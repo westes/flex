@@ -35,6 +35,12 @@
 #define const
 #endif
 
+#ifdef YY_USE_PROTOS
+#define YY_PROTO(proto) proto
+#else
+#define YY_PROTO(proto) ()
+#endif
+
 /* amount of stuff to slurp up with each read */
 #ifndef YY_READ_BUF_SIZE
 #define YY_READ_BUF_SIZE 8192
@@ -50,7 +56,10 @@
 /* copy whatever the last rule matched to the standard output */
 
 /* cast to (char *) is because for 8-bit chars, yytext is (unsigned char *) */
-#define ECHO fputs( (char *) yytext, yyout )
+/* this used to be an fputs(), but since the string might contain NUL's,
+ * we now use fwrite()
+ */
+#define ECHO fwrite( (char *) yytext, yyleng, 1, yyout )
 
 /* gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
  * is returned in "result".
@@ -87,11 +96,7 @@
 /* default declaration of generated scanner - a define so the user can
  * easily add parameters
  */
-#ifdef YY_USE_PROTOS
-#define YY_DECL int yylex( void )
-#else
-#define YY_DECL int yylex()
-#endif
+#define YY_DECL int yylex YY_PROTO(( void )) 
 
 /* code executed at the end of each rule */
 #define YY_BREAK break;
@@ -110,10 +115,9 @@
 	*yy_cp = '\0'; \
 	yy_c_buf_p = yy_cp;
 
-#define EOB_ACT_NUL_TRANS 0
-#define EOB_ACT_CONTINUE_SCAN 1
-#define EOB_ACT_END_OF_FILE 2
-#define EOB_ACT_LAST_MATCH 3
+#define EOB_ACT_CONTINUE_SCAN 0
+#define EOB_ACT_END_OF_FILE 1
+#define EOB_ACT_LAST_MATCH 2
 
 /* return all but the first 'n' matched characters back to the input stream */
 #define yyless(n) \
@@ -129,6 +133,7 @@
 
 extern YY_CHAR *yytext;
 extern int yyleng;
+extern FILE *yyin, *yyout;
 
 YY_CHAR *yytext;
 int yyleng;
@@ -161,20 +166,16 @@ static YY_CHAR yy_hold_char;
 static yy_state_type yy_last_accepting_state;
 static YY_CHAR *yy_last_accepting_cpos;
 
-#ifdef YY_USE_PROTOS
-static yy_state_type yy_get_previous_state( void );
-static yy_state_type yy_try_NUL_trans( void );
-static int yy_get_next_buffer( void );
-static void yyunput( int c, YY_CHAR *buf_ptr );
-static int input( void );
-void yyrestart( FILE *input_file );
+static yy_state_type yy_get_previous_state YY_PROTO(( void ));
+static yy_state_type yy_try_NUL_trans YY_PROTO(( void ));
+static int yy_get_next_buffer YY_PROTO(( void ));
+static void yyunput YY_PROTO(( int c, YY_CHAR *buf_ptr ));
+void yyrestart YY_PROTO(( FILE *input_file ));
+
+#ifdef __cplusplus
+static int yyinput YY_PROTO(( void ));
 #else
-static yy_state_type yy_get_previous_state();
-static yy_state_type yy_try_NUL_trans();
-static int yy_get_next_buffer();
-static void yyunput();
-static int input();
-void yyrestart();
+static int input YY_PROTO(( void ));
 #endif
 
 YY_DECL
@@ -243,12 +244,10 @@ yy_find_action:
 	YY_DO_BEFORE_ACTION;
 	YY_USER_ACTION;
 
-#ifdef FLEX_DEBUG
-	fprintf( stderr, "--accepting rule #%d (\"%s\")\n",
-		 yy_act, yytext );
-#endif
-
 do_action:	/* this label is used only to access EOF actions */
+
+%% debug code goes here
+
 	switch ( yy_act )
 	    {
 %% actions go here
@@ -261,7 +260,44 @@ do_action:	/* this label is used only to access EOF actions */
 		/* undo the effects of YY_DO_BEFORE_ACTION */
 		*yy_cp = yy_hold_char;
 
-		switch ( yy_get_next_buffer() )
+		if ( yy_c_buf_p < &yy_ch_buf[yy_n_chars + 1] )
+		    /* this was really a NUL */
+		    {
+		    yy_state_type yy_next_state;
+
+		    yy_c_buf_p = yytext + yy_amount_of_matched_text;
+
+		    yy_current_state = yy_get_previous_state();
+
+		    /* okay, we're now positioned to make the
+		     * NUL transition.  We couldn't have
+		     * yy_get_previous_state() go ahead and do it
+		     * for us because it doesn't know how to deal
+		     * with the possibility of jamming (and we
+		     * don't want to build jamming into it because
+		     * then it will run more slowly)
+		     */
+
+		    yy_next_state = yy_try_NUL_trans( yy_current_state );
+
+		    yy_bp = yytext + YY_MORE_ADJ;
+
+		    if ( yy_next_state )
+			{
+			/* consume the NUL */
+			yy_cp = ++yy_c_buf_p;
+			yy_current_state = yy_next_state;
+			goto yy_match;
+			}
+
+		    else
+			{
+%% code to do backtracking for compressed tables and set up yy_cp goes here
+			goto yy_find_action;
+			}
+		    }
+
+		else switch ( yy_get_next_buffer() )
 		    {
 		    case EOB_ACT_END_OF_FILE:
 			{
@@ -285,42 +321,6 @@ do_action:	/* this label is used only to access EOF actions */
 			    YY_NEW_FILE;
 			}
 			break;
-
-		    case EOB_ACT_NUL_TRANS:
-			{
-			yy_state_type yy_next_state;
-
-			yy_c_buf_p = yytext + yy_amount_of_matched_text;
-
-			yy_current_state = yy_get_previous_state();
-
-			/* okay, we're now positioned to make the
-			 * NUL transition.  We couldn't have
-			 * yy_get_previous_state() go ahead and do it
-			 * for us because it doesn't know how to deal
-			 * with the possibility of jamming (and we
-			 * don't want to build jamming into it because
-			 * then it will run more slowly)
-			 */
-
-			yy_next_state = yy_try_NUL_trans( yy_current_state );
-
-			yy_bp = yytext + YY_MORE_ADJ;
-
-			if ( yy_next_state )
-			    {
-			    /* consume the NUL */
-			    yy_cp = ++yy_c_buf_p;
-			    yy_current_state = yy_next_state;
-			    goto yy_match;
-			    }
-
-			else
-			    {
-%% code to do backtracking for compressed tables and set up yy_cp goes here
-			    goto yy_find_action;
-			    }
-			}
 
 		    case EOB_ACT_CONTINUE_SCAN:
 			yy_c_buf_p = yytext + yy_amount_of_matched_text;
@@ -347,7 +347,8 @@ do_action:	/* this label is used only to access EOF actions */
 #ifdef FLEX_DEBUG
 		printf( "action # %d\n", yy_act );
 #endif
-		YY_FATAL_ERROR( "fatal flex scanner internal error" );
+		YY_FATAL_ERROR(
+			"fatal flex scanner internal error--no action found" );
 	    }
 	}
     }
@@ -372,9 +373,9 @@ static int yy_get_next_buffer()
     register int number_to_move, i;
     int ret_val;
 
-    if ( yy_c_buf_p < &yy_ch_buf[yy_n_chars + 1] )
-	/* this happens when we see a NUL */
-	return ( EOB_ACT_NUL_TRANS );
+    if ( yy_c_buf_p > &yy_ch_buf[yy_n_chars + 1] )
+	YY_FATAL_ERROR(
+		"fatal flex scanner internal error--end of buffer missed" );
 
     /* try to read more data */
 
@@ -396,6 +397,9 @@ static int yy_get_next_buffer()
 
 	if ( num_to_read > YY_READ_BUF_SIZE )
 	    num_to_read = YY_READ_BUF_SIZE;
+
+	else if ( num_to_read <= 0 )
+	    YY_FATAL_ERROR( "fatal error - scanner input buffer overflow" );
 
 	/* read in more data */
 	YY_INPUT( (&yy_ch_buf[number_to_move]), yy_n_chars, num_to_read );
@@ -514,7 +518,11 @@ register YY_CHAR *yy_bp;
     }
 
 
+#ifdef __cplusplus
+static int yyinput()
+#else
 static int input()
+#endif
 
     {
     int c;
@@ -523,47 +531,56 @@ static int input()
     *yy_cp = yy_hold_char;
 
     if ( *yy_c_buf_p == YY_END_OF_BUFFER_CHAR )
-	{ /* need more input */
-	yytext = yy_c_buf_p;
-	++yy_c_buf_p;
+	if ( yy_c_buf_p < &yy_ch_buf[yy_n_chars + 1] )
+	    /* this was really a NUL */
+	    *yy_c_buf_p = '\0';
 
-	switch ( yy_get_next_buffer() )
-	    {
-	    /* this code, unfortunately, is somewhat redundant with
-	     * that above
-	     */
-	    case EOB_ACT_END_OF_FILE:
+	else
+	    { /* need more input */
+	    yytext = yy_c_buf_p;
+	    ++yy_c_buf_p;
+
+	    switch ( yy_get_next_buffer() )
 		{
-		if ( yywrap() )
+		/* this code, unfortunately, is somewhat redundant with
+		 * that above
+		 */
+		case EOB_ACT_END_OF_FILE:
 		    {
-		    yy_c_buf_p = yytext + YY_MORE_ADJ;
-		    return ( EOF );
+		    if ( yywrap() )
+			{
+			yy_c_buf_p = yytext + YY_MORE_ADJ;
+			return ( EOF );
+			}
+
+		    yy_ch_buf[0] = '\n';
+		    yy_n_chars = 1;
+		    yy_ch_buf[yy_n_chars] = YY_END_OF_BUFFER_CHAR;
+		    yy_ch_buf[yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
+		    yy_eof_has_been_seen = 0;
+		    yytext = yy_c_buf_p = &yy_ch_buf[1];
+		    yy_hold_char = *yy_c_buf_p;
+
+#ifdef __cplusplus
+		    return ( yyinput() );
+#else
+		    return ( input() );
+#endif
 		    }
+		    break;
 
-		yy_ch_buf[0] = '\n';
-		yy_n_chars = 1;
-		yy_ch_buf[yy_n_chars] = YY_END_OF_BUFFER_CHAR;
-		yy_ch_buf[yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
-		yy_eof_has_been_seen = 0;
-		yytext = yy_c_buf_p = &yy_ch_buf[1];
-		yy_hold_char = *yy_c_buf_p;
+		case EOB_ACT_CONTINUE_SCAN:
+		    yy_c_buf_p = yytext + YY_MORE_ADJ;
+		    break;
 
-		return ( input() );
+		case EOB_ACT_LAST_MATCH:
+#ifdef __cplusplus
+		    YY_FATAL_ERROR( "unexpected last match in yyinput()" );
+#else
+		    YY_FATAL_ERROR( "unexpected last match in input()" );
+#endif
 		}
-		break;
-
-	    case EOB_ACT_NUL_TRANS:
-		*yy_c_buf_p = '\0';
-		break;
-
-	    case EOB_ACT_CONTINUE_SCAN:
-		yy_c_buf_p = yytext + YY_MORE_ADJ;
-		break;
-
-	    case EOB_ACT_LAST_MATCH:
-		YY_FATAL_ERROR( "unexpected last match in input()" );
 	    }
-	}
 
     c = *yy_c_buf_p;
     yy_hold_char = *++yy_c_buf_p;
