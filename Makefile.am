@@ -150,6 +150,6 @@ buf.o: buf.c flexdef.h
 #The below recipe for making the ChangeLog will only work if you have a copy of the cvs tree handy so let it fail gracefully.
 
 ChangeLog:
-	-rcs2log -l 72 -u "vern	Vern	vern@ee.lbl.gov" -u "wlestes	W. L. Estes	wlestes@uncg.edu" -u "millaway	John Millaway	johnmillaway@yahoo.com" | sed s:/usr/local/cvsroot/flex/::g >ChangeLog 
+	-rcs2log -l 72 -u "vern	Vern	vern@ee.lbl.gov" -u "wlestes	W. L. Estes	wlestes@uncg.edu" -u "millaway	John Millaway	millaway@acm.org | sed s:/usr/local/cvsroot/flex/::g >ChangeLog 
 
 .PHONY: ChangeLog
