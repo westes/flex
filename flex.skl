@@ -60,6 +60,7 @@
 #define YY_PROTO(proto) ()
 #endif
 
+%% section 1 definitions go here
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
@@ -87,19 +88,21 @@
  */
 #ifndef YY_INPUT
 #define YY_INPUT(buf,result,max_size) \
-%- Standard (non-C++) definition
-	if ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \
+%% fread()/read() definition of YY_INPUT goes here unless we're doing C++
 %+ C++ definition
 	if ( (result = LexerInput( (char *) buf, max_size )) < 0 ) \
 %*
-		YY_FATAL_ERROR( "read() in flex scanner failed" );
+		YY_FATAL_ERROR( "input in flex scanner failed" );
 #endif
 
 /* No semi-colon after return; correct usage is to write "yyterminate();" -
  * we don't want an extra ';' after the "return" because that will cause
  * some compilers to complain about unreachable statements.
  */
+#ifndef yyterminate
 #define yyterminate() return YY_NULL
+#endif
+
 #define YY_NULL 0
 
 /* Report a fatal error. */
@@ -284,8 +287,6 @@ static int yyinput YY_PROTO(( void ));
 static int input YY_PROTO(( void ));
 #endif
 %*
-
-%% section 1 definitions go here
 
 %- Standard (non-C++) definition
 static yy_state_type yy_get_previous_state YY_PROTO(( void ));
