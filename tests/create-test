@@ -6,7 +6,17 @@ if [ ! $# -eq 1 ] ; then
    exit 1
 fi
 
-mkdir $1
+if test -e "$1" ; then
+    echo "$1 exists already"
+    exit 1
+fi
+
+mkdir $1 
+if test "$?" -ne 0 ; then
+    echo "mkdir $1 failed"
+    exit 1
+fi
+
 for i in $TESTFILES ; do
     cp TEMPLATE/$i $1/$i
 done
