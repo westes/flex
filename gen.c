@@ -1812,7 +1812,6 @@ void make_tables ()
 			if (yytext_is_array) {
 				if (!reentrant){
     				indent_puts ("static int yy_more_offset = 0;");
-                }else{
                     indent_puts ("static int yy_prev_more_offset = 0;");
                 }
 			}

@@ -345,19 +345,19 @@ m4_ifdef( [[M4_YY_NO_ANSI_FUNC_DEFS]],
 %#        yyscan_t yyscanner;
 %#
 %# Generate traditional function defs
-    m4_define( [[YYFARGS0]], [[(M4_YY_DEF_ONLY_ARG)
+    m4_define( [[YYFARGS0]], [[(M4_YY_DEF_ONLY_ARG) [[\]]
         M4_YY_DECL_LAST_ARG]])
-    m4_define( [[YYFARGS1]], [[($2 M4_YY_DEF_LAST_ARG)
-        $1 $2;
+    m4_define( [[YYFARGS1]], [[($2 M4_YY_DEF_LAST_ARG) [[\]]
+        $1 $2; [[\]]
         M4_YY_DECL_LAST_ARG]])
-    m4_define( [[YYFARGS2]], [[($2,$4 M4_YY_DEF_LAST_ARG)
-        $1 $2;
-        $3 $4;
+    m4_define( [[YYFARGS2]], [[($2,$4 M4_YY_DEF_LAST_ARG) [[\]]
+        $1 $2; [[\]]
+        $3 $4; [[\]]
         M4_YY_DECL_LAST_ARG]])
-    m4_define( [[YYFARGS3]], [[($2,$4,$6 M4_YY_DEF_LAST_ARG)
-        $1 $2;
-        $3 $4;
-        $5 $6;
+    m4_define( [[YYFARGS3]], [[($2,$4,$6 M4_YY_DEF_LAST_ARG) [[\]]
+        $1 $2; [[\]]
+        $3 $4; [[\]]
+        $5 $6; [[\]]
         M4_YY_DECL_LAST_ARG]])
 ]],
 [[
@@ -724,6 +724,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]], [[#endif]])
 
 m4_ifdef( [[M4_YY_NO_UNISTD_H]],,
 [[
+#ifndef YY_NO_UNISTD_H
 /* Special case for "unistd.h", since it is non-ANSI. We include it way
  * down here because we want the user's section 1 to have been scanned first.
  * The user has a chance to override it with an option.
@@ -734,6 +735,7 @@ m4_ifdef( [[M4_YY_NO_UNISTD_H]],,
 %if-c++-only
 #include <unistd.h>
 %endif
+#endif
 ]])
 
 #ifndef YY_EXTRA_TYPE
