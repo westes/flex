@@ -262,6 +262,7 @@ in it:
 * definitions section::
 * rules section::
 * user code section::
+* comments in the input::
 @end menu
 
 @node definitions section
@@ -320,6 +321,19 @@ is identical to
 and matches one-or-more digits followed by a '.' followed
 by zero-or-more digits.
 
+An unindented comment (i.e., a line
+beginning with @samp{/*}) is copied verbatim to the output up
+to the next @samp{*/}.
+
+Any
+@emph{indented}
+text or text enclosed in
+@samp{%@{}
+and
+@samp{%@}}
+is also copied verbatim to the output (with the %@{ and %@} symbols removed).
+The %@{ and %@} symbols must appear unindented on lines by themselves.
+
 @node rules section
 @section Format of the Rules Section
 
@@ -340,6 +354,26 @@ on the same line.
 
 @xref{Patterns}, for a further description of patterns and actions.
 
+In the rules section,
+any indented or %@{ %@} enclosed text appearing before the
+first rule may be used to declare variables
+which are local to the scanning routine and (after the declarations)
+code which is to be executed whenever the scanning routine is entered.
+Other indented or %@{ %@} text in the rule section is still copied to the output,
+but its meaning is not well-defined and it may well cause compile-time
+errors (this feature is present for
+@i{POSIX}
+compliance. @xref{lex and posix}, for other such features).
+
+Any
+@emph{indented}
+text or text enclosed in
+@samp{%@{}
+and
+@samp{%@}}
+is copied verbatim to the output (with the %@{ and %@} symbols removed).
+The %@{ and %@} symbols must appear unindented on lines by themselves.
+
 @node user code section
 @section Format of the User Code Section
 
@@ -352,30 +386,53 @@ if it is missing, the second
 @samp{%%}
 in the input file may be skipped, too.
 
-In the definitions and rules sections, any
-@emph{indented}
-text or text enclosed in
-@samp{%@{}
-and
-@samp{%@}}
-is copied verbatim to the output (with the %@{ and %@} symbols removed).
-The %@{ and %@} symbols must appear unindented on lines by themselves.
+@node comments in the input
+@section Comments in the Input
 
-In the rules section,
-any indented or %@{ %@} enclosed text appearing before the
-first rule may be used to declare variables
-which are local to the scanning routine and (after the declarations)
-code which is to be executed whenever the scanning routine is entered.
-Other indented or %@{ %@} text in the rule section is still copied to the output,
-but its meaning is not well-defined and it may well cause compile-time
-errors (this feature is present for
-@i{POSIX}
-compliance. @xref{lex and posix}, for other such features).
+Flex supports C-style comments, that is, anything between /* and */ is
+considered a comment. Whenever flex encounters a comment, it copies
+the entire comment verbatim to the generated source code. Comments
+may appear just about anywhere, but with the following exceptions:
 
-In the definitions section (but not in the rules section),
-an unindented comment (i.e., a line
-beginning with @samp{/*}) is also copied verbatim to the output up
-to the next @samp{*/}.
+@itemize
+@item Comments may not appear in the Rules Section wherever flex is expecting
+a regular expression. This means comments may not appear at the beginning of
+a line, or immediately following a list of scanner states.
+@item Comments may not appear on an @samp{%option} line in the Definitions Section.
+@end itemize
+
+
+If you want to follow a simple rule, then always begin a comment on a new line,
+with one or more whitespace characters before the initial @samp{/*}).
+This rule will work anywhere in the input file.
+
+All the comments in the following example are OK:
+
+@example
+@verbatim
+%{
+/* code block */
+%}
+
+/* Definitions Section */
+%x STATE_X
+
+%%
+    /* Rules Section */
+ruleA   /* after regex */ { /* code block */ } /* after code block */
+        /* Rules Section (indented) */
+<STATE_X>{
+ruleC   ECHO;
+ruleD   ECHO;
+%{
+/* code block */
+%}
+}
+%%
+/* User Code Section */
+
+@end verbatim
+@end example
 
 @node Patterns
 @chapter PATTERNS
