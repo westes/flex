@@ -1,7 +1,7 @@
 #! /bin/sh
 
 cat <<!
-/* File created from flex.skel via mkskel.sh */
+/* File created from flex.skl via mkskel.sh */
 
 #include "flexdef.h"
 
