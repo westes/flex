@@ -327,7 +327,7 @@ char **argv;
 
     {
     int i, sawcmpflag, use_stdout;
-    char *arg, *skelname = NULL, *flex_gettime(), clower(), *mktemp();
+    char *arg, *skelname = NULL, *flex_gettime(), *mktemp();
 
     printstats = syntaxerror = trace = spprdflt = interactive = caseins = false;
     backtrack_report = performance_report = ddebug = fulltbl = fullspd = false;
@@ -366,7 +366,7 @@ char **argv;
 			}
 
 		    for ( ++i; arg[i] != '\0'; ++i )
-			switch ( clower( arg[i] ) )
+			switch ( arg[i] )
 			    {
 			    case 'e':
 				useecs = true;
