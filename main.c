@@ -417,6 +417,14 @@ void check_options()
 	if ( do_yylineno )
 		buf_strdefine(&userdef_buf,"YY_USE_LINENO","1");
 
+	/* Create the alignment type. */
+	buf_strdefine(&userdef_buf,"YY_INT_ALIGNED",
+			long_align ? "long int" : "short int");
+	
+	/* Now map the equivalence class for NUL to its expected place. */
+	ecgroup[0] = ecgroup[csize];
+	NUL_ec = ABS( ecgroup[0] );
+
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)
 		outn( (char*)(userdef_buf.elts) );
@@ -583,6 +591,7 @@ int exit_status;
             fprintf(header_out,"#undef YY_FLUSH_BUFFER\n");
             fprintf(header_out,"#undef YY_G\n");
             fprintf(header_out,"#undef YY_INPUT\n");
+            fprintf(header_out,"#undef YY_INT_ALIGNED\n");
             fprintf(header_out,"#undef YY_INTERACTIVE\n");
             fprintf(header_out,"#undef YY_LAST_ARG\n");
             fprintf(header_out,"#undef YY_LEX_ARGS\n");
@@ -1649,10 +1658,6 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 		numecs = cre8ecs( nextecm, ecgroup, csize );
 	else
 		numecs = csize;
-
-	/* Now map the equivalence class for NUL to its expected place. */
-	ecgroup[0] = ecgroup[csize];
-	NUL_ec = ABS( ecgroup[0] );
 
 	if ( useecs )
 		ccl2ecl();

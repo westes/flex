@@ -537,7 +537,6 @@ void ntod()
 		 * long-shot that that won't be large enough.
 		 */
 		out_str_dec( "static yyconst %s yy_nxt[][%d] =\n    {\n",
-			/* '}' so vi doesn't get too confused */
 			long_align ? "long" : "short", num_full_table_rows );
 
 		outn( "    {" );
