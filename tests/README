@@ -24,9 +24,8 @@ To build and execute all tests:
 
 To build and execute a single test:
 
-  $ cd tests/ #from the top level of the flex tree
-  $ cd test-pthread-nr # for example
-  $ make 
+  $ cd tests/ # from the top level of the flex tree.
+  $ cd test-pthread-nr
   $ make check
 
 HOW TO ADD A NEW TEST
@@ -40,11 +39,15 @@ HOW TO ADD A NEW TEST
    include your new test in the cvs tree.
 
  - On success, your test should return zero.
-   On error, your test should return non-zero and print a message
-   to stderr. Hopefullly, your error message will indicate something
-   helpful to explain why the test failed.
 
- - You must modify the last few lines of tests/Makefile.in
+ - On error, your test should return 1 (one) and print a message
+   to stdout or stderr, which have been redirected to the file
+   named, "OUTPUT", in your test's directory.
+
+ - If your test is skipped (e.g., bison not found), then the Makefile
+   rule should return 2 (two). See "test-bison-nr/Makefile.in" for details.
+
+ - You must modify the last few lines of tests/configure.in
    by adding your new test directory, and the Makefile target.
 
  - Each test assumes that the newly-built binary "flex" is in the 

@@ -56,8 +56,7 @@ parser.o: parser.c
 test: check
 
 check: $(TESTNAME)
-	@echo "EXECUTING TEST: '$(TESTNAME)'"
-	./$(TESTNAME) < $(srcdir)/test.input
+	./$(TESTNAME) < $(srcdir)/test.input 
 
 distclean: clean
 	rm -f Makefile

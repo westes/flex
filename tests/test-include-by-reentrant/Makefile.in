@@ -55,13 +55,11 @@ parser.o: parser.c
 test: check
 
 check: $(TESTNAME)
-	@echo "EXECUTING TEST: '$(TESTNAME)'"
-	@echo Copying input files...
 	for f in test-1.input test-2.input test-3.input ; do \
-		if test ! -f $$f ; then  \
-			cp $(srcdir)/$$f . ; \
-		fi \
-	done 
+        if test ! -f $$f ; then  \
+            cp -f $(srcdir)/$$f . ; \
+        fi \
+    done 
 	./$(TESTNAME) test-1.input 
 
 clean:

@@ -55,8 +55,7 @@ parser.o: parser.c
 test: check
 
 check: $(TESTNAME)
-	@echo "EXECUTING TEST: '$(TESTNAME)'"
-	./$(TESTNAME) $(srcdir)/test-*.input
+	./$(TESTNAME) $(srcdir)/test-*.input 
 
 clean:
 	rm -f scanner.o scanner.c parser.o parser.c  parser.h $(TESTNAME)

@@ -43,19 +43,18 @@ $(TESTNAME): parser.y scanner.l
 		$(CC) $(CPPFLAGS) $(CFLAGS) -c scanner.c ; \
 		$(CC) $(CPPFLAGS) $(CFLAGS) -c parser.c ; \
 		$(CC) $(CFLAGS) -o $(TESTNAME) scanner.o parser.o $(LDFLAGS) $(LIBS) ; \
-	else \
-		echo "SKIPPING TEST: '$(TESTNAME);' (bison not found)." ; \
 	fi
 
 test: check
 
 check: $(TESTNAME)
 	if test "$(YACC)" = "bison" ; then \
-		echo "EXECUTING TEST: '$(TESTNAME)'" ;\
-		./$(TESTNAME) <$(srcdir)/test.input | ./$(TESTNAME) | diff $(srcdir)/test.input -; \
-	else \
-		echo "SKIPPING TEST: '$(TESTNAME);' (bison not found)." ; \
-	fi
+        ./$(TESTNAME) <$(srcdir)/test.input | ./$(TESTNAME) | \
+        diff $(srcdir)/test.input -  ; \
+    else \
+        echo "Test skipped because GNU bison was not detected by configure." ; \
+        exit 2;\
+    fi
 
 clean:
 	rm -f scanner.o scanner.c parser.o parser.c  parser.h $(TESTNAME)
