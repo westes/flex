@@ -296,7 +296,11 @@ static void yy_fatal_error YY_PROTO(( const char msg[] ));
 
 /* Report a fatal error. */
 #ifndef YY_FATAL_ERROR
+%-
 #define YY_FATAL_ERROR(msg) yy_fatal_error( msg )
+%+
+#define YY_FATAL_ERROR(msg) LexerError( msg )
+%*
 #endif
 
 /* Default declaration of generated scanner - a define so the user can
@@ -514,13 +518,6 @@ do_action:	/* This label is used only to access EOF actions. */
 		}
 
 	default:
-#ifdef FLEX_DEBUG
-%-
-		printf( "action # %d\n", yy_act );
-%+
-		cout << "action # " << yy_act << '\n';
-%*
-#endif
 		YY_FATAL_ERROR(
 			"fatal flex scanner internal error--no action found" );
 	} /* end of action switch */
@@ -1009,6 +1006,7 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 	}
 
 
+%-
 #ifdef YY_USE_PROTOS
 static void yy_fatal_error( const char msg[] )
 #else
@@ -1016,13 +1014,18 @@ static void yy_fatal_error( msg )
 char msg[];
 #endif
 	{
-%-
 	(void) fprintf( stderr, "%s\n", msg );
-%+
-	cerr << msg << '\n';
-%*
 	exit( 1 );
 	}
+
+%+
+
+void yyFlexLexer::LexerError( const char msg[] )
+	{
+	cerr << msg << '\n';
+	exit( 1 );
+	}
+%*
 
 
 /* Redefine yyless() so it works in section 3 code. */
