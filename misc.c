@@ -89,18 +89,18 @@ int size, element_size;
 /* all_lower - true if a string is all lower-case
  *
  * synopsis:
- *    char *str;
+ *    Char *str;
  *    int all_lower();
  *    true/false = all_lower( str );
  */
 
 int all_lower( str )
-register char *str;
+register Char *str;
 
     {
     while ( *str )
 	{
-	if ( ! islower( *str ) )
+	if ( ! isascii( *str ) || ! islower( *str ) )
 	    return ( 0 );
 	++str;
 	}
@@ -112,18 +112,18 @@ register char *str;
 /* all_upper - true if a string is all upper-case
  *
  * synopsis:
- *    char *str;
+ *    Char *str;
  *    int all_upper();
  *    true/false = all_upper( str );
  */
 
 int all_upper( str )
-register char *str;
+register Char *str;
 
     {
     while ( *str )
 	{
-	if ( ! isupper( *str ) )
+	if ( ! isascii( *str ) || ! isupper( (char) *str ) )
 	    return ( 0 );
 	++str;
 	}
@@ -166,15 +166,16 @@ int v[], n;
 /* clower - replace upper-case letter to lower-case
  *
  * synopsis:
- *    char clower(), c;
+ *    Char clower();
+ *    int c;
  *    c = clower( c );
  */
 
-char clower( c )
-register char c;
+Char clower( c )
+register int c;
 
     {
-    return ( isupper(c) ? tolower(c) : c );
+    return ( (isascii( c ) && isupper( c )) ? tolower( c ) : c );
     }
 
 
@@ -208,11 +209,42 @@ register char *str;
     }
 
 
+/* copy_unsigned_string -
+ *    returns a dynamically allocated copy of a (potentially) unsigned string
+ *
+ * synopsis
+ *    Char *str, *copy, *copy_unsigned_string();
+ *    copy = copy_unsigned_string( str );
+ */
+
+Char *copy_unsigned_string( str )
+register Char *str;
+
+    {
+    register Char *c;
+    Char *copy;
+
+    /* find length */
+    for ( c = str; *c; ++c )
+	;
+
+    copy = (Char *) malloc( (unsigned) ((c - str + 1) * sizeof( Char )) );
+
+    if ( copy == NULL )
+	flexfatal( "dynamic memory failure in copy_unsigned_string()" );
+
+    for ( c = copy; (*c++ = *str++); )
+	;
+    
+    return ( copy );
+    }
+
+
 /* cshell - shell sort a character array in increasing order
  *
  * synopsis
  *
- *   char v[n];
+ *   Char v[n];
  *   int n;
  *   cshell( v, n );
  *
@@ -224,12 +256,12 @@ register char *str;
  *   n - number of elements of v to be sorted
  */
 cshell( v, n )
-char v[];
+Char v[];
 int n;
 
     {
     int gap, i, j, jg;
-    char k;
+    Char k;
 
     for ( gap = n / 2; gap > 0; gap = gap / 2 )
 	for ( i = gap; i < n; ++i )
@@ -262,6 +294,7 @@ dataend()
     puts( "    } ;\n" );
 
     dataline = 0;
+    datapos = 0;
     }
 
 
@@ -380,7 +413,7 @@ flexerror( msg )
 char msg[];
 
     {
-    fprintf( stderr, "flex: %s\n", msg );
+    fprintf( stderr, "%s: %s\n", program_name, msg );
 
     flexend( 1 );
     }
@@ -397,8 +430,28 @@ flexfatal( msg )
 char msg[];
 
     {
-    fprintf( stderr, "flex: fatal internal error %s\n", msg );
+    fprintf( stderr, "%s: fatal internal error %s\n", program_name, msg );
     flexend( 1 );
+    }
+
+
+/* htoi - convert a hexadecimal digit string to an integer value
+ *
+ * synopsis:
+ *    int val, htoi();
+ *    Char str[];
+ *    val = htoi( str );
+ */
+
+int htoi( str )
+Char str[];
+
+    {
+    int result;
+
+    (void) sscanf( (char *) str, "%x", &result );
+
+    return ( result );
     }
 
 
@@ -479,19 +532,19 @@ int value;
 /* myctoi - return the integer represented by a string of digits
  *
  * synopsis
- *    char array[];
+ *    Char array[];
  *    int val, myctoi();
  *    val = myctoi( array );
  *
  */
 
 int myctoi( array )
-char array[];
+Char array[];
 
     {
     int val = 0;
 
-    (void) sscanf( array, "%d", &val );
+    (void) sscanf( (char *) array, "%d", &val );
 
     return ( val );
     }
@@ -500,13 +553,13 @@ char array[];
 /* myesc - return character corresponding to escape sequence
  *
  * synopsis
- *    char array[], c, myesc();
+ *    Char array[], c, myesc();
  *    c = myesc( array );
  *
  */
 
-char myesc( array )
-char array[];
+Char myesc( array )
+Char array[];
 
     {
     switch ( array[1] )
@@ -519,6 +572,9 @@ char array[];
 	case 't': return ( '\t' );
 	case 'v': return ( '\v' );
 
+	case 'x':
+	    /* fall through */
+
 	case '0':
 	case '1':
 	case '2':
@@ -529,11 +585,15 @@ char array[];
 	case '7':
 	case '8':
 	case '9':
-	    { /* \<octal> */
-	    char c, esc_char;
-	    register int sptr = 1;
 
-	    while ( isdigit(array[sptr]) )
+	    { /* \<octal> or \x<hex> */
+	    Char c, esc_char;
+	    register int sptr = 1;
+	    
+	    if ( array[1] == 'x' )
+		++sptr;
+
+	    while ( isascii( array[sptr] ) && isdigit( array[sptr] ) )
 		/* don't increment inside loop control because if
 		 * isdigit() is a macro it will expand it to two
 		 * increments ...
@@ -543,7 +603,11 @@ char array[];
 	    c = array[sptr];
 	    array[sptr] = '\0';
 
-	    esc_char = otoi( array + 1 );
+	    if ( array[1] == 'x' )
+		esc_char = htoi( array + 2 );
+	    else
+		esc_char = otoi( array + 1 );
+
 	    array[sptr] = c;
 
 	    if ( esc_char == '\0' )
@@ -565,17 +629,17 @@ char array[];
  *
  * synopsis:
  *    int val, otoi();
- *    char str[];
+ *    Char str[];
  *    val = otoi( str );
  */
 
 int otoi( str )
-char str[];
+Char str[];
 
     {
     int result;
 
-    (void) sscanf( str, "%o", &result );
+    (void) sscanf( (char *) str, "%o", &result );
 
     return ( result );
     }
@@ -597,7 +661,7 @@ register int c;
     {
     static char rform[10];
 
-    if ( (c >= 0 && c < 32) || c == 127 )
+    if ( (c >= 0 && c < 32) || c >= 127 )
 	{
 	switch ( c )
 	    {
