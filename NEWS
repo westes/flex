@@ -5,8 +5,12 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.23
 
-** new turkish translation from the translation project
+** the manual continues to be updated and edited, but it's still got a
+   ways to go
 
+** it is possible to have multiple c++ scanners in the same program again
+
+** new turkish translation from the translation project
 
 * version 2.5.23 released 2002-10-21
 
