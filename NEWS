@@ -5,8 +5,12 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.29
 
+** added %top directive for placing code at the top of the generated
+   scanner; see manual for details
+
 ** flex now uses m4 to generate scanners; while this means that
-   scanners are more readable, it means that flex requires m4 to be installed
+   scanners are more readable, it means that flex requires m4 to be
+   installed; see manual for details
 
 * version 2.5.29 released 2003-3-5
 
