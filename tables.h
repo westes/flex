@@ -53,14 +53,13 @@ struct yytbl_writer {
 
 /* These are used by main.c, gen.c, etc.
  * tablesext - if true, create external tables
- * tablestoggle - if true, output external tables code while processing skel
  * tablesfilename - filename for external tables
  * tablesname - name that goes in serialized data, e.g., "yytables"
  * tableswr -  writer for external tables
  * tablesverify - true if tables-verify option specified
  * gentables - true if we should spit out the normal C tables
  */
-extern bool tablesext, tablestoggle, tablesverify,gentables;
+extern bool tablesext, tablesverify,gentables;
 extern char *tablesfilename, *tablesname;
 extern struct yytbl_writer tableswr;
 

@@ -43,6 +43,49 @@
 #define CMD_C_OR_CPP         "%c-or-c++"
 #define CMD_NOT_FOR_HEADER   "%not-for-header"
 #define CMD_OK_FOR_HEADER    "%ok-for-header"
+#define CMD_PUSH             "%push"
+#define CMD_POP              "%pop"
+
+/* we allow the skeleton to push and pop. */
+struct sko_state {
+    bool dc; /**< do_copy */
+    bool tt; /**< tables_toggle */
+};
+static struct sko_state *sko_stack=0;
+static int sko_len=0,sko_sz=0;
+static void sko_push(bool dc, bool tt)
+{
+    if(!sko_stack){
+        sko_sz = 1;
+        sko_stack = (struct sko_state*)flex_alloc(sizeof(struct sko_state)*sko_sz);
+        sko_len = 0;
+    }
+    if(sko_len >= sko_sz){
+        sko_sz *= 2;
+        sko_stack = (struct sko_state*)flex_realloc(sko_stack,sizeof(struct sko_state)*sko_sz);
+    }
+    
+    /* initialize to zero and push */
+    sko_stack[sko_len].dc = dc;
+    sko_stack[sko_len].tt = tt;
+    sko_len++;
+}
+static void sko_peek(bool *dc, bool* tt)
+{
+    if(sko_len <= 0)
+        flex_die("peek attempt when sko stack is empty");
+    if(dc)
+        *dc = sko_stack[sko_len-1].dc;
+    if(tt)
+        *tt = sko_stack[sko_len-1].tt;
+}
+static void sko_pop(bool* dc, bool *tt)
+{
+    sko_peek(dc,tt);
+    sko_len--;
+    if(sko_len < 0)
+        flex_die("popped too many times in skeleton.");
+}
 
 /* Append "#define defname value\n" to the running buffer. */
 void action_define (defname, value)
@@ -812,7 +855,15 @@ void skelout ()
 {
 	char    buf_storage[MAXLINE];
 	char   *buf = buf_storage;
-	int     do_copy = 1;
+	bool   do_copy = true;
+    bool tablestoggle=false;
+
+    /* "reset" the state by clearing the buffer and pushing a '1' */
+    if(sko_len > 0)
+        sko_peek(&do_copy,&tablestoggle);
+    sko_len = 0;
+    sko_push(do_copy=true,tablestoggle);
+
 
 	/* Loop pulling lines either from the skelfile, if we're using
 	 * one, or from the skel[] array.
@@ -845,6 +896,16 @@ void skelout ()
 				/* %% is a break point for skelout() */
 				return;
 			}
+            else if (cmd_match (CMD_PUSH)){
+                sko_push(do_copy,tablestoggle);
+                out_str("/*(state = (%s,",do_copy?"true":"false");
+                out_str(          "%s)*/\n",tablestoggle?"true":"false");
+            }
+            else if (cmd_match (CMD_POP)){
+                sko_pop(&do_copy,&tablestoggle);
+                out_str("/*(state = (%s,",do_copy?"true":"false");
+                out_str(          "%s)*/\n",tablestoggle?"true":"false");
+            }
 			else if (cmd_match (CMD_TABLES_SER_BEGIN)) {
 				tablestoggle = true;
 			}
@@ -869,7 +930,7 @@ void skelout ()
 			}
 			else if (cmd_match (CMD_C_OR_CPP)) {
 				/* %* for C and C++ */
-				do_copy = 1;
+				do_copy = true;
 			}
 			else if (cmd_match (CMD_NOT_FOR_HEADER)) {
 				/* %c begin linkage-only (non-header) code. */

@@ -106,7 +106,7 @@ jmp_buf flex_main_jmp_buf;
 bool   *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
 
-bool    tablesext, tablestoggle, tablesverify, gentables;
+bool    tablesext, tablesverify, gentables;
 char   *tablesfilename=0,*tablesname=0;
 struct yytbl_writer tableswr;
 
@@ -1044,7 +1044,7 @@ void flexinit (argc, argv)
 	prefix = "yy";
 	yyclass = 0;
 	use_read = use_stdout = false;
-	tablesext = tablestoggle = tablesverify = false;
+	tablesext = tablesverify = false;
 	gentables = true;
 	tablesfilename = tablesname = NULL;
 

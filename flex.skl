@@ -6,6 +6,9 @@
 %# listed and processed in misc.c.
 %#
 %#   %#  -  A comment. The current line is ommited from the generated scanner.
+%#   %push      -  Push the current state of the skel processing
+%#                 A push is typically followed by one of the commands below.
+%#   %pop       -  Pop the state.
 %#   %c++-only  -  The following lines are printed for C++ scanners ONLY.
 %#   %c-only    -  The following lines are NOT printed for C++ scanners.
 %#   %c-or-c++  -  The following lines are printed in BOTH C and C++ scanners.
@@ -15,7 +18,6 @@
 %#   %not-for-header  -  Begin code that should NOT appear in a ".h" file.
 %#   %ok-for-header   -  %c and %e are used for building a header file.
 %#   %tables-serialization-code-begin
-%#   %tables-serialization-code-end 
 %#
 %#   All control-lines EXCEPT comment lines ("%#") will be inserted into
 %#   the generated scanner as a C-style comment. This is to aid those who
@@ -34,9 +36,10 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <stdint.h>
+%push
 %tables-serialization-code-begin
 #include <netinet/in.h>
-%tables-serialization-code-end
+%pop
 /* end standard C headers. */
 %c++-only
 /* begin standard C++ headers. */
@@ -755,6 +758,7 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 %c-or-c++
 #endif
 
+%push
 %tables-serialization-code-begin structures and prototypes
 m4_include(`tables_shared.h')
 
@@ -788,7 +792,8 @@ struct yytbl_reader {
     uint32_t bread; /**< bytes read since beginning of current tableset */
 };
 
-%tables-serialization-code-end structures and prototypes
+/* end tables serialization structures and prototypes */
+%pop
 %ok-for-header
 
 /* Default declaration of generated scanner - a define so the user can
@@ -2107,6 +2112,7 @@ void yyfree YYFARGS1( void *,ptr)
 	}
 #endif
 
+%push
 %tables-serialization-code-begin definitions
 m4_include(`tables_shared.c')
 
@@ -2494,7 +2500,8 @@ int yytables_destroy YYFARGS0(void)
     return 0;
 }
 
-%tables-serialization-code-end  definitions
+/* end table serialization code definitions */
+%pop
 
 #if YY_MAIN
 int main YY_PARAMS((void));
