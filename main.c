@@ -341,7 +341,7 @@ void check_options ()
 	}
 
     /* Setup the filter chain. */
-    output_chain = filter_create_int(NULL, filter_tee, headerfilename);
+    output_chain = filter_create_int(NULL, filter_tee_header, headerfilename);
     filter_create_ext(output_chain,"m4","-P",0);
 
     /* For debugging, only run the requested number of filters. */
@@ -599,7 +599,7 @@ void flexend (exit_status)
 	 * reason we currently can't provide a mechanism to allow the user
 	 * to inject arbitrary class members into the generated C++ scanner. - JM
 	 */
-	if (headerfilename && exit_status == 0 && outfile_created
+	if (false && headerfilename && exit_status == 0 && outfile_created
 	    && !ferror (stdout)) {
 		/* Copy the file we just wrote to a header file. */
 #define LINE_SZ 512

@@ -762,19 +762,19 @@ void gen_next_match ()
 	 * gen_NUL_trans().
 	 */
 	char   *char_map = useecs ?
-		"yy_ec[YY_SC_TO_UI(*yy_cp)]" : "YY_SC_TO_UI(*yy_cp)";
+		"yy_ec[YY_SC_TO_UI(*yy_cp)] " : "YY_SC_TO_UI(*yy_cp)";
 
 	char   *char_map_2 = useecs ?
-		"yy_ec[YY_SC_TO_UI(*++yy_cp)]" : "YY_SC_TO_UI(*++yy_cp)";
+		"yy_ec[YY_SC_TO_UI(*++yy_cp)] " : "YY_SC_TO_UI(*++yy_cp)";
 
 	if (fulltbl) {
 		if (gentables)
 			indent_put2s
-				("while ( (yy_current_state = yy_nxt[yy_current_state][%s]) > 0 )",
+				("while ( (yy_current_state = yy_nxt[yy_current_state][ %s ]) > 0 )",
 				 char_map);
 		else
 			indent_put2s
-				("while ( (yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN +  %s]) > 0 )",
+				("while ( (yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN +  %s ]) > 0 )",
 				 char_map);
 
 		indent_up ();

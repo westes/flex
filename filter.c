@@ -102,7 +102,8 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
  * @return newest filter in chain
  */
 struct filter *filter_create_int (struct filter *chain,
-				  int (*filter_func) (struct filter *), void *extra)
+				  int (*filter_func) (struct filter *),
+				  void *extra)
 {
 	struct filter *f;
 
@@ -134,8 +135,17 @@ bool filter_apply_chain (struct filter * chain)
 {
 	int     pid, pipes[2];
 
-	if (chain == NULL)
-		return true;
+    /* Tricky recursion, since we want to begin the chain
+     * at the END. Why? Because we need all the forked processes
+     * to be children of the main flex process.
+     */
+	if (chain)
+		filter_apply_chain(chain->next);
+    else
+        return true;
+
+    /* Now we are the right-most unprocessed link in the chain.
+     */
 
 	fflush (stdout);
 	fflush (stderr);
@@ -152,27 +162,27 @@ bool filter_apply_chain (struct filter * chain)
 		if (dup2 (pipes[0], 0) == -1)
 			flexfatal (_("dup2(pipes[0],0)"));
 		close (pipes[0]);
-		if ((stdin = fdopen (0, "r")) == NULL)
-			flexfatal (_("fdopen(0) failed"));
 
-        /* recursively apply rest of chain. */
-		filter_apply_chain (chain->next);
+		/* run as a filter, either internally or by exec */
+		if (chain->filter_func) {
+            int r;
 
-        /* run this filter, either internally or by execvp */
-        if  (chain->filter_func){
-            int r = chain->filter_func(chain);
-            if (r == -1)
-                flexfatal (_("filter_func failed"));
-            else{
-                close(0);
-                close(1);
-                exit(0);
-            }
-        }
-        else{
-            execvp (chain->argv[0], (char **const) (chain->argv));
+            /* setup streams again */
+            if ((stdin = fdopen (0, "r")) == NULL)
+                flexfatal (_("fdopen(0) failed"));
+            if ((stdout = fdopen (1, "w")) == NULL)
+                flexfatal (_("fdopen(1) failed"));
+
+			if((r = chain->filter_func (chain)) == -1)
+				flexfatal (_("filter_func failed"));
+            exit(0);
+		}
+		else {
+            execvp (chain->argv[0],
+                (char **const) (chain->argv));
             flexfatal (_("exec failed"));
-        }
+		}
+
 		exit (1);
 	}
 
@@ -211,17 +221,80 @@ int filter_truncate (struct filter *chain, int max_len)
 /** Splits the chain in order to write to a header file.
  *  Similar in spirit to the 'tee' program.
  *  The header file name is in extra.
+ *  @return 0 (zero) on success, and -1 on failure.
  */
-int filter_tee (struct filter *chain)
+int filter_tee_header (struct filter *chain)
 {
-    const int readsz = 512;
-    char * buf;
-    
-    buf = (char*)flex_alloc(readsz);
-    header_out = fopen (headerfilename, "w");
-    
-    execlp("cat","cat",NULL);
+	/* This function reads from stdin and writes to both the C file and the
+	 * header file at the same time.
+	 */
 
+	const int readsz = 512;
+	char   *buf;
+	int     to_cfd;
+	FILE   *to_c, *to_h;
+
+    fprintf(stderr,"filter_tee()\n");fflush(stderr);
+
+	if (!chain->extra) {
+		/* No header file was specified, so we become a transparent
+		 * filter.
+		 */
+        fprintf(stderr,"\texeclp(cat)\n");fflush(stderr);
+		execlp ("cat", "cat", NULL);
+		flexfatal (_("exec failed"));
+	}
+
+	/* Store a copy of the stdout pipe, which is already piped to C file
+	 * through the running chain. Then create a new pipe to the H file as
+	 * stdout, and fork the rest of the chain again.
+	 */
+
+	if ((to_cfd = dup (1)) == -1)
+		flexfatal (_("dup(1) failed"));
+
+	if (freopen ((char *) chain->extra, "w", stdout) == NULL)
+		flexfatal (_("freopen(headerfilename) failed"));
+
+	filter_apply_chain (chain->next);
+
+	to_c = fdopen (to_cfd, "w");
+	to_h = stdout;
+
+	/* Now to_c is a pipe to the C branch, and to_h is a pipe to the H branch.
+	 */
+
+    fprintf(stderr,"\tpid(%d): to_c=%d, to_h=%d\n",
+            getpid(),fileno(to_c),fileno(to_h)); fflush(stderr);
+
+	fputs ("m4_changequote`'m4_dnl\n", to_h);
+	fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_h);
+	fputs ("m4_define( [[M4_YY_IN_HEADER]],[[]])m4_dnl\n", to_h);
+	fprintf (to_h, "#ifndef %sHEADER_H\n", prefix);
+	fprintf (to_h, "#define %sHEADER_H 1\n", prefix);
+	fprintf (to_h, "#define %sIN_HEADER 1\n\n", prefix);
+
+	buf = (char *) flex_alloc (readsz);
+	while (fgets (buf, readsz, stdin)) {
+		fputs (buf, to_c);
+		fputs (buf, to_h);
+	}
+
+	fprintf (to_h, "\n");
+	fprintf (to_h, "#undef %sIN_HEADER\n", prefix);
+	fprintf (to_h, "#endif /* %sHEADER_H */\n", prefix);
+	fputs ("m4_undefine( [[M4_YY_IN_HEADER]])m4_dnl\n", to_h);
+
+	fflush (to_c);
+	fclose (to_c);
+
+	fflush (to_h);
+    fclose (to_h);
+
+    while(wait(0) > 0)
+        ;
+
+	exit(0);
     return 0;
 }
 

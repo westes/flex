@@ -1102,8 +1102,8 @@ extern struct Buf yydmap_buf;
 extern struct Buf m4defs_buf;
 
 /* For blocking out code from the header file. */
-#define OUT_BEGIN_CODE() out_str("#ifndef %sIN_HEADER /* YY-DISCARD-FROM-HEADER */\n",prefix)
-#define OUT_END_CODE() out_str("#endif /* !%sIN_HEADER YY-END-DISCARD-FROM-HEADER */\n",prefix);
+#define OUT_BEGIN_CODE() outn("m4_ifdef( [[M4_YY_IN_HEADER]],,[[")
+#define OUT_END_CODE()   outn("]])")
 
 /* For setjmp/longjmp (instead of calling exit(2)). Linkage in main.c */
 extern jmp_buf flex_main_jmp_buf;
@@ -1161,5 +1161,6 @@ struct filter *filter_create_int PROTO((struct filter *chain,
                   void *extra));
 extern bool filter_apply_chain PROTO((struct filter * chain));
 extern int filter_truncate (struct filter * chain, int max_len);
+extern int filter_tee_header PROTO((struct filter *chain));
 
 #endif /* not defined FLEXDEF_H */

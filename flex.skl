@@ -1486,7 +1486,8 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 
 
 %if-c-only
-#ifndef YY_NO_UNPUT
+m4_ifdef( [[M4_YY_NO_UNPUT]],,
+[[
     static void yyunput YYFARGS2( int,c, register char *,yy_bp)
 %endif
 %if-c++-only
@@ -1534,7 +1535,7 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
 	YY_G(yy_c_buf_p) = yy_cp;
 	}
 %if-c-only
-#endif	/* ifndef YY_NO_UNPUT */
+]])
 %endif
 
 %if-c-only
@@ -2397,7 +2398,6 @@ int yylex_init( ptr_yy_globals )
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
 int yylex_destroy  YYFARGS0(void)
 {
-	int i;
     M4_YY_DECL_GUTS_VAR();
 
     /* Pop the buffer stack, destroying each element. */

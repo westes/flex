@@ -307,7 +307,7 @@ LEXOPT		[aceknopr]
 	stdinit		do_stdinit = option_sense;
 	stdout		use_stdout = option_sense;
     unistd      ACTION_IFDEF("YY_NO_UNISTD_H", ! option_sense);
-	unput		ACTION_IFDEF("YY_NO_UNPUT", ! option_sense);
+	unput		ACTION_M4_IFDEF("M4_YY_NO_UNPUT", ! option_sense);
 	verbose		printstats = option_sense;
 	warn		nowarn = ! option_sense;
 	yylineno	do_yylineno = option_sense; ACTION_M4_IFDEF("M4_YY_USE_LINENO", option_sense);
