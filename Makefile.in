@@ -79,8 +79,8 @@ LINTSRCS = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.c \
 DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	configure.in Makefile.in mkskel.sh flex.skl \
 	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC \
-	flex.1 flexdoc.1 manual \
-	configure flex.man flexdoc.man
+	flex.1 flexdoc.1 \
+	configure
 
 DIST_NAME = flex
 
