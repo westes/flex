@@ -713,12 +713,20 @@ void gen_NUL_trans()
 		(void) sprintf( NUL_ec_str, "%d", NUL_ec );
 		gen_next_compressed_state( NUL_ec_str );
 
-		if ( reject )
-			indent_puts( "*yy_state_ptr++ = yy_current_state;" );
-
 		do_indent();
-
 		out_dec( "yy_is_jam = (yy_current_state == %d);\n", jamstate );
+
+		if ( reject )
+			{
+			/* Only stack this state if it's a transition we
+			 * actually make.  If we stack it on a jam, then
+			 * the state stack and yy_c_buf_p get out of sync.
+			 */
+			indent_puts( "if ( ! yy_is_jam )" );
+			indent_up();
+			indent_puts( "*yy_state_ptr++ = yy_current_state;" );
+			indent_down();
+			}
 		}
 
 	/* If we've entered an accepting state, back up; note that
