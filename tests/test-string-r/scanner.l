@@ -56,8 +56,10 @@
 #define INPUT_STRING_1  "1234 foo bar"
 #define INPUT_STRING_2  "1234 foo bar *@&@&###@^$#&#*"
 
+int main(void);
+
 int
-main ( int argc, char** argv )
+main ()
 {
     char * buf;
     int len;

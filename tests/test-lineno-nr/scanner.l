@@ -75,8 +75,12 @@ count_newlines (FILE* in)
     return n;
 }
 
+int main ( int, char**);
+
 int
-main ( int argc, char** argv )
+main ( argc,  argv )
+    int argc;
+    char** argv;
 {
     if( argc > 1 )
         printf("%d\n", count_newlines(stdin));

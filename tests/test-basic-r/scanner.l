@@ -50,7 +50,9 @@ WS    [[:blank:]]
 
 %%
 
-int main (int argc, char** argv )
+int main(void);
+
+int main ()
 {
     yyscan_t  lexer;
     yylex_init( &lexer );

@@ -84,8 +84,10 @@ static int process_text(char* s, yyscan_t  scanner)
     return (int)(*s) + (int) *(s + yyget_leng(scanner)-1);
 }
 
+int main(void);
+
 #ifndef HAVE_LIBPTHREAD
-  int main( int argc, char** argv) {
+  int main () {
     printf(
        "TEST ABORTED because pthread library not available \n"
        "-- This is expected on some systems. It is not a flex error.\n" );
@@ -118,6 +120,8 @@ void * thread_func ( void* arg )
 
     for( i =0 ; i < N_SCANS ; i++ )
     {
+        int main(void);
+
         int next;
         yyscan_t  scanner;
         FILE * fp;
@@ -146,7 +150,7 @@ void * thread_func ( void* arg )
     return NULL;
 }
 
-int main ( int argc, char** argv )
+int main ()
 {
     int i;
     pthread_t threads[N_THREADS];

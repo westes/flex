@@ -32,6 +32,9 @@
 #include "config.h"
 
 /* Insanely small read buffer. This pretty much guarantees at least one realloc. */
+#ifdef YY_BUF_SIZE
+#undef YY_BUF_SIZE
+#endif
 #define YY_BUF_SIZE 8
 
 %}
@@ -77,7 +80,7 @@ static void dump_mem(FILE* fp){
     int i;
     fprintf(fp,"\tptrs[%d] = {", nptrs);
     for (i=0; i < arrsz; i++)
-        fprintf(fp," {%#lx,%d},", (long)ptrs[i].p, (long)ptrs[i].sz);
+        fprintf(fp," {%#lx,%ld},", (long)ptrs[i].p, (long)ptrs[i].sz);
     
     fprintf(fp,"}\n");
 }
@@ -123,7 +126,7 @@ void * yyrealloc(void* p, size_t n )
             ptrs[i].sz = n;
 
             printf("yyflex_realloc(%#10lx,%8ld) total=%8ld return=%8lx\n",
-                    (long)p,n,(long)total_mem,(long)ptrs[i].p);
+                    (long)p,(long)n,(long)total_mem,(long)ptrs[i].p);
             dump_mem(stdout);
             return ptrs[i].p;
         }
@@ -153,8 +156,10 @@ void yyfree(void* p )
     exit(1);
 }
 
+int main(void);
+
 int
-main ( int argc, char** argv )
+main ()
 {
     arrsz = 1;
     ptrs  = (struct memsz*)calloc(1,sizeof(struct memsz));

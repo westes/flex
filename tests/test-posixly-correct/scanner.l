@@ -34,6 +34,8 @@
 
 #define NUM_TESTS 1
 char * tests[NUM_TESTS] =  { "ababab"};
+int main(void);
+
 int tests_ok[NUM_TESTS] =  { 0 };
 
 %}
@@ -51,7 +53,7 @@ ab{3}    tests_ok[0] = 1; return 0;
 %%
 
 
-int main ( int argc, char** argv )
+int main ()
 {
     YY_BUFFER_STATE state;
     int i;

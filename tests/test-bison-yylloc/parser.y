@@ -36,6 +36,8 @@
 #define YYLEX_PARAM   scanner
 
 int yyerror(char* msg);
+extern int testget_lineno(void*);
+
 
 /* A dummy function. A check against seg-faults in yylval->str. */
 int process_text(char* s) {

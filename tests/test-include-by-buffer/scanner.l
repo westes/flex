@@ -80,6 +80,8 @@ int include_stack_ptr = 0;
 
 %%
 
+int main(int argc, char** argv);
+
 int
 main ( int argc, char** argv )
 {

@@ -51,7 +51,9 @@ WS    [[:blank:]]
 
 %%
 
-int main (int argc, char** argv )
+int main(void);
+
+int main ()
 {
     yyin = stdin;
     yyout = stdout;
