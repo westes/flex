@@ -1,4 +1,4 @@
-/* flexccl - routines for character classes */
+/* ccl - routines for character classes */
 
 /*
  * Copyright (c) 1987, the University of California
