@@ -53,8 +53,6 @@ RoadMap - notes for developers.
 examples/ - containing examples of some possible flex scanners and a
 few other things. See the file examples/README for more details.
 
-TODO, to.do/ - outstanding bug reports, desired features, etc.
-
-faqs/ - frequently asked questions.
+TODO - outstanding bug reports, desired features, etc.
 
 tests/ - regression tests. See TESTS/README for details.
