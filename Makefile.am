@@ -123,9 +123,9 @@ yylex.o: yylex.c parse.h flexdef.h config.h
 skel.c: flex.skl mkskel.sh
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir)/flex.skl >skel.c
 
-$(man_MANS): $(srcdir)/main.c
+$(man_MANS): $(srcdir)/flex
 	for i in $(man_MANS) ; do \
-	$(help2man) --name='flex' --section=`echo $$i|rev|cut -f 1 -d .|rev` flex > $$i ; \
+	$(help2man) --name='fast lexical analyzer generator' --section=`echo $$i|rev|cut -f 1 -d .|rev` $(srcdir)/flex > $$i ; \
 	done
 
 main.o: main.c flexdef.h config.h version.h
