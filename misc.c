@@ -1,24 +1,42 @@
 /* misc - miscellaneous flex routines */
 
 /*
- * Copyright (c) 1987, the University of California
+ * Copyright (c) 1989 The Regents of the University of California.
+ * All rights reserved.
+ *
+ * This code is derived from software contributed to Berkeley by
+ * Vern Paxson.
  * 
  * The United States Government has rights in this work pursuant to
  * contract no. DE-AC03-76SF00098 between the United States Department of
  * Energy and the University of California.
- * 
- * This program may be redistributed.  Enhancements and derivative works
- * may be created provided the new works, if made available to the general
- * public, are made available for use by anyone.
+ *
+ * Redistribution and use in source and binary forms are permitted
+ * provided that the above copyright notice and this paragraph are
+ * duplicated in all such forms and that any documentation,
+ * advertising materials, and other materials related to such
+ * distribution and use acknowledge that the software was developed
+ * by the University of California, Berkeley.  The name of the
+ * University may not be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
+
+#ifndef lint
+
+static char copyright[] =
+    "@(#) Copyright (c) 1989 The Regents of the University of California.\n\
+     All rights reserved.\n";
+
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+
+#endif
 
 #include <ctype.h>
 #include "flexdef.h"
-
-#ifndef lint
-static char rcsid[] =
-    "@(#) $Header$ (LBL)";
-#endif
 
 char *malloc(), *realloc();
 
