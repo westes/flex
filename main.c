@@ -1536,16 +1536,27 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 
 	else
 		{
-		if ( yytext_is_array && !reentrant)
-			outn( "extern char yytext[];\n" );
 
-		else
+		/* Watch out: yytext_ptr is a variable when yytext is an array,
+		 * but it's a macro when yytext is a pointer.
+		 */
+		if ( yytext_is_array )
 			{
-            outn( "#ifndef YY_REENTRANT" );
-			outn( "extern char *yytext;" );
-            outn( "#endif" );
-			outn( "#define yytext_ptr yytext" );
+			if ( !reentrant )
+				outn( "extern char yytext[];\n" );
 			}
+		else
+		{
+			if ( reentrant )
+				{
+				outn( "#define yytext_ptr yytext_r" );
+				}
+			else
+				{
+				outn( "extern char *yytext;" );
+			    outn( "#define yytext_ptr yytext" );
+				}
+		}
 
 		if ( yyclass )
 			flexerror(

@@ -214,7 +214,7 @@ extern FILE *yyin, *yyout;
 		} \
 	while ( 0 )
 
-#define unput(c) yyunput( c, yytext_ptr YY_CALL_LAST_ARG )
+#define unput(c) yyunput( c, YY_G(yytext_ptr) YY_CALL_LAST_ARG )
 
 /* The following is because we cannot portably get our hands on size_t
  * (without autoconf's help, which isn't available because we want
@@ -388,7 +388,7 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
  * corresponding action - sets up yytext.
  */
 #define YY_DO_BEFORE_ACTION \
-	yytext_ptr = yy_bp; \
+	YY_G(yytext_ptr) = yy_bp; \
 %% [2.0] code to fiddle yytext and yyleng for yymore() goes here \
 	YY_G(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
@@ -794,7 +794,7 @@ do_action:	/* This label is used only to access EOF actions. */
 	case YY_END_OF_BUFFER:
 		{
 		/* Amount of text matched not including the EOB char. */
-		int yy_amount_of_matched_text = (int) (yy_cp - yytext_ptr) - 1;
+		int yy_amount_of_matched_text = (int) (yy_cp - YY_G(yytext_ptr)) - 1;
 
 		/* Undo the effects of YY_DO_BEFORE_ACTION. */
 		*yy_cp = YY_G(yy_hold_char);
@@ -827,7 +827,7 @@ do_action:	/* This label is used only to access EOF actions. */
 			{ /* This was really a NUL. */
 			yy_state_type yy_next_state;
 
-			YY_G(yy_c_buf_p) = yytext_ptr + yy_amount_of_matched_text;
+			YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + yy_amount_of_matched_text;
 
 			yy_current_state = yy_get_previous_state( YY_CALL_ONLY_ARG );
 
@@ -842,7 +842,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 			yy_next_state = yy_try_NUL_trans( yy_current_state YY_CALL_LAST_ARG);
 
-			yy_bp = yytext_ptr + YY_MORE_ADJ;
+			yy_bp = YY_G(yytext_ptr) + YY_MORE_ADJ;
 
 			if ( yy_next_state )
 				{
@@ -876,7 +876,7 @@ do_action:	/* This label is used only to access EOF actions. */
 					 * YY_NULL, it'll still work - another
 					 * YY_NULL will get returned.
 					 */
-					YY_G(yy_c_buf_p) = yytext_ptr + YY_MORE_ADJ;
+					YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + YY_MORE_ADJ;
 
 					yy_act = YY_STATE_EOF(YY_START);
 					goto do_action;
@@ -892,12 +892,12 @@ do_action:	/* This label is used only to access EOF actions. */
 
 			case EOB_ACT_CONTINUE_SCAN:
 				YY_G(yy_c_buf_p) =
-					yytext_ptr + yy_amount_of_matched_text;
+					YY_G(yytext_ptr) + yy_amount_of_matched_text;
 
 				yy_current_state = yy_get_previous_state( YY_CALL_ONLY_ARG );
 
 				yy_cp = YY_G(yy_c_buf_p);
-				yy_bp = yytext_ptr + YY_MORE_ADJ;
+				yy_bp = YY_G(yytext_ptr) + YY_MORE_ADJ;
 				goto yy_match;
 
 			case EOB_ACT_LAST_MATCH:
@@ -907,7 +907,7 @@ do_action:	/* This label is used only to access EOF actions. */
 				yy_current_state = yy_get_previous_state( YY_CALL_ONLY_ARG );
 
 				yy_cp = YY_G(yy_c_buf_p);
-				yy_bp = yytext_ptr + YY_MORE_ADJ;
+				yy_bp = YY_G(yytext_ptr) + YY_MORE_ADJ;
 				goto yy_find_action;
 			}
 		break;
@@ -1028,7 +1028,7 @@ int yyFlexLexer::yy_get_next_buffer()
 %*
 	{
 	register char *dest = YY_G(yy_current_buffer)->yy_ch_buf;
-	register char *source = yytext_ptr;
+	register char *source = YY_G(yytext_ptr);
 	register int number_to_move, i;
 	int ret_val;
 
@@ -1038,7 +1038,7 @@ int yyFlexLexer::yy_get_next_buffer()
 
 	if ( YY_G(yy_current_buffer)->yy_fill_buffer == 0 )
 		{ /* Don't try to fill the buffer, so this is an EOF. */
-		if ( YY_G(yy_c_buf_p) - yytext_ptr - YY_MORE_ADJ == 1 )
+		if ( YY_G(yy_c_buf_p) - YY_G(yytext_ptr) - YY_MORE_ADJ == 1 )
 			{
 			/* We matched a single character, the EOB, so
 			 * treat this as a final EOF.
@@ -1058,7 +1058,7 @@ int yyFlexLexer::yy_get_next_buffer()
 	/* Try to read more data. */
 
 	/* First move last chars to start of buffer. */
-	number_to_move = (int) (YY_G(yy_c_buf_p) - yytext_ptr) - 1;
+	number_to_move = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr)) - 1;
 
 	for ( i = 0; i < number_to_move; ++i )
 		*(dest++) = *(source++);
@@ -1149,7 +1149,7 @@ int yyFlexLexer::yy_get_next_buffer()
 	YY_G(yy_current_buffer)->yy_ch_buf[YY_G(yy_n_chars)] = YY_END_OF_BUFFER_CHAR;
 	YY_G(yy_current_buffer)->yy_ch_buf[YY_G(yy_n_chars) + 1] = YY_END_OF_BUFFER_CHAR;
 
-	yytext_ptr = &YY_G(yy_current_buffer)->yy_ch_buf[0];
+	YY_G(yytext_ptr) = &YY_G(yy_current_buffer)->yy_ch_buf[0];
 
 	return ret_val;
 	}
@@ -1174,7 +1174,7 @@ yy_state_type yyFlexLexer::yy_get_previous_state()
 
 %% [15.0] code to get the start state into yy_current_state goes here
 
-	for ( yy_cp = yytext_ptr + YY_MORE_ADJ; yy_cp < YY_G(yy_c_buf_p); ++yy_cp )
+	for ( yy_cp = YY_G(yytext_ptr) + YY_MORE_ADJ; yy_cp < YY_G(yy_c_buf_p); ++yy_cp )
 		{
 %% [16.0] code to find the next state goes here
 		}
@@ -1252,7 +1252,7 @@ void yyFlexLexer::yyunput( int c, register char* yy_bp YY_LAST_ARG)
 
 %% [18.0] update yylineno here
 
-	yytext_ptr = yy_bp;
+	YY_G(yytext_ptr) = yy_bp;
 	YY_G(yy_hold_char) = *yy_cp;
 	YY_G(yy_c_buf_p) = yy_cp;
 	}
@@ -1293,7 +1293,7 @@ int yyFlexLexer::yyinput()
 
 		else
 			{ /* need more input */
-			int offset = YY_G(yy_c_buf_p) - yytext_ptr;
+			int offset = YY_G(yy_c_buf_p) - YY_G(yytext_ptr);
 			++YY_G(yy_c_buf_p);
 
 			switch ( yy_get_next_buffer( YY_CALL_ONLY_ARG ) )
@@ -1329,7 +1329,7 @@ int yyFlexLexer::yyinput()
 					}
 
 				case EOB_ACT_CONTINUE_SCAN:
-					YY_G(yy_c_buf_p) = yytext_ptr + offset;
+					YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + offset;
 					break;
 				}
 			}
@@ -1415,7 +1415,7 @@ void yyFlexLexer::yy_load_buffer_state()
 %*
 	{
 	YY_G(yy_n_chars) = YY_G(yy_current_buffer)->yy_n_chars;
-	yytext_ptr = YY_G(yy_c_buf_p) = YY_G(yy_current_buffer)->yy_buf_pos;
+	YY_G(yytext_ptr) = YY_G(yy_c_buf_p) = YY_G(yy_current_buffer)->yy_buf_pos;
 	yyin = YY_G(yy_current_buffer)->yy_input_file;
 	YY_G(yy_hold_char) = *YY_G(yy_c_buf_p);
 	}
