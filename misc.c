@@ -39,6 +39,19 @@ static char rcsid[] =
 #include "flexdef.h"
 
 
+/* ANSI C does not guarantee that isascii() is defined */
+#ifndef isascii
+#define isascii(c) ((c) <= 0177)
+#endif
+
+
+
+/* declare functions that have forward references */
+
+void dataflush PROTO(());
+int otoi PROTO((Char []));
+
+
 /* action_out - write the actions from the temporary file to lex.yy.c
  *
  * synopsis
@@ -47,7 +60,7 @@ static char rcsid[] =
  *     Copies the action file up to %% (or end-of-file) to lex.yy.c
  */
 
-action_out()
+void action_out()
 
     {
     char buf[MAXLINE];
@@ -62,11 +75,11 @@ action_out()
 
 /* allocate_array - allocate memory for an integer array of the given size */
 
-char *allocate_array( size, element_size )
+void *allocate_array( size, element_size )
 int size, element_size;
 
     {
-    register char *mem;
+    register void *mem;
 
     /* on 16-bit int machines (e.g., 80286) we might be trying to
      * allocate more than a signed int can hold, and that won't
@@ -75,7 +88,7 @@ int size, element_size;
     if ( element_size * size <= 0 )
         flexfatal( "request for < 1 byte in allocate_array()" );
 
-    mem = malloc( (unsigned) (element_size * size) );
+    mem = (void *) malloc( (unsigned) (element_size * size) );
 
     if ( mem == NULL )
 	flexfatal( "memory allocation failed in allocate_array()" );
@@ -144,7 +157,7 @@ register Char *str;
  *   v - the array to be sorted
  *   n - the number of elements of 'v' to be sorted */
 
-bubble( v, n )
+void bubble( v, n )
 int v[], n;
 
     {
@@ -255,7 +268,8 @@ register Char *str;
  *   v - array to be sorted
  *   n - number of elements of v to be sorted
  */
-cshell( v, n, special_case_0 )
+
+void cshell( v, n, special_case_0 )
 Char v[];
 int n, special_case_0;
 
@@ -293,7 +307,8 @@ int n, special_case_0;
  * synopsis
  *    dataend();
  */
-dataend()
+
+void dataend()
 
     {
     if ( datapos > 0 )
@@ -313,7 +328,8 @@ dataend()
  * synopsis
  *    dataflush();
  */
-dataflush()
+
+void dataflush()
 
     {
     putchar( '\n' );
@@ -330,6 +346,40 @@ dataflush()
     /* reset the number of characters written on the current line */
     datapos = 0;
     }
+
+
+/* flexerror - report an error message and terminate
+ *
+ * synopsis
+ *    char msg[];
+ *    flexerror( msg );
+ */
+
+void flexerror( msg )
+char msg[];
+
+    {
+    fprintf( stderr, "%s: %s\n", program_name, msg );
+
+    flexend( 1 );
+    }
+
+
+/* flexfatal - report a fatal error message and terminate
+ *
+ * synopsis
+ *    char msg[];
+ *    flexfatal( msg );
+ */
+
+void flexfatal( msg )
+char msg[];
+
+    {
+    fprintf( stderr, "%s: fatal internal error, %s\n", program_name, msg );
+    flexend( 1 );
+    }
+
 
 /* flex_gettime - return current time
  *
@@ -382,7 +432,7 @@ char *flex_gettime()
  *    lerrif( msg, arg );
  */
 
-lerrif( msg, arg )
+void lerrif( msg, arg )
 char msg[];
 int arg;
 
@@ -400,7 +450,7 @@ int arg;
  *    lerrsf( msg, arg );
  */
 
-lerrsf( msg, arg )
+void lerrsf( msg, arg )
 char msg[], arg[];
 
     {
@@ -408,39 +458,6 @@ char msg[], arg[];
 
     (void) sprintf( errmsg, msg, arg );
     flexerror( errmsg );
-    }
-
-
-/* flexerror - report an error message and terminate
- *
- * synopsis
- *    char msg[];
- *    flexerror( msg );
- */
-
-flexerror( msg )
-char msg[];
-
-    {
-    fprintf( stderr, "%s: %s\n", program_name, msg );
-
-    flexend( 1 );
-    }
-
-
-/* flexfatal - report a fatal error message and terminate
- *
- * synopsis
- *    char msg[];
- *    flexfatal( msg );
- */
-
-flexfatal( msg )
-char msg[];
-
-    {
-    fprintf( stderr, "%s: fatal internal error, %s\n", program_name, msg );
-    flexend( 1 );
     }
 
 
@@ -466,7 +483,7 @@ Char str[];
 
 /* line_directive_out - spit out a "# line" statement */
 
-line_directive_out( output_file_name )
+void line_directive_out( output_file_name )
 FILE *output_file_name;
 
     {
@@ -483,7 +500,7 @@ FILE *output_file_name;
  *
  *  generates a data statement initializing the current 2-D array to "value"
  */
-mk2data( value )
+void mk2data( value )
 int value;
 
     {
@@ -515,7 +532,7 @@ int value;
  *  generates a data statement initializing the current array element to
  *  "value"
  */
-mkdata( value )
+void mkdata( value )
 int value;
 
     {
@@ -675,7 +692,7 @@ register int c;
 	    case '\b': return ( "\\b" );
 
 	    default:
-		sprintf( rform, "\\%.3o", c );
+		(void) sprintf( rform, "\\%.3o", c );
 		return ( rform );
 	    }
 	}
@@ -695,18 +712,19 @@ register int c;
 
 /* reallocate_array - increase the size of a dynamic array */
 
-char *reallocate_array( array, size, element_size )
-char *array;
+void *reallocate_array( array, size, element_size )
+void *array;
 int size, element_size;
 
     {
-    register char *new_array;
+    register void *new_array;
 
     /* same worry as in allocate_array(): */
     if ( size * element_size <= 0 )
         flexfatal( "attempt to increase array size by less than 1 byte" );
 
-    new_array = realloc( array, (unsigned) (size * element_size ));
+    new_array =
+	(void *) realloc( (char *)array, (unsigned) (size * element_size ));
 
     if ( new_array == NULL )
 	flexfatal( "attempt to increase array size failed" );
@@ -724,7 +742,7 @@ int size, element_size;
  *    Copies from skelfile to stdout until a line beginning with "%%" or
  *    EOF is found.
  */
-skelout()
+void skelout()
 
     {
     char buf[MAXLINE];
@@ -747,7 +765,7 @@ skelout()
  * element_n.  Formats the output with spaces and carriage returns.
  */
 
-transition_struct_out( element_v, element_n )
+void transition_struct_out( element_v, element_n )
 int element_v, element_n;
 
     {
