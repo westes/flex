@@ -8,18 +8,17 @@
 
 #define FLEX_SCANNER
 
+/* amount of stuff to slurp up with each read */
+#ifndef YY_READ_BUF_SIZE
+#define YY_READ_BUF_SIZE 8192
+#endif
+
+#ifndef YY_BUF_SIZE
+#define YY_BUF_SIZE (YY_READ_BUF_SIZE * 2) /* size of input buffer */
+#endif
+
 /* returned upon end-of-file */
 #define YY_END_TOK 0
-
-/* amount of stuff to slurp up with each read */
-#define YY_READ_BUF_SIZE 8192
-
-#define YY_BUF_SIZE (YY_READ_BUF_SIZE * 2) /* size of input buffer */
-
-/* number of characters one rule can match.  One less than YY_BUF_SIZE to make
- * sure we never access beyond the end of an array
- */
-#define YY_BUF_MAX (YY_BUF_SIZE - 1)
 
 /* copy whatever the last rule matched to the standard output */
 
@@ -32,6 +31,7 @@
 	if ( (result = read( fileno(yyin), buf, max_size )) < 0 ) \
 	    YY_FATAL_ERROR( "read() in flex scanner failed" );
 #define YY_NULL 0
+#define yyterminate() return ( YY_NULL )
 
 /* report a fatal error */
 #define YY_FATAL_ERROR(msg) \
@@ -45,14 +45,25 @@
 #define yywrap() 1
 
 /* enter a start condition.  This macro really ought to take a parameter,
- * but we do it the disgusting crufty way that old Unix-lex does it
+ * but we do it the disgusting crufty way forced on us by the ()-less
+ * definition of BEGIN
  */
-#define BEGIN yy_start = 1 +
+#define BEGIN yy_start = 1 + 2 *
+
+/* action number for EOF rule of a given start state */
+#define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
+
+/* special action meaning "start processing a new file" */
+#define YY_NEW_FILE goto new_file
 
 /* default declaration of generated scanner - a define so the user can
  * easily add parameters
  */
+#ifdef __STDC__
+#define YY_DECL int yylex( void )
+#else
 #define YY_DECL int yylex()
+#endif
 
 /* code executed at the end of each rule */
 #define YY_BREAK break;
@@ -87,9 +98,14 @@
 
 #define YY_USER_ACTION
 
-%% section 1 code and the data tables for the DFA go here
-
 FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
+char *yytext;
+
+#ifndef __STDC__
+#define const
+#endif
+
+%% section 1 code and the data tables for the DFA go here
 
 /* these variables are all declared out here so that section 3 code can
  * manipulate them
@@ -111,16 +127,23 @@ static char yy_ch_buf[YY_BUF_SIZE + 2];
 
 /* yy_hold_char holds the character lost when yytext is formed */
 static char yy_hold_char;
-char *yytext;
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
+#ifdef __STDC__
+static yy_state_type yy_get_previous_state( void );
+static int yy_get_next_buffer( void );
+static void yyunput( int c, char *buf_ptr );
+static int input( void );
+static void yyrestart( FILE *input_file );
+#else
 static yy_state_type yy_get_previous_state();
 static int yy_get_next_buffer();
-
 static void yyunput();
 static int input();
+static void yyrestart();
+#endif
 
 YY_DECL
     {
@@ -177,13 +200,13 @@ new_file:
 	/* yy_bp points to the position in yy_ch_buf of the start of the
 	 * current run.
 	 */
-	yy_bp = yy_cp;
+%% yymore()-related code goes here
 
 %% code to set up and find next match goes here
 
-	/* bogus while loop to let YY_BACK_TRACK and EOB_ACT_LAST_MATCH
-	 * actions branch here without introducing an optimizer-daunting
-	 * goto
+	/* bogus while loop to let YY_BACK_TRACK, EOB_ACT_LAST_MATCH,
+	 * and EOF actions branch here without introducing an optimizer-
+	 * daunting goto
 	 */
 	while ( 1 )
 	    {
@@ -196,6 +219,8 @@ new_file:
 	    fprintf( stderr, "--accepting rule #%d (\"%s\")\n",
 		     yy_act, yytext );
 #endif
+
+do_action:	/* this label is used only to access EOF actions */
 	    switch ( yy_act )
 		{
 %% actions go here
@@ -221,11 +246,13 @@ new_file:
 				 * will get returned.
 				 */
 				yy_c_buf_p = yytext;
-				return ( YY_NULL );
+
+				yy_act = YY_STATE_EOF((yy_start - 1) / 2);
+				goto do_action;
 				}
 
 			    else
-				goto new_file;
+				YY_NEW_FILE;
 			    }
 			    break;
 
@@ -270,65 +297,70 @@ new_file:
 static int yy_get_next_buffer()
 
     {
+    register char *dest = yy_ch_buf;
+    register char *source = yytext - 1; /* copy prev. char, too */
+    register int number_to_move, i;
+    int ret_val;
+    
     if ( yy_c_buf_p != &yy_ch_buf[yy_n_chars + 1] )
 	{
 	YY_FATAL_ERROR( "NULL in input" );
 	/*NOTREACHED*/
 	}
 
-    else
-	{ /* try to read more data */
-	register char *dest = yy_ch_buf;
-	register char *source = yytext - 1; /* copy prev. char, too */
-	register int number_to_move, i;
-	int ret_val;
-	
-	/* first move last chars to start of buffer */
-	number_to_move = yy_c_buf_p - yytext;
+    /* try to read more data */
 
-	for ( i = 0; i < number_to_move; ++i )
-	    *(dest++) = *(source++);
+    /* first move last chars to start of buffer */
+    number_to_move = yy_c_buf_p - yytext;
 
-	if ( yy_eof_has_been_seen )
-	    /* don't do the read, it's not guaranteed to return an EOF,
-	     * just force an EOF
-	     */
-	    yy_n_chars = 0;
+    for ( i = 0; i < number_to_move; ++i )
+	*(dest++) = *(source++);
 
-	else
-	    /* read in more data */
-	    YY_INPUT( (&yy_ch_buf[number_to_move]), yy_n_chars,
-		      YY_BUF_SIZE - number_to_move - 1 );
-
-	if ( yy_n_chars == 0 )
-	    {
-	    if ( number_to_move == 1 )
-		ret_val = EOB_ACT_END_OF_FILE;
-	    else
-		ret_val = EOB_ACT_LAST_MATCH;
-
-	    yy_eof_has_been_seen = 1;
-	    }
-
-	else
-	    ret_val = EOB_ACT_RESTART_SCAN;
-
-	yy_n_chars += number_to_move;
-	yy_ch_buf[yy_n_chars] = YY_END_OF_BUFFER_CHAR;
-	yy_ch_buf[yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
-
-	/* yytext begins at the second character in
-	 * yy_ch_buf; the first character is the one which
-	 * preceded it before reading in the latest buffer;
-	 * it needs to be kept around in case it's a
-	 * newline, so yy_get_previous_state() will have
-	 * with '^' rules active
+    if ( yy_eof_has_been_seen )
+	/* don't do the read, it's not guaranteed to return an EOF,
+	 * just force an EOF
 	 */
+	yy_n_chars = 0;
 
-	yytext = &yy_ch_buf[1];
+    else
+	{
+	int num_to_read = YY_BUF_SIZE - number_to_move - 1;
 
-	return ( ret_val );
+	if ( num_to_read > YY_READ_BUF_SIZE )
+	    num_to_read = YY_READ_BUF_SIZE;
+
+	/* read in more data */
+	YY_INPUT( (&yy_ch_buf[number_to_move]), yy_n_chars, num_to_read );
 	}
+
+    if ( yy_n_chars == 0 )
+	{
+	if ( number_to_move == 1 )
+	    ret_val = EOB_ACT_END_OF_FILE;
+	else
+	    ret_val = EOB_ACT_LAST_MATCH;
+
+	yy_eof_has_been_seen = 1;
+	}
+
+    else
+	ret_val = EOB_ACT_RESTART_SCAN;
+
+    yy_n_chars += number_to_move;
+    yy_ch_buf[yy_n_chars] = YY_END_OF_BUFFER_CHAR;
+    yy_ch_buf[yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
+
+    /* yytext begins at the second character in
+     * yy_ch_buf; the first character is the one which
+     * preceded it before reading in the latest buffer;
+     * it needs to be kept around in case it's a
+     * newline, so yy_get_previous_state() will have
+     * with '^' rules active
+     */
+
+    yytext = &yy_ch_buf[1];
+
+    return ( ret_val );
     }
 
 
@@ -355,9 +387,13 @@ static yy_state_type yy_get_previous_state()
     }
 
 
+#ifdef __STDC__
+static void yyunput( int c, register char *yy_bp )
+#else
 static void yyunput( c, yy_bp )
 int c;
 register char *yy_bp;
+#endif
 
     {
     register char *yy_cp = yy_c_buf_p;
@@ -440,4 +476,20 @@ static int input()
     yy_hold_char = *++yy_c_buf_p;
 
     return ( c );
+    }
+
+
+#ifdef __STDC__
+static void yyrestart( FILE *input_file )
+#else
+static void yyrestart( input_file )
+FILE *input_file;
+#endif
+
+    {
+    if ( yyin != stdin )
+	fclose( yyin );
+
+    yyin = input_file;
+    yy_init = 1;
     }

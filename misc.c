@@ -289,11 +289,15 @@ dataflush()
     datapos = 0;
     }
 
-/* gettime - return current time
+/* flex_gettime - return current time
  *
  * synopsis
- *    char *gettime(), *time_str;
- *    time_str = gettime();
+ *    char *flex_gettime(), *time_str;
+ *    time_str = flex_gettime();
+ *
+ * note
+ *    the routine name has the "flex_" prefix because of name clashes
+ *    with Turbo-C
  */
 
 /* include sys/types.h to use time_t and make lint happy */
@@ -311,7 +315,7 @@ dataflush()
 typedef long time_t;
 #endif
 
-char *gettime()
+char *flex_gettime()
 
     {
     time_t t, time();
@@ -377,6 +381,7 @@ char msg[];
 
     {
     fprintf( stderr, "flex: %s\n", msg );
+
     flexend( 1 );
     }
 
@@ -506,48 +511,53 @@ char array[];
     {
     switch ( array[1] )
 	{
-	case 'n': return ( '\n' );
-	case 't': return ( '\t' );
-	case 'f': return ( '\f' );
-	case 'r': return ( '\r' );
+	case 'a': return ( '\a' );
 	case 'b': return ( '\b' );
+	case 'f': return ( '\f' );
+	case 'n': return ( '\n' );
+	case 'r': return ( '\r' );
+	case 't': return ( '\t' );
+	case 'v': return ( '\v' );
 
 	case '0':
-	    if ( isdigit(array[2]) )
-		{ /* \0<octal> */
-		char c, esc_char;
-		register int sptr = 2;
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+	    { /* \<octal> */
+	    char c, esc_char;
+	    register int sptr = 1;
 
-		while ( isdigit(array[sptr]) )
-		    /* don't increment inside loop control because the
-		     * macro will expand it to two increments!  (Not a
-		     * problem with the C version of the macro)
-		     */
-		    ++sptr;
+	    while ( isdigit(array[sptr]) )
+		/* don't increment inside loop control because if
+		 * isdigit() is a macro it will expand it to two
+		 * increments ...
+		 */
+		++sptr;
 
-		c = array[sptr];
-		array[sptr] = '\0';
+	    c = array[sptr];
+	    array[sptr] = '\0';
 
-		esc_char = otoi( array + 2 );
-		array[sptr] = c;
+	    esc_char = otoi( array + 1 );
+	    array[sptr] = c;
 
-		if ( esc_char == '\0' )
-		    {
-		    synerr( "escape sequence for null not allowed" );
-		    return ( 1 );
-		    }
-
-		return ( esc_char );
-		}
-
-	    else
+	    if ( esc_char == '\0' )
 		{
 		synerr( "escape sequence for null not allowed" );
 		return ( 1 );
 		}
+
+	    return ( esc_char );
+	    }
+
+	default:
+	    return ( array[1] );
 	}
-    
-    return ( array[1] );
     }
 
 

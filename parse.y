@@ -24,7 +24,7 @@
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-%token CHAR NUMBER SECTEND SCDECL XSCDECL WHITESPACE NAME PREVCCL
+%token CHAR NUMBER SECTEND SCDECL XSCDECL WHITESPACE NAME PREVCCL EOF_OP
 
 %{
 
@@ -46,6 +46,7 @@ int trlcontxt, xcluflg, cclsorted, varlength, variable_trail_rule;
 char clower();
 
 static int madeany = false;  /* whether we've made the '.' character class */
+int previous_continued_action;	/* whether the previous rule's action was '|' */
 
 %}
 
@@ -59,7 +60,7 @@ goal            :  initlex sect1 sect1end sect2 initforrule
 
 			def_rule = mkstate( -pat );
 
-			finish_rule( def_rule, variable_trail_rule, 0, 0 );
+			finish_rule( def_rule, false, 0, 0 );
 
 			for ( i = 1; i <= lastsc; ++i )
 			    scset[i] = mkbranch( scset[i], def_rule );
@@ -126,6 +127,7 @@ initforrule     :
 			trlcontxt = variable_trail_rule = varlength = false;
 			trailcnt = headcnt = rulelen = 0;
 			current_state_type = STATE_NORMAL;
+			previous_continued_action = continued_action;
 			new_rule();
 			}
 		;
@@ -196,6 +198,16 @@ flexrule        :  scon '^' re eol
 				scset[i] = mkbranch( scset[i], pat );
 			}
 
+                |  scon EOF_OP
+			{ build_eof_action(); }
+
+                |  EOF_OP
+			{
+			/* this EOF applies only to the INITIAL start cond. */
+			actvsc[actvp = 1] = 1;
+			build_eof_action();
+			}
+
                 |  error
 			{ synerr( "unrecognized rule" ); }
 		;
@@ -206,7 +218,7 @@ scon            :  '<' namelist2 '>'
 namelist2       :  namelist2 ',' NAME
                         {
 			if ( (scnum = sclookup( nmstr )) == 0 )
-			    synerr( "undeclared start condition" );
+			    lerrsf( "undeclared start condition %s", nmstr );
 
 			else
 			    actvsc[++actvp] = scnum;
@@ -215,7 +227,7 @@ namelist2       :  namelist2 ',' NAME
 		|  NAME
 			{
 			if ( (scnum = sclookup( nmstr )) == 0 )
-			    synerr( "undeclared start condition" );
+			    lerrsf( "undeclared start condition %s", nmstr );
 			else
 			    actvsc[actvp = 1] = scnum;
 			}
@@ -279,6 +291,28 @@ re              :  re '|' series
 
 			mark_beginning_as_normal( $2 );
 			current_state_type = STATE_NORMAL;
+
+			if ( previous_continued_action )
+			    {
+			    /* we need to treat this as variable trailing
+			     * context so that the backup does not happen
+			     * in the action but before the action switch
+			     * statement.  If the backup happens in the
+			     * action, then the rules "falling into" this
+			     * one's action will *also* do the backup,
+			     * erroneously.
+			     */
+			    if ( ! varlength || headcnt != 0 )
+				{
+				if ( performance_report )
+				    fprintf( stderr,
+    "trailing context rule made variable because of preceding '|' action\n" );
+				}
+
+			    /* mark as variable */
+			    varlength = true;
+			    headcnt = 0;
+			    }
 
 			if ( varlength && headcnt == 0 )
 			    { /* variable trailing context rule */
@@ -557,6 +591,34 @@ string		:  string CHAR
 		;
 
 %%
+
+
+/* build_eof_action - build the "<<EOF>>" action for the active start
+ *                    conditions
+ */
+
+build_eof_action()
+
+    {
+    register int i;
+
+    for ( i = 1; i <= actvp; ++i )
+	{
+	if ( sceof[actvsc[i]] )
+	    lerrsf( "multiple <<EOF>> rules for start condition %s",
+		    scname[actvsc[i]] );
+
+	else
+	    {
+	    sceof[actvsc[i]] = true;
+	    fprintf( temp_action_file, "case YY_STATE_EOF(%s):\n",
+		     scname[actvsc[i]] );
+	    }
+	}
+
+    line_directive_out( temp_action_file );
+    }
+
 
 /* synerr - report a syntax error
  *

@@ -132,7 +132,7 @@ genctbl()
     int end_of_buffer_action = num_rules + 1;
 
     /* table of verify for transition and offset to next state */
-    printf( "static struct yy_trans_info yy_transition[%d] =\n",
+    printf( "static const struct yy_trans_info yy_transition[%d] =\n",
 	    tblend + numecs + 1 );
     printf( "    {\n" );
     
@@ -197,7 +197,7 @@ genctbl()
     printf( "\n" );
 
     /* table of pointers to start states */
-    printf( "static struct yy_trans_info *yy_start_state_list[%d] =\n",
+    printf( "static const struct yy_trans_info *yy_start_state_list[%d] =\n",
 	lastsc * 2 + 1 );
     printf( "    {\n" );
 
@@ -217,7 +217,7 @@ genecs()
 
     {
     register int i, j;
-    static char C_char_decl[] = "static char %s[%d] =\n    {   0,\n";
+    static char C_char_decl[] = "static const char %s[%d] =\n    {   0,\n";
     int numrows;
     char clower();
 
@@ -390,7 +390,8 @@ genftbl()
     /* *everything* is done in terms of arrays starting at 1, so provide
      * a null entry for the zero element of all C arrays
      */
-    static char C_short_decl[] = "static short int %s[%d] =\n    {   0,\n";
+    static char C_short_decl[] =
+	"static const short int %s[%d] =\n    {   0,\n";
 
     printf( C_short_decl, ALIST, lastdfa + 1 );
 
@@ -611,8 +612,11 @@ gen_start_state()
 	    }
 
 	if ( reject )
+	    {
 	    /* set up for storing up states */
 	    indent_puts( "yy_state_ptr = yy_state_buf;" );
+	    indent_puts( "*yy_state_ptr++ = yy_current_state;" );
+	    }
 	}
     }
 
@@ -632,9 +636,12 @@ gentabs()
     /* *everything* is done in terms of arrays starting at 1, so provide
      * a null entry for the zero element of all C arrays
      */
-    static char C_long_decl[] = "static long int %s[%d] =\n    {   0,\n";
-    static char C_short_decl[] = "static short int %s[%d] =\n    {   0,\n";
-    static char C_char_decl[] = "static char %s[%d] =\n    {   0,\n";
+    static char C_long_decl[] =
+	"static const long int %s[%d] =\n    {   0,\n";
+    static char C_short_decl[] =
+	"static const short int %s[%d] =\n    {   0,\n";
+    static char C_char_decl[] =
+	"static const char %s[%d] =\n    {   0,\n";
 
     acc_array = allocate_integer_array( current_max_dfas );
     nummt = 0;
@@ -684,7 +691,9 @@ gentabs()
 
 		    ++j;
 
-		    if ( variable_trailing_context_rules && accnum > 0 &&
+		    if ( variable_trailing_context_rules &&
+			 ! (accnum & YY_TRAILING_HEAD_MASK) &&
+			 accnum > 0 &&
 			 rule_type[accnum] == RULE_VARIABLE )
 			{
 			/* special hack to flag accepting number as part
@@ -895,6 +904,9 @@ char str[];
 make_tables()
 
     {
+    register int i;
+    int did_eof_rule = false;
+
     printf( "#define YY_END_OF_BUFFER %d\n", num_rules + 1 );
 
     if ( fullspd )
@@ -940,7 +952,7 @@ make_tables()
     if ( reject )
 	{
 	/* declare state buffer variables */
-	puts( "yy_trans_info yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;" );
+	puts( "yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;" );
 	puts( "char *yy_full_match;" );
 	puts( "int yy_lp;" );
 
@@ -982,6 +994,15 @@ make_tables()
 	puts( " */" );
 	puts( "#define REJECT reject_used_but_not_detected" );
 	}
+    
+    if ( yymore_used )
+	{
+	indent_puts( "static char *yy_more_pos = (char *) 0;" );
+	indent_puts( "#define yymore() (yy_more_pos = yy_bp)" );
+	}
+    
+    else
+	indent_puts( "#define yymore() yymore_used_but_not_detected" );
 
 
     skelout();
@@ -996,6 +1017,26 @@ make_tables()
 
     set_indent( 2 );
 
+    if ( yymore_used )
+	{
+	indent_puts( "if ( yy_more_pos )" );
+	indent_up();
+	indent_puts( "{" );
+	indent_puts( "yy_bp = yy_more_pos;" );
+	indent_puts( "yy_more_pos = (char *) 0;" );
+	indent_puts( "}" );
+	indent_down();
+	indent_puts( "else" );
+	indent_up();
+	indent_puts( "yy_bp = yy_cp;" );
+	indent_down();
+	}
+
+    else
+	indent_puts( "yy_bp = yy_cp;" );
+
+    skelout();
+
     gen_start_state();
     gen_next_match();
 
@@ -1008,6 +1049,23 @@ make_tables()
     indent_up();
     gen_bt_action();
     action_out();
+
+    /* generate cases for any missing EOF rules */
+    for ( i = 1; i <= lastsc; ++i )
+	if ( ! sceof[i] )
+	    {
+	    do_indent();
+	    printf( "case YY_STATE_EOF(%s):\n", scname[i] );
+	    did_eof_rule = true;
+	    }
+    
+    if ( did_eof_rule )
+	{
+	indent_up();
+	indent_puts( "yyterminate();" );
+	indent_down();
+	}
+
 
     /* generate code for yy_get_previous_state() */
     set_indent( 1 );

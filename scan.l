@@ -78,7 +78,7 @@ NOT_NAME	[^a-z_\n]+
 
 SCNAME		{NAME}
 
-ESCSEQ		\\([^\n]|0[0-9]{1,3})
+ESCSEQ		\\([^\n]|[0-9]{1,3})
 
 %%
     static int bracelevel, didadef;
@@ -107,7 +107,7 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 			}
 
 ^"%used"		checking_used = REALLY_USED; BEGIN(USED_LIST);
-^"%not"{OPTWS}"used"	checking_used = REALLY_NOT_USED; BEGIN(USED_LIST);
+^"%unused"		checking_used = REALLY_NOT_USED; BEGIN(USED_LIST);
 
 
 ^"%"[^sx]" ".*\n		{
@@ -181,15 +181,15 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 			if ( all_upper( yytext ) )
 			    reject_really_used = checking_used;
 			else
-			    synerr( "unrecognized %used/%notused construct" );
+			    synerr( "unrecognized %used/%unused construct" );
 			}
 <USED_LIST>"yymore"	{
 			if ( all_lower( yytext ) )
 			    yymore_really_used = checking_used;
 			else
-			    synerr( "unrecognized %used/%notused construct" );
+			    synerr( "unrecognized %used/%unused construct" );
 			}
-<USED_LIST>{NOT_WS}+	synerr( "unrecognized %used/%notused construct" );
+<USED_LIST>{NOT_WS}+	synerr( "unrecognized %used/%unused construct" );
 
 
 <SECT2PROLOG>.*\n/{NOT_WS}	{
@@ -200,6 +200,8 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 			}
 
 <SECT2PROLOG>.*\n	++linenum; ACTION_ECHO;
+
+<SECT2PROLOG><<EOF>>	MARK_END_OF_PROLOG; yyterminate();
 
 <SECT2>^{OPTWS}\n	++linenum; /* allow blank lines in section 2 */
 
@@ -225,25 +227,21 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 			BEGIN(PERCENT_BRACE_ACTION);
 			return ( '\n' );
 			}
-<SECT2>{WS}"|".*\n	++linenum; return ( '\n' );
+<SECT2>{WS}"|".*\n	continued_action = true; ++linenum; return ( '\n' );
 
 <SECT2>^{OPTWS}"/*"	ACTION_ECHO; BEGIN(C_COMMENT_2);
 
-<SECT2>{WS}		{ /* needs to be separate from following rule due to
-			   * bug with trailing context
-			   */
-			bracelevel = 0;
-			BEGIN(ACTION);
-			return ( '\n' );
-			}
-
+<SECT2>{WS}		|
 <SECT2>{OPTWS}/\n	{
 			bracelevel = 0;
+			continued_action = false;
 			BEGIN(ACTION);
 			return ( '\n' );
 			}
 
 <SECT2>^{OPTWS}\n	++linenum; return ( '\n' );
+
+<SECT2>"<<EOF>>"	return ( EOF_OP );
 
 <SECT2>^"%%".*		{
 			sectnum = 3;

@@ -266,7 +266,7 @@ int xcluflg;
      */
 
     if ( strcmp( str, "0" ) )
-	printf( "#define %s %d\n", str, lastsc * 2 );
+	printf( "#define %s %d\n", str, lastsc );
 
     if ( ++lastsc >= current_max_scs )
 	{
@@ -277,16 +277,21 @@ int xcluflg;
 	scset = reallocate_integer_array( scset, current_max_scs );
 	scbol = reallocate_integer_array( scbol, current_max_scs );
 	scxclu = reallocate_integer_array( scxclu, current_max_scs );
+	sceof = reallocate_integer_array( sceof, current_max_scs );
+	scname = reallocate_char_ptr_array( scname, current_max_scs );
 	actvsc = reallocate_integer_array( actvsc, current_max_scs );
 	}
 
-    if ( addsym( copy_string( str ), (char *) 0, lastsc,
-	         sctbl, START_COND_HASH_SIZE ) )
+    scname[lastsc] = copy_string( str );
+
+    if ( addsym( scname[lastsc], (char *) 0, lastsc,
+		 sctbl, START_COND_HASH_SIZE ) )
 	lerrsf( "start condition %s declared twice", str );
 
     scset[lastsc] = mkstate( SYM_EPSILON );
     scbol[lastsc] = mkstate( SYM_EPSILON );
     scxclu[lastsc] = xcluflg;
+    sceof[lastsc] = false;
     }
 
 

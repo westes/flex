@@ -216,7 +216,7 @@ int mach, variable_trail_rule, headcnt, trailcnt;
     /* we did this in new_rule(), but it often gets the wrong
      * number because we do it before we start parsing the current rule
      */
-    rule_type[num_rules] = linenum;
+    rule_linenum[num_rules] = linenum;
 
     fprintf( temp_action_file, "case %d:\n", num_rules );
 

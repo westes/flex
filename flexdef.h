@@ -30,9 +30,16 @@
 #include <stdio.h>
 #endif
 
-#ifdef SV
+#ifdef SYS_V
 #include <string.h>
+
+#ifdef AMIGA
+#define bzero(s, n) setmem((char *)(s), (unsigned)(n), '\0')
+#define abs(x) ((x) < 0 ? -(x) : (x))
+#else
 #define bzero(s, n) memset((char *)(s), '\0', (unsigned)(n))
+#endif
+
 #ifndef VMS
 char *memset();
 #else
@@ -49,7 +56,7 @@ char *memset();
 #endif
 #endif
 
-#ifndef SV
+#ifndef SYS_V
 #include <strings.h>
 #ifdef lint
 char *sprintf(); /* keep lint happy */
@@ -331,6 +338,8 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * reject - if true, generate backtracking tables for REJECT macro
  * real_reject - if true, scanner really uses REJECT (as opposed to just
  *               having "reject" set for variable trailing context)
+ * continued_action - true if this rule's action is to "fall through" to
+ *                    the next rule's action (i.e., the '|' action)
  * yymore_really_used - has a REALLY_xxx value indicating whether a
  *                      %used or %notused was used with yymore()
  * reject_really_used - same for REJECT
@@ -339,7 +348,7 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
 extern int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
 extern int interactive, caseins, useecs, fulltbl, usemecs;
 extern int fullspd, gen_line_dirs, performance_report, backtrack_report;
-extern int yymore_used, reject, real_reject;
+extern int yymore_used, reject, real_reject, continued_action;
 
 #define REALLY_NOT_DETERMINED 0
 #define REALLY_USED 1
@@ -464,10 +473,13 @@ extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
  * scset - set of rules active in start condition
  * scbol - set of rules active only at the beginning of line in a s.c.
  * scxclu - true if start condition is exclusive
+ * sceof - true if start condition has EOF rule
+ * scname - start condition name
  * actvsc - stack of active start conditions for the current rule
  */
 
-extern int lastsc, current_max_scs, *scset, *scbol, *scxclu, *actvsc;
+extern int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof, *actvsc;
+extern char **scname;
 
 
 /* variables for dfa machine data:
@@ -566,12 +578,18 @@ char *allocate_array(), *reallocate_array();
 #define allocate_int_ptr_array(size) \
 	(int **) allocate_array( size, sizeof( int * ) )
 
+#define allocate_char_ptr_array(size) \
+	(char **) allocate_array( size, sizeof( char * ) )
+
 #define allocate_dfaacc_union(size) \
 	(union dfaacc_union *) \
 		allocate_array( size, sizeof( union dfaacc_union ) )
 
 #define reallocate_int_ptr_array(array,size) \
 	(int **) reallocate_array( (char *) array, size, sizeof( int * ) )
+
+#define reallocate_char_ptr_array(array,size) \
+	(char **) reallocate_array( (char *) array, size, sizeof( char * ) )
 
 #define reallocate_dfaacc_union(array, size) \
 	(union dfaacc_union *)  reallocate_array( (char *) array, size, sizeof( union dfaacc_union ) )
