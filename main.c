@@ -1233,7 +1233,7 @@ _( "%s [-bcdfhilnpstvwBFILTV78+? -R[b] -C[aefFmr] -ooutput -Pprefix -Sskeleton]\
 		outfilename );
 
 	fprintf( f,
-		_( "\t-v  write summary of scanner statistics to f\n" ) );
+		_( "\t-v  write summary of scanner statistics to stdout\n" ) );
 	fprintf( f, _( "\t-w  do not generate warnings\n" ) );
 	fprintf( f, _( "\t-B  generate batch scanner (opposite of -I)\n" ) );
 	fprintf( f,
