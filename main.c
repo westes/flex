@@ -629,6 +629,13 @@ char **argv;
 
 			else if ( ! strcmp( arg, "--version" ) )
 				arg = "-V";
+
+			else if ( ! strcmp( arg, "--" ) )
+				{ /* end of options */
+				--argc;
+				++argv;
+				break;
+				}
 			}
 
 		for ( i = 1; arg[i] != '\0'; ++i )
