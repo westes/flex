@@ -302,17 +302,17 @@ msgstr "  %d Tabelleneinträge\n"
 #: main.c:836
 #, c-format
 msgid "  %d/%d base-def entries created\n"
-msgstr ""
+msgstr "  %d/%d Einträge »base-def« erzeugt\n"
 
 #: main.c:839
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
-msgstr ""
+msgstr "  %d/%d (max. %d) Einträge »nxt-chk« erzeugt\n"
 
 #: main.c:842
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
-msgstr ""
+msgstr "  %d/%d (max. %d) Einträge »template nxt-chk« erzeugt\n"
 
 #: main.c:846
 #, c-format
@@ -322,7 +322,7 @@ msgstr "  %d leere Tabelleneinträge\n"
 #: main.c:848
 #, c-format
 msgid "  %d protos created\n"
-msgstr ""
+msgstr "  %d Protos erzeugt\n"
 
 #: main.c:851
 #, c-format
