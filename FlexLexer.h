@@ -30,14 +30,18 @@
 // class which specifies the external interface provided to flex C++
 // lexer objects.  The second, yyFlexLexer, fills out most of the meat
 // of the lexer class; its internals may vary from lexer to lexer
-// depending on things like whether REJECT is used, and the type
-// of YY_CHAR.  If you want to create multiple lexer classes, you
-// use the -P flag to rename each yyFlexLexer to some other xxFlexLexer.
+// depending on things like whether REJECT is used.
+//
+// If you want to create multiple lexer classes, you use the -P flag
+// to rename each yyFlexLexer to some other xxFlexLexer.
 
 
 class FlexLexer {
  public:
 	virtual ~FlexLexer()	{ }
+
+	const char* YYText()	{ return yytext; }
+	int YYLeng()		{ return yyleng; }
 
 	virtual void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer ) = 0;
 	virtual YY_BUFFER_STATE yy_create_buffer( istream* s, int size ) = 0;
@@ -45,6 +49,10 @@ class FlexLexer {
 	virtual void yyrestart( istream* s ) = 0;
 
 	virtual int yylex() = 0;
+
+protected:
+	char* yytext;
+	int yyleng;
 };
 
 
@@ -56,7 +64,7 @@ class yyFlexLexer : public FlexLexer {
 		{
 		yyin = arg_yyin;
 		yyout = arg_yyout;
-		yy_c_buf_p = (YY_CHAR*) 0;
+		yy_c_buf_p = 0;
 		yy_init = 1;
 		yy_start = 0;
 
@@ -91,7 +99,7 @@ class yyFlexLexer : public FlexLexer {
 	virtual int LexerInput( char* buf, int max_size );
 	virtual void LexerOutput( const char* buf, int size );
 
-	void yyunput( YY_CHAR c, YY_CHAR* buf_ptr );
+	void yyunput( int c, char* buf_ptr );
 	int yyinput();
 
 	void yy_load_buffer_state();
@@ -107,16 +115,13 @@ class yyFlexLexer : public FlexLexer {
 	YY_BUFFER_STATE yy_current_buffer;
 
 	// yy_hold_char holds the character lost when yytext is formed.
-	YY_CHAR yy_hold_char;
+	char yy_hold_char;
 
 	// Number of characters read into yy_ch_buf.
 	int yy_n_chars;
 
-	YY_CHAR* yytext;
-	int yyleng;
-
 	// Points to current character in buffer.
-	YY_CHAR* yy_c_buf_p;
+	char* yy_c_buf_p;
 
 	int yy_init;		// whether we need to initialize
 	int yy_start;		// start state number
@@ -129,12 +134,12 @@ class yyFlexLexer : public FlexLexer {
 	// on use of certain flex features (like REJECT or yymore()).
 
 	yy_state_type yy_last_accepting_state;
-	YY_CHAR* yy_last_accepting_cpos;
+	char* yy_last_accepting_cpos;
 
 	yy_state_type* yy_state_buf;
 	yy_state_type* yy_state_ptr;
 
-	YY_CHAR* yy_full_match;
+	char* yy_full_match;
 	int* yy_full_state;
 	int yy_full_lp;
 
