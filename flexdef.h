@@ -266,7 +266,7 @@
 /* Absolute value of largest number that can be stored in a short, with a
  * bit of slop thrown in for general paranoia.
  */
-#define MAX_SHORT 32766
+#define MAX_SHORT 32700
 
 
 /* Declarations for global variables. */
@@ -608,6 +608,7 @@ void *reallocate_array PROTO((void*, int, int));
 void *yy_flex_alloc PROTO((int));
 void *yy_flex_realloc PROTO((void*, int));
 void yy_flex_free PROTO((void*));
+void *yy_flex_xmalloc PROTO((int));
 
 #define allocate_integer_array(size) \
 	(int *) allocate_array( size, sizeof( int ) )
