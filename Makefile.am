@@ -128,7 +128,7 @@ skel.c: flex.skl mkskel.sh
 
 $(man_MANS): $(srcdir)/main.c
 	for i in $(man_MANS) ; do \
-	$(help2man) --name='fast lexical analyzer generator' --section=`echo $$i|rev|cut -f 1 -d .|rev` ./flex > $$i ; \
+	$(help2man) --name='fast lexical analyzer generator' --section=`echo $$i|rev|cut -f 1 -d .|rev` $(builddir)/flex > $$i ; \
 	done
 
 main.o: main.c flexdef.h config.h version.h
