@@ -14,6 +14,11 @@
 
 #include "flexdef.h"
 
+#ifndef lint
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+#endif
+
 struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
 struct hash_entry *sctbl[START_COND_HASH_SIZE];
 struct hash_entry *ccltab[CCL_HASH_SIZE];
@@ -42,19 +47,19 @@ int table_size;
 
     {
     int hash_val = hashfunct( sym, table_size );
-    register struct hash_entry *entry = table[hash_val];
+    register struct hash_entry *sym_entry = table[hash_val];
     register struct hash_entry *new_entry;
     register struct hash_entry *successor;
     char *malloc();
 
-    while ( entry )
+    while ( sym_entry )
 	{
-	if ( ! strcmp( sym, entry->name ) )
+	if ( ! strcmp( sym, sym_entry->name ) )
 	    { /* entry already exists */
 	    return ( -1 );
 	    }
 	
-	entry = entry->next;
+	sym_entry = sym_entry->next;
 	}
 
     /* create new entry */
@@ -127,8 +132,8 @@ char ccltxt[];
  *    char sym[];
  *    hash_table table;
  *    int table_size;
- *    struct hash_entry *entry, *findsym();
- *    entry = findsym( sym, table, table_size );
+ *    struct hash_entry *sym_entry, *findsym();
+ *    sym_entry = findsym( sym, table, table_size );
  */
 
 struct hash_entry *findsym( sym, table, table_size )
@@ -137,17 +142,17 @@ hash_table table;
 int table_size;
 
     {
-    register struct hash_entry *entry = table[hashfunct( sym, table_size )];
+    register struct hash_entry *sym_entry = table[hashfunct( sym, table_size )];
     static struct hash_entry empty_entry =
 	{
 	(struct hash_entry *) 0, (struct hash_entry *) 0, NULL, NULL, 0,
 	} ;
 
-    while ( entry )
+    while ( sym_entry )
 	{
-	if ( ! strcmp( sym, entry->name ) )
-	    return ( entry );
-	entry = entry->next;
+	if ( ! strcmp( sym, sym_entry->name ) )
+	    return ( sym_entry );
+	sym_entry = sym_entry->next;
 	}
 
     return ( &empty_entry );
