@@ -607,16 +607,18 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
     int yy_lp;
 ]])
 
-#ifdef YY_TEXT_IS_ARRAY
+m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]],
+[[
     char yytext_r[YYLMAX];
     char *yytext_ptr;
     int yy_more_offset;
     int yy_prev_more_offset;
-#else
+]],
+[[
     char *yytext_r;
     int yy_more_flag;
     int yy_more_len;
-#endif
+]])
 
 %if-bison-bridge
     YYSTYPE * yylval_r;
@@ -2302,11 +2304,12 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
     YY_G(yy_lp) = 0;
 ]])
 
-#ifdef YY_TEXT_IS_ARRAY
+m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]],
+[[
     YY_G(yytext_ptr) = 0;
     YY_G(yy_more_offset) = 0;
     YY_G(yy_prev_more_offset) = 0;
-#endif
+]])
 
 /* Defined in main.c */
 #ifdef YY_STDINIT

@@ -401,7 +401,7 @@ void check_options ()
         buf_m4_define (&m4defs_buf, "M4_YY_REENTRANT", NULL);
 		outn ("#define YY_REENTRANT 1");
 		if (yytext_is_array)
-			outn ("#define YY_TEXT_IS_ARRAY");
+			buf_m4_define (&m4defs_buf, "M4_YY_TEXT_IS_ARRAY", NULL);
 	}
 
 	if ( bison_bridge)
@@ -731,7 +731,6 @@ void flexend (exit_status)
                 "YY_START_STACK_INCR",
                 "YY_STATE_EOF",
                 "YY_STDINIT",
-                "YY_TEXT_IS_ARRAY",
                 "YY_TRAILING_HEAD_MASK",
                 "YY_TRAILING_MASK",
                 "YY_USER_ACTION",
