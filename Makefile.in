@@ -2,18 +2,13 @@
 
 # If your version of "make" does not define $(MAKE), comment in the
 # definition of "MAKE" below.  (You only need to do this if you intend
-# to do "make bigcheck".)
+# to do "make bigcheck" or "make dist".)
 # MAKE = make
 
 # Possible values for DEFS:
 #
 # For flex to always generate 8-bit scanners, add "-DDEFAULT_CSIZE=256"
 # to DEFS.
-# 
-# If your C run-time library defines malloc() as returning char*
-# instead of void*, add "-DMALLOC_TYPE=char" to DEFS.  (Note that on
-# many systems, even if your malloc() returns char* you can get away
-# with skipping this step.)
 #
 # For Vax/VMS, add "-DVMS" to DEFS.
 #
@@ -46,6 +41,7 @@ SHELL = /bin/sh
 srcdir = @srcdir@
 VPATH = @srcdir@
 
+LN_S = @LN_S@
 YACC = @YACC@
 CC = @CC@
 AR = ar
@@ -93,15 +89,15 @@ PERF_REPORT = -p
 FLEXLIB = libfl.a
 
 
-all: .bootstrap flex
+all: flex
+
+flex: .bootstrap $(OBJECTS) $(FLEXLIB)
+	$(CC) $(CFLAGS) -o flex $(LDFLAGS) $(OBJECTS) $(FLEXLIB) $(LIBS)
 
 .bootstrap: initscan.c
 	@rm -f scan.c
 	cp $(srcdir)/initscan.c scan.c
 	touch .bootstrap
-
-flex: $(OBJECTS) $(FLEXLIB)
-	$(CC) $(CFLAGS) -o flex $(LDFLAGS) $(OBJECTS) $(FLEXLIB) $(LIBS)
 
 parse.c: parse.y
 	$(YACC) -d $(srcdir)/parse.y
@@ -134,7 +130,7 @@ tblcmp.o: tblcmp.c flexdef.h
 yylex.o: yylex.c flexdef.h
 
 test: check
-check: .bootstrap flex
+check: flex
 	./flex $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l \
 	| sed s,\"$(srcdir)/scan.l\",\"scan.l\", \
 	| diff scan.c -
@@ -160,29 +156,24 @@ flex.man: flex.1
 flexdoc.man: flexdoc.1
 	cd $(srcdir); nroff -man flexdoc.1 >flexdoc.man
 
-install: flex install.$(INSTALLMAN) install-lib install-inc
-	@rm -f $(bindir)/flex
+install: flex $(FLEXLIB) installdirs install.$(INSTALLMAN)
 	$(INSTALL_PROGRAM) flex $(bindir)/flex
-	@echo "NOTE: If you want to create flex++, either copy or link"
-	@echo "====  $(bindir)/flex to $(bindir)/flex++"
-
-install-lib: $(libdir) $(FLEXLIB)
-	@rm -f $(libdir)/libfl.a
+	@rm -f $(bindir)/flex++
+	$(LN_S) $(bindir)/flex $(bindir)/flex++
 	$(INSTALL_DATA) $(FLEXLIB) $(libdir)/libfl.a
-
-install-inc:
-	@rm -f $(includedir)/FlexLexer.h
 	$(INSTALL_DATA) $(srcdir)/FlexLexer.h $(includedir)/FlexLexer.h
 
 install.man: flex.1 flexdoc.1
-	@rm -f $(mandir)/flex.$(manext) $(mandir)/flexdoc.$(manext)
 	$(INSTALL_DATA) $(srcdir)/flex.1 $(mandir)/flex.$(manext)
 	$(INSTALL_DATA) $(srcdir)/flexdoc.1 $(mandir)/flexdoc.$(manext)
 
 install.cat: flex.man flexdoc.man
-	@rm -f $(mandir)/flex.$(manext) $(mandir)/flexdoc.$(manext)
 	$(INSTALL_DATA) $(srcdir)/flex.man $(mandir)/flex.$(manext)
 	$(INSTALL_DATA) $(srcdir)/flexdoc.man $(mandir)/flexdoc.$(manext)
+
+installdirs:
+	$(SHELL) $(srcdir)/mkinstalldirs \
+	  $(bindir) $(libdir) $(includedir) $(mandir)
 
 uninstall:
 	rm -f $(bindir)/flex $(bindir)/flex++
@@ -192,6 +183,9 @@ uninstall:
 
 tags: $(SOURCES)
 	ctags $(SOURCES)
+
+TAGS: $(SOURCES)
+	etags $(SOURCES)
 
 lint: $(LINTSRCS)
 	lint $(LINTSRCS) > flex.lint
