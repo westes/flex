@@ -181,7 +181,7 @@ int yylex()
 
 		    default:
 			if ( ! isascii( yylval ) || ! isprint( yylval ) )
-			    fprintf( stderr, "\\%.3o", yylval );
+			    fprintf( stderr, "\\%.3o", (unsigned int) yylval );
 			else
 			    (void) putc( yylval, stderr );
 			break;
