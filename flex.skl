@@ -120,13 +120,13 @@ m4preproc_define(`M4_GEN_PREFIX',
     M4_GEN_PREFIX(`wrap')
 %endif
 
-m4_ifdef( [[M4_YY_BISON_BRIDGE]],
+m4_ifdef( [[M4_YY_BISON_LVAL]],
 [[
     M4_GEN_PREFIX(`get_lval')
     M4_GEN_PREFIX(`set_lval')
 ]])
 
-m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 [[
     M4_GEN_PREFIX(`get_lloc')
     M4_GEN_PREFIX(`set_lloc')
@@ -368,7 +368,7 @@ m4_ifdef( [[M4_YY_NO_ANSI_FUNC_DEFS]],
     m4_define( [[YYFARGS3]], [[($1 $2, $3 $4, $5 $6 M4_YY_DEF_LAST_ARG)]])
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Enter a start condition.  This macro really ought to take a parameter,
  * but we do it the disgusting crufty way forced on us by the ()-less
@@ -377,7 +377,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]],,
 #define BEGIN YY_G(yy_start) = 1 + 2 *
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Translate the current start state into a value that can be later handed
  * to BEGIN to return to the state.  The YYSTATE alias is for lex
@@ -387,24 +387,24 @@ m4_ifdef( [[M4_YY_IN_HEADER]],,
 #define YYSTATE YY_START
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Action number for EOF rule of a given start state. */
 #define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Special action meaning "start processing a new file". */
 #define YY_NEW_FILE yyrestart( yyin M4_YY_CALL_LAST_ARG )
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define YY_END_OF_BUFFER_CHAR 0
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
@@ -435,7 +435,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define EOB_ACT_LAST_MATCH 2
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
     m4_ifdef( [[M4_YY_USE_LINENO]],
     [[
@@ -459,7 +459,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]],,
     ]])
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -476,7 +476,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]],,
 	while ( 0 )
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define unput(c) yyunput( c, YY_G(yytext_ptr) M4_YY_CALL_LAST_ARG )
 ]])
@@ -577,7 +577,7 @@ static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */
 %ok-for-header
 %endif
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* We provide macros for accessing buffer states in case in the
  * future we want to put the buffer states in a more general
@@ -590,7 +590,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]],,
                           : NULL)
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Same as previous macro, but useful when we know that the buffer stack is not
  * NULL or when we need an lvalue. For internal use only.
@@ -627,14 +627,14 @@ void yy_flush_buffer M4_YY_PARAMS( YY_BUFFER_STATE b M4_YY_PROTO_LAST_ARG );
 void yypush_buffer_state M4_YY_PARAMS( YY_BUFFER_STATE new_buffer M4_YY_PROTO_LAST_ARG );
 void yypop_buffer_state M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 static void yyensure_buffer_stack M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 static void yy_load_buffer_state M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 static void yy_init_buffer M4_YY_PARAMS( YY_BUFFER_STATE b, FILE *file M4_YY_PROTO_LAST_ARG );
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define YY_FLUSH_BUFFER yy_flush_buffer( YY_CURRENT_BUFFER M4_YY_CALL_LAST_ARG)
 ]])
@@ -649,12 +649,12 @@ void *yyalloc M4_YY_PARAMS( yy_size_t M4_YY_PROTO_LAST_ARG );
 void *yyrealloc M4_YY_PARAMS( void *, yy_size_t M4_YY_PROTO_LAST_ARG );
 void yyfree M4_YY_PARAMS( void * M4_YY_PROTO_LAST_ARG );
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define yy_new_buffer yy_create_buffer
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define yy_set_interactive(is_interactive) \
 	{ \
@@ -667,7 +667,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]],,
 	}
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define yy_set_bol(at_bol) \
 	{ \
@@ -680,7 +680,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]],,
 	}
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 ]])
@@ -689,7 +689,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]],,
 
 %if-c-only Standard (non-C++) definition
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 static yy_state_type yy_get_previous_state M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 static yy_state_type yy_try_NUL_trans M4_YY_PARAMS( yy_state_type current_state  M4_YY_PROTO_LAST_ARG);
@@ -699,7 +699,7 @@ static void yy_fatal_error M4_YY_PARAMS( yyconst char msg[] M4_YY_PROTO_LAST_ARG
 
 %endif
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Done after the current pattern has been matched and before the
  * corresponding action - sets up yytext.
@@ -713,7 +713,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]],,
 	YY_G(yy_c_buf_p) = yy_cp;
 ]])
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 %% [4.0] data tables for the DFA and the user's section 1 definitions go here
 ]])
@@ -743,7 +743,7 @@ m4_ifdef( [[M4_YY_NO_UNISTD_H]],,
 %if-c-only Reentrant structure and macros (non-C++).
 %if-reentrant
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Holds the entire state of the reentrant scanner. */
 struct yyguts_t
@@ -794,12 +794,12 @@ m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]],
     int yy_more_len;
 ]])
 
-m4_ifdef( [[M4_YY_BISON_BRIDGE]],
+m4_ifdef( [[M4_YY_BISON_LVAL]],
 [[
     YYSTYPE * yylval_r;
 ]])
 
-m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 [[
     YYLTYPE * yylloc_r;
 ]])
@@ -815,16 +815,16 @@ static int yy_init_globals M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 
 %if-reentrant
 
-m4_ifdef( [[M4_YY_IN_HEADER]],,
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
-    m4_ifdef( [[M4_YY_BISON_BRIDGE]],
+    m4_ifdef( [[M4_YY_BISON_LVAL]],
     [[
     /* This must go here because YYSTYPE and YYLTYPE are included
      * from bison output in section 1.*/
     #    define yylval YY_G(yylval_r)
     ]])
 
-    m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+    m4_ifdef( [[<M4_YY_BISON_LLOC>]],
     [[
     #    define yylloc YY_G(yylloc_r)
     ]])
@@ -908,7 +908,7 @@ YYSTYPE * yyget_lval M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 
 void yyset_lval M4_YY_PARAMS( YYSTYPE * yylval_param M4_YY_PROTO_LAST_ARG );
 
-m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 [[
     m4_ifdef( [[M4_YY_NO_GET_LLOC]],,
     [[
@@ -969,9 +969,9 @@ static int input M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 m4_ifdef( [[M4_YY_STACK_USED]],
 [[
 
-m4_ifdef( [[M4_YY_REENTRANT]],,
+m4_ifdef( [[M4_YY_NOT_REENTRANT]],
 [[
-    m4_ifdef( [[M4_YY_IN_HEADER]],,
+    m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
     [[
         static int yy_start_stack_ptr = 0;
         static int yy_start_stack_depth = 0;
@@ -1119,7 +1119,7 @@ struct yytbl_reader {
 m4_define( [[M4_YY_LEX_PROTO]], [[M4_YY_PARAMS(M4_YY_PROTO_ONLY_ARG)]])
 m4_define( [[M4_YY_LEX_DECLARATION]], [[YYFARGS0(void)]])
 
-m4_ifdef( [[M4_YY_BISON_BRIDGE]],
+m4_ifdef( [[M4_YY_BISON_LVAL]],
 [[
     m4_dnl  The bison pure parser is used. Redefine yylex to
     m4_dnl  accept the lval parameter.
@@ -1130,7 +1130,7 @@ m4_ifdef( [[M4_YY_BISON_BRIDGE]],
                [[YYFARGS1(YYSTYPE *,yylval_param)]])
 ]])
 
-m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 [[
     m4_dnl  Locations are used. yylex should also accept the ylloc parameter.
 
@@ -1182,13 +1182,13 @@ YY_DECL
 	register int yy_act;
     M4_YY_DECL_GUTS_VAR();
 
-m4_ifdef( [[M4_YY_REENTRANT]],,
+m4_ifdef( [[M4_YY_NOT_REENTRANT]],
 [[
-    m4_ifdef( [[M4_YY_BISON_BRIDGE]],
+    m4_ifdef( [[M4_YY_BISON_LVAL]],
     [[
         YYSTYPE * yylval;
     ]])
-    m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+    m4_ifdef( [[<M4_YY_BISON_LLOC>]],
     [[
         YYLTYPE * yylloc;
     ]])
@@ -1196,12 +1196,12 @@ m4_ifdef( [[M4_YY_REENTRANT]],,
 
 %% [7.0] user's declarations go here
 
-m4_ifdef( [[M4_YY_BISON_BRIDGE]],
+m4_ifdef( [[M4_YY_BISON_LVAL]],
 [[
     yylval = yylval_param;
 ]])
 
-m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 [[
     yylloc = yylloc_param;
 ]])
@@ -2642,7 +2642,7 @@ void yyset_lval YYFARGS1( YYSTYPE * ,yylval_param)
 }
 ]])
 
-m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 [[
     m4_ifdef( [[M4_YY_NO_GET_LLOC]],,
     [[

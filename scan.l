@@ -309,9 +309,9 @@ LEXOPT		[aceknopr]
     ansi-prototypes  ansi_func_protos = option_sense;
 	backup		backing_up_report = option_sense;
 	batch		interactive = ! option_sense;
-    bison-bridge     bison_bridge = option_sense;
-    bison-locations  { if((bison_bridge_locations = option_sense))
-                            bison_bridge = true;
+    bison-bridge     bison_bridge_lval = option_sense;
+    bison-locations  { if((bison_bridge_lloc = option_sense))
+                            bison_bridge_lval = true;
                      }
 	"c++"		C_plus_plus = option_sense;
 	caseful|case-sensitive		caseins = ! option_sense;

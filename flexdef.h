@@ -352,8 +352,8 @@
  * C_plus_plus - if true (i.e., -+ flag), generate a C++ scanner class;
  *   otherwise, a standard C scanner
  * reentrant - if true (-R), generate a reentrant C scanner.
- * bison_bridge - if true (--bison-bridge), bison pure calling convention.
- * bison_bridge_locations - if true (--bison-locations), bison yylloc.
+ * bison_bridge_lval - if true (--bison-bridge), bison pure calling convention.
+ * bison_bridge_lloc - if true (--bison-locations), bison yylloc.
  * long_align - if true (-Ca flag), favor long-word alignment.
  * use_read - if true (-f, -F, or -Cr) then use read() for scanner input;
  *   otherwise, use fread().
@@ -380,7 +380,7 @@ extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
 extern int interactive, caseins, lex_compat, posix_compat, do_yylineno;
 extern int useecs, fulltbl, usemecs, fullspd;
 extern int gen_line_dirs, performance_report, backing_up_report;
-extern int reentrant, bison_bridge, bison_bridge_locations;
+extern int reentrant, bison_bridge_lval, bison_bridge_lloc;
 extern bool ansi_func_defs, ansi_func_protos;
 extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
 extern int csize;

@@ -952,11 +952,11 @@ void skelout ()
             }
             else if (cmd_match(CMD_IF_BISON_BRIDGE)){
                 sko_push(do_copy);
-                do_copy = bison_bridge && do_copy;
+                do_copy = bison_bridge_lval && do_copy;
             }
             else if (cmd_match(CMD_IF_NOT_BISON_BRIDGE)){
                 sko_push(do_copy);
-                do_copy = !bison_bridge && do_copy;
+                do_copy = !bison_bridge_lval && do_copy;
             }
             else if (cmd_match (CMD_ENDIF)){
                 sko_pop(&do_copy);

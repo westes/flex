@@ -54,7 +54,7 @@ int     interactive, caseins, lex_compat, posix_compat, do_yylineno,
 int     fullspd, gen_line_dirs, performance_report, backing_up_report;
 int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
 	csize;
-int     reentrant, bison_bridge, bison_bridge_locations;
+int     reentrant, bison_bridge_lval, bison_bridge_lloc;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
 int     datapos, dataline, linenum, out_linenum;
@@ -219,7 +219,7 @@ void check_options ()
 		if (fulltbl || fullspd)
 			flexerror (_("Can't use -f or -F with -l option"));
 
-		if (reentrant || bison_bridge)
+		if (reentrant || bison_bridge_lval)
 			flexerror (_
 				   ("Can't use --reentrant or --bison-bridge with -l option"));
 
@@ -284,7 +284,7 @@ void check_options ()
 	if (C_plus_plus && (reentrant))
 		flexerror (_("Options -+ and --reentrant are mutually exclusive."));
 
-	if (C_plus_plus && bison_bridge)
+	if (C_plus_plus && bison_bridge_lval)
 		flexerror (_("bison bridge not supported for the C++ scanner."));
 
 
@@ -407,11 +407,11 @@ void check_options ()
 			buf_m4_define (&m4defs_buf, "M4_YY_TEXT_IS_ARRAY", NULL);
 	}
 
-	if ( bison_bridge)
-		buf_m4_define (&m4defs_buf, "M4_YY_BISON_BRIDGE", NULL);
+	if ( bison_bridge_lval)
+		buf_m4_define (&m4defs_buf, "M4_YY_BISON_LVAL", NULL);
 
-	if ( bison_bridge_locations)
-        buf_m4_define (&m4defs_buf, "M4_YY_BISON_BRIDGE_LOCATIONS", NULL);
+	if ( bison_bridge_lloc)
+        buf_m4_define (&m4defs_buf, "<M4_YY_BISON_LLOC>", NULL);
 
     buf_m4_define(&m4defs_buf, "M4_YY_PREFIX", prefix);
 
@@ -736,9 +736,9 @@ void flexend (exit_status)
 			putc ('s', stderr);
 		if (reentrant)
 			fputs ("--reentrant", stderr);
-        if (bison_bridge)
+        if (bison_bridge_lval)
             fputs ("--bison-bridge", stderr);
-        if (bison_bridge_locations)
+        if (bison_bridge_lloc)
             fputs ("--bison-locations", stderr);
 		if (use_stdout)
 			putc ('t', stderr);
@@ -921,7 +921,7 @@ void flexinit (argc, argv)
 	yymore_really_used = reject_really_used = unspecified;
 	interactive = csize = unspecified;
 	do_yywrap = gen_line_dirs = usemecs = useecs = true;
-	reentrant = bison_bridge = bison_bridge_locations = false;
+	reentrant = bison_bridge_lval = bison_bridge_lloc = false;
 	performance_report = 0;
 	did_outfilename = 0;
 	prefix = "yy";
@@ -1110,11 +1110,11 @@ void flexinit (argc, argv)
 			break;
 
 		case OPT_BISON_BRIDGE:
-			bison_bridge = true;
+			bison_bridge_lval = true;
 			break;
 
 		case OPT_BISON_BRIDGE_LOCATIONS:
-			bison_bridge = bison_bridge_locations = true;
+			bison_bridge_lval = bison_bridge_lloc = true;
 			break;
 
 		case OPT_REENTRANT:
