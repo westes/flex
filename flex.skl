@@ -759,7 +759,10 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 m4_include(`tables_shared.h')
 
 /* Load the DFA tables from the given stream.  */
-int yytables_load YY_PARAMS ((FILE * fp YY_PROTO_LAST_ARG));
+int yytables_fload YY_PARAMS ((FILE * fp YY_PROTO_LAST_ARG));
+
+/* Unload the tables from memory. */
+int yytables_destroy YY_PARAMS ((YY_PROTO_ONLY_ARG));
 
 /** Describes a mapping from a serialized table id to its deserialized state in
  * this scanner.  This is the bridge between our "generic" deserialization code
@@ -2025,7 +2028,6 @@ int yylex_destroy  YYFARGS0(void)
     yy_delete_buffer( YY_G(yy_current_buffer) YY_CALL_LAST_ARG );
     YY_G(yy_current_buffer) = NULL;
 
-
 #if defined(YY_STACK_USED) || defined(YY_REENTRANT)
     /* Destroy the start condition stack. */
     if (YY_G(yy_start_stack) ){
@@ -2173,7 +2175,7 @@ static int yytbl_hdr_read YYFARGS2 (struct yytbl_hdr *, th, struct yytbl_reader 
     /* we read it all into th_version, and point th_name into that data */
     if (fread (th->th_version, 1, bytes, rd->fp) != bytes){
         errno = EIO;
-        free(th->th_version);
+        yyfree(th->th_version YY_CALL_LAST_ARG);
         th->th_version = NULL;
         return -1;
     }
@@ -2414,7 +2416,7 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
 %define-yytables   The name for this specific scanner's tables.
 
 /* Find the key and load the DFA tables from the given stream.  */
-int yytbl_load YYFARGS2 (FILE *, fp, const char *, key)
+static int yytbl_fload YYFARGS2 (FILE *, fp, const char *, key)
 {
     int rv=0;
     struct yytbl_hdr th;
@@ -2438,7 +2440,7 @@ int yytbl_load YYFARGS2 (FILE *, fp, const char *, key)
         if (strcmp(th.th_name,key) != 0){
             /* Skip ahead to next set */
             fseek(rd.fp, th.th_ssize - th.th_hsize, SEEK_CUR);
-            free(th.th_version);
+            yyfree(th.th_version YY_CALL_LAST_ARG);
             th.th_version = NULL;
         }
         else
@@ -2455,7 +2457,7 @@ int yytbl_load YYFARGS2 (FILE *, fp, const char *, key)
 
 return_rv:
     if(th.th_version){
-        free(th.th_version);
+        yyfree(th.th_version YY_CALL_LAST_ARG);
         th.th_version = NULL;
     }
 
@@ -2463,9 +2465,9 @@ return_rv:
 }
 
 /** Load the DFA tables for this scanner from the given stream.  */
-int yytables_load YYFARGS1 (FILE *, fp)
+int yytables_fload YYFARGS1 (FILE *, fp)
 {
-    if( yytbl_load(fp, YYTABLES_NAME YY_CALL_LAST_ARG) != 0)
+    if( yytbl_fload(fp, YYTABLES_NAME YY_CALL_LAST_ARG) != 0)
         return -1;
     return 0;
 }
@@ -2481,7 +2483,7 @@ int yytables_destroy YYFARGS0(void)
             void * v;
             v = dmap->dm_arr;
             if(v && *(char**)v){
-                    free(*(char**)v);
+                    yyfree(*(char**)v YY_CALL_LAST_ARG);
                     *(char**)v = NULL;
             }
         }
