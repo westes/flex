@@ -97,6 +97,7 @@ public:
 	virtual ~yyFlexLexer()
 		{
 		delete yy_state_buf;
+		yy_delete_buffer( yy_current_buffer );
 		}
 
 	void yy_switch_to_buffer( struct yy_buffer_state* new_buffer );
