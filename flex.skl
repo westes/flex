@@ -106,8 +106,8 @@ extern FILE *yyin, *yyout;
 #ifdef __cplusplus
 extern "C" {
 #endif
-	extern void *yy_flex_alloc YY_PROTO(( int ));
-	extern void *yy_flex_realloc YY_PROTO(( void *ptr, int size ));
+	extern void *yy_flex_alloc YY_PROTO(( unsigned int ));
+	extern void *yy_flex_realloc YY_PROTO(( void *ptr, unsigned int ));
 	extern void yy_flex_free YY_PROTO(( void * ));
 	extern int yywrap YY_PROTO(( void ));
 	extern void yy_flex_strcpy YY_PROTO(( char *s1, const char *s2 ));
@@ -230,6 +230,12 @@ void yy_load_buffer_state YY_PROTO(( void ));
 YY_BUFFER_STATE yy_create_buffer YY_PROTO(( FILE *file, int size ));
 void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));
 void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
+
+static int yy_start_stack_ptr = 0;
+static int yy_start_stack_depth = 0;
+static int *yy_start_stack = 0;
+static void yy_push_state YY_PROTO(( int new_state ));
+static void yy_pop_state YY_PROTO(( void ));
 %*
 
 #define yy_new_buffer yy_create_buffer
@@ -248,8 +254,8 @@ static int input YY_PROTO(( void ));
 static yy_state_type yy_get_previous_state YY_PROTO(( void ));
 static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
 static int yy_get_next_buffer YY_PROTO(( void ));
-%*
 static void yy_fatal_error YY_PROTO(( const char msg[] ));
+%*
 
 /* Done after the current pattern has been matched and before the
  * corresponding action - sets up yytext.
@@ -304,6 +310,11 @@ static void yy_fatal_error YY_PROTO(( const char msg[] ));
  */
 #ifndef yyterminate
 #define yyterminate() return YY_NULL
+#endif
+
+/* Number of entries by which start-condition stack grows. */
+#ifndef YY_START_STACK_INCR
+#define YY_START_STACK_INCR 25
 #endif
 
 /* Report a fatal error. */
@@ -1036,6 +1047,55 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 	b->yy_fill_buffer = 1;
 
 	b->yy_eof_status = EOF_NOT_SEEN;
+	}
+
+
+%-
+#ifdef YY_USE_PROTOS
+static void yy_push_state( int new_state )
+#else
+static void yy_push_state( new_state )
+int new_state;
+#endif
+%+
+void yyFlexLexer::yy_push_state( int new_state )
+%*
+	{
+	if ( yy_start_stack_ptr >= yy_start_stack_depth )
+		{
+		int new_size;
+
+		yy_start_stack_depth += YY_START_STACK_INCR;
+		new_size = yy_start_stack_depth * sizeof( int );
+
+		if ( ! yy_start_stack )
+			yy_start_stack = (int *) yy_flex_alloc( new_size );
+
+		else
+			yy_start_stack = (int *) yy_flex_realloc(
+					(void *) yy_start_stack, new_size );
+
+		if ( ! yy_start_stack )
+			YY_FATAL_ERROR(
+			"out of memory expanding start-condition stack" );
+		}
+
+	yy_start_stack[yy_start_stack_ptr++] = YY_START;
+
+	BEGIN(new_state);
+	}
+
+
+%-
+static void yy_pop_state()
+%+
+void yyFlexLexer::yy_pop_state()
+%*
+	{
+	if ( --yy_start_stack_ptr < 0 )
+		YY_FATAL_ERROR( "start-condition stack underflow" );
+
+	BEGIN(yy_start_stack[yy_start_stack_ptr]);
 	}
 
 
