@@ -1041,8 +1041,7 @@ int symlist[], duplist[];
 
 			if ( tch >= 0 )
 				{ /* character transition */
-				/* abs() needed for fake %t ec's */
-				int ec = abs( ecgroup[tch] );
+				int ec = ecgroup[tch];
 
 				mkechar( ec, dupfwd, duplist );
 				symlist[ec] = 1;
