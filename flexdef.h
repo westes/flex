@@ -1157,7 +1157,7 @@ extern char *chomp (char *str);
 
 /* Tables serialization API declarations. */
 #include "tables_shared.h"
-struct yytbl_data *yytbl_data_create (enum yytbl_id id);
+int     yytbl_data_init (struct yytbl_data *tbl, enum yytbl_id id);
 struct yytbl_data *mkftbl (void);
 
 

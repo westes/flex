@@ -55,17 +55,17 @@
  *  scanner table of the same name.
  */
 enum yytbl_id {
-	YYT_ID_ACCEPT = 0x01,
-	YYT_ID_BASE = 0x02,
-	YYT_ID_CHK = 0x03,
-	YYT_ID_DEF = 0x04,
-	YYT_ID_EC = 0x05,
-	YYT_ID_META = 0x06,
-	YYT_ID_NUL_TRANS = 0x07,
+	YYT_ID_ACCEPT = 0x01,		/**< 1-dim ints */
+	YYT_ID_BASE = 0x02,		/**< 1-dim ints */
+	YYT_ID_CHK = 0x03,		/**< 1-dim ints */
+	YYT_ID_DEF = 0x04,		/**< 1-dim ints */
+	YYT_ID_EC = 0x05,		/**< 1-dim ints */
+	YYT_ID_META = 0x06,		/**< 1-dim ints */
+	YYT_ID_NUL_TRANS = 0x07,	/**< 1-dim ints */
 	YYT_ID_NXT = 0x08,		/**< may be 2 dimensional array */
-	YYT_ID_RULE_CAN_MATCH_EOL = 0x09,
-	YYT_ID_START_STATE_LIST = 0x0A,	/**< array of pointers */
-	YYT_ID_TRANSITION = 0x0B	/**< array of structs */
+	YYT_ID_RULE_CAN_MATCH_EOL = 0x09, /**< 1-dim ints */
+	YYT_ID_START_STATE_LIST = 0x0A,	/**< 1-dim ints  */
+	YYT_ID_TRANSITION = 0x0B	/**< structs */
 };
 
 /** bit flags for t_flags field of struct yytbl_data */
@@ -90,9 +90,11 @@ struct yytbl_hdr {
 
 /** A single serialized table */
 struct yytbl_data {
-	enum yytbl_id t_id; /**< table identifier */
-	uint16_t t_flags;   /**< how to interpret this data */
-	uint32_t t_hilen;   /**< num elements in highest dimension array */
-	uint32_t t_lolen;   /**< num elements in lowest dimension array */
-	void   *t_data;	    /**< table data */
+	enum yytbl_id td_id; /**< table identifier */
+	uint16_t td_flags;   /**< how to interpret this data */
+	uint32_t td_hilen;   /**< num elements in highest dimension array */
+	uint32_t td_lolen;   /**< num elements in lowest dimension array */
+	void   *td_data;     /**< table data */
 };
+
+/* vim:set noexpandtab cindent tabstop=8 softtabstop=0 shiftwidth=8 textwidth=0: */
