@@ -2,10 +2,17 @@
 
 ** expand the above into individual requests and handle those requests
 
-* integrate the items in the faqs/ directory into the manual or code
+* the manual:
+
+** integrate the items in the faqs/ directory into the manual or code
   or similar
 
-* We've converted the flex manual to texinfo, but some issues remain:
+*** create a section on flex design, features, etc.
+
+**** we're not adding comments between pattern-action rules; explain
+why in the documentation
+
+** We've converted the flex manual to texinfo, but some issues remain:
 
 ** index flex.texi
 
