@@ -721,21 +721,23 @@ void gen_NUL_trans()
 void gen_start_state()
 	{
 	if ( fullspd )
-		indent_put2s(
-			"yy_current_state = yy_start_state_list[yy_start%s];",
-			bol_needed ? " + (yy_bp[-1] == '\\n' ? 1 : 0)" : "" );
+		{
+		if ( bol_needed )
+			{
+			indent_puts(
+	"yy_current_state = yy_start_state_list[yy_start + YY_AT_BOL()];" );
+			}
+		else
+			indent_puts(
+			"yy_current_state = yy_start_state_list[yy_start];" );
+		}
 
 	else
 		{
 		indent_puts( "yy_current_state = yy_start;" );
 
 		if ( bol_needed )
-			{
-			indent_puts( "if ( yy_bp[-1] == '\\n' )" );
-			indent_up();
-			indent_puts( "++yy_current_state;" );
-			indent_down();
-			}
+			indent_puts( "yy_current_state += YY_AT_BOL();" );
 
 		if ( reject )
 			{
@@ -965,7 +967,10 @@ void gentabs()
 
 	for ( i = 1; i <= tblend; ++i )
 		{
-		if ( nxt[i] == 0 || chk[i] == 0 )
+		/* Note, the order of the following test is important.
+		 * If chk[i] is 0, then nxt[i] is undefined.
+		 */
+		if ( chk[i] == 0 || nxt[i] == 0 )
 			nxt[i] = jamstate;	/* new state is the JAM state */
 
 		mkdata( nxt[i] );
@@ -1032,11 +1037,11 @@ void make_tables()
 	if ( yymore_used )
 		{
 		indent_puts( "yytext_ptr -= yy_more_len; \\" );
-		indent_puts( "yyleng = yy_cp - yytext_ptr; \\" );
+		indent_puts( "yyleng = (int) (yy_cp - yytext_ptr); \\" );
 		}
 
 	else
-		indent_puts( "yyleng = yy_cp - yy_bp; \\" );
+		indent_puts( "yyleng = (int) (yy_cp - yy_bp); \\" );
 
 	/* Now also deal with copying yytext_ptr to yytext if needed. */
 	skelout();
@@ -1267,6 +1272,21 @@ void make_tables()
 
 	skelout();
 
+	indent_puts( "#define YY_RULE_SETUP \\" );
+	indent_up();
+	if ( bol_needed )
+		{
+		indent_puts( "if ( yyleng > 0 ) \\" );
+		indent_up();
+		indent_puts( "yy_current_buffer->yy_at_bol = \\" );
+		indent_puts( "\t\t(yytext[yyleng - 1] == '\\n'); \\" );
+		indent_down();
+		}
+	indent_puts( "YY_USER_ACTION" );
+	indent_down();
+
+	skelout();
+
 	/* Copy prolog to output file. */
 	out( &action_array[prolog_offset] );
 
@@ -1426,9 +1446,6 @@ void make_tables()
 	set_indent( 1 );
 	skelout();
 
-	if ( bol_needed )
-		indent_puts( "register char *yy_bp = yytext_ptr;\n" );
-
 	gen_start_state();
 
 	set_indent( 2 );
@@ -1445,6 +1462,15 @@ void make_tables()
 		indent_puts( "if ( c == '\\n' )" );
 		indent_up();
 		indent_puts( "--yylineno;" );
+		indent_down();
+		}
+
+	skelout();
+	if ( lex_compat )
+		{ /* update yylineno inside of input() */
+		indent_puts( "if ( c == '\\n' )" );
+		indent_up();
+		indent_puts( "++yylineno;" );
 		indent_down();
 		}
 
