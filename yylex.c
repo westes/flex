@@ -59,12 +59,6 @@ int yylex()
 			toktype = SECTEND;
 			}
 
-		else if ( sectnum == 2 )
-			{
-			sectnum = 3;
-			toktype = 0;
-			}
-
 		else
 			toktype = 0;
 		}
