@@ -230,7 +230,7 @@ int xcluflg;
 	char *copy_string();
 
 	/* Generate start condition definition, for use in BEGIN et al. */
-	out_str_dec( "#define %s %d\n", str, lastsc );
+	action_define( str, lastsc );
 
 	if ( ++lastsc >= current_max_scs )
 		scextend();
