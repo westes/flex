@@ -32,7 +32,7 @@
 #include <stdio.h>
 #endif
 
-/* always be prepared to generate an 8-bit scanner */
+/* Always be prepared to generate an 8-bit scanner. */
 #define FLEX_8_BIT_CHARS
 
 #ifdef FLEX_8_BIT_CHARS
@@ -43,7 +43,7 @@
 #define CSIZE 128
 #endif
 
-/* size of input alphabet - should be size of ASCII set */
+/* Size of input alphabet - should be size of ASCII set. */
 #ifndef DEFAULT_CSIZE
 #define DEFAULT_CSIZE 128
 #endif
@@ -97,10 +97,10 @@ char *malloc(), *realloc();
 #endif
 
 
-/* maximum line length we'll have to deal with */
+/* Maximum line length we'll have to deal with. */
 #define MAXLINE BUFSIZ
 
-/* maximum size of file name */
+/* Maximum size of file name. */
 #define FILENAMESIZE 1024
 
 #ifndef min
@@ -121,24 +121,24 @@ char *malloc(), *realloc();
 #define false 0
 
 
-/* special chk[] values marking the slots taking by end-of-buffer and action
- * numbers
+/* Special chk[] values marking the slots taking by end-of-buffer and action
+ * numbers.
  */
 #define EOB_POSITION -1
 #define ACTION_POSITION -2
 
-/* number of data items per line for -f output */
+/* Number of data items per line for -f output. */
 #define NUMDATAITEMS 10
 
-/* number of lines of data in -f output before inserting a blank line for
+/* Number of lines of data in -f output before inserting a blank line for
  * readability.
  */
 #define NUMDATALINES 10
 
-/* transition_struct_out() definitions */
+/* Transition_struct_out() definitions. */
 #define TRANS_STRUCT_PRINT_LENGTH 15
 
-/* returns true if an nfa state has an epsilon out-transition slot
+/* Returns true if an nfa state has an epsilon out-transition slot
  * that can be used.  This definition is currently not used.
  */
 #define FREE_EPSILON(state) \
@@ -146,14 +146,14 @@ char *malloc(), *realloc();
 	 trans2[state] == NO_TRANSITION && \
 	 finalst[state] != state)
 
-/* returns true if an nfa state has an epsilon out-transition character
+/* Returns true if an nfa state has an epsilon out-transition character
  * and both slots are free
  */
 #define SUPER_FREE_EPSILON(state) \
 	(transchar[state] == SYM_EPSILON && \
 	 trans1[state] == NO_TRANSITION) \
 
-/* maximum number of NFA states that can comprise a DFA state.  It's real
+/* Maximum number of NFA states that can comprise a DFA state.  It's real
  * big because if there's a lot of rules, the initial state will have a
  * huge epsilon closure.
  */
@@ -161,7 +161,7 @@ char *malloc(), *realloc();
 #define MAX_DFA_SIZE_INCREMENT 750
 
 
-/* a note on the following masks.  They are used to mark accepting numbers
+/* A note on the following masks.  They are used to mark accepting numbers
  * as being special.  As such, they implicitly limit the number of accepting
  * numbers (i.e., rules) because if there are too many rules the rule numbers
  * will overload the mask bits.  Fortunately, this limit is \large/ (0x2000 ==
@@ -169,18 +169,20 @@ char *malloc(), *realloc();
  * new_rule() to ensure that this limit is not reached.
  */
 
-/* mask to mark a trailing context accepting number */
+/* Mask to mark a trailing context accepting number. */
 #define YY_TRAILING_MASK 0x2000
 
-/* mask to mark the accepting number of the "head" of a trailing context rule */
+/* Mask to mark the accepting number of the "head" of a trailing context
+ * rule.
+ */
 #define YY_TRAILING_HEAD_MASK 0x4000
 
-/* maximum number of rules, as outlined in the above note */
+/* Maximum number of rules, as outlined in the above note. */
 #define MAX_RULE (YY_TRAILING_MASK - 1)
 
 
 /* NIL must be 0.  If not, its special meaning when making equivalence classes
- * (it marks the representative of a given e.c.) will be unidentifiable
+ * (it marks the representative of a given e.c.) will be unidentifiable.
  */
 #define NIL 0
 
@@ -192,7 +194,7 @@ char *malloc(), *realloc();
 #define INITIAL_MAX_CCLS 100	/* max number of unique character classes */
 #define MAX_CCLS_INCREMENT 100
 
-/* size of table holding members of character classes */
+/* Size of table holding members of character classes. */
 #define INITIAL_MAX_CCL_TBL_SIZE 500
 #define MAX_CCL_TBL_SIZE_INCREMENT 250
 
@@ -207,17 +209,17 @@ char *malloc(), *realloc();
 
 #define JAMSTATE -32766	/* marks a reference to the state that always jams */
 
-/* enough so that if it's subtracted from an NFA state number, the result
- * is guaranteed to be negative
+/* Enough so that if it's subtracted from an NFA state number, the result
+ * is guaranteed to be negative.
  */
 #define MARKER_DIFFERENCE 32000
 #define MAXIMUM_MNS 31999
 
-/* maximum number of nxt/chk pairs for non-templates */
+/* Maximum number of nxt/chk pairs for non-templates. */
 #define INITIAL_MAX_XPAIRS 2000
 #define MAX_XPAIRS_INCREMENT 2000
 
-/* maximum number of nxt/chk pairs needed for templates */
+/* Maximum number of nxt/chk pairs needed for templates. */
 #define INITIAL_MAX_TEMPLATE_XPAIRS 2500
 #define MAX_TEMPLATE_XPAIRS_INCREMENT 2500
 
@@ -229,77 +231,77 @@ char *malloc(), *realloc();
 #define ONE_STACK_SIZE 500	/* stack of states with only one out-transition */
 #define SAME_TRANS -1	/* transition is the same as "default" entry for state */
 
-/* the following percentages are used to tune table compression:
+/* The following percentages are used to tune table compression:
 
- * the percentage the number of out-transitions a state must be of the
+ * The percentage the number of out-transitions a state must be of the
  * number of equivalence classes in order to be considered for table
- * compaction by using protos
+ * compaction by using protos.
  */
 #define PROTO_SIZE_PERCENTAGE 15
 
-/* the percentage the number of homogeneous out-transitions of a state
+/* The percentage the number of homogeneous out-transitions of a state
  * must be of the number of total out-transitions of the state in order
  * that the state's transition table is first compared with a potential 
  * template of the most common out-transition instead of with the first
- * proto in the proto queue
+ * proto in the proto queue.
  */
 #define CHECK_COM_PERCENTAGE 50
 
-/* the percentage the number of differences between a state's transition
+/* The percentage the number of differences between a state's transition
  * table and the proto it was first compared with must be of the total
  * number of out-transitions of the state in order to keep the first
- * proto as a good match and not search any further
+ * proto as a good match and not search any further.
  */
 #define FIRST_MATCH_DIFF_PERCENTAGE 10
 
-/* the percentage the number of differences between a state's transition
+/* The percentage the number of differences between a state's transition
  * table and the most similar proto must be of the state's total number
- * of out-transitions to use the proto as an acceptable close match
+ * of out-transitions to use the proto as an acceptable close match.
  */
 #define ACCEPTABLE_DIFF_PERCENTAGE 50
 
-/* the percentage the number of homogeneous out-transitions of a state
+/* The percentage the number of homogeneous out-transitions of a state
  * must be of the number of total out-transitions of the state in order
- * to consider making a template from the state
+ * to consider making a template from the state.
  */
 #define TEMPLATE_SAME_PERCENTAGE 60
 
-/* the percentage the number of differences between a state's transition
+/* The percentage the number of differences between a state's transition
  * table and the most similar proto must be of the state's total number
- * of out-transitions to create a new proto from the state
+ * of out-transitions to create a new proto from the state.
  */
 #define NEW_PROTO_DIFF_PERCENTAGE 20
 
-/* the percentage the total number of out-transitions of a state must be
+/* The percentage the total number of out-transitions of a state must be
  * of the number of equivalence classes in order to consider trying to
  * fit the transition table into "holes" inside the nxt/chk table.
  */
 #define INTERIOR_FIT_PERCENTAGE 15
 
-/* size of region set aside to cache the complete transition table of
- * protos on the proto queue to enable quick comparisons
+/* Size of region set aside to cache the complete transition table of
+ * protos on the proto queue to enable quick comparisons.
  */
 #define PROT_SAVE_SIZE 2000
 
 #define MSP 50	/* maximum number of saved protos (protos on the proto queue) */
 
-/* maximum number of out-transitions a state can have that we'll rummage
+/* Maximum number of out-transitions a state can have that we'll rummage
  * around through the interior of the internal fast table looking for a
- * spot for it
+ * spot for it.
  */
 #define MAX_XTIONS_FULL_INTERIOR_FIT 4
 
-/* maximum number of rules which will be reported as being associated
- * with a DFA state
+/* Maximum number of rules which will be reported as being associated
+ * with a DFA state.
  */
 #define MAX_ASSOC_RULES 100
 
-/* number that, if used to subscript an array, has a good chance of producing
- * an error; should be small enough to fit into a short
+/* Number that, if used to subscript an array, has a good chance of producing
+ * an error; should be small enough to fit into a short.
  */
 #define BAD_SUBSCRIPT -32767
 
-/* absolute value of largest number that can be stored in a short, with a
+/* Absolute value of largest number that can be stored in a short, with a
  * bit of slop thrown in for general paranoia.
  */
 #define MAX_SHORT 32766
@@ -307,19 +309,19 @@ char *malloc(), *realloc();
 
 /* Declarations for global variables. */
 
-/* variables for symbol tables:
+/* Variables for symbol tables:
  * sctbl - start-condition symbol table
  * ndtbl - name-definition symbol table
  * ccltab - character class text symbol table
  */
 
 struct hash_entry
-    {
-    struct hash_entry *prev, *next;
-    char *name;
-    char *str_val;
-    int int_val;
-    } ;
+	{
+	struct hash_entry *prev, *next;
+	char *name;
+	char *str_val;
+	int int_val;
+	} ;
 
 typedef struct hash_entry *hash_table[];
 
@@ -332,7 +334,7 @@ extern struct hash_entry *sctbl[START_COND_HASH_SIZE];
 extern struct hash_entry *ccltab[CCL_HASH_SIZE];
 
 
-/* variables for flags:
+/* Variables for flags:
  * printstats - if true (-v), dump statistics
  * syntaxerror - true if a syntax error has been found
  * eofseen - true if we've seen an eof in the input file
@@ -379,10 +381,10 @@ extern int yymore_used, reject, real_reject, continued_action;
 extern int yymore_really_used, reject_really_used;
 
 
-/* variables used in the flex input routines:
+/* Variables used in the flex input routines:
  * datapos - characters on current output line
  * dataline - number of contiguous lines of data in current data
- *    statement.  Used to generate readable -f output
+ * 	statement.  Used to generate readable -f output
  * linenum - current input line number
  * skelfile - the skeleton file
  * skel - compiled-in skeleton array
@@ -399,9 +401,9 @@ extern int yymore_really_used, reject_really_used;
  * prolog - pointer to where the prolog starts in action_array
  * action_offset - index where the non-prolog starts in action_array
  * action_index - index where the next action should go, with respect
- *                to "action"
+ * 	to "action"
  * action - pointer to where non-prolog starts; equal to
- *          &action_array[action_offset]
+ * 	&action_array[action_offset]
  */
 
 extern int datapos, dataline, linenum;
@@ -417,7 +419,7 @@ extern char *action_array, *prolog, *action;
 extern int action_size, action_offset, action_index;
 
 
-/* variables for stack of states having only one out-transition:
+/* Variables for stack of states having only one out-transition:
  * onestate - state number
  * onesym - transition symbol
  * onenext - target state
@@ -429,10 +431,10 @@ extern int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
 
 
-/* variables for nfa machine data:
+/* Variables for nfa machine data:
  * current_mns - current maximum on number of NFA states
  * num_rules - number of the last accepting state; also is number of
- *             rules created so far
+ * 	rules created so far
  * num_eof_rules - number of <<EOF>> rules
  * default_rule - number of the default rule
  * current_max_rules - current maximum number of rules
@@ -446,14 +448,14 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
  * accptnum - accepting number
  * assoc_rule - rule associated with this NFA state (or 0 if none)
  * state_type - a STATE_xxx type identifying whether the state is part
- *              of a normal rule, the leading state in a trailing context
- *              rule (i.e., the state which marks the transition from
- *              recognizing the text-to-be-matched to the beginning of
- *              the trailing context), or a subsequent state in a trailing
- *              context rule
+ * 	of a normal rule, the leading state in a trailing context
+ * 	rule (i.e., the state which marks the transition from
+ * 	recognizing the text-to-be-matched to the beginning of
+ * 	the trailing context), or a subsequent state in a trailing
+ * 	context rule
  * rule_type - a RULE_xxx type identifying whether this a ho-hum
- *             normal rule or one which has variable head & trailing
- *             context
+ * 	normal rule or one which has variable head & trailing
+ * 	context
  * rule_linenum - line number associated with rule
  * rule_useful - true if we've determined that the rule can be matched
  */
@@ -464,27 +466,27 @@ extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 extern int *accptnum, *assoc_rule, *state_type;
 extern int *rule_type, *rule_linenum, *rule_useful;
 
-/* different types of states; values are useful as masks, as well, for
- * routines like check_trailing_context()
+/* Different types of states; values are useful as masks, as well, for
+ * routines like check_trailing_context().
  */
 #define STATE_NORMAL 0x1
 #define STATE_TRAILING_CONTEXT 0x2
 
-/* global holding current type of state we're making */
+/* Global holding current type of state we're making. */
 
 extern int current_state_type;
 
-/* different types of rules */
+/* Different types of rules. */
 #define RULE_NORMAL 0
 #define RULE_VARIABLE 1
 
-/* true if the input rules include a rule with both variable-length head
- * and trailing context, false otherwise
+/* True if the input rules include a rule with both variable-length head
+ * and trailing context, false otherwise.
  */
 extern int variable_trailing_context_rules;
 
 
-/* variables for protos:
+/* Variables for protos:
  * numtemps - number of templates created
  * numprots - number of protos created
  * protprev - backlink to a more-recently used proto
@@ -500,7 +502,7 @@ extern int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 extern int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 
 
-/* variables for managing equivalence classes:
+/* Variables for managing equivalence classes:
  * numecs - number of equivalence classes
  * nextecm - forward link of Equivalence Class members
  * ecgroup - class number or backward link of EC members
@@ -510,14 +512,14 @@ extern int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
  * tecbck - backward link of MEC's
  */
 
-/* reserve enough room in the equivalence class arrays so that we
+/* Reserve enough room in the equivalence class arrays so that we
  * can use the CSIZE'th element to hold equivalence class information
  * for the NUL character.  Later we'll move this information into
  * the 0th element.
  */
 extern int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs;
 
-/* meta-equivalence classes are indexed starting at 1, so it's possible
+/* Meta-equivalence classes are indexed starting at 1, so it's possible
  * that they will require positions from 1 .. CSIZE, i.e., CSIZE + 1
  * slots total (since the arrays are 0-based).  nextecm[] and ecgroup[]
  * don't require the extra position since they're indexed from 1 .. CSIZE - 1.
@@ -525,7 +527,7 @@ extern int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs;
 extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
 
 
-/* variables for start conditions:
+/* Variables for start conditions:
  * lastsc - last start condition created
  * current_max_scs - current limit on number of start conditions
  * scset - set of rules active in start condition
@@ -534,19 +536,19 @@ extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
  * sceof - true if start condition has EOF rule
  * scname - start condition name
  * actvsc - stack of active start conditions for the current rule;
- *          a negative entry means that the start condition is *not*
- *          active for the current rule.  Start conditions may appear
- *          multiple times on the stack; the entry for it closest
- *          to the top of the stack (i.e., actvsc[actvp]) is the
- *          one to use.  Others are present from "<sc>{" scoping
- *          constructs.
+ * 	a negative entry means that the start condition is *not*
+ *	active for the current rule.  Start conditions may appear
+ *	multiple times on the stack; the entry for it closest
+ *	to the top of the stack (i.e., actvsc[actvp]) is the
+ *	one to use.  Others are present from "<sc>{" scoping
+ *	constructs.
  */
 
 extern int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof, *actvsc;
 extern char **scname;
 
 
-/* variables for dfa machine data:
+/* Variables for dfa machine data:
  * current_max_dfa_size - current maximum number of NFA states in DFA
  * current_max_xpairs - current maximum number of non-template xtion pairs
  * current_max_template_xpairs - current maximum number of template pairs
@@ -568,8 +570,8 @@ extern char **scname;
  * accsiz - size of accepting set for each dfa state
  * dhash - dfa state hash value
  * numas - number of DFA accepting states created; note that this
- *    is not necessarily the same value as num_rules, which is the analogous
- *    value for the NFA
+ *	is not necessarily the same value as num_rules, which is the analogous
+ *	value for the NFA
  * numsnpairs - number of state/nextstate transition pairs
  * jambase - position in base/def where the default jam table starts
  * jamstate - state number corresponding to "jam" state
@@ -581,15 +583,15 @@ extern int current_max_template_xpairs, current_max_dfas;
 extern int lastdfa, lasttemp, *nxt, *chk, *tnxt;
 extern int *base, *def, *nultrans, NUL_ec, tblend, firstfree, **dss, *dfasiz;
 extern union dfaacc_union
-    {
-    int *dfaacc_set;
-    int dfaacc_state;
-    } *dfaacc;
+	{
+	int *dfaacc_set;
+	int dfaacc_state;
+	} *dfaacc;
 extern int *accsiz, *dhash, numas;
 extern int numsnpairs, jambase, jamstate;
 extern int end_of_buffer_state;
 
-/* variables for ccl information:
+/* Variables for ccl information:
  * lastccl - ccl index of the last created ccl
  * current_maxccls - current limit on the maximum number of unique ccl's
  * cclmap - maps a ccl index to its set pointer
@@ -606,7 +608,7 @@ extern int current_max_ccl_tbl_size;
 extern Char *ccltbl;
 
 
-/* variables for miscellaneous information:
+/* Variables for miscellaneous information:
  * starttime - real-time when we started
  * endtime - real-time when we ended
  * nmstr - last NAME scanned by the scanner
@@ -617,7 +619,7 @@ extern Char *ccltbl;
  * numeps - number of epsilon NFA states created
  * eps2 - number of epsilon states which have 2 out-transitions
  * num_reallocs - number of times it was necessary to realloc() a group
- *		  of arrays
+ *	  of arrays
  * tmpuses - number of DFA states that chain to templates
  * totnst - total number of NFA states used to make DFA states
  * peakpairs - peak number of transition pairs we had to store internally
@@ -674,28 +676,28 @@ void *allocate_array(), *reallocate_array();
 	(Char *) reallocate_array( (void *) array, size, sizeof( Char ) )
 
 
-/* used to communicate between scanner and parser.  The type should really
+/* Used to communicate between scanner and parser.  The type should really
  * be YYSTYPE, but we can't easily get our hands on it.
  */
 extern int yylval;
 
 
-/* external functions that are cross-referenced among the flex source files */
+/* External functions that are cross-referenced among the flex source files. */
 
 
 /* from file ccl.c */
 
-extern void ccladd PROTO((int, int));	/* Add a single character to a ccl */
+extern void ccladd PROTO((int, int));	/* add a single character to a ccl */
 extern int cclinit PROTO((void));	/* make an empty ccl */
 extern void cclnegate PROTO((int));	/* negate a ccl */
 
-/* list the members of a set of characters in CCL form */
+/* List the members of a set of characters in CCL form. */
 extern void list_character_set PROTO((FILE*, int[]));
 
 
 /* from file dfa.c */
 
-/* increase the maximum number of dfas */
+/* Increase the maximum number of dfas. */
 extern void increase_max_dfas PROTO((void));
 
 extern void ntod PROTO((void));	/* convert a ndfa to a dfa */
@@ -703,16 +705,16 @@ extern void ntod PROTO((void));	/* convert a ndfa to a dfa */
 
 /* from file ecs.c */
 
-/* convert character classes to set of equivalence classes */
+/* Convert character classes to set of equivalence classes. */
 extern void ccl2ecl PROTO((void));
 
-/* associate equivalence class numbers with class members */
+/* Associate equivalence class numbers with class members. */
 extern int cre8ecs PROTO((int[], int[], int));
 
-/* update equivalence classes based on character class transitions */
+/* Update equivalence classes based on character class transitions. */
 extern void mkeccl PROTO((Char[], int, int[], int[], int, int));
 
-/* create equivalence class for single character */
+/* Create equivalence class for single character. */
 extern void mkechar PROTO((int, int[], int[]));
 
 
@@ -732,94 +734,94 @@ extern void usage PROTO((void));
 /* Add the given text to the stored actions. */
 extern void add_action PROTO(( char *new_text ));
 
-/* true if a string is all lower case */
+/* True if a string is all lower case. */
 extern int all_lower PROTO((register Char *));
 
-/* true if a string is all upper case */
+/* True if a string is all upper case. */
 extern int all_upper PROTO((register Char *));
 
-/* bubble sort an integer array */
+/* Bubble sort an integer array. */
 extern void bubble PROTO((int [], int));
 
-/* shell sort a character array */
+/* Shell sort a character array. */
 extern void cshell PROTO((Char [], int, int));
 
-/* finish up a block of data declarations */
+/* Finish up a block of data declarations. */
 extern void dataend PROTO((void));
 
-/* report an error message and terminate */
+/* Report an error message and terminate. */
 extern void flexerror PROTO((char[]));
 
-/* report a fatal error message and terminate */
+/* Report a fatal error message and terminate. */
 extern void flexfatal PROTO((char[]));
 
-/* report an error message formatted with one integer argument */
+/* Report an error message formatted with one integer argument. */
 extern void lerrif PROTO((char[], int));
 
-/* report an error message formatted with one string argument */
+/* Report an error message formatted with one string argument. */
 extern void lerrsf PROTO((char[], char[]));
 
-/* spit out a "# line" statement */
+/* Spit out a "# line" statement. */
 extern void line_directive_out PROTO((FILE*));
 
-/* mark the current position in the action array as the end of the prolog */
+/* Mark the current position in the action array as the end of the prolog. */
 extern void mark_prolog PROTO(());
 
-/* generate a data statment for a two-dimensional array */
+/* Generate a data statment for a two-dimensional array. */
 extern void mk2data PROTO((int));
 
 extern void mkdata PROTO((int));	/* generate a data statement */
 
-/* return the integer represented by a string of digits */
+/* Return the integer represented by a string of digits. */
 extern int myctoi PROTO((Char []));
 
-/* write out one section of the skeleton file */
+/* Write out one section of the skeleton file. */
 extern void skelout PROTO((void));
 
-/* output a yy_trans_info structure */
+/* Output a yy_trans_info structure. */
 extern void transition_struct_out PROTO((int, int));
 
-/* set a region of memory to 0 */
+/* Set a region of memory to 0. */
 extern void zero_out PROTO((char *, int));
 
 
 /* from file nfa.c */
 
-/* add an accepting state to a machine */
+/* Add an accepting state to a machine. */
 extern void add_accept PROTO((int, int));
 
-/* make a given number of copies of a singleton machine */
+/* Make a given number of copies of a singleton machine. */
 extern int copysingl PROTO((int, int));
 
-/* debugging routine to write out an nfa */
+/* Debugging routine to write out an nfa. */
 extern void dumpnfa PROTO((int));
 
-/* finish up the processing for a rule */
+/* Finish up the processing for a rule. */
 extern void finish_rule PROTO((int, int, int, int));
 
-/* connect two machines together */
+/* Connect two machines together. */
 extern int link_machines PROTO((int, int));
 
-/* mark each "beginning" state in a machine as being a "normal" (i.e.,
- * not trailing context associated) state
+/* Mark each "beginning" state in a machine as being a "normal" (i.e.,
+ * not trailing context associated) state.
  */
 extern void mark_beginning_as_normal PROTO((register int));
 
-/* make a machine that branches to two machines */
+/* Make a machine that branches to two machines. */
 extern int mkbranch PROTO((int, int));
 
 extern int mkclos PROTO((int));	/* convert a machine into a closure */
 extern int mkopt PROTO((int));	/* make a machine optional */
 
-/* make a machine that matches either one of two machines */
+/* Make a machine that matches either one of two machines. */
 extern int mkor PROTO((int, int));
 
-/* convert a machine into a positive closure */
+/* Convert a machine into a positive closure. */
 extern int mkposcl PROTO((int));
 
 extern int mkrep PROTO((int, int, int));	/* make a replicated machine */
 
-/* create a state with a transition on a given symbol */
+/* Create a state with a transition on a given symbol. */
 extern int mkstate PROTO((int));
 
 extern void new_rule PROTO((void));	/* initialize for a new rule */
@@ -827,19 +829,19 @@ extern void new_rule PROTO((void));	/* initialize for a new rule */
 
 /* from file parse.y */
 
-/* write out a message formatted with one string, pinpointing its location */
+/* Write out a message formatted with one string, pinpointing its location. */
 extern void format_pinpoint_message PROTO((char[], char[]));
 
-/* write out a message, pinpointing its location */
+/* Write out a message, pinpointing its location. */
 extern void pinpoint_message PROTO((char[]));
 
-/* write out a warning, pinpointing it at the given line */
+/* Write out a warning, pinpointing it at the given line. */
 void line_warning PROTO(( char[], int ));
 
-/* write out a message, pinpointing it at the given line */
+/* Write out a message, pinpointing it at the given line. */
 void line_pinpoint PROTO(( char[], int ));
 
-/* report a formatted syntax error */
+/* Report a formatted syntax error. */
 extern void format_synerr PROTO((char [], char[]));
 extern void synerr PROTO((char []));	/* report a syntax error */
 extern void warn PROTO((char []));	/* report a warning */
@@ -848,51 +850,52 @@ extern int yyparse PROTO((void));	/* the YACC parser */
 
 /* from file scan.l */
 
-/* the Flex-generated scanner for flex */
+/* The Flex-generated scanner for flex. */
 extern int flexscan PROTO((void));
 
-/* open the given file (if NULL, stdin) for scanning */
+/* Open the given file (if NULL, stdin) for scanning. */
 extern void set_input_file PROTO((char*));
 
-/* wrapup a file in the lexical analyzer */
+/* Wrapup a file in the lexical analyzer. */
 extern int yywrap PROTO((void));
 
 
 /* from file sym.c */
 
-/* save the text of a character class */
+/* Save the text of a character class. */
 extern void cclinstal PROTO ((Char [], int));
 
-/* lookup the number associated with character class */
+/* Lookup the number associated with character class. */
 extern int ccllookup PROTO((Char []));
 
 extern void ndinstal PROTO((char[], Char[]));	/* install a name definition */
-/* increase maximum number of SC's */
+/* Increase maximum number of SC's. */
 extern void scextend PROTO((void));
 extern void scinstal PROTO((char[], int));	/* make a start condition */
 
-/* lookup the number associated with a start condition */
+/* Lookup the number associated with a start condition. */
 extern int sclookup PROTO((char[]));
 
 
 /* from file tblcmp.c */
 
-/* build table entries for dfa state */
+/* Build table entries for dfa state. */
 extern void bldtbl PROTO((int[], int, int, int, int));
 
 extern void cmptmps PROTO((void));	/* compress template table entries */
 extern void inittbl PROTO((void));	/* initialize transition tables */
-/* make the default, "jam" table entries */
+/* Make the default, "jam" table entries. */
 extern void mkdeftbl PROTO((void));
 
-/* create table entries for a state (or state fragment) which has
- * only one out-transition */
+/* Create table entries for a state (or state fragment) which has
+ * only one out-transition.
+ */
 extern void mk1tbl PROTO((int, int, int, int));
 
-/* place a state into full speed transition table */
+/* Place a state into full speed transition table. */
 extern void place_state PROTO((int*, int, int));
 
-/* save states with only one out-transition to be processed later */
+/* Save states with only one out-transition to be processed later. */
 extern void stack1 PROTO((int, int, int, int));
 
 
@@ -901,7 +904,7 @@ extern void stack1 PROTO((int, int, int, int));
 extern int yylex PROTO((void));
 
 
-/* The Unix kernel calls used here */
+/* The Unix system calls used here. */
 
 extern int read PROTO((int, char*, int));
 extern int unlink PROTO((char*));

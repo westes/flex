@@ -54,15 +54,15 @@ static char rcsid[] =
 
 #define PUT_BACK_STRING(str, start) \
 	for ( i = strlen( (char *) (str) ) - 1; i >= start; --i ) \
-	    unput((str)[i])
+		unput((str)[i])
 
 #define CHECK_REJECT(str) \
 	if ( all_upper( str ) ) \
-	    reject = true;
+		reject = true;
 
 #define CHECK_YYMORE(str) \
 	if ( all_lower( str ) ) \
-	    yymore_used = true;
+		yymore_used = true;
 %}
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
@@ -86,11 +86,11 @@ FIRST_CCL_CHAR	[^\\\n]|{ESCSEQ}
 CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 
 %%
-    static int bracelevel, didadef, indented_code, checking_used;
+	static int bracelevel, didadef, indented_code, checking_used;
 
-    int doing_codeblock = false;
-    int i;
-    Char nmdef[MAXLINE], myesc();
+	int doing_codeblock = false;
+	int i;
+	Char nmdef[MAXLINE], myesc();
 
 
 ^{WS}			indented_code = true; BEGIN(CODEBLOCK);
@@ -156,7 +156,7 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 			++linenum;
 			ECHO;
 			if ( indented_code )
-			    BEGIN(INITIAL);
+				BEGIN(INITIAL);
 			}
 
 
@@ -165,22 +165,21 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 <PICKUPDEF>{NOT_WS}.*	{
 			(void) strcpy( (char *) nmdef, (char *) yytext );
 
-			/* skip trailing whitespace */
+			/* Skip trailing whitespace. */
 			for ( i = strlen( (char *) nmdef ) - 1;
-			      i >= 0 &&
-			      (nmdef[i] == ' ' || nmdef[i] == '\t');
+			      i >= 0 && (nmdef[i] == ' ' || nmdef[i] == '\t');
 			      --i )
-			    ;
+				;
 
 			nmdef[i + 1] = '\0';
 
-                        ndinstal( nmstr, nmdef );
+			ndinstal( nmstr, nmdef );
 			didadef = true;
 			}
 
 <PICKUPDEF>{NL}		{
 			if ( ! didadef )
-			    synerr( "incomplete name definition" );
+				synerr( "incomplete name definition" );
 			BEGIN(INITIAL);
 			++linenum;
 			}
@@ -192,15 +191,17 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 <USED_LIST>{WS}
 <USED_LIST>"reject"	{
 			if ( all_upper( yytext ) )
-			    reject_really_used = checking_used;
+				reject_really_used = checking_used;
 			else
-			    synerr( "unrecognized %used/%unused construct" );
+				synerr(
+				"unrecognized %used/%unused construct" );
 			}
 <USED_LIST>"yymore"	{
 			if ( all_lower( yytext ) )
-			    yymore_really_used = checking_used;
+				yymore_really_used = checking_used;
 			else
-			    synerr( "unrecognized %used/%unused construct" );
+				synerr(
+				"unrecognized %used/%unused construct" );
 			}
 <USED_LIST>{NOT_WS}+	synerr( "unrecognized %used/%unused construct" );
 
@@ -224,7 +225,7 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 			bracelevel = 1;
 
 			if ( indented_code )
-			    ACTION_ECHO;
+				ACTION_ECHO;
 
 			BEGIN(CODEBLOCK_2);
 			}
@@ -244,9 +245,9 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 <SECT2>{WS}"|".*{NL}	continued_action = true; ++linenum; return '\n';
 
 <SECT2>{WS}		{
-			/* this rule is separate from the one below because
+			/* This rule is separate from the one below because
 			 * otherwise we get variable trailing context, so
-			 * we can't build the scanner using -{f,F}
+			 * we can't build the scanner using -{f,F}.
 			 */
 			bracelevel = 0;
 			continued_action = false;
@@ -275,31 +276,33 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 
 			(void) strcpy( nmstr, (char *) yytext );
 
-			/* check to see if we've already encountered this ccl */
+			/* Check to see if we've already encountered this
+			 * ccl.
+			 */
 			if ( (cclval = ccllookup( (Char *) nmstr )) )
-			    {
-			    if ( input() != ']' )
-				synerr( "bad character class" );
+				{
+				if ( input() != ']' )
+					synerr( "bad character class" );
 
-			    yylval = cclval;
-			    ++cclreuse;
-			    return PREVCCL;
-			    }
+				yylval = cclval;
+				++cclreuse;
+				return PREVCCL;
+				}
 			else
-			    {
-			    /* we fudge a bit.  We know that this ccl will
-			     * soon be numbered as lastccl + 1 by cclinit
-			     */
-			    cclinstal( (Char *) nmstr, lastccl + 1 );
+				{
+				/* We fudge a bit.  We know that this ccl will
+				 * soon be numbered as lastccl + 1 by cclinit.
+				 */
+				cclinstal( (Char *) nmstr, lastccl + 1 );
 
-			    /* push back everything but the leading bracket
-			     * so the ccl can be rescanned
-			     */
-			    yyless( 1 );
+				/* Push back everything but the leading bracket
+				 * so the ccl can be rescanned.
+				 */
+				yyless( 1 );
 
-			    BEGIN(FIRSTCCL);
-			    return '[';
-			    }
+				BEGIN(FIRSTCCL);
+				return '[';
+				}
 			}
 
 <SECT2>"{"{NAME}"}"	{
@@ -310,28 +313,29 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */
 
 			if ( ! (nmdefptr = ndlookup( nmstr )) )
-			    format_synerr( "undefined definition {%s}", nmstr );
+				format_synerr( "undefined definition {%s}",
+						nmstr );
 
 			else
-			    { /* push back name surrounded by ()'s */
-			    int len = strlen( nmdefptr );
+				{ /* push back name surrounded by ()'s */
+				int len = strlen( nmdefptr );
 
-			    if ( nmdefptr[0] == '^' ||
-				 (len > 0 && nmdefptr[len - 1] == '$') )
-				{
-				PUT_BACK_STRING(nmdefptr, 0);
+				if ( nmdefptr[0] == '^' ||
+				     (len > 0 && nmdefptr[len - 1] == '$') )
+					{
+					PUT_BACK_STRING(nmdefptr, 0);
 
-				if ( nmdefptr[0] == '^' )
-					BEGIN(CARETISBOL);
+					if ( nmdefptr[0] == '^' )
+						BEGIN(CARETISBOL);
+					}
+
+				else
+					{
+					unput(')');
+					PUT_BACK_STRING(nmdefptr, 0);
+					unput('(');
+					}
 				}
-
-			    else
-				{
-				unput(')');
-				PUT_BACK_STRING(nmdefptr, 0);
-				unput('(');
-				}
-			    }
 			}
 
 <SECT2>[/|*+?.()]	return yytext[0];
@@ -417,13 +421,13 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 			ACTION_ECHO;
 			if ( bracelevel == 0 ||
 			     (doing_codeblock && indented_code) )
-			    {
-			    if ( ! doing_codeblock )
-				add_action( "\tYY_BREAK\n" );
-			    
-			    doing_codeblock = false;
-			    BEGIN(SECT2);
-			    }
+				{
+				if ( ! doing_codeblock )
+					add_action( "\tYY_BREAK\n" );
+				
+				doing_codeblock = false;
+				BEGIN(SECT2);
+				}
 			}
 
 
@@ -439,19 +443,19 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 			++linenum;
 			ACTION_ECHO;
 			if ( bracelevel == 0 )
-			    {
-			    add_action( "\tYY_BREAK\n" );
-			    BEGIN(SECT2);
-			    }
+				{
+				add_action( "\tYY_BREAK\n" );
+				BEGIN(SECT2);
+				}
 			}
 <ACTION>.		ACTION_ECHO;
 
 <ACTION_COMMENT>"*/"	{
 			ACTION_ECHO;
 			if ( doing_codeblock )
-			    BEGIN(CODEBLOCK_2);
+				BEGIN(CODEBLOCK_2);
 			else
-			    BEGIN(ACTION);
+				BEGIN(ACTION);
 			}
 
 <ACTION_COMMENT>"*"	ACTION_ECHO;
@@ -490,37 +494,35 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 
 
 int yywrap()
-
-    {
-    if ( --num_input_files > 0 )
 	{
-	set_input_file( *++input_files );
-	return 0;
-	}
+	if ( --num_input_files > 0 )
+		{
+		set_input_file( *++input_files );
+		return 0;
+		}
 
-    else
-	return 1;
-    }
+	else
+		return 1;
+	}
 
 
 /* set_input_file - open the given file (if NULL, stdin) for scanning */
 
 void set_input_file( file )
 char *file;
-
-    {
-    if ( file )
 	{
-	infilename = file;
-	yyin = fopen( infilename, "r" );
+	if ( file )
+		{
+		infilename = file;
+		yyin = fopen( infilename, "r" );
 
-	if ( yyin == NULL )
-	    lerrsf( "can't open %s", file );
-	}
+		if ( yyin == NULL )
+			lerrsf( "can't open %s", file );
+		}
 
-    else
-	{
-	yyin = stdin;
-	infilename = "<stdin>";
+	else
+		{
+		yyin = stdin;
+		infilename = "<stdin>";
+		}
 	}
-    }

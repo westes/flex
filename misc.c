@@ -50,98 +50,84 @@ int otoi PROTO((Char []));
 
 void add_action( new_text )
 char *new_text;
-    {
-    int len = strlen( new_text );
-
-    while ( len + action_index + action_offset >= action_size - 10 /* slop */ )
 	{
-	action_size *= 2;
-	prolog = action_array =
-	    reallocate_character_array( action_array, action_size );
-	action = &action_array[action_offset];
+	int len = strlen( new_text );
+
+	while ( len + action_index + action_offset >= action_size - 10
+								/* slop */ )
+		{
+		action_size *= 2;
+		prolog = action_array =
+			reallocate_character_array( action_array, action_size );
+		action = &action_array[action_offset];
+		}
+
+	strcpy( &action[action_index], new_text );
+
+	action_index += len;
 	}
-
-    strcpy( &action[action_index], new_text );
-
-    action_index += len;
-    }
 
 
 /* allocate_array - allocate memory for an integer array of the given size */
 
 void *allocate_array( size, element_size )
 int size, element_size;
+	{
+	register void *mem;
 
-    {
-    register void *mem;
+	/* On 16-bit int machines (e.g., 80286) we might be trying to
+	 * allocate more than a signed int can hold, and that won't
+	 * work.  Cheap test:
+	 */
+	if ( element_size * size <= 0 )
+		flexfatal( "request for < 1 byte in allocate_array()" );
 
-    /* on 16-bit int machines (e.g., 80286) we might be trying to
-     * allocate more than a signed int can hold, and that won't
-     * work.  Cheap test:
-     */
-    if ( element_size * size <= 0 )
-        flexfatal( "request for < 1 byte in allocate_array()" );
+	mem = (void *) malloc( (unsigned) (element_size * size) );
 
-    mem = (void *) malloc( (unsigned) (element_size * size) );
+	if ( mem == NULL )
+		flexfatal( "memory allocation failed in allocate_array()" );
 
-    if ( mem == NULL )
-	flexfatal( "memory allocation failed in allocate_array()" );
-
-    return ( mem );
-    }
+	return mem;
+	}
 
 
-/* all_lower - true if a string is all lower-case
- *
- * synopsis:
- *    Char *str;
- *    int all_lower();
- *    true/false = all_lower( str );
- */
+/* all_lower - true if a string is all lower-case */
 
 int all_lower( str )
 register Char *str;
-
-    {
-    while ( *str )
 	{
-	if ( ! isascii( *str ) || ! islower( *str ) )
-	    return ( 0 );
-	++str;
+	while ( *str )
+		{
+		if ( ! isascii( *str ) || ! islower( *str ) )
+			return 0;
+		++str;
+		}
+
+	return 1;
 	}
 
-    return ( 1 );
-    }
 
-
-/* all_upper - true if a string is all upper-case
- *
- * synopsis:
- *    Char *str;
- *    int all_upper();
- *    true/false = all_upper( str );
- */
+/* all_upper - true if a string is all upper-case */
 
 int all_upper( str )
 register Char *str;
-
-    {
-    while ( *str )
 	{
-	if ( ! isascii( *str ) || ! isupper( (char) *str ) )
-	    return ( 0 );
-	++str;
-	}
+	while ( *str )
+		{
+		if ( ! isascii( *str ) || ! isupper( (char) *str ) )
+			return 0;
+		++str;
+		}
 
-    return ( 1 );
-    }
+	return 1;
+	}
 
 
 /* bubble - bubble sort an integer array in increasing order
  *
  * synopsis
  *   int v[n], n;
- *   bubble( v, n );
+ *   void bubble( v, n );
  *
  * description
  *   sorts the first n elements of array v and replaces them in
@@ -149,97 +135,79 @@ register Char *str;
  *
  * passed
  *   v - the array to be sorted
- *   n - the number of elements of 'v' to be sorted */
+ *   n - the number of elements of 'v' to be sorted
+ */
 
 void bubble( v, n )
 int v[], n;
+	{
+	register int i, j, k;
 
-    {
-    register int i, j, k;
-
-    for ( i = n; i > 1; --i )
-	for ( j = 1; j < i; ++j )
-	    if ( v[j] > v[j + 1] )	/* compare */
-		{
-		k = v[j];	/* exchange */
-		v[j] = v[j + 1];
-		v[j + 1] = k;
-		}
-    }
+	for ( i = n; i > 1; --i )
+		for ( j = 1; j < i; ++j )
+			if ( v[j] > v[j + 1] )	/* compare */
+				{
+				k = v[j];	/* exchange */
+				v[j] = v[j + 1];
+				v[j + 1] = k;
+				}
+	}
 
 
-/* clower - replace upper-case letter to lower-case
- *
- * synopsis:
- *    Char clower();
- *    int c;
- *    c = clower( c );
- */
+/* clower - replace upper-case letter to lower-case */
 
 Char clower( c )
 register int c;
+	{
+	return (isascii( c ) && isupper( c )) ? tolower( c ) : c;
+	}
 
-    {
-    return ( (isascii( c ) && isupper( c )) ? tolower( c ) : c );
-    }
 
-
-/* copy_string - returns a dynamically allocated copy of a string
- *
- * synopsis
- *    char *str, *copy, *copy_string();
- *    copy = copy_string( str );
- */
+/* copy_string - returns a dynamically allocated copy of a string */
 
 char *copy_string( str )
 register char *str;
+	{
+	register char *c;
+	char *copy;
 
-    {
-    register char *c;
-    char *copy;
+	/* find length */
+	for ( c = str; *c; ++c )
+		;
 
-    /* find length */
-    for ( c = str; *c; ++c )
-	;
+	copy = malloc( (unsigned) ((c - str + 1) * sizeof( char )) );
 
-    copy = malloc( (unsigned) ((c - str + 1) * sizeof( char )) );
+	if ( copy == NULL )
+		flexfatal( "dynamic memory failure in copy_string()" );
 
-    if ( copy == NULL )
-	flexfatal( "dynamic memory failure in copy_string()" );
+	for ( c = copy; (*c++ = *str++); )
+		;
 
-    for ( c = copy; (*c++ = *str++); )
-	;
-
-    return ( copy );
-    }
+	return copy;
+	}
 
 
 /* copy_unsigned_string -
  *    returns a dynamically allocated copy of a (potentially) unsigned string
- *
- * synopsis
- *    Char *str, *copy, *copy_unsigned_string();
- *    copy = copy_unsigned_string( str );
  */
 
 Char *copy_unsigned_string( str )
 register Char *str;
+	{
+	register Char *c;
+	Char *copy;
 
-    {
-    register Char *c;
-    Char *copy;
+	/* find length */
+	for ( c = str; *c; ++c )
+		;
 
-    /* find length */
-    for ( c = str; *c; ++c )
-	;
+	copy = allocate_Character_array( c - str + 1 );
 
-    copy = allocate_Character_array( c - str + 1 );
+	for ( c = copy; (*c++ = *str++); )
+		;
 
-    for ( c = copy; (*c++ = *str++); )
-	;
-
-    return ( copy );
-    }
+	return copy;
+	}
 
 
 /* cshell - shell sort a character array in increasing order
@@ -251,7 +219,7 @@ register Char *str;
  *   cshell( v, n, special_case_0 );
  *
  * description
- *   does a shell sort of the first n elements of array v.
+ *   Does a shell sort of the first n elements of array v.
  *   If special_case_0 is true, then any element equal to 0
  *   is instead assumed to have infinite weight.
  *
@@ -263,120 +231,91 @@ register Char *str;
 void cshell( v, n, special_case_0 )
 Char v[];
 int n, special_case_0;
-
-    {
-    int gap, i, j, jg;
-    Char k;
-
-    for ( gap = n / 2; gap > 0; gap = gap / 2 )
-	for ( i = gap; i < n; ++i )
-	    for ( j = i - gap; j >= 0; j = j - gap )
-		{
-		jg = j + gap;
-
-		if ( special_case_0 )
-		    {
-		    if ( v[jg] == 0 )
-			break;
-
-		    else if ( v[j] != 0 && v[j] <= v[jg] )
-			break;
-		    }
-
-		else if ( v[j] <= v[jg] )
-		    break;
-
-		k = v[j];
-		v[j] = v[jg];
-		v[jg] = k;
-		}
-    }
-
-
-/* dataend - finish up a block of data declarations
- *
- * synopsis
- *    dataend();
- */
-
-void dataend()
-
-    {
-    if ( datapos > 0 )
-	dataflush();
-
-    /* add terminator for initialization */
-    puts( "    } ;\n" );
-
-    dataline = 0;
-    datapos = 0;
-    }
-
-
-
-/* dataflush - flush generated data statements
- *
- * synopsis
- *    dataflush();
- */
-
-void dataflush()
-
-    {
-    putchar( '\n' );
-
-    if ( ++dataline >= NUMDATALINES )
 	{
-	/* put out a blank line so that the table is grouped into
-	 * large blocks that enable the user to find elements easily
-	 */
-	putchar( '\n' );
-	dataline = 0;
+	int gap, i, j, jg;
+	Char k;
+
+	for ( gap = n / 2; gap > 0; gap = gap / 2 )
+		for ( i = gap; i < n; ++i )
+			for ( j = i - gap; j >= 0; j = j - gap )
+				{
+				jg = j + gap;
+
+				if ( special_case_0 )
+					{
+					if ( v[jg] == 0 )
+						break;
+
+					else if ( v[j] != 0 && v[j] <= v[jg] )
+						break;
+					}
+
+				else if ( v[j] <= v[jg] )
+					break;
+
+				k = v[j];
+				v[j] = v[jg];
+				v[jg] = k;
+				}
 	}
 
-    /* reset the number of characters written on the current line */
-    datapos = 0;
-    }
+
+/* dataend - finish up a block of data declarations */
+
+void dataend()
+	{
+	if ( datapos > 0 )
+		dataflush();
+
+	/* add terminator for initialization; { for vi */
+	puts( "    } ;\n" );
+
+	dataline = 0;
+	datapos = 0;
+	}
 
 
-/* flexerror - report an error message and terminate
- *
- * synopsis
- *    char msg[];
- *    flexerror( msg );
- */
+/* dataflush - flush generated data statements */
+
+void dataflush()
+	{
+	putchar( '\n' );
+
+	if ( ++dataline >= NUMDATALINES )
+		{
+		/* Put out a blank line so that the table is grouped into
+		 * large blocks that enable the user to find elements easily.
+		 */
+		putchar( '\n' );
+		dataline = 0;
+		}
+
+	/* Reset the number of characters written on the current line. */
+	datapos = 0;
+	}
+
+
+/* flexerror - report an error message and terminate */
 
 void flexerror( msg )
 char msg[];
-
-    {
-    fprintf( stderr, "%s: %s\n", program_name, msg );
-
-    flexend( 1 );
-    }
+	{
+	fprintf( stderr, "%s: %s\n", program_name, msg );
+	flexend( 1 );
+	}
 
 
-/* flexfatal - report a fatal error message and terminate
- *
- * synopsis
- *    char msg[];
- *    flexfatal( msg );
- */
+/* flexfatal - report a fatal error message and terminate */
 
 void flexfatal( msg )
 char msg[];
-
-    {
-    fprintf( stderr, "%s: fatal internal error, %s\n", program_name, msg );
-    exit( 1 );
-    }
+	{
+	fprintf( stderr, "%s: fatal internal error, %s\n", program_name, msg );
+	exit( 1 );
+	}
 
 
 /* flex_gettime - return current time
- *
- * synopsis
- *    char *flex_gettime(), *time_str;
- *    time_str = flex_gettime();
  *
  * note
  *    the routine name has the "flex_" prefix because of name clashes
@@ -399,385 +338,319 @@ typedef long time_t;
 #endif
 
 char *flex_gettime()
+	{
+	time_t t, time();
+	char *result, *ctime(), *copy_string();
 
-    {
-    time_t t, time();
-    char *result, *ctime(), *copy_string();
+	t = time( (long *) 0 );
 
-    t = time( (long *) 0 );
+	result = copy_string( ctime( &t ) );
 
-    result = copy_string( ctime( &t ) );
+	/* get rid of trailing newline */
+	result[24] = '\0';
 
-    /* get rid of trailing newline */
-    result[24] = '\0';
-
-    return ( result );
-    }
+	return result;
+	}
 
 
-/* lerrif - report an error message formatted with one integer argument
- *
- * synopsis
- *    char msg[];
- *    int arg;
- *    lerrif( msg, arg );
- */
+/* lerrif - report an error message formatted with one integer argument */
 
 void lerrif( msg, arg )
 char msg[];
 int arg;
+	{
+	char errmsg[MAXLINE];
+	(void) sprintf( errmsg, msg, arg );
+	flexerror( errmsg );
+	}
 
-    {
-    char errmsg[MAXLINE];
-    (void) sprintf( errmsg, msg, arg );
-    flexerror( errmsg );
-    }
 
-
-/* lerrsf - report an error message formatted with one string argument
- *
- * synopsis
- *    char msg[], arg[];
- *    lerrsf( msg, arg );
- */
+/* lerrsf - report an error message formatted with one string argument */
 
 void lerrsf( msg, arg )
 char msg[], arg[];
+	{
+	char errmsg[MAXLINE];
 
-    {
-    char errmsg[MAXLINE];
-
-    (void) sprintf( errmsg, msg, arg );
-    flexerror( errmsg );
-    }
+	(void) sprintf( errmsg, msg, arg );
+	flexerror( errmsg );
+	}
 
 
-/* htoi - convert a hexadecimal digit string to an integer value
- *
- * synopsis:
- *    int val, htoi();
- *    Char str[];
- *    val = htoi( str );
- */
+/* htoi - convert a hexadecimal digit string to an integer value */
 
 int htoi( str )
 Char str[];
+	{
+	unsigned int result;
 
-    {
-    unsigned int result;
+	(void) sscanf( (char *) str, "%x", &result );
 
-    (void) sscanf( (char *) str, "%x", &result );
-
-    return ( result );
-    }
+	return result;
+	}
 
 
 /* is_hex_digit - returns true if a character is a valid hex digit, false
  *		  otherwise
- *
- * synopsis:
- *    int true_or_false, is_hex_digit();
- *    int ch;
- *    val = is_hex_digit( ch );
  */
 
 int is_hex_digit( ch )
 int ch;
-
-    {
-    if ( isdigit( ch ) )
-	return ( 1 );
-
-    switch ( clower( ch ) )
 	{
-	case 'a':
-	case 'b':
-	case 'c':
-	case 'd':
-	case 'e':
-	case 'f':
-	    return ( 1 );
+	if ( isdigit( ch ) )
+		return 1;
 
-	default:
-	    return ( 0 );
+	switch ( clower( ch ) )
+		{
+		case 'a':
+		case 'b':
+		case 'c':
+		case 'd':
+		case 'e':
+		case 'f':
+			return 1;
+
+		default:
+			return 0;
+		}
 	}
-    }
 
 
 /* line_directive_out - spit out a "# line" statement */
 
 void line_directive_out( output_file )
 FILE *output_file;
-
-    {
-    if ( infilename && gen_line_dirs )
 	{
-	char directive[MAXLINE];
-        sprintf( directive, "# line %d \"%s\"\n", linenum, infilename );
+	if ( infilename && gen_line_dirs )
+		{
+		char directive[MAXLINE];
+		sprintf( directive, "# line %d \"%s\"\n", linenum, infilename );
 
-	/* if output_file is nil then we should put the directive in
-	 * the accumulated actions.
-	 */
-	if ( output_file )
-	    fputs( directive, output_file );
-	else
-	    add_action( directive );
+		/* If output_file is nil then we should put the directive in
+		 * the accumulated actions.
+		 */
+		if ( output_file )
+			fputs( directive, output_file );
+		else
+			add_action( directive );
+		}
 	}
-    }
 
 
 /* mark_prolog - mark the current position in the action array as
  *               representing the action prolog
  */
 void mark_prolog()
-    {
-    prolog = action_array;
-    action_array[action_index++] = '\0';
-    action_offset = action_index;
-    action = &action_array[action_offset];
-    action_index = 0;
-    action[action_index] = '\0';
-    }
+	{
+	prolog = action_array;
+	action_array[action_index++] = '\0';
+	action_offset = action_index;
+	action = &action_array[action_offset];
+	action_index = 0;
+	action[action_index] = '\0';
+	}
 
 
 /* mk2data - generate a data statement for a two-dimensional array
  *
- * synopsis
- *    int value;
- *    mk2data( value );
- *
- *  generates a data statement initializing the current 2-D array to "value"
+ * Generates a data statement initializing the current 2-D array to "value".
  */
 void mk2data( value )
 int value;
-
-    {
-    if ( datapos >= NUMDATAITEMS )
 	{
-	putchar( ',' );
-	dataflush();
+	if ( datapos >= NUMDATAITEMS )
+		{
+		putchar( ',' );
+		dataflush();
+		}
+
+	if ( datapos == 0 )
+		/* Indent. */
+		fputs( "    ", stdout );
+
+	else
+		putchar( ',' );
+
+	++datapos;
+
+	printf( "%5d", value );
 	}
-
-    if ( datapos == 0 )
-	/* indent */
-	fputs( "    ", stdout );
-
-    else
-	putchar( ',' );
-
-    ++datapos;
-
-    printf( "%5d", value );
-    }
 
 
 /* mkdata - generate a data statement
  *
- * synopsis
- *    int value;
- *    mkdata( value );
- *
- *  generates a data statement initializing the current array element to
- *  "value"
+ * Generates a data statement initializing the current array element to
+ * "value".
  */
 void mkdata( value )
 int value;
-
-    {
-    if ( datapos >= NUMDATAITEMS )
 	{
-	putchar( ',' );
-	dataflush();
+	if ( datapos >= NUMDATAITEMS )
+		{
+		putchar( ',' );
+		dataflush();
+		}
+
+	if ( datapos == 0 )
+		/* Indent. */
+		fputs( "    ", stdout );
+	else
+		putchar( ',' );
+
+	++datapos;
+
+	printf( "%5d", value );
 	}
 
-    if ( datapos == 0 )
-	/* indent */
-	fputs( "    ", stdout );
 
-    else
-	putchar( ',' );
-
-    ++datapos;
-
-    printf( "%5d", value );
-    }
-
-
-/* myctoi - return the integer represented by a string of digits
- *
- * synopsis
- *    Char array[];
- *    int val, myctoi();
- *    val = myctoi( array );
- *
- */
+/* myctoi - return the integer represented by a string of digits */
 
 int myctoi( array )
 Char array[];
+	{
+	int val = 0;
 
-    {
-    int val = 0;
+	(void) sscanf( (char *) array, "%d", &val );
 
-    (void) sscanf( (char *) array, "%d", &val );
-
-    return ( val );
-    }
+	return val;
+	}
 
 
-/* myesc - return character corresponding to escape sequence
- *
- * synopsis
- *    Char array[], c, myesc();
- *    c = myesc( array );
- *
- */
+/* myesc - return character corresponding to escape sequence */
 
 Char myesc( array )
 Char array[];
-
-    {
-    Char c, esc_char;
-    register int sptr;
-
-    switch ( array[1] )
 	{
+	Char c, esc_char;
+	register int sptr;
+
+	switch ( array[1] )
+		{
 #ifdef __STDC__
-	case 'a': return ( '\a' );
+		case 'a': return '\a';
 #else
-	case 'a': return ( '\007' );
+		case 'a': return '\007';
 #endif
-	case 'b': return ( '\b' );
-	case 'f': return ( '\f' );
-	case 'n': return ( '\n' );
-	case 'r': return ( '\r' );
-	case 't': return ( '\t' );
-	case 'v': return ( '\v' );
+		case 'b': return '\b';
+		case 'f': return '\f';
+		case 'n': return '\n';
+		case 'r': return '\r';
+		case 't': return '\t';
+		case 'v': return '\v';
 
-	case '0':
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
-	    { /* \<octal> */
-	    sptr = 1;
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			{ /* \<octal> */
+			sptr = 1;
 
-	    while ( isascii( array[sptr] ) && isdigit( array[sptr] ) )
-		/* don't increment inside loop control because if
-		 * isdigit() is a macro it might expand into multiple
-		 * increments ...
-		 */
-		++sptr;
+			while ( isascii( array[sptr] ) &&
+				isdigit( array[sptr] ) )
+				/* Don't increment inside loop control
+				 * because if isdigit() is a macro it might
+				 * expand into multiple increments ...
+				 */
+				++sptr;
 
-	    c = array[sptr];
-	    array[sptr] = '\0';
+			c = array[sptr];
+			array[sptr] = '\0';
 
-	    esc_char = otoi( array + 1 );
+			esc_char = otoi( array + 1 );
 
-	    array[sptr] = c;
+			array[sptr] = c;
 
-	    return ( esc_char );
-	    }
+			return esc_char;
+			}
 
-	case 'x':
-	    { /* \x<hex> */
-	    int sptr = 2;
+		case 'x':
+			{ /* \x<hex> */
+			int sptr = 2;
 
-	    while ( isascii( array[sptr] ) &&
-		    is_hex_digit( (char) array[sptr] ) )
-		/* don't increment inside loop control because if
-		 * isdigit() is a macro it might expand into multiple
-		 * increments ...
-		 */
-		++sptr;
+			while ( isascii( array[sptr] ) &&
+				is_hex_digit( (char) array[sptr] ) )
+				/* Don't increment inside loop control
+				 * because if isdigit() is a macro it might
+				 * expand into multiple increments ...
+				 */
+				++sptr;
 
-	    c = array[sptr];
-	    array[sptr] = '\0';
+			c = array[sptr];
+			array[sptr] = '\0';
 
-	    esc_char = htoi( array + 2 );
+			esc_char = htoi( array + 2 );
 
-	    array[sptr] = c;
+			array[sptr] = c;
 
-	    return ( esc_char );
-	    }
+			return esc_char;
+			}
 
-	default:
-	    return ( array[1] );
+		default:
+			return array[1];
+		}
 	}
-    }
 
 
-/* otoi - convert an octal digit string to an integer value
- *
- * synopsis:
- *    int val, otoi();
- *    Char str[];
- *    val = otoi( str );
- */
+/* otoi - convert an octal digit string to an integer value */
 
 int otoi( str )
 Char str[];
+	{
+	unsigned int result;
 
-    {
-    unsigned int result;
-
-    (void) sscanf( (char *) str, "%o", &result );
-
-    return ( result );
-    }
+	(void) sscanf( (char *) str, "%o", &result );
+	return result;
+	}
 
 
 /* readable_form - return the the human-readable form of a character
- *
- * synopsis:
- *    int c;
- *    char *readable_form();
- *    <string> = readable_form( c );
  *
  * The returned string is in static storage.
  */
 
 char *readable_form( c )
 register int c;
-
-    {
-    static char rform[10];
-
-    if ( (c >= 0 && c < 32) || c >= 127 )
 	{
-	switch ( c )
-	    {
+	static char rform[10];
+
+	if ( (c >= 0 && c < 32) || c >= 127 )
+		{
+		switch ( c )
+			{
 #ifdef __STDC__
-	    case '\a': return ( "\\a" );
+			case '\a': return "\\a";
 #endif
-	    case '\b': return ( "\\b" );
-	    case '\f': return ( "\\f" );
-	    case '\n': return ( "\\n" );
-	    case '\r': return ( "\\r" );
-	    case '\t': return ( "\\t" );
-	    case '\v': return ( "\\v" );
+			case '\b': return "\\b";
+			case '\f': return "\\f";
+			case '\n': return "\\n";
+			case '\r': return "\\r";
+			case '\t': return "\\t";
+			case '\v': return "\\v";
 
-	    default:
-		(void) sprintf( rform, "\\%.3o", (unsigned int) c );
-		return ( rform );
-	    }
+			default:
+				(void) sprintf( rform, "\\%.3o",
+						(unsigned int) c );
+				return rform;
+			}
+		}
+
+	else if ( c == ' ' )
+		return "' '";
+
+	else
+		{
+		rform[0] = c;
+		rform[1] = '\0';
+
+		return rform;
+		}
 	}
-
-    else if ( c == ' ' )
-	return ( "' '" );
-
-    else
-	{
-	rform[0] = c;
-	rform[1] = '\0';
-
-	return ( rform );
-	}
-    }
 
 
 /* reallocate_array - increase the size of a dynamic array */
@@ -785,65 +658,57 @@ register int c;
 void *reallocate_array( array, size, element_size )
 void *array;
 int size, element_size;
+	{
+	register void *new_array;
 
-    {
-    register void *new_array;
+	/* Same worry as in allocate_array(): */
+	if ( size * element_size <= 0 )
+		flexfatal(
+			"attempt to increase array size by less than 1 byte" );
 
-    /* same worry as in allocate_array(): */
-    if ( size * element_size <= 0 )
-        flexfatal( "attempt to increase array size by less than 1 byte" );
-
-    new_array =
+	new_array =
 	(void *) realloc( (char *)array, (unsigned) (size * element_size ));
 
-    if ( new_array == NULL )
-	flexfatal( "attempt to increase array size failed" );
+	if ( new_array == NULL )
+		flexfatal( "attempt to increase array size failed" );
 
-    return ( new_array );
-    }
+	return new_array;
+	}
 
 
 /* skelout - write out one section of the skeleton file
  *
- * synopsis
- *    skelout();
- *
- * DESCRIPTION
+ * Description
  *    Copies skelfile or skel array to stdout until a line beginning with
  *    "%%" or EOF is found.
  */
 void skelout()
-
-    {
-    if ( skelfile )
 	{
-	char buf[MAXLINE];
+	if ( skelfile )
+		{
+		char buf[MAXLINE];
 
-	while ( fgets( buf, MAXLINE, skelfile ) != NULL )
-	    if ( buf[0] == '%' && buf[1] == '%' )
-		break;
-	    else
-		fputs( buf, stdout );
+		while ( fgets( buf, MAXLINE, skelfile ) != NULL )
+			if ( buf[0] == '%' && buf[1] == '%' )
+				break;
+		else
+			fputs( buf, stdout );
+		}
+
+	else
+		{ /* copy from skel array */
+		char *buf;
+
+		while ( (buf = skel[skel_ind++]) )
+			if ( buf[0] == '%' && buf[1] == '%' )
+				break;
+			else
+				printf( "%s\n", buf );
+		}
 	}
-
-    else
-	{ /* copy from skel array */
-	char *buf;
-
-	while ( (buf = skel[skel_ind++]) )
-	    if ( buf[0] == '%' && buf[1] == '%' )
-		break;
-	    else
-		printf( "%s\n", buf );
-	}
-    }
 
 
 /* transition_struct_out - output a yy_trans_info structure
- *
- * synopsis
- *     int element_v, element_n;
- *     transition_struct_out( element_v, element_n );
  *
  * outputs the yy_trans_info structure with the two elements, element_v and
  * element_n.  Formats the output with spaces and carriage returns.
@@ -851,44 +716,37 @@ void skelout()
 
 void transition_struct_out( element_v, element_n )
 int element_v, element_n;
-
-    {
-    printf( "%7d, %5d,", element_v, element_n );
-
-    datapos += TRANS_STRUCT_PRINT_LENGTH;
-
-    if ( datapos >= 75 )
 	{
-	putchar( '\n' );
+	printf( "%7d, %5d,", element_v, element_n );
 
-	if ( ++dataline % 10 == 0 )
-	    putchar( '\n' );
+	datapos += TRANS_STRUCT_PRINT_LENGTH;
 
-	datapos = 0;
+	if ( datapos >= 75 )
+		{
+		putchar( '\n' );
+
+		if ( ++dataline % 10 == 0 )
+			putchar( '\n' );
+
+		datapos = 0;
+		}
 	}
-    }
 
 
 /* zero_out - set a region of memory to 0
  *
- * synopsis
- *     char *region_ptr;
- *     int size_in_bytes;
- *     zero_out( region_ptr, size_in_bytes );
- *
- * sets region_ptr[0] through region_ptr[size_in_bytes - 1] to zero.
+ * Sets region_ptr[0] through region_ptr[size_in_bytes - 1] to zero.
  */
 
 void zero_out( region_ptr, size_in_bytes )
 char *region_ptr;
 int size_in_bytes;
+	{
+	register char *rp, *rp_end;
 
-    {
-    register char *rp, *rp_end;
+	rp = region_ptr;
+	rp_end = region_ptr + size_in_bytes;
 
-    rp = region_ptr;
-    rp_end = region_ptr + size_in_bytes;
-
-    while ( rp < rp_end )
-	*rp++ = 0;
-    }
+	while ( rp < rp_end )
+		*rp++ = 0;
+	}
