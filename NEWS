@@ -2,6 +2,10 @@ Changes between release 2.4.3 (03Dec93) and release 2.4.2:
 
 	- Fixed bug causing fatal scanner messages to fail to print.
 
+	- Fixed things so FlexLexer.h can be included in other C++
+	  sources.  One side-effect of this change is that -+ and -CF
+	  are now incompatible.
+
 	- libfl.a now supplies versions of the the <string.h>/<strings.h>
 	  string routines needed by flex and the scanners it generates,
 	  to enhance portability to some BSD systems.
