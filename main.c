@@ -63,7 +63,7 @@ int action_size, defs1_offset, prolog_offset, action_offset, action_index;
 char *infilename = NULL, *outfilename = NULL;
 int did_outfilename;
 char *prefix;
-int use_stdout;
+int do_stdinit, use_stdout;
 int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
 int current_mns, current_max_rules;
@@ -106,6 +106,10 @@ static char *outfile_template = "lex.%s.%s";
 static char *outfile_template = "lex%s.%s";
 #endif
 
+#ifdef THINK_C
+#include <console.h>
+#endif
+
 #ifdef MS_DOS
 extern unsigned _stklen = 16384;
 #endif
@@ -119,6 +123,10 @@ int argc;
 char **argv;
 	{
 	int i;
+
+#ifdef THINK_C
+       argc = ccommand( &argv );
+#endif
 
 	flexinit( argc, argv );
 
@@ -535,7 +543,7 @@ char **argv;
 	yytext_is_array = in_rule = reject = false;
 	yymore_really_used = reject_really_used = unspecified;
 	interactive = csize = unspecified;
-	do_yywrap = gen_line_dirs = usemecs = useecs = true;
+	do_yywrap = gen_line_dirs = usemecs = useecs = do_stdinit = true;
 	performance_report = 0;
 	did_outfilename = 0;
 	prefix = "yy";
@@ -775,6 +783,10 @@ char **argv;
 
 void readin()
 	{
+	static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
+	static char yy_nostdinit[] =
+		"FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;";
+
 	line_directive_out( (FILE *) 0, 1 );
 
 	if ( yyparse() )
@@ -889,16 +901,17 @@ void readin()
 	if ( lex_compat )
 		{
 		outn( "#define YY_FLEX_LEX_COMPAT" );
+
 		outn( "#ifdef VMS" );
-		outn( "FILE *yyin = 0, *yyout = 0;" );
+		outn( yy_nostdinit );
 		outn( "#else" );
-		outn( "FILE *yyin = stdin, *yyout = stdout;" );
+		outn( do_stdinit ? yy_stdinit : yy_nostdinit );
 		outn( "#endif" );
 		outn( "extern int yylineno;" );
 		outn( "int yylineno = 1;" );
 		}
 	else if ( ! C_plus_plus )
-		outn( "FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;" );
+		outn( do_stdinit ? yy_stdinit : yy_nostdinit );
 
 	if ( C_plus_plus )
 		outn( "\n#include <FlexLexer.h>" );
