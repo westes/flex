@@ -1,6 +1,6 @@
 # Mensajes en español para GNU flex.
 # Copyright (C) 1997 Free Software Foundation, Inc.
-# Nicolás García Pedrajas <ma1gapen@uco.es>, 1997.
+# Nicolás García-Pedrajas <ngarcia-pedrajas@acm.org>, 1997.
 # ## 23 de septiembre de 1996,
 # ## Finaliza la tradución y la dejo para revisión
 # ## No me machaquéis mucho, es la primera que hago.
@@ -9,10 +9,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU flex 2.5.2\n"
-"POT-Creation-Date: 2002-03-12 13:23-0500\n"
-"PO-Revision-Date: 1997-01-17 12:43+0100\n"
-"Last-Translator: Nicolás García Pedrajas <ma1gapen@uco.es>\n"
+"Project-Id-Version: GNU flex 2002.3.12a\n"
+"POT-Creation-Date: 2002-03-12 12:07-0500\n"
+"PO-Revision-Date: 2002-04-03 12:43+0100\n"
+"Last-Translator: Nicolás García-Pedrajas <ngarcia-pedrajas@acm.org>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
@@ -141,8 +141,7 @@ msgstr "la regla no se puede aplicar"
 # ## re-redacto el mensaje. sv
 #: main.c:160
 msgid "-s option given but default rule can be matched"
-msgstr ""
-"se ha especificado la opción -s pero se puede aplicar la regla por defecto"
+msgstr "se ha especificado la opción -s pero se puede aplicar la regla por defecto"
 
 #: main.c:184
 msgid "Can't use -+ with -l option"
@@ -153,13 +152,12 @@ msgid "Can't use -f or -F with -l option"
 msgstr "No se pueden usar las opciones -f o -F con la opción -l"
 
 #: main.c:190
-#, fuzzy
 msgid "Can't use -R or -Rb with -l option"
-msgstr "No se pueden usar las opciones -f o -F con la opción -l"
+msgstr "No se pueden usar las opciones -R o -Rb con la opción -l"
 
 #: main.c:203
 msgid "Can't specify header option if writing to stdout."
-msgstr ""
+msgstr "No se puede especificar una opción de cabecera si se escribe en stdout"
 
 # ¿juntos o juntas?
 # Creo que está bien así em
@@ -200,9 +198,8 @@ msgid "%array incompatible with -+ option"
 msgstr "%array incompatible con la opción -+"
 
 #: main.c:256
-#, fuzzy
 msgid "Options -+ and -R are mutually exclusive."
-msgstr "-Cf y -CF son mutuamente excluyentes"
+msgstr "-+ y -R son mutuamente excluyentes"
 
 #: main.c:308 main.c:494
 #, c-format
@@ -247,9 +244,9 @@ msgstr "error al cerrar el archivo de esquema %s"
 
 # Lo mismo, archivo de seguridad? em
 #: main.c:659
-#, fuzzy, c-format
+#, c-format
 msgid "error creating header file %s"
-msgstr "error al escribir el archivo de seguridad %s"
+msgstr "error al crear el archivo de cabecera %s"
 
 #: main.c:667
 #, c-format
@@ -462,8 +459,7 @@ msgstr "  %d/%d clases de metaequivalencia creadas\n"
 #: main.c:872
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
-msgstr ""
-"  %d (%d almacenadas) colisiones de localización ('hash'), %d AFDs iguales\n"
+msgstr "  %d (%d almacenadas) colisiones de localización ('hash'), %d AFDs iguales\n"
 
 #: main.c:874
 #, c-format
@@ -479,18 +475,18 @@ msgstr "  se necesitan %d entradas totales en la tabla\n"
 
 #: main.c:933
 msgid "Internal error. flexopts are malformed.\n"
-msgstr ""
+msgstr "Error interno. flexopts mal formadas.\n"
 
 # Sugerencia: modificador '%c' desconocido -> opción '%c' desconocida. sv
 # ## usage - modo de empleo
 # ## pongo try - pruebe, como en otras traducciones. sv
 #: main.c:941
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "For usage, try\n"
 "\t%s --help\n"
 msgstr ""
-"%s: modificador '%c' desconocido. Para el modo de empleo, pruebe\n"
+"Para el uso, pruebe\n"
 "\t%s --help\n"
 
 #: main.c:1001
@@ -499,9 +495,9 @@ msgid "unknown -C option '%c'"
 msgstr "opción -C desconocida '%c'"
 
 #: main.c:1080
-#, fuzzy, c-format
+#, c-format
 msgid "unknown -R option '%c'"
-msgstr "opción -C desconocida '%c'"
+msgstr "opción -R desconocida '%c'"
 
 #: main.c:1113
 #, c-format
@@ -558,15 +554,12 @@ msgstr ""
 
 #: main.c:1391
 msgid " and may be the actual source of other reported performance penalties\n"
-msgstr ""
-" y puede ser el origen real de otras penalizaciones del rendimiento "
-"notificadas\n"
+msgstr " y puede ser el origen real de otras penalizaciones del rendimiento notificadas\n"
 
 #: main.c:1397
 #, c-format
 msgid "%%option yylineno entails a large performance penalty\n"
-msgstr ""
-"la %%opción yylineno implica una penalización del rendimiento muy alta\n"
+msgstr "la %%opción yylineno implica una penalización del rendimiento muy alta\n"
 
 #: main.c:1404
 msgid "-I (interactive) entails a minor performance penalty\n"
@@ -597,8 +590,7 @@ msgstr "la %opción yylineno no se puede usar con -f o -F"
 
 #: main.c:1436
 msgid "variable trailing context rules cannot be used with -f or -F"
-msgstr ""
-"las reglas de contexto posterior variable no se pueden usar con -f o -F"
+msgstr "las reglas de contexto posterior variable no se pueden usar con -f o -F"
 
 #: main.c:1567
 #, c-format
@@ -608,7 +600,7 @@ msgstr "la %option yyclass sólo tiene sentido para los analizadores en C++"
 #: main.c:1671
 #, c-format
 msgid "%s [OPTIONS...] [file...]\n"
-msgstr ""
+msgstr "%s [OPCIONES...] [archivo...]\n"
 
 #: main.c:1674
 #, c-format
@@ -665,6 +657,57 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Compresión de tablas: (por defecto es -Cem)\n"
+"  -Ca, --align      Renuncia a tablas grandes para mejorar la alineación en memoria\n"
+"  -Ce, --ecs        construye clases de equivalencia\n"
+"  -Cf               no comprime las tablas; utiliza la representación -f\n"
+"  -CF               no comprime las tablas; utiliza la representación -F\n"
+"  -Cm, --meta-ecs   construye clases de metaequivalencia\n"
+"  -Cr, --read       utiliza read() en lugar de stdio para la entrada del analizador\n"
+"  -f, --full        genera una analizar rápido y grande. Igual que -Cfr\n"
+"  -F, --fast        usa la representación de tablas alternativa. Igual que -CFr\n"
+"\n"
+"Depurado:\n"
+"  -d, --debug             habilita el modo de depuración en el analizador\n"
+"  -b, --backup            escribe información de seguridad en %s\n"
+"  -p, --perf-report       escribe un informe de rendimiento en stderr\n"
+"  -s, --nodefault         suprime la regla por defecto consistente en un ECHO de cualquier carácter sin emparejar\n"
+"  -T, --trace             %s debería ejecutarse en modo traza\n"
+"  -w, --nowarn            no genera avisos\n"
+"  -v, --verbose           escribe un resumen de estadísticas del analizador en stdout\n"
+"\n"
+"Ficheros:\n"
+"  -o, --outfile=FILE      especifica el nombre del fichero de salida\n"
+"  -S, --skel=FILE         especifica el fichero de esquema\n"
+"  -t, --stdout            escribe el analizador en stdout en lugar de en %s\n"
+"      --yyclass=NAME      nombre de la clase de C++\n"
+"      --header=FILE       crea un fichero de cabecera de C además del analizador\n"
+"\n"
+"Comportamiento del analizador:\n"
+"  -7, --7bit              genera un analizador de 7 bits\n"
+"  -8, --8bit              genera un analizador de 8 bits\n"
+"  -B, --batch             genera un analizador en modo batch (opuesto a -I)\n"
+"  -i, --case-insensitive  ignora mayúsculas y minúsculas en los patrones\n"
+"  -l, --lex-compat        compatibilidad máxima con lex\n"
+"  -I, --interactive       genera un analizador interactivo (opuesto a -B)\n"
+"      --yylineno          mantiene información del conteo de líneas en yylineno\n"
+"\n"
+"Código generado:\n"
+"  -+,  --c++               genera una clase C++ con el analizador\n"
+"  -Dmacro[=defn]           #define macro defn  (pro defecto defn es '1')\n"
+"  -L,  --noline            suprime las directivas #line en el analizador\n"
+"  -P,  --prefix=STRING     usa STRING como prefijo en lugar de \"yy\"\n"
+"  -R,  --reentrant         generate un analizador C reentrante\n"
+"  -Rb, --reentrant-bison   analizador reentrante para un analizador léxico bison puro.\n"
+"       --stdinit           inicializa yyin/yyout a stdin/stdout\n"
+"       --noFUNCTION        no genera la función FUNCTION\n"
+"\n"
+"Miscelánea:\n"
+"  -c                      opción POSIX do-nothing\n"
+"  -n                      opción POSIX do-nothing\n"
+"  -?\n"
+"  -h, --help              produce este mensaje de ayuda\n"
+"  -V, --version           informa de la versión %s\n"
 
 #: misc.c:47
 #, c-format
@@ -765,7 +808,7 @@ msgid "too many rules (> %d)!"
 msgstr "demasiadas reglas (> %d)!"
 
 #: scan.l:139
-#, fuzzy, c-format
+#, no-c-format
 msgid "unrecognized '%' directive"
 msgstr "directiva '%' no reconocida"
 
@@ -883,10 +926,8 @@ msgstr "*Algo extraño* - terminal: %d val: %d\n"
 #~ msgstr "la opción -C se debe especificar separadamente"
 
 #  Skeleton otra vez ( recuerdo máscara, o modelos ) em
-#~ msgid ""
-#~ "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"
-#~ msgstr ""
-#~ "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -osalida -Pprefijo -Sesquema]\n"
+#~ msgid "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"
+#~ msgstr "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -osalida -Pprefijo -Sesquema]\n"
 
 #~ msgid "\t[--help --version] [file ...]\n"
 #~ msgstr "\t[--help --version] [archivo ...]\n"
@@ -914,9 +955,7 @@ msgstr "*Algo extraño* - terminal: %d val: %d\n"
 #~ msgstr "\t-h  produce este mensaje de ayuda\n"
 
 #~ msgid "\t-i  generate case-insensitive scanner\n"
-#~ msgstr ""
-#~ "\t-i  genera un analizador que no distingue entre mayúsculas y "
-#~ "minúsculas\n"
+#~ msgstr "\t-i  genera un analizador que no distingue entre mayúsculas y minúsculas\n"
 
 #~ msgid "\t-l  maximal compatibility with original lex\n"
 #~ msgstr "\t-l  compatibilidad máxima con el lex original\n"
@@ -927,14 +966,10 @@ msgstr "*Algo extraño* - terminal: %d val: %d\n"
 
 # He cambiado el orden salida de error estándar, ponía em
 #~ msgid "\t-p  generate performance report to stderr\n"
-#~ msgstr ""
-#~ "\t-p  genera el informe de rendimiento en la salida de error estándar "
-#~ "(stderr)\n"
+#~ msgstr "\t-p  genera el informe de rendimiento en la salida de error estándar (stderr)\n"
 
 #~ msgid "\t-s  suppress default rule to ECHO unmatched text\n"
-#~ msgstr ""
-#~ "\t-s  suprime la regla por defecto de visualizar (ECHO) el texto no "
-#~ "emparejado\n"
+#~ msgstr "\t-s  suprime la regla por defecto de visualizar (ECHO) el texto no emparejado\n"
 
 #~ msgid "\t-t  write generated scanner on stdout instead of %s\n"
 #~ msgstr ""
@@ -996,8 +1031,7 @@ msgstr "*Algo extraño* - terminal: %d val: %d\n"
 #~ msgstr "\t-?  produce este mensaje de ayuda\n"
 
 #~ msgid "\t-C  specify degree of table compression (default is -Cem):\n"
-#~ msgstr ""
-#~ "\t-C  especifica el grado de compresión de la tabla (por defecto -Cem):\n"
+#~ msgstr "\t-C  especifica el grado de compresión de la tabla (por defecto -Cem):\n"
 
 #~ msgid "\t\t-Ca  trade off larger tables for better memory alignment\n"
 #~ msgstr ""
@@ -1008,14 +1042,10 @@ msgstr "*Algo extraño* - terminal: %d val: %d\n"
 #~ msgstr "\t\t-Ce  construye clases de equivalencia\n"
 
 #~ msgid "\t\t-Cf  do not compress scanner tables; use -f representation\n"
-#~ msgstr ""
-#~ "\t\t-Cf  no comprime las tablas del analizador, utiliza la representación "
-#~ "-f\n"
+#~ msgstr "\t\t-Cf  no comprime las tablas del analizador, utiliza la representación -f\n"
 
 #~ msgid "\t\t-CF  do not compress scanner tables; use -F representation\n"
-#~ msgstr ""
-#~ "\t\t-CF  no comprime las tablas del analizador, utiliza la representación "
-#~ "-F\n"
+#~ msgstr "\t\t-CF  no comprime las tablas del analizador, utiliza la representación -F\n"
 
 #~ msgid "\t\t-Cm  construct meta-equivalence classes\n"
 #~ msgstr "\t\t-cm  construye clases de metaequivalencia\n"
