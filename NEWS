@@ -3,9 +3,11 @@ changes between releases of flex
 
 See the file COPYING for copying conditions
 
+** new handling of POSIXLY_CORRECT environment variable
+
 ** the test suite now has its copyrights explicitly described
 
-** new ca, de, fr, sv, tr translations
+** new ca, de, fr, ru, sv, tr translations
 
 * version 2.5.8
 
