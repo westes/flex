@@ -47,8 +47,13 @@ int     yytbl_fwrite32 (FILE * out, uint32_t v);
 int     yytbl_fwrite16 (FILE * out, uint16_t v);
 int     yytbl_fwrite8 (FILE * out, uint8_t v);
 
-void    yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
-			const char *name)
+/** Initialize a table header.
+ *  @param th  The uninitialized structure
+ *  @param version_str the  version string
+ *  @param name the name of this table set
+ */
+void yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
+		     const char *name)
 {
 	memset (th, 0, sizeof (struct yytbl_hdr));
 
@@ -62,6 +67,10 @@ void    yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
 	th->th_name = copy_string (name);
 }
 
+/** Allocate and initialize a table data structure.
+ * @param id  the table identifier
+ * @return a flex_alloc'd structure. Caller must flex_free it.
+ */
 struct yytbl_data *yytbl_data_create (enum yytbl_id id)
 {
 	struct yytbl_data *td;
@@ -73,7 +82,12 @@ struct yytbl_data *yytbl_data_create (enum yytbl_id id)
 	return td;
 }
 
-int     yytbl_hdr_fwrite (FILE * out, struct yytbl_hdr *th)
+/** write the header.
+ *  @param out the output stream
+ *  @param th table header to be written
+ *  @return -1 on error, or bytes written on success.
+ */
+int yytbl_hdr_fwrite (FILE * out, const struct yytbl_hdr *th)
 {
 	size_t  sz, rv;
 	int     pad, bwritten = 0;
@@ -113,7 +127,12 @@ int     yytbl_hdr_fwrite (FILE * out, struct yytbl_hdr *th)
 	return bwritten;
 }
 
-int     yytbl_fwrite32 (FILE * out, uint32_t v)
+/** Write four bytes in network byte order
+ * @param  out  the output stream
+ * @param  v    a dword in host byte order
+ * @return  -1 on error. number of bytes written on success.
+ */
+int yytbl_fwrite32 (FILE * out, uint32_t v)
 {
 	uint32_t vnet;
 	size_t  bytes, rv;
@@ -126,7 +145,12 @@ int     yytbl_fwrite32 (FILE * out, uint32_t v)
 	return bytes;
 }
 
-int     yytbl_fwrite16 (FILE * out, uint16_t v)
+/** Write two bytes in network byte order.
+ * @param  out  the output stream
+ * @param  v    a word in host byte order
+ * @return  -1 on error. number of bytes written on success.
+ */
+int yytbl_fwrite16 (FILE * out, uint16_t v)
 {
 	uint16_t vnet;
 	size_t  bytes, rv;
@@ -139,7 +163,12 @@ int     yytbl_fwrite16 (FILE * out, uint16_t v)
 	return bytes;
 }
 
-int     yytbl_fwrite8 (FILE * out, uint8_t v)
+/** Write a byte.
+ * @param  out  the output stream
+ * @param  v    the value to be written
+ * @return  -1 on error. number of bytes written on success.
+ */
+int yytbl_fwrite8 (FILE * out, uint8_t v)
 {
 	size_t  bytes, rv;
 
@@ -150,9 +179,14 @@ int     yytbl_fwrite8 (FILE * out, uint8_t v)
 	return bytes;
 }
 
-/* calculate the number of bytes (1,2,4) needed to hold the largest absolute value
- * in this array. */
-static int min_int_size (void *arr, int32_t len, int sz)
+/** Calculate the number of bytes  needed to hold the largest
+ *  absolute value in this array.
+ * @param arr  array
+ * @param len  number of elements in array
+ * @param sz   sizeof individual element
+ * @return 1,2, or 4
+ */
+static int min_int_size (const void *arr, int32_t len, int sz)
 {
 	int32_t curr, max = 0, i;
 
@@ -185,15 +219,26 @@ static int min_int_size (void *arr, int32_t len, int sz)
 }
 
 
-/* extract data element [i][j] from int array data tables. */
+/* Extract data element [i][j] from int array data tables. 
+ * @param tbl data table
+ * @param i index into major array. i is zero for one-dimensional arrays.
+ * @param j index into 
+ * @return data[i][j]
+ */
 static int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i, int j)
 {
 	/* TODO */
 	return 0;
 }
 
-/* Transform data to smallest possible of (int32, int16, int8) */
-void    yytbl_data_compress (struct yytbl_data *tbl)
+/* Transform data to smallest possible of (int32, int16, int8).
+ * For example, we may generate an int32 array due to user options
+ * (e.g., %option align) but if the maximum value in that array
+ * is 80, then we serialize it with 1 byte per int.
+ *
+ * @param tbl the table to be compressed
+ */
+void yytbl_data_compress (struct yytbl_data *tbl)
 {
 	int32_t i, sz;
 	void   *newdata = 0;
@@ -202,9 +247,8 @@ void    yytbl_data_compress (struct yytbl_data *tbl)
 	    && tbl->t_id != YYT_ID_START_STATE_LIST) {
 		if (tbl->t_hilen == 0) {
 			/* Data is a single-dimensional array of ints */
-			sz =
-				min_int_size (tbl->t_data, tbl->t_lolen,
-					      TFLAGS2BYTES (tbl->t_flags));
+			sz = min_int_size (tbl->t_data, tbl->t_lolen,
+					   TFLAGS2BYTES (tbl->t_flags));
 			if (sz == TFLAGS2BYTES (tbl->t_flags))
 				/* No change in this table needed. */
 				return;
@@ -221,16 +265,17 @@ void    yytbl_data_compress (struct yytbl_data *tbl)
 				n = yytbl_data_geti (tbl, 0, i);
 				switch (sz) {
 				case sizeof (int8_t):
-					((int8_t *) newdata)[i] = (int8_t) n;
+					((int8_t *) newdata)[i] =
+						(int8_t) n;
 					break;
 				case sizeof (int16_t):
-					
-						((int16_t *) newdata)[i] =
+
+					((int16_t *) newdata)[i] =
 						(int16_t) n;
 					break;
 				case sizeof (int32_t):
-					
-						((int32_t *) newdata)[i] =
+
+					((int32_t *) newdata)[i] =
 						(int32_t) n;
 					break;
 				default:	/* TODO: ERROR: unknown 'sz' */
