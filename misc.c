@@ -841,7 +841,11 @@ void skelout()
 				case '#':
 					/* a comment in the skel. ignore. */
 					break;
-					
+
+                case 't':
+                    /* %t - toggle tables api */
+                    break;
+
 				default:
 					flexfatal(
 					_( "bad line in skeleton file" ) );

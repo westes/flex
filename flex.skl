@@ -13,6 +13,7 @@
 %#          (See gen.c, etc. for details.)
 %#   %c  -  Begin linkage code that should NOT appear in a ".h" file.
 %#   %e  -  End linkage code. %c and %e are used for building a header file.
+%#   %t  -  Toggle output of Tables API.
 %#
 %#   All control-lines EXCEPT comment lines ("%#") will be inserted into
 %#   the generated scanner as a C-style comment. This is to aid those who
@@ -741,6 +742,20 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #define YY_FATAL_ERROR(msg) LexerError( msg )
 %*
 #endif
+
+%t Tables API Structures and Prototypes
+
+/* Load tables from a file descriptor. */
+//int yytables_read YY_PARAMS((int fd, const char * tbl_name  YY_PROTO_LAST_ARG));
+
+/* Load tables from a file stream. */
+int yytables_fread YY_PARAMS((FILE* fp, const char * tbl_name  YY_PROTO_LAST_ARG));
+
+/* Load tables from given bytes. */
+//int yytables_bread YY_PARAMS((void* bytes, const char * tbl_name  YY_PROTO_LAST_ARG));
+
+
+%t End of Tables API Structures and Prototypes
 
 /* Default declaration of generated scanner - a define so the user can
  * easily add parameters.
