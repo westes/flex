@@ -852,7 +852,7 @@ void readin()
 		printf( "FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;\n" );
 
 	if ( C_plus_plus )
-		printf( "\n#include \"FlexLexer.h\"\n" );
+		printf( "\n#include <FlexLexer.h>\n" );
 
 	else
 		{
