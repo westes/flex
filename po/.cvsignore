@@ -2,6 +2,7 @@
 Makefile
 Makefile.in
 Makefile.in.in
+Makevars.template
 POTFILES
 Rules-quot
 boldquot.sed
@@ -12,3 +13,4 @@ insert-header.sin
 quot.sed
 remove-potcdate.sed
 remove-potcdate.sin
+stamp-*

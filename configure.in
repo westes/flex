@@ -32,7 +32,7 @@ AC_CONFIG_HEADER(config.h:conf.in)
 dnl checks for programs
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.11.5)
+AM_GNU_GETTEXT_VERSION(0.12)
 
 AC_PROG_YACC
 AM_PROG_LEX
