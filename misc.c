@@ -6,7 +6,7 @@
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant to
  * contract no. DE-AC03-76SF00098 between the United States Department of
  * Energy and the University of California.
@@ -76,7 +76,7 @@ int size, element_size;
      */
     if ( element_size * size <= 0 )
         flexfatal( "request for < 1 byte in allocate_array()" );
-    
+
     mem = malloc( (unsigned) (element_size * size) );
 
     if ( mem == NULL )
@@ -204,7 +204,7 @@ register char *str;
 
     for ( c = copy; (*c++ = *str++); )
 	;
-    
+
     return ( copy );
     }
 
@@ -235,7 +235,7 @@ register Char *str;
 
     for ( c = copy; (*c++ = *str++); )
 	;
-    
+
     return ( copy );
     }
 
@@ -245,19 +245,21 @@ register Char *str;
  * synopsis
  *
  *   Char v[n];
- *   int n;
- *   cshell( v, n );
+ *   int n, special_case_0;
+ *   cshell( v, n, special_case_0 );
  *
  * description
  *   does a shell sort of the first n elements of array v.
+ *   If special_case_0 is true, then any element equal to 0
+ *   is instead assumed to have infinite weight.
  *
  * passed
  *   v - array to be sorted
  *   n - number of elements of v to be sorted
  */
-cshell( v, n )
+cshell( v, n, special_case_0 )
 Char v[];
-int n;
+int n, special_case_0;
 
     {
     int gap, i, j, jg;
@@ -269,7 +271,16 @@ int n;
 		{
 		jg = j + gap;
 
-		if ( v[j] <= v[jg] )
+		if ( special_case_0 )
+		    {
+		    if ( v[jg] == 0 )
+			break;
+
+		    else if ( v[j] != 0 && v[j] <= v[jg] )
+			break;
+		    }
+
+		else if ( v[j] <= v[jg] )
 		    break;
 
 		k = v[j];
@@ -461,7 +472,7 @@ line_directive_out( output_file_name )
 FILE *output_file_name;
 
     {
-    if ( infilename && gen_line_dirs ) 
+    if ( infilename && gen_line_dirs )
         fprintf( output_file_name, "# line %d \"%s\"\n", linenum, infilename );
     }
 
@@ -589,7 +600,7 @@ Char array[];
 	    { /* \<octal> or \x<hex> */
 	    Char c, esc_char;
 	    register int sptr = 1;
-	    
+
 	    if ( array[1] == 'x' )
 		++sptr;
 
@@ -670,10 +681,10 @@ register int c;
 		return ( rform );
 	    }
 	}
-    
+
     else if ( c == ' ' )
 	return ( "' '" );
-    
+
     else
 	{
 	rform[0] = c;
@@ -696,12 +707,12 @@ int size, element_size;
     /* same worry as in allocate_array(): */
     if ( size * element_size <= 0 )
         flexfatal( "attempt to increase array size by less than 1 byte" );
-    
+
     new_array = realloc( array, (unsigned) (size * element_size ));
 
     if ( new_array == NULL )
 	flexfatal( "attempt to increase array size failed" );
-    
+
     return ( new_array );
     }
 
