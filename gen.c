@@ -1074,11 +1074,11 @@ void make_tables()
 	if ( yymore_used && ! yytext_is_array )
 		{
 		indent_puts( "YY_G(yytext_ptr) -= YY_G(yy_more_len); \\" );
-		indent_puts( "YY_G(yyleng) = (int) (yy_cp - YY_G(yytext_ptr)); \\" );
+		indent_puts( "YY_G(yyleng) = (size_t) (yy_cp - YY_G(yytext_ptr)); \\" );
 		}
 
 	else
-		indent_puts( "YY_G(yyleng) = (int) (yy_cp - yy_bp); \\" );
+		indent_puts( "YY_G(yyleng) = (size_t) (yy_cp - yy_bp); \\" );
 
 	/* Now also deal with copying yytext_ptr to yytext if needed. */
 	skelout();
@@ -1355,7 +1355,8 @@ void make_tables()
 			outn(
 			"\tif ( YY_G(yy_current_buffer)->yy_is_interactive ) \\" );
 			outn( "\t\t{ \\" );
-			outn( "\t\tint c = '*', n; \\" );
+			outn( "\t\tint c = '*'; \\");
+			outn( "\t\tsize_t n; \\" );
 			outn( "\t\tfor ( n = 0; n < max_size && \\" );
 	outn( "\t\t\t     (c = getc( YY_G(yyin) )) != EOF && c != '\\n'; ++n ) \\" );
 			outn( "\t\t\tbuf[n] = (char) c; \\" );
