@@ -568,16 +568,16 @@ void yyrestart YY_PARAMS(( FILE *input_file M4_YY_PROTO_LAST_ARG ));
 
 
 void yy_switch_to_buffer YY_PARAMS(( YY_BUFFER_STATE new_buffer M4_YY_PROTO_LAST_ARG ));
-static void yy_load_buffer_state YY_PARAMS(( M4_YY_PROTO_ONLY_ARG ));
 YY_BUFFER_STATE yy_create_buffer YY_PARAMS(( FILE *file, int size M4_YY_PROTO_LAST_ARG ));
 void yy_delete_buffer YY_PARAMS(( YY_BUFFER_STATE b M4_YY_PROTO_LAST_ARG ));
-static void yy_init_buffer YY_PARAMS(( YY_BUFFER_STATE b, FILE *file M4_YY_PROTO_LAST_ARG ));
 void yy_flush_buffer YY_PARAMS(( YY_BUFFER_STATE b M4_YY_PROTO_LAST_ARG ));
 void yypush_buffer_state YY_PARAMS(( YY_BUFFER_STATE new_buffer M4_YY_PROTO_LAST_ARG ));
 void yypop_buffer_state YY_PARAMS(( M4_YY_PROTO_ONLY_ARG ));
 
 %not-for-header
 static void yyensure_buffer_stack YY_PARAMS(( M4_YY_PROTO_ONLY_ARG ));
+static void yy_load_buffer_state YY_PARAMS(( M4_YY_PROTO_ONLY_ARG ));
+static void yy_init_buffer YY_PARAMS(( YY_BUFFER_STATE b, FILE *file M4_YY_PROTO_LAST_ARG ));
 %ok-for-header
 
 #define YY_FLUSH_BUFFER yy_flush_buffer( YY_CURRENT_BUFFER M4_YY_CALL_LAST_ARG)
@@ -888,6 +888,7 @@ static int *yy_start_stack = 0;
 %ok-for-header
 %endif
 
+%not-for-header
 m4_ifdef( [[M4_YY_NO_PUSH_STATE]],,
 [[
 static void yy_push_state YY_PARAMS(( int new_state M4_YY_PROTO_LAST_ARG));
@@ -900,6 +901,7 @@ m4_ifdef( [[M4_YY_NO_TOP_STATE]],,
 [[
 static int yy_top_state YY_PARAMS(( M4_YY_PROTO_ONLY_ARG ));
 ]])
+%ok-for-header
 
 ]],
 [[
@@ -1007,6 +1009,7 @@ struct yytbl_reader {
  * easily add parameters.
  */
 #ifndef YY_DECL
+#define YY_DECL_IS_OURS 1
 %if-c-only Standard (non-C++) definition
 
 
@@ -1807,7 +1810,7 @@ static void yy_load_buffer_state  YYFARGS0(void)
 %endif
 {
 	YY_BUFFER_STATE b;
-    M4_YY_DECL_GUTS_VAR();
+    m4_dnl M4_YY_DECL_GUTS_VAR();
 
 	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
 	if ( ! b )
@@ -1883,7 +1886,7 @@ extern "C" int isatty YY_PARAMS(( int ));
 
 {
 	int oerrno = errno;
-    M4_YY_DECL_GUTS_VAR();
+    m4_dnl M4_YY_DECL_GUTS_VAR();
 
 	yy_flush_buffer( b M4_YY_CALL_LAST_ARG);
 
@@ -2079,7 +2082,7 @@ m4_ifdef( [[M4_YY_NO_SCAN_BUFFER]],,
 YY_BUFFER_STATE yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 {
 	YY_BUFFER_STATE b;
-    M4_YY_DECL_GUTS_VAR();
+    m4_dnl M4_YY_DECL_GUTS_VAR();
 
 	if ( size < 2 ||
 	     base[size-2] != YY_END_OF_BUFFER_CHAR ||
@@ -2122,7 +2125,7 @@ m4_ifdef( [[M4_YY_NO_SCAN_STRING]],,
  */
 YY_BUFFER_STATE yy_scan_string YYFARGS1( yyconst char *,str)
 {
-    M4_YY_DECL_GUTS_VAR();
+    m4_dnl M4_YY_DECL_GUTS_VAR();
 
 	return yy_scan_bytes( str, strlen(str) M4_YY_CALL_LAST_ARG);
 }
@@ -2146,7 +2149,7 @@ YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,bytes, int ,len)
 	char *buf;
 	yy_size_t n;
 	int i;
-    M4_YY_DECL_GUTS_VAR();
+    m4_dnl M4_YY_DECL_GUTS_VAR();
 
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = len + 2;
@@ -2249,7 +2252,7 @@ m4_ifdef( [[M4_YY_NO_TOP_STATE]],,
 %if-c-only
 static void yy_fatal_error YYFARGS1(yyconst char*, msg)
 {
-    M4_YY_DECL_GUTS_VAR();
+    m4_dnl M4_YY_DECL_GUTS_VAR();
 	(void) fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
 }
@@ -2630,7 +2633,6 @@ m4_ifdef( [[M4_YY_NO_FLEX_ALLOC]],,
 [[
 void *yyalloc YYFARGS1( yy_size_t ,size)
 {
-    M4_YY_DECL_GUTS_VAR();
 	return (void *) malloc( size );
 }
 ]])
@@ -2639,7 +2641,6 @@ m4_ifdef( [[M4_YY_NO_FLEX_REALLOC]],,
 [[
 void *yyrealloc  YYFARGS2( void *,ptr, yy_size_t ,size)
 {
-    M4_YY_DECL_GUTS_VAR();
 	/* The cast to (char *) in the following accommodates both
 	 * implementations that use char* generic pointers, and those
 	 * that use void* generic pointers.  It works with the latter
@@ -2655,7 +2656,6 @@ m4_ifdef( [[M4_YY_NO_FLEX_FREE]],,
 [[
 void yyfree YYFARGS1( void *,ptr)
 {
-    M4_YY_DECL_GUTS_VAR();
 	free( (char *) ptr );	/* see yyrealloc() for (char *) cast */
 }
 ]])
@@ -2702,7 +2702,6 @@ static int yytbl_read32 (void *v, struct yytbl_reader * rd)
 static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *, rd)
 {
     int     bytes;
-    M4_YY_DECL_GUTS_VAR();
     memset (th, 0, sizeof (struct yytbl_hdr));
 
     if (yytbl_read32 (&(th->th_magic), rd) != 0)
@@ -2749,7 +2748,6 @@ static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *
 static struct yytbl_dmap *yytbl_dmap_lookup YYFARGS2(struct yytbl_dmap *, dmap,
                                                       int, id)
 {
-    M4_YY_DECL_GUTS_VAR();
     while (dmap->dm_id)
         if (dmap->dm_id == id)
             return dmap;
@@ -2768,7 +2766,6 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
     struct yytbl_dmap *transdmap=0;
     int     len, i, rv, inner_loop_count;
     void   *p=0;
-    M4_YY_DECL_GUTS_VAR();
 
     memset (&td, 0, sizeof (struct yytbl_data));
 
@@ -2979,7 +2976,6 @@ static int yytbl_fload YYFARGS2(FILE *, fp, const char *, key)
     int rv=0;
     struct yytbl_hdr th;
     struct yytbl_reader rd;
-    M4_YY_DECL_GUTS_VAR();
 
     rd.fp = fp;
     th.th_version = NULL;
@@ -3026,7 +3022,6 @@ return_rv:
 /** Load the DFA tables for this scanner from the given stream.  */
 int yytables_fload YYFARGS1(FILE *, fp)
 {
-    M4_YY_DECL_GUTS_VAR();
 
     if( yytbl_fload(fp, YYTABLES_NAME M4_YY_CALL_LAST_ARG) != 0)
         return -1;
@@ -3037,7 +3032,6 @@ int yytables_fload YYFARGS1(FILE *, fp)
 int yytables_destroy YYFARGS0(void)
 {   
     struct yytbl_dmap *dmap=0;
-    M4_YY_DECL_GUTS_VAR();
 
     if(!M4_YY_TABLES_VERIFY){
         /* Walk the dmap, freeing the pointers */
@@ -3080,3 +3074,13 @@ int main ()
 ]])
 
 %ok-for-header
+#undef YY_NEW_FILE
+#undef YY_FLUSH_BUFFER
+#undef yy_set_bol
+#undef yy_new_buffer
+#undef yy_set_interactive
+
+#ifdef YY_DECL_IS_OURS
+#undef YY_DECL_IS_OURS
+#undef YY_DECL
+#endif
