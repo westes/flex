@@ -474,6 +474,15 @@ static int yy_init_globals YY_PROTO(( yyscan_t ));
 
 /* Accessor methods to globals.
    These are made visible to non-reentrant scanners for convenience. */
+
+#ifndef YY_NO_GET_DEBUG
+bool yyget_debug YY_PROTO(( YY_ONLY_ARG ));
+#endif
+
+#ifndef YY_NO_SET_DEBUG
+void yyset_debug YY_PROTO(( bool debug_flag YY_LAST_ARG ));
+#endif
+
 #ifndef YY_NO_GET_EXTRA
 YY_EXTRA_TYPE yyget_extra YY_PROTO(( YY_ONLY_ARG ));
 #endif
