@@ -33,6 +33,6 @@ This basically says "do whatever you please with this software except
 remove this notice or take advantage of the University's (or the flex
 authors') name".
 
-Note that the "flex.skel" scanner skeleton carries no copyright notice.
+Note that the "flex.skl" scanner skeleton carries no copyright notice.
 You are free to do whatever you please with scanners generated using flex;
 for them, you are not even bound by the above copyright.
