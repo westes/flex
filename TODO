@@ -19,6 +19,8 @@
 
 ** faq
 
+** document recent m4 modifications
+
 *** clean up the faqs section. The information is good; the texinfo
    could use some touching up.
 
@@ -52,6 +54,10 @@
 
 ** add a test for yypush_buffer_state/yypop_buffer_state
 
+** add a test for traditional funcs and protos
+
+** add a test for #line directive integrity
+
 * generic coding
 
 ** move as much skeleton code as possible out of gen.c and into
@@ -59,6 +65,10 @@
 
 ** figure out whether we want to add the capability to have
   auto-generated backout rules
+
+** token-type and token buffer support
+
+** move prefixes to m4
 
 * C++
 
