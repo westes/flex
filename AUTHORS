@@ -5,4 +5,8 @@ The fast table representation is a partial implementation of a design
 done by Van Jacobson.  The implementation was done by Kevin Gong and
 Vern Paxson.
 
-The reentrancy support was written by John Millaway.
+The reentrancy support, including the original nroff version of the
+documentation of the API, was written by John Millaway.
+
+W. L. Estes converted the nroff manual into texinfo and further
+mangled the manual from there.
