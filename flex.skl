@@ -1965,6 +1965,10 @@ extern "C" int isatty M4_YY_PARAMS( int );
 ]])
 %endif
 
+/* Initializes or reinitializes a buffer.
+ * This function is sometimes called more than once on the same buffer,
+ * such as during a yyrestart() or at EOF.
+ */
 %if-c-only
     static void yy_init_buffer  YYFARGS2( YY_BUFFER_STATE ,b, FILE *,file)
 %endif
