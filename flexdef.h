@@ -321,6 +321,7 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  *   listing backing-up states
  * C_plus_plus - if true (i.e., -+ flag), generate a C++ scanner class;
  *   otherwise, a standard C scanner
+ * long_align - if true (-a flag), favor long-word alignment.
  * yytext_is_array - if true (i.e., %array directive), then declare
  *   yytext as a array instead of a character pointer.  Nice and inefficient.
  * csize - size of character set for the scanner we're generating;
@@ -339,7 +340,7 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
 extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 extern int interactive, caseins, useecs, fulltbl, usemecs;
 extern int fullspd, gen_line_dirs, performance_report, backing_up_report;
-extern int C_plus_plus, yytext_is_array, csize;
+extern int C_plus_plus, long_align, yytext_is_array, csize;
 extern int yymore_used, reject, real_reject, continued_action;
 
 #define REALLY_NOT_DETERMINED 0

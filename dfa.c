@@ -526,12 +526,12 @@ void ntod()
 			 */
 			num_full_table_rows = numecs + 1;
 
-		/* Declare it "short" because it's a real long-shot that that
-		 * won't be large enough.
+		/* Unless -a, declare it "short" because it's a real
+		 * long-shot that that won't be large enough.
 		 */
-		printf( "static const short yy_nxt[][%d] =\n    {\n",
+		printf( "static const %s yy_nxt[][%d] =\n    {\n",
 			/* '}' so vi doesn't get too confused */
-			num_full_table_rows );
+			long_align ? "long" : "short", num_full_table_rows );
 
 		/* Generate 0 entries for state #0. */
 		for ( i = 0; i < num_full_table_rows; ++i )

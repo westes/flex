@@ -397,7 +397,8 @@ void genftbl()
 	register int i;
 	int end_of_buffer_action = num_rules + 1;
 
-	printf( C_short_decl, "yy_accept", lastdfa + 1 );
+	printf( long_align ? C_long_decl : C_short_decl,
+		"yy_accept", lastdfa + 1 );
 
 	dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
 
@@ -440,7 +441,7 @@ char *char_map;
 "while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )" );
 	indent_up();
 	indent_puts( "{" );
-	indent_puts( "yy_current_state = yy_def[yy_current_state];" );
+	indent_puts( "yy_current_state = (int) yy_def[yy_current_state];" );
 
 	if ( usemecs )
 		{
@@ -783,7 +784,8 @@ void gentabs()
 		accsiz[end_of_buffer_state] = 1;
 		dfaacc[end_of_buffer_state].dfaacc_set = EOB_accepting_list;
 
-		printf( C_short_decl, "yy_acclist", max( numas, 1 ) + 1 );
+		printf( long_align ? C_long_decl : C_short_decl,
+			"yy_acclist", max( numas, 1 ) + 1 );
 
 		j = 1;	/* index into "yy_acclist" array */
 
@@ -869,7 +871,7 @@ void gentabs()
 		 */
 		++k;
 
-	printf( C_short_decl, "yy_accept", k );
+	printf( long_align ? C_long_decl : C_short_decl, "yy_accept", k );
 
 	for ( i = 1; i <= lastdfa; ++i )
 		{
@@ -917,7 +919,8 @@ void gentabs()
 
 	total_states = lastdfa + numtemps;
 
-	printf( total_states >= MAX_SHORT ? C_long_decl : C_short_decl,
+	printf( (total_states >= MAX_SHORT || long_align) ?
+			C_long_decl : C_short_decl,
 		"yy_base", total_states + 1 );
 
 	for ( i = 1; i <= lastdfa; ++i )
@@ -951,7 +954,8 @@ void gentabs()
 
 	dataend();
 
-	printf( total_states >= MAX_SHORT ? C_long_decl : C_short_decl,
+	printf( (total_states >= MAX_SHORT || long_align) ?
+			C_long_decl : C_short_decl,
 		"yy_def", total_states + 1 );
 
 	for ( i = 1; i <= total_states; ++i )
@@ -959,7 +963,8 @@ void gentabs()
 
 	dataend();
 
-	printf( tblend >= MAX_SHORT ? C_long_decl : C_short_decl,
+	printf( (tblend >= MAX_SHORT || long_align) ?
+			C_long_decl : C_short_decl,
 		"yy_nxt", tblend + 1 );
 
 	for ( i = 1; i <= tblend; ++i )
@@ -972,7 +977,8 @@ void gentabs()
 
 	dataend();
 
-	printf( tblend >= MAX_SHORT ? C_long_decl : C_short_decl,
+	printf( (tblend >= MAX_SHORT || long_align) ?
+			C_long_decl : C_short_decl,
 		"yy_chk", tblend + 1 );
 
 	for ( i = 1; i <= tblend; ++i )
@@ -1025,7 +1031,7 @@ void make_tables()
 	/* First, take care of YY_DO_BEFORE_ACTION depending on yymore
 	 * being used.
 	 */
-	set_indent( 2 );
+	set_indent( 1 );
 
 	if ( yymore_used )
 		{
@@ -1062,13 +1068,18 @@ void make_tables()
 		 */
 		int total_table_size = tblend + numecs + 1;
 		char *trans_offset_type =
-		total_table_size >= MAX_SHORT ? "long" : "short";
+			(total_table_size >= MAX_SHORT || long_align) ?
+				"long" : "short";
 
 		set_indent( 0 );
 		indent_puts( "struct yy_trans_info" );
 		indent_up();
 		indent_puts( "{" ); 	/* } for vi */
-		indent_puts( "short yy_verify;" );
+
+		if ( long_align )
+			indent_puts( "long yy_verify;" );
+		else
+			indent_puts( "short yy_verify;" );
 
 		/* In cases where its sister yy_verify *is* a "yes, there is
 		 * a transition", yy_nxt is the offset (in records) to the
@@ -1125,7 +1136,8 @@ void make_tables()
 		indent_puts( "extern int yy_flex_debug;" );
 		indent_puts( "int yy_flex_debug = 1;\n" );
 
-		printf( C_short_decl, "yy_rule_linenum", num_rules );
+		printf( long_align ? C_long_decl : C_short_decl,
+			"yy_rule_linenum", num_rules );
 		for ( i = 1; i < num_rules; ++i )
 			mkdata( rule_linenum[i] );
 		dataend();

@@ -52,7 +52,7 @@ void set_up_initial_allocations PROTO((void));
 int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int interactive, caseins, useecs, fulltbl, usemecs;
 int fullspd, gen_line_dirs, performance_report, backing_up_report;
-int C_plus_plus, yytext_is_array, csize;
+int C_plus_plus, long_align, yytext_is_array, csize;
 int yymore_used, reject, real_reject, continued_action;
 int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum;
@@ -255,6 +255,8 @@ int exit_status;
 
 		if ( C_plus_plus )
 			putc( '+', stderr );
+		if ( long_align )
+			putc( 'a', stderr );
 		if ( backing_up_report )
 			putc( 'b', stderr );
 		if ( ddebug )
@@ -411,7 +413,7 @@ char **argv;
 
 	printstats = syntaxerror = trace = spprdflt = caseins = false;
 	C_plus_plus = backing_up_report = ddebug = fulltbl = fullspd = false;
-	nowarn = yymore_used = continued_action = reject = false;
+	long_align = nowarn = yymore_used = continued_action = reject = false;
 	yytext_is_array = yymore_really_used = reject_really_used = false;
 	gen_line_dirs = usemecs = useecs = true;
 	performance_report = 0;
@@ -444,6 +446,10 @@ char **argv;
 				{
 				case '+':
 					C_plus_plus = true;
+					break;
+
+				case 'a':
+					long_align = true;
 					break;
 
 				case 'B':
@@ -797,6 +803,7 @@ void readin()
 		{
 		if ( yytext_is_array )
 			{
+			puts( "\n#include <string.h>\n" );
 			puts( "extern char yytext[];\n" );
 			puts( "#ifndef YYLMAX" );
 			puts( "#define YYLMAX YY_READ_BUF_SIZE" );
@@ -877,9 +884,11 @@ void set_up_initial_allocations()
 void usage()
 	{
 	fprintf( stderr,
-	"%s [-bcdfhinpstvwBFILTV78+ -C[efmF] -Pprefix -Sskeleton] [file ...]\n",
+"%s [-abcdfhinpstvwBFILTV78+ -C[efmF] -Pprefix -Sskeleton] [file ...]\n",
 		program_name );
 
+	fprintf( stderr,
+		"\t-a  trade off larger tables for better memory alignment\n" );
 	fprintf( stderr,
 		"\t-b  generate backing-up information to lex.backup\n" );
 	fprintf( stderr, "\t-c  do-nothing POSIX option\n" );
