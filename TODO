@@ -9,10 +9,6 @@
 
 *** create a section on flex design, features, etc.
 
-** We've converted the flex manual to texinfo, but some issues remain:
-
-** index flex.texi
-
 * repackage the distribution
 
 ** address lex-replacement: document or provide an option through
@@ -22,13 +18,7 @@
 
 ** make sure all flex modules use gettext translation facilities
 
-** see about not listing flex-generated files and yacc-generated files
-   in _SOURCES as per automake manual
-
 ** subdirectories
-
-*** audit all subdirectories to be sure they're in compliance with
-    automake and friends
 
 *** in examples/manual, integrate the Makefile.examples into the
     Makefile.am
@@ -40,8 +30,6 @@
 ** explicitly describe the copyright state of the entries in
    tests/. millaway has assigned the rights to the test suite to me
    and so the test suite will be under the flex license.
-
-** make sure that tests/ winds up in the distribution
 
 * generic coding issues
 
