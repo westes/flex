@@ -198,7 +198,7 @@ int hash_size;
     locstr = 0;
 
     while ( str[locstr] )
-	hashval = ((hashval << 1) + str[locstr++]) % hash_size;
+	hashval = ((hashval << 1) + (unsigned char) str[locstr++]) % hash_size;
 
     return ( hashval );
     }
@@ -242,6 +242,28 @@ char nd[];
     }
 
 
+/* scextend - increase the maximum number of start conditions
+ *
+ * synopsis
+ *    scextend();
+ */
+
+void scextend()
+
+    {
+    current_max_scs += MAX_SCS_INCREMENT;
+
+    ++num_reallocs;
+
+    scset = reallocate_integer_array( scset, current_max_scs );
+    scbol = reallocate_integer_array( scbol, current_max_scs );
+    scxclu = reallocate_integer_array( scxclu, current_max_scs );
+    sceof = reallocate_integer_array( sceof, current_max_scs );
+    scname = reallocate_char_ptr_array( scname, current_max_scs );
+    actvsc = reallocate_integer_array( actvsc, current_max_scs );
+    }
+
+
 /* scinstal - make a start condition
  *
  * synopsis
@@ -273,18 +295,7 @@ int xcluflg;
 	printf( "#define %s %d\n", str, lastsc );
 
     if ( ++lastsc >= current_max_scs )
-	{
-	current_max_scs += MAX_SCS_INCREMENT;
-
-	++num_reallocs;
-
-	scset = reallocate_integer_array( scset, current_max_scs );
-	scbol = reallocate_integer_array( scbol, current_max_scs );
-	scxclu = reallocate_integer_array( scxclu, current_max_scs );
-	sceof = reallocate_integer_array( sceof, current_max_scs );
-	scname = reallocate_char_ptr_array( scname, current_max_scs );
-	actvsc = reallocate_integer_array( actvsc, current_max_scs );
-	}
+	scextend();
 
     scname[lastsc] = copy_string( str );
 
