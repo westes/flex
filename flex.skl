@@ -625,9 +625,10 @@ m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]],
 
 %if-bison-bridge
     YYSTYPE * yylval_r;
-#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
+m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+[[
     YYLTYPE * yylloc_r;
-#endif
+]])
 %endif
 
     };
@@ -638,14 +639,15 @@ static int yy_init_globals YY_PARAMS(( M4_YY_PROTO_ONLY_ARG ));
 %ok-for-header
 
 %not-for-header These go in the .c file only.
-/* This must go here because YYSTYPE and YYLTYPE are included
- * from bison output in section 1.*/
 %if-reentrant
 %if-bison-bridge
+/* This must go here because YYSTYPE and YYLTYPE are included
+ * from bison output in section 1.*/
 #    define yylval YY_G(yylval_r)
-#  if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
+m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+[[
 #    define yylloc YY_G(yylloc_r)
-#  endif
+]])
 %endif
 %endif
 
@@ -726,17 +728,21 @@ m4_ifdef( [[M4_YY_NO_GET_LVAL]],,
 [[
 YYSTYPE * yyget_lval YY_PARAMS(( M4_YY_PROTO_ONLY_ARG ));
 ]])
-void yyset_lval YY_PARAMS(( YYSTYPE * yylvalp M4_YY_PROTO_LAST_ARG ));
-#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
-m4_ifdef( [[M4_YY_NO_GET_LLOC]],,
+
+void yyset_lval YY_PARAMS(( YYSTYPE * yylval_param M4_YY_PROTO_LAST_ARG ));
+
+m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
 [[
-   YYLTYPE *yyget_lloc YY_PARAMS(( M4_YY_PROTO_ONLY_ARG ));
+    m4_ifdef( [[M4_YY_NO_GET_LLOC]],,
+    [[
+       YYLTYPE *yyget_lloc YY_PARAMS(( M4_YY_PROTO_ONLY_ARG ));
+    ]])
+
+    m4_ifdef( [[M4_YY_NO_SET_LLOC]],,
+    [[
+        void yyset_lloc YY_PARAMS(( YYLTYPE * yylloc_param M4_YY_PROTO_LAST_ARG ));
+    ]])
 ]])
-m4_ifdef( [[M4_YY_NO_SET_LLOC]],,
-[[
-    void yyset_lloc YY_PARAMS(( YYLTYPE * yyllocp M4_YY_PROTO_LAST_ARG ));
-]])
-#endif /* YYLTYPE */
 %endif
 
 /* Macros after this point can all be overridden by user definitions in
@@ -913,33 +919,39 @@ struct yytbl_reader {
 #ifndef YY_DECL
 %if-c-only Standard (non-C++) definition
 
-/* If the bison pure parser is used, then bison will provide
-   one or two additional arguments. */
 
-%if-bison-bridge
-#  if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
-#        define YY_LEX_PROTO YY_PARAMS((YYSTYPE * yylvalp, YYLTYPE * yyllocp M4_YY_PROTO_LAST_ARG))
-#        define YY_LEX_DECLARATION YYFARGS2(YYSTYPE *,yylvalp, YYLTYPE *,yyllocp)
-#  else
-#        define YY_LEX_PROTO YY_PARAMS((YYSTYPE * yylvalp M4_YY_PROTO_LAST_ARG))
-#        define YY_LEX_DECLARATION YYFARGS1(YYSTYPE *,yylvalp)
-#  endif
-%endif
+m4_define( [[M4_YY_LEX_PROTO]], [[YY_PARAMS((M4_YY_PROTO_ONLY_ARG))]])
+m4_define( [[M4_YY_LEX_DECLARATION]], [[YYFARGS0(void)]])
 
-%if-not-bison-bridge
-#      define YY_LEX_PROTO YY_PARAMS((M4_YY_PROTO_ONLY_ARG))
-#      define YY_LEX_DECLARATION YYFARGS0(void)
-%endif
+m4_ifdef( [[M4_YY_BISON_BRIDGE]],
+[[
+    m4_dnl  The bison pure parser is used. Redefine yylex to
+    m4_dnl  accept the lval parameter.
 
+    m4_define( [[M4_YY_LEX_PROTO]],
+               [[YY_PARAMS((YYSTYPE * yylval_param M4_YY_PROTO_LAST_ARG))]])
+    m4_define( [[M4_YY_LEX_DECLARATION]],
+               [[YYFARGS1(YYSTYPE *,yylval_param)]])
+]])
 
-extern int yylex YY_LEX_PROTO;
+m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+[[
+    m4_dnl  Locations are used. yylex should also accept the ylloc parameter.
 
-#define YY_DECL int yylex YY_LEX_DECLARATION
+    m4_define( [[M4_YY_LEX_PROTO]],
+               [[YY_PARAMS((YYSTYPE * yylval_param, YYLTYPE * yylloc_param M4_YY_PROTO_LAST_ARG))]])
+    m4_define( [[M4_YY_LEX_DECLARATION]],
+               [[YYFARGS2(YYSTYPE *,yylval_param, YYLTYPE *,yylloc_param)]])
+]])
+
+extern int yylex M4_YY_LEX_PROTO;
+
+#define YY_DECL int yylex M4_YY_LEX_DECLARATION
 %endif
 %if-c++-only C++ definition
 #define YY_DECL int yyFlexLexer::yylex()
 %endif
-#endif
+#endif /* !YY_DECL */
 
 
 /* Code executed at the beginning of each rule, after yytext and yyleng
@@ -962,24 +974,31 @@ YY_DECL
 	register yy_state_type yy_current_state;
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
-%if-bison-bridge
-%if-not-reentrant
-    YYSTYPE * yylval;
-#   if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
-      YYLTYPE * yylloc;
-#   endif
-%endif
-%endif
     M4_YY_DECL_GUTS_VAR();
+
+m4_ifdef( [[M4_YY_REENTRANT]],,
+[[
+    m4_ifdef( [[M4_YY_BISON_BRIDGE]],
+    [[
+        YYSTYPE * yylval;
+    ]])
+    m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+    [[
+        YYLTYPE * yylloc;
+    ]])
+]])
 
 %% [7.0] user's declarations go here
 
-%if-bison-bridge
-    yylval = yylvalp;
-#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
-    yylloc = yyllocp;
-#endif
-%endif
+m4_ifdef( [[M4_YY_BISON_BRIDGE]],
+[[
+    yylval = yylval_param;
+]])
+
+m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+[[
+    yylloc = yylloc_param;
+]])
 
 	if ( YY_G(yy_init) )
 		{
@@ -2260,33 +2279,34 @@ YYSTYPE * yyget_lval  YYFARGS0(void)
 
 m4_ifdef( [[M4_YY_NO_SET_LVAL]],,
 [[
-void yyset_lval YYFARGS1( YYSTYPE * ,yylvalp)
+void yyset_lval YYFARGS1( YYSTYPE * ,yylval_param)
 {
     M4_YY_DECL_GUTS_VAR();
-    yylval = yylvalp;
+    yylval = yylval_param;
 }
 ]])
 
-#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
-m4_ifdef( [[M4_YY_NO_GET_LLOC]],,
+m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
 [[
-YYLTYPE *yyget_lloc  YYFARGS0(void)
-{
-    M4_YY_DECL_GUTS_VAR();
-    return yylloc;
-}
+    m4_ifdef( [[M4_YY_NO_GET_LLOC]],,
+    [[
+        YYLTYPE *yyget_lloc  YYFARGS0(void)
+        {
+            M4_YY_DECL_GUTS_VAR();
+            return yylloc;
+        }
+    ]])
+
+    m4_ifdef( [[M4_YY_NO_SET_LLOC]],,
+    [[
+        void yyset_lloc YYFARGS1( YYLTYPE * ,yylloc_param)
+        {
+            M4_YY_DECL_GUTS_VAR();
+            yylloc = yylloc_param;
+        }
+    ]])
 ]])
 
-m4_ifdef( [[M4_YY_NO_SET_LLOC]],,
-[[
-void yyset_lloc YYFARGS1( YYLTYPE * ,yyllocp)
-{
-    M4_YY_DECL_GUTS_VAR();
-    yylloc = yyllocp;
-}
-]])
-
-#endif /* YYLTYPE */
 %endif
 
 

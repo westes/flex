@@ -404,21 +404,27 @@ void check_options ()
 			buf_m4_define (&m4defs_buf, "M4_YY_TEXT_IS_ARRAY", NULL);
 	}
 
-	if ( bison_bridge)
-		outn ("#define YY_BISON_BRIDGE 1");
+	if ( bison_bridge){
+		buf_m4_define (&m4defs_buf, "M4_YY_BISON_BRIDGE", NULL);
+        /* for now, assume bison is using %locations until I think
+         * of the best way to detect them.
+         */
+		buf_m4_define (&m4defs_buf, "M4_YY_BISON_BRIDGE_LOCATIONS", NULL);
+    }
 
 	if (strcmp (prefix, "yy")) {
 #define GEN_PREFIX(name) out_str3( "#define yy%s %s%s\n", name, prefix, name )
 		if (C_plus_plus)
 			GEN_PREFIX ("FlexLexer");
 		else {
-			outn ("#ifndef YY_REENTRANT");
-			GEN_PREFIX ("text");
-			GEN_PREFIX ("leng");
-			GEN_PREFIX ("in");
-			GEN_PREFIX ("out");
-			GEN_PREFIX ("_flex_debug");
-			outn ("#endif");
+			if (!reentrant){
+                GEN_PREFIX ("text");
+                GEN_PREFIX ("leng");
+                GEN_PREFIX ("in");
+                GEN_PREFIX ("out");
+                GEN_PREFIX ("_flex_debug");
+            }
+
 			GEN_PREFIX ("_create_buffer");
 			GEN_PREFIX ("_delete_buffer");
 			GEN_PREFIX ("_scan_buffer");
@@ -448,13 +454,12 @@ void check_options ()
 			GEN_PREFIX ("get_lineno");
 			GEN_PREFIX ("set_lineno");
 
-			outn ("#ifdef YY_BISON_BRIDGE");
-			GEN_PREFIX ("get_lval");
-			GEN_PREFIX ("set_lval");
-			GEN_PREFIX ("get_lloc");
-			GEN_PREFIX ("set_lloc");
-			outn ("#endif");
-
+			if (bison_bridge){
+                GEN_PREFIX ("get_lval");
+                GEN_PREFIX ("set_lval");
+                GEN_PREFIX ("get_lloc");
+                GEN_PREFIX ("set_lloc");
+            }
 		}
 
         /* The alloc/realloc/free functions are used internally by the
@@ -676,7 +681,6 @@ void flexend (exit_status)
                 "YYLMAX",
                 "YYSTATE",
                 "YY_AT_BOL",
-                "YY_BISON_BRIDGE",
                 "YY_BREAK",
                 "YY_BUFFER_EOF_PENDING",
                 "YY_BUFFER_NEW",

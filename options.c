@@ -167,8 +167,6 @@ optspec_t flexopts[] = {
 	,			/* Generate a reentrant C scanner. */
 	{"--noreentrant", OPT_NO_REENTRANT, 0}
 	,
-	{"--reentrant-bison", OPT_BISON_BRIDGE, 0}
-	,			/* Deprecated. Replaced by --bison-bridge */
 	{"--reject", OPT_REJECT, 0}
 	,
 	{"--noreject", OPT_NO_REJECT, 0}
