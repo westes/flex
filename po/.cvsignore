@@ -3,3 +3,4 @@ Makefile
 Makefile.in
 POTFILES
 flex.pot
+remove-potcdate.sed
