@@ -26,10 +26,7 @@
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-#ifndef lint
-static char rcsid[] =
-    "@(#) $Header$ (LBL)";
-#endif
+/* $Header$ */
 
 #include <ctype.h>
 #include "flexdef.h"

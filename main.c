@@ -32,10 +32,7 @@ char copyright[] =
  All rights reserved.\n";
 #endif /* not lint */
 
-#ifndef lint
-static char rcsid[] =
-    "@(#) $Header$ (LBL)";
-#endif
+/* $Header$ */
 
 
 #include "flexdef.h"
