@@ -973,7 +973,7 @@ int yyFlexLexer::yyinput()
 	*yy_c_buf_p = '\0';	/* preserve yytext */
 	yy_hold_char = *++yy_c_buf_p;
 
-%% update yylineno here, if doing -l
+%% update BOL and yylineno
 
 	return c;
 	}

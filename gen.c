@@ -1504,8 +1504,21 @@ void make_tables()
 		}
 
 	skelout();
-	if ( lex_compat )
-		{ /* update yylineno inside of input() */
+	/* Update BOL and yylineno inside of input(). */
+	if ( bol_needed )
+		{
+		indent_puts( "yy_current_buffer->yy_at_bol = (c == '\\n');" );
+		if ( lex_compat )
+			{
+			indent_puts( "if ( yy_current_buffer->yy_at_bol )" );
+			indent_up();
+			indent_puts( "++yylineno;" );
+			indent_down();
+			}
+		}
+
+	else if ( lex_compat )
+		{
 		indent_puts( "if ( c == '\\n' )" );
 		indent_up();
 		indent_puts( "++yylineno;" );
