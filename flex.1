@@ -10,6 +10,7 @@ This manual describes
 .I flex,
 a tool for generating programs that perform pattern-matching on text.  The
 manual includes both tutorial and reference sections:
+.nf
 
     Description
         a brief overview of the tool
@@ -36,8 +37,8 @@ manual includes both tutorial and reference sections:
         managing "mini-scanners"
 
     Multiple Input Buffers
-        how to manipulate multiple input sources; how to scan
-        from strings instead of files
+        how to manipulate multiple input sources; how to
+        scan from strings instead of files
 
     End-of-file Rules
         special rules for matching the end of the input
@@ -52,7 +53,8 @@ manual includes both tutorial and reference sections:
         connecting flex scanners together with yacc parsers
 
     Options
-        flex command-line options, and the "%option" directive
+        flex command-line options, and the "%option"
+        directive
 
     Performance Considerations
         how to make your scanner go as fast as possible
@@ -62,7 +64,8 @@ manual includes both tutorial and reference sections:
         scanner classes
 
     Incompatibilities With Lex And POSIX
-        how flex differs from AT&T lex and the POSIX lex standard
+        how flex differs from AT&T lex and the POSIX lex
+        standard
 
     Diagnostics
         those error messages produced by flex (or scanners
@@ -80,8 +83,8 @@ manual includes both tutorial and reference sections:
     Author
         includes contact information
 
-.SH
-DESCRIPTION
+.fi
+.SH DESCRIPTION
 .I flex
 is a tool for generating
 .I scanners:
@@ -361,7 +364,7 @@ expressions.  These are:
                  then the ANSI-C interpretation of \\x.
                  Otherwise, a literal 'X' (used to escape
                  operators such as '*')
-    \\0         A NUL character (ASCII code 0).
+    \\0         a NUL character (ASCII code 0)
     \\123       the character with octal value 123
     \\x2a       the character with hexadecimal value 2a
     (r)        match an r; parentheses are used to override
@@ -385,10 +388,10 @@ expressions.  These are:
                  before a newline).  Equivalent to "r/\\n".
 
                Note that flex's notion of "newline" is exactly
-                 whatever the local C compiler interprets '\\n'
-                 as; in particular, on DOS systems you must either
-                 filter out \\r's in the input yourself, or
-                 explicitly use r/\\r\\n for "r$".
+               whatever the C compiler used to compile flex
+               interprets '\\n' as; in particular, on some DOS
+               systems you must either filter out \\r's in the
+               input yourself, or explicitly use r/\\r\\n for "r$".
 
 
     <s>r       an r, but only in start condition s (see
@@ -1231,7 +1234,7 @@ are considered good style.)
 actions can also be given as indented code at the beginning
 of the rules section.  For example, the following will cause
 the scanner to enter the "SPECIAL" start condition whenever
-.I yylex()
+.B yylex()
 is called and the global variable
 .I enter_special
 is true:
@@ -1346,6 +1349,7 @@ could instead be written
 .nf
 
     comment_caller = YY_START;
+
 .fi
 Flex provides
 .B YYSTATE
@@ -1438,7 +1442,8 @@ scope, every rule automatically has the prefix
 applied to it, until a
 .I '}'
 which matches the initial
-.I '{'.  So, for example,
+.I '{'.
+So, for example,
 .nf
 
     <ESC>{
@@ -1666,7 +1671,7 @@ starting at location
 Note that both of these functions create and scan a
 .I copy
 of the string or bytes.  (This may be desirable, since
-.I yylex()
+.B yylex()
 modifies the contents of the buffer it is scanning.)  You can avoid the
 copy by using:
 .TP
@@ -1874,9 +1879,7 @@ buffers its input; use
 .B yyrestart()
 instead.
 Once scanning terminates because an end-of-file
-has been seen,
-.B
-you can assign
+has been seen, you can assign
 .I yyin
 at the new input file and then call the scanner again to continue scanning.
 .IP -
@@ -2558,11 +2561,12 @@ provide features otherwise not available:
 .TP
 .B always-interactive
 instructs flex to generate a scanner which always considers its input
-"interactive" (no call made to
+"interactive".  Normally, on each new input file the scanner calls
 .B isatty()
-will be made when the scanner runs in an attempt to determine whether
+in an attempt to determine whether
 the scanner's input source is interactive and thus should be read a
-character at a time).
+character at a time.  When this option is used, however, then no
+such call is made.
 .TP
 .B main
 directs flex to provide a default
@@ -2583,7 +2587,7 @@ This is the opposite of
 .B stack
 enables the use of start condition stacks (see Start Conditions above).
 .TP
-.B stdinit,
+.B stdinit
 if unset (i.e.,
 .B %option nostdinit)
 initializes
@@ -2597,7 +2601,7 @@ pointers, instead of
 and
 .I stdout.
 .TP
-.B yywrap,
+.B yywrap
 if unset (i.e.,
 .B %option noyywrap),
 makes the scanner not call
@@ -2626,16 +2630,24 @@ unsetting them to indicate it actually is not used
 (e.g.,
 .B %option noyymore).
 .PP
-Two option's take string-delimited values, offset with '=':
-.B outfile="<name>"
+Two options take string-delimited values, offset with '=':
+.nf
+
+    %option outfile="ABC"
+
+.fi
 is equivalent to
-.B -o<name>,
+.B -oABC,
 and
-.B prefix="<name>"
+.nf
+
+    %option prefix="XYZ"
+
+.fi
 is equivalent to
-.B -P<name>.
+.B -PXYZ.
 .PP
-A number of option's are available for lint purists who want to suppress
+A number of options are available for lint purists who want to suppress
 the appearance of unneeded routines in the generated scanner.  Each of the
 following, if unset, results in the corresponding routine not appearing in
 the generated scanner:
@@ -3181,7 +3193,7 @@ Here is an example of a simple C++ scanner:
         return 0;
         }
 .fi
-If you want to create multiple (different) lexer classes, you use th
+If you want to create multiple (different) lexer classes, you use the
 .B \-P
 flag (or the
 .B prefix=
@@ -3769,16 +3781,4 @@ This work was primarily done when I was with the Real Time Systems Group
 at the Lawrence Berkeley Laboratory in Berkeley, CA.  Many thanks to all there
 for the support I received.
 .PP
-Send comments to:
-.nf
-
-     Vern Paxson
-     Systems Engineering
-     Bldg. 46A, Room 1123
-     Lawrence Berkeley Laboratory
-     University of California
-     Berkeley, CA 94720
-
-     vern@ee.lbl.gov
-
-.fi
+Send comments to vern@ee.lbl.gov.
