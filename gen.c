@@ -1211,10 +1211,8 @@ void make_tables()
 			indent_puts( "static int yy_more_len = 0;" );
 			}
 
-		indent_puts(
-		"#define yymore() do { yy_more_flag = 1; } while ( 0 )" );
-		indent_puts(
-		"#define YY_MORE_ADJ yy_more_len" );
+		indent_puts( "#define yymore() (yy_more_flag = 1)" );
+		indent_puts( "#define YY_MORE_ADJ yy_more_len" );
 		}
 
 	else
@@ -1273,8 +1271,7 @@ void make_tables()
 		printf( "else if ( yy_act < %d )\n", num_rules );
 		indent_up();
 		indent_puts(
-		"fprintf(
-		stderr, \"--accepting rule at line %d (\\\"%s\\\")\\n\"," );
+	"fprintf( stderr, \"--accepting rule at line %d (\\\"%s\\\")\\n\"," );
 		indent_puts( "         yy_rule_linenum[yy_act], yytext );" );
 		indent_down();
 
