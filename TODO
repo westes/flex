@@ -16,7 +16,7 @@
 
 * getext
 
-** update gettext support from gettext-0.11 to gettext-0.11.2
+** update gettext support from gettext-0.11 to gettext-0.11.2 %%
 
 ** make sure all flex modules use gettext translation facilities
 
@@ -29,11 +29,16 @@
 
 ** make test suite more complete
 
+*** add a test for the --posix option %%
+
 ** explicitly describe the copyright state of the entries in
    tests/. millaway has assigned the rights to the test suite to me
    and so the test suite will be under the flex license.
 
 * generic coding
+
+** pay attention to the POSIXLY_CORRECT variable (this is from the GNU
+   coding standards and is a good idea) %%
 
 ** move as much skeleton code as possible out of gen.c and into
   flex.skl
@@ -46,6 +51,12 @@
 * C++
 
 ** revisit the C++ API. We get requests to make it more complete.
+
+Legend:
+
+*, **, ***: outline depth
+%% at end of item: must be adressed before next major release
+
 
 Local Variables:
 Mode: text
