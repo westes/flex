@@ -548,7 +548,7 @@ gen_next_match()
 	else
 	    printf( "while ( yy_current_state != %d );\n", jamstate );
 
-	if ( ! reject )
+	if ( ! reject && ! interactive )
 	    {
 	    /* do the guaranteed-needed backtrack to figure out the match */
 	    indent_puts( "yy_cp = yy_last_accepting_cpos;" );
