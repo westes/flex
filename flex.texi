@@ -6,6 +6,16 @@
 
 @c  This file is part of flex.
 
+@c  Copyright (c) 1990, 1997 The Regents of the University of California.
+@c  All rights reserved.
+
+@c  This code is derived from software contributed to Berkeley by
+@c  Vern Paxson.
+
+@c  The United States Government has rights in this work pursuant
+@c  to contract no. DE-AC03-76SF00098 between the United States
+@c  Department of Energy and the University of California.
+
 @c   Redistribution and use in source and binary forms, with or without
 @c   modification, are permitted provided that the following conditions
 @c   are met:
@@ -55,6 +65,7 @@ manual includes both tutorial and reference sections.
 * diagnostics::                 
 * limitations::                 
 * bibliography::                
+* copyright::                   
 * reporting bugs::              
 @end menu
 
@@ -3863,7 +3874,7 @@ number of states if it does.  @code{REJECT} cannot be used with the
 
 The @code{flex} internal algorithms need documentation.
 
-@node bibliography, reporting bugs, limitations, Top
+@node bibliography, copyright, limitations, Top
 @chapter Additional Reading
 
 You may wish to read more about the following programs:
@@ -3888,7 +3899,47 @@ Techniques and Tools}, Addison-Wesley (1986).  Describes the
 pattern-matching techniques used by @code{flex} (deterministic finite
 automata).
 
-@node reporting bugs,  , bibliography, Top
+@node copyright, reporting bugs, bibliography, Top
+@chapter Copyright
+
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright @copyright 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+@enumerate
+@item
+Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+@item
+Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+@end enumerate
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.
+
+@node reporting bugs,  , copyright, Top
 @chapter Reporting Bugs
 
 If you have problems with @code{flex} or think you have found a bug,
