@@ -9,10 +9,6 @@
 
 *** create a section on flex design, features, etc.
 
-**** we're not adding comments between pattern-action rules; explain
-why in the documentation (because the ability exists as per an email
-from millaway)
-
 ** We've converted the flex manual to texinfo, but some issues remain:
 
 ** index flex.texi
@@ -27,10 +23,6 @@ from millaway)
 *** jason@thought.net notes that a short description of flex, a
 summary of command line options and a reference to the info pages will
 probably satisfy the need for a man page
-
-** fix case of node names and generally make the manual prettier to read
-
-* document what folks can expect when they get a cvs snapshot
 
 * repackage the distribution
 
@@ -49,8 +41,6 @@ probably satisfy the need for a man page
 
 *** in examples/manual, integrate the Makefile.examples into the
     Makefile.am
-
-** upgrade to recent versions of automake and autoconf
 
 * test suite
 
@@ -78,9 +68,6 @@ probably satisfy the need for a man page
 
 ** figure out whether we want to add the capability to have
   auto-generated backout rules
-
-** resolve the unistd.h inclusion issues; this should be done in
-harmony with autoconf methods
 
 * C++
 
