@@ -38,9 +38,11 @@
 #ifdef YY_USE_PROTOS
 #define YY_PROTO(proto) proto
 char *malloc( unsigned size );
+int free( char * );
 #else
 #define YY_PROTO(proto) ()
 char *malloc();
+int free();
 #endif
 
 /* amount of stuff to slurp up with each read */
@@ -66,13 +68,18 @@ char *malloc();
 	if ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \
 	    YY_FATAL_ERROR( "read() in flex scanner failed" );
 #define YY_NULL 0
-#define yyterminate() return ( YY_NULL );
+
+/* no semi-colon after return; correct usage is to write "yyterminate();" -
+ * we don't want an extra ';' after the "return" because that will cause
+ * some compilers to complain about unreachable statements.
+ */
+#define yyterminate() return ( YY_NULL )
 
 /* report a fatal error */
 #define YY_FATAL_ERROR(msg) \
 	{ \
-	fputs( msg, stderr ); \
-	putc( '\n', stderr ); \
+	(void) fputs( msg, stderr ); \
+	(void) putc( '\n', stderr ); \
 	exit( 1 ); \
 	}
 
@@ -492,8 +499,12 @@ static yy_state_type yy_get_previous_state()
  *     next_state = yy_try_NUL_trans( current_state );
  */
 
+#ifdef YY_USE_PROTOS
+static yy_state_type yy_try_NUL_trans( register yy_state_type yy_current_state )
+#else
 static yy_state_type yy_try_NUL_trans( yy_current_state )
 register yy_state_type yy_current_state;
+#endif
 
     {
     register int yy_is_jam;
