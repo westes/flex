@@ -109,8 +109,11 @@ int status;
     if ( skelfile != NULL )
 	(void) fclose( skelfile );
 
-    (void) fclose( temp_action_file );
-    (void) unlink( action_file_name );
+    if ( temp_action_file )
+	{
+	(void) fclose( temp_action_file );
+	(void) unlink( action_file_name );
+	}
 
     if ( printstats )
 	{
@@ -243,6 +246,10 @@ char **argv;
 				useecs = true;
 				break;
 
+			    case 'F':
+				fullspd = true;
+				break;
+
 			    case 'f':
 				fulltbl = true;
 				break;
@@ -285,8 +292,8 @@ char **argv;
 		    break;
 
 		case 'F':
-		    fullspd = true;
 		    useecs = usemecs = false;
+		    fullspd = true;
 		    break;
 
 		case 'S':
@@ -321,10 +328,10 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
 	;
 	}
 
-    if ( fulltbl && usemecs )
+    if ( (fulltbl || fullspd) && usemecs )
 	flexerror( "full table and -cm don't make sense together" );
 
-    if ( fulltbl && interactive )
+    if ( (fulltbl || fullspd) && interactive )
 	flexerror( "full table and -I are (currently) incompatible" );
 
     if ( (fulltbl || fullspd) && reject )
