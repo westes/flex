@@ -30,6 +30,9 @@ To build and execute a single test:
 
 HOW TO ADD A NEW TEST
 
+ - Run the perl script `create-test.pl` found in this directory.
+   If it works, skip the next step.
+
  - Copy the tests/TEMPLATE directory, then modify the skeleton scanner
    (and parser if necessary). If you are submitting a patch for
    inclusion in the flex distribution, then move the file "cvsignore"
@@ -49,6 +52,7 @@ HOW TO ADD A NEW TEST
 
  - You must modify the last few lines of tests/configure.in
    by adding your new test directory, and the Makefile target.
+   (This step is done automatically by `create-test.pl`.)
 
  - Each test assumes that the newly-built binary "flex" is in the 
    directory above the tests directory.
@@ -73,4 +77,5 @@ DESCRIPTION OF TESTS
   pthread       - pthreads test. A NO-OP if libpthread not found.
   string-nr     - Scan strings, non-reentrant.
   string-r      - Scan strings, reentrant.
-  yyextra       - User-specific data in reentrant scanner.
+  c-cpp-nr      - Compile a C scanner with C++ compiler, nonreentrant.
+  c-cpp-r       - Compile a C scanner with C++ compiler, reentrant.

@@ -23,15 +23,16 @@ LN_S = @LN_S@
 YACC = @YACC@
 CC = @CC@
 CXX = @CXX@
+CXXFLAGS = @CXXFLAGS@ -I. -I"@srcdir@" -I..
 AR = ar
 RANLIB = @RANLIB@
 YACC = @YACC@
 
 # Edit these if necessary for your specific test.
-TESTNAME = TEMPLATE
+TESTNAME = test-c-cpp-r
 FLEX = ../../flex
 YFLAGS = --defines --output-file="parser.c" --name-prefix="test" 
-OBJS = scanner.o
+OBJS = scanner.o # parser.o
 
 # Force YACC to be bison (autoconf generates 'bison -y')
 YACC = @BISON@
@@ -39,19 +40,13 @@ YACC = @BISON@
 all: $(TESTNAME)
 
 $(TESTNAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(TESTNAME) $(OBJS) $(LDFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $(TESTNAME) $(OBJS) $(LDFLAGS) $(LIBS)
 
 scanner.c: $(srcdir)/scanner.l
 	$(FLEX) $(srcdir)/scanner.l
 
-scanner.o: scanner.c 
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c scanner.c
-
-parser.c: $(srcdir)/parser.y
-	$(YACC) $(YFLAGS) $(srcdir)/parser.y
-
-parser.o: parser.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c parser.c
+scanner.o: scanner.c
+	$(CXX) $(CXXFLAGS) -c scanner.c
 
 test: check
 

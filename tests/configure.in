@@ -10,6 +10,7 @@ AC_CHECK_LIB(pthread, pthread_create)
 AC_LN_S
 AC_PROG_YACC
 AC_PROG_CC
+AC_PROG_CXX
 AC_PROG_RANLIB
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
@@ -44,7 +45,7 @@ TESTDIRS="test-string-r test-pthread \
           test-bison-yylloc test-yyextra test-prefix-nr \
           test-prefix-r test-header-nr test-header-r \
           test-multiple-scanners-nr test-multiple-scanners-r \
-          test-array-nr test-array-r"
+          test-array-nr test-array-r test-c-cpp-nr test-c-cpp-r"
 
 AC_OUTPUT( Makefile test-string-r/Makefile test-pthread/Makefile
            test-bison-yylval/Makefile test-include-by-reentrant/Makefile
@@ -54,4 +55,5 @@ AC_OUTPUT( Makefile test-string-r/Makefile test-pthread/Makefile
            test-prefix-nr/Makefile test-prefix-r/Makefile
            test-header-nr/Makefile test-header-r/Makefile
            test-multiple-scanners-nr/Makefile test-multiple-scanners-r/Makefile
-           test-array-nr/Makefile test-array-r/Makefile)
+           test-array-nr/Makefile test-array-r/Makefile test-c-cpp-nr/Makefile
+           test-c-cpp-r/Makefile)
