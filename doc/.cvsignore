@@ -22,5 +22,4 @@ Makefile.in
 flex.1
 mdate-sh
 stamp-*
-texinfo.tex
 version.texi
