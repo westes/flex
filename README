@@ -1,19 +1,19 @@
-This is flex, the fast lexical analyzer.
+This is flex, the fast lexical analyzer generator.
 
-Read the file "INSTALL" for general installation directives.  Peek near
-the beginning of the file "Makefile.in" for special DEFS values.  On most
-systems, you can just run the "configure" script and type "make" to build
-flex; then "make check" to test whether it built correctly; and if it did,
-then "make install" to install it.
-
-If you're feeling adventurous, you can also issue "make bigcheck" (be
-prepared to wait a while). You can run the regression tests if you change to
-the TESTS/ directory and issue "make" followed by "make check".
+flex is a tool for generating scanners: programs which recognize
+lexical patterns in text.
 
 Note that flex is distributed under a copyright very similar to that of
 BSD Unix, and not under the GNU General Public License (GPL).
 
 This file is part of flex.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -40,9 +40,11 @@ The flex distribution contains the following files which may be of interest:
 
 README - This file.
 
-NEWS - user visible changes between the various releases.
+NEWS - current version number and list of user-visible changes.
 
 INSTALL - basic installation information.
+
+ABOUT-NLS - description of internationalization support in flex.
 
 COPYING - flex's copyright and license.
 
@@ -56,3 +58,5 @@ few other things. See the file examples/README for more details.
 TODO - outstanding bug reports, desired features, etc.
 
 tests/ - regression tests. See TESTS/README for details.
+
+po/ - internationalization support files.
