@@ -211,6 +211,11 @@ static int yy_start = 0;	/* start state number */
 static yy_state_type yy_last_accepting_state;
 static YY_CHAR *yy_last_accepting_cpos;
 
+/* flag which is used to allow yywrap()'s to do buffer switches
+ * instead of setting up a fresh yyin.  A bit of a hack ...
+ */
+static int yy_did_buffer_switch_on_eof;
+
 static yy_state_type yy_get_previous_state YY_PROTO(( void ));
 static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
 static int yy_get_next_buffer YY_PROTO(( void ));
@@ -341,6 +346,8 @@ do_action:	/* this label is used only to access EOF actions */
 		    {
 		    case EOB_ACT_END_OF_FILE:
 			{
+			yy_did_buffer_switch_on_eof = 0;
+
 			if ( yywrap() )
 			    {
 			    /* note: because we've taken care in
@@ -358,7 +365,10 @@ do_action:	/* this label is used only to access EOF actions */
 			    }
 
 			else
-			    YY_NEW_FILE;
+			    {
+			    if ( ! yy_did_buffer_switch_on_eof )
+				YY_NEW_FILE;
+			    }
 			}
 			break;
 
@@ -672,6 +682,13 @@ YY_BUFFER_STATE new_buffer;
 
     yy_current_buffer = new_buffer;
     yy_load_buffer_state();
+
+    /* we don't actually know whether we did this switch during
+     * EOF (yywrap()) processing, but the only time this flag
+     * is looked at is after yywrap() is called, so it's safe
+     * to go ahead and always set it.
+     */
+    yy_did_buffer_switch_on_eof = 1;
     }
 
 
