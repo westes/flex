@@ -13,6 +13,20 @@
 @end direntry
 @c %**end of header
 
+@titlepage
+@title Flex, version @value{VERSION}
+@subtitle A fast scanner generator
+@subtitle Edition @value{EDITION}, @value{UPDATED}
+@author Vern Paxson
+@author W. L. Estes
+@author John Millaway
+@page
+@vskip 0pt plus 1filll
+The copying conditions for the @code{flex} manual can be found in section
+@ref{Copyright}
+@end titlepage
+@contents
+
 @node Top, Copyright, (dir), (dir)
 @top flex
 
