@@ -896,7 +896,7 @@ int yyFlexLexer::yyinput()
 			}
 		}
 
-	c = *yy_c_buf_p;
+	c = *(unsigned char *) yy_c_buf_p;	/* cast for 8-bit char's */
 	*yy_c_buf_p = '\0';	/* preserve yytext */
 	yy_hold_char = *++yy_c_buf_p;
 
