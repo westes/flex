@@ -536,15 +536,14 @@ void ntod()
 			/* '}' so vi doesn't get too confused */
 			long_align ? "long" : "short", num_full_table_rows );
 
+		outn( "    {" );
+
 		/* Generate 0 entries for state #0. */
 		for ( i = 0; i < num_full_table_rows; ++i )
 			mk2data( 0 );
 
-		/* Force ',' and dataflush() next call to mk2data().*/
-		datapos = NUMDATAITEMS;
-
-		/* Force extra blank line next dataflush(). */
-		dataline = NUMDATALINES;
+		dataflush();
+		outn( "    },\n" );
 		}
 
 	/* Create the first states. */
@@ -709,6 +708,8 @@ void ntod()
 
 		if ( fulltbl )
 			{
+			outn( "    {" );
+
 			/* Supply array's 0-element. */
 			if ( ds == end_of_buffer_state )
 				mk2data( -end_of_buffer_state );
@@ -721,11 +722,8 @@ void ntod()
 				 */
 				mk2data( state[i] ? state[i] : -ds );
 
-			/* Force ',' and dataflush() next call to mk2data().*/
-			datapos = NUMDATAITEMS;
-
-			/* Force extra blank line next dataflush(). */
-			dataline = NUMDATALINES;
+			dataflush();
+			outn( "    },\n" );
 			}
 
 		else if ( fullspd )
