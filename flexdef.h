@@ -83,7 +83,7 @@
 #endif
 
 #ifdef VMS
-#define unlink delete
+#define unlink remove
 #define SHORT_FILE_NAMES
 #endif
 
