@@ -187,7 +187,7 @@ optspec_t flexopts[] = {
 	,
 	{"--trace", OPT_TRACE, 0}
 	,			/* Flex should run in trace mode. */
-	{"--tables[=FILE]", OPT_TABLES, 0}
+	{"--tables-file[=FILE]", OPT_TABLES_FILE, 0}
 	,			/* Save tables to FILE */
 	{"--nounistd", OPT_NO_UNISTD_H, 0}
 	,			/* Do not include unistd.h */

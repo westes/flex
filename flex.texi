@@ -4660,12 +4660,12 @@ indexed by name, as described below. The file format is as follows:
                 | char            th_name[];    |
                 | uint8           th_pad64[];   |
                 +-------------------------------+
-        Table 1 | uint16          t_id;         |
-                | uint16          t_flags;      |
-                | uint32          t_lolen;      |
-                | uint32          t_hilen;      |
-                | void            t_data[];     |
-                | uint8           t_pad64[];    |
+        Table 1 | uint16          td_id;         |
+                | uint16          td_flags;      |
+                | uint32          td_lolen;      |
+                | uint32          td_hilen;      |
+                | void            td_data[];     |
+                | uint8           td_pad64[];    |
                 +-------------------------------+
         Table 2 |                               |
            .    .                               .
@@ -4723,7 +4723,7 @@ Zero or more NUL bytes, padding the entire header to the next 64-bit boundary.
 Fields of a table:
 
 @table @code
-@item t_id
+@item td_id
 Specifies the table identifier. Possible values are:
 @table @code
 @item YYT_ID_ACCEPT (0x01)
@@ -4741,22 +4741,22 @@ Specifies the table identifier. Possible values are:
 @item YYT_ID_NUL_TRANS (0x07)
 @code{yy_NUL_trans}
 @item YYT_ID_NXT (0x08)
-@code{yy_nxt}. This array may be two dimensional. See the @code{t_hilen}
+@code{yy_nxt}. This array may be two dimensional. See the @code{td_hilen}
 field below.
 @item YYT_ID_RULE_CAN_MATCH_EOL (0x09)
 @code{yy_rule_can_match_eol}
 @item YYT_ID_START_STATE_LIST (0x0A)
 @code{yy_start_state_list}. This array is handled specially because it is an
-array of pointers to srtucts. See the @code{t_flags} field below.
+array of pointers to structs. See the @code{td_flags} field below.
 @item YYT_ID_TRANSITION (0x0B)
 @code{yy_transition}. This array is handled specially because it is an array of
-structs. See the @code{t_lolen} field below.
+structs. See the @code{td_lolen} field below.
 @end table
 
-@item t_flags
-Bit flags describing how to interpret the data in @code{t_data}.
+@item td_flags
+Bit flags describing how to interpret the data in @code{td_data}.
 The data arrays are one-dimensional by default, but may be
-two dimensional as specified in the @code{t_hilen} field.
+two dimensional as specified in the @code{td_hilen} field.
 
 @table @code
 @item YYT_DATA8 (0x01)
@@ -4773,30 +4773,30 @@ in the @code{yy_transition} array. It is not guaranteed that the
 the offsets.
 @end table
 
-@item t_lolen
+@item td_lolen
 Specifies the number of elements in the lowest dimension array.
 
-@item t_hilen
-If @code{t_hilen} is non-zero, then the data is a two-dimensional array.
-Otherwise, the data is a one-dimensional array. @code{t_hilen} contains the
-number of elements in the higher dimensional array, and @code{t_lolen} contains
+@item td_hilen
+If @code{td_hilen} is non-zero, then the data is a two-dimensional array.
+Otherwise, the data is a one-dimensional array. @code{td_hilen} contains the
+number of elements in the higher dimensional array, and @code{td_lolen} contains
 the number of elements in the lowest dimension.
 
-Conceptually, @code{t_data} is either @code{int t_data[t_lolen]},
-or @code{int t_data[t_hilen][t_lolen]}.  It is possible for both @code{t_lolen}
-and @code{t_hilen} to be zero, in which case @code{t_data} is a zero length
+Conceptually, @code{td_data} is either @code{int td_data[td_lolen]},
+or @code{int td_data[td_hilen][td_lolen]}.  It is possible for both @code{td_lolen}
+and @code{td_hilen} to be zero, in which case @code{td_data} is a zero length
 array, and no data is loaded, i.e., this table is simply skipped. A special
-case is made when @code{t_id} equals @code{YYT_ID_TRANSITION}, then
-@code{t_lolen} is the number of structs in the array. Each struct contains two
+case is made when @code{td_id} equals @code{YYT_ID_TRANSITION}, then
+@code{td_lolen} is the number of structs in the array. Each struct contains two
 integer fields, with the @code{yy_verify} field first, followed by the
 @code{yy_nxt} field.
 
-@item t_data[]
+@item td_data[]
 The table data. This array may be a one- or two-dimensional array, of type int8,
-int16, or int32, depending upon the values in the  @code{t_flags}, @code{t_lolen}, and
-@code{t_hilen} fields.
+int16, or int32, depending upon the values in the  @code{td_flags}, @code{td_lolen}, and
+@code{td_hilen} fields.
 
-@item t_pad64[]
+@item td_pad64[]
 Zero or more NUL bytes, padding the table to the next 64-bit boundary.
 @end table
 

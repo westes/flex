@@ -52,7 +52,6 @@ int     interactive, caseins, lex_compat, posix_compat, do_yylineno,
 	useecs, fulltbl, usemecs;
 int     fullspd, gen_line_dirs, performance_report, backing_up_report;
 int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
-
 	csize;
 int     reentrant, reentrant_bison_pure;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
@@ -62,7 +61,6 @@ FILE   *skelfile = NULL;
 int     skel_ind = 0;
 char   *action_array;
 int     action_size, defs1_offset, prolog_offset, action_offset,
-
 	action_index;
 char   *infilename = NULL, *outfilename = NULL, *headerfilename = NULL;
 int     did_outfilename;
@@ -109,7 +107,7 @@ int     nlch = '\n';
 
 bool    tablesext, tablestoggle;
 char   *tablesfilename;
-FILE   *tablesout;
+struct yytbl_writer tableswr;
 
 /* Make sure program_name is initialized so we don't crash if writing
  * out an error message before getting the program name from argv[0].
@@ -119,9 +117,11 @@ char   *program_name = "flex";
 #ifndef SHORT_FILE_NAMES
 static char *outfile_template = "lex.%s.%s";
 static char *backing_name = "lex.backup";
+static char *tablesfile_template = "lex.%s.tables";
 #else
 static char *outfile_template = "lex%s.%s";
 static char *backing_name = "lex.bck";
+static char *tablesfile_template = "lex%s.tbl";
 #endif
 
 #ifdef MS_DOS
@@ -136,8 +136,8 @@ int flex_main PROTO ((int argc, char *argv[]));
 int main PROTO ((int argc, char *argv[]));
 void fix_line_dirs PROTO ((char *, char *, char *, int));
 
-int     flex_main (argc, argv)
-     int     argc;
+int flex_main (argc, argv)
+     int argc;
      char   *argv[];
 {
 	int     i, exit_status;
@@ -167,7 +167,7 @@ int     flex_main (argc, argv)
 	if (spprdflt && !reject && rule_useful[default_rule])
 		line_warning (_
 			      ("-s option given but default rule can be matched"),
-rule_linenum[default_rule]);
+			      rule_linenum[default_rule]);
 
 	/* Generate the C state transition tables from the DFA. */
 	make_tables ();
@@ -181,8 +181,8 @@ rule_linenum[default_rule]);
 }
 
 /* Wrapper around flex_main, so flex_main can be built as a library. */
-int     main (argc, argv)
-     int     argc;
+int main (argc, argv)
+     int argc;
      char   *argv[];
 {
 #if ENABLE_NLS
@@ -196,7 +196,7 @@ int     main (argc, argv)
 
 /* check_options - check user-specified options */
 
-void    check_options ()
+void check_options ()
 {
 	int     i;
 
@@ -325,6 +325,38 @@ void    check_options ()
 		outfile_created = 1;
 	}
 
+	if (tablesext) {
+		FILE   *tablesout;
+		struct yytbl_hdr hdr;
+		char   *pname = 0;
+		int     nbytes = 0;
+
+		if (!tablesfilename) {
+			nbytes = strlen (prefix) +
+				strlen (tablesfile_template) + 2;
+			tablesfilename = pname =
+				(char *) calloc (nbytes, 1);
+			sprintf (pname, tablesfile_template, prefix);
+		}
+
+		if ((tablesout = fopen (tablesfilename, "w")) == NULL)
+			lerrsf (_("could not create %s"), tablesfilename);
+		if (pname)
+			free (pname);
+		tablesfilename = 0;
+
+		yytbl_writer_init (&tableswr, tablesout);
+
+		nbytes = strlen (prefix) + strlen ("tables") + 2;
+		pname = (char *) calloc (nbytes, 1);
+		sprintf (pname, "%stables", prefix);
+		yytbl_hdr_init (&hdr, "TODO", pname);
+		free (pname);
+
+		if (yytbl_hdr_fwrite (&tableswr, &hdr) <= 0)
+			flexerror (_("could not write tables header"));
+	}
+
 	if (skelname && (skelfile = fopen (skelname, "r")) == NULL)
 		lerrsf (_("can't open skeleton file %s"), skelname);
 
@@ -418,11 +450,11 @@ void    check_options ()
  * for the generated header. We chaneg the line number and filename.
  * linebuf is modified in place.
  */
-void    fix_line_dirs (linebuf, outfilename, headerfilename, nlines)
+void fix_line_dirs (linebuf, outfilename, headerfilename, nlines)
      char   *linebuf;
      char   *outfilename;
      char   *headerfilename;
-     int     nlines;
+     int nlines;
 {
 	char   *pname, *p;
 
@@ -475,8 +507,8 @@ void    fix_line_dirs (linebuf, outfilename, headerfilename, nlines)
  *    This routine does not return.
  */
 
-void    flexend (exit_status)
-     int     exit_status;
+void flexend (exit_status)
+     int exit_status;
 
 {
 	static int called_before = -1;	/* prevent infinite recursion. */
@@ -532,10 +564,8 @@ void    flexend (exit_status)
 		while (fgets (linebuf, LINE_SZ, stdout)) {
 			if (strstr (linebuf, "YY-DISCARD-FROM-HEADER"))
 				discard++;
-			else
-				if (strstr
-				    (linebuf,
-				     "YY-END-DISCARD-FROM-HEADER")) {
+			else if (strstr
+				 (linebuf, "YY-END-DISCARD-FROM-HEADER")) {
 				discard--;
 				continue;
 			}
@@ -971,8 +1001,8 @@ void    flexend (exit_status)
 
 /* flexinit - initialize flex */
 
-void    flexinit (argc, argv)
-     int     argc;
+void flexinit (argc, argv)
+     int argc;
      char  **argv;
 {
 	int     i, sawcmpflag, rv, optind;
@@ -997,7 +1027,6 @@ void    flexinit (argc, argv)
 	use_read = use_stdout = false;
 	tablesext = tablestoggle = false;
 	tablesfilename = NULL;
-	tablesout = NULL;
 
 	sawcmpflag = false;
 
@@ -1176,7 +1205,7 @@ void    flexinit (argc, argv)
 				else
 					lerrif (_
 						("unknown -R option '%c'"),
-(int) arg[0]);
+						(int) arg[0]);
 			}
 			break;
 
@@ -1205,8 +1234,9 @@ void    flexinit (argc, argv)
 				       "1");
 			break;
 
-		case OPT_TABLES:
+		case OPT_TABLES_FILE:
 			tablesext = true;
+			tablesfilename = arg;
 			break;
 
 		case OPT_TRACE:
@@ -1472,11 +1502,10 @@ void    flexinit (argc, argv)
 
 /* readin - read in the rules section of the input file(s) */
 
-void    readin ()
+void readin ()
 {
 	static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
 	static char yy_nostdinit[] =
-
 		"FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;";
 
 	line_directive_out ((FILE *) 0, 1);
@@ -1515,7 +1544,7 @@ void    readin ()
 		if (backing_up_file == NULL)
 			lerrsf (_
 				("could not create backing-up info file %s"),
-backing_name);
+				backing_name);
 	}
 
 	else
@@ -1648,8 +1677,7 @@ backing_name);
 
 	OUT_BEGIN_CODE ();
 	if (fullspd)
-		outn
-			("typedef yyconst struct yy_trans_info *yy_state_type;");
+		outn ("typedef yyconst struct yy_trans_info *yy_state_type;");
 	else if (!C_plus_plus)
 		outn ("typedef int yy_state_type;");
 	OUT_END_CODE ();
@@ -1672,8 +1700,7 @@ backing_name);
 		if (yyclass) {
 			outn ("int yyFlexLexer::yylex()");
 			outn ("\t{");
-			outn
-				("\tLexerError( \"yyFlexLexer::yylex invoked but %option yyclass used\" );");
+			outn ("\tLexerError( \"yyFlexLexer::yylex invoked but %option yyclass used\" );");
 			outn ("\treturn 0;");
 			outn ("\t}");
 
@@ -1722,7 +1749,7 @@ backing_name);
 
 /* set_up_initial_allocations - allocate memory for internal tables */
 
-void    set_up_initial_allocations ()
+void set_up_initial_allocations ()
 {
 	maximum_mns = (long_align ? MAXIMUM_MNS_LONG : MAXIMUM_MNS);
 	current_mns = INITIAL_MNS;
@@ -1784,7 +1811,7 @@ void    set_up_initial_allocations ()
  * (same concept as /bin/sh `basename`, but different handling of extension). */
 static char *basename2 (path, strip_ext)
      char   *path;
-     int     strip_ext;		/* boolean */
+     int strip_ext;		/* boolean */
 {
 	char   *b, *e = 0;
 
@@ -1800,7 +1827,7 @@ static char *basename2 (path, strip_ext)
 	return b;
 }
 
-void    usage ()
+void usage ()
 {
 	FILE   *f = stdout;
 
@@ -1838,7 +1865,7 @@ void    usage ()
 		  "  -t, --stdout            write scanner on stdout instead of %s\n"
 		  "      --yyclass=NAME      name of C++ class\n"
 		  "      --header=FILE       create a C header file in addition to the scanner\n"
-		  "      --tables[=FILE]     write tables to FILE\n" "\n"
+		  "      --tables-file[=FILE]  write tables to FILE\n" "\n"
 		  "Scanner behavior:\n"
 		  "  -7, --7bit              generate 7-bit scanner\n"
 		  "  -8, --8bit              generate 8-bit scanner\n"
