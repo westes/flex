@@ -1418,7 +1418,10 @@ void make_tables()
 		indent_up();
 		indent_puts( "{" );
 		indent_puts( "int yyl;" );
-		indent_puts( "for ( yyl = 0; yyl < yyleng; ++yyl )" );
+		do_indent();
+		out_str( "for ( yyl = %s; yyl < yyleng; ++yyl )\n",
+			yymore_used ? (yytext_is_array ? "yy_prev_more_offset" :
+							 "yy_more_len") : "0");
 		indent_up();
 		indent_puts( "if ( yytext[yyl] == '\\n' )" );
 		indent_up();
