@@ -1,3 +1,17 @@
+* sourceforge migration
+
+** update freshmeat entry to reflect sourceforge move (estes)
+
+** update flex docs to reflect changeover to sourceforge (millaway)
+
+** review meta-cvs (estes)
+
+** Move CVS to sourceforge (estes)
+
+** test the mailing lists (estes)
+
+** inform GNU folks about changeover (estes)
+
 * resolve the items in the to.do directory
 
 ** expand the above into individual requests and handle those requests
