@@ -3,6 +3,10 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* after version 2.5.26
+
+** new pt_br translation from the translation project
+
 * version 2.5.26 released 2003-1-14
 
 ** Fixed table deserialization bug on big-endian archs. Patch sent from Bryce Nichols <bryce@bnichols.org>
@@ -21,6 +25,7 @@ See the file COPYING for copying conditions.
 
 ** flex now warns about pattern ranges that might be ambiguous when
    generating a case-insensitive scanner
+
 
 * version 2.5.25 released 2002-12-2
 

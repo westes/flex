@@ -1,12 +1,12 @@
 # flex: translation to Brazilian Portuguese (pt_BR)
 # Copyright (C) 2002 Free Software Foundation, Inc.
-# Alexandre Folle de Menezes <afmenez@terra.com.br>, 2002.
+# Alexandre Folle de Menezes <afmenez@terra.com.br>, 2003.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.19\n"
 "POT-Creation-Date: 2002-09-05 12:07-0400\n"
-"PO-Revision-Date: 2002-11-29 04:15-0300\n"
+"PO-Revision-Date: 2003-01-15 02:00-0300\n"
 "Last-Translator: Alexandre Folle de Menezes <afmenez@terra.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
 "MIME-Version: 1.0\n"
@@ -424,54 +424,54 @@ msgstr "erro fatal de análise"
 #: main.c:1546
 #, c-format
 msgid "could not create backing-up info file %s"
-msgstr ""
+msgstr "impossível criar cópia de seguranço do arquivo de informações %s"
 
 #: main.c:1567
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr ""
+msgstr "a opção de compatibilidade com lex da AT&T '-l' acarreta em uma grande penalidade na performance\n"
 
 #: main.c:1570
 msgid " and may be the actual source of other reported performance penalties\n"
-msgstr ""
+msgstr " e pode ser a fonte real de outras penalidades de performance reportadas\n"
 
 #: main.c:1576
 #, c-format
 msgid "%%option yylineno entails a large performance penalty\n"
-msgstr ""
+msgstr "%%option yylineno acarreta em uma grande penalidade na performance\n"
 
 #: main.c:1583
 msgid "-I (interactive) entails a minor performance penalty\n"
-msgstr ""
+msgstr "-I (interativo) acarreta em uma pequena penalidade na performance\n"
 
 #: main.c:1588
 msgid "yymore() entails a minor performance penalty\n"
-msgstr ""
+msgstr "yymore() acarreta em uma pequena penalidade na performance\n"
 
 #: main.c:1594
 msgid "REJECT entails a large performance penalty\n"
-msgstr ""
+msgstr "REJECT acarreta em uma grande penalidade na performance\n"
 
 #: main.c:1599
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
+msgstr "Variável seguindo regras de contexto implicam em grande perda de performance\n"
 
 #: main.c:1611
 msgid "REJECT cannot be used with -f or -F"
-msgstr ""
+msgstr "REJECT não pode ser usado com -f ou -F"
 
 #: main.c:1614
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
-msgstr ""
+msgstr "%option yylineno não pode ser usada com REJECT"
 
 #: main.c:1617
 msgid "variable trailing context rules cannot be used with -f or -F"
-msgstr ""
+msgstr "variáveis seguindo regras de contexto não podem ser usadas com -f ou -F"
 
 #: main.c:1733
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
-msgstr ""
+msgstr "%option yyclass só tem sentido para scanners C++"
 
 #: main.c:1840
 #, c-format
@@ -543,42 +543,42 @@ msgstr ""
 #: misc.c:46
 #, c-format
 msgid "name \"%s\" ridiculously long"
-msgstr ""
+msgstr "nome \"%s\" ridiculamente longo"
 
 #: misc.c:100
 msgid "memory allocation failed in allocate_array()"
-msgstr ""
+msgstr "alocação de memória falhou em allocate_array()"
 
 #: misc.c:175
 #, c-format
 msgid "bad character '%s' detected in check_char()"
-msgstr ""
+msgstr "caractere inválido '%s' detectado em check_char()"
 
 #: misc.c:180
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
-msgstr ""
+msgstr "o scanner precisa de um flag -8 para usar o caracter %s"
 
 #: misc.c:213
 msgid "dynamic memory failure in copy_string()"
-msgstr ""
+msgstr "falha dinâmica de memória em copy_string()"
 
 #: misc.c:339
 #, c-format
 msgid "%s: fatal internal error, %s\n"
-msgstr ""
+msgstr "%s: erro interno fatal, %s\n"
 
 #: misc.c:772
 msgid "attempt to increase array size failed"
-msgstr ""
+msgstr "tentativa de aumentar o tamanho do vetor falhou"
 
 #: misc.c:844
 msgid "bad line in skeleton file"
-msgstr ""
+msgstr "linha inválida no arquivo de esqueleto"
 
 #: misc.c:890
 msgid "memory allocation failed in yy_flex_xmalloc()"
-msgstr ""
+msgstr "alocação de memória falhou em yy_flex_xmalloc()"
 
 #: nfa.c:104
 #, c-format
@@ -602,25 +602,25 @@ msgstr "********** final do despejo\n"
 
 #: nfa.c:174
 msgid "empty machine in dupmachine()"
-msgstr ""
+msgstr "máquina vazia em dupmachine()"
 
 #: nfa.c:240
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
-msgstr ""
+msgstr "Regra de final de contexto variável na linha %d\n"
 
 #: nfa.c:353
 msgid "bad state type in mark_beginning_as_normal()"
-msgstr ""
+msgstr "estado de tipo inválido em mark_beginning_as_normal()"
 
 #: nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
-msgstr ""
+msgstr "regras de entrada são muito complicadas (>= %d estados NFA)"
 
 #: nfa.c:677
 msgid "found too many transitions in mkxtion()"
-msgstr ""
+msgstr "muitas transições em mkxtion()"
 
 #: nfa.c:703
 #, c-format
@@ -629,11 +629,11 @@ msgstr "muitas regras (> %d)!"
 
 #: parse.y:175
 msgid "unknown error processing section 1"
-msgstr ""
+msgstr "erro desconhecido porcessando a seção 1"
 
 #: parse.y:200 parse.y:365
 msgid "bad start condition list"
-msgstr ""
+msgstr "lista de condições de início inválida"
 
 #: parse.y:329
 msgid "unrecognized rule"
@@ -641,7 +641,7 @@ msgstr "regra não reconhecida"
 
 #: parse.y:448 parse.y:461 parse.y:530
 msgid "trailing context used twice"
-msgstr ""
+msgstr "contexto final usado duas vezes"
 
 #: parse.y:566 parse.y:576 parse.y:649 parse.y:659
 msgid "bad iteration values"
