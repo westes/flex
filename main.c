@@ -119,64 +119,6 @@ char **argv;
 
 	readin();
 
-	if ( syntaxerror )
-		flexend( 1 );
-
-	if ( yymore_really_used == REALLY_USED )
-		yymore_used = true;
-	else if ( yymore_really_used == REALLY_NOT_USED )
-		yymore_used = false;
-
-	if ( reject_really_used == REALLY_USED )
-		reject = true;
-	else if ( reject_really_used == REALLY_NOT_USED )
-		reject = false;
-
-	if ( performance_report > 0 )
-		{
-		if ( lex_compat )
-			{
-			fprintf( stderr,
-"-l AT&T lex compatibility option entails a large performance penalty\n" );
-			fprintf( stderr,
-" and may be the actual source of other reported performance penalties\n" );
-			}
-
-		if ( performance_report > 1 )
-			{
-			if ( interactive )
-				fprintf( stderr,
-		"-I (interactive) entails a minor performance penalty\n" );
-
-			if ( yymore_used )
-				fprintf( stderr,
-			"yymore() entails a minor performance penalty\n" );
-			}
-
-		if ( reject )
-			fprintf( stderr,
-			"REJECT entails a large performance penalty\n" );
-
-		if ( variable_trailing_context_rules )
-			fprintf( stderr,
-"Variable trailing context rules entail a large performance penalty\n" );
-		}
-
-	if ( reject )
-		real_reject = true;
-
-	if ( variable_trailing_context_rules )
-		reject = true;
-
-	if ( (fulltbl || fullspd) && reject )
-		{
-		if ( real_reject )
-			flexerror( "REJECT cannot be used with -f or -F" );
-		else
-			flexerror(
-	"variable trailing context rules cannot be used with -f or -F" );
-		}
-
 	ntod();
 
 	for ( i = 1; i <= num_rules; ++i )
@@ -815,6 +757,64 @@ void readin()
 		{
 		pinpoint_message( "fatal parse error" );
 		flexend( 1 );
+		}
+
+	if ( syntaxerror )
+		flexend( 1 );
+
+	if ( yymore_really_used == REALLY_USED )
+		yymore_used = true;
+	else if ( yymore_really_used == REALLY_NOT_USED )
+		yymore_used = false;
+
+	if ( reject_really_used == REALLY_USED )
+		reject = true;
+	else if ( reject_really_used == REALLY_NOT_USED )
+		reject = false;
+
+	if ( performance_report > 0 )
+		{
+		if ( lex_compat )
+			{
+			fprintf( stderr,
+"-l AT&T lex compatibility option entails a large performance penalty\n" );
+			fprintf( stderr,
+" and may be the actual source of other reported performance penalties\n" );
+			}
+
+		if ( performance_report > 1 )
+			{
+			if ( interactive )
+				fprintf( stderr,
+		"-I (interactive) entails a minor performance penalty\n" );
+
+			if ( yymore_used )
+				fprintf( stderr,
+			"yymore() entails a minor performance penalty\n" );
+			}
+
+		if ( reject )
+			fprintf( stderr,
+			"REJECT entails a large performance penalty\n" );
+
+		if ( variable_trailing_context_rules )
+			fprintf( stderr,
+"Variable trailing context rules entail a large performance penalty\n" );
+		}
+
+	if ( reject )
+		real_reject = true;
+
+	if ( variable_trailing_context_rules )
+		reject = true;
+
+	if ( (fulltbl || fullspd) && reject )
+		{
+		if ( real_reject )
+			flexerror( "REJECT cannot be used with -f or -F" );
+		else
+			flexerror(
+	"variable trailing context rules cannot be used with -f or -F" );
 		}
 
 	if ( csize == 256 )
