@@ -15,6 +15,11 @@
 #include <ctype.h>
 #include "flexdef.h"
 
+#ifndef lint
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+#endif
+
 char *malloc(), *realloc();
 
 
@@ -45,7 +50,16 @@ char *allocate_array( size, element_size )
 int size, element_size;
 
     {
-    register char *mem = malloc( (unsigned) (element_size * size) );
+    register char *mem;
+
+    /* on 16-bit int machines (e.g., 80286) we might be trying to
+     * allocate more than a signed int can hold, and that won't
+     * work.  Cheap test:
+     */
+    if ( element_size * size <= 0 )
+        flexfatal( "request for < 1 byte in allocate_array()" );
+    
+    mem = malloc( (unsigned) (element_size * size) );
 
     if ( mem == NULL )
 	flexfatal( "memory allocation failed in allocate_array()" );
@@ -220,7 +234,18 @@ dataflush()
 
 /* include sys/types.h to use time_t and make lint happy */
 
+#ifndef MS_DOS
+#ifndef VMS
 #include <sys/types.h>
+#else
+#include <types.h>
+#endif
+#endif
+
+#ifdef MS_DOS
+#include <time.h>
+typedef long time_t;
+#endif
 
 char *gettime()
 
@@ -456,26 +481,6 @@ char array[];
 		synerr( "escape sequence for null not allowed" );
 		return ( 1 );
 		}
-
-#ifdef NOTDEF
-	case '^':
-	    {
-	    register char next_char = array[2];
-
-	    if ( next_char == '?' )
-		return ( 0x7f );
-	    
-	    else if ( next_char >= 'A' && next_char <= 'Z' )
-		return ( next_char - 'A' + 1 );
-    
-	    else if ( next_char >= 'a' && next_char <= 'z' )
-		return ( next_char - 'z' + 1 );
-    
-	    synerr( "illegal \\^ escape sequence" );
-
-	    return ( 1 );
-	    }
-#endif
 	}
     
     return ( array[1] );
@@ -494,21 +499,57 @@ int otoi( str )
 char str[];
 
     {
-#ifdef FTLSOURCE
-    fortran int gctoi()
-    int dummy = 1;
-
-    return ( gctoi( str, dummy, 8 ) );
-#else
     int result;
 
     (void) sscanf( str, "%o", &result );
 
     return ( result );
-#endif
     }
 
 
+/* readable_form - return the the human-readable form of a character
+ *
+ * synopsis:
+ *    int c;
+ *    char *readable_form();
+ *    <string> = readable_form( c );
+ *
+ * The returned string is in static storage.
+ */
+
+char *readable_form( c )
+register int c;
+
+    {
+    static char rform[10];
+
+    if ( (c >= 0 && c < 32) || c == 127 )
+	{
+	switch ( c )
+	    {
+	    case '\n': return ( "\\n" );
+	    case '\t': return ( "\\t" );
+	    case '\f': return ( "\\f" );
+	    case '\r': return ( "\\r" );
+	    case '\b': return ( "\\b" );
+
+	    default:
+		sprintf( rform, "\\%.3o", c );
+		return ( rform );
+	    }
+	}
+    
+    else if ( c == ' ' )
+	return ( "' '" );
+    
+    else
+	{
+	rform[0] = c;
+	rform[1] = '\0';
+
+	return ( rform );
+	}
+    }
 
 
 /* reallocate_array - increase the size of a dynamic array */
@@ -518,8 +559,13 @@ char *array;
 int size, element_size;
 
     {
-    register char *new_array = realloc( array,
-					(unsigned) (size * element_size ));
+    register char *new_array;
+
+    /* same worry as in allocate_array(): */
+    if ( size * element_size <= 0 )
+        flexfatal( "attempt to increase array size by less than 1 byte" );
+    
+    new_array = realloc( array, (unsigned) (size * element_size ));
 
     if ( new_array == NULL )
 	flexfatal( "attempt to increase array size failed" );
@@ -570,10 +616,10 @@ int element_v, element_n;
 
     if ( datapos >= 75 )
 	{
-	printf( "\n" );
+	putchar( '\n' );
 
 	if ( ++dataline % 10 == 0 )
-	    printf( "\n" );
+	    putchar( '\n' );
 
 	datapos = 0;
 	}
