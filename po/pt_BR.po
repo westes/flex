@@ -1,0 +1,763 @@
+# flex: translation to Brazilian Portuguese (pt_BR)
+# Copyright (C) 2002 Free Software Foundation, Inc.
+# Alexandre Folle de Menezes <afmenez@terra.com.br>, 2002.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: flex 2.5.19\n"
+"POT-Creation-Date: 2002-09-05 12:07-0400\n"
+"PO-Revision-Date: 2002-11-25 23:45-0300\n"
+"Last-Translator: Alexandre Folle de Menezes <afmenez@terra.com.br>\n"
+"Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: dfa.c:60
+#, c-format
+msgid "State #%d is non-accepting -\n"
+msgstr ""
+
+#: dfa.c:123
+msgid "dangerous trailing context"
+msgstr ""
+
+#: dfa.c:165
+msgid " associated rule line numbers:"
+msgstr ""
+
+#: dfa.c:201
+msgid " out-transitions: "
+msgstr ""
+
+#: dfa.c:209
+msgid ""
+"\n"
+" jam-transitions: EOF "
+msgstr ""
+
+#: dfa.c:340
+msgid "consistency check failed in epsclosure()"
+msgstr ""
+
+#: dfa.c:428
+msgid ""
+"\n"
+"\n"
+"DFA Dump:\n"
+"\n"
+msgstr ""
+
+#: dfa.c:589
+msgid "could not create unique end-of-buffer state"
+msgstr ""
+
+#: dfa.c:610
+#, c-format
+msgid "state # %d:\n"
+msgstr ""
+
+#: dfa.c:783
+msgid "Could not write yynxt_tbl[][]"
+msgstr ""
+
+#: dfa.c:1006
+msgid "consistency check failed in symfollowset"
+msgstr ""
+
+#: dfa.c:1054
+msgid "bad transition character detected in sympartition()"
+msgstr ""
+
+#: gen.c:424 gen.c:463
+msgid ""
+"\n"
+"\n"
+"Equivalence Classes:\n"
+"\n"
+msgstr ""
+
+#: gen.c:647 gen.c:673 gen.c:1158
+#, c-format
+msgid "state # %d accepts: [%d]\n"
+msgstr ""
+
+#: gen.c:1066
+#, c-format
+msgid "state # %d accepts: "
+msgstr "estado # %d aceita: "
+
+#: gen.c:1176
+msgid "Could not write yyacc_tbl"
+msgstr "Impossível escrever yyacc_tbl"
+
+#: gen.c:1202
+msgid ""
+"\n"
+"\n"
+"Meta-Equivalence Classes:\n"
+msgstr ""
+"\n"
+"\n"
+"Classes de Meta-Equivalência:\n"
+
+#: gen.c:1221
+msgid "Could not write yymeta_tbl"
+msgstr "Impossível escrever yymeta_tbl"
+
+#: gen.c:1278
+msgid "Could not write yybase_tbl"
+msgstr "Impossível escrever yybase_tbl"
+
+#: gen.c:1308
+msgid "Could not write yydef_tbl"
+msgstr "Impossível escrever yydef_tbl"
+
+#: gen.c:1342
+msgid "Could not write yynxt_tbl"
+msgstr "Impossível escrever yynxt_tbl"
+
+#: gen.c:1372
+msgid "Could not write yychk_tbl"
+msgstr "Impossível escrever yychk_tbl"
+
+#: gen.c:1511 gen.c:1534
+msgid "Could not write ftbl"
+msgstr "Impossível escrever ftbl"
+
+#: gen.c:1520 gen.c:1543
+msgid "Could not write ecstbl"
+msgstr "Impossível escrever ecstbl"
+
+#: gen.c:1604
+msgid "Could not write yynultrans_tbl"
+msgstr "Impossível escrever yynultrans_tbl"
+
+#: main.c:164
+msgid "rule cannot be matched"
+msgstr ""
+
+#: main.c:169
+msgid "-s option given but default rule can be matched"
+msgstr ""
+
+#: main.c:205
+msgid "Can't use -+ with -l option"
+msgstr ""
+
+#: main.c:208
+msgid "Can't use -f or -F with -l option"
+msgstr ""
+
+#: main.c:212
+msgid "Can't use -R or -Rb with -l option"
+msgstr ""
+
+#: main.c:227
+msgid "Can't specify header option if writing to stdout."
+msgstr ""
+
+#: main.c:253
+msgid "-Cf/-CF and -Cm don't make sense together"
+msgstr ""
+
+#: main.c:256
+msgid "-Cf/-CF and -I are incompatible"
+msgstr ""
+
+#: main.c:260
+msgid "-Cf/-CF are incompatible with lex-compatibility mode"
+msgstr ""
+
+#: main.c:265
+msgid "-Cf and -CF are mutually exclusive"
+msgstr ""
+
+#: main.c:269
+msgid "Can't use -+ with -CF option"
+msgstr ""
+
+#: main.c:272
+#, c-format
+msgid "%array incompatible with -+ option"
+msgstr ""
+
+#: main.c:277
+msgid "Options -+ and -R are mutually exclusive."
+msgstr ""
+
+#: main.c:323 main.c:343 main.c:556
+#, c-format
+msgid "could not create %s"
+msgstr ""
+
+#: main.c:357
+msgid "could not write tables header"
+msgstr ""
+
+#: main.c:361
+#, c-format
+msgid "can't open skeleton file %s"
+msgstr ""
+
+#: main.c:523
+#, c-format
+msgid "input error reading skeleton file %s"
+msgstr ""
+
+#: main.c:527
+#, c-format
+msgid "error closing skeleton file %s"
+msgstr ""
+
+#: main.c:769
+#, c-format
+msgid "error creating header file %s"
+msgstr ""
+
+#: main.c:777
+#, c-format
+msgid "error writing output file %s"
+msgstr ""
+
+#: main.c:781
+#, c-format
+msgid "error closing output file %s"
+msgstr ""
+
+#: main.c:785
+#, c-format
+msgid "error deleting output file %s"
+msgstr ""
+
+#: main.c:792
+msgid "No backing up.\n"
+msgstr ""
+
+#: main.c:796
+#, c-format
+msgid "%d backing up (non-accepting) states.\n"
+msgstr ""
+
+#: main.c:800
+msgid "Compressed tables always back up.\n"
+msgstr ""
+
+#: main.c:803
+#, c-format
+msgid "error writing backup file %s"
+msgstr ""
+
+#: main.c:807
+#, c-format
+msgid "error closing backup file %s"
+msgstr ""
+
+#: main.c:812
+#, c-format
+msgid "%s version %s usage statistics:\n"
+msgstr ""
+
+#: main.c:815
+msgid "  scanner options: -"
+msgstr ""
+
+#: main.c:894
+#, c-format
+msgid "  %d/%d NFA states\n"
+msgstr ""
+
+#: main.c:896
+#, c-format
+msgid "  %d/%d DFA states (%d words)\n"
+msgstr ""
+
+#: main.c:898
+#, c-format
+msgid "  %d rules\n"
+msgstr ""
+
+#: main.c:903
+msgid "  No backing up\n"
+msgstr ""
+
+#: main.c:907
+#, c-format
+msgid "  %d backing-up (non-accepting) states\n"
+msgstr ""
+
+#: main.c:912
+msgid "  Compressed tables always back-up\n"
+msgstr ""
+
+#: main.c:916
+msgid "  Beginning-of-line patterns used\n"
+msgstr ""
+
+#: main.c:918
+#, c-format
+msgid "  %d/%d start conditions\n"
+msgstr ""
+
+#: main.c:922
+#, c-format
+msgid "  %d epsilon states, %d double epsilon states\n"
+msgstr ""
+
+#: main.c:926
+msgid "  no character classes\n"
+msgstr ""
+
+#: main.c:930
+#, c-format
+msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
+msgstr ""
+
+#: main.c:935
+#, c-format
+msgid "  %d state/nextstate pairs created\n"
+msgstr ""
+
+#: main.c:938
+#, c-format
+msgid "  %d/%d unique/duplicate transitions\n"
+msgstr ""
+
+#: main.c:943
+#, c-format
+msgid "  %d table entries\n"
+msgstr ""
+
+#: main.c:951
+#, c-format
+msgid "  %d/%d base-def entries created\n"
+msgstr ""
+
+#: main.c:955
+#, c-format
+msgid "  %d/%d (peak %d) nxt-chk entries created\n"
+msgstr ""
+
+#: main.c:959
+#, c-format
+msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
+msgstr ""
+
+#: main.c:963
+#, c-format
+msgid "  %d empty table entries\n"
+msgstr ""
+
+#: main.c:965
+#, c-format
+msgid "  %d protos created\n"
+msgstr ""
+
+#: main.c:968
+#, c-format
+msgid "  %d templates created, %d uses\n"
+msgstr ""
+
+#: main.c:976
+#, c-format
+msgid "  %d/%d equivalence classes created\n"
+msgstr ""
+
+#: main.c:984
+#, c-format
+msgid "  %d/%d meta-equivalence classes created\n"
+msgstr ""
+
+#: main.c:990
+#, c-format
+msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
+msgstr ""
+
+#: main.c:992
+#, c-format
+msgid "  %d sets of reallocations needed\n"
+msgstr ""
+
+#: main.c:994
+#, c-format
+msgid "  %d total table entries needed\n"
+msgstr ""
+
+#: main.c:1056
+msgid "Internal error. flexopts are malformed.\n"
+msgstr ""
+
+#: main.c:1066
+#, c-format
+msgid "Try `%s --help' for more information.\n"
+msgstr ""
+
+#: main.c:1123
+#, c-format
+msgid "unknown -C option '%c'"
+msgstr ""
+
+#: main.c:1207
+#, c-format
+msgid "unknown -R option '%c'"
+msgstr ""
+
+#: main.c:1251
+#, c-format
+msgid "%s %s\n"
+msgstr ""
+
+#: main.c:1514
+msgid "fatal parse error"
+msgstr ""
+
+#: main.c:1546
+#, c-format
+msgid "could not create backing-up info file %s"
+msgstr ""
+
+#: main.c:1567
+msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
+msgstr ""
+
+#: main.c:1570
+msgid " and may be the actual source of other reported performance penalties\n"
+msgstr ""
+
+#: main.c:1576
+#, c-format
+msgid "%%option yylineno entails a large performance penalty\n"
+msgstr ""
+
+#: main.c:1583
+msgid "-I (interactive) entails a minor performance penalty\n"
+msgstr ""
+
+#: main.c:1588
+msgid "yymore() entails a minor performance penalty\n"
+msgstr ""
+
+#: main.c:1594
+msgid "REJECT entails a large performance penalty\n"
+msgstr ""
+
+#: main.c:1599
+msgid "Variable trailing context rules entail a large performance penalty\n"
+msgstr ""
+
+#: main.c:1611
+msgid "REJECT cannot be used with -f or -F"
+msgstr ""
+
+#: main.c:1614
+#, c-format
+msgid "%option yylineno cannot be used with REJECT"
+msgstr ""
+
+#: main.c:1617
+msgid "variable trailing context rules cannot be used with -f or -F"
+msgstr ""
+
+#: main.c:1733
+#, c-format
+msgid "%option yyclass only meaningful for C++ scanners"
+msgstr ""
+
+#: main.c:1840
+#, c-format
+msgid "Usage: %s [OPTIONS] [FILE]...\n"
+msgstr ""
+
+#: main.c:1843
+#, c-format
+msgid ""
+"Generates programs that perform pattern-matching on text.\n"
+"\n"
+"Table Compression:\n"
+"  -Ca, --align      trade off larger tables for better memory alignment\n"
+"  -Ce, --ecs        construct equivalence classes\n"
+"  -Cf               do not compress tables; use -f representation\n"
+"  -CF               do not compress tables; use -F representation\n"
+"  -Cm, --meta-ecs   construct meta-equivalence classes\n"
+"  -Cr, --read       use read() instead of stdio for scanner input\n"
+"  -f, --full        generate fast, large scanner. Same as -Cfr\n"
+"  -F, --fast        use alternate table representation. Same as -CFr\n"
+"  -Cem              default compression (same as --ecs --meta-ecs)\n"
+"\n"
+"Debugging:\n"
+"  -d, --debug             enable debug mode in scanner\n"
+"  -b, --backup            write backing-up information to %s\n"
+"  -p, --perf-report       write performance report to stderr\n"
+"  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
+"  -T, --trace             %s should run in trace mode\n"
+"  -w, --nowarn            do not generate warnings\n"
+"  -v, --verbose           write summary of scanner statistics to stdout\n"
+"\n"
+"Files:\n"
+"  -o, --outfile=FILE      specify output filename\n"
+"  -S, --skel=FILE         specify skeleton file\n"
+"  -t, --stdout            write scanner on stdout instead of %s\n"
+"      --yyclass=NAME      name of C++ class\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
+"      --tables-file[=FILE] write tables to FILE\n"
+"\n"
+"Scanner behavior:\n"
+"  -7, --7bit              generate 7-bit scanner\n"
+"  -8, --8bit              generate 8-bit scanner\n"
+"  -B, --batch             generate batch scanner (opposite of -I)\n"
+"  -i, --case-insensitive  ignore case in patterns\n"
+"  -l, --lex-compat        maximal compatibility with original lex\n"
+"  -X, --posix-compat      maximal compatibility with POSIX lex\n"
+"  -I, --interactive       generate interactive scanner (opposite of -B)\n"
+"      --yylineno          track line count in yylineno\n"
+"\n"
+"Generated code:\n"
+"  -+,  --c++               generate C++ scanner class\n"
+"  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
+"  -L,  --noline            suppress #line directives in scanner\n"
+"  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
+"  -R,  --reentrant         generate a reentrant C scanner\n"
+"  -Rb, --reentrant-bison   reentrant scanner for bison pure parser.\n"
+"       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+"       --nounistd          do not include <unistd.h>\n"
+"       --noFUNCTION        do not generate a particular FUNCTION\n"
+"\n"
+"Miscellaneous:\n"
+"  -c                      do-nothing POSIX option\n"
+"  -n                      do-nothing POSIX option\n"
+"  -?\n"
+"  -h, --help              produce this help message\n"
+"  -V, --version           report %s version\n"
+msgstr ""
+
+#: misc.c:46
+#, c-format
+msgid "name \"%s\" ridiculously long"
+msgstr ""
+
+#: misc.c:100
+msgid "memory allocation failed in allocate_array()"
+msgstr ""
+
+#: misc.c:175
+#, c-format
+msgid "bad character '%s' detected in check_char()"
+msgstr ""
+
+#: misc.c:180
+#, c-format
+msgid "scanner requires -8 flag to use the character %s"
+msgstr ""
+
+#: misc.c:213
+msgid "dynamic memory failure in copy_string()"
+msgstr ""
+
+#: misc.c:339
+#, c-format
+msgid "%s: fatal internal error, %s\n"
+msgstr ""
+
+#: misc.c:772
+msgid "attempt to increase array size failed"
+msgstr ""
+
+#: misc.c:844
+msgid "bad line in skeleton file"
+msgstr ""
+
+#: misc.c:890
+msgid "memory allocation failed in yy_flex_xmalloc()"
+msgstr ""
+
+#: nfa.c:104
+#, c-format
+msgid ""
+"\n"
+"\n"
+"********** beginning dump of nfa with start state %d\n"
+msgstr ""
+
+#: nfa.c:115
+#, c-format
+msgid "state # %4d\t"
+msgstr ""
+
+#: nfa.c:130
+msgid "********** end of dump\n"
+msgstr ""
+
+#: nfa.c:174
+msgid "empty machine in dupmachine()"
+msgstr ""
+
+#: nfa.c:240
+#, c-format
+msgid "Variable trailing context rule at line %d\n"
+msgstr ""
+
+#: nfa.c:353
+msgid "bad state type in mark_beginning_as_normal()"
+msgstr ""
+
+#: nfa.c:598
+#, c-format
+msgid "input rules are too complicated (>= %d NFA states)"
+msgstr ""
+
+#: nfa.c:677
+msgid "found too many transitions in mkxtion()"
+msgstr ""
+
+#: nfa.c:703
+#, c-format
+msgid "too many rules (> %d)!"
+msgstr ""
+
+#: parse.y:175
+msgid "unknown error processing section 1"
+msgstr ""
+
+#: parse.y:200 parse.y:365
+msgid "bad start condition list"
+msgstr ""
+
+#: parse.y:329
+msgid "unrecognized rule"
+msgstr "regra não reconhecida"
+
+#: parse.y:448 parse.y:461 parse.y:530
+msgid "trailing context used twice"
+msgstr ""
+
+#: parse.y:566 parse.y:576 parse.y:649 parse.y:659
+msgid "bad iteration values"
+msgstr ""
+
+#: parse.y:594 parse.y:612 parse.y:677 parse.y:695
+msgid "iteration value must be positive"
+msgstr ""
+
+#: parse.y:798
+msgid "negative range in character class"
+msgstr ""
+
+#: scan.l:61 scan.l:162 scan.l:219 scan.l:352 scan.l:491 scan.l:541
+msgid "Input line too long\n"
+msgstr ""
+
+#: scan.l:153
+#, no-c-format
+msgid "unrecognized '%' directive"
+msgstr ""
+
+#: scan.l:236
+msgid "incomplete name definition"
+msgstr "definição de nome incompleta"
+
+#: scan.l:360
+#, c-format
+msgid "unrecognized %%option: %s"
+msgstr ""
+
+#: scan.l:501 scan.l:620
+msgid "bad character class"
+msgstr ""
+
+#: scan.l:548
+#, c-format
+msgid "undefined definition {%s}"
+msgstr ""
+
+#: scan.l:588
+#, c-format
+msgid "bad <start condition>: %s"
+msgstr ""
+
+#: scan.l:601
+msgid "missing quote"
+msgstr "faltou \""
+
+#: scan.l:641
+#, c-format
+msgid "bad character class expression: %s"
+msgstr ""
+
+#: scan.l:663
+msgid "bad character inside {}'s"
+msgstr "caracater inválido entre {}'s"
+
+#: scan.l:669
+msgid "missing }"
+msgstr "faltou }"
+
+#: scan.l:742
+msgid "EOF encountered inside an action"
+msgstr ""
+
+#: scan.l:762
+#, c-format
+msgid "bad character: %s"
+msgstr "caracter inválido: %s"
+
+#: scan.l:791
+#, c-format
+msgid "can't open %s"
+msgstr "impossível abrir %s"
+
+#: scanopt.c:291
+#, c-format
+msgid "Usage: %s [OPTIONS]...\n"
+msgstr "Uso: %s [OPÇÕES]...\n"
+
+#: scanopt.c:565
+#, c-format
+msgid "option `%s' doesn't allow an argument\n"
+msgstr "option `%s' não permite argumentos\n"
+
+#: scanopt.c:570
+#, c-format
+msgid "option `%s' requires an argument\n"
+msgstr "option `%s' requer um argumento\n"
+
+#: scanopt.c:574
+#, c-format
+msgid "option `%s' is ambiguous\n"
+msgstr "opção `%s' é ambígua\n"
+
+#: scanopt.c:578
+#, c-format
+msgid "Unrecognized option `%s'\n"
+msgstr "Opção `%s' desconhecida\n"
+
+#: scanopt.c:582
+#, c-format
+msgid "Unknown error=(%d)\n"
+msgstr "Erro desconhecido=(%d)\n"
+
+#: sym.c:100
+msgid "symbol table memory allocation failed"
+msgstr ""
+
+#: sym.c:203
+msgid "name defined twice"
+msgstr "nome definido duas vezes"
+
+#: sym.c:257
+#, c-format
+msgid "start condition %s declared twice"
+msgstr ""
+
+#: yylex.c:56
+msgid "premature EOF"
+msgstr "Fim-de-Arquivo prematuro"
+
+#: yylex.c:198
+msgid "End Marker\n"
+msgstr "Marca de Fim\n"
+
+#: yylex.c:204
+#, c-format
+msgid "*Something Weird* - tok: %d val: %d\n"
+msgstr "*Algo Estranho* - tok: %d val: %d\n"
