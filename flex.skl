@@ -163,18 +163,17 @@ int read();
 
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
-%% section 1 definitions go here
-
-#define yytext_ptr yytext
+%% section 1 definitions and declarations of yytext/yytext_ptr go here
 
 /* done after the current pattern has been matched and before the
  * corresponding action - sets up yytext
  */
 #define YY_DO_BEFORE_ACTION \
 	yytext_ptr = yy_bp; \
-%% code to fiddle yytext and yyleng for yymore() goes here
+%% code to fiddle  yytext and yyleng for yymore() goes here
 	yy_hold_char = *yy_cp; \
 	*yy_cp = '\0'; \
+%% code to copy yytext_ptr to yytext[] goes here, if %array
 	yy_c_buf_p = yy_cp;
 
 #define EOB_ACT_CONTINUE_SCAN 0
@@ -232,11 +231,9 @@ static YY_CHAR yy_hold_char;
 static int yy_n_chars;		/* number of characters read into yy_ch_buf */
 
 
-extern YY_CHAR *yytext;
 extern int yyleng;
 extern FILE *yyin, *yyout;
 
-YY_CHAR *yytext;
 int yyleng;
 
 FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
