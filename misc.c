@@ -62,15 +62,16 @@ void *allocate_array( size, element_size )
 int size, element_size;
 	{
 	register void *mem;
+	int num_bytes = element_size * size;
 
 	/* On 16-bit int machines (e.g., 80286) we might be trying to
 	 * allocate more than a signed int can hold, and that won't
 	 * work.  Cheap test:
 	 */
-	if ( element_size * size <= 0 )
+	if ( num_bytes <= 0 )
 		flexfatal( "request for < 1 byte in allocate_array()" );
 
-	mem = yy_flex_alloc( element_size * size );
+	mem = yy_flex_alloc( num_bytes );
 
 	if ( mem == NULL )
 		flexfatal( "memory allocation failed in allocate_array()" );
@@ -749,13 +750,14 @@ void *array;
 int size, element_size;
 	{
 	register void *new_array;
+	int num_bytes = element_size * size;
 
 	/* Same worry as in allocate_array(): */
-	if ( size * element_size <= 0 )
+	if ( num_bytes <= 0 )
 		flexfatal(
 			"attempt to increase array size by less than 1 byte" );
 
-	new_array = yy_flex_realloc( array, size * element_size );
+	new_array = yy_flex_realloc( array, num_bytes );
 
 	if ( new_array == NULL )
 		flexfatal( "attempt to increase array size failed" );
