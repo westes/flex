@@ -1,47 +1,46 @@
-# Irish translations for flex.
+# Polish translation for flex.
 # Copyright (C) 2003 Free Software Foundation, Inc.
-# Kevin Patrick Scannell <scannell@SLU.EDU>, 2003.
+# Jakub Bogusz <qboosh@pld-linux.org>, 2003.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.31\n"
 "POT-Creation-Date: 2003-04-01 11:33-0500\n"
-"PO-Revision-Date: 2003-11-06 13:09-0500\n"
-"Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
-"Language-Team: Irish <ga@li.org>\n"
+"PO-Revision-Date: 2003-06-19 00:44+0200\n"
+"Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
+"Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: dfa.c:61
 #, c-format
 msgid "State #%d is non-accepting -\n"
-msgstr "Níl an staid #%d ina staid ghlactha -\n"
+msgstr "Stan #%d jest nieakceptuj±cy -\n"
 
 #: dfa.c:124
 msgid "dangerous trailing context"
-msgstr "comhthéacs sraoilleach baolach"
+msgstr "niebezpieczny kontekst koñcowy"
 
 #: dfa.c:166
 msgid " associated rule line numbers:"
-msgstr " líne-uimhreacha de na rialacha bainteacha:"
+msgstr " numery linii powi±zanych regu³:"
 
 #: dfa.c:202
 msgid " out-transitions: "
-msgstr " athruithe amach: "
+msgstr " przej¶cia-wyj¶ciowe: "
 
-# weak, I know -- KPS
 #: dfa.c:210
 msgid ""
 "\n"
 " jam-transitions: EOF "
 msgstr ""
 "\n"
-" athruithe plúchta: EOF "
+" przej¶cia-zapêtlaj±ce: EOF "
 
 #: dfa.c:341
 msgid "consistency check failed in epsclosure()"
-msgstr "teipeadh agus ag seiceáil chomhionannais i epsclosure()"
+msgstr "kontrola spójno¶ci nie powiod³a siê w epsclosure()"
 
 #: dfa.c:429
 msgid ""
@@ -52,29 +51,29 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Dumpáil DFA:\n"
+"Zrzut DFA:\n"
 "\n"
 
 #: dfa.c:604
 msgid "could not create unique end-of-buffer state"
-msgstr "níorbh fhéidir staid shainiúil a chruthú ag deireadh maoláin"
+msgstr "nie mo¿na utworzyæ unikalnego stanu koñca bufora"
 
 #: dfa.c:625
 #, c-format
 msgid "state # %d:\n"
-msgstr "staid # %d:\n"
+msgstr "stan # %d:\n"
 
 #: dfa.c:800
 msgid "Could not write yynxt_tbl[][]"
-msgstr "Níorbh fhéidir yynxt_tbl[][] a scríobh"
+msgstr "Nie mo¿na zapisaæ yynxt_tbl[][]"
 
 #: dfa.c:1023
 msgid "consistency check failed in symfollowset"
-msgstr "teipeadh agus ag seiceáil chomhionannais i symfollowset"
+msgstr "kontrola spójno¶ci nie powiod³a siê w symfollowset"
 
 #: dfa.c:1071
 msgid "bad transition character detected in sympartition()"
-msgstr "carachtar trasdula neamhbhailí i sympartition()"
+msgstr "wykryto b³êdny znak przej¶cia w sympartition()"
 
 #: gen.c:484
 msgid ""
@@ -85,30 +84,30 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Aicmí Coibhéise:\n"
+"Klasy równowa¿no¶ci:\n"
 "\n"
 
 #: gen.c:668 gen.c:697 gen.c:1221
 #, c-format
 msgid "state # %d accepts: [%d]\n"
-msgstr "glacann staid # %d le: [%d]\n"
+msgstr "stan # %d akceptuje: [%d]\n"
 
 #: gen.c:1116
 #, c-format
 msgid "state # %d accepts: "
-msgstr "glacann staid # %d le: "
+msgstr "stan # %d akceptuje: "
 
 #: gen.c:1163
 msgid "Could not write yyacclist_tbl"
-msgstr "Níorbh fhéidir yyacclist_tbl a scríobh"
+msgstr "Nie mo¿na zapisaæ yyacclist_tbl"
 
 #: gen.c:1239
 msgid "Could not write yyacc_tbl"
-msgstr "Níorbh fhéidir yyacc_tbl a scríobh"
+msgstr "Nie mo¿na zapisaæ yyacc_tbl"
 
 #: gen.c:1254 gen.c:1639 gen.c:1662
 msgid "Could not write ecstbl"
-msgstr "Níorbh fhéidir ecstbl a scríobh"
+msgstr "Nie mo¿na zapisaæ ecstbl"
 
 #: gen.c:1277
 msgid ""
@@ -118,308 +117,307 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Aicmí Meiteachoibhéise:\n"
+"Klasy meta-równowa¿no¶ci:\n"
 
 #: gen.c:1299
 msgid "Could not write yymeta_tbl"
-msgstr "Níorbh fhéidir yymeta_tbl a scríobh"
+msgstr "Nie mo¿na zapisaæ yymeta_tbl"
 
 #: gen.c:1360
 msgid "Could not write yybase_tbl"
-msgstr "Níorbh fhéidir yybase_tbl a scríobh"
+msgstr "Nie mo¿na zapisaæ yybase_tbl"
 
 #: gen.c:1394
 msgid "Could not write yydef_tbl"
-msgstr "Níorbh fhéidir yydef_tbl a scríobh"
+msgstr "Nie mo¿na zapisaæ yydef_tbl"
 
 #: gen.c:1434
 msgid "Could not write yynxt_tbl"
-msgstr "Níorbh fhéidir yynxt_tbl a scríobh"
+msgstr "Nie mo¿na zapisaæ yynxt_tbl"
 
 #: gen.c:1470
 msgid "Could not write yychk_tbl"
-msgstr "Níorbh fhéidir yychk_tbl a scríobh"
+msgstr "Nie mo¿na zapisaæ yychk_tbl"
 
 #: gen.c:1624 gen.c:1653
 msgid "Could not write ftbl"
-msgstr "Níorbh fhéidir ftbl a scríobh"
+msgstr "Nie mo¿na zapisaæ ftbl"
 
 #: gen.c:1630
 msgid "Could not write ssltbl"
-msgstr "Níorbh fhéidir ssltbl a scríobh"
+msgstr "Nie mo¿na zapisaæ ssltbl"
 
 #: gen.c:1681
 msgid "Could not write eoltbl"
-msgstr "Níorbh fhéidir eoltbl a scríobh"
+msgstr "Nie mo¿na zapisaæ eoltbl"
 
 #: gen.c:1741
 msgid "Could not write yynultrans_tbl"
-msgstr "Níorbh fhéidir yynultrans_tbl a scríobh"
+msgstr "Nie mo¿na zapisaæ yynultrans_tbl"
 
 #: main.c:176
 msgid "rule cannot be matched"
-msgstr "Ní féidir riail chomhoiriúnach a aimsiú"
+msgstr "nie mo¿na dopasowaæ regu³y"
 
 #: main.c:181
 msgid "-s option given but default rule can be matched"
-msgstr "bhí an rogha -s tugtha ach is féidir an riail loicthe a chur i gcomhoiriúnacht"
+msgstr "podano opcjê -s, ale domy¶lna regu³a mo¿e byæ dopasowana"
 
 #: main.c:217
 msgid "Can't use -+ with -l option"
-msgstr "Níl -+ ar fáil in éineacht leis an rogha -l"
+msgstr "Nie mo¿na u¿yæ -+ z opcj± -l"
 
 #: main.c:220
 msgid "Can't use -f or -F with -l option"
-msgstr "Níl -f nó -F ar fáil in éineacht leis an rogha -l"
+msgstr "Nie mo¿na u¿yæ -f ani -F z opcj± -l"
 
 #: main.c:224
 msgid "Can't use --reentrant or --bison-bridge with -l option"
-msgstr "Níl --reentrant nó --bison-bridge ar fáil in éineacht leis an rogha -l"
+msgstr "Nie mo¿na u¿yæ --reentrant ani --bison-bridge z opcj± -l"
 
 #: main.c:261
 msgid "-Cf/-CF and -Cm don't make sense together"
-msgstr "Níl -Cf/-CF agus -Cm comhoiriúnach"
+msgstr "-Cf/-CF i -Cm razem nie maj± sensu"
 
 #: main.c:264
 msgid "-Cf/-CF and -I are incompatible"
-msgstr "Níl -Cf/-CF agus -I comhoiriúnach"
+msgstr "-Cf/-CF i -I s± niekompatybilne"
 
 #: main.c:268
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
-msgstr "Níl -Cf/-CF ar fáil sa mhodh chomhoiriúnachta lex"
+msgstr "-Cf/-CF s± niekompatybilne z trybem kompatybilno¶ci z leksem"
 
 #: main.c:273
 msgid "-Cf and -CF are mutually exclusive"
-msgstr "Is comheisiatach iad na roghanna -Cf agus -CF"
+msgstr "-Cf i -CF wykluczaj± siê wzajemnie"
 
 #: main.c:277
 msgid "Can't use -+ with -CF option"
-msgstr "Níl -+ ar fáil in éineacht leis an rogha -CF"
+msgstr "Nie mo¿na u¿yæ -+ z opcj± -CF"
 
 #: main.c:280
 #, c-format
 msgid "%array incompatible with -+ option"
-msgstr "níl %array comhoiriúnach leis an rogha -+"
+msgstr "%array jest niekompatybilne z opcj± -+"
 
 #: main.c:285
 msgid "Options -+ and --reentrant are mutually exclusive."
-msgstr "Is comheisiatach iad na roghanna -+ agus --reentrant"
+msgstr "Opcje -+ i --reentrant wykluczaj± siê wzajemnie."
 
 #: main.c:288
 msgid "bison bridge not supported for the C++ scanner."
-msgstr "níl bison bridge ar fáil don scanóir C++."
+msgstr "pomost dla bisona nie jest obs³ugiwany dla skanera C++."
 
 #: main.c:340 main.c:385
 #, c-format
 msgid "could not create %s"
-msgstr "níorbh fhéidir %s a chruthú"
+msgstr "nie mo¿na utworzyæ %s"
 
 #: main.c:398
 msgid "could not write tables header"
-msgstr "níorbh fhéidir ceanntásc táblaí a scríobh"
+msgstr "nie mo¿na zapisaæ nag³ówka tablic"
 
 #: main.c:402
 #, c-format
 msgid "can't open skeleton file %s"
-msgstr "ní féidir creatchomhad %s a oscailt"
+msgstr "nie mo¿na otworzyæ pliku szablonu %s"
 
 #: main.c:483
 #, c-format
 msgid "input error reading skeleton file %s"
-msgstr "earráid agus ag léamh creatchomhaid %s"
+msgstr "b³±d wej¶cia podczas odczytu pliku szablonu %s"
 
 #: main.c:487
 #, c-format
 msgid "error closing skeleton file %s"
-msgstr "earráid agus ag dúnadh creatchomhaid %s"
+msgstr "b³±d podczas zamykania pliku szablonu %s"
 
 #: main.c:671
 #, c-format
 msgid "error creating header file %s"
-msgstr "earráid agus ag cruthú comhad ceanntáisc %s"
+msgstr "b³±d podczas tworzenia pliku nag³ówkowego %s"
 
 #: main.c:679
 #, c-format
 msgid "error writing output file %s"
-msgstr "earráid agus ag scríobh aschomhaid %s"
+msgstr "b³±d podczas zapisu pliku wyj¶ciowego %s"
 
 #: main.c:683
 #, c-format
 msgid "error closing output file %s"
-msgstr "earráid agus ag dúnadh aschomhad %s"
+msgstr "b³±d podczas zamykania pliku wyj¶ciowego %s"
 
 #: main.c:687
 #, c-format
 msgid "error deleting output file %s"
-msgstr "earráid agus ag scriosadh aschomhaid %s"
+msgstr "b³±d podczas usuwania pliku wyj¶ciowego %s"
 
 #: main.c:694
 msgid "No backing up.\n"
-msgstr "Ná cúlaítear.\n"
+msgstr "Bez zapamiêtywania.\n"
 
 #: main.c:698
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
-msgstr "%d staid chúlaithe (níl ina staid ghlactha).\n"
+msgstr "%d zapamiêtywanych stanów (nie akceptuj±cych).\n"
 
 #: main.c:702
 msgid "Compressed tables always back up.\n"
-msgstr "Cúlaíonn táblaí comhdhlúite i gcónaí.\n"
+msgstr "Skompresowane tablice zawsze zapamiêtuj±.\n"
 
 #: main.c:705
 #, c-format
 msgid "error writing backup file %s"
-msgstr "earráid agus ag scríobh an chomhaid chúlaithe %s"
+msgstr "b³±d podczas zapisu pliku raportu z zapamiêtywania %s"
 
 #: main.c:709
 #, c-format
 msgid "error closing backup file %s"
-msgstr "earráid agus ag dúnadh an chomhaid chúlaithe %s"
+msgstr "b³±d podczas zamykania pliku raportu z zapamiêtywania %s"
 
 #: main.c:714
 #, c-format
 msgid "%s version %s usage statistics:\n"
-msgstr "%s leagan %s staitistic d'úsáid:\n"
+msgstr "%s w wersji %s - statystyka u¿ycia:\n"
 
-# fr uses "lexical analyzer"; scanóir seems fine though --KPS
 #: main.c:717
 msgid "  scanner options: -"
-msgstr "  roghanna don scanóir: -"
+msgstr "  opcje skanera: -"
 
 #: main.c:796
 #, c-format
 msgid "  %d/%d NFA states\n"
-msgstr "  %d/%d staid NFA\n"
+msgstr "  %d/%d stanów NFA\n"
 
 #: main.c:798
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
-msgstr "  %d/%d staid DFA (%d focal)\n"
+msgstr "  %d/%d stanów DFA (%d s³ów)\n"
 
 #: main.c:800
 #, c-format
 msgid "  %d rules\n"
-msgstr "  %d riail\n"
+msgstr "  %d regu³\n"
 
 #: main.c:805
 msgid "  No backing up\n"
-msgstr "  Ná cúlaítear\n"
+msgstr "  Bez zapamiêtywania\n"
 
 #: main.c:809
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
-msgstr "  %d staid chúlaithe (níl ina staid ghlactha)\n"
+msgstr "  %d zapamiêtywanych stanów (nie akceptuj±cych)\n"
 
 #: main.c:814
 msgid "  Compressed tables always back-up\n"
-msgstr "  Cúlaíonn táblaí comhdhlúite i gcónaí\n"
+msgstr "  Skompresowane tablice zawsze zapamiêtuj±\n"
 
 #: main.c:818
 msgid "  Beginning-of-line patterns used\n"
-msgstr "  Patrúin úsáidte ag ceann líne\n"
+msgstr "  U¿ytych wzorców pocz±tek-linii\n"
 
 #: main.c:820
 #, c-format
 msgid "  %d/%d start conditions\n"
-msgstr "  %d/%d coinníoll tosaigh\n"
+msgstr "  %d/%d warunków pocz±tkowych\n"
 
 #: main.c:824
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
-msgstr "  %d staid eipsealóin, %d staid eipsealóin dúbailte\n"
+msgstr "  %d stanów epsilonowych, %d stanów podwójnie epsilonowych\n"
 
 #: main.c:828
 msgid "  no character classes\n"
-msgstr "  níl aon aicme charachtair\n"
+msgstr "  bez klas znaków\n"
 
 #: main.c:832
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-msgstr "  tá gá le %d/%d aicme charachtair %d/%d focal stórála, %d athúsáidte\n"
+msgstr "  %d/%d klas znaków potrzebuje %d/%d s³ów pamiêci, %d ponownie u¿ytych\n"
 
 #: main.c:837
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
-msgstr "  %d péire state/nextstate\n"
+msgstr "  %d utworzonych par stan/nastêpny-stan\n"
 
 #: main.c:840
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
-msgstr "  %d/%d athrú sainiúil/dúblach\n"
+msgstr "  %d/%d przej¶æ unikalny/duplikat\n"
 
 #: main.c:845
 #, c-format
 msgid "  %d table entries\n"
-msgstr "  %d iontráil sa tábla\n"
+msgstr "  %d elementów tablicy\n"
 
 #: main.c:853
 #, c-format
 msgid "  %d/%d base-def entries created\n"
-msgstr "  %d/%d iontráil base-def\n"
+msgstr "  %d/%d utworzonych elementów base-def\n"
 
 #: main.c:857
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
-msgstr "  %d/%d (buaic %d) iontráil nxt-chk\n"
+msgstr "  %d/%d (maksymalnie %d) utworzonych elementów nxt-chk\n"
 
 #: main.c:861
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
-msgstr "  %d/%d (buaic %d) iontráil teimpléid nxt-chk\n"
+msgstr "  %d/%d (maksymalnie %d) utworzonych szablonowych elementów nxt-chk\n"
 
 #: main.c:865
 #, c-format
 msgid "  %d empty table entries\n"
-msgstr "  %d iontráil tábla folamh\n"
+msgstr "  %d pustych elementów tablicy\n"
 
 #: main.c:867
 #, c-format
 msgid "  %d protos created\n"
-msgstr "  %d fréamhshamhail\n"
+msgstr "  %d utworzonych prototypów\n"
 
 #: main.c:870
 #, c-format
 msgid "  %d templates created, %d uses\n"
-msgstr "  %d teimpléad, %d i bhfeidhm\n"
+msgstr "  %d utworzonych szablonów, %d u¿yæ\n"
 
 #: main.c:878
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
-msgstr "  %d/%d aicme coibhéise\n"
+msgstr "  %d/%d utworzonych klas równowa¿no¶ci\n"
 
 #: main.c:886
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
-msgstr "  %d/%d aicme meiteachoibhéise\n"
+msgstr "  %d/%d utworzonych klas meta-równowa¿no¶ci\n"
 
 #: main.c:892
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
-msgstr "  %d (%d sábháilte) tuairt haiseála, %d DFA comhionann le chéile\n"
+msgstr "  %d (%d zachowanych) kolizji haszy, %d jednakowych DFA\n"
 
 #: main.c:894
 #, c-format
 msgid "  %d sets of reallocations needed\n"
-msgstr "  tá gá le %d sraith athdháilte\n"
+msgstr "  %d potrzebnych zbiorów realokacji\n"
 
 #: main.c:896
 #, c-format
 msgid "  %d total table entries needed\n"
-msgstr "  tá gá le %d iontráil tábla ar fad\n"
+msgstr "  %d potrzebnych ogó³em elementów tablicy\n"
 
 #: main.c:971
 msgid "Internal error. flexopts are malformed.\n"
-msgstr "Earráid inmheánach (flexopts míchumtha).\n"
+msgstr "B³±d wewnêtrzny. ¬le sformu³owane flexopts.\n"
 
 #: main.c:981
 #, c-format
 msgid "Try `%s --help' for more information.\n"
-msgstr "Bain triail as `%s --help' chun tuilleadh eolais a fháil.\n"
+msgstr "`%s --help' poda wiêcej informacji.\n"
 
 #: main.c:1038
 #, c-format
 msgid "unknown -C option '%c'"
-msgstr "rogha -C anaithnid '%c'"
+msgstr "nieznana opcja -C '%c'"
 
 #: main.c:1167
 #, c-format
@@ -428,64 +426,64 @@ msgstr "%s %s\n"
 
 #: main.c:1442
 msgid "fatal parse error"
-msgstr "earráid pharsála mharfach"
+msgstr "krytyczny b³±d analizy sk³adni"
 
 #: main.c:1474
 #, c-format
 msgid "could not create backing-up info file %s"
-msgstr "níorbh fhéidir comhad %s a chruthú don eolas faoin chúlú"
+msgstr "nie mo¿na utworzyæ pliku informacji o zapamiêtywaniu %s"
 
 #: main.c:1495
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr "is cúis le moilliú mór an rogha -l (comhoiriúnacht le AT&T lex)\n"
+msgstr "opcja -l zgodno¶ci z leksem AT&T powoduje du¿± stratê wydajno¶ci\n"
 
 #: main.c:1498
 msgid " and may be the actual source of other reported performance penalties\n"
-msgstr " agus is féidir gur cúis é le fadhbanna luais eile é\n"
+msgstr " i mo¿e byæ przyczyn± innych zg³aszanych strat wydajno¶ci\n"
 
 #: main.c:1504
 #, c-format
 msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
-msgstr "is cúis le moilliú mór an %%rogha yylineno, MÁ tá rialacha ann le línte nua iontu\n"
+msgstr "%%option yylineno powoduje straty wydajno¶ci TYLKO dla regu³ dopasowuj±cych znak koñca linii\n"
 
 #: main.c:1511
 msgid "-I (interactive) entails a minor performance penalty\n"
-msgstr "is cúis le moilliú beag an rogha -I (idirghníomhach)\n"
+msgstr "-I (interaktywny) powoduje ma³± stratê wydajno¶ci\n"
 
 #: main.c:1516
 msgid "yymore() entails a minor performance penalty\n"
-msgstr "is cúis le moilliú beag an fheidhm yymore()\n"
+msgstr "yymore() powoduje ma³± stratê wydajno¶ci\n"
 
 #: main.c:1522
 msgid "REJECT entails a large performance penalty\n"
-msgstr "is REJECT cúis le moilliú mór\n"
+msgstr "REJECT powoduje du¿± stratê wydajno¶ci\n"
 
 #: main.c:1527
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr "is cúis le moilliú na rialacha maidir le comhthéacs sraoilleach athraitheach\n"
+msgstr "Regu³y ze zmiennym koñcowym kontekstem powoduj± du¿± stratê wydajno¶ci\n"
 
 #: main.c:1539
 msgid "REJECT cannot be used with -f or -F"
-msgstr "Níl REJECT ar fáil leis na roghanna -f nó -F"
+msgstr "REJECT nie mo¿e byæ u¿yte z -f ani -F"
 
 #: main.c:1542
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
-msgstr "níl %option yylineno ar fáil le REJECT"
+msgstr "%option yylineno nie mo¿e byæ u¿yte z REJECT"
 
 #: main.c:1545
 msgid "variable trailing context rules cannot be used with -f or -F"
-msgstr "níl rialacha maidir le comhthéacs sraoilleach athraitheach ar fáil le -f nó -F"
+msgstr "regu³y ze zmiennym koñcowym kontekstem nie mog± byæ u¿yte z -f ani -F"
 
 #: main.c:1661
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
-msgstr "tá an %option yyclass gan bhrí ach amháin le scanóirí C++"
+msgstr "%option yyclass ma znaczenie tylko dla skanerów C++"
 
 #: main.c:1768
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
-msgstr "Úsáid: %s [ROGHANNA] [COMHAD]...\n"
+msgstr "Sk³adnia: %s [OPCJE] [PLIK]...\n"
 
 #: main.c:1771
 #, c-format
@@ -551,106 +549,107 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
-"Gineann an clár seo cláir eile le haghaidh chomhoiriúnú de phatrúin.\n"
+"Generowanie programów wykonuj±cych na tek¶cie dopasowywanie wzorców.\n"
 "\n"
-"Comhfháscadh táblaí:\n"
-"  -Ca, --align      malartaigh táblaí níos mó d'ailíniú cuimhne níos fearr\n"
-"  -Ce, --ecs        déan aicmí coibhéise\n"
-"  -Cf               ná comhfháisc táblaí; bain úsáid as léiriú -f\n"
-"  -CF               ná comhfháisc táblaí; bain úsáid as léiriú -F\n"
-"  -Cm, --meta-ecs   déan aicmí meiteachoibhéise\n"
-"  -Cr, --read       bain úsáid as read() in ionad stdio d'ionchur\n"
-"  -f, --full        tóg scanóir atá mear agus mór; ar chomhbhrí le -Cfr\n"
-"  -F, --fast        úsáid léiriú táblaí tánaisteach; ar chomhbhrí le -CFr\n"
-"  -Cem              comhfháscadh loicthe (ar chomhbhrí le --ecs --meta-ecs)\n"
+"Komprecja tablic:\n"
+"  -Ca, --align      u¿ycie wiêkszych tablic dla lepszego wyrównania pamiêci\n"
+"  -Ce, --ecs        konstruowanie klas równowa¿no¶ci\n"
+"  -Cf               nie kompresowanie tablic; u¿ycie reprezentacji -f\n"
+"  -CF               nie kompresowanie tablic; u¿ycie reprezentacji -F\n"
+"  -Cm, --meta-ecs   konstruowanie klas meta-równowa¿no¶ci\n"
+"  -Cr, --read       u¿ycie read() zamiast stdio dla wej¶cia skanera\n"
+"  -f, --full        wygenerowanie szybkiego, wielkiego skanera. To samo co -Cfr\n"
+"  -F, --fast        u¿ycie alternatywnej reprezentacji tablic. To samo co -CFr\n"
+"  -Cem              domy¶lne kompresowanie (to samo co --ecs --meta-ecs)\n"
 "\n"
-"Dífhabhtú:\n"
-"  -d, --debug             cuir dífhabhtú ar obair\n"
-"  -b, --backup            scríobh eolas faoin chúlú chuig %s\n"
-"  -p, --perf-report       scríobh tuairisc fheidhmithe chuig stderr\n"
-"  -s, --nodefault         ná déan macalla de théacs neamh-chomhoiriúnach\n"
-"  -T, --trace             ba chóir do %s a rith i modh loirg\n"
-"  -w, --nowarn            ná taispeáin rabhaidh\n"
-"  -v, --verbose           taispeáin achoimre ar staitistic scanóra chuig stdout\n"
+"Diagnostyka:\n"
+"  -d, --debug             w³±czenie trybu diagnostycznego (debug) w skanerze\n"
+"  -b, --backup            zapisanie informacji o zapamiêtywaniu do %s\n"
+"  -p, --perf-report       wypisanie raportu o wydajno¶ci na stderr\n"
+"  -s, --nodefault         pominiêcie domy¶lnej regu³y ECHO dla niedopasowanego\n"
+"                            tekstu\n"
+"  -T, --trace             %s powinien dzia³aæ w trybie ¶ledzenia\n"
+"  -w, --nowarn            nie generowanie ostrze¿eñ\n"
+"  -v, --verbose           wypisanie podsumowania statystyk skanera na stdout\n"
 "\n"
-"Comhaid:\n"
-"  -o, --outfile=COMHAD    roghnaigh ainm comhaid le haghaidh aschuir\n"
-"  -S, --skel=COMHAD       roghnaigh creatchomhad\n"
-"  -t, --stdout            scríobh an scanóir chuig stdout in ionad %s\n"
-"      --yyclass=COMHAD    ainm de `class' C++\n"
-"      --header-file=COMHAD scríobh comhad ceanntáisc C i dteannta an scanóir\n"
-"      --tables-file[=COMHAD] scríobh na táblaí chuig COMHAD\n"
+"Pliki:\n"
+"  -o, --outfile=PLIK      podanie nazwy pliku wyj¶ciowego\n"
+"  -S, --skel=PLIK         podanie pliku szablonu\n"
+"  -t, --stdout            zapis wyj¶cia skanera na stdout zamiast %s\n"
+"      --yyclass=NAZWA     nazwa klasy C++\n"
+"      --header-file=PLIK   utworzenie pliku nag³ówkowego C oprócz skanera\n"
+"      --tables-file[=PLIK] zapisanie tablic do PLIKU\n"
 "\n"
-"Scanóir:\n"
-"  -7, --7bit              gin scanóir 7-giotán\n"
-"  -8, --8bit              gin scanóir 8-giotán\n"
-"  -B, --batch             gin scanóir baisce (i gcodarsnacht le -I)\n"
-"  -i, --case-insensitive  déan neamhshuim ar ceannlitreacha/litreacha beaga\n"
-"  -l, --lex-compat        comhoiriúnacht le lex bunúsach, a mhéad is féidir\n"
-"  -X, --posix-compat      comhoiriúnacht le lex POSIX, a mhéad is féidir\n"
-"  -I, --interactive       gin scanóir idirghníomhach (i gcodarsnacht le -B)\n"
-"      --yylineno          coimeád líon na línte i yylineno\n"
+"Zachowanie skanera:\n"
+"  -7, --7bit              wygenerowanie skanera 7-bitowego\n"
+"  -8, --8bit              wygenerowanie skanera 8-bitowego\n"
+"  -B, --batch             wygenerowanie skanera wsadowego (przeciwieñstwo -I)\n"
+"  -i, --case-insensitive  ignorowanie wielko¶ci liter we wzorcach\n"
+"  -l, --lex-compat        maksymalna kompatybilno¶æ z oryginalnym leksem\n"
+"  -X, --posix-compat      maksymalna kompatybilno¶æ z leksem POSIX\n"
+"  -I, --interactive       wygenerowanie skanera interaktywnego (przeciw. -B)\n"
+"      --yylineno          ¶ledzenie liczby linii w yylineno\n"
 "\n"
-"Generated code:\n"
-"  -+,  --c++               gin scanóir mar class C++\n"
-"  -Dmacra[=sain]           #define macra sain  (sain='1' trí mhainneachtain)\n"
-"  -L,  --noline            ná cuir treoracha #line sa scanóir\n"
-"  -P,  --prefix=TEAGHRÁN   úsáid TEAGHRÁN mar réimír in ionad \"yy\"\n"
-"  -R,  --reentrant         gin scanóir reentrant C\n"
-"       --bison-bridge      scanóir do pharsálaí íon bison.\n"
-"       --bison-locations   ceadaigh an úsáid de yylloc.\n"
-"       --stdinit           socraigh yyin/yyout mar stdin/stdout faoi seach\n"
-"       --noansi-definitions sainmhíniú d'fheidhmeanna ar an sean-nós\n"
-"       --noansi-prototypes  ceadaigh liosta folamh de pharaiméadair\n"
-"       --nounistd          ná cuir <unistd.h> san áireamh\n"
-"       --noFEIDHM          ná gin an FHEIDHM seo\n"
+"Generowany kod:\n"
+"  -+,  --c++               wygenerowanie klasy skanera w C++\n"
+"  -Dmakro[=defn]           #define makro defn  (domy¶lne defn to '1')\n"
+"  -L,  --noline            pominiêcie dyrektyw #line w skanerze\n"
+"  -P,  --prefix=£AÑCUCH    u¿ycie jako prefiksu £AÑCUCHA zamiast \"yy\"\n"
+"  -R,  --reentrant         wygenerowanie wielobie¿nego skanera w C\n"
+"       --bison-bridge      skaner dla czystego analizatora w bisonie\n"
+"       --bison-locations   dodanie obs³ugi yylloc\n"
+"       --stdinit           zainicjowanie yyin/yyout na stdin/stdout\n"
+"       --noansi-definitions definicje funkcji w starym stylu\n"
+"       --noansi-prototypes  puste listy parametrów w prototypach\n"
+"       --nounistd          nie do³±czanie <unistd.h>\n"
+"       --noFUNKCJA         nie generowanie podanej FUNKCJI\n"
 "\n"
-"Miscellaneous:\n"
-"  -c                      rogha POSIX gan feidhm\n"
-"  -n                      rogha POSIX gan feidhm\n"
+"Ró¿ne:\n"
+"  -c                      nic nie robi±ca opcja POSIX\n"
+"  -n                      nic nie robi±ca opcja POSIX\n"
 "  -?\n"
-"  -h, --help              taispeáin an chabhair seo\n"
-"  -V, --version           taispeáin leagan %s\n"
+"  -h, --help              wy¶wietlenie tego pomocnego opisu\n"
+"  -V, --version           podanie wersji programu %s\n"
 
 #: misc.c:100 misc.c:126
 #, c-format
 msgid "name \"%s\" ridiculously long"
-msgstr "tá an t-ainm \"%s\" i bhfad Éireann rófhada"
+msgstr "nazwa \"%s\" jest ¶miesznie d³uga"
 
 #: misc.c:175
 msgid "memory allocation failed in allocate_array()"
-msgstr "teipeadh agus ag riaradh cuimhne i allocate_array()"
+msgstr "nie uda³o siê przydzieliæ pamiêci w allocate_array()"
 
 #: misc.c:250
 #, c-format
 msgid "bad character '%s' detected in check_char()"
-msgstr "aimsíodh carachtar neamhbhailí '%s' i check_char()"
+msgstr "b³êdny znak '%s' usuniêty w check_char()"
 
 #: misc.c:255
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
-msgstr "ní foláir an rogha -8 chun an charachtair %s a úsáid"
+msgstr "skaner wymaga flagi -8 aby u¿yæ znaku %s"
 
 #: misc.c:288
 msgid "dynamic memory failure in copy_string()"
-msgstr "teipeadh agus ag riaradh cuimhne i copy_string()"
+msgstr "niepowodzenie dynamicznej pamiêci w copy_string()"
 
 #: misc.c:422
 #, c-format
 msgid "%s: fatal internal error, %s\n"
-msgstr "%s: earráid inmheánach marfach, %s\n"
+msgstr "%s: krytyczny b³±d wewnêtrzny: %s\n"
 
 #: misc.c:875
 msgid "attempt to increase array size failed"
-msgstr "teipeadh agus ag iarraidh an eagair a mhéadú"
+msgstr "próba zwiêkszenia rozmiaru tablicy nie powiod³a siê"
 
 #: misc.c:1002
 msgid "bad line in skeleton file"
-msgstr "drochlíne i gcreatchomhad"
+msgstr "b³êdna linia w pliku szablonu"
 
 #: misc.c:1051
 msgid "memory allocation failed in yy_flex_xmalloc()"
-msgstr "teipeadh agus ag riaradh cuimhne i yy_flex_xmalloc()"
+msgstr "nie uda³o siê przydzieliæ pamiêci w yy_flex_xmalloc()"
 
 #: nfa.c:104
 #, c-format
@@ -661,201 +660,201 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"********** ag tosú dumpála de nfa le staid tosaigh %d\n"
+"********** pocz±tek zrzutu NFA ze stanem pocz±tkowym %d\n"
 
 #: nfa.c:115
 #, c-format
 msgid "state # %4d\t"
-msgstr "staid # %4d\t"
+msgstr "stan # %4d\t"
 
 #: nfa.c:130
 msgid "********** end of dump\n"
-msgstr "********** i ndeireadh dumpála\n"
+msgstr "********** koniec zrzutu\n"
 
 #: nfa.c:174
 msgid "empty machine in dupmachine()"
-msgstr "meaisín folamh i dupmachine()"
+msgstr "pusty automat w dupmachine()"
 
 #: nfa.c:240
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
-msgstr "riail maidir le comhthéacs sraoilleach athraitheach ag líne %d\n"
+msgstr "Regu³a ze zmiennym koñcowym kontekstem w linii %d\n"
 
 #: nfa.c:353
 msgid "bad state type in mark_beginning_as_normal()"
-msgstr "drochstaid i mark_beginning_as_normal()"
+msgstr "b³êdny typ stanu w mark_beginning_as_normal()"
 
 #: nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
-msgstr "is róchasta na rialacha ionchuir (>= %d staid NFA)"
+msgstr "regu³y wej¶ciowe s± zbyt skomplikowane (>= %d stanów NFA)"
 
 #: nfa.c:677
 msgid "found too many transitions in mkxtion()"
-msgstr "an iomarca athruithe i mkxtion()"
+msgstr "znaleziono zbyt du¿o przej¶æ w mkxtion()"
 
 #: nfa.c:703
 #, c-format
 msgid "too many rules (> %d)!"
-msgstr "an iomarca rialacha (> %d)!"
+msgstr "zbyt du¿o regu³ (> %d)!"
 
 #: parse.y:183
 msgid "unknown error processing section 1"
-msgstr "earráid anaithnid agus ag próiseáil an chéad pháirt"
+msgstr "nieznany b³±d podczas przetwarzania sekcji 1"
 
 #: parse.y:208 parse.y:373
 msgid "bad start condition list"
-msgstr "is neamhbhailí liosta na coinníollacha tosaigh"
+msgstr "b³êdna lista warunków pocz±tkowych"
 
 #: parse.y:337
 msgid "unrecognized rule"
-msgstr "riail anaithnid"
+msgstr "nierozpoznana regu³a"
 
 #: parse.y:456 parse.y:469 parse.y:538
 msgid "trailing context used twice"
-msgstr "baineadh úsáid as comhthéacs sraoilleach faoi dhó"
+msgstr "koñcowy kontekst u¿yty dwukrotnie"
 
 #: parse.y:574 parse.y:584 parse.y:657 parse.y:667
 msgid "bad iteration values"
-msgstr "luachanna timthrialla neamhbhailí"
+msgstr "b³êdne warto¶ci iteracji"
 
 #: parse.y:602 parse.y:620 parse.y:685 parse.y:703
 msgid "iteration value must be positive"
-msgstr "ní foláir luach timthrialla deimhneach"
+msgstr "warto¶æ iteracji musi byæ dodatnia"
 
 #: parse.y:817 parse.y:827
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr "tá an réimse carachtair [%c-%c] débhríoch i scanóir a dhéanann neamhshuim ar ceannlitreacha agus litreacha beaga"
+msgstr "przedzia³ znaków [%c-%c] jest niejednoznaczny w skanerze ignoruj±cym wielko¶æ liter"
 
 #: parse.y:832
 msgid "negative range in character class"
-msgstr "réimse diúltach in aicme carachtair"
+msgstr "ujemny przedzia³ w klasie znaków"
 
 #: scan.l:70 scan.l:180 scan.l:267 scan.l:409 scan.l:548 scan.l:598
 msgid "Input line too long\n"
-msgstr "Tá líne an ionchuir rófhada\n"
+msgstr "Linia wej¶ciowa zbyt d³uga\n"
 
 #: scan.l:149
 #, c-format
 msgid "malformed '%top' directive"
-msgstr "treoir '%top' míchumtha"
+msgstr "¼le sformu³owana dyrektywa '%top'"
 
 #: scan.l:171
 #, no-c-format
 msgid "unrecognized '%' directive"
-msgstr "treoir '%' anaithnid"
+msgstr "nierozpoznana dyrektywa '%'"
 
 #: scan.l:251
 msgid "Unmatched '{'"
-msgstr "'{' corr"
+msgstr "Niesparowany '{'"
 
 #: scan.l:284
 msgid "incomplete name definition"
-msgstr "is neamhiomlán an sainmhíniú ainm"
+msgstr "niekompletna definicja nazwy"
 
 #: scan.l:417
 #, c-format
 msgid "unrecognized %%option: %s"
-msgstr "rogha %% anaithnid: %s"
+msgstr "nierozpoznane %%option: %s"
 
 #: scan.l:558 scan.l:677
 msgid "bad character class"
-msgstr "aicme charachtair neamhbhailí"
+msgstr "b³êdna klasa znaków"
 
 #: scan.l:605
 #, c-format
 msgid "undefined definition {%s}"
-msgstr "sainmhíniú neamhshainithe {%s}"
+msgstr "niezdefiniowana definicja {%s}"
 
 #: scan.l:645
 #, c-format
 msgid "bad <start condition>: %s"
-msgstr "<coinníoll tosaigh> neamhbhailí: %s"
+msgstr "b³êdny <warunek pocz±tkowy>: %s"
 
 #: scan.l:658
 msgid "missing quote"
-msgstr "comhartha athfhriotal ar iarraidh"
+msgstr "brak cudzys³owu"
 
 #: scan.l:698
 #, c-format
 msgid "bad character class expression: %s"
-msgstr "is neamhbhailí an slonn aicme carachtair: %s"
+msgstr "b³êdne wyra¿enie klasy znaków: %s"
 
 #: scan.l:720
 msgid "bad character inside {}'s"
-msgstr "carachtar neamhbhailí idir {}"
+msgstr "b³êdny znak wewn±trz {}"
 
 #: scan.l:726
 msgid "missing }"
-msgstr "} ar iarraidh."
+msgstr "brak }"
 
 #: scan.l:799
 msgid "EOF encountered inside an action"
-msgstr "Buaileadh EOF i ngníomh"
+msgstr "EOF napotkany wewn±trz akcji"
 
 #: scan.l:819
 #, c-format
 msgid "bad character: %s"
-msgstr "carachtar neamhbhailí: %s"
+msgstr "b³êdny znak: %s"
 
 #: scan.l:848
 #, c-format
 msgid "can't open %s"
-msgstr "ní féidir %s a oscailt"
+msgstr "nie mo¿na otworzyæ %s"
 
 #: scanopt.c:291
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
-msgstr "Úsáid: %s [ROGHANNA]...\n"
+msgstr "Sk³adnia: %s [OPCJE]...\n"
 
 #: scanopt.c:565
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
-msgstr "ní cheadaítear argóint i ndiaidh an rogha `%s'\n"
+msgstr "opcja `%s' nie przyjmuje argumentu\n"
 
 #: scanopt.c:570
 #, c-format
 msgid "option `%s' requires an argument\n"
-msgstr "ní foláir argóint don rogha `%s'\n"
+msgstr "opcja `%s' wymaga argumentu\n"
 
 #: scanopt.c:574
 #, c-format
 msgid "option `%s' is ambiguous\n"
-msgstr "tá an rogha `%s' débhríoch\n"
+msgstr "opcja `%s' jest niejednoznaczna\n"
 
 #: scanopt.c:578
 #, c-format
 msgid "Unrecognized option `%s'\n"
-msgstr "Rogha anaithnid `%s'\n"
+msgstr "Nierozpoznana opcja `%s'\n"
 
 #: scanopt.c:582
 #, c-format
 msgid "Unknown error=(%d)\n"
-msgstr "Earráid anaithnid=(%d)\n"
+msgstr "Nieznany b³±d=(%d)\n"
 
 #: sym.c:100
 msgid "symbol table memory allocation failed"
-msgstr "teipeadh agus ag riaradh cuimhne don tábla siombalach"
+msgstr "nie uda³o siê przydzieliæ pamiêci dla tablicy symboli"
 
 #: sym.c:203
 msgid "name defined twice"
-msgstr "sainmhíníodh an t-ainm faoi dhó"
+msgstr "nazwa zdefiniowana dwukrotnie"
 
 #: sym.c:254
 #, c-format
 msgid "start condition %s declared twice"
-msgstr "fógraíodh an choinníoll tosaigh %s faoi dhó"
+msgstr "warunek pocz±tkowy %s zadeklarowany dwukrotnie"
 
 #: yylex.c:56
 msgid "premature EOF"
-msgstr "EOF gan choinne"
+msgstr "przedwczesny EOF"
 
 #: yylex.c:198
 msgid "End Marker\n"
-msgstr "Comhartha Deiridh\n"
+msgstr "Znacznik koñca\n"
 
 #: yylex.c:204
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
-msgstr "*Rud Éigin Aisteach* - tok: %d val: %d\n"
+msgstr "*Co¶ dziwnego* - tok: %d val: %d\n"
