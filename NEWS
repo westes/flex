@@ -3,6 +3,21 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* after version 2.5.14
+
+** zh_cn translation added from translation project
+
+** a bug that caused a segfault has now been fixed
+
+** the test suite now respects the usual CFLAGS, etc. variables
+
+** removed some warnings which some tests trigggered with the -s option
+
+** the flex-generated header file now tries to be smarter about
+   conditionally including start conditions
+
+** tables code omitted from generated scanner when not used
+
 * version 2.5.14 2002-8-15
 
 ** the tests using the reentrant c scanner as c++ were reworked
