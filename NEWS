@@ -1,14 +1,13 @@
 This is the file NEWS for the flex package. It records user -visible
-changes between releases of flex.
+changes between releases of flex
 
-See the file COPYING for copying conditions.
+See the file COPYING for copying conditions
 
 * version 2.5.6
 
 ** gettext support added (from gettext 0.11)
 
-*** translations for ca, de, es, fr, ko, ru, sv, tr included
-
+*** translations for ca, da, de, es, fr, ko, ru, sv, tr included
 
 ** distribution now built under automake 1.6 and autoconf 2.53
 
@@ -24,9 +23,9 @@ See the file COPYING for copying conditions.
 
 *** All positive %options are now accessible from the command line
 
-*** Added option -D, to define a preprocessor symbol.
+*** Added option -D, to define a preprocessor symbol
 
-*** Added option --header=FILE to specify a C .h file to generate.
+*** Added option --header=FILE to specify a C .h file to generate
 
 *** added option --yywrap to call yywrap on EOF
 
@@ -37,44 +36,48 @@ See the file COPYING for copying conditions.
 *** for long option names which are associated with existing short
 options, see accompanying documentation
 
-** Support for reentrant C scanners has been added.
+*** new %option nounistd or command-line --nounistd added to prevent
+    flex from generating #include <unistd.h> on systems that don't
+    have that include file
 
-*** Updated the manual with the new reentrant API.
+** Support for reentrant C scanners has been added
+
+*** Updated the manual with the new reentrant API
 
 *** Two new options %option reentrant (-R) and 
-%option reentrant-bison (-Rb).
+%option reentrant-bison (-Rb)
 
-*** All globals optionally placed into struct yyglobals_t.
+*** All globals optionally placed into struct yyglobals_t
 
-*** All access to globals replaced by macro invocations.
+*** All access to globals replaced by macro invocations
 
 *** All functions optionally take one additional
-argument, yy_globals.
+argument, yy_globals
 
 *** New style for invoking reentrant scanner:
 yylex_init(void** scanner );
 yylex( scanner );
 yylex_destroy( scanner );
 
-*** Added get/set functions for members of struct yy_globals_t.
-e.g.,  yyget_text, yyget_leng, etc.
+*** Added get/set functions for members of struct yy_globals_t
+e.g.,  yyget_text, yyget_leng, etc
 
-*** Prefix substitution added for new functions.
+*** Prefix substitution added for new functions
 
 *** Macro shortcuts to the lengthy get/set functions
-provided for use in actions. e.g.,  yytext, yyleng, etc.
+provided for use in actions. e.g.,  yytext, yyleng, etc
 
-*** Arbitrary, user-defined data, "yyextra", may be added to scanner.
+*** Arbitrary, user-defined data, "yyextra", may be added to scanner
 
-** %option nomain no longer implies %option yywrap.
-But the inverse is still true.
+** %option nomain no longer implies %option yywrap
+But the inverse is still true
 
-** Developer test suite added.
+** Developer test suite added
 
 *** TESTS/ directory has been added. Users can 
-'make check' in the TESTS directory to execute the test suite.
+'make check' in the TESTS directory to execute the test suite
 
-** Support for bison variables yylval and yylloc added.
+** Support for bison variables yylval and yylloc added
 
 ** automake support for the build process
 
