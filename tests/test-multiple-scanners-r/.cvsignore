@@ -6,3 +6,5 @@ scanner-2.c
 scanner-2.h
 test-multiple-scanners-r
 OUTPUT
+scanner-1.tables
+scanner-2.tables
