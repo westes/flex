@@ -66,6 +66,18 @@ public:
 
 	virtual int yylex() = 0;
 
+	// Call yylex with new input/output sources.
+	int yylex( istream* new_in = 0, ostream* new_out = 0 )
+		{
+		switch_streams( new_in, new_out );
+		return yylex();
+		}
+
+	// Switch to new input/output streams.  A nil stream pointer
+	// indicates "keep the current one".
+	virtual void switch_streams( istream* new_in = 0,
+					ostream* new_out = 0 ) = 0;
+
 protected:
 	char* yytext;
 	int yyleng;
@@ -89,6 +101,7 @@ public:
 	void yyrestart( istream* s );
 
 	virtual int yylex();
+	virtual void switch_streams( istream* new_in, ostream* new_out );
 
 protected:
 	virtual int LexerInput( char* buf, int max_size );
