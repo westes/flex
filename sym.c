@@ -263,7 +263,7 @@ int xcluflg;
 	}
 
     if ( addsym( copy_string( str ), (char *) 0, lastsc,
-	 sctbl, START_COND_HASH_SIZE ) )
+	         sctbl, START_COND_HASH_SIZE ) )
 	lerrsf( "start condition %s declared twice", str );
 
     scset[lastsc] = mkstate( SYM_EPSILON );
