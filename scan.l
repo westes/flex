@@ -239,21 +239,17 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
 <SECT2>^{OPTWS}{NL}	++linenum; /* allow blank lines in section 2 */
 
-<SECT2>^({WS}|"%{")	{
-			indented_code = (yytext[0] != '%');
+<SECT2>^{OPTWS}"%{"	{
+			indented_code = false;
 			doing_codeblock = true;
 			bracelevel = 1;
-
-			if ( indented_code )
-				ACTION_ECHO;
-
 			BEGIN(CODEBLOCK_2);
 			}
 
-<SECT2>^"<"		BEGIN(SC); return '<';
-<SECT2>^"^"		return '^';
+<SECT2>^{OPTWS}"<"	BEGIN(SC); return '<';
+<SECT2>^{OPTWS}"^"	return '^';
 <SECT2>\"		BEGIN(QUOTE); return '"';
-<SECT2>"{"/[0-9]		BEGIN(NUM); return '{';
+<SECT2>"{"/[0-9]	BEGIN(NUM); return '{';
 <SECT2>"$"/([ \t]|{NL})	return '$';
 
 <SECT2>{WS}"%{"		{
@@ -268,6 +264,15 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 				}
 			}
 <SECT2>{WS}"|".*{NL}	continued_action = true; ++linenum; return '\n';
+
+<SECT2>^{WS}"/*"	{
+			yyless( yyleng - 2 );	/* put back '/', '*' */
+			bracelevel = 0;
+			continued_action = false;
+			BEGIN(ACTION);
+			}
+
+<SECT2>^{WS}		/* allow indented rules */
 
 <SECT2>{WS}		{
 			/* This rule is separate from the one below because
@@ -300,6 +305,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 				}
 			}
 
+<SECT2>^{OPTWS}"<<EOF>>"	|
 <SECT2>"<<EOF>>"	return EOF_OP;
 
 <SECT2>^"%%".*		{
