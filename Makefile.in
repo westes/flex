@@ -215,10 +215,10 @@ dist: $(DISTFILES)
 
 dist2:
 	@rm -rf $(DIST_NAME)
+	@rm -f $(DIST_NAME).tar $(DIST_NAME).tar.Z $(DIST_NAME).tar.gz
 	@mkdir $(DIST_NAME)
 	tar cf - $(DISTFILES) | (cd $(DIST_NAME); tar xfB -)
 	@mv $(DIST_NAME)/scan.c $(DIST_NAME)/initscan.c
-	@rm -f flex.tar flex.tar.Z flex.tar.gz
 	tar chf $(DIST_NAME).tar $(DIST_NAME)
 	$(COMPRESS) $(DIST_NAME).tar
 	@rm -rf $(DIST_NAME)
