@@ -36,7 +36,7 @@
 
 /* Append "#define defname value\n" to the running buffer. */
 void action_define( defname, value )
-char *defname;
+const char *defname;
 int value;
 	{
 	char buf[MAXLINE];
@@ -523,7 +523,7 @@ int value;
 /* myctoi - return the integer represented by a string of digits */
 
 int myctoi( array )
-char *array;
+const char *array;
 	{
 	int val = 0;
 

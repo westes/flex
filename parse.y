@@ -819,7 +819,7 @@ void build_eof_action()
 /* format_synerr - write out formatted syntax error */
 
 void format_synerr( msg, arg )
-char msg[], arg[];
+const char *msg, arg[];
 	{
 	char errmsg[MAXLINE];
 
@@ -831,7 +831,7 @@ char msg[], arg[];
 /* synerr - report a syntax error */
 
 void synerr( str )
-char str[];
+const char *str;
 	{
 	syntaxerror = true;
 	pinpoint_message( str );
@@ -841,7 +841,7 @@ char str[];
 /* format_warn - write out formatted warning */
 
 void format_warn( msg, arg )
-char msg[], arg[];
+const char *msg, arg[];
 	{
 	char warn_msg[MAXLINE];
 
@@ -853,7 +853,7 @@ char msg[], arg[];
 /* warn - report a warning, unless -w was given */
 
 void warn( str )
-char str[];
+const char *str;
 	{
 	line_warning( str, linenum );
 	}
@@ -863,7 +863,7 @@ char str[];
  */
 
 void format_pinpoint_message( msg, arg )
-char msg[], arg[];
+const char *msg, arg[];
 	{
 	char errmsg[MAXLINE];
 
@@ -875,7 +875,7 @@ char msg[], arg[];
 /* pinpoint_message - write out a message, pinpointing its location */
 
 void pinpoint_message( str )
-char str[];
+const char *str;
 	{
 	line_pinpoint( str, linenum );
 	}
@@ -884,7 +884,7 @@ char str[];
 /* line_warning - report a warning at a given line, unless -w was given */
 
 void line_warning( str, line )
-char str[];
+const char *str;
 int line;
 	{
 	char warning[MAXLINE];
@@ -900,7 +900,7 @@ int line;
 /* line_pinpoint - write out a message, pinpointing it at the given line */
 
 void line_pinpoint( str, line )
-char str[];
+const char *str;
 int line;
 	{
 	fprintf( stderr, "%s: %d: %s\n", infilename, line, str );
@@ -912,6 +912,6 @@ int line;
  */
 
 void yyerror( msg )
-char msg[];
+const char *msg;
 	{
 	}

@@ -62,7 +62,7 @@ static struct hash_entry *ccltab[CCL_HASH_SIZE];
 
 static int addsym PROTO((register char[], char*, int, hash_table, int));
 static struct hash_entry *findsym();
-static int hashfunct PROTO((register char[], int));
+static int hashfunct PROTO((register const char*, int));
 
 
 /* addsym - add symbol and definitions to symbol table
@@ -150,7 +150,7 @@ Char ccltxt[];
 /* findsym - find symbol in symbol table */
 
 static struct hash_entry *findsym( sym, table, table_size )
-register char sym[];
+register const char *sym;
 hash_table table;
 int table_size;
 	{
@@ -176,7 +176,7 @@ int table_size;
 /* hashfunct - compute the hash value for "str" and hash size "hash_size" */
 
 static int hashfunct( str, hash_size )
-register char str[];
+register const char *str;
 int hash_size;
 	{
 	register int hashval;
@@ -198,7 +198,7 @@ int hash_size;
 /* ndinstal - install a name definition */
 
 void ndinstal( name, definition )
-char name[];
+const char *name;
 Char definition[];
 	{
 	char *copy_string();
@@ -217,7 +217,7 @@ Char definition[];
  */
 
 Char *ndlookup( nd )
-char nd[];
+const char *nd;
 	{
 	return (Char *) findsym( nd, ndtbl, NAME_TABLE_HASH_SIZE )->str_val;
 	}
@@ -246,7 +246,7 @@ void scextend()
  */
 
 void scinstal( str, xcluflg )
-char str[];
+const char *str;
 int xcluflg;
 	{
 	char *copy_string();
@@ -278,7 +278,7 @@ int xcluflg;
  */
 
 int sclookup( str )
-char str[];
+const char *str;
 	{
 	return findsym( str, sctbl, START_COND_HASH_SIZE )->int_val;
 	}

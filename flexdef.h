@@ -795,7 +795,7 @@ extern void usage PROTO((void));
 /* from file misc.c */
 
 /* Add a #define to the action file. */
-extern void action_define PROTO(( char *defname, int value ));
+extern void action_define PROTO(( const char *defname, int value ));
 
 /* Add the given text to the stored actions. */
 extern void add_action PROTO(( char *new_text ));
