@@ -37,7 +37,8 @@ probably satisfy the need for a man page
 ** address lex-replacement: document or provide an option through
    configure for creating lex and libl.a files
 
-** gettextify flex
+** update gettext support from gettext-0.11 to gettext-0.11.1
+
 
 ** subdirectories
 
