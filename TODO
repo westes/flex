@@ -4,11 +4,7 @@
 
 * the manual:
 
-** integrate the items in the faqs/ directory into the manual or code
-  or similar (millaway is working on this; much of the FAQS directory
-  is old or uninformative)
-
-*** create a section on flex design, features, etc.
+** create a section on flex design, features, etc.
 
 * address lex-replacement: document or provide an option through
    configure for creating lex and libl.a files (but remember this has
