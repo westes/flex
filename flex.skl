@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <stdint.h>
 /* end standard C headers. */
 %+
 /* begin standard C++ headers. */
@@ -55,14 +56,8 @@
 #else	/* ! __cplusplus */
 
 /* We're not in a C++ compiler, so by default,
-   we generate traditional function defs, unless you explicitly ask
-   for C99 defs. */
-
-#ifndef YY_NO_TRADITIONAL_FUNC_DEFS
-#ifndef YY_TRADITIONAL_FUNC_DEFS
-#define YY_TRADITIONAL_FUNC_DEFS
-#endif
-#endif
+   we generate C99 function defs, unless you explicitly ask
+   for traditional defs by defining YY_TRADITIONAL_FUNC_DEFS */
 
 #if __STDC__
 

@@ -1427,13 +1427,15 @@ and taking two floats as arguments.  Note that if you give arguments to
 the scanning routine using a K&R-style/non-prototyped function
 declaration, you must terminate the definition with a semi-colon (;).
 
-@code{flex} generates K&R-style function definitions by default. This is solely
-to support bootstrapping gcc on old systems. Worse, it prevents us from using
-any standard data types smaller than int (such as short, char, or bool) as
-function arguments. For this reason, future versions of @code{flex} may
-generate standard C99 code, leaving K&R-style functions to the historians.
-Currently, if you want C99 definitions, then you'll have to define
-@code{YY_NO_TRADITIONAL_FUNC_DEFS}.
+@code{flex} generates @samp{C99} function definitions by default. However flex
+does have the ability to generate obsolete, er, @samp{traditional}, function
+definitions. This is to support bootstrapping gcc on old systems.
+Unfortunately, traditional definitions prevent us from using any standard data
+types smaller than int (such as short, char, or bool) as function arguments.
+For this reason, future versions of @code{flex} may generate standard C99 code
+only, leaving K&R-style functions to the historians.  Currently, if you do
+@strong{not} want @samp{C99} definitions, then you must define
+@code{YY_TRADITIONAL_FUNC_DEFS}.
 
 @cindex stdin, default for yyin
 Whenever @code{yylex()} is called, it scans tokens from the global input
