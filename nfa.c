@@ -598,7 +598,7 @@ int sym;
 	{
 	if ( ++lastnfa >= current_mns )
 		{
-		if ( (current_mns += MNS_INCREMENT) >= MAXIMUM_MNS )
+		if ( (current_mns += MNS_INCREMENT) >= maximum_mns )
 			lerrif(
 		_( "input rules are too complicated (>= %d NFA states)" ),
 				current_mns );

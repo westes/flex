@@ -2171,7 +2171,7 @@ generated scanner for faster performance because the elements of
 the tables are better aligned for memory access and computation.  On some
 RISC architectures, fetching and manipulating longwords is more efficient
 than with smaller-sized units such as shortwords.  This option can
-double the size of the tables used by your scanner.
+quadruple the size of the tables used by your scanner.
 
 @item -Ce, --ecs
 directs @code{flex} to construct @dfn{equivalence classes}, i.e., sets

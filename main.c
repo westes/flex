@@ -71,7 +71,7 @@ char *prefix, *yyclass;
 int do_stdinit, use_stdout;
 int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
-int current_mns, current_max_rules;
+int maximum_mns, current_mns, current_max_rules;
 int num_rules, num_eof_rules, default_rule, lastnfa;
 int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 int *accptnum, *assoc_rule, *state_type;
@@ -1581,6 +1581,7 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 
 void set_up_initial_allocations()
 	{
+	maximum_mns = (long_align ? MAXIMUM_MNS_LONG : MAXIMUM_MNS);
 	current_mns = INITIAL_MNS;
 	firstst = allocate_integer_array( current_mns );
 	lastst = allocate_integer_array( current_mns );

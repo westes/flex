@@ -221,11 +221,12 @@
 
 /* Maximum number of NFA states. */
 #define MAXIMUM_MNS 31999
+#define MAXIMUM_MNS_LONG 1999999999
 
 /* Enough so that if it's subtracted from an NFA state number, the result
  * is guaranteed to be negative.
  */
-#define MARKER_DIFFERENCE (MAXIMUM_MNS+2)
+#define MARKER_DIFFERENCE (maximum_mns+2)
 
 /* Maximum number of nxt/chk pairs for non-templates. */
 #define INITIAL_MAX_XPAIRS 2000
@@ -444,6 +445,7 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
 
 
 /* Variables for nfa machine data:
+ * maximum_mns - maximal number of NFA states supported by tables
  * current_mns - current maximum on number of NFA states
  * num_rules - number of the last accepting state; also is number of
  * 	rules created so far
@@ -472,7 +474,7 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
  * rule_useful - true if we've determined that the rule can be matched
  */
 
-extern int current_mns, current_max_rules;
+extern int maximum_mns, current_mns, current_max_rules;
 extern int num_rules, num_eof_rules, default_rule, lastnfa;
 extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 extern int *accptnum, *assoc_rule, *state_type;
