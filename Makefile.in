@@ -130,9 +130,12 @@ sym.o: sym.c flexdef.h
 tblcmp.o: tblcmp.c flexdef.h
 yylex.o: yylex.c flexdef.h
 
-alloca.o: $(srcdir)/MISC/alloca.c
-	$(CC) $(CFLAGS) -o alloca.o -c -Dxmalloc=yy_flex_xmalloc \
-		$(srcdir)/MISC/alloca.c
+alloca.o: alloca.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -Dxmalloc=yy_flex_xmalloc alloca.c
+
+alloca.c: $(srcdir)/MISC/alloca.c
+	@rm -f alloca.c
+	cp $(srcdir)/MISC/alloca.c .
 
 test: check
 check: flex
@@ -202,7 +205,7 @@ mostlyclean:
 	rm -f *~ *.bak core errs scan.tmp
 
 clean: mostlyclean
-	rm -f parse.c parse.h *.o *.lint lex.yy.c $(FLEXLIB)
+	rm -f parse.c parse.h *.o alloca.c *.lint lex.yy.c $(FLEXLIB)
 
 distclean: clean
 	rm -f .bootstrap flex scan.c tags TAGS Makefile config.status
