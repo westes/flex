@@ -6,7 +6,7 @@
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant
  * to contract no. DE-AC03-76SF00098 between the United States
  * Department of Energy and the University of California.
@@ -52,7 +52,7 @@ void set_up_initial_allocations PROTO((void));
 int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int interactive, caseins, lex_compat, useecs, fulltbl, usemecs;
 int fullspd, gen_line_dirs, performance_report, backing_up_report;
-int C_plus_plus, long_align, use_read, yytext_is_array, csize;
+int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap, csize;
 int yymore_used, reject, real_reject, continued_action, in_rule;
 int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum, out_linenum;
@@ -66,8 +66,8 @@ char *prefix;
 int use_stdout;
 int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
-int current_mns, num_rules, num_eof_rules, default_rule;
-int current_max_rules, lastnfa;
+int current_mns, current_max_rules;
+int num_rules, num_eof_rules, default_rule, lastnfa;
 int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 int *accptnum, *assoc_rule, *state_type;
 int *rule_type, *rule_linenum, *rule_useful;
@@ -77,7 +77,8 @@ int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs, tecfwd[CSIZE + 1];
 int tecbck[CSIZE + 1];
-int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof;
+int lastsc, *scset, *scbol, *scxclu, *sceof;
+int current_max_scs;
 char **scname;
 int current_max_dfa_size, current_max_xpairs;
 int current_max_template_xpairs, current_max_dfas;
@@ -86,8 +87,8 @@ int *base, *def, *nultrans, NUL_ec, tblend, firstfree, **dss, *dfasiz;
 union dfaacc_union *dfaacc;
 int *accsiz, *dhash, numas;
 int numsnpairs, jambase, jamstate;
-int lastccl, current_maxccls, *cclmap, *ccllen, *cclng, cclreuse;
-int current_max_ccl_tbl_size;
+int lastccl, *cclmap, *ccllen, *cclng, cclreuse;
+int current_maxccls, current_max_ccl_tbl_size;
 Char *ccltbl;
 char nmstr[MAXLINE];
 int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
@@ -103,6 +104,10 @@ char *program_name;
 static char *outfile_template = "lex.%s.%s";
 #else
 static char *outfile_template = "lex%s.%s";
+#endif
+
+#ifdef MS_DOS
+extern unsigned _stklen = 16384;
 #endif
 
 static int outfile_created = 0;
@@ -263,6 +268,9 @@ void check_options()
 		GEN_PREFIX( "FlexLexer" );
 		GEN_PREFIX( "_create_buffer" );
 		GEN_PREFIX( "_delete_buffer" );
+		GEN_PREFIX( "_scan_buffer" );
+		GEN_PREFIX( "_scan_string" );
+		GEN_PREFIX( "_scan_bytes" );
 		GEN_PREFIX( "_flex_debug" );
 		GEN_PREFIX( "_init_buffer" );
 		GEN_PREFIX( "_load_buffer_state" );
@@ -527,7 +535,7 @@ char **argv;
 	yytext_is_array = in_rule = reject = false;
 	yymore_really_used = reject_really_used = unspecified;
 	interactive = csize = unspecified;
-	gen_line_dirs = usemecs = useecs = true;
+	do_yywrap = gen_line_dirs = usemecs = useecs = true;
 	performance_report = 0;
 	did_outfilename = 0;
 	prefix = "yy";
@@ -851,6 +859,9 @@ void readin()
 	if ( reject )
 		outn( "\n#define YY_USES_REJECT" );
 
+	if ( ! do_yywrap )
+		outn( "\n#define yywrap() 1" );
+
 	if ( ddebug )
 		outn( "\n#define FLEX_DEBUG" );
 
@@ -877,7 +888,12 @@ void readin()
 
 	if ( lex_compat )
 		{
+		outn( "#define YY_FLEX_LEX_COMPAT" );
+		outn( "#ifdef VMS" );
+		outn( "FILE *yyin = 0, *yyout = 0;" );
+		outn( "#else" );
 		outn( "FILE *yyin = stdin, *yyout = stdout;" );
+		outn( "#endif" );
 		outn( "extern int yylineno;" );
 		outn( "int yylineno = 1;" );
 		}
