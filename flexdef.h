@@ -58,26 +58,26 @@
 
 #ifndef __int8_t_defined
 # define __int8_t_defined
-typedef signed char		int8_t;
-typedef short int		int16_t;
-typedef int			int32_t;
+typedef signed char int8_t;
+typedef short int int16_t;
+typedef int int32_t;
+
 # if __WORDSIZE == 64
-typedef long int		int64_t;
+typedef long int int64_t;
 # else
-__extension__
-typedef long long int		int64_t;
+__extension__ typedef long long int int64_t;
 # endif
 #endif
 
 /* Unsigned.  */
-typedef unsigned char		uint8_t;
-typedef unsigned short int	uint16_t;
-typedef unsigned int		uint32_t;
+typedef unsigned char uint8_t;
+typedef unsigned short int uint16_t;
+typedef unsigned int uint32_t;
+
 #if __WORDSIZE == 64
-typedef unsigned long int	uint64_t;
+typedef unsigned long int uint64_t;
 #else
-__extension__
-typedef unsigned long long int	uint64_t;
+__extension__ typedef unsigned long long int uint64_t;
 #endif
 #endif /* ! HAVE_INTTYPES_H_WITH_UINTMAX */
 
@@ -436,7 +436,6 @@ typedef unsigned long long int	uint64_t;
  */
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
-
 	spprdflt;
 extern int interactive, caseins, lex_compat, posix_compat, do_yylineno;
 extern int useecs, fulltbl, usemecs, fullspd;
@@ -672,7 +671,6 @@ extern int current_max_dfa_size, current_max_xpairs;
 extern int current_max_template_xpairs, current_max_dfas;
 extern int lastdfa, *nxt, *chk, *tnxt;
 extern int *base, *def, *nultrans, NUL_ec, tblend, firstfree, **dss,
-
 	*dfasiz;
 extern union dfaacc_union {
 	int    *dfaacc_set;
