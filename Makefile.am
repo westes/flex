@@ -95,7 +95,7 @@ EXTRA_DIST = \
 	NEWS \
 	ONEWS \
 	README \
-	README.cvs-snapshot
+	README.cvs-snapshot \
 	RoadMap \
 	THANKS \
 	TODO \
