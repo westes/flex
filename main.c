@@ -405,6 +405,9 @@ void check_options ()
 			GEN_PREFIX ("_flush_buffer");
 			GEN_PREFIX ("_load_buffer_state");
 			GEN_PREFIX ("_switch_to_buffer");
+			GEN_PREFIX ("push_buffer_state");
+			GEN_PREFIX ("pop_buffer_state");
+			GEN_PREFIX ("ensure_buffer_stack");
 			GEN_PREFIX ("lex");
 			GEN_PREFIX ("restart");
 			GEN_PREFIX ("lex_init");
@@ -753,6 +756,9 @@ void flexend (exit_status)
                 "yy_set_bol",
                 "yy_set_interactive",
                 "yy_switch_to_buffer",
+				"yypush_buffer_state",
+				"yypop_buffer_state",
+				"yyensure_buffer_stack",
                 "yyalloc",
                 "yyconst",
                 "yyextra",

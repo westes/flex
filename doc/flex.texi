@@ -1928,12 +1928,14 @@ using:
 @deftypefun void yy_switch_to_buffer ( YY_BUFFER_STATE new_buffer )
 @end deftypefun
 
-The above switches the scanner's input buffer so subsequent tokens will
-come from @code{new_buffer}.  Note that @code{yy_switch_to_buffer()} may
-be used by @code{yywrap()} to set things up for continued scanning,
-instead of opening a new file and pointing @file{yyin} at it.  Note also
-that switching input sources via either @code{yy_switch_to_buffer()} or
-@code{yywrap()} does @emph{not} change the start condition.
+The above function switches the scanner's input buffer so subsequent tokens
+will come from @code{new_buffer}.  Note that @code{yy_switch_to_buffer()} may
+be used by @code{yywrap()} to set things up for continued scanning, instead of
+opening a new file and pointing @file{yyin} at it. If you are looking for a
+stack of input buffers, then you want to use @code{yypush_buffer_state()}
+instead of this function. Note also that switching input sources via either
+@code{yy_switch_to_buffer()} or @code{yywrap()} does @emph{not} change the
+start condition.
 
 @cindex memory, deleting input buffers
 @deftypefun void yy_delete_buffer ( YY_BUFFER_STATE buffer )
@@ -1942,6 +1944,26 @@ that switching input sources via either @code{yy_switch_to_buffer()} or
 is used to reclaim the storage associated with a buffer.  (@code{buffer}
 can be NULL, in which case the routine does nothing.)  You can also clear
 the current contents of a buffer using:
+
+@cindex pushing an input buffer
+@cindex stack, input buffer push
+@deftypefun void yypush_buffer_state ( YY_BUFFER_STATE buffer )
+@end deftypefun
+
+This function pushes the new buffer state onto an internal stack. The pushed
+state becomes the new current state. The stack is maintained by flex and will
+grow as required. This function is intended to be used instead of
+@code{yy_switch_to_buffer}, when you want to change states, but preserve the
+current state for later use. 
+
+@cindex popping an input buffer
+@cindex stack, input buffer pop
+@deftypefun void yypop_buffer_state ( )
+@end deftypefun
+
+This function removes the current state from the top of the stack, and deletes
+it by calling @code{yy_delete_buffer}.  The next state on the stack, if any,
+becomes the new current state.
 
 @cindex clearing an input buffer
 @cindex flushing an input buffer
@@ -1960,15 +1982,57 @@ is an alias for @code{yy_create_buffer()},
 provided for compatibility with the C++ use of @code{new} and
 @code{delete} for creating and destroying dynamic objects.
 
-@cindex YY_CURRENT_BUFFER, and multiple buffers
-Finally, the macro @code{YY_CURRENT_BUFFER} macro returns a
-@code{YY_BUFFER_STATE} handle to the current buffer.
+@cindex YY_CURRENT_BUFFER, and multiple buffers Finally, the macro
+@code{YY_CURRENT_BUFFER} macro returns a @code{YY_BUFFER_STATE} handle to the
+current buffer. It should not be used as an lvalue.
 
 @cindex EOF, example using multiple input buffers
-Here is an example of using these features for writing a scanner
+Here are two examples of using these features for writing a scanner
 which expands include files (the
 @code{<<EOF>>}
-feature is discussed below):
+feature is discussed below).
+
+This first example uses yypush_buffer_state and yypop_buffer_state. Flex
+maintains the stack internally.
+
+@cindex handling include files with multiple input buffers
+@example
+@verbatim
+    /* the "incl" state is used for picking up the name
+     * of an include file
+     */
+    %x incl
+    %%
+    include             BEGIN(incl);
+
+    [a-z]+              ECHO;
+    [^a-z\n]*\n?        ECHO;
+
+    <incl>[ \t]*      /* eat the whitespace */
+    <incl>[^ \t\n]+   { /* got the include file name */
+            yyin = fopen( yytext, "r" );
+
+            if ( ! yyin )
+                error( ... );
+
+			yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
+
+            BEGIN(INITIAL);
+            }
+
+    <<EOF>> {
+			yypop_buffer_state();
+
+            if ( !YY_CURRENT_BUFFER )
+                {
+                yyterminate();
+                }
+            }
+@end verbatim
+@end example
+
+The second example, below, does the same thing as the previous example did, but
+manages its own input buffer stack manually (instead of letting flex do it).
 
 @cindex handling include files with multiple input buffers
 @example
@@ -5882,7 +5946,7 @@ you might try this:
 @example
 @verbatim
 /* For non-reentrant C scanner only. */
-yy_delete_buffer(yy_current_buffer);
+yy_delete_buffer(YY_CURRENT_BUFFER);
 yy_init = 1;
 @end verbatim
 @end example
@@ -5898,7 +5962,7 @@ situation. It is possible that some other globals may need resetting as well.
 >   We thought that it would be possible to have this number through the
 >   evaluation of the following expression:
 >
->   seek_position = (no_buffers)*YY_READ_BUF_SIZE + yy_c_buf_p - yy_current_buffer->yy_ch_buf
+>   seek_position = (no_buffers)*YY_READ_BUF_SIZE + yy_c_buf_p - YY_CURRENT_BUFFER->yy_ch_buf
 @end verbatim
 @end example
 
@@ -5909,7 +5973,7 @@ even though @code{YY_READ_BUF_SIZE} bytes were requested).  The second problem
 is that when refilling its internal buffer, @code{flex} keeps some characters
 from the previous buffer (because usually it's in the middle of a match,
 and needs those characters to construct @code{yytext} for the match once it's
-done).  Because of this, @code{yy_c_buf_p - yy_current_buffer->yy_ch_buf} won't
+done).  Because of this, @code{yy_c_buf_p - YY_CURRENT_BUFFER->yy_ch_buf} won't
 be exactly the number of characters already read from the current buffer.
 
 An alternative solution is to count the number of characters you've matched
@@ -6267,7 +6331,7 @@ Date: Wed, 13 Nov 1996 19:51:54 PST
 From: Vern Paxson <vern>
 
 > "unput()" them to input flow, question occurs. If I do this after I scan
-> a carriage, the variable "yy_current_buffer->yy_at_bol" is changed. That
+> a carriage, the variable "YY_CURRENT_BUFFER->yy_at_bol" is changed. That
 > means the carriage flag has gone.
 
 You can control this by calling yy_set_bol().  It's described in the manual.

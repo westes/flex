@@ -1898,7 +1898,7 @@ void make_tables ()
 		}
 
 		else {
-			outn ("\tif ( YY_G(yy_current_buffer)->yy_is_interactive ) \\");
+			outn ("\tif ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \\");
 			outn ("\t\t{ \\");
 			outn ("\t\tint c = '*'; \\");
 			outn ("\t\tsize_t n; \\");
@@ -1935,7 +1935,7 @@ void make_tables ()
 	if (bol_needed) {
 		indent_puts ("if ( yyleng > 0 ) \\");
 		indent_up ();
-		indent_puts ("YY_G(yy_current_buffer)->yy_at_bol = \\");
+		indent_puts ("YY_CURRENT_BUFFER_LVALUE->yy_at_bol = \\");
 		indent_puts ("\t\t(yytext[yyleng - 1] == '\\n'); \\");
 		indent_down ();
 	}
@@ -2149,10 +2149,10 @@ void make_tables ()
 	/* Update BOL and yylineno inside of input(). */
 	if (bol_needed) {
 		indent_puts
-			("YY_G(yy_current_buffer)->yy_at_bol = (c == '\\n');");
+			("YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\\n');");
 		if (do_yylineno) {
 			indent_puts
-				("if ( YY_G(yy_current_buffer)->yy_at_bol )");
+				("if ( YY_CURRENT_BUFFER_LVALUE->yy_at_bol )");
 			indent_up ();
 			indent_puts ("++yylineno;");
 			indent_down ();
