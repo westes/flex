@@ -60,7 +60,7 @@ int state[];
 		if ( backing_up_report )
 			{
 			fprintf( backing_up_file,
-				"State #%d is non-accepting -\n", ds );
+				_( "State #%d is non-accepting -\n" ), ds );
 
 			/* identify the state */
 			dump_associated_rules( backing_up_file, ds );
@@ -127,7 +127,7 @@ int nacc;
 				if ( accset[j] & YY_TRAILING_HEAD_MASK )
 					{
 					line_warning(
-						"dangerous trailing context",
+					_( "dangerous trailing context" ),
 						rule_linenum[ar] );
 					return;
 					}
@@ -170,7 +170,7 @@ int ds;
 
 	bubble( rule_set, num_associated_rules );
 
-	fprintf( file, " associated rule line numbers:" );
+	fprintf( file, _( " associated rule line numbers:" ) );
 
 	for ( i = 1; i <= num_associated_rules; ++i )
 		{
@@ -208,7 +208,7 @@ int state[];
 		out_char_set[i] = state[ec];
 		}
 
-	fprintf( file, " out-transitions: " );
+	fprintf( file, _( " out-transitions: " ) );
 
 	list_character_set( file, out_char_set );
 
@@ -216,7 +216,7 @@ int state[];
 	for ( i = 0; i < csize; ++i )
 		out_char_set[i] = ! out_char_set[i];
 
-	fprintf( file, "\n jam-transitions: EOF " );
+	fprintf( file, _( "\n jam-transitions: EOF " ) );
 
 	list_character_set( file, out_char_set );
 
@@ -352,7 +352,8 @@ ADD_STATE(state) \
 		if ( IS_MARKED(stk[stkpos]) )
 			UNMARK_STATE(stk[stkpos])
 		else
-			flexfatal( "consistency check failed in epsclosure()" );
+			flexfatal(
+			_( "consistency check failed in epsclosure()" ) );
 		}
 
 	*ns_addr = numstates;
@@ -435,7 +436,7 @@ void ntod()
 	if ( trace )
 		{
 		dumpnfa( scset[1] );
-		fputs( "\n\nDFA Dump:\n\n", stderr );
+		fputs( _( "\n\nDFA Dump:\n\n" ), stderr );
 		}
 
 	inittbl();
@@ -582,7 +583,7 @@ void ntod()
 		{
 		if ( ! snstods( nset, 0, accset, 0, 0, &end_of_buffer_state ) )
 			flexfatal(
-				"could not create unique end-of-buffer state" );
+			_( "could not create unique end-of-buffer state" ) );
 
 		++numas;
 		++num_start_states;
@@ -603,7 +604,7 @@ void ntod()
 		dsize = dfasiz[ds];
 
 		if ( trace )
-			fprintf( stderr, "state # %d:\n", ds );
+			fprintf( stderr, _( "state # %d:\n" ), ds );
 
 		sympartition( dset, dsize, symlist, duplist );
 
@@ -987,7 +988,8 @@ int ds[], dsize, transsym, nset[];
 			}
 
 		else if ( sym >= 'A' && sym <= 'Z' && caseins )
-			flexfatal( "consistency check failed in symfollowset" );
+			flexfatal(
+			_( "consistency check failed in symfollowset" ) );
 
 		else if ( sym == SYM_EPSILON )
 			{ /* do nothing */
@@ -1040,7 +1042,7 @@ int symlist[], duplist[];
 			if ( tch < -lastccl || tch >= csize )
 				{
 				flexfatal(
-			"bad transition character detected in sympartition()" );
+		_( "bad transition character detected in sympartition()" ) );
 				}
 
 			if ( tch >= 0 )

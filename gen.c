@@ -245,7 +245,7 @@ void genecs()
 
 	if ( trace )
 		{
-		fputs( "\n\nEquivalence Classes:\n\n", stderr );
+		fputs( _( "\n\nEquivalence Classes:\n\n" ), stderr );
 
 		numrows = csize / 8;
 
@@ -423,7 +423,7 @@ void genftbl()
 		mkdata( anum );
 
 		if ( trace && anum )
-			fprintf( stderr, "state # %d accepts: [%d]\n",
+			fprintf( stderr, _( "state # %d accepts: [%d]\n" ),
 				i, anum );
 		}
 
@@ -815,7 +815,8 @@ void gentabs()
 
 				if ( trace )
 					fprintf( stderr,
-						"state # %d accepts: ", i );
+						_( "state # %d accepts: " ),
+						i );
 
 				for ( k = 1; k <= nacc; ++k )
 					{
@@ -893,7 +894,7 @@ void gentabs()
 		mkdata( acc_array[i] );
 
 		if ( ! reject && trace && acc_array[i] )
-			fprintf( stderr, "state # %d accepts: [%d]\n",
+			fprintf( stderr, _( "state # %d accepts: [%d]\n" ),
 				i, acc_array[i] );
 		}
 
@@ -916,7 +917,8 @@ void gentabs()
 		 */
 
 		if ( trace )
-			fputs( "\n\nMeta-Equivalence Classes:\n", stderr );
+			fputs( _( "\n\nMeta-Equivalence Classes:\n" ),
+			      stderr );
 
 		out_str_dec( C_int_decl, "yy_meta", numecs + 1 );
 

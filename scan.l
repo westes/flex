@@ -133,7 +133,7 @@ LEXOPT		[aceknopr]
 	^"%"{LEXOPT}{OPTWS}[[:digit:]]*{OPTWS}{NL}	++linenum; /* ignore */
 	^"%"{LEXOPT}{WS}.*{NL}	++linenum;	/* ignore */
 
-	^"%"[^sxaceknopr{}].*	synerr( "unrecognized '%' directive" );
+	^"%"[^sxaceknopr{}].*	synerr( _( "unrecognized '%' directive" ) );
 
 	^{NAME}		{
 			strcpy( nmstr, yytext );
@@ -200,7 +200,7 @@ LEXOPT		[aceknopr]
 
 	{NL}		{
 			if ( ! didadef )
-				synerr( "incomplete name definition" );
+				synerr( _( "incomplete name definition" ) );
 			BEGIN(INITIAL);
 			++linenum;
 			}
@@ -281,7 +281,8 @@ LEXOPT		[aceknopr]
 			}
 
 	(([a-mo-z]|n[a-np-z])[[:alpha:]\-+]*)|.	{
-			format_synerr( "unrecognized %%option: %s", yytext );
+			format_synerr( _( "unrecognized %%option: %s" ),
+				yytext );
 			BEGIN(RECOVER);
 			}
 }
@@ -406,7 +407,7 @@ LEXOPT		[aceknopr]
 			if ( (cclval = ccllookup( (Char *) nmstr )) != 0 )
 				{
 				if ( input() != ']' )
-					synerr( "bad character class" );
+					synerr( _( "bad character class" ) );
 
 				yylval = cclval;
 				++cclreuse;
@@ -437,7 +438,8 @@ LEXOPT		[aceknopr]
 			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */
 
 			if ( (nmdefptr = ndlookup( nmstr )) == 0 )
-				format_synerr( "undefined definition {%s}",
+				format_synerr(
+					_( "undefined definition {%s}" ),
 						nmstr );
 
 			else
@@ -472,7 +474,10 @@ LEXOPT		[aceknopr]
 	">"		BEGIN(SECT2); return '>';
 	">"/^		BEGIN(CARETISBOL); return '>';
 	{SCNAME}	RETURNNAME;
-	.		format_synerr( "bad <start condition>: %s", yytext );
+	.		{
+			format_synerr( _( "bad <start condition>: %s" ),
+				yytext );
+			}
 }
 
 <CARETISBOL>"^"		BEGIN(SECT2); return '^';
@@ -483,7 +488,7 @@ LEXOPT		[aceknopr]
 	\"		BEGIN(SECT2); return '"';
 
 	{NL}		{
-			synerr( "missing quote" );
+			synerr( _( "missing quote" ) );
 			BEGIN(SECT2);
 			++linenum;
 			return '"';
@@ -502,7 +507,7 @@ LEXOPT		[aceknopr]
 	[^\]\n]		RETURNCHAR;
 	"]"		BEGIN(SECT2); return ']';
 	.|{NL}		{
-			synerr( "bad character class" );
+			synerr( _( "bad character class" ) );
 			BEGIN(SECT2);
 			return ']';
 			}
@@ -522,7 +527,8 @@ LEXOPT		[aceknopr]
 	"[:upper:]"	BEGIN(CCL); return CCE_UPPER;
 	"[:xdigit:]"	BEGIN(CCL); return CCE_XDIGIT;
 	{CCL_EXPR}	{
-			format_synerr( "bad character class expression: %s",
+			format_synerr(
+				_( "bad character class expression: %s" ),
 					yytext );
 			BEGIN(CCL); return CCE_ALNUM;
 			}
@@ -538,13 +544,13 @@ LEXOPT		[aceknopr]
 	"}"		BEGIN(SECT2); return '}';
 
 	.		{
-			synerr( "bad character inside {}'s" );
+			synerr( _( "bad character inside {}'s" ) );
 			BEGIN(SECT2);
 			return '}';
 			}
 
 	{NL}		{
-			synerr( "missing }" );
+			synerr( _( "missing }" ) );
 			BEGIN(SECT2);
 			++linenum;
 			return '}';
@@ -617,7 +623,7 @@ LEXOPT		[aceknopr]
 }
 
 <COMMENT,ACTION,ACTION_STRING><<EOF>>	{
-			synerr( "EOF encountered inside an action" );
+			synerr( _( "EOF encountered inside an action" ) );
 			yyterminate();
 			}
 
@@ -637,7 +643,7 @@ LEXOPT		[aceknopr]
 	<<EOF>>		sectnum = 0; yyterminate();
 }
 
-<*>.|\n			format_synerr( "bad character: %s", yytext );
+<*>.|\n			format_synerr( _( "bad character: %s" ), yytext );
 
 %%
 
@@ -666,7 +672,7 @@ char *file;
 		yyin = fopen( infilename, "r" );
 
 		if ( yyin == NULL )
-			lerrsf( "can't open %s", file );
+			lerrsf( _( "can't open %s" ), file );
 		}
 
 	else

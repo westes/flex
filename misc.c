@@ -46,7 +46,7 @@ int value;
 
 	if ( strlen( defname ) > MAXLINE / 2 )
 		{
-		format_pinpoint_message( "name \"%s\" ridiculously long", 
+		format_pinpoint_message( _( "name \"%s\" ridiculously long" ), 
 			defname );
 		return;
 		}
@@ -94,7 +94,8 @@ size_t element_size;
 
 	mem = flex_alloc( num_bytes );
 	if ( ! mem )
-		flexfatal( "memory allocation failed in allocate_array()" );
+		flexfatal(
+			_( "memory allocation failed in allocate_array()" ) );
 
 	return mem;
 	}
@@ -172,11 +173,12 @@ void check_char( c )
 int c;
 	{
 	if ( c >= CSIZE )
-		lerrsf( "bad character '%s' detected in check_char()",
+		lerrsf( _( "bad character '%s' detected in check_char()" ),
 			readable_form( c ) );
 
 	if ( c >= csize )
-		lerrsf( "scanner requires -8 flag to use the character %s",
+		lerrsf(
+		_( "scanner requires -8 flag to use the character %s" ),
 			readable_form( c ) );
 	}
 
@@ -209,7 +211,7 @@ register const char *str;
 	copy = (char *) flex_alloc( size );
 
 	if ( copy == NULL )
-		flexfatal( "dynamic memory failure in copy_string()" );
+		flexfatal( _( "dynamic memory failure in copy_string()" ) );
 
 	for ( c2 = copy; (*c2++ = *str++) != 0; )
 		;
@@ -341,7 +343,8 @@ const char msg[];
 void flexfatal( msg )
 const char msg[];
 	{
-	fprintf( stderr, "%s: fatal internal error, %s\n", program_name, msg );
+	fprintf( stderr, _( "%s: fatal internal error, %s\n" ),
+		program_name, msg );
 	exit( 1 );
 	}
 
@@ -383,7 +386,7 @@ const char msg[], arg[];
 	}
 
 
-/* line_directive_out - spit out a "# line" statement */
+/* line_directive_out - spit out a "#line" statement */
 
 void line_directive_out( output_file, do_infile )
 FILE *output_file;
@@ -768,7 +771,7 @@ size_t element_size;
 
 	new_array = flex_realloc( array, num_bytes );
 	if ( ! new_array )
-		flexfatal( "attempt to increase array size failed" );
+		flexfatal( _( "attempt to increase array size failed" ) );
 
 	return new_array;
 	}
@@ -814,7 +817,7 @@ void skelout()
 
 				default:
 					flexfatal(
-						"bad line in skeleton file" );
+					_( "bad line in skeleton file" ) );
 				}
 			}
 
@@ -866,7 +869,8 @@ int size;
 	void *result = flex_alloc( (size_t) size );
 
 	if ( ! result  )
-		flexfatal( "memory allocation failed in yy_flex_xmalloc()" );
+		flexfatal(
+			_( "memory allocation failed in yy_flex_xmalloc()" ) );
 
 	return result;
 	}

@@ -150,11 +150,12 @@ char **argv;
 
 	for ( i = 1; i <= num_rules; ++i )
 		if ( ! rule_useful[i] && i != default_rule )
-			line_warning( "rule cannot be matched",
+			line_warning( _( "rule cannot be matched" ),
 					rule_linenum[i] );
 
 	if ( spprdflt && ! reject && rule_useful[default_rule] )
-		line_warning( "-s option given but default rule can be matched",
+		line_warning(
+			_( "-s option given but default rule can be matched" ),
 			rule_linenum[default_rule] );
 
 	/* Generate the C state transition tables from the DFA. */
@@ -178,10 +179,10 @@ void check_options()
 	if ( lex_compat )
 		{
 		if ( C_plus_plus )
-			flexerror( "Can't use -+ with -l option" );
+			flexerror( _( "Can't use -+ with -l option" ) );
 
 		if ( fulltbl || fullspd )
-			flexerror( "Can't use -f or -F with -l option" );
+			flexerror( _( "Can't use -f or -F with -l option" ) );
 
 		/* Don't rely on detecting use of yymore() and REJECT,
 		 * just assume they'll be used.
@@ -209,20 +210,20 @@ void check_options()
 		}
 
 	if ( (fulltbl || fullspd) && usemecs )
-		flexerror( "-Cf/-CF and -Cm don't make sense together" );
+		flexerror( _( "-Cf/-CF and -Cm don't make sense together" ) );
 
 	if ( (fulltbl || fullspd) && interactive )
-		flexerror( "-Cf/-CF and -I are incompatible" );
+		flexerror( _( "-Cf/-CF and -I are incompatible" ) );
 
 	if ( fulltbl && fullspd )
-		flexerror( "-Cf and -CF are mutually exclusive" );
+		flexerror( _( "-Cf and -CF are mutually exclusive" ) );
 
 	if ( C_plus_plus && fullspd )
-		flexerror( "Can't use -+ with -CF option" );
+		flexerror( _( "Can't use -+ with -CF option" ) );
 
 	if ( C_plus_plus && yytext_is_array )
 		{
-		warn( "%array incompatible with -+ option" );
+		warn( _( "%array incompatible with -+ option" ) );
 		yytext_is_array = false;
 		}
 
@@ -275,13 +276,13 @@ void check_options()
 		prev_stdout = freopen( outfilename, "w", stdout );
 
 		if ( prev_stdout == NULL )
-			lerrsf( "could not create %s", outfilename );
+			lerrsf( _( "could not create %s" ), outfilename );
 
 		outfile_created = 1;
 		}
 
 	if ( skelname && (skelfile = fopen( skelname, "r" )) == NULL )
-		lerrsf( "can't open skeleton file %s", skelname );
+		lerrsf( _( "can't open skeleton file %s" ), skelname );
 
 	if ( strcmp( prefix, "yy" ) )
 		{
@@ -338,50 +339,56 @@ int exit_status;
 	if ( skelfile != NULL )
 		{
 		if ( ferror( skelfile ) )
-			lerrsf( "input error reading skeleton file %s",
+			lerrsf( _( "input error reading skeleton file %s" ),
 				skelname );
 
 		else if ( fclose( skelfile ) )
-			lerrsf( "error closing skeleton file %s", skelname );
+			lerrsf( _( "error closing skeleton file %s" ),
+				skelname );
 		}
 
 	if ( exit_status != 0 && outfile_created )
 		{
 		if ( ferror( stdout ) )
-			lerrsf( "error writing output file %s", outfilename );
+			lerrsf( _( "error writing output file %s" ),
+				outfilename );
 
 		else if ( fclose( stdout ) )
-			lerrsf( "error closing output file %s", outfilename );
+			lerrsf( _( "error closing output file %s" ),
+				outfilename );
 
 		else if ( unlink( outfilename ) )
-			lerrsf( "error deleting output file %s", outfilename );
+			lerrsf( _( "error deleting output file %s" ),
+				outfilename );
 		}
 
 	if ( backing_up_report && backing_up_file )
 		{
 		if ( num_backing_up == 0 )
-			fprintf( backing_up_file, "No backing up.\n" );
+			fprintf( backing_up_file, _( "No backing up.\n" ) );
 		else if ( fullspd || fulltbl )
 			fprintf( backing_up_file,
-				"%d backing up (non-accepting) states.\n",
+				_( "%d backing up (non-accepting) states.\n" ),
 				num_backing_up );
 		else
 			fprintf( backing_up_file,
-				"Compressed tables always back up.\n" );
+				_( "Compressed tables always back up.\n" ) );
 
 		if ( ferror( backing_up_file ) )
-			lerrsf( "error writing backup file %s", backing_name );
+			lerrsf( _( "error writing backup file %s" ),
+				backing_name );
 
 		else if ( fclose( backing_up_file ) )
-			lerrsf( "error closing backup file %s", backing_name );
+			lerrsf( _( "error closing backup file %s" ),
+				backing_name );
 		}
 
 	if ( printstats )
 		{
-		fprintf( stderr, "%s version %s usage statistics:\n",
+		fprintf( stderr, _( "%s version %s usage statistics:\n" ),
 			program_name, flex_version );
 
-		fprintf( stderr, "  scanner options: -" );
+		fprintf( stderr, _( "  scanner options: -" ) );
 
 		if ( C_plus_plus )
 			putc( '+', stderr );
@@ -452,68 +459,74 @@ int exit_status;
 
 		putc( '\n', stderr );
 
-		fprintf( stderr, "  %d/%d NFA states\n", lastnfa, current_mns );
-		fprintf( stderr, "  %d/%d DFA states (%d words)\n", lastdfa,
-			current_max_dfas, totnst );
-		fprintf( stderr, "  %d rules\n",
+		fprintf( stderr, _( "  %d/%d NFA states\n" ),
+			lastnfa, current_mns );
+		fprintf( stderr, _( "  %d/%d DFA states (%d words)\n" ),
+			lastdfa, current_max_dfas, totnst );
+		fprintf( stderr, _( "  %d rules\n" ),
 		num_rules + num_eof_rules - 1 /* - 1 for def. rule */ );
 
 		if ( num_backing_up == 0 )
-			fprintf( stderr, "  No backing up\n" );
+			fprintf( stderr, _( "  No backing up\n" ) );
 		else if ( fullspd || fulltbl )
 			fprintf( stderr,
-				"  %d backing-up (non-accepting) states\n",
+			_( "  %d backing-up (non-accepting) states\n" ),
 				num_backing_up );
 		else
 			fprintf( stderr,
-				"  Compressed tables always back-up\n" );
+				_( "  Compressed tables always back-up\n" ) );
 
 		if ( bol_needed )
 			fprintf( stderr,
-				"  Beginning-of-line patterns used\n" );
+				_( "  Beginning-of-line patterns used\n" ) );
 
-		fprintf( stderr, "  %d/%d start conditions\n", lastsc,
+		fprintf( stderr, _( "  %d/%d start conditions\n" ), lastsc,
 			current_max_scs );
 		fprintf( stderr,
-			"  %d epsilon states, %d double epsilon states\n",
+			_( "  %d epsilon states, %d double epsilon states\n" ),
 			numeps, eps2 );
 
 		if ( lastccl == 0 )
-			fprintf( stderr, "  no character classes\n" );
+			fprintf( stderr, _( "  no character classes\n" ) );
 		else
 			fprintf( stderr,
-	"  %d/%d character classes needed %d/%d words of storage, %d reused\n",
+_( "  %d/%d character classes needed %d/%d words of storage, %d reused\n" ),
 				lastccl, current_maxccls,
 				cclmap[lastccl] + ccllen[lastccl],
 				current_max_ccl_tbl_size, cclreuse );
 
-		fprintf( stderr, "  %d state/nextstate pairs created\n",
+		fprintf( stderr, _( "  %d state/nextstate pairs created\n" ),
 			numsnpairs );
-		fprintf( stderr, "  %d/%d unique/duplicate transitions\n",
+		fprintf( stderr, _( "  %d/%d unique/duplicate transitions\n" ),
 			numuniq, numdup );
 
 		if ( fulltbl )
 			{
 			tblsiz = lastdfa * numecs;
-			fprintf( stderr, "  %d table entries\n", tblsiz );
+			fprintf( stderr, _( "  %d table entries\n" ), tblsiz );
 			}
 
 		else
 			{
 			tblsiz = 2 * (lastdfa + numtemps) + 2 * tblend;
 
-			fprintf( stderr, "  %d/%d base-def entries created\n",
+			fprintf( stderr,
+				_( "  %d/%d base-def entries created\n" ),
 				lastdfa + numtemps, current_max_dfas );
 			fprintf( stderr,
-				"  %d/%d (peak %d) nxt-chk entries created\n",
+			_( "  %d/%d (peak %d) nxt-chk entries created\n" ),
 				tblend, current_max_xpairs, peakpairs );
 			fprintf( stderr,
-			"  %d/%d (peak %d) template nxt-chk entries created\n",
-				numtemps * nummecs, current_max_template_xpairs,
+		_( "  %d/%d (peak %d) template nxt-chk entries created\n" ),
+				numtemps * nummecs,
+				current_max_template_xpairs,
 				numtemps * numecs );
-			fprintf( stderr, "  %d empty table entries\n", nummt );
-			fprintf( stderr, "  %d protos created\n", numprots );
-			fprintf( stderr, "  %d templates created, %d uses\n",
+			fprintf( stderr, _( "  %d empty table entries\n" ),
+				nummt );
+			fprintf( stderr, _( "  %d protos created\n" ),
+				numprots );
+			fprintf( stderr,
+				_( "  %d templates created, %d uses\n" ),
 				numtemps, tmpuses );
 			}
 
@@ -521,7 +534,7 @@ int exit_status;
 			{
 			tblsiz = tblsiz + csize;
 			fprintf( stderr,
-				"  %d/%d equivalence classes created\n",
+				_( "  %d/%d equivalence classes created\n" ),
 				numecs, csize );
 			}
 
@@ -529,16 +542,17 @@ int exit_status;
 			{
 			tblsiz = tblsiz + numecs;
 			fprintf( stderr,
-				"  %d/%d meta-equivalence classes created\n",
+			_( "  %d/%d meta-equivalence classes created\n" ),
 				nummecs, csize );
 			}
 
 		fprintf( stderr,
-			"  %d (%d saved) hash collisions, %d DFAs equal\n",
+		_( "  %d (%d saved) hash collisions, %d DFAs equal\n" ),
 			hshcol, hshsave, dfaeql );
-		fprintf( stderr, "  %d sets of reallocations needed\n",
+		fprintf( stderr, _( "  %d sets of reallocations needed\n" ),
 			num_reallocs );
-		fprintf( stderr, "  %d total table entries needed\n", tblsiz );
+		fprintf( stderr, _( "  %d total table entries needed\n" ),
+			tblsiz );
 		}
 
 #ifndef VMS
@@ -622,7 +636,7 @@ char **argv;
 				case 'C':
 					if ( i != 1 )
 						flexerror(
-					"-C flag must be given separately" );
+				_( "-C flag must be given separately" ) );
 
 					if ( ! sawcmpflag )
 						{
@@ -662,7 +676,7 @@ char **argv;
 
 							default:
 								lerrif(
-						"unknown -C option '%c'",
+						_( "unknown -C option '%c'" ),
 								(int) arg[i] );
 								break;
 							}
@@ -713,7 +727,7 @@ char **argv;
 				case 'o':
 					if ( i != 1 )
 						flexerror(
-					"-o flag must be given separately" );
+				_( "-o flag must be given separately" ) );
 
 					outfilename = arg + i + 1;
 					did_outfilename = 1;
@@ -722,7 +736,7 @@ char **argv;
 				case 'P':
 					if ( i != 1 )
 						flexerror(
-					"-P flag must be given separately" );
+				_( "-P flag must be given separately" ) );
 
 					prefix = arg + i + 1;
 					goto get_next_arg;
@@ -734,7 +748,7 @@ char **argv;
 				case 'S':
 					if ( i != 1 )
 						flexerror(
-					"-S flag must be given separately" );
+				_( "-S flag must be given separately" ) );
 
 					skelname = arg + i + 1;
 					goto get_next_arg;
@@ -756,7 +770,7 @@ char **argv;
 					break;
 
 				case 'V':
-					printf( "%s version %s\n",
+					printf( _( "%s version %s\n" ),
 						program_name, flex_version );
 					exit( 0 );
 
@@ -774,7 +788,7 @@ char **argv;
 
 				default:
 					fprintf( stderr,
-		"%s: unknown flag '%c'.  For usage, try\n\t%s --help\n",
+		_( "%s: unknown flag '%c'.  For usage, try\n\t%s --help\n" ),
 						program_name, (int) arg[i],
 						program_name );
 					exit( 1 );
@@ -822,7 +836,7 @@ void readin()
 
 	if ( yyparse() )
 		{
-		pinpoint_message( "fatal parse error" );
+		pinpoint_message( _( "fatal parse error" ) );
 		flexend( 1 );
 		}
 
@@ -833,7 +847,8 @@ void readin()
 		{
 		backing_up_file = fopen( backing_name, "w" );
 		if ( backing_up_file == NULL )
-			lerrsf( "could not create backing-up info file %s",
+			lerrsf(
+			_( "could not create backing-up info file %s" ),
 				backing_name );
 		}
 
@@ -855,29 +870,29 @@ void readin()
 		if ( lex_compat )
 			{
 			fprintf( stderr,
-"-l AT&T lex compatibility option entails a large performance penalty\n" );
+_( "-l AT&T lex compatibility option entails a large performance penalty\n" ) );
 			fprintf( stderr,
-" and may be the actual source of other reported performance penalties\n" );
+_( " and may be the actual source of other reported performance penalties\n" ) );
 			}
 
 		if ( performance_report > 1 )
 			{
 			if ( interactive )
 				fprintf( stderr,
-		"-I (interactive) entails a minor performance penalty\n" );
+	_( "-I (interactive) entails a minor performance penalty\n" ) );
 
 			if ( yymore_used )
 				fprintf( stderr,
-			"yymore() entails a minor performance penalty\n" );
+		_( "yymore() entails a minor performance penalty\n" ) );
 			}
 
 		if ( reject )
 			fprintf( stderr,
-			"REJECT entails a large performance penalty\n" );
+			_( "REJECT entails a large performance penalty\n" ) );
 
 		if ( variable_trailing_context_rules )
 			fprintf( stderr,
-"Variable trailing context rules entail a large performance penalty\n" );
+_( "Variable trailing context rules entail a large performance penalty\n" ) );
 		}
 
 	if ( reject )
@@ -889,10 +904,11 @@ void readin()
 	if ( (fulltbl || fullspd) && reject )
 		{
 		if ( real_reject )
-			flexerror( "REJECT cannot be used with -f or -F" );
+			flexerror(
+				_( "REJECT cannot be used with -f or -F" ) );
 		else
 			flexerror(
-	"variable trailing context rules cannot be used with -f or -F" );
+	_( "variable trailing context rules cannot be used with -f or -F" ) );
 		}
 
 	if ( reject )
@@ -1041,22 +1057,22 @@ void usage()
 	FILE *f = stdout;
 
 	fprintf( f,
-"%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n",
+_( "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n" ),
 		program_name );
-	fprintf( f, "\t[--help --version] [file ...]\n" );
+	fprintf( f, _( "\t[--help --version] [file ...]\n" ) );
 
+	fprintf( f, _( "\t-b  generate backing-up information to %s\n" ),
+		backing_name );
+	fprintf( f, _( "\t-c  do-nothing POSIX option\n" ) );
+	fprintf( f, _( "\t-d  turn on debug mode in generated scanner\n" ) );
+	fprintf( f, _( "\t-f  generate fast, large scanner\n" ) );
+	fprintf( f, _( "\t-h  produce this help message\n" ) );
+	fprintf( f, _( "\t-i  generate case-insensitive scanner\n" ) );
+	fprintf( f, _( "\t-l  maximal compatibility with original lex\n" ) );
+	fprintf( f, _( "\t-n  do-nothing POSIX option\n" ) );
+	fprintf( f, _( "\t-p  generate performance report to stderr\n" ) );
 	fprintf( f,
-		"\t-b  generate backing-up information to %s\n", backing_name );
-	fprintf( f, "\t-c  do-nothing POSIX option\n" );
-	fprintf( f, "\t-d  turn on debug mode in generated scanner\n" );
-	fprintf( f, "\t-f  generate fast, large scanner\n" );
-	fprintf( f, "\t-h  produce this help message\n" );
-	fprintf( f, "\t-i  generate case-insensitive scanner\n" );
-	fprintf( f, "\t-l  maximal compatibility with original lex\n" );
-	fprintf( f, "\t-n  do-nothing POSIX option\n" );
-	fprintf( f, "\t-p  generate performance report to stderr\n" );
-	fprintf( f,
-		"\t-s  suppress default rule to ECHO unmatched text\n" );
+		_( "\t-s  suppress default rule to ECHO unmatched text\n" ) );
 
 	if ( ! did_outfilename )
 		{
@@ -1066,39 +1082,39 @@ void usage()
 		}
 
 	fprintf( f,
-		"\t-t  write generated scanner on stdout instead of %s\n",
+		_( "\t-t  write generated scanner on stdout instead of %s\n" ),
 		outfilename );
 
 	fprintf( f,
-		"\t-v  write summary of scanner statistics to f\n" );
-	fprintf( f, "\t-w  do not generate warnings\n" );
-	fprintf( f, "\t-B  generate batch scanner (opposite of -I)\n" );
+		_( "\t-v  write summary of scanner statistics to f\n" ) );
+	fprintf( f, _( "\t-w  do not generate warnings\n" ) );
+	fprintf( f, _( "\t-B  generate batch scanner (opposite of -I)\n" ) );
 	fprintf( f,
-		"\t-F  use alternative fast scanner representation\n" );
+		_( "\t-F  use alternative fast scanner representation\n" ) );
 	fprintf( f,
-		"\t-I  generate interactive scanner (opposite of -B)\n" );
-	fprintf( f, "\t-L  suppress #line directives in scanner\n" );
-	fprintf( f, "\t-T  %s should run in trace mode\n", program_name );
-	fprintf( f, "\t-V  report %s version\n", program_name );
-	fprintf( f, "\t-7  generate 7-bit scanner\n" );
-	fprintf( f, "\t-8  generate 8-bit scanner\n" );
-	fprintf( f, "\t-+  generate C++ scanner class\n" );
-	fprintf( f, "\t-?  produce this help message\n" );
+		_( "\t-I  generate interactive scanner (opposite of -B)\n" ) );
+	fprintf( f, _( "\t-L  suppress #line directives in scanner\n" ) );
+	fprintf( f, _( "\t-T  %s should run in trace mode\n" ), program_name );
+	fprintf( f, _( "\t-V  report %s version\n" ), program_name );
+	fprintf( f, _( "\t-7  generate 7-bit scanner\n" ) );
+	fprintf( f, _( "\t-8  generate 8-bit scanner\n" ) );
+	fprintf( f, _( "\t-+  generate C++ scanner class\n" ) );
+	fprintf( f, _( "\t-?  produce this help message\n" ) );
 	fprintf( f,
-	"\t-C  specify degree of table compression (default is -Cem):\n" );
+_( "\t-C  specify degree of table compression (default is -Cem):\n" ) );
 	fprintf( f,
-	"\t\t-Ca  trade off larger tables for better memory alignment\n" );
-	fprintf( f, "\t\t-Ce  construct equivalence classes\n" );
+_( "\t\t-Ca  trade off larger tables for better memory alignment\n" ) );
+	fprintf( f, _( "\t\t-Ce  construct equivalence classes\n" ) );
 	fprintf( f,
-	"\t\t-Cf  do not compress scanner tables; use -f representation\n" );
+_( "\t\t-Cf  do not compress scanner tables; use -f representation\n" ) );
 	fprintf( f,
-	"\t\t-CF  do not compress scanner tables; use -F representation\n" );
-	fprintf( f, "\t\t-Cm  construct meta-equivalence classes\n" );
+_( "\t\t-CF  do not compress scanner tables; use -F representation\n" ) );
+	fprintf( f, _( "\t\t-Cm  construct meta-equivalence classes\n" ) );
 	fprintf( f,
-		"\t\t-Cr  use read() instead of stdio for scanner input\n" );
-	fprintf( f, "\t-o  specify output filename\n" );
-	fprintf( f, "\t-P  specify scanner prefix other than \"yy\"\n" );
-	fprintf( f, "\t-S  specify skeleton file\n" );
-	fprintf( f, "\t--help     produce this help message\n" );
-	fprintf( f, "\t--version  report %s version\n", program_name );
+	_( "\t\t-Cr  use read() instead of stdio for scanner input\n" ) );
+	fprintf( f, _( "\t-o  specify output filename\n" ) );
+	fprintf( f, _( "\t-P  specify scanner prefix other than \"yy\"\n" ) );
+	fprintf( f, _( "\t-S  specify skeleton file\n" ) );
+	fprintf( f, _( "\t--help     produce this help message\n" ) );
+	fprintf( f, _( "\t--version  report %s version\n" ), program_name );
 	}

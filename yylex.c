@@ -52,7 +52,7 @@ int yylex()
 
 		if ( sectnum == 1 )
 			{
-			synerr( "premature EOF" );
+			synerr( _( "premature EOF" ) );
 			sectnum = 2;
 			toktype = SECTEND;
 			}
@@ -201,12 +201,12 @@ int yylex()
 				break;
 
 			case 0:
-				fprintf( stderr, "End Marker\n" );
+				fprintf( stderr, _( "End Marker\n" ) );
 				break;
 
 			default:
 				fprintf( stderr,
-					"*Something Weird* - tok: %d val: %d\n",
+				_( "*Something Weird* - tok: %d val: %d\n" ),
 					toktype, yylval );
 				break;
 			}
