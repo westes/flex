@@ -3,6 +3,8 @@ changes between releases of flex
 
 See the file COPYING for copying conditions
 
+** new ca, de, fr, sv, tr translations
+
 * version 2.5.8
 
 ** a new --posix option generates scanners with posix-style abc{1,3}
