@@ -556,11 +556,13 @@ int exit_status;
 
             fprintf(header_out,"#line %d \"%s\"\n", (++nlines)+1, headerfilename);
 
-            /* Print the prefixed start conditions. */
+            /* Print the start conditions. */
             fprintf(header_out,"#ifdef YY_HEADER_EXPORT_START_CONDITIONS\n");
             fprintf(header_out,"/* Beware! Start conditions are not prefixed. */\n");
-                   
-            for (i=1; i <= lastsc; i++)
+            
+            /* Special case for "INITIAL" */
+            fprintf(header_out,"#undef INITIAL\n#define INITIAL 0\n");
+            for (i=2; i <= lastsc; i++)
                 fprintf(header_out, "#define %s %d\n",scname[i], i-1);
             fprintf(header_out,"#endif /* YY_HEADER_EXPORT_START_CONDITIONS */\n\n");
 
@@ -576,7 +578,6 @@ int exit_status;
             fprintf(header_out,"#undef EOB_ACT_LAST_MATCH\n");
             fprintf(header_out,"#undef FLEX_SCANNER\n");
             fprintf(header_out,"#undef FLEX_STD\n");
-            fprintf(header_out,"#undef INITIAL\n");
             fprintf(header_out,"#undef REJECT\n");
             fprintf(header_out,"#undef YYLMAX\n");
             fprintf(header_out,"#undef YYSTATE\n");
@@ -717,8 +718,13 @@ int exit_status;
             fprintf(header_out,"#undef yyfree\n");
 
 			/* undef any of the auto-generated symbols. */
-			for(i=0; i < defs_buf.nelts; i++)
+			for(i=0; i < defs_buf.nelts; i++){
+
+                /* don't undef start conditions */
+                if (sclookup(((char**)defs_buf.elts)[i]) > 0 )
+                    continue;
 				fprintf(header_out, "#undef %s\n", ((char**)defs_buf.elts)[i]);
+            }
 
             fprintf(header_out,"#endif /* !YY_HEADER_NO_UNDEFS */\n");
 			fprintf(header_out, "\n");
