@@ -93,7 +93,8 @@ char *memset();
 #ifdef __STDC__
 
 #ifdef __GNUC__
-void *malloc( unsigned );
+#include <stddef.h>
+void *malloc( size_t );
 void free( void* );
 #else
 #include <stdlib.h>
