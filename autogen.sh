@@ -23,7 +23,9 @@
 
 # If you see no configure script, then run ./autogen.sh to create it
 # and procede with the "normal" build procedures.
-
-autoheader && autoconf
-
-cd tests && autoheader && autoconf
+for i in . tests
+do
+    cd $i
+    autoheader && autoconf
+    cd .
+done
