@@ -35,25 +35,15 @@
 #define FLEXDEF_H 1
 
 #include <stdio.h>
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <ctype.h>
 #include <limits.h>
 #include <setjmp.h>
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
-
-#ifdef __TURBOC__
-#define HAVE_STRING_H 1
-#define MS_DOS 1
-#ifndef __STDC__
-#define __STDC__ 1
-#endif
- #pragma warn -pro
- #pragma warn -rch
- #pragma warn -use
- #pragma warn -aus
- #pragma warn -par
- #pragma warn -pia
 #endif
 
 #ifdef HAVE_STRING_H
