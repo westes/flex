@@ -5,6 +5,9 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.24
 
+** flex now uses flex_int*_t types. For C99 systems, they are just the
+   int*_t types; for non-C99 systems, we just make some typedefs
+
 ** new pt_br translation from the tranlation project
 
 * version 2.5.24 released 2002-11-25
