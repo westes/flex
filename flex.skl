@@ -84,9 +84,11 @@ class istream;
 #define BEGIN yy_start = 1 + 2 *
 
 /* Translate the current start state into a value that can be later handed
- * to BEGIN to return to the state.
+ * to BEGIN to return to the state.  The YYSTATE alias is for lex
+ * compatibility.
  */
 #define YY_START ((yy_start - 1) / 2)
+#define YYSTATE YY_START
 
 /* Action number for EOF rule of a given start state. */
 #define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
