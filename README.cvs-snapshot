@@ -1,10 +1,17 @@
-If you see this file, it's because you have a cvs snapshot of flex. If
-you are not interested in flex development or you are not in need of
-the latest bleeding-edge features, then this snapshot is not for you.
+This file gives information regarding cvs snapshots of flex. cvs
+snapshots of flex contain the files which are under version control by
+the flex maintainers for the flex project. These snapshots can be
+found at:
+
+ftp://ftp.uncg.edu/people/wlestes/
+
+If you are not interested in flex development or you are not in need
+of the latest bleeding-edge features, then cvs snapshots of flex are
+not for you.
 
 When you get a distribution of flex, a large number of intermediate
 files needed to make building flex easy are included. You don't have
-that in this snapshot.
+that in a cvs snapshot.
 
 You will need various external tools in order to build the distribution. Here is
 a (possibly incomplete) list of the required tools. Always get the latest
@@ -33,4 +40,5 @@ This script calls the various tools needed to get flex ready for the
 GNU-style configure script to be able to work.
 
 From this point on, building flex follows the usual configure, make,
-make install routine.
+make install routine, almost. When configuring the flex tree, pass the
+--enable-maintainer-mode option to configure.
