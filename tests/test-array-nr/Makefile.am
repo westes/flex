@@ -23,7 +23,7 @@ BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
 EXTRA_DIST = scanner.l test.input
-CLEANFILES = scanner.c parser.c parser.h test-array-nr OUTPUT
+CLEANFILES = scanner.c parser.c parser.h test-array-nr OUTPUT $(OBJS)
 OBJS = scanner.o # parser.o
 
 INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
