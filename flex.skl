@@ -1266,10 +1266,7 @@ yy_state_type yyFlexLexer::yy_try_NUL_trans( yy_state_type yy_current_state )
 
 %-
 #ifndef YY_NO_UNPUT
-static void yyunput ( c, yy_bp)
-int c;
-register char *yy_bp;
-YY_DECL_LAST_ARG
+static void yyunput YYFARGS2( int,c, register char *,yy_bp)
 %+
 void yyFlexLexer::yyunput( int c, register char* yy_bp)
 %*
