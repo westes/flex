@@ -899,15 +899,15 @@ void skelout ()
                 sko_push(do_copy);
                 if(ddebug){
                     out_str("/*(state = (%s) */",do_copy?"true":"false");
-                    out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
                 }
+                out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
             }
             else if (cmd_match (CMD_POP)){
                 sko_pop(&do_copy);
                 if(ddebug){
                     out_str("/*(state = (%s) */",do_copy?"true":"false");
-                    out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
                 }
+                out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
             }
             else if (cmd_match (CMD_IF_REENTRANT)){
                 sko_push(do_copy);

@@ -1894,7 +1894,7 @@ void make_tables ()
 			outn ("\t\t} \\");
 			outn ("\t\terrno=0; \\");
 			outn ("\t\tclearerr(yyin); \\");
-			outn ("\t}");
+			outn ("\t}\\");
 		}
 
 		else {
@@ -1924,7 +1924,7 @@ void make_tables ()
 			outn ("\t\t\terrno=0; \\");
 			outn ("\t\t\tclearerr(yyin); \\");
 			outn ("\t\t\t} \\");
-			outn ("\t\t}");
+			outn ("\t\t}\\");
 		}
 	}
 
