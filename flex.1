@@ -1,11 +1,87 @@
-.TH FLEXDOC 1 "December 1994" "Version 2.5"
+.TH FLEX 1 "December 1994" "Version 2.5"
 .SH NAME
-flexdoc \- documentation for flex, fast lexical analyzer generator
+flex \- fast lexical analyzer generator
 .SH SYNOPSIS
 .B flex
 .B [\-bcdfhilnpstvwBFILTV78+ \-C[aefFmr] \-ooutput \-Pprefix \-Sskeleton]
 .I [filename ...]
-.SH DESCRIPTION
+.SH OVERVIEW
+This manual describes
+.I flex,
+a tool for generating programs that perform pattern-matching on text.  The
+manual includes both tutorial and reference sections:
+
+    Description
+        a brief overview of the tool
+
+    Some Simple Examples
+
+    Format Of The Input File
+
+    Patterns
+        the extended regular expressions used by flex
+
+    How The Input Is Matched
+        the rules for determining what has been matched
+
+    Actions
+        how to specify what to do when a pattern is matched
+
+    The Generated Scanner
+        details regarding the scanner that flex produces;
+        how to control the input source
+
+    Start Conditions
+        introducing context into your scanners, and
+        managing "mini-scanners"
+
+    Multiple Input Buffers
+        how to manipulate multiple input sources; how to scan
+        from strings instead of files
+
+    End-of-file Rules
+        special rules for matching the end of the input
+
+    Miscellaneous Macros
+        a summary of macros available to the actions
+
+    Values Available To The User
+        a summary of values available to the actions
+
+    Interfacing With Yacc
+        connecting flex scanners together with yacc parsers
+
+    Options
+        flex command-line options, and the "%option" directive
+
+    Performance Considerations
+        how to make your scanner go as fast as possible
+
+    Generating C++ Scanners
+        the (experimental) facility for generating C++
+        scanner classes
+
+    Incompatibilities With Lex And POSIX
+        how flex differs from AT&T lex and the POSIX lex standard
+
+    Diagnostics
+        those error messages produced by flex (or scanners
+        it generates) whose meanings might not be apparent
+
+    Files
+        files used by flex
+
+    Deficiencies / Bugs
+        known problems with flex
+
+    See Also
+        other documentation, related tools
+
+    Author
+        includes contact information
+
+.SH
+DESCRIPTION
 .I flex
 is a tool for generating
 .I scanners:
@@ -260,7 +336,7 @@ expressions.  These are:
 .nf
 
     x          match the character 'x'
-    .          any character except newline
+    .          any character (byte) except newline
     [xyz]      a "character class"; in this case, the pattern
                  matches either an 'x', a 'y', or a 'z'
     [abj-oZ]   a "character class" with a range in it; matches
@@ -285,6 +361,7 @@ expressions.  These are:
                  then the ANSI-C interpretation of \\x.
                  Otherwise, a literal 'X' (used to escape
                  operators such as '*')
+    \\0         A NUL character (ASCII code 0).
     \\123       the character with octal value 123
     \\x2a       the character with hexadecimal value 2a
     (r)        match an r; parentheses are used to override
@@ -301,16 +378,24 @@ expressions.  These are:
     r/s        an r but only if it is followed by an s.  The
                  s is not part of the matched text.  This type
                  of pattern is called as "trailing context".
-    ^r         an r, but only at the beginning of a line
-    r$         an r, but only at the end of a line.  Equivalent
-                 to "r/\\n".
+    ^r         an r, but only at the beginning of a line (i.e.,
+                 which just starting to scan, or right after a
+                 newline has been scanned).
+    r$         an r, but only at the end of a line (i.e., just
+                 before a newline).  Equivalent to "r/\\n".
+
+               Note that flex's notion of "newline" is exactly
+                 whatever the local C compiler interprets '\\n'
+                 as; in particular, on DOS systems you must either
+                 filter out \\r's in the input yourself, or
+                 explicitly use r/\\r\\n for "r$".
 
 
     <s>r       an r, but only in start condition s (see
-               below for discussion of start conditions)
+                 below for discussion of start conditions)
     <s1,s2,s3>r
                same, but in any of start conditions s1,
-               s2, or s3
+                 s2, or s3
     <*>r       an r in any start condition, even an exclusive one.
 
 
@@ -697,7 +782,7 @@ active rule.  For example, when the following scanner scans the token
 (The first three rules share the fourth's action since they use
 the special '|' action.)
 .B REJECT
-is a particularly expensive feature in terms scanner performance;
+is a particularly expensive feature in terms of scanner performance;
 if it is used in
 .I any
 of the scanner's actions it will slow down
@@ -1735,6 +1820,92 @@ unreachable statement warnings where because a rule's action ends with
 "return", the
 .B YY_BREAK
 is inaccessible.
+.SH VALUES AVAILABLE TO THE USER
+This section summarizes the various values available to the user
+in the rule actions.
+.IP -
+.B char *yytext
+holds the text of the current token.  It may be modified but not lengthened
+(you cannot append characters to the end).
+.IP
+If the special directive
+.B %array
+appears in the first section of the scanner description, then
+.B yytext
+is instead declared
+.B char yytext[YYLMAX],
+where
+.B YYLMAX
+is a macro definition that you can redefine in the first section
+if you don't like the default value (generally 8KB).  Using
+.B %array
+results in somewhat slower scanners, but the value of
+.B yytext
+becomes immune to calls to
+.I input()
+and
+.I unput(),
+which potentially destroy its value when
+.B yytext
+is a character pointer.  The opposite of
+.B %array
+is
+.B %pointer,
+which is the default.
+.IP
+You cannot use
+.B %array
+when generating C++ scanner classes
+(the
+.B \-+
+flag).
+.IP -
+.B int yyleng
+holds the length of the current token.
+.IP -
+.B FILE *yyin
+is the file which by default
+.I flex
+reads from.  It may be redefined but doing so only makes sense before
+scanning begins or after an EOF has been encountered.  Changing it in
+the midst of scanning will have unexpected results since
+.I flex
+buffers its input; use
+.B yyrestart()
+instead.
+Once scanning terminates because an end-of-file
+has been seen,
+.B
+you can assign
+.I yyin
+at the new input file and then call the scanner again to continue scanning.
+.IP -
+.B void yyrestart( FILE *new_file )
+may be called to point
+.I yyin
+at the new input file.  The switch-over to the new file is immediate
+(any previously buffered-up input is lost).  Note that calling
+.B yyrestart()
+with
+.I yyin
+as an argument thus throws away the current input buffer and continues
+scanning the same input file.
+.IP -
+.B FILE *yyout
+is the file to which
+.B ECHO
+actions are done.  It can be reassigned by the user.
+.IP -
+.B YY_CURRENT_BUFFER
+returns a
+.B YY_BUFFER_STATE
+handle to the current buffer.
+.IP -
+.B YY_START
+returns an integer value corresponding to the current start
+condition.  You can subsequently use this value with
+.B BEGIN
+to return to that start condition.
 .SH INTERFACING WITH YACC
 One of the main uses of
 .I flex
@@ -1800,26 +1971,6 @@ Considerations below.)
 .TP
 .B \-c
 is a do-nothing, deprecated option included for POSIX compliance.
-.IP
-.B NOTE:
-in previous releases of
-.I flex
-.B \-c
-specified table-compression options.  This functionality is
-now given by the
-.B \-C
-flag.  To ease the the impact of this change, when
-.I flex
-encounters
-.B \-c,
-it currently issues a warning message and assumes that
-.B \-C
-was desired instead.  In the future this "promotion" of
-.B \-c
-to
-.B \-C
-will go away in the name of full POSIX compliance (unless
-the POSIX meaning is removed first).
 .TP
 .B \-d
 makes the generated scanner run in
@@ -1900,7 +2051,7 @@ features that lead to minor performance losses.
 .IP
 Note that the use of
 .B REJECT
-and variable trailing context (see the Bugs section in flex(1))
+and variable trailing context (see the Deficiencies / Bugs section below)
 entails a substantial performance penalty; use of
 .I yymore(),
 the
@@ -2672,8 +2823,7 @@ or as
 Note that here the special '|' action does
 .I not
 provide any savings, and can even make things worse (see
-.B BUGS
-in flex(1)).
+Deficiencies / Bugs below).
 .LP
 Another area where the user can increase a scanner's performance
 (and one that's easier to implement) arises from the fact that
@@ -3071,18 +3221,18 @@ is a rewrite of the AT&T Unix
 tool (the two implementations do not share any code, though),
 with some extensions and incompatibilities, both of which
 are of concern to those who wish to write scanners acceptable
-to either implementation.  The POSIX
+to either implementation.  Flex is fully compliant with the POSIX
 .I lex
-specification is closer to
-.I flex's
-behavior than that of the original
-.I lex
-implementation, but there also remain some incompatibilities between
-.I flex
-and POSIX.  The intent is that ultimately
-.I flex
-will be fully POSIX-conformant.  In this section we discuss all of
-the known areas of incompatibility.
+specification, except that when using
+.B %pointer
+(the default), a call to
+.B unput()
+destroys the contents of
+.B yytext,
+which is counter to the POSIX specification.
+.PP
+In this section we discuss all of the known areas of incompatibility
+between flex, AT&T lex, and the POSIX specification.
 .PP
 .I flex's
 .B \-l
@@ -3449,12 +3599,113 @@ or, as noted above, switch to using the C++ scanner class.
 you listed more start conditions in a <> construct than exist (so
 you must have listed at least one of them twice).
 .SH FILES
-See flex(1).
+.TP
+.B \-lfl
+library with which scanners must be linked.
+.TP
+.I lex.yy.c
+generated scanner (called
+.I lexyy.c
+on some systems).
+.TP
+.I lex.yy.cc
+generated C++ scanner class, when using
+.B -+.
+.TP
+.I <FlexLexer.h>
+header file defining the C++ scanner base class,
+.B FlexLexer,
+and its derived class,
+.B yyFlexLexer.
+.TP
+.I flex.skl
+skeleton scanner.  This file is only used when building flex, not when
+flex executes.
+.TP
+.I lex.backup
+backing-up information for
+.B \-b
+flag (called
+.I lex.bck
+on some systems).
 .SH DEFICIENCIES / BUGS
-Again, see flex(1).
-.SH "SEE ALSO"
 .PP
-flex(1), lex(1), yacc(1), sed(1), awk(1).
+Some trailing context
+patterns cannot be properly matched and generate
+warning messages ("dangerous trailing context").  These are
+patterns where the ending of the
+first part of the rule matches the beginning of the second
+part, such as "zx*/xy*", where the 'x*' matches the 'x' at
+the beginning of the trailing context.  (Note that the POSIX draft
+states that the text matched by such patterns is undefined.)
+.PP
+For some trailing context rules, parts which are actually fixed-length are
+not recognized as such, leading to the abovementioned performance loss.
+In particular, parts using '|' or {n} (such as "foo{3}") are always
+considered variable-length.
+.PP
+Combining trailing context with the special '|' action can result in
+.I fixed
+trailing context being turned into the more expensive
+.I variable
+trailing context.  For example, in the following:
+.nf
+
+    %%
+    abc      |
+    xyz/def
+
+.fi
+.PP
+Use of
+.B unput()
+invalidates yytext and yyleng, unless the
+.B %array
+directive
+or the
+.B \-l
+option has been used.
+.PP
+Pattern-matching of NUL's is substantially slower than matching other
+characters.
+.PP
+Dynamic resizing of the input buffer is slow, as it entails rescanning
+all the text matched so far by the current (generally huge) token.
+.PP
+Due to both buffering of input and read-ahead, you cannot intermix
+calls to <stdio.h> routines, such as, for example,
+.B getchar(),
+with
+.I flex
+rules and expect it to work.  Call
+.B input()
+instead.
+.PP
+The total table entries listed by the
+.B \-v
+flag excludes the number of table entries needed to determine
+what rule has been matched.  The number of entries is equal
+to the number of DFA states if the scanner does not use
+.B REJECT,
+and somewhat greater than the number of states if it does.
+.PP
+.B REJECT
+cannot be used with the
+.B \-f
+or
+.B \-F
+options.
+.PP
+The
+.I flex
+internal algorithms need documentation.
+.SH SEE ALSO
+.PP
+lex(1), yacc(1), sed(1), awk(1).
+.PP
+John Levine, Tony Mason, and Doug Brown,
+.I Lex & Yacc,
+O'Reilly and Associates.  Be sure to get the 2nd edition.
 .PP
 M. E. Lesk and E. Schmidt,
 .I LEX \- Lexical Analyzer Generator
@@ -3493,7 +3744,8 @@ Richard Ohnemus, Sven Panne, Roland Pesch, Walter Pelissero, Gaumond
 Pierre, Esmond Pitt, Jef Poskanzer, Joe Rahmeh, Jarmo Raiha,
 Frederic Raimbault, Pat Rankin, Rick Richardson,
 Kevin Rodgers, Kai Uwe Rommel, Jim Roskind, Alberto Santini,
-Darrell Schiebel, Doug Schmidt, Philippe Schnoebelen, Andreas Schwab,
+Darrell Schiebel, Raf Schietekat,
+Doug Schmidt, Philippe Schnoebelen, Andreas Schwab,
 Alex Siegel, Eckehard Stolz, Jan-Erik Strvmquist,
 Mike Stump, Paul Stuart, Dave Tallman, Ian Lance Taylor,
 Chris Thewalt, Richard M. Timoney, Jodi Tsai,
