@@ -108,9 +108,9 @@ parse.c: parse.y
 parse.h: parse.c
 
 scan.c: scan.l
-	$(FLEX) $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l \
-	| sed s,\"$(srcdir)/scan.l\",\"scan.l\", >scan.tmp
-	mv scan.tmp scan.c
+	$(FLEX) $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l >scan.tmp
+	sed s,\"$(srcdir)/scan.l\",\"scan.l\", <scan.tmp >scan.c
+	@rm scan.tmp
 
 scan.o: scan.c parse.h flexdef.h
 yylex.o: yylex.c parse.h flexdef.h
