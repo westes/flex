@@ -236,7 +236,7 @@ static int yy_top_state YY_PROTO(( void ));
 %*
 
 static void *yy_flex_alloc YY_PROTO(( unsigned int ));
-static void *yy_flex_realloc YY_PROTO(( void *ptr, unsigned int ));
+static void *yy_flex_realloc YY_PROTO(( void *, unsigned int ));
 static void yy_flex_free YY_PROTO(( void * ));
 
 #define yy_new_buffer yy_create_buffer
@@ -244,7 +244,7 @@ static void yy_flex_free YY_PROTO(( void * ));
 %% yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
 
 #ifndef yytext_ptr
-static void yy_flex_strcpy YY_PROTO(( char *, const char * ));
+static void yy_flex_strncpy YY_PROTO(( char *, const char *, int ));
 #endif
 
 %- Standard (non-C++) definition
@@ -1171,15 +1171,17 @@ void yyFlexLexer::LexerError( const char msg[] )
 
 #ifndef yytext_ptr
 #ifdef YY_USE_PROTOS
-static void yy_flex_strcpy( char *s1, const char *s2 )
+static void yy_flex_strncpy( char *s1, const char *s2, int n )
 #else
-static void yy_flex_strcpy( s1, s2 )
+static void yy_flex_strncpy( s1, s2, n )
 char *s1;
 const char *s2;
+int n;
 #endif
 	{
-	while ( (*(s1++) = *(s2++)) )
-		;
+	register int i;
+	for ( i = 0; i < n; ++i )
+		s1[i] = s2[i];
 	}
 #endif
 
