@@ -37,17 +37,15 @@
 
 #ifdef YY_USE_PROTOS
 #define YY_PROTO(proto) proto
+char *malloc( unsigned size );
 #else
 #define YY_PROTO(proto) ()
+char *malloc();
 #endif
 
 /* amount of stuff to slurp up with each read */
 #ifndef YY_READ_BUF_SIZE
 #define YY_READ_BUF_SIZE 8192
-#endif
-
-#ifndef YY_BUF_SIZE
-#define YY_BUF_SIZE (YY_READ_BUF_SIZE * 2) /* size of input buffer */
 #endif
 
 /* returned upon end-of-file */
@@ -68,7 +66,7 @@
 	if ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \
 	    YY_FATAL_ERROR( "read() in flex scanner failed" );
 #define YY_NULL 0
-#define yyterminate() return ( YY_NULL )
+#define yyterminate() return ( YY_NULL );
 
 /* report a fatal error */
 #define YY_FATAL_ERROR(msg) \
@@ -91,7 +89,10 @@
 #define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
 
 /* special action meaning "start processing a new file" */
-#define YY_NEW_FILE goto new_file
+#define YY_NEW_FILE { \
+	yy_init_buffer( yy_current_buffer, yyin ); \
+	yy_load_buffer_state(); \
+	}
 
 /* default declaration of generated scanner - a define so the user can
  * easily add parameters
@@ -102,6 +103,12 @@
 #define YY_BREAK break;
 
 #define YY_END_OF_BUFFER_CHAR 0
+
+#ifndef YY_BUF_SIZE
+#define YY_BUF_SIZE (YY_READ_BUF_SIZE * 2) /* size of default input buffer */
+#endif
+
+typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
 %% section 1 definitions go here
 
@@ -122,14 +129,53 @@
 /* return all but the first 'n' matched characters back to the input stream */
 #define yyless(n) \
 	{ \
-	*yy_cp = yy_hold_char; /* undo effects of setting up yytext */ \
+	/* undo effects of setting up yytext */ \
+	*yy_cp = yy_hold_char; \
 	yy_c_buf_p = yy_cp = yy_bp + n; \
 	YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 	}
 
 #define unput(c) yyunput( c, yytext )
 
+
+struct yy_buffer_state
+    {
+    FILE *yy_input_file;
+
+    YY_CHAR *yy_ch_buf;		/* input buffer */
+    YY_CHAR *yy_buf_pos;	/* current position in input buffer */
+    int yy_buf_size;		/* size of input buffer in bytes */
+    int yy_n_chars;		/* number of characters read into yy_ch_buf */
+
+    int yy_eof_status;		/* whether we've seen an EOF on this buffer */
+#define EOF_NOT_SEEN 0
+    /* "pending" happens when the EOF has been seen but there's still
+     * some text process
+     */
+#define EOF_PENDING 1
+#define EOF_DONE 2
+    };
+
+static struct yy_buffer_state *yy_original_buffer;
+static struct yy_buffer_state *yy_current_buffer;
+
+/* we provide macros for accessing the buffer states in case in the
+ * future we want to put the buffer states in a more general "scanner state"
+ */
+#define YY_ORIGINAL_BUFFER yy_original_buffer
+#define YY_CURRENT_BUFFER yy_current_buffer
+
+
+/* yy_hold_char holds the character lost when yytext is formed */
+static YY_CHAR yy_hold_char;
+
+static int yy_n_chars;		/* number of characters read into yy_ch_buf */
+
+
+
+#ifndef YY_USER_ACTION
 #define YY_USER_ACTION
+#endif
 
 extern YY_CHAR *yytext;
 extern int yyleng;
@@ -145,23 +191,10 @@ FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
 /* these variables are all declared out here so that section 3 code can
  * manipulate them
  */
-static YY_CHAR *yy_c_buf_p;	/* points to current character in buffer */
+/* points to current character in buffer */
+static YY_CHAR *yy_c_buf_p = (YY_CHAR *) 0;
 static int yy_init = 1;		/* whether we need to initialize */
 static int yy_start = 0;	/* start state number */
-
-/* true when we've seen an EOF for the current input file */
-static int yy_eof_has_been_seen;
-
-static int yy_n_chars;		/* number of characters read into yy_ch_buf */
-
-/* yy_ch_buf has to be 2 characters longer than YY_BUF_SIZE because we need
- * to put in 2 end-of-buffer characters (this is explained where it is
- * done) at the end of yy_ch_buf
- */
-static YY_CHAR yy_ch_buf[YY_BUF_SIZE + 2];
-
-/* yy_hold_char holds the character lost when yytext is formed */
-static YY_CHAR yy_hold_char;
 
 static yy_state_type yy_last_accepting_state;
 static YY_CHAR *yy_last_accepting_cpos;
@@ -171,6 +204,11 @@ static yy_state_type yy_try_NUL_trans YY_PROTO(( void ));
 static int yy_get_next_buffer YY_PROTO(( void ));
 static void yyunput YY_PROTO(( int c, YY_CHAR *buf_ptr ));
 void yyrestart YY_PROTO(( FILE *input_file ));
+void yy_switch_to_buffer YY_PROTO(( struct yy_buffer_state *new_buffer ));
+void yy_load_buffer_state YY_PROTO(( void ));
+struct yy_buffer_state *yy_create_buffer YY_PROTO(( FILE *file, int size ));
+void yy_delete_buffer YY_PROTO(( struct yy_buffer_state *b ));
+void yy_init_buffer YY_PROTO(( struct yy_buffer_state *b, FILE *file ));
 
 #ifdef __cplusplus
 static int yyinput YY_PROTO(( void ));
@@ -197,29 +235,14 @@ YY_DECL
 	if ( ! yyout )
 	    yyout = stdout;
 
-new_file:
-	/* this is where we enter upon encountering an end-of-file and
-	 * yywrap() indicating that we should continue processing
-	 */
+	if ( yy_current_buffer )
+	    yy_init_buffer( yy_current_buffer, yyin );
+	else
+	    yy_original_buffer =
+		yy_current_buffer = yy_create_buffer( yyin, YY_BUF_SIZE );
 
-	/* we put in the '\n' and start reading from [1] so that an
-	 * initial match-at-newline will be true.
-	 */
+	yy_load_buffer_state();
 
-	yy_ch_buf[0] = '\n';
-	yy_n_chars = 1;
-
-	/* we always need two end-of-buffer characters.  The first causes
-	 * a transition to the end-of-buffer state.  The second causes
-	 * a jam in that state.
-	 */
-	yy_ch_buf[yy_n_chars] = YY_END_OF_BUFFER_CHAR;
-	yy_ch_buf[yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
-
-	yy_eof_has_been_seen = 0;
-
-	yytext = yy_c_buf_p = &yy_ch_buf[1];
-	yy_hold_char = *yy_c_buf_p;
 	yy_init = 0;
 	}
 
@@ -260,7 +283,8 @@ do_action:	/* this label is used only to access EOF actions */
 		/* undo the effects of YY_DO_BEFORE_ACTION */
 		*yy_cp = yy_hold_char;
 
-		if ( yy_c_buf_p < &yy_ch_buf[yy_n_chars + 1] )
+		if ( yy_c_buf_p <
+		     &yy_current_buffer->yy_ch_buf[yy_n_chars + 1] )
 		    /* this was really a NUL */
 		    {
 		    yy_state_type yy_next_state;
@@ -332,7 +356,8 @@ do_action:	/* this label is used only to access EOF actions */
 			goto yy_match;
 
 		    case EOB_ACT_LAST_MATCH:
-			yy_c_buf_p = &yy_ch_buf[yy_n_chars];
+			yy_c_buf_p =
+			    &yy_current_buffer->yy_ch_buf[yy_n_chars];
 
 			yy_current_state = yy_get_previous_state();
 
@@ -368,12 +393,12 @@ do_action:	/* this label is used only to access EOF actions */
 static int yy_get_next_buffer()
 
     {
-    register YY_CHAR *dest = yy_ch_buf;
+    register YY_CHAR *dest = yy_current_buffer->yy_ch_buf;
     register YY_CHAR *source = yytext - 1; /* copy prev. char, too */
     register int number_to_move, i;
     int ret_val;
 
-    if ( yy_c_buf_p > &yy_ch_buf[yy_n_chars + 1] )
+    if ( yy_c_buf_p > &yy_current_buffer->yy_ch_buf[yy_n_chars + 1] )
 	YY_FATAL_ERROR(
 		"fatal flex scanner internal error--end of buffer missed" );
 
@@ -385,7 +410,7 @@ static int yy_get_next_buffer()
     for ( i = 0; i < number_to_move; ++i )
 	*(dest++) = *(source++);
 
-    if ( yy_eof_has_been_seen )
+    if ( yy_current_buffer->yy_eof_status != EOF_NOT_SEEN )
 	/* don't do the read, it's not guaranteed to return an EOF,
 	 * just force an EOF
 	 */
@@ -393,7 +418,7 @@ static int yy_get_next_buffer()
 
     else
 	{
-	int num_to_read = YY_BUF_SIZE - number_to_move - 1;
+	int num_to_read = yy_current_buffer->yy_buf_size - number_to_move - 1;
 
 	if ( num_to_read > YY_READ_BUF_SIZE )
 	    num_to_read = YY_READ_BUF_SIZE;
@@ -402,35 +427,39 @@ static int yy_get_next_buffer()
 	    YY_FATAL_ERROR( "fatal error - scanner input buffer overflow" );
 
 	/* read in more data */
-	YY_INPUT( (&yy_ch_buf[number_to_move]), yy_n_chars, num_to_read );
+	YY_INPUT( (&yy_current_buffer->yy_ch_buf[number_to_move]),
+		  yy_n_chars, num_to_read );
 	}
 
     if ( yy_n_chars == 0 )
 	{
 	if ( number_to_move == 1 )
+	    {
 	    ret_val = EOB_ACT_END_OF_FILE;
-	else
-	    ret_val = EOB_ACT_LAST_MATCH;
+	    yy_current_buffer->yy_eof_status = EOF_DONE;
+	    }
 
-	yy_eof_has_been_seen = 1;
+	else
+	    {
+	    ret_val = EOB_ACT_LAST_MATCH;
+	    yy_current_buffer->yy_eof_status = EOF_PENDING;
+	    }
 	}
 
     else
 	ret_val = EOB_ACT_CONTINUE_SCAN;
 
     yy_n_chars += number_to_move;
-    yy_ch_buf[yy_n_chars] = YY_END_OF_BUFFER_CHAR;
-    yy_ch_buf[yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
+    yy_current_buffer->yy_ch_buf[yy_n_chars] = YY_END_OF_BUFFER_CHAR;
+    yy_current_buffer->yy_ch_buf[yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
 
-    /* yytext begins at the second character in
-     * yy_ch_buf; the first character is the one which
-     * preceded it before reading in the latest buffer;
-     * it needs to be kept around in case it's a
-     * newline, so yy_get_previous_state() will have
-     * with '^' rules active
+    /* yytext begins at the second character in yy_ch_buf; the first
+     * character is the one which preceded it before reading in the latest
+     * buffer; it needs to be kept around in case it's a newline, so
+     * yy_get_previous_state() will have with '^' rules active
      */
 
-    yytext = &yy_ch_buf[1];
+    yytext = &yy_current_buffer->yy_ch_buf[1];
 
     return ( ret_val );
     }
@@ -487,22 +516,25 @@ register YY_CHAR *yy_bp;
     {
     register YY_CHAR *yy_cp = yy_c_buf_p;
 
-    *yy_cp = yy_hold_char; /* undo effects of setting up yytext */
+    /* undo effects of setting up yytext */
+    *yy_cp = yy_hold_char;
 
-    if ( yy_cp < yy_ch_buf + 2 )
+    if ( yy_cp < yy_current_buffer->yy_ch_buf + 2 )
 	{ /* need to shift things up to make room */
 	register int number_to_move = yy_n_chars + 2; /* +2 for EOB chars */
-	register YY_CHAR *dest = &yy_ch_buf[YY_BUF_SIZE + 2];
-	register YY_CHAR *source = &yy_ch_buf[number_to_move];
+	register YY_CHAR *dest =
+	    &yy_current_buffer->yy_ch_buf[yy_current_buffer->yy_buf_size + 2];
+	register YY_CHAR *source =
+	    &yy_current_buffer->yy_ch_buf[number_to_move];
 
-	while ( source > yy_ch_buf )
+	while ( source > yy_current_buffer->yy_ch_buf )
 	    *--dest = *--source;
 
 	yy_cp += dest - source;
 	yy_bp += dest - source;
-	yy_n_chars = YY_BUF_SIZE;
+	yy_n_chars = yy_current_buffer->yy_buf_size;
 
-	if ( yy_cp < yy_ch_buf + 2 )
+	if ( yy_cp < yy_current_buffer->yy_ch_buf + 2 )
 	    YY_FATAL_ERROR( "flex scanner push-back overflow" );
 	}
 
@@ -531,7 +563,8 @@ static int input()
     *yy_cp = yy_hold_char;
 
     if ( *yy_c_buf_p == YY_END_OF_BUFFER_CHAR )
-	if ( yy_c_buf_p < &yy_ch_buf[yy_n_chars + 1] )
+	{
+	if ( yy_c_buf_p < &yy_current_buffer->yy_ch_buf[yy_n_chars + 1] )
 	    /* this was really a NUL */
 	    *yy_c_buf_p = '\0';
 
@@ -542,9 +575,6 @@ static int input()
 
 	    switch ( yy_get_next_buffer() )
 		{
-		/* this code, unfortunately, is somewhat redundant with
-		 * that above
-		 */
 		case EOB_ACT_END_OF_FILE:
 		    {
 		    if ( yywrap() )
@@ -553,13 +583,7 @@ static int input()
 			return ( EOF );
 			}
 
-		    yy_ch_buf[0] = '\n';
-		    yy_n_chars = 1;
-		    yy_ch_buf[yy_n_chars] = YY_END_OF_BUFFER_CHAR;
-		    yy_ch_buf[yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
-		    yy_eof_has_been_seen = 0;
-		    yytext = yy_c_buf_p = &yy_ch_buf[1];
-		    yy_hold_char = *yy_c_buf_p;
+		    YY_NEW_FILE;
 
 #ifdef __cplusplus
 		    return ( yyinput() );
@@ -581,6 +605,7 @@ static int input()
 #endif
 		}
 	    }
+	}
 
     c = *yy_c_buf_p;
     yy_hold_char = *++yy_c_buf_p;
@@ -597,6 +622,122 @@ FILE *input_file;
 #endif
 
     {
-    yyin = input_file;
-    yy_init = 1;
+    yy_init_buffer( yy_current_buffer, input_file );
+    yy_load_buffer_state();
+    }
+
+
+#ifdef YY_USE_PROTOS
+void yy_switch_to_buffer( struct yy_buffer_state *new_buffer )
+#else
+void yy_switch_to_buffer( new_buffer )
+struct yy_buffer_state *new_buffer;
+#endif
+
+    {
+    if ( yy_current_buffer == new_buffer )
+	return;
+
+    if ( yy_current_buffer )
+	{
+	/* flush out information for old buffer */
+	*yy_c_buf_p = yy_hold_char;
+	yy_current_buffer->yy_buf_pos = yy_c_buf_p;
+	yy_current_buffer->yy_n_chars = yy_n_chars;
+	}
+
+    yy_current_buffer = new_buffer;
+    yy_load_buffer_state();
+    }
+
+
+#ifdef YY_USE_PROTOS
+void yy_load_buffer_state( void )
+#else
+void yy_load_buffer_state()
+#endif
+
+    {
+    yy_n_chars = yy_current_buffer->yy_n_chars;
+    yytext = yy_c_buf_p = yy_current_buffer->yy_buf_pos;
+    yyin = yy_current_buffer->yy_input_file;
+    yy_hold_char = *yy_c_buf_p;
+    }
+
+
+#ifdef YY_USE_PROTOS
+struct yy_buffer_state *yy_create_buffer( FILE *file, int size )
+#else
+struct yy_buffer_state *yy_create_buffer( file, size )
+FILE *file;
+int size;
+#endif
+
+    {
+    struct yy_buffer_state *b;
+
+    b = (struct yy_buffer_state *) malloc( sizeof( struct yy_buffer_state ) );
+
+    if ( ! b )
+	YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
+
+    /* yy_ch_buf has to be 2 characters longer than the size given because
+     * we need to put in 2 end-of-buffer characters.
+     */
+    b->yy_buf_size = size + 2;
+    b->yy_ch_buf = (YY_CHAR *) malloc( b->yy_buf_size );
+
+    if ( ! b->yy_ch_buf )
+	YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
+
+    yy_init_buffer( b, file );
+
+    return ( b );
+    }
+
+
+#ifdef YY_USE_PROTOS
+void yy_delete_buffer( struct yy_buffer_state *b )
+#else
+void yy_delete_buffer( b )
+struct yy_buffer_state *b;
+#endif
+
+    {
+    if ( b == yy_current_buffer )
+	yy_current_buffer = (struct yy_buffer_state *) 0;
+
+    free( (char *) b->yy_ch_buf );
+    free( (char *) b );
+    }
+
+
+#ifdef YY_USE_PROTOS
+void yy_init_buffer( struct yy_buffer_state *b, FILE *file )
+#else
+void yy_init_buffer( b, file )
+struct yy_buffer_state *b;
+FILE *file;
+#endif
+
+    {
+    b->yy_input_file = file;
+
+    /* we put in the '\n' and start reading from [1] so that an
+     * initial match-at-newline will be true.
+     */
+
+    b->yy_ch_buf[0] = '\n';
+    b->yy_n_chars = 1;
+
+    /* we always need two end-of-buffer characters.  The first causes
+     * a transition to the end-of-buffer state.  The second causes
+     * a jam in that state.
+     */
+    b->yy_ch_buf[1] = YY_END_OF_BUFFER_CHAR;
+    b->yy_ch_buf[2] = YY_END_OF_BUFFER_CHAR;
+
+    b->yy_buf_pos = &b->yy_ch_buf[1];
+
+    b->yy_eof_status = EOF_NOT_SEEN;
     }
