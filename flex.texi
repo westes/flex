@@ -164,7 +164,7 @@ Here's another simple example:
 This scanner counts the number of characters and the number
 of lines in its input (it produces no output other than the
 final report on the counts).  The first line
-declares two globals, @var{num_lines} and @var{num_chars}, which are accessible
+declares two globals, @code{num_lines} and @code{num_chars}, which are accessible
 both inside
 @code{yylex()}
 and in the
@@ -652,7 +652,7 @@ chosen.
 
 Once the match is determined, the text corresponding to the match
 (called the @dfn{token}) is made available in the global character
-pointer @var{yytext}, and its length in the global integer @var{yyleng}.
+pointer @code{yytext}, and its length in the global integer @code{yyleng}.
 The @dfn{action} corresponding to the matched pattern is then executed
 (@pxref{actions}), and then the remaining input is scanned for another
 match.
@@ -673,33 +673,33 @@ input is:
 which generates a scanner that simply copies its input (one character
 at a time) to its output.
 
-Note that @var{yytext} can be defined in two different ways: either as a
+Note that @code{yytext} can be defined in two different ways: either as a
 character @emph{pointer} or as a character @emph{array}.  You can
 control which definition @code{flex} uses by including one of the
 special directives @code{%pointer} or @code{%array} in the first
 (definitions) section of your flex input.  The default is
 @code{%pointer}, unless you use the @samp{-l} lex compatibility option,
-in which case @var{yytext} will be an array.  The advantage of using
+in which case @code{yytext} will be an array.  The advantage of using
 @code{%pointer} is substantially faster scanning and no buffer overflow
 when matching very large tokens (unless you run out of dynamic memory).
 The disadvantage is that you are restricted in how your actions can
-modify @var{yytext} (@pxref{actions}), and calls to the @code{unput()}
-function destroys the present contents of @var{yytext}, which can be a
+modify @code{yytext} (@pxref{actions}), and calls to the @code{unput()}
+function destroys the present contents of @code{yytext}, which can be a
 considerable porting headache when moving between different @code{lex}
 versions.
 
 The advantage of
 @code{%array}
 is that you can then modify
-@var{yytext}
+@code{yytext}
 to your heart's content, and calls to
 @code{unput()}
 do not destroy
-@var{yytext}
+@code{yytext}
 (@pxref{actions}).  Furthermore, existing
 @code{lex}
 programs sometimes access
-@var{yytext}
+@code{yytext}
 externally using declarations of the form:
 
 @example
@@ -711,16 +711,16 @@ externally using declarations of the form:
 This definition is erroneous when used with @code{%pointer}, but correct
 for @code{%array}.
 
-The @code{%array} declaration defines @var{yytext} to be an array of
-@var{YYLMAX} characters, which defaults to a fairly large value.  You
-can change the size by simply #define'ing @var{YYLMAX} to a different
+The @code{%array} declaration defines @code{yytext} to be an array of
+@code{YYLMAX} characters, which defaults to a fairly large value.  You
+can change the size by simply #define'ing @code{YYLMAX} to a different
 value in the first section of your @code{flex} input.  As mentioned
 above, with @code{%pointer} yytext grows dynamically to accommodate
 large tokens.  While this means your @code{%pointer} scanner can
 accommodate very large tokens (such as matching entire blocks of
 comments), bear in mind that each time the scanner must resize
-@var{yytext} it also must rescan the entire token from the beginning, so
-matching such tokens can prove slow.  @var{yytext} presently does
+@code{yytext} it also must rescan the entire token from the beginning, so
+matching such tokens can prove slow.  @code{yytext} presently does
 @emph{not} dynamically grow if a call to @code{unput()} results in too
 much text being pushed back; instead, a run-time error results.
 
@@ -777,14 +777,14 @@ to return a value to whatever routine called @code{yylex()}.  Each time
 last left off until it either reaches the end of the file or executes a
 return.
 
-Actions are free to modify @var{yytext} except for lengthening it
+Actions are free to modify @code{yytext} except for lengthening it
 (adding characters to its end--these will overwrite later characters in
 the input stream).  This however does not apply when using @code{%array}
-(@pxref{matching}). In that case, @var{yytext} may be freely modified in
+(@pxref{matching}). In that case, @code{yytext} may be freely modified in
 any way.
 
 Actions are free to modify
-@var{yyleng}
+@code{yyleng}
 except they should not do so if the action also includes use of
 @code{yymore()}
 (see below).
@@ -803,7 +803,7 @@ corresponding start condition (see below).
 @item  REJECT
 directs the scanner to proceed on to the ``second best'' rule which
 matched the input (or a prefix of the input).  The rule is chosen as
-described above in @ref{matching}, and @var{yytext} and @var{yyleng} set
+described above in @ref{matching}, and @code{yytext} and @code{yyleng} set
 up appropriately.  It may either be one which matched as much text as
 the originally chosen rule but came later in the @code{flex} input file,
 or one which matched less text.  For example, the following will both
@@ -861,7 +861,7 @@ Note also that unlike the other special actions, @code{REJECT} is a
 @item  yymore()
 tells the scanner that the next time it matches a rule, the
 corresponding token should be @emph{appended} onto the current value of
-@var{yytext} rather than replacing it.  For example, given the input
+@code{yytext} rather than replacing it.  For example, given the input
 @samp{mega-kludge} the following will write @samp{mega-mega-kludge} to
 the output:
 
@@ -876,24 +876,24 @@ the output:
 First @samp{mega-} is matched and echoed to the output.  Then @samp{kludge}
 is matched, but the previous @samp{mega-} is still hanging around at the
 beginning of
-@var{yytext}
+@code{yytext}
 so the
 @code{ECHO}
 for the @samp{kludge} rule will actually write @samp{mega-kludge}.
 @end table
 
 Two notes regarding use of @code{yymore()}.  First, @code{yymore()}
-depends on the value of @var{yyleng} correctly reflecting the size of
-the current token, so you must not modify @var{yyleng} if you are using
+depends on the value of @code{yyleng} correctly reflecting the size of
+the current token, so you must not modify @code{yyleng} if you are using
 @code{yymore()}.  Second, the presence of @code{yymore()} in the
 scanner's action entails a minor performance penalty in the scanner's
 matching speed.
 
-@code{yyless(n)} returns all but the first @var{n} characters of the
+@code{yyless(n)} returns all but the first @code{n} characters of the
 current token back to the input stream, where they will be rescanned
-when the scanner looks for the next match.  @var{yytext} and
-@var{yyleng} are adjusted appropriately (e.g., @var{yyleng} will now be
-equal to @var{n}).  For example, on the input @samp{foobar} the
+when the scanner looks for the next match.  @code{yytext} and
+@code{yyleng} are adjusted appropriately (e.g., @code{yyleng} will now be
+equal to @code{n}).  For example, on the input @samp{foobar} the
 following will write out @samp{foobarbar}:
 
 @example
@@ -918,7 +918,7 @@ other source files.
 
 @code{unput(c)}
 puts the character
-@var{c}
+@code{c}
 back onto the input stream.  It will be the next character scanned.
 The following action will take the current token and cause it
 to be rescanned enclosed in parentheses.
@@ -950,7 +950,7 @@ is that if you are using
 @code{unput()}
 @emph{destroys}
 the contents of
-@var{yytext},
+@code{yytext},
 starting with its rightmost character and devouring one character to
 the left with each call.  If you need the value of yytext preserved
 after a call to
@@ -1085,8 +1085,8 @@ block-reads rather than simple @code{getc()} calls to read characters
 from @file{yyin}.  The nature of how it gets its input can be controlled
 by defining the @code{YY_INPUT} macro.  The calling sequence for
 @code{YY_INPUT()} is @code{YY_INPUT(buf,result,max_size)}.  Its action
-is to place up to @var{max_size} characters in the character array
-@var{buf} and return in the integer variable @var{result} either the
+is to place up to @code{max_size} characters in the character array
+@code{buf} and return in the integer variable @code{result} either the
 number of characters read or the constant @code{YY_NULL} (0 on Unix
 systems) to indicate @samp{EOF}.  The default @code{YY_INPUT} reads from
 the global file-pointer @file{yyin}.
@@ -1214,10 +1214,10 @@ is equivalent to
 @end verbatim
 @end example
 
-Without the @code{<INITIAL,example>} qualifier, the @var{bar} pattern in
+Without the @code{<INITIAL,example>} qualifier, the @code{bar} pattern in
 the second example wouldn't be active (i.e., couldn't match) when in
 start condition @code{example}.  If we just used @code{example>} to
-qualify @var{bar}, though, then it would only be active in
+qualify @code{bar}, though, then it would only be active in
 @code{example} and not in @code{INITIAL}, while in the first example
 it's active in both, because in the first example the @code{example}
 start condition is an inclusive @code{(%s)} start condition.
@@ -1255,8 +1255,8 @@ condition name are not required but are considered good style.)
 
 @code{BEGIN} actions can also be given as indented code at the beginning
 of the rules section.  For example, the following will cause the scanner
-to enter the @var{SPECIAL} start condition whenever @code{yylex()} is
-called and the global variable @var{enter_special} is true:
+to enter the @code{SPECIAL} start condition whenever @code{yylex()} is
+called and the global variable @code{enter_special} is true:
 
 @example
 @verbatim
@@ -1366,7 +1366,7 @@ following fashion:
 
 Furthermore, you can access the current start condition using the
 integer-valued @code{YY_START} macro.  For example, the above
-assignments to @var{comment_caller} could instead be written
+assignments to @code{comment_caller} could instead be written
 
 @example
 @verbatim
@@ -1485,10 +1485,10 @@ Start condition scopes may be nested.
 
 The following routines are available for manipulating stacks of start conditions:
 
-@deftypefun  void yy_push_state ( int @var{new_state} )
+@deftypefun  void yy_push_state ( int @code{new_state} )
 pushes the current start condition onto the top of the start condition
 stack and switches to
-@var{new_state}
+@code{new_state}
 as though you had used
 @code{BEGIN new_state}
 (recall that start condition names are also integers).
@@ -1532,8 +1532,8 @@ buffer is created by using:
 @end example
 
 which takes a @code{FILE} pointer and a size and creates a buffer
-associated with the given file and large enough to hold @var{size}
-characters (when in doubt, use @var{YY_BUF_SIZE} for the size).  It
+associated with the given file and large enough to hold @code{size}
+characters (when in doubt, use @code{YY_BUF_SIZE} for the size).  It
 returns a @code{YY_BUFFER_STATE} handle, which may then be passed to
 other routines (see below).  The @code{YY_BUFFER_STATE} type is a
 pointer to an opaque @code{struct yy_buffer_state} structure, so you may
@@ -1554,7 +1554,7 @@ using:
 @end example
 
 The above switches the scanner's input buffer so subsequent tokens will
-come from @var{new_buffer}.  Note that @code{yy_switch_to_buffer()} may
+come from @code{new_buffer}.  Note that @code{yy_switch_to_buffer()} may
 be used by @code{yywrap()} to set things up for continued scanning,
 instead of opening a new file and pointing @file{yyin} at it.  Note also
 that switching input sources via either @code{yy_switch_to_buffer()} or
@@ -1566,7 +1566,7 @@ that switching input sources via either @code{yy_switch_to_buffer()} or
 @end verbatim
 @end example
 
-is used to reclaim the storage associated with a buffer.  (@var{buffer}
+is used to reclaim the storage associated with a buffer.  (@code{buffer}
 can be nil, in which case the routine does nothing.)  You can also clear
 the current contents of a buffer using:
 
@@ -1663,8 +1663,8 @@ scans a NUL-terminated string.
 @end deffn
 
 @deffn Function yy_scan_bytes ( const char *bytes, int len )
-scans @var{len} bytes (including possibly @code{NUL}s) starting at location
-@var{bytes}.
+scans @code{len} bytes (including possibly @code{NUL}s) starting at location
+@code{bytes}.
 @end deffn
 
 Note that both of these functions create and scan a @emph{copy} of the
@@ -1673,15 +1673,15 @@ the contents of the buffer it is scanning.)  You can avoid the copy by
 using:
 
 @deffn yy_scan_buffer ( char *base, yy_size_t size )
-which scans in place the buffer starting at @var{base}, consisting of
-@var{size} bytes, the last two bytes of which @emph{must} be
-@var{YY_END_OF_BUFFER_CHAR} (ASCII NUL).  These last two bytes are not
+which scans in place the buffer starting at @code{base}, consisting of
+@code{size} bytes, the last two bytes of which @emph{must} be
+@code{YY_END_OF_BUFFER_CHAR} (ASCII NUL).  These last two bytes are not
 scanned; thus, scanning consists of @code{base[0]} through
 @code{base[size-2]}, inclusive.
 @end deffn
 
-If you fail to set up @var{base} in this manner (i.e., forget the final
-two @var{YY_END_OF_BUFFER_CHAR} bytes), then @code{yy_scan_buffer()}
+If you fail to set up @code{base} in this manner (i.e., forget the final
+two @code{YY_END_OF_BUFFER_CHAR} bytes), then @code{yy_scan_buffer()}
 returns a nil pointer instead of creating a new input buffer.
 
 The type
@@ -1757,7 +1757,7 @@ The macro @code{YY_USER_ACTION} can be defined to provide an action
 which is always executed prior to the matched rule's action.  For
 example, it could be #define'd to call a routine to convert yytext to
 lower-case.  When @code{YY_USER_ACTION} is invoked, the variable
-@var{yy_act} gives the number of the matched rule (rules are numbered
+@code{yy_act} gives the number of the matched rule (rules are numbered
 starting with 1).  Suppose you want to profile how often each of your
 rules is matched.  The following would do the trick:
 
@@ -1767,10 +1767,10 @@ rules is matched.  The following would do the trick:
 @end verbatim
 @end example
 
-where @var{ctr} is an array to hold the counts for the different rules.
+where @code{ctr} is an array to hold the counts for the different rules.
 Note that the macro @code{YY_NUM_RULES} gives the total number of rules
 (including the default rule), even if you use @samp{-s)}, so a correct
-declaration for @var{ctr} is:
+declaration for @code{ctr} is:
 
 @example
 @verbatim
@@ -1826,12 +1826,12 @@ holds the text of the current token.  It may be modified but not
 lengthened (you cannot append characters to the end).
 
 If the special directive @code{%array} appears in the first section of
-the scanner description, then @var{yytext} is instead declared
-@code{char yytext[YYLMAX]}, where @var{YYLMAX} is a macro definition
+the scanner description, then @code{yytext} is instead declared
+@code{char yytext[YYLMAX]}, where @code{YYLMAX} is a macro definition
 that you can redefine in the first section if you don't like the default
 value (generally 8KB).  Using @code{%array} results in somewhat slower
-scanners, but the value of @var{yytext} becomes immune to calls to
-@code{unput()}, which potentially destroy its value when @var{yytext} is
+scanners, but the value of @code{yytext} becomes immune to calls to
+@code{unput()}, which potentially destroy its value when @code{yytext} is
 a character pointer.  The opposite of @code{%array} is @code{%pointer},
 which is the default.
 
@@ -1877,12 +1877,12 @@ One of the main uses of @code{flex} is as a companion to the @code{yacc}
 parser-generator.  @code{yacc} parsers expect to call a routine named
 @code{yylex()} to find the next input token.  The routine is supposed to
 return the type of the next token as well as putting any associated
-value in the global @var{yylval}.  To use @code{flex} with @code{yacc},
+value in the global @code{yylval}.  To use @code{flex} with @code{yacc},
 one specifies the @samp{-d} option to @code{yacc} to instruct it to
 generate the file @file{y.tab.h} containing definitions of all the
 @code{%tokens} appearing in the @code{yacc} input.  This file is then
 included in the @code{flex} scanner.  For example, if one of the tokens
-is @var{TOK_NUMBER}, part of the scanner might look like:
+is @code{TOK_NUMBER}, part of the scanner might look like:
 
 @example
 @verbatim
@@ -1917,7 +1917,7 @@ is a do-nothing, deprecated option included for POSIX compliance.
 
 @item -d
 makes the generated scanner run in @dfn{debug} mode.  Whenever a pattern
-is recognized and the global variable @var{yy_flex_debug} is non-zero
+is recognized and the global variable @code{yy_flex_debug} is non-zero
 (which is the default), the scanner will write to @file{stderr} a line
 of the form:
 
@@ -1950,7 +1950,7 @@ and then exits.  @samp{-?}  and @samp{--help} are synonyms for
 instructs @code{flex} to generate a @dfn{case-insensitive} scanner.  The
 case of letters given in the @code{flex} input patterns will be ignored,
 and tokens in the input will be matched regardless of case.  The matched
-text given in @var{yytext} will have the preserved case (i.e., it will
+text given in @code{yytext} will have the preserved case (i.e., it will
 not be folded).
 
 @item -l
@@ -2099,9 +2099,9 @@ option, but with minor API changes for
 compatibility. In particular, the declaration of
 @code{yylex}
 is modified, and support for
-@var{yylval_r}
+@code{yylval_r}
 and
-@var{yylloc_r}
+@code{yylloc_r}
 is incorporated. @xref{bison pure}.
 
 The options @samp{-R} and @samp{-Rb} do not affect the performance of
@@ -2259,7 +2259,7 @@ directives (see the @samp{-l} option above) refer to the file
 changes the default @samp{yy} prefix used by @code{flex} for all
 globally-visible variable and function names to instead be
 @samp{prefix}.  For example, @samp{-Pfoo} changes the name of
-@var{yytext} to @var{footext}.  It also changes the name of the default
+@code{yytext} to @code{footext}.  It also changes the name of the default
 output file from @file{lex.yy.c} to @file{lex.foo.c}.  Here are all of
 the names affected:
 
@@ -2386,8 +2386,8 @@ enables the use of
 start condition stacks (@pxref{start conditions}).  
 
 @item stdinit
-if set (i.e., @b{%option stdinit)} initializes @var{yyin} and
-@var{yyout} to @file{stdin} and @file{stdout}, instead of the default of
+if set (i.e., @b{%option stdinit)} initializes @code{yyin} and
+@code{yyout} to @file{stdin} and @file{stdout}, instead of the default of
 @file{nil}.  Some existing @code{lex} programs depend on this behavior,
 even though it is not compliant with ANSI C, which does not require
 @file{stdin} and @file{stdout} to be compile-time constant. In a
@@ -2397,8 +2397,8 @@ is performed in @code{yylex_init} at runtime.
 @item yylineno
 directs @code{flex} to generate a scanner
 that maintains the number of the current line read from its input in the
-global variable @var{yylineno}.  This option is implied by @code{%option
-lex-compat}.  In a reentrant C scanner, the macro @var{yylineno_r} is
+global variable @code{yylineno}.  This option is implied by @code{%option
+lex-compat}.  In a reentrant C scanner, the macro @code{yylineno_r} is
 accessible regardless of the value of @code{%option yylineno}, however, its
 value is not modified by @code{flex} unless @code{%option yylineno} is enabled.
 
@@ -2789,7 +2789,7 @@ write rules which match @emph{short} amounts of text if it's anticipated
 that the text will often include @code{NUL}s.
 
 Another final note regarding performance: as mentioned in
-@ref{matching}, dynamically resizing @var{yytext} to accommodate huge
+@ref{matching}, dynamically resizing @code{yytext} to accommodate huge
 tokens is a slow process because it presently requires that the (huge)
 token be rescanned from the beginning.  Thus if performance is vital,
 you should attempt to match ``large'' quantities of text but not
@@ -2824,11 +2824,11 @@ interface.  It provides the following member functions:
 @table @code
 @item const char* YYText()
 returns the text of the most recently matched token, the equivalent of
-@var{yytext}.
+@code{yytext}.
 
 @item int YYLeng()
 returns the length of the most recently matched token, the equivalent of
-@var{yyleng}.
+@code{yyleng}.
 
 @item int lineno() const
 returns the current input line number (see @code{%option yylineno)}, or
@@ -2836,7 +2836,7 @@ returns the current input line number (see @code{%option yylineno)}, or
 
 @item void set_debug( int flag )
 sets the debugging flag for the scanner, equivalent to assigning to
-@var{yy_flex_debug} (@pxref{invoking flex}).  Note that you must build
+@code{yy_flex_debug} (@pxref{invoking flex}).  Note that you must build
 the scannerusing @code{%option debug} to include debugging information
 in it.
 
@@ -2874,9 +2874,9 @@ instead of @code{yyFlexLexer}.  In this case, rather than generating
 @code{yyFlexLexer::LexerError()} if called).
 
 @item virtual void switch_streams(istream* new_in = 0, ostream* new_out = 0)
-reassigns @var{yyin} to @var{new_in} (if non-nil) and @var{yyout} to
-@var{new_out} (if non-nil), deleting the previous input buffer if
-@var{yyin} is reassigned.
+reassigns @code{yyin} to @code{new_in} (if non-nil) and @code{yyout} to
+@code{new_out} (if non-nil), deleting the previous input buffer if
+@code{yyin} is reassigned.
 
 @item int yylex( istream* new_in, ostream* new_out = 0 )
 first switches the input streams via @code{switch_streams( new_in,
@@ -2889,7 +2889,7 @@ scanner:
 
 @table @code
 @item virtual int LexerInput( char* buf, int max_size )
-reads up to @var{max_size} characters into @var{buf} and returns the
+reads up to @code{max_size} characters into @code{buf} and returns the
 number of characters read.  To indicate end-of-input, return 0
 characters.  Note that @code{interactive} scanners (see the @samp{-B}
 and @samp{-I} flags in @ref{invoking flex}) define the macro
@@ -2899,7 +2899,7 @@ scanning an interactive input source, you can test for the presence of
 this name via @code{#ifdef} statements.
 
 @item virtual void LexerOutput( const char* buf, int size )
-writes out @var{size} characters from the buffer @var{buf}, which, while
+writes out @code{size} characters from the buffer @code{buf}, which, while
 @code{NUL}-terminated, may also contain internal @code{NUL}s if the
 scanner's rules can match text with @code{NUL}s in them.
 
@@ -3089,7 +3089,7 @@ scanners. Here is a quick overview of the API:
 @code{%option reentrant} must be specified.
 
 @item
-All functions take one additional argument: @var{yy_globals}
+All functions take one additional argument: @code{yy_globals}
 
 @item
 All global variables are replaced by their @samp{_r} equivalents.
@@ -3103,7 +3103,7 @@ Accessor methods (get/set functions) provide access to common
 @code{flex} variables.
 
 @item 
-User-specific data can be stored in @var{yyextra_r}.
+User-specific data can be stored in @code{yyextra_r}.
 @end itemize
 
 @node reentrant example, reentrant detail, reentrant overview, reentrant
@@ -3165,10 +3165,10 @@ necessary. The default is to generate a non-reentrant scanner.
 @node extra reentrant argument, global replacement, specify reentrant, reentrant detail
 @subsection The Extra Argument
 
-All functions take one additional argument: @var{yy_globals}.
+All functions take one additional argument: @code{yy_globals}.
 
 Notice that the calls to @code{yy_push_state} and @code{yy_pop_state}
-both have an argument, @var{yy_globals} , that is not present in a
+both have an argument, @code{yy_globals} , that is not present in a
 non-reentrant scanner.  Here are the declarations of
 @code{yy_push_state} and @code{yy_pop_state} in the generated scanner:
 
@@ -3179,12 +3179,12 @@ non-reentrant scanner.  Here are the declarations of
 @end verbatim
 @end example
 
-Notice that the argument @var{yy_globals} appears in the declaration of
+Notice that the argument @code{yy_globals} appears in the declaration of
 both functions.  In fact, all @code{flex} functions in a reentrant
 scanner have this additional argument.  It is always the last argument
 in the argument list, it is always of type @code{void *}, and it is
-always named @var{yy_globals}.  As you may have guessed,
-@var{yy_globals} is a pointer to an opaque data structure encapsulating
+always named @code{yy_globals}.  As you may have guessed,
+@code{yy_globals} is a pointer to an opaque data structure encapsulating
 the current state of the scanner.  For a list of function declarations,
 see @ref{reentrant functions}. Note that preprocessor macros, such as
 @code{BEGIN}, @code{ECHO}, and @code{REJECT}, do not take this
@@ -3195,11 +3195,11 @@ additional argument.
 
 All global variables are replaced by their @code{_r} equivalents.
 
-Notice in the above example that @var{yyout} and @var{yytext} are
-replaced by @var{yyout_r} and @var{yytext_r}.  These are macros that
+Notice in the above example that @code{yyout} and @code{yytext} are
+replaced by @code{yyout_r} and @code{yytext_r}.  These are macros that
 will expand to their equivalent lvalue.  All of the familiar @code{flex}
 globals have been replaced by their @code{_r} equivalents. Wherever you
-would normally use @var{yytext} in actions, you must use @var{yytext_r}
+would normally use @code{yytext} in actions, you must use @code{yytext_r}
 instead. This rule applies to all @code{flex} variables. The following
 is an example that uses the @code{_r} macros:
 
@@ -3217,9 +3217,9 @@ is an example that uses the @code{_r} macros:
 @end example
 
 One important thing to remember about
-@var{yytext_r}
+@code{yytext_r}
 and friends is that
-@var{yytext_r}
+@code{yytext_r}
 is not a global variable in a reentrant
 scanner, you can not access it directly from outside an action or from
 other functions. You must use the accessor method 
@@ -3243,8 +3243,8 @@ after @code{yylex}, respectively.
 The function @code{yylex_init} must be called before calling any other
 function. The argument to @code{yylex_init} is the address of an
 uninitialized pointer to be filled in by @code{flex}. The contents of
-@var{ptr_yy_globals} need not be initialized, since @code{flex} will
-overwrite it anyway. The value stored in @var{ptr_yy_globals} should
+@code{ptr_yy_globals} need not be initialized, since @code{flex} will
+overwrite it anyway. The value stored in @code{ptr_yy_globals} should
 thereafter be passed to @code{yylex()} and @b{yylex_destroy()}.  Flex
 does not save the argument passed to @code{yylex_init}, so it is safe to
 pass the address of a local pointer to @code{yylex_init}.  The function
@@ -3253,7 +3253,7 @@ takes one argument, which is the value returned (via an argument) by
 @code{yylex_init}.  Otherwise, it behaves the same as the non-reentrant
 version of @code{yylex}.  The function @code{yylex_destroy} should be
 called to free resources used by the scanner. After @code{yylex_destroy}
-is called, the contents of @var{yyglobals} should not be used.  Of
+is called, the contents of @code{yyglobals} should not be used.  Of
 course, there is no need to destroy a scanner if you plan to reuse it.
 A @code{flex} scanner (both reentrant and non-reentrant) may be
 restarted by calling @code{yyrestart}.
@@ -3266,7 +3266,7 @@ Accessor methods (get/set functions) provide access to common
 
 Many scanners that you build will be part of a larger project. Portions
 of your project will need access to @code{flex} values, such as
-@var{yytext}.  In a non-reentrant scanner, these values are global, so
+@code{yytext}.  In a non-reentrant scanner, these values are global, so
 there is no problem. However, in a reentrant scanner, there are no
 global @code{flex} values. You can not access them directly.  Instead,
 you must access @code{flex} values using accessor methods (get/set
@@ -3297,7 +3297,7 @@ The above code may be called from within an action like this:
 @node extra data,  , accessor methods, reentrant detail
 @subsection Extra Data
 
-User-specific data can be stored in @var{yyextra_r}.
+User-specific data can be stored in @code{yyextra_r}.
 
 In a reentrant scanner, it is unwise to use global variables to
 communicate with or maintain state between different pieces of your program.
@@ -3525,7 +3525,7 @@ incompatibilities, both of which are of concern to those who wish to
 write scanners acceptable to both implementations.  @code{flex} is fully
 compliant with the POSIX @code{lex} specification, except that when
 using @code{%pointer} (the default), a call to @code{unput()} destroys
-the contents of @var{yytext}, which is counter to the POSIX
+the contents of @code{yytext}, which is counter to the POSIX
 specification.  In this section we discuss all of the known areas of
 incompatibility between @code{flex}, AT&T @code{lex}, and the POSIX
 specification.  @code{flex}'s @samp{-l} option turns on maximum
@@ -3537,7 +3537,7 @@ following exceptions:
 
 @itemize
 @item 
-The undocumented @code{lex} scanner internal variable @var{yylineno} is
+The undocumented @code{lex} scanner internal variable @code{yylineno} is
 not supported unless @samp{-l} or @code{%option yylineno} is used.
 
 @item
@@ -3599,7 +3599,7 @@ them instead.  @xref{cxx}, and @ref{reentrant}  for details.
 
 @item 
 @code{output()} is not supported.  Output from the @b{ECHO} macro is
-done to the file-pointer @var{yyout} (default @file{stdout)}.
+done to the file-pointer @code{yyout} (default @file{stdout)}.
 
 @item
 @code{output()} is not part of the POSIX specification.
@@ -3788,9 +3788,9 @@ its rules.  This error can also occur due to internal problems.
 
 @item
 @samp{token too large, exceeds YYLMAX}. your scanner uses @code{%array}
-and one of its rules matched a string longer than the @var{YYLMAX}
+and one of its rules matched a string longer than the @code{YYLMAX}
 constant (8K bytes by default).  You can increase the value by
-#define'ing @var{YYLMAX} in the definitions section of your @code{flex}
+#define'ing @code{YYLMAX} in the definitions section of your @code{flex}
 input.
 
 @item
@@ -3804,7 +3804,7 @@ details.
 @item
 @samp{flex scanner push-back overflow}. you used @code{unput()} to push
 back so much text that the scanner's buffer could not hold both the
-pushed-back text and the current token in @var{yytext}.  Ideally the
+pushed-back text and the current token in @code{yytext}.  Ideally the
 scanner should dynamically resize the buffer in this case, but at
 present it does not.
 
