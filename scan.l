@@ -532,3 +532,25 @@ char *file;
 		infilename = "<stdin>";
 		}
 	}
+
+
+/* Wrapper routines for accessing the scanner's malloc routines. */
+
+void *flex_alloc( size )
+unsigned int size;
+	{
+	return yy_flex_alloc( size );
+	}
+
+void *flex_realloc( ptr, size )
+void *ptr;
+unsigned int size;
+	{
+	return yy_flex_realloc( ptr, size );
+	}
+
+void flex_free( ptr )
+void *ptr;
+	{
+	yy_flex_free( ptr );
+	}
