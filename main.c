@@ -817,7 +817,12 @@ void readin()
 		puts( "typedef char YY_CHAR;" );
 
 	if ( C_plus_plus )
+		{
 		puts( "#define yytext_ptr yytext" );
+
+		if ( interactive )
+			puts( "#define YY_INTERACTIVE" );
+		}
 
 	if ( fullspd )
 		printf(
