@@ -169,15 +169,15 @@ FAQ
 * The ^ operator isn't working::              
 * Trailing context is getting confused with trailing optional patterns::              
 * Is flex GNU or not?::              
-* unnamed-faq-53::              
-* unnamed-faq-54::              
-* unnamed-faq-55::              
-* unnamed-faq-56::              
-* unnamed-faq-57::              
-* unnamed-faq-58::              
-* unnamed-faq-59::              
-* unnamed-faq-60::              
-* unnamed-faq-61::              
+* ERASEME53::              
+* I need to scan if-then-else blocks and while loops::              
+* ERASEME55::              
+* ERASEME56::              
+* ERASEME57::              
+* Is there a repository for flex scanners?::              
+* How can I conditionally compile or preprocess my flex input file?::              
+* Where can I find grammars for lex and yacc?::              
+* I get an end-of-buffer message for each character scanned.::              
 * unnamed-faq-62::              
 * unnamed-faq-63::              
 * unnamed-faq-64::              
@@ -1384,7 +1384,7 @@ If the scanner reaches an end-of-file, subsequent calls are undefined
 unless either @file{yyin} is pointed at a new input file (in which case
 scanning continues from that file), or @code{yyrestart()} is called.
 @code{yyrestart()} takes one argument, a @code{FILE *} pointer (which
-can be nil, if you've set up @code{YY_INPUT} to scan from a source other
+can be NULL, if you've set up @code{YY_INPUT} to scan from a source other
 than @code{yyin}), and initializes @file{yyin} for scanning from that
 file.  Essentially there is no difference between just assigning
 @file{yyin} to a new input file or using @code{yyrestart()} to do so;
@@ -1897,7 +1897,7 @@ correctly declare input buffers in source files other than that of your
 scanner.  Note that the @code{FILE} pointer in the call to
 @code{yy_create_buffer} is only used as the value of @file{yyin} seen by
 @code{YY_INPUT}.  If you redefine @code{YY_INPUT()} so it no longer uses
-@file{yyin}, then you can safely pass a nil @code{FILE} pointer to
+@file{yyin}, then you can safely pass a NULL @code{FILE} pointer to
 @code{yy_create_buffer}.  You select a particular buffer to scan from
 using:
 
@@ -1916,7 +1916,7 @@ that switching input sources via either @code{yy_switch_to_buffer()} or
 @end deftypefun
 
 is used to reclaim the storage associated with a buffer.  (@code{buffer}
-can be nil, in which case the routine does nothing.)  You can also clear
+can be NULL, in which case the routine does nothing.)  You can also clear
 the current contents of a buffer using:
 
 @cindex clearing an input buffer
@@ -2039,7 +2039,7 @@ scanned; thus, scanning consists of @code{base[0]} through
 
 If you fail to set up @code{base} in this manner (i.e., forget the final
 two @code{YY_END_OF_BUFFER_CHAR} bytes), then @code{yy_scan_buffer()}
-returns a nil pointer instead of creating a new input buffer.
+returns a NULL pointer instead of creating a new input buffer.
 
 @deftp  {Data type} yy_size_t
 is an integral type to which you can cast an integer expression
@@ -2625,7 +2625,7 @@ start condition stacks (@pxref{Start Conditions}).
 @item --stdinit, @code{%option stdinit}
 if set (i.e., @b{%option stdinit)} initializes @code{yyin} and
 @code{yyout} to @file{stdin} and @file{stdout}, instead of the default of
-@file{nil}.  Some existing @code{lex} programs depend on this behavior,
+@file{NULL}.  Some existing @code{lex} programs depend on this behavior,
 even though it is not compliant with ANSI C, which does not require
 @file{stdin} and @file{stdout} to be compile-time constant. In a
 reentrant scanner, however, this is not a problem since initialization
@@ -3613,8 +3613,8 @@ instead of @code{yyFlexLexer}.  In this case, rather than generating
 
 @findex switch_streams (C++ only)
 @item virtual void switch_streams(istream* new_in = 0, ostream* new_out = 0)
-reassigns @code{yyin} to @code{new_in} (if non-nil) and @code{yyout} to
-@code{new_out} (if non-nil), deleting the previous input buffer if
+reassigns @code{yyin} to @code{new_in} (if non-null) and @code{yyout} to
+@code{new_out} (if non-null), deleting the previous input buffer if
 @code{yyin} is reassigned.
 
 @item int yylex( istream* new_in, ostream* new_out = 0 )
@@ -5199,15 +5199,15 @@ publish them here.
 * The ^ operator isn't working::              
 * Trailing context is getting confused with trailing optional patterns::              
 * Is flex GNU or not?::              
-* unnamed-faq-53::              
-* unnamed-faq-54::              
-* unnamed-faq-55::              
-* unnamed-faq-56::              
-* unnamed-faq-57::              
-* unnamed-faq-58::              
-* unnamed-faq-59::              
-* unnamed-faq-60::              
-* unnamed-faq-61::              
+* ERASEME53::              
+* I need to scan if-then-else blocks and while loops::              
+* ERASEME55::              
+* ERASEME56::              
+* ERASEME57::              
+* Is there a repository for flex scanners?::              
+* How can I conditionally compile or preprocess my flex input file?::              
+* Where can I find grammars for lex and yacc?::              
+* I get an end-of-buffer message for each character scanned.::              
 * unnamed-faq-62::              
 * unnamed-faq-63::              
 * unnamed-faq-64::              
@@ -5912,7 +5912,7 @@ When the flex C++ scanning class rewrite finally happens, then this sort of thin
 @cindex customizing I/O in C++ scanners
 @cindex C++ I/O, customizing
 You can do this by passing the various functions (such as @code{LexerInput()}
-and @code{LexerOutput()}) nil @code{iostream*}'s, and then
+and @code{LexerOutput()}) NULL @code{iostream*}'s, and then
 dealing with your own I/O classes surreptitiously (i.e., stashing them in
 special member variables).  This works because the only assumption about
 the lexer regarding what's done with the iostream's is that they're
@@ -6438,8 +6438,8 @@ The latest release is 2.5.4, by the way, available from ftp.ee.lbl.gov.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-53
-@unnumberedsec unnamed-faq-53
+@node ERASEME53
+@unnumberedsec ERASEME53
 @example
 @verbatim
 To: tsv@cs.UManitoba.CA
@@ -6464,8 +6464,8 @@ of ()'s except for the trailing context operator, '/'.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-54
-@unnumberedsec unnamed-faq-54
+@node I need to scan if-then-else blocks and while loops
+@unnumberedsec I need to scan if-then-else blocks and while loops
 @example
 @verbatim
 To: "Mike Stolnicki" <mstolnic@ford.com>
@@ -6493,8 +6493,8 @@ for sure won't be for many months to come).
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-55
-@unnumberedsec unnamed-faq-55
+@node ERASEME55
+@unnumberedsec ERASEME55
 @example
 @verbatim
 To: Colin Paul Adams <colin@colina.demon.co.uk>
@@ -6523,8 +6523,8 @@ variables, and then invokes yyFlexLexer::yylex() to do the regular scanning.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-56
-@unnumberedsec unnamed-faq-56
+@node ERASEME56
+@unnumberedsec ERASEME56
 @example
 @verbatim
 To: Mikael.Latvala@lmf.ericsson.se
@@ -6560,8 +6560,8 @@ it would confuse more people than it would enlighten.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-57
-@unnumberedsec unnamed-faq-57
+@node ERASEME57
+@unnumberedsec ERASEME57
 @example
 @verbatim
 To: "Marty Leisner" <leisner@sdsp.mc.xerox.com>
@@ -6593,101 +6593,35 @@ You can get 2.5.4 from ftp.ee.lbl.gov.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-58
-@unnumberedsec unnamed-faq-58
-@example
-@verbatim
-To: uocarroll@deagostini.co.uk (Ultan O'Carroll)
-Subject: Re: Flex repositries
-In-reply-to: Your message of Fri, 12 Sep 1997 15:02:28 PDT.
-Date: Fri, 12 Sep 1997 10:31:50 PDT
-From: Vern Paxson <vern>
+@node Is there a repository for flex scanners?
+@unnumberedsec Is there a repository for flex scanners?
 
->      before I start beavering away I wonder if you know of any
->      place/libraries for flex
->      desciption files that might already do this or give me a head start ?
-
-Unfortunately, no, I don't.  You might try asking on comp.compilers.
-
-		Vern
-@end verbatim
-@end example
+Not that we know of. You might try asking on comp.compilers.
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-59
-@unnumberedsec unnamed-faq-59
-@example
-@verbatim
-To: Adoram Rogel <adoram@hybridge.com>
-Subject: Re: Conditional compiling in the definitions section
-In-reply-to: Your message of Thu, 25 Sep 1997 11:22:42 PDT.
-Date: Thu, 25 Sep 1997 10:56:31 PDT
-From: Vern Paxson <vern>
+@node How can I conditionally compile or preprocess my flex input file?
+@unnumberedsec How can I conditionally compile or preprocess my flex input file?
 
-> I'm trying to combine two large lex files that now differ only in
-> about 10 lines in the definitions section.
-> I would like to have something like this:
-> #ifdef FFF
-> it	\<IT\>
-> #else
-> it	\<I\>
-> #endif
->
-> Now, I can't add states for these, as I have already too many states
-> and the program is very complicated, and I won't be able to handle
-> 10 or 20 more states.
->
-> Any trick to do this ?
 
-You might try using m4, or the C preprocessor plus a sed script to
-clean up the result (strip out the #line's).
+Flex doesn't have a preprocessor like C does.  You might try using m4, or the C
+preprocessor plus a sed script to clean up the result.
 
-		Vern
-@end verbatim
-@end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-60
-@unnumberedsec unnamed-faq-60
-@example
-@verbatim
-To: Steve Antoch <SteveAn@visio.com>
-Subject: Re: lex and yacc grammars
-In-reply-to: Your message of Mon, 17 Nov 1997 15:31:25 PST.
-Date: Mon, 17 Nov 1997 15:27:01 PST
-From: Vern Paxson <vern>
+@node Where can I find grammars for lex and yacc?
+@unnumberedsec Where can I find grammars for lex and yacc?
 
-> Would you happen to know where I can find grammars for lex and yacc?
-
-The flex sources have a grammar for (f)lex.  Dunno about yacc,
-
-		Vern
-@end verbatim
-@end example
+In the sources for flex and bison.
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-61
-@unnumberedsec unnamed-faq-61
-@example
-@verbatim
-To: Bryan Housel <bryan@drawcomp.com>
-Subject: Re: Question about Flex v2.5
-In-reply-to: Your message of Tue, 11 Nov 1997 21:30:23 PST.
-Date: Mon, 17 Nov 1997 17:12:21 PST
-From: Vern Paxson <vern>
-
-> It prints one of those "end of buffer.." messages for each character in the
-> token...
+@node I get an end-of-buffer message for each character scanned.
+@unnumberedsec I get an end-of-buffer message for each character scanned.
 
 This will happen if your LexerInput() function returns only one character
 at a time, which can happen either if you're scanner is "interactive", or
 if the streams library on your platform always returns 1 for yyin->gcount().
 
 Solution: override LexerInput() with a version that returns whole buffers.
-
-		Vern
-@end verbatim
-@end example
 
 @c TODO: Evaluate this faq.
 @node unnamed-faq-62
@@ -8211,6 +8145,6 @@ to specific locations in the generated scanner, and may be used to insert arbitr
 @c     exe "%s/" . @w . "/" . @r . "/g"
 @c     normal 'f
 @c endf
-@c nnoremap <F5>  1G/@node\s\+unnamed-faq-\d\+<cr>mfww"wy5ezt:call Faq()<cr>
+@c nnoremap <F5>  1G/@node\s\+unnamed-faq-\d\+<cr>mfww"wy5ezt:call Faq2()<cr>
 
 @bye
