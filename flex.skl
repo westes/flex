@@ -246,7 +246,7 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
 %if-not-reentrant
-extern size_t yyleng;
+extern int yyleng;
 %endif
 
 %push
@@ -415,7 +415,7 @@ static char yy_hold_char;
 static int yy_n_chars;		/* number of characters read into yy_ch_buf */
 
 
-size_t yyleng;
+int yyleng;
 
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = (char *) 0;
