@@ -3,9 +3,16 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* after version 2.5.21
+* version 2.5.22 released 2002-10-10
 
-** more test suite cleanups
+** more portability fixes around how we get ahold of the integral
+   types; there is a constant FLEX_NEED_INTEGRAL_TYPE_DEFINITIONS
+   which you should define if you don't have the <inttypes.h> header
+   file (after you complain to your C vendor for not providing a
+   reasonable C environment)
+
+** more test suite cleanups; in particular, the test suite should run
+   correctly when build from a different directory
 
 ** upgraded automake to 1.7 and consequently autoconf to 2.54; this
    means, among other things, that there is some support for
