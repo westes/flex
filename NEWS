@@ -5,6 +5,8 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.31
 
+** new romanian (ro) translation from the translation project
+
 ** upgrade to use gettext 0.12 (this now makes the "pdf" and "ps"
    targets in the build system able to be run successfully)
 

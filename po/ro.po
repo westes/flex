@@ -1,0 +1,833 @@
+# Mesajele în limba românã pentru flex-2.5.19
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# # Acest fi?ier este pus în domeniul public.
+# Eugen Hoanca <eugenh@urban-grafx.ro>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: flex 2.5.19\n"
+"POT-Creation-Date: 2002-09-05 12:07-0400\n"
+"PO-Revision-Date: 2003-08-23 08:26+0300\n"
+"Last-Translator: Eugen Hoanca <eugenh@urban-grafx.ro>\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: dfa.c:60
+#, c-format
+msgid "State #%d is non-accepting -\n"
+msgstr "Starea #%d este de neacceptat. -\n"
+
+#: dfa.c:123
+msgid "dangerous trailing context"
+msgstr "context de sfârºit(trailing) periculos"
+
+#: dfa.c:165
+msgid " associated rule line numbers:"
+msgstr " numerele de linie asociate regulii:"
+
+#: dfa.c:201
+msgid " out-transitions: "
+msgstr " tranziþii exterioare(out): "
+
+#: dfa.c:209
+msgid ""
+"\n"
+" jam-transitions: EOF "
+msgstr ""
+"\n"
+" tranziþii jam: EOF "
+
+#: dfa.c:340
+msgid "consistency check failed in epsclosure()"
+msgstr "verificare de consistenþã eºuatã în epsclosure()"
+
+#: dfa.c:428
+msgid ""
+"\n"
+"\n"
+"DFA Dump:\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Rezultat(dump) DFA:\n"
+"\n"
+
+#: dfa.c:589
+msgid "could not create unique end-of-buffer state"
+msgstr "nu am putut crea sfârºit unic pentru starea buffer-ului"
+
+#: dfa.c:610
+#, c-format
+msgid "state # %d:\n"
+msgstr "stare # %d:\n"
+
+#: dfa.c:783
+msgid "Could not write yynxt_tbl[][]"
+msgstr "Nu am putut scrie yynxt_tbl[][]"
+
+#: dfa.c:1006
+msgid "consistency check failed in symfollowset"
+msgstr "verificare de consistenþã eºuatã în symfollowset"
+
+#: dfa.c:1054
+msgid "bad transition character detected in sympartition()"
+msgstr "caracter greºit de tranziþie detectat în sympartition()"
+
+#: gen.c:424 gen.c:463
+msgid ""
+"\n"
+"\n"
+"Equivalence Classes:\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Clase de Echivalenþã:\n"
+"\n"
+
+#: gen.c:647 gen.c:673 gen.c:1158
+#, c-format
+msgid "state # %d accepts: [%d]\n"
+msgstr "starea # %d acceptã: [%d]\n"
+
+#: gen.c:1066
+#, c-format
+msgid "state # %d accepts: "
+msgstr "starea # %d acceptã: "
+
+#: gen.c:1176
+msgid "Could not write yyacc_tbl"
+msgstr "Nu am putut scrie yyacc_tbl"
+
+#: gen.c:1202
+msgid ""
+"\n"
+"\n"
+"Meta-Equivalence Classes:\n"
+msgstr ""
+"\n"
+"\n"
+"Clase de Meta-Echivalenþã:\n"
+
+#: gen.c:1221
+msgid "Could not write yymeta_tbl"
+msgstr "Nu am putut scrie yymeta_tbl"
+
+#: gen.c:1278
+msgid "Could not write yybase_tbl"
+msgstr "Nu am putut scrie yybase_tbl"
+
+#: gen.c:1308
+msgid "Could not write yydef_tbl"
+msgstr "Nu am putut scrie yydef_tbl"
+
+#: gen.c:1342
+msgid "Could not write yynxt_tbl"
+msgstr "Nu am putut scrie yynxt_tbl"
+
+#: gen.c:1372
+msgid "Could not write yychk_tbl"
+msgstr "Nu am putut scrie yychk_tbl"
+
+#: gen.c:1511 gen.c:1534
+msgid "Could not write ftbl"
+msgstr "Nu am putut scrie ftbl"
+
+#: gen.c:1520 gen.c:1543
+msgid "Could not write ecstbl"
+msgstr "Nu am putut scrie ecstbl"
+
+#: gen.c:1604
+msgid "Could not write yynultrans_tbl"
+msgstr "Nu am putut scrie yynultrans_tbl"
+
+#: main.c:164
+msgid "rule cannot be matched"
+msgstr "regula nu se potriveºte cu nimic"
+
+#: main.c:169
+msgid "-s option given but default rule can be matched"
+msgstr "a fost datã opþiunea -s dar regula implicitã se poate potrivi"
+
+#: main.c:205
+msgid "Can't use -+ with -l option"
+msgstr "Nu se poate folosi -+ cu opþiunea -l"
+
+#: main.c:208
+msgid "Can't use -f or -F with -l option"
+msgstr "Nu se poate folosi -f sau -F cu opþiunea -l"
+
+#: main.c:212
+msgid "Can't use -R or -Rb with -l option"
+msgstr "Nu se poate folosi -R sau -Rb cu opþiunea -l"
+
+#: main.c:227
+msgid "Can't specify header option if writing to stdout."
+msgstr "Nu se poate specifica opþiunea de header dacã se scrie la stdout"
+
+#: main.c:253
+msgid "-Cf/-CF and -Cm don't make sense together"
+msgstr "-Cf/-CF ºi -Cm nu au sens folosite împreunã"
+
+#: main.c:256
+msgid "-Cf/-CF and -I are incompatible"
+msgstr "-Cf/-CF ºi -I sunt incompatibile"
+
+#: main.c:260
+msgid "-Cf/-CF are incompatible with lex-compatibility mode"
+msgstr "-Cf/-CF sunt incompatibile cu module de compatibilitate lex"
+
+#: main.c:265
+msgid "-Cf and -CF are mutually exclusive"
+msgstr "-Cf ºi -CF se exclud reciproc"
+
+#: main.c:269
+msgid "Can't use -+ with -CF option"
+msgstr "Nu se poate folosi -+ cu opþiunea -CF"
+
+#: main.c:272
+#, c-format
+msgid "%array incompatible with -+ option"
+msgstr "%array incompatibil cu opþiunea -+"
+
+#: main.c:277
+msgid "Options -+ and -R are mutually exclusive."
+msgstr "Opþiunile -+ ºi -R se exclud reciproc"
+
+#: main.c:323 main.c:343 main.c:556
+#, c-format
+msgid "could not create %s"
+msgstr "nu am putut crea %s"
+
+#: main.c:357
+msgid "could not write tables header"
+msgstr "Nu am putut scrie capul de tabel"
+
+#: main.c:361
+#, c-format
+msgid "can't open skeleton file %s"
+msgstr "nu am putut deschide fiºierul schelet %s"
+
+#: main.c:523
+#, c-format
+msgid "input error reading skeleton file %s"
+msgstr "eroare de intrare(input) în timpul citirii fiºierului schelet %s"
+
+#: main.c:527
+#, c-format
+msgid "error closing skeleton file %s"
+msgstr "eroare în închiderea fiºierului schelet %s"
+
+#: main.c:769
+#, c-format
+msgid "error creating header file %s"
+msgstr "eroare în crearea fiºierului de header %s"
+
+#: main.c:777
+#, c-format
+msgid "error writing output file %s"
+msgstr "eroare în scrierea fiºierului de output %s"
+
+#: main.c:781
+#, c-format
+msgid "error closing output file %s"
+msgstr "eroare în închiderea fiºierului de output %s"
+
+#: main.c:785
+#, c-format
+msgid "error deleting output file %s"
+msgstr "eroare în ºtergerea fiºierului de output %s"
+
+#: main.c:792
+msgid "No backing up.\n"
+msgstr "Nu se revine (backing-up).\n"
+
+#: main.c:796
+#, c-format
+msgid "%d backing up (non-accepting) states.\n"
+msgstr "%d salvare de (inacceptabile) stãri.\n"
+
+#: main.c:800
+msgid "Compressed tables always back up.\n"
+msgstr "Tabelele compresate întotdeauna au back-up.\n"
+
+#: main.c:803
+#, c-format
+msgid "error writing backup file %s"
+msgstr "eroare în scrierea fiºierului de backup %s"
+
+#: main.c:807
+#, c-format
+msgid "error closing backup file %s"
+msgstr "eroare în închiderea fiºierului de backup %s"
+
+#: main.c:812
+#, c-format
+msgid "%s version %s usage statistics:\n"
+msgstr "%s versiunea %s statistici de folosire:\n"
+
+#: main.c:815
+msgid "  scanner options: -"
+msgstr "  opþiuni de scanner: -"
+
+#: main.c:894
+#, c-format
+msgid "  %d/%d NFA states\n"
+msgstr "  %d/%d stãri NFA\n"
+
+#: main.c:896
+#, c-format
+msgid "  %d/%d DFA states (%d words)\n"
+msgstr "  %d/%d stãri DFA (%d cuvinte)\n"
+
+#: main.c:898
+#, c-format
+msgid "  %d rules\n"
+msgstr "  %d reguli\n"
+
+#: main.c:903
+msgid "  No backing up\n"
+msgstr "  Nu se face backup\n"
+
+#: main.c:907
+#, c-format
+msgid "  %d backing-up (non-accepting) states\n"
+msgstr "  %d salvare de (inacceptabile) stãri\n"
+
+#: main.c:912
+msgid "  Compressed tables always back-up\n"
+msgstr "  Tabelele compresate întotdeauna au back-up\n"
+
+#: main.c:916
+msgid "  Beginning-of-line patterns used\n"
+msgstr "  Tipare de începuturi de linie folosite\n"
+
+#: main.c:918
+#, c-format
+msgid "  %d/%d start conditions\n"
+msgstr "  %d/%d condiþii de start\n"
+
+#: main.c:922
+#, c-format
+msgid "  %d epsilon states, %d double epsilon states\n"
+msgstr "  %d stãri epsilon, %d stãri dublu epsilon\n"
+
+#: main.c:926
+msgid "  no character classes\n"
+msgstr "  nici o clasã de caractere\n"
+
+#: main.c:930
+#, c-format
+msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
+msgstr "  %d/%d clase de caractere necesare %d/%d cuvinte de stocare, %d refolosite\n"
+
+#: main.c:935
+#, c-format
+msgid "  %d state/nextstate pairs created\n"
+msgstr "  %d perechi de stare/stareurmãtoare create\n"
+
+#: main.c:938
+#, c-format
+msgid "  %d/%d unique/duplicate transitions\n"
+msgstr "  %d/%d tranziþii unice/duplicate\n"
+
+#: main.c:943
+#, c-format
+msgid "  %d table entries\n"
+msgstr "  %d intrãri în tabele\n"
+
+#: main.c:951
+#, c-format
+msgid "  %d/%d base-def entries created\n"
+msgstr "  %d/%d base-def intrãri create\n"
+
+#: main.c:955
+#, c-format
+msgid "  %d/%d (peak %d) nxt-chk entries created\n"
+msgstr "  %d/%d (maxim %d) nxt-chk intrãri create\n"
+
+#: main.c:959
+#, c-format
+msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
+msgstr "  %d/%d (maxim %d) model nxt-chk intrãri create\n"
+
+#: main.c:963
+#, c-format
+msgid "  %d empty table entries\n"
+msgstr "  %d intrãri în tabel goale\n"
+
+#: main.c:965
+#, c-format
+msgid "  %d protos created\n"
+msgstr "  %d prototipuri create\n"
+
+#: main.c:968
+#, c-format
+msgid "  %d templates created, %d uses\n"
+msgstr "  %d modele create, %d folosiri\n"
+
+#: main.c:976
+#, c-format
+msgid "  %d/%d equivalence classes created\n"
+msgstr "  %d/%d clase de echivalenþã create\n"
+
+#: main.c:984
+#, c-format
+msgid "  %d/%d meta-equivalence classes created\n"
+msgstr "  %d/%d clase de  meta-echivalenþã create\n"
+
+#: main.c:990
+#, c-format
+msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
+msgstr "  %d (%d salvate) coliziuni disipate(hash), %d egaluri de DFA-uril\n"
+
+#: main.c:992
+#, c-format
+msgid "  %d sets of reallocations needed\n"
+msgstr "  %d seturi de realocãri necesare\n"
+
+#: main.c:994
+#, c-format
+msgid "  %d total table entries needed\n"
+msgstr "  %d intrãri totale în tabel necesare\n"
+
+#: main.c:1056
+msgid "Internal error. flexopts are malformed.\n"
+msgstr "Eroare internã. Opþiunile flex(flexopts) sunt malformate.\n"
+
+#: main.c:1066
+#, c-format
+msgid "Try `%s --help' for more information.\n"
+msgstr "Încercaþi `%s --help' pentru mai multe informaþii.\n"
+
+#: main.c:1123
+#, c-format
+msgid "unknown -C option '%c'"
+msgstr "opþiune -C necunoscutã `%c'"
+
+#: main.c:1207
+#, c-format
+msgid "unknown -R option '%c'"
+msgstr "opþiune -R necunoscutã `%c'"
+
+#: main.c:1251
+#, c-format
+msgid "%s %s\n"
+msgstr "%s %s\n"
+
+#: main.c:1514
+msgid "fatal parse error"
+msgstr "eroare fatalã de analizã(parse)"
+
+#: main.c:1546
+#, c-format
+msgid "could not create backing-up info file %s"
+msgstr "nu s-a putut crea fiºierul de informaþii de back-up %s"
+
+#: main.c:1567
+msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
+msgstr "-l opþiunea de compatibilitate AT&T lex determinã o scãdere drasticã a performanþei\n"
+
+#: main.c:1570
+msgid " and may be the actual source of other reported performance penalties\n"
+msgstr "ºi poate fi sursa realã a altor scãderi de performanþã raportate\n"
+
+#: main.c:1576
+#, c-format
+msgid "%%option yylineno entails a large performance penalty\n"
+msgstr "%%opþiunea yylineno determinã o scãdere drasticã a performanþei\n"
+
+#: main.c:1583
+msgid "-I (interactive) entails a minor performance penalty\n"
+msgstr "-I (interactiãe) determinã o scãdere minorã a performanþei\n"
+
+#: main.c:1588
+msgid "yymore() entails a minor performance penalty\n"
+msgstr "yymore() determinã o scãdere minorã a performanþei\n"
+
+#: main.c:1594
+msgid "REJECT entails a large performance penalty\n"
+msgstr "REJECT determinã o scãdere drasticã a performanþei\n"
+
+#: main.c:1599
+msgid "Variable trailing context rules entail a large performance penalty\n"
+msgstr "Contextul de sfârºit(trailing) variabil determinã o scãdere drasticã a performanþei\n"
+
+#: main.c:1611
+msgid "REJECT cannot be used with -f or -F"
+msgstr "REJECT nu poate fi folosit cu -f sau -F"
+
+#: main.c:1614
+#, c-format
+msgid "%option yylineno cannot be used with REJECT"
+msgstr "%opþiunea yylineno nu poate fi folositã cu REJECT"
+
+#: main.c:1617
+msgid "variable trailing context rules cannot be used with -f or -F"
+msgstr "contextul de sfârºit(trailing) variabil nu poate fi folosit cu -f sau -F"
+
+#: main.c:1733
+#, c-format
+msgid "%option yyclass only meaningful for C++ scanners"
+msgstr "%opþunea yyclass este folositoare doar pentru scannerele C++"
+
+#: main.c:1840
+#, c-format
+msgid "Usage: %s [OPTIONS] [FILE]...\n"
+msgstr "Folosire: %s [OPÞIUNI] [FIªIER]...\n"
+
+#: main.c:1843
+#, c-format
+msgid ""
+"Generates programs that perform pattern-matching on text.\n"
+"\n"
+"Table Compression:\n"
+"  -Ca, --align      trade off larger tables for better memory alignment\n"
+"  -Ce, --ecs        construct equivalence classes\n"
+"  -Cf               do not compress tables; use -f representation\n"
+"  -CF               do not compress tables; use -F representation\n"
+"  -Cm, --meta-ecs   construct meta-equivalence classes\n"
+"  -Cr, --read       use read() instead of stdio for scanner input\n"
+"  -f, --full        generate fast, large scanner. Same as -Cfr\n"
+"  -F, --fast        use alternate table representation. Same as -CFr\n"
+"  -Cem              default compression (same as --ecs --meta-ecs)\n"
+"\n"
+"Debugging:\n"
+"  -d, --debug             enable debug mode in scanner\n"
+"  -b, --backup            write backing-up information to %s\n"
+"  -p, --perf-report       write performance report to stderr\n"
+"  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
+"  -T, --trace             %s should run in trace mode\n"
+"  -w, --nowarn            do not generate warnings\n"
+"  -v, --verbose           write summary of scanner statistics to stdout\n"
+"\n"
+"Files:\n"
+"  -o, --outfile=FILE      specify output filename\n"
+"  -S, --skel=FILE         specify skeleton file\n"
+"  -t, --stdout            write scanner on stdout instead of %s\n"
+"      --yyclass=NAME      name of C++ class\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
+"      --tables-file[=FILE] write tables to FILE\n"
+"\n"
+"Scanner behavior:\n"
+"  -7, --7bit              generate 7-bit scanner\n"
+"  -8, --8bit              generate 8-bit scanner\n"
+"  -B, --batch             generate batch scanner (opposite of -I)\n"
+"  -i, --case-insensitive  ignore case in patterns\n"
+"  -l, --lex-compat        maximal compatibility with original lex\n"
+"  -X, --posix-compat      maximal compatibility with POSIX lex\n"
+"  -I, --interactive       generate interactive scanner (opposite of -B)\n"
+"      --yylineno          track line count in yylineno\n"
+"\n"
+"Generated code:\n"
+"  -+,  --c++               generate C++ scanner class\n"
+"  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
+"  -L,  --noline            suppress #line directives in scanner\n"
+"  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
+"  -R,  --reentrant         generate a reentrant C scanner\n"
+"  -Rb, --reentrant-bison   reentrant scanner for bison pure parser.\n"
+"       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+"       --nounistd          do not include <unistd.h>\n"
+"       --noFUNCTION        do not generate a particular FUNCTION\n"
+"\n"
+"Miscellaneous:\n"
+"  -c                      do-nothing POSIX option\n"
+"  -n                      do-nothing POSIX option\n"
+"  -?\n"
+"  -h, --help              produce this help message\n"
+"  -V, --version           report %s version\n"
+msgstr ""
+"Genereazã programe care cautã potriviri de tipare pe un text\n"
+"\n"
+"Compresie de tabele:\n"
+"  -Ca, --align      renunþã la tabelele mari în favoarea unui aliniament mai bun al memoriei\n"
+"  -Ce, --ecs        construieºte clase de echivalenþã\n"
+"  -Cf               nu compreseazã tabelele; foloseºte reprezentare -f \n"
+"  -CF               nu compreseazã tabelele; foloseºte reprezentare -F\n"
+"  -Cm, --meta-ecs   construieºte clase de meta-echivalenþã\n"
+"  -Cr, --read       foloseºte read() în loc de stdio pentru intrarea de scanner\n"
+"  -f, --full        genereazã scannere rapide, mari. Asemãnãtor lui -Cfr\n"
+"  -F, --fast        foloseºte reprezentare alternativã de tabele. Asemãnãtor lui -CFr\n"
+"  -Cem              compresie implicitã (asemãnãtor lui --ecs --meta-ecs)\n"
+"\n"
+"Debugging:\n"
+"  -d, --debug             activeazã modul debug în scanner\n"
+"  -b, --backup            scriere de informaþii de backup în %s\n"
+"  -p, --perf-report       scrie raportul de performanþã la stderr\n"
+"  -s, --nodefault         eliminã regula implicitã de ECHO text care nu se potriveºte\n"
+"  -T, --trace             %s ar trebui sã ruleze în mod trace\n"
+"  -w, --nowarn            nu genereazã avertismente\n"
+"  -v, --verbose           scrie cuprinsul statisticilor scanner-ului la stdout\n"
+"\n"
+"Fiºiere:\n"
+"  -o, --outfile=FIªIER      specificã numele de fiºier de ieºire\n"
+"  -S, --skel=FIªIER         specificã fiºierul schelet\n"
+"  -t, --stdout            scrie scannerul la  stdout în loc de %s\n"
+"      --yyclass=NUME      numele clasei C++\n"
+"      --header-file=FIªIER   creazã im fiºier de header C pe lângãscanner\n"
+"      --tables-file[=FIªIER] scrie tabelele în FIªIER\n"
+"\n"
+"Comportament scanner:\n"
+"  -7, --7bit              genereazã scanner pe 7-biþi\n"
+"  -8, --8bit              genereazã scanner pe 8-biþi\n"
+"  -B, --batch             genereazã scanner comandã(batch) (inversul lui -I)\n"
+"  -i, --case-insensitive  ignorã cazul în tipare\n"
+"  -l, --lex-compat        compatibilitate maximã cu lex original\n"
+"  -X, --posix-compat      compatibilitate maximã cu lex POSIX\n"
+"  -I, --interactive       genereazã scanner interactive (inversul lui -B)\n"
+"      --yylineno          urmãreºte numãrãtoare liniilor în yylineno\n"
+"\n"
+"Cod generat:\n"
+"  -+,  --c++               genereazã clasã de scanner C++ \n"
+"  -Dmacro[=defn]           #define macro defn  (implicit defn is '1')\n"
+"  -L,  --noline            eliminã directivele #line din scanner\n"
+"  -P,  --prefix=ªIR     foloseºte ªIR ca ºi prefix în loc de \"yy\"\n"
+"  -R,  --reentrant         genereazã un scanner C circular(reentrant)\n"
+"  -Rb, --reentrant-bison   scanner circular pentru analizã purã bison.\n"
+"       --stdinit           iniþializeazã yyin/yyout cãtre stdin/stdout\n"
+"       --nounistd          nu include <unistd.h>\n"
+"       --noFUNCÞIE        nu genera o FUNCÞIE particularã\n"
+"\n"
+"Diverse:\n"
+"  -c                      opþiune POSIX care nu face nimic\n"
+"  -n                      opþiune POSIX care nu face nimic\n"
+"  -?\n"
+"  -h, --help              produce acest mesaj de ajutor\n"
+"  -V, --version           raporteazã versiunea %s\n"
+
+#: misc.c:46
+#, c-format
+msgid "name \"%s\" ridiculously long"
+msgstr "numele \"%s\" este ridicol de lung"
+
+#: misc.c:100
+msgid "memory allocation failed in allocate_array()"
+msgstr "alocare de memorie eºuatã în allocate_array()"
+
+#: misc.c:175
+#, c-format
+msgid "bad character '%s' detected in check_char()"
+msgstr "caracter greºit `%s' detectat în check_char()"
+
+#: misc.c:180
+#, c-format
+msgid "scanner requires -8 flag to use the character %s"
+msgstr "scannerul necesitã parametrul(flag) -8 pentru a folosi caracterul %s"
+
+#: misc.c:213
+msgid "dynamic memory failure in copy_string()"
+msgstr "eroare de memorie dinamicã în copy_string()"
+
+#: misc.c:339
+#, c-format
+msgid "%s: fatal internal error, %s\n"
+msgstr "%s: eroare internã fatalã, %s\n"
+
+#: misc.c:772
+msgid "attempt to increase array size failed"
+msgstr "încercare de a mãri dimensiunea domeniului eºuatã"
+
+#: misc.c:844
+msgid "bad line in skeleton file"
+msgstr "linie greºitã în fiºierul schelet"
+
+#: misc.c:890
+msgid "memory allocation failed in yy_flex_xmalloc()"
+msgstr "alocare de memorie eºuatã în yy_flex_xmalloc()"
+
+#: nfa.c:104
+#, c-format
+msgid ""
+"\n"
+"\n"
+"********** beginning dump of nfa with start state %d\n"
+msgstr ""
+"\n"
+"\n"
+"********** începerea aducerii(dump) nfa cu starea de început %d\n"
+
+#: nfa.c:115
+#, c-format
+msgid "state # %4d\t"
+msgstr "stare # %4d\t"
+
+#: nfa.c:130
+msgid "********** end of dump\n"
+msgstr "********** sfârºit de aducere(dump)\n"
+
+#: nfa.c:174
+msgid "empty machine in dupmachine()"
+msgstr "maºinã vidã în dupmachine()"
+
+#: nfa.c:240
+#, c-format
+msgid "Variable trailing context rule at line %d\n"
+msgstr "Regulã de context de sfârºit variabil la linia %d\n"
+
+#: nfa.c:353
+msgid "bad state type in mark_beginning_as_normal()"
+msgstr "tip de stare greºitã în mark_beginning_as_normal()"
+
+#: nfa.c:598
+#, c-format
+msgid "input rules are too complicated (>= %d NFA states)"
+msgstr "regulile de intrare(input) sunt prea complicate (>= %d stãri NFA)"
+
+#: nfa.c:677
+msgid "found too many transitions in mkxtion()"
+msgstr "s-au gãsit prea multe tranziþii în mkxtion()"
+
+#: nfa.c:703
+#, c-format
+msgid "too many rules (> %d)!"
+msgstr "prea multe reguli (> %d)!"
+
+#: parse.y:175
+msgid "unknown error processing section 1"
+msgstr "eroare necunoscutã în procesarea secþiunii 1"
+
+#: parse.y:200 parse.y:365
+msgid "bad start condition list"
+msgstr "listã de stãri în condiþie proastã"
+
+#: parse.y:329
+msgid "unrecognized rule"
+msgstr "regulã necunoscutã"
+
+#: parse.y:448 parse.y:461 parse.y:530
+msgid "trailing context used twice"
+msgstr "context de sfârºit(trailing) utilizat de douã ori"
+
+#: parse.y:566 parse.y:576 parse.y:649 parse.y:659
+msgid "bad iteration values"
+msgstr "valori de iteraþie greºite"
+
+#: parse.y:594 parse.y:612 parse.y:677 parse.y:695
+msgid "iteration value must be positive"
+msgstr "valoarea iteraþiei trebuie sã fie pozitivã"
+
+#: parse.y:798
+msgid "negative range in character class"
+msgstr "domeniu negativ în clasa de caractere"
+
+#: scan.l:61 scan.l:162 scan.l:219 scan.l:352 scan.l:491 scan.l:541
+msgid "Input line too long\n"
+msgstr "Linie de intrare(input) prea lungã\n"
+
+#: scan.l:153
+#, no-c-format
+msgid "unrecognized '%' directive"
+msgstr "directivã '%' necunoscutã"
+
+#: scan.l:236
+msgid "incomplete name definition"
+msgstr "definire de nume incompletã"
+
+#: scan.l:360
+#, c-format
+msgid "unrecognized %%option: %s"
+msgstr "%%opþiune necunoscutã: %s"
+
+#: scan.l:501 scan.l:620
+msgid "bad character class"
+msgstr "clasã de caractere greºitã"
+
+#: scan.l:548
+#, c-format
+msgid "undefined definition {%s}"
+msgstr "definiþie nedefinitã {%s}"
+
+#: scan.l:588
+#, c-format
+msgid "bad <start condition>: %s"
+msgstr "<condiþie de start> greºitã: %s"
+
+#: scan.l:601
+msgid "missing quote"
+msgstr "menþionare(quote) lipsã"
+
+#: scan.l:641
+#, c-format
+msgid "bad character class expression: %s"
+msgstr "expresie clasã caracter greºitã: %s"
+
+#: scan.l:663
+msgid "bad character inside {}'s"
+msgstr "caracter eronat între {}"
+
+#: scan.l:669
+msgid "missing }"
+msgstr "lipseºte }"
+
+#: scan.l:742
+msgid "EOF encountered inside an action"
+msgstr "EOF întâlnit în mijlocul acþiunii"
+
+#: scan.l:762
+#, c-format
+msgid "bad character: %s"
+msgstr "caracter eronat: %s"
+
+#: scan.l:791
+#, c-format
+msgid "can't open %s"
+msgstr "nu pot deschide %s"
+
+#: scanopt.c:291
+#, c-format
+msgid "Usage: %s [OPTIONS]...\n"
+msgstr "Folosire: %s [OPÞIUNI]...\n"
+
+#: scanopt.c:565
+#, c-format
+msgid "option `%s' doesn't allow an argument\n"
+msgstr "opþiunea `%s' nu permite parametri\n"
+
+#: scanopt.c:570
+#, c-format
+msgid "option `%s' requires an argument\n"
+msgstr "opþiunea `%s' necesitã un parametru\n"
+
+#: scanopt.c:574
+#, c-format
+msgid "option `%s' is ambiguous\n"
+msgstr "opþiunea `%s' este ambiguã\n"
+
+#: scanopt.c:578
+#, c-format
+msgid "Unrecognized option `%s'\n"
+msgstr "Opþiune necunoscutã `%s'\n"
+
+#: scanopt.c:582
+#, c-format
+msgid "Unknown error=(%d)\n"
+msgstr "Eroare necunoscutã=(%d)\n"
+
+#: sym.c:100
+msgid "symbol table memory allocation failed"
+msgstr "alocare de memorie pentru tabela de simboluri eºuatã"
+
+#: sym.c:203
+msgid "name defined twice"
+msgstr "nume definit de douã ori"
+
+#: sym.c:257
+#, c-format
+msgid "start condition %s declared twice"
+msgstr "condiþie de start %s definitã de douã ori"
+
+#: yylex.c:56
+msgid "premature EOF"
+msgstr "EOF prematur"
+
+#: yylex.c:198
+msgid "End Marker\n"
+msgstr "Marcaj de sfârºit\n"
+
+#: yylex.c:204
+#, c-format
+msgid "*Something Weird* - tok: %d val: %d\n"
+msgstr "*Ceva Ciudat* - tok: %d val: %d\n"
