@@ -1,7 +1,7 @@
 BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
-EXTRA_DIST = scanner.l parser.y test.input
+EXTRA_DIST = scanner.l test.input
 CLEANFILES = scanner.c scanner.h parser.c parser.h test-yyextra OUTPUT $(OBJS)
 OBJS = scanner.o # parser.o
 
