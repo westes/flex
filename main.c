@@ -621,7 +621,7 @@ char **argv;
 
 	if ( ! csize_given )
 		{
-		if ( fulltbl || fullspd )
+		if ( (fulltbl || fullspd) && ! useecs )
 			csize = DEFAULT_CSIZE;
 		else
 			csize = CSIZE;
