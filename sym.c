@@ -150,7 +150,7 @@ int table_size;
 	return &empty_entry;
 	}
 
-    
+
 /* hashfunct - compute the hash value for "str" and hash size "hash_size" */
 
 int hashfunct( str, hash_size )
