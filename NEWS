@@ -3,6 +3,11 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* after version 2.5.29
+
+** flex now uses m4 to generate scanners; while this means that
+   scanners are more readable, it means that flex requires m4 to be installed
+
 * version 2.5.29 released 2003-3-5
 
 ** Automatic stack management for multiple input buffers in C and C++ scanners
