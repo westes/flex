@@ -1,0 +1,15 @@
+* resolve the items in the to.do directory
+
+** expand the above into individual requests and handle those requests
+
+* convert flex to use automake
+
+* make flex.texi the authoritative manual
+
+** take the man-isms out of flex.texi
+
+** add flex.texi and its generated info files into the Makefile
+   process (best done via automake)
+
+* integrate the items in the faqs/ directory into the manual or code
+  or similar
