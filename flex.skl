@@ -236,6 +236,7 @@ static int yy_start_stack_depth = 0;
 static int *yy_start_stack = 0;
 static void yy_push_state YY_PROTO(( int new_state ));
 static void yy_pop_state YY_PROTO(( void ));
+static int yy_top_state YY_PROTO(( void ));
 %*
 
 #define yy_new_buffer yy_create_buffer
@@ -1096,6 +1097,16 @@ void yyFlexLexer::yy_pop_state()
 		YY_FATAL_ERROR( "start-condition stack underflow" );
 
 	BEGIN(yy_start_stack[yy_start_stack_ptr]);
+	}
+
+
+%-
+static int yy_top_state()
+%+
+int yyFlexLexer::yy_top_state()
+%*
+	{
+	return yy_start_stack[yy_start_stack_ptr - 1];
 	}
 
 

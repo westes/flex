@@ -122,7 +122,8 @@ protected:
 	int* yy_start_stack;
 
 	void yy_push_state( int new_state );
-	int yy_pop_state();
+	void yy_pop_state();
+	int yy_top_state();
 
 	yy_state_type yy_get_previous_state();
 	yy_state_type yy_try_NUL_trans( yy_state_type current_state );
