@@ -1023,6 +1023,18 @@ void make_tables()
     else
 	indent_puts( "yyleng = yy_cp - yy_bp; \\" );
 
+    /* now also deal with copying yytext_ptr to yytext if needed */
+    skelout();
+    if ( yytext_is_array )
+	{
+	indent_puts( "if ( yyleng >= YYLMAX ) \\" );
+	indent_up();
+	indent_puts(
+		"YY_FATAL_ERROR( \"token too large, exceeds YYLMAX\" ); \\" );
+	indent_down();
+	indent_puts( "strcpy( yytext, (char *) yytext_ptr ); \\" );
+	}
+
     set_indent( 0 );
     
     skelout();
