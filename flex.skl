@@ -162,17 +162,6 @@ extern void *yy_flex_alloc YY_PROTO(( int ));
 extern void yy_flex_free YY_PROTO(( void * ));
 extern int yywrap YY_PROTO(( void ));
 
-/* Done after the current pattern has been matched and before the
- * corresponding action - sets up yytext.
- */
-#define YY_DO_BEFORE_ACTION \
-	yytext_ptr = yy_bp; \
-%% code to fiddle  yytext and yyleng for yymore() goes here
-	yy_hold_char = *yy_cp; \
-	*yy_cp = '\0'; \
-%% code to copy yytext_ptr to yytext[] goes here, if %array
-	yy_c_buf_p = yy_cp;
-
 #define EOB_ACT_CONTINUE_SCAN 0
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
@@ -247,9 +236,6 @@ static int yy_start = 0;	/* start state number */
  */
 static int yy_did_buffer_switch_on_eof;
 
-static yy_state_type yy_get_previous_state YY_PROTO(( void ));
-static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
-static int yy_get_next_buffer YY_PROTO(( void ));
 static void yyunput YY_PROTO(( YY_CHAR c, YY_CHAR *buf_ptr ));
 void yyrestart YY_PROTO(( FILE *input_file ));
 void yy_switch_to_buffer YY_PROTO(( YY_BUFFER_STATE new_buffer ));
@@ -268,7 +254,22 @@ static int input YY_PROTO(( void ));
 
 %% section 1 definitions and declarations of yytext/yytext_ptr go here
 
+/* Done after the current pattern has been matched and before the
+ * corresponding action - sets up yytext.
+ */
+#define YY_DO_BEFORE_ACTION \
+	yytext_ptr = yy_bp; \
+%% code to fiddle  yytext and yyleng for yymore() goes here
+	yy_hold_char = *yy_cp; \
+	*yy_cp = '\0'; \
+%% code to copy yytext_ptr to yytext[] goes here, if %array
+	yy_c_buf_p = yy_cp;
+
 %% data tables for the DFA go here
+
+static yy_state_type yy_get_previous_state YY_PROTO(( void ));
+static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
+static int yy_get_next_buffer YY_PROTO(( void ));
 
 YY_DECL
 	{
