@@ -14,7 +14,7 @@ All rights reserved.
 
 <!--
 @title Flex, version @value{VERSION}
-@subtitle Edition @value{EDITION}, @value{UPDATED}
+@subtitle Edition <edition>@value{EDITION}</edition>, @value{UPDATED}
 -->
 
 <author><firstname>Vern</firstname><surname>Paxson</surname></author>
@@ -22,16 +22,20 @@ All rights reserved.
 <author><firstname>John</firstname><surname>Millaway</surname></author>
 
 <legalnotice>
+<para>
 This code is derived from software contributed to Berkeley by
 Vern Paxson.
-
+</para>
+<para>
 The United States Government has rights in this work pursuant
 to contract no. DE-AC03-76SF00098 between the United States
 Department of Energy and the University of California.
-
+</para>
+<para>
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
+</para>
 
 <orderedlist>
 
@@ -47,15 +51,17 @@ documentation and/or other materials provided with the distribution.
 </listitem>
 </orderedlist>
 
-
+<para>
 Neither the name of the University nor the names of its contributors
 may be used to endorse or promote products derived from this software
 without specific prior written permission.
-
+</para>
+<para>
 THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
 IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 PURPOSE.
+</para>
 </legalnotice>
 
 </bookinfo>
@@ -68,42 +74,34 @@ PURPOSE.
 @direntry
 
 <preface>
-
+<para>
 This manual describes <application>flex</application>, a tool for generating programs that
 perform pattern-matching on text.  The manual includes both tutorial and
 reference sections.
-
+</para>
+<para>
 This edition of @cite{The flex Manual} documents <application>flex</application> version
 @value{VERSION}. It was last updated on @value{UPDATED}.
+</para>
 
 </preface>
-
-<chapter>
-<title>Copyright</title>
-
-<!-- @cindex copyright of flex -->
-<!-- @cindex distributing flex -->
-
-The flex manual is placed under the same licensing conditions as the
-rest of flex:
-
-</chapter>
 
 <chapter>
 <title>Reporting Bugs</title>
 
 <!-- @cindex bugs, reporting -->
 <!-- @cindex reporting bugs -->
-
+<para>
 If you have problems with <application>flex</application> or think you have found a bug,
 please send mail detailing your problem to
 @email{lex-help@@lists.sourceforge.net}. Patches are always welcome.
+</para>
 
 </chapter>
 
 <chapter>
 <title>Introduction</title>
-
+<para>
 <!-- @cindex scanner, definition of -->
 <application>flex</application> is a tool for generating @dfn{scanners}.  A scanner is a
 program which recognizes lexical patterns in text.  The <application>flex</application>
@@ -116,19 +114,22 @@ This file can be compiled and linked with the flex runtime library to
 produce an executable.  When the executable is run, it analyzes its
 input for occurrences of the regular expressions.  Whenever it finds
 one, it executes the corresponding C code.
+</para>
 
 </chapter>
 
 <chapter>
 <title>Some Simple Examples</title>
 
-First some simple examples to get the flavor of how one uses
+First <para>some simple examples to get the flavor of how one uses
 <application>flex</application>.
-
+</para>
+<para>
 <!-- @cindex username expansion -->
 The following <application>flex</application> input specifies a scanner which, when it
 encounters the string @samp{username} will replace it with the user's
 login name:
+</para>
 
 <informalexample>
 <programlisting>
@@ -139,6 +140,7 @@ login name:
 </programlisting>
 </informalexample>
 
+<para>
 <!-- @cindex default rule -->
 <!-- @cindex rules, default -->
 By default, any text not matched by a <application>flex</application> scanner is copied to
@@ -147,8 +149,11 @@ to its output with each occurrence of @samp{username} expanded.  In this
 input, there is just one rule.  @samp{username} is the @dfn{pattern} and
 the @samp{printf} is the @dfn{action}.  The @samp{%%} symbol marks the
 beginning of the rules.
+</para>
 
+<para>
 Here's another simple example:
+</para>
 
 <!-- @cindex counting characters and lines -->
 <informalexample>
@@ -171,6 +176,7 @@ Here's another simple example:
 </programlisting>
 </informalexample>
 
+<para>
 This scanner counts the number of characters and the number of lines in
 its input. It produces no output other than the final report on the
 character and line counts.  The first line declares two globals,
@@ -180,8 +186,11 @@ second @samp{%%}.  There are two rules, one which matches a newline
 (@samp{\n}) and increments both the line count and the character count,
 and one which matches any character other than a newline (indicated by
 the @samp{.} regular expression).
+</para>
 
+<para>
 A somewhat more complicated example:
+</para>
 
 <!-- @cindex Pascal-like language -->
 <informalexample>
@@ -241,12 +250,16 @@ A somewhat more complicated example:
 </programlisting>
 </informalexample>
 
+<para>
 This is the beginnings of a simple scanner for a language like Pascal.
 It identifies different types of @dfn{tokens} and reports on what it has
 seen.
+</para>
 
+<para>
 The details of this example will be explained in the following
 sections.
+</para>
 
 </chapter>
 
@@ -259,8 +272,10 @@ sections.
 <!-- @cindex file format -->
 <!-- @cindex sections of flex input -->
 
+<para>
 The <application>flex</application> input file consists of three sections, separated by a
 line containing only @samp{%%}.
+</para>
 
 <!-- @cindex format of input file -->
 <informalexample>
@@ -277,10 +292,10 @@ line containing only @samp{%%}.
 
 <!--
 @menu
-* Definitions Section::         
-* Rules Section::               
-* User Code Section::           
-* Comments in the Input::       
+* Definitions Section::
+* Rules Section::
+* User Code Section::
+* Comments in the Input::
 @end menu
 -->
 
@@ -288,15 +303,19 @@ line containing only @samp{%%}.
 <section>
 <title>Format of the Definitions Section</title>
 
+<para>
 <!-- @cindex input file, Definitions section -->
 <!-- @cindex Definitions, in flex input -->
 The @dfn{definitions section} contains declarations of simple @dfn{name}
 definitions to simplify the scanner specification, and declarations of
 @dfn{start conditions}, which are explained in a later section.
+</para>
 
+<para>
 <!-- @cindex aliases, how to define -->
 <!-- @cindex pattern aliases, how to define -->
 Name definitions have the form:
+</para>
 
 <informalexample>
 <programlisting>
@@ -306,12 +325,14 @@ Name definitions have the form:
 </programlisting>
 </informalexample>
 
+<para>
 The @samp{name} is a word beginning with a letter or an underscore
 (@samp{_}) followed by zero or more letters, digits, @samp{_}, or
 @samp{-} (dash).  The definition is taken to begin at the first
 non-whitespace character following the name and continuing to the end of
 the line.  The definition can subsequently be referred to using
-@samp{@{name@}}, which will expand to @samp{(definition)}.  For example,
+@samp{{name}}, which will expand to @samp{(definition)}.  For example,
+</para>
 
 <!-- @cindex pattern aliases, defining -->
 <!-- @cindex defining pattern aliases -->
@@ -324,9 +345,11 @@ the line.  The definition can subsequently be referred to using
 </programlisting>
 </informalexample>
 
+<para>
 Defines @samp{DIGIT} to be a regular expression which matches a single
 digit, and @samp{ID} to be a regular expression which matches a letter
 followed by zero-or-more letters-or-digits.  A subsequent reference to
+</para>
 
 <!-- @cindex pattern aliases, use of -->
 <informalexample>
@@ -337,7 +360,9 @@ followed by zero-or-more letters-or-digits.  A subsequent reference to
 </programlisting>
 </informalexample>
 
+<para>
 is identical to
+</para>
 
 <informalexample>
 <programlisting>
@@ -347,32 +372,40 @@ is identical to
 </programlisting>
 </informalexample>
 
+<para>
 and matches one-or-more digits followed by a @samp{.} followed by
 zero-or-more digits.
+</para>
 
+<para>
 <!-- @cindex comments in flex input -->
 An unindented comment (i.e., a line
 beginning with @samp{/*}) is copied verbatim to the output up
 to the next @samp{*/}.
+</para>
 
-<!-- @cindex %@{ and %@}, in Definitions Section -->
+<para>
+<!-- @cindex %{ and %}, in Definitions Section -->
 <!-- @cindex embedding C code in flex input -->
 <!-- @cindex C code in flex input -->
-Any @emph{indented} text or text enclosed in @samp{%@{} and @samp{%@}}
-is also copied verbatim to the output (with the %@{ and %@} symbols
-removed).  The %@{ and %@} symbols must appear unindented on lines by
+Any <emphasis>indented</emphasis> text or text enclosed in @samp{%{} and @samp{%}}
+is also copied verbatim to the output (with the %{ and %} symbols
+removed).  The %{ and %} symbols must appear unindented on lines by
 themselves.
+</para>
 
 <!-- @cindex %top -->
 
-A @code{%top} block is similar to a @samp{%@{} ... @samp{%@}} block, except
-that the code in a @code{%top} block is relocated to the @emph{top} of the
+<para>
+A @code{%top} block is similar to a @samp{%{} ... @samp{%}} block, except
+that the code in a @code{%top} block is relocated to the <emphasis>top</emphasis> of the
 generated file, before any flex definitions @footnote{Actually,
-@code{yyIN_HEADER} is defined before the @samp{%top} block.}. 
+@code{yyIN_HEADER} is defined before the @samp{%top} block.}.
 The @code{%top} block is useful when you want certain preprocessor macros to be
 defined or certain files to be included before the generated code.
-The single characters, @samp{@{}  and @samp{@}} are used to delimit the
+The single characters, @samp{{}  and @samp{}} are used to delimit the
 @code{%top} block, as show in the example below:
+</para>
 
 <informalexample>
 <programlisting>
@@ -386,7 +419,9 @@ The single characters, @samp{@{}  and @samp{@}} are used to delimit the
 </programlisting>
 </informalexample>
 
+<para>
 Multiple @code{%top} blocks are allowed, and their order is preserved.
+</para>
 
 </section>
 
@@ -395,8 +430,11 @@ Multiple @code{%top} blocks are allowed, and their order is preserved.
 
 <!-- @cindex input file, Rules Section -->
 <!-- @cindex rules, in flex input -->
+
+<para>
 The @dfn{rules} section of the <application>flex</application> input contains a series of
 rules of the form:
+</para>
 
 <informalexample>
 <programlisting>
@@ -406,22 +444,28 @@ rules of the form:
 </programlisting>
 </informalexample>
 
+<para>
 where the pattern must be unindented and the action must begin
 on the same line.
 @xref{Patterns}, for a further description of patterns and actions.
+</para>
 
-In the rules section, any indented or %@{ %@} enclosed text appearing
+<para>
+In the rules section, any indented or %{ %} enclosed text appearing
 before the first rule may be used to declare variables which are local
 to the scanning routine and (after the declarations) code which is to be
 executed whenever the scanning routine is entered.  Other indented or
-%@{ %@} text in the rule section is still copied to the output, but its
+%{ %} text in the rule section is still copied to the output, but its
 meaning is not well-defined and it may well cause compile-time errors
 (this feature is present for @acronym{POSIX} compliance. @xref{Lex and
 Posix}, for other such features).
+</para>
 
-Any @emph{indented} text or text enclosed in @samp{%@{} and @samp{%@}}
-is copied verbatim to the output (with the %@{ and %@} symbols removed).
-The %@{ and %@} symbols must appear unindented on lines by themselves.
+<para>
+Any <emphasis>indented</emphasis> text or text enclosed in @samp{%{} and @samp{%}}
+is copied verbatim to the output (with the %{ and %} symbols removed).
+The %{ and %} symbols must appear unindented on lines by themselves.
+</para>
 
 </section>
 
@@ -430,10 +474,13 @@ The %@{ and %@} symbols must appear unindented on lines by themselves.
 
 <!-- @cindex input file, user code Section -->
 <!-- @cindex user code, in flex input -->
+
+<para>
 The user code section is simply copied to <filename>lex.yy.c</filename> verbatim.  It
 is used for companion routines which call or are called by the scanner.
 The presence of this section is optional; if it is missing, the second
 @samp{%%} in the input file may be skipped, too.
+</para>
 
 </section>
 
@@ -441,33 +488,46 @@ The presence of this section is optional; if it is missing, the second
 <title>Comments in the Input</title>
 
 <!-- @cindex comments, syntax of -->
+
+<para>
 Flex supports C-style comments, that is, anything between /* and */ is
 considered a comment. Whenever flex encounters a comment, it copies the
 entire comment verbatim to the generated source code. Comments may
 appear just about anywhere, but with the following exceptions:
+</para>
 
 <itemizedlist>
 
 <!-- @cindex comments, in rules section -->
 <listitem>
 
+<para>
 Comments may not appear in the Rules Section wherever flex is expecting
 a regular expression. This means comments may not appear at the
 beginning of a line, or immediately following a list of scanner states.
+</para>
+
 </listitem>
 <listitem>
 
+<para>
 Comments may not appear on an @samp{%option} line in the Definitions
 Section.
+</para>
+
 </listitem>
 </itemizedlist>
 
 
-If you want to follow a simple rule, then always begin a comment on a
+
+<para>If you want to follow a simple rule, then always begin a comment on a
 new line, with one or more whitespace characters before the initial
 @samp{/*}).  This rule will work anywhere in the input file.
+</para>
 
+<para>
 All the comments in the following example are valid:
+</para>
 
 <!-- @cindex comments, valid uses of -->
 <!-- @cindex comments in the input -->
@@ -507,14 +567,18 @@ ruleD   ECHO;
 
 <!-- @cindex patterns, in rules section -->
 <!-- @cindex regular expressions, in patterns -->
+
+<para>
 The patterns in the input (see @ref{Rules Section}) are written using an
 extended set of regular expressions.  These are:
+</para>
 
 <!-- @cindex patterns, syntax -->
 <!-- @cindex patterns, syntax -->
 <variablelist>
 <varlistentry><term>x</term>
 <listitem>
+
 match the character 'x'
 
 </listitem>
@@ -589,21 +653,21 @@ zero or one r's (that is, ``an optional r'')
 </listitem>
 </varlistentry>
 
-<varlistentry><term>r@{2,5@}</term>
+<varlistentry><term>r{2,5}</term>
 <listitem>
 anywhere from two to five r's
 
 </listitem>
 </varlistentry>
 
-<varlistentry><term>r@{2,@}</term>
+<varlistentry><term>r{2,}</term>
 <listitem>
 two or more r's
 
 </listitem>
 </varlistentry>
 
-<varlistentry><term>r@{4@}</term>
+<varlistentry><term>r{4}</term>
 <listitem>
 exactly 4 r's
 
@@ -611,7 +675,7 @@ exactly 4 r's
 </listitem>
 </varlistentry>
 
-<varlistentry><term>@{name@}</term>
+<varlistentry><term>{name}</term>
 <listitem>
 the expansion of the @samp{name} definition
 (@pxref{Format}).
@@ -773,7 +837,7 @@ operators, @samp{-}, @samp{]]}, and, at the beginning of the class, @samp{^}.
 The regular expressions listed above are grouped according to
 precedence, from highest precedence at the top to lowest at the bottom.
 Those grouped together have equal precedence (see special note on the
-precedence of the repeat operator, @samp{@{@}}, under the documentation
+precedence of the repeat operator, @samp{{}}, under the documentation
 for the @samp{--posix} POSIX compliance option).  For example,
 
 <!-- @cindex patterns, grouping and precedence -->
@@ -797,7 +861,7 @@ is the same as
 
 since the @samp{*} operator has higher precedence than concatenation,
 and concatenation higher than alternation (@samp{|}).  This pattern
-therefore matches @emph{either} the string @samp{foo} @emph{or} the
+therefore matches <emphasis>either</emphasis> the string @samp{foo} <emphasis>or</emphasis> the
 string @samp{ba} followed by zero-or-more @samp{r}'s.  To match
 @samp{foo} or zero-or-more repetitions of the string @samp{bar}, use:
 
@@ -893,7 +957,7 @@ enabled:
 @item @samp{[a-t]} @tab ok @tab @samp{[a-tA-T]} @tab
 @item @samp{[A-T]} @tab ok @tab @samp{[a-tA-T]} @tab
 @item @samp{[A-t]} @tab ambiguous @tab @samp{[A-Z\[\\\]_`a-t]} @tab @samp{[a-tA-T]}
-@item @samp{[_-@{]} @tab ambiguous @tab @samp{[_`a-z@{]} @tab @samp{[_`a-zA-Z@{]}
+@item @samp{[_-{]} @tab ambiguous @tab @samp{[_`a-z{]} @tab @samp{[_`a-zA-Z{]}
 @item @samp{[@@-C]} @tab ambiguous @tab @samp{[@@ABC]} @tab @samp{[@@A-Z\[\\\]_`abc]}
 @end multitable-->
 
@@ -904,7 +968,7 @@ enabled:
 <listitem>
 
 A negated character class such as the example @samp{[^A-Z]} above
-@emph{will} match a newline unless @samp{\n} (or an equivalent escape
+<emphasis>will</emphasis> match a newline unless @samp{\n} (or an equivalent escape
 sequence) is one of the characters explicitly present in the negated
 character class (e.g., @samp{[^A-Z\n]}).  This is unlike how many other
 regular expression tools treat negated character classes, but
@@ -1028,7 +1092,7 @@ a time) to its output.
 <!-- @cindex %pointer, use of -->
 <!-- @vindex yytext -->
 Note that <varname>yytext</varname> can be defined in two different ways: either as
-a character @emph{pointer} or as a character @emph{array}. You can
+a character <emphasis>pointer</emphasis> or as a character <emphasis>array</emphasis>. You can
 control which definition <application>flex</application> uses by including one of the
 special directives @code{%pointer} or @code{%array} in the first
 (definitions) section of your flex input.  The default is
@@ -1070,7 +1134,7 @@ accommodate very large tokens (such as matching entire blocks of
 comments), bear in mind that each time the scanner must resize
 <varname>yytext</varname> it also must rescan the entire token from the beginning,
 so matching such tokens can prove slow.  <varname>yytext</varname> presently does
-@emph{not} dynamically grow if a call to <function>unput</function> results in too
+<emphasis>not</emphasis> dynamically grow if a call to <function>unput</function> results in too
 much text being pushed back; instead, a run-time error results.
 
 <!-- @cindex %array, with C++ -->
@@ -1118,17 +1182,17 @@ single blank, and throws away whitespace found at the end of a line:
 </programlisting>
 </informalexample>
 
-<!-- @cindex %@{ and %@}, in Rules Section -->
-<!-- @cindex actions, use of @{ and @} -->
+<!-- @cindex %{ and %}, in Rules Section -->
+<!-- @cindex actions, use of { and } -->
 <!-- @cindex actions, embedded C strings -->
 <!-- @cindex C-strings, in actions -->
 <!-- @cindex comments, in actions -->
-If the action contains a @samp{@}}, then the action spans till the
-balancing @samp{@}} is found, and the action may cross multiple lines.
+If the action contains a @samp{}}, then the action spans till the
+balancing @samp{}} is found, and the action may cross multiple lines.
 <application>flex</application> knows about C strings and comments and won't be fooled by
 braces found within them, but also allows actions to begin with
-@samp{%@{} and will consider the action to be all the text up to the
-next @samp{%@}} (regardless of ordinary braces inside the action).
+@samp{%{} and will consider the action to be all the text up to the
+next @samp{%}} (regardless of ordinary braces inside the action).
 
 <!-- @cindex |, in actions -->
 An action consisting solely of a vertical bar (@samp{|}) means ``same as the
@@ -1225,14 +1289,14 @@ The first three rules share the fourth's action since they use the
 special @samp{|} action.
 
 @code{REJECT} is a particularly expensive feature in terms of scanner
-performance; if it is used in @emph{any} of the scanner's actions it
-will slow down @emph{all} of the scanner's matching.  Furthermore,
+performance; if it is used in <emphasis>any</emphasis> of the scanner's actions it
+will slow down <emphasis>all</emphasis> of the scanner's matching.  Furthermore,
 @code{REJECT} cannot be used with the @samp{-Cf} or @samp{-CF} options
 (@pxref{Scanner Options}).
 
 Note also that unlike the other special actions, @code{REJECT} is a
-@emph{branch}.  code immediately following it in the action will
-@emph{not} be executed.
+<emphasis>branch</emphasis>.  code immediately following it in the action will
+<emphasis>not</emphasis> be executed.
 
 </listitem>
 </varlistentry>
@@ -1241,7 +1305,7 @@ Note also that unlike the other special actions, @code{REJECT} is a
 <listitem>
 <!-- @cindex yymore() -->
 tells the scanner that the next time it matches a rule, the
-corresponding token should be @emph{appended} onto the current value of
+corresponding token should be <emphasis>appended</emphasis> onto the current value of
 <varname>yytext</varname> rather than replacing it.  For example, given the input
 @samp{mega-kludge} the following will write @samp{mega-mega-kludge} to
 the output:
@@ -1331,14 +1395,14 @@ the current token and cause it to be rescanned enclosed in parentheses.
 </informalexample>
 
 Note that since each <function>unput</function> puts the given character back at the
-@emph{beginning} of the input stream, pushing back strings must be done
+<emphasis>beginning</emphasis> of the input stream, pushing back strings must be done
 back-to-front.
 
 <!-- @cindex %pointer, and unput() -->
 <!-- @cindex unput(), and %pointer -->
 An important potential problem when using <function>unput</function> is that if you
 are using @code{%pointer} (the default), a call to <function>unput</function>
-@emph{destroys} the contents of <varname>yytext</varname>, starting with its
+<emphasis>destroys</emphasis> the contents of <varname>yytext</varname>, starting with its
 rightmost character and devouring one character to the left with each
 call.  If you need the value of <varname>yytext</varname> preserved after a call to
 <function>unput</function> (as in the above example), you must either first copy it
@@ -1463,7 +1527,7 @@ definitions prevent us from using any standard data types smaller than
 int (such as short, char, or bool) as function arguments.  For this
 reason, future versions of <application>flex</application> may generate standard C99 code
 only, leaving K&amp;R-style functions to the historians.  Currently, if you
-do @strong{not} want @samp{C99} definitions, then you must use 
+do <emphasis role="strong">not</emphasis> want @samp{C99} definitions, then you must use
 @code{%option noansi-definitions}.
 
 <!-- @cindex stdin, default for yyin -->
@@ -1489,7 +1553,7 @@ the latter is available for compatibility with previous versions of
 middle of scanning.  It can also be used to throw away the current input
 buffer, by calling it with an argument of <filename>yyin</filename>; but it would be
 better to use @code{YY_FLUSH_BUFFER} (@pxref{Actions}).  Note that
-<function>yyrestart</function> does @emph{not} reset the start condition to
+<function>yyrestart</function> does <emphasis>not</emphasis> reset the start condition to
 @code{INITIAL} (@pxref{Start Conditions}).
 
 <!-- @cindex RETURN, within actions -->
@@ -1537,7 +1601,7 @@ false (zero), then it is assumed that the function has gone ahead and
 set up <filename>yyin</filename> to point to another input file, and scanning
 continues.  If it returns true (non-zero), then the scanner terminates,
 returning 0 to its caller.  Note that in either case, the start
-condition remains unchanged; it does @emph{not} revert to
+condition remains unchanged; it does <emphasis>not</emphasis> revert to
 @code{INITIAL}.
 
 <!-- @cindex yywrap, default for -->
@@ -1607,7 +1671,7 @@ action.  Until the next @code{BEGIN} action is executed, rules with the
 given start condition will be active and rules with other start
 conditions will be inactive.  If the start condition is inclusive, then
 rules with no start conditions at all will also be active.  If it is
-exclusive, then @emph{only} rules qualified with the start condition
+exclusive, then <emphasis>only</emphasis> rules qualified with the start condition
 will be active.  A set of rules contingent on the same exclusive start
 condition describe a scanner which is independent of any of the other
 rules in the <application>flex</application> input.  Because of this, exclusive start
@@ -1930,8 +1994,8 @@ condition @dfn{scope}.  A start condition scope is begun with:
 
 where @code{SCs} is a list of one or more start conditions.  Inside the
 start condition scope, every rule automatically has the prefix
-@code{SCs>} applied to it, until a @samp{@}} which matches the initial
-@samp{@{}.  So, for example,
+@code{SCs>} applied to it, until a @samp{}} which matches the initial
+@samp{{}.  So, for example,
 
 <!-- @cindex extended scope of start conditions -->
 <informalexample>
@@ -1947,7 +2011,9 @@ start condition scope, every rule automatically has the prefix
 </programlisting>
 </informalexample>
 
+<para>
 is equivalent to:
+</para>
 
 <informalexample>
 <programlisting>
@@ -1960,37 +2026,61 @@ is equivalent to:
 </programlisting>
 </informalexample>
 
+<para>
 Start condition scopes may be nested.
+</para>
 
 <!-- @cindex stacks, routines for manipulating -->
 <!-- @cindex start conditions, use of a stack -->
 
+<para>
 The following routines are available for manipulating stacks of start conditions:
+</para>
 
-@deftypefun  void yy_push_state ( int @code{new_state} )
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>yy_push_state</function></funcdef> 
+    <paramdef> int @code{new_state<parameter>}</parameter> </paramdef>
+</funcprototype>
+</funcsynopsis>
+
 pushes the current start condition onto the top of the start condition
 stack and switches to
 @code{new_state}
 as though you had used
 @code{BEGIN new_state}
 (recall that start condition names are also integers).
-@end deftypefun
 
-@deftypefun void yy_pop_state ()
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>yy_pop_state</function></funcdef> 
+    <void/>
+</funcprototype>
+</funcsynopsis>
+
 pops the top of the stack and switches to it via
 @code{BEGIN}.
-@end deftypefun
 
-@deftypefun int yy_top_state ()
+<funcsynopsis>
+<funcprototype>
+<funcdef>int <function>yy_top_state</function></funcdef> 
+    <void/>
+</funcprototype>
+</funcsynopsis>
+
 returns the top of the stack without altering the stack's contents.
-@end deftypefun
 
 <!-- @cindex memory, for start condition stacks -->
+
+<para>
 The start condition stack grows dynamically and so has no built-in size
 limitation.  If memory is exhausted, program execution aborts.
+</para>
 
+<para>
 To use start condition stacks, your scanner must include a @code{%option
 stack} directive (@pxref{Scanner Options}).
+</para>
 
 </chapter>
 
@@ -1998,6 +2088,8 @@ stack} directive (@pxref{Scanner Options}).
 <title>Multiple Input Buffers</title>
 
 <!-- @cindex multiple input streams -->
+
+<para>
 Some scanners (such as those which support ``include'' files) require
 reading from several input streams.  As <application>flex</application> scanners do a large
 amount of buffering, one cannot control where the next input will be
@@ -2006,15 +2098,25 @@ the scanning context.  <function>YY_INPUT</function> is only called when the sca
 reaches the end of its buffer, which may be a long time after scanning a
 statement such as an @code{include} statement which requires switching
 the input source.
+</para>
 
+<para>
 To negotiate these sorts of problems, <application>flex</application> provides a mechanism
 for creating and switching between multiple input buffers.  An input
 buffer is created by using:
+</para>
 
 <!-- @cindex memory, allocating input buffers -->
-@deftypefun YY_BUFFER_STATE yy_create_buffer ( FILE *file, int size )
-@end deftypefun
 
+<funcsynopsis>
+<funcprototype>
+<funcdef>YY_BUFFER_STATE <function>yy_create_buffer</function></funcdef>
+    <paramdef>FILE *<parameter>file</parameter></paramdef>
+    <paramdef>int<parameter>size</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+
+<para>
 which takes a @code{FILE} pointer and a size and creates a buffer
 associated with the given file and large enough to hold @code{size}
 characters (when in doubt, use @code{YY_BUF_SIZE} for the size).  It
@@ -2032,76 +2134,123 @@ scanner.  Note that the @code{FILE} pointer in the call to
 <filename>yyin</filename>, then you can safely pass a NULL @code{FILE} pointer to
 <function>yy_create_buffer</function>.  You select a particular buffer to scan from
 using:
+</para>
 
-@deftypefun void yy_switch_to_buffer ( YY_BUFFER_STATE new_buffer )
-@end deftypefun
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>yy_switch_to_buffer</function></funcdef> 
+    <paramdef> YY_BUFFER_STATE <parameter>new_buffer</parameter> </paramdef>
+</funcprototype>
+</funcsynopsis>
 
-The above function switches the scanner's input buffer so subsequent tokens
+
+<para>The above function switches the scanner's input buffer so subsequent tokens
 will come from @code{new_buffer}.  Note that <function>yy_switch_to_buffer</function> may
 be used by <function>yywrap</function> to set things up for continued scanning, instead of
 opening a new file and pointing <filename>yyin</filename> at it. If you are looking for a
 stack of input buffers, then you want to use <function>yypush_buffer_state</function>
 instead of this function. Note also that switching input sources via either
-<function>yy_switch_to_buffer</function> or <function>yywrap</function> does @emph{not} change the
+<function>yy_switch_to_buffer</function> or <function>yywrap</function> does <emphasis>not</emphasis> change the
 start condition.
+</para>
 
 <!-- @cindex memory, deleting input buffers -->
-@deftypefun void yy_delete_buffer ( YY_BUFFER_STATE buffer )
-@end deftypefun
 
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>yy_delete_buffer</function></funcdef> 
+    <paramdef> YY_BUFFER_STATE <parameter>buffer</parameter> </paramdef>
+</funcprototype>
+</funcsynopsis>
+
+<para>
 is used to reclaim the storage associated with a buffer.  (@code{buffer}
 can be NULL, in which case the routine does nothing.)  You can also clear
 the current contents of a buffer using:
+</para>
 
 <!-- @cindex pushing an input buffer -->
 <!-- @cindex stack, input buffer push -->
-@deftypefun void yypush_buffer_state ( YY_BUFFER_STATE buffer )
-@end deftypefun
 
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>yypush_buffer_state</function></funcdef> 
+    <paramdef> YY_BUFFER_STATE <parameter>buffer</parameter> </paramdef>
+</funcprototype>
+</funcsynopsis>
+
+<para>
 This function pushes the new buffer state onto an internal stack. The pushed
 state becomes the new current state. The stack is maintained by flex and will
 grow as required. This function is intended to be used instead of
 <function>yy_switch_to_buffer</function>, when you want to change states, but preserve the
-current state for later use. 
+current state for later use.
+</para>
 
 <!-- @cindex popping an input buffer -->
 <!-- @cindex stack, input buffer pop -->
-@deftypefun void yypop_buffer_state ( )
-@end deftypefun
 
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>yypop_buffer_state</function></funcdef> 
+    <void/>
+</funcprototype>
+</funcsynopsis>
+
+<para>
 This function removes the current state from the top of the stack, and deletes
 it by calling <function>yy_delete_buffer</function>.  The next state on the stack, if any,
 becomes the new current state.
+</para>
 
 <!-- @cindex clearing an input buffer -->
 <!-- @cindex flushing an input buffer -->
-@deftypefun void yy_flush_buffer ( YY_BUFFER_STATE buffer )
-@end deftypefun
 
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>yy_flush_buffer</function></funcdef> 
+    <paramdef> YY_BUFFER_STATE <parameter>buffer</parameter> </paramdef>
+</funcprototype>
+</funcsynopsis>
+
+<para>
 This function discards the buffer's contents,
 so the next time the scanner attempts to match a token from the
 buffer, it will first fill the buffer anew using
 <function>YY_INPUT</function>.
+</para>
 
+<para>
 @deftypefun YY_BUFFER_STATE yy_new_buffer ( FILE *file, int size )
 @end deftypefun
+</para>
 
+<para>
 is an alias for <function>yy_create_buffer</function>,
 provided for compatibility with the C++ use of @code{new} and
 @code{delete} for creating and destroying dynamic objects.
+</para>
 
 <!-- @cindex YY_CURRENT_BUFFER, and multiple buffers Finally, the macro -->
+
+<para>
 @code{YY_CURRENT_BUFFER} macro returns a @code{YY_BUFFER_STATE} handle to the
 current buffer. It should not be used as an lvalue.
+</para>
 
 <!-- @cindex EOF, example using multiple input buffers -->
+
+<para>
 Here are two examples of using these features for writing a scanner
 which expands include files (the
 @code{&lt;&lt;EOF&gt;&gt;}
 feature is discussed below).
+</para>
 
+<para>
 This first example uses yypush_buffer_state and yypop_buffer_state. Flex
 maintains the stack internally.
+</para>
 
 <!-- @cindex handling include files with multiple input buffers -->
 <informalexample>
@@ -2141,8 +2290,10 @@ maintains the stack internally.
 </programlisting>
 </informalexample>
 
+<para>
 The second example, below, does the same thing as the previous example did, but
 manages its own input buffer stack manually (instead of letting flex do it).
+</para>
 
 <!-- @cindex handling include files with multiple input buffers -->
 <informalexample>
@@ -2214,28 +2365,36 @@ input buffer for scanning the string, and return a corresponding
 new buffer using <function>yy_switch_to_buffer</function>, so the next call to
 <function>yylex</function> will start scanning the string.
 
-@deftypefun YY_BUFFER_STATE yy_scan_string ( const char *str )
+<funcsynopsis>
+<funcprototype>
+<funcdef>YY_BUFFER_STATE <function>yy_scan_string</function></funcdef> 
+    <paramdef> const char *<parameter>str</parameter> </paramdef>
+</funcprototype>
+</funcsynopsis>
 scans a NUL-terminated string.
-@end deftypefun
 
 @deftypefun YY_BUFFER_STATE yy_scan_bytes ( const char *bytes, int len )
+@end deftypefun
 scans @code{len} bytes (including possibly @code{NUL}s) starting at location
 @code{bytes}.
-@end deftypefun
 
-Note that both of these functions create and scan a @emph{copy} of the
+Note that both of these functions create and scan a <emphasis>copy</emphasis> of the
 string or bytes.  (This may be desirable, since <function>yylex</function> modifies
 the contents of the buffer it is scanning.)  You can avoid the copy by
 using:
 
 <!-- @vindex YY_END_OF_BUFFER_CHAR -->
+
+<para>
 @deftypefun YY_BUFFER_STATE yy_scan_buffer (char *base, yy_size_t size)
+@end deftypefun
+</para>
+
 which scans in place the buffer starting at @code{base}, consisting of
-@code{size} bytes, the last two bytes of which @emph{must} be
+@code{size} bytes, the last two bytes of which <emphasis>must</emphasis> be
 @code{YY_END_OF_BUFFER_CHAR} (ASCII NUL).  These last two bytes are not
 scanned; thus, scanning consists of @code{base[0]} through
 @code{base[size-2]}, inclusive.
-@end deftypefun
 
 If you fail to set up @code{base} in this manner (i.e., forget the final
 two @code{YY_END_OF_BUFFER_CHAR} bytes), then <function>yy_scan_buffer</function>
@@ -2288,7 +2447,7 @@ shown in the example above.
 
 &lt;&lt;EOF&gt;&gt; rules may not be used with other patterns; they may only be
 qualified with a list of start conditions.  If an unqualified &lt;&lt;EOF&gt;&gt;
-rule is given, it applies to @emph{all} start conditions which do not
+rule is given, it applies to <emphasis>all</emphasis> start conditions which do not
 already have &lt;&lt;EOF&gt;&gt; actions.  To specify an &lt;&lt;EOF&gt;&gt; rule for only the
 initial start condition, use:
 
@@ -2552,12 +2711,12 @@ menu. If you want to lookup a particular option by name, @xref{Index of Scanner 
 
 <!--
 @menu
-* Options for Specifing Filenames::  
-* Options Affecting Scanner Behavior::  
-* Code-Level And API Options::  
-* Options for Scanner Speed and Size::  
-* Debugging Options::           
-* Miscellaneous Options::       
+* Options for Specifing Filenames::
+* Options Affecting Scanner Behavior::
+* Code-Level And API Options::
+* Options for Scanner Speed and Size::
+* Debugging Options::
+* Miscellaneous Options::
 @end menu
 -->
 
@@ -2715,7 +2874,7 @@ This option is for flex development. We document it here in case you stumble
 upon it by accident or in case you suspect some inconsistency in the serialized
 tables.  Flex will serialize the scanner dfa tables but will also generate the
 in-code tables as it normally does. At runtime, the scanner will verify that
-the serialized tables match the in-code tables, instead of loading them. 
+the serialized tables match the in-code tables, instead of loading them.
 
 </listitem>
 </varlistentry>
@@ -2752,7 +2911,7 @@ not be folded).  For tricky behavior, see @ref{case and character ranges}.
 <varlistentry><term>-l, --lex-compat, @code{%option lex-compat}</term>
 <listitem>
 turns on maximum compatibility with the original <acronym>&amp;</acronym> @code{lex}
-implementation.  Note that this does not mean @emph{full} compatibility.
+implementation.  Note that this does not mean <emphasis>full</emphasis> compatibility.
 Use of this option costs a considerable amount of performance, and it
 cannot be used with the @samp{--c++}, @samp{--full}, @samp{--fast}, @samp{-Cf}, or
 @samp{-CF} options.  For details on the compatibilities it provides, see
@@ -2771,11 +2930,11 @@ cannot be used with the @samp{--c++}, @samp{--full}, @samp{--fast}, @samp{-Cf}, 
 <varlistentry><term>-B, --batch, @code{%option batch}</term>
 <listitem>
 instructs <application>flex</application> to generate a @dfn{batch} scanner, the opposite of
-@emph{interactive} scanners generated by @samp{--interactive} (see below).  In
-general, you use @samp{-B} when you are @emph{certain} that your scanner
+<emphasis>interactive</emphasis> scanners generated by @samp{--interactive} (see below).  In
+general, you use @samp{-B} when you are <emphasis>certain</emphasis> that your scanner
 will never be used interactively, and you want to squeeze a
-@emph{little} more performance out of it.  If your goal is instead to
-squeeze out a @emph{lot} more performance, you should be using the
+<emphasis>little</emphasis> more performance out of it.  If your goal is instead to
+squeeze out a <emphasis>lot</emphasis> more performance, you should be using the
 @samp{-Cf} or @samp{-CF} options, which turn on @samp{--batch} automatically
 anyway.
 
@@ -2798,7 +2957,7 @@ enough text to disambiguate the current token, is a bit faster than only
 looking ahead when necessary.  But scanners that always look ahead give
 dreadful interactive performance; for example, when a user types a
 newline, it is not recognized as a newline token until they enter
-@emph{another} token, which often means typing in another whole line.
+<emphasis>another</emphasis> token, which often means typing in another whole line.
 
 <application>flex</application> scanners default to @code{interactive} unless you use the
 @samp{-Cf} or @samp{-CF} table-compression options
@@ -2806,12 +2965,12 @@ newline, it is not recognized as a newline token until they enter
 high-performance you should be using one of these options, so if you
 didn't, <application>flex</application> assumes you'd rather trade off a bit of run-time
 performance for intuitive interactive behavior.  Note also that you
-@emph{cannot} use @samp{--interactive} in conjunction with @samp{-Cf} or
+<emphasis>cannot</emphasis> use @samp{--interactive} in conjunction with @samp{-Cf} or
 @samp{-CF}.  Thus, this option is not really needed; it is on by default
 for all those cases in which it is allowed.
 
 You can force a scanner to
-@emph{not}
+<emphasis>not</emphasis>
 be interactive by using
 @samp{--batch}
 
@@ -2892,7 +3051,7 @@ generate the default rule.
 <varlistentry><term>--always-interactive, @code{%option always-interactive}</term>
 <listitem>
 instructs flex to generate a scanner which always considers its input
-@emph{interactive}.  Normally, on each new input file the scanner calls
+<emphasis>interactive</emphasis>.  Normally, on each new input file the scanner calls
 <function>isatty</function> in an attempt to determine whether the scanner's input
 source is interactive and thus should be read a character at a time.
 When this option is used, however, then no such call is made.
@@ -2928,11 +3087,11 @@ in behavior.  At the current writing the known differences between
 
 <listitem>
 
-In POSIX and <acronym>&amp;</acronym> @code{lex}, the repeat operator, @samp{@{@}}, has lower
-precedence than concatenation (thus @samp{ab@{3@}} yields @samp{ababab}).
+In POSIX and <acronym>&amp;</acronym> @code{lex}, the repeat operator, @samp{{}}, has lower
+precedence than concatenation (thus @samp{ab{3}} yields @samp{ababab}).
 Most POSIX utilities use an Extended Regular Expression (ERE) precedence
 that has the precedence of the repeat operator higher than concatenation
-(which causes @samp{ab@{3@}} to yield @samp{abbb}).  By default, <application>flex</application>
+(which causes @samp{ab{3}} to yield @samp{abbb}).  By default, <application>flex</application>
 places the precedence of the repeat operator higher than concatenation
 which matches the ERE processing of other POSIX utilities.  When either
 @samp{--posix} or @samp{-l} are specified, <application>flex</application> will use the
@@ -3034,7 +3193,7 @@ is generated.
 
 <varlistentry><term>--ansi-prototypes, @code{%option ansi-prototypes}</term>
 <listitem>
-instructs flex to generate ANSI C99 prototypes for functions. 
+instructs flex to generate ANSI C99 prototypes for functions.
 This option is enabled by default.
 If @code{noansi-prototypes} is specified, then
 prototypes will have empty parameter lists.
@@ -3066,7 +3225,7 @@ is modified to take an additional parameter,
 
 <varlistentry><term>--bison-locations, @code{%option bison-locations}</term>
 <listitem>
-instruct flex that 
+instruct flex that
 @code{GNU bison} @code{%locations} are being used.
 This means <function>yylex</function> will be passed
 an additional parameter, <varname>yylloc</varname>. This option
@@ -3215,7 +3374,7 @@ programs into the same executable.  Note, though, that using this
 option also renames
 <function>yywrap</function>,
 so you now
-@emph{must}
+<emphasis>must</emphasis>
 either
 provide your own (appropriately-named) version of the routine for your
 scanner, or use
@@ -3381,7 +3540,7 @@ array look-up per character scanned).
 
 <varlistentry><term>-Cr, --read, @code{%option read}</term>
 <listitem>
-causes the generated scanner to @emph{bypass} use of the standard I/O
+causes the generated scanner to <emphasis>bypass</emphasis> use of the standard I/O
 library (@code{stdio}) for input.  Instead of calling <function>fread</function> or
 <function>getc</function>, the scanner will use the <function>read</function> system call,
 resulting in a performance gain which varies from system to system, but
@@ -3455,12 +3614,12 @@ The result is large but fast.  This option is equivalent to
 
 <varlistentry><term>-F, --fast, @code{%option fast}</term>
 <listitem>
-specifies that the @emph{fast} scanner table representation should be
+specifies that the <emphasis>fast</emphasis> scanner table representation should be
 used (and @code{stdio} bypassed).  This representation is about as fast
 as the full table representation @samp{--full}, and for some sets of
 patterns will be considerably smaller (and for others, larger).  In
-general, if the pattern set contains both @emph{keywords} and a
-catch-all, @emph{identifier} rule, such as in the set:
+general, if the pattern set contains both <emphasis>keywords</emphasis> and a
+catch-all, <emphasis>identifier</emphasis> rule, such as in the set:
 
 <informalexample>
 <programlisting>
@@ -3475,7 +3634,7 @@ catch-all, @emph{identifier} rule, such as in the set:
 </informalexample>
 
 then you're better off using the full table representation.  If only
-the @emph{identifier} rule is present and you then use a hash table or some such
+the <emphasis>identifier</emphasis> rule is present and you then use a hash table or some such
 to detect the keywords, you're better off using
 @samp{--fast}.
 
@@ -3503,7 +3662,7 @@ with @samp{--c++}.
 Generate backing-up information to <filename>lex.backup</filename>.  This is a list of
 scanner states which require backing up and the input characters on
 which they do so.  By adding rules one can remove backing-up states.  If
-@emph{all} backing-up states are eliminated and @samp{-Cf} or @code{-CF}
+<emphasis>all</emphasis> backing-up states are eliminated and @samp{-Cf} or @code{-CF}
 is used, the generated scanner will run faster (see the @samp{--perf-report} flag).
 Only users who wish to squeeze every last cycle out of their scanners
 need worry about this option.  (@pxref{Performance}).
@@ -3572,7 +3731,7 @@ the @samp{--interactive} flag entail minor performance penalties.
 
 <varlistentry><term>-s, --nodefault, @code{%option nodefault}</term>
 <listitem>
-causes the @emph{default rule} (that unmatched scanner input is echoed
+causes the <emphasis>default rule</emphasis> (that unmatched scanner input is echoed
 to <filename>stdout)</filename> to be suppressed.  If the scanner encounters input
 that does not match any of its rules, it aborts with an error.  This
 option is useful for finding holes in a scanner's rule set.
@@ -3733,7 +3892,7 @@ you scanned, use <function>ss</function>.
 important.  It is a particularly expensive option.
 
 There is one case when @code{%option yylineno} can be expensive. That is when
-your patterns match long tokens that could @emph{possibly} contain a newline
+your patterns match long tokens that could <emphasis>possibly</emphasis> contain a newline
 character. There is no performance penalty for rules that can not possibly
 match newlines, since flex does not need to check them for newlines.  In
 general, you should avoid rules such as @code{[^f]+}, which match very long
@@ -3869,10 +4028,10 @@ accidentally match a valid token.  A possible future <application>flex</applicat
 will be to automatically add rules to eliminate backing up).
 
 It's important to keep in mind that you gain the benefits of eliminating
-backing up only if you eliminate @emph{every} instance of backing up.
+backing up only if you eliminate <emphasis>every</emphasis> instance of backing up.
 Leaving just one means you gain nothing.
 
-@emph{Variable} trailing context (where both the leading and trailing
+<emphasis>Variable</emphasis> trailing context (where both the leading and trailing
 parts do not have a fixed length) entails almost the same performance
 loss as @code{REJECT} (i.e., substantial).  So when possible a rule
 like:
@@ -3911,7 +4070,7 @@ or as
 </programlisting>
 </informalexample>
 
-Note that here the special '|' action does @emph{not} provide any
+Note that here the special '|' action does <emphasis>not</emphasis> provide any
 savings, and can even make things worse (@pxref{Limitations}).
 
 Another area where the user can increase a scanner's performance (and
@@ -3962,8 +4121,8 @@ This could be sped up by writing it as:
 
 Now instead of each newline requiring the processing of another action,
 recognizing the newlines is distributed over the other rules to keep the
-matched text as long as possible.  Note that @emph{adding} rules does
-@emph{not} slow down the scanner!  The speed of the scanner is
+matched text as long as possible.  Note that <emphasis>adding</emphasis> rules does
+<emphasis>not</emphasis> slow down the scanner!  The speed of the scanner is
 independent of the number of rules or (modulo the considerations given
 at the beginning of this section) how complicated the rules are with
 regard to operators such as @samp{*} and @samp{|}.
@@ -4034,7 +4193,7 @@ recognition of newlines with that of the other tokens:
 
 One has to be careful here, as we have now reintroduced backing up
 into the scanner.  In particular, while
-@emph{we}
+<emphasis>we</emphasis>
 know that there will never be any characters in the input stream
 other than letters or newlines,
 <application>flex</application>
@@ -4071,7 +4230,7 @@ Compiled with @samp{-Cf}, this is about as fast as one can get a
 
 A final note: <application>flex</application> is slow when matching @code{NUL}s,
 particularly when a token contains multiple @code{NUL}s.  It's best to
-write rules which match @emph{short} amounts of text if it's anticipated
+write rules which match <emphasis>short</emphasis> amounts of text if it's anticipated
 that the text will often include @code{NUL}s.
 
 Another final note regarding performance: as mentioned in
@@ -4089,7 +4248,7 @@ characters per token.
 
 <!-- @cindex c++, experimental form of scanner class -->
 <!-- @cindex experimental form of c++ scanner class -->
-@strong{IMPORTANT}: the present form of the scanning class is @emph{experimental}
+<emphasis role="strong">IMPORTANT</emphasis>: the present form of the scanning class is <emphasis>experimental</emphasis>
 and may change considerably between major releases.
 
 <!-- @cindex C++ -->
@@ -4102,7 +4261,7 @@ not encounter any compilation errors (@pxref{Reporting Bugs}).  You can
 then use C++ code in your rule actions instead of C code.  Note that the
 default input source for your scanner remains <filename>yyin</filename>, and default
 echoing is still done to <filename>yyout</filename>.  Both of these remain @code{FILE
-*} variables and not C++ @emph{streams}.
+*} variables and not C++ <emphasis>streams</emphasis>.
 
 You can also use <application>flex</application> to generate a C++ scanner class, using the
 @samp{-+} option (or, equivalently, @code{%option c++)}, which is
@@ -4266,7 +4425,7 @@ writes the message to the stream @code{cerr} and exits.
 </varlistentry>
 </variablelist>
 
-Note that a @code{yyFlexLexer} object contains its @emph{entire}
+Note that a @code{yyFlexLexer} object contains its <emphasis>entire</emphasis>
 scanning state.  Thus you can use such objects to create reentrant
 scanners, but see also @ref{Reentrant}.  You can instantiate multiple
 instances of the same @code{yyFlexLexer} class, and you can also combine
@@ -4384,11 +4543,11 @@ multi-threaded applications.  Any thread may create and execute a reentrant
 
 <!--
 @menu
-* Reentrant Uses::              
-* Reentrant Overview::          
-* Reentrant Example::           
-* Reentrant Detail::            
-* Reentrant Functions::         
+* Reentrant Uses::
+* Reentrant Overview::
+* Reentrant Example::
+* Reentrant Detail::
+* Reentrant Functions::
 @end menu
 -->
 
@@ -4540,13 +4699,13 @@ Here are the things you need to do or know to use the reentrant C API of
 
 <!--
 @menu
-* Specify Reentrant::           
-* Extra Reentrant Argument::    
-* Global Replacement::          
-* Init and Destroy Functions::  
-* Accessor Methods::            
-* Extra Data::                  
-* About yyscan_t::              
+* Specify Reentrant::
+* Extra Reentrant Argument::
+* Global Replacement::
+* Init and Destroy Functions::
+* Accessor Methods::
+* Extra Data::
+* About yyscan_t::
 @end menu
 -->
 
@@ -4562,7 +4721,7 @@ Notice that @code{%option reentrant} is specified in the above example
 (@pxref{Reentrant Example}. Had this option not been specified,
 <application>flex</application> would have happily generated a non-reentrant scanner without
 complaining. You may explicitly specify @code{%option noreentrant}, if
-you do @emph{not} want a reentrant scanner, although it is not
+you do <emphasis>not</emphasis> want a reentrant scanner, although it is not
 necessary. The default is to generate a non-reentrant scanner.
 
 </section>
@@ -4971,7 +5130,7 @@ input.
 <!-- @cindex POSIX and lex -->
 <!-- @cindex lex (traditional) and POSIX -->
 
-<application>flex</application> is a rewrite of the <acronym>&amp;</acronym> Unix @emph{lex} tool (the two
+<application>flex</application> is a rewrite of the <acronym>&amp;</acronym> Unix <emphasis>lex</emphasis> tool (the two
 implementations do not share any code, though), with some extensions and
 incompatibilities, both of which are of concern to those who wish to
 write scanners acceptable to both implementations.  <application>flex</application> is fully
@@ -5069,7 +5228,7 @@ isn't a problem with an interactive scanner. @xref{Reentrant}, for
 <listitem>
 
 Also note that <application>flex</application> C++ scanner classes
-@emph{are}
+<emphasis>are</emphasis>
 reentrant, so if using C++ is an option for you, you should use
 them instead.  @xref{Cxx}, and @ref{Reentrant}  for details.
 
@@ -5118,7 +5277,7 @@ and so the string @samp{foo} will match.
 <listitem>
 
 Note that if the definition begins with @samp{^} or ends with @samp{$}
-then it is @emph{not} expanded with parentheses, to allow these
+then it is <emphasis>not</emphasis> expanded with parentheses, to allow these
 operators to appear in definitions without losing their special
 meanings.  But the @samp{&lt;s&gt;}, @samp{/}, and @code{&lt;&lt;EOF&gt;&gt;} operators
 cannot be used in a <application>flex</application> definition.
@@ -5162,7 +5321,7 @@ supported.  It is not part of the POSIX specification.
 </listitem>
 <listitem>
 
-After a call to <function>unput</function>, @emph{yytext} is undefined until the
+After a call to <function>unput</function>, <emphasis>yytext</emphasis> is undefined until the
 next token is matched, unless the scanner was built using @code{%array}.
 This is not the case with @code{lex} or the POSIX specification.  The
 @samp{-l} option does away with this incompatibility.
@@ -5170,9 +5329,9 @@ This is not the case with @code{lex} or the POSIX specification.  The
 </listitem>
 <listitem>
 
-The precedence of the @samp{@{,@}} (numeric range) operator is
+The precedence of the @samp{{,}} (numeric range) operator is
 different.  The <acronym>&amp;</acronym> and POSIX specifications of @code{lex}
-interpret @samp{abc@{1,3@}} as match one, two,
+interpret @samp{abc{1,3}} as match one, two,
 or three occurrences of @samp{abc}'', whereas <application>flex</application> interprets it
 as ``match @samp{ab} followed by one, two, or three occurrences of
 @samp{c}''.  The @samp{-l} and @samp{--posix} options do away with this
@@ -5282,7 +5441,7 @@ YY_USER_INIT
 </listitem>
 <listitem>
 
-%@{@}'s around actions
+%{}'s around actions
 </listitem>
 <listitem>
 
@@ -5337,9 +5496,9 @@ override the default behavior.
 
 <!--
 @menu
-* The Default Memory Management::  
-* Overriding The Default Memory Management::  
-* A Note About yytext And Memory::  
+* The Default Memory Management::
+* Overriding The Default Memory Management::
+* A Note About yytext And Memory::
 @end menu
 -->
 
@@ -5355,7 +5514,7 @@ buffer. As of version 2.5.9 Flex will clean up all memory when you call <functio
 
 Flex allocates dynamic memory for four purposes, listed below @footnote{The
 quantities given here are approximate, and may vary due to host architecture,
-compiler configuration, or due to future enhancements to flex.} 
+compiler configuration, or due to future enhancements to flex.}
 
 <variablelist>
 
@@ -5402,7 +5561,7 @@ is about 40 bytes, plus an additional large character buffer (described above.)
 The initial buffer state is created during initialization, and with each call
 to yy_create_buffer(). You can't tune the size of this, but you can tune the
 character buffer as described above. Any buffer state that you explicitly
-create by calling yy_create_buffer() is @emph{NOT} destroyed automatically. You
+create by calling yy_create_buffer() is <emphasis>NOT</emphasis> destroyed automatically. You
 must call yy_delete_buffer() to free the memory. The exception to this rule is
 that flex will delete the current buffer automatically when you call
 yylex_destroy(). If you delete the current buffer, be sure to set it to NULL.
@@ -5524,7 +5683,7 @@ void * yyrealloc (void * ptr, size_t bytes, void* yyscanner) {
     return allocator_realloc (yyextra, bytes);
 }
 
-void yyfree (void * ptr, void * yyscanner) {      
+void yyfree (void * ptr, void * yyscanner) {
     /* Do nothing -- we leave it to the garbage collector. */
 }
 
@@ -5542,7 +5701,7 @@ void yyfree (void * ptr, void * yyscanner) {
 
 When flex finds a match, <varname>yytext</varname> points to the first character of the
 match in the input buffer. The string itself is part of the input buffer, and
-is @emph{NOT} allocated separately. The value of yytext will be overwritten the next
+is <emphasis>NOT</emphasis> allocated separately. The value of yytext will be overwritten the next
 time yylex() is called. In short, the value of yytext is only valid from within
 the matched rule's action.
 
@@ -5579,9 +5738,9 @@ scanning begins. The tables may be discarded when scanning is finished.
 
 <!--
 @menu
-* Creating Serialized Tables::  
-* Loading and Unloading Serialized Tables::  
-* Tables File Format::          
+* Creating Serialized Tables::
+* Loading and Unloading Serialized Tables::
+* Tables File Format::
 @end menu
 -->
 
@@ -5605,9 +5764,9 @@ or
 </informalexample>
 
 These options instruct flex to save the DFA tables to the file @var{FILE}. The tables
-will @emph{not} be embedded in the generated scanner. The scanner will not
+will <emphasis>not</emphasis> be embedded in the generated scanner. The scanner will not
 function on its own. The scanner will be dependent upon the serialized tables. You must
-load the tables from this file at runtime before you can scan anything. 
+load the tables from this file at runtime before you can scan anything.
 
 If you do not specify a filename to @code{--tables-file}, the tables will be
 saved to <filename>lex.yy.tables</filename>, where @samp{yy} is the appropriate prefix.
@@ -5656,7 +5815,7 @@ only appears in the reentrant scanner.
 This function returns @samp{0} (zero) on success, or non-zero on error.
 @end deftypefun
 
-The loaded tables are @strong{not} automatically destroyed (unloaded) when you
+The loaded tables are <emphasis role="strong">not</emphasis> automatically destroyed (unloaded) when you
 call <function>yylex_destroy</function>. The reason is that you may create several scanners
 of the same type (in a reentrant scanner), each of which needs access to these
 tables.  To avoid a nasty memory leak, you must call the following function:
@@ -5668,7 +5827,7 @@ scanner.  This function returns @samp{0} (zero) on success, or non-zero on
 error.
 @end deftypefun
 
-@strong{The functions <function>yytables_fload</function> and <function>yytables_destroy</function> are not thread-safe.} You must ensure that these functions are called exactly once (for
+<emphasis role="strong">The functions <function>yytables_fload</function> and <function>yytables_destroy</function> are not thread-safe.</emphasis> You must ensure that these functions are called exactly once (for
 each scanner type) in a threaded program, before any thread calls <function>yylex</function>.
 After the tables are loaded, they are never written to, and no thread
 protection is required thereafter -- until you destroy them.
@@ -5731,7 +5890,7 @@ and tables sections are padded to 64-bit boundaries. Below we describe each
 field in detail. This format does not specify how the scanner will expand the
 given data, i.e., data may be serialized as int8, but expanded to an int32
 array at runtime. This is to reduce the size of the serialized data where
-possible.  Remember, @emph{all integer values are in network byte order}. 
+possible.  Remember, <emphasis>all integer values are in network byte order</emphasis>.
 
 @noindent
 Fields of a table header:
@@ -6109,11 +6268,11 @@ matches the 'x' at the beginning of the trailing context.  (Note that
 the POSIX draft states that the text matched by such patterns is
 undefined.)  For some trailing context rules, parts which are actually
 fixed-length are not recognized as such, leading to the abovementioned
-performance loss.  In particular, parts using @samp{|} or @samp{@{n@}}
-(such as @samp{foo@{3@}}) are always considered variable-length.
+performance loss.  In particular, parts using @samp{|} or @samp{{n}}
+(such as @samp{foo{3}}) are always considered variable-length.
 Combining trailing context with the special @samp{|} action can result
-in @emph{fixed} trailing context being turned into the more expensive
-@emph{variable} trailing context.  For example, in the following:
+in <emphasis>fixed</emphasis> trailing context being turned into the more expensive
+<emphasis>variable</emphasis> trailing context.  For example, in the following:
 
 <!-- @cindex warning, dangerous trailing context -->
 <informalexample>
@@ -6169,7 +6328,7 @@ You may wish to read more about the following programs:
 The following books may contain material of interest:
 
 John Levine, Tony Mason, and Doug Brown,
-@emph{Lex &amp; Yacc},
+Lex &amp; Yacc,
 O'Reilly and Associates.  Be sure to get the 2nd edition.
 
 M. E. Lesk and E. Schmidt,
@@ -6191,105 +6350,105 @@ publish them here.
 
 <!--
 @menu
-* When was flex born?::         
-* How do I expand \ escape sequences in C-style quoted strings?::  
-* Why do flex scanners call fileno if it is not ANSI compatible?::  
-* Does flex support recursive pattern definitions?::  
-* How do I skip huge chunks of input (tens of megabytes) while using flex?::  
-* Flex is not matching my patterns in the same order that I defined them.::  
-* My actions are executing out of order or sometimes not at all.::  
-* How can I have multiple input sources feed into the same scanner at the same time?::  
-* Can I build nested parsers that work with the same input file?::  
-* How can I match text only at the end of a file?::  
-* How can I make REJECT cascade across start condition boundaries?::  
-* Why cant I use fast or full tables with interactive mode?::  
-* How much faster is -F or -f than -C?::  
-* If I have a simple grammar cant I just parse it with flex?::  
-* Why doesnt yyrestart() set the start state back to INITIAL?::  
-* How can I match C-style comments?::  
-* The period isnt working the way I expected.::  
-* Can I get the flex manual in another format?::  
-* Does there exist a "faster" NDFA->DFA algorithm?::  
-* How does flex compile the DFA so quickly?::  
-* How can I use more than 8192 rules?::  
-* How do I abandon a file in the middle of a scan and switch to a new file?::  
-* How do I execute code only during initialization (only before the first scan)?::  
-* How do I execute code at termination?::  
-* Where else can I find help?::  
-* Can I include comments in the "rules" section of the file?::  
-* I get an error about undefined yywrap().::  
-* How can I change the matching pattern at run time?::  
-* How can I expand macros in the input?::  
-* How can I build a two-pass scanner?::  
-* How do I match any string not matched in the preceding rules?::  
-* I am trying to port code from <acronym>&amp;</acronym> lex that uses yysptr and yysbuf.::  
-* Is there a way to make flex treat NULL like a regular character?::  
-* Whenever flex can not match the input it says "flex scanner jammed".::  
-* Why doesnt flex have non-greedy operators like perl does?::  
-* Memory leak - 16386 bytes allocated by malloc.::  
-* How do I track the byte offset for lseek()?::  
-* How do I use my own I/O classes in a C++ scanner?::  
-* How do I skip as many chars as possible?::  
-* deleteme00::              
-* Are certain equivalent patterns faster than others?::              
-* Is backing up a big deal?::              
-* Can I fake multi-byte character support?::              
-* deleteme01::              
-* Can you discuss some flex internals?::              
-* unput() messes up yy_at_bol::              
-* The | operator is not doing what I want::              
-* Why can't flex understand this variable trailing context pattern?::              
-* The ^ operator isn't working::              
-* Trailing context is getting confused with trailing optional patterns::              
-* Is flex GNU or not?::              
-* ERASEME53::              
-* I need to scan if-then-else blocks and while loops::              
-* ERASEME55::              
-* ERASEME56::              
-* ERASEME57::              
-* Is there a repository for flex scanners?::              
-* How can I conditionally compile or preprocess my flex input file?::              
-* Where can I find grammars for lex and yacc?::              
-* I get an end-of-buffer message for each character scanned.::              
-* unnamed-faq-62::              
-* unnamed-faq-63::              
-* unnamed-faq-64::              
-* unnamed-faq-65::              
-* unnamed-faq-66::              
-* unnamed-faq-67::              
-* unnamed-faq-68::              
-* unnamed-faq-69::              
-* unnamed-faq-70::              
-* unnamed-faq-71::              
-* unnamed-faq-72::              
-* unnamed-faq-73::              
-* unnamed-faq-74::              
-* unnamed-faq-75::              
-* unnamed-faq-76::              
-* unnamed-faq-77::              
-* unnamed-faq-78::              
-* unnamed-faq-79::              
-* unnamed-faq-80::              
-* unnamed-faq-81::              
-* unnamed-faq-82::              
-* unnamed-faq-83::              
-* unnamed-faq-84::              
-* unnamed-faq-85::              
-* unnamed-faq-86::              
-* unnamed-faq-87::              
-* unnamed-faq-88::              
-* unnamed-faq-90::              
-* unnamed-faq-91::              
-* unnamed-faq-92::              
-* unnamed-faq-93::              
-* unnamed-faq-94::              
-* unnamed-faq-95::              
-* unnamed-faq-96::              
-* unnamed-faq-97::              
-* unnamed-faq-98::              
-* unnamed-faq-99::              
-* unnamed-faq-100::             
-* unnamed-faq-101::             
+* When was flex born?::
+* How do I expand \ escape sequences in C-style quoted strings?::
+* Why do flex scanners call fileno if it is not ANSI compatible?::
+* Does flex support recursive pattern definitions?::
+* How do I skip huge chunks of input (tens of megabytes) while using flex?::
+* Flex is not matching my patterns in the same order that I defined them.::
+* My actions are executing out of order or sometimes not at all.::
+* How can I have multiple input sources feed into the same scanner at the same time?::
+* Can I build nested parsers that work with the same input file?::
+* How can I match text only at the end of a file?::
+* How can I make REJECT cascade across start condition boundaries?::
+* Why cant I use fast or full tables with interactive mode?::
+* How much faster is -F or -f than -C?::
+* If I have a simple grammar cant I just parse it with flex?::
+* Why doesnt yyrestart() set the start state back to INITIAL?::
+* How can I match C-style comments?::
+* The period isnt working the way I expected.::
+* Can I get the flex manual in another format?::
+* Does there exist a "faster" NDFA->DFA algorithm?::
+* How does flex compile the DFA so quickly?::
+* How can I use more than 8192 rules?::
+* How do I abandon a file in the middle of a scan and switch to a new file?::
+* How do I execute code only during initialization (only before the first scan)?::
+* How do I execute code at termination?::
+* Where else can I find help?::
+* Can I include comments in the "rules" section of the file?::
+* I get an error about undefined yywrap().::
+* How can I change the matching pattern at run time?::
+* How can I expand macros in the input?::
+* How can I build a two-pass scanner?::
+* How do I match any string not matched in the preceding rules?::
+* I am trying to port code from <acronym>&amp;</acronym> lex that uses yysptr and yysbuf.::
+* Is there a way to make flex treat NULL like a regular character?::
+* Whenever flex can not match the input it says "flex scanner jammed".::
+* Why doesnt flex have non-greedy operators like perl does?::
+* Memory leak - 16386 bytes allocated by malloc.::
+* How do I track the byte offset for lseek()?::
+* How do I use my own I/O classes in a C++ scanner?::
+* How do I skip as many chars as possible?::
+* deleteme00::
+* Are certain equivalent patterns faster than others?::
+* Is backing up a big deal?::
+* Can I fake multi-byte character support?::
+* deleteme01::
+* Can you discuss some flex internals?::
+* unput() messes up yy_at_bol::
+* The | operator is not doing what I want::
+* Why can't flex understand this variable trailing context pattern?::
+* The ^ operator isn't working::
+* Trailing context is getting confused with trailing optional patterns::
+* Is flex GNU or not?::
+* ERASEME53::
+* I need to scan if-then-else blocks and while loops::
+* ERASEME55::
+* ERASEME56::
+* ERASEME57::
+* Is there a repository for flex scanners?::
+* How can I conditionally compile or preprocess my flex input file?::
+* Where can I find grammars for lex and yacc?::
+* I get an end-of-buffer message for each character scanned.::
+* unnamed-faq-62::
+* unnamed-faq-63::
+* unnamed-faq-64::
+* unnamed-faq-65::
+* unnamed-faq-66::
+* unnamed-faq-67::
+* unnamed-faq-68::
+* unnamed-faq-69::
+* unnamed-faq-70::
+* unnamed-faq-71::
+* unnamed-faq-72::
+* unnamed-faq-73::
+* unnamed-faq-74::
+* unnamed-faq-75::
+* unnamed-faq-76::
+* unnamed-faq-77::
+* unnamed-faq-78::
+* unnamed-faq-79::
+* unnamed-faq-80::
+* unnamed-faq-81::
+* unnamed-faq-82::
+* unnamed-faq-83::
+* unnamed-faq-84::
+* unnamed-faq-85::
+* unnamed-faq-86::
+* unnamed-faq-87::
+* unnamed-faq-88::
+* unnamed-faq-90::
+* unnamed-faq-91::
+* unnamed-faq-92::
+* unnamed-faq-93::
+* unnamed-faq-94::
+* unnamed-faq-95::
+* unnamed-faq-96::
+* unnamed-faq-97::
+* unnamed-faq-98::
+* unnamed-faq-99::
+* unnamed-faq-100::
+* unnamed-faq-101::
 @end menu-->
 
 
@@ -6355,9 +6514,9 @@ No. You cannot have recursive definitions.  The pattern-matching power of
 regular expressions in general (and therefore flex scanners, too) is
 limited.  In particular, regular expressions cannot ``balance'' parentheses
 to an arbitrary degree.  For example, it's impossible to write a regular
-expression that matches all strings containing the same number of '@{'s
-as '@}'s.  For more powerful pattern matching, you need a parser, such
-as @cite{GNU bison}.
+expression that matches all strings containing the same number of '{'s
+as '}'s.  For more powerful pattern matching, you need a parser, such
+as <application>GNU bison</application>.
 
 </section>
 
@@ -6379,7 +6538,7 @@ simultaneously, in parallel.  (Seems impossible, but it's actually a fairly
 simple technique once you understand the principles.)
 
 A side-effect of this parallel matching is that when the input matches more
-than one rule, <application>flex</application> scanners pick the rule that matched the @emph{most} text. This
+than one rule, <application>flex</application> scanners pick the rule that matched the <emphasis>most</emphasis> text. This
 is explained further in the manual, in the section @xref{Matching}.
 
 If you want <application>flex</application> to choose a shorter match, then you can work around this
@@ -6409,7 +6568,7 @@ also not have the option of changing the input language.)
 <section>
 <title>My actions are executing out of order or sometimes not at all.</title>
 
-Most likely, you have (in error) placed the opening @samp{@{} of the action
+Most likely, you have (in error) placed the opening @samp{{} of the action
 block on a different line than the rule, e.g.,
 
 <informalexample>
@@ -6423,7 +6582,7 @@ block on a different line than the rule, e.g.,
 </programlisting>
 </informalexample>
 
-<application>flex</application> requires that the opening @samp{@{} of an action associated with a rule
+<application>flex</application> requires that the opening @samp{{} of an action associated with a rule
 begin on the same line as does the rule.  You need instead to write your rules
 as follows:
 
@@ -6662,29 +6821,43 @@ Here are some tips for using @samp{.}:
 
 <listitem>
 
+<para>
 A common mistake is to place the grouping parenthesis AFTER an operator, when
 you really meant to place the parenthesis BEFORE the operator, e.g., you
 probably want this @code{(foo|bar)+} and NOT this @code{(foo|bar+)}.
+</para>
 
+<para>
 The first pattern matches the words @samp{foo} or @samp{bar} any number of
 times, e.g., it matches the text @samp{barfoofoobarfoo}. The
 second pattern matches a single instance of @code{foo} or a single instance of
 @code{bar} followed by one or more @samp{r}s, e.g., it matches the text @code{barrrr} .
+</para>
+
 </listitem>
 <listitem>
 
+<para>
 A @samp{.} inside @samp{[]}'s just means a literal@samp{.} (period),
 and NOT ``any character except newline''.
+</para>
+
 </listitem>
 <listitem>
 
+<para>
 Remember that @samp{.} matches any character EXCEPT @samp{\n} (and @samp{EOF}).
 If you really want to match ANY character, including newlines, then use @code{(.|\n)}
 Beware that the regex @code{(.|\n)+} will match your entire input!
+</para>
+
 </listitem>
 <listitem>
 
+<para>
 Finally, if you want to match a literal @samp{.} (a period), then use @samp{[.]} or @samp{"."}
+</para>
+
 </listitem>
 </itemizedlist>
 
@@ -6705,10 +6878,12 @@ number of formats.
 <section>
 <title>Does there exist a "faster" NDFA->DFA algorithm?</title>
 
+<para>
 There's no way around the potential exponential running time - it
 can take you exponential time just to enumerate all of the DFA states.
 In practice, though, the running time is closer to linear, or sometimes
 quadratic.
+</para>
 
 </section>
 
@@ -6721,18 +6896,24 @@ There are two big speed wins that <application>flex</application> uses:
 
 <listitem>
 
+<para>
 It analyzes the input rules to construct equivalence classes for those
 characters that always make the same transitions.  It then rewrites the NFA
 using equivalence classes for transitions instead of characters.  This cuts
 down the NFA->DFA computation time dramatically, to the point where, for
 uncompressed DFA tables, the DFA generation is often I/O bound in writing out
 the tables.
+</para>
+
 </listitem>
 <listitem>
 
+<para>
 It maintains hash values for previously computed DFA states, so testing
 whether a newly constructed DFA state is equivalent to a previously constructed
 state can be done very quickly, by first comparing hash values.
+</para>
+
 </listitem>
 </orderedlist>
 
@@ -6742,9 +6923,11 @@ state can be done very quickly, by first comparing hash values.
 <section>
 <title>How can I use more than 8192 rules?</title>
 
+<para>
 <application>flex</application> is compiled with an upper limit of 8192 rules per scanner.
 If you need more than 8192 rules in your scanner, you'll have to recompile <application>flex</application>
 with the following changes in <filename>flexdef.h</filename>:
+</para>
 
 <informalexample>
 <programlisting>
@@ -6758,13 +6941,19 @@ with the following changes in <filename>flexdef.h</filename>:
 </programlisting>
 </informalexample>
 
+<para>
 This should work okay as long as your C compiler uses 32 bit integers.
 But you might want to think about whether using such a huge number of rules
 is the best way to solve your problem.
+</para>
 
+<para>
 The following may also be relevant:
+</para>
 
+<para>
 With luck, you should be able to increase the definitions in flexdef.h for:
+</para>
 
 <informalexample>
 <programlisting>
@@ -6776,10 +6965,12 @@ With luck, you should be able to increase the definitions in flexdef.h for:
 </programlisting>
 </informalexample>
 
+<para>
 recompile everything, and it'll all work.  Flex only has these 16-bit-like
 values built into it because a long time ago it was developed on a machine
 with 16-bit ints.  I've given this advice to others in the past but haven't
 heard back from them whether it worked okay or not...
+</para>
 
 </section>
 
@@ -7114,7 +7305,7 @@ How do I skip as many chars as possible -- without interfering with the other
 patterns?
 
 In the example below, we want to skip over characters until we see the phrase
-"endskip". The following will @emph{NOT} work correctly (do you see why not?)
+"endskip". The following will <emphasis>NOT</emphasis> work correctly (do you see why not?)
 
 <informalexample>
 <programlisting>
@@ -9547,7 +9738,7 @@ code such as @code{x[y[z]]}.
 
 
 <application>m4</application> is only required at the time you run <application>flex</application>. The generated
-scanner is ordinary C or C++, and does @emph{not} require <application>m4</application>.
+scanner is ordinary C or C++, and does <emphasis>not</emphasis> require <application>m4</application>.
 
 
 </appendix>
@@ -9556,12 +9747,12 @@ scanner is ordinary C or C++, and does @emph{not} require <application>m4</appli
 <title>Indices</title>
 
 @menu
-* Concept Index::               
-* Index of Functions and Macros::  
-* Index of Variables::          
-* Index of Data Types::         
-* Index of Hooks::              
-* Index of Scanner Options::    
+* Concept Index::
+* Index of Functions and Macros::
+* Index of Variables::
+* Index of Data Types::
+* Index of Hooks::
+* Index of Scanner Options::
 @end menu
 
 <section>
