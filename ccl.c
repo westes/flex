@@ -1,5 +1,9 @@
 /* ccl - routines for character classes */
 
+#ifndef lint
+static char rcsid[] = "@(#) $Header$ (LBL)";
+#endif
+
 /*
  * Copyright (c) 1987, the University of California
  * 
