@@ -22,6 +22,11 @@
 /*  PURPOSE. */
 
 #include "flexdef.h"
+static const char * check_4_gnu_m4 =
+    "m4_dnl ifdef(`__gnu__', ,"
+    "`errprint(Flex requires GNU M4. Set the PATH or set the M4 environment variable to its path name.)"
+    " m4exit(2)')\n";
+
 
 /** global chain. */
 struct filter *output_chain = NULL;
@@ -248,6 +253,7 @@ int filter_tee_header (struct filter *chain)
 	 */
 
 	if (write_header) {
+        fputs (check_4_gnu_m4, to_h);
 		fputs ("m4_changecom`'m4_dnl\n", to_h);
 		fputs ("m4_changequote`'m4_dnl\n", to_h);
 		fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_h);
@@ -262,6 +268,7 @@ int filter_tee_header (struct filter *chain)
 
 	}
 
+    fputs (check_4_gnu_m4, to_c);
 	fputs ("m4_changecom`'m4_dnl\n", to_c);
 	fputs ("m4_changequote`'m4_dnl\n", to_c);
 	fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_c);

@@ -43,7 +43,22 @@ AC_PROG_RANLIB
 
 AC_PATH_PROG(BISON, bison,bison)
 AC_PATH_PROG(HELP2MAN, help2man, help2man)
-AC_PATH_PROGS(M4, gnum4 gm4 m4, m4)
+
+
+# Check for a GNU m4 that supports --prefix-builtins
+AC_PATH_PROGS(M4, gm4 gnum4 m4, m4)
+if test x"$M4" != x; then
+  AC_MSG_CHECKING([for GNU m4])
+  case `$M4 --help < /dev/null 2>&1` in
+    *prefix-builtins*) AC_MSG_RESULT(yes) ;;
+    *) AC_MSG_RESULT(no) ;
+       AC_MSG_ERROR([GNU M4 1.4 is required]) ;;
+  esac
+else
+   AC_MSG_ERROR([GNU M4 1.4 is required]) ;
+fi
+AC_DEFINE_UNQUOTED([M4], ["$M4"], [Define to the GNU M4 executable name.])
+
 AC_PATH_PROG(INDENT, indent, indent)
 dnl if INDENT is set to 'indent' then we didn't find indent
 if test "$INDENT" != indent ; then

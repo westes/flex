@@ -211,6 +211,7 @@ int main (argc, argv)
 void check_options ()
 {
 	int     i;
+    const char * m4 = NULL;
 
 	if (lex_compat) {
 		if (C_plus_plus)
@@ -342,9 +343,12 @@ void check_options ()
 		outfile_created = 1;
 	}
 
+
     /* Setup the filter chain. */
     output_chain = filter_create_int(NULL, filter_tee_header, headerfilename);
-    filter_create_ext(output_chain,"m4","-P",0);
+    if ( !(m4 = getenv("M4")))
+        m4 = M4;
+    filter_create_ext(output_chain, m4, "-P", 0);
     filter_create_int(output_chain, filter_fix_linedirs, NULL);
 
     /* For debugging, only run the requested number of filters. */
@@ -431,7 +435,7 @@ void check_options ()
         buf_init(&tmpbuf, sizeof(char));
         for (i = 1; i <= lastsc; i++) {
              char *str, *fmt = "#define %s %d\n";
-             
+
              str = (char*)flex_alloc(strlen(fmt) + strlen(scname[i]) + (int)(1 + log(i)/log(10)) + 2);
              sprintf(str, fmt,      scname[i], i - 1);
              buf_strappend(&tmpbuf, str);
@@ -453,7 +457,7 @@ void check_options ()
 
     /* Place a bogus line directive, it will be fixed in the filter. */
     outn("#line 0 \"M4_YY_OUTFILE_NAME\"\n");
-    
+
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)
 		outn ((char *) (userdef_buf.elts));
@@ -488,7 +492,7 @@ void flexend (exit_status)
 				skelname);
 	}
 
-#if 0 
+#if 0
 		fprintf (header_out,
 			 "#ifdef YY_HEADER_EXPORT_START_CONDITIONS\n");
 		fprintf (header_out,
@@ -646,7 +650,7 @@ void flexend (exit_status)
                 /* must be null-terminated */
                 NULL};
 
-                
+
                 for (i=0; undef_list[i] != NULL; i++)
                     fprintf (header_out, "#undef %s\n", undef_list[i]);
         }
