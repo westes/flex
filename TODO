@@ -7,12 +7,17 @@
 ** do an end-to-end proofread of the manual (this is under way, but is
    going slowly)
 
+** pretty up the dvi output; overflows, etc.
+
 ** faq
 
 *** clean up the faqs section. The information is good; the texinfo
    could use some touching up.
 
 *** index the faq entries
+
+*** mention that it's possible to use a variable to scan mathing
+    brackets, nested comments etc.
 
 ** create a section on flex design, features, etc.
 
@@ -39,10 +44,12 @@
 
 * generic coding
 
+** include option to generate ide-style error messages.
+
 ** move as much skeleton code as possible out of gen.c and into
   flex.skl
 
-*  * Automatic management of the input buffer stack. (currently does
+** Automatic management of the input buffer stack. (currently does
     this for the start condition stack, but not for the input
     buffer stack.)
 
@@ -53,12 +60,13 @@
 
 ** revisit the C++ API. We get requests to make it more complete.
 
-* build system
+* distribution
 
 ** use bootstrapper
 
 ** use clcommit once it's available in a reasonable form
 
+** move documentation into subdirectory
 
 Legend:
 
