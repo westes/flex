@@ -22,7 +22,7 @@ dnl WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 dnl PURPOSE.
 
 AC_PREREQ(2.50)
-AC_INIT(flex,2.5.19,help-flex@gnu.org)
+AC_INIT(flex,2.5.20,help-flex@gnu.org)
 AC_CONFIG_SRCDIR(scan.l)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h:conf.in)

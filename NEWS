@@ -3,7 +3,7 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* after version 2.5.19
+* version 2.5.20 released 2002-9-16
 
 ** A flex scanner has the ability to save the DFA tables to a file,
    and load them at runtime when needed.
@@ -16,7 +16,6 @@ See the file COPYING for copying conditions.
    penalty warning with yylineno in documentation
 
 ** test-table-opts is now run last in the test suite because it's so fat
-
 
 ** flex can, to some extent, diagnose where internal problems occur
 
