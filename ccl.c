@@ -154,7 +154,7 @@ int cset[];
 
     putc( '[', file );
 
-    for ( i = (uses_NUL ? 0 : 1); i < csize; ++i )
+    for ( i = 0; i < csize; ++i )
 	{
 	if ( cset[i] )
 	    {
