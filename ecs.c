@@ -80,15 +80,18 @@ ccl2ecl()
  *
  * synopsis
  *    int cre8ecs();
- *    number of classes = cre8ecs( fwd, bck, num );
+ *    number of classes = cre8ecs( fwd, bck, num, start_pos );
  *
  *  fwd is the forward linked-list of equivalence class members.  bck
  *  is the backward linked-list, and num is the number of class members.
+ *  start_pos is 0 if the class members begin in fwd[] and bck[] at
+ *  position 0, and 1 if they begin at position 1.
+ *
  *  Returned is the number of classes.
  */
 
-int cre8ecs( fwd, bck, num )
-int fwd[], bck[], num;
+int cre8ecs( fwd, bck, num, start_pos )
+int fwd[], bck[], num, start_pos;
 
     {
     int i, j, numcl;
@@ -101,7 +104,7 @@ int fwd[], bck[], num;
      * class.
      */
 
-    for ( i = 1; i <= num; ++i )
+    for ( i = start_pos; i < num + start_pos; ++i )
 	if ( bck[i] == NIL )
 	    {
 	    bck[i] = ++numcl;
@@ -129,7 +132,7 @@ int ecmap[];
     {
     int i;
 
-    for ( i = 1; i <= csize; ++i )
+    for ( i = (uses_NUL ? 0 : 1); i < csize; ++i )
 	if ( xlation[i] == 0 )
 	    ecmap[i] = num_xlations + 1;
 	else

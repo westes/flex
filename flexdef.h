@@ -31,7 +31,7 @@
 #endif
 
 #ifdef FLEX_8_BIT_CHARS
-#define CSIZE 255
+#define CSIZE 256
 #define Char unsigned char
 #else
 #define Char char
@@ -167,7 +167,7 @@ char *sprintf(); /* keep lint happy */
 
 /* size of input alphabet - should be size of ASCII set */
 #ifndef CSIZE
-#define CSIZE 127
+#define CSIZE 128
 #endif
 
 #define INITIAL_MAX_CCLS 100	/* max number of unique character classes */
@@ -332,7 +332,7 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * backtrack_report - if true (i.e., -b flag), generate "lex.backtrack" file
  *   listing backtracking states
  * csize - size of character set for the scanner we're generating;
- *   127 for 7-bit chars and 255 for 8-bit
+ *   128 for 7-bit chars and 256 for 8-bit
  * yymore_used - if true, yymore() is used in input rules
  * reject - if true, generate backtracking tables for REJECT macro
  * real_reject - if true, scanner really uses REJECT (as opposed to just
@@ -470,8 +470,15 @@ extern int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
  * num_xlations - number of different xlation values
  */
 
-extern int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs;
+extern int numecs, nextecm[CSIZE], ecgroup[CSIZE], nummecs;
+
+/* meta-equivalence classes are indexed starting at 1, so it's possible
+ * that they will require positions from 1 .. CSIZE, i.e., CSIZE + 1
+ * slots total (since the arrays are 0-based).  nextecm[] and ecgroup[]
+ * don't require the extra position since they're indexed from 1 .. CSIZE - 1.
+ */
 extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
+
 extern int *xlation;
 extern int num_xlations;
 
@@ -569,12 +576,13 @@ extern Char *ccltbl;
  * hshsave - number of hash collisions saved by checking number of states
  * num_backtracking - number of DFA states requiring back-tracking
  * bol_needed - whether scanner needs beginning-of-line recognition
+ * uses_NUL - true if the scanner needs to be able to recognize NUL's
  */
 
 extern char *starttime, *endtime, nmstr[MAXLINE];
 extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
-extern int num_backtracking, bol_needed;
+extern int num_backtracking, bol_needed, uses_NUL;
 
 char *allocate_array(), *reallocate_array();
 
