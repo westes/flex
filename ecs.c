@@ -1,4 +1,4 @@
-/* flexecs - equivalence class routines */
+/* ecs - equivalence class routines */
 
 /*
  * Copyright (c) 1987, the University of California
