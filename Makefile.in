@@ -36,6 +36,9 @@ includedir = $(prefix)/include
 manext = 1
 mandir = $(prefix)/man/man$(manext)
 
+# You can define this to be "lex" if you want to replace lex at your site.
+FLEX = flex
+
 INSTALLMAN = man
 
 SHELL = /bin/sh
@@ -54,7 +57,7 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 # You normally do not need to modify anything below this point.
 # ------------------------------------------------------------
 
-CPPFLAGS = -I. -I$(srcdir) $(DEFS)
+CPPFLAGS = -I. -I$(srcdir)
 
 .c.o:
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $<
@@ -73,7 +76,7 @@ LINTSRCS = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.c \
 	scan.c skel.c sym.c tblcmp.c yylex.c
 
 DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
-	configure.in Makefile.in mkskel.sh flex.skl \
+	configure.in config.h.in Makefile.in mkskel.sh flex.skl \
 	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC \
 	flex.1 flexdoc.1 \
 	scan.c install.sh mkinstalldirs configure
@@ -81,7 +84,7 @@ DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 DIST_NAME = flex
 
 # which "flex" to use to generate scan.c from scan.l
-FLEX = ./flex
+FLEX_EXEC = ./$(FLEX)
 FLEX_FLAGS = -t $(PERF_REPORT)
 COMPRESSION =
 PERF_REPORT = -p
@@ -89,10 +92,10 @@ PERF_REPORT = -p
 FLEXLIB = libfl.a
 
 
-all: flex
+all: $(FLEX)
 
-flex: .bootstrap $(OBJECTS) $(FLEXLIB)
-	$(CC) $(CFLAGS) -o flex $(LDFLAGS) $(OBJECTS) $(FLEXLIB) $(LIBS)
+$(FLEX): .bootstrap $(OBJECTS) $(FLEXLIB)
+	$(CC) $(CFLAGS) -o $(FLEX) $(LDFLAGS) $(OBJECTS) $(FLEXLIB) $(LIBS)
 
 .bootstrap: initscan.c
 	@rm -f scan.c
@@ -101,34 +104,35 @@ flex: .bootstrap $(OBJECTS) $(FLEXLIB)
 
 parse.c: parse.y
 	$(YACC) -d $(srcdir)/parse.y
-	@sed '/extern char.*malloc/d' <y.tab.c >parse.c
-	@rm -f y.tab.c
+	@sed '/extern char.*malloc/d' <y.tab.c >parse.tmp
+	@mv parse.tmp parse.c
 	@mv y.tab.h parse.h
+	@rm -f y.tab.c
 
 parse.h: parse.c
 
 scan.c: scan.l
-	$(FLEX) $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l >scan.tmp
-	sed s,\"$(srcdir)/scan.l\",\"scan.l\", <scan.tmp >scan.c
-	@rm scan.tmp
+	$(FLEX_EXEC) $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l >scan.c
+	@sed s,\"$(srcdir)/scan.l\",\"scan.l\", <scan.c >scan.tmp
+	@mv scan.tmp scan.c
 
-scan.o: scan.c parse.h flexdef.h
-yylex.o: yylex.c parse.h flexdef.h
+scan.o: scan.c parse.h flexdef.h config.h
+yylex.o: yylex.c parse.h flexdef.h config.h
 
 skel.c: flex.skl mkskel.sh
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir)/flex.skl >skel.c
 
-main.o: main.c flexdef.h version.h
-ccl.o: ccl.c flexdef.h
-dfa.o: dfa.c flexdef.h
-ecs.o: ecs.c flexdef.h
-gen.o: gen.c flexdef.h
-misc.o: misc.c flexdef.h
-nfa.o: nfa.c flexdef.h
-parse.o: parse.c flexdef.h
-skel.o: skel.c flexdef.h
-sym.o: sym.c flexdef.h
-tblcmp.o: tblcmp.c flexdef.h
+main.o: main.c flexdef.h config.h version.h
+ccl.o: ccl.c flexdef.h config.h
+dfa.o: dfa.c flexdef.h config.h
+ecs.o: ecs.c flexdef.h config.h
+gen.o: gen.c flexdef.h config.h
+misc.o: misc.c flexdef.h config.h
+nfa.o: nfa.c flexdef.h config.h
+parse.o: parse.c flexdef.h config.h
+skel.o: skel.c flexdef.h config.h
+sym.o: sym.c flexdef.h config.h
+tblcmp.o: tblcmp.c flexdef.h config.h
 
 alloca.o: alloca.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -Dxmalloc=yy_flex_xmalloc alloca.c
@@ -138,8 +142,8 @@ alloca.c: $(srcdir)/MISC/alloca.c
 	cp $(srcdir)/MISC/alloca.c .
 
 test: check
-check: flex
-	./flex $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l \
+check: $(FLEX)
+	$(FLEX_EXEC) $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l \
 	| sed s,\"$(srcdir)/scan.l\",\"scan.l\", \
 	| diff scan.c -
 	@echo "Check successful, using COMPRESSION=\"$(COMPRESSION)\""
@@ -158,37 +162,37 @@ $(FLEXLIB): $(LIBOBJS)
 	$(AR) cru $(FLEXLIB) $(LIBOBJS)
 	-$(RANLIB) $(FLEXLIB)
 
-flex.man: flex.1
-	cd $(srcdir); nroff -man flex.1 >flex.man
+$(FLEX).man: flex.1
+	cd $(srcdir); nroff -man flex.1 >$(FLEX).man
 
-flexdoc.man: flexdoc.1
-	cd $(srcdir); nroff -man flexdoc.1 >flexdoc.man
+$(FLEX)doc.man: flexdoc.1
+	cd $(srcdir); nroff -man flexdoc.1 >$(FLEX)doc.man
 
-install: flex $(FLEXLIB) installdirs install.$(INSTALLMAN)
-	$(INSTALL_PROGRAM) flex $(bindir)/flex
-	@rm -f $(bindir)/flex++
-	cd $(bindir); $(LN_S) flex flex++
+install: $(FLEX) $(FLEXLIB) installdirs install.$(INSTALLMAN)
+	$(INSTALL_PROGRAM) $(FLEX) $(bindir)/$(FLEX)
+	@rm -f $(bindir)/$(FLEX)++
+	cd $(bindir); $(LN_S) $(FLEX) $(FLEX)++
 	$(INSTALL_DATA) $(FLEXLIB) $(libdir)/libfl.a
 	-cd $(libdir); $(RANLIB) libfl.a
 	$(INSTALL_DATA) $(srcdir)/FlexLexer.h $(includedir)/FlexLexer.h
 
 install.man: flex.1 flexdoc.1
-	$(INSTALL_DATA) $(srcdir)/flex.1 $(mandir)/flex.$(manext)
-	$(INSTALL_DATA) $(srcdir)/flexdoc.1 $(mandir)/flexdoc.$(manext)
+	$(INSTALL_DATA) $(srcdir)/flex.1 $(mandir)/$(FLEX).$(manext)
+	$(INSTALL_DATA) $(srcdir)/flexdoc.1 $(mandir)/$(FLEX)doc.$(manext)
 
-install.cat: flex.man flexdoc.man
-	$(INSTALL_DATA) $(srcdir)/flex.man $(mandir)/flex.$(manext)
-	$(INSTALL_DATA) $(srcdir)/flexdoc.man $(mandir)/flexdoc.$(manext)
+install.cat: $(FLEX).man $(FLEX)doc.man
+	$(INSTALL_DATA) $(srcdir)/$(FLEX).man $(mandir)/$(FLEX).$(manext)
+	$(INSTALL_DATA) $(srcdir)/$(FLEX)doc.man $(mandir)/$(FLEX)doc.$(manext)
 
 installdirs:
 	$(SHELL) $(srcdir)/mkinstalldirs \
 	  $(bindir) $(libdir) $(includedir) $(mandir)
 
 uninstall:
-	rm -f $(bindir)/flex $(bindir)/flex++
+	rm -f $(bindir)/$(FLEX) $(bindir)/$(FLEX)++
 	rm -f $(libdir)/libfl.a
 	rm -f $(includedir)/FlexLexer.h
-	rm -f $(mandir)/flex.$(manext) $(mandir)/flexdoc.$(manext)
+	rm -f $(mandir)/$(FLEX).$(manext) $(mandir)/$(FLEX)doc.$(manext)
 
 tags: $(SOURCES)
 	ctags $(SOURCES)
@@ -209,12 +213,12 @@ clean: mostlyclean
 	rm -f parse.c parse.h *.o alloca.c *.lint lex.yy.c lex.yy.cc $(FLEXLIB)
 
 distclean: clean
-	rm -f .bootstrap flex scan.c tags TAGS Makefile config.status
+	rm -f .bootstrap $(FLEX) scan.c tags TAGS Makefile config.status
 
 realclean: distclean
-	rm -f flex.man flexdoc.man flex*.tar.gz flex*.tar.Z
+	rm -f $(FLEX).man $(FLEX)doc.man skel.c flex*.tar.gz flex*.tar.Z
 
-dist: flex $(DISTFILES)
+dist: $(FLEX) $(DISTFILES)
 	$(MAKE) DIST_NAME=flex-`sed <version.h 's/[^"]*"//' | sed 's/"//'` dist2
 
 dist2:
