@@ -862,6 +862,7 @@ extern int sclookup PROTO((char[]));
 extern void bldtbl PROTO((int[], int, int, int, int));
 
 extern void cmptmps PROTO((void));	/* compress template table entries */
+extern void expand_nxt_chk PROTO((void));	/* increase nxt/chk arrays */
 extern void inittbl PROTO((void));	/* initialize transition tables */
 /* Make the default, "jam" table entries. */
 extern void mkdeftbl PROTO((void));
