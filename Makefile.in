@@ -1,19 +1,5 @@
 # @(#) $Header$ (LBL)
 
-SHELL = /bin/sh
-srcdir = @srcdir@
-VPATH = @srcdir@
-
-YACC = @YACC@
-CC = @CC@
-AR = ar
-RANLIB = @RANLIB@
-INSTALL = @INSTALL@
-INSTALL_DATA = @INSTALL_DATA@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@
-MAKEINFO = makeinfo
-TEXI2DVI = texi2dvi
-
 # If your version of "make" does not define $(MAKE), comment in the
 # definition of "MAKE" below.  (You only need to do this if you intend
 # to do "make bigcheck".)
@@ -56,6 +42,19 @@ mandir = $(prefix)/man/man$(manext)
 
 INSTALLMAN = man
 
+SHELL = /bin/sh
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+YACC = @YACC@
+CC = @CC@
+AR = ar
+RANLIB = @RANLIB@
+INSTALL = @INSTALL@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+COMPRESS = compress
+
 # You normally do not need to modify anything below this point.
 # ------------------------------------------------------------
 
@@ -81,12 +80,15 @@ DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	configure.in Makefile.in mkskel.sh flex.skl \
 	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC \
 	flex.1 flexdoc.1 manual \
-	configure initscan.c flex.man flexdoc.man
+	configure flex.man flexdoc.man
+
+DIST_NAME = flex
 
 # which "flex" to use to generate scan.c from scan.l
 FLEX = ./flex
-FLEX_FLAGS = -ipst
+FLEX_FLAGS = -ist $(PERF_REPORT)
 COMPRESSION =
+PERF_REPORT = -p
 
 FLEXLIB = libfl.a
 
@@ -206,21 +208,20 @@ distclean: clean
 	rm -f .bootstrap scan.c tags TAGS Makefile config.status
 
 realclean: distclean
-	rm -f flex.man flexdoc.man flex*.tar.gz
+	rm -f flex.man flexdoc.man flex*.tar.gz flex*.tar.Z
 
 dist: $(DISTFILES)
-	echo `pwd` | sed 's|.*/||' > .fname
-	rm -rf `cat .fname`
-	mkdir `cat .fname`
-	chmod 777 `cat .fname`
-	tar cf - $(DISTFILES) | (cd `cat .fname`; tar xf -)
-	@rm -f `cat .fname`/initscan.c
-	cp `cat .fname`/scan.c `cat .fname`/initscan.c
-	chmod -R a+r `cat .fname`
-	@rm -f flex.tar flex.tar.Z
-	tar chf `cat .fname`.tar `cat .fname`
-	gzip -8 `cat .fname`.tar
-	rm -rf `cat .fname` .fname
+	$(MAKE) DIST_NAME=`pwd | sed 's|.*/||'` dist2
+
+dist2:
+	@rm -rf $(DIST_NAME)
+	@mkdir $(DIST_NAME)
+	tar cf - $(DISTFILES) | (cd $(DIST_NAME); tar xfB -)
+	@mv $(DIST_NAME)/scan.c $(DIST_NAME)/initscan.c
+	@rm -f flex.tar flex.tar.Z flex.tar.gz
+	tar chf $(DIST_NAME).tar $(DIST_NAME)
+	$(COMPRESS) $(DIST_NAME).tar
+	@rm -rf $(DIST_NAME)
 
 Makefile: Makefile.in config.status
 	$(SHELL) config.status
