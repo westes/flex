@@ -14,6 +14,11 @@
 
 #include "flexdef.h"
 
+#ifndef lint
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+#endif
+
 /* bldtbl - build table entries for dfa state
  *
  * synopsis
@@ -317,7 +322,7 @@ int *state, numtrans;
     /* if there are too many out-transitions, put the state at the end of
      * nxt and chk
      */
-    if ( numtrans > MAX_XTIONS_FOR_FULL_INTERIOR_FIT )
+    if ( numtrans > MAX_XTIONS_FULL_INTERIOR_FIT )
 	{
 	/* if table is empty, return the first available spot in chk/nxt,
 	 * which should be 1
@@ -367,7 +372,7 @@ int *state, numtrans;
 	/* if we started search from the beginning, store the new firstfree for
 	 * the next call of find_table_space()
 	 */
-	if ( numtrans <= MAX_XTIONS_FOR_FULL_INTERIOR_FIT )
+	if ( numtrans <= MAX_XTIONS_FULL_INTERIOR_FIT )
 	    firstfree = i + 1;
 
 	/* check to see if all elements in chk (and therefore nxt) that are
@@ -429,17 +434,17 @@ genctbl()
     nxt[tblend + 1] = END_OF_BUFFER_ACTION;
     chk[tblend + 1] = numecs + 1;
     chk[tblend + 2] = 1; /* anything but EOB */
+    nxt[tblend + 2] = 0; /* so that "make test" won't show arb. differences */
 
     /* make sure every state has a end-of-buffer transition and an action # */
     for ( i = 0; i <= lastdfa; ++i )
 	{
+	register int anum = dfaacc[i].dfaacc_state;
+
 	chk[base[i]] = EOB_POSITION;
 	chk[base[i] - 1] = ACTION_POSITION;
-	nxt[base[i] - 1] = dfaacc[i].dfaacc_state;	/* action number */
+	nxt[base[i] - 1] = anum ? anum : accnum + 1;	/* action number */
 	}
-
-    for ( i = 0; i <= lastsc * 2; ++i )
-	nxt[base[i] - 1] = DEFAULT_ACTION;
 
     dataline = 0;
     datapos = 0;
@@ -482,6 +487,54 @@ genctbl()
     }
 
 
+/* genftbl - generates full transition table
+ *
+ * synopsis
+ *     genftbl();
+ */
+
+genftbl()
+
+    {
+    register int i;
+
+    /* *everything* is done in terms of arrays starting at 1, so provide
+     * a null entry for the zero element of all C arrays
+     */
+    static char C_short_decl[] = "static short int %c[%d] =\n    {   0,\n";
+    static char C_char_decl[] = "static char %c[%d] =\n    {   0,\n";
+
+#ifdef UNSIGNED_CHAR
+    printf( C_short_decl, ALIST, lastdfa + 1 );
+#else
+    printf( accnum > 127 ? C_short_decl : C_char_decl, ALIST, lastdfa + 1 );
+#endif
+
+    for ( i = 1; i <= lastdfa; ++i )
+	{
+	register int anum = dfaacc[i].dfaacc_state;
+
+	if ( i == end_of_buffer_state )
+	    mkdata( END_OF_BUFFER_ACTION );
+
+	else
+	    mkdata( anum ? anum : accnum + 1 );
+
+	if ( trace && anum )
+	    fprintf( stderr, "state # %d accepts: [%d]\n", i, anum );
+	}
+
+    dataend();
+
+    if ( useecs )
+	genecs();
+
+    /* don't have to dump the actual full table entries - they were created
+     * on-the-fly
+     */
+    }
+
+
 /* gentabs - generate data statements for the transition tables
  *
  * synopsis
@@ -491,21 +544,17 @@ genctbl()
 gentabs()
 
     {
-    int i, j, k, *accset, nacc, *acc_array;
-    char clower();
+    int i, j, k, *accset, nacc, *acc_array, total_states;
 
     /* *everything* is done in terms of arrays starting at 1, so provide
-     * a null entry for the zero element of all FTL arrays
+     * a null entry for the zero element of all C arrays
      */
-    static char ftl_long_decl[] = "static long int %c[%d] =\n    {   0,\n";
-    static char ftl_short_decl[] = "static short int %c[%d] =\n    {   0,\n";
-    static char ftl_char_decl[] = "static char %c[%d] =\n    {   0,\n";
+    static char C_long_decl[] = "static long int %c[%d] =\n    {   0,\n";
+    static char C_short_decl[] = "static short int %c[%d] =\n    {   0,\n";
+    static char C_char_decl[] = "static char %c[%d] =\n    {   0,\n";
 
     acc_array = allocate_integer_array( current_max_dfas );
     nummt = 0;
-
-    if ( fulltbl )
-	jambase = lastdfa + 1;	/* home of "jam" pseudo-state */
 
     printf( "#define YY_JAM %d\n", jamstate );
     printf( "#define YY_JAM_BASE %d\n", jambase );
@@ -521,7 +570,7 @@ gentabs()
 	 * indices in the dfaacc array
 	 */
 
-	printf( accnum > 127 ? ftl_short_decl : ftl_char_decl,
+	printf( accnum > 127 ? C_short_decl : C_char_decl,
 		ACCEPT, max( numas, 1 ) + 1 );
 
 	j = 1;	/* index into ACCEPT array */
@@ -561,13 +610,14 @@ gentabs()
 
 	dataend();
 	}
-    
+
     else
 	{
 	for ( i = 1; i <= lastdfa; ++i )
 	    acc_array[i] = dfaacc[i].dfaacc_state;
-	
-	acc_array[i] = 0; /* add (null) accepting number for jam state */
+
+	/* add accepting number for jam state */
+	acc_array[i] = 0;
 	}
 
     /* spit out ALIST array.  If we're doing "reject", it'll be pointers
@@ -575,7 +625,7 @@ gentabs()
      * In either case, we just dump the numbers.
      */
 
-    /* "lastdfa + 2" is the size of ALIST; includes room for FTL arrays
+    /* "lastdfa + 2" is the size of ALIST; includes room for C arrays
      * beginning at 0 and for "jam" state
      */
     k = lastdfa + 2;
@@ -588,14 +638,12 @@ gentabs()
 	 */
 	++k;
 
+#ifdef UNSIGNED_CHAR
+    printf( C_short_decl, ALIST, k );
+#else
     printf( ((reject && numas > 126) || accnum > 127) ?
-	    ftl_short_decl : ftl_char_decl, ALIST, k );
-
-    /* set up default actions */
-    for ( i = 1; i <= lastsc * 2; ++i )
-	acc_array[i] = DEFAULT_ACTION;
-
-    acc_array[end_of_buffer_state] = END_OF_BUFFER_ACTION;
+	    C_short_decl : C_char_decl, ALIST, k );
+#endif
 
     for ( i = 1; i <= lastdfa; ++i )
 	{
@@ -624,7 +672,7 @@ gentabs()
 	if ( trace )
 	    fputs( "\n\nMeta-Equivalence Classes:\n", stderr );
 
-	printf( ftl_char_decl, MATCHARRAY, numecs + 1 );
+	printf( C_char_decl, MATCHARRAY, numecs + 1 );
 
 	for ( i = 1; i <= numecs; ++i )
 	    {
@@ -637,78 +685,75 @@ gentabs()
 	dataend();
 	}
 
-    if ( ! fulltbl )
+    total_states = lastdfa + numtemps;
+
+    printf( tblend > MAX_SHORT ? C_long_decl : C_short_decl,
+	    BASEARRAY, total_states + 1 );
+
+    for ( i = 1; i <= lastdfa; ++i )
 	{
-	int total_states = lastdfa + numtemps;
+	register int d = def[i];
 
-	printf( tblend > MAX_SHORT ? ftl_long_decl : ftl_short_decl,
-		BASEARRAY, total_states + 1 );
+	if ( base[i] == JAMSTATE )
+	    base[i] = jambase;
 
-	for ( i = 1; i <= lastdfa; ++i )
-	    {
-	    register int d = def[i];
-
-	    if ( base[i] == JAMSTATE )
-		base[i] = jambase;
-
-	    if ( d == JAMSTATE )
-		def[i] = jamstate;
-
-	    else if ( d < 0 )
-		{
-		/* template reference */
-		++tmpuses;
-		def[i] = lastdfa - d + 1;
-		}
-
-	    mkdata( base[i] );
-	    }
-
-	/* generate jam state's base index */
-	mkdata( base[i] );
-
-	for ( ++i /* skip jam state */; i <= total_states; ++i )
-	    {
-	    mkdata( base[i] );
+	if ( d == JAMSTATE )
 	    def[i] = jamstate;
-	    }
 
-	dataend();
-
-	printf( tblend > MAX_SHORT ? ftl_long_decl : ftl_short_decl,
-		DEFARRAY, total_states + 1 );
-
-	for ( i = 1; i <= total_states; ++i )
-	    mkdata( def[i] );
-
-	dataend();
-
-	printf( lastdfa > MAX_SHORT ? ftl_long_decl : ftl_short_decl,
-		NEXTARRAY, tblend + 1 );
-
-	for ( i = 1; i <= tblend; ++i )
+	else if ( d < 0 )
 	    {
-	    if ( nxt[i] == 0 )
-		nxt[i] = jamstate;	/* new state is the JAM state */
-
-	    mkdata( nxt[i] );
+	    /* template reference */
+	    ++tmpuses;
+	    def[i] = lastdfa - d + 1;
 	    }
 
-	dataend();
-
-	printf( lastdfa > MAX_SHORT ? ftl_long_decl : ftl_short_decl,
-		CHECKARRAY, tblend + 1 );
-
-	for ( i = 1; i <= tblend; ++i )
-	    {
-	    if ( chk[i] == 0 )
-		++nummt;
-
-	    mkdata( chk[i] );
-	    }
-
-	dataend();
+	mkdata( base[i] );
 	}
+
+    /* generate jam state's base index */
+    mkdata( base[i] );
+
+    for ( ++i /* skip jam state */; i <= total_states; ++i )
+	{
+	mkdata( base[i] );
+	def[i] = jamstate;
+	}
+
+    dataend();
+
+    printf( tblend > MAX_SHORT ? C_long_decl : C_short_decl,
+	    DEFARRAY, total_states + 1 );
+
+    for ( i = 1; i <= total_states; ++i )
+	mkdata( def[i] );
+
+    dataend();
+
+    printf( lastdfa > MAX_SHORT ? C_long_decl : C_short_decl,
+	    NEXTARRAY, tblend + 1 );
+
+    for ( i = 1; i <= tblend; ++i )
+	{
+	if ( nxt[i] == 0 || chk[i] == 0 )
+	    nxt[i] = jamstate;	/* new state is the JAM state */
+
+	mkdata( nxt[i] );
+	}
+
+    dataend();
+
+    printf( lastdfa > MAX_SHORT ? C_long_decl : C_short_decl,
+	    CHECKARRAY, tblend + 1 );
+
+    for ( i = 1; i <= tblend; ++i )
+	{
+	if ( chk[i] == 0 )
+	    ++nummt;
+
+	mkdata( chk[i] );
+	}
+
+    dataend();
     }
 
 
@@ -718,10 +763,11 @@ genecs()
 
     {
     register int i, j;
-    static char ftl_char_decl[] = "static char %c[%d] =\n    {   0,\n";
+    static char C_char_decl[] = "static char %c[%d] =\n    {   0,\n";
     int numrows;
+    char clower();
 
-    printf( ftl_char_decl, ECARRAY, CSIZE + 1 );
+    printf( C_char_decl, ECARRAY, CSIZE + 1 );
 
     for ( i = 1; i <= CSIZE; ++i )
 	{
@@ -830,11 +876,20 @@ make_tables()
 	}
     
     if ( fullspd || fulltbl )
+	{
 	skelout();
 
-    /* compute the tables and copy them to output file */
-    if ( fullspd )
-	genctbl();
+	if ( num_backtracking > 0 )
+	    {
+	    printf( "#define FLEX_USES_BACKTRACKING\n" );
+	    printf( "#define YY_BACK_TRACK %d\n", accnum + 1 );
+	    }
+
+	if ( fullspd )
+	    genctbl();
+	else
+	    genftbl();
+	}
 
     else
 	gentabs();
@@ -1223,6 +1278,7 @@ ntod()
     int *nset, *dset;
     int targptr, totaltrans, i, comstate, comfreq, targ;
     int *epsclosure(), snstods(), symlist[CSIZE + 1];
+    int num_start_states;
 
     /* this is so find_table_space(...) will know where to start looking in
      * chk/nxt for unused records for space to put in the state
@@ -1291,7 +1347,9 @@ ntod()
 
     /* create the first states */
 
-    for ( i = 1; i <= lastsc * 2; ++i )
+    num_start_states = lastsc * 2;
+
+    for ( i = 1; i <= num_start_states; ++i )
 	{
 	numstates = 1;
 
@@ -1322,6 +1380,7 @@ ntod()
 	    flexfatal( "could not create unique end-of-buffer state" );
 
 	numas += 1;
+	++num_start_states;
 
 	todo[todo_next] = end_of_buffer_state;
 	ADD_QUEUE_ELEMENT(todo_next);
@@ -1413,16 +1472,20 @@ ntod()
 		state[i] = state[j];
 	    }
 
+	if ( ds > num_start_states )
+	    check_for_backtracking( ds, state );
+
 	if ( fulltbl )
 	    {
 	    /* supply array's 0-element */
 	    if ( ds == end_of_buffer_state )
-		mk2data( 0 );
+		mk2data( -end_of_buffer_state );
 	    else
 		mk2data( end_of_buffer_state );
 
 	    for ( i = 1; i <= numecs; ++i )
-		mk2data( state[i] );
+		/* jams are marked by negative of state number */
+		mk2data( state[i] ? state[i] : -ds );
 
 	    /* force ',' and dataflush() next call to mk2data */
 	    datapos = NUMDATAITEMS;
@@ -1457,7 +1520,7 @@ ntod()
     if ( fulltbl )
 	dataend();
 
-    else
+    else if ( ! fullspd )
 	{
 	cmptmps();  /* create compressed template entries */
 
@@ -1536,7 +1599,7 @@ stack1( statenum, sym, nextstate, deflink )
 int statenum, sym, nextstate, deflink;
 
     {
-    if ( onesp >= ONE_STACK_SIZE )
+    if ( onesp >= ONE_STACK_SIZE - 1 )
 	mk1tbl( statenum, sym, nextstate, deflink );
 
     else
