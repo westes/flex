@@ -158,6 +158,7 @@ namelist1	:  namelist1 NAME
 		;
 
 sect2		:  sect2 initforrule flexrule '\n'
+		|  sect2 '{' '\n' sect2 '}' '\n'
 		|
 		;
 
