@@ -39,16 +39,23 @@
 ** move as much skeleton code as possible out of gen.c and into
   flex.skl
 
-** create a uniform memory management API
+*  * Automatic management of the input buffer stack. (currently does
+    this for the start condition stack, but not for the input
+    buffer stack.)
 
-** pass reentrant state to the memory management functions for
+** memory management
+
+**  * Complete the memory management api and documentation.
+
+*** create a uniform memory management API
+
+*** pass reentrant state to the memory management functions for
    consistancy's sake %%
 
 ** figure out whether we want to add the capability to have
   auto-generated backout rules
 
 ** yylineno is global, not per-buffer
-
 
 * C++
 
