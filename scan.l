@@ -502,6 +502,8 @@ LEXOPT		[aceknopr]
 			else
 				{ /* push back name surrounded by ()'s */
 				int len = strlen( (char *) nmdefptr );
+                if (end_is_ws)
+                    unput(end_ch);
 
 				if ( lex_compat || nmdefptr[0] == '^' ||
 				     (len > 0 && nmdefptr[len - 1] == '$')
@@ -515,8 +517,6 @@ LEXOPT		[aceknopr]
 
 				else
 					{
-					if (end_is_ws)
-                        unput(end_ch);
 					unput(')');
 					PUT_BACK_STRING((char *) nmdefptr, 0);
 					unput('(');
