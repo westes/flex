@@ -449,7 +449,7 @@ void ntod()
 	 * ecgroup[NUL]), (2) NUL's equivalence class is the last
 	 * equivalence class, and (3) the number of equivalence classes is
 	 * the same as the number of characters.  This latter case comes
-	 * about when useecs is false or when its true but every character
+	 * about when useecs is false or when it's true but every character
 	 * still manages to land in its own class (unlikely, but it's
 	 * cheap to check for).  If all these things are true then the
 	 * character code needed to represent NUL's equivalence class for
@@ -508,7 +508,9 @@ void ntod()
 		{
 		for ( i = 0; i <= numecs; ++i )
 			state[i] = 0;
+
 		place_state( state, 0, 0 );
+		dfaacc[i].dfaacc_state = 0;
 		}
 
 	else if ( fulltbl )
@@ -763,6 +765,9 @@ void ntod()
 
 		mkdeftbl();
 		}
+
+	yy_flex_free( (void *) accset );
+	yy_flex_free( (void *) nset );
 	}
 
 
