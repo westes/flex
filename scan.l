@@ -480,11 +480,19 @@ LEXOPT		[aceknopr]
 				}
 			}
 
-	"{"{NAME}"}"	{
+    /* Check for :space: at the end of the rule so we don't
+     * wrap the expanded regex in '(' ')' -- breaking trailing
+     * context.
+     */
+	"{"{NAME}"}"[[:space:]]?	 {
 			register Char *nmdefptr;
+            int end_is_ws, end_ch;
+            
+            end_ch = yytext[yyleng-1];
+            end_is_ws = end_ch != '}' ? 1 : 0;
 
 			strcpy( nmstr, yytext + 1 );
-			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */
+			nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 			if ( (nmdefptr = ndlookup( nmstr )) == 0 )
 				format_synerr(
@@ -496,7 +504,8 @@ LEXOPT		[aceknopr]
 				int len = strlen( (char *) nmdefptr );
 
 				if ( lex_compat || nmdefptr[0] == '^' ||
-				     (len > 0 && nmdefptr[len - 1] == '$') )
+				     (len > 0 && nmdefptr[len - 1] == '$')
+                     || end_is_ws)
 					{ /* don't use ()'s after all */
 					PUT_BACK_STRING((char *) nmdefptr, 0);
 
@@ -506,6 +515,8 @@ LEXOPT		[aceknopr]
 
 				else
 					{
+					if (end_is_ws)
+                        unput(end_ch);
 					unput(')');
 					PUT_BACK_STRING((char *) nmdefptr, 0);
 					unput('(');
