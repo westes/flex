@@ -1,3 +1,63 @@
+Changes between 2.3 (full) release of 26May90 and 2.2 (alpha) release:
+
+    User-visible:
+
+	- A lone <<EOF>> rule (that is, one which is not qualified with
+	  a list of start conditions) now specifies the EOF action for
+	  *all* start conditions which haven't already had <<EOF>> actions
+	  given.  To specify an end-of-file action for just the initial
+	  state, use <INITIAL><<EOF>>.
+
+	- -d debug output is now contigent on the global yy_flex_debug
+	  being set to a non-zero value, which it is by default.
+
+	- A new macro, YY_USER_INIT, is provided for the user to specify
+	  initialization action to be taken on the first call to the
+	  scanner.  This action is done before the scanner does its
+	  own initialization.
+
+	- yy_new_buffer() has been added as an alias for yy_create_buffer()
+
+	- Comments beginning with '#' and extending to the end of the line
+	  now work, but have been deprecated (in anticipation of making
+	  flex recognize #line directives).
+
+	- It is now documented that flex interprets "^foo|bar" differently
+	  from lex.  flex interprets it as "match either a 'foo' or a 'bar',
+	  providing it comes at the beginning of a line", whereas lex
+	  interprets it as "match either a 'foo' at the beginning of a line,
+	  or a 'bar' anywhere".
+
+	- It is now documented that flex initializes the global "yyin" on
+	  the first call to the scanner, while lex initializes it at
+	  compile-time.
+
+	- It is now documented that yy_switch_to_buffer() can be used
+	  in the yywrap() macro/routine.
+
+	- The funky restrictions on when semi-colons could follow the
+	  YY_NEW_FILE and yyless macros have been removed.  They now
+	  behave identically to functions.
+
+
+    Other changes:
+
+	- Prototypes and proper declarations of void routines have
+	  been added to the flex source code, courtesy of Kevin B. Kenny.
+
+	- Routines dealing with memory allocation now use void* pointers
+	  instead of char* - see README for porting implications.
+
+	- Error-checking is now done when flex closes a file.
+
+	- Various lint tweaks were added to reduce the number of gripes.
+
+	- A note has been added to flexdoc.1 mentioning work in progress
+	  on modifying flex to generate straight C code rather than a
+	  table-driven automaton, with an email address of whom to contact
+	  if you are working along similar lines.
+
+
 Changes between 2.2 Patch #3 (30Mar90) and 2.2 Patch #2:
 
 	- fixed bug which caused -I scanners to bomb
