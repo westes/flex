@@ -106,7 +106,7 @@ jmp_buf flex_main_jmp_buf;
 bool   *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
 
-bool    tablesext, tablestoggle;
+bool    tablesext, tablestoggle, tablesverify, gentables;
 char   *tablesfilename;
 struct yytbl_writer tableswr;
 
@@ -326,11 +326,23 @@ void check_options ()
 		outfile_created = 1;
 	}
 
+	/* always generate the tablesverify flag. */
+	action_define ("YY_TABLES_VERIFY", tablesverify ? 1 : 0);
+	if (tablesext)
+		gentables = false;
+
+	if (tablesverify)
+		/* force generation of C tables. */
+		gentables = true;
+
+
 	if (tablesext) {
 		FILE   *tablesout;
 		struct yytbl_hdr hdr;
 		char   *pname = 0;
 		int     nbytes = 0;
+
+		action_define ("YY_TABLES_EXTERNAL", 1);
 
 		if (!tablesfilename) {
 			nbytes = strlen (prefix) +
@@ -531,7 +543,7 @@ void flexend (exit_status)
 
 	/* flex generates the header file by rewinding the output FILE
 	 * pointer. However, since we can't rewind stdout, we must disallow
-	 * %option header if we are writing to stdout. This is a kludge. 
+	 * %option header if we are writing to stdout. This is a kludge.
 	 * This kludge can be rewritten when we get around to buffering
 	 * Section 1 of the input file, because then we'll have seen all the
 	 * %options BEFORE we begin generating the scanner. The lack of
@@ -1026,7 +1038,8 @@ void flexinit (argc, argv)
 	prefix = "yy";
 	yyclass = 0;
 	use_read = use_stdout = false;
-	tablesext = tablestoggle = false;
+	tablesext = tablestoggle = tablesverify = false;
+	gentables = true;
 	tablesfilename = NULL;
 
 	sawcmpflag = false;
@@ -1038,8 +1051,9 @@ void flexinit (argc, argv)
 	action_array[0] = '\0';
 
 	/* Initialize any buffers. */
-	buf_init (&userdef_buf, sizeof (char));
-	buf_init (&defs_buf, sizeof (char *));
+	buf_init (&userdef_buf, sizeof (char));	/* one long string */
+	buf_init (&defs_buf, sizeof (char *));	/* list of strings */
+	buf_init (&yydmap_buf, sizeof (char));	/* one long string */
 
 
 	/* Enable C++ if program name ends with '+'. */
@@ -1238,6 +1252,10 @@ void flexinit (argc, argv)
 		case OPT_TABLES_FILE:
 			tablesext = true;
 			tablesfilename = arg;
+			break;
+
+		case OPT_TABLES_VERIFY:
+			tablesverify = true;
 			break;
 
 		case OPT_TRACE:
@@ -1524,7 +1542,7 @@ void readin ()
 	 * the POSIXLY_CORRECT variable is set, then we quietly make flex as
 	 * posix-compatible as possible.  This is the recommended behavior
 	 * according to the GNU Coding Standards.
-	 * 
+	 *
 	 * Note: The posix option was added to flex to provide the posix behavior
 	 * of the repeat operator in regular expressions, e.g., `ab{3}'
 	 */

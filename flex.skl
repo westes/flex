@@ -32,8 +32,8 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
-%tables-serialization-code-begin
 #include <stdint.h>
+%tables-serialization-code-begin
 #include <netinet/in.h>
 %tables-serialization-code-end
 /* end standard C headers. */
@@ -762,7 +762,6 @@ int yytables_load YY_PARAMS ((FILE * fp YY_PROTO_LAST_ARG));
  * this scanner.  This is the bridge between our "generic" deserialization code
  * and the specifics of this scanner. 
  */
-
 struct yytbl_dmap {
 	enum yytbl_id dm_id;/**< table identifier */
 	void  **dm_arr;		/**< address of pointer to store the deserialized table. */
@@ -776,6 +775,11 @@ static struct yytbl_dmap yydmap[] =
     {0,0,0}
 };
 
+/** A tables-reader object to maintain some state in the read. */
+struct yytbl_reader {
+    FILE * fp; /**< input stream */
+    uint32_t bread; /**< bytes read since beginning of current tableset */
+};
 
 %tables-serialization-code-end structures and prototypes
 
@@ -2071,61 +2075,76 @@ void yyfree YYFARGS1( void *,ptr)
 %tables-serialization-code-begin definitions
 m4_include(`tables_shared.c')
 
-static int yytbl_read8 (void *v, FILE * fp)
+static int yytbl_read8 (void *v, struct yytbl_reader * rd)
 {
-    if (fread (v, sizeof (uint8_t), 1, fp) != 1)
+    errno = 0;
+    if (fread (v, sizeof (uint8_t), 1, rd->fp) != 1){
+        errno = EIO;
         return -1;
+    }
+    rd->bread += sizeof(uint8_t);
     return 0;
 }
 
-static int yytbl_read16 (void *v, FILE * fp)
+static int yytbl_read16 (void *v, struct yytbl_reader * rd)
 {
-    if (fread (v, sizeof (uint16_t), 1, fp) != 1)
+    errno = 0;
+    if (fread (v, sizeof (uint16_t), 1, rd->fp) != 1){
+        errno = EIO;
         return -1;
+    }
     *((uint16_t *) v) = ntohs (*((uint16_t *) v));
+    rd->bread += sizeof(uint16_t);
     return 0;
 }
 
-static int yytbl_read32 (void *v, FILE * fp)
+static int yytbl_read32 (void *v, struct yytbl_reader * rd)
 {
-    if (fread (v, sizeof (uint32_t), 1, fp) != 1)
+    errno = 0;
+    if (fread (v, sizeof (uint32_t), 1, rd->fp) != 1){
+        errno = EIO;
         return -1;
+    }
     *((uint32_t *) v) = ntohl (*((uint32_t *) v));
+    rd->bread += sizeof(uint32_t);
     return 0;
 }
 
-static int yytbl_hdr_read YYFARGS2 (struct yytbl_hdr *, th, FILE *, fp)
+static int yytbl_hdr_read YYFARGS2 (struct yytbl_hdr *, th, struct yytbl_reader *, rd)
 {
     int     bytes;
     memset (th, 0, sizeof (struct yytbl_hdr));
 
-    if (yytbl_read32 (&(th->th_magic), fp) != 0)
-        /* TODO: read error */
+    if (yytbl_read32 (&(th->th_magic), rd) != 0)
         return -1;
 
-    if (th->th_magic != YYTBL_MAGIC)
-        /* TODO: bad magic number */
+    if (th->th_magic != YYTBL_MAGIC){
+        yy_fatal_error("bad magic number" /*TODO: not fatal.*/ YY_CALL_LAST_ARG);
         return -1;
+    }
 
-    if (yytbl_read32 (&(th->th_hsize), fp) != 0
-        || yytbl_read32 (&(th->th_ssize), fp) != 0
-        || yytbl_read16 (&(th->th_flags), fp) != 0)
-        /* TODO: read error */
+    if (yytbl_read32 (&(th->th_hsize), rd) != 0
+        || yytbl_read32 (&(th->th_ssize), rd) != 0
+        || yytbl_read16 (&(th->th_flags), rd) != 0)
         return -1;
 
     /* Sanity check on header size. Greater than 1k suggests some funny business. */
-    if (th->th_hsize < 16 || th->th_hsize > 1024)
-        /* TODO: insane header size detected */
+    if (th->th_hsize < 16 || th->th_hsize > 1024){
+        yy_fatal_error("insane header size detected" /*TODO: not fatal.*/ YY_CALL_LAST_ARG);
         return -1;
+    }
 
     /* Allocate enough space for the version and name fields */
     bytes = th->th_hsize - 14;
     th->th_version = (char *) yyalloc (bytes YY_CALL_LAST_ARG);
 
     /* we read it all into th_version, and point th_name into that data */
-    if (fread (th->th_version, 1, bytes, fp) != bytes)
-        /* TODO: read error */
+    if (fread (th->th_version, 1, bytes, rd->fp) != bytes){
+        errno = EIO;
         return -1;
+    }
+    else
+        rd->bread += bytes;
 
     th->th_name = th->th_version + strlen (th->th_version) + 1;
     return 0;
@@ -2139,7 +2158,7 @@ static struct yytbl_dmap *yytbl_dmap_lookup YYFARGS2 (struct yytbl_dmap *, dmap,
                                                       int, id)
 {
     while (dmap->dm_id)
-        if (dmap->dm_id != id)
+        if (dmap->dm_id == id)
             return dmap;
         else
             dmap++;
@@ -2150,30 +2169,21 @@ static struct yytbl_dmap *yytbl_dmap_lookup YYFARGS2 (struct yytbl_dmap *, dmap,
  *  @param dmap used to performing mapping
  *  @return 0 on success
  */
-static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, FILE *, fp)
+static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_reader*, rd)
 {
     struct yytbl_data td;
-    struct yytbl_dmap *transdmap;
-    int     len, i, rv;
+    struct yytbl_dmap *transdmap=0;
+    int     len, i, rv,pad;
     size_t  bytes;
-    void   *p;
+    void   *p=0;
 
     memset (&td, 0, sizeof (struct yytbl_data));
 
-    if (yytbl_read16 (&td.td_id, fp) != 0
-        || yytbl_read16 (&td.td_flags, fp) != 0
-        || yytbl_read32 (&td.td_hilen, fp) != 0
-        || yytbl_read32 (&td.td_lolen, fp) != 0)
-        /* TODO: read error */
+    if (yytbl_read16 (&td.td_id, rd) != 0
+        || yytbl_read16 (&td.td_flags, rd) != 0
+        || yytbl_read32 (&td.td_hilen, rd) != 0
+        || yytbl_read32 (&td.td_lolen, rd) != 0)
         return -1;
-
-    if ((dmap = yytbl_dmap_lookup (dmap, td.td_id YY_CALL_LAST_ARG)) == NULL)
-        /* TODO: table id not found. This is bad. */
-        return -1;
-
-    /* Allocate space for table. */
-    bytes = td.td_lolen * (td.td_hilen ? td.td_hilen : 1) * dmap->dm_sz;
-    *dmap->dm_arr = p = (void *) yyalloc (bytes YY_CALL_LAST_ARG);
 
     /* Lookup the map for the transition table so we have it in case we need it
      * inside the loop below. This scanner might not even have a transition
@@ -2181,9 +2191,23 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, FILE *, fp)
      */
     transdmap = yytbl_dmap_lookup (dmap, YYT_ID_TRANSITION YY_CALL_LAST_ARG);
 
+    if ((dmap = yytbl_dmap_lookup (dmap, td.td_id YY_CALL_LAST_ARG)) == NULL){
+        yy_fatal_error("table id not found in map." /*TODO: not fatal.*/ YY_CALL_LAST_ARG);
+        return -1;
+    }
+
+    /* Allocate space for table. */
+    bytes = td.td_lolen * (td.td_hilen ? td.td_hilen : 1) * dmap->dm_sz;
+    if(YY_TABLES_VERIFY)
+        /* We point to the array itself */
+        p = dmap->dm_arr; 
+    else
+        /* We point to the address of a pointer. */
+        *dmap->dm_arr = p = (void *) yyalloc (bytes YY_CALL_LAST_ARG);
+
     /* read and map each element */
     len = yytbl_calc_total_len (&td);
-    for (i = 0; i < len; i++) {
+    for (i = 0; i < len; /* increment i in j loop */) {
         int     read_count = 1, j;
 
         /* If it's a struct, read 2 integers */
@@ -2192,26 +2216,28 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, FILE *, fp)
 
         /* This loop executes at most 2 times. it is to handle YYTD_STRUCT */
         for (j = 0; j < read_count; j++, i++) {
-            uint32_t t32, t16, t8;
+            int32_t t32;
+            int16_t t16;
+            int8_t  t8;
 
-            /* read into t32 no matter what he real size is. */
+            /* read into t32 no matter what the real size is. */
             switch (YYTDFLAGS2BYTES (td.td_flags)) {
             case sizeof (int32_t):
-                rv = yytbl_read32 (&t32, fp);
+                rv = yytbl_read32 (&t32, rd);
                 break;
             case sizeof (int16_t):
-                rv = yytbl_read16 (&t16, fp);
+                rv = yytbl_read16 (&t16, rd);
                 t32 = t16;
                 break;
             case sizeof (int8_t):
-                rv = yytbl_read8 (&t8, fp);
+                rv = yytbl_read8 (&t8, rd);
                 t32 = t8;
                 break;
-            default:            /* TODO: invalid td_flags detected */
+            default: 
+                yy_fatal_error("invalid td_flags" /*TODO: not fatal.*/ YY_CALL_LAST_ARG);
                 return -1;
             }
             if (rv != 0)
-                /* TODO: read error */
                 return -1;
 
             /* copy into the deserialized array... */
@@ -2225,16 +2251,29 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, FILE *, fp)
 
                 switch (dmap->dm_sz) {
                 case sizeof (int32_t):
-                    ((int32_t *) v)[0] = (int32_t) t32;
+                    if (YY_TABLES_VERIFY){
+                        if( ((int32_t *) v)[0] != (int32_t) t32)
+                           yy_fatal_error("tables verification failed at YYTD_STRUCT int32_t" YY_CALL_LAST_ARG);
+                    }else
+                        ((int32_t *) v)[0] = (int32_t) t32;
                     break;
                 case sizeof (int16_t):
-                    ((int16_t *) v)[0] = (int16_t) t32;
+                    if (YY_TABLES_VERIFY ){
+                        if(((int16_t *) v)[0] != (int16_t) t32)
+                        yy_fatal_error("tables verification failed at YYTD_STRUCT int16_t" YY_CALL_LAST_ARG);
+                    }else
+                        ((int16_t *) v)[0] = (int16_t) t32;
                     break;
-                case sizeof (int8_t):
-                    ((int8_t *) v)[0] = (int8_t) t32;
+                case sizeof(int8_t):
+                    if (YY_TABLES_VERIFY ){
+                         if( ((int8_t *) v)[0] != (int8_t) t32)
+                        yy_fatal_error("tables verification failed at YYTD_STRUCT int8_t" YY_CALL_LAST_ARG);
+                    }else
+                        ((int8_t *) v)[0] = (int8_t) t32;
                     break;
                 default:
-                    break;
+                    yy_fatal_error("invalid dmap->dm_sz for struct" /*TODO: not fatal.*/ YY_CALL_LAST_ARG);
+                    return -1;
                 }
 
                 /* if we're done with j, increment p */
@@ -2242,39 +2281,72 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, FILE *, fp)
                     p = (struct yy_trans_info *) p + 1;
             }
             else if ((td.td_flags & YYTD_PTRANS)) {
+                /* t32 is an index into the transition array. */
+                struct yy_trans_info *v;
 
-                /* t32 is an index into the transition array. calculate the offset. */
-
-                if (!transdmap)
-                    /* TODO: map for transition table not found. */
+                if (!transdmap){
+                    yy_fatal_error("transition table not found" /*TODO: not fatal.*/ YY_CALL_LAST_ARG);
                     return -1;
+                }
+                
+                if( YY_TABLES_VERIFY)
+                    v = &(((struct yy_trans_info *) (transdmap->dm_arr))[t32]);
+                else
+                    v = &((*((struct yy_trans_info **) (transdmap->dm_arr)))[t32]);
 
-                ((struct yy_trans_info **) p)[0] =
-                    &((*((struct yy_trans_info **) (transdmap->dm_arr)))[t32]);
+                if(YY_TABLES_VERIFY ){
+                    if( ((struct yy_trans_info **) p)[0] != v)
+                        yy_fatal_error("tables verification failed at YYTD_PTRANS" YY_CALL_LAST_ARG);
+                }else
+                    ((struct yy_trans_info **) p)[0] = v;
+                
+                /* increment p */
                 p = (struct yy_trans_info **) p + 1;
             }
             else {
                 /* t32 is a plain int. copy data, then incrememnt p. */
                 switch (dmap->dm_sz) {
                 case sizeof (int32_t):
-                    ((int32_t *) p)[0] = (int32_t) t32;
+                    if(YY_TABLES_VERIFY ){
+                    if( ((int32_t *) p)[0] != (int32_t) t32)
+                        yy_fatal_error("tables verification failed at int32_t" YY_CALL_LAST_ARG);
+                    }else
+                        ((int32_t *) p)[0] = (int32_t) t32;
                     p = ((int32_t *) p) + 1;
                     break;
                 case sizeof (int16_t):
-                    ((int16_t *) p)[0] = (int16_t) t32;
+                    if(YY_TABLES_VERIFY ){
+                    if( ((int16_t *) p)[0] != (int16_t) t32)
+                        yy_fatal_error("tables verification failed at int16_t" YY_CALL_LAST_ARG);
+                    }else
+                        ((int16_t *) p)[0] = (int16_t) t32;
                     p = ((int16_t *) p) + 1;
                     break;
                 case sizeof (int8_t):
-                    ((int8_t *) p)[0] = (int8_t) t32;
+                    if(YY_TABLES_VERIFY ){
+                    if( ((int8_t *) p)[0] != (int8_t) t32)
+                        yy_fatal_error("tables verification failed at int8_t" YY_CALL_LAST_ARG);
+                    }else
+                        ((int8_t *) p)[0] = (int8_t) t32;
                     p = ((int8_t *) p) + 1;
                     break;
                 default:
-                    break;
+                    yy_fatal_error("invalid dmap->dm_sz for plain int" /*TODO: not fatal.*/ YY_CALL_LAST_ARG);
+                    return -1;
                 }
             }
         }
 
     }
+
+    /* Now eat padding. */
+    pad = yypad64(rd->bread);
+    while(--pad >= 0){
+        int8_t t8;
+        if(yytbl_read8(&t8,rd) != 0)
+            return -1;
+    }
+
     return 0;
 }
 
@@ -2282,20 +2354,24 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, FILE *, fp)
 int yytables_load YYFARGS1 (FILE *, fp)
 {
     struct yytbl_hdr th;
+    struct yytbl_reader rd;
+
+    rd.fp = fp;
+    rd.bread = 0;
 
     /* Keep trying until we find the right set of tables */
     for (;;) {
-        if (yytbl_hdr_read (&th, fp YY_CALL_LAST_ARG) != 0)
-            /* TODO: failed to read tables header */
+        if (yytbl_hdr_read (&th, &rd YY_CALL_LAST_ARG) != 0)
             return -1;
 
         /* TODO: strcmp th_name with search key. For now, we just break out. */
         break;
     }
 
-    while (1) {
+    while (rd.bread < th.th_ssize){
         /* Load the data tables */
-        //yytbl_data_load (fp YY_CALL_LAST_ARG);
+        if(yytbl_data_load (yydmap,&rd YY_CALL_LAST_ARG) != 0)
+            return -1;
     }
 
     return 0;

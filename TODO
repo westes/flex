@@ -52,6 +52,24 @@
 
 ** revisit the C++ API. We get requests to make it more complete.
 
+* Tables API
+
+** Fix deserialization of --fast tables
+
+** Handle reject-triggered tables
+
+** Lookup table by name
+
+** rename _fwrite t _write since writer was created
+
+** create user API for tables deserialization
+
+** document API and --tables-* options
+
+** create test for multiple tables
+
+** verify that new macros/functions work with %option header-file
+
 * build system
 
 ** use bootstrapper

@@ -302,12 +302,15 @@ void cshell (v, n, special_case_0)
 
 void dataend ()
 {
-	if (datapos > 0)
-		dataflush ();
+	/* short circuit any output */
+	if (gentables) {
 
-	/* add terminator for initialization; { for vi */
-	outn ("    } ;\n");
+		if (datapos > 0)
+			dataflush ();
 
+		/* add terminator for initialization; { for vi */
+		outn ("    } ;\n");
+	}
 	dataline = 0;
 	datapos = 0;
 }
@@ -317,6 +320,10 @@ void dataend ()
 
 void dataflush ()
 {
+	/* short circuit any output */
+	if (!gentables)
+		return;
+
 	outc ('\n');
 
 	if (++dataline >= NUMDATALINES) {
@@ -474,6 +481,10 @@ void mark_prolog ()
 void mk2data (value)
      int value;
 {
+	/* short circuit any output */
+	if (!gentables)
+		return;
+
 	if (datapos >= NUMDATAITEMS) {
 		outc (',');
 		dataflush ();
@@ -500,6 +511,10 @@ void mk2data (value)
 void mkdata (value)
      int value;
 {
+	/* short circuit any output */
+	if (!gentables)
+		return;
+
 	if (datapos >= NUMDATAITEMS) {
 		outc (',');
 		dataflush ();
@@ -834,7 +849,8 @@ void skelout ()
 				tablestoggle = false;
 			}
 			else if (cmd_match (CMD_TABLES_YYDMAP)) {
-
+				if (tablesext && yydmap_buf.elts)
+					outn ((char *) (yydmap_buf.elts));
 			}
 			else if (cmd_match (CMD_CPP_ONLY)) {
 				/* only for C++ */
@@ -881,6 +897,11 @@ void skelout ()
 void transition_struct_out (element_v, element_n)
      int element_v, element_n;
 {
+
+	/* short circuit any output */
+	if (!gentables)
+		return;
+
 	out_dec2 (" {%4d,%4d },", element_v, element_n);
 
 	datapos += TRANS_STRUCT_PRINT_LENGTH;

@@ -22,16 +22,17 @@
 # ------------------------------------------------
 # This test is really a set of tests, one for
 # each compression flag. -Ca, -Cem, etc..
-# Then we test the serializalization mechanism.
-# THEN we compare the serialized tables to the non-serialized.
+# The 'opt' tests execute non-serialized scanners with various table options.
+# The 'ver' verify that the serialized tables match the in-code tables.
+# The 'ser' deserialize the tables and scan using them.
 # ------------------------------------------------
 
 BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
 testname  := test-table-opts
-allopts   := -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caf -CaF -Cam -Caem
-variations := opt-nr opt-r ser-nr ser-r
+allopts   := -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem
+variations := opt-nr opt-r ser-nr ser-r ver-nr ver-r
 alltests  := $(foreach opt,$(allopts), $(foreach vari,$(variations),test-$(vari)$(opt)))
 alltestexe := $(addsuffix $(EXEEXT),$(alltests))
 alltestsrc := $(addsuffix .c,$(alltests))
@@ -47,16 +48,22 @@ INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
 test-table-opts: $(alltests) comparison_test
 
 test-opt-r%.c: $(srcdir)/scanner.l
-	$(FLEX) --reentrant $*  -o $@ $<
+	$(FLEX) -L --reentrant $*  -o $@ $<
 
 test-opt-nr%.c: $(srcdir)/scanner.l
-	$(FLEX) $* -o $@ $<
+	$(FLEX) -L $* -o $@ $<
 
 test-ser-r%.c: $(srcdir)/scanner.l
-	$(FLEX) --reentrant --tables-file="test-ser-r$*.tables" $*  -o $@ $<
+	$(FLEX) -L --reentrant --tables-file="test-ser-r$*.tables" $*  -o $@ $<
 
 test-ser-nr%.c: $(srcdir)/scanner.l
-	$(FLEX) --tables-file="test-ser-nr$*.tables"  $* -o $@ $<
+	$(FLEX) -L --tables-file="test-ser-nr$*.tables"  $* -o $@ $<
+
+test-ver-r%.c: $(srcdir)/scanner.l
+	$(FLEX) -L --reentrant --tables-file="test-ver-r$*.tables" --tables-verify $*  -o $@ $<
+
+test-ver-nr%.c: $(srcdir)/scanner.l
+	$(FLEX) -L --tables-file="test-ver-nr$*.tables" --tables-verify $* -o $@ $<
 
 test-opt%$(EXEEXT): test-opt%.o
 	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
@@ -64,9 +71,12 @@ test-opt%$(EXEEXT): test-opt%.o
 test-ser%$(EXEEXT): test-ser%.o
 	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
+test-ver%$(EXEEXT): test-ver%.o
+	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
+
 test: $(alltestexe)
 	for t in $(alltestexe) ; do \
-		./$$t < $(srcdir)/test.input || exit 1 ; \
+		./$$t `basename $$t $(EXEEXT)`.tables < $(srcdir)/test.input || exit 1 ; \
 	done
 
 .c.o:

@@ -34,6 +34,7 @@
 
 #include "flexdef.h"
 #include "parse.h"
+extern bool tablesverify, tablesext;
 
 #define ACTION_ECHO add_action( yytext )
 #define ACTION_IFDEF(def, should_define) \
@@ -341,6 +342,12 @@ LEXOPT		[aceknopr]
 	yyclass		return OPT_YYCLASS;
 	header(-file)?      return OPT_HEADER;
 	tables-file         return OPT_TABLES;
+	tables-verify   {
+                    tablesverify = option_sense;
+                    if(!tablesext && option_sense)
+                        tablesext = true;
+                    }
+
 
 	\"[^"\n]*\"	{
 			if(strlen(yytext + 1 ) < MAXLINE) 

@@ -26,18 +26,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "config.h"
-
 %}
 
 %option 8bit prefix="vvv"
-%option nounput main noyywrap 
-%option warn
+%option nounput nomain noyywrap 
+%option warn yylineno
+
 
 
 %%
+
 foo|bar         ;
 [[:digit:]]+    ;
 [[:blank:]]+    ;
 .|\n            ;
 %%
 
+int main ( int argc, char** argv )
+{
+    FILE* fp = NULL;
+    void *yyscanner=0;
+#ifdef YY_REENTRANT
+    yylex_init(&yyscanner);
+#endif
+#ifdef YY_TABLES_EXTERNAL
+    if((fp  = fopen(argv[1],"r"))== NULL)
+        yy_fatal_error("could not open tables file for reading" YY_CALL_LAST_ARG);
+
+    if(yytables_load(fp YY_CALL_LAST_ARG) < 0)
+        yy_fatal_error("yytables_load returned < 0" YY_CALL_LAST_ARG);
+    if(YY_TABLES_VERIFY)
+        exit(0);
+#endif
+    
+    if(argc > 2){
+        if((fp  = fopen(argv[2],"r"))== NULL)
+            yy_fatal_error("could not open input file for reading" YY_CALL_LAST_ARG);
+        yyin = fp;
+    }
+    while(yylex(YY_CALL_ONLY_ARG) != 0)
+        ;
+    yylex_destroy(YY_CALL_ONLY_ARG);
+
+    if(argc < 0) /* silence the compiler */
+        yyscanner = (void*)fp;
+
+    return 0;
+}

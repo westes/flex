@@ -36,9 +36,6 @@
 #include "flexdef.h"
 #include "tables.h"
 
-/** Calculate (0-7) = number bytes needed to pad n to next 64-bit boundary. */
-#define yypad64(n) ((8-((n)%8))%8)
-
 /** Convert size_t to t_flag.
  *  @param n in {1,2,4}
  *  @return YYTD_DATA*. 

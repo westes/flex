@@ -56,9 +56,10 @@ struct yytbl_writer {
  * tablestoggle - if true, output external tables code while processing skel
  * tablesfilename - filename for external tables
  * tableswr -  writer for external tables
- * 
+ * tablesverify - true if tables-verify option specified
+ * gentables - true if we should spit out the normal C tables
  */
-extern bool tablesext, tablestoggle;
+extern bool tablesext, tablestoggle, tablesverify,gentables;
 extern char *tablesfilename;
 extern struct yytbl_writer tableswr;
 

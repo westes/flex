@@ -7,3 +7,5 @@ OUTPUT
 .deps
 test-opt-*
 test-ser-*
+test-ver-*
+*.tables

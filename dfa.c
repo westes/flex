@@ -534,14 +534,27 @@ void ntod ()
 					    sizeof (int32_t));
 		yynxt_curr = 0;
 
+		buf_prints (&yydmap_buf,
+			    "\t{YYT_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
+			    long_align ? "int32_t" : "int16_t");
+
 		/* Unless -Ca, declare it "short" because it's a real
 		 * long-shot that that won't be large enough.
 		 */
-		out_str_dec ("static yyconst %s yy_nxt[][%d] =\n    {\n",
-			     long_align ? "long" : "short",
-			     num_full_table_rows);
+		if (gentables)
+			out_str_dec
+				("static yyconst %s yy_nxt[][%d] =\n    {\n",
+				 long_align ? "int32_t" : "int16_t",
+				 num_full_table_rows);
+		else {
+			out_dec ("#undef YY_NXT_LOLEN\n#define YY_NXT_LOLEN (%d)\n", num_full_table_rows);
+			out_str ("static yyconst %s *yy_nxt =0;\n",
+				 long_align ? "int32_t" : "int16_t");
+		}
 
-		outn ("    {");
+
+		if (gentables)
+			outn ("    {");
 
 		/* Generate 0 entries for state #0. */
 		for (i = 0; i < num_full_table_rows; ++i) {
@@ -550,7 +563,8 @@ void ntod ()
 		}
 
 		dataflush ();
-		outn ("    },\n");
+		if (gentables)
+			outn ("    },\n");
 	}
 
 	/* Create the first states. */
@@ -720,7 +734,8 @@ void ntod ()
 						     sizeof (int32_t));
 
 
-			outn ("    {");
+			if (gentables)
+				outn ("    {");
 
 			/* Supply array's 0-element. */
 			if (ds == end_of_buffer_state) {
@@ -744,7 +759,8 @@ void ntod ()
 			}
 
 			dataflush ();
-			outn ("    },\n");
+			if (gentables)
+				outn ("    },\n");
 		}
 
 		else if (fullspd)
