@@ -13,7 +13,7 @@ INCLUDES = -I $(srcdir) -I $(top_srcdir)
 testname = TEMPLATE
 
 scanner.c: $(srcdir)/scanner.l
-	$(FLEX) $<
+	$(FLEX) $(LFLAGS) $<
 
 parser.c: $(srcdir)/parser.y
 	$(BISON) $(YFLAGS) $<
