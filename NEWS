@@ -81,7 +81,9 @@ Changes between release 2.5.0.7 (06Mar95) and release 2.4.7:
 			of stdin and stdout
 		yylineno	if set, keep track of the current line
 			number in global yylineno (this option is expensive
-			in terms of performance)
+			in terms of performance).  The line number is available
+			to C++ scanning objects via the new member function
+			lineno().
 		yywrap	if unset ("%option noyywrap"), scanner does not
 			call yywrap() upon EOF but simply assumes there
 			are no more files to scan
@@ -288,7 +290,8 @@ Changes between release 2.5.0.7 (06Mar95) and release 2.4.7:
 	  of calling yylex().
 
 	- C++ scanners now have yy_flex_debug as a member variable of
-	  FlexLexer rather than a global.
+	  FlexLexer rather than a global, and member functions for testing
+	  and setting it.
 
 	- When generating a C++ scanning class, you can now use
 
