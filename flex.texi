@@ -4758,8 +4758,6 @@ pooled memory mechanism will save you a lot of grief when writing parsers.
 @cindex serialization
 @cindex memory, serialized tables
 
-@strong{This feature is currently under development.
-It should be considered alpha quality.}
 @anchor{serialization}
 A @code{flex} scanner has the ability to save the DFA tables to a file, and
 load them runtime when needed.  The motivation for this feature is to reduce

@@ -440,6 +440,12 @@ void check_options ()
 		if (do_yywrap)
 			GEN_PREFIX ("wrap");
 
+        if (tablesext){
+            GEN_PREFIX ("tables_fload");
+            GEN_PREFIX ("tables_destroy");
+            GEN_PREFIX ("TABLES_NAME");
+        }
+
 		outn ("");
 	}
 

@@ -763,6 +763,7 @@ int yytables_fload YY_PARAMS ((FILE * fp YY_PROTO_LAST_ARG));
 
 /* Unload the tables from memory. */
 int yytables_destroy YY_PARAMS ((YY_PROTO_ONLY_ARG));
+%not-for-header
 
 /** Describes a mapping from a serialized table id to its deserialized state in
  * this scanner.  This is the bridge between our "generic" deserialization code
@@ -788,6 +789,7 @@ struct yytbl_reader {
 };
 
 %tables-serialization-code-end structures and prototypes
+%ok-for-header
 
 /* Default declaration of generated scanner - a define so the user can
  * easily add parameters.

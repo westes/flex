@@ -50,10 +50,6 @@
 
 ** revisit the C++ API. We get requests to make it more complete.
 
-* Tables API
-
-** verify that new macros/functions work with %option header-file
-
 * build system
 
 ** use bootstrapper

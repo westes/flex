@@ -33,6 +33,7 @@
 %option 8bit outfile="scanner-2.c" prefix="S2_"
 %option nounput nomain noyywrap
 %option warn stack reentrant noyy_top_state
+%option tables-file="scanner-2.tables"
 
 %x OFF
 %x ON

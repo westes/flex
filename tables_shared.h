@@ -69,6 +69,8 @@ dnl  flex code (hence the name "_shared").
 #endif
 
 
+#ifndef YYTABLES_TYPES
+#define YYTABLES_TYPES
 /** Possible values for td_id field. Each one corresponds to a
  *  scanner table of the same name.
  */
@@ -119,6 +121,7 @@ struct yytbl_data {
 	uint32_t td_lolen;   /**< num elements in lowest dimension array */
 	void   *td_data;     /**< table data */
 };
+#endif
 
 /** Extract corresponding data size_t from td_flags */
 #ifndef YYTDFLAGS2BYTES
@@ -130,6 +133,12 @@ struct yytbl_data {
                 :sizeof(int32_t)))
 #endif
 
+#ifdef FLEX_SCANNER
+%not-for-header
+#endif
 yyskel_static int32_t yytbl_calc_total_len (const struct yytbl_data *tbl);
+#ifdef FLEX_SCANNER
+%ok-for-header
+#endif
 
 /* vim:set noexpandtab cindent tabstop=8 softtabstop=0 shiftwidth=8 textwidth=0: */
