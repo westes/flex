@@ -111,3 +111,15 @@ parse.o: parse.c flexdef.h config.h
 skel.o: skel.c flexdef.h config.h
 sym.o: sym.c flexdef.h config.h
 tblcmp.o: tblcmp.c flexdef.h config.h
+
+#The below recipe for making the ChangeLog will only work if you have a copy of the cvs tree handy so let it fail gracefully
+
+dist: ChangeLog
+
+ChangeLog:
+	-rcs2log -l 72 -u "vern	Vern	vern@ee.lbl.gov" -u "wlestes	W. L. Estes	wlestes@uncg.edu" | sed s:/usr/local/cvsroot/flex/::g >ChangeLog 
+
+# the ChangeLog target is phony so it will be remade whenever you make
+# the dist target
+
+.PHONY: ChangeLog
