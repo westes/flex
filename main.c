@@ -94,6 +94,8 @@ static char *outfile = "lex.yy.c";
 static char *outfile = "lexyy.c";
 #endif
 static int outfile_created = 0;
+static int use_stdout;
+static char *skelname = NULL;
 
 
 main( argc, argv )
@@ -222,6 +224,47 @@ int status;
 	fprintf( stderr, "  started at %s, finished at %s\n",
 		 starttime, endtime );
 
+	fprintf( stderr, "  scanner options: -" );
+
+	if ( backtrack_report )
+	    putc( 'b', stderr );
+	if ( ddebug )
+	    putc( 'd', stderr );
+	if ( interactive )
+	    putc( 'I', stderr );
+	if ( caseins )
+	    putc( 'i', stderr );
+	if ( ! gen_line_dirs )
+	    putc( 'L', stderr );
+	if ( performance_report )
+	    putc( 'p', stderr );
+	if ( spprdflt )
+	    putc( 's', stderr );
+	if ( use_stdout )
+	    putc( 't', stderr );
+	if ( trace )
+	    putc( 'T', stderr );
+	if ( printstats )
+	    putc( 'v', stderr );	/* always true! */
+	if ( csize == 256 )
+	    putc( '8', stderr );
+
+	fprintf( stderr, " -C" );
+
+	if ( fulltbl )
+	    putc( 'f', stderr );
+	if ( fullspd )
+	    putc( 'F', stderr );
+	if ( useecs )
+	    putc( 'e', stderr );
+	if ( usemecs )
+	    putc( 'm', stderr );
+
+	if ( strcmp( skelname, DEFAULT_SKELETON_FILE ) )
+	    fprintf( stderr, " -S%s", skelname );
+
+	putc( '\n', stderr );
+
 	fprintf( stderr, "  %d/%d NFA states\n", lastnfa, current_mns );
 	fprintf( stderr, "  %d/%d DFA states (%d words)\n", lastdfa,
 			 current_max_dfas, totnst );
@@ -321,8 +364,8 @@ int argc;
 char **argv;
 
     {
-    int i, sawcmpflag, use_stdout;
-    char *arg, *skelname = NULL, *flex_gettime(), *mktemp();
+    int i, sawcmpflag;
+    char *arg, *flex_gettime(), *mktemp();
 
     printstats = syntaxerror = trace = spprdflt = interactive = caseins = false;
     backtrack_report = performance_report = ddebug = fulltbl = fullspd = false;
@@ -597,16 +640,15 @@ get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
 readin()
 
     {
+    skelout();
+
     if ( ddebug )
 	puts( "#define FLEX_DEBUG" );
 
-#ifdef FLEX_8_BIT_CHARS
+    if ( csize == 256 )
 	puts( "#define YY_CHAR unsigned char" );
-#else
+    else
 	puts( "#define YY_CHAR char" );
-#endif
-
-    skelout();
 
     line_directive_out( stdout );
 
