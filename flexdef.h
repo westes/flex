@@ -115,14 +115,35 @@ char *sprintf(); /* keep lint happy */
  * in the array.
  */
 
-#define ALIST 'l'	/* points to list of rules accepted for a state */
-#define ACCEPT 'a'	/* list of rules accepted for a state */
-#define ECARRAY 'e'	/* maps input characters to equivalence classes */
-#define MATCHARRAY 'm'	/* maps equivalence classes to meta-equivalence classes */
-#define BASEARRAY 'b'	/* "base" array */
-#define DEFARRAY 'd'	/* "default" array */
-#define NEXTARRAY 'n'	/* "next" array */
-#define CHECKARRAY 'c'	/* "check" array */
+/* points to list of rules accepted for a state */
+#define ALIST "yy_accept"
+#define ACCEPT "yy_acclist"	/* list of rules accepted for a state */
+#define ECARRAY "yy_ec"	/* maps input characters to equivalence classes */
+/* maps equivalence classes to meta-equivalence classes */
+#define MATCHARRAY "yy_meta"
+#define BASEARRAY "yy_base"	/* "base" array */
+#define DEFARRAY "yy_def"	/* "default" array */
+#define NEXTARRAY "yy_nxt"	/* "next" array */
+#define CHECKARRAY "yy_chk"	/* "check" array */
+
+
+/* a note on the following masks.  They are used to mark accepting numbers
+ * as being special.  As such, they implicitly limit the number of accepting
+ * numbers (i.e., rules) because if there are too many rules the rule numbers
+ * will overload the mask bits.  Fortunately, this limit is \large/ (0x2000 ==
+ * 8192) so unlikely to actually cause any problems.  A check is made in
+ * new_rule() to ensure that this limit is not reached.
+ */
+
+/* mask to mark a trailing context accepting number */
+#define YY_TRAILING_MASK 0x2000
+
+/* mask to mark the accepting number of the "head" of a trailing context rule */
+#define YY_TRAILING_HEAD_MASK 0x4000
+
+/* maximum number of rules, as outlined in the above note */
+#define MAX_RULE (YY_TRAILING_MASK - 1)
+
 
 /* NIL must be 0.  If not, its special meaning when making equivalence classes
  * (it marks the representative of a given e.c.) will be unidentifiable
@@ -137,12 +158,15 @@ char *sprintf(); /* keep lint happy */
 /* size of input alphabet - should be size of ASCII set */
 #define CSIZE 127
 
-#define INITIAL_MAXCCLS 100	/* max number of unique character classes */
-#define MAXCCLS_INCREMENT 100
+#define INITIAL_MAX_CCLS 100	/* max number of unique character classes */
+#define MAX_CCLS_INCREMENT 100
 
 /* size of table holding members of character classes */
 #define INITIAL_MAX_CCL_TBL_SIZE 500
 #define MAX_CCL_TBL_SIZE_INCREMENT 250
+
+#define INITIAL_MAX_RULES 100	/* default maximum number of rules */
+#define MAX_RULES_INCREMENT 100
 
 #define INITIAL_MNS 2000	/* default maximum number of nfa states */
 #define MNS_INCREMENT 1000	/* amount to bump above by if it's not enough */
@@ -289,34 +313,49 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * useecs - if true (-ce flag), use equivalence classes
  * fulltbl - if true (-cf flag), don't compress the DFA state table
  * usemecs - if true (-cm flag), use meta-equivalence classes
- * reject - if true (-r flag), generate tables for REJECT macro
  * fullspd - if true (-F flag), use Jacobson method of table representation
  * gen_line_dirs - if true (i.e., no -L flag), generate #line directives
  * performance_report - if true (i.e., -p flag), generate a report relating
  *   to scanner performance
+ * backtrack_report - if true (i.e., -b flag), generate "lex.backtrack" file
+ *   listing backtracking states
+ * yymore_used - if true, yymore() is used in input rules
+ * reject - if true, generate backtracking tables for REJECT macro
+ * real_reject - if true, scanner really uses REJECT (as opposed to just
+ *               having "reject" set for variable trailing context)
+ * yymore_really_used - has a REALLY_xxx value indicating whether a
+ *                      %used or %notused was used with yymore()
+ * reject_really_used - same for REJECT
  */
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
-extern int interactive, caseins, useecs, fulltbl, usemecs, reject;
-extern int fullspd, gen_line_dirs, performance_report;
+extern int interactive, caseins, useecs, fulltbl, usemecs;
+extern int fullspd, gen_line_dirs, performance_report, backtrack_report;
+extern int yymore_used, reject, real_reject;
+
+#define REALLY_NOT_DETERMINED 0
+#define REALLY_USED 1
+#define REALLY_NOT_USED 2
+extern int yymore_really_used, reject_really_used;
 
 
 /* variables used in the flex input routines:
  * datapos - characters on current output line
  * dataline - number of contiguous lines of data in current data
  *    statement.  Used to generate readable -f output
- * skelfile - fd of the skeleton file
+ * skelfile - the skeleton file
  * yyin - input file
  * temp_action_file - temporary file to hold actions
+ * backtrack_file - file to summarize backtracking states to
  * action_file_name - name of the temporary file
  * infilename - name of input file
  * linenum - current input line number
  */
 
 extern int datapos, dataline, linenum;
-extern FILE *skelfile, *yyin, *temp_action_file;
+extern FILE *skelfile, *yyin, *temp_action_file, *backtrack_file;
 extern char *infilename;
-extern char *action_file_name;
+extern char action_file_name[];
 
 
 /* variables for stack of states having only one out-transition:
@@ -333,7 +372,9 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
 
 /* variables for nfa machine data:
  * current_mns - current maximum on number of NFA states
- * accnum - number of the last accepting state
+ * num_rules - number of the last accepting state; also is number of
+ *             rules created so far
+ * current_max_rules - current maximum number of rules
  * lastnfa - last nfa state number created
  * firstst - physically the first state of a fragment
  * lastst - last physical state of fragment
@@ -343,11 +384,40 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
  * trans2 - 2nd transition state for epsilons
  * accptnum - accepting number
  * assoc_rule - rule associated with this NFA state (or 0 if none)
+ * state_type - a STATE_xxx type identifying whether the state is part
+ *              of a normal rule, the leading state in a trailing context
+ *              rule (i.e., the state which marks the transition from
+ *              recognizing the text-to-be-matched to the beginning of
+ *              the trailing context), or a subsequent state in a trailing
+ *              context rule
+ * rule_type - a RULE_xxx type identifying whether this a a ho-hum
+ *             normal rule or one which has variable head & trailing
+ *             context
+ * rule_linenum - line number associated with rule
  */
 
-extern int current_mns, accnum, lastnfa;
+extern int current_mns, num_rules, current_max_rules, lastnfa;
 extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
-extern int *accptnum, *assoc_rule;
+extern int *accptnum, *assoc_rule, *state_type, *rule_type, *rule_linenum;
+
+/* different types of states; values are useful as masks, as well, for
+ * routines like check_trailing_context()
+ */
+#define STATE_NORMAL 0x1
+#define STATE_TRAILING_CONTEXT 0x2
+
+/* global holding current type of state we're making */
+
+extern int current_state_type;
+
+/* different types of rules */
+#define RULE_NORMAL 0
+#define RULE_VARIABLE 1
+
+/* true if the input rules include a rule with both variable-length head
+ * and trailing context, false otherwise
+ */
+extern int variable_trailing_context_rules;
 
 
 /* variables for protos:
@@ -411,11 +481,8 @@ extern int lastsc, current_max_scs, *scset, *scbol, *scxclu, *actvsc;
  *    -r is not given)
  * accsiz - size of accepting set for each dfa state
  * dhash - dfa state hash value
- * todo - queue of DFAs still to be processed
- * todo_head - head of todo queue
- * todo_next - next available entry on todo queue
  * numas - number of DFA accepting states created; note that this
- *    is not necessarily the same value as accnum, which is the analogous
+ *    is not necessarily the same value as num_rules, which is the analogous
  *    value for the NFA
  * numsnpairs - number of state/nextstate transition pairs
  * jambase - position in base/def where the default jam table starts
@@ -432,7 +499,7 @@ extern union dfaacc_union
     int *dfaacc_set;
     int dfaacc_state;
     } *dfaacc;
-extern int *accsiz, *dhash, *todo, todo_head, todo_next, numas;
+extern int *accsiz, *dhash, numas;
 extern int numsnpairs, jambase, jamstate;
 extern int end_of_buffer_state;
 
