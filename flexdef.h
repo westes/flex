@@ -30,11 +30,20 @@
 #include <stdio.h>
 #endif
 
+/* always be prepared to generate an 8-bit scanner */
+#define FLEX_8_BIT_CHARS
+
 #ifdef FLEX_8_BIT_CHARS
 #define CSIZE 256
 #define Char unsigned char
 #else
 #define Char char
+#define CSIZE 128
+#endif
+
+/* size of input alphabet - should be size of ASCII set */
+#ifndef DEFAULT_CSIZE
+#define DEFAULT_CSIZE 128
 #endif
 
 
@@ -165,11 +174,6 @@ char *sprintf(); /* keep lint happy */
 #define UNIQUE -1	/* marks a symbol as an e.c. representative */
 #define INFINITY -1	/* for x{5,} constructions */
 
-/* size of input alphabet - should be size of ASCII set */
-#ifndef CSIZE
-#define CSIZE 128
-#endif
-
 #define INITIAL_MAX_CCLS 100	/* max number of unique character classes */
 #define MAX_CCLS_INCREMENT 100
 
@@ -202,7 +206,7 @@ char *sprintf(); /* keep lint happy */
 #define INITIAL_MAX_TEMPLATE_XPAIRS 2500
 #define MAX_TEMPLATE_XPAIRS_INCREMENT 2500
 
-#define SYM_EPSILON 0	/* to mark transitions on the symbol epsilon */
+#define SYM_EPSILON (CSIZE + 1)	/* to mark transitions on the symbol epsilon */
 
 #define INITIAL_MAX_SCS 40	/* maximum number of start conditions */
 #define MAX_SCS_INCREMENT 40	/* amount to bump by if it's not enough */
@@ -470,7 +474,12 @@ extern int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
  * num_xlations - number of different xlation values
  */
 
-extern int numecs, nextecm[CSIZE], ecgroup[CSIZE], nummecs;
+/* reserve enough room in the equivalence class arrays so that we
+ * can use the CSIZE'th element to hold equivalence class information
+ * for the NUL character.  Later we'll move this information into
+ * the 0th element.
+ */
+extern int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs;
 
 /* meta-equivalence classes are indexed starting at 1, so it's possible
  * that they will require positions from 1 .. CSIZE, i.e., CSIZE + 1
@@ -509,6 +518,8 @@ extern char **scname;
  * tnxt - internal nxt table for templates
  * base - offset into "nxt" for given state
  * def - where to go if "chk" disallows "nxt" entry
+ * nultrans - NUL transition for each state
+ * NUL_ec - equivalence class of the NUL character
  * tblend - last "nxt/chk" table entry being used
  * firstfree - first empty entry in "nxt/chk" table
  * dss - nfa state set for each dfa
@@ -529,7 +540,7 @@ extern char **scname;
 extern int current_max_dfa_size, current_max_xpairs;
 extern int current_max_template_xpairs, current_max_dfas;
 extern int lastdfa, lasttemp, *nxt, *chk, *tnxt;
-extern int *base, *def, tblend, firstfree, **dss, *dfasiz;
+extern int *base, *def, *nultrans, NUL_ec, tblend, firstfree, **dss, *dfasiz;
 extern union dfaacc_union
     {
     int *dfaacc_set;
@@ -576,13 +587,12 @@ extern Char *ccltbl;
  * hshsave - number of hash collisions saved by checking number of states
  * num_backtracking - number of DFA states requiring back-tracking
  * bol_needed - whether scanner needs beginning-of-line recognition
- * uses_NUL - true if the scanner needs to be able to recognize NUL's
  */
 
 extern char *starttime, *endtime, nmstr[MAXLINE];
 extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
-extern int num_backtracking, bol_needed, uses_NUL;
+extern int num_backtracking, bol_needed;
 
 char *allocate_array(), *reallocate_array();
 
