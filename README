@@ -72,7 +72,7 @@ to live, cd there, and use
 to extract them.
 
 Either move {flexskelcom.h,flexskeldef.h,fastskeldef.h} into /usr/include
-or edit {flex.skel,flex.fastskel,flexskeldef.h,fastskeldef.h,scan.c}
+or edit {flex.skel,flex.fastskel,flexskeldef.h,fastskeldef.h,scan.c.dist}
 and wire in the full pathname of where you are going to keep the include files.
 
 Decide where you want to keep {flex.skel,flex.fastskel} (suggestion:
@@ -85,9 +85,6 @@ To make flex for the first time, use:
     make first_flex
 
 which uses a pre-generated copy of the scanner whose source is in flex.
-For subsequent makes, just use:
-
-    make
 
 Assuming it builds successfully, you can test it using
 
@@ -107,8 +104,8 @@ where "..." is one of:
 	-ist -c
 	-ist -ce
 	-ist -cm
-	-istf
-	-istF
+	-ist -cfe
+	-ist -cFe
 
 and testing using:
 
