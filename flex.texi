@@ -4760,8 +4760,8 @@ pooled memory mechanism will save you a lot of grief when writing parsers.
 
 @anchor{serialization}
 A @code{flex} scanner has the ability to save the DFA tables to a file, and
-load them runtime when needed.  The motivation for this feature is to reduce
-the runtime memory footprint.  Traditionally, these tables are compiled into
+load them at runtime when needed.  The motivation for this feature is to reduce
+the runtime memory footprint.  Traditionally, these tables have been compiled into
 the scanner as C arrays, and are sometimes quite large.  Since the tables are
 compiled into the scanner, the memory used by the tables can never be freed.
 This is a waste of memory, especially if an application uses several scanners,
