@@ -42,11 +42,16 @@ manual includes both tutorial and reference sections.
 * generated scanner::           
 * start conditions::            
 * multiple::                    
+* eof::                         
+* misc macros::                 
+* user values::                 
+* yacc::                        
 * invoking flex::               
+* scanner options::             
 * performance::                 
 * cxx::                         
 * reentrant::                   
-* POSIX::                       
+* lex and posix::               
 * diagnostics::                 
 * limitations::                 
 * bibliography::                
@@ -92,7 +97,6 @@ the corresponding C code.
 * performance::                 
 * cxx::                         
 * reentrant::                   
-* POSIX::                       
 * diagnostics::                 
 * limitations::                 
 * bibliography::                
@@ -339,7 +343,7 @@ Other indented or %@{ %@} text in the rule section is still copied to the output
 but its meaning is not well-defined and it may well cause compile-time
 errors (this feature is present for
 @i{POSIX}
-compliance. @xref{POSIX}, for other such features).
+compliance. @xref{lex and posix}, for other such features).
 
 In the definitions section (but not in the rules section),
 an unindented comment (i.e., a line
@@ -1493,7 +1497,7 @@ limitation.  If memory is exhausted, program execution aborts.
 To use start condition stacks, your scanner must include a @code{%option
 stack} directive (@pxref{invoking flex}).
 
-@node multiple, invoking flex, start conditions, Top
+@node multiple, eof, start conditions, Top
 @chapter MULTIPLE INPUT BUFFERS
 
 Some scanners (such as those which support ``include'' files) require
@@ -1647,7 +1651,7 @@ scans a NUL-terminated string.
 @end deffn
 
 @deffn Function yy_scan_bytes ( const char *bytes, int len )
-scans @var{len} bytes (including possibly NUL's) starting at location
+scans @var{len} bytes (including possibly @code{NUL}s) starting at location
 @var{bytes}.
 @end deffn
 
@@ -1673,14 +1677,8 @@ The type
 is an integral type to which you can cast an integer expression
 reflecting the size of the buffer.
 
-@menu
-* eof::                         
-* misc macros::                 
-* user values::                 
-@end menu
-
-@node eof, misc macros, multiple, multiple
-@section END-OF-FILE RULES
+@node eof, misc macros, multiple, Top
+@chapter END-OF-FILE RULES
 
 The special rule @code{<<EOF>>} indicates
 actions which are to be taken when an end-of-file is
@@ -1740,8 +1738,8 @@ example:
 @end verbatim
 @end example
 
-@node misc macros, user values, eof, multiple
-@section MISCELLANEOUS MACROS
+@node misc macros, user values, eof, Top
+@chapter MISCELLANEOUS MACROS
 
 The macro @code{YY_USER_ACTION} can be defined to provide an action
 which is always executed prior to the matched rule's action.  For
@@ -1804,125 +1802,75 @@ being very careful that every rule ends with a @code{break}" or a
 where because a rule's action ends with @code{return}, the
 @code{YY_BREAK} is inaccessible.
 
-@node user values,  , misc macros, multiplel
-@section VALUES AVAILABLE TO THE USER
+@node user values, yacc, misc macros, Top
+@chapter VALUES AVAILABLE TO THE USER
 
-This section summarizes the various values available to the user
-in the rule actions.
-@itemize
-@item 
-@b{char *yytext}
-holds the text of the current token.  It may be modified but not lengthened
-(you cannot append characters to the end).
-@item
-If the special directive
-@code{%array}
-appears in the first section of the scanner description, then
-@var{yytext}
-is instead declared
-@b{char yytext[YYLMAX]},
-where
-@var{YYLMAX}
-is a macro definition that you can redefine in the first section
-if you don't like the default value (generally 8KB).  Using
-@code{%array}
-results in somewhat slower scanners, but the value of
-@var{yytext}
-becomes immune to calls to
-@i{unput()},
-which potentially destroy its value when
-@var{yytext}
-is a character pointer.  The opposite of
-@code{%array}
-is
-@code{%pointer},
+This chapter summarizes the various values available to the user in the
+rule actions.
+
+@table @code
+@item  char *yytext
+holds the text of the current token.  It may be modified but not
+lengthened (you cannot append characters to the end).
+
+If the special directive @code{%array} appears in the first section of
+the scanner description, then @var{yytext} is instead declared
+@code{char yytext[YYLMAX]}, where @var{YYLMAX} is a macro definition
+that you can redefine in the first section if you don't like the default
+value (generally 8KB).  Using @code{%array} results in somewhat slower
+scanners, but the value of @var{yytext} becomes immune to calls to
+@code{unput()}, which potentially destroy its value when @var{yytext} is
+a character pointer.  The opposite of @code{%array} is @code{%pointer},
 which is the default.
-@item
-You cannot use
-@code{%array}
-when generating C++ scanner classes
-(the
-@b{--+}
-flag).
-@item 
-@b{int yyleng}
+
+You cannot use @code{%array} when generating C++ scanner classes (the
+@samp{-+} flag).
+
+@item  int yyleng
 holds the length of the current token.
-@item 
-@b{FILE *yyin}
-is the file which by default
-@code{flex}
-reads from.  It may be redefined but doing so only makes sense before
-scanning begins or after an EOF has been encountered.  Changing it in
-the midst of scanning will have unexpected results since
-@code{flex}
-buffers its input; use
-@code{yyrestart()}
-instead.
-Once scanning terminates because an end-of-file
-has been seen, you can assign
-@file{yyin}
-at the new input file and then call the scanner again to continue scanning.
-@item 
-@b{void yyrestart( FILE *new_file )}
-may be called to point
-@file{yyin}
-at the new input file.  The switch-over to the new file is immediate
-(any previously buffered-up input is lost).  Note that calling
-@code{yyrestart()}
-with
-@file{yyin}
+
+@item  FILE *yyin
+is the file which by default @code{flex} reads from.  It may be
+redefined but doing so only makes sense before scanning begins or after
+an EOF has been encountered.  Changing it in the midst of scanning will
+have unexpected results since @code{flex} buffers its input; use
+@code{yyrestart()} instead.  Once scanning terminates because an
+end-of-file has been seen, you can assign @file{yyin} at the new input
+file and then call the scanner again to continue scanning.
+
+@item  void yyrestart( FILE *new_file )
+may be called to point @file{yyin} at the new input file.  The
+switch-over to the new file is immediate (any previously buffered-up
+input is lost).  Note that calling @code{yyrestart()} with @file{yyin}
 as an argument thus throws away the current input buffer and continues
 scanning the same input file.
-@item 
-@b{FILE *yyout}
-is the file to which
-@b{ECHO}
-actions are done.  It can be reassigned by the user.
-@item 
-@b{YY_CURRENT_BUFFER}
-returns a
-@b{YY_BUFFER_STATE}
-handle to the current buffer.
-@item 
-@code{YY_START}
-returns an integer value corresponding to the current start
-condition.  You can subsequently use this value with
-@code{BEGIN}
-to return to that start condition.
-@end itemize
 
-@section INTERFACING WITH YACC
+@item  FILE *yyout
+is the file to which @code{ECHO} actions are done.  It can be reassigned
+by the user.
 
-One of the main uses of
-@code{flex}
-is as a companion to the
-@i{yacc}
-parser-generator.
-@i{yacc}
-parsers expect to call a routine named
-@code{yylex()}
-to find the next input token.  The routine is supposed to
+@item  YY_CURRENT_BUFFER
+returns a @code{YY_BUFFER_STATE} handle to the current buffer.
+
+@item  YY_START
+returns an integer value corresponding to the current start condition.
+You can subsequently use this value with @code{BEGIN} to return to that
+start condition.
+@end table
+
+@node yacc, invoking flex, user values, Top
+@chapter INTERFACING WITH YACC
+
+One of the main uses of @code{flex} is as a companion to the @code{yacc}
+parser-generator.  @code{yacc} parsers expect to call a routine named
+@code{yylex()} to find the next input token.  The routine is supposed to
 return the type of the next token as well as putting any associated
-value in the global
-@b{yylval}.
-To use
-@code{flex}
-with
-@i{yacc},
-one specifies the
-@b{--d}
-option to
-@i{yacc}
-to instruct it to generate the file
-@b{y.tab.h}
-containing definitions of all the
-@b{%tokens}
-appearing in the
-@i{yacc}
-input.  This file is then included in the
-@code{flex}
-scanner.  For example, if one of the tokens is "TOK_NUMBER",
-part of the scanner might look like:
+value in the global @var{yylval}.  To use @code{flex} with @code{yacc},
+one specifies the @samp{-d} option to @code{yacc} to instruct it to
+generate the file @file{y.tab.h} containing definitions of all the
+@code{%tokens} appearing in the @code{yacc} input.  This file is then
+included in the @code{flex} scanner.  For example, if one of the tokens
+is @var{TOK_NUMBER}, part of the scanner might look like:
 
 @example
 @verbatim
@@ -1936,188 +1884,126 @@ part of the scanner might look like:
 @end verbatim
 @end example
 
-@node invoking flex, performance, multiple, Top
+@node invoking flex, scanner options, yacc, Top
 @chapter Invoking flex
 
 @code{flex}
 has the following options:
-@itemize
-}{@b{--b}}
-@item[{@b{--b}}]
-Generate backing-up information to
-@i{lex.backup}.
-This is a list of scanner states which require backing up
-and the input characters on which they do so.  By adding rules one
-can remove backing-up states.  If
-@i{all}
-backing-up states are eliminated and
-@b{--Cf}
-or
-@b{--CF}
-is used, the generated scanner will run faster (see the
-@b{--p}
-flag).  Only users who wish to squeeze every last cycle out of their
-scanners need worry about this option.  (See the section on Performance
-Considerations below.)
-@item[{@b{--c}}]
+
+@table @samp
+@item -b
+Generate backing-up information to @file{lex.backup}.  This is a list of
+scanner states which require backing up and the input characters on
+which they do so.  By adding rules one can remove backing-up states.  If
+@emph{all} backing-up states are eliminated and @samp{-Cf} or @code{-CF}
+is used, the generated scanner will run faster (see the @samp{-p} flag).
+Only users who wish to squeeze every last cycle out of their scanners
+need worry about this option.  (@pxref{performance}).
+
+@item -c
 is a do-nothing, deprecated option included for POSIX compliance.
-@item[{@b{--d}}]
-makes the generated scanner run in
-@i{debug}
-mode.  Whenever a pattern is recognized and the global
-@b{yy_flex_debug}
-is non-zero (which is the default),
-the scanner will write to
-@i{stderr}
-a line of the form:
+
+@item -d
+makes the generated scanner run in @dfn{debug} mode.  Whenever a pattern
+is recognized and the global variable @var{yy_flex_debug} is non-zero
+(which is the default), the scanner will write to @file{stderr} a line
+of the form:
 
 @example
 @verbatim
-    --accepting rule at line 53 ("the matched text")
+    -accepting rule at line 53 ("the matched text")
 @end verbatim
 @end example
 
-The line number refers to the location of the rule in the file
-defining the scanner (i.e., the file that was fed to flex).  Messages
-are also generated when the scanner backs up, accepts the
-default rule, reaches the end of its input buffer (or encounters
-a NUL; at this point, the two look the same as far as the scanner's concerned),
-or reaches an end-of-file.
-@item[{@b{--f}}]
+The line number refers to the location of the rule in the file defining
+the scanner (i.e., the file that was fed to flex).  Messages are also
+generated when the scanner backs up, accepts the default rule, reaches
+the end of its input buffer (or encounters a NUL; at this point, the two
+look the same as far as the scanner's concerned), or reaches an
+end-of-file.
+
+@item -f
 specifies
-@i{fast scanner}.
-No table compression is done and stdio is bypassed.
+@dfn{fast scanner}.
+No table compression is done and @code{stdio} is bypassed.
 The result is large but fast.  This option is equivalent to
-@b{--Cfr}
-(see below).
-@item[{@b{--h}}]
-generates a "help" summary of
-@i{flex's}
-options to
-@i{stdout}
-and then exits.
-@b{--?}
-and
-@b{----help}
-are synonyms for
-@b{--h}.
-@item[{@b{--i}}]
-instructs
-@code{flex}
-to generate a
-@i{case-insensitive}
-scanner.  The case of letters given in the
-@code{flex}
-input patterns will
-be ignored, and tokens in the input will be matched regardless of case.  The
-matched text given in
-@i{yytext}
-will have the preserved case (i.e., it will not be folded).
-@item[{@b{--l}}]
-turns on maximum compatibility with the original AT&T
-@i{lex}
-implementation.  Note that this does not mean
-@i{full}
-compatibility.  Use of this option costs a considerable amount of
-performance, and it cannot be used with the
-@b{--+, -f, -F, -Cf},
-or
-@b{-CF}
-options.  For details on the compatibilities it provides, see the section
-"Incompatibilities With Lex And POSIX" below.  This option also results
-in the name
-@b{YY_FLEX_LEX_COMPAT}
-being #define'd in the generated scanner.
-@item[{@b{--n}}]
+@samp{--Cfr}
+
+@item -h
+generates a ``help'' summary of @code{flex}'s options to @file{stdout}
+and then exits.  @samp{-?}  and @samp{--help} are synonyms for
+@samp{-h}.
+
+@item -i
+instructs @code{flex} to generate a @dfn{case-insensitive} scanner.  The
+case of letters given in the @code{flex} input patterns will be ignored,
+and tokens in the input will be matched regardless of case.  The matched
+text given in @var{yytext} will have the preserved case (i.e., it will
+not be folded).
+
+@item -l
+turns on maximum compatibility with the original AT&T @code{lex}
+implementation.  Note that this does not mean @emph{full} compatibility.
+Use of this option costs a considerable amount of performance, and it
+cannot be used with the @samp{-+}, @samp{-f}, @samp{-F}, @samp{-Cf}, or
+@samp{-CF} options.  For details on the compatibilities it provides, see
+@ref{lex and posix}.  This option also results in the name
+@code{YY_FLEX_LEX_COMPAT} being @code{#define}'d in the generated scanner.
+
+@item -n
 is another do-nothing, deprecated option included only for
 POSIX compliance.
-@item[{@b{--p}}]
-generates a performance report to stderr.  The report
-consists of comments regarding features of the
-@code{flex}
-input file which will cause a serious loss of performance in the resulting
-scanner.  If you give the flag twice, you will also get comments regarding
-features that lead to minor performance losses.
-@itemize
-@item
-Note that the use of
-@b{REJECT},
-@b{%option yylineno},
-and variable trailing context (see the Deficiencies / Bugs section below)
-entails a substantial performance penalty; use of
-@i{yymore()},
-the
-@b{^}
-operator,
-and the
-@b{--I}
-flag entail minor performance penalties.
-@end itemize%
-@item[{@b{--s}}]
-causes the
-@i{default rule}
-(that unmatched scanner input is echoed to
-@i{stdout)}
-to be suppressed.  If the scanner encounters input that does not
-match any of its rules, it aborts with an error.  This option is
-useful for finding holes in a scanner's rule set.
-@item[{@b{--t}}]
-instructs
-@code{flex}
-to write the scanner it generates to standard output instead
-of
-@b{lex.yy.c}.
-@item[{@b{--v}}]
-specifies that
-@code{flex}
-should write to
-@i{stderr}
-a summary of statistics regarding the scanner it generates.
-Most of the statistics are meaningless to the casual
-@code{flex}
-user, but the first line identifies the version of
-@code{flex}
-(same as reported by
-@b{--V)},
+
+@item -p
+generates a performance report to @file{stderr}.  The report consists of
+comments regarding features of the @code{flex} input file which will
+cause a serious loss of performance in the resulting scanner.  If you
+give the flag twice, you will also get comments regarding features that
+lead to minor performance losses.
+
+Note that the use of @code{REJECT}, @code{%option yylineno}, and
+variable trailing context (@pxref{limitations}) entails a substantial
+performance penalty; use of @code{yymore()}, the @samp{^} operator, and
+the @samp{-I} flag entail minor performance penalties.
+
+@item -s
+causes the @emph{default rule} (that unmatched scanner input is echoed
+to @file{stdout)} to be suppressed.  If the scanner encounters input
+that does not match any of its rules, it aborts with an error.  This
+option is useful for finding holes in a scanner's rule set.
+
+@item -t
+instructs @code{flex} to write the scanner it generates to standard
+output instead of @file{lex.yy.c}.
+
+@item -v
+specifies that @code{flex} should write to @file{stderr} a summary of
+statistics regarding the scanner it generates.  Most of the statistics
+are meaningless to the casual @code{flex} user, but the first line
+identifies the version of @code{flex} (same as reported by @samp{-V}),
 and the next line the flags used when generating the scanner, including
 those that are on by default.
-@item[{@b{--w}}]
+
+@item -w
 suppresses warning messages.
-@item[{@b{--B}}]
-instructs
-@code{flex}
-to generate a
-@i{batch}
-scanner, the opposite of
-@i{interactive}
-scanners generated by
-@b{--I}
-(see below).  In general, you use
-@b{--B}
-when you are
-@i{certain}
-that your scanner will never be used interactively, and you want to
-squeeze a
-@i{little}
-more performance out of it.  If your goal is instead to squeeze out a
-@i{lot}
-more performance, you should  be using the
-@b{--Cf}
-or
-@b{--CF}
-options (discussed below), which turn on
-@b{--B}
-automatically anyway.
-@item[{@b{--F}}]
-specifies that the
-\undertext{fast}
-scanner table representation should be used (and stdio
-bypassed).  This representation is
-about as fast as the full table representation
-@b{(-f)},
-and for some sets of patterns will be considerably smaller (and for
-others, larger).  In general, if the pattern set contains both "keywords"
-and a catch-all, "identifier" rule, such as in the set:
+
+@item -B
+instructs @code{flex} to generate a @dfn{batch} scanner, the opposite of
+@emph{interactive} scanners generated by @samp{-I} (see below).  In
+general, you use @samp{-B} when you are @emph{certain} that your scanner
+will never be used interactively, and you want to squeeze a
+@emph{little} more performance out of it.  If your goal is instead to
+squeeze out a @emph{lot} more performance, you should be using the
+@samp{-Cf} or @samp{-CF} options, which turn on @samp{-B} automatically
+anyway.
+
+@item -F
+specifies that the @emph{fast} scanner table representation should be
+used (and @code{stdio} bypassed).  This representation is about as fast
+as the full table representation @samp{-f}, and for some sets of
+patterns will be considerably smaller (and for others, larger).  In
+general, if the pattern set contains both @emph{keywords} and a
+catch-all, @emph{identifier} rule, such as in the set:
 
 @example
 @verbatim
@@ -2130,307 +2016,204 @@ and a catch-all, "identifier" rule, such as in the set:
 @end example
 
 then you're better off using the full table representation.  If only
-the "identifier" rule is present and you then use a hash table or some such
+the @emph{identifier} rule is present and you then use a hash table or some such
 to detect the keywords, you're better off using
-@b{-F}.
-@itemize
-@item
-This option is equivalent to
-@b{--CFr}
-(see below).  It cannot be used with
-@b{--+}.
-@end itemize%
-@item[{@b{--I}}]
-instructs
-@code{flex}
-to generate an
-@i{interactive}
-scanner.  An interactive scanner is one that only looks ahead to decide
-what token has been matched if it absolutely must.  It turns out that
-always looking one extra character ahead, even if the scanner has already
-seen enough text to disambiguate the current token, is a bit faster than
-only looking ahead when necessary.  But scanners that always look ahead
-give dreadful interactive performance; for example, when a user types
-a newline, it is not recognized as a newline token until they enter
-@i{another}
-token, which often means typing in another whole line.
-@itemize
-@item
-@code{flex}
-scanners default to
-@i{interactive}
-unless you use the
-@b{--Cf}
-or
-@b{--CF}
-table-compression options (see below).  That's because if you're looking
-for high-performance you should be using one of these options, so if you
-didn't,
-@code{flex}
-assumes you'd rather trade off a bit of run-time performance for intuitive
-interactive behavior.  Note also that you
-@i{cannot}
-use
-@b{--I}
-in conjunction with
-@b{--Cf}
-or
-@b{--CF}.
-Thus, this option is not really needed; it is on by default for all those
-cases in which it is allowed.
-@item
+@samp{-F}.
+
+This option is equivalent to @samp{-CFr} (see below).  It cannot be used
+with @samp{-+}.
+
+@item -I
+instructs @code{flex} to generate an @i{interactive} scanner.  An
+interactive scanner is one that only looks ahead to decide what token
+has been matched if it absolutely must.  It turns out that always
+looking one extra character ahead, even if the scanner has already seen
+enough text to disambiguate the current token, is a bit faster than only
+looking ahead when necessary.  But scanners that always look ahead give
+dreadful interactive performance; for example, when a user types a
+newline, it is not recognized as a newline token until they enter
+@emph{another} token, which often means typing in another whole line.
+
+@code{flex} scanners default to @code{interactive} unless you use the
+@samp{-Cf} or @samp{-CF} table-compression options
+(@pxref{performance}).  That's because if you're looking for
+high-performance you should be using one of these options, so if you
+didn't, @code{flex} assumes you'd rather trade off a bit of run-time
+performance for intuitive interactive behavior.  Note also that you
+@emph{cannot} use @samp{-I} in conjunction with @samp{-Cf} or
+@samp{-CF}.  Thus, this option is not really needed; it is on by default
+for all those cases in which it is allowed.
+
 You can force a scanner to
 @emph{not}
 be interactive by using
-@b{--B}
-(see above).
-@end itemize%
-@item[{@b{--L}}]
+@samp{-B}
+
+@item -L
 instructs
 @code{flex}
 not to generate
-@b{#line}
+@code{#line}
 directives.  Without this option,
 @code{flex}
 peppers the generated scanner
-with #line directives so error messages in the actions will be correctly
+with @code{#line} directives so error messages in the actions will be correctly
 located with respect to either the original
 @code{flex}
 input file (if the errors are due to code in the input file), or
-@b{lex.yy.c}
+@file{lex.yy.c}
 (if the errors are
-@i{flex's}
+@code{flex}'s
 fault -- you should report these sorts of errors to the email address
-given below).
-@item[{@b{--R[b]}}]
-instructs flex to generate a reentrant C scanner.
-The generated scanner may safely be used in a multi-threaded
-environment. The API for a reentrant scanner is different
-than for a non-reentrant scanner (see
-@b{%Reentrant C Scanners%}
-below).
-Because of the API difference between reentrant and non-reentrant
-@code{flex}
-scanners, non-reentrant flex code must be modified before
-it is suitable for use with this option.
-This option is not compatible with the
-@b{--+}
-option.
-@itemize
-@item
-@b{--Rb}
-(reentrant bison) instructs flex to generate a reentrant C scanner that is
-meant to be called by a
-@i{GNU bison}
-pure parser. The scanner is the same as the scanner generated by the
-@b{-R}
-option, but with minor API changes for
-@i{bison}
-compatiblity. In particular, the declaration of
-@i{yylex}
-is modified, and support for
-@i{yylval_r}
-and
-@i{yylloc_r}
-is incorporated. See
-@b{%Reentrant C Scanners With Bison Pure Parsers% below}.
-@item
-The options
-@b{-R}
-and
-@b{--Rb}
-do not affect the performance of the scanner.
+given in @ref{reporting bugs}).
 
-@end itemize%
-@item[{@b{--T}}]
-makes
-@code{flex}
-run in
-@i{trace}
-mode.  It will generate a lot of messages to
-@i{stderr}
-concerning
-the form of the input and the resultant non-deterministic and deterministic
-finite automata.  This option is mostly for use in maintaining
-@code{flex}.
-@item[{@b{--V}}]
-prints the version number to
-@i{stdout}
-and exits.
-@b{----version}
-is a synonym for
-@b{--V}.
-@item[{@b{--7}}]
-instructs
-@code{flex}
-to generate a 7-bit scanner, i.e., one which can only recognized 7-bit
-characters in its input.  The advantage of using
-@b{--7}
-is that the scanner's tables can be up to half the size of those generated
-using the
-@b{--8}
-option (see below).  The disadvantage is that such scanners often hang
-or crash if their input contains an 8-bit character.
-@itemize
-@item
+@item -R
+instructs flex to generate a reentrant C scanner.  The generated scanner
+may safely be used in a multi-threaded environment. The API for a
+reentrant scanner is different than for a non-reentrant scanner
+@pxref{Reentrant C Scanners}).  Because of the API difference between
+reentrant and non-reentrant @code{flex} scanners, non-reentrant flex
+code must be modified before it is suitable for use with this option.
+This option is not compatible with the @samp{-+} option.
+
+@item -Rb
+instructs flex to generate a reentrant C scanner that is
+meant to be called by a
+@code{GNU bison}
+pure parser. The scanner is the same as the scanner generated by the
+@samp{-R}
+option, but with minor API changes for
+@code{bison}
+compatibility. In particular, the declaration of
+@code{yylex}
+is modified, and support for
+@var{yylval_r}
+and
+@var{yylloc_r}
+is incorporated. @xref{bison pure}.
+
+The options @samp{-R} and @samp{-Rb} do not affect the performance of
+the scanner.
+
+@item -T
+makes @code{flex} run in @dfn{trace} mode.  It will generate a lot of
+messages to @file{stderr} concerning the form of the input and the
+resultant non-deterministic and deterministic finite automata.  This
+option is mostly for use in maintaining @code{flex}.
+
+@item -V
+prints the version number to @file{stdout} and exits.  @samp{--version}
+is a synonym for @samp{-V}.
+
+@item -7
+instructs @code{flex} to generate a 7-bit scanner, i.e., one which can
+only recognize 7-bit characters in its input.  The advantage of using
+@samp{-7} is that the scanner's tables can be up to half the size of
+those generated using the @samp{-8}.  The disadvantage is that such
+scanners often hang or crash if their input contains an 8-bit character.
+
 Note, however, that unless you generate your scanner using the
-@b{--Cf}
-or
-@b{--CF}
-table compression options, use of
-@b{--7}
+@samp{-Cf} or @samp{-CF} table compression options, use of @samp{-7}
 will save only a small amount of table space, and make your scanner
-considerably less portable.
-@i{Flex's}
-default behavior is to generate an 8-bit scanner unless you use the
-@b{--Cf}
-or
-@b{--CF},
-in which case
-@code{flex}
-defaults to generating 7-bit scanners unless your site was always
-configured to generate 8-bit scanners (as will often be the case
-with non-USA sites).  You can tell whether flex generated a 7-bit
-or an 8-bit scanner by inspecting the flag summary in the
-@b{--v}
-output as described above.
-@item
-Note that if you use
-@b{--Cfe}
-or
-@b{--CFe}
-(those table compression options, but also using equivalence classes as
-discussed see below), flex still defaults to generating an 8-bit
-scanner, since usually with these compression options full 8-bit tables
-are not much more expensive than 7-bit tables.
-@end itemize%
-@item[{@b{--8}}]
-instructs
-@code{flex}
-to generate an 8-bit scanner, i.e., one which can recognize 8-bit
-characters.  This flag is only needed for scanners generated using
-@b{--Cf}
-or
-@b{--CF},
-as otherwise flex defaults to generating an 8-bit scanner anyway.
-@itemize
-@item
+considerably less portable.  @code{Flex}'s default behavior is to
+generate an 8-bit scanner unless you use the @samp{-Cf} or @samp{-CF},
+in which case @code{flex} defaults to generating 7-bit scanners unless
+your site was always configured to generate 8-bit scanners (as will
+often be the case with non-USA sites).  You can tell whether flex
+generated a 7-bit or an 8-bit scanner by inspecting the flag summary in
+the @samp{-v} output as described above.
+
+Note that if you use @samp{-Cfe} or @samp{-CFe} @code{flex} still
+defaults to generating an 8-bit scanner, since usually with these
+compression options full 8-bit tables are not much more expensive than
+7-bit tables.
+
+@item -8
+instructs @code{flex} to generate an 8-bit scanner, i.e., one which can
+recognize 8-bit characters.  This flag is only needed for scanners
+generated using @samp{-Cf} or @samp{-CF}, as otherwise flex defaults to
+generating an 8-bit scanner anyway.
+
 See the discussion of
-@b{--7}
-above for flex's default behavior and the tradeoffs between 7-bit
+@samp{-7}
+above for @code{flex}'s default behavior and the tradeoffs between 7-bit
 and 8-bit scanners.
-@end itemize%
-@item[{@b{--+}}]
+
+@item -+
 specifies that you want flex to generate a C++
-scanner class.  See the section on Generating C++ Scanners below for
+scanner class.  @xref{cxx}, for
 details.
-@item[{@b{--C[aefFmr]}}]
+
+@item -C[aefFmr]
 controls the degree of table compression and, more generally, trade-offs
 between small scanners and fast scanners.
-@itemize
-@item
-@b{--Ca}
-("align") instructs flex to trade off larger tables in the
+
+@item -Ca
+(``align'') instructs flex to trade off larger tables in the
 generated scanner for faster performance because the elements of
 the tables are better aligned for memory access and computation.  On some
 RISC architectures, fetching and manipulating longwords is more efficient
 than with smaller-sized units such as shortwords.  This option can
 double the size of the tables used by your scanner.
-@item
-@b{--Ce}
-directs
-@code{flex}
-to construct
-@i{equivalence classes},
-i.e., sets of characters
-which have identical lexical properties (for example, if the only
-appearance of digits in the
-@code{flex}
-input is in the character class
-"[0-9]" then the digits '0', '1', ..., '9' will all be put
-in the same equivalence class).  Equivalence classes usually give
-dramatic reductions in the final table/object file sizes (typically
-a factor of 2-5) and are pretty cheap performance-wise (one array
-look-up per character scanned).
-@item
-@b{--Cf}
-specifies that the
-@i{full}
-scanner tables should be generated -
-@code{flex}
-should not compress the
-tables by taking advantages of similar transition functions for
-different states.
-@item
-@b{--CF}
+
+@item -Ce
+directs @code{flex} to construct @dfn{equivalence classes}, i.e., sets
+of characters which have identical lexical properties (for example, if
+the only appearance of digits in the @code{flex} input is in the
+character class ``[0-9]'' then the digits '0', '1', ..., '9' will all be
+put in the same equivalence class).  Equivalence classes usually give
+dramatic reductions in the final table/object file sizes (typically a
+factor of 2-5) and are pretty cheap performance-wise (one array look-up
+per character scanned).
+
+@item -Cf
+specifies that the @dfn{full} scanner tables should be generated -
+@code{flex} should not compress the tables by taking advantages of
+similar transition functions for different states.
+
+@item -CF
 specifies that the alternate fast scanner representation (described
-above under the
-@b{--F}
-flag)
-should be used.  This option cannot be used with
-@b{--+}.
-@item
-@b{--Cm}
+above under the @samp{-F} flag) should be used.  This option cannot be
+used with @samp{-+}.
+
+@item -Cm
 directs
 @code{flex}
 to construct
-@i{meta-equivalence classes},
+@dfn{meta-equivalence classes},
 which are sets of equivalence classes (or characters, if equivalence
 classes are not being used) that are commonly used together.  Meta-equivalence
 classes are often a big win when using compressed tables, but they
-have a moderate performance impact (one or two "if" tests and one
+have a moderate performance impact (one or two @code{if} tests and one
 array look-up per character scanned).
-@item
-@b{--Cr}
-causes the generated scanner to
-@i{bypass}
-use of the standard I/O library (stdio) for input.  Instead of calling
-@b{fread()}
-or
-@b{getc()},
-the scanner will use the
-@b{read()}
-system call, resulting in a performance gain which varies from system
-to system, but in general is probably negligible unless you are also using
-@b{--Cf}
-or
-@b{--CF}.
-Using
-@b{--Cr}
-can cause strange behavior if, for example, you read from
-@file{yyin}
-using stdio prior to calling the scanner (because the scanner will miss
-whatever text your previous reads left in the stdio input buffer).
-@item
-@b{--Cr}
-has no effect if you define
-@code{YY_INPUT()}
-(see The Generated Scanner above).
-@item
-A lone
-@b{--C}
-specifies that the scanner tables should be compressed but neither
-equivalence classes nor meta-equivalence classes should be used.
-@item
-The options
-@b{--Cf}
-or
-@b{--CF}
-and
-@b{--Cm}
-do not make sense together - there is no opportunity for meta-equivalence
-classes if the table is not being compressed.  Otherwise the options
-may be freely mixed, and are cumulative.
-@item
-The default setting is
-@b{--Cem},
-which specifies that
-@code{flex}
-should generate equivalence classes
-and meta-equivalence classes.  This setting provides the highest
-degree of table compression.  You can trade off
-faster-executing scanners at the cost of larger tables with
-the following generally being true:
+
+@item -Cr
+causes the generated scanner to @emph{bypass} use of the standard I/O
+library (@code{stdio}) for input.  Instead of calling @code{fread()} or
+@code{getc()}, the scanner will use the @code{read()} system call,
+resulting in a performance gain which varies from system to system, but
+in general is probably negligible unless you are also using @samp{-Cf}
+or @samp{-CF}.  Using @samp{-Cr} can cause strange behavior if, for
+example, you read from @file{yyin} using @code{stdio} prior to calling
+the scanner (because the scanner will miss whatever text your previous
+reads left in the @code{stdio} input buffer).  @samp{-Cr} has no effect
+if you define @code{YY_INPUT()} (@pxref{generated scanner}).
+
+@item -C
+A lone @samp{-C} specifies that the scanner tables should be compressed
+but neither equivalence classes nor meta-equivalence classes should be
+used.
+
+The options @samp{-Cf} or @samp{-CF} and @samp{-Cm} do not make sense
+together - there is no opportunity for meta-equivalence classes if the
+table is not being compressed.  Otherwise the options may be freely
+mixed, and are cumulative.
+
+The default setting is @samp{-Cem}, which specifies that @code{flex}
+should generate equivalence classes and meta-equivalence classes.  This
+setting provides the highest degree of table compression.  You can trade
+off faster-executing scanners at the cost of larger tables with the
+following generally being true:
 
 @example
 @verbatim
@@ -2447,49 +2230,26 @@ the following generally being true:
 @end example
 
 Note that scanners with the smallest tables are usually generated and
-compiled the quickest, so
-during development you will usually want to use the default, maximal
-compression.
-@item
-@b{--Cfe}
-is often a good compromise between speed and size for production
-scanners.
-@end itemize%
-@item[{@b{--ooutput}}]
-directs flex to write the scanner to the file
-@b{output}
-instead of
-@b{lex.yy.c}.
-If you combine
-@b{--o}
-with the
-@b{--t}
-option, then the scanner is written to
-@i{stdout}
-but its
-@b{#line}
-directives (see the
-@b{\-L}
-option above) refer to the file
-@b{output}.
-@item[{@b{--Pprefix}}]
-changes the default
-@i{yy}
-prefix used by
-@code{flex}
-for all globally-visible variable and function names to instead be
-@i{prefix}.
-For example,
-@b{--Pfoo}
-changes the name of
-@var{yytext}
-to
-@b{footext}.
-It also changes the name of the default output file from
-@b{lex.yy.c}
-to
-@b{lex.foo.c}.
-Here are all of the names affected:
+compiled the quickest, so during development you will usually want to
+use the default, maximal compression.
+
+@samp{-Cfe} is often a good compromise between speed and size for
+production scanners.
+
+@item -ooutput
+directs flex to write the scanner to the file @file{output} instead of
+@file{lex.yy.c}.  If you combine @samp{-o} with the @samp{-t} option,
+then the scanner is written to @file{stdout} but its @code{#line}
+directives (see the @samp{-l} option above) refer to the file
+@file{output}.
+
+@item -Pprefix
+changes the default @samp{yy} prefix used by @code{flex} for all
+globally-visible variable and function names to instead be
+@samp{prefix}.  For example, @samp{-Pfoo} changes the name of
+@var{yytext} to @var{footext}.  It also changes the name of the default
+output file from @file{lex.yy.c} to @file{lex.foo.c}.  Here are all of
+the names affected:
 
 @example
 @verbatim
@@ -2511,51 +2271,46 @@ Here are all of the names affected:
 @end verbatim
 @end example
 
-(If you are using a C++ scanner, then only
-@b{yywrap}
-and
-@b{yyFlexLexer}
-are affected.)
-Within your scanner itself, you can still refer to the global variables
-and functions using either version of their name; but externally, they
-have the modified name.
-@itemize
-@item
+(If you are using a C++ scanner, then only @code{yywrap} and
+@code{yyFlexLexer} are affected.)  Within your scanner itself, you can
+still refer to the global variables and functions using either version
+of their name; but externally, they have the modified name.
+
 This option lets you easily link together multiple
 @code{flex}
 programs into the same executable.  Note, though, that using this
 option also renames
 @code{yywrap()},
 so you now
-@i{must}
+@emph{must}
 either
 provide your own (appropriately-named) version of the routine for your
 scanner, or use
-@b{%option noyywrap},
+@code{%option noyywrap},
 as linking with
-@b{--lfl}
+@samp{-lfl}
 no longer provides one for you by default.
-@end itemize%
-@item[{@b{--Sskeleton_file}}]
+
+@item -Sskeleton_file
 overrides the default skeleton file from which
 @code{flex}
 constructs its scanners.  You'll never need this option unless you are doing
 @code{flex}
 maintenance or development.
-@end itemize}
-@code{flex}
-also provides a mechanism for controlling options within the
+@end table
+
+@node scanner options, performance, invoking flex, Top
+@chapter option Directives within Scanners
+
+@code{flex} also provides a mechanism for controlling options within the
 scanner specification itself, rather than from the flex command-line.
-This is done by including
-@b{%option}
-directives in the first section of the scanner specification.
-You can specify multiple options with a single
-@b{%option}
-directive, and multiple directives in the first section of your flex input
-file.
+This is done by including @code{%option} directives in the first section
+of the scanner specification.  You can specify multiple options with a
+single @code{%option} directive, and multiple directives in the first
+section of your flex input file.
 
 Most options are given simply as names, optionally preceded by the
-word "no" (with no intervening whitespace) to negate their meaning.
+word @samp{no} (with no intervening whitespace) to negate their meaning.
 A number are equivalent to flex flags or their negation:
 
 @example
@@ -2595,104 +2350,61 @@ A number are equivalent to flex flags or their negation:
 @end verbatim
 @end example
 
-Some
-@b{%option's}
-provide features otherwise not available:
-@itemize
-}{@b{always-interactive}}
-@item[{@b{always-interactive}}]
-instructs flex to generate a scanner which always considers its input
-"interactive".  Normally, on each new input file the scanner calls
-@b{isatty()}
-in an attempt to determine whether
-the scanner's input source is interactive and thus should be read a
-character at a time.  When this option is used, however, then no
-such call is made.
-@item[{@b{main}}]
-directs flex to provide a default
-@b{main()}
-program for the scanner, which simply calls
-@code{yylex()}.
-This option implies
-@b{noyywrap}
-(see below).
-@item[{@b{never-interactive}}]
-instructs flex to generate a scanner which never considers its input
-"interactive" (again, no call made to
-@b{isatty())}.
-This is the opposite of
-@b{always-interactive}.
-@item[{@b{stack}}]
-enables the use of start condition stacks (see Start Conditions above).
-@item[{@b{stdinit}}]
-if set (i.e.,
-@b{%option stdinit)}
-initializes
-@file{yyin}
-and
-@i{yyout}
-to
-@i{stdin}
-and
-@i{stdout},
-instead of the default of
-@i{nil}.
-Some existing
-@i{lex}
-programs depend on this behavior, even though it is not compliant with
-ANSI C, which does not require
-@i{stdin}
-and
-@i{stdout}
-to be compile-time constant. In a reentrant scanner, however, this is not
-a problem since initialization is performed in
-@b{yylex_init}
-at runtime.
-@item[{@b{yylineno}}]
-directs
-@code{flex}
-to generate a scanner that maintains the number of the current line
-read from its input in the global variable
-@b{yylineno}.
-This option is implied by
-@b{%option lex-compat}.
-In a reentrant C scanner, the macro
-@b{yylineno_r}
-is accessible regardless of the value of
-@b{%option yylineno},
-however, its value is not modified by flex unless
-@b{%option yylineno}
-is enabled. 
-@item[{@b{yywrap}}]
-if unset (i.e.,
-@b{%option noyywrap)},
-makes the scanner not call
-@code{yywrap()}
-upon an end-of-file, but simply assume that there are no more
-files to scan (until the user points
-@file{yyin}
-at a new file and calls
-@code{yylex()}
-again).
-@end itemize}
-@code{flex}
-scans your rule actions to determine whether you use the
-@b{REJECT}
-or
-@code{yymore()}
-features.  The
-@b{reject}
-and
-@b{yymore}
-options are available to override its decision as to whether you use the
-options, either by setting them (e.g.,
-@b{%option reject)}
-to indicate the feature is indeed used, or
-unsetting them to indicate it actually is not used
-(e.g.,
-@b{%option noyymore)}.
+Some @code{%option}'s provide features otherwise not available:
 
-Three options take string-delimited values, offset with '=':
+@table @code
+@item always-interactive
+instructs flex to generate a scanner which always considers its input
+@emph{interactive}.  Normally, on each new input file the scanner calls
+@code{isatty()} in an attempt to determine whether the scanner's input
+source is interactive and thus should be read a character at a time.
+When this option is used, however, then no such call is made.
+
+@item main
+ directs flex to provide a default @code{main()} program for the
+scanner, which simply calls @code{yylex()}.  This option implies
+@code{noyywrap} (see below).
+
+@item never-interactive
+instructs flex to generate a scanner which never considers its input
+interactive.  This is the opposite of @code{always-interactive}.
+
+@item stack
+enables the use of
+start condition stacks (@pxref{start conditions}).  
+
+@item stdinit
+if set (i.e., @b{%option stdinit)} initializes @var{yyin} and
+@var{yyout} to @file{stdin} and @file{stdout}, instead of the default of
+@file{nil}.  Some existing @code{lex} programs depend on this behavior,
+even though it is not compliant with ANSI C, which does not require
+@file{stdin} and @file{stdout} to be compile-time constant. In a
+reentrant scanner, however, this is not a problem since initialization
+is performed in @code{yylex_init} at runtime.
+
+@item yylineno
+directs @code{flex} to generate a scanner
+that maintains the number of the current line read from its input in the
+global variable @var{yylineno}.  This option is implied by @code{%option
+lex-compat}.  In a reentrant C scanner, the macro @var{yylineno_r} is
+accessible regardless of the value of @code{%option yylineno}, however, its
+value is not modified by @code{flex} unless @code{%option yylineno} is enabled.
+
+@item yywrap
+if unset (i.e., @code{%option noyywrap)}, makes the scanner not call
+@code{yywrap()} upon an end-of-file, but simply assume that there are no
+more files to scan (until the user points @file{yyin} at a new file and
+calls @code{yylex()} again).
+@end table
+
+@code{flex} scans your rule actions to determine whether you use the
+@code{REJECT} or @code{yymore()} features.  The @code{REJECT} and
+@code{yymore} options are available to override its decision as to
+whether you use the options, either by setting them (e.g., @code{%option
+reject)} to indicate the feature is indeed used, or unsetting them to
+indicate it actually is not used (e.g., @code{%option noyymore)}.
+
+These options take string-delimited values, offset with '=':
 
 @example
 @verbatim
@@ -2700,9 +2412,7 @@ Three options take string-delimited values, offset with '=':
 @end verbatim
 @end example
 
-is equivalent to
-@b{-oABC},
-and
+is equivalent to @samp{-oABC}, and
 
 @example
 @verbatim
@@ -2710,8 +2420,8 @@ and
 @end verbatim
 @end example
 
-is equivalent to
-@b{-PXYZ}.
+is equivalent to @samp{-PXYZ}.
+
 Finally,
 
 @example
@@ -2720,34 +2430,18 @@ Finally,
 @end verbatim
 @end example
 
-only applies when generating a C++ scanner (
-@b{--+}
-option).  It informs
-@code{flex}
-that you have derived
-@b{foo}
-as a subclass of
-@b{yyFlexLexer},
-so
-@code{flex}
-will place your actions in the member function
-@b{foo::yylex()}
-instead of
-@b{yyFlexLexer::yylex()}.
-It also generates a
-@b{yyFlexLexer::yylex()}
-member function that emits a run-time error (by invoking
-@b{yyFlexLexer::LexerError())}
-if called.
-See Generating C++ Scanners, below, for additional information.
+only applies when generating a C++ scanner (the @samp{-+} option).  It
+informs @code{flex} that you have derived @code{foo} as a subclass of
+@code{yyFlexLexer}, so @code{flex} will place your actions in the member
+function @code{foo::yylex()} instead of @code{yyFlexLexer::yylex()}.  It
+also generates a @code{yyFlexLexer::yylex()} member function that emits
+a run-time error (by invoking @code{yyFlexLexer::LexerError())} if
+called.  @xref{cxx}.
 
 A number of options are available for lint purists who want to suppress
-the appearance of unneeded routines in the generated scanner.  Each of the
-following, if unset
-(e.g.,
-@b{%option nounput}
-), results in the corresponding routine not appearing in
-the generated scanner:
+the appearance of unneeded routines in the generated scanner.  Each of
+the following, if unset (e.g., @code{%option nounput}), results in the
+corresponding routine not appearing in the generated scanner:
 
 @example
 @verbatim
@@ -2762,23 +2456,17 @@ the generated scanner:
 @end verbatim
 @end example
 
-(though
-@b{yy_push_state()}
-and friends won't appear anyway unless you use
-@b{%option stack)}.
+(though @code{yy_push_state()} and friends won't appear anyway unless
+you use @code{%option stack)}.
 
-@node performance, cxx, invoking flex, Top
+@node performance, cxx, scanner options, Top
 @chapter PERFORMANCE CONSIDERATIONS
 
-The main design goal of
-@code{flex}
-is that it generate high-performance scanners.  It has been optimized
-for dealing well with large sets of rules.  Aside from the effects on
-scanner speed of the table compression
-@b{--C}
-options outlined above,
-there are a number of options/actions which degrade performance.  These
-are, from most expensive to least:
+The main design goal of @code{flex} is that it generate high-performance
+scanners.  It has been optimized for dealing well with large sets of
+rules.  Aside from the effects on scanner speed of the table compression
+@samp{-C} options outlined above, there are a number of options/actions
+which degrade performance.  These are, from most expensive to least:
 
 @example
 @verbatim
@@ -2796,27 +2484,19 @@ are, from most expensive to least:
 @end verbatim
 @end example
 
-with the first three all being quite expensive and the last two
-being quite cheap.  Note also that
-@code{unput()}
-is implemented as a routine call that potentially does quite a bit of
-work, while
-@b{yyless()}
-is a quite-cheap macro; so if just putting back some excess text you
-scanned, use
-@b{yyless()}.
+with the first three all being quite expensive and the last two being
+quite cheap.  Note also that @code{unput()} is implemented as a routine
+call that potentially does quite a bit of work, while @code{yyless()} is
+a quite-cheap macro. So if you are just putting back some excess text
+you scanned, use @code{ss()}.
 
-@b{REJECT}
-should be avoided at all costs when performance is important.
-It is a particularly expensive option.
+@code{REJECT} should be avoided at all costs when performance is
+important.  It is a particularly expensive option.
 
-Getting rid of backing up is messy and often may be an enormous
-amount of work for a complicated scanner.  In principal, one begins
-by using the
-@b{--b}
-flag to generate a
-@i{lex.backup}
-file.  For example, on the input
+Getting rid of backing up is messy and often may be an enormous amount
+of work for a complicated scanner.  In principal, one begins by using
+the @samp{-b} flag to generate a @file{lex.backup} file.  For example,
+on the input:
 
 @example
 @verbatim
@@ -2852,34 +2532,29 @@ the file looks like:
 @end verbatim
 @end example
 
-The first few lines tell us that there's a scanner state in
-which it can make a transition on an 'o' but not on any other
-character, and that in that state the currently scanned text does not match
-any rule.  The state occurs when trying to match the rules found
-at lines 2 and 3 in the input file.
-If the scanner is in that state and then reads
-something other than an 'o', it will have to back up to find
-a rule which is matched.  With
-a bit of headscratching one can see that this must be the
-state it's in when it has seen "fo".  When this has happened,
-if anything other than another 'o' is seen, the scanner will
-have to back up to simply match the 'f' (by the default rule).
+The first few lines tell us that there's a scanner state in which it can
+make a transition on an 'o' but not on any other character, and that in
+that state the currently scanned text does not match any rule.  The
+state occurs when trying to match the rules found at lines 2 and 3 in
+the input file.  If the scanner is in that state and then reads
+something other than an 'o', it will have to back up to find a rule
+which is matched.  With a bit of headscratching one can see that this
+must be the state it's in when it has seen @samp{fo}.  When this has
+happened, if anything other than another @samp{o} is seen, the scanner
+will have to back up to simply match the @samp{f} (by the default rule).
 
-The comment regarding State #8 indicates there's a problem
-when "foob" has been scanned.  Indeed, on any character other
-than an 'a', the scanner will have to back up to accept "foo".
-Similarly, the comment for State #9 concerns when "fooba" has
-been scanned and an 'r' does not follow.
+The comment regarding State #8 indicates there's a problem when
+@samp{foob} has been scanned.  Indeed, on any character other than an
+@samp{a}, the scanner will have to back up to accept "foo".  Similarly,
+the comment for State #9 concerns when @samp{fooba} has been scanned and
+an @samp{r} does not follow.
 
-The final comment reminds us that there's no point going to
-all the trouble of removing backing up from the rules unless
-we're using
-@b{--Cf}
-or
-@b{--CF},
-since there's no performance gain doing so with compressed scanners.
+The final comment reminds us that there's no point going to all the
+trouble of removing backing up from the rules unless we're using
+@samp{-Cf} or @samp{-CF}, since there's no performance gain doing so
+with compressed scanners.
 
-The way to remove the backing up is to add "error" rules:
+The way to remove the backing up is to add ``error'' rules:
 
 @example
 @verbatim
@@ -2896,9 +2571,8 @@ The way to remove the backing up is to add "error" rules:
 @end verbatim
 @end example
 
-
-Eliminating backing up among a list of keywords can also be
-done using a "catch-all" rule:
+Eliminating backing up among a list of keywords can also be done using a
+``catch-all'' rule:
 
 @example
 @verbatim
@@ -2912,25 +2586,21 @@ done using a "catch-all" rule:
 
 This is usually the best solution when appropriate.
 
-Backing up messages tend to cascade.
-With a complicated set of rules it's not uncommon to get hundreds
-of messages.  If one can decipher them, though, it often
-only takes a dozen or so rules to eliminate the backing up (though
-it's easy to make a mistake and have an error rule accidentally match
-a valid token.  A possible future
-@code{flex}
-feature will be to automatically add rules to eliminate backing up).
+Backing up messages tend to cascade.  With a complicated set of rules
+it's not uncommon to get hundreds of messages.  If one can decipher
+them, though, it often only takes a dozen or so rules to eliminate the
+backing up (though it's easy to make a mistake and have an error rule
+accidentally match a valid token.  A possible future @code{flex} feature
+will be to automatically add rules to eliminate backing up).
 
 It's important to keep in mind that you gain the benefits of eliminating
-backing up only if you eliminate
-@i{every}
-instance of backing up.  Leaving just one means you gain nothing.
+backing up only if you eliminate @emph{every} instance of backing up.
+Leaving just one means you gain nothing.
 
-@i{Variable}
-trailing context (where both the leading and trailing parts do not have
-a fixed length) entails almost the same performance loss as
-@b{REJECT}
-(i.e., substantial).  So when possible a rule like:
+@emph{Variable} trailing context (where both the leading and trailing
+parts do not have a fixed length) entails almost the same performance
+loss as @code{REJECT} (i.e., substantial).  So when possible a rule
+like:
 
 @example
 @verbatim
@@ -2959,20 +2629,16 @@ or as
 @end verbatim
 @end example
 
-Note that here the special '|' action does
-@emph{not}
-provide any savings, and can even make things worse (see
-Deficiencies / Bugs below).
-\noindent
-Another area where the user can increase a scanner's performance
-(and one that's easier to implement) arises from the fact that
-the longer the tokens matched, the faster the scanner will run.
-This is because with long tokens the processing of most input
-characters takes place in the (short) inner scanning loop, and
-does not often have to go through the additional work of setting up
-the scanning environment (e.g.,
-@b{yytext)}
-for the action.  Recall the scanner for C comments:
+Note that here the special '|' action does @emph{not} provide any
+savings, and can even make things worse (@pxref{limitations}).
+
+Another area where the user can increase a scanner's performance (and
+one that's easier to implement) arises from the fact that the longer the
+tokens matched, the faster the scanner will run.  This is because with
+long tokens the processing of most input characters takes place in the
+(short) inner scanning loop, and does not often have to go through the
+additional work of setting up the scanning environment (e.g.,
+@code{yytext}) for the action.  Recall the scanner for C comments:
 
 @example
 @verbatim
@@ -2982,10 +2648,10 @@ for the action.  Recall the scanner for C comments:
 
     "/*"         BEGIN(comment);
 
-    comment>[^*\n]*
-    comment>"*"+[^*/\n]*
-    comment>\n             ++line_num;
-    comment>"*"+"/"        BEGIN(INITIAL);
+    <comment>[^*\n]*
+    <comment>"*"+[^*/\n]*
+    <comment>\n             ++line_num;
+    <comment>"*"+"/"        BEGIN(INITIAL);
 @end verbatim
 @end example
 
@@ -2999,24 +2665,21 @@ This could be sped up by writing it as:
 
     "/*"         BEGIN(comment);
 
-    comment>[^*\n]*
-    comment>[^*\n]*\n      ++line_num;
-    comment>"*"+[^*/\n]*
-    comment>"*"+[^*/\n]*\n ++line_num;
-    comment>"*"+"/"        BEGIN(INITIAL);
+    <comment>[^*\n]*
+    <comment>[^*\n]*\n      ++line_num;
+    <comment>"*"+[^*/\n]*
+    <comment>"*"+[^*/\n]*\n ++line_num;
+    <comment>"*"+"/"        BEGIN(INITIAL);
 @end verbatim
 @end example
 
-Now instead of each newline requiring the processing of another
-action, recognizing the newlines is "distributed" over the other rules
-to keep the matched text as long as possible.  Note that
-@i{adding}
-rules does
-@emph{not}
-slow down the scanner!  The speed of the scanner is independent
-of the number of rules or (modulo the considerations given at the
-beginning of this section) how complicated the rules are with
-regard to operators such as '*' and '|'.
+Now instead of each newline requiring the processing of another action,
+recognizing the newlines is distributed over the other rules to keep the
+matched text as long as possible.  Note that @emph{adding} rules does
+@emph{not} slow down the scanner!  The speed of the scanner is
+independent of the number of rules or (modulo the considerations given
+at the beginning of this section) how complicated the rules are with
+regard to operators such as @samp{*} and @samp{|}.
 
 A final example in speeding up a scanner: suppose you want to scan
 through a file containing identifiers and keywords, one per line
@@ -3054,10 +2717,9 @@ To eliminate the back-tracking, introduce a catch-all rule:
 @end verbatim
 @end example
 
-Now, if it's guaranteed that there's exactly one word per line,
-then we can reduce the total number of matches by a half by
-merging in the recognition of newlines with that of the other
-tokens:
+Now, if it's guaranteed that there's exactly one word per line, then we
+can reduce the total number of matches by a half by merging in the
+recognition of newlines with that of the other tokens:
 
 @example
 @verbatim
@@ -3076,15 +2738,15 @@ tokens:
 
 One has to be careful here, as we have now reintroduced backing up
 into the scanner.  In particular, while
-@i{we}
+@emph{we}
 know that there will never be any characters in the input stream
 other than letters or newlines,
 @code{flex}
 can't figure this out, and it will plan for possibly needing to back up
-when it has scanned a token like "auto" and then the next character
+when it has scanned a token like @samp{auto} and then the next character
 is something other than a newline or a letter.  Previously it would
-then just match the "auto" rule and be done, but now it has no "auto"
-rule, only a "auto\n" rule.  To eliminate the possibility of backing up,
+then just match the @samp{auto} rule and be done, but now it has no @samp{auto}
+rule, only a @samp{auto\n} rule.  To eliminate the possibility of backing up,
 we could either duplicate all rules but without final newlines, or,
 since we never expect to encounter such an input and therefore don't
 how it's classified, we can introduce one more catch-all rule, this
@@ -3106,239 +2768,143 @@ one which doesn't include a newline:
 @end verbatim
 @end example
 
-Compiled with
-@b{--Cf},
-this is about as fast as one can get a
-@code{flex}
-scanner to go for this particular problem.
+Compiled with @samp{-Cf}, this is about as fast as one can get a
+@code{flex} scanner to go for this particular problem.
 
-A final note:
-@code{flex}
-is slow when matching NUL's, particularly when a token contains
-multiple NUL's.
-It's best to write rules which match
-@i{short}
-amounts of text if it's anticipated that the text will often include NUL's.
+A final note: @code{flex} is slow when matching @code{NUL}s,
+particularly when a token contains multiple @code{NUL}s.  It's best to
+write rules which match @emph{short} amounts of text if it's anticipated
+that the text will often include @code{NUL}s.
 
-Another final note regarding performance: as mentioned above in the section
-How the Input is Matched, dynamically resizing
-@var{yytext}
-to accommodate huge tokens is a slow process because it presently requires that
-the (huge) token be rescanned from the beginning.  Thus if performance is
-vital, you should attempt to match "large" quantities of text but not
-"huge" quantities, where the cutoff between the two is at about 8K
-characters/token.
+Another final note regarding performance: as mentioned in
+@ref{matching}, dynamically resizing @var{yytext} to accommodate huge
+tokens is a slow process because it presently requires that the (huge)
+token be rescanned from the beginning.  Thus if performance is vital,
+you should attempt to match ``large'' quantities of text but not
+``huge'' quantities, where the cutoff between the two is at about 8K
+characters per token.
 
 @node cxx, reentrant, performance, Top
 @chapter GENERATING C++ SCANNERS
 
-@code{flex}
-provides two different ways to generate scanners for use with C++.  The
-first way is to simply compile a scanner generated by
-@code{flex}
-using a C++ compiler instead of a C compiler.  You should not encounter
-any compilations errors (please report any you find to the email address
-given in the Author section below).  You can then use C++ code in your
-rule actions instead of C code.  Note that the default input source for
-your scanner remains
-@file{yyin},
-and default echoing is still done to
-@i{yyout}.
-Both of these remain
-@i{FILE *}
-variables and not C++
-@i{streams}.
+@code{flex} provides two different ways to generate scanners for use
+with C++.  The first way is to simply compile a scanner generated by
+@code{flex} using a C++ compiler instead of a C compiler.  You should
+not encounter any compilation errors (@pxref{reporting bugs}).  You can
+then use C++ code in your rule actions instead of C code.  Note that the
+default input source for your scanner remains @file{yyin}, and default
+echoing is still done to @file{yyout}.  Both of these remain @code{FILE
+*} variables and not C++ @emph{streams}.
 
-You can also use
-@code{flex}
-to generate a C++ scanner class, using the
-@b{--+}
-option (or, equivalently,
-@b{%option c++)},
-which is automatically specified if the name of the flex
-executable ends in a '+', such as
-@i{flex++}.
-When using this option, flex defaults to generating the scanner to the file
-@b{lex.yy.cc}
-instead of
-@b{lex.yy.c}.
-The generated scanner includes the header file
-@i{FlexLexer.h},
-which defines the interface to two C++ classes.
+You can also use @code{flex} to generate a C++ scanner class, using the
+@samp{-+} option (or, equivalently, @code{%option c++)}, which is
+automatically specified if the name of the @code{flex} executable ends
+in a '+', such as @code{flex++}.  When using this option, @code{flex}
+defaults to generating the scanner to the file @file{lex.yy.cc} instead
+of @file{lex.yy.c}.  The generated scanner includes the header file
+@file{FlexLexer.h}, which defines the interface to two C++ classes.
 
 The first class,
-@b{FlexLexer},
+@code{FlexLexer},
 provides an abstract base class defining the general scanner class
 interface.  It provides the following member functions:
-@itemize
-}{@b{const char* YYText()}}
-@item[{@b{const char* YYText()}}]
+
+@table @code
+@item const char* YYText()
 returns the text of the most recently matched token, the equivalent of
 @var{yytext}.
-@item[{@b{int YYLeng()}}]
+
+@item int YYLeng()
 returns the length of the most recently matched token, the equivalent of
 @var{yyleng}.
-@item[{@b{int lineno() const}}]
-returns the current input line number
-(see
-@b{%option yylineno)},
-or
-@b{1}
-if
-@b{%option yylineno}
-was not used.
-@item[{@b{void set_debug( int flag )}}]
+
+@item int lineno() const
+returns the current input line number (see @code{%option yylineno)}, or
+@code{1} if @code{%option yylineno} was not used.
+
+@item void set_debug( int flag )
 sets the debugging flag for the scanner, equivalent to assigning to
-@b{yy_flex_debug}
-(see the Options section above).  Note that you must build the scanner
-using
-@b{%option debug}
-to include debugging information in it.
-@item[{@b{int debug() const}}]
+@var{yy_flex_debug} (@pxref{invoking flex}).  Note that you must build
+the scannerusing @code{%option debug} to include debugging information
+in it.
+
+@item int debug() const
 returns the current setting of the debugging flag.
-@end itemize}
+@end table
+
 Also provided are member functions equivalent to
-@code{yy_switch_to_buffer()},
-@b{yy_create_buffer()}
-(though the first argument is an
-@b{istream*}
-object pointer and not a
-@b{FILE*)},
-@b{yy_flush_buffer()},
-@b{yy_delete_buffer()},
-and
-@code{yyrestart()}
-(again, the first argument is a
-@b{istream*}
+@code{yy_switch_to_buffer()}, @code{yy_create_buffer()} (though the
+first argument is an @code{istream*} object pointer and not a
+@code{FILE*)}, @code{yy_flush_buffer()}, @code{yy_delete_buffer()}, and
+@code{yyrestart()} (again, the first argument is a @code{istream*}
 object pointer).
 
-The second class defined in
-@i{FlexLexer.h}
-is
-@b{yyFlexLexer},
-which is derived from
-@b{FlexLexer}.
-It defines the following additional member functions:
-@itemize
-}{\bf}
-@item[{\bf}]
-yyFlexLexer( istream* arg_yyin = 0, ostream* arg_yyout = 0 )
-constructs a
-@b{yyFlexLexer}
-object using the given streams for input and output.  If not specified,
-the streams default to
-@b{cin}
-and
-@b{cout},
-respectively.
-@item[{@b{virtual int yylex()}}]
-performs the same role is
-@code{yylex()}
-does for ordinary flex scanners: it scans the input stream, consuming
-tokens, until a rule's action returns a value.  If you derive a subclass
-@b{S}
-from
-@b{yyFlexLexer}
-and want to access the member functions and variables of
-@b{S}
-inside
-@code{yylex()},
-then you need to use
-@b{%option yyclass="S"}
-to inform
-@code{flex}
-that you will be using that subclass instead of
-@b{yyFlexLexer}.
-In this case, rather than generating
-@b{yyFlexLexer::yylex()},
-@code{flex}
-generates
-@b{S::yylex()}
-(and also generates a dummy
-@b{yyFlexLexer::yylex()}
-that calls
-@b{yyFlexLexer::LexerError()}
-if called).
-@item[{\bf}]
-virtual void switch_streams(istream* new_in = 0,
-\bf
-ostream* new_out = 0)
-reassigns
-@b{yyin}
-to
-@b{new_in}
-(if non-nil)
-and
-@b{yyout}
-to
-@b{new_out}
-(ditto), deleting the previous input buffer if
-@b{yyin}
-is reassigned.
-@item[{\bf}]
-int yylex( istream* new_in, ostream* new_out = 0 )
-first switches the input streams via
-@b{switch_streams( new_in, new_out )}
-and then returns the value of
-@code{yylex()}.
-@end itemize}
-In addition,
-@b{yyFlexLexer}
-defines the following protected virtual functions which you can redefine
-in derived classes to tailor the scanner:
-@itemize
-}{\bf}
-@item[{\bf}]
-virtual int LexerInput( char* buf, int max_size )
-reads up to
-@b{max_size}
-characters into
-@b{buf}
-and returns the number of characters read.  To indicate end-of-input,
-return 0 characters.  Note that "interactive" scanners (see the
-@b{--B}
-and
-@b{--I}
-flags) define the macro
-@b{YY_INTERACTIVE}.
-If you redefine
-@b{LexerInput()}
-and need to take different actions depending on whether or not
-the scanner might be scanning an interactive input source, you can
-test for the presence of this name via
-@b{#ifdef}.
-@item[{\bf}]
-virtual void LexerOutput( const char* buf, int size )
-writes out
-@b{size}
-characters from the buffer
-@b{buf},
-which, while NUL-terminated, may also contain "internal" NUL's if
-the scanner's rules can match text with NUL's in them.
-@item[{\bf}]
-virtual void LexerError( const char* msg )
+The second class defined in @file{FlexLexer.h} is @code{yyFlexLexer},
+which is derived from @code{FlexLexer}.  It defines the following
+additional member functions:
+
+@table @code
+@item yyFlexLexer( istream* arg_yyin = 0, ostream* arg_yyout = 0 )
+constructs a @code{yyFlexLexer} object using the given streams for input
+and output.  If not specified, the streams default to @code{cin} and
+@code{cout}, respectively.
+
+@item virtual int yylex()
+performs the same role is @code{yylex()} does for ordinary @code{flex}
+scanners: it scans the input stream, consuming tokens, until a rule's
+action returns a value.  If you derive a subclass @code{S} from
+@code{yyFlexLexer} and want to access the member functions and variables
+of @code{S} inside @code{yylex()}, then you need to use @code{%option
+yyclass="S"} to inform @code{flex} that you will be using that subclass
+instead of @code{yyFlexLexer}.  In this case, rather than generating
+@code{yyFlexLexer::yylex()}, @code{flex} generates @code{S::yylex()}
+(and also generates a dummy @code{yyFlexLexer::yylex()} that calls
+@code{yyFlexLexer::LexerError()} if called).
+
+@item virtual void switch_streams(istream* new_in = 0, ostream* new_out = 0)
+reassigns @var{yyin} to @var{new_in} (if non-nil) and @var{yyout} to
+@var{new_out} (if non-nil), deleting the previous input buffer if
+@var{yyin} is reassigned.
+
+@item int yylex( istream* new_in, ostream* new_out = 0 )
+first switches the input streams via @code{switch_streams( new_in,
+new_out )} and then returns the value of @code{yylex()}.
+@end table
+
+In addition, @code{yyFlexLexer} defines the following protected virtual
+functions which you can redefine in derived classes to tailor the
+scanner:
+
+@table @code
+@item virtual int LexerInput( char* buf, int max_size )
+reads up to @var{max_size} characters into @var{buf} and returns the
+number of characters read.  To indicate end-of-input, return 0
+characters.  Note that @code{interactive} scanners (see the @samp{-B}
+and @samp{-I} flags in @ref{invoking flex}) define the macro
+@code{YY_INTERACTIVE}.  If you redefine @code{LexerInput()} and need to
+take different actions depending on whether or not the scanner might be
+scanning an interactive input source, you can test for the presence of
+this name via @code{#ifdef} statements.
+
+@item virtual void LexerOutput( const char* buf, int size )
+writes out @var{size} characters from the buffer @var{buf}, which, while
+@code{NUL}-terminated, may also contain internal @code{NUL}s if the
+scanner's rules can match text with @code{NUL}s in them.
+
+@item virtual void LexerError( const char* msg )
 reports a fatal error message.  The default version of this function
-writes the message to the stream
-@b{cerr}
-and exits.
-@end itemize}
-Note that a
-@b{yyFlexLexer}
-object contains its
-@i{entire}
+writes the message to the stream @code{cerr} and exits.
+@end table
+
+Note that a @code{yyFlexLexer} object contains its @emph{entire}
 scanning state.  Thus you can use such objects to create reentrant
 scanners.  You can instantiate multiple instances of the same
-@b{yyFlexLexer}
-class, and you can also combine multiple C++ scanner classes together
-in the same program using the
-@b{--P}
-option discussed above.
+@code{yyFlexLexer} class, and you can also combine multiple C++ scanner
+classes together in the same program using the @samp{-P} option
+discussed above.
 
-Finally, note that the
-@code{%array}
-feature is not available to C++ scanner classes; you must use
-@code{%pointer}
-(the default).
+Finally, note that the @code{%array} feature is not available to C++
+scanner classes; you must use @code{%pointer} (the default).
 
 Here is an example of a simple C++ scanner:
 
@@ -3373,7 +2939,7 @@ Here is an example of a simple C++ scanner:
                 if(c == '\n')
                     ++mylineno;
 
-                else if(c == '*')
+                else if(c == @samp{*})
                     {
                     if((c = yyinput()) == '/')
                         break;
@@ -3395,7 +2961,7 @@ Here is an example of a simple C++ scanner:
 
     int main( int /* argc */, char** /* argv */ )
         {
-        FlexLexer* lexer = new yyFlexLexer;
+        @code{flex}Lexer* lexer = new yyFlexLexer;
         while(lexer->yylex() != 0)
             ;
         return 0;
@@ -3404,24 +2970,16 @@ Here is an example of a simple C++ scanner:
 @end example
 
 If you want to create multiple (different) lexer classes, you use the
-@b{--P}
-flag (or the
-@b{prefix=}
-option) to rename each
-@b{yyFlexLexer}
-to some other
-@b{xxFlexLexer}.
-You then can include
-@b{FlexLexer.h>}
-in your other sources once per lexer class, first renaming
-@b{yyFlexLexer}
-as follows:
+@samp{-P} flag (or the @code{prefix=} option) to rename each
+@code{yyFlexLexer} to some other @samp{xxFlexLexer}.  You then can
+include @file{FlexLexer.h>} in your other sources once per lexer class,
+first renaming @code{yyFlexLexer} as follows:
 
 @example
 @verbatim
     #undef yyFlexLexer
     #define yyFlexLexer xxFlexLexer
-    #include FlexLexer.h>
+    #include <FflexLexer.h>
 
     #undef yyFlexLexer
     #define yyFlexLexer zzFlexLexer
@@ -3429,31 +2987,39 @@ as follows:
 @end verbatim
 @end example
 
-if, for example, you used
-@b{%option prefix="xx"}
-for one of your scanners and
-@b{%option prefix="zz"}
-for the other.
+if, for example, you used @code{%option prefix="xx"} for one of your
+scanners and @code{%option prefix="zz"} for the other.
 
-IMPORTANT: the present form of the scanning class is
-@i{experimental}
-and may change considerably between major releases. 
+IMPORTANT: the present form of the scanning class is @emph{experimental}
+and may change considerably between major releases.
 
-@node reentrant, POSIX, cxx, Top
+@node reentrant, lex and posix, cxx, Top
 @chapter REENTRANT C SCANNERS
 
 @code{flex} has the ability to generate a reentrant C scanner. This is
-accomplished by specifying
-@b{\ %option\ reentrant\ }{\rm (}@b{-R}{\rm )\ or\ }@b{%option\ reentrant-bison\ }{\rm (}@b{-Rb}{\rm )}.
-The generated scanner is both portable, and safe to use in one or more separate threads of control.
-The most common use for reentrant scanners is from within multi-threaded applications.
-Any thread may create and execute a reentrant
-@code{flex}
-scanner without the need for synchronization with other threads. 
+accomplished by specifying @code{%option reentrant} (@samp{-R}) or
+@code{%option reentrant-bison} (@samp{-Rb}).  The generated scanner is
+both portable, and safe to use in one or more separate threads of
+control.  The most common use for reentrant scanners is from within
+multi-threaded applications.  Any thread may create and execute a
+reentrant @code{flex} scanner without the need for synchronization with
+other threads.
 
-However, there are other uses for a reentrant scanner.
-For example, you could scan two or more files simultaneously to implement a 'diff'
-at the token level (i.e., instead of at the character level):
+@menu
+* reentrant uses::              
+* reentrant overview::          
+* reentrant example::           
+* reentrant detail::            
+* bison pure::                  
+* reentrant functions::         
+@end menu
+
+@node reentrant uses, reentrant overview, reentrant, reentrant
+@section Uses for Reentrant Scanners
+
+However, there are other uses for a reentrant scanner.  For example, you
+could scan two or more files simultaneously to implement a @code{diff} at
+the token level (i.e., instead of at the character level):
 
 @example
 @verbatim
@@ -3468,18 +3034,16 @@ at the token level (i.e., instead of at the character level):
         if( tok1 != tok2 )
             printf("Files are different.");
 
-    } while ( tok1 && tok2 );
+   } while ( tok1 && tok2 );
 @end verbatim
 @end example
 
-
 Another use for a reentrant scanner is recursion.
 (Note that a recursive scanner can also be created using a non-reentrant scanner and
-buffer states. See
-@b{Multiple\ Input\ Buffers}{\rm },
-above.)
-The following crude scanner supports the "eval" command by invoking another
-instance of itself.
+buffer states. @xref{multiple}.)
+
+The following crude scanner supports the @samp{eval} command by invoking
+another instance of itself.
 
 @example
 @verbatim
@@ -3491,62 +3055,60 @@ instance of itself.
     "eval(".+")"  {  
                       void * scanner;
                       yylex_init( &scanner );
-                      yytext_r[yyleng_r-1] = '\ '; 
+                      yytext_r[yyleng_r-1] = ' '; 
 
                       yyscan_string( yytext_r + 5, scanner );
                       yylex( scanner );
 
                       yylex_destroy( scanner );
-                  }
+                 }
     ...
     %%
 @end verbatim
 @end example
 
+@node reentrant overview, reentrant example, reentrant uses, reentrant
+@section An overview of the reentrant API
 
-The API for reentrant scanners is different than for
-non-reentrant scanners. Here is a quick overview of the API:
+The API for reentrant scanners is different than for non-reentrant
+scanners. Here is a quick overview of the API:
+
 @itemize
-}{@b{1}.}
-@item[{@b{1}.}]
-@b{%option reentrant}
-must be specified.
-@item[{@b{2}.}]
-All functions take one additional argument: 
-@i{yy_globals}
+@code{%option reentrant} must be specified.
 
-@item[{@b{3}.}]
-All global variables are replaced by their "_r" equivalents.
-@item[{@b{4}.}]
-@b{yylex_init}
-and
-@b{yylex_destroy}
-must be called before and after
-@b{yylex}
-, respectively.
-@item[{@b{5}.}]
-Accessor methods (get/set functions) provide access to common flex variables.
-@item[{@b{6}.}]
-User-specific data can be stored in 
-@i{yyextra_r}{\rm }.
-@end itemize}
-The above list is explained in detail below. First, an example of a reentrant scanner:
+@item
+All functions take one additional argument: @var{yy_globals}
+
+@item
+All global variables are replaced by their @samp{_r} equivalents.
+
+@item
+@code{yylex_init} and @code{yylex_destroy} must be called before and
+after @code{yylex}, respectively.
+
+@item 
+Accessor methods (get/set functions) provide access to common
+@code{flex} variables.
+
+@item 
+User-specific data can be stored in @var{yyextra_r}.
+@end itemize
+
+@node reentrant example, reentrant detail, reentrant overview, reentrant
+@section Reentrant Example
+
+First, an example of a reentrant scanner:
 
 @example
 @verbatim
     /* This scanner prints "//" comments. */
-
     %option reentrant stack
     %x COMMENT
-
     %%
     "//"                 yy_push_state( COMMENT, yy_globals);
     .|\n
-
-    COMMENT>\n          yy_pop_state( yy_globals );
-
-    COMMENT>[^\n]+      fprintf( yyout_r, "%s\n", yytext_r);
-
+    <COMMENT>\n          yy_pop_state( yy_globals );
+    <COMMENT>[^\n]+      fprintf( yyout_r, "%s\n", yytext_r);
     %%
     int main ( int argc, char * argv[] ) 
     {
@@ -3555,45 +3117,36 @@ The above list is explained in detail below. First, an example of a reentrant sc
         yylex_init ( &scanner );
         yylex ( scanner );
         yylex_destroy ( scanner );
-
     return 0;
-    }
+   }
 @end verbatim
 @end example
 
-\nwl
+@node reentrant detail, bison pure, reentrant example, reentrant
+@section The Reentrant API in Detail
 
-@b{1. %option reentrant}
+Here are the things you need to do or know to use the reentrant C API of
+@code{flex}.
+
+@itemize
+@item
+ %option reentrant
 must be specified.
-\ind{1indent}
-Notice that
-@b{%option reentrant}
-is specified in the above example. Had this option not been
-specified, flex would have happily generated a non-reentrant scanner without
-complaining. You may explicitly specify
-@b{%option\ noreentrant}{\rm },
-if you do 
-@emph{not}
-want a reentrant scanner, although it is not necessary. The default is to
-generate a non-reentrant scanner.
-\ind{1indent}
 
-@b{2}.
-All functions take one additional argument: 
-@i{yy_globals}{\rm }.
-\ind{1indent}
-Notice that the calls to 
-@b{yy_push_state}
-and
-@b{yy_pop_state}
-both have an argument,
-@i{yy_globals}
-, that is not present in a non-reentrant scanner.
-Here are the declarations of
-@b{yy_push_state}
-and
-@b{yy_pop_state}
-in the generated scanner.
+Notice that @code{%option reentrant} is specified in the above example
+(@pxref{reentrant example}. Had this option not been specified,
+@code{flex} would have happily generated a non-reentrant scanner without
+complaining. You may explicitly specify @code{%option noreentrant}, if
+you do @emph{not} want a reentrant scanner, although it is not
+necessary. The default is to generate a non-reentrant scanner.
+
+@item
+All functions take one additional argument: @var{yy_globals}.
+
+Notice that the calls to @code{yy_push_state} and @code{yy_pop_state}
+both have an argument, @var{yy_globals} , that is not present in a
+non-reentrant scanner.  Here are the declarations of
+@code{yy_push_state} and @code{yy_pop_state} in the generated scanner:
 
 @example
 @verbatim
@@ -3602,33 +3155,21 @@ in the generated scanner.
 @end verbatim
 @end example
 
-
-Notice that the argument 
-@i{yy_globals}
-appears in the declaration of both functions.
-In fact, all flex functions in a reentrant scanner have this additional argument.
-It is always the last argument in the argument list, it always of type 
-@b{void\ *}{\rm },
-and it is always named
-@i{yy_globals}{\rm }.
-As you may have guessed, 
-@i{yy_globals}
-is a pointer to an opaque data structure encapsulating the current state of the
-scanner.
-For a list of function declarations, see "Functions And Macros Available In
-Reentrant Scanners" below.
-
-Note that preprocessor macros, such as 
-@code{BEGIN}{\rm },
-@b{ECHO}{\rm ,\ and\ }@b{REJECT}{\rm },
-do not take this additional argument.
-\ind{1indent}
+Notice that the argument @var{yy_globals} appears in the declaration of
+both functions.  In fact, all @code{flex} functions in a reentrant
+scanner have this additional argument.  It is always the last argument
+in the argument list, it is always of type @b{void *}, and it is always
+named @var{yy_globals}.  As you may have guessed, @var{yy_globals} is a
+pointer to an opaque data structure encapsulating the current state of
+the scanner.  For a list of function declarations, see @ref{reentrant
+functions}. Note that preprocessor macros, such as @code{BEGIN},
+@b{ECHO}, and @code{REJECT}, do not take this additional argument.
 
 @b{3}.
 All global variables are replaced by their 
 @b{_r}
 equivalents.
-\ind{1indent}
+
 Notice in the above example that 
 @b{yyout}
 and 
@@ -3636,10 +3177,10 @@ and
 are replaced by 
 @b{yyout_r}
 and 
-@b{yytext_r}{\rm }.
+@b{yytext_r}.
 These
 are macros that will expand to their equivalent lvalue.
-All of the familiar flex globals have been replaced by their 
+All of the familiar @code{flex} globals have been replaced by their 
 @b{_r}
 equivalents. Wherever you would
 normally use 
@@ -3647,26 +3188,21 @@ normally use
 in actions, you must use 
 @b{yytext_r}
 instead. This rule
-applies to all flex variables. The following is an example that uses the 
+applies to all @code{flex} variables. The following is an example that uses the 
 @b{_r}
 macros:
-
 @example
 @verbatim
     %%
         #define SWAP(a,b) do{int t=a; a=b; b=t;}while(0)
-
     "reverse me"  {
             int i;
-
             for( i =0; i  yyleng_r/2 ; i++ )
                 SWAP( yytext_r[i], yytext_r[yyleng_r-i-1] );
-
             fprintf( yyout_r, "%s", yytext_r );
-            }
+           }
 @end verbatim
 @end example
-
 
 One important thing to remember about
 @b{yytext_r}
@@ -3677,12 +3213,11 @@ scanner, you can not access it directly from outside an action or from
 other functions. You must use the accessor method 
 @b{yyget_text}
 to accomplish this. (See below).
-\ind{1indent}
 
 @b{4}.
-@b{yylex_init}{\rm \ and\ }@b{yylex_destroy}{\rm \ must\ be\ called\ before\ and\ after\ }
-@b{yylex}{\rm ,\ respectively}.
-\ind{1indent}
+@b{yylex_init} and}@b{yylex_destroy} must be called before and after}
+@b{yylex}, respectively}.
+
 @example
 @verbatim
     int yylex_init ( void ** ptr_yy_globals ) ;
@@ -3691,99 +3226,87 @@ to accomplish this. (See below).
 @end verbatim
 @end example
 
-
 The function 
 @b{yylex_init}
 must be called before calling any other function. The
 argument to 
 @b{yylex_init}
 is the address of an uninitialized pointer to be filled
-in by flex. The contents of 
-@i{ptr_yy_globals}
-need not be initialized, since flex
+in by @code{flex}. The contents of 
+@emph{ptr_yy_globals}
+need not be initialized, since @code{flex}
 will overwrite it anyway. The value stored in 
-@i{ptr_yy_globals}
+@emph{ptr_yy_globals}
 should thereafter be passed
 to 
 @b{yylex}
 and 
-@b{yylex_destroy}{\rm }.
+@b{yylex_destroy}.
 Flex does not save the argument passed to 
-@b{yylex_init}{\rm },
+@b{yylex_init},
 so it is safe to pass the address of a local pointer to 
-@b{yylex_init}{\rm }.
-
+@b{yylex_init}.
 The function 
 @b{yylex}
 should be familiar to you by now. The reentrant version
 takes one argument, which is the value returned (via an argument) by
-@b{yylex_init}{\rm }.
+@b{yylex_init}.
 Otherwise, it behaves the same as the non-reentrant version of
-@b{yylex}{\rm }.
-
+@b{yylex}.
 The function 
 @b{yylex_destroy}
 should be called to free resources used by the
 scanner. After 
 @b{yylex_destroy}
 is called, the contents of 
-@i{yyglobals}
+@emph{yyglobals}
 should not be
 used.
-
 Of course, there is no need to destroy a scanner if you plan to reuse it. 
-A flex scanner (both reentrant and non-reentrant) may be restarted by calling
-@b{yyrestart}{\rm }.
-\ind{1indent}
+A @code{flex} scanner (both reentrant and non-reentrant) may be restarted by calling
+@b{yyrestart}.
 
 @b{5}.
-Accessor methods (get/set functions) provide access to common flex variables.
-\ind{1indent}
+Accessor methods (get/set functions) provide access to common @code{flex} variables.
+
 Many scanners that you build will be part of a larger project. Portions of your
-project will need access to flex values, such as 
-@var{yytext}{\rm }.
+project will need access to @code{flex} values, such as 
+@var{yytext}.
 In a non-reentrant
 scanner, these values are global, so there is no problem. However, in a
-reentrant scanner, there are no global flex values. You can not access them
+reentrant scanner, there are no global @code{flex} values. You can not access them
 directly.
-
-Instead, you must access flex values using accessor methods (get/set
+Instead, you must access @code{flex} values using accessor methods (get/set
 functions). Each accessor method is named 
 @b{yyget_NAME}
 or 
-@b{yyset_NAME}{\rm },
+@b{yyset_NAME},
 where 
 @b{NAME}
-is the name of the flex variable you want. For example:
-
+is the name of the @code{flex} variable you want. For example:
 @example
 @verbatim
     /* Set the last character of yytext to NULL. */
-
     void chop ( void * scanner )
     {
         int len = yyget_leng( scanner );        
         yyget_text( scanner )[len - 1] = '\0';        
-    }
+   }
 @end verbatim
 @end example
 
-
 The above code may be called from within an action like this:
-
 @example
 @verbatim
     %%
-    .+\n    { chop( yy_globals ); }
+    .+\n    { chop( yy_globals );}
 @end verbatim
 @end example
 
-\ind{1indent}
-
 @b{6}.
 User-specific data can be stored in 
-@i{yyextra_r}{\rm }.
-\ind{1indent}
+@emph{yyextra_r}.
+
 In a reentrant scanner, it is unwise to use global variables to
 communicate with or maintain state between different pieces of your program.
 However, you may need access to external data or invoke external functions
@@ -3792,7 +3315,6 @@ Likewise, you may need to pass information to your scanner
 (e.g., open file descriptors, or database connections).
 In a non-reentrant scanner, the only way to do this would be through the
 use of global variables.
-
 Flex allows you to store arbitrary, "extra" data in a scanner.
 This data is accessible through the accessor methods
 @b{yyget_extra}
@@ -3801,21 +3323,18 @@ and
 from outside the scanner, and through the shortcut macro
 @b{yyextra_r}
 from within the scanner itself. They are defined as
-
 @example
 @verbatim
     #define YY_EXTRA_TYPE  void*
-
     YY_EXTRA_TYPE  yyget_extra ( void * scanner ) ;
     void yyset_extra ( YY_EXTRA_TYPE arbitrary_data , void * scanner) ;
 @end verbatim
 @end example
 
-
 By default, 
 @b{YY_EXTRA_TYPE}
 is defined as type
-@b{void\ *}{\rm }.
+@b{void *}.
 You will have to cast 
 @b{yyextra_r}
 and the return value from
@@ -3827,23 +3346,17 @@ in section 1 of your scanner:
 @verbatim
     
     /* An example of overriding YY_EXTRA_TYPE. */
-
     %{    
     #include sys/stat.h>
     #include unistd.h>
-
     #define YY_EXTRA_TYPE  struct stat*
     %}
-
     %option reentrant
-
     %%
           
     __filesize__     printf( "%ld", yyextra_r->st_size  );
     __lastmod__      printf( "%ld", yyextra_r->st_mtime );
-
     %%
-
     void scan_file( char* filename )
     {
         void * scanner;
@@ -3854,32 +3367,31 @@ in section 1 of your scanner:
         
         stat( filename, &buf);
         yyset_extra( &buf, scanner );
-
         yylex ( scanner );
         yylex_destroy( scanner );
-    }
+   }
 @end verbatim
 @end example
 
-@subsection REENTRANT C SCANNERS WITH BISON PURE PARSERS
+@node bison pure, reentrant functions, reentrant detail, reentrant
+@section REENTRANT C SCANNERS WITH BISON PURE PARSERS
 
-This section describes the flex features useful when integrating
+This section describes the @code{flex} features useful when integrating
 @code{flex}
 with 
 @code{bison}.
 Skip this section if you are not using
 @code{bison}
 with your scanner.
-Here we discuss only the flex half of the flex/bison pair.
+Here we discuss only the @code{flex} half of the @code{flex}/bison pair.
 We do not discuss bison in any detail.
 For more information about generating pure bison parsers, see @ref{Top, , , bison, The GNU Bison Manual}
-
 A bison-compatible scanner is generated by declaring 
 @samp{%option reentrant-bison}
 or by supplying
 @samp{-Rb}
 when invoking @code{flex}.
-This instructs flex that the macros
+This instructs @code{flex} that the macros
 @code{yylval_r}
 and
 @code{yylloc_r}
@@ -3891,44 +3403,38 @@ and
 and
 @b{YYLTYPE}{,
 are typically defined in a header file, included in section 1 of
-the flex input file. 
-@b{%option reentrant-bison}
+the @code{flex} input file. 
+@code{%option reentrant-bison}
 implies
-@b{%option reentrant}.
-
+@code{%option reentrant}.
 If
-@b{%option reentrant-bison}
-is specified, flex provides support for the functions
-@b{yyget_lval}{\rm },
-@b{yyset_lval}{\rm },
-@b{yyget_lloc}{\rm },
+@code{%option reentrant-bison}
+is specified, @code{flex} provides support for the functions
+@b{yyget_lval},
+@b{yyset_lval},
+@b{yyget_lloc},
 and
-@b{yyset_lloc}{\rm },
+@b{yyset_lloc},
 defined below, and the corresponding macros
 @b{yylval_r}
 and
-@b{yylloc_r}{\rm },
+@b{yylloc_r},
 for use within actions.
-
 @example
 @verbatim
     YYSTYPE * yyget_lval ( void * scanner ) ;
     void yyset_lval ( YYSTYPE * lvalp, void * scanner );
-
     YYLTYPE * yyget_lloc ( void * scanner ) ;
     void yyset_lloc ( YYLTYPE * llocp, void * scanner );
 @end verbatim
 @end example
 
-
 Accordingly, the declaration of yylex becomes one of the following:
 @c .ni
-
       int yylex ( YYSTYPE * lvalp, void * scanner );
       int yylex ( YYSTYPE * lvalp, YYLTYPE * llocp, void * scanner );
 @end verbatim
 @end example
-
 
 Note that the macros
 @b{yylval_r}
@@ -3936,106 +3442,87 @@ and
 @b{yylloc_r}
 evaluate to pointers.
 Support for yylloc is optional in bison, so it is optional
-in flex as well. This support is automatically handled
-by flex.
-Specifically, support for yyloc is only present in a flex scanner if the preprocessor
+in @code{flex} as well. This support is automatically handled
+by @code{flex}.
+Specifically, support for yyloc is only present in a @code{flex} scanner if the preprocessor
 symbol
 @b{YYLTYPE}
 is defined.
-
-The following is an example of a flex scanner that is bison-compatible.
-
+The following is an example of a @code{flex} scanner that is bison-compatible.
 @example
 @verbatim
     /* Scanner for "C" assignment statements... sort of. */
-
     %{
     #include "y.tab.h"  /* Generated by bison. */
     %}
   
     %option reentrant-bison
-
     %
    
-    [[:digit:]]+  { yylval_r->num = atoi(yytext_r);   return NUMBER; }
-    [[:alnum:]]+  { yylval_r->str = strdup(yytext_r); return STRING; }
-    "="|";"       { return yytext_r[0]; }
-
-    .  { }
+    [[:digit:]]+  { yylval_r->num = atoi(yytext_r);   return NUMBER;}
+    [[:alnum:]]+  { yylval_r->str = strdup(yytext_r); return STRING;}
+    "="|";"       { return yytext_r[0];}
+    .  {}
     %
     
 @end verbatim
 @end example
-
 
 As you can see, there really is no magic here. We just use
 @b{yylval_r}
 as we would any other variable. The data type of 
 @b{yylval_r}
 is generated by bison, and included in the file
-@i{y.tab.h}{\rm }.
+@emph{y.tab.h}.
 Here is the corresponding bison parser:
-
 @example
 @verbatim
     /* Parser to convert "C" assignments to lisp. */
-
     %{
     /* Pass the argument to yyparse through to yylex. */
     #define YYPARSE_PARAM scanner
     #define YYLEX_PARAM   scanner
     %}
-
     %pure_parser
-
     %union {
         int num;
         char* str;
-    }
+   }
     %token str> STRING
     %token num> NUMBER
     %%
-
     assignment:
         STRING '=' NUMBER ';' {
             printf( "(setf %s %d)", $1, $3 );
-        }
+       }
     ;
 @end verbatim
 @end example
-
 @menu
 * reentrant functions::         
 @end menu
-
-@node reentrant functions,  , reentrant, reentrant
+@node reentrant functions,  , bison pure, reentrant
 @section FUNCTIONS AND MACROS AVAILABLE IN REENTRANT C SCANNERS
-
 Functions available in a reentrant scanner:
-
 @example
 @verbatim
     char *yyget_text ( void * scanner );
     int yyget_leng ( void * scanner );
-
     FILE *yyget_in ( void * scanner );
     FILE *yyget_out ( void * scanner );
     int yyget_lineno ( void * scanner );
     YY_EXTRA_TYPE yyget_extra ( void * scanner );
-
     void yyset_in  ( FILE * in_str , void * scanner );
     void yyset_out  ( FILE * out_str , void * scanner );
     void yyset_lineno ( int line_number , void * scanner );
     void yyset_extra ( YY_EXTRA_TYPE user_defined , void * scanner );
 @end verbatim
 @end example
-
 @itemize
 @item
 -- There are no "set" functions for yytext_r and yyleng_r. This is intentional.
 @end itemize
 Macro shortcuts available in actions in a reentrant scanner:
-
 @example
 @verbatim
     yytext_r
@@ -4046,31 +3533,27 @@ Macro shortcuts available in actions in a reentrant scanner:
     yyextra_r
 @end verbatim
 @end example
-
 @itemize
 @item
 -- In a reentrant C scanner, support for yylineno_r is always present
-(i.e., you may access yylineno_r), but the value is never modified by flex unless
-@b{%option yylineno}
+(i.e., you may access yylineno_r), but the value is never modified by @code{flex} unless
+@code{%option yylineno}
 is enabled. This is to allow the user to maintain the line count herself.
 @end itemize
 Additional functions and macros made available when
-@b{%option reentrant-bison}
-{\rm (}@b{-Rb}{\rm )}
+@code{%option reentrant-bison}
+(}@b{-Rb})}
 is specified:
-
 @example
 @verbatim
     YYSTYPE * yyget_lval ( void * scanner );
     YYLTYPE *yyget_lloc ( void * scanner );
     void yyset_lval ( YYSTYPE * yylvalp , void * scanner );
     void yyset_lloc ( YYLTYPE * yyllocp , void * scanner );
-
     yylval_r
     yylloc_r
 @end verbatim
 @end example
-
 @itemize
 @item
 -- Support for yylloc is dependent upon the presence of the preprocessor
@@ -4079,20 +3562,19 @@ symbol
 Support for yylval relies on the type
 @b{YYSTYPE}
 to be defined. Typically, these definitions are generated by bison, in a .h file,
-and are included in section 1 of the flex input.
+and are included in section 1 of the @code{flex} input.
 @end itemize
 
-@node POSIX, diagnostics, reentrant, Top
+@node lex and posix, diagnostics, reentrant, Top
 @chapter INCOMPATIBILITIES WITH LEX AND POSIX
-
 @code{flex}
 is a rewrite of the AT&T Unix
-@i{lex}
+@emph{lex}
 tool (the two implementations do not share any code, though),
 with some extensions and incompatibilities, both of which
 are of concern to those who wish to write scanners acceptable
-to either implementation.  Flex is fully compliant with the POSIX
-@i{lex}
+to either implementation.  @code{flex} is fully compliant with the POSIX
+@emph{lex}
 specification, except that when using
 @code{%pointer}
 (the default), a call to
@@ -4100,44 +3582,39 @@ specification, except that when using
 destroys the contents of
 @var{yytext},
 which is counter to the POSIX specification.
-
 In this section we discuss all of the known areas of incompatibility
-between flex, AT&T lex, and the POSIX specification.
-
-@i{flex's}
-@b{--l}
+between @code{flex}, AT&T lex, and the POSIX specification.
+@emph{flex's}
+@samp{-l}
 option turns on maximum compatibility with the original AT&T
-@i{lex}
+@emph{lex}
 implementation, at the cost of a major loss in the generated scanner's
 performance.  We note below which incompatibilities can be overcome
 using the
-@b{--l}
+@samp{-l}
 option.
-
 @code{flex}
 is fully compatible with
-@i{lex}
+@emph{lex}
 with the following exceptions:
 @itemize
 @item 
 The undocumented
-@i{lex}
+@emph{lex}
 scanner internal variable
-@b{yylineno}
+@var{yylineno}
 is not supported unless
-@b{--l}
+@samp{-l}
 or
-@b{%option yylineno}
+@code{%option yylineno}
 is used.
 @item
 @code{yylineno}
 should be maintained on a per-buffer basis, rather than a per-scanner
 (single global variable) basis.
-
 @item
 @code{yylineno}
 is not part of the POSIX specification.
-
 @item 
 The
 @code{input()}
@@ -4149,7 +3626,7 @@ encounters an end-of-file the normal
 processing is done.  A ``real'' end-of-file is returned by
 @code{input()}
 as
-@i{EOF}.
+@emph{EOF}.
 @item
 Input is instead controlled by defining the
 @code{YY_INPUT()}
@@ -4170,31 +3647,27 @@ routine is not redefinable.  This restriction is in accordance with POSIX.
 @item 
 @code{flex}
 scanners are not as reentrant as
-@i{lex}
+@emph{lex}
 scanners.  In particular, if you have an interactive scanner and
 an interrupt handler which long-jumps out of the scanner, and
 the scanner is subsequently called again, you may get the following
 message:
-
 @example
 @verbatim
-    fatal flex scanner internal error--end of buffer missed
+    fatal @code{flex} scanner internal error--end of buffer missed
 @end verbatim
 @end example
-
 To reenter the scanner, first use
-
 @example
 @verbatim
     yyrestart( yyin );
 @end verbatim
 @end example
-
 Note that this call will throw away any buffered input; usually this
 isn't a problem with an interactive scanner.
 @item
-Also note that flex C++ scanner classes
-@i{are}
+Also note that @code{flex} C++ scanner classes
+@emph{are}
 reentrant, so if using C++ is an option for you, you should use
 them instead.  See "Generating C++ Scanners" above for details.
 @item 
@@ -4203,14 +3676,14 @@ is not supported.
 Output from the
 @b{ECHO}
 macro is done to the file-pointer
-@i{yyout}
+@emph{yyout}
 (default
-@i{stdout)}.
+@emph{stdout)}.
 @item
 @b{output()}
 is not part of the POSIX specification.
 @item 
-@i{lex}
+@emph{lex}
 does not support exclusive start conditions (%x), though they
 are in the POSIX specification.
 @item 
@@ -4218,7 +3691,6 @@ When definitions are expanded,
 @code{flex}
 encloses them in parentheses.
 With lex, the following:
-
 @example
 @verbatim
     NAME    [A-Z][A-Z0-9]*
@@ -4227,7 +3699,6 @@ With lex, the following:
     %%
 @end verbatim
 @end example
-
 will not match the string "foo" because when the macro
 is expanded the rule is equivalent to "foo[A-Z][A-Z0-9]*?"
 and the precedence is such that the '?' is associated with
@@ -4252,52 +3723,49 @@ operators cannot be used in a
 definition.
 @item
 Using
-@b{--l}
+@samp{-l}
 results in the
-@i{lex}
+@emph{lex}
 behavior of no parentheses around the definition.
-
 @item
 The POSIX specification is that the definition be enclosed in parentheses.
 @item 
 Some implementations of
-@i{lex}
+@emph{lex}
 allow a rule's action to begin on a separate line, if the rule's pattern
 has trailing whitespace:
-
 @example
 @verbatim
     %%
     foo|barspace here>
-      { foobar_action(); }
+      { foobar_action();}
 @end verbatim
 @end example
-
 @code{flex}
 does not support this feature.
 @item 
 The
-@i{lex}
+@emph{lex}
 @b{%r}
 (generate a Ratfor scanner) option is not supported.  It is not part
 of the POSIX specification.
 @item 
 After a call to
 @code{unput()},
-@i{yytext}
+@emph{yytext}
 is undefined until the next token is matched, unless the scanner
 was built using
 @code{%array}.
 This is not the case with
-@i{lex}
+@emph{lex}
 or the POSIX specification.  The
-@b{--l}
+@samp{-l}
 option does away with this incompatibility.
 @item 
 The precedence of the
 \bf
 (numeric range) operator is different.
-@i{lex}
+@emph{lex}
 interprets "abc{1,3}" as "match one, two, or
 three occurrences of 'abc'", whereas
 @code{flex}
@@ -4308,7 +3776,7 @@ in agreement with the POSIX specification.
 The precedence of the
 @b{^}
 operator is different.
-@i{lex}
+@emph{lex}
 interprets @samp{^foo|bar} as "match either 'foo' at the beginning of a line,
 or 'bar' anywhere", whereas
 @code{flex}
@@ -4318,7 +3786,7 @@ of a line".  The latter is in agreement with the POSIX specification.
 The special table-size declarations such as
 @b{%a}
 supported by
-@i{lex}
+@emph{lex}
 are not required by
 @code{flex}
 scanners;
@@ -4331,7 +3799,7 @@ FLEX_SCANNER
 is #define'd so scanners may be written for use with either
 @code{flex}
 or
-@i{lex}.
+@emph{lex}.
 Scanners also include
 @b{YY_FLEX_MAJOR_VERSION}
 and
@@ -4345,9 +3813,8 @@ respectively).
 The following
 @code{flex}
 features are not included in
-@i{lex}
+@emph{lex}
 or the POSIX specification:
-
 @example
 @verbatim
     C++ scanners
@@ -4371,70 +3838,59 @@ or the POSIX specification:
     multiple actions on a line
 @end verbatim
 @end example
-
-plus almost all of the flex flags.
+plus almost all of the @code{flex} flags.
 The last feature in the list refers to the fact that with
 @code{flex}
 you can put multiple actions on the same line, separated with
 semi-colons, while with
-@i{lex},
+@emph{lex},
 the following
-
 @example
 @verbatim
     foo    handle_foo(); ++num_foos_seen;
 @end verbatim
 @end example
-
 is (rather surprisingly) truncated to
-
 @example
 @verbatim
     foo    handle_foo();
 @end verbatim
 @end example
-
 @code{flex}
 does not truncate the action.  Actions that are not enclosed in
 braces are simply terminated at the end of the line.
-
-@node diagnostics, limitations, POSIX, Top
+@node diagnostics, limitations, lex and posix, Top
 @chapter DIAGNOSTICS
-
 @samp{warning, rule cannot be matched}
 indicates that the given rule
 cannot be matched because it follows other rules that will
 always match the same text as it.  For
 example, in the following "foo" cannot be matched because it comes after
 an identifier "catch-all" rule:
-
 @example
 @verbatim
     [a-z]+    got_identifier();
     foo       got_foo();
 @end verbatim
 @end example
-
 Using
-@b{REJECT}
+@code{REJECT}
 in a scanner suppresses this warning.
-
-@i{warning},
-@b{--s}
+@emph{warning},
+@samp{-s}
 @i
 option given but default rule can be matched
 means that it is possible (perhaps only in a particular start condition)
 that the default rule (match any single character) is the only one
 that will match a particular input.  Since
-@b{--s}
+@samp{-s}
 was given, presumably this is not intended.
-
-@i{reject_used_but_not_detected undefined}
+@emph{reject_used_but_not_detected undefined}
 or
-@i{yymore_used_but_not_detected undefined -}
+@emph{yymore_used_but_not_detected undefined -}
 These errors can occur at compile time.  They indicate that the
 scanner uses
-@b{REJECT}
+@code{REJECT}
 or
 @code{yymore()}
 but that
@@ -4444,18 +3900,16 @@ failed to notice the fact, meaning that
 scanned the first two sections looking for occurrences of these actions
 and failed to find any, but somehow you snuck some in (via a #include
 file, for example).  Use
-@b{%option reject}
+@code{%option reject}
 or
-@b{%option yymore}
-to indicate to flex that you really do use these features.
-
-@i{flex scanner jammed -}
+@code{%option yymore}
+to indicate to @code{flex} that you really do use these features.
+@emph{flex scanner jammed -}
 a scanner compiled with
-@b{--s}
+@samp{-s}
 has encountered an input string which wasn't matched by
 any of its rules.  This error can also occur due to internal problems.
-
-@i{token too large, exceeds YYLMAX -}
+@emph{token too large, exceeds YYLMAX -}
 your scanner uses
 @code{%array}
 and one of its rules matched a string longer than the
@@ -4466,21 +3920,19 @@ constant (8K bytes by default).  You can increase the value by
 in the definitions section of your
 @code{flex}
 input.
-
-@i{scanner requires --8 flag to}
-@i{use the character 'x' -}
+@emph{scanner requires --8 flag to}
+@emph{use the character 'x' -}
 Your scanner specification includes recognizing the 8-bit character
-@i{'x'}
+@emph{'x'}
 and you did not specify the --8 flag, and your scanner defaulted to 7-bit
 because you used the
-@b{--Cf}
+@samp{-Cf}
 or
-@b{--CF}
+@samp{-CF}
 table compression options.  See the discussion of the
-@b{--7}
+@samp{-7}
 flag for details.
-
-@i{flex scanner push-back overflow -}
+@emph{flex scanner push-back overflow -}
 you used
 @code{unput()}
 to push back so much text that the scanner's buffer could not hold
@@ -4488,35 +3940,28 @@ both the pushed-back text and the current token in
 @var{yytext}.
 Ideally the scanner should dynamically resize the buffer in this case, but at
 present it does not.
-
 @i
 input buffer overflow, can't enlarge buffer because scanner uses REJECT -
 the scanner was working on matching an extremely large token and needed
 to expand the input buffer.  This doesn't work with scanners that use
 \bf
 REJECT.
-
 @i
-fatal flex scanner internal error--end of buffer missed -
+fatal @code{flex} scanner internal error--end of buffer missed -
 This can occur in an scanner which is reentered after a long-jump
 has jumped out (or over) the scanner's activation frame.  Before
 reentering the scanner, use:
-
 @example
 @verbatim
     yyrestart( yyin );
 @end verbatim
 @end example
-
 or, as noted above, switch to using the C++ scanner class.
-
-@i{too many start conditions in > construct! -}
+@emph{too many start conditions in > construct! -}
 you listed more start conditions in a > construct than exist (so
 you must have listed at least one of them twice).
-
 @node limitations, bibliography, diagnostics, Top
 @chapter Limitations
-
 Some trailing context
 patterns cannot be properly matched and generate
 warning messages (``dangerous trailing context'').  These are
@@ -4525,18 +3970,15 @@ first part of the rule matches the beginning of the second
 part, such as @samp{zx*/xy*}, where the 'x*' matches the 'x' at
 the beginning of the trailing context.  (Note that the POSIX draft
 states that the text matched by such patterns is undefined.)
-
 For some trailing context rules, parts which are actually fixed-length are
 not recognized as such, leading to the abovementioned performance loss.
 In particular, parts using @samp{|} or @samp{@{n@}} (such as "foo{3}") are always
 considered variable-length.
-
 Combining trailing context with the special @samp{|} action can result in
-@i{fixed}
+@emph{fixed}
 trailing context being turned into the more expensive
-@i{variable}
+@emph{variable}
 trailing context.  For example, in the following:
-
 @example
 @verbatim
     %%
@@ -4545,26 +3987,21 @@ trailing context.  For example, in the following:
 @end verbatim
 @end example
 
-
 Use of
 @code{unput()}
 invalidates yytext and yyleng, unless the
 @code{%array}
 directive
 or the
-@b{--l}
+@samp{-l}
 option has been used.
-
-Pattern-matching of NUL's is substantially slower than matching other
+Pattern-matching of @code{NUL}s is substantially slower than matching other
 characters.
-
 Dynamic resizing of the input buffer is slow, as it entails rescanning
 all the text matched so far by the current (generally huge) token.
-
 Due to both buffering of input and read-ahead, you cannot intermix calls
 to stdio.h> routines, such as, for example, @b{getchar()}, with
 @code{flex} rules and expect it to work.  Call @code{input()} instead.
-
 The total table entries listed by the
 @samp{-v}
 flag excludes the number of table entries needed to determine
@@ -4572,36 +4009,26 @@ what rule has been matched.  The number of entries is equal
 to the number of DFA states if the scanner does not use
 @code{REJECT},
 and somewhat greater than the number of states if it does.
-
 @code{REJECT} cannot be used with the @samp{-f} or @samp{-F} options.
-
 The @code{flex} internal algorithms need documentation.
-
 @node bibliography,  , limitations, Top
 @chapter Additional Reading
-
 You may wish to read more about the following programs:
-
 @itemize
 @item lex
 @item yacc
 @item sed
 @item awk
 @end itemize
-
 The following books may contain material of interest:
-
 John Levine, Tony Mason, and Doug Brown,
-@i{Lex & Yacc},
+@emph{Lex & Yacc},
 O'Reilly and Associates.  Be sure to get the 2nd edition.
-
 M. E. Lesk and E. Schmidt,
-@i{LEX -- Lexical Analyzer Generator}
-
+@emph{LEX -- Lexical Analyzer Generator}
 Alfred Aho, Ravi Sethi and Jeffrey Ullman,
-@i{Compilers: Principles, Techniques and Tools},
+@emph{Compilers: Principles, Techniques and Tools},
 Addison-Wesley (1986).  Describes the pattern-matching techniques used by
 @code{flex}
 (deterministic finite automata).
-
 @bye
