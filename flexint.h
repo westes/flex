@@ -14,7 +14,7 @@ typedef signed char int8_t;
 typedef short int int16_t;
 typedef int int32_t;
 
-# if __WORDSIZE == 64 || defined __arch64__
+# if __WORDSIZE == 64 || defined __arch64__ || defined __cplusplus
 typedef long int int64_t;
 # else
 typedef long long int int64_t;
@@ -26,7 +26,7 @@ typedef unsigned char uint8_t;
 typedef unsigned short int uint16_t;
 typedef unsigned int uint32_t;
 
-#if __WORDSIZE == 64 || defined __arch64__
+#if __WORDSIZE == 64 || defined __arch64__ || defined __cplusplus
 typedef unsigned long int uint64_t;
 #else
 typedef unsigned long long int uint64_t;
