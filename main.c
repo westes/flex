@@ -1582,9 +1582,6 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 		outn( "typedef int yy_state_type;" );
 	OUT_END_CODE();
 
-	if ( ddebug )
-		outn( "\n#define FLEX_DEBUG" );
-
 	if ( lex_compat )
 		outn( "#define YY_FLEX_LEX_COMPAT" );
 
