@@ -28,7 +28,29 @@
 #include <stdio.h>
 
 
-class yyFlexLexer {
+// This file defines two classes.  The first, FlexLexer, is an abstract
+// class which specifies the external interface provided to flex C++
+// lexer objects.  The second, yyFlexLexer, fills out most of the meat
+// of the lexer class; its internals may vary from lexer to lexer
+// depending on things like whether REJECT is used, and the type
+// of YY_CHAR.  If you want to create multiple lexer classes, you
+// use the -P flag to rename each yyFlexLexer to some other xxFlexLexer.
+
+
+class FlexLexer {
+ public:
+	virtual ~FlexLexer()	{ }
+
+	virtual void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer ) = 0;
+	virtual YY_BUFFER_STATE yy_create_buffer( FILE* file, int size ) = 0;
+	virtual void yy_delete_buffer( YY_BUFFER_STATE b ) = 0;
+	virtual void yyrestart( FILE *input_file ) = 0;
+
+	virtual int yylex() = 0;
+};
+
+
+class yyFlexLexer : public FlexLexer {
  public:
 	yyFlexLexer( FILE* arg_yyin = 0, FILE* arg_yyout = 0 )
 		{
@@ -63,7 +85,7 @@ class yyFlexLexer {
 	void yy_delete_buffer( YY_BUFFER_STATE b );
 	void yyrestart( FILE *input_file );
 
-	virtual int yylex() = 0;
+	virtual int yylex();
 
  protected:
 	virtual int LexerInput( char* buf, int max_size )
