@@ -34,17 +34,26 @@
 #include "flexdef.h"
 #include "tables.h"
 
+#define CMD_TABLES_SER_BEGIN "%tables-serialization-code-begin"
+#define CMD_TABLES_SER_END   "%tables-serialization-code-end"
+#define CMD_TABLES_YYDMAP    "%tables-yydmap"
+#define CMD_CPP_ONLY         "%c++-only"
+#define CMD_C_ONLY           "%c-only"
+#define CMD_C_OR_CPP         "%c-or-c++"
+#define CMD_NOT_FOR_HEADER   "%not-for-header"
+#define CMD_OK_FOR_HEADER    "%ok-for-header"
+
 /* Append "#define defname value\n" to the running buffer. */
-void    action_define (defname, value)
+void action_define (defname, value)
      const char *defname;
-     int     value;
+     int value;
 {
 	char    buf[MAXLINE];
 	char   *cpy;
 
 	if ((int) strlen (defname) > MAXLINE / 2) {
-		format_pinpoint_message (
-					 _("name \"%s\" ridiculously long"),
+		format_pinpoint_message (_
+					 ("name \"%s\" ridiculously long"),
 					 defname);
 		return;
 	}
@@ -59,7 +68,7 @@ void    action_define (defname, value)
 
 
 /* Append "new_text" to the running buffer. */
-void    add_action (new_text)
+void add_action (new_text)
      char   *new_text;
 {
 	int     len = strlen (new_text);
@@ -89,16 +98,16 @@ void    add_action (new_text)
 /* allocate_array - allocate memory for an integer array of the given size */
 
 void   *allocate_array (size, element_size)
-     int     size;
-     size_t  element_size;
+     int size;
+     size_t element_size;
 {
 	register void *mem;
 	size_t  num_bytes = element_size * size;
 
 	mem = flex_alloc (num_bytes);
 	if (!mem)
-		flexfatal (
-			   _("memory allocation failed in allocate_array()"));
+		flexfatal (_
+			   ("memory allocation failed in allocate_array()"));
 
 	return mem;
 }
@@ -106,7 +115,7 @@ void   *allocate_array (size, element_size)
 
 /* all_lower - true if a string is all lower-case */
 
-int     all_lower (str)
+int all_lower (str)
      register char *str;
 {
 	while (*str) {
@@ -121,7 +130,7 @@ int     all_lower (str)
 
 /* all_upper - true if a string is all upper-case */
 
-int     all_upper (str)
+int all_upper (str)
      register char *str;
 {
 	while (*str) {
@@ -149,8 +158,8 @@ int     all_upper (str)
  *   n - the number of elements of 'v' to be sorted
  */
 
-void    bubble (v, n)
-     int     v[], n;
+void bubble (v, n)
+     int v[], n;
 {
 	register int i, j, k;
 
@@ -169,24 +178,24 @@ void    bubble (v, n)
  *		and exits.
  */
 
-void    check_char (c)
-     int     c;
+void check_char (c)
+     int c;
 {
 	if (c >= CSIZE)
 		lerrsf (_("bad character '%s' detected in check_char()"),
 			readable_form (c));
 
 	if (c >= csize)
-		lerrsf (
-			_("scanner requires -8 flag to use the character %s"),
-readable_form (c));
+		lerrsf (_
+			("scanner requires -8 flag to use the character %s"),
+			readable_form (c));
 }
 
 
 
 /* clower - replace upper-case letter to lower-case */
 
-Char    clower (c)
+Char clower (c)
      register int c;
 {
 	return (Char) ((isascii (c) && isupper (c)) ? tolower (c) : c);
@@ -258,9 +267,9 @@ Char   *copy_unsigned_string (str)
  *   n - number of elements of v to be sorted
  */
 
-void    cshell (v, n, special_case_0)
-     Char    v[];
-     int     n, special_case_0;
+void cshell (v, n, special_case_0)
+     Char v[];
+     int n, special_case_0;
 {
 	int     gap, i, j, jg;
 	Char    k;
@@ -275,7 +284,8 @@ void    cshell (v, n, special_case_0)
 						break;
 
 					else if (v[j] != 0
-						 && v[j] <= v[jg]) break;
+						 && v[j] <= v[jg])
+						break;
 				}
 
 				else if (v[j] <= v[jg])
@@ -290,7 +300,7 @@ void    cshell (v, n, special_case_0)
 
 /* dataend - finish up a block of data declarations */
 
-void    dataend ()
+void dataend ()
 {
 	if (datapos > 0)
 		dataflush ();
@@ -305,7 +315,7 @@ void    dataend ()
 
 /* dataflush - flush generated data statements */
 
-void    dataflush ()
+void dataflush ()
 {
 	outc ('\n');
 
@@ -324,7 +334,7 @@ void    dataflush ()
 
 /* flexerror - report an error message and terminate */
 
-void    flexerror (msg)
+void flexerror (msg)
      const char *msg;
 {
 	fprintf (stderr, "%s: %s\n", program_name, msg);
@@ -334,7 +344,7 @@ void    flexerror (msg)
 
 /* flexfatal - report a fatal error message and terminate */
 
-void    flexfatal (msg)
+void flexfatal (msg)
      const char *msg;
 {
 	fprintf (stderr, _("%s: fatal internal error, %s\n"),
@@ -345,8 +355,8 @@ void    flexfatal (msg)
 
 /* htoi - convert a hexadecimal digit string to an integer value */
 
-int     htoi (str)
-     Char    str[];
+int htoi (str)
+     Char str[];
 {
 	unsigned int result;
 
@@ -358,9 +368,9 @@ int     htoi (str)
 
 /* lerrif - report an error message formatted with one integer argument */
 
-void    lerrif (msg, arg)
+void lerrif (msg, arg)
      const char *msg;
-     int     arg;
+     int arg;
 {
 	char    errmsg[MAXLINE];
 
@@ -371,7 +381,7 @@ void    lerrif (msg, arg)
 
 /* lerrsf - report an error message formatted with one string argument */
 
-void    lerrsf (msg, arg)
+void lerrsf (msg, arg)
      const char *msg, arg[];
 {
 	char    errmsg[MAXLINE];
@@ -383,9 +393,9 @@ void    lerrsf (msg, arg)
 
 /* line_directive_out - spit out a "#line" statement */
 
-void    line_directive_out (output_file, do_infile)
+void line_directive_out (output_file, do_infile)
      FILE   *output_file;
-     int     do_infile;
+     int do_infile;
 {
 	char    directive[MAXLINE], filename[MAXLINE];
 	char   *s1, *s2, *s3;
@@ -437,7 +447,7 @@ void    line_directive_out (output_file, do_infile)
  *               representing where the user's section 1 definitions end
  *		 and the prolog begins
  */
-void    mark_defs1 ()
+void mark_defs1 ()
 {
 	defs1_offset = 0;
 	action_array[action_index++] = '\0';
@@ -449,7 +459,7 @@ void    mark_defs1 ()
 /* mark_prolog - mark the current position in the action array as
  *               representing the end of the action prolog
  */
-void    mark_prolog ()
+void mark_prolog ()
 {
 	action_array[action_index++] = '\0';
 	action_offset = action_index;
@@ -461,8 +471,8 @@ void    mark_prolog ()
  *
  * Generates a data statement initializing the current 2-D array to "value".
  */
-void    mk2data (value)
-     int     value;
+void mk2data (value)
+     int value;
 {
 	if (datapos >= NUMDATAITEMS) {
 		outc (',');
@@ -487,8 +497,8 @@ void    mk2data (value)
  * Generates a data statement initializing the current array element to
  * "value".
  */
-void    mkdata (value)
-     int     value;
+void mkdata (value)
+     int value;
 {
 	if (datapos >= NUMDATAITEMS) {
 		outc (',');
@@ -509,7 +519,7 @@ void    mkdata (value)
 
 /* myctoi - return the integer represented by a string of digits */
 
-int     myctoi (array)
+int myctoi (array)
      const char *array;
 {
 	int     val = 0;
@@ -522,8 +532,8 @@ int     myctoi (array)
 
 /* myesc - return character corresponding to escape sequence */
 
-Char    myesc (array)
-     Char    array[];
+Char myesc (array)
+     Char array[];
 {
 	Char    c, esc_char;
 
@@ -610,8 +620,8 @@ Char    myesc (array)
 
 /* otoi - convert an octal digit string to an integer value */
 
-int     otoi (str)
-     Char    str[];
+int otoi (str)
+     Char str[];
 {
 	unsigned int result;
 
@@ -624,30 +634,30 @@ int     otoi (str)
  *	 generated scanner, keeping track of the line count.
  */
 
-void    out (str)
+void out (str)
      const char *str;
 {
 	fputs (str, stdout);
 	out_line_count (str);
 }
 
-void    out_dec (fmt, n)
+void out_dec (fmt, n)
      const char *fmt;
-     int     n;
+     int n;
 {
 	printf (fmt, n);
 	out_line_count (fmt);
 }
 
-void    out_dec2 (fmt, n1, n2)
+void out_dec2 (fmt, n1, n2)
      const char *fmt;
-     int     n1, n2;
+     int n1, n2;
 {
 	printf (fmt, n1, n2);
 	out_line_count (fmt);
 }
 
-void    out_hex (fmt, x)
+void out_hex (fmt, x)
      const char *fmt;
      unsigned int x;
 {
@@ -655,7 +665,7 @@ void    out_hex (fmt, x)
 	out_line_count (fmt);
 }
 
-void    out_line_count (str)
+void out_line_count (str)
      const char *str;
 {
 	register int i;
@@ -665,7 +675,7 @@ void    out_line_count (str)
 			++out_linenum;
 }
 
-void    out_str (fmt, str)
+void out_str (fmt, str)
      const char *fmt, str[];
 {
 	printf (fmt, str);
@@ -673,7 +683,7 @@ void    out_str (fmt, str)
 	out_line_count (str);
 }
 
-void    out_str3 (fmt, s1, s2, s3)
+void out_str3 (fmt, s1, s2, s3)
      const char *fmt, s1[], s2[], s3[];
 {
 	printf (fmt, s1, s2, s3);
@@ -683,17 +693,17 @@ void    out_str3 (fmt, s1, s2, s3)
 	out_line_count (s3);
 }
 
-void    out_str_dec (fmt, str, n)
+void out_str_dec (fmt, str, n)
      const char *fmt, str[];
-     int     n;
+     int n;
 {
 	printf (fmt, str, n);
 	out_line_count (fmt);
 	out_line_count (str);
 }
 
-void    outc (c)
-     int     c;
+void outc (c)
+     int c;
 {
 	putc (c, stdout);
 
@@ -701,7 +711,7 @@ void    outc (c)
 		++out_linenum;
 }
 
-void    outn (str)
+void outn (str)
      const char *str;
 {
 	puts (str);
@@ -762,8 +772,8 @@ char   *readable_form (c)
 
 void   *reallocate_array (array, size, element_size)
      void   *array;
-     int     size;
-     size_t  element_size;
+     int size;
+     size_t element_size;
 {
 	register void *new_array;
 	size_t  num_bytes = element_size * size;
@@ -782,7 +792,7 @@ void   *reallocate_array (array, size, element_size)
  *    Copies skelfile or skel array to stdout until a line beginning with
  *    "%%" or EOF is found.
  */
-void    skelout ()
+void skelout ()
 {
 	char    buf_storage[MAXLINE];
 	char   *buf = buf_storage;
@@ -808,40 +818,48 @@ void    skelout ()
 					out_str ("/* %s */\n", buf);
 			}
 
-			switch (buf[1]) {
-			case '%':
+			/* We've been accused of using cryptic markers in the skel.
+			 * So we'll use emacs-style-hyphenated-commands.
+			 */
+#define cmd_match(s) (strncmp(buf,(s),strlen(s))==0)
+
+			if (buf[1] == '%') {
+				/* %% is a break point for skelout() */
 				return;
+			}
+			else if (cmd_match (CMD_TABLES_SER_BEGIN)) {
+				tablestoggle = true;
+			}
+			else if (cmd_match (CMD_TABLES_SER_END)) {
+				tablestoggle = false;
+			}
+			else if (cmd_match (CMD_TABLES_YYDMAP)) {
 
-			case '+':
+			}
+			else if (cmd_match (CMD_CPP_ONLY)) {
+				/* only for C++ */
 				do_copy = C_plus_plus;
-				break;
-
-			case '-':
+			}
+			else if (cmd_match (CMD_C_ONLY)) {
+				/* %- only for C */
 				do_copy = !C_plus_plus;
-				break;
-
-			case '*':
+			}
+			else if (cmd_match (CMD_C_OR_CPP)) {
+				/* %* for C and C++ */
 				do_copy = 1;
-				break;
-
-			case 'c':	/* begin linkage-only (non-header) code. */
+			}
+			else if (cmd_match (CMD_NOT_FOR_HEADER)) {
+				/* %c begin linkage-only (non-header) code. */
 				OUT_BEGIN_CODE ();
-				break;
-
-			case 'e':	/* end linkage-only code. */
+			}
+			else if (cmd_match (CMD_OK_FOR_HEADER)) {
+				/* %e end linkage-only code. */
 				OUT_END_CODE ();
-				break;
-
-			case '#':
-				/* a comment in the skel. ignore. */
-				break;
-
-			case 't':
-				/* %t - toggle tables api */
-				tablestoggle = !tablestoggle;
-				break;
-
-			default:
+			}
+			else if (buf[1] == '#') {
+				/* %# a comment in the skel. ignore. */
+			}
+			else {
 				flexfatal (_("bad line in skeleton file"));
 			}
 		}
@@ -850,7 +868,7 @@ void    skelout ()
 			if (tablesext || !tablestoggle)
 				outn (buf);
 		}
-	}
+	}			/* end while */
 }
 
 
@@ -860,8 +878,8 @@ void    skelout ()
  * element_n.  Formats the output with spaces and carriage returns.
  */
 
-void    transition_struct_out (element_v, element_n)
-     int     element_v, element_n;
+void transition_struct_out (element_v, element_n)
+     int element_v, element_n;
 {
 	out_dec2 (" {%4d,%4d },", element_v, element_n);
 
@@ -882,7 +900,7 @@ void    transition_struct_out (element_v, element_n)
  * broken versions of bison.
  */
 void   *yy_flex_xmalloc (size)
-     int     size;
+     int size;
 {
 	void   *result = flex_alloc ((size_t) size);
 
@@ -899,9 +917,9 @@ void   *yy_flex_xmalloc (size)
  * Sets region_ptr[0] through region_ptr[size_in_bytes - 1] to zero.
  */
 
-void    zero_out (region_ptr, size_in_bytes)
+void zero_out (region_ptr, size_in_bytes)
      char   *region_ptr;
-     size_t  size_in_bytes;
+     size_t size_in_bytes;
 {
 	register char *rp, *rp_end;
 
