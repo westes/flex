@@ -956,9 +956,9 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 
 
 #ifdef YY_USE_PROTOS
-void yy_fatal_error( const char msg[] )
+static void yy_fatal_error( const char msg[] )
 #else
-void yy_fatal_error( msg )
+static void yy_fatal_error( msg )
 char msg[];
 #endif
 	{
