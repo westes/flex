@@ -1,13 +1,13 @@
 # Danish messages for flex.
 # Copyright (C) 1996 Free Software Foundation, Inc.
-# Keld Simonsen <keld@dkuug.dk>, 2000.
+# Keld Simonsen <keld@dkuug.dk>, 2000-2002.
 # Johan Linde <jl@theophys.kth.se>, 1996.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: flex 2.5.2\n"
-"POT-Creation-Date: 2002-03-12 13:23-0500\n"
-"PO-Revision-Date: 2000-12-11 09:12+0100\n"
+"Project-Id-Version: flex 2002.3.12a\n"
+"POT-Creation-Date: 2002-03-12 12:07-0500\n"
+"PO-Revision-Date: 2002-03-27 09:12+0100\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -121,13 +121,12 @@ msgid "Can't use -f or -F with -l option"
 msgstr "-f eller -F kan ikke bruges sammen med -l"
 
 #: main.c:190
-#, fuzzy
 msgid "Can't use -R or -Rb with -l option"
-msgstr "-f eller -F kan ikke bruges sammen med -l"
+msgstr "-R eller -Rb kan ikke bruges sammen med -l"
 
 #: main.c:203
 msgid "Can't specify header option if writing to stdout."
-msgstr ""
+msgstr "Kan ikke angive header-flag hvis der skrives til standard-ud."
 
 #: main.c:229
 msgid "-Cf/-CF and -Cm don't make sense together"
@@ -160,9 +159,8 @@ msgid "%array incompatible with -+ option"
 msgstr "-+ kan ikke bruges sammen med %array"
 
 #: main.c:256
-#, fuzzy
 msgid "Options -+ and -R are mutually exclusive."
-msgstr "-Cf og -CF er gensidigt udelukkende"
+msgstr "Flagene -+ og -R er gensidigt udelukkende."
 
 #: main.c:308 main.c:494
 #, c-format
@@ -185,9 +183,9 @@ msgid "error closing skeleton file %s"
 msgstr "fejl ved lukning af skabelonfilen %s"
 
 #: main.c:659
-#, fuzzy, c-format
+#, c-format
 msgid "error creating header file %s"
-msgstr "fejl ved skrivning af sikkerhedskopifilen %s"
+msgstr "fejl ved oprettelsen af headerfilen %s"
 
 #: main.c:667
 #, c-format
@@ -359,15 +357,15 @@ msgstr "  %d totale tabelposter kræves\n"
 
 #: main.c:933
 msgid "Internal error. flexopts are malformed.\n"
-msgstr ""
+msgstr "Intern fejl. flexopts er fejlbehæftede.\n"
 
 #: main.c:941
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "For usage, try\n"
 "\t%s --help\n"
 msgstr ""
-"%s: ukendt flag \"%c\".  For mere information, brug\n"
+"For hvordan det skal bruges prøv\n"
 "\t%s --help\n"
 
 #: main.c:1001
@@ -376,9 +374,9 @@ msgid "unknown -C option '%c'"
 msgstr "ukendt flag til -C \"%c\""
 
 #: main.c:1080
-#, fuzzy, c-format
+#, c-format
 msgid "unknown -R option '%c'"
-msgstr "ukendt flag til -C \"%c\""
+msgstr "ukendt flag til -R '%c'"
 
 #: main.c:1113
 #, c-format
@@ -396,8 +394,7 @@ msgstr "kunne ikke oprette sikkerhedskopi af info-fil %s"
 
 #: main.c:1389
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr ""
-"flaget -l for opførsel som AT&T's lex medfører et væsentligt præstationstab\n"
+msgstr "flaget -l for opførsel som AT&T's lex medfører et væsentligt præstationstab\n"
 
 #: main.c:1391
 msgid " and may be the actual source of other reported performance penalties\n"
@@ -422,9 +419,7 @@ msgstr "REJECT medfører et væsentligt præstationstab\n"
 
 #: main.c:1417
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
-"Regler for variabel efterfølgende kontekst medfører et væsentlig "
-"præstationstab\n"
+msgstr "Regler for variabel efterfølgende kontekst medfører et væsentlig præstationstab\n"
 
 #: main.c:1430
 msgid "REJECT cannot be used with -f or -F"
@@ -449,7 +444,7 @@ msgstr "%option yyclass er kun meningsfyldt for C++-fortolkere"
 #: main.c:1671
 #, c-format
 msgid "%s [OPTIONS...] [file...]\n"
-msgstr ""
+msgstr "%s [FLAG...] [fil...]\n"
 
 #: main.c:1674
 #, c-format
@@ -506,6 +501,57 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Tabel-kompression: (normalt -Cem)\n"
+"  -Ca, --align      brug bedre hukommelses-tilpasning i stedet for mindre tabeller\n"
+"  -Ce, --ecs        konstruér ækvivalensklasser\n"
+"  -Cf               komprimér ikke tabeller; brug -f repræsentation\n"
+"  -CF               komprimér ikke tabeller; brug -F repræsentation\n"
+"  -Cm, --meta-ecs   konstruér meta-ækvivalensklasser\n"
+"  -Cr, --read       brug read() i stedet for stdio til skanner-inddata\n"
+"  -f, --full        generér hurtig, stor skanner. Det samme som -Cfr\n"
+"  -F, --fast        brug alternativ tabelrepræsentation. Det samme som -CFr\n"
+"\n"
+"Fejlsøgning:\n"
+"  -d, --debug             aktivér fejlsøgnings-tilstand i skanneren\n"
+"  -b, --backup            skriv sikkerhedskopi-information til %s\n"
+"  -p, --perf-report       skriv ydelses-rapport på stdfejl\n"
+"  -s, --nodefault         undertryk normal regel om at udskrive tekst der ikke passede\n"
+"  -T, --trace             %s bør køre i sporings-tilstand\n"
+"  -w, --nowarn            generér ikke advarsler\n"
+"  -v, --verbose           skriv sammendrag af skanner-statistik til stdud\n"
+"\n"
+"Filer:\n"
+"  -o, --outfile=FILE      angiv uddata-filnavn\n"
+"  -S, --skel=FILE         angiv skelet-fil\n"
+"  -t, --stdout            skriv skanner på stdud i stedet for på %s\n"
+"      --yyclass=NAME      navn på C++-klasse\n"
+"      --header=FILE       opret en C header-fil sammen med skanneren\n"
+"\n"
+"Skannerens opførsel:\n"
+"  -7, --7bit              generér 7-bit-skanner\n"
+"  -8, --8bit              generér 8-bit-skanner\n"
+"  -B, --batch             generér batch-skanner (modsat -I)\n"
+"  -i, --case-insensitive  ignorér forskel på små og store bogstaver i mønstre\n"
+"  -l, --lex-compat        maksimal kompatibilitet med oprindelig lex\n"
+"  -I, --interactive       generér interaktiv skanner (modsat -B)\n"
+"      --yylineno          notér linjenummer i yylineno\n"
+"\n"
+"Genereret kode:\n"
+"  -+,  --c++               generér C++ skanner-klasse\n"
+"  -Dmacro[=defn]           #define macro defn  (forvalgt defn er '1')\n"
+"  -L,  --noline            undertryk #line-direktiver i skanner\n"
+"  -P,  --prefix=STRENG     brug STRENG som begyndelse i stedet for \"yy\"\n"
+"  -R,  --reentrant         generér en reentrant C-skanner\n"
+"  -Rb, --reentrant-bison   reentrant skanner for ren Bison-fortolker.\n"
+"       --stdinit           initialisér yyin/yyout til stdind/stdud\n"
+"       --noFUNKTION        generér ikke en bestemt FUNKTION\n"
+"\n"
+"Forskelligt:\n"
+"  -c                      POSIX-flag der ikke udføres\n"
+"  -n                      POSIX-flag der ikke udføres\n"
+"  -?\n"
+"  -h, --help              udskriv denne hjælpebesked\n"
+"  -V, --version           udskriv %s version\n"
 
 #: misc.c:47
 #, c-format
@@ -595,7 +641,7 @@ msgid "too many rules (> %d)!"
 msgstr "for mange regler (> %d)!"
 
 #: scan.l:139
-#, c-format
+#, no-c-format
 msgid "unrecognized '%' directive"
 msgstr "ukendt %-direktiv"
 
@@ -691,10 +737,8 @@ msgstr "*Noget mærkeligt* - tegn: %d værdi: %d\n"
 #~ msgid "-C flag must be given separately"
 #~ msgstr "flaget -C skal angives separat"
 
-#~ msgid ""
-#~ "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"
-#~ msgstr ""
-#~ "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -oudfil -Pprefiks -Sskabelon]\n"
+#~ msgid "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"
+#~ msgstr "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -oudfil -Pprefiks -Sskabelon]\n"
 
 #~ msgid "\t[--help --version] [file ...]\n"
 #~ msgstr "\t[--help --version] [fil ...]\n"
@@ -727,13 +771,10 @@ msgstr "*Noget mærkeligt* - tegn: %d værdi: %d\n"
 #~ msgstr "\t-p  send rapport om præstation til standard fejl\n"
 
 #~ msgid "\t-s  suppress default rule to ECHO unmatched text\n"
-#~ msgstr ""
-#~ "\t-s  undertryk standardreglen om at udskrive tekst som ikke kunne "
-#~ "matches\n"
+#~ msgstr "\t-s  undertryk standardreglen om at udskrive tekst som ikke kunne matches\n"
 
 #~ msgid "\t-t  write generated scanner on stdout instead of %s\n"
-#~ msgstr ""
-#~ "\t-t  skriv den oprettede fortolker til standard ud i stedet for %s\n"
+#~ msgstr "\t-t  skriv den oprettede fortolker til standard ud i stedet for %s\n"
 
 #~ msgid "\t-v  write summary of scanner statistics to f\n"
 #~ msgstr "\t-v  skriv kortfattet skannerstatistik til f\n"
@@ -775,27 +816,22 @@ msgstr "*Noget mærkeligt* - tegn: %d værdi: %d\n"
 #~ msgstr "\t-C  angiv graden af tabelkompression (standard -Cem):\n"
 
 #~ msgid "\t\t-Ca  trade off larger tables for better memory alignment\n"
-#~ msgstr ""
-#~ "\t\t-Ca  skift til større tabeller for at forbedre "
-#~ "hukommelsebehandlingen\n"
+#~ msgstr "\t\t-Ca  skift til større tabeller for at forbedre hukommelsebehandlingen\n"
 
 #~ msgid "\t\t-Ce  construct equivalence classes\n"
 #~ msgstr "\t\t-Ce  opret ækvivalensklasser\n"
 
 #~ msgid "\t\t-Cf  do not compress scanner tables; use -f representation\n"
-#~ msgstr ""
-#~ "\t\t-Cf  komprimér ikke fortolkertabellerne; brug repræsentationen -f\n"
+#~ msgstr "\t\t-Cf  komprimér ikke fortolkertabellerne; brug repræsentationen -f\n"
 
 #~ msgid "\t\t-CF  do not compress scanner tables; use -F representation\n"
-#~ msgstr ""
-#~ "\t\t-CF  komprimér ikke skannertabellerne; brug repræsentationen -F\n"
+#~ msgstr "\t\t-CF  komprimér ikke skannertabellerne; brug repræsentationen -F\n"
 
 #~ msgid "\t\t-Cm  construct meta-equivalence classes\n"
 #~ msgstr "\t\t-Cm  opret meta-ækvivalensklasser\n"
 
 #~ msgid "\t\t-Cr  use read() instead of stdio for scanner input\n"
-#~ msgstr ""
-#~ "\t\t-Cr  brug read() i stedet for standard ind som inddata til skanneren\n"
+#~ msgstr "\t\t-Cr  brug read() i stedet for standard ind som inddata til skanneren\n"
 
 #~ msgid "\t-o  specify output filename\n"
 #~ msgstr "\t-o  angiv navnet på udfilen\n"
