@@ -1957,6 +1957,19 @@ static int yy_init_globals YYFARGS0(void)
     YY_G(yy_start_stack_depth) = 0;
     YY_G(yy_start_stack) = (int *) 0;
 
+#ifdef YY_USES_REJECT
+    YY_G(yy_state_buf) = 0;
+    YY_G(yy_state_ptr) = 0;
+    YY_G(yy_full_match) = 0;
+    YY_G(yy_lp) = 0;
+#endif
+
+#ifdef YY_TEXT_IS_ARRAY
+    YY_G(yytext_ptr) = 0;
+    YY_G(yy_more_offset) = 0;
+    YY_G(yy_prev_more_offset) = 0;
+#endif
+
 /* Defined in main.c */
 #ifdef YY_STDINIT
     yyin = stdin;
@@ -1991,10 +2004,13 @@ int yylex_init( ptr_yy_globals )
     }
 
     *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), NULL );
+
     if (*ptr_yy_globals == NULL){
         errno = ENOMEM;
         return 1;
     }
+
+    memset(*ptr_yy_globals,0,sizeof(struct yyguts_t));
 
     return yy_init_globals ( *ptr_yy_globals );
     }
