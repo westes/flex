@@ -55,7 +55,8 @@ void check_for_backtracking( ds, state )
 int ds;
 int state[];
 	{
-	if ( (reject && ! dfaacc[ds].dfaacc_set) || ! dfaacc[ds].dfaacc_state )
+	if ( (reject && ! dfaacc[ds].dfaacc_set) ||
+	     (! reject && ! dfaacc[ds].dfaacc_state) )
 		{ /* state is non-accepting */
 		++num_backtracking;
 
@@ -290,7 +291,7 @@ MARK_STATE(state) \
 if ( ++numstates >= current_max_dfa_size ) \
 DO_REALLOCATION \
 t[numstates] = state; \
-hashval = hashval + state; \
+hashval += state; \
 }
 
 #define STACK_STATE(state) \
@@ -318,10 +319,11 @@ ADD_STATE(state) \
 		 * the stack.
 		 */
 		if ( ! IS_MARKED(ns) )
+			{
 			PUT_ON_STACK(ns)
-
-		CHECK_ACCEPT(ns)
-		hashval = hashval + ns;
+			CHECK_ACCEPT(ns)
+			hashval += ns;
+			}
 		}
 
 	for ( stkpos = 1; stkpos <= stkend; ++stkpos )
@@ -412,12 +414,6 @@ void ntod()
 	 */
 	int duplist[CSIZE + 1], state[CSIZE + 1];
 	int targfreq[CSIZE + 1], targstate[CSIZE + 1];
-
-	/* This is so find_table_space(...) will know where to start looking
-	 * in chk/nxt for unused records for space to put in the state
-	 */
-	if ( fullspd )
-		firstfree = 0;
 
 	accset = allocate_integer_array( num_rules + 1 );
 	nset = allocate_integer_array( current_max_dfa_size );
@@ -1031,11 +1027,7 @@ int symlist[], duplist[];
 			{
 			if ( tch < -lastccl || tch >= csize )
 				{
-				if ( tch >= csize && tch <= CSIZE )
-					flexerror( "scanner requires -8 flag" );
-
-				else
-					flexfatal(
+				flexfatal(
 			"bad transition character detected in sympartition()" );
 				}
 
