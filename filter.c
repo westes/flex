@@ -36,14 +36,15 @@
 /** global chain. */
 struct filter *output_chain = NULL;
 
-/* Allocate and initialize a filter.
+/* Allocate and initialize an external filter.
  * @param chain the current chain or NULL for new chain
  * @param cmd the command to execute.
  * @param ... a NULL terminated list of (const char*) arguments to command,
  *            not including argv[0].
  * @return newest filter in chain
  */
-struct filter *filter_create (struct filter *chain, const char *cmd, ...)
+struct filter *filter_create_ext (struct filter *chain, const char *cmd,
+				  ...)
 {
 	struct filter *f;
 	int     max_args;
@@ -53,6 +54,8 @@ struct filter *filter_create (struct filter *chain, const char *cmd, ...)
 	/* allocate and initialize new filter */
 	f = (struct filter *) flex_alloc (sizeof (struct filter));
 	memset (f, 0, sizeof (*f));
+	f->filter_func = NULL;
+	f->extra = NULL;
 	f->next = NULL;
 	f->argc = 0;
 
@@ -90,6 +93,39 @@ struct filter *filter_create (struct filter *chain, const char *cmd, ...)
 	return f;
 }
 
+/* Allocate and initialize an internal filter.
+ * @param chain the current chain or NULL for new chain
+ * @param filter_func The function that will perform the filtering.
+ *        filter_func should return 0 if successful, and -1
+ *        if an error occurs -- or it can simply exit().
+ * @param extra optional user-defined data to pass to the filter.
+ * @return newest filter in chain
+ */
+struct filter *filter_create_int (struct filter *chain,
+				  int (*filter_func) (struct filter *), void *extra)
+{
+	struct filter *f;
+
+	/* allocate and initialize new filter */
+	f = (struct filter *) flex_alloc (sizeof (struct filter));
+	memset (f, 0, sizeof (*f));
+	f->next = NULL;
+	f->argc = 0;
+	f->argv = NULL;
+
+	f->filter_func = filter_func;
+	f->extra = extra;
+
+	if (chain != NULL) {
+		/* append f to end of chain */
+		while (chain->next)
+			chain = chain->next;
+		chain->next = f;
+	}
+
+	return f;
+}
+
 /** Fork and exec entire filter chain.
  *  @param chain The head of the chain.
  *  @return true on success.
@@ -119,9 +155,24 @@ bool filter_apply_chain (struct filter * chain)
 		if ((stdin = fdopen (0, "r")) == NULL)
 			flexfatal (_("fdopen(0) failed"));
 
+        /* recursively apply rest of chain. */
 		filter_apply_chain (chain->next);
-		execvp (chain->argv[0], (char **const) (chain->argv));
-		flexfatal (_("exec failed"));
+
+        /* run this filter, either internally or by execvp */
+        if  (chain->filter_func){
+            int r = chain->filter_func(chain);
+            if (r == -1)
+                flexfatal (_("filter_func failed"));
+            else{
+                close(0);
+                close(1);
+                exit(0);
+            }
+        }
+        else{
+            execvp (chain->argv[0], (char **const) (chain->argv));
+            flexfatal (_("exec failed"));
+        }
 		exit (1);
 	}
 
@@ -155,6 +206,23 @@ int filter_truncate (struct filter *chain, int max_len)
 
 	chain->next = NULL;
 	return len;
+}
+
+/** Splits the chain in order to write to a header file.
+ *  Similar in spirit to the 'tee' program.
+ *  The header file name is in extra.
+ */
+int filter_tee (struct filter *chain)
+{
+    const int readsz = 512;
+    char * buf;
+    
+    buf = (char*)flex_alloc(readsz);
+    header_out = fopen (headerfilename, "w");
+    
+    execlp("cat","cat",NULL);
+
+    return 0;
 }
 
 /* vim:set expandtab cindent tabstop=4 softtabstop=4 shiftwidth=4 textwidth=0: */

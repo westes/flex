@@ -341,8 +341,8 @@ void check_options ()
 	}
 
     /* Setup the filter chain. */
-    output_chain = filter_create(NULL,"m4","-P",0);
-    /* filter_create(output_chain,"cat",0); */
+    output_chain = filter_create_int(NULL, filter_tee, headerfilename);
+    filter_create_ext(output_chain,"m4","-P",0);
 
     /* For debugging, only run the requested number of filters. */
     if (preproc_level > 0) {

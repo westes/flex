@@ -51,6 +51,7 @@ struct Buf *buf_print_strings(struct Buf * buf, FILE* out)
         if(s)
             fprintf(out, "%s", s);
     }
+    return buf;
 }
 
 /* Append a "%s" formatted string to a string buffer */
@@ -119,6 +120,7 @@ struct Buf *buf_m4_define (struct Buf *buf, const char* def, const char* val)
 
     sprintf(str, fmt, def, val);
     buf_append(buf, &str, 1);
+    return buf;
 }
 
 /** Pushes "m4_undefine([[def]])m4_dnl" to end of buffer.
@@ -135,6 +137,7 @@ struct Buf *buf_m4_undefine (struct Buf *buf, const char* def)
 
     sprintf(str, fmt, def);
     buf_append(buf, &str, 1);
+    return buf;
 }
 
 /* create buf with 0 elements, each of size elem_size. */

@@ -118,7 +118,6 @@ void action_define (defname, value)
 void action_m4_define (const char *defname, const char * value)
 {
 	char    buf[MAXLINE];
-	char   *cpy;
 
     flexfatal ("DO NOT USE THIS FUNCTION!");
 

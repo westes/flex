@@ -1140,28 +1140,25 @@ bool range_covers_case (int c1, int c2);
 /*
  *  From "filter.c"
  */
+
+/** A single stdio filter to execute.
+ *  The filter may be external, such as "sed", or it
+ *  may be internal, as a function call.
+ */
 struct filter {
-	int     argc;
-	const char ** argv;
-    struct filter * next;
+    int    (*filter_func)(struct filter*); /**< internal filter function */
+    void * extra;         /**< extra data passed to filter_func */
+	int     argc;         /**< arg count */
+	const char ** argv;   /**< arg vector, \0-terminated */
+    struct filter * next; /**< next filter or NULL */
 };
 
 /* output filter chain */
 extern struct filter * output_chain;
-
-/* Allocate and initialize a filter.
- * @param chain the current chain or NULL for new chain
- * @param cmd the command to execute.
- * @param ... a NULL terminated list of (const char*) arguments to command,
- *            not including argv[0].
- * @return newest filter in chain
- */
-extern struct filter *filter_create PROTO((struct filter * chain, const char *cmd, ...));
-
-/* Fork and exec entire filter chain.
- *  @param chain The head of the chain.
- * @return true on success.
- */
+extern struct filter *filter_create_ext PROTO((struct filter * chain, const char *cmd, ...));
+struct filter *filter_create_int PROTO((struct filter *chain,
+				  int (*filter_func) (struct filter *),
+                  void *extra));
 extern bool filter_apply_chain PROTO((struct filter * chain));
 extern int filter_truncate (struct filter * chain, int max_len);
 
