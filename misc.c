@@ -48,24 +48,22 @@ void dataflush PROTO(());
 int otoi PROTO((Char []));
 
 
-/* action_out - write the actions from the temporary file to lex.yy.c
- *
- * synopsis
- *     action_out();
- *
- *     Copies the action file up to %% (or end-of-file) to lex.yy.c
- */
-
-void action_out()
-
+void add_action( new_text )
+char *new_text;
     {
-    char buf[MAXLINE];
+    int len = strlen( new_text );
 
-    while ( fgets( buf, MAXLINE, temp_action_file ) != NULL )
-	if ( buf[0] == '%' && buf[1] == '%' )
-	    break;
-	else
-	    fputs( buf, stdout );
+    while ( len + action_index + action_offset >= action_size - 10 /* slop */ )
+	{
+	action_size *= 2;
+	prolog = action_array =
+	    reallocate_character_array( action_array, action_size );
+	action = &action_array[action_offset];
+	}
+
+    strcpy( &action[action_index], new_text );
+
+    action_index += len;
     }
 
 
@@ -235,10 +233,7 @@ register Char *str;
     for ( c = str; *c; ++c )
 	;
 
-    copy = (Char *) malloc( (unsigned) ((c - str + 1) * sizeof( Char )) );
-
-    if ( copy == NULL )
-	flexfatal( "dynamic memory failure in copy_unsigned_string()" );
+    copy = allocate_Character_array( c - str + 1 );
 
     for ( c = copy; (*c++ = *str++); )
 	;
@@ -373,7 +368,7 @@ char msg[];
 
     {
     fprintf( stderr, "%s: fatal internal error, %s\n", program_name, msg );
-    flexend( 1 );
+    exit( 1 );
     }
 
 
@@ -469,7 +464,7 @@ int htoi( str )
 Char str[];
 
     {
-    int result;
+    unsigned int result;
 
     (void) sscanf( (char *) str, "%x", &result );
 
@@ -511,12 +506,37 @@ int ch;
 
 /* line_directive_out - spit out a "# line" statement */
 
-void line_directive_out( output_file_name )
-FILE *output_file_name;
+void line_directive_out( output_file )
+FILE *output_file;
 
     {
     if ( infilename && gen_line_dirs )
-        fprintf( output_file_name, "# line %d \"%s\"\n", linenum, infilename );
+	{
+	char directive[MAXLINE];
+        sprintf( directive, "# line %d \"%s\"\n", linenum, infilename );
+
+	/* if output_file is nil then we should put the directive in
+	 * the accumulated actions.
+	 */
+	if ( output_file )
+	    fputs( directive, output_file );
+	else
+	    add_action( directive );
+	}
+    }
+
+
+/* mark_prolog - mark the current position in the action array as
+ *               representing the action prolog
+ */
+void mark_prolog()
+    {
+    prolog = action_array;
+    action_array[action_index++] = '\0';
+    action_offset = action_index;
+    action = &action_array[action_offset];
+    action_index = 0;
+    action[action_index] = '\0';
     }
 
 
@@ -621,7 +641,9 @@ Char array[];
 
     switch ( array[1] )
 	{
+#ifdef __STDC__
 	case 'a': return ( '\a' );
+#endif
 	case 'b': return ( '\b' );
 	case 'f': return ( '\f' );
 	case 'n': return ( '\n' );
@@ -663,7 +685,8 @@ Char array[];
 	    { /* \x<hex> */
 	    int sptr = 2;
 
-	    while ( isascii( array[sptr] ) && is_hex_digit( array[sptr] ) )
+	    while ( isascii( array[sptr] ) &&
+		    is_hex_digit( (char) array[sptr] ) )
 		/* don't increment inside loop control because if
 		 * isdigit() is a macro it might expand into multiple
 		 * increments ...
@@ -698,7 +721,7 @@ int otoi( str )
 Char str[];
 
     {
-    int result;
+    unsigned int result;
 
     (void) sscanf( (char *) str, "%o", &result );
 
@@ -726,14 +749,18 @@ register int c;
 	{
 	switch ( c )
 	    {
-	    case '\n': return ( "\\n" );
-	    case '\t': return ( "\\t" );
-	    case '\f': return ( "\\f" );
-	    case '\r': return ( "\\r" );
+#ifdef __STDC__
+	    case '\a': return ( "\\a" );
+#endif
 	    case '\b': return ( "\\b" );
+	    case '\f': return ( "\\f" );
+	    case '\n': return ( "\\n" );
+	    case '\r': return ( "\\r" );
+	    case '\t': return ( "\\t" );
+	    case '\v': return ( "\\v" );
 
 	    default:
-		(void) sprintf( rform, "\\%.3o", c );
+		(void) sprintf( rform, "\\%.3o", (unsigned int) c );
 		return ( rform );
 	    }
 	}
@@ -780,19 +807,33 @@ int size, element_size;
  *    skelout();
  *
  * DESCRIPTION
- *    Copies from skelfile to stdout until a line beginning with "%%" or
- *    EOF is found.
+ *    Copies skelfile or skel array to stdout until a line beginning with
+ *    "%%" or EOF is found.
  */
 void skelout()
 
     {
-    char buf[MAXLINE];
+    if ( skelfile )
+	{
+	char buf[MAXLINE];
 
-    while ( fgets( buf, MAXLINE, skelfile ) != NULL )
-	if ( buf[0] == '%' && buf[1] == '%' )
-	    break;
-	else
-	    fputs( buf, stdout );
+	while ( fgets( buf, MAXLINE, skelfile ) != NULL )
+	    if ( buf[0] == '%' && buf[1] == '%' )
+		break;
+	    else
+		fputs( buf, stdout );
+	}
+
+    else
+	{ /* copy from skel array */
+	char *buf;
+
+	while ( (buf = skel[skel_ind++]) )
+	    if ( buf[0] == '%' && buf[1] == '%' )
+		break;
+	    else
+		printf( "%s\n", buf );
+	}
     }
 
 
@@ -823,4 +864,29 @@ int element_v, element_n;
 
 	datapos = 0;
 	}
+    }
+
+
+/* zero_out - set a region of memory to 0
+ *
+ * synopsis
+ *     char *region_ptr;
+ *     int size_in_bytes;
+ *     zero_out( region_ptr, size_in_bytes );
+ *
+ * sets region_ptr[0] through region_ptr[size_in_bytes - 1] to zero.
+ */
+
+void zero_out( region_ptr, size_in_bytes )
+char *region_ptr;
+int size_in_bytes;
+
+    {
+    register char *rp, *rp_end;
+
+    rp = region_ptr;
+    rp_end = region_ptr + size_in_bytes;
+
+    while ( rp < rp_end )
+	*rp++ = 0;
     }
