@@ -510,7 +510,7 @@ void ntod()
 			state[i] = 0;
 
 		place_state( state, 0, 0 );
-		dfaacc[i].dfaacc_state = 0;
+		dfaacc[0].dfaacc_state = 0;
 		}
 
 	else if ( fulltbl )
