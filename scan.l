@@ -619,7 +619,7 @@ LEXOPT		[aceknopr]
 <ACTION_STRING>{
 	[^"\\\n]+	ACTION_ECHO;
 	\\.		ACTION_ECHO;
-	{NL}		++linenum; ACTION_ECHO;
+	{NL}		++linenum; ACTION_ECHO; BEGIN(ACTION);
 	\"		ACTION_ECHO; BEGIN(ACTION);
 	.		ACTION_ECHO;
 }
