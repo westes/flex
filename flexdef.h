@@ -1068,8 +1068,8 @@ extern struct Buf userdef_buf;
 extern struct Buf defs_buf;
 
 /* For blocking out code from the header file. */
-#define OUT_BEGIN_CODE() out_str("#ifndef %sIN_HEADER\n",prefix)
-#define OUT_END_CODE() out_str("#endif /* !%sIN_HEADER */\n",prefix);
+#define OUT_BEGIN_CODE() out_str("#ifndef %sIN_HEADER /* YY-DISCARD-FROM-HEADER */\n",prefix)
+#define OUT_END_CODE() out_str("#endif /* !%sIN_HEADER YY-END-DISCARD-FROM-HEADER */\n",prefix);
 
 /* For setjmp/longjmp (instead of calling exit(2)). Linkage in main.c */
 extern jmp_buf flex_main_jmp_buf;

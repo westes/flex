@@ -532,6 +532,7 @@ int exit_status;
 			FILE *header_out;
 			char linebuf[LINE_SZ];
 			int nlines=0;
+            int discard = 0;
 
 			/* rewind the outfile file. */
 			fflush(stdout);
@@ -548,6 +549,16 @@ int exit_status;
 
             nlines=4;
 			while(fgets(linebuf, LINE_SZ, stdout)) {
+                if (strstr(linebuf, "YY-DISCARD-FROM-HEADER"))
+                    discard++;
+                else if (strstr(linebuf, "YY-END-DISCARD-FROM-HEADER")){
+                    discard--;
+                    continue;
+                }
+
+                if (discard)
+                    continue;
+
                 fix_line_dirs(linebuf, outfilename, headerfilename, nlines);
 				fputs(linebuf, header_out);
                 nlines++;
@@ -555,6 +566,7 @@ int exit_status;
 
             /* Kill ALL flex-related macros. This is so the user
              * can #include more than one generated header file. */
+            fprintf(header_out,"#line %d \"%s\"", (++nlines)+1, headerfilename);
             fprintf(header_out,"\n");
             fprintf(header_out,"#undef BEGIN\n");
             fprintf(header_out,"#undef ECHO\n");
