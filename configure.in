@@ -22,9 +22,9 @@ dnl WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 dnl PURPOSE.
 
 AC_PREREQ(2.50)
-AC_INIT(flex,2.5.11,help-flex@gnu.org)
+AC_INIT(flex,2.5.12,help-flex@gnu.org)
 AC_CONFIG_SRCDIR(scan.l)
-AM_INIT_AUTOMAKE(flex,2.5.11)
+AM_INIT_AUTOMAKE(flex,2.5.12)
 AM_CONFIG_HEADER(config.h:conf.in)
           AM_GNU_GETTEXT
 AM_GNU_GETTEXT_VERSION(0.11.5)
@@ -83,4 +83,5 @@ tests/test-posix/Makefile
 tests/test-posixly-correct/Makefile
 dnl --new-test-here-- This line is processed by tests/create-test.
 )
+
 AC_OUTPUT
