@@ -1,4 +1,11 @@
-Changes between 2.3 Patch #3 (03Aug90) and original 2.3 release:
+Changes between 2.3 Patch #4 (03Aug90) and 2.3 Patch #3:
+
+	- Fixed bug in hexadecimal escapes which allowed only digits,
+	  not letters, in escapes
+	- Fixed bug in previous "Changes" file!
+
+
+Changes between 2.3 Patch #3 (03Aug90) and 2.3 Patch #2:
 
 	- Correction to patch #2 for gcc compilation; thanks goes to
 	  Paul Eggert for catching this.
