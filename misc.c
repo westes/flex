@@ -391,7 +391,7 @@ int do_infile;
 	{
 	char directive[MAXLINE], filename[MAXLINE];
 	char *s1, *s2, *s3;
-	static char line_fmt[] = "# line %d \"%s\"\n";
+	static char line_fmt[] = "#line %d \"%s\"\n";
 
 	if ( ! gen_line_dirs )
 		return;
