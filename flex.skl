@@ -62,8 +62,8 @@ m4_include(`flexint.h')
 %c++-only
 /* begin standard C++ headers. */
 #include <iostream> 
-#include <cerrno>
-#include <cstdlib>
+#include <errno.h>
+#include <stdlib.h>
 /* end standard C++ headers. */
 %pop
 
