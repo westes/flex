@@ -106,6 +106,7 @@ static char outfile_path[64];
 static int outfile_created = 0;
 static int use_stdout;
 static char *skelname = NULL;
+static char *prefix = "yy";
 
 
 int main( argc, argv )
@@ -302,6 +303,9 @@ int exit_status;
 		if ( skelname )
 			fprintf( stderr, " -S%s", skelname );
 
+		if ( strcmp( prefix, "yy" ) )
+			fprintf( stderr, " -P%s", prefix );
+
 		putc( '\n', stderr );
 
 		fprintf( stderr, "  %d/%d NFA states\n", lastnfa, current_mns );
@@ -409,7 +413,7 @@ char **argv;
 	{
 	int i, sawcmpflag;
 	int csize_given, interactive_given;
-	char *arg, *prefix, *mktemp();
+	char *arg, *mktemp();
 
 	printstats = syntaxerror = trace = spprdflt = caseins = false;
 	C_plus_plus = backing_up_report = ddebug = fulltbl = fullspd = false;
@@ -428,8 +432,6 @@ char **argv;
 	prolog = action = action_array =
 		allocate_character_array( action_size );
 	action_offset = action_index = 0;
-
-	prefix = "yy";
 
 	program_name = argv[0];
 
@@ -693,8 +695,10 @@ char **argv;
 	if ( strcmp( prefix, "yy" ) )
 		{
 #define GEN_PREFIX(name) printf( "#define yy%s %s%s\n", name, prefix, name );
+		GEN_PREFIX( "FlexLexer" );
 		GEN_PREFIX( "_create_buffer" );
 		GEN_PREFIX( "_delete_buffer" );
+		GEN_PREFIX( "_flex_debug" );
 		GEN_PREFIX( "_init_buffer" );
 		GEN_PREFIX( "_load_buffer_state" );
 		GEN_PREFIX( "_switch_to_buffer" );
@@ -704,8 +708,7 @@ char **argv;
 		GEN_PREFIX( "out" );
 		GEN_PREFIX( "restart" );
 		GEN_PREFIX( "text" );
-		GEN_PREFIX( "_flex_debug" );
-		GEN_PREFIX( "FlexLexer" );
+		GEN_PREFIX( "wrap" );
 		printf( "\n" );
 		}
 
