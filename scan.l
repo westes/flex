@@ -674,6 +674,8 @@ char *file;
 		yyin = stdin;
 		infilename = copy_string( "<stdin>" );
 		}
+
+	linenum = 1;
 	}
 
 
