@@ -2007,7 +2007,7 @@ void make_tables ()
 		indent_puts ("if ( yy_act == 0 )");
 		indent_up ();
 		indent_puts (C_plus_plus ?
-			     "cerr << \"--scanner backing up\\n\";" :
+			     "std::cerr << \"--scanner backing up\\n\";" :
 			     "fprintf( stderr, \"--scanner backing up\\n\" );");
 		indent_down ();
 
@@ -2017,7 +2017,7 @@ void make_tables ()
 
 		if (C_plus_plus) {
 			indent_puts
-				("cerr << \"--accepting rule at line \" << yy_rule_linenum[yy_act] <<");
+				("std::cerr << \"--accepting rule at line \" << yy_rule_linenum[yy_act] <<");
 			indent_puts
 				("         \"(\\\"\" << yytext << \"\\\")\\n\";");
 		}
@@ -2037,7 +2037,7 @@ void make_tables ()
 
 		if (C_plus_plus) {
 			indent_puts
-				("cerr << \"--accepting default rule (\\\"\" << yytext << \"\\\")\\n\";");
+				("std::cerr << \"--accepting default rule (\\\"\" << yytext << \"\\\")\\n\";");
 		}
 		else {
 			indent_puts
@@ -2052,7 +2052,7 @@ void make_tables ()
 		indent_up ();
 
 		indent_puts (C_plus_plus ?
-			     "cerr << \"--(end of buffer or a NUL)\\n\";" :
+			     "std::cerr << \"--(end of buffer or a NUL)\\n\";" :
 			     "fprintf( stderr, \"--(end of buffer or a NUL)\\n\" );");
 
 		indent_down ();
@@ -2063,7 +2063,7 @@ void make_tables ()
 
 		if (C_plus_plus) {
 			indent_puts
-				("cerr << \"--EOF (start condition \" << YY_START << \")\\n\";");
+				("std::cerr << \"--EOF (start condition \" << YY_START << \")\\n\";");
 		}
 		else {
 			indent_puts
