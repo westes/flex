@@ -757,12 +757,6 @@ void gentabs()
 	int i, j, k, *accset, nacc, *acc_array, total_states;
 	int end_of_buffer_action = num_rules + 1;
 
-	/* *Everything* is done in terms of arrays starting at 1, so provide
-	 * a null entry for the zero element of all C arrays.
-	 */
-	static char C_char_decl[] =
-		"static const YY_CHAR %s[%d] =\n    {   0,\n";	/* } for vi */
-
 	acc_array = allocate_integer_array( current_max_dfas );
 	nummt = 0;
 
