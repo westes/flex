@@ -101,7 +101,7 @@ int state[];
 void check_trailing_context( nfa_states, num_states, accset, nacc )
 int *nfa_states, num_states;
 int *accset;
-register int nacc;
+int nacc;
 	{
 	register int i, j;
 
@@ -398,7 +398,7 @@ void ntod()
 	int num_full_table_rows;	/* used only for -f */
 	int *nset, *dset;
 	int targptr, totaltrans, i, comstate, comfreq, targ;
-	int *epsclosure(), snstods(), symlist[CSIZE + 1];
+	int symlist[CSIZE + 1];
 	int num_start_states;
 	int todo_head, todo_next;
 

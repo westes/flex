@@ -227,7 +227,6 @@ void genctbl()
 
 void genecs()
 	{
-	Char clower();
 	register int i, j;
 	int numrows;
 
@@ -388,7 +387,7 @@ void gen_find_action()
 	}
 
 
-/* genftbl - generates full transition table */
+/* genftbl - generate full transition table */
 
 void genftbl()
 	{
@@ -581,7 +580,7 @@ void gen_next_match()
 
 void gen_next_state( worry_about_NULs )
 int worry_about_NULs;
-	{ /* NOTE - changes in here should be reflected in get_next_match() */
+	{ /* NOTE - changes in here should be reflected in gen_next_match() */
 	char char_map[256];
 
 	if ( worry_about_NULs && ! nultrans )
@@ -646,7 +645,7 @@ int worry_about_NULs;
 /* Generate the code to make a NUL transition. */
 
 void gen_NUL_trans()
-	{ /* NOTE - changes in here should be reflected in get_next_match() */
+	{ /* NOTE - changes in here should be reflected in gen_next_match() */
 	int need_backing_up = (num_backing_up > 0 && ! reject);
 
 	if ( need_backing_up )

@@ -379,7 +379,7 @@ LEXOPT		[aceknopr]
 			/* Check to see if we've already encountered this
 			 * ccl.
 			 */
-			if ( (cclval = ccllookup( (Char *) nmstr )) )
+			if ( (cclval = ccllookup( (Char *) nmstr )) != 0 )
 				{
 				if ( input() != ']' )
 					synerr( "bad character class" );
@@ -412,7 +412,7 @@ LEXOPT		[aceknopr]
 			strcpy( nmstr, yytext + 1 );
 			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */
 
-			if ( ! (nmdefptr = ndlookup( nmstr )) )
+			if ( (nmdefptr = ndlookup( nmstr )) == 0 )
 				format_synerr( "undefined definition {%s}",
 						nmstr );
 

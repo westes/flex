@@ -45,7 +45,12 @@ class istream;
 
 
 #ifdef __TURBOC__
+#pragma warn -rch
+#pragma warn -use
+#include <io.h>
+#include <stdlib.h>
 #define YY_USE_CONST
+#define YY_USE_PROTOS
 #endif
 
 
@@ -244,7 +249,11 @@ static void yy_flex_free YY_PROTO(( void * ));
 #define yy_new_buffer yy_create_buffer
 
 #define yy_set_interactive(is_interactive) \
-	(yy_current_buffer->yy_current_buffer = is_interactive)
+	{ \
+	if ( ! yy_current_buffer ) \
+		yy_current_buffer = yy_create_buffer( yyin, YY_BUF_SIZE ); \
+	yy_current_buffer->yy_is_interactive = is_interactive; \
+	}
 
 %% yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
 

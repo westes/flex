@@ -51,7 +51,11 @@
 #ifdef __hpux
 void *alloca ();
 #else /* not __hpux */
+#ifdef __TURBOC__
+#include <malloc.h>
+#else
 char *alloca ();
+#endif /* not __TURBOC__ */
 #endif /* not __hpux */
 #endif /* not _AIX */
 #endif /* not HAVE_ALLOCA_H */
@@ -68,11 +72,6 @@ int trlcontxt, xcluflg, cclsorted, varlength, variable_trail_rule;
 
 int *scon_stk;
 int scon_stk_ptr;
-
-Char clower();
-char *copy_string();
-void build_eof_action();
-void yyerror();
 
 static int madeany = false;  /* whether we've made the '.' character class */
 int previous_continued_action;	/* whether the previous rule's action was '|' */

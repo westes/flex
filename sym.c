@@ -77,7 +77,7 @@ int table_size;
 	if ( new_entry == NULL )
 		flexfatal( "symbol table memory allocation failed" );
 
-	if ( (successor = table[hash_val]) )
+	if ( (successor = table[hash_val]) != 0 )
 		{
 		new_entry->next = successor;
 		successor->prev = new_entry;

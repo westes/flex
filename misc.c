@@ -201,7 +201,7 @@ register char *str;
 	if ( copy == NULL )
 		flexfatal( "dynamic memory failure in copy_string()" );
 
-	for ( c = copy; (*c++ = *str++); )
+	for ( c = copy; (*c++ = *str++) != 0; )
 		;
 
 	return copy;
@@ -224,7 +224,7 @@ register Char *str;
 
 	copy = allocate_Character_array( c - str + 1 );
 
-	for ( c = copy; (*c++ = *str++); )
+	for ( c = copy; (*c++ = *str++) != 0; )
 		;
 
 	return copy;
@@ -336,6 +336,19 @@ char msg[];
 	}
 
 
+/* htoi - convert a hexadecimal digit string to an integer value */
+
+int htoi( str )
+Char str[];
+	{
+	unsigned int result;
+
+	(void) sscanf( (char *) str, "%x", &result );
+
+	return result;
+	}
+
+
 /* lerrif - report an error message formatted with one integer argument */
 
 void lerrif( msg, arg )
@@ -357,45 +370,6 @@ char msg[], arg[];
 
 	(void) sprintf( errmsg, msg, arg );
 	flexerror( errmsg );
-	}
-
-
-/* htoi - convert a hexadecimal digit string to an integer value */
-
-int htoi( str )
-Char str[];
-	{
-	unsigned int result;
-
-	(void) sscanf( (char *) str, "%x", &result );
-
-	return result;
-	}
-
-
-/* is_hex_digit - returns true if a character is a valid hex digit, false
- *		  otherwise
- */
-
-int is_hex_digit( ch )
-int ch;
-	{
-	if ( isdigit( ch ) )
-		return 1;
-
-	switch ( clower( ch ) )
-		{
-		case 'a':
-		case 'b':
-		case 'c':
-		case 'd':
-		case 'e':
-		case 'f':
-			return 1;
-
-		default:
-			return 0;
-		}
 	}
 
 
@@ -602,7 +576,7 @@ Char array[];
 			int sptr = 2;
 
 			while ( isascii( array[sptr] ) &&
-				is_hex_digit( (char) array[sptr] ) )
+				isxdigit( (char) array[sptr] ) )
 				/* Don't increment inside loop control
 				 * because if isdigit() is a macro it might
 				 * expand into multiple increments ...

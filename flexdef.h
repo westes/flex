@@ -33,6 +33,20 @@
 
 #include "config.h"
 
+#ifdef __TURBOC__
+#define HAVE_STRING_H 1
+#define MS_DOS 1
+#ifndef __STDC__
+#define __STDC__ 1
+#endif
+#pragma warn -pro
+#pragma warn -rch
+#pragma warn -use
+#pragma warn -aus
+#pragma warn -par
+#pragma warn -pia
+#endif
+
 #ifdef HAVE_STRING_H
 #include <string.h>
 #else
@@ -49,16 +63,6 @@
 
 #if __STDC__
 #include <stdlib.h>
-#endif
-
-#ifdef __BORLANDC__
-/* Gag. */
-#pragma warn -pro
-#pragma warn -rch
-#pragma warn -use
-#pragma warn -aus
-#pragma warn -par
-#pragma warn -pia
 #endif
 
 /* Always be prepared to generate an 8-bit scanner. */
@@ -703,10 +707,22 @@ extern void list_character_set PROTO((FILE*, int[]));
 
 /* from file dfa.c */
 
+/* Check a DFA state for backing up. */
+extern void check_for_backing_up PROTO((int, int[]));
+
+/* Check to see if NFA state set constitutes "dangerous" trailing context. */
+extern void check_trailing_context PROTO((int*, int, int*, int));
+
+/* Construct the epsilon closure of a set of ndfa states. */
+extern int *epsclosure PROTO((int*, int*, int[], int*, int*));
+
 /* Increase the maximum number of dfas. */
 extern void increase_max_dfas PROTO((void));
 
 extern void ntod PROTO((void));	/* convert a ndfa to a dfa */
+
+/* Converts a set of ndfa states into a dfa state. */
+extern int snstods PROTO((int[], int, int[], int, int, int*));
 
 
 /* from file ecs.c */
@@ -725,6 +741,46 @@ extern void mkechar PROTO((int, int[], int[]));
 
 
 /* from file gen.c */
+
+extern void do_indent PROTO((void));	/* indent to the current level */
+
+/* Generate the code to keep backing-up information. */
+extern void gen_backing_up PROTO((void));
+
+/* Generate the code to perform the backing up. */
+extern void gen_bu_action PROTO((void));
+
+/* Generate full speed compressed transition table. */
+extern void genctbl PROTO((void));
+
+/* Generate the code to find the action number. */
+extern void gen_find_action PROTO((void));
+
+extern void genftbl PROTO((void));	/* generate full transition table */
+
+/* Generate the code to find the next compressed-table state. */
+extern void gen_next_compressed_state PROTO((char*));
+
+/* Generate the code to find the next match. */
+extern void gen_next_match PROTO((void));
+
+/* Generate the code to find the next state. */
+extern void gen_next_state PROTO((int));
+
+/* Generate the code to make a NUL transition. */
+extern void gen_NUL_trans PROTO((void));
+
+/* Generate the code to find the start state. */
+extern void gen_start_state PROTO((void));
+
+/* Generate data statements for the transition tables. */
+extern void gentabs PROTO((void));
+
+/* Write out a formatted string at the current indentation level. */
+extern void indent_put2s PROTO((char[], char[]));
+
+/* Write out a string + newline at the current indentation level. */
+extern void indent_puts PROTO((char[]));
 
 extern void make_tables PROTO((void));	/* generate transition tables */
 
@@ -756,6 +812,15 @@ extern void bubble PROTO((int [], int));
 /* Check a character to make sure it's in the expected range. */
 extern void check_char PROTO((int c));
 
+/* Replace upper-case letter to lower-case. */
+extern Char clower PROTO((int));
+
+/* Returns a dynamically allocated copy of a string. */
+extern char *copy_string PROTO((register char *));
+
+/* Returns a dynamically allocated copy of a (potentially) unsigned string. */
+extern Char *copy_unsigned_string PROTO((register Char *));
+
 /* Shell sort a character array. */
 extern void cshell PROTO((Char [], int, int));
 
@@ -767,6 +832,9 @@ extern void flexerror PROTO((char[]));
 
 /* Report a fatal error message and terminate. */
 extern void flexfatal PROTO((char[]));
+
+/* Convert a hexadecimal digit string to an integer value. */
+extern int htoi PROTO((Char[]));
 
 /* Report an error message formatted with one integer argument. */
 extern void lerrif PROTO((char[], int));
@@ -792,6 +860,9 @@ extern void mkdata PROTO((int));	/* generate a data statement */
 
 /* Return the integer represented by a string of digits. */
 extern int myctoi PROTO((char []));
+
+/* Return character corresponding to escape sequence. */
+extern Char myesc PROTO((Char[]));
 
 /* Convert an octal digit string to an integer value. */
 extern int otoi PROTO((Char [] ));
@@ -870,6 +941,9 @@ extern void new_rule PROTO((void));	/* initialize for a new rule */
 
 /* from file parse.y */
 
+/* Build the "<<EOF>>" action for the active start conditions. */
+extern void build_eof_action PROTO((void));
+
 /* Write out a message formatted with one string, pinpointing its location. */
 extern void format_pinpoint_message PROTO((char[], char[]));
 
@@ -877,16 +951,17 @@ extern void format_pinpoint_message PROTO((char[], char[]));
 extern void pinpoint_message PROTO((char[]));
 
 /* Write out a warning, pinpointing it at the given line. */
-void line_warning PROTO(( char[], int ));
+extern void line_warning PROTO(( char[], int ));
 
 /* Write out a message, pinpointing it at the given line. */
-void line_pinpoint PROTO(( char[], int ));
+extern void line_pinpoint PROTO(( char[], int ));
 
 /* Report a formatted syntax error. */
 extern void format_synerr PROTO((char [], char[]));
 extern void synerr PROTO((char []));	/* report a syntax error */
 extern void format_warn PROTO((char [], char[]));
 extern void warn PROTO((char []));	/* report a warning */
+extern void yyerror PROTO((char []));	/* report a parse error */
 extern int yyparse PROTO((void));	/* the YACC parser */
 
 
@@ -904,13 +979,21 @@ extern int yywrap PROTO((void));
 
 /* from file sym.c */
 
+/* Add symbol and definitions to symbol table. */
+extern int addsym PROTO((register char[], char*, int, hash_table, int));
+
 /* Save the text of a character class. */
 extern void cclinstal PROTO ((Char [], int));
 
 /* Lookup the number associated with character class. */
 extern int ccllookup PROTO((Char []));
 
+/* Find symbol in symbol table. */
+extern struct hash_entry *findsym PROTO((register char[], hash_table, int ));
+
 extern void ndinstal PROTO((char[], Char[]));	/* install a name definition */
+extern Char *ndlookup PROTO((char[]));	/* lookup a name definition */
+
 /* Increase maximum number of SC's. */
 extern void scextend PROTO((void));
 extern void scinstal PROTO((char[], int));	/* make a start condition */
@@ -926,6 +1009,8 @@ extern void bldtbl PROTO((int[], int, int, int, int));
 
 extern void cmptmps PROTO((void));	/* compress template table entries */
 extern void expand_nxt_chk PROTO((void));	/* increase nxt/chk arrays */
+/* Finds a space in the table for a state to be placed. */
+extern int find_table_space PROTO((int*, int));
 extern void inittbl PROTO((void));	/* initialize transition tables */
 /* Make the default, "jam" table entries. */
 extern void mkdeftbl PROTO((void));
