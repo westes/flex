@@ -304,9 +304,11 @@ re              :  re '|' series
 			     */
 			    if ( ! varlength || headcnt != 0 )
 				{
-				if ( performance_report )
-				    fprintf( stderr,
-    "trailing context rule made variable because of preceding '|' action\n" );
+				fprintf( stderr,
+    "flex: warning - trailing context rule at line %d made variable because\n",
+					 linenum );
+				fprintf( stderr,
+					 "      of preceding '|' action\n" );
 				}
 
 			    /* mark as variable */
