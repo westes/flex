@@ -920,7 +920,7 @@ void gentabs()
 
 	total_states = lastdfa + numtemps;
 
-	printf( (total_states >= MAX_SHORT || long_align) ?
+	printf( (tblend >= MAX_SHORT || long_align) ?
 			C_long_decl : C_short_decl,
 		"yy_base", total_states + 1 );
 
@@ -964,7 +964,7 @@ void gentabs()
 
 	dataend();
 
-	printf( (tblend >= MAX_SHORT || long_align) ?
+	printf( (total_states >= MAX_SHORT || long_align) ?
 			C_long_decl : C_short_decl,
 		"yy_nxt", tblend + 1 );
 
@@ -978,7 +978,7 @@ void gentabs()
 
 	dataend();
 
-	printf( (tblend >= MAX_SHORT || long_align) ?
+	printf( (total_states >= MAX_SHORT || long_align) ?
 			C_long_decl : C_short_decl,
 		"yy_chk", tblend + 1 );
 
