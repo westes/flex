@@ -107,12 +107,19 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 ^"%%".*			{
 			sectnum = 2;
 			line_directive_out( stdout );
+			bracelevel = 0;
 			BEGIN(SECT2PROLOG);
 			return SECTEND;
 			}
 
 ^"%pointer".*{NL}	++linenum; yytext_is_array = false;
-^"%array".*{NL}		++linenum; yytext_is_array = true;
+^"%array".*{NL}		{
+			if ( C_plus_plus )
+				warn( "%array incompatible with -+ option" );
+			else
+				yytext_is_array = true;
+			++linenum;
+			}
 
 ^"%used"		{
 			warn( "%used/%unused have been deprecated" );
@@ -204,14 +211,24 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 <USED_LIST>{NOT_WS}+	synerr( "unrecognized %used/%unused construct" );
 
 
-<SECT2PROLOG>.*{NL}/{NOT_WS}	{
-			++linenum;
-			ACTION_ECHO;
-			MARK_END_OF_PROLOG;
-			BEGIN(SECT2);
+<SECT2PROLOG>^"%{".*	++bracelevel; yyless( 2 );	/* eat only %{ */
+<SECT2PROLOG>^"%}".*	--bracelevel; yyless( 2 );	/* eat only %} */
+
+<SECT2PROLOG>^{WS}.*	ACTION_ECHO;	/* indented code in prolog */
+
+<SECT2PROLOG>^{NOT_WS}.*	{	/* non-indented code */
+			if ( bracelevel <= 0 )
+				{ /* not in %{ ... %} */
+				yyless( 0 );	/* put it all back */
+				MARK_END_OF_PROLOG;
+				BEGIN(SECT2);
+				}
+			else
+				ACTION_ECHO;
 			}
 
-<SECT2PROLOG>.*{NL}	++linenum; ACTION_ECHO;
+<SECT2PROLOG>.*		ACTION_ECHO;
+<SECT2PROLOG>{NL}	++linenum; ACTION_ECHO;
 
 <SECT2PROLOG><<EOF>>	{
 			MARK_END_OF_PROLOG;
