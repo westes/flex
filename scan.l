@@ -57,6 +57,8 @@
 #define CHECK_YYMORE(str) \
 	if ( all_lower( str ) ) \
 		yymore_used = true;
+
+#define YY_NO_TOP_STATE
 %}
 
 %option caseless nodefault outfile="scan.c" stack
@@ -81,8 +83,10 @@ ESCSEQ		(\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2}))
 FIRST_CCL_CHAR	([^\\\n]|{ESCSEQ})
 CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
+LEXOPT		[aceknopr]
+
 %%
-	static int bracelevel, didadef, indented_code, checking_used;
+	static int bracelevel, didadef, indented_code;
 	static int doing_rule_action = false;
 	static int option_sense;
 
@@ -119,7 +123,8 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
 	^"%option"	BEGIN(OPTION); return OPTION_OP;
 
-	^"%"[aceknopr]{OPTWS}[0-9]*{OPTWS}{NL}	++linenum;	/* ignore */
+	^"%"{LEXOPT}{OPTWS}[0-9]*{OPTWS}{NL}	++linenum;	/* ignore */
+	^"%"{LEXOPT}{WS}.*{NL}	++linenum;	/* ignore */
 
 	^"%"[^sxaceknopr{}].*	synerr( "unrecognized '%' directive" );
 
@@ -225,6 +230,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 	verbose		printstats = option_sense;
 	warn		nowarn = ! option_sense;
 	yymore		yymore_really_used = option_sense;
+	yywrap		do_yywrap = option_sense;
 
 	outfile		return OPT_OUTFILE;
 	prefix		return OPT_PREFIX;
@@ -615,20 +621,20 @@ char *file;
 /* Wrapper routines for accessing the scanner's malloc routines. */
 
 void *flex_alloc( size )
-unsigned int size;
+size_t size;
 	{
-	return yy_flex_alloc( size );
+	return (void *) malloc( size );
 	}
 
 void *flex_realloc( ptr, size )
 void *ptr;
-unsigned int size;
+size_t size;
 	{
-	return yy_flex_realloc( ptr, size );
+	return (void *) realloc( ptr, size );
 	}
 
 void flex_free( ptr )
 void *ptr;
 	{
-	yy_flex_free( ptr );
+	free( ptr );
 	}
