@@ -66,6 +66,8 @@
 
 ** check if we still need to #undef macros at the end of a header
 
+** merge yylineno into support for location tracking
+
 * C++
 
 ** have a separate skeleton for c++
