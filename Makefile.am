@@ -107,6 +107,12 @@ SUBDIRS = \
 	examples \
 	po
 
+DIST_SUBDIRS = \
+	m4  \
+	examples \
+	po \
+	tests
+
 localedir = $(datadir)/locale
 INCLUDES = -DLOCALEDIR=\"$(localedir)\" -I@includedir@
 LIBS = @LIBINTL@ @LIBS@
