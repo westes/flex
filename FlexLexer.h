@@ -35,9 +35,9 @@
 // If you want to create multiple lexer classes, you use the -P flag
 // to rename each yyFlexLexer to some other xxFlexLexer.
 
-extern "C++" {
-
 #include <iostream.h>
+
+extern "C++" {
 
 struct yy_buffer_state;
 typedef int yy_state_type;
@@ -82,6 +82,9 @@ public:
 		yy_more_flag = 0;
 		yy_more_len = 0;
 
+		yy_start_stack_ptr = yy_start_stack_depth = 0;
+		yy_start_stack = 0;
+
 		yy_current_buffer = 0;
 
 #ifdef YY_USES_REJECT
@@ -113,6 +116,13 @@ protected:
 
 	void yy_load_buffer_state();
 	void yy_init_buffer( struct yy_buffer_state* b, istream* s );
+
+	int yy_start_stack_ptr;
+	int yy_start_stack_depth;
+	int* yy_start_stack;
+
+	void yy_push_state( int new_state );
+	int yy_pop_state();
 
 	yy_state_type yy_get_previous_state();
 	yy_state_type yy_try_NUL_trans( yy_state_type current_state );
