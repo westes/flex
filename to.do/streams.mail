@@ -1,0 +1,194 @@
+Received: from 204.33.249.66 by ee.lbl.gov for <vern@ee.lbl.gov> (8.8.2/1.43r)
+	id SAA22776; Sun, 17 Nov 1996 18:18:35 -0800 (PST)
+Received: by paradigm.webvision.com (940816.SGI.8.6.9/940406.SGI)
+	 id SAA10316; Sun, 17 Nov 1996 18:18:10 -0800
+Date: Sun, 17 Nov 1996 18:18:10 -0800
+Message-Id: <199611180218.SAA10316@paradigm.webvision.com>
+From: dave madden <dhm@paradigm.webvision.com>
+To: vern@ee.lbl.gov
+CC: jebossom@cognos.com
+In-reply-to: <199611130423.UAA10645@daffy.ee.lbl.gov> (message from Vern
+	Paxson on Tue, 12 Nov 1996 20:23:35 PST)
+Subject: Re: flex-2.5.3: wedging streams
+Status: U
+
+ =>Date: Tue, 12 Nov 1996 20:23:35 PST
+ =>From: Vern Paxson <vern@ee.lbl.gov>
+ =>
+[=>>from dhm@webvision.com]
+ =>> After poking around in the generated scanner, it looks like I need to
+ =>> be able to return a new code from yy_get_next_buffer (say
+ =>> EOB_ACT_TRY_AGAIN)  that'll cause yylex() to remember where it is
+ =>> and return to its caller with a "no-token-available" indication.  The
+ =>> next call of yylex( ) should recover the saved state and consequently
+ =>> retry yy_get_next_buffer( ) immediately.
+ =>
+ =>This would be a nice feature to have.  No one is working on it as far
+ =>as I know.  John Bossom (jebossom@Cognos.COM) is working on reentrant
+ =>scanners, though, which have the entire scanning state encapsulated in
+ =>a single struct.
+ =>...
+ =>The trick of
+ =>course is in getting the state reset correctly.  This is already done for
+ =>EOB_ACT_CONTINUE_SCAN (which then also advances the state machine using
+ =>yy_get_previous_state()), so you should be able to follow what it does.
+
+Well, I got it working.  I added a flag and some state in the
+yy_buffer_state structure to hold yy_bp and start_state, and some code
+in gen.c and flex.skl to test the flag and do [what I hope is] the
+right thing.  The patches are appended.  I wish I had time to do a
+cleaner job of it (and thoroughly test it -- I dunno if it'll work
+right when faced with strange buffer switching) but I'm in a bit of a
+hurry...  I did try it with both C and C++, though.  If you're
+interested, I'll clean up my test progs and send them as well.
+
+To use it, just define YY_WEDGE to be the token you want returned if
+the input stream blocks, and (optionally) YY_IS_WEDGED( ) to be a
+function returning a boolean.  If you don't define YY_IS_WEDGED, the
+default is to do "(errno==EWOULDBLOCK)".  Then, if YY_INPUT returns 0
+and YY_IS_WEDGED( ) is true, yylex( ) will return YY_WEDGE.  If
+YY_WEDGE is not defined, almost all my code gets #ifdef'd out and you
+get a regular parser.
+
+Regards,
+d.
+
+diff -c flex-2.5.4.orig/flex.skl flex-2.5.4/flex.skl
+*** flex-2.5.4.orig/flex.skl	Tue Sep 10 16:58:54 1996
+--- flex-2.5.4/flex.skl	Sun Nov 17 17:44:12 1996
+***************
+*** 111,116 ****
+--- 111,117 ----
+  #define EOB_ACT_CONTINUE_SCAN 0
+  #define EOB_ACT_END_OF_FILE 1
+  #define EOB_ACT_LAST_MATCH 2
++ #define	EOB_ACT_INPUT_BLOCKED 3
+  
+  /* The funky do-while in the following #define is used to turn the definition
+   * int a single C statement (which needs a semi-colon terminator).  This
+***************
+*** 182,187 ****
+--- 183,199 ----
+  	 */
+  	int yy_is_interactive;
+  
++ 	/*
++ 	 * Whether this input source returned EWOULDBLOCK on the last
++ 	 * read, indicating that it's not finished, but that there are no
++ 	 * data available now.  (If this is set, the scanner will load its
++ 	 * state from the yy_b_buf_p and yy_state rather than from
++ 	 * its normal sources)
++ 	 */
++ 	int yy_blocked;
++ 	char *yy_b_buf_p;
++ 	void *yy_continue_state;
++ 
+  	/* Whether we're considered to be at the beginning of a line.
+  	 * If so, '^' rules will be active on the next match, otherwise
+  	 * not.
+***************
+*** 634,639 ****
+--- 646,660 ----
+  				yy_cp = yy_c_buf_p;
+  				yy_bp = yytext_ptr + YY_MORE_ADJ;
+  				goto yy_find_action;
++ #ifdef YY_WEDGE
++ 			case EOB_ACT_INPUT_BLOCKED:
++ 				yy_current_buffer->yy_blocked = 1;
++ 				yy_current_buffer->yy_continue_state = (void *)(yy_start);
++ 				yy_current_buffer->yy_b_buf_p = yytext_ptr + YY_MORE_ADJ;
++ 				yy_c_buf_p = yytext_ptr + yy_amount_of_matched_text;
++ 				yy_hold_char = *yy_c_buf_p;
++ 				return YY_WEDGE;
++ #endif	/* defined(YY_WEDGE) */
+  			}
+  		break;
+  		}
+***************
+*** 735,740 ****
+--- 756,762 ----
+   *	EOB_ACT_LAST_MATCH -
+   *	EOB_ACT_CONTINUE_SCAN - continue scanning from current position
+   *	EOB_ACT_END_OF_FILE - end of file
++  *  EOB_ACT_INPUT_BLOCKED - YY_INPUT returned 0 and errno == EWOULDBLOCK
+   */
+  
+  %-
+***************
+*** 844,849 ****
+--- 866,880 ----
+  
+  	if ( yy_n_chars == 0 )
+  		{
++ #ifdef YY_WEDGE
++ #ifndef YY_IS_WEDGED
++ #include <sys/errno.h>
++ #define	YY_IS_WEDGED()	(errno == EWOULDBLOCK)
++ #endif	/* !defined(YY_IS_WEDGED) */
++ 		if (YY_IS_WEDGED( )) {
++ 			ret_val = EOB_ACT_INPUT_BLOCKED;
++ 		} else
++ #endif	/* defined(YY_WEDGE) */
+  		if ( number_to_move == YY_MORE_ADJ )
+  			{
+  			ret_val = EOB_ACT_END_OF_FILE;
+***************
+*** 881,886 ****
+--- 912,918 ----
+  	{
+  	register yy_state_type yy_current_state;
+  	register char *yy_cp;
++ 	char *yy_bp;
+  
+  %% code to get the start state into yy_current_state goes here
+  
+***************
+*** 1215,1220 ****
+--- 1247,1253 ----
+  %+
+  	b->yy_is_interactive = 0;
+  %*
++ 	b->yy_blocked = 0;
+  	}
+  
+  
+diff -c flex-2.5.4.orig/gen.c flex-2.5.4/gen.c
+*** flex-2.5.4.orig/gen.c	Sat May 25 20:43:44 1996
+--- flex-2.5.4/gen.c	Sun Nov 17 17:40:55 1996
+***************
+*** 750,755 ****
+--- 750,770 ----
+  
+  void gen_start_state()
+  	{
++ 	outn( "#ifdef YY_WEDGE" );
++ 	indent_puts( "if (yy_current_buffer->yy_blocked)" );
++ 	indent_up( );
++ 	indent_puts( "{" );
++ 	indent_puts( "yy_current_buffer->yy_blocked = 0;" );
++ 	indent_puts(
++ 		"yy_current_state = (yy_state_type)(yy_current_buffer->yy_continue_state);" );
++ 	indent_puts( "yy_bp = yy_current_buffer->yy_b_buf_p;" );
++ 	indent_puts( "}" );
++ 	indent_down( );
++ 	indent_puts( "else" );
++ 	indent_up( );
++ 	indent_puts( "{" );
++ 	outn( "#endif /* defined(YY_WEDGE) */" );
++ 	
+  	if ( fullspd )
+  		{
+  		if ( bol_needed )
+***************
+*** 776,781 ****
+--- 791,800 ----
+  			indent_puts( "*yy_state_ptr++ = yy_current_state;" );
+  			}
+  		}
++ 	outn( "#ifdef YY_WEDGE" );
++ 	indent_puts( "}" );
++ 	indent_down( );
++ 	outn( "#endif /* defined(YY_WEDGE) */" );
+  	}
+  
+
