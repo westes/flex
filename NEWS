@@ -282,6 +282,8 @@ Changes between release 2.5.0.2 (28Dec94) and release 2.4.7:
 	- Scanners generated using -l lex compatibility now have the symbol
 	  YY_FLEX_LEX_COMPAT #define'd.
 
+	- Improved support for MS-DOS.
+
 	- Documentation now clarifies that start conditions persist across
 	  switches to new input files or different input buffers.  If you
 	  want to e.g., return to INITIAL, you must explicitly do so.
