@@ -98,7 +98,7 @@ SUBDIRS = \
 
 # clean up before running the test suite so we dont test old builds of test code
 
-test: clean
+check-local: clean
 	NOK=;\
 	NFAIL=;\
 	for dir in $(SUBDIRS) ; do \
@@ -115,4 +115,5 @@ test: clean
 	done ; \
 	echo Results: ; \
 	echo Tests succeeded: `echo @ECHO_N@ "$$NOK@ECHO_C@"|wc -c`; \
-	echo Tests FAILED: `echo @ECHO_N@ "$$NFAIL@ECHO_C@"|wc -c` ;
+	echo Tests FAILED: `echo @ECHO_N@ "$$NFAIL@ECHO_C@"|wc -c` ; \
+	test "$$NFAIL" = ""
