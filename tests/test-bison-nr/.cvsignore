@@ -7,3 +7,4 @@ TEMPLATE
 OUTPUT
 .deps
 test-bison-nr
+scanner.h
