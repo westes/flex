@@ -114,6 +114,8 @@ MAINTAINERCLEANFILES = \
 
 
 EXTRA_DIST = \
+	flex.spec.in \
+	flex.spec \
 	.indent.pro \
 	AUTHORS \
 	COPYING \

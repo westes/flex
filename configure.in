@@ -76,6 +76,7 @@ dnl checks for functions
 AC_CHECK_DECLS(__func__)
 
 AC_CONFIG_FILES(
+flex.spec
 Makefile
 examples/Makefile
 examples/fastwc/Makefile
