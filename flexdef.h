@@ -126,6 +126,9 @@
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #endif
+#ifdef HAVE_SYS_PARAMS_H
+#include <sys/params.h>
+#endif
 
 /* Special chk[] values marking the slots taking by end-of-buffer and action
  * numbers.
