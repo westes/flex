@@ -32,7 +32,7 @@ static void append_char (char c,  void* scanner );
 
 %%
 
-.|\r|\n  { append_char (yytext_r[0],yy_globals); }
+.|\r|\n  { append_char (yytext[0],yy_globals); }
 
 %%
 

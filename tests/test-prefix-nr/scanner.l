@@ -27,12 +27,12 @@
         FOO_scan_bytes((yyconst char*)0, 0);
         FOO_scan_string((yyconst char*)0);
         FOO_switch_to_buffer((YY_BUFFER_STATE)0);
-        FOOin   = (FILE*)0;
-        FOOout  = (FILE*)0;
-        FOOleng = 0;
-        FOOlex();
-        FOOrestart((FILE*)0);
-        FOOtext = (char*)0;
+        yyin   = (FILE*)0;
+        yyout  = (FILE*)0;
+        yyleng = 0;
+        yylex();
+        yyrestart((FILE*)0);
+        yytext = (char*)0;
     }
  }
 %%
@@ -41,8 +41,8 @@
 int
 main ( int argc, char** argv )
 {
-    FOOin = stdin;
-    FOOout = stdout;
+    yyin = stdin;
+    yyout = stdout;
     FOOlex();
     printf("TEST RETURNING OK.\n");
     return 0;

@@ -1074,11 +1074,11 @@ void make_tables()
 	if ( yymore_used && ! yytext_is_array )
 		{
 		indent_puts( "YY_G(yytext_ptr) -= YY_G(yy_more_len); \\" );
-		indent_puts( "YY_G(yyleng) = (size_t) (yy_cp - YY_G(yytext_ptr)); \\" );
+		indent_puts( "yyleng = (size_t) (yy_cp - YY_G(yytext_ptr)); \\" );
 		}
 
 	else
-		indent_puts( "YY_G(yyleng) = (size_t) (yy_cp - yy_bp); \\" );
+		indent_puts( "yyleng = (size_t) (yy_cp - yy_bp); \\" );
 
 	/* Now also deal with copying yytext_ptr to yytext if needed. */
 	skelout(); /* %% [3.0] - break point in skel */
@@ -1086,9 +1086,9 @@ void make_tables()
 		{
 		if ( yymore_used )
 			indent_puts(
-				"if ( YY_G(yyleng) + YY_G(yy_more_offset) >= YYLMAX ) \\" );
+				"if ( yyleng + YY_G(yy_more_offset) >= YYLMAX ) \\" );
 		else
-			indent_puts( "if ( YY_G(yyleng) >= YYLMAX ) \\" );
+			indent_puts( "if ( yyleng >= YYLMAX ) \\" );
 
 		indent_up();
 		indent_puts(
@@ -1098,8 +1098,8 @@ void make_tables()
 		if ( yymore_used )
 			{
 			indent_puts(
-"yy_flex_strncpy( &YY_G(yytext)[YY_G(yy_more_offset)], YY_G(yytext_ptr), YY_G(yyleng) + 1 YY_CALL_LAST_ARG); \\" );
-			indent_puts( "YY_G(yyleng) += YY_G(yy_more_offset); \\" );
+"yy_flex_strncpy( &yytext[YY_G(yy_more_offset)], YY_G(yytext_ptr), yyleng + 1 YY_CALL_LAST_ARG); \\" );
+			indent_puts( "yyleng += YY_G(yy_more_offset); \\" );
 			indent_puts(
 				"YY_G(yy_prev_more_offset) = YY_G(yy_more_offset); \\" );
 			indent_puts( "YY_G(yy_more_offset) = 0; \\" );
@@ -1107,7 +1107,7 @@ void make_tables()
 		else
 			{
 			indent_puts(
-		"yy_flex_strncpy( YY_G(yytext), YY_G(yytext_ptr), YY_G(yyleng) + 1 YY_CALL_LAST_ARG); \\" );
+		"yy_flex_strncpy( yytext, YY_G(yytext_ptr), yyleng + 1 YY_CALL_LAST_ARG); \\" );
 			}
 		}
 
@@ -1287,14 +1287,14 @@ void make_tables()
 		if ( yytext_is_array )
 			{
 			indent_puts(
-	"#define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( YY_G(yytext) YY_CALL_LAST_ARG))" );
+	"#define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( yytext YY_CALL_LAST_ARG))" );
 			indent_puts( "#define YY_NEED_STRLEN" );
 			indent_puts( "#define YY_MORE_ADJ 0" );
 			indent_puts( "#define YY_RESTORE_YY_MORE_OFFSET \\" );
 			indent_up();
 			indent_puts( "{ \\" );
 			indent_puts( "YY_G(yy_more_offset) = YY_G(yy_prev_more_offset); \\" );
-			indent_puts( "YY_G(yyleng) -= YY_G(yy_more_offset); \\" );
+			indent_puts( "yyleng -= YY_G(yy_more_offset); \\" );
 			indent_puts( "}" );
 			indent_down();
 			}
@@ -1345,7 +1345,7 @@ void make_tables()
 		if ( use_read )
 			{
 			outn(
-"\tif ( (result = read( fileno(YY_G(yyin)), (char *) buf, max_size )) < 0 ) \\" );
+"\tif ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \\" );
 			outn(
 		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );" );
 			}
@@ -1358,18 +1358,18 @@ void make_tables()
 			outn( "\t\tint c = '*'; \\");
 			outn( "\t\tsize_t n; \\" );
 			outn( "\t\tfor ( n = 0; n < max_size && \\" );
-	outn( "\t\t\t     (c = getc( YY_G(yyin) )) != EOF && c != '\\n'; ++n ) \\" );
+	outn( "\t\t\t     (c = getc( yyin )) != EOF && c != '\\n'; ++n ) \\" );
 			outn( "\t\t\tbuf[n] = (char) c; \\" );
 			outn( "\t\tif ( c == '\\n' ) \\" );
 			outn( "\t\t\tbuf[n++] = (char) c; \\" );
-			outn( "\t\tif ( c == EOF && ferror( YY_G(yyin) ) ) \\" );
+			outn( "\t\tif ( c == EOF && ferror( yyin ) ) \\" );
 			outn(
 	"\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\" );
 			outn( "\t\tresult = n; \\" );
 			outn( "\t\t} \\" );
 			outn(
-	"\telse if ( ((result = fread( buf, 1, max_size, YY_G(yyin) )) == 0) \\" );
-			outn( "\t\t  && ferror( YY_G(yyin) ) ) \\" );
+	"\telse if ( ((result = fread( buf, 1, max_size, yyin )) == 0) \\" );
+			outn( "\t\t  && ferror( yyin ) ) \\" );
 			outn(
 		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );" );
 			}
@@ -1381,10 +1381,10 @@ void make_tables()
 	indent_up();
 	if ( bol_needed )
 		{
-		indent_puts( "if ( YY_G(yyleng) > 0 ) \\" );
+		indent_puts( "if ( yyleng > 0 ) \\" );
 		indent_up();
 		indent_puts( "YY_G(yy_current_buffer)->yy_at_bol = \\" );
-		indent_puts( "\t\t(YY_G(yytext)[YY_G(yyleng) - 1] == '\\n'); \\" );
+		indent_puts( "\t\t(yytext[yyleng - 1] == '\\n'); \\" );
 		indent_down();
 		}
 	indent_puts( "YY_USER_ACTION" );
@@ -1433,13 +1433,13 @@ void make_tables()
 		indent_puts( "{" );
 		indent_puts( "int yyl;" );
 		do_indent();
-		out_str( "for ( yyl = %s; yyl < YY_G(yyleng); ++yyl )\n",
+		out_str( "for ( yyl = %s; yyl < yyleng; ++yyl )\n",
 			yymore_used ? (yytext_is_array ? "yy_prev_more_offset" :
 							 "yy_more_len") : "0");
 		indent_up();
-		indent_puts( "if ( YY_G(yytext)[yyl] == '\\n' )" );
+		indent_puts( "if ( yytext[yyl] == '\\n' )" );
 		indent_up();
-		indent_puts( "++YY_G(yylineno);" );
+		indent_puts( "++yylineno;" );
 		indent_down();
 		indent_down();
 		indent_puts( "}" );
@@ -1477,7 +1477,7 @@ void make_tables()
 	"fprintf( stderr, \"--accepting rule at line %d (\\\"%s\\\")\\n\"," );
 
 			indent_puts(
-				"         yy_rule_linenum[yy_act], YY_G(yytext) );" );
+				"         yy_rule_linenum[yy_act], yytext );" );
 			}
 
 		indent_down();
@@ -1495,7 +1495,7 @@ void make_tables()
 			{
 			indent_puts(
 	"fprintf( stderr, \"--accepting default rule (\\\"%s\\\")\\n\"," );
-			indent_puts( "         YY_G(yytext) );" );
+			indent_puts( "         yytext );" );
 			}
 
 		indent_down();
@@ -1607,7 +1607,7 @@ void make_tables()
 		{ /* update yylineno inside of unput() */
 		indent_puts( "if ( c == '\\n' )" );
 		indent_up();
-		indent_puts( "--YY_G(yylineno);" );
+		indent_puts( "--yylineno;" );
 		indent_down();
 		}
 
@@ -1620,7 +1620,7 @@ void make_tables()
 			{
 			indent_puts( "if ( YY_G(yy_current_buffer)->yy_at_bol )" );
 			indent_up();
-			indent_puts( "++YY_G(yylineno);" );
+			indent_puts( "++yylineno;" );
 			indent_down();
 			}
 		}
@@ -1629,7 +1629,7 @@ void make_tables()
 		{
 		indent_puts( "if ( c == '\\n' )" );
 		indent_up();
-		indent_puts( "++YY_G(yylineno);" );
+		indent_puts( "++yylineno;" );
 		indent_down();
 		}
 

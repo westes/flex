@@ -21,22 +21,22 @@ enum yesno_t { no=0, yes=1 };
 %x DISCARD_THRU_GT
 %%
 
-    #define YY_USER_INIT yyextra_r = no;
-    #define NEED_TAG_NAME yyextra_r
+    #define YY_USER_INIT yyextra = no;
+    #define NEED_TAG_NAME yyextra
         
 
 <INITIAL>{
 "</"       { NEED_TAG_NAME= yes; yy_push_state( IN_TAG, yy_globals); return LTSLASH;}
 "<"[^[:alpha:]]  { yy_push_state(DISCARD_THRU_GT,yy_globals); }
 "<"        { NEED_TAG_NAME= yes; yy_push_state( IN_TAG, yy_globals); return  LT; }
-[^<]{1,512} { yyget_lval(yy_globals)->str = STRDUP(yytext_r); return TEXT;}
+[^<]{1,512} { yyget_lval(yy_globals)->str = STRDUP(yytext); return TEXT;}
 }
 <IN_TAG>{
 ">"  { yy_pop_state( yy_globals ); return GT; }
 [[:alpha:]][[:alnum:]]* {
         if( NEED_TAG_NAME == yes){
             NEED_TAG_NAME=no;
-            yylval_r->str = STRDUP(yytext_r);
+            yylval->str = STRDUP(yytext);
             return TAGNAME;
         }
     }

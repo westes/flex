@@ -336,12 +336,8 @@ void check_options()
 			GEN_PREFIX( "_flush_buffer" );
 			GEN_PREFIX( "_load_buffer_state" );
 			GEN_PREFIX( "_switch_to_buffer" );
-			GEN_PREFIX( "in" );
-			GEN_PREFIX( "leng" );
 			GEN_PREFIX( "lex" );
-			GEN_PREFIX( "out" );
 			GEN_PREFIX( "restart" );
-			GEN_PREFIX( "text" );
             GEN_PREFIX( "lex_init" );
             GEN_PREFIX( "lex_destroy" );
             GEN_PREFIX( "get_extra" );
@@ -363,9 +359,6 @@ void check_options()
             GEN_PREFIX( "set_lloc" );
             outn( "#endif" );
             outn( "#endif" );
-
-			if ( do_yylineno )
-				GEN_PREFIX( "lineno" );
 
             if ( do_yylineno && reentrant)
                 outn ( "#define YY_USE_LINENO 1");
@@ -1334,12 +1327,10 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 
 		else
 			{
-            outn( "#ifdef YY_REENTRANT" );
-			outn( "#define yytext_ptr YY_G(yytext)" );
-            outn( "#else" );
+            outn( "#ifndef YY_REENTRANT" );
 			outn( "extern char *yytext;" );
-			outn( "#define yytext_ptr yytext" );
             outn( "#endif" );
+			outn( "#define yytext_ptr yytext" );
 			}
 
 		if ( yyclass )

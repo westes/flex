@@ -16,18 +16,18 @@ static char* STRDUP(char* s1);
 
 %%
 
-    if ( !yyextra_r)
-        yyextra_r = 1;
+    if ( !yyextra)
+        yyextra = 1;
 
 ^[[:digit:]]+  { 
-        yylval_r->lineno = yyextra_r++;
-        yylloc_r->first_line = (int)strtol(yytext_r,NULL,10);
+        yylval->lineno = yyextra++;
+        yylloc->first_line = (int)strtol(yytext,NULL,10);
         return LINENO;
     }
 ":"  { return COLON; }
 " "  { return SPACE; }
 "="  { return EQUAL; }
-[[:alnum:]_]+ {  yylval_r->str = STRDUP(yytext_r); return IDENT;}
+[[:alnum:]_]+ {  yylval->str = STRDUP(yytext); return IDENT;}
 
 \r|\n { }
 .     { yyterminate();}

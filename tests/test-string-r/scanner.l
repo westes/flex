@@ -21,7 +21,7 @@
 [[:alpha:]]+   { printf("WORD "); fflush(stdout);}
 .              {
     fprintf(stderr,"*** Error: Unrecognized character '%c' while scanning.\n",
-         yytext_r[0]);
+         yytext[0]);
     yyterminate();
     }
 

@@ -114,13 +114,14 @@
 #define YY_CALL_LAST_ARG  , yy_globals
 #define YY_CALL_ONLY_ARG   yy_globals
 
-/* For convenience. */
-#define yyin_r YY_G(yyin)
-#define yyout_r YY_G(yyout)
-#define yyextra_r YY_G(yyextra)
-#define yyleng_r YY_G(yyleng)
-#define yytext_r YY_G(yytext)
-#define yylineno_r YY_G(yylineno)
+/* For convenience, these vars (plus the bison vars far below)
+   are macros in the reentrant scanner. */
+#define yyin YY_G(yyin_r)
+#define yyout YY_G(yyout_r)
+#define yyextra YY_G(yyextra_r)
+#define yyleng YY_G(yyleng_r)
+#define yytext YY_G(yytext_r)
+#define yylineno YY_G(yylineno_r)
 
 int yylex_init YY_PROTO((void** scanner));
 int yylex_destroy YY_PROTO((void* scanner));
@@ -153,7 +154,7 @@ int yylex_destroy YY_PROTO((void* scanner));
 #define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
 
 /* Special action meaning "start processing a new file". */
-#define YY_NEW_FILE yyrestart( YY_G(yyin) YY_CALL_LAST_ARG )
+#define YY_NEW_FILE yyrestart( yyin YY_CALL_LAST_ARG )
 
 #define YY_END_OF_BUFFER_CHAR 0
 
@@ -339,7 +340,7 @@ static void yy_flex_free YY_PROTO(( void * YY_LAST_ARG ));
 	{ \
 	if ( ! YY_G(yy_current_buffer) ) \
 		YY_G(yy_current_buffer) =    \
-            yy_create_buffer( YY_G(yyin), YY_BUF_SIZE YY_CALL_LAST_ARG); \
+            yy_create_buffer( yyin, YY_BUF_SIZE YY_CALL_LAST_ARG); \
 	YY_G(yy_current_buffer)->yy_is_interactive = is_interactive; \
 	}
 
@@ -347,7 +348,7 @@ static void yy_flex_free YY_PROTO(( void * YY_LAST_ARG ));
 	{ \
 	if ( ! YY_G(yy_current_buffer) ) \
 		YY_G(yy_current_buffer) =    \
-            yy_create_buffer( YY_G(yyin), YY_BUF_SIZE YY_CALL_LAST_ARG); \
+            yy_create_buffer( yyin, YY_BUF_SIZE YY_CALL_LAST_ARG); \
 	YY_G(yy_current_buffer)->yy_at_bol = at_bol; \
 	}
 
@@ -392,14 +393,14 @@ struct yy_globals_t
     {
 
     /* User-defined. Not touched by flex. */
-    YY_EXTRA_TYPE yyextra;
+    YY_EXTRA_TYPE yyextra_r;
 
     /* The rest are the same as the globals declared in the non-reentrant scanner. */
-    FILE *yyin, *yyout;
+    FILE *yyin_r, *yyout_r;
     YY_BUFFER_STATE yy_current_buffer;
     char yy_hold_char;
     int yy_n_chars;
-    int yyleng;
+    int yyleng_r;
     char *yy_c_buf_p;
     int yy_init;
     int yy_start;
@@ -410,23 +411,23 @@ struct yy_globals_t
     yy_state_type yy_last_accepting_state;
     char* yy_last_accepting_cpos;
 
-    int yylineno;
+    int yylineno_r;
 
 #ifdef YY_TEXT_IS_ARRAY
-    char yytext[YYLMAX];
+    char yytext_r[YYLMAX];
     char *yytext_ptr;
     int yy_more_offset;
     int yy_prev_more_offset;
 #else
-    char *yytext;
+    char *yytext_r;
     int yy_more_flag;
     int yy_more_len;
 #endif
 
 #ifdef YY_REENTRANT_BISON_PURE
-    YYSTYPE * yylval;
+    YYSTYPE * yylval_r;
 #ifdef YYLTYPE
-    YYLTYPE * yylloc;
+    YYLTYPE * yylloc_r;
 #endif
 #endif
 
@@ -439,9 +440,9 @@ static int yy_init_globals YY_PROTO(( void * ));
 /* This must go here because YYSTYPE and YYLSTYPE are included
  * from bison output in section 1.*/
 #ifdef YY_REENTRANT_BISON_PURE
-#    define yylval_r YY_G(yylval)
+#    define yylval YY_G(yylval_r)
 #  ifdef YYLTYPE
-#    define yylloc_r YY_G(yylloc)
+#    define yylloc YY_G(yylloc_r)
 #  endif
 #endif
 
@@ -595,7 +596,7 @@ YY_MALLOC_DECL
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
-#define ECHO (void) fwrite( YY_G(yytext), YY_G(yyleng), 1, YY_G(yyout) )
+#define ECHO (void) fwrite( yytext, yyleng, 1, yyout )
 %+ C++ definition
 #define ECHO LexerOutput( yytext, yyleng )
 %*
@@ -701,9 +702,9 @@ YY_DECL
 %% [7.0] user's declarations go here
 
 #ifdef YY_REENTRANT_BISON_PURE
-    YY_G(yylval) = yylvalp;
+    yylval = yylvalp;
 #ifdef YYLTYPE
-    YY_G(yylloc) = yyllocp;
+    yylloc = yyllocp;
 #endif
 #endif
 
@@ -718,23 +719,23 @@ YY_DECL
 		if ( ! YY_G(yy_start) )
 			YY_G(yy_start) = 1;	/* first start state */
 
-		if ( ! YY_G(yyin) )
+		if ( ! yyin )
 %-
-			YY_G(yyin) = stdin;
+			yyin = stdin;
 %+
 			yyin = & FLEX_STD cin;
 %*
 
-		if ( ! YY_G(yyout) )
+		if ( ! yyout )
 %-
-			YY_G(yyout) = stdout;
+			yyout = stdout;
 %+
 			yyout = & FLEX_STD cout;
 %*
 
 		if ( ! YY_G(yy_current_buffer) )
 			YY_G(yy_current_buffer) =
-				yy_create_buffer( YY_G(yyin), YY_BUF_SIZE YY_CALL_LAST_ARG);
+				yy_create_buffer( yyin, YY_BUF_SIZE YY_CALL_LAST_ARG);
 
 		yy_load_buffer_state( YY_CALL_ONLY_ARG );
 		}
@@ -790,7 +791,7 @@ do_action:	/* This label is used only to access EOF actions. */
 			 * back-up) that will match for the new input source.
 			 */
 			YY_G(yy_n_chars) = YY_G(yy_current_buffer)->yy_n_chars;
-			YY_G(yy_current_buffer)->yy_input_file = YY_G(yyin);
+			YY_G(yy_current_buffer)->yy_input_file = yyin;
 			YY_G(yy_current_buffer)->yy_buffer_status = YY_BUFFER_NORMAL;
 			}
 
@@ -1109,7 +1110,7 @@ int yyFlexLexer::yy_get_next_buffer()
 		if ( number_to_move == YY_MORE_ADJ )
 			{
 			ret_val = EOB_ACT_END_OF_FILE;
-			yyrestart( YY_G(yyin)  YY_CALL_LAST_ARG);
+			yyrestart( yyin  YY_CALL_LAST_ARG);
 			}
 
 		else
@@ -1288,7 +1289,7 @@ int yyFlexLexer::yyinput()
 					 */
 
 					/* Reset buffer status. */
-					yyrestart( YY_G(yyin) YY_CALL_LAST_ARG);
+					yyrestart( yyin YY_CALL_LAST_ARG);
 
 					/* fall through */
 
@@ -1339,7 +1340,7 @@ void yyFlexLexer::yyrestart( FLEX_STD istream* input_file )
 	{
 	if ( ! YY_G(yy_current_buffer) )
 		YY_G(yy_current_buffer) =
-            yy_create_buffer( YY_G(yyin), YY_BUF_SIZE YY_CALL_LAST_ARG);
+            yy_create_buffer( yyin, YY_BUF_SIZE YY_CALL_LAST_ARG);
 
 	yy_init_buffer( YY_G(yy_current_buffer), input_file YY_CALL_LAST_ARG);
 	yy_load_buffer_state( YY_CALL_ONLY_ARG );
@@ -1394,7 +1395,7 @@ void yyFlexLexer::yy_load_buffer_state()
 	{
 	YY_G(yy_n_chars) = YY_G(yy_current_buffer)->yy_n_chars;
 	yytext_ptr = YY_G(yy_c_buf_p) = YY_G(yy_current_buffer)->yy_buf_pos;
-	YY_G(yyin) = YY_G(yy_current_buffer)->yy_input_file;
+	yyin = YY_G(yy_current_buffer)->yy_input_file;
 	YY_G(yy_hold_char) = *YY_G(yy_c_buf_p);
 	}
 
@@ -1753,11 +1754,11 @@ void yyFlexLexer::LexerError( yyconst char msg[] )
 	do \
 		{ \
 		/* Undo effects of setting up yytext. */ \
-		YY_G(yytext)[YY_G(yyleng)] = YY_G(yy_hold_char); \
-		YY_G(yy_c_buf_p) = YY_G(yytext) + n; \
+		yytext[yyleng] = YY_G(yy_hold_char); \
+		YY_G(yy_c_buf_p) = yytext + n; \
 		YY_G(yy_hold_char) = *YY_G(yy_c_buf_p); \
 		*YY_G(yy_c_buf_p) = '\0'; \
-		YY_G(yyleng) = n; \
+		yyleng = n; \
 		} \
 	while ( 0 )
 
@@ -1775,7 +1776,7 @@ YY_EXTRA_TYPE yyget_extra( YY_ONLY_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    return YY_G(yyextra);
+    return yyextra;
 }
 #endif /* !YY_NO_GET_EXTRA */
 
@@ -1787,7 +1788,7 @@ int yyget_lineno( YY_ONLY_ARG )
     YY_DECL_LAST_ARG
 #  endif
 {
-    return YY_G(yylineno);
+    return yylineno;
 }
 #endif /* !YY_NO_GET_LINENO */
 
@@ -1799,7 +1800,7 @@ FILE *yyget_in( YY_ONLY_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    return YY_G(yyin);
+    return yyin;
 }
 #endif /* !YY_NO_GET_IN */
 
@@ -1811,7 +1812,7 @@ FILE *yyget_out( YY_ONLY_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    return YY_G(yyout);
+    return yyout;
 }
 #endif /* !YY_NO_GET_OUT */
 
@@ -1823,7 +1824,7 @@ int yyget_leng( YY_ONLY_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    return YY_G(yyleng);
+    return yyleng;
 }
 #endif /* !YY_NO_GET_LENG */
 
@@ -1835,7 +1836,7 @@ char *yyget_text( YY_ONLY_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    return YY_G(yytext);
+    return yytext;
 }
 #endif /* !YY_NO_GET_TEXT */
 
@@ -1848,7 +1849,7 @@ void yyset_extra( user_defined YY_LAST_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    YY_G(yyextra) = user_defined ;
+    yyextra = user_defined ;
 }
 #endif /* !YY_NO_SET_EXTRA */
 
@@ -1861,7 +1862,7 @@ void yyset_lineno( line_number YY_LAST_ARG )
     YY_DECL_LAST_ARG
 #  endif
 {
-    YY_G(yylineno) = line_number;
+    yylineno = line_number;
 }
 #endif /* !YY_NO_SET_LINENO */
 
@@ -1875,7 +1876,7 @@ void yyset_in( in_str YY_LAST_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    YY_G(yyin) = in_str ;
+    yyin = in_str ;
 }
 #endif /* !YY_NO_SET_IN */
 
@@ -1888,7 +1889,7 @@ void yyset_out( out_str YY_LAST_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    YY_G(yyout) = out_str ;
+    yyout = out_str ;
 }
 #endif /* !YY_NO_SET_OUT */
 
@@ -1903,7 +1904,7 @@ YYSTYPE * yyget_lval( YY_ONLY_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    return YY_G(yylval);
+    return yylval;
 }
 #endif /* !YY_NO_GET_LVAL */
 
@@ -1916,7 +1917,7 @@ void yyset_lval( yylvalp YY_LAST_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    YY_G(yylval) = yylvalp;
+    yylval = yylvalp;
 }
 #endif /* !YY_NO_SET_LVAL */
 
@@ -1929,7 +1930,7 @@ YYLTYPE *yyget_lloc( YY_ONLY_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    return YY_G(yylloc);
+    return yylloc;
 }
 #endif /* !YY_NO_GET_LLOC */
 
@@ -1942,7 +1943,7 @@ void yyset_lloc( yyllocp YY_LAST_ARG )
     YY_DECL_LAST_ARG
 #endif
 {
-    YY_G(yylloc) = yyllocp;
+    yylloc = yyllocp;
 }
 #endif /* !YY_NO_SET_LLOC */
 
@@ -1962,7 +1963,7 @@ static int yy_init_globals( yy_globals )
 
   /* We do not touch yylineno unless the option is enabled. */
 #ifdef YY_USE_LINENO
-    YY_G(yylineno) =  1;
+    yylineno =  1;
 #endif
     YY_G(yy_current_buffer) = 0;
     YY_G(yy_c_buf_p) = (char *) 0;
@@ -1974,11 +1975,11 @@ static int yy_init_globals( yy_globals )
 
 /* Defined in main.c */
 #ifdef YY_STDINIT
-    YY_G(yyin) = stdin;
-    YY_G(yyout) = stdout;
+    yyin = stdin;
+    yyout = stdout;
 #else
-    YY_G(yyin) = (FILE *) 0;
-    YY_G(yyout) = (FILE *) 0;
+    yyin = (FILE *) 0;
+    yyout = (FILE *) 0;
 #endif
     return 0;
     }

@@ -27,10 +27,10 @@
      /* recurse */
     void * scanner;
     FILE * fp;
-    yytext_r[yyleng_r-1]='\0';
-    if((fp=fopen(yytext_r,"r"))==NULL) {
+    yytext[yyleng-1]='\0';
+    if((fp=fopen(yytext,"r"))==NULL) {
         fprintf(stderr,"*** Error: Could not open include file \"%s\".\n",
-            yytext_r);
+            yytext);
         yyterminate();
     }
     yylex_init(&scanner);
@@ -42,12 +42,12 @@
     BEGIN(0);
     }
 .|\n  {
-    fprintf(stderr,"Invalid input \"%s\".\n", yytext_r);
+    fprintf(stderr,"Invalid input \"%s\".\n", yytext);
     yyterminate();
    }
 }
 
-<<EOF>> { fclose(yyin_r); yyterminate();}
+<<EOF>> { fclose(yyin); yyterminate();}
 
 %%
 

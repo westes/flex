@@ -2105,9 +2105,9 @@ option, but with minor API changes for
 compatibility. In particular, the declaration of
 @code{yylex}
 is modified, and support for
-@code{yylval_r}
+@code{yylval}
 and
-@code{yylloc_r}
+@code{yylloc}
 is incorporated. @xref{bison pure}.
 
 The options @samp{--reentrant} and @samp{--reentrant-bison} do not affect the performance of
@@ -2348,7 +2348,7 @@ is performed in @code{yylex_init} at runtime.
 directs @code{flex} to generate a scanner
 that maintains the number of the current line read from its input in the
 global variable @code{yylineno}.  This option is implied by @code{%option
-lex-compat}.  In a reentrant C scanner, the macro @code{yylineno_r} is
+lex-compat}.  In a reentrant C scanner, the macro @code{yylineno} is
 accessible regardless of the value of @code{%option yylineno}, however, its
 value is not modified by @code{flex} unless @code{%option yylineno} is enabled.
 
@@ -3048,9 +3048,9 @@ another instance of itself.
     "eval(".+")"  {  
                       void * scanner;
                       yylex_init( &scanner );
-                      yytext_r[yyleng_r-1] = ' '; 
+                      yytext[yyleng-1] = ' '; 
 
-                      yyscan_string( yytext_r + 5, scanner );
+                      yyscan_string( yytext + 5, scanner );
                       yylex( scanner );
 
                       yylex_destroy( scanner );
@@ -3073,7 +3073,7 @@ scanners. Here is a quick overview of the API:
 All functions take one additional argument: @code{yy_globals}
 
 @item
-All global variables are replaced by their @samp{_r} equivalents.
+All global variables are replaced by their macro equivalents.
 
 @item
 @code{yylex_init} and @code{yylex_destroy} must be called before and
@@ -3084,7 +3084,7 @@ Accessor methods (get/set functions) provide access to common
 @code{flex} variables.
 
 @item 
-User-specific data can be stored in @code{yyextra_r}.
+User-specific data can be stored in @code{yyextra}.
 @end itemize
 
 @node reentrant example, reentrant detail, reentrant overview, reentrant
@@ -3101,7 +3101,7 @@ First, an example of a reentrant scanner:
     "//"                 yy_push_state( COMMENT, yy_globals);
     .|\n
     <COMMENT>\n          yy_pop_state( yy_globals );
-    <COMMENT>[^\n]+      fprintf( yyout_r, "%s\n", yytext_r);
+    <COMMENT>[^\n]+      fprintf( yyout, "%s\n", yytext);
     %%
     int main ( int argc, char * argv[] ) 
     {
@@ -3133,8 +3133,7 @@ Here are the things you need to do or know to use the reentrant C API of
 @node specify reentrant, extra reentrant argument, reentrant detail, reentrant detail
 @subsection Declaring a Scanner as Reentrant
 
- %option reentrant
-must be specified.
+ %option reentrant (--reentrant) must be specified.
 
 Notice that @code{%option reentrant} is specified in the above example
 (@pxref{reentrant example}. Had this option not been specified,
@@ -3172,39 +3171,33 @@ see @ref{reentrant functions}. Note that preprocessor macros, such as
 additional argument.
 
 @node global replacement, init and destroy and destroy, extra reentrant argument, reentrant detail
-@subsection Global Variables Replaced
+@subsection Global Variables Replaced by Macros
 
-All global variables are replaced by their @code{_r} equivalents.
+All global variables are replaced by macro equivalents.
 
-Notice in the above example that @code{yyout} and @code{yytext} are
-replaced by @code{yyout_r} and @code{yytext_r}.  These are macros that
-will expand to their equivalent lvalue.  All of the familiar @code{flex}
-globals have been replaced by their @code{_r} equivalents. Wherever you
-would normally use @code{yytext} in actions, you must use @code{yytext_r}
-instead. This rule applies to all @code{flex} variables. The following
-is an example that uses the @code{_r} macros:
+Note that in the above example, @code{yyout} and @code{yytext} are
+not plain variables. These are macros that will expand to their equivalent lvalue.
+All of the familiar @code{flex} globals have been replaced by their macro
+equivalents. In particular, @code{yytext}, @code{yyleng}, @code{yylineno},
+@code{yyin}, @code{yyout}, @code{yyextra}, @code{yylval}, and @code{yylloc}
+are macros. You may safely use these macros in actions as if they were plain
+variables. We only tell you this so you don't expect to link to these variables
+externally. Currently, each macro expands to a member of an internal struct, e.g.,
 
 @example
 @verbatim
-    %%
-        #define SWAP(a,b) do{int t=a; a=b; b=t;}while(0)
-    "reverse me"  {
-            int i;
-            for( i =0; i  yyleng_r/2 ; i++ )
-                SWAP( yytext_r[i], yytext_r[yyleng_r-i-1] );
-            fprintf( yyout_r, "%s", yytext_r );
-           }
+#define yytext (((struct yy_globals_t*)yy_globals)->yytext_r)
 @end verbatim
 @end example
 
 One important thing to remember about
-@code{yytext_r}
+@code{yytext}
 and friends is that
-@code{yytext_r}
+@code{yytext}
 is not a global variable in a reentrant
 scanner, you can not access it directly from outside an action or from
-other functions. You must use the accessor method 
-@code{yyget_text}
+other functions. You must use an accessor method, e.g., 
+@code{yyget_text}, 
 to accomplish this. (See below).
 
 @node init and destroy and destroy, accessor methods, global replacement, reentrant detail
@@ -3248,7 +3241,7 @@ Accessor methods (get/set functions) provide access to common
 Many scanners that you build will be part of a larger project. Portions
 of your project will need access to @code{flex} values, such as
 @code{yytext}.  In a non-reentrant scanner, these values are global, so
-there is no problem. However, in a reentrant scanner, there are no
+there is no problem accessing them. However, in a reentrant scanner, there are no
 global @code{flex} values. You can not access them directly.  Instead,
 you must access @code{flex} values using accessor methods (get/set
 functions). Each accessor method is named @code{yyget_NAME} or
@@ -3278,7 +3271,7 @@ The above code may be called from within an action like this:
 @node extra data,  , accessor methods, reentrant detail
 @subsection Extra Data
 
-User-specific data can be stored in @code{yyextra_r}.
+User-specific data can be stored in @code{yyextra}.
 
 In a reentrant scanner, it is unwise to use global variables to
 communicate with or maintain state between different pieces of your program.
@@ -3294,7 +3287,7 @@ This data is accessible through the accessor methods
 and
 @code{yyset_extra}
 from outside the scanner, and through the shortcut macro
-@code{yyextra_r}
+@code{yyextra}
 from within the scanner itself. They are defined as follows:
 
 @example
@@ -3306,7 +3299,7 @@ from within the scanner itself. They are defined as follows:
 @end example
 
 By default, @code{YY_EXTRA_TYPE} is defined as type @code{void *}.  You
-will have to cast @code{yyextra_r} and the return value from
+will have to cast @code{yyextra} and the return value from
 @code{yyget_extra} to the appropriate value each time you access the
 extra data.  To avoid casting, you may override the default type by
 defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
@@ -3322,8 +3315,8 @@ defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
     %option reentrant
     %%
           
-    __filesize__     printf( "%ld", yyextra_r->st_size  );
-    __lastmod__      printf( "%ld", yyextra_r->st_mtime );
+    __filesize__     printf( "%ld", yyextra->st_size  );
+    __lastmod__      printf( "%ld", yyextra->st_mtime );
     %%
     void scan_file( char* filename )
     {
@@ -3351,17 +3344,17 @@ half of the @code{flex} and @code{bison} pair.  We do not discuss
 @code{bison} in any detail.  For more information about generating pure
 @code{bison} parsers, see @ref{Top, , , bison, The GNU Bison Manual} A
 @code{bison}-compatible scanner is generated by declaring @samp{%option
-reentrant-bison} or by supplying @samp{-Rb} when invoking @code{flex}
+reentrant-bison} or by supplying @samp{--reentran-bison} when invoking @code{flex}
 from the command line.  This instructs @code{flex} that the macros
-@code{yylval_r} and @code{yylloc_r} may be used. The data types for
-@code{yylval_r} and @code{yylloc_r}, (@code{YYSTYPE} and @code{YYLTYPE},
+@code{yylval} and @code{yylloc} may be used. The data types for
+@code{yylval} and @code{yylloc}, (@code{YYSTYPE} and @code{YYLTYPE},
 are typically defined in a header file, included in section 1 of the
 @code{flex} input file.  @code{%option reentrant-bison} implies
 @code{%option reentrant}.  If @code{%option reentrant-bison} is
 specified, @code{flex} provides support for the functions
 @code{yyget_lval}, @code{yyset_lval}, @code{yyget_lloc}, and
 @code{yyset_lloc}, defined below, and the corresponding macros
-@code{yylval_r} and @code{yylloc_r}, for use within actions.
+@code{yylval} and @code{yylloc}, for use within actions.
 
 @example
 @verbatim
@@ -3381,7 +3374,7 @@ Accordingly, the declaration of yylex becomes one of the following:
 @end verbatim
 @end example
 
-Note that the macros @code{yylval_r} and @code{yylloc_r} evaluate to
+Note that the macros @code{yylval} and @code{yylloc} evaluate to
 pointers.  Support for @code{yylloc} is optional in @code{bison}, so it
 is optional in @code{flex} as well. This support is automatically
 handled by @code{flex}.  Specifically, support for @code{yyloc} is only
@@ -3399,17 +3392,17 @@ scanner that is @code{bison}-compatible.
     %option reentrant-bison
     %
    
-    [[:digit:]]+  { yylval_r->num = atoi(yytext_r);   return NUMBER;}
-    [[:alnum:]]+  { yylval_r->str = strdup(yytext_r); return STRING;}
-    "="|";"       { return yytext_r[0];}
+    [[:digit:]]+  { yylval->num = atoi(yytext);   return NUMBER;}
+    [[:alnum:]]+  { yylval->str = strdup(yytext); return STRING;}
+    "="|";"       { return yytext[0];}
     .  {}
     %
-@end vernbatim
+@end verbatim
 @end example
 
 As you can see, there really is no magic here. We just use
-@code{yylval_r} as we would any other variable. The data type of
-@code{yylval_r} is generated by @code{bison}, and included in the file
+@code{yylval} as we would any other variable. The data type of
+@code{yylval} is generated by @code{bison}, and included in the file
 @file{y.tab.h}.  Here is the corresponding @code{bison} parser:
 
 @example
@@ -3424,7 +3417,7 @@ As you can see, there really is no magic here. We just use
     %union {
         int num;
         char* str;
-   }
+    }
     %token <str> STRING
     %token <num> NUMBER 
     %%
@@ -3439,7 +3432,7 @@ As you can see, there really is no magic here. We just use
 @node reentrant functions,  , bison pure, reentrant
 @section FUNCTIONS AND MACROS AVAILABLE IN REENTRANT C SCANNERS
 
-The ffollowing Functions are available in a reentrant scanner:
+The following Functions are available in a reentrant scanner:
 
 @example
 @verbatim
@@ -3456,29 +3449,29 @@ The ffollowing Functions are available in a reentrant scanner:
 @end verbatim
 @end example
 
-There are no ``set'' functions for yytext_r and yyleng_r. This is intentional.
+There are no ``set'' functions for yytext and yyleng. This is intentional.
 
 The following Macro shortcuts are available in actions in a reentrant
 scanner:
 
 @example
 @verbatim
-    yytext_r
-    yyleng_r
-    yyin_r
-    yyout_r
-    yylineno_r
-    yyextra_r
+    yytext
+    yyleng
+    yyin
+    yyout
+    yylineno
+    yyextra
 @end verbatim
 @end example
 
-In a reentrant C scanner, support for yylineno_r is always present
-(i.e., you may access yylineno_r), but the value is never modified by
+In a reentrant C scanner, support for yylineno is always present
+(i.e., you may access yylineno), but the value is never modified by
 @code{flex} unless @code{%option yylineno} is enabled. This is to allow
 the user to maintain the line count independently of @code{flex}.
 
 The following functions and macros are made available when @code{%option
-reentrant-bison} (@samp{-Rb}) is specified:
+reentrant-bison} (@samp{--reentrant-bison}) is specified:
 
 @example
 @verbatim
@@ -3486,8 +3479,8 @@ reentrant-bison} (@samp{-Rb}) is specified:
     YYLTYPE *yyget_lloc ( void * scanner );
     void yyset_lval ( YYSTYPE * yylvalp , void * scanner );
     void yyset_lloc ( YYLTYPE * yyllocp , void * scanner );
-    yylval_r
-    yylloc_r
+    yylval
+    yylloc
 @end verbatim
 @end example
 

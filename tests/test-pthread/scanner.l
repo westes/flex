@@ -38,18 +38,18 @@ static int process_text(char* s, void* scanner);
     #define NUMBER 200
     #define WORD   201
 
-<INITIAL>[[:digit:]]+ { BEGIN(STATE_1); process_text(yytext_r,yy_globals); return NUMBER; }
-<INITIAL>[[:alpha:]]+ { BEGIN(STATE_2); process_text(yytext_r,yy_globals); return WORD; }
+<INITIAL>[[:digit:]]+ { BEGIN(STATE_1); process_text(yytext,yy_globals); return NUMBER; }
+<INITIAL>[[:alpha:]]+ { BEGIN(STATE_2); process_text(yytext,yy_globals); return WORD; }
 
-<STATE_1>[[:alpha:]]+ { BEGIN(0); process_text(yytext_r,yy_globals); return WORD; }
-<STATE_1>[[:digit:]]+ { BEGIN(0); process_text(yytext_r,yy_globals); return NUMBER; }
+<STATE_1>[[:alpha:]]+ { BEGIN(0); process_text(yytext,yy_globals); return WORD; }
+<STATE_1>[[:digit:]]+ { BEGIN(0); process_text(yytext,yy_globals); return NUMBER; }
 
-<STATE_2>[[:alpha:]]+ { BEGIN(0); process_text(yytext_r,yy_globals); return WORD; }
-<STATE_2>[[:digit:]]+ { BEGIN(0); process_text(yytext_r,yy_globals); return NUMBER; }
+<STATE_2>[[:alpha:]]+ { BEGIN(0); process_text(yytext,yy_globals); return WORD; }
+<STATE_2>[[:digit:]]+ { BEGIN(0); process_text(yytext,yy_globals); return NUMBER; }
 
-<INITIAL,STATE_1,STATE_2>" "|\t|\r|\n { process_text(yytext_r,yy_globals); }
+<INITIAL,STATE_1,STATE_2>" "|\t|\r|\n { process_text(yytext,yy_globals); }
 <INITIAL,STATE_1,STATE_2>[^[:alnum:][:space:]\t\r\n] {
-        /*fprintf(stderr,"*** Error: bad input char '%c'.\n", yytext_r[0]); */
+        /*fprintf(stderr,"*** Error: bad input char '%c'.\n", yytext[0]); */
         yyterminate();
     }
 <INITIAL,STATE_1,STATE_2>[[:space:]\r\n]+  { }
