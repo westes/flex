@@ -839,6 +839,9 @@ extern void cshell PROTO((Char [], int, int));
 /* Finish up a block of data declarations. */
 extern void dataend PROTO((void));
 
+/* Flush generated data statements. */
+extern void dataflush PROTO((void));
+
 /* Report an error message and terminate. */
 extern void flexerror PROTO((const char[]));
 
