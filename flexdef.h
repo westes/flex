@@ -91,13 +91,15 @@ char *memset();
 #endif
 
 #ifdef __STDC__
-#ifndef DONT_HAVE_STDLIB_H
-#include <stdlib.h>
-#else
+
+#ifdef __GNUC__
 void *malloc( unsigned );
 void free( void* );
-#endif
 #else
+#include <stdlib.h>
+#endif
+
+#else	/* ! __STDC__ */
 char *malloc(), *realloc();
 #endif
 
@@ -524,7 +526,13 @@ extern int num_xlations;
  * scxclu - true if start condition is exclusive
  * sceof - true if start condition has EOF rule
  * scname - start condition name
- * actvsc - stack of active start conditions for the current rule
+ * actvsc - stack of active start conditions for the current rule;
+ *          a negative entry means that the start condition is *not*
+ *          active for the current rule.  Start conditions may appear
+ *          multiple times on the stack; the entry for it closest
+ *          to the top of the stack (i.e., actvsc[actvp]) is the
+ *          one to use.  Others are present from "<sc>{" scoping
+ *          constructs.
  */
 
 extern int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof, *actvsc;
@@ -830,6 +838,7 @@ extern void cclinstal PROTO ((Char [], int));
 extern int ccllookup PROTO((Char []));
 
 extern void ndinstal PROTO((char[], Char[]));	/* install a name definition */
+extern void scextend PROTO(());		/* increase maximum number of SC's */
 extern void scinstal PROTO((char[], int));	/* make a start condition */
 
 /* lookup the number associated with a start condition */

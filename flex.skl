@@ -10,11 +10,11 @@
 
 #ifdef __STDC__
 
-#ifndef DONT_HAVE_STDLIB_H
-#include <stdlib.h>
-#else
+#ifdef __GNUC__
 void *malloc( unsigned );
 void free( void* );
+#else
+#include <stdlib.h>
 #endif
 
 #define YY_USE_PROTOS
