@@ -141,22 +141,27 @@ void genctbl()
 
 	/* We want the transition to be represented as the offset to the
 	 * next state, not the actual state number, which is what it currently
-	 * is.  The offset is base[nxt[i]] - base[chk[i]].  That's just the
-	 * difference between the starting points of the two involved states
-	 * (to - from).
+	 * is.  The offset is base[nxt[i]] - (base of current state)].  That's
+	 * just the difference between the starting points of the two involved
+	 * states (to - from).
 	 *
 	 * First, though, we need to find some way to put in our end-of-buffer
 	 * flags and states.  We do this by making a state with absolutely no
 	 * transitions.  We put it at the end of the table.
 	 */
 
-	/* At this point, we're guaranteed that there's enough room in nxt[]
-	 * and chk[] to hold tblend + numecs entries.  We need just two slots.
-	 * One for the action and one for the end-of-buffer transition.  We
-	 * now *assume* that we're guaranteed the only character we'll try to
-	 * index this nxt/chk pair with is EOB, i.e., 0, so we don't have to
-	 * make sure there's room for jam entries for other characters.
+	/* We need to have room in nxt/chk for two more slots: One for the
+	 * action and one for the end-of-buffer transition.  We now *assume*
+	 * that we're guaranteed the only character we'll try to index this
+	 * nxt/chk pair with is EOB, i.e., 0, so we don't have to make sure
+	 * there's room for jam entries for other characters.
 	 */
+
+	while ( tblend + 2 >= current_max_xpairs )
+		expand_nxt_chk();
+
+	while ( lastdfa + 1 >= current_max_dfas )
+		increase_max_dfas();
 
 	base[lastdfa + 1] = tblend + 2;
 	nxt[tblend + 1] = end_of_buffer_action;
@@ -246,8 +251,6 @@ void genecs()
 
 	if ( trace )
 		{
-		char *readable_form();
-
 		fputs( "\n\nEquivalence Classes:\n\n", stderr );
 
 		numrows = csize / 8;
@@ -445,7 +448,7 @@ char *char_map;
 	if ( usemecs )
 		{
 		/* We've arrange it so that templates are never chained
-		 * to one another.  This means we can afford make a
+		 * to one another.  This means we can afford to make a
 		 * very simple test to see if we need to convert to
 		 * yy_c's meta-equivalence class without worrying
 		 * about erroneously looking up the meta-equivalence
@@ -913,7 +916,7 @@ void gentabs()
 
 	total_states = lastdfa + numtemps;
 
-	printf( total_states > MAX_SHORT ? C_long_decl : C_short_decl,
+	printf( total_states >= MAX_SHORT ? C_long_decl : C_short_decl,
 		"yy_base", total_states + 1 );
 
 	for ( i = 1; i <= lastdfa; ++i )
@@ -947,7 +950,7 @@ void gentabs()
 
 	dataend();
 
-	printf( tblend > MAX_SHORT ? C_long_decl : C_short_decl,
+	printf( total_states >= MAX_SHORT ? C_long_decl : C_short_decl,
 		"yy_def", total_states + 1 );
 
 	for ( i = 1; i <= total_states; ++i )
@@ -955,7 +958,7 @@ void gentabs()
 
 	dataend();
 
-	printf( lastdfa > MAX_SHORT ? C_long_decl : C_short_decl,
+	printf( tblend >= MAX_SHORT ? C_long_decl : C_short_decl,
 		"yy_nxt", tblend + 1 );
 
 	for ( i = 1; i <= tblend; ++i )
@@ -968,7 +971,7 @@ void gentabs()
 
 	dataend();
 
-	printf( lastdfa > MAX_SHORT ? C_long_decl : C_short_decl,
+	printf( tblend >= MAX_SHORT ? C_long_decl : C_short_decl,
 		"yy_chk", tblend + 1 );
 
 	for ( i = 1; i <= tblend; ++i )
@@ -1058,7 +1061,7 @@ void make_tables()
 		 */
 		int total_table_size = tblend + numecs + 1;
 		char *trans_offset_type =
-		total_table_size > MAX_SHORT ? "long" : "short";
+		total_table_size >= MAX_SHORT ? "long" : "short";
 
 		set_indent( 0 );
 		indent_puts( "struct yy_trans_info" );
@@ -1092,7 +1095,11 @@ void make_tables()
 	else
 		gentabs();
 
-	if ( num_backtracking > 0 )
+	/* Definitions for backtracking.  We don't need them if REJECT
+	 * is being used because then we use an alternative backtracking
+	 * technique instead.
+	 */
+	if ( num_backtracking > 0 && ! reject )
 		{
 		indent_puts( "static yy_state_type yy_last_accepting_state;" );
 		indent_puts( "static YY_CHAR *yy_last_accepting_cpos;\n" );
@@ -1105,14 +1112,7 @@ void make_tables()
 		for ( i = 1; i <= lastdfa; ++i )
 			{
 			if ( fullspd )
-				{
-				if ( nultrans )
-					printf( "    &yy_transition[%d],\n",
-						base[i] );
-				else
-					printf( "    0,\n" );
-				}
-
+				printf( "    &yy_transition[%d],\n", base[i] );
 			else
 				mkdata( nultrans[i] );
 			}
