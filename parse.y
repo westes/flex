@@ -3,6 +3,9 @@
 %token CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
 %token OPTION_OP OPT_OUTFILE OPT_PREFIX
 
+%token CCE_ALNUM CCE_ALPHA CCE_BLANK CCE_CNTRL CCE_DIGIT CCE_GRAPH
+%token CCE_LOWER CCE_PRINT CCE_PUNCT CCE_SPACE CCE_UPPER CCE_XDIGIT
+
 %{
 /*-
  * Copyright (c) 1990 The Regents of the University of California.
@@ -68,13 +71,25 @@ char *alloca ();
 #include "flexdef.h"
 
 int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, rulelen;
-int trlcontxt, xcluflg, cclsorted, varlength, variable_trail_rule;
+int trlcontxt, xcluflg, currccl, cclsorted, varlength, variable_trail_rule;
 
 int *scon_stk;
 int scon_stk_ptr;
 
 static int madeany = false;  /* whether we've made the '.' character class */
 int previous_continued_action;	/* whether the previous rule's action was '|' */
+
+/* Expand a POSIX character class expression. */
+#define CCL_EXPR(func) \
+	{ \
+	int c; \
+	for ( c = 0; c < csize; ++c ) \
+		if ( isascii(c) && func(c) ) \
+			ccladd( currccl, c ); \
+	}
+
+/* While POSIX defines isblank(), it's not ANSI C. */
+#define IS_BLANK(c) ((c) == ' ' || (c) == '\t')
 
 /* On some over-ambitious machines, such as DEC Alpha's, the default
  * token type is "long" instead of "int"; this leads to problems with
@@ -700,14 +715,35 @@ ccl		:  ccl CHAR '-' CHAR
 			$$ = $1;
 			}
 
+		|  ccl ccl_expr
+			{
+			/* Too hard to properly maintain cclsorted. */
+			cclsorted = false;
+			$$ = $1;
+			}
+
 		|
 			{
 			cclsorted = true;
 			lastchar = 0;
-			$$ = cclinit();
+			currccl = $$ = cclinit();
 			}
 		;
 
+ccl_expr:	   CCE_ALNUM	{ CCL_EXPR(isalnum) }
+		|  CCE_ALPHA	{ CCL_EXPR(isalpha) }
+		|  CCE_BLANK	{ CCL_EXPR(IS_BLANK) }
+		|  CCE_CNTRL	{ CCL_EXPR(iscntrl) }
+		|  CCE_DIGIT	{ CCL_EXPR(isdigit) }
+		|  CCE_GRAPH	{ CCL_EXPR(isgraph) }
+		|  CCE_LOWER	{ CCL_EXPR(islower) }
+		|  CCE_PRINT	{ CCL_EXPR(isprint) }
+		|  CCE_PUNCT	{ CCL_EXPR(ispunct) }
+		|  CCE_SPACE	{ CCL_EXPR(isspace) }
+		|  CCE_UPPER	{ CCL_EXPR(isupper) }
+		|  CCE_XDIGIT	{ CCL_EXPR(isxdigit) }
+		;
+		
 string		:  string CHAR
 			{
 			if ( caseins && $2 >= 'A' && $2 <= 'Z' )
