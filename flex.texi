@@ -3,9 +3,12 @@
 @setfilename flex.info
 @settitle flex: a fast lexical analyzer generator
 @include version.texi
-@c  Define new index types for "Examples" and "macro hooks".
+@c  "Examples" index 
 @defindex ex
+@c  "Macro Hooks" index
 @defindex hk
+@c  "Options" index
+@defindex op
 @dircategory Programming
 @direntry
 * flex: (flex).      Fast lexical analyzer generator (lex replacement).
@@ -62,6 +65,15 @@ Format of the Input File
 * Rules Section::               
 * User Code Section::           
 * Comments in the Input::       
+
+Scanner Options
+
+* Options for Specifing Filenames::
+* Options Affecting Scanner Behavior::
+* Code-Level And API Options::
+* Options for Scanner Speed and Size::
+* Debugging Options::
+* Miscellaneous Options::
 
 Reentrant C Scanners
 
@@ -2356,71 +2368,84 @@ is @code{TOK_NUMBER}, part of the scanner might look like:
 @cindex options, command-line
 @cindex arguments, command-line
 
-@code{flex}
-has the following options.
+The various @code{flex} options are categorized by function in the following
+menu. If you want to lookup a particular option by name, @xref{Index of Scanner Options}.
 
-@table @samp
-@anchor{option-backup}
-@item -b, --backup, @code{%option backup}
-Generate backing-up information to @file{lex.backup}.  This is a list of
-scanner states which require backing up and the input characters on
-which they do so.  By adding rules one can remove backing-up states.  If
-@emph{all} backing-up states are eliminated and @samp{-Cf} or @code{-CF}
-is used, the generated scanner will run faster (see the @samp{--perf-report} flag).
-Only users who wish to squeeze every last cycle out of their scanners
-need worry about this option.  (@pxref{Performance}).
+@menu
+* Options for Specifing Filenames::
+* Options Affecting Scanner Behavior::
+* Code-Level And API Options::
+* Options for Scanner Speed and Size::
+* Debugging Options::
+* Miscellaneous Options::
+@end menu
 
-@anchor{option-bison-bridge}
-@item --bison-bridge, @code{%option bison-bridge}
-instructs flex to generate a C scanner that is
-meant to be called by a
-@code{GNU bison}
-parser. The scanner has minor API changes for
-@code{bison}
-compatibility. In particular, the declaration of
-@code{yylex}
-is modified, and support for
-@code{yylval}
-and
-@code{yylloc}
-is incorporated. @xref{Bison Bridge}.
-
-@item -c
-is a do-nothing option included for POSIX compliance.
-
-@anchor{option-debug}
-@item -d, --debug, @code{%option debug}
-makes the generated scanner run in @dfn{debug} mode.  Whenever a pattern
-is recognized and the global variable @code{yy_flex_debug} is non-zero
-(which is the default), the scanner will write to @file{stderr} a line
-of the form:
+Even though there are many scanner options, a typical scanner might only
+specify the following options:
 
 @example
 @verbatim
-    -accepting rule at line 53 ("the matched text")
+%option   8-bit reentrant bison-bridge 
+%option   warn nodefault
+%option   yylineno
+%option   outfile="scanner.c" header-file="scanner.h"
 @end verbatim
 @end example
 
-The line number refers to the location of the rule in the file defining
-the scanner (i.e., the file that was fed to flex).  Messages are also
-generated when the scanner backs up, accepts the default rule, reaches
-the end of its input buffer (or encounters a NUL; at this point, the two
-look the same as far as the scanner's concerned), or reaches an
-end-of-file.
+The first line specifies the general type of scanner we want. The second line
+specifies that we are being careful. The third line asks flex to track line
+numbers. The last line tells flex what to name the files. (The options can be
+specified in any order. We just dividied them.)
 
-@anchor{option-full}
-@item -f, --full, @code{%option full}
-specifies
-@dfn{fast scanner}.
-No table compression is done and @code{stdio} is bypassed.
-The result is large but fast.  This option is equivalent to
-@samp{--Cfr}
+@code{flex} also provides a mechanism for controlling options within the
+scanner specification itself, rather than from the flex command-line.
+This is done by including @code{%option} directives in the first section
+of the scanner specification.  You can specify multiple options with a
+single @code{%option} directive, and multiple directives in the first
+section of your flex input file.
 
-@item -h, -?, --help
-generates a ``help'' summary of @code{flex}'s options to @file{stdout}
-and then exits.
+Most options are given simply as names, optionally preceded by the
+word @samp{no} (with no intervening whitespace) to negate their meaning.
+The names are the same as their long-option equivalents (but without the
+leading @samp{--} ).
+
+@code{flex} scans your rule actions to determine whether you use the
+@code{REJECT} or @code{yymore()} features.  The @code{REJECT} and
+@code{yymore} options are available to override its decision as to
+whether you use the options, either by setting them (e.g., @code{%option
+reject)} to indicate the feature is indeed used, or unsetting them to
+indicate it actually is not used (e.g., @code{%option noyymore)}.
+
+
+A number of options are available for lint purists who want to suppress
+the appearance of unneeded routines in the generated scanner.  Each of
+the following, if unset (e.g., @code{%option nounput}), results in the
+corresponding routine not appearing in the generated scanner:
+
+@example
+@verbatim
+    input, unput
+    yy_push_state, yy_pop_state, yy_top_state
+    yy_scan_buffer, yy_scan_bytes, yy_scan_string
+
+    yyget_extra, yyset_extra, yyget_leng, yyget_text,
+    yyget_lineno, yyset_lineno, yyget_in, yyset_in,
+    yyget_out, yyset_out, yyget_lval, yyset_lval,
+    yyget_lloc, yyset_lloc, yyget_debug, yyset_debug
+@end verbatim
+@end example
+
+(though @code{yy_push_state()} and friends won't appear anyway unless
+you use @code{%option stack)}.
+
+@node Options for Specifing Filenames
+@section Options for Specifing Filenames
+
+@table @samp
 
 @anchor{option-header}
+@opindex ---header-file
+@opindex header-file
 @item --header-file=FILE, @code{%option header-file="FILE"}
 instructs flex to write a C header to @file{FILE}. This file contains
 function prototypes, extern variables, and types used by the scanner.
@@ -2435,7 +2460,65 @@ is substituted with the appropriate prefix.
 The @samp{--header-file} option is not compatible with the @samp{--c++} option,
 since the C++ scanner provides its own header in @file{yyFlexLexer.h}.
 
+
+
+@anchor{option-outfile}
+@opindex -o
+@opindex ---outfile
+@opindex outfile
+@item -oFILE, --outfile=FILE, @code{%option outfile="FILE"}
+directs flex to write the scanner to the file @file{FILE} instead of
+@file{lex.yy.c}.  If you combine @samp{--outfile} with the @samp{--stdout} option,
+then the scanner is written to @file{stdout} but its @code{#line}
+directives (see the @samp{-l} option above) refer to the file
+@file{FILE}.
+
+
+
+@anchor{option-stdout}
+@opindex -t
+@opindex ---stdout
+@opindex stdout
+@item -t, --stdout, @code{%option stdout}
+instructs @code{flex} to write the scanner it generates to standard
+output instead of @file{lex.yy.c}.
+
+
+
+@opindex ---skel
+@item -SFILE, --skel=FILE
+overrides the default skeleton file from which
+@code{flex}
+constructs its scanners.  You'll never need this option unless you are doing
+@code{flex}
+maintenance or development.
+
+@opindex ---tables-file
+@opindex tables-file
+@item --tables-file=FILE
+Write serialized scanner dfa tables to FILE. The generated scanner will not
+contain the tables, and requires them to be loaded at runtime.
+@xref{serialization}.
+
+@opindex ---tables-verify
+@opindex tables-verify
+@item --tables-verify
+This option is for flex development. We document it here in case you stumble
+upon it by accident or in case you suspect some inconsistency in the serialized
+tables.  Flex will serialize the scanner dfa tables but will also generate the
+in-code tables as it normally does. At runtime, the scanner will verify that
+the serialized tables match the in-code tables, instead of loading them. 
+
+@end table
+
+@node Options Affecting Scanner Behavior
+@section Options Affecting Scanner Behavior
+
+@table @samp
 @anchor{option-case-insensitive}
+@opindex -i
+@opindex ---case-insensitive
+@opindex case-insensitive
 @item -i, --case-insensitive, @code{%option case-insensitive}
 instructs @code{flex} to generate a @dfn{case-insensitive} scanner.  The
 case of letters given in the @code{flex} input patterns will be ignored,
@@ -2443,7 +2526,12 @@ and tokens in the input will be matched regardless of case.  The matched
 text given in @code{yytext} will have the preserved case (i.e., it will
 not be folded).
 
+
+
 @anchor{option-lex-compat}
+@opindex -l
+@opindex ---lex-compat
+@opindex lex-compat
 @item -l, --lex-compat, @code{%option lex-compat}
 turns on maximum compatibility with the original AT&T @code{lex}
 implementation.  Note that this does not mean @emph{full} compatibility.
@@ -2453,49 +2541,12 @@ cannot be used with the @samp{--c++}, @samp{--full}, @samp{--fast}, @samp{-Cf}, 
 @ref{Lex and Posix}.  This option also results in the name
 @code{YY_FLEX_LEX_COMPAT} being @code{#define}'d in the generated scanner.
 
-@item -n
-is another do-nothing option included only for
-POSIX compliance.
 
-@anchor{option-perf-report}
-@item -p, --perf-report, @code{%option perf-report}
-generates a performance report to @file{stderr}.  The report consists of
-comments regarding features of the @code{flex} input file which will
-cause a serious loss of performance in the resulting scanner.  If you
-give the flag twice, you will also get comments regarding features that
-lead to minor performance losses.
-
-Note that the use of @code{REJECT}, and
-variable trailing context (@pxref{Limitations}) entails a substantial
-performance penalty; use of @code{yymore()}, the @samp{^} operator, and
-the @samp{--interactive} flag entail minor performance penalties.
-
-@anchor{option-nodefault}
-@item -s, --nodefault, @code{%option nodefault}
-causes the @emph{default rule} (that unmatched scanner input is echoed
-to @file{stdout)} to be suppressed.  If the scanner encounters input
-that does not match any of its rules, it aborts with an error.  This
-option is useful for finding holes in a scanner's rule set.
-
-@anchor{option-stdout}
-@item -t, --stdout, @code{%option stdout}
-instructs @code{flex} to write the scanner it generates to standard
-output instead of @file{lex.yy.c}.
-
-@anchor{option-verbose}
-@item -v, --verbose, @code{%option verbose}
-specifies that @code{flex} should write to @file{stderr} a summary of
-statistics regarding the scanner it generates.  Most of the statistics
-are meaningless to the casual @code{flex} user, but the first line
-identifies the version of @code{flex} (same as reported by @samp{--version}),
-and the next line the flags used when generating the scanner, including
-those that are on by default.
-
-@anchor{option-nowarn}
-@item -w, --nowarn, @code{%option nowarn}
-suppresses warning messages.
 
 @anchor{option-batch}
+@opindex -B
+@opindex ---batch
+@opindex batch
 @item -B, --batch, @code{%option batch}
 instructs @code{flex} to generate a @dfn{batch} scanner, the opposite of
 @emph{interactive} scanners generated by @samp{--interactive} (see below).  In
@@ -2506,34 +2557,12 @@ squeeze out a @emph{lot} more performance, you should be using the
 @samp{-Cf} or @samp{-CF} options, which turn on @samp{--batch} automatically
 anyway.
 
-@anchor{option-fast}
-@item -F, --fast, @code{%option fast}
-specifies that the @emph{fast} scanner table representation should be
-used (and @code{stdio} bypassed).  This representation is about as fast
-as the full table representation @samp{--full}, and for some sets of
-patterns will be considerably smaller (and for others, larger).  In
-general, if the pattern set contains both @emph{keywords} and a
-catch-all, @emph{identifier} rule, such as in the set:
 
-@example
-@verbatim
-    "case"    return TOK_CASE;
-    "switch"  return TOK_SWITCH;
-    ...
-    "default" return TOK_DEFAULT;
-    [a-z]+    return TOK_ID;
-@end verbatim
-@end example
-
-then you're better off using the full table representation.  If only
-the @emph{identifier} rule is present and you then use a hash table or some such
-to detect the keywords, you're better off using
-@samp{--fast}.
-
-This option is equivalent to @samp{-CFr} (see below).  It cannot be used
-with @samp{--c++}.
 
 @anchor{option-interactive}
+@opindex -I
+@opindex ---interactive
+@opindex interactive
 @item -I, --interactive, @code{%option interactive}
 instructs @code{flex} to generate an @i{interactive} scanner.  An
 interactive scanner is one that only looks ahead to decide what token
@@ -2560,71 +2589,12 @@ You can force a scanner to
 be interactive by using
 @samp{--batch}
 
-@anchor{option-noline}
-@item -L, --noline, @code{%option noline}
-instructs
-@code{flex}
-not to generate
-@code{#line}
-directives.  Without this option,
-@code{flex}
-peppers the generated scanner
-with @code{#line} directives so error messages in the actions will be correctly
-located with respect to either the original
-@code{flex}
-input file (if the errors are due to code in the input file), or
-@file{lex.yy.c}
-(if the errors are
-@code{flex}'s
-fault -- you should report these sorts of errors to the email address
-given in @ref{Reporting Bugs}).
 
-@anchor{option-reentrant}
-@item -R, --reentrant, @code{%option reentrant}
-instructs flex to generate a reentrant C scanner.  The generated scanner
-may safely be used in a multi-threaded environment. The API for a
-reentrant scanner is different than for a non-reentrant scanner
-@pxref{Reentrant}).  Because of the API difference between
-reentrant and non-reentrant @code{flex} scanners, non-reentrant flex
-code must be modified before it is suitable for use with this option.
-This option is not compatible with the @samp{--c++} option.
-
-The option @samp{--reentrant} does not affect the performance of
-the scanner.
-
-@anchor{option-trace}
-@item -T, --trace, @code{%option trace}
-makes @code{flex} run in @dfn{trace} mode.  It will generate a lot of
-messages to @file{stderr} concerning the form of the input and the
-resultant non-deterministic and deterministic finite automata.  This
-option is mostly for use in maintaining @code{flex}.
-
-@item -V, --version
-prints the version number to @file{stdout} and exits.
-
-@anchor{option-posix}
-@item -X, --posix, @code{%option posix}
-turns on maximum compatibility with the POSIX 1003.2-1992 definition of
-@code{lex}.  Since @code{flex} was originally designed to implement the
-POSIX definition of @code{lex} this generally involves very few changes
-in behavior.  At the current writing the known differences between
-@code{flex} and the POSIX standard are:
-
-@itemize
-@item
-In POSIX and AT&T @code{lex}, the repeat operator, @samp{@{@}}, has lower
-precedence than concatenation (thus @samp{ab@{3@}} yields @samp{ababab}).
-Most POSIX utilities use an Extended Regular Expression (ERE) precedence
-that has the precedence of the repeat operator higher than concatenation
-(which causes @samp{ab@{3@}} to yield @samp{abbb}).  By default, @code{flex}
-places the precedence of the repeat operator higher than concatenation
-which matches the ERE processing of other POSIX utilities.  When either
-@samp{--posix} or @samp{-l} are specified, @code{flex} will use the
-traditional AT&T and POSIX-compliant precedence for the repeat operator
-where concatenation has higher precedence than the repeat operator.
-@end itemize
 
 @anchor{option-7bit}
+@opindex -7
+@opindex ---7bit
+@opindex 7bit
 @item -7, --7bit, @code{%option 7bit}
 instructs @code{flex} to generate a 7-bit scanner, i.e., one which can
 only recognize 7-bit characters in its input.  The advantage of using
@@ -2648,7 +2618,12 @@ defaults to generating an 8-bit scanner, since usually with these
 compression options full 8-bit tables are not much more expensive than
 7-bit tables.
 
+
+
 @anchor{option-8bit}
+@opindex -8
+@opindex ---8bit
+@opindex 8bit
 @item -8, --8bit, @code{%option 8bit}
 instructs @code{flex} to generate an 8-bit scanner, i.e., one which can
 recognize 8-bit characters.  This flag is only needed for scanners
@@ -2660,130 +2635,205 @@ See the discussion of
 above for @code{flex}'s default behavior and the tradeoffs between 7-bit
 and 8-bit scanners.
 
+
+
+@anchor{option-default}
+@opindex ---default
+@opindex default
+@item --default, @code{%option default}
+generate the default rule.
+
+
+
+@anchor{option-always-interactive}
+@opindex ---always-interactive
+@opindex always-interactive
+@item --always-interactive, @code{%option always-interactive}
+instructs flex to generate a scanner which always considers its input
+@emph{interactive}.  Normally, on each new input file the scanner calls
+@code{isatty()} in an attempt to determine whether the scanner's input
+source is interactive and thus should be read a character at a time.
+When this option is used, however, then no such call is made.
+
+
+
+@opindex ---never-interactive
+@item --never-interactive, @code{--never-interactive}
+instructs flex to generate a scanner which never considers its input
+interactive.  This is the opposite of @code{always-interactive}.
+
+
+@anchor{option-posix}
+@opindex -X
+@opindex ---posix
+@opindex posix
+@item -X, --posix, @code{%option posix}
+turns on maximum compatibility with the POSIX 1003.2-1992 definition of
+@code{lex}.  Since @code{flex} was originally designed to implement the
+POSIX definition of @code{lex} this generally involves very few changes
+in behavior.  At the current writing the known differences between
+@code{flex} and the POSIX standard are:
+
+@itemize
+@item
+In POSIX and AT&T @code{lex}, the repeat operator, @samp{@{@}}, has lower
+precedence than concatenation (thus @samp{ab@{3@}} yields @samp{ababab}).
+Most POSIX utilities use an Extended Regular Expression (ERE) precedence
+that has the precedence of the repeat operator higher than concatenation
+(which causes @samp{ab@{3@}} to yield @samp{abbb}).  By default, @code{flex}
+places the precedence of the repeat operator higher than concatenation
+which matches the ERE processing of other POSIX utilities.  When either
+@samp{--posix} or @samp{-l} are specified, @code{flex} will use the
+traditional AT&T and POSIX-compliant precedence for the repeat operator
+where concatenation has higher precedence than the repeat operator.
+@end itemize
+
+
+@anchor{option-stack}
+@opindex ---stack
+@opindex stack
+@item --stack, @code{%option stack}
+enables the use of
+start condition stacks (@pxref{Start Conditions}).
+
+
+
+@anchor{option-stdinit}
+@opindex ---stdinit
+@opindex stdinit
+@item --stdinit, @code{%option stdinit}
+if set (i.e., @b{%option stdinit)} initializes @code{yyin} and
+@code{yyout} to @file{stdin} and @file{stdout}, instead of the default of
+@file{nil}.  Some existing @code{lex} programs depend on this behavior,
+even though it is not compliant with ANSI C, which does not require
+@file{stdin} and @file{stdout} to be compile-time constant. In a
+reentrant scanner, however, this is not a problem since initialization
+is performed in @code{yylex_init} at runtime.
+
+
+
+@anchor{option-yylineno}
+@opindex ---yylineno
+@opindex yylineno
+@item --yylineno, @code{%option yylineno}
+directs @code{flex} to generate a scanner
+that maintains the number of the current line read from its input in the
+global variable @code{yylineno}.  This option is implied by @code{%option
+lex-compat}.  In a reentrant C scanner, the macro @code{yylineno} is
+accessible regardless of the value of @code{%option yylineno}, however, its
+value is not modified by @code{flex} unless @code{%option yylineno} is enabled.
+
+
+
+@anchor{option-yywrap}
+@opindex ---yywrap
+@opindex yywrap
+@item --yywrap, @code{%option yywrap}
+if unset (i.e., @code{--noyywrap)}, makes the scanner not call
+@code{yywrap()} upon an end-of-file, but simply assume that there are no
+more files to scan (until the user points @file{yyin} at a new file and
+calls @code{yylex()} again).
+
+@end table
+
+@node Code-Level And API Options
+@section Code-Level And API Options
+
+@table @samp
+
+@anchor{option-bison-bridge}
+@opindex ---bison-bridge
+@opindex bison-bridge
+@item --bison-bridge, @code{%option bison-bridge}
+instructs flex to generate a C scanner that is
+meant to be called by a
+@code{GNU bison}
+parser. The scanner has minor API changes for
+@code{bison}
+compatibility. In particular, the declaration of
+@code{yylex}
+is modified, and support for
+@code{yylval}
+and
+@code{yylloc}
+is incorporated. @xref{Bison Bridge}.
+
+
+
+@anchor{option-noline}
+@opindex -L
+@opindex ---noline
+@opindex noline
+@item -L, --noline, @code{%option noline}
+instructs
+@code{flex}
+not to generate
+@code{#line}
+directives.  Without this option,
+@code{flex}
+peppers the generated scanner
+with @code{#line} directives so error messages in the actions will be correctly
+located with respect to either the original
+@code{flex}
+input file (if the errors are due to code in the input file), or
+@file{lex.yy.c}
+(if the errors are
+@code{flex}'s
+fault -- you should report these sorts of errors to the email address
+given in @ref{Reporting Bugs}).
+
+
+
+@anchor{option-reentrant}
+@opindex -R
+@opindex ---reentrant
+@opindex reentrant
+@item -R, --reentrant, @code{%option reentrant}
+instructs flex to generate a reentrant C scanner.  The generated scanner
+may safely be used in a multi-threaded environment. The API for a
+reentrant scanner is different than for a non-reentrant scanner
+@pxref{Reentrant}).  Because of the API difference between
+reentrant and non-reentrant @code{flex} scanners, non-reentrant flex
+code must be modified before it is suitable for use with this option.
+This option is not compatible with the @samp{--c++} option.
+
+The option @samp{--reentrant} does not affect the performance of
+the scanner.
+
+
+
 @anchor{option-c++}
+@opindex -+
+@opindex ---c++
+@opindex c++
 @item -+, --c++, @code{%option c++}
 specifies that you want flex to generate a C++
 scanner class.  @xref{Cxx}, for
 details.
 
+
+
 @anchor{option-array}
+@opindex ---array
+@opindex array
 @item --array, @code{%option array}
 specifies that you want yytext to be an array instead of a char*
 
-@item -C[aefFmr]
-controls the degree of table compression and, more generally, trade-offs
-between small scanners and fast scanners.
 
-@anchor{option-align}
-@item -Ca, --align, @code{%option align}
-(``align'') instructs flex to trade off larger tables in the
-generated scanner for faster performance because the elements of
-the tables are better aligned for memory access and computation.  On some
-RISC architectures, fetching and manipulating longwords is more efficient
-than with smaller-sized units such as shortwords.  This option can
-quadruple the size of the tables used by your scanner.
-
-@anchor{option-ecs}
-@item -Ce, --ecs, @code{%option ecs}
-directs @code{flex} to construct @dfn{equivalence classes}, i.e., sets
-of characters which have identical lexical properties (for example, if
-the only appearance of digits in the @code{flex} input is in the
-character class ``[0-9]'' then the digits '0', '1', ..., '9' will all be
-put in the same equivalence class).  Equivalence classes usually give
-dramatic reductions in the final table/object file sizes (typically a
-factor of 2-5) and are pretty cheap performance-wise (one array look-up
-per character scanned).
-
-@item -Cf
-specifies that the @dfn{full} scanner tables should be generated -
-@code{flex} should not compress the tables by taking advantages of
-similar transition functions for different states.
-
-@item -CF
-specifies that the alternate fast scanner representation (described
-above under the @samp{--fast} flag) should be used.  This option cannot be
-used with @samp{--c++}.
-
-@anchor{option-meta-ecs}
-@item -Cm, --meta-ecs, @code{%option meta-ecs}
-directs
-@code{flex}
-to construct
-@dfn{meta-equivalence classes},
-which are sets of equivalence classes (or characters, if equivalence
-classes are not being used) that are commonly used together.  Meta-equivalence
-classes are often a big win when using compressed tables, but they
-have a moderate performance impact (one or two @code{if} tests and one
-array look-up per character scanned).
-
-@anchor{option-read}
-@item -Cr, --read, @code{%option read}
-causes the generated scanner to @emph{bypass} use of the standard I/O
-library (@code{stdio}) for input.  Instead of calling @code{fread()} or
-@code{getc()}, the scanner will use the @code{read()} system call,
-resulting in a performance gain which varies from system to system, but
-in general is probably negligible unless you are also using @samp{-Cf}
-or @samp{-CF}.  Using @samp{-Cr} can cause strange behavior if, for
-example, you read from @file{yyin} using @code{stdio} prior to calling
-the scanner (because the scanner will miss whatever text your previous
-reads left in the @code{stdio} input buffer).  @samp{-Cr} has no effect
-if you define @code{YY_INPUT()} (@pxref{Generated Scanner}).
-
-@item -C
-A lone @samp{-C} specifies that the scanner tables should be compressed
-but neither equivalence classes nor meta-equivalence classes should be
-used.
-
-The options @samp{-Cf} or @samp{-CF} and @samp{-Cm} do not make sense
-together - there is no opportunity for meta-equivalence classes if the
-table is not being compressed.  Otherwise the options may be freely
-mixed, and are cumulative.
-
-The default setting is @samp{-Cem}, which specifies that @code{flex}
-should generate equivalence classes and meta-equivalence classes.  This
-setting provides the highest degree of table compression.  You can trade
-off faster-executing scanners at the cost of larger tables with the
-following generally being true:
-
-@example
-@verbatim
-    slowest & smallest
-          -Cem
-          -Cm
-          -Ce
-          -C
-          -C{f,F}e
-          -C{f,F}
-          -C{f,F}a
-    fastest & largest
-@end verbatim
-@end example
-
-Note that scanners with the smallest tables are usually generated and
-compiled the quickest, so during development you will usually want to
-use the default, maximal compression.
-
-@samp{-Cfe} is often a good compromise between speed and size for
-production scanners.
-
-@anchor{option-default}
-@item --default, @code{%option default}
-generate the default rule.
-
-@anchor{option-outfile}
-@item -oFILE, --outfile=FILE, @code{%option outfile="FILE"}
-directs flex to write the scanner to the file @file{FILE} instead of
-@file{lex.yy.c}.  If you combine @samp{--outfile} with the @samp{--stdout} option,
-then the scanner is written to @file{stdout} but its @code{#line}
-directives (see the @samp{-l} option above) refer to the file
-@file{FILE}.
 
 @anchor{option-pointer}
+@opindex ---pointer
+@opindex pointer
 @item --pointer, @code{%option pointer}
 specify that  @code{yytext} should be a @code{char *}, not an array.
 This default is @code{char *}.
 
+
+
 @anchor{option-prefix}
+@opindex -P
+@opindex ---prefix
+@opindex prefix
 @item -PPREFIX, --prefix=PREFIX, @code{%option prefix="PREFIX"}
 changes the default @samp{yy} prefix used by @code{flex} for all
 globally-visible variable and function names to instead be
@@ -2835,32 +2885,21 @@ as linking with
 @samp{-lfl}
 no longer provides one for you by default.
 
-@item -SFILE, --skel=FILE
-overrides the default skeleton file from which
-@code{flex}
-constructs its scanners.  You'll never need this option unless you are doing
-@code{flex}
-maintenance or development.
 
-@anchor{option-always-interactive}
-@item --always-interactive, @code{%option always-interactive}
-instructs flex to generate a scanner which always considers its input
-@emph{interactive}.  Normally, on each new input file the scanner calls
-@code{isatty()} in an attempt to determine whether the scanner's input
-source is interactive and thus should be read a character at a time.
-When this option is used, however, then no such call is made.
 
 @anchor{option-main}
+@opindex ---main
+@opindex main
 @item --main, @code{%option main}
  directs flex to provide a default @code{main()} program for the
 scanner, which simply calls @code{yylex()}.  This option implies
 @code{noyywrap} (see below).
 
-@item --never-interactive, @code{--never-interactive}
-instructs flex to generate a scanner which never considers its input
-interactive.  This is the opposite of @code{always-interactive}.
+
 
 @anchor{option-nounistd}
+@opindex ---nounistd
+@opindex nounistd
 @item --nounistd, @code{%option nounistd}
 suppresses inclusion of the non-ANSI header file @file{unistd.h}. This option
 is meant to target environments in which @file{unistd.h} does not exist. Be aware
@@ -2870,37 +2909,11 @@ If you wish to use these functions, you will have to inform your compiler where
 to find them.
 @xref{option-always-interactive}. @xref{option-read}.
 
-@anchor{option-stack}
-@item --stack, @code{%option stack}
-enables the use of
-start condition stacks (@pxref{Start Conditions}).
 
-@anchor{option-stdinit}
-@item --stdinit, @code{%option stdinit}
-if set (i.e., @b{%option stdinit)} initializes @code{yyin} and
-@code{yyout} to @file{stdin} and @file{stdout}, instead of the default of
-@file{nil}.  Some existing @code{lex} programs depend on this behavior,
-even though it is not compliant with ANSI C, which does not require
-@file{stdin} and @file{stdout} to be compile-time constant. In a
-reentrant scanner, however, this is not a problem since initialization
-is performed in @code{yylex_init} at runtime.
-
-@anchor{option-warn}
-@item --warn, @code{%option warn}
-warn about certain things. In particular, if the default rule can be
-matched but no defualt rule has been given, the flex will warn you.
-We recommend using this option always.
-
-@anchor{option-yylineno}
-@item --yylineno, @code{%option yylineno}
-directs @code{flex} to generate a scanner
-that maintains the number of the current line read from its input in the
-global variable @code{yylineno}.  This option is implied by @code{%option
-lex-compat}.  In a reentrant C scanner, the macro @code{yylineno} is
-accessible regardless of the value of @code{%option yylineno}, however, its
-value is not modified by @code{flex} unless @code{%option yylineno} is enabled.
 
 @anchor{option-yyclass}
+@opindex ---yyclass
+@opindex yyclass
 @item --yyclass, @code{%option yyclass="NAME"}
 only applies when generating a C++ scanner (the @samp{--c++} option).  It
 informs @code{flex} that you have derived @code{foo} as a subclass of
@@ -2910,54 +2923,317 @@ also generates a @code{yyFlexLexer::yylex()} member function that emits
 a run-time error (by invoking @code{yyFlexLexer::LexerError())} if
 called.  @xref{Cxx}.
 
-@anchor{option-yywrap}
-@item --yywrap, @code{%option yywrap}
-if unset (i.e., @code{--noyywrap)}, makes the scanner not call
-@code{yywrap()} upon an end-of-file, but simply assume that there are no
-more files to scan (until the user points @file{yyin} at a new file and
-calls @code{yylex()} again).
 @end table
 
-@code{flex} also provides a mechanism for controlling options within the
-scanner specification itself, rather than from the flex command-line.
-This is done by including @code{%option} directives in the first section
-of the scanner specification.  You can specify multiple options with a
-single @code{%option} directive, and multiple directives in the first
-section of your flex input file.
+@node Options for Scanner Speed and Size
+@section Options for Scanner Speed and Size
 
-Most options are given simply as names, optionally preceded by the
-word @samp{no} (with no intervening whitespace) to negate their meaning.
-The names are the same as their long-option equivalents (but without the
-leading @samp{--} ).
+@table @samp
 
-@code{flex} scans your rule actions to determine whether you use the
-@code{REJECT} or @code{yymore()} features.  The @code{REJECT} and
-@code{yymore} options are available to override its decision as to
-whether you use the options, either by setting them (e.g., @code{%option
-reject)} to indicate the feature is indeed used, or unsetting them to
-indicate it actually is not used (e.g., @code{%option noyymore)}.
+@item -C[aefFmr]
+controls the degree of table compression and, more generally, trade-offs
+between small scanners and fast scanners.
 
+@table @samp
+@opindex -C
+@item -C
+A lone @samp{-C} specifies that the scanner tables should be compressed
+but neither equivalence classes nor meta-equivalence classes should be
+used.
 
-A number of options are available for lint purists who want to suppress
-the appearance of unneeded routines in the generated scanner.  Each of
-the following, if unset (e.g., @code{%option nounput}), results in the
-corresponding routine not appearing in the generated scanner:
+@anchor{option-align}
+@opindex -Ca
+@opindex ---align
+@opindex align
+@item -Ca, --align, @code{%option align}
+(``align'') instructs flex to trade off larger tables in the
+generated scanner for faster performance because the elements of
+the tables are better aligned for memory access and computation.  On some
+RISC architectures, fetching and manipulating longwords is more efficient
+than with smaller-sized units such as shortwords.  This option can
+quadruple the size of the tables used by your scanner.
+
+@anchor{option-ecs}
+@opindex -Ce
+@opindex ---ecs
+@opindex ecs
+@item -Ce, --ecs, @code{%option ecs}
+directs @code{flex} to construct @dfn{equivalence classes}, i.e., sets
+of characters which have identical lexical properties (for example, if
+the only appearance of digits in the @code{flex} input is in the
+character class ``[0-9]'' then the digits '0', '1', ..., '9' will all be
+put in the same equivalence class).  Equivalence classes usually give
+dramatic reductions in the final table/object file sizes (typically a
+factor of 2-5) and are pretty cheap performance-wise (one array look-up
+per character scanned).
+
+@opindex -Cf
+@item -Cf
+specifies that the @dfn{full} scanner tables should be generated -
+@code{flex} should not compress the tables by taking advantages of
+similar transition functions for different states.
+
+@opindex -CF
+@item -CF
+specifies that the alternate fast scanner representation (described
+above under the @samp{--fast} flag) should be used.  This option cannot be
+used with @samp{--c++}.
+
+@anchor{option-meta-ecs}
+@opindex -Cm
+@opindex ---meta-ecs
+@opindex meta-ecs
+@item -Cm, --meta-ecs, @code{%option meta-ecs}
+directs
+@code{flex}
+to construct
+@dfn{meta-equivalence classes},
+which are sets of equivalence classes (or characters, if equivalence
+classes are not being used) that are commonly used together.  Meta-equivalence
+classes are often a big win when using compressed tables, but they
+have a moderate performance impact (one or two @code{if} tests and one
+array look-up per character scanned).
+
+@anchor{option-read}
+@opindex -Cr
+@opindex ---read
+@opindex read
+@item -Cr, --read, @code{%option read}
+causes the generated scanner to @emph{bypass} use of the standard I/O
+library (@code{stdio}) for input.  Instead of calling @code{fread()} or
+@code{getc()}, the scanner will use the @code{read()} system call,
+resulting in a performance gain which varies from system to system, but
+in general is probably negligible unless you are also using @samp{-Cf}
+or @samp{-CF}.  Using @samp{-Cr} can cause strange behavior if, for
+example, you read from @file{yyin} using @code{stdio} prior to calling
+the scanner (because the scanner will miss whatever text your previous
+reads left in the @code{stdio} input buffer).  @samp{-Cr} has no effect
+if you define @code{YY_INPUT()} (@pxref{Generated Scanner}).
+@end table
+
+The options @samp{-Cf} or @samp{-CF} and @samp{-Cm} do not make sense
+together - there is no opportunity for meta-equivalence classes if the
+table is not being compressed.  Otherwise the options may be freely
+mixed, and are cumulative.
+
+The default setting is @samp{-Cem}, which specifies that @code{flex}
+should generate equivalence classes and meta-equivalence classes.  This
+setting provides the highest degree of table compression.  You can trade
+off faster-executing scanners at the cost of larger tables with the
+following generally being true:
 
 @example
 @verbatim
-    input, unput
-    yy_push_state, yy_pop_state, yy_top_state
-    yy_scan_buffer, yy_scan_bytes, yy_scan_string
-
-    yyget_extra, yyset_extra, yyget_leng, yyget_text,
-    yyget_lineno, yyset_lineno, yyget_in, yyset_in,
-    yyget_out, yyset_out, yyget_lval, yyset_lval,
-    yyget_lloc, yyset_lloc, yyget_debug, yyset_debug
+    slowest & smallest
+          -Cem
+          -Cm
+          -Ce
+          -C
+          -C{f,F}e
+          -C{f,F}
+          -C{f,F}a
+    fastest & largest
 @end verbatim
 @end example
 
-(though @code{yy_push_state()} and friends won't appear anyway unless
-you use @code{%option stack)}.
+Note that scanners with the smallest tables are usually generated and
+compiled the quickest, so during development you will usually want to
+use the default, maximal compression.
+
+@samp{-Cfe} is often a good compromise between speed and size for
+production scanners.
+
+@anchor{option-full}
+@opindex -f
+@opindex ---full
+@opindex full
+@item -f, --full, @code{%option full}
+specifies
+@dfn{fast scanner}.
+No table compression is done and @code{stdio} is bypassed.
+The result is large but fast.  This option is equivalent to
+@samp{--Cfr}
+
+
+@anchor{option-fast}
+@opindex -F
+@opindex ---fast
+@opindex fast
+@item -F, --fast, @code{%option fast}
+specifies that the @emph{fast} scanner table representation should be
+used (and @code{stdio} bypassed).  This representation is about as fast
+as the full table representation @samp{--full}, and for some sets of
+patterns will be considerably smaller (and for others, larger).  In
+general, if the pattern set contains both @emph{keywords} and a
+catch-all, @emph{identifier} rule, such as in the set:
+
+@example
+@verbatim
+    "case"    return TOK_CASE;
+    "switch"  return TOK_SWITCH;
+    ...
+    "default" return TOK_DEFAULT;
+    [a-z]+    return TOK_ID;
+@end verbatim
+@end example
+
+then you're better off using the full table representation.  If only
+the @emph{identifier} rule is present and you then use a hash table or some such
+to detect the keywords, you're better off using
+@samp{--fast}.
+
+This option is equivalent to @samp{-CFr} (see below).  It cannot be used
+with @samp{--c++}.
+
+@end table
+
+@node Debugging Options
+@section Debugging Options
+
+@table @samp
+
+@anchor{option-backup}
+@opindex -b
+@opindex ---backup
+@opindex backup
+@item -b, --backup, @code{%option backup}
+Generate backing-up information to @file{lex.backup}.  This is a list of
+scanner states which require backing up and the input characters on
+which they do so.  By adding rules one can remove backing-up states.  If
+@emph{all} backing-up states are eliminated and @samp{-Cf} or @code{-CF}
+is used, the generated scanner will run faster (see the @samp{--perf-report} flag).
+Only users who wish to squeeze every last cycle out of their scanners
+need worry about this option.  (@pxref{Performance}).
+
+
+
+@anchor{option-debug}
+@opindex -d
+@opindex ---debug
+@opindex debug
+@item -d, --debug, @code{%option debug}
+makes the generated scanner run in @dfn{debug} mode.  Whenever a pattern
+is recognized and the global variable @code{yy_flex_debug} is non-zero
+(which is the default), the scanner will write to @file{stderr} a line
+of the form:
+
+@example
+@verbatim
+    -accepting rule at line 53 ("the matched text")
+@end verbatim
+@end example
+
+The line number refers to the location of the rule in the file defining
+the scanner (i.e., the file that was fed to flex).  Messages are also
+generated when the scanner backs up, accepts the default rule, reaches
+the end of its input buffer (or encounters a NUL; at this point, the two
+look the same as far as the scanner's concerned), or reaches an
+end-of-file.
+
+
+
+@anchor{option-perf-report}
+@opindex -p
+@opindex ---perf-report
+@opindex perf-report
+@item -p, --perf-report, @code{%option perf-report}
+generates a performance report to @file{stderr}.  The report consists of
+comments regarding features of the @code{flex} input file which will
+cause a serious loss of performance in the resulting scanner.  If you
+give the flag twice, you will also get comments regarding features that
+lead to minor performance losses.
+
+Note that the use of @code{REJECT}, and
+variable trailing context (@pxref{Limitations}) entails a substantial
+performance penalty; use of @code{yymore()}, the @samp{^} operator, and
+the @samp{--interactive} flag entail minor performance penalties.
+
+
+
+@anchor{option-nodefault}
+@opindex -s
+@opindex ---nodefault
+@opindex nodefault
+@item -s, --nodefault, @code{%option nodefault}
+causes the @emph{default rule} (that unmatched scanner input is echoed
+to @file{stdout)} to be suppressed.  If the scanner encounters input
+that does not match any of its rules, it aborts with an error.  This
+option is useful for finding holes in a scanner's rule set.
+
+
+
+@anchor{option-trace}
+@opindex -T
+@opindex ---trace
+@opindex trace
+@item -T, --trace, @code{%option trace}
+makes @code{flex} run in @dfn{trace} mode.  It will generate a lot of
+messages to @file{stderr} concerning the form of the input and the
+resultant non-deterministic and deterministic finite automata.  This
+option is mostly for use in maintaining @code{flex}.
+
+
+
+@anchor{option-nowarn}
+@opindex -w
+@opindex ---nowarn
+@opindex nowarn
+@item -w, --nowarn, @code{%option nowarn}
+suppresses warning messages.
+
+
+
+@anchor{option-verbose}
+@opindex -v
+@opindex ---verbose
+@opindex verbose
+@item -v, --verbose, @code{%option verbose}
+specifies that @code{flex} should write to @file{stderr} a summary of
+statistics regarding the scanner it generates.  Most of the statistics
+are meaningless to the casual @code{flex} user, but the first line
+identifies the version of @code{flex} (same as reported by @samp{--version}),
+and the next line the flags used when generating the scanner, including
+those that are on by default.
+
+
+
+@anchor{option-warn}
+@opindex ---warn
+@opindex warn
+@item --warn, @code{%option warn}
+warn about certain things. In particular, if the default rule can be
+matched but no defualt rule has been given, the flex will warn you.
+We recommend using this option always.
+
+@end table
+
+@node Miscellaneous Options
+@section Miscellaneous Options
+
+@table @samp
+@opindex -c
+@item -c
+is a do-nothing option included for POSIX compliance.
+
+@opindex -h
+@opindex ---help
+generates
+@item -h, -?, --help
+generates a ``help'' summary of @code{flex}'s options to @file{stdout}
+and then exits.
+
+@opindex -n
+@item -n
+is another do-nothing option included only for
+POSIX compliance.
+
+@opindex -V
+@opindex ---version
+@item -V, --version
+prints the version number to @file{stdout} and exits.
+
+@end table
+
 
 @node Performance
 @chapter Performance Considerations
@@ -4388,6 +4664,7 @@ To override the default implementations, you must do two things:
 following options:
 
 @itemize
+@opindex noyyalloc
 @item @code{%option noyyalloc}
 @item @code{%option noyyrealloc}
 @item @code{%option noyyfree}.
@@ -4484,7 +4761,7 @@ pooled memory mechanism will save you a lot of grief when writing parsers.
 
 @strong{This feature is currently under development.
 It should be considered alpha quality.}
-
+@anchor{serialization}
 A @code{flex} scanner has the ability to save the DFA tables to a file, and
 load them runtime when needed.  The motivation for this feature is to reduce
 the runtime memory footprint.  Traditionally, these tables are compiled into
@@ -4506,7 +4783,7 @@ scanning begins. The tables may be discarded when scanning is finished.
 @node Creating Serialized Tables
 @section Creating Serialized Tables
 @cindex tables, creating serialized
-@cindex creating serialized tables
+@cindex serialization of tables
 
 @code{%option tables-file="foo.tables"} (@code{--tables-file=foo.tables})
 instructs flex to save the DFA tables to the file @file{foo.tables}. The tables
@@ -7922,6 +8199,7 @@ As you can see, there really is no magic here. We just use
 * Index of Data Types::         
 * Index of Hooks::              
 * Index of Examples::           
+* Index of Scanner Options::
 @end menu
 
 @node Concept Index
@@ -7970,5 +8248,10 @@ to specific locations in the generated scanner, and may be used to insert arbitr
 @node Index of Examples
 @unnumberedsec Index of Examples
 @printindex ex
+
+@node Index of Scanner Options
+@unnumberedsec Index of Scanner Options
+
+@printindex op
 
 @bye
