@@ -39,6 +39,13 @@ static char rcsid[] =
 #include "flexdef.h"
 #include "parse.h"
 
+
+/* ANSI C does not guarantee that isascii() is defined */
+#ifndef isascii
+#define isascii(c) ((c) <= 0177)
+#endif
+
+
 /* yylex - scan for a regular expression token
  *
  * synopsis
