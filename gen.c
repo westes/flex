@@ -1344,10 +1344,19 @@ void make_tables()
 		{
 		if ( use_read )
 			{
+                       outn( "\terrno=0; \\" );
 			outn(
-"\tif ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \\" );
+"\twhile ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \\" );
+                       outn( "\t{ \\" );
+                       outn( "\t\tif( errno != EINTR) \\" );
+                       outn( "\t\t{ \\" );
 			outn(
-		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );" );
+	"\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\" );
+                       outn( "\t\t\tbreak; \\" );
+                       outn( "\t\t} \\" );
+                       outn( "\t\terrno=0; \\" );
+                       outn( "\t\tclearerr(yyin); \\" );
+                       outn( "\t}" );
 			}
 
 		else
@@ -1367,11 +1376,22 @@ void make_tables()
 	"\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\" );
 			outn( "\t\tresult = n; \\" );
 			outn( "\t\t} \\" );
+			outn( "\telse \\" );
+			outn( "\t\t{ \\" );
+			outn( "\t\terrno=0; \\" );
 			outn(
-	"\telse if ( ((result = fread( buf, 1, max_size, yyin )) == 0) \\" );
-			outn( "\t\t  && ferror( yyin ) ) \\" );
+"\t\twhile ( (result = fread(buf, 1, max_size, yyin))==0 && ferror(yyin)) \\" );
+			outn( "\t\t\t{ \\" );
+			outn( "\t\t\tif( errno != EINTR) \\" );
+			outn( "\t\t\t\t{ \\" );
 			outn(
-		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );" );
+	"\t\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\" );
+			outn( "\t\t\t\tbreak; \\" );
+			outn( "\t\t\t\t} \\" );
+			outn( "\t\t\terrno=0; \\" );
+			outn( "\t\t\tclearerr(yyin); \\" );
+			outn( "\t\t\t} \\" );
+			outn( "\t\t}" );
 			}
 		}
 
