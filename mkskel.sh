@@ -5,7 +5,7 @@ cat <<!
 
 #include "flexdef.h"
 
-char *skel[] = {
+const char *skel[] = {
 !
 
 sed 's/\\/&&/g' $* | sed 's/"/\\"/g' | sed 's/.*/  "&",/'
