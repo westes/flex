@@ -99,6 +99,8 @@ protected:
 // yyFlexLexer, as discussed in the flex man page.
 #define yyFlexLexerOnce
 
+extern "C++" {
+
 class yyFlexLexer : public FlexLexer {
 public:
 	// arg_yyin and arg_yyout default to the cin and cout, but we
@@ -181,5 +183,7 @@ protected:
 	int yy_more_offset;
 	int yy_prev_more_offset;
 };
+
+}
 
 #endif
