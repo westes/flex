@@ -58,7 +58,7 @@ int mach, accepting_number;
 		{
 		int astate = mkstate( SYM_EPSILON );
 		accptnum[astate] = accepting_number;
-		mach = link_machines( mach, astate );
+		(void) link_machines( mach, astate );
 		}
 	}
 
