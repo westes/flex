@@ -35,12 +35,12 @@ AC_CHECK_HEADERS(string.h malloc.h sys/types.h unistd.h stdbool.h)
 AC_CHECK_HEADERS(cunistd netinet/in.h)
 
 AC_PROG_YACC
-AC_CHECK_PROG(BISON, bison, $srcdir/missing)
 AM_PROG_LEX
 AC_PROG_CC
 AC_PROG_LN_S
 AC_PROG_RANLIB
 
+AC_PATH_PROG(BISON, bison, $srcdir/missing)
 AC_PATH_PROG(HELP2MAN, help2man, $srcdir/missing)
 AC_PATH_PROG(M4, m4, $srcdir/missing)
 AC_PATH_PROG(INDENT, indent, $srcdir/missing)
