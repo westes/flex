@@ -123,7 +123,7 @@ test-mul: $(serexe)
 	done
 
 .c.o:
-	$(CC) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<
+	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<
 
 .PHONY: test-table-opts test test-opt test-ser test-ver test-mul
 .SECONDARY: $(allobj) $(allsrc)

@@ -42,4 +42,4 @@ test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT) < $(srcdir)/test.input
 
 .c.o:
-	$(CC) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<
+	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<

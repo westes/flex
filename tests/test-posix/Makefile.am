@@ -42,4 +42,4 @@ test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT)
 
 .c.o:
-	$(CC) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<
+	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<

@@ -42,4 +42,4 @@ test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT) < $(srcdir)/test.input
 
 .cpp.o:
-	$(CXX) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<
+	$(CXX) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<

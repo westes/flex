@@ -47,7 +47,7 @@ test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT)
 
 .c.o:
-	$(CC) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<
+	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<
 
 main.o: scanner-1.h scanner-2.h
 scanner-1.h: scanner-1.c

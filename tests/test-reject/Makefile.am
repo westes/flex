@@ -66,4 +66,4 @@ test: $(tests)
 	./$(testname)-ser$(EXEEXT) $(testname)-ser.tables < $(srcdir)/test.input
 
 .c.o:
-	$(CC) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<
+	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<
