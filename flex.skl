@@ -499,7 +499,7 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
-%% code for yylineno update (if -l) goes here
+%% code for yylineno update goes here
 
 do_action:	/* This label is used only to access EOF actions. */
 
@@ -646,6 +646,7 @@ yyFlexLexer::yyFlexLexer( istream* arg_yyin, ostream* arg_yyout )
 	yy_init = 1;
 	yy_start = 0;
 	yy_flex_debug = 0;
+	yylineno = 1;	// this will only get updated if %option yylineno
 
 	yy_did_buffer_switch_on_eof = 0;
 
@@ -944,7 +945,7 @@ void yyFlexLexer::yyunput( int c, register char* yy_bp )
 
 	*--yy_cp = (char) c;
 
-%% update yylineno here, if doing -l
+%% update yylineno here
 
 	yytext_ptr = yy_bp;
 	yy_hold_char = *yy_cp;
