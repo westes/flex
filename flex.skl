@@ -744,17 +744,7 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 
 %t Tables API Structures and Prototypes
-
-/* Load tables from a file descriptor. */
-//int yytables_read YY_PARAMS((int fd, const char * tbl_name  YY_PROTO_LAST_ARG));
-
-/* Load tables from a file stream. */
-int yytables_fread YY_PARAMS((FILE* fp, const char * tbl_name  YY_PROTO_LAST_ARG));
-
-/* Load tables from given bytes. */
-//int yytables_bread YY_PARAMS((void* bytes, const char * tbl_name  YY_PROTO_LAST_ARG));
-
-
+m4_include(`tables_shared.h')
 %t End of Tables API Structures and Prototypes
 
 /* Default declaration of generated scanner - a define so the user can

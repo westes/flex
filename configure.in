@@ -42,7 +42,7 @@ AC_C_CONST
 AC_TYPE_SIZE_T
 AC_HEADER_STDC
 AC_CHECK_HEADERS(string.h malloc.h sys/types.h unistd.h stdbool.h)
-AC_CHECK_HEADERS(cunistd)
+AC_CHECK_HEADERS(cunistd netinet/in.h)
 
 AC_CONFIG_FILES(
 Makefile

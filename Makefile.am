@@ -74,7 +74,8 @@ noinst_HEADERS = \
 	flexdef.h \
 	version.h \
 	options.h \
-	scanopt.h
+	scanopt.h \
+	tables_shared.h
 
 include_HEADERS = \
 	FlexLexer.h

@@ -35,6 +35,7 @@
 #define FLEXDEF_H 1
 
 #include <stdio.h>
+#include <stdint.h>
 #include <ctype.h>
 #include <limits.h>
 #include <setjmp.h>
@@ -134,6 +135,9 @@
 
 #define unspecified -1
 
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
 
 /* Special chk[] values marking the slots taking by end-of-buffer and action
  * numbers.
@@ -1087,5 +1091,8 @@ extern jmp_buf flex_main_jmp_buf;
 
 /* Removes all \n and \r chars from tail of str. returns str. */
 extern char* chomp(char* str);
+
+/* Tables serialization API declarations. */
+#include "tables_shared.h"
 
 #endif /* not defined FLEXDEF_H */
