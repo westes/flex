@@ -135,7 +135,7 @@ int cclp;
 /* list_character_set - list the members of a set of characters in CCL form
  *
  * synopsis
- *     int cset[CSIZE + 1];
+ *     int cset[CSIZE];
  *     FILE *file;
  *     list_character_set( cset );
  *
@@ -154,7 +154,7 @@ int cset[];
 
     putc( '[', file );
 
-    for ( i = 1; i <= csize; ++i )
+    for ( i = (uses_NUL ? 0 : 1); i < csize; ++i )
 	{
 	if ( cset[i] )
 	    {
@@ -164,7 +164,7 @@ int cset[];
 
 	    fputs( readable_form( i ), file );
 
-	    while ( ++i <= csize && cset[i] )
+	    while ( ++i < csize && cset[i] )
 		;
 
 	    if ( i - 1 > start_char )
