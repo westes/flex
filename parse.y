@@ -740,7 +740,12 @@ ccl_expr:	   CCE_ALNUM	{ CCL_EXPR(isalnum) }
 		|  CCE_PRINT	{ CCL_EXPR(isprint) }
 		|  CCE_PUNCT	{ CCL_EXPR(ispunct) }
 		|  CCE_SPACE	{ CCL_EXPR(isspace) }
-		|  CCE_UPPER	{ CCL_EXPR(isupper) }
+		|  CCE_UPPER	{
+				if ( caseins )
+					CCL_EXPR(islower)
+				else
+					CCL_EXPR(isupper)
+				}
 		|  CCE_XDIGIT	{ CCL_EXPR(isxdigit) }
 		;
 		
