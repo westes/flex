@@ -417,7 +417,7 @@ extern int yymore_really_used, reject_really_used;
 
 extern int datapos, dataline, linenum, out_linenum;
 extern FILE *skelfile, *yyin, *backing_up_file;
-extern char *skel[];
+extern const char *skel[];
 extern int skel_ind;
 extern char *infilename, *outfilename;
 extern int did_outfilename;
@@ -816,7 +816,7 @@ extern void check_char PROTO((int c));
 extern Char clower PROTO((int));
 
 /* Returns a dynamically allocated copy of a string. */
-extern char *copy_string PROTO((register char *));
+extern char *copy_string PROTO((register const char *));
 
 /* Returns a dynamically allocated copy of a (potentially) unsigned string. */
 extern Char *copy_unsigned_string PROTO((register Char *));
@@ -828,19 +828,19 @@ extern void cshell PROTO((Char [], int, int));
 extern void dataend PROTO((void));
 
 /* Report an error message and terminate. */
-extern void flexerror PROTO((char[]));
+extern void flexerror PROTO((const char[]));
 
 /* Report a fatal error message and terminate. */
-extern void flexfatal PROTO((char[]));
+extern void flexfatal PROTO((const char[]));
 
 /* Convert a hexadecimal digit string to an integer value. */
 extern int htoi PROTO((Char[]));
 
 /* Report an error message formatted with one integer argument. */
-extern void lerrif PROTO((char[], int));
+extern void lerrif PROTO((const char[], int));
 
 /* Report an error message formatted with one string argument. */
-extern void lerrsf PROTO((char[], char[]));
+extern void lerrsf PROTO((const char[], const char[]));
 
 /* Spit out a "# line" statement. */
 extern void line_directive_out PROTO((FILE*, int));
@@ -868,16 +868,17 @@ extern Char myesc PROTO((Char[]));
 extern int otoi PROTO((Char [] ));
 
 /* Output a (possibly-formatted) string to the generated scanner. */
-extern void out PROTO((char []));
-extern void out_dec PROTO((char [], int));
-extern void out_dec2 PROTO((char [], int, int));
-extern void out_hex PROTO((char [], unsigned int));
-extern void out_line_count PROTO((char []));;
-extern void out_str PROTO((char [], char []));
-extern void out_str3 PROTO((char [], char [], char [], char []));
-extern void out_str_dec PROTO((char [], char [], int));
+extern void out PROTO((const char []));
+extern void out_dec PROTO((const char [], int));
+extern void out_dec2 PROTO((const char [], int, int));
+extern void out_hex PROTO((const char [], unsigned int));
+extern void out_line_count PROTO((const char []));
+extern void out_str PROTO((const char [], const char []));
+extern void out_str3
+	PROTO((const char [], const char [], const char [], const char []));
+extern void out_str_dec PROTO((const char [], const char [], int));
 extern void outc PROTO((int));
-extern void outn PROTO((char []));
+extern void outn PROTO((const char []));
 
 /* Return a printable version of the given character, which might be
  * 8-bit.
