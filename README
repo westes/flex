@@ -15,7 +15,11 @@ Note that flex is distributed under a copyright very similar to that of
 BSD Unix, and not under the GNU General Public License (GPL), except for
 the "configure" script, which is covered by the GPL.
 
-Please send problems and feedback to:
+Many thanks to the 2.4 pre-testers for finding a bunch of bugs and helping
+increase/test portability: Francois Pinard, Nathan Zelle, Gavin Nicol, and
+Matthew Jacob.
+
+Please send bug reports and feedback to:
 
 	Vern Paxson
 	ICSD, 46A/1123
