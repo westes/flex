@@ -26,6 +26,8 @@ noinst_SCRIPTS = \
 	create-test
 
 SUBDIRS = \
+	test-lineno-r \
+	test-lineno-nr \
 	TEMPLATE \
 	test-array-nr \
 	test-array-r \
