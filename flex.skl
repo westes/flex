@@ -909,7 +909,7 @@ YY_DECL
 
 #ifdef YY_USES_REJECT
         if ( ! YY_G(yy_state_buf) )
-            YY_G(yy_state_buf) = yyalloc(YY_BUF_SIZE + 2  YY_CALL_LAST_ARG);
+            YY_G(yy_state_buf) = (yy_state_type *)yyalloc(YY_BUF_SIZE + 2  YY_CALL_LAST_ARG);
 #endif
 
 		if ( ! YY_G(yy_start) )
