@@ -2734,7 +2734,7 @@ corresponding routine not appearing in the generated scanner:
     yyget_extra, yyset_extra, yyget_leng, yyget_text, 
     yyget_lineno, yyset_lineno, yyget_in, yyset_in,
     yyget_out, yyset_out, yyget_lval, yyset_lval,
-    yyget_lloc, yyset_lloc,
+    yyget_lloc, yyset_lloc, yyget_debug, yyset_debug
 @end verbatim
 @end example
 
@@ -3851,6 +3851,8 @@ The following Functions are available in a reentrant scanner:
 @findex yyset_in
 @findex yyset_out
 @findex yyset_lineno
+@findex yyget_debug
+@findex yyset_debug
 
 @example
 @verbatim
@@ -3860,7 +3862,9 @@ The following Functions are available in a reentrant scanner:
     FILE *yyget_out ( yyscan_t scanner );
     int yyget_lineno ( yyscan_t scanner );
     YY_EXTRA_TYPE yyget_extra ( yyscan_t scanner );
-
+    bool yyget_debug ( yyscan_t scanner );
+ 
+    void yyset_debug ( bool flag, yyscan_t scanner );
     void yyset_in  ( FILE * in_str , yyscan_t scanner );
     void yyset_out  ( FILE * out_str , yyscan_t scanner );
     void yyset_lineno ( int line_number , yyscan_t scanner );
@@ -3881,6 +3885,7 @@ scanner:
     yyout
     yylineno
     yyextra
+    yy_flex_debug
 @end verbatim
 @end example
 
