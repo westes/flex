@@ -112,6 +112,11 @@ m4preproc_define(`M4_GEN_PREFIX',
     M4_GEN_PREFIX(`get_text')
     M4_GEN_PREFIX(`get_lineno')
     M4_GEN_PREFIX(`set_lineno')
+    m4_ifdef( [[M4_YY_REENTRANT]],
+    [[
+        M4_GEN_PREFIX(`get_column')
+        M4_GEN_PREFIX(`set_column')
+    ]])
     M4_GEN_PREFIX(`wrap')
 %endif
 
@@ -133,7 +138,7 @@ m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
     M4_GEN_PREFIX(`free')
 
 %if-c-only
-m4_ifdef( [[M4_YY_REENTRANT]],,
+m4_ifdef( [[M4_YY_NOT_REENTRANT]],
 [[
     M4_GEN_PREFIX(`text')
     M4_GEN_PREFIX(`leng')
@@ -278,13 +283,28 @@ m4_define( [[M4_YY_DOC_PARAM]], [[@param yyscanner The scanner object.]])
 #define yyextra YY_G(yyextra_r)
 #define yyleng YY_G(yyleng_r)
 #define yytext YY_G(yytext_r)
-#define yylineno YY_G(yylineno_r)
+#define yylineno (YY_CURRENT_BUFFER_LVALUE->yy_bs_lineno)
+#define yycolumn (YY_CURRENT_BUFFER_LVALUE->yy_bs_column)
 #define yy_flex_debug YY_G(yy_flex_debug_r)
+
+m4_define( [[M4_YY_INCR_LINENO]],
+[[   
+    do{ yylineno++;
+        yycolumn=0;
+    }while(0)
+]])
 
 int yylex_init M4_YY_PARAMS(yyscan_t* scanner);
 %endif
 
+
+
 %if-not-reentrant
+
+m4_define( [[M4_YY_INCR_LINENO]],
+[[   
+    yylineno++;
+]])
 
 %# Define these macros to be no-ops.
 m4_define( [[M4_YY_DECL_GUTS_VAR]], [[m4_dnl]])
@@ -515,6 +535,10 @@ struct yy_buffer_state
 	 * not.
 	 */
 	int yy_at_bol;
+
+    int yy_bs_lineno; /**< The line count. */
+    int yy_bs_column; /**< The column count. */
+    
 
 	/* Whether to try to fill the input buffer when we reach the
 	 * end of it.
@@ -1676,8 +1700,10 @@ m4_ifdef( [[M4_YY_NO_UNPUT]],,
     void yyFlexLexer::yyunput( int c, register char* yy_bp)
 %endif
 {
-	register char *yy_cp = YY_G(yy_c_buf_p);
+	register char *yy_cp;
     M4_YY_DECL_GUTS_VAR();
+
+    yy_cp = YY_G(yy_c_buf_p);
 
 	/* undo effects of setting up yytext */
 	*yy_cp = YY_G(yy_hold_char);
@@ -1708,8 +1734,9 @@ m4_ifdef( [[M4_YY_NO_UNPUT]],,
 %% [18.0] update yylineno here
 m4_ifdef( [[M4_YY_USE_LINENO]],
 [[
-    if ( c == '\n' )
+    if ( c == '\n' ){
         --yylineno;
+    }
 ]])
 
 	YY_G(yytext_ptr) = yy_bp;
@@ -1978,12 +2005,21 @@ extern "C" int isatty M4_YY_PARAMS( int );
 
 {
 	int oerrno = errno;
-    m4_dnl M4_YY_DECL_GUTS_VAR();
+    M4_YY_DECL_GUTS_VAR();
 
 	yy_flush_buffer( b M4_YY_CALL_LAST_ARG);
 
 	b->yy_input_file = file;
 	b->yy_fill_buffer = 1;
+
+    /* If b is the current buffer, then yy_init_buffer was _probably_
+     * called from yyrestart() or through yy_get_next_buffer.
+     * In that case, we don't want to reset the lineno or column.
+     */
+    if (b != YY_CURRENT_BUFFER){
+        b->yy_bs_lineno = 1;
+        b->yy_bs_column = 0;
+    }
 
 %if-c-only
 m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]],
@@ -2402,8 +2438,35 @@ m4_ifdef( [[M4_YY_NO_GET_LINENO]],,
 int yyget_lineno  YYFARGS0(void)
 {
     M4_YY_DECL_GUTS_VAR();
+    
+    m4_ifdef( [[M4_YY_REENTRANT]],
+    [[
+        if (! YY_CURRENT_BUFFER)
+            return 0;
+    ]])
     return yylineno;
 }
+]])
+
+m4_ifdef( [[M4_YY_REENTRANT]],
+[[
+m4_ifdef( [[M4_YY_NO_GET_COLUMN]],,
+[[
+/** Get the current column number.
+ * M4_YY_DOC_PARAM
+ */
+int yyget_column  YYFARGS0(void)
+{
+    M4_YY_DECL_GUTS_VAR();
+    
+    m4_ifdef( [[M4_YY_REENTRANT]],
+    [[
+        if (! YY_CURRENT_BUFFER)
+            return 0;
+    ]])
+    return yycolumn;
+}
+]])
 ]])
 
 m4_ifdef( [[M4_YY_NO_GET_IN]],,
@@ -2478,8 +2541,38 @@ m4_ifdef( [[M4_YY_NO_SET_LINENO]],,
 void yyset_lineno YYFARGS1( int ,line_number)
 {
     M4_YY_DECL_GUTS_VAR();
+
+    m4_ifdef( [[M4_YY_REENTRANT]],
+    [[
+        /* lineno is only valid if an input buffer exists. */
+        if (! YY_CURRENT_BUFFER )
+           yy_fatal_error( "yyset_lineno called with no buffer" M4_YY_CALL_LAST_ARG); 
+    ]])
     yylineno = line_number;
 }
+]])
+
+m4_ifdef( [[M4_YY_REENTRANT]],
+[[
+m4_ifdef( [[M4_YY_NO_SET_COLUMN]],,
+[[
+/** Set the current column.
+ * @param line_number
+ * M4_YY_DOC_PARAM
+ */
+void yyset_column YYFARGS1( int , column_no)
+{
+    M4_YY_DECL_GUTS_VAR();
+
+    m4_ifdef( [[M4_YY_REENTRANT]],
+    [[
+        /* column is only valid if an input buffer exists. */
+        if (! YY_CURRENT_BUFFER )
+           yy_fatal_error( "yyset_column called with no buffer" M4_YY_CALL_LAST_ARG); 
+    ]])
+    yycolumn = column_no;
+}
+]])
 ]])
 
 
@@ -2579,10 +2672,13 @@ static int yy_init_globals YYFARGS0(void)
     /* Initialization is the same as for the non-reentrant scanner.
        This function is called once per scanner lifetime. */
 
-  /* We do not touch yylineno unless the option is enabled. */
 m4_ifdef( [[M4_YY_USE_LINENO]],
 [[
+    m4_ifdef( [[M4_YY_NOT_REENTRANT]],
+    [[
+    /* We do not touch yylineno unless the option is enabled. */
     yylineno =  1;
+    ]])
 ]])
     YY_G(yy_buffer_stack) = 0;
     YY_G(yy_buffer_stack_top) = 0;

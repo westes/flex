@@ -1987,7 +1987,7 @@ void make_tables ()
 	indent_up ();
 	indent_puts ("if ( yytext[yyl] == '\\n' )");
 	indent_up ();
-	indent_puts ("++yylineno;");
+	indent_puts ("M4_YY_INCR_LINENO();");
 	indent_down ();
 	indent_down ();
 	indent_puts ("}");
@@ -2150,7 +2150,7 @@ void make_tables ()
 			indent_puts
 				("if ( YY_CURRENT_BUFFER_LVALUE->yy_at_bol )");
 			indent_up ();
-			indent_puts ("++yylineno;");
+			indent_puts ("M4_YY_INCR_LINENO();");
 			indent_down ();
 		}
 	}
@@ -2158,7 +2158,7 @@ void make_tables ()
 	else if (do_yylineno) {
 		indent_puts ("if ( c == '\\n' )");
 		indent_up ();
-		indent_puts ("++yylineno;");
+		indent_puts ("M4_YY_INCR_LINENO();");
 		indent_down ();
 	}
 
