@@ -22,7 +22,7 @@
 EXTRA_DIST = \
 	README
 
-noinst_SCRIPTS = \
+dist_noinst_SCRIPTS = \
 	create-test
 
 DIST_SUBDIRS = \
