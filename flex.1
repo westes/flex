@@ -1617,7 +1617,7 @@ scanner.  If you give the flag twice, you will also get comments regarding
 features that lead to minor performance losses.
 .IP
 Note that the use of
-.I REJECT
+.B REJECT
 and variable trailing context (see the Bugs section in flex(1))
 entails a substantial performance penalty; use of
 .I yymore(),
@@ -2189,7 +2189,7 @@ feature will be to automatically add rules to eliminate backing up).
 .I Variable
 trailing context (where both the leading and trailing parts do not have
 a fixed length) entails almost the same performance loss as
-.I REJECT
+.B REJECT
 (i.e., substantial).  So when possible a rule like:
 .nf
 
@@ -2955,6 +2955,13 @@ both the pushed-back text and the current token in
 .B yytext.
 Ideally the scanner should dynamically resize the buffer in this case, but at
 present it does not.
+.PP
+.I
+input buffer overflow, can't enlarge buffer because scanner uses REJECT -
+the scanner was working on matching an extremely large token and needed
+to expand the input buffer.  This doesn't work with scanners that use
+.B
+REJECT.
 .PP
 .I
 fatal flex scanner internal error--end of buffer missed -
