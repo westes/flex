@@ -13,3 +13,5 @@
 
 * integrate the items in the faqs/ directory into the manual or code
   or similar
+
+** shape up the tests/ directory so it runs out of the box
