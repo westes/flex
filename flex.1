@@ -3,7 +3,7 @@
 flexdoc \- documentation for flex, fast lexical analyzer generator
 .SH SYNOPSIS
 .B flex
-.B [\-abcdfhinpstvwBFILTV78+ \-C[efmF] \-Pprefix \-Sskeleton]
+.B [\-abcdfhinpstvwBFILTV78+ \-C[efFmr] \-Pprefix \-Sskeleton]
 .I [filename ...]
 .SH DESCRIPTION
 .I flex
@@ -658,9 +658,9 @@ of the scanner's actions it will slow down
 of the scanner's matching.  Furthermore,
 .B REJECT
 cannot be used with the
-.I -f
+.I -Cf
 or
-.I -F
+.I -CF
 options (see below).
 .IP
 Note also that unlike the other special actions,
@@ -1513,9 +1513,9 @@ This is a list of scanner states which require backing up
 and the input characters on which they do so.  By adding rules one
 can remove backing-up states.  If all backing-up states
 are eliminated and
-.B \-f
+.B \-Cf
 or
-.B \-F
+.B \-CF
 is used, the generated scanner will run faster (see the
 .B \-p
 flag).  Only users who wish to squeeze every last cycle out of their
@@ -1567,13 +1567,11 @@ a NUL; at this point, the two look the same as far as the scanner's concerned),
 or reaches an end-of-file.
 .TP
 .B \-f
-specifies (take your pick)
-.I full table
-or
+specifies
 .I fast scanner.
-No table compression is done.  The result is large but fast.
-This option is equivalent to
-.B \-Cf
+No table compression is done and stdio is bypassed.
+The result is large but fast.  This option is equivalent to
+.B \-Cfr
 (see below).
 .TP
 .B \-h
@@ -1684,10 +1682,10 @@ automatically anyway.
 specifies that the
 .ul
 fast
-scanner table representation should be used.  This representation is
+scanner table representation should be used (and stdio
+bypassed).  This representation is
 about as fast as the full table representation
-.ul
-(-f),
+.B (-f),
 and for some sets of patterns will be considerably smaller (and for
 others, larger).  In general, if the pattern set contains both "keywords"
 and a catch-all, "identifier" rule, such as in the set:
@@ -1703,11 +1701,10 @@ and a catch-all, "identifier" rule, such as in the set:
 then you're better off using the full table representation.  If only
 the "identifier" rule is present and you then use a hash table or some such
 to detect the keywords, you're better off using
-.ul
--F.
+.B -F.
 .IP
 This option is equivalent to
-.B \-CF
+.B \-CFr
 (see below).
 .TP
 .B \-I
@@ -1901,6 +1898,30 @@ classes are not being used) that are commonly used together.  Meta-equivalence
 classes are often a big win when using compressed tables, but they
 have a moderate performance impact (one or two "if" tests and one
 array look-up per character scanned).
+.IP
+.B \-Cr
+causes the generated scanner to
+.I bypass
+use of the standard I/O library (stdio) for input.  Instead of calling
+.B fread(),
+the scanner will use the
+.B read()
+system call, resulting in a performance gain which varies from system
+to system, but in general is probably negligible unless you are also using
+.B \-Cf
+or
+.B \-CF.
+Using
+.B \-Cr
+can cause strange behavior if, for example, you read from
+.I yyin
+using stdio prior to calling the scanner (because the scanner will miss
+whatever text your previous reads left in the stdio input buffer).
+.IP
+.B \-Cr
+has no effect if you define
+.B YY_INPUT
+(see The Generated Scanner above).
 .IP
 A lone
 .B \-C
@@ -2102,9 +2123,9 @@ been scanned and an 'r' does not follow.
 The final comment reminds us that there's no point going to
 all the trouble of removing backing up from the rules unless
 we're using
-.B \-f
+.B \-Cf
 or
-.B \-F,
+.B \-CF,
 since there's no performance gain doing so with compressed scanners.
 .PP
 The way to remove the backing up is to add "error" rules:
@@ -2590,32 +2611,6 @@ has not yet been accepted into the draft (and probably won't; it looks
 like the draft will simply not specify any way of controlling the
 scanner's input other than by making an initial assignment to
 .I yyin).
-.IP -
-.I flex
-scanners do not use stdio for input.  Because of this, when writing an
-interactive scanner one must explicitly call fflush() on the
-stream associated with the terminal after writing out a prompt.
-With
-.I lex
-such writes are automatically flushed since
-.I lex
-scanners use
-.B getchar()
-for their input.
-.IP
-You can make
-.I
-flex
-scanners use stdio by changing the definition of
-.B YY_INPUT
-to:
-.nf
-    #define YY_INPUT(buf,result,max_size) \\
-        if ( ((result = fread( (char *) buf, 1, max_size, \\
-                               yyin )) == 0) && \\
-             ferror( yyin ) ) \\
-                 YY_FATAL_ERROR( "fread() in flex scanner failed" );
-.fi
 .IP -
 .I flex
 scanners are not as reentrant as
