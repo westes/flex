@@ -64,7 +64,33 @@ ccl2ecl()
 	    {
 	    ich = ccltbl[cclp + ccls];
 	    cclmec = ecgroup[ich];
-	    if ( cclmec > 0 )
+
+	    if ( xlation && cclmec < 0 )
+		{
+		/* special hack--if we're doing %t tables then it's
+		 * possible that no representative of this character's
+		 * equivalence class is in the ccl.  So waiting till
+		 * we see the representative would be disastrous.  Instead,
+		 * we add this character's equivalence class anyway, if it's
+		 * not already present.
+		 */
+		int j;
+
+		/* this loop makes this whole process n^2; but we don't
+		 * really care about %t performance anyway
+		 */
+		for ( j = 0; j < newlen; ++j )
+		    if ( ccltbl[cclp + j] == -cclmec )
+			break;
+
+		if ( j >= newlen )
+		    { /* no representative yet, add this one in */
+		    ccltbl[cclp + newlen] = -cclmec;
+		    ++newlen;
+		    }
+		}
+
+	    else if ( cclmec > 0 )
 		{
 		ccltbl[cclp + newlen] = cclmec;
 		++newlen;
@@ -80,18 +106,16 @@ ccl2ecl()
  *
  * synopsis
  *    int cre8ecs();
- *    number of classes = cre8ecs( fwd, bck, num, start_pos );
+ *    number of classes = cre8ecs( fwd, bck, num );
  *
  *  fwd is the forward linked-list of equivalence class members.  bck
  *  is the backward linked-list, and num is the number of class members.
- *  start_pos is 0 if the class members begin in fwd[] and bck[] at
- *  position 0, and 1 if they begin at position 1.
  *
  *  Returned is the number of classes.
  */
 
-int cre8ecs( fwd, bck, num, start_pos )
-int fwd[], bck[], num, start_pos;
+int cre8ecs( fwd, bck, num )
+int fwd[], bck[], num;
 
     {
     int i, j, numcl;
@@ -103,8 +127,7 @@ int fwd[], bck[], num, start_pos;
      * is positive, then x is the representative of its equivalence
      * class.
      */
-
-    for ( i = start_pos; i < num + start_pos; ++i )
+    for ( i = 1; i <= num; ++i )
 	if ( bck[i] == NIL )
 	    {
 	    bck[i] = ++numcl;
@@ -119,24 +142,82 @@ int fwd[], bck[], num, start_pos;
 /* ecs_from_xlation - associate equivalence class numbers using %t table
  *
  * synopsis
- *    ecs_from_xlation( ecmap );
+ *    numecs = ecs_from_xlation( ecmap );
  *
  *  Upon return, ecmap will map each character code to its equivalence
  *  class.  The mapping will be positive if the character is the representative
  *  of its class, negative otherwise.
+ *
+ *  Returns the number of equivalence classes used.
  */
 
-ecs_from_xlation( ecmap )
+int ecs_from_xlation( ecmap )
 int ecmap[];
 
     {
     int i;
+    int nul_is_alone = false;
+    int did_default_xlation_class = false;
 
-    for ( i = (uses_NUL ? 0 : 1); i < csize; ++i )
+    if ( xlation[0] != 0 )
+	{
+	/* if NUL shares its translation with other characters, choose one
+	 * of the other characters as the representative for the equivalence
+	 * class.  This allows a cheap test later to see whether we can
+	 * do away with NUL's equivalence class.
+	 */
+	for ( i = 1; i < csize; ++i )
+	    if ( xlation[i] == -xlation[0] )
+		{
+		xlation[i] = xlation[0];
+		ecmap[0] = -xlation[0];
+		break;
+		}
+
+	if ( i >= csize )
+	    /* didn't find a companion character--remember this fact */
+	    nul_is_alone = true;
+	}
+
+    for ( i = 1; i < csize; ++i )
 	if ( xlation[i] == 0 )
-	    ecmap[i] = num_xlations + 1;
+	    {
+	    if ( did_default_xlation_class )
+		ecmap[i] = -num_xlations;
+	    
+	    else
+		{
+		/* make an equivalence class for those characters not
+		 * specified in the %t table
+		 */
+		++num_xlations;
+		ecmap[i] = num_xlations;
+		did_default_xlation_class = true;
+		}
+	    }
+
 	else
 	    ecmap[i] = xlation[i];
+
+    if ( nul_is_alone )
+	/* force NUL's equivalence class to be the last one */
+	{
+	++num_xlations;
+	ecmap[0] = num_xlations;
+
+	/* there's actually a bug here: if someone is fanatic enough to
+	 * put every character in its own translation class, then right
+	 * now we just promoted NUL's equivalence class to be csize + 1;
+	 * we can handle NUL's class number being == csize (by instead
+	 * putting it in its own table), but we can't handle some *other*
+	 * character having to be put in its own table, too.  So in
+	 * this case we bail out.
+	 */
+	if ( num_xlations > csize )
+	    flexfatal( "too many %t classes!" );
+	}
+
+    return num_xlations;
     }
 
 
@@ -144,17 +225,19 @@ int ecmap[];
  *
  * synopsis
  *    Char ccls[];
- *    int lenccl, fwd[llsiz], bck[llsiz], llsiz;
- *    mkeccl( ccls, lenccl, fwd, bck, llsiz );
+ *    int lenccl, fwd[llsiz], bck[llsiz], llsiz, NUL_mapping;
+ *    mkeccl( ccls, lenccl, fwd, bck, llsiz, NUL_mapping );
  *
  * where ccls contains the elements of the character class, lenccl is the
  * number of elements in the ccl, fwd is the forward link-list of equivalent
  * characters, bck is the backward link-list, and llsiz size of the link-list
+ *
+ * NUL_mapping is the value which NUL (0) should be mapped to.
  */
 
-mkeccl( ccls, lenccl, fwd, bck, llsiz )
+mkeccl( ccls, lenccl, fwd, bck, llsiz, NUL_mapping )
 Char ccls[];
-int lenccl, fwd[], bck[], llsiz;
+int lenccl, fwd[], bck[], llsiz, NUL_mapping;
 
     {
     int cclp, oldec, newec;
@@ -170,6 +253,10 @@ int lenccl, fwd[], bck[], llsiz;
     while ( cclp < lenccl )
 	{
 	cclm = ccls[cclp];
+
+	if ( NUL_mapping && cclm == 0 )
+	    cclm = NUL_mapping;
+
 	oldec = bck[cclm];
 	newec = cclm;
 
@@ -177,8 +264,19 @@ int lenccl, fwd[], bck[], llsiz;
 
 	for ( i = fwd[cclm]; i != NIL && i <= llsiz; i = fwd[i] )
 	    { /* look for the symbol in the character class */
-	    for ( ; j < lenccl && (ccls[j] <= i || cclflags[j]); ++j )
-		if ( ccls[j] == i )
+	    for ( ; j < lenccl; ++j )
+		{
+		register int ccl_char;
+
+		if ( NUL_mapping && ccls[j] == 0 )
+		    ccl_char = NUL_mapping;
+		else
+		    ccl_char = ccls[j];
+
+		if ( ccl_char > i )
+		    break;
+
+		if ( ccl_char == i && ! cclflags[j] )
 		    {
 		    /* we found an old companion of cclm in the ccl.
 		     * link it into the new equivalence class and flag it as
@@ -194,6 +292,7 @@ int lenccl, fwd[], bck[], llsiz;
 		    /* continue 2 */
 		    goto next_pt;
 		    }
+		}
 
 	    /* symbol isn't in character class.  Put it in the old equivalence
 	     * class
