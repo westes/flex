@@ -31,6 +31,12 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#if HAVE_STRING_H
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
 /* Always be prepared to generate an 8-bit scanner. */
 #define CSIZE 256
 #define Char unsigned char
@@ -606,16 +612,9 @@ extern int num_backing_up, bol_needed;
 void *allocate_array PROTO((int, int));
 void *reallocate_array PROTO((void*, int, int));
 
-void *yy_flex_alloc PROTO((unsigned int));
-void *yy_flex_realloc PROTO((void*, unsigned int));
-void yy_flex_free PROTO((void*));
-int yy_flex_strcmp PROTO(( const char *s1, const char *s2 ));
-void yy_flex_strcpy PROTO(( char *s1, const char *s2 ));
-int yy_flex_strlen PROTO(( const char *s ));
-
-#define strcmp yy_flex_strcmp
-#define strcpy yy_flex_strcpy
-#define strlen yy_flex_strlen
+void *flex_alloc PROTO((unsigned int));
+void *flex_realloc PROTO((void*, unsigned int));
+void flex_free PROTO((void*));
 
 #define allocate_integer_array(size) \
 	(int *) allocate_array( size, sizeof( int ) )
