@@ -4512,10 +4512,7 @@ ignores them.
 @item
 The name @code{FLEX_SCANNER} is @code{#define}'d so scanners may be
 written for use with either @code{flex} or @code{lex}.  Scanners also
-include @code{YY_FLEX_MAJOR_VERSION} and @code{YY_FLEX_MINOR_VERSION}
-indicating which version of @code{flex} generated the scanner (for
-example, for the 2.5 release, these defines would be 2 and 5
-respectively).
+include @code{YY_FLEX_VERSION} indicating which version of @code{flex} generated the scanner.
 @end itemize
 
 @cindex POSIX, non-POSIX features of flex
