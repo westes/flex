@@ -213,7 +213,12 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 
 <SECT2PROLOG>.*{NL}	++linenum; ACTION_ECHO;
 
-<SECT2PROLOG><<EOF>>	MARK_END_OF_PROLOG; yyterminate();
+<SECT2PROLOG><<EOF>>	{
+			MARK_END_OF_PROLOG;
+			sectnum = 3;
+			BEGIN(SECT3);
+			yyterminate(); /* to stop the parser */
+			}
 
 <SECT2>^{OPTWS}{NL}	++linenum; /* allow blank lines in section 2 */
 
@@ -266,7 +271,7 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 <SECT2>^"%%".*		{
 			sectnum = 3;
 			BEGIN(SECT3);
-			return EOF; /* to stop the parser */
+			yyterminate(); /* to stop the parser */
 			}
 
 <SECT2>"["{FIRST_CCL_CHAR}{CCL_CHAR}*	{
@@ -485,6 +490,7 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 
 
 <SECT3>.*(\n?)		ECHO;
+<SECT3><<EOF>>		sectnum = 0; yyterminate();
 
 <*>.|\n			format_synerr( "bad character: %s", (char *) yytext );
 
