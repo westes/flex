@@ -39,17 +39,26 @@ static char rcsid[] =
 #define PUT_BACK_STRING(str, start) \
 	for ( i = strlen( str ) - 1; i >= start; --i ) \
 	    unput(str[i])
+
+#define CHECK_REJECT(str) \
+	if ( all_upper( str ) ) \
+	    reject = true;
+
+#define CHECK_YYMORE(str) \
+	if ( all_lower( str ) ) \
+	    yymore_used = true;
 %}
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
 %x FIRSTCCL CCL ACTION RECOVER BRACEERROR C_COMMENT C_COMMENT_2 ACTION_COMMENT
-%x ACTION_STRING PERCENT_BRACE_ACTION
+%x ACTION_STRING PERCENT_BRACE_ACTION USED_LIST
 
-WS		[ \t]+
+WS		[ \t\f]+
+OPTWS		[ \t\f]*
+NOT_WS		[^ \t\f\n]
 
-OPTWS		[ \t]*
-
-NAME		[a-z_][a-z_0-9]*
+NAME		[a-z_][a-z_0-9-]*
+NOT_NAME	[^a-z_\n]+
 
 SCNAME		{NAME}
 
@@ -57,15 +66,21 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 
 %%
     static int bracelevel, didadef;
-    int i, cclval;
+    int i, indented_code, checking_used;
     char nmdef[MAXLINE], myesc();
 
-^{WS}.*\n		++linenum; ECHO; /* indented code */
+^{WS}			indented_code = true; BEGIN(CODEBLOCK);
 ^#.*\n			++linenum; ECHO; /* treat as a comment */
 ^"/*"			ECHO; BEGIN(C_COMMENT);
 ^"%s"(tart)?		return ( SCDECL );
 ^"%x"			return ( XSCDECL );
-^"%{".*\n		++linenum; line_directive_out( stdout ); BEGIN(CODEBLOCK);
+^"%{".*\n		{
+			++linenum;
+			line_directive_out( stdout );
+			indented_code = false;
+			BEGIN(CODEBLOCK);
+			}
+
 {WS}			return ( WHITESPACE );
 
 ^"%%".*			{
@@ -75,7 +90,11 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 			return ( SECTEND );
 			}
 
-^"%"[^sx{%].*\n		{
+^"%used"		checking_used = REALLY_USED; BEGIN(USED_LIST);
+^"%not"{OPTWS}"used"	checking_used = REALLY_NOT_USED; BEGIN(USED_LIST);
+
+
+^"%"[^sx]" ".*\n		{
 			fprintf( stderr,
 			     "old-style lex command at line %d ignored:\n\t%s",
 				 linenum, yytext );
@@ -100,12 +119,22 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 <C_COMMENT>"*"		ECHO;
 <C_COMMENT>\n		++linenum; ECHO;
 
+
 <CODEBLOCK>^"%}".*\n	++linenum; BEGIN(0);
-<CODEBLOCK>.*\n		++linenum; ECHO;
+<CODEBLOCK>"reject"	ECHO; CHECK_REJECT(yytext);
+<CODEBLOCK>"yymore"	ECHO; CHECK_YYMORE(yytext);
+<CODEBLOCK>{NAME}|{NOT_NAME}|.	ECHO;
+<CODEBLOCK>\n		{
+			++linenum;
+			ECHO;
+			if ( indented_code )
+			    BEGIN(0);
+			}
+
 
 <PICKUPDEF>{WS}		/* separates name and definition */
 
-<PICKUPDEF>[^ \t\n].*	{
+<PICKUPDEF>{NOT_WS}.*	{
 			(void) strcpy( nmdef, yytext );
 
 			for ( i = strlen( nmdef ) - 1;
@@ -130,7 +159,24 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 <RECOVER>.*\n		++linenum; BEGIN(0); RETURNNAME;
 
 
-<SECT2PROLOG>.*\n/[^ \t\n]	{
+<USED_LIST>\n		++linenum; BEGIN(0);
+<USED_LIST>{WS}
+<USED_LIST>"reject"	{
+			if ( all_upper( yytext ) )
+			    reject_really_used = checking_used;
+			else
+			    synerr( "unrecognized %used/%notused construct" );
+			}
+<USED_LIST>"yymore"	{
+			if ( all_lower( yytext ) )
+			    yymore_really_used = checking_used;
+			else
+			    synerr( "unrecognized %used/%notused construct" );
+			}
+<USED_LIST>{NOT_WS}+	synerr( "unrecognized %used/%notused construct" );
+
+
+<SECT2PROLOG>.*\n/{NOT_WS}	{
 			++linenum;
 			ACTION_ECHO;
 			MARK_END_OF_PROLOG;
@@ -184,16 +230,14 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 <SECT2>^{OPTWS}\n	++linenum; return ( '\n' );
 
 <SECT2>^"%%".*		{
-			/* guarantee that the SECT3 rule will have something
-			 * to match
-			 */
-			yyless(1);
 			sectnum = 3;
 			BEGIN(SECT3);
 			return ( EOF ); /* to stop the parser */
 			}
 
 <SECT2>"["([^\\\]\n]|{ESCSEQ})+"]"	{
+			int cclval;
+
 			(void) strcpy( nmstr, yytext );
 
 			/* check to see if we've already encountered this ccl */
@@ -301,7 +345,9 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 
 
 <PERCENT_BRACE_ACTION>{OPTWS}"%}".*	bracelevel = 0;
-<PERCENT_BRACE_ACTION>.*		ACTION_ECHO;
+<PERCENT_BRACE_ACTION,ACTION>"reject"	ACTION_ECHO; CHECK_REJECT(yytext);
+<PERCENT_BRACE_ACTION,ACTION>"yymore"	ACTION_ECHO; CHECK_YYMORE(yytext);
+<PERCENT_BRACE_ACTION>{NAME}|{NOT_NAME}|.	ACTION_ECHO;
 <PERCENT_BRACE_ACTION>\n		{
 			++linenum;
 			ACTION_ECHO;
@@ -312,9 +358,11 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 			    }
 			}
 
+	/* REJECT and yymore() are checked for above, in PERCENT_BRACE_ACTION */
 <ACTION>"{"		ACTION_ECHO; ++bracelevel;
 <ACTION>"}"		ACTION_ECHO; --bracelevel;
-<ACTION>[^{}"'/\n]+	ACTION_ECHO;
+<ACTION>[^a-z_{}"'/\n]+	ACTION_ECHO;
+<ACTION>{NAME}		ACTION_ECHO;
 <ACTION>"/*"		ACTION_ECHO; BEGIN(ACTION_COMMENT);
 <ACTION>"'"([^'\\\n]|\\.)*"'"	ACTION_ECHO; /* character constant */
 <ACTION>\"		ACTION_ECHO; BEGIN(ACTION_STRING);
@@ -360,38 +408,5 @@ ESCSEQ		\\([^\n]|0[0-9]{1,3})
 			}
 
 
-<SECT3>.|\n		{
-			register int numchars;
-
-			/* black magic - we know the names of a flex scanner's
-			 * internal variables.  We cap the input buffer with
-			 * an end-of-string and dump it to the output.
-			 */
-			YY_DO_BEFORE_SCAN; /* recover from setting up yytext */
-
-#ifdef FLEX_FAST_SKEL
-			fputs( yy_cp + 1, stdout );
-#else
-			yy_ch_buf[yy_e_buf_p + 1] = '\0';
-
-			/* ignore the first character; it's the second '%'
-			 * put back by the yyless(1) above
-			 */
-			fputs( yy_ch_buf + yy_c_buf_p + 1, stdout );
-#endif
-
-			/* if we don't do this, the data written by write()
-			 * can get overwritten when stdout is finally flushed
-			 */
-			(void) fflush( stdout );
-
-			while ( (numchars = read( fileno(yyin), yy_ch_buf,
-						  YY_BUF_MAX )) > 0 )
-			    (void) write( fileno(stdout), yy_ch_buf, numchars );
-	
-			if ( numchars < 0 )
-			    flexerror( "fatal read error in section 3" );
-
-			return ( EOF );
-			}
+<SECT3>.*(\n?)		ECHO;
 %%
