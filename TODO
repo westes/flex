@@ -39,14 +39,12 @@
 
 ** memory management
 
-**  * Complete the memory management api and documentation.
+*** Complete the memory management api and documentation.
 
 *** create a uniform memory management API
 
 ** figure out whether we want to add the capability to have
   auto-generated backout rules
-
-** yylineno is global, not per-buffer
 
 * C++
 
