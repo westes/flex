@@ -53,4 +53,7 @@ But the inverse is still true.
 ** flex no longer generates C-language scanners with C++-style
    comments
 
+** flex now generates scanners in c++ which are compatible with
+   recent c++ compilers
+
 See the file ONEWS for changes in earlier releases.
