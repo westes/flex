@@ -1,6 +1,7 @@
 *.gmo
 Makefile
 Makefile.in
+Makefile.in.in
 POTFILES
 flex.pot
 remove-potcdate.sed
