@@ -21,19 +21,18 @@ dnl IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 dnl WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 dnl PURPOSE.
 
+dnl autoconf requirements and initialization
+
 AC_PREREQ(2.54)
 AC_INIT(flex,2.5.21,help-flex@gnu.org)
 AC_CONFIG_SRCDIR(scan.l)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h:conf.in)
+
+dnl checks for programs
+
 AM_GNU_GETTEXT
 AM_GNU_GETTEXT_VERSION(0.11.5)
-
-AC_TYPE_SIZE_T
-AC_HEADER_STDC
-AC_CHECK_HEADERS(string.h malloc.h sys/types.h unistd.h stdbool.h)
-AC_CHECK_HEADERS(cunistd netinet/in.h)
-AC_CHECK_DECLS(__func__)
 
 AC_PROG_YACC
 AM_PROG_LEX
@@ -56,6 +55,22 @@ if test "$INDENT" != $srcdir/missing ; then
 else
    AC_MSG_WARN(no indent program found: make indent target will not function)
 fi
+
+dnl checks for libraries
+
+dnl checks for header files
+
+AC_HEADER_STDC
+AC_CHECK_HEADERS(string.h malloc.h sys/types.h unistd.h stdbool.h)
+AC_CHECK_HEADERS(cunistd netinet/in.h)
+
+dnl checks for types
+
+AC_TYPE_SIZE_T
+
+dnl checks for functions
+
+AC_CHECK_DECLS(__func__)
 
 AC_CONFIG_FILES(
 Makefile
