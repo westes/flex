@@ -642,7 +642,8 @@ int sym;
     else
 	{
 	if ( useecs )
-	    mkechar( sym, nextecm, ecgroup );
+	    /* map NUL's to csize */
+	    mkechar( sym ? sym : csize, nextecm, ecgroup );
 	}
 
     return ( lastnfa );
