@@ -4,7 +4,7 @@
 #define FLEXINT_H
 
 #ifndef FLEX_NEED_INTEGRAL_TYPE_DEFINITIONS
-#include <inttypes.h>
+#include <sys/types.h>
 #else
 /* Exact integral types.  */
 
