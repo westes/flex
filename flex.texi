@@ -105,24 +105,6 @@ it analyzes its input for occurrences
 of the regular expressions.  Whenever it finds one, it executes
 the corresponding C code.
 
-@menu
-* Simple Examples::             
-* Format::                      
-* Patterns::                    
-* Matching::                    
-* Actions::                     
-* Generated Scanner::           
-* Start Conditions::            
-* Multiple::                    
-* Invoking Flex::               
-* Performance::                 
-* Cxx::                         
-* Reentrant::                   
-* Diagnostics::                 
-* Limitations::                 
-* Bibliography::                
-@end menu
-
 @node Simple Examples
 @chapter Some Simple Examples
 
@@ -3503,7 +3485,7 @@ additional argument.
 @subsection Global Variables Replaced By Macros
 
 @cindex reentrant, accessing flex variables
-All global variables are replaced by macro equivalents.
+All global variables in traditional flex have been replaced by macro equivalents.
 
 Note that in the above example, @code{yyout} and @code{yytext} are
 not plain variables. These are macros that will expand to their equivalent lvalue.
@@ -3560,12 +3542,35 @@ pass the address of a local pointer to @code{yylex_init}.  The function
 @code{yylex} should be familiar to you by now. The reentrant version
 takes one argument, which is the value returned (via an argument) by
 @code{yylex_init}.  Otherwise, it behaves the same as the non-reentrant
-version of @code{yylex}.  The function @code{yylex_destroy} should be
+version of @code{yylex}. 
+
+The function @code{yylex_destroy} should be
 called to free resources used by the scanner. After @code{yylex_destroy}
-is called, the contents of @code{yyglobals} should not be used.  Of
+is called, the contents of @code{yy_globals} should not be used.  Of
 course, there is no need to destroy a scanner if you plan to reuse it.
 A @code{flex} scanner (both reentrant and non-reentrant) may be
 restarted by calling @code{yyrestart}.
+
+Below is an example of a program that creates a scanner, uses it, then destroys
+it when done:
+
+@example
+@verbatim
+    int main ()
+    {
+        yyscan_t scanner;
+        int tok;
+
+        yylex_init(&scanner);
+
+        while ((tok=yylex()) > 0)
+            printf("tok=%d  yytext=%s\n", tok, yyget_text(scanner));
+
+        yylex_destroy(scanner);
+        return 0;
+    }
+@end verbatim
+@end example
 
 @node Accessor Methods
 @subsection Accessing Variables with Reentrant Scanners
