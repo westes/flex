@@ -28,10 +28,7 @@
 
 /* @(#) $Header$ (LBL) */
 
-#ifndef FILE
 #include <stdio.h>
-#endif
-
 #include <string.h>
 #include <ctype.h>
 
