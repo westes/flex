@@ -22,7 +22,7 @@ dnl WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 dnl PURPOSE.
 
 AC_PREREQ(2.50)
-AC_INIT(flex,2.5.15,help-flex@gnu.org)
+AC_INIT(flex,2.5.16,help-flex@gnu.org)
 AC_CONFIG_SRCDIR(scan.l)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h:conf.in)
@@ -43,16 +43,17 @@ AC_PROG_RANLIB
 
 AC_PATH_PROG(HELP2MAN, help2man, $srcdir/missing)
 AC_PATH_PROG(M4, m4, $srcdir/missing)
-
 AC_PATH_PROG(INDENT, indent, $srcdir/missing)
 if test "$INDENT" != $srcdir/missing ; then
    AC_MSG_CHECKING(if $INDENT is GNU indent)
    if $INDENT --version | head -1|grep "GNU indent" > /dev/null ; then
       AC_MSG_RESULT(yes)
-      else
+   else
       AC_MSG_RESULT(no)
       AC_MSG_WARN($INDENT does not appear to be GNU indent.)
    fi
+else
+   AC_MSG_WARN(no indent program found: make indent target will not function)
 fi
 
 AC_CONFIG_FILES(
