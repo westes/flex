@@ -43,7 +43,8 @@ TESTDIRS="test-string-r test-pthread \
           test-include-by-buffer test-string-nr \
           test-bison-yylloc test-yyextra test-prefix-nr \
           test-prefix-r test-header-nr test-header-r \
-          test-multiple-scanners-nr test-multiple-scanners-r"
+          test-multiple-scanners-nr test-multiple-scanners-r \
+          test-array-nr test-array-r"
 
 AC_OUTPUT( Makefile test-string-r/Makefile test-pthread/Makefile
            test-bison-yylval/Makefile test-include-by-reentrant/Makefile
@@ -52,5 +53,5 @@ AC_OUTPUT( Makefile test-string-r/Makefile test-pthread/Makefile
            test-bison-yylloc/Makefile test-yyextra/Makefile
            test-prefix-nr/Makefile test-prefix-r/Makefile
            test-header-nr/Makefile test-header-r/Makefile
-           test-multiple-scanners-nr/Makefile test-multiple-scanners-r/Makefile)
-
+           test-multiple-scanners-nr/Makefile test-multiple-scanners-r/Makefile
+           test-array-nr/Makefile test-array-r/Makefile)
