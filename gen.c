@@ -1257,7 +1257,7 @@ void make_tables()
 		else
 			{
 			printf(
-			"\tif ( yy_current_buffer->is_interactive ) \\\n" );
+			"\tif ( yy_current_buffer->yy_is_interactive ) \\\n" );
 			printf( "\t\t{ \\\n" );
 			printf( "\t\tint c = getc( yyin ); \\\n" );
 			printf( "\t\tresult = c == EOF ? 0 : 1; \\\n" );
