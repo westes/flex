@@ -80,6 +80,8 @@ Changes between 2.2 (alpha) release of March '90 and previous release:
 	  format.
 	- % directives which are valid to lex but not to flex are
 	  now ignored instead of generating warnings.
+	- -DSYS_V flag can now also be specified -DUSG for System V
+	  compilation.
 
 
 Changes between 2.1 beta-test release of June '89 and previous release:
