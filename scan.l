@@ -25,6 +25,8 @@
  */
 
 %{
+#undef yywrap
+
 #include "flexdef.h"
 #include "parse.h"
 
@@ -63,8 +65,6 @@ static char rcsid[] =
 #define CHECK_YYMORE(str) \
 	if ( all_lower( str ) ) \
 	    yymore_used = true;
-
-#undef yywrap
 %}
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
@@ -89,7 +89,7 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
     Char nmdef[MAXLINE], myesc();
 
 ^{WS}			indented_code = true; BEGIN(CODEBLOCK);
-^#.*\n			++linenum; ECHO; /* treat as a comment */
+^#.*\n			++linenum; /* treat as a comment */
 ^"/*"			ECHO; BEGIN(C_COMMENT);
 ^"%s"{NAME}?		return ( SCDECL );
 ^"%x"{NAME}?		return ( XSCDECL );
@@ -110,12 +110,12 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 			}
 
 ^"%used"		{
-	    pinpoint_message( "Warning, %%used/%%unused have been deprecated" );
+	pinpoint_message( "warning - %%used/%%unused have been deprecated" );
 			checking_used = REALLY_USED; BEGIN(USED_LIST);
 			}
 ^"%unused"		{
 			checking_used = REALLY_NOT_USED; BEGIN(USED_LIST);
-	    pinpoint_message( "Warning, %%used/%%unused have been deprecated" );
+	pinpoint_message( "warning - %%used/%%unused have been deprecated" );
 			checking_used = REALLY_NOT_USED; BEGIN(USED_LIST);
 			}
 
@@ -513,7 +513,7 @@ int yywrap()
 
 /* set_input_file - open the given file (if NULL, stdin) for scanning */
 
-set_input_file( file )
+void set_input_file( file )
 char *file;
 
     {
