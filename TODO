@@ -1,10 +1,10 @@
 * sourceforge migration
 
-** Move CVS to sourceforge (estes)
+** Move CVS to sourceforge (estes) %%
 
-** test the mailing lists (estes)
+** test the mailing lists (estes) %%
 
-** inform GNU folks about changeover (estes)
+** inform GNU folks about changeover (estes) %%
 
 * resolve the items in the to.do directory
 
@@ -19,7 +19,7 @@
 
 ** pretty up the dvi output; overflows, etc.
 
-** document recent m4 modifications
+** document recent m4 modifications (millaway) %%
 
 ** faq
 
@@ -30,6 +30,8 @@
 
 *** mention that it's possible to use a variable to scan matching
     brackets, nested comments etc.
+
+*** include something about lexing/parsing fortran
 
 ** create a section on flex design, features, etc.
 
@@ -82,9 +84,7 @@
 ** remove texinfo.tex from the cvs tree; it only needs to be present
    on the system where the flex release is put together
 
-** remove need for --enable-maintainer-mode configure switch
-
-*** use clcommit to manage ChangeLog
+** use clcommit to manage ChangeLog
 
 Legend:
 
