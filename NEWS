@@ -45,6 +45,8 @@ Changes between release 2.5.2 (25Apr95) and release 2.5.1:
 	- A bug in destructing a FlexLexer object before doing any scanning
 	  with it has been fixed.
 
+	- A problem with including FlexLexer.h multiple times has been fixed.
+
 	- The alloca() chud necessary to accommodate bison has grown
 	  even uglier, but hopefully more correct.
 
