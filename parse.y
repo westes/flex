@@ -109,6 +109,13 @@ int scon_stk_ptr;
 static int madeany = false;  /* whether we've made the '.' character class */
 int previous_continued_action;	/* whether the previous rule's action was '|' */
 
+#define format_warn3(fmt, a1, a2) \
+	do{ \
+        char fw3_msg[MAXLINE];\
+        snprintf( fw3_msg, MAXLINE,(fmt), (a1), (a2) );\
+        warn( fw3_msg );\
+	}while(0)
+
 /* Expand a POSIX character class expression. */
 #define CCL_EXPR(func) \
 	do{ \
@@ -787,13 +794,39 @@ fullccl		:  '[' ccl ']'
 
 ccl		:  ccl CHAR '-' CHAR
 			{
-			if ( caseins )
-				{
-				if ( $2 >= 'A' && $2 <= 'Z' )
-					$2 = clower( $2 );
-				if ( $4 >= 'A' && $4 <= 'Z' )
-					$4 = clower( $4 );
-				}
+
+			if (caseins)
+			  {
+			    /* Squish the character range to lowercase only if BOTH
+			     * ends of the range are uppercase.
+			     */
+			    if (isupper ($2) && isupper ($4))
+			      {
+				$2 = tolower ($2);
+				$4 = tolower ($4);
+			      }
+
+			    /* If one end of the range has case and the other
+			     * does not, or the cases are different, then we're not
+			     * sure what range the user is trying to express.
+			     * Examples: [@-z] or [S-t]
+			     */
+			    else if (has_case ($2) != has_case ($4)
+				     || (has_case ($2) && (b_islower ($2) != b_islower ($4))))
+			      format_warn3 (
+			      _("the character range [%c-%c] is ambiguous in a case-insensitive scanner"),
+					    $2, $4);
+
+			    /* If the range spans uppercase characters but not
+			     * lowercase (or vice-versa), then should we automatically
+			     * include lowercase characters in the range?
+			     * Example: [@-_] spans [a-z] but not [A-Z]
+			     */
+			    else if (!has_case ($2) && !has_case ($4) && !range_covers_case ($2, $4))
+			      format_warn3 (
+			      _("the character range [%c-%c] is ambiguous in a case-insensitive scanner"),
+					    $2, $4);
+			  }
 
 			if ( $2 > $4 )
 				synerr( _("negative range in character class") );
