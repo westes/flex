@@ -5,7 +5,8 @@
  */
 
 #define FLEX_SCANNER
-#define YY_FLEX_VERSION 25
+#define YY_FLEX_MAJOR_VERSION 2
+#define YY_FLEX_MINOR_VERSION 5
 
 %-
 #include <stdio.h>
@@ -930,10 +931,9 @@ void yyFlexLexer::yyunput( int c, register char* yy_bp )
 
 %% update yylineno here, if doing -l
 
-	/* Note: the formal parameter *must* be called "yy_bp" for this
-	 * macro to now work correctly.
-	 */
-	YY_DO_BEFORE_ACTION; /* set up yytext again */
+	yytext_ptr = yy_bp;
+	yy_hold_char = *yy_cp;
+	yy_c_buf_p = yy_cp;
 	}
 
 
