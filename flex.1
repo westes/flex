@@ -1,4 +1,4 @@
-.TH FLEX 1 "20 March 1990" "Version 2.2"
+.TH FLEX 1 "26 May 1990" "Version 2.3"
 .SH NAME
 flex - fast lexical analyzer generator
 .SH SYNOPSIS
@@ -253,7 +253,8 @@ compliance; see below for other such features).
 In the definitions section, an unindented comment (i.e., a line
 beginning with "/*") is also copied verbatim to the output up
 to the next "*/".  Also, any line in the definitions section
-beginning with '#' is ignored.
+beginning with '#' is ignored, though this style of comment is
+deprecated and may go away in the future.
 .SH PATTERNS
 The patterns in the input are written using an extended set of regular
 expressions.  These are:
@@ -1066,12 +1067,27 @@ handle, which may then be passed to other routines:
 switches the scanner's input buffer so subsequent tokens will
 come from
 .I new_buffer.
+Note that
+.B yy_switch_to_buffer()
+may be used by yywrap() to sets things up for continued scanning, instead
+of opening a new file and pointing
+.I yyin
+at it.
 .nf
 
     void yy_delete_buffer( YY_BUFFER_STATE buffer )
 
 .fi
 is used to reclaim the storage associated with a buffer.
+.LP
+.B yy_new_buffer()
+is an alias for
+.B yy_create_buffer(),
+provided for compatibility with the C++ use of
+.I new
+and
+.I delete
+for creating and destroying dynamic objects.
 .LP
 Finally, the
 .B YY_CURRENT_BUFFER
@@ -1164,15 +1180,15 @@ as shown in the example above.
 <<EOF>> rules may not be used with other
 patterns; they may only be qualified with a list of start
 conditions.  If an unqualified <<EOF>> rule is given, it
-applies only to the
-.B INITIAL
-start condition, and
-.I not
-to
-.B %s
-(or
-.B %x)
-start conditions.
+applies to
+.I all
+start conditions which do not already have <<EOF>> actions.  To
+specify an <<EOF>> rule for only the initial start condition, use
+.nf
+
+    <INITIAL><<EOF>>
+
+.fi
 .LP
 These rules are useful for catching things like unclosed comments.
 An example:
@@ -1205,6 +1221,13 @@ YY_USER_ACTION
 can be redefined to provide an action
 which is always executed prior to the matched rule's action.  For example,
 it could be #define'd to call a routine to convert yytext to lower-case.
+.LP
+The macro
+.B YY_USER_INIT
+may be redefined to provide an action which is always executed before
+the first scan (and before the scanner's internal initializations are done).
+For example, it could be used to call a routine to read
+in a data table or open a logging file.
 .LP
 In the generated scanner, the actions are all gathered in one large
 switch statement and separated using
@@ -1351,8 +1374,10 @@ the POSIX meaning is removed first).
 .B -d
 makes the generated scanner run in
 .I debug
-mode.  Whenever a pattern is recognized the scanner will
-write to
+mode.  Whenever a pattern is recognized and the global
+.B yy_flex_debug
+is non-zero (which is the default),
+the scanner will write to
 .I stderr
 a line of the form:
 .nf
@@ -2139,6 +2164,16 @@ interprets it as "match 'ab'
 followed by one, two, or three occurrences of 'c'".  The latter is
 in agreement with the current POSIX draft.
 .IP -
+The precedence of the
+.B ^
+operator is different.
+.I lex
+interprets "^foo|bar" as "match either 'foo' at the beginning of a line,
+or 'bar' anywhere", whereas
+.I flex
+interprets it as "match either 'foo' or 'bar' if they come at the beginning
+of a line".  The latter is in agreement with the current POSIX draft.
+.IP -
 To refer to yytext outside of the scanner source file,
 the correct definition with
 .I flex
@@ -2153,6 +2188,31 @@ variety of declaration (as this is a fairly painless change to
 require of
 .I lex
 users).
+.IP -
+.I yyin
+is
+.I initialized
+by
+.I lex
+to be
+.I stdin;
+.I flex,
+on the other hand,
+initializes
+.I yyin
+to NULL
+and then
+.I assigns
+it to
+.I stdin
+the first time the scanner is called, providing
+.I yyin
+has not already been assigned to a non-NULL value.  The difference is
+subtle, but the net effect is that with
+.I flex
+scanners,
+.I yyin
+does not have a valid value until the scanner has been called.
 .IP -
 The special table-size declarations such as
 .B %a
@@ -2185,7 +2245,7 @@ or the POSIX draft standard:
     #line directives
     %{}'s around actions
     yyrestart()
-    comments beginning with '#'
+    comments beginning with '#' (deprecated)
     multiple actions on a line
 
 .fi
@@ -2231,7 +2291,7 @@ input file.  (Note that previously
 supported a
 .B %used/%unused
 mechanism for dealing with this problem; this feature is still supported
-but now deprecated, and will go away soon unless the author hear's from
+but now deprecated, and will go away soon unless the author hears from
 people who can argue compellingly that they need it.)
 .LP
 .I flex scanner jammed -
@@ -2273,13 +2333,15 @@ Jacobson.  The implementation was done by Kevin Gong and Vern Paxson.
 .LP
 Thanks to the many
 .I flex
-beta-testers and feedbackers, especially Casey
+beta-testers, feedbackers, and contributors, especially Casey
 Leedom, benson@odi.com,
 Frederic Brehm, Nick Christopher, Jason Coughlin,
+Scott David Daniels, Leo Eskin,
 Chris Faylor, Eric Goldman, Eric
 Hughes, Jeffrey R. Jones, Kevin B. Kenny, Ronald Lamprecht,
 Greg Lee, Craig Leres, Mohamed el Lozy, Jim Meyering, Marc Nozell, Esmond Pitt,
-Jef Poskanzer, Dave Tallman, Frank Whaley, Ken Yap, and those whose names
+Jef Poskanzer, Jim Roskind,
+Dave Tallman, Frank Whaley, Ken Yap, and those whose names
 have slipped my marginal mail-archiving skills but whose contributions
 are appreciated all the same.
 .LP
@@ -2291,6 +2353,15 @@ Thanks to Esmond Pitt and Earle Horton for 8-bit character support;
 to Benson Margulies and Fred
 Burke for C++ support; to Ove Ewerlid for the basics of support for
 NUL's; and to Eric Hughes for the basics of support for multiple buffers.
+.LP
+Work is being done on extending
+.I flex
+to generate scanners in which the
+state machine is directly represented in C code rather than tables.
+These scanners may well be substantially faster than those generated
+using -f or -F.  If you are working in this area and are interested
+in comparing notes and seeing whether redundant work can be avoided,
+contact Ove Ewerlid (ewerlid@mizar.DoCS.UU.SE).
 .LP
 This work was primarily done when I was at the Real Time Systems Group
 at the Lawrence Berkeley Laboratory in Berkeley, CA.  Many thanks to all there
