@@ -747,7 +747,7 @@ extern void mk2data PROTO((int));
 extern void mkdata PROTO((int));	/* generate a data statement */
 
 /* Return the integer represented by a string of digits. */
-extern int myctoi PROTO((Char []));
+extern int myctoi PROTO((char []));
 
 /* Return a printable version of the given character, which might be
  * 8-bit

@@ -477,11 +477,11 @@ int value;
 /* myctoi - return the integer represented by a string of digits */
 
 int myctoi( array )
-Char array[];
+char array[];
 	{
 	int val = 0;
 
-	(void) sscanf( (char *) array, "%d", &val );
+	(void) sscanf( array, "%d", &val );
 
 	return val;
 	}
