@@ -30,4 +30,4 @@
 
 touch ChangeLog
 
-autopoint && aclocal -I m4 && autoheader && automake -a && autoconf
+autopoint -f && aclocal -I m4 && autoheader && automake -a && autoconf
