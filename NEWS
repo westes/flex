@@ -3,6 +3,11 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* after version 2.5.22
+
+** the script create-test was not included in the distribution and it
+   should have been
+
 * version 2.5.22 released 2002-10-10
 
 ** more portability fixes around how we get ahold of the integral
