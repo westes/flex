@@ -5,6 +5,8 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.28
 
+** Automatic stack management for multiple input buffers
+
 ** moved the flex documentation to a new doc/ subdirectory
 
 ** cleanups to the yy namespace
