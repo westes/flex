@@ -54,8 +54,6 @@
 
 ** make test suite more complete
 
-*** add a test for yypush_buffer_state/yypop_buffer_state
-
 * generic coding
 
 ** move as much skeleton code as possible out of gen.c and into

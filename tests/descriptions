@@ -17,6 +17,7 @@ debug-r               - Use debugging functions, reentrant.
 header-nr             - Test generated header file, non-reentrant.
 header-r              - Test generated header file, reentrant.
 include-by-buffer     - YY_BUFFER_STATE, yy_push_state, etc.
+include-by-push       - yypush_buffer_state, yypop_buffer_state
 include-by-reentrant  - Nested scanners.
 linedir-r             - Check #line directives.
 lineno-nr             - Use %option yylineno, non-reentrant.

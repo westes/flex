@@ -98,6 +98,7 @@ tests/test-c-cpp-r/Makefile
 tests/test-header-nr/Makefile
 tests/test-header-r/Makefile
 tests/test-include-by-buffer/Makefile
+tests/test-include-by-push/Makefile
 tests/test-include-by-reentrant/Makefile
 tests/test-multiple-scanners-nr/Makefile
 tests/test-multiple-scanners-r/Makefile

@@ -53,6 +53,7 @@ DIST_SUBDIRS = \
 	test-c-cpp-nr \
 	test-c-cpp-r \
 	test-include-by-buffer \
+	test-include-by-push \
 	test-include-by-reentrant \
 	test-prefix-nr \
 	test-prefix-r \
@@ -91,6 +92,7 @@ SUBDIRS = \
 	test-c-cpp-nr \
 	test-c-cpp-r \
 	test-include-by-buffer \
+	test-include-by-push \
 	test-include-by-reentrant \
 	test-prefix-nr \
 	test-prefix-r \
