@@ -68,7 +68,6 @@ int table_size;
     register struct hash_entry *sym_entry = table[hash_val];
     register struct hash_entry *new_entry;
     register struct hash_entry *successor;
-    char *malloc();
 
     while ( sym_entry )
 	{
