@@ -38,6 +38,10 @@
 @c   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 @c   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 @c   PURPOSE.
+@dircategory Programming
+@direntry
+* flex: (flex).      Fast lexical analyzer generator (lex replacement).
+@end direntry
 @node Top
 @top flex
 
