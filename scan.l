@@ -43,11 +43,11 @@
 	return CHAR;
 
 #define RETURNNAME \
-	yy_strcpy( nmstr, yytext ); \
+	strcpy( nmstr, yytext ); \
 	return NAME;
 
 #define PUT_BACK_STRING(str, start) \
-	for ( i = yy_strlen( str ) - 1; i >= start; --i ) \
+	for ( i = strlen( str ) - 1; i >= start; --i ) \
 		unput((str)[i])
 
 #define CHECK_REJECT(str) \
@@ -139,7 +139,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 ^"%"[^sxanpekotcru{}].*	synerr( "unrecognized '%' directive" );
 
 ^{NAME}			{
-			yy_strcpy( nmstr, yytext );
+			strcpy( nmstr, yytext );
 			didadef = false;
 			BEGIN(PICKUPDEF);
 			}
@@ -171,10 +171,10 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 <PICKUPDEF>{WS}		/* separates name and definition */
 
 <PICKUPDEF>{NOT_WS}.*	{
-			yy_strcpy( (char *) nmdef, yytext );
+			strcpy( (char *) nmdef, yytext );
 
 			/* Skip trailing whitespace. */
-			for ( i = yy_strlen( (char *) nmdef ) - 1;
+			for ( i = strlen( (char *) nmdef ) - 1;
 			      i >= 0 && (nmdef[i] == ' ' || nmdef[i] == '\t');
 			      --i )
 				;
@@ -296,7 +296,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 <SECT2>"["{FIRST_CCL_CHAR}{CCL_CHAR}*	{
 			int cclval;
 
-			yy_strcpy( nmstr, yytext );
+			strcpy( nmstr, yytext );
 
 			/* Check to see if we've already encountered this
 			 * ccl.
@@ -331,7 +331,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 			register Char *nmdefptr;
 			Char *ndlookup();
 
-			yy_strcpy( nmstr, yytext + 1 );
+			strcpy( nmstr, yytext + 1 );
 			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */
 
 			if ( ! (nmdefptr = ndlookup( nmstr )) )
@@ -340,7 +340,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
 			else
 				{ /* push back name surrounded by ()'s */
-				int len = yy_strlen( (char *) nmdefptr );
+				int len = strlen( (char *) nmdefptr );
 
 				if ( lex_compat || nmdefptr[0] == '^' ||
 				     (len > 0 && nmdefptr[len - 1] == '$') )

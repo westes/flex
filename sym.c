@@ -62,7 +62,7 @@ int table_size;
 
 	while ( sym_entry )
 		{
-		if ( ! yy_strcmp( sym, sym_entry->name ) )
+		if ( ! strcmp( sym, sym_entry->name ) )
 			{ /* entry already exists */
 			return -1;
 			}
@@ -142,7 +142,7 @@ int table_size;
 
 	while ( sym_entry )
 		{
-		if ( ! yy_strcmp( sym, sym_entry->name ) )
+		if ( ! strcmp( sym, sym_entry->name ) )
 			return sym_entry;
 		sym_entry = sym_entry->next;
 		}

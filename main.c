@@ -260,7 +260,7 @@ int exit_status;
 		if ( skelname )
 			fprintf( stderr, " -S%s", skelname );
 
-		if ( yy_strcmp( prefix, "yy" ) )
+		if ( strcmp( prefix, "yy" ) )
 			fprintf( stderr, " -P%s", prefix );
 
 		putc( '\n', stderr );
@@ -394,7 +394,7 @@ char **argv;
 	program_name = argv[0];
 
 	if ( program_name[0] != '\0' &&
-	     program_name[yy_strlen( program_name ) - 1] == '+' )
+	     program_name[strlen( program_name ) - 1] == '+' )
 		C_plus_plus = true;
 
 	/* read flags */
@@ -696,7 +696,7 @@ char **argv;
 	if ( skelname && (skelfile = fopen( skelname, "r" )) == NULL )
 		lerrsf( "can't open skeleton file %s", skelname );
 
-	if ( yy_strcmp( prefix, "yy" ) )
+	if ( strcmp( prefix, "yy" ) )
 		{
 #define GEN_PREFIX(name) out_str3( "#define yy%s %s%s\n", name, prefix, name );
 		GEN_PREFIX( "FlexLexer" );
