@@ -568,7 +568,7 @@ struct yyguts_t
 
 %if-bison-bridge
     YYSTYPE * yylval_r;
-#ifdef YYLTYPE
+#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
     YYLTYPE * yylloc_r;
 #endif
 %endif
@@ -581,12 +581,12 @@ static int yy_init_globals YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 %ok-for-header
 
 %not-for-header These go in the .c file only.
-/* This must go here because YYSTYPE and YYLSTYPE are included
+/* This must go here because YYSTYPE and YYLTYPE are included
  * from bison output in section 1.*/
 %if-reentrant
 %if-bison-bridge
 #    define yylval YY_G(yylval_r)
-#  ifdef YYLTYPE
+#  if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
 #    define yylloc YY_G(yylloc_r)
 #  endif
 %endif
@@ -656,7 +656,7 @@ void yyset_lineno YY_PARAMS(( int line_number YY_PROTO_LAST_ARG ));
 YYSTYPE * yyget_lval YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 void yyset_lval YY_PARAMS(( YYSTYPE * yylvalp YY_PROTO_LAST_ARG ));
-#ifdef YYLTYPE
+#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
 #ifndef YY_NO_GET_LLOC
    YYLTYPE *yyget_lloc YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
@@ -840,7 +840,7 @@ struct yytbl_reader {
    one or two additional arguments. */
 
 %if-bison-bridge
-#  ifdef YYLTYPE 
+#  if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
 #        define YY_LEX_PROTO YY_PARAMS((YYSTYPE * yylvalp, YYLTYPE * yyllocp YY_PROTO_LAST_ARG))
 #        define YY_LEX_DECLARATION YYFARGS2(YYSTYPE *,yylvalp, YYLTYPE *,yyllocp)
 #  else
@@ -887,7 +887,7 @@ YY_DECL
 %if-bison-bridge
 %if-not-reentrant
     YYSTYPE * yylval;
-#   ifdef YYLTYPE
+#   if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
       YYLTYPE * yylloc;
 #   endif
 %endif
@@ -897,7 +897,7 @@ YY_DECL
 
 %if-bison-bridge
     yylval = yylvalp;
-#ifdef YYLTYPE
+#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
     yylloc = yyllocp;
 #endif
 %endif
@@ -1992,7 +1992,7 @@ void yyset_lval YYFARGS1( YYSTYPE * ,yylvalp)
 }
 #endif /* !YY_NO_SET_LVAL */
 
-#ifdef YYLTYPE
+#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
 #ifndef YY_NO_GET_LLOC
 YYLTYPE *yyget_lloc  YYFARGS0(void)
 {
