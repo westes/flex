@@ -52,7 +52,15 @@
 	return CHAR;
 
 #define RETURNNAME \
+	if(strlen(yytext) < MAXLINE) \
+         { \
 	strcpy( nmstr, yytext ); \
+	 } \
+	else \
+	 { \
+	   synerr(_("Input line too long\n")); \
+	   exit(1);  \
+	 }  \
 	return NAME;
 
 #define PUT_BACK_STRING(str, start) \
@@ -145,7 +153,16 @@ LEXOPT		[aceknopr]
 	^"%"[^sxaceknopr{}].*	synerr( _( "unrecognized '%' directive" ) );
 
 	^{NAME}		{
+			if(strlen(yytext) < MAXLINE) 
+        		 { 
 			strcpy( nmstr, yytext );
+			 } 
+			else 
+			 { 
+			   synerr( _("Input line too long\n")); 
+			   exit(EXIT_FAILURE);  
+			 }
+
 			didadef = false;
 			BEGIN(PICKUPDEF);
 			}
@@ -193,8 +210,15 @@ LEXOPT		[aceknopr]
 	{WS}		/* separates name and definition */
 
 	{NOT_WS}[^\r\n]*	{
+ 		        if(strlen(yytext) < MAXLINE)
+ 		         {
 			strcpy( (char *) nmdef, yytext );
-
+ 		         } 
+ 		        else
+ 		         {
+ 		           synerr( _("Input line too long\n"));
+ 		           exit(1); 
+			 }
 			/* Skip trailing whitespace. */
 			for ( i = strlen( (char *) nmdef ) - 1;
 			      i >= 0 && (nmdef[i] == ' ' || nmdef[i] == '\t');
@@ -319,7 +343,15 @@ LEXOPT		[aceknopr]
 	tables-file         return OPT_TABLES;
 
 	\"[^"\n]*\"	{
+			if(strlen(yytext + 1 ) < MAXLINE) 
+        		 { 
 			strcpy( nmstr, yytext + 1 );
+			 } 
+			else 
+			 { 
+			   synerr( _("Input line too long\n")); 
+			   exit(1);  
+			 }
 			nmstr[strlen( nmstr ) - 1] = '\0';
 			return NAME;
 			}
@@ -450,7 +482,15 @@ LEXOPT		[aceknopr]
 	"["({FIRST_CCL_CHAR}|{CCL_EXPR})({CCL_CHAR}|{CCL_EXPR})*	{
 			int cclval;
 
+			if(strlen(yytext ) < MAXLINE) 
+        		 { 
 			strcpy( nmstr, yytext );
+			 } 
+			else 
+			 { 
+			   synerr( _("Input line too long\n")); 
+			   exit(1);  
+			 } 
 
 			/* Check to see if we've already encountered this
 			 * ccl.
@@ -492,8 +532,16 @@ LEXOPT		[aceknopr]
             end_ch = yytext[yyleng-1];
             end_is_ws = end_ch != '}' ? 1 : 0;
 
+ 			if(strlen(yytext + 1 ) < MAXLINE) 
+         		 { 
 			strcpy( nmstr, yytext + 1 );
-			nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
+ 			 } 
+ 			else 
+ 			 { 
+ 			   synerr( _("Input line too long\n")); 
+ 			   exit(1);  
+ 			 }			
+nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 			if ( (nmdefptr = ndlookup( nmstr )) == 0 )
 				format_synerr(
