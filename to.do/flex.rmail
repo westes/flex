@@ -3718,4 +3718,485 @@ Help-flex mailing list
 Help-flex@gnu.org
 http://mail.gnu.org/mailman/listinfo/help-flex
 
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Mon Jun  4 11:26:56 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id LAA07669
+	for <wlestes@localhost>; Mon, 4 Jun 2001 11:26:55 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Mon, 04 Jun 2001 11:26:55 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f54F63q16735
+	for <wlestes@hermes.email.uncg.edu>; Mon, 4 Jun 2001 11:06:03 -0400 (EDT)
+Received: from fencepost.gnu.org (we-refuse-to-spy-on-our-users@fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id LAA00743
+	for <wlestes@uncg.edu>; Mon, 4 Jun 2001 11:06:02 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 156vve-0003bF-00
+	for <wlestes@uncg.edu>; Mon, 04 Jun 2001 11:06:02 -0400
+Received: from mx1.thebiz.net ([216.238.0.20])
+	by fencepost.gnu.org with smtp (Exim 3.16 #1 (Debian))
+	id 156vtP-0003Xd-00
+	for <help-flex@gnu.org>; Mon, 04 Jun 2001 11:03:43 -0400
+Received: (qmail 14188 invoked from network); 4 Jun 2001 11:03:40 -0400
+Received: from mail2.backend.thebiz.net (HELO mail2.thebiz.net) (172.16.0.129)
+  by mx1.backend.thebiz.net with SMTP; 4 Jun 2001 11:03:40 -0400
+Received: (qmail 26039 invoked by uid 0); 4 Jun 2001 11:03:39 -0400
+Received: from unknown (HELO abit) (216.238.78.51)
+  by mail.ulster.net with SMTP; 4 Jun 2001 11:03:39 -0400
+Message-ID: <006701c0ed07$fcefc5a0$0400a8c0@abit>
+From: "Bill Fenlason" <BillFen@Ulster.Net>
+To: <help-flex@gnu.org>
+Subject: FLEX <<EOF>> with yymore() token
+MIME-Version: 1.0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 5.00.3018.1300
+X-MimeOLE: Produced By Microsoft MimeOLE V5.00.3018.1300
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Mon, 4 Jun 2001 11:06:52 -0400
+
+*** EOOH ***
+From: "Bill Fenlason" <BillFen@Ulster.Net>
+To: <help-flex@gnu.org>
+Subject: FLEX <<EOF>> with yymore() token
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Mon, 4 Jun 2001 11:06:52 -0400
+
+I posted part of this question to comp.compilers, and John Millaway pointed
+me here.  Thanks John.  I've read the archives but did not see this topic
+discussed.
+
+In FLEX, the current buffer is flushed immediately when EOF is encountered,
+even if it contains a token pushed by yymore().  That means that something
+like:
+    <start_cond><<EOF>>{If (yyleng > 0) return(A_TOKEN) .... }
+fails, because yyleng may be non-zero but yytext is null.  The token is
+copied to the start of the buffer but is then overwritten by the buffer
+flush (via yyrestart).
+
+I modified the skeleton to check this out.  If the call to yyrestart is
+bypassed (OK in my case), the problem partly goes away.  Is this a bug or an
+unintended byproduct?
+
+The core issue relates to <<EOF>> and what actions after <<EOF>> are
+allowed.  <<EOF>> is logically a state rather than a token, and the null
+return (after yywrap) makes perfect sense to me.  The comment in the code
+about a repeated call returning null again also makes sense, but it seems to
+me that allowing the return of a residual token (pushed by yymore) would be
+appropriate.  I realize the difficulty in trying to allow <<EOF>> as right
+context in a pattern, and I had hoped to accomplish the same thing via the
+<<EOF>> rules.
+
+Currently at <<EOF>> yyleng is set to 1 plus the yymore length, and I would
+propose that it should be set to the yymore length only (usually 0).  The
+scan has to rely on the trailing null in the buffer to identify the <<EOF>>
+state, but should it be treated as an actual token?  (In the case above I
+needed to use --yyleng.)
+
+I understand the need to reset the buffer in case the user has changed yyin.
+
+The man page specifies that repeated calls after EOF are undefined.  Would
+defining them such that zero additional characters are matched and that null
+is returned be an improvement?  Should the calculation of yyleng at <<EOF>>
+be changed?  Should there be a change regarding the buffer flush to allow
+the residual token to be returned?
+
+My case involves recognizing identifiers which may contain extralingual
+characters defined at runtime.
+
+Thank you.
+
+Bill Fenlason
+
+
+
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From BillFen@Ulster.Net  Sun Jun 10 13:20:00 2001
+Return-Path: <BillFen@Ulster.Net>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id NAA02104
+	for <wlestes@localhost>; Sun, 10 Jun 2001 13:20:00 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Sun, 10 Jun 2001 13:20:00 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.uncg.edu (8.11.0/8.11.0) with ESMTP id f5AHIPs03250
+	for <wlestes@hermes.email.uncg.edu>; Sun, 10 Jun 2001 13:18:25 -0400 (EDT)
+Received: from mx1.thebiz.net (mx1.thebiz.net [216.238.0.20])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with SMTP id NAA27551
+	for <wlestes@uncg.edu>; Sun, 10 Jun 2001 13:18:24 -0400 (EDT)
+Received: (qmail 24543 invoked from network); 10 Jun 2001 13:18:24 -0400
+Received: from unknown (HELO mail2.thebiz.net) (172.16.0.129)
+  by mx1.backend.thebiz.net with SMTP; 10 Jun 2001 13:18:24 -0400
+Received: (qmail 29926 invoked by uid 0); 10 Jun 2001 13:18:23 -0400
+Received: from unknown (HELO abit) (216.238.78.51)
+  by mail.ulster.net with SMTP; 10 Jun 2001 13:18:23 -0400
+Message-ID: <00f301c0f1d1$bb1ef140$0400a8c0@abit>
+From: "Bill Fenlason" <BillFen@Ulster.Net>
+To: <wlestes@uncg.edu>
+Subject: FLEX modifications
+Date: Sun, 10 Jun 2001 13:21:02 -0400
+MIME-Version: 1.0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 5.00.3018.1300
+X-MimeOLE: Produced By Microsoft MimeOLE V5.00.3018.1300
+
+*** EOOH ***
+From: "Bill Fenlason" <BillFen@Ulster.Net>
+To: <wlestes@uncg.edu>
+Subject: FLEX modifications
+Date: Sun, 10 Jun 2001 13:21:02 -0400
+
+Hello Will,
+
+Are you currently the one responsible for FLEX development and maint?  I saw
+you pointed to in the FLEX help archives.
+
+Since no one has commented on my recent message regarding yymore() and
+<<EOF>>, I though I would send you a note directly.
+
+Are you interested in a patch and documentation changes?  I'll be happy to
+develop them and send them to you.  It will be some work for me since I
+would want to be sure that everything is bulletproof.  But I don't want to
+spend the time on it if there is no agreement that the change is both needed
+and wanted.
+
+The reason I'm implementing this is that the parser interface routine I'm
+developing builds a token chain that includes tokens for missing ending
+delimiters (comment ends, quotes, parens, etc, as well as include file end
+identifiers.  It is convenient to keep generating zero length tokens at
+<<EOF>> to handle this, with the final YY_NULL being delayed until nothing
+is outstanding or pushed with yymore().  Leaving repeated calls after EOF as
+undefined and undocumented seems to me to be a loose end that might well be
+clarified.  I think that my approach makes sense in general, and had hoped
+that others more experienced with FLEX would point out some pros and cons.
+
+I have some other topics to ask about along with some suggestions, and it
+will be helpful to know if you are interested in this or other changes and
+additions to FLEX.
+
+I'll be using a modified skeleton in any event so I'm not dependent (or
+asking for) any "official" changes.  But FLEX is a wonderful tool, and I
+wouldn't mind contributing something to it if I am able to.
+
+Thanks.
+
+Bill Fenlason
+
+ps I assume that Vern is a very busy guy so I have not written to him.  But
+feel free to forward this to him if you think it appropriate.
+
+
+
+
+
+1, answered,,
+Summary-line: 10-Jun         BillFen@Ulster.Net [121] #Re: FLEX modifications
+X-Coding-System: nil
+Mail-from: From BillFen@Ulster.Net  Sun Jun 10 20:30:13 2001
+Return-Path: <BillFen@Ulster.Net>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id UAA02667
+	for <wlestes@localhost>; Sun, 10 Jun 2001 20:30:13 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Sun, 10 Jun 2001 20:30:13 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.uncg.edu (8.11.0/8.11.0) with ESMTP id f5B0SGs07342
+	for <wlestes@hermes.email.uncg.edu>; Sun, 10 Jun 2001 20:28:16 -0400 (EDT)
+Received: from mx1.thebiz.net (mx1.thebiz.net [216.238.0.20])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with SMTP id UAA12568
+	for <wlestes@uncg.edu>; Sun, 10 Jun 2001 20:28:17 -0400 (EDT)
+Received: (qmail 24345 invoked from network); 10 Jun 2001 20:28:15 -0400
+Received: from unknown (HELO mail2.thebiz.net) (172.16.0.129)
+  by mx1.backend.thebiz.net with SMTP; 10 Jun 2001 20:28:15 -0400
+Received: (qmail 3989 invoked by uid 0); 10 Jun 2001 20:28:13 -0400
+Received: from unknown (HELO abit) (216.238.78.51)
+  by mail.ulster.net with SMTP; 10 Jun 2001 20:28:13 -0400
+Message-ID: <001201c0f20d$eb553360$0400a8c0@abit>
+From: "Bill Fenlason" <BillFen@Ulster.Net>
+To: "W. L. Estes" <wlestes@uncg.edu>
+References:  <00f301c0f1d1$bb1ef140$0400a8c0@abit> <200106101934.PAA02280@michael.uncg.edu>
+Subject: Re: FLEX modifications
+Date: Sun, 10 Jun 2001 20:31:55 -0400
+MIME-Version: 1.0
+Content-Type: text/plain;
+	charset="Windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 5.00.3018.1300
+X-MimeOLE: Produced By Microsoft MimeOLE V5.00.3018.1300
+
+*** EOOH ***
+From: "Bill Fenlason" <BillFen@Ulster.Net>
+To: "W. L. Estes" <wlestes@uncg.edu>
+Subject: Re: FLEX modifications
+Date: Sun, 10 Jun 2001 20:31:55 -0400
+
+Will,
+
+Thanks for responding, and for pointing out that I could keep track of the
+paired delimiter state in the calling program - certainly a reasonable
+question.
+
+I decided against that approach primarily because I didn't want to
+complicate the calling program unnecessarily.  I found that treating this as
+a scanning function allowed the overall coding to be smaller and more
+reasonable.  For example, I handle nested comments, and the scanner needs to
+use separate start conditions.  The nesting level needs to be maintained for
+that any way, so using additional calls after eof makes it really simple - I
+just return the zero length "missing delimeter" tokens and decrease the
+nesting level.  When it reaches zero I go back to the base state and YY_NULL
+is returned.  All in all, trying to keep track in both places is a
+duplication.
+
+But that does not explain the yymore() issue.  The language I'm scanning
+(PL/I) allows identifier name characters to be specified at runtime.  The
+feature is to support foreign language keyboards etc.  So the problem is how
+to scan them?  I don't want to force the calling program to paste parts of a
+word together, and I have to test any non conventional character (i.e.
+128-255) to determine if it is a name character or not.  My solution is to
+yymore() each word, and either append a valid extralingual character or
+return the word.  Works great, except at EOF.  I don't want to depend on a
+trailing NL character, although it would be present almost all of the time.
+(After 35 years of programming, I've learned the value of making things
+bulletproof  8:-).
+
+Finally, the actions at eof I'm proposing just "feel right".  I hope after
+some reflection you come to the same conclusion.  I'll be glad to go into
+lots more detail in case you have any fine points to consider.
+
+The next few issues I have relate to providing assistance for unlimied
+include file nesting, and how to assist with token location information
+(yylineno and offset) without having the performance robbing rescan for NL.
+Also I'd like to kick around some ideas related to gen.c and skeletons.
+
+Would you rather that I discuss these things with you directly, or should I
+use the list?  I don't know the balance between knowledgeable programmers
+and developers, and users in the list membership.  I would like a healthy
+discussion on these ideas and questions but I wouldn't want to add
+inappropriate things to the list.
+
+Thanks again - hope this is not taking too much of your time.
+
+Bill Fenlason
+
+ps. a snapshot would be great!
+
+----- Original Message -----
+From: W. L. Estes
+To: BillFen@Ulster.Net
+Sent: Sunday, June 10, 2001 3:34 PM
+Subject: Re: FLEX modifications
+
+
+> Are you currently the one responsible for FLEX development and maint?  I
+saw
+> you pointed to in the FLEX help archives.
+
+yes. :)
+
+> Since no one has commented on my recent message regarding yymore() and
+> <<EOF>>, I though I would send you a note directly.
+>
+> Are you interested in a patch and documentation changes?  I'll be happy to
+> develop them and send them to you.  It will be some work for me since I
+> would want to be sure that everything is bulletproof.  But I don't want to
+> spend the time on it if there is no agreement that the change is both
+needed
+> and wanted.
+
+On first reading of your message, I thought that I needed to think
+about what you were asking. Unfortunately, you got put way down in the
+queue.
+
+> The reason I'm implementing this is that the parser interface routine I'm
+> developing builds a token chain that includes tokens for missing ending
+> delimiters (comment ends, quotes, parens, etc, as well as include file end
+> identifiers.  It is convenient to keep generating zero length tokens at
+> <<EOF>> to handle this, with the final YY_NULL being delayed until nothing
+> is outstanding or pushed with yymore().  Leaving repeated calls after EOF
+as
+> undefined and undocumented seems to me to be a loose end that might well
+be
+> clarified.  I think that my approach makes sense in general, and had hoped
+
+> that others more experienced with FLEX would point out some pros and cons.
+
+devil's advocate question: why not just keep track of your state and
+compare: e.g. if (eof && !closed_delim_state)...
+
+> I have some other topics to ask about along with some suggestions, and it
+> will be helpful to know if you are interested in this or other changes and
+> additions to FLEX.
+
+I'm always interested in suggestions, patches etc. please note: i'm
+not saying no to your idea above, i'm just asking you to explain it to
+me better--because i'm not quite getting what you're saying.
+
+> I'll be using a modified skeleton in any event so I'm not dependent (or
+> asking for) any "official" changes.  But FLEX is a wonderful tool, and I
+> wouldn't mind contributing something to it if I am able to.
+
+Certainly. If you'd like my current sources (which have migrated quite
+a bit since Vern's last 2.5.4 release), let me know. you can have a
+copy of the cvs repository or a snapshot of the current tree.
+
+and what is your need for a modified skeleton? (i.e. is that something
+which might be of use to the general flex user?)
+
+> Thanks.
+
+--Will
+
+
+1, answered,,
+Summary-line: 15-Jun         BillFen@Ulster.Net  [66] #Re: FLEX modifications
+X-Coding-System: nil
+Mail-from: From BillFen@Ulster.Net  Fri Jun 15 15:22:34 2001
+Return-Path: <BillFen@Ulster.Net>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id PAA05265
+	for <wlestes@localhost>; Fri, 15 Jun 2001 15:22:33 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Fri, 15 Jun 2001 15:22:33 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.uncg.edu (8.11.0/8.11.0) with ESMTP id f5FJKjs04809
+	for <wlestes@hermes.email.uncg.edu>; Fri, 15 Jun 2001 15:20:45 -0400 (EDT)
+Received: from mx3.thebiz.net (mx3.thebiz.net [216.238.0.22])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with SMTP id PAA05329
+	for <wlestes@uncg.edu>; Fri, 15 Jun 2001 15:20:45 -0400 (EDT)
+Received: (qmail 34351 invoked from network); 15 Jun 2001 15:19:39 -0400
+Received: from unknown (172.16.0.72)
+  by mx3.backend.thebiz.net with QMQP; 15 Jun 2001 15:19:39 -0400
+Received: from unknown (HELO abit) (216.238.78.36)
+  by mail.ulster.net with SMTP; 15 Jun 2001 15:19:39 -0400
+Message-ID: <001901c0f5d0$a7080fe0$0400a8c0@abit>
+From: "Bill Fenlason" <BillFen@Ulster.Net>
+To: "W. L. Estes" <wlestes@uncg.edu>
+References:  <00f301c0f1d1$bb1ef140$0400a8c0@abit> <200106101934.PAA02280@michael.uncg.edu>
+Subject: Re: FLEX modifications
+Date: Fri, 15 Jun 2001 15:23:25 -0400
+MIME-Version: 1.0
+Content-Type: text/plain;
+	charset="Windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 5.00.3018.1300
+X-MimeOLE: Produced By Microsoft MimeOLE V5.00.3018.1300
+
+*** EOOH ***
+From: "Bill Fenlason" <BillFen@Ulster.Net>
+To: "W. L. Estes" <wlestes@uncg.edu>
+Subject: Re: FLEX modifications
+Date: Fri, 15 Jun 2001 15:23:25 -0400
+
+Hello Will,
+
+I assume that you have not had time to get to my last note, or perhaps it is
+just too far down in the queue.  This one will keep it company  8-).
+
+There are two lines of code that I've added to the skeleton which seem to
+solve the problem of repeated calls at end of file and the yymore()
+situation.  I'll briefly describe them so you can decide if you would like
+to consider including them.
+
+This is below the yywrap() test, near:
+   case EOB_ACT_END_OF_FILE:
+
+     yy_c_buf_p = yytext_ptr + YY_MORE_ADJ;
+
+     yyleng = YY_MORE_ADJ;    /* <== Added Line */
+
+As the related comment described, yytext was carefully set up.  This line
+sets up yyleng as for a normal token.  The value will be the length of any
+yymore() token (normally zero), which is the difference between the
+current buffer pointer and the current text pointer.  The code after the
+match
+is made sets he length to one greater because of the double null EOB
+marker.  --yyleng will work as well.
+
+The second change is in the yy_get_next_buffer routine:
+
+    ret_val = EOB_ACT_END_OF_FILE;
+
+    /* <== Inserted if condition ==> */
+    if ( yyin != yy_current_buffer->yy_input_file
+    || yy_current_buffer-> yy_buffer_status == YY_BUFFER_NEW)
+
+   yyrestart( yyin );
+
+It makes the restart conditional on a change of the yyin address or a newly
+created buffer.  It is not exactly the way I would like it, but it is not
+unreasonable.
+
+I can understand the desire to allow the user to just reassign yyin within
+an <<EOF>> rule, but I think the earlier version approach of requiring the
+user to issue YY_NEW_FILE is more orderly.  The philosophical issue is
+if EOF is a persistent state or if a recall after it should automatically
+imply that a new file is being provided.  Both sides of the argument can
+have
+advantages for the user and I had hoped for some discussion of the point
+in case there is something that I don't understand about it.
+
+I'm still testing and researching the code and will let you know if I find
+anything else necessary - I need to more fully check the input() routine.  I
+spent a while checking both the skeleton logic and the various alternatives
+generated within gen.c.  Hopefully I didn't miss anything.  .
+
+Bill Fenlason
+
+
+
+
+
+
+
 
