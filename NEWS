@@ -5,7 +5,7 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.19
 
-** new translations from the translation project: fr
+** new translations from the translation project: fr, ca
 
 **Flex generates C99 defs now; see YY_TRADITIONAL_FUNC_DEFS in the
   manual if that's not a good thing for you
