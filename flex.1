@@ -117,9 +117,9 @@ A somewhat more complicated example:
 
     "+"|"-"|"*"|"/"   printf( "An operator: %s\\n", yytext );
 
-    "{"[^}\\n]*"}"   /* eat up one-line comments */
+    "{"[^}\\n]*"}"     /* eat up one-line comments */
 
-    [ \\t\\n]+       /* eat up whitespace */
+    [ \\t\\n]+          /* eat up whitespace */
 
     .           printf( "Unrecognized character: %s\\n", yytext );
 
@@ -149,8 +149,9 @@ sections.
 .SH FORMAT OF THE INPUT FILE
 The
 .I flex
-input file consists of three sections, separated by
-.B %%:
+input file consists of three sections, separated by a line with just
+.B %%
+in it:
 .nf
 
     definitions
@@ -164,7 +165,7 @@ The
 .I definitions
 section contains declarations of simple
 .I name
-definitions to simplify the scanner specification and of
+definitions to simplify the scanner specification, and declarations of
 .I start conditions,
 which are explained in a later section.
 .LP
@@ -174,11 +175,11 @@ Name definitions have the form:
     name definition
 
 .fi
-The "name" is a word beginning with a letter or a '_'
-followed by zero or more letters, digits, '_', or '-'.
-The definition is taken to begin at the first non-white-space
-following the name and continue to the end of the line.
-Definition can subsequently be referred to using "{name}", which
+The "name" is a word beginning with a letter or an underscore ('_')
+followed by zero or more letters, digits, '_', or '-' (dash).
+The definition is taken to begin at the first non-white-space character
+following the name and continuing to the end of the line.
+The definition can subsequently be referred to using "{name}", which
 will expand to "(definition)".  For example,
 .nf
 
@@ -189,7 +190,7 @@ will expand to "(definition)".  For example,
 defines "DIGIT" to be a regular expression which matches a
 single digit, and
 "ID" to be a regular expression which matches a letter
-followed by zero-or-more letters or digits.
+followed by zero-or-more letters-or-digits.
 A subsequent reference to
 .nf
 
@@ -241,7 +242,7 @@ The %{}'s must appear unindented on lines by themselves.
 In the rules section,
 any indented or %{} text appearing before the
 first rule may be used to declare variables
-which are local to the scanning routine, and, after the declarations,
+which are local to the scanning routine and (after the declarations)
 code which is to be executed whenever the scanning routine is entered.
 Other indented or %{} text in the rule section is still copied to the output,
 but its meaning is not well-defined and it may well cause compile-time
@@ -251,7 +252,8 @@ compliance; see below for other such features).
 .LP
 In the definitions section, an unindented comment (i.e., a line
 beginning with "/*") is also copied verbatim to the output up
-to the next "*/".  Also, any line beginning with '#' is ignored.
+to the next "*/".  Also, any line in the definitions section
+beginning with '#' is ignored.
 .SH PATTERNS
 The patterns in the input are written using an extended set of regular
 expressions.  These are:
@@ -259,18 +261,16 @@ expressions.  These are:
 
     x          match the character 'x'
     .          any character except newline
-    [xyz]      an 'x', a 'y', or a 'z'
-    [abj-oZ]   an 'a', a 'b', any letter
-               from 'j' through 'o', or a 'Z'
-    [^A-Z]     any character EXCEPT an uppercase letter,
-               including a newline (unlike how many other
-               regular expression tools treat the '^'!).
-               This means that a pattern like [^"]* will
-               match an entire file (overflowing the input
-               buffer) unless there's another quote in
-               the input.
+    [xyz]      a "character class"; in this case, the pattern
+	         matches either an 'x', a 'y', or a 'z'
+    [abj-oZ]   a "character class" with a range in it; matches
+	         an 'a', a 'b', any letter from 'j' through 'o',
+                 or a 'Z'
+    [^A-Z]     a "negated character class", i.e., any character
+	         but those in the class.  In this case, any
+	         character EXCEPT an uppercase letter.
     [^A-Z\\n]   any character EXCEPT an uppercase letter or
-               a newline
+                 a newline
     r*         zero or more r's, where r is any regular expression
     r+         one or more r's
     r?         zero or one r's (that is, "an optional r")
@@ -281,32 +281,29 @@ expressions.  These are:
                (see above)
     "[xyz]\\"foo"
                the literal string: [xyz]"foo
-    \\x         if x is an 'a', 'b', 'f', 'n', 'r',
-               't', or 'v', then the ANSI-C
-               interpretation of \\x.  Otherwise,
-               a literal 'x' (used to escape
-               operators such as '*')
-    \\123      the character with octal value 123
-    \\x2a      the character with hexadecimal value 2a
-    (r)        match an r; parentheses are used
-               to override precedence (see below)
+    \\X         if X is an 'a', 'b', 'f', 'n', 'r', 't', or 'v',
+		 then the ANSI-C interpretation of \\x.
+		 Otherwise, a literal 'X' (used to escape
+                 operators such as '*')
+    \\123       the character with octal value 123
+    \\x2a       the character with hexadecimal value 2a
+    (r)        match an r; parentheses are used to override
+		 precedence (see below)
 
 
-    rs         the regular expression r followed
-               by the regular expression s; called
-               "concatenation"
+    rs         the regular expression r followed by the
+		 regular expression s; called "concatenation"
 
 
     r|s        either an r or an s
 
 
-    r/s        an r but only if it is followed by
-               an s.  The s is not part of the
-               matched text.  This type of
-               pattern is known as "trailing context".
+    r/s        an r but only if it is followed by an s.  The
+		 s is not part of the matched text.  This type
+		 of pattern is called as "trailing context".
     ^r         an r, but only at the beginning of a line
-    r$         an r, but only at the end of a line
-               (r must not use trailing context)
+    r$         an r, but only at the end of a line.  Equivalent
+		 to "r/\\n".
 
 
     <s>r       an r, but only in start condition s (see
@@ -348,12 +345,40 @@ To match "foo" or zero-or-more "bar"'s, use:
     foo|(bar)*
 
 .fi
-and to match zero-or-more "foo"'s or "bar"'s:
+and to match zero-or-more "foo"'s-or-"bar"'s:
 .nf
 
     (foo|bar)*
 
 .fi
+.LP
+Some notes on patterns:
+.IP -
+A negated character class such as the example "[^A-Z]"
+above
+.I will match a newline
+unless "\\n" (or an equivalent escape sequence) is one of the
+characters explicitly present in the negated character class
+(e.g., "[^A-Z\\n]").  This is unlike how many other regular
+expression tools treat negated character classes, but unfortunately
+the inconsistency is historically entrenched.
+Matching newlines means that a pattern like [^"]* can match an entire
+input (overflowing the scanner's input buffer) unless there's another
+quote in the input.
+.I -
+A rule can have at most one instance of trailing context (the '/' operator
+or the '$' operator).  The start condition, '^', and "<<EOF>>" patterns
+can only occur at the beginning of a pattern, and, as well as with '/' and '$',
+cannot be grouped inside parentheses.  The following are all illegal:
+.nf
+
+    foo/bar$
+    foo|(bar$)
+    foo|^bar
+    <sc1>foo<sc2>bar
+
+.fi
+(Note that the first of these, though, can be written "foo/bar\\n".)
 .SH HOW THE INPUT IS MATCHED
 When the generated scanner is run, it analyzes its input looking
 for strings which match any of its patterns.  If it finds more than
@@ -380,7 +405,7 @@ input is scanned for another match.
 .LP
 If no match is found, then the
 .I default rule
-is executed: the next character in the input is matched and
+is executed: the next character in the input is considered matched and
 copied to the standard output.  Thus, the simplest legal
 .I flex
 input is:
@@ -404,6 +429,9 @@ which deletes all occurrences of "zap me" from its input:
     "zap me"
 
 .fi
+(It will copy all other characters in the input to the output since
+they will be matched by the default rule.)
+.LP
 Here is a program which compresses multiple blanks and tabs down to
 a single blank, and throws away whitespace found at the end of a line:
 .nf
@@ -414,27 +442,33 @@ a single blank, and throws away whitespace found at the end of a line:
 
 .fi
 .LP
-If the action contains a '{', then the action spans till the balancing
-'}' is found, and the action may cross multiple lines.
+If the action contains a '{', then the action spans till the balancing '}'
+is found, and the action may cross multiple lines.
 .I flex 
 knows about C strings and comments and won't be fooled by braces found
 within them, but also allows actions to begin with
 .B %{
 and will consider the action to be all the text up to the next
-.B %}.
+.B %}
+(regardless of ordinary braces inside the action).
 .LP
 An action consisting solely of a vertical bar ('|') means "same as
-the action for the next rule.  See below for an illustration.
+the action for the next rule."  See below for an illustration.
 .LP
 Actions can include arbitrary C code, including
 .B return
-statements to return a value whatever routine called
+statements to return a value to whatever routine called
 .B yylex().
 Each time
 .B yylex()
 is called it continues processing tokens from where it last left
 off until it either reaches
-the end of the file or executes a return.
+the end of the file or executes a return.  Once it reaches an end-of-file,
+however, then any subsequent call to
+.B yylex()
+will simply immediately return, unless
+.B yyrestart()
+is first called (see below).
 .LP
 Actions are not allowed to modify yytext or yyleng.
 .LP
