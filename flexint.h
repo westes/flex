@@ -17,19 +17,9 @@ typedef uint32_t flex_uint32_t;
 typedef signed char flex_int8_t;
 typedef short int flex_int16_t;
 typedef int flex_int32_t;
-# if __WORDSIZE == 64 || defined __arch64__ || defined __cplusplus
-typedef long int flex_int64_t;
-# else
-typedef long long int flex_int64_t;
-# endif
 typedef unsigned char flex_uint8_t; 
 typedef unsigned short int flex_uint16_t;
 typedef unsigned int flex_uint32_t;
-#if __WORDSIZE == 64 || defined __arch64__ || defined __cplusplus
-typedef unsigned long int flex_uint64_t;
-#else
-typedef unsigned long long int flex_uint64_t;
-#endif
 #endif /* ! C99 */
 
 /* Limits of integral types. */
