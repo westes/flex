@@ -3,6 +3,14 @@ changes between releases of flex
 
 See the file COPYING for copying conditions
 
+* version 2.5.10 released 2002-7-24
+
+** yy_globals renamed to yyscanner and yy_globals_t renamed to
+   yy_guts_t
+
+** added dist-bzip2 option to Makefile.am so we now produce a bzip2'd
+   archive in addition to the standard gzip archive
+
 *  version 2.5.9
 
 ** new tests in test suite: test-mem-{nr,r}, test-posix,
