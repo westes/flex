@@ -60,6 +60,9 @@
 #ifdef HAVE_SYS_PARAMS_H
 #include <sys/params.h>
 #endif
+#ifdef HAVE_SYS_WAIT_H
+#include <sys/wait.h>
+#endif
 #ifdef HAVE_STDBOOL_H
 #include <stdbool.h>
 #else
