@@ -264,7 +264,7 @@ int scanopt_usage (scanner,fp,usage)
         if (*p == '/')
             p++;
 
-        fprintf(fp,"Usage: %s [OPTIONS]...\n", p);
+        fprintf(fp,_("Usage: %s [OPTIONS]...\n"), p);
     }
     fprintf(fp,"\n");
 
@@ -513,19 +513,19 @@ scanopt_err(s,opt_offset,is_short,err)
         fprintf(stderr,"%s: ", s->argv[0]);
         switch (err) {
         case SCANOPT_ERR_ARG_NOT_ALLOWED:
-            fprintf(stderr,"option `%s' doesn't allow an argument\n",optname);
+            fprintf(stderr,_("option `%s' doesn't allow an argument\n"),optname);
             break;
         case SCANOPT_ERR_ARG_NOT_FOUND:
-            fprintf(stderr,"option `%s' requires an argument\n",optname);
+            fprintf(stderr,_("option `%s' requires an argument\n"),optname);
             break;
         case SCANOPT_ERR_OPT_AMBIGUOUS:
-            fprintf(stderr,"option `%s' is ambiguous\n",optname);
+            fprintf(stderr,_("option `%s' is ambiguous\n"),optname);
             break;
         case SCANOPT_ERR_OPT_UNRECOGNIZED:
-            fprintf(stderr,"Unrecognized option -- `%s'\n",optname);
+            fprintf(stderr,_("Unrecognized option `%s'\n"),optname);
             break;
         default:
-            fprintf(stderr,"Unknown error=(%d)\n",err);
+            fprintf(stderr,_("Unknown error=(%d)\n"),err);
             break;
         }
     }
