@@ -219,6 +219,8 @@ dist2:
 	@mkdir $(DIST_NAME)
 	tar cf - $(DISTFILES) | (cd $(DIST_NAME); tar xfB -)
 	@mv $(DIST_NAME)/scan.c $(DIST_NAME)/initscan.c
+	@chmod 444 $(DIST_NAME)/initscan.c
+	@chmod +w $(DIST_NAME)/Makefile.in
 	tar chf $(DIST_NAME).tar $(DIST_NAME)
 	$(COMPRESS) $(DIST_NAME).tar
 	@rm -rf $(DIST_NAME)
