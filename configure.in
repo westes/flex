@@ -42,11 +42,12 @@ AC_PROG_CXX
 AC_PROG_LN_S
 AC_PROG_RANLIB
 
-AC_PATH_PROG(BISON, bison, $srcdir/missing)
-AC_PATH_PROG(HELP2MAN, help2man, $srcdir/missing)
-AC_PATH_PROG(M4, m4, $srcdir/missing)
-AC_PATH_PROG(INDENT, indent, $srcdir/missing)
-if test "$INDENT" != $srcdir/missing ; then
+AC_PATH_PROG(BISON, bison,bison)
+AC_PATH_PROG(HELP2MAN, help2man, help2man)
+AC_PATH_PROG(M4, m4, m4)
+AC_PATH_PROG(INDENT, indent, indent)
+dnl if INDENT is set to 'indent' then we didn't find indent
+if test "$INDENT" != indent ; then
    AC_MSG_CHECKING(if $INDENT is GNU indent)
    if $INDENT --version 2>/dev/null | head -1|grep "GNU indent" > /dev/null ; then
       AC_MSG_RESULT(yes)
