@@ -34,7 +34,8 @@
    correct .cvsignore file and other such niceties
 
 ** explicitly describe the copyright state of the entries in
-   tests/. should this be public domain by default?
+   tests/. millaway has assigned the rights to the test suite to me
+   and so the test suite will be under the flex license.
 
 * move as much skeleton code as possible out of gen.c and into
   flex.skl
