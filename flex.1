@@ -33,24 +33,25 @@ First some simple examples to get the flavor of how one uses
 .I flex.
 The following
 .I flex
-input specifies a scanner which whenever it encounters a tab
-will print eight blanks to its standard output:
+input specifies a scanner which whenever it encounters the string
+"username" will replace it with the user's login name:
 .nf
 
     %%
-    \t    printf( "        " );
+    username    printf( "%s", getlogin() );
 
 .fi
 By default, any text not matched by a
 .I flex
 scanner
 is copied to the output, so the net effect of this scanner is
-to copy its input file to its output with each tab expanded
-into eight blanks.
-In this input, there is just one rule.  "\t" is the
+to copy its input file to its output with each occurrence
+of "username" expanded.
+In this input, there is just one rule.  "username" is the
 .I pattern
-(it's a regular expression specifying a tab) and the "printf" is the
-.I action.  The "%%" marks the beginning of the rules.
+and the "printf" is the
+.I action.
+The "%%" marks the beginning of the rules.
 .LP
 Here's another simple example:
 .nf
@@ -58,14 +59,14 @@ Here's another simple example:
         int num_lines = 0, num_chars = 0;
 
     %%
-    \n    ++num_lines; ++num_chars;
+    \\n    ++num_lines; ++num_chars;
     .     ++num_chars;
 
     %%
     main()
         {
         yylex();
-        printf( "# of lines = %d, # of chars = %d\n",
+        printf( "# of lines = %d, # of chars = %d\\n",
                 num_lines, num_chars );
         }
 
@@ -128,7 +129,7 @@ A somewhat more complicated example:
     int argc;
     char **argv;
         {
-        ++argv, --argc;
+        ++argv, --argc;  /* skip over program name */
         if ( argc > 0 )
                 yyin = fopen( argv[0], "r" );
         else
@@ -143,7 +144,7 @@ Pascal.  It identifies different types of
 .I tokens
 and reports on what it has seen.
 .LP
-The details of the example will be explained in the following
+The details of this example will be explained in the following
 sections.
 .SH FORMAT OF THE INPUT FILE
 The
@@ -408,8 +409,8 @@ a single blank, and throws away whitespace found at the end of a line:
 .nf
 
     %%
-    [ \t]+        putchar( ' ' );
-    [ \t]+$       /* ignore this token */
+    [ \\t]+        putchar( ' ' );
+    [ \\t]+$       /* ignore this token */
 
 .fi
 .LP
@@ -469,7 +470,7 @@ words in the input and call the routine special() whenever "frob" is seen:
     %%
 
     frob        special(); REJECT;
-    [^ \t\n]+   ++word_count;
+    [^ \\t\\n]+   ++word_count;
 
 .fi
 Without the
@@ -488,7 +489,7 @@ active rule.  For example, when the following scanner scans the token
     ab       |
     abc      |
     abcd     ECHO; REJECT;
-    .|\n     /* eat up any unmatched character */
+    .|\\n     /* eat up any unmatched character */
 
 .fi
 (The first three rules share the fourth's action since they use
@@ -805,8 +806,8 @@ are preceded earlier in the line by the string "expect-number":
     %%
     expect-number        BEGIN(expect);
 
-    <expect>[0-9]+       printf( "found a number\n" );
-    <expect>\n           {
+    <expect>[0-9]+       printf( "found a number\\n" );
+    <expect>\\n           {
                 /* that's the end of the line, so
                  * we need another "expect-number"
                  * before we'll recognize any more
@@ -824,9 +825,9 @@ maintaining a count of the current input line.
     %%
             int line_num = 1;
 
-    <comment>[^*\n]*
-    <comment>"*"+[^*/\n]*
-    <comment>\n             ++line_num;
+    <comment>[^*\\n]*
+    <comment>"*"+[^*/\\n]*
+    <comment>\\n             ++line_num;
     <comment>"*"+"/"        BEGIN(INITIAL);
 
     "/*"         BEGIN(comment);
@@ -842,9 +843,9 @@ following fashion:
             int line_num = 1;
             int comment_caller;
 
-    <comment>[^*\n]*
-    <comment>"*"+[^*/\n]*
-    <comment>\n             ++line_num;
+    <comment>[^*\\n]*
+    <comment>"*"+[^*/\\n]*
+    <comment>\\n             ++line_num;
     <comment>"*"+"/"        BEGIN(comment_caller);
 
     "/*"         {
@@ -1058,19 +1059,19 @@ the file looks like:
      associated rules:
            2       3
      out-transitions: [ o ]
-     jam-transitions: EOF [ \001-n  p-\177 ]
+     jam-transitions: EOF [ \\001-n  p-\\177 ]
 
     State #8 is non-accepting -
      associated rules:
            3
      out-transitions: [ a ]
-     jam-transitions: EOF [ \001-`  b-\177 ]
+     jam-transitions: EOF [ \\001-`  b-\\177 ]
 
     State #9 is non-accepting -
      associated rules:
            3
      out-transitions: [ r ]
-     jam-transitions: EOF [ \001-q  s-\177 ]
+     jam-transitions: EOF [ \\001-q  s-\\177 ]
 
     Compressed tables always backtrack.
 
@@ -1144,9 +1145,9 @@ for the action.  Recall the scanner for C comments:
     %%
             int line_num = 1;
 
-    <comment>[^*\n]*
-    <comment>"*"+[^*/\n]*
-    <comment>\n             ++line_num;
+    <comment>[^*\\n]*
+    <comment>"*"+[^*/\\n]*
+    <comment>\\n             ++line_num;
     <comment>"*"+"/"        BEGIN(INITIAL);
 
     "/*"         BEGIN(comment);
@@ -1159,10 +1160,10 @@ This could be sped up by writing it as:
     %%
             int line_num = 1;
 
-    <comment>[^*\n]*
-    <comment>[^*\n]*\n      ++line_num;
-    <comment>"*"+[^*/\n]*
-    <comment>"*"+[^*/\n]*\n ++line_num;
+    <comment>[^*\\n]*
+    <comment>[^*\\n]*\\n      ++line_num;
+    <comment>"*"+[^*/\\n]*
+    <comment>"*"+[^*/\\n]*\\n ++line_num;
     <comment>"*"+"/"        BEGIN(INITIAL);
 
     "/*"         BEGIN(comment);
