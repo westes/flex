@@ -101,6 +101,7 @@ extern "C" {
 	extern void *yy_flex_realloc YY_PROTO(( void *ptr, int size ));
 	extern void yy_flex_free YY_PROTO(( void * ));
 	extern int yywrap YY_PROTO(( void ));
+	extern void yy_strcpy YY_PROTO(( char *s1, const char *s2 ));
 #ifdef __cplusplus
 	}
 #endif
