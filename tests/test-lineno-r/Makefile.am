@@ -5,7 +5,7 @@ EXTRA_DIST = scanner.l test.input
 CLEANFILES = scanner.c test-lineno-r OUTPUT $(OBJS)
 OBJS = scanner.o
 
-INCLUDES = -I $(srcdir) -I $(top_srcdir)
+INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir)
 
 testname = test-lineno-r
 

@@ -5,7 +5,7 @@ EXTRA_DIST = scanner.l parser.y test.input main.c
 CLEANFILES = scanner.c parser.c parser.h test-bison-yylloc $(OBJS) OUTPUT
 OBJS = scanner.o parser.o main.o
 
-INCLUDES = -I $(srcdir) -I $(top_srcdir)
+INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir)
 #LDFLAGS = $(top_srcdir)/libfl.a 
 YFLAGS = --defines --output=parser.c --name-prefix="test"
 
@@ -21,7 +21,7 @@ $(testname)$(EXEEXT): $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 
 test: $(testname)$(EXEEXT)
-	$(srcdir)/$(testname)$(EXEEXT) < $(srcdir)/test.input
+	./$(testname)$(EXEEXT) < $(srcdir)/test.input
 
 .c.o:
 	$(CC) -c -o $@ $(INCLUDES) $<

@@ -5,7 +5,7 @@ EXTRA_DIST = scanner.l test.input
 CLEANFILES = scanner.c parser.c parser.h test-cpp-nr$(OBJS) OUTPUT
 OBJS = scanner.o
 
-INCLUDES = -I $(srcdir) -I $(top_srcdir)
+INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir)
 #LDFLAGS = $(top_srcdir)/libfl.a 
 #YFLAGS = --defines --output=parser.c
 
@@ -21,7 +21,7 @@ $(testname)$(EXEEXT): $(OBJS)
 	$(CXX) -o $(testname)$(EXEEXT) $(OBJS) $(LDFLAGS)
 
 test: $(testname)$(EXEEXT)
-	$(srcdir)/$(testname)$(EXEEXT) < $(srcdir)/test.input
+	./$(testname)$(EXEEXT) < $(srcdir)/test.input
 
 .c.o:
 	$(CC) -c -o $@ $(INCLUDES) $<
