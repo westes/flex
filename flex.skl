@@ -239,14 +239,18 @@ static int yy_start = 0;	/* start state number */
 static int yy_did_buffer_switch_on_eof;
 
 void yyrestart YY_PROTO(( FILE *input_file ));
+
 void yy_switch_to_buffer YY_PROTO(( YY_BUFFER_STATE new_buffer ));
 void yy_load_buffer_state YY_PROTO(( void ));
 YY_BUFFER_STATE yy_create_buffer YY_PROTO(( FILE *file, int size ));
+void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));
+void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
+void yy_flush_buffer YY_PROTO(( YY_BUFFER_STATE b ));
+#define YY_FLUSH_BUFFER yy_flush_buffer( yy_current_buffer )
+
 YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, yy_size_t size ));
 YY_BUFFER_STATE yy_scan_string YY_PROTO(( const char *str ));
 YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( const char *bytes, int len ));
-void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));
-void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
 %*
 
 static void *yy_flex_alloc YY_PROTO(( yy_size_t ));
@@ -1170,17 +1174,10 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 %*
 
 	{
+	yy_flush_buffer( b );
+
 	b->yy_input_file = file;
-	b->yy_n_chars = 0;
-
-	/* We always need two end-of-buffer characters.  The first causes
-	 * a transition to the end-of-buffer state.  The second causes
-	 * a jam in that state.
-	 */
-	b->yy_ch_buf[0] = YY_END_OF_BUFFER_CHAR;
-	b->yy_ch_buf[1] = YY_END_OF_BUFFER_CHAR;
-
-	b->yy_buf_pos = &b->yy_ch_buf[0];
+	b->yy_fill_buffer = 1;
 
 %-
 #if YY_ALWAYS_INTERACTIVE
@@ -1195,12 +1192,39 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 %+
 	b->yy_is_interactive = 0;
 %*
+	}
+
+
+%-
+#ifdef YY_USE_PROTOS
+void yy_flush_buffer( YY_BUFFER_STATE b )
+#else
+void yy_flush_buffer( b )
+YY_BUFFER_STATE b;
+#endif
+
+%+
+void yyFlexLexer::yy_flush_buffer( YY_BUFFER_STATE b )
+%*
+	{
+	b->yy_n_chars = 0;
+
+	/* We always need two end-of-buffer characters.  The first causes
+	 * a transition to the end-of-buffer state.  The second causes
+	 * a jam in that state.
+	 */
+	b->yy_ch_buf[0] = YY_END_OF_BUFFER_CHAR;
+	b->yy_ch_buf[1] = YY_END_OF_BUFFER_CHAR;
+
+	b->yy_buf_pos = &b->yy_ch_buf[0];
 
 	b->yy_at_bol = 1;
-	b->yy_fill_buffer = 1;
-
 	b->yy_buffer_status = YY_BUFFER_NEW;
+
+	if ( b == yy_current_buffer )
+		yy_load_buffer_state();
 	}
+%*
 
 
 #ifndef YY_NO_SCAN_BUFFER
