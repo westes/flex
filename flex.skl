@@ -1722,22 +1722,27 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 
 
 %if-c-only
-#ifndef YY_ALWAYS_INTERACTIVE
-#ifndef YY_NEVER_INTERACTIVE
+m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]],,
+[[
+    m4_ifdef( [[M4_YY_NEVER_INTERACTIVE]],,
+    [[
 #ifndef __cplusplus
 extern int isatty YY_PARAMS(( int ));
 #endif /* __cplusplus */
-#endif /* !YY_NEVER_INTERACTIVE */
-#endif /* !YY_ALWAYS_INTERACTIVE */
+    ]])
+]])
 %endif
 
 %if-c-only
     void yy_init_buffer  YYFARGS2( YY_BUFFER_STATE ,b, FILE *,file)
 %endif
 %if-c++-only
-#ifndef YY_NEVER_INTERACTIVE
+
+m4_ifdef( [[M4_YY_NEVER_INTERACTIVE]],,
+[[
 extern "C" int isatty YY_PARAMS(( int ));
-#endif
+]])
+
 void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, std::istream* file )
 %endif
 
@@ -1751,15 +1756,19 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, std::istream* file )
 	b->yy_fill_buffer = 1;
 
 %if-c-only
-#if YY_ALWAYS_INTERACTIVE
+m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]],
+[[
 	b->yy_is_interactive = 1;
-#else
-#if YY_NEVER_INTERACTIVE
-	b->yy_is_interactive = 0;
-#else
-	b->yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;
-#endif
-#endif
+]],
+[[
+    m4_ifdef( [[M4_YY_NEVER_INTERACTIVE]],
+    [[
+        b->yy_is_interactive = 0;
+    ]],
+    [[
+        b->yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;
+    ]])
+]])
 %endif
 %if-c++-only
 	b->yy_is_interactive = 0;

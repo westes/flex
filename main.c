@@ -1334,13 +1334,11 @@ void flexinit (argc, argv)
 			break;
 
 		case OPT_ALWAYS_INTERACTIVE:
-			buf_strdefine (&userdef_buf,
-				       "YY_ALWAYS_INTERACTIVE", "1");
+			buf_m4_define (&m4defs_buf, "M4_YY_ALWAYS_INTERACTIVE", 0);
 			break;
 
 		case OPT_NEVER_INTERACTIVE:
-			buf_strdefine (&userdef_buf,
-				       "YY_NEVER_INTERACTIVE", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NEVER_INTERACTIVE", 0);
 			break;
 
 		case OPT_ARRAY:
