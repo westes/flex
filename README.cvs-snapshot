@@ -15,7 +15,9 @@ bash or some other fairly robust sh-style shell
 GNU bison;  to generate parse.c from parse.y
 GNU m4; required by BNU autoconf (yes, it *must* be GNU m4)
 GNU autoconf and GNU automake; for generating Makefiles etc.
+GNU gettext; for i18n
 flex;  for bootstrap of scan.l
+help2man; to generate man page
 tar, gzip, etc.; for packaging of the source distribution
 texinfo tools;  to build and test the flex manual
 perl; GNU automake and GNU autoconf now depend on perl to run
