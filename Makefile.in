@@ -214,7 +214,9 @@ distclean: clean
 	rm -f .bootstrap $(FLEX) scan.c tags TAGS Makefile config.status \
 		config.h
 
-realclean: distclean
+maintainer-clean: distclean
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
 	rm -f $(FLEX).man skel.c flex*.tar.gz flex*.tar.Z
 
 dist: $(FLEX) $(DISTFILES) parse.c parse.h $(srcdir)/$(FLEX).man
