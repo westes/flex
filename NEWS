@@ -1,3 +1,24 @@
+Changes between release 2.4.4 (07Dec93) and release 2.4.3:
+
+	- Fixed two serious bugs in scanning 8-bit characters.
+
+	- Fixed bug in YY_USER_ACTION that caused it to be executed
+	  inappropriately (on the scanner's on internal actions, and
+	  with incorrect yytext/yyleng values).
+
+	- Fixed bug in pointing yyin at a new file and resuming scanning.
+
+	- Portability fix regarding min/max/abs macros conflicting with
+	  function definitions in standard header files.
+
+	- Added a virtual LexerError() method to the C++ yyFlexLexer class
+	  for reporting error messages instead of always using cerr.
+
+	- Added warning in flexdoc that the C++ scanning class is presently
+	  experimental and subject to considerable change between major
+	  releases.
+
+
 Changes between release 2.4.3 (03Dec93) and release 2.4.2:
 
 	- Fixed bug causing fatal scanner messages to fail to print.
@@ -6,9 +27,9 @@ Changes between release 2.4.3 (03Dec93) and release 2.4.2:
 	  sources.  One side-effect of this change is that -+ and -CF
 	  are now incompatible.
 
-	- libfl.a now supplies versions of the the <string.h>/<strings.h>
-	  string routines needed by flex and the scanners it generates,
-	  to enhance portability to some BSD systems.
+	- libfl.a now supplies private versions of the the <string.h>/
+	  <strings.h> string routines needed by flex and the scanners
+	  it generates, to enhance portability to some BSD systems.
 
 	- More robust solution to 2.4.2's flexfatal() bug fix.
 
