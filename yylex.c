@@ -194,6 +194,10 @@ int yylex()
 		fprintf( stderr, "[%d]", yylval );
 		break;
 
+	    case EOF_OP:
+		fprintf( stderr, "<<EOF>>" );
+		break;
+
 	    case 0:
 		fprintf( stderr, "End Marker" );
 		break;
