@@ -60,7 +60,7 @@ int current_state_type;
 int variable_trailing_context_rules;
 int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
-int numecs, nextecm[CSIZE], ecgroup[CSIZE], nummecs, tecfwd[CSIZE + 1];
+int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs, tecfwd[CSIZE + 1];
 int tecbck[CSIZE + 1];
 int *xlation = (int *) 0;
 int num_xlations;
@@ -69,7 +69,7 @@ char **scname;
 int current_max_dfa_size, current_max_xpairs;
 int current_max_template_xpairs, current_max_dfas;
 int lastdfa, *nxt, *chk, *tnxt;
-int *base, *def, tblend, firstfree, **dss, *dfasiz;
+int *base, *def, *nultrans, NUL_ec, tblend, firstfree, **dss, *dfasiz;
 union dfaacc_union *dfaacc;
 int *accsiz, *dhash, numas;
 int numsnpairs, jambase, jamstate;
@@ -79,7 +79,7 @@ Char *ccltbl;
 char *starttime, *endtime, nmstr[MAXLINE];
 int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
-int num_backtracking, bol_needed, uses_NUL;
+int num_backtracking, bol_needed;
 FILE *temp_action_file;
 FILE *backtrack_file;
 int end_of_buffer_state;
@@ -152,7 +152,6 @@ char **argv;
 	"variable trailing context rules cannot be used with -f or -F" );
 	}
 
-    /* convert the ndfa to a dfa */
     ntod();
 
     /* generate the C state transition tables from the DFA */
@@ -334,6 +333,8 @@ char **argv;
     sawcmpflag = false;
     use_stdout = false;
 
+    csize = DEFAULT_CSIZE;
+
     program_name = argv[0];
 
     /* read flags */
@@ -394,7 +395,7 @@ char **argv;
 					(int) arg[i] );
 				break;
 			    }
-		    
+
 		    goto get_next_arg;
 
 		case 'd':
@@ -452,6 +453,10 @@ char **argv;
 
 		case 'v':
 		    printstats = true;
+		    break;
+
+		case '8':
+		    csize = CSIZE;
 		    break;
 
 		default:
@@ -528,9 +533,9 @@ get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
 	static char temp_action_file_name[32];
 
 #ifndef SHORT_FILE_NAMES
-	strcpy( temp_action_file_name, "/tmp/flexXXXXXX" );
+	(void) strcpy( temp_action_file_name, "/tmp/flexXXXXXX" );
 #else
-	strcpy( temp_action_file_name, "flexXXXXXX.tmp" );
+	(void) strcpy( temp_action_file_name, "flexXXXXXX.tmp" );
 #endif
 	(void) mktemp( temp_action_file_name );
 
@@ -544,12 +549,10 @@ get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
     numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst = 0;
     numuniq = numdup = hshsave = eofseen = datapos = dataline = 0;
     num_backtracking = onesp = numprots = 0;
-    variable_trailing_context_rules = bol_needed = uses_NUL = false;
+    variable_trailing_context_rules = bol_needed = false;
 
     linenum = sectnum = 1;
     firstprot = NIL;
-
-    csize = CSIZE;
 
     /* used in mkprot() so that the first proto goes in slot 1
      * of the proto queue
@@ -557,11 +560,13 @@ get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
     lastprot = 1;
 
     if ( useecs )
-	{
-	/* set up doubly-linked equivalence classes */
-	ecgroup[0] = NIL;
+	{ /* set up doubly-linked equivalence classes */
+	/* We loop all the way up to csize, since ecgroup[csize] is the
+	 * position used for NUL characters
+	 */
+	ecgroup[1] = NIL;
 
-	for ( i = 1; i < csize; ++i )
+	for ( i = 2; i <= csize; ++i )
 	    {
 	    ecgroup[i] = i - 1;
 	    nextecm[i - 1] = i;
@@ -572,7 +577,7 @@ get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
 
     else
 	{ /* put everything in its own equivalence class */
-	for ( i = 0; i < csize; ++i )
+	for ( i = 1; i <= csize; ++i )
 	    {
 	    ecgroup[i] = i;
 	    nextecm[i] = BAD_SUBSCRIPT;	/* to catch errors */
@@ -613,24 +618,22 @@ readin()
 
     if ( xlation )
 	{
-	ecs_from_xlation( ecgroup );
+	numecs = ecs_from_xlation( ecgroup );
 	useecs = true;
-	numecs = num_xlations + 1;	/* + 1 for characters not in %t table */
-	ccl2ecl();
 	}
 
     else if ( useecs )
-	{
-	if ( uses_NUL )
-	    numecs = cre8ecs( nextecm, ecgroup, csize, 0 );
-	else
-	    numecs = cre8ecs( nextecm, ecgroup, csize - 1, 1 );
-
-	ccl2ecl();
-	}
+	numecs = cre8ecs( nextecm, ecgroup, csize );
 
     else
 	numecs = csize;
+
+    /* now map the equivalence class for NUL to its expected place */
+    ecgroup[0] = ecgroup[csize];
+    NUL_ec = abs( ecgroup[0] );
+
+    if ( useecs )
+	ccl2ecl();
     }
 
 
@@ -688,4 +691,6 @@ set_up_initial_allocations()
     dhash = allocate_integer_array( current_max_dfas );
     dss = allocate_int_ptr_array( current_max_dfas );
     dfaacc = allocate_dfaacc_union( current_max_dfas );
+
+    nultrans = (int *) 0;
     }
