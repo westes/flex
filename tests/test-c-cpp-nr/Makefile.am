@@ -45,4 +45,4 @@ test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT) < $(srcdir)/test.input
 
 .c.o:
-	$(CC) -c -o $@ $(INCLUDES) $<
+	$(CXX) -c -o $@ $(INCLUDES) $<

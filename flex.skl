@@ -520,7 +520,7 @@ struct yyguts_t
 %e
 
 %c
-static int yy_init_globals YY_PARAMS(( yyscan_t ));
+static int yy_init_globals YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 %e
 
 /* This must go here because YYSTYPE and YYLSTYPE are included
@@ -1860,8 +1860,7 @@ void yyset_lloc YYFARGS1( YYLTYPE * ,yyllocp)
 #endif /* YY_REENTRANT_BISON_PURE */
 
 
-static int yy_init_globals( yyscanner )
-    yyscan_t yyscanner;
+static int yy_init_globals YYFARGS0(void)
     {
     /* Initialization is the same as for the non-reentrant scanner.
        This function is called once per scanner lifetime. */
@@ -1890,8 +1889,17 @@ static int yy_init_globals( yyscanner )
     }
 
 /* User-visible API */
+
+/* yylex_init is special because it creates the scanner itself, so it is
+ * the ONLY reentrant function that doesn't take the scanner as the last argument.
+ * That's why we explicitly handle the declaration, instead of using our macros.
+ */
+#ifndef YY_TRADITIONAL_FUNC_DEFS
+int yylex_init(yyscan_t* ptr_yy_globals)
+#else
 int yylex_init( ptr_yy_globals )
     yyscan_t* ptr_yy_globals;
+#endif
     {
     *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), NULL );
     yy_init_globals ( *ptr_yy_globals );
