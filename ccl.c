@@ -41,6 +41,8 @@ int ch;
 	{
 	int ind, len, newpos, i;
 
+	check_char( ch );
+
 	len = ccllen[cclp];
 	ind = cclmap[cclp];
 
@@ -121,7 +123,6 @@ void list_character_set( file, cset )
 FILE *file;
 int cset[];
 	{
-	char *readable_form();
 	register int i;
 
 	putc( '[', file );

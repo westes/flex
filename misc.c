@@ -154,6 +154,24 @@ int v[], n;
 	}
 
 
+/* check_char - checks a character to make sure it's within the range
+ *		we're expecting.  If not, generates fatal error message
+ *		and exits.
+ */
+
+void check_char( int c )
+	{
+	if ( c >= CSIZE )
+		lerrsf( "bad character '%s' detected in check_char()",
+			readable_form( c ) );
+
+	if ( c >= csize )
+		lerrsf( "scanner requires -8 flag to use the character '%s'",
+			readable_form( c ) );
+	}
+
+
+
 /* clower - replace upper-case letter to lower-case */
 
 Char clower( c )
