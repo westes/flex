@@ -163,8 +163,10 @@ int hash_size;
 	locstr = 0;
 
 	while ( str[locstr] )
-		hashval = ((hashval << 1) + (unsigned char) str[locstr++]) %
-			hash_size;
+		{
+		hashval = (hashval << 1) + (unsigned char) str[locstr++];
+		hashval %= hash_size;
+		}
 
 	return hashval;
 	}
