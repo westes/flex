@@ -45,6 +45,8 @@ probably satisfy the need for a man page
 *** in examples/manual, integrate the Makefile.examples into the
     Makefile.am
 
+** upgrade to recent versions of automake and autoconf
+
 * test suite
 
 ** Rewrite tests/Makefile.in and friends so that users do not need to
@@ -62,13 +64,18 @@ probably satisfy the need for a man page
 
 ** make sure that tests/ winds up in the distribution
 
-* move as much skeleton code as possible out of gen.c and into
+* generic coding issues
+
+** move as much skeleton code as possible out of gen.c and into
   flex.skl
 
-* create a uniform memory management API
+** create a uniform memory management API
 
-* figure out whether we want to add the capability to have
+** figure out whether we want to add the capability to have
   auto-generated backout rules
+
+** resolve the unistd.h inclusion issues; this should be done in
+harmony with autoconf methods
 
 * C++
 
