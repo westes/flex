@@ -119,7 +119,9 @@ manual includes both tutorial and reference sections:
 is a tool for generating
 .I scanners:
 programs which recognized lexical patterns in text.
+The
 .I flex
+program
 reads
 the given input files, or its standard input if no file names are given,
 for a description of a scanner to generate.  The description is in
@@ -433,14 +435,15 @@ expressions.  These are:
 
 
     <s>r       an r, but only in start condition s (see
-                 below for discussion of start conditions)
+                 below for discussion of start conditions).
     <s1,s2,s3>r
                same, but in any of start conditions s1,
-                 s2, or s3
+                 s2, or s3.
     <*>r       an r in any start condition, even an exclusive one.
 
 
-    <<EOF>>    an end-of-file
+    <<EOF>>    an end-of-file.
+
     <s1,s2><<EOF>>
                an end-of-file when in start condition s1 or s2
 
@@ -1900,7 +1903,7 @@ where
 is an array to hold the counts for the different rules.  Note that
 the macro
 .B YY_NUM_RULES
-gives the total number of rules (including the default rule, even if
+gives the total number of rules (including the default rule), even if
 you use
 .B \-s),
 so a correct declaration for
