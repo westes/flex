@@ -329,7 +329,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
 <SECT2>"{"{NAME}"}"	{
 			register Char *nmdefptr;
-			char *ndlookup();
+			Char *ndlookup();
 
 			(void) strcpy( nmstr, yytext + 1 );
 			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */
