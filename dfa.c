@@ -327,6 +327,289 @@ increase_max_dfas()
     }
 
 
+/* ntod - convert an ndfa to a dfa
+ *
+ * synopsis
+ *    ntod();
+ *
+ *  creates the dfa corresponding to the ndfa we've constructed.  the
+ *  dfa starts out in state #1.
+ */
+ntod()
+
+    {
+    int *accset, ds, nacc, newds;
+    int duplist[CSIZE + 1], sym, hashval, numstates, dsize;
+    int targfreq[CSIZE + 1], targstate[CSIZE + 1], state[CSIZE + 1];
+    int *nset, *dset;
+    int targptr, totaltrans, i, comstate, comfreq, targ;
+    int *epsclosure(), snstods(), symlist[CSIZE + 1];
+    int num_start_states;
+
+    /* this is so find_table_space(...) will know where to start looking in
+     * chk/nxt for unused records for space to put in the state
+     */
+    if ( fullspd )
+	firstfree = 0;
+
+    accset = allocate_integer_array( accnum + 1 );
+    nset = allocate_integer_array( current_max_dfa_size );
+
+    todo_head = todo_next = 0;
+
+#define ADD_QUEUE_ELEMENT(element) \
+	if ( ++element >= current_max_dfas ) \
+	    { /* check for queue overflowing */ \
+	    if ( todo_head == 0 ) \
+		increase_max_dfas(); \
+	    else \
+		element = 0; \
+	    }
+
+#define NEXT_QUEUE_ELEMENT(element) ((element + 1) % (current_max_dfas + 1))
+
+    for ( i = 0; i <= CSIZE; ++i )
+	{
+	duplist[i] = NIL;
+	symlist[i] = false;
+	}
+
+    for ( i = 0; i <= accnum; ++i )
+	accset[i] = NIL;
+
+    if ( trace )
+	{
+	dumpnfa( scset[1] );
+	fputs( "\n\nDFA Dump:\n\n", stderr );
+	}
+
+    inittbl();
+
+    if ( fullspd )
+	{
+	for ( i = 0; i <= numecs; ++i )
+	    state[i] = 0;
+	place_state( state, 0, 0 );
+	}
+
+    if ( fulltbl )
+	{
+	/* declare it "short" because it's a real long-shot that that
+	 * won't be large enough
+	 */
+	printf( "static short int %c[][%d] =\n    {\n", NEXTARRAY,
+		numecs + 1 ); /* '}' so vi doesn't get too confused */
+
+	/* generate 0 entries for state #0 */
+	for ( i = 0; i <= numecs; ++i )
+	    mk2data( 0 );
+
+	/* force ',' and dataflush() next call to mk2data */
+	datapos = NUMDATAITEMS;
+
+	/* force extra blank line next dataflush() */
+	dataline = NUMDATALINES;
+	}
+
+    /* create the first states */
+
+    num_start_states = lastsc * 2;
+
+    for ( i = 1; i <= num_start_states; ++i )
+	{
+	numstates = 1;
+
+	/* for each start condition, make one state for the case when
+	 * we're at the beginning of the line (the '%' operator) and
+	 * one for the case when we're not
+	 */
+	if ( i % 2 == 1 )
+	    nset[numstates] = scset[(i / 2) + 1];
+	else
+	    nset[numstates] = mkbranch( scbol[i / 2], scset[i / 2] );
+
+	nset = epsclosure( nset, &numstates, accset, &nacc, &hashval );
+
+	if ( snstods( nset, numstates, accset, nacc, hashval, &ds ) )
+	    {
+	    numas = numas + nacc;
+	    totnst = totnst + numstates;
+
+	    todo[todo_next] = ds;
+	    ADD_QUEUE_ELEMENT(todo_next);
+	    }
+	}
+
+    if ( ! fullspd )
+	{
+	if ( ! snstods( nset, 0, accset, 0, 0, &end_of_buffer_state ) )
+	    flexfatal( "could not create unique end-of-buffer state" );
+
+	numas += 1;
+	++num_start_states;
+
+	todo[todo_next] = end_of_buffer_state;
+	ADD_QUEUE_ELEMENT(todo_next);
+	}
+
+    while ( todo_head != todo_next )
+	{
+	targptr = 0;
+	totaltrans = 0;
+
+	for ( i = 1; i <= numecs; ++i )
+	    state[i] = 0;
+
+	ds = todo[todo_head];
+	todo_head = NEXT_QUEUE_ELEMENT(todo_head);
+
+	dset = dss[ds];
+	dsize = dfasiz[ds];
+
+	if ( trace )
+	    fprintf( stderr, "state # %d:\n", ds );
+
+	sympartition( dset, dsize, symlist, duplist );
+
+	for ( sym = 1; sym <= numecs; ++sym )
+	    {
+	    if ( symlist[sym] )
+		{
+		symlist[sym] = 0;
+
+		if ( duplist[sym] == NIL )
+		    { /* symbol has unique out-transitions */
+		    numstates = symfollowset( dset, dsize, sym, nset );
+		    nset = epsclosure( nset, &numstates, accset,
+				       &nacc, &hashval );
+
+		    if ( snstods( nset, numstates, accset,
+				  nacc, hashval, &newds ) )
+			{
+			totnst = totnst + numstates;
+			todo[todo_next] = newds;
+			ADD_QUEUE_ELEMENT(todo_next);
+			numas = numas + nacc;
+			}
+
+		    state[sym] = newds;
+
+		    if ( trace )
+			fprintf( stderr, "\t%d\t%d\n", sym, newds );
+
+		    targfreq[++targptr] = 1;
+		    targstate[targptr] = newds;
+		    ++numuniq;
+		    }
+
+		else
+		    {
+		    /* sym's equivalence class has the same transitions
+		     * as duplist(sym)'s equivalence class
+		     */
+		    targ = state[duplist[sym]];
+		    state[sym] = targ;
+
+		    if ( trace )
+			fprintf( stderr, "\t%d\t%d\n", sym, targ );
+
+		    /* update frequency count for destination state */
+
+		    i = 0;
+		    while ( targstate[++i] != targ )
+			;
+
+		    ++targfreq[i];
+		    ++numdup;
+		    }
+
+		++totaltrans;
+		duplist[sym] = NIL;
+		}
+	    }
+
+	numsnpairs = numsnpairs + totaltrans;
+
+	if ( caseins && ! useecs )
+	    {
+	    register int j;
+
+	    for ( i = 'A', j = 'a'; i <= 'Z'; ++i, ++j )
+		state[i] = state[j];
+	    }
+
+	if ( ds > num_start_states )
+	    check_for_backtracking( ds, state );
+
+	if ( fulltbl )
+	    {
+	    /* supply array's 0-element */
+	    if ( ds == end_of_buffer_state )
+		mk2data( -end_of_buffer_state );
+	    else
+		mk2data( end_of_buffer_state );
+
+	    for ( i = 1; i <= numecs; ++i )
+		/* jams are marked by negative of state number */
+		mk2data( state[i] ? state[i] : -ds );
+
+	    /* force ',' and dataflush() next call to mk2data */
+	    datapos = NUMDATAITEMS;
+
+	    /* force extra blank line next dataflush() */
+	    dataline = NUMDATALINES;
+	    }
+
+        else if ( fullspd )
+	    place_state( state, ds, totaltrans );
+
+	else if ( ds == end_of_buffer_state )
+	    /* special case this state to make sure it does what it's
+	     * supposed to, i.e., jam on end-of-buffer
+	     */
+	    stack1( ds, 0, 0, JAMSTATE );
+
+	else /* normal, compressed state */
+	    {
+	    /* determine which destination state is the most common, and
+	     * how many transitions to it there are
+	     */
+
+	    comfreq = 0;
+	    comstate = 0;
+
+	    for ( i = 1; i <= targptr; ++i )
+		if ( targfreq[i] > comfreq )
+		    {
+		    comfreq = targfreq[i];
+		    comstate = targstate[i];
+		    }
+
+	    bldtbl( state, ds, totaltrans, comstate, comfreq );
+	    }
+	}
+
+    if ( fulltbl )
+	dataend();
+
+    else if ( ! fullspd )
+	{
+	cmptmps();  /* create compressed template entries */
+
+	/* create tables for all the states with only one out-transition */
+	while ( onesp > 0 )
+	    {
+	    mk1tbl( onestate[onesp], onesym[onesp], onenext[onesp],
+		    onedef[onesp] );
+	    --onesp;
+	    }
+
+	mkdeftbl();
+	}
+    
+    }
+
+
 /* snstods - converts a set of ndfa states into a dfa state
  *
  * synopsis
