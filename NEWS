@@ -1,77 +1,205 @@
-Changes between release 2.4 (04Oct93) and release 2.3:
+Changes between release 2.4 (09Nov93) and release 2.3:
 
-skeleton file: John Gilmore
-	flex.skel -> flex.skl
-	-S to go away unless hear it's useful
-yywrap() a function
-must link with libfl.a
-C++: Kent Williams
-	use for reentrant scanners
-	C++ streams: Tom Epperly
-	lex.yy.cc
-	FlexLexer.h
-	flex++
-no temp file
-manual/
-detects if -8 flag needed
--h for help
-buffer dynamically enlarges; but *slow* to match big tokens
-	and doesn't do so on unput()
-fewer porting headaches; memset(), malloc() type in particular
-MISC/
--P prefix
--V
-<*>
-%array/%pointer
-	use %array to avoid input()/unput() trashing yytext
-	YYLMAX
-	not with -+
-flex -V
--8 by default (except -C{f,F}?); -7 supported
--A align option, promotes short -> long
-number of fencepost table expansion bugs fixed
-YY_START: integer value, can do stacks
-yyrestart() no longer needed; just point yyin at a new file
-fencepost bug fixes
-'#' no longer a comment character
-\n in flex input can optionally include leading or trailing \r
-warnings for rules that can't be matched; REJECT obviates
-more consistent identification of error locations
-yyleng a global
-definitions can now include leading '^' or trailing '$'
-scanners are -I interactive if compressed, by default; -B
-warnings for unmatchable rules; if -s given but default rule can be matched
-YY_USER_ACTION only called for real actions
-many misc bug fixes thanks to Gerhard Wilhelms
-\n\r stuff
-yyless() usable in section 3 (Ceriel Jacobs)
-formfeed no longer a whitespace character
-run-time detection of out-of-range characters (8 bit when built for 7 bit)
-%t nuked
-yyleng may be modified
--w: suppress warnings
--p -p: report minor performance problems, too
-no more time information in -v output
-MISC/fastwc
-MISC/debflex.awk (Francois)
-MISC/testxxLexerl.l
-YY_NEW_FILE no longer needed
-definitions with ^, $ allowed; not expanded inside parens
-version.h
+	- The new '-+' flag instructs flex to generate a C++ scanner class
+	  (thanks to Kent Williams).  flex writes an implementation of the
+	  class defined in FlexLexer.h to lex.yy.cc.  You may include
+	  multiple scanner classes in your program using the -P flag.  Note
+	  that the scanner class also provides a mechanism for creating
+	  reentrant scanners.  The scanner class uses C++ streams for I/O
+	  instead of FILE*'s (thanks to Tom Epperly).  If the flex executable's
+	  name ends in '+' then the '-+' flag is automatically on, so creating
+	  a symlink or copy of "flex" to "flex++" results in a version of
+	  flex that can be used exclusively for C++ scanners.
 
-corrected doc: -C options are cumulative
-	may modify yytext but not lengthen it (append chars)
-	modifying last char may affect anchoring
-	backtracking -> backing up
-	unindented comments allowed in first section, but not in second
-	yyless() only usable in scanner source, not externally
-	yyrestart(yyin) throws away current buffer
-	high-speed scanners: match as much text as possible w/ each rule
-	beginning-of-line operator is fairly cheap
-	unput() expensive, yyless() cheap
-	corrected backing-up example
+	  Note that without the '-+' flag, flex-generated scanners can still
+	  be compiled using C++ compilers, though they use FILE*'s for I/O
+	  instead of streams.
 
-code reformatted
+	  See the "GENERATING C++ SCANNERS" section of flexdoc for details.
+
+	- The new '-P' option specifies a prefix to use other than "yy"
+	  for the scanner's globally-visible variables, and for the
+	  "lex.yy.c" filename.  Using -P you can link together multiple
+	  flex scanners in the same executable.
+
+	- The distribution includes G.T. Nicol's flex manual (note
+	  that the manual has not yet been brought up to date; it
+	  presently reflects flex version 2.3).  See the manual/
+	  subdirectory.  Note that the PostScript for the manual
+	  presently lacks an index; this will be fixed soon.
+
+	  The distribution also includes a "texinfo" version of flexdoc.1,
+	  contributed by Roland Pesch (thanks also to Marq Kole, who
+	  contributed another version).  It also has not been brought
+	  up to date, but reflects version 2.3.  See MISC/flex.texinfo.
+
+	- yywrap() is now a function, and you now *must* link flex scanners
+	  with libfl.a.
+
+	- In the blessed name of POSIX compliance, flex supports "%array"
+	  and "%pointer" directives in the definitions (first) section of
+	  the scanner specification.  The former specifies that yytext
+	  should be an array (of size YYLMAX), the latter, that it should
+	  be a pointer.  The array version of yytext is universally slower
+	  than the pointer version, but has the advantage that its contents
+	  remain unmodified across calls to input() and unput() (the pointer
+	  version of yytext is, still, trashed by such calls).
+
+	  "%array" cannot be used with the '-+' C++ scanner class option.
+
+	- The new '-a' option directs flex to trade off memory for
+	  natural alignment when generating a scanner's tables.  In
+	  particular, table entries that would otherwise be "short"
+	  become "long".
+
+	- The new '-h' option produces a summary of the flex flags.
+
+	- The new '-V' option reports the flex version number and exits.
+
+	- The new scanner macro YY_START returns an integer value
+	  corresponding to the current start condition.  You can return
+	  to that start condition by passing the value to a subsequent
+	  "BEGIN" action.  You also can implement "start condition stacks"
+	  by storing the values in an integer stack.
+
+	- flex now generates warnings for rules that can't be matched.
+	  These warnings can be turned off using the new '-w' flag.  If
+	  your scanner uses REJECT then you will not get these warnings.
+
+	- If you specify the '-s' flag but the default rule can be matched,
+	  flex now generates a warning.
+
+	- "yyleng" is now a global, and may be modified by the user (though
+	  doing so and then using yymore() will yield weird results).
+
+	- Name definitions in the first section of a scanner specification
+	  can now include a leading '^' or trailing '$' operator.  In this
+	  case, the definition is *not* pushed back inside of parentheses.
+
+	- Scanners with compressed tables are now "interactive" (-I option)
+	  by default.  You can suppress this attribute (which makes them
+	  run slighly slower) using the new '-B' flag.
+
+	- Flex now generates 8-bit scanners by default, unless you use the
+	  -Cf or -CF compression options (-Cfe  and -CFe result in 8-bit
+	  scanners).  You can force it to generate a 7-bit scanner using
+	  the new '-7' flag.  You can build flex to generate 8-bit scanners
+	  for -Cf and -CF, too, by adding -DDEFAULT_CSIZE=256 to CFLAGS
+	  in the Makefile.
+
+	- You no longer need to call the scanner routine yyrestart() to
+	  inform the scanner that you have switched to a new file after
+	  having seen an EOF on the current input file.  Instead, just
+	  point yyin at the new file and continue scanning.
+
+	- You no longer need to invoke YY_NEW_FILE in an <<EOF>> action
+	  to indicate you wish to continue scanning.  Simply point yyin
+	  at a new file.
+
+	- A leading '#' no longer introduces a comment in a flex input.
+
+	- flex no longer considers formfeed ('\f') a whitespace character.
+
+	- %t, I'm happy to report, has been nuked.
+
+	- The '-p' option may be given twice ('-pp') to instruct flex to
+	  report minor performance problems as well as major ones.
+
+	- The '-v' verbose output no longer includes start/finish time
+	  information.
+
+	- Newlines in flex inputs can optionally include leading or
+	  trailing carriage-returns ('\r'), in support of several PC/Mac
+	  run-time libraries that automatically include these.
+
+	- A start condition of the form "<*>" makes the following rule
+	  active in every start condition, whether exclusive or inclusive.
+
+	- The following items have been corrected in the flex documentation:
+
+		- '-C' table compression options *are* cumulative.
+
+		- You may modify yytext but not lengthen it by appending
+		  characters to the end.  Modifying its final character
+		  will affect '^' anchoring for the next rule matched
+		  if the character is changed to or from a newline.
+
+		- The term "backtracking" has been renamed "backing up",
+		  since it is a one-time repositioning and not a repeated
+		  search.  What used to be the "lex.backtrack" file is now
+		  "lex.backup".
+
+		- Unindented "/* ... */" comments are allowed in the first
+		  flex input section, but not in the second.
+
+		- yyless() can only be used in the flex input source, not
+		  externally.
+
+		- You can use "yyrestart(yyin)" to throw away the
+		  current contents of the input buffer.
+
+		- To write high-speed scanners, attempt to match as much
+		  text as possible with each rule.  See MISC/fastwc/README
+		  for more information.
+
+		- Using the beginning-of-line operator ('^') is fairly
+		  cheap.  Using unput() is expensive.  Using yyless() is
+		  cheap.
+
+		- An example of scanning strings with embedded escape
+		  sequences has been added.
+
+		- The example of backing-up in flexdoc was erroneous; it
+		  has been corrected.
+
+	- A flex scanner's internal buffer now dynamically grows if needed
+	  to match large tokens.  Note that growing the buffer presently
+	  requires rescanning the (large) token, so consuming a lot of
+	  text this way is a slow process.  Also note that presently the
+	  buffer does *not* grow if you unput() more text than can fit
+	  into the buffer.
+
+	- The MISC/ directory has been reorganized; see MISC/README for
+	  details.
+
+	- yyless() can now be used in the third (user action) section
+	  of a scanner specification, thanks to Ceriel Jacobs.  yyless()
+	  remains a macro and cannot be used outside of the scanner source.
+
+	- The skeleton file is no longer opened at run-time, but instead
+	  compiled into a large string array (thanks to John Gilmore and
+	  friends at Cygnus).  You can still use the -S flag to point flex
+	  at a different skeleton file, though if you use this option let
+	  me know, as I plan to otherwise do away with -S in the near
+	  future.
+
+	- flex no longer uses a temporary file to store the scanner's
+	  actions.
+
+	- A number of changes have been made to decrease porting headaches.
+	  In particular, flex no longer uses memset() or ctime(), and
+	  provides a single simple mechanism for dealing with C compilers
+	  that still define malloc() as returning char* instead of void*.
+
+	- Flex now detects if the scanner specification requires the -8 flag
+	  but the flag was not given or on by default.
+
+	- A number of table-expansion fencepost bugs have been fixed,
+	  making flex more robust for generating large scanners.
+
+	- flex more consistently identifies the location of errors in
+	  its input.
+
+	- YY_USER_ACTION is now invoked only for "real" actions, not for
+	  internal actions used by the scanner for things like filling
+	  the buffer or handling EOF.
+
+	- A large number of miscellaneous bugs have been found and fixed
+	  thanks to Gerhard Wilhelms.
+
+	- The source code has been heavily reformatted, making patches
+	  relative to previous flex releases no longer accurate.
+
 
 Changes between 2.3 Patch #8 (21Feb93) and 2.3 Patch #7:
 
