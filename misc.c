@@ -149,7 +149,8 @@ int v[], n;
  *		and exits.
  */
 
-void check_char( int c )
+void check_char( c )
+int c;
 	{
 	if ( c >= CSIZE )
 		lerrsf( "bad character '%s' detected in check_char()",
