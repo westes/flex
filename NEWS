@@ -3,6 +3,18 @@ changes between releases of flex
 
 See the file COPYING for copying conditions
 
+* version 2.5.7
+
+** configure now uses autoconf's versioning information and configure
+** --help reports the bug-reporting address for flex
+
+** test suite now only reports success versus failure; reporting
+   skipped is problematic under the current setup
+
+** compilation with --disable-nls now works
+
+** flex can now be built in a separate directory
+
 * version 2.5.6
 
 ** gettext support added (from gettext 0.11)
