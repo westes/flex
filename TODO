@@ -14,7 +14,9 @@
 ** address lex-replacement: document or provide an option through
    configure for creating lex and libl.a files
 
-** update gettext support from gettext-0.11 to gettext-0.11.1
+*** decide what to do about abc{1,3} being broken in the posix standard
+
+** update gettext support from gettext-0.11 to gettext-0.11.2
 
 ** make sure all flex modules use gettext translation facilities
 
