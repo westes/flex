@@ -61,7 +61,7 @@
 #include <malloc.h>
 #endif
 
-#if __STDC__
+#ifdef STDC_HEADERS
 #include <stdlib.h>
 #endif
 
