@@ -35,6 +35,10 @@
 // If you want to create multiple lexer classes, you use the -P flag
 // to rename each yyFlexLexer to some other xxFlexLexer.
 
+#include <iostream.h>
+
+struct yy_buffer_state;
+typedef int yy_state_type;
 
 class FlexLexer {
 public:
@@ -43,9 +47,11 @@ public:
 	const char* YYText()	{ return yytext; }
 	int YYLeng()		{ return yyleng; }
 
-	virtual void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer ) = 0;
-	virtual YY_BUFFER_STATE yy_create_buffer( istream* s, int size ) = 0;
-	virtual void yy_delete_buffer( YY_BUFFER_STATE b ) = 0;
+	virtual void
+		yy_switch_to_buffer( struct yy_buffer_state* new_buffer ) = 0;
+	virtual struct yy_buffer_state*
+		yy_create_buffer( istream* s, int size ) = 0;
+	virtual void yy_delete_buffer( struct yy_buffer_state* b ) = 0;
 	virtual void yyrestart( istream* s ) = 0;
 
 	virtual int yylex() = 0;
@@ -88,9 +94,9 @@ public:
 		delete yy_state_buf;
 		}
 
-	void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer );
-	YY_BUFFER_STATE yy_create_buffer( istream* s, int size );
-	void yy_delete_buffer( YY_BUFFER_STATE b );
+	void yy_switch_to_buffer( struct yy_buffer_state* new_buffer );
+	struct yy_buffer_state* yy_create_buffer( istream* s, int size );
+	void yy_delete_buffer( struct yy_buffer_state* b );
 	void yyrestart( istream* s );
 
 	virtual int yylex();
@@ -103,7 +109,7 @@ protected:
 	int yyinput();
 
 	void yy_load_buffer_state();
-	void yy_init_buffer( YY_BUFFER_STATE b, istream* s );
+	void yy_init_buffer( struct yy_buffer_state* b, istream* s );
 
 	yy_state_type yy_get_previous_state();
 	yy_state_type yy_try_NUL_trans( yy_state_type current_state );
@@ -112,7 +118,7 @@ protected:
 	istream* yyin;	// input source for default LexerInput
 	ostream* yyout;	// output sink for default LexerOutput
 
-	YY_BUFFER_STATE yy_current_buffer;
+	struct yy_buffer_state* yy_current_buffer;
 
 	// yy_hold_char holds the character lost when yytext is formed.
 	char yy_hold_char;

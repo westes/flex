@@ -677,13 +677,16 @@ char **argv;
 		}
 
 	if ( (fulltbl || fullspd) && usemecs )
-		flexerror( "-f/-F and -Cm don't make sense together" );
+		flexerror( "-Cf/-CF and -Cm don't make sense together" );
 
 	if ( (fulltbl || fullspd) && interactive )
-		flexerror( "-f/-F and -I are incompatible" );
+		flexerror( "-Cf/-CF and -I are incompatible" );
 
 	if ( fulltbl && fullspd )
-		flexerror( "-f and -F are mutually exclusive" );
+		flexerror( "-Cf and -CF are mutually exclusive" );
+
+	if ( C_plus_plus && fullspd )
+		flexerror( "Can't use -+ with -CF option" );
 
 	if ( ! use_stdout )
 		{
@@ -830,7 +833,7 @@ void readin()
 	if ( fullspd )
 		printf(
 		"typedef const struct yy_trans_info *yy_state_type;\n" );
-	else
+	else if ( ! C_plus_plus )
 		printf( "typedef int yy_state_type;\n" );
 
 	if ( reject )
@@ -845,7 +848,7 @@ void readin()
 		printf( "extern int yylineno;\n" );
 		printf( "int yylineno = 1;\n" );
 		}
-	else
+	else if ( ! C_plus_plus )
 		printf( "FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;\n" );
 
 	if ( C_plus_plus )

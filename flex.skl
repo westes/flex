@@ -6,7 +6,9 @@
 
 #define FLEX_SCANNER
 
+%-
 #include <stdio.h>
+%*
 
 
 /* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
@@ -21,7 +23,7 @@
 
 #include <stdlib.h>
 %+
-#include <iostream.h>
+class istream;
 %*
 #include <unistd.h>
 
