@@ -264,8 +264,6 @@ int exit_status;
 
 		if ( C_plus_plus )
 			putc( '+', stderr );
-		if ( long_align )
-			putc( 'a', stderr );
 		if ( backing_up_report )
 			putc( 'b', stderr );
 		if ( ddebug )
@@ -301,6 +299,8 @@ int exit_status;
 
 		fprintf( stderr, " -C" );
 
+		if ( long_align )
+			putc( 'a', stderr );
 		if ( fulltbl )
 			putc( 'f', stderr );
 		if ( fullspd )
@@ -467,10 +467,6 @@ char **argv;
 					C_plus_plus = true;
 					break;
 
-				case 'a':
-					long_align = true;
-					break;
-
 				case 'B':
 					interactive = false;
 					interactive_given = true;
@@ -503,6 +499,11 @@ char **argv;
 					for ( ++i; arg[i] != '\0'; ++i )
 						switch ( arg[i] )
 							{
+							case 'a':
+								long_align =
+									true;
+								break;
+
 							case 'e':
 								useecs = true;
 								break;
@@ -977,11 +978,9 @@ void set_up_initial_allocations()
 void usage()
 	{
 	fprintf( stderr,
-"%s [-abcdfhinpstvwBFILTV78+ -C[efmF] -Pprefix -Sskeleton] [file ...]\n",
+"%s [-bcdfhilnpstvwBFILTV78+ -C[aefFmr] -Pprefix -Sskeleton] [file ...]\n",
 		program_name );
 
-	fprintf( stderr,
-		"\t-a  trade off larger tables for better memory alignment\n" );
 	fprintf( stderr,
 		"\t-b  generate backing-up information to lex.backup\n" );
 	fprintf( stderr, "\t-c  do-nothing POSIX option\n" );
@@ -989,6 +988,7 @@ void usage()
 	fprintf( stderr, "\t-f  generate fast, large scanner\n" );
 	fprintf( stderr, "\t-h  produce this help message\n" );
 	fprintf( stderr, "\t-i  generate case-insensitive scanner\n" );
+	fprintf( stderr, "\t-l  maximal compatibility with original lex\n" );
 	fprintf( stderr, "\t-n  do-nothing POSIX option\n" );
 	fprintf( stderr, "\t-p  generate performance report to stderr\n" );
 	fprintf( stderr,
@@ -1011,12 +1011,16 @@ void usage()
 	fprintf( stderr, "\t-+  generate C++ scanner class\n" );
 	fprintf( stderr,
 	"\t-C  specify degree of table compression (default is -Cem):\n" );
+	fprintf( stderr,
+	"\t\t-Ca  trade off larger tables for better memory alignment\n" );
 	fprintf( stderr, "\t\t-Ce  construct equivalence classes\n" );
 	fprintf( stderr,
 	"\t\t-Cf  do not compress scanner tables; use -f representation\n" );
-	fprintf( stderr, "\t\t-Cm  construct meta-equivalence classes\n" );
 	fprintf( stderr,
 	"\t\t-CF  do not compress scanner tables; use -F representation\n" );
+	fprintf( stderr, "\t\t-Cm  construct meta-equivalence classes\n" );
+	fprintf( stderr,
+		"\t\t-Cr  use read() instead of stdio for scanner input\n" );
 	fprintf( stderr, "\t-P  specify scanner prefix other than \"yy\"\n" );
 	fprintf( stderr, "\t-S  specify skeleton file\n" );
 	}
