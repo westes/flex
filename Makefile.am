@@ -44,7 +44,7 @@ AUTOMAKE_OPTIONS = \
 	gnits \
 	check-news \
 	dist-bzip2 \
-	1.6
+	1.7
 
 
 bin_PROGRAMS = flex
