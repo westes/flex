@@ -45,7 +45,7 @@ static char rcsid[] =
  *    ccladd( cclp, ch );
  */
 
-ccladd( cclp, ch )
+void ccladd( cclp, ch )
 int cclp;
 int ch;
 
@@ -124,7 +124,7 @@ int cclinit()
  *    cclnegate( ccl );
  */
 
-cclnegate( cclp )
+void cclnegate( cclp )
 int cclp;
 
     {
@@ -144,7 +144,7 @@ int cclp;
  * has a non-zero value in the set array.
  */
 
-list_character_set( file, cset )
+void list_character_set( file, cset )
 FILE *file;
 int cset[];
 
