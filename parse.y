@@ -58,10 +58,10 @@ char *alloca ();
 
 #include "flexdef.h"
 
-int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, actvp, rulelen;
+int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, rulelen;
 int trlcontxt, xcluflg, cclsorted, varlength, variable_trail_rule;
 
-int *actvsc, *active_ss, *scon_stk;
+int *scon_stk;
 int scon_stk_ptr, max_scon_stk;
 
 Char clower();
@@ -116,11 +116,6 @@ initlex		:
 
 			/* Create default DFA start condition. */
 			scinstal( "INITIAL", false );
-
-			/* Initially, the start condition scoping is
-			 * "no start conditions active".
-			 */
-			actvp = 0;
 			}
 		;
 
@@ -132,18 +127,7 @@ sect1		:  sect1 startconddecl namelist1
 
 sect1end	:  SECTEND
 			{
-			/* We now know how many start conditions there
-			 * are, so create the "activity" map indicating
-			 * which conditions are active.
-			 */
-			actvsc = allocate_integer_array( lastsc + 1 );
-			active_ss = allocate_integer_array( lastsc + 1 );
-
-			for ( i = 1; i <= lastsc; ++i )
-				active_ss[i] = 0;
-
-			max_scon_stk = lastsc + 1;
-			scon_stk = allocate_integer_array( max_scon_stk );
+			scon_stk = allocate_integer_array( lastsc + 1 );
 			scon_stk_ptr = 0;
 			}
 		;
@@ -165,8 +149,9 @@ namelist1	:  namelist1 NAME
 			{ synerr( "bad start condition list" ); }
 		;
 
-sect2		:  sect2 initforrule flexrule '\n'
-		|  sect2 '\n' scons '{' sect2 '}'
+sect2		:  sect2 scon initforrule flexrule '\n'
+			{ scon_stk_ptr = $2; }
+		|  sect2 scon '{' sect2 '}'
 			{ scon_stk_ptr = $2; }
 		|
 		;
@@ -179,54 +164,36 @@ initforrule	:
 			current_state_type = STATE_NORMAL;
 			previous_continued_action = continued_action;
 			in_rule = true;
+
 			new_rule();
 			}
 		;
 
-flexrule	:  scon '^' rule
+flexrule	:  '^' rule
 			{
-			pat = $3;
+			pat = $2;
 			finish_rule( pat, variable_trail_rule,
 				headcnt, trailcnt );
 
-			for ( i = 1; i <= actvp; ++i )
-				scbol[actvsc[i]] =
-					mkbranch( scbol[actvsc[i]], pat );
-
-			if ( ! bol_needed )
+			if ( scon_stk_ptr > 0 )
 				{
-				bol_needed = true;
-
-				if ( performance_report > 1 )
-					pinpoint_message( 
-			"'^' operator results in sub-optimal performance" );
+				for ( i = 1; i <= scon_stk_ptr; ++i )
+					scbol[scon_stk[i]] =
+						mkbranch( scbol[scon_stk[i]],
+								pat );
 				}
-			}
 
-		|  scon rule
-			{
-			pat = $2;
-			finish_rule( pat, variable_trail_rule,
-				headcnt, trailcnt );
+			else
+				{
+				/* Add to all non-exclusive start conditions,
+				 * including the default (0) start condition.
+				 */
 
-			for ( i = 1; i <= actvp; ++i )
-				scset[actvsc[i]] =
-					mkbranch( scset[actvsc[i]], pat );
-			}
-
-		|  '^' rule
-			{
-			pat = $2;
-			finish_rule( pat, variable_trail_rule,
-				headcnt, trailcnt );
-
-			/* Add to all non-exclusive start conditions,
-			 * including the default (0) start condition.
-			 */
-
-			for ( i = 1; i <= lastsc; ++i )
-				if ( ! scxclu[i] )
-					scbol[i] = mkbranch( scbol[i], pat );
+				for ( i = 1; i <= lastsc; ++i )
+					if ( ! scxclu[i] )
+						scbol[i] = mkbranch( scbol[i],
+									pat );
+				}
 
 			if ( ! bol_needed )
 				{
@@ -244,68 +211,82 @@ flexrule	:  scon '^' rule
 			finish_rule( pat, variable_trail_rule,
 				headcnt, trailcnt );
 
-			for ( i = 1; i <= lastsc; ++i )
-				if ( ! scxclu[i] )
-					scset[i] = mkbranch( scset[i], pat );
-			}
+			if ( scon_stk_ptr > 0 )
+				{
+				for ( i = 1; i <= scon_stk_ptr; ++i )
+					scset[scon_stk[i]] =
+						mkbranch( scset[scon_stk[i]],
+								pat );
+				}
 
-		|  scon EOF_OP
-			{ build_eof_action(); }
+			else
+				{
+				for ( i = 1; i <= lastsc; ++i )
+					if ( ! scxclu[i] )
+						scset[i] =
+							mkbranch( scset[i],
+								pat );
+				}
+			}
 
 		|  EOF_OP
 			{
-			/* This EOF applies to all start conditions
-			 * which don't already have EOF actions.
-			 */
-			actvp = 0;
+			if ( scon_stk_ptr > 0 )
+				build_eof_action();
+	
+			else
+				{
+				/* This EOF applies to all start conditions
+				 * which don't already have EOF actions.
+				 */
+				for ( i = 1; i <= lastsc; ++i )
+					if ( ! sceof[i] )
+						scon_stk[++scon_stk_ptr] = i;
 
-			for ( i = 1; i <= lastsc; ++i )
-				if ( ! sceof[i] )
-					actvsc[++actvp] = i;
-
-			if ( actvp == 0 )
-				warn(
+				if ( scon_stk_ptr == 0 )
+					warn(
 			"all start conditions already have <<EOF>> rules" );
 
-			else
-				build_eof_action();
+				else
+					build_eof_action();
+				}
 			}
 
 		|  error
 			{ synerr( "unrecognized rule" ); }
 		;
 
-scons		: scon
-			{
-			$$ = scon_stk_ptr;
+scon_stk_ptr	:
+			{ $$ = scon_stk_ptr; }
+		;
 
-			scon_stk_ptr += actvp;
-
-			while ( scon_stk_ptr >= max_scon_stk )
-				{
-				max_scon_stk *= 2;
-				scon_stk = reallocate_integer_array( scon_stk,
-						max_scon_stk );
-				}
-
-			for ( i = 1; i <= actvp; ++i )
-				scon_stk[$$ + i] = actvsc[i];
-			}
-
-scon		:  '<' namelist2 '>'
+scon		:  '<' scon_stk_ptr namelist2 '>'
+			{ $$ = $2; }
 
 		|  '<' '*' '>'
 			{
-			actvp = 0;
+			$$ = scon_stk_ptr;
 
 			for ( i = 1; i <= lastsc; ++i )
-				actvsc[++actvp] = i;
+				{
+				int j;
+
+				for ( j = 1; j <= scon_stk_ptr; ++j )
+					if ( scon_stk[j] == i )
+						break;
+
+				if ( j > scon_stk_ptr )
+					scon_stk[++scon_stk_ptr] = i;
+				}
 			}
+
+		|
+			{ $$ = scon_stk_ptr; }
 		;
 
 namelist2	:  namelist2 ',' sconname
 
-		|  { actvp = 0; } sconname
+		|  sconname
 
 		|  error
 			{ synerr( "bad start condition list" ); }
@@ -319,15 +300,17 @@ sconname	:  NAME
 					nmstr );
 			else
 				{
-				if ( ++actvp >= current_max_scs )
-					/* Some bozo has included multiple
-					 * instances of start condition names.
-					 */
-					pinpoint_message(
-				"too many start conditions in <> construct!" );
+				for ( i = 1; i <= scon_stk_ptr; ++i )
+					if ( scon_stk[i] == scnum )
+						{
+						format_warn(
+							"<%s> specified twice",
+							scname[scnum] );
+						break;
+						}
 
-				else
-					actvsc[actvp] = scnum;
+				if ( i > scon_stk_ptr )
+					scon_stk[++scon_stk_ptr] = scnum;
 				}
 			}
 		;
@@ -728,18 +711,18 @@ void build_eof_action()
 	register int i;
 	char action_text[MAXLINE];
 
-	for ( i = 1; i <= actvp; ++i )
+	for ( i = 1; i <= scon_stk_ptr; ++i )
 		{
-		if ( sceof[actvsc[i]] )
+		if ( sceof[scon_stk[i]] )
 			format_pinpoint_message(
 				"multiple <<EOF>> rules for start condition %s",
-				scname[actvsc[i]] );
+				scname[scon_stk[i]] );
 
 		else
 			{
-			sceof[actvsc[i]] = true;
+			sceof[scon_stk[i]] = true;
 			sprintf( action_text, "case YY_STATE_EOF(%s):\n",
-			scname[actvsc[i]] );
+				scname[scon_stk[i]] );
 			add_action( action_text );
 			}
 		}
@@ -775,6 +758,18 @@ char str[];
 	{
 	syntaxerror = true;
 	pinpoint_message( str );
+	}
+
+
+/* format_warn - write out formatted warning */
+
+void format_warn( msg, arg )
+char msg[], arg[];
+	{
+	char warn_msg[MAXLINE];
+
+	(void) sprintf( warn_msg, msg, arg );
+	warn( warn_msg );
 	}
 
 
