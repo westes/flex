@@ -628,151 +628,161 @@ void flexend (exit_status)
 		fprintf (header_out,
 			 "/* Undefine all internal macros, etc., that do no belong in the header. */\n\n");
 
-		fprintf (header_out, "#undef BEGIN\n");
-		fprintf (header_out, "#undef ECHO\n");
-		fprintf (header_out, "#undef EOB_ACT_CONTINUE_SCAN\n");
-		fprintf (header_out, "#undef EOB_ACT_END_OF_FILE\n");
-		fprintf (header_out, "#undef EOB_ACT_LAST_MATCH\n");
-		fprintf (header_out, "#undef FLEX_SCANNER\n");
-		fprintf (header_out, "#undef FLEX_STD\n");
-		fprintf (header_out, "#undef REJECT\n");
-		fprintf (header_out, "#undef YYLMAX\n");
-		fprintf (header_out, "#undef YYSTATE\n");
-		fprintf (header_out, "#undef YY_AT_BOL\n");
-		fprintf (header_out, "#undef YY_BREAK\n");
-		fprintf (header_out, "#undef YY_BUFFER_EOF_PENDING\n");
-		fprintf (header_out, "#undef YY_BUFFER_NEW\n");
-		fprintf (header_out, "#undef YY_BUFFER_NORMAL\n");
-		fprintf (header_out, "#undef YY_BUF_SIZE\n");
-		fprintf (header_out, "#undef YY_CALL_LAST_ARG\n");
-		fprintf (header_out, "#undef YY_CALL_ONLY_ARG\n");
-		fprintf (header_out, "#undef YY_CURRENT_BUFFER\n");
-		fprintf (header_out, "#undef YY_DECL\n");
-		fprintf (header_out, "#undef YY_DECL_LAST_ARG\n");
-		fprintf (header_out, "#undef YY_DO_BEFORE_ACTION\n");
-		fprintf (header_out, "#undef YY_END_OF_BUFFER\n");
-		fprintf (header_out, "#undef YY_END_OF_BUFFER_CHAR\n");
-		fprintf (header_out, "#undef YY_EXIT_FAILURE\n");
-		fprintf (header_out, "#undef YY_EXTRA_TYPE\n");
-		fprintf (header_out, "#undef YY_FATAL_ERROR\n");
-		fprintf (header_out, "#undef YY_FLEX_DEFINED_ECHO\n");
-		fprintf (header_out, "#undef YY_FLEX_LEX_COMPAT\n");
-		fprintf (header_out, "#undef YY_FLEX_MAJOR_VERSION\n");
-		fprintf (header_out, "#undef YY_FLEX_MINOR_VERSION\n");
-		fprintf (header_out, "#undef YY_FLUSH_BUFFER\n");
-		fprintf (header_out, "#undef YY_G\n");
-		fprintf (header_out, "#undef YY_INPUT\n");
-		fprintf (header_out, "#undef YY_INT_ALIGNED\n");
-		fprintf (header_out, "#undef YY_INTERACTIVE\n");
-		fprintf (header_out, "#undef YY_LAST_ARG\n");
-		fprintf (header_out, "#undef YY_LEX_ARGS\n");
-		fprintf (header_out, "#undef YY_MAIN\n");
-		fprintf (header_out, "#undef YY_MORE_ADJ\n");
-		fprintf (header_out, "#undef YY_NEED_STRLEN\n");
-		fprintf (header_out, "#undef YY_NEW_FILE\n");
-		fprintf (header_out, "#undef YY_NO_FLEX_ALLOC\n");
-		fprintf (header_out, "#undef YY_NO_FLEX_REALLOC\n");
-		fprintf (header_out, "#undef YY_NO_FLEX_FREE\n");
-		fprintf (header_out, "#undef YY_NO_GET_DEBUG\n");
-		fprintf (header_out, "#undef YY_NO_GET_EXTRA\n");
-		fprintf (header_out, "#undef YY_NO_GET_IN\n");
-		fprintf (header_out, "#undef YY_NO_GET_LENG\n");
-		fprintf (header_out, "#undef YY_NO_GET_LINENO\n");
-		fprintf (header_out, "#undef YY_NO_GET_LLOC\n");
-		fprintf (header_out, "#undef YY_NO_GET_LVAL\n");
-		fprintf (header_out, "#undef YY_NO_GET_OUT\n");
-		fprintf (header_out, "#undef YY_NO_GET_TEXT\n");
-		fprintf (header_out, "#undef YY_NO_INPUT\n");
-		fprintf (header_out, "#undef YY_NO_POP_STATE\n");
-		fprintf (header_out, "#undef YY_NO_PUSH_STATE\n");
-		fprintf (header_out, "#undef YY_NO_SCAN_BUFFER\n");
-		fprintf (header_out, "#undef YY_NO_SCAN_BYTES\n");
-		fprintf (header_out, "#undef YY_NO_SCAN_STRING\n");
-		fprintf (header_out, "#undef YY_NO_SET_DEBUG\n");
-		fprintf (header_out, "#undef YY_NO_SET_EXTRA\n");
-		fprintf (header_out, "#undef YY_NO_SET_IN\n");
-		fprintf (header_out, "#undef YY_NO_SET_LINENO\n");
-		fprintf (header_out, "#undef YY_NO_SET_LLOC\n");
-		fprintf (header_out, "#undef YY_NO_SET_LVAL\n");
-		fprintf (header_out, "#undef YY_NO_SET_OUT\n");
-		fprintf (header_out, "#undef YY_NO_TOP_STATE\n");
-		fprintf (header_out, "#undef YY_NO_UNISTD_H\n");
-		fprintf (header_out, "#undef YY_NO_UNPUT\n");
-		fprintf (header_out, "#undef YY_NULL\n");
-		fprintf (header_out, "#undef YY_NUM_RULES\n");
-		fprintf (header_out, "#undef YY_ONLY_ARG\n");
-		fprintf (header_out, "#undef YY_PROTO\n");
-		fprintf (header_out, "#undef YY_READ_BUF_SIZE\n");
-		fprintf (header_out, "#undef YY_REENTRANT\n");
-		fprintf (header_out, "#undef YY_BISON_BRIDGE\n");
-		fprintf (header_out, "#undef YY_RESTORE_YY_MORE_OFFSET\n");
-		fprintf (header_out, "#undef YY_RULE_SETUP\n");
-		fprintf (header_out, "#undef YY_SC_TO_UI\n");
-		fprintf (header_out, "#undef YY_SKIP_YYWRAP\n");
-		fprintf (header_out, "#undef YY_STACK_USED\n");
-		fprintf (header_out, "#undef YY_START\n");
-		fprintf (header_out, "#undef YY_START_STACK_INCR\n");
-		fprintf (header_out, "#undef YY_STATE_EOF\n");
-		fprintf (header_out, "#undef YY_STDINIT\n");
-		fprintf (header_out, "#undef YY_TEXT_IS_ARRAY\n");
-		fprintf (header_out, "#undef YY_TRAILING_HEAD_MASK\n");
-		fprintf (header_out, "#undef YY_TRAILING_MASK\n");
-		fprintf (header_out, "#undef YY_USER_ACTION\n");
-		fprintf (header_out, "#undef YY_USES_REJECT\n");
-		fprintf (header_out, "#undef YY_USE_CONST\n");
-		fprintf (header_out, "#undef YY_USE_LINENO\n");
-		fprintf (header_out, "#undef YY_USE_PROTOS\n");
-		fprintf (header_out, "#undef unput\n");
-		fprintf (header_out, "#undef yy_create_buffer\n");
-		fprintf (header_out, "#undef yy_delete_buffer\n");
-		fprintf (header_out, "#undef yy_flex_debug\n");
-		fprintf (header_out, "#undef yy_flush_buffer\n");
-		fprintf (header_out, "#undef yy_init_buffer\n");
-		fprintf (header_out, "#undef yy_load_buffer_state\n");
-		fprintf (header_out, "#undef yy_new_buffer\n");
-		fprintf (header_out, "#undef yy_scan_buffer\n");
-		fprintf (header_out, "#undef yy_scan_bytes\n");
-		fprintf (header_out, "#undef yy_scan_string\n");
-		fprintf (header_out, "#undef yy_set_bol\n");
-		fprintf (header_out, "#undef yy_set_interactive\n");
-		fprintf (header_out, "#undef yy_switch_to_buffer\n");
-		fprintf (header_out, "#undef yyconst\n");
-		fprintf (header_out, "#undef yyextra\n");
-		fprintf (header_out, "#undef yyget_debug\n");
-		fprintf (header_out, "#undef yyset_debug\n");
-		fprintf (header_out, "#undef yyget_extra\n");
-		fprintf (header_out, "#undef yyget_in\n");
-		fprintf (header_out, "#undef yyget_leng\n");
-		fprintf (header_out, "#undef yyget_lineno\n");
-		fprintf (header_out, "#undef yyget_lloc\n");
-		fprintf (header_out, "#undef yyget_lval\n");
-		fprintf (header_out, "#undef yyget_out\n");
-		fprintf (header_out, "#undef yyget_text\n");
-		fprintf (header_out, "#undef yyin\n");
-		fprintf (header_out, "#undef yyleng\n");
-		fprintf (header_out, "#undef yyless\n");
-		fprintf (header_out, "#undef yylex\n");
-		fprintf (header_out, "#undef yylex_destroy\n");
-		fprintf (header_out, "#undef yylex_init\n");
-		fprintf (header_out, "#undef yylineno\n");
-		fprintf (header_out, "#undef yylloc\n");
-		fprintf (header_out, "#undef yylval\n");
-		fprintf (header_out, "#undef yymore\n");
-		fprintf (header_out, "#undef yyout\n");
-		fprintf (header_out, "#undef yyrestart\n");
-		fprintf (header_out, "#undef yyset_extra\n");
-		fprintf (header_out, "#undef yyset_in\n");
-		fprintf (header_out, "#undef yyset_lineno\n");
-		fprintf (header_out, "#undef yyset_lloc\n");
-		fprintf (header_out, "#undef yyset_lval\n");
-		fprintf (header_out, "#undef yyset_out\n");
-		fprintf (header_out, "#undef yyterminate\n");
-		fprintf (header_out, "#undef yytext\n");
-		fprintf (header_out, "#undef yytext_ptr\n");
-		fprintf (header_out, "#undef yywrap\n");
-		fprintf (header_out, "#undef yyalloc\n");
-		fprintf (header_out, "#undef yyrealloc\n");
-		fprintf (header_out, "#undef yyfree\n");
+        {
+            const char * undef_list[] = {
+                "BEGIN",
+                "ECHO",
+                "EOB_ACT_CONTINUE_SCAN",
+                "EOB_ACT_END_OF_FILE",
+                "EOB_ACT_LAST_MATCH",
+                "FLEX_SCANNER",
+                "FLEX_STD",
+                "REJECT",
+                "YYLMAX",
+                "YYSTATE",
+                "YY_AT_BOL",
+                "YY_BISON_BRIDGE",
+                "YY_BREAK",
+                "YY_BUFFER_EOF_PENDING",
+                "YY_BUFFER_NEW",
+                "YY_BUFFER_NORMAL",
+                "YY_BUF_SIZE",
+                "YY_CALL_LAST_ARG",
+                "YY_CALL_ONLY_ARG",
+                "YY_CURRENT_BUFFER",
+                "YY_DECL",
+                "YY_DECL_LAST_ARG",
+                "YY_DO_BEFORE_ACTION",
+                "YY_END_OF_BUFFER",
+                "YY_END_OF_BUFFER_CHAR",
+                "YY_EXIT_FAILURE",
+                "YY_EXTRA_TYPE",
+                "YY_FATAL_ERROR",
+                "YY_FLEX_DEFINED_ECHO",
+                "YY_FLEX_LEX_COMPAT",
+                "YY_FLEX_MAJOR_VERSION",
+                "YY_FLEX_MINOR_VERSION",
+                "YY_FLUSH_BUFFER",
+                "YY_G",
+                "YY_INPUT",
+                "YY_INTERACTIVE",
+                "YY_INT_ALIGNED",
+                "YY_LAST_ARG",
+                "YY_LEX_ARGS",
+                "YY_MAIN",
+                "YY_MORE_ADJ",
+                "YY_NEED_STRLEN",
+                "YY_NEW_FILE",
+                "YY_NO_FLEX_ALLOC",
+                "YY_NO_FLEX_FREE",
+                "YY_NO_FLEX_REALLOC",
+                "YY_NO_GET_DEBUG",
+                "YY_NO_GET_EXTRA",
+                "YY_NO_GET_IN",
+                "YY_NO_GET_LENG",
+                "YY_NO_GET_LINENO",
+                "YY_NO_GET_LLOC",
+                "YY_NO_GET_LVAL",
+                "YY_NO_GET_OUT",
+                "YY_NO_GET_TEXT",
+                "YY_NO_INPUT",
+                "YY_NO_POP_STATE",
+                "YY_NO_PUSH_STATE",
+                "YY_NO_SCAN_BUFFER",
+                "YY_NO_SCAN_BYTES",
+                "YY_NO_SCAN_STRING",
+                "YY_NO_SET_DEBUG",
+                "YY_NO_SET_EXTRA",
+                "YY_NO_SET_IN",
+                "YY_NO_SET_LINENO",
+                "YY_NO_SET_LLOC",
+                "YY_NO_SET_LVAL",
+                "YY_NO_SET_OUT",
+                "YY_NO_TOP_STATE",
+                "YY_NO_UNISTD_H",
+                "YY_NO_UNPUT",
+                "YY_NULL",
+                "YY_NUM_RULES",
+                "YY_ONLY_ARG",
+                "YY_PROTO",
+                "YY_READ_BUF_SIZE",
+                "YY_REENTRANT",
+                "YY_RESTORE_YY_MORE_OFFSET",
+                "YY_RULE_SETUP",
+                "YY_SC_TO_UI",
+                "YY_SKIP_YYWRAP",
+                "YY_STACK_USED",
+                "YY_START",
+                "YY_START_STACK_INCR",
+                "YY_STATE_EOF",
+                "YY_STDINIT",
+                "YY_TEXT_IS_ARRAY",
+                "YY_TRAILING_HEAD_MASK",
+                "YY_TRAILING_MASK",
+                "YY_USER_ACTION",
+                "YY_USES_REJECT",
+                "YY_USE_CONST",
+                "YY_USE_LINENO",
+                "YY_USE_PROTOS",
+                "unput",
+                "yy_create_buffer",
+                "yy_delete_buffer",
+                "yy_flex_debug",
+                "yy_flush_buffer",
+                "yy_init_buffer",
+                "yy_load_buffer_state",
+                "yy_new_buffer",
+                "yy_scan_buffer",
+                "yy_scan_bytes",
+                "yy_scan_string",
+                "yy_set_bol",
+                "yy_set_interactive",
+                "yy_switch_to_buffer",
+                "yyalloc",
+                "yyconst",
+                "yyextra",
+                "yyfree",
+                "yyget_debug",
+                "yyget_extra",
+                "yyget_in",
+                "yyget_leng",
+                "yyget_lineno",
+                "yyget_lloc",
+                "yyget_lval",
+                "yyget_out",
+                "yyget_text",
+                "yyin",
+                "yyleng",
+                "yyless",
+                "yylex",
+                "yylex_destroy",
+                "yylex_init",
+                "yylineno",
+                "yylloc",
+                "yylval",
+                "yymore",
+                "yyout",
+                "yyrealloc",
+                "yyrestart",
+                "yyset_debug",
+                "yyset_extra",
+                "yyset_in",
+                "yyset_lineno",
+                "yyset_lloc",
+                "yyset_lval",
+                "yyset_out",
+                "yyterminate",
+                "yytext",
+                "yytext_ptr",
+                "yywrap",
+
+                /* must be null-terminated */
+                NULL};
+
+                
+                for (i=0; undef_list[i] != NULL; i++)
+                    fprintf (header_out, "#undef %s\n", undef_list[i]);
+        }
 
 		/* undef any of the auto-generated symbols. */
 		for (i = 0; i < defs_buf.nelts; i++) {
