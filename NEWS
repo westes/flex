@@ -5,6 +5,8 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.22
 
+** the constant FLEX_BETA is defined if flex is a beta release
+
 ** the script create-test was not included in the distribution and it
    should have been
 
