@@ -32,14 +32,6 @@
 
 #ifdef __STDC__
 
-#ifdef __GNUC__
-#include <stddef.h>
-void *malloc( size_t );
-void free( void* );
-#else
-#include <stdlib.h>
-#endif	/* __GNUC__ */
-
 #define YY_USE_PROTOS
 #define YY_USE_CONST
 
@@ -61,13 +53,6 @@ void free( void* );
 #define YY_PROTO(proto) proto
 #else
 #define YY_PROTO(proto) ()
-/* We can't get here if it's an ANSI C compiler, or a C++ compiler,
- * so it's got to be a K&R compiler, and therefore there's no standard
- * place from which to include these definitions.
- */
-char *malloc();
-int free();
-int read();
 #endif
 
 
@@ -150,7 +135,7 @@ int read();
 /* Default declaration of generated scanner - a define so the user can
  * easily add parameters.
  */
-#define YY_DECL int yylex YY_PROTO(( void )) 
+#define YY_DECL int yylex YY_PROTO(( void ))
 
 /* Code executed at the end of each rule. */
 #define YY_BREAK break;
@@ -162,6 +147,9 @@ int read();
 #endif
 
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
+
+extern int yyleng;
+extern FILE *yyin, *yyout;
 
 %% section 1 definitions and declarations of yytext/yytext_ptr go here
 
@@ -204,7 +192,7 @@ struct yy_buffer_state
 	/* Size of input buffer in bytes, not including room for EOB
 	 * characters.
 	 */
-	int yy_buf_size;	
+	int yy_buf_size;
 
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
@@ -235,9 +223,6 @@ static YY_CHAR yy_hold_char;
 
 static int yy_n_chars;		/* number of characters read into yy_ch_buf */
 
-
-extern int yyleng;
-extern FILE *yyin, *yyout;
 
 int yyleng;
 
@@ -270,6 +255,9 @@ void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));
 void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
 
 #define yy_new_buffer yy_create_buffer
+
+extern void *yy_flex_alloc();
+extern void yy_flex_free();
 
 #ifdef __cplusplus
 static int yyinput YY_PROTO(( void ));
@@ -466,7 +454,7 @@ do_action:	/* This label is used only to access EOF actions. */
 /* yy_get_next_buffer - try to read in a new buffer
  *
  * Returns a code representing an action:
- *	EOB_ACT_LAST_MATCH - 
+ *	EOB_ACT_LAST_MATCH -
  *	EOB_ACT_CONTINUE_SCAN - continue scanning from current position
  *	EOB_ACT_END_OF_FILE - end of file
  */
@@ -763,7 +751,7 @@ int size;
 	{
 	YY_BUFFER_STATE b;
 
-	b = (YY_BUFFER_STATE) malloc( sizeof( struct yy_buffer_state ) );
+	b = (YY_BUFFER_STATE) yy_flex_alloc( sizeof( struct yy_buffer_state ) );
 
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
@@ -773,7 +761,8 @@ int size;
 	/* yy_ch_buf has to be 2 characters longer than the size given because
 	 * we need to put in 2 end-of-buffer characters.
 	 */
-	b->yy_ch_buf = (YY_CHAR *) malloc( (unsigned) (b->yy_buf_size + 2) );
+	b->yy_ch_buf =
+		(YY_CHAR *) yy_flex_alloc( (unsigned) (b->yy_buf_size + 2) );
 
 	if ( ! b->yy_ch_buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
@@ -794,8 +783,8 @@ YY_BUFFER_STATE b;
 	if ( b == yy_current_buffer )
 		yy_current_buffer = (YY_BUFFER_STATE) 0;
 
-	free( (char *) b->yy_ch_buf );
-	free( (char *) b );
+	yy_flex_free( b->yy_ch_buf );
+	yy_flex_free( b );
 	}
 
 
