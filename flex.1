@@ -1782,9 +1782,9 @@ have to back up to simply match the 'f' (by the default rule).
 .PP
 The comment regarding State #8 indicates there's a problem
 when "foob" has been scanned.  Indeed, on any character other
-than a 'b', the scanner will have to back up to accept "foo".
+than an 'a', the scanner will have to back up to accept "foo".
 Similarly, the comment for State #9 concerns when "fooba" has
-been scanned.
+been scanned and an 'r' does not follow.
 .PP
 The final comment reminds us that there's no point going to
 all the trouble of removing backtracking from the rules unless
