@@ -19,8 +19,6 @@
 
 ** pretty up the dvi output; overflows, etc.
 
-** document recent m4 modifications (millaway) %%
-
 ** faq
 
 *** clean up the faqs section. The information is good; the texinfo

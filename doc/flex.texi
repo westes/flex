@@ -261,6 +261,7 @@ Appendices
 
 * Makefiles and Flex::          
 * Bison Bridge::                
+* M4 Dependency::               
 
 Indices
 
@@ -7987,6 +7988,7 @@ then the problem is that the last rule needs to be "{whitespace}" !
 @menu
 * Makefiles and Flex::          
 * Bison Bridge::                
+* M4 Dependency::               
 @end menu
 
 @node Makefiles and Flex, Bison Bridge, Appendices, Appendices
@@ -8098,7 +8100,7 @@ with your specific implementation of @command{make}.
 For more details on writing Makefiles, see @ref{Top, , , make, The
 GNU Make Manual}.
 
-@node Bison Bridge,  , Makefiles and Flex, Appendices
+@node Bison Bridge, M4 Dependency, Makefiles and Flex, Appendices
 @section C Scanners with Bison Parsers
 
 @cindex bison, bridging with flex
@@ -8199,6 +8201,31 @@ As you can see, there really is no magic here. We just use
     ;
 @end verbatim
 @end example
+
+@node M4 Dependency, , Bison Bridge, Appendices
+@section M4 Dependency
+@cindex m4
+
+The macro processor @code{m4}@footnote{The use of m4 is subject to change in
+future revisions of flex.} must be installed wherever flex is installed.
+@code{flex} invokes @samp{m4}, found by searching the directories in the
+@code{PATH} environment variable. Any code you place in section 1 or in the
+actions will be sent through m4. Please follow these rules to protect your
+code from unwanted @code{m4} processing.
+
+@itemize
+
+@item Do not use symbols that begin with, @samp{m4_}, such as, @samp{m4_define},
+or @samp{m4_include}, since those are reserved for @code{m4} macro names.
+
+@item Do not use the strings @samp{[[} or @samp{]]} anywhere in your code. The
+former is not valid in C, except within comments, but the latter is valid in
+code such as @code{x[y[z]]}.
+
+@end itemize
+
+@code{m4} is only required at the time you run @code{flex}. The generated
+scanner is ordinary C or C++, and does @emph{not} require @code{m4}.
 
 
 @node Indices,  , Appendices, Top
