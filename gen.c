@@ -1048,7 +1048,8 @@ void make_tables()
 		indent_puts(
 		"YY_FATAL_ERROR( \"token too large, exceeds YYLMAX\" ); \\" );
 		indent_down();
-		indent_puts( "yy_flex_strcpy( yytext, yytext_ptr ); \\" );
+		indent_puts(
+			"yy_flex_strncpy( yytext, yytext_ptr, yyleng ); \\" );
 		}
 
 	set_indent( 0 );
@@ -1393,7 +1394,7 @@ void make_tables()
 	/* Generate code for handling NUL's, if needed. */
 
 	/* First, deal with backing up and setting up yy_cp if the scanner
-	 * finds that it should JAM on the NUL>
+	 * finds that it should JAM on the NUL.
 	 */
 	skelout();
 	set_indent( 7 );
@@ -1412,6 +1413,13 @@ void make_tables()
 			indent_puts(
 				"yy_current_state = yy_last_accepting_state;" );
 			}
+
+		else
+			/* Still need to initialize yy_cp, though
+			 * yy_current_state was set up by
+			 * yy_get_previous_state().
+			 */
+			indent_puts( "yy_cp = yy_c_buf_p;" );
 		}
 
 
