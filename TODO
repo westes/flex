@@ -10,7 +10,8 @@
 *** create a section on flex design, features, etc.
 
 **** we're not adding comments between pattern-action rules; explain
-why in the documentation
+why in the documentation (because the ability exists as per an email
+from millaway)
 
 ** We've converted the flex manual to texinfo, but some issues remain:
 
