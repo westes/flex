@@ -3,6 +3,10 @@ changes between releases of flex
 
 See the file COPYING for copying conditions
 
+** ability to choose which memory functions are used in flex
+
+** new yylex_destroy() function for the non-reentrant scanner
+
 ** new handling of POSIXLY_CORRECT environment variable
 
 ** the test suite now has its copyrights explicitly described
