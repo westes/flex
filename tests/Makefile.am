@@ -58,7 +58,9 @@ SUBDIRS = \
 	test-string-r \
 	test-yyextra
 
-test:
+# clean up before running the test suite so we dont test old builds of test code
+
+test: clean
 	NOK=;\
 	NFAIL=;\
 	for dir in $(SUBDIRS) ; do \
