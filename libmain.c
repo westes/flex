@@ -8,5 +8,8 @@ int main( argc, argv )
 int argc;
 char *argv[];
 	{
-	return yylex();
+	while ( yylex() != 0 )
+		;
+
+	return 0;
 	}
