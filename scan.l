@@ -354,11 +354,11 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 				}
 			}
 
-<SECT2>[/|*+?.()]	return yytext[0];
+<SECT2>[/|*+?.()]	return (int) yytext[0];
 <SECT2>.		RETURNCHAR;
 
 
-<SC>[,*]		return yytext[0];
+<SC>[,*]		return (int) yytext[0];
 <SC>">"			BEGIN(SECT2); return '>';
 <SC>">"/^		BEGIN(CARETISBOL); return '>';
 <SC>{SCNAME}		RETURNNAME;
