@@ -1,3 +1,9 @@
+Changes between 2.3 Patch #5 (16Aug90) and 2.3 Patch #4:
+
+	- An up-to-date version of initscan.c so "make test" will
+	  work after applying the previous patches
+
+
 Changes between 2.3 Patch #4 (14Aug90) and 2.3 Patch #3:
 
 	- Fixed bug in hexadecimal escapes which allowed only digits,
