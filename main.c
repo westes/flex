@@ -160,7 +160,8 @@ int flex_main (argc, argv)
 	if (exit_status){
         fflush(stdout);
         fclose(stdout);
-        wait(0);
+        while (wait(0) > 0){
+        }
 		return exit_status - 1;
     }
 
@@ -367,7 +368,7 @@ void check_options ()
 		char   *pname = 0;
 		int     nbytes = 0;
 
-		action_define ("YY_TABLES_EXTERNAL", 1);
+		buf_m4_define (&m4defs_buf, "M4_YY_TABLES_EXTERNAL", NULL);
 
 		if (!tablesfilename) {
 			nbytes = strlen (prefix) +
