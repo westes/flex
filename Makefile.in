@@ -76,7 +76,7 @@ DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	configure.in Makefile.in mkskel.sh flex.skl \
 	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC \
 	flex.1 flexdoc.1 \
-	scan.c install.sh mkinstalldirs configure
+	parse.c parse.h scan.c install.sh mkinstalldirs configure
 
 DIST_NAME = flex
 
