@@ -4,9 +4,36 @@
  * $Header$
  */
 
+#define FLEX_SCANNER
+
 #include <stdio.h>
 
-#define FLEX_SCANNER
+
+#ifdef __cplusplus
+#include <osfcn.h>
+#include <strings.h>
+
+/* use prototypes in function declarations */
+#define YY_USE_PROTOS
+
+/* the "const" storage-class-modifier is valid */
+#define YY_USE_CONST
+
+#endif
+
+#ifdef __STDC__
+#define YY_USE_PROTOS
+#define YY_USE_CONST
+#endif
+
+#ifdef __TURBOC__
+#define YY_USE_CONST
+#endif
+
+
+#ifndef YY_USE_CONST
+#define const
+#endif
 
 /* amount of stuff to slurp up with each read */
 #ifndef YY_READ_BUF_SIZE
@@ -22,13 +49,14 @@
 
 /* copy whatever the last rule matched to the standard output */
 
-#define ECHO fputs( yytext, yyout )
+/* cast to (char *) is because for 8-bit chars, yytext is (unsigned char *) */
+#define ECHO fputs( (char *) yytext, yyout )
 
 /* gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
  * is returned in "result".
  */
 #define YY_INPUT(buf,result,max_size) \
-	if ( (result = read( fileno(yyin), buf, max_size )) < 0 ) \
+	if ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \
 	    YY_FATAL_ERROR( "read() in flex scanner failed" );
 #define YY_NULL 0
 #define yyterminate() return ( YY_NULL )
@@ -59,7 +87,7 @@
 /* default declaration of generated scanner - a define so the user can
  * easily add parameters
  */
-#ifdef __STDC__
+#ifdef YY_USE_PROTOS
 #define YY_DECL int yylex( void )
 #else
 #define YY_DECL int yylex()
@@ -70,17 +98,17 @@
 
 #define YY_END_OF_BUFFER_CHAR 0
 
+%% section 1 definitions go here
+
 /* done after the current pattern has been matched and before the
  * corresponding action - sets up yytext
  */
 #define YY_DO_BEFORE_ACTION \
 	yytext = yy_bp; \
+%% code to fiddle yytext and yyleng for yymore() goes here
 	yy_hold_char = *yy_cp; \
 	*yy_cp = '\0'; \
 	yy_c_buf_p = yy_cp;
-
-/* returns the length of the matched text */
-#define yyleng (yy_cp - yy_bp)
 
 #define EOB_ACT_RESTART_SCAN 0
 #define EOB_ACT_END_OF_FILE 1
@@ -94,23 +122,24 @@
 	YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 	}
 
-#define unput(c) yyunput( c, yy_bp )
+#define unput(c) yyunput( c, yytext )
 
 #define YY_USER_ACTION
 
+extern YY_CHAR *yytext;
+extern int yyleng;
+
+YY_CHAR *yytext;
+int yyleng;
+
 FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
-char *yytext;
 
-#ifndef __STDC__
-#define const
-#endif
-
-%% section 1 code and the data tables for the DFA go here
+%% data tables for the DFA go here
 
 /* these variables are all declared out here so that section 3 code can
  * manipulate them
  */
-static char *yy_c_buf_p;	/* points to current character in buffer */
+static YY_CHAR *yy_c_buf_p;	/* points to current character in buffer */
 static int yy_init = 1;		/* whether we need to initialize */
 static int yy_start = 0;	/* start state number */
 
@@ -123,32 +152,32 @@ static int yy_n_chars;		/* number of characters read into yy_ch_buf */
  * to put in 2 end-of-buffer characters (this is explained where it is
  * done) at the end of yy_ch_buf
  */
-static char yy_ch_buf[YY_BUF_SIZE + 2];
+static YY_CHAR yy_ch_buf[YY_BUF_SIZE + 2];
 
 /* yy_hold_char holds the character lost when yytext is formed */
-static char yy_hold_char;
+static YY_CHAR yy_hold_char;
 
 static yy_state_type yy_last_accepting_state;
-static char *yy_last_accepting_cpos;
+static YY_CHAR *yy_last_accepting_cpos;
 
-#ifdef __STDC__
+#ifdef YY_USE_PROTOS
 static yy_state_type yy_get_previous_state( void );
 static int yy_get_next_buffer( void );
-static void yyunput( int c, char *buf_ptr );
+static void yyunput( int c, YY_CHAR *buf_ptr );
 static int input( void );
-static void yyrestart( FILE *input_file );
+void yyrestart( FILE *input_file );
 #else
 static yy_state_type yy_get_previous_state();
 static int yy_get_next_buffer();
 static void yyunput();
 static int input();
-static void yyrestart();
+void yyrestart();
 #endif
 
 YY_DECL
     {
     register yy_state_type yy_current_state;
-    register char *yy_cp, *yy_bp;
+    register YY_CHAR *yy_cp, *yy_bp;
     register int yy_act;
 
 %% user's declarations go here
@@ -192,6 +221,7 @@ new_file:
 
     while ( 1 )		/* loops until end-of-file is reached */
 	{
+%% yymore()-related code goes here
 	yy_cp = yy_c_buf_p;
 
 	/* support of yytext */
@@ -200,7 +230,7 @@ new_file:
 	/* yy_bp points to the position in yy_ch_buf of the start of the
 	 * current run.
 	 */
-%% yymore()-related code goes here
+	yy_bp = yy_cp;
 
 %% code to set up and find next match goes here
 
@@ -229,8 +259,6 @@ do_action:	/* this label is used only to access EOF actions */
 		    /* undo the effects of YY_DO_BEFORE_ACTION */
 		    *yy_cp = yy_hold_char;
 
-		    yytext = yy_bp;
-
 		    switch ( yy_get_next_buffer() )
 			{
 			case EOB_ACT_END_OF_FILE:
@@ -257,7 +285,7 @@ do_action:	/* this label is used only to access EOF actions */
 			    break;
 
 			case EOB_ACT_RESTART_SCAN:
-			    yy_c_buf_p = yytext;
+			    yy_c_buf_p = yytext + YY_MORE_ADJ;
 			    yy_hold_char = *yy_c_buf_p;
 			    break;
 
@@ -267,13 +295,15 @@ do_action:	/* this label is used only to access EOF actions */
 			    yy_current_state = yy_get_previous_state();
 
 			    yy_cp = yy_c_buf_p;
-			    yy_bp = yytext;
+			    yy_bp = yytext + YY_MORE_ADJ;
 			    continue; /* go to "YY_DO_BEFORE_ACTION" */
 			}
 		    break;
 
 		default:
+#ifdef FLEX_DEBUG
 		    printf( "action # %d\n", yy_act );
+#endif
 		    YY_FATAL_ERROR( "fatal flex scanner internal error" );
 		}
 
@@ -297,8 +327,8 @@ do_action:	/* this label is used only to access EOF actions */
 static int yy_get_next_buffer()
 
     {
-    register char *dest = yy_ch_buf;
-    register char *source = yytext - 1; /* copy prev. char, too */
+    register YY_CHAR *dest = yy_ch_buf;
+    register YY_CHAR *source = yytext - 1; /* copy prev. char, too */
     register int number_to_move, i;
     int ret_val;
     
@@ -374,11 +404,11 @@ static yy_state_type yy_get_previous_state()
 
     {
     register yy_state_type yy_current_state;
-    register char *yy_cp;
+    register YY_CHAR *yy_cp;
 
 %% code to get the start state into yy_current_state goes here
 
-    for ( yy_cp = yytext; yy_cp < yy_c_buf_p; ++yy_cp )
+    for ( yy_cp = yytext + YY_MORE_ADJ; yy_cp < yy_c_buf_p; ++yy_cp )
 	{
 %% code to find the next state goes here
 	}
@@ -387,24 +417,24 @@ static yy_state_type yy_get_previous_state()
     }
 
 
-#ifdef __STDC__
-static void yyunput( int c, register char *yy_bp )
+#ifdef YY_USE_PROTOS
+static void yyunput( int c, register YY_CHAR *yy_bp )
 #else
 static void yyunput( c, yy_bp )
 int c;
-register char *yy_bp;
+register YY_CHAR *yy_bp;
 #endif
 
     {
-    register char *yy_cp = yy_c_buf_p;
+    register YY_CHAR *yy_cp = yy_c_buf_p;
 
     *yy_cp = yy_hold_char; /* undo effects of setting up yytext */
 
     if ( yy_cp < yy_ch_buf + 2 )
 	{ /* need to shift things up to make room */
 	register int number_to_move = yy_n_chars + 2; /* +2 for EOB chars */
-	register char *dest = &yy_ch_buf[YY_BUF_SIZE + 2];
-	register char *source = &yy_ch_buf[number_to_move];
+	register YY_CHAR *dest = &yy_ch_buf[YY_BUF_SIZE + 2];
+	register YY_CHAR *source = &yy_ch_buf[number_to_move];
 
 	while ( source > yy_ch_buf )
 	    *--dest = *--source;
@@ -422,6 +452,9 @@ register char *yy_bp;
 
     *--yy_cp = c;
 
+    /* note: the formal parameter *must* be called "yy_bp" for this
+     *       macro to now work correctly
+     */
     YY_DO_BEFORE_ACTION; /* set up yytext again */
     }
 
@@ -430,7 +463,7 @@ static int input()
 
     {
     int c;
-    char *yy_cp = yy_c_buf_p;
+    YY_CHAR *yy_cp = yy_c_buf_p;
 
     *yy_cp = yy_hold_char;
 
@@ -465,7 +498,7 @@ static int input()
 		break;
 
 	    case EOB_ACT_RESTART_SCAN:
-		yy_c_buf_p = yytext;
+		yy_c_buf_p = yytext + YY_MORE_ADJ;
 		break;
 
 	    case EOB_ACT_LAST_MATCH:
@@ -480,17 +513,14 @@ static int input()
     }
 
 
-#ifdef __STDC__
-static void yyrestart( FILE *input_file )
+#ifdef YY_USE_PROTOS
+void yyrestart( FILE *input_file )
 #else
-static void yyrestart( input_file )
+void yyrestart( input_file )
 FILE *input_file;
 #endif
 
     {
-    if ( yyin != stdin )
-	fclose( yyin );
-
     yyin = input_file;
     yy_init = 1;
     }
