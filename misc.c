@@ -31,20 +31,13 @@ static char rcsid[] =
     "@(#) $Header$ (LBL)";
 #endif
 
-#include <ctype.h>
 #include "flexdef.h"
-
-
-/* ANSI C does not guarantee that isascii() is defined */
-#ifndef isascii
-#define isascii(c) ((c) <= 0177)
-#endif
 
 
 
 /* declare functions that have forward references */
 
-void dataflush PROTO(());
+void dataflush PROTO((void));
 int otoi PROTO((Char []));
 
 
@@ -330,44 +323,6 @@ char msg[];
 	{
 	fprintf( stderr, "%s: fatal internal error, %s\n", program_name, msg );
 	exit( 1 );
-	}
-
-
-/* flex_gettime - return current time
- *
- * note
- *    the routine name has the "flex_" prefix because of name clashes
- *    with Turbo-C
- */
-
-/* include sys/types.h to use time_t and make lint happy */
-
-#ifndef MS_DOS
-#ifndef VMS
-#include <sys/types.h>
-#else
-#include <types.h>
-#endif
-#endif
-
-#ifdef MS_DOS
-#include <time.h>
-typedef long time_t;
-#endif
-
-char *flex_gettime()
-	{
-	time_t t, time();
-	char *result, *ctime(), *copy_string();
-
-	t = time( (long *) 0 );
-
-	result = copy_string( ctime( &t ) );
-
-	/* get rid of trailing newline */
-	result[24] = '\0';
-
-	return result;
 	}
 
 
