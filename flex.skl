@@ -177,16 +177,20 @@ struct yy_buffer_state
 	 */
 	int yy_fill_buffer;
 
-	/* Whether we've seen an EOF on this buffer. */
-	int yy_eof_status;
-#define EOF_NOT_SEEN 0
-	/* "Pending" happens when the EOF has been seen but there's still
-	 * some text to process.  Note that when we actually see the EOF,
-	 * we switch the status back to "not seen" (via yyrestart()), so
-	 * that the user can continue scanning by just pointing yyin at
-	 * a new input file.
+	int yy_buffer_status;
+#define YY_BUFFER_NEW 0
+#define YY_BUFFER_NORMAL 1
+	/* When an EOF's been seen but there's still some text to process
+	 * then we mark the buffer as YY_EOF_PENDING, to indicate that we
+	 * shouldn't try reading from the input source any more.  We might
+	 * still have a bunch of tokens to match, though, because of
+	 * possible backing-up.
+	 *
+	 * When we actually see the EOF, we change the status to "new"
+	 * (via yyrestart()), so that the user can continue scanning by
+	 * just pointing yyin at a new input file.
 	 */
-#define EOF_PENDING 1
+#define YY_BUFFER_EOF_PENDING 2
 	};
 
 %- Standard (non-C++) definition
@@ -449,18 +453,20 @@ do_action:	/* This label is used only to access EOF actions. */
 		/* Undo the effects of YY_DO_BEFORE_ACTION. */
 		*yy_cp = yy_hold_char;
 
-		if ( yy_current_buffer->yy_input_file != yyin )
+		if ( yy_current_buffer->yy_buffer_status == YY_BUFFER_NEW )
 			{
-			/* This can happen if we scan a file, yywrap() returns
-			 * 1, and then later the user points yyin at a new
-			 * file to resume scanning.  We have to assure
+			/* We're scanning a new file or input source.  It's
+			 * possible that this happened because the user
+			 * just pointed yyin at a new source and called
+			 * yylex().  If so, then we have to assure
 			 * consistency between yy_current_buffer and our
 			 * globals.  Here is the right place to do so, because
 			 * this is the first action (other than possibly a
-			 * back-up) that will match for the new input file.
+			 * back-up) that will match for the new input source.
 			 */
-			yy_current_buffer->yy_input_file = yyin;
 			yy_n_chars = yy_current_buffer->yy_n_chars;
+			yy_current_buffer->yy_input_file = yyin;
+			yy_current_buffer->yy_buffer_status = YY_BUFFER_NORMAL;
 			}
 
 		/* Note that here we test for yy_c_buf_p "<=" to the position
@@ -654,7 +660,7 @@ int yyFlexLexer::yy_get_next_buffer()
 	for ( i = 0; i < number_to_move; ++i )
 		*(dest++) = *(source++);
 
-	if ( yy_current_buffer->yy_eof_status != EOF_NOT_SEEN )
+	if ( yy_current_buffer->yy_buffer_status == YY_BUFFER_EOF_PENDING )
 		/* don't do the read, it's not guaranteed to return an EOF,
 		 * just force an EOF
 		 */
@@ -712,7 +718,8 @@ int yyFlexLexer::yy_get_next_buffer()
 		else
 			{
 			ret_val = EOB_ACT_LAST_MATCH;
-			yy_current_buffer->yy_eof_status = EOF_PENDING;
+			yy_current_buffer->yy_buffer_status =
+				YY_BUFFER_EOF_PENDING;
 			}
 		}
 
@@ -1066,7 +1073,7 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 
 	b->yy_fill_buffer = 1;
 
-	b->yy_eof_status = EOF_NOT_SEEN;
+	b->yy_buffer_status = YY_BUFFER_NEW;
 	}
 
 
