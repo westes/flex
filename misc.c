@@ -68,6 +68,52 @@ int size, element_size;
     }
 
 
+/* all_lower - true if a string is all lower-case
+ *
+ * synopsis:
+ *    char *str;
+ *    int all_lower();
+ *    true/false = all_lower( str );
+ */
+
+int all_lower( str )
+register char *str;
+
+    {
+    while ( *str )
+	{
+	if ( ! islower( *str ) )
+	    return ( 0 );
+	++str;
+	}
+
+    return ( 1 );
+    }
+
+
+/* all_upper - true if a string is all upper-case
+ *
+ * synopsis:
+ *    char *str;
+ *    int all_upper();
+ *    true/false = all_upper( str );
+ */
+
+int all_upper( str )
+register char *str;
+
+    {
+    while ( *str )
+	{
+	if ( ! isupper( *str ) )
+	    return ( 0 );
+	++str;
+	}
+
+    return ( 1 );
+    }
+
+
 /* bubble - bubble sort an integer array in increasing order
  *
  * synopsis
