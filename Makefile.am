@@ -33,7 +33,7 @@
 # For MS-DOS, add "-DMS_DOS" to DEFS.  See the directory MISC/MSDOS for
 # additional info.
 
-YFLAGS = -d
+AM_YFLAGS = -d
 ACLOCAL_AMFLAGS = -I m4
 help2man = @HELP2MAN@
 m4 = @M4@
