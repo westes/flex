@@ -5,6 +5,8 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.19
 
+** flex can, to some extent, diagnose where internal problems occur
+
 ** new translations from the translation project: fr, ca, ru, sv
 
 **Flex generates C99 defs now; see YY_TRADITIONAL_FUNC_DEFS in the
