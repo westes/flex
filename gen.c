@@ -37,7 +37,7 @@ static char rcsid[] =
 /* declare functions that have forward references */
 
 void gen_next_state PROTO((int));
-void genecs PROTO(());
+void genecs PROTO((void));
 void indent_put2s PROTO((char [], char []));
 void indent_puts PROTO((char []));
 
@@ -77,11 +77,11 @@ void do_indent()
 	}
 
 
-/* Generate the code to keep backtracking information. */
+/* Generate the code to keep backing-up information. */
 
-void gen_backtracking()
+void gen_backing_up()
 	{
-	if ( reject || num_backtracking == 0 )
+	if ( reject || num_backing_up == 0 )
 		return;
 
 	if ( fullspd )
@@ -98,23 +98,23 @@ void gen_backtracking()
 	}
 
 
-/* Generate the code to perform the backtrack. */
+/* Generate the code to perform the backing up. */
 
-void gen_bt_action()
+void gen_bu_action()
 	{
-	if ( reject || num_backtracking == 0 )
+	if ( reject || num_backing_up == 0 )
 		return;
 
 	set_indent( 3 );
 
-	indent_puts( "case 0: /* must backtrack */" );
+	indent_puts( "case 0: /* must back up */" );
 	indent_puts( "/* undo the effects of YY_DO_BEFORE_ACTION */" );
 	indent_puts( "*yy_cp = yy_hold_char;" );
 
 	if ( fullspd || fulltbl )
 		indent_puts( "yy_cp = yy_last_accepting_cpos + 1;" );
 	else
-		/* Backtracking info for compressed tables is taken \after/
+		/* Backing-up info for compressed tables is taken \after/
 		 * yy_cp has been incremented for the next state.
 		 */
 		indent_puts( "yy_cp = yy_last_accepting_cpos;" );
@@ -287,7 +287,7 @@ void gen_find_action()
 		indent_puts( "yy_lp = yy_accept[yy_current_state];" );
 
 		puts(
-		"find_rule: /* we branch to this label when backtracking */" );
+		"find_rule: /* we branch to this label when backing up */" );
 
 		indent_puts(
 		"for ( ; ; ) /* until we find what rule we matched */" );
@@ -433,11 +433,11 @@ char *char_map;
 	{
 	indent_put2s( "register YY_CHAR yy_c = %s;", char_map );
 
-	/* Save the backtracking info \before/ computing the next state
+	/* Save the backing-up info \before/ computing the next state
 	 * because we always compute one more state than needed - we
 	 * always proceed until we reach a jam state
 	 */
-	gen_backtracking();
+	gen_backing_up();
 
 	indent_puts(
 "while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )" );
@@ -468,7 +468,7 @@ char *char_map;
 	indent_down();
 
 	indent_puts(
-	"yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];" );
+"yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];" );
 	}
 
 
@@ -479,8 +479,9 @@ void gen_next_match()
 	/* NOTE - changes in here should be reflected in gen_next_state() and
 	 * gen_NUL_trans().
 	 */
-	char *char_map = useecs ? "yy_ec[*yy_cp]" : "*yy_cp";
-	char *char_map_2 = useecs ? "yy_ec[*++yy_cp]" : "*++yy_cp";
+	char *char_map = useecs ? "yy_ec[(unsigned int) *yy_cp]" : "*yy_cp";
+	char *char_map_2 =
+		useecs ? "yy_ec[(unsigned int) *++yy_cp]" : "*++yy_cp";
 
 	if ( fulltbl )
 		{
@@ -490,16 +491,16 @@ void gen_next_match()
 
 		indent_up();
 
-		if ( num_backtracking > 0 )
+		if ( num_backing_up > 0 )
 			{
 			indent_puts( "{" );	/* } for vi */
-			gen_backtracking();
+			gen_backing_up();
 			putchar( '\n' );
 			}
 
 		indent_puts( "++yy_cp;" );
 
-		if ( num_backtracking > 0 )
+		if ( num_backing_up > 0 )
 			/* { for vi */
 			indent_puts( "}" );
 
@@ -517,20 +518,21 @@ void gen_next_match()
 		indent_puts( "register YY_CHAR yy_c;\n" );
 		indent_put2s( "for ( yy_c = %s;", char_map );
 		indent_puts(
-	"      (yy_trans_info = &yy_current_state[yy_c])->yy_verify == yy_c;" );
+	"      (yy_trans_info = &yy_current_state[(unsigned int) yy_c])->" );
+		indent_puts( "yy_verify == yy_c;" );
 		indent_put2s( "      yy_c = %s )", char_map_2 );
 
 		indent_up();
 
-		if ( num_backtracking > 0 )
+		if ( num_backing_up > 0 )
 			indent_puts( "{" );	/* } for vi */
 
 		indent_puts( "yy_current_state += yy_trans_info->yy_nxt;" );
 
-		if ( num_backtracking > 0 )
+		if ( num_backing_up > 0 )
 			{
 			putchar( '\n' );
-			gen_backtracking();	/* { for vi */
+			gen_backing_up();	/* { for vi */
 			indent_puts( "}" );
 			}
 
@@ -564,7 +566,7 @@ void gen_next_match()
 
 		if ( ! reject && ! interactive )
 			{
-			/* Do the guaranteed-needed backtrack to figure out
+			/* Do the guaranteed-needed backing up to figure out
 			 * the match.
 			 */
 			indent_puts( "yy_cp = yy_last_accepting_cpos;" );
@@ -586,7 +588,8 @@ int worry_about_NULs;
 		{
 		if ( useecs )
 			(void) sprintf( char_map,
-				"(*yy_cp ? yy_ec[*yy_cp] : %d)", NUL_ec );
+				"(*yy_cp ? yy_ec[(unsigned int) *yy_cp] : %d)",
+					NUL_ec );
 		else
 			(void) sprintf( char_map,
 				"(*yy_cp ? *yy_cp : %d)", NUL_ec );
@@ -598,8 +601,8 @@ int worry_about_NULs;
 	if ( worry_about_NULs && nultrans )
 		{
 		if ( ! fulltbl && ! fullspd )
-			/* Compressed tables backtrack *before* they match. */
-			gen_backtracking();
+			/* Compressed tables back up *before* they match. */
+			gen_backing_up();
 
 		indent_puts( "if ( *yy_cp )" );
 		indent_up();
@@ -632,7 +635,7 @@ int worry_about_NULs;
 		}
 
 	if ( fullspd || fulltbl )
-		gen_backtracking();
+		gen_backing_up();
 
 	if ( reject )
 		indent_puts( "*yy_state_ptr++ = yy_current_state;" );
@@ -643,10 +646,10 @@ int worry_about_NULs;
 
 void gen_NUL_trans()
 	{ /* NOTE - changes in here should be reflected in get_next_match() */
-	int need_backtracking = (num_backtracking > 0 && ! reject);
+	int need_backing_up = (num_backing_up > 0 && ! reject);
 
-	if ( need_backtracking )
-		/* We'll need yy_cp lying around for the gen_backtracking(). */
+	if ( need_backing_up )
+		/* We'll need yy_cp lying around for the gen_backing_up(). */
 		indent_puts( "register YY_CHAR *yy_cp = yy_c_buf_p;" );
 
 	putchar( '\n' );
@@ -673,7 +676,8 @@ void gen_NUL_trans()
 
 		indent_puts(
 		"register const struct yy_trans_info *yy_trans_info;\n" );
-		indent_puts( "yy_trans_info = &yy_current_state[yy_c];" );
+		indent_puts(
+		"yy_trans_info = &yy_current_state[(unsigned int) yy_c];" );
 		indent_puts( "yy_current_state += yy_trans_info->yy_nxt;" );
 
 		indent_puts(
@@ -695,17 +699,17 @@ void gen_NUL_trans()
 		printf( "yy_is_jam = (yy_current_state == %d);\n", jamstate );
 		}
 
-	/* If we've entered an accepting state, backtrack; note that
-	 * compressed tables have *already* done such backtracking, so
+	/* If we've entered an accepting state, back up; note that
+	 * compressed tables have *already* done such backing up, so
 	 * we needn't bother with it again.
 	 */
-	if ( need_backtracking && (fullspd || fulltbl) )
+	if ( need_backing_up && (fullspd || fulltbl) )
 		{
 		putchar( '\n' );
 		indent_puts( "if ( ! yy_is_jam )" );
 		indent_up();
 		indent_puts( "{" );
-		gen_backtracking();
+		gen_backing_up();
 		indent_puts( "}" );
 		indent_down();
 		}
@@ -762,9 +766,9 @@ void gentabs()
 	/* The compressed table format jams by entering the "jam state",
 	 * losing information about the previous state in the process.
 	 * In order to recover the previous state, we effectively need
-	 * to keep backtracking information.
+	 * to keep backing-up information.
 	 */
-	++num_backtracking;
+	++num_backing_up;
 
 	if ( reject )
 		{
@@ -1095,11 +1099,11 @@ void make_tables()
 	else
 		gentabs();
 
-	/* Definitions for backtracking.  We don't need them if REJECT
-	 * is being used because then we use an alternative backtracking
+	/* Definitions for backing up.  We don't need them if REJECT
+	 * is being used because then we use an alternative backin-up
 	 * technique instead.
 	 */
-	if ( num_backtracking > 0 && ! reject )
+	if ( num_backing_up > 0 && ! reject )
 		{
 		indent_puts( "static yy_state_type yy_last_accepting_state;" );
 		indent_puts( "static YY_CHAR *yy_last_accepting_cpos;\n" );
@@ -1185,12 +1189,11 @@ void make_tables()
 	if ( yymore_used )
 		{
 		indent_puts( "static int yy_more_flag = 0;" );
-		indent_puts( "static int yy_doing_yy_more = 0;" );
 		indent_puts( "static int yy_more_len = 0;" );
 		indent_puts(
 		"#define yymore() do { yy_more_flag = 1; } while ( 0 )" );
 		indent_puts(
-		"#define YY_MORE_ADJ (yy_doing_yy_more ? yy_more_len : 0)" );
+		"#define YY_MORE_ADJ yy_more_len" );
 		}
 
 	else
@@ -1211,8 +1214,7 @@ void make_tables()
 	if ( yymore_used )
 		{
 		indent_puts( "yy_more_len = 0;" );
-		indent_puts( "yy_doing_yy_more = yy_more_flag;" );
-		indent_puts( "if ( yy_doing_yy_more )" );
+		indent_puts( "if ( yy_more_flag )" );
 		indent_up();
 		indent_puts( "{" );
 		indent_puts( "yy_more_len = yyleng;" );
@@ -1243,7 +1245,7 @@ void make_tables()
 		indent_puts( "if ( yy_act == 0 )" );
 		indent_up();
 		indent_puts(
-			"fprintf( stderr, \"--scanner backtracking\\n\" );" );
+			"fprintf( stderr, \"--scanner backing up\\n\" );" );
 		indent_down();
 
 		do_indent();
@@ -1283,7 +1285,7 @@ void make_tables()
 	/* Copy actions to output file. */
 	skelout();
 	indent_up();
-	gen_bt_action();
+	gen_bu_action();
 	fputs( action, stdout );
 
 	/* generate cases for any missing EOF rules */
@@ -1305,7 +1307,7 @@ void make_tables()
 
 	/* Generate code for handling NUL's, if needed. */
 
-	/* First, deal with backtracking and setting up yy_cp if the scanner
+	/* First, deal with backing up and setting up yy_cp if the scanner
 	 * finds that it should JAM on the NUL>
 	 */
 	skelout();
@@ -1318,7 +1320,7 @@ void make_tables()
 		{ /* compressed table */
 		if ( ! reject && ! interactive )
 			{
-			/* Do the guaranteed-needed backtrack to figure
+			/* Do the guaranteed-needed backing up to figure
 			 * out the match.
 			 */
 			indent_puts( "yy_cp = yy_last_accepting_cpos;" );
@@ -1350,5 +1352,7 @@ void make_tables()
 	/* Copy remainder of input to output. */
 
 	line_directive_out( stdout );
-	(void) flexscan(); /* copy remainder of input to output */
+
+	if ( sectnum == 3 )
+		(void) flexscan(); /* copy remainder of input to output */
 	}
