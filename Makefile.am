@@ -37,6 +37,7 @@ YFLAGS = -d
 ACLOCAL_AMFLAGS = -I m4
 help2man = @HELP2MAN@
 m4 = @M4@
+indent = @INDENT@
 
 AUTOMAKE_OPTIONS = \
 	readme-alpha \
@@ -177,13 +178,12 @@ indentfiles = buf.c ccl.c dfa.c ecs.c flexdef.h gen.c libmain.c \
               tblcmp.c yylex.c
 
 indent:
-	echo "indent target is not activated.";  exit 1
-	test -f .indent.pro
-	indent --version | grep GNU
+	if [ -f .indent.pro ] ; then \
 	for f in $(indentfiles);\
 	do\
 		echo indenting $$f ;\
-		indent < $$f >/dev/null && indent $$f || echo $$f FAILED ;\
-	done
+		$(indent) < $$f >/dev/null && indent $$f || echo $$f FAILED to indent ;\
+	done \
+	fi
 
 .PHONY: ChangeLog tags indent
