@@ -878,7 +878,7 @@ void skelout ()
 		/* copy from skel array */
 		if (buf[0] == '%') {	/* control line */
 			/* print the control line as a comment. */
-			if (buf[1] != '#') {
+			if (ddebug && buf[1] != '#') {
 				if (buf[strlen (buf) - 1] == '\\')
 					out_str ("/* %s */\\\n", buf);
 				else
@@ -898,13 +898,19 @@ void skelout ()
 			}
             else if (cmd_match (CMD_PUSH)){
                 sko_push(do_copy,tablestoggle);
-                out_str("/*(state = (%s,",do_copy?"true":"false");
-                out_str(          "%s)*/\n",tablestoggle?"true":"false");
+                if(ddebug){
+                    out_str("/*(state = (%s,",do_copy?"true":"false");
+                    out_str(          "%s)*/",tablestoggle?"true":"false");
+                    out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
+                }
             }
             else if (cmd_match (CMD_POP)){
                 sko_pop(&do_copy,&tablestoggle);
-                out_str("/*(state = (%s,",do_copy?"true":"false");
-                out_str(          "%s)*/\n",tablestoggle?"true":"false");
+                if(ddebug){
+                    out_str("/*(state = (%s,",do_copy?"true":"false");
+                    out_str(          "%s)*/",tablestoggle?"true":"false");
+                    out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
+                }
             }
 			else if (cmd_match (CMD_TABLES_SER_BEGIN)) {
 				tablestoggle = true;
