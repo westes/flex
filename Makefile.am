@@ -71,7 +71,6 @@ libfl_a_SOURCES = \
 
 noinst_HEADERS = \
 	flexdef.h \
-	parse.h \
 	version.h \
 	options.h \
 	scanopt.h
@@ -101,9 +100,7 @@ EXTRA_DIST = \
 	$(man_MANS)
 
 BUILT_SOURCES = \
-	skel.c \
-	parse.c \
-	scan.c
+	skel.c
 
 SUBDIRS = \
 	m4  \
