@@ -30,6 +30,8 @@
 
 * test suite
 
+** integrate the test suite into automake's framework
+
 ** make test suite more complete
 
 * generic coding
@@ -57,6 +59,8 @@
 * build system
 
 ** use bootstrapper
+
+** consider if --enable-maintainer-mode is a good thing
 
 Legend:
 
