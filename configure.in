@@ -20,5 +20,7 @@ case "$YACC" in
   ;;
 esac
 
+AC_CONFIG_SUBDIRS(TESTS)
+
 AC_OUTPUT(Makefile,
 [test -z "$CONFIG_HEADERS" || echo timestamp > stamp-h])
