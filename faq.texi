@@ -166,13 +166,13 @@ In this way, @code{yytext} does not need to be modified at all.
 @node  Why do flex scanners call fileno if it is not ANSI compatible?
 @unnumberedsec Why do flex scanners call fileno if it is not ANSI compatible?
 
-Flex scanners call fileno() in order to get the file descriptor
-corresponding to yyin. The file descriptor may be passed to
-isatty() or read(), depending upon which %options you specified.
-If your system does not have fileno() support, to get rid of the
-read() call, do not specify %option read. To get rid of the isatty()
-call, you must specify one of %option always-interactive or
-%option never-interactive.
+Flex scanners call @code{fileno()} in order to get the file descriptor
+corresponding to @code{yyin}. The file descriptor may be passed to
+@code{isatty()} or @code{read()}, depending upon which @code{%options} you specified.
+If your system does not have @code{fileno()} support, to get rid of the
+@code{read()} call, do not specify @code{%option read}. To get rid of the @code{isatty()}
+call, you must specify one of @code{%option always-interactive} or
+@code{%option never-interactive}.
 
 @node  Does flex support recursive pattern definitions?
 @unnumberedsec Does flex support recursive pattern definitions?
