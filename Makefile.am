@@ -91,6 +91,9 @@ EXTRA_DIST = \
 BUILT_SOURCES = \
 	skel.c
 
+man_MANS = \
+	flex.1
+
 # We have a few dependencies and rules to enumerate. (from the old
 # Makefile.in by Vern)
 
