@@ -2,7 +2,15 @@
 #include "y.tab.h"
 
 /*
- * Copyright (c) University of California, 1987
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  */
 
 /* yylex - scan for a regular expression token
@@ -13,6 +21,7 @@
  *
  *     token - return token found
  */
+
 int yylex()
 
     {
@@ -22,7 +31,7 @@ int yylex()
     if ( eofseen )
 	toktype = EOF;
     else
-	toktype = lexscan();
+	toktype = flexscan();
 
     if ( toktype == EOF )
 	{
@@ -102,7 +111,7 @@ int yylex()
 		fputs( "%%\n", stderr );
 
 		/* we set beglin to be true so we'll start
-		 * writing out numbers as we echo rules.  lexscan() has
+		 * writing out numbers as we echo rules.  flexscan() has
 		 * already assigned sectnum
 		 */
 

@@ -1,7 +1,15 @@
-/* lexsym - symbol table routines */
+/* flexsym - symbol table routines */
 
 /*
- * Copyright (c) University of California, 1987
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  */
 
 #include "flexdef.h"
@@ -49,7 +57,7 @@ int table_size;
     new_entry = (struct hash_entry *) malloc( sizeof( struct hash_entry ) );
 
     if ( new_entry == NULL )
-	lexfatal( "symbol table memory allocation failed" );
+	flexfatal( "symbol table memory allocation failed" );
 
     if ( (successor = table[hash_val]) )
 	{
@@ -76,6 +84,7 @@ int table_size;
  *    int cclnum;
  *    cclinstal( ccltxt, cclnum );
  */
+
 cclinstal( ccltxt, cclnum )
 char ccltxt[];
 int cclnum;
@@ -98,6 +107,7 @@ int cclnum;
  *    int ccllookup, cclval;
  *    cclval/0 = ccllookup( ccltxt );
  */
+
 int ccllookup( ccltxt )
 char ccltxt[];
 
@@ -194,6 +204,7 @@ int hash_size;
  *    char nd[], def[];
  *    ndinstal( nd, def );
  */
+
 ndinstal( nd, def )
 char nd[], def[];
 
@@ -213,6 +224,7 @@ char nd[], def[];
  *    char *ndlookup();
  *    def/NULL = ndlookup( nd );
  */
+
 char *ndlookup( nd )
 char nd[];
 
@@ -233,6 +245,7 @@ char nd[];
  * NOTE
  *    the start condition is Exclusive if xcluflg is true
  */
+
 scinstal( str, xcluflg )
 char str[];
 int xcluflg;
@@ -240,19 +253,13 @@ int xcluflg;
     {
     char *copy_string();
 
-    if ( genftl )
-	{
-	/* bit of a hack.  We know how the default start-condition is
-	 * declared, and don't put out a define for it, because it
-	 * would come out as "#define 0 1"
-	 */
+    /* bit of a hack.  We know how the default start-condition is
+     * declared, and don't put out a define for it, because it
+     * would come out as "#define 0 1"
+     */
 
-	if ( strcmp( str, "0" ) )
-	    printf( "#define %s %d\n", str, lastsc * 2 );
-	}
-
-    else
-	printf( "define(YYLEX_SC_%s,%d)\n", str, lastsc * 2 );
+    if ( strcmp( str, "0" ) )
+	printf( "#define %s %d\n", str, lastsc * 2 );
 
     if ( ++lastsc >= current_max_scs )
 	{
@@ -283,6 +290,7 @@ int xcluflg;
  *    int sclookup;
  *    scnum/0 = sclookup( str );
  */
+
 int sclookup( str )
 char str[];
 

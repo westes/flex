@@ -1,7 +1,15 @@
-/* lexcmp - table compression routines */
+/* flexcmp - table compression routines */
 
 /*
- * Copyright (c) University of California, 1987
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  */
 
 #include "flexdef.h"
@@ -40,6 +48,7 @@
  * state on EVERY transition character, and therefore cost only one
  * difference.
  */
+
 bldtbl( state, statenum, totaltrans, comstate, comfreq )
 int state[], statenum, totaltrans, comstate, comfreq;
 
@@ -185,6 +194,7 @@ int state[], statenum, totaltrans, comstate, comfreq;
  *  up at the top end of the nxt array; they will now be compressed and have
  *  table entries made for them.
  */
+
 cmptmps()
 
     {
@@ -274,11 +284,207 @@ expand_nxt_chk()
     }
 
 
+/* find_table_space - finds a space in the table for a state to be placed
+ *
+ * synopsis
+ *     int *state, numtrans, block_start;
+ *     int find_table_space();
+ *
+ *     block_start = find_table_space( state, numtrans );
+ *
+ * State is the state to be added to the full speed transition table.
+ * Numtrans is the number of out-transititions for the state.
+ *
+ * find_table_space() returns the position of the start of the first block (in
+ * chk) able to accomodate the state
+ *
+ * In determining if a state will or will not fit, find_table_space() must take
+ * into account the fact that an end-of-buffer state will be added at [0],
+ * and an action number will be added in [-1].
+ */
+
+int find_table_space( state, numtrans )
+int *state, numtrans;
+    
+    {
+    /* firstfree is the position of the first possible occurence of two
+     * consecutive unused records in the chk and nxt arrays
+     */
+    register int i;
+    register int *state_ptr, *chk_ptr;
+    register int *ptr_to_last_entry_in_state;
+
+    /* if there are too many out-transititions, put the state at the end of
+     * nxt and chk
+     */
+    if ( numtrans > MAX_XTIONS_FOR_FULL_INTERIOR_FIT )
+	{
+	/* if table is empty, return the first available spot in chk/nxt,
+	 * which should be 1
+	 */
+	if ( tblend < 2 )
+	    return ( 1 );
+
+	i = tblend - numecs;	/* start searching for table space near the
+				 * end of chk/nxt arrays
+				 */
+	}
+
+    else
+	i = firstfree;		/* start searching for table space from the
+				 * beginning (skipping only the elements
+				 * which will definitely not hold the new
+				 * state)
+				 */
+
+    while ( 1 )		/* loops until a space is found */
+	{
+	if ( i + numecs > current_max_xpairs )
+	    expand_nxt_chk();
+
+	/* loops until space for end-of-buffer and action number are found */
+	while ( 1 )
+	    {
+	    if ( chk[i - 1] == 0 )	/* check for action number space */
+		{
+		if ( chk[i] == 0 )	/* check for end-of-buffer space */
+		    break;
+
+		else
+		    i += 2;	/* since i != 0, there is no use checking to
+				 * see if (++i) - 1 == 0, because that's the
+				 * same as i == 0, so we skip a space
+				 */
+		}
+
+	    else
+		++i;
+
+	    if ( i + numecs > current_max_xpairs )
+		expand_nxt_chk();
+	    }
+
+	/* if we started search from the beginning, store the new firstfree for
+	 * the next call of find_table_space()
+	 */
+	if ( numtrans <= MAX_XTIONS_FOR_FULL_INTERIOR_FIT )
+	    firstfree = i + 1;
+
+	/* check to see if all elements in chk (and therefore nxt) that are
+	 * needed for the new state have not yet been taken
+	 */
+
+	state_ptr = &state[1];
+	ptr_to_last_entry_in_state = &chk[i + numecs + 1];
+
+	for ( chk_ptr = &chk[i + 1]; chk_ptr != ptr_to_last_entry_in_state;
+	      ++chk_ptr )
+	    if ( *(state_ptr++) != 0 && *chk_ptr != 0 )
+		break;
+
+	if ( chk_ptr == ptr_to_last_entry_in_state )
+	    return ( i );
+
+	else
+	    ++i;
+	}
+    }
+
+
+/* genctbl - generates full speed compressed transition table
+ *
+ * synopsis
+ *     genctbl();
+ */
+
+genctbl()
+
+    {
+    register int i;
+
+    /* table of verify for transition and offset to next state */
+    printf( "static struct yy_trans_info yy_transition[%d] =\n",
+	    tblend + numecs + 1 );
+    printf( "    {\n" );
+    
+    /* We want the transition to be represented as the offset to the
+     * next state, not the actual state number, which is what it currently is.
+     * The offset is base[nxt[i]] - base[chk[i]].  That's just the
+     * difference between the starting points of the two involved states
+     * (to - from).
+     *
+     * first, though, we need to find some way to put in our end-of-buffer
+     * flags and states.  We do this by making a state with absolutely no
+     * transitions.  We put it at the end of the table.
+     */
+    /* at this point, we're guarenteed that there's enough room in nxt[]
+     * and chk[] to hold tblend + numecs entries.  We need just two slots.
+     * One for the action and one for the end-of-buffer transition.  We
+     * now *assume* that we're guarenteed the only character we'll try to
+     * index this nxt/chk pair with is EOB, i.e., 0, so we don't have to
+     * make sure there's room for jam entries for other characters.
+     */
+
+    base[lastdfa + 1] = tblend + 2;
+    nxt[tblend + 1] = END_OF_BUFFER_ACTION;
+    chk[tblend + 1] = numecs + 1;
+    chk[tblend + 2] = 1; /* anything but EOB */
+
+    /* make sure every state has a end-of-buffer transition and an action # */
+    for ( i = 0; i <= lastdfa; ++i )
+	{
+	chk[base[i]] = EOB_POSITION;
+	chk[base[i] - 1] = ACTION_POSITION;
+	nxt[base[i] - 1] = dfaacc[i].dfaacc_state;	/* action number */
+	}
+
+    for ( i = 0; i <= lastsc * 2; ++i )
+	nxt[base[i] - 1] = DEFAULT_ACTION;
+
+    dataline = 0;
+    datapos = 0;
+
+    for ( i = 0; i <= tblend; ++i )
+	{
+	if ( chk[i] == EOB_POSITION )
+	    transition_struct_out( 0, base[lastdfa + 1] - i );
+
+	else if ( chk[i] == ACTION_POSITION )
+	    transition_struct_out( 0, nxt[i] );
+
+	else if ( chk[i] > numecs || chk[i] == 0 )
+	    transition_struct_out( 0, 0 );		/* unused slot */
+
+	else	/* verify, transitition */
+	    transition_struct_out( chk[i], base[nxt[i]] - (i - chk[i]) );
+	}
+
+
+    /* here's the final, end-of-buffer state */
+    transition_struct_out( chk[tblend + 1], nxt[tblend + 1] );
+    transition_struct_out( chk[tblend + 2], nxt[tblend + 2] );
+
+    printf( "    };\n" );
+    printf( "\n" );
+
+    /* table of pointers to start states */
+    printf( "static struct yy_trans_info *yy_state_ptr[%d] =\n",
+	lastsc * 2 + 1 );
+    printf( "    {\n" );
+
+    for ( i = 0; i <= lastsc * 2; ++i )
+	printf( "    &yy_transition[%d],\n", base[i] );
+
+    printf( "    };\n" );
+    }
+
+
 /* gentabs - generate data statements for the transition tables
  *
  * synopsis
  *    gentabs();
  */
+
 gentabs()
 
     {
@@ -298,74 +504,11 @@ gentabs()
     if ( fulltbl )
 	jambase = lastdfa + 1;	/* home of "jam" pseudo-state */
 
-    printf( "#define YYJAM %d\n", jamstate );
-    printf( "#define YYJAMBASE %d\n", jambase );
+    printf( "#define YY_JAM %d\n", jamstate );
+    printf( "#define YY_JAM_BASE %d\n", jambase );
 
     if ( usemecs )
-	printf( "#define YYTEMPLATE %d\n", lastdfa + 2 );
-
-#ifdef NOTDEF
-/* unsupported code */
-    if ( ! genftl )
-	{ /* ratfor scanner */
-	static char vardata[] = "%%%sdata %s/%d/\n";
-	static char dindent[] = DATAINDENTSTR;
-	static char arydecl[] = "integer %c(%d)\n";
-	static char ary2decl[] = "integer %c(%d,%d)\n";
-
-	skelout();
-
-	if ( reject )
-	    {
-	    /* write out the pointers into the accepting lists for each state,
-	     * and the accepting lists
-	     */
-
-	    /* alist needs to be lastdfa + 2 because we tell where a state's
-	     * accepting list ends by checking the beginning of the next state,
-	     * and there's an entry in alist for the default, "jam" pseudo-state
-	     * (this latter entry is needed because states jam by making
-	     * a transition to the state; see the flex skeleton.  By the way,
-	     * I *think* we could get rid of the jam state entirely by
-	     * slight modification of the skeleton ...)
-	     */
-
-	    printf( arydecl, ALIST, lastdfa + 2 );
-
-	    printf( arydecl, ACCEPT, max( numas, 1 ) );
-	    }
-
-	else
-	    printf( arydecl, ALIST, lastdfa + 1 );
-
-	if ( useecs )
-	    printf( arydecl, ECARRAY, CSIZE );
-	if ( usemecs )
-	    printf( arydecl, MATCHARRAY, numecs );
-
-	if ( fulltbl )
-	    {
-	    printf( ary2decl, NEXTARRAY, lastdfa, numecs );
-	    printf( vardata, dindent, "yyjam", 0 );
-	    }
-
-	else
-	    {
-	    printf( arydecl, BASEARRAY, lastdfa + numtemps );
-	    printf( arydecl, DEFARRAY, lastdfa + numtemps );
-	    printf( arydecl, NEXTARRAY, tblend );
-	    printf( arydecl, CHECKARRAY, tblend );
-
-	    printf( vardata, dindent, "yyjam", jambase );
-
-	    /* the first template begins right after the default jam table,
-	     * which itself begins right after the last dfa
-	     */
-
-	    printf( vardata, dindent, "yytmp", lastdfa + 2 );
-	    }
-	}
-#endif NOTDEF
+	printf( "#define YY_TEMPLATE %d\n", lastdfa + 2 );
 
     if ( reject )
 	{
@@ -375,9 +518,8 @@ gentabs()
 	 * indices in the dfaacc array
 	 */
 
-	if ( genftl )
-	    printf( accnum > 127 ? ftl_short_decl : ftl_char_decl,
-		    ACCEPT, max( numas, 1 ) + 1 );
+	printf( accnum > 127 ? ftl_short_decl : ftl_char_decl,
+		ACCEPT, max( numas, 1 ) + 1 );
 
 	j = 1;	/* index into ACCEPT array */
 
@@ -387,7 +529,7 @@ gentabs()
 
 	    if ( accsiz[i] != 0 )
 		{
-		accset = dfaacc[i];
+		accset = dfaacc[i].dfaacc_set;
 		nacc = accsiz[i];
 
 		if ( trace )
@@ -395,7 +537,8 @@ gentabs()
 
 		for ( k = 1; k <= nacc; ++k )
 		    {
-		    mkdata( ACCEPT, j++, accset[k] );
+		    ++j;
+		    mkdata( accset[k] );
 
 		    if ( trace )
 			{
@@ -419,7 +562,7 @@ gentabs()
     else
 	{
 	for ( i = 1; i <= lastdfa; ++i )
-	    acc_array[i] = (int) dfaacc[i];
+	    acc_array[i] = dfaacc[i].dfaacc_state;
 	
 	acc_array[i] = 0; /* add (null) accepting number for jam state */
 	}
@@ -429,39 +572,42 @@ gentabs()
      * In either case, we just dump the numbers.
      */
 
-    if ( genftl )
-	{
-	/* "lastdfa + 2" is the size of ALIST; includes room for FTL arrays
-	 * beginning at 0 and for "jam" state
+    /* "lastdfa + 2" is the size of ALIST; includes room for FTL arrays
+     * beginning at 0 and for "jam" state
+     */
+    k = lastdfa + 2;
+
+    if ( reject )
+	/* we put a "cap" on the table associating lists of accepting
+	 * numbers with state numbers.  This is needed because we tell
+	 * where the end of an accepting list is by looking at where
+	 * the list for the next state starts.
 	 */
-	k = lastdfa + 2;
+	++k;
 
-	if ( reject )
-	    /* we put a "cap" on the table associating lists of accepting
-	     * numbers with state numbers.  This is needed because we tell
-	     * where the end of an accepting list is by looking at where
-	     * the list for the next state starts.
-	     */
-	    ++k;
+    printf( ((reject && numas > 126) || accnum > 127) ?
+	    ftl_short_decl : ftl_char_decl, ALIST, k );
 
-	printf( ((reject && numas > 126) || accnum > 127) ?
-		ftl_short_decl : ftl_char_decl, ALIST, k );
-	}
+    /* set up default actions */
+    for ( i = 1; i <= lastsc * 2; ++i )
+	acc_array[i] = DEFAULT_ACTION;
+
+    acc_array[end_of_buffer_state] = END_OF_BUFFER_ACTION;
 
     for ( i = 1; i <= lastdfa; ++i )
 	{
-	mkdata( ALIST, i, acc_array[i] );
+	mkdata( acc_array[i] );
 
 	if ( ! reject && trace && acc_array[i] )
 	    fprintf( stderr, "state # %d accepts: [%d]\n", i, acc_array[i] );
 	}
 
     /* add entry for "jam" state */
-    mkdata( ALIST, i, acc_array[i] );
+    mkdata( acc_array[i] );
 
     if ( reject )
 	/* add "cap" for the list */
-	mkdata( ALIST, i + 1, acc_array[i] );
+	mkdata( acc_array[i] );
 
     dataend();
 
@@ -469,8 +615,7 @@ gentabs()
 	{
 	/* write out equivalence classes */
 
-	if ( genftl )
-	    printf( ftl_char_decl, ECARRAY, CSIZE + 1 );
+	printf( ftl_char_decl, ECARRAY, CSIZE + 1 );
 
 	for ( i = 1; i <= CSIZE; ++i )
 	    {
@@ -478,7 +623,7 @@ gentabs()
 		ecgroup[i] = ecgroup[clower( i )];
 
 	    ecgroup[i] = abs( ecgroup[i] );
-	    mkdata( ECARRAY, i, ecgroup[i] );
+	    mkdata( ecgroup[i] );
 	    }
 
 	dataend();
@@ -522,15 +667,14 @@ gentabs()
 	if ( trace )
 	    fputs( "\n\nMeta-Equivalence Classes:\n", stderr );
 
-	if ( genftl )
-	    printf( ftl_char_decl, MATCHARRAY, numecs + 1 );
+	printf( ftl_char_decl, MATCHARRAY, numecs + 1 );
 
 	for ( i = 1; i <= numecs; ++i )
 	    {
 	    if ( trace )
 		fprintf( stderr, "%d = %d\n", i, abs( tecbck[i] ) );
 
-	    mkdata( MATCHARRAY, i, abs( tecbck[i] ) );
+	    mkdata( abs( tecbck[i] ) );
 	    }
 
 	dataend();
@@ -540,9 +684,8 @@ gentabs()
 	{
 	int total_states = lastdfa + numtemps;
 
-	if ( genftl )
-	    printf( tblend > 32766 ? ftl_long_decl : ftl_short_decl,
-		    BASEARRAY, total_states + 1 );
+	printf( tblend > MAX_SHORT ? ftl_long_decl : ftl_short_decl,
+		BASEARRAY, total_states + 1 );
 
 	for ( i = 1; i <= lastdfa; ++i )
 	    {
@@ -561,64 +704,54 @@ gentabs()
 		def[i] = lastdfa - d + 1;
 		}
 
-	    mkdata( BASEARRAY, i, base[i] );
+	    mkdata( base[i] );
 	    }
 
 	/* generate jam state's base index */
-	mkdata( BASEARRAY, i, base[i] );
+	mkdata( base[i] );
 
 	for ( ++i /* skip jam state */; i <= total_states; ++i )
 	    {
-	    mkdata( BASEARRAY, i, base[i] );
+	    mkdata( base[i] );
 	    def[i] = jamstate;
 	    }
 
 	dataend();
 
-	if ( genftl )
-	    printf( tblend > 32766 ? ftl_long_decl : ftl_short_decl,
-		    DEFARRAY, total_states + 1 );
+	printf( tblend > MAX_SHORT ? ftl_long_decl : ftl_short_decl,
+		DEFARRAY, total_states + 1 );
 
 	for ( i = 1; i <= total_states; ++i )
-	    mkdata( DEFARRAY, i, def[i] );
+	    mkdata( def[i] );
 
 	dataend();
 
-	if ( genftl )
-	    printf( lastdfa > 32766 ? ftl_long_decl : ftl_short_decl,
-		    NEXTARRAY, tblend + 1 );
+	printf( lastdfa > MAX_SHORT ? ftl_long_decl : ftl_short_decl,
+		NEXTARRAY, tblend + 1 );
 
 	for ( i = 1; i <= tblend; ++i )
 	    {
 	    if ( nxt[i] == 0 )
 		nxt[i] = jamstate;	/* new state is the JAM state */
 
-	    mkdata( NEXTARRAY, i, nxt[i] );
+	    mkdata( nxt[i] );
 	    }
 
 	dataend();
 
-	if ( genftl )
-	    printf( lastdfa > 32766 ? ftl_long_decl : ftl_short_decl,
-		    CHECKARRAY, tblend + 1 );
+	printf( lastdfa > MAX_SHORT ? ftl_long_decl : ftl_short_decl,
+		CHECKARRAY, tblend + 1 );
 
 	for ( i = 1; i <= tblend; ++i )
 	    {
 	    if ( chk[i] == 0 )
 		++nummt;
 
-	    mkdata( CHECKARRAY, i, chk[i] );
+	    mkdata( chk[i] );
 	    }
 
 	dataend();
 	}
-
-    skelout();
-
-    /* copy remainder of input to output */
-
-    line_directive_out();
-    (void) lexscan(); /* copy remainder of input to output */
     }
 
 
@@ -663,11 +796,65 @@ inittbl()
     }
 
 
+/* make_tables - generate transition tables
+ *
+ * synopsis
+ *     make_tables();
+ *
+ * Generates transition tables and finishes generating output file
+ */
+
+make_tables()
+
+    {
+    if ( fullspd )
+	{ /* need to define YY_TRANS_OFFSET_TYPE as a size large
+	   * enough to hold the biggest offset
+	   */
+	int total_table_size = tblend + numecs + 1;
+
+	printf( "#define YY_TRANS_OFFSET_TYPE %s\n",
+		total_table_size > MAX_SHORT ? "long" : "short" );
+	}
+    
+    if ( fullspd || fulltbl )
+	skelout();
+
+    /* compute the tables and copy them to output file */
+    if ( fullspd )
+	genctbl();
+
+    else
+	gentabs();
+
+    skelout();
+
+    (void) fclose( temp_action_file );
+    temp_action_file = fopen( action_file_name, "r" );
+
+    /* copy prolog from action_file to output file */
+    action_out();
+
+    skelout();
+
+    /* copy actions from action_file to output file */
+    action_out();
+
+    skelout();
+
+    /* copy remainder of input to output */
+
+    line_directive_out( stdout );
+    (void) flexscan(); /* copy remainder of input to output */
+    }
+
+
 /* mkdeftbl - make the default, "jam" table entries
  *
  * synopsis
  *   mkdeftbl();
  */
+
 mkdeftbl()
 
     {
@@ -716,6 +903,7 @@ mkdeftbl()
  * the tables are searched for an interior spot that will accomodate the
  * state array.
  */
+
 mkentry( state, numchars, statenum, deflink, totaltrans )
 register int *state;
 int numchars, statenum, deflink, totaltrans;
@@ -848,6 +1036,7 @@ int numchars, statenum, deflink, totaltrans;
  *   int state, sym, onenxt, onedef;
  *   mk1tbl( state, sym, onenxt, onedef );
  */
+
 mk1tbl( state, sym, onenxt, onedef )
 int state, sym, onenxt, onedef;
 
@@ -880,6 +1069,7 @@ int state, sym, onenxt, onedef;
  *   int state[], statenum, comstate;
  *   mkprot( state, statenum, comstate );
  */
+
 mkprot( state, statenum, comstate )
 int state[], statenum, comstate;
 
@@ -923,6 +1113,7 @@ int state[], statenum, comstate;
  *   int state[], statenum, comstate, totaltrans;
  *   mktemplate( state, statenum, comstate, totaltrans );
  */
+
 mktemplate( state, statenum, comstate )
 int state[], statenum, comstate;
 
@@ -980,6 +1171,7 @@ int state[], statenum, comstate;
  *   int qelm;
  *   mv2front( qelm );
  */
+
 mv2front( qelm )
 int qelm;
 
@@ -1020,6 +1212,12 @@ ntod()
     int targptr, totaltrans, i, comstate, comfreq, targ;
     int *epsclosure(), snstods(), symlist[CSIZE + 1];
 
+    /* this is so find_table_space(...) will know where to start looking in
+     * chk/nxt for unused records for space to put in the state
+     */
+    if ( fullspd )
+	firstfree = 0;
+
     accset = allocate_integer_array( accnum + 1 );
     nset = allocate_integer_array( current_max_dfa_size );
 
@@ -1053,29 +1251,30 @@ ntod()
 
     inittbl();
 
-    if ( genftl )
-	skelout();
+    if ( fullspd )
+	{
+	for ( i = 0; i <= numecs; ++i )
+	    state[i] = 0;
+	place_state( state, 0, 0 );
+	}
 
     if ( fulltbl )
 	{
-	if ( genftl )
-	    {
-	    /* declare it "short" because it's a real long-shot that that
-	     * won't be large enough
-	     */
-	    printf( "static short int %c[][%d] =\n    {\n", NEXTARRAY,
-		    numecs + 1 );
+	/* declare it "short" because it's a real long-shot that that
+	 * won't be large enough
+	 */
+	printf( "static short int %c[][%d] =\n    {\n", NEXTARRAY,
+		numecs + 1 ); /* '}' so vi doesn't get too confused */
 
-	    /* generate 0 entries for state #0 */
-	    for ( i = 0; i <= numecs; ++i )
-		mk2data( NEXTARRAY, 0, 0, 0 );
+	/* generate 0 entries for state #0 */
+	for ( i = 0; i <= numecs; ++i )
+	    mk2data( 0 );
 
-	    /* force ',' and dataflush() next call to mk2data */
-	    datapos = NUMDATAITEMS;
+	/* force ',' and dataflush() next call to mk2data */
+	datapos = NUMDATAITEMS;
 
-	    /* force extra blank line next dataflush() */
-	    dataline = NUMDATALINES;
-	    }
+	/* force extra blank line next dataflush() */
+	dataline = NUMDATALINES;
 	}
 
     /* create the first states */
@@ -1103,6 +1302,17 @@ ntod()
 	    todo[todo_next] = ds;
 	    ADD_QUEUE_ELEMENT(todo_next);
 	    }
+	}
+
+    if ( fulltbl )
+	{
+	if ( ! snstods( nset, 0, accset, 0, 0, &end_of_buffer_state ) )
+	    flexfatal( "could not create unique end-of-buffer state" );
+
+	numas += 1;
+
+	todo[todo_next] = end_of_buffer_state;
+	ADD_QUEUE_ELEMENT(todo_next);
 	}
 
     while ( todo_head != todo_next )
@@ -1193,27 +1403,24 @@ ntod()
 
 	if ( fulltbl )
 	    {
-	    if ( genftl )
-		{
-		/* supply array's 0-element */
-		mk2data( NEXTARRAY, 0, 0, 0 );
-
-		for ( i = 1; i <= numecs; ++i )
-		    mk2data( NEXTARRAY, 0, 0, state[i] );
-
-		/* force ',' and dataflush() next call to mk2data */
-		datapos = NUMDATAITEMS;
-
-		/* force extra blank line next dataflush() */
-		dataline = NUMDATALINES;
-		}
-
+	    /* supply array's 0-element */
+	    if ( ds == end_of_buffer_state )
+		mk2data( 0 );
 	    else
-		{
-		for ( i = 1; i <= numecs; ++i )
-		    mk2data( NEXTARRAY, ds, i, state[i] );
-		}
+		mk2data( end_of_buffer_state );
+
+	    for ( i = 1; i <= numecs; ++i )
+		mk2data( state[i] );
+
+	    /* force ',' and dataflush() next call to mk2data */
+	    datapos = NUMDATAITEMS;
+
+	    /* force extra blank line next dataflush() */
+	    dataline = NUMDATALINES;
 	    }
+
+        else if ( fullspd )
+	    place_state( state, ds, totaltrans );
 
 	else
 	    {
@@ -1252,6 +1459,53 @@ ntod()
 
 	mkdeftbl();
 	}
+    
+    }
+
+
+/* place_state - place a state into full speed transition table
+ *
+ * synopsis
+ *     int *state, statenum, transnum;
+ *     place_state( state, statenum, transnum );
+ *
+ * State is the statenum'th state.  It is indexed by equivalence class and
+ * gives the number of the state to enter for a given equivalence class.
+ * Transnum is the number of out-transitions for the state.
+ */
+
+place_state( state, statenum, transnum )
+int *state, statenum, transnum;
+
+    {
+    register int i;
+    register int *state_ptr;
+    int position = find_table_space( state, transnum );
+
+    /* base is the table of start positions */
+    base[statenum] = position;
+
+    /* put in action number marker; this non-zero number makes sure that
+     * find_table_space() knows that this position in chk/nxt is taken
+     * and should not be used for another accepting number in another state
+     */
+    chk[position - 1] = 1;
+
+    /* put in end-of-buffer marker; this is for the same purposes as above */
+    chk[position] = 1;
+
+    /* place the state into chk and nxt */
+    state_ptr = &state[1];
+
+    for ( i = 1; i <= numecs; ++i, ++state_ptr )
+	if ( *state_ptr != 0 )
+	    {
+	    chk[position + i] = i;
+	    nxt[position + i] = *state_ptr;
+	    }
+
+    if ( position + numecs > tblend )
+	tblend = position + numecs;
     }
 
 
@@ -1265,6 +1519,7 @@ ntod()
  * state is pushed onto it, to be processed later by mk1tbl.  If there's
  * no room, we process the sucker right now.
  */
+
 stack1( statenum, sym, nextstate, deflink )
 int statenum, sym, nextstate, deflink;
 
@@ -1300,6 +1555,7 @@ int statenum, sym, nextstate, deflink;
  * between "state" and "pr" is returned as function value.  Note that this
  * number is "numecs" minus the number of "SAME_TRANS" entries in "ext".
  */
+
 int tbldiff( state, pr, ext )
 int state[], pr, ext[];
 

@@ -1,7 +1,15 @@
-/* lexccl - routines for character classes */
+/* flexccl - routines for character classes */
 
 /*
- * Copyright (c) University of California, 1987
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  */
 
 #include "flexdef.h"
@@ -13,6 +21,7 @@
  *    char ch;
  *    ccladd( cclp, ch );
  */
+
 ccladd( cclp, ch )
 int cclp;
 char ch;
@@ -51,6 +60,7 @@ char ch;
  *    int cclinit();
  *    new_ccl = cclinit();
  */
+
 int cclinit()
 
     {
@@ -90,6 +100,7 @@ int cclinit()
  *    int cclp;
  *    cclnegate( ccl );
  */
+
 cclnegate( cclp )
 int cclp;
 

@@ -1,13 +1,42 @@
-/* lexmisc - miscellaneous flex routines */
+/* flexmisc - miscellaneous flex routines */
 
 /*
- * Copyright (c) University of California, 1987
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  */
 
 #include <ctype.h>
 #include "flexdef.h"
 
 char *malloc(), *realloc();
+
+
+/* action_out - write the actions from the temporary file to lex.yy.c
+ *
+ * synopsis
+ *     action_out();
+ *
+ *     Copies the action file up to %% (or end-of-file) to lex.yy.c
+ */
+
+action_out()
+
+    {
+    char buf[MAXLINE];
+
+    while ( fgets( buf, MAXLINE, temp_action_file ) != NULL )
+	if ( buf[0] == '%' && buf[1] == '%' )
+	    break;
+	else
+	    fputs( buf, stdout );
+    }
 
 
 /* allocate_array - allocate memory for an integer array of the given size */
@@ -19,7 +48,7 @@ int size, element_size;
     register char *mem = malloc( (unsigned) (element_size * size) );
 
     if ( mem == NULL )
-	lexfatal( "memory allocation failed in allocate_array()" );
+	flexfatal( "memory allocation failed in allocate_array()" );
 
     return ( mem );
     }
@@ -92,7 +121,7 @@ register char *str;
     copy = malloc( (unsigned) ((c - str + 1) * sizeof( char )) );
 
     if ( copy == NULL )
-	lexfatal( "dynamic memory failure in copy_string()" );
+	flexfatal( "dynamic memory failure in copy_string()" );
 
     for ( c = copy; (*c++ = *str++); )
 	;
@@ -151,9 +180,8 @@ dataend()
     if ( datapos > 0 )
 	dataflush();
 
-    if ( genftl )
-	/* add terminator for initialization */
-	puts( "    } ;\n" );
+    /* add terminator for initialization */
+    puts( "    } ;\n" );
 
     dataline = 0;
     }
@@ -170,22 +198,18 @@ dataflush()
     {
     putchar( '\n' );
 
-    if ( genftl )
+    if ( ++dataline >= NUMDATALINES )
 	{
-	if ( ++dataline >= NUMDATALINES )
-	    {
-	    /* put out a blank line so that the table is grouped into
-	     * large blocks that enable the user to find elements easily
-	     */
-	    putchar( '\n' );
-	    dataline = 0;
-	    }
+	/* put out a blank line so that the table is grouped into
+	 * large blocks that enable the user to find elements easily
+	 */
+	putchar( '\n' );
+	dataline = 0;
 	}
 
     /* reset the number of characters written on the current line */
     datapos = 0;
     }
-
 
 /* gettime - return current time
  *
@@ -230,7 +254,7 @@ int arg;
     {
     char errmsg[MAXLINE];
     (void) sprintf( errmsg, msg, arg );
-    lexerror( errmsg );
+    flexerror( errmsg );
     }
 
 
@@ -246,199 +270,115 @@ char msg[], arg[];
 
     {
     char errmsg[MAXLINE];
+
     (void) sprintf( errmsg, msg, arg );
-    lexerror( errmsg );
+    flexerror( errmsg );
     }
 
 
-/* lexerror - report an error message and terminate
+/* flexerror - report an error message and terminate
  *
  * synopsis
  *    char msg[];
- *    lexerror( msg );
+ *    flexerror( msg );
  */
 
-lexerror( msg )
+flexerror( msg )
 char msg[];
 
     {
     fprintf( stderr, "flex: %s\n", msg );
-    lexend( 1 );
+    flexend( 1 );
     }
 
 
-/* lexfatal - report a fatal error message and terminate
+/* flexfatal - report a fatal error message and terminate
  *
  * synopsis
  *    char msg[];
- *    lexfatal( msg );
+ *    flexfatal( msg );
  */
 
-lexfatal( msg )
+flexfatal( msg )
 char msg[];
 
     {
     fprintf( stderr, "flex: fatal internal error %s\n", msg );
-    lexend( 1 );
+    flexend( 1 );
     }
 
 
 /* line_directive_out - spit out a "# line" statement */
 
-line_directive_out()
+line_directive_out( output_file_name )
+FILE *output_file_name;
 
     {
-    if ( infilename ) 
-        printf( "# line %d \"%s\"\n", linenum, infilename );
+    if ( infilename && gen_line_dirs ) 
+        fprintf( output_file_name, "# line %d \"%s\"\n", linenum, infilename );
     }
 
 
 /* mk2data - generate a data statement for a two-dimensional array
  *
  * synopsis
- *    char name;
- *    int row, column, value;
- *    mk2data( name, row, column, value );
+ *    int value;
+ *    mk2data( value );
  *
- *  generates a data statement initializing "name(row, column)" to "value"
- *  Note that name is only a character; NOT a string.  If we're generating
- *  FTL (-f flag), "name", "row", and "column" get ignored.
+ *  generates a data statement initializing the current 2-D array to "value"
  */
-mk2data( name, row, column, value )
-char name;
-int row, column, value;
+mk2data( value )
+int value;
 
     {
-    int datalen;
-    static char dindent[] = DATAINDENTSTR;
-
-    if ( genftl )
+    if ( datapos >= NUMDATAITEMS )
 	{
-	if ( datapos >= NUMDATAITEMS )
-	    {
-	    putchar( ',' );
-	    dataflush();
-	    }
-
-	if ( datapos == 0 )
-	    /* indent */
-	    fputs( "    ", stdout );
-
-	else
-	    putchar( ',' );
-
-	++datapos;
-
-	printf( "%5d", value );
+	putchar( ',' );
+	dataflush();
 	}
+
+    if ( datapos == 0 )
+	/* indent */
+	fputs( "    ", stdout );
 
     else
-	{
-	/* figure out length of data statement to be written.  7 is the constant
-	 * overhead of a one character name, '(', ',',  and ')' to delimit
-	 * the array reference, a '/' and a '/' to delimit the value, and
-	 * room for a blank or a comma between this data statement and the
-	 * previous one
-	 */
+	putchar( ',' );
 
-	datalen = 7 + numdigs( row ) + numdigs( column ) + numdigs( value );
+    ++datapos;
 
-	if ( datalen + datapos >= DATALINEWIDTH | datapos == 0 )
-	    {
-	    if ( datapos != 0 )
-		dataflush();
-
-	    /* precede data statement with '%' so rat4 preprocessor doesn't have
-	     * to bother looking at it -- speed hack
-	     */
-	    printf( "%%%sdata ", dindent );
-
-	    /* 4 is the constant overhead of writing out the word "DATA" */
-	    datapos = DATAINDENTWIDTH + 4 + datalen;
-	    }
-
-	else
-	    {
-	    putchar( ',' );
-	    datapos = datapos + datalen;
-	    }
-
-	printf( "%c(%d,%d)/%d/", name, row, column, value );
-	}
+    printf( "%5d", value );
     }
 
 
 /* mkdata - generate a data statement
  *
  * synopsis
- *    char name;
- *    int arrayelm, value;
- *    mkdata( name, arrayelm, value );
+ *    int value;
+ *    mkdata( value );
  *
- *  generates a data statement initializing "name(arrayelm)" to "value"
- *  Note that name is only a character; NOT a string.  If we're generating
- *  FTL (-f flag), "name" and "arrayelm" get ignored.
+ *  generates a data statement initializing the current array element to
+ *  "value"
  */
-mkdata( name, arrayelm, value )
-char name;
-int arrayelm, value;
+mkdata( value )
+int value;
 
     {
-    int datalen;
-    static char dindent[] = DATAINDENTSTR;
-
-    if ( genftl )
+    if ( datapos >= NUMDATAITEMS )
 	{
-	if ( datapos >= NUMDATAITEMS )
-	    {
-	    putchar( ',' );
-	    dataflush();
-	    }
-
-	if ( datapos == 0 )
-	    /* indent */
-	    fputs( "    ", stdout );
-
-	else
-	    putchar( ',' );
-
-	++datapos;
-
-	printf( "%5d", value );
+	putchar( ',' );
+	dataflush();
 	}
+
+    if ( datapos == 0 )
+	/* indent */
+	fputs( "    ", stdout );
 
     else
-	{
-	/* figure out length of data statement to be written.  6 is the constant
-	 * overhead of a one character name, '(' and ')' to delimit the array
-	 * reference, a '/' and a '/' to delimit the value, and room for a
-	 * blank or a comma between this data statement and the previous one
-	 */
+	putchar( ',' );
 
-	datalen = 6 + numdigs( arrayelm ) + numdigs( value );
+    ++datapos;
 
-	if ( datalen + datapos >= DATALINEWIDTH | datapos == 0 )
-	    {
-	    if ( datapos != 0 )
-		dataflush();
-
-	    /* precede data statement with '%' so rat4 preprocessor doesn't have
-	     * to bother looking at it -- speed hack
-	     */
-	    printf( "%%%sdata ", dindent );
-
-	    /* 4 is the constant overhead of writing out the word "DATA" */
-	    datapos = DATAINDENTWIDTH + 4 + datalen;
-	    }
-
-	else
-	    {
-	    putchar( ',' );
-	    datapos = datapos + datalen;
-	    }
-
-	printf( "%c(%d)/%d/", name, arrayelm, value );
-	}
+    printf( "%5d", value );
     }
 
 
@@ -542,42 +482,6 @@ char array[];
     }
 
 
-/* numdigs - number of digits (includes leading sign) in number
- *
- * synopsis
- *    int numdigs, x;
- *    num = numdigs( x );
- */
-int numdigs( x )
-int x;
-
-    {
-    if ( x < 0 )
-	{
-	/* the only negative numbers we expect to encounter are very
-	 * small ones
-	 */
-	if ( x < -9 )
-	    lexfatal( "assumption of small negative numbers botched in numdigs()" );
-
-	return ( 2 );
-	}
-
-    if ( x < 10 )
-	return ( 1 );
-    else if ( x < 100 )
-	return ( 2 );
-    else if ( x < 1000 )
-	return ( 3 );
-    else if ( x < 10000 )
-	return ( 4 );
-    else if ( x < 100000 )
-	return ( 5 );
-    else
-	return ( 6 );
-    }
-
-
 /* otoi - convert an octal digit string to an integer value
  *
  * synopsis:
@@ -618,13 +522,13 @@ int size, element_size;
 					(unsigned) (size * element_size ));
 
     if ( new_array == NULL )
-	lexfatal( "attempt to increase array size failed" );
+	flexfatal( "attempt to increase array size failed" );
     
     return ( new_array );
     }
 
 
-/* skelout - write out one section of the lexskel file
+/* skelout - write out one section of the skeleton file
  *
  * synopsis
  *    skelout();
@@ -643,4 +547,34 @@ skelout()
 	    break;
 	else
 	    fputs( buf, stdout );
+    }
+
+
+/* transition_struct_out - output a yy_trans_info structure
+ *
+ * synopsis
+ *     int element_v, element_n;
+ *     transition_struct_out( element_v, element_n );
+ *
+ * outputs the yy_trans_info structure with the two elements, element_v and
+ * element_n.  Formats the output with spaces and carriage returns.
+ */
+
+transition_struct_out( element_v, element_n )
+int element_v, element_n;
+
+    {
+    printf( "%7d, %5d,", element_v, element_n );
+
+    datapos += TRANS_STRUCT_PRINT_LENGTH;
+
+    if ( datapos >= 75 )
+	{
+	printf( "\n" );
+
+	if ( ++dataline % 10 == 0 )
+	    printf( "\n" );
+
+	datapos = 0;
+	}
     }

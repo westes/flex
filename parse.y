@@ -1,7 +1,15 @@
-/* lexparse.y - parser for flex input */
+/* flexparse.y - parser for flex input */
 
 /*
- * Copyright (c) University of California, 1987
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  */
 
 %token CHAR NUMBER SECTEND SCDECL XSCDECL WHITESPACE NAME PREVCCL
@@ -63,7 +71,7 @@ namelist1	:  namelist1 WHITESPACE NAME
                         { synerr( "bad start condition list" ); }
 		;
 
-sect2           :  sect2 initforrule lexrule '\n'
+sect2           :  sect2 initforrule flexrule '\n'
 		|
 		;
 
@@ -75,7 +83,7 @@ initforrule     :
 			}
 		;
 
-lexrule         :  scon '^' re eol 
+flexrule        :  scon '^' re eol 
                         {
 			pat = link_machines( $3, $4 );
 			add_accept( pat, headcnt, trailcnt );

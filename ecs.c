@@ -1,7 +1,15 @@
-/* lexecs - equivalence class routines */
+/* flexecs - equivalence class routines */
 
 /*
- * Copyright (c) University of California, 1987
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  */
 
 #include "flexdef.h"
@@ -11,6 +19,7 @@
  * synopsis
  *    ccl2ecl();
  */
+
 ccl2ecl()
 
     {
@@ -54,6 +63,7 @@ ccl2ecl()
  *  is the backward linked-list, and num is the number of class members.
  *  Returned is the number of classes.
  */
+
 int cre8ecs( fwd, bck, num )
 int fwd[], bck[], num;
 
@@ -91,6 +101,7 @@ int fwd[], bck[], num;
  * number of elements in the ccl, fwd is the forward link-list of equivalent
  * characters, bck is the backward link-list, and llsiz size of the link-list
  */
+
 mkeccl( ccls, lenccl, fwd, bck, llsiz )
 char ccls[];
 int lenccl, fwd[], bck[], llsiz;
@@ -171,6 +182,7 @@ next_pt:
  *    int tch, fwd[], bck[];
  *    mkechar( tch, fwd, bck );
  */
+
 mkechar( tch, fwd, bck )
 int tch, fwd[], bck[];
 

@@ -1,7 +1,15 @@
-/* lexdfa - DFA construction routines */
+/* flexdfa - DFA construction routines */
 
 /*
- * Copyright (c) University of California, 1987
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  */
 
 #include "flexdef.h"
@@ -26,6 +34,7 @@
  *
  *    hashval is the hash value for the dfa corresponding to the state set
  */
+
 int *epsclosure( t, ns_addr, accset, nacc_addr, hv_addr )
 int *t, *ns_addr, accset[], *nacc_addr, *hv_addr;
 
@@ -136,7 +145,7 @@ int *t, *ns_addr, accset[], *nacc_addr, *hv_addr;
 	    UNMARK_STATE(stk[stkpos])
 	    }
 	else
-	    lexfatal( "consistency check failed in epsclosure()" );
+	    flexfatal( "consistency check failed in epsclosure()" );
 	}
 
     *ns_addr = numstates;
@@ -166,7 +175,7 @@ increase_max_dfas()
     dhash = reallocate_integer_array( dhash, current_max_dfas );
     todo = reallocate_integer_array( todo, current_max_dfas );
     dss = reallocate_integer_pointer_array( dss, current_max_dfas );
-    dfaacc = reallocate_integer_pointer_array( dfaacc, current_max_dfas );
+    dfaacc = reallocate_dfaacc_union( dfaacc, current_max_dfas );
 
     /* fix up todo queue */
     if ( todo_next < todo_head )
@@ -190,6 +199,7 @@ increase_max_dfas()
  *
  * on return, the dfa state number is in newds.
  */
+
 int snstods( sns, numstates, accset, nacc, hashval, newds_addr )
 int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 
@@ -242,7 +252,7 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
     newds = lastdfa;
 
     if ( ! (dss[newds] = (int *) malloc( (unsigned) ((numstates + 1) * sizeof( int )) )) )
-	lexfatal( "dynamic memory failure in snstods()" );
+	flexfatal( "dynamic memory failure in snstods()" );
 
     /* if we haven't already sorted the states in sns, we do so now, so that
      * future comparisons with it can be made quickly
@@ -259,7 +269,7 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 
     if ( nacc == 0 )
 	{
-	dfaacc[newds] = 0;
+	dfaacc[newds].dfaacc_state = 0;
 	accsiz[newds] = 0;
 	}
 
@@ -273,13 +283,15 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 
 	bubble( accset, nacc );
 
-	if ( ! (dfaacc[newds] =
-		(int *) malloc( (unsigned) ((nacc + 1) * sizeof( int )) )) )
-	    lexfatal( "dynamic memory failure in snstods()" );
+	dfaacc[newds].dfaacc_state =
+	    (int) malloc( (unsigned) ((nacc + 1) * sizeof( int )) );
+
+	if ( ! dfaacc[newds].dfaacc_state )
+	    flexfatal( "dynamic memory failure in snstods()" );
 
 	/* save the accepting set for later */
 	for ( i = 1; i <= nacc; ++i )
-	    dfaacc[newds][i] = accset[i];
+	    dfaacc[newds].dfaacc_set[i] = accset[i];
 
 	accsiz[newds] = nacc;
 	}
@@ -292,7 +304,7 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 	    if ( accset[i] < j )
 		j = accset[i];
 
-	dfaacc[newds] = (int *) j;
+	dfaacc[newds].dfaacc_state = j;
 	}
 
     *newds_addr = newds;
@@ -308,6 +320,7 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
  *    int nset[current_max_dfa_size], numstates;
  *    numstates = symfollowset( ds, dsize, transsym, nset );
  */
+
 int symfollowset( ds, dsize, transsym, nset )
 int ds[], dsize, transsym, nset[];
 
@@ -363,7 +376,7 @@ int ds[], dsize, transsym, nset[];
 	    }
 
 	else if ( sym >= 'A' && sym <= 'Z' && caseins )
-	    lexfatal( "consistency check failed in symfollowset" );
+	    flexfatal( "consistency check failed in symfollowset" );
 
 	else if ( sym == SYM_EPSILON )
 	    { /* do nothing */
@@ -387,6 +400,7 @@ bottom:
  *    symlist[numecs];
  *    sympartition( ds, numstates, symlist, duplist );
  */
+
 sympartition( ds, numstates, symlist, duplist )
 int ds[], numstates, duplist[];
 int symlist[];
@@ -416,7 +430,7 @@ int symlist[];
 	if ( tch != SYM_EPSILON )
 	    {
 	    if ( tch < -lastccl || tch > CSIZE )
-		lexfatal( "bad transition character detected in sympartition()" );
+		flexfatal( "bad transition character detected in sympartition()" );
 
 	    if ( tch > 0 )
 		{ /* character transition */

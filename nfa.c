@@ -1,7 +1,15 @@
-/* lexnfa - NFA construction routines */
+/* flexnfa - NFA construction routines */
 
 /*
- * Copyright (c) University of California, 1987
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  */
 
 #include "flexdef.h"
@@ -20,34 +28,46 @@
  * characters in the pattern, or zero if the trailing context has variable
  * length.
  */
+
 add_accept( mach, headcnt, trailcnt )
 int mach, headcnt, trailcnt;
 
     {
     int astate;
 
-    printf( "case %d:\n", ++accnum );
+    fprintf( temp_action_file, "case %d:\n", ++accnum );
 
     if ( headcnt > 0 || trailcnt > 0 )
 	{ /* do trailing context magic to not match the trailing characters */
-	printf( "YYDOBEFORESCAN; /* undo effects of setting up yytext */\n" );
+	fprintf( temp_action_file,
+	    "YY_DO_BEFORE_SCAN; /* undo effects of setting up yytext */\n" );
 
 	if ( headcnt > 0 )
 	    {
-	    if ( ! genftl || headcnt > 1 )
-		printf( "yycbufp = yybbufp + %d;\n",
-			genftl ? headcnt - 1 : headcnt );
+	    int head_offset = headcnt - 1;
+
+	    if ( fullspd || fulltbl )
+		/* with the fast skeleton, yy_c_buf_p points to the *next*
+		 * character to scan, rather than the one that was last
+		 * scanned
+		 */
+		++head_offset;
+
+	    if ( head_offset > 0 )
+		fprintf( temp_action_file, "yy_c_buf_p = yy_b_buf_p + %d;\n",
+			 head_offset );
+
 	    else
-		printf( "yycbufp = yybbufp;\n" );
+		fprintf( temp_action_file, "yy_c_buf_p = yy_b_buf_p;\n" );
 	    }
 
 	else
-	    printf( "yycbufp -= %d;\n", trailcnt );
-
-	printf( "YYDOBEFOREACTION; /* set up yytext again */\n" );
+	    fprintf( temp_action_file, "yy_c_buf_p -= %d;\n", trailcnt );
+    
+	fprintf( temp_action_file, "YY_DO_BEFORE_ACTION; /* set up yytext again */\n" );
 	}
 
-    line_directive_out();
+    line_directive_out( temp_action_file );
 
     /* hang the accepting number off an epsilon state.  if it is associated
      * with a state that has a non-epsilon out-transition, then the state
@@ -76,6 +96,7 @@ int mach, headcnt, trailcnt;
  *     singl  - a singleton machine
  *     num    - the number of copies of singl to be present in newsng
  */
+
 int copysingl( singl, num )
 int singl, num;
 
@@ -97,6 +118,7 @@ int singl, num;
  *    int state1;
  *    dumpnfa( state1 );
  */
+
 dumpnfa( state1 )
 int state1;
 
@@ -150,6 +172,7 @@ int state1;
  * also note that the original MUST be contiguous, with its low and high
  * states accessible by the arrays firstst and lastst
  */
+
 int dupmachine( mach )
 int mach;
 
@@ -197,6 +220,7 @@ int mach;
  *  and then last, and will fail if either of the sub-patterns fails.
  *  FIRST is set to new by the operation.  last is unmolested.
  */
+
 int link_machines( first, last )
 int first, last;
 
@@ -232,6 +256,7 @@ int first, last;
  * the resulting machine CANNOT be used with any other "mk" operation except
  * more mkbranch's.  Compare with mkor()
  */
+
 int mkbranch( first, second )
 int first, second;
 
@@ -260,6 +285,7 @@ int first, second;
  *
  *     new - a new state which matches the closure of "state"
  */
+
 int mkclos( state )
 int state;
 
@@ -281,6 +307,7 @@ int state;
  *     1. mach must be the last machine created
  *     2. mach is destroyed by the call
  */
+
 int mkopt( mach )
 int mach;
 
@@ -319,6 +346,7 @@ int mach;
  * the code is rather convoluted because an attempt is made to minimize
  * the number of epsilon states needed
  */
+
 int mkor( first, second )
 int first, second;
 
@@ -379,6 +407,7 @@ int first, second;
  *
  *    new - a machine matching the positive closure of "state"
  */
+
 int mkposcl( state )
 int state;
 
@@ -411,6 +440,7 @@ int state;
  * note
  *   if "ub" is INFINITY then "new" matches "lb" or more occurances of "mach"
  */
+
 int mkrep( mach, lb, ub )
 int mach, lb, ub;
 
@@ -457,6 +487,7 @@ int mach, lb, ub;
  * CONTIGUOUS.  Change it and you will have to rewrite DUPMACHINE (kludge
  * that it admittedly is)
  */
+
 int mkstate( sym )
 int sym;
 
@@ -523,6 +554,7 @@ int sym;
  *     statefrom - the state from which the transition is to be made
  *     stateto   - the state to which the transition is to be made
  */
+
 mkxtion( statefrom, stateto )
 int statefrom, stateto;
 
@@ -532,7 +564,7 @@ int statefrom, stateto;
 
     else if ( (transchar[statefrom] != SYM_EPSILON) ||
 	      (trans2[statefrom] != NO_TRANSITION) )
-	lexfatal( "found too many transitions in mkxtion()" );
+	flexfatal( "found too many transitions in mkxtion()" );
 
     else
 	{ /* second out-transition for an epsilon state */

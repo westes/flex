@@ -1,25 +1,27 @@
 /* flexscan.l - scanner for flex input */
 
 /*
- * Copyright (c) University of California, 1987
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  */
 
 %{
 #include "flexdef.h"
-#include "strings.h"
 #include "y.tab.h"
 
-#undef YYDECL
-#define YYDECL \
-	int lexscan()
+#define ACTION_ECHO fprintf( temp_action_file, "%s", yytext )
+#define MARK_END_OF_PROLOG fprintf( temp_action_file, "%%%% end of prolog\n" );
 
-#undef yywrap
-#define yywrap(result) \
-	{ \
-	if ( ! did_second_skelout ) \
-		skelout(); \
-	result = 1; \
-	}
+#undef YY_DECL
+#define YY_DECL \
+	int flexscan()
 
 #define RETURNCHAR \
 	yylval = yytext[0]; \
@@ -52,20 +54,19 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
     static int bracelevel;
     int i, cclval;
     char nmdef[MAXLINE], myesc();
-    static int didadef, did_second_skelout = false;
+    static int didadef;
 
 ^{WS}.*\n		++linenum; ECHO; /* indented code */
-^#.*\n			++linenum; ECHO; /* either a Ratfor comment or a CPP directive */
+^#.*\n			++linenum; ECHO; /* treat as a comment */
 ^"/*"			ECHO; BEGIN(C_COMMENT);
 ^"%s"(tart)?		return ( SCDECL );
 ^"%x"			return ( XSCDECL );
-^"%{".*\n		++linenum; line_directive_out(); BEGIN(CODEBLOCK);
+^"%{".*\n		++linenum; line_directive_out( stdout ); BEGIN(CODEBLOCK);
 {WS}			return ( WHITESPACE );
 
 ^"%%".*			{
 			sectnum = 2;
-			skelout();
-			line_directive_out();
+			line_directive_out( stdout );
 			BEGIN(SECT2PROLOG);
 			return ( SECTEND );
 			}
@@ -127,13 +128,12 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 
 <SECT2PROLOG>.*\n/[^ \t\n]	{
 			++linenum;
-			ECHO;
-			skelout();
-			did_second_skelout = true;
+			ACTION_ECHO;
+			MARK_END_OF_PROLOG;
 			BEGIN(SECT2);
 			}
 
-<SECT2PROLOG>.*\n	++linenum; ECHO;
+<SECT2PROLOG>.*\n	++linenum; ACTION_ECHO;
 
 <SECT2>^{OPTWS}\n	++linenum; /* allow blank lines in section 2 */
 <SECT2>^{WS}.*\n	{
@@ -154,7 +154,14 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 			}
 <SECT2>{WS}"|".*\n	++linenum; return ( '\n' );
 
-<SECT2>{WS}	|
+<SECT2>{WS}		{ /* needs to be separate from following rule due to
+			   * bug with trailing context
+			   */
+			bracelevel = 0;
+			BEGIN(ACTION);
+			return ( '\n' );
+			}
+
 <SECT2>{OPTWS}/\n	{
 			bracelevel = 0;
 			BEGIN(ACTION);
@@ -281,47 +288,45 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 
 
 <PERCENT_BRACE_ACTION>{OPTWS}"%}".*	bracelevel = 0;
-<PERCENT_BRACE_ACTION>.*		ECHO;
+<PERCENT_BRACE_ACTION>.*		ACTION_ECHO;
 <PERCENT_BRACE_ACTION>\n		{
 			++linenum;
-			ECHO;
+			ACTION_ECHO;
 			if ( bracelevel == 0 )
 			    {
-			    if ( genftl )
-				puts( "\tbreak;" );
+			    fputs( "\tbreak;\n", temp_action_file );
 			    BEGIN(SECT2);
 			    }
 			}
 
-<ACTION>"{"		ECHO; ++bracelevel;
-<ACTION>"}"		ECHO; --bracelevel;
-<ACTION>[^{}"'/\n]+	ECHO;
-<ACTION>"/*"		ECHO; BEGIN(ACTION_COMMENT);
-<ACTION>"'"([^'\\\n]|\\.)*"'"	ECHO; /* character constant */
-<ACTION>\"		ECHO; BEGIN(ACTION_STRING);
+<ACTION>"{"		ACTION_ECHO; ++bracelevel;
+<ACTION>"}"		ACTION_ECHO; --bracelevel;
+<ACTION>[^{}"'/\n]+	ACTION_ECHO;
+<ACTION>"/*"		ACTION_ECHO; BEGIN(ACTION_COMMENT);
+<ACTION>"'"([^'\\\n]|\\.)*"'"	ACTION_ECHO; /* character constant */
+<ACTION>\"		ACTION_ECHO; BEGIN(ACTION_STRING);
 <ACTION>\n		{
 			++linenum;
-			ECHO;
+			ACTION_ECHO;
 			if ( bracelevel == 0 )
 			    {
-			    if ( genftl )
-				puts( "\tbreak;" );
+			    fputs( "\tbreak;\n", temp_action_file );
 			    BEGIN(SECT2);
 			    }
 			}
-<ACTION>.		ECHO;
+<ACTION>.		ACTION_ECHO;
 
-<ACTION_COMMENT>"*/"	ECHO; BEGIN(ACTION);
-<ACTION_COMMENT>[^*\n]+	ECHO;
-<ACTION_COMMENT>"*"	ECHO;
-<ACTION_COMMENT>\n	++linenum; ECHO;
-<ACTION_COMMENT>.	ECHO;
+<ACTION_COMMENT>"*/"	ACTION_ECHO; BEGIN(ACTION);
+<ACTION_COMMENT>[^*\n]+	ACTION_ECHO;
+<ACTION_COMMENT>"*"	ACTION_ECHO;
+<ACTION_COMMENT>\n	++linenum; ACTION_ECHO;
+<ACTION_COMMENT>.	ACTION_ECHO;
 
-<ACTION_STRING>[^"\\\n]+	ECHO;
-<ACTION_STRING>\\.	ECHO;
-<ACTION_STRING>\n	++linenum; ECHO;
-<ACTION_STRING>\"	ECHO; BEGIN(ACTION);
-<ACTION_STRING>.	ECHO;
+<ACTION_STRING>[^"\\\n]+	ACTION_ECHO;
+<ACTION_STRING>\\.	ACTION_ECHO;
+<ACTION_STRING>\n	++linenum; ACTION_ECHO;
+<ACTION_STRING>\"	ACTION_ECHO; BEGIN(ACTION);
+<ACTION_STRING>.	ACTION_ECHO;
 
 
 <SECT2,QUOTE,CCL>{ESCSEQ}	{
@@ -339,32 +344,35 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 <SECT3>.|\n		{
 			register int numchars;
 
-			/* black magic - we know the names of a lex scanner's
+			/* black magic - we know the names of a flex scanner's
 			 * internal variables.  We cap the input buffer with
 			 * an end-of-string and dump it to the output.
 			 */
-			YYDOBEFORESCAN;	/* recover from setting up yytext */
+			YY_DO_BEFORE_SCAN; /* recover from setting up yytext */
 
-			yychbuf[yyebufp + 1] = '\0';
+#ifdef FLEX_FAST_SKEL
+			fputs( yy_c_buf_p + 1, stdout );
+#else
+			yy_ch_buf[yy_e_buf_p + 1] = '\0';
 
 			/* ignore the first character; it's the second '%'
 			 * put back by the yyless(1) above
 			 */
-			fputs( yychbuf + yycbufp + 1, stdout );
+			fputs( yy_ch_buf + yy_c_buf_p + 1, stdout );
+#endif
 
 			/* if we don't do this, the data written by write()
 			 * can get overwritten when stdout is finally flushed
 			 */
 			(void) fflush( stdout );
 
-			while ( (numchars = read( fileno(yyin), yychbuf,
-						  YYBUFMAX )) > 0 )
-			    (void) write( fileno(stdout), yychbuf, numchars );
+			while ( (numchars = read( fileno(yyin), yy_ch_buf,
+						  YY_BUF_MAX )) > 0 )
+			    (void) write( fileno(stdout), yy_ch_buf, numchars );
 	
 			if ( numchars < 0 )
-			    lexerror( "fatal read error in section 3" );
+			    flexerror( "fatal read error in section 3" );
 
 			return ( EOF );
 			}
-
 %%

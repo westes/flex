@@ -1,21 +1,31 @@
 /* flex - tool to generate fast lexical analyzers
  *
- * Copyright (c) University of California, 1987
+ *
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  *
  *
- * ver   date  who remarks
- * ---   ----  --- -------------------------------------------------------
- * 04a 27Jun86 VP  .translated from Ratfor into C
- * 01a 22Aug83 VP  .written.  Original version by Jef Poskanzer.
+ * ver   date  who    remarks
+ * ---   ----  ------ -------------------------------------------------------
+ * 04b 30sep87 kg, vp .implemented (part of) Van Jacobson's fast scanner design
+ * 04a 27jun86 vp     .translated from Ratfor into C
+ * 01a 22aug83 vp     .written.  Original version by Jef Poskanzer.
  */
-
 
 #include "flexdef.h"
 
 
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
-int interactive, caseins, genftl, useecs, fulltbl, usemecs, reject;
+int interactive, caseins, useecs, fulltbl, usemecs, reject;
+int fullspd, gen_line_dirs;
 int datapos, dataline, linenum;
 FILE *skelfile = NULL;
 char *infilename = NULL;
@@ -32,7 +42,8 @@ int lastsc, current_max_scs, *scset, *scbol, *scxclu, *actvsc;
 int current_max_dfa_size, current_max_xpairs;
 int current_max_template_xpairs, current_max_dfas;
 int lastdfa, *nxt, *chk, *tnxt;
-int *base, *def, tblend, firstfree, numtemps, **dss, *dfasiz, **dfaacc;
+int *base, *def, tblend, firstfree, numtemps, **dss, *dfasiz;
+union dfaacc_union *dfaacc;
 int *accsiz, *dhash, *todo, todo_head, todo_next, numas;
 int numsnpairs, jambase, jamstate;
 int lastccl, current_maxccls, *cclmap, *ccllen, *cclng, cclreuse;
@@ -41,6 +52,9 @@ char *ccltbl;
 char *starttime, *endtime, nmstr[MAXLINE];
 int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
+FILE *temp_action_file;
+int end_of_buffer_state;
+char *action_file_name = "/tmp/flexXXXXXX";
 
 
 /* flex - main program
@@ -54,7 +68,8 @@ int argc;
 char **argv;
 
     {
-    lexinit( argc, argv );
+    flexinit( argc, argv );
+
     readin();
 
     if ( ! syntaxerror )
@@ -62,21 +77,21 @@ char **argv;
 	/* convert the ndfa to a dfa */
 	ntod();
 
-	/* generate the ratfor state transition tables from the dfa */
-	gentabs();
+	/* generate the C state transition tables from the DFA */
+	make_tables();
 	}
 
-    /* note, lexend does not return.  It exits with its argument as status. */
+    /* note, flexend does not return.  It exits with its argument as status. */
 
-    lexend( 0 );
+    flexend( 0 );
     }
 
 
-/* lexend - terminate flex
+/* flexend - terminate flex
  *
  * synopsis
  *    int status;
- *    lexend( status );
+ *    flexend( status );
  *
  *    status is exit status.
  *
@@ -84,7 +99,7 @@ char **argv;
  *    This routine does not return.
  */
 
-lexend( status )
+flexend( status )
 int status;
 
     {
@@ -94,6 +109,9 @@ int status;
     if ( skelfile != NULL )
 	(void) fclose( skelfile );
 
+    (void) fclose( temp_action_file );
+    (void) unlink( action_file_name );
+
     if ( printstats )
 	{
 	endtime = gettime();
@@ -101,9 +119,6 @@ int status;
 	fprintf( stderr, "flex usage statistics:\n" );
 	fprintf( stderr, "  started at %s, finished at %s\n",
 		 starttime, endtime );
-
-	if ( ! genftl )
-	    fprintf( stderr, "  Ratfor scanner generated\n" );
 
 	fprintf( stderr, "  %d/%d NFA states\n", lastnfa, current_mns );
 	fprintf( stderr, "  %d/%d DFA states (%d words)\n", lastdfa,
@@ -175,26 +190,25 @@ int status;
     }
 
 
-/* lexinit - initialize flex
+/* flexinit - initialize flex
  *
  * synopsis
  *    int argc;
  *    char **argv;
- *    lexinit( argc, argv );
+ *    flexinit( argc, argv );
  */
 
-lexinit( argc, argv )
+flexinit( argc, argv )
 int argc;
 char **argv;
 
     {
-    int i;
-    char *arg, *skelname = DEFAULT_SKELETON_FILE, *gettime(), clower();
-    int sawcmpflag, use_stdout;
+    int i, sawcmpflag, use_stdout;
+    char *arg, *skelname = NULL, *gettime(), clower(), *mktemp();
 
     printstats = syntaxerror = trace = spprdflt = interactive = caseins = false;
-    ddebug = fulltbl = reject = false;
-    usemecs = genftl = useecs = true;
+    ddebug = fulltbl = reject = fullspd = false;
+    gen_line_dirs = usemecs = useecs = true;
 
     sawcmpflag = false;
     use_stdout = false;
@@ -212,7 +226,7 @@ char **argv;
 		{
 		case 'c':
 		    if ( i != 1 )
-			lexerror( "-c flag must be given separately" );
+			flexerror( "-c flag must be given separately" );
 
 		    if ( ! sawcmpflag )
 			{
@@ -262,21 +276,22 @@ char **argv;
 		    caseins = true;
 		    break;
 
-		case 'l':
-		    use_stdout = false;
-		    break;
-
-		case 'n':
-		    printstats = false;
+		case 'L':
+		    gen_line_dirs = false;
 		    break;
 
 		case 'r':
 		    reject = true;
 		    break;
 
+		case 'F':
+		    fullspd = true;
+		    useecs = usemecs = false;
+		    break;
+
 		case 'S':
 		    if ( i != 1 )
-			lexerror( "-S flag must be given separately" );
+			flexerror( "-S flag must be given separately" );
 
 		    skelname = arg + i + 1;
 		    goto get_next_arg;
@@ -307,23 +322,41 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
 	}
 
     if ( fulltbl && usemecs )
-	lexerror( "full table and -cm don't make sense together" );
+	flexerror( "full table and -cm don't make sense together" );
 
     if ( fulltbl && interactive )
-	lexerror( "full table and -I are (currently) incompatible" );
+	flexerror( "full table and -I are (currently) incompatible" );
+
+    if ( (fulltbl || fullspd) && reject )
+	flexerror( "reject (-r) cannot be used with -f or -F" );
+
+    if ( fulltbl && fullspd )
+	flexerror( "full table and -F are mutually exclusive" );
+
+    if ( ! skelname )
+	{
+	static char skeleton_name_storage[400];
+
+	skelname = skeleton_name_storage;
+
+	if ( fullspd || fulltbl )
+	    (void) strcpy( skelname, FAST_SKELETON_FILE );
+	else
+	    (void) strcpy( skelname, DEFAULT_SKELETON_FILE );
+	}
 
     if ( ! use_stdout )
 	{
 	FILE *prev_stdout = freopen( "lex.yy.c", "w", stdout );
 
 	if ( prev_stdout == NULL )
-	    lexerror( "could not create lex.yy.c" );
+	    flexerror( "could not create lex.yy.c" );
 	}
 
     if ( argc )
 	{
 	if ( argc > 1 )
-	    lexerror( "extraneous argument(s) given" );
+	    flexerror( "extraneous argument(s) given" );
 
 	yyin = fopen( infilename = argv[0], "r" );
 
@@ -342,6 +375,11 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
 
     if ( (skelfile = fopen( skelname, "r" )) == NULL )
 	lerrsf( "can't open skeleton file %s", skelname );
+
+    (void) mktemp( action_file_name );
+
+    if ( (temp_action_file = fopen( action_file_name, "w" )) == NULL )
+	lerrsf( "can't open temporary action file %s", action_file_name );
 
     lastdfa = lastnfa = accnum = numas = numsnpairs = tmpuses = 0;
     numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst = 0;
@@ -388,60 +426,35 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
  * synopsis
  *    readin();
  */
+
 readin()
 
     {
-    if ( genftl )
-	{
-	fputs( "#define YYDEFAULTACTION ", stdout );
+    fputs( "#define YY_DEFAULT_ACTION ", stdout );
 
-	if ( spprdflt )
-	    fputs( "YYFATALERROR( \"flex scanner jammed\" )", stdout );
-	else
-	    fputs( "ECHO", stdout );
-
-	fputs( ";\n", stdout );
-
-	if ( ddebug )
-	    puts( "#define LEX_DEBUG" );
-	if ( useecs )
-	    puts( "#define LEX_USE_ECS" );
-	if ( usemecs )
-	    puts( "#define LEX_USE_MECS" );
-	if ( interactive )
-	    puts( "#define LEX_INTERACTIVE_SCANNER" );
-	if ( reject )
-	    puts( "#define LEX_REJECT_ENABLED" );
-	if ( fulltbl )
-	    puts( "#define LEX_FULL_TABLE" );
-	}
-
+    if ( spprdflt )
+	fputs( "YY_FATAL_ERROR( \"flex scanner jammed\" )", stdout );
     else
-	{
-	fputs( "define(YYDEFAULTACTION,", stdout );
+	fputs( "ECHO", stdout );
 
-	if ( spprdflt )
-	    fputs( "call error( \"flex scanner jammed\" )", stdout );
-	else
-	    fputs( "ECHO", stdout );
+    fputs( ";\n", stdout );
 
-	fputs( ")\n", stdout );
-
-	if ( ddebug )
-	    puts( "define(LEX_DEBUG,)" );
-	if ( useecs )
-	    puts( "define(LEX_USE_ECS,)" );
-	if ( usemecs )
-	    puts( "define(LEX_USE_MECS,)" );
-	if ( reject )
-	    puts( "define(LEX_REJECT_ENABLED,)" );
-	if ( fulltbl )
-	    puts( "define(LEX_FULL_TABLE,)" );
-	}
+    if ( ddebug )
+	puts( "#define FLEX_DEBUG" );
+    if ( useecs )
+	puts( "#define FLEX_USE_ECS" );
+    if ( usemecs )
+	puts( "#define FLEX_USE_MECS" );
+    if ( interactive )
+	puts( "#define FLEX_INTERACTIVE_SCANNER" );
+    if ( reject )
+	puts( "#define FLEX_REJECT_ENABLED" );
+    if ( fulltbl )
+	puts( "#define FLEX_FULL_TABLE" );
 
     skelout();
 
-    line_directive_out();
+    line_directive_out( stdout );
 
     if ( yyparse() )
 	lerrif( "fatal parse error at line %d", linenum );
@@ -454,6 +467,7 @@ readin()
 
     else
 	numecs = CSIZE;
+
     }
 
 
@@ -503,5 +517,5 @@ set_up_initial_allocations()
     dhash = allocate_integer_array( current_max_dfas );
     todo = allocate_integer_array( current_max_dfas );
     dss = allocate_integer_pointer_array( current_max_dfas );
-    dfaacc = allocate_integer_pointer_array( current_max_dfas );
+    dfaacc = allocate_dfaacc_union( current_max_dfas );
     }

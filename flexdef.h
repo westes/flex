@@ -1,16 +1,34 @@
 /*
- *  Symbol definitions for flex.
+ *  Definitions for flex.
  *
  * modification history
  * --------------------
- * 02a   vp  27jun86  .translated into C/FTL
+ * 02b kg, vp   30sep87  .added definitions for fast scanner; misc. cleanup
+ * 02a vp       27jun86  .translated into C/FTL
  */
 
 /*
- * Copyright (c) University of California, 1987
+ * Copyright (c) 1987, the University of California
+ * 
+ * The United States Government has rights in this work pursuant to
+ * contract no. DE-AC03-76SF00098 between the United States Department of
+ * Energy and the University of California.
+ * 
+ * This program may be redistributed.  Enhancements and derivative works
+ * may be created provided the new works, if made available to the general
+ * public, are made available for use by anyone.
  */
 
 #include <stdio.h>
+
+#ifdef SV
+#include <string.h>
+#define bzero(s, n) memset((char *)(s), '\000', (unsigned)(n))
+#else
+#include <strings.h>
+#endif
+
+char *sprintf(); /* keep lint happy */
 
 
 /* maximum line length we'll have to deal with */
@@ -30,13 +48,21 @@
 #define DEFAULT_SKELETON_FILE "flex.skel"
 #endif
 
-/* maximum number of characters per line recognized by Fortran compiler */
-#define DATALINEWIDTH 72
+#ifndef FAST_SKELETON_FILE
+#define FAST_SKELETON_FILE "flex.fastskel"
+#endif
 
-/* string to indent Fortran data statements with */
-#define DATAINDENTSTR "      "
-/* width of dataindent string in Fortran columns */
-#define DATAINDENTWIDTH 6
+/* special nxt[] action number for the "at the end of the input buffer" state */
+/* note: -1 is already taken by YY_NEW_FILE */
+#define END_OF_BUFFER_ACTION -3
+/* action number for default action for fast scanners */
+#define DEFAULT_ACTION -2
+
+/* special chk[] values marking the slots taking by end-of-buffer and action
+ * numbers
+ */
+#define EOB_POSITION -1
+#define ACTION_POSITION -2
 
 /* number of data items per line for -f output */
 #define NUMDATAITEMS 10
@@ -45,6 +71,9 @@
  * readability.
  */
 #define NUMDATALINES 10
+
+/* transition_struct_out() definitions */
+#define TRANS_STRUCT_PRINT_LENGTH 15
 
 /* returns true if an nfa state has an epsilon out-transition slot
  * that can be used.  This definition is currently not used.
@@ -186,10 +215,21 @@
 
 #define MSP 50	/* maximum number of saved protos (protos on the proto queue) */
 
+/* maximum number of out-transitions a state can have that we'll rummage
+ * around through the interior of the internal fast table looking for a
+ * spot for it
+ */
+#define MAX_XTIONS_FOR_FULL_INTERIOR_FIT 4
+
 /* number that, if used to subscript an array, has a good chance of producing
  * an error; should be small enough to fit into a short
  */
 #define BAD_SUBSCRIPT -32767
+
+/* absolute value of largest number that can be stored in a short, with a
+ * bit of slop thrown in for general paranoia.
+ */
+#define MAX_SHORT 32766
 
 
 /* Declarations for global variables. */
@@ -231,10 +271,13 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * fulltbl - if true (-cf flag), don't compress the DFA state table
  * usemecs - if true (-cm flag), use meta-equivalence classes
  * reject - if true (-r flag), generate tables for REJECT macro
+ * fullspd - if true (-F flag), use Jacobson method of table representation
+ * gen_line_dirs - if true (i.e., no -L flag), generate #line directives
  */
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
-extern int interactive, caseins, genftl, useecs, fulltbl, usemecs, reject;
+extern int interactive, caseins, useecs, fulltbl, usemecs, reject;
+extern int fullspd, gen_line_dirs;
 
 
 /* variables used in the flex input routines:
@@ -243,13 +286,16 @@ extern int interactive, caseins, genftl, useecs, fulltbl, usemecs, reject;
  *    statement.  Used to generate readable -f output
  * skelfile - fd of the skeleton file
  * yyin - input file
+ * temp_action_file - temporary file to hold actions
+ * action_file_name - name of the temporary file
  * infilename - name of input file
  * linenum - current input line number
  */
 
 extern int datapos, dataline, linenum;
-extern FILE *skelfile, *yyin;
+extern FILE *skelfile, *yyin, *temp_action_file;
 extern char *infilename;
+extern char *action_file_name;
 
 
 /* variables for stack of states having only one out-transition:
@@ -352,15 +398,21 @@ extern int lastsc, current_max_scs, *scset, *scbol, *scxclu, *actvsc;
  * numsnpairs - number of state/nextstate transition pairs
  * jambase - position in base/def where the default jam table starts
  * jamstate - state number corresponding to "jam" state
+ * end_of_buffer_state - end-of-buffer dfa state number
  */
 
 extern int current_max_dfa_size, current_max_xpairs;
 extern int current_max_template_xpairs, current_max_dfas;
 extern int lastdfa, lasttemp, *nxt, *chk, *tnxt;
-extern int *base, *def, tblend, firstfree, **dss, *dfasiz, **dfaacc;
+extern int *base, *def, tblend, firstfree, **dss, *dfasiz;
+extern union dfaacc_union
+    {
+    int *dfaacc_set;
+    int dfaacc_state;
+    } *dfaacc;
 extern int *accsiz, *dhash, *todo, todo_head, todo_next, numas;
 extern int numsnpairs, jambase, jamstate;
-
+extern int end_of_buffer_state;
 
 /* variables for ccl information:
  * lastccl - ccl index of the last created ccl
@@ -414,8 +466,15 @@ char *allocate_array(), *reallocate_array();
 #define allocate_integer_pointer_array(size) \
 	(int **) allocate_array( size, sizeof( int * ) )
 
+#define allocate_dfaacc_union(size) \
+	(union dfaacc_union *) \
+		allocate_array( size, sizeof( union dfaacc_union ) )
+
 #define reallocate_integer_pointer_array(array,size) \
 	(int **) reallocate_array( (char *) array, size, sizeof( int * ) )
+
+#define reallocate_dfaacc_union(array, size) \
+	(union dfaacc_union *)  reallocate_array( (char *) array, size, sizeof( union dfaacc_union ) )
 
 #define allocate_character_array(size) allocate_array( size, sizeof( char ) )
 
