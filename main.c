@@ -750,7 +750,7 @@ char **argv;
 					break;
 
 				case 'V':
-					fprintf( stderr, "%s version %s\n",
+					printf( "%s version %s\n",
 						program_name, flex_version );
 					exit( 0 );
 
@@ -768,9 +768,9 @@ char **argv;
 
 				default:
 					fprintf( stderr,
-						"%s: unknown flag '%c'\n",
-						program_name, (int) arg[i] );
-					usage();
+		"%s: unknown flag '%c'.  For usage, try\n\t%s --help\n",
+						program_name, (int) arg[i],
+						program_name );
 					exit( 1 );
 				}
 
@@ -1032,22 +1032,24 @@ void set_up_initial_allocations()
 
 void usage()
 	{
-	fprintf( stderr,
+	FILE *f = stdout;
+
+	fprintf( f,
 "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n",
 		program_name );
-	fprintf( stderr, "\t[--help --version] [file ...]\n" );
+	fprintf( f, "\t[--help --version] [file ...]\n" );
 
-	fprintf( stderr,
+	fprintf( f,
 		"\t-b  generate backing-up information to %s\n", backing_name );
-	fprintf( stderr, "\t-c  do-nothing POSIX option\n" );
-	fprintf( stderr, "\t-d  turn on debug mode in generated scanner\n" );
-	fprintf( stderr, "\t-f  generate fast, large scanner\n" );
-	fprintf( stderr, "\t-h  produce this help message\n" );
-	fprintf( stderr, "\t-i  generate case-insensitive scanner\n" );
-	fprintf( stderr, "\t-l  maximal compatibility with original lex\n" );
-	fprintf( stderr, "\t-n  do-nothing POSIX option\n" );
-	fprintf( stderr, "\t-p  generate performance report to stderr\n" );
-	fprintf( stderr,
+	fprintf( f, "\t-c  do-nothing POSIX option\n" );
+	fprintf( f, "\t-d  turn on debug mode in generated scanner\n" );
+	fprintf( f, "\t-f  generate fast, large scanner\n" );
+	fprintf( f, "\t-h  produce this help message\n" );
+	fprintf( f, "\t-i  generate case-insensitive scanner\n" );
+	fprintf( f, "\t-l  maximal compatibility with original lex\n" );
+	fprintf( f, "\t-n  do-nothing POSIX option\n" );
+	fprintf( f, "\t-p  generate performance report to stderr\n" );
+	fprintf( f,
 		"\t-s  suppress default rule to ECHO unmatched text\n" );
 
 	if ( ! did_outfilename )
@@ -1057,40 +1059,40 @@ void usage()
 		outfilename = outfile_path;
 		}
 
-	fprintf( stderr,
+	fprintf( f,
 		"\t-t  write generated scanner on stdout instead of %s\n",
 		outfilename );
 
-	fprintf( stderr,
-		"\t-v  write summary of scanner statistics to stderr\n" );
-	fprintf( stderr, "\t-w  do not generate warnings\n" );
-	fprintf( stderr, "\t-B  generate batch scanner (opposite of -I)\n" );
-	fprintf( stderr,
+	fprintf( f,
+		"\t-v  write summary of scanner statistics to f\n" );
+	fprintf( f, "\t-w  do not generate warnings\n" );
+	fprintf( f, "\t-B  generate batch scanner (opposite of -I)\n" );
+	fprintf( f,
 		"\t-F  use alternative fast scanner representation\n" );
-	fprintf( stderr,
+	fprintf( f,
 		"\t-I  generate interactive scanner (opposite of -B)\n" );
-	fprintf( stderr, "\t-L  suppress #line directives in scanner\n" );
-	fprintf( stderr, "\t-T  %s should run in trace mode\n", program_name );
-	fprintf( stderr, "\t-V  report %s version\n", program_name );
-	fprintf( stderr, "\t-7  generate 7-bit scanner\n" );
-	fprintf( stderr, "\t-8  generate 8-bit scanner\n" );
-	fprintf( stderr, "\t-+  generate C++ scanner class\n" );
-	fprintf( stderr, "\t-?  produce this help message\n" );
-	fprintf( stderr,
+	fprintf( f, "\t-L  suppress #line directives in scanner\n" );
+	fprintf( f, "\t-T  %s should run in trace mode\n", program_name );
+	fprintf( f, "\t-V  report %s version\n", program_name );
+	fprintf( f, "\t-7  generate 7-bit scanner\n" );
+	fprintf( f, "\t-8  generate 8-bit scanner\n" );
+	fprintf( f, "\t-+  generate C++ scanner class\n" );
+	fprintf( f, "\t-?  produce this help message\n" );
+	fprintf( f,
 	"\t-C  specify degree of table compression (default is -Cem):\n" );
-	fprintf( stderr,
+	fprintf( f,
 	"\t\t-Ca  trade off larger tables for better memory alignment\n" );
-	fprintf( stderr, "\t\t-Ce  construct equivalence classes\n" );
-	fprintf( stderr,
+	fprintf( f, "\t\t-Ce  construct equivalence classes\n" );
+	fprintf( f,
 	"\t\t-Cf  do not compress scanner tables; use -f representation\n" );
-	fprintf( stderr,
+	fprintf( f,
 	"\t\t-CF  do not compress scanner tables; use -F representation\n" );
-	fprintf( stderr, "\t\t-Cm  construct meta-equivalence classes\n" );
-	fprintf( stderr,
+	fprintf( f, "\t\t-Cm  construct meta-equivalence classes\n" );
+	fprintf( f,
 		"\t\t-Cr  use read() instead of stdio for scanner input\n" );
-	fprintf( stderr, "\t-o  specify output filename\n" );
-	fprintf( stderr, "\t-P  specify scanner prefix other than \"yy\"\n" );
-	fprintf( stderr, "\t-S  specify skeleton file\n" );
-	fprintf( stderr, "\t--help     produce this help message\n" );
-	fprintf( stderr, "\t--version  report %s version\n", program_name );
+	fprintf( f, "\t-o  specify output filename\n" );
+	fprintf( f, "\t-P  specify scanner prefix other than \"yy\"\n" );
+	fprintf( f, "\t-S  specify skeleton file\n" );
+	fprintf( f, "\t--help     produce this help message\n" );
+	fprintf( f, "\t--version  report %s version\n", program_name );
 	}
