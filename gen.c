@@ -1283,7 +1283,8 @@ void make_tables()
 		do_indent();
 		printf( "else\n" );
 		indent_up();
-		indent_puts( "fprintf( stderr, \"--EOF\\n\" );" );
+		indent_puts(
+	"fprintf( stderr, \"--EOF (start condition %d)\\n\", YY_START );" );
 		indent_down();
 
 		indent_puts( "}" );
