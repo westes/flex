@@ -59,13 +59,13 @@ int yylex()
     else
 	toktype = flexscan();
 
-    if ( toktype == EOF )
+    if ( toktype == EOF || toktype == 0 )
 	{
 	eofseen = 1;
 
 	if ( sectnum == 1 )
 	    {
-	    synerr( "unexpected EOF" );
+	    synerr( "premature EOF" );
 	    sectnum = 2;
 	    toktype = SECTEND;
 	    }
@@ -73,7 +73,7 @@ int yylex()
 	else if ( sectnum == 2 )
 	    {
 	    sectnum = 3;
-	    toktype = SECTEND;
+	    toktype = 0;
 	    }
 
 	else
