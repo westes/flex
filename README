@@ -1,5 +1,7 @@
 // $Header$
 
+This is release 2.0.1 of flex - a beta release.
+
 The flex distribution consists of the following files:
 
 	README		This message
@@ -11,8 +13,8 @@ The flex distribution consists of the following files:
 	parse.y
 	scan.l
 	ccl.c
-	dfa.c		flex sources
-	ecs.c
+	dfa.c
+	ecs.c		flex sources
 	gen.c
 	main.c
 	misc.c
@@ -21,11 +23,15 @@ The flex distribution consists of the following files:
 	tblcmp.c
 	yylex.c
 
-	scan.c.dist	pre-flex'd version of scan.l
+	initscan.c	pre-flex'd version of scan.l
 
 	flex.skel	skeleton for generated scanners
 
 	flex.1		manual entry
+
+	COPYING		flex's copyright
+	MISC		miscellaneous stuff (e.g., old VMS Makefile) which
+			almost no one will care about
 
 The files are packaged as a compressed shell archive, which in turn
 contains seven shell archives.  Create a directory where you want flex
@@ -48,7 +54,7 @@ Decide where you want to keep flex.skel (suggestion:  /usr/local/lib) and
 move it there.  Edit "Makefile" and change the definition of SKELETON_FILE
 to reflect the full pathname of flex.skel.
 
-For a System V machine, add "-DSV" to CFLAGS in the Makefile.
+For a System V machine, add "-DSYS_V" to CFLAGS in the Makefile.
 
 
 To make flex for the first time, use:
