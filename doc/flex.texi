@@ -256,6 +256,9 @@ FAQ
 * unnamed-faq-99::              
 * unnamed-faq-100::             
 * unnamed-faq-101::             
+* What is the difference between YYLEX_PARAM and YY_DECL?::
+* Why do I get "conflicting types for yylex" error?::
+* How do I access the values set in a Flex action from within a Bison action?::
 
 Appendices
 
@@ -5398,6 +5401,9 @@ publish them here.
 * unnamed-faq-99::              
 * unnamed-faq-100::             
 * unnamed-faq-101::             
+* What is the difference between YYLEX_PARAM and YY_DECL?::
+* Why do I get "conflicting types for yylex" error?::
+* How do I access the values set in a Flex action from within a Bison action?::
 @end menu
 
 @node  When was flex born?
@@ -8010,6 +8016,34 @@ then the problem is that the last rule needs to be "{whitespace}" !
 		Vern
 @end verbatim
 @end example
+
+@node What is the difference between YYLEX_PARAM and YY_DECL?
+@unnumberedsec What is the difference between YYLEX_PARAM and YY_DECL?
+
+YYLEX_PARAM is not a flex symbol. It is for Bison. It tells Bison to pass extra
+params when it calls yylex() from the parser.
+
+YY_DECL is the Flex declaration of yylex. The default is similar to this:
+
+@example
+@verbatim
+#define int yy_lex ()
+@end verbatim
+@end example
+
+
+@node Why do I get "conflicting types for yylex" error?
+@unnumberedsec Why do I get "conflicting types for yylex" error?
+
+This is a compiler error regarding a generated Bison parser, not a Flex scanner.
+It means you need a prototype of yylex() in the top of the Bison file.
+Be sure the prototype matches YY_DECL.
+
+@node How do I access the values set in a Flex action from within a Bison action?
+@unnumberedsec How do I access the values set in a Flex action from within a Bison action?
+
+With $1, $2, $3, etc. These are called "Semantic Values" in the Bison manual.
+See @ref{Top, , , bison, the GNU Bison Manual}.
 
 @node Appendices, Indices, FAQ, Top
 @appendix Appendices
