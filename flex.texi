@@ -18,12 +18,11 @@
 @node Top
 @top flex
 
-This manual describes
-@code{flex},
-a tool for generating programs that perform pattern-matching on text.  The
-manual includes both tutorial and reference sections.
+This manual describes @code{flex}, a tool for generating programs that
+perform pattern-matching on text.  The manual includes both tutorial and
+reference sections.
 
-This edition of the @cite{flex Manual} documents @code{flex} version
+This edition of @cite{The flex Manual} documents @code{flex} version
 @value{VERSION}. It was last updated on @value{UPDATED}.
 
 @menu
@@ -280,58 +279,45 @@ please send mail detailing your problem to
 @node Introduction
 @chapter Introduction
 
-@cindex flex, introduction
-@code{flex}
-is a tool for generating
-@dfn{scanners}.
-A scanner is a program which recognizes lexical patterns in text.
-The
-@code{flex}
-program
-reads
-the given input files, or its standard input if no file names are given,
-for a description of a scanner to generate.  The description is in
-the form of pairs
-of regular expressions and C code, called
-@dfn{rules}. @code{flex}
-generates as output a C source file,
-@file{lex.yy.c} by default,
-which defines a routine
-@b{yylex()}.
-This file is compiled and linked with the
-flex runtime library
-library to produce an executable.  When the executable is run,
-it analyzes its input for occurrences
-of the regular expressions.  Whenever it finds one, it executes
-the corresponding C code.
+@cindex scanner, definition of
+@code{flex} is a tool for generating @dfn{scanners}.  A scanner is a
+program which recognizes lexical patterns in text.  The @code{flex}
+program reads the given input files, or its standard input if no file
+names are given, for a description of a scanner to generate.  The
+description is in the form of pairs of regular expressions and C code,
+called @dfn{rules}. @code{flex} generates as output a C source file,
+@file{lex.yy.c} by default, which defines a routine @code{yylex()}.
+This file can be compiled and linked with the flex runtime library to
+produce an executable.  When the executable is run, it analyzes its
+input for occurrences of the regular expressions.  Whenever it finds
+one, it executes the corresponding C code.
 
 @node Simple Examples
 @chapter Some Simple Examples
 
 First some simple examples to get the flavor of how one uses
 @code{flex}.
-The following
-@code{flex}
-input specifies a scanner which whenever it encounters the string
-@samp{username} will replace it with the user's login name:
 
+@exindex username expansion
+The following @code{flex} input specifies a scanner which, when it
+encounters the string @samp{username} will replace it with the user's
+login name:
+
+@example
 @verbatim
     %%
     username    printf( "%s", getlogin() );
 @end verbatim
+@end example
 
 @cindex default rule
-By default, any text not matched by a
-@code{flex}
-scanner
-is copied to the output, so the net effect of this scanner is
-to copy its input file to its output with each occurrence
-of @samp{username} expanded.
-In this input, there is just one rule.  @samp{username} is the
-@dfn{pattern}
-and the @samp{printf} is the
-@dfn{action}.
-The @samp{%%} symbol marks the beginning of the rules.
+@cindex rules, default
+By default, any text not matched by a @code{flex} scanner is copied to
+the output, so the net effect of this scanner is to copy its input file
+to its output with each occurrence of @samp{username} expanded.  In this
+input, there is just one rule.  @samp{username} is the @dfn{pattern} and
+the @samp{printf} is the @dfn{action}.  The @samp{%%} symbol marks the
+beginning of the rules.
 
 Here's another simple example:
 
@@ -354,21 +340,19 @@ Here's another simple example:
 @end verbatim
 @end example
 
-This scanner counts the number of characters and the number
-of lines in its input (it produces no output other than the
-final report on the counts).  The first line
-declares two globals, @code{num_lines} and @code{num_chars}, which are accessible
-both inside
-@code{yylex()}
-and in the
-@code{main()}
-routine declared after the second @samp{%%}.  There are two rules, one
-which matches a newline (@samp{\n}) and increments both the line count and
-the character count, and one which matches any character other than
-a newline (indicated by the @samp{.} regular expression).
+This scanner counts the number of characters and the number of lines in
+its input. It produces no output other than the final report on the
+character and line counts.  The first line declares two globals,
+@code{num_lines} and @code{num_chars}, which are accessible both inside
+@code{yylex()} and in the @code{main()} routine declared after the
+second @samp{%%}.  There are two rules, one which matches a newline
+(@samp{\n}) and increments both the line count and the character count,
+and one which matches any character other than a newline (indicated by
+the @samp{.} regular expression).
 
 A somewhat more complicated example:
 
+@c proofread edit stopped here
 @exindex Pascal-like language
 @example
 @verbatim
