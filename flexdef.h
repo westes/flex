@@ -47,6 +47,10 @@
 #endif
 
 
+#ifdef USG
+#define SYS_V
+#endif
+
 #ifdef SYS_V
 #include <string.h>
 
