@@ -53,7 +53,7 @@ static char rcsid[] =
 	return ( NAME );
 
 #define PUT_BACK_STRING(str, start) \
-	for ( i = strlen( (char *) str ) - 1; i >= start; --i ) \
+	for ( i = strlen( (char *) (str) ) - 1; i >= start; --i ) \
 	    unput((str)[i])
 
 #define CHECK_REJECT(str) \
@@ -133,7 +133,8 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 
 %t{OPTWS}\n		{
 			++linenum;
-			xlation = (int *) malloc( sizeof( int ) * csize );
+			xlation =
+			    (int *) malloc( sizeof( int ) * (unsigned) csize );
 
 			if ( ! xlation )
 			    flexfatal(
@@ -331,7 +332,7 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 			    /* push back everything but the leading bracket
 			     * so the ccl can be rescanned
 			     */
-			    PUT_BACK_STRING((char *) nmstr, 1);
+			    PUT_BACK_STRING((Char *) nmstr, 1);
 
 			    BEGIN(FIRSTCCL);
 			    return ( '[' );
