@@ -3,7 +3,12 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* after version 2.5.14
+* version 2.5.15 released 2002-8-21
+
+** reject-state buffer is now dynamically allocated and REJECT buffer
+   variables are reentrant-safe
+
+** manual now discusses memory usage
 
 ** skeleton now processed by m4 before mkskel.sh; (this only matters
    if you want to change the skeleton or if you're doing flex development)
@@ -21,7 +26,7 @@ See the file COPYING for copying conditions.
 
 ** tables code omitted from generated scanner when not used
 
-* version 2.5.14 2002-8-15
+* version 2.5.14 released 2002-8-15
 
 ** the tests using the reentrant c scanner as c++ were reworked
    slightly to be sure that the c++ was enforced
