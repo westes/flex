@@ -334,7 +334,7 @@ int exit_status;
 				num_backing_up );
 		else
 			fprintf( stderr,
-				"  compressed tables always back-up\n" );
+				"  Compressed tables always back-up\n" );
 
 		if ( bol_needed )
 			fprintf( stderr,
