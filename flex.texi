@@ -3,6 +3,7 @@
 @setfilename flex.info
 @settitle The Flex Manual
 @c %**end of header
+@include version.texi
 
 @c  This file is part of flex.
 
@@ -41,6 +42,9 @@ This manual describes
 @code{flex},
 a tool for generating programs that perform pattern-matching on text.  The
 manual includes both tutorial and reference sections.
+
+This edition of the @code{flex Manual} documents @code{flex} version 
+@value{VERSION}. Last updated @value{UPDATED}.
 
 @menu
 * Introduction::                
