@@ -2,8 +2,12 @@
 
 /* $Header$ */
 
-main()
+extern int yylex();
+
+int main( argc, argv )
+int argc;
+char *argv[];
 
     {
-    yylex();
+    return yylex();
     }
