@@ -585,7 +585,7 @@ int argc;
 char **argv;
 	{
 	int i, sawcmpflag;
-	char *arg, *mktemp();
+	char *arg;
 
 	printstats = syntaxerror = trace = spprdflt = caseins = false;
 	lex_compat = C_plus_plus = backing_up_report = ddebug = fulltbl = false;
