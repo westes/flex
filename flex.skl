@@ -1864,12 +1864,13 @@ void yyFlexLexer::LexerError( yyconst char msg[] )
 	do \
 		{ \
 		/* Undo effects of setting up yytext. */ \
-        YY_LESS_LINENO(n);\
+        int yyless_macro_arg = (n); \
+        YY_LESS_LINENO(yyless_macro_arg);\
 		yytext[yyleng] = YY_G(yy_hold_char); \
-		YY_G(yy_c_buf_p) = yytext + n; \
+		YY_G(yy_c_buf_p) = yytext + yyless_macro_arg; \
 		YY_G(yy_hold_char) = *YY_G(yy_c_buf_p); \
 		*YY_G(yy_c_buf_p) = '\0'; \
-		yyleng = n; \
+		yyleng = yyless_macro_arg; \
 		} \
 	while ( 0 )
 
