@@ -26,8 +26,6 @@
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-/* @(#) $Header$ (LBL) */
-
 #include <stdio.h>
 #include <ctype.h>
 

@@ -32,9 +32,6 @@ char copyright[] =
  All rights reserved.\n";
 #endif /* not lint */
 
-/* $Header$ */
-
-
 #include "flexdef.h"
 #include "version.h"
 

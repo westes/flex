@@ -26,8 +26,6 @@
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-/* $Header$ */
-
 #include "flexdef.h"
 
 /* ccladd - add a single character to a ccl */

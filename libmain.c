@@ -1,7 +1,5 @@
 /* libmain - flex run-time support library "main" function */
 
-/* $Header$ */
-
 extern int yylex();
 
 int main( argc, argv )

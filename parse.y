@@ -33,9 +33,6 @@
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-/* $Header$ */
-
-
 /* Some versions of bison are broken in that they use alloca() but don't
  * declare it properly.  The following is the patented (just kidding!)
  * #ifdef chud to fix the problem, courtesy of Francois Pinard.

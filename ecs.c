@@ -26,8 +26,6 @@
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-/* $Header$ */
-
 #include "flexdef.h"
 
 /* ccl2ecl - convert character classes to set of equivalence classes */

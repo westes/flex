@@ -26,8 +26,6 @@
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-/* $Header$ */
-
 #include <ctype.h>
 #include "flexdef.h"
 #include "parse.h"
