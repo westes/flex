@@ -51,7 +51,7 @@ char *ccltbl;
 char *starttime, *endtime, nmstr[MAXLINE];
 int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
-int num_backtracking;
+int num_backtracking, bol_needed;
 FILE *temp_action_file;
 int end_of_buffer_state;
 #ifndef SHORT_FILE_NAMES
@@ -88,6 +88,8 @@ char **argv;
     /* note, flexend does not return.  It exits with its argument as status. */
 
     flexend( 0 );
+
+    /*NOTREACHED*/
     }
 
 
@@ -134,10 +136,15 @@ int status;
 
 	if ( num_backtracking == 0 )
 	    fprintf( stderr, "  No backtracking\n" );
-	else
+	else if ( fullspd || fulltbl )
 	    fprintf( stderr, "  %d backtracking (non-accepting) states\n",
 		     num_backtracking );
-	    
+	else
+	    fprintf( stderr, "  compressed tables always backtrack\n" );
+
+	if ( bol_needed )
+	    fprintf( stderr, "  Beginning-of-line patterns used\n" );
+
 	fprintf( stderr, "  %d/%d start conditions\n", lastsc,
 			 current_max_scs );
 	fprintf( stderr, "  %d epsilon states, %d double epsilon states\n",
@@ -418,6 +425,7 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
     numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst = 0;
     numuniq = numdup = hshsave = eofseen = datapos = dataline = 0;
     num_backtracking = onesp = numprots = 0;
+    bol_needed = false;
 
     linenum = sectnum = 1;
     firstprot = NIL;
@@ -463,27 +471,15 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
 readin()
 
     {
-    fputs( "#define YY_DEFAULT_ACTION ", stdout );
-
-    if ( spprdflt )
-	fputs( "YY_FATAL_ERROR( \"flex scanner jammed\" )", stdout );
-    else
-	fputs( "ECHO", stdout );
-
-    fputs( ";\n", stdout );
-
     if ( ddebug )
 	puts( "#define FLEX_DEBUG" );
-    if ( useecs )
-	puts( "#define FLEX_USE_ECS" );
-    if ( usemecs )
-	puts( "#define FLEX_USE_MECS" );
-    if ( interactive )
-	puts( "#define FLEX_INTERACTIVE_SCANNER" );
-    if ( reject )
-	puts( "#define FLEX_REJECT_ENABLED" );
+
     if ( fulltbl )
 	puts( "#define FLEX_FULL_TABLE" );
+    else if ( fullspd )
+	puts( "#define FLEX_FAST_COMPRESSED" );
+    else
+	puts( "#define FLEX_COMPRESSED" );
 
     skelout();
 
