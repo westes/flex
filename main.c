@@ -52,7 +52,7 @@ void set_up_initial_allocations PROTO((void));
 int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int interactive, caseins, useecs, fulltbl, usemecs;
 int fullspd, gen_line_dirs, performance_report, backing_up_report;
-int C_plus_plus, long_align, yytext_is_array, csize;
+int C_plus_plus, long_align, use_read, yytext_is_array, csize;
 int yymore_used, reject, real_reject, continued_action;
 int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum;
@@ -299,6 +299,8 @@ int exit_status;
 			putc( 'e', stderr );
 		if ( usemecs )
 			putc( 'm', stderr );
+		if ( use_read )
+			putc( 'r', stderr );
 
 		if ( skelname )
 			fprintf( stderr, " -S%s", skelname );
@@ -423,7 +425,7 @@ char **argv;
 	performance_report = 0;
 
 	sawcmpflag = false;
-	use_stdout = false;
+	use_read = use_stdout = false;
 	csize_given = false;
 	interactive_given = false;
 
@@ -506,6 +508,10 @@ char **argv;
 								usemecs = true;
 								break;
 
+							case 'r':
+								use_read = true;
+								break;
+
 							default:
 								lerrif(
 						"unknown -C option '%c'",
@@ -521,12 +527,12 @@ char **argv;
 
 				case 'f':
 					useecs = usemecs = false;
-					fulltbl = true;
+					use_read = fulltbl = true;
 					break;
 
 				case 'F':
 					useecs = usemecs = false;
-					fullspd = true;
+					use_read = fullspd = true;
 					break;
 
 				case 'h':
@@ -767,6 +773,12 @@ void readin()
 	{
 	skelout();
 
+	if ( yyparse() )
+		{
+		pinpoint_message( "fatal parse error" );
+		flexend( 1 );
+		}
+
 	if ( csize == 256 )
 		puts( "typedef unsigned char YY_CHAR;" );
 	else
@@ -784,21 +796,31 @@ void readin()
 	if ( reject )
 		printf( "\n#define YY_USES_REJECT\n" );
 
-	if ( C_plus_plus )
-		printf( "\n#include \"FlexLexer.h\"\n" );
-
 	if ( ddebug )
 		puts( "\n#define FLEX_DEBUG" );
 
 	skelout();
 
-	line_directive_out( stdout );
-
-	if ( yyparse() )
+	if ( ! C_plus_plus )
 		{
-		pinpoint_message( "fatal parse error" );
-		flexend( 1 );
+		if ( use_read )
+			printf(
+"\tif ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \\\n" );
+		else
+			{
+			printf(
+"\tif ( ((result = fread( (char *) buf, 1, max_size, yyin )) == 0) && \\\n" );
+			printf(
+"\t     ferror( yyin ) ) \\\n" );
+			}
 		}
+
+	skelout();
+
+	if ( C_plus_plus )
+		printf( "\n#include \"FlexLexer.h\"\n" );
+
+	line_directive_out( stdout );
 
 	if ( useecs )
 		numecs = cre8ecs( nextecm, ecgroup, csize );
