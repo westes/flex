@@ -2,13 +2,13 @@
 # Copyright © 1996 Free Software Foundation, Inc.
 # Dominique Boucher <boucherd@IRO.UMontreal.CA>, 1996.
 # Marc Baudoin <babafou@ensta.fr>, 1996, traducteur jusqu'en mars 2002
-# Michel Robitaille <robitail@IRO.UMontreal.CA>, 1996, depuis mars 2002.
+# Michel Robitaille <robitail@IRO.UMontreal.CA>, traducteur depuis/since 1996, depuis mars 2002 pour flex.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.8\n"
 "POT-Creation-Date: 2002-06-19 09:43-0400\n"
-"PO-Revision-Date: 2002-06-20 08:00-0500\n"
+"PO-Revision-Date: 2002-08-01 08:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
