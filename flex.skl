@@ -1003,7 +1003,7 @@ char msg[];
 #endif
 	{
 %-
-	fprintf( stderr, "%s\n", msg );
+	(void) fprintf( stderr, "%s\n", msg );
 %+
 	cerr << msg << '\n';
 %*
