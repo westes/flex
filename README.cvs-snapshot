@@ -21,6 +21,7 @@ help2man; to generate man page
 tar, gzip, etc.; for packaging of the source distribution
 texinfo tools;  to build and test the flex manual
 perl; GNU automake and GNU autoconf now depend on perl to run
+GNU indent; for indenting the flex source the way we want it done
 
 ONce you have all the necessary tools installed, life becomes
 simple. To prepare the flex tree for building, run the script:
