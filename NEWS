@@ -219,7 +219,7 @@ Changes between release 2.5.0.2 (28Dec94) and release 2.4.7:
 	  rules active) or not at the beginning of a line (zero argument,
 	  '^' rules inactive).
 
-	- Related to this change, the mechanism for determing when a scan is
+	- Related to this change, the mechanism for determining when a scan is
 	  starting at the beginning of a line has changed.  It used to be
 	  that '^' was active iff the character prior to that at which the
 	  scan started was a newline.  The mechanism now is that '^' is
