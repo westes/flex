@@ -122,6 +122,6 @@ ChangeLog:
 dist-hook:
 	-for i in tests to.do examples faqs ; \
 		do \
-		cvs -Q export -D today -d $(PACKAGE)-$(VERSION)/$$i $(PACKAGE)/$$i ; \
+		cvs -d /usr/local/cvsroot -Q export -D today -d $(PACKAGE)-$(VERSION)/$$i $(PACKAGE)/$$i ; \
 	done
 	-cd $(PACKAGE)-$(VERSION) && ./autogen.sh
