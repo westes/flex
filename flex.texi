@@ -74,6 +74,7 @@ This edition of the @code{flex Manual} documents @code{flex} version
 * Bibliography::                
 * Copyright::                   
 * Reporting Bugs::              
+* FAQ::
 * Appendices::
 * Indices::
 @end menu
@@ -4336,6 +4337,9 @@ PURPOSE.
 If you have problems with @code{flex} or think you have found a bug,
 please send mail detailing your problem to
 @email{help-flex@@gnu.org}. Patches are always welcome.
+
+@c The FAQ is a node unto itself, in the file "faq.texi"
+@include faq.texi
 
 @node Appendices
 @appendix Appendices

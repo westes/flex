@@ -1,0 +1,571 @@
+@node FAQ
+@unnumbered FAQ
+
+@menu
+* When was flex born?::
+* How do I expand \ escape sequences in C-style quoted strings?::
+* Why do flex scanners call fileno if it is not ANSI compatible?::
+* Does flex support recursive pattern definitions?::
+* How do skip huge chunks of input (tens of megabytes) while using flex?::
+* Flex is not matching my patterns in the same order that I defined them.::
+* My actions are executing out of order or sometimes not at all.::
+* How can I have multiple input sources feed into the same scanner at the same time?::
+* Can I build nested parsers that work with the same input file?::
+* How can I match text only at the end of a file?::
+* How can I make REJECT cascade across start condition boundaries?::
+* Why can't I use fast or full tables with interactive mode?::
+* How much faster is -F or -f than -C?::
+* If I have a simple grammar can't I just parse it with flex?::
+* Why doesn't yyrestart() set the start state back to INITIAL?::
+* How can I match C-style comments?::
+* The '.' isn't working the way I expected.::
+* Can I get the flex manual in another format?::
+* Does there exist a "faster" NDFA->DFA algorithm?::
+* How does flex compile the DFA so quickly?::
+* How can I use more than 8192 rules?::
+* How do I abandon a file in the middle of a scan and switch to a new file?::
+* How do I execute code only during initialization (only before the first scan)?::
+* How do I execute code at termination?::
+* Where else can I find help?::
+* Can I include comments in the "rules" section of the file file?::
+* I get an error about undefined yywrap().::
+* How can I change the matching pattern at run time?::
+* Is there a way to increase the rules (NFA states to a bigger number?)::
+@end menu
+
+
+@node  When was flex born?
+@unnumberedsec When was flex born?
+
+When was flex born?
+
+Vern Paxson took over
+the Software Tools lex project from Jef Poskanzer in 1982.  At that point it
+was written in Ratfor.  Around 1987 or so, Paxson translated it into C, and
+a legend was born :-).
+
+@node  How do I expand \ escape sequences in C-style quoted strings?
+@unnumberedsec How do I expand \ escape sequences in C-style quoted strings?
+
+How do I expand \ escape sequences in C-style quoted strings?
+
+
+A key point when scanning quoted strings is that you cannot (easily) write
+a single rule that will precisely match the string if you allow things
+like embedded escape sequences and newlines.  If you try to match strings
+with a single rule then you'll wind up having to rescan the string anyway
+to find any escape sequences.
+
+Instead you use exclusive start conditions and a set of rules, one for
+matching non-escaped text, one for matching a single escape, one for
+matching an embedded newline, and one for recognizing the end of the
+string.  Each of these rules is then faced with the question of where to
+put its intermediary results.  The best solution is for the rules to
+append their local value of yytext to the end of a "string literal"
+buffer.  A rule like the escape-matcher will append to the buffer the
+meaning of the escape sequence rather than the literal text in yytext.
+In this way, yytext does not need to be modified at all.
+
+@node  Why do flex scanners call fileno if it is not ANSI compatible?
+@unnumberedsec Why do flex scanners call fileno if it is not ANSI compatible?
+
+Why do flex scanners call fileno if it is not ANSI compatible?
+
+
+Flex scanners call fileno() in order to get the file descriptor
+corresponding to yyin. The file descriptor may be passed to
+isatty() or read(), depending upon which %options you specified.
+If your system does not have fileno() support. To get rid of the
+read() call, do not specify %option read. To get rid of the isatty()
+call, you must specify one of %option always-interactive or 
+%option never-interactive.
+
+@node  Does flex support recursive pattern definitions?
+@unnumberedsec Does flex support recursive pattern definitions?
+
+Does flex support recursive pattern definitions?
+e.g.,
+
+@example
+@verbatim
+%%
+block   "{"({block}|{statement})*"}"
+@end verbatim
+@end example
+
+No. You cannot have recursive definitions.  The pattern-matching power of 
+regular expressions in general (and therefore flex scanners, too) is
+limited.  In particular, regular expressions cannot "balance" parentheses
+to an arbitrary degree.  For example, it's impossible to write a regular
+expression that matches all strings containing the same number of '@{'s
+as '@}'s.  For more powerful pattern matching, you need a parser, such
+as GNU bison. 
+
+@node  How do skip huge chunks of input (tens of megabytes) while using flex?
+@unnumberedsec How do skip huge chunks of input (tens of megabytes) while using flex?
+
+How do skip huge chunks of input (tens of megabytes) while using flex?
+
+
+Use fseek (or lseek) to position yyin, then call yyrestart().
+
+@node  Flex is not matching my patterns in the same order that I defined them.
+@unnumberedsec Flex is not matching my patterns in the same order that I defined them.
+
+Flex is not matching my patterns in the same order that I defined them.
+
+
+This is indeed the natural way to expect it to work, however, flex picks the
+rule that matches the most text (i.e., the longest possible input string).
+This is because flex uses an entirely different matching technique
+("deterministic finite automata") that actually does all of the matching
+simultaneously, in parallel.  (Seems impossible, but it's actually a fairly
+simple technique once you understand the principles.)
+
+A side-effect of this parallel matching is that when the input matches more
+than one rule, flex scanners pick the rule that matched the *most* text. This
+is explained further in the manual, in the section "How the input
+is Matched".
+
+If you want flex to choose a shorter match, then you can work around this
+behavior by expanding your short
+rule to match more text, then put back the extra:
+
+@example
+@verbatim
+data_.*        yyless( 5 ); BEGIN BLOCKIDSTATE;
+@end verbatim
+@end example
+
+Another fix would be to make the second rule active only during the
+<BLOCKIDSTATE> start condition, and make that start condition exclusive
+by declaring it with %x instead of %s.
+
+A final fix is to change the input language so that the ambiguity for
+data_ is removed, by adding characters to it that don't match the
+identifier rule, or by removing characters (such as '_') from the
+identifier rule so it no longer matches "data_".  (Of course, you might
+also not have the option of changing the input language ...)
+
+@node  My actions are executing out of order or sometimes not at all.
+@unnumberedsec My actions are executing out of order or sometimes not at all. 
+
+My actions are executing out of order or sometimes not at all. What's
+happening?
+
+
+Most likely, you have (in error) placed the opening @samp{@{} of the action
+block on a different line than the rule, e.g.,
+
+@example
+@verbatim
+^(foo|bar)
+   {  <<<--- WRONG!
+
+   }
+@end verbatim
+@end example
+
+flex requires that the opening @samp{@{} of an action associated with a rule
+begin on the same line as does the rule.  You need instead to write your rules
+as follows:
+
+@example
+@verbatim
+^(foo|bar)   {  // CORRECT!
+
+    }
+@end verbatim
+@end example
+
+@node  How can I have multiple input sources feed into the same scanner at the same time?
+@unnumberedsec How can I have multiple input sources feed into the same scanner at the same time?
+
+How can I have multiple input sources feed into the same scanner at
+the same time?
+
+If...
+@itemize @w
+@item
+your scanner is free of backtracking (verified using flex's -b flag),
+@item
+AND you run it interactively (-I option; default unless using special table
+compression options),
+@item
+AND you feed it one character at a time by redefining YY_INPUT to do so,
+@end itemize
+
+then every time it matches a token, it will have exhausted its input
+buffer (because the scanner is free of backtracking).  This means you
+can safely use select() at the point and only call yylex() for another
+token if select() indicates there's data available.
+
+That is, move the select() out from the input function to a point where
+it determines whether yylex() gets called for the next token.
+
+With this approach, you will still have problems if your input can arrive
+piecemeal; select() could inform you that the beginning of a token is
+available, you call yylex() to get it, but it winds up blocking waiting
+for the later characters in the token.
+
+Here's another way:  Move your input multiplexing inside of YY_INPUT.  That
+is, whenever YY_INPUT is called, it select()'s to see where input is
+available.  If input is available for the scanner, it reads and returns the
+next byte.  If input is available from another source, it calls whatever
+function is responsible for reading from that source.  (If no input is
+available, it blocks until some is.)  I've used this technique in an
+interpreter I wrote that both reads keyboard input using a flex scanner and
+IPC traffic from sockets, and it works fine.
+
+@node  Can I build nested parsers that work with the same input file?
+@unnumberedsec Can I build nested parsers that work with the same input file?
+
+Can I build nested parsers that work with the same input file?
+
+
+This is not going to work without some additional effort.  The reason is
+that flex block-buffers the input it reads from yyin.  This means that the
+"outermost" yylex(), when called, will automatically slurp up the first 8K
+of input available on yyin, and subsequent calls to other yylex()'s won't
+see that input.  You might be tempted to work around this problem by
+redefining YY_INPUT to only return a small amount of text, but it turns out
+that that approach is quite difficult.  Instead, the best solution is to
+combine all of your scanners into one large scanner, using a different
+exclusive start condition for each.
+
+@node  How can I match text only at the end of a file?
+@unnumberedsec How can I match text only at the end of a file?
+
+How can I match text only at the end of a file?
+
+
+There is no way to write a rule which is "match this text, but only if
+it comes at the end of the file".  You can fake it, though, if you happen
+to have a character lying around that you don't allow in your input.
+Then you redefine YY_INPUT to call your own routine which, if it sees
+an EOF, returns the magic character first (and remembers to return a
+real EOF next time it's called).  Then you could write:
+
+@example
+@verbatim
+<COMMENT>(.|\n)*{EOF_CHAR}    /* saw comment at EOF */
+@end verbatim
+@end example
+
+@node  How can I make REJECT cascade across start condition boundaries?
+@unnumberedsec How can I make REJECT cascade across start condition boundaries?
+
+How can I make REJECT cascade across start condition boundaries?
+
+
+You can do this as follows.  Suppose you have a start condition A, and
+after exhausting all of the possible matches in <A>, you want to try
+matches in <INITIAL>.  Then you could use the following:
+
+@example
+@verbatim
+%x A
+%%
+<A>rule_that_is_long    ...; REJECT;
+<A>rule                 ...; REJECT; /* shorter rule */
+<A>etc.
+...
+<A>.|\n  {
+            /* Shortest and last rule in <A>, so
+             * cascaded REJECT's will eventually
+             * wind up matching this rule.  We want
+             * to now switch to the initial state
+             * and try matching from there instead.
+             */
+            yyless(0);    /* put back matched text */
+            BEGIN(INITIAL);
+         }
+@end verbatim
+@end example
+
+@node  Why can't I use fast or full tables with interactive mode?
+@unnumberedsec Why can't I use fast or full tables with interactive mode?
+
+Why can't I use fast or full tables with interactive mode?
+
+
+One of the assumptions
+flex makes is that interactive applications are inherently slow (for just
+that reason, they're waiting on a human).  
+It has to do with how the scanner detects that it must be finished scanning
+a token.  For interactive scanners, after scanning each character the current
+state is looked up in a table (essentially) to see whether there's a chance
+of another input character possibly extending the length of the match.  If
+not, the scanner halts.  For non-interactive scanners, the end-of-token test
+is much simpler, basically a compare with 0, so no memory bus cycles.  Since
+the test occurs in the innermost scanning loop, one would like to make it go
+as fast as possible.
+
+Still, it seems reasonable to allow the user to choose to trade off a bit
+of performance in this area to gain the corresponding flexibility.  There
+might be another reason, though, why fast scanners don't support the
+interactive option 
+
+@node  How much faster is -F or -f than -C?
+@unnumberedsec How much faster is -F or -f than -C?
+
+How much faster is -F or -f than -C?
+
+
+Much faster (factor of 2-3).
+
+@node  If I have a simple grammar can't I just parse it with flex?
+@unnumberedsec If I have a simple grammar can't I just parse it with flex?
+
+If I have a simple grammar, can't I just parse it with flex?
+
+
+Is your grammar recursive? That's almost always a sign that you're
+better off using a parser/scanner rather than just trying to use a scanner
+alone.
+@node  Why doesn't yyrestart() set the start state back to INITIAL?
+@unnumberedsec Why doesn't yyrestart() set the start state back to INITIAL?
+
+Why doesn't yyrestart() set the start state back to INITIAL?
+
+
+
+There are two reasons.  The first is that there might
+be programs that rely on the start state not changing across file changes.
+The second is that with flex 2.4, use of yyrestart() is no longer required,
+so fixing the problem there doesn't solve the more general problem.  
+
+@node  How can I match C-style comments?
+@unnumberedsec How can I match C-style comments?
+
+How can I match C-style comments?
+
+You might be tempted to try something like this:
+
+@example
+@verbatim
+"/*".*"*/"       // WRONG!
+@end verbatim
+@end example
+
+or, worse, this:
+
+@example
+@verbatim
+"/*"(.|\n)"*/"   // WRONG!
+@end verbatim
+@end example
+
+
+The above rules will eat too much input, and blow up on things like:
+
+@example
+@verbatim
+    /* a comment */ do_my_thing( "oops */" );
+@end verbatim
+@end example
+
+Here is one way which allows you to track line information:
+
+@example
+@verbatim
+<INITIAL>{
+    "/*"              BEGIN(IN_COMMENT);
+}
+<IN_COMMENT>{
+    "*/"      BEGIN(INITIAL);
+    [^*\n]+   // eat comment in chunks
+    "*"       // eat the lone star
+    \n        yylineno++;
+}
+@end verbatim
+@end example
+
+@node  The '.' isn't working the way I expected.
+@unnumberedsec The '.' isn't working the way I expected.
+
+The '.' (dot) isn't working the way I expected.
+
+Here are some tips for using @samp{.}:
+
+@itemize
+@item
+A common mistake is to place the grouping parenthesis AFTER an operator, when
+you really meant to place the parenthesis BEFORE the operator, e.g., you
+probably want this @code{(foo|bar)+} and NOT this @code{(foo|bar+)}.
+
+The first pattern matches the words @code{foo} or @code{bar} any number of
+times, e.g., it matches the text @code{barfoofoobarfoo}. The
+second pattern matches a single instance of @code{foo} or a single instance of
+@code{ba} followed by one or more @samp{r}s, e.g., it matches the text @code{barrrr} .
+@item
+A @samp{.} inside []'s just means a literal@samp{.} (period),
+and NOT "any character except newline".
+@item
+Remember that @samp{.} matches any character EXCEPT @samp{\n} (and EOF).
+If you really want to match ANY character, including newlines, then use @code{(.|\n)}
+--- Beware that the regex @code{(.|\n)+} will match your entire input!
+@item
+Finally, if you want to match a literal @samp{.} (a period), then use [.] or "."
+@end itemize
+
+
+@node  Can I get the flex manual in another format?
+@unnumberedsec Can I get the flex manual in another format?
+
+Can I get the flex manual in another format?
+
+As of flex 2.5, the manual is distributed in texinfo format.
+You can use the "texi2*" tools to convert the manual to any format
+you desire (e.g., @samp{texi2html}).
+
+@node  Does there exist a "faster" NDFA->DFA algorithm?
+@unnumberedsec Does there exist a "faster" NDFA->DFA algorithm? 
+
+Does there exist a "faster" NDFA->DFA algorithm? Most standard texts (e.g.,
+Aho), imply that NDFA->DFA can take exponential time, since there are
+exponential number of potential states in NDFA.
+
+There's no way around the potential exponential running time - it
+can take you exponential time just to enumerate all of the DFA states.
+In practice, though, the running time is closer to linear, or sometimes
+quadratic.
+
+@node  How does flex compile the DFA so quickly?
+@unnumberedsec How does flex compile the DFA so quickly?
+
+How does flex compile the DFA so quickly?
+
+There are two big speed wins that flex uses:
+
+@enumerate
+@item
+It analyzes the input rules to construct equivalence classes for those
+characters that always make the same transitions.  It then rewrites the NFA
+using equivalence classes for transitions instead of characters.  This cuts
+down the NFA->DFA computation time dramatically, to the point where, for
+uncompressed DFA tables, the DFA generation is often I/O bound in writing out
+the tables.
+@item
+It maintains hash values for previously computed DFA states, so testing
+whether a newly constructed DFA state is equivalent to a previously constructed
+state can be done very quickly, by first comparing hash values.
+@end enumerate
+
+@node  How can I use more than 8192 rules?
+@unnumberedsec How can I use more than 8192 rules?
+
+How can I use more than 8192 rules?
+
+
+Flex is compiled with an upper limit of 8192 rules per scanner. 
+If you need more than 8192 rules in your scanner, you'll have to recompile flex
+with the following changes in flexdef.h:
+
+@example
+@verbatim
+<    #define YY_TRAILING_MASK 0x2000
+<    #define YY_TRAILING_HEAD_MASK 0x4000
+--
+>    #define YY_TRAILING_MASK 0x20000000
+>    #define YY_TRAILING_HEAD_MASK 0x40000000
+@end verbatim
+@end example
+
+This should work okay as long as your C compiler uses 32 bit integers.
+But you might want to think about whether using such a huge number of rules
+is the best way to solve your problem.
+
+@node  How do I abandon a file in the middle of a scan and switch to a new file?
+@unnumberedsec How do I abandon a file in the middle of a scan and switch to a new file?
+
+How do I abandon a file in the middle of a scan and switch to a new file?
+
+
+Just all yyrestart(newfile). Be sure to reset the start state if you want a
+"fresh" start, since yyrestart does NOT reset the start state back to INITIAL.
+
+@node  How do I execute code only during initialization (only before the first scan)?
+@unnumberedsec How do I execute code only during initialization (only before the first scan)?
+
+How do I execute code only during initialization (only before the first scan)?
+
+You can specify an initial action by defining the macro YY_USER_INIT (though
+note that yyout may not be available at the time this macro is executed).  Or you
+can add to the beginning of your rules section:
+
+@example
+@verbatim
+%%
+    /* Must be indented! */
+    static int did_init = 0;
+
+    if ( ! did_init ){
+        do_my_init();
+        did_init = 1;
+    }
+@end verbatim
+@end example
+
+@node  How do I execute code at termination?
+@unnumberedsec How do I execute code at termination?
+
+How do I execute code at termination (i.e., only after the last scan?)
+
+
+You can specifiy an action for the <<EOF>> rule.
+@node  Where else can I find help?
+@unnumberedsec Where else can I find help?
+
+Where else can I find help?
+
+The @code{help-flex} email list is served by GNU. See http://www.gnu.org/ for
+details how to subscribe or search the archives.
+
+@node  Can I include comments in the "rules" section of the file file?
+@unnumberedsec Can I include comments in the "rules" section of the file file?
+
+Can I include comments in the "rules" section of the file file?
+
+Yes, just about anywhere you want to. See the manual for the specific syntax.
+
+@node  I get an error about undefined yywrap().
+@unnumberedsec I get an error about undefined yywrap().
+
+I get an error about undefined yywrap().
+
+You must supply a yywrap() function of your own, or link to libfl.a
+(which provides one), or use
+
+    %option noyywrap
+
+in your source to say you don't want a yywrap() function.
+See the manual page for more details concerning yywrap().
+
+@node  How can I change the matching pattern at run time?
+@unnumberedsec How can I change the matching pattern at run time?
+
+How can I change the matching pattern at run time?
+
+You can't, it's compiled into a static table when flex builds the scanner.
+
+@node  Is there a way to increase the rules (NFA states to a bigger number?)
+@unnumberedsec Is there a way to increase the rules (NFA states to a bigger number?)
+
+Is there a way to increase the rules (NFA states to a bigger number?)
+
+With luck, you should be able to increase the definitions in flexdef.h for:
+
+@example
+@verbatim
+#define JAMSTATE -32766 /* marks a reference to the state that always jams */
+#define MAXIMUM_MNS 31999
+#define BAD_SUBSCRIPT -32767
+@end verbatim
+@end example
+
+recompile everything, and it'll all work.  Flex only has these 16-bit-like
+values built into it because a long time ago it was developed on a machine
+with 16-bit ints.  I've given this advice to others in the past but haven't
+heard back from them whether it worked okay or not...
+

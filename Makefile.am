@@ -79,6 +79,7 @@ include_HEADERS = \
 	FlexLexer.h
 
 info_TEXINFOS =	flex.texi
+flex_TEXINFOS = faq.texi
 man_MANS = flex.1
 
 EXTRA_DIST = \
