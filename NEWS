@@ -1,3 +1,9 @@
+Changes between 2.2 Patch #2 (27Mar90) and 2.2 Patch #1:
+
+	- fixed bug writing past end of input buffer in yyunput()
+	- fixed bug detecting NUL's at the end of a buffer
+
+
 Changes between 2.2 Patch #1 (23Mar90) and 2.2 (alpha) release:
 
 	- Makefile fixes: definition of MAKE variable for systems
