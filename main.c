@@ -311,8 +311,6 @@ void check_options()
 		if ( do_yywrap )
 			GEN_PREFIX( "wrap" );
 
-		GEN_PREFIX( "_flex_debug" );
-
 		outn( "" );
 		}
 
