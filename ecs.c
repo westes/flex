@@ -113,10 +113,34 @@ int fwd[], bck[], num;
     }
 
 
+/* ecs_from_xlation - associate equivalence class numbers using %t table
+ *
+ * synopsis
+ *    ecs_from_xlation( ecmap );
+ *
+ *  Upon return, ecmap will map each character code to its equivalence
+ *  class.  The mapping will be positive if the character is the representative
+ *  of its class, negative otherwise.
+ */
+
+ecs_from_xlation( ecmap )
+int ecmap[];
+
+    {
+    int i;
+
+    for ( i = 1; i <= csize; ++i )
+	if ( xlation[i] == 0 )
+	    ecmap[i] = num_xlations + 1;
+	else
+	    ecmap[i] = xlation[i];
+    }
+
+
 /* mkeccl - update equivalence classes based on character class xtions
  *
  * synopsis
- *    char ccls[];
+ *    Char ccls[];
  *    int lenccl, fwd[llsiz], bck[llsiz], llsiz;
  *    mkeccl( ccls, lenccl, fwd, bck, llsiz );
  *
@@ -126,14 +150,13 @@ int fwd[], bck[], num;
  */
 
 mkeccl( ccls, lenccl, fwd, bck, llsiz )
-char ccls[];
+Char ccls[];
 int lenccl, fwd[], bck[], llsiz;
 
     {
     int cclp, oldec, newec;
     int cclm, i, j;
-
-#define PROCFLG 0x80
+    static unsigned char cclflags[CSIZE];	/* initialized to all '\0' */
 
     /* note that it doesn't matter whether or not the character class is
      * negated.  The same results will be obtained in either case.
@@ -151,7 +174,7 @@ int lenccl, fwd[], bck[], llsiz;
 
 	for ( i = fwd[cclm]; i != NIL && i <= llsiz; i = fwd[i] )
 	    { /* look for the symbol in the character class */
-	    for ( ; j < lenccl && (ccls[j] <= i || (ccls[j] & PROCFLG)); ++j )
+	    for ( ; j < lenccl && (ccls[j] <= i || cclflags[j]); ++j )
 		if ( ccls[j] == i )
 		    {
 		    /* we found an old companion of cclm in the ccl.
@@ -162,7 +185,7 @@ int lenccl, fwd[], bck[], llsiz;
 		    bck[i] = newec;
 		    fwd[newec] = i;
 		    newec = i;
-		    ccls[j] |= PROCFLG;	/* set flag so we don't reprocess */
+		    cclflags[j] = 1;	/* set flag so we don't reprocess */
 
 		    /* get next equivalence class member */
 		    /* continue 2 */
@@ -193,10 +216,10 @@ next_pt:
 
 	/* find next ccl member to process */
 
-	for ( ++cclp; (ccls[cclp] & PROCFLG) && cclp < lenccl; ++cclp )
+	for ( ++cclp; cclflags[cclp] && cclp < lenccl; ++cclp )
 	    {
 	    /* reset "doesn't need processing" flag */
-	    ccls[cclp] &= ~PROCFLG;
+	    cclflags[cclp] = 0;
 	    }
 	}
     }
