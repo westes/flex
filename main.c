@@ -11,29 +11,28 @@
  * may be created provided the new works, if made available to the general
  * public, are made available for use by anyone.
  *
- *
- * ver   date  who    remarks
- * ---   ----  ------ -------------------------------------------------------
- * 04b 30sep87 kg, vp .implemented (part of) Van Jacobson's fast scanner design
- * 04a 27jun86 vp     .translated from Ratfor into C
- * 01a 22aug83 vp     .written.  Original version by Jef Poskanzer.
  */
 
 #include "flexdef.h"
+
+#ifndef lint
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+#endif
 
 
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
 int interactive, caseins, useecs, fulltbl, usemecs, reject;
-int fullspd, gen_line_dirs;
+int fullspd, gen_line_dirs, performance_report;
 int datapos, dataline, linenum;
 FILE *skelfile = NULL;
 char *infilename = NULL;
 int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
-int current_mns;
-int accnum, *firstst, *lastst, *finalst, *transchar;
-int *trans1, *trans2, *accptnum, lastnfa;
+int current_mns, accnum, lastnfa;
+int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
+int *accptnum, *assoc_rule;
 int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs, tecfwd[CSIZE + 1];
@@ -42,7 +41,7 @@ int lastsc, current_max_scs, *scset, *scbol, *scxclu, *actvsc;
 int current_max_dfa_size, current_max_xpairs;
 int current_max_template_xpairs, current_max_dfas;
 int lastdfa, *nxt, *chk, *tnxt;
-int *base, *def, tblend, firstfree, numtemps, **dss, *dfasiz;
+int *base, *def, tblend, firstfree, **dss, *dfasiz;
 union dfaacc_union *dfaacc;
 int *accsiz, *dhash, *todo, todo_head, todo_next, numas;
 int numsnpairs, jambase, jamstate;
@@ -52,9 +51,14 @@ char *ccltbl;
 char *starttime, *endtime, nmstr[MAXLINE];
 int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
+int num_backtracking;
 FILE *temp_action_file;
 int end_of_buffer_state;
+#ifndef SHORT_FILE_NAMES
 char *action_file_name = "/tmp/flexXXXXXX";
+#else
+char *action_file_name = "flexXXXXXX.tmp";
+#endif
 
 
 /* flex - main program
@@ -126,7 +130,14 @@ int status;
 	fprintf( stderr, "  %d/%d NFA states\n", lastnfa, current_mns );
 	fprintf( stderr, "  %d/%d DFA states (%d words)\n", lastdfa,
 			 current_max_dfas, totnst );
-	fprintf( stderr, "  %d rules\n", accnum );
+	fprintf( stderr, "  %d rules\n", accnum - 1 /* - 1 for def. rule */ );
+
+	if ( num_backtracking == 0 )
+	    fprintf( stderr, "  No backtracking\n" );
+	else
+	    fprintf( stderr, "  %d backtracking (non-accepting) states\n",
+		     num_backtracking );
+	    
 	fprintf( stderr, "  %d/%d start conditions\n", lastsc,
 			 current_max_scs );
 	fprintf( stderr, "  %d epsilon states, %d double epsilon states\n",
@@ -138,7 +149,7 @@ int status;
 	    fprintf( stderr,
 	"  %d/%d character classes needed %d/%d words of storage, %d reused\n",
 		     lastccl, current_maxccls,
-		     cclmap[lastccl] + ccllen[lastccl] - 1,
+		     cclmap[lastccl] + ccllen[lastccl],
 		     current_max_ccl_tbl_size, cclreuse );
 
 	fprintf( stderr, "  %d state/nextstate pairs created\n", numsnpairs );
@@ -189,7 +200,11 @@ int status;
 	fprintf( stderr, "  %d total table entries needed\n", tblsiz );
 	}
 
+#ifndef VMS
     exit( status );
+#else
+    exit( status + 1 );
+#endif
     }
 
 
@@ -210,7 +225,7 @@ char **argv;
     char *arg, *skelname = NULL, *gettime(), clower(), *mktemp();
 
     printstats = syntaxerror = trace = spprdflt = interactive = caseins = false;
-    ddebug = fulltbl = reject = fullspd = false;
+    performance_report = ddebug = fulltbl = reject = fullspd = false;
     gen_line_dirs = usemecs = useecs = true;
 
     sawcmpflag = false;
@@ -275,6 +290,11 @@ char **argv;
 		    fulltbl = true;
 		    break;
 
+		case 'F':
+		    useecs = usemecs = false;
+		    fullspd = true;
+		    break;
+
 		case 'I':
 		    interactive = true;
 		    break;
@@ -287,13 +307,12 @@ char **argv;
 		    gen_line_dirs = false;
 		    break;
 
-		case 'r':
-		    reject = true;
+		case 'p':
+		    performance_report = true;
 		    break;
 
-		case 'F':
-		    useecs = usemecs = false;
-		    fullspd = true;
+		case 'r':
+		    reject = true;
 		    break;
 
 		case 'S':
@@ -340,6 +359,9 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
     if ( fulltbl && fullspd )
 	flexerror( "full table and -F are mutually exclusive" );
 
+    if ( performance_report && reject )
+	fprintf( stderr, "Reject guarentees performance penalties\n" );
+
     if ( ! skelname )
 	{
 	static char skeleton_name_storage[400];
@@ -354,7 +376,11 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
 
     if ( ! use_stdout )
 	{
+#ifndef SHORT_FILE_NAMES
 	FILE *prev_stdout = freopen( "lex.yy.c", "w", stdout );
+#else
+	FILE *prev_stdout = freopen( "lexyy.c", "w", stdout );
+#endif
 
 	if ( prev_stdout == NULL )
 	    flexerror( "could not create lex.yy.c" );
@@ -391,7 +417,7 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
     lastdfa = lastnfa = accnum = numas = numsnpairs = tmpuses = 0;
     numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst = 0;
     numuniq = numdup = hshsave = eofseen = datapos = dataline = 0;
-    onesp = numprots = 0;
+    num_backtracking = onesp = numprots = 0;
 
     linenum = sectnum = 1;
     firstprot = NIL;
@@ -492,6 +518,7 @@ set_up_initial_allocations()
     trans1 = allocate_integer_array( current_mns );
     trans2 = allocate_integer_array( current_mns );
     accptnum = allocate_integer_array( current_mns );
+    assoc_rule = allocate_integer_array( current_mns );
 
     current_max_scs = INITIAL_MAX_SCS;
     scset = allocate_integer_array( current_max_scs );
@@ -523,6 +550,6 @@ set_up_initial_allocations()
     accsiz = allocate_integer_array( current_max_dfas );
     dhash = allocate_integer_array( current_max_dfas );
     todo = allocate_integer_array( current_max_dfas );
-    dss = allocate_integer_pointer_array( current_max_dfas );
+    dss = allocate_int_ptr_array( current_max_dfas );
     dfaacc = allocate_dfaacc_union( current_max_dfas );
     }
