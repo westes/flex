@@ -1428,6 +1428,14 @@ and taking two floats as arguments.  Note that if you give arguments to
 the scanning routine using a K&R-style/non-prototyped function
 declaration, you must terminate the definition with a semi-colon (;).
 
+@code{flex} generates K&R-style function definitions by default. This is solely
+to support bootstrapping gcc on old systems. Worse, it prevents us from using
+any standard data types smaller than int (such as short, char, or bool) as
+function arguments. For this reason, future versions of @code{flex} may
+generate standard C99 code, leaving K&R-style functions to the historians.
+Currently, if you want C99 definitions, then you'll have to define
+@code{YY_NO_TRADITIONAL_FUNC_DEFS}.
+
 @cindex stdin, default for yyin
 Whenever @code{yylex()} is called, it scans tokens from the global input
 file @file{yyin} (which defaults to stdin).  It continues until it
@@ -1779,15 +1787,7 @@ is what's used by AT&T @code{lex}).
 
 For historical reasons, start conditions do not have their own
 name-space within the generated scanner. The start condition names are
-unmodified in the generated scanner. However, they are prefixed
-with @samp{yysc_} in the generated header, where @samp{yy} corresponds
-to the appropriate prefix. Thus, @code{%x comment} produces
-@code{#define comment n} in the scanner, and produces
-@code{#define yysc_comment}
-in the header. If you have already prefixed the start condition,
-then flex attempts to respect your design by honoring the prefix.
-Likewise, flex attempts to respect your capitalization convention.
-
+unmodified in the generated scanner and generated header.
 @xref{option-header}. @xref{option-prefix}.
 
 
@@ -2409,6 +2409,10 @@ Only the external API is exported by the header file. Many macros that
 are usable from within scanner actions are not exported to the header
 file. This is due to namespace problems and the goal of a clean
 external API.
+
+While in the header, the macro @code{yyIN_HEADER} is defined, where @samp{yy}
+is substituted with the appropriate prefix.
+
 The @samp{--header} option is not compatible with the @samp{--c++} option,
 since the C++ scanner provides its own header in @file{yyFlexLexer.h}.
 
