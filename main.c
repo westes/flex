@@ -199,6 +199,7 @@ void check_options()
 		use_read = false;
 		}
 
+	/* See comments in flexend() for an explanation of this error condition. */
 	if ( use_stdout && headerfilename )
 	    flexerror( _( "Can't specify header option if writing to stdout.") );
 
@@ -477,6 +478,16 @@ int exit_status;
 				skelname );
 		}
 
+	/* flex generates the header file by rewinding the output FILE
+	 * pointer. However, since we can't rewind stdout, we must disallow
+	 * %option header if we are writing to stdout. This is a kludge. 
+	 * This kludge can be rewritten when we get around to buffering
+	 * Section 1 of the input file, because then we'll have seen all the
+	 * %options BEFORE we begin generating the scanner. The lack of
+	 * buffering causes other problems, too. For example, it is the
+	 * reason we currently can't provide a mechanism to allow the user
+	 * to inject arbtrary class members into the generated C++ scanner. - JM
+	 */
 	if ( headerfilename && exit_status == 0 && outfile_created && !ferror(stdout))
 		{
 			/* Copy the file we just wrote to a header file. */
