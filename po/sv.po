@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.2\n"
-"POT-Creation-Date: 2002-03-12 12:07-0500\n"
+"POT-Creation-Date: 2002-03-12 13:23-0500\n"
 "PO-Revision-Date: 1996-12-08 14:12\n"
 "Last-Translator: Johan Linde <jl@theophys.kth.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"

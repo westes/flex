@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.2\n"
-"POT-Creation-Date: 2002-03-12 12:07-0500\n"
+"POT-Creation-Date: 2002-03-12 13:23-0500\n"
 "PO-Revision-Date: 2002-02-27 14:38GMT +02:00\n"
 "Last-Translator: Altuð Bayram <altugbayram_2000@yahoo.com>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"

@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU flex 2.5.2\n"
-"POT-Creation-Date: 2002-03-12 12:07-0500\n"
+"POT-Creation-Date: 2002-03-12 13:23-0500\n"
 "PO-Revision-Date: 1997-01-17 12:43+0100\n"
 "Last-Translator: Nicolás García Pedrajas <ma1gapen@uco.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
