@@ -5,6 +5,31 @@ See the file COPYING for copying conditions.
 
 * version 2.5.6
 
+** command-line option parsing happens differently now:
+
+*** Added long option parsing
+
+*** Options -n and -c, previously deprecated, now simply do nothing
+
+*** Options are now parsed left to right
+
+** added a number of new options
+
+*** All positive %options are now accessible from the command line
+
+*** Added option -D, to define a preprocessor symbol.
+
+*** Added option --header=FILE to specify a C .h file to generate.
+
+*** added option --yywrap to call yywrap on EOF
+
+*** added option --yylineno to track line count in yylineno
+
+*** --yyclass=NAME name of C++ class when generating c++ scanners
+
+*** for long option names which are associated with existing short
+options, see accompanying documentation
+
 ** Support for reentrant C scanners has been added.
 
 *** Updated the manual with the new reentrant API.
