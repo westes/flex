@@ -47,6 +47,10 @@ void flexinit PROTO((int, char**));
 void readin PROTO((void));
 void set_up_initial_allocations PROTO((void));
 
+#ifdef NEED_ARGV_FIXUP
+extern void argv_fixup PROTO((int *, char ***));
+#endif
+
 
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
@@ -116,6 +120,7 @@ static char *backing_name = "lex.bck";
 extern unsigned _stklen = 16384;
 #endif
 
+static char outfile_path[MAXLINE];
 static int outfile_created = 0;
 static char *skelname = NULL;
 
@@ -127,7 +132,10 @@ char **argv;
 	int i;
 
 #ifdef THINK_C
-       argc = ccommand( &argv );
+	argc = ccommand( &argv );
+#endif
+#ifdef NEED_ARGV_FIXUP
+	argv_fixup( &argc, &argv );
 #endif
 
 	flexinit( argc, argv );
@@ -247,7 +255,6 @@ void check_options()
 
 		if ( ! did_outfilename )
 			{
-			static char outfile_path[64];
 			char *suffix;
 
 			if ( C_plus_plus )
@@ -574,10 +581,19 @@ char **argv;
 	/* read flags */
 	for ( --argc, ++argv; argc ; --argc, ++argv )
 		{
-		if ( argv[0][0] != '-' || argv[0][1] == '\0' )
+		arg = argv[0];
+
+		if ( arg[0] != '-' || arg[1] == '\0' )
 			break;
 
-		arg = argv[0];
+		if ( arg[1] == '-' )
+			{ /* --option */
+			if ( ! strcmp( arg, "--help" ) )
+				arg = "-h";
+
+			else if ( ! strcmp( arg, "--version" ) )
+				arg = "-V";
+			}
 
 		for ( i = 1; arg[i] != '\0'; ++i )
 			switch ( arg[i] )
@@ -661,6 +677,7 @@ char **argv;
 					use_read = fullspd = true;
 					break;
 
+				case '?':
 				case 'h':
 					usage();
 					exit( 0 );
@@ -897,6 +914,21 @@ void readin()
 			outn( "#define YY_INTERACTIVE" );
 		}
 
+	else
+		{
+		if ( do_stdinit )
+			{
+			outn( "#ifdef VMS" );
+			outn( yy_nostdinit );
+			outn( "#else" );
+			outn( yy_stdinit );
+			outn( "#endif" );
+			}
+
+		else
+			outn( yy_nostdinit );
+		}
+
 	if ( fullspd )
 		outn( "typedef const struct yy_trans_info *yy_state_type;" );
 	else if ( ! C_plus_plus )
@@ -904,18 +936,6 @@ void readin()
 
 	if ( ddebug )
 		outn( "\n#define FLEX_DEBUG" );
-
-	if ( do_stdinit )
-		{
-		outn( "#ifdef VMS" );
-		outn( yy_nostdinit );
-		outn( "#else" );
-		outn( yy_stdinit );
-		outn( "#endif" );
-		}
-
-	else
-		outn( yy_nostdinit );
 
 	if ( lex_compat )
 		{
@@ -1013,8 +1033,9 @@ void set_up_initial_allocations()
 void usage()
 	{
 	fprintf( stderr,
-"%s [-bcdfhilnpstvwBFILTV78+ -C[aefFmr] -Pprefix -Sskeleton] [file ...]\n",
+"%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n",
 		program_name );
+	fprintf( stderr, "\t[--help --version] [file ...]\n" );
 
 	fprintf( stderr,
 		"\t-b  generate backing-up information to %s\n", backing_name );
@@ -1028,8 +1049,18 @@ void usage()
 	fprintf( stderr, "\t-p  generate performance report to stderr\n" );
 	fprintf( stderr,
 		"\t-s  suppress default rule to ECHO unmatched text\n" );
+
+	if ( ! did_outfilename )
+		{
+		sprintf( outfile_path, outfile_template,
+			prefix, C_plus_plus ? "cc" : "c" );
+		outfilename = outfile_path;
+		}
+
 	fprintf( stderr,
-	"\t-t  write generated scanner on stdout instead of lex.yy.c\n" );
+		"\t-t  write generated scanner on stdout instead of %s\n",
+		outfilename );
+
 	fprintf( stderr,
 		"\t-v  write summary of scanner statistics to stderr\n" );
 	fprintf( stderr, "\t-w  do not generate warnings\n" );
@@ -1044,6 +1075,7 @@ void usage()
 	fprintf( stderr, "\t-7  generate 7-bit scanner\n" );
 	fprintf( stderr, "\t-8  generate 8-bit scanner\n" );
 	fprintf( stderr, "\t-+  generate C++ scanner class\n" );
+	fprintf( stderr, "\t-?  produce this help message\n" );
 	fprintf( stderr,
 	"\t-C  specify degree of table compression (default is -Cem):\n" );
 	fprintf( stderr,
@@ -1059,4 +1091,6 @@ void usage()
 	fprintf( stderr, "\t-o  specify output filename\n" );
 	fprintf( stderr, "\t-P  specify scanner prefix other than \"yy\"\n" );
 	fprintf( stderr, "\t-S  specify skeleton file\n" );
+	fprintf( stderr, "\t--help     produce this help message\n" );
+	fprintf( stderr, "\t--version  report %s version\n", program_name );
 	}
