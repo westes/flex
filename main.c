@@ -100,10 +100,11 @@ int num_input_files;
 char *program_name;
 
 #ifndef SHORT_FILE_NAMES
-static char *outfile = "lex.yy.c";
+static char *outfile_template = "lex.%s.c";
 #else
-static char *outfile = "lexyy.c";
+static char *outfile_template = "lex%s.c";
 #endif
+static char outfile_path[64];
 
 static int outfile_created = 0;
 static int use_stdout;
@@ -225,7 +226,7 @@ int exit_status;
 		else if ( fclose( stdout ) )
 			flexfatal( "error occurred when closing output file" );
 
-		else if ( unlink( outfile ) )
+		else if ( unlink( outfile_path ) )
 			flexfatal( "error occurred when deleting output file" );
 		}
 
@@ -416,7 +417,7 @@ char **argv;
 	{
 	int i, sawcmpflag;
 	int csize_given, interactive_given;
-	char *arg, *flex_gettime(), *mktemp();
+	char *arg, *prefix, *flex_gettime(), *mktemp();
 
 	printstats = syntaxerror = trace = spprdflt = caseins = false;
 	backtrack_report = ddebug = fulltbl = fullspd = false;
@@ -435,6 +436,8 @@ char **argv;
 	prolog = action = action_array =
 		allocate_character_array( action_size );
 	action_offset = action_index = 0;
+
+	prefix = "yy";
 
 	starttime = flex_gettime();
 
@@ -545,6 +548,14 @@ char **argv;
 					 */
 					break;
 
+				case 'P':
+					if ( i != 1 )
+						flexerror(
+					"-P flag must be given separately" );
+
+					prefix = arg + i + 1;
+					goto get_next_arg;
+
 				case 'p':
 					++performance_report;
 					break;
@@ -600,7 +611,9 @@ char **argv;
 					exit( 1 );
 				}
 
-		/* Used by -C and -S flags in lieu of a "continue 2" control. */
+		/* Used by -C, -S and -P flags in lieu of a "continue 2"
+		 * control.
+		 */
 		get_next_arg: ;
 		}
 
@@ -631,10 +644,14 @@ char **argv;
 
 	if ( ! use_stdout )
 		{
-		FILE *prev_stdout = freopen( outfile, "w", stdout );
+		FILE *prev_stdout;
+
+		sprintf( outfile_path, outfile_template, prefix );
+
+		prev_stdout = freopen( outfile_path, "w", stdout );
 
 		if ( prev_stdout == NULL )
-			lerrsf( "could not create %s", outfile );
+			lerrsf( "could not create %s", outfile_path );
 
 		outfile_created = 1;
 		}
@@ -664,6 +681,23 @@ char **argv;
 
 	if ( skelname && (skelfile = fopen( skelname, "r" )) == NULL )
 		lerrsf( "can't open skeleton file %s", skelname );
+
+	if ( strcmp( prefix, "yy" ) )
+		{
+#define GEN_PREFIX(name) printf( "#define yy%s %s%s\n", name, prefix, name );
+		GEN_PREFIX( "_create_buffer" );
+		GEN_PREFIX( "_delete_buffer" );
+		GEN_PREFIX( "_init_buffer" );
+		GEN_PREFIX( "_load_buffer_state" );
+		GEN_PREFIX( "_switch_to_buffer" );
+		GEN_PREFIX( "in" );
+		GEN_PREFIX( "leng" );
+		GEN_PREFIX( "lex" );
+		GEN_PREFIX( "out" );
+		GEN_PREFIX( "restart" );
+		GEN_PREFIX( "text" );
+		printf( "\n" );
+		}
 
 	lastdfa = lastnfa = 0;
 	num_rules = num_eof_rules = default_rule = 0;
