@@ -1,12 +1,214 @@
-Changes between release 2.5.0 (xxDec93) and release 2.4.5:
+Changes between release 2.5.0.1 (05Dec94) and release 2.4.7:
 
-	- Snapshot for installation on ell.
+	- A new concept of "start condition" scope has been introduced.
+	  A start condition scope is begun with:
 
-	- Self-contained scanners (modulo yywrap()).
+		<SCs>{
 
-	- Three new routines are available for manipulating stacks
-	  of start conditions: yy_push_state( int new_state ),
-	  void yy_pop_state(), and int yy_top_state().
+	  where SCs is a list of one or more start conditions.  Inside
+	  the start condition scope, every rule automatically has the
+	  prefix <SCs> applied to it, until a '}' which matches the
+	  initial '{'.  So, for example:
+
+		<ESC>{
+			"\\n"	return '\n';
+			"\\r"	return '\r';
+			"\\f"	return '\f';
+			"\\0"	return '\0';
+		}
+
+	  is equivalent to:
+
+		<ESC>"\\n"	return '\n';
+		<ESC>"\\r"	return '\r';
+		<ESC>"\\f"	return '\f';
+		<ESC>"\\0"	return '\0';
+
+	  Start condition scopes may be nested.
+
+	- The new %option directive can be used in the first section of
+	  a flex scanner to control scanner-generation options.  Most
+	  options are given simply as names, optionally preceded by the
+	  word "no" (with no intervening whitespace) to negate their
+	  meaning.  Some are equivalent to flex flags, so putting them
+	  in your scanner source is equivalent to always specifying
+	  the flag (%option's take precedence over flags):
+
+		7bit	-7 option
+		8bit	-8 option
+		align	-Ca option
+		backup	-b option
+		batch	-B option
+		c++	-+ option
+		caseful	opposite of -i option (caseful is the default);
+		case-sensitive	same as above
+		caseless	-i option;
+		case-insensitive	same as above
+		debug	-d option
+		default	opposite of -s option
+		ecs	-Ce option
+		fast	-F option
+		full	-f option
+		interactive	-I option
+		lex-compat	-l option
+		meta-ecs	-Cm option
+		perf-report	-p option
+		read	-Cr option
+		stdout	-t option
+		verbose	-v option
+		warn	opposite of -w option (so use "%option nowarn" for -w)
+
+		array	equivalent to "%array"
+		pointer	equivalent to "%pointer" (default)
+
+	  Some provide new features:
+
+		always-interactive	generate a scanner which always
+			considers its input "interactive" (no call to isatty()
+			will be made when the scanner runs)
+		main	supply a main program for the scanner, which
+			simply calls yylex().  Implies %option yywrap.
+		never-interactive	generate a scanner which never
+			considers its input "interactive" (no call to isatty()
+			will be made when the scanner runs)
+		stack	if set, enable start condition stacks (see below)
+		stdinit	if unset ("%option nostdinit"), initialize yyin
+			and yyout statically to nil FILE* pointers, instead
+			of stdin and stdout
+		yywrap	if unset ("%option noyywrap"), scanner does not
+			call yywrap() upon EOF but simply assumes there
+			are no more files to scan
+
+	  Flex scans your rule actions to determine whether you use the
+	  REJECT or yymore features (this is not new).  Two %options can be
+	  used to override its decision, either by setting them to indicate
+	  the feature is indeed used, or unsetting them to indicate it
+	  actually is not used:
+
+		reject
+		yymore
+
+	  Two %option's take string-delimited values, offset with '=':
+
+		outfile="<name>"	equivalent to -o<name>
+		prefix="<name>"		equivalent to -P<name>
+
+	  A number of %option's are available for lint purists who
+	  want to suppress the appearance of unneeded routines in
+	  the generated scanner.  Each of the following, if unset,
+	  results in the corresponding routine not appearing in the
+	  generated scanner:
+
+		input, unput
+		yy_push_state, yy_pop_state, yy_top_state
+		yy_scan_buffer, yy_scan_bytes, yy_scan_string
+
+	  You can specify multiple options with a single %option directive,
+	  and multiple directives in the first section of your flex input file.
+
+	- The new function:
+
+		YY_BUFFER_STATE yy_scan_string( const char *str )
+
+	  returns a YY_BUFFER_STATE (which also becomes the current input
+	  buffer) for scanning the given string, which occurs starting
+	  with the next call to yylex().  The string must be NUL-terminated.
+	  A related function:
+
+		YY_BUFFER_STATE yy_scan_bytes( const char *bytes, int len )
+
+	  creates a buffer for scanning "len" bytes (including possibly NUL's)
+	  starting at location "bytes".
+
+	  Note that both of these functions create and scan a *copy* of
+	  the string/bytes.  (This may be desirable, since yylex() modifies
+	  the contents of the buffer it is scanning.)  You can avoid the
+	  copy by using:
+
+		YY_BUFFER_STATE yy_scan_buffer( char *base, yy_size_t size )
+
+	  which scans in place the buffer starting at "base", consisting
+	  of "size" bytes, the last two bytes of which *must* be
+	  YY_END_OF_BUFFER_CHAR (these bytes are not scanned; thus, scanning
+	  consists of base[0] through base[size-2], inclusive).  If you
+	  fail to set up "base" in this manner, yy_scan_buffer returns a
+	  nil pointer instead of creating a new input buffer.
+
+	  The type yy_size_t is an integral type to which you can cast
+	  an integer expression reflecting the size of the buffer.
+
+	- Three new routines are available for manipulating stacks of
+	  start conditions:
+
+		void yy_push_state( int new_state )
+
+	  pushes the current start condition onto the top of the stack
+	  and BEGIN's "new_state" (recall that start condition names are
+	  also integers).
+
+		void yy_pop_state()
+
+	  pops the top of the stack and BEGIN's to it, and
+
+		int yy_top_state()
+
+	  returns the top of the stack without altering the stack's
+	  contents.
+
+	  The start condition stack grows dynamically and so has no built-in
+	  size limitation.  If memory is exhausted, program execution
+	  is aborted.
+
+	  To use start condition stacks, your scanner must include
+	  a "%option stack" directive.
+
+	- The promised rewrite of the C++ FlexLexer class has not yet
+	  been done.  Support for FlexLexer is limited at the moment to
+	  fixing show-stopper bugs, so, for example, the new functions
+	  yy_scan_string() & friends are not available to FlexLexer
+	  objects.
+
+	- The new macro
+
+		yy_set_interactive(is_interactive)
+
+	  can be used to control whether the current buffer is considered
+	  "interactive".  An interactive buffer is processed more slowly,
+	  but must be used when the scanner's input source is indeed
+	  interactive to avoid problems due to waiting to fill buffers
+	  (see the discussion of the -I flag in flexdoc).  A non-zero value
+	  in the macro invocation marks the buffer as interactive, a zero
+	  value as non-interactive.  Note that use of this macro overrides
+	  "%option always-interactive" or "%option never-interactive".
+
+	  yy_set_interactive() must be invoked prior to beginning to
+	  scan the buffer.
+
+	- The new macro
+
+		yy_set_bol(at_bol)
+
+	  can be used to control whether the current buffer's scanning
+	  context for the next token match is done as though at the
+	  beginning of a line (non-zero macro argument; makes '^' anchored
+	  rules active) or not at the beginning of a line (zero argument,
+	  '^' rules inactive).
+
+	- Related to this change, the mechanism for determing when a scan is
+	  starting at the beginning of a line has changed.  It used to be
+	  that '^' was active iff the character prior to that at which the
+	  scan started was a newline.  The mechanism now is that '^' is
+	  active iff the last token ended in a newline (or the last call to
+	  input() returned a newline).  For most users, the difference in
+	  mechanisms is negligible.  Where it will make a difference,
+	  however, is if unput() or yyless() is used to alter the input
+	  stream.  When in doubt, use yy_set_bol().
+
+	- The new beginning-of-line mechanism involved changing some fairly
+	  twisted code, so it may have introduced bugs - beware ...
+
+	- The macro YY_AT_BOL() returns true if the next token scanned from
+	  the current buffer will have '^' rules active, false otherwise.
 
 	- Flex now generates #line directives relating the code it
 	  produces to the output file; this means that error messages
@@ -14,8 +216,96 @@ Changes between release 2.5.0 (xxDec93) and release 2.4.5:
 
 	- A new "-ooutput" option writes the generated scanner to "output".
 	  If used with -t, the scanner is still written to stdout, but
-	  its internal #line directives use "output".
+	  its internal #line directives (see previous item) use "output".
 
+	- When generating #line directives, filenames with embedded '\'s
+	  have those characters escaped (i.e., turned into '\\').  This
+	  feature helps with reporting filenames for some MS-DOS and OS/2
+	  systems.
+
+	- You can now change the name "flex" to something else (e.g., "lex")
+	  by redefining $(FLEX) in the Makefile.
+
+	- Two bugs (one serious) that could cause "bigcheck" to fail have
+	  been fixed.
+
+	- A number of portability/configuration changes have been made
+	  for easier portability.
+
+	- You can use "YYSTATE" in your scanner as an alias for YY_START
+	  (for AT&T lex compatibility).
+
+	- input() now maintains yylineno.
+
+	- input() no longer trashes yytext.
+
+	- C++ FlexLexer objects now use the "cerr" stream to report -d output
+	  instead of stdio.
+
+	- The -c flag now has its full glorious POSIX interpretation (do
+	  nothing), rather than being interpreted as an old-style -C flag.
+
+	- Scanners generated using -l lex compatiblity now have the symbol
+	  YY_FLEX_LEX_COMPAT #define'd.
+
+	- Documentation now clarifies that start conditions persist across
+	  switches to new input files or different input buffers.  If you
+	  want to e.g., return to INITIAL, you must explicitly do so.
+
+	- Documentation now clarifies that you can pass a nil FILE* pointer
+	  to yy_create_buffer() or yyrestart() if you've arrange YY_INPUT
+	  to not need yyin.
+
+	- Documentation now clarifies that YY_BUFFER_STATE is a pointer to
+	  an opaque "struct yy_buffer_state".
+
+	- Documentation now stresses that you gain the benefits of removing
+	  backing-up states only if you remove *all* of them.
+
+	- More #ifdef chud has been added to the parser in attempt to
+	  deal with bison's use of alloca().
+
+	- "make clean" no longer deletes emacs backup files (*~).
+
+	- Some memory leaks have been fixed.
+
+	- A bug was fixed in which dynamically-expanded buffers were
+	  reallocated a couple of bytes too small.
+
+	- -S will not be going away.
+
+	- With the 2.6 release, I am considering dropping support for non-ANSI
+	  C compilers (in particular, non-prototyping C compilers).  If this
+	  puts you in a panic, drop me a line at flex-ansi@ee.lbl.gov.  If
+	  your mail bounces with "no such user", then enough people have
+	  already complained that I've rescinded my decision.
+
+
+Changes between release 2.4.7 (03Aug94) and release 2.4.6:
+
+	- Fixed serious bug in reading multiple files.
+
+	- Fixed bug in scanning NUL's.
+
+	- Fixed bug in input() returning 8-bit characters.
+
+	- Fixed bug in matching text with embedded NUL's when
+	  using %array or lex compatibility.
+
+	- Fixed multiple invocations of YY_USER_ACTION when using '|'
+	  continuation action.
+
+	- Minor prototyping fixes.
+
+Changes between release 2.4.6 (04Jan94) and release 2.4.5:
+
+	- Linking with -lfl no longer required if your program includes
+	  its own yywrap() and main() functions.  (This change will cause
+	  problems if you have a non-ANSI compiler on a system for which
+	  sizeof(int) != sizeof(void*) or sizeof(int) != sizeof(size_t).)
+
+	- The use of 'extern "C++"' in FlexLexer.h has been modified to
+	  get around an incompatibility with g++'s header files.
 
 Changes between release 2.4.5 (11Dec93) and release 2.4.4:
 
@@ -288,9 +578,7 @@ Changes between release 2.4.1 (30Nov93) and release 2.3.8:
 	- The skeleton file is no longer opened at run-time, but instead
 	  compiled into a large string array (thanks to John Gilmore and
 	  friends at Cygnus).  You can still use the -S flag to point flex
-	  at a different skeleton file, though if you use this option let
-	  me know, as I plan to otherwise do away with -S in the near
-	  future.
+	  at a different skeleton file.
 
 	- flex no longer uses a temporary file to store the scanner's
 	  actions.
