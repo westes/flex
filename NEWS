@@ -1,3 +1,11 @@
+Changes between release 2.4.2 (01Dec93) and release 2.4.1:
+
+	- Fixed bug in libfl.a referring to non-existent "flexfatal" function.
+
+	- Modified to produce both compress'd and gzip'd tar files for
+	  distributions (you probably don't care about this change!).
+
+
 Changes between release 2.4.1 (30Nov93) and release 2.3.8:
 
 	- The new '-+' flag instructs flex to generate a C++ scanner class
