@@ -42,7 +42,7 @@ AUTOMAKE_OPTIONS = \
 	gnits \
 	check-news \
 	no-texinfo.tex \
-	readme-alpha
+	dist-bzip2
 
 bin_PROGRAMS = flex
 lib_LIBRARIES = libfl.a
