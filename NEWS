@@ -5,6 +5,8 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.29
 
+** yylineno is per-buffer in reentrant scanners
+
 ** added %top directive for placing code at the top of the generated
    scanner; see manual for details
 
