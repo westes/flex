@@ -1,9 +1,5 @@
 /* ccl - routines for character classes */
 
-#ifndef lint
-static char rcsid[] = "@(#) $Header$ (LBL)";
-#endif
-
 /*
  * Copyright (c) 1987, the University of California
  * 
@@ -17,6 +13,11 @@ static char rcsid[] = "@(#) $Header$ (LBL)";
  */
 
 #include "flexdef.h"
+
+#ifndef lint
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+#endif
 
 /* ccladd - add a single character to a ccl
  *
@@ -110,4 +111,49 @@ int cclp;
 
     {
     cclng[cclp] = 1;
+    }
+
+
+/* list_character_set - list the members of a set of characters in CCL form
+ *
+ * synopsis
+ *     int cset[CSIZE + 1];
+ *     list_character_set( cset );
+ *
+ * writes to stderr a character-class representation of those characters
+ * present in the given set.  A character is present if it has a non-zero
+ * value in the set array.
+ */
+
+list_character_set( cset )
+int cset[];
+
+    {
+    register int i;
+    char *readable_form();
+
+    putc( '[', stderr );
+
+    for ( i = 1; i <= CSIZE; ++i )
+	{
+	if ( cset[i] )
+	    {
+	    register int start_char = i;
+
+	    putc( ' ', stderr );
+
+	    fputs( readable_form( i ), stderr );
+
+	    while ( ++i <= CSIZE && cset[i] )
+		;
+
+	    if ( i - 1 > start_char )
+		/* this was a run */
+		fprintf( stderr, "-%s", readable_form( i - 1 ) );
+
+	    putc( ' ', stderr );
+	    }
+	}
+
+    putc( ']', stderr );
     }
