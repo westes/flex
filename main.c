@@ -801,6 +801,10 @@ char **argv;
                     ddebug = true;
                     break;
 
+            case OPT_NO_DEBUG:
+                    ddebug = false;
+                    break;
+
             case OPT_FULL:
                     useecs = usemecs = false;
                     use_read = fulltbl = true;
@@ -829,6 +833,11 @@ char **argv;
 
             case OPT_MAIN:
                     buf_strdefine(&userdef_buf, "YY_MAIN", "1");
+                    do_yywrap = false;
+                    break;
+
+            case OPT_NO_MAIN:
+                    buf_strdefine(&userdef_buf, "YY_MAIN", "0");
                     break;
 
             case OPT_NO_LINE:
@@ -865,6 +874,10 @@ char **argv;
                     }
                     break;
 
+            case OPT_NO_REENTRANT:
+                    reentrant = reentrant_bison_pure = false;
+                    break;
+
             case OPT_SKEL:
                     skelname = arg;
                     break;
@@ -894,6 +907,10 @@ char **argv;
                             program_name, flex_version );
                     exit( 0 );
 
+            case OPT_WARN:
+                    nowarn = false;
+                    break;
+
             case OPT_NO_WARN:
                     nowarn = true;
                     break;
@@ -908,6 +925,10 @@ char **argv;
 
             case OPT_ALIGN:
                     long_align = true;
+                    break;
+
+            case OPT_NO_ALIGN:
+                    long_align = false;
                     break;
 
             case OPT_ALWAYS_INTERACTIVE:
@@ -930,13 +951,21 @@ char **argv;
                     useecs = true;
                     break;
 
+            case OPT_NO_ECS:
+                    useecs = false;
+                    break;
+
             case OPT_HEADER:
                     headerfilename = arg;
                     break;
 
             case OPT_META_ECS:
                     usemecs = true;
+                    break;
 
+            case OPT_NO_META_ECS:
+                    usemecs = false;
+                    break;
 
             case OPT_PREPROCDEFINE: 
                     {
@@ -971,6 +1000,10 @@ char **argv;
                     do_stdinit = true;
                     break;
 
+            case OPT_NO_STDINIT:
+                    do_stdinit = false;
+                    break;
+
             case OPT_YYCLASS:
                     yyclass = arg;
                     break;
@@ -979,8 +1012,96 @@ char **argv;
                     do_yylineno = true;
                     break;
 
+            case OPT_NO_YYLINENO:
+                    do_yylineno = false;
+                    break;
+
             case OPT_YYWRAP:
                     do_yywrap = true;
+                    break;
+
+            case OPT_NO_YYWRAP:
+                    do_yywrap = false;
+                    break;
+
+            case OPT_YYMORE:
+                    yymore_really_used = true;
+                    break;
+
+            case OPT_NO_YYMORE:
+                    yymore_really_used = false;
+                    break;
+
+            case OPT_REJECT:
+                    reject_really_used = true;
+                    break;
+
+            case OPT_NO_REJECT:
+                    reject_really_used = false;
+                    break;
+
+            case OPT_NO_YY_PUSH_STATE:
+                    buf_strdefine(&userdef_buf, "YY_NO_PUSH_STATE", "1");
+                    break;
+            case OPT_NO_YY_POP_STATE:
+                    buf_strdefine(&userdef_buf, "YY_NO_POP_STATE", "1");
+                    break;
+            case OPT_NO_YY_TOP_STATE:
+                    buf_strdefine(&userdef_buf, "YY_NO_TOP_STATE", "1");
+                    break;
+            case OPT_NO_UNPUT:
+                    buf_strdefine(&userdef_buf, "YY_NO_UNPUT", "1");
+                    break;
+            case OPT_NO_YY_SCAN_BUFFER:
+                    buf_strdefine(&userdef_buf, "YY_NO_SCAN_BUFFER", "1");
+                    break;
+            case OPT_NO_YY_SCAN_BYTES:
+                    buf_strdefine(&userdef_buf, "YY_NO_SCAN_BYTES", "1");
+                    break;
+            case OPT_NO_YY_SCAN_STRING:
+                    buf_strdefine(&userdef_buf, "YY_NO_SCAN_STRING", "1");
+                    break;
+            case OPT_NO_YYGET_EXTRA:
+                    buf_strdefine(&userdef_buf, "YY_NO_GET_EXTRA", "1");
+                    break;
+            case OPT_NO_YYSET_EXTRA:
+                    buf_strdefine(&userdef_buf, "YY_NO_SET_EXTRA", "1");
+                    break;
+            case OPT_NO_YYGET_LENG:
+                    buf_strdefine(&userdef_buf, "YY_NO_GET_LENG", "1");
+                    break;
+            case OPT_NO_YYGET_TEXT:
+                    buf_strdefine(&userdef_buf, "YY_NO_GET_TEXT", "1");
+                    break;
+            case OPT_NO_YYGET_LINENO:
+                    buf_strdefine(&userdef_buf, "YY_NO_GET_LINENO", "1");
+                    break;
+            case OPT_NO_YYSET_LINENO:
+                    buf_strdefine(&userdef_buf, "YY_NO_SET_LINENO", "1");
+                    break;
+            case OPT_NO_YYGET_IN:
+                    buf_strdefine(&userdef_buf, "YY_NO_GET_IN", "1");
+                    break;
+            case OPT_NO_YYSET_IN:
+                    buf_strdefine(&userdef_buf, "YY_NO_SET_IN", "1");
+                    break;
+            case OPT_NO_YYGET_OUT:
+                    buf_strdefine(&userdef_buf, "YY_NO_GET_OUT", "1");
+                    break;
+            case OPT_NO_YYSET_OUT:
+                    buf_strdefine(&userdef_buf, "YY_NO_SET_OUT", "1");
+                    break;
+            case OPT_NO_YYGET_LVAL:
+                    buf_strdefine(&userdef_buf, "YY_NO_GET_LVAL", "1");
+                    break;
+            case OPT_NO_YYSET_LVAL:
+                    buf_strdefine(&userdef_buf, "YY_NO_SET_LVAL", "1");
+                    break;
+            case OPT_NO_YYGET_LLOC:
+                    buf_strdefine(&userdef_buf, "YY_NO_GET_LLOC", "1");
+                    break;
+            case OPT_NO_YYSET_LLOC:
+                    buf_strdefine(&userdef_buf, "YY_NO_SET_LLOC", "1");
                     break;
 
             } /* switch */
@@ -1369,16 +1490,14 @@ _(
 
 "\n"
 "Generated code:\n"
-"  -+, --c++               generate C++ scanner class\n"
-"  -Dmacro[=defn]          #define macro defn  (default defn is '1')\n"
-"  -L, --noline            suppress #line directives in scanner\n"
-"  -P, --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
-"  -R, --reentrant         generate a reentrant C scanner\n"
-"  -Rb, --reentrant-bison  reentrant scanner for bison pure parser.\n"
-
-"\n"
-"Functions:\n"
-"  --yywrap                call yywrap on EOF\n"
+"  -+,  --c++               generate C++ scanner class\n"
+"  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
+"  -L,  --noline            suppress #line directives in scanner\n"
+"  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
+"  -R,  --reentrant         generate a reentrant C scanner\n"
+"  -Rb, --reentrant-bison   reentrant scanner for bison pure parser.\n"
+"       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+"       --noFUNCTION        do not generate a particular FUNCTION\n"
 
 "\n"
 "Miscellaneous:\n"
