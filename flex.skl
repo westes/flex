@@ -153,8 +153,12 @@ struct yy_buffer_state
 
     YY_CHAR *yy_ch_buf;		/* input buffer */
     YY_CHAR *yy_buf_pos;	/* current position in input buffer */
-    int yy_buf_size;		/* size of input buffer in bytes */
-    int yy_n_chars;		/* number of characters read into yy_ch_buf */
+
+    /* size of input buffer in bytes, not including room for EOB characters*/
+    int yy_buf_size;	
+
+    /* number of characters read into yy_ch_buf, not including EOB characters */
+    int yy_n_chars;
 
     int yy_eof_status;		/* whether we've seen an EOF on this buffer */
 #define EOF_NOT_SEEN 0
@@ -290,8 +294,13 @@ do_action:	/* this label is used only to access EOF actions */
 		/* undo the effects of YY_DO_BEFORE_ACTION */
 		*yy_cp = yy_hold_char;
 
-		if ( yy_c_buf_p <
-		     &yy_current_buffer->yy_ch_buf[yy_n_chars + 1] )
+		/* note that here we test for yy_c_buf_p "<=" to the position
+		 * of the first EOB in the buffer, since yy_c_buf_p will
+		 * already have been incremented past the NUL character
+		 * (since all states make transitions on EOB to the end-
+		 * of-buffer state).  Contrast this with the test in yyinput().
+		 */
+		if ( yy_c_buf_p <= &yy_current_buffer->yy_ch_buf[yy_n_chars] )
 		    /* this was really a NUL */
 		    {
 		    yy_state_type yy_next_state;
@@ -575,7 +584,11 @@ static int input()
 
     if ( *yy_c_buf_p == YY_END_OF_BUFFER_CHAR )
 	{
-	if ( yy_c_buf_p < &yy_current_buffer->yy_ch_buf[yy_n_chars + 1] )
+	/* yy_c_buf_p now points to the character we want to return.
+	 * If this occurs *before* the EOB characters, then it's a
+	 * valid NUL; if not, then we've hit the end of the buffer.
+	 */
+	if ( yy_c_buf_p < &yy_current_buffer->yy_ch_buf[yy_n_chars] )
 	    /* this was really a NUL */
 	    *yy_c_buf_p = '\0';
 
@@ -692,11 +705,12 @@ int size;
     if ( ! b )
 	YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 
+    b->yy_buf_size = size;
+
     /* yy_ch_buf has to be 2 characters longer than the size given because
      * we need to put in 2 end-of-buffer characters.
      */
-    b->yy_buf_size = size + 2;
-    b->yy_ch_buf = (YY_CHAR *) malloc( (unsigned) b->yy_buf_size );
+    b->yy_ch_buf = (YY_CHAR *) malloc( (unsigned) (b->yy_buf_size + 2) );
 
     if ( ! b->yy_ch_buf )
 	YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
