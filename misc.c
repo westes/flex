@@ -86,7 +86,7 @@ register char *str;
 	{
 	while ( *str )
 		{
-		if ( ! isascii( *str ) || ! islower( *str ) )
+		if ( ! isascii( (Char) *str ) || ! islower( *str ) )
 			return 0;
 		++str;
 		}
@@ -102,7 +102,7 @@ register char *str;
 	{
 	while ( *str )
 		{
-		if ( ! isascii( *str ) || ! isupper( (char) *str ) )
+		if ( ! isascii( (Char) *str ) || ! isupper( (char) *str ) )
 			return 0;
 		++str;
 		}
