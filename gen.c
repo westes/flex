@@ -1985,9 +1985,9 @@ void make_tables ()
 	indent_puts ("{");
 	indent_puts ("int yyl;");
 	do_indent ();
-	out_str ("for ( yyl = YY_G(%s); yyl < yyleng; ++yyl )\n",
-		 yymore_used ? (yytext_is_array ? "yy_prev_more_offset" :
-				"yy_more_len") : "0");
+	out_str ("for ( yyl = %s; yyl < yyleng; ++yyl )\n",
+		 yymore_used ? (yytext_is_array ? "YY_G(yy_prev_more_offset)" :
+				"(yy_more_len)") : "0");
 	indent_up ();
 	indent_puts ("if ( yytext[yyl] == '\\n' )");
 	indent_up ();
