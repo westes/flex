@@ -8,19 +8,6 @@
 
 #include <stdio.h>
 
-#ifdef __STDC__
-
-#ifdef __GNUC__
-void *malloc( unsigned );
-void free( void* );
-#else
-#include <stdlib.h>
-#endif
-
-#define YY_USE_PROTOS
-#define YY_USE_CONST
-#endif
-
 
 /* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
 #ifdef c_plusplus
@@ -32,10 +19,7 @@ void free( void* );
 
 #ifdef __cplusplus
 
-#ifndef __STDC__
 #include <stdlib.h>
-#endif
-
 #include <osfcn.h>
 
 /* use prototypes in function declarations */
@@ -44,7 +28,22 @@ void free( void* );
 /* the "const" storage-class-modifier is valid */
 #define YY_USE_CONST
 
-#endif
+#else	/* ! __cplusplus */
+
+#ifdef __STDC__
+
+#ifdef __GNUC__
+void *malloc( unsigned );
+void free( void* );
+#else
+#include <stdlib.h>
+#endif	/* __GNUC__ */
+
+#define YY_USE_PROTOS
+#define YY_USE_CONST
+
+#endif	/* __STDC__ */
+#endif	/* ! __cplusplus */
 
 
 #ifdef __TURBOC__
@@ -61,7 +60,10 @@ void free( void* );
 #define YY_PROTO(proto) proto
 #else
 #define YY_PROTO(proto) ()
-/* there's no standard place to get these definitions */
+/* we can't get here if it's an ANSI C compiler, or a C++ compiler,
+ * so it's got to be a K&R compiler, and therefore there's no standard
+ * place from which to include these definitions
+ */
 char *malloc();
 int free();
 int read();
