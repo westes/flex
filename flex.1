@@ -2459,7 +2459,7 @@ tokens, until a rule's action returns a value.
 In addition,
 .B yyFlexLexer
 defines the following protected virtual functions which you can redefine
-in derived classes to tailor the scanner's input and output:
+in derived classes to tailor the scanner:
 .TP
 .B
 virtual int LexerInput( char* buf, int max_size )
@@ -2489,6 +2489,13 @@ characters from the buffer
 .B buf,
 which, while NUL-terminated, may also contain "internal" NUL's if
 the scanner's rules can match text with NUL's in them.
+.TP
+.B
+virtual void LexerError( const char* msg )
+reports a fatal error message.  The default version of this function
+writes the message to the stream
+.B cerr
+and exits.
 .PP
 Note that a
 .B yyFlexLexer
@@ -2568,6 +2575,9 @@ Here is an example of a simple C++ scanner:
         return 0;
         }
 .fi
+IMPORTANT: the present form of the scanning class is
+.I experimental
+and may change considerably between major releases.
 .SH INCOMPATIBILITIES WITH LEX AND POSIX
 .I flex
 is a rewrite of the AT&T Unix
@@ -3010,14 +3020,17 @@ Juengst, Amir Katz, ken@ken.hilco.com, Kevin B. Kenny, Marq Kole, Ronald
 Lamprecht, Greg Lee, Craig Leres, John Levine, Mohamed el Lozy, Chris
 Metcalf, Luke Mewburn, Jim Meyering, G.T. Nicol, Landon Noll, Marc Nozell,
 Richard Ohnemus, Sven Panne, Roland Pesch, Walter Pelissero, Gaumond
-Pierre, Esmond Pitt, Jef Poskanzer, Joe Rahmeh, Kevin Rodgers, Jim
-Roskind, Doug Schmidt, Alex Siegel, Paul Stuart, Dave Tallman, Chris Thewalt,
+Pierre, Esmond Pitt, Jef Poskanzer, Joe Rahmeh, Frederic Raimbault,
+Rick Richardson,
+Kevin Rodgers, Jim Roskind,
+Doug Schmidt, Philippe Schnoebelen,
+Alex Siegel, Paul Stuart, Dave Tallman, Chris Thewalt,
 Paul Tuinenga, Gary Weik, Frank Whaley, Gerhard Wilhelms, Kent Williams, Ken
 Yap, Nathan Zelle, David Zuhn, and those whose names have slipped my marginal
 mail-archiving skills but whose contributions are appreciated all the
 same.
 .PP
-Thanks to Keith Bostic, Noah Friedman,
+Thanks to Keith Bostic, Jon Forrest, Noah Friedman,
 John Gilmore, Craig Leres, John Levine, Bob Mulcahy, G.T.
 Nicol, Francois Pinard, Rich Salz, and Richard Stallman for help with various
 distribution headaches.
