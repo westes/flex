@@ -5,6 +5,7 @@
  */
 
 #define FLEX_SCANNER
+#define YY_FLEX_VERSION 25
 
 %-
 #include <stdio.h>
