@@ -29,12 +29,7 @@
 
 ** make test suite more complete
 
-*** add a test for the --posix option %%
-
 * generic coding
-
-** pay attention to the POSIXLY_CORRECT variable (this is from the GNU
-   coding standards and is a good idea) %%
 
 ** move as much skeleton code as possible out of gen.c and into
   flex.skl
@@ -48,9 +43,6 @@
 **  * Complete the memory management api and documentation.
 
 *** create a uniform memory management API
-
-*** pass reentrant state to the memory management functions for
-   consistancy's sake %%
 
 ** figure out whether we want to add the capability to have
   auto-generated backout rules
