@@ -37,6 +37,13 @@ static char rcsid[] =
 
 #include "flexdef.h"
 
+
+/* declare functions that have forward references */
+
+int dupmachine PROTO((int));
+void mkxtion PROTO((int, int));
+
+
 /* add_accept - add an accepting state to a machine
  *
  * synopsis
@@ -46,8 +53,8 @@ static char rcsid[] =
  * accepting_number becomes mach's accepting number.
  */
 
-add_accept( mach, accepting_number )
-int mach;
+void add_accept( mach, accepting_number )
+int mach, accepting_number;
 
     {
     /* hang the accepting number off an epsilon state.  if it is associated
@@ -101,7 +108,7 @@ int singl, num;
  *    dumpnfa( state1 );
  */
 
-dumpnfa( state1 )
+void dumpnfa( state1 )
 int state1;
 
     {
@@ -191,6 +198,7 @@ int mach;
     return ( init );
     }
 
+
 /* finish_rule - finish up the processing for a rule
  *
  * synopsis
@@ -207,7 +215,7 @@ int mach;
  * context has variable length.
  */
 
-finish_rule( mach, variable_trail_rule, headcnt, trailcnt )
+void finish_rule( mach, variable_trail_rule, headcnt, trailcnt )
 int mach, variable_trail_rule, headcnt, trailcnt;
 
     {
@@ -318,7 +326,7 @@ int first, last;
  * The "beginning" states are the epsilon closure of the first state
  */
 
-mark_beginning_as_normal( mach )
+void mark_beginning_as_normal( mach )
 register int mach;
 
     {
@@ -666,7 +674,7 @@ int sym;
  *     stateto   - the state to which the transition is to be made
  */
 
-mkxtion( statefrom, stateto )
+void mkxtion( statefrom, stateto )
 int statefrom, stateto;
 
     {
@@ -694,7 +702,7 @@ int statefrom, stateto;
  * arrays (such as rule_type[]) are grown as needed.
  */
 
-new_rule()
+void new_rule()
 
     {
     if ( ++num_rules >= current_max_rules )

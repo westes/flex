@@ -37,6 +37,16 @@ static char rcsid[] =
 
 #include "flexdef.h"
 
+
+/* declarations for functions that have forward references */
+
+void mkentry PROTO((register int*, int, int, int, int));
+void mkprot PROTO((int[], int, int));
+void mktemplate PROTO((int[], int, int));
+void mv2front PROTO((int));
+int tbldiff PROTO((int[], int, int[]));
+
+
 /* bldtbl - build table entries for dfa state
  *
  * synopsis
@@ -72,7 +82,7 @@ static char rcsid[] =
  * cost only one difference.
  */
 
-bldtbl( state, statenum, totaltrans, comstate, comfreq )
+void bldtbl( state, statenum, totaltrans, comstate, comfreq )
 int state[], statenum, totaltrans, comstate, comfreq;
 
     {
@@ -218,7 +228,7 @@ int state[], statenum, totaltrans, comstate, comfreq;
  *  table entries made for them.
  */
 
-cmptmps()
+void cmptmps()
 
     {
     int tmpstorage[CSIZE + 1];
@@ -290,7 +300,7 @@ cmptmps()
 
 /* expand_nxt_chk - expand the next check arrays */
 
-expand_nxt_chk()
+void expand_nxt_chk()
 
     {
     register int old_max = current_max_xpairs;
@@ -424,7 +434,7 @@ int *state, numtrans;
  * own tbase/tdef tables.  They are shifted down to be contiguous
  * with the non-template entries during table generation.
  */
-inittbl()
+void inittbl()
 
     {
     register int i;
@@ -461,7 +471,7 @@ inittbl()
  *   mkdeftbl();
  */
 
-mkdeftbl()
+void mkdeftbl()
 
     {
     int i;
@@ -512,7 +522,7 @@ mkdeftbl()
  * state array.
  */
 
-mkentry( state, numchars, statenum, deflink, totaltrans )
+void mkentry( state, numchars, statenum, deflink, totaltrans )
 register int *state;
 int numchars, statenum, deflink, totaltrans;
 
@@ -645,7 +655,7 @@ int numchars, statenum, deflink, totaltrans;
  *   mk1tbl( state, sym, onenxt, onedef );
  */
 
-mk1tbl( state, sym, onenxt, onedef )
+void mk1tbl( state, sym, onenxt, onedef )
 int state, sym, onenxt, onedef;
 
     {
@@ -678,7 +688,7 @@ int state, sym, onenxt, onedef;
  *   mkprot( state, statenum, comstate );
  */
 
-mkprot( state, statenum, comstate )
+void mkprot( state, statenum, comstate )
 int state[], statenum, comstate;
 
     {
@@ -722,7 +732,7 @@ int state[], statenum, comstate;
  *   mktemplate( state, statenum, comstate, totaltrans );
  */
 
-mktemplate( state, statenum, comstate )
+void mktemplate( state, statenum, comstate )
 int state[], statenum, comstate;
 
     {
@@ -780,7 +790,7 @@ int state[], statenum, comstate;
  *   mv2front( qelm );
  */
 
-mv2front( qelm )
+void mv2front( qelm )
 int qelm;
 
     {
@@ -813,7 +823,7 @@ int qelm;
  * Transnum is the number of out-transitions for the state.
  */
 
-place_state( state, statenum, transnum )
+void place_state( state, statenum, transnum )
 int *state, statenum, transnum;
 
     {
@@ -859,7 +869,7 @@ int *state, statenum, transnum;
  * no room, we process the sucker right now.
  */
 
-stack1( statenum, sym, nextstate, deflink )
+void stack1( statenum, sym, nextstate, deflink )
 int statenum, sym, nextstate, deflink;
 
     {
