@@ -1,0 +1,17 @@
+Changes between beta-test release of Feb. '88 and initial release:
+
+	- many files renamed to remove "flex" suffix
+	- input() routine added to compressed and fast skeletons
+	- unput() routine added to compressed skeleton
+	- -d, -ce support for fast scanners
+	- symbol table extended to avoid ugly casts of ints <-> char *'s;
+	  this may relieve MS-DOS woes
+	- actions are now separated with YY_BREAK instead of simple "break"'s
+	- fixed bug causing core-dumps if skeleton file could not be opened
+	- fixed bugs in logic deciding which options cannot be intermixed
+	- initial start condition can now be referred to as "INITIAL"
+	- fixed bug which would incorrectly computer trailing context
+	  count for a pattern like "(foo){3}"; now this is considered
+	  "variable length", even though it isn't.
+	- block comments allowed between rules
+	- misc. typos corrected
