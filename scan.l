@@ -47,6 +47,8 @@ extern bool tablesverify, tablesext;
     do{ \
         if ( should_define ) \
             buf_m4_define( &m4defs_buf, def, NULL);\
+        else \
+            buf_m4_undefine( &m4defs_buf, def);\
     } while(0)
 
 #define MARK_END_OF_PROLOG mark_prolog();

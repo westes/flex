@@ -113,12 +113,27 @@ struct Buf *buf_m4_define (struct Buf *buf, const char* def, const char* val)
 {
     const char * fmt = "m4_define( [[%s]], [[%s]])m4_dnl\n";
     char * str;
-    int len;
 
     val = val?val:"";
     str = (char*)flex_alloc(strlen(fmt) + strlen(def) + strlen(val) + 2);
 
     sprintf(str, fmt, def, val);
+    buf_append(buf, &str, 1);
+}
+
+/** Pushes "m4_undefine([[def]])m4_dnl" to end of buffer.
+ * @param buf A buffer as a list of strings.
+ * @param def The m4 symbol to undefine.
+ * @return buf
+ */
+struct Buf *buf_m4_undefine (struct Buf *buf, const char* def)
+{
+    const char * fmt = "m4_undefine( [[%s]])m4_dnl\n";
+    char * str;
+
+    str = (char*)flex_alloc(strlen(fmt) + strlen(def) + 2);
+
+    sprintf(str, fmt, def);
     buf_append(buf, &str, 1);
 }
 
