@@ -643,6 +643,8 @@ Char array[];
 	{
 #ifdef __STDC__
 	case 'a': return ( '\a' );
+#else
+	case 'a': return ( '\007' );
 #endif
 	case 'b': return ( '\b' );
 	case 'f': return ( '\f' );
