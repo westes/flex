@@ -1,3 +1,27 @@
+Changes between 2.3 Patch #8 (21Feb93) and 2.3 Patch #7:
+
+	- Fixed bugs in dynamic memory allocation leading to grievous
+	  fencepost problems when generating large scanners.
+	- Fixed bug causing infinite loops on character classes with 8-bit
+	  characters in them.
+	- Fixed bug in matching repetitions with a lower bound of 0.
+	- Fixed bug in scanning NUL characters using an "interactive" scanner.
+	- Fixed bug in using yymore() at the end of a file.
+	- Fixed bug in misrecognizing rules with variable trailing context.
+	- Fixed bug compiling flex on Suns using gcc 2.
+	- Fixed bug in not recognizing that input files with the character
+	  ASCII 128 in them require the -8 flag.
+	- Fixed bug that could cause an infinite loop writing out
+	  error messages.
+	- Fixed bug in not recognizing old-style lex % declarations if
+	  followed by a tab instead of a space.
+	- Fixed potential crash when flex terminated early (usually due
+	  to a bad flag) and the -v flag had been given.
+	- Added some missing declarations of void functions.
+	- Changed to only use '\a' for __STDC__ compilers.
+	- Updated mailing addresses.
+
+
 Changes between 2.3 Patch #7 (28Mar91) and 2.3 Patch #6:
 
 	- Fixed out-of-bounds array access that caused bad tables
