@@ -479,7 +479,9 @@ static void yy_fatal_error YY_PARAMS(( yyconst char msg[] YY_PROTO_LAST_ARG ));
 %-
 #include <unistd.h>
 %+
+#ifdef HAVE_CUNISTD
 #include <cunistd>
+#endif
 %*
 #endif /* !YY_NO_UNISTD_H */
 
