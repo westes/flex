@@ -827,11 +827,10 @@ is declared as follows:
 
 .fi
 (If your environment supports function prototypes, then it will
-be "int yylex( void )".)  This definition may be changed by redefining
+be "int yylex( void )".)  This definition may be changed by defining
 the "YY_DECL" macro.  For example, you could use:
 .nf
 
-    #undef YY_DECL
     #define YY_DECL float lexscan( a, b ) float a, b;
 
 .fi
@@ -889,7 +888,7 @@ block-reads rather than simple
 .I getc()
 calls to read characters from
 .I yyin.
-The nature of how it gets its input can be controlled by redefining the
+The nature of how it gets its input can be controlled by defining the
 .B YY_INPUT
 macro.
 YY_INPUT's calling sequence is "YY_INPUT(buf,result,max_size)".  Its
@@ -904,12 +903,11 @@ number of characters read or the constant YY_NULL (0 on Unix systems)
 to indicate EOF.  The default YY_INPUT reads from the
 global file-pointer "yyin".
 .PP
-A sample redefinition of YY_INPUT (in the definitions
+A sample definition of YY_INPUT (in the definitions
 section of the input file):
 .nf
 
     %{
-    #undef YY_INPUT
     #define YY_INPUT(buf,result,max_size) \\
         { \\
         int c = getchar(); \\
@@ -1429,13 +1427,13 @@ An example:
 The macro
 .bd
 YY_USER_ACTION
-can be redefined to provide an action
+can be defined to provide an action
 which is always executed prior to the matched rule's action.  For example,
 it could be #define'd to call a routine to convert yytext to lower-case.
 .PP
 The macro
 .B YY_USER_INIT
-may be redefined to provide an action which is always executed before
+may be defined to provide an action which is always executed before
 the first scan (and before the scanner's internal initializations are done).
 For example, it could be used to call a routine to read
 in a data table or open a logging file.
@@ -2578,7 +2576,7 @@ processing is done.  A ``real'' end-of-file is returned by
 as
 .I EOF.
 .IP
-Input is instead controlled by redefining the
+Input is instead controlled by defining the
 .B YY_INPUT
 macro.
 .IP
@@ -2604,6 +2602,20 @@ such writes are automatically flushed since
 scanners use
 .B getchar()
 for their input.
+.IP
+You can make
+.I
+flex
+scanners use stdio by changing the definition of
+.B YY_INPUT
+to:
+.nf
+    #define YY_INPUT(buf,result,max_size) \\
+        if ( ((result = fread( (char *) buf, 1, max_size, \\
+                               yyin )) == 0) && \\
+             ferror( yyin ) ) \\
+                 YY_FATAL_ERROR( "fread() in flex scanner failed" );
+.fi
 .IP -
 .I flex
 scanners are not as reentrant as
@@ -2705,7 +2717,10 @@ After a call to
 .I yytext
 and
 .I yyleng
-are undefined until the next token is matched.  This is not the case with
+are undefined until the next token is matched, unless the scanner
+was built using
+.B %array.
+This is not the case with
 .I lex
 or the present POSIX draft.
 .IP -
@@ -2956,18 +2971,19 @@ Thanks to the many
 beta-testers, feedbackers, and contributors, especially Casey Leedom,
 Nelson H.F. Beebe, benson@odi.com, Peter A. Bigot, Keith Bostic, Frederic
 Brehm, Nick Christopher, Jason Coughlin, Bill Cox, Dave Curtis, Scott David
-Daniels, Mike Donahue, Chuck Doucette, Tom Epperly, Leo Eskin, Chris
-Faylor, Jon Forrest, Eric Goldman, Ulrich Grepel, Jan Hajic, Jarkko
-Hietaniemi, Eric Hughes, Ceriel Jacobs, Jeffrey R. Jones, Amir Katz,
-ken@ken.hilco.com, Kevin B. Kenny, Marq Kole, Ronald Lamprecht, Greg Lee,
-Craig Leres, John Levine, Mohamed el Lozy, Chris Metcalf, Luke Mewburn, Jim
-Meyering, Landon Noll, Marc Nozell, Richard Ohnemus, Sven Panne, Roland
-Pesch, Walter Pelissero, Gaumond Pierre, Francois Pinard, Esmond Pitt, Jef
-Poskanzer, Kevin Rodgers, Jim Roskind, Doug Schmidt, Alex Siegel, Paul
-Stuart, Dave Tallman, Paul Tuinenga, Gary Weik, Frank Whaley, Gerhard
-Wilhelms, Kent Williams, Ken Yap, David Zuhn, and those whose names have
-slipped my marginal mail-archiving skills but whose contributions are
-appreciated all the same.
+Daniels, Chris G. Demetriou, Mike Donahue, Chuck Doucette, Tom Epperly, Leo
+Eskin, Chris Faylor, Jon Forrest, Eric Goldman, Ulrich Grepel, Jan Hajic,
+Jarkko Hietaniemi, Eric Hughes, Ceriel Jacobs, Jeffrey R. Jones, Henry
+Juengst, Amir Katz, ken@ken.hilco.com, Kevin B. Kenny, Marq Kole, Ronald
+Lamprecht, Greg Lee, Craig Leres, John Levine, Mohamed el Lozy, Chris
+Metcalf, Luke Mewburn, Jim Meyering, G.T. Nicol, Landon Noll, Marc Nozell,
+Richard Ohnemus, Sven Panne, Roland Pesch, Walter Pelissero, Gaumond
+Pierre, Francois Pinard, Esmond Pitt, Jef Poskanzer, Kevin Rodgers, Jim
+Roskind, Doug Schmidt, Alex Siegel, Paul Stuart, Dave Tallman, Paul
+Tuinenga, Gary Weik, Frank Whaley, Gerhard Wilhelms, Kent Williams, Ken
+Yap, David Zuhn, and those whose names have slipped my marginal
+mail-archiving skills but whose contributions are appreciated all the
+same.
 .PP
 Thanks to Keith Bostic, John Gilmore, Craig Leres, Bob Mulcahy, G.T.
 Nicol, Rich Salz, and Richard Stallman for help with various
