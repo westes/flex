@@ -1959,6 +1959,18 @@ int yylex_destroy( yy_globals )
     {
     if( yy_globals )
         {
+
+            /* Destroy the current (main) buffer. */
+            yy_delete_buffer( YY_G(yy_current_buffer) YY_CALL_LAST_ARG );
+            YY_G(yy_current_buffer) = NULL;
+
+            /* Destroy the start condition stack. */
+            if( YY_G(yy_start_stack) ) {
+                yy_flex_free( YY_G(yy_start_stack) );
+                YY_G(yy_start_stack) = NULL;
+            }
+
+            /* Destroy the main struct. */
             yy_flex_free ( yy_globals YY_CALL_LAST_ARG );
         }
     return 0;
