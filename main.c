@@ -1019,10 +1019,7 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 
 	if ( ! do_yywrap )
 		{
-        if( reentrant )
-    		outn( "\n#define yywrap(YY_ONLY_ARG) 1" );
-        else
-            outn( "\n#define yywrap(n) 1" );
+        outn( "\n#define yywrap(n) 1" );
 		outn( "#define YY_SKIP_YYWRAP" );
 		}
 
