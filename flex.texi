@@ -55,6 +55,7 @@ manual includes both tutorial and reference sections.
 * diagnostics::                 
 * limitations::                 
 * bibliography::                
+* reporting bugs::              
 @end menu
 
 @node introduction, simple examples, Top, Top
@@ -642,7 +643,7 @@ Once the match is determined, the text corresponding to the match
 (called the @dfn{token}) is made available in the global character
 pointer @var{yytext}, and its length in the global integer @var{yyleng}.
 The @dfn{action} corresponding to the matched pattern is then executed
-(@pxref{Actions}), and then the remaining input is scanned for another
+(@pxref{actions}), and then the remaining input is scanned for another
 match.
 
 If no match is found, then the
@@ -671,7 +672,7 @@ in which case @var{yytext} will be an array.  The advantage of using
 @code{%pointer} is substantially faster scanning and no buffer overflow
 when matching very large tokens (unless you run out of dynamic memory).
 The disadvantage is that you are restricted in how your actions can
-modify @var{yytext} (@pxref{Actions}), and calls to the @code{unput()}
+modify @var{yytext} (@pxref{actions}), and calls to the @code{unput()}
 function destroys the present contents of @var{yytext}, which can be a
 considerable porting headache when moving between different @code{lex}
 versions.
@@ -2071,7 +2072,7 @@ given in @ref{reporting bugs}).
 instructs flex to generate a reentrant C scanner.  The generated scanner
 may safely be used in a multi-threaded environment. The API for a
 reentrant scanner is different than for a non-reentrant scanner
-@pxref{Reentrant C Scanners}).  Because of the API difference between
+@pxref{reentrant}).  Because of the API difference between
 reentrant and non-reentrant @code{flex} scanners, non-reentrant flex
 code must be modified before it is suitable for use with this option.
 This option is not compatible with the @samp{-+} option.
@@ -3128,8 +3129,18 @@ First, an example of a reentrant scanner:
 Here are the things you need to do or know to use the reentrant C API of
 @code{flex}.
 
-@itemize
-@item
+@menu
+* specify reentrant::           
+* extra reentrant argument::    
+* global replacement::          
+* init and destroy and destroy::  
+* accessor methods::            
+* extra data::                  
+@end menu
+
+@node specify reentrant, extra reentrant argument, reentrant detail, reentrant detail
+@subsection Declaring a Scanner as Reentrant
+
  %option reentrant
 must be specified.
 
@@ -3140,7 +3151,9 @@ complaining. You may explicitly specify @code{%option noreentrant}, if
 you do @emph{not} want a reentrant scanner, although it is not
 necessary. The default is to generate a non-reentrant scanner.
 
-@item
+@node extra reentrant argument, global replacement, specify reentrant, reentrant detail
+@subsection The Extra Argument
+
 All functions take one additional argument: @var{yy_globals}.
 
 Notice that the calls to @code{yy_push_state} and @code{yy_pop_state}
@@ -3158,39 +3171,27 @@ non-reentrant scanner.  Here are the declarations of
 Notice that the argument @var{yy_globals} appears in the declaration of
 both functions.  In fact, all @code{flex} functions in a reentrant
 scanner have this additional argument.  It is always the last argument
-in the argument list, it is always of type @b{void *}, and it is always
-named @var{yy_globals}.  As you may have guessed, @var{yy_globals} is a
-pointer to an opaque data structure encapsulating the current state of
-the scanner.  For a list of function declarations, see @ref{reentrant
-functions}. Note that preprocessor macros, such as @code{BEGIN},
-@b{ECHO}, and @code{REJECT}, do not take this additional argument.
+in the argument list, it is always of type @code{void *}, and it is
+always named @var{yy_globals}.  As you may have guessed,
+@var{yy_globals} is a pointer to an opaque data structure encapsulating
+the current state of the scanner.  For a list of function declarations,
+see @ref{reentrant functions}. Note that preprocessor macros, such as
+@code{BEGIN}, @code{ECHO}, and @code{REJECT}, do not take this
+additional argument.
 
-@b{3}.
-All global variables are replaced by their 
-@b{_r}
-equivalents.
+@node global replacement, init and destroy and destroy, extra reentrant argument, reentrant detail
+@subsection Global Variables Replaced
 
-Notice in the above example that 
-@b{yyout}
-and 
-@var{yytext}
-are replaced by 
-@b{yyout_r}
-and 
-@b{yytext_r}.
-These
-are macros that will expand to their equivalent lvalue.
-All of the familiar @code{flex} globals have been replaced by their 
-@b{_r}
-equivalents. Wherever you would
-normally use 
-@var{yytext}
-in actions, you must use 
-@b{yytext_r}
-instead. This rule
-applies to all @code{flex} variables. The following is an example that uses the 
-@b{_r}
-macros:
+All global variables are replaced by their @code{_r} equivalents.
+
+Notice in the above example that @var{yyout} and @var{yytext} are
+replaced by @var{yyout_r} and @var{yytext_r}.  These are macros that
+will expand to their equivalent lvalue.  All of the familiar @code{flex}
+globals have been replaced by their @code{_r} equivalents. Wherever you
+would normally use @var{yytext} in actions, you must use @var{yytext_r}
+instead. This rule applies to all @code{flex} variables. The following
+is an example that uses the @code{_r} macros:
+
 @example
 @verbatim
     %%
@@ -3205,18 +3206,20 @@ macros:
 @end example
 
 One important thing to remember about
-@b{yytext_r}
+@var{yytext_r}
 and friends is that
-@b{yytext_r}
+@var{yytext_r}
 is not a global variable in a reentrant
 scanner, you can not access it directly from outside an action or from
 other functions. You must use the accessor method 
-@b{yyget_text}
+@code{yyget_text}
 to accomplish this. (See below).
 
-@b{4}.
-@b{yylex_init} and}@b{yylex_destroy} must be called before and after}
-@b{yylex}, respectively}.
+@node init and destroy and destroy, accessor methods, global replacement, reentrant detail
+@subsection init and destroy functions
+
+@code{yylex_init} and @code{yylex_destroy} must be called before and
+after @code{yylex}, respectively.
 
 @example
 @verbatim
@@ -3226,64 +3229,40 @@ to accomplish this. (See below).
 @end verbatim
 @end example
 
-The function 
-@b{yylex_init}
-must be called before calling any other function. The
-argument to 
-@b{yylex_init}
-is the address of an uninitialized pointer to be filled
-in by @code{flex}. The contents of 
-@emph{ptr_yy_globals}
-need not be initialized, since @code{flex}
-will overwrite it anyway. The value stored in 
-@emph{ptr_yy_globals}
-should thereafter be passed
-to 
-@b{yylex}
-and 
-@b{yylex_destroy}.
-Flex does not save the argument passed to 
-@b{yylex_init},
-so it is safe to pass the address of a local pointer to 
-@b{yylex_init}.
-The function 
-@b{yylex}
-should be familiar to you by now. The reentrant version
+The function @code{yylex_init} must be called before calling any other
+function. The argument to @code{yylex_init} is the address of an
+uninitialized pointer to be filled in by @code{flex}. The contents of
+@var{ptr_yy_globals} need not be initialized, since @code{flex} will
+overwrite it anyway. The value stored in @var{ptr_yy_globals} should
+thereafter be passed to @code{yylex()} and @b{yylex_destroy()}.  Flex
+does not save the argument passed to @code{yylex_init}, so it is safe to
+pass the address of a local pointer to @code{yylex_init}.  The function
+@code{yylex} should be familiar to you by now. The reentrant version
 takes one argument, which is the value returned (via an argument) by
-@b{yylex_init}.
-Otherwise, it behaves the same as the non-reentrant version of
-@b{yylex}.
-The function 
-@b{yylex_destroy}
-should be called to free resources used by the
-scanner. After 
-@b{yylex_destroy}
-is called, the contents of 
-@emph{yyglobals}
-should not be
-used.
-Of course, there is no need to destroy a scanner if you plan to reuse it. 
-A @code{flex} scanner (both reentrant and non-reentrant) may be restarted by calling
-@b{yyrestart}.
+@code{yylex_init}.  Otherwise, it behaves the same as the non-reentrant
+version of @code{yylex}.  The function @code{yylex_destroy} should be
+called to free resources used by the scanner. After @code{yylex_destroy}
+is called, the contents of @var{yyglobals} should not be used.  Of
+course, there is no need to destroy a scanner if you plan to reuse it.
+A @code{flex} scanner (both reentrant and non-reentrant) may be
+restarted by calling @code{yyrestart}.
 
-@b{5}.
-Accessor methods (get/set functions) provide access to common @code{flex} variables.
+@node accessor methods, extra data, init and destroy and destroy, reentrant detail
+@subsection Accessing Variables with Reentrant Scanners
 
-Many scanners that you build will be part of a larger project. Portions of your
-project will need access to @code{flex} values, such as 
-@var{yytext}.
-In a non-reentrant
-scanner, these values are global, so there is no problem. However, in a
-reentrant scanner, there are no global @code{flex} values. You can not access them
-directly.
-Instead, you must access @code{flex} values using accessor methods (get/set
-functions). Each accessor method is named 
-@b{yyget_NAME}
-or 
-@b{yyset_NAME},
-where 
-@b{NAME}
-is the name of the @code{flex} variable you want. For example:
+Accessor methods (get/set functions) provide access to common
+@code{flex} variables.
+
+Many scanners that you build will be part of a larger project. Portions
+of your project will need access to @code{flex} values, such as
+@var{yytext}.  In a non-reentrant scanner, these values are global, so
+there is no problem. However, in a reentrant scanner, there are no
+global @code{flex} values. You can not access them directly.  Instead,
+you must access @code{flex} values using accessor methods (get/set
+functions). Each accessor method is named @code{yyget_NAME} or
+@code{yyset_NAME}, where @code{NAME} is the name of the @code{flex}
+variable you want. For example:
+
 @example
 @verbatim
     /* Set the last character of yytext to NULL. */
@@ -3296,6 +3275,7 @@ is the name of the @code{flex} variable you want. For example:
 @end example
 
 The above code may be called from within an action like this:
+
 @example
 @verbatim
     %%
@@ -3303,9 +3283,10 @@ The above code may be called from within an action like this:
 @end verbatim
 @end example
 
-@b{6}.
-User-specific data can be stored in 
-@emph{yyextra_r}.
+@node extra data,  , accessor methods, reentrant detail
+@subsection Extra Data
+
+User-specific data can be stored in @var{yyextra_r}.
 
 In a reentrant scanner, it is unwise to use global variables to
 communicate with or maintain state between different pieces of your program.
@@ -3315,14 +3296,15 @@ Likewise, you may need to pass information to your scanner
 (e.g., open file descriptors, or database connections).
 In a non-reentrant scanner, the only way to do this would be through the
 use of global variables.
-Flex allows you to store arbitrary, "extra" data in a scanner.
+@code{Flex} allows you to store arbitrary, ``extra'' data in a scanner.
 This data is accessible through the accessor methods
-@b{yyget_extra}
+@code{yyget_extra}
 and
-@b{yyset_extra}
+@code{yyset_extra}
 from outside the scanner, and through the shortcut macro
-@b{yyextra_r}
-from within the scanner itself. They are defined as
+@code{yyextra_r}
+from within the scanner itself. They are defined as follows:
+
 @example
 @verbatim
     #define YY_EXTRA_TYPE  void*
@@ -3331,24 +3313,18 @@ from within the scanner itself. They are defined as
 @end verbatim
 @end example
 
-By default, 
-@b{YY_EXTRA_TYPE}
-is defined as type
-@b{void *}.
-You will have to cast 
-@b{yyextra_r}
-and the return value from
-@b{yyget_extra}
-to the appropriate value each time you access the extra data.
-To avoid casting, you may override the default type by defining
-@b{YY_EXTRA_TYPE}
-in section 1 of your scanner:
+By default, @code{YY_EXTRA_TYPE} is defined as type @code{void *}.  You
+will have to cast @code{yyextra_r} and the return value from
+@code{yyget_extra} to the appropriate value each time you access the
+extra data.  To avoid casting, you may override the default type by
+defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
+
+@example
 @verbatim
-    
     /* An example of overriding YY_EXTRA_TYPE. */
     %{    
-    #include sys/stat.h>
-    #include unistd.h>
+    #include <sys/stat.h>
+    #include <unistd.h>
     #define YY_EXTRA_TYPE  struct stat*
     %}
     %option reentrant
@@ -3377,49 +3353,24 @@ in section 1 of your scanner:
 @section REENTRANT C SCANNERS WITH BISON PURE PARSERS
 
 This section describes the @code{flex} features useful when integrating
-@code{flex}
-with 
-@code{bison}.
-Skip this section if you are not using
-@code{bison}
-with your scanner.
-Here we discuss only the @code{flex} half of the @code{flex}/bison pair.
-We do not discuss bison in any detail.
-For more information about generating pure bison parsers, see @ref{Top, , , bison, The GNU Bison Manual}
-A bison-compatible scanner is generated by declaring 
-@samp{%option reentrant-bison}
-or by supplying
-@samp{-Rb}
-when invoking @code{flex}.
-This instructs @code{flex} that the macros
-@code{yylval_r}
-and
-@code{yylloc_r}
-may be used. The data types for 
-@code{yylval_r}
-and
-@code{yylloc_r},
-(}@b{YYSTYPE}
-and
-@b{YYLTYPE}{,
-are typically defined in a header file, included in section 1 of
-the @code{flex} input file. 
-@code{%option reentrant-bison}
-implies
-@code{%option reentrant}.
-If
-@code{%option reentrant-bison}
-is specified, @code{flex} provides support for the functions
-@b{yyget_lval},
-@b{yyset_lval},
-@b{yyget_lloc},
-and
-@b{yyset_lloc},
-defined below, and the corresponding macros
-@b{yylval_r}
-and
-@b{yylloc_r},
-for use within actions.
+@code{flex} with @code{bison}.  Skip this section if you are not using
+@code{bison} with your scanner.  Here we discuss only the @code{flex}
+half of the @code{flex} and @code{bison} pair.  We do not discuss
+@code{bison} in any detail.  For more information about generating pure
+@code{bison} parsers, see @ref{Top, , , bison, The GNU Bison Manual} A
+@code{bison}-compatible scanner is generated by declaring @samp{%option
+reentrant-bison} or by supplying @samp{-Rb} when invoking @code{flex}
+from the command line.  This instructs @code{flex} that the macros
+@code{yylval_r} and @code{yylloc_r} may be used. The data types for
+@code{yylval_r} and @code{yylloc_r}, (@code{YYSTYPE} and @code{YYLTYPE},
+are typically defined in a header file, included in section 1 of the
+@code{flex} input file.  @code{%option reentrant-bison} implies
+@code{%option reentrant}.  If @code{%option reentrant-bison} is
+specified, @code{flex} provides support for the functions
+@code{yyget_lval}, @code{yyset_lval}, @code{yyget_lloc}, and
+@code{yyset_lloc}, defined below, and the corresponding macros
+@code{yylval_r} and @code{yylloc_r}, for use within actions.
+
 @example
 @verbatim
     YYSTYPE * yyget_lval ( void * scanner ) ;
@@ -3430,25 +3381,22 @@ for use within actions.
 @end example
 
 Accordingly, the declaration of yylex becomes one of the following:
-@c .ni
+
+@example
+@verbatim
       int yylex ( YYSTYPE * lvalp, void * scanner );
       int yylex ( YYSTYPE * lvalp, YYLTYPE * llocp, void * scanner );
 @end verbatim
 @end example
 
-Note that the macros
-@b{yylval_r}
-and
-@b{yylloc_r}
-evaluate to pointers.
-Support for yylloc is optional in bison, so it is optional
-in @code{flex} as well. This support is automatically handled
-by @code{flex}.
-Specifically, support for yyloc is only present in a @code{flex} scanner if the preprocessor
-symbol
-@b{YYLTYPE}
-is defined.
-The following is an example of a @code{flex} scanner that is bison-compatible.
+Note that the macros @code{yylval_r} and @code{yylloc_r} evaluate to
+pointers.  Support for @code{yylloc} is optional in @code{bison}, so it
+is optional in @code{flex} as well. This support is automatically
+handled by @code{flex}.  Specifically, support for @code{yyloc} is only
+present in a @code{flex} scanner if the preprocessor symbol
+@code{YYLTYPE} is defined.  The following is an example of a @code{flex}
+scanner that is @code{bison}-compatible.
+
 @example
 @verbatim
     /* Scanner for "C" assignment statements... sort of. */
@@ -3464,17 +3412,14 @@ The following is an example of a @code{flex} scanner that is bison-compatible.
     "="|";"       { return yytext_r[0];}
     .  {}
     %
-    
-@end verbatim
+@end vernbatim
 @end example
 
 As you can see, there really is no magic here. We just use
-@b{yylval_r}
-as we would any other variable. The data type of 
-@b{yylval_r}
-is generated by bison, and included in the file
-@emph{y.tab.h}.
-Here is the corresponding bison parser:
+@code{yylval_r} as we would any other variable. The data type of
+@code{yylval_r} is generated by @code{bison}, and included in the file
+@file{y.tab.h}.  Here is the corresponding @code{bison} parser:
+
 @example
 @verbatim
     /* Parser to convert "C" assignments to lisp. */
@@ -3488,8 +3433,8 @@ Here is the corresponding bison parser:
         int num;
         char* str;
    }
-    %token str> STRING
-    %token num> NUMBER
+    %token <str> STRING
+    %token <num> NUMBER 
     %%
     assignment:
         STRING '=' NUMBER ';' {
@@ -3498,12 +3443,12 @@ Here is the corresponding bison parser:
     ;
 @end verbatim
 @end example
-@menu
-* reentrant functions::         
-@end menu
+
 @node reentrant functions,  , bison pure, reentrant
 @section FUNCTIONS AND MACROS AVAILABLE IN REENTRANT C SCANNERS
-Functions available in a reentrant scanner:
+
+The ffollowing Functions are available in a reentrant scanner:
+
 @example
 @verbatim
     char *yyget_text ( void * scanner );
@@ -3518,11 +3463,12 @@ Functions available in a reentrant scanner:
     void yyset_extra ( YY_EXTRA_TYPE user_defined , void * scanner );
 @end verbatim
 @end example
-@itemize
-@item
--- There are no "set" functions for yytext_r and yyleng_r. This is intentional.
-@end itemize
-Macro shortcuts available in actions in a reentrant scanner:
+
+There are no ``set'' functions for yytext_r and yyleng_r. This is intentional.
+
+The following Macro shortcuts are available in actions in a reentrant
+scanner:
+
 @example
 @verbatim
     yytext_r
@@ -3533,17 +3479,15 @@ Macro shortcuts available in actions in a reentrant scanner:
     yyextra_r
 @end verbatim
 @end example
-@itemize
-@item
--- In a reentrant C scanner, support for yylineno_r is always present
-(i.e., you may access yylineno_r), but the value is never modified by @code{flex} unless
-@code{%option yylineno}
-is enabled. This is to allow the user to maintain the line count herself.
-@end itemize
-Additional functions and macros made available when
-@code{%option reentrant-bison}
-(}@b{-Rb})}
-is specified:
+
+In a reentrant C scanner, support for yylineno_r is always present
+(i.e., you may access yylineno_r), but the value is never modified by
+@code{flex} unless @code{%option yylineno} is enabled. This is to allow
+the user to maintain the line count independently of @code{flex}.
+
+The following functions and macros are made available when @code{%option
+reentrant-bison} (@samp{-Rb}) is specified:
+
 @example
 @verbatim
     YYSTYPE * yyget_lval ( void * scanner );
@@ -3554,143 +3498,109 @@ is specified:
     yylloc_r
 @end verbatim
 @end example
-@itemize
-@item
--- Support for yylloc is dependent upon the presence of the preprocessor
-symbol
-@b{YYLTYPE}.
-Support for yylval relies on the type
-@b{YYSTYPE}
-to be defined. Typically, these definitions are generated by bison, in a .h file,
-and are included in section 1 of the @code{flex} input.
-@end itemize
+
+Support for yylloc is dependent upon the presence of the preprocessor
+symbol @code{YYLTYPE}.  Support for yylval relies on the type
+@code{YYSTYPE} to be defined. Typically, these definitions are generated
+by @code{bison}, in a .h file, and are included in section 1 of the
+@code{flex} input.
 
 @node lex and posix, diagnostics, reentrant, Top
 @chapter INCOMPATIBILITIES WITH LEX AND POSIX
-@code{flex}
-is a rewrite of the AT&T Unix
-@emph{lex}
-tool (the two implementations do not share any code, though),
-with some extensions and incompatibilities, both of which
-are of concern to those who wish to write scanners acceptable
-to either implementation.  @code{flex} is fully compliant with the POSIX
-@emph{lex}
-specification, except that when using
-@code{%pointer}
-(the default), a call to
-@code{unput()}
-destroys the contents of
-@var{yytext},
-which is counter to the POSIX specification.
-In this section we discuss all of the known areas of incompatibility
-between @code{flex}, AT&T lex, and the POSIX specification.
-@emph{flex's}
-@samp{-l}
-option turns on maximum compatibility with the original AT&T
-@emph{lex}
-implementation, at the cost of a major loss in the generated scanner's
-performance.  We note below which incompatibilities can be overcome
-using the
-@samp{-l}
-option.
-@code{flex}
-is fully compatible with
-@emph{lex}
-with the following exceptions:
+
+@code{flex} is a rewrite of the AT&T Unix @emph{lex} tool (the two
+implementations do not share any code, though), with some extensions and
+incompatibilities, both of which are of concern to those who wish to
+write scanners acceptable to both implementations.  @code{flex} is fully
+compliant with the POSIX @code{lex} specification, except that when
+using @code{%pointer} (the default), a call to @code{unput()} destroys
+the contents of @var{yytext}, which is counter to the POSIX
+specification.  In this section we discuss all of the known areas of
+incompatibility between @code{flex}, AT&T @code{lex}, and the POSIX
+specification.  @code{flex}'s @samp{-l} option turns on maximum
+compatibility with the original AT&T @code{lex} implementation, at the
+cost of a major loss in the generated scanner's performance.  We note
+below which incompatibilities can be overcome using the @samp{-l}
+option.  @code{flex} is fully compatible with @code{lex} with the
+following exceptions:
+
 @itemize
 @item 
-The undocumented
-@emph{lex}
-scanner internal variable
-@var{yylineno}
-is not supported unless
-@samp{-l}
-or
-@code{%option yylineno}
-is used.
+The undocumented @code{lex} scanner internal variable @var{yylineno} is
+not supported unless @samp{-l} or @code{%option yylineno} is used.
+
 @item
-@code{yylineno}
-should be maintained on a per-buffer basis, rather than a per-scanner
-(single global variable) basis.
+@code{yylineno} should be maintained on a per-buffer basis, rather than
+a per-scanner (single global variable) basis.
+
 @item
-@code{yylineno}
-is not part of the POSIX specification.
+@code{yylineno} is not part of the POSIX specification.
+
 @item 
-The
-@code{input()}
-routine is not redefinable, though it may be called to read characters
-following whatever has been matched by a rule.  If
-@code{input()}
-encounters an end-of-file the normal
-@code{yywrap()}
+The @code{input()} routine is not redefinable, though it may be called
+to read characters following whatever has been matched by a rule.  If
+@code{input()} encounters an end-of-file the normal @code{yywrap()}
 processing is done.  A ``real'' end-of-file is returned by
-@code{input()}
-as
-@emph{EOF}.
+@code{input()} as @code{EOF}.
+
 @item
-Input is instead controlled by defining the
-@code{YY_INPUT()}
-macro.
+Input is instead controlled by defining the @code{YY_INPUT()} macro.
+
 @item
-The
-@code{flex}
-restriction that
-@code{input()}
-cannot be redefined is in accordance with the POSIX specification,
-which simply does not specify any way of controlling the
-scanner's input other than by making an initial assignment to
-@file{yyin}.
+The @code{flex} restriction that @code{input()} cannot be redefined is
+in accordance with the POSIX specification, which simply does not
+specify any way of controlling the scanner's input other than by making
+an initial assignment to @file{yyin}.
+
 @item 
-The
-@code{unput()}
-routine is not redefinable.  This restriction is in accordance with POSIX.
+The @code{unput()} routine is not redefinable.  This restriction is in
+accordance with POSIX.
+
 @item 
-@code{flex}
-scanners are not as reentrant as
-@emph{lex}
-scanners.  In particular, if you have an interactive scanner and
-an interrupt handler which long-jumps out of the scanner, and
-the scanner is subsequently called again, you may get the following
-message:
+@code{flex} scanners are not as reentrant as @code{lex} scanners.  In
+particular, if you have an interactive scanner and an interrupt handler
+which long-jumps out of the scanner, and the scanner is subsequently
+called again, you may get the following message:
+
 @example
 @verbatim
     fatal @code{flex} scanner internal error--end of buffer missed
 @end verbatim
 @end example
-To reenter the scanner, first use
+
+To reenter the scanner, first use:
+
 @example
 @verbatim
     yyrestart( yyin );
 @end verbatim
 @end example
+
 Note that this call will throw away any buffered input; usually this
-isn't a problem with an interactive scanner.
+isn't a problem with an interactive scanner. @xref{reentrant}, for
+@code{flex}'s reentrant API.
+
 @item
 Also note that @code{flex} C++ scanner classes
 @emph{are}
 reentrant, so if using C++ is an option for you, you should use
-them instead.  See "Generating C++ Scanners" above for details.
+them instead.  @xref{cxx}, and @ref{reentrant}  for details.
+
 @item 
-@b{output()}
-is not supported.
-Output from the
-@b{ECHO}
-macro is done to the file-pointer
-@emph{yyout}
-(default
-@emph{stdout)}.
+@code{output()} is not supported.  Output from the @b{ECHO} macro is
+done to the file-pointer @var{yyout} (default @file{stdout)}.
+
 @item
-@b{output()}
-is not part of the POSIX specification.
+@code{output()} is not part of the POSIX specification.
+
 @item 
-@emph{lex}
-does not support exclusive start conditions (%x), though they
+@code{lex} does not support exclusive start conditions (%x), though they
 are in the POSIX specification.
+
 @item 
-When definitions are expanded,
-@code{flex}
-encloses them in parentheses.
-With lex, the following:
+When definitions are expanded, @code{flex} encloses them in parentheses.
+With @code{lex}, the following:
+
 @example
 @verbatim
     NAME    [A-Z][A-Z0-9]*
@@ -3699,122 +3609,81 @@ With lex, the following:
     %%
 @end verbatim
 @end example
-will not match the string "foo" because when the macro
-is expanded the rule is equivalent to "foo[A-Z][A-Z0-9]*?"
-and the precedence is such that the '?' is associated with
-"[A-Z0-9]*".  With
-@code{flex},
-the rule will be expanded to
-"foo([A-Z][A-Z0-9]*)?" and so the string "foo" will match.
+
+will not match the string @samp{foo} because when the macro is expanded
+the rule is equivalent to @samp{foo[A-Z][A-Z0-9]*?}  and the precedence
+is such that the @samp{?} is associated with @samp{[A-Z0-9]*}.  With
+@code{flex}, the rule will be expanded to @samp{foo([A-Z][A-Z0-9]*)?}
+and so the string @samp{foo} will match.
+
 @item
-Note that if the definition begins with
-@b{^}
-or ends with
-@b{$}
-then it is
-@emph{not}
-expanded with parentheses, to allow these operators to appear in
-definitions without losing their special meanings.  But the
-@b{s>, /},
-and
-@b{EOF>>}
-operators cannot be used in a
-@code{flex}
-definition.
+Note that if the definition begins with @samp{^} or ends with @samp{$}
+then it is @emph{not} expanded with parentheses, to allow these
+operators to appear in definitions without losing their special
+meanings.  But the @samp{<s>}, @samp{/}, and @code{<<EOF>>} operators
+cannot be used in a @code{flex} definition.
+
 @item
-Using
-@samp{-l}
-results in the
-@emph{lex}
-behavior of no parentheses around the definition.
+Using @samp{-l} results in the @code{lex} behavior of no parentheses
+around the definition.
+
 @item
 The POSIX specification is that the definition be enclosed in parentheses.
+
 @item 
-Some implementations of
-@emph{lex}
-allow a rule's action to begin on a separate line, if the rule's pattern
-has trailing whitespace:
+Some implementations of @code{lex} allow a rule's action to begin on a
+separate line, if the rule's pattern has trailing whitespace:
+
 @example
 @verbatim
     %%
-    foo|barspace here>
+    foo|bar<space here>
       { foobar_action();}
 @end verbatim
 @end example
-@code{flex}
-does not support this feature.
+
+@code{flex} does not support this feature.
+
 @item 
-The
-@emph{lex}
-@b{%r}
-(generate a Ratfor scanner) option is not supported.  It is not part
-of the POSIX specification.
+The @code{lex} @code{%r} (generate a Ratfor scanner) option is not
+supported.  It is not part of the POSIX specification.
+
 @item 
-After a call to
-@code{unput()},
-@emph{yytext}
-is undefined until the next token is matched, unless the scanner
-was built using
-@code{%array}.
-This is not the case with
-@emph{lex}
-or the POSIX specification.  The
-@samp{-l}
-option does away with this incompatibility.
+After a call to @code{unput()}, @emph{yytext} is undefined until the
+next token is matched, unless the scanner was built using @code{%array}.
+This is not the case with @code{lex} or the POSIX specification.  The
+@samp{-l} option does away with this incompatibility.
+
 @item 
-The precedence of the
-\bf
-(numeric range) operator is different.
-@emph{lex}
-interprets "abc{1,3}" as "match one, two, or
-three occurrences of 'abc'", whereas
-@code{flex}
-interprets it as "match 'ab'
-followed by one, two, or three occurrences of 'c'".  The latter is
-in agreement with the POSIX specification.
+The precedence of the @samp{@{,@}} (numeric range) operator is
+different.  @code{lex} interprets @samp{abc@{1,3@}} as match one, two,
+or three occurrences of @samp{abc}'', whereas @code{flex} interprets it
+as ``match @samp{ab} followed by one, two, or three occurrences of
+@samp{c}''.  The latter is in agreement with the POSIX specification.
+
 @item 
-The precedence of the
-@b{^}
-operator is different.
-@emph{lex}
-interprets @samp{^foo|bar} as "match either 'foo' at the beginning of a line,
-or 'bar' anywhere", whereas
-@code{flex}
-interprets it as "match either 'foo' or 'bar' if they come at the beginning
-of a line".  The latter is in agreement with the POSIX specification.
+The precedence of the @samp{^} operator is different.  @code{lex}
+interprets @samp{^foo|bar} as ``match either 'foo' at the beginning of a
+line, or 'bar' anywhere'', whereas @code{flex} interprets it as ``match
+either @samp{foo} or @samp{bar} if they come at the beginning of a
+line''.  The latter is in agreement with the POSIX specification.
+
 @item 
-The special table-size declarations such as
-@b{%a}
-supported by
-@emph{lex}
-are not required by
-@code{flex}
-scanners;
-@code{flex}
+The special table-size declarations such as @code{%a} supported by
+@code{lex} are not required by @code{flex} scanners..  @code{flex}
 ignores them.
 @item 
-The name
-@c .bd
-FLEX_SCANNER
-is #define'd so scanners may be written for use with either
-@code{flex}
-or
-@emph{lex}.
-Scanners also include
-@b{YY_FLEX_MAJOR_VERSION}
-and
-@b{YY_FLEX_MINOR_VERSION}
-indicating which version of
-@code{flex}
-generated the scanner
-(for example, for the 2.5 release, these defines would be 2 and 5
+The name @code{FLEX_SCANNER} is @code{#define}'d so scanners may be
+written for use with either @code{flex} or @code{lex}.  Scanners also
+include @code{YY_FLEX_MAJOR_VERSION} and @code{YY_FLEX_MINOR_VERSION}
+indicating which version of @code{flex} generated the scanner (for
+example, for the 2.5 release, these defines would be 2 and 5
 respectively).
 @end itemize
-The following
-@code{flex}
-features are not included in
-@emph{lex}
-or the POSIX specification:
+
+The following @code{flex} features are not included in @code{lex} or the
+POSIX specification:
+
 @example
 @verbatim
     C++ scanners
@@ -3828,157 +3697,147 @@ or the POSIX specification:
     yy_set_bol()
     YY_AT_BOL()
    <<EOF>>
-    *>
+    <*>
     YY_DECL
     YY_START
     YY_USER_ACTION
     YY_USER_INIT
     #line directives
     %{}'s around actions
+    reentrant C API
     multiple actions on a line
 @end verbatim
 @end example
-plus almost all of the @code{flex} flags.
-The last feature in the list refers to the fact that with
-@code{flex}
-you can put multiple actions on the same line, separated with
-semi-colons, while with
-@emph{lex},
-the following
+
+plus almost all of the @code{flex} flags.  The last feature in the list
+refers to the fact that with @code{flex} you can put multiple actions on
+the same line, separated with semi-colons, while with @code{lex}, the
+following:
+
 @example
 @verbatim
     foo    handle_foo(); ++num_foos_seen;
 @end verbatim
 @end example
+
 is (rather surprisingly) truncated to
+
 @example
 @verbatim
     foo    handle_foo();
 @end verbatim
 @end example
-@code{flex}
-does not truncate the action.  Actions that are not enclosed in
-braces are simply terminated at the end of the line.
+
+@code{flex} does not truncate the action.  Actions that are not enclosed
+in braces are simply terminated at the end of the line.
+
 @node diagnostics, limitations, lex and posix, Top
 @chapter DIAGNOSTICS
-@samp{warning, rule cannot be matched}
-indicates that the given rule
-cannot be matched because it follows other rules that will
-always match the same text as it.  For
-example, in the following "foo" cannot be matched because it comes after
-an identifier "catch-all" rule:
+
+The following is a list of @code{flex} diagnostic messages:
+
+@itemize
+@item
+@samp{warning, rule cannot be matched} indicates that the given rule
+cannot be matched because it follows other rules that will always match
+the same text as it.  For example, in the following @samp{foo} cannot be
+matched because it comes after an identifier ``catch-all'' rule:
+
 @example
 @verbatim
     [a-z]+    got_identifier();
     foo       got_foo();
 @end verbatim
 @end example
-Using
-@code{REJECT}
-in a scanner suppresses this warning.
-@emph{warning},
-@samp{-s}
-@i
-option given but default rule can be matched
-means that it is possible (perhaps only in a particular start condition)
-that the default rule (match any single character) is the only one
-that will match a particular input.  Since
-@samp{-s}
-was given, presumably this is not intended.
-@emph{reject_used_but_not_detected undefined}
-or
-@emph{yymore_used_but_not_detected undefined -}
-These errors can occur at compile time.  They indicate that the
-scanner uses
-@code{REJECT}
-or
-@code{yymore()}
-but that
-@code{flex}
-failed to notice the fact, meaning that
-@code{flex}
-scanned the first two sections looking for occurrences of these actions
-and failed to find any, but somehow you snuck some in (via a #include
-file, for example).  Use
-@code{%option reject}
-or
-@code{%option yymore}
-to indicate to @code{flex} that you really do use these features.
-@emph{flex scanner jammed -}
-a scanner compiled with
-@samp{-s}
-has encountered an input string which wasn't matched by
-any of its rules.  This error can also occur due to internal problems.
-@emph{token too large, exceeds YYLMAX -}
-your scanner uses
-@code{%array}
-and one of its rules matched a string longer than the
-@var{YYLMAX}
+
+Using @code{REJECT} in a scanner suppresses this warning.
+
+@item
+@samp{warning, -s option given but default rule can be matched} means
+that it is possible (perhaps only in a particular start condition) that
+the default rule (match any single character) is the only one that will
+match a particular input.  Since @samp{-s} was given, presumably this is
+not intended.  
+
+@item
+@code{reject_used_but_not_detected undefined} or
+@code{yymore_used_but_not_detected undefined}. These errors can occur
+at compile time.  They indicate that the scanner uses @code{REJECT} or
+@code{yymore()} but that @code{flex} failed to notice the fact, meaning
+that @code{flex} scanned the first two sections looking for occurrences
+of these actions and failed to find any, but somehow you snuck some in
+(via a #include file, for example).  Use @code{%option reject} or
+@code{%option yymore} to indicate to @code{flex} that you really do use
+these features.
+
+@item
+@samp{flex scanner jammed}. a scanner compiled with
+@samp{-s} has encountered an input string which wasn't matched by any of
+its rules.  This error can also occur due to internal problems.
+
+@item
+@samp{token too large, exceeds YYLMAX}. your scanner uses @code{%array}
+and one of its rules matched a string longer than the @var{YYLMAX}
 constant (8K bytes by default).  You can increase the value by
-#define'ing
-@var{YYLMAX}
-in the definitions section of your
-@code{flex}
+#define'ing @var{YYLMAX} in the definitions section of your @code{flex}
 input.
-@emph{scanner requires --8 flag to}
-@emph{use the character 'x' -}
-Your scanner specification includes recognizing the 8-bit character
-@emph{'x'}
-and you did not specify the --8 flag, and your scanner defaulted to 7-bit
-because you used the
-@samp{-Cf}
-or
-@samp{-CF}
-table compression options.  See the discussion of the
-@samp{-7}
-flag for details.
-@emph{flex scanner push-back overflow -}
-you used
-@code{unput()}
-to push back so much text that the scanner's buffer could not hold
-both the pushed-back text and the current token in
-@var{yytext}.
-Ideally the scanner should dynamically resize the buffer in this case, but at
+
+@item
+@samp{scanner requires -8 flag to use the character 'x'}. Your scanner
+specification includes recognizing the 8-bit character @samp{'x'} and
+you did not specify the -8 flag, and your scanner defaulted to 7-bit
+because you used the @samp{-Cf} or @samp{-CF} table compression options.
+See the discussion of the @samp{-7} flag, @ref{invoking flex}, for
+details.
+
+@item
+@samp{flex scanner push-back overflow}. you used @code{unput()} to push
+back so much text that the scanner's buffer could not hold both the
+pushed-back text and the current token in @var{yytext}.  Ideally the
+scanner should dynamically resize the buffer in this case, but at
 present it does not.
-@i
-input buffer overflow, can't enlarge buffer because scanner uses REJECT -
-the scanner was working on matching an extremely large token and needed
-to expand the input buffer.  This doesn't work with scanners that use
-\bf
-REJECT.
-@i
-fatal @code{flex} scanner internal error--end of buffer missed -
-This can occur in an scanner which is reentered after a long-jump
-has jumped out (or over) the scanner's activation frame.  Before
-reentering the scanner, use:
+
+@item
+@samp{input buffer overflow, can't enlarge buffer because scanner uses
+REJECT}.  the scanner was working on matching an extremely large token
+and needed to expand the input buffer.  This doesn't work with scanners
+that use @code{REJECT}.
+
+@item
+@samp{fatal flex scanner internal error--end of buffer missed}. This can
+occur in a scanner which is reentered after a long-jump has jumped out
+(or over) the scanner's activation frame.  Before reentering the
+scanner, use:
 @example
 @verbatim
     yyrestart( yyin );
 @end verbatim
 @end example
 or, as noted above, switch to using the C++ scanner class.
-@emph{too many start conditions in > construct! -}
-you listed more start conditions in a > construct than exist (so
-you must have listed at least one of them twice).
+
+@item
+@samp{too many start conditions in <> construct!}  you listed more start
+conditions in a <> construct than exist (so you must have listed at
+least one of them twice).
+@end itemize
+
 @node limitations, bibliography, diagnostics, Top
 @chapter Limitations
-Some trailing context
-patterns cannot be properly matched and generate
-warning messages (``dangerous trailing context'').  These are
-patterns where the ending of the
-first part of the rule matches the beginning of the second
-part, such as @samp{zx*/xy*}, where the 'x*' matches the 'x' at
-the beginning of the trailing context.  (Note that the POSIX draft
-states that the text matched by such patterns is undefined.)
-For some trailing context rules, parts which are actually fixed-length are
-not recognized as such, leading to the abovementioned performance loss.
-In particular, parts using @samp{|} or @samp{@{n@}} (such as "foo{3}") are always
-considered variable-length.
-Combining trailing context with the special @samp{|} action can result in
-@emph{fixed}
-trailing context being turned into the more expensive
-@emph{variable}
-trailing context.  For example, in the following:
+
+Some trailing context patterns cannot be properly matched and generate
+warning messages (@samp{dangerous trailing context}).  These are
+patterns where the ending of the first part of the rule matches the
+beginning of the second part, such as @samp{zx*/xy*}, where the 'x*'
+matches the 'x' at the beginning of the trailing context.  (Note that
+the POSIX draft states that the text matched by such patterns is
+undefined.)  For some trailing context rules, parts which are actually
+fixed-length are not recognized as such, leading to the abovementioned
+performance loss.  In particular, parts using @samp{|} or @samp{@{n@}}
+(such as @samp{foo@{3@}}) are always considered variable-length.
+Combining trailing context with the special @samp{|} action can result
+in @emph{fixed} trailing context being turned into the more expensive
+@emph{variable} trailing context.  For example, in the following:
+
 @example
 @verbatim
     %%
@@ -3987,32 +3846,26 @@ trailing context.  For example, in the following:
 @end verbatim
 @end example
 
-Use of
-@code{unput()}
-invalidates yytext and yyleng, unless the
-@code{%array}
-directive
-or the
-@samp{-l}
-option has been used.
-Pattern-matching of @code{NUL}s is substantially slower than matching other
-characters.
-Dynamic resizing of the input buffer is slow, as it entails rescanning
-all the text matched so far by the current (generally huge) token.
-Due to both buffering of input and read-ahead, you cannot intermix calls
-to stdio.h> routines, such as, for example, @b{getchar()}, with
-@code{flex} rules and expect it to work.  Call @code{input()} instead.
-The total table entries listed by the
-@samp{-v}
-flag excludes the number of table entries needed to determine
-what rule has been matched.  The number of entries is equal
-to the number of DFA states if the scanner does not use
-@code{REJECT},
-and somewhat greater than the number of states if it does.
-@code{REJECT} cannot be used with the @samp{-f} or @samp{-F} options.
+Use of @code{unput()} invalidates yytext and yyleng, unless the
+@code{%array} directive or the @samp{-l} option has been used.
+Pattern-matching of @code{NUL}s is substantially slower than matching
+other characters.  Dynamic resizing of the input buffer is slow, as it
+entails rescanning all the text matched so far by the current (generally
+huge) token.  Due to both buffering of input and read-ahead, you cannot
+intermix calls to @file{<stdio.h>} routines, such as, @b{getchar()},
+with @code{flex} rules and expect it to work.  Call @code{input()}
+instead.  The total table entries listed by the @samp{-v} flag excludes
+the number of table entries needed to determine what rule has been
+matched.  The number of entries is equal to the number of DFA states if
+the scanner does not use @code{REJECT}, and somewhat greater than the
+number of states if it does.  @code{REJECT} cannot be used with the
+@samp{-f} or @samp{-F} options.
+
 The @code{flex} internal algorithms need documentation.
-@node bibliography,  , limitations, Top
+
+@node bibliography, reporting bugs, limitations, Top
 @chapter Additional Reading
+
 You may wish to read more about the following programs:
 @itemize
 @item lex
@@ -4020,15 +3873,26 @@ You may wish to read more about the following programs:
 @item sed
 @item awk
 @end itemize
+
 The following books may contain material of interest:
+
 John Levine, Tony Mason, and Doug Brown,
 @emph{Lex & Yacc},
 O'Reilly and Associates.  Be sure to get the 2nd edition.
+
 M. E. Lesk and E. Schmidt,
 @emph{LEX -- Lexical Analyzer Generator}
-Alfred Aho, Ravi Sethi and Jeffrey Ullman,
-@emph{Compilers: Principles, Techniques and Tools},
-Addison-Wesley (1986).  Describes the pattern-matching techniques used by
-@code{flex}
-(deterministic finite automata).
+
+Alfred Aho, Ravi Sethi and Jeffrey Ullman, @emph{Compilers: Principles,
+Techniques and Tools}, Addison-Wesley (1986).  Describes the
+pattern-matching techniques used by @code{flex} (deterministic finite
+automata).
+
+@node reporting bugs,  , bibliography, Top
+@chapter Reporting Bugs
+
+If you have problems with @code{flex} or think you have found a bug,
+please send mail detailing your problem to
+@email{help-flex@@gnu.org}. Patches are always welcome.
+
 @bye
