@@ -339,9 +339,9 @@ YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( yyconst char *bytes, int len YY_LAST_AR
 %*
 
 %c
-void *yy_flex_alloc YY_PROTO(( yy_size_t YY_LAST_ARG ));
-void *yy_flex_realloc YY_PROTO(( void *, yy_size_t YY_LAST_ARG ));
-void yy_flex_free YY_PROTO(( void * YY_LAST_ARG ));
+void *yyalloc YY_PROTO(( yy_size_t YY_LAST_ARG ));
+void *yyrealloc YY_PROTO(( void *, yy_size_t YY_LAST_ARG ));
+void yyfree YY_PROTO(( void * YY_LAST_ARG ));
 %e
 
 #define yy_new_buffer yy_create_buffer
@@ -953,7 +953,7 @@ yyFlexLexer::yyFlexLexer( FLEX_STD istream* arg_yyin, FLEX_STD ostream* arg_yyou
 yyFlexLexer::~yyFlexLexer()
 	{
 	delete [] yy_state_buf;
-	yy_flex_free( yy_start_stack YY_CALL_LAST_ARG );
+	yyfree( yy_start_stack YY_CALL_LAST_ARG );
 	yy_delete_buffer( yy_current_buffer YY_CALL_LAST_ARG);
 	}
 
@@ -1097,7 +1097,7 @@ int yyFlexLexer::yy_get_next_buffer()
 
 				b->yy_ch_buf = (char *)
 					/* Include room in for 2 EOB chars. */
-					yy_flex_realloc( (void *) b->yy_ch_buf,
+					yyrealloc( (void *) b->yy_ch_buf,
 							 b->yy_buf_size + 2 YY_CALL_LAST_ARG );
 				}
 			else
@@ -1435,7 +1435,7 @@ YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( FLEX_STD istream* file, int size 
 	{
 	YY_BUFFER_STATE b;
 
-	b = (YY_BUFFER_STATE) yy_flex_alloc( sizeof( struct yy_buffer_state ) YY_CALL_LAST_ARG );
+	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) YY_CALL_LAST_ARG );
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 
@@ -1444,7 +1444,7 @@ YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( FLEX_STD istream* file, int size 
 	/* yy_ch_buf has to be 2 characters longer than the size given because
 	 * we need to put in 2 end-of-buffer characters.
 	 */
-	b->yy_ch_buf = (char *) yy_flex_alloc( b->yy_buf_size + 2 YY_CALL_LAST_ARG );
+	b->yy_ch_buf = (char *) yyalloc( b->yy_buf_size + 2 YY_CALL_LAST_ARG );
 	if ( ! b->yy_ch_buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 
@@ -1475,9 +1475,9 @@ void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
 		YY_G(yy_current_buffer) = (YY_BUFFER_STATE) 0;
 
 	if ( b->yy_is_our_buffer )
-		yy_flex_free( (void *) b->yy_ch_buf YY_CALL_LAST_ARG );
+		yyfree( (void *) b->yy_ch_buf YY_CALL_LAST_ARG );
 
-	yy_flex_free( (void *) b YY_CALL_LAST_ARG );
+	yyfree( (void *) b YY_CALL_LAST_ARG );
 	}
 
 
@@ -1588,7 +1588,7 @@ YY_DECL_LAST_ARG
 		/* They forgot to leave room for the EOB's. */
 		return 0;
 
-	b = (YY_BUFFER_STATE) yy_flex_alloc( sizeof( struct yy_buffer_state ) YY_CALL_LAST_ARG );
+	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) YY_CALL_LAST_ARG );
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
 
@@ -1648,7 +1648,7 @@ int len;
 
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = len + 2;
-	buf = (char *) yy_flex_alloc( n YY_CALL_LAST_ARG );
+	buf = (char *) yyalloc( n YY_CALL_LAST_ARG );
 	if ( ! buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
 
@@ -1693,10 +1693,10 @@ void yyFlexLexer::yy_push_state( int new_state )
 		new_size = YY_G(yy_start_stack_depth) * sizeof( int );
 
 		if ( ! YY_G(yy_start_stack) )
-			YY_G(yy_start_stack) = (int *) yy_flex_alloc( new_size YY_CALL_LAST_ARG );
+			YY_G(yy_start_stack) = (int *) yyalloc( new_size YY_CALL_LAST_ARG );
 
 		else
-			YY_G(yy_start_stack) = (int *) yy_flex_realloc(
+			YY_G(yy_start_stack) = (int *) yyrealloc(
 					(void *) YY_G(yy_start_stack), new_size YY_CALL_LAST_ARG );
 
 		if ( ! YY_G(yy_start_stack) )
@@ -2040,7 +2040,7 @@ int yylex_init( ptr_yy_globals )
     yyscan_t* ptr_yy_globals;
 #endif
     {
-    *ptr_yy_globals = (yyscan_t) yy_flex_alloc ( sizeof( struct yy_globals_t ), NULL );
+    *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yy_globals_t ), NULL );
     yy_init_globals ( *ptr_yy_globals );
     return 0;
     }
@@ -2063,14 +2063,14 @@ int yylex_destroy( YY_ONLY_ARG )
 #if defined(YY_STACK_USED) || defined(YY_REENTRANT)
     /* Destroy the start condition stack. */
     if (YY_G(yy_start_stack) ){
-        yy_flex_free( YY_G(yy_start_stack) YY_CALL_LAST_ARG );
+        yyfree( YY_G(yy_start_stack) YY_CALL_LAST_ARG );
         YY_G(yy_start_stack) = NULL;
     }
 #endif
 
 #ifdef YY_REENTRANT
     /* Destroy the main struct (reentrant only). */
-    yy_flex_free ( yy_globals YY_CALL_LAST_ARG );
+    yyfree ( yy_globals YY_CALL_LAST_ARG );
 #endif
     return 0;
 }
@@ -2112,13 +2112,13 @@ YY_DECL_LAST_ARG
 	}
 #endif
 
-/* You may override yy_flex_alloc by defining YY_NO_FLEX_ALLOC and linking to
+/* You may override yyalloc by defining YY_NO_FLEX_ALLOC and linking to
  * your own version */
 #ifndef YY_NO_FLEX_ALLOC
 #ifdef YY_USE_PROTOS
-void *yy_flex_alloc( yy_size_t size YY_LAST_ARG )
+void *yyalloc( yy_size_t size YY_LAST_ARG )
 #else
-void *yy_flex_alloc( size YY_LAST_ARG )
+void *yyalloc( size YY_LAST_ARG )
 yy_size_t size;
 YY_DECL_LAST_ARG
 #endif
@@ -2127,13 +2127,13 @@ YY_DECL_LAST_ARG
 	}
 #endif
 
-/* You may override yy_flex_realloc by defining YY_NO_FLEX_REALLOC and linking
+/* You may override yyrealloc by defining YY_NO_FLEX_REALLOC and linking
  * to your own version. */
 #ifndef YY_NO_FLEX_REALLOC
 #ifdef YY_USE_PROTOS
-void *yy_flex_realloc( void *ptr, yy_size_t size YY_LAST_ARG )
+void *yyrealloc( void *ptr, yy_size_t size YY_LAST_ARG )
 #else
-void *yy_flex_realloc( ptr, size YY_LAST_ARG )
+void *yyrealloc( ptr, size YY_LAST_ARG )
 void *ptr;
 yy_size_t size;
 YY_DECL_LAST_ARG
@@ -2150,18 +2150,18 @@ YY_DECL_LAST_ARG
 	}
 #endif
 
-/* You may override yy_flex_free by defining YY_NO_FLEX_FREE and linking to
+/* You may override yyfree by defining YY_NO_FLEX_FREE and linking to
  * your own version.*/
 #ifndef YY_NO_FLEX_FREE
 #ifdef YY_USE_PROTOS
-void yy_flex_free( void *ptr YY_LAST_ARG )
+void yyfree( void *ptr YY_LAST_ARG )
 #else
-void yy_flex_free( ptr YY_LAST_ARG )
+void yyfree( ptr YY_LAST_ARG )
 void *ptr;
 YY_DECL_LAST_ARG
 #endif
 	{
-	free( (char *) ptr );	/* see yy_flex_realloc() for (char *) cast */
+	free( (char *) ptr );	/* see yyrealloc() for (char *) cast */
 	}
 #endif
 

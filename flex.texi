@@ -2564,6 +2564,9 @@ the names affected:
     yyrestart
     yytext
     yywrap
+    yyalloc
+    yyrealloc
+    yyfree
 @end verbatim
 @end example
 
@@ -3856,6 +3859,8 @@ The following Functions are available in a reentrant scanner:
 @findex yyset_lineno
 @findex yyget_debug
 @findex yyset_debug
+@findex yyget_extra
+@findex yyset_extra
 
 @example
 @verbatim
@@ -4159,10 +4164,9 @@ in braces are simply terminated at the end of the line.
 @chapter Memory Management
 
 @cindex memory management
-@cindex alloc, overriding
-@cindex malloc, overriding
-@cindex realloc, overriding
-@cindex free, overriding
+@cindex yyalloc, overriding
+@cindex yyrealloc, overriding
+@cindex yyfree, overriding
 @cindex yytext, memory for
 
 This chapter describes how flex handles dynamic memory, and how you can
@@ -4227,7 +4231,7 @@ yylex_destroy().
 @node Overriding The Default Memory Management
 @section Overriding The Default Memory Management
 
-TODO -- Describe how to override yy_flex_(alloc,free,realloc),
+TODO -- Describe how to override yy(alloc,free,realloc),
 YY_READ_BUF_SIZE, YY_BUF_SIZE, YY_START_STACK_INCR, and anything else that
 crops up.
 

@@ -39,7 +39,7 @@
 %option 8bit outfile="scanner.c" prefix="test"
 %option nounput nomain noyywrap
 %option warn stack nodefault reentrant
-%option noyy_flex_alloc noyy_flex_realloc noyy_flex_free
+%option noyyalloc noyyrealloc noyyfree
 
 %x parens
 
@@ -82,7 +82,7 @@ static void dump_mem(FILE* fp){
     fprintf(fp,"}\n");
 }
 
-void * yy_flex_alloc(size_t n YY_LAST_ARG)
+void * yyalloc(size_t n YY_LAST_ARG)
 {
     void * p;
     struct memsz * old;
@@ -112,7 +112,7 @@ void * yy_flex_alloc(size_t n YY_LAST_ARG)
     return p;
 }
 
-void * yy_flex_realloc(void* p, size_t n YY_LAST_ARG)
+void * yyrealloc(void* p, size_t n YY_LAST_ARG)
 {
     int i;
     for (i=0; i < arrsz; i++)
@@ -133,7 +133,7 @@ void * yy_flex_realloc(void* p, size_t n YY_LAST_ARG)
     exit(1);
 }
 
-void yy_flex_free(void* p YY_LAST_ARG)
+void yyfree(void* p YY_LAST_ARG)
 {
     int i;
     for (i=0; i < arrsz; i++)

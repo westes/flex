@@ -382,6 +382,9 @@ void check_options()
             GEN_PREFIX( "get_text" );
             GEN_PREFIX( "get_lineno" );
             GEN_PREFIX( "set_lineno" );
+            GEN_PREFIX( "alloc" );
+            GEN_PREFIX( "realloc" );
+            GEN_PREFIX( "free" );
 
             outn( "#ifdef YY_REENTRANT_BISON_PURE" );
             GEN_PREFIX( "get_lval" );
@@ -582,6 +585,9 @@ int exit_status;
             fprintf(header_out,"#undef YY_MORE_ADJ\n");
             fprintf(header_out,"#undef YY_NEED_STRLEN\n");
             fprintf(header_out,"#undef YY_NEW_FILE\n");
+            fprintf(header_out,"#undef YY_NO_FLEX_ALLOC\n");
+            fprintf(header_out,"#undef YY_NO_FLEX_REALLOC\n");
+            fprintf(header_out,"#undef YY_NO_FLEX_FREE\n");
             fprintf(header_out,"#undef YY_NO_GET_DEBUG\n");
             fprintf(header_out,"#undef YY_NO_GET_EXTRA\n");
             fprintf(header_out,"#undef YY_NO_GET_IN\n");
@@ -647,6 +653,8 @@ int exit_status;
             fprintf(header_out,"#undef yy_switch_to_buffer\n");
             fprintf(header_out,"#undef yyconst\n");
             fprintf(header_out,"#undef yyextra\n");
+            fprintf(header_out,"#undef yyget_debug\n");
+            fprintf(header_out,"#undef yyset_debug\n");
             fprintf(header_out,"#undef yyget_extra\n");
             fprintf(header_out,"#undef yyget_in\n");
             fprintf(header_out,"#undef yyget_leng\n");
@@ -677,6 +685,9 @@ int exit_status;
             fprintf(header_out,"#undef yytext\n");
             fprintf(header_out,"#undef yytext_ptr\n");
             fprintf(header_out,"#undef yywrap\n");
+            fprintf(header_out,"#undef yyalloc\n");
+            fprintf(header_out,"#undef yyrealloc\n");
+            fprintf(header_out,"#undef yyfree\n");
 
 			/* undef any of the auto-generated symbols. */
 			for(i=0; i < defs_buf.nelts; i++)
