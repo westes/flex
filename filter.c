@@ -163,9 +163,9 @@ bool filter_apply_chain (struct filter * chain)
 			int     r;
 
 			/* setup streams again */
-			if ((stdin = fdopen (0, "r")) == NULL)
+			if ( ! fdopen (0, "r"))
 				flexfatal (_("fdopen(0) failed"));
-			if ((stdout = fdopen (1, "w")) == NULL)
+			if (!fdopen (1, "w"))
 				flexfatal (_("fdopen(1) failed"));
 
 			if ((r = chain->filter_func (chain)) == -1)
@@ -186,7 +186,7 @@ bool filter_apply_chain (struct filter * chain)
 	if (dup2 (pipes[1], 1) == -1)
 		flexfatal (_("dup2(pipes[1],1)"));
 	close (pipes[1]);
-	if ((stdout = fdopen (1, "w")) == NULL)
+	if ( !fdopen (1, "w"))
 		flexfatal (_("fdopen(1) failed"));
 
 	return true;
