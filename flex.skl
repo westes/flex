@@ -707,6 +707,8 @@ static int input YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 
 
+%push
+%c-only
 #if YY_STACK_USED
 %if-not-reentrant
 %not-for-header
@@ -731,6 +733,7 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #define YY_NO_POP_STATE 1
 #define YY_NO_TOP_STATE 1
 #endif
+%pop
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
