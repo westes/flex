@@ -111,6 +111,7 @@ tests/test-string-r/Makefile
 tests/test-yyextra/Makefile
 tests/test-lineno-nr/Makefile
 tests/test-lineno-r/Makefile
+tests/test-linedir-r/Makefile
 tests/test-debug-r/Makefile
 tests/test-debug-nr/Makefile
 tests/test-mem-nr/Makefile

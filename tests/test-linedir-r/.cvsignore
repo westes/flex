@@ -1,0 +1,6 @@
+Makefile
+Makefile.in
+scanner.c
+scanner.h
+test-linedir-r
+OUTPUT

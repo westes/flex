@@ -10,23 +10,29 @@ bison-yylloc          - Reentrant scanner + pure parser. Requires bison.
 bison-yylval          - Reentrant scanner + pure parser. Requires bison.
 c-cpp-nr              - Compile a C scanner with C++ compiler, nonreentrant.
 c-cpp-r               - Compile a C scanner with C++ compiler, reentrant.
+c++-basic             - The C++ scanner.
+c++-multiple-scanners - Multiple C++ scanners.
 debug-nr              - Use yy_flex_debug, non-reentrant.
 debug-r               - Use debugging functions, reentrant.
 header-nr             - Test generated header file, non-reentrant.
 header-r              - Test generated header file, reentrant.
 include-by-buffer     - YY_BUFFER_STATE, yy_push_state, etc.
 include-by-reentrant  - Nested scanners.
+linedir-r             - Check #line directives.
 lineno-nr             - Use %option yylineno, non-reentrant.
 lineno-r              - Use %option yylineno, reentrant.
 mem-nr                - Override memory api, non-reentrant.
 mem-r                 - Override memory api, reentrant.
 multiple-scanners-nr  - #include and run two separate scanners, non-reentrant.
 multiple-scanners-r   - #include and run two separate scanners, reentrant.
+noansi-nr             - test %option noansi-*, non-reentrant.
+noansi-r              - test %option noansi-*, reentrant.
 posix                 - Test %option posix-compat.
 posixly-correct       - Test POSIXLY_CORRECT variable.
 prefix-nr             - Verify prefixes are working, nonreentrant.
 prefix-r              - Verify prefixes are working, reentrant.
 pthread               - Pthreads test. A NO-OP if libpthread not found.
+reject                - Check REJECT code.
 string-nr             - Scan strings, non-reentrant.
 string-r              - Scan strings, reentrant.
 table-opts            - Try every table compression option.
