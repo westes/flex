@@ -40,7 +40,6 @@ m4 = @M4@
 indent = @INDENT@
 
 AUTOMAKE_OPTIONS = \
-	readme-alpha \
 	gnits \
 	check-news \
 	dist-bzip2 \
@@ -127,7 +126,7 @@ AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I@includedir@ -I$(top_srcdir)/intl
 LIBS = @LIBINTL@ @LIBS@
 
 skel.c: flex.skl mkskel.sh
-	$(m4) -P -DVERSION=$(VERSION) $(srcdir)/flex.skl | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
+	$(m4) -P -DFLEX_MAJOR_VERSION=`echo $(VERSION)|cut -f 1 -d .` -DFLEX_MINOR_VERSION=`echo $(VERSION)|cut -f 2 -d .` -DFLEX_SUBMINOR_VERSION=`echo $(VERSION)|cut -f 3 -d .` $(srcdir)/flex.skl | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
 
 $(man_MANS): $(srcdir)/main.c
 	for i in $(man_MANS) ; do \
