@@ -1,0 +1,5 @@
+*.gmo
+Makefile
+Makefile.in
+POTFILES
+flex.pot
