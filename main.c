@@ -102,8 +102,10 @@ char *program_name;
 
 #ifndef SHORT_FILE_NAMES
 static char *outfile_template = "lex.%s.%s";
+static char *backing_name = "lex.backup";
 #else
 static char *outfile_template = "lex%s.%s";
+static char *backing_name = "lex.bck";
 #endif
 
 #ifdef THINK_C
@@ -316,24 +318,23 @@ int exit_status;
 	if ( skelfile != NULL )
 		{
 		if ( ferror( skelfile ) )
-			flexfatal(
-				"error occurred when reading skeleton file" );
+			lerrsf( "input error reading skeleton file %s",
+				skelname );
 
 		else if ( fclose( skelfile ) )
-			flexfatal(
-				"error occurred when closing skeleton file" );
+			lerrsf( "error closing skeleton file %s", skelname );
 		}
 
 	if ( exit_status != 0 && outfile_created )
 		{
 		if ( ferror( stdout ) )
-			flexfatal( "error occurred when writing output file" );
+			lerrsf( "error writing output file %s", outfilename );
 
 		else if ( fclose( stdout ) )
-			flexfatal( "error occurred when closing output file" );
+			lerrsf( "error closing output file %s", outfilename );
 
 		else if ( unlink( outfilename ) )
-			flexfatal( "error occurred when deleting output file" );
+			lerrsf( "error deleting output file %s", outfilename );
 		}
 
 	if ( backing_up_report && backing_up_file )
@@ -349,10 +350,10 @@ int exit_status;
 				"Compressed tables always back up.\n" );
 
 		if ( ferror( backing_up_file ) )
-			flexfatal( "error occurred when writing backup file" );
+			lerrsf( "error writing backup file %s", backing_name );
 
 		else if ( fclose( backing_up_file ) )
-			flexfatal( "error occurred when closing backup file" );
+			lerrsf( "error closing backup file %s", backing_name );
 		}
 
 	if ( printstats )
@@ -800,14 +801,10 @@ void readin()
 
 	if ( backing_up_report )
 		{
-#ifndef SHORT_FILE_NAMES
-		backing_up_file = fopen( "lex.backup", "w" );
-#else
-		backing_up_file = fopen( "lex.bck", "w" );
-#endif
-
+		backing_up_file = fopen( backing_name, "w" );
 		if ( backing_up_file == NULL )
-			flexerror( "could not create lex.backup" );
+			lerrsf( "could not create backing-up info file %s",
+				backing_name );
 		}
 
 	else
@@ -1006,7 +1003,7 @@ void usage()
 		program_name );
 
 	fprintf( stderr,
-		"\t-b  generate backing-up information to lex.backup\n" );
+		"\t-b  generate backing-up information to %s\n", backing_name );
 	fprintf( stderr, "\t-c  do-nothing POSIX option\n" );
 	fprintf( stderr, "\t-d  turn on debug mode in generated scanner\n" );
 	fprintf( stderr, "\t-f  generate fast, large scanner\n" );
