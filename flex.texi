@@ -157,18 +157,18 @@ FAQ
 * How do I track the byte offset for lseek()?::  
 * How do I use my own I/O classes in a C++ scanner?::  
 * How do I skip as many chars as possible?::  
-* unnamed-faq-33::              
-* unnamed-faq-42::              
-* unnamed-faq-43::              
-* unnamed-faq-44::              
-* unnamed-faq-45::              
-* unnamed-faq-46::              
-* unnamed-faq-47::              
-* unnamed-faq-48::              
-* unnamed-faq-49::              
-* unnamed-faq-50::              
-* unnamed-faq-51::              
-* unnamed-faq-52::              
+* deleteme00::              
+* Are certain equivalent patterns faster than others?::              
+* Is backing up a big deal?::              
+* Can I fake multi-byte character support?::              
+* deleteme01::              
+* Can you discuss some flex internals?::              
+* unput() messes up yy_at_bol::              
+* The | operator is not doing what I want::              
+* Why can't flex understand this variable trailing context pattern?::              
+* The ^ operator isn't working::              
+* Trailing context is getting confused with trailing optional patterns::              
+* Is flex GNU or not?::              
 * unnamed-faq-53::              
 * unnamed-faq-54::              
 * unnamed-faq-55::              
@@ -5187,18 +5187,18 @@ publish them here.
 * How do I track the byte offset for lseek()?::  
 * How do I use my own I/O classes in a C++ scanner?::  
 * How do I skip as many chars as possible?::  
-* unnamed-faq-33::              
-* unnamed-faq-42::              
-* unnamed-faq-43::              
-* unnamed-faq-44::              
-* unnamed-faq-45::              
-* unnamed-faq-46::              
-* unnamed-faq-47::              
-* unnamed-faq-48::              
-* unnamed-faq-49::              
-* unnamed-faq-50::              
-* unnamed-faq-51::              
-* unnamed-faq-52::              
+* deleteme00::              
+* Are certain equivalent patterns faster than others?::              
+* Is backing up a big deal?::              
+* Can I fake multi-byte character support?::              
+* deleteme01::              
+* Can you discuss some flex internals?::              
+* unput() messes up yy_at_bol::              
+* The | operator is not doing what I want::              
+* Why can't flex understand this variable trailing context pattern?::              
+* The ^ operator isn't working::              
+* Trailing context is getting confused with trailing optional patterns::              
+* Is flex GNU or not?::              
 * unnamed-faq-53::              
 * unnamed-faq-54::              
 * unnamed-faq-55::              
@@ -5249,7 +5249,7 @@ publish them here.
 * unnamed-faq-101::             
 @end menu
 
-@node  When was flex born?, How do I expand \ escape sequences in C-style quoted strings?, FAQ, FAQ
+@node  When was flex born?
 @unnumberedsec When was flex born?
 
 Vern Paxson took over
@@ -5257,7 +5257,7 @@ the @cite{Software Tools} lex project from Jef Poskanzer in 1982.  At that point
 was written in Ratfor.  Around 1987 or so, Paxson translated it into C, and
 a legend was born :-).
 
-@node How do I expand \ escape sequences in C-style quoted strings?, Why do flex scanners call fileno if it is not ANSI compatible?, When was flex born?, FAQ
+@node How do I expand \ escape sequences in C-style quoted strings?
 @unnumberedsec How do I expand \ escape sequences in C-style quoted strings?
 
 A key point when scanning quoted strings is that you cannot (easily) write
@@ -5276,7 +5276,7 @@ buffer.  A rule like the escape-matcher will append to the buffer the
 meaning of the escape sequence rather than the literal text in @code{yytext}.
 In this way, @code{yytext} does not need to be modified at all.
 
-@node  Why do flex scanners call fileno if it is not ANSI compatible?, Does flex support recursive pattern definitions?, How do I expand \ escape sequences in C-style quoted strings?, FAQ
+@node  Why do flex scanners call fileno if it is not ANSI compatible?
 @unnumberedsec Why do flex scanners call fileno if it is not ANSI compatible?
 
 Flex scanners call @code{fileno()} in order to get the file descriptor
@@ -5287,7 +5287,7 @@ If your system does not have @code{fileno()} support, to get rid of the
 call, you must specify one of @code{%option always-interactive} or
 @code{%option never-interactive}.
 
-@node  Does flex support recursive pattern definitions?, How do I skip huge chunks of input (tens of megabytes) while using flex?, Why do flex scanners call fileno if it is not ANSI compatible?, FAQ
+@node  Does flex support recursive pattern definitions?
 @unnumberedsec Does flex support recursive pattern definitions?
 
 e.g.,
@@ -5307,12 +5307,12 @@ expression that matches all strings containing the same number of '@{'s
 as '@}'s.  For more powerful pattern matching, you need a parser, such
 as @cite{GNU bison}.
 
-@node  How do I skip huge chunks of input (tens of megabytes) while using flex?, Flex is not matching my patterns in the same order that I defined them., Does flex support recursive pattern definitions?, FAQ
+@node  How do I skip huge chunks of input (tens of megabytes) while using flex?
 @unnumberedsec How do I skip huge chunks of input (tens of megabytes) while using flex?
 
 Use @code{fseek()} (or @code{lseek()}) to position yyin, then call @code{yyrestart()}.
 
-@node  Flex is not matching my patterns in the same order that I defined them., My actions are executing out of order or sometimes not at all., How do I skip huge chunks of input (tens of megabytes) while using flex?, FAQ
+@node  Flex is not matching my patterns in the same order that I defined them.
 @unnumberedsec Flex is not matching my patterns in the same order that I defined them.
 
 @code{flex} picks the
@@ -5346,7 +5346,7 @@ identifier rule, or by removing characters (such as @samp{_}) from the
 identifier rule so it no longer matches @samp{data_}.  (Of course, you might
 also not have the option of changing the input language.)
 
-@node  My actions are executing out of order or sometimes not at all., How can I have multiple input sources feed into the same scanner at the same time?, Flex is not matching my patterns in the same order that I defined them., FAQ
+@node  My actions are executing out of order or sometimes not at all.
 @unnumberedsec My actions are executing out of order or sometimes not at all.
 
 Most likely, you have (in error) placed the opening @samp{@{} of the action
@@ -5373,7 +5373,7 @@ as follows:
 @end verbatim
 @end example
 
-@node  How can I have multiple input sources feed into the same scanner at the same time?, Can I build nested parsers that work with the same input file?, My actions are executing out of order or sometimes not at all., FAQ
+@node  How can I have multiple input sources feed into the same scanner at the same time?
 @unnumberedsec How can I have multiple input sources feed into the same scanner at the same time?
 
 If @dots{}
@@ -5409,7 +5409,7 @@ available, it blocks until some input is available.)  I've used this technique i
 interpreter I wrote that both reads keyboard input using a @code{flex} scanner and
 IPC traffic from sockets, and it works fine.
 
-@node  Can I build nested parsers that work with the same input file?, How can I match text only at the end of a file?, How can I have multiple input sources feed into the same scanner at the same time?, FAQ
+@node  Can I build nested parsers that work with the same input file?
 @unnumberedsec Can I build nested parsers that work with the same input file?
 
 This is not going to work without some additional effort.  The reason is
@@ -5422,7 +5422,7 @@ that that approach is quite difficult.  Instead, the best solution is to
 combine all of your scanners into one large scanner, using a different
 exclusive start condition for each.
 
-@node  How can I match text only at the end of a file?, How can I make REJECT cascade across start condition boundaries?, Can I build nested parsers that work with the same input file?, FAQ
+@node  How can I match text only at the end of a file?
 @unnumberedsec How can I match text only at the end of a file?
 
 There is no way to write a rule which is ``match this text, but only if
@@ -5438,7 +5438,7 @@ real @code{EOF} next time it's called).  Then you could write:
 @end verbatim
 @end example
 
-@node  How can I make REJECT cascade across start condition boundaries?, Why cant I use fast or full tables with interactive mode?, How can I match text only at the end of a file?, FAQ
+@node  How can I make REJECT cascade across start condition boundaries?
 @unnumberedsec How can I make REJECT cascade across start condition boundaries?
 
 You can do this as follows.  Suppose you have a start condition @samp{A}, and
@@ -5466,7 +5466,7 @@ BEGIN(INITIAL);
 @end verbatim
 @end example
 
-@node  Why cant I use fast or full tables with interactive mode?, How much faster is -F or -f than -C?, How can I make REJECT cascade across start condition boundaries?, FAQ
+@node  Why cant I use fast or full tables with interactive mode?
 @unnumberedsec Why can't I use fast or full tables with interactive mode?
 
 One of the assumptions
@@ -5486,19 +5486,19 @@ of performance in this area to gain the corresponding flexibility.  There
 might be another reason, though, why fast scanners don't support the
 interactive option.
 
-@node  How much faster is -F or -f than -C?, If I have a simple grammar cant I just parse it with flex?, Why cant I use fast or full tables with interactive mode?, FAQ
+@node  How much faster is -F or -f than -C?
 @unnumberedsec How much faster is -F or -f than -C?
 
 Much faster (factor of 2-3).
 
-@node  If I have a simple grammar cant I just parse it with flex?, Why doesnt yyrestart() set the start state back to INITIAL?, How much faster is -F or -f than -C?, FAQ
+@node  If I have a simple grammar cant I just parse it with flex?
 @unnumberedsec If I have a simple grammar can't I just parse it with flex?
 
 Is your grammar recursive? That's almost always a sign that you're
 better off using a parser/scanner rather than just trying to use a scanner
 alone.
 
-@node  Why doesnt yyrestart() set the start state back to INITIAL?, How can I match C-style comments?, If I have a simple grammar cant I just parse it with flex?, FAQ
+@node  Why doesnt yyrestart() set the start state back to INITIAL?
 @unnumberedsec Why doesn't yyrestart() set the start state back to INITIAL?
 
 There are two reasons.  The first is that there might
@@ -5506,7 +5506,7 @@ be programs that rely on the start state not changing across file changes.
 The second is that beginning with @code{flex} version 2.4, use of @code{yyrestart()} is no longer required,
 so fixing the problem there doesn't solve the more general problem.
 
-@node  How can I match C-style comments?, The period isnt working the way I expected., Why doesnt yyrestart() set the start state back to INITIAL?, FAQ
+@node  How can I match C-style comments?
 @unnumberedsec How can I match C-style comments?
 
 You might be tempted to try something like this:
@@ -5549,7 +5549,7 @@ Here is one way which allows you to track line information:
 @end verbatim
 @end example
 
-@node  The period isnt working the way I expected., Can I get the flex manual in another format?, How can I match C-style comments?, FAQ
+@node  The period isnt working the way I expected.
 @unnumberedsec The '.' isn't working the way I expected.
 
 Here are some tips for using @samp{.}:
@@ -5575,14 +5575,14 @@ Beware that the regex @code{(.|\n)+} will match your entire input!
 Finally, if you want to match a literal @samp{.} (a period), then use @samp{[.]} or @samp{"."}
 @end itemize
 
-@node  Can I get the flex manual in another format?, Does there exist a "faster" NDFA->DFA algorithm?, The period isnt working the way I expected., FAQ
+@node  Can I get the flex manual in another format?
 @unnumberedsec Can I get the flex manual in another format?
 
 The @code{flex} source distribution  includes a texinfo manual. You are
 free to convert that texinfo into whatever format you desire. The
 @code{texinfo} package includes tools for conversion to a number of formats.
 
-@node  Does there exist a "faster" NDFA->DFA algorithm?, How does flex compile the DFA so quickly?, Can I get the flex manual in another format?, FAQ
+@node  Does there exist a "faster" NDFA->DFA algorithm?
 @unnumberedsec Does there exist a "faster" NDFA->DFA algorithm?
 
 There's no way around the potential exponential running time - it
@@ -5590,7 +5590,7 @@ can take you exponential time just to enumerate all of the DFA states.
 In practice, though, the running time is closer to linear, or sometimes
 quadratic.
 
-@node  How does flex compile the DFA so quickly?, How can I use more than 8192 rules?, Does there exist a "faster" NDFA->DFA algorithm?, FAQ
+@node  How does flex compile the DFA so quickly?
 @unnumberedsec How does flex compile the DFA so quickly?
 
 There are two big speed wins that @code{flex} uses:
@@ -5609,7 +5609,7 @@ whether a newly constructed DFA state is equivalent to a previously constructed
 state can be done very quickly, by first comparing hash values.
 @end enumerate
 
-@node  How can I use more than 8192 rules?, How do I abandon a file in the middle of a scan and switch to a new file?, How does flex compile the DFA so quickly?, FAQ
+@node  How can I use more than 8192 rules?
 @unnumberedsec How can I use more than 8192 rules?
 
 @code{Flex} is compiled with an upper limit of 8192 rules per scanner.
@@ -5647,13 +5647,13 @@ values built into it because a long time ago it was developed on a machine
 with 16-bit ints.  I've given this advice to others in the past but haven't
 heard back from them whether it worked okay or not...
 
-@node  How do I abandon a file in the middle of a scan and switch to a new file?, How do I execute code only during initialization (only before the first scan)?, How can I use more than 8192 rules?, FAQ
+@node  How do I abandon a file in the middle of a scan and switch to a new file?
 @unnumberedsec How do I abandon a file in the middle of a scan and switch to a new file?
 
 Just call @code{yyrestart(newfile)}. Be sure to reset the start state if you want a
 ``fresh start, since @code{yyrestart} does NOT reset the start state back to @code{INITIAL}.
 
-@node  How do I execute code only during initialization (only before the first scan)?, How do I execute code at termination?, How do I abandon a file in the middle of a scan and switch to a new file?, FAQ
+@node  How do I execute code only during initialization (only before the first scan)?
 @unnumberedsec How do I execute code only during initialization (only before the first scan)?
 
 You can specify an initial action by defining the macro @code{YY_USER_INIT} (though
@@ -5673,23 +5673,23 @@ did_init = 1;
 @end verbatim
 @end example
 
-@node  How do I execute code at termination?, Where else can I find help?, How do I execute code only during initialization (only before the first scan)?, FAQ
+@node  How do I execute code at termination?
 @unnumberedsec How do I execute code at termination?
 
 You can specify an action for the @code{<<EOF>>} rule.
 
-@node  Where else can I find help?, Can I include comments in the "rules" section of the file?, How do I execute code at termination?, FAQ
+@node  Where else can I find help?
 @unnumberedsec Where else can I find help?
 
 The @code{help-flex} email list is served by GNU. See @uref{http://www.gnu.org/} for
 details on how to subscribe or search the archives.
 
-@node  Can I include comments in the "rules" section of the file?, I get an error about undefined yywrap()., Where else can I find help?, FAQ
+@node  Can I include comments in the "rules" section of the file?
 @unnumberedsec Can I include comments in the "rules" section of the file?
 
 Yes, just about anywhere you want to. See the manual for the specific syntax.
 
-@node  I get an error about undefined yywrap()., How can I change the matching pattern at run time?, Can I include comments in the "rules" section of the file?, FAQ
+@node  I get an error about undefined yywrap().
 @unnumberedsec I get an error about undefined yywrap().
 
 You must supply a @code{yywrap()} function of your own, or link to @file{libfl.a}
@@ -5703,12 +5703,12 @@ You must supply a @code{yywrap()} function of your own, or link to @file{libfl.a
 
 in your source to say you don't want a @code{yywrap()} function.
 
-@node  How can I change the matching pattern at run time?, How can I expand macros in the input?, I get an error about undefined yywrap()., FAQ
+@node  How can I change the matching pattern at run time?
 @unnumberedsec How can I change the matching pattern at run time?
 
 You can't, it's compiled into a static table when flex builds the scanner.
 
-@node How can I expand macros in the input?, How can I build a two-pass scanner?, How can I change the matching pattern at run time?, FAQ
+@node How can I expand macros in the input?
 @unnumberedsec How can I expand macros in the input?
 
 The best way to approach this problem is at a higher level, e.g., in the parser.
@@ -5743,7 +5743,7 @@ yyterminate();
 You probably will want a stack of expansion buffers to allow nested macros.
 From the above though hopefully the idea is clear.
 
-@node How can I build a two-pass scanner?, How do I match any string not matched in the preceding rules?, How can I expand macros in the input?, FAQ
+@node How can I build a two-pass scanner?
 @unnumberedsec How can I build a two-pass scanner?
 
 One way to do it is to filter the first pass to a temporary file,
@@ -5758,7 +5758,7 @@ tree, but the performance hit for the latter is usually an order of magnitude
 smaller, since everything is already classified, in binary format, and
 residing in memory.
 
-@node How do I match any string not matched in the preceding rules?, I am trying to port code from AT&T lex that uses yysptr and yysbuf., How can I build a two-pass scanner?, FAQ
+@node How do I match any string not matched in the preceding rules?
 @unnumberedsec How do I match any string not matched in the preceding rules?
 
 One way to assign precedence, is to place the more specific rules first. If
@@ -5779,7 +5779,7 @@ same amount of text as the more specific rules, and in that case the
 @code{flex} scanner will pick the first rule listed in your scanner as the
 one to match.
 
-@node I am trying to port code from AT&T lex that uses yysptr and yysbuf., Is there a way to make flex treat NULL like a regular character?, How do I match any string not matched in the preceding rules?, FAQ
+@node I am trying to port code from AT&T lex that uses yysptr and yysbuf.
 @unnumberedsec I am trying to port code from AT&T lex that uses yysptr and yysbuf.
 
 Those are internal variables pointing into the AT&T scanner's input buffer.  I
@@ -5789,13 +5789,13 @@ what they're doing, and then replace @code{input()} with an appropriate definiti
 @code{YY_INPUT}.  You shouldn't need to (and must not) replace
 @code{flex}'s @code{unput()} function.
 
-@node Is there a way to make flex treat NULL like a regular character?, Whenever flex can not match the input it says "flex scanner jammed"., I am trying to port code from AT&T lex that uses yysptr and yysbuf., FAQ
+@node Is there a way to make flex treat NULL like a regular character?
 @unnumberedsec Is there a way to make flex treat NULL like a regular character?
 
 Yes, @samp{\0} and @samp{\x00} should both do the trick.  Perhaps you have an ancient
 version of @code{flex}.  The latest release is version @value{VERSION}.
 
-@node Whenever flex can not match the input it says "flex scanner jammed"., Why doesnt flex have non-greedy operators like perl does?, Is there a way to make flex treat NULL like a regular character?, FAQ
+@node Whenever flex can not match the input it says "flex scanner jammed".
 @unnumberedsec Whenever flex can not match the input it says "flex scanner jammed".
 
 You need to add a rule that matches the otherwise-unmatched text.
@@ -5813,7 +5813,7 @@ e.g.,
 
 See @code{%option default} for more information.
 
-@node Why doesnt flex have non-greedy operators like perl does?, Memory leak - 16386 bytes allocated by malloc., Whenever flex can not match the input it says "flex scanner jammed"., FAQ
+@node Why doesnt flex have non-greedy operators like perl does?
 @unnumberedsec Why doesn't flex have non-greedy operators like perl does?
 
 A DFA can do a non-greedy match by stopping
@@ -5835,7 +5835,7 @@ state), and perhaps @samp{(.|\n)} to get a single character within the chunk ...
 
 This approach also has much better error-reporting properties.
 
-@node Memory leak - 16386 bytes allocated by malloc., How do I track the byte offset for lseek()?, Why doesnt flex have non-greedy operators like perl does?, FAQ
+@node Memory leak - 16386 bytes allocated by malloc.
 @unnumberedsec Memory leak - 16386 bytes allocated by malloc.
 @anchor{faq-memory-leak}
 
@@ -5865,7 +5865,7 @@ yy_init = 1;
 Note: @code{yy_init} is an "internal variable", and hasn't been tested in this
 situation. It is possible that some other globals may need resetting as well.
 
-@node How do I track the byte offset for lseek()?, How do I use my own I/O classes in a C++ scanner?, Memory leak - 16386 bytes allocated by malloc., FAQ
+@node How do I track the byte offset for lseek()?
 @unnumberedsec How do I track the byte offset for lseek()?
 
 @example
@@ -5900,7 +5900,7 @@ example,
 (You need to be careful to update your bookkeeping if you use @code{yymore(}),
 @code{yyless()}, @code{unput()}, or @code{input()}.)
 
-@node How do I use my own I/O classes in a C++ scanner?, How do I skip as many chars as possible?, How do I track the byte offset for lseek()?, FAQ
+@node How do I use my own I/O classes in a C++ scanner?
 @section How do I use my own I/O classes in a C++ scanner?
 
 When the flex C++ scanning class rewrite finally happens, then this sort of thing should become much easier.
@@ -5920,7 +5920,7 @@ ultimately passed to @code{LexerInput()} and @code{LexerOutput}, which then do w
 is necessary with them.
 
 @c faq edit stopped here
-@node How do I skip as many chars as possible?, unnamed-faq-33, How do I use my own I/O classes in a C++ scanner?, FAQ
+@node How do I skip as many chars as possible?
 @unnumberedsec How do I skip as many chars as possible?
 
 How do I skip as many chars as possible -- without interfering with the other
@@ -5963,8 +5963,8 @@ making it match "endskip" plus something else.  So for example:
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-33, unnamed-faq-42, How do I skip as many chars as possible?, FAQ
-@unnumberedsec unnamed-faq-33
+@node deleteme00
+@unnumberedsec deleteme00
 @example
 @verbatim
 QUESTION:
@@ -5978,8 +5978,8 @@ a legend was born :-).
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-42, unnamed-faq-43, unnamed-faq-33, FAQ
-@unnumberedsec unnamed-faq-42
+@node Are certain equivalent patterns faster than others?
+@unnumberedsec Are certain equivalent patterns faster than others?
 @example
 @verbatim
 To: Adoram Rogel <adoram@orna.hybridge.com>
@@ -6056,8 +6056,8 @@ the example in MISC/fastwc/.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-43, unnamed-faq-44, unnamed-faq-42, FAQ
-@unnumberedsec unnamed-faq-43
+@node Is backing up a big deal?
+@unnumberedsec Is backing up a big deal?
 @example
 @verbatim
 To: Adoram Rogel <adoram@hybridge.com>
@@ -6109,8 +6109,8 @@ Adding a 0 or two after each should do the trick.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-44, unnamed-faq-45, unnamed-faq-43, FAQ
-@unnumberedsec unnamed-faq-44
+@node Can I fake multi-byte character support?
+@unnumberedsec Can I fake multi-byte character support?
 @example
 @verbatim
 To: Heeman_Lee@hp.com
@@ -6148,8 +6148,8 @@ ftp.ee.lbl.gov.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-45, unnamed-faq-46, unnamed-faq-44, FAQ
-@unnumberedsec unnamed-faq-45
+@node deleteme01
+@unnumberedsec deleteme01
 @example
 @verbatim
 To: moleary@primus.com
@@ -6175,8 +6175,8 @@ won't happen for quite a while, unless someone else does it first.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-46, unnamed-faq-47, unnamed-faq-45, FAQ
-@unnumberedsec unnamed-faq-46
+@node Can you discuss some flex internals?
+@unnumberedsec Can you discuss some flex internals?
 @example
 @verbatim
 To: Johan Linde <jl@theophys.kth.se>
@@ -6231,8 +6231,8 @@ See above.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-47, unnamed-faq-48, unnamed-faq-46, FAQ
-@unnumberedsec unnamed-faq-47
+@node unput() messes up yy_at_bol
+@unnumberedsec unput() messes up yy_at_bol
 @example
 @verbatim
 To: Xinying Li <xli@npac.syr.edu>
@@ -6262,8 +6262,8 @@ The latest release is 2.5.4, by the way.  It fixes some bugs in 2.5.2 and
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-48, unnamed-faq-49, unnamed-faq-47, FAQ
-@unnumberedsec unnamed-faq-48
+@node The | operator is not doing what I want
+@unnumberedsec The | operator is not doing what I want
 @example
 @verbatim
 To: Alain.ISSARD@st.com
@@ -6303,8 +6303,8 @@ Let me know if you still have problems.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-49, unnamed-faq-50, unnamed-faq-48, FAQ
-@unnumberedsec unnamed-faq-49
+@node Why can't flex understand this variable trailing context pattern?
+@unnumberedsec Why can't flex understand this variable trailing context pattern?
 @example
 @verbatim
 To: Gregory Margo <gmargo@newton.vip.best.com>
@@ -6329,8 +6329,8 @@ encloses the definitions in parentheses.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-50, unnamed-faq-51, unnamed-faq-49, FAQ
-@unnumberedsec unnamed-faq-50
+@node The ^ operator isn't working
+@unnumberedsec The ^ operator isn't working
 @example
 @verbatim
 To: Thomas Hadig <hadig@toots.physik.rwth-aachen.de>
@@ -6366,8 +6366,8 @@ behavior by using the "-l" lex-compatibility flag, or "%option lex-compat".
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-51, unnamed-faq-52, unnamed-faq-50, FAQ
-@unnumberedsec unnamed-faq-51
+@node Trailing context is getting confused with trailing optional patterns
+@unnumberedsec Trailing context is getting confused with trailing optional patterns
 @example
 @verbatim
 To: Adoram Rogel <adoram@hybridge.com>
@@ -6397,8 +6397,8 @@ so flex's matching will be correct.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-52, unnamed-faq-53, unnamed-faq-51, FAQ
-@unnumberedsec unnamed-faq-52
+@node Is flex GNU or not?
+@unnumberedsec Is flex GNU or not?
 @example
 @verbatim
 To: Cameron MacKinnon <mackin@interlog.com>
@@ -6438,7 +6438,7 @@ The latest release is 2.5.4, by the way, available from ftp.ee.lbl.gov.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-53, unnamed-faq-54, unnamed-faq-52, FAQ
+@node unnamed-faq-53
 @unnumberedsec unnamed-faq-53
 @example
 @verbatim
@@ -6464,7 +6464,7 @@ of ()'s except for the trailing context operator, '/'.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-54, unnamed-faq-55, unnamed-faq-53, FAQ
+@node unnamed-faq-54
 @unnumberedsec unnamed-faq-54
 @example
 @verbatim
@@ -6493,7 +6493,7 @@ for sure won't be for many months to come).
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-55, unnamed-faq-56, unnamed-faq-54, FAQ
+@node unnamed-faq-55
 @unnumberedsec unnamed-faq-55
 @example
 @verbatim
@@ -6523,7 +6523,7 @@ variables, and then invokes yyFlexLexer::yylex() to do the regular scanning.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-56, unnamed-faq-57, unnamed-faq-55, FAQ
+@node unnamed-faq-56
 @unnumberedsec unnamed-faq-56
 @example
 @verbatim
@@ -6560,7 +6560,7 @@ it would confuse more people than it would enlighten.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-57, unnamed-faq-58, unnamed-faq-56, FAQ
+@node unnamed-faq-57
 @unnumberedsec unnamed-faq-57
 @example
 @verbatim
@@ -6593,7 +6593,7 @@ You can get 2.5.4 from ftp.ee.lbl.gov.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-58, unnamed-faq-59, unnamed-faq-57, FAQ
+@node unnamed-faq-58
 @unnumberedsec unnamed-faq-58
 @example
 @verbatim
@@ -6614,7 +6614,7 @@ Unfortunately, no, I don't.  You might try asking on comp.compilers.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-59, unnamed-faq-60, unnamed-faq-58, FAQ
+@node unnamed-faq-59
 @unnumberedsec unnamed-faq-59
 @example
 @verbatim
@@ -6647,7 +6647,7 @@ clean up the result (strip out the #line's).
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-60, unnamed-faq-61, unnamed-faq-59, FAQ
+@node unnamed-faq-60
 @unnumberedsec unnamed-faq-60
 @example
 @verbatim
@@ -6666,7 +6666,7 @@ The flex sources have a grammar for (f)lex.  Dunno about yacc,
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-61, unnamed-faq-62, unnamed-faq-60, FAQ
+@node unnamed-faq-61
 @unnumberedsec unnamed-faq-61
 @example
 @verbatim
@@ -6690,7 +6690,7 @@ Solution: override LexerInput() with a version that returns whole buffers.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-62, unnamed-faq-63, unnamed-faq-61, FAQ
+@node unnamed-faq-62
 @unnumberedsec unnamed-faq-62
 @example
 @verbatim
@@ -6724,7 +6724,7 @@ and, if you get complaints about too many rules, make the following change too:
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-63, unnamed-faq-64, unnamed-faq-62, FAQ
+@node unnamed-faq-63
 @unnumberedsec unnamed-faq-63
 @example
 @verbatim
@@ -6757,7 +6757,7 @@ is derived from istream.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-64, unnamed-faq-65, unnamed-faq-63, FAQ
+@node unnamed-faq-64
 @unnumberedsec unnamed-faq-64
 @example
 @verbatim
@@ -6787,7 +6787,7 @@ start reading from the given file at its present location.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-65, unnamed-faq-66, unnamed-faq-64, FAQ
+@node unnamed-faq-65
 @unnumberedsec unnamed-faq-65
 @example
 @verbatim
@@ -6814,7 +6814,7 @@ corresponding routines/symbols.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-66, unnamed-faq-67, unnamed-faq-65, FAQ
+@node unnamed-faq-66
 @unnumberedsec unnamed-faq-66
 @example
 @verbatim
@@ -6845,7 +6845,7 @@ last POSIX draft I saw).
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-67, unnamed-faq-68, unnamed-faq-66, FAQ
+@node unnamed-faq-67
 @unnumberedsec unnamed-faq-67
 @example
 @verbatim
@@ -6871,7 +6871,7 @@ I'm afraid I don't know what the problem might be.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-68, unnamed-faq-69, unnamed-faq-67, FAQ
+@node unnamed-faq-68
 @unnumberedsec unnamed-faq-68
 @example
 @verbatim
@@ -6899,7 +6899,7 @@ function (by deriving from yyFlexLexer).
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-69, unnamed-faq-70, unnamed-faq-68, FAQ
+@node unnamed-faq-69
 @unnumberedsec unnamed-faq-69
 @example
 @verbatim
@@ -6922,7 +6922,7 @@ The latest flex release, by the way, is 2.5.4, available from ftp.ee.lbl.gov.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-70, unnamed-faq-71, unnamed-faq-69, FAQ
+@node unnamed-faq-70
 @unnumberedsec unnamed-faq-70
 @example
 @verbatim
@@ -6946,7 +6946,7 @@ do this by redefining YY_USER_ACTION, as described in the manual.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-71, unnamed-faq-72, unnamed-faq-70, FAQ
+@node unnamed-faq-71
 @unnumberedsec unnamed-faq-71
 @example
 @verbatim
@@ -6976,7 +6976,7 @@ like the above is much more pragmatic than waiting for a new feature.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-72, unnamed-faq-73, unnamed-faq-71, FAQ
+@node unnamed-faq-72
 @unnumberedsec unnamed-faq-72
 @example
 @verbatim
@@ -7012,7 +7012,7 @@ since flex will put "#define foo 1" in the generated scanner.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-73, unnamed-faq-74, unnamed-faq-72, FAQ
+@node unnamed-faq-73
 @unnumberedsec unnamed-faq-73
 @example
 @verbatim
@@ -7039,7 +7039,7 @@ Sorry for the less-than-happy news ...
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-74, unnamed-faq-75, unnamed-faq-73, FAQ
+@node unnamed-faq-74
 @unnumberedsec unnamed-faq-74
 @example
 @verbatim
@@ -7068,7 +7068,7 @@ So that's the first thing to look for.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-75, unnamed-faq-76, unnamed-faq-74, FAQ
+@node unnamed-faq-75
 @unnumberedsec unnamed-faq-75
 @example
 @verbatim
@@ -7107,7 +7107,7 @@ The C++ istream version, using -B, takes 3.8 seconds.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-76, unnamed-faq-77, unnamed-faq-75, FAQ
+@node unnamed-faq-76
 @unnumberedsec unnamed-faq-76
 @example
 @verbatim
@@ -7129,7 +7129,7 @@ for it and then print it out.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-77, unnamed-faq-78, unnamed-faq-76, FAQ
+@node unnamed-faq-77
 @unnumberedsec unnamed-faq-77
 @example
 @verbatim
@@ -7153,7 +7153,7 @@ scan that in order to find the end of the string.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-78, unnamed-faq-79, unnamed-faq-77, FAQ
+@node unnamed-faq-78
 @unnumberedsec unnamed-faq-78
 @example
 @verbatim
@@ -7186,7 +7186,7 @@ Derive your own subclass and make mylineno a member variable of it.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-79, unnamed-faq-80, unnamed-faq-78, FAQ
+@node unnamed-faq-79
 @unnumberedsec unnamed-faq-79
 @example
 @verbatim
@@ -7234,7 +7234,7 @@ absolutely must squeeze every last cycle out of your scanner.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-80, unnamed-faq-81, unnamed-faq-79, FAQ
+@node unnamed-faq-80
 @unnumberedsec unnamed-faq-80
 @example
 @verbatim
@@ -7266,7 +7266,7 @@ numerous other flex tweaks :-).
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-81, unnamed-faq-82, unnamed-faq-80, FAQ
+@node unnamed-faq-81
 @unnumberedsec unnamed-faq-81
 @example
 @verbatim
@@ -7322,7 +7322,7 @@ Institute for Semantic Information Processing, University of Osnabrueck, FRG
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-82, unnamed-faq-83, unnamed-faq-81, FAQ
+@node unnamed-faq-82
 @unnumberedsec unnamed-faq-82
 @example
 @verbatim
@@ -7351,7 +7351,7 @@ scan.c with a larger value for
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-83, unnamed-faq-84, unnamed-faq-82, FAQ
+@node unnamed-faq-83
 @unnumberedsec unnamed-faq-83
 @example
 @verbatim
@@ -7398,7 +7398,7 @@ Sorry for the less-than-completely-satisfactory answer.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-84, unnamed-faq-85, unnamed-faq-83, FAQ
+@node unnamed-faq-84
 @unnumberedsec unnamed-faq-84
 @example
 @verbatim
@@ -7425,7 +7425,7 @@ consume tokens in an attempt to get the parser into a consistent state.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-85, unnamed-faq-86, unnamed-faq-84, FAQ
+@node unnamed-faq-85
 @unnumberedsec unnamed-faq-85
 @example
 @verbatim
@@ -7459,7 +7459,7 @@ This is off the top of my head, not sure it'll work.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-86, unnamed-faq-87, unnamed-faq-85, FAQ
+@node unnamed-faq-86
 @unnumberedsec unnamed-faq-86
 @example
 @verbatim
@@ -7492,7 +7492,7 @@ to declare local variables.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-87, unnamed-faq-88, unnamed-faq-86, FAQ
+@node unnamed-faq-87
 @unnumberedsec unnamed-faq-87
 @example
 @verbatim
@@ -7513,7 +7513,7 @@ safely make it a lot lower if needed.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-88, unnamed-faq-90, unnamed-faq-87, FAQ
+@node unnamed-faq-88
 @unnumberedsec unnamed-faq-88
 @example
 @verbatim
@@ -7541,7 +7541,7 @@ recompile everything, and it should all work.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-90, unnamed-faq-91, unnamed-faq-88, FAQ
+@node unnamed-faq-90
 @unnumberedsec unnamed-faq-90
 @example
 @verbatim
@@ -7577,7 +7577,7 @@ running the risk of consuming the entire input stream, as noted above.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-91, unnamed-faq-92, unnamed-faq-90, FAQ
+@node unnamed-faq-91
 @unnumberedsec unnamed-faq-91
 @example
 @verbatim
@@ -7646,7 +7646,7 @@ Share what you know. Learn what you don't.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-92, unnamed-faq-93, unnamed-faq-91, FAQ
+@node unnamed-faq-92
 @unnumberedsec unnamed-faq-92
 @example
 @verbatim
@@ -7666,7 +7666,7 @@ Derive your own subclass from yyFlexLexer.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-93, unnamed-faq-94, unnamed-faq-92, FAQ
+@node unnamed-faq-93
 @unnumberedsec unnamed-faq-93
 @example
 @verbatim
@@ -7691,7 +7691,7 @@ to values at that time.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-94, unnamed-faq-95, unnamed-faq-93, FAQ
+@node unnamed-faq-94
 @unnumberedsec unnamed-faq-94
 @example
 @verbatim
@@ -7728,7 +7728,7 @@ very slowly, a character at a time.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-95, unnamed-faq-96, unnamed-faq-94, FAQ
+@node unnamed-faq-95
 @unnumberedsec unnamed-faq-95
 @example
 @verbatim
@@ -7770,7 +7770,7 @@ distribution from ftp.ee.lbl.gov.  (Or you can first try removing
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-96, unnamed-faq-97, unnamed-faq-95, FAQ
+@node unnamed-faq-96
 @unnumberedsec unnamed-faq-96
 @example
 @verbatim
@@ -7798,7 +7798,7 @@ your "make" is broken, in which case compile scan.c to scan.o by hand.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-97, unnamed-faq-98, unnamed-faq-96, FAQ
+@node unnamed-faq-97
 @unnumberedsec unnamed-faq-97
 @example
 @verbatim
@@ -7819,7 +7819,7 @@ scanner of the scanner (e.g., "scanner->yylex()").
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-98, unnamed-faq-99, unnamed-faq-97, FAQ
+@node unnamed-faq-98
 @unnumberedsec unnamed-faq-98
 @example
 @verbatim
@@ -7843,7 +7843,7 @@ For flex, you can probably do the equivalent using a switch on YYSTATE.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-99, unnamed-faq-100, unnamed-faq-98, FAQ
+@node unnamed-faq-99
 @unnumberedsec unnamed-faq-99
 @example
 @verbatim
@@ -7872,7 +7872,7 @@ See the file "COPYING" in the flex distribution for the legalese.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-100, unnamed-faq-101, unnamed-faq-99, FAQ
+@node unnamed-faq-100
 @unnumberedsec unnamed-faq-100
 @example
 @verbatim
@@ -7895,7 +7895,7 @@ allow recursion), it is a scanner that's confined to regular expressions.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-101,  , unnamed-faq-100, FAQ
+@node unnamed-faq-101
 @unnumberedsec unnamed-faq-101
 @example
 @verbatim
@@ -8202,5 +8202,15 @@ to specific locations in the generated scanner, and may be used to insert arbitr
 @unnumberedsec Index of Scanner Options
 
 @printindex op
+
+@c A vim script to name the faq entries. delete this when faqs are no longer
+@c named "unnamed-faq-XXX".
+@c
+@c fu! Faq2 () range abort
+@c     let @r=input("Rename to: ")
+@c     exe "%s/" . @w . "/" . @r . "/g"
+@c     normal 'f
+@c endf
+@c nnoremap <F5>  1G/@node\s\+unnamed-faq-\d\+<cr>mfww"wy5ezt:call Faq()<cr>
 
 @bye
