@@ -122,3 +122,6 @@ ChangeLog:
 	-rcs2log -l 72 -u "vern	Vern	vern@ee.lbl.gov" -u "wlestes	W. L. Estes	wlestes@uncg.edu" | sed s:/usr/local/cvsroot/flex/::g >ChangeLog 
 
 .PHONY: ChangeLog
+
+dist-hook:
+	-cvs -Q export -D today -d $(PACKAGE)-$(VERSION)/tests $(PACKAGE)/tests && cd $(PACKAGE)-$(VERSION) && ./autogen.sh
