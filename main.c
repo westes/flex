@@ -39,7 +39,14 @@ static char rcsid[] =
 
 #include "flexdef.h"
 
-static char flex_version[] = "2.2";
+static char flex_version[] = "2.3";
+
+
+/* declare functions that have forward references */
+
+void flexinit PROTO((int, char**));
+void readin PROTO(());
+void set_up_initial_allocations PROTO(());
 
 
 /* these globals are all defined and commented in flexdef.h */
@@ -98,7 +105,7 @@ static int use_stdout;
 static char *skelname = NULL;
 
 
-main( argc, argv )
+int main( argc, argv )
 int argc;
 char **argv;
 
@@ -124,15 +131,13 @@ char **argv;
 	{
 	if ( interactive )
 	    fprintf( stderr,
-		 "-I (interactive) entails a minor performance penalty\n" );
+		     "-I (interactive) entails a minor performance penalty\n" );
 
 	if ( yymore_used )
-	    fprintf( stderr,
-		     "yymore() entails a minor performance penalty\n" );
+	    fprintf( stderr, "yymore() entails a minor performance penalty\n" );
 
 	if ( reject )
-	    fprintf( stderr,
-		     "REJECT entails a large performance penalty\n" );
+	    fprintf( stderr, "REJECT entails a large performance penalty\n" );
 
 	if ( variable_trailing_context_rules )
 	    fprintf( stderr,
@@ -179,7 +184,7 @@ char **argv;
  *    This routine does not return.
  */
 
-flexend( status )
+void flexend( status )
 int status;
 
     {
@@ -187,18 +192,36 @@ int status;
     char *flex_gettime();
 
     if ( skelfile != NULL )
-	(void) fclose( skelfile );
+	{
+	if ( ferror( skelfile ) )
+	    flexfatal( "error occurred when writing skeleton file" );
+
+	else if ( fclose( skelfile ) )
+	    flexfatal( "error occurred when closing skeleton file" );
+	}
 
     if ( temp_action_file )
 	{
-	(void) fclose( temp_action_file );
-	(void) unlink( action_file_name );
+	if ( ferror( temp_action_file ) )
+	    flexfatal( "error occurred when writing temporary action file" );
+
+	else if ( fclose( temp_action_file ) )
+	    flexfatal( "error occurred when closing temporary action file" );
+
+	else if ( unlink( action_file_name ) )
+	    flexfatal( "error occurred when deleting temporary action file" );
 	}
 
     if ( status != 0 && outfile_created )
 	{
-	(void) fclose( stdout );
-	(void) unlink( outfile );
+	if ( ferror( stdout ) )
+	    flexfatal( "error occurred when writing output file" );
+
+	else if ( fclose( stdout ) )
+	    flexfatal( "error occurred when closing output file" );
+
+	else if ( unlink( outfile ) )
+	    flexfatal( "error occurred when deleting output file" );
 	}
 
     if ( backtrack_report && backtrack_file )
@@ -212,7 +235,11 @@ int status;
 	else
 	    fprintf( backtrack_file, "Compressed tables always backtrack.\n" );
 
-	(void) fclose( backtrack_file );
+	if ( ferror( backtrack_file ) )
+	    flexfatal( "error occurred when writing backtracking file" );
+
+	else if ( fclose( backtrack_file ) )
+	    flexfatal( "error occurred when closing backtracking file" );
 	}
 
     if ( printstats )
@@ -267,8 +294,9 @@ int status;
 
 	fprintf( stderr, "  %d/%d NFA states\n", lastnfa, current_mns );
 	fprintf( stderr, "  %d/%d DFA states (%d words)\n", lastdfa,
-			 current_max_dfas, totnst );
-	fprintf( stderr, "  %d rules\n", num_rules - 1 /* - 1 for def. rule */ );
+		 current_max_dfas, totnst );
+	fprintf( stderr,
+		 "  %d rules\n", num_rules - 1 /* - 1 for def. rule */ );
 
 	if ( num_backtracking == 0 )
 	    fprintf( stderr, "  No backtracking\n" );
@@ -282,7 +310,7 @@ int status;
 	    fprintf( stderr, "  Beginning-of-line patterns used\n" );
 
 	fprintf( stderr, "  %d/%d start conditions\n", lastsc,
-			 current_max_scs );
+		 current_max_scs );
 	fprintf( stderr, "  %d epsilon states, %d double epsilon states\n",
 		 numeps, eps2 );
 
@@ -359,7 +387,7 @@ int status;
  *    flexinit( argc, argv );
  */
 
-flexinit( argc, argv )
+void flexinit( argc, argv )
 int argc;
 char **argv;
 
@@ -637,7 +665,7 @@ get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
  *    readin();
  */
 
-readin()
+void readin()
 
     {
     skelout();
@@ -682,7 +710,7 @@ readin()
 
 /* set_up_initial_allocations - allocate memory for internal tables */
 
-set_up_initial_allocations()
+void set_up_initial_allocations()
 
     {
     current_mns = INITIAL_MNS;
