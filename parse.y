@@ -60,7 +60,10 @@ char *alloca ();
 
 int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, actvp, rulelen;
 int trlcontxt, xcluflg, cclsorted, varlength, variable_trail_rule;
-int *active_ss;
+
+int *actvsc, *active_ss, *scon_stk;
+int scon_stk_ptr, max_scon_stk;
+
 Char clower();
 void build_eof_action();
 void yyerror();
@@ -133,10 +136,15 @@ sect1end	:  SECTEND
 			 * are, so create the "activity" map indicating
 			 * which conditions are active.
 			 */
+			actvsc = allocate_integer_array( lastsc + 1 );
 			active_ss = allocate_integer_array( lastsc + 1 );
 
 			for ( i = 1; i <= lastsc; ++i )
 				active_ss[i] = 0;
+
+			max_scon_stk = lastsc + 1;
+			scon_stk = allocate_integer_array( max_scon_stk );
+			scon_stk_ptr = 0;
 			}
 		;
 
@@ -158,7 +166,8 @@ namelist1	:  namelist1 NAME
 		;
 
 sect2		:  sect2 initforrule flexrule '\n'
-		|  sect2 '{' '\n' sect2 '}' '\n'
+		|  sect2 '\n' scons '{' sect2 '}'
+			{ scon_stk_ptr = $2; }
 		|
 		;
 
@@ -169,6 +178,7 @@ initforrule	:
 			trailcnt = headcnt = rulelen = 0;
 			current_state_type = STATE_NORMAL;
 			previous_continued_action = continued_action;
+			in_rule = true;
 			new_rule();
 			}
 		;
@@ -264,6 +274,23 @@ flexrule	:  scon '^' rule
 		|  error
 			{ synerr( "unrecognized rule" ); }
 		;
+
+scons		: scon
+			{
+			$$ = scon_stk_ptr;
+
+			scon_stk_ptr += actvp;
+
+			while ( scon_stk_ptr >= max_scon_stk )
+				{
+				max_scon_stk *= 2;
+				scon_stk = reallocate_integer_array( scon_stk,
+						max_scon_stk );
+				}
+
+			for ( i = 1; i <= actvp; ++i )
+				scon_stk[$$ + i] = actvsc[i];
+			}
 
 scon		:  '<' namelist2 '>'
 
