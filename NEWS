@@ -5,6 +5,8 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.25
 
+** Fixed table deserialization bug on big-endian archs. Patch sent from Bryce Nichols <bryce@bnichols.org>
+
 ** yyleng has proper declarations now; this caused flex to generate
    unusable scanners for some programs
 
