@@ -11,7 +11,7 @@
 
 #ifdef __cplusplus
 #include <stdlib.h>
-#include <strings.h>
+#include <osfcn.h>
 
 /* use prototypes in function declarations */
 #define YY_USE_PROTOS
@@ -37,14 +37,14 @@
 
 #ifdef YY_USE_PROTOS
 #define YY_PROTO(proto) proto
-#ifndef __cplusplus
 char *malloc( unsigned size );
 int free( char * );
-#endif
 #else
 #define YY_PROTO(proto) ()
+/* there's no standard place to get these definitions */
 char *malloc();
 int free();
+int read();
 #endif
 
 /* amount of stuff to slurp up with each read */
