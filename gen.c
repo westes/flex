@@ -1052,7 +1052,7 @@ void make_tables()
 		indent_puts(
 		"YY_FATAL_ERROR( \"token too large, exceeds YYLMAX\" ); \\" );
 		indent_down();
-		indent_puts( "strcpy( yytext, (char *) yytext_ptr ); \\" );
+		indent_puts( "strcpy( yytext, yytext_ptr ); \\" );
 		}
 
 	set_indent( 0 );
