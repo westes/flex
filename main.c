@@ -50,7 +50,7 @@ void set_up_initial_allocations PROTO((void));
 
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
-int interactive, caseins, useecs, fulltbl, usemecs;
+int interactive, caseins, lex_compat, useecs, fulltbl, usemecs;
 int fullspd, gen_line_dirs, performance_report, backing_up_report;
 int C_plus_plus, long_align, use_read, yytext_is_array, csize;
 int yymore_used, reject, real_reject, continued_action;
@@ -134,6 +134,14 @@ char **argv;
 
 	if ( performance_report > 0 )
 		{
+		if ( lex_compat )
+			{
+			fprintf( stderr,
+"-l AT&T lex compatibility option entails a large performance penalty\n" );
+			fprintf( stderr,
+" and may be the actual source of other reported performance penalties\n" );
+			}
+
 		if ( performance_report > 1 )
 			{
 			if ( interactive )
@@ -264,6 +272,8 @@ int exit_status;
 			putc( 'd', stderr );
 		if ( caseins )
 			putc( 'i', stderr );
+		if ( lex_compat )
+			putc( 'l', stderr );
 		if ( performance_report > 0 )
 			putc( 'p', stderr );
 		if ( performance_report > 1 )
@@ -418,6 +428,7 @@ char **argv;
 	char *arg, *mktemp();
 
 	printstats = syntaxerror = trace = spprdflt = caseins = false;
+	lex_compat = false;
 	C_plus_plus = backing_up_report = ddebug = fulltbl = fullspd = false;
 	long_align = nowarn = yymore_used = continued_action = reject = false;
 	yytext_is_array = yymore_really_used = reject_really_used = false;
@@ -548,6 +559,10 @@ char **argv;
 					caseins = true;
 					break;
 
+				case 'l':
+					lex_compat = true;
+					break;
+
 				case 'L':
 					gen_line_dirs = false;
 					break;
@@ -643,14 +658,31 @@ char **argv;
 			interactive = true;
 		}
 
+	if ( lex_compat )
+		{
+		if ( C_plus_plus )
+			flexerror( "Can't use -+ with -l option" );
+
+		if ( fulltbl || fullspd )
+			flexerror( "Can't use -f or -F with -l option" );
+
+		/* Don't rely on detecting use of yymore() and REJECT,
+		 * just assume they'll be used.
+		 */
+		yymore_really_used = reject_really_used = true;
+
+		yytext_is_array = true;
+		use_read = false;
+		}
+
 	if ( (fulltbl || fullspd) && usemecs )
-		flexerror( "full table and -Cm don't make sense together" );
+		flexerror( "-f/-F and -Cm don't make sense together" );
 
 	if ( (fulltbl || fullspd) && interactive )
-		flexerror( "full table and -I are incompatible" );
+		flexerror( "-f/-F and -I are incompatible" );
 
 	if ( fulltbl && fullspd )
-		flexerror( "full table and -F are mutually exclusive" );
+		flexerror( "-f and -F are mutually exclusive" );
 
 	if ( ! use_stdout )
 		{
@@ -804,16 +836,37 @@ void readin()
 	if ( ! C_plus_plus )
 		{
 		if ( use_read )
+			{
 			printf(
 "\tif ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \\\n" );
+			printf(
+		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );\n" );
+			}
+
 		else
 			{
 			printf(
-"\tif ( ((result = fread( (char *) buf, 1, max_size, yyin )) == 0) && \\\n" );
+			"\tif ( yy_current_buffer->is_interactive ) \\\n" );
 			printf(
-"\t     ferror( yyin ) ) \\\n" );
+		"\t\tresult = (buf[0] = getc( yyin )) == EOF ? 0 : 1; \\\n" );
+			printf(
+"\telse if ( ((result = fread( (char *) buf, 1, max_size, yyin )) == 0)\\\n" );
+			printf( "\t\t  && ferror( yyin ) ) \\\n" );
+			printf(
+		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );\n" );
 			}
 		}
+
+	skelout();
+
+	if ( lex_compat )
+		{
+		printf( "FILE *yyin = stdin, *yyout = stdout;\n" );
+		printf( "extern int yylineno;\n" );
+		printf( "int yylineno = 1;\n" );
+		}
+	else
+		printf( "FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;\n" );
 
 	skelout();
 

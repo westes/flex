@@ -3,7 +3,7 @@
 flexdoc \- documentation for flex, fast lexical analyzer generator
 .SH SYNOPSIS
 .B flex
-.B [\-abcdfhinpstvwBFILTV78+ \-C[efFmr] \-Pprefix \-Sskeleton]
+.B [\-abcdfhilnpstvwBFILTV78+ \-C[efFmr] \-Pprefix \-Sskeleton]
 .I [filename ...]
 .SH DESCRIPTION
 .I flex
@@ -454,7 +454,12 @@ uses by including one of the special directives
 or
 .B %array
 in the first (definitions) section of your flex input.  The default is
-.B %pointer.
+.B %pointer,
+unless you use the
+.B -l
+lex compatibility option, in which case
+.B yytext
+will be an array.
 The advantage of using
 .B %pointer
 is substantially faster scanning and no buffer overflow when matching
@@ -1594,6 +1599,19 @@ matched text given in
 .I yytext
 will have the preserved case (i.e., it will not be folded).
 .TP
+.B \-l
+turns on maximum compatibility with the original AT&T
+.I lex
+implementation.  Note that this does not mean
+.I full
+compatibility.  Use of this option costs a considerable amount of
+performance, and it cannot be used with the
+.B \-+, -f, -F, -Cf,
+or
+.B -CF
+options.  For details on the compatibilities it provides, see the section
+"Incompatibilities With Lex And POSIX" below.
+.TP
 .B \-n
 is another do-nothing, deprecated option included only for
 POSIX compliance.
@@ -1903,7 +1921,9 @@ array look-up per character scanned).
 causes the generated scanner to
 .I bypass
 use of the standard I/O library (stdio) for input.  Instead of calling
-.B fread(),
+.B fread()
+or
+.B getc(),
 the scanner will use the
 .B read()
 system call, resulting in a performance gain which varies from system
@@ -2537,30 +2557,33 @@ Here is an example of a simple C++ scanner:
 .fi
 .SH INCOMPATIBILITIES WITH LEX AND POSIX
 .I flex
-is a rewrite of the Unix
+is a rewrite of the AT&T Unix
 .I lex
 tool (the two implementations do not share any code, though),
 with some extensions and incompatibilities, both of which
 are of concern to those who wish to write scanners acceptable
-to either implementation.  At present, the POSIX
+to either implementation.  The POSIX
 .I lex
-draft is
-close to the original
+specification is closer to
+.I flex's
+behavior than that of the original
 .I lex
-implementation, so some of these
-incompatibilities are also in conflict with the POSIX draft.  But
-the intent is that ultimately
+implementation, but there also remain some incompatibilities between
 .I flex
-will be fully POSIX-conformant.  Please bear in
-mind that all the comments which follow are with regard to the POSIX
-.I draft
-of Spring 1990 (draft 10), and not the final document (or subsequent
-drafts); they are included so
+and POSIX.  The intent is that ultimately
 .I flex
-users can be aware of the standardization issues and those areas where
-.I flex
-may in the near future undergo changes incompatible with
-its current definition.
+will be fully POSIX-conformant.  In this section we discuss all of
+the known areas of incompatibility.
+.PP
+.I flex's
+.B \-l
+option turns on maximum compatibility with the original AT&T
+.I lex
+implementation, at the cost of a major loss in the generated scanner's
+performance.  We note below which incompatibilities can be overcome
+using the
+.B \-l
+option.
 .PP
 .I flex
 is fully compatible with
@@ -2571,19 +2594,11 @@ The undocumented
 .I lex
 scanner internal variable
 .B yylineno
-is not supported.  It is difficult to support this option efficiently,
-since it requires examining every character scanned and reexamining
-the characters when the scanner backs up.
-Things get more complicated when the end of buffer or file is reached or a
-NUL is scanned (since the scan must then be restarted with the proper line
-number count), or the user uses the yyless(), unput(), or REJECT actions,
-or the multiple input buffer functions.
+is not supported unless
+.B \-l
+is used.
 .IP
-The fix is to add rules which, upon seeing a newline, increment
-yylineno.  This is usually an easy process, though it can be a drag if some
-of the patterns can match multiple newlines along with other characters.
-.IP
-yylineno is not part of the POSIX draft.
+yylineno is not part of the POSIX specification.
 .IP -
 The
 .B input()
@@ -2605,12 +2620,10 @@ The
 .I flex
 restriction that
 .B input()
-cannot be redefined is in accordance with the POSIX draft, but
-.B YY_INPUT
-has not yet been accepted into the draft (and probably won't; it looks
-like the draft will simply not specify any way of controlling the
+cannot be redefined is in accordance with the POSIX specification,
+which simply does not specify any way of controlling the
 scanner's input other than by making an initial assignment to
-.I yyin).
+.I yyin.
 .IP -
 .I flex
 scanners are not as reentrant as
@@ -2648,11 +2661,11 @@ macro is done to the file-pointer
 .I stdout).
 .IP
 .B output()
-is not part of the POSIX draft.
+is not part of the POSIX specification.
 .IP -
 .I lex
 does not support exclusive start conditions (%x), though they
-are in the current POSIX draft.
+are in the POSIX specification.
 .IP -
 When definitions are expanded,
 .I flex
@@ -2689,23 +2702,19 @@ operators cannot be used in a
 .I flex
 definition.
 .IP
-The POSIX draft interpretation is the same as
-.I flex's.
-.IP -
-To specify a character class which matches anything but a left bracket (']'),
-in
+Using
+.B \-l
+results in the
 .I lex
-one can use "[^]]" but with
-.I flex
-one must use "[^\\]]".  The latter works with
-.I lex,
-too.
+behavior of no parentheses around the definition.
+.IP
+The POSIX specification is that the definition be enclosed in parentheses.
 .IP -
 The
 .I lex
 .B %r
 (generate a Ratfor scanner) option is not supported.  It is not part
-of the POSIX draft.
+of the POSIX specification.
 .IP -
 After a call to
 .B unput(),
@@ -2717,7 +2726,9 @@ was built using
 .B %array.
 This is not the case with
 .I lex
-or the present POSIX draft.
+or the POSIX specification.  The
+.B \-l
+option does away with this incompatibility.
 .IP -
 The precedence of the
 .B {}
@@ -2728,7 +2739,7 @@ three occurrences of 'abc'", whereas
 .I flex
 interprets it as "match 'ab'
 followed by one, two, or three occurrences of 'c'".  The latter is
-in agreement with the current POSIX draft.
+in agreement with the POSIX specification.
 .IP -
 The precedence of the
 .B ^
@@ -2738,7 +2749,7 @@ interprets "^foo|bar" as "match either 'foo' at the beginning of a line,
 or 'bar' anywhere", whereas
 .I flex
 interprets it as "match either 'foo' or 'bar' if they come at the beginning
-of a line".  The latter is in agreement with the current POSIX draft.
+of a line".  The latter is in agreement with the POSIX specification.
 .IP -
 .I yyin
 is
@@ -2764,6 +2775,10 @@ subtle, but the net effect is that with
 scanners,
 .I yyin
 does not have a valid value until the scanner has been called.
+.IP
+The
+.B \-l
+option does away with this incompatibility.
 .IP -
 The special table-size declarations such as
 .B %a
@@ -2787,7 +2802,7 @@ The following
 .I flex
 features are not included in
 .I lex
-or the POSIX draft standard:
+or the POSIX specification:
 .nf
 
     yyterminate()

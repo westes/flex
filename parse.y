@@ -311,7 +311,7 @@ rule		:  re2 re
 				headcnt = 0;
 				}
 
-			if ( varlength && headcnt == 0 )
+			if ( lex_compat || (varlength && headcnt == 0) )
 				{ /* variable trailing context rule */
 				/* Mark the first part of the rule as the
 				 * accepting "head" part of a trailing
@@ -359,7 +359,7 @@ rule		:  re2 re
 				headcnt = 0;
 				}
 
-			if ( varlength && headcnt == 0 )
+			if ( lex_compat || (varlength && headcnt == 0) )
 				{
 				/* Again, see the comment in the rule for
 				 * "re2 re" above.
@@ -391,7 +391,7 @@ rule		:  re2 re
 
 			if ( trlcontxt )
 				{
-				if ( varlength && headcnt == 0 )
+				if ( lex_compat || (varlength && headcnt == 0) )
 					/* Both head and trail are
 					 * variable-length.
 					 */

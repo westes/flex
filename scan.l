@@ -109,7 +109,13 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 			return SECTEND;
 			}
 
-^"%pointer".*{NL}	++linenum; yytext_is_array = false;
+^"%pointer".*{NL}	{
+			if ( lex_compat )
+				warn( "%pointer incompatible with -l option" );
+			else
+				yytext_is_array = false;
+			++linenum;
+			}
 ^"%array".*{NL}		{
 			if ( C_plus_plus )
 				warn( "%array incompatible with -+ option" );
@@ -336,9 +342,9 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 				{ /* push back name surrounded by ()'s */
 				int len = strlen( nmdefptr );
 
-				if ( nmdefptr[0] == '^' ||
+				if ( lex_compat || nmdefptr[0] == '^' ||
 				     (len > 0 && nmdefptr[len - 1] == '$') )
-					{
+					{ /* don't use ()'s after all */
 					PUT_BACK_STRING(nmdefptr, 0);
 
 					if ( nmdefptr[0] == '^' )
@@ -381,8 +387,8 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 			}
 
 
-<FIRSTCCL>"^"/[^-\n]	BEGIN(CCL); return '^';
-<FIRSTCCL>"^"/-		return '^';
+<FIRSTCCL>"^"/[^-\]\n]	BEGIN(CCL); return '^';
+<FIRSTCCL>"^"/("-"|"]")	return '^';
 <FIRSTCCL>.		BEGIN(CCL); RETURNCHAR;
 
 <CCL>-/[^\]\n]		return '-';

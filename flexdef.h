@@ -309,6 +309,7 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * spprdflt - if true (-s), suppress the default rule
  * interactive - if true (-I), generate an interactive scanner
  * caseins - if true (-i), generate a case-insensitive scanner
+ * lex_compat - if true (-l), maximize compatibility with AT&T lex
  * useecs - if true (-Ce flag), use equivalence classes
  * fulltbl - if true (-Cf flag), don't compress the DFA state table
  * usemecs - if true (-Cm flag), use meta-equivalence classes
@@ -340,7 +341,7 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  */
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
-extern int interactive, caseins, useecs, fulltbl, usemecs;
+extern int interactive, caseins, lex_compat, useecs, fulltbl, usemecs;
 extern int fullspd, gen_line_dirs, performance_report, backing_up_report;
 extern int C_plus_plus, long_align, use_read, yytext_is_array, csize;
 extern int yymore_used, reject, real_reject, continued_action;

@@ -1255,6 +1255,24 @@ void make_tables()
 	gen_find_action();
 
 	skelout();
+	if ( lex_compat )
+		{
+		indent_puts( "if ( yy_act != YY_END_OF_BUFFER )" );
+		indent_up();
+		indent_puts( "{" );
+		indent_puts( "int yyl;" );
+		indent_puts( "for ( yyl = 0; yyl < yyleng; ++yyl )" );
+		indent_up();
+		indent_puts( "if ( yytext[yyl] == '\\n' )" );
+		indent_up();
+		indent_puts( "++yylineno;" );
+		indent_down();
+		indent_down();
+		indent_puts( "}" );
+		indent_down();
+		}
+
+	skelout();
 	if ( ddebug )
 		{
 		indent_puts( "if ( yy_flex_debug )" );
@@ -1365,6 +1383,15 @@ void make_tables()
 	set_indent( 1 );
 	skelout();
 	gen_NUL_trans();
+
+	skelout();
+	if ( lex_compat )
+		{ /* update yylineno inside of unput() */
+		indent_puts( "if ( c == '\\n' )" );
+		indent_up();
+		indent_puts( "--yylineno;" );
+		indent_down();
+		}
 
 	skelout();
 
