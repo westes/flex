@@ -37,9 +37,9 @@
 #define CMD_IF_TABLES_SER    "%if-tables-serialization"
 #define CMD_TABLES_YYDMAP    "%tables-yydmap"
 #define CMD_DEFINE_YYTABLES  "%define-yytables"
-#define CMD_CPP_ONLY         "%c++-only"
-#define CMD_C_ONLY           "%c-only"
-#define CMD_C_OR_CPP         "%c-or-c++"
+#define CMD_IF_CPP_ONLY      "%if-c++-only"
+#define CMD_IF_C_ONLY        "%if-c-only"
+#define CMD_IF_C_OR_CPP      "%if-c-or-c++"
 #define CMD_NOT_FOR_HEADER   "%not-for-header"
 #define CMD_OK_FOR_HEADER    "%ok-for-header"
 #define CMD_PUSH             "%push"
@@ -939,16 +939,19 @@ void skelout ()
                 out_str("#define YYTABLES_NAME \"%s\"\n",
                         tablesname?tablesname:"yytables");
             }
-			else if (cmd_match (CMD_CPP_ONLY)) {
+			else if (cmd_match (CMD_IF_CPP_ONLY)) {
 				/* only for C++ */
+                sko_push(do_copy);
 				do_copy = C_plus_plus;
 			}
-			else if (cmd_match (CMD_C_ONLY)) {
+			else if (cmd_match (CMD_IF_C_ONLY)) {
 				/* %- only for C */
+                sko_push(do_copy);
 				do_copy = !C_plus_plus;
 			}
-			else if (cmd_match (CMD_C_OR_CPP)) {
+			else if (cmd_match (CMD_IF_C_OR_CPP)) {
 				/* %* for C and C++ */
+                sko_push(do_copy);
 				do_copy = true;
 			}
 			else if (cmd_match (CMD_NOT_FOR_HEADER)) {
