@@ -1,65 +1,27 @@
 // $Header$
 
-This is release 2.3 of flex - a full release.
+This is release 2.4 of flex.  See "version.h" for the exact patch-level.
 
-The flex distribution consists of the following files:
+Read the "Installation considerations" note in the Makefile and make any
+necessary changes.
 
-	README		This message
+To make this version of flex for the first time (even if you've already
+installed earlier version of flex), use:
 
-	Makefile
-	flexdef.h
-	parse.y
-	scan.l
-	ccl.c
-	dfa.c
-	ecs.c		flex sources
-	gen.c
-	main.c
-	misc.c
-	nfa.c
-	sym.c
-	tblcmp.c
-	yylex.c
+	make bootstrap
 
-	libmain.c	flex library (-lfl) source
+and then
 
-	initscan.c	pre-flex'd version of scan.l
+	make
 
-	flex.skel	skeleton for generated scanners
+Assuming flex builds successfully, you can test it using
 
-	flexdoc.1	full user documentation
-	flex.1		reference documentation
-
-	Changes		Differences between this release and the previous one
-
-	COPYING		flex's copyright
-
-	MISC/		a directory containing miscellaneous porting-related
-			notes (for Atari, MS-DOS, Turbo-C, and VMS)
-
-
-Decide where you want to keep flex.skel (suggestion:  /usr/local/lib),
-but don't move it there yet.  Edit "Makefile" and change the definition
-of SKELETON_FILE to reflect the full pathname of flex.skel.
-
-Read the "Porting considerations" note in the Makefile and make
-the necessary changes.
-
-To make flex for the first time, use:
-
-    make first_flex
-
-which uses the pre-generated copy of the flex scanner (the scanner
-itself is written using flex).
-
-Assuming it builds successfully, you can test it using
-
-    make test
+	make check
 
 The "diff" should not show any differences.
 
-If you're feeling adventurous, issue "make bigtest" and be prepared
-to wait a while.
+If you're feeling adventurous, issue "make bigcheck" and be prepared to wait
+a while.
 
 Install flex using:
 
@@ -69,11 +31,48 @@ Install flex using:
 Please send problems and feedback to:
 
 	vern@ee.lbl.gov
-	ucbvax!ee.lbl.gov!vern
 
 	Vern Paxson
-	Computer Systems Engineering
+	Systems Engineering
 	46A/1123
 	Lawrence Berkeley Laboratory
 	1 Cyclotron Rd.
 	Berkeley, CA 94720
+
+
+The flex distribution consists of the following files:
+
+	README		This message
+
+	Makefile, flexdef.h, parse.y, scan.l, ccl.c, dfa.c, ecs.c, gen.c,
+	main.c, misc.c, nfa.c, sym.c, tblcmp.c, yylex.c	
+			source files
+
+	version.h	version of this flex release
+
+	flex.skl	flex scanner skeleton
+	mkskel.sh	script for converting flex.skl to C source file skel.c
+
+	liballoc.c
+	libmain.c	flex library (-lfl) sources
+	libyywrap.c
+
+	initscan.c	pre-flex'd version of scan.l
+
+	FlexLexer.h	header file for C++ lexer class
+
+	flexdoc.1	full user documentation
+	flex.1		reference documentation
+
+	flexdoc.man	preformatted versions of documentation
+	flex.man
+
+	manual/		A flex user manual written by G.T. Nicol.  See
+			manual/README for details.
+
+	Changes		Differences between this release and the previous one
+
+	COPYING		flex's copyright
+
+	MISC/		a directory containing miscellaneous contributions.
+			See MISC/README for details.
