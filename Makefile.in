@@ -65,11 +65,11 @@ SOURCES = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.y \
 OBJECTS = ccl.o dfa.o ecs.o gen.o main.o misc.o nfa.o parse.o \
 	scan.o skel.o sym.o tblcmp.o yylex.o @ALLOCA@
 
-LIBSRCS = liballoc.c libmain.c libyywrap.c
-LIBOBJS = liballoc.o libmain.o libyywrap.o
+LIBSRCS = liballoc.c libmain.c libstring.c libyywrap.c
+LIBOBJS = liballoc.o libmain.o libstring.o libyywrap.o
 
 LINTSRCS = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.c \
-	scan.c skel.c sym.c tblcmp.c yylex.c liballoc.c
+	scan.c skel.c sym.c tblcmp.c yylex.c liballoc.c libstring.c
 
 DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	configure.in Makefile.in mkskel.sh flex.skl \
@@ -195,16 +195,16 @@ TAGS: $(SOURCES)
 	etags $(SOURCES)
 
 lint: $(LINTSRCS)
-	lint $(LINTSRCS) > flex.lint
+	lint -Dconst= $(LINTSRCS) > flex.lint
 
 gcc-lint: $(LINTSRCS)
 	gcc -Dlint -Wall $(LINTSRCS) >flex.gcc-lint 2>&1
 
 mostlyclean:
-	rm -f *~ *.bak core errs scan.tmp
+	rm -f *~ a.out *.bak core errs scan.tmp
 
 clean: mostlyclean
-	rm -f parse.c parse.h *.o alloca.c *.lint lex.yy.c $(FLEXLIB)
+	rm -f parse.c parse.h *.o alloca.c *.lint lex.yy.c lex.yy.cc $(FLEXLIB)
 
 distclean: clean
 	rm -f .bootstrap flex scan.c tags TAGS Makefile config.status
