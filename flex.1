@@ -1,4 +1,4 @@
-.TH FLEXDOC 1 "December 1993" "Version 2.5"
+.TH FLEXDOC 1 "December 1994" "Version 2.5"
 .SH NAME
 flexdoc \- documentation for flex, fast lexical analyzer generator
 .SH SYNOPSIS
@@ -511,9 +511,9 @@ to a different value in the first section of your
 .I flex
 input.  As mentioned above, with
 .B %pointer
-yytext grows dynamically to accomodate large tokens.  While this means your
+yytext grows dynamically to accommodate large tokens.  While this means your
 .B %pointer
-scanner can accomodate very large tokens (such as matching entire blocks
+scanner can accommodate very large tokens (such as matching entire blocks
 of comments), bear in mind that each time the scanner must resize
 .B yytext
 it also must rescan the entire token from the beginning, so matching such
@@ -698,7 +698,19 @@ beginning of
 so the
 .B ECHO
 for the "kludge" rule will actually write "mega-kludge".
-The presence of
+.PP
+Two notes regarding use of
+.B yymore().
+First,
+.B yymore()
+depends on the value of
+.I yyleng
+correctly reflecting the size of the current token, so you must not
+modify
+.I yyleng
+if you are using
+.B yymore().
+Second, the presence of
 .B yymore()
 in the scanner's action entails a minor performance penalty in the
 scanner's matching speed.
@@ -746,10 +758,13 @@ to be rescanned enclosed in parentheses.
 
     {
     int i;
+    /* Copy yytext because unput() trashes yytext */
+    char *yycopy = strdup( yytext );
     unput( ')' );
     for ( i = yyleng - 1; i >= 0; --i )
-        unput( yytext[i] );
+        unput( yycopy[i] );
     unput( '(' );
+    free( yycopy );
     }
 
 .fi
@@ -758,7 +773,26 @@ Note that since each
 puts the given character back at the
 .I beginning
 of the input stream, pushing back strings must be done back-to-front.
-Also note that you cannot put back
+.PP
+An important potential problem when using
+.B unput()
+is that if you are using
+.B %pointer
+(the default), a call to
+.B unput()
+.I destroys
+the contents of
+.I yytext,
+starting with its rightmost character and devouring one character to
+the left with each call.  If you need the value of yytext preserved
+after a call to
+.B unput()
+(as in the above example),
+you must either first copy it elsewhere, or build your scanner using
+.B %array
+instead (see How The Input Is Matched).
+.PP
+Finally, note that you cannot put back
 .B EOF
 to attempt to mark the input stream with an end-of-file.
 .IP -
@@ -866,7 +900,11 @@ is called.
 .B yyrestart()
 takes one argument, a
 .B FILE *
-pointer, and initializes
+pointer (which can be nil, if you've set up
+.B YY_INPUT
+to scan from a source other than
+.I yyin),
+and initializes
 .I yyin
 for scanning from that file.  Essentially there is no difference between
 just assigning
@@ -934,7 +972,11 @@ function has gone ahead and set up
 .I yyin
 to point to another input file, and scanning continues.  If it returns
 true (non-zero), then the scanner terminates, returning 0 to its
-caller.
+caller.  Note that in either case, the start condition remains unchanged;
+it does
+.I not
+revert to
+.B INITIAL.
 .PP
 The default
 .B yywrap()
@@ -1229,10 +1271,10 @@ not including checking for a string that's too long):
     <str>\\\\(.|\\n)  *string_buf_ptr++ = yytext[1];
 
     <str>[^\\\\\\n\\"]+        {
-            char *yytext_ptr = yytext;
+            char *yptr = yytext;
 
-            while ( *yytext_ptr )
-                    *string_buf_ptr++ = *yytext_ptr++;
+            while ( *yptr )
+                    *string_buf_ptr++ = *yptr++;
             }
 
 .fi
@@ -1267,7 +1309,31 @@ characters (when in doubt, use
 .B YY_BUF_SIZE
 for the size).  It returns a
 .B YY_BUFFER_STATE
-handle, which may then be passed to other routines:
+handle, which may then be passed to other routines (see below).  The
+.B YY_BUFFER_STATE
+type is a pointer to an opaque
+.B struct yy_buffer_state
+structure, so you may safely initialize YY_BUFFER_STATE variables to
+.B ((YY_BUFFER_STATE) 0)
+if you wish, and also refer to the opaque structure in order to
+correctly declare input buffers in source files other than that
+of your scanner.  Note that the
+.I FILE
+pointer in the call to
+.B yy_create_buffer
+is only used as the value of
+.I yyin
+seen by
+.B YY_INPUT;
+if you redefine
+.B YY_INPUT
+so it no longer uses
+.I yyin,
+then you can safely pass a nil
+.I FILE
+pointer to
+.B yy_create_buffer.
+You select a particular buffer to scan from using:
 .nf
 
     void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
@@ -1281,7 +1347,13 @@ Note that
 may be used by yywrap() to set things up for continued scanning, instead
 of opening a new file and pointing
 .I yyin
-at it.
+at it.  Note also that switching input sources via either
+.B yy_switch_to_buffer()
+or
+.B yywrap()
+does
+.I not
+change the start condition.
 .nf
 
     void yy_delete_buffer( YY_BUFFER_STATE buffer )
@@ -1504,8 +1576,9 @@ Generate backing-up information to
 .I lex.backup.
 This is a list of scanner states which require backing up
 and the input characters on which they do so.  By adding rules one
-can remove backing-up states.  If all backing-up states
-are eliminated and
+can remove backing-up states.  If
+.I all
+backing-up states are eliminated and
 .B \-Cf
 or
 .B \-CF
@@ -2039,7 +2112,7 @@ Here are all of the names affected:
 
 .fi
 Within your scanner itself, you can still refer to the global variables
-and functions using either version of their name; but eternally, they
+and functions using either version of their name; but externally, they
 have the modified name.
 .IP
 This option lets you easily link together multiple
@@ -2198,6 +2271,11 @@ a valid token.  A possible future
 .I flex
 feature will be to automatically add rules to eliminate backing up).
 .PP
+It's important to keep in mind that you gain the benefits of eliminating
+backing up only if you eliminate
+.I every
+instance of backing up.  Leaving just one means you gain nothing.
+.PP
 .I Variable
 trailing context (where both the leading and trailing parts do not have
 a fixed length) entails almost the same performance loss as
@@ -2228,16 +2306,9 @@ or as
 Note that here the special '|' action does
 .I not
 provide any savings, and can even make things worse (see
-.PP
-A final note regarding performance: as mentioned above in the section
-How the Input is Matched, dynamically resizing
-.B yytext
-to accomodate huge tokens is a slow process because it presently requires that
-the (huge) token be rescanned from the beginning.  Thus if performance is
-vital, you should attempt to match "large" quantities of text but not
-"huge" quantities, where the cutoff between the two is at about 8K
-characters/token.
-.PP
+.B BUGS
+in flex(1)).
+.LP
 Another area where the user can increase a scanner's performance
 (and one that's easier to implement) arises from the fact that
 the longer the tokens matched, the faster the scanner will run.
@@ -2381,6 +2452,15 @@ multiple NUL's.
 It's best to write rules which match
 .I short
 amounts of text if it's anticipated that the text will often include NUL's.
+.PP
+Another final note regarding performance: as mentioned above in the section
+How the Input is Matched, dynamically resizing
+.B yytext
+to accommodate huge tokens is a slow process because it presently requires that
+the (huge) token be rescanned from the beginning.  Thus if performance is
+vital, you should attempt to match "large" quantities of text but not
+"huge" quantities, where the cutoff between the two is at about 8K
+characters/token.
 .SH GENERATING C++ SCANNERS
 .I flex
 provides two different ways to generate scanners for use with C++.  The
@@ -2587,7 +2667,7 @@ Here is an example of a simple C++ scanner:
 .fi
 IMPORTANT: the present form of the scanning class is
 .I experimental
-and may change considerably between major releases.
+and may change considerably between major releases. 
 .SH INCOMPATIBILITIES WITH LEX AND POSIX
 .I flex
 is a rewrite of the AT&T Unix
@@ -2657,6 +2737,10 @@ cannot be redefined is in accordance with the POSIX specification,
 which simply does not specify any way of controlling the
 scanner's input other than by making an initial assignment to
 .I yyin.
+.IP -
+The
+.B unput()
+routine is not redefinable.  This restriction is in accordance with POSIX.
 .IP -
 .I flex
 scanners are not as reentrant as
@@ -2752,9 +2836,7 @@ of the POSIX specification.
 After a call to
 .B unput(),
 .I yytext
-and
-.I yyleng
-are undefined until the next token is matched, unless the scanner
+is undefined until the next token is matched, unless the scanner
 was built using
 .B %array.
 This is not the case with
@@ -2872,21 +2954,6 @@ is (rather surprisingly) truncated to
 does not truncate the action.  Actions that are not enclosed in
 braces are simply terminated at the end of the line.
 .SH DIAGNOSTICS
-If you receive errors when linking a
-.I flex
-scanner complaining about the following missing routines:
-.ds
-    yywrap
-    yy_flex_alloc
-    ...
-.de
-(and various others) then you forgot to link your program with
-.B \-lfl.
-This run-time library is
-.I required
-for all
-.I flex
-scanners.
 .PP
 .I warning, rule cannot be matched
 indicates that the given rule
@@ -3020,27 +3087,38 @@ Thanks to the many
 .I flex
 beta-testers, feedbackers, and contributors, especially Francois Pinard,
 Casey Leedom,
-Nelson H.F. Beebe, benson@odi.com, Peter A. Bigot, Keith Bostic, Frederic
-Brehm, Nick Christopher, Jason Coughlin, Bill Cox, Dave Curtis, Scott David
+David Barker-Plummer, Nelson H.F. Beebe, benson@odi.com,
+Karl Berry, Peter A. Bigot, Simon Blanchard,
+Keith Bostic, Frederic Brehm, Kin Cho, Nick Christopher,
+Brian Clapper, J.T. Conklin,
+Jason Coughlin, Bill Cox, Dave Curtis, Scott David
 Daniels, Chris G. Demetriou, Theo Deraadt,
-Mike Donahue, Chuck Doucette, Tom Epperly, Leo
-Eskin, Chris Faylor, Jon Forrest, Kaveh R. Ghazi,
-Eric Goldman, Ulrich Grepel, Jan Hajic,
-Jarkko Hietaniemi, Eric Hughes, John Interrante,
-Ceriel Jacobs, Michal Jaegermann, Jeffrey R. Jones, Henry
-Juengst, Amir Katz, ken@ken.hilco.com, Kevin B. Kenny, Marq Kole, Ronald
-Lamprecht, Greg Lee, Craig Leres, John Levine, Steve Liddle,
-Mohamed el Lozy, Brian Madsen, Chris
-Metcalf, Luke Mewburn, Jim Meyering, Erik Naggum,
+Mike Donahue, Chuck Doucette, Tom Epperly, Leo Eskin,
+Chris Faylor, Jon Forrest, Kaveh R. Ghazi,
+Eric Goldman, Christopher M. Gould, Ulrich Grepel, Peer Griebel,
+Jan Hajic, Charles Hemphill, NORO Hideo,
+Jarkko Hietaniemi, Scott Hofmann,
+Jeff Honig, Dana Hudes, Eric Hughes, John Interrante,
+Ceriel Jacobs, Michal Jaegermann, Sakari Jalovaara, Jeffrey R. Jones,
+Henry Juengst, Klaus Kaempf, Jonathan I. Kamens,
+Amir Katz, ken@ken.hilco.com, Kevin B. Kenny,
+Steve Kirsch, Winfried Koenig, Marq Kole, Ronald Lamprecht,
+Greg Lee, Rohan Lenard, Craig Leres, John Levine, Steve Liddle, Mike Long,
+Mohamed el Lozy, Brian Madsen, Malte, Joe Marshall,
+Bengt Martensson, Chris Metcalf,
+Luke Mewburn, Jim Meyering, R. Alexander Milowski, Erik Naggum,
 G.T. Nicol, Landon Noll, Marc Nozell,
 Richard Ohnemus, Sven Panne, Roland Pesch, Walter Pelissero, Gaumond
-Pierre, Esmond Pitt, Jef Poskanzer, Joe Rahmeh, Frederic Raimbault,
-Rick Richardson,
-Kevin Rodgers, Kai Uwe Rommel, Jim Roskind,
-Doug Schmidt, Philippe Schnoebelen, Andreas Schwab,
-Alex Siegel, Mike Stump, Paul Stuart, Dave Tallman, Chris Thewalt,
+Pierre, Esmond Pitt, Jef Poskanzer, Joe Rahmeh, Jarmo Raiha,
+Frederic Raimbault, Pat Rankin, Rick Richardson,
+Kevin Rodgers, Kai Uwe Rommel, Jim Roskind, Alberto Santini,
+Darrell Schiebel, Doug Schmidt, Philippe Schnoebelen, Andreas Schwab,
+Alex Siegel, Eckehard Stolz, Jan-Erik Strvmquist,
+Mike Stump, Paul Stuart, Dave Tallman, Ian Lance Taylor,
+Chris Thewalt, Richard M. Timoney, Jodi Tsai,
 Paul Tuinenga, Gary Weik, Frank Whaley, Gerhard Wilhelms, Kent Williams, Ken
-Yap, Nathan Zelle, David Zuhn, and those whose names have slipped my marginal
+Yap, Ron Zellar, Nathan Zelle, David Zuhn,
+and those whose names have slipped my marginal
 mail-archiving skills but whose contributions are appreciated all the
 same.
 .PP
