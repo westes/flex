@@ -52,7 +52,9 @@
 
 #ifdef AMIGA
 #define bzero(s, n) setmem((char *)(s), n, '\0')
+#ifndef abs
 #define abs(x) ((x) < 0 ? -(x) : (x))
+#endif
 #else
 #define bzero(s, n) memset((char *)(s), '\0', n)
 #endif
@@ -83,6 +85,8 @@ char *sprintf(); /* keep lint happy */
 #endif
 #endif
 
+char *malloc(), *realloc();
+
 
 /* maximum line length we'll have to deal with */
 #define MAXLINE BUFSIZ
@@ -90,11 +94,17 @@ char *sprintf(); /* keep lint happy */
 /* maximum size of file name */
 #define FILENAMESIZE 1024
 
+#ifndef min
 #define min(x,y) ((x) < (y) ? (x) : (y))
+#endif
+#ifndef max
 #define max(x,y) ((x) > (y) ? (x) : (y))
+#endif
 
 #ifdef MS_DOS
+#ifndef abs
 #define abs(x) ((x) < 0 ? -(x) : (x))
+#endif
 #define SHORT_FILE_NAMES
 #endif
 
