@@ -1,9 +1,9 @@
-.TH FLEXDOC 1 "November 1993" "Version 2.4"
+.TH FLEXDOC 1 "December 1993" "Version 2.5"
 .SH NAME
 flexdoc \- documentation for flex, fast lexical analyzer generator
 .SH SYNOPSIS
 .B flex
-.B [\-bcdfhilnpstvwBFILTV78+ \-C[aefFmr] \-Pprefix \-Sskeleton]
+.B [\-bcdfhilnpstvwBFILTV78+ \-C[aefFmr] \-ooutput \-Pprefix \-Sskeleton]
 .I [filename ...]
 .SH DESCRIPTION
 .I flex
@@ -924,10 +924,6 @@ section of the input file):
 This definition will change the input processing to occur
 one character at a time.
 .PP
-You also can add in things like keeping track of the
-input line number this way; but don't expect your scanner to
-go very fast.
-.PP
 When the scanner receives an end-of-file indication from YY_INPUT,
 it then checks the
 .B yywrap()
@@ -1771,18 +1767,14 @@ directives.  Without this option,
 .I flex
 peppers the generated scanner
 with #line directives so error messages in the actions will be correctly
-located with respect to the original
+located with respect to either the original
 .I flex
-input file, and not to
-the fairly meaningless line numbers of
-.B lex.yy.c.
-(Unfortunately
-.I flex
-does not presently generate the necessary directives
-to "retarget" the line numbers for those parts of
+input file (if the errors are due to code in the input file), or
 .B lex.yy.c
-which it generated.  So if there is an error in the generated code,
-a meaningless line number is reported.)
+(if the errors are
+.I flex's
+fault -- you should report these sorts of errors to the email address
+given below).
 .TP
 .B \-T
 makes
@@ -1991,6 +1983,24 @@ compression.
 .B \-Cfe
 is often a good compromise between speed and size for production
 scanners.
+.TP
+.B \-ooutput
+directs flex to write the scanner to the file
+.B output
+instead of
+.B lex.yy.c.
+If you combine
+.B \-o
+with the
+.B \-t
+option, then the scanner is written to
+.I stdout
+but its
+.B #line
+directives (see the
+.B \\-L
+option above) refer to the file
+.B output.
 .TP
 .B \-Pprefix
 changes the default
@@ -2828,6 +2838,7 @@ features are not included in
 or the POSIX specification:
 .nf
 
+    C++ scanners
     yyterminate()
     <<EOF>>
     <*>
@@ -3011,19 +3022,21 @@ beta-testers, feedbackers, and contributors, especially Francois Pinard,
 Casey Leedom,
 Nelson H.F. Beebe, benson@odi.com, Peter A. Bigot, Keith Bostic, Frederic
 Brehm, Nick Christopher, Jason Coughlin, Bill Cox, Dave Curtis, Scott David
-Daniels, Chris G. Demetriou, Mike Donahue, Chuck Doucette, Tom Epperly, Leo
+Daniels, Chris G. Demetriou, Theo Deraadt,
+Mike Donahue, Chuck Doucette, Tom Epperly, Leo
 Eskin, Chris Faylor, Jon Forrest, Kaveh R. Ghazi,
 Eric Goldman, Ulrich Grepel, Jan Hajic,
 Jarkko Hietaniemi, Eric Hughes, John Interrante,
-Ceriel Jacobs, Jeffrey R. Jones, Henry
+Ceriel Jacobs, Michal Jaegermann, Jeffrey R. Jones, Henry
 Juengst, Amir Katz, ken@ken.hilco.com, Kevin B. Kenny, Marq Kole, Ronald
 Lamprecht, Greg Lee, Craig Leres, John Levine, Steve Liddle,
 Mohamed el Lozy, Brian Madsen, Chris
-Metcalf, Luke Mewburn, Jim Meyering, G.T. Nicol, Landon Noll, Marc Nozell,
+Metcalf, Luke Mewburn, Jim Meyering, Erik Naggum,
+G.T. Nicol, Landon Noll, Marc Nozell,
 Richard Ohnemus, Sven Panne, Roland Pesch, Walter Pelissero, Gaumond
 Pierre, Esmond Pitt, Jef Poskanzer, Joe Rahmeh, Frederic Raimbault,
 Rick Richardson,
-Kevin Rodgers, Jim Roskind,
+Kevin Rodgers, Kai Uwe Rommel, Jim Roskind,
 Doug Schmidt, Philippe Schnoebelen, Andreas Schwab,
 Alex Siegel, Mike Stump, Paul Stuart, Dave Tallman, Chris Thewalt,
 Paul Tuinenga, Gary Weik, Frank Whaley, Gerhard Wilhelms, Kent Williams, Ken
