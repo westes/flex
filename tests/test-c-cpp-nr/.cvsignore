@@ -1,5 +1,5 @@
 Makefile
-scanner.c
+scanner.cpp
 test-c-cpp-nr
 OUTPUT
 Makefile.in
