@@ -4,6 +4,8 @@
 
 # Possible values for DEFS:
 #
+# By default, flex generates 8-bit scanners when using table compression,
+# and 7-bit scanners when using uncompressed tables (-f or -F options).
 # For flex to always generate 8-bit scanners, add "-DDEFAULT_CSIZE=256"
 # to DEFS.
 #
