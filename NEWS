@@ -1,4 +1,4 @@
-Changes between release 2.5.0.7 (06Mar95) and release 2.4.7:
+Changes between release 2.5.1 (28Mar95) and release 2.4.7:
 
 	- A new concept of "start condition" scope has been introduced.
 	  A start condition scope is begun with:
@@ -354,6 +354,10 @@ Changes between release 2.5.0.7 (06Mar95) and release 2.4.7:
 
 	- You can now use "#line" directives in the first section of your
 	  scanner specification.
+
+	- When generating full-table scanners (-Cf), flex now puts braces
+	  around each row of the 2-d array initialization, to silence warnings
+	  on over-zealous compilers.
 
 	- Improved support for MS-DOS.  The flex sources have been successfully
 	  built, unmodified, for Borland 4.02 (all that's required is a
