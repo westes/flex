@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: flex 2.5.2\n"
-"POT-Creation-Date: 2002-03-12 13:23-0500\n"
-"PO-Revision-Date: 2002-02-27 14:38GMT +02:00\n"
+"Project-Id-Version: flex 2002.3.12a\n"
+"POT-Creation-Date: 2002-03-12 12:07-0500\n"
+"PO-Revision-Date: 2002-03-15 11:33GMT+200\n"
 "Last-Translator: Altuð Bayram <altugbayram_2000@yahoo.com>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -121,13 +121,12 @@ msgid "Can't use -f or -F with -l option"
 msgstr "-f veya -F'yi -l seçeneði ile kullanma"
 
 #: main.c:190
-#, fuzzy
 msgid "Can't use -R or -Rb with -l option"
-msgstr "-f veya -F'yi -l seçeneði ile kullanma"
+msgstr "-R veya -Rb -l seçeneði ile kullanýlmaz"
 
 #: main.c:203
 msgid "Can't specify header option if writing to stdout."
-msgstr ""
+msgstr "Eðer stdout'a yazýlacaksa baþlýk seçeneðini belirtme"
 
 #: main.c:229
 msgid "-Cf/-CF and -Cm don't make sense together"
@@ -160,9 +159,8 @@ msgid "%array incompatible with -+ option"
 msgstr "%array -+ seçeneði ile uyumsuz"
 
 #: main.c:256
-#, fuzzy
 msgid "Options -+ and -R are mutually exclusive."
-msgstr "-Cf ve -CF karþýlýklý dýþarlayandýr"
+msgstr "-+ ve -R seçenekleri karþýlýklý dýþarlayandýr."
 
 #: main.c:308 main.c:494
 #, c-format
@@ -185,9 +183,9 @@ msgid "error closing skeleton file %s"
 msgstr "iskelet dosyasý kapatýlýrken hata: %s"
 
 #: main.c:659
-#, fuzzy, c-format
+#, c-format
 msgid "error creating header file %s"
-msgstr "yedek dosyasý yazýlýrken hata: %s"
+msgstr "baþlýk dosyasý %s'i oluþtururken hata"
 
 #: main.c:667
 #, c-format
@@ -285,9 +283,7 @@ msgstr "  karakter sýnýflarý yok\n"
 #: main.c:815
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-msgstr ""
-"  %d/%d ihtiyaç duyulan karakter sýnýfý %d/%d depolanan sözcük, %d yeniden "
-"kullanýldý\n"
+msgstr "  %d/%d ihtiyaç duyulan karakter sýnýfý %d/%d depolanan sözcük, %d yeniden kullanýldý\n"
 
 #: main.c:820
 #, c-format
@@ -361,15 +357,15 @@ msgstr "  %d toplam tablo girdilerine ihtiyaç var\n"
 
 #: main.c:933
 msgid "Internal error. flexopts are malformed.\n"
-msgstr ""
+msgstr "Ýç hata. flexopt'ler bozuk.\n"
 
 #: main.c:941
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "For usage, try\n"
 "\t%s --help\n"
 msgstr ""
-"%s: bilinmeyen bayrak '%c'.  Kullaným için, dene\n"
+"Kullaným için, aþaðýdakini deneyin\n"
 "\t%s --help\n"
 
 #: main.c:1001
@@ -378,9 +374,9 @@ msgid "unknown -C option '%c'"
 msgstr "bilinmeyen -C seçeneði '%c'"
 
 #: main.c:1080
-#, fuzzy, c-format
+#, c-format
 msgid "unknown -R option '%c'"
-msgstr "bilinmeyen -C seçeneði '%c'"
+msgstr "bilinmeyen -R seçeneði '%c'"
 
 #: main.c:1113
 #, c-format
@@ -423,8 +419,7 @@ msgstr "REJECT bir büyük baþarým kaybýna neden olur\n"
 
 #: main.c:1417
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
-"Deðiþken izleme ortamý kurallarý bir büyük baþarým kaybýna neden olur\n"
+msgstr "Deðiþken izleme ortamý kurallarý bir büyük baþarým kaybýna neden olur\n"
 
 #: main.c:1430
 msgid "REJECT cannot be used with -f or -F"
@@ -447,7 +442,7 @@ msgstr "%option yyclass sadece C++ tarayýcýlar için anlamlýdýr"
 #: main.c:1671
 #, c-format
 msgid "%s [OPTIONS...] [file...]\n"
-msgstr ""
+msgstr "%s [SEÇENEKLER...] [dosya...]\n"
 
 #: main.c:1674
 #, c-format
@@ -504,6 +499,57 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Tablo Sýkýþtýrma: (-Cem öntanýmlýdýr)\n"
+"  -Ca, --align      daha iyi hafýza yerleþimi için daha büyük tablolara deðiþtir\n"
+"  -Ce, --ecs        denklik sýnýflarýný oluþtur\n"
+"  -Cf               tarayýcý tablolarýný sýkýþtýrma; -f gösterimini kullan\n"
+"  -CF               tarayýcý tablolarýný sýkýþtýrma; -F gösterimini kullan\n"
+"  -Cm, --meta-ecs   ara-denklik sýnýflarýný oluþtur\n"
+"  -Cr, --read       tarayýcý girdisi için stdionun yerine read() kullan\n"
+"  -f, --full        hýzlý, geniþ tarayýcýlar oluþtur. -Cfr'ye benzer\n"
+"  -F, --fast        alternatif tablo gösterimlerini kullan. -CFr'ye benzer\n"
+"\n"
+"Hata Ayýklama:\n"
+"  -d, --debug             tarayýcý içinde hata ayýklayýcý kipini etkinleþtir\n"
+"  -b, --backup            yedekleme bilgisini %s'e yaz\n"
+"  -p, --perf-report       baþarým raporunu stderr'a yaz\n"
+"  -s, --nodefault         eþlenemeyen metni öntanýmlý kural ECHO'ya bas\n"
+"  -T, --trace             %s izleme kipinde çalýþmalý\n"
+"  -w, --nowarn            uyarýlar üretme\n"
+"  -v, --verbose           tarayýcý istatistiklerinin özetini stdout'a yaz\n"
+"\n"
+"Dosyalar:\n"
+"  -o, --outfile=DOSYA     çýktý dosya adýný belirle\n"
+"  -S, --skel=DOSYA        iskelet dosyayý belirle\n"
+"  -t, --stdout            tarayýcýlarý %s'in yerine stdout'a yaz\n"
+"      --yyclass=ÝSÝM      C++ sýnýfýnýn adý\n"
+"      --header=DOSYA      tarayýcýnýn içine eklemek için bir C baþlýk dosyasýoluþtur\n"
+"\n"
+"Tarayýcý davranýþý:\n"
+"  -7, --7bit              7-bit tarayýcý oluþtur\n"
+"  -8, --8bit              generate 8-bit scanner\n"
+"  -B, --batch             yýðýn tarayýcýlar üret (-I'nýn karþýtý)\n"
+"  -i, --case-insensitive  kalýplardaki büyük-küçük duyarlýlýðýný ihmal et\n"
+"  -l, --lex-compat        özgün lex ile en yüksek seviyede uyumluluk\n"
+"  -I, --interactive       etkileþimli tarayýcý üret (-B'nin karþýtý)\n"
+"      --yylineno          yylineno içindeki satýr sayýsýný izle\n"
+"\n"
+"Üretilen  kod:\n"
+"  -+,  --c++               C++ tarayýcý sýnýfý oluþtur\n"
+"  -Dmacro[=defn]           #define makro defn  (öntanýmlý defn '1'dir)\n"
+"  -L,  --noline            tarayýcý içinde #line bildirimlerini bas\n"
+"  -P,  --prefix=DÝZÝ       önek olarak \"yy\"'nin yerine DÝZÝ kullan \n"
+"  -R,  --reentrant         yineli girilebilen C tarayýcýsý üret\n"
+"  -Rb, --reentrant-bison   saf bison ayrýþtýrýcýsý için yineli girilebilentarayýcý.\n"
+"       --stdinit           yyin/yyout'u stdin/stdout'a ayarlý baþlat\n"
+"       --noFUNCTION        özel bir FONKSÝYON üretme\n"
+"\n"
+"Çeþitli:\n"
+"  -c                      hiçbirþeyi POSIX seçenekli yapma\n"
+"  -n                      hiçbirþeyi POSIX seçenekli yapma\n"
+"  -?\n"
+"  -h, --help              bu yardým iletisini üret\n"
+"  -V, --version           %s sürümünü raporlar\n"
 
 #: misc.c:47
 #, c-format
@@ -593,7 +639,7 @@ msgid "too many rules (> %d)!"
 msgstr "çok fazla kural (> %d)!"
 
 #: scan.l:139
-#, fuzzy, c-format
+#, no-c-format
 msgid "unrecognized '%' directive"
 msgstr "'%' bildirimi tanýnmadý"
 
@@ -676,130 +722,3 @@ msgstr "Bitiþ Ýþaretçisi\n"
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr "*Birþey Anlaþýlmaz* -andaç: %d deðer: %d\n"
-
-#~ msgid "-P flag must be given separately"
-#~ msgstr "-P bayraðý ayrýk olarak verilmeli"
-
-#~ msgid "-o flag must be given separately"
-#~ msgstr "-o bayraðý ayrýk olarak verilmeli"
-
-#~ msgid "-S flag must be given separately"
-#~ msgstr "-S bayraðý ayrýk olarak verilmeli"
-
-#~ msgid "-C flag must be given separately"
-#~ msgstr "-C bayraðý ayrýk olarak verilmeli"
-
-#~ msgid ""
-#~ "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"
-#~ msgstr "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -oçýktý -Pönek -Siskelet]\n"
-
-#~ msgid "\t[--help --version] [file ...]\n"
-#~ msgstr "\t[--help --version] [dosya ...]\n"
-
-#~ msgid "\t-b  generate backing-up information to %s\n"
-#~ msgstr "\t-b  yedekleme bilgisini %s'e üret\n"
-
-#~ msgid "\t-c  do-nothing POSIX option\n"
-#~ msgstr "\t-c  hiçbirþeyi POSIX seçenekli yapma\n"
-
-#~ msgid "\t-d  turn on debug mode in generated scanner\n"
-#~ msgstr "\t-d  oluþturulmuþ sýnýflar içerisinde hata ayýklama kipini aç\n"
-
-#~ msgid "\t-f  generate fast, large scanner\n"
-#~ msgstr "\t-f  hýzlý, geniþ tarayýcýlar oluþtur\n"
-
-#~ msgid "\t-h  produce this help message\n"
-#~ msgstr "\t-h  bu yardým iletisini üret\n"
-
-#~ msgid "\t-i  generate case-insensitive scanner\n"
-#~ msgstr "\t-i  büyük-küçük-duyarsýz tarayýcýlar üret\n"
-
-#~ msgid "\t-l  maximal compatibility with original lex\n"
-#~ msgstr "\t-l  özgün lex ile en yüksek seviyede uyumluluk\n"
-
-#~ msgid "\t-n  do-nothing POSIX option\n"
-#~ msgstr "\t-n  hiçbirþeyi POSIX seçenekli yapma\n"
-
-#~ msgid "\t-p  generate performance report to stderr\n"
-#~ msgstr "\t-p  baþarým raporunu stderr'a oluþtur\n"
-
-#~ msgid "\t-s  suppress default rule to ECHO unmatched text\n"
-#~ msgstr "\t-s  eþlenemeyen metni öntanýmlý kural ECHO'ya bas\n"
-
-#~ msgid "\t-t  write generated scanner on stdout instead of %s\n"
-#~ msgstr "\t-t  üretilen tarayýcýlarý %s'in yerine stdout'a yaz\n"
-
-#~ msgid "\t-v  write summary of scanner statistics to f\n"
-#~ msgstr "\t-v  tarayýcý istatistiklerinin özetini f'ye yaz\n"
-
-#~ msgid "\t-w  do not generate warnings\n"
-#~ msgstr "\t-w  uyarýlar üretme\n"
-
-#~ msgid "\t-B  generate batch scanner (opposite of -I)\n"
-#~ msgstr "\t-B  yýðýn tarayýcýlar üret (-I'nýn karþýtý)\n"
-
-#~ msgid "\t-F  use alternative fast scanner representation\n"
-#~ msgstr "\t-F  alternatif hýzlý tarayýcý gösterimini kullan\n"
-
-#~ msgid "\t-I  generate interactive scanner (opposite of -B)\n"
-#~ msgstr "\t-I  etkileþimli tarayýcý üret (-B'nin karþýtý)\n"
-
-#~ msgid "\t-L  suppress #line directives in scanner\n"
-#~ msgstr "\t-L  tarayýcý içinde #line bildirimlerini bas\n"
-
-#~ msgid "\t-T  %s should run in trace mode\n"
-#~ msgstr "\t-T  %s izleme kipinde çalýþmalý\n"
-
-#~ msgid "\t-V  report %s version\n"
-#~ msgstr "\t-V  %s sürümünü raporlar\n"
-
-#~ msgid "\t-7  generate 7-bit scanner\n"
-#~ msgstr "\t-7  7-bit tarayýcý oluþtur\n"
-
-#~ msgid "\t-8  generate 8-bit scanner\n"
-#~ msgstr "\t-8  8-bit tarayýcý oluþtur\n"
-
-#~ msgid "\t-+  generate C++ scanner class\n"
-#~ msgstr "\t-+  C++ tarayýcý sýnýfý oluþtur\n"
-
-#~ msgid "\t-?  produce this help message\n"
-#~ msgstr "\t-?  bu yardým iletisini üret\n"
-
-#~ msgid "\t-C  specify degree of table compression (default is -Cem):\n"
-#~ msgstr "\t-C  tablo sýkýþtýrmanýn derecesini belirle (-Cem öntanýmlýdýr):\n"
-
-#~ msgid "\t\t-Ca  trade off larger tables for better memory alignment\n"
-#~ msgstr ""
-#~ "\t\t-Ca  daha iyi hafýza yerleþimi için daha büyük tablolarý deðiþtir\n"
-
-#~ msgid "\t\t-Ce  construct equivalence classes\n"
-#~ msgstr "\t\t-Ce  denklik sýnýflarýný oluþtur\n"
-
-#~ msgid "\t\t-Cf  do not compress scanner tables; use -f representation\n"
-#~ msgstr "\t\t-Cf  tarayýcý tablolarýný sýkýþtýrma; -f gösterimini kullan\n"
-
-#~ msgid "\t\t-CF  do not compress scanner tables; use -F representation\n"
-#~ msgstr ""
-#~ "\t\t-CF  tarayýcý tablolarýný sýkýþtýrma; -F gösterimini kullan\n"
-#~ "\n"
-
-#~ msgid "\t\t-Cm  construct meta-equivalence classes\n"
-#~ msgstr "\t\t-Cm  ara-denklik sýnýflarýný oluþtur\n"
-
-#~ msgid "\t\t-Cr  use read() instead of stdio for scanner input\n"
-#~ msgstr "\t\t-Cr  tarayýcý girdisi için stdionun yerine read() kullan\n"
-
-#~ msgid "\t-o  specify output filename\n"
-#~ msgstr "\t-o  çýktý dosya adýný belirle\n"
-
-#~ msgid "\t-P  specify scanner prefix other than \"yy\"\n"
-#~ msgstr "\t-P  tarayýc önekini \"yy\"'den farklý belirler\n"
-
-#~ msgid "\t-S  specify skeleton file\n"
-#~ msgstr "\t-S  iskelet dosyayý belirle\n"
-
-#~ msgid "\t--help     produce this help message\n"
-#~ msgstr "\t--help     bu yardým iletisini üret\n"
-
-#~ msgid "\t--version  report %s version\n"
-#~ msgstr "\t--version  %s sürümünü bildir\n"
