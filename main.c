@@ -937,7 +937,11 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 		if ( do_stdinit )
 			{
 			outn( "#ifdef VMS" );
+			outn( "#ifndef __VMS_POSIX" );
 			outn( yy_nostdinit );
+			outn( "#else" );
+			outn( yy_stdinit );
+			outn( "#endif" );
 			outn( "#else" );
 			outn( yy_stdinit );
 			outn( "#endif" );
