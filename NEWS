@@ -3,7 +3,13 @@ changes between releases of flex
 
 See the file COPYING for copying conditions
 
+* after version 2.5.11
+
+** new fr translation from the translation project
+
 * version 2.5.11 released 2002-7-31
+
+** Fixed bug where yyless did not consider yylineno
 
 ** the yylineno performance hit is now gone
 
