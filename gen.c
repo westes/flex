@@ -300,8 +300,8 @@ void gen_find_action()
 
 	else if ( reject )
 		{
-		indent_puts( "yy_current_state = *--yy_state_ptr;" );
-		indent_puts( "yy_lp = yy_accept[yy_current_state];" );
+		indent_puts( "yy_current_state = *--YY_G(yy_state_ptr);" );
+		indent_puts( "YY_G(yy_lp) = yy_accept[yy_current_state];" );
 
 		outn(
 		"find_rule: /* we branch to this label when backing up */" );
@@ -314,10 +314,10 @@ void gen_find_action()
 		indent_puts( "{" );
 
 		indent_puts(
-		"if ( yy_lp && yy_lp < yy_accept[yy_current_state + 1] )" );
+		"if ( YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1] )" );
 		indent_up();
 		indent_puts( "{" );
-		indent_puts( "yy_act = yy_acclist[yy_lp];" );
+		indent_puts( "yy_act = yy_acclist[YY_G(yy_lp)];" );
 
 		if ( variable_trailing_context_rules )
 			{
@@ -352,9 +352,9 @@ void gen_find_action()
 				/* Remember matched text in case we back up
 				 * due to REJECT.
 				 */
-				indent_puts( "yy_full_match = yy_cp;" );
-				indent_puts( "yy_full_state = yy_state_ptr;" );
-				indent_puts( "yy_full_lp = yy_lp;" );
+				indent_puts( "YY_G(yy_full_match) = yy_cp;" );
+				indent_puts( "yy_full_state = YY_G(yy_state_ptr);" );
+				indent_puts( "yy_full_lp = YY_G(yy_lp);" );
 				}
 
 			indent_puts( "}" );
@@ -363,14 +363,14 @@ void gen_find_action()
 			indent_puts( "else" );
 			indent_up();
 			indent_puts( "{" );
-			indent_puts( "yy_full_match = yy_cp;" );
-			indent_puts( "yy_full_state = yy_state_ptr;" );
-			indent_puts( "yy_full_lp = yy_lp;" );
+			indent_puts( "YY_G(yy_full_match) = yy_cp;" );
+			indent_puts( "yy_full_state = YY_G(yy_state_ptr);" );
+			indent_puts( "yy_full_lp = YY_G(yy_lp);" );
 			indent_puts( "break;" );
 			indent_puts( "}" );
 			indent_down();
 
-			indent_puts( "++yy_lp;" );
+			indent_puts( "++YY_G(yy_lp);" );
 			indent_puts( "goto find_rule;" );
 			}
 
@@ -381,7 +381,7 @@ void gen_find_action()
 			 */
 			indent_up();
 			indent_puts( "{" );
-			indent_puts( "yy_full_match = yy_cp;" );
+			indent_puts( "YY_G(yy_full_match) = yy_cp;" );
 			indent_puts( "break;" );
 			indent_puts( "}" );
 			indent_down();
@@ -396,8 +396,8 @@ void gen_find_action()
 		 * the beginning, but at the cost of complaints that we're
 		 * branching inside a loop.
 		 */
-		indent_puts( "yy_current_state = *--yy_state_ptr;" );
-		indent_puts( "yy_lp = yy_accept[yy_current_state];" );
+		indent_puts( "yy_current_state = *--YY_G(yy_state_ptr);" );
+		indent_puts( "YY_G(yy_lp) = yy_accept[yy_current_state];" );
 
 		indent_puts( "}" );
 
@@ -678,7 +678,7 @@ int worry_about_NULs;
 		gen_backing_up();
 
 	if ( reject )
-		indent_puts( "*yy_state_ptr++ = yy_current_state;" );
+		indent_puts( "*YY_G(yy_state_ptr)++ = yy_current_state;" );
 	}
 
 
@@ -747,7 +747,7 @@ void gen_NUL_trans()
 			 */
 			indent_puts( "if ( ! yy_is_jam )" );
 			indent_up();
-			indent_puts( "*yy_state_ptr++ = yy_current_state;" );
+			indent_puts( "*YY_G(yy_state_ptr)++ = yy_current_state;" );
 			indent_down();
 			}
 		}
@@ -795,8 +795,10 @@ void gen_start_state()
 		if ( reject )
 			{
 			/* Set up for storing up states. */
-			indent_puts( "yy_state_ptr = yy_state_buf;" );
-			indent_puts( "*yy_state_ptr++ = yy_current_state;" );
+            outn("#ifdef YY_USES_REJECT");
+			indent_puts( "YY_G(yy_state_ptr) = YY_G(yy_state_buf);" );
+			indent_puts( "*YY_G(yy_state_ptr)++ = yy_current_state;" );
+            outn("#endif");
 			}
 		}
 	}
@@ -1229,11 +1231,12 @@ void make_tables()
 
 	if ( reject )
 		{
+        outn("#ifdef YY_USES_REJECT");
 		/* Declare state buffer variables. */
-		if ( ! C_plus_plus )
+		if ( ! C_plus_plus  && ! reentrant )
 			{
 			outn(
-	"static yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;" );
+	"static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;" );
 			outn( "static char *yy_full_match;" );
 			outn( "static int yy_lp;" );
 			}
@@ -1259,22 +1262,23 @@ void make_tables()
 		outn(
 	"*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \\" );
 		outn(
-	"yy_cp = yy_full_match; /* restore poss. backed-over text */ \\" );
+	"yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \\" );
 
 		if ( variable_trailing_context_rules )
 			{
 			outn(
-		"yy_lp = yy_full_lp; /* restore orig. accepting pos. */ \\" );
+		"YY_G(yy_lp) = yy_full_lp; /* restore orig. accepting pos. */ \\" );
 			outn(
-		"yy_state_ptr = yy_full_state; /* restore orig. state */ \\" );
+		"YY_G(yy_state_ptr) = yy_full_state; /* restore orig. state */ \\" );
 			outn(
-	"yy_current_state = *yy_state_ptr; /* restore curr. state */ \\" );
+	"yy_current_state = *YY_G(yy_state_ptr); /* restore curr. state */ \\" );
 			}
 
-		outn( "++yy_lp; \\" );
+ 		outn( "++YY_G(yy_lp); \\" );
 		outn( "goto find_rule; \\" );
 
 		outn( "}" );
+		outn("#endif");
 		}
 
 	else

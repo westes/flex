@@ -4441,6 +4441,10 @@ buffer (16384 bytes) is almost always too large.  The ideal size for this
 buffer is the length of the longest token expected.  Flex will allocate a few
 extra bytes for housekeeping.
 
+@item 16kb for the REJECT state. This will only be allocated if you use REJECT.
+The size is the same as the input buffer, so if you override the size of the
+input buffer, then you automatically override the size of this buffer as well.
+
 @item 100 bytes for the start condition stack.
 Flex allocates memory for the start condition stack. This is the stack used
 for pushing start states, i.e., with yy_push_state(). It will grow if

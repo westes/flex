@@ -521,6 +521,13 @@ struct yyguts_t
     int yylineno_r;
     int yy_flex_debug_r;
 
+#ifdef YY_USES_REJECT
+    yy_state_type *yy_state_buf;
+    yy_state_type *yy_state_ptr;
+    char *yy_full_match;
+    int yy_lp;
+#endif
+
 #ifdef YY_TEXT_IS_ARRAY
     char yytext_r[YYLMAX];
     char *yytext_ptr;
@@ -814,6 +821,11 @@ YY_DECL
 
 #ifdef YY_USER_INIT
 		YY_USER_INIT;
+#endif
+
+#ifdef YY_USES_REJECT
+        if ( ! YY_G(yy_state_buf) )
+            YY_G(yy_state_buf) = yyalloc(YY_BUF_SIZE + 2  YY_CALL_LAST_ARG);
 #endif
 
 		if ( ! YY_G(yy_start) )
@@ -1967,6 +1979,10 @@ int yylex_destroy  YYFARGS0(void)
         yyfree( YY_G(yy_start_stack) YY_CALL_LAST_ARG );
         YY_G(yy_start_stack) = NULL;
     }
+#endif
+
+#ifdef YY_USES_REJECT
+    yyfree ( YY_G(yy_state_buf) YY_CALL_LAST_ARG);
 #endif
 
 #ifdef YY_REENTRANT
