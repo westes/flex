@@ -380,8 +380,16 @@ expressions.  These are:
 
 
     r/s        an r but only if it is followed by an s.  The
-                 s is not part of the matched text.  This type
-                 of pattern is called as "trailing context".
+                 text matched by s is included when determining
+                 whether this rule is the "longest match",
+                 but is then returned to the input before
+                 the action is executed.  So the action only
+                 sees the text matched by r.  This type
+                 of pattern is called trailing context".
+                 (There are some combinations of r/s that flex
+                 cannot match correctly; see notes in the
+                 Deficiencies / Bugs section below regarding
+                 "dangerous trailing context".)
     ^r         an r, but only at the beginning of a line (i.e.,
                  which just starting to scan, or right after a
                  newline has been scanned).
@@ -970,6 +978,16 @@ in order to avoid a name clash with the
 stream by the name of
 .I input.)
 .IP -
+.B YY_FLUSH_BUFFER
+flushes the scanner's internal buffer
+so that the next time the scanner attempts to match a token, it will
+first refill the buffer using
+.B YY_INPUT
+(see The Generated Scanner, below).  This action is a special case
+of the more general
+.B yy_flush_buffer()
+function, described below in the section Multiple Input Buffers.
+.IP -
 .B yyterminate()
 can be used in lieu of a return statement in an action.  It terminates
 the scanner and returns a 0 to the scanner's caller, indicating "all done".
@@ -1048,7 +1066,17 @@ of
 and because it can be used to switch input files in the middle of scanning.
 It can also be used to throw away the current input buffer, by calling
 it with an argument of
-.I yyin.
+.I yyin;
+but better is to use
+.B YY_FLUSH_BUFFER
+(see above).
+Note that
+.B yyrestart()
+does
+.I not
+reset the start condition to
+.B INITIAL
+(see Start Conditions, below).
 .PP
 If
 .B yylex()
@@ -1109,9 +1137,15 @@ it does
 revert to
 .B INITIAL.
 .PP
-The default
+If you do not supply your own version of
+.B yywrap(),
+then you must either use
+.B %option noyywrap
+(in which case the scanner behaves as though
 .B yywrap()
-always returns 1.
+returned 1), or you must link with
+.B \-lfl
+to obtain the default version of the routine, which always returns 1.
 .PP
 Three routines are available for scanning from in-memory buffers rather
 than files:
@@ -1193,7 +1227,10 @@ connection between the two.  The set of rules:
 
     %s example
     %%
-    <example>foo           /* do something */
+
+    <example>foo   do_something();
+
+    bar            something_else();
 
 .fi
 is equivalent to
@@ -1201,9 +1238,34 @@ is equivalent to
 
     %x example
     %%
-    <INITIAL,example>foo   /* do something */
+
+    <example>foo   do_something();
+
+    <INITIAL,example>bar    something_else();
 
 .fi
+Without the
+.B <INITIAL,example>
+qualifier, the
+.I bar
+pattern in the second example wouldn't be active (i.e., couldn't match)
+when in start condition
+.B example.
+If we just used
+.B <example>
+to qualify
+.I bar,
+though, then it would only be active in
+.B example
+and not in
+.B INITIAL,
+while in the first example it's active in both, because in the first
+example the
+.B example
+startion condition is an
+.I inclusive
+.B (%s)
+start condition.
 .PP
 Also note that the special start-condition specifier
 .B <*>
@@ -1213,13 +1275,22 @@ have been written;
 
     %x example
     %%
-    <*>foo   /* do something */
+
+    <example>foo   do_something();
+
+    <*>bar    something_else();
 
 .fi
 .PP
 The default rule (to
 .B ECHO
-any unmatched character) remains active in start conditions.
+any unmatched character) remains active in start conditions.  It
+is equivalent to:
+.nf
+
+    <*>.|\\n     ECHO;
+
+.fi
 .PP
 .B BEGIN(0)
 returns to the original state where only the rules with
@@ -1571,6 +1642,16 @@ change the start condition.
 
 .fi
 is used to reclaim the storage associated with a buffer.
+You can also clear the current contents of a buffer using:
+.nf
+
+    void yy_flush_buffer( YY_BUFFER_STATE buffer )
+
+.fi
+This function discards the buffer's contents,
+so the next time the scanner attempts to match a token from the
+buffer, it will first fill the buffer anew using
+.B YY_INPUT.
 .PP
 .B yy_new_buffer()
 is an alias for
@@ -2036,7 +2117,7 @@ The result is large but fast.  This option is equivalent to
 generates a "help" summary of
 .I flex's
 options to
-.I stderr 
+.I stdout 
 and then exits.
 .B \-?
 and
@@ -2263,7 +2344,7 @@ finite automata.  This option is mostly for use in maintaining
 .TP
 .B \-V
 prints the version number to
-.I stderr
+.I stdout
 and exits.
 .B \-\-version
 is a synonym for
@@ -2502,6 +2583,7 @@ Here are all of the names affected:
     yy_delete_buffer
     yy_flex_debug
     yy_init_buffer
+    yy_flush_buffer
     yy_load_buffer_state
     yy_switch_to_buffer
     yyin
@@ -2666,7 +2748,7 @@ unsetting them to indicate it actually is not used
 (e.g.,
 .B %option noyymore).
 .PP
-Two options take string-delimited values, offset with '=':
+Three options take string-delimited values, offset with '=':
 .nf
 
     %option outfile="ABC"
@@ -2682,6 +2764,32 @@ and
 .fi
 is equivalent to
 .B -PXYZ.
+Finally,
+.nf
+
+    %option yyclass="foo"
+
+.fi
+only applies when generating a C++ scanner (
+.B \-+
+option).  It informs
+.I flex
+that you have derived
+.B foo
+as a subclass of
+.B yyFlexLexer,
+so
+.I flex
+will place your actions in the member function
+.B foo::yylex()
+instead of
+.B yyFlexLexer::yylex().
+It also generates a
+.B yyFlexLexer::yylex()
+member function that emits a run-time error (by invoking
+.B yyFlexLexer::LexerError())
+if called.
+See Generating C++ Scanners, below, for additional information.
 .PP
 A number of options are available for lint purists who want to suppress
 the appearance of unneeded routines in the generated scanner.  Each of the
@@ -3078,6 +3186,7 @@ Also provided are member functions equivalent to
 .B istream*
 object pointer and not a
 .B FILE*),
+.B yy_flush_buffer(),
 .B yy_delete_buffer(),
 and
 .B yyrestart()
@@ -3108,7 +3217,54 @@ respectively.
 performs the same role is
 .B yylex()
 does for ordinary flex scanners: it scans the input stream, consuming
-tokens, until a rule's action returns a value.
+tokens, until a rule's action returns a value.  If you derive a subclass
+.B S
+from
+.B yyFlexLexer
+and want to access the member functions and variables of
+.B S
+inside
+.B yylex(),
+then you need to use
+.B %option yyclass="S"
+to inform
+.I flex
+that you will be using that subclass instead of
+.B yyFlexLexer.
+In this case, rather than generating
+.B yyFlexLexer::yylex(),
+.I flex
+generates
+.B S::yylex()
+(and also generates a dummy
+.B yyFlexLexer::yylex()
+that calls
+.B yyFlexLexer::LexerError()
+if called).
+.TP
+.B
+virtual void switch_streams(istream* new_in = 0,
+.B
+ostream* new_out = 0)
+reassigns
+.B yyin
+to
+.B new_in
+(if non-nil)
+and
+.B yyout
+to
+.B new_out
+(ditto), deleting the previous input buffer if
+.B yyin
+is reassigned.
+.TP
+.B
+int yylex( istream* new_in = 0, ostream* new_out = 0 )
+first switches the input streams via
+.B switch_streams( new_in, new_out )
+and then returns the value of
+.B yylex().
 .PP
 In addition,
 .B yyFlexLexer
@@ -3420,6 +3576,20 @@ results in the
 behavior of no parentheses around the definition.
 .IP
 The POSIX specification is that the definition be enclosed in parentheses.
+.IP -
+Some implementations of
+.I lex
+allow a rule's action to begin on a separate line, if the rule's pattern
+has trailing whitespace:
+.nf
+
+    %%
+    foo|bar<space here>
+      { foobar_action(); }
+
+.fi
+.I flex
+does not support this feature.
 .IP -
 The
 .I lex
@@ -3773,20 +3943,20 @@ Thanks to the many
 .I flex
 beta-testers, feedbackers, and contributors, especially Francois Pinard,
 Casey Leedom,
-David Barker-Plummer, Nelson H.F. Beebe, benson@odi.com,
+Terry Allen, David Barker-Plummer, Nelson H.F. Beebe, benson@odi.com,
 Karl Berry, Peter A. Bigot, Simon Blanchard,
-Keith Bostic, Frederic Brehm, Kin Cho, Nick Christopher,
+Keith Bostic, Frederic Brehm, Ian Brockbank, Kin Cho, Nick Christopher,
 Brian Clapper, J.T. Conklin,
-Jason Coughlin, Bill Cox, Dave Curtis, Scott David
+Jason Coughlin, Bill Cox, Nick Cropper, Dave Curtis, Scott David
 Daniels, Chris G. Demetriou, Theo Deraadt,
 Mike Donahue, Chuck Doucette, Tom Epperly, Leo Eskin,
-Chris Faylor, Chris Flatters, Jon Forrest, Kaveh R. Ghazi,
+Chris Faylor, Chris Flatters, Jon Forrest, Joe Gayda, Kaveh R. Ghazi,
 Eric Goldman, Christopher M. Gould, Ulrich Grepel, Peer Griebel,
 Jan Hajic, Charles Hemphill, NORO Hideo,
 Jarkko Hietaniemi, Scott Hofmann,
 Jeff Honig, Dana Hudes, Eric Hughes, John Interrante,
 Ceriel Jacobs, Michal Jaegermann, Sakari Jalovaara, Jeffrey R. Jones,
-Henry Juengst, Klaus Kaempf, Jonathan I. Kamens,
+Henry Juengst, Klaus Kaempf, Jonathan I. Kamens, Terrence O Kane,
 Amir Katz, ken@ken.hilco.com, Kevin B. Kenny,
 Steve Kirsch, Winfried Koenig, Marq Kole, Ronald Lamprecht,
 Greg Lee, Rohan Lenard, Craig Leres, John Levine, Steve Liddle, Mike Long,
@@ -3794,11 +3964,12 @@ Mohamed el Lozy, Brian Madsen, Malte, Joe Marshall,
 Bengt Martensson, Chris Metcalf,
 Luke Mewburn, Jim Meyering, R. Alexander Milowski, Erik Naggum,
 G.T. Nicol, Landon Noll, Marc Nozell,
-Richard Ohnemus, Sven Panne, Roland Pesch, Walter Pelissero, Gaumond
+Richard Ohnemus, Karsten Pahnke,
+Sven Panne, Roland Pesch, Walter Pelissero, Gaumond
 Pierre, Esmond Pitt, Jef Poskanzer, Joe Rahmeh, Jarmo Raiha,
 Frederic Raimbault, Pat Rankin, Rick Richardson,
 Kevin Rodgers, Kai Uwe Rommel, Jim Roskind, Alberto Santini,
-Darrell Schiebel, Raf Schietekat,
+Andreas Scherer, Darrell Schiebel, Raf Schietekat,
 Doug Schmidt, Philippe Schnoebelen, Andreas Schwab,
 Alex Siegel, Eckehard Stolz, Jan-Erik Strvmquist,
 Mike Stump, Paul Stuart, Dave Tallman, Ian Lance Taylor,

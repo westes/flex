@@ -1,4 +1,4 @@
-Changes between release 2.5.0.5 (10Jan95) and release 2.4.7:
+Changes between release 2.5.0.7 (06Mar95) and release 2.4.7:
 
 	- A new concept of "start condition" scope has been introduced.
 	  A start condition scope is begun with:
@@ -92,10 +92,12 @@ Changes between release 2.5.0.5 (10Jan95) and release 2.4.7:
 		reject
 		yymore
 
-	  Two %option's take string-delimited values, offset with '=':
+	  Three %option's take string-delimited values, offset with '=':
 
 		outfile="<name>"	equivalent to -o<name>
 		prefix="<name>"		equivalent to -P<name>
+		yyclass="<name>"	set the name of the C++ scanning class
+					(see below)
 
 	  A number of %option's are available for lint purists who
 	  want to suppress the appearance of unneeded routines in
@@ -205,7 +207,7 @@ Changes between release 2.5.0.5 (10Jan95) and release 2.4.7:
 	  "interactive".  An interactive buffer is processed more slowly,
 	  but must be used when the scanner's input source is indeed
 	  interactive to avoid problems due to waiting to fill buffers
-	  (see the discussion of the -I flag in flexdoc).  A non-zero value
+	  (see the discussion of the -I flag in flex.1).  A non-zero value
 	  in the macro invocation marks the buffer as interactive, a zero
 	  value as non-interactive.  Note that use of this macro overrides
 	  "%option always-interactive" or "%option never-interactive".
@@ -239,18 +241,67 @@ Changes between release 2.5.0.5 (10Jan95) and release 2.4.7:
 	- The macro YY_AT_BOL() returns true if the next token scanned from
 	  the current buffer will have '^' rules active, false otherwise.
 
-	- Flex now generates #line directives relating the code it
-	  produces to the output file; this means that error messages
-	  in the flex-generated code should be correctly pinpointed.
+	- The new function
+
+		void yy_flush_buffer( struct yy_buffer_state* b )
+
+	  flushes the contents of the current buffer (i.e., next time
+	  the scanner attempts to match a token using b as the current
+	  buffer, it will begin by invoking YY_INPUT to fill the buffer).
+	  This routine is also available to C++ scanners (unlike some
+	  of the other new routines).
+
+	  The related macro
+
+		YY_FLUSH_BUFFER
+
+	  flushes the contents of the current buffer.
 
 	- A new "-ooutput" option writes the generated scanner to "output".
 	  If used with -t, the scanner is still written to stdout, but
 	  its internal #line directives (see previous item) use "output".
 
+	- Flex now generates #line directives relating the code it
+	  produces to the output file; this means that error messages
+	  in the flex-generated code should be correctly pinpointed.
+
 	- When generating #line directives, filenames with embedded '\'s
 	  have those characters escaped (i.e., turned into '\\').  This
 	  feature helps with reporting filenames for some MS-DOS and OS/2
 	  systems.
+
+	- The FlexLexer class includes two new public member functions:
+
+		virtual void switch_streams( istream* new_in = 0,
+						ostream* new_out = 0 )
+
+	  reassigns yyin to new_in (if non-nil) and yyout to new_out
+	  (ditto), deleting the previous input buffer if yyin is
+	  reassigned.  It is used by:
+
+		int yylex( istream* new_in = 0, ostream* new_out = 0 )
+
+	  which first calls switch_streams() and then returns the value
+	  of calling yylex().
+
+	- C++ scanners now have yy_flex_debug as a member variable of
+	  FlexLexer rather than a global.
+
+	- When generating a C++ scanning class, you can now use
+
+		%option yyclass="foo"
+
+	  to inform flex that you have derived "foo" as a subclass of
+	  yyFlexLexer, so flex will place your actions in the member
+	  function foo::yylex() instead of yyFlexLexer::yylex().  It also
+	  generates a yyFlexLexer::yylex() member function that generates a
+	  run-time error if called (by invoking yyFlexLexer::LexerError()).
+	  This feature is necessary if your subclass "foo" introduces some
+	  additional member functions or variables that you need to access
+	  from yylex().
+
+	- Current texinfo files in MISC/texinfo, contributed by Francois
+	  Pinard.
 
 	- You can now change the name "flex" to something else (e.g., "lex")
 	  by redefining $(FLEX) in the Makefile.
@@ -270,7 +321,7 @@ Changes between release 2.5.0.5 (10Jan95) and release 2.4.7:
 
 	- C++ scanner objects now work with the -P option.  You include
 	  <FlexLexer.h> once per scanner - see comments in <FlexLexer.h>
-	  (or flexdoc) for details.
+	  (or flex.1) for details.
 
 	- C++ FlexLexer objects now use the "cerr" stream to report -d output
 	  instead of stdio.
@@ -286,10 +337,39 @@ Changes between release 2.5.0.5 (10Jan95) and release 2.4.7:
 	- Scanners generated using -l lex compatibility now have the symbol
 	  YY_FLEX_LEX_COMPAT #define'd.
 
+	- When initializing (i.e., yy_init is non-zero on entry to yylex()),
+	  generated scanners now set yy_init to zero before executing
+	  YY_USER_INIT.  This means that you can set yy_init back to a
+	  non-zero value in YY_USER_INIT if you need the scanner to be
+	  reinitialized on the next call.
+
 	- You can now use "#line" directives in the first section of your
 	  scanner specification.
 
-	- Improved support for MS-DOS.
+	- Improved support for MS-DOS.  The flex sources have been successfully
+	  built, unmodified, for Borland 4.02 (all that's required is a
+	  Borland Makefile and config.h file, which are supplied in
+	  MISC/Borland - contributed by Terrence O Kane).
+
+	- Improved support for Macintosh using Think C - the sources should
+	  build for this platform "out of the box".  Contributed by Scott
+	  Hofmann.
+
+	- Improved support for VMS, in MISC/VMS/, contributed by Pat Rankin.
+
+	- Support for the Amiga, in MISC/Amiga/, contributed by Andreas
+	  Scherer.  Note that the contributed files were developed for
+	  flex 2.4 and have not been tested with flex 2.5.
+
+	- Some notes on support for the NeXT, in MISC/NeXT, contributed
+	  by Raf Schietekat.
+
+	- The MISC/ directory now includes a preformatted version of flex.1
+	  in flex.man, and pre-yacc'd versions of parse.y in parse.{c,h}.
+
+	- The flex.1 and flexdoc.1 manual pages have been merged.  There
+	  is now just one document, flex.1, which includes an overview
+	  at the beginning to help you find the section you need.
 
 	- Documentation now clarifies that start conditions persist across
 	  switches to new input files or different input buffers.  If you
@@ -312,6 +392,14 @@ Changes between release 2.5.0.5 (10Jan95) and release 2.4.7:
 
 	- Documentation now stresses that you gain the benefits of removing
 	  backing-up states only if you remove *all* of them.
+
+	- Documentation now points out that traditional lex allows you
+	  to put the action on a separate line from the rule pattern if
+	  the pattern has trailing whitespace (ugh!), but flex doesn't
+	  support this.
+
+	- A broken example in documentation of the difference between
+	  inclusive and exclusive start conditions is now fixed.
 
 	- Usage (-h) report now goes to stdout.
 
