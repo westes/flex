@@ -557,13 +557,18 @@ int exit_status;
             fprintf(header_out,"#line %d \"%s\"\n", (++nlines)+1, headerfilename);
 
             /* Print the prefixed start conditions. */
+            fprintf(header_out,"#ifdef YY_HEADER_EXPORT_START_CONDITIONS\n");
+            fprintf(header_out,"/* Beware! Start conditions are not prefixed. */\n");
+                   
             for (i=1; i <= lastsc; i++)
-                fprintf(header_out, "#define %s %d\n",
-                        fix_scname(linebuf,scname[i]), i-1);
+                fprintf(header_out, "#define %s %d\n",scname[i], i-1);
+            fprintf(header_out,"#endif /* YY_HEADER_EXPORT_START_CONDITIONS */\n\n");
 
             /* Kill ALL flex-related macros. This is so the user
              * can #include more than one generated header file. */
-            fprintf(header_out,"\n");
+            fprintf(header_out,"#ifndef YY_HEADER_NO_UNDEFS\n");
+            fprintf(header_out,"/* Undefine all internal macros, etc., that do no belong in the header. */\n\n");
+
             fprintf(header_out,"#undef BEGIN\n");
             fprintf(header_out,"#undef ECHO\n");
             fprintf(header_out,"#undef EOB_ACT_CONTINUE_SCAN\n");
@@ -715,6 +720,7 @@ int exit_status;
 			for(i=0; i < defs_buf.nelts; i++)
 				fprintf(header_out, "#undef %s\n", ((char**)defs_buf.elts)[i]);
 
+            fprintf(header_out,"#endif /* !YY_HEADER_NO_UNDEFS */\n");
 			fprintf(header_out, "\n");
 			fprintf(header_out, "#undef %sIN_HEADER\n", prefix);
 			fprintf(header_out, "#endif /* %sHEADER_H */\n", prefix);

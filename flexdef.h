@@ -1088,16 +1088,4 @@ extern jmp_buf flex_main_jmp_buf;
 /* Removes all \n and \r chars from tail of str. returns str. */
 extern char* chomp(char* str);
 
-/* converts str to lowercase. returns str. */
-extern char * strlower (char *str);
-
-/* converts str to lowercase. returns str. */
-extern char * strupper (char *str);
-
-/* guess case preference for str */
-extern int case_preference (const char* str);
-
-/* creates a name-space safe copy of start cond name in buf. returns buf */
-extern char * fix_scname (char * buf, const char * name);
-
 #endif /* not defined FLEXDEF_H */
