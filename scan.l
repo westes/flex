@@ -39,7 +39,7 @@
 	int flexscan()
 
 #define RETURNCHAR \
-	yylval = yytext[0]; \
+	yylval = (unsigned char) yytext[0]; \
 	return CHAR;
 
 #define RETURNNAME \
@@ -360,11 +360,11 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 				}
 			}
 
-<SECT2>[/|*+?.()]	return (int) yytext[0];
+<SECT2>[/|*+?.()]	return (unsigned char) yytext[0];
 <SECT2>.		RETURNCHAR;
 
 
-<SC>[,*]		return (int) yytext[0];
+<SC>[,*]		return (unsigned char) yytext[0];
 <SC>">"			BEGIN(SECT2); return '>';
 <SC>">"/^		BEGIN(CARETISBOL); return '>';
 <SC>{SCNAME}		RETURNNAME;
