@@ -277,32 +277,6 @@ static void yy_flex_free YY_PROTO(( void * ));
 
 %% yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
 
-#ifndef YY_SKIP_YYWRAP
-#ifdef __cplusplus
-extern "C" int yywrap YY_PROTO(( void ));
-#else
-extern int yywrap YY_PROTO(( void ));
-#endif
-#endif
-
-#ifndef YY_NO_UNPUT
-static void yyunput YY_PROTO(( int c, char *buf_ptr ));
-#endif
-
-#ifndef yytext_ptr
-static void yy_flex_strncpy YY_PROTO(( char *, yyconst char *, int ));
-#endif
-
-#ifndef YY_NO_INPUT
-%- Standard (non-C++) definition
-#ifdef __cplusplus
-static int yyinput YY_PROTO(( void ));
-#else
-static int input YY_PROTO(( void ));
-#endif
-%*
-#endif
-
 %- Standard (non-C++) definition
 static yy_state_type yy_get_previous_state YY_PROTO(( void ));
 static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
@@ -326,6 +300,34 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
  */
+
+#ifndef YY_SKIP_YYWRAP
+#ifdef __cplusplus
+extern "C" int yywrap YY_PROTO(( void ));
+#else
+extern int yywrap YY_PROTO(( void ));
+#endif
+#endif
+
+%-
+#ifndef YY_NO_UNPUT
+static void yyunput YY_PROTO(( int c, char *buf_ptr ));
+#endif
+%*
+
+#ifndef yytext_ptr
+static void yy_flex_strncpy YY_PROTO(( char *, yyconst char *, int ));
+#endif
+
+#ifndef YY_NO_INPUT
+%- Standard (non-C++) definition
+#ifdef __cplusplus
+static int yyinput YY_PROTO(( void ));
+#else
+static int input YY_PROTO(( void ));
+#endif
+%*
+#endif
 
 #if YY_STACK_USED
 static int yy_start_stack_ptr = 0;
@@ -907,6 +909,7 @@ yy_state_type yyFlexLexer::yy_try_NUL_trans( yy_state_type yy_current_state )
 
 
 %-
+#ifndef YY_NO_UNPUT
 #ifdef YY_USE_PROTOS
 static void yyunput( int c, register char *yy_bp )
 #else
@@ -951,6 +954,9 @@ void yyFlexLexer::yyunput( int c, register char* yy_bp )
 	yy_hold_char = *yy_cp;
 	yy_c_buf_p = yy_cp;
 	}
+%-
+#endif	/* ifndef YY_NO_UNPUT */
+%*
 
 
 %-
