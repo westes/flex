@@ -28,111 +28,112 @@
 @c   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 @c   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 @c   PURPOSE.
+
 @node FAQ
 @unnumbered FAQ
 
 @menu
-* When was flex born?::
-* How do I expand \ escape sequences in C-style quoted strings?::
-* Why do flex scanners call fileno if it is not ANSI compatible?::
-* Does flex support recursive pattern definitions?::
-* How do skip huge chunks of input (tens of megabytes) while using flex?::
-* Flex is not matching my patterns in the same order that I defined them.::
-* My actions are executing out of order or sometimes not at all.::
-* How can I have multiple input sources feed into the same scanner at the same time?::
-* Can I build nested parsers that work with the same input file?::
-* How can I match text only at the end of a file?::
-* How can I make REJECT cascade across start condition boundaries?::
-* Why cant I use fast or full tables with interactive mode?::
-* How much faster is -F or -f than -C?::
-* If I have a simple grammar cant I just parse it with flex?::
-* Why doesnt yyrestart() set the start state back to INITIAL?::
-* How can I match C-style comments?::
-* The period isnt working the way I expected.::
-* Can I get the flex manual in another format?::
-* Does there exist a "faster" NDFA->DFA algorithm?::
-* How does flex compile the DFA so quickly?::
-* How can I use more than 8192 rules?::
-* How do I abandon a file in the middle of a scan and switch to a new file?::
-* How do I execute code only during initialization (only before the first scan)?::
-* How do I execute code at termination?::
-* Where else can I find help?::
-* Can I include comments in the "rules" section of the file file?::
-* I get an error about undefined yywrap().::
-* How can I change the matching pattern at run time?::
-* Is there a way to increase the rules (NFA states to a bigger number?)::
-* How can I expand macros in the input?::
-* How can I build a two-pass scanner?::
-* How do I match any string not matched in the preceding rules?::
-* I am trying to port code from AT&T lex that uses yysptr and yysbuf.::
-* Is there a way to make flex treat NULL like a regular character?::
-* Whenever flex can not match the input it says "flex scanner jammed".::
-* Why doesnt flex have non-greedy operators like perl does?::
-* Memory leak - 16386 bytes allocated by malloc.::
-* How do I track the byte offset for lseek()?::
-* unnamed-faq-16::
-* How do I skip as many chars as possible?::
-* unnamed-faq-33::
-* unnamed-faq-42::
-* unnamed-faq-43::
-* unnamed-faq-44::
-* unnamed-faq-45::
-* unnamed-faq-46::
-* unnamed-faq-47::
-* unnamed-faq-48::
-* unnamed-faq-49::
-* unnamed-faq-50::
-* unnamed-faq-51::
-* unnamed-faq-52::
-* unnamed-faq-53::
-* unnamed-faq-54::
-* unnamed-faq-55::
-* unnamed-faq-56::
-* unnamed-faq-57::
-* unnamed-faq-58::
-* unnamed-faq-59::
-* unnamed-faq-60::
-* unnamed-faq-61::
-* unnamed-faq-62::
-* unnamed-faq-63::
-* unnamed-faq-64::
-* unnamed-faq-65::
-* unnamed-faq-66::
-* unnamed-faq-67::
-* unnamed-faq-68::
-* unnamed-faq-69::
-* unnamed-faq-70::
-* unnamed-faq-71::
-* unnamed-faq-72::
-* unnamed-faq-73::
-* unnamed-faq-74::
-* unnamed-faq-75::
-* unnamed-faq-76::
-* unnamed-faq-77::
-* unnamed-faq-78::
-* unnamed-faq-79::
-* unnamed-faq-80::
-* unnamed-faq-81::
-* unnamed-faq-82::
-* unnamed-faq-83::
-* unnamed-faq-84::
-* unnamed-faq-85::
-* unnamed-faq-86::
-* unnamed-faq-87::
-* unnamed-faq-88::
-* unnamed-faq-89::
-* unnamed-faq-90::
-* unnamed-faq-91::
-* unnamed-faq-92::
-* unnamed-faq-93::
-* unnamed-faq-94::
-* unnamed-faq-95::
-* unnamed-faq-96::
-* unnamed-faq-97::
-* unnamed-faq-98::
-* unnamed-faq-99::
-* unnamed-faq-100::
-* unnamed-faq-101::
+* When was flex born?::         
+* How do I expand \ escape sequences in C-style quoted strings?::  
+* Why do flex scanners call fileno if it is not ANSI compatible?::  
+* Does flex support recursive pattern definitions?::  
+* How do I skip huge chunks of input (tens of megabytes) while using flex?::  
+* Flex is not matching my patterns in the same order that I defined them.::  
+* My actions are executing out of order or sometimes not at all.::  
+* How can I have multiple input sources feed into the same scanner at the same time?::  
+* Can I build nested parsers that work with the same input file?::  
+* How can I match text only at the end of a file?::  
+* How can I make REJECT cascade across start condition boundaries?::  
+* Why cant I use fast or full tables with interactive mode?::  
+* How much faster is -F or -f than -C?::  
+* If I have a simple grammar cant I just parse it with flex?::  
+* Why doesnt yyrestart() set the start state back to INITIAL?::  
+* How can I match C-style comments?::  
+* The period isnt working the way I expected.::  
+* Can I get the flex manual in another format?::  
+* Does there exist a "faster" NDFA->DFA algorithm?::  
+* How does flex compile the DFA so quickly?::  
+* How can I use more than 8192 rules?::  
+* How do I abandon a file in the middle of a scan and switch to a new file?::  
+* How do I execute code only during initialization (only before the first scan)?::  
+* How do I execute code at termination?::  
+* Where else can I find help?::  
+* Can I include comments in the "rules" section of the file file?::  
+* I get an error about undefined yywrap().::  
+* How can I change the matching pattern at run time?::  
+* Is there a way to increase the rules (NFA states to a bigger number?)::  
+* How can I expand macros in the input?::  
+* How can I build a two-pass scanner?::  
+* How do I match any string not matched in the preceding rules?::  
+* I am trying to port code from AT&T lex that uses yysptr and yysbuf.::  
+* Is there a way to make flex treat NULL like a regular character?::  
+* Whenever flex can not match the input it says "flex scanner jammed".::  
+* Why doesnt flex have non-greedy operators like perl does?::  
+* Memory leak - 16386 bytes allocated by malloc.::  
+* How do I track the byte offset for lseek()?::  
+* unnamed-faq-16::              
+* How do I skip as many chars as possible?::  
+* unnamed-faq-33::              
+* unnamed-faq-42::              
+* unnamed-faq-43::              
+* unnamed-faq-44::              
+* unnamed-faq-45::              
+* unnamed-faq-46::              
+* unnamed-faq-47::              
+* unnamed-faq-48::              
+* unnamed-faq-49::              
+* unnamed-faq-50::              
+* unnamed-faq-51::              
+* unnamed-faq-52::              
+* unnamed-faq-53::              
+* unnamed-faq-54::              
+* unnamed-faq-55::              
+* unnamed-faq-56::              
+* unnamed-faq-57::              
+* unnamed-faq-58::              
+* unnamed-faq-59::              
+* unnamed-faq-60::              
+* unnamed-faq-61::              
+* unnamed-faq-62::              
+* unnamed-faq-63::              
+* unnamed-faq-64::              
+* unnamed-faq-65::              
+* unnamed-faq-66::              
+* unnamed-faq-67::              
+* unnamed-faq-68::              
+* unnamed-faq-69::              
+* unnamed-faq-70::              
+* unnamed-faq-71::              
+* unnamed-faq-72::              
+* unnamed-faq-73::              
+* unnamed-faq-74::              
+* unnamed-faq-75::              
+* unnamed-faq-76::              
+* unnamed-faq-77::              
+* unnamed-faq-78::              
+* unnamed-faq-79::              
+* unnamed-faq-80::              
+* unnamed-faq-81::              
+* unnamed-faq-82::              
+* unnamed-faq-83::              
+* unnamed-faq-84::              
+* unnamed-faq-85::              
+* unnamed-faq-86::              
+* unnamed-faq-87::              
+* unnamed-faq-88::              
+* unnamed-faq-89::              
+* unnamed-faq-90::              
+* unnamed-faq-91::              
+* unnamed-faq-92::              
+* unnamed-faq-93::              
+* unnamed-faq-94::              
+* unnamed-faq-95::              
+* unnamed-faq-96::              
+* unnamed-faq-97::              
+* unnamed-faq-98::              
+* unnamed-faq-99::              
+* unnamed-faq-100::             
+* unnamed-faq-101::             
 @end menu
 
 @node  When was flex born?
