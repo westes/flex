@@ -39,7 +39,7 @@ static char rcsid[] =
 
 #include "flexdef.h"
 
-static char flex_version[] = "2.0.1 (beta)";
+static char flex_version[] = "2.1 (beta)";
 
 
 /* these globals are all defined and commented in flexdef.h */
