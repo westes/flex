@@ -30,13 +30,11 @@
 /*  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED */
 /*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
 /*  PURPOSE. */
-
-#ifndef lint
-char copyright[] =
-"@(#) Copyright (c) 1990 The Regents of the University of California.\n\
- All rights reserved.\n";
-#endif /* not lint */
-
+
+#include <config.h>
+#ifdef ENABLE_NLS
+#include <locale.h>
+#endif /* ENABLE_NLS */
 #include "flexdef.h"
 #include "version.h"
 #include "options.h"
@@ -120,10 +118,6 @@ static char *outfile_template = "lex%s.%s";
 static char *backing_name = "lex.bck";
 #endif
 
-#ifdef THINK_C
-#include <console.h>
-#endif
-
 #ifdef MS_DOS
 extern unsigned _stklen = 16384;
 #endif
@@ -152,10 +146,6 @@ char *argv[];
 	exit_status = setjmp(flex_main_jmp_buf);
 	if ( exit_status )
 		return exit_status - 1;
-
-#ifdef THINK_C
-	argc = ccommand( &argv );
-#endif
 
 	flexinit( argc, argv );
 
