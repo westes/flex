@@ -6,6 +6,7 @@
 
 %-
 #include <stdio.h>
+#include <errno.h>
 %*
 
 
@@ -1437,6 +1438,8 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 %*
 
 	{
+	int oerrno = errno;
+
 	yy_flush_buffer( b YY_CALL_LAST_ARG);
 
 	b->yy_input_file = file;
@@ -1455,6 +1458,7 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 %+
 	b->yy_is_interactive = 0;
 %*
+	errno = oerrno;
 	}
 
 
