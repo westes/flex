@@ -1,4 +1,4 @@
-/* flexscan.l - scanner for flex input */
+/* scan.l - scanner for flex input */
 
 /*
  * Copyright (c) 1987, the University of California
@@ -14,7 +14,7 @@
 
 %{
 #include "flexdef.h"
-#include "y.tab.h"
+#include "parse.h"
 
 #define ACTION_ECHO fprintf( temp_action_file, "%s", yytext )
 #define MARK_END_OF_PROLOG fprintf( temp_action_file, "%%%% end of prolog\n" );
@@ -37,7 +37,7 @@
 %}
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
-%x FIRSTCCL CCL ACTION RECOVER BRACEERROR C_COMMENT ACTION_COMMENT
+%x FIRSTCCL CCL ACTION RECOVER BRACEERROR C_COMMENT C_COMMENT_2 ACTION_COMMENT
 %x ACTION_STRING PERCENT_BRACE_ACTION
 
 WS		[ \t]+
@@ -51,10 +51,9 @@ SCNAME		{NAME}
 ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 
 %%
-    static int bracelevel;
+    static int bracelevel, didadef;
     int i, cclval;
     char nmdef[MAXLINE], myesc();
-    static int didadef;
 
 ^{WS}.*\n		++linenum; ECHO; /* indented code */
 ^#.*\n			++linenum; ECHO; /* treat as a comment */
@@ -123,7 +122,7 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 			++linenum;
 			}
 
-<RECOVER>.*\n		++linenum; RETURNNAME;
+<RECOVER>.*\n		++linenum; BEGIN(0); RETURNNAME;
 
 
 <SECT2PROLOG>.*\n/[^ \t\n]	{
@@ -136,10 +135,17 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 <SECT2PROLOG>.*\n	++linenum; ACTION_ECHO;
 
 <SECT2>^{OPTWS}\n	++linenum; /* allow blank lines in section 2 */
-<SECT2>^{WS}.*\n	{
+
+	/* this horrible mess of a rule matches indented lines which
+	 * do not contain "/*".  We need to make the distinction because
+	 * otherwise this rule will be taken instead of the rule which
+	 * matches the beginning of comments like this one
+	 */
+<SECT2>^{WS}([^/\n]|"/"[^*\n])*("/"?)\n	{
 			synerr( "indented code found outside of action" );
 			++linenum;
 			}
+
 <SECT2>"<"		BEGIN(SC); return ( '<' );
 <SECT2>^"^"		return ( '^' );
 <SECT2>\"		BEGIN(QUOTE); return ( '"' );
@@ -153,6 +159,8 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 			return ( '\n' );
 			}
 <SECT2>{WS}"|".*\n	++linenum; return ( '\n' );
+
+<SECT2>^{OPTWS}"/*"	ACTION_ECHO; BEGIN(C_COMMENT_2);
 
 <SECT2>{WS}		{ /* needs to be separate from following rule due to
 			   * bug with trailing context
@@ -171,7 +179,7 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 <SECT2>^{OPTWS}\n	++linenum; return ( '\n' );
 
 <SECT2>^"%%".*		{
-			/* guarentee that the SECT3 rule will have something
+			/* guarantee that the SECT3 rule will have something
 			 * to match
 			 */
 			yyless(1);
@@ -294,7 +302,7 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 			ACTION_ECHO;
 			if ( bracelevel == 0 )
 			    {
-			    fputs( "\tbreak;\n", temp_action_file );
+			    fputs( "\tYY_BREAK\n", temp_action_file );
 			    BEGIN(SECT2);
 			    }
 			}
@@ -310,7 +318,7 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 			ACTION_ECHO;
 			if ( bracelevel == 0 )
 			    {
-			    fputs( "\tbreak;\n", temp_action_file );
+			    fputs( "\tYY_BREAK\n", temp_action_file );
 			    BEGIN(SECT2);
 			    }
 			}
@@ -321,6 +329,12 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 <ACTION_COMMENT>"*"	ACTION_ECHO;
 <ACTION_COMMENT>\n	++linenum; ACTION_ECHO;
 <ACTION_COMMENT>.	ACTION_ECHO;
+
+<C_COMMENT_2>"*/"	ACTION_ECHO; BEGIN(SECT2);
+<C_COMMENT_2>"*/".*\n	++linenum; ACTION_ECHO; BEGIN(SECT2);
+<C_COMMENT_2>[^*\n]+	ACTION_ECHO;
+<C_COMMENT_2>"*"	ACTION_ECHO;
+<C_COMMENT_2>\n		++linenum; ACTION_ECHO;
 
 <ACTION_STRING>[^"\\\n]+	ACTION_ECHO;
 <ACTION_STRING>\\.	ACTION_ECHO;
