@@ -630,6 +630,7 @@ void flexend (exit_status)
 
         {
             const char * undef_list[] = {
+
                 "BEGIN",
                 "ECHO",
                 "EOB_ACT_CONTINUE_SCAN",
@@ -729,19 +730,16 @@ void flexend (exit_status)
                 "YY_START_STACK_INCR",
                 "YY_STATE_EOF",
                 "YY_STDINIT",
-                "YY_STRUCT_YY_BUFFER_STATE",
                 "YY_TEXT_IS_ARRAY",
                 "YY_TRAILING_HEAD_MASK",
                 "YY_TRAILING_MASK",
-                "YY_TYPEDEF_YY_BUFFER_STATE",
-                "YY_TYPEDEF_YY_SCANNER_T",
-                "YY_TYPEDEF_YY_SIZE_T",
                 "YY_USER_ACTION",
                 "YY_USES_REJECT",
                 "YY_USE_CONST",
                 "YY_USE_LINENO",
                 "YY_USE_PROTOS",
                 "unput",
+                "yyTABLES_NAME",
                 "yy_create_buffer",
                 "yy_delete_buffer",
                 "yy_flex_debug",
@@ -788,6 +786,8 @@ void flexend (exit_status)
                 "yyset_lloc",
                 "yyset_lval",
                 "yyset_out",
+                "yytables_destroy",
+                "yytables_fload",
                 "yyterminate",
                 "yytext",
                 "yytext_ptr",
