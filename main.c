@@ -58,8 +58,8 @@ int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum;
 FILE *skelfile = NULL;
 int skel_ind = 0;
-char *action_array, *prolog, *action;
-int action_size, action_offset, action_index;
+char *action_array;
+int action_size, defs1_offset, prolog_offset, action_offset, action_index;
 char *infilename = NULL;
 int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
@@ -442,9 +442,9 @@ char **argv;
 
 	/* Initialize dynamic array for holding the rule actions. */
 	action_size = 2048;	/* default size of action array in bytes */
-	prolog = action = action_array =
-		allocate_character_array( action_size );
-	action_offset = action_index = 0;
+	action_array = allocate_character_array( action_size );
+	defs1_offset = prolog_offset = action_offset = action_index = 0;
+	action_array[0] = '\0';
 
 	program_name = argv[0];
 
@@ -806,6 +806,8 @@ void readin()
 	{
 	skelout();
 
+	line_directive_out( (FILE *) 0 );
+
 	if ( yyparse() )
 		{
 		pinpoint_message( "fatal parse error" );
@@ -837,34 +839,6 @@ void readin()
 	if ( ddebug )
 		puts( "\n#define FLEX_DEBUG" );
 
-	skelout();
-
-	if ( ! C_plus_plus )
-		{
-		if ( use_read )
-			{
-			printf(
-"\tif ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \\\n" );
-			printf(
-		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );\n" );
-			}
-
-		else
-			{
-			printf(
-			"\tif ( yy_current_buffer->is_interactive ) \\\n" );
-			printf(
-		"\t\tresult = (buf[0] = getc( yyin )) == EOF ? 0 : 1; \\\n" );
-			printf(
-"\telse if ( ((result = fread( (char *) buf, 1, max_size, yyin )) == 0)\\\n" );
-			printf( "\t\t  && ferror( yyin ) ) \\\n" );
-			printf(
-		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );\n" );
-			}
-		}
-
-	skelout();
-
 	if ( lex_compat )
 		{
 		printf( "FILE *yyin = stdin, *yyout = stdout;\n" );
@@ -874,26 +848,10 @@ void readin()
 	else
 		printf( "FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;\n" );
 
-	skelout();
-
 	if ( C_plus_plus )
 		printf( "\n#include \"FlexLexer.h\"\n" );
 
-	line_directive_out( stdout );
-
-	if ( useecs )
-		numecs = cre8ecs( nextecm, ecgroup, csize );
 	else
-		numecs = csize;
-
-	/* Now map the equivalence class for NUL to its expected place. */
-	ecgroup[0] = ecgroup[csize];
-	NUL_ec = abs( ecgroup[0] );
-
-	if ( useecs )
-		ccl2ecl();
-
-	if ( ! C_plus_plus )
 		{
 		if ( yytext_is_array )
 			{
@@ -913,8 +871,19 @@ void readin()
 			puts( "#define yytext_ptr yytext" );
 			}
 		}
-	}
 
+	if ( useecs )
+		numecs = cre8ecs( nextecm, ecgroup, csize );
+	else
+		numecs = csize;
+
+	/* Now map the equivalence class for NUL to its expected place. */
+	ecgroup[0] = ecgroup[csize];
+	NUL_ec = abs( ecgroup[0] );
+
+	if ( useecs )
+		ccl2ecl();
+	}
 
 
 /* set_up_initial_allocations - allocate memory for internal tables */

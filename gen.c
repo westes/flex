@@ -1221,10 +1221,38 @@ void make_tables()
 		indent_puts( "#define YY_MORE_ADJ 0" );
 		}
 
+	fputs( &action_array[defs1_offset], stdout );
+
+	skelout();
+
+	if ( ! C_plus_plus )
+		{
+		if ( use_read )
+			{
+			printf(
+"\tif ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \\\n" );
+			printf(
+		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );\n" );
+			}
+
+		else
+			{
+			printf(
+			"\tif ( yy_current_buffer->is_interactive ) \\\n" );
+			printf(
+		"\t\tresult = (buf[0] = getc( yyin )) == EOF ? 0 : 1; \\\n" );
+			printf(
+"\telse if ( ((result = fread( (char *) buf, 1, max_size, yyin )) == 0)\\\n" );
+			printf( "\t\t  && ferror( yyin ) ) \\\n" );
+			printf(
+		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );\n" );
+			}
+		}
+
 	skelout();
 
 	/* Copy prolog to output file. */
-	fputs( prolog, stdout );
+	fputs( &action_array[prolog_offset], stdout );
 
 	skelout();
 
@@ -1323,7 +1351,7 @@ void make_tables()
 	skelout();
 	indent_up();
 	gen_bu_action();
-	fputs( action, stdout );
+	fputs( &action_array[action_offset], stdout );
 
 	/* generate cases for any missing EOF rules */
 	for ( i = 1; i <= lastsc; ++i )

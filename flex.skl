@@ -60,55 +60,8 @@
 #define YY_PROTO(proto) ()
 #endif
 
-%% section 1 definitions go here
-
-/* Amount of stuff to slurp up with each read. */
-#ifndef YY_READ_BUF_SIZE
-#define YY_READ_BUF_SIZE 8192
-#endif
-
 /* Returned upon end-of-file. */
-#define YY_END_TOK 0
-
-/* Copy whatever the last rule matched to the standard output. */
-
-#ifndef ECHO
-%- Standard (non-C++) definition
-/* This used to be an fputs(), but since the string might contain NUL's,
- * we now use fwrite().
- */
-#define ECHO (void) fwrite( yytext, yyleng, 1, yyout )
-%+ C++ definition
-#define ECHO LexerOutput( yytext, yyleng )
-%*
-#endif
-
-/* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
- * is returned in "result".
- */
-#ifndef YY_INPUT
-#define YY_INPUT(buf,result,max_size) \
-%% fread()/read() definition of YY_INPUT goes here unless we're doing C++
-%+ C++ definition
-	if ( (result = LexerInput( (char *) buf, max_size )) < 0 ) \
-		YY_FATAL_ERROR( "input in flex scanner failed" );
-%*
-#endif
-
-/* No semi-colon after return; correct usage is to write "yyterminate();" -
- * we don't want an extra ';' after the "return" because that will cause
- * some compilers to complain about unreachable statements.
- */
-#ifndef yyterminate
-#define yyterminate() return YY_NULL
-#endif
-
 #define YY_NULL 0
-
-/* Report a fatal error. */
-#ifndef YY_FATAL_ERROR
-#define YY_FATAL_ERROR(msg) yy_fatal_error( msg )
-#endif
 
 /* Enter a start condition.  This macro really ought to take a parameter,
  * but we do it the disgusting crufty way forced on us by the ()-less
@@ -129,27 +82,7 @@
  */
 #define YY_NEW_FILE yyrestart( yyin )
 
-/* Default declaration of generated scanner - a define so the user can
- * easily add parameters.
- */
-#ifndef YY_DECL
-%- Standard (non-C++) definition
-#define YY_DECL int yylex YY_PROTO(( void ))
-%+ C++ definition
-#define YY_DECL int yyFlexLexer::yylex()
-%*
-#endif
-
-/* Code executed at the end of each rule. */
-#ifndef YY_BREAK
-#define YY_BREAK break;
-#endif
-
 #define YY_END_OF_BUFFER_CHAR 0
-
-#ifndef YY_BUF_SIZE
-#define YY_BUF_SIZE (YY_READ_BUF_SIZE * 2) /* size of default input buffer */
-#endif
 
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
@@ -262,8 +195,6 @@ static int yy_n_chars;		/* number of characters read into yy_ch_buf */
 
 int yyleng;
 
-%% yyin/yyout and (if -l option) yylineno definition & initialization goes here
-
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = (char *) 0;
 static int yy_init = 1;		/* whether we need to initialize */
@@ -285,7 +216,7 @@ void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
 
 #define yy_new_buffer yy_create_buffer
 
-%% declarations of yytext/yytext_ptr (and C++ include, if used) go here
+%% yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
 
 %- Standard (non-C++) definition
 #ifdef __cplusplus
@@ -307,13 +238,80 @@ static void yy_fatal_error YY_PROTO(( const char msg[] ));
  */
 #define YY_DO_BEFORE_ACTION \
 	yytext_ptr = yy_bp; \
-%% code to fiddle  yytext and yyleng for yymore() goes here
+%% code to fiddle yytext and yyleng for yymore() goes here
 	yy_hold_char = *yy_cp; \
 	*yy_cp = '\0'; \
 %% code to copy yytext_ptr to yytext[] goes here, if %array
 	yy_c_buf_p = yy_cp;
 
-%% data tables for the DFA go here
+%% data tables for the DFA and the user's section 1 definitions go here
+
+/* Macros after this point can all be overridden by user definitions in
+ * section 1.
+ */
+
+/* Amount of stuff to slurp up with each read. */
+#ifndef YY_READ_BUF_SIZE
+#define YY_READ_BUF_SIZE 8192
+#endif
+
+/* Copy whatever the last rule matched to the standard output. */
+
+#ifndef ECHO
+%- Standard (non-C++) definition
+/* This used to be an fputs(), but since the string might contain NUL's,
+ * we now use fwrite().
+ */
+#define ECHO (void) fwrite( yytext, yyleng, 1, yyout )
+%+ C++ definition
+#define ECHO LexerOutput( yytext, yyleng )
+%*
+#endif
+
+/* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
+ * is returned in "result".
+ */
+#ifndef YY_INPUT
+#define YY_INPUT(buf,result,max_size) \
+%% fread()/read() definition of YY_INPUT goes here unless we're doing C++
+%+ C++ definition
+	if ( (result = LexerInput( (char *) buf, max_size )) < 0 ) \
+		YY_FATAL_ERROR( "input in flex scanner failed" );
+%*
+#endif
+
+/* No semi-colon after return; correct usage is to write "yyterminate();" -
+ * we don't want an extra ';' after the "return" because that will cause
+ * some compilers to complain about unreachable statements.
+ */
+#ifndef yyterminate
+#define yyterminate() return YY_NULL
+#endif
+
+/* Report a fatal error. */
+#ifndef YY_FATAL_ERROR
+#define YY_FATAL_ERROR(msg) yy_fatal_error( msg )
+#endif
+
+/* Default declaration of generated scanner - a define so the user can
+ * easily add parameters.
+ */
+#ifndef YY_DECL
+%- Standard (non-C++) definition
+#define YY_DECL int yylex YY_PROTO(( void ))
+%+ C++ definition
+#define YY_DECL int yyFlexLexer::yylex()
+%*
+#endif
+
+/* Code executed at the end of each rule. */
+#ifndef YY_BREAK
+#define YY_BREAK break;
+#endif
+
+#ifndef YY_BUF_SIZE
+#define YY_BUF_SIZE (YY_READ_BUF_SIZE * 2) /* size of default input buffer */
+#endif
 
 YY_DECL
 	{

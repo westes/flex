@@ -35,7 +35,6 @@
 #define ACTION_ECHO add_action( yytext )
 #define MARK_END_OF_PROLOG mark_prolog();
 
-#undef YY_DECL
 #define YY_DECL \
 	int flexscan()
 
@@ -89,12 +88,12 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
 
 ^{WS}			indented_code = true; BEGIN(CODEBLOCK);
-^"/*"			ECHO; BEGIN(C_COMMENT);
+^"/*"			ACTION_ECHO; BEGIN(C_COMMENT);
 ^"%s"{NAME}?		return SCDECL;
 ^"%x"{NAME}?		return XSCDECL;
 ^"%{".*{NL}		{
 			++linenum;
-			line_directive_out( stdout );
+			line_directive_out( (FILE *) 0 );
 			indented_code = false;
 			BEGIN(CODEBLOCK);
 			}
@@ -103,8 +102,9 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
 ^"%%".*			{
 			sectnum = 2;
-			line_directive_out( stdout );
 			bracelevel = 0;
+			mark_defs1();
+			line_directive_out( (FILE *) 0 );
 			BEGIN(SECT2PROLOG);
 			return SECTEND;
 			}
@@ -149,20 +149,20 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 {OPTWS}{NL}		++linenum; return '\n';
 
 
-<C_COMMENT>"*/"		ECHO; BEGIN(INITIAL);
-<C_COMMENT>"*/".*{NL}	++linenum; ECHO; BEGIN(INITIAL);
-<C_COMMENT>[^*\n]+	ECHO;
-<C_COMMENT>"*"		ECHO;
-<C_COMMENT>{NL}		++linenum; ECHO;
+<C_COMMENT>"*/"		ACTION_ECHO; BEGIN(INITIAL);
+<C_COMMENT>"*/".*{NL}	++linenum; ACTION_ECHO; BEGIN(INITIAL);
+<C_COMMENT>[^*\n]+	ACTION_ECHO;
+<C_COMMENT>"*"		ACTION_ECHO;
+<C_COMMENT>{NL}		++linenum; ACTION_ECHO;
 
 
 <CODEBLOCK>^"%}".*{NL}	++linenum; BEGIN(INITIAL);
-<CODEBLOCK>"reject"	ECHO; CHECK_REJECT(yytext);
-<CODEBLOCK>"yymore"	ECHO; CHECK_YYMORE(yytext);
-<CODEBLOCK>{NAME}|{NOT_NAME}|.	ECHO;
+<CODEBLOCK>"reject"	ACTION_ECHO; CHECK_REJECT(yytext);
+<CODEBLOCK>"yymore"	ACTION_ECHO; CHECK_YYMORE(yytext);
+<CODEBLOCK>{NAME}|{NOT_NAME}|.	ACTION_ECHO;
 <CODEBLOCK>{NL}		{
 			++linenum;
-			ECHO;
+			ACTION_ECHO;
 			if ( indented_code )
 				BEGIN(INITIAL);
 			}
@@ -223,7 +223,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 			if ( bracelevel <= 0 )
 				{ /* not in %{ ... %} */
 				yyless( 0 );	/* put it all back */
-				MARK_END_OF_PROLOG;
+				mark_prolog();
 				BEGIN(SECT2);
 				}
 			else
@@ -234,7 +234,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 <SECT2PROLOG>{NL}	++linenum; ACTION_ECHO;
 
 <SECT2PROLOG><<EOF>>	{
-			MARK_END_OF_PROLOG;
+			mark_prolog();
 			sectnum = 0;
 			yyterminate(); /* to stop the parser */
 			}

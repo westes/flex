@@ -366,12 +366,12 @@ extern int yymore_really_used, reject_really_used;
  *
  * action_array - array to hold the rule actions
  * action_size - size of action_array
- * prolog - pointer to where the prolog starts in action_array
+ * defs1_offset - index where the user's section 1 definitions start
+ *	in action_array
+ * prolog_offset - index where the prolog starts in action_array
  * action_offset - index where the non-prolog starts in action_array
  * action_index - index where the next action should go, with respect
- * 	to "action"
- * action - pointer to where non-prolog starts; equal to
- * 	&action_array[action_offset]
+ * 	to "action_array"
  */
 
 extern int datapos, dataline, linenum;
@@ -383,8 +383,9 @@ extern char **input_files;
 extern int num_input_files;
 extern char *program_name;
 
-extern char *action_array, *prolog, *action;
-extern int action_size, action_offset, action_index;
+extern char *action_array;
+extern int action_size;
+extern int defs1_offset, prolog_offset, action_offset, action_index;
 
 
 /* Variables for stack of states having only one out-transition:
@@ -738,6 +739,11 @@ extern void lerrsf PROTO((char[], char[]));
 /* Spit out a "# line" statement. */
 extern void line_directive_out PROTO((FILE*));
 
+/* Mark the current position in the action array as the end of the section 1
+ * user defs.
+ */
+extern void mark_defs1 PROTO((void));
+
 /* Mark the current position in the action array as the end of the prolog. */
 extern void mark_prolog PROTO((void));
 
@@ -750,7 +756,7 @@ extern void mkdata PROTO((int));	/* generate a data statement */
 extern int myctoi PROTO((char []));
 
 /* Return a printable version of the given character, which might be
- * 8-bit
+ * 8-bit.
  */
 extern char *readable_form PROTO((int));
 
