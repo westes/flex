@@ -182,9 +182,11 @@ char **argv;
 /* Wrapper around flex_main, so flex_main can be built as a library. */
 int main( argc, argv )
 {
+#if ENABLE_NLS
 	setlocale(LC_MESSAGES, "");
 	textdomain(PACKAGE);
 	bindtextdomain(PACKAGE, LOCALEDIR);
+#endif
 
     return flex_main(argc,argv);
 }
