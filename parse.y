@@ -132,9 +132,9 @@ initforrule     :
 			}
 		;
 
-flexrule        :  scon '^' re eol
+flexrule        :  scon '^' rule
                         {
-			pat = link_machines( $3, $4 );
+			pat = $3;
 			finish_rule( pat, variable_trail_rule,
 				     headcnt, trailcnt );
 
@@ -152,9 +152,9 @@ flexrule        :  scon '^' re eol
 			    }
 			}
 
-		|  scon re eol
+		|  scon rule
                         {
-			pat = link_machines( $2, $3 );
+			pat = $2;
 			finish_rule( pat, variable_trail_rule,
 				     headcnt, trailcnt );
 
@@ -163,9 +163,9 @@ flexrule        :  scon '^' re eol
 				mkbranch( scset[actvsc[i]], pat );
 			}
 
-                |  '^' re eol
+                |  '^' rule
 			{
-			pat = link_machines( $2, $3 );
+			pat = $2;
 			finish_rule( pat, variable_trail_rule,
 				     headcnt, trailcnt );
 
@@ -187,9 +187,9 @@ flexrule        :  scon '^' re eol
 			    }
 			}
 
-                |  re eol
+                |  rule
 			{
-			pat = link_machines( $1, $2 );
+			pat = $1;
 			finish_rule( pat, variable_trail_rule,
 				     headcnt, trailcnt );
 
@@ -236,51 +236,7 @@ namelist2       :  namelist2 ',' NAME
 			{ synerr( "bad start condition list" ); }
 		;
 
-eol             :  '$'
-                        {
-			if ( trlcontxt )
-			    {
-			    synerr( "trailing context used twice" );
-			    $$ = mkstate( SYM_EPSILON );
-			    }
-			else
-			    {
-			    trlcontxt = true;
-
-			    if ( ! varlength )
-				headcnt = rulelen;
-
-			    ++rulelen;
-			    trailcnt = 1;
-
-			    eps = mkstate( SYM_EPSILON );
-			    $$ = link_machines( eps, mkstate( '\n' ) );
-			    }
-			}
-
-		|
-		        {
-		        $$ = mkstate( SYM_EPSILON );
-
-			if ( trlcontxt )
-			    {
-			    if ( varlength && headcnt == 0 )
-				/* both head and trail are variable-length */
-				variable_trail_rule = true;
-			    else
-				trailcnt = rulelen;
-			    }
-		        }
-		;
-
-re              :  re '|' series
-                        {
-			varlength = true;
-
-			$$ = mkor( $1, $3 );
-			}
-
-		|  re2 series
+rule            :  re2 re
 			{
 			if ( transchar[lastst[$2]] != SYM_EPSILON )
 			    /* provide final transition \now/ so it
@@ -328,9 +284,78 @@ re              :  re '|' series
 			     * state ...
 			     */
 			    add_accept( $1, num_rules | YY_TRAILING_HEAD_MASK );
+			    variable_trail_rule = true;
 			    }
+			
+			else
+			    trailcnt = rulelen;
 
 			$$ = link_machines( $1, $2 );
+			}
+
+		|  re2 re '$'
+			{ synerr( "trailing context used twice" ); }
+
+		|  re '$'
+                        {
+			if ( trlcontxt )
+			    {
+			    synerr( "trailing context used twice" );
+			    $$ = mkstate( SYM_EPSILON );
+			    }
+
+			else if ( previous_continued_action )
+			    {
+			    /* see the comment in the rule for "re2 re"
+			     * above
+			     */
+			    if ( ! varlength || headcnt != 0 )
+				{
+				fprintf( stderr,
+    "%s: warning - trailing context rule at line %d made variable because\n",
+					 program_name, linenum );
+				fprintf( stderr,
+					 "      of preceding '|' action\n" );
+				}
+
+			    /* mark as variable */
+			    varlength = true;
+			    headcnt = 0;
+			    }
+
+			trlcontxt = true;
+
+			if ( ! varlength )
+			    headcnt = rulelen;
+
+			++rulelen;
+			trailcnt = 1;
+
+			eps = mkstate( SYM_EPSILON );
+			$$ = link_machines( $1,
+				 link_machines( eps, mkstate( '\n' ) ) );
+			}
+
+		|  re
+			{
+		        $$ = $1;
+
+			if ( trlcontxt )
+			    {
+			    if ( varlength && headcnt == 0 )
+				/* both head and trail are variable-length */
+				variable_trail_rule = true;
+			    else
+				trailcnt = rulelen;
+			    }
+		        }
+		;
+
+
+re              :  re '|' series
+                        {
+			varlength = true;
+			$$ = mkor( $1, $3 );
 			}
 
 		|  series
@@ -340,8 +365,8 @@ re              :  re '|' series
 
 re2		:  re '/'
 			{
-			/* this rule is separate from the others for "re" so
-			 * that the reduction will occur before the trailing
+			/* this rule is written separately so
+			 * the reduction will occur before the trailing
 			 * series is parsed
 			 */
 
