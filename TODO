@@ -53,11 +53,14 @@ probably satisfy the need for a man page
 ** make test suite more complete
 
 ** create a script which sets up a new skeleton test directory with a
-   correct .cvsignore file and other such niceties
+   correct .cvsignore file and other such niceties (Millaway has done
+   this, but it's in perl and that's probably not good.)
 
 ** explicitly describe the copyright state of the entries in
    tests/. millaway has assigned the rights to the test suite to me
    and so the test suite will be under the flex license.
+
+** make sure that tests/ winds up in the distribution
 
 * move as much skeleton code as possible out of gen.c and into
   flex.skl
