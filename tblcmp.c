@@ -225,9 +225,7 @@ int state[], statenum, totaltrans, comstate, comfreq;
  * Template tables are compressed by using the 'template equivalence
  * classes', which are collections of transition character equivalence
  * classes which always appear together in templates - really meta-equivalence
- * classes.  until this point, the tables for templates have been stored
- * up at the top end of the nxt array; they will now be compressed and have
- * table entries made for them.
+ * classes.
  */
 
 void cmptmps()
@@ -435,9 +433,7 @@ int *state, numtrans;
 /* inittbl - initialize transition tables
  *
  * Initializes "firstfree" to be one beyond the end of the table.  Initializes
- * all "chk" entries to be zero.  Note that templates are built in their
- * own tbase/tdef tables.  They are shifted down to be contiguous
- * with the non-template entries during table generation.
+ * all "chk" entries to be zero.
  */
 void inittbl()
 	{
@@ -566,11 +562,10 @@ int numchars, statenum, deflink, totaltrans;
 	/* Whether we try to fit the state table in the middle of the table
 	 * entries we have already generated, or if we just take the state
 	 * table at the end of the nxt/chk tables, we must make sure that we
-	 * have a valid base address (i.e., non-negative).  Note that not
-	 * only are negative base addresses dangerous at run-time (because
-	 * indexing the next array with one and a low-valued character might
-	 * generate an array-out-of-bounds error message), but at compile-time
-	 * negative base addresses denote TEMPLATES.
+	 * have a valid base address (i.e., non-negative).  Note that
+	 * negative base addresses dangerous at run-time (because indexing
+	 * the nxt array with one and a low-valued character will access
+	 * memory before the start of the array.
 	 */
 
 	/* Find the first transition of state that we need to worry about. */
@@ -837,7 +832,7 @@ int *state, statenum, transnum;
 
 /* stack1 - save states with only one out-transition to be processed later
  *
- * if there's room for another state on the "one-transition" stack, the
+ * If there's room for another state on the "one-transition" stack, the
  * state is pushed onto it, to be processed later by mk1tbl.  If there's
  * no room, we process the sucker right now.
  */
