@@ -1115,7 +1115,7 @@ char **argv;
                     break;
 
             case OPT_VERSION:
-                    printf( _( "%s version %s\n" ),
+                    printf( _( "%s %s\n" ),
                             program_name, flex_version );
                     exit( 0 );
 
@@ -1673,10 +1673,12 @@ void usage()
         outfilename = outfile_path;
         }
 
-    fprintf(f,_( "%s [OPTIONS...] [file...]\n"), program_name);
+    fprintf(f,_( "Usage: %s [OPTIONS] [FILE]...\n"), program_name);
     fprintf(f,
 _(
-"Table Compression: (default is -Cem)\n"
+"Generates programs that perform pattern-matching on text.\n"
+"\n"
+"Table Compression:\n"
 "  -Ca, --align      trade off larger tables for better memory alignment\n"
 "  -Ce, --ecs        construct equivalence classes\n"
 "  -Cf               do not compress tables; use -f representation\n"
@@ -1685,7 +1687,8 @@ _(
 "  -Cr, --read       use read() instead of stdio for scanner input\n"
 "  -f, --full        generate fast, large scanner. Same as -Cfr\n"
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
-  
+"  -Cem              default compression (same as --ecs --meta-ecs)\n"
+
 "\n"
 "Debugging:\n"
 "  -d, --debug             enable debug mode in scanner\n"

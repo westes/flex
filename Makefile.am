@@ -79,6 +79,7 @@ include_HEADERS = \
 	FlexLexer.h
 
 info_TEXINFOS =	flex.texi
+man1_MANS = flex.1
 
 EXTRA_DIST = \
 	AUTHORS \
@@ -95,7 +96,8 @@ EXTRA_DIST = \
 	mkskel.sh \
 	ABOUT-NLS \
 	config.rpath \
-	gettext.h
+	gettext.h \
+	flex.1
 
 BUILT_SOURCES = \
 	skel.c \
@@ -119,6 +121,9 @@ yylex.o: yylex.c parse.h flexdef.h config.h
 
 skel.c: flex.skl mkskel.sh
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir)/flex.skl >skel.c
+
+flex.1: flex
+	help2man --name='fast lexical analyzer generator' --section=1 ./flex >flex.1
 
 main.o: main.c flexdef.h config.h version.h
 ccl.o: ccl.c flexdef.h config.h
