@@ -4457,40 +4457,64 @@ ignores them.
 @item
 The name @code{FLEX_SCANNER} is @code{#define}'d so scanners may be
 written for use with either @code{flex} or @code{lex}.  Scanners also
-include @code{YY_FLEX_VERSION} indicating which version of @code{flex} generated the scanner.
+include @code{YY_FLEX_MAJOR_VERSION},  @code{YY_FLEX_MINOR_VERSION}
+and @code{YY_FLEX_SUBMINOR_VERSION}
+indicating which version of @code{flex} generated the scanner. For
+example, for the 2.5.22 release, these defines would be 2,  5 and 22
+respectively. If the version of @code{flex} being used is a beta
+version, then the symbol @code{FLEX_BETA} is defined.
 @end itemize
 
-@cindex POSIX, non-POSIX features of flex
-
+@cindex POSIX comp;compliance
+@cindex non-POSIX features of flex
 The following @code{flex} features are not included in @code{lex} or the
 POSIX specification:
 
-@example
-@verbatim
-    C++ scanners
-    %option
-    start condition scopes
-    start condition stacks
-    interactive/non-interactive scanners
-    yy_scan_string() and friends
-    yyterminate()
-    yy_set_interactive()
-    yy_set_bol()
-    YY_AT_BOL()
+@itemize
+@item
+C++ scanners
+@item
+%option
+@item
+start condition scopes
+@item
+start condition stacks
+@item
+interactive/non-interactive scanners
+@item
+yy_scan_string() and friends
+@item
+yyterminate()
+@item
+yy_set_interactive()
+@item
+yy_set_bol()
+@item
+YY_AT_BOL()
    <<EOF>>
-    <*>
-    YY_DECL
-    YY_START
-    YY_USER_ACTION
-    YY_USER_INIT
-    #line directives
-    %{}'s around actions
-    reentrant C API
-    multiple actions on a line
-@end verbatim
-@end example
+@item
+<*>
+@item
+YY_DECL
+@item
+YY_START
+@item
+YY_USER_ACTION
+@item
+YY_USER_INIT
+@item
+#line directives
+@item
+%{}'s around actions
+@item
+reentrant C API
+@item
+multiple actions on a line
+@item
+almost all of the @code{flex} command-line options
+@end itemize
 
-plus almost all of the @code{flex} flags.  The last feature in the list
+The feature ``multiple actions on a line''
 refers to the fact that with @code{flex} you can put multiple actions on
 the same line, separated with semi-colons, while with @code{lex}, the
 following:
