@@ -531,6 +531,29 @@ is also copied verbatim to the output (with the %@{ and %@} symbols
 removed).  The %@{ and %@} symbols must appear unindented on lines by
 themselves.
 
+@cindex %top
+
+A @code{%top} block is similar to a @samp{%@{} ... @samp{%@}} block, except
+that the code in a @code{%top} block is relocated to the @emph{top} of the
+generated file, before any flex definitions @footnote{Actually,
+@code{yyIN_HEADER} is defined before the @samp{%top} block.}. 
+The @code{%top} block is useful when you want certain preprocessor macros to be
+defined or certain files to be included before the generated code.
+The single characters, @samp{@{}  and @samp{@}} are used to delimit the
+@code{%top} block, as show in the example below:
+
+@example
+@verbatim
+    %top{
+        /* This code goes at the "top" of the generated file. */
+        #include <stdint.h>
+        #include <inttypes.h>
+    }
+@end verbatim
+@end example
+
+Multiple @code{%top} blocks are allowed, and their order is preserved.
+
 @node Rules Section, User Code Section, Definitions Section, Format
 @section Format of the Rules Section
 

@@ -126,6 +126,7 @@ tests/test-c++-basic/Makefile
 tests/test-bison-nr/Makefile
 tests/test-reject/Makefile
 tests/test-c++-multiple-scanners/Makefile
+tests/test-top/Makefile
 dnl --new-test-here-- This line is processed by tests/create-test.
 )
 

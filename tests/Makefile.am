@@ -48,6 +48,7 @@ DIST_SUBDIRS = \
 	test-lineno-nr \
 	test-linedir-r \
 	TEMPLATE \
+	test-top \
 	test-array-nr \
 	test-array-r \
 	test-c-cpp-nr \
@@ -102,6 +103,7 @@ SUBDIRS = \
 	test-yyextra \
 	test-noansi-nr \
 	test-noansi-r \
+	test-top \
 	test-table-opts
 
 # clean up before running the test suite so we dont test old builds of test code

@@ -441,9 +441,18 @@ void check_options ()
         buf_destroy(&tmpbuf);
     }
 
+    /* This is where we begin writing to the file. */
+
+    /* Dump the %top code. */
+    if( top_buf.elts)
+        outn((char*) top_buf.elts);
+
     /* Dump the m4 definitions. */
     buf_print_strings(&m4defs_buf, stdout);
     m4defs_buf.nelts = 0; /* memory leak here. */
+
+    /* Place a bogus line directive, it will be fixed in the filter. */
+    outn("#line 0 \"M4_YY_OUTFILE_NAME\"\n");
     
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)
@@ -935,6 +944,7 @@ void flexinit (argc, argv)
 	buf_init (&userdef_buf, sizeof (char));	/* one long string */
 	buf_init (&defs_buf, sizeof (char *));	/* list of strings */
 	buf_init (&yydmap_buf, sizeof (char));	/* one long string */
+	buf_init (&top_buf, sizeof (char));	    /* one long string */
 
     {
         const char * m4defs_init_str[] = {"m4_changequote\n",

@@ -95,7 +95,7 @@ extern bool tablesverify, tablesext;
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
 %x FIRSTCCL CCL ACTION RECOVER COMMENT ACTION_STRING PERCENT_BRACE_ACTION
-%x OPTION LINEDIR
+%x OPTION LINEDIR CODEBLOCK_MATCH_BRACE
 
 WS		[[:blank:]]+
 OPTWS		[[:blank:]]*
@@ -122,7 +122,7 @@ LEXOPT		[aceknopr]
 	static int option_sense;
 
 	int doing_codeblock = false;
-	int i;
+	int i, brace_depth=0, brace_start_line=0;
 	Char nmdef[MAXLINE];
 
 
@@ -138,6 +138,15 @@ LEXOPT		[aceknopr]
 			indented_code = false;
 			BEGIN(CODEBLOCK);
 			}
+    ^"%top"[[:blank:]]*"{"[[:blank:]]*{NL}    {
+                brace_start_line = linenum;
+                ++linenum;
+                buf_linedir( &top_buf, infilename?infilename:"<stdin>", linenum);
+                brace_depth = 1;
+                yy_push_state(CODEBLOCK_MATCH_BRACE);
+            }
+    
+    ^"%top".*   synerr( _("malformed '%top' directive") );
 
 	{WS}		/* discard */
 
@@ -212,6 +221,36 @@ LEXOPT		[aceknopr]
 			if ( indented_code )
 				BEGIN(INITIAL);
 			}
+}
+
+<CODEBLOCK_MATCH_BRACE>{
+    "}"     {
+                if( --brace_depth == 0){
+                    /* TODO: Matched. */
+                    yy_pop_state();
+                }else
+                    buf_strnappend(&top_buf, yytext, yyleng);
+            }
+
+    "{"     {   
+                brace_depth++;
+                buf_strnappend(&top_buf, yytext, yyleng);
+            }
+
+    {NL}    {
+                ++linenum;
+                buf_strnappend(&top_buf, yytext, yyleng);
+            }
+
+    [^{}\r\n]+  {
+                buf_strnappend(&top_buf, yytext, yyleng);
+                }
+
+    <<EOF>>     {
+                linenum = brace_start_line;
+                synerr(_("Unmatched '{'"));
+                yyterminate();
+                }
 }
 
 
