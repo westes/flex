@@ -34,7 +34,7 @@
 
 #include "flexdef.h"
 
-
+/* Append "#define defname value\n" to the running buffer. */
 void action_define( defname, value )
 char *defname;
 int value;
@@ -53,6 +53,7 @@ int value;
 	}
 
 
+/* Append "new_text" to the running buffer. */
 void add_action( new_text )
 char *new_text;
 	{
@@ -793,6 +794,12 @@ void skelout()
 		{ /* copy from skel array */
 		if ( buf[0] == '%' )
 			{ /* control line */
+			/* print the control line as a comment. */
+			if (buf[strlen(buf)-1]=='\\')
+				out_str("/* %s */\\\n", buf);
+			else
+				out_str("/* %s */\n", buf);
+				
 			switch ( buf[1] )
 				{
 				case '%':
@@ -808,6 +815,14 @@ void skelout()
 
 				case '*':
 					do_copy = 1;
+					break;
+
+				case 'c':
+					OUT_BEGIN_CODE();
+					break;
+
+				case 'e':
+					OUT_END_CODE();
 					break;
 
 				default:

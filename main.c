@@ -39,6 +39,7 @@ char copyright[] =
 
 #include "flexdef.h"
 #include "version.h"
+#include "options.h"
 
 static char flex_version[] = FLEX_VERSION;
 
@@ -48,8 +49,7 @@ static char flex_version[] = FLEX_VERSION;
 void flexinit PROTO((int, char**));
 void readin PROTO((void));
 void set_up_initial_allocations PROTO((void));
-
-
+static char * basename2 PROTO((char* path, int should_strip_ext));
 
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
@@ -64,7 +64,7 @@ FILE *skelfile = NULL;
 int skel_ind = 0;
 char *action_array;
 int action_size, defs1_offset, prolog_offset, action_offset, action_index;
-char *infilename = NULL, *outfilename = NULL;
+char *infilename = NULL, *outfilename = NULL, *headerfilename = NULL;
 int did_outfilename;
 char *prefix, *yyclass;
 int do_stdinit, use_stdout;
@@ -244,10 +244,10 @@ void check_options()
 		yytext_is_array = false;
 		}
 
-    if ( C_plus_plus && (reentrant || reentrant_bison_pure) )    
+    if ( C_plus_plus && (reentrant || reentrant_bison_pure) )
         flexerror( _( "Options -+ and -R are mutually exclusive." ) );
-        
-    
+
+
 	if ( useecs )
 		{ /* Set up doubly-linked equivalence classes. */
 
@@ -294,7 +294,7 @@ void check_options()
 			outfilename = outfile_path;
 			}
 
-		prev_stdout = freopen( outfilename, "w", stdout );
+		prev_stdout = freopen( outfilename, "w+", stdout );
 
 		if ( prev_stdout == NULL )
 			lerrsf( _( "could not create %s" ), outfilename );
@@ -362,7 +362,7 @@ void check_options()
 
 			if ( do_yylineno )
 				GEN_PREFIX( "lineno" );
-            
+
             if ( do_yylineno && reentrant)
                 outn ( "#define YY_USE_LINENO 1");
 			}
@@ -375,6 +375,10 @@ void check_options()
 
 	if ( did_outfilename )
 		line_directive_out( stdout, 0 );
+
+        /* Dump the user defined preproc directives. */
+        if (userdef_buf.elts)
+            outn( (char*)(userdef_buf.elts) );
 
 	skelout();
 	}
@@ -390,8 +394,12 @@ void flexend( exit_status )
 int exit_status;
 
 	{
-	int tblsiz;
+	static int called_before = -1; /* prevent infinite recursion. */
+	int tblsiz;	
 	int unlink();
+
+	if( ++called_before )
+		exit( exit_status );
 
 	if ( skelfile != NULL )
 		{
@@ -402,6 +410,45 @@ int exit_status;
 		else if ( fclose( skelfile ) )
 			lerrsf( _( "error closing skeleton file %s" ),
 				skelname );
+		}
+
+	if ( headerfilename && exit_status == 0 && outfile_created && !ferror(stdout))
+		{
+			/* Copy the file we just wrote to a header file. */
+			#define COPY_SZ 512
+			FILE *header_out;
+			char copybuf[COPY_SZ];
+			int ncopy;
+
+			/* rewind the outfile file. */
+			fflush(stdout);
+			fseek(stdout, 0L, SEEK_SET);
+
+			header_out = fopen(headerfilename, "w");
+			if ( header_out == NULL)
+				lerrsf( _( "could not create %s"), headerfilename );
+
+			fprintf(header_out,
+					"#ifndef %sHEADER_H\n"
+					"#define %sHEADER_H 1\n"
+					"#define %sIN_HEADER 1\n",
+					prefix,prefix,prefix);
+			fflush(header_out);
+
+			while((ncopy=fread(copybuf, 1, COPY_SZ, stdout)) > 0) 
+				if ( fwrite(copybuf, 1, ncopy, header_out) <= 0)
+					break;
+
+			fflush(header_out);
+			fprintf(header_out,
+					"\n"
+					"#undef %sIN_HEADER\n"
+					"#endif /* %sHEADER_H */\n",
+					prefix, prefix);
+
+			if ( ferror( header_out ) )
+				lerrsf( _( "error creating header file %s" ), headerfilename);
+			fclose(header_out);
 		}
 
 	if ( exit_status != 0 && outfile_created )
@@ -418,6 +465,7 @@ int exit_status;
 			lerrsf( _( "error deleting output file %s" ),
 				outfilename );
 		}
+
 
 	if ( backing_up_report && backing_up_file )
 		{
@@ -461,12 +509,12 @@ int exit_status;
 			putc( 'p', stderr );
 		if ( performance_report > 1 )
 			putc( 'p', stderr );
-		if ( spprdflt )        
+		if ( spprdflt )
 			putc( 's', stderr );
-        if ( reentrant ) 
+        if ( reentrant )
             {
             putc( 'R', stderr );
-            
+
             if( reentrant_bison_pure )
                 putc( 'b', stderr );
             }
@@ -629,8 +677,9 @@ void flexinit( argc, argv )
 int argc;
 char **argv;
 	{
-	int i, sawcmpflag;
+	int i, sawcmpflag, rv, optind;
 	char *arg;
+        scanopt_t sopt;
 
 	printstats = syntaxerror = trace = spprdflt = caseins = false;
 	lex_compat = C_plus_plus = backing_up_report = ddebug = fulltbl = false;
@@ -654,248 +703,288 @@ char **argv;
 	defs1_offset = prolog_offset = action_offset = action_index = 0;
 	action_array[0] = '\0';
 
+        /* Initialize any buffers. */
+        buf_init(&userdef_buf, sizeof(char));
+
     /* Enable C++ if program name ends with '+'. */
-	program_name = argv[0];
+	program_name = basename2(argv[0],0);
 
 	if ( program_name[0] != '\0' &&
 	     program_name[strlen( program_name ) - 1] == '+' )
 		C_plus_plus = true;
 
 	/* read flags */
-	for ( --argc, ++argv; argc ; --argc, ++argv )
-		{
-		arg = argv[0];
+        sopt = scanopt_init(flexopts, argc, argv, 0);
+        if (!sopt) {
+            /* This will only happen when flexopts array is altered. */
+            fprintf(stderr,
+                    _("Internal error. flexopts are malformed.\n"));
+            exit(1);
+        }
 
-        /* Stop at first non-option. */
-		if ( arg[0] != '-' || arg[1] == '\0' )
-			break;
+        while((rv=scanopt(sopt, &arg, &optind)) != 0){
 
-		if ( arg[1] == '-' )
-			{ /* --option */
-			if ( ! strcmp( arg, "--help" ) )
-				arg = "-h";
+            if (rv < 0) {
+                /* Scanopt has already printed an option-specific error message. */
+                fprintf( stderr, _( "For usage, try\n\t%s --help\n" ),
+                    program_name );
+                exit( 1 );
+                break;
+            }
 
-			else if ( ! strcmp( arg, "--version" ) )
-				arg = "-V";
+            switch ((enum flexopt_flag_t)rv){
+            case OPT_CPLUSPLUS:
+                    C_plus_plus = true;
+                    break;
 
-			else if ( ! strcmp( arg, "--" ) )
-				{ /* end of options */
-				--argc;
-				++argv;
-				break;
-				}
-			}
+            case OPT_BATCH:
+                    interactive = false;
+                    break;
 
-		for ( i = 1; arg[i] != '\0'; ++i )
-			switch ( arg[i] )
-				{
-				case '+':
-					C_plus_plus = true;
-					break;
+            case OPT_BACKUP:
+                    backing_up_report = true;
+                    break;
 
-				case 'B':
-					interactive = false;
-					break;
+            case OPT_DONOTHING:
+                    break;
 
-				case 'b':
-					backing_up_report = true;
-					break;
+            case OPT_COMPRESSION:
+                    if ( ! sawcmpflag )
+                            {
+                            useecs = false;
+                            usemecs = false;
+                            fulltbl = false;
+                            sawcmpflag = true;
+                            }
 
-				case 'c':
-					break;
+                    for( i=0 ; arg && arg[i] != '\0'; i++)
+                            switch ( arg[i] )
+                                    {
+                                    case 'a':
+                                            long_align = true;
+                                            break;
 
-				case 'C':
-					if ( i != 1 )
-						flexerror(
-				_( "-C flag must be given separately" ) );
+                                    case 'e':
+                                            useecs = true;
+                                            break;
 
-					if ( ! sawcmpflag )
-						{
-						useecs = false;
-						usemecs = false;
-						fulltbl = false;
-						sawcmpflag = true;
-						}
+                                    case 'F':
+                                            fullspd = true;
+                                            break;
 
-					for ( ++i; arg[i] != '\0'; ++i )
-						switch ( arg[i] )
-							{
-							case 'a':
-								long_align =
-									true;
-								break;
+                                    case 'f':
+                                            fulltbl = true;
+                                            break;
 
-							case 'e':
-								useecs = true;
-								break;
+                                    case 'm':
+                                            usemecs = true;
+                                            break;
 
-							case 'F':
-								fullspd = true;
-								break;
+                                    case 'r':
+                                            use_read = true;
+                                            break;
 
-							case 'f':
-								fulltbl = true;
-								break;
+                                    default:
+                                            lerrif(
+                            _( "unknown -C option '%c'" ),
+                                            (int) arg[i] );
+                                            break;
+                                    }
+                    break;
 
-							case 'm':
-								usemecs = true;
-								break;
+            case OPT_DEBUG:
+                    ddebug = true;
+                    break;
 
-							case 'r':
-								use_read = true;
-								break;
+            case OPT_FULL:
+                    useecs = usemecs = false;
+                    use_read = fulltbl = true;
+                    break;
 
-							default:
-								lerrif(
-						_( "unknown -C option '%c'" ),
-								(int) arg[i] );
-								break;
-							}
+            case OPT_FAST:
+                    useecs = usemecs = false;
+                    use_read = fullspd = true;
+                    break;
 
-					goto get_next_arg;
+            case OPT_HELP:
+                    usage();
+                    exit( 0 );
 
-				case 'd':
-					ddebug = true;
-					break;
+            case OPT_INTERACTIVE:
+                    interactive = true;
+                    break;
 
-				case 'f':
-					useecs = usemecs = false;
-					use_read = fulltbl = true;
-					break;
+            case OPT_CASE_INSENSITIVE:
+                    caseins = true;
+                    break;
 
-				case 'F':
-					useecs = usemecs = false;
-					use_read = fullspd = true;
-					break;
+            case OPT_LEX_COMPAT:
+                    lex_compat = true;
+                    break;
 
-				case '?':
-				case 'h':
-					usage();
-					exit( 0 );
+            case OPT_MAIN:
+                    buf_strdefine(&userdef_buf, "YY_MAIN", "1");
+                    break;
 
-				case 'I':
-					interactive = true;
-					break;
+            case OPT_NOLINE:
+                    gen_line_dirs = false;
+                    break;
 
-				case 'i':
-					caseins = true;
-					break;
+            case OPT_OUTFILE:
+                    outfilename = arg;
+                    did_outfilename = 1;
+                    break;
 
-				case 'l':
-					lex_compat = true;
-					break;
+            case OPT_PREFIX:
+                    prefix = arg;
+                    break;
 
-				case 'L':
-					gen_line_dirs = false;
-					break;
+            case OPT_PERF_REPORT:
+                    ++performance_report;
+                    break;
 
-				case 'n':
-					/* Stupid do-nothing deprecated
-					 * option.
-					 */
-					break;
-
-				case 'o':
-					if ( i != 1 )
-						flexerror(
-				_( "-o flag must be given separately" ) );
-
-					outfilename = arg + i + 1;
-					did_outfilename = 1;
-					goto get_next_arg;
-
-				case 'P':
-					if ( i != 1 )
-						flexerror(
-				_( "-P flag must be given separately" ) );
-
-					prefix = arg + i + 1;
-					goto get_next_arg;
-
-				case 'p':
-					++performance_report;
-					break;
-
-                case 'R':
-					if ( i != 1 )
-						flexerror(
-				_( "-R flag must be given separately" ) );
+            case OPT_REENTRANT_BISON:
                     reentrant = true;
-                    
-                    /* Optional arguments follow -R */
+                    reentrant_bison_pure = true;
+                    break;
 
-					for ( ++i; arg[i] != '\0'; ++i )
-						switch ( arg[i] )
-							{
-							case 'b':
-								reentrant_bison_pure = true;
-								break;
+            case OPT_REENTRANT:
+                    reentrant = true;
 
-							default:
-								lerrif(
-						_( "unknown -R option '%c'" ),
-								(int) arg[i] );
-								break;
-							}
-					goto get_next_arg;
+                    /* Optional 'b' follows -R */
+                    if (arg) {
+                        if (strcmp(arg,"b")==0)
+                            reentrant_bison_pure = true;
+                        else
+                            lerrif(_( "unknown -R option '%c'" ),(int)arg[i]);
+                    }
+                    break;
 
-				case 'S':
-					if ( i != 1 )
-						flexerror(
-				_( "-S flag must be given separately" ) );
+            case OPT_SKEL:
+                    skelname = arg;
+                    break;
 
-					skelname = arg + i + 1;
-					goto get_next_arg;
+            case OPT_DEFAULT:
+                    spprdflt = false;
+                    break;
 
-				case 's':
-					spprdflt = true;
-					break;
+            case OPT_NODEFAULT:
+                    spprdflt = true;
+                    break;
 
-				case 't':
-					use_stdout = true;
-					break;
+            case OPT_STDOUT:
+                    use_stdout = true;
+                    break;
 
-				case 'T':
-					trace = true;
-					break;
+            case OPT_TRACE:
+                    trace = true;
+                    break;
 
-				case 'v':
-					printstats = true;
-					break;
+            case OPT_VERBOSE:
+                    printstats = true;
+                    break;
 
-				case 'V':
-					printf( _( "%s version %s\n" ),
-						program_name, flex_version );
-					exit( 0 );
+            case OPT_VERSION:
+                    printf( _( "%s version %s\n" ),
+                            program_name, flex_version );
+                    exit( 0 );
 
-				case 'w':
-					nowarn = true;
-					break;
+            case OPT_NOWARN:
+                    nowarn = true;
+                    break;
 
-				case '7':
-					csize = 128;
-					break;
+            case OPT_7BIT:
+                    csize = 128;
+                    break;
 
-				case '8':
-					csize = CSIZE;
-					break;
+            case OPT_8BIT:
+                    csize = CSIZE;
+                    break;
 
-				default:
-					fprintf( stderr,
-		_( "%s: unknown flag '%c'.  For usage, try\n\t%s --help\n" ),
-						program_name, (int) arg[i],
-						program_name );
-					exit( 1 );
-				}
+            case OPT_ALIGN:
+                    long_align = true;
+                    break;
 
-		/* Used by -C, -S, -o, and -P flags in lieu of a "continue 2"
-		 * control.
-		 */
-		get_next_arg: ;
-		}
+            case OPT_ALWAYS_INTERACTIVE:
+                    buf_strdefine(&userdef_buf,"YY_ALWAYS_INTERACTIVE", "1");
+                    break;
 
-	num_input_files = argc;
-	input_files = argv;
+            case OPT_NEVER_INTERACTIVE:
+                    buf_strdefine(&userdef_buf, "YY_NEVER_INTERACTIVE", "1" );
+                    break;
+
+            case OPT_ARRAY:
+                    yytext_is_array = true;
+                    break;
+
+            case OPT_POINTER:
+                    yytext_is_array = false;
+                    break;
+
+            case OPT_ECS:
+                    useecs = true;
+                    break;
+
+            case OPT_HEADER:
+                    headerfilename = arg;
+                    break;
+
+            case OPT_META_ECS:
+                    usemecs = true;
+
+
+            case OPT_PREPROCDEFINE: 
+                    {
+                    /* arg is "symbol" or "symbol=definition". */
+                        char *def;
+
+                        for(def=arg; *def != '\0' && *def!='='; ++def)
+                            ;
+
+                        buf_strappend(&userdef_buf,"#define ");
+                        if (*def=='\0'){
+                            buf_strappend(&userdef_buf,arg);
+                            buf_strappend(&userdef_buf, " 1\n");
+                        }else{
+                            buf_strnappend(&userdef_buf, arg,def-arg);
+                            buf_strappend(&userdef_buf, " ");
+                            buf_strappend(&userdef_buf, def+1);
+                            buf_strappend(&userdef_buf, "\n");
+                        }
+                    }
+                    break;
+
+            case OPT_READ:
+                    use_read = true;
+                    break;
+
+            case OPT_STACK:
+                    buf_strdefine(&userdef_buf,"YY_STACK_USED","1");
+                    break;
+
+            case OPT_STDINIT:
+                    do_stdinit = true;
+                    break;
+
+            case OPT_YYCLASS:
+                    yyclass = arg;
+                    break;
+
+            case OPT_YYLINENO:
+                    do_yylineno = true;
+                    break;
+
+            case OPT_YYWRAP:
+                    do_yywrap = true;
+                    break;
+
+            } /* switch */
+        } /* while scanopt() */
+
+        scanopt_destroy(sopt);
+
+	num_input_files = argc - optind;
+	input_files = argv + optind;
 	set_input_file( num_input_files > 0 ? input_files[0] : NULL );
 
 	lastccl = lastsc = lastdfa = lastnfa = 0;
@@ -1040,7 +1129,8 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 		}
 
 	else
-		{ 
+		{
+		OUT_BEGIN_CODE();
             /* In reentrant scanner, stdinit is handled in flex.skl. */
 		if ( do_stdinit )
 			{
@@ -1065,12 +1155,13 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
             outn( "#endif" );
 			}
 
-		else 
+		else
             {
             outn( "#ifndef YY_REENTRANT" );
 			outn( yy_nostdinit );
             outn( "#endif" );
             }
+		OUT_END_CODE();
 		}
 
 	if ( fullspd )
@@ -1087,7 +1178,9 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 	if ( do_yylineno && ! C_plus_plus && ! reentrant )
 		{
 		outn( "extern int yylineno;" );
+		OUT_BEGIN_CODE();
 		outn( "int yylineno = 1;" );
+		OUT_END_CODE();
 		}
 
 	if ( C_plus_plus )
@@ -1102,7 +1195,7 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 "\tLexerError( \"yyFlexLexer::yylex invoked but %option yyclass used\" );" );
 			outn( "\treturn 0;" );
 			outn( "\t}" );
-	
+
 			out_str( "\n#define YY_DECL int %s::yylex()\n",
 				yyclass );
 			}
@@ -1199,72 +1292,95 @@ void set_up_initial_allocations()
 	}
 
 
+/* extracts basename from path, optionally stripping the extension "\.*"
+ * (same concept as /bin/sh `basename`, but different handling of extension). */
+static char * basename2(path, strip_ext)
+    char * path;
+    int strip_ext; /* boolean */
+{
+    char *b, *e=0;
+    b = path;
+    for (b=path; *path; path++)
+        if (*path== '/')
+            b = path+1;
+        else if (*path=='.')
+            e = path;
+
+    if (strip_ext && e && e > b)
+        *e = '\0';
+    return b;
+}
+
 void usage()
 	{
-	FILE *f = stdout;
+    FILE *f = stdout;
+    if ( ! did_outfilename )
+        {
+        sprintf( outfile_path, outfile_template,
+                prefix, C_plus_plus ? "cc" : "c" );
+        outfilename = outfile_path;
+        }
 
-	fprintf( f,
-_( "%s [-bcdfhilnpstvwBFILTV78+? -R[b] -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n" ),
-		program_name );
-	fprintf( f, _( "\t[--help --version] [file ...]\n" ) );
+    fprintf(f,_( "%s [OPTIONS...] [file...]\n"), program_name);
+    fprintf(f,
+_(
+"Table Compression: (default is -Cem)\n"
+"  -Ca, --align      trade off larger tables for better memory alignment\n"
+"  -Ce, --ecs        construct equivalence classes\n"
+"  -Cf               do not compress tables; use -f representation\n"
+"  -CF               do not compress tables; use -F representation\n"
+"  -Cm, --meta-ecs   construct meta-equivalence classes\n"
+"  -Cr, --read       use read() instead of stdio for scanner input\n"
+"  -f, --full        generate fast, large scanner. Same as -Cfr\n"
+"  -F, --fast        use alternate table representation. Same as -CFr\n"
+  
+"\n"
+"Debugging:\n"
+"  -d, --debug             enable debug mode in scanner\n"
+"  -b, --backup            write backing-up information to %s\n"
+"  -p, --perf-report       write performance report to stderr\n"
+"  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
+"  -T, --trace             %s should run in trace mode\n"
+"  -w, --nowarn            do not generate warnings\n"
+"  -v, --verbose           write summary of scanner statistics to stdout\n"
 
-	fprintf( f, _( "\t-b  generate backing-up information to %s\n" ),
-		backing_name );
-	fprintf( f, _( "\t-c  do-nothing POSIX option\n" ) );
-	fprintf( f, _( "\t-d  turn on debug mode in generated scanner\n" ) );
-	fprintf( f, _( "\t-f  generate fast, large scanner\n" ) );
-	fprintf( f, _( "\t-h  produce this help message\n" ) );
-	fprintf( f, _( "\t-i  generate case-insensitive scanner\n" ) );
-	fprintf( f, _( "\t-l  maximal compatibility with original lex\n" ) );
-	fprintf( f, _( "\t-n  do-nothing POSIX option\n" ) );
-	fprintf( f, _( "\t-p  generate performance report to stderr\n" ) );
-	fprintf( f,
-		_( "\t-s  suppress default rule to ECHO unmatched text\n" ) );
+"\n"
+"Files:\n"
+"  -o, --outfile=FILE      specify output filename\n"
+"  -S, --skel=FILE         specify skeleton file\n"
+"  -t, --stdout            write scanner on stdout instead of %s\n"
+"      --yyclass=NAME      name of C++ class\n"
+    
+"\n"
+"Scanner behavior:\n"
+"  -7, --7bit              generate 7-bit scanner\n"
+"  -8, --8bit              generate 8-bit scanner\n"
+"  -B, --batch             generate batch scanner (opposite of -I)\n"
+"  -i, --case-insensitive  ignore case in patterns\n"
+"  -l, --lex-compat        maximal compatibility with original lex\n"
+"  -I, --interactive       generate interactive scanner (opposite of -B)\n"
+"      --yylineno          track line count in yylineno\n"
 
-	if ( ! did_outfilename )
-		{
-		sprintf( outfile_path, outfile_template,
-			prefix, C_plus_plus ? "cc" : "c" );
-		outfilename = outfile_path;
-		}
+"\n"
+"Generated code:\n"
+"  -+, --c++               generate C++ scanner class\n"
+"  -Dmacro[=defn]          #define macro defn  (default defn is '1')\n"
+"  -L, --noline            suppress #line directives in scanner\n"
+"  -P, --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
+"  -R, --reentrant         generate a reentrant C scanner\n"
+"  -Rb, --reentrant-bison  reentrant scanner for bison pure parser.\n"
 
-	fprintf( f,
-		_( "\t-t  write generated scanner on stdout instead of %s\n" ),
-		outfilename );
+"\n"
+"Functions:\n"
+"  --yywrap                call yywrap on EOF\n"
 
-	fprintf( f,
-		_( "\t-v  write summary of scanner statistics to stdout\n" ) );
-	fprintf( f, _( "\t-w  do not generate warnings\n" ) );
-	fprintf( f, _( "\t-B  generate batch scanner (opposite of -I)\n" ) );
-	fprintf( f,
-		_( "\t-F  use alternative fast scanner representation\n" ) );
-	fprintf( f,
-		_( "\t-I  generate interactive scanner (opposite of -B)\n" ) );
-	fprintf( f, _( "\t-L  suppress #line directives in scanner\n" ) );
-	fprintf( f, _( "\t-R  generate a reentrant C scanner\n" ) );
-	fprintf( f,
-_( "\t\t-Rb  reentrant scanner is to be called by a bison pure parser.\n" ) );
-	fprintf( f, _( "\t-T  %s should run in trace mode\n" ), program_name );
-	fprintf( f, _( "\t-V  report %s version\n" ), program_name );
-	fprintf( f, _( "\t-7  generate 7-bit scanner\n" ) );
-	fprintf( f, _( "\t-8  generate 8-bit scanner\n" ) );
-	fprintf( f, _( "\t-+  generate C++ scanner class\n" ) );
-	fprintf( f, _( "\t-?  produce this help message\n" ) );
-	fprintf( f,
-_( "\t-C  specify degree of table compression (default is -Cem):\n" ) );
-	fprintf( f,
-_( "\t\t-Ca  trade off larger tables for better memory alignment\n" ) );
-	fprintf( f, _( "\t\t-Ce  construct equivalence classes\n" ) );
-	fprintf( f,
-_( "\t\t-Cf  do not compress scanner tables; use -f representation\n" ) );
-	fprintf( f,
-_( "\t\t-CF  do not compress scanner tables; use -F representation\n" ) );
-	fprintf( f, _( "\t\t-Cm  construct meta-equivalence classes\n" ) );
-	fprintf( f,
-	_( "\t\t-Cr  use read() instead of stdio for scanner input\n" ) );
-	fprintf( f, _( "\t-o  specify output filename\n" ) );
-	fprintf( f, _( "\t-P  specify scanner prefix other than \"yy\"\n" ) );
-	fprintf( f, _( "\t-S  specify skeleton file\n" ) );
-	fprintf( f, _( "\t--help     produce this help message\n" ) );
-	fprintf( f, _( "\t--version  report %s version\n" ), program_name );
-	}
+"\n"
+"Miscellaneous:\n"
+"  -c                      do-nothing POSIX option\n"
+"  -n                      do-nothing POSIX option\n"
+"  -?\n"
+"  -h, --help              produce this help message\n"
+"  -V, --version           report %s version\n"
+), backing_name, program_name, outfile_path, program_name);
+
+}

@@ -1913,7 +1913,7 @@ Only users who wish to squeeze every last cycle out of their scanners
 need worry about this option.  (@pxref{performance}).
 
 @item -c
-is a do-nothing, deprecated option included for POSIX compliance.
+is a do-nothing option included for POSIX compliance.
 
 @item -d
 makes the generated scanner run in @dfn{debug} mode.  Whenever a pattern
@@ -1963,7 +1963,7 @@ cannot be used with the @samp{-+}, @samp{-f}, @samp{-F}, @samp{-Cf}, or
 @code{YY_FLEX_LEX_COMPAT} being @code{#define}'d in the generated scanner.
 
 @item -n
-is another do-nothing, deprecated option included only for
+is another do-nothing option included only for
 POSIX compliance.
 
 @item -p

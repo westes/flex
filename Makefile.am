@@ -57,7 +57,10 @@ flex_SOURCES = \
 	skel.c \
 	sym.c \
 	tblcmp.c \
-	yylex.c
+	yylex.c \
+	options.c \
+	scanopt.c \
+	buf.c
 
 libfl_a_SOURCES = \
 	libmain.c \
@@ -66,7 +69,9 @@ libfl_a_SOURCES = \
 noinst_HEADERS = \
 	flexdef.h \
 	parse.h \
-	version.h
+	version.h \
+	options.h \
+	scanopt.h
 
 include_HEADERS = \
 	FlexLexer.h
@@ -111,6 +116,9 @@ parse.o: parse.c flexdef.h config.h
 skel.o: skel.c flexdef.h config.h
 sym.o: sym.c flexdef.h config.h
 tblcmp.o: tblcmp.c flexdef.h config.h
+options.o: options.c options.h scanopt.h flexdef.h config.h
+scanopt.o: scanopt.c scanopt.h flexdef.h config.h
+buf.o: buf.c flexdef.h
 
 #The below recipe for making the ChangeLog will only work if you have a copy of the cvs tree handy so let it fail gracefully.
 
