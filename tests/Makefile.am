@@ -26,6 +26,8 @@ noinst_SCRIPTS = \
 	create-test
 
 SUBDIRS = \
+	test-mem-r \
+	test-mem-nr \
 	test-debug-nr \
 	test-debug-r \
 	test-lineno-r \

@@ -154,7 +154,9 @@ int yylex_destroy YY_PROTO((yyscan_t scanner));
 #define YY_END_OF_BUFFER_CHAR 0
 
 /* Size of default input buffer. */
+#ifndef YY_BUF_SIZE
 #define YY_BUF_SIZE 16384
+#endif
 
 
 #ifndef YY_TYPEDEF_YY_BUFFER_STATE
@@ -337,9 +339,9 @@ YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( yyconst char *bytes, int len YY_LAST_AR
 %*
 
 %c
-static void *yy_flex_alloc YY_PROTO(( yy_size_t YY_LAST_ARG ));
-static void *yy_flex_realloc YY_PROTO(( void *, yy_size_t YY_LAST_ARG ));
-static void yy_flex_free YY_PROTO(( void * YY_LAST_ARG ));
+void *yy_flex_alloc YY_PROTO(( yy_size_t YY_LAST_ARG ));
+void *yy_flex_realloc YY_PROTO(( void *, yy_size_t YY_LAST_ARG ));
+void yy_flex_free YY_PROTO(( void * YY_LAST_ARG ));
 %e
 
 #define yy_new_buffer yy_create_buffer
@@ -2043,33 +2045,36 @@ int yylex_init( ptr_yy_globals )
     return 0;
     }
 
-#ifdef YY_USE_PROTOS
-int yylex_destroy( yyscan_t yy_globals )
-#else
-int yylex_destroy( yy_globals )
-    yyscan_t yy_globals;
-#endif
-    {
-    if( yy_globals )
-        {
-
-            /* Destroy the current (main) buffer. */
-            yy_delete_buffer( YY_G(yy_current_buffer) YY_CALL_LAST_ARG );
-            YY_G(yy_current_buffer) = NULL;
-
-            /* Destroy the start condition stack. */
-            if( YY_G(yy_start_stack) ) {
-                yy_flex_free( YY_G(yy_start_stack) YY_CALL_LAST_ARG );
-                YY_G(yy_start_stack) = NULL;
-            }
-
-            /* Destroy the main struct. */
-            yy_flex_free ( yy_globals YY_CALL_LAST_ARG );
-        }
-    return 0;
-    }
-
 #endif /* End YY_REENTRANT */
+
+/* yylex_destroy is for both reentrant and non-reentrant scanners. */
+#ifdef YY_USE_PROTOS
+int yylex_destroy( YY_ONLY_ARG )
+#else
+int yylex_destroy( YY_ONLY_ARG )
+    YY_DECL_LAST_ARG
+#endif
+{
+    /* Destroy the current (main) buffer. */
+    yy_delete_buffer( YY_G(yy_current_buffer) YY_CALL_LAST_ARG );
+    YY_G(yy_current_buffer) = NULL;
+
+
+#if defined(YY_STACK_USED) || defined(YY_REENTRANT)
+    /* Destroy the start condition stack. */
+    if (YY_G(yy_start_stack) ){
+        yy_flex_free( YY_G(yy_start_stack) YY_CALL_LAST_ARG );
+        YY_G(yy_start_stack) = NULL;
+    }
+#endif
+
+#ifdef YY_REENTRANT
+    /* Destroy the main struct (reentrant only). */
+    yy_flex_free ( yy_globals YY_CALL_LAST_ARG );
+#endif
+    return 0;
+}
+
 
 /* Internal utility routines. */
 
@@ -2107,7 +2112,9 @@ YY_DECL_LAST_ARG
 	}
 #endif
 
-
+/* You may override yy_flex_alloc by defining YY_NO_FLEX_ALLOC and linking to
+ * your own version */
+#ifndef YY_NO_FLEX_ALLOC
 #ifdef YY_USE_PROTOS
 static void *yy_flex_alloc( yy_size_t size YY_LAST_ARG )
 #else
@@ -2118,7 +2125,11 @@ YY_DECL_LAST_ARG
 	{
 	return (void *) malloc( size );
 	}
+#endif
 
+/* You may override yy_flex_realloc by defining YY_NO_FLEX_REALLOC and linking
+ * to your own version. */
+#ifndef YY_NO_FLEX_REALLOC
 #ifdef YY_USE_PROTOS
 static void *yy_flex_realloc( void *ptr, yy_size_t size YY_LAST_ARG )
 #else
@@ -2137,7 +2148,11 @@ YY_DECL_LAST_ARG
 	 */
 	return (void *) realloc( (char *) ptr, size );
 	}
+#endif
 
+/* You may override yy_flex_free by defining YY_NO_FLEX_FREE and linking to
+ * your own version.*/
+#ifndef YY_NO_FLEX_FREE
 #ifdef YY_USE_PROTOS
 static void yy_flex_free( void *ptr YY_LAST_ARG )
 #else
@@ -2148,6 +2163,7 @@ YY_DECL_LAST_ARG
 	{
 	free( (char *) ptr );	/* see yy_flex_realloc() for (char *) cast */
 	}
+#endif
 
 #if YY_MAIN
 int main()

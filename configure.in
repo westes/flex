@@ -75,6 +75,8 @@ tests/test-lineno-nr/Makefile
 tests/test-lineno-r/Makefile
 tests/test-debug-r/Makefile
 tests/test-debug-nr/Makefile
+tests/test-mem-nr/Makefile
+tests/test-mem-r/Makefile
 dnl --new-test-here-- This line is processed by tests/create-test.
 )
 AC_OUTPUT

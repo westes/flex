@@ -286,6 +286,10 @@ LEXOPT		[aceknopr]
 	yy_scan_bytes	ACTION_IFDEF("YY_NO_SCAN_BYTES", ! option_sense);
 	yy_scan_string	ACTION_IFDEF("YY_NO_SCAN_STRING", ! option_sense);
 
+    yy_flex_alloc   ACTION_IFDEF("YY_NO_FLEX_ALLOC", ! option_sense);
+    yy_flex_realloc ACTION_IFDEF("YY_NO_FLEX_REALLOC", ! option_sense);
+    yy_flex_free    ACTION_IFDEF("YY_NO_FLEX_FREE", ! option_sense);
+
     yyget_debug     ACTION_IFDEF("YY_NO_GET_DEBUG", ! option_sense);
     yyset_debug     ACTION_IFDEF("YY_NO_SET_DEBUG", ! option_sense);
     yyget_extra     ACTION_IFDEF("YY_NO_GET_EXTRA", ! option_sense);
