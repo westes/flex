@@ -69,20 +69,12 @@
 #ifdef lint
 char *sprintf(); /* keep lint happy */
 #endif
-#ifdef SCO_UNIX
-void *memset();
-#else
-char *memset();
-#endif
 #endif
 
 #ifdef AMIGA
-#define bzero(s, n) setmem((char *)(s), n, '\0')
 #ifndef abs
 #define abs(x) ((x) < 0 ? -(x) : (x))
 #endif
-#else
-#define bzero(s, n) (void) memset((char *)(s), '\0', n)
 #endif
 
 #ifdef VMS
@@ -128,10 +120,6 @@ char *malloc(), *realloc();
 #define true 1
 #define false 0
 
-
-#ifndef DEFAULT_SKELETON_FILE
-#define DEFAULT_SKELETON_FILE "flex.skel"
-#endif
 
 /* special chk[] values marking the slots taking by end-of-buffer and action
  * numbers
@@ -350,6 +338,7 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * eofseen - true if we've seen an eof in the input file
  * ddebug - if true (-d), make a "debug" scanner
  * trace - if true (-T), trace processing
+ * nowarn - if true (-w), do not generate warnings
  * spprdflt - if true (-s), suppress the default rule
  * interactive - if true (-I), generate an interactive scanner
  * caseins - if true (-i), generate a case-insensitive scanner
@@ -358,10 +347,13 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * usemecs - if true (-Cm flag), use meta-equivalence classes
  * fullspd - if true (-F flag), use Jacobson method of table representation
  * gen_line_dirs - if true (i.e., no -L flag), generate #line directives
- * performance_report - if true (i.e., -p flag), generate a report relating
- *   to scanner performance
+ * performance_report - if > 0 (i.e., -p flag), generate a report relating
+ *   to scanner performance; if > 1 (-p -p), report on minor performance
+ *   problems, too
  * backtrack_report - if true (i.e., -b flag), generate "lex.backtrack" file
  *   listing backtracking states
+ * yytext_is_array - if true (i.e., %array directive), then declare
+ *   yytext as a array instead of a character pointer.  Nice and inefficient.
  * csize - size of character set for the scanner we're generating;
  *   128 for 7-bit chars and 256 for 8-bit
  * yymore_used - if true, yymore() is used in input rules
@@ -375,9 +367,10 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * reject_really_used - same for REJECT
  */
 
-extern int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
+extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 extern int interactive, caseins, useecs, fulltbl, usemecs;
-extern int fullspd, gen_line_dirs, performance_report, backtrack_report, csize;
+extern int fullspd, gen_line_dirs, performance_report, backtrack_report;
+extern int yytext_is_array, csize;
 extern int yymore_used, reject, real_reject, continued_action;
 
 #define REALLY_NOT_DETERMINED 0
@@ -392,23 +385,36 @@ extern int yymore_really_used, reject_really_used;
  *    statement.  Used to generate readable -f output
  * linenum - current input line number
  * skelfile - the skeleton file
+ * skel - compiled-in skeleton array
+ * skel_ind - index into "skel" array, if skelfile is nil
  * yyin - input file
- * temp_action_file - temporary file to hold actions
  * backtrack_file - file to summarize backtracking states to
  * infilename - name of input file
- * action_file_name - name of the temporary file
  * input_files - array holding names of input files
  * num_input_files - size of input_files array
  * program_name - name with which program was invoked 
+ *
+ * action_array - array to hold the rule actions
+ * action_size - size of action_array
+ * prolog - pointer to where the prolog starts in action_array
+ * action_offset - index where the non-prolog starts in action_array
+ * action_index - index where the next action should go, with respect
+ *                to "action"
+ * action - pointer to where non-prolog starts; equal to
+ *          &action_array[action_offset]
  */
 
 extern int datapos, dataline, linenum;
-extern FILE *skelfile, *yyin, *temp_action_file, *backtrack_file;
+extern FILE *skelfile, *yyin, *backtrack_file;
+extern char *skel[];
+extern int skel_ind;
 extern char *infilename;
-extern char *action_file_name;
 extern char **input_files;
 extern int num_input_files;
 extern char *program_name;
+
+extern char *action_array, *prolog, *action;
+extern int action_size, action_offset, action_index;
 
 
 /* variables for stack of states having only one out-transition:
@@ -427,6 +433,8 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
  * current_mns - current maximum on number of NFA states
  * num_rules - number of the last accepting state; also is number of
  *             rules created so far
+ * num_eof_rules - number of <<EOF>> rules
+ * default_rule - number of the default rule
  * current_max_rules - current maximum number of rules
  * lastnfa - last nfa state number created
  * firstst - physically the first state of a fragment
@@ -443,15 +451,18 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
  *              recognizing the text-to-be-matched to the beginning of
  *              the trailing context), or a subsequent state in a trailing
  *              context rule
- * rule_type - a RULE_xxx type identifying whether this a a ho-hum
+ * rule_type - a RULE_xxx type identifying whether this a ho-hum
  *             normal rule or one which has variable head & trailing
  *             context
  * rule_linenum - line number associated with rule
+ * rule_useful - true if we've determined that the rule can be matched
  */
 
-extern int current_mns, num_rules, current_max_rules, lastnfa;
+extern int current_mns, num_rules, num_eof_rules, default_rule;
+extern int current_max_rules, lastnfa;
 extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
-extern int *accptnum, *assoc_rule, *state_type, *rule_type, *rule_linenum;
+extern int *accptnum, *assoc_rule, *state_type;
+extern int *rule_type, *rule_linenum, *rule_useful;
 
 /* different types of states; values are useful as masks, as well, for
  * routines like check_trailing_context()
@@ -497,8 +508,6 @@ extern int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
  *   templates)
  * tecfwd - forward link of meta-equivalence classes members
  * tecbck - backward link of MEC's
- * xlation - maps character codes to their translations, or nil if no %t table
- * num_xlations - number of different xlation values
  */
 
 /* reserve enough room in the equivalence class arrays so that we
@@ -514,9 +523,6 @@ extern int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs;
  * don't require the extra position since they're indexed from 1 .. CSIZE - 1.
  */
 extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
-
-extern int *xlation;
-extern int num_xlations;
 
 
 /* variables for start conditions:
@@ -557,8 +563,8 @@ extern char **scname;
  * firstfree - first empty entry in "nxt/chk" table
  * dss - nfa state set for each dfa
  * dfasiz - size of nfa state set for each dfa
- * dfaacc - accepting set for each dfa state (or accepting number, if
- *    -r is not given)
+ * dfaacc - accepting set for each dfa state (if using REJECT), or accepting
+ *	number, if not
  * accsiz - size of accepting set for each dfa state
  * dhash - dfa state hash value
  * numas - number of DFA accepting states created; note that this
@@ -656,9 +662,15 @@ void *allocate_array(), *reallocate_array();
 	reallocate_array( (void *) array, size, sizeof( union dfaacc_union ) )
 
 #define allocate_character_array(size) \
-	(Char *) allocate_array( size, sizeof( Char ) )
+	(char *) allocate_array( size, sizeof( char ) )
 
 #define reallocate_character_array(array,size) \
+	(char *) reallocate_array( (void *) array, size, sizeof( char ) )
+
+#define allocate_Character_array(size) \
+	(Char *) allocate_array( size, sizeof( Char ) )
+
+#define reallocate_Character_array(array,size) \
 	(Char *) reallocate_array( (void *) array, size, sizeof( Char ) )
 
 
@@ -674,7 +686,7 @@ extern int yylval;
 /* from file ccl.c */
 
 extern void ccladd PROTO((int, int));	/* Add a single character to a ccl */
-extern int cclinit PROTO(());	/* make an empty ccl */
+extern int cclinit PROTO((void));	/* make an empty ccl */
 extern void cclnegate PROTO((int));	/* negate a ccl */
 
 /* list the members of a set of characters in CCL form */
@@ -684,21 +696,18 @@ extern void list_character_set PROTO((FILE*, int[]));
 /* from file dfa.c */
 
 /* increase the maximum number of dfas */
-extern void increase_max_dfas PROTO(());
+extern void increase_max_dfas PROTO((void));
 
-extern void ntod PROTO(());	/* convert a ndfa to a dfa */
+extern void ntod PROTO((void));	/* convert a ndfa to a dfa */
 
 
 /* from file ecs.c */
 
 /* convert character classes to set of equivalence classes */
-extern void ccl2ecl PROTO(());
+extern void ccl2ecl PROTO((void));
 
 /* associate equivalence class numbers with class members */
 extern int cre8ecs PROTO((int[], int[], int));
-
-/* associate equivalence class numbers using %t table */
-extern int ecs_from_xlation PROTO((int[]));
 
 /* update equivalence classes based on character class transitions */
 extern void mkeccl PROTO((Char[], int, int[], int[], int, int));
@@ -709,18 +718,19 @@ extern void mkechar PROTO((int, int[], int[]));
 
 /* from file gen.c */
 
-extern void make_tables PROTO(());	/* generate transition tables */
+extern void make_tables PROTO((void));	/* generate transition tables */
 
 
 /* from file main.c */
 
 extern void flexend PROTO((int));
+extern void usage PROTO((void));
 
 
 /* from file misc.c */
 
-/* write out the actions from the temporary file to lex.yy.c */
-extern void action_out PROTO(());
+/* Add the given text to the stored actions. */
+extern void add_action PROTO(( char *new_text ));
 
 /* true if a string is all lower case */
 extern int all_lower PROTO((register Char *));
@@ -734,7 +744,8 @@ extern void bubble PROTO((int [], int));
 /* shell sort a character array */
 extern void cshell PROTO((Char [], int, int));
 
-extern void dataend PROTO(());	/* finish up a block of data declarations */
+/* finish up a block of data declarations */
+extern void dataend PROTO((void));
 
 /* report an error message and terminate */
 extern void flexerror PROTO((char[]));
@@ -751,6 +762,9 @@ extern void lerrsf PROTO((char[], char[]));
 /* spit out a "# line" statement */
 extern void line_directive_out PROTO((FILE*));
 
+/* mark the current position in the action array as the end of the prolog */
+extern void mark_prolog PROTO(());
+
 /* generate a data statment for a two-dimensional array */
 extern void mk2data PROTO((int));
 
@@ -760,10 +774,13 @@ extern void mkdata PROTO((int));	/* generate a data statement */
 extern int myctoi PROTO((Char []));
 
 /* write out one section of the skeleton file */
-extern void skelout PROTO(());
+extern void skelout PROTO((void));
 
 /* output a yy_trans_info structure */
 extern void transition_struct_out PROTO((int, int));
+
+/* set a region of memory to 0 */
+extern void zero_out PROTO((char *, int));
 
 
 /* from file nfa.c */
@@ -805,7 +822,7 @@ extern int mkrep PROTO((int, int, int));	/* make a replicated machine */
 /* create a state with a transition on a given symbol */
 extern int mkstate PROTO((int));
 
-extern void new_rule PROTO(());	/* initialize for a new rule */
+extern void new_rule PROTO((void));	/* initialize for a new rule */
 
 
 /* from file parse.y */
@@ -816,18 +833,29 @@ extern void format_pinpoint_message PROTO((char[], char[]));
 /* write out a message, pinpointing its location */
 extern void pinpoint_message PROTO((char[]));
 
+/* write out a warning, pinpointing it at the given line */
+void line_warning PROTO(( char[], int ));
+
+/* write out a message, pinpointing it at the given line */
+void line_pinpoint PROTO(( char[], int ));
+
+/* report a formatted syntax error */
+extern void format_synerr PROTO((char [], char[]));
 extern void synerr PROTO((char []));	/* report a syntax error */
-extern int yyparse PROTO(());	/* the YACC parser */
+extern void warn PROTO((char []));	/* report a warning */
+extern int yyparse PROTO((void));	/* the YACC parser */
 
 
 /* from file scan.l */
 
-extern int flexscan PROTO(());	/* the Flex-generated scanner for flex */
+/* the Flex-generated scanner for flex */
+extern int flexscan PROTO((void));
 
 /* open the given file (if NULL, stdin) for scanning */
 extern void set_input_file PROTO((char*));
 
-extern int yywrap PROTO(());	/* wrapup a file in the lexical analyzer */
+/* wrapup a file in the lexical analyzer */
+extern int yywrap PROTO((void));
 
 
 /* from file sym.c */
@@ -839,7 +867,8 @@ extern void cclinstal PROTO ((Char [], int));
 extern int ccllookup PROTO((Char []));
 
 extern void ndinstal PROTO((char[], Char[]));	/* install a name definition */
-extern void scextend PROTO(());		/* increase maximum number of SC's */
+/* increase maximum number of SC's */
+extern void scextend PROTO((void));
 extern void scinstal PROTO((char[], int));	/* make a start condition */
 
 /* lookup the number associated with a start condition */
@@ -851,9 +880,10 @@ extern int sclookup PROTO((char[]));
 /* build table entries for dfa state */
 extern void bldtbl PROTO((int[], int, int, int, int));
 
-extern void cmptmps PROTO(());	/* compress template table entries */
-extern void inittbl PROTO(());	/* initialize transition tables */
-extern void mkdeftbl PROTO(());	/* make the default, "jam" table entries */
+extern void cmptmps PROTO((void));	/* compress template table entries */
+extern void inittbl PROTO((void));	/* initialize transition tables */
+/* make the default, "jam" table entries */
+extern void mkdeftbl PROTO((void));
 
 /* create table entries for a state (or state fragment) which has
  * only one out-transition */
@@ -868,7 +898,7 @@ extern void stack1 PROTO((int, int, int, int));
 
 /* from file yylex.c */
 
-extern int yylex PROTO(());
+extern int yylex PROTO((void));
 
 
 /* The Unix kernel calls used here */
