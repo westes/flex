@@ -70,21 +70,25 @@
 /* this used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
+#ifndef ECHO
 #define ECHO (void) fwrite( (char *) yytext, yyleng, 1, yyout )
+#endif
 
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
  * is returned in "result".
  */
+#ifndef YY_INPUT
 #define YY_INPUT(buf,result,max_size) \
 	if ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \
 		YY_FATAL_ERROR( "read() in flex scanner failed" );
-#define YY_NULL 0
+#endif
 
 /* No semi-colon after return; correct usage is to write "yyterminate();" -
  * we don't want an extra ';' after the "return" because that will cause
  * some compilers to complain about unreachable statements.
  */
 #define yyterminate() return YY_NULL
+#define YY_NULL 0
 
 /* Report a fatal error. */
 
@@ -102,6 +106,7 @@
  * done when it reached the ';' after the YY_FATAL_ERROR() call.
  */
 
+#ifndef YY_FATAL_ERROR
 #define YY_FATAL_ERROR(msg) \
 	do \
 		{ \
@@ -110,9 +115,7 @@
 		exit( 1 ); \
 		} \
 	while ( 0 )
-
-/* Default yywrap function - always treat EOF as an EOF. */
-#define yywrap() 1
+#endif
 
 /* Enter a start condition.  This macro really ought to take a parameter,
  * but we do it the disgusting crufty way forced on us by the ()-less
@@ -135,10 +138,14 @@
 /* Default declaration of generated scanner - a define so the user can
  * easily add parameters.
  */
+#ifndef YY_DECL
 #define YY_DECL int yylex YY_PROTO(( void ))
+#endif
 
 /* Code executed at the end of each rule. */
+#ifndef YY_BREAK
 #define YY_BREAK break;
+#endif
 
 #define YY_END_OF_BUFFER_CHAR 0
 
@@ -151,7 +158,9 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 extern int yyleng;
 extern FILE *yyin, *yyout;
 
-%% section 1 definitions and declarations of yytext/yytext_ptr go here
+extern void *yy_flex_alloc YY_PROTO(( int ));
+extern void yy_flex_free YY_PROTO(( void * ));
+extern int yywrap YY_PROTO(( void ));
 
 /* Done after the current pattern has been matched and before the
  * corresponding action - sets up yytext.
@@ -228,11 +237,6 @@ int yyleng;
 
 FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
 
-%% data tables for the DFA go here
-
-/* These variables are all declared out here so that section 3 code can
- * manipulate them.
- */
 /* Points to current character in buffer. */
 static YY_CHAR *yy_c_buf_p = (YY_CHAR *) 0;
 static int yy_init = 1;		/* whether we need to initialize */
@@ -256,14 +260,15 @@ void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
 
 #define yy_new_buffer yy_create_buffer
 
-extern void *yy_flex_alloc();
-extern void yy_flex_free();
-
 #ifdef __cplusplus
 static int yyinput YY_PROTO(( void ));
 #else
 static int input YY_PROTO(( void ));
 #endif
+
+%% section 1 definitions and declarations of yytext/yytext_ptr go here
+
+%% data tables for the DFA go here
 
 YY_DECL
 	{
