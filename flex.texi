@@ -1324,7 +1324,6 @@ caller, indicating ``all done''.  By default, @code{yyterminate()} is
 also called when an end-of-file is encountered.  It is a macro and may
 be redefined.
 
-@c proofread edit stopped here
 @node Generated Scanner, Start Conditions, Actions, Top
 @chapter The Generated Scanner
 
@@ -1344,12 +1343,11 @@ default, @code{yylex()} is declared as follows:
 @end example
 
 @cindex yylex(), overriding
-(If your environment supports function prototypes, then it will
-be
- @code{int yylex( void )}.)  This definition may be changed by defining
+(If your environment supports function prototypes, then it will be
+@code{int yylex( void )}.)  This definition may be changed by defining
 the @code{YY_DECL} macro.  For example, you could use:
 
-@cindex yylex, overriding the prototype
+@cindex yylex, overriding the prototype of
 @example
 @verbatim
     #define YY_DECL float lexscan( a, b ) float a, b;
@@ -1361,23 +1359,27 @@ and taking two floats as arguments.  Note that if you give arguments to
 the scanning routine using a K&R-style/non-prototyped function
 declaration, you must terminate the definition with a semi-colon (;).
 
-@code{flex} generates @samp{C99} function definitions by default. However flex
-does have the ability to generate obsolete, er, @samp{traditional}, function
-definitions. This is to support bootstrapping gcc on old systems.
-Unfortunately, traditional definitions prevent us from using any standard data
-types smaller than int (such as short, char, or bool) as function arguments.
-For this reason, future versions of @code{flex} may generate standard C99 code
-only, leaving K&R-style functions to the historians.  Currently, if you do
-@strong{not} want @samp{C99} definitions, then you must define
+@code{flex} generates @samp{C99} function definitions by
+default. However flex does have the ability to generate obsolete, er,
+@samp{traditional}, function definitions. This is to support
+bootstrapping gcc on old systems.  Unfortunately, traditional
+definitions prevent us from using any standard data types smaller than
+int (such as short, char, or bool) as function arguments.  For this
+reason, future versions of @code{flex} may generate standard C99 code
+only, leaving K&R-style functions to the historians.  Currently, if you
+do @strong{not} want @samp{C99} definitions, then you must define
 @code{YY_TRADITIONAL_FUNC_DEFS}.
 
 @cindex stdin, default for yyin
+@cindex yyin
 Whenever @code{yylex()} is called, it scans tokens from the global input
 file @file{yyin} (which defaults to stdin).  It continues until it
 either reaches an end-of-file (at which point it returns the value 0) or
 one of its actions executes a @code{return} statement.
 
 @cindex EOF and yyrestart()
+@cindex end-of-file, and yyrestart()
+@cindex yyrestart()
 If the scanner reaches an end-of-file, subsequent calls are undefined
 unless either @file{yyin} is pointed at a new input file (in which case
 scanning continues from that file), or @code{yyrestart()} is called.
@@ -1394,14 +1396,12 @@ better to use @code{YY_FLUSH_BUFFER} (@pxref{Actions}).  Note that
 @code{yyrestart()} does @emph{not} reset the start condition to
 @code{INITIAL} (@pxref{Start Conditions}).
 
-@cindex returning from within an action
-If
-@code{yylex()}
-stops scanning due to executing a
-@code{return}
-statement in one of the actions, the scanner may then be called again and it
-will resume scanning where it left off.
+@cindex RETURN, within actions
+If @code{yylex()} stops scanning due to executing a @code{return}
+statement in one of the actions, the scanner may then be called again
+and it will resume scanning where it left off.
 
+@cindex YY_INPUT
 By default (and for purposes of efficiency), the scanner uses
 block-reads rather than simple @code{getc()} calls to read characters
 from @file{yyin}.  The nature of how it gets its input can be controlled
@@ -1417,7 +1417,6 @@ the global file-pointer @file{yyin}.
 Here is a sample definition of @code{YY_INPUT} (in the definitions
 section of the input file):
 
-@cindex YY_INPUT, overriding the input mechanism
 @example
 @verbatim
     %{
@@ -1430,10 +1429,10 @@ section of the input file):
 @end verbatim
 @end example
 
-This definition will change the input processing to occur
-one character at a time.
+This definition will change the input processing to occur one character
+at a time.
 
-@cindex yywrap(), explanation
+@cindex yywrap()
 When the scanner receives an end-of-file indication from YY_INPUT, it
 then checks the @code{yywrap()} function.  If @code{yywrap()} returns
 false (zero), then it is assumed that the function has gone ahead and
@@ -1443,24 +1442,25 @@ returning 0 to its caller.  Note that in either case, the start
 condition remains unchanged; it does @emph{not} revert to
 @code{INITIAL}.
 
+@cindex yywrap, default for
+@cindex nowrap, %option
+@cindex %option nowrap
 If you do not supply your own version of @code{yywrap()}, then you must
 either use @code{%option noyywrap} (in which case the scanner behaves as
 though @code{yywrap()} returned 1), or you must link with @samp{-lfl} to
 obtain the default version of the routine, which always returns 1.
 
 For scanning from in-memory buffers (e.g., scanning strings), see
-@ref{Scanning Strings}
-@xref{Multiple Input Buffers}.
+@ref{Scanning Strings}. @xref{Multiple Input Buffers}.
 
-The scanner writes its
-@code{ECHO}
-output to the
-@file{yyout}
-global (default, @file{stdout}), which may be redefined by the user simply
-by assigning it to some other
-@code{FILE}
-pointer.
+@cindex ECHO, and yyout
+@cindex yyout
+@cindex stdout, as default for yyout
+The scanner writes its @code{ECHO} output to the @file{yyout} global
+(default, @file{stdout}), which may be redefined by the user simply by
+assigning it to some other @code{FILE} pointer.
 
+@c proofread edit stopped here
 @node Start Conditions, Multiple Input Buffers, Generated Scanner, Top
 @chapter Start Conditions
 
