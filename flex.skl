@@ -106,11 +106,7 @@ extern FILE *yyin, *yyout;
 #ifdef __cplusplus
 extern "C" {
 #endif
-	extern void *yy_flex_alloc YY_PROTO(( unsigned int ));
-	extern void *yy_flex_realloc YY_PROTO(( void *ptr, unsigned int ));
-	extern void yy_flex_free YY_PROTO(( void * ));
 	extern int yywrap YY_PROTO(( void ));
-	extern void yy_flex_strcpy YY_PROTO(( char *s1, const char *s2 ));
 #ifdef __cplusplus
 	}
 #endif
@@ -239,6 +235,14 @@ static void yy_pop_state YY_PROTO(( void ));
 static int yy_top_state YY_PROTO(( void ));
 %*
 
+#ifdef yytext_ptr
+static void yy_flex_strcpy YY_PROTO(( char *, const char * ));
+#endif
+
+static void *yy_flex_alloc YY_PROTO(( unsigned int ));
+static void *yy_flex_realloc YY_PROTO(( void *ptr, unsigned int ));
+static void yy_flex_free YY_PROTO(( void * ));
+
 #define yy_new_buffer yy_create_buffer
 
 %% yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
@@ -274,6 +278,19 @@ static void yy_fatal_error YY_PROTO(( const char msg[] ));
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
  */
+
+#ifdef YY_MALLOC_DECL
+YY_MALLOC_DECL
+#else
+#if __STDC__
+#include <stdlib.h>
+#else
+/* Just try to get by without declaring the routines.  This will fail
+ * miserably on non-ANSI systems for which sizeof(size_t) != sizeof(int)
+ * or sizeof(void*) != sizeof(int).
+ */
+#endif
+#endif
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
@@ -1146,3 +1163,36 @@ void yyFlexLexer::LexerError( const char msg[] )
 		yyleng = n; \
 		} \
 	while ( 0 )
+
+
+/* Internal utility routines. */
+
+#ifdef yytext_ptr
+static void yy_flex_strcpy( s1, s2 )
+char *s1;
+const char *s2;
+	{
+	while ( (*(s1++) = *(s2++)) )
+		;
+	}
+#endif
+
+
+static void *yy_flex_alloc( size )
+unsigned int size;
+	{
+	return (void *) malloc( size );
+	}
+
+static void *yy_flex_realloc( ptr, size )
+void *ptr;
+unsigned int size;
+	{
+	return (void *) realloc( ptr, size );
+	}
+
+static void yy_flex_free( ptr )
+void *ptr;
+	{
+	free( ptr );
+	}
