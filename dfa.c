@@ -776,7 +776,6 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
     int didsort = 0;
     register int i, j;
     int newds, *oldsns;
-    char *malloc();
 
     for ( i = 1; i <= lastdfa; ++i )
 	if ( hashval == dhash[i] )
@@ -1011,8 +1010,14 @@ int symlist[];
 	if ( tch != SYM_EPSILON )
 	    {
 	    if ( tch < -lastccl || tch > csize )
-		flexfatal(
-		    "bad transition character detected in sympartition()" );
+		{
+		if ( tch > csize && tch <= CSIZE )
+		    flexerror( "scanner requires -8 flag" );
+
+		else
+		    flexfatal(
+			"bad transition character detected in sympartition()" );
+		}
 
 	    if ( tch >= 0 )
 		{ /* character transition */
