@@ -477,6 +477,38 @@ Char str[];
     }
 
 
+/* is_hex_digit - returns true if a character is a valid hex digit, false
+ *		  otherwise
+ *
+ * synopsis:
+ *    int true_or_false, is_hex_digit();
+ *    int ch;
+ *    val = is_hex_digit( ch );
+ */
+
+int is_hex_digit( ch )
+int ch;
+
+    {
+    if ( isdigit( ch ) )
+	return ( 1 );
+
+    switch ( clower( ch ) )
+	{
+	case 'a':
+	case 'b':
+	case 'c':
+	case 'd':
+	case 'e':
+	case 'f':
+	    return ( 1 );
+
+	default:
+	    return ( 0 );
+	}
+    }
+
+
 /* line_directive_out - spit out a "# line" statement */
 
 void line_directive_out( output_file_name )
@@ -584,6 +616,9 @@ Char myesc( array )
 Char array[];
 
     {
+    Char c, esc_char;
+    register int sptr;
+
     switch ( array[1] )
 	{
 	case 'a': return ( '\a' );
@@ -593,9 +628,6 @@ Char array[];
 	case 'r': return ( '\r' );
 	case 't': return ( '\t' );
 	case 'v': return ( '\v' );
-
-	case 'x':
-	    /* fall through */
 
 	case '0':
 	case '1':
@@ -607,15 +639,31 @@ Char array[];
 	case '7':
 	case '8':
 	case '9':
-
-	    { /* \<octal> or \x<hex> */
-	    Char c, esc_char;
-	    register int sptr = 1;
-
-	    if ( array[1] == 'x' )
-		++sptr;
+	    { /* \<octal> */
+	    sptr = 1;
 
 	    while ( isascii( array[sptr] ) && isdigit( array[sptr] ) )
+		/* don't increment inside loop control because if
+		 * isdigit() is a macro it might expand into multiple
+		 * increments ...
+		 */
+		++sptr;
+
+	    c = array[sptr];
+	    array[sptr] = '\0';
+
+	    esc_char = otoi( array + 1 );
+
+	    array[sptr] = c;
+
+	    return ( esc_char );
+	    }
+
+	case 'x':
+	    { /* \x<hex> */
+	    int sptr = 2;
+
+	    while ( isascii( array[sptr] ) && is_hex_digit( array[sptr] ) )
 		/* don't increment inside loop control because if
 		 * isdigit() is a macro it will expand it to two
 		 * increments ...
@@ -625,10 +673,7 @@ Char array[];
 	    c = array[sptr];
 	    array[sptr] = '\0';
 
-	    if ( array[1] == 'x' )
-		esc_char = htoi( array + 2 );
-	    else
-		esc_char = otoi( array + 1 );
+	    esc_char = htoi( array + 2 );
 
 	    array[sptr] = c;
 
