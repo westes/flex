@@ -133,6 +133,12 @@ extern FILE *yyin, *yyout;
 
 #define unput(c) yyunput( c, yytext_ptr )
 
+/* The following is because we cannot portably get our hands on size_t
+ * (without autoconf's help, which isn't available because we want
+ * flex-generated scanners to compile on their own).
+ */
+typedef unsigned int yy_size_t;
+
 
 struct yy_buffer_state
 	{
@@ -148,7 +154,7 @@ struct yy_buffer_state
 	/* Size of input buffer in bytes, not including room for EOB
 	 * characters.
 	 */
-	int yy_buf_size;
+	yy_size_t yy_buf_size;
 
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
@@ -224,15 +230,16 @@ void yyrestart YY_PROTO(( FILE *input_file ));
 void yy_switch_to_buffer YY_PROTO(( YY_BUFFER_STATE new_buffer ));
 void yy_load_buffer_state YY_PROTO(( void ));
 YY_BUFFER_STATE yy_create_buffer YY_PROTO(( FILE *file, int size ));
-YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, char *start, int size ));
+YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, char *start,
+						yy_size_t size ));
 YY_BUFFER_STATE yy_scan_string YY_PROTO(( const char *str ));
 YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( const char *bytes, int len ));
 void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));
 void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
 %*
 
-static void *yy_flex_alloc YY_PROTO(( unsigned int ));
-static void *yy_flex_realloc YY_PROTO(( void *, unsigned int ));
+static void *yy_flex_alloc YY_PROTO(( yy_size_t ));
+static void *yy_flex_realloc YY_PROTO(( void *, yy_size_t ));
 static void yy_flex_free YY_PROTO(( void * ));
 
 #define yy_new_buffer yy_create_buffer
@@ -287,9 +294,15 @@ static void yy_fatal_error YY_PROTO(( const char msg[] ));
 static int yy_start_stack_ptr = 0;
 static int yy_start_stack_depth = 0;
 static int *yy_start_stack = 0;
+#ifndef YY_NO_PUSH_STATE
 static void yy_push_state YY_PROTO(( int new_state ));
+#endif
+#ifndef YY_NO_POP_STATE
 static void yy_pop_state YY_PROTO(( void ));
+#endif
+#ifndef YY_NO_TOP_STATE
 static int yy_top_state YY_PROTO(( void ));
+#endif
 #endif
 
 #ifdef YY_MALLOC_DECL
@@ -1092,13 +1105,14 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 	}
 
 
+#ifndef YY_NO_SCAN_BUFFER
 %-
 #ifdef YY_USE_PROTOS
-YY_BUFFER_STATE yy_scan_buffer( char *base, char *start, int size )
+YY_BUFFER_STATE yy_scan_buffer( char *base, char *start, yy_size_t size )
 #else
 YY_BUFFER_STATE yy_scan_buffer( base, start, size )
 char *base, *start;
-int size;
+yy_size_t size;
 #endif
 	{
 	YY_BUFFER_STATE b;
@@ -1127,8 +1141,10 @@ int size;
 	return b;
 	}
 %*
+#endif
 
 
+#ifndef YY_NO_SCAN_STRING
 %-
 #ifdef YY_USE_PROTOS
 YY_BUFFER_STATE yy_scan_string( const char *str )
@@ -1144,8 +1160,10 @@ const char *str;
 	return yy_scan_bytes( str, len );
 	}
 %*
+#endif
 
 
+#ifndef YY_NO_SCAN_BYTES
 %-
 #ifdef YY_USE_PROTOS
 YY_BUFFER_STATE yy_scan_bytes( const char *bytes, int len )
@@ -1157,7 +1175,8 @@ int len;
 	{
 	YY_BUFFER_STATE b;
 	char *buf;
-	int i, n;
+	yy_size_t n;
+	int i;
 
 	/* Get memory for full buffer, including space for preceding '\n'
 	 * and trailing EOB's.
@@ -1184,9 +1203,10 @@ int len;
 
 	return b;
 	}
+#endif
 
 
-#if YY_STACK_USED
+#ifndef YY_NO_PUSH_STATE
 %-
 #ifdef YY_USE_PROTOS
 static void yy_push_state( int new_state )
@@ -1200,7 +1220,7 @@ void yyFlexLexer::yy_push_state( int new_state )
 	{
 	if ( yy_start_stack_ptr >= yy_start_stack_depth )
 		{
-		int new_size;
+		yy_size_t new_size;
 
 		yy_start_stack_depth += YY_START_STACK_INCR;
 		new_size = yy_start_stack_depth * sizeof( int );
@@ -1221,8 +1241,10 @@ void yyFlexLexer::yy_push_state( int new_state )
 
 	BEGIN(new_state);
 	}
+#endif
 
 
+#ifndef YY_NO_POP_STATE
 %-
 static void yy_pop_state()
 %+
@@ -1234,8 +1256,10 @@ void yyFlexLexer::yy_pop_state()
 
 	BEGIN(yy_start_stack[yy_start_stack_ptr]);
 	}
+#endif
 
 
+#ifndef YY_NO_TOP_STATE
 %-
 static int yy_top_state()
 %+
@@ -1305,21 +1329,21 @@ int n;
 
 
 #ifdef YY_USE_PROTOS
-static void *yy_flex_alloc( unsigned int size )
+static void *yy_flex_alloc( yy_size_t size )
 #else
 static void *yy_flex_alloc( size )
-unsigned int size;
+yy_size_t size;
 #endif
 	{
 	return (void *) malloc( size );
 	}
 
 #ifdef YY_USE_PROTOS
-static void *yy_flex_realloc( void *ptr, unsigned int size )
+static void *yy_flex_realloc( void *ptr, yy_size_t size )
 #else
 static void *yy_flex_realloc( ptr, size )
 void *ptr;
-unsigned int size;
+yy_size_t size;
 #endif
 	{
 	return (void *) realloc( ptr, size );
