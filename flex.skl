@@ -2060,7 +2060,7 @@ void *ptr;
 YY_DECL_LAST_ARG
 #endif
 	{
-	free( (char *) ptr );	// see yy_flex_realloc() for (char *) cast
+	free( (char *) ptr );	/* see yy_flex_realloc() for (char *) cast */
 	}
 
 #if YY_MAIN
