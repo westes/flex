@@ -39,6 +39,7 @@ int yylex()
 	{
 	int toktype;
 	static int beglin = false;
+	extern char *yytext;
 
 	if ( eofseen )
 		toktype = EOF;
@@ -116,9 +117,8 @@ int yylex()
 				 * writing out numbers as we echo rules.
 				 * flexscan() has already assigned sectnum.
 				 */
-
 				if ( sectnum == 2 )
-				beglin = 1;
+					beglin = 1;
 
 				break;
 
@@ -179,8 +179,29 @@ int yylex()
 				fprintf( stderr, "<<EOF>>" );
 				break;
 
+			case OPTION_OP:
+				fprintf( stderr, "%s ", yytext );
+				break;
+
+			case OPT_OUTFILE:
+			case OPT_PREFIX:
+			case CCE_ALNUM:
+			case CCE_ALPHA:
+			case CCE_BLANK:
+			case CCE_CNTRL:
+			case CCE_DIGIT:
+			case CCE_GRAPH:
+			case CCE_LOWER:
+			case CCE_PRINT:
+			case CCE_PUNCT:
+			case CCE_SPACE:
+			case CCE_UPPER:
+			case CCE_XDIGIT:
+				fprintf( stderr, "%s", yytext );
+				break;
+
 			case 0:
-				fprintf( stderr, "End Marker" );
+				fprintf( stderr, "End Marker\n" );
 				break;
 
 			default:
