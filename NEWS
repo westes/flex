@@ -16,6 +16,14 @@ Changes between release 2.4.3 (03Dec93) and release 2.4.2:
 
 	- Some lint tweaks.
 
+	- NOTE: problems have been encountered attempting to build flex
+	  C++ scanners using g++ version 2.5.X.  The problem is due to an
+	  unfortunate heuristic in g++ 2.5.X that attempts to discern between
+	  C and C++ headers.  Because FlexLexer.h is installed (by default)
+	  in /usr/local/include and not /usr/local/lib/g++-include, g++ 2.5.X
+	  decides that it's a C header :-(.  So if you have problems, install
+	  the header in /usr/local/lib/g++-include instead.
+
 
 Changes between release 2.4.2 (01Dec93) and release 2.4.1:
 
