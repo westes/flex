@@ -93,6 +93,12 @@ protected:
 }
 #endif
 
+#if defined(yyFlexLexer) || ! defined(yyFlexLexerOnce)
+// Either this is the first time through (yyFlexLexerOnce not defined),
+// or this is a repeated include to define a different flavor of
+// yyFlexLexer, as discussed in the flex man page.
+#define yyFlexLexerOnce
+
 class yyFlexLexer : public FlexLexer {
 public:
 	// arg_yyin and arg_yyout default to the cin and cout, but we
@@ -173,3 +179,5 @@ protected:
 	int yy_more_flag;
 	int yy_more_len;
 };
+
+#endif
