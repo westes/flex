@@ -101,6 +101,8 @@ tests/test-include-by-buffer/Makefile
 tests/test-include-by-reentrant/Makefile
 tests/test-multiple-scanners-nr/Makefile
 tests/test-multiple-scanners-r/Makefile
+tests/test-noansi-nr/Makefile
+tests/test-noansi-r/Makefile
 tests/test-prefix-nr/Makefile
 tests/test-prefix-r/Makefile
 tests/test-pthread/Makefile

@@ -26,9 +26,17 @@ dist_noinst_SCRIPTS = \
 	create-test
 
 DIST_SUBDIRS = \
-	test-c++-multiple-scanners \
-	test-reject \
+	test-basic-nr \
+	test-basic-r \
+	test-bison-yylloc \
+	test-bison-yylval \
 	test-bison-nr \
+	test-multiple-scanners-nr \
+	test-multiple-scanners-r \
+	test-header-nr \
+	test-header-r \
+	test-reject \
+	test-c++-multiple-scanners \
 	test-c++-basic \
 	test-posixly-correct \
 	test-posix \
@@ -41,30 +49,32 @@ DIST_SUBDIRS = \
 	TEMPLATE \
 	test-array-nr \
 	test-array-r \
-	test-basic-nr \
-	test-basic-r \
-	test-bison-yylloc \
-	test-bison-yylval \
 	test-c-cpp-nr \
 	test-c-cpp-r \
-	test-header-nr \
-	test-header-r \
 	test-include-by-buffer \
 	test-include-by-reentrant \
-	test-multiple-scanners-nr \
-	test-multiple-scanners-r \
 	test-prefix-nr \
 	test-prefix-r \
 	test-pthread \
 	test-string-nr \
 	test-string-r \
 	test-yyextra \
+	test-noansi-nr \
+	test-noansi-r \
 	test-table-opts
 
 SUBDIRS = \
-	test-c++-multiple-scanners \
-	test-reject \
+	test-basic-nr \
+	test-basic-r \
+	test-bison-yylloc \
+	test-bison-yylval \
 	test-bison-nr \
+	test-multiple-scanners-nr \
+	test-multiple-scanners-r \
+	test-header-nr \
+	test-header-r \
+	test-reject \
+	test-c++-multiple-scanners \
 	test-c++-basic \
 	test-posixly-correct \
 	test-posix \
@@ -76,24 +86,18 @@ SUBDIRS = \
 	test-lineno-nr \
 	test-array-nr \
 	test-array-r \
-	test-basic-nr \
-	test-basic-r \
-	test-bison-yylloc \
-	test-bison-yylval \
 	test-c-cpp-nr \
 	test-c-cpp-r \
-	test-header-nr \
-	test-header-r \
 	test-include-by-buffer \
 	test-include-by-reentrant \
-	test-multiple-scanners-nr \
-	test-multiple-scanners-r \
 	test-prefix-nr \
 	test-prefix-r \
 	test-pthread \
 	test-string-nr \
 	test-string-r \
 	test-yyextra \
+	test-noansi-nr \
+	test-noansi-r \
 	test-table-opts
 
 # clean up before running the test suite so we dont test old builds of test code

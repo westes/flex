@@ -1,0 +1,7 @@
+Makefile
+parser.c
+parser.h
+scanner.c
+test-noansi-r
+OUTPUT
+Makefile.in
