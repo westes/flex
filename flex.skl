@@ -25,6 +25,8 @@
 %-
 #include <stdio.h>
 #include <errno.h>
+%+
+#include <cerrno>
 %*
 
 
@@ -40,7 +42,6 @@
 
 #include <stdlib.h>
 %+
-#ifdef __CPLUSPLUS
 #define FLEX_STD   std::
 #include <iostream>
 %*
@@ -1504,7 +1505,7 @@ YY_DECL_LAST_ARG
 
 %+
 #ifndef YY_NEVER_INTERACTIVE
-extern "C" int isatty YY_PROTO(( int )) THROW_NIL ;
+extern "C" int isatty YY_PROTO(( int ));
 #endif
 void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, FLEX_STD istream* file )
 %*
