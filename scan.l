@@ -231,7 +231,17 @@ ESCSEQ		\\([^\n]|[0-9]{1,3})
 
 <SECT2>^{OPTWS}"/*"	ACTION_ECHO; BEGIN(C_COMMENT_2);
 
-<SECT2>{WS}		|
+<SECT2>{WS}		{
+			/* this rule is separate from the one below because
+			 * otherwise we get variable trailing context, so
+			 * we can't build the scanner using -{f,F}
+			 */
+			bracelevel = 0;
+			continued_action = false;
+			BEGIN(ACTION);
+			return ( '\n' );
+			}
+
 <SECT2>{OPTWS}/\n	{
 			bracelevel = 0;
 			continued_action = false;
