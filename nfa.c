@@ -215,6 +215,8 @@ void finish_rule( mach, variable_trail_rule, headcnt, trailcnt )
 int mach, variable_trail_rule, headcnt, trailcnt;
 
     {
+    char action_text[MAXLINE];
+
     add_accept( mach, num_rules );
 
     /* we did this in new_rule(), but it often gets the wrong
@@ -228,13 +230,14 @@ int mach, variable_trail_rule, headcnt, trailcnt;
     if ( continued_action )
 	--rule_linenum[num_rules];
 
-    fprintf( temp_action_file, "case %d:\n", num_rules );
+    sprintf( action_text, "case %d:\n", num_rules );
+    add_action( action_text );
 
     if ( variable_trail_rule )
 	{
 	rule_type[num_rules] = RULE_VARIABLE;
 
-	if ( performance_report )
+	if ( performance_report > 0 )
 	    fprintf( stderr, "Variable trailing context rule at line %d\n",
 		     rule_linenum[num_rules] );
 
@@ -251,23 +254,27 @@ int mach, variable_trail_rule, headcnt, trailcnt;
 	    char *scanner_cp = "yy_c_buf_p = yy_cp";
 	    char *scanner_bp = "yy_bp";
 
-	    fprintf( temp_action_file,
+	    add_action(
 	"*yy_cp = yy_hold_char; /* undo effects of setting up yytext */\n" );
 
 	    if ( headcnt > 0 )
-		fprintf( temp_action_file, "%s = %s + %d;\n",
+		{
+		sprintf( action_text, "%s = %s + %d;\n",
 			 scanner_cp, scanner_bp, headcnt );
+		add_action( action_text );
+		}
 
 	    else
-		fprintf( temp_action_file,
-			 "%s -= %d;\n", scanner_cp, trailcnt );
+		{
+		sprintf( action_text, "%s -= %d;\n", scanner_cp, trailcnt );
+		add_action( action_text );
+		}
 	
-	    fprintf( temp_action_file,
-		     "YY_DO_BEFORE_ACTION; /* set up yytext again */\n" );
+	    add_action( "YY_DO_BEFORE_ACTION; /* set up yytext again */\n" );
 	    }
 	}
 
-    line_directive_out( temp_action_file );
+    line_directive_out( (FILE *) 0 );
     }
 
 
@@ -708,10 +715,13 @@ void new_rule()
 	rule_type = reallocate_integer_array( rule_type, current_max_rules );
 	rule_linenum =
 	    reallocate_integer_array( rule_linenum, current_max_rules );
+	rule_useful =
+	    reallocate_integer_array( rule_useful, current_max_rules );
 	}
 
     if ( num_rules > MAX_RULE )
 	lerrif( "too many rules (> %d)!", MAX_RULE );
 
     rule_linenum[num_rules] = linenum;
+    rule_useful[num_rules] = false;
     }
