@@ -262,13 +262,13 @@ expressions.  These are:
     x          match the character 'x'
     .          any character except newline
     [xyz]      a "character class"; in this case, the pattern
-	         matches either an 'x', a 'y', or a 'z'
+                 matches either an 'x', a 'y', or a 'z'
     [abj-oZ]   a "character class" with a range in it; matches
-	         an 'a', a 'b', any letter from 'j' through 'o',
+                 an 'a', a 'b', any letter from 'j' through 'o',
                  or a 'Z'
     [^A-Z]     a "negated character class", i.e., any character
-	         but those in the class.  In this case, any
-	         character EXCEPT an uppercase letter.
+                 but those in the class.  In this case, any
+                 character EXCEPT an uppercase letter.
     [^A-Z\\n]   any character EXCEPT an uppercase letter or
                  a newline
     r*         zero or more r's, where r is any regular expression
@@ -282,28 +282,28 @@ expressions.  These are:
     "[xyz]\\"foo"
                the literal string: [xyz]"foo
     \\X         if X is an 'a', 'b', 'f', 'n', 'r', 't', or 'v',
-		 then the ANSI-C interpretation of \\x.
-		 Otherwise, a literal 'X' (used to escape
+                 then the ANSI-C interpretation of \\x.
+                 Otherwise, a literal 'X' (used to escape
                  operators such as '*')
     \\123       the character with octal value 123
     \\x2a       the character with hexadecimal value 2a
     (r)        match an r; parentheses are used to override
-		 precedence (see below)
+                 precedence (see below)
 
 
     rs         the regular expression r followed by the
-		 regular expression s; called "concatenation"
+                 regular expression s; called "concatenation"
 
 
     r|s        either an r or an s
 
 
     r/s        an r but only if it is followed by an s.  The
-		 s is not part of the matched text.  This type
-		 of pattern is called as "trailing context".
+                 s is not part of the matched text.  This type
+                 of pattern is called as "trailing context".
     ^r         an r, but only at the beginning of a line
     r$         an r, but only at the end of a line.  Equivalent
-		 to "r/\\n".
+                 to "r/\\n".
 
 
     <s>r       an r, but only in start condition s (see
@@ -365,7 +365,7 @@ the inconsistency is historically entrenched.
 Matching newlines means that a pattern like [^"]* can match an entire
 input (overflowing the scanner's input buffer) unless there's another
 quote in the input.
-.I -
+.IP -
 A rule can have at most one instance of trailing context (the '/' operator
 or the '$' operator).  The start condition, '^', and "<<EOF>>" patterns
 can only occur at the beginning of a pattern, and, as well as with '/' and '$',
@@ -378,7 +378,15 @@ cannot be grouped inside parentheses.  The following are all illegal:
     <sc1>foo<sc2>bar
 
 .fi
-(Note that the first of these, though, can be written "foo/bar\\n".)
+Note that the first of these, though, can be written "foo/bar\\n", and
+the second could be written as two rules using the special '|' action (see
+below):
+.nf
+
+    foo      |
+    ^bar     /* action goes here */
+
+.fi
 .SH HOW THE INPUT IS MATCHED
 When the generated scanner is run, it analyzes its input looking
 for strings which match any of its patterns.  If it finds more than
@@ -498,7 +506,7 @@ For example, the following will both count the
 words in the input and call the routine special() whenever "frob" is seen:
 .nf
 
-	    int word_count = 0;
+            int word_count = 0;
     %%
 
     frob        special(); REJECT;
@@ -672,7 +680,7 @@ is the file
 which contains the scanning routine
 .B yylex(),
 a number of tables used by it for matching tokens, and a number
-of auxilliary routines and macros.  By default,
+of auxiliary routines and macros.  By default,
 .B yylex()
 is declared as follows:
 .nf
@@ -847,10 +855,28 @@ exclusive start conditions make it easy to specify "mini-scanners"
 which scan portions of the input that are syntactically different
 from the rest (e.g., comments).
 .LP
+If the distinction between inclusive and exclusive start conditions
+is still a little vague, here's a simple example illustrating the
+connection between the two.  The set of rules:
+.nf
+
+    %s example
+    %%
+    <example>foo           /* do something */
+
+.fi
+is equivalent to
+.nf
+
+    %x example
+    %%
+    <INITIAL,example>foo   /* do something */
+
+.fi
+.LP
 The default rule (to
 .B ECHO
-any unmatched character) remains active in exclusive start conditions.
-### you are here
+any unmatched character) remains active in start conditions.
 .LP
 .B BEGIN(0)
 returns to the original state where only the rules with
@@ -859,17 +885,30 @@ referred to as the start-condition "INITIAL", so
 .B BEGIN(INITIAL)
 is equivalent to
 .B BEGIN(0).
+(The parentheses around the start condition name are not required but
+are considered good style.)
 .LP
-Here is a scanner which will recognize numbers only if they
-are preceded earlier in the line by the string "expect-number":
+Here is a scanner which provides two different interpretations
+of a string like "123.456".  By default it will treat it as
+as three tokens, the integer "123", a dot ('.'), and the integer "456".
+But if the string is preceded earlier in the line by the string
+"expect-floats"
+it will treat it as a single token, the floating-point number
+123.456:
 .nf
 
+    %{
+    #include <math.h>
+    %}
     %s expect
 
     %%
-    expect-number        BEGIN(expect);
+    expect-floats        BEGIN(expect);
 
-    <expect>[0-9]+       printf( "found a number\\n" );
+    <expect>[0-9]+"."[0-9]+      {
+                printf( "found a float, = %f\\n",
+                        atof( yytext ) );
+                }
     <expect>\\n           {
                 /* that's the end of the line, so
                  * we need another "expect-number"
@@ -878,6 +917,13 @@ are preceded earlier in the line by the string "expect-number":
                  */
                 BEGIN(INITIAL);
                 }
+
+    [0-9]+      {
+                printf( "found an integer, = %d\\n",
+                        atoi( yytext ) );
+                }
+
+    "."         printf( "found a dot\\n" );
 
 .fi
 Here is a scanner which recognizes (and discards) C comments while
@@ -888,12 +934,12 @@ maintaining a count of the current input line.
     %%
             int line_num = 1;
 
-    <comment>[^*\\n]*
-    <comment>"*"+[^*/\\n]*
+    "/*"         BEGIN(comment);
+
+    <comment>[^*\\n]*        /* eat anything that's not a '*' */
+    <comment>"*"+[^*/\\n]*   /* eat up '*'s not followed by '/'s */
     <comment>\\n             ++line_num;
     <comment>"*"+"/"        BEGIN(INITIAL);
-
-    "/*"         BEGIN(comment);
 
 .fi
 Note that start-conditions names are really integer values and
@@ -901,18 +947,13 @@ can be stored as such.  Thus, the above could be extended in the
 following fashion:
 .nf
 
-    %x comment
+    %x comment foo
     %%
             int line_num = 1;
             int comment_caller;
 
-    <comment>[^*\\n]*
-    <comment>"*"+[^*/\\n]*
-    <comment>\\n             ++line_num;
-    <comment>"*"+"/"        BEGIN(comment_caller);
-
     "/*"         {
-                 comment_caller = INTIIAL;
+                 comment_caller = INITIAL;
                  BEGIN(comment);
                  }
 
@@ -922,6 +963,12 @@ following fashion:
                  comment_caller = foo;
                  BEGIN(comment);
                  }
+
+    <comment>[^*\\n]*        /* eat anything that's not a '*' */
+    <comment>"*"+[^*/\\n]*   /* eat up '*'s not followed by '/'s */
+    <comment>\\n             ++line_num;
+    <comment>"*"+"/"        BEGIN(comment_caller);
+
 .fi
 One can then implement a "stack" of start conditions using an
 array of integers.  (It is likely that such stacks will become
@@ -929,7 +976,7 @@ a full-fledged
 .I flex
 feature in the future.)  Note, though, that
 start conditions do not have their own name-space; %s's and %x's
-declare names effectively the same as #define's.
+declare names in the same fashion as #define's.
 .SH END-OF-FILE RULES
 The special rule "<<EOF>>" indicates
 actions which are to be taken when an end-of-file is
@@ -965,12 +1012,14 @@ An example:
 
     %x quote
     %%
-    ...
+
+    ...other rules for dealing with quotes...
+
     <quote><<EOF>>   {
              error( "unterminated quote" );
              yyterminate();
              }
-    <<EOF>>          {
+    <<EOF>>  {
              if ( *++filelist )
                      {
                      yyin = fopen( *filelist, "r" );
@@ -993,10 +1042,13 @@ In the generated scanner, the actions are all gathered in one large
 switch statement and separated using
 .B YY_BREAK,
 which may be redefined.
-This allows, for example, C++ users to
+This allows, for example, some C++ users to
 #define YY_BREAK to do nothing (while being very careful that every
 rule ends with a "break" or a "return"!) to avoid suffering from
-unreachable statement warnings where a rule's action ends with "return".
+unreachable statement warnings where because a rule's action ends with
+"return", the
+.B YY_BREAK
+is inaccessible.
 .SH INTERFACING WITH YACC
 One of the main uses of
 .I flex
@@ -1004,9 +1056,9 @@ is as a companion to the
 .I yacc
 parser-generator.
 .I yacc
-parsers expect to call the
+parsers expect to call a routine named
 .B yylex()
-routine to find the next input token.  The routine is supposed to
+to find the next input token.  The routine is supposed to
 return the type of the next token as well as putting any associated
 value in the global
 .B yylval.
@@ -1044,7 +1096,7 @@ In the name of POSIX compliance,
 .I flex
 supports a
 .I translation table
-for mapping input characters together into specified sets.
+for mapping input characters into groups.
 The table is specified in the first section, and its format looks like:
 .nf
 
@@ -1052,29 +1104,31 @@ The table is specified in the first section, and its format looks like:
     1        abcd
     2        ABCDEFGHIJKLMNOPQRSTUVWXYZ
     52       0123456789
+    6        \\t\\ \\n
     %t
 
 .fi
 This example specifies that the characters 'a', 'b', 'c', and 'd'
-are to all be lumped into group #1, the upper-case letters are
-to be in group #2, and digits in group #52, and
-.I no other characters will appear in the patterns
-(note that characters can also be specified in a
-.B %t
-table using escape sequences).
+are to all be lumped into group #1, upper-case letters
+in group #2, digits in group #52, tabs, blanks, and newlines into
+group #6, and
+.I
+no other characters will appear in the patterns.
 The group numbers are actually disregarded by
 .I flex;
 .B %t
 serves, though, to lump characters together.  Given the above
-table, for example, the pattern "aAA*5" is equivalent to "dZQ*0".
+table, for example, the pattern "a(AA)*5" is equivalent to "d(ZQ)*0".
 They both say, "match any character in group #1, followed by
-a character from group #2, followed by zero-or-more characters
+zero-or-more pairs of characters
 from group #2, followed by a character from group #52."  Thus
 .B %t
 provides a crude way for introducing equivalence classes into
-the scanner specification.  It is the author's belief that the
+the scanner specification.
+.LP
+Note that the
 .B -i
-option coupled with the equivalence classes which
+option (see below) coupled with the equivalence classes which
 .I flex
 automatically generates take care of virtually all the instances
 when one might consider using
@@ -1086,23 +1140,29 @@ The main design goal of
 .I flex
 is that it generate high-performance scanners.  It has been optimized
 for dealing well with large sets of rules.  Aside from the effects
-outlined above of table compression on scanner speed,
+of table compression on scanner speed outlined above,
 there are a number of options/actions which degrade performance.  These
-are, in decreasing order of performance impact:
+are, from most expensive to least:
 .nf
 
     REJECT
+
     pattern sets that require backtracking
     arbitrary trailing context
-    %T
+
     '^' beginning-of-line operator
     yymore()
-    start conditions
 
 .fi
+with the first three all being quite expensive and the last two
+being quite cheap.
 .LP
-Getting rid of backtracking is messy and often may be too much
-work for a complicated scanner's rules.  In principal, one begins
+.B REJECT
+should be avoided at all costs when performance is important.
+It is a particularly expensive option.
+.LP
+Getting rid of backtracking is messy and often may be an enormous
+amount of work for a complicated scanner.  In principal, one begins
 by using the
 .B -b 
 flag to generate a
@@ -1141,7 +1201,8 @@ the file looks like:
 .fi
 The first few lines tell us that there's a scanner state in
 which it can make a transition on an 'o' but not on any other
-character, and the currently scanned text does not match any rule.
+character, and the in that state currently scanned text does not match
+any rule.
 If the scanner is in that state and then reads
 something other than an 'o', it will have to backtrack to find
 a rule which is matched.  With
@@ -1180,18 +1241,60 @@ The way to remove the backtracking is to add "error" rules:
 
 .fi
 .LP
-Unfortunately backtracking messages tend to cascade and
-with a complicated input set it's not uncommon to get hundreds
+Eliminating backtracking among a list of keywords can also be
+done using a "catch-all" rule:
+.nf
+
+    %%
+    foo         return TOK_KEYWORD;
+    foobar      return TOK_KEYWORD;
+
+    [a-z]+      return TOK_ID;
+
+.fi
+This is usually the best solution when appropriate.
+.LP
+Backtracking messages tend to cascade.
+With a complicated set of rules it's not uncommon to get hundreds
 of messages.  If one can decipher them, though, it often
-only takes a dozen or so rules to eliminate the backtracking.
-(A possible future
+only takes a dozen or so rules to eliminate the backtracking (though
+it's easy to make a mistake and have an error rule accidentally match
+a valid token.  A possible future
 .I flex
-feature will be to automatically add rules to eliminate backtracking.
-The problem is that while it's easy for
-.I flex
-to figure out what rules are needed, it's very hard for it to
-know what the proper action is.  Currently I'm thinking that it
-will simply invoke a user-redefinable macro and that's it ...)
+feature will be to automatically add rules to eliminate backtracking).
+.LP
+.I Variable
+trailing context (where both the leading and trailing parts do not have
+a fixed length) entails almost the same performance loss as
+.I REJECT
+(i.e., substantial).  So when possible a rule like:
+.nf
+
+    %%
+    mouse|rat/(cat|dog)   run();
+
+.fi
+is better written:
+.nf
+
+    %%
+    mouse/cat|dog         run();
+    rat/cat|dog           run();
+
+.fi
+or as
+.nf
+
+    %%
+    mouse|rat/cat         run();
+    mouse|rat/dog         run();
+
+.fi
+Note that here the special '|' action does
+.I not
+provide any savings, and can even make things worse (see
+.B BUGS
+below).
 .LP
 Another area where the user can increase a scanner's performance
 (and one that's easier to implement) arises from the fact that
@@ -1208,12 +1311,12 @@ for the action.  Recall the scanner for C comments:
     %%
             int line_num = 1;
 
+    "/*"         BEGIN(comment);
+
     <comment>[^*\\n]*
     <comment>"*"+[^*/\\n]*
     <comment>\\n             ++line_num;
     <comment>"*"+"/"        BEGIN(INITIAL);
-
-    "/*"         BEGIN(comment);
 
 .fi
 This could be sped up by writing it as:
@@ -1223,13 +1326,13 @@ This could be sped up by writing it as:
     %%
             int line_num = 1;
 
+    "/*"         BEGIN(comment);
+
     <comment>[^*\\n]*
     <comment>[^*\\n]*\\n      ++line_num;
     <comment>"*"+[^*/\\n]*
     <comment>"*"+[^*/\\n]*\\n ++line_num;
     <comment>"*"+"/"        BEGIN(INITIAL);
-
-    "/*"         BEGIN(comment);
 
 .fi
 Now instead of each newline requiring the processing of another
@@ -1242,30 +1345,121 @@ slow down the scanner!  The speed of the scanner is independent
 of the number of rules or (modulo the considerations given at the
 beginning of this section) how complicated the rules are with
 regard to operators such as '*' and '|'.
+.LP
+A final example in speeding up a scanner: suppose you want to scan
+through a file containing identifiers and keywords, one per line
+and with no other extraneous characters, and recognize all the
+keywords.  A natural first approach is:
+.nf
+
+    %%
+    asm      |
+    auto     |
+    break    |
+    ... etc ...
+    volatile |
+    while    /* it's a keyword */
+
+    .|\\n     /* it's not a keyword */
+
+.fi
+To eliminate the back-tracking, introduce a catch-all rule:
+.nf
+
+    %%
+    asm      |
+    auto     |
+    break    |
+    ... etc ...
+    volatile |
+    while    /* it's a keyword */
+
+    [a-z]+   |
+    .|\\n     /* it's not a keyword */
+
+.fi
+Now, if it's guaranteed that there's exactly one word per line,
+then we can reduce the total number of matches by a half by
+merging in the recognition of newlines with that of the other
+tokens:
+.nf
+
+    %%
+    asm\\n    |
+    auto\\n   |
+    break\\n  |
+    ... etc ...
+    volatile\\n |
+    while\\n  /* it's a keyword */
+
+    [a-z]+\\n |
+    .|\\n     /* it's not a keyword */
+
+.fi
+One has to be careful here, as we have now reintroduced backtracking
+into the scanner.  In particular, while
+.I we
+know that there will never be any characters in the input stream
+other than letters or newlines,
+.I flex
+can't figure this out, and it will plan for possibly needing backtracking
+when it has scanned a token like "auto" and then the next character
+is something other than a newline or a letter.  Previously it would
+then just match the "auto" rule and be done, but now it has no "auto"
+rule, only a "auto\\n" rule.  To eliminate the possibility of backtracking,
+we could either duplicate all rules but without final newlines, or,
+since we never expect to encounter such an input and therefore don't
+how it's classified, we can introduce one more catch-all rule, this
+one which doesn't include a newline:
+.nf
+
+    %%
+    asm\\n    |
+    auto\\n   |
+    break\\n  |
+    ... etc ...
+    volatile\\n |
+    while\\n  /* it's a keyword */
+
+    [a-z]+\\n |
+    [a-z]+   |
+    .|\\n     /* it's not a keyword */
+
+.fi
+Compiled with
+.B -Cf,
+this is about as fast as one can get a
+.I flex 
+scanner to go for this particular problem.
 .SH INCOMPATIBILITIES WITH LEX AND POSIX
 .I flex
 is a rewrite of the Unix
 .I lex
 tool (the two implementations do not share any code, though),
-which dates to the late 1970's.  There are some incompatibilities
-which are of concern to those who wish to write scanners acceptable
-to either implementation.  At present, the POSIX lex draft is
-very close to the original lex implementation, so some of these
+with some extensions and incompatibilities, both of which
+are of concern to those who wish to write scanners acceptable
+to either implementation.  At present, the POSIX
+.I lex
+draft is
+very close to the original
+.I lex
+implementation, so some of these
 incompatibilities are also in conflict with the POSIX draft.  But
 the intent is that except as noted below,
 .I flex
 as it presently stands will
-ultimately be POSIX comformant (i.e., that those areas of conflict with
+ultimately be POSIX conformant (i.e., that those areas of conflict with
 the POSIX draft will be resolved in
 .I flex's
-favor).  Please bare in
-mind that all the comments are with regard to the POSIX
+favor).  Please bear in
+mind that all the comments which follow are with regard to the POSIX
 .I draft
-standard and not the final document; they are included so
+standard of Summer 1989, and not the final document (or subsequent
+drafts); they are included so
 .I flex
 users can be aware of the standardization issues and those areas where
 .I flex
-may in the near future be incompatibly changed with
+may in the near future undergo changes incompatible with
 its current definition.
 .LP
 .I flex
@@ -1273,10 +1467,14 @@ is fully compatible with
 .I lex
 with the following exceptions:
 .IP -
+.I lex
+does not support exclusive start conditions (%x), though they
+are in the current POSIX draft.
+.IP -
 When definitions are expanded,
 .I flex
 encloses them in parentheses.
-With lex, the following
+With lex, the following:
 .nf
 
     NAME    [A-Z][A-Z0-9]*
@@ -1291,28 +1489,34 @@ and the precedence is such that the '?' is associated with
 "[A-Z0-9]*".  With
 .I flex,
 the rule will be expanded to
-"foo([A-z][A-Z0-9]*)?" and so the string "foo" will match.
+"foo([A-Z][A-Z0-9]*)?" and so the string "foo" will match.
 Note that because of this, the
-.B ^, $, <s>,
+.B ^, $, <s>, /,
 and
-.B /
-operators cannot be used in a definition.
+.B <<EOF>>
+operators cannot be used in a
+.I flex
+definition.
 .IP
-Note that the POSIX draft interpretation here is the same as
+The POSIX draft interpretation is the same as
 .I flex's.
 .IP -
-The undocumented lex-scanner internal variable
+The undocumented
+.I lex
+scanner internal variable
 .B yylineno
 is not supported.  (The variable is not part of the POSIX draft.)
 .IP -
 The
 .B input()
-routine is not redefinable, though may be called to read characters
+routine is not redefinable, though it may be called to read characters
 following whatever has been matched by a rule.  If
 .B input()
 encounters an end-of-file the normal
 .B yywrap()
-processing is done.  A ``real'' end-of-file is returned as
+processing is done.  A ``real'' end-of-file is returned by
+.B input()
+as
 .I EOF.
 .IP
 Input is instead controlled by redefining the
@@ -1332,7 +1536,8 @@ is not supported.
 Output from the
 .B ECHO
 macro is done to the file-pointer
-"yyout" (default
+.I yyout
+(default
 .I stdout).
 .IP
 The POSIX draft mentions that an
@@ -1350,19 +1555,50 @@ that
 .B yywrap()
 is likely to be changed to a function in the near future.
 .IP -
+After a call to
+.B unput(),
+.I yytext
+and
+.I yyleng
+are undefined until the next token is matched.  This is not the case with
+.I lex
+or the present POSIX draft.
+.IP -
 The precedence of the
 .B {}
-operator is different.  lex interprets "abc{1,3}" as "match one, two, or
+(numeric range) operator is different.
+.I lex
+interprets "abc{1,3}" as "match one, two, or
 three occurrences of 'abc'", whereas
 .I flex
 interprets it as "match 'ab'
 followed by one, two, or three occurrences of 'c'".  The latter is
 in agreement with the current POSIX draft.
 .IP -
-To refer to yytext outside of your scanner source file, use
-"extern char *yytext;" rather than "extern char yytext[];".
-This is contrary to the POSIX draft but a point on which I refuse
-to budge, as the array representation entails a serious performance penalty.
+To refer to yytext outside of the scanner source file,
+the correct definition with
+.I flex
+is "extern char *yytext" rather than "extern char yytext[]".
+This is contrary to the current POSIX draft but a point on which
+.I flex
+will not be changing, as the array representation entails a
+serious performance penalty.  It is hoped that the POSIX draft will
+be emended to support the
+.I flex
+variety of declaration (as this is a fairly painless change to
+require of
+.I lex
+users).
+.IP -
+The special table-size declarations such as
+.B %a
+supported by
+.I lex
+are not required by
+.I flex
+scanners;
+.I flex
+ignores them.
 .IP -
 The name
 .bd
@@ -1371,7 +1607,45 @@ is #define'd so scanners may be written for use with either
 .I flex
 or
 .I lex.
-.SH DEFICIENCES / BUGS
+.LP
+The following
+.I flex
+features are not included in
+.I lex
+or the POSIX draft standard:
+.nf
+
+    yyterminate()
+    <<EOF>>
+    YY_DECL
+    #line directives
+    %{}'s around actions
+    yyrestart()
+    comments beginning with '#'
+    multiple actions on a line
+
+.fi
+This last feature refers to the fact that with
+.I flex
+you can put multiple actions on the same line, separated with
+semi-colons, while with
+.I lex,
+the following
+.nf
+
+    foo    handle_foo(); ++num_foos_seen;
+
+.fi
+is (rather surprisingly) truncated to
+.nf
+
+    foo    handle_foo();
+
+.fi
+.I flex
+does not truncate the action.  Actions that are not enclosed in
+braces are simply terminated at the end of the line.
+.SH DEFICIENCIES / BUGS
 .LP
 Some trailing context
 patterns cannot be properly matched and generate
@@ -1381,21 +1655,26 @@ first part of the rule matches the beginning of the second
 part, such as "zx*/xy*", where the 'x*' matches the 'x' at
 the beginning of the trailing context.  (Note that the POSIX draft
 states that the text matched by such patterns is undefined.)
-If desperate, you can use
-.B yyless()
-to effect arbitrary trailing context.
-.LP
-.I variable
-trailing context (where both the leading and trailing parts do not have
-a fixed length) entails the same performance loss as
-.I REJECT
-(i.e., substantial).
 .LP
 For some trailing context rules, parts which are actually fixed-length are
 not recognized as such, leading to the abovementioned performance loss.
-In particular, parts using '|' or {n} are always considered variable-length.
+In particular, parts using '|' or {n} (such as "foo{3}") are always
+considered variable-length.
 .LP
-Use of unput() or input() invalidates yytext and yyleng.
+Combining trailing context with the special '|' action can result in
+.I fixed
+trailing context being turned into the more expensive
+.I variable
+trailing context.  For example, this happens in the following example:
+.nf
+
+    %%
+    abc      |
+    xyz/def
+
+.fi
+.LP
+Use of unput() invalidates yytext and yyleng.
 .LP
 Use of unput() to push back more text than was matched can
 result in the pushed-back text matching a beginning-of-line ('^')
@@ -1412,13 +1691,21 @@ Their presence generates fatal errors.
 .I flex
 does not generate correct #line directives for code internal
 to the scanner; thus, bugs in
-.I
-flex.skel
+.I flex.skel
 yield bogus line numbers.
 .LP
+The
+.B -d
+option should use the
+.I line
+number corresponding to the matched rule rather than the
+.I rule
+number, which is
+close-to-useless.
+.LP
 Due to both buffering of input and read-ahead, you cannot intermix
-calls to stdio routines, such as, for example,
-.B getchar()
+calls to <stdio.h> routines, such as, for example,
+.B getchar(),
 with
 .I flex
 rules and expect it to work.  Call
@@ -1449,13 +1736,13 @@ The
 internal algorithms need documentation.
 .SH "SEE ALSO"
 .LP
-lex(1), yacc(1), sed(1), awk(1).
+flex(1), lex(1), yacc(1), sed(1), awk(1).
 .LP
 M. E. Lesk and E. Schmidt,
 .I LEX - Lexical Analyzer Generator
 .SH AUTHOR
 Vern Paxson, with the help of many ideas and much inspiration from
-Van Jacobson.  Original version by Jef Poskanzer.  Fast table
+Van Jacobson.  Original version by Jef Poskanzer.  The fast table
 representation is a partial implementation of a design done by Van
 Jacobson.  The implementation was done by Kevin Gong and Vern Paxson.
 .LP
@@ -1467,7 +1754,7 @@ Frederic Brehm, Nick Christopher, Jason Coughlin,
 Chris Faylor, Eric Goldman, Eric
 Hughes, Jeffrey R. Jones, Kevin B. Kenny, Ronald Lamprecht,
 Greg Lee, Craig Leres, Mohamed el Lozy, Jim Meyering, Marc Nozell, Esmond Pitt,
-Jef Poskanzer, Dave Tallman, Frank Whaley, Ken Yap, and others whose names
+Jef Poskanzer, Dave Tallman, Frank Whaley, Ken Yap, and those whose names
 have slipped my marginal mail-archiving skills but whose contributions
 are appreciated all the same.
 .LP
@@ -1476,11 +1763,9 @@ Mulcahy, Rich Salz, and Richard Stallman for help with various distribution
 headaches.
 .LP
 Thanks to Esmond Pitt for 8-bit character support, Benson Margulies and Fred
-Burke for C++ support, and Ove Ewerlid for supporting NUL's (as well as for
-impressive efforts regarding generating extremely high-performance
-scanners, which with luck will be soon forthcoming).
+Burke for C++ support, and Ove Ewerlid for supporting NUL's.
 .LP
-This work was primarily done when I was a member of the Real Time System Group
+This work was primarily done when I was at the Real Time Systems Group
 at the Lawrence Berkeley Laboratory in Berkeley, CA.  Many thanks to all there
 for the support I received.
 .LP
