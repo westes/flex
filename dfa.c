@@ -176,7 +176,7 @@ int ds;
 
     bubble( rule_set, num_associated_rules );
 
-    fprintf( file, " associated rules:" );
+    fprintf( file, " associated rule line numbers:" );
 
     for ( i = 1; i <= num_associated_rules; ++i )
 	{
