@@ -249,10 +249,6 @@ int mach, variable_trail_rule, headcnt, trailcnt;
 		if ( headcnt > 0 )
 		    fprintf( temp_action_file, "%s = %s + %d;\n",
 			     scanner_cp, scanner_bp, headcnt );
-
-		else
-		    fprintf( temp_action_file, "%s = %s;\n",
-			     scanner_cp, scanner_bp );
 		}
 
 	    else
