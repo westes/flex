@@ -1245,6 +1245,7 @@ int len;
 
 	return b;
 	}
+%*
 #endif
 
 
@@ -1400,3 +1401,11 @@ void *ptr;
 	{
 	free( ptr );
 	}
+
+#if YY_MAIN
+int main()
+	{
+	yylex();
+	return 0;
+	}
+#endif
