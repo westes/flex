@@ -16,8 +16,8 @@ BSD Unix, and not under the GNU General Public License (GPL), except for
 the "configure" script, which is covered by the GPL.
 
 Many thanks to the 2.4 pre-testers for finding a bunch of bugs and helping
-increase/test portability: Francois Pinard, Nathan Zelle, Gavin Nicol, and
-Matthew Jacob.
+increase/test portability: Francois Pinard, Nathan Zelle, Gavin Nicol,
+Chris Thewalt, and Matthew Jacob.
 
 Please send bug reports and feedback to:
 
