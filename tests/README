@@ -19,10 +19,9 @@ failure and determine if it's truly significant.
 
 * HOW TO RUN THE TEST SUITE
 
-To build and execute all tests:
+To build and execute all tests from the top level of the flex source tree:
 
-  $ cd tests/ # from the top level of the flex source tree
-  $ make test
+  $ make check
 
 To build and execute a single test:
 
