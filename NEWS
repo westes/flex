@@ -4,7 +4,7 @@ Changes between release 2.4.3 (03Dec93) and release 2.4.2:
 
 	- libfl.a now supplies versions of the the <string.h>/<strings.h>
 	  string routines needed by flex and the scanners it generates,
-	  to enhance portability.
+	  to enhance portability to some BSD systems.
 
 	- More robust solution to 2.4.2's flexfatal() bug fix.
 
