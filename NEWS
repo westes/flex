@@ -14,7 +14,9 @@ Changes between release 2.4.5 (11Dec93) and release 2.4.4:
 
 	- Fixed fairly benign memory leak.
 
-	- Added `extern "C++"' wrapper to FlexLexer.h header.
+	- Added `extern "C++"' wrapper to FlexLexer.h header.  This
+	  should overcome the g++ 2.5.X problems mentioned in the
+	  NEWS for release 2.4.3.
 
 	- Changed #include of FlexLexer.h to use <> instead of "".
 
