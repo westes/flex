@@ -1,0 +1,8 @@
+INCLUDE #2
+
+This is the second file that will
+be included.
+
+>>> Foo are GNU?
+
+#include "eof_test03.txt"

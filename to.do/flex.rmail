@@ -1,0 +1,3182 @@
+BABYL OPTIONS: -*- rmail -*-
+Version: 5
+Labels:
+Note:   This is the header of an rmail file.
+Note:   If you are seeing it in rmail,
+Note:    it means the file has no messages in it.
+
+1,,
+X-Coding-System: nil
+Mail-from: From vern@daffy.ee.lbl.gov  Wed Mar 14 04:01:40 2001
+Return-Path: <vern@daffy.ee.lbl.gov>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id EAA09959
+	for <wlestes@localhost>; Wed, 14 Mar 2001 04:01:40 -0500
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Wed, 14 Mar 2001 04:01:40 -0500 (EST)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f2E8pme19617
+	for <wlestes@hermes.email.uncg.edu>; Wed, 14 Mar 2001 03:51:48 -0500 (EST)
+Received: from daffy.ee.lbl.gov (daffy.ee.lbl.gov [131.243.1.31])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id DAA20394
+	for <wlestes@uncg.edu>; Wed, 14 Mar 2001 03:51:47 -0500 (EST)
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f2E8pkM07870;
+	Wed, 14 Mar 2001 00:51:46 -0800 (PST)
+Message-Id: <200103140851.f2E8pkM07870@daffy.ee.lbl.gov>
+To: "W. L. Estes" <wlestes@uncg.edu>
+Subject: Re: possibly taking over maintenance of flex 
+In-reply-to: Your message of Tue, 13 Mar 2001 09:00:58 EST.
+Date: Wed, 14 Mar 2001 00:51:46 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+*** EOOH ***
+To: "W. L. Estes" <wlestes@uncg.edu>
+Subject: Re: possibly taking over maintenance of flex 
+In-reply-to: Your message of Tue, 13 Mar 2001 09:00:58 EST.
+Date: Wed, 14 Mar 2001 00:51:46 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+> probably best to have a trial period up front as you suggest.
+
+Okay, you can get a copy of the master sources from
+
+        ftp://ftp.ee.lbl.gov/.vp-flex-sources.tar.gz
+
+The TODO/ subdirectory has the general wish list plus a number of contributed
+patches.  The faqs/ subdirectory has a bunch of email messages (in MH
+folder format, i.e., one message per file, files numbered sequentially)
+for commonly asked questions - worth taking a look through to see what
+sorts of things people frequently ask about.
+
+Next messages are various stuff I sent to Dick King.
+
+Thanks for giving it a try - naturally, by all means let me know when you
+have questions ...
+
+		Vern
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From vern@daffy.ee.lbl.gov  Wed Mar 14 04:01:40 2001
+Return-Path: <vern@daffy.ee.lbl.gov>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id EAA09961
+	for <wlestes@localhost>; Wed, 14 Mar 2001 04:01:40 -0500
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Wed, 14 Mar 2001 04:01:40 -0500 (EST)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f2E8ppe19633
+	for <wlestes@hermes.email.uncg.edu>; Wed, 14 Mar 2001 03:51:51 -0500 (EST)
+Received: from daffy.ee.lbl.gov (daffy.ee.lbl.gov [131.243.1.31])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id DAA20402
+	for <wlestes@uncg.edu>; Wed, 14 Mar 2001 03:51:50 -0500 (EST)
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f2E8poV07877;
+	Wed, 14 Mar 2001 00:51:50 -0800 (PST)
+Message-Id: <200103140851.f2E8poV07877@daffy.ee.lbl.gov>
+To: wlestes@uncg.edu
+Subject: messages sent to Dick King (1 of 2)
+Date: Wed, 14 Mar 2001 00:51:49 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+*** EOOH ***
+To: wlestes@uncg.edu
+Subject: messages sent to Dick King (1 of 2)
+Date: Wed, 14 Mar 2001 00:51:49 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+
+------- Forwarded Messages
+
+Date:  Mon, 21 Aug 2000 23:03:54 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: Some new Flex maintainer volunteers
+To:  Dick King <king@reasoning.com>
+Cc:  bkuhn@ebb.org
+In-reply-to:  Your message of Tue, 15 Aug 2000 14:03:58 PDT.
+
+> Vern, i'm ready when you are.
+
+Okay, I've put the master sources in
+
+	ftp://ftp.ee.lbl.gov/.vp-flex-sources.tar.gz
+
+The TODO/ subdirectory has a the general wish list plus a number of
+contributed patches (per the mail I'll be cc'ing you on regarding reentrant
+scanners).  The faqs/ subdirectory has a bunch of email messages (in MH
+folder format, i.e., one message per file, files numbered sequentially) for
+commonly asked questions - worth taking a look through to see what sorts of
+things people frequently ask about.
+
+I very much appreciate your taking over maintaining/developing flex, and
+apologize for how long it's taken me to bundle stuff up to give to you (all
+too symptomatic of why I'm no longer able to work on flex :-( ).  By all
+means, let me know when you have questions ...
+
+		Vern
+
+------- Message 2
+
+Date:  Mon, 21 Aug 2000 23:38:00 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: I volunteer to modify flex to generate reentrant C code.
+To:  "John W. Millaway" <jmillawa@nimbus.ocis.temple.edu>
+Cc:  help-flex@gnu.org, king@reasoning.com
+In-reply-to:  Your message of Mon, 21 Aug 2000 16:23:18 PDT.
+
+> I'm requesting this feature and at the same time volunteering to implement
+> it:	
+
+John Bossom contributed patches a while ago for adding reentrant scanners.
+I never managed to try them out or integrate them (note that I'm no longer
+the flex maintainer/developer, having just transferred the honors to Dick
+King, whom I've cc'd), but I've made them available from:
+
+	ftp://ftp.ee.lbl.gov/.vp-flex-reentrant.tar.gz
+
+I imagine Dick will be interested in hearing of problems/improvements/etc.
+
+		Vern
+
+------- Message 3
+
+Date:  Wed, 30 Aug 2000 07:23:07 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: bug in flex 2.5.4? 
+To:  Keith McGuigan <keith.mcguigan@ecora.com>
+Cc:  king@reasoning.com
+In-reply-to:  Your message of Tue, 29 Aug 2000 12:21:02 EDT.
+
+This does indeed sound like a bug.  Dick King (cc'd) recently took over
+development & maintenance for flex; I've sent him a copy of your message.
+
+		Vern
+
+------- Message 4
+
+Date:  Thu, 31 Aug 2000 15:41:00 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: Flex 
+To:  "Skifstrom, Eric" <SKIFSTRE@Mattel.com>
+Cc:  king@reasoning.com
+In-reply-to:  Your message of Wed, 30 Aug 2000 09:35:58 PDT.
+
+> Thanks for all the work on Flex.  It is appreciated.  How do I get a copy of
+> flex for Windows 98 platform.
+
+I've only directly support flex for Unix, and have always distributed it
+in source-code form only.  So I don't know where you get a copy, though
+I bet with some web surfing you can find one.
+
+Also, please note, Dick King (cc'd) has taken over flex development
+and maintenance.
+
+		Vern
+
+------- Message 5
+
+Date:  Thu, 31 Aug 2000 15:43:40 -0700 (PDT)
+From:  Dick King <king@reasoning.com>
+Subject:  Re: Flex 
+To:  vern@ee.lbl.gov
+MIME-Version:  1.0
+Content-Type:  text/plain; charset=us-ascii
+Content-Transfer-Encoding:  7bit
+In-Reply-To:  <200008312241.e7VMf0G14335@daffy.ee.lbl.gov>
+References:  <200008312241.e7VMf0G14335@daffy.ee.lbl.gov>
+X-Mailer:  VM 6.61 under 19.14 XEmacs Lucid
+
+Vern Paxson writes:
+ >> Thanks for all the work on Flex.  It is appreciated.  How do I get a copy of
+ >> flex for Windows 98 platform.
+ >
+ >I've only directly support flex for Unix, and have always distributed it
+ >in source-code form only.  So I don't know where you get a copy, though
+ >I bet with some web surfing you can find one.
+ >
+ >Also, please note, Dick King (cc'd) has taken over flex development
+ >and maintenance.
+ >
+ >		Vern
+ >
+
+I have a couple of how-to-be-a-gnu-product-maintainer questions.
+
+First, how do i get to the wish list?  I assume people mail the stuff and it
+accumulates somewhere.
+
+Second, if i decide i have a fix for a group of problems what do i do to get it
+distributed?
+
+- -dk
+
+------- Message 6
+
+Date:  Sun, 03 Sep 2000 12:22:48 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: Flex 
+To:  Dick King <king@reasoning.com>
+In-reply-to:  Your message of Thu, 31 Aug 2000 15:43:40 PDT.
+
+> First, how do i get to the wish list?  I assume people mail the stuff and it
+> accumulates somewhere.
+
+There's a honed-down copy in the distribution I put together.  I also have
+several hundred email messages, which will be rather tedious to wade through,
+but I can put together for you if you wish (this is non-trivial, though,
+since there's some personal mail intermixed in it which I'll have to locate
+and remove).
+
+> Second, if i decide i have a fix for a group of problems what do i do to get it
+> distributed?
+
+Put together a new release distribution (either a minor version change or
+a major one, depennding on the scope of the changes).  Make sure it works
+with "make bigcheck", and make sure you can copy the distribution to a
+virgin machine, unpack it & successfully build it (including "make bigcheck").
+
+Next, make it available somewhere for anonymous ftp and/or Web access.
+(If this is a problem, I can still host the distribution at ftp.ee.lbl.gov.)
+
+Finally, send mail like the appended example.  For your first message,
+you should explain that you've taken over development of flex from me.
+It would probably be good to cc me, in case a thread develops from the
+note that it would be helpful to have me contribute to.  No need to cc
+me on later notes (though I don't mind, either).
+
+I used to send the note to compilers@iecc.com (the USENET comp.compilers
+group) and info-gnu@prep.ai.mit.edu.  I don't know if the former is still
+the correct address - you could find out from the USENET group's archives,
+presumably.  The latter has likely changed to info-gnu@gnu.org.
+
+		Vern
+
+
+Date:  Tue, 28 Mar 95 11:58:04 PST
+From:  Vern Paxson <vern>
+Subject:  flex release 2.5.1 now available
+To:  compilers@iecc.com, info-gnu@prep.ai.mit.edu
+
+Release 2.5.1 of flex, a POSIX-compliant "lex" scanner generator, is now
+available for anonymous ftp to ftp.ee.lbl.gov.  Retrieve flex-2.5.1.tar.Z
+or flex-2.5.1.tar.gz.  flex-2.5.1.tar.gz should be showing up shortly at
+the usual GNU mirror sites.
+
+The main changes between 2.5 and 2.4 are:
+
+	- A new concept of "start condition" scope lets you group together
+	  rules sharing the same start conditions into a syntactic unit.
+	- Flex now includes a general mechanism for specifying scanner options.
+	- Routines have been added for scanning strings instead of files.
+	- Routines have been added for manipulating stacks of start conditions.
+	- Fledgling support for POSIX character class expressions.
+	- Enhanced portability to MS-DOS, VMS, NT, Macintosh, Amiga.
+	- A number of bugs have been fixed.
+	- input() no longer trashes yytext.
+	- Interactive scanners now run significantly faster.
+	- C++ scanner objects now work with the -P option.
+	- The promised rewrite of the C++ FlexLexer class has not been done,
+	  but is still planned.
+
+See the "NEWS" file for more details.
+
+Please report bugs to: vern@ee.lbl.gov or bug-gnu-utils@prep.ai.mit.edu
+
+		Vern
+
+Vern Paxson
+Lawrence Berkeley Laboratory
+vern@ee.lbl.gov
+
+------- Message 7
+
+Date:  Wed, 13 Sep 2000 00:59:33 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: Does the FSF maintain Flex?
+To:  "Leanard Lin" <leanard@syntest.com.tw>
+Cc:  king@reasoning.com
+In-reply-to:  Your message of Wed, 13 Sep 2000 00:55:38 PDT.
+
+> Dear Vern,
+> 
+> I have a problem about flex of linux version.
+> If comment is very long, flex will not re-malloc
+> for it.
+> It will display a error message and exit program.
+> 
+> Thanks,
+> 
+> Leanard
+
+Well, clearly if a comment is larger than the available memory, then flex
+can't realloc to accommodate it.  But presumably that's not what's going on
+or you wouldn't have bothered writing; so I don't know what the problem
+might be.
+
+Flex is now developed & maintained by Dick King, king@reasoning.com, whom
+I've cc'd.
+
+		Vern
+
+------- Message 8
+
+Date:  Wed, 04 Oct 2000 23:36:59 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: Flex 2.5.4.1 Bugs
+To:  Hans Aberg <haberg@matematik.su.se>
+Cc:  king@reasoning.com
+In-reply-to:  Your message of Sun, 01 Oct 2000 20:32:48 PDT.
+
+> I made a Metrowerks MacOS CW Pro 5 plugin out of the Flex 2.5.4.1. Here are
+> some bugs:
+> 
+> -- flexerror() calls flexend() which becomes an infinite loop in the case
+> of an error in flexend(). So, flexerror(), replace flexend() by exit().
+> 
+> -- If there is no output file error, flexend() fails to close the output
+> file. This causes a problem as a plugin, because the file remains locked
+> the next time the compiler runs, and the file cannot be reopened.
+> 
+> This bug also occurs if, one first has created the .c file, then runs it
+> with a -S option for a skeleton filet Flex cannot find, in which case
+> flexend() fails to close the output file.
+
+Please note, Dick King (king@reasoning.com) has taken over flex maintenance
+and development.  I've cc'd him.
+
+		Vern
+
+------- Message 9
+
+Date:  Wed, 04 Oct 2000 23:38:07 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: flex -+ option and ISO C++ IOStreams
+To:  Harri Pasanen <harri.pasanen@trema.com>
+Cc:  king@reasoning.com
+In-reply-to:  Your message of Mon, 02 Oct 2000 10:15:59 PDT.
+
+> You probably already know this: 
+> 
+> flex version 2.5.4 generates with -+ flag a forward declaration of class
+> istream.
+> Problem is that it is incompatible with the new ANSI IOStreams.  This
+> becomes apparent if I try to use KAI C++ (http://www.kai.com/) to
+> compile the generated scanner.
+> 
+> Lexing Scanner.l...
+> Compiling Scanner.o...
+> "/usr/local/KAI/KCC.pu-4.0b-1/KCC_BASE/include/istream.h", line 12:
+> error #101: 
+>           "istream" has already been declared in the current scope
+>   using std::istream;
+> 
+> I wonder if an updated version of flex is in the works?  In the time
+> being I can compile my own...
+
+Dick King (king@reasoning.com) has recently taken over flex maintenance and
+development (I've cc'd him).  Since there will be a fair amount of getting
+up to speed for him, I think building your own version for now is the
+best course.
+
+		Vern
+
+------- Message 10
+
+Date:  Thu, 05 Oct 2000 00:27:15 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: Flex Feature Idea 
+To:  Davy Durham <david.durham@wcom.com>
+Cc:  king@reasoning.com
+In-reply-to:  Your message of Thu, 28 Sep 2000 11:28:52 EDT.
+
+>     First I just want to say how much flex has been helpful to me in
+> writing my parser, and that I really appreciate the free use of the
+> program...
+
+You're welcome!
+
+Please note, though, that Dick King (cc'd) has taken over flex maintenance
+and development.
+
+>     I can't re-write YY_INPUT which could  detect and remove the '\' and
+> \n  and go ahead and return the _next_ char, because I'm  keeping up
+> with the line-number and column-number in YY_USER_ACTION for each
+> token... Since flex buffer's the data retrieved from YY_INPUT, _my_
+> YY_INPUT would need to increment the line-number, but it would happen
+> possibly too soon...  Plus I'm using yy_switch_buffer to do macro
+> replacements quite a bit which I think would complicate things even
+> more....
+
+Well, that's how you have to do it, I'm afraid.  I can't see any practical
+way to add this as a feature to flex at a later stage in the input analysis,
+since the semantics really are "pretend this slash and this newline don't
+exist (mod line numbers)".  What you can probably do for line numbers is
+the following: create a data structure that maps byte offsets in the current
+input stream to line numbers.  YY_INPUT would fill this in as it returns
+new (possibly munged) lines, and your actions would consult it in order to
+generate correct location information for error messages.  (To deal with
+multiple input buffers, you maintain one data structure per buffer.)
+
+		Vern
+
+------- Message 11
+
+Date:  Thu, 05 Oct 2000 01:03:01 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: [minor] obscure error messages if YY_DECL ends in semicolon 
+To:  "Eric R. Buddington" <ebuddington@mail.wesleyan.edu>
+Cc:  king@reasoning.com
+In-reply-to:  Your message of Thu, 14 Sep 2000 13:39:52 EDT.
+
+> Your address was listed in the flex info pages, so I send this to you; if
+> you aren't the currnet maintainer, please let me know.
+
+I'm not longer the maintainer - Dick King (cc'd) has taken over.
+
+> First, I would like to add an '%option reentrant", such that the flex code
+> would have the lexer function as its only global symbol. Would you
+> consider such a patch for inclusion in the official flex?
+
+Someone has already contributed patches for this - you can get them
+from ftp://ftp.ee.lbl.gov/.vp-flex-reentrant.tar.gz .
+
+> Secondly, an erroneous input that might give better error messages:
+> 
+> If YY_DECL ends with a semicolon, the generated error messages refer to
+> wrong (nonexistant in this case) line numbers in the source file. The
+> user error is only clear after turning off #line directives and looking at
+> the generated .c file.
+> 
+> It would be good to have this error (a fairly easy one to make) reported
+> clearly, if that can be done elegantly. This I what I get now:
+> 
+> flex -t -Pcap_string_ cap_string.flex > cap_string.c
+> cc -Wall   -c -o cap_string.o cap_string.c
+> cap_string.flex:163: parse error before `{'
+> cap_string.flex:165: register name not specified for `yy_cp'
+> cap_string.flex:165: register name not specified for `yy_bp'
+> cap_string.flex:166: register name not specified for `yy_act'
+> cap_string.flex:39: parse error before `if'
+> ...
+
+I don't offhand see an easy way to fix this, other than scanning the source
+for a YY_DECL definition and looking for a semi-colon (urgh, what a hack).
+Dick will have to toss it onto the to-do list.
+
+		Vern
+
+------- Message 12
+
+Date:  Thu, 5 Oct 2000 10:51:53 +0200
+From:  Hans Aberg <haberg@matematik.su.se>
+Subject:  Re: Flex 2.5.4.1 Bugs
+To:  Vern Paxson <vern@ee.lbl.gov>
+Cc:  king@reasoning.com
+X-Sender:  haberg@pop.matematik.su.se (Unverified)
+In-Reply-To:  <200010050636.e956axT12828@daffy.ee.lbl.gov>
+References:  Your message of Sun, 01 Oct 2000 20:32:48 PDT.
+Mime-Version:  1.0
+Content-Type:  text/plain; charset="us-ascii"
+Status:  U
+
+At 23.36 -0700 0-10-04, Vern Paxson wrote:
+>Please note, Dick King (king@reasoning.com) has taken over flex maintenance
+>and development.  I've cc'd him.
+
+OK.
+
+To: Dick King
+Bison seems to under revision right now (I'm working hard with the Bison
+development team just these days on pinpointing some bugs). -- Perhaps Flex
+& Bison development should somehow be synchronized.
+
+I have labelled Flex as BSD. Is that correct?
+
+  Hans Aberg
+
+
+
+------- Message 13
+
+Date:  Fri, 06 Oct 2000 02:04:11 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: C++, flex under cygwin and Visual C++
+To:  "Simon J. Julier" <sjulier@erols.com>
+Cc:  king@reasoning.com
+In-reply-to:  Your message of Thu, 05 Oct 2000 07:15:17 PDT.
+
+> Many apologies if either (a) it's a stupid question or (b) if I'm emailing 
+> the wrong person.
+
+It's (b) :-).  Dick King (king@reasoning.com) has taken over flex
+maintenance and development.  I've cc'd him.
+
+> I have been using flex (v. impressive) to write a parser 
+> for a C++ program. The program is being compiled using a Windows 
+> 2000/Windows NT machine using the cygwin tool set and the Microsoft Visual 
+> C++ compiler. Because the cygwin distribution does not include FlexLexer.h, 
+> I took the advice from the man page and simply renamed lex.yy.c as 
+> lex.yy.cxx and compiled this as a C++ program. This almost works except for 
+> the fact that, in C++ compile mode, there is a dependency on unistd.h due 
+> to the following code snippet:
+> 
+> #ifdef __cplusplus
+> 
+> #include <stdlib.h>
+> #include <unistd.h>
+> 
+> ... (other stuff) ...
+> 
+> Since the Visual C++ compiler does not come with the header file unistd.h, 
+> I manually modified the code to:
+> 
+> #ifdef __cplusplus
+> 
+> #include <stdlib.h>
+> #ifndef _WIN32
+> #include <unistd.h>
+> #endif /* ! _WIN32 */
+> 
+> Is this the "right way" to solve the problem?
+
+I imagine it is.  This problem has come up a bunch of times, and,
+much as I hate adding #ifdef's to the skeleton, I haven't thought of
+any other way to do it.
+
+> If so, would it be possible 
+> to consider making the appropriate changes to flex.skl?
+
+Sounds okay to me, but this is now Dick's call.
+
+		Vern
+
+------- Message 14
+
+Date:  Fri, 6 Oct 2000 09:31:08 -0700 (PDT)
+From:  Dick King <king@reasoning.com>
+Subject:  Re: C++, flex under cygwin and Visual C++
+To:  vern@ee.lbl.gov
+Cc:  sjulier@erols.com
+MIME-Version:  1.0
+Content-Type:  text/plain; charset=us-ascii
+Content-Transfer-Encoding:  7bit
+In-Reply-To:  <200010060904.e9694BU17584@daffy.ee.lbl.gov>
+References:  <200010060904.e9694BU17584@daffy.ee.lbl.gov>
+X-Mailer:  VM 6.61 under 19.14 XEmacs Lucid
+
+
+
+I'm getting my flex support operations organized, finally.
+
+I've established a new eddress, flex@2xtreme.net .
+
+I'll start looking at the small bug fixes flex has been asked for in a week or
+so.  Then i will get to meaty changes.
+
+One meaty change i've been asked for which i would like to do [i did it for my
+current company's lexer product so i think i understand the issues] is a
+character level prefilter infrastructure, that would allow you to integrate a
+cpp-style preprocessor [rather than making it a separate pass as is the norm]
+or to write a flex lexer for a language like FORTRAN or COBOL or that language
+i've heard about whose name escapes me where indentation is syntactically
+significant.
+
+Vern Paxson writes:
+ >> Many apologies if either (a) it's a stupid question or (b) if I'm emailing 
+ >> the wrong person.
+ >
+ >It's (b) :-).  Dick King (king@reasoning.com) has taken over flex
+ >maintenance and development.  I've cc'd him.
+ >
+ >> I have been using flex (v. impressive) to write a parser 
+ >> for a C++ program. The program is being compiled using a Windows 
+ >> 2000/Windows NT machine using the cygwin tool set and the Microsoft Visual 
+ >> C++ compiler. Because the cygwin distribution does not include FlexLexer.h, 
+ >> I took the advice from the man page and simply renamed lex.yy.c as 
+ >> lex.yy.cxx and compiled this as a C++ program. This almost works except for 
+ >> the fact that, in C++ compile mode, there is a dependency on unistd.h due 
+ >> to the following code snippet:
+ >> 
+ >> #ifdef __cplusplus
+ >> 
+ >> #include <stdlib.h>
+ >> #include <unistd.h>
+ >> 
+ >> ... (other stuff) ...
+ >> 
+ >> Since the Visual C++ compiler does not come with the header file unistd.h, 
+ >> I manually modified the code to:
+ >> 
+ >> #ifdef __cplusplus
+ >> 
+ >> #include <stdlib.h>
+ >> #ifndef _WIN32
+ >> #include <unistd.h>
+ >> #endif /* ! _WIN32 */
+ >> 
+ >> Is this the "right way" to solve the problem?
+ >
+ >I imagine it is.  This problem has come up a bunch of times, and,
+ >much as I hate adding #ifdef's to the skeleton, I haven't thought of
+ >any other way to do it.
+ >
+ >> If so, would it be possible 
+ >> to consider making the appropriate changes to flex.skl?
+ >
+ >Sounds okay to me, but this is now Dick's call.
+ >
+ >		Vern
+ >
+
+------- Message 15
+
+Date:  Sun, 08 Oct 2000 01:19:08 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: C++, flex under cygwin and Visual C++
+To:  Dick King <king@reasoning.com>
+In-reply-to:  Your message of Fri, 06 Oct 2000 09:31:08 PDT.
+
+> One meaty change i've been asked for which i would like to do [i did it for my
+> current company's lexer product so i think i understand the issues] is a
+> character level prefilter infrastructure, that would allow you to integrate a
+> cpp-style preprocessor [rather than making it a separate pass as is the norm]
+> or to write a flex lexer for a language like FORTRAN or COBOL or that language
+> i've heard about whose name escapes me where indentation is syntactically
+> significant.
+
+That would be really nice to have!
+
+		Vern
+
+------- Message 16
+
+Date:  Mon, 9 Oct 2000 12:27:13 -0400 (EDT)
+From:  Andrew Droffner <adroffne@versus.dmz.advance.net>
+Subject:  Re: Flex & Multiple Threads 
+To:  Vern Paxson <vern@ee.lbl.gov>
+Cc:  help-flex@gnu.org, king@reasoning.com
+In-Reply-To:  <200010050752.e957qGq13639@daffy.ee.lbl.gov>
+MIME-Version:  1.0
+Content-Type:  TEXT/PLAIN; charset=US-ASCII
+
+I'm unable to compile the scan.l LEX specification using the bootstrap
+scanner, initscan.c. I have tried it on the latest flex source from GNU,
+and the tarball from your page at ee.lbl.gov.
+
+If I drop the "%option reentrant" from scan.l, then it all compiles. I
+doubt it works right then. What else do I need here, a new initscan.c?
+
+Thanks for the help. 
+
+On Thu, 5 Oct 2000, Vern Paxson wrote:
+
+> > I'm interested in building a multi-threaded server using YACC & Lex.
+> > The server & client parse the data they pass to each other.
+> > 
+> > The Bison dialect of YACC uses a "%pure_parser" option to force re-entrant
+> > code. I would like a Flex equivalent; is there one already?
+> 
+> There are patches to flex to support reentrant scanners, which I've
+> put in ftp://ftp.ee.lbl.gov/.vp-flex-reentrant.tar.gz .
+> 
+> Also, please note, flex maintenance has been taken over by Dick King
+> <king@reasoning.com>.
+> 
+> 		Vern
+> 
+
+- -- 
+[ Andrew Droffner
+[ Advance Publications Internet
+[
+[ adroffne@advance.net
+
+
+------- Message 17
+
+Date:  Tue, 10 Oct 2000 22:40:12 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: Flex & Multiple Threads 
+To:  Andrew Droffner <adroffne@versus.dmz.advance.net>
+Cc:  help-flex@gnu.org, king@reasoning.com
+In-reply-to:  Your message of Mon, 09 Oct 2000 12:27:13 PDT.
+
+> I'm unable to compile the scan.l LEX specification using the bootstrap
+> scanner, initscan.c. I have tried it on the latest flex source from GNU,
+> and the tarball from your page at ee.lbl.gov.
+> 
+> If I drop the "%option reentrant" from scan.l, then it all compiles. I
+> doubt it works right then. What else do I need here, a new initscan.c?
+
+I don't have any firsthand experience with those patches, unfortunately,
+so all I can offer is to try building without the %option reentrant;
+then run flex on scan.l to build a new scan.c; recompile using that;
+run "make check" to make sure it's working okay; then try putting the
+%option reentrant back in.  Because I believe the modified scan.l doesn't
+actually need %option reentrant, it's just there to exercise the scanning
+during "make check".
+
+		Vern
+
+------- Message 18
+
+Date:  Wed, 11 Oct 2000 11:42:35 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: Flex & Multiple Threads 
+To:  Dick King <king@reasoning.com>
+In-reply-to:  Your message of Wed, 11 Oct 2000 11:29:49 PDT.
+
+> How do i read help-flex@gnu.org?
+
+Try sending mail to help-flex-request@gnu.org with a message body of
+"subscribe".  Let me know if that doesn't work.
+
+		Ven
+
+------- End of Forwarded Messages
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From vern@daffy.ee.lbl.gov  Wed Mar 14 04:01:40 2001
+Return-Path: <vern@daffy.ee.lbl.gov>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id EAA09964
+	for <wlestes@localhost>; Wed, 14 Mar 2001 04:01:40 -0500
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Wed, 14 Mar 2001 04:01:40 -0500 (EST)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f2E8pse19643
+	for <wlestes@hermes.email.uncg.edu>; Wed, 14 Mar 2001 03:51:54 -0500 (EST)
+Received: from daffy.ee.lbl.gov (daffy.ee.lbl.gov [131.243.1.31])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id DAA20408
+	for <wlestes@uncg.edu>; Wed, 14 Mar 2001 03:51:53 -0500 (EST)
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f2E8pqR07884;
+	Wed, 14 Mar 2001 00:51:52 -0800 (PST)
+Message-Id: <200103140851.f2E8pqR07884@daffy.ee.lbl.gov>
+To: wlestes@uncg.edu
+Subject: messages sent to Dick King (2 of 2)
+Date: Wed, 14 Mar 2001 00:51:52 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+*** EOOH ***
+To: wlestes@uncg.edu
+Subject: messages sent to Dick King (2 of 2)
+Date: Wed, 14 Mar 2001 00:51:52 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+
+------- Forwarded Messages
+
+Date:  Sat, 07 Oct 2000 10:31:22 -0700
+From:  "Dick King, flex maintainer" <flex@2xtreme.net>
+Subject:  Re: the source tree
+To:  vern@ee.lbl.gov
+Cc:  flex@2xtreme.net
+In-reply-to:  <14814.15467.441052.399457@fiddle.mtview.reasoning.com>
+Reply-to:  flex@2xtreme.net
+MIME-version:  1.0
+X-Mailer:  Forte Agent 1.8/32.548
+Content-type:  text/plain; charset=us-ascii
+Content-transfer-encoding:  7bit
+References:  <14814.15467.441052.399457@fiddle.mtview.reasoning.com>
+
+On Fri, 6 Oct 2000 13:56:11 -0700 (PDT), you wrote:
+
+> > I think i'm prepared to give this a try.
+> 
+> Cool!, thanks.  Here's a snapshot of the current source tree.  I'm about
+> to leave for two week's vacation, not reading email, but upon my return
+> I'll put together the stuff-to-do email archive, etc.
+> 
+> 		Vern
+> 
+
+What is the current release?
+
+You sent me 2.5.4a to my office computer on June 20, but i found 2.5.5a on
+June 20 and downloaded it to my home computer.
+
+- -dk
+
+PS: when anyone writes to you, tell them about my new eddress
+[flex@2xtreme.net]?  Thanks.
+
+- -dk
+
+
+------- Message 2
+
+Date:  Sun, 08 Oct 2000 01:26:26 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: a sort of flex-related question :-)
+To:  Alan Donovan <alan.donovan@arm.com>
+Cc:  flex@2xtreme.net
+In-reply-to:  Your message of Thu, 05 Oct 2000 18:49:51 PDT.
+
+> Vern, sorry to write out of the blue like this but I figure that as the
+> maintainer of flex, you could probably answer my question in a second.
+
+I'm actually no longer the maintainer.  Dick King has taken over.  He's set
+up the address flex@2xtreme.net for flex correspondence.  I've cc'd him.
+
+> I'm writing a tool somewhere between flex and yacc, in which you specify
+> a set of rules and actions (as in yacc) but the language is that of
+> regular expressions not context-free grammars.
+> 
+> Each rule may include literals, operators, and simpler (i.e. previously
+> declared) rules as components, and have an action.  e.g.
+> 
+> foo    :[0-9]+   { func1(); }
+> 
+> bar    :"x"foo   { func2(); }
+>        |"y"foo   { func3(); }
+> 
+> So the NDFA for "bar" actually contains two copies of the NDFA for
+> "foo".  My problem arises when trying to determine where in the DFA
+> (generated by subset construction) to invoke the actions associated with
+> each rule.  All my DFA states are annotated as to which rules (if any)
+> they start and which rules (if any) they accept. However this is not
+> enough to correctly invoke the actions.
+> 
+> Consider:
+> 
+>    foo: ab
+>    bar: a
+> 
+> in the context of some larger expression zip:(foo|bar)"c".
+> 
+> The DFA for "zip" looks like:
+> 
+>     a      b      c
+>  P ---> Q ---> R ---> T
+>         |
+>         +----> S
+>            c
+> 
+> P starts rules "foo",  "bar" and "zip". Q accepts "bar" and R accepts
+> rule "foo". S and T accept zip.
+> 
+> On input "abc", how do you know _not_ to invoke the action for rule
+> "bar" when you reach state Q (or more correctly, when you receive the
+> "b" and move to state R)?
+> 
+> So the question is: do you think what I am trying to do is possible?
+
+What you are doing looks like a parse, and you can only parse LR(0)
+languages with DFAs (if I recall correctly), i.e., those without
+lookahead.  The above example requires lookahead to differentiate
+matching foo from bar.  So I think you're out of luck here, if
+I understand the example correctly.
+
+		Vern
+
+------- Message 3
+
+Date:  Sun, 08 Oct 2000 07:47:01 -0700
+From:  "Dick King, flex maintainer" <flex@2xtreme.net>
+Subject:  Re: a sort of flex-related question :-)
+To:  Vern Paxson <vern@ee.lbl.gov>
+Cc:  Alan Donovan <alan.donovan@arm.com>
+In-reply-to:  <200010080826.e988QQC23650@daffy.ee.lbl.gov>
+Reply-to:  flex@2xtreme.net
+MIME-version:  1.0
+X-Mailer:  Forte Agent 1.8/32.548
+Content-type:  text/plain; charset=us-ascii
+Content-transfer-encoding:  7bit
+References:  <200010080826.e988QQC23650@daffy.ee.lbl.gov>
+Status:  U
+
+On Sun, 08 Oct 2000 01:26:26 PDT, you wrote:
+
+> > Vern, sorry to write out of the blue like this but I figure that as the
+> > maintainer of flex, you could probably answer my question in a second.
+> 
+> I'm actually no longer the maintainer.  Dick King has taken over.  He's set
+> up the address flex@2xtreme.net for flex correspondence.  I've cc'd him.
+> 
+> > I'm writing a tool somewhere between flex and yacc, in which you specify
+> > a set of rules and actions (as in yacc) but the language is that of
+> > regular expressions not context-free grammars.
+> > 
+> > Each rule may include literals, operators, and simpler (i.e. previously
+> > declared) rules as components, and have an action.  e.g.
+> > 
+> > foo    :[0-9]+   { func1(); }
+> > 
+> > bar    :"x"foo   { func2(); }
+> >        |"y"foo   { func3(); }
+> > 
+> > So the NDFA for "bar" actually contains two copies of the NDFA for
+> > "foo".  My problem arises when trying to determine where in the DFA
+> > (generated by subset construction) to invoke the actions associated with
+> > each rule.  All my DFA states are annotated as to which rules (if any)
+> > they start and which rules (if any) they accept. However this is not
+> > enough to correctly invoke the actions.
+> > 
+> > Consider:
+> > 
+> >    foo: ab
+> >    bar: a
+> > 
+> > in the context of some larger expression zip:(foo|bar)"c".
+> > 
+> > The DFA for "zip" looks like:
+> > 
+> >     a      b      c
+> >  P ---> Q ---> R ---> T
+> >         |
+> >         +----> S
+> >            c
+> > 
+> > P starts rules "foo",  "bar" and "zip". Q accepts "bar" and R accepts
+> > rule "foo". S and T accept zip.
+> > 
+> > On input "abc", how do you know _not_ to invoke the action for rule
+> > "bar" when you reach state Q (or more correctly, when you receive the
+> > "b" and move to state R)?
+> > 
+> > So the question is: do you think what I am trying to do is possible?
+> 
+> What you are doing looks like a parse, and you can only parse LR(0)
+> languages with DFAs (if I recall correctly), i.e., those without
+> lookahead.  The above example requires lookahead to differentiate
+> matching foo from bar.  So I think you're out of luck here, if
+> I understand the example correctly.
+> 
+> 		Vern
+
+Vern is mostly correct.  Small extensions can give you a single token
+[character, here] lookahead but that is not enough to deliver the
+functionality you want.  Consider
+
+foo: a    { foo_fn(); }
+bar: ab   { bar_fn(); }
+
+mumble:    foo bcde.....yZ   { any }
+         | bar  cde.....yW   { any }
+
+- -dk
+
+
+------- Message 4
+
+Date:  Tue, 10 Oct 2000 02:36:57 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: Bison's semantic parsers
+To:  Akim Demaille <akim@epita.fr>
+Cc:  Hans Aberg <haberg@matematik.su.se>,
+        Davy Durham <david.durham@wcom.com>, Bison Help <help-bison@gnu.org>,
+        flex@2xtreme.net
+In-reply-to:  Your message of 10 Oct 2000 11:43:07 PDT.
+
+> Nope, indeed Vern seems also to say he won't work on Flex again.
+
+Unfortunately, yes.
+
+> Vern, could we imagine that Flex be put on the CVS server of the FSF,
+> subversions.gnu.org?
+
+Thank you very much for the offer, I certainly appreciate it.  However,
+Dick King has already volunteered to take over maitenance and development.
+I've cc'd the address he's using for flex-related mail, flex@2xtreme.net.
+
+		Vern
+
+------- Message 5
+
+Date:  Tue, 10 Oct 2000 13:30:02 +0200
+From:  Hans Aberg <haberg@matematik.su.se>
+Subject:  Re: Bison's semantic parsers
+To:  Vern Paxson <vern@ee.lbl.gov>
+Cc:  Akim Demaille <akim@epita.fr>, Davy Durham <david.durham@wcom.com>,
+       Bison Help <help-bison@gnu.org>, flex@2xtreme.net
+X-Sender:  haberg@pop.matematik.su.se
+In-Reply-To:  <200010100936.e9A9avg01250@daffy.ee.lbl.gov>
+References:  Your message of 10 Oct 2000 11:43:07 PDT.
+Mime-Version:  1.0
+Content-Type:  text/plain; charset="us-ascii"
+Status:  U
+
+At 02.36 -0700 0-10-10, Vern Paxson wrote:
+>> Vern, could we imagine that Flex be put on the CVS server of the FSF,
+>> subversions.gnu.org?
+>
+>Thank you very much for the offer, I certainly appreciate it.  However,
+>Dick King has already volunteered to take over maitenance and development.
+>I've cc'd the address he's using for flex-related mail, flex@2xtreme.net.
+
+At 11.43 +0200 0-10-10, Akim Demaille wrote:
+>Hans> Perhaps Bison and Flex should be bundled, or tuned up together.
+>
+>It's a good but bad idea.  For instance you could also argue that
+>Autoconf, Automake and Libtool be merged, but if you just observe that
+>they have totally different evolutions, it becomes infeasible.  While
+>definitely a seducing idea, it wouldn't work IMHO.
+
+My experimenting with C++ though suggests that Bison and Flex needs some
+synchronizing if one should take full advantage of that language:
+
+- -- One thing that come to my mind is that instead of letting the Bison
+output .cc file include the Flex .cc file, they communicate the information
+via header files.
+
+- -- When experimenting C++ manipulator style I mentioned before
+    Parser parser;
+    parser_value val;
+    ifstream ifs("...", ios_base::in | ios_base::binary);
+    ofstream ofs("...");
+    if (ifs) try { for (;;) {
+        ifs >> parser >> val;
+        cout << val << endl;
+    }
+I experience problems with how Flex resets its state, and how streams and
+such are initialized.
+
+For example, if I try to gobble up UNIX, MacOS & DOS line separators in Flex by
+    \n|\r|\r\n		 { return '\n'; }
+then, when Flex sees a \r it must first look ahead to verify the next
+character isn't a \n. However, if a successful value "val" is produced,
+then the next time  one ends up at the line ifs >> parser >> val, Flex is
+reset, and as a consequence, the extra character needed to the \n check is
+gobbled up.
+
+One can get around this by not allowing this ifs >> parser >> val
+construct, then the advantage of freer, and therefore easier user syntaxes
+are lost.
+
+- -- I think that there might be some other issues, such as how to properly
+localize all data that Bison and Flex uses, and how they should communicate
+that. These are more questions of hand-shaking than bundling them together
+as a single program.
+
+As for the comparisons of Bison and Flex versus other types of
+compiler-compilers, I think the main disadvantage with them (the former) is
+that they are extremely difficult to debug. It's rather hopeless trying to
+debug the C/C++ files they produce as output. If one could hook up an
+debugger though, so that one could step throw the .l/.y source files, just
+as in the case of visual debugging of a C/C++ file, then this would change,
+and it would not make any difference of what method is used, as long as it
+is efficient and does the job.
+
+  Hans Aberg
+
+
+
+------- Message 6
+
+Date:  10 Oct 2000 13:51:33 +0200
+From:  Akim Demaille <akim@epita.fr>
+Subject:  Re: Bison's semantic parsers
+To:  Vern Paxson <vern@ee.lbl.gov>
+Cc:  Hans Aberg <haberg@matematik.su.se>, Davy Durham <david.durham@wcom.com>,
+       Bison Help <help-bison@gnu.org>, flex@2xtreme.net,
+       Didier Verna <didier@epita.fr>
+References:  <200010100936.e9A9avg01250@daffy.ee.lbl.gov>
+In-Reply-To:  Vern Paxson's message of "Tue, 10 Oct 2000 02:36:57 PDT"
+Lines:  27
+User-Agent:  Gnus/5.0807 (Gnus v5.8.7) XEmacs/21.1 (Channel Islands)
+MIME-Version:  1.0
+Content-Type:  text/plain; charset=us-ascii
+Status:  U
+
+>>>>> "Vern" == Vern Paxson <vern@ee.lbl.gov> writes:
+
+>> Nope, indeed Vern seems also to say he won't work on Flex again.
+
+Vern> Unfortunately, yes.
+
+Just by curiosity: you're no longer interested, or you don't have time
+enough?
+
+>> Vern, could we imagine that Flex be put on the CVS server of the
+>> FSF, subversions.gnu.org?
+
+Vern> Thank you very much for the offer, I certainly appreciate it.
+
+I'm also quite pleased to see my offer pleased you so much :)
+
+Vern> However, Dick King has already volunteered to take over
+Vern> maitenance and development.  I've cc'd the address he's using
+Vern> for flex-related mail, flex@2xtreme.net.
+
+Thanks!
+
+Then, I shall restate my question for flex@2xtreme: is there a CVS
+server or something which would make it possible to participate the
+development of Flex?
+
+        Akim
+
+------- Message 7
+
+Date:  Tue, 10 Oct 2000 14:15:53 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: Bison's semantic parsers
+To:  Akim Demaille <akim@epita.fr>
+Cc:  Hans Aberg <haberg@matematik.su.se>,
+        Davy Durham <david.durham@wcom.com>, Bison Help <help-bison@gnu.org>,
+        flex@2xtreme.net, Didier Verna <didier@epita.fr>
+In-reply-to:  Your message of 10 Oct 2000 13:51:33 PDT.
+
+> Just by curiosity: you're no longer interested, or you don't have time
+> enough?
+
+No time ...
+
+		Vern
+
+------- Message 8
+
+Date:  Thu, 12 Oct 2000 20:07:57 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: Flex 2.5.4 Bug 
+To:  Cliff Sarginson <csarginson@descartes.com>
+Cc:  flex@2xtreme.net
+In-reply-to:  Your message of Thu, 12 Oct 2000 13:52:06 +0200.
+
+> I dont know if you still receive bug reports about flex ..
+
+I'm not, Dick King (cc'd) has taken over maintenance & development.
+
+> but here is one.. !
+> 
+> In a scanner we have ..
+> 
+> %start this that msg another
+> 
+> The field "msg" gets turned into a
+> 
+> #define msg 3
+> 
+> We do not define a  xxx_YY_FATAL_ERROR
+> 
+> So flex supplies one, as a macro, with a definition:
+> 
+> xxx_yy_fatal_error (const msg [])
+> 
+> The "C" pre-processor merrily turns this into
+> 
+> xx_yy_fatal_error ( const 3  [] )
+> 
+> Are we really the first to come across this ? Flex should maybe
+> be a bit more creative with it's paramater naming for macro's
+> or do some other name space checking maybe ?
+
+Yep, this is a known problem.  The difficulty is that when lex was
+originally designed, it allowed you to switch start states using
+"BEGIN msg" rather than "BEGIN(msg)".  This means that either you
+do a major analysis of the source to only patch up true BEGIN's
+(rather than, say, one that occurs inside a string literal); or you
+use a gross hack in defining BEGIN, like flex does:
+
+	#define BEGIN yy_start = 1 + 2 *
+
+With this sort of definition, there's no way to modify the namespace
+consumed by start states.  If instead you could require the ()'s, then
+you could use
+
+	#define BEGIN(state) yy_start = 1 + 2 * (YY_STATE_ ## state)
+
+and all would be happy ...
+
+		Vern
+
+------- Message 9
+
+Date:  Thu, 12 Oct 2000 20:08:03 PDT
+From:  Vern Paxson <vern>
+Subject:  Re: a sort of flex-related question :-) 
+To:  Alan.Donovan@arm.com
+Cc:  flex@2xtreme.net
+In-reply-to:  Your message of Thu, 12 Oct 2000 15:36:38 BST.
+
+> Thank you both for your help.  I can probably rearrange my grammars to be
+> LR(0). Can you give me a reference for the algorithm for LR(0) parsing with
+> a DFA?
+
+Dunno off hand, but I imagine it must be in the Dragon Book.
+
+		Vern
+
+------- Message 10
+
+Date:  Thu, 02 Nov 2000 11:56:35 PST
+From:  Vern Paxson <vern>
+Subject:  Re: flex documentation enhancement request
+To:  Tracy Camp <campt@thalvors.miralink.com>
+Cc:  flex@2xtreme.net
+In-reply-to:  Your message of Thu, 02 Nov 2000 10:17:17 PST.
+
+Yes, a lot of people get bitten by this, unfortunately.
+
+Note, Dick King has taken over flex maintenance and development, and has
+set up the address flex@2xtreme.net for flex correspondence.  I've cc'd him.
+
+		Vern
+
+
+> As a new user to flex I found the following situation quite confusing and
+> think a breif caviate note in the manual would have helped out (or at
+> least an emphisis if there was one) :)
+> 
+> when using external variables when patching a pattern such as:
+> 
+> %x buffer_dev
+> %{
+> extern struct mystruct astruct; /* struct containing member buffer_dev */
+> %}
+> %%
+> buffer_dev=	BEGIN(buffer_dev);
+> 
+> <buffer_dev>.*$ {
+> 	strncpy(astruct.buffer_dev,yytext,255);
+> 	}
+> %%
+> 
+> this causes all sorts of problems because 'buffer_dev' is defined by flex
+> at some point and I used buffer_dev as a member of an external structure
+> that I'm trying to fill in with flex.  This causes all sorts of compile
+> problems.  Renaming my 'buffer_dev' condition to something else works
+> around this, but it was not immediately obvious what the problem was from
+> the compile error.  For all else I found your manual to be of GREAT help -
+> thanks!
+> 
+> t.
+> 
+> Tracy Camp
+> Product Development
+> Miralink Corp.PDX
+> Portland OR
+> 503-223-3140
+> 
+
+------- Message 11
+
+Date:  Thu, 09 Nov 2000 23:03:38 PST
+From:  Vern Paxson <vern>
+Subject:  Re: Standard C++ compatibility for flex++ 
+To:  Volker Simonis <simonis@informatik.uni-tuebingen.de>
+Cc:  help-flex@gnu.org, flex@2xtreme.net
+In-reply-to:  Your message of Wed, 08 Nov 2000 15:50:36 +0100.
+
+> Is there any chance for a new release of flex? Is there a maintainer right now?
+> Is it possible to submit some bug-fixes or to contribute in some way?
+
+Dick King has taken over flex development and maintenance.  You can
+reach him at flex@2xtreme.net (cc'd).
+
+		Vern
+
+------- Message 12
+
+Date:  Wed, 14 Feb 2001 12:57:37 PST
+From:  Vern Paxson <vern>
+Subject:  Re: Bug#84780: Fix for info documentation (fwd)
+To:  Santiago Vila <sanvila@unex.es>
+Cc:  Gordon Sadler <gbsadler1@lcisp.com>, flex@2xtreme.net
+In-reply-to:  Your message of Wed, 14 Feb 2001 15:40:30 PST.
+
+Please note, Dick King has taken over flex maintenance and development,
+and has set up the address flex@2xtreme.net for flex correspondence.
+
+		Vern
+
+
+> Hello.
+> 
+> I received this from the Debian Bug System.
+> 
+> ---------- Forwarded message ----------
+> Date: Sun, 4 Feb 2001 02:41:30 -0600
+> From: Gordon Sadler <gbsadler1@lcisp.com>
+> To: Debian Bug Tracking System <submit@bugs.debian.org>
+> Subject: #84780: Fix for info documentation
+> 
+> Package: flex
+> Version: 2.5.4a-9
+> Severity: wishlist
+> 
+> Attached find a diff to MISC/texinfo/flex.texi
+> I noticed during the texi2html run it complains of first section not
+> being toplevel. I opened the texi file and changed the toplevel
+> sections to chapters. While I was there noticed the comment about
+> fixing all of the See... to make them @xref, so I did.
+> 
+> Looks like upstream is pretty much done ... but you seem to be in
+> touch, last changelog mentions manpage patch from author?
+> 
+> If you use this texi to regen the info the x-refs make it a little more
+> useable. Maybe I'll add the index in next -)
+> 
+> Gordon Sadler
+> ------------------------------------------------------------------------
+> This is the patch in unified format:
+> 
+> diff -r -u flex-2.5.4.orig/MISC/texinfo/flex.texi flex-2.5.4/MISC/texinfo/flex.texi
+> --- flex-2.5.4.orig/MISC/texinfo/flex.texi	Sun Jul 27 04:47:21 1997
+> +++ flex-2.5.4/MISC/texinfo/flex.texi	Wed Feb 14 15:34:49 2001
+> @@ -151,12 +151,12 @@
+>  @end ifinfo
+> 
+>  @node Name, Synopsis, Top, Top
+> -@section Name
+> +@chapter Name
+> 
+>  flex - fast lexical analyzer generator
+> 
+>  @node Synopsis, Overview, Name, Top
+> -@section Synopsis
+> +@chapter Synopsis
+> 
+>  @example
+>  flex [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]
+> @@ -164,7 +164,7 @@
+>  @end example
+> 
+>  @node Overview, Description, Synopsis, Top
+> -@section Overview
+> +@chapter Overview
+> 
+>  This manual describes @code{flex}, a tool for generating programs
+>  that perform pattern-matching on text.  The manual
+> @@ -244,7 +244,7 @@
+>  @end table
+> 
+>  @node Description, Examples, Overview, Top
+> -@section Description
+> +@chapter Description
+> 
+>  @code{flex} is a tool for generating @dfn{scanners}: programs which
+>  recognized lexical patterns in text.  @code{flex} reads the given
+> @@ -260,7 +260,7 @@
+>  corresponding C code.
+> 
+>  @node Examples, Format, Description, Top
+> -@section Some simple examples
+> +@chapter Some simple examples
+> 
+>  First some simple examples to get the flavor of how one
+>  uses @code{flex}.  The following @code{flex} input specifies a scanner
+> @@ -371,7 +371,7 @@
+>  following sections.
+> 
+>  @node Format, Patterns, Examples, Top
+> -@section Format of the input file
+> +@chapter Format of the input file
+> 
+>  The @code{flex} input file consists of three sections, separated
+>  by a line with just @samp{%%} in it:
+> @@ -439,7 +439,7 @@
+>  where the pattern must be unindented and the action must
+>  begin on the same line.
+> 
+> -See below for a further description of patterns and
+> +@xref{Patterns}, for a further description of patterns and
+>  actions.
+> 
+>  Finally, the user code section is simply copied to
+> @@ -468,7 +468,7 @@
+>  is also copied verbatim to the output up to the next "*/".
+> 
+>  @node Patterns, Matching, Format, Top
+> -@section Patterns
+> +@chapter Patterns
+> 
+>  The patterns in the input are written using an extended
+>  set of regular expressions.  These are:
+> @@ -697,7 +697,7 @@
+>  @end itemize
+> 
+>  @node Matching, Actions, Patterns, Top
+> -@section How the input is matched
+> +@chapter How the input is matched
+> 
+>  When the generated scanner is run, it analyzes its input
+>  looking for strings which match any of its patterns.  If
+> @@ -773,7 +773,7 @@
+>  classes (the @code{c++} option; see below).
+> 
+>  @node Actions, Generated scanner, Matching, Top
+> -@section Actions
+> +@chapter Actions
+> 
+>  Each pattern in a rule has a corresponding action, which
+>  can be any arbitrary C statement.  The pattern ends at the
+> @@ -1035,7 +1035,7 @@
+>  @end itemize
+> 
+>  @node Generated scanner, Start conditions, Actions, Top
+> -@section The generated scanner
+> +@chapter The generated scanner
+> 
+>  The output of @code{flex} is the file @file{lex.yy.c}, which contains
+>  the scanning routine @samp{yylex()}, a number of tables used by
+> @@ -1136,15 +1136,15 @@
+> 
+>  Three routines are available for scanning from in-memory
+>  buffers rather than files: @samp{yy_scan_string()},
+> -@samp{yy_scan_bytes()}, and @samp{yy_scan_buffer()}.  See the discussion
+> -of them below in the section Multiple Input Buffers.
+> +@samp{yy_scan_bytes()}, and @samp{yy_scan_buffer()}.
+> +@xref{Multiple buffers, ,Multiple Input Buffers}.
+> 
+>  The scanner writes its @samp{ECHO} output to the @code{yyout} global
+>  (default, stdout), which may be redefined by the user
+>  simply by assigning it to some other @code{FILE} pointer.
+> 
+>  @node Start conditions, Multiple buffers, Generated scanner, Top
+> -@section Start conditions
+> +@chapter Start conditions
+> 
+>  @code{flex} provides a mechanism for conditionally activating
+>  rules.  Any rule whose pattern is prefixed with "<sc>"
+> @@ -1500,7 +1500,7 @@
+>  @samp{%option stack} directive (see Options below).
+> 
+>  @node Multiple buffers, End-of-file rules, Start conditions, Top
+> -@section Multiple input buffers
+> +@chapter Multiple input buffers
+> 
+>  Some scanners (such as those which support "include"
+>  files) require reading from several input streams.  As
+> @@ -1675,7 +1675,7 @@
+>  @end table
+> 
+>  @node End-of-file rules, Miscellaneous, Multiple buffers, Top
+> -@section End-of-file rules
+> +@chapter End-of-file rules
+> 
+>  The special rule "<<EOF>>" indicates actions which are to
+>  be taken when an end-of-file is encountered and yywrap()
+> @@ -1735,7 +1735,7 @@
+>  @end example
+> 
+>  @node Miscellaneous, User variables, End-of-file rules, Top
+> -@section Miscellaneous macros
+> +@chapter Miscellaneous macros
+> 
+>  The macro @code{YY_USER_ACTION} can be defined to provide an
+>  action which is always executed prior to the matched
+> @@ -1800,7 +1800,7 @@
+>  the @code{YY_BREAK} is inaccessible.
+> 
+>  @node User variables, YACC interface, Miscellaneous, Top
+> -@section Values available to the user
+> +@chapter Values available to the user
+> 
+>  This section summarizes the various values available to
+>  the user in the rule actions.
+> @@ -1865,7 +1865,7 @@
+>  @end itemize
+> 
+>  @node YACC interface, Options, User variables, Top
+> -@section Interfacing with @code{yacc}
+> +@chapter Interfacing with @code{yacc}
+> 
+>  One of the main uses of @code{flex} is as a companion to the @code{yacc}
+>  parser-generator.  @code{yacc} parsers expect to call a routine
+> @@ -1890,7 +1890,7 @@
+>  @end example
+> 
+>  @node Options, Performance, YACC interface, Top
+> -@section Options
+> +@chapter Options
+>  @code{flex} has the following options:
+> 
+>  @table @samp
+> @@ -1903,8 +1903,8 @@
+>  and @samp{-Cf} or @samp{-CF} is used, the generated scanner will
+>  run faster (see the @samp{-p} flag).  Only users who wish
+>  to squeeze every last cycle out of their scanners
+> -need worry about this option.  (See the section on
+> -Performance Considerations below.)
+> +need worry about this option.  (@pxref{Performance, ,
+> +Performance Considerations})
+> 
+>  @item -c
+>  is a do-nothing, deprecated option included for
+> @@ -2138,8 +2138,7 @@
+> 
+>  @item -+
+>  specifies that you want flex to generate a C++
+> -scanner class.  See the section on Generating C++
+> -Scanners below for details.
+> +scanner class.  @xref{C++, ,Generating C++ Scanners}.
+> 
+>  @item -C[aefFmr]
+>  controls the degree of table compression and, more
+> @@ -2419,8 +2418,7 @@
+>  function @samp{foo::yylex()} instead of @samp{yyFlexLexer::yylex()}.
+>  It also generates a @samp{yyFlexLexer::yylex()} member function that
+>  emits a run-time error (by invoking @samp{yyFlexLexer::LexerError()})
+> -if called.  See Generating C++ Scanners, below, for additional
+> -information.
+> +if called.  @xref{C++, ,Generating C++ Scanners}.
+> 
+>  A number of options are available for lint purists who
+>  want to suppress the appearance of unneeded routines in
+> @@ -2439,7 +2437,7 @@
+>  unless you use @samp{%option stack}).
+> 
+>  @node Performance, C++, Options, Top
+> -@section Performance considerations
+> +@chapter Performance considerations
+> 
+>  The main design goal of @code{flex} is that it generate
+>  high-performance scanners.  It has been optimized for dealing
+> @@ -2756,7 +2754,7 @@
+>  the two is at about 8K characters/token.
+> 
+>  @node C++, Incompatibilities, Performance, Top
+> -@section Generating C++ scanners
+> +@chapter Generating C++ scanners
+> 
+>  @code{flex} provides two different ways to generate scanners for
+>  use with C++.  The first way is to simply compile a
+> @@ -2975,7 +2973,7 @@
+>  releases.
+> 
+>  @node Incompatibilities, Diagnostics, C++, Top
+> -@section Incompatibilities with @code{lex} and POSIX
+> +@chapter Incompatibilities with @code{lex} and POSIX
+> 
+>  @code{flex} is a rewrite of the AT&T Unix @code{lex} tool (the two
+>  implementations do not share any code, though), with some
+> @@ -3051,8 +3049,8 @@
+> 
+>  Also note that flex C++ scanner classes @emph{are}
+>  reentrant, so if using C++ is an option for you, you
+> -should use them instead.  See "Generating C++
+> -Scanners" above for details.
+> +should use them instead.  @xref{C++, ,Generating C++
+> +Scanners}.
+> 
+>  @item
+>  @samp{output()} is not supported.  Output from the @samp{ECHO}
+> @@ -3198,7 +3196,7 @@
+>  line.
+> 
+>  @node Diagnostics, Files, Incompatibilities, Top
+> -@section Diagnostics
+> +@chapter Diagnostics
+> 
+>  @table @samp
+>  @item warning, rule cannot be matched
+> @@ -3251,8 +3249,7 @@
+>  scanner specification includes recognizing the 8-bit
+>  character @var{x} and you did not specify the -8 flag, and your
+>  scanner defaulted to 7-bit because you used the @samp{-Cf} or @samp{-CF}
+> -table compression options.  See the discussion of the @samp{-7}
+> -flag for details.
+> +table compression options. @xref{Options, ,@samp{-7}flag}.
+> 
+>  @item flex scanner push-back overflow
+>  you used @samp{unput()} to push
+> @@ -3285,7 +3282,7 @@
+>  @end table
+> 
+>  @node Files, Deficiencies, Diagnostics, Top
+> -@section Files
+> +@chapter Files
+> 
+>  @table @file
+>  @item -lfl
+> @@ -3311,7 +3308,7 @@
+>  @end table
+> 
+>  @node Deficiencies, See also, Files, Top
+> -@section Deficiencies / Bugs
+> +@chapter Deficiencies / Bugs
+> 
+>  Some trailing context patterns cannot be properly matched
+>  and generate warning messages ("dangerous trailing
+> @@ -3365,7 +3362,7 @@
+>  The @code{flex} internal algorithms need documentation.
+> 
+>  @node See also, Author, Deficiencies, Top
+> -@section See also
+> +@chapter See also
+> 
+>  @code{lex}(1), @code{yacc}(1), @code{sed}(1), @code{awk}(1).
+> 
+> @@ -3380,7 +3377,7 @@
+>  (deterministic finite automata).
+> 
+>  @node Author,  , See also, Top
+> -@section Author
+> +@chapter Author
+> 
+>  Vern Paxson, with the help of many ideas and much inspiration from
+>  Van Jacobson.  Original version by Jef Poskanzer.  The fast table
+> 
+
+------- End of Forwarded Messages
+
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From vern@daffy.ee.lbl.gov  Mon Mar 26 18:48:05 2001
+Return-Path: <vern@daffy.ee.lbl.gov>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id SAA00754
+	for <wlestes@localhost>; Mon, 26 Mar 2001 18:48:05 -0500
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Mon, 26 Mar 2001 18:48:05 -0500 (EST)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f2QNVUe03862
+	for <wlestes@hermes.email.uncg.edu>; Mon, 26 Mar 2001 18:31:30 -0500 (EST)
+Received: from daffy.ee.lbl.gov (daffy.ee.lbl.gov [131.243.1.31])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id SAA18856
+	for <wlestes@uncg.edu>; Mon, 26 Mar 2001 18:31:28 -0500 (EST)
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f2QNVPc23647;
+	Mon, 26 Mar 2001 15:31:25 -0800 (PST)
+Message-Id: <200103262331.f2QNVPc23647@daffy.ee.lbl.gov>
+To: wlestes@uncg.edu
+Subject: Fwd: release 2.5 of flex...
+Date: Mon, 26 Mar 2001 15:31:25 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+*** EOOH ***
+To: wlestes@uncg.edu
+Subject: Fwd: release 2.5 of flex...
+Date: Mon, 26 Mar 2001 15:31:25 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+(Any luck finding some flex cycles?)
+
+------- Forwarded Message
+
+Date:  Mon, 26 Mar 2001 00:06:31 +0200
+From:  Kai Hennig <khennig@pobox.com>
+Subject:  release 2.5 of flex...
+To:  vern@ee.lbl.gov
+X-Spam-Filter:  check_local@studserv.stud.uni-hannover.de by digitalanswers.org
+Reply-To:  khennig@pobox.com
+Organization:  TRI Systems
+X-Mailer:  Mozilla 4.76 (Macintosh; U; PPC)
+X-Accept-Language:  en
+MIME-Version:  1.0
+Content-Type:  text/plain; charset=iso-8859-1
+Content-Transfer-Encoding:  8bit
+
+> Extract from file 'INSTALL' from flex-2.5.4
+>
+> ...
+> If you need to do unusual things to compile the package, we encourage
+> you to figure out how `configure' could check whether to do them, and
+> mail diffs or instructions to the address given in the README so we
+> can include them in the next release.
+> ...
+
+Hi Vern,
+
+I'm using your flex package 2.5.4 on a Macintosh with Apple's Macintosh
+Programmers Workshop 3.5 (MPW). There is a description comming along
+with your package for the THINK C version 6.0 from Scott Hofmann
+(23-JUL-94) which is not helpfull for using the package with MPW. I
+enclosed a brief instruction for using the flex package with MPW which
+might be more helpfull since Think C is no longer officially available
+(as far as I know).
+
+greetings,
+Kai
+
+
+
+
+Notes on the MPW 3.5 version of Flex 2.5.4
+Kai Hennig 25-Mar-2001
+Internet: khennig@pobox.com
+
+To compile and run Flex 2.5.4 as an MPW Tool no changes to any file have
+to be done. Instead add a file called 'config.h' to the files listed in
+the command lines given below with the content listed below the
+commands. To compile and link all necessary files execute the following
+commands in the MPW shell:
+
+MrC -noMapCR -alloca -ansi strict main.c
+MrC -noMapCR -alloca -ansi strict ccl.c
+MrC -noMapCR -alloca -ansi strict dfa.c
+MrC -noMapCR -alloca -ansi strict ecs.c
+MrC -noMapCR -alloca -ansi strict gen.c
+MrC -noMapCR -alloca -ansi strict misc.c
+MrC -noMapCR -alloca -ansi strict nfa.c
+MrC -noMapCR -alloca -ansi strict -w off parse.c
+MrC -noMapCR -alloca -ansi strict initscan.c
+MrC -noMapCR -alloca -ansi strict tblcmp.c
+MrC -noMapCR -alloca -ansi strict sym.c
+MrC -noMapCR -alloca -ansi strict skel.c
+MrC -noMapCR -alloca -ansi strict yylex.c
+PPCLink -t 'MPST' -c 'MPS ' -o flex *
+main.c.o *
+ccl.c.o *
+dfa.c.o *
+ecs.c.o *
+gen.c.o *
+misc.c.o *
+nfa.c.o *
+parse.c.o *
+initscan.c.o *
+tblcmp.c.o *
+sym.c.o *
+skel.c.o *
+yylex.c.o *
+"{SharedLibraries}InterfaceLib" *
+"{SharedLibraries}StdCLib" *
+"{SharedLibraries}MathLib" *
+"{PPCLibraries}StdCRuntime.o" *
+"{PPCLibraries}PPCCRuntime.o" *
+"{PPCLibraries}MrCIOStreams.o" *
+"{PPCLibraries}PPCToolLibs.o"
+
+
+/* File 'config.h' */
+/* Define to `unsigned' if <sys/types.h> doesn't define.  */
+#undef size_t
+
+/* Define if you have the ANSI C header files.  */
+#define STDC_HEADERS 1
+
+/* Define if you have the <string.h> header file.  */
+#define HAVE_STRING_H 1
+
+/* Define if you have <alloca.h> and it should be used (not on 
+Ultrix).  */
+#define HAVE_ALLOCA_H 1
+
+/* Define if you use FAT file system, leave undefined for NTFS */
+#undef SHORT_FILE_NAMES 
+
+/* Never do interactive input */
+#define YY_NEVER_INTERACTIVE 1
+/* EOF File 'config.h' */
+
+------- End of Forwarded Message
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From vern@daffy.ee.lbl.gov  Wed Mar 28 04:07:49 2001
+Return-Path: <vern@daffy.ee.lbl.gov>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id EAA02765
+	for <wlestes@localhost>; Wed, 28 Mar 2001 04:07:49 -0500
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Wed, 28 Mar 2001 04:07:49 -0500 (EST)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f2S8o2e15934
+	for <wlestes@hermes.email.uncg.edu>; Wed, 28 Mar 2001 03:50:02 -0500 (EST)
+Received: from daffy.ee.lbl.gov (daffy.ee.lbl.gov [131.243.1.31])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id DAA23213
+	for <wlestes@uncg.edu>; Wed, 28 Mar 2001 03:50:00 -0500 (EST)
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f2S8nr529885;
+	Wed, 28 Mar 2001 00:49:53 -0800 (PST)
+Message-Id: <200103280849.f2S8nr529885@daffy.ee.lbl.gov>
+To: "John W. Millaway" <johnmillaway@yahoo.com>
+Cc: help-flex@gnu.org, wlestes@uncg.edu
+Subject: Re: reentrant C scanner
+In-reply-to: Your message of Tue, 27 Mar 2001 12:49:46 PST.
+Date: Wed, 28 Mar 2001 00:49:53 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+*** EOOH ***
+To: "John W. Millaway" <johnmillaway@yahoo.com>
+Cc: help-flex@gnu.org, wlestes@uncg.edu
+Subject: Re: reentrant C scanner
+In-reply-to: Your message of Tue, 27 Mar 2001 12:49:46 PST.
+Date: Wed, 28 Mar 2001 00:49:53 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+> I contacted you (or someone there at flex H.Q.) about modifying flex to generate a
+> reentrant scanner. I found some time recently, and the modifications are nearly
+> complete. It wasn't as bad as I had originally thought it would be.
+> 
+> I have two questions for you:
+> 
+> 1. What is the procedure for regression testing?
+> 2. What is the procedure for merging my modifications with the current
+> distribution?
+
+Both of these are not well defined at the moment.  Will Estes (cc'd) has
+volunteered to give taking over flex maintenance/development a try, and
+we're right now in a preliminary period during which he's gauging whether
+he'll indeed have the cycles for doing so.
+
+		Vern
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From vern@daffy.ee.lbl.gov  Thu Mar 29 18:05:46 2001
+Return-Path: <vern@daffy.ee.lbl.gov>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id SAA02631
+	for <wlestes@localhost>; Thu, 29 Mar 2001 18:05:46 -0500
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Thu, 29 Mar 2001 18:05:46 -0500 (EST)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f2TMmHe28250
+	for <wlestes@hermes.email.uncg.edu>; Thu, 29 Mar 2001 17:48:17 -0500 (EST)
+Received: from daffy.ee.lbl.gov (daffy.ee.lbl.gov [131.243.1.31])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id RAA02561
+	for <wlestes@uncg.edu>; Thu, 29 Mar 2001 17:48:16 -0500 (EST)
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f2TMmCD10050;
+	Thu, 29 Mar 2001 14:48:12 -0800 (PST)
+Message-Id: <200103292248.f2TMmCD10050@daffy.ee.lbl.gov>
+To: John Tupper <john_tupper@tenornetworks.com>
+Subject: Re: flex bug
+Cc: wlestes@uncg.edu
+In-reply-to: Your message of Thu, 29 Mar 2001 13:52:38 PST.
+Date: Thu, 29 Mar 2001 14:48:12 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+*** EOOH ***
+To: John Tupper <john_tupper@tenornetworks.com>
+Subject: Re: flex bug
+Cc: wlestes@uncg.edu
+In-reply-to: Your message of Thu, 29 Mar 2001 13:52:38 PST.
+Date: Thu, 29 Mar 2001 14:48:12 PST
+From: Vern Paxson <vern@ee.lbl.gov>
+
+Argh, yes, you're right.  This is (mis)feature interaction between
+%option yylineno and trailing context.
+
+I've cc'd Will Estes, who is trying out taking over flex maintenance /
+development.  Will, I think the place to fix this is in finish_rule() in
+nfa.c, making it generate extra code to loop through the characters being
+put back and decrement yylineno accordingly.
+
+		Vern
+
+
+> 
+> --------------DC4CBAA5BA86BA0906373DD6
+> Content-Type: text/plain; charset=us-ascii
+> Content-Transfer-Encoding: 7bit
+> 
+> Vern,
+>   Are you the right person to send this to?  It's a groaner. . .
+> 
+> If you define a rule with a trailing context and the trailing context
+> matches a newline, the newline gets counted twice (in yylineno), once in
+> the trailing context and once when its matched for real.
+> 
+> Sample grammer:
+> 
+> \/\*               { begin(Comment); }
+> <Comment>\*/[^/]   { ; /* this rule is problematic */ }
+> <Comment>[^\*]+    { ; }
+> <Comment>\*\/      { begin(0); }
+> 
+> The above grammer strips out C style comments.  If a comment contains a
+> star at the end of a line, yylineno gets incremented twice.
+> 
+> We used the obvious work around by adding a seperate rule to explicitly
+> match *\n without any trailing context, so we're not waiting for a fix.
+> 
+> Oh yeah, we're using version 2.5.4.
+> 
+> Thanks,
+> John Tupper
+> (john_tupper@tenornetworks.com)
+> 
+> 
+> --------------DC4CBAA5BA86BA0906373DD6
+> Content-Type: text/html; charset=us-ascii
+> Content-Transfer-Encoding: 7bit
+> 
+> <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+> <html>
+> Vern,
+> <br>&nbsp; Are you the right person to send this to?&nbsp; It's a groaner.
+> . .
+> <p>If you define a rule with a trailing context and the trailing context
+> matches a newline, the newline gets counted twice (in yylineno), once in
+> the trailing context and once when its matched for real.
+> <p>Sample grammer:
+> <p><tt>\/\*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+> { begin(Comment); }</tt>
+> <br><tt>&lt;Comment>\*/[^/]&nbsp;&nbsp; { ; /* this rule is problematic
+> */ }</tt>
+> <br><tt>&lt;Comment>[^\*]+&nbsp;&nbsp;&nbsp; { ; }</tt>
+> <br><tt>&lt;Comment>\*\/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { begin(0); }</tt>
+> <p>The above grammer strips out C style comments.&nbsp; If a comment contains
+> a star at the end of a line, yylineno gets incremented twice.
+> <p>We used the obvious work around by adding a seperate rule to explicitly
+> match *\n without any trailing context, so we're not waiting for a fix.
+> <p>Oh yeah, we're using version 2.5.4.
+> <p>Thanks,
+> <br>John Tupper
+> <br>(john_tupper@tenornetworks.com)
+> <br>&nbsp;</html>
+> 
+> --------------DC4CBAA5BA86BA0906373DD6--
+> 
+
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From johnmillaway@yahoo.com  Sun Apr  8 18:10:46 2001
+Return-Path: <johnmillaway@yahoo.com>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id SAA06099
+	for <wlestes@localhost>; Sun, 8 Apr 2001 18:10:46 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Sun, 08 Apr 2001 18:10:46 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f38Lr7e10030
+	for <wlestes@hermes.email.uncg.edu>; Sun, 8 Apr 2001 17:53:07 -0400 (EDT)
+Received: from web9407.mail.yahoo.com (web9407.mail.yahoo.com [216.136.129.23])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with SMTP id RAA28292
+	for <wlestes@uncg.edu>; Sun, 8 Apr 2001 17:53:05 -0400 (EDT)
+Message-ID: <20010408215303.56462.qmail@web9407.mail.yahoo.com>
+Received: from [216.254.82.102] by web9407.mail.yahoo.com; Sun, 08 Apr 2001 14:53:03 PDT
+Date: Sun, 8 Apr 2001 14:53:03 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: reentrant C scanner
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200104082000.QAA05847@michael.uncg.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+*** EOOH ***
+Date: Sun, 8 Apr 2001 14:53:03 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: reentrant C scanner
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200104082000.QAA05847@michael.uncg.edu>
+
+Hi,
+
+(Sorry it took a while, my DSL went down again.)
+
+Here is a link to the diff, because my browser (Opera) doesn't do file-uploads
+properly.
+
+http://astro.temple.edu/~john43/flex_r.diff.gz
+
+I did not include a diff of skel.c, because it is built from flex.skl. I did a GNU
+diff, instead of CVS diff, because I had already modified flex before importing it
+into CVS... which means `cvs diff' won't work without some massaging. I'm no CVS
+expert, let me know if you have a solution.
+
+This all works, but is not finished. I want to test it with as many scanners as I
+can dig up. At some point, I'll submit a test directory and a "README.reenrant" as
+well as a modification of the texinfo docs.
+
+Briefly, the changes are these:
+
+1. Added option "reentrant" (-R).
+2. Added preprocessor directive: YY_REENTRANT. (and a few more related to this).
+3. Added internal "struct yy_globals_t"; user-visible as "void*".
+4. All global variables are conditionally eliminated and placed in the struct.
+5. Nearly all functions conditionally take an additional argument.
+6. yylex() is now yylex_r(void*)
+7. All access to globals must be wrapped in YY_G() macro.
+8. User may attach arbitrary data (void*) to the scanner, to maintain state.
+9. New functions for using scanner:  yy_init_r, yy_free_r;
+10. Accessor functions to extract values from struct or globals.
+11. Frequently accessed variables (yytext, yyleng, etc..) have macro shortcuts,
+(yytext_r, yyleng_r, etc.) which hide the internals from users building reentrant
+scanners.
+
+-John Millaway
+
+
+__________________________________________________
+Do You Yahoo!?
+Get email at your own domain with Yahoo! Mail. 
+http://personal.mail.yahoo.com/
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From johnmillaway@yahoo.com  Sun Apr  8 19:16:58 2001
+Return-Path: <johnmillaway@yahoo.com>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id TAA06140
+	for <wlestes@localhost>; Sun, 8 Apr 2001 19:16:58 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Sun, 08 Apr 2001 19:16:58 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f38MwXe18411
+	for <wlestes@hermes.email.uncg.edu>; Sun, 8 Apr 2001 18:58:33 -0400 (EDT)
+Received: from web9402.mail.yahoo.com (web9402.mail.yahoo.com [216.136.129.108])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with SMTP id SAA01092
+	for <wlestes@uncg.edu>; Sun, 8 Apr 2001 18:58:32 -0400 (EDT)
+Message-ID: <20010408225832.81903.qmail@web9402.mail.yahoo.com>
+Received: from [216.254.82.102] by web9402.mail.yahoo.com; Sun, 08 Apr 2001 15:58:32 PDT
+Date: Sun, 8 Apr 2001 15:58:32 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: reentrant C scanner
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200104082224.SAA06112@michael.uncg.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+*** EOOH ***
+Date: Sun, 8 Apr 2001 15:58:32 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: reentrant C scanner
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200104082224.SAA06112@michael.uncg.edu>
+
+> have downloaded this and will set aside time to read your patch this
+> week.
+Please download again, I fixed another bug.
+
+> > I did not include a diff of skel.c, because it is built from flex.skl. I did a
+> GNU> 
+> ok. will remember this...
+
+Just do `./mkskel.sh <flex.skl >skel.c` to rebuild it.
+
+> tag your current sources.
+> import the standard sources and give them another tag/branch name.
+> do a cvs diff explicitly between the two above.
+
+Will do.
+
+
+> that's the gut reaction. let me know if that works or if you have
+> troubles. But I need to prepare a publicly readable cvs archive anyway.
+
+Have you thought about sourceforge?
+
+> the scanner stuff is finished, yes? (sure, there will be bugs and
+> things to work out, but i am asking if the reentrant stuff is in place.)
+Yes, finished. But the changes were so widespread and there are so many options and
+directives that I'm sure something will break very soon. That's why a
+regression-test directory would be nice.
+
+> Go ahead and write the README. This is a good exercise--and usually
+> fairly easy to knock off. It can serve as a guide later on down the
+> road.
+OK.
+
+> To clarify, reentrant should probably not be a default behavior for
+> now.
+It is not. In fact, yacc/bison parsers won't call yylex_r()... something I'll work
+on later.
+
+
+> If it's ok with you, I'm going to forward your post on to
+> help-flex@gnu.org so the "community" can dig in too.
+
+Great. Please include my email address.
+
+Also, the community should really decide on the new API. I am wide open to
+suggestions. Currently, the new API allows a lexer to be backwards compatible, so
+that a working reentrant scanner should be able to be recompiled as a non-reentrant
+scanner, and everything will work just dandy on the inside. However, the syntax is
+not so pretty for the user. On the other hand, a reentrant scanner that is not
+meant to be backwards compatible has a cleaner API (fewer oddball macros).
+
+An example to illustrate:
+
+%option reentrant
+%s FOOBAR
+
+%%
+
+  /* The line in each pair below do the same thing.
+     But second of each pair is backwards-compatible. */
+
+"call-func"  { yy_push_state ( FOOBAR , yy_globals ); }
+"call-func"  { yy_push_state ( FOOBAR  YYCALL_LAST_ARG ); }
+
+"user-data"  { printf( (char*) yyusr_r );}
+"user-data"  { printf( (char*) yy_get_usr(YYCALL_ONLY_ARG));}
+
+"yyleng"     { printf( "%s %d" , yy_text_r, yyleng_r ); }
+"yyleng"     { printf( "%s %d" , YY_G(yy_text), YY_G(yyleng)); }
+
+%%
+main()
+{
+    char* stuff = "user specific data.";
+    void * mylexer;
+   
+    yy_init_r ( & mylexer );       /* Create the scanner. */
+    yy_set_usr( stuff, mylexer );  /* set user-defined stuff. */
+
+    while( 1 )
+        yylex_r ( lexer );
+
+    yy_free_r ( lexer );
+}
+
+-John Millaway
+
+
+__________________________________________________
+Do You Yahoo!?
+Get email at your own domain with Yahoo! Mail. 
+http://personal.mail.yahoo.com/
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From johnmillaway@yahoo.com  Sun Apr  8 20:12:39 2001
+Return-Path: <johnmillaway@yahoo.com>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id UAA06162
+	for <wlestes@localhost>; Sun, 8 Apr 2001 20:12:39 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Sun, 08 Apr 2001 20:12:39 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f38NsQe25613
+	for <wlestes@hermes.email.uncg.edu>; Sun, 8 Apr 2001 19:54:26 -0400 (EDT)
+Received: from web9406.mail.yahoo.com (web9406.mail.yahoo.com [216.136.129.22])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with SMTP id TAA03391
+	for <wlestes@uncg.edu>; Sun, 8 Apr 2001 19:54:24 -0400 (EDT)
+Message-ID: <20010408235423.12509.qmail@web9406.mail.yahoo.com>
+Received: from [216.254.82.102] by web9406.mail.yahoo.com; Sun, 08 Apr 2001 16:54:23 PDT
+Date: Sun, 8 Apr 2001 16:54:23 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: reentrant C scanner
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200104082224.SAA06112@michael.uncg.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+*** EOOH ***
+Date: Sun, 8 Apr 2001 16:54:23 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: reentrant C scanner
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200104082224.SAA06112@michael.uncg.edu>
+
+I'm sure you haven't had time to look at it yet, but there are two other points I
+wanted to mention:
+
+1. Once the reentrant scanner is working, there is no need for the non-reentrant
+scanner. The non-reentrant API can be built as a wrapper around the reentrant
+scanner. Much, much less code maintenance. I will happily do the conversion.
+
+2. The reentrancy can be verified, in part, by running `nm -A -l' on a compiled
+scanner. `nm` is part of binutils and shows, among other things, the global
+variables. In the reentrant scanner, there should be none.
+
+-John Millaway
+
+PS - What is the mailing list? I guess I should subscribe! The gnu site says that
+there is currently no list for flex:
+http://www.gnu.org/software/flex/flex.html#lists
+
+
+__________________________________________________
+Do You Yahoo!?
+Get email at your own domain with Yahoo! Mail. 
+http://personal.mail.yahoo.com/
+
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From vern@daffy.ee.lbl.gov  Tue Apr 17 04:00:22 2001
+Return-Path: <vern@daffy.ee.lbl.gov>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id EAA31012
+	for <wlestes@localhost>; Tue, 17 Apr 2001 04:00:21 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Tue, 17 Apr 2001 04:00:21 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3H7eqe08321
+	for <wlestes@hermes.email.uncg.edu>; Tue, 17 Apr 2001 03:40:52 -0400 (EDT)
+Received: from daffy.ee.lbl.gov (daffy.ee.lbl.gov [131.243.1.31])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id DAA08895
+	for <wlestes@uncg.edu>; Tue, 17 Apr 2001 03:40:50 -0400 (EDT)
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f3H7eoW18946;
+	Tue, 17 Apr 2001 00:40:50 -0700 (PDT)
+Message-Id: <200104170740.f3H7eoW18946@daffy.ee.lbl.gov>
+To: "Yuri Victorovich" <yurivict@hotmail.com>
+Subject: Re: Flex comments
+Cc: wlestes@uncg.edu
+In-reply-to: Your message of Sun, 15 Apr 2001 22:47:37 PDT.
+Date: Tue, 17 Apr 2001 00:40:50 PDT
+From: Vern Paxson <vern@ee.lbl.gov>
+
+*** EOOH ***
+To: "Yuri Victorovich" <yurivict@hotmail.com>
+Subject: Re: Flex comments
+Cc: wlestes@uncg.edu
+In-reply-to: Your message of Sun, 15 Apr 2001 22:47:37 PDT.
+Date: Tue, 17 Apr 2001 00:40:50 PDT
+From: Vern Paxson <vern@ee.lbl.gov>
+
+> One problem: how to eliminate the static variables without making it C++ 
+> scanner with option -+? I do not want to introduce any of C++ into my 
+> project and at the same time I use pthreads on FreeBSD.
+> 
+> That would be a nice feature to have such an option.
+
+I agree it would be nice.  I've cc'd Will Estes, who is trying out taking
+over flex maintenance / development.
+
+		Vern
+
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From yurivict@hotmail.com  Tue Apr 17 10:42:56 2001
+Return-Path: <yurivict@hotmail.com>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id KAA01266
+	for <wlestes@localhost>; Tue, 17 Apr 2001 10:42:56 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Tue, 17 Apr 2001 10:42:56 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3HENMe01358
+	for <wlestes@hermes.email.uncg.edu>; Tue, 17 Apr 2001 10:23:22 -0400 (EDT)
+Received: from hotmail.com (f210.law12.hotmail.com [64.4.19.210])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id KAA06325
+	for <wlestes@uncg.edu>; Tue, 17 Apr 2001 10:23:21 -0400 (EDT)
+Received: from mail pickup service by hotmail.com with Microsoft SMTPSVC;
+	 Tue, 17 Apr 2001 07:22:51 -0700
+Received: from 194.158.212.99 by lw12fd.law12.hotmail.msn.com with HTTP;	Tue, 17 Apr 2001 14:22:51 GMT
+X-Originating-IP: [194.158.212.99]
+From: "Yuri Victorovich" <yurivict@hotmail.com>
+To: wlestes@uncg.edu
+Subject: Re: Flex comments
+Date: Tue, 17 Apr 2001 07:22:51 -0700
+Mime-Version: 1.0
+Content-Type: text/plain; format=flowed
+Message-ID: <F210b98KtdhQYZkxOjm00009556@hotmail.com>
+X-OriginalArrivalTime: 17 Apr 2001 14:22:51.0694 (UTC) FILETIME=[E2BCD4E0:01C0C749]
+
+*** EOOH ***
+From: "Yuri Victorovich" <yurivict@hotmail.com>
+To: wlestes@uncg.edu
+Subject: Re: Flex comments
+Date: Tue, 17 Apr 2001 07:22:51 -0700
+
+Will, Thank you for reply!
+
+I spent the whole day yesterday writing awk script to
+convert normal flex output to thread-safe form.
+
+If you do not have time or will need help with this
+work on flex -- I can do anything from research, programming
+to testing. Just let me know -- I digged into it to some
+extent already and will have some time in the coming weeks.
+
+Kind Regards,
+Yuri.
+
+
+
+
+
+>From: "W. L. Estes" <wlestes@uncg.edu>
+>To: vern@ee.lbl.gov
+>CC: yurivict@hotmail.com
+>Subject: Re: Flex comments
+>Date: Tue, 17 Apr 2001 08:33:35 -0400
+>
+> > > One problem: how to eliminate the static variables without making it 
+>C++
+> > > scanner with option -+? I do not want to introduce any of C++ into my
+> > > project and at the same time I use pthreads on FreeBSD.
+> > >
+> > > That would be a nice feature to have such an option.
+> >
+> > I agree it would be nice.  I've cc'd Will Estes, who is trying out 
+>taking
+> > over flex maintenance / development.
+>
+>Thanks for the suggestion. I'll look into what it will take to do
+>this.
+>
+>--Will
+
+_________________________________________________________________
+Get your FREE download of MSN Explorer at http://explorer.msn.com
+
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From vern@daffy.ee.lbl.gov  Tue Apr 17 12:34:26 2001
+Return-Path: <vern@daffy.ee.lbl.gov>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA01409
+	for <wlestes@localhost>; Tue, 17 Apr 2001 12:34:26 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Tue, 17 Apr 2001 12:34:26 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3HGFpe27457
+	for <wlestes@hermes.email.uncg.edu>; Tue, 17 Apr 2001 12:15:51 -0400 (EDT)
+Received: from daffy.ee.lbl.gov (daffy.ee.lbl.gov [131.243.1.31])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA20041
+	for <wlestes@uncg.edu>; Tue, 17 Apr 2001 12:15:49 -0400 (EDT)
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f3HGFoP19785;
+	Tue, 17 Apr 2001 09:15:50 -0700 (PDT)
+Message-Id: <200104171615.f3HGFoP19785@daffy.ee.lbl.gov>
+To: "W. L. Estes" <wlestes@uncg.edu>
+Subject: Re: Flex comments
+In-reply-to: Your message of Tue, 17 Apr 2001 08:57:41 PDT.
+Date: Tue, 17 Apr 2001 09:15:50 PDT
+From: Vern Paxson <vern@ee.lbl.gov>
+
+*** EOOH ***
+To: "W. L. Estes" <wlestes@uncg.edu>
+Subject: Re: Flex comments
+In-reply-to: Your message of Tue, 17 Apr 2001 08:57:41 PDT.
+Date: Tue, 17 Apr 2001 09:15:50 PDT
+From: Vern Paxson <vern@ee.lbl.gov>
+
+> If there is more detail in the original message, could you forward it
+> to me?
+
+That was the whole message.  The basic problem that people run into
+is they want reentrant scanners, so no statics or global variables.
+The general strategy for this is to have a new yylex() interface in
+which the caller passes in a struct that has all of the otherwise-global
+variables.  This is a bit tricky to do cleanly because you can't switch
+to that as *the* interface, of course, because it would break the
+existing API; which means you have to be able to generate two forms of
+the skeleton file, one for the existing API with the statics/globals,
+and one without them and the struct definition instead.
+
+There's probably some more discussion on this in the mail tarball I sent
+you - search for "reentrant".
+
+		Vern
+
+
+1, filed, answered,,
+X-Coding-System: nil
+Mail-from: From vern@daffy.ee.lbl.gov  Tue Apr 17 12:34:26 2001
+Return-Path: <vern@daffy.ee.lbl.gov>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA01409
+	for <wlestes@localhost>; Tue, 17 Apr 2001 12:34:26 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Tue, 17 Apr 2001 12:34:26 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3HGFpe27457
+	for <wlestes@hermes.email.uncg.edu>; Tue, 17 Apr 2001 12:15:51 -0400 (EDT)
+Received: from daffy.ee.lbl.gov (daffy.ee.lbl.gov [131.243.1.31])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA20041
+	for <wlestes@uncg.edu>; Tue, 17 Apr 2001 12:15:49 -0400 (EDT)
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f3HGFoP19785;
+	Tue, 17 Apr 2001 09:15:50 -0700 (PDT)
+Message-Id: <200104171615.f3HGFoP19785@daffy.ee.lbl.gov>
+To: "W. L. Estes" <wlestes@uncg.edu>
+Subject: Re: Flex comments
+In-reply-to: Your message of Tue, 17 Apr 2001 08:57:41 PDT.
+Date: Tue, 17 Apr 2001 09:15:50 PDT
+From: Vern Paxson <vern@ee.lbl.gov>
+
+*** EOOH ***
+To: "W. L. Estes" <wlestes@uncg.edu>
+Subject: Re: Flex comments
+In-reply-to: Your message of Tue, 17 Apr 2001 08:57:41 PDT.
+Date: Tue, 17 Apr 2001 09:15:50 PDT
+From: Vern Paxson <vern@ee.lbl.gov>
+
+> If there is more detail in the original message, could you forward it
+> to me?
+
+That was the whole message.  The basic problem that people run into
+is they want reentrant scanners, so no statics or global variables.
+The general strategy for this is to have a new yylex() interface in
+which the caller passes in a struct that has all of the otherwise-global
+variables.  This is a bit tricky to do cleanly because you can't switch
+to that as *the* interface, of course, because it would break the
+existing API; which means you have to be able to generate two forms of
+the skeleton file, one for the existing API with the statics/globals,
+and one without them and the struct definition instead.
+
+There's probably some more discussion on this in the mail tarball I sent
+you - search for "reentrant".
+
+		Vern
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Wed Apr 25 00:20:40 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id AAA22703
+	for <wlestes@localhost>; Wed, 25 Apr 2001 00:20:40 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Wed, 25 Apr 2001 00:20:40 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3P403e01034
+	for <wlestes@hermes.email.uncg.edu>; Wed, 25 Apr 2001 00:00:03 -0400 (EDT)
+Received: from fencepost.gnu.org (we-refuse-to-spy-on-our-users@fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id AAA05202
+	for <wlestes@uncg.edu>; Wed, 25 Apr 2001 00:00:02 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14sGTC-0006Tm-00
+	for <wlestes@uncg.edu>; Wed, 25 Apr 2001 00:00:02 -0400
+Received: from [203.199.199.50] (helo=banyannetworks.com)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14sGRt-0006Sr-00
+	for <help-flex@gnu.org>; Tue, 24 Apr 2001 23:58:44 -0400
+Received: from localhost (arasi@localhost) by banyannetworks.com (8.9.3/8.8.3) with ESMTP id JAA03208 for <help-flex@gnu.org>; Wed, 25 Apr 2001 09:25:36 +0530
+From: Avai Arasi <arasi@banyanNetworks.com>
+To: help-flex@gnu.org
+Subject: Clarification Regarding Porting Flex and Bison to RTOS
+Message-ID: <Pine.LNX.4.10.10104250920140.3092-100000@banyannetworks.com>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Wed, 25 Apr 2001 09:25:36 +0530 (IST)
+
+*** EOOH ***
+From: Avai Arasi <arasi@banyanNetworks.com>
+To: help-flex@gnu.org
+Subject: Clarification Regarding Porting Flex and Bison to RTOS
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Wed, 25 Apr 2001 09:25:36 +0530 (IST)
+
+Hello,
+
+   I am trying to port both Flex and Bison to a Real Time OS. I don't have
+the device options like the file which the Flex expects as input. In the
+place of the file i have a character pointer. How should I proceed with
+the parsing ? 
+
+  Is there any standard procedure for this porting ? If somebody has
+already done such a work can i have some hints please.
+
+Thank You.
+
+Regards,
+Avaiarasi
+Senior Engineer R & D
+Banyan Networks Pvt. Ltd.
+Chennai.
+
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Wed Apr 25 13:17:31 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id NAA23790
+	for <wlestes@localhost>; Wed, 25 Apr 2001 13:17:31 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Wed, 25 Apr 2001 13:17:31 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3PGv2e04258
+	for <wlestes@hermes.email.uncg.edu>; Wed, 25 Apr 2001 12:57:02 -0400 (EDT)
+Received: from fencepost.gnu.org (fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA11157
+	for <wlestes@uncg.edu>; Wed, 25 Apr 2001 12:57:01 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14sSb8-00056g-00
+	for <wlestes@uncg.edu>; Wed, 25 Apr 2001 12:57:02 -0400
+Received: from web9403.mail.yahoo.com ([216.136.129.109])
+	by fencepost.gnu.org with smtp (Exim 3.16 #1 (Debian))
+	id 14sSYq-00053W-00
+	for <help-flex@gnu.org>; Wed, 25 Apr 2001 12:54:41 -0400
+Message-ID: <20010425165439.64856.qmail@web9403.mail.yahoo.com>
+Received: from [216.254.82.102] by web9403.mail.yahoo.com; Wed, 25 Apr 2001 09:54:39 PDT
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Bug: %option main overrides %option yywrap
+To: help-flex@gnu.org
+In-Reply-To: <200104251228.IAA23213@michael.uncg.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Wed, 25 Apr 2001 09:54:39 -0700 (PDT)
+
+*** EOOH ***
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Bug: %option main overrides %option yywrap
+To: help-flex@gnu.org
+In-Reply-To: <200104251228.IAA23213@michael.uncg.edu>
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Wed, 25 Apr 2001 09:54:39 -0700 (PDT)
+
+Hello,
+
+There is a "bug" in the current version of flex (2.5.4) in which the %option
+[no]main unconditionally sets the %option [no]yywrap. I use the term "bug"
+hesitantly, because this behavior appears to be intentional. However, I can't think
+of any use for it other than to cause unexpected link errors when yywrap() is not
+found.
+
+Example:
+
+  %option noyywrap  /* Disable option yywrap. */
+  %option nomain    /* Option yywrap is now enabled! */
+
+One workaround is to always specify %option yywrap AFTER %option main. In general,
+if the user explicitly sets an option, then flex should either honor that setting,
+or report a conflict.
+
+The bug is in "scan.l" at line 247, and is undocumented.
+
+244:	lex-compat	lex_compat = option_sense;
+245:	main		{
+246:			action_define( "YY_MAIN", option_sense );
+247:			do_yywrap = ! option_sense;
+248:			}
+249:	meta-ecs	usemecs = option_sense;
+
+-John Millaway
+
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Auctions - buy the things you want at great prices
+http://auctions.yahoo.com/
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Wed Apr 25 14:11:45 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id OAA23826
+	for <wlestes@localhost>; Wed, 25 Apr 2001 14:11:44 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Wed, 25 Apr 2001 14:11:44 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3PHp7e27019
+	for <wlestes@hermes.email.uncg.edu>; Wed, 25 Apr 2001 13:51:07 -0400 (EDT)
+Received: from fencepost.gnu.org (fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id NAA17880
+	for <wlestes@uncg.edu>; Wed, 25 Apr 2001 13:51:08 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14sTRT-0003QA-00
+	for <wlestes@uncg.edu>; Wed, 25 Apr 2001 13:51:07 -0400
+Received: from web9404.mail.yahoo.com ([216.136.129.110])
+	by fencepost.gnu.org with smtp (Exim 3.16 #1 (Debian))
+	id 14sTQy-0003Pm-00
+	for <help-flex@gnu.org>; Wed, 25 Apr 2001 13:50:36 -0400
+Message-ID: <20010425175036.43329.qmail@web9404.mail.yahoo.com>
+Received: from [216.254.82.102] by web9404.mail.yahoo.com; Wed, 25 Apr 2001 10:50:36 PDT
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: scaning from memory
+To: "alexandre.gouraud" <alexandre.gouraud@laposte.net>, help-flex@gnu.org
+In-Reply-To: <GCCZ8R$IiFF_2Id0FNAO2kAXNPACqX5slPk_GQyEsHVyKKjYXVpqFi3j4Ntc@laposte.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Wed, 25 Apr 2001 10:50:36 -0700 (PDT)
+
+*** EOOH ***
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: scaning from memory
+To: "alexandre.gouraud" <alexandre.gouraud@laposte.net>, help-flex@gnu.org
+In-Reply-To: <GCCZ8R$IiFF_2Id0FNAO2kAXNPACqX5slPk_GQyEsHVyKKjYXVpqFi3j4Ntc@laposte.net>
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Wed, 25 Apr 2001 10:50:36 -0700 (PDT)
+
+> I am trying to write a parser with flex/bison scaning strings
+> in memory, but I can't make it work. I am pretty sure it's a
+> common way of using flex, but I didn't find any example on the
+> web. (I have read the manual, of course). I have found several
+> times this question, but no answer.
+> I don't know where to put the yy_scan_string() statement. I
+> use the <<EOF>> rule as last rule. And I have also modified
+> the prototype of the yylex function with
+> #define YY_DECL int yylex(YYSTYPE *lvalp,char *name)
+> where name is the string I want to parse.
+
+You should call yy_scan_string before calling yylex. Here are two examples:
+
+1. In general:
+
+  YY_BUFFER_STATE buf_state = yy_scan_string( str );
+  while( yylex() != 0 )
+      ;
+  yy_delete_buffer(buf_state);
+
+
+2. Your particular scanner:
+
+%{
+#define YY_USER_INIT  buf_state = yy_scan_string( name );
+%}
+%%
+    static YY_BUFFER_STATE buf_state;
+
+<<EOF>>   { yy_buffer_delete( buf_state ); yyterminate(); }
+%%
+
+-John
+
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Auctions - buy the things you want at great prices
+http://auctions.yahoo.com/
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Wed Apr 25 14:41:58 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id OAA23852
+	for <wlestes@localhost>; Wed, 25 Apr 2001 14:41:58 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Wed, 25 Apr 2001 14:41:58 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3PILLe10211
+	for <wlestes@hermes.email.uncg.edu>; Wed, 25 Apr 2001 14:21:21 -0400 (EDT)
+Received: from fencepost.gnu.org (fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id OAA21692
+	for <wlestes@uncg.edu>; Wed, 25 Apr 2001 14:21:21 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14sTuj-0007Yw-00
+	for <wlestes@uncg.edu>; Wed, 25 Apr 2001 14:21:21 -0400
+Received: from daffy.ee.lbl.gov ([131.243.1.31])
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14sTtm-0007Xg-00
+	for <help-flex@gnu.org>; Wed, 25 Apr 2001 14:20:22 -0400
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f3PIKJa19998;
+	Wed, 25 Apr 2001 11:20:19 -0700 (PDT)
+Message-Id: <200104251820.f3PIKJa19998@daffy.ee.lbl.gov>
+To: "John W. Millaway" <johnmillaway@yahoo.com>
+Cc: help-flex@gnu.org
+Subject: Re: Bug: %option main overrides %option yywrap
+In-reply-to: Your message of Wed, 25 Apr 2001 09:54:39 PDT.
+From: Vern Paxson <vern@ee.lbl.gov>
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Wed, 25 Apr 2001 11:20:19 PDT
+
+*** EOOH ***
+To: "John W. Millaway" <johnmillaway@yahoo.com>
+Cc: help-flex@gnu.org
+Subject: Re: Bug: %option main overrides %option yywrap
+In-reply-to: Your message of Wed, 25 Apr 2001 09:54:39 PDT.
+From: Vern Paxson <vern@ee.lbl.gov>
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Wed, 25 Apr 2001 11:20:19 PDT
+
+> 245:	main		{
+> 246:			action_define( "YY_MAIN", option_sense );
+> 247:			do_yywrap = ! option_sense;
+> 248:			}
+
+I think I did that (which is documented in the manual, by the way) so that
+"%option main" would be a quick way to specify you want a bare-bones
+program for which you don't have to define any additional routines.
+I'd be disinclined to change it (though it's Will's call) because it's
+so easy to work around - just don't use "%option main", which is only
+saving you a few lines of code anyway.
+
+		Vern
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Wed Apr 25 16:28:59 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id QAA23955
+	for <wlestes@localhost>; Wed, 25 Apr 2001 16:28:59 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Wed, 25 Apr 2001 16:28:59 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3PK99e25951
+	for <wlestes@hermes.email.uncg.edu>; Wed, 25 Apr 2001 16:09:09 -0400 (EDT)
+Received: from fencepost.gnu.org (fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id QAA05277
+	for <wlestes@uncg.edu>; Wed, 25 Apr 2001 16:09:08 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14sVb1-0005jV-00
+	for <wlestes@uncg.edu>; Wed, 25 Apr 2001 16:09:07 -0400
+Received: from michael.uncg.edu ([152.13.5.20])
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14sVaJ-0005iu-00
+	for <help-flex@gnu.org>; Wed, 25 Apr 2001 16:08:23 -0400
+Received: (from wlestes@localhost)
+	by michael.uncg.edu (8.9.3/8.9.3) id QAA23947;
+	Wed, 25 Apr 2001 16:27:46 -0400
+Message-Id: <200104252027.QAA23947@michael.uncg.edu>
+X-Authentication-Warning: michael.uncg.edu: wlestes set sender to wlestes@michael.uncg.edu using -f
+From: "W. L. Estes" <wlestes@uncg.edu>
+To: vern@ee.lbl.gov
+CC: johnmillaway@yahoo.com, help-flex@gnu.org
+In-reply-to: <200104251820.f3PIKJa19998@daffy.ee.lbl.gov> (message from Vern
+	Paxson on Wed, 25 Apr 2001 11:20:19 PDT)
+Subject: Re: Bug: %option main overrides %option yywrap
+References:  <200104251820.f3PIKJa19998@daffy.ee.lbl.gov>
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Wed, 25 Apr 2001 16:27:46 -0400
+
+*** EOOH ***
+From: "W. L. Estes" <wlestes@uncg.edu>
+To: vern@ee.lbl.gov
+CC: johnmillaway@yahoo.com, help-flex@gnu.org
+In-reply-to: <200104251820.f3PIKJa19998@daffy.ee.lbl.gov> (message from Vern
+	Paxson on Wed, 25 Apr 2001 11:20:19 PDT)
+Subject: Re: Bug: %option main overrides %option yywrap
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Wed, 25 Apr 2001 16:27:46 -0400
+
+> I think I did that (which is documented in the manual, by the way) so that
+> "%option main" would be a quick way to specify you want a bare-bones
+> program for which you don't have to define any additional routines.
+> I'd be disinclined to change it (though it's Will's call) because it's
+> so easy to work around - just don't use "%option main", which is only
+> saving you a few lines of code anyway.
+
+Additionally, flex.1 says the following:
+
+       main   directs  flex  to  provide a default main() program
+              for the scanner, which simply calls yylex().   This
+              option implies noyywrap (see below).
+
+My sense is that Vern is correct: The right thing to do is to not use
+%option main if you want yywrap() to be under your control.
+
+Thanks,
+
+--Will
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Thu Apr 26 12:11:23 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA25162
+	for <wlestes@localhost>; Thu, 26 Apr 2001 12:11:22 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Thu, 26 Apr 2001 12:11:22 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3QFp6e21203
+	for <wlestes@hermes.email.uncg.edu>; Thu, 26 Apr 2001 11:51:06 -0400 (EDT)
+Received: from fencepost.gnu.org (fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id LAA21348
+	for <wlestes@uncg.edu>; Thu, 26 Apr 2001 11:51:05 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14so2r-00043k-00
+	for <wlestes@uncg.edu>; Thu, 26 Apr 2001 11:51:05 -0400
+Received: from [208.155.173.144] (helo=symbology.com)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14so2e-0003Dl-00
+	for <help-flex@gnu.org>; Thu, 26 Apr 2001 11:50:53 -0400
+Received: from Spooler by symbology.com (Mercury/32 v3.21c) ID MO003737;
+    26 Apr 01 10:52:43 -0500
+Received: from spooler by symbology.com (Mercury/32 v3.21c); 26 Apr 01 10:52:29 -0500
+Received: from grommit (10.0.0.74) by Symbology (Mercury/32 v3.21c) ID MG003736;
+   26 Apr 01 10:52:22 -0500
+From: "Dave Dutcher" <ddutcher@symbology.com>
+To: <help-flex@gnu.org>
+Subject: Suppress copying characters to yytext?
+Message-ID: <002501c0ce68$99b3ec40$4a00000a@symbology.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3 (Normal)
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook CWS, Build 9.0.2416 (9.0.2910.0)
+X-MimeOLE: Produced By Microsoft MimeOLE V5.50.4133.2400
+Importance: Normal
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Thu, 26 Apr 2001 10:50:20 -0500
+
+*** EOOH ***
+From: "Dave Dutcher" <ddutcher@symbology.com>
+To: <help-flex@gnu.org>
+Subject: Suppress copying characters to yytext?
+Importance: Normal
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Thu, 26 Apr 2001 10:50:20 -0500
+
+Hi,
+
+First off I was wondering if there is an official web site for Flex?
+
+Second, I would like to be able to have Flex use certain characters in a
+regular expression to match the expression but suppress copying the
+characters to yytext.  A simple example would be if I was trying to match
+text surrounded by quotes, but I don't want to use the quotes. i.e.
+
+\"[^\n]\"		{ yylval = strdup(yytext); //This gives me the text and quotes. }
+
+or
+
+\"[^\n]\"		{ yylval = strdup(yytext+1); yylval[strlen(yylval)-1] = '\0';
+//Now I've removed the quotes. }
+
+But since I'm lazy ;)  I would like to be able to tell Flex not to copy the
+quotes.  What I would like is an operator that would tell flex to match an
+expression but to not copy it to yytext.  Off the top of my head maybe the #
+symbol could work for such an operator, so I could then do:
+
+\"#[^\n]\"#	{ yylval = strdup(yytext); //This would give me the text without
+the quotes. }
+
+Does anyone know if such a feature or something similar exists?  If this
+doesn't exists would it be practical?
+
+Thanks,
+
+Dave Dutcher
+Software Engineer
+Symbology, Inc.
+Minneapolis, MN
+
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Thu Apr 26 12:26:26 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA25203
+	for <wlestes@localhost>; Thu, 26 Apr 2001 12:26:26 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Thu, 26 Apr 2001 12:26:26 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3QG63e27511
+	for <wlestes@hermes.email.uncg.edu>; Thu, 26 Apr 2001 12:06:03 -0400 (EDT)
+Received: from fencepost.gnu.org (fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA23192
+	for <wlestes@uncg.edu>; Thu, 26 Apr 2001 12:06:02 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14soHK-0004gM-00
+	for <wlestes@uncg.edu>; Thu, 26 Apr 2001 12:06:02 -0400
+Received: from acp3bf.physik.rwth-aachen.de ([137.226.32.75])
+	by fencepost.gnu.org with smtp (Exim 3.16 #1 (Debian))
+	id 14soFe-0004cw-00
+	for <help-flex@gnu.org>; Thu, 26 Apr 2001 12:04:18 -0400
+Received: from localhost (broeker@localhost) by acp3bf.physik.rwth-aachen.de (8.7.5/v3.2) with ESMTP id SAA00797; Thu, 26 Apr 2001 18:04:09 +0200
+X-Authentication-Warning: acp3bf.physik.rwth-aachen.de: broeker owned process doing -bs
+From: Hans-Bernhard Broeker <broeker@physik.rwth-aachen.de>
+X-Sender: broeker@acp3bf
+To: Dave Dutcher <ddutcher@symbology.com>
+cc: help-flex@gnu.org
+Subject: Re: Suppress copying characters to yytext?
+In-Reply-To: <002501c0ce68$99b3ec40$4a00000a@symbology.com>
+Message-ID: <Pine.LNX.4.10.10104261759540.592-100000@acp3bf>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Thu, 26 Apr 2001 18:04:06 +0200 (MET DST)
+
+*** EOOH ***
+From: Hans-Bernhard Broeker <broeker@physik.rwth-aachen.de>
+To: Dave Dutcher <ddutcher@symbology.com>
+cc: help-flex@gnu.org
+Subject: Re: Suppress copying characters to yytext?
+In-Reply-To: <002501c0ce68$99b3ec40$4a00000a@symbology.com>
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Thu, 26 Apr 2001 18:04:06 +0200 (MET DST)
+
+On Thu, 26 Apr 2001, Dave Dutcher wrote:
+
+> Second, I would like to be able to have Flex use certain characters in a
+> regular expression to match the expression but suppress copying the
+> characters to yytext.  
+
+You can do that with a start condition and trailing context rules. I.e.
+roughly like this:
+
+<INITIAL>\"	BEGIN(IN_STRING)
+
+<IN_STRING>[^\n]*/\"	{ 
+			/* yytext is the interior of the string, now */
+			BEGIN(INITIAL)
+			}
+
+-- 
+Hans-Bernhard Broeker (broeker@physik.rwth-aachen.de)
+Even if all the snow were burnt, ashes would remain.
+
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From johnmillaway@yahoo.com  Wed Apr 25 18:52:08 2001
+Return-Path: <johnmillaway@yahoo.com>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id SAA24103
+	for <wlestes@localhost>; Wed, 25 Apr 2001 18:52:08 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Wed, 25 Apr 2001 18:52:08 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3PMWQe07299
+	for <wlestes@hermes.email.uncg.edu>; Wed, 25 Apr 2001 18:32:26 -0400 (EDT)
+Received: from web9404.mail.yahoo.com (web9404.mail.yahoo.com [216.136.129.110])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with SMTP id SAA23019
+	for <wlestes@uncg.edu>; Wed, 25 Apr 2001 18:32:24 -0400 (EDT)
+Message-ID: <20010425223059.65780.qmail@web9404.mail.yahoo.com>
+Received: from [216.254.82.102] by web9404.mail.yahoo.com; Wed, 25 Apr 2001 15:30:59 PDT
+Date: Wed, 25 Apr 2001 15:30:59 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: Bug: %option main overrides %option yywrap
+To: "W. L. Estes" <wlestes@uncg.edu>, vern@ee.lbl.gov
+Cc: help-flex@gnu.org
+In-Reply-To: <200104252027.QAA23947@michael.uncg.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+*** EOOH ***
+Date: Wed, 25 Apr 2001 15:30:59 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: Bug: %option main overrides %option yywrap
+To: "W. L. Estes" <wlestes@uncg.edu>, vern@ee.lbl.gov
+Cc: help-flex@gnu.org
+In-Reply-To: <200104252027.QAA23947@michael.uncg.edu>
+
+> Additionally, flex.1 says the following:
+> 
+>        main   directs  flex  to  provide a default main() program
+>               for the scanner, which simply calls yylex().   This
+>               option implies noyywrap (see below).
+
+I understand, and it makes sense. Just be aware that the inverse of this rule is
+also true --  %option nomain implies yywrap -- which makes much less sense.
+
+Of course, I only complain because it had me on one heck of a bug hunt. I had
+specified %option noyywrap and %option nomain, yet the linker complained that it
+couldn't find yywrap. I thought I had broken something! :)
+
+-John
+
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Auctions - buy the things you want at great prices
+http://auctions.yahoo.com/
+
+

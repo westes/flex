@@ -1,0 +1,24 @@
+Tue Oct  5 21:51:59 1993  Vern Paxson
+
+	* Removed FILTER/ subdirectory.
+
+	* Removed alloca.c.
+
+	* Changed Makefile definition of CC to just "gcc -g", removed
+	  assumption of alloca being present.
+
+	* Added pointer to MISC/fastwc/ to wc.lex.
+
+Tue Jun  8 15:47:39 1993  Gavin Thomas Nicol  (nick at sillybugs)
+
+	* Changed main() in wc.lex extensively. The old version would not
+	  work correctly without the YY_NEW_FILE. (lex handles the older
+	  version OK though).
+
+	* Added a rule to expr.lex to handle whitespace. The old version
+ 	  reported an illegal character.
+
+	* Added -traditional to the gcc flags because the flex definition
+	  for free() clashes with some systems that have old header files.
+	  
+

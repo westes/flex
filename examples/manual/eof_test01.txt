@@ -1,0 +1,17 @@
+This is test file #1
+
+-------------------------------------------------
+
+We will now include test #2 in a standard way.
+
+#include "eof_test02.txt"
+
+-------------------------------------------------
+
+And now we will include test # 2 with a different
+format
+
+#include "eof_test02.txt"
+-------------------------------------------------
+
+and this is the end of the test.

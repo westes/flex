@@ -1,0 +1,123 @@
+start conditions given own name space by making them structure fields
+	#define BEGIN(x) yy_start_state = yy_states->x
+reentrant/
+streams/
+yylineno maintained per input buffer
+use yyconst instead of const, to fix __STDC__ == 0 problem
+scan input for unput()
+-CF/-Cf support interactive scanners
+reject_really_used -> maintain_backup_tables
+full library encapsulation: flex'ing on the fly
+fix MAX_MNS/MARKER_DIFFERENCE to not be a hard limit
+Two flags to warn when something is seen that lex or posix might interpret
+  differently; this should be quite doable as -l already exists. Proposed
+  names: -Wl, -Wp.
+reentrant C scanners
+yy_fseek() for positioning in input file
+set-able "at beginning of line" , no more unput() trashes yytext?
+yy_unput_string(); unput() shifts yytext to preserve it, grows buffer as needed
+yy_malloc_type as void* so can be easily switched to char* for poor
+	hopeless bastards running SunSoft stuff?
+public "TODO" file, requesting help?
+test -P to make sure it's not broken now due to e.g. yy_scan_string
+%option
+hook for treating input interactively even if not isatty()
+scan.l:22:error message :-( (see flex.todo)
+document yy_fill_buffer
+lint, gcc-lint
+-lfl removed from flex.1
+merge 2.4.6, e.g., NEWS
+'|' action copies action instead of omitting break
+if yy_current_buffer defined on entry to yylex(), don't promote nil yyin
+	to stdin, etc.
+multibyte character flex
+
+
+ANSI only
+multiple inclusion of <stdlib.h>?
+[=...=] POSIX stuff
++flex.todo
+yylineno, yycol by checking for whether rules can match embedded newlines,
+	only trailing newlines, always trailing newlines, or no newlines
+compute transition path to each DFA state, to aid in backtracking
+	for each state, store pointer to predecessor, character for xtion
+merge flex.1, flexdoc.1?
+bison++ interface
+YYLEXER_NAME
+out-line FlexLexer destructors
+GNU readline contrib?
+isatty() decl?
+#ifdef chud for unput() etc. not being used?
+	"../scan.l", line 207: warning:  ::yy_did_buffer_switch_on_eof defined but not used
+	cc   -c  -g scan.c
+	"scan.cc", line 1752: warning: statement not reached
+alloca.c removed from Makefile
+// comments
+
+output partitioning for e.g., scanning tables, actions, etc.
+
+ 497  09/11 14:17-PDT  3450 To:t_bonner@oscar  Re: Modifying yytext in an actio
+MISC stuff non-writeable
+texinfo version of manual
+
+	ALSO: document how to do so (including no need to redefine unput()),
+		whether feature added or not
+
+example of "error" backtracking rules as opposed to "catch-all"
+get rid of get_previous_state via accepting #'s tied to previous state #'s
+-p tells something about backtracking
+easy way to scan strings instead of files
+input() across buffer boundaries, buffer overflow; unput() fix
+start state stack
+NLSTATE - sets "in newline" state; also mechanism to clear "in newline" state
+checks for bogus backtrack rules  ... - rule shadowing
+document incompatibility with lex when unput()'ing a newline
+	after a newline has been read
+document that comments are not allowed on definition lines
+	foo  bar  /* the "foo" definition ... */
+perhaps indented code in section 2 leads to warnings?
+#line directives for code at beginning of scanner routine
+nuke %used etc.
+hooks for direct access to the buffer, e.g. for flushing it
+options in .l file as well as on command line; particularly the rename-prefix
+	option
+clarify "eat up * not followed by /" in <comment> example; move it to
+    performance, offer simpler version for start states
+hook for finding out how much text can be safely pushed back
+the .backtrack code knows how to identify characters that cause transitions 
+	(you wanted this for some clearer error messages for the
+	 "default rule can be matched")
+yy_switch_to_buffer sets yy_init to 0?
+handy library routines, such as yy_C_comment(), yy_C_string(),
+obey #line directives in input; first, get rid of # comments ...
+flex.h header for declarations of e.g., yymore(), yytext?
+	but what about %array making the yytext definition out of date?
+merge w/ okeeffe code
+rearrange the Performance Considerations section so that the easy
+    fixes come first
+copyright notice in manuals?
+input() updates yytext and yyleng; perhaps unput too???;
+	right now it trashes them (doesn't restore '\0')
+document that yyleng can now be modified
+	except if yymore() used?
+anchoring allowed inside ()'s - (^abc|def$)
+unput() propagates non-newline state too?
+complain about invalid anchoring - foo(^abc), (^abc)+
+library in its own directory
+yylineno
+example in flexdoc on YY_INPUT reading from input()
+redesign for retargetability (i.e., use w/ other languages ...)
+clean up escape expansion
+bison @N
+example for doc. on scanning strings w/ escapes in them:
+POSIX/
+get rid of duplicated code between "re2 re" rule and "re '$'" rule
+preformatted man pages for VMS sites, possibly using col -b to get rid
+	of backspaces ...
+slurp entire input file into mega-buffer; allows pointers to in-place
+	identifiers
+lex compatibility flag
+update flags in docs
+-n removed from POSIX?
+"MAKE = ..." shouldn't be commented out, or else bigtest can fail
+BSD man macros

@@ -1,0 +1,711 @@
+PARSE.Y 344: ('rule'-rule " | re '$' ": There are some errors concerning
+    trailing context. First of all the rule " re '$' " implies that this is
+    no variable_trail_rule because the tail of it ( '$' ) has a fixed length
+    of 1. The only possible reason for making this rule variable is when
+    'previous_continued_action' is true. In this case 'variable_trail_rule'
+    must be set and the beginning of the trailing part must be marked.
+    However the variables 'varlength' and 'headcnt' have not the same meaning
+    as in the rule " re2 re ". Here ( in the rule " re '$' " ) 'varlength'
+    is true if the head ( 're' ) of the rule has variable length, and
+    'headcnt' is still 0 because it isn't set during reduction of 're'.
+    Therefore the test for a variable trailing rule
+      " if ( ! varlength || headcnt != 0 ) "
+    is wrong and should be removed.
+    Also it is not necessary to set 'varlength' or 'headcnt' if you set
+    " trailcnt = 1; ". If this rule is made variable then 'variable_trail_rule'
+    is set and neither 'headcnt' nor 'trailcnt' are used in 'finish_rule()'.
+    And if this rule is normal then the head may be variable or not, but in
+    'finish_rule()' code is generated to reduce 'yy_cp' by 1.
+    Finally I found no reason to create an epsilon-state and insert it in
+    front of mkstate( '\n' ) instead of adding it behind. This epsilon-state
+    should be marked as STATE_TRAILING_CONTEXT. Otherwise you get no warning
+    of dangerous trailing context if you have a rule " x\n*$ " which was made
+    variable with '|'.)
+
+		|  re '$'
+			{
+			/* if ( trlcontxt )
+			    {
+			    synerr( "trailing context used twice" );
+			    $$ = mkstate( SYM_EPSILON );
+			    }
+
+			else */ if ( previous_continued_action )
+			    {
+			    /* see the comment in the rule for "re2 re"
+			     * above
+			     */
+			/*  if ( ! varlength || headcnt != 0 )  */
+				{
+				fprintf( stderr,
+    "%s: warning - trailing context rule at line %d made variable because\n",
+					 program_name, linenum );
+				fprintf( stderr,
+					 "      of preceding '|' action\n" );
+				}
+
+			/* mark as variable */
+			/*  varlength = true;
+			    headcnt = 0;  */
+
+			    add_accept( $1, num_rules | YY_TRAILING_HEAD_MASK )
+;
+			    variable_trail_rule = true;
+			    }
+
+		/*	trlcontxt = true;
+
+			if ( ! varlength )
+			    headcnt = rulelen;
+
+			++rulelen;  */
+			trailcnt = 1;
+
+			current_state_type = STATE_TRAILING_CONTEXT;
+			eps = mkstate( SYM_EPSILON );
+			current_state_type = STATE_NORMAL;
+
+			$$ = link_machines( $1,
+				 link_machines( mkstate( '\n' ), eps ) );
+			}
+
+DFA.C 618: (ntod(): The arrays 'targstate[]' and 'targfreq[]' can be
+    maintained in a better way. Up to now it is possible that states are added
+    to 'targstate[]' more than once, because the state 'newds' from the call
+    to snstods() creates a new entry in 'targstate[]'. But 'newds' may already
+    exist in 'targstate[]' !
+    Another point is that 'targfreq[]' is not updated if "caseins && ! useecs"
+    is true.
+    My algorithm should solve these problems. However it could be simplified
+    by replacing 'newds' by 'targ' and removing the statement "targ = newds;".
+    Remark to the second point: I decremented the targfreq-counter if 'sym'
+    was an uppercase letter and incremented it if 'sym' was a lowercase
+    letter. The index 'i' of 'targfreq[i]' points to the correct position in
+    'targstate[]' even if a new state was added.)
+
+	for ( sym = 1; sym <= numecs; ++sym )
+	    {
+	    if ( symlist[sym] )
+		{
+		symlist[sym] = 0;
+
+		if ( duplist[sym] == NIL )
+		    { /* symbol has unique out-transitions */
+		    numstates = symfollowset( dset, dsize, sym, nset );
+		    nset = epsclosure( nset, &numstates, accset,
+				       &nacc, &hashval );
+
+		    if ( snstods( nset, numstates, accset,
+				  nacc, hashval, &newds ) )
+			{
+			totnst = totnst + numstates;
+			++todo_next;
+			numas += nacc;
+
+			if ( variable_trailing_context_rules && nacc > 0 )
+			    check_trailing_context( nset, numstates,
+				accset, nacc );
+			}
+
+		    targ = newds;
+		    }
+
+		else
+		    {
+		    /* sym's equivalence class has the same transitions
+		     * as duplist(sym)'s equivalence class
+		     */
+		    targ = state[duplist[sym]];
+		    }
+
+		state[sym] = targ;
+
+		if ( trace )
+			fprintf( stderr, "\t%d\t%d\n", sym, targ );
+
+		/* update frequency count for destination state */
+
+		for ( i = 1; i <= targptr; ++i )
+		    if ( targstate[i] == targ )
+			    break;
+
+		if ( i <= targptr )
+		    {
+		    ++targfreq[i];
+		    ++numdup;
+		    }
+		else
+		    {
+		    targfreq[++targptr] = 1;
+		    targstate[targptr] = targ;
+		    ++numuniq;
+		    }
+
+		if ( caseins && ! useecs )
+		    {
+		    if ( sym >= 'A' && sym <= 'Z' )
+			{
+			--targfreq[i];
+			--totaltrans;
+			}
+		    else if ( sym >= 'a' && sym <= 'z' )
+			{
+			++targfreq[i];
+			++totaltrans;
+			}
+		    }
+
+		++totaltrans;
+		duplist[sym] = NIL;
+		}
+	    }
+
+
+GEN.C 438: (gen_next_compressed_state(): I have rewritten the function
+    'yy_try_NUL_trans()' so it really just tries to find out whether a
+    transition on the NUL character goes to the jamstate or not. ( That means
+    I removed each creation of backtracking information and the saving of the
+    new state on the 'yy_state_buf[]'. )
+    Therefore I removed the call for 'gen_backtracking()' here, because the
+    function 'gen_next_compressed_state()' is also used in 'gen_NUL_trans()'.)
+
+/*  gen_backtracking(); */
+
+GEN.C 587ff: (gen_next_state(): Since the backtracking information is not
+    created in 'gen_next_compressed_state()' any more, it is done here
+    before the next state is computed ( for "compressed" tables ). This
+    removes the bug that the backtracking information is created twice if
+    'nultrans' is not NULL and 'gen_next_compressed_state()' is called.
+    Finally I had to insert the creation of a "{" and a "}", because there
+    is a local variable created in 'gen_next_compressed_state()'. ( These are
+    needed only when backtracking information is really created.) )
+
+    if ( ! fulltbl && ! fullspd )
+	gen_backtracking();
+
+    if ( worry_about_NULs && nultrans )
+	{
+	indent_puts( "if ( *yy_cp )" );
+	indent_up();
+	indent_puts( "{" );
+	}
+    else if ( ! fulltbl && ! fullspd && ! reject && num_backtracking > 0 )
+	indent_puts( "{" );
+
+    if ( fulltbl )
+	indent_put2s( "yy_current_state = yy_nxt[yy_current_state][%s];",
+		char_map );
+
+    else if ( fullspd )
+	indent_put2s( "yy_current_state += yy_current_state[%s].yy_nxt;",
+		    char_map );
+
+    else
+	gen_next_compressed_state( char_map );
+
+    if ( worry_about_NULs && nultrans )
+	{
+	indent_puts( "}" );
+	indent_down();
+	indent_puts( "else" );
+	indent_up();
+
+	indent_puts( "yy_current_state = yy_NUL_trans[yy_current_state];" );
+	indent_down();
+	}
+    else if ( ! fulltbl && ! fullspd && ! reject && num_backtracking > 0 )
+	indent_puts( "}" );
+
+    if ( fullspd || fulltbl )
+	gen_backtracking();
+
+    if ( reject )
+	indent_puts( "*yy_state_ptr++ = yy_current_state;" );
+    }
+
+GEN.C 553: (gen_next_match(): There is a problem if 'interactive' is true. In
+    this case the scanner jams if the next state is the jamstate ( i.e.
+    yy_base[yy_current_state] == jambase ). However the scanner reaches also
+    the jamstate if the transition character is the NUL-character or if the
+    end of the buffer is reached. Then in the EOB-action is decided whether
+    this was really a NUL character or the end-of-buffer. ( If it was a NUL,
+    scanning will be resumed. If it was the end-of-buffer, the buffer will be
+    filled first, before scanning will be resumed. )
+    These actions are not done if you use an 'interactive' scanner, because
+    the EOB-action is not executed. Therefore you have to continue scanning,
+    if you have just matched a NUL character ( i.e. *yy_cp == '\0' and
+    yy_cp < &yy_current_buffer->yy_ch_buf[yy_n_chars] ) and if you are not
+    already in the yamstate ( i.e. yy_current_state != jamstate ).
+    Note that the '<' in " yy_cp < &yy_current_buffer->yy_ch_buf[yy_n_chars] "
+    implies that the EOB action is *not* executed if the last match before the
+    end-of-buffer was maximal.
+    The following change in the algorithm results in a minor performance
+    penalty because the additional conditions are tested only if you have
+    reached the end of the match or if you are using NUL characters in your
+    patterns.)
+
+	if ( interactive )
+	    {
+	    printf( "while ( yy_base[yy_current_state] != %d\n", jambase );
+	    set_indent( 4 );
+	    indent_puts( "|| ( *yy_cp == '\\0'" );
+	    indent_up();
+	    indent_puts(
+		" && yy_cp < &yy_current_buffer->yy_ch_buf[yy_n_chars]" );
+	    do_indent();
+	    printf( " && yy_current_state != %d ) );\n", jamstate );
+	    set_indent( 2 );
+	    }
+	else
+	    printf( "while ( yy_current_state != %d );\n", jamstate );
+
+GEN.C 341: (gen_find_action(): Question: The variables 'yy_full_match',
+    'yy_full_state' and 'yy_full_lp' are used only in the REJECT macro. Why
+    do you not also test here on 'real_reject' before you create code to set
+    these variables ( like you did in line 327ff for the action of the case
+    " ( yy_act & YY_TRAILING_MASK ) " ) ?)
+
+    New code beginning at line 338 to show the context:
+	    indent_puts( "else" );
+	    indent_up();
+	    indent_puts( "{" );
+
+	    if ( real_reject )
+		{
+		/* remember matched text in case we back up due to REJECT */
+		indent_puts( "yy_full_match = yy_cp;" );
+		indent_puts( "yy_full_state = yy_state_ptr;" );
+		indent_puts( "yy_full_lp = yy_lp;" );
+		}
+
+	    indent_puts( "break;" );
+	    indent_puts( "}" );
+	    indent_down();
+
+	    indent_puts( "++yy_lp;" );
+	    indent_puts( "goto find_rule;" );
+	    }
+
+
+FLEX.SKEL 364,379: (YY_END_OF_BUFFER action: If it was really a NUL character
+    which started this action, then 'yy_bp' points still at the beginning of
+    the current run and 'yy_c_buf_p' points behind the NUL character.
+    Contrast this with the situation after the call of 'yy_get_next_buffer()'!
+    Therefore I removed the statement " yy_bp = yytext + YY_MORE_ADJ; "
+    ( line 379 ) and replaced the statement
+    " yy_c_buf_p = yytext + yy_amount_of_matched_text; " ( line 364 ) by the
+    easier one " yy_c_buf_p = --yy_cp; ". Here 'yy_cp' is also adjusted.
+    This guarantees that both 'yy_c_buf_p' and 'yy_cp' point at the NUL
+    character. Therefore 'yy_cp' will have the correct value when it is needed
+    after the call to 'yy_try_NUL_trans()' ( when we know whether we make a
+    transition or not ).
+
+    line 364:
+		    yy_c_buf_p = --yy_cp;
+
+    line 379:
+		/*  yy_bp = yytext + YY_MORE_ADJ; */
+
+GEN.C 632: (gen_NUL_trans(): I have rewritten 'yy_try_NUL_trans()'. The new
+    version just finds out whether a transition on the NUL character goes to
+    the jamstate or not. See also my remarks to 'gen_next_compressed_state()'.
+    Note that the test " yy_is_jam = (yy_current_state == jamstate); " is
+    also used, if 'interactive' is true. Otherwise 'yy_try_NUL_trans()' would
+    return 0, if the NUL character was the last character of a pattern
+    ( e.g. "x\0" ), and we therefore would not reach the last state.
+    Remark: Change also the comment in FLEX.SKEL for this function.)
+
+    FLEX.SKEL, line 583:
+%% code to find the next state goes here
+
+    GEN.C, line 632ff:
+/*  int need_backtracking = (num_backtracking > 0 && ! reject);
+
+    if ( need_backtracking )
+	/ * we'll need yy_cp lying around for the gen_backtracking() * /
+	indent_puts( "register YY_CHAR *yy_cp = yy_c_buf_p;" ); */
+
+    GEN.C, line 674ff:
+/*	if ( reject )
+	    indent_puts( "*yy_state_ptr++ = yy_current_state;" ); */
+
+	do_indent();
+
+/*	if ( interactive )
+	    printf( "yy_is_jam = (yy_base[yy_current_state] == %d);\n",
+		    jambase );
+	else */
+	    printf( "yy_is_jam = (yy_current_state == %d);\n", jamstate );
+	}
+
+    /* if we've entered an accepting state, backtrack; note that
+     * compressed tables have *already* done such backtracking, so
+     * we needn't bother with it again
+     */
+/*  if ( need_backtracking && (fullspd || fulltbl) )
+	{
+	putchar( '\n' );
+	indent_puts( "if ( ! yy_is_jam )" );
+	indent_up();
+	indent_puts( "{" );
+	gen_backtracking();
+	indent_puts( "}" );
+	indent_down();
+	} */
+    }
+
+GEN.C 1293: (make_tables(): The changed functionality of 'yy_try_NUL_trans()'
+    implies changes in the EOB action. If the next state 'yy_next_state' is 0
+    ( i.e. the jamstate ), you can immediately jump to 'yy_find_action'.
+    Remember that 'yy_cp' was already adjusted to point at the NUL !
+    Also you must not use the backtracking information because the actual
+    state 'yy_current_state' may be an accepting state.
+    If 'yy_next_state' is not the jamstate, we make a transition on the NUL.
+    This requires the following actions:
+    - Create backtracking information for compressed tables *before* we make
+      the transition on NUL.
+    - Now increment 'yy_cp' and set 'yy_current_state' to 'yy_next_state'.
+      ( Note that 'yy_cp' points at the NUL up to now. )
+    - Save the new state on the stack 'yy_state_buf[]' if 'reject' is true.
+    - Create backtracking information *after* the transition, if 'fulltbl'
+      or 'fullspd' is true.
+    - Finally decide, if 'interactive' is true, whether scanning should be
+      resumed at 'yy_match' or whether we have reached a final state and
+      should jump to 'yy_find_action'. (Condition like in 'gen_next_match()'.)
+      If 'interactive' is false, just resume scanning.)
+
+    Corresponding code in FLEX.SKEL beginning at line 381:
+		    if ( yy_next_state )
+			{
+			/* consume the NUL */
+%% code to do backtracking for compressed tables and set up yy_cp goes here
+			}
+		    else
+			goto yy_find_action;
+
+    Code in GEN.C beginning at line 1293:
+    /* first, deal with backtracking and setting up yy_cp if the scanner
+     * finds that it should JAM on the NUL
+     */
+    skelout();
+    set_indent( 6 );
+
+    if ( ! fulltbl && ! fullspd )
+	gen_backtracking();
+
+    indent_puts( "++yy_cp;" );
+    indent_puts( "yy_current_state = yy_next_state;" );
+
+    if ( reject )
+	indent_puts( "*yy_state_ptr++ = yy_current_state;" );
+
+    if ( fulltbl || fullspd )
+	gen_backtracking();
+
+    if ( interactive )
+	{
+	do_indent();
+	printf( "if ( yy_base[yy_current_state] != %d\n", jambase );
+	indent_up();
+	indent_puts( "|| ( *yy_cp == '\\0'" );
+	indent_puts( "&& yy_cp < &yy_current_buffer->yy_ch_buf[yy_n_chars]" );
+	do_indent();
+	printf( "&& yy_current_state != %d ) )\n", jamstate );
+	indent_puts( "goto yy_match;" );
+	indent_down();
+	indent_puts( "else" );
+	indent_up();
+	indent_puts( "goto yy_find_action;" );
+	indent_down();
+	}
+    else
+	indent_puts( "goto yy_match;" );
+
+/*  if ( fullspd || fulltbl )
+	indent_puts( "yy_cp = yy_c_buf_p;" );
+
+    else
+	{ / * compressed table * /
+	if ( ! reject && ! interactive )
+	    {
+	    / * do the guaranteed-needed backtrack to figure out the match * /
+	    indent_puts( "yy_cp = yy_last_accepting_cpos;" );
+	    indent_puts( "yy_current_state = yy_last_accepting_state;" );
+	    }
+	} */
+
+FLEX.SKEL 513: (yy_get_next_buffer(): Here is an error if 'yymore()' is active
+    in the last match (i.e. yy_doing_yy_more == 1 and yy_more_len > 0). Then
+    'number_to_move' will be (1 + yy_more_len), i.e. the previous character
+    plus the additional characters for using 'yymore()'.)
+
+	if ( number_to_move == 1 + YY_MORE_ADJ )
+	    {
+	    ret_val = EOB_ACT_END_OF_FILE;
+	    yy_current_buffer->yy_eof_status = EOF_DONE;
+	    }
+
+	else
+	    {
+	    ret_val = EOB_ACT_LAST_MATCH;
+	    yy_current_buffer->yy_eof_status = EOF_PENDING;
+	    }
+	}
+
+GEN.C 1317: (make_tables(): In the generation of 'yy_get_previous_state()' the
+    variable 'yy_bp' must be set to 'yytext + YY_MORE_ADJ' if 'bol_needed' is
+    true. Otherwise 'yy_bp' points eventually at the beginning of the
+    yymore-prefix instead of the current run.)
+
+    if ( bol_needed )
+	indent_puts( "register YY_CHAR *yy_bp = yytext + YY_MORE_ADJ;\n" );
+
+FLEX.SKEL 589ff: (yyunput(): The function 'yyunput()' should be rewritten.
+    First of all the example for 'unput()' in file flexdoc doesn't work:
+	      {
+	      int i;
+	      unput( ')' );
+	      for ( i = yyleng - 1; i >= 0; --i )
+		  unput( yytext[i] );
+	      unput( '(' );
+	      }
+    The actual version of 'yyunput()' modifies 'yyleng'. Therefore 'yyleng' is
+    decremented by " unput( ')' ) " and the pattern to be pushed back has lost
+    its last character. To avoid this just copy the 'yytext'-string and
+    'yyleng' before you call 'unput()'.
+    Another point is that 'yytext' and 'yyleng' could be maintained in a
+    better way. ( Up to now 'yyleng' can become negative ! )
+    I think it's better to say that the pushed back pattern should fulfill
+    the beginning-of-line-condition if and only if the old pattern does
+    ( excluding a possibly existing 'yymore'-prefix ! ).
+    Up to now you have problems if there is a 'yymore'-prefix, because
+    'yytext' will be corrupted by YY_DO_BEFORE_ACTION. ( This macro sets
+    'yytext' to 'yy_bp - yy_more_len', but our 'yy_bp' points already at the
+    beginning of the 'yymore'-prefix. )
+
+    My version of 'yyunput()' reduces the 'yytext'-string by 1 for every
+    pushed back character and decrements 'yyleng' until 'yytext' is the empty
+    string. The beginning-of-line-condition is preserved when 'bol_needed' is
+    true. ( Then the character before the current run is copied in front of
+    the pushed back character. ) If there is a 'yymore'-prefix, 'yy_more_len'
+    will be decremented if 'yy_cp' reaches the beginning of the current run.
+
+    Remark: The parameter 'yytext' in " yyunput( c, yytext ) " is not really
+    necessary since 'yytext' is a global variable. You could also set
+    " register YY_CHAR *yy_bp = yytext; " at the beginning of 'yyunput()'.)
+
+    Replace lines 622 - 623 in FLEX.SKEL:
+
+    if ( yy_cp > yy_bp && yy_cp[-1] == '\n' )
+	yy_cp[-2] = '\n';
+
+    by
+
+%% code to adjust yy_bp and yy_more_len goes here
+
+    Add in GEN.C a function 'gen_yyunput()':
+/* generate code to adjust yy_bp and yy_more_len in yyunput
+ */
+
+void gen_yyunput()
+
+    {
+    if ( yymore_used )
+	indent_puts( "yy_bp += YY_MORE_ADJ;\n" );
+
+    if ( bol_needed )
+	indent_puts( "yy_cp[-2] = yy_bp[-1];\n" );
+
+    if ( yymore_used )
+	{
+	indent_puts( "if ( (yy_cp == yy_bp) && YY_MORE_ADJ )" );
+	indent_up();
+	indent_puts( "--yy_more_len;" );
+	indent_down();
+	indent_puts( "else" );
+	indent_up();
+	indent_puts( "--yy_bp;" );
+	indent_down();
+	}
+    else
+	indent_puts( "--yy_bp;" );
+    }
+
+    Finally add in the function 'make_tables()' behind the call of
+    'gen_NUL_trans()' in line 1328:
+
+    skelout();
+    gen_yyunput();
+
+FLEX.SKEL 642,658: (input(): There is an error in 'input()' if the end of
+    'yy_current_buffer' is reached and 'yymore' is active. Then
+    'yy_get_next_buffer()' is called which function assumes that 'yytext'
+    points at the beginning of the 'yymore'-prefix. This function can't
+    recognize the end of the input stream correctly and therefore returns
+    EOB_ACT_LAST_MATCH instead of EOB_ACT_END_OF_FILE. Also if the end of
+    the input file isn't reached yet (EOB_ACT_CONTINUE_SCAN) at least one
+    character will be lost.
+    To avoid this error just turn off 'yy_doing_yy_more'. Then you need
+    not to adjust with YY_MORE_ADJ in lines 667 and 682. However you have to
+    use a function 'gen_input()', because 'yy_doing_yy_more' does not exist
+    if 'yymore_used' is false.
+
+    ( Another solution is to adjust 'yytext':
+    " yytext = yy_c_buf_p - YY_MORE_ADJ; ", line 658. )
+
+    I think the trick with "yy_did_buffer_switch_on_eof" should be done here
+    the same way as in the YY_END_OF_BUFFER action.
+    Finally I removed the variable 'yy_cp' and used 'yy_c_buf_p' instead.)
+
+#ifdef __cplusplus
+static int yyinput()
+#else
+static int input()
+#endif
+
+    {
+    int c;
+
+    *yy_c_buf_p = yy_hold_char; /* yy_cp not needed */
+
+    if ( *yy_c_buf_p == YY_END_OF_BUFFER_CHAR )
+	{
+	/* yy_c_buf_p now points to the character we want to return.
+	 * If this occurs *before* the EOB characters, then it's a
+	 * valid NUL; if not, then we've hit the end of the buffer.
+	 */
+	if ( yy_c_buf_p < &yy_current_buffer->yy_ch_buf[yy_n_chars] )
+	    /* this was really a NUL */
+	    *yy_c_buf_p = '\0';
+
+	else
+	    { /* need more input */
+%% code to turn off yy_doing_yy_more and yy_more_len goes here
+	    yytext = yy_c_buf_p;
+	    ++yy_c_buf_p;
+
+	    switch ( yy_get_next_buffer() )
+		{
+		case EOB_ACT_END_OF_FILE:
+		    {
+		    yy_did_buffer_switch_on_eof = 0;
+
+		    if ( yywrap() )
+			{
+			yy_c_buf_p = yytext; /* + YY_MORE_ADJ not needed */
+			return ( EOF );
+			}
+		    else
+			{
+			if ( ! yy_did_buffer_switch_on_eof )
+			    YY_NEW_FILE;
+			}
+
+#ifdef __cplusplus
+		    return ( yyinput() );
+#else
+		    return ( input() );
+#endif
+		    }
+		    break;
+
+		case EOB_ACT_CONTINUE_SCAN:
+		    yy_c_buf_p = yytext; /* + YY_MORE_ADJ not needed */
+		    break;
+
+		case EOB_ACT_LAST_MATCH:
+#ifdef __cplusplus
+		    YY_FATAL_ERROR( "unexpected last match in yyinput()" );
+#else
+		    YY_FATAL_ERROR( "unexpected last match in input()" );
+#endif
+		}
+	    }
+	}
+
+    c = *yy_c_buf_p;
+    yy_hold_char = *++yy_c_buf_p;
+
+    return ( c );
+    }
+
+    Add in GEN.C a function 'gen_input()':
+/* generate code to turn off yy_doing_yy_more and yy_more_len in input
+ */
+
+void gen_input()
+
+    {
+    if ( yymore_used )
+	indent_puts( "yy_doing_yy_more = yy_more_len = 0;" );
+    }
+
+    Finally add in the function 'make_tables()' behind the call of
+    'gen_yyunput()':
+
+    set_indent( 3 );
+    skelout();
+    gen_input();
+
+PARSE.Y 54: ( 'goal'-rule: If there is no rule in the input file, the end of
+    the prolog is not marked yet, because 'flexscan()' is still in the start
+    condition <SECT2PROLOG> and the rule <SECT2PROLOG><<EOF>> is not done up
+    to now. Therefore mark the end of prolog here, before you add the default
+    rule. I test here on " num_rules == 1 ", because the 'initforrule'-rule
+    increments 'num_rules' before this action is executed.)
+
+			if ( num_rules == 1 )
+			    fprintf( temp_action_file, "%%%% end of prolog\n" )
+;
+
+SCAN.L 255: ( '<SECT2PROLOG><<EOF>>'-rule: If there are no rules at all in
+    the input file, then this rule will be executed at the end of
+    'make_tables()'. At this point 'temp_action_file' was closed for writing
+    and has been reopened for reading. The macro MARK_END_OF_PROLOG will
+    therefore lead to a write-error.
+    To avoid this error add the condition " if ( num_rules == 0 ) ". If this
+    rule is executed at the end of 'make_tables()' there will be at least the
+    default rule, i.e. 'num_rules' will be greater than 0.
+    Remark: This correction together with the one before will allow an input
+    file which just consists of "%%". ( Copy 'stdin' to 'stdout'. ))
+
+<SECT2PROLOG><<EOF>>		{
+			if ( num_rules == 0 )
+			    MARK_END_OF_PROLOG;
+			yyterminate();
+			}
+
+MISC.C 376: ( flexfatal(): The call of 'flexend( 1 )' will lead to an
+    infinite loop if 'flexfatal()' is called from 'flexend()'. I therefore
+    introduced the flag 'doing_flexend' to prevent 'flexend()' to be called
+    more than once.)
+
+    Replace the function call 'flexend( 1 );' in GEN.C, line 376, by
+    if ( ! doing_flexend )
+	flexend( 1 );
+
+    Set 'doing_flexend' at the beginning of 'flexend()' in MAIN.C, line 195:
+    doing_flexend = true;
+
+    Add in FLEXDEF.H, line 381, the declaration of 'doing_flexend':
+extern int yymore_used, reject, real_reject, continued_action, doing_flexend;
+
+    Add in FLEXDEF.H, line 376, a comment for this variable:
+ * doing_flexend - true if flexend() has been started
+
+    Initialize 'doing_flexend' in 'flexinit()' in MAIN.C, line 401:
+    yymore_used = continued_action = reject = doing_flexend = false;
+
+FLEX.SKEL 94: ( 'YY_INPUT()'-macro: I have problems with 'fileno()' and
+    'read()'.
+    I used the C Compiler of the BORLAND C++ Compiler and compiled the created
+    scanner with the option 'ANSI keywords'.
+    In this compiler the prototype of the function 'read(...)' is declared in
+    the header file 'io.h' and not in 'stdio.h'. Therefore I get a warning.
+    Real trouble caused 'fileno' which is defined as macro in 'stdio.h':
+	#define fileno(f)       ((f)->fd)
+    However this macro does not belong to the 'ANSI keywords' because it is
+    define'd under the condition " #if !__STDC__ ". Therefore I get a warning
+    and a linker error that the function 'fileno()' does not exist.
+    (I can avoid this problem by adding the above define-macro in the *.l file
+    or by replacing the option 'ANSI keywords' by 'Borland C++ keywords'.))

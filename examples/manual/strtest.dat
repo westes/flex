@@ -1,0 +1,21 @@
+"This is a string"
+"The next string will be empty"
+""
+"This is a string with a \b(\\b) in it"
+"This is a string with a \t(\\t) in it"
+"This is a string with a \n(\\n) in it"
+"This is a string with a \v(\\v) in it"
+"This is a string with a \f(\\f) in it"
+"This is a string with a \r(\\r) in it"
+"This is a string with a \"(\\\") in it"
+"This is a string with a \z(\\z) in it"
+"This is a string with a \X4a(\\X4a) in it"
+"This is a string with a \x4a(\\x4a) in it"
+"This is a string with a \x7(\\x7) in it"
+"This is a string with a \112(\\112) in it"
+"This is a string with a \043(\\043) in it"
+"This is a string with a \7(\\7) in it"
+"This is a multi-line \
+string"
+"This is an unterminated string
+"This is an unterminated string too

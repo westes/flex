@@ -1,0 +1,46 @@
+The contents of this directory are:
+
+	Wilhelms.todo
+		This guy Gerhard Wilhelms did an exhaustive line-by-line
+		study of flex, finding a large number of glitches; it's
+		not clear how significant they are (some have subseuqently
+		been fixed).
+
+	Wish-List
+		A long list of cryptic one-line descriptions of various
+		features people have asked for, or I've thought would be
+		handy.  If you have questions about particular ones, let
+		me know.
+
+	reentrant
+		A set of mods contributed by John Bossom for adding
+		an option to flex to make reentrant scanners.
+
+	rflex-2.5.4-diffs
+		A set of mods contributed by Chris Appleton for
+		the same purpose.
+
+	streams
+		email from David Madden about coping with non-blocking
+		I/O.
+
+	unicode
+		patches to support Unicode scanners, contributed
+		by James A. Lauth.
+
+
+Of these, the ones that people frequently ask about are support for reentrant
+scanners and support for Unicode.  I haven't played with the reentrant stuff
+so don't know how solid / well designed it is.  I've sent out the Unicode
+stuff to numerous people and haven't received any complaints, so I imagine
+it works well.
+
+Another thing people ask for fairly often is removing the limit on size
+of the scanners.  There's some mail in the faqs/ directory about ways to
+do this by cranking some #define's in flexdef.h, though of course the best
+solution would be dynamic memory/resizing.
+
+By the way, I have translated the core flex algorithms into a C++ regular
+expression class (but one that doesn't support the uglier stuff like
+yymore()/yyless(), trailing context, etc.).  If you ever wind up wanting
+it, just let me know.

@@ -1,0 +1,102 @@
+Summary of changes for flex Unicode support
+
+- ccl.c
+  - ccladd()
+    - changed call to reallocate_Character_array to reallocate_wchar_array
+
+- ecs.c
+  - mkeccl()
+    - changed type of ccls from Char to wchar_t
+
+- flex.1
+  - added description of -U option
+  - added extra qualifier to -Ca option regarding usage with -U
+  - modified -C, -Cf, and -CF options regarding usage with -U
+
+- flex.skl
+  - changed all references of char (except error messages) to YY_CHAR
+  - added new insertion point for defining YY_CHAR and YY_SC_TO_UI()
+  - yy_scan_bytes()
+    - renamed to yy_scan_chars to avoid confusion with 2-byte chars
+    - renamed param bytes to chars
+  - ECHO
+    - redefined C version as fwrite(yytext, sizeof(YY_CHAR), yyleng, yyout)
+  - YY_INPUT
+    - removed char* cast on param buf of C++ version
+  - yyFlexLexer::LexerInput()
+    - changed get() call to read((unsigned char *) buf, sizeof(YY_CHAR))
+    - changed read() call to read((unsigned char *) buf, max_size *
+      sizeof(YY_CHAR))
+    - changed gcount() call to gcount() / sizeof(YY_CHAR)
+  - yyFlexLexer::LexerOutput()
+    - changed write() call to write((unsigned char *) buf, size *
+      sizeof(YY_CHAR))
+  - yy_get_next_buffer()
+    - yy_flex_realloc() call
+      - changed param b->yy_buf_size + 2 to
+        (b->yy_buf_size + 2) * sizeof(YY_CHAR)
+  - input() and yyFlexLexer::yyinput()
+    - changed line c = *(unsigned char *) yy_c_buf_p; to
+      c = YY_SC_TO_UI(*yy_c_buf_p);
+
+- flexdef.h
+  - defined CSIZE as 65536
+  - changed myesc() proto to return int
+  - changed type of ccltbl from Char * to wchar_t *
+  - added allocate_wchar_array() and reallocate_wchar_array() macros
+  - changed mkeccl() proto's first param to wchar_t[]
+  - changed cshell() proto's first param to wchar_t[]
+
+
+- FlexLexer.h
+  - changed all references of char (except error messages) to YY_CHAR
+  - added description about typedef'ing YY_CHAR before inclusion
+
+- gen.c
+  - changed appropriate references of char in output strings to YY_CHAR
+  - added C_uchar_decl and C_ushort_decl for 16-bit yy_ec type bump-down
+  - genecs()
+    - added code for 16-bit yy_ec type bump; -Ca bumps type to long
+  - make_tables()
+    - YY_INPUT
+      - read redefined as read(..., max_size * sizeof(YY_CHAR))
+      - added code to use getwc() and WEOF for 16-bit interactive
+      - fread redefined as fread(buf, sizeof(YY_CHAR), max_size, yyin)
+
+- main.c
+  - changed type of ccltbl from Char * to wchar_t *
+  - check_options()
+    - changed default csize from CSIZE to 256 due to redef of CSIZE
+    - added code to check for options incompatible with -U
+    - added code to ouput typedef of YY_CHAR to skeleton, plus extra call to
+      skelout() to get down to original insertion point
+  - flexend()
+    - added code to print "U" when printing stats
+  - flexinit()
+    - added code set csize for option -U
+    - changed assignment of csize in option -8 from CSIZE to 256 due to redef
+      of CSIZE
+  - readin()
+    - changed appropriate references of char in output strings to YY_CHAR
+    - removed output of YY_CHAR typedef; now located in check_options()
+  - usage()
+    - added fprintf for -U usage
+
+- misc.c
+  - check_char()
+    - added code to distinguish chars needing -8 and -U flags
+  - cshell()
+    - changed type of v from Char to wchar_t
+    - changed type of k from Char to wchar_t
+  - myesc()
+    - now returns an int to handle 16-bit escape sequences
+    - changed esc_char from Char to unsigned int as per htoi() and otoi()
+
+- scan.l
+  - changed ESCSEQ to accept 6 digit octal escapes and 4 digit hex escapes
+  - removed myesc() and ndlookup() protos
+  - added option "16bit"
+
+- tblcmp.c
+  - mktemplate
+    - changed type of transset from Char to wchar_t
