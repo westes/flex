@@ -1401,6 +1401,29 @@ void readin()
 	if ( syntaxerror )
 		flexend( 1 );
 
+	/* If the user explicitly requested posix compatibility by specifing the
+	 * posix-compat option, then we check for conflicting options. However, if
+	 * the POSIXLY_CORRECT variable is set, then we quietly make flex as
+	 * posix-compatible as possible.  This is the recommended behavior
+	 * according to the GNU Coding Standards.
+	 * 
+	 * Note: The posix option was added to flex to provide the posix behavior
+	 * of the repeat operator in regular expressions, e.g., `ab{3}'
+	 */
+	if ( posix_compat )
+		{
+		/* TODO: This is where we try to make flex behave according to
+		 * posiz, AND check for conflicting options. How far should we go
+		 * with this? Should we disable all the neat-o flex features?
+		 */
+		}
+
+	if ( getenv("POSIXLY_CORRECT") )
+		{
+		posix_compat = true;
+		/* TODO: See TODO comment above */
+		}
+
 	if ( backing_up_report )
 		{
 		backing_up_file = fopen( backing_name, "w" );
