@@ -129,6 +129,9 @@ static char *tablesfile_template = "lex%s.tbl";
 extern unsigned _stklen = 16384;
 #endif
 
+/* From scan.l */
+extern FILE* yyout;
+
 static char outfile_path[MAXLINE];
 static int outfile_created = 0;
 static char *skelname = NULL;
@@ -151,8 +154,12 @@ int flex_main (argc, argv)
 	 * exit(n);
 	 */
 	exit_status = setjmp (flex_main_jmp_buf);
-	if (exit_status)
+	if (exit_status){
+        fflush(stdout);
+        fclose(stdout);
+        wait(0);
 		return exit_status - 1;
+    }
 
 	flexinit (argc, argv);
 
@@ -328,6 +335,12 @@ void check_options ()
 
 		outfile_created = 1;
 	}
+
+    /* Setup the filter chain. */
+    output_chain = filter_create(NULL,"m4","-P",0);
+    filter_apply_chain(output_chain);
+    yyout = stdout;
+    
 
 	/* always generate the tablesverify flag. */
 	action_define ("YY_TABLES_VERIFY", tablesverify ? 1 : 0);

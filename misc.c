@@ -704,7 +704,7 @@ void out_dec (fmt, n)
      const char *fmt;
      int n;
 {
-	printf (fmt, n);
+	fprintf (stdout, fmt, n);
 	out_line_count (fmt);
 }
 
@@ -712,7 +712,7 @@ void out_dec2 (fmt, n1, n2)
      const char *fmt;
      int n1, n2;
 {
-	printf (fmt, n1, n2);
+	fprintf (stdout, fmt, n1, n2);
 	out_line_count (fmt);
 }
 
@@ -720,7 +720,7 @@ void out_hex (fmt, x)
      const char *fmt;
      unsigned int x;
 {
-	printf (fmt, x);
+	fprintf (stdout, fmt, x);
 	out_line_count (fmt);
 }
 
@@ -737,7 +737,7 @@ void out_line_count (str)
 void out_str (fmt, str)
      const char *fmt, str[];
 {
-	printf (fmt, str);
+	fprintf (stdout,fmt, str);
 	out_line_count (fmt);
 	out_line_count (str);
 }
@@ -745,7 +745,7 @@ void out_str (fmt, str)
 void out_str3 (fmt, s1, s2, s3)
      const char *fmt, s1[], s2[], s3[];
 {
-	printf (fmt, s1, s2, s3);
+	fprintf (stdout,fmt, s1, s2, s3);
 	out_line_count (fmt);
 	out_line_count (s1);
 	out_line_count (s2);
@@ -756,7 +756,7 @@ void out_str_dec (fmt, str, n)
      const char *fmt, str[];
      int n;
 {
-	printf (fmt, str, n);
+	fprintf (stdout,fmt, str, n);
 	out_line_count (fmt);
 	out_line_count (str);
 }
@@ -764,7 +764,7 @@ void out_str_dec (fmt, str, n)
 void outc (c)
      int c;
 {
-	putc (c, stdout);
+	fputc (c, stdout);
 
 	if (c == '\n')
 		++out_linenum;
@@ -773,7 +773,8 @@ void outc (c)
 void outn (str)
      const char *str;
 {
-	puts (str);
+	fputs (str,stdout);
+    fputc('\n',stdout);
 	out_line_count (str);
 	++out_linenum;
 }

@@ -65,7 +65,8 @@ flex_SOURCES = \
 	scanopt.c \
 	buf.c \
 	tables.c \
-	tables_shared.c
+	tables_shared.c \
+	filter.c
 
 libfl_a_SOURCES = \
 	libmain.c \
@@ -168,6 +169,7 @@ tables_shared.o: tables_shared.c flexdef.h flexint.h tables.h \
  tables_shared.h
 tblcmp.o: tblcmp.c flexdef.h flexint.h
 yylex.o: yylex.c flexdef.h flexint.h parse.h
+filter.o: filter.c flexdef.h flexint.h
 
 # Create a tags file.
 tags:

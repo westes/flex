@@ -42,6 +42,7 @@
 #ifdef STDC_HEADERS
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <setjmp.h>
 #include <ctype.h>
 #include <string.h>
@@ -1128,5 +1129,32 @@ int reverse_case(int c);
 
 /* return false if [c1-c2] is ambiguous for a caseless scanner. */
 bool range_covers_case (int c1, int c2);
+
+/*
+ *  From "filter.c"
+ */
+struct filter {
+	int     argc;
+	const char ** argv;
+    struct filter * next;
+};
+
+/* output filter chain */
+extern struct filter * output_chain;
+
+/* Allocate and initialize a filter.
+ * @param chain the current chain or NULL for new chain
+ * @param cmd the command to execute.
+ * @param ... a NULL terminated list of (const char*) arguments to command,
+ *            not including argv[0].
+ * @return newest filter in chain
+ */
+struct filter *filter_create (struct filter * chain, const char *cmd, ...);
+
+/* Fork and exec entire filter chain.
+ *  @param chain The head of the chain.
+ * @return true on success.
+ */
+bool filter_apply_chain (struct filter * chain);
 
 #endif /* not defined FLEXDEF_H */
