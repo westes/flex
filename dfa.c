@@ -677,15 +677,25 @@ void ntod()
 				}
 			}
 
-		numsnpairs = numsnpairs + totaltrans;
-
 		if ( caseins && ! useecs )
 			{
 			register int j;
 
 			for ( i = 'A', j = 'a'; i <= 'Z'; ++i, ++j )
+				{
+				if ( state[i] == 0 && state[j] != 0 )
+					/* We're adding a transition. */
+					++totaltrans;
+
+				else if ( state[i] != 0 && state[j] == 0 )
+					/* We're taking away a transition. */
+					--totaltrans;
+
 				state[i] = state[j];
+				}
 			}
+
+		numsnpairs += totaltrans;
 
 		if ( ds > num_start_states )
 			check_for_backing_up( ds, state );
