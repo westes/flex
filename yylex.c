@@ -1,5 +1,7 @@
+/* yylex - scanner front-end for flex */
+
 #include "flexdef.h"
-#include "y.tab.h"
+#include "parse.h"
 
 /*
  * Copyright (c) 1987, the University of California
