@@ -501,7 +501,6 @@ Char myesc( array )
 Char array[];
 	{
 	Char c, esc_char;
-	register int sptr;
 
 	switch ( array[1] )
 		{
@@ -530,7 +529,7 @@ Char array[];
 		case '8':
 		case '9':
 			{ /* \<octal> */
-			sptr = 1;
+			int sptr = 1;
 
 			while ( isascii( array[sptr] ) &&
 				isdigit( array[sptr] ) )

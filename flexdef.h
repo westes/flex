@@ -548,7 +548,7 @@ extern char **scname;
 
 extern int current_max_dfa_size, current_max_xpairs;
 extern int current_max_template_xpairs, current_max_dfas;
-extern int lastdfa, lasttemp, *nxt, *chk, *tnxt;
+extern int lastdfa, *nxt, *chk, *tnxt;
 extern int *base, *def, *nultrans, NUL_ec, tblend, firstfree, **dss, *dfasiz;
 extern union dfaacc_union
 	{

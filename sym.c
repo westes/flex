@@ -134,7 +134,8 @@ int table_size;
 	{
 	static struct hash_entry empty_entry =
 		{
-		(struct hash_entry *) 0, (struct hash_entry *) 0, NULL, NULL, 0,
+		(struct hash_entry *) 0, (struct hash_entry *) 0,
+		(char *) 0, (char *) 0, 0,
 		} ;
 	register struct hash_entry *sym_entry =
 		table[hashfunct( sym, table_size )];
@@ -174,14 +175,15 @@ int hash_size;
 
 /* ndinstal - install a name definition */
 
-void ndinstal( nd, def )
-char nd[];
-Char def[];
+void ndinstal( name, definition )
+char name[];
+Char definition[];
 	{
 	char *copy_string();
 	Char *copy_unsigned_string();
 
-	if ( addsym( copy_string( nd ), (char *) copy_unsigned_string( def ), 0,
+	if ( addsym( copy_string( name ),
+			(char *) copy_unsigned_string( definition ), 0,
 			ndtbl, NAME_TABLE_HASH_SIZE ) )
 		synerr( "name defined twice" );
 	}
