@@ -66,7 +66,7 @@ char *action_array;
 int action_size, defs1_offset, prolog_offset, action_offset, action_index;
 char *infilename = NULL, *outfilename = NULL;
 int did_outfilename;
-char *prefix;
+char *prefix, *yyclass;
 int do_stdinit, use_stdout;
 int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
@@ -576,6 +576,7 @@ char **argv;
 	performance_report = 0;
 	did_outfilename = 0;
 	prefix = "yy";
+	yyclass = 0;
 	use_read = use_stdout = false;
 
 	sawcmpflag = false;
@@ -965,7 +966,21 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 		}
 
 	if ( C_plus_plus )
+		{
 		outn( "\n#include <FlexLexer.h>" );
+
+		if ( yyclass )
+			{
+			outn( "int yyFlexLexer::yylex()" );
+			outn( "\t{" );
+			outn(
+"\tLexerError( \"yyFlexLexer::yylex invoked but %option yyclass used\" );" );
+			outn( "\t}" );
+	
+			out_str( "\n#define YY_DECL int %s::yylex()\n",
+				yyclass );
+			}
+		}
 
 	else
 		{
@@ -977,6 +992,10 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 			outn( "extern char *yytext;" );
 			outn( "#define yytext_ptr yytext" );
 			}
+
+		if ( yyclass )
+			flexerror(
+		_( "%option yyclass only meaningful for C++ scanners" ) );
 		}
 
 	if ( useecs )
