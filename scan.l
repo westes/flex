@@ -16,6 +16,11 @@
 #include "flexdef.h"
 #include "parse.h"
 
+#ifndef lint
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+#endif
+
 #define ACTION_ECHO fprintf( temp_action_file, "%s", yytext )
 #define MARK_END_OF_PROLOG fprintf( temp_action_file, "%%%% end of prolog\n" );
 
@@ -48,7 +53,7 @@ NAME		[a-z_][a-z_0-9]*
 
 SCNAME		{NAME}
 
-ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
+ESCSEQ		\\([^\n]|0[0-9]{1,3})
 
 %%
     static int bracelevel, didadef;
@@ -266,7 +271,7 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 
 <CCL>-/[^\]\n]		return ( '-' );
 <CCL>[^\]\n]		RETURNCHAR;
-<CCL>"]"			BEGIN(SECT2); return ( ']' );
+<CCL>"]"		BEGIN(SECT2); return ( ']' );
 
 
 <NUM>[0-9]+		{
@@ -365,7 +370,7 @@ ESCSEQ		\\([^^\n]|"^".|0[0-9]{1,3})
 			YY_DO_BEFORE_SCAN; /* recover from setting up yytext */
 
 #ifdef FLEX_FAST_SKEL
-			fputs( yy_c_buf_p + 1, stdout );
+			fputs( yy_cp + 1, stdout );
 #else
 			yy_ch_buf[yy_e_buf_p + 1] = '\0';
 
