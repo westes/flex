@@ -1150,6 +1150,9 @@ YY_BUFFER_STATE b;
 void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
 %*
 	{
+	if ( ! b )
+		return;
+
 	if ( b == yy_current_buffer )
 		yy_current_buffer = (YY_BUFFER_STATE) 0;
 
