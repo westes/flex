@@ -5,27 +5,28 @@
 * integrate the items in the faqs/ directory into the manual or code
   or similar
 
-* make flex.texi the authoritative manual
-
-** take the man-isms out of flex.texi
+* We've converted the flex manual to texinfo, but some issues remain:
 
 ** index flex.texi
 
 ** think about dividing flex.texi into more sections and subsections
+
+** Have flex.texi use automakes version info.
+
+** the pro-.man crowd will want a manpage; I don't want to maintain
+   one. What to do?  help2man, possibly.
 
 * repackage the distribution
 
 ** address lex-replacement: document or provide an option through
    configure for creating lex and libl.a files
 
-** convert flex to use automake
-
 ** gettextify flex
 
 * test suite
 
-** Rewrite tests/Makefile.* so that users do not need to alter it when
-   they add tests
+** Rewrite tests/Makefile.in and friends so that users do not need to
+   alter it when they add tests
 
 ** make test suite more complete
 
