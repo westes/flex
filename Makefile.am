@@ -177,10 +177,12 @@ filter.o: filter.c flexdef.h flexint.h
 tags:
 	ctags --c-types='defgmstuv' $(srcdir)/*.[ch]
 
-# Create the ChangeLog
+# Create the ChangeLog, but only if we're inside a cvs working directory
 
 ChangeLog:
-	sh $(srcdir)/tools/cvs2cl.pl -F trunk -U $(srcdir)/tools/cvsauthors
+	if [ -d CVS ] ; then \
+		sh $(srcdir)/tools/cvs2cl.pl -F trunk -U $(srcdir)/tools/cvsauthors \
+	; fi
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #
