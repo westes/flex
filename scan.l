@@ -381,7 +381,7 @@ LEXOPT		[aceknopr]
 			yyterminate(); /* to stop the parser */
 			}
 
-	"["{FIRST_CCL_CHAR}({CCL_CHAR}|{CCL_EXPR})*	{
+	"["({FIRST_CCL_CHAR}|{CCL_EXPR})({CCL_CHAR}|{CCL_EXPR})*	{
 			int cclval;
 
 			strcpy( nmstr, yytext );
