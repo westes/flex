@@ -46,4 +46,8 @@ But the inverse is still true.
 
 ** automake support for the build process
 
+** manual is now in texinfo/info format
+
+*** flex.1 removed from distribution
+
 See the file ONEWS for changes in earlier releases.
