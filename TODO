@@ -56,10 +56,6 @@
 
 *** add a test for yypush_buffer_state/yypop_buffer_state
 
-*** add a test for traditional funcs and protos
-
-*** add a test for #line directive integrity
-
 * generic coding
 
 ** move as much skeleton code as possible out of gen.c and into
