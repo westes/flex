@@ -109,7 +109,8 @@ parse.h: parse.c
 
 scan.c: scan.l
 	$(FLEX) $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l \
-	| sed s,\"$(srcdir)/scan.l\",\"scan.l\", >scan.c
+	| sed s,\"$(srcdir)/scan.l\",\"scan.l\", >scan.tmp
+	mv scan.tmp scan.c
 
 scan.o: scan.c parse.h flexdef.h
 
@@ -194,7 +195,7 @@ gcc-lint: $(LINTSRCS)
 	gcc -Dlint -Wall $(LINTSRCS) >flex.gcc-lint 2>&1
 
 mostlyclean:
-	rm -f *~ *.bak core errs
+	rm -f *~ *.bak core errs scan.tmp
 
 clean: mostlyclean
 	rm -f parse.c parse.h *.o *.lint lex.yy.c $(FLEXLIB)
