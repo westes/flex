@@ -149,10 +149,12 @@ LIBS = @LIBINTL@ @LIBS@
 skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
 	$(m4) -P -DFLEX_MAJOR_VERSION=`echo $(VERSION)|cut -f 1 -d .` -DFLEX_MINOR_VERSION=`echo $(VERSION)|cut -f 2 -d .` -DFLEX_SUBMINOR_VERSION=`echo $(VERSION)|cut -f 3 -d .` $(srcdir)/flex.skl | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
 
+if MAINTAINER_MODE
 $(man_MANS): $(srcdir)/main.c
 	for i in $(man_MANS) ; do \
 	$(help2man) --name='fast lexical analyzer generator' --section=`echo $$i|rev|cut -f 1 -d .|rev` @builddir@/flex > $$i ; \
 	done
+endif
 
 # Explicitly describe dependencies.
 # You can recreate this with `gcc -I. -MM *.c'
