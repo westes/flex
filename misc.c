@@ -63,7 +63,16 @@ char *new_text;
 
 	while ( len + action_index >= action_size - 10 /* slop */ )
 		{
-		action_size *= 2;
+		int new_size = action_size * 2;
+
+		if ( new_size <= 0 )
+			/* Increase just a little, to try to avoid overflow
+			 * on 16-bit machines.
+			 */
+			action_size += action_size / 8;
+		else
+			action_size = new_size;
+
 		action_array =
 			reallocate_character_array( action_array, action_size );
 		}
