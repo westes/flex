@@ -77,7 +77,7 @@
 
 WS		[[:blank:]]+
 OPTWS		[[:blank:]]*
-NOT_WS		[^[:blank:]\n]
+NOT_WS		[^[:blank:]\r\n]
 
 NL		\r?\n
 
@@ -186,7 +186,7 @@ LEXOPT		[aceknopr]
 <PICKUPDEF>{
 	{WS}		/* separates name and definition */
 
-	{NOT_WS}.*	{
+	{NOT_WS}[^\r\n]*	{
 			strcpy( (char *) nmdef, yytext );
 
 			/* Skip trailing whitespace. */

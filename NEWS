@@ -56,4 +56,6 @@ But the inverse is still true.
 ** flex now generates scanners in c++ which are compatible with
    recent c++ compilers
 
+** flex input scanner now recognizes '\r' as an EOL character
+
 See the file ONEWS for changes in earlier releases.
