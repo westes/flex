@@ -17,24 +17,37 @@ Changes between release 2.4 (09Nov93) and release 2.3:
 
 	  See the "GENERATING C++ SCANNERS" section of flexdoc for details.
 
+	- The new '-l' flag turns on maximum AT&T lex compatibility.  In
+	  particular, -l includes support for "yylineno" and makes yytext
+	  be an array instead of a pointer.  It does not, however, do away
+	  with all incompatibilities.  See the "INCOMPATIBILITIES WITH LEX
+	  AND POSIX" section of flexdoc for details.
+
 	- The new '-P' option specifies a prefix to use other than "yy"
 	  for the scanner's globally-visible variables, and for the
 	  "lex.yy.c" filename.  Using -P you can link together multiple
 	  flex scanners in the same executable.
 
-	- The distribution includes G.T. Nicol's flex manual (note
-	  that the manual has not yet been brought up to date; it
-	  presently reflects flex version 2.3).  See the manual/
-	  subdirectory.  Note that the PostScript for the manual
-	  presently lacks an index; this will be fixed soon.
-
-	  The distribution also includes a "texinfo" version of flexdoc.1,
+	- The distribution includes a "texinfo" version of flexdoc.1,
 	  contributed by Roland Pesch (thanks also to Marq Kole, who
-	  contributed another version).  It also has not been brought
-	  up to date, but reflects version 2.3.  See MISC/flex.texinfo.
+	  contributed another version).  It has not been brought up to
+	  date, but reflects version 2.3.  See MISC/flex.texinfo.
+
+	  The flex distribution will soon include G.T. Nicol's flex
+	  manual; he is presently bringing it up-to-date for version 2.4.
 
 	- yywrap() is now a function, and you now *must* link flex scanners
 	  with libfl.a.
+
+	- Site-configuration is now done via an autoconf-generated
+	  "configure" script contributed by Francois Pinard.
+
+	- Scanners now use fread() (or getc(), if interactive) and not
+	  read() for input.  A new "table compression" option, -Cr,
+	  overrides this change and causes the scanner to use read()
+	  (because read() is a bit faster than fread()).  -f and -F
+	  are now equivalent to -Cfr and -CFr; i.e., they imply the
+	  -Cr option.
 
 	- In the blessed name of POSIX compliance, flex supports "%array"
 	  and "%pointer" directives in the definitions (first) section of
@@ -61,6 +74,10 @@ Changes between release 2.4 (09Nov93) and release 2.3:
 	  to that start condition by passing the value to a subsequent
 	  "BEGIN" action.  You also can implement "start condition stacks"
 	  by storing the values in an integer stack.
+
+	- You can now redefine macros such as YY_INPUT by just #define'ing
+	  them to some other value in the first section of the flex input;
+	  no need to first #undef them.
 
 	- flex now generates warnings for rules that can't be matched.
 	  These warnings can be turned off using the new '-w' flag.  If
@@ -193,6 +210,10 @@ Changes between release 2.4 (09Nov93) and release 2.3:
 	- YY_USER_ACTION is now invoked only for "real" actions, not for
 	  internal actions used by the scanner for things like filling
 	  the buffer or handling EOF.
+
+	- The rule "[^]]" now matches any character other than a ']';
+	  formerly it matched any character at all followed by a ']'.
+	  This change was made for compatibility with AT&T lex.
 
 	- A large number of miscellaneous bugs have been found and fixed
 	  thanks to Gerhard Wilhelms.
