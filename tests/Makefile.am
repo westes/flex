@@ -26,6 +26,7 @@ noinst_SCRIPTS = \
 	create-test
 
 DIST_SUBDIRS = \
+	test-c++-multiple-scanners \
 	test-reject \
 	test-bison-nr \
 	test-c++-basic \
@@ -61,6 +62,7 @@ DIST_SUBDIRS = \
 	test-table-opts
 
 SUBDIRS = \
+	test-c++-multiple-scanners \
 	test-reject \
 	test-bison-nr \
 	test-c++-basic \
