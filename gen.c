@@ -89,8 +89,8 @@ void gen_backing_up()
 
 	indent_up();
 	indent_puts( "{" );
-	indent_puts( "yy_last_accepting_state = yy_current_state;" );
-	indent_puts( "yy_last_accepting_cpos = yy_cp;" );
+	indent_puts( "YY_G(yy_last_accepting_state) = yy_current_state;" );
+	indent_puts( "YY_G(yy_last_accepting_cpos) = yy_cp;" );
 	indent_puts( "}" );
 	indent_down();
 	}
@@ -107,17 +107,17 @@ void gen_bu_action()
 
 	indent_puts( "case 0: /* must back up */" );
 	indent_puts( "/* undo the effects of YY_DO_BEFORE_ACTION */" );
-	indent_puts( "*yy_cp = yy_hold_char;" );
+	indent_puts( "*yy_cp = YY_G(yy_hold_char);" );
 
 	if ( fullspd || fulltbl )
-		indent_puts( "yy_cp = yy_last_accepting_cpos + 1;" );
+		indent_puts( "yy_cp = YY_G(yy_last_accepting_cpos) + 1;" );
 	else
 		/* Backing-up info for compressed tables is taken \after/
 		 * yy_cp has been incremented for the next state.
 		 */
-		indent_puts( "yy_cp = yy_last_accepting_cpos;" );
+		indent_puts( "yy_cp = YY_G(yy_last_accepting_cpos);" );
 
-	indent_puts( "yy_current_state = yy_last_accepting_state;" );
+	indent_puts( "yy_current_state = YY_G(yy_last_accepting_state);" );
 	indent_puts( "goto yy_find_action;" );
 	outc( '\n' );
 
@@ -391,9 +391,9 @@ void gen_find_action()
 			indent_puts( "if ( yy_act == 0 )" );
 			indent_up();
 			indent_puts( "{ /* have to back up */" );
-			indent_puts( "yy_cp = yy_last_accepting_cpos;" );
+			indent_puts( "yy_cp = YY_G(yy_last_accepting_cpos);" );
 			indent_puts(
-				"yy_current_state = yy_last_accepting_state;" );
+				"yy_current_state = YY_G(yy_last_accepting_state);" );
 			indent_puts( "yy_act = yy_accept[yy_current_state];" );
 			indent_puts( "}" );
 			indent_down();
@@ -583,9 +583,9 @@ void gen_next_match()
 			/* Do the guaranteed-needed backing up to figure out
 			 * the match.
 			 */
-			indent_puts( "yy_cp = yy_last_accepting_cpos;" );
+			indent_puts( "yy_cp = YY_G(yy_last_accepting_cpos);" );
 			indent_puts(
-				"yy_current_state = yy_last_accepting_state;" );
+				"yy_current_state = YY_G(yy_last_accepting_state);" );
 			}
 		}
 	}
@@ -670,7 +670,7 @@ void gen_NUL_trans()
 		/* We're going to need yy_cp lying around for the call
 		 * below to gen_backing_up().
 		 */
-		indent_puts( "register char *yy_cp = yy_c_buf_p;" );
+		indent_puts( "register char *yy_cp = YY_G(yy_c_buf_p);" );
 
 	outc( '\n' );
 
@@ -753,16 +753,16 @@ void gen_start_state()
 		if ( bol_needed )
 			{
 			indent_puts(
-	"yy_current_state = yy_start_state_list[yy_start + YY_AT_BOL()];" );
+	"yy_current_state = yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()];" );
 			}
 		else
 			indent_puts(
-			"yy_current_state = yy_start_state_list[yy_start];" );
+			"yy_current_state = yy_start_state_list[YY_G(yy_start)];" );
 		}
 
 	else
 		{
-		indent_puts( "yy_current_state = yy_start;" );
+		indent_puts( "yy_current_state = YY_G(yy_start);" );
 
 		if ( bol_needed )
 			indent_puts( "yy_current_state += YY_AT_BOL();" );
@@ -1068,12 +1068,12 @@ void make_tables()
 
 	if ( yymore_used && ! yytext_is_array )
 		{
-		indent_puts( "yytext_ptr -= yy_more_len; \\" );
-		indent_puts( "yyleng = (int) (yy_cp - yytext_ptr); \\" );
+		indent_puts( "YY_G(yytext_ptr) -= YY_G(yy_more_len); \\" );
+		indent_puts( "YY_G(yyleng) = (int) (yy_cp - YY_G(yytext_ptr)); \\" );
 		}
 
 	else
-		indent_puts( "yyleng = (int) (yy_cp - yy_bp); \\" );
+		indent_puts( "YY_G(yyleng) = (int) (yy_cp - yy_bp); \\" );
 
 	/* Now also deal with copying yytext_ptr to yytext if needed. */
 	skelout();
@@ -1081,9 +1081,9 @@ void make_tables()
 		{
 		if ( yymore_used )
 			indent_puts(
-				"if ( yyleng + yy_more_offset >= YYLMAX ) \\" );
+				"if ( YY_G(yyleng) + YY_G(yy_more_offset) >= YYLMAX ) \\" );
 		else
-			indent_puts( "if ( yyleng >= YYLMAX ) \\" );
+			indent_puts( "if ( YY_G(yyleng) >= YYLMAX ) \\" );
 
 		indent_up();
 		indent_puts(
@@ -1093,16 +1093,16 @@ void make_tables()
 		if ( yymore_used )
 			{
 			indent_puts(
-"yy_flex_strncpy( &yytext[yy_more_offset], yytext_ptr, yyleng + 1 ); \\" );
-			indent_puts( "yyleng += yy_more_offset; \\" );
+"yy_flex_strncpy( &YY_G(yytext)[YY_G(yy_more_offset)], YY_G(yytext_ptr), YY_G(yyleng) + 1 ); \\" );
+			indent_puts( "YY_G(yyleng) += YY_G(yy_more_offset); \\" );
 			indent_puts(
-				"yy_prev_more_offset = yy_more_offset; \\" );
-			indent_puts( "yy_more_offset = 0; \\" );
+				"YY_G(yy_prev_more_offset) = YY_G(yy_more_offset); \\" );
+			indent_puts( "YY_G(yy_more_offset) = 0; \\" );
 			}
 		else
 			{
 			indent_puts(
-		"yy_flex_strncpy( yytext, yytext_ptr, yyleng + 1 ); \\" );
+		"yy_flex_strncpy( YY_G(yytext), YY_G(yytext_ptr), YY_G(yyleng) + 1 ); \\" );
 			}
 		}
 
@@ -1160,7 +1160,7 @@ void make_tables()
 	 */
 	if ( num_backing_up > 0 && ! reject )
 		{
-		if ( ! C_plus_plus )
+		if ( ! C_plus_plus && !reentrant)
 			{
 			indent_puts(
 			"static yy_state_type yy_last_accepting_state;" );
@@ -1229,7 +1229,7 @@ void make_tables()
 		outn( "#define REJECT \\" );
 		outn( "{ \\" );		/* } for vi */
 		outn(
-	"*yy_cp = yy_hold_char; /* undo effects of setting up yytext */ \\" );
+	"*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \\" );
 		outn(
 	"yy_cp = yy_full_match; /* restore poss. backed-over text */ \\" );
 
@@ -1264,35 +1264,39 @@ void make_tables()
 			{
 			if ( yytext_is_array )
 				{
+                outn( "#ifndef YY_REENTRANT");
 				indent_puts( "static int yy_more_offset = 0;" );
 				indent_puts(
 					"static int yy_prev_more_offset = 0;" );
-				}
-			else
+                outn( "#endif" );
+				}            
+			else if( !reentrant )
 				{
+                outn( "#ifndef YY_REENTRANT");
 				indent_puts( "static int yy_more_flag = 0;" );
 				indent_puts( "static int yy_more_len = 0;" );
+                outn( "#endif" );
 				}
 			}
 
 		if ( yytext_is_array )
 			{
 			indent_puts(
-	"#define yymore() (yy_more_offset = yy_flex_strlen( yytext ))" );
+	"#define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( YY_G(yytext) ))" );
 			indent_puts( "#define YY_NEED_STRLEN" );
 			indent_puts( "#define YY_MORE_ADJ 0" );
 			indent_puts( "#define YY_RESTORE_YY_MORE_OFFSET \\" );
 			indent_up();
 			indent_puts( "{ \\" );
-			indent_puts( "yy_more_offset = yy_prev_more_offset; \\" );
-			indent_puts( "yyleng -= yy_more_offset; \\" );
+			indent_puts( "YY_G(yy_more_offset) = YY_G(yy_prev_more_offset); \\" );
+			indent_puts( "YY_G(yyleng) -= YY_G(yy_more_offset); \\" );
 			indent_puts( "}" );
 			indent_down();
 			}
 		else
 			{
-			indent_puts( "#define yymore() (yy_more_flag = 1)" );
-			indent_puts( "#define YY_MORE_ADJ yy_more_len" );
+			indent_puts( "#define yymore() (YY_G(yy_more_flag) = 1)" );
+			indent_puts( "#define YY_MORE_ADJ YY_G(yy_more_len)" );
 			indent_puts( "#define YY_RESTORE_YY_MORE_OFFSET" );
 			}
 		}
@@ -1311,12 +1315,18 @@ void make_tables()
 			outn( "#ifndef YYLMAX" );
 			outn( "#define YYLMAX 8192" );
 			outn( "#endif\n" );
+            outn( "#ifndef YY_REENTRANT" );
 			outn( "char yytext[YYLMAX];" );
 			outn( "char *yytext_ptr;" );
+            outn( "#endif" );
 			}
 
-		else
+		else 
+            {
+			outn( "#ifndef YY_REENTRANT" );
 			outn( "char *yytext;" );
+			outn( "#endif" );
+            }
 		}
 
 	out( &action_array[defs1_offset] );
@@ -1330,7 +1340,7 @@ void make_tables()
 		if ( use_read )
 			{
 			outn(
-"\tif ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \\" );
+"\tif ( (result = read( fileno(YY_G(yyin)), (char *) buf, max_size )) < 0 ) \\" );
 			outn(
 		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );" );
 			}
@@ -1338,22 +1348,22 @@ void make_tables()
 		else
 			{
 			outn(
-			"\tif ( yy_current_buffer->yy_is_interactive ) \\" );
+			"\tif ( YY_G(yy_current_buffer)->yy_is_interactive ) \\" );
 			outn( "\t\t{ \\" );
 			outn( "\t\tint c = '*', n; \\" );
 			outn( "\t\tfor ( n = 0; n < max_size && \\" );
-	outn( "\t\t\t     (c = getc( yyin )) != EOF && c != '\\n'; ++n ) \\" );
+	outn( "\t\t\t     (c = getc( YY_G(yyin) )) != EOF && c != '\\n'; ++n ) \\" );
 			outn( "\t\t\tbuf[n] = (char) c; \\" );
 			outn( "\t\tif ( c == '\\n' ) \\" );
 			outn( "\t\t\tbuf[n++] = (char) c; \\" );
-			outn( "\t\tif ( c == EOF && ferror( yyin ) ) \\" );
+			outn( "\t\tif ( c == EOF && ferror( YY_G(yyin) ) ) \\" );
 			outn(
 	"\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\" );
 			outn( "\t\tresult = n; \\" );
 			outn( "\t\t} \\" );
 			outn(
-	"\telse if ( ((result = fread( buf, 1, max_size, yyin )) == 0) \\" );
-			outn( "\t\t  && ferror( yyin ) ) \\" );
+	"\telse if ( ((result = fread( buf, 1, max_size, YY_G(yyin) )) == 0) \\" );
+			outn( "\t\t  && ferror( YY_G(yyin) ) ) \\" );
 			outn(
 		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );" );
 			}
@@ -1365,10 +1375,10 @@ void make_tables()
 	indent_up();
 	if ( bol_needed )
 		{
-		indent_puts( "if ( yyleng > 0 ) \\" );
+		indent_puts( "if ( YY_G(yyleng) > 0 ) \\" );
 		indent_up();
-		indent_puts( "yy_current_buffer->yy_at_bol = \\" );
-		indent_puts( "\t\t(yytext[yyleng - 1] == '\\n'); \\" );
+		indent_puts( "YY_G(yy_current_buffer)->yy_at_bol = \\" );
+		indent_puts( "\t\t(YY_G(yytext)[YY_G(yyleng) - 1] == '\\n'); \\" );
 		indent_down();
 		}
 	indent_puts( "YY_USER_ACTION" );
@@ -1387,12 +1397,12 @@ void make_tables()
 
 	if ( yymore_used && ! yytext_is_array )
 		{
-		indent_puts( "yy_more_len = 0;" );
-		indent_puts( "if ( yy_more_flag )" );
+		indent_puts( "YY_G(yy_more_len) = 0;" );
+		indent_puts( "if ( YY_G(yy_more_flag) )" );
 		indent_up();
 		indent_puts( "{" );
-		indent_puts( "yy_more_len = yy_c_buf_p - yytext_ptr;" );
-		indent_puts( "yy_more_flag = 0;" );
+		indent_puts( "YY_G(yy_more_len) = YY_G(yy_c_buf_p) - YY_G(yytext_ptr);" );
+		indent_puts( "YY_G(yy_more_flag) = 0;" );
 		indent_puts( "}" );
 		indent_down();
 		}
@@ -1461,7 +1471,7 @@ void make_tables()
 	"fprintf( stderr, \"--accepting rule at line %d (\\\"%s\\\")\\n\"," );
 
 			indent_puts(
-				"         yy_rule_linenum[yy_act], yytext );" );
+				"         yy_rule_linenum[yy_act], YY_G(yytext) );" );
 			}
 
 		indent_down();
@@ -1479,7 +1489,7 @@ void make_tables()
 			{
 			indent_puts(
 	"fprintf( stderr, \"--accepting default rule (\\\"%s\\\")\\n\"," );
-			indent_puts( "         yytext );" );
+			indent_puts( "         YY_G(yytext) );" );
 			}
 
 		indent_down();
@@ -1549,7 +1559,7 @@ void make_tables()
 	set_indent( 4 );
 
 	if ( fullspd || fulltbl )
-		indent_puts( "yy_cp = yy_c_buf_p;" );
+		indent_puts( "yy_cp = YY_G(yy_c_buf_p);" );
 
 	else
 		{ /* compressed table */
@@ -1558,9 +1568,9 @@ void make_tables()
 			/* Do the guaranteed-needed backing up to figure
 			 * out the match.
 			 */
-			indent_puts( "yy_cp = yy_last_accepting_cpos;" );
+			indent_puts( "yy_cp = YY_G(yy_last_accepting_cpos);" );
 			indent_puts(
-				"yy_current_state = yy_last_accepting_state;" );
+				"yy_current_state = YY_G(yy_last_accepting_state);" );
 			}
 
 		else
@@ -1568,7 +1578,7 @@ void make_tables()
 			 * yy_current_state was set up by
 			 * yy_get_previous_state().
 			 */
-			indent_puts( "yy_cp = yy_c_buf_p;" );
+			indent_puts( "yy_cp = YY_G(yy_c_buf_p);" );
 		}
 
 
@@ -1591,7 +1601,7 @@ void make_tables()
 		{ /* update yylineno inside of unput() */
 		indent_puts( "if ( c == '\\n' )" );
 		indent_up();
-		indent_puts( "--yylineno;" );
+		indent_puts( "--YY_G(yylineno);" );
 		indent_down();
 		}
 
@@ -1599,12 +1609,12 @@ void make_tables()
 	/* Update BOL and yylineno inside of input(). */
 	if ( bol_needed )
 		{
-		indent_puts( "yy_current_buffer->yy_at_bol = (c == '\\n');" );
+		indent_puts( "YY_G(yy_current_buffer)->yy_at_bol = (c == '\\n');" );
 		if ( do_yylineno )
 			{
-			indent_puts( "if ( yy_current_buffer->yy_at_bol )" );
+			indent_puts( "if ( YY_G(yy_current_buffer)->yy_at_bol )" );
 			indent_up();
-			indent_puts( "++yylineno;" );
+			indent_puts( "++YY_G(yylineno);" );
 			indent_down();
 			}
 		}
@@ -1613,7 +1623,7 @@ void make_tables()
 		{
 		indent_puts( "if ( c == '\\n' )" );
 		indent_up();
-		indent_puts( "++yylineno;" );
+		indent_puts( "++YY_G(yylineno);" );
 		indent_down();
 		}
 

@@ -54,6 +54,7 @@ int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int interactive, caseins, lex_compat, do_yylineno, useecs, fulltbl, usemecs;
 int fullspd, gen_line_dirs, performance_report, backing_up_report;
 int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap, csize;
+int reentrant, reentrant_bison_pure;
 int yymore_used, reject, real_reject, continued_action, in_rule;
 int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum, out_linenum;
@@ -181,6 +182,9 @@ void check_options()
 		if ( fulltbl || fullspd )
 			flexerror( _( "Can't use -f or -F with -l option" ) );
 
+        if( reentrant || reentrant_bison_pure )
+            flexerror( _( "Can't use -R or -Rb with -l option" ) );
+
 		/* Don't rely on detecting use of yymore() and REJECT,
 		 * just assume they'll be used.
 		 */
@@ -241,6 +245,10 @@ void check_options()
 		yytext_is_array = false;
 		}
 
+    if ( C_plus_plus && (reentrant || reentrant_bison_pure) )    
+        flexerror( _( "Options -+ and -R are mutually exclusive." ) );
+        
+    
 	if ( useecs )
 		{ /* Set up doubly-linked equivalence classes. */
 
@@ -298,6 +306,16 @@ void check_options()
 	if ( skelname && (skelfile = fopen( skelname, "r" )) == NULL )
 		lerrsf( _( "can't open skeleton file %s" ), skelname );
 
+    if ( reentrant )
+        {
+            outn("#define YY_REENTRANT 1");
+            if( yytext_is_array )
+                outn("#define YY_TEXT_IS_ARRAY");
+        }
+
+    if ( reentrant_bison_pure )
+            outn("#define YY_REENTRANT_BISON_PURE 1");
+
 	if ( strcmp( prefix, "yy" ) )
 		{
 #define GEN_PREFIX(name) out_str3( "#define yy%s %s%s\n", name, prefix, name )
@@ -321,9 +339,33 @@ void check_options()
 			GEN_PREFIX( "out" );
 			GEN_PREFIX( "restart" );
 			GEN_PREFIX( "text" );
+            GEN_PREFIX( "lex_init" );
+            GEN_PREFIX( "lex_destroy" );
+            GEN_PREFIX( "get_extra" );
+            GEN_PREFIX( "set_extra" );
+            GEN_PREFIX( "get_in" );
+            GEN_PREFIX( "set_in" );
+            GEN_PREFIX( "get_out" );
+            GEN_PREFIX( "set_out" );
+            GEN_PREFIX( "get_leng" );
+            GEN_PREFIX( "get_text" );
+            GEN_PREFIX( "get_lineno" );
+            GEN_PREFIX( "set_lineno" );
+
+            outn( "#ifdef YY_REENTRANT_BISON_PURE" );
+            GEN_PREFIX( "get_lval" );
+            GEN_PREFIX( "set_lval" );
+            outn( "#ifdef YYLTYPE" );
+            GEN_PREFIX( "get_lloc" );
+            GEN_PREFIX( "set_lloc" );
+            outn( "#endif" );
+            outn( "#endif" );
 
 			if ( do_yylineno )
 				GEN_PREFIX( "lineno" );
+            
+            if ( do_yylineno && reentrant)
+                outn ( "#define YY_USE_LINENO 1");
 			}
 
 		if ( do_yywrap )
@@ -420,8 +462,15 @@ int exit_status;
 			putc( 'p', stderr );
 		if ( performance_report > 1 )
 			putc( 'p', stderr );
-		if ( spprdflt )
+		if ( spprdflt )        
 			putc( 's', stderr );
+        if ( reentrant ) 
+            {
+            putc( 'R', stderr );
+            
+            if( reentrant_bison_pure )
+                putc( 'b', stderr );
+            }
 		if ( use_stdout )
 			putc( 't', stderr );
 		if ( printstats )
@@ -591,6 +640,7 @@ char **argv;
 	yymore_really_used = reject_really_used = unspecified;
 	interactive = csize = unspecified;
 	do_yywrap = gen_line_dirs = usemecs = useecs = true;
+    reentrant = reentrant_bison_pure = false;
 	performance_report = 0;
 	did_outfilename = 0;
 	prefix = "yy";
@@ -764,6 +814,29 @@ char **argv;
 				case 'p':
 					++performance_report;
 					break;
+
+                case 'R':
+					if ( i != 1 )
+						flexerror(
+				_( "-P flag must be given separately" ) );
+                    reentrant = true;
+                    
+                    /* Optional arguments follow -R */
+
+					for ( ++i; arg[i] != '\0'; ++i )
+						switch ( arg[i] )
+							{
+							case 'b':
+								reentrant_bison_pure = true;
+								break;
+
+							default:
+								lerrif(
+						_( "unknown -R option '%c'" ),
+								(int) arg[i] );
+								break;
+							}
+					goto get_next_arg;
 
 				case 'S':
 					if ( i != 1 )
@@ -945,7 +1018,10 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 
 	if ( ! do_yywrap )
 		{
-		outn( "\n#define yywrap() 1" );
+        if( reentrant )
+    		outn( "\n#define yywrap(YY_ONLY_ARG) 1" );
+        else
+            outn( "\n#define yywrap(n) 1" );
 		outn( "#define YY_SKIP_YYWRAP" );
 		}
 
@@ -966,9 +1042,19 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 		}
 
 	else
-		{
+		{ 
+            /* In reentrant scanner, stdinit is handled in flex.skl. */
 		if ( do_stdinit )
 			{
+            outn( "#ifdef YY_REENTRANT" );
+			outn( "#ifdef VMS" );
+			outn( "#ifdef __VMS_POSIX" );
+            outn( "#define YY_STDINIT" );
+			outn( "#endif" );
+			outn( "#else" );
+            outn( "#define YY_STDINIT" );
+			outn( "#endif" );
+            outn( "#else /* end YY_REENTRANT */" );
 			outn( "#ifdef VMS" );
 			outn( "#ifndef __VMS_POSIX" );
 			outn( yy_nostdinit );
@@ -978,10 +1064,15 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 			outn( "#else" );
 			outn( yy_stdinit );
 			outn( "#endif" );
+            outn( "#endif" );
 			}
 
-		else
+		else 
+            {
+            outn( "#ifndef YY_REENTRANT" );
 			outn( yy_nostdinit );
+            outn( "#endif" );
+            }
 		}
 
 	if ( fullspd )
@@ -995,7 +1086,7 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 	if ( lex_compat )
 		outn( "#define YY_FLEX_LEX_COMPAT" );
 
-	if ( do_yylineno && ! C_plus_plus )
+	if ( do_yylineno && ! C_plus_plus && ! reentrant )
 		{
 		outn( "extern int yylineno;" );
 		outn( "int yylineno = 1;" );
@@ -1021,13 +1112,17 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 
 	else
 		{
-		if ( yytext_is_array )
+		if ( yytext_is_array && !reentrant)
 			outn( "extern char yytext[];\n" );
 
 		else
 			{
+            outn( "#ifdef YY_REENTRANT" );
+			outn( "#define yytext_ptr YY_G(yytext)" );
+            outn( "#else" );
 			outn( "extern char *yytext;" );
 			outn( "#define yytext_ptr yytext" );
+            outn( "#endif" );
 			}
 
 		if ( yyclass )
@@ -1111,7 +1206,7 @@ void usage()
 	FILE *f = stdout;
 
 	fprintf( f,
-_( "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n" ),
+_( "%s [-bcdfhilnpstvwBFILTV78+? -R[b] -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n" ),
 		program_name );
 	fprintf( f, _( "\t[--help --version] [file ...]\n" ) );
 
@@ -1148,6 +1243,9 @@ _( "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n" ),
 	fprintf( f,
 		_( "\t-I  generate interactive scanner (opposite of -B)\n" ) );
 	fprintf( f, _( "\t-L  suppress #line directives in scanner\n" ) );
+	fprintf( f, _( "\t-R  generate a reentrant C scanner\n" ) );
+	fprintf( f,
+_( "\t\t-Rb  reentrant scanner is to be called by a bison pure parser.\n" ) );
 	fprintf( f, _( "\t-T  %s should run in trace mode\n" ), program_name );
 	fprintf( f, _( "\t-V  report %s version\n" ), program_name );
 	fprintf( f, _( "\t-7  generate 7-bit scanner\n" ) );

@@ -235,11 +235,11 @@ int mach, variable_trail_rule, headcnt, trailcnt;
 			/* Do trailing context magic to not match the trailing
 			 * characters.
 			 */
-			char *scanner_cp = "yy_c_buf_p = yy_cp";
+			char *scanner_cp = "YY_G(yy_c_buf_p) = yy_cp";
 			char *scanner_bp = "yy_bp";
 
 			add_action(
-	"*yy_cp = yy_hold_char; /* undo effects of setting up yytext */\n" );
+	"*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */\n" );
 
 			if ( headcnt > 0 )
 				{

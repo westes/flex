@@ -242,7 +242,9 @@ LEXOPT		[aceknopr]
 	lex-compat	lex_compat = option_sense;
 	main		{
 			action_define( "YY_MAIN", option_sense );
-			do_yywrap = ! option_sense;
+            /* Override yywrap */
+            if( option_sense == true )
+                do_yywrap = false;
 			}
 	meta-ecs	usemecs = option_sense;
 	never-interactive	{
@@ -251,6 +253,12 @@ LEXOPT		[aceknopr]
 	perf-report	performance_report += option_sense ? 1 : -1;
 	pointer		yytext_is_array = ! option_sense;
 	read		use_read = option_sense;
+    reentrant   reentrant = option_sense;
+    reentrant-bison {
+                /* reentrant-bison implies reentrant. */
+                if ((reentrant_bison_pure = option_sense) != 0)
+                    reentrant = 1;
+            }    
 	reject		reject_really_used = option_sense;
 	stack		action_define( "YY_STACK_USED", option_sense );
 	stdinit		do_stdinit = option_sense;
@@ -260,7 +268,7 @@ LEXOPT		[aceknopr]
 	warn		nowarn = ! option_sense;
 	yylineno	do_yylineno = option_sense;
 	yymore		yymore_really_used = option_sense;
-	yywrap		do_yywrap = option_sense;
+	yywrap      do_yywrap = option_sense;
 
 	yy_push_state	ACTION_IFDEF("YY_NO_PUSH_STATE", ! option_sense);
 	yy_pop_state	ACTION_IFDEF("YY_NO_POP_STATE", ! option_sense);
@@ -269,6 +277,21 @@ LEXOPT		[aceknopr]
 	yy_scan_buffer	ACTION_IFDEF("YY_NO_SCAN_BUFFER", ! option_sense);
 	yy_scan_bytes	ACTION_IFDEF("YY_NO_SCAN_BYTES", ! option_sense);
 	yy_scan_string	ACTION_IFDEF("YY_NO_SCAN_STRING", ! option_sense);
+
+    yyget_extra     ACTION_IFDEF("YY_NO_GET_EXTRA", ! option_sense);
+    yyset_extra     ACTION_IFDEF("YY_NO_SET_EXTRA", ! option_sense);
+    yyget_leng      ACTION_IFDEF("YY_NO_GET_LENG", ! option_sense);
+    yyget_text      ACTION_IFDEF("YY_NO_GET_TEXT", ! option_sense);
+    yyget_lineno    ACTION_IFDEF("YY_NO_GET_LINENO", ! option_sense);
+    yyset_lineno    ACTION_IFDEF("YY_NO_SET_LINENO", ! option_sense);
+    yyget_in        ACTION_IFDEF("YY_NO_GET_IN", ! option_sense);
+    yyset_in        ACTION_IFDEF("YY_NO_SET_IN", ! option_sense);
+    yyget_out       ACTION_IFDEF("YY_NO_GET_OUT", ! option_sense);
+    yyset_out       ACTION_IFDEF("YY_NO_SET_OUT", ! option_sense);
+    yyget_lval      ACTION_IFDEF("YY_NO_GET_LVAL", ! option_sense);
+    yyset_lval      ACTION_IFDEF("YY_NO_SET_LVAL", ! option_sense);
+    yyget_lloc      ACTION_IFDEF("YY_NO_GET_LLOC", ! option_sense);
+    yyset_lloc      ACTION_IFDEF("YY_NO_SET_LLOC", ! option_sense);
 
 	outfile		return OPT_OUTFILE;
 	prefix		return OPT_PREFIX;
