@@ -86,6 +86,7 @@ ESCSEQ		(\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2}))
 
 FIRST_CCL_CHAR	([^\\\n]|{ESCSEQ})
 CCL_CHAR	([^\\\n\]]|{ESCSEQ})
+CCL_EXPR	("[:"[a-z]+":]")
 
 LEXOPT		[aceknopr]
 
@@ -227,6 +228,10 @@ LEXOPT		[aceknopr]
 	input		ACTION_IFDEF("YY_NO_INPUT", ! option_sense);
 	interactive	interactive = option_sense;
 	lex-compat	lex_compat = option_sense;
+	main		{
+			action_define( "YY_MAIN", option_sense );
+			do_yywrap = option_sense;
+			}
 	meta-ecs	usemecs = option_sense;
 	never-interactive	{
 			action_define( "YY_NEVER_INTERACTIVE", option_sense );
@@ -376,7 +381,7 @@ LEXOPT		[aceknopr]
 			yyterminate(); /* to stop the parser */
 			}
 
-	"["{FIRST_CCL_CHAR}{CCL_CHAR}*	{
+	"["{FIRST_CCL_CHAR}({CCL_CHAR}|{CCL_EXPR})*	{
 			int cclval;
 
 			strcpy( nmstr, yytext );
@@ -489,6 +494,25 @@ LEXOPT		[aceknopr]
 			}
 }
 
+<FIRSTCCL,CCL>{
+	"[:alnum:]"	BEGIN(CCL); return CCE_ALNUM;
+	"[:alpha:]"	BEGIN(CCL); return CCE_ALPHA;
+	"[:blank:]"	BEGIN(CCL); return CCE_BLANK;
+	"[:cntrl:]"	BEGIN(CCL); return CCE_CNTRL;
+	"[:digit:]"	BEGIN(CCL); return CCE_DIGIT;
+	"[:graph:]"	BEGIN(CCL); return CCE_GRAPH;
+	"[:lower:]"	BEGIN(CCL); return CCE_LOWER;
+	"[:print:]"	BEGIN(CCL); return CCE_PRINT;
+	"[:punct:]"	BEGIN(CCL); return CCE_PUNCT;
+	"[:space:]"	BEGIN(CCL); return CCE_SPACE;
+	"[:upper:]"	BEGIN(CCL); return CCE_UPPER;
+	"[:xdigit:]"	BEGIN(CCL); return CCE_XDIGIT;
+	{CCL_EXPR}	{
+			format_synerr( "bad character class expression: %s",
+					yytext );
+			BEGIN(CCL); return CCE_ALNUM;
+			}
+}
 
 <NUM>{
 	[0-9]+		{
