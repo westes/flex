@@ -31,7 +31,6 @@
 
 #include "flexdef.h"
 
-
 /* declare functions that have forward references */
 
 void dump_associated_rules PROTO ((FILE *, int));
