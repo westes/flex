@@ -19,8 +19,6 @@
 
 * getext
 
-** update gettext support from gettext-0.11 to gettext-0.11.2 %%
-
 ** make sure all flex modules use gettext translation facilities
 
 *subdirectories
