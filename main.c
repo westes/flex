@@ -53,7 +53,7 @@ int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int interactive, caseins, lex_compat, useecs, fulltbl, usemecs;
 int fullspd, gen_line_dirs, performance_report, backing_up_report;
 int C_plus_plus, long_align, use_read, yytext_is_array, csize;
-int yymore_used, reject, real_reject, continued_action;
+int yymore_used, reject, real_reject, continued_action, in_rule;
 int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum, out_linenum;
 FILE *skelfile = NULL;
@@ -74,7 +74,7 @@ int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs, tecfwd[CSIZE + 1];
 int tecbck[CSIZE + 1];
-int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof, *actvsc;
+int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof;
 char **scname;
 int current_max_dfa_size, current_max_xpairs;
 int current_max_template_xpairs, current_max_dfas;
@@ -373,9 +373,9 @@ char **argv;
 	char *arg, *mktemp();
 
 	printstats = syntaxerror = trace = spprdflt = caseins = false;
-	lex_compat = false;
-	C_plus_plus = backing_up_report = ddebug = fulltbl = fullspd = false;
-	long_align = nowarn = yymore_used = continued_action = reject = false;
+	lex_compat = C_plus_plus = backing_up_report = ddebug = fulltbl = false;
+	fullspd = long_align = nowarn = yymore_used = continued_action = false;
+	in_rule = reject = false;
 	yytext_is_array = yymore_really_used = reject_really_used = false;
 	gen_line_dirs = usemecs = useecs = true;
 	performance_report = 0;
@@ -928,7 +928,6 @@ void set_up_initial_allocations()
 	scxclu = allocate_integer_array( current_max_scs );
 	sceof = allocate_integer_array( current_max_scs );
 	scname = allocate_char_ptr_array( current_max_scs );
-	actvsc = allocate_integer_array( current_max_scs );
 
 	current_maxccls = INITIAL_MAX_CCLS;
 	cclmap = allocate_integer_array( current_maxccls );

@@ -341,6 +341,7 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  *   having "reject" set for variable trailing context)
  * continued_action - true if this rule's action is to "fall through" to
  *   the next rule's action (i.e., the '|' action)
+ * in_rule - true if we're inside an individual rule, false if not.
  * yymore_really_used - has a REALLY_xxx value indicating whether a
  *   %used or %notused was used with yymore()
  * reject_really_used - same for REJECT
@@ -350,7 +351,7 @@ extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 extern int interactive, caseins, lex_compat, useecs, fulltbl, usemecs;
 extern int fullspd, gen_line_dirs, performance_report, backing_up_report;
 extern int C_plus_plus, long_align, use_read, yytext_is_array, csize;
-extern int yymore_used, reject, real_reject, continued_action;
+extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
 #define REALLY_NOT_DETERMINED 0
 #define REALLY_USED 1
@@ -515,16 +516,9 @@ extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
  * scxclu - true if start condition is exclusive
  * sceof - true if start condition has EOF rule
  * scname - start condition name
- * actvsc - stack of active start conditions for the current rule;
- * 	a negative entry means that the start condition is *not*
- *	active for the current rule.  Start conditions may appear
- *	multiple times on the stack; the entry for it closest
- *	to the top of the stack (i.e., actvsc[actvp]) is the
- *	one to use.  Others are present from "<sc>{" scoping
- *	constructs.
  */
 
-extern int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof, *actvsc;
+extern int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof;
 extern char **scname;
 
 
