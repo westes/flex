@@ -41,7 +41,7 @@ pieces.
 
 
 Decide where you want to keep flex.skel (suggestion:  /usr/local/lib) and
-move it there.  Edit "Makefile" and change the definition of SKELETON_FILE
+copy it there.  Edit "Makefile" and change the definition of SKELETON_FILE
 to reflect the full pathname of flex.skel.
 
 Read the "Porting considerations" note in the Makefile and make
@@ -105,9 +105,6 @@ the addresses are:
 
 	vern@cs.cornell.edu	(email sent to the former addresses should
 				 continue to be forwarded for quite a while)
-				(if I'm unlucky, you'll have to send mail
-				 to "paxson@cs.cornell.edu", so try that if
-				 the first doesn't work)
 
 	Vern Paxson
 	CS Department
