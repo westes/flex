@@ -26,6 +26,8 @@ The flex distribution consists of the following files:
 
 	README		This message
 
+	Changes		Differences between this release and the beta-test
+
 	Makefile
 	flexdef.h
 	parse.y
@@ -36,10 +38,11 @@ The flex distribution consists of the following files:
 	main.c
 	misc.c
 	nfa.c
-	scan.c
 	sym.c
 	tblcmp.c
 	yylex.c
+
+	scan.c.dist	pre-flex'd version of scan.l
 
 	flex.skel
 	flex.fastskel
@@ -51,15 +54,18 @@ The flex distribution consists of the following files:
 
 	Timings		a brief note comparing timings of flex vs. lex
 
-The files are packaged as three compressed shell archives, ~90Kb in size
-total.  Create a directory where you want flex to live, cd there, and use
+The files are packaged as a compressed shell archive, which in turn
+contains seven shell archives.  Create a directory where you want flex
+to live, cd there, and use
 
-	uncompress flexdist.1.Z
-	uncompress flexdist.2.Z
-	uncompress flexdist.3.Z
-	sh flexdist.1
-	sh flexdist.2
-	sh flexdist.3
+	uncompress flex.shar.Z
+	sh flex.shar.1
+	sh flex.shar.2
+	sh flex.shar.3
+	sh flex.shar.4
+	sh flex.shar.5
+	sh flex.shar.6
+	sh flex.shar.7
 
 to extract them.
 
