@@ -149,7 +149,7 @@ buf.o: buf.c flexdef.h
 
 # Create a tags file.
 tags:
-	ctags --c-types='defgmstuv' *.[ch]
+	ctags --c-types='defgmstuv' $(srcdir)/*.[ch]
 
 #The below recipe for making the ChangeLog will only work if you have a copy of the cvs tree handy so let it fail gracefully.
 
