@@ -430,7 +430,7 @@ flexfatal( msg )
 char msg[];
 
     {
-    fprintf( stderr, "%s: fatal internal error %s\n", program_name, msg );
+    fprintf( stderr, "%s: fatal internal error, %s\n", program_name, msg );
     flexend( 1 );
     }
 
