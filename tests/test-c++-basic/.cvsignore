@@ -1,0 +1,6 @@
+Makefile
+Makefile.in
+scanner.cpp
+OUTPUT
+.deps
+test-c++-basic

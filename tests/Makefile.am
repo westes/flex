@@ -26,6 +26,7 @@ noinst_SCRIPTS = \
 	create-test
 
 SUBDIRS = \
+	test-c++-basic \
 	test-table-opts \
 	test-posixly-correct \
 	test-posix \
