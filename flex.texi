@@ -102,8 +102,7 @@ Memory Management
 Serialized Tables
 
 * Creating Serialized Tables:: 
-* Loading Serialized Tables:: 
-* Freeing Serialized Tables::
+* Loading and Unloading Serialized Tables:: 
 * Tables File Format:: 
 
 FAQ
@@ -4775,8 +4774,7 @@ scanning begins. The tables may be discarded when scanning is finished.
 
 @menu
 * Creating Serialized Tables::
-* Loading Serialized Tables::
-* Freeing Serialized Tables::
+* Loading and Unloading Serialized Tables::
 * Tables File Format::
 @end menu
 
@@ -4785,18 +4783,27 @@ scanning begins. The tables may be discarded when scanning is finished.
 @cindex tables, creating serialized
 @cindex serialization of tables
 
-@code{%option tables-file="foo.tables"} (@code{--tables-file=foo.tables})
-instructs flex to save the DFA tables to the file @file{foo.tables}. The tables
+You may create a scanner with serialized tables by specifying:
+
+@example
+@verbatim
+    %option tables-file=FILE
+or
+    --tables-file=FILE
+@end verbatim
+@end example
+
+These options instruct flex to save the DFA tables to the file @var{FILE}. The tables
 will @emph{not} be embedded in the generated scanner. The scanner will not
-function on its own. It is now dependent upon the serialized tables. You must
+function on its own. The scanner will be dependent upon the serialized tables. You must
 load the tables from this file at runtime before you can scan anything. 
 
 If you do not specify a filename to @code{--tables-file}, the tables will be
 saved to @file{lex.yy.tables}, where @samp{yy} is the appropriate prefix.
 
 If your project uses several different scanners, you can concatenate the
-serialized tables into one file, and flex will find the correct scanner, using
-the scanner prefix as the lookup key. An example follows:
+serialized tables into one file, and flex will find the correct set of tables,
+using the scanner prefix as part of the lookup key. An example follows:
 
 @exindex serialized tables, multiple scanners
 @example
@@ -4810,23 +4817,47 @@ $ cat lex.cpp.tables lex.c.tables  >  all.tables
 The above example created two scanners, @samp{cpp}, and @samp{c}. Since we did
 not specify a filename, the tables were serialized to @file{lex.c.tables} and
 @file{lex.cpp.tables}, respectively. Then, we concatenated the two files
-together into @file{all.tables}, presumably to distribute that file with our
-project.  At runtime, we will open the file and tell flex to load the tables.
-Flex will find the correct tables automatically. (See next section).
+together into @file{all.tables}, which we will distribute with our project. At
+runtime, we will open the file and tell flex to load the tables from it.  Flex
+will find the correct tables automatically. (See next section).
 
-@node Loading Serialized Tables
-@section Loading Serialized Tables
-@cindex tables, loading
+@node Loading and Unloading Serialized Tables
+@section Loading and Unloading Serialized Tables
+@cindex tables, loading and unloading
 @cindex loading tables at runtime
-
-how to load serialized tables
-
-@node Freeing Serialized Tables
-@section Freeing Serialized Tables
 @cindex tables, freeing
 @cindex freeing tables
+@cindex memory, serialized tables
 
-how to free serialized tables
+If you've built your scanner with @code{%option tables-file}, then you must
+load the scanner tables at runtime. This can be accomplished with the following
+function:
+
+@deftypefun int yytables_fload (FILE* @var{fp} [, yyscan_t @var{scanner}])
+Locates scanner tables in the stream pointed to by @var{fp} and loads them.
+Memory for the tables is allocated via @code{yyalloc}.  You must call this
+function before the first call to @code{yylex}. The argument @var{scanner}
+only appears in the reentrant scanner.
+This function returns @samp{0} (zero) on success, or non-zero on error.
+@end deftypefun
+
+The loaded tables are @strong{not} automatically destroyed (unloaded) when you
+call @code{yylex_destroy}. The reason is that you may create several scanners
+of the same type (in a reentrant scanner), each of which needs access to these
+tables.  To avoid a nasty memory leak, you must call the following function:
+
+@deftypefun int yytables_destroy ([yyscan_t @var{scanner}])
+Unloads the scanner tables. The tables must be loaded again before you can scan
+any more data.  The argument @var{scanner} only appears in the reentrant
+scanner.  This function returns @samp{0} (zero) on success, or non-zero on
+error.
+@end deftypefun
+
+@strong{The functions @code{yytables_fload} and @code{yytables_destroy} are not
+thread-safe.} You must ensure that these functions are called exactly once (for
+each scanner type) in a threaded program, before any thread calls @code{yylex}.
+After the tables are loaded, they are never written to, and no thread
+protection is required thereafter -- until you destroy them.
 
 @node Tables File Format
 @section Tables File Format

@@ -52,10 +52,6 @@
 
 * Tables API
 
-** create user API for tables deserialization
-
-** document API and --tables-* options
-
 ** verify that new macros/functions work with %option header-file
 
 * build system
