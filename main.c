@@ -274,24 +274,31 @@ void check_options()
 
 	if ( strcmp( prefix, "yy" ) )
 		{
-#define GEN_PREFIX(name) out_str3( "#define yy%s %s%s\n", name, prefix, name );
-		GEN_PREFIX( "FlexLexer" );
-		GEN_PREFIX( "_create_buffer" );
-		GEN_PREFIX( "_delete_buffer" );
-		GEN_PREFIX( "_scan_buffer" );
-		GEN_PREFIX( "_scan_string" );
-		GEN_PREFIX( "_scan_bytes" );
-		GEN_PREFIX( "_flex_debug" );
-		GEN_PREFIX( "_init_buffer" );
-		GEN_PREFIX( "_load_buffer_state" );
-		GEN_PREFIX( "_switch_to_buffer" );
-		GEN_PREFIX( "in" );
-		GEN_PREFIX( "leng" );
-		GEN_PREFIX( "lex" );
-		GEN_PREFIX( "out" );
-		GEN_PREFIX( "restart" );
-		GEN_PREFIX( "text" );
-		GEN_PREFIX( "wrap" );
+#define GEN_PREFIX(name) out_str3( "#define yy%s %s%s\n", name, prefix, name )
+		if ( C_plus_plus )
+			GEN_PREFIX( "FlexLexer" );
+		else
+			{
+			GEN_PREFIX( "_create_buffer" );
+			GEN_PREFIX( "_delete_buffer" );
+			GEN_PREFIX( "_scan_buffer" );
+			GEN_PREFIX( "_scan_string" );
+			GEN_PREFIX( "_scan_bytes" );
+			GEN_PREFIX( "_flex_debug" );
+			GEN_PREFIX( "_init_buffer" );
+			GEN_PREFIX( "_load_buffer_state" );
+			GEN_PREFIX( "_switch_to_buffer" );
+			GEN_PREFIX( "in" );
+			GEN_PREFIX( "leng" );
+			GEN_PREFIX( "lex" );
+			GEN_PREFIX( "out" );
+			GEN_PREFIX( "restart" );
+			GEN_PREFIX( "text" );
+			}
+
+		if ( do_yywrap )
+			GEN_PREFIX( "wrap" );
+
 		outn( "" );
 		}
 
@@ -869,7 +876,10 @@ void readin()
 		outn( "\n#define YY_USES_REJECT" );
 
 	if ( ! do_yywrap )
+		{
 		outn( "\n#define yywrap() 1" );
+		outn( "#define YY_SKIP_YYWRAP" );
+		}
 
 	if ( ddebug )
 		outn( "\n#define FLEX_DEBUG" );
