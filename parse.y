@@ -43,6 +43,14 @@ void yyerror();
 static int madeany = false;  /* whether we've made the '.' character class */
 int previous_continued_action;	/* whether the previous rule's action was '|' */
 
+/* On some over-ambitious machines, such as DEC Alpha's, the default
+ * token type is "long" instead of "int"; this leads to problems with
+ * declaring yylval in flexdef.h.  But so far, all the yacc's I've seen
+ * wrap their definitions of YYSTYPE with "#ifndef YYSTYPE"'s, so the
+ * following should ensure that the default token type is "int".
+ */
+#define YYSTYPE int
+
 %}
 
 %%
