@@ -34,7 +34,7 @@
 @c   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 @c   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 @c   PURPOSE.
-@node Top, introduction, (dir), (dir)
+@node Top
 @top flex
 
 This manual describes
@@ -69,7 +69,7 @@ manual includes both tutorial and reference sections.
 * reporting bugs::              
 @end menu
 
-@node introduction, simple examples, Top, Top
+@node introduction
 @chapter Introduction
 
 @code{flex}
@@ -114,7 +114,7 @@ the corresponding C code.
 * bibliography::                
 @end menu
 
-@node simple examples, format, introduction, Top
+@node simple examples
 @chapter SOME SIMPLE EXAMPLES
 
 First some simple examples to get the flavor of how one uses
@@ -239,7 +239,7 @@ and reports on what it has seen.
 The details of this example will be explained in the following
 sections.
 
-@node format, Patterns, simple examples, Top
+@node format
 @chapter FORMAT OF THE INPUT FILE
 
 The
@@ -362,7 +362,7 @@ an unindented comment (i.e., a line
 beginning with @samp{/*}) is also copied verbatim to the output up
 to the next @samp{*/}.
 
-@node Patterns, matching, format, Top
+@node Patterns
 @chapter PATTERNS
 
 The patterns in the input are written using an extended set of regular
@@ -639,7 +639,7 @@ A similar trick will work for matching a foo or a
 bar-at-the-beginning-of-a-line.
 @end itemize
 
-@node matching, actions, Patterns, Top
+@node matching
 @chapter HOW THE INPUT IS MATCHED
 
 When the generated scanner is run, it analyzes its input looking for
@@ -727,7 +727,7 @@ much text being pushed back; instead, a run-time error results.
 Also note that you cannot use @code{%array} with C++ scanner classes
 (@pxref{cxx}).
 
-@node actions, generated scanner, matching, Top
+@node actions
 @chapter ACTIONS
 
 Each pattern in a rule has a corresponding action, which can be any
@@ -1019,7 +1019,7 @@ By default,
 is also called when an end-of-file is encountered.  It is a macro and
 may be redefined.
 
-@node generated scanner, start conditions, actions, Top
+@node generated scanner
 @chapter THE GENERATED SCANNER
 
 The output of @code{flex} is the file @file{lex.yy.c}, which contains
@@ -1139,7 +1139,7 @@ by assigning it to some other
 @code{FILE}
 pointer.
 
-@node start conditions, multiple, generated scanner, Top
+@node start conditions
 @chapter START CONDITIONS
 
 @code{flex}
@@ -1509,7 +1509,7 @@ limitation.  If memory is exhausted, program execution aborts.
 To use start condition stacks, your scanner must include a @code{%option
 stack} directive (@pxref{invoking flex}).
 
-@node multiple, eof, start conditions, Top
+@node multiple
 @chapter MULTIPLE INPUT BUFFERS
 
 Some scanners (such as those which support ``include'' files) require
@@ -1689,7 +1689,7 @@ The type
 is an integral type to which you can cast an integer expression
 reflecting the size of the buffer.
 
-@node eof, misc macros, multiple, Top
+@node eof
 @chapter END-OF-FILE RULES
 
 The special rule @code{<<EOF>>} indicates
@@ -1750,7 +1750,7 @@ example:
 @end verbatim
 @end example
 
-@node misc macros, user values, eof, Top
+@node misc macros
 @chapter MISCELLANEOUS MACROS
 
 The macro @code{YY_USER_ACTION} can be defined to provide an action
@@ -1814,7 +1814,7 @@ being very careful that every rule ends with a @code{break}" or a
 where because a rule's action ends with @code{return}, the
 @code{YY_BREAK} is inaccessible.
 
-@node user values, yacc, misc macros, Top
+@node user values
 @chapter VALUES AVAILABLE TO THE USER
 
 This chapter summarizes the various values available to the user in the
@@ -1870,7 +1870,7 @@ You can subsequently use this value with @code{BEGIN} to return to that
 start condition.
 @end table
 
-@node yacc, invoking flex, user values, Top
+@node yacc
 @chapter INTERFACING WITH YACC
 
 One of the main uses of @code{flex} is as a companion to the @code{yacc}
@@ -1896,7 +1896,7 @@ is @code{TOK_NUMBER}, part of the scanner might look like:
 @end verbatim
 @end example
 
-@node invoking flex, scanner options, yacc, Top
+@node invoking flex
 @chapter Invoking flex
 
 @code{flex}
@@ -2359,7 +2359,7 @@ more files to scan (until the user points @file{yyin} at a new file and
 calls @code{yylex()} again).
 @end table
 
-@node scanner options, performance, invoking flex, Top
+@node scanner options
 @chapter option Directives within Scanners
 
 @code{flex} also provides a mechanism for controlling options within the
@@ -2452,7 +2452,7 @@ corresponding routine not appearing in the generated scanner:
 (though @code{yy_push_state()} and friends won't appear anyway unless
 you use @code{%option stack)}.
 
-@node performance, cxx, scanner options, Top
+@node performance
 @chapter PERFORMANCE CONSIDERATIONS
 
 The main design goal of @code{flex} is that it generate high-performance
@@ -2777,7 +2777,7 @@ you should attempt to match ``large'' quantities of text but not
 ``huge'' quantities, where the cutoff between the two is at about 8K
 characters per token.
 
-@node cxx, reentrant, performance, Top
+@node cxx
 @chapter GENERATING C++ SCANNERS
 
 @code{flex} provides two different ways to generate scanners for use
@@ -2986,7 +2986,7 @@ scanners and @code{%option prefix="zz"} for the other.
 IMPORTANT: the present form of the scanning class is @emph{experimental}
 and may change considerably between major releases.
 
-@node reentrant, lex and posix, cxx, Top
+@node reentrant
 @chapter REENTRANT C SCANNERS
 
 @code{flex} has the ability to generate a reentrant C scanner. This is
@@ -3007,7 +3007,7 @@ other threads.
 * reentrant functions::         
 @end menu
 
-@node reentrant uses, reentrant overview, reentrant, reentrant
+@node reentrant uses
 @section Uses for Reentrant Scanners
 
 However, there are other uses for a reentrant scanner.  For example, you
@@ -3060,7 +3060,7 @@ another instance of itself.
 @end verbatim
 @end example
 
-@node reentrant overview, reentrant example, reentrant uses, reentrant
+@node reentrant overview
 @section An overview of the reentrant API
 
 The API for reentrant scanners is different than for non-reentrant
@@ -3087,7 +3087,7 @@ Accessor methods (get/set functions) provide access to common
 User-specific data can be stored in @code{yyextra}.
 @end itemize
 
-@node reentrant example, reentrant detail, reentrant overview, reentrant
+@node reentrant example
 @section Reentrant Example
 
 First, an example of a reentrant scanner:
@@ -3115,7 +3115,7 @@ First, an example of a reentrant scanner:
 @end verbatim
 @end example
 
-@node reentrant detail, bison pure, reentrant example, reentrant
+@node reentrant detail
 @section The Reentrant API in Detail
 
 Here are the things you need to do or know to use the reentrant C API of
@@ -3131,7 +3131,7 @@ Here are the things you need to do or know to use the reentrant C API of
 * about yyscan_t::
 @end menu
 
-@node specify reentrant, extra reentrant argument, reentrant detail, reentrant detail
+@node specify reentrant
 @subsection Declaring a Scanner as Reentrant
 
  %option reentrant (--reentrant) must be specified.
@@ -3143,7 +3143,7 @@ complaining. You may explicitly specify @code{%option noreentrant}, if
 you do @emph{not} want a reentrant scanner, although it is not
 necessary. The default is to generate a non-reentrant scanner.
 
-@node extra reentrant argument, global replacement, specify reentrant, reentrant detail
+@node extra reentrant argument
 @subsection The Extra Argument
 
 All functions take one additional argument: @code{yy_globals}.
@@ -3172,7 +3172,7 @@ see @ref{reentrant functions}. Note that preprocessor macros, such as
 @code{BEGIN}, @code{ECHO}, and @code{REJECT}, do not take this
 additional argument.
 
-@node global replacement, init and destroy and destroy, extra reentrant argument, reentrant detail
+@node global replacement
 @subsection Global Variables Replaced by Macros
 
 All global variables are replaced by macro equivalents.
@@ -3202,7 +3202,7 @@ other functions. You must use an accessor method, e.g.,
 @code{yyget_text}, 
 to accomplish this. (See below).
 
-@node init and destroy and destroy, accessor methods, global replacement, reentrant detail
+@node init and destroy and destroy
 @subsection init and destroy functions
 
 @code{yylex_init} and @code{yylex_destroy} must be called before and
@@ -3234,7 +3234,7 @@ course, there is no need to destroy a scanner if you plan to reuse it.
 A @code{flex} scanner (both reentrant and non-reentrant) may be
 restarted by calling @code{yyrestart}.
 
-@node accessor methods, extra data, init and destroy and destroy, reentrant detail
+@node accessor methods
 @subsection Accessing Variables with Reentrant Scanners
 
 Accessor methods (get/set functions) provide access to common
@@ -3270,7 +3270,7 @@ The above code may be called from within an action like this:
 @end verbatim
 @end example
 
-@node extra data, about yyscan_t, accessor methods, reentrant detail
+@node extra data
 @subsection Extra Data
 
 User-specific data can be stored in @code{yyextra}.
@@ -3337,7 +3337,7 @@ defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
 @end example
 
 
-@node about yyscan_t,  , extra data, reentrant detail
+@node about yyscan_t
 @subsection About yyscan_t
 
 @code{yyscan_t} is defined as:
@@ -3354,7 +3354,7 @@ directly. In particular, you should never attempt to free it
 (use @code{yylex_destroy()} instead.)
 
 
-@node bison pure, reentrant functions, reentrant detail, reentrant
+@node bison pure
 @section REENTRANT C SCANNERS WITH BISON PURE PARSERS
 
 This section describes the @code{flex} features useful when integrating
@@ -3450,7 +3450,7 @@ As you can see, there really is no magic here. We just use
 @end verbatim
 @end example
 
-@node reentrant functions,  , bison pure, reentrant
+@node reentrant functions
 @section FUNCTIONS AND MACROS AVAILABLE IN REENTRANT C SCANNERS
 
 The following Functions are available in a reentrant scanner:
@@ -3511,7 +3511,7 @@ symbol @code{YYLTYPE}.  Support for yylval relies on the type
 by @code{bison}, in a .h file, and are included in section 1 of the
 @code{flex} input.
 
-@node lex and posix, diagnostics, reentrant, Top
+@node lex and posix
 @chapter INCOMPATIBILITIES WITH LEX AND POSIX
 
 @code{flex} is a rewrite of the AT&T Unix @emph{lex} tool (the two
@@ -3737,7 +3737,7 @@ is (rather surprisingly) truncated to
 @code{flex} does not truncate the action.  Actions that are not enclosed
 in braces are simply terminated at the end of the line.
 
-@node diagnostics, limitations, lex and posix, Top
+@node diagnostics
 @chapter DIAGNOSTICS
 
 The following is a list of @code{flex} diagnostic messages:
@@ -3827,7 +3827,7 @@ conditions in a <> construct than exist (so you must have listed at
 least one of them twice).
 @end itemize
 
-@node limitations, bibliography, diagnostics, Top
+@node limitations
 @chapter Limitations
 
 Some trailing context patterns cannot be properly matched and generate
@@ -3869,7 +3869,7 @@ number of states if it does.  @code{REJECT} cannot be used with the
 
 The @code{flex} internal algorithms need documentation.
 
-@node bibliography, copyright, limitations, Top
+@node bibliography
 @chapter Additional Reading
 
 You may wish to read more about the following programs:
@@ -3894,7 +3894,7 @@ Techniques and Tools}, Addison-Wesley (1986).  Describes the
 pattern-matching techniques used by @code{flex} (deterministic finite
 automata).
 
-@node copyright, reporting bugs, bibliography, Top
+@node copyright
 @chapter Copyright
 
 The flex manual is placed under the same licensing conditions as the
@@ -3934,7 +3934,7 @@ IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 PURPOSE.
 
-@node reporting bugs,  , copyright, Top
+@node reporting bugs
 @chapter Reporting Bugs
 
 If you have problems with @code{flex} or think you have found a bug,
