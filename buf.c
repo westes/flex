@@ -66,6 +66,17 @@ struct Buf *buf_prints (struct Buf *buf, const char *fmt, const char *s)
 	return buf;
 }
 
+/** Append the contents of @a src to @a dest.
+ * @param @a dest the destination buffer
+ * @param @a dest the source buffer
+ * @return @a dest
+ */
+struct Buf *buf_concat(struct Buf* dest, const struct Buf* src)
+{
+    buf_append(dest, src->elts, src->nelts);
+    return dest;
+}
+
 
 /* Appends n characters in str to buf. */
 struct Buf *buf_strnappend (buf, str, n)

@@ -419,6 +419,22 @@ void check_options ()
 	buf_strdefine (&userdef_buf, "YY_INT_ALIGNED",
 		       long_align ? "long int" : "short int");
 
+    /* Define the start condition macros. */
+    {
+        struct Buf tmpbuf;
+        buf_init(&tmpbuf, sizeof(char));
+        for (i = 1; i <= lastsc; i++) {
+             char *str, *fmt = "#define %s %d\n";
+             
+             str = (char*)flex_alloc(strlen(fmt) + strlen(scname[i]) + (int)(1 + log(i)/log(2)) + 2);
+             sprintf(str, fmt,      scname[i], i - 1);
+             buf_strappend(&tmpbuf, str);
+             free(str);
+        }
+        buf_m4_define(&m4defs_buf, "M4_YY_SC_DEFS", tmpbuf.elts);
+        buf_destroy(&tmpbuf);
+    }
+
     /* Dump the m4 definitions. */
     buf_print_strings(&m4defs_buf, stdout);
     m4defs_buf.nelts = 0; /* memory leak here. */
@@ -467,8 +483,7 @@ void flexend (exit_status)
 		fprintf (header_out,
 			 "#undef INITIAL\n#define INITIAL 0\n");
 		for (i = 2; i <= lastsc; i++)
-			fprintf (header_out, "#define %s %d\n", scname[i],
-				 i - 1);
+			fprintf (header_out, "#define %s %d\n", scname[i], i - 1);
 		fprintf (header_out,
 			 "#endif /* YY_HEADER_EXPORT_START_CONDITIONS */\n\n");
 

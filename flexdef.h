@@ -46,6 +46,7 @@
 #include <setjmp.h>
 #include <ctype.h>
 #include <string.h>
+#include <math.h>
 #endif
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
@@ -1082,6 +1083,7 @@ extern void buf_init PROTO ((struct Buf * buf, size_t elem_size));
 extern void buf_destroy PROTO ((struct Buf * buf));
 extern struct Buf *buf_append
 PROTO ((struct Buf * buf, const void *ptr, int n_elem));
+extern struct Buf *buf_concat PROTO((struct Buf* dest, const struct Buf* src));
 extern struct Buf *buf_strappend PROTO ((struct Buf *, const char *str));
 extern struct Buf *buf_strnappend
 PROTO ((struct Buf *, const char *str, int nchars));

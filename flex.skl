@@ -642,6 +642,10 @@ static void yy_fatal_error YY_PARAMS(( yyconst char msg[] M4_YY_PROTO_LAST_ARG )
 %% [4.0] data tables for the DFA and the user's section 1 definitions go here
 %ok-for-header
 
+m4_ifdef( [[M4_YY_IN_HEADER]], [[#ifdef YY_HEADER_EXPORT_START_CONDITIONS]])
+M4_YY_SC_DEFS
+m4_ifdef( [[M4_YY_IN_HEADER]], [[#endif]])
+
 /* Special case for "unistd.h", since it is non-ANSI. We include it way
  * down here because we want the user's section 1 to have been scanned first.
  * The user has a chance to override it with an option.
@@ -3079,6 +3083,8 @@ int main ()
 #undef yy_set_bol
 #undef yy_new_buffer
 #undef yy_set_interactive
+#undef yytext_ptr
+#undef YY_DO_BEFORE_ACTION
 
 #ifdef YY_DECL_IS_OURS
 #undef YY_DECL_IS_OURS

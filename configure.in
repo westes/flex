@@ -60,6 +60,7 @@ else
 fi
 
 dnl checks for libraries
+AC_CHECK_LIB(m, log)
 
 dnl checks for header files
 
