@@ -23,29 +23,24 @@
 #define YY_FLEX_MINOR_VERSION 5
 
 %-
+/* begin standard C headers. */
 #include <stdio.h>
 #include <errno.h>
+#include <stdlib.h>
+/* end standard C headers. */
 %+
+/* begin standard C++ headers. */
+#include <iostream> 
 #include <cerrno>
+#include <cstdlib>
+/* end standard C++ headers. */
 %*
-
-
-/* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
-#ifdef c_plusplus
-#ifndef __cplusplus
-#define __cplusplus
-#endif
-#endif
-
 
 #ifdef __cplusplus
 
-#include <stdlib.h>
 %+
 #define FLEX_STD   std::
-#include <iostream>
 %*
-#include <unistd.h>
 
 /* Use prototypes in function declarations. */
 #define YY_USE_PROTOS
@@ -62,15 +57,6 @@
 
 #endif	/* __STDC__ */
 #endif	/* ! __cplusplus */
-
-#ifdef __TURBOC__
- #pragma warn -rch
- #pragma warn -use
-#include <io.h>
-#include <stdlib.h>
-#define YY_USE_CONST
-#define YY_USE_PROTOS
-#endif
 
 #ifdef YY_USE_CONST
 #define yyconst const
@@ -402,6 +388,19 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 %% [4.0] data tables for the DFA and the user's section 1 definitions go here
 %e
 
+/* Special case for "unistd.h", since it is non-ANSI. We include it way
+ * down here because we want the user's section 1 to have been scanned first.
+ * The user has a chance to override it with an option.
+ */
+#ifndef YY_NO_UNISTD_H
+%-
+#include <unistd.h>
+%+
+#include <cunistd>
+%*
+#endif /* !YY_NO_UNISTD_H */
+
+
 #ifndef YY_EXTRA_TYPE
 #define YY_EXTRA_TYPE void *
 #endif
@@ -589,21 +588,6 @@ static int yy_top_state YY_PROTO(( YY_ONLY_ARG ));
 #define YY_NO_PUSH_STATE 1
 #define YY_NO_POP_STATE 1
 #define YY_NO_TOP_STATE 1
-#endif
-
-#ifdef YY_MALLOC_DECL
-YY_MALLOC_DECL
-#else
-#if __STDC__
-#ifndef __cplusplus
-#include <stdlib.h>
-#endif
-#else
-/* Just try to get by without declaring the routines.  This will fail
- * miserably on non-ANSI systems for which sizeof(size_t) != sizeof(int)
- * or sizeof(void*) != sizeof(int).
- */
-#endif
 #endif
 
 /* Amount of stuff to slurp up with each read. */

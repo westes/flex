@@ -79,6 +79,7 @@ optspec_t  flexopts[] = {
 {"--stdout",            OPT_STDOUT,0},/* Write generated scanner to stdout. */
 {"-T",                  OPT_TRACE,0},
 {"--trace",             OPT_TRACE,0},/* Flex should run in trace mode. */
+{"--nounistd",          OPT_NO_UNISTD_H,0}, /* Do not include unistd.h */
 {"-v",                  OPT_VERBOSE,0},
 {"--verbose",           OPT_VERBOSE,0},/* Write summary of scanner statistics to stdout. */
 {"-V",                  OPT_VERSION,0},

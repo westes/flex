@@ -269,6 +269,7 @@ LEXOPT		[aceknopr]
 	stack		action_define( "YY_STACK_USED", option_sense );
 	stdinit		do_stdinit = option_sense;
 	stdout		use_stdout = option_sense;
+    unistd      ACTION_IFDEF("YY_NO_UNISTD_H", ! option_sense);
 	unput		ACTION_IFDEF("YY_NO_UNPUT", ! option_sense);
 	verbose		printstats = option_sense;
 	warn		nowarn = ! option_sense;

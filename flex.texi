@@ -2276,6 +2276,7 @@ classes are often a big win when using compressed tables, but they
 have a moderate performance impact (one or two @code{if} tests and one
 array look-up per character scanned).
 
+@anchor{option-read}
 @item -Cr, --read
 causes the generated scanner to @emph{bypass} use of the standard I/O
 library (@code{stdio}) for input.  Instead of calling @code{fread()} or
@@ -2387,6 +2388,7 @@ constructs its scanners.  You'll never need this option unless you are doing
 @code{flex}
 maintenance or development.
 
+@anchor{option-always-interactive}
 @item --always-interactive
 instructs flex to generate a scanner which always considers its input
 @emph{interactive}.  Normally, on each new input file the scanner calls
@@ -2402,6 +2404,15 @@ scanner, which simply calls @code{yylex()}.  This option implies
 @item --never-interactive
 instructs flex to generate a scanner which never considers its input
 interactive.  This is the opposite of @code{always-interactive}.
+
+@item --nounistd
+suppresses inclusion of the non-ANSI header file @file{unistd.h}. This option
+is meant to target environments in which @file{unistd.h} does not exist. Be aware
+that certain options may cause flex to generate code that relies on functions
+normally found in @file{unistd.h}, (e.g. @code{isatty()}, @code{read()}.)
+If you wish to use these functions, you will have to inform your compiler where
+to find them.
+@xref{option-always-interactive}. @xref{option-read}.
 
 @item --stack
 enables the use of
@@ -2471,6 +2482,7 @@ leading @samp{--} ).
     interactive     -I   --interactive
     lex-compat      -l   --lex-compat
     meta-ecs        -Cm  --meta-ecs
+    nounistd             --nounistd
     perf-report     -p   --perf-report
     pointer              --pointer equivalent to "%pointer" (default)
     prefix="PREFIX" -P   --prefix

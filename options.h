@@ -79,6 +79,7 @@ enum flexopt_flag_t {
     OPT_STDINIT,
     OPT_STDOUT,
     OPT_TRACE,
+    OPT_NO_UNISTD_H,
     OPT_VERBOSE,
     OPT_VERSION,
     OPT_WARN,

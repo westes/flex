@@ -573,6 +573,7 @@ int exit_status;
             fprintf(header_out,"#undef YY_NO_SET_LVAL\n");
             fprintf(header_out,"#undef YY_NO_SET_OUT\n");
             fprintf(header_out,"#undef YY_NO_TOP_STATE\n");
+            fprintf(header_out,"#undef YY_NO_UNISTD_H\n");
             fprintf(header_out,"#undef YY_NO_UNPUT\n");
             fprintf(header_out,"#undef YY_NULL\n");
             fprintf(header_out,"#undef YY_NUM_RULES\n");
@@ -1100,7 +1101,11 @@ char **argv;
             case OPT_STDOUT:
                     use_stdout = true;
                     break;
-
+                    
+            case OPT_NO_UNISTD_H:
+                    buf_strdefine(&userdef_buf,"YY_NO_UNISTD_H", "1");
+                    break;
+                
             case OPT_TRACE:
                     trace = true;
                     break;
@@ -1718,6 +1723,7 @@ _(
 "  -R,  --reentrant         generate a reentrant C scanner\n"
 "  -Rb, --reentrant-bison   reentrant scanner for bison pure parser.\n"
 "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+"       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 
 "\n"
