@@ -89,6 +89,7 @@ info_TEXINFOS =	flex.texi
 man_MANS = flex.1
 
 EXTRA_DIST = \
+	.indent.pro \
 	AUTHORS \
 	COPYING \
 	INSTALL \
@@ -162,6 +163,7 @@ tags:
 ChangeLog:
 	-rcs2log -l 72 -u "vern	Vern	vern@ee.lbl.gov" -u "wlestes	W. L. Estes	wlestes@uncg.edu" -u "millaway	John Millaway	millaway@acm.org" | sed s:/usr/local/cvsroot/flex/::g >ChangeLog 
 
+if MAINTAINER_MODE
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #
 # Whole idea:
@@ -184,5 +186,6 @@ indent:
 		$(indent) < $$f >/dev/null && indent $$f || echo $$f FAILED to indent ;\
 	done \
 	fi
+endif MAINTAINER_MODE
 
 .PHONY: ChangeLog tags indent
