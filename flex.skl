@@ -1489,8 +1489,9 @@ void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
 extern "C" int isatty YY_PROTO(( int ));
 #else
 extern int isatty YY_PROTO(( int ));
-#endif
-#endif
+#endif /* __cplusplus */
+#endif /* !YY_NEVER_INTERACTIVE */
+#endif /* !YY_ALWAYS_INTERACTIVE */
 
 #ifdef YY_USE_PROTOS
 void yy_init_buffer( YY_BUFFER_STATE b, FILE *file YY_LAST_ARG)
