@@ -5,6 +5,9 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.25
 
+** yyleng has proper declarations now; this caused flex to generate
+   unusable scanners for some programs
+
 ** the flex distribution now includes a spec file suitable for use
    with rpm
 
