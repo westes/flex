@@ -357,6 +357,56 @@ and to match zero-or-more "foo"'s-or-"bar"'s:
 
 .fi
 .PP
+In addition to characters and ranges of characters, character classes
+can also contain character class
+.I expressions.
+These are expressions enclosed inside
+.B [:
+and
+.B :]
+delimiters (which themselves must appear between the '[' and ']' of the
+character class; other elements may occur inside the character class, too).
+The valid expressions are:
+.nf
+
+    [:alnum:] [:alpha:] [:blank:]
+    [:cntrl:] [:digit:] [:graph:]
+    [:lower:] [:print:] [:punct:]
+    [:space:] [:upper:] [:xdigit:]
+
+.fi
+These expressions all designate a set of characters equivalent to
+the corresponding standard C
+.B isXXX
+function.  For example,
+.B [:alnum:]
+designates those characters for which
+.B isalnum()
+returns true - i.e., any alphabetic or numeric.
+Some systems don't provide
+.B isblank(),
+so flex defines
+.B [:blank:]
+as a blank or a tab.
+.PP
+For example, the following character classes are all equivalent:
+.nf
+
+    [[:alnum:]]
+    [[:alpha:][:digit:]
+    [[:alpha:]0-9]
+    [a-zA-Z0-9]
+
+.fi
+If your scanner is case-insensitive (the
+.B \-i
+flag), then
+.B [:upper:]
+and
+.B [:lower:]
+are equivalent to
+.B [:alpha:].
+.PP
 Some notes on patterns:
 .IP -
 A negated character class such as the example "[^A-Z]"
@@ -467,10 +517,8 @@ very large tokens (unless you run out of dynamic memory).  The disadvantage
 is that you are restricted in how your actions can modify
 .B yytext
 (see the next section), and calls to the
-.B input()
-and
 .B unput()
-functions destroy the present contents of
+function destroys the present contents of
 .B yytext,
 which can be a considerable porting headache when moving between different
 .I lex
@@ -481,8 +529,6 @@ The advantage of
 is that you can then modify
 .B yytext
 to your heart's content, and calls to
-.B input()
-and
 .B unput()
 do not destroy
 .B yytext
@@ -529,7 +575,7 @@ Also note that you cannot use
 .B %array
 with C++ scanner classes
 (the
-.B \-+
+.B c++
 option; see below).
 .SH ACTIONS
 Each pattern in a rule has a corresponding action, which can be any
@@ -584,15 +630,11 @@ Actions are free to modify
 .B yytext
 except for lengthening it (adding
 characters to its end--these will overwrite later characters in the
-input stream).  Modifying the final character of yytext may alter
-whether when scanning resumes rules anchored with '^' are active.
-Specifically, changing the final character of yytext to a newline will
-activate such rules on the next scan, and changing it to anything else
-will deactivate the rules.  Users should not rely on this behavior being
-present in future releases.  Finally, note that none of this paragraph
-applies when using
+input stream).  This however does not apply when using
 .B %array
-(see above).
+(see above); in that case,
+.B yytext
+may be freely modified in any way.
 .PP
 Actions are free to modify
 .B yyleng
@@ -982,6 +1024,13 @@ The default
 .B yywrap()
 always returns 1.
 .PP
+Three routines are available for scanning from in-memory buffers rather
+than files:
+.B yy_scan_string(), yy_scan_bytes(),
+and
+.B yy_scan_buffer().
+See the discussion of them below in the section Multiple Input Buffers.
+.PP
 The scanner writes its
 .B ECHO
 output to the
@@ -1213,6 +1262,12 @@ could instead be written
 
     comment_caller = YY_START;
 .fi
+Flex provides
+.B YYSTATE
+as an alias for
+.B YY_START
+(since that is what's used by AT&T
+.I lex).
 .PP
 Note that start conditions do not have their own name-space; %s's and %x's
 declare names in the same fashion as #define's.
@@ -1278,6 +1333,71 @@ not including checking for a string that's too long):
             }
 
 .fi
+.PP
+Often, such as in some of the examples above, you wind up writing a
+whole bunch of rules all preceded by the same start condition(s).  Flex
+makes this a little easier and cleaner by introducing a notion of
+start condition
+.I scope.
+A start condition scope is begun with:
+.nf
+
+    <SCs>{
+
+.fi
+where
+.I SCs
+is a list of one or more start conditions.  Inside the start condition
+scope, every rule automatically has the prefix
+.I <SCs>
+applied to it, until a
+.I '}'
+which matches the initial
+.I '{'.  So, for example,
+.nf
+
+    <ESC>{
+        "\\\\n"   return '\\n';
+        "\\\\r"   return '\\r';
+        "\\\\f"   return '\\f';
+        "\\\\0"   return '\\0';
+    }
+
+.fi
+is equivalent to:
+.nf
+
+    <ESC>"\\\\n"  return '\\n';
+    <ESC>"\\\\r"  return '\\r';
+    <ESC>"\\\\f"  return '\\f';
+    <ESC>"\\\\0"  return '\\0';
+
+.fi
+Start condition scopes may be nested.
+.PP
+Three routines are available for manipulating stacks of start conditions:
+.TP
+.B void yy_push_state(int new_state)
+pushes the current start condition onto the top of the start condition
+stack and switches to
+.I new_state
+as though you had used
+.B BEGIN new_state
+(recall that start condition names are also integers).
+.TP
+.B void yy_pop_state()
+pops the top of the stack and switches to it via
+.B BEGIN.
+.TP
+.B int yy_top_state()
+returns the top of the stack without altering the stack's contents.
+.PP
+The start condition stack grows dynamically and so has no built-in
+size limitation.  If memory is exhausted, program execution aborts.
+.PP
+To use start condition stacks, your scanner must include a
+.B %option stack
+directive (see Options below).
 .SH MULTIPLE INPUT BUFFERS
 Some scanners (such as those which support "include" files)
 require reading from several input streams.  As
@@ -1436,6 +1556,64 @@ feature is discussed below):
             }
 
 .fi
+Three routines are available for setting up input buffers for
+scanning in-memory strings instead of files.  All of them create
+a new input buffer for scanning the string, and return a corresponding
+.B YY_BUFFER_STATE
+handle (which you should delete with
+.B yy_delete_buffer()
+when done with it).  They also switch to the new buffer using
+.B yy_switch_to_buffer(),
+so the next call to
+.B yylex()
+will start scanning the string.
+.TP
+.B yy_scan_string(const char *str)
+scans a NUL-terminated string.
+.TP
+.B yy_scan_bytes(const char *bytes, int len)
+scans
+.I len
+bytes (including possibly NUL's)
+starting at location
+.I bytes.
+.PP
+Note that both of these functions create and scan a
+.I copy
+of the string or bytes.  (This may be desireable, since
+.I yylex()
+modifies the contents of the buffer it is scanning.)  You can avoid the
+copy by using:
+.TP
+.B yy_scan_buffer(char *base, yy_size_t size)
+which scans in place the buffer starting at
+.I base,
+consisting of
+.I size
+bytes, the last two bytes of which
+.I must
+be
+.B YY_END_OF_BUFFER_CHAR
+(ASCII NUL).
+These last two bytes are not scanned; thus, scanning
+consists of
+.B base[0]
+through
+.B base[size-2],
+inclusive.
+.IP
+If you fail to set up
+.I base
+in this manner (i.e., forget the final two
+.B YY_END_OF_BUFFER_CHAR
+bytes), then
+.B yy_scan_buffer()
+returns a nil pointer instead of creating a new input buffer.
+.IP
+The type
+.B yy_size_t
+is an integral type to which you can cast an integer expression
+reflecting the size of the buffer.
 .SH END-OF-FILE RULES
 The special rule "<<EOF>>" indicates
 actions which are to be taken when an end-of-file is
@@ -1510,6 +1688,38 @@ may be defined to provide an action which is always executed before
 the first scan (and before the scanner's internal initializations are done).
 For example, it could be used to call a routine to read
 in a data table or open a logging file.
+.PP
+The macro
+.B yy_set_interactive(is_interactive)
+can be used to control whether the current buffer is considered
+.I interactive.
+An interactive buffer is processed more slowly,
+but must be used when the scanner's input source is indeed
+interactive to avoid problems due to waiting to fill buffers
+(see the discussion of the
+.B \-I
+flag below).  A non-zero value
+in the macro invocation marks the buffer as interactive, a zero  
+value as non-interactive.  Note that use of this macro overrides
+.B %option always-interactive
+or
+.B %option never-interactive
+(see Options below).
+.B yy_set_interactive()
+must be invoked prior to beginning to scan the buffer that is
+(or is not) to be considered interactive.
+.PP
+The macro
+.B yy_set_bol(at_bol)
+can be used to control whether the current buffer's scanning
+context for the next token match is done as though at the
+beginning of a line.  A non-zero macro argument makes rules anchored with
+'^' active, while a zero argumed makes '^' rules inactive.
+.PP
+The macro
+.B YY_AT_BOL()
+returns true if the next token scanned from the current buffer
+will have '^' rules active, false otherwise.
 .PP
 In the generated scanner, the actions are all gathered in one large
 switch statement and separated using
@@ -1671,7 +1881,10 @@ performance, and it cannot be used with the
 or
 .B -CF
 options.  For details on the compatibilities it provides, see the section
-"Incompatibilities With Lex And POSIX" below.
+"Incompatibilities With Lex And POSIX" below.  This option also results
+in the name
+.B YY_FLEX_LEX_COMPAT
+being #define'd in the generated scanner.
 .TP
 .B \-n
 is another do-nothing, deprecated option included only for
@@ -2095,7 +2308,6 @@ to
 Here are all of the names affected:
 .nf
 
-    yyFlexLexer
     yy_create_buffer
     yy_delete_buffer
     yy_flex_debug
@@ -2111,6 +2323,11 @@ Here are all of the names affected:
     yywrap
 
 .fi
+(If you are using a C++ scanner, then only
+.B yywrap
+and
+.B yyFlexLexer
+are affected.)
 Within your scanner itself, you can still refer to the global variables
 and functions using either version of their name; but externally, they
 have the modified name.
@@ -2122,8 +2339,11 @@ option also renames
 .B yywrap(),
 so you now
 .I must
+either
 provide your own (appropriately-named) version of the routine for your
-scanner, as linking with
+scanner, or use
+.B %option noyywrap,
+as linking with
 .B \-lfl
 no longer provides one for you by default.
 .TP
@@ -2133,6 +2353,152 @@ overrides the default skeleton file from which
 constructs its scanners.  You'll never need this option unless you are doing
 .I flex
 maintenance or development.
+.PP
+.I flex
+also provides a mechanism for controlling options within the
+scanner specification itself, rather than from the flex command-line.
+This is done by including
+.B %option
+directives in the first section of the scanner specification.
+You can specify multiple options with a single
+.B %option
+directive, and multiple directives in the first section of your flex input
+file.  Most
+options are given simply as names, optionally preceded by the
+word "no" (with no intervening whitespace) to negate their meaning.
+A number are equivalent to flex flags or their negation:
+.nf
+
+    7bit            -7 option
+    8bit            -8 option
+    align           -Ca option
+    backup          -b option
+    batch           -B option
+    c++             -+ option
+
+    caseful or
+    case-sensitive  opposite of -i (default)
+
+    case-insensitive or
+    caseless        -i option
+
+    debug           -d option
+    default         opposite of -s option
+    ecs             -Ce option
+    fast            -F option
+    full            -f option
+    interactive     -I option
+    lex-compat      -l option
+    meta-ecs        -Cm option
+    perf-report     -p option
+    read            -Cr option
+    stdout          -t option
+    verbose         -v option
+    warn            opposite of -w option
+                    (use "%option nowarn" for -w)
+
+    array           equivalent to "%array"
+    pointer         equivalent to "%pointer" (default)
+
+.fi
+Some
+.B %option's
+provide features otherwise not available:
+.TP
+.B always-interactive
+instructs flex to generate a scanner which always considers its input
+"interactive" (no call made to
+.B isatty()
+will be made when the scanner runs in an attempt to determine whether
+the scanner's input source is interactive and thus should be read a
+character at a time).
+.TP
+.B main
+directs flex to provide a default
+.B main()
+program for the scanner, which simply calls
+.B yylex().
+This option implies
+.B noyywrap
+(see below).
+.TP
+.B never-interactive
+instructs flex to generate a scanner which never considers its input
+"interactive" (again, no call made to
+.B isatty()).
+This is the opposite of
+.B always-interactive.
+.TP
+.B stack
+enables the use of start condition stacks (see Start Conditions above).
+.TP
+.B stdinit,
+if unset (i.e.,
+.B %option nostdinit)
+initializes
+.I yyin
+and
+.I yyout
+to nil
+.I FILE
+pointers, instead of
+.I stdin
+and
+.I stdout.
+.TP
+.B yywrap,
+if unset (i.e.,
+.B %option noyywrap),
+makes the scanner not call
+.B yywrap()
+upon an end-of-file, but simply assume that there are no more
+files to scan (until the user points
+.I yyin
+at a new file and calls
+.B yylex()
+again).
+.PP
+.I flex
+scans your rule actions to determine whether you use the
+.B REJECT
+or
+.B yymore()
+features.  The
+.B reject
+and
+.B yymore
+options are available to override its decision as to whether you use the
+options, either by setting them (e.g.,
+.B %option reject)
+to indicate the feature is indeed used, or
+unsetting them to indicate it actually is not used
+(e.g.,
+.B %option noyymore).
+.PP
+Two option's take string-delimited values, offset with '=':
+.B outfile="<name>"
+is equivalent to
+.B -o<name>,
+and
+.B prefix="<name>"
+is equivalent to
+.B -P<name>.
+.PP
+A number of option's are available for lint purists who want to suppress
+the appearance of unneeded routines in the generated scanner.  Each of the
+following, if unset, results in the corresponding routine not appearing in
+the generated scanner:
+.nf
+
+    input, unput
+    yy_push_state, yy_pop_state, yy_top_state
+    yy_scan_buffer, yy_scan_bytes, yy_scan_string
+
+.fi
+(though
+.B yy_push_state()
+and friends won't appear anyway unless you use
+.B %option stack).
 .SH PERFORMANCE CONSIDERATIONS
 The main design goal of
 .I flex
@@ -2150,8 +2516,8 @@ are, from most expensive to least:
     pattern sets that require backing up
     arbitrary trailing context
 
-    yymore()
     '^' beginning-of-line operator
+    yymore()
 
 .fi
 with the first three all being quite expensive and the last two
@@ -2665,6 +3031,36 @@ Here is an example of a simple C++ scanner:
         return 0;
         }
 .fi
+If you want to create multiple (different) lexer classes, you use th
+.B \-P
+flag (or the
+.B prefix=
+option) to rename each
+.B yyFlexLexer
+to some other
+.B xxFlexLexer.
+You then can include
+.B <FlexLexer.h>
+in your other sources once per lexer class, first renaming
+.B yyFlexLexer
+as follows:
+.nf
+
+    #undef yyFlexLexer
+    #define yyFlexLexer xxFlexLexer
+    #include <FlexLexer.h>
+
+    #undef yyFlexLexer
+    #define yyFlexLexer zzFlexLexer
+    #include <FlexLexer.h>
+
+.fi
+if, for example, you used
+.B %option prefix="xx"
+for one of your scanners and
+.B %option prefix="zz"
+for the other.
+.PP
 IMPORTANT: the present form of the scanning class is
 .I experimental
 and may change considerably between major releases. 
@@ -2866,35 +3262,6 @@ or 'bar' anywhere", whereas
 interprets it as "match either 'foo' or 'bar' if they come at the beginning
 of a line".  The latter is in agreement with the POSIX specification.
 .IP -
-.I yyin
-is
-.I initialized
-by
-.I lex
-to be
-.I stdin;
-.I flex,
-on the other hand,
-initializes
-.I yyin
-to NULL
-and then
-.I assigns
-it to
-.I stdin
-the first time the scanner is called, providing
-.I yyin
-has not already been assigned to a non-NULL value.  The difference is
-subtle, but the net effect is that with
-.I flex
-scanners,
-.I yyin
-does not have a valid value until the scanner has been called.
-.IP
-The
-.B \-l
-option does away with this incompatibility.
-.IP -
 The special table-size declarations such as
 .B %a
 supported by
@@ -2912,6 +3279,15 @@ is #define'd so scanners may be written for use with either
 .I flex
 or
 .I lex.
+Scanners also include
+.B YY_FLEX_MAJOR_VERSION
+and
+.B YY_FLEX_MINOR_VERSION
+indicating which version of
+.I flex
+generated the scanner
+(for example, for the 2.5 release, these defines would be 2 and 5
+respectively).
 .PP
 The following
 .I flex
@@ -2921,12 +3297,21 @@ or the POSIX specification:
 .nf
 
     C++ scanners
+    %option
+    start condition scopes
+    start condition stacks
+    interactive/non-interactive scanners
+    yy_scan_string() and friends
     yyterminate()
+    yy_set_interactive()
+    yy_set_bol()
+    YY_AT_BOL()
     <<EOF>>
     <*>
     YY_DECL
     YY_START
     YY_USER_ACTION
+    YY_USER_INIT
     #line directives
     %{}'s around actions
     multiple actions on a line
@@ -2995,15 +3380,11 @@ failed to notice the fact, meaning that
 .I flex
 scanned the first two sections looking for occurrences of these actions
 and failed to find any, but somehow you snuck some in (via a #include
-file, for example).  Make an explicit reference to the action in your
-.I flex
-input file.  (Note that previously
-.I flex
-supported a
-.B %used/%unused
-mechanism for dealing with this problem; this feature is still supported
-but now deprecated, and will go away soon unless the author hears from
-people who can argue compellingly that they need it.)
+file, for example).  Use
+.B %option reject
+or
+.B %option yymore
+to indicate to flex that you really do use these featurs.
 .PP
 .I flex scanner jammed -
 a scanner compiled with
