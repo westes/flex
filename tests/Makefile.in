@@ -12,7 +12,7 @@ build:
 	@for dir in $(TESTDIRS) ; do \
        (cd "$$dir" && $(MAKE) ) ; \
     done
-	@echo "Type 'make check' to run all tests."
+	@echo "Type '`basename $(MAKE)` check' to run all tests."
 
 check:
 	@nok=0;\
@@ -20,22 +20,24 @@ check:
     nskip=0;\
     for dir in $(TESTDIRS) ; do \
        echo -n Executing "$$dir" ; \
-       dot=$$((30-$${#dir})); \
-       while (( dot )); do \
+       dot=$$(( 30 - $${#dir} )); \
+       while test $$dot -gt 0 ; do \
            echo -n '.'; \
-           dot=$$((dot-1)); \
+           dot=$$(( $$dot - 1 )); \
        done; \
        ( cd "$$dir" && $(MAKE) check  > OUTPUT 2>&1 ) ; \
        case $$? in \
-            0)  echo OK.; \
-                 nok=$$((nok+1)) ; \
-                 continue; \
+            0 )  echo OK.; \
+                 nok=$$(( $$nok + 1 )) ; \
                  ;; \
-            1)  echo "FAILED. See $$dir/OUTPUT for details." ; \
-                 nfail=$$((nfail+1)) ; \
+            1 )  echo "FAILED. See $$dir/OUTPUT for details." ; \
+                 nfail=$$(( $$nfail + 1 )) ; \
                  ;; \
-            2)  echo "SKIPPED. See $$dir/OUTPUT for details."; \
-                 nskip=$$((nskip+1)) ; \
+            2 )  echo "SKIPPED. See $$dir/OUTPUT for details."; \
+                 nskip=$$(( $$nskip + 1 )) ; \
+                 ;; \
+            * )  echo "FAILED? Unknown exit status reported."; \
+                 nfail=$$(( $$nfail + 1 )) ; \
                  ;; \
        esac; \
     done ; \
