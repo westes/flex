@@ -3,3 +3,4 @@ config.in
 config.status
 config.h
 config.log
+Makefile
