@@ -71,8 +71,8 @@ noinst_HEADERS = \
 include_HEADERS = \
 	FlexLexer.h
 
-info_TEXINFOS = \
-	flex.texi
+# info_TEXINFOS = \
+# 	flex.texi
 
 EXTRA_DIST = \
 	AUTHORS \
@@ -112,14 +112,11 @@ skel.o: skel.c flexdef.h config.h
 sym.o: sym.c flexdef.h config.h
 tblcmp.o: tblcmp.c flexdef.h config.h
 
-#The below recipe for making the ChangeLog will only work if you have a copy of the cvs tree handy so let it fail gracefully
+#The below recipe for making the ChangeLog will only work if you have a copy of the cvs tree handy so let it fail gracefully.
 
-dist: ChangeLog
+# Maintainer: you need to make the ChangeLog before you distribute.
 
 ChangeLog:
 	-rcs2log -l 72 -u "vern	Vern	vern@ee.lbl.gov" -u "wlestes	W. L. Estes	wlestes@uncg.edu" | sed s:/usr/local/cvsroot/flex/::g >ChangeLog 
-
-# the ChangeLog target is phony so it will be remade whenever you make
-# the dist target
 
 .PHONY: ChangeLog
