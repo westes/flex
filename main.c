@@ -39,13 +39,13 @@ static char rcsid[] =
 
 #include "flexdef.h"
 
-static char flex_version[] = "2.1 (beta)";
+static char flex_version[] = "2.2";
 
 
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
 int interactive, caseins, useecs, fulltbl, usemecs;
-int fullspd, gen_line_dirs, performance_report, backtrack_report;
+int fullspd, gen_line_dirs, performance_report, backtrack_report, csize;
 int yymore_used, reject, real_reject, continued_action;
 int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum;
@@ -62,6 +62,8 @@ int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs, tecfwd[CSIZE + 1];
 int tecbck[CSIZE + 1];
+int *xlation = (int *) 0;
+int num_xlations;
 int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof, *actvsc;
 char **scname;
 int current_max_dfa_size, current_max_xpairs;
@@ -73,7 +75,7 @@ int *accsiz, *dhash, numas;
 int numsnpairs, jambase, jamstate;
 int lastccl, current_maxccls, *cclmap, *ccllen, *cclng, cclreuse;
 int current_max_ccl_tbl_size;
-char *ccltbl;
+Char *ccltbl;
 char *starttime, *endtime, nmstr[MAXLINE];
 int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
@@ -81,16 +83,15 @@ int num_backtracking, bol_needed;
 FILE *temp_action_file;
 FILE *backtrack_file;
 int end_of_buffer_state;
-#ifndef SHORT_FILE_NAMES
-char action_file_name[] = "/tmp/flexXXXXXX";
-#else
-char action_file_name[] = "flexXXXXXX.tmp";
-#endif
+char *action_file_name = NULL;
+char **input_files;
+int num_input_files;
+char *program_name;
 
 #ifndef SHORT_FILE_NAMES
-static char outfile[] = "lex.yy.c";
+static char *outfile = "lex.yy.c";
 #else
-static char outfile[] = "lexyy.c";
+static char *outfile = "lexyy.c";
 #endif
 static int outfile_created = 0;
 
@@ -125,13 +126,13 @@ char **argv;
 
     if ( performance_report )
 	{
-	if ( yymore_used )
-	    fprintf( stderr,
-		     "yymore() entails a minor performance penalty\n" );
-
 	if ( interactive )
 	    fprintf( stderr,
 		 "-I (interactive) entails a minor performance penalty\n" );
+
+	if ( yymore_used )
+	    fprintf( stderr,
+		     "yymore() entails a minor performance penalty\n" );
 
 	if ( reject )
 	    fprintf( stderr,
@@ -223,7 +224,8 @@ int status;
 	{
 	endtime = flex_gettime();
 
-	fprintf( stderr, "flex version %s usage statistics:\n", flex_version );
+	fprintf( stderr, "%s version %s usage statistics:\n", program_name,
+		 flex_version );
 	fprintf( stderr, "  started at %s, finished at %s\n",
 		 starttime, endtime );
 
@@ -287,16 +289,16 @@ int status;
 
 	if ( useecs )
 	    {
-	    tblsiz = tblsiz + CSIZE;
+	    tblsiz = tblsiz + csize;
 	    fprintf( stderr, "  %d/%d equivalence classes created\n",
-		     numecs, CSIZE );
+		     numecs, csize );
 	    }
 
 	if ( usemecs )
 	    {
 	    tblsiz = tblsiz + numecs;
 	    fprintf( stderr, "  %d/%d meta-equivalence classes created\n",
-		     nummecs, CSIZE );
+		     nummecs, csize );
 	    }
 
 	fprintf( stderr, "  %d (%d saved) hash collisions, %d DFAs equal\n",
@@ -338,6 +340,8 @@ char **argv;
     sawcmpflag = false;
     use_stdout = false;
 
+    program_name = argv[0];
+
     /* read flags */
     for ( --argc, ++argv; argc ; --argc, ++argv )
 	{
@@ -354,8 +358,15 @@ char **argv;
 		    break;
 
 		case 'c':
+		    fprintf( stderr,
+	"%s: Assuming use of deprecated -c flag is really intended to be -C\n",
+			     program_name );
+
+		    /* fall through */
+
+		case 'C':
 		    if ( i != 1 )
-			flexerror( "-c flag must be given separately" );
+			flexerror( "-C flag must be given separately" );
 
 		    if ( ! sawcmpflag )
 			{
@@ -385,7 +396,7 @@ char **argv;
 				break;
 
 			    default:
-				lerrif( "unknown -c option %c",
+				lerrif( "unknown -C option '%c'",
 					(int) arg[i] );
 				break;
 			    }
@@ -418,6 +429,10 @@ char **argv;
 		    gen_line_dirs = false;
 		    break;
 
+		case 'n':
+		    /* stupid do-nothing deprecated option */
+		    break;
+
 		case 'p':
 		    performance_report = true;
 		    break;
@@ -446,16 +461,16 @@ char **argv;
 		    break;
 
 		default:
-		    lerrif( "unknown flag %c", (int) arg[i] );
+		    lerrif( "unknown flag '%c'", (int) arg[i] );
 		    break;
 		}
 
-get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
+get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
 	;
 	}
 
     if ( (fulltbl || fullspd) && usemecs )
-	flexerror( "full table and -cm don't make sense together" );
+	flexerror( "full table and -Cm don't make sense together" );
 
     if ( (fulltbl || fullspd) && interactive )
 	flexerror( "full table and -I are (currently) incompatible" );
@@ -476,24 +491,14 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
 	FILE *prev_stdout = freopen( outfile, "w", stdout );
 
 	if ( prev_stdout == NULL )
-	    flexerror( "could not create lex.yy.c" );
+	    lerrsf( "could not create %s", outfile );
 
 	outfile_created = 1;
 	}
 
-    if ( argc )
-	{
-	if ( argc > 1 )
-	    flexerror( "extraneous argument(s) given" );
-
-	yyin = fopen( infilename = argv[0], "r" );
-
-	if ( yyin == NULL )
-	    lerrsf( "can't open %s", argv[0] );
-	}
-
-    else
-	yyin = stdin;
+    num_input_files = argc;
+    input_files = argv;
+    set_input_file( num_input_files > 0 ? input_files[0] : NULL );
 
     if ( backtrack_report )
 	{
@@ -520,7 +525,23 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
     if ( (skelfile = fopen( skelname, "r" )) == NULL )
 	lerrsf( "can't open skeleton file %s", skelname );
 
-    (void) mktemp( action_file_name );
+#ifdef SYS_V
+    action_file_name = tmpnam( NULL );
+#endif
+
+    if ( action_file_name == NULL )
+	{
+	static char temp_action_file_name[32];
+
+#ifndef SHORT_FILE_NAMES
+	strcpy( temp_action_file_name, "/tmp/flexXXXXXX" );
+#else
+	strcpy( temp_action_file_name, "flexXXXXXX.tmp" );
+#endif
+	(void) mktemp( temp_action_file_name );
+
+	action_file_name = temp_action_file_name;
+	}
 
     if ( (temp_action_file = fopen( action_file_name, "w" )) == NULL )
 	lerrsf( "can't open temporary action file %s", action_file_name );
@@ -534,6 +555,8 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
     linenum = sectnum = 1;
     firstprot = NIL;
 
+    csize = CSIZE;
+
     /* used in mkprot() so that the first proto goes in slot 1
      * of the proto queue
      */
@@ -544,18 +567,18 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
 	/* set up doubly-linked equivalence classes */
 	ecgroup[1] = NIL;
 
-	for ( i = 2; i <= CSIZE; ++i )
+	for ( i = 2; i <= csize; ++i )
 	    {
 	    ecgroup[i] = i - 1;
 	    nextecm[i - 1] = i;
 	    }
 
-	nextecm[CSIZE] = NIL;
+	nextecm[csize] = NIL;
 	}
 
     else
 	{ /* put everything in its own equivalence class */
-	for ( i = 1; i <= CSIZE; ++i )
+	for ( i = 1; i <= csize; ++i )
 	    {
 	    ecgroup[i] = i;
 	    nextecm[i] = BAD_SUBSCRIPT;	/* to catch errors */
@@ -578,29 +601,38 @@ readin()
     if ( ddebug )
 	puts( "#define FLEX_DEBUG" );
 
-    if ( fulltbl )
-	puts( "#define FLEX_FULL_TABLE" );
-    else if ( fullspd )
-	puts( "#define FLEX_FAST_COMPRESSED" );
-    else
-	puts( "#define FLEX_COMPRESSED" );
+#ifdef FLEX_8_BIT_CHARS
+	puts( "#define YY_CHAR unsigned char" );
+#else
+	puts( "#define YY_CHAR char" );
+#endif
 
     skelout();
 
     line_directive_out( stdout );
 
     if ( yyparse() )
-	lerrif( "fatal parse error at line %d", linenum );
-
-    if ( useecs )
 	{
-	numecs = cre8ecs( nextecm, ecgroup, CSIZE );
+	pinpoint_message( "fatal parse error" );
+	flexend( 1 );
+	}
+
+    if ( xlation )
+	{
+	ecs_from_xlation( ecgroup );
+	useecs = true;
+	numecs = num_xlations + 1;	/* + 1 for characters not in %t table */
+	ccl2ecl();
+	}
+
+    else if ( useecs )
+	{
+	numecs = cre8ecs( nextecm, ecgroup, csize );
 	ccl2ecl();
 	}
 
     else
-	numecs = CSIZE;
-
+	numecs = csize;
     }
 
 
