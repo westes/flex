@@ -39,8 +39,9 @@ static char rcsid[] =
 
 
 #include "flexdef.h"
+#include "version.h"
 
-static char flex_version[] = "2.3";
+static char flex_version[] = FLEX_VERSION;
 
 
 /* declare functions that have forward references */
@@ -51,27 +52,31 @@ void set_up_initial_allocations PROTO(());
 
 
 /* these globals are all defined and commented in flexdef.h */
-int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
+int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int interactive, caseins, useecs, fulltbl, usemecs;
-int fullspd, gen_line_dirs, performance_report, backtrack_report, csize;
+int fullspd, gen_line_dirs, performance_report, backtrack_report;
+int yytext_is_array, csize;
 int yymore_used, reject, real_reject, continued_action;
 int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum;
 FILE *skelfile = NULL;
+int skel_ind = 0;
+char *action_array, *prolog, *action;
+int action_size, action_offset, action_index;
 char *infilename = NULL;
 int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
-int current_mns, num_rules, current_max_rules, lastnfa;
+int current_mns, num_rules, num_eof_rules, default_rule;
+int current_max_rules, lastnfa;
 int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
-int *accptnum, *assoc_rule, *state_type, *rule_type, *rule_linenum;
+int *accptnum, *assoc_rule, *state_type;
+int *rule_type, *rule_linenum, *rule_useful;
 int current_state_type;
 int variable_trailing_context_rules;
 int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs, tecfwd[CSIZE + 1];
 int tecbck[CSIZE + 1];
-int *xlation = (int *) 0;
-int num_xlations;
 int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof, *actvsc;
 char **scname;
 int current_max_dfa_size, current_max_xpairs;
@@ -84,14 +89,12 @@ int numsnpairs, jambase, jamstate;
 int lastccl, current_maxccls, *cclmap, *ccllen, *cclng, cclreuse;
 int current_max_ccl_tbl_size;
 Char *ccltbl;
-char *starttime, *endtime, nmstr[MAXLINE];
+char *starttime = 0, *endtime, nmstr[MAXLINE];
 int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 int num_backtracking, bol_needed;
-FILE *temp_action_file;
 FILE *backtrack_file;
 int end_of_buffer_state;
-char *action_file_name = NULL;
 char **input_files;
 int num_input_files;
 char *program_name;
@@ -111,6 +114,8 @@ int argc;
 char **argv;
 
     {
+    int i;
+
     flexinit( argc, argv );
 
     readin();
@@ -128,14 +133,18 @@ char **argv;
     else if ( reject_really_used == REALLY_NOT_USED )
 	reject = false;
 
-    if ( performance_report )
+    if ( performance_report > 0 )
 	{
-	if ( interactive )
-	    fprintf( stderr,
+	if ( performance_report > 1 )
+	    {
+	    if ( interactive )
+		fprintf( stderr,
 		     "-I (interactive) entails a minor performance penalty\n" );
 
-	if ( yymore_used )
-	    fprintf( stderr, "yymore() entails a minor performance penalty\n" );
+	    if ( yymore_used )
+		fprintf( stderr,
+			 "yymore() entails a minor performance penalty\n" );
+	    }
 
 	if ( reject )
 	    fprintf( stderr, "REJECT entails a large performance penalty\n" );
@@ -162,14 +171,21 @@ char **argv;
 
     ntod();
 
+    for ( i = 1; i <= num_rules; ++i )
+	if ( ! rule_useful[i] && i != default_rule )
+	    line_warning( "rule cannot be matched", rule_linenum[i] );
+
+    if ( spprdflt && ! reject && rule_useful[default_rule] )
+	line_warning( "-s option given but default rule can be matched",
+	    rule_linenum[default_rule] );
+
     /* generate the C state transition tables from the DFA */
     make_tables();
 
     /* note, flexend does not return.  It exits with its argument as status. */
-
     flexend( 0 );
 
-    /*NOTREACHED*/
+    return 0;	/* keep compilers/lint happy */
     }
 
 
@@ -195,22 +211,10 @@ int status;
     if ( skelfile != NULL )
 	{
 	if ( ferror( skelfile ) )
-	    flexfatal( "error occurred when writing skeleton file" );
+	    flexfatal( "error occurred when reading skeleton file" );
 
 	else if ( fclose( skelfile ) )
 	    flexfatal( "error occurred when closing skeleton file" );
-	}
-
-    if ( temp_action_file )
-	{
-	if ( ferror( temp_action_file ) )
-	    flexfatal( "error occurred when writing temporary action file" );
-
-	else if ( fclose( temp_action_file ) )
-	    flexfatal( "error occurred when closing temporary action file" );
-
-	else if ( unlink( action_file_name ) )
-	    flexfatal( "error occurred when deleting temporary action file" );
 	}
 
     if ( status != 0 && outfile_created )
@@ -245,12 +249,15 @@ int status;
 
     if ( printstats )
 	{
-	endtime = flex_gettime();
-
 	fprintf( stderr, "%s version %s usage statistics:\n", program_name,
 		 flex_version );
-	fprintf( stderr, "  started at %s, finished at %s\n",
-		 starttime, endtime );
+
+	if ( starttime )
+	    {
+	    endtime = flex_gettime();
+	    fprintf( stderr, "  started at %s, finished at %s\n",
+		     starttime, endtime );
+	    }
 
 	fprintf( stderr, "  scanner options: -" );
 
@@ -258,23 +265,31 @@ int status;
 	    putc( 'b', stderr );
 	if ( ddebug )
 	    putc( 'd', stderr );
-	if ( interactive )
-	    putc( 'I', stderr );
 	if ( caseins )
 	    putc( 'i', stderr );
-	if ( ! gen_line_dirs )
-	    putc( 'L', stderr );
-	if ( performance_report )
+	if ( performance_report > 0 )
+	    putc( 'p', stderr );
+	if ( performance_report > 1 )
 	    putc( 'p', stderr );
 	if ( spprdflt )
 	    putc( 's', stderr );
 	if ( use_stdout )
 	    putc( 't', stderr );
-	if ( trace )
-	    putc( 'T', stderr );
 	if ( printstats )
 	    putc( 'v', stderr );	/* always true! */
-	if ( csize == 256 )
+	if ( nowarn )
+	    putc( 'w', stderr );
+	if ( ! interactive )
+	    putc( 'B', stderr );
+	if ( interactive )
+	    putc( 'I', stderr );
+	if ( ! gen_line_dirs )
+	    putc( 'L', stderr );
+	if ( trace )
+	    putc( 'T', stderr );
+	if ( csize == 128 )
+	    putc( '7', stderr );
+	else
 	    putc( '8', stderr );
 
 	fprintf( stderr, " -C" );
@@ -288,7 +303,7 @@ int status;
 	if ( usemecs )
 	    putc( 'm', stderr );
 
-	if ( strcmp( skelname, DEFAULT_SKELETON_FILE ) )
+	if ( skelname )
 	    fprintf( stderr, " -S%s", skelname );
 
 	putc( '\n', stderr );
@@ -296,8 +311,8 @@ int status;
 	fprintf( stderr, "  %d/%d NFA states\n", lastnfa, current_mns );
 	fprintf( stderr, "  %d/%d DFA states (%d words)\n", lastdfa,
 		 current_max_dfas, totnst );
-	fprintf( stderr,
-		 "  %d rules\n", num_rules - 1 /* - 1 for def. rule */ );
+	fprintf( stderr, "  %d rules\n",
+		 num_rules + num_eof_rules - 1 /* - 1 for def. rule */ );
 
 	if ( num_backtracking == 0 )
 	    fprintf( stderr, "  No backtracking\n" );
@@ -394,18 +409,27 @@ char **argv;
 
     {
     int i, sawcmpflag;
+    int csize_given, interactive_given;
     char *arg, *flex_gettime(), *mktemp();
 
-    printstats = syntaxerror = trace = spprdflt = interactive = caseins = false;
-    backtrack_report = performance_report = ddebug = fulltbl = fullspd = false;
-    yymore_used = continued_action = reject = false;
+    printstats = syntaxerror = trace = spprdflt = caseins = false;
+    backtrack_report = ddebug = fulltbl = fullspd = false;
+    nowarn = yymore_used = continued_action = reject = yytext_is_array = false;
     yymore_really_used = reject_really_used = false;
     gen_line_dirs = usemecs = useecs = true;
+    performance_report = 0;
 
     sawcmpflag = false;
     use_stdout = false;
+    csize_given = false;
+    interactive_given = false;
 
-    csize = DEFAULT_CSIZE;
+    /* Initialize dynamic array for holding the rule actions. */
+    action_size = 2048;	/* default size of action array in bytes */
+    prolog = action = action_array = allocate_character_array( action_size );
+    action_offset = action_index = 0;
+
+    starttime = flex_gettime();
 
     program_name = argv[0];
 
@@ -420,6 +444,11 @@ char **argv;
 	for ( i = 1; arg[i] != '\0'; ++i )
 	    switch ( arg[i] )
 		{
+		case 'B':
+		    interactive = false;
+		    interactive_given = true;
+		    break;
+
 		case 'b':
 		    backtrack_report = true;
 		    break;
@@ -484,8 +513,13 @@ char **argv;
 		    fullspd = true;
 		    break;
 
+		case 'h':
+		    usage();
+		    exit( 0 );
+
 		case 'I':
 		    interactive = true;
+		    interactive_given = true;
 		    break;
 
 		case 'i':
@@ -501,7 +535,7 @@ char **argv;
 		    break;
 
 		case 'p':
-		    performance_report = true;
+		    ++performance_report;
 		    break;
 
 		case 'S':
@@ -527,35 +561,60 @@ char **argv;
 		    printstats = true;
 		    break;
 
+		case 'V':
+		    fprintf( stderr, "%s version %s\n",
+			     program_name, flex_version );
+		    exit( 0 );
+
+		case 'w':
+		    nowarn = true;
+		    break;
+
+		case '7':
+		    csize = 128;
+		    csize_given = true;
+		    break;
+
 		case '8':
 		    csize = CSIZE;
+		    csize_given = true;
 		    break;
 
 		default:
-		    lerrif( "unknown flag '%c'", (int) arg[i] );
-		    break;
+		    fprintf( stderr, "%s: unknown flag '%c'\n",
+			     program_name, (int) arg[i] );
+		    usage();
+		    exit( 1 );
 		}
 
 get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
 	;
 	}
 
+    if ( ! csize_given )
+	{
+	if ( fulltbl || fullspd )
+	    csize = DEFAULT_CSIZE;
+	else
+	    csize = CSIZE;
+	}
+
+    if ( ! interactive_given )
+	{
+	if ( fulltbl || fullspd )
+	    interactive = false;
+	else
+	    interactive = true;
+	}
+
     if ( (fulltbl || fullspd) && usemecs )
 	flexerror( "full table and -Cm don't make sense together" );
 
     if ( (fulltbl || fullspd) && interactive )
-	flexerror( "full table and -I are (currently) incompatible" );
+	flexerror( "full table and -I are incompatible" );
 
     if ( fulltbl && fullspd )
 	flexerror( "full table and -F are mutually exclusive" );
-
-    if ( ! skelname )
-	{
-	static char skeleton_name_storage[400];
-
-	skelname = skeleton_name_storage;
-	(void) strcpy( skelname, DEFAULT_SKELETON_FILE );
-	}
 
     if ( ! use_stdout )
 	{
@@ -590,34 +649,11 @@ get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
     lastccl = 0;
     lastsc = 0;
 
-    /* initialize the statistics */
-    starttime = flex_gettime();
-
-    if ( (skelfile = fopen( skelname, "r" )) == NULL )
+    if ( skelname && (skelfile = fopen( skelname, "r" )) == NULL )
 	lerrsf( "can't open skeleton file %s", skelname );
 
-#ifdef SYS_V
-    action_file_name = tmpnam( NULL );
-#endif
-
-    if ( action_file_name == NULL )
-	{
-	static char temp_action_file_name[32];
-
-#ifndef SHORT_FILE_NAMES
-	(void) strcpy( temp_action_file_name, "/tmp/flexXXXXXX" );
-#else
-	(void) strcpy( temp_action_file_name, "flexXXXXXX.tmp" );
-#endif
-	(void) mktemp( temp_action_file_name );
-
-	action_file_name = temp_action_file_name;
-	}
-
-    if ( (temp_action_file = fopen( action_file_name, "w" )) == NULL )
-	lerrsf( "can't open temporary action file %s", action_file_name );
-
-    lastdfa = lastnfa = num_rules = numas = numsnpairs = tmpuses = 0;
+    lastdfa = lastnfa = 0;
+    num_rules = num_eof_rules = default_rule = numas = numsnpairs = tmpuses = 0;
     numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst = 0;
     numuniq = numdup = hshsave = eofseen = datapos = dataline = 0;
     num_backtracking = onesp = numprots = 0;
@@ -675,9 +711,9 @@ void readin()
 	puts( "#define FLEX_DEBUG" );
 
     if ( csize == 256 )
-	puts( "#define YY_CHAR unsigned char" );
+	puts( "typedef unsigned char YY_CHAR;" );
     else
-	puts( "#define YY_CHAR char" );
+	puts( "typedef char YY_CHAR;" );
 
     line_directive_out( stdout );
 
@@ -685,12 +721,6 @@ void readin()
 	{
 	pinpoint_message( "fatal parse error" );
 	flexend( 1 );
-	}
-
-    if ( xlation )
-	{
-	numecs = ecs_from_xlation( ecgroup );
-	useecs = true;
 	}
 
     else if ( useecs )
@@ -728,6 +758,7 @@ void set_up_initial_allocations()
     current_max_rules = INITIAL_MAX_RULES;
     rule_type = allocate_integer_array( current_max_rules );
     rule_linenum = allocate_integer_array( current_max_rules );
+    rule_useful = allocate_integer_array( current_max_rules );
 
     current_max_scs = INITIAL_MAX_SCS;
     scset = allocate_integer_array( current_max_scs );
@@ -743,7 +774,7 @@ void set_up_initial_allocations()
     cclng = allocate_integer_array( current_maxccls );
 
     current_max_ccl_tbl_size = INITIAL_MAX_CCL_TBL_SIZE;
-    ccltbl = allocate_character_array( current_max_ccl_tbl_size );
+    ccltbl = allocate_Character_array( current_max_ccl_tbl_size );
 
     current_max_dfa_size = INITIAL_MAX_DFA_SIZE;
 
@@ -764,4 +795,44 @@ void set_up_initial_allocations()
     dfaacc = allocate_dfaacc_union( current_max_dfas );
 
     nultrans = (int *) 0;
+    }
+
+
+void usage()
+    {
+    fprintf( stderr,
+	"%s [-bcdfhinpstvwBFILTV78 -C[efmF] -Sskeleton] [filename ...]\n",
+	program_name );
+
+    fprintf( stderr,
+	"\t-b  generate backtracking information to lex.backtrack\n" );
+    fprintf( stderr, "\t-c  do-nothing POSIX option\n" );
+    fprintf( stderr, "\t-d  turn on debug mode in generated scanner\n" );
+    fprintf( stderr, "\t-f  generate fast, large scanner\n" );
+    fprintf( stderr, "\t-h  produce this help message\n" );
+    fprintf( stderr, "\t-i  generate case-insensitive scanner\n" );
+    fprintf( stderr, "\t-n  do-nothing POSIX option\n" );
+    fprintf( stderr, "\t-p  generate performance report to stderr\n" );
+    fprintf( stderr, "\t-s  suppress default rule to ECHO unmatched text\n" );
+    fprintf( stderr,
+	"\t-t  write generated scanner on stdout instead of lex.yy.c\n" );
+    fprintf( stderr, "\t-v  write summary of scanner statistics to stderr\n" );
+    fprintf( stderr, "\t-w  do not generate warnings\n" );
+    fprintf( stderr, "\t-B  generate batch scanner (opposite of -I)\n" );
+    fprintf( stderr, "\t-F  use alternative fast scanner representation\n" );
+    fprintf( stderr, "\t-I  generate interactive scanner (opposite of -B)\n" );
+    fprintf( stderr, "\t-L  suppress #line directives in scanner\n" );
+    fprintf( stderr, "\t-T  %s should run in trace mode\n", program_name );
+    fprintf( stderr, "\t-V  report %s version\n", program_name );
+    fprintf( stderr, "\t-7  generate 7-bit scanner\n" );
+    fprintf( stderr, "\t-8  generate 8-bit scanner\n" );
+    fprintf( stderr,
+	"\t-C  specify degree of table compression (default is -Cem):\n" );
+    fprintf( stderr, "\t\t-Ce  construct equivalence classes\n" );
+    fprintf( stderr,
+	"\t\t-Cf  do not compress scanner tables; use -f representation\n" );
+    fprintf( stderr, "\t\t-Cm  construct meta-equivalence classes\n" );
+    fprintf( stderr,
+	"\t\t-CF  do not compress scanner tables; use -F representation\n" );
+    fprintf( stderr, "\t-S  specify non-default skeleton file\n" );
     }

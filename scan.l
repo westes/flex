@@ -1,4 +1,3 @@
-
 /* scan.l - scanner for flex input */
 
 %{
@@ -38,8 +37,8 @@ static char rcsid[] =
 #include "flexdef.h"
 #include "parse.h"
 
-#define ACTION_ECHO fprintf( temp_action_file, "%s", yytext )
-#define MARK_END_OF_PROLOG fprintf( temp_action_file, "%%%% end of prolog\n" );
+#define ACTION_ECHO add_action( (char *) yytext )
+#define MARK_END_OF_PROLOG mark_prolog();
 
 #undef YY_DECL
 #define YY_DECL \
@@ -47,11 +46,11 @@ static char rcsid[] =
 
 #define RETURNCHAR \
 	yylval = yytext[0]; \
-	return ( CHAR );
+	return CHAR;
 
 #define RETURNNAME \
 	(void) strcpy( nmstr, (char *) yytext ); \
-	return ( NAME );
+	return NAME;
 
 #define PUT_BACK_STRING(str, start) \
 	for ( i = strlen( (char *) (str) ) - 1; i >= start; --i ) \
@@ -68,11 +67,13 @@ static char rcsid[] =
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
 %x FIRSTCCL CCL ACTION RECOVER BRACEERROR C_COMMENT ACTION_COMMENT
-%x ACTION_STRING PERCENT_BRACE_ACTION USED_LIST CODEBLOCK_2 XLATION
+%x ACTION_STRING PERCENT_BRACE_ACTION USED_LIST CODEBLOCK_2
 
 WS		[ \t\f]+
 OPTWS		[ \t\f]*
 NOT_WS		[^ \t\f\n]
+
+NL		\n|\r\n|\n\r
 
 NAME		[a-z_][a-z_0-9-]*
 NOT_NAME	[^a-z_\n]+
@@ -81,71 +82,51 @@ SCNAME		{NAME}
 
 ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 
+FIRST_CCL_CHAR	[^\\\n]|{ESCSEQ}
+CCL_CHAR	[^\\\n\]]|{ESCSEQ}
+
 %%
-    static int bracelevel, didadef;
-    int i, indented_code, checking_used, new_xlation;
+    static int bracelevel, didadef, indented_code, checking_used;
+
     int doing_codeblock = false;
+    int i;
     Char nmdef[MAXLINE], myesc();
 
+
 ^{WS}			indented_code = true; BEGIN(CODEBLOCK);
-^#.*\n			++linenum; /* treat as a comment */
 ^"/*"			ECHO; BEGIN(C_COMMENT);
-^"%s"{NAME}?		return ( SCDECL );
-^"%x"{NAME}?		return ( XSCDECL );
-^"%{".*\n		{
+^"%s"{NAME}?		return SCDECL;
+^"%x"{NAME}?		return XSCDECL;
+^"%{".*{NL}		{
 			++linenum;
 			line_directive_out( stdout );
 			indented_code = false;
 			BEGIN(CODEBLOCK);
 			}
 
-{WS}			return ( WHITESPACE );
+{WS}			return WHITESPACE;
 
 ^"%%".*			{
 			sectnum = 2;
 			line_directive_out( stdout );
 			BEGIN(SECT2PROLOG);
-			return ( SECTEND );
+			return SECTEND;
 			}
 
+^"%pointer"		yytext_is_array = false;
+^"%array"		yytext_is_array = true;
+
 ^"%used"		{
-	pinpoint_message( "warning - %%used/%%unused have been deprecated" );
+			warn( "%used/%unused have been deprecated" );
 			checking_used = REALLY_USED; BEGIN(USED_LIST);
 			}
 ^"%unused"		{
+			warn( "%used/%unused have been deprecated" );
 			checking_used = REALLY_NOT_USED; BEGIN(USED_LIST);
-	pinpoint_message( "warning - %%used/%%unused have been deprecated" );
-			checking_used = REALLY_NOT_USED; BEGIN(USED_LIST);
 			}
 
 
-^"%"[aeknopt]" ".*\n	{
-#ifdef NOTDEF
-			fprintf( stderr,
-			     "old-style lex command at line %d ignored:\n\t%s",
-				 linenum, yytext );
-#endif
-			++linenum;
-			}
-
-^"%"[cr]{OPTWS}		/* ignore old lex directive */
-
-%t{OPTWS}\n		{
-			++linenum;
-			xlation =
-			    (int *) malloc( sizeof( int ) * (unsigned) csize );
-
-			if ( ! xlation )
-			    flexfatal(
-				"dynamic memory failure building %t table" );
-
-			for ( i = 0; i < csize; ++i )
-			    xlation[i] = 0;
-
-			num_xlations = 0;
-
-			BEGIN(XLATION);
-			}
+^"%"[aceknopr]{WS}.*{NL}	++linenum;	/* ignore */
 
 ^"%"[^sxanpekotcru{}]{OPTWS}	synerr( "unrecognized '%' directive" );
 
@@ -156,23 +137,22 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 			}
 
 {SCNAME}		RETURNNAME;
-^{OPTWS}\n		++linenum; /* allows blank lines in section 1 */
-{OPTWS}\n		++linenum; return ( '\n' );
-.			synerr( "illegal character" ); BEGIN(RECOVER);
+^{OPTWS}{NL}		++linenum; /* allows blank lines in section 1 */
+{OPTWS}{NL}		++linenum; return '\n';
 
 
 <C_COMMENT>"*/"		ECHO; BEGIN(INITIAL);
-<C_COMMENT>"*/".*\n	++linenum; ECHO; BEGIN(INITIAL);
+<C_COMMENT>"*/".*{NL}	++linenum; ECHO; BEGIN(INITIAL);
 <C_COMMENT>[^*\n]+	ECHO;
 <C_COMMENT>"*"		ECHO;
-<C_COMMENT>\n		++linenum; ECHO;
+<C_COMMENT>{NL}		++linenum; ECHO;
 
 
-<CODEBLOCK>^"%}".*\n	++linenum; BEGIN(INITIAL);
+<CODEBLOCK>^"%}".*{NL}	++linenum; BEGIN(INITIAL);
 <CODEBLOCK>"reject"	ECHO; CHECK_REJECT(yytext);
 <CODEBLOCK>"yymore"	ECHO; CHECK_YYMORE(yytext);
 <CODEBLOCK>{NAME}|{NOT_NAME}|.	ECHO;
-<CODEBLOCK>\n		{
+<CODEBLOCK>{NL}		{
 			++linenum;
 			ECHO;
 			if ( indented_code )
@@ -185,9 +165,10 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 <PICKUPDEF>{NOT_WS}.*	{
 			(void) strcpy( (char *) nmdef, (char *) yytext );
 
+			/* skip trailing whitespace */
 			for ( i = strlen( (char *) nmdef ) - 1;
 			      i >= 0 &&
-			      nmdef[i] == ' ' || nmdef[i] == '\t';
+			      (nmdef[i] == ' ' || nmdef[i] == '\t');
 			      --i )
 			    ;
 
@@ -197,17 +178,17 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 			didadef = true;
 			}
 
-<PICKUPDEF>\n		{
+<PICKUPDEF>{NL}		{
 			if ( ! didadef )
 			    synerr( "incomplete name definition" );
 			BEGIN(INITIAL);
 			++linenum;
 			}
 
-<RECOVER>.*\n		++linenum; BEGIN(INITIAL); RETURNNAME;
+<RECOVER>.*{NL}		++linenum; BEGIN(INITIAL); RETURNNAME;
 
 
-<USED_LIST>\n		++linenum; BEGIN(INITIAL);
+<USED_LIST>{NL}		++linenum; BEGIN(INITIAL);
 <USED_LIST>{WS}
 <USED_LIST>"reject"	{
 			if ( all_upper( yytext ) )
@@ -224,37 +205,18 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 <USED_LIST>{NOT_WS}+	synerr( "unrecognized %used/%unused construct" );
 
 
-<XLATION>"%t"{OPTWS}\n	++linenum; BEGIN(INITIAL);
-<XLATION>^{OPTWS}[0-9]+	++num_xlations; new_xlation = true;
-<XLATION>^.		synerr( "bad row in translation table" );
-<XLATION>{WS}		/* ignore whitespace */
-
-<XLATION>{ESCSEQ}	{
-			xlation[myesc( yytext )] =
-				(new_xlation ? num_xlations : -num_xlations);
-			new_xlation = false;
-			}
-<XLATION>.		{
-			xlation[yytext[0]] =
-				(new_xlation ? num_xlations : -num_xlations);
-			new_xlation = false;
-			}
-
-<XLATION>\n		++linenum;
-
-
-<SECT2PROLOG>.*\n/{NOT_WS}	{
+<SECT2PROLOG>.*{NL}/{NOT_WS}	{
 			++linenum;
 			ACTION_ECHO;
 			MARK_END_OF_PROLOG;
 			BEGIN(SECT2);
 			}
 
-<SECT2PROLOG>.*\n	++linenum; ACTION_ECHO;
+<SECT2PROLOG>.*{NL}	++linenum; ACTION_ECHO;
 
 <SECT2PROLOG><<EOF>>	MARK_END_OF_PROLOG; yyterminate();
 
-<SECT2>^{OPTWS}\n	++linenum; /* allow blank lines in section 2 */
+<SECT2>^{OPTWS}{NL}	++linenum; /* allow blank lines in section 2 */
 
 <SECT2>^({WS}|"%{")	{
 			indented_code = (yytext[0] != '%');
@@ -267,19 +229,19 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 			BEGIN(CODEBLOCK_2);
 			}
 
-<SECT2>"<"		BEGIN(SC); return ( '<' );
-<SECT2>^"^"		return ( '^' );
-<SECT2>\"		BEGIN(QUOTE); return ( '"' );
-<SECT2>"{"/[0-9]		BEGIN(NUM); return ( '{' );
+<SECT2>^"<"		BEGIN(SC); return '<';
+<SECT2>^"^"		return '^';
+<SECT2>\"		BEGIN(QUOTE); return '"';
+<SECT2>"{"/[0-9]		BEGIN(NUM); return '{';
 <SECT2>"{"[^0-9\n][^}\n]*	BEGIN(BRACEERROR);
-<SECT2>"$"/[ \t\n]	return ( '$' );
+<SECT2>"$"/([ \t]|{NL})	return '$';
 
 <SECT2>{WS}"%{"		{
 			bracelevel = 1;
 			BEGIN(PERCENT_BRACE_ACTION);
-			return ( '\n' );
+			return '\n';
 			}
-<SECT2>{WS}"|".*\n	continued_action = true; ++linenum; return ( '\n' );
+<SECT2>{WS}"|".*{NL}	continued_action = true; ++linenum; return '\n';
 
 <SECT2>{WS}		{
 			/* this rule is separate from the one below because
@@ -289,27 +251,26 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 			bracelevel = 0;
 			continued_action = false;
 			BEGIN(ACTION);
-			return ( '\n' );
+			return '\n';
 			}
 
-<SECT2>{OPTWS}/\n	{
+<SECT2>{OPTWS}{NL}	{
 			bracelevel = 0;
 			continued_action = false;
 			BEGIN(ACTION);
-			return ( '\n' );
+			unput( '\n' );	/* so <ACTION> sees it */
+			return '\n';
 			}
 
-<SECT2>^{OPTWS}\n	++linenum; return ( '\n' );
-
-<SECT2>"<<EOF>>"	return ( EOF_OP );
+<SECT2>"<<EOF>>"	return EOF_OP;
 
 <SECT2>^"%%".*		{
 			sectnum = 3;
 			BEGIN(SECT3);
-			return ( EOF ); /* to stop the parser */
+			return EOF; /* to stop the parser */
 			}
 
-<SECT2>"["([^\\\]\n]|{ESCSEQ})+"]"	{
+<SECT2>"["{FIRST_CCL_CHAR}{CCL_CHAR}*	{
 			int cclval;
 
 			(void) strcpy( nmstr, (char *) yytext );
@@ -317,9 +278,12 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 			/* check to see if we've already encountered this ccl */
 			if ( (cclval = ccllookup( (Char *) nmstr )) )
 			    {
+			    if ( input() != ']' )
+				synerr( "bad character class" );
+
 			    yylval = cclval;
 			    ++cclreuse;
-			    return ( PREVCCL );
+			    return PREVCCL;
 			    }
 			else
 			    {
@@ -331,10 +295,10 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 			    /* push back everything but the leading bracket
 			     * so the ccl can be rescanned
 			     */
-			    PUT_BACK_STRING((Char *) nmstr, 1);
+			    yyless( 1 );
 
 			    BEGIN(FIRSTCCL);
-			    return ( '[' );
+			    return '[';
 			    }
 			}
 
@@ -342,80 +306,99 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 			register Char *nmdefptr;
 			Char *ndlookup();
 
-			(void) strcpy( nmstr, (char *) yytext );
-			nmstr[yyleng - 1] = '\0';  /* chop trailing brace */
+			(void) strcpy( nmstr, (char *) yytext + 1 );
+			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */
 
-			/* lookup from "nmstr + 1" to chop leading brace */
-			if ( ! (nmdefptr = ndlookup( nmstr + 1 )) )
-			    synerr( "undefined {name}" );
+			if ( ! (nmdefptr = ndlookup( nmstr )) )
+			    format_synerr( "undefined definition {%s}", nmstr );
 
 			else
 			    { /* push back name surrounded by ()'s */
-			    unput(')');
-			    PUT_BACK_STRING(nmdefptr, 0);
-			    unput('(');
+			    int len = strlen( nmdefptr );
+
+			    if ( nmdefptr[0] == '^' ||
+				 (len > 0 && nmdefptr[len - 1] == '$') )
+				{
+				PUT_BACK_STRING(nmdefptr, 0);
+
+				if ( nmdefptr[0] == '^' )
+					BEGIN(CARETISBOL);
+				}
+
+			    else
+				{
+				unput(')');
+				PUT_BACK_STRING(nmdefptr, 0);
+				unput('(');
+				}
 			    }
 			}
 
-<SECT2>[/|*+?.()]	return ( yytext[0] );
+<SECT2>[/|*+?.()]	return yytext[0];
 <SECT2>.		RETURNCHAR;
-<SECT2>\n		++linenum; return ( '\n' );
 
 
-<SC>","			return ( ',' );
-<SC>">"			BEGIN(SECT2); return ( '>' );
-<SC>">"/"^"		BEGIN(CARETISBOL); return ( '>' );
+<SC>[,*]		return yytext[0];
+<SC>">"			BEGIN(SECT2); return '>';
+<SC>">"/^		BEGIN(CARETISBOL); return '>';
 <SC>{SCNAME}		RETURNNAME;
-<SC>.			synerr( "bad start condition name" );
+<SC>.			{
+			format_synerr( "bad <start condition>: %s",
+					(char *) yytext );
+			}
 
-<CARETISBOL>"^"		BEGIN(SECT2); return ( '^' );
+<CARETISBOL>"^"		BEGIN(SECT2); return '^';
 
 
 <QUOTE>[^"\n]		RETURNCHAR;
-<QUOTE>\"		BEGIN(SECT2); return ( '"' );
+<QUOTE>\"		BEGIN(SECT2); return '"';
 
-<QUOTE>\n		{
+<QUOTE>{NL}		{
 			synerr( "missing quote" );
 			BEGIN(SECT2);
 			++linenum;
-			return ( '"' );
+			return '"';
 			}
 
 
-<FIRSTCCL>"^"/[^-\n]	BEGIN(CCL); return ( '^' );
-<FIRSTCCL>"^"/-		return ( '^' );
-<FIRSTCCL>-		BEGIN(CCL); yylval = '-'; return ( CHAR );
+<FIRSTCCL>"^"/[^-\n]	BEGIN(CCL); return '^';
+<FIRSTCCL>"^"/-		return '^';
 <FIRSTCCL>.		BEGIN(CCL); RETURNCHAR;
 
-<CCL>-/[^\]\n]		return ( '-' );
+<CCL>-/[^\]\n]		return '-';
 <CCL>[^\]\n]		RETURNCHAR;
-<CCL>"]"		BEGIN(SECT2); return ( ']' );
+<CCL>"]"		BEGIN(SECT2); return ']';
+<CCL>.|{NL}		{
+			synerr( "bad character class" );
+			BEGIN(SECT2);
+			return ']';
+			}
 
 
 <NUM>[0-9]+		{
 			yylval = myctoi( yytext );
-			return ( NUMBER );
+			return NUMBER;
 			}
 
-<NUM>","			return ( ',' );
-<NUM>"}"			BEGIN(SECT2); return ( '}' );
+<NUM>","		return ',';
+<NUM>"}"		BEGIN(SECT2); return '}';
 
 <NUM>.			{
 			synerr( "bad character inside {}'s" );
 			BEGIN(SECT2);
-			return ( '}' );
+			return '}';
 			}
 
-<NUM>\n			{
+<NUM>{NL}		{
 			synerr( "missing }" );
 			BEGIN(SECT2);
 			++linenum;
-			return ( '}' );
+			return '}';
 			}
 
 
 <BRACEERROR>"}"		synerr( "bad name in {}'s" ); BEGIN(SECT2);
-<BRACEERROR>\n		synerr( "missing }" ); ++linenum; BEGIN(SECT2);
+<BRACEERROR>{NL}	synerr( "missing }" ); ++linenum; BEGIN(SECT2);
 
 
 <PERCENT_BRACE_ACTION,CODEBLOCK_2>{OPTWS}"%}".*		bracelevel = 0;
@@ -428,14 +411,14 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 			CHECK_YYMORE(yytext);
 			}
 <PERCENT_BRACE_ACTION,CODEBLOCK_2>{NAME}|{NOT_NAME}|.	ACTION_ECHO;
-<PERCENT_BRACE_ACTION,CODEBLOCK_2>\n			{
+<PERCENT_BRACE_ACTION,CODEBLOCK_2>{NL}			{
 			++linenum;
 			ACTION_ECHO;
 			if ( bracelevel == 0 ||
 			     (doing_codeblock && indented_code) )
 			    {
 			    if ( ! doing_codeblock )
-				fputs( "\tYY_BREAK\n", temp_action_file );
+				add_action( "\tYY_BREAK\n" );
 			    
 			    doing_codeblock = false;
 			    BEGIN(SECT2);
@@ -451,12 +434,12 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 <ACTION>"/*"		ACTION_ECHO; BEGIN(ACTION_COMMENT);
 <ACTION>"'"([^'\\\n]|\\.)*"'"	ACTION_ECHO; /* character constant */
 <ACTION>\"		ACTION_ECHO; BEGIN(ACTION_STRING);
-<ACTION>\n		{
+<ACTION>{NL}		{
 			++linenum;
 			ACTION_ECHO;
 			if ( bracelevel == 0 )
 			    {
-			    fputs( "\tYY_BREAK\n", temp_action_file );
+			    add_action( "\tYY_BREAK\n" );
 			    BEGIN(SECT2);
 			    }
 			}
@@ -465,12 +448,11 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 <ACTION_COMMENT>"*/"	ACTION_ECHO; BEGIN(ACTION);
 <ACTION_COMMENT>[^*\n]+	ACTION_ECHO;
 <ACTION_COMMENT>"*"	ACTION_ECHO;
-<ACTION_COMMENT>\n	++linenum; ACTION_ECHO;
-<ACTION_COMMENT>.	ACTION_ECHO;
+<ACTION_COMMENT>{NL}	++linenum; ACTION_ECHO;
 
 <ACTION_STRING>[^"\\\n]+	ACTION_ECHO;
 <ACTION_STRING>\\.	ACTION_ECHO;
-<ACTION_STRING>\n	++linenum; ACTION_ECHO;
+<ACTION_STRING>{NL}	++linenum; ACTION_ECHO;
 <ACTION_STRING>\"	ACTION_ECHO; BEGIN(ACTION);
 <ACTION_STRING>.	ACTION_ECHO;
 
@@ -482,17 +464,20 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 
 <SECT2,QUOTE,CCL>{ESCSEQ}	{
 			yylval = myesc( yytext );
-			return ( CHAR );
+			return CHAR;
 			}
 
 <FIRSTCCL>{ESCSEQ}	{
 			yylval = myesc( yytext );
 			BEGIN(CCL);
-			return ( CHAR );
+			return CHAR;
 			}
 
 
 <SECT3>.*(\n?)		ECHO;
+
+<*>.|\n			format_synerr( "bad character: %s", (char *) yytext );
+
 %%
 
 
@@ -502,11 +487,11 @@ int yywrap()
     if ( --num_input_files > 0 )
 	{
 	set_input_file( *++input_files );
-	return ( 0 );
+	return 0;
 	}
 
     else
-	return ( 1 );
+	return 1;
     }
 
 
