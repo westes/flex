@@ -484,7 +484,7 @@ void gen_next_match()
 	if ( fulltbl )
 		{
 		indent_put2s(
-	"while ( (yy_current_state = yy_nxt[yy_current_state][%s]) > 0 )",
+"while ( (yy_current_state = yy_nxt[yy_current_state][(unsigned int)%s]) > 0 )",
 				char_map );
 
 		indent_up();
@@ -594,7 +594,8 @@ int worry_about_NULs;
 		}
 
 	else
-		(void) strcpy( char_map, useecs ? "yy_ec[*yy_cp]" : "*yy_cp" );
+		(void) strcpy( char_map,
+			useecs ? "yy_ec[(unsigned int) *yy_cp]" : "*yy_cp" );
 
 	if ( worry_about_NULs && nultrans )
 		{
@@ -609,12 +610,12 @@ int worry_about_NULs;
 
 	if ( fulltbl )
 		indent_put2s(
-			"yy_current_state = yy_nxt[yy_current_state][%s];", 
+	"yy_current_state = yy_nxt[yy_current_state][(unsigned int) %s];", 
 				char_map );
 
 	else if ( fullspd )
 		indent_put2s(
-			"yy_current_state += yy_current_state[%s].yy_nxt;",
+	"yy_current_state += yy_current_state[(unsigned int) %s].yy_nxt;",
 				char_map );
 
 	else
@@ -648,7 +649,7 @@ void gen_NUL_trans()
 
 	if ( need_backing_up )
 		/* We'll need yy_cp lying around for the gen_backing_up(). */
-		indent_puts( "register YY_CHAR *yy_cp = yy_c_buf_p;" );
+		indent_puts( "register char *yy_cp = yy_c_buf_p;" );
 
 	putchar( '\n' );
 
@@ -1112,7 +1113,7 @@ void make_tables()
 			indent_puts(
 			"static yy_state_type yy_last_accepting_state;" );
 			indent_puts(
-				"static YY_CHAR *yy_last_accepting_cpos;\n" );
+				"static char *yy_last_accepting_cpos;\n" );
 			}
 		}
 
@@ -1150,7 +1151,7 @@ void make_tables()
 			{
 			puts(
 	"static yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;" );
-			puts( "static YY_CHAR *yy_full_match;" );
+			puts( "static char *yy_full_match;" );
 			puts( "static int yy_lp;" );
 			}
 
@@ -1356,7 +1357,7 @@ void make_tables()
 	skelout();
 
 	if ( bol_needed )
-		indent_puts( "register YY_CHAR *yy_bp = yytext_ptr;\n" );
+		indent_puts( "register char *yy_bp = yytext_ptr;\n" );
 
 	gen_start_state();
 
