@@ -1,5 +1,3 @@
-# @(#) $Header$ (LBL)
-
 @SET_MAKE@
 
 # Possible values for DEFS:
@@ -100,6 +98,10 @@ $(FLEX): .bootstrap $(OBJECTS) $(FLEXLIB)
 	@rm -f scan.c
 	cp $(srcdir)/initscan.c scan.c
 	touch .bootstrap
+
+# this is for developers who have to bootstrap sometimes
+initscan.c: scan.l
+	flex -t scan.l > initscan.c
 
 parse.c: parse.y
 	$(YACC) -d $(srcdir)/parse.y
