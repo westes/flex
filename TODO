@@ -11,17 +11,10 @@
 
 *** Make "see also" into real xrefs
 
-** add flex.texi and its generated info files into the Makefile
-   process (best done via automake)
-
 * repackage the distribution
 
 ** address lex-replacement: document or provide an option through
    configure for creating lex and libl.a files
-
-** include parse.c and parse.h in distribution
-
-*** remove parse.[ch] from `make clean'
 
 ** convert flex to use automake
 
