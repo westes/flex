@@ -2167,7 +2167,8 @@ scanner.  If you give the flag twice, you will also get comments regarding
 features that lead to minor performance losses.
 .IP
 Note that the use of
-.B REJECT
+.B REJECT,
+.B %option yylineno,
 and variable trailing context (see the Deficiencies / Bugs section below)
 entails a substantial performance penalty; use of
 .I yymore(),
@@ -2589,6 +2590,7 @@ Here are all of the names affected:
     yyin
     yyleng
     yylex
+    yylineno
     yyout
     yyrestart
     yytext
@@ -2719,6 +2721,15 @@ pointers, instead of
 and
 .I stdout.
 .TP
+.B yylineno
+directs
+.I flex
+to generate a scanner that maintains the number of the current line
+read from its input in the global variable
+.B yylineno.
+This option is implied by
+.B %option lex-compat.
+.TP
 .B yywrap
 if unset (i.e.,
 .B %option noyywrap),
@@ -2819,9 +2830,13 @@ are, from most expensive to least:
 .nf
 
     REJECT
+    %option yylineno
+    arbitrary trailing context
 
     pattern sets that require backing up
-    arbitrary trailing context
+    %array
+    %option interactive
+    %option always-interactive
 
     '^' beginning-of-line operator
     yymore()
@@ -3155,7 +3170,9 @@ You can also use
 .I flex
 to generate a C++ scanner class, using the
 .B \-+
-option, which is automatically specified if the name of the flex
+option (or, equivalently,
+.B %option c++),
+which is automatically specified if the name of the flex
 executable ends in a '+', such as
 .I flex++.
 When using this option, flex defaults to generating the scanner to the file
@@ -3178,6 +3195,27 @@ returns the text of the most recently matched token, the equivalent of
 .B int YYLeng()
 returns the length of the most recently matched token, the equivalent of
 .B yyleng.
+.TP
+.B int lineno() const
+returns the current input line number
+(see
+.B %option yylineno),
+or
+.B 1
+if
+.B %option yylineno
+was not used.
+.TP
+.B void set_debug( int flag )
+sets the debugging flag for the scanner, equivalent to assigning to
+.B yy_flex_debug
+(see the Options section above).  Note that you must build the scanner
+using
+.B %option debug
+to include debugging information in it.
+.TP
+.B int debug() const
+returns the current setting of the debugging flag.
 .PP
 Also provided are member functions equivalent to
 .B yy_switch_to_buffer(),
@@ -3459,6 +3497,8 @@ scanner internal variable
 .B yylineno
 is not supported unless
 .B \-l
+or
+.B %option yylineno
 is used.
 .IP
 yylineno is not part of the POSIX specification.

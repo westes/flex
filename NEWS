@@ -79,6 +79,9 @@ Changes between release 2.5.0.7 (06Mar95) and release 2.4.7:
 		stdinit	if unset ("%option nostdinit"), initialize yyin
 			and yyout statically to nil FILE* pointers, instead
 			of stdin and stdout
+		yylineno	if set, keep track of the current line
+			number in global yylineno (this option is expensive
+			in terms of performance)
 		yywrap	if unset ("%option noyywrap"), scanner does not
 			call yywrap() upon EOF but simply assumes there
 			are no more files to scan
@@ -319,6 +322,9 @@ Changes between release 2.5.0.7 (06Mar95) and release 2.4.7:
 
 	- input() no longer trashes yytext.
 
+	- interactive scanners now read characters in YY_INPUT up to a
+	  newline, a large performance gain.
+
 	- C++ scanner objects now work with the -P option.  You include
 	  <FlexLexer.h> once per scanner - see comments in <FlexLexer.h>
 	  (or flex.1) for details.
@@ -374,6 +380,9 @@ Changes between release 2.5.0.7 (06Mar95) and release 2.4.7:
 	- Documentation now clarifies that start conditions persist across
 	  switches to new input files or different input buffers.  If you
 	  want to e.g., return to INITIAL, you must explicitly do so.
+
+	- The "Performance Considerations" section of the manual has been
+	  updated.
 
 	- Documented the "yy_act" variable, which when YY_USER_ACTION is
 	  invoked holds the number of the matched rule, and added an
