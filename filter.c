@@ -298,4 +298,37 @@ int filter_tee_header (struct filter *chain)
     return 0;
 }
 
+int filter_fix_linedirs(struct filter *chain)
+{
+    regex_t reg_ld;
+	char   *buf;
+	const int readsz = 512;
+    int err;
+
+    if(!chain)
+        return 0;
+
+/* We only care about matching line directives that flex generates.  */
+#define REGEXP_LINEDIR "^#line ([[:digit:]]+) \"(.*\")"
+
+    buf = (char*) flex_alloc(readsz);
+    memset(&reg_ld,0,sizeof(regex_t));
+
+    if((err = regcomp(&reg_ld, REGEXP_LINEDIR, REG_EXTENDED)) != 0){
+        regerror(err, &reg_ld, buf, readsz);
+        sprintf( buf, "regcomp failed: %s\n", buf);
+        flexfatal ( buf );
+    }
+
+    while(fgets(buf,readsz,stdin)){
+        if( buf[0] == '#' && regexec(&reg_ld,buf, 0, NULL, 0) == 0){
+
+
+        }
+        fputs(buf, stdout);
+    }
+
+    return 0;
+}
+
 /* vim:set expandtab cindent tabstop=4 softtabstop=4 shiftwidth=4 textwidth=0: */

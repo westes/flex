@@ -55,6 +55,8 @@
 #include <unistd.h>
 #endif
 
+#include <regex.h>
+
 /* We use gettext. So, when we write strings which should be translated, we mark them with _() */
 #ifdef ENABLE_NLS
 #ifdef HAVE_LOCALE_H
@@ -1163,5 +1165,6 @@ struct filter *filter_create_int PROTO((struct filter *chain,
 extern bool filter_apply_chain PROTO((struct filter * chain));
 extern int filter_truncate (struct filter * chain, int max_len);
 extern int filter_tee_header PROTO((struct filter *chain));
+extern int filter_fix_linedirs PROTO((struct filter *chain));
 
 #endif /* not defined FLEXDEF_H */

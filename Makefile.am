@@ -66,7 +66,8 @@ flex_SOURCES = \
 	buf.c \
 	tables.c \
 	tables_shared.c \
-	filter.c
+	filter.c \
+	regex.c
 
 libfl_a_SOURCES = \
 	libmain.c \
