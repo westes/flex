@@ -33,6 +33,46 @@
 
 #include "flexdef.h"
 
+
+static const char* REGEXP_LINEDIR = "^#line ([[:digit:]]+) \"(.*)\"";
+
+regex_t regex_linedir; /*<< matches line directives */
+
+
+/** Initialize the regular expressions.
+ * @return true upon success.
+ */
+bool flex_init_regex(void)
+{
+    flex_regcomp(&regex_linedir, REGEXP_LINEDIR, REG_EXTENDED);
+
+    return true;
+}
+
+/** Compiles a regular expression or dies trying.
+ * @param preg  Same as for regcomp().
+ * @param regex Same as for regcomp().
+ * @param cflags Same as for regcomp().
+ */
+void flex_regcomp(regex_t *preg, const char *regex, int cflags)
+{
+    int err;
+
+	memset (preg, 0, sizeof (regex_t));
+
+	if ((err = regcomp (preg, regex, cflags)) != 0) {
+        const int errbuf_sz = 200;
+        char * errbuf=0;
+
+        errbuf = (char*)flex_alloc(errbuf_sz *sizeof(char));
+		regerror (err, preg, errbuf, errbuf_sz);
+		sprintf (errbuf, "regcomp failed: %s\n", errbuf);
+
+		flexfatal (errbuf);
+        free(errbuf);
+	}
+}
+
 /** Extract a copy of the match, or NULL if no match.
  * @param m A match as returned by regexec().
  * @param src The source string that was passed to regexec().
@@ -60,16 +100,14 @@ char   *regmatch_dup (regmatch_t * m, const char *src)
  */
 char   *regmatch_cpy (regmatch_t * m, char *dest, const char *src)
 {
-	int     len;
-
 	if (m == NULL || m->rm_so < 0) {
 		if (dest)
 			dest[0] = '\0';
 		return dest;
 	}
 
-	len = m->rm_eo - m->rm_so;
-	return strcpy (dest, src + m->rm_so + len);
+	snprintf (dest, regmatch_len(m), "%s", src + m->rm_so);
+    return dest;
 }
 
 /** Get the length in characters of the match.

@@ -135,17 +135,17 @@ bool filter_apply_chain (struct filter * chain)
 {
 	int     pid, pipes[2];
 
-    /* Tricky recursion, since we want to begin the chain
-     * at the END. Why? Because we need all the forked processes
-     * to be children of the main flex process.
-     */
+	/* Tricky recursion, since we want to begin the chain
+	 * at the END. Why? Because we need all the forked processes
+	 * to be children of the main flex process.
+	 */
 	if (chain)
-		filter_apply_chain(chain->next);
-    else
-        return true;
+		filter_apply_chain (chain->next);
+	else
+		return true;
 
-    /* Now we are the right-most unprocessed link in the chain.
-     */
+	/* Now we are the right-most unprocessed link in the chain.
+	 */
 
 	fflush (stdout);
 	fflush (stderr);
@@ -165,22 +165,22 @@ bool filter_apply_chain (struct filter * chain)
 
 		/* run as a filter, either internally or by exec */
 		if (chain->filter_func) {
-            int r;
+			int     r;
 
-            /* setup streams again */
-            if ((stdin = fdopen (0, "r")) == NULL)
-                flexfatal (_("fdopen(0) failed"));
-            if ((stdout = fdopen (1, "w")) == NULL)
-                flexfatal (_("fdopen(1) failed"));
+			/* setup streams again */
+			if ((stdin = fdopen (0, "r")) == NULL)
+				flexfatal (_("fdopen(0) failed"));
+			if ((stdout = fdopen (1, "w")) == NULL)
+				flexfatal (_("fdopen(1) failed"));
 
-			if((r = chain->filter_func (chain)) == -1)
+			if ((r = chain->filter_func (chain)) == -1)
 				flexfatal (_("filter_func failed"));
-            exit(0);
+			exit (0);
 		}
 		else {
-            execvp (chain->argv[0],
-                (char **const) (chain->argv));
-            flexfatal (_("exec failed"));
+			execvp (chain->argv[0],
+				(char **const) (chain->argv));
+			flexfatal (_("exec failed"));
 		}
 
 		exit (1);
@@ -234,13 +234,15 @@ int filter_tee_header (struct filter *chain)
 	int     to_cfd;
 	FILE   *to_c, *to_h;
 
-    fprintf(stderr,"filter_tee()\n");fflush(stderr);
+	fprintf (stderr, "filter_tee()\n");
+	fflush (stderr);
 
 	if (!chain->extra) {
 		/* No header file was specified, so we become a transparent
 		 * filter.
 		 */
-        fprintf(stderr,"\texeclp(cat)\n");fflush(stderr);
+		fprintf (stderr, "\texeclp(cat)\n");
+		fflush (stderr);
 		execlp ("cat", "cat", NULL);
 		flexfatal (_("exec failed"));
 	}
@@ -264,8 +266,9 @@ int filter_tee_header (struct filter *chain)
 	/* Now to_c is a pipe to the C branch, and to_h is a pipe to the H branch.
 	 */
 
-    fprintf(stderr,"\tpid(%d): to_c=%d, to_h=%d\n",
-            getpid(),fileno(to_c),fileno(to_h)); fflush(stderr);
+	fprintf (stderr, "\tpid(%d): to_c=%d, to_h=%d\n",
+		 getpid (), fileno (to_c), fileno (to_h));
+	fflush (stderr);
 
 	fputs ("m4_changequote`'m4_dnl\n", to_h);
 	fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_h);
@@ -289,46 +292,64 @@ int filter_tee_header (struct filter *chain)
 	fclose (to_c);
 
 	fflush (to_h);
-    fclose (to_h);
+	fclose (to_h);
 
-    while(wait(0) > 0)
-        ;
+	while (wait (0) > 0) ;
 
-	exit(0);
-    return 0;
+	exit (0);
+	return 0;
 }
 
-int filter_fix_linedirs(struct filter *chain)
+int filter_fix_linedirs (struct filter *chain)
 {
-    regex_t reg_ld;
 	char   *buf;
 	const int readsz = 512;
-    int err;
+    int lineno=1;
+    bool in_gen = true;/* in generated code */
 
-    if(!chain)
-        return 0;
+	if (!chain)
+		return 0;
 
-/* We only care about matching line directives that flex generates.  */
-#define REGEXP_LINEDIR "^#line ([[:digit:]]+) \"(.*\")"
+	buf = (char *) flex_alloc (readsz);
 
-    buf = (char*) flex_alloc(readsz);
-    memset(&reg_ld,0,sizeof(regex_t));
+	while (fgets (buf, readsz, stdin)) {
 
-    if((err = regcomp(&reg_ld, REGEXP_LINEDIR, REG_EXTENDED)) != 0){
-        regerror(err, &reg_ld, buf, readsz);
-        sprintf( buf, "regcomp failed: %s\n", buf);
-        flexfatal ( buf );
-    }
+        regmatch_t m[10];
+        
+		if (buf[0] == '#'
+		    && regexec (&regex_linedir, buf, 3, m, 0) == 0) {
+            
+            int num;
+            char * fname;
 
-    while(fgets(buf,readsz,stdin)){
-        if( buf[0] == '#' && regexec(&reg_ld,buf, 0, NULL, 0) == 0){
+            /* extract the line number and filename */
+            num = regmatch_strtol(&m[1], buf, NULL, 0);
+            fname = regmatch_dup(&m[2], buf);
 
-
+            if ( strcmp(fname, outfilename?outfilename:"") ==0
+                || strcmp(fname, headerfilename?headerfilename:"") ==0
+                ){
+                /* Adjust the line directives. */
+                in_gen = true;
+                fprintf(stdout, "#line %d \"%s\"\n", lineno+1, fname);
+                free(fname);
+            
+            }
+            else{
+                /* it's a #line directive for code we didn't write */
+                in_gen= false;
+                fputs (buf, stdout);
+            }
+		}
+        else{
+            /* It's just a regular line of code. */
+            fputs(buf, stdout);
         }
-        fputs(buf, stdout);
-    }
+        lineno++;
+	}
+    fflush(stdout);
 
-    return 0;
+	return 0;
 }
 
 /* vim:set expandtab cindent tabstop=4 softtabstop=4 shiftwidth=4 textwidth=0: */

@@ -343,6 +343,7 @@ void check_options ()
     /* Setup the filter chain. */
     output_chain = filter_create_int(NULL, filter_tee_header, headerfilename);
     filter_create_ext(output_chain,"m4","-P",0);
+    filter_create_int(output_chain, filter_fix_linedirs, NULL);
 
     /* For debugging, only run the requested number of filters. */
     if (preproc_level > 0) {
@@ -1107,6 +1108,8 @@ void flexinit (argc, argv)
         buf_append (&m4defs_buf, &m4defs_init_str, 2);
     }
 
+    /* initialize regex lib */
+    flex_init_regex();
 
 	/* Enable C++ if program name ends with '+'. */
 	program_name = basename2 (argv[0], 0);

@@ -1167,4 +1167,18 @@ extern int filter_truncate (struct filter * chain, int max_len);
 extern int filter_tee_header PROTO((struct filter *chain));
 extern int filter_fix_linedirs PROTO((struct filter *chain));
 
+
+/*
+ * From "regex.c"
+ */
+
+extern regex_t regex_linedir;
+bool flex_init_regex(void);
+void flex_regcomp(regex_t *preg, const char *regex, int cflags);
+char   *regmatch_dup (regmatch_t * m, const char *src);
+char   *regmatch_cpy (regmatch_t * m, char *dest, const char *src);
+int regmatch_len (regmatch_t * m);
+int regmatch_strtol (regmatch_t * m, const char *src, char **endptr, int base);
+bool regmatch_empty (regmatch_t * m);
+
 #endif /* not defined FLEXDEF_H */
