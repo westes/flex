@@ -3,6 +3,17 @@
 #ifndef FLEXINT_H
 #define FLEXINT_H
 
+/* try to get all the integer types */
+
+/* if you're a C99 system, then you should say so and we just include
+the inttypes.h header. If you're not C99, by default we try to include
+sys/types.h. If that doesn't work for you, then define
+FLEX_NEED_INTEGRAL_TYPE_DEFINITIONS. If that gives you problems, check
+that your header files and such are happy. */
+
+#if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901
+#include <inttypes.h>
+#endif
 #ifndef FLEX_NEED_INTEGRAL_TYPE_DEFINITIONS
 #include <sys/types.h>
 #else
