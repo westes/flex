@@ -3,8 +3,6 @@
 @setfilename flex.info
 @settitle flex: a fast lexical analyzer generator
 @include version.texi
-@c  "Examples" index 
-@defindex ex
 @c  "Macro Hooks" index
 @defindex hk
 @c  "Options" index
@@ -218,7 +216,6 @@ Indices
 * Index of Variables::          
 * Index of Data Types::         
 * Index of Hooks::              
-* Index of Examples::           
 * Index of Scanner Options::    
 
 @end detailmenu
@@ -299,7 +296,7 @@ one, it executes the corresponding C code.
 First some simple examples to get the flavor of how one uses
 @code{flex}.
 
-@exindex username expansion
+@cindex username expansion
 The following @code{flex} input specifies a scanner which, when it
 encounters the string @samp{username} will replace it with the user's
 login name:
@@ -322,7 +319,7 @@ beginning of the rules.
 
 Here's another simple example:
 
-@exindex counting characters and lines
+@cindex counting characters and lines
 @example
 @verbatim
             int num_lines = 0, num_chars = 0;
@@ -353,7 +350,7 @@ the @samp{.} regular expression).
 
 A somewhat more complicated example:
 
-@exindex Pascal-like language
+@cindex Pascal-like language
 @example
 @verbatim
     /* scanner for a toy Pascal-like language */
@@ -428,7 +425,7 @@ sections.
 The @code{flex} input file consists of three sections, separated by a
 line containing only @samp{%%}.
 
-@exindex format of input file
+@cindex format of input file
 @example
 @verbatim
     definitions
@@ -472,8 +469,8 @@ non-whitespace character following the name and continuing to the end of
 the line.  The definition can subsequently be referred to using
 @samp{@{name@}}, which will expand to @samp{(definition)}.  For example,
 
-@exindex pattern aliases, defining
-@exindex defining pattern aliases
+@cindex pattern aliases, defining
+@cindex defining pattern aliases
 @example
 @verbatim
     DIGIT    [0-9]
@@ -485,7 +482,7 @@ Defines @samp{DIGIT} to be a regular expression which matches a single
 digit, and @samp{ID} to be a regular expression which matches a letter
 followed by zero-or-more letters-or-digits.  A subsequent reference to
 
-@exindex pattern aliases, use of
+@cindex pattern aliases, use of
 @example
 @verbatim
     {DIGIT}+"."{DIGIT}*
@@ -547,47 +544,44 @@ Any @emph{indented} text or text enclosed in @samp{%@{} and @samp{%@}}
 is copied verbatim to the output (with the %@{ and %@} symbols removed).
 The %@{ and %@} symbols must appear unindented on lines by themselves.
 
-@c proofread edit stopped here
 @node User Code Section, Comments in the Input, Rules Section, Format
 @section Format of the User Code Section
-@cindex format, User Code Section
-@cindex sections, User Code Section
-@cindex User Code Section
 
-The user code section is simply copied to
-@file{lex.yy.c}
-verbatim.
-It is used for companion routines which call or are called
-by the scanner.  The presence of this section is optional;
-if it is missing, the second
-@samp{%%}
-in the input file may be skipped, too.
+@cindex input file, user code Section
+@cindex user code, in flex input
+The user code section is simply copied to @file{lex.yy.c} verbatim.  It
+is used for companion routines which call or are called by the scanner.
+The presence of this section is optional; if it is missing, the second
+@samp{%%} in the input file may be skipped, too.
 
 @node Comments in the Input,  , User Code Section, Format
 @section Comments in the Input
-@cindex comments, syntax
 
+@cindex comments, syntax of
 Flex supports C-style comments, that is, anything between /* and */ is
-considered a comment. Whenever flex encounters a comment, it copies
-the entire comment verbatim to the generated source code. Comments
-may appear just about anywhere, but with the following exceptions:
+considered a comment. Whenever flex encounters a comment, it copies the
+entire comment verbatim to the generated source code. Comments may
+appear just about anywhere, but with the following exceptions:
 
 @itemize
-@item Comments may not appear in the Rules Section wherever flex is expecting
-a regular expression. This means comments may not appear at the beginning of
-a line, or immediately following a list of scanner states.
-@item Comments may not appear on an @samp{%option} line in the Definitions Section.
+@cindex comments, in rules section
+@item
+Comments may not appear in the Rules Section wherever flex is expecting
+a regular expression. This means comments may not appear at the
+beginning of a line, or immediately following a list of scanner states.
+@item
+Comments may not appear on an @samp{%option} line in the Definitions
+Section.
 @end itemize
 
+If you want to follow a simple rule, then always begin a comment on a
+new line, with one or more whitespace characters before the initial
+@samp{/*}).  This rule will work anywhere in the input file.
 
-If you want to follow a simple rule, then always begin a comment on a new line,
-with one or more whitespace characters before the initial @samp{/*}).
-This rule will work anywhere in the input file.
-
-All the comments in the following example are OK:
+All the comments in the following example are valid:
 
 @cindex comments, valid uses of
-@exindex comments in the input
+@cindex comments in the input
 @example
 @verbatim
 %{
@@ -614,15 +608,17 @@ ruleD   ECHO;
 @end verbatim
 @end example
 
+@c proofread edit stopped here
 @node Patterns, Matching, Format, Top
 @chapter Patterns
-@cindex Patterns
 
-The patterns in the input are written using an extended set of regular
-expressions.  These are:
+@cindex patterns, in rules section
+@cindex regular expressions, in patterns
+The patterns in the input (see @ref{Rules Section}) are written using an
+extended set of regular expressions.  These are:
 
 @cindex patterns, syntax
-@exindex patterns, syntax
+@cindex patterns, syntax
 @table @samp
 @item x
 match the character 'x'
@@ -630,6 +626,7 @@ match the character 'x'
 @item .
 any character (byte) except newline
 
+@cindex [] in patterns
 @cindex character classes in patterns, syntax of
 @cindex POSIX, character classes in patterns, syntax of
 @item [xyz]
@@ -637,7 +634,6 @@ a @dfn{character class}; in this case, the pattern
 matches either an 'x', a 'y', or a 'z'
 
 @cindex ranges in patterns
-@cindex [] in patterns
 @item [abj-oZ]
 a "character class" with a range in it; matches
 an 'a', a 'b', any letter from 'j' through 'o',
@@ -663,6 +659,7 @@ one or more r's
 @item r?
 zero or one r's (that is, ``an optional r'')
 
+@cindex braces in patterns
 @item r@{2,5@}
 anywhere from two to five r's
 
@@ -684,15 +681,15 @@ the literal string: @samp{[xyz]"foo}
 
 @cindex escape sequences in patterns, syntax of
 @item \X
-if X is @samp{a}, @samp{b}, @samp{f}, @samp{n}, @samp{r}, @samp{t}, or @samp{v},
-then the ANSI-C interpretation of @samp{\x}.
-Otherwise, a literal @samp{X} (used to escape
-operators such as @samp{*})
+if X is @samp{a}, @samp{b}, @samp{f}, @samp{n}, @samp{r}, @samp{t}, or
+@samp{v}, then the ANSI-C interpretation of @samp{\x}.  Otherwise, a
+literal @samp{X} (used to escape operators such as @samp{*})
 
 @cindex NULL character in patterns, syntax of
 @item \0
 a NUL character (ASCII code 0)
 
+@cindex octal characters in patterns
 @item \123
 the character with octal value 123
 
@@ -700,66 +697,64 @@ the character with octal value 123
 the character with hexadecimal value 2a
 
 @item (r)
-match an r; parentheses are used to override
-                 precedence (see below)
+match an @samp{r}; parentheses are used to override precedence (see below)
 
+@cindex concatenation, in patterns
 @item rs
-the regular expression r followed by the
-regular expression s; called @dfn{concatenation}
-
+the regular expression @samp{r} followed by the regular expression @samp{s}; called
+@dfn{concatenation}
 
 @item r|s
-either an r or an s
+either an @samp{r} or an @samp{s}
 
-@cindex trailing context in patterns, syntax of
+@cindex trailing context, in patterns
 @item r/s
-an r but only if it is followed by an s.  The
-text matched by s is included when determining
-whether this rule is the longest match,
-but is then returned to the input before
-the action is executed.  So the action only
-sees the text matched by r.  This type
-of pattern is called @dfn{trailing context}.
-(There are some combinations of r/s that flex
-cannot match correctly. @xref{Limitations},
-regarding
-dangerous trailing context.)
+an @samp{r} but only if it is followed by an @samp{s}.  The text matched by @samp{s} is
+included when determining whether this rule is the longest match, but is
+then returned to the input before the action is executed.  So the action
+only sees the text matched by @samp{r}.  This type of pattern is called
+@dfn{trailing context}.  (There are some combinations of @samp{r/s} that flex
+cannot match correctly. @xref{Limitations}, regarding dangerous trailing
+context.)
 
-@cindex BOL, syntax of
+@cindex beginning of line, in patterns
+@cindex BOL, in patterns
 @item ^r
-an r, but only at the beginning of a line (i.e.,
+an @samp{r}, but only at the beginning of a line (i.e.,
 when just starting to scan, or right after a
 newline has been scanned).
 
-@cindex EOL in patterns, syntax of
+@cindex end of line, in patterns
+@cindex EOL, in patterns
 @item r$
-an r, but only at the end of a line (i.e., just
-before a newline).  Equivalent to @samp{r/\n}.
+an @samp{r}, but only at the end of a line (i.e., just before a
+newline).  Equivalent to @samp{r/\n}.
 
+@cindex newline, matching in patterns
 Note that @code{flex}'s notion of ``newline'' is exactly
 whatever the C compiler used to compile @code{flex}
 interprets @samp{\n} as; in particular, on some DOS
 systems you must either filter out @samp{\r}s in the
 input yourself, or explicitly use @samp{r/\r\n} for @samp{r$}.
 
-@cindex start conditions in patterns, syntax of
+@cindex start conditions, in patterns
 @item <s>r
-an r, but only in start condition s (see
-@ref{Start Conditions} for discussion of start conditions).
+an @samp{r}, but only in start condition @code{s} (see @ref{Start
+Conditions} for discussion of start conditions).
 
 @item <s1,s2,s3>r
-same, but in any of start conditions s1,
-s2, or s3.
+same, but in any of start conditions @code{s1}, @code{s2}, or @code{s3}.
 
 @item <*>r
-an r in any start condition, even an exclusive one.
+an @samp{r} in any start condition, even an exclusive one.
 
+@cindex end of file, in patterns
 @cindex EOF in patterns, syntax of
 @item <<EOF>>
 an end-of-file.
 
 @item <s1,s2><<EOF>>
-an end-of-file when in start condition s1 or s2
+an end-of-file when in start condition @code{s1} or @code{s2}
 @end table
 
 Note that inside of a character class, all regular expression operators
@@ -773,7 +768,7 @@ Those grouped together have equal precedence (see special note on the
 precedence of the repeat operator, @samp{@{@}}, under the documentation
 for the @samp{--posix} POSIX compliance option).  For example,
 
-@exindex patterns, grouping and precedence
+@cindex patterns, grouping and precedence
 @example
 @verbatim
     foo|bar*
@@ -788,11 +783,11 @@ is the same as
 @end verbatim
 @end example
 
-since the '*' operator has higher precedence than concatenation, and
-concatenation higher than alternation ('|').  This pattern therefore
-matches @emph{either} the string @samp{foo} @emph{or} the string
-@samp{ba} followed by zero-or-more r's.  To match @samp{foo} or
-zero-or-more repetitions of the string @samp{bar}, use:
+since the @samp{*} operator has higher precedence than concatenation,
+and concatenation higher than alternation (@samp{|}).  This pattern
+therefore matches @emph{either} the string @samp{foo} @emph{or} the
+string @samp{ba} followed by zero-or-more @samp{r}'s.  To match
+@samp{foo} or zero-or-more repetitions of the string @samp{bar}, use:
 
 @example
 @verbatim
@@ -803,7 +798,7 @@ zero-or-more repetitions of the string @samp{bar}, use:
 And to match a sequence of zero or more repetitions of @samp{foo} and
 @samp{bar}:
 
-@exindex patterns, repetitions with grouping
+@cindex patterns, repetitions with grouping
 @example
 @verbatim
     (foo|bar)*
@@ -818,7 +813,7 @@ themselves must appear between the @samp{[} and @samp{]} of the
 character class. Other elements may occur inside the character class,
 too).  The valid expressions are:
 
-@exindex patterns, valid character classes
+@cindex patterns, valid character classes
 @example
 @verbatim
     [:alnum:] [:alpha:] [:blank:]
@@ -828,24 +823,17 @@ too).  The valid expressions are:
 @end verbatim
 @end example
 
-These expressions all designate a set of characters equivalent to
-the corresponding standard C
-@code{isXXX}
-function.  For example,
-@samp{[:alnum:]}
-designates those characters for which
-@code{isalnum()}
-returns true - i.e., any alphabetic or numeric character.
-Some systems don't provide
-@code{isblank()},
-so flex defines
-@samp{[:blank:]}
-as a blank or a tab.
+These expressions all designate a set of characters equivalent to the
+corresponding standard C @code{isXXX} function.  For example,
+@samp{[:alnum:]} designates those characters for which @code{isalnum()}
+returns true - i.e., any alphabetic or numeric character.  Some systems
+don't provide @code{isblank()}, so flex defines @samp{[:blank:]} as a
+blank or a tab.
 
 For example, the following character classes are all equivalent:
 
 @cindex character classes, equivalence of
-@exindex patterns, character class equivalence
+@cindex patterns, character class equivalence
 @example
 @verbatim
     [[:alnum:]]
@@ -860,25 +848,24 @@ If your scanner is case-insensitive (the @samp{-i} flag), then
 @samp{[:upper:]} and @samp{[:lower:]} are equivalent to
 @samp{[:alpha:]}.
 
-Some notes on patterns:
-@cindex EOL, in negated character classes
-@cindex trailing context, limits of
-@cindex BOL, ^ as normal character
-@cindex EOL, $ as normal character
+Some notes on patterns are in order.
 
 @itemize
+@cindex end of line, in negated character classes
+@cindex EOL, in negated character classes
 @item
-A negated character class such as the example @samp{[^A-Z]}
-above
-@emph{will match a newline}
-unless @samp{\n} (or an equivalent escape sequence) is one of the
-characters explicitly present in the negated character class
-(e.g., @samp{[^A-Z\n]}).  This is unlike how many other regular
-expression tools treat negated character classes, but unfortunately
-the inconsistency is historically entrenched.
-Matching newlines means that a pattern like @samp{[^"]*} can match the entire
+A negated character class such as the example @samp{[^A-Z]} above
+@emph{will} match a newline unless @samp{\n} (or an equivalent escape
+sequence) is one of the characters explicitly present in the negated
+character class (e.g., @samp{[^A-Z\n]}).  This is unlike how many other
+regular expression tools treat negated character classes, but
+unfortunately the inconsistency is historically entrenched.  Matching
+newlines means that a pattern like @samp{[^"]*} can match the entire
 input unless there's another quote in the input.
 
+@cindex trailing context, limits of
+@cindex ^ as non-special character in patterns
+@cindex $ as normal character in patterns
 @item
 A rule can have at most one instance of trailing context (the @samp{/} operator
 or the @samp{$} operator).  The start condition, @samp{^}, and @samp{<<EOF>>} patterns
@@ -890,7 +877,7 @@ a rule loses its special properties and is treated as a normal character.
 @item
 The following are invalid:
 
-@exindex patterns, invalid trailing context
+@cindex patterns, invalid trailing context
 @example
 @verbatim
     foo/bar$
@@ -903,7 +890,7 @@ Note that the first of these can be written @samp{foo/bar\n}.
 @item
 The following will result in @samp{$} or @samp{^} being treated as a normal character:
 
-@exindex patterns, special characters treated as normal
+@cindex patterns, special characters treated as non-special
 @example
 @verbatim
     foo|(bar$)
@@ -915,7 +902,7 @@ If the desired meaning is a @samp{foo} or a
 @samp{bar}-followed-by-a-newline, the following could be used (the
 special @code{|} action is explained below, @pxref{Actions}):
 
-@exindex patterns, end of line
+@cindex patterns, end of line
 @example
 @verbatim
     foo      |
@@ -923,10 +910,11 @@ special @code{|} action is explained below, @pxref{Actions}):
 @end verbatim
 @end example
 
-A similar trick will work for matching a foo or a
-bar-at-the-beginning-of-a-line.
+A similar trick will work for matching a @samp{foo} or a
+@samp{bar}-at-the-beginning-of-a-line.
 @end itemize
 
+@c proofread edit stopped here
 @node Matching, Actions, Patterns, Top
 @chapter How the Input Is Matched
 @cindex patterns, how the input is matched
@@ -954,7 +942,7 @@ copied to the standard output.  Thus, the simplest valid
 @code{flex}
 input is:
 
-@exindex minimal scanner
+@cindex minimal scanner
 @example
 @verbatim
     %%
@@ -1035,7 +1023,7 @@ action is empty, then when the pattern is matched the input token
 is simply discarded.  For example, here is the specification for a program
 which deletes all occurrences of @samp{zap me} from its input:
 
-@exindex deleting lines from input
+@cindex deleting lines from input
 @example
 @verbatim
     %%
@@ -1050,7 +1038,7 @@ Here is a program which compresses multiple blanks and tabs down to a
 single blank, and throws away whitespace found at the end of a line:
 
 @cindex whitespace, compressing, example
-@exindex compressing whitespace
+@cindex compressing whitespace
 @example
 @verbatim
     %%
@@ -1126,7 +1114,7 @@ count the words in the input and call the routine @code{special()}
 whenever @samp{frob} is seen:
 
 @cindex REJECT, example
-@exindex REJECT
+@cindex REJECT
 @example
 @verbatim
             int word_count = 0;
@@ -1144,7 +1132,7 @@ one finding the next best choice to the currently active rule.  For
 example, when the following scanner scans the token @samp{abcd}, it will
 write @samp{abcdabcaba} to the output:
 
-@exindex REJECT, calling multiple times
+@cindex REJECT, calling multiple times
 @example
 @verbatim
     %%
@@ -1185,7 +1173,7 @@ corresponding token should be @emph{appended} onto the current value of
 the output:
 
 @cindex yymore(), example
-@exindex yymore() to append token to previous token
+@cindex yymore() to append token to previous token
 @example
 @verbatim
     %%
@@ -1220,7 +1208,7 @@ following will write out @samp{foobarbar}:
 
 @cindex yyless(), example
 @cindex pushing back characters with yyless
-@exindex yyless() to push back characters
+@cindex yyless() to push back characters
 @example
 @verbatim
     %%
@@ -1250,7 +1238,7 @@ back onto the input stream.  It will be the next character scanned.
 The following action will take the current token and cause it
 to be rescanned enclosed in parentheses.
 
-@exindex unput() to push back characters
+@cindex unput() to push back characters
 @example
 @verbatim
     {
@@ -1301,7 +1289,7 @@ input stream with an end-of-file.
 example, the following is one way to eat up C comments:
 
 @cindex comments, example of discarding
-@exindex discarding C comments
+@cindex discarding C comments
 @example
 @verbatim
     %%
@@ -1387,7 +1375,7 @@ be
  @code{int yylex( void )}.)  This definition may be changed by defining
 the @code{YY_DECL} macro.  For example, you could use:
 
-@exindex yylex, overriding the prototype
+@cindex yylex, overriding the prototype
 @example
 @verbatim
     #define YY_DECL float lexscan( a, b ) float a, b;
@@ -1455,7 +1443,7 @@ the global file-pointer @file{yyin}.
 Here is a sample definition of @code{YY_INPUT} (in the definitions
 section of the input file):
 
-@exindex YY_INPUT, overriding the input mechanism
+@cindex YY_INPUT, overriding the input mechanism
 @example
 @verbatim
     %{
@@ -1508,7 +1496,7 @@ provides a mechanism for conditionally activating rules.  Any rule
 whose pattern is prefixed with @samp{<sc>} will only be active when
 the scanner is in the start condition named @code{sc}.  For example,
 
-@exindex start conditions, basic
+@cindex start conditions, basic
 @example
 @verbatim
     <STRING>[^"]*        { /* eat up the string body ... */
@@ -1520,7 +1508,7 @@ the scanner is in the start condition named @code{sc}.  For example,
 will be active only when the scanner is in the @code{STRING} start
 condition, and
 
-@exindex start conditions, multiple
+@cindex start conditions, multiple
 @example
 @verbatim
     <INITIAL,STRING,QUOTE>\.        { /* handle an escape ... */
@@ -1554,7 +1542,7 @@ If the distinction between inclusive and exclusive start conditions
 is still a little vague, here's a simple example illustrating the
 connection between the two.  The set of rules:
 
-@exindex start conditions, inclusive
+@cindex start conditions, inclusive
 @example
 @verbatim
     %s example
@@ -1568,7 +1556,7 @@ connection between the two.  The set of rules:
 
 is equivalent to
 
-@exindex start conditions, exclusive
+@cindex start conditions, exclusive
 @example
 @verbatim
     %x example
@@ -1594,7 +1582,7 @@ Also note that the special start-condition specifier
 matches every start condition.  Thus, the above example could also
 have been written:
 
-@exindex start conditions, use of wildcard condition (<*>)
+@cindex start conditions, use of wildcard condition (<*>)
 @example
 @verbatim
     %x example
@@ -1609,7 +1597,7 @@ have been written:
 The default rule (to @code{ECHO} any unmatched character) remains active
 in start conditions.  It is equivalent to:
 
-@exindex start conditions, behavior of default rule
+@cindex start conditions, behavior of default rule
 @example
 @verbatim
     <*>.|\n     ECHO;
@@ -1630,7 +1618,7 @@ of the rules section.  For example, the following will cause the scanner
 to enter the @code{SPECIAL} start condition whenever @code{yylex()} is
 called and the global variable @code{enter_special} is true:
 
-@exindex start conditions, using BEGIN
+@cindex start conditions, using BEGIN
 @example
 @verbatim
             int enter_special;
@@ -1652,7 +1640,7 @@ dot (@samp{.}), and the integer @samp{456}.  But if the string is
 preceded earlier in the line by the string @samp{expect-floats} it will
 treat it as a single token, the floating-point number @samp{123.456}:
 
-@exindex start conditions, for different interpretations of same input
+@cindex start conditions, for different interpretations of same input
 @example
 @verbatim
     %{
@@ -1689,7 +1677,7 @@ treat it as a single token, the floating-point number @samp{123.456}:
 Here is a scanner which recognizes (and discards) C comments while
 maintaining a count of the current input line.
 
-@exindex recognizing C comments
+@cindex recognizing C comments
 @example
 @verbatim
     %x comment
@@ -1715,7 +1703,7 @@ can be stored as such.  Thus, the above could be extended in the
 following fashion:
 
 @cindex start conditions, integer values
-@exindex using integer values of start condition names
+@cindex using integer values of start condition names
 @example
 @verbatim
     %x comment foo
@@ -1747,7 +1735,7 @@ Furthermore, you can access the current start condition using the
 integer-valued @code{YY_START} macro.  For example, the above
 assignments to @code{comment_caller} could instead be written
 
-@exindex getting current start state with YY_START
+@cindex getting current start state with YY_START
 @example
 @verbatim
     comment_caller = YY_START;
@@ -1769,7 +1757,7 @@ Finally, here's an example of how to match C-style quoted strings using
 exclusive start conditions, including expanded escape sequences (but
 not including checking for a string that's too long):
 
-@exindex matching C-style double-quoted strings
+@cindex matching C-style double-quoted strings
 @example
 @verbatim
     %x str
@@ -1846,7 +1834,7 @@ start condition scope, every rule automatically has the prefix
 @code{SCs>} applied to it, until a @samp{@}} which matches the initial
 @samp{@{}.  So, for example,
 
-@exindex extended scope of start conditions
+@cindex extended scope of start conditions
 @example
 @verbatim
     <ESC>{
@@ -1985,7 +1973,7 @@ which expands include files (the
 @code{<<EOF>>}
 feature is discussed below):
 
-@exindex handling include files with multiple input buffers
+@cindex handling include files with multiple input buffers
 @example
 @verbatim
     /* the "incl" state is used for picking up the name
@@ -2128,7 +2116,7 @@ initial start condition, use:
 These rules are useful for catching things like unclosed comments.  An
 example:
 
-@exindex <<EOF>>, use of
+@cindex <<EOF>>, use of
 @example
 @verbatim
     %x quote
@@ -2161,7 +2149,7 @@ lower-case.  When @code{YY_USER_ACTION} is invoked, the variable
 starting with 1).  Suppose you want to profile how often each of your
 rules is matched.  The following would do the trick:
 
-@exindex YY_USER_ACTION to track each time a rule is matched
+@cindex YY_USER_ACTION to track each time a rule is matched
 @example
 @verbatim
     #define YY_USER_ACTION ++ctr[yy_act]
@@ -2308,7 +2296,7 @@ generate the file @file{y.tab.h} containing definitions of all the
 included in the @code{flex} scanner.  For example, if one of the tokens
 is @code{TOK_NUMBER}, part of the scanner might look like:
 
-@exindex yacc interface
+@cindex yacc interface
 @example
 @verbatim
     %{
@@ -3261,7 +3249,7 @@ of work for a complicated scanner.  In principal, one begins by using
 the @samp{-b} flag to generate a @file{lex.backup} file.  For example,
 on the input:
 
-@exindex backing up, eliminating
+@cindex backing up, eliminating
 @example
 @verbatim
     %%
@@ -3321,7 +3309,7 @@ with compressed scanners.
 @cindex error rules, to eliminate backing up
 The way to remove the backing up is to add ``error'' rules:
 
-@exindex backing up, eliminating by adding error rules
+@cindex backing up, eliminating by adding error rules
 @example
 @verbatim
     %%
@@ -3340,7 +3328,7 @@ The way to remove the backing up is to add ``error'' rules:
 Eliminating backing up among a list of keywords can also be done using a
 ``catch-all'' rule:
 
-@exindex backing up, eliminating with catch-all rule
+@cindex backing up, eliminating with catch-all rule
 @example
 @verbatim
     %%
@@ -3369,7 +3357,7 @@ parts do not have a fixed length) entails almost the same performance
 loss as @code{REJECT} (i.e., substantial).  So when possible a rule
 like:
 
-@exindex trailing context, variable length
+@cindex trailing context, variable length
 @example
 @verbatim
     %%
@@ -3408,7 +3396,7 @@ long tokens the processing of most input characters takes place in the
 additional work of setting up the scanning environment (e.g.,
 @code{yytext}) for the action.  Recall the scanner for C comments:
 
-@exindex performance optimization, matching longer tokens
+@cindex performance optimization, matching longer tokens
 @example
 @verbatim
     %x comment
@@ -3457,7 +3445,7 @@ through a file containing identifiers and keywords, one per line
 and with no other extraneous characters, and recognize all the
 keywords.  A natural first approach is:
 
-@exindex performance optimization, recognizing keywords
+@cindex performance optimization, recognizing keywords
 @example
 @verbatim
     %%
@@ -3702,7 +3690,7 @@ scanner classes; you must use @code{%pointer} (the default).
 
 Here is an example of a simple C++ scanner:
 
-@exindex C++ scanners, use of
+@cindex C++ scanners, use of
 @example
 @verbatim
         // An example of using the flex C++ scanner class.
@@ -3773,7 +3761,7 @@ first renaming @code{yyFlexLexer} as follows:
 
 @cindex include files, with C++
 @cindex header files, with C++
-@exindex C++ scanners, including multiple scanners
+@cindex C++ scanners, including multiple scanners
 @example
 @verbatim
     #undef yyFlexLexer
@@ -3815,7 +3803,7 @@ However, there are other uses for a reentrant scanner.  For example, you
 could scan two or more files simultaneously to implement a @code{diff} at
 the token level (i.e., instead of at the character level):
 
-@exindex reentrant scanners, multiple interleaved scanners
+@cindex reentrant scanners, multiple interleaved scanners
 @example
 @verbatim
     /* Example of maintaining more than one active scanner. */
@@ -3840,7 +3828,7 @@ buffer states. @xref{Multiple Input Buffers}.)
 The following crude scanner supports the @samp{eval} command by invoking
 another instance of itself.
 
-@exindex reentrant scanners, recursive invocation
+@cindex reentrant scanners, recursive invocation
 @example
 @verbatim
     /* Example of recursive invocation. */
@@ -4101,7 +4089,7 @@ functions). Each accessor method is named @code{yyget_NAME} or
 @code{yyset_NAME}, where @code{NAME} is the name of the @code{flex}
 variable you want. For example:
 
-@exindex accessor functions, use of
+@cindex accessor functions, use of
 @example
 @verbatim
     /* Set the last character of yytext to NULL. */
@@ -4166,7 +4154,7 @@ will have to cast @code{yyextra} and the return value from
 extra data.  To avoid casting, you may override the default type by
 defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
 
-@exindex YY_EXTRA_TYPE, defining your own type
+@cindex YY_EXTRA_TYPE, defining your own type
 @example
 @verbatim
     /* An example of overriding YY_EXTRA_TYPE. */
@@ -4354,7 +4342,7 @@ particular, if you have an interactive scanner and an interrupt handler
 which long-jumps out of the scanner, and the scanner is subsequently
 called again, you may get the following message:
 
-@exindex error messages, end of buffer missed
+@cindex error messages, end of buffer missed
 @example
 @verbatim
     fatal @code{flex} scanner internal error--end of buffer missed
@@ -4363,7 +4351,7 @@ called again, you may get the following message:
 
 To reenter the scanner, first use:
 
-@exindex restarting the scanner
+@cindex restarting the scanner
 @example
 @verbatim
     yyrestart( yyin );
@@ -4395,7 +4383,7 @@ are in the POSIX specification.
 When definitions are expanded, @code{flex} encloses them in parentheses.
 With @code{lex}, the following:
 
-@exindex name definitions, not POSIX
+@cindex name definitions, not POSIX
 @example
 @verbatim
     NAME    [A-Z][A-Z0-9]*
@@ -4429,7 +4417,7 @@ The POSIX specification is that the definition be enclosed in parentheses.
 Some implementations of @code{lex} allow a rule's action to begin on a
 separate line, if the rule's pattern has trailing whitespace:
 
-@exindex patterns and actions on different lines
+@cindex patterns and actions on different lines
 @example
 @verbatim
     %%
@@ -4655,7 +4643,7 @@ that there is a custom allocator with garbage collection. In order to make this
 example interesting, we will use a reentrant scanner, passing a pointer to the
 custom allocator through @code{yyextra}.
 
-@exindex overriding the memory routines
+@cindex overriding the memory routines
 @example
 @verbatim
 %{
@@ -4763,7 +4751,7 @@ If your project uses several different scanners, you can concatenate the
 serialized tables into one file, and flex will find the correct set of tables,
 using the scanner prefix as part of the lookup key. An example follows:
 
-@exindex serialized tables, multiple scanners
+@cindex serialized tables, multiple scanners
 @example
 @verbatim
 $ flex --tables-file --prefix=cpp cpp.l
@@ -5006,7 +4994,7 @@ cannot be matched because it follows other rules that will always match
 the same text as it.  For example, in the following @samp{foo} cannot be
 matched because it comes after an identifier ``catch-all'' rule:
 
-@exindex warning, rule cannot be matched
+@cindex warning, rule cannot be matched
 @example
 @verbatim
     [a-z]+    got_identifier();
@@ -5104,7 +5092,7 @@ Combining trailing context with the special @samp{|} action can result
 in @emph{fixed} trailing context being turned into the more expensive
 @emph{variable} trailing context.  For example, in the following:
 
-@exindex warning, dangerous trailing context
+@cindex warning, dangerous trailing context
 @example
 @verbatim
     %%
@@ -7969,7 +7957,7 @@ following Makefile does not explicitly instruct @command{make} how to build
 @file{foo.c} from @file{foo.l}. Instead, it relies on the implicit rules of the
 @command{make} program to build the intermediate file, @file{scan.c}:
 
-@exindex Makefile, example of implicit rules
+@cindex Makefile, example of implicit rules
 @example
 @verbatim
     # Basic Makefile -- relies on implicit rules
@@ -7987,7 +7975,7 @@ For simple cases, the above may be sufficient. For other cases,
 you may have to explicitly instruct @command{make} how to build your scanner.
 The following is an example of a Makefile containing explicit rules:
 
-@exindex Makefile, explicit example
+@cindex Makefile, explicit example
 @example
 @verbatim
     # Basic Makefile -- provides explicit rules
@@ -8118,7 +8106,7 @@ present in a @code{flex} scanner if the preprocessor symbol
 @code{YYLTYPE} is defined.  The following is an example of a @code{flex}
 scanner that is compatible with @code{bison}.
 
-@exindex bison, scanner to be called from bison
+@cindex bison, scanner to be called from bison
 @example
 @verbatim
     /* Scanner for "C" assignment statements... sort of. */
@@ -8142,7 +8130,7 @@ As you can see, there really is no magic here. We just use
 @code{yylval} is generated by @code{bison}, and included in the file
 @file{y.tab.h}. Here is the corresponding @code{bison} parser:
 
-@exindex bison, parser
+@cindex bison, parser
 @example
 @verbatim
     /* Parser to convert "C" assignments to lisp. */
@@ -8177,7 +8165,6 @@ As you can see, there really is no magic here. We just use
 * Index of Variables::          
 * Index of Data Types::         
 * Index of Hooks::              
-* Index of Examples::           
 * Index of Scanner Options::    
 @end menu
 
@@ -8216,7 +8203,7 @@ that expand to variables or constants.
 @unnumberedsec Index of Data Types
 @printindex tp
 
-@node Index of Hooks, Index of Examples, Index of Data Types, Indices
+@node Index of Hooks, Index of Scanner Options, Index of Data Types, Indices
 @unnumberedsec Index of Hooks
 
 This is an index of "hooks" that the user may define. These hooks typically  correspond
@@ -8224,11 +8211,7 @@ to specific locations in the generated scanner, and may be used to insert arbitr
 
 @printindex hk
 
-@node Index of Examples, Index of Scanner Options, Index of Hooks, Indices
-@unnumberedsec Index of Examples
-@printindex ex
-
-@node Index of Scanner Options,  , Index of Examples, Indices
+@node Index of Scanner Options,  , Index of Hooks, Indices
 @unnumberedsec Index of Scanner Options
 
 @printindex op
