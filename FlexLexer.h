@@ -69,6 +69,7 @@ public:
 protected:
 	char* yytext;
 	int yyleng;
+	int yy_flex_debug;	// only has effect with -d or "%option debug"
 };
 
 }
