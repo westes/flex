@@ -38,6 +38,14 @@ static char rcsid[] =
 #include "flexdef.h"
 
 
+/* declare functions that have forward references */
+
+void gen_next_state PROTO((int));
+void genecs PROTO(());
+void indent_put2s PROTO((char [], char []));
+void indent_puts PROTO((char []));
+
+
 static int indent_level = 0; /* each level is 4 spaces */
 
 #define indent_up() (++indent_level)
@@ -55,7 +63,7 @@ static char C_state_decl[] =
 
 /* indent to the current level */
 
-do_indent()
+void do_indent()
 
     {
     register int i = indent_level * 4;
@@ -76,7 +84,7 @@ do_indent()
 
 /* generate the code to keep backtracking information */
 
-gen_backtracking()
+void gen_backtracking()
 
     {
     if ( reject || num_backtracking == 0 )
@@ -98,7 +106,7 @@ gen_backtracking()
 
 /* generate the code to perform the backtrack */
 
-gen_bt_action()
+void gen_bt_action()
 
     {
     if ( reject || num_backtracking == 0 )
@@ -132,7 +140,7 @@ gen_bt_action()
  *     genctbl();
  */
 
-genctbl()
+void genctbl()
 
     {
     register int i;
@@ -202,7 +210,7 @@ genctbl()
 
     /* table of pointers to start states */
     printf( "static const struct yy_trans_info *yy_start_state_list[%d] =\n",
-	lastsc * 2 + 1 );
+	    lastsc * 2 + 1 );
     printf( "    {\n" );
 
     for ( i = 0; i <= lastsc * 2; ++i )
@@ -217,7 +225,7 @@ genctbl()
 
 /* generate equivalence-class tables */
 
-genecs()
+void genecs()
 
     {
     register int i, j;
@@ -253,8 +261,7 @@ genecs()
 	    {
 	    for ( i = j; i < csize; i = i + numrows )
 		{
-		fprintf( stderr, "%4s = %-2d",
-			 readable_form( i ), ecgroup[i] );
+		fprintf( stderr, "%4s = %-2d", readable_form( i ), ecgroup[i] );
 
 		putc( ' ', stderr );
 		}
@@ -267,7 +274,7 @@ genecs()
 
 /* generate the code to find the action number */
 
-gen_find_action()
+void gen_find_action()
 
     {
     if ( fullspd )
@@ -388,7 +395,7 @@ gen_find_action()
  *     genftbl();
  */
 
-genftbl()
+void genftbl()
 
     {
     register int i;
@@ -422,7 +429,7 @@ genftbl()
 
 /* generate the code to find the next compressed-table state */
 
-gen_next_compressed_state( char_map )
+void gen_next_compressed_state( char_map )
 char *char_map;
 
     {
@@ -468,7 +475,7 @@ char *char_map;
 
 /* generate the code to find the next match */
 
-gen_next_match()
+void gen_next_match()
 
     {
     /* NOTE - changes in here should be reflected in gen_next_state() and
@@ -564,7 +571,7 @@ gen_next_match()
 
 /* generate the code to find the next state */
 
-gen_next_state( worry_about_NULs )
+void gen_next_state( worry_about_NULs )
 int worry_about_NULs;
 
     { /* NOTE - changes in here should be reflected in get_next_match() */
@@ -573,13 +580,13 @@ int worry_about_NULs;
     if ( worry_about_NULs && ! nultrans )
 	{
 	if ( useecs )
-	    sprintf( char_map, "(*yy_cp ? yy_ec[*yy_cp] : %d)", NUL_ec );
+	    (void) sprintf( char_map, "(*yy_cp ? yy_ec[*yy_cp] : %d)", NUL_ec );
 	else
-	    sprintf( char_map, "(*yy_cp ? *yy_cp : %d)", NUL_ec );
+	    (void) sprintf( char_map, "(*yy_cp ? *yy_cp : %d)", NUL_ec );
 	}
 
     else
-	strcpy( char_map, useecs ? "yy_ec[*yy_cp]" : "*yy_cp" );
+	(void) strcpy( char_map, useecs ? "yy_ec[*yy_cp]" : "*yy_cp" );
 
     if ( worry_about_NULs && nultrans )
 	{
@@ -623,7 +630,7 @@ int worry_about_NULs;
 
 /* generate the code to make a NUL transition */
 
-gen_NUL_trans()
+void gen_NUL_trans()
 
     { /* NOTE - changes in here should be reflected in get_next_match() */
     int need_backtracking = (num_backtracking > 0 && ! reject);
@@ -665,7 +672,7 @@ gen_NUL_trans()
 	{
 	char NUL_ec_str[20];
 
-	sprintf( NUL_ec_str, "%d", NUL_ec );
+	(void) sprintf( NUL_ec_str, "%d", NUL_ec );
 	gen_next_compressed_state( NUL_ec_str );
 
 	if ( reject )
@@ -699,7 +706,7 @@ gen_NUL_trans()
 
 /* generate the code to find the start state */
 
-gen_start_state()
+void gen_start_state()
 
     {
     if ( fullspd )
@@ -734,7 +741,7 @@ gen_start_state()
  *    gentabs();
  */
 
-gentabs()
+void gentabs()
 
     {
     int i, j, k, *accset, nacc, *acc_array, total_states;
@@ -973,7 +980,7 @@ gentabs()
  * current indentation level, adding a final newline
  */
 
-indent_put2s( fmt, arg )
+void indent_put2s( fmt, arg )
 char fmt[], arg[];
 
     {
@@ -987,7 +994,7 @@ char fmt[], arg[];
  * newline
  */
 
-indent_puts( str )
+void indent_puts( str )
 char str[];
 
     {
@@ -1004,7 +1011,7 @@ char str[];
  * Generates transition tables and finishes generating output file
  */
 
-make_tables()
+void make_tables()
 
     {
     register int i;
@@ -1071,6 +1078,12 @@ make_tables()
     else
 	gentabs();
 
+    if ( num_backtracking > 0 )
+	{
+	indent_puts( "static yy_state_type yy_last_accepting_state;" );
+	indent_puts( "static YY_CHAR *yy_last_accepting_cpos;\n" );
+	}
+
     if ( nultrans )
 	{
 	printf( C_state_decl, "yy_NUL_trans", lastdfa + 1 );
@@ -1094,11 +1107,12 @@ make_tables()
 
     if ( ddebug )
 	{ /* spit out table mapping rules to line numbers */
-	printf( C_short_decl, "yy_rule_linenum", num_rules );
+	indent_puts( "extern int yy_flex_debug;" );
+	indent_puts( "int yy_flex_debug = 1;\n" );
 
+	printf( C_short_decl, "yy_rule_linenum", num_rules );
 	for ( i = 1; i < num_rules; ++i )
 	    mkdata( rule_linenum[i] );
-
 	dataend();
 	}
 
@@ -1168,8 +1182,16 @@ make_tables()
 
     skelout();
 
-    (void) fclose( temp_action_file );
+    if ( ferror( temp_action_file ) )
+	flexfatal( "error occurred when writing temporary action file" );
+
+    else if ( fclose( temp_action_file ) )
+	flexfatal( "error occurred when closing temporary action file" );
+
     temp_action_file = fopen( action_file_name, "r" );
+
+    if ( temp_action_file == NULL )
+	flexfatal( "could not re-open temporary action file" );
 
     /* copy prolog from action_file to output file */
     action_out();
@@ -1205,6 +1227,10 @@ make_tables()
     skelout();
     if ( ddebug )
 	{
+	indent_puts( "if ( yy_flex_debug )" );
+	indent_up();
+
+	indent_puts( "{" );
 	indent_puts( "if ( yy_act == 0 )" );
 	indent_up();
 	indent_puts( "fprintf( stderr, \"--scanner backtracking\\n\" );" );
@@ -1236,6 +1262,9 @@ make_tables()
 	printf( "else\n" );
 	indent_up();
 	indent_puts( "fprintf( stderr, \"--EOF\\n\" );" );
+	indent_down();
+
+	indent_puts( "}" );
 	indent_down();
 	}
 
