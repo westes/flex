@@ -421,9 +421,6 @@ void check_options ()
 			GEN_PREFIX ("get_text");
 			GEN_PREFIX ("get_lineno");
 			GEN_PREFIX ("set_lineno");
-			GEN_PREFIX ("alloc");
-			GEN_PREFIX ("realloc");
-			GEN_PREFIX ("free");
 
 			outn ("#ifdef YY_BISON_BRIDGE");
 			GEN_PREFIX ("get_lval");
@@ -433,6 +430,13 @@ void check_options ()
 			outn ("#endif");
 
 		}
+
+        /* The alloc/realloc/free functions are used internally by the
+         * generated scanner for both and C++.
+         */
+        GEN_PREFIX ("alloc");
+        GEN_PREFIX ("realloc");
+        GEN_PREFIX ("free");
 
 		if (!reentrant)
 			GEN_PREFIX ("lineno");

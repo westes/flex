@@ -21,6 +21,7 @@
 
 
 FLEX = $(top_builddir)/flex
+builddir = @builddir@
 
 EXTRA_DIST = scanner-1.l scanner-2.l main.cpp
 CLEANFILES = scanner-1.cpp test-c++-multiple-scanners OUTPUT $(OBJS) scanner-2.cpp

@@ -446,7 +446,6 @@ YY_BUFFER_STATE yy_scan_bytes YY_PARAMS(( yyconst char *bytes, int len YY_PROTO_
 
 %pop
 
-
 void *yyalloc YY_PARAMS(( yy_size_t YY_PROTO_LAST_ARG ));
 void *yyrealloc YY_PARAMS(( void *, yy_size_t YY_PROTO_LAST_ARG ));
 void yyfree YY_PARAMS(( void * YY_PROTO_LAST_ARG ));
@@ -2084,11 +2083,11 @@ int yylex_init( ptr_yy_globals )
 
 %endif
 
+%push
+%c-only SNIP! this currently causes conflicts with the c++ scanner
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
 int yylex_destroy  YYFARGS0(void)
 {
-%push
-%c-only SNIP! this currently causes conflicts with the c++ scanner
     /* Destroy the current (main) buffer. */
     yy_delete_buffer( YY_G(yy_current_buffer) YY_CALL_LAST_ARG );
     YY_G(yy_current_buffer) = NULL;
@@ -2109,9 +2108,9 @@ int yylex_destroy  YYFARGS0(void)
     /* Destroy the main struct (reentrant only). */
     yyfree ( yyscanner YY_CALL_LAST_ARG );
 %endif
-%pop
     return 0;
 }
+%pop
 
 
 /* Internal utility routines. */
