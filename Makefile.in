@@ -217,7 +217,7 @@ distclean: clean
 realclean: distclean
 	rm -f $(FLEX).man skel.c flex*.tar.gz flex*.tar.Z
 
-dist: $(FLEX) $(DISTFILES)
+dist: $(FLEX) $(DISTFILES) parse.c parse.h
 	$(MAKE) DIST_NAME=flex-`sed <version.h 's/[^"]*"//' | sed 's/"//'` dist2
 
 dist2:
@@ -228,6 +228,7 @@ dist2:
 	@mv $(DIST_NAME)/scan.c $(DIST_NAME)/initscan.c
 	@chmod 444 $(DIST_NAME)/initscan.c
 	@chmod +w $(DIST_NAME)/Makefile.in
+	@cp parse.c parse.h $(DIST_NAME)/MISC
 	tar chf $(DIST_NAME).tar $(DIST_NAME)
 	compress <$(DIST_NAME).tar >$(DIST_NAME).tar.Z
 	gzip <$(DIST_NAME).tar >$(DIST_NAME).tar.gz
