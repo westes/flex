@@ -21,7 +21,7 @@ enum yesno_t { no=0, yes=1 };
 %x DISCARD_THRU_GT
 %%
 
-    yyextra_r = no;
+    #define YY_USER_INIT yyextra_r = no;
     #define NEED_TAG_NAME yyextra_r
         
 
@@ -35,7 +35,7 @@ enum yesno_t { no=0, yes=1 };
 ">"  { yy_pop_state( yy_globals ); return GT; }
 [[:alpha:]][[:alnum:]]* {
         if( NEED_TAG_NAME == yes){
-            NEED_TAG_NAME=yes;
+            NEED_TAG_NAME=no;
             yylval_r->str = STRDUP(yytext_r);
             return TAGNAME;
         }
