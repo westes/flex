@@ -3441,4 +3441,281 @@ Do You Yahoo!?
 Yahoo! Auctions - buy the things you want at great prices
 http://auctions.yahoo.com/
 
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Sat May  5 03:45:30 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id DAA14343
+	for <wlestes@localhost>; Sat, 5 May 2001 03:45:30 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Sat, 05 May 2001 03:45:30 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f457R2q28664
+	for <wlestes@hermes.email.uncg.edu>; Sat, 5 May 2001 03:27:02 -0400 (EDT)
+Received: from fencepost.gnu.org (we-refuse-to-spy-on-our-users@fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id DAA13852
+	for <wlestes@uncg.edu>; Sat, 5 May 2001 03:27:02 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14vwT0-0007qN-00
+	for <wlestes@uncg.edu>; Sat, 05 May 2001 03:27:02 -0400
+Received: from daffy.ee.lbl.gov ([131.243.1.31])
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14vwQr-0007nj-00
+	for <help-flex@gnu.org>; Sat, 05 May 2001 03:24:49 -0400
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f457Ol523882;
+	Sat, 5 May 2001 00:24:47 -0700 (PDT)
+Message-Id: <200105050724.f457Ol523882@daffy.ee.lbl.gov>
+To: "John W. Millaway" <johnmillaway@yahoo.com>
+Cc: help-flex@gnu.org
+Subject: Re: Why is YY_BUF_SIZE not override-able?
+In-reply-to: Your message of Fri, 04 May 2001 11:15:47 PDT.
+From: Vern Paxson <vern@ee.lbl.gov>
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Sat, 05 May 2001 00:24:46 PDT
+
+*** EOOH ***
+To: "John W. Millaway" <johnmillaway@yahoo.com>
+Cc: help-flex@gnu.org
+Subject: Re: Why is YY_BUF_SIZE not override-able?
+In-reply-to: Your message of Fri, 04 May 2001 11:15:47 PDT.
+From: Vern Paxson <vern@ee.lbl.gov>
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Sat, 05 May 2001 00:24:46 PDT
+
+> Most everything can be overridden by the user. However the size of the input
+> buffer, YY_BUF_SIZE, is fixed. Is there a reason why YY_BUF_SIZE can't be
+> overridden?
+
+I don't remember offhand why I didn't make it redefinable, but note that
+you can effect smaller buffer sizes using yy_create_buffer().
+
+		Vern
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Mon May 21 05:59:38 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id FAA13870
+	for <wlestes@localhost>; Mon, 21 May 2001 05:59:38 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Mon, 21 May 2001 05:59:38 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f4L9d5q15741
+	for <wlestes@hermes.email.uncg.edu>; Mon, 21 May 2001 05:39:05 -0400 (EDT)
+Received: from fencepost.gnu.org (we-refuse-to-spy-on-our-users@fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id FAA22405
+	for <wlestes@uncg.edu>; Mon, 21 May 2001 05:39:06 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 151m9W-000616-00
+	for <wlestes@uncg.edu>; Mon, 21 May 2001 05:39:02 -0400
+Received: from [202.54.26.202] (helo=hindon.hss.co.in)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 151m7z-0005xX-00
+	for <help-flex@gnu.org>; Mon, 21 May 2001 05:37:27 -0400
+Received: from hsssun01.hss.hns.com (localhost [127.0.0.1])
+	by hindon.hss.co.in (8.10.0/8.10.0) with ESMTP id f4L9cb501756
+	for <help-flex@gnu.org>; Mon, 21 May 2001 15:08:38 +0530 (IST)
+Received: from sampark.hss.hns.com (sampark [139.85.229.22])
+	by hsssun01.hss.hns.com (8.10.0/8.10.0) with SMTP id f4L9kWY10057
+	for <help-flex@gnu.org>; Mon, 21 May 2001 15:16:45 +0530 (IST)
+Received: by sampark.hss.hns.com(Lotus SMTP MTA Internal build v4.6.2  (651.2 6-10-1998))  id 65256A53.0034A297 ; Mon, 21 May 2001 15:04:54 +0530
+X-Lotus-FromDomain: HSSBLR
+From: kbinu@hss.hns.com
+To: help-flex@gnu.org
+cc: crajasri@hss.hns.com
+Message-ID: <65256A53.0034A096.00@sampark.hss.hns.com>
+Subject: Enhancements in flex for error handling
+Mime-Version: 1.0
+Content-type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Mon, 21 May 2001 14:55:56 +0530
+
+*** EOOH ***
+From: kbinu@hss.hns.com
+To: help-flex@gnu.org
+cc: crajasri@hss.hns.com
+Subject: Enhancements in flex for error handling
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Mon, 21 May 2001 14:55:56 +0530
+
+
+
+
+Hi
+     We have been using flex generated scanners for a project. In our
+application, we need to ensure that the application does not exit on system
+errors including memory allocation failures. For errors that might occur
+while the scanner allocates memory, we thought we would re-define
+YY_FATAL_ERROR to something like
+#define YY_FATAL_ERROR(x) return (error_indication=x, 0)
+where error_indication is a global that I would check after the lexer
+returns. This however is not feasible since YY_FATAL_ERROR is used in
+functions called within yylex. Some of these do not return values. Also
+yylex doesn't check if the called function encountered errors.
+Is there any plan to enhance flex to return cleanly from yylex instead of
+using exit() ? If not, any references on how to go about modifying the
+skeleton scanner for this feature ?
+
+-Binu
+
+
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Mon May 21 12:35:41 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA14455
+	for <wlestes@localhost>; Mon, 21 May 2001 12:35:41 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Mon, 21 May 2001 12:35:41 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f4LGF4q14830
+	for <wlestes@hermes.email.uncg.edu>; Mon, 21 May 2001 12:15:05 -0400 (EDT)
+Received: from fencepost.gnu.org (we-refuse-to-spy-on-our-users@fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA05855
+	for <wlestes@uncg.edu>; Mon, 21 May 2001 12:15:04 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 151sKm-0003HU-00
+	for <wlestes@uncg.edu>; Mon, 21 May 2001 12:15:04 -0400
+Received: from web9407.mail.yahoo.com ([216.136.129.23])
+	by fencepost.gnu.org with smtp (Exim 3.16 #1 (Debian))
+	id 151sIL-0003CL-00
+	for <help-flex@gnu.org>; Mon, 21 May 2001 12:12:33 -0400
+Message-ID: <20010521161232.55864.qmail@web9407.mail.yahoo.com>
+Received: from [216.254.82.102] by web9407.mail.yahoo.com; Mon, 21 May 2001 09:12:32 PDT
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: Enhancements in flex for error handling
+To: kbinu@hss.hns.com, help-flex@gnu.org
+Cc: crajasri@hss.hns.com
+In-Reply-To: <65256A53.0034A096.00@sampark.hss.hns.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Mon, 21 May 2001 09:12:32 -0700 (PDT)
+
+*** EOOH ***
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: Enhancements in flex for error handling
+To: kbinu@hss.hns.com, help-flex@gnu.org
+Cc: crajasri@hss.hns.com
+In-Reply-To: <65256A53.0034A096.00@sampark.hss.hns.com>
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Mon, 21 May 2001 09:12:32 -0700 (PDT)
+
+> using exit() ? If not, any references on how to go about modifying the
+> skeleton scanner for this feature ?
+
+You might get away with something like this (without having to modify the skeleton
+code):   yyerror sets a flag, then resets the scanner, pointing the input to
+/dev/null.
+The parser will have to check the error flag, of course.
+
+-John
+
+
+
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Auctions - buy the things you want at great prices
+http://auctions.yahoo.com/
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
 
