@@ -1172,7 +1172,7 @@ extern int filter_fix_linedirs PROTO((struct filter *chain));
  * From "regex.c"
  */
 
-extern regex_t regex_linedir;
+extern regex_t regex_linedir, regex_blank_line;
 bool flex_init_regex(void);
 void flex_regcomp(regex_t *preg, const char *regex, int cflags);
 char   *regmatch_dup (regmatch_t * m, const char *src);

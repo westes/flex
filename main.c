@@ -233,10 +233,6 @@ void check_options ()
 		use_read = false;
 	}
 
-	/* See comments in flexend() for an explanation of this error condition. */
-	if (use_stdout && headerfilename)
-		flexerror (_
-			   ("Can't specify header option if writing to stdout."));
 
 #if 0
 	/* This makes no sense whatsoever. I'm removing it. */

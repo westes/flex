@@ -476,11 +476,11 @@ void line_directive_out (output_file, do_infile)
 	if (!gen_line_dirs)
 		return;
 
-	if ((do_infile && !infilename) || (!do_infile && !outfilename))
-		/* don't know the filename to use, skip */
-		return;
+	s1 = do_infile ? infilename : "M4_YY_OUTFILE_NAME";
 
-	s1 = do_infile ? infilename : outfilename;
+	if (do_infile && !s1)
+        s1 = "<stdin>";
+    
 	s2 = filename;
 	s3 = &filename[sizeof (filename) - 2];
 

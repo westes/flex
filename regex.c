@@ -1,15 +1,5 @@
 /** regex - regular expression functions related to POSIX regex lib. */
 
-/*  Copyright (c) 1990 The Regents of the University of California. */
-/*  All rights reserved. */
-
-/*  This code is derived from software contributed to Berkeley by */
-/*  Vern Paxson. */
-
-/*  The United States Government has rights in this work pursuant */
-/*  to contract no. DE-AC03-76SF00098 between the United States */
-/*  Department of Energy and the University of California. */
-
 /*  This file is part of flex. */
 
 /*  Redistribution and use in source and binary forms, with or without */
@@ -35,8 +25,10 @@
 
 
 static const char* REGEXP_LINEDIR = "^#line ([[:digit:]]+) \"(.*)\"";
+static const char* REGEXP_BLANK_LINE = "^[[:space:]]*$";
 
-regex_t regex_linedir; /*<< matches line directives */
+regex_t regex_linedir; /**< matches line directives */
+regex_t regex_blank_line; /**< matches blank lines */
 
 
 /** Initialize the regular expressions.
@@ -45,6 +37,7 @@ regex_t regex_linedir; /*<< matches line directives */
 bool flex_init_regex(void)
 {
     flex_regcomp(&regex_linedir, REGEXP_LINEDIR, REG_EXTENDED);
+    flex_regcomp(&regex_blank_line, REGEXP_BLANK_LINE, REG_EXTENDED);
 
     return true;
 }

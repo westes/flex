@@ -1,15 +1,5 @@
 /* filter - postprocessing of flex output through filters */
 
-/*  Copyright (c) 1990 The Regents of the University of California. */
-/*  All rights reserved. */
-
-/*  This code is derived from software contributed to Berkeley by */
-/*  Vern Paxson. */
-
-/*  The United States Government has rights in this work pursuant */
-/*  to contract no. DE-AC03-76SF00098 between the United States */
-/*  Department of Energy and the University of California. */
-
 /*  This file is part of flex. */
 
 /*  Redistribution and use in source and binary forms, with or without */
@@ -231,21 +221,11 @@ int filter_tee_header (struct filter *chain)
 
 	const int readsz = 512;
 	char   *buf;
-	int     to_cfd;
-	FILE   *to_c, *to_h;
+	int     to_cfd = -1;
+	FILE   *to_c = NULL, *to_h = NULL;
+	bool    write_header;
 
-	fprintf (stderr, "filter_tee()\n");
-	fflush (stderr);
-
-	if (!chain->extra) {
-		/* No header file was specified, so we become a transparent
-		 * filter.
-		 */
-		fprintf (stderr, "\texeclp(cat)\n");
-		fflush (stderr);
-		execlp ("cat", "cat", NULL);
-		flexfatal (_("exec failed"));
-	}
+	write_header = (chain->extra != NULL);
 
 	/* Store a copy of the stdout pipe, which is already piped to C file
 	 * through the running chain. Then create a new pipe to the H file as
@@ -254,45 +234,64 @@ int filter_tee_header (struct filter *chain)
 
 	if ((to_cfd = dup (1)) == -1)
 		flexfatal (_("dup(1) failed"));
-
-	if (freopen ((char *) chain->extra, "w", stdout) == NULL)
-		flexfatal (_("freopen(headerfilename) failed"));
-
-	filter_apply_chain (chain->next);
-
 	to_c = fdopen (to_cfd, "w");
-	to_h = stdout;
+
+	if (write_header) {
+		if (freopen ((char *) chain->extra, "w", stdout) == NULL)
+			flexfatal (_("freopen(headerfilename) failed"));
+
+		filter_apply_chain (chain->next);
+		to_h = stdout;
+	}
 
 	/* Now to_c is a pipe to the C branch, and to_h is a pipe to the H branch.
 	 */
 
-	fprintf (stderr, "\tpid(%d): to_c=%d, to_h=%d\n",
-		 getpid (), fileno (to_c), fileno (to_h));
-	fflush (stderr);
+	if (write_header) {
+		fputs ("m4_changecom`'m4_dnl\n", to_h);
+		fputs ("m4_changequote`'m4_dnl\n", to_h);
+		fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_h);
+		fputs ("m4_define( [[M4_YY_IN_HEADER]],[[]])m4_dnl\n",
+		       to_h);
+		fprintf (to_h, "#ifndef %sHEADER_H\n", prefix);
+		fprintf (to_h, "#define %sHEADER_H 1\n", prefix);
+		fprintf (to_h, "#define %sIN_HEADER 1\n\n", prefix);
+		fprintf (to_h,
+			 "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
+			 headerfilename ? headerfilename : "<stdout>");
 
-	fputs ("m4_changequote`'m4_dnl\n", to_h);
-	fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_h);
-	fputs ("m4_define( [[M4_YY_IN_HEADER]],[[]])m4_dnl\n", to_h);
-	fprintf (to_h, "#ifndef %sHEADER_H\n", prefix);
-	fprintf (to_h, "#define %sHEADER_H 1\n", prefix);
-	fprintf (to_h, "#define %sIN_HEADER 1\n\n", prefix);
+	}
+
+	fputs ("m4_changecom`'m4_dnl\n", to_c);
+	fputs ("m4_changequote`'m4_dnl\n", to_c);
+	fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_c);
+	fprintf (to_c, "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
+		 outfilename ? outfilename : "<stdout>");
 
 	buf = (char *) flex_alloc (readsz);
 	while (fgets (buf, readsz, stdin)) {
 		fputs (buf, to_c);
-		fputs (buf, to_h);
+		if (write_header)
+			fputs (buf, to_h);
 	}
 
-	fprintf (to_h, "\n");
-	fprintf (to_h, "#undef %sIN_HEADER\n", prefix);
-	fprintf (to_h, "#endif /* %sHEADER_H */\n", prefix);
-	fputs ("m4_undefine( [[M4_YY_IN_HEADER]])m4_dnl\n", to_h);
+	if (write_header) {
+		fprintf (to_h, "\n");
+
+		/* write a fake line number. It will get fixed by the linedir filter. */
+		fprintf (to_h, "#line 4000 \"M4_YY_OUTFILE_NAME\"\n");
+
+		fprintf (to_h, "#undef %sIN_HEADER\n", prefix);
+		fprintf (to_h, "#endif /* %sHEADER_H */\n", prefix);
+		fputs ("m4_undefine( [[M4_YY_IN_HEADER]])m4_dnl\n", to_h);
+
+		fflush (to_h);
+		fclose (to_h);
+	}
 
 	fflush (to_c);
 	fclose (to_c);
 
-	fflush (to_h);
-	fclose (to_h);
 
 	while (wait (0) > 0) ;
 
@@ -300,12 +299,19 @@ int filter_tee_header (struct filter *chain)
 	return 0;
 }
 
+/** Adjust the line numbers in the #line directives of the generated scanner.
+ * After the m4 expansion, the line numbers are incorrect since the m4 macros
+ * can add or remove lines.  This only adjusts line numbers for generated code,
+ * not user code. This also happens to be a good place to squeeze multiple
+ * blank lines into a single blank line.
+ */
 int filter_fix_linedirs (struct filter *chain)
 {
 	char   *buf;
 	const int readsz = 512;
-    int lineno=1;
-    bool in_gen = true;/* in generated code */
+	int     lineno = 1;
+	bool    in_gen = true;	/* in generated code */
+	bool    last_was_blank = false;
 
 	if (!chain)
 		return 0;
@@ -314,40 +320,59 @@ int filter_fix_linedirs (struct filter *chain)
 
 	while (fgets (buf, readsz, stdin)) {
 
-        regmatch_t m[10];
-        
+		regmatch_t m[10];
+
+		/* Check for #line directive. */
 		if (buf[0] == '#'
 		    && regexec (&regex_linedir, buf, 3, m, 0) == 0) {
-            
-            int num;
-            char * fname;
 
-            /* extract the line number and filename */
-            num = regmatch_strtol(&m[1], buf, NULL, 0);
-            fname = regmatch_dup(&m[2], buf);
+			int     num;
+			char   *fname;
 
-            if ( strcmp(fname, outfilename?outfilename:"") ==0
-                || strcmp(fname, headerfilename?headerfilename:"") ==0
-                ){
-                /* Adjust the line directives. */
-                in_gen = true;
-                fprintf(stdout, "#line %d \"%s\"\n", lineno+1, fname);
-                free(fname);
-            
-            }
-            else{
-                /* it's a #line directive for code we didn't write */
-                in_gen= false;
-                fputs (buf, stdout);
-            }
+			/* extract the line number and filename */
+			num = regmatch_strtol (&m[1], buf, NULL, 0);
+			fname = regmatch_dup (&m[2], buf);
+
+			if (strcmp
+			    (fname, outfilename ? outfilename : "<stdout>")
+			    == 0
+			    || strcmp (fname,
+				       headerfilename ? headerfilename :
+				       "<stdout>") == 0) {
+				/* Adjust the line directives. */
+				in_gen = true;
+				sprintf (buf, "#line %d \"%s\"\n",
+					 lineno + 1, fname);
+				free (fname);
+
+			}
+			else {
+				/* it's a #line directive for code we didn't write */
+				in_gen = false;
+			}
+
+			last_was_blank = false;
 		}
-        else{
-            /* It's just a regular line of code. */
-            fputs(buf, stdout);
-        }
-        lineno++;
+
+		/* squeeze blank lines from generated code */
+		else if (in_gen
+			 && regexec (&regex_blank_line, buf, 0, NULL,
+				     0) == 0) {
+			if (last_was_blank)
+				continue;
+			else
+				last_was_blank = true;
+		}
+
+		else {
+			/* it's a line of normal, non-empty code. */
+			last_was_blank = false;
+		}
+
+		fputs (buf, stdout);
+		lineno++;
 	}
-    fflush(stdout);
+	fflush (stdout);
 
 	return 0;
 }
