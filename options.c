@@ -211,6 +211,10 @@ optspec_t flexopts[] = {
 	,
 	{"--nowarn", OPT_NO_WARN, 0}
 	,			/* Suppress warning messages. */
+	{"--noansi-definitions", OPT_NO_ANSI_FUNC_DEFS, 0}
+	,
+	{"--noansi-prototypes", OPT_NO_ANSI_FUNC_PROTOS, 0}
+	,
 	{"--yyclass=NAME", OPT_YYCLASS, 0}
 	,
 	{"--yylineno", OPT_YYLINENO, 0}

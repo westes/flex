@@ -1810,20 +1810,17 @@ void make_tables ()
 	if (yymore_used) {
 		if (!C_plus_plus) {
 			if (yytext_is_array) {
-				outn ("#ifndef YY_REENTRANT");
-				indent_puts
-					("static int yy_more_offset = 0;");
-				indent_puts
-					("static int yy_prev_more_offset = 0;");
-				outn ("#endif");
+				if (!reentrant){
+    				indent_puts ("static int yy_more_offset = 0;");
+                }else{
+                    indent_puts ("static int yy_prev_more_offset = 0;");
+                }
 			}
 			else if (!reentrant) {
-				outn ("#ifndef YY_REENTRANT");
 				indent_puts
 					("static int yy_more_flag = 0;");
 				indent_puts
 					("static int yy_more_len = 0;");
-				outn ("#endif");
 			}
 		}
 
@@ -1863,16 +1860,15 @@ void make_tables ()
 			outn ("#ifndef YYLMAX");
 			outn ("#define YYLMAX 8192");
 			outn ("#endif\n");
-			outn ("#ifndef YY_REENTRANT");
-			outn ("char yytext[YYLMAX];");
-			outn ("char *yytext_ptr;");
-			outn ("#endif");
+			if (!reentrant){
+                outn ("char yytext[YYLMAX];");
+                outn ("char *yytext_ptr;");
+            }
 		}
 
 		else {
-			outn ("#ifndef YY_REENTRANT");
-			outn ("char *yytext;");
-			outn ("#endif");
+			if(! reentrant)
+                outn ("char *yytext;");
 		}
 	}
 

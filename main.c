@@ -105,6 +105,7 @@ int     num_input_files;
 jmp_buf flex_main_jmp_buf;
 bool   *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
+bool    ansi_func_defs, ansi_func_protos;
 
 bool    tablesext, tablesverify, gentables;
 char   *tablesfilename=0,*tablesname=0;
@@ -310,6 +311,12 @@ void check_options ()
 		}
 	}
 
+    if (!ansi_func_defs)
+        buf_m4_define( &m4defs_buf, "M4_YY_NO_ANSI_FUNC_DEFS", NULL);
+
+    if (!ansi_func_protos)
+        buf_m4_define( &m4defs_buf, "M4_YY_NO_ANSI_FUNC_PROTOS", NULL);
+
 	if (!use_stdout) {
 		FILE   *prev_stdout;
 
@@ -396,7 +403,6 @@ void check_options ()
 
 	if (reentrant) {
         buf_m4_define (&m4defs_buf, "M4_YY_REENTRANT", NULL);
-		outn ("#define YY_REENTRANT 1");
 		if (yytext_is_array)
 			buf_m4_define (&m4defs_buf, "M4_YY_TEXT_IS_ARRAY", NULL);
 	}
@@ -915,6 +921,7 @@ void flexinit (argc, argv)
 	tablesext = tablesverify = false;
 	gentables = true;
 	tablesfilename = tablesname = NULL;
+    ansi_func_defs = ansi_func_protos = true;
 
 	sawcmpflag = false;
 
@@ -1288,6 +1295,14 @@ void flexinit (argc, argv)
 			reject_really_used = false;
 			break;
 
+        case OPT_NO_ANSI_FUNC_DEFS:
+            ansi_func_defs = false;
+            break;
+
+        case OPT_NO_ANSI_FUNC_PROTOS:
+            ansi_func_protos = false;
+            break;
+
 		case OPT_NO_YY_PUSH_STATE:
 			//buf_strdefine (&userdef_buf, "YY_NO_PUSH_STATE", "1");
             buf_m4_define( &m4defs_buf, "M4_YY_NO_PUSH_STATE",0);
@@ -1551,15 +1566,16 @@ void readin ()
 		OUT_BEGIN_CODE ();
 		/* In reentrant scanner, stdinit is handled in flex.skl. */
 		if (do_stdinit) {
-			outn ("#ifdef YY_REENTRANT");
-			outn ("#ifdef VMS");
-			outn ("#ifdef __VMS_POSIX");
-			outn ("#define YY_STDINIT");
-			outn ("#endif");
-			outn ("#else");
-			outn ("#define YY_STDINIT");
-			outn ("#endif");
-			outn ("#else /* end YY_REENTRANT */");
+			if (reentrant){
+                outn ("#ifdef VMS");
+                outn ("#ifdef __VMS_POSIX");
+                outn ("#define YY_STDINIT");
+                outn ("#endif");
+                outn ("#else");
+                outn ("#define YY_STDINIT");
+                outn ("#endif");
+            }
+
 			outn ("#ifdef VMS");
 			outn ("#ifndef __VMS_POSIX");
 			outn (yy_nostdinit);
@@ -1573,9 +1589,8 @@ void readin ()
 		}
 
 		else {
-			outn ("#ifndef YY_REENTRANT");
-			outn (yy_nostdinit);
-			outn ("#endif");
+			if(!reentrant)
+                outn (yy_nostdinit);
 		}
 		OUT_END_CODE ();
 	}
@@ -1787,6 +1802,8 @@ void usage ()
 		  "       --bison-bridge      scanner for bison pure parser.\n"
 		  "       --bison-locations   include yylloc support.\n"
 		  "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+          "       --noansi-definitions old-style function definitions\n"
+          "       --noansi-prototypes  empty parameter list in prototypes\n"
 		  "       --nounistd          do not include <unistd.h>\n"
 		  "       --noFUNCTION        do not generate a particular FUNCTION\n"
 		  "\n" "Miscellaneous:\n"
