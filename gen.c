@@ -1038,12 +1038,12 @@ void gen_start_state ()
 
 		if (reject) {
 			/* Set up for storing up states. */
-			outn ("#ifdef YY_USES_REJECT");
+			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
 			indent_puts
 				("YY_G(yy_state_ptr) = YY_G(yy_state_buf);");
 			indent_puts
 				("*YY_G(yy_state_ptr)++ = yy_current_state;");
-			outn ("#endif");
+			outn ("]])");
 		}
 	}
 }
@@ -1761,7 +1761,7 @@ void make_tables ()
 	}
 
 	if (reject) {
-		outn ("#ifdef YY_USES_REJECT");
+		outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
 		/* Declare state buffer variables. */
 		if (!C_plus_plus && !reentrant) {
 			outn ("static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;");
@@ -1797,7 +1797,7 @@ void make_tables ()
 		outn ("goto find_rule; \\");
 
 		outn ("}");
-		outn ("#endif");
+		outn ("]])\n");
 	}
 
 	else {
