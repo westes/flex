@@ -235,7 +235,7 @@ void cmptmps()
 
     if ( usemecs )
 	{
-	/* create equivalence classes base on data gathered on template
+	/* create equivalence classes based on data gathered on template
 	 * transitions
 	 */
 
@@ -245,7 +245,7 @@ void cmptmps()
     else
 	nummecs = numecs;
 
-    if ( lastdfa + numtemps + 1 >= current_max_dfas )
+    while ( lastdfa + numtemps + 1 >= current_max_dfas )
 	increase_max_dfas();
 
     /* loop through each template */
@@ -308,8 +308,8 @@ void expand_nxt_chk()
     nxt = reallocate_integer_array( nxt, current_max_xpairs );
     chk = reallocate_integer_array( chk, current_max_xpairs );
 
-    bzero( (char *) (chk + old_max),
-	   MAX_XPAIRS_INCREMENT * sizeof( int ) / sizeof( char ) );
+    zero_out( (char *) (chk + old_max),
+	      MAX_XPAIRS_INCREMENT * sizeof( int ) / sizeof( char ) );
     }
 
 
@@ -368,7 +368,7 @@ int *state, numtrans;
 
     while ( 1 )		/* loops until a space is found */
 	{
-	if ( i + numecs > current_max_xpairs )
+	while ( i + numecs >= current_max_xpairs )
 	    expand_nxt_chk();
 
 	/* loops until space for end-of-buffer and action number are found */
@@ -389,7 +389,7 @@ int *state, numtrans;
 	    else
 		++i;
 
-	    if ( i + numecs > current_max_xpairs )
+	    while ( i + numecs >= current_max_xpairs )
 		expand_nxt_chk();
 	    }
 
@@ -435,7 +435,8 @@ void inittbl()
     {
     register int i;
 
-    bzero( (char *) chk, current_max_xpairs * sizeof( int ) / sizeof( char ) );
+    zero_out( (char *) chk,
+	      current_max_xpairs * sizeof( int ) / sizeof( char ) );
 
     tblend = 0;
     firstfree = tblend + 1;
@@ -476,7 +477,7 @@ void mkdeftbl()
 
     ++tblend; /* room for transition on end-of-buffer character */
 
-    if ( tblend + numecs > current_max_xpairs )
+    while ( tblend + numecs >= current_max_xpairs )
 	expand_nxt_chk();
 
     /* add in default end-of-buffer transition */
@@ -584,7 +585,7 @@ int numchars, statenum, deflink, totaltrans;
 		;
 	    }
 
-	if ( baseaddr + maxec - minec >= current_max_xpairs )
+	while ( baseaddr + maxec - minec + 1 >= current_max_xpairs )
 	    expand_nxt_chk();
 
 	for ( i = minec; i <= maxec; ++i )
@@ -598,7 +599,8 @@ int numchars, statenum, deflink, totaltrans;
 			      ++baseaddr )
 			    ;
 
-			if ( baseaddr + maxec - minec >= current_max_xpairs )
+			while ( baseaddr + maxec - minec + 1 >=
+			     current_max_xpairs )
 			    expand_nxt_chk();
 
 			/* reset the loop counter so we'll start all
@@ -620,7 +622,7 @@ int numchars, statenum, deflink, totaltrans;
     tblbase = baseaddr - minec;
     tbllast = tblbase + maxec;
 
-    if ( tbllast >= current_max_xpairs )
+    while ( tbllast + 1 >= current_max_xpairs )
 	expand_nxt_chk();
 
     base[statenum] = tblbase;
@@ -860,7 +862,7 @@ int *state, statenum, transnum;
  *   int statenum, sym, nextstate, deflink;
  *   stack1( statenum, sym, nextstate, deflink );
  *
- * if there's room for another state one the "one-transition" stack, the
+ * if there's room for another state on the "one-transition" stack, the
  * state is pushed onto it, to be processed later by mk1tbl.  If there's
  * no room, we process the sucker right now.
  */
