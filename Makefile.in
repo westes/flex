@@ -145,7 +145,8 @@ bigcheck:
 	rm -f scan.c ; $(MAKE) COMPRESSION="-Ce" check
 	rm -f scan.c ; $(MAKE) COMPRESSION="-Cm" check
 	rm -f scan.c ; $(MAKE) COMPRESSION="-Cfe" check
-	rm -f scan.c ; $(MAKE) COMPRESSION="-CFe" check
+	rm -f scan.c ; $(MAKE) COMPRESSION="-CFer" check
+	rm -f scan.c ; $(MAKE) COMPRESSION="-l" PERF_REPORT="" check
 	rm -f scan.c ; $(MAKE)
 	@echo "All checks successful"
 
