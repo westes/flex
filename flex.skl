@@ -881,6 +881,7 @@ do_action:	/* This label is used only to access EOF actions. */
 	} /* end of yylex */
 %e
 %+
+%c
 yyFlexLexer::yyFlexLexer( FLEX_STD istream* arg_yyin, FLEX_STD ostream* arg_yyout )
 	{
 	yyin = arg_yyin;
