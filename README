@@ -1,8 +1,10 @@
+// $Header$
+
 The flex distribution consists of the following files:
 
 	README		This message
 
-	Changes		Differences between this release and the beta-test
+	Changes		Differences between this release and the previous one
 
 	Makefile
 	flexdef.h
@@ -11,6 +13,7 @@ The flex distribution consists of the following files:
 	ccl.c
 	dfa.c		flex sources
 	ecs.c
+	gen.c
 	main.c
 	misc.c
 	nfa.c
@@ -20,15 +23,9 @@ The flex distribution consists of the following files:
 
 	scan.c.dist	pre-flex'd version of scan.l
 
-	flex.skel
-	flex.fastskel
-	flexskelcom.h	skeleton scanner sources
-	flexskeldef.h
-	fastskeldef.h
+	flex.skel	skeleton for generated scanners
 
 	flex.1		manual entry
-
-	Timings		a brief note comparing timings of flex vs. lex
 
 The files are packaged as a compressed shell archive, which in turn
 contains seven shell archives.  Create a directory where you want flex
@@ -47,15 +44,12 @@ to live, cd there, and use
 
 to extract them.
 
-Either move {flexskelcom.h,flexskeldef.h,fastskeldef.h} into /usr/include
-or edit {flex.skel,flex.fastskel,flexskeldef.h,fastskeldef.h,scan.c.dist}
-and wire in the full pathname of where you are going to keep the include files.
+Decide where you want to keep flex.skel (suggestion:  /usr/local/lib) and
+move it there.  Edit "Makefile" and change the definition of SKELETON_FILE
+to reflect the full pathname of flex.skel.
 
-Decide where you want to keep {flex.skel,flex.fastskel} (suggestion:
-/usr/local/lib) and move it there.  Edit "Makefile" and change the
-definitions of SKELETON_FILE and F_SKELETON_FILE to reflect the full
-pathnames of {flex.skel,flex.fastskel}.  For a System V machine, add
-"-DSV" to CFLAGS.
+For a System V machine, add "-DSV" to CFLAGS in the Makefile.
+
 
 To make flex for the first time, use:
 
