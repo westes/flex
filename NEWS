@@ -3,7 +3,9 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* after version 2.5.16
+* version 2.5.17 released 2002-8-29
+
+** more portability fixes
 
 ** updated config.sub and config.guess
 
