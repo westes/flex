@@ -1877,11 +1877,11 @@ input buffer for scanning the string, and return a corresponding
 new buffer using @code{yy_switch_to_buffer()}, so the next call to
 @code{yylex()} will start scanning the string.
 
-@deftypefun void yy_scan_string ( const char *str )
+@deftypefun YY_BUFFER_STATE yy_scan_string ( const char *str )
 scans a NUL-terminated string.
 @end deftypefun
 
-@deftypefun void yy_scan_bytes ( const char *bytes, int len )
+@deftypefun YY_BUFFER_STATE yy_scan_bytes ( const char *bytes, int len )
 scans @code{len} bytes (including possibly @code{NUL}s) starting at location
 @code{bytes}.
 @end deftypefun
@@ -1892,7 +1892,7 @@ the contents of the buffer it is scanning.)  You can avoid the copy by
 using:
 
 @vindex YY_END_OF_BUFFER_CHAR
-@deftypefun void yy_scan_buffer (char *base, yy_size_t size)
+@deftypefun YY_BUFFER_STATE yy_scan_buffer (char *base, yy_size_t size)
 which scans in place the buffer starting at @code{base}, consisting of
 @code{size} bytes, the last two bytes of which @emph{must} be
 @code{YY_END_OF_BUFFER_CHAR} (ASCII NUL).  These last two bytes are not
@@ -3353,12 +3353,15 @@ another instance of itself.
     %%
     "eval(".+")"  {  
                       yyscan_t scanner;
+                      YY_BUFFER_STATE buf;
+
                       yylex_init( &scanner );
                       yytext[yyleng-1] = ' '; 
 
-                      yyscan_string( yytext + 5, scanner );
+                      buf = yy_scan_string( yytext + 5, scanner );
                       yylex( scanner );
 
+                      yy_delete_buffer(buf,scanner);
                       yylex_destroy( scanner );
                  }
     ...
