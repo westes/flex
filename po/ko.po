@@ -1,0 +1,660 @@
+# flex-2.5.2 Korean po file
+# Copyright (C) 1997 Free Software Foundation, Inc.
+# Choi Jun Ho <junker@jazz.snu.ac.kr>, 1997.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: flex 2.5.2\n"
+"PO-Revision-Date: 1997-02-05 20:30\n"
+"Last-Translator: Choi Jun Ho <junker@jazz.snu.ac.kr>\n"
+"Language-Team: Korean <ko@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=EUC-KR\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: main.c:361
+msgid "input error reading skeleton file %s"
+msgstr "스켈레톤 파일 %s를 읽는 도중 오류가 발생했습니다"
+
+#: main.c:898
+msgid " and may be the actual source of other reported performance penalties\n"
+msgstr " 그리고 아마도 다른 보고된 성능 저하의 실제 원인일 것입니다\n"
+
+#: main.c:814
+msgid ""
+"%s: unknown flag '%c'.  For usage, try\n"
+"\t%s --help\n"
+msgstr ""
+"%s: 알 수 없는 옵션 '%c'.  사용법을 보려면 \n"
+"\t%s --help라고 하세요.\n"
+
+#: dfa.c:211
+msgid " out-transitions: "
+msgstr " 나가는 쪽 전이: "
+
+#: main.c:394
+msgid "Compressed tables always back up.\n"
+msgstr " 압축된 테이블은 항상 백업합니다.\n"
+
+#: main.c:896
+msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
+msgstr "-l AT&T lex 호환 옵션은 큰 성능 저하를 일으킵니다\n"
+
+#: scan.l:493
+msgid "missing quote"
+msgstr "인용기호 빠짐"
+
+#: dfa.c:130
+msgid "dangerous trailing context"
+msgstr "위험한 추적 문맥"
+
+#: main.c:556
+msgid "  %d/%d equivalence classes created\n"
+msgstr "  %d/%d개의 동치류가 만들어졌습니다\n"
+
+#: main.c:158
+msgid "-s option given but default rule can be matched"
+msgstr "-s 옵션이 주어졌지만 기본 규칙이 적용될 수 있습니다"
+
+#: main.c:762
+msgid "-P flag must be given separately"
+msgstr "-P 플래그는 따로 주어야 합니다"
+
+#: gen.c:426 gen.c:902
+msgid "state # %d accepts: [%d]\n"
+msgstr "상태번호 %d는 [%d]를 받아들입니다\n"
+
+#: main.c:401
+msgid "error closing backup file %s"
+msgstr "백업 파일 %s를 닫는데 오류가 발생했습니다"
+
+#: main.c:753
+msgid "-o flag must be given separately"
+msgstr "-o 플래그는 따로 주어야 합니다"
+
+#: main.c:774
+msgid "-S flag must be given separately"
+msgstr "-S 플래그는 따로 주어야 합니다"
+
+#: main.c:302
+msgid "can't open skeleton file %s"
+msgstr "스켈레톤 파일 %s를 열 수 없습니다"
+
+#: main.c:545
+msgid "  %d protos created\n"
+msgstr "  %d개의 원형이 만들어졌습니다\n"
+
+#: dfa.c:1043
+msgid "bad transition character detected in sympartition()"
+msgstr "sympartition()에서 잘못된 전이 문자를 찾았습니다"
+
+#: dfa.c:606
+msgid "state # %d:\n"
+msgstr "상태번호 %d:\n"
+
+#: main.c:662
+msgid "-C flag must be given separately"
+msgstr "-C 플래그는 따로 주어야 합니다"
+
+#: main.c:390
+msgid "%d backing up (non-accepting) states.\n"
+msgstr "%d개의 되돌림(받아들이지 않는) 상태.\n"
+
+#: scan.l:136
+msgid "unrecognized '%' directive"
+msgstr "알 수 없는 '%' 지시자"
+
+#: main.c:543
+msgid "  %d empty table entries\n"
+msgstr "  %d개의 빈 테이블 엔트리\n"
+
+#: main.c:539
+msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
+msgstr "  %d/%d (최대 %d) 템플리트 nxt-chk 엔트리가 만들어졌습니다\n"
+
+#: main.c:533
+msgid "  %d/%d base-def entries created\n"
+msgstr "  %d/%d base-def 엔트리가 만들어졌습니다\n"
+
+#: dfa.c:173
+msgid " associated rule line numbers:"
+msgstr " 관련 규칙 행번호:"
+
+#: scan.l:286
+msgid "unrecognized %%option: %s"
+msgstr "알 수 없는 %%option: %s"
+
+#: main.c:496
+msgid "  Compressed tables always back-up\n"
+msgstr " 압축된 테이블은 항상 백업합니다\n"
+
+#: main.c:573
+msgid "  %d total table entries needed\n"
+msgstr "  총 %d개의 테이블 엔트리가 필요합니다\n"
+
+#: main.c:519
+msgid "  %d/%d unique/duplicate transitions\n"
+msgstr "  %d/%d개의 유일한/중복되는 전이\n"
+
+#: dfa.c:990
+msgid "consistency check failed in symfollowset"
+msgstr "symfollowset에서 일관성 검사가 실패했습니다"
+
+#: scan.l:533
+msgid "bad character class expression: %s"
+msgstr "잘못된 문자 집합 식: %s"
+
+#: scan.l:444
+msgid "undefined definition {%s}"
+msgstr "정의되지 않은 정의 {%s}"
+
+#: main.c:397
+msgid "error writing backup file %s"
+msgstr "백업 파일 %s를 쓰는데 오류가 발생했습니다"
+
+#: scan.l:628
+msgid "EOF encountered inside an action"
+msgstr "동작 도중에 EOF를 만났습니다"
+
+#: main.c:874
+msgid "could not create backing-up info file %s"
+msgstr "되돌림 정보 파일 %s를 만들 수 없었습니다"
+
+#: main.c:548
+msgid "  %d templates created, %d uses\n"
+msgstr "  %d개의 템플리트가 만들어지고, %d개를 씁니다\n"
+
+#: main.c:228
+msgid "-Cf/-CF are incompatible with lex-compatibility mode"
+msgstr "-Cf/-CF 는 lex호환 모드와는 같이 쓸 수 없습니다"
+
+#: scan.l:677
+msgid "can't open %s"
+msgstr "%s를 열 수 없습니다"
+
+#: main.c:489
+msgid "  No backing up\n"
+msgstr "  되돌림이 없습니다\n"
+
+#: scan.l:555
+msgid "missing }"
+msgstr "}이 빠졌습니다"
+
+#: main.c:483
+msgid "  %d/%d DFA states (%d words)\n"
+msgstr "  %d/%d개의 DFA 상태 (%d 단어)\n"
+
+#: scan.l:648
+msgid "bad character: %s"
+msgstr "잘못된 문자: %s"
+
+#: gen.c:925
+msgid "\n\nMeta-Equivalence Classes:\n"
+msgstr "\n\n메타-동치류들:\n"
+
+#: main.c:232
+msgid "-Cf/-CF and %option yylineno are incompatible"
+msgstr "-Cf/-CF와 %option yylineno 는 같이 쓸 수 없습니다"
+
+#: main.c:296
+msgid "could not create %s"
+msgstr "%s를 만들 수 없습니다"
+
+#: dfa.c:585
+msgid "could not create unique end-of-buffer state"
+msgstr "유일한 버퍼의 끝(end-of-buffer)상태를 만들 수 없었습니다"
+
+#: main.c:365
+msgid "error closing skeleton file %s"
+msgstr "스켈레톤 파일 %s를 닫는데 오류가 발생했습니다"
+
+#: main.c:911
+msgid "-I (interactive) entails a minor performance penalty\n"
+msgstr "-I (대화형) 은 소규모의 성능저하를 일으킵니다\n"
+
+#: main.c:536
+msgid "  %d/%d (peak %d) nxt-chk entries created\n"
+msgstr "  %d/%d (최대 %d) nxt-chk 엔트리가 만들어졌습니다\n"
+
+#: main.c:235
+msgid "-Cf and -CF are mutually exclusive"
+msgstr "-Cf와 -CF는 같이 쓸 수 없습니다"
+
+#: main.c:407
+msgid "%s version %s usage statistics:\n"
+msgstr "%s 버전 %s 사용 통계:\n"
+
+#: main.c:221
+msgid "-Cf/-CF and -Cm don't make sense together"
+msgstr "-Cf/-CF는 -Cm와 같이 쓰면 의미가 없습니다"
+
+#: main.c:512
+msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
+msgstr "  %d/%d 문자 집합에 %d/%d개의 저장용 문자가 필요했고, %d개는 재사용되었습니다.\n"
+
+#: main.c:380
+msgid "error deleting output file %s"
+msgstr "출력파일 %s를 지우는 데 오류가 발생했습니다"
+
+#: dfa.c:356
+msgid "consistency check failed in epsclosure()"
+msgstr "epsclosure()에서 일관성 검사가 실패했습니다"
+
+#: main.c:481
+msgid "  %d/%d NFA states\n"
+msgstr "  %d/%d개의 NFA 상태\n"
+
+#: main.c:509
+msgid "  no character classes\n"
+msgstr "  문자류가 없습니다\n"
+
+#: main.c:904
+msgid "%%option yylineno entails a large performance penalty\n"
+msgstr "%%option yylineno는 큰 성능저하를 일으킵니다\n"
+
+#: main.c:182
+msgid "Can't use -+ with -l option"
+msgstr "-l옵션에는 -+옵션을 같이 쓸 수 없습니다"
+
+#: dfa.c:439
+msgid "\n\nDFA Dump:\n\n"
+msgstr "\n\nDFA 출력:\n\n"
+
+#: main.c:410
+msgid "  scanner options: -"
+msgstr "  스캐너 옵션: -"
+
+#: gen.c:823
+msgid "state # %d accepts: "
+msgstr "상태번호 %d는 다음을 받아들입니다: "
+
+#: main.c:224
+msgid "-Cf/-CF and -I are incompatible"
+msgstr "-Cf/-CF와 -I는 같이 쓸 수 없습니다"
+
+#: scan.l:480
+msgid "bad <start condition>: %s"
+msgstr "잘못된 <시작 조건>: %s"
+
+#: main.c:492
+msgid "  %d backing-up (non-accepting) states\n"
+msgstr "  %d개의 되돌림(받아들이지 않는) 상태\n"
+
+#: main.c:505
+msgid "  %d epsilon states, %d double epsilon states\n"
+msgstr "  %d개의 엡실론 상태, %d개의 이중 엡실론 상태\n"
+
+#: main.c:239
+msgid "Can't use -+ with -CF option"
+msgstr "-CF옵션에 -+옵션을 같이 쓸 수 없습니다"
+
+#: main.c:153
+msgid "rule cannot be matched"
+msgstr "맞는 규칙을 찾을 수 없습니다"
+
+#: main.c:796
+msgid "%s version %s\n"
+msgstr "%s 버전 %s\n"
+
+#: main.c:525
+msgid "  %d table entries\n"
+msgstr "  %d개의 테이블 엔트리\n"
+
+#: main.c:702
+msgid "unknown -C option '%c'"
+msgstr "알 수 없는 -C 옵션 '%c'"
+
+#: scan.l:412 scan.l:512
+msgid "bad character class"
+msgstr "잘못된 문자류"
+
+#: main.c:185
+msgid "Can't use -f or -F with -l option"
+msgstr "-l옵션에 -f나 -F옵션을 쓸 수 없습니다"
+
+#: main.c:571
+msgid "  %d sets of reallocations needed\n"
+msgstr "  %d개의 재할당 집합이 필요합니다\n"
+
+#: main.c:387
+msgid "No backing up.\n"
+msgstr "되돌림이 없습니다.\n"
+
+#: main.c:243
+msgid "%array incompatible with -+ option"
+msgstr "%array는 -+옵션과 같이 쓸 수 없습니다"
+
+#: main.c:485
+msgid "  %d rules\n"
+msgstr "  %d개의 규칙\n"
+
+#: main.c:517
+msgid "  %d state/nextstate pairs created\n"
+msgstr "  %d개의 상태/다음 상태 쌍이 만들어졌습니다\n"
+
+#: scan.l:549
+msgid "bad character inside {}'s"
+msgstr "{}안의 잘못된 문자"
+
+#: dfa.c:63
+msgid "State #%d is non-accepting -\n"
+msgstr "상태번호 %d는 받아들이지 않는 -입니다\n"
+
+#: dfa.c:219
+msgid "\n jam-transitions: EOF "
+msgstr "\n 잼-전이: EOF "
+
+#: main.c:500
+msgid "  Beginning-of-line patterns used\n"
+msgstr "  행 시작(beginning-of-line) 유형을 사용하였습니다\n"
+
+#: main.c:564
+msgid "  %d/%d meta-equivalence classes created\n"
+msgstr "  %d/%d 메타 동치류가 만들어졌습니다\n"
+
+#: main.c:372
+msgid "error writing output file %s"
+msgstr "출력파일 %s를 쓰는 데 오류가 발생했습니다"
+
+#: gen.c:248
+msgid "\n\nEquivalence Classes:\n\n"
+msgstr "\n\n동치류:\n\n"
+
+#: main.c:376
+msgid "error closing output file %s"
+msgstr "출력파일 %s를 닫는데 오류가 발생했습니다"
+
+#: main.c:862
+msgid "fatal parse error"
+msgstr "치명적인 파싱 에러"
+
+#: main.c:502
+msgid "  %d/%d start conditions\n"
+msgstr "  %d/%d개의 시작조건\n"
+
+#: main.c:569
+msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
+msgstr "  %d(%d 저장됨)개의 해싱 충돌로 %d개의 DFA가 같게 처리됩니다\n"
+
+#: scan.l:203
+msgid "incomplete name definition"
+msgstr "불완전한 이름 정의"
+
+#: main.c:915
+msgid "yymore() entails a minor performance penalty\n"
+msgstr "yymore()는 소규모의 성능저하를 일으킵니다\n"
+
+#: main.c:920
+msgid "REJECT entails a large performance penalty\n"
+msgstr "REJECT는 큰 성능저하를 일으킵니다\n"
+
+#: main.c:924
+msgid "Variable trailing context rules entail a large performance penalty\n"
+msgstr "가변 추적 문맥 규칙은 큰 성능저하를 일으킵니다\n"
+
+#: main.c:937
+msgid "REJECT cannot be used with -f or -F"
+msgstr "REJECT는 -f나 -F옵션과 같이 쓸 수 없습니다"
+
+#: main.c:940
+msgid "%option yylineno cannot be used with -f or -F"
+msgstr "%option yylineno은 -f나 -F옵션과 같이 쓸 수 없습니다"
+
+#: main.c:943
+msgid "variable trailing context rules cannot be used with -f or -F"
+msgstr "가변 추적 문맥 규칙은 -f나 -F옵션과 같이 쓸 수 없습니다"
+
+#: main.c:1038
+msgid "%option yyclass only meaningful for C++ scanners"
+msgstr "%option yyclass는 C++스캐너에게만 의미가 있습니다"
+
+#: main.c:1117
+msgid "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"
+msgstr "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -o출력파일 -P접두사 -S스켈레톤]\n"
+
+#: main.c:1119
+msgid "\t[--help --version] [file ...]\n"
+msgstr "\t[--help --version] [파일 ...]\n"
+
+#: main.c:1121
+msgid "\t-b  generate backing-up information to %s\n"
+msgstr "\t-b  %s에 되돌림 정보를 만듭니다.\n"
+
+#: main.c:1123
+msgid "\t-c  do-nothing POSIX option\n"
+msgstr "\t-c  아무 일도 하지 않는 POSIX옵션\n"
+
+#: main.c:1124
+msgid "\t-d  turn on debug mode in generated scanner\n"
+msgstr "\t-d  만들어진 스캐너에서 디버그 모드로 바꿉니다\n"
+
+#: main.c:1125
+msgid "\t-f  generate fast, large scanner\n"
+msgstr "\t-f  빠르지만 큰 스캐너를 만듭니다\n"
+
+#: main.c:1126
+msgid "\t-h  produce this help message\n"
+msgstr "\t-h  이 도움말 메시지를 출력합니다\n"
+
+#: main.c:1127
+msgid "\t-i  generate case-insensitive scanner\n"
+msgstr "\t-i  대소문자 구별없는 스캐너를 만듭니다\n"
+
+#: main.c:1128
+msgid "\t-l  maximal compatibility with original lex\n"
+msgstr "\t-l  오리지널 lex와 최대한의 호환성을 제공합니다\n"
+
+#: main.c:1129
+msgid "\t-n  do-nothing POSIX option\n"
+msgstr "\t-n  아무 일도 하지 않는 POSIX옵션\n"
+
+#: main.c:1130
+msgid "\t-p  generate performance report to stderr\n"
+msgstr "\t-p  성능 보고를 표준 에러로 출력합니다\n"
+
+#: main.c:1132
+msgid "\t-s  suppress default rule to ECHO unmatched text\n"
+msgstr "\t-s  기본 규칙을 'ECHO 찾지못한 글'로 제한합니다\n"
+
+#: main.c:1142
+msgid "\t-t  write generated scanner on stdout instead of %s\n"
+msgstr "\t-t  %s 대신 만들어진 스캐너를 표준 출력으로 씁니다\n"
+
+#: main.c:1146
+msgid "\t-v  write summary of scanner statistics to f\n"
+msgstr "\t-v  스캐너 통계 요약을 f에 씁니다\n"
+
+#: main.c:1147
+msgid "\t-w  do not generate warnings\n"
+msgstr "\t-w  경고를 내지 않습니다\n"
+
+#: main.c:1148
+msgid "\t-B  generate batch scanner (opposite of -I)\n"
+msgstr "\t-B  일괄처리 스캐너를 만듭니다(-I와 반대)\n"
+
+#: main.c:1150
+msgid "\t-F  use alternative fast scanner representation\n"
+msgstr "\t-F  다른 방법의 빠른 스캐너 표현법을 사용합니다\n"
+
+#: main.c:1152
+msgid "\t-I  generate interactive scanner (opposite of -B)\n"
+msgstr "\t-I  대화형 스캐너를 만듭니다(-B와 반대)\n"
+
+#: main.c:1153
+msgid "\t-L  suppress #line directives in scanner\n"
+msgstr "\t-L  스캐너에서 #line지시자를 내지 않도록 합니다\n"
+
+#: main.c:1154
+msgid "\t-T  %s should run in trace mode\n"
+msgstr "\t-T  %s는 추적 모드에서 실행되도록 합니다\n"
+
+#: main.c:1155
+msgid "\t-V  report %s version\n"
+msgstr "\t-V  %s의 버전을 출력합니다\n"
+
+#: main.c:1156
+msgid "\t-7  generate 7-bit scanner\n"
+msgstr "\t-7  7비트 스캐너를 만듭니다\n"
+
+#: main.c:1157
+msgid "\t-8  generate 8-bit scanner\n"
+msgstr "\t-8  8비트 스캐너를 만듭니다\n"
+
+#: main.c:1158
+msgid "\t-+  generate C++ scanner class\n"
+msgstr "\t-+  C++ 스캐너 클래스를 만듭니다\n"
+
+#: main.c:1159
+msgid "\t-?  produce this help message\n"
+msgstr "\t-?  이 도움말을 출력합니다\n"
+
+#: main.c:1161
+msgid "\t-C  specify degree of table compression (default is -Cem):\n"
+msgstr "\t-C  테이블 압축정도를 지정합니다(기본값은 -Cem):\n"
+
+#: main.c:1163
+msgid "\t\t-Ca  trade off larger tables for better memory alignment\n"
+msgstr "\t\t-Ca  더 좋은 메모리 정렬을 위해 큰 테이블을 만듭니다\n"
+
+#: main.c:1164
+msgid "\t\t-Ce  construct equivalence classes\n"
+msgstr "\t\t-Ce  동치류를 만듭니다\n"
+
+#: main.c:1166
+msgid "\t\t-Cf  do not compress scanner tables; use -f representation\n"
+msgstr "\t\t-Cf  스캐너 테이블을 압축하지 않습니다. -f표현법을 사용합니다\n"
+
+#: main.c:1168
+msgid "\t\t-CF  do not compress scanner tables; use -F representation\n"
+msgstr "\t\t-CF  스캐너 테이블을 압축하지 않습니다. -F표현법을 사용합니다\n"
+
+#: main.c:1169
+msgid "\t\t-Cm  construct meta-equivalence classes\n"
+msgstr "\t\t-Cm  메타 동치류를 만듭니다\n"
+
+#: main.c:1171
+msgid "\t\t-Cr  use read() instead of stdio for scanner input\n"
+msgstr "\t\t-Cr  스캐너 입력을 stdio라이브러리 대신 read()시스템 콜을 사용합니다\n"
+
+#: main.c:1172
+msgid "\t-o  specify output filename\n"
+msgstr "\t-o  출력 파일이름을 지정합니다\n"
+
+#: main.c:1173
+msgid "\t-P  specify scanner prefix other than \"yy\"\n"
+msgstr "\t-P  \"yy\"대신에 다른 스캐너 접두사를 지정합니다\n"
+
+#: main.c:1174
+msgid "\t-S  specify skeleton file\n"
+msgstr "\t-S  스켈레톤 파일을 지정합니다\n"
+
+#: main.c:1175
+msgid "\t--help     produce this help message\n"
+msgstr "\t--help     이 도움말을 출력합니다\n"
+
+#: main.c:1176
+msgid "\t--version  report %s version\n"
+msgstr "\t--version  %s의 버전을 출력합니다\n"
+
+#: misc.c:42
+msgid "name \"%s\" ridiculously long"
+msgstr "이름 \"%s\"는 비정상적으로 깁니다"
+
+#: misc.c:91
+msgid "memory allocation failed in allocate_array()"
+msgstr "allocate_array()에서 메모리 할당이 실패했습니다"
+
+#: misc.c:169
+msgid "bad character '%s' detected in check_char()"
+msgstr "check_char()에서 잘못된 문자 '%s'를 찾았습니다"
+
+#: misc.c:174
+msgid "scanner requires -8 flag to use the character %s"
+msgstr "스캐너에서 문자 %s를 쓰기 위해서는 -8옵션이 필요합니다"
+
+#: misc.c:207
+msgid "dynamic memory failure in copy_string()"
+msgstr "copy_string()에서 동적 메모리 할당이 실패했습니다"
+
+#: misc.c:339
+msgid "%s: fatal internal error, %s\n"
+msgstr "%s: 치명적인 내부 에러, %s\n"
+
+#: misc.c:765
+msgid "attempt to increase array size failed"
+msgstr "배열 크기를 늘리려는 시도가 실패했습니다"
+
+#: misc.c:811
+msgid "bad line in skeleton file"
+msgstr "스켈레톤 파일에 잘못된 행"
+
+#: misc.c:864
+msgid "memory allocation failed in yy_flex_xmalloc()"
+msgstr "yy_flex_xmalloc()에서 메모리 할당이 실패했습니다"
+
+#: nfa.c:100
+msgid "\n\n********** beginning dump of nfa with start state %d\n"
+msgstr "\n\n********** 시작 상태 %d에서 nfa출력 시작\n"
+
+#: nfa.c:112
+msgid "state # %4d\t"
+msgstr "상태 번호 %4d\t"
+
+#: nfa.c:127
+msgid "********** end of dump\n"
+msgstr "********** 출력 끝\n"
+
+#: nfa.c:173
+msgid "empty machine in dupmachine()"
+msgstr "dupmachine()에서의 빈 머신"
+
+#: nfa.c:225
+msgid "Variable trailing context rule at line %d\n"
+msgstr "%d행에서 가변 추적 문맥 규칙\n"
+
+#: nfa.c:347
+msgid "bad state type in mark_beginning_as_normal()"
+msgstr "mark_beginning_as_normal()에서 잘못된 상태형"
+
+#: nfa.c:600
+msgid "input rules are too complicated (>= %d NFA states)"
+msgstr "입력 규칙이 너무 복잡합니다(>= NFA상태 %d개)"
+
+#: nfa.c:679
+msgid "found too many transitions in mkxtion()"
+msgstr "mkxtion()에 전이가 너무 많습니다"
+
+#: nfa.c:705
+msgid "too many rules (> %d)!"
+msgstr "규칙이 너무 많습니다 (> %d)!"
+
+#: sym.c:78
+msgid "symbol table memory allocation failed"
+msgstr "심볼 테이블 메모리 할당이 실패했습니다"
+
+#: sym.c:188
+msgid "name defined twice"
+msgstr "이름을 두번 정의했습니다"
+
+#: sym.c:243
+msgid "start condition %s declared twice"
+msgstr "시작조건 %s를 두번 선언했습니다"
+
+#: yylex.c:55
+msgid "premature EOF"
+msgstr "갑작스런 EOF"
+
+#: yylex.c:204
+msgid "End Marker\n"
+msgstr "종료 표시\n"
+
+#: yylex.c:209
+msgid "*Something Weird* - tok: %d val: %d\n"
+msgstr "*무언가 이상합니다* - tok: %d val: %d\n"
+
+#~ msgid ""
+#~ "%s: unknown flag '%c'.  For usage, try\n"
+#~ "\t%s --help\n"
+#~ msgstr ""
+#~ "%s: indicateur inconnu '%c'.  Pour la recette d'usage, demandez\n"
+#~ "\t%s --help\n"

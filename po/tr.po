@@ -1,0 +1,689 @@
+# Turkish translations for GNU flex messages.
+# Copyright (C) 2002 Free Software Foundation, Inc.
+# Altuð Bayram <altugbayram_2000@yahoo.com>, 2002.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: flex 2.5.2\n"
+"POT-Creation-Date: 2002-02-26 18:35+0200\n"
+"PO-Revision-Date: 2002-02-27 14:38GMT +02:00\n"
+"Last-Translator: Altuð Bayram <altugbayram_2000@yahoo.com>\n"
+"Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 0.9.5\n"
+
+#: main.c:361
+msgid "input error reading skeleton file %s"
+msgstr "iskelet dosyasý %s okunurken girdi hatasý"
+
+#: main.c:898
+msgid " and may be the actual source of other reported performance penalties\n"
+msgstr " ve belki diðer raporlanan baþarým kayýplarýnýn güncel kaynaðý\n"
+
+#: main.c:814
+msgid ""
+"%s: unknown flag '%c'.  For usage, try\n"
+"\t%s --help\n"
+msgstr ""
+"%s: bilinmeyen bayrak '%c'.  Kullaným için, dene\n"
+"\t%s --help\n"
+
+#: dfa.c:211
+msgid " out-transitions: "
+msgstr " dýþ-geçiþler: "
+
+#: main.c:394
+msgid "Compressed tables always back up.\n"
+msgstr "Sýkýþtýrýlmýþ tablolar daima yedeklidir.\n"
+
+#: main.c:896
+msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
+msgstr "-l AT&T lex uyumluluðu seçeneði bir büyük baþarým kaybýna neden olur\n"
+
+#: scan.l:493
+msgid "missing quote"
+msgstr "eksik çift týrnak"
+
+#: dfa.c:130
+msgid "dangerous trailing context"
+msgstr "tehlikeli izleme ortamý"
+
+#: main.c:556
+msgid "  %d/%d equivalence classes created\n"
+msgstr "  %d/%d denk sýnýflar yaratýldý\n"
+
+#: main.c:158
+msgid "-s option given but default rule can be matched"
+msgstr "-s seçeneði verilmiþ fakat öntanýmlý kural eþlenebilmeli"
+
+#: main.c:762
+msgid "-P flag must be given separately"
+msgstr "-P bayraðý ayrýk olarak verilmeli"
+
+#: gen.c:426 gen.c:902
+msgid "state # %d accepts: [%d]\n"
+msgstr "durum # %d kabul eder: [%d]\n"
+
+#: main.c:401
+msgid "error closing backup file %s"
+msgstr "yedek dosyasý kapatýlýrken hata: %s"
+
+#: main.c:753
+msgid "-o flag must be given separately"
+msgstr "-o bayraðý ayrýk olarak verilmeli"
+
+#: main.c:774
+msgid "-S flag must be given separately"
+msgstr "-S bayraðý ayrýk olarak verilmeli"
+
+#: main.c:302
+msgid "can't open skeleton file %s"
+msgstr "iskelet dosyasý %s açýlamadý"
+
+#: main.c:545
+msgid "  %d protos created\n"
+msgstr "  %d prototip yaratýldý\n"
+
+#: dfa.c:1043
+msgid "bad transition character detected in sympartition()"
+msgstr "sympartition() içinde hatalý geçiþ karakterleri saptandý"
+
+#: dfa.c:606
+msgid "state # %d:\n"
+msgstr "durum # %d:\n"
+
+#: main.c:662
+msgid "-C flag must be given separately"
+msgstr "-C bayraðý ayrýk olarak verilmeli"
+
+#: main.c:390
+msgid "%d backing up (non-accepting) states.\n"
+msgstr "%d yedeklenmiþ (kabul-edilmeyen) durum.\n"
+
+#: scan.l:136
+msgid "unrecognized '%' directive"
+msgstr "'%' bildirimi tanýnmadý"
+
+#: main.c:543
+msgid "  %d empty table entries\n"
+msgstr "  %d boþ tablo girdileri\n"
+
+#: main.c:539
+msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
+msgstr "  %d/%d (en yüksek %d) þablon nxt-chk girdileri yaratýldý\n"
+
+#: main.c:533
+msgid "  %d/%d base-def entries created\n"
+msgstr "  %d/%d temel-taným girdileri yaratýldý\n"
+
+#: dfa.c:173
+msgid " associated rule line numbers:"
+msgstr " birleþmiþ kural satýr numaralarý:"
+
+#: scan.l:286
+msgid "unrecognized %%option: %s"
+msgstr "geçersiz %%seçenek: %s"
+
+#: main.c:496
+msgid "  Compressed tables always back-up\n"
+msgstr "  Sýkýþtýrýlmýþ tablolar daima yedeklenir\n"
+
+#: main.c:573
+msgid "  %d total table entries needed\n"
+msgstr "  %d toplam tablo girdilerine ihtiyaç var\n"
+
+#: main.c:519
+msgid "  %d/%d unique/duplicate transitions\n"
+msgstr "  %d/%d tekil/çift geçiþler\n"
+
+#: dfa.c:990
+msgid "consistency check failed in symfollowset"
+msgstr "symfollowset içindeki tutarlýk kontrolü baþarýsýz"
+
+#: scan.l:533
+msgid "bad character class expression: %s"
+msgstr "bozuk karakter sýnýfý ifadesi: %s"
+
+#: scan.l:444
+msgid "undefined definition {%s}"
+msgstr "belirsiz taným {%s}"
+
+#: main.c:397
+msgid "error writing backup file %s"
+msgstr "yedek dosyasý yazýlýrken hata: %s"
+
+#: scan.l:628
+msgid "EOF encountered inside an action"
+msgstr "bir eylem içinde EOF ile karþýlaþýldý"
+
+#: main.c:874
+msgid "could not create backing-up info file %s"
+msgstr "yedekleme bilgi dosyasý %s yaratýlamadý"
+
+#: main.c:548
+msgid "  %d templates created, %d uses\n"
+msgstr "  %d aþblon yaratýldý, %d kullanýldý\n"
+
+#: main.c:228
+msgid "-Cf/-CF are incompatible with lex-compatibility mode"
+msgstr "-Cf/-CF lex-uyumluluk kipi ile uyumsuzdur"
+
+#: scan.l:677
+msgid "can't open %s"
+msgstr "%s açýlamýyor"
+
+#: main.c:489
+msgid "  No backing up\n"
+msgstr "  Yedekleme yok\n"
+
+#: scan.l:555
+msgid "missing }"
+msgstr "kayýp }"
+
+#: main.c:483
+msgid "  %d/%d DFA states (%d words)\n"
+msgstr "  %d/%d DFA durumu (%d sözcük)\n"
+
+#: scan.l:648
+msgid "bad character: %s"
+msgstr "hatalý karakter: %s"
+
+#: gen.c:925
+msgid ""
+"\n"
+"\n"
+"Meta-Equivalence Classes:\n"
+msgstr ""
+"\n"
+"\n"
+"Ara-Denklik Sýnýflarý:\n"
+
+#: main.c:232
+msgid "-Cf/-CF and %option yylineno are incompatible"
+msgstr "-Cf/-CF ve %option yylineno uyumsuz"
+
+#: main.c:296
+msgid "could not create %s"
+msgstr "%s yaratýlamadý"
+
+#: dfa.c:585
+msgid "could not create unique end-of-buffer state"
+msgstr "tekil tampon sonu durumu yaratýlamadý"
+
+#: main.c:365
+msgid "error closing skeleton file %s"
+msgstr "iskelet dosyasý kapatýlýrken hata: %s"
+
+#: main.c:911
+msgid "-I (interactive) entails a minor performance penalty\n"
+msgstr "-I (etkileþimli) bir küçük baþarým kaybýna neden olur\n"
+
+#: main.c:536
+msgid "  %d/%d (peak %d) nxt-chk entries created\n"
+msgstr "  %d/%d (en yüksek %d) nxt-chk girdileri yaratýldý\n"
+
+#: main.c:235
+msgid "-Cf and -CF are mutually exclusive"
+msgstr "-Cf ve -CF karþýlýklý dýþarlayandýr"
+
+#: main.c:407
+msgid "%s version %s usage statistics:\n"
+msgstr "%s sürüm %s kullaným istatistikleri:\n"
+
+#: main.c:221
+msgid "-Cf/-CF and -Cm don't make sense together"
+msgstr "-Cf/-CF ve -Cm birlikte hassas deðillerdir"
+
+#: main.c:512
+msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
+msgstr "  %d/%d ihtiyaç duyulan karakter sýnýfý %d/%d depolanan sözcük, %d yeniden kullanýldý\n"
+
+#: main.c:380
+msgid "error deleting output file %s"
+msgstr "çýktý dosyasý %s silinirken hata"
+
+#: dfa.c:356
+msgid "consistency check failed in epsclosure()"
+msgstr "epsclosure() içindeki tutarlýlýk kontrolü baþarýsýz"
+
+#: main.c:481
+msgid "  %d/%d NFA states\n"
+msgstr "  %d/%d NFA durumu\n"
+
+#: main.c:509
+msgid "  no character classes\n"
+msgstr "  karakter sýnýflarý yok\n"
+
+#: main.c:904
+msgid "%%option yylineno entails a large performance penalty\n"
+msgstr "%%option yylineno bir büyük baþarým kaybýna neden olur\n"
+
+#: main.c:182
+msgid "Can't use -+ with -l option"
+msgstr "-+'yi -l seçeneði ile kullanma"
+
+#: dfa.c:439
+msgid ""
+"\n"
+"\n"
+"DFA Dump:\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"DFA Dökümü:\n"
+"\n"
+
+#: main.c:410
+msgid "  scanner options: -"
+msgstr "  tarayýcý seçenekleri: -"
+
+#: gen.c:823
+msgid "state # %d accepts: "
+msgstr "durum # %d kabul eder: "
+
+#: main.c:224
+msgid "-Cf/-CF and -I are incompatible"
+msgstr "-Cf/-CF ve -I uyumsuzdur"
+
+#: scan.l:480
+msgid "bad <start condition>: %s"
+msgstr "hatalý <baþlangýç þartý>: %s"
+
+#: main.c:492
+msgid "  %d backing-up (non-accepting) states\n"
+msgstr "  %d yedeklenmiþ (kabul-edilmeyen) durum\n"
+
+#: main.c:505
+msgid "  %d epsilon states, %d double epsilon states\n"
+msgstr "  %d epsilon durumu, %d çift epsilon durumu\n"
+
+#: main.c:239
+msgid "Can't use -+ with -CF option"
+msgstr "-+ yi -CF seçeneði ile kullanma"
+
+#: main.c:153
+msgid "rule cannot be matched"
+msgstr "kural eþlenemdi"
+
+#: main.c:796
+msgid "%s version %s\n"
+msgstr "%s sürüm %s\n"
+
+#: main.c:525
+msgid "  %d table entries\n"
+msgstr "  %d tablo girdileri\n"
+
+#: main.c:702
+msgid "unknown -C option '%c'"
+msgstr "bilinmeyen -C seçeneði '%c'"
+
+#: scan.l:412 scan.l:512
+msgid "bad character class"
+msgstr "hatalý karakter sýnýfý"
+
+#: main.c:185
+msgid "Can't use -f or -F with -l option"
+msgstr "-f veya -F'yi -l seçeneði ile kullanma"
+
+#: main.c:571
+msgid "  %d sets of reallocations needed\n"
+msgstr "  %d tekrar ayýrým kumesine ihtiyaç var\n"
+
+#: main.c:387
+msgid "No backing up.\n"
+msgstr "Yedekleme yok.\n"
+
+#: main.c:243
+msgid "%array incompatible with -+ option"
+msgstr "%array -+ seçeneði ile uyumsuz"
+
+#: main.c:485
+msgid "  %d rules\n"
+msgstr "  %d kural\n"
+
+#: main.c:517
+msgid "  %d state/nextstate pairs created\n"
+msgstr "  %d durumu/sonrakidurum çifti yaratýldý\n"
+
+#: scan.l:549
+msgid "bad character inside {}'s"
+msgstr "{}'ler içinde hatalý karakter"
+
+#: dfa.c:63
+msgid "State #%d is non-accepting -\n"
+msgstr "Durum #%d kabul edilmiyor -\n"
+
+#: dfa.c:219
+msgid ""
+"\n"
+" jam-transitions: EOF "
+msgstr ""
+"\n"
+" sýkýþýk-geçiþler: EOF "
+
+#: main.c:500
+msgid "  Beginning-of-line patterns used\n"
+msgstr "  Baþlangýç-satýrý kalýplarý kullanýldý\n"
+
+#: main.c:564
+msgid "  %d/%d meta-equivalence classes created\n"
+msgstr "  %d/%d ara-denklik sýnýflarý yaratýldý\n"
+
+#: main.c:372
+msgid "error writing output file %s"
+msgstr "çýktý dosyasý yazýlýrken hata: %s"
+
+#: gen.c:248
+msgid ""
+"\n"
+"\n"
+"Equivalence Classes:\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Denklik Sýnýflarý:\n"
+"\n"
+
+#: main.c:376
+msgid "error closing output file %s"
+msgstr "çýktý dosyasý kapatýlýrken hata: %s"
+
+#: main.c:862
+msgid "fatal parse error"
+msgstr "ölümcül ayrýþtýrma hatasý"
+
+#: main.c:502
+msgid "  %d/%d start conditions\n"
+msgstr "  %d/%d baþlangýç þartlarý\n"
+
+#: main.c:569
+msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
+msgstr "  %d (%d kaydedildi) saçýlma çarpýþmasý, %d DFA denk\n"
+
+#: scan.l:203
+msgid "incomplete name definition"
+msgstr "eksik isim tanýmlamasý"
+
+#: main.c:915
+msgid "yymore() entails a minor performance penalty\n"
+msgstr "yymore() bir küçük baþarým kaybýna neden olur\n"
+
+#: main.c:920
+msgid "REJECT entails a large performance penalty\n"
+msgstr "REJECT bir büyük baþarým kaybýna neden olur\n"
+
+#: main.c:924
+msgid "Variable trailing context rules entail a large performance penalty\n"
+msgstr "Deðiþken izleme ortamý kurallarý bir büyük baþarým kaybýna neden olur\n"
+
+#: main.c:937
+msgid "REJECT cannot be used with -f or -F"
+msgstr "REJECT -f veya -F ile kullanýlamadý"
+
+#: main.c:940
+msgid "%option yylineno cannot be used with -f or -F"
+msgstr "%option yylineno -f veya -F ile kullanýlamaz"
+
+#: main.c:943
+msgid "variable trailing context rules cannot be used with -f or -F"
+msgstr "deðiþken izleme ortamý kurallarý -f veya -F ile kullanýlamaz"
+
+#: main.c:1038
+msgid "%option yyclass only meaningful for C++ scanners"
+msgstr "%option yyclass sadece C++ tarayýcýlar için anlamlýdýr"
+
+#: main.c:1117
+msgid "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"
+msgstr "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -oçýktý -Pönek -Siskelet]\n"
+
+#: main.c:1119
+msgid "\t[--help --version] [file ...]\n"
+msgstr "\t[--help --version] [dosya ...]\n"
+
+#: main.c:1121
+msgid "\t-b  generate backing-up information to %s\n"
+msgstr "\t-b  yedekleme bilgisini %s'e üret\n"
+
+#: main.c:1123
+msgid "\t-c  do-nothing POSIX option\n"
+msgstr "\t-c  hiçbirþeyi POSIX seçenekli yapma\n"
+
+#: main.c:1124
+msgid "\t-d  turn on debug mode in generated scanner\n"
+msgstr "\t-d  oluþturulmuþ sýnýflar içerisinde hata ayýklama kipini aç\n"
+
+#: main.c:1125
+msgid "\t-f  generate fast, large scanner\n"
+msgstr "\t-f  hýzlý, geniþ tarayýcýlar oluþtur\n"
+
+#: main.c:1126
+msgid "\t-h  produce this help message\n"
+msgstr "\t-h  bu yardým iletisini üret\n"
+
+#: main.c:1127
+msgid "\t-i  generate case-insensitive scanner\n"
+msgstr "\t-i  büyük-küçük-duyarsýz tarayýcýlar üret\n"
+
+#: main.c:1128
+msgid "\t-l  maximal compatibility with original lex\n"
+msgstr "\t-l  özgün lex ile en yüksek seviyede uyumluluk\n"
+
+#: main.c:1129
+msgid "\t-n  do-nothing POSIX option\n"
+msgstr "\t-n  hiçbirþeyi POSIX seçenekli yapma\n"
+
+#: main.c:1130
+msgid "\t-p  generate performance report to stderr\n"
+msgstr "\t-p  baþarým raporunu stderr'a oluþtur\n"
+
+#: main.c:1132
+msgid "\t-s  suppress default rule to ECHO unmatched text\n"
+msgstr "\t-s  eþlenemeyen metni öntanýmlý kural ECHO'ya bas\n"
+
+#: main.c:1142
+msgid "\t-t  write generated scanner on stdout instead of %s\n"
+msgstr "\t-t  üretilen tarayýcýlarý %s'in yerine stdout'a yaz\n"
+
+#: main.c:1146
+msgid "\t-v  write summary of scanner statistics to f\n"
+msgstr "\t-v  tarayýcý istatistiklerinin özetini f'ye yaz\n"
+
+#: main.c:1147
+msgid "\t-w  do not generate warnings\n"
+msgstr "\t-w  uyarýlar üretme\n"
+
+#: main.c:1148
+msgid "\t-B  generate batch scanner (opposite of -I)\n"
+msgstr "\t-B  yýðýn tarayýcýlar üret (-I'nýn karþýtý)\n"
+
+#: main.c:1150
+msgid "\t-F  use alternative fast scanner representation\n"
+msgstr "\t-F  alternatif hýzlý tarayýcý gösterimini kullan\n"
+
+#: main.c:1152
+msgid "\t-I  generate interactive scanner (opposite of -B)\n"
+msgstr "\t-I  etkileþimli tarayýcý üret (-B'nin karþýtý)\n"
+
+#: main.c:1153
+msgid "\t-L  suppress #line directives in scanner\n"
+msgstr "\t-L  tarayýcý içinde #line bildirimlerini bas\n"
+
+#: main.c:1154
+msgid "\t-T  %s should run in trace mode\n"
+msgstr "\t-T  %s izleme kipinde çalýþmalý\n"
+
+#: main.c:1155
+msgid "\t-V  report %s version\n"
+msgstr "\t-V  %s sürümünü raporlar\n"
+
+#: main.c:1156
+msgid "\t-7  generate 7-bit scanner\n"
+msgstr "\t-7  7-bit tarayýcý oluþtur\n"
+
+#: main.c:1157
+msgid "\t-8  generate 8-bit scanner\n"
+msgstr "\t-8  8-bit tarayýcý oluþtur\n"
+
+#: main.c:1158
+msgid "\t-+  generate C++ scanner class\n"
+msgstr "\t-+  C++ tarayýcý sýnýfý oluþtur\n"
+
+#: main.c:1159
+msgid "\t-?  produce this help message\n"
+msgstr "\t-?  bu yardým iletisini üret\n"
+
+#: main.c:1161
+msgid "\t-C  specify degree of table compression (default is -Cem):\n"
+msgstr "\t-C  tablo sýkýþtýrmanýn derecesini belirle (-Cem öntanýmlýdýr):\n"
+
+#: main.c:1163
+msgid "\t\t-Ca  trade off larger tables for better memory alignment\n"
+msgstr "\t\t-Ca  daha iyi hafýza yerleþimi için daha büyük tablolarý deðiþtir\n"
+
+#: main.c:1164
+msgid "\t\t-Ce  construct equivalence classes\n"
+msgstr "\t\t-Ce  denklik sýnýflarýný oluþtur\n"
+
+#: main.c:1166
+msgid "\t\t-Cf  do not compress scanner tables; use -f representation\n"
+msgstr "\t\t-Cf  tarayýcý tablolarýný sýkýþtýrma; -f gösterimini kullan\n"
+
+#: main.c:1168
+msgid "\t\t-CF  do not compress scanner tables; use -F representation\n"
+msgstr ""
+"\t\t-CF  tarayýcý tablolarýný sýkýþtýrma; -F gösterimini kullan\n"
+"\n"
+
+#: main.c:1169
+msgid "\t\t-Cm  construct meta-equivalence classes\n"
+msgstr "\t\t-Cm  ara-denklik sýnýflarýný oluþtur\n"
+
+#: main.c:1171
+msgid "\t\t-Cr  use read() instead of stdio for scanner input\n"
+msgstr "\t\t-Cr  tarayýcý girdisi için stdionun yerine read() kullan\n"
+
+#: main.c:1172
+msgid "\t-o  specify output filename\n"
+msgstr "\t-o  çýktý dosya adýný belirle\n"
+
+#: main.c:1173
+msgid "\t-P  specify scanner prefix other than \"yy\"\n"
+msgstr "\t-P  tarayýc önekini \"yy\"'den farklý belirler\n"
+
+#: main.c:1174
+msgid "\t-S  specify skeleton file\n"
+msgstr "\t-S  iskelet dosyayý belirle\n"
+
+#: main.c:1175
+msgid "\t--help     produce this help message\n"
+msgstr "\t--help     bu yardým iletisini üret\n"
+
+#: main.c:1176
+msgid "\t--version  report %s version\n"
+msgstr "\t--version  %s sürümünü bildir\n"
+
+#: misc.c:42
+msgid "name \"%s\" ridiculously long"
+msgstr "isim \"%s\" gülünç derecede uzun"
+
+#: misc.c:91
+msgid "memory allocation failed in allocate_array()"
+msgstr "allocate_array() içinde hafýza ayýrýmý baþarýsýz"
+
+#: misc.c:169
+msgid "bad character '%s' detected in check_char()"
+msgstr "check_char() içinde hatalý karakter '%s' saptandý"
+
+#: misc.c:174
+msgid "scanner requires -8 flag to use the character %s"
+msgstr "tarayýcý %s karakterini kullanmak için -8 bayraðýna ihtiyaç duyar"
+
+#: misc.c:207
+msgid "dynamic memory failure in copy_string()"
+msgstr "copy_string() içinde dinamik hafýza baþarýsýzlýðý"
+
+#: misc.c:339
+msgid "%s: fatal internal error, %s\n"
+msgstr "%s: ölümcül iç hata, %s\n"
+
+#: misc.c:765
+msgid "attempt to increase array size failed"
+msgstr "dizi boyutunu artýrma çabasý baþarýsýz"
+
+#: misc.c:811
+msgid "bad line in skeleton file"
+msgstr "iskelet dosya içinde hatalý satýr"
+
+#: misc.c:864
+msgid "memory allocation failed in yy_flex_xmalloc()"
+msgstr "yy_flex_xmalloc() içinde hafýza ayýrýmý baþarýsýz"
+
+#: nfa.c:100
+msgid ""
+"\n"
+"\n"
+"********** beginning dump of nfa with start state %d\n"
+msgstr ""
+"\n"
+"\n"
+"********** nfa'nýn dökümü baþlangýç durumu %d ile baþlýyor\n"
+
+#: nfa.c:112
+msgid "state # %4d\t"
+msgstr "durum # %4d\t"
+
+#: nfa.c:127
+msgid "********** end of dump\n"
+msgstr "********** döküm sonu\n"
+
+#: nfa.c:173
+msgid "empty machine in dupmachine()"
+msgstr "dupmachine() içinde boþ makine"
+
+#: nfa.c:225
+msgid "Variable trailing context rule at line %d\n"
+msgstr "Deðiþken izleme ortamý satýr %d'de\n"
+
+#: nfa.c:347
+msgid "bad state type in mark_beginning_as_normal()"
+msgstr "mark_beginning_as_normal() içinde hatalý durum tipi"
+
+#: nfa.c:600
+msgid "input rules are too complicated (>= %d NFA states)"
+msgstr "girdi kurallarý çok karýþýk (>= %d NFA durumu)"
+
+#: nfa.c:679
+msgid "found too many transitions in mkxtion()"
+msgstr "mkxtion() içinde çok fazla geçiþ bulundu"
+
+#: nfa.c:705
+msgid "too many rules (> %d)!"
+msgstr "çok fazla kural (> %d)!"
+
+#: sym.c:78
+msgid "symbol table memory allocation failed"
+msgstr "simge tablosu hafýza ayýrýmý baþarýsýz"
+
+#: sym.c:188
+msgid "name defined twice"
+msgstr "isim iki defa tanýmlandý"
+
+#: sym.c:243
+msgid "start condition %s declared twice"
+msgstr "baþlangýç þartý %s iki defa bildirildi"
+
+#: yylex.c:55
+msgid "premature EOF"
+msgstr "erken EOF"
+
+#: yylex.c:204
+msgid "End Marker\n"
+msgstr "Bitiþ Ýþaretçisi\n"
+
+#: yylex.c:209
+msgid "*Something Weird* - tok: %d val: %d\n"
+msgstr "*Birþey Anlaþýlmaz* -andaç: %d deðer: %d\n"

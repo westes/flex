@@ -1,0 +1,669 @@
+# Messages français pour Flex.
+# Copyright (C) 1996 Free Software Foundation, Inc.
+# Dominique Boucher <boucherd@IRO.UMontreal.CA>, 1996.
+# Marc Baudoin <babafou@ensta.fr>, 1996.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: flex 2.5.2\n"
+"PO-Revision-Date: 1996-09-14 14:43 MET DST\n"
+"Last-Translator: Marc Baudoin <babafou@ensta.fr>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:361
+msgid "input error reading skeleton file %s"
+msgstr "erreur lors de la lecture du fichier canevas %s"
+
+#: main.c:898
+msgid " and may be the actual source of other reported performance penalties\n"
+msgstr " et peuvent être cause d'autres vices de performance observés\n"
+
+#: main.c:814
+msgid ""
+"%s: unknown flag '%c'.  For usage, try\n"
+"\t%s --help\n"
+msgstr ""
+"%s : option `%c' inconnue. Pour de l'aide, faites\n"
+"\t%s --help\n"
+
+#: dfa.c:211
+msgid " out-transitions: "
+msgstr " transitions de sortie : "
+
+#: main.c:394
+msgid "Compressed tables always back up.\n"
+msgstr "Les tables comprimées font toujours des retours-arrière.\n"
+
+#: main.c:896
+msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
+msgstr ""
+"L'option -l de compatibilité avec le « lex » d'AT&T entraîne une importante\n"
+"perte de performance\n"
+
+#: scan.l:493
+msgid "missing quote"
+msgstr "guillemet manquant"
+
+#: dfa.c:130
+msgid "dangerous trailing context"
+msgstr "le contexte traîné est dangereux"
+
+#: main.c:556
+msgid "  %d/%d equivalence classes created\n"
+msgstr "  %d/%d classes d'équivalence produites\n"
+
+#: main.c:158
+msgid "-s option given but default rule can be matched"
+msgstr "l'option -s est donnée mais la règle par défaut peut être reconnue"
+
+#: main.c:762
+msgid "-P flag must be given separately"
+msgstr "l'option -P doit être utilisée séparément"
+
+#: gen.c:426 gen.c:902
+msgid "state # %d accepts: [%d]\n"
+msgstr "l'état n° %d accepte : [%d]\n"
+
+#: main.c:401
+msgid "error closing backup file %s"
+msgstr "erreur lors de la fermeture du fichier de sauvegarde %s"
+
+#: main.c:753
+msgid "-o flag must be given separately"
+msgstr "l'option -o doit être utilisée séparément"
+
+#: main.c:774
+msgid "-S flag must be given separately"
+msgstr "l'option -S doit être utilisée séparément"
+
+#: main.c:302
+msgid "can't open skeleton file %s"
+msgstr "impossible d'ouvrir le fichier canevas %s"
+
+#: main.c:545
+msgid "  %d protos created\n"
+msgstr "  %d prototypes produits\n"
+
+#: dfa.c:1043
+msgid "bad transition character detected in sympartition()"
+msgstr "mauvais caractère de transition détecté dans sympartition()"
+
+#: dfa.c:606
+msgid "state # %d:\n"
+msgstr "état n° %d :\n"
+
+#: main.c:662
+msgid "-C flag must be given separately"
+msgstr "L'option -C doit être utilisée séparément"
+
+#: main.c:390
+msgid "%d backing up (non-accepting) states.\n"
+msgstr "%d états avec retour arrière (non-acceptants).\n"
+
+#: scan.l:136
+msgid "unrecognized '%' directive"
+msgstr "directive `%' inconnue"
+
+#: main.c:543
+msgid "  %d empty table entries\n"
+msgstr "  %d entrées vides dans la table\n"
+
+#: main.c:539
+msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
+msgstr "  %d/%d (max %d) entrées de modèle nxt-chk produites\n"
+
+#: main.c:533
+msgid "  %d/%d base-def entries created\n"
+msgstr "  %d/%d entrées base-def produites\n"
+
+#: dfa.c:173
+msgid " associated rule line numbers:"
+msgstr " numéros de ligne associés à la règle :"
+
+#: scan.l:286
+msgid "unrecognized %%option: %s"
+msgstr "%%option non-reconnue : %s"
+
+#: main.c:496
+msgid "  Compressed tables always back-up\n"
+msgstr "  Les tables comprimées font toujours des retours arrière\n"
+
+#: main.c:573
+msgid "  %d total table entries needed\n"
+msgstr "  %d entrées requises dans la table, au total\n"
+
+#: main.c:519
+msgid "  %d/%d unique/duplicate transitions\n"
+msgstr "  %d/%d transitions uniques/dupliquées\n"
+
+#: dfa.c:990
+msgid "consistency check failed in symfollowset"
+msgstr "le contrôle de cohérence a échoué dans symfollowset()"
+
+#: scan.l:533
+msgid "bad character class expression: %s"
+msgstr "mauvaise expression de classe de caractères : %s"
+
+#: scan.l:444
+msgid "undefined definition {%s}"
+msgstr "définition {%s} non-définie"
+
+#: main.c:397
+msgid "error writing backup file %s"
+msgstr "erreur lors de l'écriture du fichier de sauvegarde %s"
+
+#: scan.l:628
+msgid "EOF encountered inside an action"
+msgstr "Fin de fichier rencontrée à l'intérieur d'une action"
+
+#: main.c:874
+msgid "could not create backing-up info file %s"
+msgstr "impossible de créer le fichier d'information sur les retours-arrière %s"
+
+#: main.c:548
+msgid "  %d templates created, %d uses\n"
+msgstr "  %d modèles produits, %d usages\n"
+
+#: main.c:228
+msgid "-Cf/-CF are incompatible with lex-compatibility mode"
+msgstr "l'option -Cf/-CF n'est pas compatible avec le mode de compatibilité « lex »"
+
+#: scan.l:677
+msgid "can't open %s"
+msgstr "impossible d'ouvrir %s"
+
+#: main.c:489
+msgid "  No backing up\n"
+msgstr "  Pas de retour arrière\n"
+
+#: scan.l:555
+msgid "missing }"
+msgstr "`}' non-apparié"
+
+#: main.c:483
+msgid "  %d/%d DFA states (%d words)\n"
+msgstr "  %d/%d états AFD (%d mots)\n"
+
+#: scan.l:648
+msgid "bad character: %s"
+msgstr "mauvais caractère : %s"
+
+#: gen.c:925
+msgid "\n\nMeta-Equivalence Classes:\n"
+msgstr "\n\nClasses de Méta-Équivalence :\n"
+
+#: main.c:232
+msgid "-Cf/-CF and %option yylineno are incompatible"
+msgstr "-Cf/-CF et %option yylineno sont incompatibles"
+
+#: main.c:296
+msgid "could not create %s"
+msgstr "impossible de créer %s"
+
+#: dfa.c:585
+msgid "could not create unique end-of-buffer state"
+msgstr "impossible de créer un seul état de fin de tampon"
+
+#: main.c:365
+msgid "error closing skeleton file %s"
+msgstr "erreur lors de la fermeture du fichier canevas %s"
+
+#: main.c:911
+msgid "-I (interactive) entails a minor performance penalty\n"
+msgstr "l'option -I (interactif) entraîne une légère perte de performance\n"
+
+#: main.c:536
+msgid "  %d/%d (peak %d) nxt-chk entries created\n"
+msgstr "  %d/%d (max %d) entrées nxt-chk produites\n"
+
+#: main.c:235
+msgid "-Cf and -CF are mutually exclusive"
+msgstr "-Cf et -CF sont mutuellement exclusifs"
+
+#: main.c:407
+msgid "%s version %s usage statistics:\n"
+msgstr "« %s » version %s, statistiques d'utilisation :\n"
+
+#: main.c:221
+msgid "-Cf/-CF and -Cm don't make sense together"
+msgstr "-Cf/-CF et -Cm ne peuvent être spécifiés ensemble"
+
+#: main.c:512
+msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
+msgstr "  %d/%d classes de caractères requises %d/%d mots-mémoire, %d recyclés\n"
+
+#: main.c:380
+msgid "error deleting output file %s"
+msgstr "erreur lors de l'effacement du fichier de sortie %s"
+
+#: dfa.c:356
+msgid "consistency check failed in epsclosure()"
+msgstr "le contrôle de cohérence a échoué dans epsclosure()"
+
+#: main.c:481
+msgid "  %d/%d NFA states\n"
+msgstr "  %d/%d états NFA\n"
+
+#: main.c:509
+msgid "  no character classes\n"
+msgstr "  pas de classes de caractères\n"
+
+#: main.c:904
+msgid "%%option yylineno entails a large performance penalty\n"
+msgstr "%%option yylineno entraîne une importante perte de performance\n"
+
+#: main.c:182
+msgid "Can't use -+ with -l option"
+msgstr "L'option -+ ne peut être combinée à -l"
+
+#: dfa.c:439
+msgid "\n\nDFA Dump:\n\n"
+msgstr "\n\nVidage de l'AFD :\n\n"
+
+#: main.c:410
+msgid "  scanner options: -"
+msgstr "  options de l'analyseur lexical : -"
+
+#: gen.c:823
+msgid "state # %d accepts: "
+msgstr "l'état n° %d accepte : "
+
+#: main.c:224
+msgid "-Cf/-CF and -I are incompatible"
+msgstr "-Cf/-CF et -I sont incompatibles"
+
+#: scan.l:480
+msgid "bad <start condition>: %s"
+msgstr "mauvaise <condition de départ> : %s"
+
+#: main.c:492
+msgid "  %d backing-up (non-accepting) states\n"
+msgstr "  %d états avec retour arrière (si non-acceptants)\n"
+
+#: main.c:505
+msgid "  %d epsilon states, %d double epsilon states\n"
+msgstr "  %d états epsilon, %d états double epsilon\n"
+
+#: main.c:239
+msgid "Can't use -+ with -CF option"
+msgstr "L'option -+ ne peut être combinée à -CF"
+
+#: main.c:153
+msgid "rule cannot be matched"
+msgstr "la règle ne peut être reconnue"
+
+#: main.c:796
+msgid "%s version %s\n"
+msgstr "« %s » version %s\n"
+
+#: main.c:525
+msgid "  %d table entries\n"
+msgstr "  %d entrées dans la table\n"
+
+#: main.c:702
+msgid "unknown -C option '%c'"
+msgstr "l'option -C `%c' inconnue"
+
+#: scan.l:412 scan.l:512
+msgid "bad character class"
+msgstr "mauvaise classe de caractères"
+
+#: main.c:185
+msgid "Can't use -f or -F with -l option"
+msgstr "Les options -f et -F ne peuvent être combinées à -l"
+
+#: main.c:571
+msgid "  %d sets of reallocations needed\n"
+msgstr "  %d ensembles de réallocations requis\n"
+
+#: main.c:387
+msgid "No backing up.\n"
+msgstr "Pas de retour-arrière.\n"
+
+#: main.c:243
+msgid "%array incompatible with -+ option"
+msgstr "%array incompatible avec l'option -+"
+
+#: main.c:485
+msgid "  %d rules\n"
+msgstr "  %d règles\n"
+
+#: main.c:517
+msgid "  %d state/nextstate pairs created\n"
+msgstr "  %d paires state/nextstate produites\n"
+
+#: scan.l:549
+msgid "bad character inside {}'s"
+msgstr "mauvais caractère entre accolades `{}'"
+
+#: dfa.c:63
+msgid "State #%d is non-accepting -\n"
+msgstr "L'état n° %d n'accepte pas -\n"
+
+#: dfa.c:219
+msgid "\n jam-transitions: EOF "
+msgstr "\n transitions-bouchon : EOF "
+
+#: main.c:500
+msgid "  Beginning-of-line patterns used\n"
+msgstr "  Modèles utilisés en début de ligne\n"
+
+#: main.c:564
+msgid "  %d/%d meta-equivalence classes created\n"
+msgstr "  %d/%d classes de méta-équivalence produites\n"
+
+#: main.c:372
+msgid "error writing output file %s"
+msgstr "erreur lors de l'écriture du fichier de sortie %s"
+
+#: gen.c:248
+msgid "\n\nEquivalence Classes:\n\n"
+msgstr "\n\nClasses d'Équivalence :\n\n"
+
+#: main.c:376
+msgid "error closing output file %s"
+msgstr "erreur lors de la fermeture du fichier de sortie %s"
+
+#: main.c:862
+msgid "fatal parse error"
+msgstr "erreur de lecture fatale"
+
+#: main.c:502
+msgid "  %d/%d start conditions\n"
+msgstr "  %d/%d conditions de départ\n"
+
+#: main.c:569
+msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
+msgstr "  %d (%d sauvés) collisions durant dispersion, %d AFD égaux\n"
+
+#: scan.l:203
+msgid "incomplete name definition"
+msgstr "définition de nom incomplète"
+
+#: main.c:915
+msgid "yymore() entails a minor performance penalty\n"
+msgstr "yymore() entraîne une petite baisse de performance\n"
+
+#: main.c:920
+msgid "REJECT entails a large performance penalty\n"
+msgstr "REJECT entraîne une importante baisse de performance\n"
+
+#: main.c:924
+msgid "Variable trailing context rules entail a large performance penalty\n"
+msgstr ""
+"Les règles de contexte traîné variable entraînent une importante baisse de\n"
+"performance\n"
+
+#: main.c:937
+msgid "REJECT cannot be used with -f or -F"
+msgstr "REJECT ne peut pas être utilisé avec -f ou -F"
+
+#: main.c:940
+msgid "%option yylineno cannot be used with -f or -F"
+msgstr "%option yylineno incompatible avec -f ou -F"
+
+#: main.c:943
+msgid "variable trailing context rules cannot be used with -f or -F"
+msgstr ""
+"les règles de contexte traîné variable ne peuvent pas être utilisées avec\n"
+"-f ou -F"
+
+#: main.c:1038
+msgid "%option yyclass only meaningful for C++ scanners"
+msgstr "%option yyclass n'a de sens qu'avec les analyseurs C++"
+
+#: main.c:1117
+msgid "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"
+msgstr "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -osortie -Ppréfixe -Scanevas]\n"
+
+#: main.c:1119
+msgid "\t[--help --version] [file ...]\n"
+msgstr "\t[--help --version] [fichier ...]\n"
+
+#: main.c:1121
+msgid "\t-b  generate backing-up information to %s\n"
+msgstr "\t-b  génère des informations de retour arrière dans %s\n"
+
+#: main.c:1123
+msgid "\t-c  do-nothing POSIX option\n"
+msgstr "\t-c  option POSIX pour ne rien faire\n"
+
+#: main.c:1124
+msgid "\t-d  turn on debug mode in generated scanner\n"
+msgstr "\t-d  active le mode de déverminage dans l'analyseur généré\n"
+
+#: main.c:1125
+msgid "\t-f  generate fast, large scanner\n"
+msgstr "\t-f  génère un analyseur rapide et volumineux\n"
+
+#: main.c:1126
+msgid "\t-h  produce this help message\n"
+msgstr "\t-h  affiche ce message d'aide\n"
+
+#: main.c:1127
+msgid "\t-i  generate case-insensitive scanner\n"
+msgstr "\t-i  génère un analyseur insensible à la casse\n"
+
+#: main.c:1128
+msgid "\t-l  maximal compatibility with original lex\n"
+msgstr "\t-l  compatibilité maximale avec le « lex » original\n"
+
+#: main.c:1129
+msgid "\t-n  do-nothing POSIX option\n"
+msgstr "\t-n  option POSIX pour ne rien faire\n"
+
+#: main.c:1130
+msgid "\t-p  generate performance report to stderr\n"
+msgstr "\t-p  affiche un rapport de performance sur stderr\n"
+
+#: main.c:1132
+msgid "\t-s  suppress default rule to ECHO unmatched text\n"
+msgstr "\t-s  supprime la règle par défaut qui AFFICHE le texte non reconnu\n"
+
+#: main.c:1142
+msgid "\t-t  write generated scanner on stdout instead of %s\n"
+msgstr "\t-t  écrit l'analyseur généré sur la sortie standard au lieu de %s\n"
+
+#: main.c:1146
+msgid "\t-v  write summary of scanner statistics to f\n"
+msgstr "\t-v  écrit un résumé des statistiques de l'analyseur sur f\n"
+
+#: main.c:1147
+msgid "\t-w  do not generate warnings\n"
+msgstr "\t-w  ne génère pas d'avertissements\n"
+
+#: main.c:1148
+msgid "\t-B  generate batch scanner (opposite of -I)\n"
+msgstr "\t-B  génère un analyseur non-interactif (inverse de -I)\n"
+
+#: main.c:1150
+msgid "\t-F  use alternative fast scanner representation\n"
+msgstr "\t-F  produit une représentation plus efficace de l'analyseur\n"
+
+#: main.c:1152
+msgid "\t-I  generate interactive scanner (opposite of -B)\n"
+msgstr "\t-I  génère un analyseur interactif (inverse de -B)\n"
+
+#: main.c:1153
+msgid "\t-L  suppress #line directives in scanner\n"
+msgstr "\t-L  supprime les directives #line dans l'analyseur\n"
+
+#: main.c:1154
+msgid "\t-T  %s should run in trace mode\n"
+msgstr "\t-T  %s devrait fonctionner en mode trace\n"
+
+#: main.c:1155
+msgid "\t-V  report %s version\n"
+msgstr "\t-V  indique la version de « %s »\n"
+
+#: main.c:1156
+msgid "\t-7  generate 7-bit scanner\n"
+msgstr "\t-7  génère un analyseur 7 bits\n"
+
+#: main.c:1157
+msgid "\t-8  generate 8-bit scanner\n"
+msgstr "\t-8  génère un analyseur 8 bits\n"
+
+#: main.c:1158
+msgid "\t-+  generate C++ scanner class\n"
+msgstr "\t-+  génère un analyseur sous forme de classe C++\n"
+
+#: main.c:1159
+msgid "\t-?  produce this help message\n"
+msgstr "\t-?  affiche ce message d'aide\n"
+
+#: main.c:1161
+msgid "\t-C  specify degree of table compression (default is -Cem):\n"
+msgstr "\t-C  spécifie le degré de compression des tables (-Cem par défaut) :\n"
+
+#: main.c:1163
+msgid "\t\t-Ca  trade off larger tables for better memory alignment\n"
+msgstr ""
+"\t\t-Ca  produit des tables plus encombrantes pour un meilleur\n"
+"alignement en mémoire\n"
+
+#: main.c:1164
+msgid "\t\t-Ce  construct equivalence classes\n"
+msgstr "\t\t-Ce  construit des classes d'équivalence\n"
+
+#: main.c:1166
+msgid "\t\t-Cf  do not compress scanner tables; use -f representation\n"
+msgstr "\t\t-Cf  ne comprime pas les tables de l'analyseur ; utilise la représentation -f\n"
+
+#: main.c:1168
+msgid "\t\t-CF  do not compress scanner tables; use -F representation\n"
+msgstr "\t\t-CF  ne comprime pas les tables de l'analyseur ; utilise la représentation -F\n"
+
+#: main.c:1169
+msgid "\t\t-Cm  construct meta-equivalence classes\n"
+msgstr "\t\t-Cm  construit des classes de meta-équivalence\n"
+
+#: main.c:1171
+msgid "\t\t-Cr  use read() instead of stdio for scanner input\n"
+msgstr "\t\t-Cr  utilise read() au lieu de stdio pour l'entrée de l'analyseur\n"
+
+#: main.c:1172
+msgid "\t-o  specify output filename\n"
+msgstr "\t-o  spécifie le nom du fichier de sortie\n"
+
+#: main.c:1173
+msgid "\t-P  specify scanner prefix other than \"yy\"\n"
+msgstr "\t-P  spécifie un préfixe d'analyseur autre que \"yy\"\n"
+
+#: main.c:1174
+msgid "\t-S  specify skeleton file\n"
+msgstr "\t-S  spécifie le fichier canevas\n"
+
+#: main.c:1175
+msgid "\t--help     produce this help message\n"
+msgstr "\t--help     affiche ce message d'aide\n"
+
+#: main.c:1176
+msgid "\t--version  report %s version\n"
+msgstr "\t--version  indique la version de « %s »\n"
+
+#: misc.c:42
+msgid "name \"%s\" ridiculously long"
+msgstr "le nom \"%s\" est ridiculement long"
+
+#: misc.c:91
+msgid "memory allocation failed in allocate_array()"
+msgstr "échec d'allocation mémoire dans allocate_array()"
+
+#: misc.c:169
+msgid "bad character '%s' detected in check_char()"
+msgstr "mauvais caractère `%s' détecté dans check_char()"
+
+#: misc.c:174
+msgid "scanner requires -8 flag to use the character %s"
+msgstr "l'analyseur nécessite l'option -8 pour pouvoir utiliser le caractère %s"
+
+#: misc.c:207
+msgid "dynamic memory failure in copy_string()"
+msgstr "échec de mémoire dynamique dans copy_string()"
+
+#: misc.c:339
+msgid "%s: fatal internal error, %s\n"
+msgstr "%s : erreur interne fatale, %s\n"
+
+#: misc.c:765
+msgid "attempt to increase array size failed"
+msgstr "échec de la tentative d'augmenter la taille du tableau"
+
+#: misc.c:811
+msgid "bad line in skeleton file"
+msgstr "mauvaise ligne dans le fichier canevas"
+
+#: misc.c:864
+msgid "memory allocation failed in yy_flex_xmalloc()"
+msgstr "échec d'allocation mémoire dans yy_flex_xmalloc()"
+
+#: nfa.c:100
+msgid "\n\n********** beginning dump of nfa with start state %d\n"
+msgstr "\n\n********** début du vidage de nfa avec %d pour état de départ\n"
+
+#: nfa.c:112
+msgid "state # %4d\t"
+msgstr "état n° %4d\t"
+
+#: nfa.c:127
+msgid "********** end of dump\n"
+msgstr "********** fin du vidage\n"
+
+#: nfa.c:173
+msgid "empty machine in dupmachine()"
+msgstr "machine vide dans dupmachine()"
+
+#: nfa.c:225
+msgid "Variable trailing context rule at line %d\n"
+msgstr "Règle de contexte traîné variable à la ligne %d\n"
+
+#: nfa.c:347
+msgid "bad state type in mark_beginning_as_normal()"
+msgstr "mauvais type d'état dans mark_beginning_as_normal()"
+
+#: nfa.c:600
+msgid "input rules are too complicated (>= %d NFA states)"
+msgstr "les règles d'entrée sont trop compliquées (>= %d états NFA)"
+
+#: nfa.c:679
+msgid "found too many transitions in mkxtion()"
+msgstr "il y a trop de transitions dans mkxtion()"
+
+#: nfa.c:705
+msgid "too many rules (> %d)!"
+msgstr "trop de règles (> %d) !"
+
+#: sym.c:78
+msgid "symbol table memory allocation failed"
+msgstr "échec de l'allocation mémoire de la table des symboles"
+
+#: sym.c:188
+msgid "name defined twice"
+msgstr "nom défini deux fois"
+
+#: sym.c:243
+msgid "start condition %s declared twice"
+msgstr "condition de départ %s déclarée deux fois"
+
+#: yylex.c:55
+msgid "premature EOF"
+msgstr "fin de fichier inattendue"
+
+#: yylex.c:204
+msgid "End Marker\n"
+msgstr "Marqueur de Fin\n"
+
+#: yylex.c:209
+msgid "*Something Weird* - tok: %d val: %d\n"
+msgstr "*Très bizarre* - tok : %d val : %d\n"
+
+#~ msgid ""
+#~ "%s: unknown flag '%c'.  For usage, try\n"
+#~ "\t%s --help\n"
+#~ msgstr ""
+#~ "%s : indicateur `%c' inconnu. Pour la recette d'usage, demandez\n"
+#~ "\t%s --help\n"
