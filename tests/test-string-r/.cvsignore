@@ -1,4 +1,5 @@
 Makefile
+makefile.in
 parser.c
 parser.h
 scanner.c
