@@ -62,14 +62,7 @@ void *allocate_array( size, element_size )
 int size, element_size;
 	{
 	register void *mem;
-	int num_bytes = element_size * size;
-
-	/* On 16-bit int machines (e.g., 80286) we might be trying to
-	 * allocate more than a signed int can hold, and that won't
-	 * work.  Cheap test:
-	 */
-	if ( num_bytes <= 0 )
-		flexfatal( "request for < 1 byte in allocate_array()" );
+	unsigned int num_bytes = element_size * size;
 
 	mem = yy_flex_alloc( num_bytes );
 
@@ -178,12 +171,14 @@ register char *str;
 	{
 	register char *c;
 	char *copy;
+	unsigned int size;
 
 	/* find length */
 	for ( c = str; *c; ++c )
 		;
 
-	copy = (char *) yy_flex_alloc( (c - str + 1) * sizeof( char ) );
+	size = (c - str + 1) * sizeof( char );
+	copy = (char *) yy_flex_alloc( size );
 
 	if ( copy == NULL )
 		flexfatal( "dynamic memory failure in copy_string()" );
@@ -750,12 +745,7 @@ void *array;
 int size, element_size;
 	{
 	register void *new_array;
-	int num_bytes = element_size * size;
-
-	/* Same worry as in allocate_array(): */
-	if ( num_bytes <= 0 )
-		flexfatal(
-			"attempt to increase array size by less than 1 byte" );
+	unsigned int num_bytes = element_size * size;
 
 	new_array = yy_flex_realloc( array, num_bytes );
 
@@ -855,7 +845,7 @@ int element_v, element_n;
 void *yy_flex_xmalloc( size )
 int size;
 	{
-	void *result = yy_flex_alloc( size );
+	void *result = yy_flex_alloc( (unsigned) size );
 
 	if ( ! result  )
 		flexfatal( "memory allocation failed in yy_flex_xmalloc()" );
