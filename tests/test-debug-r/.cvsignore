@@ -1,0 +1,9 @@
+Makefile
+Makefile.in
+parser.c
+parser.h
+scanner.c
+TEMPLATE
+OUTPUT
+.deps
+test-debug-r

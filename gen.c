@@ -1191,7 +1191,7 @@ void make_tables()
 
 	if ( ddebug )
 		{ /* Spit out table mapping rules to line numbers. */
-		if ( ! C_plus_plus )
+		if ( ! C_plus_plus && ! reentrant )
 			{
 			indent_puts( "extern int yy_flex_debug;" );
 			indent_puts( "int yy_flex_debug = 1;\n" );

@@ -26,6 +26,8 @@ noinst_SCRIPTS = \
 	create-test
 
 SUBDIRS = \
+	test-debug-nr \
+	test-debug-r \
 	test-lineno-r \
 	test-lineno-nr \
 	TEMPLATE \
