@@ -1002,7 +1002,7 @@ void line_pinpoint( str, line )
 const char *str;
 int line;
 	{
-	fprintf( stderr, "%s: %d: %s\n", infilename, line, str );
+	fprintf( stderr, "%s:%d: %s\n", infilename, line, str );
 	}
 
 
