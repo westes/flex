@@ -3,7 +3,7 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* after version 2.5.25
+* version 2.5.26 released 2003-1-14
 
 ** Fixed table deserialization bug on big-endian archs. Patch sent from Bryce Nichols <bryce@bnichols.org>
 
