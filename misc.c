@@ -167,7 +167,7 @@ void check_char( int c )
 Char clower( c )
 register int c;
 	{
-	return (isascii( c ) && isupper( c )) ? tolower( c ) : c;
+	return (Char) ((isascii( c ) && isupper( c )) ? tolower( c ) : c);
 	}
 
 
@@ -496,17 +496,19 @@ Char array[];
 
 	switch ( array[1] )
 		{
-#ifdef __STDC__
-		case 'a': return '\a';
-#else
-		case 'a': return '\007';
-#endif
 		case 'b': return '\b';
 		case 'f': return '\f';
 		case 'n': return '\n';
 		case 'r': return '\r';
 		case 't': return '\t';
+
+#ifdef __STDC__
+		case 'a': return '\a';
 		case 'v': return '\v';
+#else
+		case 'a': return '\007';
+		case 'v': return '\013';
+#endif
 
 		case '0':
 		case '1':
@@ -593,15 +595,16 @@ register int c;
 		{
 		switch ( c )
 			{
-#ifdef __STDC__
-			case '\a': return "\\a";
-#endif
 			case '\b': return "\\b";
 			case '\f': return "\\f";
 			case '\n': return "\\n";
 			case '\r': return "\\r";
 			case '\t': return "\\t";
+
+#ifdef __STDC__
+			case '\a': return "\\a";
 			case '\v': return "\\v";
+#endif
 
 			default:
 				(void) sprintf( rform, "\\%.3o",
