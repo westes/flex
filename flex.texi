@@ -2240,7 +2240,7 @@ cause a serious loss of performance in the resulting scanner.  If you
 give the flag twice, you will also get comments regarding features that
 lead to minor performance losses.
 
-Note that the use of @code{REJECT}, @code{%option yylineno}, and
+Note that the use of @code{REJECT}, and
 variable trailing context (@pxref{Limitations}) entails a substantial
 performance penalty; use of @code{yymore()}, the @samp{^} operator, and
 the @samp{--interactive} flag entail minor performance penalties.
@@ -2767,11 +2767,12 @@ which degrade performance.  These are, from most expensive to least:
 @example
 @verbatim
     REJECT
-    %option yylineno
     arbitrary trailing context
 
     pattern sets that require backing up
+    %option yylineno
     %array
+
     %option interactive
     %option always-interactive
 
@@ -2780,7 +2781,7 @@ which degrade performance.  These are, from most expensive to least:
 @end verbatim
 @end example
 
-with the first three all being quite expensive and the last two being
+with the first two all being quite expensive and the last two being
 quite cheap.  Note also that @code{unput()} is implemented as a routine
 call that potentially does quite a bit of work, while @code{yyless()} is
 a quite-cheap macro. So if you are just putting back some excess text
@@ -2788,6 +2789,25 @@ you scanned, use @code{ss()}.
 
 @code{REJECT} should be avoided at all costs when performance is
 important.  It is a particularly expensive option.
+
+There is one case when @code{%option yylineno} can be expensive. That is when
+your patterns match long tokens that could @emph{possibly} contain a newline
+character. There is no performance penalty for rules that can not possibly
+match newlines, since flex does not need to check them for newlines.  In
+general, you should avoid rules such as @code{[^f]+}, which match very long
+tokens, including newlines, and may possibly match your entire file! A better
+approach is to separate @code{[^f]+} into two rules:
+
+@example
+@verbatim
+%option yylineno
+%%
+    [^f\n]+
+    \n+
+@end verbatim
+@end example
+
+The above scanner does not incur a performance penalty.
 
 @cindex patterns, tuning for performance
 @cindex performance, backing up
