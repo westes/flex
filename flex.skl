@@ -225,7 +225,6 @@ static int yy_start = 0;	/* start state number */
  */
 static int yy_did_buffer_switch_on_eof;
 
-static void yyunput YY_PROTO(( int c, char *buf_ptr ));
 void yyrestart YY_PROTO(( FILE *input_file ));
 void yy_switch_to_buffer YY_PROTO(( YY_BUFFER_STATE new_buffer ));
 void yy_load_buffer_state YY_PROTO(( void ));
@@ -244,6 +243,9 @@ static void yy_flex_free YY_PROTO(( void * ));
 
 #define yy_new_buffer yy_create_buffer
 
+#define yy_set_interactive(is_interactive) \
+	(yy_current_buffer->yy_current_buffer = is_interactive)
+
 %% yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
 
 #ifndef yywrap
@@ -254,10 +256,15 @@ extern int yywrap YY_PROTO(( void ));
 #endif
 #endif
 
+#ifndef YY_NO_UNPUT
+static void yyunput YY_PROTO(( int c, char *buf_ptr ));
+#endif
+
 #ifndef yytext_ptr
 static void yy_flex_strncpy YY_PROTO(( char *, const char *, int ));
 #endif
 
+#ifndef YY_NO_INPUT
 %- Standard (non-C++) definition
 #ifdef __cplusplus
 static int yyinput YY_PROTO(( void ));
@@ -265,6 +272,7 @@ static int yyinput YY_PROTO(( void ));
 static int input YY_PROTO(( void ));
 #endif
 %*
+#endif
 
 %- Standard (non-C++) definition
 static yy_state_type yy_get_previous_state YY_PROTO(( void ));
@@ -303,6 +311,11 @@ static void yy_pop_state YY_PROTO(( void ));
 #ifndef YY_NO_TOP_STATE
 static int yy_top_state YY_PROTO(( void ));
 #endif
+
+#else
+#define YY_NO_PUSH_STATE 1
+#define YY_NO_POP_STATE 1
+#define YY_NO_TOP_STATE 1
 #endif
 
 #ifdef YY_MALLOC_DECL
@@ -1094,7 +1107,15 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 	b->yy_buf_pos = &b->yy_ch_buf[1];
 
 %-
+#if YY_ALWAYS_INTERACTIVE
+	b->yy_is_interactive = 1;
+#else
+#if YY_NEVER_INTERACTIVE
+	b->yy_is_interactive = 0;
+#else
 	b->yy_is_interactive = file ? isatty( fileno(file) ) : 0;
+#endif
+#endif
 %+
 	b->yy_is_interactive = 0;
 %*
