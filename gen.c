@@ -663,9 +663,12 @@ int worry_about_NULs;
 
 void gen_NUL_trans()
 	{ /* NOTE - changes in here should be reflected in gen_next_match() */
+	/* Only generate a definition for "yy_cp" if we'll generate code
+	 * that uses it.  Otherwise lint and the like complain.
+	 */
 	int need_backing_up = (num_backing_up > 0 && ! reject);
 
-	if ( need_backing_up )
+	if ( need_backing_up && ! nultrans )
 		/* We'll need yy_cp lying around for the gen_backing_up(). */
 		indent_puts( "register char *yy_cp = yy_c_buf_p;" );
 
