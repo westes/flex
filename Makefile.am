@@ -91,16 +91,16 @@ EXTRA_DIST = \
 	TODO \
 	autogen.sh \
 	flex.skl \
-	mkskel.sh \
-	tests \
-	to.do \
-	examples \
-	faqs 
+	mkskel.sh
+
 
 BUILT_SOURCES = \
 	skel.c \
 	parse.c \
-scan.c
+	scan.c
+
+SUBDIRS = \
+	examples
 
 # We have a few dependencies and rules to enumerate. (from the old
 # Makefile.in by Vern)
@@ -134,7 +134,3 @@ ChangeLog:
 .PHONY: ChangeLog
 
 dist-hook:
-	-if test ! "x$(distdir)" = "x" ; then \
-         rm -rf `find $(distdir)/ -name CVS` ;\
-     fi;
-	-cd $(PACKAGE)-$(VERSION) && ./autogen.sh
