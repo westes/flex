@@ -23,16 +23,20 @@ static char rcsid[] =
 
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
-int interactive, caseins, useecs, fulltbl, usemecs, reject;
-int fullspd, gen_line_dirs, performance_report;
+int interactive, caseins, useecs, fulltbl, usemecs;
+int fullspd, gen_line_dirs, performance_report, backtrack_report;
+int yymore_used, reject, real_reject;
+int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum;
 FILE *skelfile = NULL;
 char *infilename = NULL;
 int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
-int current_mns, accnum, lastnfa;
+int current_mns, num_rules, current_max_rules, lastnfa;
 int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
-int *accptnum, *assoc_rule;
+int *accptnum, *assoc_rule, *state_type, *rule_type, *rule_linenum;
+int current_state_type;
+int variable_trailing_context_rules;
 int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs, tecfwd[CSIZE + 1];
@@ -43,7 +47,7 @@ int current_max_template_xpairs, current_max_dfas;
 int lastdfa, *nxt, *chk, *tnxt;
 int *base, *def, tblend, firstfree, **dss, *dfasiz;
 union dfaacc_union *dfaacc;
-int *accsiz, *dhash, *todo, todo_head, todo_next, numas;
+int *accsiz, *dhash, numas;
 int numsnpairs, jambase, jamstate;
 int lastccl, current_maxccls, *cclmap, *ccllen, *cclng, cclreuse;
 int current_max_ccl_tbl_size;
@@ -53,11 +57,12 @@ int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 int num_backtracking, bol_needed;
 FILE *temp_action_file;
+FILE *backtrack_file;
 int end_of_buffer_state;
 #ifndef SHORT_FILE_NAMES
-char *action_file_name = "/tmp/flexXXXXXX";
+char action_file_name[] = "/tmp/flexXXXXXX";
 #else
-char *action_file_name = "flexXXXXXX.tmp";
+char action_file_name[] = "flexXXXXXX.tmp";
 #endif
 
 
@@ -78,6 +83,46 @@ char **argv;
 
     if ( ! syntaxerror )
 	{
+	if ( yymore_really_used == REALLY_USED )
+	    yymore_used = true;
+	else if ( yymore_really_used == REALLY_NOT_USED )
+	    yymore_used = false;
+
+	if ( reject_really_used == REALLY_USED )
+	    reject = true;
+	else if ( reject_really_used == REALLY_NOT_USED )
+	    reject = false;
+
+	if ( performance_report )
+	    {
+	    if ( yymore_used )
+		fprintf( stderr,
+			 "yymore() entails a minor performance penalty\n" );
+
+	    if ( reject )
+		fprintf( stderr,
+			 "REJECT entails a large performance penalty\n" );
+
+	    if ( variable_trailing_context_rules )
+		fprintf( stderr,
+    "Variable trailing context rules entail a large performance penalty\n" );
+	    }
+
+	if ( reject )
+	    real_reject = true;
+
+	if ( variable_trailing_context_rules )
+	    reject = true;
+
+	if ( (fulltbl || fullspd) && reject )
+	    {
+	    if ( real_reject )
+		flexerror( "REJECT cannot be used with -f or -F" );
+	    else
+		flexerror(
+	    "variable trailing context rules cannot be used with -f or -F" );
+	    }
+
 	/* convert the ndfa to a dfa */
 	ntod();
 
@@ -121,6 +166,20 @@ int status;
 	(void) unlink( action_file_name );
 	}
 
+    if ( backtrack_report )
+	{
+	if ( num_backtracking == 0 )
+	    fprintf( backtrack_file, "No backtracking.\n" );
+	else if ( fullspd || fulltbl )
+	    fprintf( backtrack_file,
+		     "%d backtracking (non-accepting) states.\n",
+		     num_backtracking );
+	else
+	    fprintf( backtrack_file, "Compressed tables always backtrack.\n" );
+
+	(void) fclose( backtrack_file );
+	}
+
     if ( printstats )
 	{
 	endtime = gettime();
@@ -132,7 +191,7 @@ int status;
 	fprintf( stderr, "  %d/%d NFA states\n", lastnfa, current_mns );
 	fprintf( stderr, "  %d/%d DFA states (%d words)\n", lastdfa,
 			 current_max_dfas, totnst );
-	fprintf( stderr, "  %d rules\n", accnum - 1 /* - 1 for def. rule */ );
+	fprintf( stderr, "  %d rules\n", num_rules - 1 /* - 1 for def. rule */ );
 
 	if ( num_backtracking == 0 )
 	    fprintf( stderr, "  No backtracking\n" );
@@ -232,7 +291,9 @@ char **argv;
     char *arg, *skelname = NULL, *gettime(), clower(), *mktemp();
 
     printstats = syntaxerror = trace = spprdflt = interactive = caseins = false;
-    performance_report = ddebug = fulltbl = reject = fullspd = false;
+    backtrack_report = performance_report = ddebug = fulltbl = fullspd = false;
+    yymore_used = reject = false;
+    yymore_really_used = reject_really_used = false;
     gen_line_dirs = usemecs = useecs = true;
 
     sawcmpflag = false;
@@ -249,6 +310,10 @@ char **argv;
 	for ( i = 1; arg[i] != '\0'; ++i )
 	    switch ( arg[i] )
 		{
+		case 'b':
+		    backtrack_report = true;
+		    break;
+
 		case 'c':
 		    if ( i != 1 )
 			flexerror( "-c flag must be given separately" );
@@ -318,10 +383,6 @@ char **argv;
 		    performance_report = true;
 		    break;
 
-		case 'r':
-		    reject = true;
-		    break;
-
 		case 'S':
 		    if ( i != 1 )
 			flexerror( "-S flag must be given separately" );
@@ -360,14 +421,8 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
     if ( (fulltbl || fullspd) && interactive )
 	flexerror( "full table and -I are (currently) incompatible" );
 
-    if ( (fulltbl || fullspd) && reject )
-	flexerror( "reject (-r) cannot be used with -f or -F" );
-
     if ( fulltbl && fullspd )
 	flexerror( "full table and -F are mutually exclusive" );
-
-    if ( performance_report && reject )
-	fprintf( stderr, "Reject guarentees performance penalties\n" );
 
     if ( ! skelname )
 	{
@@ -407,6 +462,22 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
     else
 	yyin = stdin;
 
+    if ( backtrack_report )
+	{
+#ifndef SHORT_FILE_NAMES
+	backtrack_file = fopen( "lex.backtrack", "w" );
+#else
+	backtrack_file = fopen( "lex.bck", "w" );
+#endif
+
+	if ( backtrack_file == NULL )
+	    flexerror( "could not create lex.backtrack" );
+	}
+
+    else
+	backtrack_file = NULL;
+
+
     lastccl = 0;
     lastsc = 0;
 
@@ -421,11 +492,11 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
     if ( (temp_action_file = fopen( action_file_name, "w" )) == NULL )
 	lerrsf( "can't open temporary action file %s", action_file_name );
 
-    lastdfa = lastnfa = accnum = numas = numsnpairs = tmpuses = 0;
+    lastdfa = lastnfa = num_rules = numas = numsnpairs = tmpuses = 0;
     numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst = 0;
     numuniq = numdup = hshsave = eofseen = datapos = dataline = 0;
     num_backtracking = onesp = numprots = 0;
-    bol_needed = false;
+    variable_trailing_context_rules = bol_needed = false;
 
     linenum = sectnum = 1;
     firstprot = NIL;
@@ -515,6 +586,11 @@ set_up_initial_allocations()
     trans2 = allocate_integer_array( current_mns );
     accptnum = allocate_integer_array( current_mns );
     assoc_rule = allocate_integer_array( current_mns );
+    state_type = allocate_integer_array( current_mns );
+
+    current_max_rules = INITIAL_MAX_RULES;
+    rule_type = allocate_integer_array( current_max_rules );
+    rule_linenum = allocate_integer_array( current_max_rules );
 
     current_max_scs = INITIAL_MAX_SCS;
     scset = allocate_integer_array( current_max_scs );
@@ -522,7 +598,7 @@ set_up_initial_allocations()
     scxclu = allocate_integer_array( current_max_scs );
     actvsc = allocate_integer_array( current_max_scs );
 
-    current_maxccls = INITIAL_MAXCCLS;
+    current_maxccls = INITIAL_MAX_CCLS;
     cclmap = allocate_integer_array( current_maxccls );
     ccllen = allocate_integer_array( current_maxccls );
     cclng = allocate_integer_array( current_maxccls );
@@ -545,7 +621,6 @@ set_up_initial_allocations()
     dfasiz = allocate_integer_array( current_max_dfas );
     accsiz = allocate_integer_array( current_max_dfas );
     dhash = allocate_integer_array( current_max_dfas );
-    todo = allocate_integer_array( current_max_dfas );
     dss = allocate_int_ptr_array( current_max_dfas );
     dfaacc = allocate_dfaacc_union( current_max_dfas );
     }
