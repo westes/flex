@@ -3,34 +3,35 @@
 #ifndef FLEXINT_H
 #define FLEXINT_H
 
-#if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901
-#include <stdint.h>
+#ifndef FLEX_NEED_INTEGRAL_TYPE_DEFINITIONS
+#include <inttypes.h>
 #else
 /* Exact integral types.  */
 
 /* Signed.  */
 
-#define int8_t signed char
-#define int16_t short int
-#define int32_t int
+typedef signed char int8_t;
+typedef short int int16_t;
+typedef int int32_t;
 
 # if __WORDSIZE == 64 || defined __arch64__
-#define int64_t long int
+typedef long int int64_t;
 # else
-#define int64_t long long int
+typedef long long int int64_t;
 # endif
 
 /* Unsigned.  */
 
-#define uint8_t unsigned char
-#define uint16_t unsigned short int
-#define uint32_t unsigned int
+typedef unsigned char uint8_t;
+typedef unsigned short int uint16_t;
+typedef unsigned int uint32_t;
 
 #if __WORDSIZE == 64 || defined __arch64__
-#define uint64_t unsigned long int
+typedef unsigned long int uint64_t;
 #else
-#define uint64_t unsigned long long int
+typedef unsigned long long int uint64_t;
 #endif
+#endif /* FLEX_NEED_INTEGRAL_TYPE_DEFINITIONS */
 
 /* Limits of integral types. */
 #ifndef INT8_MIN
@@ -61,6 +62,5 @@
 #define UINT32_MAX             (4294967295U)
 #endif
 
-#endif /* not C99 system */
 
 #endif /* ! FLEXINT_H */
