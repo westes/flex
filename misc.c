@@ -796,7 +796,12 @@ void skelout()
 	while ( skelfile ?
 		(fgets( buf, MAXLINE, skelfile ) != NULL) :
 		((buf = (char *) skel[skel_ind++]) != 0) )
-		{ /* copy from skel array */
+		{ 
+
+		if (skelfile )
+			chomp(buf);
+
+		/* copy from skel array */
 		if ( buf[0] == '%' )
 			{ /* control line */
 			/* print the control line as a comment. */
@@ -844,15 +849,7 @@ void skelout()
 			}
 
 		else if ( do_copy )
-			{
-			if ( skelfile )
-				/* Skeleton file reads include final
-				 * newline, skel[] array does not.
-				 */
-				out( buf );
-			else
 				outn( buf );
-			}
 		}
 	}
 
@@ -915,3 +912,22 @@ size_t size_in_bytes;
 	while ( rp < rp_end )
 		*rp++ = 0;
 	}
+
+/* Remove all '\n' and '\r' characters, if any, from the end of str.
+ * str can be any null-terminated string, or NULL.
+ * returns str. */
+char* chomp(char* str){
+    char* p=str;
+    if (!str || !*str)  /* s is null or empty string */
+        return str;
+
+    /* find end of string minus one*/
+    while (*p)
+        ++p;
+    --p;
+
+    /* eat newlines */
+    while (p >= str && (*p == '\r' || *p == '\n'))
+        *p-- = 0;
+    return str;
+}

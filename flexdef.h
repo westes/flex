@@ -1058,4 +1058,7 @@ extern struct Buf defs_buf;
 extern jmp_buf flex_main_jmp_buf;
 #define FLEX_EXIT(status) longjmp(flex_main_jmp_buf,(status)+1)
 
+/* Removes all \n and \r chars from tail of str. returns str. */
+extern char* chomp(char* str);
+
 #endif /* not defined FLEXDEF_H */
