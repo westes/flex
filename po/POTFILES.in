@@ -9,7 +9,7 @@ main.c
 misc.c
 nfa.c
 options.c
-parse.c
+parse.y
 scan.l
 scanopt.c
 skel.c
