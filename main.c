@@ -831,7 +831,7 @@ char **argv;
                     buf_strdefine(&userdef_buf, "YY_MAIN", "1");
                     break;
 
-            case OPT_NOLINE:
+            case OPT_NO_LINE:
                     gen_line_dirs = false;
                     break;
 
@@ -873,7 +873,7 @@ char **argv;
                     spprdflt = false;
                     break;
 
-            case OPT_NODEFAULT:
+            case OPT_NO_DEFAULT:
                     spprdflt = true;
                     break;
 
@@ -894,7 +894,7 @@ char **argv;
                             program_name, flex_version );
                     exit( 0 );
 
-            case OPT_NOWARN:
+            case OPT_NO_WARN:
                     nowarn = true;
                     break;
 

@@ -39,12 +39,12 @@ optspec_t  flexopts[] = {
 {"--main",              OPT_MAIN,0}, /* use built-in main() function. */
 {"--meta-ecs",          OPT_META_ECS,0},/* Construct meta-equivalence classes. */
 {"--never-interactive", OPT_NEVER_INTERACTIVE,0},
-{"--nodefault",         OPT_NODEFAULT,0},/* Suppress default rule to ECHO unmatched text. */
-{"-s",                  OPT_NODEFAULT,0},
-{"--noline",            OPT_NOLINE,0},/* Suppress #line directives in scanner. */
-{"-L",                  OPT_NOLINE,0},/* Suppress #line directives in scanner. */
-{"--nowarn",            OPT_NOWARN,0},/* Suppress warning messages. */
-{"-w",                  OPT_NOWARN,0},
+{"--nodefault",         OPT_NO_DEFAULT,0},/* Suppress default rule to ECHO unmatched text. */
+{"-s",                  OPT_NO_DEFAULT,0},
+{"--noline",            OPT_NO_LINE,0},/* Suppress #line directives in scanner. */
+{"-L",                  OPT_NO_LINE,0},/* Suppress #line directives in scanner. */
+{"--nowarn",            OPT_NO_WARN,0},/* Suppress warning messages. */
+{"-w",                  OPT_NO_WARN,0},
 {"--outfile=FILE",      OPT_OUTFILE,0},/* Write to FILE (default is lex.yy.c) */
 {"-o FILE",             OPT_OUTFILE,0},
 {"--perf-report",       OPT_PERF_REPORT,0},/* Generate performance report to stderr. */
