@@ -9,11 +9,9 @@ MAINTAINERCLEANFILES = \
 	flex.ops
 
 EXTRA_DIST = \
-		$(man_MANS)
+	$(man_MANS)
 
-if MAINTAINER_MODE
 $(man_MANS): $(top_srcdir)/main.c
 	for i in $(man_MANS) ; do \
 	$(help2man) --name='fast lexical analyzer generator' --section=`echo $$i|rev|cut -f 1 -d .|rev` ../flex > $$i ; \
 	done
-endif

@@ -92,8 +92,6 @@
 
 *** use clcommit to manage ChangeLog
 
-*** make sure man page is rebuilt under reasonable conditions
-
 Legend:
 
 *, **, ***: outline depth
