@@ -1281,9 +1281,16 @@ void make_tables()
 			outn(
 			"\tif ( yy_current_buffer->yy_is_interactive ) \\" );
 			outn( "\t\t{ \\" );
-			outn( "\t\tint c = getc( yyin ); \\" );
-			outn( "\t\tresult = c == EOF ? 0 : 1; \\" );
-			outn( "\t\tbuf[0] = (char) c; \\" );
+			outn( "\t\tint c = '*', n; \\" );
+			outn( "\t\tfor ( n = 0; n < max_size && \\" );
+	outn( "\t\t\t     (c = getc( yyin )) != EOF && c != '\\n'; ++n ) \\" );
+			outn( "\t\t\tbuf[n] = (char) c; \\" );
+			outn( "\t\tif ( c == '\\n' ) \\" );
+			outn( "\t\t\tbuf[n++] = (char) c; \\" );
+			outn( "\t\tif ( c == EOF && ferror( yyin ) ) \\" );
+			outn(
+	"\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\" );
+			outn( "\t\tresult = n; \\" );
 			outn( "\t\t} \\" );
 			outn(
 	"\telse if ( ((result = fread( buf, 1, max_size, yyin )) == 0) \\" );
