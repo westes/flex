@@ -83,7 +83,7 @@ and testing using:
 
 Format the manual entry using
 
-    nroff -man flex.1
+	make flex.man
 
 
 Please send problems and feedback to:
