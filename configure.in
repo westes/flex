@@ -8,6 +8,7 @@ AC_PROG_YACC
 AC_PROG_CC
 AC_PROG_RANLIB
 AC_PROG_INSTALL
+AC_PROG_MAKE_SET
 AC_CONST
 AC_TYPE_SIZE_T
 AC_HEADER_STDC
@@ -19,4 +20,5 @@ case "$YACC" in
   ;;
 esac
 
-AC_OUTPUT(Makefile)
+AC_OUTPUT(Makefile,
+[test -z "$CONFIG_HEADERS" || echo timestamp > stamp-h])
