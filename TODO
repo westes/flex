@@ -28,12 +28,22 @@ from millaway)
 summary of command line options and a reference to the info pages will
 probably satisfy the need for a man page
 
+** fix case of node names and generally make the manual prettier to read
+
 * repackage the distribution
 
 ** address lex-replacement: document or provide an option through
    configure for creating lex and libl.a files
 
 ** gettextify flex
+
+** subdirectories
+
+*** audit all subdirectories to be sure they're in compliance with
+    automake and friends
+
+*** in examples/manual, integrate the Makefile.examples into the
+    Makefile.am
 
 * test suite
 
