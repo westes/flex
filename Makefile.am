@@ -71,8 +71,8 @@ noinst_HEADERS = \
 include_HEADERS = \
 	FlexLexer.h
 
-# info_TEXINFOS = \
-# 	flex.texi
+info_TEXINFOS = \
+	flex.texi
 
 EXTRA_DIST = \
 	AUTHORS \
@@ -87,13 +87,9 @@ EXTRA_DIST = \
 	autogen.sh \
 	flex.skl \
 	mkskel.sh \
-	$(man_MANS)
 
 BUILT_SOURCES = \
 	skel.c
-
-man_MANS = \
-	flex.1
 
 # We have a few dependencies and rules to enumerate. (from the old
 # Makefile.in by Vern)
@@ -124,4 +120,8 @@ ChangeLog:
 .PHONY: ChangeLog
 
 dist-hook:
-	-cvs -Q export -D today -d $(PACKAGE)-$(VERSION)/tests $(PACKAGE)/tests && cd $(PACKAGE)-$(VERSION) && ./autogen.sh
+	-for i in tests to.do examples faqs ; \
+		do \
+		cvs -Q export -D today -d $(PACKAGE)-$(VERSION)/$$i $(PACKAGE)/$$i ; \
+	done
+	-cd $(PACKAGE)-$(VERSION) && ./autogen.sh
