@@ -1,4 +1,4 @@
-Changes between release 2.5.0.4 (09Jan95) and release 2.4.7:
+Changes between release 2.5.0.5 (10Jan95) and release 2.4.7:
 
 	- A new concept of "start condition" scope has been introduced.
 	  A start condition scope is begun with:
@@ -299,6 +299,10 @@ Changes between release 2.5.0.4 (09Jan95) and release 2.4.7:
 	  invoked holds the number of the matched rule, and added an
 	  example of using yy_act to profile how often each rule is matched.
 
+	- Added YY_NUM_RULES, a definition that gives the total number
+	  of rules in the file, including the default rule (even if you
+	  use -s).
+
 	- Documentation now clarifies that you can pass a nil FILE* pointer
 	  to yy_create_buffer() or yyrestart() if you've arrange YY_INPUT
 	  to not need yyin.
@@ -308,6 +312,10 @@ Changes between release 2.5.0.4 (09Jan95) and release 2.4.7:
 
 	- Documentation now stresses that you gain the benefits of removing
 	  backing-up states only if you remove *all* of them.
+
+	- Usage (-h) report now goes to stdout.
+
+	- Version (-V) info now goes to stdout.
 
 	- More #ifdef chud has been added to the parser in attempt to
 	  deal with bison's use of alloca().
