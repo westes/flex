@@ -3,7 +3,9 @@ changes between releases of flex
 
 See the file COPYING for copying conditions
 
-* after version 2.5.12
+* version 2.5.13
+
+** the header file output with %option header is now much smaller
 
 ** Fixed type mismatch in printf in scanner skeleton
 
