@@ -32,7 +32,7 @@
 #include "flexdef.h"
 #include "parse.h"
 
-#define ACTION_ECHO add_action( (char *) yytext )
+#define ACTION_ECHO add_action( yytext )
 #define MARK_END_OF_PROLOG mark_prolog();
 
 #undef YY_DECL
@@ -44,11 +44,11 @@
 	return CHAR;
 
 #define RETURNNAME \
-	(void) strcpy( nmstr, (char *) yytext ); \
+	(void) strcpy( nmstr, yytext ); \
 	return NAME;
 
 #define PUT_BACK_STRING(str, start) \
-	for ( i = strlen( (char *) (str) ) - 1; i >= start; --i ) \
+	for ( i = strlen( str ) - 1; i >= start; --i ) \
 		unput((str)[i])
 
 #define CHECK_REJECT(str) \
@@ -139,7 +139,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 ^"%"[^sxanpekotcru{}].*	synerr( "unrecognized '%' directive" );
 
 ^{NAME}			{
-			(void) strcpy( nmstr, (char *) yytext );
+			(void) strcpy( nmstr, yytext );
 			didadef = false;
 			BEGIN(PICKUPDEF);
 			}
@@ -171,7 +171,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 <PICKUPDEF>{WS}		/* separates name and definition */
 
 <PICKUPDEF>{NOT_WS}.*	{
-			(void) strcpy( (char *) nmdef, (char *) yytext );
+			(void) strcpy( (char *) nmdef, yytext );
 
 			/* Skip trailing whitespace. */
 			for ( i = strlen( (char *) nmdef ) - 1;
@@ -296,7 +296,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 <SECT2>"["{FIRST_CCL_CHAR}{CCL_CHAR}*	{
 			int cclval;
 
-			(void) strcpy( nmstr, (char *) yytext );
+			(void) strcpy( nmstr, yytext );
 
 			/* Check to see if we've already encountered this
 			 * ccl.
@@ -329,9 +329,9 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
 <SECT2>"{"{NAME}"}"	{
 			register Char *nmdefptr;
-			Char *ndlookup();
+			char *ndlookup();
 
-			(void) strcpy( nmstr, (char *) yytext + 1 );
+			(void) strcpy( nmstr, yytext + 1 );
 			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */
 
 			if ( ! (nmdefptr = ndlookup( nmstr )) )
@@ -340,12 +340,12 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
 			else
 				{ /* push back name surrounded by ()'s */
-				int len = strlen( nmdefptr );
+				int len = strlen( (char *) nmdefptr );
 
 				if ( lex_compat || nmdefptr[0] == '^' ||
 				     (len > 0 && nmdefptr[len - 1] == '$') )
 					{ /* don't use ()'s after all */
-					PUT_BACK_STRING(nmdefptr, 0);
+					PUT_BACK_STRING((char *) nmdefptr, 0);
 
 					if ( nmdefptr[0] == '^' )
 						BEGIN(CARETISBOL);
@@ -354,7 +354,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 				else
 					{
 					unput(')');
-					PUT_BACK_STRING(nmdefptr, 0);
+					PUT_BACK_STRING((char *) nmdefptr, 0);
 					unput('(');
 					}
 				}
@@ -369,8 +369,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 <SC>">"/^		BEGIN(CARETISBOL); return '>';
 <SC>{SCNAME}		RETURNNAME;
 <SC>.			{
-			format_synerr( "bad <start condition>: %s",
-					(char *) yytext );
+			format_synerr( "bad <start condition>: %s", yytext );
 			}
 
 <CARETISBOL>"^"		BEGIN(SECT2); return '^';
@@ -497,12 +496,12 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
 
 <SECT2,QUOTE,CCL>{ESCSEQ}	{
-			yylval = myesc( yytext );
+			yylval = myesc( (Char *) yytext );
 			return CHAR;
 			}
 
 <FIRSTCCL>{ESCSEQ}	{
-			yylval = myesc( yytext );
+			yylval = myesc( (Char *) yytext );
 			BEGIN(CCL);
 			return CHAR;
 			}
@@ -511,7 +510,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 <SECT3>.*(\n?)		ECHO;
 <SECT3><<EOF>>		sectnum = 0; yyterminate();
 
-<*>.|\n			format_synerr( "bad character: %s", (char *) yytext );
+<*>.|\n			format_synerr( "bad character: %s", yytext );
 
 %%
 
