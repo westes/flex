@@ -3,6 +3,10 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* after version 2.5.28
+
+** cleanups to the yy namespace
+
 * version 2.5.28 released 2003-2-12
 
 ** flex is now hosted at sourceforge
