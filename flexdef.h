@@ -37,6 +37,10 @@
 #include <strings.h>
 #endif
 
+#if __STDC__
+#include <stdlib.h>
+#endif
+
 /* Always be prepared to generate an 8-bit scanner. */
 #define CSIZE 256
 #define Char unsigned char
