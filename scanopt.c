@@ -31,6 +31,7 @@
 /*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
 /*  PURPOSE. */
 
+#include "flexdef.h"
 #include "scanopt.h"
 
 

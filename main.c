@@ -31,16 +31,12 @@
 /*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
 /*  PURPOSE. */
 
-#include <config.h>
-#ifdef ENABLE_NLS
-#include <locale.h>
-#endif /* ENABLE_NLS */
+
 #include "flexdef.h"
 #include "version.h"
 #include "options.h"
 
 static char flex_version[] = FLEX_VERSION;
-
 
 /* declare functions that have forward references */
 

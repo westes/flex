@@ -34,38 +34,73 @@
 #ifndef FLEXDEF_H
 #define FLEXDEF_H 1
 
-#include <stdio.h>
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-#endif
-#include <ctype.h>
-#include <limits.h>
-#include <setjmp.h>
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#ifdef HAVE_STRING_H
+#ifdef STDC_HEADERS
+#include <stdio.h>
+#include <stdlib.h>
+#include <setjmp.h>
+#include <ctype.h>
 #include <string.h>
-#else
-#include <strings.h>
 #endif
+#ifdef HAVE_LIMITS_H
+#include <limits.h>
+#endif
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+#ifndef HAVE_INTTYPES_H_WITH_UINTMAX
+/* Exact integral types.  */
+
+/* Signed.  */
+
+#ifndef __int8_t_defined
+# define __int8_t_defined
+typedef signed char		int8_t;
+typedef short int		int16_t;
+typedef int			int32_t;
+# if __WORDSIZE == 64
+typedef long int		int64_t;
+# else
+__extension__
+typedef long long int		int64_t;
+# endif
+#endif
+
+/* Unsigned.  */
+typedef unsigned char		uint8_t;
+typedef unsigned short int	uint16_t;
+typedef unsigned int		uint32_t;
+#if __WORDSIZE == 64
+typedef unsigned long int	uint64_t;
+#else
+__extension__
+typedef unsigned long long int	uint64_t;
+#endif
+#endif /* ! HAVE_INTTYPES_H_WITH_UINTMAX */
 
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
-
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
 #endif
-
-#ifdef STDC_HEADERS
-#include <stdlib.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
 #endif
 
+/* We use gettext. So, when we write strings which should be translated, we mark them with _() */
+#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif /* HAVE_LOCALE_H */
 #include "gettext.h"
 #define _(String) gettext (String)
+#else
+#define _(STRING) STRING
+#endif /* ENABLE_NLS */
 
 /* Always be prepared to generate an 8-bit scanner. */
 #define CSIZE 256

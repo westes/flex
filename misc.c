@@ -31,7 +31,6 @@
 /*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
 /*  PURPOSE. */
 
-
 #include "flexdef.h"
 
 /* Append "#define defname value\n" to the running buffer. */
@@ -43,8 +42,8 @@ void    action_define (defname, value)
 	char   *cpy;
 
 	if ((int) strlen (defname) > MAXLINE / 2) {
-		format_pinpoint_message (_
-					 ("name \"%s\" ridiculously long"),
+		format_pinpoint_message (
+					 _("name \"%s\" ridiculously long"),
 					 defname);
 		return;
 	}
@@ -97,8 +96,8 @@ void   *allocate_array (size, element_size)
 
 	mem = flex_alloc (num_bytes);
 	if (!mem)
-		flexfatal (_
-			   ("memory allocation failed in allocate_array()"));
+		flexfatal (
+			   _("memory allocation failed in allocate_array()"));
 
 	return mem;
 }
@@ -177,8 +176,8 @@ void    check_char (c)
 			readable_form (c));
 
 	if (c >= csize)
-		lerrsf (_
-			("scanner requires -8 flag to use the character %s"),
+		lerrsf (
+			_("scanner requires -8 flag to use the character %s"),
 readable_form (c));
 }
 
