@@ -3,7 +3,7 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* after version 2.5.18
+* version 2.5.19
 
 ** prevent segfault on input lines which are longer than the allocated
    space (problem report from Manoj Srivastava
