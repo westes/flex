@@ -1155,8 +1155,11 @@ void make_tables()
 
 	if ( ddebug )
 		{ /* Spit out table mapping rules to line numbers. */
-		indent_puts( "extern int yy_flex_debug;" );
-		indent_puts( "int yy_flex_debug = 1;\n" );
+		if ( ! C_plus_plus )
+			{
+			indent_puts( "extern int yy_flex_debug;" );
+			indent_puts( "int yy_flex_debug = 1;\n" );
+			}
 
 		out_str_dec( long_align ? C_long_decl : C_short_decl,
 			"yy_rule_linenum", num_rules );
