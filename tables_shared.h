@@ -115,7 +115,7 @@ struct yytbl_hdr {
 
 /** A single serialized table */
 struct yytbl_data {
-	enum yytbl_id td_id; /**< flex_uint16_t table identifier */
+	flex_uint16_t td_id;      /**< enum yytbl_id table identifier */
 	flex_uint16_t td_flags;   /**< how to interpret this data */
 	flex_uint32_t td_hilen;   /**< num elements in highest dimension array */
 	flex_uint32_t td_lolen;   /**< num elements in lowest dimension array */
