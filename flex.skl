@@ -310,6 +310,13 @@ static void yy_fatal_error YY_PROTO(( const char msg[] ));
 %*
 #endif
 
+/* Code executed at the beginning of each rule, after yytext and yyleng
+ * have been set up.
+ */
+#ifndef YY_USER_ACTION
+#define YY_USER_ACTION
+#endif
+
 /* Code executed at the end of each rule. */
 #ifndef YY_BREAK
 #define YY_BREAK break;
@@ -376,13 +383,6 @@ yy_find_action:
 %% code to find the action number goes here
 
 		YY_DO_BEFORE_ACTION;
-
-#ifdef YY_USER_ACTION
-		if ( yy_act != YY_END_OF_BUFFER )
-			{
-			YY_USER_ACTION;
-			}
-#endif
 
 %% code for yylineno update goes here, if -l option
 
