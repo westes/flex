@@ -43,7 +43,7 @@ static char rcsid[] =
  *    ccl2ecl();
  */
 
-ccl2ecl()
+void ccl2ecl()
 
     {
     int i, ich, newlen, cclp, ccls, cclmec;
@@ -235,7 +235,7 @@ int ecmap[];
  * NUL_mapping is the value which NUL (0) should be mapped to.
  */
 
-mkeccl( ccls, lenccl, fwd, bck, llsiz, NUL_mapping )
+void mkeccl( ccls, lenccl, fwd, bck, llsiz, NUL_mapping )
 Char ccls[];
 int lenccl, fwd[], bck[], llsiz, NUL_mapping;
 
@@ -334,7 +334,7 @@ next_pt:
  *    mkechar( tch, fwd, bck );
  */
 
-mkechar( tch, fwd, bck )
+void mkechar( tch, fwd, bck )
 int tch, fwd[], bck[];
 
     {
