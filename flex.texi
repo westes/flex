@@ -79,6 +79,7 @@ This edition of the @site{flex Manual} documents @code{flex} version
 * Bibliography::                
 * Copyright::                   
 * Reporting Bugs::              
+* FAQ::                         
 * Appendices::                  
 * Indices::                     
 
@@ -116,6 +117,110 @@ Memory Management
 * The Default Memory Management::
 * Overriding The Default Memory Management::
 * A Note About yytext And Memory::
+
+FAQ
+
+* When was flex born?::         
+* How do I expand \ escape sequences in C-style quoted strings?::  
+* Why do flex scanners call fileno if it is not ANSI compatible?::  
+* Does flex support recursive pattern definitions?::  
+* How do I skip huge chunks of input (tens of megabytes) while using flex?::  
+* Flex is not matching my patterns in the same order that I defined them.::  
+* My actions are executing out of order or sometimes not at all.::  
+* How can I have multiple input sources feed into the same scanner at the same time?::  
+* Can I build nested parsers that work with the same input file?::  
+* How can I match text only at the end of a file?::  
+* How can I make REJECT cascade across start condition boundaries?::  
+* Why cant I use fast or full tables with interactive mode?::  
+* How much faster is -F or -f than -C?::  
+* If I have a simple grammar cant I just parse it with flex?::  
+* Why doesnt yyrestart() set the start state back to INITIAL?::  
+* How can I match C-style comments?::  
+* The period isnt working the way I expected.::  
+* Can I get the flex manual in another format?::  
+* Does there exist a "faster" NDFA->DFA algorithm?::  
+* How does flex compile the DFA so quickly?::  
+* How can I use more than 8192 rules?::  
+* How do I abandon a file in the middle of a scan and switch to a new file?::  
+* How do I execute code only during initialization (only before the first scan)?::  
+* How do I execute code at termination?::  
+* Where else can I find help?::  
+* Can I include comments in the "rules" section of the file file?::  
+* I get an error about undefined yywrap().::  
+* How can I change the matching pattern at run time?::  
+* Is there a way to increase the rules (NFA states to a bigger number?)::  
+* How can I expand macros in the input?::  
+* How can I build a two-pass scanner?::  
+* How do I match any string not matched in the preceding rules?::  
+* I am trying to port code from AT&T lex that uses yysptr and yysbuf.::  
+* Is there a way to make flex treat NULL like a regular character?::  
+* Whenever flex can not match the input it says "flex scanner jammed".::  
+* Why doesnt flex have non-greedy operators like perl does?::  
+* Memory leak - 16386 bytes allocated by malloc.::  
+* How do I track the byte offset for lseek()?::  
+* unnamed-faq-16::              
+* How do I skip as many chars as possible?::  
+* unnamed-faq-33::              
+* unnamed-faq-42::              
+* unnamed-faq-43::              
+* unnamed-faq-44::              
+* unnamed-faq-45::              
+* unnamed-faq-46::              
+* unnamed-faq-47::              
+* unnamed-faq-48::              
+* unnamed-faq-49::              
+* unnamed-faq-50::              
+* unnamed-faq-51::              
+* unnamed-faq-52::              
+* unnamed-faq-53::              
+* unnamed-faq-54::              
+* unnamed-faq-55::              
+* unnamed-faq-56::              
+* unnamed-faq-57::              
+* unnamed-faq-58::              
+* unnamed-faq-59::              
+* unnamed-faq-60::              
+* unnamed-faq-61::              
+* unnamed-faq-62::              
+* unnamed-faq-63::              
+* unnamed-faq-64::              
+* unnamed-faq-65::              
+* unnamed-faq-66::              
+* unnamed-faq-67::              
+* unnamed-faq-68::              
+* unnamed-faq-69::              
+* unnamed-faq-70::              
+* unnamed-faq-71::              
+* unnamed-faq-72::              
+* unnamed-faq-73::              
+* unnamed-faq-74::              
+* unnamed-faq-75::              
+* unnamed-faq-76::              
+* unnamed-faq-77::              
+* unnamed-faq-78::              
+* unnamed-faq-79::              
+* unnamed-faq-80::              
+* unnamed-faq-81::              
+* unnamed-faq-82::              
+* unnamed-faq-83::              
+* unnamed-faq-84::              
+* unnamed-faq-85::              
+* unnamed-faq-86::              
+* unnamed-faq-87::              
+* unnamed-faq-88::              
+* unnamed-faq-89::              
+* unnamed-faq-90::              
+* unnamed-faq-91::              
+* unnamed-faq-92::              
+* unnamed-faq-93::              
+* unnamed-faq-94::              
+* unnamed-faq-95::              
+* unnamed-faq-96::              
+* unnamed-faq-97::              
+* unnamed-faq-98::              
+* unnamed-faq-99::              
+* unnamed-faq-100::             
+* unnamed-faq-101::             
 
 Appendices
 
@@ -4629,8 +4734,2872 @@ If you have problems with @code{flex} or think you have found a bug,
 please send mail detailing your problem to
 @email{help-flex@@gnu.org}. Patches are always welcome.
 
-@c The FAQ is a node unto itself, in the file "faq.texi"
-@include faq.texi
+@node FAQ
+@unnumbered FAQ
+
+From time to time, the @code{flex} maintainer receives certain
+questions. Rather than repeat answers to well-understood problems, we
+publish them here.
+
+@menu
+* When was flex born?::         
+* How do I expand \ escape sequences in C-style quoted strings?::  
+* Why do flex scanners call fileno if it is not ANSI compatible?::  
+* Does flex support recursive pattern definitions?::  
+* How do I skip huge chunks of input (tens of megabytes) while using flex?::  
+* Flex is not matching my patterns in the same order that I defined them.::  
+* My actions are executing out of order or sometimes not at all.::  
+* How can I have multiple input sources feed into the same scanner at the same time?::  
+* Can I build nested parsers that work with the same input file?::  
+* How can I match text only at the end of a file?::  
+* How can I make REJECT cascade across start condition boundaries?::  
+* Why cant I use fast or full tables with interactive mode?::  
+* How much faster is -F or -f than -C?::  
+* If I have a simple grammar cant I just parse it with flex?::  
+* Why doesnt yyrestart() set the start state back to INITIAL?::  
+* How can I match C-style comments?::  
+* The period isnt working the way I expected.::  
+* Can I get the flex manual in another format?::  
+* Does there exist a "faster" NDFA->DFA algorithm?::  
+* How does flex compile the DFA so quickly?::  
+* How can I use more than 8192 rules?::  
+* How do I abandon a file in the middle of a scan and switch to a new file?::  
+* How do I execute code only during initialization (only before the first scan)?::  
+* How do I execute code at termination?::  
+* Where else can I find help?::  
+* Can I include comments in the "rules" section of the file file?::  
+* I get an error about undefined yywrap().::  
+* How can I change the matching pattern at run time?::  
+* Is there a way to increase the rules (NFA states to a bigger number?)::  
+* How can I expand macros in the input?::  
+* How can I build a two-pass scanner?::  
+* How do I match any string not matched in the preceding rules?::  
+* I am trying to port code from AT&T lex that uses yysptr and yysbuf.::  
+* Is there a way to make flex treat NULL like a regular character?::  
+* Whenever flex can not match the input it says "flex scanner jammed".::  
+* Why doesnt flex have non-greedy operators like perl does?::  
+* Memory leak - 16386 bytes allocated by malloc.::  
+* How do I track the byte offset for lseek()?::  
+* unnamed-faq-16::              
+* How do I skip as many chars as possible?::  
+* unnamed-faq-33::              
+* unnamed-faq-42::              
+* unnamed-faq-43::              
+* unnamed-faq-44::              
+* unnamed-faq-45::              
+* unnamed-faq-46::              
+* unnamed-faq-47::              
+* unnamed-faq-48::              
+* unnamed-faq-49::              
+* unnamed-faq-50::              
+* unnamed-faq-51::              
+* unnamed-faq-52::              
+* unnamed-faq-53::              
+* unnamed-faq-54::              
+* unnamed-faq-55::              
+* unnamed-faq-56::              
+* unnamed-faq-57::              
+* unnamed-faq-58::              
+* unnamed-faq-59::              
+* unnamed-faq-60::              
+* unnamed-faq-61::              
+* unnamed-faq-62::              
+* unnamed-faq-63::              
+* unnamed-faq-64::              
+* unnamed-faq-65::              
+* unnamed-faq-66::              
+* unnamed-faq-67::              
+* unnamed-faq-68::              
+* unnamed-faq-69::              
+* unnamed-faq-70::              
+* unnamed-faq-71::              
+* unnamed-faq-72::              
+* unnamed-faq-73::              
+* unnamed-faq-74::              
+* unnamed-faq-75::              
+* unnamed-faq-76::              
+* unnamed-faq-77::              
+* unnamed-faq-78::              
+* unnamed-faq-79::              
+* unnamed-faq-80::              
+* unnamed-faq-81::              
+* unnamed-faq-82::              
+* unnamed-faq-83::              
+* unnamed-faq-84::              
+* unnamed-faq-85::              
+* unnamed-faq-86::              
+* unnamed-faq-87::              
+* unnamed-faq-88::              
+* unnamed-faq-89::              
+* unnamed-faq-90::              
+* unnamed-faq-91::              
+* unnamed-faq-92::              
+* unnamed-faq-93::              
+* unnamed-faq-94::              
+* unnamed-faq-95::              
+* unnamed-faq-96::              
+* unnamed-faq-97::              
+* unnamed-faq-98::              
+* unnamed-faq-99::              
+* unnamed-faq-100::             
+* unnamed-faq-101::             
+@end menu
+
+@node  When was flex born?
+@unnumberedsec When was flex born?
+
+Vern Paxson took over
+the @cite{Software Tools} lex project from Jef Poskanzer in 1982.  At that point it
+was written in Ratfor.  Around 1987 or so, Paxson translated it into C, and
+a legend was born :-).
+
+@node How do I expand \ escape sequences in C-style quoted strings?
+@unnumberedsec How do I expand \ escape sequences in C-style quoted strings?
+
+A key point when scanning quoted strings is that you cannot (easily) write
+a single rule that will precisely match the string if you allow things
+like embedded escape sequences and newlines.  If you try to match strings
+with a single rule then you'll wind up having to rescan the string anyway
+to find any escape sequences.
+
+Instead you can use exclusive start conditions and a set of rules, one for
+matching non-escaped text, one for matching a single escape, one for
+matching an embedded newline, and one for recognizing the end of the
+string.  Each of these rules is then faced with the question of where to
+put its intermediary results.  The best solution is for the rules to
+append their local value of @code{yytext} to the end of a ``string literal''
+buffer.  A rule like the escape-matcher will append to the buffer the
+meaning of the escape sequence rather than the literal text in @code{yytext}.
+In this way, @code{yytext} does not need to be modified at all.
+
+@node  Why do flex scanners call fileno if it is not ANSI compatible?
+@unnumberedsec Why do flex scanners call fileno if it is not ANSI compatible?
+
+Flex scanners call @code{fileno()} in order to get the file descriptor
+corresponding to @code{yyin}. The file descriptor may be passed to
+@code{isatty()} or @code{read()}, depending upon which @code{%options} you specified.
+If your system does not have @code{fileno()} support, to get rid of the
+@code{read()} call, do not specify @code{%option read}. To get rid of the @code{isatty()}
+call, you must specify one of @code{%option always-interactive} or
+@code{%option never-interactive}.
+
+@node  Does flex support recursive pattern definitions?
+@unnumberedsec Does flex support recursive pattern definitions?
+
+Does flex support recursive pattern definitions?
+e.g.,
+
+@example
+@verbatim
+%%
+block   "{"({block}|{statement})*"}"
+@end verbatim
+@end example
+
+No. You cannot have recursive definitions.  The pattern-matching power of
+regular expressions in general (and therefore flex scanners, too) is
+limited.  In particular, regular expressions cannot "balance" parentheses
+to an arbitrary degree.  For example, it's impossible to write a regular
+expression that matches all strings containing the same number of '@{'s
+as '@}'s.  For more powerful pattern matching, you need a parser, such
+as GNU bison.
+
+@node  How do I skip huge chunks of input (tens of megabytes) while using flex?
+@unnumberedsec How do I skip huge chunks of input (tens of megabytes) while using flex?
+
+Use fseek (or lseek) to position yyin, then call yyrestart().
+
+@node  Flex is not matching my patterns in the same order that I defined them.
+@unnumberedsec Flex is not matching my patterns in the same order that I defined them.
+
+Flex is not matching my patterns in the same order that I defined them.
+
+This is indeed the natural way to expect it to work, however, flex picks the
+rule that matches the most text (i.e., the longest possible input string).
+This is because flex uses an entirely different matching technique
+("deterministic finite automata") that actually does all of the matching
+simultaneously, in parallel.  (Seems impossible, but it's actually a fairly
+simple technique once you understand the principles.)
+
+A side-effect of this parallel matching is that when the input matches more
+than one rule, flex scanners pick the rule that matched the *most* text. This
+is explained further in the manual, in the section "How the input
+is Matched".
+
+If you want flex to choose a shorter match, then you can work around this
+behavior by expanding your short
+rule to match more text, then put back the extra:
+
+@example
+@verbatim
+data_.*        yyless( 5 ); BEGIN BLOCKIDSTATE;
+@end verbatim
+@end example
+
+Another fix would be to make the second rule active only during the
+<BLOCKIDSTATE> start condition, and make that start condition exclusive
+by declaring it with %x instead of %s.
+
+A final fix is to change the input language so that the ambiguity for
+data_ is removed, by adding characters to it that don't match the
+identifier rule, or by removing characters (such as '_') from the
+identifier rule so it no longer matches "data_".  (Of course, you might
+also not have the option of changing the input language ...)
+
+@node  My actions are executing out of order or sometimes not at all.
+@unnumberedsec My actions are executing out of order or sometimes not at all.
+
+My actions are executing out of order or sometimes not at all. What's
+happening?
+
+Most likely, you have (in error) placed the opening @samp{@{} of the action
+block on a different line than the rule, e.g.,
+
+@example
+@verbatim
+^(foo|bar)
+{  <<<--- WRONG!
+
+}
+@end verbatim
+@end example
+
+flex requires that the opening @samp{@{} of an action associated with a rule
+begin on the same line as does the rule.  You need instead to write your rules
+as follows:
+
+@example
+@verbatim
+^(foo|bar)   {  // CORRECT!
+
+}
+@end verbatim
+@end example
+
+@node  How can I have multiple input sources feed into the same scanner at the same time?
+@unnumberedsec How can I have multiple input sources feed into the same scanner at the same time?
+
+How can I have multiple input sources feed into the same scanner at
+the same time?
+
+If...
+@itemize
+@item
+your scanner is free of backtracking (verified using flex's -b flag),
+@item
+AND you run it interactively (-I option; default unless using special table
+compression options),
+@item
+AND you feed it one character at a time by redefining YY_INPUT to do so,
+@end itemize
+
+then every time it matches a token, it will have exhausted its input
+buffer (because the scanner is free of backtracking).  This means you
+can safely use select() at the point and only call yylex() for another
+token if select() indicates there's data available.
+
+That is, move the select() out from the input function to a point where
+it determines whether yylex() gets called for the next token.
+
+With this approach, you will still have problems if your input can arrive
+piecemeal; select() could inform you that the beginning of a token is
+available, you call yylex() to get it, but it winds up blocking waiting
+for the later characters in the token.
+
+Here's another way:  Move your input multiplexing inside of YY_INPUT.  That
+is, whenever YY_INPUT is called, it select()'s to see where input is
+available.  If input is available for the scanner, it reads and returns the
+next byte.  If input is available from another source, it calls whatever
+function is responsible for reading from that source.  (If no input is
+available, it blocks until some is.)  I've used this technique in an
+interpreter I wrote that both reads keyboard input using a flex scanner and
+IPC traffic from sockets, and it works fine.
+
+@node  Can I build nested parsers that work with the same input file?
+@unnumberedsec Can I build nested parsers that work with the same input file?
+
+Can I build nested parsers that work with the same input file?
+
+This is not going to work without some additional effort.  The reason is
+that flex block-buffers the input it reads from yyin.  This means that the
+"outermost" yylex(), when called, will automatically slurp up the first 8K
+of input available on yyin, and subsequent calls to other yylex()'s won't
+see that input.  You might be tempted to work around this problem by
+redefining YY_INPUT to only return a small amount of text, but it turns out
+that that approach is quite difficult.  Instead, the best solution is to
+combine all of your scanners into one large scanner, using a different
+exclusive start condition for each.
+
+@node  How can I match text only at the end of a file?
+@unnumberedsec How can I match text only at the end of a file?
+
+How can I match text only at the end of a file?
+
+There is no way to write a rule which is "match this text, but only if
+it comes at the end of the file".  You can fake it, though, if you happen
+to have a character lying around that you don't allow in your input.
+Then you redefine YY_INPUT to call your own routine which, if it sees
+an EOF, returns the magic character first (and remembers to return a
+real EOF next time it's called).  Then you could write:
+
+@example
+@verbatim
+<COMMENT>(.|\n)*{EOF_CHAR}    /* saw comment at EOF */
+@end verbatim
+@end example
+
+@node  How can I make REJECT cascade across start condition boundaries?
+@unnumberedsec How can I make REJECT cascade across start condition boundaries?
+
+How can I make REJECT cascade across start condition boundaries?
+
+You can do this as follows.  Suppose you have a start condition A, and
+after exhausting all of the possible matches in <A>, you want to try
+matches in <INITIAL>.  Then you could use the following:
+
+@example
+@verbatim
+%x A
+%%
+<A>rule_that_is_long    ...; REJECT;
+<A>rule                 ...; REJECT; /* shorter rule */
+<A>etc.
+...
+<A>.|\n  {
+/* Shortest and last rule in <A>, so
+* cascaded REJECT's will eventually
+* wind up matching this rule.  We want
+* to now switch to the initial state
+* and try matching from there instead.
+*/
+yyless(0);    /* put back matched text */
+BEGIN(INITIAL);
+}
+@end verbatim
+@end example
+
+@node  Why cant I use fast or full tables with interactive mode?
+@unnumberedsec Why can't I use fast or full tables with interactive mode?
+
+One of the assumptions
+flex makes is that interactive applications are inherently slow (they're
+waiting on a human after all).
+It has to do with how the scanner detects that it must be finished scanning
+a token.  For interactive scanners, after scanning each character the current
+state is looked up in a table (essentially) to see whether there's a chance
+of another input character possibly extending the length of the match.  If
+not, the scanner halts.  For non-interactive scanners, the end-of-token test
+is much simpler, basically a compare with 0, so no memory bus cycles.  Since
+the test occurs in the innermost scanning loop, one would like to make it go
+as fast as possible.
+
+Still, it seems reasonable to allow the user to choose to trade off a bit
+of performance in this area to gain the corresponding flexibility.  There
+might be another reason, though, why fast scanners don't support the
+interactive option
+
+@node  How much faster is -F or -f than -C?
+@unnumberedsec How much faster is -F or -f than -C?
+
+How much faster is -F or -f than -C?
+
+Much faster (factor of 2-3).
+
+@node  If I have a simple grammar cant I just parse it with flex?
+@unnumberedsec If I have a simple grammar can't I just parse it with flex?
+
+Is your grammar recursive? That's almost always a sign that you're
+better off using a parser/scanner rather than just trying to use a scanner
+alone.
+@node  Why doesnt yyrestart() set the start state back to INITIAL?
+@unnumberedsec Why doesn't yyrestart() set the start state back to INITIAL?
+
+There are two reasons.  The first is that there might
+be programs that rely on the start state not changing across file changes.
+The second is that with flex 2.4, use of yyrestart() is no longer required,
+so fixing the problem there doesn't solve the more general problem.
+
+@node  How can I match C-style comments?
+@unnumberedsec How can I match C-style comments?
+
+How can I match C-style comments?
+
+You might be tempted to try something like this:
+
+@example
+@verbatim
+"/*".*"*/"       // WRONG!
+@end verbatim
+@end example
+
+or, worse, this:
+
+@example
+@verbatim
+"/*"(.|\n)"*/"   // WRONG!
+@end verbatim
+@end example
+
+The above rules will eat too much input, and blow up on things like:
+
+@example
+@verbatim
+/* a comment */ do_my_thing( "oops */" );
+@end verbatim
+@end example
+
+Here is one way which allows you to track line information:
+
+@example
+@verbatim
+<INITIAL>{
+"/*"              BEGIN(IN_COMMENT);
+}
+<IN_COMMENT>{
+"*/"      BEGIN(INITIAL);
+[^*\n]+   // eat comment in chunks
+"*"       // eat the lone star
+\n        yylineno++;
+}
+@end verbatim
+@end example
+
+@node  The period isnt working the way I expected.
+@unnumberedsec The '.' isn't working the way I expected.
+
+Here are some tips for using @samp{.}:
+
+@itemize
+@item
+A common mistake is to place the grouping parenthesis AFTER an operator, when
+you really meant to place the parenthesis BEFORE the operator, e.g., you
+probably want this @code{(foo|bar)+} and NOT this @code{(foo|bar+)}.
+
+The first pattern matches the words @code{foo} or @code{bar} any number of
+times, e.g., it matches the text @code{barfoofoobarfoo}. The
+second pattern matches a single instance of @code{foo} or a single instance of
+@code{ba} followed by one or more @samp{r}s, e.g., it matches the text @code{barrrr} .
+@item
+A @samp{.} inside []'s just means a literal@samp{.} (period),
+and NOT "any character except newline".
+@item
+Remember that @samp{.} matches any character EXCEPT @samp{\n} (and EOF).
+If you really want to match ANY character, including newlines, then use @code{(.|\n)}
+--- Beware that the regex @code{(.|\n)+} will match your entire input!
+@item
+Finally, if you want to match a literal @samp{.} (a period), then use [.] or "."
+@end itemize
+
+@node  Can I get the flex manual in another format?
+@unnumberedsec Can I get the flex manual in another format?
+
+Can I get the flex manual in another format?
+
+As of flex 2.5, the manual is distributed in texinfo format.
+You can use the "texi2*" tools to convert the manual to any format
+you desire (e.g., @samp{texi2html}).
+
+@node  Does there exist a "faster" NDFA->DFA algorithm?
+@unnumberedsec Does there exist a "faster" NDFA->DFA algorithm?
+
+Does there exist a "faster" NDFA->DFA algorithm? Most standard texts (e.g.,
+Aho), imply that NDFA->DFA can take exponential time, since there are
+exponential number of potential states in NDFA.
+
+There's no way around the potential exponential running time - it
+can take you exponential time just to enumerate all of the DFA states.
+In practice, though, the running time is closer to linear, or sometimes
+quadratic.
+
+@node  How does flex compile the DFA so quickly?
+@unnumberedsec How does flex compile the DFA so quickly?
+
+How does flex compile the DFA so quickly?
+
+There are two big speed wins that flex uses:
+
+@enumerate
+@item
+It analyzes the input rules to construct equivalence classes for those
+characters that always make the same transitions.  It then rewrites the NFA
+using equivalence classes for transitions instead of characters.  This cuts
+down the NFA->DFA computation time dramatically, to the point where, for
+uncompressed DFA tables, the DFA generation is often I/O bound in writing out
+the tables.
+@item
+It maintains hash values for previously computed DFA states, so testing
+whether a newly constructed DFA state is equivalent to a previously constructed
+state can be done very quickly, by first comparing hash values.
+@end enumerate
+
+@node  How can I use more than 8192 rules?
+@unnumberedsec How can I use more than 8192 rules?
+
+How can I use more than 8192 rules?
+
+Flex is compiled with an upper limit of 8192 rules per scanner.
+If you need more than 8192 rules in your scanner, you'll have to recompile flex
+with the following changes in flexdef.h:
+
+@example
+@verbatim
+<    #define YY_TRAILING_MASK 0x2000
+<    #define YY_TRAILING_HEAD_MASK 0x4000
+--
+>    #define YY_TRAILING_MASK 0x20000000
+>    #define YY_TRAILING_HEAD_MASK 0x40000000
+@end verbatim
+@end example
+
+This should work okay as long as your C compiler uses 32 bit integers.
+But you might want to think about whether using such a huge number of rules
+is the best way to solve your problem.
+
+@node  How do I abandon a file in the middle of a scan and switch to a new file?
+@unnumberedsec How do I abandon a file in the middle of a scan and switch to a new file?
+
+How do I abandon a file in the middle of a scan and switch to a new file?
+
+Just all yyrestart(newfile). Be sure to reset the start state if you want a
+"fresh" start, since yyrestart does NOT reset the start state back to INITIAL.
+
+@node  How do I execute code only during initialization (only before the first scan)?
+@unnumberedsec How do I execute code only during initialization (only before the first scan)?
+
+How do I execute code only during initialization (only before the first scan)?
+
+You can specify an initial action by defining the macro YY_USER_INIT (though
+note that yyout may not be available at the time this macro is executed).  Or you
+can add to the beginning of your rules section:
+
+@example
+@verbatim
+%%
+/* Must be indented! */
+static int did_init = 0;
+
+if ( ! did_init ){
+do_my_init();
+did_init = 1;
+}
+@end verbatim
+@end example
+
+@node  How do I execute code at termination?
+@unnumberedsec How do I execute code at termination?
+
+How do I execute code at termination (i.e., only after the last scan?)
+
+You can specifiy an action for the <<EOF>> rule.
+@node  Where else can I find help?
+@unnumberedsec Where else can I find help?
+
+Where else can I find help?
+
+The @code{help-flex} email list is served by GNU. See http://www.gnu.org/ for
+details how to subscribe or search the archives.
+
+@node  Can I include comments in the "rules" section of the file file?
+@unnumberedsec Can I include comments in the "rules" section of the file file?
+
+Can I include comments in the "rules" section of the file file?
+
+Yes, just about anywhere you want to. See the manual for the specific syntax.
+
+@node  I get an error about undefined yywrap().
+@unnumberedsec I get an error about undefined yywrap().
+
+I get an error about undefined yywrap().
+
+You must supply a yywrap() function of your own, or link to libfl.a
+(which provides one), or use
+
+%option noyywrap
+
+in your source to say you don't want a yywrap() function.
+See the manual page for more details concerning yywrap().
+
+@node  How can I change the matching pattern at run time?
+@unnumberedsec How can I change the matching pattern at run time?
+
+How can I change the matching pattern at run time?
+
+You can't, it's compiled into a static table when flex builds the scanner.
+
+@node  Is there a way to increase the rules (NFA states to a bigger number?)
+@unnumberedsec Is there a way to increase the rules (NFA states to a bigger number?)
+
+Is there a way to increase the rules (NFA states to a bigger number?)
+
+With luck, you should be able to increase the definitions in flexdef.h for:
+
+@example
+@verbatim
+#define JAMSTATE -32766 /* marks a reference to the state that always jams */
+#define MAXIMUM_MNS 31999
+#define BAD_SUBSCRIPT -32767
+@end verbatim
+@end example
+
+recompile everything, and it'll all work.  Flex only has these 16-bit-like
+values built into it because a long time ago it was developed on a machine
+with 16-bit ints.  I've given this advice to others in the past but haven't
+heard back from them whether it worked okay or not...
+
+@node How can I expand macros in the input?
+@unnumberedsec How can I expand macros in the input?
+
+How can I expand macros in the input?
+
+The best way to approach this problem is at a higher level, e.g., in the parser.
+
+However, you can do this using multiple input buffers.
+
+@example
+@verbatim
+%%
+macro/[a-z]+	{
+/* Saw the macro "macro" followed by extra stuff. */
+main_buffer = YY_CURRENT_BUFFER;
+expansion_buffer = yy_scan_string(expand(yytext));
+yy_switch_to_buffer(expansion_buffer);
+}
+
+<<EOF>>	{
+if ( expansion_buffer )
+{
+// We were doing an expansion, return to where
+// we were.
+yy_switch_to_buffer(main_buffer);
+yy_delete_buffer(expansion_buffer);
+expansion_buffer = 0;
+}
+else
+yyterminate();
+}
+@end verbatim
+@end example
+
+You probably will want a stack of expansion buffers to allow nested macros.
+From the above though hopefully the idea is clear.
+
+@node How can I build a two-pass scanner?
+@unnumberedsec How can I build a two-pass scanner?
+
+How can I build a two-pass scanner?
+
+One way to do it is to filter the first pass to a temporary file,
+then process the temporary file on the second pass. You will probably see a
+performance hit, do to all the disk I/O.
+
+When you need to look ahead far forward like this, it almost always means
+that the right solution is to build a parse tree of the entire input, then
+walk it after the parse in order to generate the output.  In a sense, this
+is a two-pass approach, once through the text and once through the parse
+tree, but the performance hit for the latter is usually an order of magnitude
+smaller, since everything is already classified, in binary format, and
+residing in memory.
+
+@node How do I match any string not matched in the preceding rules?
+@unnumberedsec How do I match any string not matched in the preceding rules?
+
+How do I match any string not matched in the preceding rules?
+
+One way to assign precedence, is to place the more specific rules first. If
+two rules would match the same input (same sequence of characters) then the
+first rule listed in the flex input wins. e.g.,
+
+@example
+@verbatim
+%%
+foo[a-zA-Z_]+    return FOO_ID;
+bar[a-zA-Z_]+    return BAR_ID;
+[a-zA-Z_]+       return GENERIC_ID;
+@end verbatim
+@end example
+
+Note that the rule @code{[a-zA-Z_]+} must come *after* the others.  It will match the
+same amount of text as the more specific rules, and in that case the
+flex scanner will pick the first rule listed in your scanner as the
+one to match.
+
+@node I am trying to port code from AT&T lex that uses yysptr and yysbuf.
+@unnumberedsec I am trying to port code from AT&T lex that uses yysptr and yysbuf.
+
+I am trying to port code from AT&T lex that uses yysptr and yysbuf.
+
+Those are internal variables pointing into the AT&T scanner's input buffer.  I
+imagine they're being manipulated in user versions of the input() and unput()
+functions.  If so, what you need to do is analyze those functions to figure out
+what they're doing, and then replace input() with an appropriate definition of
+YY_INPUT (see the flex man page).  You shouldn't need to (and must not) replace
+flex's unput() function.
+
+@node Is there a way to make flex treat NULL like a regular character?
+@unnumberedsec Is there a way to make flex treat NULL like a regular character?
+
+Is there a way to make flex treat NULL like a regular character?
+
+Yes, \0 and \x00 should both do the trick.  Perhaps you have an ancient
+version of flex.  The latest release is version @value{VERSION}.
+
+@node Whenever flex can not match the input it says "flex scanner jammed".
+@unnumberedsec Whenever flex can not match the input it says "flex scanner jammed".
+
+Whenever flex can not match the input it says "flex scanner jammed".
+
+You need to add a rule that matches the otherwise-unmatched text.
+e.g.,
+
+@example
+@verbatim
+%option yylineno
+%%
+[[a bunch of rules here]]
+
+.	printf("bad input character '%s' at line %d\n", yytext, yylineno);
+@end verbatim
+@end example
+
+See %option default for more information.
+
+@node Why doesnt flex have non-greedy operators like perl does?
+@unnumberedsec Why doesn't flex have non-greedy operators like perl does?
+
+A DFA can do a non-greedy match by stopping
+the first time it enters an accepting state, instead of consuming input until
+it determines that no further matching is possible (a ``jam'' state).  This
+is actually easier to implement than longest leftmost match (which flex does).
+
+But it's also much less useful than longest leftmost match.  In general,
+when you find yourself wishing for non-greedy matching, that's usually a
+sign that you're trying to make the scanner do some parsing.  That's
+generally the wrong approach, since it lacks the power to do a decent job.
+Better is to either introduce a separate parser, or to split the scanner
+into multiple scanners using (exclusive) start conditions.
+
+You might have
+a separate start state once you've seen the BEGIN. In that state, you
+might then have a regex that will match END (to kick you out of the
+state), and perhaps (.|\n) to get a single character within the chunk ...
+
+This approach also has much better error-reporting properties.
+
+@node Memory leak - 16386 bytes allocated by malloc.
+@unnumberedsec Memory leak - 16386 bytes allocated by malloc.
+@anchor{faq-memory-leak}
+UPDATED 2002-07-10: As of flex version 2.5.9, this leak means that you did not
+call yylex_destroy(). If you are using an earlier version of flex, then read
+on.
+
+The leak is about 16426 bytes.  That is, (8192 * 2 + 2) for the read-buffer, and
+about 40 for struct yy_buffer_state (depending upon alignment). The leak is in
+the non-reentrant C scanner only (NOT in the reentrant scanner, NOT in the C++
+scanner). Since flex doesn't know when you are done, the buffer is never freed.
+
+However, the leak won't multiply since the buffer is reused no matter how many
+times you call yylex().
+
+If you want to reclaim the memory when you are completely done scanning, then
+you might try this:
+
+@example
+@verbatim
+/* For non-reentrant C scanner only. */
+yy_delete_buffer(yy_current_buffer);
+yy_init = 1;
+@end verbatim
+@end example
+
+Note: yy_init is an "internal variable", and hasn't been tested in this
+situation. It is possible that some other globals may need resetting as well.
+
+@node How do I track the byte offset for lseek()?
+@unnumberedsec How do I track the byte offset for lseek()?
+
+@example
+@verbatim
+>   We thought that it would be possible to have this number through the
+>   evaluation of the following expression:
+>
+>   seek_position = (no_buffers)*YY_READ_BUF_SIZE + yy_c_buf_p - yy_current_buffer->yy_ch_buf
+@end verbatim
+@end example
+
+While this is the right ideas, it has two problems.  The first is that
+it's possible that flex will request less than YY_READ_BUF_SIZE during
+an invocation of YY_INPUT (or that your input source will return less
+even though YY_READ_BUF_SIZE bytes were requested).  The second problem
+is that when refilling its internal buffer, flex keeps some characters
+from the previous buffer (because usually it's in the middle of a match,
+and needs those characters to construct yytext for the match once it's
+done).  Because of this, yy_c_buf_p - yy_current_buffer->yy_ch_buf won't
+be exactly the number of characters already read from the current buffer.
+
+An alternative solution is to count the number of characters you've matched
+since starting to scan.  This can be done by using YY_USER_ACTION.  For
+example,
+
+	#define YY_USER_ACTION num_chars += yyleng;
+
+(You need to be careful to update your bookkeeping if you use yymore(),
+yyless(), unput(), or input().)
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-16
+@unnumberedsec unnamed-faq-16
+@example
+@verbatim
+To: steves@telebase.com
+Subject: Re: flex C++ question
+In-reply-to: Your message of Thu, 08 Dec 94 13:10:58 EST.
+Date: Wed, 14 Dec 94 16:40:47 PST
+From: Vern Paxson <vern>
+
+> We'd like to override the provided LexerInput() and LexerOutput()
+> functions, but we'd like to *not* use iostreams.  Instead, we'd like
+> to use some of our own I/O classes.  Is this possible?
+
+You can do this by passing the various functions nil iostream*'s, and then
+dealing with your own I/O classes surreptitiously (i.e., stashing them in
+special member variables).  This works because the only assumption about
+the lexer regarding what's done with the iostream's is that they're
+ultimately passed to LexerInput and LexerOutput, which then do whatever
+necessary with them.
+
+When the flex C++ scanning class rewrite finally happens (no date for this
+in sight), then this sort of thing should become much easier.
+
+		Vern
+@end verbatim
+@end example
+
+@node How do I skip as many chars as possible?
+@unnumberedsec How do I skip as many chars as possible?
+
+How do I skip as many chars as possible -- without interfering with the other
+patterns?
+
+In the example below, we want to skip over characters until we see the phrase
+"endskip". The following will @emph{NOT} work correctly (do you see why not?)
+
+@example
+@verbatim
+/* INCORRECT SCANNER */
+%x SKIP
+%%
+<INITIAL>startskip   BEGIN(SKIP);
+...
+<SKIP>"endskip"       BEGIN(INITIAL);
+<SKIP>.*             ;
+@end verbatim
+@end example
+
+The problem is that the pattern .* will eat up the word "endskip."
+The simplest (but slow) fix is:
+
+@example
+@verbatim
+<SKIP>"endskip"      BEGIN(INITIAL);
+<SKIP>.              ;
+@end verbatim
+@end example
+
+The fix involves making the second rule match more, without
+making it match "endskip" plus something else.  So for example:
+
+@example
+@verbatim
+<SKIP>"endskip"     BEGIN(INITIAL);
+<SKIP>[^e]+         ;
+<SKIP>.		        ;/* so you eat up e's, too */
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-33
+@unnumberedsec unnamed-faq-33
+@example
+@verbatim
+QUESTION:
+When was flex born?
+
+Vern Paxson took over
+the Software Tools lex project from Jef Poskanzer in 1982.  At that point it
+was written in Ratfor.  Around 1987 or so, Paxson translated it into C, and
+a legend was born :-).
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-42
+@unnumberedsec unnamed-faq-42
+@example
+@verbatim
+To: Adoram Rogel <adoram@orna.hybridge.com>
+Subject: Re: Flex 2.5.2 performance questions
+In-reply-to: Your message of Wed, 18 Sep 96 11:12:17 EDT.
+Date: Wed, 18 Sep 96 10:51:02 PDT
+From: Vern Paxson <vern>
+
+[Note, the most recent flex release is 2.5.4, which you can get from
+ftp.ee.lbl.gov.  It has bug fixes over 2.5.2 and 2.5.3.]
+
+> 1. Using the pattern
+>    ([Ff](oot)?)?[Nn](ote)?(\.)?
+>    instead of
+>    (((F|f)oot(N|n)ote)|((N|n)ote)|((N|n)\.)|((F|f)(N|n)(\.)))
+>    (in a very complicated flex program) caused the program to slow from
+>    300K+/min to 100K/min (no other changes were done).
+
+These two are not equivalent.  For example, the first can match "footnote."
+but the second can only match "footnote".  This is almost certainly the
+cause in the discrepancy - the slower scanner run is matching more tokens,
+and/or having to do more backing up.
+
+> 2. Which of these two are better: [Ff]oot or (F|f)oot ?
+
+From a performance point of view, they're equivalent (modulo presumably
+minor effects such as memory cache hit rates; and the presence of trailing
+context, see below).  From a space point of view, the first is slightly
+preferable.
+
+> 3. I have a pattern that look like this:
+>    pats {p1}|{p2}|{p3}|...|{p50}     (50 patterns ORd)
+>
+>    running yet another complicated program that includes the following rule:
+>    <snext>{and}/{no4}{bb}{pats}
+>
+>    gets me to "too complicated - over 32,000 states"...
+
+I can't tell from this example whether the trailing context is variable-length
+or fixed-length (it could be the latter if {and} is fixed-length).  If it's
+variable length, which flex -p will tell you, then this reflects a basic
+performance problem, and if you can eliminate it by restructuring your
+scanner, you will see significant improvement.
+
+>    so I divided {pats} to {pats1}, {pats2},..., {pats5} each consists of about
+>    10 patterns and changed the rule to be 5 rules.
+>    This did compile, but what is the rule of thumb here ?
+
+The rule is to avoid trailing context other than fixed-length, in which for
+a/b, either the 'a' pattern or the 'b' pattern have a fixed length.  Use
+of the '|' operator automatically makes the pattern variable length, so in
+this case '[Ff]oot' is preferred to '(F|f)oot'.
+
+> 4. I changed a rule that looked like this:
+>    <snext8>{and}{bb}/{ROMAN}[^A-Za-z] { BEGIN...
+>
+>    to the next 2 rules:
+>    <snext8>{and}{bb}/{ROMAN}[A-Za-z] { ECHO;}
+>    <snext8>{and}{bb}/{ROMAN}         { BEGIN...
+>
+>    Again, I understand the using [^...] will cause a great performance loss
+
+Actually, it doesn't cause any sort of performance loss.  It's a surprising
+fact about regular expressions that they always match in linear time
+regardless of how complex they are.
+
+>    but are there any specific rules about it ?
+
+See the "Performance Considerations" section of the man page, and also
+the example in MISC/fastwc/.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-43
+@unnumberedsec unnamed-faq-43
+@example
+@verbatim
+To: Adoram Rogel <adoram@hybridge.com>
+Subject: Re: Flex 2.5.2 performance questions
+In-reply-to: Your message of Thu, 19 Sep 96 10:16:04 EDT.
+Date: Thu, 19 Sep 96 09:58:00 PDT
+From: Vern Paxson <vern>
+
+> a lot about the backing up problem.
+> I believe that there lies my biggest problem, and I'll try to improve
+> it.
+
+Since you have variable trailing context, this is a bigger performance
+problem.  Fixing it is usually easier than fixing backing up, which in a
+complicated scanner (yours seems to fit the bill) can be extremely
+difficult to do correctly.
+
+You also don't mention what flags you are using for your scanner.
+-f makes a large speed difference, and -Cfe buys you nearly as much
+speed but the resulting scanner is considerably smaller.
+
+> I have an | operator in {and} and in {pats} so both of them are variable
+> length.
+
+-p should have reported this.
+
+> Is changing one of them to fixed-length is enough ?
+
+Yes.
+
+> Is it possible to change the 32,000 states limit ?
+
+Yes.  I've appended instructions on how.  Before you make this change,
+though, you should think about whether there are ways to fundamentally
+simplify your scanner - those are certainly preferable!
+
+		Vern
+
+To increase the 32K limit (on a machine with 32 bit integers), you increase
+the magnitude of the following in flexdef.h:
+
+#define JAMSTATE -32766 /* marks a reference to the state that always jams */
+#define MAXIMUM_MNS 31999
+#define BAD_SUBSCRIPT -32767
+#define MAX_SHORT 32700
+
+Adding a 0 or two after each should do the trick.
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-44
+@unnumberedsec unnamed-faq-44
+@example
+@verbatim
+To: Heeman_Lee@hp.com
+Subject: Re: flex - multi-byte support?
+In-reply-to: Your message of Thu, 03 Oct 1996 17:24:04 PDT.
+Date: Fri, 04 Oct 1996 11:42:18 PDT
+From: Vern Paxson <vern>
+
+>      I assume as long as my *.l file defines the
+>      range of expected character code values (in octal format), flex will
+>      scan the file and read multi-byte characters correctly. But I have no
+>      confidence in this assumption.
+
+Your lack of confidence is justified - this won't work.
+
+Flex has in it a widespread assumption that the input is processed
+one byte at a time.  Fixing this is on the to-do list, but is involved,
+so it won't happen any time soon.  In the interim, the best I can suggest
+(unless you want to try fixing it yourself) is to write your rules in
+terms of pairs of bytes, using definitions in the first section:
+
+	X	\xfe\xc2
+	...
+	%%
+	foo{X}bar	found_foo_fe_c2_bar();
+
+etc.  Definitely a pain - sorry about that.
+
+By the way, the email address you used for me is ancient, indicating you
+have a very old version of flex.  You can get the most recent, 2.5.4, from
+ftp.ee.lbl.gov.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-45
+@unnumberedsec unnamed-faq-45
+@example
+@verbatim
+To: moleary@primus.com
+Subject: Re: Flex / Unicode compatibility question
+In-reply-to: Your message of Tue, 22 Oct 1996 10:15:42 PDT.
+Date: Tue, 22 Oct 1996 11:06:13 PDT
+From: Vern Paxson <vern>
+
+Unfortunately flex at the moment has a widespread assumption within it
+that characters are processed 8 bits at a time.  I don't see any easy
+fix for this (other than writing your rules in terms of double characters -
+a pain).  I also don't know of a wider lex, though you might try surfing
+the Plan 9 stuff because I know it's a Unicode system, and also the PCCT
+toolkit (try searching say Alta Vista for "Purdue Compiler Construction
+Toolkit").
+
+Fixing flex to handle wider characters is on the long-term to-do list.
+But since flex is a strictly spare-time project these days, this probably
+won't happen for quite a while, unless someone else does it first.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-46
+@unnumberedsec unnamed-faq-46
+@example
+@verbatim
+To: Johan Linde <jl@theophys.kth.se>
+Subject: Re: translation of flex
+In-reply-to: Your message of Sun, 10 Nov 1996 09:16:36 PST.
+Date: Mon, 11 Nov 1996 10:33:50 PST
+From: Vern Paxson <vern>
+
+> I'm working for the Swedish team translating GNU program, and I'm currently
+> working with flex. I have a few questions about some of the messages which
+> I hope you can answer.
+
+All of the things you're wondering about, by the way, concerning flex
+internals - probably the only person who understands what they mean in
+English is me!  So I wouldn't worry too much about getting them right.
+That said ...
+
+> #: main.c:545
+> msgid "  %d protos created\n"
+>
+> Does proto mean prototype?
+
+Yes - prototypes of state compression tables.
+
+> #: main.c:539
+> msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
+>
+> Here I'm mainly puzzled by 'nxt-chk'. I guess it means 'next-check'. (?)
+> However, 'template next-check entries' doesn't make much sense to me. To be
+> able to find a good translation I need to know a little bit more about it.
+
+There is a scheme in the Aho/Sethi/Ullman compiler book for compressing
+scanner tables.  It involves creating two pairs of tables.  The first has
+"base" and "default" entries, the second has "next" and "check" entries.
+The "base" entry is indexed by the current state and yields an index into
+the next/check table.  The "default" entry gives what to do if the state
+transition isn't found in next/check.  The "next" entry gives the next
+state to enter, but only if the "check" entry verifies that this entry is
+correct for the current state.  Flex creates templates of series of
+next/check entries and then encodes differences from these templates as a
+way to compress the tables.
+
+> #: main.c:533
+> msgid "  %d/%d base-def entries created\n"
+>
+> The same problem here for 'base-def'.
+
+See above.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-47
+@unnumberedsec unnamed-faq-47
+@example
+@verbatim
+To: Xinying Li <xli@npac.syr.edu>
+Subject: Re: FLEX ?
+In-reply-to: Your message of Wed, 13 Nov 1996 17:28:38 PST.
+Date: Wed, 13 Nov 1996 19:51:54 PST
+From: Vern Paxson <vern>
+
+> "unput()" them to input flow, question occurs. If I do this after I scan
+> a carriage, the variable "yy_current_buffer->yy_at_bol" is changed. That
+> means the carriage flag has gone.
+
+You can control this by calling yy_set_bol().  It's described in the manual.
+
+>      And if in pre-reading it goes to the end of file, is anything done
+> to control the end of curren buffer and end of file?
+
+No, there's no way to put back an end-of-file.
+
+>      By the way I am using flex 2.5.2 and using the "-l".
+
+The latest release is 2.5.4, by the way.  It fixes some bugs in 2.5.2 and
+2.5.3.  You can get it from ftp.ee.lbl.gov.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-48
+@unnumberedsec unnamed-faq-48
+@example
+@verbatim
+To: Alain.ISSARD@st.com
+Subject: Re: Start condition with FLEX
+In-reply-to: Your message of Mon, 18 Nov 1996 09:45:02 PST.
+Date: Mon, 18 Nov 1996 10:41:34 PST
+From: Vern Paxson <vern>
+
+> I am not able to use the start condition scope and to use the | (OR) with
+> rules having start conditions.
+
+The problem is that if you use '|' as a regular expression operator, for
+example "a|b" meaning "match either 'a' or 'b'", then it must *not* have
+any blanks around it.  If you instead want the special '|' *action* (which
+from your scanner appears to be the case), which is a way of giving two
+different rules the same action:
+
+	foo	|
+	bar	matched_foo_or_bar();
+
+then '|' *must* be separated from the first rule by whitespace and *must*
+be followed by a new line.  You *cannot* write it as:
+
+	foo | bar	matched_foo_or_bar();
+
+even though you might think you could because yacc supports this syntax.
+The reason for this unfortunately incompatibility is historical, but it's
+unlikely to be changed.
+
+Your problems with start condition scope are simply due to syntax errors
+from your use of '|' later confusing flex.
+
+Let me know if you still have problems.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-49
+@unnumberedsec unnamed-faq-49
+@example
+@verbatim
+To: Gregory Margo <gmargo@newton.vip.best.com>
+Subject: Re: flex-2.5.3 bug report
+In-reply-to: Your message of Sat, 23 Nov 1996 16:50:09 PST.
+Date: Sat, 23 Nov 1996 17:07:32 PST
+From: Vern Paxson <vern>
+
+> Enclosed is a lex file that "real" lex will process, but I cannot get
+> flex to process it.  Could you try it and maybe point me in the right direction?
+
+Your problem is that some of the definitions in the scanner use the '/'
+trailing context operator, and have it enclosed in ()'s.  Flex does not
+allow this operator to be enclosed in ()'s because doing so allows undefined
+regular expressions such as "(a/b)+".  So the solution is to remove the
+parentheses.  Note that you must also be building the scanner with the -l
+option for AT&T lex compatibility.  Without this option, flex automatically
+encloses the definitions in parentheses.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-50
+@unnumberedsec unnamed-faq-50
+@example
+@verbatim
+To: Thomas Hadig <hadig@toots.physik.rwth-aachen.de>
+Subject: Re: Flex Bug ?
+In-reply-to: Your message of Tue, 26 Nov 1996 14:35:01 PST.
+Date: Tue, 26 Nov 1996 11:15:05 PST
+From: Vern Paxson <vern>
+
+> In my lexer code, i have the line :
+> ^\*.*          { }
+>
+> Thus all lines starting with an astrix (*) are comment lines.
+> This does not work !
+
+I can't get this problem to reproduce - it works fine for me.  Note
+though that if what you have is slightly different:
+
+	COMMENT	^\*.*
+	%%
+	{COMMENT}	{ }
+
+then it won't work, because flex pushes back macro definitions enclosed
+in ()'s, so the rule becomes
+
+	(^\*.*)		{ }
+
+and now that the '^' operator is not at the immediate beginning of the
+line, it's interpreted as just a regular character.  You can avoid this
+behavior by using the "-l" lex-compatibility flag, or "%option lex-compat".
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-51
+@unnumberedsec unnamed-faq-51
+@example
+@verbatim
+To: Adoram Rogel <adoram@hybridge.com>
+Subject: Re: Flex 2.5.4 BOF ???
+In-reply-to: Your message of Tue, 26 Nov 1996 16:10:41 PST.
+Date: Wed, 27 Nov 1996 10:56:25 PST
+From: Vern Paxson <vern>
+
+>     Organization(s)?/[a-z]
+>
+> This matched "Organizations" (looking in debug mode, the trailing s
+> was matched with trailing context instead of the optional (s) in the
+> end of the word.
+
+That should only happen with lex.  Flex can properly match this pattern.
+(That might be what you're saying, I'm just not sure.)
+
+> Is there a way to avoid this dangerous trailing context problem ?
+
+Unfortunately, there's no easy way.  On the other hand, I don't see why
+it should be a problem.  Lex's matching is clearly wrong, and I'd hope
+that usually the intent remains the same as expressed with the pattern,
+so flex's matching will be correct.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-52
+@unnumberedsec unnamed-faq-52
+@example
+@verbatim
+To: Cameron MacKinnon <mackin@interlog.com>
+Subject: Re: Flex documentation bug
+In-reply-to: Your message of Mon, 02 Dec 1996 00:07:08 PST.
+Date: Sun, 01 Dec 1996 22:29:39 PST
+From: Vern Paxson <vern>
+
+> I'm not sure how or where to submit bug reports (documentation or
+> otherwise) for the GNU project stuff ...
+
+Well, strictly speaking flex isn't part of the GNU project.  They just
+distribute it because no one's written a decent GPL'd lex replacement.
+So you should send bugs directly to me.  Those sent to the GNU folks
+sometimes find there way to me, but some may drop between the cracks.
+
+> In GNU Info, under the section 'Start Conditions', and also in the man
+> page (mine's dated April '95) is a nice little snippet showing how to
+> parse C quoted strings into a buffer, defined to be MAX_STR_CONST in
+> size. Unfortunately, no overflow checking is ever done ...
+
+This is already mentioned in the manual:
+
+Finally, here's an example of how to  match  C-style  quoted
+strings using exclusive start conditions, including expanded
+escape sequences (but not including checking  for  a  string
+that's too long):
+
+The reason for not doing the overflow checking is that it will needlessly
+clutter up an example whose main purpose is just to demonstrate how to
+use flex.
+
+The latest release is 2.5.4, by the way, available from ftp.ee.lbl.gov.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-53
+@unnumberedsec unnamed-faq-53
+@example
+@verbatim
+To: tsv@cs.UManitoba.CA
+Subject: Re: Flex (reg)..
+In-reply-to: Your message of Thu, 06 Mar 1997 23:50:16 PST.
+Date: Thu, 06 Mar 1997 15:54:19 PST
+From: Vern Paxson <vern>
+
+> [:alpha:] ([:alnum:] | \\_)*
+
+If your rule really has embedded blanks as shown above, then it won't
+work, as the first blank delimits the rule from the action.  (It wouldn't
+even compile ...)  You need instead:
+
+[:alpha:]([:alnum:]|\\_)*
+
+and that should work fine - there's no restriction on what can go inside
+of ()'s except for the trailing context operator, '/'.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-54
+@unnumberedsec unnamed-faq-54
+@example
+@verbatim
+To: "Mike Stolnicki" <mstolnic@ford.com>
+Subject: Re: FLEX help
+In-reply-to: Your message of Fri, 30 May 1997 13:33:27 PDT.
+Date: Fri, 30 May 1997 10:46:35 PDT
+From: Vern Paxson <vern>
+
+> We'd like to add "if-then-else", "while", and "for" statements to our
+> language ...
+> We've investigated many possible solutions.  The one solution that seems
+> the most reasonable involves knowing the position of a TOKEN in yyin.
+
+I strongly advise you to instead build a parse tree (abstract syntax tree)
+and loop over that instead.  You'll find this has major benefits in keeping
+your interpreter simple and extensible.
+
+That said, the functionality you mention for get_position and set_position
+have been on the to-do list for a while.  As flex is a purely spare-time
+project for me, no guarantees when this will be added (in particular, it
+for sure won't be for many months to come).
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-55
+@unnumberedsec unnamed-faq-55
+@example
+@verbatim
+To: Colin Paul Adams <colin@colina.demon.co.uk>
+Subject: Re: Flex C++ classes and Bison
+In-reply-to: Your message of 09 Aug 1997 17:11:41 PDT.
+Date: Fri, 15 Aug 1997 10:48:19 PDT
+From: Vern Paxson <vern>
+
+> #define YY_DECL   int yylex (YYSTYPE *lvalp, struct parser_control
+> *parm)
+>
+> I have been trying  to get this to work as a C++ scanner, but it does
+> not appear to be possible (warning that it matches no declarations in
+> yyFlexLexer, or something like that).
+>
+> Is this supposed to be possible, or is it being worked on (I DID
+> notice the comment that scanner classes are still experimental, so I'm
+> not too hopeful)?
+
+What you need to do is derive a subclass from yyFlexLexer that provides
+the above yylex() method, squirrels away lvalp and parm into member
+variables, and then invokes yyFlexLexer::yylex() to do the regular scanning.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-56
+@unnumberedsec unnamed-faq-56
+@example
+@verbatim
+To: Mikael.Latvala@lmf.ericsson.se
+Subject: Re: Possible mistake in Flex v2.5 document
+In-reply-to: Your message of Fri, 05 Sep 1997 16:07:24 PDT.
+Date: Fri, 05 Sep 1997 10:01:54 PDT
+From: Vern Paxson <vern>
+
+> In that example you show how to count comment lines when using
+> C style /* ... */ comments. My question is, shouldn't you take into
+> account a scenario where end of a comment marker occurs inside
+> character or string literals?
+
+The scanner certainly needs to also scan character and string literals.
+However it does that (there's an example in the man page for strings), the
+lexer will recognize the beginning of the literal before it runs across the
+embedded "/*".  Consequently, it will finish scanning the literal before it
+even considers the possibility of matching "/*".
+
+Example:
+
+	'([^']*|{ESCAPE_SEQUENCE})'
+
+will match all the text between the ''s (inclusive).  So the lexer
+considers this as a token beginning at the first ', and doesn't even
+attempt to match other tokens inside it.
+
+I thinnk this subtlety is not worth putting in the manual, as I suspect
+it would confuse more people than it would enlighten.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-57
+@unnumberedsec unnamed-faq-57
+@example
+@verbatim
+To: "Marty Leisner" <leisner@sdsp.mc.xerox.com>
+Subject: Re: flex limitations
+In-reply-to: Your message of Sat, 06 Sep 1997 11:27:21 PDT.
+Date: Mon, 08 Sep 1997 11:38:08 PDT
+From: Vern Paxson <vern>
+
+> %%
+> [a-zA-Z]+       /* skip a line */
+>                 {  printf("got %s\n", yytext); }
+> %%
+
+What version of flex are you using?  If I feed this to 2.5.4, it complains:
+
+	"bug.l", line 5: EOF encountered inside an action
+	"bug.l", line 5: unrecognized rule
+	"bug.l", line 5: fatal parse error
+
+Not the world's greatest error message, but it manages to flag the problem.
+
+(With the introduction of start condition scopes, flex can't accommodate
+an action on a separate line, since it's ambiguous with an indented rule.)
+
+You can get 2.5.4 from ftp.ee.lbl.gov.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-58
+@unnumberedsec unnamed-faq-58
+@example
+@verbatim
+To: uocarroll@deagostini.co.uk (Ultan O'Carroll)
+Subject: Re: Flex repositries
+In-reply-to: Your message of Fri, 12 Sep 1997 15:02:28 PDT.
+Date: Fri, 12 Sep 1997 10:31:50 PDT
+From: Vern Paxson <vern>
+
+>      before I start beavering away I wonder if you know of any
+>      place/libraries for flex
+>      desciption files that might already do this or give me a head start ?
+
+Unfortunately, no, I don't.  You might try asking on comp.compilers.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-59
+@unnumberedsec unnamed-faq-59
+@example
+@verbatim
+To: Adoram Rogel <adoram@hybridge.com>
+Subject: Re: Conditional compiling in the definitions section
+In-reply-to: Your message of Thu, 25 Sep 1997 11:22:42 PDT.
+Date: Thu, 25 Sep 1997 10:56:31 PDT
+From: Vern Paxson <vern>
+
+> I'm trying to combine two large lex files that now differ only in
+> about 10 lines in the definitions section.
+> I would like to have something like this:
+> #ifdef FFF
+> it	\<IT\>
+> #else
+> it	\<I\>
+> #endif
+>
+> Now, I can't add states for these, as I have already too many states
+> and the program is very complicated, and I won't be able to handle
+> 10 or 20 more states.
+>
+> Any trick to do this ?
+
+You might try using m4, or the C preprocessor plus a sed script to
+clean up the result (strip out the #line's).
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-60
+@unnumberedsec unnamed-faq-60
+@example
+@verbatim
+To: Steve Antoch <SteveAn@visio.com>
+Subject: Re: lex and yacc grammars
+In-reply-to: Your message of Mon, 17 Nov 1997 15:31:25 PST.
+Date: Mon, 17 Nov 1997 15:27:01 PST
+From: Vern Paxson <vern>
+
+> Would you happen to know where I can find grammars for lex and yacc?
+
+The flex sources have a grammar for (f)lex.  Dunno about yacc,
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-61
+@unnumberedsec unnamed-faq-61
+@example
+@verbatim
+To: Bryan Housel <bryan@drawcomp.com>
+Subject: Re: Question about Flex v2.5
+In-reply-to: Your message of Tue, 11 Nov 1997 21:30:23 PST.
+Date: Mon, 17 Nov 1997 17:12:21 PST
+From: Vern Paxson <vern>
+
+> It prints one of those "end of buffer.." messages for each character in the
+> token...
+
+This will happen if your LexerInput() function returns only one character
+at a time, which can happen either if you're scanner is "interactive", or
+if the streams library on your platform always returns 1 for yyin->gcount().
+
+Solution: override LexerInput() with a version that returns whole buffers.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-62
+@unnumberedsec unnamed-faq-62
+@example
+@verbatim
+To: Georg.Rehm@CL-KI.Uni-Osnabrueck.DE
+Subject: Re: Flex maximums
+In-reply-to: Your message of Mon, 17 Nov 1997 17:16:06 PST.
+Date: Mon, 17 Nov 1997 17:16:15 PST
+From: Vern Paxson <vern>
+
+> I took a quick look into the flex-sources and altered some #defines in
+> flexdefs.h:
+>
+> 	#define INITIAL_MNS 64000
+> 	#define MNS_INCREMENT 1024000
+> 	#define MAXIMUM_MNS 64000
+
+The things to fix are to add a couple of zeroes to:
+
+#define JAMSTATE -32766 /* marks a reference to the state that always jams */
+#define MAXIMUM_MNS 31999
+#define BAD_SUBSCRIPT -32767
+#define MAX_SHORT 32700
+
+and, if you get complaints about too many rules, make the following change too:
+
+	#define YY_TRAILING_MASK 0x200000
+	#define YY_TRAILING_HEAD_MASK 0x400000
+
+- Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-63
+@unnumberedsec unnamed-faq-63
+@example
+@verbatim
+To: jimmey@lexis-nexis.com (Jimmey Todd)
+Subject: Re: FLEX question regarding istream vs ifstream
+In-reply-to: Your message of Mon, 08 Dec 1997 15:54:15 PST.
+Date: Mon, 15 Dec 1997 13:21:35 PST
+From: Vern Paxson <vern>
+
+>         stdin_handle = YY_CURRENT_BUFFER;
+>         ifstream fin( "aFile" );
+>         yy_switch_to_buffer( yy_create_buffer( fin, YY_BUF_SIZE ) );
+>
+> What I'm wanting to do, is pass the contents of a file thru one set
+> of rules and then pass stdin thru another set... It works great if, I
+> don't use the C++ classes. But since everything else that I'm doing is
+> in C++, I thought I'd be consistent.
+>
+> The problem is that 'yy_create_buffer' is expecting an istream* as it's
+> first argument (as stated in the man page). However, fin is a ifstream
+> object. Any ideas on what I might be doing wrong? Any help would be
+> appreciated. Thanks!!
+
+You need to pass &fin, to turn it into an ifstream* instead of an ifstream.
+Then its type will be compatible with the expected istream*, because ifstream
+is derived from istream.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-64
+@unnumberedsec unnamed-faq-64
+@example
+@verbatim
+To: Enda Fadian <fadiane@piercom.ie>
+Subject: Re: Question related to Flex man page?
+In-reply-to: Your message of Tue, 16 Dec 1997 15:17:34 PST.
+Date: Tue, 16 Dec 1997 14:17:09 PST
+From: Vern Paxson <vern>
+
+> Can you explain to me what is ment by a long-jump in relation to flex?
+
+Using the longjmp() function while inside yylex() or a routine called by it.
+
+> what is the flex activation frame.
+
+Just yylex()'s stack frame.
+
+> As far as I can see yyrestart will bring me back to the sart of the input
+> file and using flex++ isnot really an option!
+
+No, yyrestart() doesn't imply a rewind, even though its name might sound
+like it does.  It tells the scanner to flush its internal buffers and
+start reading from the given file at its present location.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-65
+@unnumberedsec unnamed-faq-65
+@example
+@verbatim
+To: hassan@larc.info.uqam.ca (Hassan Alaoui)
+Subject: Re: Need urgent Help
+In-reply-to: Your message of Sat, 20 Dec 1997 19:38:19 PST.
+Date: Sun, 21 Dec 1997 21:30:46 PST
+From: Vern Paxson <vern>
+
+> /usr/lib/yaccpar: In function `int yyparse()':
+> /usr/lib/yaccpar:184: warning: implicit declaration of function `int yylex(...)'
+>
+> ld: Undefined symbol
+>    _yylex
+>    _yyparse
+>    _yyin
+
+This is a known problem with Solaris C++ (and/or Solaris yacc).  I believe
+the fix is to explicitly insert some 'extern "C"' statements for the
+corresponding routines/symbols.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-66
+@unnumberedsec unnamed-faq-66
+@example
+@verbatim
+To: mc0307@mclink.it
+Cc: gnu@prep.ai.mit.edu
+Subject: Re: [mc0307@mclink.it: Help request]
+In-reply-to: Your message of Fri, 12 Dec 1997 17:57:29 PST.
+Date: Sun, 21 Dec 1997 22:33:37 PST
+From: Vern Paxson <vern>
+
+> This is my definition for float and integer types:
+> . . .
+> NZD          [1-9]
+> ...
+> I've tested my program on other lex version (on UNIX Sun Solaris an HP
+> UNIX) and it work well, so I think that my definitions are correct.
+> There are any differences between Lex and Flex?
+
+There are indeed differences, as discussed in the man page.  The one
+you are probably running into is that when flex expands a name definition,
+it puts parentheses around the expansion, while lex does not.  There's
+an example in the man page of how this can lead to different matching.
+Flex's behavior complies with the POSIX standard (or at least with the
+last POSIX draft I saw).
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-67
+@unnumberedsec unnamed-faq-67
+@example
+@verbatim
+To: hassan@larc.info.uqam.ca (Hassan Alaoui)
+Subject: Re: Thanks
+In-reply-to: Your message of Mon, 22 Dec 1997 16:06:35 PST.
+Date: Mon, 22 Dec 1997 14:35:05 PST
+From: Vern Paxson <vern>
+
+> Thank you very much for your help. I compile and link well with C++ while
+> declaring 'yylex ...' extern, But a little problem remains. I get a
+> segmentation default when executing ( I linked with lfl library) while it
+> works well when using LEX instead of flex. Do you have some ideas about the
+> reason for this ?
+
+The one possible reason for this that comes to mind is if you've defined
+yytext as "extern char yytext[]" (which is what lex uses) instead of
+"extern char *yytext" (which is what flex uses).  If it's not that, then
+I'm afraid I don't know what the problem might be.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-68
+@unnumberedsec unnamed-faq-68
+@example
+@verbatim
+To: "Bart Niswonger" <NISWONGR@almaden.ibm.com>
+Subject: Re: flex 2.5: c++ scanners & start conditions
+In-reply-to: Your message of Tue, 06 Jan 1998 10:34:21 PST.
+Date: Tue, 06 Jan 1998 19:19:30 PST
+From: Vern Paxson <vern>
+
+> The problem is that when I do this (using %option c++) start
+> conditions seem to not apply.
+
+The BEGIN macro modifies the yy_start variable.  For C scanners, this
+is a static with scope visible through the whole file.  For C++ scanners,
+it's a member variable, so it only has visible scope within a member
+function.  Your lexbegin() routine is not a member function when you
+build a C++ scanner, so it's not modifying the correct yy_start.  The
+diagnostic that indicates this is that you found you needed to add
+a declaration of yy_start in order to get your scanner to compile when
+using C++; instead, the correct fix is to make lexbegin() a member
+function (by deriving from yyFlexLexer).
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-69
+@unnumberedsec unnamed-faq-69
+@example
+@verbatim
+To: "Boris Zinin" <boris@ippe.rssi.ru>
+Subject: Re: current position in flex buffer
+In-reply-to: Your message of Mon, 12 Jan 1998 18:58:23 PST.
+Date: Mon, 12 Jan 1998 12:03:15 PST
+From: Vern Paxson <vern>
+
+> The problem is how to determine the current position in flex active
+> buffer when a rule is matched....
+
+You will need to keep track of this explicitly, such as by redefining
+YY_USER_ACTION to count the number of characters matched.
+
+The latest flex release, by the way, is 2.5.4, available from ftp.ee.lbl.gov.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-70
+@unnumberedsec unnamed-faq-70
+@example
+@verbatim
+To: Bik.Dhaliwal@bis.org
+Subject: Re: Flex question
+In-reply-to: Your message of Mon, 26 Jan 1998 13:05:35 PST.
+Date: Tue, 27 Jan 1998 22:41:52 PST
+From: Vern Paxson <vern>
+
+> That requirement involves knowing
+> the character position at which a particular token was matched
+> in the lexer.
+
+The way you have to do this is by explicitly keeping track of where
+you are in the file, by counting the number of characters scanned
+for each token (available in yyleng).  It may prove convenient to
+do this by redefining YY_USER_ACTION, as described in the manual.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-71
+@unnumberedsec unnamed-faq-71
+@example
+@verbatim
+To: Vladimir Alexiev <vladimir@cs.ualberta.ca>
+Subject: Re: flex: how to control start condition from parser?
+In-reply-to: Your message of Mon, 26 Jan 1998 05:50:16 PST.
+Date: Tue, 27 Jan 1998 22:45:37 PST
+From: Vern Paxson <vern>
+
+> It seems useful for the parser to be able to tell the lexer about such
+> context dependencies, because then they don't have to be limited to
+> local or sequential context.
+
+One way to do this is to have the parser call a stub routine that's
+included in the scanner's .l file, and consequently that has access ot
+BEGIN.  The only ugliness is that the parser can't pass in the state
+it wants, because those aren't visible - but if you don't have many
+such states, then using a different set of names doesn't seem like
+to much of a burden.
+
+While generating a .h file like you suggests is certainly cleaner,
+flex development has come to a virtual stand-still :-(, so a workaround
+like the above is much more pragmatic than waiting for a new feature.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-72
+@unnumberedsec unnamed-faq-72
+@example
+@verbatim
+To: Barbara Denny <denny@3com.com>
+Subject: Re: freebsd flex bug?
+In-reply-to: Your message of Fri, 30 Jan 1998 12:00:43 PST.
+Date: Fri, 30 Jan 1998 12:42:32 PST
+From: Vern Paxson <vern>
+
+> lex.yy.c:1996: parse error before `='
+
+This is the key, identifying this error.  (It may help to pinpoint
+it by using flex -L, so it doesn't generate #line directives in its
+output.)  I will bet you heavy money that you have a start condition
+name that is also a variable name, or something like that; flex spits
+out #define's for each start condition name, mapping them to a number,
+so you can wind up with:
+
+	%x foo
+	%%
+		...
+	%%
+	void bar()
+		{
+		int foo = 3;
+		}
+
+and the penultimate will turn into "int 1 = 3" after C preprocessing,
+since flex will put "#define foo 1" in the generated scanner.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-73
+@unnumberedsec unnamed-faq-73
+@example
+@verbatim
+To: Maurice Petrie <mpetrie@infoscigroup.com>
+Subject: Re: Lost flex .l file
+In-reply-to: Your message of Mon, 02 Feb 1998 14:10:01 PST.
+Date: Mon, 02 Feb 1998 11:15:12 PST
+From: Vern Paxson <vern>
+
+> I am curious as to
+> whether there is a simple way to backtrack from the generated source to
+> reproduce the lost list of tokens we are searching on.
+
+In theory, it's straight-forward to go from the DFA representation
+back to a regular-expression representation - the two are isomorphic.
+In practice, a huge headache, because you have to unpack all the tables
+back into a single DFA representation, and then write a program to munch
+on that and translate it into an RE.
+
+Sorry for the less-than-happy news ...
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-74
+@unnumberedsec unnamed-faq-74
+@example
+@verbatim
+To: jimmey@lexis-nexis.com (Jimmey Todd)
+Subject: Re: Flex performance question
+In-reply-to: Your message of Thu, 19 Feb 1998 11:01:17 PST.
+Date: Thu, 19 Feb 1998 08:48:51 PST
+From: Vern Paxson <vern>
+
+> What I have found, is that the smaller the data chunk, the faster the
+> program executes. This is the opposite of what I expected. Should this be
+> happening this way?
+
+This is exactly what will happen if your input file has embedded NULs.
+From the man page:
+
+A final note: flex is slow when matching NUL's, particularly
+when  a  token  contains multiple NUL's.  It's best to write
+rules which match short amounts of text if it's  anticipated
+that the text will often include NUL's.
+
+So that's the first thing to look for.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-75
+@unnumberedsec unnamed-faq-75
+@example
+@verbatim
+To: jimmey@lexis-nexis.com (Jimmey Todd)
+Subject: Re: Flex performance question
+In-reply-to: Your message of Thu, 19 Feb 1998 11:01:17 PST.
+Date: Thu, 19 Feb 1998 15:42:25 PST
+From: Vern Paxson <vern>
+
+So there are several problems.
+
+First, to go fast, you want to match as much text as possible, which
+your scanners don't in the case that what they're scanning is *not*
+a <RN> tag.  So you want a rule like:
+
+	[^<]+
+
+Second, C++ scanners are particularly slow if they're interactive,
+which they are by default.  Using -B speeds it up by a factor of 3-4
+on my workstation.
+
+Third, C++ scanners that use the istream interface are slow, because
+of how poorly implemented istream's are.  I built two versions of
+the following scanner:
+
+	%%
+	.*\n
+	.*
+	%%
+
+and the C version inhales a 2.5MB file on my workstation in 0.8 seconds.
+The C++ istream version, using -B, takes 3.8 seconds.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-76
+@unnumberedsec unnamed-faq-76
+@example
+@verbatim
+To: "Frescatore, David (CRD, TAD)" <frescatore@exc01crdge.crd.ge.com>
+Subject: Re: FLEX 2.5 & THE YEAR 2000
+In-reply-to: Your message of Wed, 03 Jun 1998 11:26:22 PDT.
+Date: Wed, 03 Jun 1998 10:22:26 PDT
+From: Vern Paxson <vern>
+
+> I am researching the Y2K problem with General Electric R&D
+> and need to know if there are any known issues concerning
+> the above mentioned software and Y2K regardless of version.
+
+There shouldn't be, all it ever does with the date is ask the system
+for it and then print it out.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-77
+@unnumberedsec unnamed-faq-77
+@example
+@verbatim
+To: "Hans Dermot Doran" <htd@ibhdoran.com>
+Subject: Re: flex problem
+In-reply-to: Your message of Wed, 15 Jul 1998 21:30:13 PDT.
+Date: Tue, 21 Jul 1998 14:23:34 PDT
+From: Vern Paxson <vern>
+
+> To overcome this, I gets() the stdin into a string and lex the string. The
+> string is lexed OK except that the end of string isn't lexed properly
+> (yy_scan_string()), that is the lexer dosn't recognise the end of string.
+
+Flex doesn't contain mechanisms for recognizing buffer endpoints.  But if
+you use fgets instead (which you should anyway, to protect against buffer
+overflows), then the final \n will be preserved in the string, and you can
+scan that in order to find the end of the string.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-78
+@unnumberedsec unnamed-faq-78
+@example
+@verbatim
+To: soumen@almaden.ibm.com
+Subject: Re: Flex++ 2.5.3 instance member vs. static member
+In-reply-to: Your message of Mon, 27 Jul 1998 02:10:04 PDT.
+Date: Tue, 28 Jul 1998 01:10:34 PDT
+From: Vern Paxson <vern>
+
+> %{
+> int mylineno = 0;
+> %}
+> ws      [ \t]+
+> alpha   [A-Za-z]
+> dig     [0-9]
+> %%
+>
+> Now you'd expect mylineno to be a member of each instance of class
+> yyFlexLexer, but is this the case?  A look at the lex.yy.cc file seems to
+> indicate otherwise; unless I am missing something the declaration of
+> mylineno seems to be outside any class scope.
+>
+> How will this work if I want to run a multi-threaded application with each
+> thread creating a FlexLexer instance?
+
+Derive your own subclass and make mylineno a member variable of it.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-79
+@unnumberedsec unnamed-faq-79
+@example
+@verbatim
+To: Adoram Rogel <adoram@hybridge.com>
+Subject: Re: More than 32K states change hangs
+In-reply-to: Your message of Tue, 04 Aug 1998 16:55:39 PDT.
+Date: Tue, 04 Aug 1998 22:28:45 PDT
+From: Vern Paxson <vern>
+
+> Vern Paxson,
+>
+> I followed your advice, posted on Usenet bu you, and emailed to me
+> personally by you, on how to overcome the 32K states limit. I'm running
+> on Linux machines.
+> I took the full source of version 2.5.4 and did the following changes in
+> flexdef.h:
+> #define JAMSTATE -327660
+> #define MAXIMUM_MNS 319990
+> #define BAD_SUBSCRIPT -327670
+> #define MAX_SHORT 327000
+>
+> and compiled.
+> All looked fine, including check and bigcheck, so I installed.
+
+Hmmm, you shouldn't increase MAX_SHORT, though looking through my email
+archives I see that I did indeed recommend doing so.  Try setting it back
+to 32700; that should suffice that you no longer need -Ca.  If it still
+hangs, then the interesting question is - where?
+
+> Compiling the same hanged program with a out-of-the-box (RedHat 4.2
+> distribution of Linux)
+> flex 2.5.4 binary works.
+
+Since Linux comes with source code, you should diff it against what
+you have to see what problems they missed.
+
+> Should I always compile with the -Ca option now ? even short and simple
+> filters ?
+
+No, definitely not.  It's meant to be for those situations where you
+absolutely must squeeze every last cycle out of your scanner.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-80
+@unnumberedsec unnamed-faq-80
+@example
+@verbatim
+To: "Schmackpfeffer, Craig" <Craig.Schmackpfeffer@usa.xerox.com>
+Subject: Re: flex output for static code portion
+In-reply-to: Your message of Tue, 11 Aug 1998 11:55:30 PDT.
+Date: Mon, 17 Aug 1998 23:57:42 PDT
+From: Vern Paxson <vern>
+
+> I would like to use flex under the hood to generate a binary file
+> containing the data structures that control the parse.
+
+This has been on the wish-list for a long time.  In principle it's
+straight-forward - you redirect mkdata() et al's I/O to another file,
+and modify the skeleton to have a start-up function that slurps these
+into dynamic arrays.  The concerns are (1) the scanner generation code
+is hairy and full of corner cases, so it's easy to get surprised when
+going down this path :-( ; and (2) being careful about buffering so
+that when the tables change you make sure the scanner starts in the
+correct state and reading at the right point in the input file.
+
+> I was wondering if you know of anyone who has used flex in this way.
+
+I don't - but it seems like a reasonable project to undertake (unlike
+numerous other flex tweaks :-).
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-81
+@unnumberedsec unnamed-faq-81
+@example
+@verbatim
+Received: from 131.173.17.11 (131.173.17.11 [131.173.17.11])
+	by ee.lbl.gov (8.9.1/8.9.1) with ESMTP id AAA03838
+	for <vern@ee.lbl.gov>; Thu, 20 Aug 1998 00:47:57 -0700 (PDT)
+Received: from hal.cl-ki.uni-osnabrueck.de (hal.cl-ki.Uni-Osnabrueck.DE [131.173.141.2])
+	by deimos.rz.uni-osnabrueck.de (8.8.7/8.8.8) with ESMTP id JAA34694
+	for <vern@ee.lbl.gov>; Thu, 20 Aug 1998 09:47:55 +0200
+Received: (from georg@localhost) by hal.cl-ki.uni-osnabrueck.de (8.6.12/8.6.12) id JAA34834 for vern@ee.lbl.gov; Thu, 20 Aug 1998 09:47:54 +0200
+From: Georg Rehm <georg@hal.cl-ki.uni-osnabrueck.de>
+Message-Id: <199808200747.JAA34834@hal.cl-ki.uni-osnabrueck.de>
+Subject: "flex scanner push-back overflow"
+To: vern@ee.lbl.gov
+Date: Thu, 20 Aug 1998 09:47:54 +0200 (MEST)
+Reply-To: Georg.Rehm@CL-KI.Uni-Osnabrueck.DE
+X-NoJunk: Do NOT send commercial mail, spam or ads to this address!
+X-URL: http://www.cl-ki.uni-osnabrueck.de/~georg/
+X-Mailer: ELM [version 2.4ME+ PL28 (25)]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+Hi Vern,
+
+Yesterday, I encountered a strange problem: I use the macro processor m4
+to include some lengthy lists into a .l file. Following is a flex macro
+definition that causes some serious pain in my neck:
+
+AUTHOR           ("A. Boucard / L. Boucard"|"A. Dastarac / M. Levent"|"A.Boucaud / L.Boucaud"|"Abderrahim Lamchichi"|"Achmat Dangor"|"Adeline Toullier"|"Adewale Maja-Pearce"|"Ahmed Ziri"|"Akram Ellyas"|"Alain Bihr"|"Alain Gresh"|"Alain Guillemoles"|"Alain Joxe"|"Alain Morice"|"Alain Renon"|"Alain Zecchini"|"Albert Memmi"|"Alberto Manguel"|"Alex De Waal"|"Alfonso Artico"| [...])
+
+The complete list contains about 10kB. When I try to "flex" this file
+(on a Solaris 2.6 machine, using a modified flex 2.5.4 (I only increased
+some of the predefined values in flexdefs.h) I get the error:
+
+myflex/flex -8  sentag.tmp.l
+flex scanner push-back overflow
+
+When I remove the slashes in the macro definition everything works fine.
+As I understand it, the double quotes escape the slash-character so it
+really means "/" and not "trailing context". Furthermore, I tried to
+escape the slashes with backslashes, but with no use, the same error message
+appeared when flexing the code.
+
+Do you have an idea what's going on here?
+
+Greetings from Germany,
+	Georg
+--
+Georg Rehm                                     georg@cl-ki.uni-osnabrueck.de
+Institute for Semantic Information Processing, University of Osnabrueck, FRG
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-82
+@unnumberedsec unnamed-faq-82
+@example
+@verbatim
+To: Georg.Rehm@CL-KI.Uni-Osnabrueck.DE
+Subject: Re: "flex scanner push-back overflow"
+In-reply-to: Your message of Thu, 20 Aug 1998 09:47:54 PDT.
+Date: Thu, 20 Aug 1998 07:05:35 PDT
+From: Vern Paxson <vern>
+
+> myflex/flex -8  sentag.tmp.l
+> flex scanner push-back overflow
+
+Flex itself uses a flex scanner.  That scanner is running out of buffer
+space when it tries to unput() the humongous macro you've defined.  When
+you remove the '/'s, you make it small enough so that it fits in the buffer;
+removing spaces would do the same thing.
+
+The fix is to either rethink how come you're using such a big macro and
+perhaps there's another/better way to do it; or to rebuild flex's own
+scan.c with a larger value for
+
+	#define YY_BUF_SIZE 16384
+
+- Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-83
+@unnumberedsec unnamed-faq-83
+@example
+@verbatim
+To: Jan Kort <jan@research.techforce.nl>
+Subject: Re: Flex
+In-reply-to: Your message of Fri, 04 Sep 1998 12:18:43 +0200.
+Date: Sat, 05 Sep 1998 00:59:49 PDT
+From: Vern Paxson <vern>
+
+> %%
+>
+> "TEST1\n"       { fprintf(stderr, "TEST1\n"); yyless(5); }
+> ^\n             { fprintf(stderr, "empty line\n"); }
+> .               { }
+> \n              { fprintf(stderr, "new line\n"); }
+>
+> %%
+> -- input ---------------------------------------
+> TEST1
+> -- output --------------------------------------
+> TEST1
+> empty line
+> ------------------------------------------------
+
+IMHO, it's not clear whether or not this is in fact a bug.  It depends
+on whether you view yyless() as backing up in the input stream, or as
+pushing new characters onto the beginning of the input stream.  Flex
+interprets it as the latter (for implementation convenience, I'll admit),
+and so considers the newline as in fact matching at the beginning of a
+line, as after all the last token scanned an entire line and so the
+scanner is now at the beginning of a new line.
+
+I agree that this is counter-intuitive for yyless(), given its
+functional description (it's less so for unput(), depending on whether
+you're unput()'ing new text or scanned text).  But I don't plan to
+change it any time soon, as it's a pain to do so.  Consequently,
+you do indeed need to use yy_set_bol() and YY_AT_BOL() to tweak
+your scanner into the behavior you desire.
+
+Sorry for the less-than-completely-satisfactory answer.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-84
+@unnumberedsec unnamed-faq-84
+@example
+@verbatim
+To: Patrick Krusenotto <krusenot@mac-info-link.de>
+Subject: Re: Problems with restarting flex-2.5.2-generated scanner
+In-reply-to: Your message of Thu, 24 Sep 1998 10:14:07 PDT.
+Date: Thu, 24 Sep 1998 23:28:43 PDT
+From: Vern Paxson <vern>
+
+> I am using flex-2.5.2 and bison 1.25 for Solaris and I am desperately
+> trying to make my scanner restart with a new file after my parser stops
+> with a parse error. When my compiler restarts, the parser always
+> receives the token after the token (in the old file!) that caused the
+> parser error.
+
+I suspect the problem is that your parser has read ahead in order
+to attempt to resolve an ambiguity, and when it's restarted it picks
+up with that token rather than reading a fresh one.  If you're using
+yacc, then the special "error" production can sometimes be used to
+consume tokens in an attempt to get the parser into a consistent state.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-85
+@unnumberedsec unnamed-faq-85
+@example
+@verbatim
+To: Henric Jungheim <junghelh@pe-nelson.com>
+Subject: Re: flex 2.5.4a
+In-reply-to: Your message of Tue, 27 Oct 1998 16:41:42 PST.
+Date: Tue, 27 Oct 1998 16:50:14 PST
+From: Vern Paxson <vern>
+
+> This brings up a feature request:  How about a command line
+> option to specify the filename when reading from stdin?  That way one
+> doesn't need to create a temporary file in order to get the "#line"
+> directives to make sense.
+
+Use -o combined with -t (per the man page description of -o).
+
+> P.S., Is there any simple way to use non-blocking IO to parse multiple
+> streams?
+
+Simple, no.
+
+One approach might be to return a magic character on EWOULDBLOCK and
+have a rule
+
+	.*<magic-character>	// put back .*, eat magic character
+
+This is off the top of my head, not sure it'll work.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-86
+@unnumberedsec unnamed-faq-86
+@example
+@verbatim
+To: "Repko, Billy D" <billy.d.repko@intel.com>
+Subject: Re: Compiling scanners
+In-reply-to: Your message of Wed, 13 Jan 1999 10:52:47 PST.
+Date: Thu, 14 Jan 1999 00:25:30 PST
+From: Vern Paxson <vern>
+
+> It appears that maybe it cannot find the lfl library.
+
+The Makefile in the distribution builds it, so you should have it.
+It's exceedingly trivial, just a main() that calls yylex() and
+a yyrap() that always returns 1.
+
+> %%
+>       \n      ++num_lines; ++num_chars;
+>       .       ++num_chars;
+
+You can't indent your rules like this - that's where the errors are coming
+from.  Flex copies indented text to the output file, it's how you do things
+like
+
+	int num_lines_seen = 0;
+
+to declare local variables.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-87
+@unnumberedsec unnamed-faq-87
+@example
+@verbatim
+To: Erick Branderhorst <Erick.Branderhorst@asml.nl>
+Subject: Re: flex input buffer
+In-reply-to: Your message of Tue, 09 Feb 1999 13:53:46 PST.
+Date: Tue, 09 Feb 1999 21:03:37 PST
+From: Vern Paxson <vern>
+
+> In the flex.skl file the size of the default input buffers is set.  Can you
+> explain why this size is set and why it is such a high number.
+
+It's large to optimize performance when scanning large files.  You can
+safely make it a lot lower if needed.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-88
+@unnumberedsec unnamed-faq-88
+@example
+@verbatim
+To: "Guido Minnen" <guidomi@cogs.susx.ac.uk>
+Subject: Re: Flex error message
+In-reply-to: Your message of Wed, 24 Feb 1999 15:31:46 PST.
+Date: Thu, 25 Feb 1999 00:11:31 PST
+From: Vern Paxson <vern>
+
+> I'm extending a larger scanner written in Flex and I keep running into
+> problems. More specifically, I get the error message:
+> "flex: input rules are too complicated (>= 32000 NFA states)"
+
+Increase the definitions in flexdef.h for:
+
+#define JAMSTATE -32766 /* marks a reference to the state that always j
+ams */
+#define MAXIMUM_MNS 31999
+#define BAD_SUBSCRIPT -32767
+
+recompile everything, and it should all work.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-89
+@unnumberedsec unnamed-faq-89
+@example
+@verbatim
+To: John Victor J <vjohn@its.soft.net>
+Subject: Re: flex---is thread safe
+In-reply-to: Your message of Sun, 23 May 1999 12:56:56 +0530.
+Date: Sun, 23 May 1999 00:32:53 PDT
+From: Vern Paxson <vern>
+
+>      I would like to know whether flex is thread safe???
+
+I take it you mean the scanners it generates and not flex itself.
+
+The answer is (still) No, except if you use the -+ option to generate
+a C++ scanning class (and if your stream library is thread-safe).
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-90
+@unnumberedsec unnamed-faq-90
+@example
+@verbatim
+To: "Dmitriy Goldobin" <gold@ems.chel.su>
+Subject: Re: FLEX trouble
+In-reply-to: Your message of Mon, 31 May 1999 18:44:49 PDT.
+Date: Tue, 01 Jun 1999 00:15:07 PDT
+From: Vern Paxson <vern>
+
+>   I have a trouble with FLEX. Why rule "/*".*"*/" work properly,=20
+> but rule "/*"(.|\n)*"*/" don't work ?
+
+The second of these will have to scan the entire input stream (because
+"(.|\n)*" matches an arbitrary amount of any text) in order to see if
+it ends with "*/", terminating the comment.  That potentially will overflow
+the input buffer.
+
+>   More complex rule "/*"([^*]|(\*/[^/]))*"*/ give an error
+> 'unrecognized rule'.
+
+You can't use the '/' operator inside parentheses.  It's not clear
+what "(a/b)*" actually means.
+
+>   I now use workaround with state <comment>, but single-rule is
+> better, i think.
+
+Single-rule is nice but will always have the problem of either setting
+restrictions on comments (like not allowing multi-line comments) and/or
+running the risk of consuming the entire input stream, as noted above.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-91
+@unnumberedsec unnamed-faq-91
+@example
+@verbatim
+Received: from mc-qout4.whowhere.com (mc-qout4.whowhere.com [209.185.123.18])
+	by ee.lbl.gov (8.9.3/8.9.3) with SMTP id IAA05100
+	for <vern@ee.lbl.gov>; Tue, 15 Jun 1999 08:56:06 -0700 (PDT)
+Received: from Unknown/Local ([?.?.?.?]) by my-deja.com; Tue Jun 15 08:55:43 1999
+To: vern@ee.lbl.gov
+Date: Tue, 15 Jun 1999 08:55:43 -0700
+From: "Aki Niimura" <neko@my-deja.com>
+Message-ID: <KNONDOHDOBGAEAAA@my-deja.com>
+Mime-Version: 1.0
+Cc:
+X-Sent-Mail: on
+Reply-To:
+X-Mailer: MailCity Service
+Subject: A question on flex C++ scanner
+X-Sender-Ip: 12.72.207.61
+Organization: My Deja Email  (http://www.my-deja.com:80)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+Dear Dr. Paxon,
+
+I have been using flex for years.
+It works very well on many projects.
+Most case, I used it to generate a scanner on C language.
+However, one project I needed to generate  a scanner
+on C++ lanuage. Thanks to your enhancement, flex did
+the job.
+
+Currently, I'm working on enhancing my previous project.
+I need to deal with multiple input streams (recursive
+inclusion) in this scanner (C++).
+I did similar thing for another scanner (C) as you
+explained in your documentation.
+
+The generated scanner (C++) has necessary methods:
+- switch_to_buffer(struct yy_buffer_state *b)
+- yy_create_buffer(istream *is, int sz)
+- yy_delete_buffer(struct yy_buffer_state *b)
+
+However, I couldn't figure out how to access current
+buffer (yy_current_buffer).
+
+yy_current_buffer is a protected member of yyFlexLexer.
+I can't access it directly.
+Then, I thought yy_create_buffer() with is = 0 might
+return current stream buffer. But it seems not as far
+as I checked the source. (flex 2.5.4)
+
+I went through the Web in addition to Flex documentation.
+However, it hasn't been successful, so far.
+
+It is not my intention to bother you, but, can you
+comment about how to obtain the current stream buffer?
+
+Your response would be highly appreciated.
+
+Best regards,
+Aki Niimura
+
+--== Sent via Deja.com http://www.deja.com/ ==--
+Share what you know. Learn what you don't.
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-92
+@unnumberedsec unnamed-faq-92
+@example
+@verbatim
+To: neko@my-deja.com
+Subject: Re: A question on flex C++ scanner
+In-reply-to: Your message of Tue, 15 Jun 1999 08:55:43 PDT.
+Date: Tue, 15 Jun 1999 09:04:24 PDT
+From: Vern Paxson <vern>
+
+> However, I couldn't figure out how to access current
+> buffer (yy_current_buffer).
+
+Derive your own subclass from yyFlexLexer.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-93
+@unnumberedsec unnamed-faq-93
+@example
+@verbatim
+To: "Stones, Darren" <Darren.Stones@nectech.co.uk>
+Subject: Re: You're the man to see?
+In-reply-to: Your message of Wed, 23 Jun 1999 11:10:29 PDT.
+Date: Wed, 23 Jun 1999 09:01:40 PDT
+From: Vern Paxson <vern>
+
+> I hope you can help me.  I am using Flex and Bison to produce an interpreted
+> language.  However all goes well until I try to implement an IF statement or
+> a WHILE.  I cannot get this to work as the parser parses all the conditions
+> eg. the TRUE and FALSE conditons to check for a rule match.  So I cannot
+> make a decision!!
+
+You need to use the parser to build a parse tree (= abstract syntax trwee),
+and when that's all done you recursively evaluate the tree, binding variables
+to values at that time.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-94
+@unnumberedsec unnamed-faq-94
+@example
+@verbatim
+To: Petr Danecek <petr@ics.cas.cz>
+Subject: Re: flex - question
+In-reply-to: Your message of Mon, 28 Jun 1999 19:21:41 PDT.
+Date: Fri, 02 Jul 1999 16:52:13 PDT
+From: Vern Paxson <vern>
+
+> file, it takes an enormous amount of time. It is funny, because the
+> source code has only 12 rules!!! I think it looks like an exponencial
+> growth.
+
+Right, that's the problem - some patterns (those with a lot of
+ambiguity, where yours has because at any given time the scanner can
+be in the middle of all sorts of combinations of the different
+rules) blow up exponentially.
+
+For your rules, there is an easy fix.  Change the ".*" that comes fater
+the directory name to "[^ ]*".  With that in place, the rules are no
+longer nearly so ambiguous, because then once one of the directories
+has been matched, no other can be matched (since they all require a
+leading blank).
+
+If that's not an acceptable solution, then you can enter a start state
+to pick up the .*\n after each directory is matched.
+
+Also note that for speed, you'll want to add a ".*" rule at the end,
+otherwise rules that don't match any of the patterns will be matched
+very slowly, a character at a time.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-95
+@unnumberedsec unnamed-faq-95
+@example
+@verbatim
+To: Tielman Koekemoer <tielman@spi.co.za>
+Subject: Re: Please help.
+In-reply-to: Your message of Thu, 08 Jul 1999 13:20:37 PDT.
+Date: Thu, 08 Jul 1999 08:20:39 PDT
+From: Vern Paxson <vern>
+
+> I was hoping you could help me with my problem.
+>
+> I tried compiling (gnu)flex on a Solaris 2.4 machine
+> but when I ran make (after configure) I got an error.
+>
+> --------------------------------------------------------------
+> gcc -c -I. -I. -g -O parse.c
+> ./flex -t -p  ./scan.l >scan.c
+> sh: ./flex: not found
+> *** Error code 1
+> make: Fatal error: Command failed for target `scan.c'
+> -------------------------------------------------------------
+>
+> What's strange to me is that I'm only
+> trying to install flex now. I then edited the Makefile to
+> and changed where it says "FLEX = flex" to "FLEX = lex"
+> ( lex: the native Solaris one ) but then it complains about
+> the "-p" option. Is there any way I can compile flex without
+> using flex or lex?
+>
+> Thanks so much for your time.
+
+You managed to step on the bootstrap sequence, which first copies
+initscan.c to scan.c in order to build flex.  Try fetching a fresh
+distribution from ftp.ee.lbl.gov.  (Or you can first try removing
+".bootstrap" and doing a make again.)
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-96
+@unnumberedsec unnamed-faq-96
+@example
+@verbatim
+To: Tielman Koekemoer <tielman@spi.co.za>
+Subject: Re: Please help.
+In-reply-to: Your message of Fri, 09 Jul 1999 09:16:14 PDT.
+Date: Fri, 09 Jul 1999 00:27:20 PDT
+From: Vern Paxson <vern>
+
+> First I removed .bootstrap (and ran make) - no luck. I downloaded the
+> software but I still have the same problem. Is there anything else I
+> could try.
+
+Try:
+
+	cp initscan.c scan.c
+	touch scan.c
+	make scan.o
+
+If this last tries to first build scan.c from scan.l using ./flex, then
+your "make" is broken, in which case compile scan.c to scan.o by hand.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-97
+@unnumberedsec unnamed-faq-97
+@example
+@verbatim
+To: Sumanth Kamenani <skamenan@crl.nmsu.edu>
+Subject: Re: Error
+In-reply-to: Your message of Mon, 19 Jul 1999 23:08:41 PDT.
+Date: Tue, 20 Jul 1999 00:18:26 PDT
+From: Vern Paxson <vern>
+
+> I am getting a compilation error. The error is given as "unknown symbol- yylex".
+
+The parser relies on calling yylex(), but you're instead using the C++ scanning
+class, so you need to supply a yylex() "glue" function that calls an instance
+scanner of the scanner (e.g., "scanner->yylex()").
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-98
+@unnumberedsec unnamed-faq-98
+@example
+@verbatim
+To: daniel@synchrods.synchrods.COM (Daniel Senderowicz)
+Subject: Re: lex
+In-reply-to: Your message of Mon, 22 Nov 1999 11:19:04 PST.
+Date: Tue, 23 Nov 1999 15:54:30 PST
+From: Vern Paxson <vern>
+
+Well, your problem is the
+
+switch (yybgin-yysvec-1) {      /* witchcraft */
+
+at the beginning of lex rules.  "witchcraft" == "non-portable".  It's
+assuming knowledge of the AT&T lex's internal variables.
+
+For flex, you can probably do the equivalent using a switch on YYSTATE.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-99
+@unnumberedsec unnamed-faq-99
+@example
+@verbatim
+To: archow@hss.hns.com
+Subject: Re: Regarding distribution of flex and yacc based grammars
+In-reply-to: Your message of Sun, 19 Dec 1999 17:50:24 +0530.
+Date: Wed, 22 Dec 1999 01:56:24 PST
+From: Vern Paxson <vern>
+
+> When we provide the customer with an object code distribution, is it
+> necessary for us to provide source
+> for the generated C files from flex and bison since they are generated by
+> flex and bison ?
+
+For flex, no.  I don't know what the current state of this is for bison.
+
+> Also, is there any requrirement for us to neccessarily  provide source for
+> the grammar files which are fed into flex and bison ?
+
+Again, for flex, no.
+
+See the file "COPYING" in the flex distribution for the legalese.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-100
+@unnumberedsec unnamed-faq-100
+@example
+@verbatim
+To: Martin Gallwey <gallweym@hyperion.moe.ul.ie>
+Subject: Re: Flex, and self referencing rules
+In-reply-to: Your message of Sun, 20 Feb 2000 01:01:21 PST.
+Date: Sat, 19 Feb 2000 18:33:16 PST
+From: Vern Paxson <vern>
+
+> However, I do not use unput anywhere. I do use self-referencing
+> rules like this:
+>
+> UnaryExpr               ({UnionExpr})|("-"{UnaryExpr})
+
+You can't do this - flex is *not* a parser like yacc (which does indeed
+allow recursion), it is a scanner that's confined to regular expressions.
+
+		Vern
+@end verbatim
+@end example
+
+@c TODO: Evaluate this faq.
+@node unnamed-faq-101
+@unnumberedsec unnamed-faq-101
+@example
+@verbatim
+To: slg3@lehigh.edu (SAMUEL L. GULDEN)
+Subject: Re: Flex problem
+In-reply-to: Your message of Thu, 02 Mar 2000 12:29:04 PST.
+Date: Thu, 02 Mar 2000 23:00:46 PST
+From: Vern Paxson <vern>
+
+If this is exactly your program:
+
+> digit [0-9]
+> digits {digit}+
+> whitespace [ \t\n]+
+>
+> %%
+> "[" { printf("open_brac\n");}
+> "]" { printf("close_brac\n");}
+> "+" { printf("addop\n");}
+> "*" { printf("multop\n");}
+> {digits} { printf("NUMBER = %s\n", yytext);}
+> whitespace ;
+
+then the problem is that the last rule needs to be "{whitespace}" !
+
+		Vern
+@end verbatim
+@end example
 
 @node Appendices
 @appendix Appendices
