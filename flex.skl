@@ -45,7 +45,9 @@
 
 
 #ifndef YY_USE_CONST
+#ifndef const
 #define const
+#endif
 #endif
 
 
@@ -168,7 +170,7 @@ extern int yywrap YY_PROTO(( void ));
 		{ \
 		/* Undo effects of setting up yytext. */ \
 		*yy_cp = yy_hold_char; \
-		yy_c_buf_p = yy_cp = yy_bp + n; \
+		yy_c_buf_p = yy_cp = yy_bp + n - YY_MORE_ADJ; \
 		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 		} \
 	while ( 0 )
@@ -351,7 +353,7 @@ do_action:	/* This label is used only to access EOF actions. */
 		 * already have been incremented past the NUL character
 		 * (since all states make transitions on EOB to the
 		 * end-of-buffer state).  Contrast this with the test
-		 * in yyinput().
+		 * in input().
 		 */
 		if ( yy_c_buf_p <= &yy_current_buffer->yy_ch_buf[yy_n_chars] )
 			{ /* This was really a NUL. */
@@ -384,7 +386,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 			else
 				{
-%% code to do backtracking for compressed tables and set up yy_cp goes here
+%% code to do back-up for compressed tables and set up yy_cp goes here
 				goto yy_find_action;
 				}
 			}
@@ -571,7 +573,7 @@ register yy_state_type yy_current_state;
 #endif
 	{
 	register int yy_is_jam;
-%% code to find the next state, and perhaps do backtracking, goes here
+%% code to find the next state, and perhaps do backing up, goes here
 
 	return yy_is_jam ? 0 : yy_current_state;
 	}
@@ -629,9 +631,8 @@ static int input()
 #endif
 	{
 	int c;
-	YY_CHAR *yy_cp = yy_c_buf_p;
 
-	*yy_cp = yy_hold_char;
+	*yy_c_buf_p = yy_hold_char;
 
 	if ( *yy_c_buf_p == YY_END_OF_BUFFER_CHAR )
 		{
@@ -684,6 +685,7 @@ static int input()
 		}
 
 	c = *yy_c_buf_p;
+	*yy_c_buf_p = '\0';	/* preserve yytext */
 	yy_hold_char = *++yy_c_buf_p;
 
 	return c;
