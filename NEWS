@@ -3,6 +3,13 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* after version 2.5.16
+
+** updated config.sub and config.guess
+
+** flex is indented by GNU indent (this was done earlier but not
+   explicitly documented)
+
 * version 2.5.16 released 2002-8-28
 
 ** c++ scanners compile again
