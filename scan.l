@@ -60,8 +60,8 @@
 %}
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
-%x FIRSTCCL CCL ACTION RECOVER BRACEERROR COMMENT
-%x ACTION_STRING PERCENT_BRACE_ACTION USED_LIST CODEBLOCK_2
+%x FIRSTCCL CCL ACTION RECOVER BRACEERROR COMMENT ACTION_STRING
+%x PERCENT_BRACE_ACTION USED_LIST
 
 WS		[ \t]+
 OPTWS		[ \t]*
@@ -155,7 +155,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 <COMMENT>{
 	"*/"		ACTION_ECHO; yy_pop_state();
 	"*"		ACTION_ECHO;
-	[^*\n]+	ACTION_ECHO;
+	[^*\n]+		ACTION_ECHO;
 	[^*\n]*{NL}	++linenum; ACTION_ECHO;
 }
 
@@ -255,7 +255,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 			indented_code = false;
 			doing_codeblock = true;
 			bracelevel = 1;
-			BEGIN(CODEBLOCK_2);
+			BEGIN(PERCENT_BRACE_ACTION);
 			}
 
 	^{OPTWS}"<"	BEGIN(SC); return '<';
@@ -470,10 +470,10 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 }
 
 
-<ACTION,CODEBLOCK_2>"/*"	ACTION_ECHO; yy_push_state( COMMENT );
-
-<PERCENT_BRACE_ACTION,CODEBLOCK_2>{
+<PERCENT_BRACE_ACTION>{
 	{OPTWS}"%}".*		bracelevel = 0;
+
+	<ACTION>"/*"		ACTION_ECHO; yy_push_state( COMMENT );
 
 	<CODEBLOCK,ACTION>{
 		"reject"	{
@@ -540,14 +540,12 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 			}
 
 
-<SECT2,QUOTE,CCL>{ESCSEQ}	{
+<SECT2,QUOTE,FIRSTCCL,CCL>{ESCSEQ}	{
 			yylval = myesc( (Char *) yytext );
-			return CHAR;
-			}
 
-<FIRSTCCL>{ESCSEQ}	{
-			yylval = myesc( (Char *) yytext );
-			BEGIN(CCL);
+			if ( YY_START == FIRSTCCL )
+				BEGIN(CCL);
+
 			return CHAR;
 			}
 
