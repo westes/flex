@@ -5,6 +5,8 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.25
 
+** new es translation from the translation project
+
 ** slight tweeks to the flex_int*_t types
 
 ** flex now warns about pattern ranges that might be ambiguous when
