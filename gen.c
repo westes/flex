@@ -1078,6 +1078,7 @@ void make_tables()
 	skelout();
 
 
+	out_dec( "#define YY_NUM_RULES %d\n", num_rules );
 	out_dec( "#define YY_END_OF_BUFFER %d\n", num_rules + 1 );
 
 	if ( fullspd )
