@@ -20,6 +20,8 @@
 Makefile
 Makefile.in
 flex.1
+flex.pdf
+flex.ps
 mdate-sh
 stamp-*
 version.texi
