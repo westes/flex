@@ -66,11 +66,11 @@ SOURCES = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.y \
 OBJECTS = ccl.o dfa.o ecs.o gen.o main.o misc.o nfa.o parse.o \
 	scan.o skel.o sym.o tblcmp.o yylex.o @ALLOCA@
 
-LIBSRCS = liballoc.c libmain.c libstring.c libyywrap.c
-LIBOBJS = liballoc.o libmain.o libstring.o libyywrap.o
+LIBSRCS = libmain.c libyywrap.c
+LIBOBJS = libmain.o libyywrap.o
 
 LINTSRCS = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.c \
-	scan.c skel.c sym.c tblcmp.c yylex.c liballoc.c libstring.c
+	scan.c skel.c sym.c tblcmp.c yylex.c
 
 DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	configure.in Makefile.in mkskel.sh flex.skl \
@@ -113,6 +113,7 @@ scan.c: scan.l
 	mv scan.tmp scan.c
 
 scan.o: scan.c parse.h flexdef.h
+yylex.o: yylex.c parse.h flexdef.h
 
 skel.c: flex.skl mkskel.sh
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir)/flex.skl >skel.c
@@ -128,7 +129,6 @@ parse.o: parse.c flexdef.h
 skel.o: skel.c flexdef.h
 sym.o: sym.c flexdef.h
 tblcmp.o: tblcmp.c flexdef.h
-yylex.o: yylex.c flexdef.h
 
 alloca.o: alloca.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -Dxmalloc=yy_flex_xmalloc alloca.c
