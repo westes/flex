@@ -46,11 +46,15 @@ Changes between 2.3 (full) release of 26May90 and 2.2 (alpha) release:
 	  been added to the flex source code, courtesy of Kevin B. Kenny.
 
 	- Routines dealing with memory allocation now use void* pointers
-	  instead of char* - see README for porting implications.
+	  instead of char* - see Makefile for porting implications.
 
 	- Error-checking is now done when flex closes a file.
 
 	- Various lint tweaks were added to reduce the number of gripes.
+
+	- Makefile has been further parameterized to aid in porting.
+
+	- Support for SCO Unix added.
 
 	- A note has been added to flexdoc.1 mentioning work in progress
 	  on modifying flex to generate straight C code rather than a
