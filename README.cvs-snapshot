@@ -1,34 +1,33 @@
-DESCRIPTION
+If you see this file, it's because you have a cvs snapshot of flex. If
+you are not interested in flex development or you are not in need of
+the latest bleeding-edge features, then this snapshot is not for you.
 
-This file describes what to expect in a flex CVS snapshot.
-
-
-WHO SHOULD READ THIS DOCUMENT
-
-Flex developers should read this document. If you are simply installing flex,
-you do not need to read this document (instead, read INSTALL).
-
-
-NOTE
-
-A CVS snapshot of flex is NOT the same thing as a distribution of flex. A CVS
-snapshot is used in the development of flex, while a "distribution" is used to
-build and install flex.
-
-
-REQUIREMENTS
+When you get a distribution of flex, a large number of intermediate
+files needed to make building flex easy are included. You don't have
+that in this snapshot.
 
 You will need various external tools in order to build the distribution. Here is
 a (possibly incomplete) list of the required tools. Always get the latest
 version of each tool:
 
-    compiler suite    ;  e.g., gcc
-    bash              ;  required by autotools (I think!)
-    GNU bison         ;  to generate parse.c
-    GNU autotools     ;  autoconf, automake, autogen
-    GNU m4            ;  required by autotools
-    flex              ;  for bootstrap of scan.l
-    tar/gzip          ;  to build the distro
-    texinfo tools     ;  to build and test the flex manual
-    perl              ;  not essential. this may be removed in the future
+compiler suite;  e.g., gcc
+bash or some other fairly robust sh-style shell
+GNU bison;  to generate parse.c from parse.y
+GNU m4; required by BNU autoconf (yes, it *must* be GNU m4)
+GNU autoconf and GNU automake; for generating Makefiles etc.
+flex;  for bootstrap of scan.l
+tar, gzip, etc.; for packaging of the source distribution
+texinfo tools;  to build and test the flex manual
+perl; GNU automake and GNU autoconf now depend on perl to run
 
+ONce you have all the necessary tools installed, life becomes
+simple. To prepare the flex tree for building, run the script:
+
+$ ./autogen.sh
+
+in the top level of the flex source tree.
+This script calls the various tools needed to get flex ready for the
+GNU-style configure script to be able to work.
+
+From this point on, building flex follows the usual configure, make,
+make install routine.
