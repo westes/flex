@@ -46,34 +46,35 @@ This manual describes
 a tool for generating programs that perform pattern-matching on text.  The
 manual includes both tutorial and reference sections.
 
-This edition of the @code{flex Manual} documents @code{flex} version 
+This edition of the @code{flex Manual} documents @code{flex} version
 @value{VERSION}. Last updated @value{UPDATED}.
 
 @menu
-* Introduction::                
-* Simple Examples::             
-* Format::                      
-* Patterns::                    
-* Matching::                    
-* Actions::                     
-* Generated Scanner::           
-* Start Conditions::            
-* Multiple::                    
-* EOF::                         
-* Misc Macros::                 
-* User Values::                 
-* Yacc::                        
-* Invoking Flex::               
-* Scanner Options::             
-* Performance::                 
-* Cxx::                         
-* Reentrant::                   
-* Lex and Posix::               
-* Diagnostics::                 
-* Limitations::                 
-* Bibliography::                
-* Copyright::                   
-* Reporting Bugs::              
+* Introduction::
+* Simple Examples::
+* Format::
+* Patterns::
+* Matching::
+* Actions::
+* Generated Scanner::
+* Start Conditions::
+* Multiple Input Buffers::
+* EOF::
+* Misc Macros::
+* User Values::
+* Yacc::
+* Invoking Flex::
+* Scanner Options::
+* Performance::
+* Cxx::
+* Reentrant::
+* Lex and Posix::
+* Memory Management::
+* Diagnostics::
+* Limitations::
+* Bibliography::
+* Copyright::
+* Reporting Bugs::
 * FAQ::
 * Appendices::
 * Indices::
@@ -221,7 +222,7 @@ A somewhat more complicated example:
                 yyin = fopen( argv[0], "r" );
         else
                 yyin = stdin;
-        
+
         yylex();
         }
 @end verbatim
@@ -336,7 +337,7 @@ to the next @samp{*/}.
 @cindex %@{ and %@}, in Definitions Section
 @cindex embedding C code with %@{ and %@}
 @cindex including C code with %@{ and %@}
- 
+
 Any
 @emph{indented}
 text or text enclosed in
@@ -708,7 +709,7 @@ Some notes on patterns:
 @cindex EOL, $ as normal character
 
 @itemize
-@item 
+@item
 A negated character class such as the example @samp{[^A-Z]}
 above
 @emph{will match a newline}
@@ -720,7 +721,7 @@ the inconsistency is historically entrenched.
 Matching newlines means that a pattern like @samp{[^"]*} can match the entire
 input unless there's another quote in the input.
 
-@item 
+@item
 A rule can have at most one instance of trailing context (the @samp{/} operator
 or the @samp{$} operator).  The start condition, @samp{^}, and @samp{<<EOF>>} patterns
 can only occur at the beginning of a pattern, and, as well as with @samp{/} and @samp{$},
@@ -861,7 +862,7 @@ matching such tokens can prove slow.  @code{yytext} presently does
 @emph{not} dynamically grow if a call to @code{unput()} results in too
 much text being pushed back; instead, a run-time error results.
 
-@cindex %array, with C++ 
+@cindex %array, with C++
 Also note that you cannot use @code{%array} with C++ scanner classes
 (@pxref{Cxx}).
 
@@ -1188,7 +1189,7 @@ first refill the buffer using
 (@pxref{Generated Scanner}).  This action is a special case
 of the more general
 @code{yy_flush_buffer()}
-function, described below (@pxref{Multiple})
+function, described below (@pxref{Multiple Input Buffers})
 
 @cindex yyterminate(), explanation
 @cindex terminating with yyterminate()
@@ -1319,7 +1320,7 @@ obtain the default version of the routine, which always returns 1.
 
 For scanning from in-memory buffers (e.g., scanning strings), see
 @ref{Scanning Strings}
-@xref{Multiple}.
+@xref{Multiple Input Buffers}.
 
 The scanner writes its
 @code{ECHO}
@@ -1385,7 +1386,7 @@ If the distinction between inclusive and exclusive start conditions
 is still a little vague, here's a simple example illustrating the
 connection between the two.  The set of rules:
 
-@exindex start conditions, inclusive 
+@exindex start conditions, inclusive
 @example
 @verbatim
     %s example
@@ -1728,7 +1729,7 @@ limitation.  If memory is exhausted, program execution aborts.
 To use start condition stacks, your scanner must include a @code{%option
 stack} directive (@pxref{Invoking Flex}).
 
-@node Multiple
+@node Multiple Input Buffers
 @chapter Multiple Input Buffers
 
 @cindex multiple input streams
@@ -1753,7 +1754,7 @@ which takes a @code{FILE} pointer and a size and creates a buffer
 associated with the given file and large enough to hold @code{size}
 characters (when in doubt, use @code{YY_BUF_SIZE} for the size).  It
 returns a @code{YY_BUFFER_STATE} handle, which may then be passed to
-other routines (see below).  
+other routines (see below).
 @tindex YY_BUFFER_STATE
 The @code{YY_BUFFER_STATE} type is a
 pointer to an opaque @code{struct yy_buffer_state} structure, so you may
@@ -1923,19 +1924,19 @@ no further files to process).  The action must finish
 by doing one of the following things:
 
 @itemize
-@item 
+@item
 @findex YY_NEW_FILE  (now obsolete)
 assigning @file{yyin} to a new input file (in previous versions of
 @code{flex}, after doing the assignment you had to call the special
 action @code{YY_NEW_FILE}.  This is no longer necessary.)
 
-@item 
+@item
 executing a @code{return} statement;
 
-@item 
+@item
 executing the special @code{yyterminate()} action.
 
-@item 
+@item
 or, switching to a new buffer using @code{yy_switch_to_buffer()} as
 shown in the example above.
 @end itemize
@@ -2376,7 +2377,7 @@ resultant non-deterministic and deterministic finite automata.  This
 option is mostly for use in maintaining @code{flex}.
 
 @item -V, --version
-prints the version number to @file{stdout} and exits. 
+prints the version number to @file{stdout} and exits.
 
 @item -X, --posix
 turns on maximum compatibility with the POSIX 1003.2-1992 definition of
@@ -2386,7 +2387,7 @@ in behavior.  At the current writing the known differences between
 @code{flex} and the POSIX standard are:
 
 @itemize
-@item 
+@item
 In POSIX and AT&T @code{lex}, the repeat operator, @samp{@{@}}, has lower
 precedence than concatenation (thus @samp{ab@{3@}} yields @samp{ababab}).
 Most POSIX utilities use an Extended Regular Expression (ERE) precedence
@@ -2619,9 +2620,10 @@ If you wish to use these functions, you will have to inform your compiler where
 to find them.
 @xref{Option-Always-Interactive}. @xref{Option-Read}.
 
+@anchor{Option-Stack}
 @item --stack
 enables the use of
-start condition stacks (@pxref{Start Conditions}).  
+start condition stacks (@pxref{Start Conditions}).
 
 @item --stdinit
 if set (i.e., @b{%option stdinit)} initializes @code{yyin} and
@@ -2695,6 +2697,7 @@ leading @samp{--} ).
     read            -Cr  --read
     reentrant       -R   --reentrant
     reentrant-bison -Rb  --reentrant-bison
+    stack                --stack
     stdout          -t   --stdout
     verbose         -v   --verbose
     warn                 --warn (use "%option nowarn" for -w)
@@ -2731,7 +2734,7 @@ corresponding routine not appearing in the generated scanner:
     yy_push_state, yy_pop_state, yy_top_state
     yy_scan_buffer, yy_scan_bytes, yy_scan_string
 
-    yyget_extra, yyset_extra, yyget_leng, yyget_text, 
+    yyget_extra, yyset_extra, yyget_leng, yyget_text,
     yyget_lineno, yyset_lineno, yyget_in, yyset_in,
     yyget_out, yyset_out, yyget_lval, yyset_lval,
     yyget_lloc, yyset_lloc, yyget_debug, yyset_debug
@@ -3327,12 +3330,12 @@ reentrant @code{flex} scanner without the need for synchronization with
 other threads.
 
 @menu
-* Reentrant Uses::              
-* Reentrant Overview::          
-* Reentrant Example::           
-* Reentrant Detail::            
-* Bison Pure::                  
-* Reentrant Functions::         
+* Reentrant Uses::
+* Reentrant Overview::
+* Reentrant Example::
+* Reentrant Detail::
+* Bison Pure::
+* Reentrant Functions::
 @end menu
 
 @node Reentrant Uses
@@ -3362,7 +3365,7 @@ the token level (i.e., instead of at the character level):
 
 Another use for a reentrant scanner is recursion.
 (Note that a recursive scanner can also be created using a non-reentrant scanner and
-buffer states. @xref{Multiple}.)
+buffer states. @xref{Multiple Input Buffers}.)
 
 The following crude scanner supports the @samp{eval} command by invoking
 another instance of itself.
@@ -3375,12 +3378,12 @@ another instance of itself.
     %option reentrant
 
     %%
-    "eval(".+")"  {  
+    "eval(".+")"  {
                       yyscan_t scanner;
                       YY_BUFFER_STATE buf;
 
                       yylex_init( &scanner );
-                      yytext[yyleng-1] = ' '; 
+                      yytext[yyleng-1] = ' ';
 
                       buf = yy_scan_string( yytext + 5, scanner );
                       yylex( scanner );
@@ -3414,11 +3417,11 @@ All global variables are replaced by their macro equivalents.
 @code{yylex_init} and @code{yylex_destroy} must be called before and
 after @code{yylex}, respectively.
 
-@item 
+@item
 Accessor methods (get/set functions) provide access to common
 @code{flex} variables.
 
-@item 
+@item
 User-specific data can be stored in @code{yyextra}.
 @end itemize
 
@@ -3438,10 +3441,10 @@ First, an example of a reentrant scanner:
     <COMMENT>\n          yy_pop_state( yy_globals );
     <COMMENT>[^\n]+      fprintf( yyout, "%s\n", yytext);
     %%
-    int main ( int argc, char * argv[] ) 
+    int main ( int argc, char * argv[] )
     {
         yyscan_t scanner;
-        
+
         yylex_init ( &scanner );
         yylex ( scanner );
         yylex_destroy ( scanner );
@@ -3457,12 +3460,12 @@ Here are the things you need to do or know to use the reentrant C API of
 @code{flex}.
 
 @menu
-* Specify Reentrant::           
-* Extra Reentrant Argument::    
-* Global Replacement::          
-* Init and Destroy Functions::  
-* Accessor Methods::            
-* Extra Data::                  
+* Specify Reentrant::
+* Extra Reentrant Argument::
+* Global Replacement::
+* Init and Destroy Functions::
+* Accessor Methods::
+* Extra Data::
 * About yyscan_t::
 @end menu
 
@@ -3536,8 +3539,8 @@ and friends is that
 @code{yytext}
 is not a global variable in a reentrant
 scanner, you can not access it directly from outside an action or from
-other functions. You must use an accessor method, e.g., 
-@code{yyget_text}, 
+other functions. You must use an accessor method, e.g.,
+@code{yyget_text},
 to accomplish this. (See below).
 
 @node Init and Destroy Functions
@@ -3570,7 +3573,7 @@ pass the address of a local pointer to @code{yylex_init}.  The function
 @code{yylex} should be familiar to you by now. The reentrant version
 takes one argument, which is the value returned (via an argument) by
 @code{yylex_init}.  Otherwise, it behaves the same as the non-reentrant
-version of @code{yylex}. 
+version of @code{yylex}.
 
 The function @code{yylex_destroy} should be
 called to free resources used by the scanner. After @code{yylex_destroy}
@@ -3623,8 +3626,8 @@ variable you want. For example:
     /* Set the last character of yytext to NULL. */
     void chop ( yyscan_t scanner )
     {
-        int len = yyget_leng( scanner );        
-        yyget_text( scanner )[len - 1] = '\0';        
+        int len = yyget_leng( scanner );
+        yyget_text( scanner )[len - 1] = '\0';
     }
 @end verbatim
 @end example
@@ -3683,14 +3686,14 @@ defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
 @example
 @verbatim
     /* An example of overriding YY_EXTRA_TYPE. */
-    %{    
+    %{
     #include <sys/stat.h>
     #include <unistd.h>
     #define YY_EXTRA_TYPE  struct stat*
     %}
     %option reentrant
     %%
-          
+
     __filesize__     printf( "%ld", yyextra->st_size  );
     __lastmod__      printf( "%ld", yyextra->st_mtime );
     %%
@@ -3698,10 +3701,10 @@ defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
     {
         yyscan_t scanner;
         struct stat buf;
-        
+
         yylex_init ( &scanner );
         yyset_in( fopen(filename,"r"), scanner );
-        
+
         stat( filename, &buf);
         yyset_extra( &buf, scanner );
         yylex ( scanner );
@@ -3761,9 +3764,9 @@ specified, @code{flex} provides support for the functions
 @code{yyset_lloc}, defined below, and the corresponding macros
 @code{yylval} and @code{yylloc}, for use within actions.
 
-@deftypefun YYSTYPE* yyget_lval ( yyscan_t scanner ) 
+@deftypefun YYSTYPE* yyget_lval ( yyscan_t scanner )
 @end deftypefun
-@deftypefun YYLTYPE* yyget_lloc ( yyscan_t scanner ) 
+@deftypefun YYLTYPE* yyget_lloc ( yyscan_t scanner )
 @end deftypefun
 
 @deftypefun void yyset_lval ( YYSTYPE* lvalp, yyscan_t scanner )
@@ -3796,10 +3799,10 @@ scanner that is @code{bison}-compatible.
     %{
     #include "y.tab.h"  /* Generated by bison. */
     %}
-  
+
     %option reentrant-bison
     %
-   
+
     [[:digit:]]+  { yylval->num = atoi(yytext);   return NUMBER;}
     [[:alnum:]]+  { yylval->str = strdup(yytext); return STRING;}
     "="|";"       { return yytext[0];}
@@ -3828,7 +3831,7 @@ As you can see, there really is no magic here. We just use
         char* str;
     }
     %token <str> STRING
-    %token <num> NUMBER 
+    %token <num> NUMBER
     %%
     assignment:
         STRING '=' NUMBER ';' {
@@ -3863,7 +3866,7 @@ The following Functions are available in a reentrant scanner:
     int yyget_lineno ( yyscan_t scanner );
     YY_EXTRA_TYPE yyget_extra ( yyscan_t scanner );
     bool yyget_debug ( yyscan_t scanner );
- 
+
     void yyset_debug ( bool flag, yyscan_t scanner );
     void yyset_in  ( FILE * in_str , yyscan_t scanner );
     void yyset_out  ( FILE * out_str , yyscan_t scanner );
@@ -3938,7 +3941,7 @@ option.  @code{flex} is fully compatible with @code{lex} with the
 following exceptions:
 
 @itemize
-@item 
+@item
 The undocumented @code{lex} scanner internal variable @code{yylineno} is
 not supported unless @samp{-l} or @code{%option yylineno} is used.
 
@@ -3949,7 +3952,7 @@ a per-scanner (single global variable) basis.
 @item
 @code{yylineno} is not part of the POSIX specification.
 
-@item 
+@item
 The @code{input()} routine is not redefinable, though it may be called
 to read characters following whatever has been matched by a rule.  If
 @code{input()} encounters an end-of-file the normal @code{yywrap()}
@@ -3965,11 +3968,11 @@ in accordance with the POSIX specification, which simply does not
 specify any way of controlling the scanner's input other than by making
 an initial assignment to @file{yyin}.
 
-@item 
+@item
 The @code{unput()} routine is not redefinable.  This restriction is in
 accordance with POSIX.
 
-@item 
+@item
 @code{flex} scanners are not as reentrant as @code{lex} scanners.  In
 particular, if you have an interactive scanner and an interrupt handler
 which long-jumps out of the scanner, and the scanner is subsequently
@@ -4001,18 +4004,18 @@ Also note that @code{flex} C++ scanner classes
 reentrant, so if using C++ is an option for you, you should use
 them instead.  @xref{Cxx}, and @ref{Reentrant}  for details.
 
-@item 
+@item
 @code{output()} is not supported.  Output from the @b{ECHO} macro is
 done to the file-pointer @code{yyout} (default @file{stdout)}.
 
 @item
 @code{output()} is not part of the POSIX specification.
 
-@item 
+@item
 @code{lex} does not support exclusive start conditions (%x), though they
 are in the POSIX specification.
 
-@item 
+@item
 When definitions are expanded, @code{flex} encloses them in parentheses.
 With @code{lex}, the following:
 
@@ -4046,7 +4049,7 @@ around the definition.
 @item
 The POSIX specification is that the definition be enclosed in parentheses.
 
-@item 
+@item
 Some implementations of @code{lex} allow a rule's action to begin on a
 separate line, if the rule's pattern has trailing whitespace:
 
@@ -4061,17 +4064,17 @@ separate line, if the rule's pattern has trailing whitespace:
 
 @code{flex} does not support this feature.
 
-@item 
+@item
 The @code{lex} @code{%r} (generate a Ratfor scanner) option is not
 supported.  It is not part of the POSIX specification.
 
-@item 
+@item
 After a call to @code{unput()}, @emph{yytext} is undefined until the
 next token is matched, unless the scanner was built using @code{%array}.
 This is not the case with @code{lex} or the POSIX specification.  The
 @samp{-l} option does away with this incompatibility.
 
-@item 
+@item
 The precedence of the @samp{@{,@}} (numeric range) operator is
 different.  The AT&T and POSIX specifications of @code{lex}
 interpret @samp{abc@{1,3@}} as match one, two,
@@ -4080,18 +4083,18 @@ as ``match @samp{ab} followed by one, two, or three occurrences of
 @samp{c}''.  The @samp{-l} and @samp{--posix} options do away with this
 incompatibility.
 
-@item 
+@item
 The precedence of the @samp{^} operator is different.  @code{lex}
 interprets @samp{^foo|bar} as ``match either 'foo' at the beginning of a
 line, or 'bar' anywhere'', whereas @code{flex} interprets it as ``match
 either @samp{foo} or @samp{bar} if they come at the beginning of a
 line''.  The latter is in agreement with the POSIX specification.
 
-@item 
+@item
 The special table-size declarations such as @code{%a} supported by
 @code{lex} are not required by @code{flex} scanners..  @code{flex}
 ignores them.
-@item 
+@item
 The name @code{FLEX_SCANNER} is @code{#define}'d so scanners may be
 written for use with either @code{flex} or @code{lex}.  Scanners also
 include @code{YY_FLEX_MAJOR_VERSION} and @code{YY_FLEX_MINOR_VERSION}
@@ -4152,6 +4155,102 @@ is (rather surprisingly) truncated to
 @code{flex} does not truncate the action.  Actions that are not enclosed
 in braces are simply terminated at the end of the line.
 
+@node Memory Management
+@chapter Memory Management
+
+@cindex memory management
+@cindex alloc, overriding
+@cindex malloc, overriding
+@cindex realloc, overriding
+@cindex free, overriding
+@cindex yytext, memory for
+
+This chapter describes how flex handles dynamic memory, and how you can
+override the default behavior.
+
+@menu
+* The Default Memory Management::
+* Overriding The Default Memory Management::
+* A Note About yytext And Memory::
+@end menu
+
+@node The Default Memory Management
+@section The Default Memory Management
+
+Flex allocates dynamic memory during initialization, and once in a while from
+within a call to yylex(). Initialization takes place during the first call
+to yylex(). Thereafter, flex may reallocate more memory if it needs to enlarge
+a buffer.
+
+Flex allocates dynamic memory for four purposes, listed below.
+
+@enumerate
+
+@item Flex allocates memory for the character buffer used to perform pattern
+matching.  Flex must read ahead from the input stream and store it in a large
+character buffer. This buffer is typically the largest chunk of dynamic memory
+flex consumes. This buffer will grow if necessary. Flex frees this memory when
+you call yylex_destroy().  The default (8192 bytes) is almost always too large.
+The ideal size for this buffer is the length of the largest token expected,
+plus 2.  The 2 extra bytes are for housekeeping.
+
+@item Flex allocates memory the start condition stack. This is the stack used
+for pushing start states, i.e., with yy_push_state(). It will grow if
+necessary.  Since the states are simply integers, this stack doesn't consume
+much memory.  This stack is not present if @code{%option stack} is not
+specified.  You will rarely need to tune this buffer. The ideal size for this
+stack is the maximum depth expected.  The memory for this stack is
+automatically destroyed when you call yylex_destroy(). @xref{Option-Stack}.
+
+@item Flex allocates memory for each YY_BUFFER_STATE. The buffer state itself
+is about 40 bytes, plus an additional large character buffer (described above.)
+The initial buffer state is created during initialization, and with each call
+to yy_create_buffer(). You can't tune the size of this, but you can tune the
+character buffer as described above. Any buffer state that you explicitly
+create by calling yy_create_buffer() is @emph{NOT} destroyed automatically. You
+must call yy_delete_buffer() to free the memory. The exception to this rule is
+that flex will delete the current buffer automatically when you call
+yylex_destroy(). If you delete the current buffer, be sure to set it to NULL.
+That way, flex will not try to delete the buffer a second time (possibly
+crashing your program!) At the time of this writing, flex does not provide a
+growable stack for the buffer states.  You have to manage that yourself.
+@xref{Multiple Input Buffers}.
+
+@item Flex allocates about 84 bytes for the reentrant scanner structure when
+you call yylex_init(). It is destroyed when the user calls yylex_destroy().
+
+@end enumerate
+
+It is important to note that flex will clean up all memory when you call
+yylex_destroy().
+
+@node Overriding The Default Memory Management
+@section Overriding The Default Memory Management
+
+TODO -- Describe how to override yy_flex_(alloc,free,realloc),
+YY_READ_BUF_SIZE, YY_BUF_SIZE, YY_START_STACK_INCR, and anything else that
+crops up.
+
+@node A Note About yytext And Memory
+@section A Note About yytext And Memory
+
+When flex finds a match, @code{yytext} points to the first character of the
+match in the input buffer. The string itself is part of the input buffer, and
+is @emph{NOT} allocated separately. The value of yytext will be overwritten the next
+time yylex() is called. In short, the value of yytext is only valid from within
+the matched rule's action.
+
+Often, you want the value of yytext to persist for later processing, i.e., by a
+parser with non-zero lookahead. In order to preserve yytext, you will have to
+copy it with strdup() or a similar function. But this introduces some headache
+because your parser is now responsible for freeing the copy of yytext. If you
+use a yacc or bison parser, (commonly used with flex), you will discover that
+syntax errors in the input can cause this memory to be leaked.
+
+To prevent memory leaks from strdup'd yytext, you will have to track the memory
+somehow. Our experience has shown that a garbage collection mechanism or a pooled memory
+mechanism will save you a lot of grief when writing scanners and parsers.
+
 @node Diagnostics
 @chapter Diagnostics
 
@@ -4182,7 +4281,7 @@ Using @code{REJECT} in a scanner suppresses this warning.
 that it is possible (perhaps only in a particular start condition) that
 the default rule (match any single character) is the only one that will
 match a particular input.  Since @samp{-s} was given, presumably this is
-not intended.  
+not intended.
 
 @item
 @code{reject_used_but_not_detected undefined} or
