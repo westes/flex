@@ -43,3 +43,7 @@
 
 * figure out whether we want to add the capability to have
   auto-generated backout rules
+
+* C++
+
+** revisit the C++ API. We get requests to make it more complete.
