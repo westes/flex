@@ -1,3 +1,16 @@
+Changes between 2.3 Patch #2 (02Aug90) and original 2.3 release:
+
+	- Fixed (hopefully) headaches involving declaring malloc()
+	  and free() for gcc, which defines __STDC__ but (often) doesn't
+	  come with the standard include files such as <stdlib.h>.
+	  Reordered #ifdef maze in the scanner skeleton in the hope of
+	  getting the declarations right for cfront and g++, too.
+
+	- Note that this patch supercedes patch #1 for release 2.3,
+	  which was never announced but was available briefly for
+	  anonymous ftp.
+
+
 Changes between 2.3 (full) release of 28Jun90 and 2.2 (alpha) release:
 
     User-visible:
