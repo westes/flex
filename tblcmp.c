@@ -233,7 +233,7 @@ cmptmps()
 	 * transitions
 	 */
 
-	nummecs = cre8ecs( tecfwd, tecbck, numecs, 1 );
+	nummecs = cre8ecs( tecfwd, tecbck, numecs );
 	}
     
     else
@@ -760,7 +760,7 @@ int state[], statenum, comstate;
 	    }
 
     if ( usemecs )
-	mkeccl( transset, tsptr, tecfwd, tecbck, numecs );
+	mkeccl( transset, tsptr, tecfwd, tecbck, numecs, 0 );
 
     mkprot( tnxt + tmpbase, -numtemps, comstate );
 
