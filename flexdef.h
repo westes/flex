@@ -82,23 +82,9 @@ char *sprintf(); /* keep lint happy */
 #define SHORT_FILE_NAMES
 #endif
 
-#ifdef __STDC__
-
-#ifdef __GNUC__
-#include <stddef.h>
-void *malloc( size_t );
-void free( void* );
-#else
-#include <stdlib.h>
-#endif
-
-#else	/* ! __STDC__ */
-char *malloc(), *realloc();
-#endif
-
 
 /* Maximum line length we'll have to deal with. */
-#define MAXLINE BUFSIZ
+#define MAXLINE 2048
 
 /* Maximum size of file name. */
 #define FILENAMESIZE 1024
@@ -635,7 +621,12 @@ extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 extern int num_backtracking, bol_needed;
 
-void *allocate_array(), *reallocate_array();
+void *allocate_array PROTO((int, int));
+void *reallocate_array PROTO((void*, int, int));
+
+void *yy_flex_alloc PROTO((int));
+void *yy_flex_realloc PROTO((void*, int));
+void yy_flex_free PROTO((void*));
 
 #define allocate_integer_array(size) \
 	(int *) allocate_array( size, sizeof( int ) )
