@@ -445,22 +445,17 @@ line containing only @samp{%%}.
 * Comments in the Input::       
 @end menu
 
-@c proofread edit stopped here
 @node Definitions Section
 @section Format of the Definitions Section
-@cindex format, Definitions Section
-@cindex sections, Definitions Section
-@cindex Definitions Sections
 
-The
-@i{definitions}
-section contains declarations of simple
-@i{name}
+@cindex input file, Definitions section
+@cindex Definitions, in flex input
+The @dfn{definitions section} contains declarations of simple @dfn{name}
 definitions to simplify the scanner specification, and declarations of
-@i{start conditions},
-which are explained in a later section.
+@dfn{start conditions}, which are explained in a later section.
 
-@cindex patterns aliases, how to define
+@cindex aliases, how to define
+@cindex pattern aliases, how to define
 Name definitions have the form:
 
 @example
@@ -469,14 +464,15 @@ Name definitions have the form:
 @end verbatim
 @end example
 
-The @samp{name} is a word beginning with a letter or an underscore (@samp{_})
-followed by zero or more letters, digits, @samp{_}, or @samp{-} (dash).
-The definition is taken to begin at the first non-whitespace character
-following the name and continuing to the end of the line.
-The definition can subsequently be referred to using @samp{@{name@}}, which
-will expand to @samp{(definition)}.  For example,
+The @samp{name} is a word beginning with a letter or an underscore
+(@samp{_}) followed by zero or more letters, digits, @samp{_}, or
+@samp{-} (dash).  The definition is taken to begin at the first
+non-whitespace character following the name and continuing to the end of
+the line.  The definition can subsequently be referred to using
+@samp{@{name@}}, which will expand to @samp{(definition)}.  For example,
 
 @exindex pattern aliases, defining
+@exindex defining pattern aliases
 @example
 @verbatim
     DIGIT    [0-9]
@@ -484,11 +480,9 @@ will expand to @samp{(definition)}.  For example,
 @end verbatim
 @end example
 
-Defines @samp{DIGIT} to be a regular expression which matches a
-single digit, and
-@samp{ID} to be a regular expression which matches a letter
-followed by zero-or-more letters-or-digits.
-A subsequent reference to
+Defines @samp{DIGIT} to be a regular expression which matches a single
+digit, and @samp{ID} to be a regular expression which matches a letter
+followed by zero-or-more letters-or-digits.  A subsequent reference to
 
 @exindex pattern aliases, use of
 @example
@@ -505,37 +499,29 @@ is identical to
 @end verbatim
 @end example
 
-and matches one-or-more digits followed by a '.' followed
-by zero-or-more digits.
+and matches one-or-more digits followed by a @samp{.} followed by
+zero-or-more digits.
 
+@cindex comments in flex input
 An unindented comment (i.e., a line
 beginning with @samp{/*}) is copied verbatim to the output up
 to the next @samp{*/}.
 
 @cindex %@{ and %@}, in Definitions Section
-@cindex embedding C code with %@{ and %@}
-@cindex including C code with %@{ and %@}
-
-Any
-@emph{indented}
-text or text enclosed in
-@samp{%@{}
-and
-@samp{%@}}
-is also copied verbatim to the output (with the %@{ and %@} symbols removed).
-The %@{ and %@} symbols must appear unindented on lines by themselves.
+@cindex embedding C code in flex input
+@cindex C code in flex input
+Any @emph{indented} text or text enclosed in @samp{%@{} and @samp{%@}}
+is also copied verbatim to the output (with the %@{ and %@} symbols
+removed).  The %@{ and %@} symbols must appear unindented on lines by
+themselves.
 
 @node Rules Section
 @section Format of the Rules Section
-@cindex format, Rules Section
-@cindex sections, format of Rules Section
-@cindex Rules Section
 
-The
-@i{rules}
-section of the
-@code{flex}
-input contains a series of rules of the form:
+@cindex input file, Rules Section
+@cindex rules, in flex input
+The @dfn{rules} section of the @code{flex} input contains a series of
+rules of the form:
 
 @example
 @verbatim
@@ -545,29 +531,22 @@ input contains a series of rules of the form:
 
 where the pattern must be unindented and the action must begin
 on the same line.
-
 @xref{Patterns}, for a further description of patterns and actions.
 
-In the rules section,
-any indented or %@{ %@} enclosed text appearing before the
-first rule may be used to declare variables
-which are local to the scanning routine and (after the declarations)
-code which is to be executed whenever the scanning routine is entered.
-Other indented or %@{ %@} text in the rule section is still copied to the output,
-but its meaning is not well-defined and it may well cause compile-time
-errors (this feature is present for
-@i{POSIX}
-compliance. @xref{Lex and Posix}, for other such features).
+In the rules section, any indented or %@{ %@} enclosed text appearing
+before the first rule may be used to declare variables which are local
+to the scanning routine and (after the declarations) code which is to be
+executed whenever the scanning routine is entered.  Other indented or
+%@{ %@} text in the rule section is still copied to the output, but its
+meaning is not well-defined and it may well cause compile-time errors
+(this feature is present for @acronym{POSIX} compliance. @xref{Lex and
+Posix}, for other such features).
 
-Any
-@emph{indented}
-text or text enclosed in
-@samp{%@{}
-and
-@samp{%@}}
+Any @emph{indented} text or text enclosed in @samp{%@{} and @samp{%@}}
 is copied verbatim to the output (with the %@{ and %@} symbols removed).
 The %@{ and %@} symbols must appear unindented on lines by themselves.
 
+@c proofread edit stopped here
 @node User Code Section
 @section Format of the User Code Section
 @cindex format, User Code Section
