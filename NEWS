@@ -1,4 +1,4 @@
-Changes between release 2.4 (09Nov93) and release 2.3:
+Changes between release 2.4 (30Nov93) and release 2.3:
 
 	- The new '-+' flag instructs flex to generate a C++ scanner class
 	  (thanks to Kent Williams).  flex writes an implementation of the
