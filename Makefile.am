@@ -63,23 +63,49 @@ libfl_a_SOURCES = \
 
 noinst_HEADERS = \
 	flexdef.h \
+	parse.h \
 	version.h
 
 include_HEADERS = \
-	FlexLexer.H
+	FlexLexer.h
 
 info_TEXINFOS = \
 	flex.texi
 
-noinst_SCRIPTS  = \
-	autogen.sh
-
 EXTRA_DIST = \
 	AUTHORS \
 	COPYING \
+	INSTALL \
 	NEWS \
 	ONEWS \
 	README \
 	RoadMap \
 	THANKS \
-	TODO
+	TODO \
+	autogen.sh \
+	flex.skl \
+	mkskel.sh
+
+BUILT_SOURCES = \
+	skel.c
+
+# We have a few dependencies and rules to enumerate. (from the old
+# Makefile.in by Vern)
+
+scan.o: scan.c parse.h flexdef.h config.h
+yylex.o: yylex.c parse.h flexdef.h config.h
+
+skel.c: flex.skl mkskel.sh
+	$(SHELL) $(srcdir)/mkskel.sh $(srcdir)/flex.skl >skel.c
+
+main.o: main.c flexdef.h config.h version.h
+ccl.o: ccl.c flexdef.h config.h
+dfa.o: dfa.c flexdef.h config.h
+ecs.o: ecs.c flexdef.h config.h
+gen.o: gen.c flexdef.h config.h
+misc.o: misc.c flexdef.h config.h
+nfa.o: nfa.c flexdef.h config.h
+parse.o: parse.c flexdef.h config.h
+skel.o: skel.c flexdef.h config.h
+sym.o: sym.c flexdef.h config.h
+tblcmp.o: tblcmp.c flexdef.h config.h
