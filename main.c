@@ -384,10 +384,8 @@ void check_options()
             outn( "#ifdef YY_REENTRANT_BISON_PURE" );
             GEN_PREFIX( "get_lval" );
             GEN_PREFIX( "set_lval" );
-            outn( "#ifdef YYLTYPE" );
             GEN_PREFIX( "get_lloc" );
             GEN_PREFIX( "set_lloc" );
-            outn( "#endif" );
             outn( "#endif" );
 
             if ( do_yylineno && reentrant)
