@@ -352,17 +352,17 @@ void gen_find_action()
 			}
 
 		else
-		{
-		/* Remember matched text in case we back up due to trailing
-		 * context plus REJECT.
-		 */
-		indent_up();
-		indent_puts( "{" );
-		indent_puts( "yy_full_match = yy_cp;" );
-		indent_puts( "break;" );
-		indent_puts( "}" );
-		indent_down();
-		}
+			{
+			/* Remember matched text in case we back up due to
+			 * trailing context plus REJECT.
+			 */
+			indent_up();
+			indent_puts( "{" );
+			indent_puts( "yy_full_match = yy_cp;" );
+			indent_puts( "break;" );
+			indent_puts( "}" );
+			indent_down();
+			}
 
 		indent_puts( "}" );
 		indent_down();
@@ -382,8 +382,26 @@ void gen_find_action()
 		}
 
 	else
-		/* compressed */
+		{ /* compressed */
 		indent_puts( "yy_act = yy_accept[yy_current_state];" );
+
+		if ( interactive && ! reject )
+			{
+			/* Do the guaranteed-needed backing up to figure out
+			 * the match.
+			 */
+			indent_puts( "if ( yy_act == 0 )" );
+			indent_up();
+			indent_puts( "{ /* have to back up */" );
+
+			indent_puts( "yy_cp = yy_last_accepting_cpos;" );
+			indent_puts(
+				"yy_current_state = yy_last_accepting_state;" );
+			indent_puts( "yy_act = yy_accept[yy_current_state];" );
+			indent_puts( "}" );
+			indent_down();
+			}
+		}
 	}
 
 
@@ -1454,7 +1472,7 @@ void make_tables()
 	 * finds that it should JAM on the NUL.
 	 */
 	skelout();
-	set_indent( 7 );
+	set_indent( 4 );
 
 	if ( fullspd || fulltbl )
 		indent_puts( "yy_cp = yy_c_buf_p;" );
