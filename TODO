@@ -1,7 +1,5 @@
 * sourceforge migration
 
-** update freshmeat entry to reflect sourceforge move (estes)
-
 ** Move CVS to sourceforge (estes)
 
 ** test the mailing lists (estes)
@@ -77,7 +75,9 @@
 
 ** use clcommit once it's available in a reasonable form
 
-** move documentation into subdirectory
+** remove the need for --enable-maintainer-mode; this means putting
+   the ChangeLog under cvs control and making sure that the manpage is
+   only rebuilt under reasonable conditions
 
 Legend:
 
