@@ -39,12 +39,14 @@ static char rcsid[] =
 
 #include "flexdef.h"
 
+static char flex_version[] = "2.0.1 (beta)";
+
 
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
 int interactive, caseins, useecs, fulltbl, usemecs;
 int fullspd, gen_line_dirs, performance_report, backtrack_report;
-int yymore_used, reject, real_reject;
+int yymore_used, reject, real_reject, continued_action;
 int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum;
 FILE *skelfile = NULL;
@@ -60,7 +62,8 @@ int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs, tecfwd[CSIZE + 1];
 int tecbck[CSIZE + 1];
-int lastsc, current_max_scs, *scset, *scbol, *scxclu, *actvsc;
+int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof, *actvsc;
+char **scname;
 int current_max_dfa_size, current_max_xpairs;
 int current_max_template_xpairs, current_max_dfas;
 int lastdfa, *nxt, *chk, *tnxt;
@@ -84,6 +87,13 @@ char action_file_name[] = "/tmp/flexXXXXXX";
 char action_file_name[] = "flexXXXXXX.tmp";
 #endif
 
+#ifndef SHORT_FILE_NAMES
+static char outfile[] = "lex.yy.c";
+#else
+static char outfile[] = "lexyy.c";
+#endif
+static int outfile_created = 0;
+
 
 /* flex - main program
  *
@@ -100,54 +110,58 @@ char **argv;
 
     readin();
 
-    if ( ! syntaxerror )
+    if ( syntaxerror )
+	flexend( 1 );
+
+    if ( yymore_really_used == REALLY_USED )
+	yymore_used = true;
+    else if ( yymore_really_used == REALLY_NOT_USED )
+	yymore_used = false;
+
+    if ( reject_really_used == REALLY_USED )
+	reject = true;
+    else if ( reject_really_used == REALLY_NOT_USED )
+	reject = false;
+
+    if ( performance_report )
 	{
-	if ( yymore_really_used == REALLY_USED )
-	    yymore_used = true;
-	else if ( yymore_really_used == REALLY_NOT_USED )
-	    yymore_used = false;
+	if ( yymore_used )
+	    fprintf( stderr,
+		     "yymore() entails a minor performance penalty\n" );
 
-	if ( reject_really_used == REALLY_USED )
-	    reject = true;
-	else if ( reject_really_used == REALLY_NOT_USED )
-	    reject = false;
-
-	if ( performance_report )
-	    {
-	    if ( yymore_used )
-		fprintf( stderr,
-			 "yymore() entails a minor performance penalty\n" );
-
-	    if ( reject )
-		fprintf( stderr,
-			 "REJECT entails a large performance penalty\n" );
-
-	    if ( variable_trailing_context_rules )
-		fprintf( stderr,
-    "Variable trailing context rules entail a large performance penalty\n" );
-	    }
+	if ( interactive )
+	    fprintf( stderr,
+		 "-I (interactive) entails a minor performance penalty\n" );
 
 	if ( reject )
-	    real_reject = true;
+	    fprintf( stderr,
+		     "REJECT entails a large performance penalty\n" );
 
 	if ( variable_trailing_context_rules )
-	    reject = true;
-
-	if ( (fulltbl || fullspd) && reject )
-	    {
-	    if ( real_reject )
-		flexerror( "REJECT cannot be used with -f or -F" );
-	    else
-		flexerror(
-	    "variable trailing context rules cannot be used with -f or -F" );
-	    }
-
-	/* convert the ndfa to a dfa */
-	ntod();
-
-	/* generate the C state transition tables from the DFA */
-	make_tables();
+	    fprintf( stderr,
+"Variable trailing context rules entail a large performance penalty\n" );
 	}
+
+    if ( reject )
+	real_reject = true;
+
+    if ( variable_trailing_context_rules )
+	reject = true;
+
+    if ( (fulltbl || fullspd) && reject )
+	{
+	if ( real_reject )
+	    flexerror( "REJECT cannot be used with -f or -F" );
+	else
+	    flexerror(
+	"variable trailing context rules cannot be used with -f or -F" );
+	}
+
+    /* convert the ndfa to a dfa */
+    ntod();
+
+    /* generate the C state transition tables from the DFA */
+    make_tables();
 
     /* note, flexend does not return.  It exits with its argument as status. */
 
@@ -174,7 +188,7 @@ int status;
 
     {
     int tblsiz;
-    char *gettime();
+    char *flex_gettime();
 
     if ( skelfile != NULL )
 	(void) fclose( skelfile );
@@ -183,6 +197,12 @@ int status;
 	{
 	(void) fclose( temp_action_file );
 	(void) unlink( action_file_name );
+	}
+
+    if ( status != 0 && outfile_created )
+	{
+	(void) fclose( stdout );
+	(void) unlink( outfile );
 	}
 
     if ( backtrack_report )
@@ -201,9 +221,9 @@ int status;
 
     if ( printstats )
 	{
-	endtime = gettime();
+	endtime = flex_gettime();
 
-	fprintf( stderr, "flex usage statistics:\n" );
+	fprintf( stderr, "flex version %s usage statistics:\n", flex_version );
 	fprintf( stderr, "  started at %s, finished at %s\n",
 		 starttime, endtime );
 
@@ -251,12 +271,12 @@ int status;
 	    {
 	    tblsiz = 2 * (lastdfa + numtemps) + 2 * tblend;
 
-	    fprintf( stderr, "  %d/%d base/def entries created\n",
+	    fprintf( stderr, "  %d/%d base-def entries created\n",
 		     lastdfa + numtemps, current_max_dfas );
-	    fprintf( stderr, "  %d/%d (peak %d) nxt/chk entries created\n",
+	    fprintf( stderr, "  %d/%d (peak %d) nxt-chk entries created\n",
 		     tblend, current_max_xpairs, peakpairs );
 	    fprintf( stderr,
-		     "  %d/%d (peak %d) template nxt/chk entries created\n",
+		     "  %d/%d (peak %d) template nxt-chk entries created\n",
 		     numtemps * nummecs, current_max_template_xpairs,
 		     numtemps * numecs );
 	    fprintf( stderr, "  %d empty table entries\n", nummt );
@@ -307,11 +327,11 @@ char **argv;
 
     {
     int i, sawcmpflag, use_stdout;
-    char *arg, *skelname = NULL, *gettime(), clower(), *mktemp();
+    char *arg, *skelname = NULL, *flex_gettime(), clower(), *mktemp();
 
     printstats = syntaxerror = trace = spprdflt = interactive = caseins = false;
     backtrack_report = performance_report = ddebug = fulltbl = fullspd = false;
-    yymore_used = reject = false;
+    yymore_used = continued_action = reject = false;
     yymore_really_used = reject_really_used = false;
     gen_line_dirs = usemecs = useecs = true;
 
@@ -453,14 +473,12 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
 
     if ( ! use_stdout )
 	{
-#ifndef SHORT_FILE_NAMES
-	FILE *prev_stdout = freopen( "lex.yy.c", "w", stdout );
-#else
-	FILE *prev_stdout = freopen( "lexyy.c", "w", stdout );
-#endif
+	FILE *prev_stdout = freopen( outfile, "w", stdout );
 
 	if ( prev_stdout == NULL )
 	    flexerror( "could not create lex.yy.c" );
+
+	outfile_created = 1;
 	}
 
     if ( argc )
@@ -497,7 +515,7 @@ get_next_arg: /* used by -c and -S flags in lieu of a "continue 2" control */
     lastsc = 0;
 
     /* initialize the statistics */
-    starttime = gettime();
+    starttime = flex_gettime();
 
     if ( (skelfile = fopen( skelname, "r" )) == NULL )
 	lerrsf( "can't open skeleton file %s", skelname );
@@ -611,6 +629,8 @@ set_up_initial_allocations()
     scset = allocate_integer_array( current_max_scs );
     scbol = allocate_integer_array( current_max_scs );
     scxclu = allocate_integer_array( current_max_scs );
+    sceof = allocate_integer_array( current_max_scs );
+    scname = allocate_char_ptr_array( current_max_scs );
     actvsc = allocate_integer_array( current_max_scs );
 
     current_maxccls = INITIAL_MAX_CCLS;

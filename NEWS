@@ -1,17 +1,104 @@
-Changes between beta-test release of Feb. '88 and initial release:
+Changes between beta-test release of June '88 and previous release:
 
-	- many files renamed to remove "flex" prefix
-	- input() routine added to compressed and fast skeletons
-	- unput() routine added to compressed skeleton
-	- -d, -ce support for fast scanners
-	- symbol table extended to avoid ugly casts of ints <-> char *'s;
-	  this may relieve MS-DOS woes
-	- actions are now separated with YY_BREAK instead of simple "break"'s
-	- fixed bug causing core-dumps if skeleton file could not be opened
-	- fixed bugs in logic deciding which options cannot be intermixed
-	- initial start condition can now be referred to as <INITIAL>
-	- fixed bug which would incorrectly computer trailing context
-	  count for a pattern like "(foo){3}"; now this is considered
-	  "variable length", even though it isn't.
-	- block comments allowed between rules
-	- misc. typos corrected
+    User-visible:
+
+	- -p flag generates a performance report to stderr.  The report
+	  consists of comments regarding features of the scanner rules
+	  which result in slower scanners.
+
+	- -b flag generates backtracking information to lex.backtrack.
+	  This is a list of scanner states which require backtracking
+	  and the characters on which they do so.  By adding rules
+	  one can remove backtracking states.  If all backtracking states
+	  are eliminated, the generated scanner will run faster.
+	  Backtracking is not yet documented in the manual entry.
+
+	- Variable trailing context now works, i.e., one can have
+	  rules like "(foo)*/[ \t]*bletch".  Some trailing context
+	  patterns still cannot be properly matched and generate
+	  error messages.  These are patterns where the ending of the
+	  first part of the rule matches the beginning of the second
+	  part, such as "zx*/xy*", where the 'x*' matches the 'x' at
+	  the beginning of the trailing context.  Lex won't get these
+	  patterns right either.
+
+	- Faster scanners.
+
+	- End-of-file rules.  The special rule "<<EOF>>" indicates
+	  actions which are to be taken when an end-of-file is
+	  encountered and yywrap() returns non-zero (i.e., indicates
+	  no further files to process).  See manual entry for example.
+
+	- The -r (reject used) flag is gone.  flex now scans the input
+	  for occurrences of the string "REJECT" to determine if the
+	  action is needed.  It tries to be intelligent about this but
+	  can be fooled.  One can force the presence or absence of
+	  REJECT by adding a line in the first section of the form
+	  "%used REJECT" or "%unused REJECT".
+
+	- yymore() has been implemented.  Similarly to REJECT, flex
+	  detects the use of yymore(), which can be overridden using
+	  "%used" or "%unused".
+
+	- Patterns like "x{0,3}" now work (i.e., with lower-limit == 0).
+
+	- Removed '\^x' for ctrl-x misfeature.
+
+	- Added '\a' and '\v' escape sequences.
+
+	- \<digits> now works for octal escape sequences; previously
+	  \0<digits> was required.
+
+	- Better error reporting; line numbers are associated with rules.
+
+	- yyleng is a macro; it cannot be accessed outside of the
+	  scanner source file.
+
+	- yytext and yyleng should not be modified within a flex action.
+
+	- Generated scanners #define the name FLEX_SCANNER.
+
+	- Rules are internally separated by YY_BREAK in lex.yy.c rather
+	  than break, to allow redefinition.
+
+	- The macro YY_USER_ACTION can be redefined to provide an action
+	  which is always executed prior to the matched rule's action.
+	
+	- yyrestart() is a new action which can be used to restart
+	  the scanner after it has seen an end-of-file (a "real" one,
+	  that is, one for which yywrap() returned non-zero).  It takes
+	  a FILE* argument indicating a new file to scan and sets
+	  things up so that a subsequent call to yylex() will start
+	  scanning that file.
+
+	- Internal scanner names all preceded by "yy_"
+
+	- lex.yy.c is deleted if errors are encountered during processing.
+
+	- Comments may be put in the first section of the input by preceding
+	  them with '#'.
+
+
+
+    Other changes:
+
+	- Some portability-related bugs fixed, in particular for machines
+	  with unsigned characters or sizeof( int* ) != sizeof( int ).
+	  Also, tweaks for VMS and Microsoft C (MS-DOS), and identifiers all
+	  trimmed to be 31 or fewer characters.  Shortened file names
+	  for dinosaur OS's.  Checks for allocating > 64K memory
+	  on 16 bit'ers.  Amiga tweaks.  Compiles using gcc on a Sun-3.
+
+	- Compressed and fast scanner skeletons merged.
+
+	- Skeleton header files done away with.
+
+	- Generated scanner uses prototypes and "const" for __STDC__.
+
+	- -DSV flag is now -DSYS_V for System V compilation.
+
+	- Removed all references to FTL language.
+
+	- Software now covered by BSD Copyright.
+
+	- flex will replace lex in subsequent BSD releases.
