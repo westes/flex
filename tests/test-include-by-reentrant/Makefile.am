@@ -22,7 +22,7 @@ $(testname)$(EXEEXT): $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 
 test: $(testname)$(EXEEXT)
-	./$(testname) test-1.input
+	./$(testname) $(srcdir)/test-1.input
 
 .c.o:
 	$(CC) -c -o $@ $(INCLUDES) $<
