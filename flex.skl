@@ -1973,7 +1973,7 @@ int yylex_destroy( yy_globals )
 
             /* Destroy the start condition stack. */
             if( YY_G(yy_start_stack) ) {
-                yy_flex_free( YY_G(yy_start_stack) );
+                yy_flex_free( YY_G(yy_start_stack) YY_CALL_LAST_ARG );
                 YY_G(yy_start_stack) = NULL;
             }
 
