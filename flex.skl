@@ -57,7 +57,8 @@ m4_include(`flexint.h')
 /* begin standard C++ headers. */
 #include <iostream> 
 #include <errno.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstring>
 /* end standard C++ headers. */
 %endif
 
@@ -441,7 +442,10 @@ void yy_init_buffer YY_PARAMS(( YY_BUFFER_STATE b, FILE *file YY_PROTO_LAST_ARG 
 void yy_flush_buffer YY_PARAMS(( YY_BUFFER_STATE b YY_PROTO_LAST_ARG ));
 void yypush_buffer_state YY_PARAMS(( YY_BUFFER_STATE new_buffer YY_PROTO_LAST_ARG ));
 void yypop_buffer_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
-void yyensure_buffer_stack YY_PARAMS(( YY_PROTO_ONLY_ARG ));
+
+%not-for-header
+static void yyensure_buffer_stack YY_PARAMS(( YY_PROTO_ONLY_ARG ));
+%ok-for-header
 
 #define YY_FLUSH_BUFFER yy_flush_buffer( YY_CURRENT_BUFFER YY_CALL_LAST_ARG)
 
@@ -1129,7 +1133,10 @@ yyFlexLexer::yyFlexLexer( std::istream* arg_yyin, std::ostream* arg_yyout )
 	yy_start_stack_ptr = yy_start_stack_depth = 0;
 	yy_start_stack = 0;
 
-	yy_current_buffer = 0;
+    YY_G(yy_buffer_stack) = 0;
+    YY_G(yy_buffer_stack_top) = 0;
+    YY_G(yy_buffer_stack_max) = 0;
+
 
 #ifdef YY_USES_REJECT
 	yy_state_buf = new yy_state_type[YY_BUF_SIZE + 2];
@@ -1142,14 +1149,14 @@ yyFlexLexer::~yyFlexLexer()
 	{
 	delete [] yy_state_buf;
 	yyfree( yy_start_stack YY_CALL_LAST_ARG );
-	yy_delete_buffer( yy_current_buffer YY_CALL_LAST_ARG);
+	yy_delete_buffer( YY_CURRENT_BUFFER YY_CALL_LAST_ARG);
 	}
 
 void yyFlexLexer::switch_streams( std::istream* new_in, std::ostream* new_out )
 	{
 	if ( new_in )
 		{
-		yy_delete_buffer( yy_current_buffer  YY_CALL_LAST_ARG);
+		yy_delete_buffer( YY_CURRENT_BUFFER YY_CALL_LAST_ARG);
 		yy_switch_to_buffer( yy_create_buffer( new_in, YY_BUF_SIZE  YY_CALL_LAST_ARG) YY_CALL_LAST_ARG);
 		}
 
@@ -1702,12 +1709,17 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, std::istream* file )
 		yy_load_buffer_state( YY_CALL_ONLY_ARG );
 	}
 
-%if-c-only
+%if-c-or-c++
 /** Pushes the new state onto the stack. The new state becomes
  *  the current state. This function will allocate the stack
  *  if necessary.
  */
+%if-c-only
 void yypush_buffer_state YYFARGS1(YY_BUFFER_STATE,new_buffer)
+%endif
+%if-c++-only
+void yyFlexLexer::yypush_buffer_state (YY_BUFFER_STATE new_buffer)
+%endif
 {
 	if (new_buffer == NULL)
 		return;
@@ -1734,11 +1746,17 @@ void yypush_buffer_state YYFARGS1(YY_BUFFER_STATE,new_buffer)
 }
 %endif
 
-%if-c-only
+
+%if-c-or-c++
 /** Removes and DELETES the top of the stack, if present.
  *  The next element becomes the new top, if present.
  */
+%if-c-only
 void yypop_buffer_state YYFARGS0(void)
+%endif
+%if-c++-only
+void yyFlexLexer::yypop_buffer_state (void)
+%endif
 {
 	if (!YY_CURRENT_BUFFER)
 		return;
@@ -1755,11 +1773,17 @@ void yypop_buffer_state YYFARGS0(void)
 }
 %endif
 
-%if-c-only
+
+%if-c-or-c++
 /** Allocates the stack if it does not exist.
  *  Guarantees space for at least one push.
  */
-void yyensure_buffer_stack YYFARGS0(void)
+%if-c-only
+static void yyensure_buffer_stack YYFARGS0(void)
+%endif
+%if-c++-only
+void yyFlexLexer::yyensure_buffer_stack(void)
+%endif
 {
 	int num_to_alloc;
 
@@ -1798,6 +1822,7 @@ void yyensure_buffer_stack YYFARGS0(void)
 	}
 }
 %endif
+
 
 
 

@@ -122,6 +122,9 @@ public:
 	void yy_delete_buffer( struct yy_buffer_state* b );
 	void yyrestart( FLEX_STD istream* s );
 
+    void yypush_buffer_state( struct yy_buffer_state* new_buffer );
+    void yypop_buffer_state(void);
+
 	virtual int yylex();
 	virtual void switch_streams( FLEX_STD istream* new_in, FLEX_STD ostream* new_out );
 
@@ -152,8 +155,6 @@ protected:
 	FLEX_STD istream* yyin;	// input source for default LexerInput
 	FLEX_STD ostream* yyout;	// output sink for default LexerOutput
 
-	struct yy_buffer_state* yy_current_buffer;
-
 	// yy_hold_char holds the character lost when yytext is formed.
 	char yy_hold_char;
 
@@ -169,6 +170,12 @@ protected:
 	// Flag which is used to allow yywrap()'s to do buffer switches
 	// instead of setting up a fresh yyin.  A bit of a hack ...
 	int yy_did_buffer_switch_on_eof;
+
+
+    size_t yy_buffer_stack_top; /*<< index of top of stack. */
+    size_t yy_buffer_stack_max; /*<< capacity of stack. */
+    struct yy_buffer_state ** yy_buffer_stack; /*<< Stack as an array. */
+    void yyensure_buffer_stack(void);
 
 	// The following are not always needed, but may be depending
 	// on use of certain flex features (like REJECT or yymore()).
