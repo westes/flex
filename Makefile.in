@@ -76,7 +76,7 @@ LINTSRCS = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.c \
 	scan.c skel.c sym.c tblcmp.c yylex.c
 
 DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
-	configure.in config.h.in Makefile.in mkskel.sh skel.c flex.skl \
+	configure.in conf.in Makefile.in mkskel.sh skel.c flex.skl \
 	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC \
 	flex.1 scan.c install.sh mkinstalldirs configure
 
@@ -211,7 +211,8 @@ clean: mostlyclean
 	rm -f parse.c parse.h *.o alloca.c *.lint lex.yy.c lex.yy.cc $(FLEXLIB)
 
 distclean: clean
-	rm -f .bootstrap $(FLEX) scan.c tags TAGS Makefile config.status
+	rm -f .bootstrap $(FLEX) scan.c tags TAGS Makefile config.status \
+		config.h
 
 realclean: distclean
 	rm -f $(FLEX).man skel.c flex*.tar.gz flex*.tar.Z
@@ -238,6 +239,7 @@ config.status: configure
 	$(SHELL) config.status --recheck
 configure: configure.in
 	cd $(srcdir); autoconf
+config.h: conf.in config.status
 
 # Prevent GNU make v3 from overflowing arg limit on SysV.
 .NOEXPORT:
