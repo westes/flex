@@ -4,10 +4,14 @@
 
 * the manual:
 
-** clean up the faqs section. The information is good; the texinfo
+** do an end-to-end proofread of the manual
+
+** faq
+
+*** clean up the faqs section. The information is good; the texinfo
    could use some touching up.
 
-** index the faq entries
+*** index the faq entries
 
 ** create a section on flex design, features, etc.
 
