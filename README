@@ -59,6 +59,8 @@ contains seven shell archives.  Create a directory where you want flex
 to live, cd there, and use
 
 	uncompress flex.shar.Z
+	sh flex.shar
+
 	sh flex.shar.1
 	sh flex.shar.2
 	sh flex.shar.3
