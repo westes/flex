@@ -38,8 +38,6 @@ static char rcsid[] =
 #include <ctype.h>
 #include "flexdef.h"
 
-char *malloc(), *realloc();
-
 
 /* action_out - write the actions from the temporary file to lex.yy.c
  *
