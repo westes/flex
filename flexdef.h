@@ -90,7 +90,16 @@ char *memset();
 #define SHORT_FILE_NAMES
 #endif
 
+#ifdef __STDC__
+#ifndef DONT_HAVE_STDLIB_H
+#include <stdlib.h>
+#else
+void *malloc( unsigned );
+void free( void* );
+#endif
+#else
 char *malloc(), *realloc();
+#endif
 
 
 /* maximum line length we'll have to deal with */
