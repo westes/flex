@@ -754,29 +754,8 @@ void readin()
 
 	skelout();
 
-	if ( yytext_is_array )
-		{
-		if ( C_plus_plus )
-			flexerror( "%array and C++ scanners are incompatible" );
-
-		puts( "extern char yytext[];\n" );
-		puts( "#ifndef YYLMAX" );
-		puts( "#define YYLMAX YY_READ_BUF_SIZE" );
-		puts( "#endif YYLMAX\n" );
-		puts( "char yytext[YYLMAX];" );
-		puts( "YY_CHAR *yytext_ptr;" );
-		}
-
-	else
-		{
-		if ( ! C_plus_plus )
-			{
-			puts( "extern YY_CHAR *yytext;" );
-			puts( "YY_CHAR *yytext;" );
-			}
-
+	if ( C_plus_plus )
 		puts( "#define yytext_ptr yytext" );
-		}
 
 	if ( fullspd )
 		printf(
@@ -814,6 +793,26 @@ void readin()
 
 	if ( useecs )
 		ccl2ecl();
+
+	if ( ! C_plus_plus )
+		{
+		if ( yytext_is_array )
+			{
+			puts( "extern char yytext[];\n" );
+			puts( "#ifndef YYLMAX" );
+			puts( "#define YYLMAX YY_READ_BUF_SIZE" );
+			puts( "#endif YYLMAX\n" );
+			puts( "char yytext[YYLMAX];" );
+			puts( "YY_CHAR *yytext_ptr;" );
+			}
+
+		else
+			{
+			puts( "extern YY_CHAR *yytext;" );
+			puts( "YY_CHAR *yytext;" );
+			puts( "#define yytext_ptr yytext" );
+			}
+		}
 	}
 
 
