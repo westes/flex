@@ -22,6 +22,14 @@
 
 #include <stdlib.h>
 %+
+
+#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7)
+#define THROW_NIL throw()
+#define STD   std::
+#include <iosfwd>
+#else
+#define THROW_NIL
+#define STD
 #include <iostream.h>
 %*
 #include <unistd.h>
@@ -197,7 +205,7 @@ struct yy_buffer_state
 %-
 	FILE *yy_input_file;
 %+
-	istream* yy_input_file;
+	STD istream* yy_input_file;
 %*
 
 	char *yy_ch_buf;		/* input buffer */
@@ -859,7 +867,7 @@ do_action:	/* This label is used only to access EOF actions. */
 	} /* end of yylex */
 
 %+
-yyFlexLexer::yyFlexLexer( istream* arg_yyin, ostream* arg_yyout )
+yyFlexLexer::yyFlexLexer( STD istream* arg_yyin, ostream* arg_yyout )
 	{
 	yyin = arg_yyin;
 	yyout = arg_yyout;
@@ -895,7 +903,7 @@ yyFlexLexer::~yyFlexLexer()
 	yy_delete_buffer( yy_current_buffer YY_CALL_LAST_ARG);
 	}
 
-void yyFlexLexer::switch_streams( istream* new_in, ostream* new_out )
+void yyFlexLexer::switch_streams( STD  istream* new_in, ostream* new_out )
 	{
 	if ( new_in )
 		{
@@ -1290,7 +1298,7 @@ FILE *input_file;
 YY_DECL_LAST_ARG
 #endif
 %+
-void yyFlexLexer::yyrestart( istream* input_file )
+void yyFlexLexer::yyrestart( STD istream* input_file )
 %*
 	{
 	if ( ! YY_G(yy_current_buffer) )
@@ -1365,7 +1373,7 @@ int size;
 YY_DECL_LAST_ARG
 #endif
 %+
-YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( istream* file, int size )
+YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( STD istream* file, int size )
 %*
 	{
 	YY_BUFFER_STATE b;
@@ -1433,8 +1441,10 @@ YY_DECL_LAST_ARG
 #endif
 
 %+
-extern "C" int isatty YY_PROTO(( int ));
-void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
+#ifndef YY_NEVER_INTERACTIVE
+extern "C" int isatty YY_PROTO(( int )) THROW_NIL ;
+#endif
+void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, STD istream* file )
 %*
 
 	{
