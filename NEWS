@@ -1,3 +1,87 @@
+Changes between 2.2 (alpha) release of March '90 and previous release:
+
+    User-visible:
+
+	- Full user documentation now available.
+
+	- Support for 8-bit scanners.
+
+	- Scanners now accept NUL's.
+
+	- A facility has been added for dealing with multiple
+	  input buffers.
+
+	- Two manual entries now.  One which fully describes flex
+	  (rather than just its differences from lex), and the
+	  other for quick(er) reference.
+
+	- A number of changes to bring flex closer into compliance
+	  with the latest POSIX lex draft:
+
+		%t support
+		flex now accepts multiple input files and concatenates
+		    them together to form its input
+		previous -c (compress) flag renamed -C
+		do-nothing -c and -n flags added
+		Any indented code or code within %{}'s in section 2 is
+		    now copied to the output
+
+	- yyleng is now a bona fide global integer.
+
+	- -d debug information now gives the line number of the
+	  matched rule instead of which number rule it was from
+	  the beginning of the file.
+
+	- -v output now includes a summary of the flags used to generate
+	  the scanner.
+
+	- unput() and yyrestart() are now globally callable.
+
+	- yyrestart() no longer closes the previous value of yyin.
+
+	- C++ support; generated scanners can be compiled with C++ compiler.
+
+	- Primitive -lfl library added, containing default main()
+	  which calls yylex().  A number of routines currently living
+	  in the scanner skeleton will probably migrate to here
+	  in the future (in particular, yywrap() will probably cease
+	  to be a macro and instead be a function in the -lfl library).
+
+	- Hexadecimal (\x) escape sequences added.
+
+	- Support for MS-DOS, VMS, and Turbo-C integrated.
+
+	- The %used/%unused operators have been deprecated.  They
+	  may go away soon.
+
+
+    Other changes:
+
+	- Makefile enhanced for easier testing and installation.
+	- The parser has been tweaked to detect some erroneous
+	  constructions which previously were missed.
+	- Scanner input buffer overflow is now detected.
+	- Bugs with missing "const" declarations fixed.
+	- Out-of-date Minix/Atari patches provided.
+	- Scanners no longer require printf() unless FLEX_DEBUG is being used.
+	- A subtle input() bug has been fixed.
+	- Line numbers for "continued action" rules (those following
+	  the special '|' action) are now correct.
+	- unput() bug fixed; had been causing problems porting flex to VMS.
+	- yymore() handling rewritten to fix bug with interaction
+	  between yymore() and trailing context.
+	- EOF in actions now generates an error message.
+	- Bug involving -CFe and generating equivalence classes fixed.
+	- Bug which made -CF be treated as -Cf fixed.
+	- Support for SysV tmpnam() added.
+	- Unused #define's for scanner no longer generated.
+	- Error messages which are associated with a particular input
+	  line are now all identified with their input line in standard
+	  format.
+	- % directives which are valid to lex but not to flex are
+	  now ignored instead of generating warnings.
+
+
 Changes between 2.1 beta-test release of June '89 and previous release:
 
     User-visible:
@@ -88,17 +172,10 @@ Changes between 2.1 beta-test release of June '89 and previous release:
 	  trimmed to be 31 or fewer characters.  Shortened file names
 	  for dinosaur OS's.  Checks for allocating > 64K memory
 	  on 16 bit'ers.  Amiga tweaks.  Compiles using gcc on a Sun-3.
-
 	- Compressed and fast scanner skeletons merged.
-
 	- Skeleton header files done away with.
-
 	- Generated scanner uses prototypes and "const" for __STDC__.
-
 	- -DSV flag is now -DSYS_V for System V compilation.
-
 	- Removed all references to FTL language.
-
 	- Software now covered by BSD Copyright.
-
 	- flex will replace lex in subsequent BSD releases.
