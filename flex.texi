@@ -4182,15 +4182,19 @@ override the default behavior.
 @section The Default Memory Management
 
 Flex allocates dynamic memory during initialization, and once in a while from
-within a call to yylex(). Initialization takes place during the first call
-to yylex(). Thereafter, flex may reallocate more memory if it needs to enlarge
-a buffer.
+within a call to yylex(). Initialization takes place during the first call to
+yylex(). Thereafter, flex may reallocate more memory if it needs to enlarge a
+buffer. As of version 2.5.9 Flex will clean up all memory when you call @code{yylex_destroy}
+@xref{faq-memory-leak}.
 
-Flex allocates dynamic memory for four purposes, listed below.
+Flex allocates dynamic memory for four purposes, listed below @footnote{The
+quantities given here are approximate, and may vary due to host architecture,
+compiler configuration, or due to future enhancements to flex.} 
 
-@enumerate
+@table @asis
 
-@item Flex allocates memory for the character buffer used to perform pattern
+@item 16kB for the input buffer.
+Flex allocates memory for the character buffer used to perform pattern
 matching.  Flex must read ahead from the input stream and store it in a large
 character buffer.  This buffer is typically the largest chunk of dynamic memory
 flex consumes. This buffer will grow if necessary, doubling the size each time.
@@ -4199,7 +4203,8 @@ buffer (16384 bytes) is almost always too large.  The ideal size for this
 buffer is the length of the longest token expected.  Flex will allocate a few
 extra bytes for housekeeping.
 
-@item Flex allocates memory the start condition stack. This is the stack used
+@item 100 bytes for the start condition stack.
+Flex allocates memory for the start condition stack. This is the stack used
 for pushing start states, i.e., with yy_push_state(). It will grow if
 necessary.  Since the states are simply integers, this stack doesn't consume
 much memory.  This stack is not present if @code{%option stack} is not
@@ -4207,7 +4212,8 @@ specified.  You will rarely need to tune this buffer. The ideal size for this
 stack is the maximum depth expected.  The memory for this stack is
 automatically destroyed when you call yylex_destroy(). @xref{Option-Stack}.
 
-@item Flex allocates memory for each YY_BUFFER_STATE. The buffer state itself
+@item 40 bytes for each YY_BUFFER_STATE.
+Flex allocates memory for each YY_BUFFER_STATE. The buffer state itself
 is about 40 bytes, plus an additional large character buffer (described above.)
 The initial buffer state is created during initialization, and with each call
 to yy_create_buffer(). You can't tune the size of this, but you can tune the
@@ -4221,13 +4227,12 @@ crashing your program!) At the time of this writing, flex does not provide a
 growable stack for the buffer states.  You have to manage that yourself.
 @xref{Multiple Input Buffers}.
 
-@item Flex allocates about 84 bytes for the reentrant scanner structure when
+@item 84 bytes for the reentrant scanner guts
+Flex allocates about 84 bytes for the reentrant scanner structure when
 you call yylex_init(). It is destroyed when the user calls yylex_destroy().
 
-@end enumerate
+@end table
 
-It is important to note that flex will clean up all memory when you call
-yylex_destroy().
 
 @node Overriding The Default Memory Management
 @section Overriding The Default Memory Management

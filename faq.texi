@@ -819,7 +819,7 @@ This approach also has much better error-reporting properties.
 
 @node Memory leak - 16386 bytes allocated by malloc.
 @unnumberedsec Memory leak - 16386 bytes allocated by malloc.
-
+@anchor{faq-memory-leak}
 UPDATED 2002-07-10: As of flex version 2.5.9, this leak means that you did not
 call yylex_destroy(). If you are using an earlier version of flex, then read
 on.
