@@ -642,6 +642,8 @@ int sym;
 
 	else
 		{
+		check_char( sym );
+
 		if ( useecs )
 			/* Map NUL's to csize. */
 			mkechar( sym ? sym : csize, nextecm, ecgroup );
