@@ -901,7 +901,7 @@ void line_pinpoint( str, line )
 char str[];
 int line;
 	{
-	fprintf( stderr, "\"%s\", line %d: %s\n", infilename, line, str );
+	fprintf( stderr, "%s: %d: %s\n", infilename, line, str );
 	}
 
 
