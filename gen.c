@@ -1344,7 +1344,7 @@ void make_tables()
 	gen_find_action();
 
 	skelout();
-	if ( lex_compat )
+	if ( do_yylineno )
 		{
 		indent_puts( "if ( yy_act != YY_END_OF_BUFFER )" );
 		indent_up();
@@ -1518,7 +1518,7 @@ void make_tables()
 	gen_NUL_trans();
 
 	skelout();
-	if ( lex_compat )
+	if ( do_yylineno )
 		{ /* update yylineno inside of unput() */
 		indent_puts( "if ( c == '\\n' )" );
 		indent_up();
@@ -1531,7 +1531,7 @@ void make_tables()
 	if ( bol_needed )
 		{
 		indent_puts( "yy_current_buffer->yy_at_bol = (c == '\\n');" );
-		if ( lex_compat )
+		if ( do_yylineno )
 			{
 			indent_puts( "if ( yy_current_buffer->yy_at_bol )" );
 			indent_up();
@@ -1540,7 +1540,7 @@ void make_tables()
 			}
 		}
 
-	else if ( lex_compat )
+	else if ( do_yylineno )
 		{
 		indent_puts( "if ( c == '\\n' )" );
 		indent_up();
