@@ -1,47 +1,57 @@
 \input texinfo.tex @c -*-texinfo-*-
 @c %**start of header
 @setfilename flex.info
-@settitle The Flex Manual
-@c %**end of header
+@settitle flex: a fast lexical analyzer generator
 @include version.texi
 @c  Define new index types for "Examples" and "macro hooks".
 @defindex ex
 @defindex hk
-
-@c  This file is part of flex.
-
-@c  Copyright (c) 1990, 1997 The Regents of the University of California.
-@c  All rights reserved.
-
-@c  This code is derived from software contributed to Berkeley by
-@c  Vern Paxson.
-
-@c  The United States Government has rights in this work pursuant
-@c  to contract no. DE-AC03-76SF00098 between the United States
-@c  Department of Energy and the University of California.
-
-@c   Redistribution and use in source and binary forms, with or without
-@c   modification, are permitted provided that the following conditions
-@c   are met:
-
-@c   1. Redistributions of source code must retain the above copyright
-@c      notice, this list of conditions and the following disclaimer.
-@c   2. Redistributions in binary form must reproduce the above copyright
-@c      notice, this list of conditions and the following disclaimer in the
-@c      documentation and/or other materials provided with the distribution.
-
-@c   Neither the name of the University nor the names of its contributors
-@c   may be used to endorse or promote products derived from this software
-@c   without specific prior written permission.
-
-@c   THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
-@c   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
-@c   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-@c   PURPOSE.
 @dircategory Programming
 @direntry
 * flex: (flex).      Fast lexical analyzer generator (lex replacement).
 @end direntry
+@c %**end of header
+
+@copying
+@quotation
+This file is part of flex.
+
+Copyright @copyright{} 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+@enumerate
+@item
+ Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+@item
+Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+@end enumerate
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.
+@end quotation
+@end copying
+
 @node Top
 @top flex
 
@@ -54,6 +64,8 @@ This edition of the @cite{flex Manual} documents @code{flex} version
 @value{VERSION}. It was last updated on @value{UPDATED}.
 
 @menu
+* Copyright::                   
+* Reporting Bugs::              
 * Introduction::                
 * Simple Examples::             
 * Format::                      
@@ -77,8 +89,6 @@ This edition of the @cite{flex Manual} documents @code{flex} version
 * Diagnostics::                 
 * Limitations::                 
 * Bibliography::                
-* Copyright::                   
-* Reporting Bugs::              
 * FAQ::                         
 * Appendices::                  
 * Indices::                     
@@ -235,6 +245,27 @@ Indices
 
 @end detailmenu
 @end menu
+
+@node Copyright
+@chapter Copyright
+
+@cindex copyright of flex
+@cindex distributing flex
+
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+@insertcopying
+
+@node Reporting Bugs
+@chapter Reporting Bugs
+
+@cindex bugs, reporting
+@cindex reporting bugs
+
+If you have problems with @code{flex} or think you have found a bug,
+please send mail detailing your problem to
+@email{help-flex@@gnu.org}. Patches are always welcome.
 
 @node Introduction
 @chapter Introduction
@@ -4695,58 +4726,6 @@ Techniques and Tools}, Addison-Wesley (1986).  Describes the
 pattern-matching techniques used by @code{flex} (deterministic finite
 automata).
 
-@node Copyright
-@chapter Copyright
-
-@cindex copyright of flex
-@cindex distributing flex
-
-The flex manual is placed under the same licensing conditions as the
-rest of flex:
-
-Copyright @copyright{} 1990, 1997 The Regents of the University of California.
-All rights reserved.
-
-This code is derived from software contributed to Berkeley by
-Vern Paxson.
-
-The United States Government has rights in this work pursuant
-to contract no. DE-AC03-76SF00098 between the United States
-Department of Energy and the University of California.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-@enumerate
-@item
-Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-
-@item
-Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in the
-documentation and/or other materials provided with the distribution.
-@end enumerate
-
-Neither the name of the University nor the names of its contributors
-may be used to endorse or promote products derived from this software
-without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
-IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE.
-
-@node Reporting Bugs
-@chapter Reporting Bugs
-
-@cindex bugs, reporting
-
-If you have problems with @code{flex} or think you have found a bug,
-please send mail detailing your problem to
-@email{help-flex@@gnu.org}. Patches are always welcome.
-
 @node FAQ
 @unnumbered FAQ
 
@@ -5472,7 +5451,6 @@ yy_init = 1;
 Note: @code{yy_init} is an "internal variable", and hasn't been tested in this
 situation. It is possible that some other globals may need resetting as well.
 
-@c faq edit stopped here
 @node How do I track the byte offset for lseek()?
 @unnumberedsec How do I track the byte offset for lseek()?
 
@@ -5485,25 +5463,30 @@ situation. It is possible that some other globals may need resetting as well.
 @end verbatim
 @end example
 
-While this is the right ideas, it has two problems.  The first is that
-it's possible that flex will request less than YY_READ_BUF_SIZE during
-an invocation of YY_INPUT (or that your input source will return less
-even though YY_READ_BUF_SIZE bytes were requested).  The second problem
-is that when refilling its internal buffer, flex keeps some characters
+While this is the right idea, it has two problems.  The first is that
+it's possible that @code{flex} will request less than @code{YY_READ_BUF_SIZE} during
+an invocation of @code{YY_INPUT} (or that your input source will return less
+even though @code{YY_READ_BUF_SIZE} bytes were requested).  The second problem
+is that when refilling its internal buffer, @code{flex} keeps some characters
 from the previous buffer (because usually it's in the middle of a match,
-and needs those characters to construct yytext for the match once it's
-done).  Because of this, yy_c_buf_p - yy_current_buffer->yy_ch_buf won't
+and needs those characters to construct @code{yytext} for the match once it's
+done).  Because of this, @code{yy_c_buf_p - yy_current_buffer->yy_ch_buf} won't
 be exactly the number of characters already read from the current buffer.
 
 An alternative solution is to count the number of characters you've matched
-since starting to scan.  This can be done by using YY_USER_ACTION.  For
+since starting to scan.  This can be done by using @code{YY_USER_ACTION}.  For
 example,
 
-	#define YY_USER_ACTION num_chars += yyleng;
+@example
+@verbatim
+#define YY_USER_ACTION num_chars += yyleng;
+@end verbatim
+@end example
 
-(You need to be careful to update your bookkeeping if you use yymore(),
-yyless(), unput(), or input().)
+(You need to be careful to update your bookkeeping if you use @code{yymore(}),
+@code{yyless()}, @code{unput()}, or @code{input()}.)
 
+@c faq edit stopped here
 @c TODO: Evaluate this faq.
 @node unnamed-faq-16
 @unnumberedsec unnamed-faq-16
