@@ -10,7 +10,7 @@
 
 
 #ifdef __cplusplus
-#include <osfcn.h>
+#include <stdlib.h>
 #include <strings.h>
 
 /* use prototypes in function declarations */
@@ -37,8 +37,10 @@
 
 #ifdef YY_USE_PROTOS
 #define YY_PROTO(proto) proto
+#ifndef __cplusplus
 char *malloc( unsigned size );
 int free( char * );
+#endif
 #else
 #define YY_PROTO(proto) ()
 char *malloc();
