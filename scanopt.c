@@ -677,7 +677,7 @@ scanopt (svoid, arg, optindex)
     struct _scanopt_t* s;
     struct _aux * auxp;
     int is_short;
-    int opt_offset=-1;
+    int opt_offset = -1;
 
     s = (struct _scanopt_t*)svoid;
 
