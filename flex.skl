@@ -667,6 +667,18 @@ yyFlexLexer::~yyFlexLexer()
 	yy_delete_buffer( yy_current_buffer );
 	}
 
+void yyFlexLexer::switch_streams( istream* new_in, ostream* new_out )
+	{
+	if ( new_in )
+		{
+		yy_delete_buffer( yy_current_buffer );
+		yy_switch_to_buffer( yy_create_buffer( new_in, YY_BUF_SIZE ) );
+		}
+
+	if ( new_out )
+		yyout = new_out;
+	}
+
 #ifdef YY_INTERACTIVE
 int yyFlexLexer::LexerInput( char* buf, int /* max_size */ )
 #else
