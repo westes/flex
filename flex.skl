@@ -14,6 +14,8 @@
 %#   %c-or-c++  -  The following lines are printed in BOTH C and C++ scanners.
 %#   %if-reentrant     - Print for reentrant scanners.(push)
 %#   %if-not-reentrant - Print for non-reentrant scanners. (push)
+%#   %if-bison-bridge  - Print for bison-bridge. (push)
+%#   %if-not-bison-bridge  - Print for non-bison-bridge. (push)
 %#   %endif        - Same as pop.
 %#   %%  -  A stop-point, where code is inserted by flex.
 %#          Each stop-point is numbered here and also in the code generator.
@@ -557,12 +559,12 @@ struct yyguts_t
     int yy_more_len;
 #endif
 
-#ifdef YY_BISON_BRIDGE
+%if-bison-bridge
     YYSTYPE * yylval_r;
 #ifdef YYLTYPE
     YYLTYPE * yylloc_r;
 #endif
-#endif
+%endif
 
     };
 %ok-for-header
@@ -575,12 +577,12 @@ static int yy_init_globals YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 /* This must go here because YYSTYPE and YYLSTYPE are included
  * from bison output in section 1.*/
 %if-reentrant
-#ifdef YY_BISON_BRIDGE
+%if-bison-bridge
 #    define yylval YY_G(yylval_r)
 #  ifdef YYLTYPE
 #    define yylloc YY_G(yylloc_r)
 #  endif
-#endif /* YY_BISON_BRIDGE */
+%endif
 %endif
 
 %ok-for-header
@@ -642,7 +644,7 @@ int yyget_lineno YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 void yyset_lineno YY_PARAMS(( int line_number YY_PROTO_LAST_ARG ));
 #endif
 
-#ifdef YY_BISON_BRIDGE
+%if-bison-bridge
 #ifndef YY_NO_GET_LVAL
 YYSTYPE * yyget_lval YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
@@ -655,7 +657,7 @@ void yyset_lval YY_PARAMS(( YYSTYPE * yylvalp YY_PROTO_LAST_ARG ));
     void yyset_lloc YY_PARAMS(( YYLTYPE * yyllocp YY_PROTO_LAST_ARG ));
 #endif
 #endif /* YYLTYPE */
-#endif /* YY_BISON_BRIDGE */
+%endif
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -827,7 +829,7 @@ struct yytbl_reader {
 /* If the bison pure parser is used, then bison will provide
    one or two additional arguments. */
 
-#ifdef YY_BISON_BRIDGE
+%if-bison-bridge
 #  ifdef YYLTYPE 
 #        define YY_LEX_PROTO YY_PARAMS((YYSTYPE * yylvalp, YYLTYPE * yyllocp YY_PROTO_LAST_ARG))
 #        define YY_LEX_DECLARATION YYFARGS2(YYSTYPE *,yylvalp, YYLTYPE *,yyllocp)
@@ -835,10 +837,12 @@ struct yytbl_reader {
 #        define YY_LEX_PROTO YY_PARAMS((YYSTYPE * yylvalp YY_PROTO_LAST_ARG))
 #        define YY_LEX_DECLARATION YYFARGS1(YYSTYPE *,yylvalp)
 #  endif
-#else
+%endif
+
+%if-not-bison-bridge
 #      define YY_LEX_PROTO YY_PARAMS((YY_PROTO_ONLY_ARG))
 #      define YY_LEX_DECLARATION YYFARGS0(void)
-#endif
+%endif
 
 
 extern int yylex YY_LEX_PROTO;
@@ -870,23 +874,23 @@ YY_DECL
 	register yy_state_type yy_current_state;
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
-#ifdef YY_BISON_BRIDGE
+%if-bison-bridge
 %if-not-reentrant
     YYSTYPE * yylval;
 #   ifdef YYLTYPE
       YYLTYPE * yylloc;
 #   endif
 %endif
-#endif
+%endif
 
 %% [7.0] user's declarations go here
 
-#ifdef YY_BISON_BRIDGE
+%if-bison-bridge
     yylval = yylvalp;
 #ifdef YYLTYPE
     yylloc = yyllocp;
 #endif
-#endif
+%endif
 
 	if ( YY_G(yy_init) )
 		{
@@ -1962,7 +1966,7 @@ void yyset_debug YYFARGS1( int ,bdebug)
 %if-reentrant
 /* Accessor methods for yylval and yylloc */
 
-#ifdef YY_BISON_BRIDGE
+%if-bison-bridge
 #ifndef YY_NO_GET_LVAL
 YYSTYPE * yyget_lval  YYFARGS0(void)
 {
@@ -1993,7 +1997,7 @@ void yyset_lloc YYFARGS1( YYLTYPE * ,yyllocp)
 #endif /* !YY_NO_SET_LLOC */
 
 #endif /* YYLTYPE */
-#endif /* YY_BISON_BRIDGE */
+%endif
 
 
 static int yy_init_globals YYFARGS0(void)

@@ -46,6 +46,8 @@
 #define CMD_POP              "%pop"
 #define CMD_IF_REENTRANT     "%if-reentrant"
 #define CMD_IF_NOT_REENTRANT "%if-not-reentrant"
+#define CMD_IF_BISON_BRIDGE  "%if-bison-bridge"
+#define CMD_IF_NOT_BISON_BRIDGE  "%if-not-bison-bridge"
 #define CMD_ENDIF            "%endif"
 
 /* we allow the skeleton to push and pop. */
@@ -914,6 +916,14 @@ void skelout ()
             else if (cmd_match (CMD_IF_NOT_REENTRANT)){
                 sko_push(do_copy);
                 do_copy = !reentrant && do_copy;
+            }
+            else if (cmd_match(CMD_IF_BISON_BRIDGE)){
+                sko_push(do_copy);
+                do_copy = bison_bridge && do_copy;
+            }
+            else if (cmd_match(CMD_IF_NOT_BISON_BRIDGE)){
+                sko_push(do_copy);
+                do_copy = !bison_bridge && do_copy;
             }
             else if (cmd_match (CMD_ENDIF)){
                 sko_pop(&do_copy);
