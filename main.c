@@ -905,20 +905,24 @@ void readin()
 	if ( ddebug )
 		outn( "\n#define FLEX_DEBUG" );
 
-	if ( lex_compat )
+	if ( do_stdinit )
 		{
-		outn( "#define YY_FLEX_LEX_COMPAT" );
-
 		outn( "#ifdef VMS" );
 		outn( yy_nostdinit );
 		outn( "#else" );
-		outn( do_stdinit ? yy_stdinit : yy_nostdinit );
+		outn( yy_stdinit );
 		outn( "#endif" );
+		}
+
+	else
+		outn( yy_nostdinit );
+
+	if ( lex_compat )
+		{
+		outn( "#define YY_FLEX_LEX_COMPAT" );
 		outn( "extern int yylineno;" );
 		outn( "int yylineno = 1;" );
 		}
-	else if ( ! C_plus_plus )
-		outn( do_stdinit ? yy_stdinit : yy_nostdinit );
 
 	if ( C_plus_plus )
 		outn( "\n#include <FlexLexer.h>" );
