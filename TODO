@@ -25,5 +25,8 @@
 
 ** make test suite more complete
 
-** create .cvsignore files for the remaining tests/test-*
-   subdirectories
+** create a script which sets up a new skeleton test directory with a
+   correct .cvsignore file and other such niceties
+
+** explicitly describe the copyright state of the entries in
+   tests/. should this be public domain by default?
