@@ -833,11 +833,11 @@ void skelout()
 void transition_struct_out( element_v, element_n )
 int element_v, element_n;
 	{
-	out_dec2( "%7d, %5d,", element_v, element_n );
+	out_dec2( " {%4d,%4d },", element_v, element_n );
 
 	datapos += TRANS_STRUCT_PRINT_LENGTH;
 
-	if ( datapos >= 75 )
+	if ( datapos >= 79 - TRANS_STRUCT_PRINT_LENGTH )
 		{
 		outc( '\n' );
 

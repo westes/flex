@@ -96,8 +96,8 @@
  */
 #define NUMDATALINES 10
 
-/* Transition_struct_out() definitions. */
-#define TRANS_STRUCT_PRINT_LENGTH 15
+/* transition_struct_out() definitions. */
+#define TRANS_STRUCT_PRINT_LENGTH 14
 
 /* Returns true if an nfa state has an epsilon out-transition slot
  * that can be used.  This definition is currently not used.
