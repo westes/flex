@@ -75,6 +75,7 @@ libfl_a_SOURCES = \
 
 noinst_HEADERS = \
 	flexdef.h \
+	flexint.h \
 	version.h \
 	options.h \
 	scanopt.h \
@@ -125,7 +126,7 @@ localedir = $(datadir)/locale
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I@includedir@ -I$(top_srcdir)/intl
 LIBS = @LIBINTL@ @LIBS@
 
-skel.c: flex.skl mkskel.sh
+skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
 	$(m4) -P -DFLEX_MAJOR_VERSION=`echo $(VERSION)|cut -f 1 -d .` -DFLEX_MINOR_VERSION=`echo $(VERSION)|cut -f 2 -d .` -DFLEX_SUBMINOR_VERSION=`echo $(VERSION)|cut -f 3 -d .` $(srcdir)/flex.skl | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
 
 $(man_MANS): $(srcdir)/main.c
@@ -135,27 +136,28 @@ $(man_MANS): $(srcdir)/main.c
 
 # Explicitly describe dependencies.
 # You can recreate this with `gcc -I. -MM *.c'
-buf.o: buf.c flexdef.h
-ccl.o: ccl.c flexdef.h
-dfa.o: dfa.c flexdef.h tables.h tables_shared.h
-ecs.o: ecs.c flexdef.h
-gen.o: gen.c flexdef.h tables.h tables_shared.h
+buf.o: buf.c flexdef.h flexint.h
+ccl.o: ccl.c flexdef.h flexint.h
+dfa.o: dfa.c flexdef.h flexint.h tables.h tables_shared.h
+ecs.o: ecs.c flexdef.h flexint.h
+gen.o: gen.c flexdef.h flexint.h tables.h tables_shared.h
 libmain.o: libmain.c
 libyywrap.o: libyywrap.c
-main.o: main.c flexdef.h version.h options.h scanopt.h tables.h \
+main.o: main.c flexdef.h flexint.h version.h options.h scanopt.h \
+ tables.h tables_shared.h
+misc.o: misc.c flexdef.h flexint.h tables.h tables_shared.h
+nfa.o: nfa.c flexdef.h flexint.h
+options.o: options.c options.h scanopt.h flexdef.h flexint.h
+parse.o: parse.c flexdef.h flexint.h tables.h tables_shared.h
+scan.o: scan.c flexdef.h flexint.h parse.h
+scanopt.o: scanopt.c flexdef.h flexint.h scanopt.h
+skel.o: skel.c flexdef.h flexint.h
+sym.o: sym.c flexdef.h flexint.h
+tables.o: tables.c flexdef.h flexint.h tables.h tables_shared.h
+tables_shared.o: tables_shared.c flexdef.h flexint.h tables.h \
  tables_shared.h
-misc.o: misc.c flexdef.h tables.h tables_shared.h
-nfa.o: nfa.c flexdef.h
-options.o: options.c options.h scanopt.h flexdef.h
-parse.o: parse.c flexdef.h tables.h tables_shared.h
-scan.o: scan.c flexdef.h parse.h
-scanopt.o: scanopt.c flexdef.h scanopt.h
-skel.o: skel.c flexdef.h
-sym.o: sym.c flexdef.h
-tables.o: tables.c flexdef.h tables.h tables_shared.h
-tables_shared.o: tables_shared.c flexdef.h tables.h tables_shared.h
-tblcmp.o: tblcmp.c flexdef.h
-yylex.o: yylex.c flexdef.h parse.h
+tblcmp.o: tblcmp.c flexdef.h flexint.h
+yylex.o: yylex.c flexdef.h flexint.h parse.h
 
 # Create a tags file.
 tags:

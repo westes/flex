@@ -49,12 +49,7 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_INTTYPES_H
-#include <inttypes.h>
-#endif
+#include "flexint.h"
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -127,6 +122,10 @@
 #endif
 
 #define unspecified -1
+
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
 
 /* Special chk[] values marking the slots taking by end-of-buffer and action
  * numbers.
