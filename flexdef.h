@@ -115,9 +115,6 @@ __extension__ typedef unsigned long long int uint64_t;
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
-#ifdef HAVE_MALLOC_H
-#include <malloc.h>
-#endif
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
