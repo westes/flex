@@ -119,8 +119,8 @@ static char *yy_last_accepting_cpos;
 static yy_state_type yy_get_previous_state();
 static int yy_get_next_buffer();
 
-static yyunput();
-static input();
+static void yyunput();
+static int input();
 
 YY_DECL
     {
@@ -355,7 +355,7 @@ static yy_state_type yy_get_previous_state()
     }
 
 
-static yyunput( c, yy_bp )
+static void yyunput( c, yy_bp )
 int c;
 register char *yy_bp;
 
