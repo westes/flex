@@ -660,10 +660,3 @@ msgstr "Marqueur de Fin\n"
 #: yylex.c:209
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr "*Très bizarre* - tok : %d val : %d\n"
-
-#~ msgid ""
-#~ "%s: unknown flag '%c'.  For usage, try\n"
-#~ "\t%s --help\n"
-#~ msgstr ""
-#~ "%s : indicateur `%c' inconnu. Pour la recette d'usage, demandez\n"
-#~ "\t%s --help\n"

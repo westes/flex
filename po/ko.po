@@ -651,10 +651,3 @@ msgstr "종료 표시\n"
 #: yylex.c:209
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr "*무언가 이상합니다* - tok: %d val: %d\n"
-
-#~ msgid ""
-#~ "%s: unknown flag '%c'.  For usage, try\n"
-#~ "\t%s --help\n"
-#~ msgstr ""
-#~ "%s: indicateur inconnu '%c'.  Pour la recette d'usage, demandez\n"
-#~ "\t%s --help\n"
