@@ -64,7 +64,8 @@ flex_SOURCES = \
 	yylex.c \
 	options.c \
 	scanopt.c \
-	buf.c
+	buf.c \
+	tables.c
 
 libfl_a_SOURCES = \
 	libmain.c \
@@ -131,24 +132,25 @@ $(man_MANS): $(srcdir)/main.c
 
 # Explicitly describe dependencies.
 # You can recreate this with `gcc -I. -MM *.c'
-buf.o: buf.c flexdef.h config.h gettext.h
-ccl.o: ccl.c flexdef.h config.h gettext.h
-dfa.o: dfa.c flexdef.h config.h gettext.h
-ecs.o: ecs.c flexdef.h config.h gettext.h
-gen.o: gen.c flexdef.h config.h gettext.h
+buf.o: buf.c flexdef.h config.h gettext.h tables_shared.h
+ccl.o: ccl.c flexdef.h config.h gettext.h tables_shared.h
+dfa.o: dfa.c flexdef.h config.h gettext.h tables_shared.h
+ecs.o: ecs.c flexdef.h config.h gettext.h tables_shared.h
+gen.o: gen.c flexdef.h config.h gettext.h tables_shared.h
 libmain.o: libmain.c
 libyywrap.o: libyywrap.c
-main.o: main.c flexdef.h config.h gettext.h version.h options.h scanopt.h
-misc.o: misc.c flexdef.h config.h gettext.h
-nfa.o: nfa.c flexdef.h config.h gettext.h
-options.o: options.c options.h scanopt.h flexdef.h config.h gettext.h
-parse.o: parse.c flexdef.h config.h gettext.h
-scan.o: scan.c flexdef.h config.h gettext.h parse.h
-scanopt.o: scanopt.c scanopt.h flexdef.h config.h gettext.h
-skel.o: skel.c flexdef.h config.h gettext.h
-sym.o: sym.c flexdef.h config.h gettext.h
-tblcmp.o: tblcmp.c flexdef.h config.h gettext.h
-yylex.o: yylex.c flexdef.h config.h gettext.h parse.h
+main.o: main.c flexdef.h config.h gettext.h tables_shared.h version.h options.h scanopt.h
+misc.o: misc.c flexdef.h config.h gettext.h tables_shared.h
+nfa.o: nfa.c flexdef.h config.h gettext.h tables_shared.h
+options.o: options.c options.h scanopt.h flexdef.h config.h gettext.h tables_shared.h
+parse.o: parse.c flexdef.h config.h gettext.h tables_shared.h
+scan.o: scan.c flexdef.h config.h gettext.h tables_shared.h parse.h
+scanopt.o: scanopt.c scanopt.h flexdef.h config.h gettext.h tables_shared.h
+skel.o: skel.c flexdef.h config.h gettext.h tables_shared.h
+sym.o: sym.c flexdef.h config.h gettext.h tables_shared.h
+tables.o: tables.c flexdef.h config.h gettext.h tables_shared.h
+tblcmp.o: tblcmp.c flexdef.h config.h gettext.h tables_shared.h
+yylex.o: yylex.c flexdef.h config.h gettext.h tables_shared.h parse.h
 
 # Create a tags file.
 tags:
