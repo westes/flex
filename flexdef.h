@@ -39,10 +39,9 @@ char *memset();
 
 #ifndef SV
 #include <strings.h>
-#endif
-
 #ifdef lint
 char *sprintf(); /* keep lint happy */
+#endif
 #endif
 
 
@@ -71,11 +70,6 @@ char *sprintf(); /* keep lint happy */
 #ifndef FAST_SKELETON_FILE
 #define FAST_SKELETON_FILE "flex.fastskel"
 #endif
-
-/* special internal nxt[] action number for the "at the end of the
- * input buffer" state
- */
-#define END_OF_BUFFER_ACTION 0
 
 /* special chk[] values marking the slots taking by end-of-buffer and action
  * numbers
@@ -478,12 +472,13 @@ extern char *ccltbl;
  * numdup - number of duplicate transitions
  * hshsave - number of hash collisions saved by checking number of states
  * num_backtracking - number of DFA states requiring back-tracking
+ * bol_needed - whether scanner needs beginning-of-line recognition
  */
 
 extern char *starttime, *endtime, nmstr[MAXLINE];
 extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
-extern int num_backtracking;
+extern int num_backtracking, bol_needed;
 
 char *allocate_array(), *reallocate_array();
 
