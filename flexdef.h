@@ -319,7 +319,7 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  *   listing backing-up states
  * C_plus_plus - if true (i.e., -+ flag), generate a C++ scanner class;
  *   otherwise, a standard C scanner
- * long_align - if true (-a flag), favor long-word alignment.
+ * long_align - if true (-Ca flag), favor long-word alignment.
  * use_read - if true (-f, -F, or -Cr) then use read() for scanner input;
  *   otherwise, use fread().
  * yytext_is_array - if true (i.e., %array directive), then declare
@@ -706,10 +706,10 @@ extern void usage PROTO((void));
 extern void add_action PROTO(( char *new_text ));
 
 /* True if a string is all lower case. */
-extern int all_lower PROTO((register Char *));
+extern int all_lower PROTO((register char *));
 
 /* True if a string is all upper case. */
-extern int all_upper PROTO((register Char *));
+extern int all_upper PROTO((register char *));
 
 /* Bubble sort an integer array. */
 extern void bubble PROTO((int [], int));
