@@ -3,14 +3,17 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* after version 2.5.13
+* version 2.5.14 2002-8-15
+
+** the tests using the reentrant c scanner as c++ were reworked
+   slightly to be sure that the c++ was enforced
 
 ** de translation now included in the distribution
 
 ** various portability fixes regarding nls support, c++ include
    headers, etc.
 
-* version 2.5.13
+* version 2.5.13 released 2002-8-15
 
 ** the header file output with %option header is now much smaller
 
