@@ -299,10 +299,11 @@ extern FILE *yyin, *yyout;
 	do \
 		{ \
 		/* Undo effects of setting up yytext. */ \
-        YY_LESS_LINENO(n);\
+        int yyless_macro_arg = (n); \
+        YY_LESS_LINENO(yyless_macro_arg);\
 		*yy_cp = YY_G(yy_hold_char); \
 		YY_RESTORE_YY_MORE_OFFSET \
-		YY_G(yy_c_buf_p) = yy_cp = yy_bp + n - YY_MORE_ADJ; \
+		YY_G(yy_c_buf_p) = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
 		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 		} \
 	while ( 0 )
