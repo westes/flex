@@ -1427,12 +1427,12 @@ void readin()
 		 * posiz, AND check for conflicting options. How far should we go
 		 * with this? Should we disable all the neat-o flex features?
 		 */
+        /* Update: Estes says no, since other flex features don't violate posix. */
 		}
 
 	if ( getenv("POSIXLY_CORRECT") )
 		{
 		posix_compat = true;
-		/* TODO: See TODO comment above */
 		}
 
 	if ( backing_up_report )

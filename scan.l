@@ -66,6 +66,11 @@
 #define CHECK_YYMORE(str) \
 	if ( all_lower( str ) ) \
 		yymore_used = true;
+
+#define YY_USER_INIT \
+	if ( getenv("POSIXLY_CORRECT") ) \
+		posix_compat = true;
+
 %}
 
 %option caseless nodefault stack noyy_top_state
