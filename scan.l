@@ -301,7 +301,7 @@ LEXOPT		[aceknopr]
 	read		use_read = option_sense;
     reentrant   reentrant = option_sense;
 	reject		reject_really_used = option_sense;
-	stack		action_define( "YY_STACK_USED", option_sense );
+	stack		ACTION_M4_IFDEF( "M4_YY_STACK_USED", option_sense );
 	stdinit		do_stdinit = option_sense;
 	stdout		use_stdout = option_sense;
     unistd      ACTION_IFDEF("YY_NO_UNISTD_H", ! option_sense);

@@ -917,6 +917,7 @@ PROTO ((const char *, const char *, const char *, const char *));
 extern void out_str_dec PROTO ((const char *, const char *, int));
 extern void outc PROTO ((int));
 extern void outn PROTO ((const char *));
+extern void out_m4_define (const char* def, const char* val);
 
 /* Return a printable version of the given character, which might be
  * 8-bit.
@@ -1154,12 +1155,13 @@ extern struct filter * output_chain;
  *            not including argv[0].
  * @return newest filter in chain
  */
-struct filter *filter_create PROTO((struct filter * chain, const char *cmd, ...));
+extern struct filter *filter_create PROTO((struct filter * chain, const char *cmd, ...));
 
 /* Fork and exec entire filter chain.
  *  @param chain The head of the chain.
  * @return true on success.
  */
-bool filter_apply_chain PROTO((struct filter * chain));
+extern bool filter_apply_chain PROTO((struct filter * chain));
+extern int filter_truncate (struct filter * chain, int max_len);
 
 #endif /* not defined FLEXDEF_H */

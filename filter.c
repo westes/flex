@@ -136,4 +136,25 @@ bool filter_apply_chain (struct filter * chain)
 	return true;
 }
 
+/** Truncate the chain to max_len number of filters.
+ * @param chain the current chain.
+ * @param max_len the maximum length of the chain.
+ * @return the resulting length of the chain.
+ */
+int filter_truncate (struct filter *chain, int max_len)
+{
+	int     len = 1;
+
+	if (!chain)
+		return 0;
+
+	while (chain->next && len < max_len) {
+		chain = chain->next;
+		++len;
+	}
+
+	chain->next = NULL;
+	return len;
+}
+
 /* vim:set expandtab cindent tabstop=4 softtabstop=4 shiftwidth=4 textwidth=0: */

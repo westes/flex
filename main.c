@@ -136,6 +136,9 @@ static char outfile_path[MAXLINE];
 static int outfile_created = 0;
 static char *skelname = NULL;
 
+/* For debugging. The max number of filters to apply to skeleton. */
+static int preproc_level = 1000;
+
 int flex_main PROTO ((int argc, char *argv[]));
 int main PROTO ((int argc, char *argv[]));
 void fix_line_dirs PROTO ((char *, char *, char *, int));
@@ -339,9 +342,14 @@ void check_options ()
     /* Setup the filter chain. */
     output_chain = filter_create(NULL,"m4","-P",0);
     /* filter_create(output_chain,"cat",0); */
-    filter_apply_chain(output_chain);
+
+    /* For debugging, only run the requested number of filters. */
+    if (preproc_level > 0) {
+        filter_truncate(output_chain, preproc_level);
+        filter_apply_chain(output_chain);
+    }
     yyout = stdout;
-    
+
 
 	/* always generate the tablesverify flag. */
 	buf_m4_define (&m4defs_buf, "M4_YY_TABLES_VERIFY", tablesverify ? "1" : "0");
@@ -483,6 +491,7 @@ void check_options ()
 
     /* Dump the m4 definitions. */
     buf_print_strings(&m4defs_buf, stdout);
+    m4defs_buf.nelts = 0; /* memory leak here. */
     
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)
@@ -718,7 +727,6 @@ void flexend (exit_status)
                 "YY_RULE_SETUP",
                 "YY_SC_TO_UI",
                 "YY_SKIP_YYWRAP",
-                "YY_STACK_USED",
                 "YY_START",
                 "YY_START_STACK_INCR",
                 "YY_STATE_EOF",
@@ -1086,7 +1094,13 @@ void flexinit (argc, argv)
 	buf_init (&userdef_buf, sizeof (char));	/* one long string */
 	buf_init (&defs_buf, sizeof (char *));	/* list of strings */
 	buf_init (&yydmap_buf, sizeof (char));	/* one long string */
-	buf_init (&m4defs_buf, sizeof (char *)); /* list of strings */
+
+    {
+        const char * m4defs_init_str[] = {"m4_changequote\n",
+                                          "m4_changequote([[, ]])\n"};
+        buf_init (&m4defs_buf, sizeof (char *));
+        buf_append (&m4defs_buf, &m4defs_init_str, 2);
+    }
 
 
 	/* Enable C++ if program name ends with '+'. */
@@ -1211,6 +1225,10 @@ void flexinit (argc, argv)
 		case OPT_POSIX_COMPAT:
 			posix_compat = true;
 			break;
+
+        case OPT_PREPROC_LEVEL:
+            preproc_level = strtol(arg,NULL,0);
+            break;
 
 		case OPT_MAIN:
 			buf_strdefine (&userdef_buf, "YY_MAIN", "1");
@@ -1384,7 +1402,8 @@ void flexinit (argc, argv)
 			break;
 
 		case OPT_STACK:
-			buf_strdefine (&userdef_buf, "YY_STACK_USED", "1");
+			//buf_strdefine (&userdef_buf, "YY_STACK_USED", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_STACK_USED",0);
 			break;
 
 		case OPT_STDINIT:
@@ -1664,7 +1683,7 @@ void readin ()
 	}
 
 	if (reject){
-        buf_m4_define( &m4defs_buf, "M4_YY_USES_REJECT", NULL);
+        out_m4_define( "M4_YY_USES_REJECT", NULL);
 		//outn ("\n#define YY_USES_REJECT");
     }
 

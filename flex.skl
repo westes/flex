@@ -21,6 +21,7 @@ m4preproc_changecom
 
 %# Macros for runtime processing stage.
 m4_changecom
+m4_changequote
 m4_changequote([[, ]])
 
 %# 
@@ -158,12 +159,14 @@ m4_define( [[YY_PROTO_ONLY_ARG]],  [[yyscan_t yyscanner]])
 
 %# For use in function definitions to append the additional argument.
 m4_ifdef( [[M4_YY_TRADITIONAL_FUNC_DEFS]],
+[[
     m4_define( [[YY_DEF_LAST_ARG]], [[, yyscanner]])
     m4_define( [[YY_DEF_ONLY_ARG]], [[yyscanner]])
-,
+]],
+[[
     m4_define( [[YY_DEF_LAST_ARG]],  [[, yyscan_t yyscanner]])
     m4_define( [[YY_DEF_ONLY_ARG]],  [[yyscan_t yyscanner]])
-)
+]])
 m4_define( [[YY_DECL_LAST_ARG]],  [[yyscan_t yyscanner;]])
 
 %# For use in function calls to pass the additional argument.
@@ -192,10 +195,12 @@ m4_define( [[YY_PROTO_ONLY_ARG]],  [[void]])
 m4_define( [[YY_DEF_LAST_ARG]])
 
 m4_ifdef( [[M4_YY_TRADITIONAL_FUNC_DEFS]],
+[[
     m4_define( [[YY_DEF_ONLY_ARG]])
-,
+]],
+[[
     m4_define( [[YY_DEF_ONLY_ARG]],  [[void]])
-)
+]])
 m4_define([[YY_DECL_LAST_ARG]])
 m4_define([[YY_CALL_LAST_ARG]])
 m4_define([[YY_CALL_ONLY_ARG]])
@@ -218,18 +223,20 @@ m4_define([[YY_CALL_ONLY_ARG]])
  *        yyscan_t yyscanner;
  */
 m4_ifdef( [[YY_TRADITIONAL_FUNC_DEFS]],
+[[
 %# Generate traditional function defs
     #define YYFARGS0(v) (YY_DEF_ONLY_ARG) YY_DECL_LAST_ARG
     #define YYFARGS1(t1,n1) (n1 YY_DEF_LAST_ARG) t1 n1; YY_DECL_LAST_ARG
     #define YYFARGS2(t1,n1,t2,n2) (n1,n2 YY_DEF_LAST_ARG) t1 n1; t2 n2; YY_DECL_LAST_ARG
     #define YYFARGS3(t1,n1,t2,n2,t3,n3) (n1,n2,n3 YY_DEF_LAST_ARG) t1 n1; t2 n2; t3 n3; YY_DECL_LAST_ARG
-,
+]],
+[[
 %# Generate C99 function defs.
     m4_define( [[YYFARGS0]], [[(YY_DEF_ONLY_ARG)]])
     m4_define( [[YYFARGS1]], [[($1 $2 YY_DEF_LAST_ARG)]])
     m4_define( [[YYFARGS2]], [[($1 $2, $3 $4 YY_DEF_LAST_ARG)]])
     m4_define( [[YYFARGS3]], [[($1 $2, $3 $4, $5 $6 YY_DEF_LAST_ARG)]])
-)
+]])
 
 /* Enter a start condition.  This macro really ought to take a parameter,
  * but we do it the disgusting crufty way forced on us by the ()-less
@@ -759,7 +766,9 @@ static int input YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 
 
 %if-c-only
-#if YY_STACK_USED
+%# TODO: This is messy.
+m4_ifdef( [[M4_YY_STACK_USED]],
+[[
 %if-not-reentrant
 %not-for-header
 static int yy_start_stack_ptr = 0;
@@ -781,11 +790,12 @@ m4_ifdef( [[M4_YY_NO_TOP_STATE]],,
 static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 ]])
 
-#else
-#define YY_NO_PUSH_STATE 1
-#define YY_NO_POP_STATE 1
-#define YY_NO_TOP_STATE 1
-#endif
+]],
+[[
+m4_define( [[M4_YY_NO_PUSH_STATE]])
+m4_define( [[M4_YY_NO_POP_STATE]])
+m4_define( [[M4_YY_NO_TOP_STATE]])
+]])
 %endif
 
 /* Amount of stuff to slurp up with each read. */
@@ -1187,7 +1197,8 @@ yyFlexLexer::yyFlexLexer( std::istream* arg_yyin, std::ostream* arg_yyout )
 m4_ifdef( [[M4_YY_USES_REJECT]],
 [[
 	yy_state_buf = new yy_state_type[YY_BUF_SIZE + 2];
-,
+]],
+[[
 	yy_state_buf = 0;
 ]])
 	}
@@ -1317,8 +1328,8 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 [[
 			YY_FATAL_ERROR(
 "input buffer overflow, can't enlarge buffer because scanner uses REJECT" );
-,
-
+]],
+[[
 			/* just a shorter name for the current buffer */
 			YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
 
@@ -2307,11 +2318,15 @@ int yylex_destroy  YYFARGS0(void)
 	yyfree(YY_G(yy_buffer_stack) YY_CALL_LAST_ARG);
 	YY_G(yy_buffer_stack) = NULL;
 
-#if defined(YY_STACK_USED) || defined(YY_REENTRANT)
+%# This is the m4 way to say "if (stack_used || is_reentrant){ destroy_stack }"
+m4_ifdef( [[M4_YY_STACK_USED]], [[m4_define([[M4_YY_DESTROY_START_STACK]])]])
+m4_ifdef( [[M4_YY_REENTRANT]],  [[m4_define([[M4_YY_DESTROY_START_STACK]])]])
+m4_ifdef( [[M4_YY_DESTROY_START_STACK]],
+[[
     /* Destroy the start condition stack. */
         yyfree( YY_G(yy_start_stack) YY_CALL_LAST_ARG );
         YY_G(yy_start_stack) = NULL;
-#endif
+]])
 
 m4_ifdef( [[M4_YY_USES_REJECT]],
 [[

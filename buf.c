@@ -117,9 +117,9 @@ struct Buf *buf_m4_define (struct Buf *buf, const char* def, const char* val)
 
     val = val?val:"";
     str = (char*)flex_alloc(strlen(fmt) + strlen(def) + strlen(val) + 2);
-    
+
     sprintf(str, fmt, def, val);
-    buf_append(buf, str, 1);
+    buf_append(buf, &str, 1);
 }
 
 /* create buf with 0 elements, each of size elem_size. */

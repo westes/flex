@@ -53,7 +53,7 @@ int main ( int argc, char** argv )
 
     if(yytables_fload(fp YY_CALL_LAST_ARG) < 0)
         yy_fatal_error("yytables_fload returned < 0" YY_CALL_LAST_ARG);
-    if(YY_TABLES_VERIFY)
+    if(M4_YY_TABLES_VERIFY)
         exit(0);
 #endif
     
