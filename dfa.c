@@ -42,38 +42,38 @@ void sympartition PROTO((int[], int, int[], int[]));
 int symfollowset PROTO((int[], int, int, int[]));
 
 
-/* check_for_backtracking - check a DFA state for backtracking
+/* check_for_backing_up - check a DFA state for backing up
  *
  * synopsis
- *     void check_for_backtracking( int ds, int state[numecs] );
+ *     void check_for_backing_up( int ds, int state[numecs] );
  *
  * ds is the number of the state to check and state[] is its out-transitions,
  * indexed by equivalence class.
  */
 
-void check_for_backtracking( ds, state )
+void check_for_backing_up( ds, state )
 int ds;
 int state[];
 	{
 	if ( (reject && ! dfaacc[ds].dfaacc_set) ||
 	     (! reject && ! dfaacc[ds].dfaacc_state) )
 		{ /* state is non-accepting */
-		++num_backtracking;
+		++num_backing_up;
 
-		if ( backtrack_report )
+		if ( backing_up_report )
 			{
-			fprintf( backtrack_file,
+			fprintf( backing_up_file,
 				"State #%d is non-accepting -\n", ds );
 
 			/* identify the state */
-			dump_associated_rules( backtrack_file, ds );
+			dump_associated_rules( backing_up_file, ds );
 
 			/* Now identify it further using the out- and
 			 * jam-transitions.
 			 */
-			dump_transitions( backtrack_file, state );
+			dump_transitions( backing_up_file, state );
 
-			putc( '\n', backtrack_file );
+			putc( '\n', backing_up_file );
 			}
 		}
 	}
@@ -689,7 +689,7 @@ void ntod()
 			}
 
 		if ( ds > num_start_states )
-			check_for_backtracking( ds, state );
+			check_for_backing_up( ds, state );
 
 		if ( nultrans )
 			{
