@@ -1,3 +1,14 @@
+Changes between release 2.4.3 (03Dec93) and release 2.4.2:
+
+	- Fixed bug causing fatal scanner messages to fail to print.
+
+	- libfl.a now supplies versions of the the <string.h>/<strings.h>
+	  string routines needed by flex and the scanners it generates,
+	  to enhance portability.
+
+	- More robust solution to 2.4.2's flexfatal() bug fix.
+
+
 Changes between release 2.4.2 (01Dec93) and release 2.4.1:
 
 	- Fixed bug in libfl.a referring to non-existent "flexfatal" function.
