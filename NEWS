@@ -3,6 +3,8 @@ changes between releases of flex
 
 See the file COPYING for copying conditions
 
+* after version 2.5.8
+
 ** ability to choose which memory functions are used in flex
 
 ** new yylex_destroy() function for the non-reentrant scanner
