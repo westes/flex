@@ -1,4 +1,4 @@
-/* flexnfa - NFA construction routines */
+/* nfa - NFA construction routines */
 
 /*
  * Copyright (c) 1987, the University of California
@@ -71,7 +71,8 @@ int mach, headcnt, trailcnt;
 
     /* hang the accepting number off an epsilon state.  if it is associated
      * with a state that has a non-epsilon out-transition, then the state
-     * will accept BEFORE it makes that transition, i.e. one character too soon
+     * will accept BEFORE it makes that transition, i.e., one character
+     * too soon
      */
 
     if ( transchar[finalst[mach]] == SYM_EPSILON )
@@ -438,7 +439,7 @@ int state;
  *          number of times to "ub" number of times
  *
  * note
- *   if "ub" is INFINITY then "new" matches "lb" or more occurances of "mach"
+ *   if "ub" is INFINITY then "new" matches "lb" or more occurrences of "mach"
  */
 
 int mkrep( mach, lb, ub )
