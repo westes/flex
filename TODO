@@ -12,9 +12,11 @@
 ** add flex.texi and its generated info files into the Makefile
    process (best done via automake)
 
-* rework the distribution
+* repackage the distribution
 
 ** include parse.c and parse.h in distribution
+
+*** remove parse.[ch] from `make clean'
 
 ** convert flex to use automake
 
