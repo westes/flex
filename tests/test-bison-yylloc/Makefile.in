@@ -50,8 +50,8 @@ test: check
 
 check: $(TESTNAME)
 	if test "$(YACC)" = "bison" ; then \
-        {./$(TESTNAME) <$(srcdir)/test.input | ./$(TESTNAME) | \
-        diff $(srcdir)/test.input -  ;}; \
+        { ./$(TESTNAME) <$(srcdir)/test.input | ./$(TESTNAME) | \
+          diff $(srcdir)/test.input -  ; } ; \
     else \
         echo "Test skipped because GNU bison was not detected by configure." ; \
         exit 2;\
