@@ -1,0 +1,67 @@
+# Makefile.in for a single TEST.
+#
+# By default this Makefile will build the target "$(TESTNAME)"
+# from the sources "scanner.l" and "parser.y".
+#
+# $(TESTNAME) is supplied by the calling Makefile.
+# "parser.y"  is not necessary. You may delete this file
+#             if you do not require a parser.
+# "scanner.l" is necessary. It should build "scanner.c".
+#
+
+@SET_MAKE@
+
+CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@ -I. -I"@srcdir@" -I..
+DEFS = @DEFS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+SHELL = /bin/sh
+srcdir = @srcdir@
+VPATH = @srcdir@
+LN_S = @LN_S@
+YACC = @YACC@
+CC = @CC@
+AR = ar
+RANLIB = @RANLIB@
+YACC = @YACC@
+
+# Edit these if necessary for your specific test.
+TESTNAME = test-multiple-scanners-nr
+FLEX = ../../flex
+OBJS = scanner-1.o scanner-2.o main.o
+
+# Force YACC to be bison (autoconf generates 'bison -y')
+YACC = @BISON@
+
+all: $(TESTNAME)
+
+$(TESTNAME): $(OBJS)
+	$(CC) $(CFLAGS) -o $(TESTNAME) $(OBJS) $(LDFLAGS) $(LIBS)
+
+main.o: $(srcdir)/main.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $(srcdir)/main.c
+
+scanner-1.c: $(srcdir)/scanner-1.l
+	$(FLEX) $(srcdir)/scanner-1.l
+
+scanner-1.o: scanner-1.c scanner-1.h
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c scanner-1.c
+
+scanner-2.c: $(srcdir)/scanner-2.l
+	$(FLEX) $(srcdir)/scanner-2.l
+
+scanner-2.o: scanner-2.c scanner-2.h
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c scanner-2.c
+
+test: check
+
+check: $(TESTNAME)
+	./$(TESTNAME)
+
+distclean: clean
+	rm -f Makefile
+
+clean:
+	rm -f scanner-*.c scanner-*.h $(OBJS) $(TESTNAME) OUTPUT
+
