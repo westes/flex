@@ -283,7 +283,9 @@ static void yy_fatal_error YY_PROTO(( const char msg[] ));
 YY_MALLOC_DECL
 #else
 #if __STDC__
+#ifndef __cplusplus
 #include <stdlib.h>
+#endif
 #else
 /* Just try to get by without declaring the routines.  This will fail
  * miserably on non-ANSI systems for which sizeof(size_t) != sizeof(int)
@@ -1168,9 +1170,13 @@ void yyFlexLexer::LexerError( const char msg[] )
 /* Internal utility routines. */
 
 #ifdef yytext_ptr
+#ifdef YY_USE_PROTOS
+static void yy_flex_strcpy( char *s1, const char *s2 )
+#else
 static void yy_flex_strcpy( s1, s2 )
 char *s1;
 const char *s2;
+#endif
 	{
 	while ( (*(s1++) = *(s2++)) )
 		;
@@ -1178,21 +1184,33 @@ const char *s2;
 #endif
 
 
+#ifdef YY_USE_PROTOS
+static void *yy_flex_alloc( unsigned int size )
+#else
 static void *yy_flex_alloc( size )
 unsigned int size;
+#endif
 	{
 	return (void *) malloc( size );
 	}
 
+#ifdef YY_USE_PROTOS
+static void *yy_flex_realloc( void *ptr, unsigned int size )
+#else
 static void *yy_flex_realloc( ptr, size )
 void *ptr;
 unsigned int size;
+#endif
 	{
 	return (void *) realloc( ptr, size );
 	}
 
+#ifdef YY_USE_PROTOS
+static void yy_flex_free( void *ptr )
+#else
 static void yy_flex_free( ptr )
 void *ptr;
+#endif
 	{
 	free( ptr );
 	}
