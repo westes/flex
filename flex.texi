@@ -4,7 +4,9 @@
 @settitle The Flex Manual
 @c %**end of header
 @include version.texi
+@c  Define new index types for "Examples" and "macro hooks".
 @defindex ex
+@defindex hk
 
 @c  This file is part of flex.
 
@@ -1206,6 +1208,7 @@ function, described below (@pxref{Multiple})
 @cindex terminating with yyterminate()
 @cindex exiting with yyterminate()
 @cindex halting with yyterminate()
+@findex yyterminate
 
 @code{yyterminate()}
 can be used in lieu of a return statement in an action.  It terminates
@@ -1218,6 +1221,7 @@ may be redefined.
 @node Generated Scanner
 @chapter The Generated Scanner
 
+@cindex yylex(), in generated scanner
 The output of @code{flex} is the file @file{lex.yy.c}, which contains
 the scanning routine @code{yylex()}, a number of tables used by it for
 matching tokens, and a number of auxiliary routines and macros.  By
@@ -1232,6 +1236,7 @@ default, @code{yylex()} is declared as follows:
 @end verbatim
 @end example
 
+@cindex yylex(), overriding
 (If your environment supports function prototypes, then it will
 be
  @code{int yylex( void )}.)  This definition may be changed by defining
@@ -1249,11 +1254,13 @@ and taking two floats as arguments.  Note that if you give arguments to
 the scanning routine using a K&R-style/non-prototyped function
 declaration, you must terminate the definition with a semi-colon (;).
 
+@cindex stdin, default for yyin
 Whenever @code{yylex()} is called, it scans tokens from the global input
 file @file{yyin} (which defaults to stdin).  It continues until it
 either reaches an end-of-file (at which point it returns the value 0) or
 one of its actions executes a @code{return} statement.
 
+@cindex EOF and yyrestart()
 If the scanner reaches an end-of-file, subsequent calls are undefined
 unless either @file{yyin} is pointed at a new input file (in which case
 scanning continues from that file), or @code{yyrestart()} is called.
@@ -1270,6 +1277,7 @@ better to use @code{YY_FLUSH_BUFFER} (@pxref{Actions}).  Note that
 @code{yyrestart()} does @emph{not} reset the start condition to
 @code{INITIAL} (@pxref{Start Conditions}).
 
+@cindex returning from within an action
 If
 @code{yylex()}
 stops scanning due to executing a
@@ -1288,6 +1296,7 @@ number of characters read or the constant @code{YY_NULL} (0 on Unix
 systems) to indicate @samp{EOF}.  The default @code{YY_INPUT} reads from
 the global file-pointer @file{yyin}.
 
+@cindex YY_INPUT, overriding
 Here is a sample definition of @code{YY_INPUT} (in the definitions
 section of the input file):
 
@@ -1307,6 +1316,7 @@ section of the input file):
 This definition will change the input processing to occur
 one character at a time.
 
+@cindex yywrap(), explanation
 When the scanner receives an end-of-file indication from YY_INPUT, it
 then checks the @code{yywrap()} function.  If @code{yywrap()} returns
 false (zero), then it is assumed that the function has gone ahead and
@@ -1321,11 +1331,8 @@ either use @code{%option noyywrap} (in which case the scanner behaves as
 though @code{yywrap()} returned 1), or you must link with @samp{-lfl} to
 obtain the default version of the routine, which always returns 1.
 
-Three routines are available for scanning from in-memory buffers rather
-than files:
-@code{yy_scan_string()}, @code{yy_scan_bytes()},
-and
-@code{yy_scan_buffer()}.
+For scanning from in-memory buffers (e.g., scanning strings), see
+@ref{Scanning Strings}
 @xref{Multiple}.
 
 The scanner writes its
@@ -1340,6 +1347,7 @@ pointer.
 @node Start Conditions
 @chapter Start Conditions
 
+@cindex start conditions, explanation
 @code{flex}
 provides a mechanism for conditionally activating rules.  Any rule
 whose pattern is prefixed with @samp{<sc>} will only be active when
@@ -1369,6 +1377,7 @@ condition, and
 will be active only when the current start condition is either
 @code{INITIAL}, @code{STRING}, or @code{QUOTE}.
 
+@cindex start conditions, inclusive v.s. exclusive
 Start conditions are declared in the definitions (first) section of the
 input using unindented lines beginning with either @samp{%s} or
 @samp{%x} followed by a list of names.  The former declares
@@ -1424,6 +1433,7 @@ qualify @code{bar}, though, then it would only be active in
 it's active in both, because in the first example the @code{example}
 start condition is an inclusive @code{(%s)} start condition.
 
+@cindex start conditions, special wildcard condition
 Also note that the special start-condition specifier
 @code{<*>}
 matches every start condition.  Thus, the above example could also
@@ -1451,6 +1461,9 @@ in start conditions.  It is equivalent to:
 @end verbatim
 @end example
 
+@cindex BEGIN(), explanation
+@findex BEGIN
+@vindex INITIAL
 @code{BEGIN(0)} returns to the original state where only the rules with
 no start conditions are active.  This state can also be referred to as
 the start-condition @code{INITIAL}, so @code{BEGIN(INITIAL)} is
@@ -1517,6 +1530,7 @@ treat it as a single token, the floating-point number @samp{123.456}:
 @end verbatim
 @end example
 
+@cindex comments, example of scanning C comments
 Here is a scanner which recognizes (and discards) C comments while
 maintaining a count of the current input line.
 
@@ -1545,6 +1559,7 @@ Note that start-conditions names are really integer values and
 can be stored as such.  Thus, the above could be extended in the
 following fashion:
 
+@cindex start conditions, integer values
 @exindex using integer values of start condition names
 @example
 @verbatim
@@ -1572,6 +1587,7 @@ following fashion:
 @end verbatim
 @end example
 
+@cindex YY_START, example
 Furthermore, you can access the current start condition using the
 integer-valued @code{YY_START} macro.  For example, the above
 assignments to @code{comment_caller} could instead be written
@@ -1583,6 +1599,7 @@ assignments to @code{comment_caller} could instead be written
 @end verbatim
 @end example
 
+@vindex YY_START
 Flex provides @code{YYSTATE} as an alias for @code{YY_START} (since that
 is what's used by AT&T @code{lex}).
 
@@ -1653,6 +1670,7 @@ not including checking for a string that's too long):
 @end verbatim
 @end example
 
+@cindex start condition, applying to multiple patterns
 Often, such as in some of the examples above, you wind up writing a
 whole bunch of rules all preceded by the same start condition(s).  Flex
 makes this a little easier and cleaner by introducing a notion of start
@@ -1694,6 +1712,9 @@ is equivalent to:
 
 Start condition scopes may be nested.
 
+@cindex stacks, routines for manipulating
+@cindex start conditions, use of a stack
+
 The following routines are available for manipulating stacks of start conditions:
 
 @deftypefun  void yy_push_state ( int @code{new_state} )
@@ -1714,6 +1735,7 @@ pops the top of the stack and switches to it via
 returns the top of the stack without altering the stack's contents.
 @end deftypefun
 
+@cindex memory, for start condition stacks
 The start condition stack grows dynamically and so has no built-in size
 limitation.  If memory is exhausted, program execution aborts.
 
@@ -1723,6 +1745,7 @@ stack} directive (@pxref{Invoking Flex}).
 @node Multiple
 @chapter Multiple Input Buffers
 
+@cindex multiple input streams
 Some scanners (such as those which support ``include'' files) require
 reading from several input streams.  As @code{flex} scanners do a large
 amount of buffering, one cannot control where the next input will be
@@ -1736,6 +1759,7 @@ To negotiate these sorts of problems, @code{flex} provides a mechanism
 for creating and switching between multiple input buffers.  An input
 buffer is created by using:
 
+@cindex memory, allocating input buffers
 @deftypefun YY_BUFFER_STATE yy_create_buffer ( FILE *file, int size )
 @end deftypefun
 
@@ -1743,7 +1767,9 @@ which takes a @code{FILE} pointer and a size and creates a buffer
 associated with the given file and large enough to hold @code{size}
 characters (when in doubt, use @code{YY_BUF_SIZE} for the size).  It
 returns a @code{YY_BUFFER_STATE} handle, which may then be passed to
-other routines (see below).  The @code{YY_BUFFER_STATE} type is a
+other routines (see below).  
+@tindex YY_BUFFER_STATE
+The @code{YY_BUFFER_STATE} type is a
 pointer to an opaque @code{struct yy_buffer_state} structure, so you may
 safely initialize @code{YY_BUFFER_STATE} variables to @code{((YY_BUFFER_STATE)
 0)} if you wish, and also refer to the opaque structure in order to
@@ -1765,6 +1791,7 @@ instead of opening a new file and pointing @file{yyin} at it.  Note also
 that switching input sources via either @code{yy_switch_to_buffer()} or
 @code{yywrap()} does @emph{not} change the start condition.
 
+@cindex memory, deleting input buffers
 @deftypefun void yy_delete_buffer ( YY_BUFFER_STATE buffer )
 @end deftypefun
 
@@ -1772,6 +1799,8 @@ is used to reclaim the storage associated with a buffer.  (@code{buffer}
 can be nil, in which case the routine does nothing.)  You can also clear
 the current contents of a buffer using:
 
+@cindex clearing an input buffer
+@cindex flushing an input buffer
 @deftypefun void yy_flush_buffer ( YY_BUFFER_STATE buffer )
 @end deftypefun
 
@@ -1787,9 +1816,11 @@ is an alias for @code{yy_create_buffer()},
 provided for compatibility with the C++ use of @code{new} and
 @code{delete} for creating and destroying dynamic objects.
 
+@cindex YY_CURRENT_BUFFER, and multiple buffers
 Finally, the macro @code{YY_CURRENT_BUFFER} macro returns a
 @code{YY_BUFFER_STATE} handle to the current buffer.
 
+@cindex EOF, example using multiple input buffers
 Here is an example of using these features for writing a scanner
 which expands include files (the
 @code{<<EOF>>}
@@ -1853,6 +1884,8 @@ feature is discussed below):
 @end verbatim
 @end example
 
+@anchor{Scanning Strings}
+@cindex strings, scanning strings instead of files
 The following routines are available for setting up input buffers for
 scanning in-memory strings instead of files.  All of them create a new
 input buffer for scanning the string, and return a corresponding
@@ -1875,6 +1908,7 @@ string or bytes.  (This may be desirable, since @code{yylex()} modifies
 the contents of the buffer it is scanning.)  You can avoid the copy by
 using:
 
+@vindex YY_END_OF_BUFFER_CHAR
 @deftypefun void yy_scan_buffer (char *base, yy_size_t size)
 which scans in place the buffer starting at @code{base}, consisting of
 @code{size} bytes, the last two bytes of which @emph{must} be
@@ -1895,6 +1929,7 @@ reflecting the size of the buffer.
 @node EOF
 @chapter End-of-File Rules
 
+@cindex EOF, explanation
 The special rule @code{<<EOF>>} indicates
 actions which are to be taken when an end-of-file is
 encountered and @code{yywrap()} returns non-zero (i.e., indicates
@@ -1903,6 +1938,7 @@ by doing one of the following things:
 
 @itemize
 @item 
+@findex YY_NEW_FILE  (now obsolete)
 assigning @file{yyin} to a new input file (in previous versions of
 @code{flex}, after doing the assignment you had to call the special
 action @code{YY_NEW_FILE}.  This is no longer necessary.)
@@ -1957,6 +1993,7 @@ example:
 @node Misc Macros
 @chapter Miscellaneous Macros
 
+@hkindex YY_USER_ACTION
 The macro @code{YY_USER_ACTION} can be defined to provide an action
 which is always executed prior to the matched rule's action.  For
 example, it could be #define'd to call a routine to convert yytext to
@@ -1972,6 +2009,7 @@ rules is matched.  The following would do the trick:
 @end verbatim
 @end example
 
+@vindex YY_NUM_RULES
 where @code{ctr} is an array to hold the counts for the different rules.
 Note that the macro @code{YY_NUM_RULES} gives the total number of rules
 (including the default rule), even if you use @samp{-s)}, so a correct
@@ -1983,11 +2021,13 @@ declaration for @code{ctr} is:
 @end verbatim
 @end example
 
+@hkindex YY_USER_INIT
 The macro @code{YY_USER_INIT} may be defined to provide an action which
 is always executed before the first scan (and before the scanner's
 internal initializations are done).  For example, it could be used to
 call a routine to read in a data table or open a logging file.
 
+@findex yy_set_interactive
 The macro @code{yy_set_interactive(is_interactive)} can be used to
 control whether the current buffer is considered @dfn{interactive}.  An
 interactive buffer is processed more slowly, but must be used when the
@@ -2000,15 +2040,21 @@ use of this macro overrides @code{%option always-interactive} or
 @code{yy_set_interactive()} must be invoked prior to beginning to scan
 the buffer that is (or is not) to be considered interactive.
 
+@cindex BOL, setting it
+@findex yy_set_bol
 The macro @code{yy_set_bol(at_bol)} can be used to control whether the
 current buffer's scanning context for the next token match is done as
 though at the beginning of a line.  A non-zero macro argument makes
 rules anchored with @samp{^} active, while a zero argument makes
 @samp{^} rules inactive.
 
+@cindex BOL, checking the BOL flag
+@findex YY_AT_BOL
 The macro @code{YY_AT_BOL()} returns true if the next token scanned from
 the current buffer will have @samp{^} rules active, false otherwise.
 
+@cindex actions, redefining YY_BREAK
+@hkindex YY_BREAK
 In the generated scanner, the actions are all gathered in one large
 switch statement and separated using @code{YY_BREAK}, which may be
 redefined.  By default, it is simply a @code{break}, to separate each
@@ -2026,10 +2072,14 @@ This chapter summarizes the various values available to the user in the
 rule actions.
 
 @table @code
+@vindex yytext
 @item  char *yytext
 holds the text of the current token.  It may be modified but not
 lengthened (you cannot append characters to the end).
 
+@cindex yytext, default array size
+@cindex array, default size for yytext
+@vindex YYLMAX
 If the special directive @code{%array} appears in the first section of
 the scanner description, then @code{yytext} is instead declared
 @code{char yytext[YYLMAX]}, where @code{YYLMAX} is a macro definition
@@ -2040,12 +2090,15 @@ scanners, but the value of @code{yytext} becomes immune to calls to
 a character pointer.  The opposite of @code{%array} is @code{%pointer},
 which is the default.
 
+@cindex C++ and %array
 You cannot use @code{%array} when generating C++ scanner classes (the
 @samp{-+} flag).
 
+@vindex yyleng
 @item  int yyleng
 holds the length of the current token.
 
+@vindex yyin
 @item  FILE *yyin
 is the file which by default @code{flex} reads from.  It may be
 redefined but doing so only makes sense before scanning begins or after
@@ -2055,6 +2108,7 @@ have unexpected results since @code{flex} buffers its input; use
 end-of-file has been seen, you can assign @file{yyin} at the new input
 file and then call the scanner again to continue scanning.
 
+@findex yyrestart
 @item  void yyrestart( FILE *new_file )
 may be called to point @file{yyin} at the new input file.  The
 switch-over to the new file is immediate (any previously buffered-up
@@ -2062,13 +2116,16 @@ input is lost).  Note that calling @code{yyrestart()} with @file{yyin}
 as an argument thus throws away the current input buffer and continues
 scanning the same input file.
 
+@vindex yyout
 @item  FILE *yyout
 is the file to which @code{ECHO} actions are done.  It can be reassigned
 by the user.
 
+@vindex YY_CURRENT_BUFFER
 @item  YY_CURRENT_BUFFER
 returns a @code{YY_BUFFER_STATE} handle to the current buffer.
 
+@vindex YY_START
 @item  YY_START
 returns an integer value corresponding to the current start condition.
 You can subsequently use this value with @code{BEGIN} to return to that
@@ -2078,6 +2135,9 @@ start condition.
 @node Yacc
 @chapter Interfacing with Yacc
 
+@cindex yacc, interface
+
+@vindex yylval, with yacc
 One of the main uses of @code{flex} is as a companion to the @code{yacc}
 parser-generator.  @code{yacc} parsers expect to call a routine named
 @code{yylex()} to find the next input token.  The routine is supposed to
@@ -2104,6 +2164,10 @@ is @code{TOK_NUMBER}, part of the scanner might look like:
 
 @node Invoking Flex
 @chapter Invoking Flex
+
+@cindex command-line options
+@cindex options, command-line
+@cindex arguments, command-line
 
 @code{flex}
 has the following options.
@@ -2673,12 +2737,16 @@ you use @code{%option stack)}.
 @node Performance
 @chapter Performance Considerations
 
+@cindex performance, considerations
 The main design goal of @code{flex} is that it generate high-performance
 scanners.  It has been optimized for dealing well with large sets of
 rules.  Aside from the effects on scanner speed of the table compression
 @samp{-C} options outlined above, there are a number of options/actions
 which degrade performance.  These are, from most expensive to least:
 
+@cindex REJECT, performance costs
+@cindex yylineno, performance costs
+@cindex trailing context, performance costs
 @example
 @verbatim
     REJECT
@@ -2704,12 +2772,15 @@ you scanned, use @code{ss()}.
 @code{REJECT} should be avoided at all costs when performance is
 important.  It is a particularly expensive option.
 
+@cindex patterns, tuning for performance
+@cindex performance, backing up
+@cindex backing up, example of eliminating
 Getting rid of backing up is messy and often may be an enormous amount
 of work for a complicated scanner.  In principal, one begins by using
 the @samp{-b} flag to generate a @file{lex.backup} file.  For example,
 on the input:
 
-@exindex backing up, getting rid of
+@exindex backing up, eliminating
 @example
 @verbatim
     %%
@@ -2766,6 +2837,7 @@ trouble of removing backing up from the rules unless we're using
 @samp{-Cf} or @samp{-CF}, since there's no performance gain doing so
 with compressed scanners.
 
+@cindex error rules, to eliminate backing up
 The way to remove the backing up is to add ``error'' rules:
 
 @exindex backing up, eliminating by adding error rules
@@ -2897,6 +2969,8 @@ independent of the number of rules or (modulo the considerations given
 at the beginning of this section) how complicated the rules are with
 regard to operators such as @samp{*} and @samp{|}.
 
+@cindex keywords, for performance
+@cindex performance, using keywords
 A final example in speeding up a scanner: suppose you want to scan
 through a file containing identifiers and keywords, one per line
 and with no other extraneous characters, and recognize all the
@@ -3004,6 +3078,9 @@ characters per token.
 @node Cxx
 @chapter Generating C++ Scanners
 
+@cindex C++
+@cindex member functions in C++
+@cindex methods
 @code{flex} provides two different ways to generate scanners for use
 with C++.  The first way is to simply compile a scanner generated by
 @code{flex} using a C++ compiler instead of a C compiler.  You should
@@ -3027,24 +3104,29 @@ provides an abstract base class defining the general scanner class
 interface.  It provides the following member functions:
 
 @table @code
+@findex YYText (C++ only)
 @item const char* YYText()
 returns the text of the most recently matched token, the equivalent of
 @code{yytext}.
 
+@findex YYLeng (C++ only)
 @item int YYLeng()
 returns the length of the most recently matched token, the equivalent of
 @code{yyleng}.
 
+@findex lineno (C++ only)
 @item int lineno() const
 returns the current input line number (see @code{%option yylineno)}, or
 @code{1} if @code{%option yylineno} was not used.
 
+@findex set_debug (C++ only)
 @item void set_debug( int flag )
 sets the debugging flag for the scanner, equivalent to assigning to
 @code{yy_flex_debug} (@pxref{Invoking Flex}).  Note that you must build
 the scannerusing @code{%option debug} to include debugging information
 in it.
 
+@findex  debug (C++ only)
 @item int debug() const
 returns the current setting of the debugging flag.
 @end table
@@ -3056,16 +3138,20 @@ first argument is an @code{istream*} object pointer and not a
 @code{yyrestart()} (again, the first argument is a @code{istream*}
 object pointer).
 
+@tindex yyFlexLexer (C++ only)
+@tindex FlexLexer (C++ only)
 The second class defined in @file{FlexLexer.h} is @code{yyFlexLexer},
 which is derived from @code{FlexLexer}.  It defines the following
 additional member functions:
 
 @table @code
+@findex yyFlexLexer constructor (C++ only)
 @item yyFlexLexer( istream* arg_yyin = 0, ostream* arg_yyout = 0 )
 constructs a @code{yyFlexLexer} object using the given streams for input
 and output.  If not specified, the streams default to @code{cin} and
 @code{cout}, respectively.
 
+@findex yylex (C++ version)
 @item virtual int yylex()
 performs the same role is @code{yylex()} does for ordinary @code{flex}
 scanners: it scans the input stream, consuming tokens, until a rule's
@@ -3078,6 +3164,7 @@ instead of @code{yyFlexLexer}.  In this case, rather than generating
 (and also generates a dummy @code{yyFlexLexer::yylex()} that calls
 @code{yyFlexLexer::LexerError()} if called).
 
+@findex switch_streams (C++ only)
 @item virtual void switch_streams(istream* new_in = 0, ostream* new_out = 0)
 reassigns @code{yyin} to @code{new_in} (if non-nil) and @code{yyout} to
 @code{new_out} (if non-nil), deleting the previous input buffer if
@@ -3093,6 +3180,7 @@ functions which you can redefine in derived classes to tailor the
 scanner:
 
 @table @code
+@findex LexerInput (C++ only)
 @item virtual int LexerInput( char* buf, int max_size )
 reads up to @code{max_size} characters into @code{buf} and returns the
 number of characters read.  To indicate end-of-input, return 0
@@ -3103,11 +3191,14 @@ take different actions depending on whether or not the scanner might be
 scanning an interactive input source, you can test for the presence of
 this name via @code{#ifdef} statements.
 
+@findex LexerOutput (C++ only)
 @item virtual void LexerOutput( const char* buf, int size )
 writes out @code{size} characters from the buffer @code{buf}, which, while
 @code{NUL}-terminated, may also contain internal @code{NUL}s if the
 scanner's rules can match text with @code{NUL}s in them.
 
+@cindex error reporting, in C++
+@findex LexerError (C++ only)
 @item virtual void LexerError( const char* msg )
 reports a fatal error message.  The default version of this function
 writes the message to the stream @code{cerr} and exits.
@@ -3187,12 +3278,15 @@ Here is an example of a simple C++ scanner:
 @end verbatim
 @end example
 
+@cindex C++, multiple different scanners
 If you want to create multiple (different) lexer classes, you use the
 @samp{-P} flag (or the @code{prefix=} option) to rename each
 @code{yyFlexLexer} to some other @samp{xxFlexLexer}.  You then can
 include @file{FlexLexer.h>} in your other sources once per lexer class,
 first renaming @code{yyFlexLexer} as follows:
 
+@cindex include files, with C++
+@cindex header files, with C++
 @exindex C++ scanners, including multiple scanners
 @example
 @verbatim
@@ -3215,6 +3309,7 @@ and may change considerably between major releases.
 @node Reentrant
 @chapter Reentrant C Scanners
 
+@cindex reentrant, explanation
 @code{flex} has the ability to generate a reentrant C scanner. This is
 accomplished by specifying @code{%option reentrant} (@samp{-R}) or
 @code{%option reentrant-bison} (@samp{-Rb}).  The generated scanner is
@@ -3291,6 +3386,7 @@ another instance of itself.
 @node Reentrant Overview
 @section An Overview of the Reentrant API
 
+@cindex reentrant, API explanation
 The API for reentrant scanners is different than for non-reentrant
 scanners. Here is a quick overview of the API:
 
@@ -3302,6 +3398,7 @@ All functions take one additional argument: @code{yy_globals}
 
 @item
 All global variables are replaced by their macro equivalents.
+(We tell you this because it may be important to you during debugging.)
 
 @item
 @code{yylex_init} and @code{yylex_destroy} must be called before and
@@ -3319,7 +3416,7 @@ User-specific data can be stored in @code{yyextra}.
 @section Reentrant Example
 
 First, an example of a reentrant scanner:
-
+@cindex reentrant, example of
 @example
 @verbatim
     /* This scanner prints "//" comments. */
@@ -3374,6 +3471,8 @@ necessary. The default is to generate a non-reentrant scanner.
 @node Extra Reentrant Argument
 @subsection The Extra Argument
 
+@cindex reentrant, calling functions
+@vindex yy_globals (reentrant only)
 All functions take one additional argument: @code{yy_globals}.
 
 Notice that the calls to @code{yy_push_state} and @code{yy_pop_state}
@@ -3403,6 +3502,7 @@ additional argument.
 @node Global Replacement
 @subsection Global Variables Replaced By Macros
 
+@cindex reentrant, accessing flex variables
 All global variables are replaced by macro equivalents.
 
 Note that in the above example, @code{yyout} and @code{yytext} are
@@ -3432,6 +3532,11 @@ to accomplish this. (See below).
 
 @node Init and Destroy Functions
 @subsection Init and Destroy Functions
+
+@cindex memory, considerations for reentrant scanners
+@cindex reentrant, initialization
+@findex yylex_init
+@findex yylex_destroy
 
 @code{yylex_init} and @code{yylex_destroy} must be called before and
 after @code{yylex}, respectively.
@@ -3465,6 +3570,7 @@ restarted by calling @code{yyrestart}.
 @node Accessor Methods
 @subsection Accessing Variables with Reentrant Scanners
 
+@cindex reentrant, accessor functions
 Accessor methods (get/set functions) provide access to common
 @code{flex} variables.
 
@@ -3502,6 +3608,8 @@ The above code may be called from within an action like this:
 @node Extra Data
 @subsection Extra Data
 
+@cindex reentrant, extra data
+@vindex yyextra
 User-specific data can be stored in @code{yyextra}.
 
 In a reentrant scanner, it is unwise to use global variables to
@@ -3521,11 +3629,14 @@ from outside the scanner, and through the shortcut macro
 @code{yyextra}
 from within the scanner itself. They are defined as follows:
 
+@tindex YY_EXTRA_TYPE (reentrant only)
+@findex yyget_extra
+@findex yyset_extra
 @example
 @verbatim
     #define YY_EXTRA_TYPE  void*
-    YY_EXTRA_TYPE  yyget_extra ( yyscan_t scanner ) ;
-    void yyset_extra ( YY_EXTRA_TYPE arbitrary_data , yyscan_t scanner) ;
+    YY_EXTRA_TYPE  yyget_extra ( yyscan_t scanner );
+    void           yyset_extra ( YY_EXTRA_TYPE arbitrary_data , yyscan_t scanner);
 @end verbatim
 @end example
 
@@ -3570,6 +3681,7 @@ defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
 @node About yyscan_t
 @subsection About yyscan_t
 
+@tindex yyscan_t (reentrant only)
 @code{yyscan_t} is defined as:
 
 @example
@@ -3586,6 +3698,12 @@ directly. In particular, you should never attempt to free it
 
 @node Bison Pure
 @section Reentrant C Scanners with Bison Pure Parsers
+
+@cindex bison, with reentrant
+@vindex yylval
+@vindex yylloc
+@tindex YYLTYPE
+@tindex YYSTYPE
 
 This section describes the @code{flex} features useful when integrating
 @code{flex} with @code{bison}.  Skip this section if you are not using
@@ -3606,18 +3724,19 @@ specified, @code{flex} provides support for the functions
 @code{yyset_lloc}, defined below, and the corresponding macros
 @code{yylval} and @code{yylloc}, for use within actions.
 
-@example
-@verbatim
-    YYSTYPE * yyget_lval ( yyscan_t scanner ) ;
-    void yyset_lval ( YYSTYPE * lvalp, yyscan_t scanner );
+@deftypefun YYSTYPE* yyget_lval ( yyscan_t scanner ) 
+@end deftypefun
+@deftypefun YYLTYPE* yyget_lloc ( yyscan_t scanner ) 
+@end deftypefun
 
-    YYLTYPE * yyget_lloc ( yyscan_t scanner ) ;
-    void yyset_lloc ( YYLTYPE * llocp, yyscan_t scanner );
-@end verbatim
-@end example
+@deftypefun void yyset_lval ( YYSTYPE* lvalp, yyscan_t scanner )
+@end deftypefun
+@deftypefun void yyset_lloc ( YYLTYPE* llocp, yyscan_t scanner )
+@end deftypefun
 
 Accordingly, the declaration of yylex becomes one of the following:
 
+@findex yylex (reentrant version)
 @example
 @verbatim
       int yylex ( YYSTYPE * lvalp, yyscan_t scanner );
@@ -3687,6 +3806,15 @@ As you can see, there really is no magic here. We just use
 
 The following Functions are available in a reentrant scanner:
 
+@findex yyget_text
+@findex yyget_leng
+@findex yyget_in
+@findex yyget_out
+@findex yyget_lineno
+@findex yyset_in
+@findex yyset_out
+@findex yyset_lineno
+
 @example
 @verbatim
     char *yyget_text ( yyscan_t scanner );
@@ -3695,6 +3823,7 @@ The following Functions are available in a reentrant scanner:
     FILE *yyget_out ( yyscan_t scanner );
     int yyget_lineno ( yyscan_t scanner );
     YY_EXTRA_TYPE yyget_extra ( yyscan_t scanner );
+
     void yyset_in  ( FILE * in_str , yyscan_t scanner );
     void yyset_out  ( FILE * out_str , yyscan_t scanner );
     void yyset_lineno ( int line_number , yyscan_t scanner );
@@ -3718,6 +3847,7 @@ scanner:
 @end verbatim
 @end example
 
+@cindex yylineno, in a reentrant scanner
 In a reentrant C scanner, support for yylineno is always present
 (i.e., you may access yylineno), but the value is never modified by
 @code{flex} unless @code{%option yylineno} is enabled. This is to allow
@@ -3745,6 +3875,9 @@ by @code{bison}, in a .h file, and are included in section 1 of the
 
 @node Lex and Posix
 @chapter Incompatibilities with Lex and Posix
+
+@cindex POSIX and lex
+@cindex lex (traditional) and POSIX
 
 @code{flex} is a rewrite of the AT&T Unix @emph{lex} tool (the two
 implementations do not share any code, though), with some extensions and
@@ -3923,6 +4056,8 @@ example, for the 2.5 release, these defines would be 2 and 5
 respectively).
 @end itemize
 
+@cindex POSIX, non-POSIX features of flex
+
 The following @code{flex} features are not included in @code{lex} or the
 POSIX specification:
 
@@ -3975,6 +4110,9 @@ in braces are simply terminated at the end of the line.
 
 @node Diagnostics
 @chapter Diagnostics
+
+@cindex error reporting, diagnostic messages
+@cindex warnings, diagnostic messages
 
 The following is a list of @code{flex} diagnostic messages:
 
@@ -4067,6 +4205,8 @@ least one of them twice).
 @node Limitations
 @chapter Limitations
 
+@cindex limitations of flex
+
 Some trailing context patterns cannot be properly matched and generate
 warning messages (@samp{dangerous trailing context}).  These are
 patterns where the ending of the first part of the rule matches the
@@ -4135,6 +4275,9 @@ automata).
 @node Copyright
 @chapter Copyright
 
+@cindex copyright of flex
+@cindex distributing flex
+
 The flex manual is placed under the same licensing conditions as the
 rest of flex:
 
@@ -4175,6 +4318,8 @@ PURPOSE.
 @node Reporting Bugs
 @chapter Reporting Bugs
 
+@cindex bugs, reporting
+
 If you have problems with @code{flex} or think you have found a bug,
 please send mail detailing your problem to
 @email{help-flex@@gnu.org}. Patches are always welcome.
@@ -4185,9 +4330,10 @@ please send mail detailing your problem to
 @menu
 * Concept Index::
 * Index of Functions and Macros::
-* Index of Examples::
 * Index of Variables::
 * Index of Data Types::
+* Index of Hooks::
+* Index of Examples::
 @end menu
 
 @node Concept Index
@@ -4199,22 +4345,42 @@ please send mail detailing your problem to
 @cindex end of file -- see EOF
 @cindex regular expressions -- see Patterns
 @cindex macros, see preprocessor macros
+@cindex freeing memory -- see memory
+@cindex allocating memory see memory
+@cindex malloc -- see memory
+@cindex bison, see also yacc
 @printindex cp
 
 @node Index of Functions and Macros
 @unnumberedsec Index of Functions and Macros
-@printindex fn
 
-@node Index of Examples
-@unnumberedsec Index of Examples
-@printindex ex
+This is an index of functions and preprocessor macros that look like functions.
+For macros that expand to variables or constants, see @ref{Index of Variables}.
+
+@printindex fn
 
 @node Index of Variables
 @unnumberedsec Index of Variables
+
+This is an index of variables, constants, and preprocessor macros
+that expand to variables or constants.
+
 @printindex vr
 
 @node Index of Data Types
 @unnumberedsec Index of Data Types
 @printindex tp
+
+@node Index of Hooks
+@unnumberedsec Index of Hooks
+
+This is an index of "hooks" that the user may define. These hooks typically  correspond
+to specific locations in the generated scanner, and may be used to insert arbitrary code.
+
+@printindex hk
+
+@node Index of Examples
+@unnumberedsec Index of Examples
+@printindex ex
 
 @bye
