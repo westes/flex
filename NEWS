@@ -1,3 +1,22 @@
+Changes between release 2.5.0 (xxDec93) and release 2.4.5:
+
+	- Snapshot for installation on ell.
+
+	- Self-contained scanners (modulo yywrap()).
+
+	- Three new routines are available for manipulating stacks
+	  of start conditions: yy_push_state( int new_state ),
+	  void yy_pop_state(), and int yy_top_state().
+
+	- Flex now generates #line directives relating the code it
+	  produces to the output file; this means that error messages
+	  in the flex-generated code should be correctly pinpointed.
+
+	- A new "-ooutput" option writes the generated scanner to "output".
+	  If used with -t, the scanner is still written to stdout, but
+	  its internal #line directives use "output".
+
+
 Changes between release 2.4.5 (11Dec93) and release 2.4.4:
 
 	- Fixed bug breaking C++ scanners that use REJECT or variable
