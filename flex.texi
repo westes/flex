@@ -4583,6 +4583,9 @@ pooled memory mechanism will save you a lot of grief when writing parsers.
 @cindex serialization
 @cindex memory, serialized tables
 
+@strong{This feature is currently under development.
+It should be considered alpha quality.}
+
 A @code{flex} scanner has the ability to save the DFA tables to a file, and
 load them runtime when needed.  The motivation for this feature is to reduce
 the runtime memory footprint.  Traditionally, these tables are compiled into
@@ -4640,16 +4643,17 @@ indexed by name, as described below. The file format is as follows:
         Header  | uint32          th_magic;     |
                 | uint32          th_hsize;     |
                 | uint32          th_ssize;     |
-                | uint8           th_version[4];|
                 | uint16          th_flags;     |
+                | char            th_version[]; |
                 | char            th_name[];    |
-                | char            th_pad64[];   |
+                | uint8           th_pad64[];   |
                 +-------------------------------+
         Table 1 | uint16          t_id;         |
                 | uint16          t_flags;      |
-                | uint32          t_len[2];     |
+                | uint32          t_lolen;      |
+                | uint32          t_hilen;      |
                 | void            t_data[];     |
-                | char            t_pad64[];    |
+                | uint8           t_pad64[];    |
                 +-------------------------------+
         Table 2 |                               |
            .    .                               .
@@ -4682,18 +4686,23 @@ Fields of a table header:
 @table @code
 @item th_magic
 Magic number, always 0xF13C57B1.
+
 @item th_hsize
 Size of this entire header, in bytes.
+
 @item th_ssize
 Size of this entire set, in bytes.
-@item th_version[4]
-Flex version numbers: major,minor,r1,r2.  Currently flex only specfies three
-revision levels, so 'r2' will simply be zero, e.g. 2.5.13.0
+
 @item th_flags
 Bit flags for this table set. Currently unused.
+
+@item th_version[]
+Flex version numbers in NUL-termninated string format. e.g., @samp{2.5.13a}
+
 @item th_name[]
 Contains the name of this table set. The default is @samp{yytables},
 and is prefixed accordingly. Must be NUL-terminated.
+
 @item th_pad64[]
 Zero or more NUL bytes, padding the entire header to the next 64-bit boundary.
 @end table
@@ -4720,21 +4729,22 @@ Specifies the table identifier. Possible values are:
 @item YYT_ID_NUL_TRANS (0x07)
 @code{yy_NUL_trans}
 @item YYT_ID_NXT (0x08)
-@code{yy_nxt}
+@code{yy_nxt}. This array may be two dimensional. See the @code{t_hilen}
+field below.
 @item YYT_ID_RULE_CAN_MATCH_EOL (0x09)
 @code{yy_rule_can_match_eol}
 @item YYT_ID_START_STATE_LIST (0x0A)
-@code{yy_start_state_list}. This array is handled specially because it is an array of
-pointers to srtucts. See the @code{t_flags} field below.
+@code{yy_start_state_list}. This array is handled specially because it is an
+array of pointers to srtucts. See the @code{t_flags} field below.
 @item YYT_ID_TRANSITION (0x0B)
 @code{yy_transition}. This array is handled specially because it is an array of
-structs. See the the @code{t_len} field below.
+structs. See the @code{t_lolen} field below.
 @end table
 
 @item t_flags
 Bit flags describing how to interpret the data in @code{t_data}.
 The data arrays are one-dimensional by default, but may be
-two dimensional as specified in the @code{t_len} field.
+two dimensional as specified in the @code{t_hilen} field.
 
 @table @code
 @item YYT_DATA8 (0x01)
@@ -4751,28 +4761,32 @@ in the @code{yy_transition} array. It is not guaranteed that the
 the offsets.
 @end table
 
-@item t_len[2]
-Specifies the number of elements in the array.
-If @code{t_len[0]} is non-zero, then the data is a two-dimensional array.
-Otherwise, the data is a one-dimensional array. @code{t_len[0]} contains the
-number of elements in the higher dimensional array, and @code{t_len[1]} contains the number
-of elements in the lowest dimension. Conceptually, @code{t_data} is either 
-@code{int t_data[t_len[1]]}, or @code{int t_data[t_len[0]][t_len[1]]}.
-It is possible for both values of @code{t_len} to be zero, in which case
-@code{t_data} is a zero length array, and no data is loaded, i.e., this table
-is simply skipped. Note that if @code{t_id} equals
-@code{YYT_ID_TRANSITION}, then @code{t_len[1]} is the number of structs in 
-the array. Each struct contains two integer fields, with the @code{yy_verify} field first,
-followed by the @code{yy_nxt} field.
+@item t_lolen
+Specifies the number of elements in the lowest dimension array.
+
+@item t_hilen
+If @code{t_hilen} is non-zero, then the data is a two-dimensional array.
+Otherwise, the data is a one-dimensional array. @code{t_hilen} contains the
+number of elements in the higher dimensional array, and @code{t_lolen} contains
+the number of elements in the lowest dimension.
+
+Conceptually, @code{t_data} is either @code{int t_data[t_lolen]},
+or @code{int t_data[t_hilen][t_lolen]}.  It is possible for both @code{t_lolen}
+and @code{t_hilen} to be zero, in which case @code{t_data} is a zero length
+array, and no data is loaded, i.e., this table is simply skipped. A special
+case is made when @code{t_id} equals @code{YYT_ID_TRANSITION}, then
+@code{t_lolen} is the number of structs in the array. Each struct contains two
+integer fields, with the @code{yy_verify} field first, followed by the
+@code{yy_nxt} field.
 
 @item t_data[]
 The table data. This array may be a one- or two-dimensional array, of type int8,
-int16, or int32, depending upon the values in the  @code{t_flags} and
-the @code{t_len} fields.
+int16, or int32, depending upon the values in the  @code{t_flags}, @code{t_lolen}, and
+@code{t_hilen} fields.
+
 @item t_pad64[]
 Zero or more NUL bytes, padding the table to the next 64-bit boundary.
 @end table
-
 
 @node Diagnostics
 @chapter Diagnostics

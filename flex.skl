@@ -1749,6 +1749,13 @@ void yyFlexLexer::LexerError( yyconst char msg[] )
 	}
 %*
 
+%t Tables API Routines
+/* TODO: The Tables API is a work in progress. 
+ * We need to generalize the input model for the tables so we
+ * don't duplicate code reading from a FILE*, int, or a void*.
+ */
+
+%t End Tables API Routines
 
 /* Redefine yyless() so it works in section 3 code. */
 
