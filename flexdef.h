@@ -32,16 +32,12 @@
 #include <stdio.h>
 #endif
 
-/* Always be prepared to generate an 8-bit scanner. */
-#define FLEX_8_BIT_CHARS
+#include <string.h>
+#include <ctype.h>
 
-#ifdef FLEX_8_BIT_CHARS
+/* Always be prepared to generate an 8-bit scanner. */
 #define CSIZE 256
 #define Char unsigned char
-#else
-#define Char char
-#define CSIZE 128
-#endif
 
 /* Size of input alphabet - should be size of ASCII set. */
 #ifndef DEFAULT_CSIZE
@@ -56,29 +52,12 @@
 #endif
 #endif
 
-
-#ifdef USG
-#define SYS_V
-#endif
-
-#ifdef SYS_V
-#include <string.h>
-#else
-
-#include <strings.h>
-#ifdef lint
-char *sprintf(); /* keep lint happy */
-#endif
-#endif
-
-#ifdef AMIGA
-#ifndef abs
-#define abs(x) ((x) < 0 ? -(x) : (x))
-#endif
-#endif
-
 #ifdef VMS
 #define unlink delete
+#define SHORT_FILE_NAMES
+#endif
+
+#ifdef MS_DOS
 #define SHORT_FILE_NAMES
 #endif
 
@@ -95,13 +74,16 @@ char *sprintf(); /* keep lint happy */
 #ifndef max
 #define max(x,y) ((x) > (y) ? (x) : (y))
 #endif
-
-#ifdef MS_DOS
 #ifndef abs
 #define abs(x) ((x) < 0 ? -(x) : (x))
 #endif
-#define SHORT_FILE_NAMES
+
+
+/* ANSI C does not guarantee that isascii() is defined */
+#ifndef isascii
+#define isascii(c) ((c) <= 0177)
 #endif
+
 
 #define true 1
 #define false 0
@@ -309,7 +291,7 @@ struct hash_entry
 	int int_val;
 	} ;
 
-typedef struct hash_entry *hash_table[];
+typedef struct hash_entry **hash_table;
 
 #define NAME_TABLE_HASH_SIZE 101
 #define START_COND_HASH_SIZE 101
@@ -338,14 +320,14 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * performance_report - if > 0 (i.e., -p flag), generate a report relating
  *   to scanner performance; if > 1 (-p -p), report on minor performance
  *   problems, too
- * backtrack_report - if true (i.e., -b flag), generate "lex.backtrack" file
- *   listing backtracking states
+ * backing_up_report - if true (i.e., -b flag), generate "lex.backup" file
+ *   listing backing-up states
  * yytext_is_array - if true (i.e., %array directive), then declare
  *   yytext as a array instead of a character pointer.  Nice and inefficient.
  * csize - size of character set for the scanner we're generating;
  *   128 for 7-bit chars and 256 for 8-bit
  * yymore_used - if true, yymore() is used in input rules
- * reject - if true, generate backtracking tables for REJECT macro
+ * reject - if true, generate back-up tables for REJECT macro
  * real_reject - if true, scanner really uses REJECT (as opposed to just
  *   having "reject" set for variable trailing context)
  * continued_action - true if this rule's action is to "fall through" to
@@ -357,7 +339,7 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 extern int interactive, caseins, useecs, fulltbl, usemecs;
-extern int fullspd, gen_line_dirs, performance_report, backtrack_report;
+extern int fullspd, gen_line_dirs, performance_report, backing_up_report;
 extern int yytext_is_array, csize;
 extern int yymore_used, reject, real_reject, continued_action;
 
@@ -376,7 +358,7 @@ extern int yymore_really_used, reject_really_used;
  * skel - compiled-in skeleton array
  * skel_ind - index into "skel" array, if skelfile is nil
  * yyin - input file
- * backtrack_file - file to summarize backtracking states to
+ * backing_up_file - file to summarize backing-up states to
  * infilename - name of input file
  * input_files - array holding names of input files
  * num_input_files - size of input_files array
@@ -393,7 +375,7 @@ extern int yymore_really_used, reject_really_used;
  */
 
 extern int datapos, dataline, linenum;
-extern FILE *skelfile, *yyin, *backtrack_file;
+extern FILE *skelfile, *yyin, *backing_up_file;
 extern char *skel[];
 extern int skel_ind;
 extern char *infilename;
@@ -595,8 +577,6 @@ extern Char *ccltbl;
 
 
 /* Variables for miscellaneous information:
- * starttime - real-time when we started
- * endtime - real-time when we ended
  * nmstr - last NAME scanned by the scanner
  * sectnum - section number currently being parsed
  * nummt - number of empty nxt/chk table entries
@@ -612,14 +592,14 @@ extern Char *ccltbl;
  * numuniq - number of unique transitions
  * numdup - number of duplicate transitions
  * hshsave - number of hash collisions saved by checking number of states
- * num_backtracking - number of DFA states requiring back-tracking
+ * num_backing_up - number of DFA states requiring backing up
  * bol_needed - whether scanner needs beginning-of-line recognition
  */
 
-extern char *starttime, *endtime, nmstr[MAXLINE];
+extern char nmstr[MAXLINE];
 extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
-extern int num_backtracking, bol_needed;
+extern int num_backing_up, bol_needed;
 
 void *allocate_array PROTO((int, int));
 void *reallocate_array PROTO((void*, int, int));
@@ -759,7 +739,7 @@ extern void lerrsf PROTO((char[], char[]));
 extern void line_directive_out PROTO((FILE*));
 
 /* Mark the current position in the action array as the end of the prolog. */
-extern void mark_prolog PROTO(());
+extern void mark_prolog PROTO((void));
 
 /* Generate a data statment for a two-dimensional array. */
 extern void mk2data PROTO((int));
