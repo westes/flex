@@ -486,7 +486,7 @@ int exit_status;
 	 * %options BEFORE we begin generating the scanner. The lack of
 	 * buffering causes other problems, too. For example, it is the
 	 * reason we currently can't provide a mechanism to allow the user
-	 * to inject arbtrary class members into the generated C++ scanner. - JM
+	 * to inject arbitrary class members into the generated C++ scanner. - JM
 	 */
 	if ( headerfilename && exit_status == 0 && outfile_created && !ferror(stdout))
 		{
