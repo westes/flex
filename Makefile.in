@@ -29,8 +29,9 @@ LIBS = @LIBS@
 # nroff preformatted versions will be installed if INSTALLMAN=cat.
 
 prefix = /usr/local
-bindir = $(prefix)/bin
-libdir = $(prefix)/lib
+exec_prefix = $(prefix)
+bindir = $(exec_prefix)/bin
+libdir = $(exec_prefix)/lib
 includedir = $(prefix)/include
 manext = 1
 mandir = $(prefix)/man/man$(manext)
