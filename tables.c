@@ -57,6 +57,8 @@ int     yytbl_write16 (struct yytbl_writer *wr, uint16_t v);
 int     yytbl_write8 (struct yytbl_writer *wr, uint8_t v);
 int     yytbl_writen (struct yytbl_writer *wr, void *v, int32_t len);
 static int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i);
+static int32_t yytbl_data_getijk (const struct yytbl_data *tbl, int i,
+				  int j, int k);
 
 
 /** Initialize the table writer.
@@ -335,8 +337,8 @@ int yytbl_write8 (struct yytbl_writer *wr, uint8_t v)
  * @param k index into struct, must be 0 or 1. Only valid for YYTD_ID_TRANSITION table
  * @return data[i][j + k]
  */
-int32_t yytbl_data_getijk (const struct yytbl_data * tbl, int i, int j,
-			   int k)
+static int32_t yytbl_data_getijk (const struct yytbl_data *tbl, int i,
+				  int j, int k)
 {
 	int32_t lo;
 
