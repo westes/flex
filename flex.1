@@ -3,7 +3,7 @@
 flexdoc \- documentation for flex, fast lexical analyzer generator
 .SH SYNOPSIS
 .B flex
-.B [\-abcdfhilnpstvwBFILTV78+ \-C[efFmr] \-Pprefix \-Sskeleton]
+.B [\-bcdfhilnpstvwBFILTV78+ \-C[aefFmr] \-Pprefix \-Sskeleton]
 .I [filename ...]
 .SH DESCRIPTION
 .I flex
@@ -1503,14 +1503,6 @@ part of the scanner might look like:
 .I flex
 has the following options:
 .TP
-.B \-a
-(``align'') instructs flex to trade off larger tables in the
-generated scanner for faster performance because the elements of
-the tables are better aligned for memory access and computation.  On some RISC
-architectures, fetching and manipulating longwords is more efficient than
-with smaller-sized datums such as shortwords.  This option can
-double the size of the tables used by your scanner.
-.TP
 .B \-b
 Generate backing-up information to
 .I lex.backup.
@@ -1871,8 +1863,17 @@ specifies that you want flex to generate a C++
 scanner class.  See the section on Generating C++ Scanners below for
 details.
 .TP 
-.B \-C[efmF]
-controls the degree of table compression.
+.B \-C[aefFmr]
+controls the degree of table compression and, more generally, trade-offs
+between small scanners and fast scanners.
+.IP
+.B \-Ca
+("align") instructs flex to trade off larger tables in the
+generated scanner for faster performance because the elements of
+the tables are better aligned for memory access and computation.  On some
+RISC architectures, fetching and manipulating longwords is more efficient
+than with smaller-sized datums such as shortwords.  This option can
+double the size of the tables used by your scanner.
 .IP
 .B \-Ce
 directs
@@ -1976,6 +1977,7 @@ the following generally being true:
           -C
           -C{f,F}e
           -C{f,F}
+          -C{f,F}a
     fastest & largest
 
 .fi
@@ -2053,8 +2055,6 @@ is that it generate high-performance scanners.  It has been optimized
 for dealing well with large sets of rules.  Aside from the effects on
 scanner speed of the table compression
 .B \-C
-and
-.B \-a
 options outlined above,
 there are a number of options/actions which degrade performance.  These
 are, from most expensive to least:
