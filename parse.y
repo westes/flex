@@ -1,4 +1,3 @@
-
 /* parse.y - parser for flex input */
 
 %token CHAR NUMBER SECTEND SCDECL XSCDECL WHITESPACE NAME PREVCCL EOF_OP
@@ -39,7 +38,10 @@ static char rcsid[] =
 
 int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, actvp, rulelen;
 int trlcontxt, xcluflg, cclsorted, varlength, variable_trail_rule;
+int *active_ss;
 Char clower();
+void build_eof_action();
+void yyerror();
 
 static int madeany = false;  /* whether we've made the '.' character class */
 int previous_continued_action;	/* whether the previous rule's action was '|' */
@@ -47,7 +49,7 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 %}
 
 %%
-goal            :  initlex sect1 sect1end sect2 initforrule
+goal		:  initlex sect1 sect1end sect2 initforrule
 			{ /* add default rule */
 			int def_rule;
 
@@ -56,27 +58,36 @@ goal            :  initlex sect1 sect1end sect2 initforrule
 
 			def_rule = mkstate( -pat );
 
+			/* remember the number of the default rule so we
+			 * don't generate "can't match" warnings for it.
+			 */
+			default_rule = num_rules;
+
 			finish_rule( def_rule, false, 0, 0 );
 
 			for ( i = 1; i <= lastsc; ++i )
 			    scset[i] = mkbranch( scset[i], def_rule );
 
 			if ( spprdflt )
-			    fputs( "YY_FATAL_ERROR( \"flex scanner jammed\" )",
-				   temp_action_file );
+			    add_action(
+				"YY_FATAL_ERROR( \"flex scanner jammed\" )" );
 			else
-			    fputs( "ECHO", temp_action_file );
+			    add_action( "ECHO" );
 
-			fputs( ";\n\tYY_BREAK\n", temp_action_file );
+			add_action( ";\n\tYY_BREAK\n" );
 			}
 		;
 
-initlex         :
-			{
-			/* initialize for processing rules */
+initlex		:
+			{ /* initialize for processing rules */
 
 			/* create default DFA start condition */
 			scinstal( "INITIAL", false );
+
+			/* initially, the start condition scoping is
+			 * "no start conditions active"
+			 */
+			actvp = 0;
 			}
 		;
 
@@ -87,9 +98,19 @@ sect1		:  sect1 startconddecl WHITESPACE namelist1 '\n'
 		;
 
 sect1end	:  SECTEND
+			{
+			/* we now know how many start conditions there
+			 * are, so create the "activity" map indicating
+			 * which conditions are active.
+			 */
+			active_ss = allocate_integer_array( lastsc + 1 );
+
+			for ( i = 1; i <= lastsc; ++i )
+			    active_ss[i] = 0;
+			}
 		;
 
-startconddecl   :  SCDECL
+startconddecl	:  SCDECL
 			{
 			/* these productions are separate from the s1object
 			 * rule because the semantics must be done before
@@ -113,11 +134,11 @@ namelist1	:  namelist1 WHITESPACE NAME
                         { synerr( "bad start condition list" ); }
 		;
 
-sect2           :  sect2 initforrule flexrule '\n'
+sect2		:  sect2 initforrule flexrule '\n'
 		|
 		;
 
-initforrule     :
+initforrule	:
 			{
 			/* initialize for a parse of one rule */
 			trlcontxt = variable_trail_rule = varlength = false;
@@ -128,7 +149,7 @@ initforrule     :
 			}
 		;
 
-flexrule        :  scon '^' rule
+flexrule	:  scon '^' rule
                         {
 			pat = $3;
 			finish_rule( pat, variable_trail_rule,
@@ -142,7 +163,7 @@ flexrule        :  scon '^' rule
 			    {
 			    bol_needed = true;
 
-			    if ( performance_report )
+			    if ( performance_report > 1 )
 				pinpoint_message( 
 			    "'^' operator results in sub-optimal performance" );
 			    }
@@ -159,7 +180,7 @@ flexrule        :  scon '^' rule
 				mkbranch( scset[actvsc[i]], pat );
 			}
 
-                |  '^' rule
+		|  '^' rule
 			{
 			pat = $2;
 			finish_rule( pat, variable_trail_rule,
@@ -177,13 +198,13 @@ flexrule        :  scon '^' rule
 			    {
 			    bol_needed = true;
 
-			    if ( performance_report )
+			    if ( performance_report > 1 )
 				pinpoint_message(
 			    "'^' operator results in sub-optimal performance" );
 			    }
 			}
 
-                |  rule
+		|  rule
 			{
 			pat = $1;
 			finish_rule( pat, variable_trail_rule,
@@ -194,10 +215,10 @@ flexrule        :  scon '^' rule
 				scset[i] = mkbranch( scset[i], pat );
 			}
 
-                |  scon EOF_OP
+		|  scon EOF_OP
 			{ build_eof_action(); }
 
-                |  EOF_OP
+		|  EOF_OP
 			{
 			/* this EOF applies to all start conditions
 			 * which don't already have EOF actions
@@ -209,44 +230,57 @@ flexrule        :  scon '^' rule
 				actvsc[++actvp] = i;
 
 			if ( actvp == 0 )
-			    pinpoint_message(
-		"warning - all start conditions already have <<EOF>> rules" );
+			    warn(
+			    "all start conditions already have <<EOF>> rules" );
 
 			else
 			    build_eof_action();
 			}
 
-                |  error
+		|  error
 			{ synerr( "unrecognized rule" ); }
 		;
 
-scon            :  '<' namelist2 '>'
+scon		:  '<' namelist2 '>'
+
+		|  '<' '*' '>'
+			{
+			actvp = 0;
+
+			for ( i = 1; i <= lastsc; ++i )
+				actvsc[++actvp] = i;
+			}
 		;
 
-namelist2       :  namelist2 ',' NAME
-                        {
-			if ( (scnum = sclookup( nmstr )) == 0 )
-			    format_pinpoint_message(
-				"undeclared start condition %s", nmstr );
+namelist2	:  namelist2 ',' sconname
 
-			else
-			    actvsc[++actvp] = scnum;
-			}
-
-		|  NAME
-			{
-			if ( (scnum = sclookup( nmstr )) == 0 )
-			    format_pinpoint_message(
-				"undeclared start condition %s", nmstr );
-			else
-			    actvsc[actvp = 1] = scnum;
-			}
+		|  { actvp = 0; } sconname
 
 		|  error
 			{ synerr( "bad start condition list" ); }
 		;
 
-rule            :  re2 re
+sconname	:  NAME
+			{
+			if ( (scnum = sclookup( nmstr )) == 0 )
+			    format_pinpoint_message(
+				"undeclared start condition %s", nmstr );
+			else
+			    {
+			    if ( ++actvp >= current_max_scs )
+				/* some bozo has included multiple instances
+				 * of start condition names
+				 */
+				pinpoint_message(
+				"too many start conditions in <> construct!" );
+
+			    else
+				actvsc[actvp] = scnum;
+			    }
+			}
+		;
+
+rule		:  re2 re
 			{
 			if ( transchar[lastst[$2]] != SYM_EPSILON )
 			    /* provide final transition \now/ so it
@@ -269,13 +303,8 @@ rule            :  re2 re
 			     * erroneously.
 			     */
 			    if ( ! varlength || headcnt != 0 )
-				{
-				fprintf( stderr,
-    "%s: warning - trailing context rule at line %d made variable because\n",
-					 program_name, linenum );
-				fprintf( stderr,
-					 "      of preceding '|' action\n" );
-				}
+				warn(
+		"trailing context made variable due to preceding '|' action" );
 
 			    /* mark as variable */
 			    varlength = true;
@@ -320,26 +349,33 @@ rule            :  re2 re
 			     * above
 			     */
 			    if ( ! varlength || headcnt != 0 )
-				{
-				fprintf( stderr,
-    "%s: warning - trailing context rule at line %d made variable because\n",
-					 program_name, linenum );
-				fprintf( stderr,
-					 "      of preceding '|' action\n" );
-				}
+				warn(
+		"trailing context made variable due to preceding '|' action" );
 
 			    /* mark as variable */
 			    varlength = true;
 			    headcnt = 0;
 			    }
 
+			if ( varlength && headcnt == 0 )
+			    {
+			    /* again, see the comment in the rule for "re2 re"
+			     * above
+			     */
+			    add_accept( $1, num_rules | YY_TRAILING_HEAD_MASK );
+			    variable_trail_rule = true;
+			    }
+
+			else
+			    {
+			    if ( ! varlength )
+				headcnt = rulelen;
+
+			    ++rulelen;
+			    trailcnt = 1;
+			    }
+
 			trlcontxt = true;
-
-			if ( ! varlength )
-			    headcnt = rulelen;
-
-			++rulelen;
-			trailcnt = 1;
 
 			eps = mkstate( SYM_EPSILON );
 			$$ = link_machines( $1,
@@ -362,7 +398,7 @@ rule            :  re2 re
 		;
 
 
-re              :  re '|' series
+re		:  re '|' series
                         {
 			varlength = true;
 			$$ = mkor( $1, $3 );
@@ -398,7 +434,7 @@ re2		:  re '/'
 			}
 		;
 
-series          :  series singleton
+series		:  series singleton
                         {
 			/* this is where concatenation of adjacent patterns
 			 * gets done
@@ -410,7 +446,7 @@ series          :  series singleton
 			{ $$ = $1; }
 		;
 
-singleton       :  singleton '*'
+singleton	:  singleton '*'
                         {
 			varlength = true;
 
@@ -443,7 +479,15 @@ singleton       :  singleton '*'
 			else
 			    {
 			    if ( $3 == 0 )
-				$$ = mkopt( mkrep( $1, $3, $5 ) );
+				{
+				if ( $5 <= 0 )
+				    {
+				    synerr( "bad iteration values" );
+				    $$ = $1;
+				    }
+				else
+				    $$ = mkopt( mkrep( $1, 1, $5 ) );
+				}
 			    else
 				$$ = mkrep( $1, $3, $5 );
 			    }
@@ -552,7 +596,7 @@ fullccl		:  '[' ccl ']'
 			/* *Sigh* - to be compatible Unix lex, negated ccls
 			 * match newlines
 			 */
-#ifdef NOTDEF
+#if 0
 			ccladd( $3, '\n' ); /* negated ccls don't match '\n' */
 			cclsorted = false; /* because we added the newline */
 #endif
@@ -561,7 +605,7 @@ fullccl		:  '[' ccl ']'
 			}
 		;
 
-ccl             :  ccl CHAR '-' CHAR
+ccl		:  ccl CHAR '-' CHAR
                         {
 			if ( $2 > $4 )
 			    synerr( "negative range in character class" );
@@ -635,6 +679,7 @@ void build_eof_action()
 
     {
     register int i;
+    char action_text[MAXLINE];
 
     for ( i = 1; i <= actvp; ++i )
 	{
@@ -646,12 +691,34 @@ void build_eof_action()
 	else
 	    {
 	    sceof[actvsc[i]] = true;
-	    fprintf( temp_action_file, "case YY_STATE_EOF(%s):\n",
+	    sprintf( action_text, "case YY_STATE_EOF(%s):\n",
 		     scname[actvsc[i]] );
+	    add_action( action_text );
 	    }
 	}
 
-    line_directive_out( temp_action_file );
+    line_directive_out( (FILE *) 0 );
+
+    /* this isn't a normal rule after all - don't count it as
+     * such, so we don't have any holes in the rule numbering
+     * (which make generating "rule can never match" warnings
+     * more difficult
+     */
+    --num_rules;
+    ++num_eof_rules;
+    }
+
+
+/* format_synerr - write out formatted syntax error */
+
+void format_synerr( msg, arg )
+char msg[], arg[];
+
+    {
+    char errmsg[MAXLINE];
+
+    (void) sprintf( errmsg, msg, arg );
+    synerr( errmsg );
     }
 
 
@@ -665,6 +732,14 @@ char str[];
     pinpoint_message( str );
     }
 
+
+/* warn - report a warning, unless -w was given */
+
+void warn( str )
+char str[];
+    {
+    line_warning( str, linenum );
+    }
 
 /* format_pinpoint_message - write out a message formatted with one string,
  *			     pinpointing its location
@@ -687,7 +762,34 @@ void pinpoint_message( str )
 char str[];
 
     {
-    fprintf( stderr, "\"%s\", line %d: %s\n", infilename, linenum, str );
+    line_pinpoint( str, linenum );
+    }
+
+
+/* line_warning - report a warning at a given line, unless -w was given */
+
+void line_warning( str, line )
+char str[];
+int line;
+    {
+    char warning[MAXLINE];
+
+    if ( ! nowarn )
+	{
+	sprintf( warning, "warning, %s", str );
+	line_pinpoint( warning, line );
+	}
+    }
+
+
+/* line_pinpoint - write out a message, pinpointing it at the given line */
+
+void line_pinpoint( str, line )
+char str[];
+int line;
+
+    {
+    fprintf( stderr, "\"%s\", line %d: %s\n", infilename, line, str );
     }
 
 
