@@ -1198,6 +1198,7 @@ void make_tables()
 
     if ( yymore_used )
 	{
+	indent_puts( "yy_more_len = 0;" );
 	indent_puts( "yy_doing_yy_more = yy_more_flag;" );
 	indent_puts( "if ( yy_doing_yy_more )" );
 	indent_up();
