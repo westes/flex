@@ -2406,11 +2406,11 @@ int yytbl_load YYFARGS2 (FILE *, fp, const char *, key)
     struct yytbl_reader rd;
 
     rd.fp = fp;
-    rd.bread = 0;
     th.th_version = NULL;
 
     /* Keep trying until we find the right set of tables or end of file. */
     while (!feof(rd.fp)) {
+        rd.bread = 0;
         if (yytbl_hdr_read (&th, &rd YY_CALL_LAST_ARG) != 0){
             rv = -1;
             goto return_rv;

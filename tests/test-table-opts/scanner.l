@@ -28,7 +28,7 @@
 #include "config.h"
 %}
 
-%option 8bit prefix="vvv"
+%option 8bit
 %option nounput nomain noyywrap 
 %option warn yylineno
 

@@ -22,9 +22,10 @@
 # ------------------------------------------------
 # This test is really a set of tests, one for
 # each compression flag. -Ca, -Cem, etc..
-# The 'opt' tests execute non-serialized scanners with various table options.
-# The 'ver' verify that the serialized tables match the in-code tables.
-# The 'ser' deserialize the tables and scan using them.
+# 'test-opt' builds non-serialized scanners with various table options.
+# 'test-ver' verifies that the serialized tables match the in-code tables.
+# 'test-ser' deserializes the tables at runtime.
+# 'test-mul' checks that we can store multiple tables in a single file.
 # ------------------------------------------------
 
 BISON = @BISON@
@@ -32,38 +33,59 @@ FLEX = $(top_builddir)/flex
 
 testname  := test-table-opts
 allopts   := -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem
-variations := opt-nr opt-r ser-nr ser-r ver-nr ver-r
-alltests  := $(foreach opt,$(allopts), $(foreach vari,$(variations),test-$(vari)$(opt)))
-alltestexe := $(addsuffix $(EXEEXT),$(alltests))
-alltestsrc := $(addsuffix .c,$(alltests))
-alltestobj := $(addsuffix .o,$(alltests))
+
+# the test names themselves
+opttests :=  $(foreach opt,$(allopts), test-opt-nr$(opt) test-opt-r$(opt))
+sertests :=  $(foreach opt,$(allopts), test-ser-nr$(opt) test-ser-r$(opt))
+vertests :=  $(foreach opt,$(allopts), test-ver-nr$(opt) test-ver-r$(opt))
+alltests  := $(opttests) $(vertests) $(sertests) test-mul
+
+# the executables to build
+optexe := $(addsuffix $(EXEEXT),$(opttests))
+verexe := $(addsuffix $(EXEEXT),$(vertests))
+serexe := $(addsuffix $(EXEEXT),$(sertests))
+allexe := $(optexe) $(verexe) $(serexe)
+
+# the .c files
+optsrc := $(addsuffix .c,$(opttests))
+versrc := $(addsuffix .c,$(vertests))
+sersrc := $(addsuffix .c,$(sertests))
+allsrc := $(optsrc) $(versrc) $(sersrc)
+
+# the .o files
+optobj := $(addsuffix .o,$(opttests))
+verobj := $(addsuffix .o,$(vertests))
+serobj := $(addsuffix .o,$(sertests))
+allobj := $(optobj) $(verobj) $(serobj)
+
+# the .tables files
+sertables  := $(addsuffix .tables,$(sertests))
 alltables  := $(addsuffix .tables,$(alltests))
 
 EXTRA_DIST = scanner.l test.input
-CLEANFILES = scanner.c OUTPUT $(alltestobj) $(alltestsrc) $(alltestexe)\
-             $(alltables)
+CLEANFILES = scanner.c OUTPUT test-*.o test-*.c test-*.tables core $(alltests)
 INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
 
-
-test-table-opts: $(alltests) comparison_test
+test: test-table-opts
+test-table-opts: $(alltests)
 
 test-opt-r%.c: $(srcdir)/scanner.l
-	$(FLEX) -L --reentrant $*  -o $@ $<
+	$(FLEX) -L -P $(subst -,_,$(basename $(@F))) --reentrant $*  -o $@ $<
 
 test-opt-nr%.c: $(srcdir)/scanner.l
-	$(FLEX) -L $* -o $@ $<
+	$(FLEX) -L -P $(subst -,_,$(basename $(@F))) $* -o $@ $<
 
 test-ser-r%.c: $(srcdir)/scanner.l
-	$(FLEX) -L --reentrant --tables-file="test-ser-r$*.tables" $*  -o $@ $<
+	$(FLEX) -L -P $(subst -,_,$(basename $(@F))) -R --tables-file="test-ser-r$*.tables" $*  -o $@ $<
 
 test-ser-nr%.c: $(srcdir)/scanner.l
-	$(FLEX) -L --tables-file="test-ser-nr$*.tables"  $* -o $@ $<
+	$(FLEX) -L -P $(subst -,_,$(basename $(@F))) --tables-file="test-ser-nr$*.tables"  $* -o $@ $<
 
 test-ver-r%.c: $(srcdir)/scanner.l
-	$(FLEX) -L --reentrant --tables-file="test-ver-r$*.tables" --tables-verify $*  -o $@ $<
+	$(FLEX) -L -P $(subst -,_,$(basename $(@F))) -R --tables-file="test-ver-r$*.tables" --tables-verify $*  -o $@ $<
 
 test-ver-nr%.c: $(srcdir)/scanner.l
-	$(FLEX) -L --tables-file="test-ver-nr$*.tables" --tables-verify $* -o $@ $<
+	$(FLEX) -L -P $(subst -,_,$(basename $(@F))) --tables-file="test-ver-nr$*.tables" --tables-verify $* -o $@ $<
 
 test-opt%$(EXEEXT): test-opt%.o
 	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
@@ -74,13 +96,33 @@ test-ser%$(EXEEXT): test-ser%.o
 test-ver%$(EXEEXT): test-ver%.o
 	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
-test: $(alltestexe)
-	for t in $(alltestexe) ; do \
-		./$$t `basename $$t $(EXEEXT)`.tables < $(srcdir)/test.input || exit 1 ; \
+test-opt: $(optexe)
+	for t in $(optexe) ; do \
+		./$$t `basename $$t $(EXEEXT)`.tables < $(srcdir)/test.input \
+          || { echo $t FAILED ; exit 1 ; } ; \
+	done
+
+test-ver: $(verexe)
+	for t in $(verexe) ; do \
+		./$$t `basename $$t $(EXEEXT)`.tables < $(srcdir)/test.input \
+          || { echo $t FAILED ; exit 1 ; } ; \
+	done
+
+test-ser: $(serexe)
+	for t in $(serexe) ; do \
+		./$$t `basename $$t $(EXEEXT)`.tables < $(srcdir)/test.input \
+          || { echo $t FAILED ; exit 1 ; } ; \
+	done
+
+test-mul: $(serexe)
+	$(RM) all-ser.tables
+	cat $(sertables) > all-ser.tables
+	for t in $(serexe) ; do \
+		./$$t all-ser.tables < $(srcdir)/test.input || { echo $$t FAILED; exit 1; } ;  \
 	done
 
 .c.o:
 	$(CC) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<
 
-.PHONY: test-table-opts
-.SECONDARY: $(alltestobj) $(alltestsrc)
+.PHONY: test-table-opts test test-opt test-ser test-ver test-mul
+.SECONDARY: $(allobj) $(allsrc)
