@@ -130,10 +130,13 @@ static char outfile_path[MAXLINE];
 static int outfile_created = 0;
 static char *skelname = NULL;
 
+int flex_main PROTO((int argc,char *argv[]));
+int main PROTO((int argc,char *argv[]));
+void fix_line_dirs PROTO(( char *, char *, char *, int ));
 
 int flex_main( argc, argv )
 int argc;
-char **argv;
+char *argv[];
 	{
 	int i,exit_status;
 
@@ -181,6 +184,8 @@ char **argv;
 
 /* Wrapper around flex_main, so flex_main can be built as a library. */
 int main( argc, argv )
+    int argc;
+    char *argv[];
 {
 #if ENABLE_NLS
 	setlocale(LC_MESSAGES, "");
@@ -484,7 +489,6 @@ int exit_status;
 	static int called_before = -1; /* prevent infinite recursion. */
 	int tblsiz;	
 	int i;
-	int unlink();
 
 	if( ++called_before )
 		FLEX_EXIT( exit_status );
@@ -513,7 +517,7 @@ int exit_status;
 	if ( headerfilename && exit_status == 0 && outfile_created && !ferror(stdout))
 		{
 			/* Copy the file we just wrote to a header file. */
-			#define LINE_SZ 512
+#define LINE_SZ 512
 			FILE *header_out;
 			char linebuf[LINE_SZ];
 			int nlines=0;
@@ -526,11 +530,9 @@ int exit_status;
 			if ( header_out == NULL)
 				lerrsf( _( "could not create %s"), headerfilename );
 
-			fprintf(header_out,
-					"#ifndef %sHEADER_H\n"
-					"#define %sHEADER_H 1\n"
-					"#define %sIN_HEADER 1\n\n",
-					prefix,prefix,prefix);
+			fprintf(header_out, "#ifndef %sHEADER_H\n", prefix);
+            fprintf(header_out, "#define %sHEADER_H 1\n",prefix);
+            fprintf(header_out, "#define %sIN_HEADER 1\n\n",prefix);
 			fflush(header_out);
 
             nlines=4;
@@ -693,11 +695,9 @@ int exit_status;
 			for(i=0; i < defs_buf.nelts; i++)
 				fprintf(header_out, "#undef %s\n", ((char**)defs_buf.elts)[i]);
 
-			fprintf(header_out,
-					"\n"
-					"#undef %sIN_HEADER\n"
-					"#endif /* %sHEADER_H */\n",
-					prefix, prefix);
+			fprintf(header_out, "\n");
+			fprintf(header_out, "#undef %sIN_HEADER\n", prefix);
+			fprintf(header_out, "#endif /* %sHEADER_H */\n", prefix);
 
 			if ( ferror( header_out ) )
 				lerrsf( _( "error creating header file %s" ), headerfilename);

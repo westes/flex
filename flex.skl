@@ -27,7 +27,6 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <stdbool.h>
 /* end standard C headers. */
 %+
 /* begin standard C++ headers. */
@@ -43,9 +42,6 @@
 #define FLEX_STD   std::
 %*
 
-/* Use prototypes in function declarations. */
-#define YY_USE_PROTOS
-
 /* The "const" storage-class-modifier is valid. */
 #define YY_USE_CONST
 
@@ -53,7 +49,6 @@
 
 #if __STDC__
 
-#define YY_USE_PROTOS
 #define YY_USE_CONST
 
 #endif	/* __STDC__ */
@@ -65,12 +60,23 @@
 #define yyconst
 #endif
 
-
-#ifdef YY_USE_PROTOS
-#define YY_PROTO(proto) proto
+/* For compilers that can't handle prototypes.
+ * e.g.,
+ * The function prototype
+ *    int foo(int x, char* y);
+ *
+ * ...should be written as
+ *    int foo YY_PARAMS((int x, char* y));
+ *
+ * ...which could possibly generate
+ *    int foo ();
+ */
+#ifdef YY_NO_PROTOS
+#define YY_PARAMS(proto) ()
 #else
-#define YY_PROTO(proto) ()
+#define YY_PARAMS(proto) proto
 #endif
+
 
 /* Returned upon end-of-file. */
 #define YY_NULL 0
@@ -81,7 +87,6 @@
  * double cast.
  */
 #define YY_SC_TO_UI(c) ((unsigned int) (unsigned char) c)
-
 
 #ifdef YY_REENTRANT
 
@@ -95,14 +100,13 @@ typedef void* yyscan_t;
 #define YY_G(var) (((struct yy_globals_t*)yy_globals)->var)
 
 /* For use in function prototypes to append the additional argument. */
-#ifdef YY_USE_PROTOS
-#define YY_LAST_ARG , yyscan_t yy_globals
-#define YY_ONLY_ARG    yyscan_t yy_globals
-#else
-#define YY_LAST_ARG , yy_globals
-#define YY_ONLY_ARG    yy_globals
+#define YY_PROTO_LAST_ARG , yyscan_t yy_globals
+#define YY_PROTO_ONLY_ARG    yyscan_t yy_globals
+
+/* For use in function definitions to append the additional argument. */
+#define YY_DEF_LAST_ARG , yy_globals
+#define YY_DEF_ONLY_ARG    yy_globals
 #define YY_DECL_LAST_ARG yyscan_t yy_globals;
-#endif
 
 /* For use in function calls to pass the additional argument. */
 #define YY_CALL_LAST_ARG  , yy_globals
@@ -118,18 +122,20 @@ typedef void* yyscan_t;
 #define yylineno YY_G(yylineno_r)
 #define yy_flex_debug YY_G(yy_flex_debug_r)
 
-int yylex_init YY_PROTO((yyscan_t* scanner));
-int yylex_destroy YY_PROTO((yyscan_t scanner));
+int yylex_init YY_PARAMS((yyscan_t* scanner));
 
 #else /* not YY_REENTRANT */
 
-  /* Define these macros to be no-ops. */
+/* Define these macros to be no-ops. */
 #define YY_G(var) (var)
-#define YY_LAST_ARG
-#define YY_ONLY_ARG  void
+#define YY_PROTO_LAST_ARG
+#define YY_PROTO_ONLY_ARG void
+#define YY_DEF_LAST_ARG
+#define YY_DEF_ONLY_ARG
+#define YY_DECL_LAST_ARG
 #define YY_CALL_LAST_ARG
 #define YY_CALL_ONLY_ARG
-#define YY_DECL_LAST_ARG
+
 #endif
 
 /* Enter a start condition.  This macro really ought to take a parameter,
@@ -320,28 +326,28 @@ static int yy_did_buffer_switch_on_eof;
 %e
 #endif /* end !YY_REENTRANT */
 
-void yyrestart YY_PROTO(( FILE *input_file YY_LAST_ARG ));
+void yyrestart YY_PARAMS(( FILE *input_file YY_PROTO_LAST_ARG ));
 
 
-void yy_switch_to_buffer YY_PROTO(( YY_BUFFER_STATE new_buffer YY_LAST_ARG ));
-void yy_load_buffer_state YY_PROTO(( YY_ONLY_ARG ));
-YY_BUFFER_STATE yy_create_buffer YY_PROTO(( FILE *file, int size YY_LAST_ARG ));
-void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b YY_LAST_ARG ));
-void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file YY_LAST_ARG ));
-void yy_flush_buffer YY_PROTO(( YY_BUFFER_STATE b YY_LAST_ARG ));
+void yy_switch_to_buffer YY_PARAMS(( YY_BUFFER_STATE new_buffer YY_PROTO_LAST_ARG ));
+void yy_load_buffer_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
+YY_BUFFER_STATE yy_create_buffer YY_PARAMS(( FILE *file, int size YY_PROTO_LAST_ARG ));
+void yy_delete_buffer YY_PARAMS(( YY_BUFFER_STATE b YY_PROTO_LAST_ARG ));
+void yy_init_buffer YY_PARAMS(( YY_BUFFER_STATE b, FILE *file YY_PROTO_LAST_ARG ));
+void yy_flush_buffer YY_PARAMS(( YY_BUFFER_STATE b YY_PROTO_LAST_ARG ));
 
 #define YY_FLUSH_BUFFER yy_flush_buffer( YY_G(yy_current_buffer) YY_CALL_LAST_ARG)
 
-YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, yy_size_t size YY_LAST_ARG ));
-YY_BUFFER_STATE yy_scan_string YY_PROTO(( yyconst char *yy_str YY_LAST_ARG ));
-YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( yyconst char *bytes, int len YY_LAST_ARG ));
+YY_BUFFER_STATE yy_scan_buffer YY_PARAMS(( char *base, yy_size_t size YY_PROTO_LAST_ARG ));
+YY_BUFFER_STATE yy_scan_string YY_PARAMS(( yyconst char *yy_str YY_PROTO_LAST_ARG ));
+YY_BUFFER_STATE yy_scan_bytes YY_PARAMS(( yyconst char *bytes, int len YY_PROTO_LAST_ARG ));
 
 %*
 
 %c
-void *yyalloc YY_PROTO(( yy_size_t YY_LAST_ARG ));
-void *yyrealloc YY_PROTO(( void *, yy_size_t YY_LAST_ARG ));
-void yyfree YY_PROTO(( void * YY_LAST_ARG ));
+void *yyalloc YY_PARAMS(( yy_size_t YY_PROTO_LAST_ARG ));
+void *yyrealloc YY_PARAMS(( void *, yy_size_t YY_PROTO_LAST_ARG ));
+void yyfree YY_PARAMS(( void * YY_PROTO_LAST_ARG ));
 %e
 
 #define yy_new_buffer yy_create_buffer
@@ -368,10 +374,10 @@ void yyfree YY_PROTO(( void * YY_LAST_ARG ));
 
 %- Standard (non-C++) definition
 %c
-static yy_state_type yy_get_previous_state YY_PROTO(( YY_ONLY_ARG ));
-static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state  YY_LAST_ARG));
-static int yy_get_next_buffer YY_PROTO(( YY_ONLY_ARG ));
-static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
+static yy_state_type yy_get_previous_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
+static yy_state_type yy_try_NUL_trans YY_PARAMS(( yy_state_type current_state  YY_PROTO_LAST_ARG));
+static int yy_get_next_buffer YY_PARAMS(( YY_PROTO_ONLY_ARG ));
+static void yy_fatal_error YY_PARAMS(( yyconst char msg[] ));
 %e
 %*
 
@@ -436,7 +442,7 @@ struct yy_globals_t
     char* yy_last_accepting_cpos;
 
     int yylineno_r;
-    bool yy_flex_debug_r;
+    int yy_flex_debug_r;
 
 #ifdef YY_TEXT_IS_ARRAY
     char yytext_r[YYLMAX];
@@ -460,7 +466,7 @@ struct yy_globals_t
 %e
 
 %c
-static int yy_init_globals YY_PROTO(( yyscan_t ));
+static int yy_init_globals YY_PARAMS(( yyscan_t ));
 %e
 
 /* This must go here because YYSTYPE and YYLSTYPE are included
@@ -477,65 +483,69 @@ static int yy_init_globals YY_PROTO(( yyscan_t ));
 /* Accessor methods to globals.
    These are made visible to non-reentrant scanners for convenience. */
 
+#ifndef YY_NO_DESTROY
+int yylex_destroy YY_PARAMS(( YY_PROTO_ONLY_ARG ));
+#endif
+
 #ifndef YY_NO_GET_DEBUG
-bool yyget_debug YY_PROTO(( YY_ONLY_ARG ));
+int yyget_debug YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 
 #ifndef YY_NO_SET_DEBUG
-void yyset_debug YY_PROTO(( bool debug_flag YY_LAST_ARG ));
+void yyset_debug YY_PARAMS(( int debug_flag YY_PROTO_LAST_ARG ));
 #endif
 
 #ifndef YY_NO_GET_EXTRA
-YY_EXTRA_TYPE yyget_extra YY_PROTO(( YY_ONLY_ARG ));
+YY_EXTRA_TYPE yyget_extra YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 
 #ifndef YY_NO_SET_EXTRA
-void yyset_extra YY_PROTO(( YY_EXTRA_TYPE user_defined YY_LAST_ARG ));
+void yyset_extra YY_PARAMS(( YY_EXTRA_TYPE user_defined YY_PROTO_LAST_ARG ));
 #endif
 
 #ifndef YY_NO_GET_IN
-FILE *yyget_in YY_PROTO(( YY_ONLY_ARG ));
+FILE *yyget_in YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 
 #ifndef YY_NO_SET_IN
-void yyset_in  YY_PROTO(( FILE * in_str YY_LAST_ARG ));
+void yyset_in  YY_PARAMS(( FILE * in_str YY_PROTO_LAST_ARG ));
 #endif
 
 #ifndef YY_NO_GET_OUT
-FILE *yyget_out YY_PROTO(( YY_ONLY_ARG ));
+FILE *yyget_out YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 
 #ifndef YY_NO_SET_OUT
-void yyset_out  YY_PROTO(( FILE * out_str YY_LAST_ARG ));
+void yyset_out  YY_PARAMS(( FILE * out_str YY_PROTO_LAST_ARG ));
 #endif
 
 #ifndef YY_NO_GET_LENG
-int yyget_leng YY_PROTO(( YY_ONLY_ARG ));
+int yyget_leng YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 
 #ifndef YY_NO_GET_TEXT
-char *yyget_text YY_PROTO(( YY_ONLY_ARG ));
+char *yyget_text YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 
 #ifndef YY_NO_GET_LINENO
-int yyget_lineno YY_PROTO(( YY_ONLY_ARG ));
+int yyget_lineno YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 
 #ifndef YY_NO_SET_LINENO
-void yyset_lineno YY_PROTO(( int line_number YY_LAST_ARG ));
+void yyset_lineno YY_PARAMS(( int line_number YY_PROTO_LAST_ARG ));
 #endif
 
 #ifdef YY_REENTRANT_BISON_PURE
 #ifndef YY_NO_GET_LVAL
-YYSTYPE * yyget_lval YY_PROTO(( YY_ONLY_ARG ));
+YYSTYPE * yyget_lval YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
-void yyset_lval YY_PROTO(( YYSTYPE * yylvalp YY_LAST_ARG ));
+void yyset_lval YY_PARAMS(( YYSTYPE * yylvalp YY_PROTO_LAST_ARG ));
 #ifdef YYLTYPE
 #ifndef YY_NO_GET_LLOC
-   YYLTYPE *yyget_lloc YY_PROTO(( YY_ONLY_ARG ));
+   YYLTYPE *yyget_lloc YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 #ifndef YY_NO_SET_LLOC
-    void yyset_lloc YY_PROTO(( YYLTYPE * yyllocp YY_LAST_ARG ));
+    void yyset_lloc YY_PARAMS(( YYLTYPE * yyllocp YY_PROTO_LAST_ARG ));
 #endif
 #endif /* YYLTYPE */
 #endif /* YY_REENTRANT_BISON_PURE */
@@ -546,35 +556,35 @@ void yyset_lval YY_PROTO(( YYSTYPE * yylvalp YY_LAST_ARG ));
 
 #ifndef YY_SKIP_YYWRAP
 #ifdef __cplusplus
-extern "C" int yywrap YY_PROTO(( YY_ONLY_ARG ));
+extern "C" int yywrap YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #else
-extern int yywrap YY_PROTO(( YY_ONLY_ARG ));
+extern int yywrap YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 #endif
 
 %-
 %c
 #ifndef YY_NO_UNPUT
-static void yyunput YY_PROTO(( int c, char *buf_ptr  YY_LAST_ARG));
+static void yyunput YY_PARAMS(( int c, char *buf_ptr  YY_PROTO_LAST_ARG));
 #endif
 %e
 %*
 
 #ifndef yytext_ptr
-static void yy_flex_strncpy YY_PROTO(( char *, yyconst char *, int YY_LAST_ARG));
+static void yy_flex_strncpy YY_PARAMS(( char *, yyconst char *, int YY_PROTO_LAST_ARG));
 #endif
 
 #ifdef YY_NEED_STRLEN
-static int yy_flex_strlen YY_PROTO(( yyconst char * YY_LAST_ARG));
+static int yy_flex_strlen YY_PARAMS(( yyconst char * YY_PROTO_LAST_ARG));
 #endif
 
 #ifndef YY_NO_INPUT
 %- Standard (non-C++) definition
 %c
 #ifdef __cplusplus
-static int yyinput YY_PROTO(( YY_ONLY_ARG ));
+static int yyinput YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #else
-static int input YY_PROTO(( YY_ONLY_ARG ));
+static int input YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 %e
 %*
@@ -589,13 +599,13 @@ static int *yy_start_stack = 0;
 %e
 #endif
 #ifndef YY_NO_PUSH_STATE
-static void yy_push_state YY_PROTO(( int new_state YY_LAST_ARG));
+static void yy_push_state YY_PARAMS(( int new_state YY_PROTO_LAST_ARG));
 #endif
 #ifndef YY_NO_POP_STATE
-static void yy_pop_state YY_PROTO(( YY_ONLY_ARG ));
+static void yy_pop_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 #ifndef YY_NO_TOP_STATE
-static int yy_top_state YY_PROTO(( YY_ONLY_ARG ));
+static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 
 #else
@@ -667,32 +677,23 @@ static int yy_top_state YY_PROTO(( YY_ONLY_ARG ));
 
 #ifdef YY_REENTRANT_BISON_PURE
 #  ifdef YYLTYPE 
-#    ifdef YY_USE_PROTOS
-#        define YY_LEX_ARGS (YYSTYPE * yylvalp, YYLTYPE * yyllocp YY_LAST_ARG)
-#    else
-#        define YY_LEX_ARGS (yylvalp, yyllocp YY_LAST_ARG) \
-                             YYSTYPE * yylvalp; YYLTYPE * yyllocp; YY_DECL_LAST_ARG
-#    endif
+#        define YY_LEX_PROTO YY_PARAMS((YYSTYPE * yylvalp, YYLTYPE * yyllocp YY_PROTO_LAST_ARG))
+#        define YY_LEX_DECLARATION (yylvalp, yyllocp YY_DEF_LAST_ARG) \
+                                    YYSTYPE * yylvalp; YYLTYPE * yyllocp; YY_DECL_LAST_ARG
 #  else
-#    ifdef YY_USE_PROTOS
-#        define YY_LEX_ARGS (YYSTYPE * yylvalp YY_LAST_ARG)
-#    else
-#        define YY_LEX_ARGS (yylvalp YY_LAST_ARG) \
-                             YYSTYPE * yylvalp; YY_DECL_LAST_ARG
-#    endif
+#        define YY_LEX_PROTO YY_PARAMS((YYSTYPE * yylvalp YY_PROTO_LAST_ARG))
+#        define YY_LEX_DECLARATION (yylvalp YY_DEF_LAST_ARG) \
+                                    YYSTYPE * yylvalp; YY_DECL_LAST_ARG
 #  endif
 #else
-#  ifdef YY_USE_PROTOS
-#      define YY_LEX_ARGS (YY_ONLY_ARG)
-#  else
-#      define YY_LEX_ARGS (YY_ONLY_ARG) YY_DECL_LAST_ARG
-#  endif
+#      define YY_LEX_PROTO YY_PARAMS((YY_PROTO_ONLY_ARG))
+#      define YY_LEX_DECLARATION (YY_DEF_ONLY_ARG) YY_DECL_LAST_ARG
 #endif
 
 
-extern int yylex YY_PROTO( YY_LEX_ARGS );
+extern int yylex YY_LEX_PROTO;
 
-#define YY_DECL int yylex YY_LEX_ARGS
+#define YY_DECL int yylex YY_LEX_DECLARATION
 %+ C++ definition
 #define YY_DECL int yyFlexLexer::yylex()
 %*
@@ -1016,12 +1017,8 @@ void yyFlexLexer::LexerOutput( const char* buf, int size )
 
 %-
 %c
-#ifdef YY_USE_PROTOS
-static int yy_get_next_buffer(YY_ONLY_ARG)
-#else
-static int yy_get_next_buffer(YY_ONLY_ARG)
+static int yy_get_next_buffer (YY_DEF_ONLY_ARG)
 YY_DECL_LAST_ARG
-#endif
 %+
 int yyFlexLexer::yy_get_next_buffer()
 %*
@@ -1158,12 +1155,8 @@ int yyFlexLexer::yy_get_next_buffer()
 
 %-
 %c
-#ifdef YY_USE_PROTOS
-static yy_state_type yy_get_previous_state(YY_ONLY_ARG)
-#else
-static yy_state_type yy_get_previous_state(YY_ONLY_ARG)
+static yy_state_type yy_get_previous_state (YY_DEF_ONLY_ARG)
 YY_DECL_LAST_ARG
-#endif
 %+
 yy_state_type yyFlexLexer::yy_get_previous_state()
 %*
@@ -1189,13 +1182,9 @@ yy_state_type yyFlexLexer::yy_get_previous_state()
  */
 
 %-
-#ifdef YY_USE_PROTOS
-static yy_state_type yy_try_NUL_trans( yy_state_type yy_current_state YY_LAST_ARG )
-#else
-static yy_state_type yy_try_NUL_trans( yy_current_state YY_LAST_ARG )
+static yy_state_type yy_try_NUL_trans ( yy_current_state YY_DEF_LAST_ARG )
 yy_state_type yy_current_state;
 YY_DECL_LAST_ARG
-#endif
 %+
 yy_state_type yyFlexLexer::yy_try_NUL_trans( yy_state_type yy_current_state )
 %*
@@ -1209,16 +1198,12 @@ yy_state_type yyFlexLexer::yy_try_NUL_trans( yy_state_type yy_current_state )
 
 %-
 #ifndef YY_NO_UNPUT
-#ifdef YY_USE_PROTOS
-static void yyunput( int c, register char *yy_bp YY_LAST_ARG )
-#else
-static void yyunput( c, yy_bp YY_LAST_ARG)
+static void yyunput ( c, yy_bp YY_DEF_LAST_ARG)
 int c;
 register char *yy_bp;
 YY_DECL_LAST_ARG
-#endif
 %+
-void yyFlexLexer::yyunput( int c, register char* yy_bp YY_LAST_ARG)
+void yyFlexLexer::yyunput( int c, register char* yy_bp YY_DEF_LAST_ARG)
 %*
 	{
 	register char *yy_cp = YY_G(yy_c_buf_p);
@@ -1263,14 +1248,10 @@ void yyFlexLexer::yyunput( int c, register char* yy_bp YY_LAST_ARG)
 %-
 #ifndef YY_NO_INPUT
 #ifdef __cplusplus
-static int yyinput(YY_ONLY_ARG)
+static int yyinput(YY_DEF_ONLY_ARG)
 #else
-#ifdef YY_USE_PROTOS
-static int input(YY_ONLY_ARG)
-#else
-static int input(YY_ONLY_ARG)
+static int input (YY_DEF_ONLY_ARG)
     YY_DECL_LAST_ARG
-#endif
 #endif
 %+
 int yyFlexLexer::yyinput()
@@ -1347,13 +1328,9 @@ int yyFlexLexer::yyinput()
 %*
 
 %-
-#ifdef YY_USE_PROTOS
-void yyrestart( FILE *input_file YY_LAST_ARG)
-#else
-void yyrestart( input_file YY_LAST_ARG)
+void yyrestart ( input_file YY_DEF_LAST_ARG)
 FILE *input_file;
 YY_DECL_LAST_ARG
-#endif
 %+
 void yyFlexLexer::yyrestart( FLEX_STD istream* input_file )
 %*
@@ -1368,13 +1345,9 @@ void yyFlexLexer::yyrestart( FLEX_STD istream* input_file )
 
 
 %-
-#ifdef YY_USE_PROTOS
-void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer YY_LAST_ARG )
-#else
-void yy_switch_to_buffer( new_buffer YY_LAST_ARG )
+void yy_switch_to_buffer ( new_buffer YY_DEF_LAST_ARG )
 YY_BUFFER_STATE new_buffer;
 YY_DECL_LAST_ARG
-#endif
 %+
 void yyFlexLexer::yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
 %*
@@ -1403,12 +1376,8 @@ void yyFlexLexer::yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
 
 
 %-
-#ifdef YY_USE_PROTOS
-void yy_load_buffer_state( YY_ONLY_ARG )
-#else
-void yy_load_buffer_state(YY_ONLY_ARG )
+void yy_load_buffer_state (YY_DEF_ONLY_ARG )
 YY_DECL_LAST_ARG
-#endif
 %+
 void yyFlexLexer::yy_load_buffer_state()
 %*
@@ -1421,14 +1390,10 @@ void yyFlexLexer::yy_load_buffer_state()
 
 
 %-
-#ifdef YY_USE_PROTOS
-YY_BUFFER_STATE yy_create_buffer( FILE *file, int size YY_LAST_ARG)
-#else
-YY_BUFFER_STATE yy_create_buffer( file, size YY_LAST_ARG)
+YY_BUFFER_STATE yy_create_buffer ( file, size YY_DEF_LAST_ARG)
 FILE *file;
 int size;
 YY_DECL_LAST_ARG
-#endif
 %+
 YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( FLEX_STD istream* file, int size )
 %*
@@ -1457,13 +1422,9 @@ YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( FLEX_STD istream* file, int size 
 
 
 %-
-#ifdef YY_USE_PROTOS
-void yy_delete_buffer( YY_BUFFER_STATE b YY_LAST_ARG)
-#else
-void yy_delete_buffer( b YY_LAST_ARG)
+void yy_delete_buffer ( b YY_DEF_LAST_ARG)
 YY_BUFFER_STATE b;
 YY_DECL_LAST_ARG
-#endif
 %+
 void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
 %*
@@ -1485,25 +1446,21 @@ void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
 #ifndef YY_ALWAYS_INTERACTIVE
 #ifndef YY_NEVER_INTERACTIVE
 #ifdef __cplusplus
-extern "C" int isatty YY_PROTO(( int ));
+extern "C" int isatty YY_PARAMS(( int ));
 #else
-extern int isatty YY_PROTO(( int ));
+extern int isatty YY_PARAMS(( int ));
 #endif /* __cplusplus */
 #endif /* !YY_NEVER_INTERACTIVE */
 #endif /* !YY_ALWAYS_INTERACTIVE */
 
-#ifdef YY_USE_PROTOS
-void yy_init_buffer( YY_BUFFER_STATE b, FILE *file YY_LAST_ARG)
-#else
-void yy_init_buffer( b, file YY_LAST_ARG)
+void yy_init_buffer ( b, file YY_DEF_LAST_ARG)
 YY_BUFFER_STATE b;
 FILE *file;
 YY_DECL_LAST_ARG
-#endif
 
 %+
 #ifndef YY_NEVER_INTERACTIVE
-extern "C" int isatty YY_PROTO(( int ));
+extern "C" int isatty YY_PARAMS(( int ));
 #endif
 void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, FLEX_STD istream* file )
 %*
@@ -1534,13 +1491,9 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, FLEX_STD istream* file )
 
 
 %-
-#ifdef YY_USE_PROTOS
-void yy_flush_buffer( YY_BUFFER_STATE b YY_LAST_ARG )
-#else
-void yy_flush_buffer( b YY_LAST_ARG )
+void yy_flush_buffer ( b YY_DEF_LAST_ARG )
 YY_BUFFER_STATE b;
 YY_DECL_LAST_ARG
-#endif
 
 %+
 void yyFlexLexer::yy_flush_buffer( YY_BUFFER_STATE b )
@@ -1571,14 +1524,10 @@ void yyFlexLexer::yy_flush_buffer( YY_BUFFER_STATE b )
 
 #ifndef YY_NO_SCAN_BUFFER
 %-
-#ifdef YY_USE_PROTOS
-YY_BUFFER_STATE yy_scan_buffer( char *base, yy_size_t size YY_LAST_ARG )
-#else
-YY_BUFFER_STATE yy_scan_buffer( base, size YY_LAST_ARG )
+YY_BUFFER_STATE yy_scan_buffer ( base, size YY_DEF_LAST_ARG )
 char *base;
 yy_size_t size;
 YY_DECL_LAST_ARG
-#endif
 	{
 	YY_BUFFER_STATE b;
 
@@ -1612,13 +1561,9 @@ YY_DECL_LAST_ARG
 
 #ifndef YY_NO_SCAN_STRING
 %-
-#ifdef YY_USE_PROTOS
-YY_BUFFER_STATE yy_scan_string( yyconst char *yy_str YY_LAST_ARG )
-#else
-YY_BUFFER_STATE yy_scan_string( yy_str YY_LAST_ARG)
+YY_BUFFER_STATE yy_scan_string ( yy_str YY_DEF_LAST_ARG)
 yyconst char *yy_str;
 YY_DECL_LAST_ARG
-#endif
 	{
 	int len;
 	for ( len = 0; yy_str[len]; ++len )
@@ -1632,14 +1577,10 @@ YY_DECL_LAST_ARG
 
 #ifndef YY_NO_SCAN_BYTES
 %-
-#ifdef YY_USE_PROTOS
-YY_BUFFER_STATE yy_scan_bytes( yyconst char *bytes, int len YY_LAST_ARG)
-#else
-YY_BUFFER_STATE yy_scan_bytes( bytes, len YY_LAST_ARG)
+YY_BUFFER_STATE yy_scan_bytes ( bytes, len YY_DEF_LAST_ARG)
 yyconst char *bytes;
 YY_DECL_LAST_ARG
 int len;
-#endif
 	{
 	YY_BUFFER_STATE b;
 	char *buf;
@@ -1674,13 +1615,9 @@ int len;
 
 #ifndef YY_NO_PUSH_STATE
 %-
-#ifdef YY_USE_PROTOS
-static void yy_push_state( int new_state YY_LAST_ARG)
-#else
-static void yy_push_state( new_state YY_LAST_ARG)
+static void yy_push_state ( new_state YY_DEF_LAST_ARG)
 int new_state;
 YY_DECL_LAST_ARG
-#endif
 %+
 void yyFlexLexer::yy_push_state( int new_state )
 %*
@@ -1713,12 +1650,8 @@ void yyFlexLexer::yy_push_state( int new_state )
 
 #ifndef YY_NO_POP_STATE
 %-
-#ifdef YY_USE_PROTOS
-static void yy_pop_state( YY_ONLY_ARG )
-#else
-static void yy_pop_state( YY_ONLY_ARG )
+static void yy_pop_state ( YY_DEF_ONLY_ARG )
 YY_DECL_LAST_ARG
-#endif
 %+
 void yyFlexLexer::yy_pop_state()
 %*
@@ -1733,12 +1666,8 @@ void yyFlexLexer::yy_pop_state()
 
 #ifndef YY_NO_TOP_STATE
 %-
-#ifdef YY_USE_PROTOS
-static int yy_top_state( YY_ONLY_ARG )
-#else
-static int yy_top_state( YY_ONLY_ARG )
+static int yy_top_state ( YY_DEF_ONLY_ARG )
 YY_DECL_LAST_ARG
-#endif
 %+
 int yyFlexLexer::yy_top_state()
 %*
@@ -1752,7 +1681,8 @@ int yyFlexLexer::yy_top_state()
 #endif
 
 %-
-static void yy_fatal_error( yyconst char msg[] )
+static void yy_fatal_error ( msg )
+    yyconst char msg[];
 	{
 	(void) fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
@@ -1790,98 +1720,66 @@ void yyFlexLexer::LexerError( yyconst char msg[] )
 /* Accessor  methods (get/set functions) to struct members. */
 
 #ifndef YY_NO_GET_EXTRA
-#ifdef YY_USE_PROTOS
-YY_EXTRA_TYPE yyget_extra( YY_ONLY_ARG )
-#else
-YY_EXTRA_TYPE yyget_extra( YY_ONLY_ARG )
+YY_EXTRA_TYPE yyget_extra ( YY_DEF_ONLY_ARG )
     YY_DECL_LAST_ARG
-#endif
 {
     return yyextra;
 }
 #endif /* !YY_NO_GET_EXTRA */
 
 #ifndef YY_NO_GET_LINENO
-#  ifdef YY_USE_PROTOS
-int yyget_lineno( YY_ONLY_ARG )
-#  else
-int yyget_lineno( YY_ONLY_ARG )
+int yyget_lineno ( YY_DEF_ONLY_ARG )
     YY_DECL_LAST_ARG
-#  endif
 {
     return yylineno;
 }
 #endif /* !YY_NO_GET_LINENO */
 
 #ifndef YY_NO_GET_IN
-#ifdef YY_USE_PROTOS
-FILE *yyget_in( YY_ONLY_ARG )
-#else
-FILE *yyget_in( YY_ONLY_ARG )
+FILE *yyget_in ( YY_DEF_ONLY_ARG )
     YY_DECL_LAST_ARG
-#endif
 {
     return yyin;
 }
 #endif /* !YY_NO_GET_IN */
 
 #ifndef YY_NO_GET_OUT
-#ifdef YY_USE_PROTOS
-FILE *yyget_out( YY_ONLY_ARG )
-#else
-FILE *yyget_out( YY_ONLY_ARG )
+FILE *yyget_out ( YY_DEF_ONLY_ARG )
     YY_DECL_LAST_ARG
-#endif
 {
     return yyout;
 }
 #endif /* !YY_NO_GET_OUT */
 
 #ifndef YY_NO_GET_LENG
-#ifdef YY_USE_PROTOS
-int yyget_leng( YY_ONLY_ARG )
-#else
-int yyget_leng( YY_ONLY_ARG )
+int yyget_leng ( YY_DEF_ONLY_ARG )
     YY_DECL_LAST_ARG
-#endif
 {
     return yyleng;
 }
 #endif /* !YY_NO_GET_LENG */
 
 #ifndef YY_NO_GET_TEXT
-#ifdef YY_USE_PROTOS
-char *yyget_text( YY_ONLY_ARG )
-#else
-char *yyget_text( YY_ONLY_ARG )
+char *yyget_text ( YY_DEF_ONLY_ARG )
     YY_DECL_LAST_ARG
-#endif
 {
     return yytext;
 }
 #endif /* !YY_NO_GET_TEXT */
 
 #ifndef YY_NO_SET_EXTRA
-#ifdef YY_USE_PROTOS
-void yyset_extra( YY_EXTRA_TYPE user_defined YY_LAST_ARG )
-#else
-void yyset_extra( user_defined YY_LAST_ARG )
+void yyset_extra ( user_defined YY_DEF_LAST_ARG )
     YY_EXTRA_TYPE user_defined;
     YY_DECL_LAST_ARG
-#endif
 {
     yyextra = user_defined ;
 }
 #endif /* !YY_NO_SET_EXTRA */
 
 #ifndef YY_NO_SET_LINENO
-#  ifdef YY_USE_PROTOS
-void yyset_lineno( int line_number YY_LAST_ARG )
-#  else
-void yyset_lineno( line_number YY_LAST_ARG )
+void yyset_lineno ( line_number YY_DEF_LAST_ARG )
     int line_number;
     YY_DECL_LAST_ARG
-#  endif
 {
     yylineno = line_number;
 }
@@ -1889,26 +1787,18 @@ void yyset_lineno( line_number YY_LAST_ARG )
 
 
 #ifndef YY_NO_SET_IN
-#ifdef YY_USE_PROTOS
-void yyset_in( FILE * in_str YY_LAST_ARG )
-#else
-void yyset_in( in_str YY_LAST_ARG )
+void yyset_in ( in_str YY_DEF_LAST_ARG )
     FILE * in_str;
     YY_DECL_LAST_ARG
-#endif
 {
     yyin = in_str ;
 }
 #endif /* !YY_NO_SET_IN */
 
 #ifndef YY_NO_SET_OUT
-#ifdef YY_USE_PROTOS
-void yyset_out( FILE * out_str YY_LAST_ARG )
-#else
-void yyset_out( out_str YY_LAST_ARG )
+void yyset_out ( out_str YY_DEF_LAST_ARG )
     FILE * out_str;
     YY_DECL_LAST_ARG
-#endif
 {
     yyout = out_str ;
 }
@@ -1916,25 +1806,17 @@ void yyset_out( out_str YY_LAST_ARG )
 
 
 #ifndef YY_NO_GET_DEBUG
-#ifdef YY_USE_PROTOS
-bool  yyget_debug( YY_ONLY_ARG )
-#else
-bool yyget_debug( YY_ONLY_ARG )
+int yyget_debug ( YY_DEF_ONLY_ARG )
     YY_DECL_LAST_ARG
-#endif
 {
     return yy_flex_debug;
 }
 #endif /* !YY_NO_GET_DEBUG */
 
 #ifndef YY_NO_SET_DEBUG
-#ifdef YY_USE_PROTOS
-void yyset_debug(bool bdebug YY_LAST_ARG )
-#else
-void yyset_debug( bdebug YY_LAST_ARG )
-    bool bdebug;
+void yyset_debug ( bdebug YY_DEF_LAST_ARG )
+    int bdebug;
     YY_DECL_LAST_ARG
-#endif
 {
     yy_flex_debug = bdebug ;
 }
@@ -1945,25 +1827,17 @@ void yyset_debug( bdebug YY_LAST_ARG )
 
 #ifdef YY_REENTRANT_BISON_PURE
 #ifndef YY_NO_GET_LVAL
-#ifdef YY_USE_PROTOS
-YYSTYPE * yyget_lval( YY_ONLY_ARG )
-#else
-YYSTYPE * yyget_lval( YY_ONLY_ARG )
+YYSTYPE * yyget_lval ( YY_DEF_ONLY_ARG )
     YY_DECL_LAST_ARG
-#endif
 {
     return yylval;
 }
 #endif /* !YY_NO_GET_LVAL */
 
 #ifndef YY_NO_SET_LVAL
-#ifdef YY_USE_PROTOS
-void yyset_lval( YYSTYPE * yylvalp YY_LAST_ARG )
-#else
-void yyset_lval( yylvalp YY_LAST_ARG )
+void yyset_lval ( yylvalp YY_DEF_LAST_ARG )
     YYSTYPE * yylvalp;
     YY_DECL_LAST_ARG
-#endif
 {
     yylval = yylvalp;
 }
@@ -1971,25 +1845,17 @@ void yyset_lval( yylvalp YY_LAST_ARG )
 
 #ifdef YYLTYPE
 #ifndef YY_NO_GET_LLOC
-#ifdef YY_USE_PROTOS
-YYLTYPE *yyget_lloc( YY_ONLY_ARG )
-#else
-YYLTYPE *yyget_lloc( YY_ONLY_ARG )
+YYLTYPE *yyget_lloc ( YY_DEF_ONLY_ARG )
     YY_DECL_LAST_ARG
-#endif
 {
     return yylloc;
 }
 #endif /* !YY_NO_GET_LLOC */
 
 #ifndef YY_NO_SET_LLOC
-#ifdef YY_USE_PROTOS
-void yyset_lloc( YYLTYPE * yyllocp YY_LAST_ARG )
-#else
-void yyset_lloc( yyllocp YY_LAST_ARG )
+void yyset_lloc ( yyllocp YY_DEF_LAST_ARG )
     YYLTYPE * yyllocp;
     YY_DECL_LAST_ARG
-#endif
 {
     yylloc = yyllocp;
 }
@@ -1999,12 +1865,8 @@ void yyset_lloc( yyllocp YY_LAST_ARG )
 #endif /* YY_REENTRANT_BISON_PURE */
 
 
-#ifdef YY_USE_PROTOS
-static int yy_init_globals( yyscan_t yy_globals)
-#else
 static int yy_init_globals( yy_globals )
     yyscan_t yy_globals;
-#endif
     {
     /* Initialization is the same as for the non-reentrant scanner.
        This function is called once per scanner lifetime. */
@@ -2033,12 +1895,8 @@ static int yy_init_globals( yy_globals )
     }
 
 /* User-visible API */
-#ifdef YY_USE_PROTOS
-int yylex_init( yyscan_t* ptr_yy_globals)
-#else
 int yylex_init( ptr_yy_globals )
     yyscan_t* ptr_yy_globals;
-#endif
     {
     *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yy_globals_t ), NULL );
     yy_init_globals ( *ptr_yy_globals );
@@ -2048,12 +1906,8 @@ int yylex_init( ptr_yy_globals )
 #endif /* End YY_REENTRANT */
 
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
-#ifdef YY_USE_PROTOS
-int yylex_destroy( YY_ONLY_ARG )
-#else
-int yylex_destroy( YY_ONLY_ARG )
+int yylex_destroy ( YY_DEF_ONLY_ARG )
     YY_DECL_LAST_ARG
-#endif
 {
     /* Destroy the current (main) buffer. */
     yy_delete_buffer( YY_G(yy_current_buffer) YY_CALL_LAST_ARG );
@@ -2079,15 +1933,11 @@ int yylex_destroy( YY_ONLY_ARG )
 /* Internal utility routines. */
 
 #ifndef yytext_ptr
-#ifdef YY_USE_PROTOS
-static void yy_flex_strncpy( char *s1, yyconst char *s2, int n YY_LAST_ARG)
-#else
-static void yy_flex_strncpy( s1, s2, n YY_LAST_ARG)
+static void yy_flex_strncpy ( s1, s2, n YY_DEF_LAST_ARG)
 char *s1;
 yyconst char *s2;
 int n;
 YY_DECL_LAST_ARG
-#endif
 	{
 	register int i;
 	for ( i = 0; i < n; ++i )
@@ -2096,13 +1946,9 @@ YY_DECL_LAST_ARG
 #endif
 
 #ifdef YY_NEED_STRLEN
-#ifdef YY_USE_PROTOS
-static int yy_flex_strlen( yyconst char *s YY_LAST_ARG)
-#else
-static int yy_flex_strlen( s YY_LAST_ARG)
+static int yy_flex_strlen ( s YY_DEF_LAST_ARG)
 yyconst char *s;
 YY_DECL_LAST_ARG
-#endif
 	{
 	register int n;
 	for ( n = 0; s[n]; ++n )
@@ -2115,13 +1961,9 @@ YY_DECL_LAST_ARG
 /* You may override yyalloc by defining YY_NO_FLEX_ALLOC and linking to
  * your own version */
 #ifndef YY_NO_FLEX_ALLOC
-#ifdef YY_USE_PROTOS
-void *yyalloc( yy_size_t size YY_LAST_ARG )
-#else
-void *yyalloc( size YY_LAST_ARG )
+void *yyalloc ( size YY_DEF_LAST_ARG )
 yy_size_t size;
 YY_DECL_LAST_ARG
-#endif
 	{
 	return (void *) malloc( size );
 	}
@@ -2130,14 +1972,10 @@ YY_DECL_LAST_ARG
 /* You may override yyrealloc by defining YY_NO_FLEX_REALLOC and linking
  * to your own version. */
 #ifndef YY_NO_FLEX_REALLOC
-#ifdef YY_USE_PROTOS
-void *yyrealloc( void *ptr, yy_size_t size YY_LAST_ARG )
-#else
-void *yyrealloc( ptr, size YY_LAST_ARG )
+void *yyrealloc ( ptr, size YY_DEF_LAST_ARG )
 void *ptr;
 yy_size_t size;
 YY_DECL_LAST_ARG
-#endif
 	{
 	/* The cast to (char *) in the following accommodates both
 	 * implementations that use char* generic pointers, and those
@@ -2153,20 +1991,18 @@ YY_DECL_LAST_ARG
 /* You may override yyfree by defining YY_NO_FLEX_FREE and linking to
  * your own version.*/
 #ifndef YY_NO_FLEX_FREE
-#ifdef YY_USE_PROTOS
-void yyfree( void *ptr YY_LAST_ARG )
-#else
-void yyfree( ptr YY_LAST_ARG )
+void yyfree ( ptr YY_DEF_LAST_ARG )
 void *ptr;
 YY_DECL_LAST_ARG
-#endif
 	{
 	free( (char *) ptr );	/* see yyrealloc() for (char *) cast */
 	}
 #endif
 
 #if YY_MAIN
-int main()
+int main YY_PARAMS((void));
+
+int main ()
 	{
 
 #ifdef YY_REENTRANT

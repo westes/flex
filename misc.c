@@ -916,7 +916,9 @@ size_t size_in_bytes;
 /* Remove all '\n' and '\r' characters, if any, from the end of str.
  * str can be any null-terminated string, or NULL.
  * returns str. */
-char* chomp(char* str){
+char* chomp(str)
+    char* str;
+{
     char* p=str;
     if (!str || !*str)  /* s is null or empty string */
         return str;

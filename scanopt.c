@@ -39,6 +39,8 @@
 #ifdef HAVE_STRCASECMP
 #define STRCASECMP(a,b) strcasecmp(a,b)
 #else
+static int STRCASECMP PROTO((const char*, const char*));
+
 static int STRCASECMP(a,b)
     const char* a;
     const char* b;
@@ -76,6 +78,15 @@ struct _scanopt_t
 };
 
 /* Accessor functions. These WOULD be one-liners, but portability calls. */
+static const char* NAME PROTO((struct _scanopt_t *, int));
+static int PRINTLEN PROTO((struct _scanopt_t *, int));
+static int RVAL PROTO((struct _scanopt_t *, int));
+static int FLAGS PROTO((struct _scanopt_t *, int));
+static const char* DESC PROTO((struct _scanopt_t *, int));
+static int scanopt_err PROTO(( struct _scanopt_t *, int, int, int));
+static int matchlongopt PROTO((char*,char**,int*,char**,int*));
+static int find_opt  PROTO(( struct _scanopt_t *, int, char *, int, int *, int* opt_offset));
+
 static const char* NAME(s,i)
     struct _scanopt_t *s; int i;
 {
@@ -99,6 +110,7 @@ static int FLAGS(s,i)
 {
     return s->aux[i].flags;
 }
+
 static const char* DESC(s,i)
     struct _scanopt_t *s; int i;
 {
@@ -106,6 +118,8 @@ static const char* DESC(s,i)
 }
 
 #ifndef NO_SCANOPT_USAGE
+static int get_cols PROTO((void));
+
 static int get_cols()
 {
     char *env;
@@ -246,10 +260,12 @@ int scanopt_usage (scanner,fp,usage)
     usg_elem *store;   /* array of preallocated elements. */
     int store_idx=0;
     usg_elem *ue;
-    int maxlen[2] = {0,0};
+    int maxlen[2];
     int desccol=0;
     int print_run=0;
 
+    maxlen[0] = 0;
+    maxlen[1] = 0;
 
     s = (struct _scanopt_t*)scanner;
 
@@ -408,8 +424,8 @@ int scanopt_usage (scanner,fp,usage)
 
             PRINT_SPACES(fp,indent);nchars+=indent;
 
-    /* Print, adding a ", " between aliases. */
-    #define PRINT_IT(i) do{\
+/* Print, adding a ", " between aliases. */
+#define PRINT_IT(i) do{\
                   if(nwords++)\
                       nchars+=fprintf(fp,", ");\
                   nchars+=fprintf(fp,"%s",s->options[i].opt_fmt);\

@@ -61,7 +61,8 @@ static struct hash_entry *ccltab[CCL_HASH_SIZE];
 /* declare functions that have forward references */
 
 static int addsym PROTO((register char[], char*, int, hash_table, int));
-static struct hash_entry *findsym();
+static struct hash_entry *findsym PROTO(( register const char *sym,
+                                     hash_table table, int table_size));
 static int hashfunct PROTO((register const char*, int));
 
 
@@ -127,7 +128,6 @@ int cclnum;
 	/* We don't bother checking the return status because we are not
 	 * called unless the symbol is new.
 	 */
-	Char *copy_unsigned_string();
 
 	(void) addsym( (char *) copy_unsigned_string( ccltxt ),
 			(char *) 0, cclnum,
@@ -201,8 +201,6 @@ void ndinstal( name, definition )
 const char *name;
 Char definition[];
 	{
-	char *copy_string();
-	Char *copy_unsigned_string();
 
 	if ( addsym( copy_string( name ),
 			(char *) copy_unsigned_string( definition ), 0,
@@ -249,7 +247,6 @@ void scinstal( str, xcluflg )
 const char *str;
 int xcluflg;
 	{
-	char *copy_string();
 
 	/* Generate start condition definition, for use in BEGIN et al. */
 	action_define( str, lastsc );
