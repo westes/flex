@@ -5,6 +5,11 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.25
 
+** the flex distribution now includes a spec file suitable for use
+   with rpm
+
+** some more c++ fixes
+
 ** new es translation from the translation project
 
 ** slight tweeks to the flex_int*_t types
