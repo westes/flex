@@ -68,7 +68,7 @@
 		yymore_used = true;
 %}
 
-%option caseless nodefault outfile="scan.c" stack noyy_top_state
+%option caseless nodefault stack noyy_top_state
 %option nostdinit
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
