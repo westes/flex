@@ -7,33 +7,36 @@ flex; then "make check" to test whether it built correctly; and if it did,
 then "make install" to install it.
 
 If you're feeling adventurous, you can also issue "make bigcheck" (be
-prepared to wait a while).
+prepared to wait a while). You can run the regression tests if you change to
+the TESTS/ directory and issue "make" followed by "make check".
 
 Note that flex is distributed under a copyright very similar to that of
 BSD Unix, and not under the GNU General Public License (GPL).
 
 Please send bug reports and feedback to help-flex@gnu.org.
 
-The flex distribution contains the following files of interest:
+The flex distribution contains the following files which may be of interest:
 
-README - This file
+README - This file.
 
-NEWS - Differences between the various releases
+NEWS - user visible changes between the various releases.
 
-INSTALL - basic installation information
+INSTALL - basic installation information.
 
-COPYING - flex's copyright and license
+COPYING - flex's copyright and license.
 
-flex.1, flex.texi - user documentation
+flex.1, flex.texi - user documentation.
 
-RoadMap - notes for developers
+RoadMap - notes for developers.
 
 examples/ - containing examples of some possible flex scanners and a
 few other things. See the file examples/README for more details.
 
 TODO, to.do/ - outstanding bug reports, desired features, etc.
 
-faqs/ - frequently asked questions
+faqs/ - frequently asked questions.
 
 misc/ - assorted files which may be of interest when building flex on
-platforms other than *nix ones. See misc/README for more information
+platforms other than *nix ones. See misc/README for more information.
+
+tests/ - regression tests. See TESTS/README for details.
