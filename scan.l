@@ -230,7 +230,7 @@ LEXOPT		[aceknopr]
 	lex-compat	lex_compat = option_sense;
 	main		{
 			action_define( "YY_MAIN", option_sense );
-			do_yywrap = option_sense;
+			do_yywrap = ! option_sense;
 			}
 	meta-ecs	usemecs = option_sense;
 	never-interactive	{
