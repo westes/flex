@@ -1,2 +1,8 @@
-Original author:
-Vern Paxson <<vern@ee.lbl.gov>
+Vern Paxson wrote flex with the help of many ideas and much
+inspiration from Van Jacobson.  Original version by Jef Poskanzer.
+
+The fast table representation is a partial implementation of a design
+done by Van Jacobson.  The implementation was done by Kevin Gong and
+Vern Paxson.
+
+The reentrancy support was written by John Millaway.
