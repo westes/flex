@@ -665,7 +665,7 @@ Char array[];
 
 	    while ( isascii( array[sptr] ) && is_hex_digit( array[sptr] ) )
 		/* don't increment inside loop control because if
-		 * isdigit() is a macro it will expand it to two
+		 * isdigit() is a macro it might expand into multiple
 		 * increments ...
 		 */
 		++sptr;
