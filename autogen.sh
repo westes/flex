@@ -29,5 +29,4 @@
 #Makefile first.)
 
 touch ChangeLog
-
-autopoint -f && aclocal -I m4 && autoheader && automake -a && autoconf
+autoreconf --install --verbose
