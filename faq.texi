@@ -31,6 +31,13 @@
 * I get an error about undefined yywrap().::
 * How can I change the matching pattern at run time?::
 * Is there a way to increase the rules (NFA states to a bigger number?)::
+* How can I expand macros in the input?::
+* How can I build a two-pass scanner?::
+* How do I match any string not matched in the preceding rules?::
+* I am trying to port code from AT&T lex that uses yysptr and yysbuf.::
+* Is there a way to make flex treat NULL like a regular character?::
+* Whenever flex can not match the input it says "flex scanner jammed".::
+* Why doesn't flex have non-greedy operators like perl does?::
 @end menu
 
 
@@ -568,4 +575,149 @@ recompile everything, and it'll all work.  Flex only has these 16-bit-like
 values built into it because a long time ago it was developed on a machine
 with 16-bit ints.  I've given this advice to others in the past but haven't
 heard back from them whether it worked okay or not...
+
+@node How can I expand macros in the input?
+@unnumberedsec How can I expand macros in the input?
+
+How can I expand macros in the input?
+
+The best way to approach this problem is at a higher level, e.g., in the parser.
+
+However, you can do this using multiple input buffers.
+
+@example
+@verbatim
+%%
+macro/[a-z]+	{
+    /* Saw the macro "macro" followed by extra stuff. */
+    main_buffer = YY_CURRENT_BUFFER;
+    expansion_buffer = yy_scan_string(expand(yytext));
+    yy_switch_to_buffer(expansion_buffer);
+    }
+
+<<EOF>>	{
+    if ( expansion_buffer )
+        {
+        // We were doing an expansion, return to where
+        // we were.
+        yy_switch_to_buffer(main_buffer);
+        yy_delete_buffer(expansion_buffer);
+        expansion_buffer = 0;
+        }
+    else
+        yyterminate();
+    }
+@end verbatim
+@end example
+
+You probably will want a stack of expansion buffers to allow nested macros.
+From the above though hopefully the idea is clear.
+
+
+@node How can I build a two-pass scanner?
+@unnumberedsec How can I build a two-pass scanner?
+
+How can I build a two-pass scanner?
+
+One way to do it is to filter the first pass to a temporary file,
+then process the temporary file on the second pass. You will probably see a
+performance hit, do to all the disk I/O.
+
+When you need to look ahead far forward like this, it almost always means
+that the right solution is to build a parse tree of the entire input, then
+walk it after the parse in order to generate the output.  In a sense, this
+is a two-pass approach, once through the text and once through the parse
+tree, but the performance hit for the latter is usually an order of magnitude
+smaller, since everything is already classified, in binary format, and
+residing in memory.
+
+
+@node How do I match any string not matched in the preceding rules?
+@unnumberedsec How do I match any string not matched in the preceding rules?
+
+How do I match any string not matched in the preceding rules?
+
+One way to assign precedence, is to place the more specific rules first. If
+two rules would match the same input (same sequence of characters) then the
+first rule listed in the flex input wins. e.g.,
+
+@example
+@verbatim
+%%
+foo[a-zA-Z_]+    return FOO_ID;
+bar[a-zA-Z_]+    return BAR_ID;
+[a-zA-Z_]+       return GENERIC_ID;
+@end verbatim
+@end example
+
+Note that the rule @code{[a-zA-Z_]+} must come *after* the others.  It will match the
+same amount of text as the more specific rules, and in that case the
+flex scanner will pick the first rule listed in your scanner as the
+one to match.
+
+@node I am trying to port code from AT&T lex that uses yysptr and yysbuf.
+@unnumberedsec I am trying to port code from AT&T lex that uses yysptr and yysbuf.
+
+I am trying to port code from AT&T lex that uses yysptr and yysbuf.
+
+Those are internal variables pointing into the AT&T scanner's input buffer.  I
+imagine they're being manipulated in user versions of the input() and unput()
+functions.  If so, what you need to do is analyze those functions to figure out
+what they're doing, and then replace input() with an appropriate definition of
+YY_INPUT (see the flex man page).  You shouldn't need to (and must not) replace
+flex's unput() function.
+
+
+@node Is there a way to make flex treat NULL like a regular character?
+@unnumberedsec Is there a way to make flex treat NULL like a regular character?
+
+Is there a way to make flex treat NULL like a regular character?
+
+Yes, \0 and \x00 should both do the trick.  Perhaps you have an ancient
+version of flex.  The latest release is version @value{VERSION}.
+
+
+@node Whenever flex can not match the input it says "flex scanner jammed".
+@unnumberedsec Whenever flex can not match the input it says "flex scanner jammed".
+
+Whenever flex can not match the input it says "flex scanner jammed".
+
+You need to add a rule that matches the otherwise-unmatched text.
+e.g.,
+
+@example
+@verbatim
+%option yylineno
+%%
+[[a bunch of rules here]]
+
+.	printf("bad input character '%s' at line %d\n", yytext, yylineno);
+@end verbatim
+@end example
+
+See %option default for more information.
+
+@node Why doesn't flex have non-greedy operators like perl does?
+@unnumberedsec Why doesn't flex have non-greedy operators like perl does?
+
+Why doesn't flex have non-greedy operators like perl does?
+
+A DFA can do a non-greedy match by stopping
+the first time it enters an accepting state, instead of consuming input until
+it determines that no further matching is possible (a "jam" state).  This
+is actually easier to implement than longest leftmost match (which flex does).
+
+But it's also much less useful than longest leftmost match.  In general,
+when you find yourself wishing for non-greedy matching, that's usually a
+sign that you're trying to make the scanner do some parsing.  That's
+generally the wrong approach, since it lacks the power to do a decent job.
+Better is to either introduce a separate parser, or to split the scanner
+into multiple scanners using (exclusive) start conditions.  
+
+You might have
+a separate start state once you've seen the BEGIN. In that state, you
+might then have a regex that will match END (to kick you out of the
+state), and perhaps (.|\n) to get a single character within the chunk ...
+
+This approach also has much better error-reporting properties.
 
