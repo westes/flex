@@ -39,7 +39,6 @@ This edition of the @cite{flex Manual} documents @code{flex} version
 * Misc Macros::                 
 * User Values::                 
 * Yacc::                        
-* Invoking Flex::               
 * Scanner Options::             
 * Performance::                 
 * Cxx::                         
@@ -1199,7 +1198,7 @@ cannot be used with the
 @samp{-Cf}
 or
 @samp{-CF}
-options (@pxref{Invoking Flex}).
+options (@pxref{Scanner Options}).
 
 Note also that unlike the other special actions, @code{REJECT} is a
 @emph{branch}.  code immediately following it in the action will
@@ -1926,7 +1925,7 @@ The start condition stack grows dynamically and so has no built-in size
 limitation.  If memory is exhausted, program execution aborts.
 
 To use start condition stacks, your scanner must include a @code{%option
-stack} directive (@pxref{Invoking Flex}).
+stack} directive (@pxref{Scanner Options}).
 
 @node Multiple Input Buffers
 @chapter Multiple Input Buffers
@@ -2219,10 +2218,10 @@ control whether the current buffer is considered @dfn{interactive}.  An
 interactive buffer is processed more slowly, but must be used when the
 scanner's input source is indeed interactive to avoid problems due to
 waiting to fill buffers (see the discussion of the @samp{-I} flag in
-@ref{Invoking Flex}).  A non-zero value in the macro invocation marks
+@ref{Scanner Options}).  A non-zero value in the macro invocation marks
 the buffer as interactive, a zero value as non-interactive.  Note that
 use of this macro overrides @code{%option always-interactive} or
-@code{%option never-interactive} (@pxref{Invoking Flex}).
+@code{%option never-interactive} (@pxref{Scanner Options}).
 @code{yy_set_interactive()} must be invoked prior to beginning to scan
 the buffer that is (or is not) to be considered interactive.
 
@@ -2348,8 +2347,8 @@ is @code{TOK_NUMBER}, part of the scanner might look like:
 @end verbatim
 @end example
 
-@node Invoking Flex
-@chapter Invoking Flex
+@node Scanner Options
+@chapter Scanner Options
 
 @cindex command-line options
 @cindex options, command-line
@@ -2359,7 +2358,8 @@ is @code{TOK_NUMBER}, part of the scanner might look like:
 has the following options.
 
 @table @samp
-@item -b, --backup
+@anchor{option-backup}
+@item -b, --backup, @code{%option backup}
 Generate backing-up information to @file{lex.backup}.  This is a list of
 scanner states which require backing up and the input characters on
 which they do so.  By adding rules one can remove backing-up states.  If
@@ -2371,7 +2371,8 @@ need worry about this option.  (@pxref{Performance}).
 @item -c
 is a do-nothing option included for POSIX compliance.
 
-@item -d, --debug
+@anchor{option-debug}
+@item -d, --debug, @code{%option debug}
 makes the generated scanner run in @dfn{debug} mode.  Whenever a pattern
 is recognized and the global variable @code{yy_flex_debug} is non-zero
 (which is the default), the scanner will write to @file{stderr} a line
@@ -2390,7 +2391,8 @@ the end of its input buffer (or encounters a NUL; at this point, the two
 look the same as far as the scanner's concerned), or reaches an
 end-of-file.
 
-@item -f, --full
+@anchor{option-full}
+@item -f, --full, @code{%option full}
 specifies
 @dfn{fast scanner}.
 No table compression is done and @code{stdio} is bypassed.
@@ -2402,7 +2404,7 @@ generates a ``help'' summary of @code{flex}'s options to @file{stdout}
 and then exits.
 
 @anchor{option-header}
-@item --header=FILE
+@item --header=FILE, @code{%option header="FILE"}
 instructs flex to write a C header to @file{FILE}. This file contains
 function prototypes, extern variables, and types used by the scanner.
 Only the external API is exported by the header file. Many macros that
@@ -2416,14 +2418,16 @@ is substituted with the appropriate prefix.
 The @samp{--header} option is not compatible with the @samp{--c++} option,
 since the C++ scanner provides its own header in @file{yyFlexLexer.h}.
 
-@item -i, --case-insensitive
+@anchor{option-case-insensitive}
+@item -i, --case-insensitive, @code{%option case-insensitive}
 instructs @code{flex} to generate a @dfn{case-insensitive} scanner.  The
 case of letters given in the @code{flex} input patterns will be ignored,
 and tokens in the input will be matched regardless of case.  The matched
 text given in @code{yytext} will have the preserved case (i.e., it will
 not be folded).
 
-@item -l, --lex-compat
+@anchor{option-lex-compat}
+@item -l, --lex-compat, @code{%option lex-compat}
 turns on maximum compatibility with the original AT&T @code{lex}
 implementation.  Note that this does not mean @emph{full} compatibility.
 Use of this option costs a considerable amount of performance, and it
@@ -2436,7 +2440,8 @@ cannot be used with the @samp{--c++}, @samp{--full}, @samp{--fast}, @samp{-Cf}, 
 is another do-nothing option included only for
 POSIX compliance.
 
-@item -p, --perf-report
+@anchor{option-perf-report}
+@item -p, --perf-report, @code{%option perf-report}
 generates a performance report to @file{stderr}.  The report consists of
 comments regarding features of the @code{flex} input file which will
 cause a serious loss of performance in the resulting scanner.  If you
@@ -2448,17 +2453,20 @@ variable trailing context (@pxref{Limitations}) entails a substantial
 performance penalty; use of @code{yymore()}, the @samp{^} operator, and
 the @samp{--interactive} flag entail minor performance penalties.
 
-@item -s, --nodefault
+@anchor{option-nodefault}
+@item -s, --nodefault, @code{%option nodefault}
 causes the @emph{default rule} (that unmatched scanner input is echoed
 to @file{stdout)} to be suppressed.  If the scanner encounters input
 that does not match any of its rules, it aborts with an error.  This
 option is useful for finding holes in a scanner's rule set.
 
-@item -t, --stdout
+@anchor{option-stdout}
+@item -t, --stdout, @code{%option stdout}
 instructs @code{flex} to write the scanner it generates to standard
 output instead of @file{lex.yy.c}.
 
-@item -v, --verbose
+@anchor{option-verbose}
+@item -v, --verbose, @code{%option verbose}
 specifies that @code{flex} should write to @file{stderr} a summary of
 statistics regarding the scanner it generates.  Most of the statistics
 are meaningless to the casual @code{flex} user, but the first line
@@ -2466,10 +2474,12 @@ identifies the version of @code{flex} (same as reported by @samp{--version}),
 and the next line the flags used when generating the scanner, including
 those that are on by default.
 
-@item -w, --nowarn
+@anchor{option-nowarn}
+@item -w, --nowarn, @code{%option nowarn}
 suppresses warning messages.
 
-@item -B, --batch
+@anchor{option-batch}
+@item -B, --batch, @code{%option batch}
 instructs @code{flex} to generate a @dfn{batch} scanner, the opposite of
 @emph{interactive} scanners generated by @samp{--interactive} (see below).  In
 general, you use @samp{-B} when you are @emph{certain} that your scanner
@@ -2479,7 +2489,8 @@ squeeze out a @emph{lot} more performance, you should be using the
 @samp{-Cf} or @samp{-CF} options, which turn on @samp{--batch} automatically
 anyway.
 
-@item -F, --fast
+@anchor{option-fast}
+@item -F, --fast, @code{%option fast}
 specifies that the @emph{fast} scanner table representation should be
 used (and @code{stdio} bypassed).  This representation is about as fast
 as the full table representation @samp{--full}, and for some sets of
@@ -2505,7 +2516,8 @@ to detect the keywords, you're better off using
 This option is equivalent to @samp{-CFr} (see below).  It cannot be used
 with @samp{--c++}.
 
-@item -I, --interactive
+@anchor{option-interactive}
+@item -I, --interactive, @code{%option interactive}
 instructs @code{flex} to generate an @i{interactive} scanner.  An
 interactive scanner is one that only looks ahead to decide what token
 has been matched if it absolutely must.  It turns out that always
@@ -2531,7 +2543,8 @@ You can force a scanner to
 be interactive by using
 @samp{--batch}
 
-@item -L, --noline
+@anchor{option-noline}
+@item -L, --noline, @code{%option noline}
 instructs
 @code{flex}
 not to generate
@@ -2549,7 +2562,8 @@ input file (if the errors are due to code in the input file), or
 fault -- you should report these sorts of errors to the email address
 given in @ref{Reporting Bugs}).
 
-@item -R, --reentrant
+@anchor{option-reentrant}
+@item -R, --reentrant, @code{%option reentrant}
 instructs flex to generate a reentrant C scanner.  The generated scanner
 may safely be used in a multi-threaded environment. The API for a
 reentrant scanner is different than for a non-reentrant scanner
@@ -2558,7 +2572,8 @@ reentrant and non-reentrant @code{flex} scanners, non-reentrant flex
 code must be modified before it is suitable for use with this option.
 This option is not compatible with the @samp{--c++} option.
 
-@item -Rb, --reentrant-bison
+@anchor{option-reentrant-bison}
+@item -Rb, --reentrant-bison, @code{%option reentrant-bison}
 instructs flex to generate a reentrant C scanner that is
 meant to be called by a
 @code{GNU bison}
@@ -2577,7 +2592,8 @@ is incorporated. @xref{Bison Pure}.
 The options @samp{--reentrant} and @samp{--reentrant-bison} do not affect the performance of
 the scanner.
 
-@item -T, --trace
+@anchor{option-trace}
+@item -T, --trace, @code{%option trace}
 makes @code{flex} run in @dfn{trace} mode.  It will generate a lot of
 messages to @file{stderr} concerning the form of the input and the
 resultant non-deterministic and deterministic finite automata.  This
@@ -2586,7 +2602,8 @@ option is mostly for use in maintaining @code{flex}.
 @item -V, --version
 prints the version number to @file{stdout} and exits.
 
-@item -X, --posix
+@anchor{option-posix}
+@item -X, --posix, @code{%option posix}
 turns on maximum compatibility with the POSIX 1003.2-1992 definition of
 @code{lex}.  Since @code{flex} was originally designed to implement the
 POSIX definition of @code{lex} this generally involves very few changes
@@ -2607,7 +2624,8 @@ traditional AT&T and POSIX-compliant precedence for the repeat operator
 where concatenation has higher precedence than the repeat operator.
 @end itemize
 
-@item -7, --7bit
+@anchor{option-7bit}
+@item -7, --7bit, @code{%option 7bit}
 instructs @code{flex} to generate a 7-bit scanner, i.e., one which can
 only recognize 7-bit characters in its input.  The advantage of using
 @samp{--7bit} is that the scanner's tables can be up to half the size of
@@ -2630,7 +2648,8 @@ defaults to generating an 8-bit scanner, since usually with these
 compression options full 8-bit tables are not much more expensive than
 7-bit tables.
 
-@item -8, --8bit
+@anchor{option-8bit}
+@item -8, --8bit, @code{%option 8bit}
 instructs @code{flex} to generate an 8-bit scanner, i.e., one which can
 recognize 8-bit characters.  This flag is only needed for scanners
 generated using @samp{-Cf} or @samp{-CF}, as otherwise flex defaults to
@@ -2641,16 +2660,22 @@ See the discussion of
 above for @code{flex}'s default behavior and the tradeoffs between 7-bit
 and 8-bit scanners.
 
-@item -+, --c++
+@anchor{option-c++}
+@item -+, --c++, @code{%option c++}
 specifies that you want flex to generate a C++
 scanner class.  @xref{Cxx}, for
 details.
+
+@anchor{option-array}
+@item --array, @code{%option array}
+specifies that you want yytext to be an array instead of a char*
 
 @item -C[aefFmr]
 controls the degree of table compression and, more generally, trade-offs
 between small scanners and fast scanners.
 
-@item -Ca, --align
+@anchor{option-align}
+@item -Ca, --align, @code{%option align}
 (``align'') instructs flex to trade off larger tables in the
 generated scanner for faster performance because the elements of
 the tables are better aligned for memory access and computation.  On some
@@ -2658,7 +2683,8 @@ RISC architectures, fetching and manipulating longwords is more efficient
 than with smaller-sized units such as shortwords.  This option can
 quadruple the size of the tables used by your scanner.
 
-@item -Ce, --ecs
+@anchor{option-ecs}
+@item -Ce, --ecs, @code{%option ecs}
 directs @code{flex} to construct @dfn{equivalence classes}, i.e., sets
 of characters which have identical lexical properties (for example, if
 the only appearance of digits in the @code{flex} input is in the
@@ -2678,7 +2704,8 @@ specifies that the alternate fast scanner representation (described
 above under the @samp{--fast} flag) should be used.  This option cannot be
 used with @samp{--c++}.
 
-@item -Cm, --meta-ecs
+@anchor{option-meta-ecs}
+@item -Cm, --meta-ecs, @code{%option meta-ecs}
 directs
 @code{flex}
 to construct
@@ -2689,8 +2716,8 @@ classes are often a big win when using compressed tables, but they
 have a moderate performance impact (one or two @code{if} tests and one
 array look-up per character scanned).
 
-@anchor{Option-Read}
-@item -Cr, --read
+@anchor{option-read}
+@item -Cr, --read, @code{%option read}
 causes the generated scanner to @emph{bypass} use of the standard I/O
 library (@code{stdio}) for input.  Instead of calling @code{fread()} or
 @code{getc()}, the scanner will use the @code{read()} system call,
@@ -2739,15 +2766,25 @@ use the default, maximal compression.
 @samp{-Cfe} is often a good compromise between speed and size for
 production scanners.
 
-@item -oFILE, --outfile=FILE
+@anchor{option-default}
+@item --default, @code{%option default}
+generate the default rule.
+
+@anchor{option-outfile}
+@item -oFILE, --outfile=FILE, @code{%option outfile="FILE"}
 directs flex to write the scanner to the file @file{FILE} instead of
 @file{lex.yy.c}.  If you combine @samp{--outfile} with the @samp{--stdout} option,
 then the scanner is written to @file{stdout} but its @code{#line}
 directives (see the @samp{-l} option above) refer to the file
 @file{FILE}.
 
+@anchor{option-pointer}
+@item --pointer, @code{%option pointer}
+specify that  @code{yytext} should be a @code{char *}, not an array.
+This default is @code{char *}.
+
 @anchor{option-prefix}
-@item -PPREFIX, --prefix=PREFIX
+@item -PPREFIX, --prefix=PREFIX, @code{%option prefix="PREFIX"}
 changes the default @samp{yy} prefix used by @code{flex} for all
 globally-visible variable and function names to instead be
 @samp{PREFIX}.  For example, @samp{--prefix=foo} changes the name of
@@ -2805,38 +2842,41 @@ constructs its scanners.  You'll never need this option unless you are doing
 @code{flex}
 maintenance or development.
 
-@anchor{Option-Always-Interactive}
-@item --always-interactive
+@anchor{option-always-interactive}
+@item --always-interactive, @code{%option always-interactive}
 instructs flex to generate a scanner which always considers its input
 @emph{interactive}.  Normally, on each new input file the scanner calls
 @code{isatty()} in an attempt to determine whether the scanner's input
 source is interactive and thus should be read a character at a time.
 When this option is used, however, then no such call is made.
 
-@item --main
+@anchor{option-main}
+@item --main, @code{%option main}
  directs flex to provide a default @code{main()} program for the
 scanner, which simply calls @code{yylex()}.  This option implies
 @code{noyywrap} (see below).
 
-@item --never-interactive
+@item --never-interactive, @code{--never-interactive}
 instructs flex to generate a scanner which never considers its input
 interactive.  This is the opposite of @code{always-interactive}.
 
-@item --nounistd
+@anchor{option-nounistd}
+@item --nounistd, @code{%option nounistd}
 suppresses inclusion of the non-ANSI header file @file{unistd.h}. This option
 is meant to target environments in which @file{unistd.h} does not exist. Be aware
 that certain options may cause flex to generate code that relies on functions
 normally found in @file{unistd.h}, (e.g. @code{isatty()}, @code{read()}.)
 If you wish to use these functions, you will have to inform your compiler where
 to find them.
-@xref{Option-Always-Interactive}. @xref{Option-Read}.
+@xref{option-always-interactive}. @xref{option-read}.
 
-@anchor{Option-Stack}
-@item --stack
+@anchor{option-stack}
+@item --stack, @code{%option stack}
 enables the use of
 start condition stacks (@pxref{Start Conditions}).
 
-@item --stdinit
+@anchor{option-stdinit}
+@item --stdinit, @code{%option stdinit}
 if set (i.e., @b{%option stdinit)} initializes @code{yyin} and
 @code{yyout} to @file{stdin} and @file{stdout}, instead of the default of
 @file{nil}.  Some existing @code{lex} programs depend on this behavior,
@@ -2845,7 +2885,14 @@ even though it is not compliant with ANSI C, which does not require
 reentrant scanner, however, this is not a problem since initialization
 is performed in @code{yylex_init} at runtime.
 
-@item --yylineno
+@anchor{option-warn}
+@item --warn, @code{%option warn}
+warn about certain things. In particular, if the default rule can be
+matched but no defualt rule has been given, the flex will warn you.
+We recommend using this option always.
+
+@anchor{option-yylineno}
+@item --yylineno, @code{%option yylineno}
 directs @code{flex} to generate a scanner
 that maintains the number of the current line read from its input in the
 global variable @code{yylineno}.  This option is implied by @code{%option
@@ -2853,15 +2900,23 @@ lex-compat}.  In a reentrant C scanner, the macro @code{yylineno} is
 accessible regardless of the value of @code{%option yylineno}, however, its
 value is not modified by @code{flex} unless @code{%option yylineno} is enabled.
 
-@item --yywrap
+@anchor{option-yyclass}
+@item --yyclass, @code{%option yyclass="NAME"}
+only applies when generating a C++ scanner (the @samp{--c++} option).  It
+informs @code{flex} that you have derived @code{foo} as a subclass of
+@code{yyFlexLexer}, so @code{flex} will place your actions in the member
+function @code{foo::yylex()} instead of @code{yyFlexLexer::yylex()}.  It
+also generates a @code{yyFlexLexer::yylex()} member function that emits
+a run-time error (by invoking @code{yyFlexLexer::LexerError())} if
+called.  @xref{Cxx}.
+
+@anchor{option-yywrap}
+@item --yywrap, @code{%option yywrap}
 if unset (i.e., @code{--noyywrap)}, makes the scanner not call
 @code{yywrap()} upon an end-of-file, but simply assume that there are no
 more files to scan (until the user points @file{yyin} at a new file and
 calls @code{yylex()} again).
 @end table
-
-@node Scanner Options
-@chapter Option Directives Within Scanners
 
 @code{flex} also provides a mechanism for controlling options within the
 scanner specification itself, rather than from the flex command-line.
@@ -2875,48 +2930,6 @@ word @samp{no} (with no intervening whitespace) to negate their meaning.
 The names are the same as their long-option equivalents (but without the
 leading @samp{--} ).
 
-@example
-@verbatim
-    7bit            -7   --7bit
-    8bit            -8   --8bit
-    align           -Ca  --align
-    array                --array   equivalent to "%array"
-    backup          -b   --backup
-    batch           -B   --batch
-    c++             -+   --c++
-
-    caseful or
-    case-sensitive  (default)
-
-    case-insensitive or
-    caseless        -i   --case-insensitive
-
-    debug           -d   --debug
-    default              --default
-    ecs             -Ce  --ecs
-    fast            -F   --fast
-    full            -f   --full
-    header="FILE"        --header=FILE
-    interactive     -I   --interactive
-    lex-compat      -l   --lex-compat
-    meta-ecs        -Cm  --meta-ecs
-    nounistd             --nounistd
-    perf-report     -p   --perf-report
-    pointer              --pointer equivalent to "%pointer" (default)
-    prefix="PREFIX" -P   --prefix
-    outfile="FILE"  -o   --outfile=FILE
-    read            -Cr  --read
-    reentrant       -R   --reentrant
-    reentrant-bison -Rb  --reentrant-bison
-    stack                --stack
-    stdout          -t   --stdout
-    verbose         -v   --verbose
-    warn                 --warn (use "%option nowarn" for -w)
-    yyclass="NAME"       --yyclass=NAME
-
-@end verbatim
-@end example
-
 @code{flex} scans your rule actions to determine whether you use the
 @code{REJECT} or @code{yymore()} features.  The @code{REJECT} and
 @code{yymore} options are available to override its decision as to
@@ -2924,15 +2937,6 @@ whether you use the options, either by setting them (e.g., @code{%option
 reject)} to indicate the feature is indeed used, or unsetting them to
 indicate it actually is not used (e.g., @code{%option noyymore)}.
 
-
-@code{%option yyclass}
-only applies when generating a C++ scanner (the @samp{--c++} option).  It
-informs @code{flex} that you have derived @code{foo} as a subclass of
-@code{yyFlexLexer}, so @code{flex} will place your actions in the member
-function @code{foo::yylex()} instead of @code{yyFlexLexer::yylex()}.  It
-also generates a @code{yyFlexLexer::yylex()} member function that emits
-a run-time error (by invoking @code{yyFlexLexer::LexerError())} if
-called.  @xref{Cxx}.
 
 A number of options are available for lint purists who want to suppress
 the appearance of unneeded routines in the generated scanner.  Each of
@@ -3363,7 +3367,7 @@ returns the current input line number (see @code{%option yylineno)}, or
 @findex set_debug (C++ only)
 @item void set_debug( int flag )
 sets the debugging flag for the scanner, equivalent to assigning to
-@code{yy_flex_debug} (@pxref{Invoking Flex}).  Note that you must build
+@code{yy_flex_debug} (@pxref{Scanner Options}).  Note that you must build
 the scannerusing @code{%option debug} to include debugging information
 in it.
 
@@ -3426,7 +3430,7 @@ scanner:
 reads up to @code{max_size} characters into @code{buf} and returns the
 number of characters read.  To indicate end-of-input, return 0
 characters.  Note that @code{interactive} scanners (see the @samp{-B}
-and @samp{-I} flags in @ref{Invoking Flex}) define the macro
+and @samp{-I} flags in @ref{Scanner Options}) define the macro
 @code{YY_INTERACTIVE}.  If you redefine @code{LexerInput()} and need to
 take different actions depending on whether or not the scanner might be
 scanning an interactive input source, you can test for the presence of
@@ -4452,7 +4456,7 @@ necessary.  Since the states are simply integers, this stack doesn't consume
 much memory.  This stack is not present if @code{%option stack} is not
 specified.  You will rarely need to tune this buffer. The ideal size for this
 stack is the maximum depth expected.  The memory for this stack is
-automatically destroyed when you call yylex_destroy(). @xref{Option-Stack}.
+automatically destroyed when you call yylex_destroy(). @xref{option-stack}.
 
 @item 40 bytes for each YY_BUFFER_STATE.
 Flex allocates memory for each YY_BUFFER_STATE. The buffer state itself
@@ -4856,7 +4860,7 @@ input.
 specification includes recognizing the 8-bit character @samp{'x'} and
 you did not specify the -8 flag, and your scanner defaulted to 7-bit
 because you used the @samp{-Cf} or @samp{-CF} table compression options.
-See the discussion of the @samp{-7} flag, @ref{Invoking Flex}, for
+See the discussion of the @samp{-7} flag, @ref{Scanner Options}, for
 details.
 
 @item
