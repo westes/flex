@@ -4439,4 +4439,82 @@ flex maintenance and development.
 
 
 
+
+1,,
+X-Coding-System: nil
+Mail-from: From johnmillaway@yahoo.com  Thu Aug 16 11:11:13 2001
+Return-Path: <johnmillaway@yahoo.com>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id LAA22070
+	for <wlestes@localhost>; Thu, 16 Aug 2001 11:11:13 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Thu, 16 Aug 2001 11:11:13 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.uncg.edu (8.11.0/8.11.0) with ESMTP id f7GF5xW19868
+	for <wlestes@hermes.email.uncg.edu>; Thu, 16 Aug 2001 11:05:59 -0400 (EDT)
+Received: from web9405.mail.yahoo.com (web9405.mail.yahoo.com [216.136.129.111])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with SMTP id LAA07077
+	for <wlestes@uncg.edu>; Thu, 16 Aug 2001 11:05:57 -0400 (EDT)
+Message-ID: <20010816150558.37014.qmail@web9405.mail.yahoo.com>
+Received: from [216.254.82.102] by web9405.mail.yahoo.com; Thu, 16 Aug 2001 08:05:58 PDT
+Date: Thu, 16 Aug 2001 08:05:58 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: comments in lexical definitions
+To: Tobias Ostgathe <ostgathe@tesionmail.de>
+Cc: help-flex@gnu.org, Hans-Bernhard Broeker <broeker@physik.rwth-aachen.de>,
+        "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <003301c1264e$0677bea0$2465e2c3@wuschtbix>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+*** EOOH ***
+Date: Thu, 16 Aug 2001 08:05:58 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: comments in lexical definitions
+To: Tobias Ostgathe <ostgathe@tesionmail.de>
+Cc: help-flex@gnu.org, Hans-Bernhard Broeker <broeker@physik.rwth-aachen.de>,
+        "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <003301c1264e$0677bea0$2465e2c3@wuschtbix>
+
+> > > I'm missing the possibility to include comments in lexical definition
+
+Flex does allow comments everywhere you could possibly need them. This
+discussion suggests a failure in the flex docs to make the syntax clear. What's
+the trick, then? 
+
+1. Use traditional C comments, not '//' comments.
+2. INDENT THE COMMENT.
+
+-John
+(Exhaustive example follows)
+
+%{
+    /* 1  */
+%}
+    /*  2  */
+%option reentrant
+%x STATE_X
+
+%%
+   /* 3 */
+ruleA    /* 4 */ { /* 5 */}
+ruleB    /* 6 */ ECHO; /* 7 */
+   /* 8 */
+<STATE_X>{
+ruleC   ECHO;
+   /* 9 */
+ruleD   ECHO;
+}
+
+%%
+/* 10 */
+
+
+
+__________________________________________________
+Do You Yahoo!?
+Make international calls for as low as $.04/minute with Yahoo! Messenger
+http://phonecard.yahoo.com/
+
 
