@@ -532,7 +532,7 @@ void ntod()
 		/* Declare it "short" because it's a real long-shot that that
 		 * won't be large enough.
 		 */
-		printf( "static short int yy_nxt[][%d] =\n    {\n",
+		printf( "static const short yy_nxt[][%d] =\n    {\n",
 			/* '}' so vi doesn't get too confused */
 			num_full_table_rows );
 
