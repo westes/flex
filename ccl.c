@@ -65,7 +65,7 @@ int ch;
 
 	++num_reallocs;
 
-	ccltbl = reallocate_character_array( ccltbl, current_max_ccl_tbl_size );
+	ccltbl = reallocate_Character_array( ccltbl, current_max_ccl_tbl_size );
 	}
 
     ccllen[cclp] = len + 1;
