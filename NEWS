@@ -5,6 +5,8 @@ See the file COPYING for copying conditions
 
 * version 2.5.11 released 2002-7-31
 
+** the yylineno performance hit is now gone
+
 ** fixed some typos in the manual and we now include texinfo.tex
 
 ** traditional prototypes output for C scanners, controlled by a
