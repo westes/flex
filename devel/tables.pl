@@ -124,17 +124,18 @@ sub pad64{ return ((8-((shift)%8))%8) }
 
 BEGIN {
     %::TID = ( 
-	0x01 => 'YYTH_ID_ACCEPT' ,
-	0x02 => 'YYTH_ID_BASE' ,
-	0x03 => 'YYTH_ID_CHK' ,
-	0x04 => 'YYTH_ID_DEF' ,
-	0x05 => 'YYTH_ID_EC' ,
-	0x06 => 'YYTH_ID_META' ,
-	0x07 => 'YYTH_ID_NUL_TRANS' ,
-	0x08 => 'YYTH_ID_NXT' ,
-	0x09 => 'YYTH_ID_RULE_CAN_MATCH_EOL' ,
-	0x0A => 'YYTH_ID_START_STATE_LIST' ,
-	0x0B => 'YYTH_ID_TRANSITION');
+	0x01 => 'YYTD_ID_ACCEPT' ,
+	0x02 => 'YYTD_ID_BASE' ,
+	0x03 => 'YYTD_ID_CHK' ,
+	0x04 => 'YYTD_ID_DEF' ,
+	0x05 => 'YYTD_ID_EC' ,
+	0x06 => 'YYTD_ID_META' ,
+	0x07 => 'YYTD_ID_NUL_TRANS' ,
+	0x08 => 'YYTD_ID_NXT' ,
+	0x09 => 'YYTD_ID_RULE_CAN_MATCH_EOL' ,
+	0x0A => 'YYTD_ID_START_STATE_LIST' ,
+	0x0B => 'YYTD_ID_TRANSITION',
+	0x0C => 'YYTD_ID_ACCLIST');
 
     %::TFLAGS = (
 	0x01 => ['YYTD_DATA8',\&read8] ,

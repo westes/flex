@@ -525,7 +525,7 @@ void ntod ()
 			(struct yytbl_data *) calloc (1,
 						      sizeof (struct
 							      yytbl_data));
-		yytbl_data_init (yynxt_tbl, YYT_ID_NXT);
+		yytbl_data_init (yynxt_tbl, YYTD_ID_NXT);
 		yynxt_tbl->td_hilen = 1;
 		yynxt_tbl->td_lolen = num_full_table_rows;
 		yynxt_tbl->td_data = yynxt_data =
@@ -535,7 +535,7 @@ void ntod ()
 		yynxt_curr = 0;
 
 		buf_prints (&yydmap_buf,
-			    "\t{YYT_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
+			    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
 			    long_align ? "int32_t" : "int16_t");
 
 		/* Unless -Ca, declare it "short" because it's a real

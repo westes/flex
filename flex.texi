@@ -4669,6 +4669,8 @@ array of pointers to structs. See the @code{td_flags} field below.
 @item YYT_ID_TRANSITION (0x0B)
 @code{yy_transition}. This array is handled specially because it is an array of
 structs. See the @code{td_lolen} field below.
+@item YYT_ID_ACCLIST (0x0C)
+@code{yy_acclist}
 @end table
 
 @item td_flags

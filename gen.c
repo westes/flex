@@ -105,7 +105,7 @@ static struct yytbl_data *mkeoltbl (void)
 	struct yytbl_data *tbl;
 
 	tbl = (struct yytbl_data *) calloc (1, sizeof (struct yytbl_data));
-	yytbl_data_init (tbl, YYT_ID_RULE_CAN_MATCH_EOL);
+	yytbl_data_init (tbl, YYTD_ID_RULE_CAN_MATCH_EOL);
 	tbl->td_flags = YYTD_DATA8;
 	tbl->td_lolen = num_rules + 1;
 	tbl->td_data = tdata =
@@ -115,7 +115,7 @@ static struct yytbl_data *mkeoltbl (void)
 		tdata[i] = rule_has_nl[i] ? 1 : 0;
 
 	buf_prints (&yydmap_buf,
-		    "\t{YYT_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(%s)},\n",
+		    "\t{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(%s)},\n",
 		    "int32_t");
 	return tbl;
 }
@@ -207,12 +207,12 @@ static struct yytbl_data *mkctbl (void)
 	int     end_of_buffer_action = num_rules + 1;
 
 	buf_prints (&yydmap_buf,
-		    "\t{YYT_ID_TRANSITION, (void**)&yy_transition, sizeof(%s)},\n",
+		    "\t{YYTD_ID_TRANSITION, (void**)&yy_transition, sizeof(%s)},\n",
 		    ((tblend + numecs + 1) >= INT16_MAX
 		     || long_align) ? "int32_t" : "int16_t");
 
 	tbl = (struct yytbl_data *) calloc (1, sizeof (struct yytbl_data));
-	yytbl_data_init (tbl, YYT_ID_TRANSITION);
+	yytbl_data_init (tbl, YYTD_ID_TRANSITION);
 	tbl->td_flags = YYTD_DATA32 | YYTD_STRUCT;
 	tbl->td_hilen = 0;
 	tbl->td_lolen = tblend + numecs + 1;	/* number of structs */
@@ -308,7 +308,7 @@ static struct yytbl_data *mkssltbl (void)
 	int32_t i;
 
 	tbl = (struct yytbl_data *) calloc (1, sizeof (struct yytbl_data));
-	yytbl_data_init (tbl, YYT_ID_START_STATE_LIST);
+	yytbl_data_init (tbl, YYTD_ID_START_STATE_LIST);
 	tbl->td_flags = YYTD_DATA32 | YYTD_PTRANS;
 	tbl->td_hilen = 0;
 	tbl->td_lolen = lastsc * 2 + 1;
@@ -320,7 +320,7 @@ static struct yytbl_data *mkssltbl (void)
 		tdata[i] = base[i];
 
 	buf_prints (&yydmap_buf,
-		    "\t{YYT_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(%s)},\n",
+		    "\t{YYTD_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(%s)},\n",
 		    "struct yy_trans_info*");
 
 	return tbl;
@@ -438,7 +438,7 @@ struct yytbl_data *mkecstbl (void)
 	int32_t *tdata = 0;
 
 	tbl = (struct yytbl_data *) calloc (1, sizeof (struct yytbl_data));
-	yytbl_data_init (tbl, YYT_ID_EC);
+	yytbl_data_init (tbl, YYTD_ID_EC);
 	tbl->td_flags |= YYTD_DATA32;
 	tbl->td_hilen = 0;
 	tbl->td_lolen = csize;
@@ -455,7 +455,7 @@ struct yytbl_data *mkecstbl (void)
 	}
 
 	buf_prints (&yydmap_buf,
-		    "\t{YYT_ID_EC, (void**)&yy_ec, sizeof(%s)},\n",
+		    "\t{YYTD_ID_EC, (void**)&yy_ec, sizeof(%s)},\n",
 		    "int32_t");
 
 	return tbl;
@@ -649,7 +649,7 @@ struct yytbl_data *mkftbl (void)
 	int32_t *tdata = 0;
 
 	tbl = (struct yytbl_data *) calloc (1, sizeof (struct yytbl_data));
-	yytbl_data_init (tbl, YYT_ID_ACCEPT);
+	yytbl_data_init (tbl, YYTD_ID_ACCEPT);
 	tbl->td_flags |= YYTD_DATA32;
 	tbl->td_hilen = 0;	/* it's a one-dimensional array */
 	tbl->td_lolen = lastdfa + 1;
@@ -670,7 +670,7 @@ struct yytbl_data *mkftbl (void)
 	}
 
 	buf_prints (&yydmap_buf,
-		    "\t{YYT_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
+		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
 		    long_align ? "int32_t" : "int16_t");
 	return tbl;
 }
@@ -1056,10 +1056,10 @@ void gentabs ()
 	int     i, j, k, *accset, nacc, *acc_array, total_states;
 	int     end_of_buffer_action = num_rules + 1;
 	struct yytbl_data *yyacc_tbl = 0, *yymeta_tbl = 0, *yybase_tbl = 0,
-		*yydef_tbl = 0, *yynxt_tbl = 0, *yychk_tbl = 0;
+		*yydef_tbl = 0, *yynxt_tbl = 0, *yychk_tbl = 0, *yyacclist_tbl=0;
 	int32_t *yyacc_data = 0, *yybase_data = 0, *yydef_data = 0,
-		*yynxt_data = 0, *yychk_data = 0;
-	int32_t yybase_curr = 0;
+		*yynxt_data = 0, *yychk_data = 0, *yyacclist_data=0;
+	int32_t yybase_curr = 0, yyacclist_curr=0,yyacc_curr=0;
 
 	acc_array = allocate_integer_array (current_max_dfas);
 	nummt = 0;
@@ -1090,6 +1090,17 @@ void gentabs ()
 		out_str_dec (long_align ? get_int32_decl () :
 			     get_int16_decl (), "yy_acclist", MAX (numas,
 								   1) + 1);
+        
+        buf_prints (&yydmap_buf,
+                "\t{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(%s)},\n",
+                long_align ? "int32_t" : "int16_t");
+
+        yyacclist_tbl = (struct yytbl_data*)calloc(1,sizeof(struct yytbl_data));
+        yytbl_data_init (yyacclist_tbl, YYTD_ID_ACCLIST);
+        yyacclist_tbl->td_lolen  = MAX(numas,1) + 1;
+        yyacclist_tbl->td_data = yyacclist_data = 
+            (int32_t *) calloc (yyacclist_tbl->td_lolen, sizeof (int32_t));
+        yyacclist_curr = 1;
 
 		j = 1;		/* index into "yy_acclist" array */
 
@@ -1125,6 +1136,7 @@ void gentabs ()
 					}
 
 					mkdata (accnum);
+                    yyacclist_data[yyacclist_curr++] = accnum;
 
 					if (trace) {
 						fprintf (stderr, "[%d]",
@@ -1145,6 +1157,13 @@ void gentabs ()
 		acc_array[i] = j;
 
 		dataend ();
+        if (tablesext) {
+            yytbl_data_compress (yyacclist_tbl);
+            if (yytbl_data_fwrite (&tableswr, yyacclist_tbl) < 0)
+                flexerror (_("Could not write yyacclist_tbl"));
+            yytbl_data_destroy (yyacclist_tbl);
+            yyacclist_tbl = NULL;
+        }
 	}
 
 	else {
@@ -1182,20 +1201,21 @@ void gentabs ()
 		     "yy_accept", k);
 
 	buf_prints (&yydmap_buf,
-		    "\t{YYT_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
+		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
 		    long_align ? "int32_t" : "int16_t");
 
 	yyacc_tbl =
 		(struct yytbl_data *) calloc (1,
 					      sizeof (struct yytbl_data));
-	yytbl_data_init (yyacc_tbl, YYT_ID_ACCEPT);
+	yytbl_data_init (yyacc_tbl, YYTD_ID_ACCEPT);
 	yyacc_tbl->td_lolen = k;
 	yyacc_tbl->td_data = yyacc_data =
 		(int32_t *) calloc (yyacc_tbl->td_lolen, sizeof (int32_t));
+    yyacc_curr=1;
 
 	for (i = 1; i <= lastdfa; ++i) {
 		mkdata (acc_array[i]);
-		yyacc_data[i] = acc_array[i];
+		yyacc_data[yyacc_curr++] = acc_array[i];
 
 		if (!reject && trace && acc_array[i])
 			fprintf (stderr, _("state # %d accepts: [%d]\n"),
@@ -1204,12 +1224,12 @@ void gentabs ()
 
 	/* Add entry for "jam" state. */
 	mkdata (acc_array[i]);
-	yyacc_data[i] = acc_array[i];
+	yyacc_data[yyacc_curr++] = acc_array[i];
 
 	if (reject) {
 		/* Add "cap" for the list. */
 		mkdata (acc_array[i]);
-		yyacc_data[i] = acc_array[i];
+		yyacc_data[yyacc_curr++] = acc_array[i];
 	}
 
 	dataend ();
@@ -1247,7 +1267,7 @@ void gentabs ()
 			(struct yytbl_data *) calloc (1,
 						      sizeof (struct
 							      yytbl_data));
-		yytbl_data_init (yymeta_tbl, YYT_ID_META);
+		yytbl_data_init (yymeta_tbl, YYTD_ID_META);
 		yymeta_tbl->td_lolen = numecs + 1;
 		yymeta_tbl->td_data = yymecs_data =
 			(int32_t *) calloc (yymeta_tbl->td_lolen,
@@ -1259,7 +1279,7 @@ void gentabs ()
 
 		out_str_dec (get_int32_decl (), "yy_meta", numecs + 1);
 		buf_prints (&yydmap_buf,
-			    "\t{YYT_ID_META, (void**)&yy_meta, sizeof(%s)},\n",
+			    "\t{YYTD_ID_META, (void**)&yy_meta, sizeof(%s)},\n",
 			    "int32_t");
 
 		for (i = 1; i <= numecs; ++i) {
@@ -1291,13 +1311,13 @@ void gentabs ()
 		     "yy_base", total_states + 1);
 
 	buf_prints (&yydmap_buf,
-		    "\t{YYT_ID_BASE, (void**)&yy_base, sizeof(%s)},\n",
+		    "\t{YYTD_ID_BASE, (void**)&yy_base, sizeof(%s)},\n",
 		    (tblend >= INT16_MAX
 		     || long_align) ? "int32_t" : "int16_t");
 	yybase_tbl =
 		(struct yytbl_data *) calloc (1,
 					      sizeof (struct yytbl_data));
-	yytbl_data_init (yybase_tbl, YYT_ID_BASE);
+	yytbl_data_init (yybase_tbl, YYTD_ID_BASE);
 	yybase_tbl->td_lolen = total_states + 1;
 	yybase_tbl->td_data = yybase_data =
 		(int32_t *) calloc (yybase_tbl->td_lolen,
@@ -1350,14 +1370,14 @@ void gentabs ()
 		     "yy_def", total_states + 1);
 
 	buf_prints (&yydmap_buf,
-		    "\t{YYT_ID_DEF, (void**)&yy_def, sizeof(%s)},\n",
+		    "\t{YYTD_ID_DEF, (void**)&yy_def, sizeof(%s)},\n",
 		    (total_states >= INT16_MAX
 		     || long_align) ? "int32_t" : "int16_t");
 
 	yydef_tbl =
 		(struct yytbl_data *) calloc (1,
 					      sizeof (struct yytbl_data));
-	yytbl_data_init (yydef_tbl, YYT_ID_DEF);
+	yytbl_data_init (yydef_tbl, YYTD_ID_DEF);
 	yydef_tbl->td_lolen = total_states + 1;
 	yydef_tbl->td_data = yydef_data =
 		(int32_t *) calloc (yydef_tbl->td_lolen, sizeof (int32_t));
@@ -1384,14 +1404,14 @@ void gentabs ()
 		     tblend + 1);
 
 	buf_prints (&yydmap_buf,
-		    "\t{YYT_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
+		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
 		    (total_states >= INT16_MAX
 		     || long_align) ? "int32_t" : "int16_t");
 
 	yynxt_tbl =
 		(struct yytbl_data *) calloc (1,
 					      sizeof (struct yytbl_data));
-	yytbl_data_init (yynxt_tbl, YYT_ID_NXT);
+	yytbl_data_init (yynxt_tbl, YYTD_ID_NXT);
 	yynxt_tbl->td_lolen = tblend + 1;
 	yynxt_tbl->td_data = yynxt_data =
 		(int32_t *) calloc (yynxt_tbl->td_lolen, sizeof (int32_t));
@@ -1423,14 +1443,14 @@ void gentabs ()
 		     tblend + 1);
 
 	buf_prints (&yydmap_buf,
-		    "\t{YYT_ID_CHK, (void**)&yy_chk, sizeof(%s)},\n",
+		    "\t{YYTD_ID_CHK, (void**)&yy_chk, sizeof(%s)},\n",
 		    (total_states >= INT16_MAX
 		     || long_align) ? "int32_t" : "int16_t");
 
 	yychk_tbl =
 		(struct yytbl_data *) calloc (1,
 					      sizeof (struct yytbl_data));
-	yytbl_data_init (yychk_tbl, YYT_ID_CHK);
+	yytbl_data_init (yychk_tbl, YYTD_ID_CHK);
 	yychk_tbl->td_lolen = tblend + 1;
 	yychk_tbl->td_data = yychk_data =
 		(int32_t *) calloc (yychk_tbl->td_lolen, sizeof (int32_t));
@@ -1684,7 +1704,7 @@ void make_tables ()
 		out_str_dec (get_state_decl (), "yy_NUL_trans",
 			     lastdfa + 1);
 		buf_prints (&yydmap_buf,
-			    "\t{YYT_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(%s)},\n",
+			    "\t{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(%s)},\n",
 			    (fullspd) ? "struct yy_trans_info*" :
 			    "int32_t");
 
@@ -1692,7 +1712,7 @@ void make_tables ()
 			(struct yytbl_data *) calloc (1,
 						      sizeof (struct
 							      yytbl_data));
-		yytbl_data_init (yynultrans_tbl, YYT_ID_NUL_TRANS);
+		yytbl_data_init (yynultrans_tbl, YYTD_ID_NUL_TRANS);
 		if (fullspd)
 			yynultrans_tbl->td_flags |= YYTD_PTRANS;
 		yynultrans_tbl->td_lolen = lastdfa + 1;

@@ -26,6 +26,7 @@ noinst_SCRIPTS = \
 	create-test
 
 SUBDIRS = \
+	test-reject \
 	test-bison-nr \
 	test-c++-basic \
 	test-posixly-correct \

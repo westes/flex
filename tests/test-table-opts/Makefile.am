@@ -63,7 +63,8 @@ sertables  := $(addsuffix .tables,$(sertests))
 alltables  := $(addsuffix .tables,$(alltests))
 
 EXTRA_DIST = scanner.l test.input
-CLEANFILES = scanner.c OUTPUT test-*.o test-*.c test-*.tables core $(alltests)
+CLEANFILES = scanner.c OUTPUT test-*.o test-*.c test-*.tables \
+             all-ser.tables core $(alltests)
 INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
 
 test: test-table-opts

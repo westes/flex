@@ -332,7 +332,7 @@ int yytbl_write8 (struct yytbl_writer *wr, uint8_t v)
  * @param tbl data table
  * @param i index into higher dimension array. i should be zero for one-dimensional arrays.
  * @param j index into lower dimension array.
- * @param k index into struct, must be 0 or 1. Only valid for YYT_ID_TRANSITION table
+ * @param k index into struct, must be 0 or 1. Only valid for YYTD_ID_TRANSITION table
  * @return data[i][j + k]
  */
 int32_t yytbl_data_getijk (const struct yytbl_data * tbl, int i, int j,
@@ -364,7 +364,7 @@ int32_t yytbl_data_getijk (const struct yytbl_data * tbl, int i, int j,
 }
 
 /** Extract data element [i] from array data tables treated as a single flat array of integers.
- * Be careful for 2-dimensional arrays or for YYT_ID_TRANSITION, which is an array
+ * Be careful for 2-dimensional arrays or for YYTD_ID_TRANSITION, which is an array
  * of structs. 
  * @param tbl data table
  * @param i index into array.
@@ -388,7 +388,7 @@ static int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i)
 }
 
 /** Set data element [i] in array data tables treated as a single flat array of integers.
- * Be careful for 2-dimensional arrays or for YYT_ID_TRANSITION, which is an array
+ * Be careful for 2-dimensional arrays or for YYTD_ID_TRANSITION, which is an array
  * of structs. 
  * @param tbl data table
  * @param i index into array.

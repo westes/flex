@@ -30,6 +30,7 @@
 %c-only
 /* begin standard C headers. */
 #include <stdio.h>
+#include <string.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -1823,9 +1824,7 @@ YY_EXTRA_TYPE yyget_extra  YYFARGS0(void)
 #ifndef YY_NO_GET_LINENO
 int yyget_lineno  YYFARGS0(void)
 {
-#ifdef YY_USE_LINENO
     return yylineno;
-#endif
 }
 #endif /* !YY_NO_GET_LINENO */
 
@@ -2207,7 +2206,7 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
      * inside the loop below. This scanner might not even have a transition
      * table, which is ok.
      */
-    transdmap = yytbl_dmap_lookup (dmap, YYT_ID_TRANSITION YY_CALL_LAST_ARG);
+    transdmap = yytbl_dmap_lookup (dmap, YYTD_ID_TRANSITION YY_CALL_LAST_ARG);
 
     if ((dmap = yytbl_dmap_lookup (dmap, td.td_id YY_CALL_LAST_ARG)) == NULL){
         yy_fatal_error("table id not found in map." /*TODO: not fatal.*/ YY_CALL_LAST_ARG);

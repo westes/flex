@@ -69,21 +69,22 @@ dnl  flex code (hence the name "_shared").
 #endif
 
 
-/** Possible values for t_id field. Each one corresponds to a
+/** Possible values for td_id field. Each one corresponds to a
  *  scanner table of the same name.
  */
 enum yytbl_id {
-	YYT_ID_ACCEPT = 0x01,		/**< 1-dim ints */
-	YYT_ID_BASE = 0x02,		/**< 1-dim ints */
-	YYT_ID_CHK = 0x03,		/**< 1-dim ints */
-	YYT_ID_DEF = 0x04,		/**< 1-dim ints */
-	YYT_ID_EC = 0x05,		/**< 1-dim ints */
-	YYT_ID_META = 0x06,		/**< 1-dim ints */
-	YYT_ID_NUL_TRANS = 0x07,	/**< 1-dim ints, maybe indices */
-	YYT_ID_NXT = 0x08,		/**< may be 2 dimensional ints */
-	YYT_ID_RULE_CAN_MATCH_EOL = 0x09, /**< 1-dim ints */
-	YYT_ID_START_STATE_LIST = 0x0A,	/**< 1-dim indices into trans tbl  */
-	YYT_ID_TRANSITION = 0x0B	/**< structs */
+	YYTD_ID_ACCEPT = 0x01,		/**< 1-dim ints */
+	YYTD_ID_BASE = 0x02,		/**< 1-dim ints */
+	YYTD_ID_CHK = 0x03,		/**< 1-dim ints */
+	YYTD_ID_DEF = 0x04,		/**< 1-dim ints */
+	YYTD_ID_EC = 0x05,		/**< 1-dim ints */
+	YYTD_ID_META = 0x06,		/**< 1-dim ints */
+	YYTD_ID_NUL_TRANS = 0x07,	/**< 1-dim ints, maybe indices */
+	YYTD_ID_NXT = 0x08,		/**< may be 2 dimensional ints */
+	YYTD_ID_RULE_CAN_MATCH_EOL = 0x09, /**< 1-dim ints */
+	YYTD_ID_START_STATE_LIST = 0x0A,	/**< 1-dim indices into trans tbl  */
+	YYTD_ID_TRANSITION = 0x0B,	/**< structs */
+	YYTD_ID_ACCLIST = 0x0C		/**< 1-dim ints */
 };
 
 /** bit flags for t_flags field of struct yytbl_data */

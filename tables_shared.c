@@ -64,7 +64,7 @@ yyskel_static int32_t yytbl_calc_total_len (const struct yytbl_data *tbl)
 	if (tbl->td_hilen > 0)
 		n *= tbl->td_hilen;
 
-	if (tbl->td_id == YYT_ID_TRANSITION)
+	if (tbl->td_id == YYTD_ID_TRANSITION)
 		n *= 2;
 	return n;
 }
