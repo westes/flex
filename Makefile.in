@@ -226,6 +226,7 @@ dist2:
 	tar chf $(DIST_NAME).tar $(DIST_NAME)
 	compress <$(DIST_NAME).tar >$(DIST_NAME).tar.Z
 	gzip <$(DIST_NAME).tar >$(DIST_NAME).tar.gz
+	@rm $(DIST_NAME).tar
 
 Makefile: Makefile.in config.status
 	$(SHELL) config.status
