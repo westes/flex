@@ -235,7 +235,7 @@ static void yy_pop_state YY_PROTO(( void ));
 static int yy_top_state YY_PROTO(( void ));
 %*
 
-#ifdef yytext_ptr
+#ifndef yytext_ptr
 static void yy_flex_strcpy YY_PROTO(( char *, const char * ));
 #endif
 
@@ -1169,7 +1169,7 @@ void yyFlexLexer::LexerError( const char msg[] )
 
 /* Internal utility routines. */
 
-#ifdef yytext_ptr
+#ifndef yytext_ptr
 #ifdef YY_USE_PROTOS
 static void yy_flex_strcpy( char *s1, const char *s2 )
 #else
