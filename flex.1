@@ -1785,7 +1785,20 @@ following would do the trick:
 .fi
 where
 .I ctr
-is an array to hold the counts for the different rules.
+is an array to hold the counts for the different rules.  Note that
+the macro
+.B YY_NUM_RULES
+gives the total number of rules (including the default rule, even if
+you use
+.B \-s),
+so a correct declaration for
+.I ctr
+is:
+.nf
+
+    int ctr[YY_NUM_RULES];
+
+.fi
 .PP
 The macro
 .B YY_USER_INIT
