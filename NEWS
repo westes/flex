@@ -1,4 +1,4 @@
-Changes between 2.3 Patch #4 (03Aug90) and 2.3 Patch #3:
+Changes between 2.3 Patch #4 (14Aug90) and 2.3 Patch #3:
 
 	- Fixed bug in hexadecimal escapes which allowed only digits,
 	  not letters, in escapes
