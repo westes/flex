@@ -68,6 +68,10 @@
 
 ** merge yylineno into support for location tracking
 
+** bug where yylineno is not decremented on REJECT
+
+** bug where yylineno is counted in trailing context
+
 * C++
 
 ** have a separate skeleton for c++
