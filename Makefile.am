@@ -86,7 +86,7 @@ EXTRA_DIST = \
 	TODO \
 	autogen.sh \
 	flex.skl \
-	mkskel.sh \
+	mkskel.sh
 
 BUILT_SOURCES = \
 	skel.c
