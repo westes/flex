@@ -1472,7 +1472,7 @@ int yyFlexLexer::yy_get_next_buffer()
 					/* Reset buffer status. */
 					yyrestart( yyin YY_CALL_LAST_ARG);
 
-					/* fall through */
+					/*FALLTHROUGH*/
 
 				case EOB_ACT_END_OF_FILE:
 					{
