@@ -3,6 +3,12 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* after version 2.5.27
+
+** Fixed trailing slash bug in YY_INPUT macro def
+
+** Flex now warns if always-interactive is specified with fast or full
+
 * version 2.5.27 released 2003-1-21
 
 ** flex now works with recent bison versions
