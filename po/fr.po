@@ -1,19 +1,21 @@
 # Messages français pour Flex.
-# Copyright © 1996 Free Software Foundation, Inc.
-# Dominique Boucher <boucherd@IRO.UMontreal.CA>, 1996.
-# Marc Baudoin <babafou@ensta.fr>, 1996, traducteur jusqu'en mars 2002
+# Copyright © 2004 Free Software Foundation, Inc.
 # Michel Robitaille <robitail@IRO.UMontreal.CA>, traducteur depuis/since 1996, depuis mars 2002 pour flex.
+#
+# Marc Baudoin <babafou@ensta.fr>, 1996, traducteur jusqu'en mars 2002
+# Dominique Boucher <boucherd@IRO.UMontreal.CA>, 1996.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.31\n"
 "POT-Creation-Date: 2003-04-01 11:33-0500\n"
-"PO-Revision-Date: 2003-11-07 08:00-0500\n"
+"PO-Revision-Date: 2004-05-10 08:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: dfa.c:61
 #, c-format
