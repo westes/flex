@@ -65,7 +65,7 @@ int yylex()
 	{
 	if ( beglin )
 	    {
-	    fprintf( stderr, "%d\t", accnum + 1 );
+	    fprintf( stderr, "%d\t", num_rules + 1 );
 	    beglin = 0;
 	    }
 
