@@ -988,7 +988,7 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 		}
 
 	if ( fullspd )
-		outn( "typedef const struct yy_trans_info *yy_state_type;" );
+		outn( "typedef yyconst struct yy_trans_info *yy_state_type;" );
 	else if ( ! C_plus_plus )
 		outn( "typedef int yy_state_type;" );
 
