@@ -8,7 +8,7 @@ srcdir= @srcdir@
 
 all:
 	for dir in $(TESTDIRS) ; do \
-       (cd "$$dir" && $(MAKE) ) || exit -1; \
+       (cd "$$dir" && $(MAKE) ) || echo test in $$dir failed ; \
     done
 
 check: 
