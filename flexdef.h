@@ -30,24 +30,35 @@
 #include <stdio.h>
 #endif
 
+#ifdef FLEX_8_BIT_CHARS
+#define CSIZE 255
+#define Char unsigned char
+#else
+#define Char char
+#endif
+
+
 #ifdef SYS_V
 #include <string.h>
 
 #ifdef AMIGA
-#define bzero(s, n) setmem((char *)(s), (unsigned)(n), '\0')
+#define bzero(s, n) setmem((char *)(s), n, '\0')
 #define abs(x) ((x) < 0 ? -(x) : (x))
 #else
-#define bzero(s, n) memset((char *)(s), '\0', (unsigned)(n))
+#define bzero(s, n) memset((char *)(s), '\0', n)
 #endif
 
 #ifndef VMS
+#ifndef SYS_V
+/* System V systems should already declare memset as returning void* */
 char *memset();
+#endif
 #else
 /* memset is needed for old versions of the VMS C runtime library */
 #define memset(s, c, n) \
 	{ \
 	register char *t = s; \
-	register unsigned int m = n; \
+	register int m = n; \
 	while ( m-- > 0 ) \
 	    *t++ = c; \
 	}
@@ -125,22 +136,6 @@ char *sprintf(); /* keep lint happy */
 #define INITIAL_MAX_DFA_SIZE 750
 #define MAX_DFA_SIZE_INCREMENT 750
 
-/* array names to be used in generated machine.  They're short because
- * we write out one data statement (which names the array) for each element
- * in the array.
- */
-
-/* points to list of rules accepted for a state */
-#define ALIST "yy_accept"
-#define ACCEPT "yy_acclist"	/* list of rules accepted for a state */
-#define ECARRAY "yy_ec"	/* maps input characters to equivalence classes */
-/* maps equivalence classes to meta-equivalence classes */
-#define MATCHARRAY "yy_meta"
-#define BASEARRAY "yy_base"	/* "base" array */
-#define DEFARRAY "yy_def"	/* "default" array */
-#define NEXTARRAY "yy_nxt"	/* "next" array */
-#define CHECKARRAY "yy_chk"	/* "check" array */
-
 
 /* a note on the following masks.  They are used to mark accepting numbers
  * as being special.  As such, they implicitly limit the number of accepting
@@ -171,7 +166,9 @@ char *sprintf(); /* keep lint happy */
 #define INFINITY -1	/* for x{5,} constructions */
 
 /* size of input alphabet - should be size of ASCII set */
+#ifndef CSIZE
 #define CSIZE 127
+#endif
 
 #define INITIAL_MAX_CCLS 100	/* max number of unique character classes */
 #define MAX_CCLS_INCREMENT 100
@@ -325,29 +322,31 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * spprdflt - if true (-s), suppress the default rule
  * interactive - if true (-I), generate an interactive scanner
  * caseins - if true (-i), generate a case-insensitive scanner
- * useecs - if true (-ce flag), use equivalence classes
- * fulltbl - if true (-cf flag), don't compress the DFA state table
- * usemecs - if true (-cm flag), use meta-equivalence classes
+ * useecs - if true (-Ce flag), use equivalence classes
+ * fulltbl - if true (-Cf flag), don't compress the DFA state table
+ * usemecs - if true (-Cm flag), use meta-equivalence classes
  * fullspd - if true (-F flag), use Jacobson method of table representation
  * gen_line_dirs - if true (i.e., no -L flag), generate #line directives
  * performance_report - if true (i.e., -p flag), generate a report relating
  *   to scanner performance
  * backtrack_report - if true (i.e., -b flag), generate "lex.backtrack" file
  *   listing backtracking states
+ * csize - size of character set for the scanner we're generating;
+ *   127 for 7-bit chars and 255 for 8-bit
  * yymore_used - if true, yymore() is used in input rules
  * reject - if true, generate backtracking tables for REJECT macro
  * real_reject - if true, scanner really uses REJECT (as opposed to just
- *               having "reject" set for variable trailing context)
+ *   having "reject" set for variable trailing context)
  * continued_action - true if this rule's action is to "fall through" to
- *                    the next rule's action (i.e., the '|' action)
+ *   the next rule's action (i.e., the '|' action)
  * yymore_really_used - has a REALLY_xxx value indicating whether a
- *                      %used or %notused was used with yymore()
+ *   %used or %notused was used with yymore()
  * reject_really_used - same for REJECT
  */
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
 extern int interactive, caseins, useecs, fulltbl, usemecs;
-extern int fullspd, gen_line_dirs, performance_report, backtrack_report;
+extern int fullspd, gen_line_dirs, performance_report, backtrack_report, csize;
 extern int yymore_used, reject, real_reject, continued_action;
 
 #define REALLY_NOT_DETERMINED 0
@@ -360,19 +359,25 @@ extern int yymore_really_used, reject_really_used;
  * datapos - characters on current output line
  * dataline - number of contiguous lines of data in current data
  *    statement.  Used to generate readable -f output
+ * linenum - current input line number
  * skelfile - the skeleton file
  * yyin - input file
  * temp_action_file - temporary file to hold actions
  * backtrack_file - file to summarize backtracking states to
- * action_file_name - name of the temporary file
  * infilename - name of input file
- * linenum - current input line number
+ * action_file_name - name of the temporary file
+ * input_files - array holding names of input files
+ * num_input_files - size of input_files array
+ * program_name - name with which program was invoked 
  */
 
 extern int datapos, dataline, linenum;
 extern FILE *skelfile, *yyin, *temp_action_file, *backtrack_file;
 extern char *infilename;
-extern char action_file_name[];
+extern char *action_file_name;
+extern char **input_files;
+extern int num_input_files;
+extern char *program_name;
 
 
 /* variables for stack of states having only one out-transition:
@@ -461,10 +466,14 @@ extern int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
  *   templates)
  * tecfwd - forward link of meta-equivalence classes members
  * tecbck - backward link of MEC's
+ * xlation - maps character codes to their translations, or nil if no %t table
+ * num_xlations - number of different xlation values
  */
 
 extern int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs;
 extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
+extern int *xlation;
+extern int num_xlations;
 
 
 /* variables for start conditions:
@@ -537,7 +546,7 @@ extern int end_of_buffer_state;
 
 extern int lastccl, current_maxccls, *cclmap, *ccllen, *cclng, cclreuse;
 extern int current_max_ccl_tbl_size;
-extern char *ccltbl;
+extern Char *ccltbl;
 
 
 /* variables for miscellaneous information:
@@ -594,10 +603,11 @@ char *allocate_array(), *reallocate_array();
 #define reallocate_dfaacc_union(array, size) \
 	(union dfaacc_union *)  reallocate_array( (char *) array, size, sizeof( union dfaacc_union ) )
 
-#define allocate_character_array(size) allocate_array( size, sizeof( char ) )
+#define allocate_character_array(size) \
+	(Char *) allocate_array( size, sizeof( Char ) )
 
 #define reallocate_character_array(array,size) \
-	reallocate_array( array, size, sizeof( char ) )
+	(Char *) reallocate_array( (char *) array, size, sizeof( Char ) )
 
 
 /* used to communicate between scanner and parser.  The type should really
