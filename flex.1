@@ -3,7 +3,8 @@
 flex \- fast lexical analyzer generator
 .SH SYNOPSIS
 .B flex
-.B [\-bcdfhilnpstvwBFILTV78+ \-C[aefFmr] \-ooutput \-Pprefix \-Sskeleton]
+.B [\-bcdfhilnpstvwBFILTV78+? \-C[aefFmr] \-ooutput \-Pprefix \-Sskeleton]
+.B [\-\-help \-\-version]
 .I [filename ...]
 .SH OVERVIEW
 This manual describes
@@ -1766,11 +1767,25 @@ An example:
 .fi
 .SH MISCELLANEOUS MACROS
 The macro
-.bd
-YY_USER_ACTION
+.B YY_USER_ACTION
 can be defined to provide an action
 which is always executed prior to the matched rule's action.  For example,
 it could be #define'd to call a routine to convert yytext to lower-case.
+When
+.B YY_USER_ACTION
+is invoked, the variable
+.I yy_act
+gives the number of the matched rule (rules are numbered starting with 1).
+Suppose you want to profile how often each of your rules is matched.  The
+following would do the trick:
+.nf
+
+    #define YY_USER_ACTION ++ctr[yy_act]
+
+.fi
+where
+.I ctr
+is an array to hold the counts for the different rules.
 .PP
 The macro
 .B YY_USER_INIT
@@ -2010,6 +2025,11 @@ generates a "help" summary of
 options to
 .I stderr 
 and then exits.
+.B \-?
+and
+.B \-\-help
+are synonyms for
+.B \-h.
 .TP
 .B \-i
 instructs
@@ -2232,6 +2252,9 @@ finite automata.  This option is mostly for use in maintaining
 prints the version number to
 .I stderr
 and exits.
+.B \-\-version
+is a synonym for
+.B \-V.
 .TP
 .B \-7
 instructs
@@ -3721,6 +3744,12 @@ O'Reilly and Associates.  Be sure to get the 2nd edition.
 .PP
 M. E. Lesk and E. Schmidt,
 .I LEX \- Lexical Analyzer Generator
+.PP
+Alfred Aho, Ravi Sethi and Jeffrey Ullman,
+.I Compilers: Principles, Techniques and Tools,
+Addison-Wesley (1986).  Describes the pattern-matching techniques used by
+.I flex
+(deterministic finite automata).
 .SH AUTHOR
 Vern Paxson, with the help of many ideas and much inspiration from
 Van Jacobson.  Original version by Jef Poskanzer.  The fast table
@@ -3738,7 +3767,7 @@ Brian Clapper, J.T. Conklin,
 Jason Coughlin, Bill Cox, Dave Curtis, Scott David
 Daniels, Chris G. Demetriou, Theo Deraadt,
 Mike Donahue, Chuck Doucette, Tom Epperly, Leo Eskin,
-Chris Faylor, Jon Forrest, Kaveh R. Ghazi,
+Chris Faylor, Chris Flatters, Jon Forrest, Kaveh R. Ghazi,
 Eric Goldman, Christopher M. Gould, Ulrich Grepel, Peer Griebel,
 Jan Hajic, Charles Hemphill, NORO Hideo,
 Jarkko Hietaniemi, Scott Hofmann,

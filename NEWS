@@ -1,4 +1,4 @@
-Changes between release 2.5.0.2 (28Dec94) and release 2.4.7:
+Changes between release 2.5.0.4 (09Jan95) and release 2.4.7:
 
 	- A new concept of "start condition" scope has been introduced.
 	  A start condition scope is begun with:
@@ -23,6 +23,10 @@ Changes between release 2.5.0.2 (28Dec94) and release 2.4.7:
 		<ESC>"\\r"	return '\r';
 		<ESC>"\\f"	return '\f';
 		<ESC>"\\0"	return '\0';
+
+	  As indicated in this example, rules inside start condition scopes
+	  (and any rule, actually, other than the first) can be indented,
+	  to better show the extent of the scope.
 
 	  Start condition scopes may be nested.
 
@@ -282,11 +286,18 @@ Changes between release 2.5.0.2 (28Dec94) and release 2.4.7:
 	- Scanners generated using -l lex compatibility now have the symbol
 	  YY_FLEX_LEX_COMPAT #define'd.
 
+	- You can now use "#line" directives in the first section of your
+	  scanner specification.
+
 	- Improved support for MS-DOS.
 
 	- Documentation now clarifies that start conditions persist across
 	  switches to new input files or different input buffers.  If you
 	  want to e.g., return to INITIAL, you must explicitly do so.
+
+	- Documented the "yy_act" variable, which when YY_USER_ACTION is
+	  invoked holds the number of the matched rule, and added an
+	  example of using yy_act to profile how often each rule is matched.
 
 	- Documentation now clarifies that you can pass a nil FILE* pointer
 	  to yy_create_buffer() or yyrestart() if you've arrange YY_INPUT
