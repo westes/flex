@@ -1,9 +1,6 @@
 # @(#) $Header$ (LBL)
 
-# If your version of "make" does not define $(MAKE), comment in the
-# definition of "MAKE" below.  (You only need to do this if you intend
-# to do "make bigcheck" or "make dist".)
-# MAKE = make
+@SET_MAKE@
 
 # Possible values for DEFS:
 #
@@ -16,6 +13,7 @@
 # additional info.
 
 CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
 DEFS = @DEFS@
 LDFLAGS = 
 LIBS = @LIBS@
@@ -28,16 +26,18 @@ LIBS = @LIBS@
 # Raw, unformatted troff source will be installed if INSTALLMAN=man,
 # nroff preformatted versions will be installed if INSTALLMAN=cat.
 
-prefix = /usr/local
-exec_prefix = $(prefix)
+prefix = @prefix@
+exec_prefix = @exec_prefix@
 bindir = $(exec_prefix)/bin
 libdir = $(exec_prefix)/lib
 includedir = $(prefix)/include
 manext = 1
 mandir = $(prefix)/man/man$(manext)
 
-# You can define this to be "lex" if you want to replace lex at your site.
+# You can define these to be "lex" and "libl.a" if you want to replace
+# lex at your site.
 FLEX = flex
+FLEXLIB = libfl.a
 
 INSTALLMAN = man
 
@@ -87,8 +87,6 @@ FLEX_EXEC = ./$(FLEX)
 FLEX_FLAGS = -t $(PERF_REPORT)
 COMPRESSION =
 PERF_REPORT = -p
-
-FLEXLIB = libfl.a
 
 
 all: $(FLEX)
@@ -151,6 +149,7 @@ bigcheck:
 	rm -f scan.c ; $(MAKE) COMPRESSION="-C" check
 	rm -f scan.c ; $(MAKE) COMPRESSION="-Ce" check
 	rm -f scan.c ; $(MAKE) COMPRESSION="-Cm" check
+	rm -f scan.c ; $(MAKE) COMPRESSION="-f" check
 	rm -f scan.c ; $(MAKE) COMPRESSION="-Cfea" check
 	rm -f scan.c ; $(MAKE) COMPRESSION="-CFer" check
 	rm -f scan.c ; $(MAKE) COMPRESSION="-l" PERF_REPORT="" check
@@ -162,14 +161,14 @@ $(FLEXLIB): $(LIBOBJS)
 	-$(RANLIB) $(FLEXLIB)
 
 $(FLEX).man: flex.1
-	cd $(srcdir); nroff -man flex.1 >$(FLEX).man
+	cd $(srcdir) && nroff -man flex.1 >$(FLEX).man
 
 install: $(FLEX) $(FLEXLIB) installdirs install.$(INSTALLMAN)
 	$(INSTALL_PROGRAM) $(FLEX) $(bindir)/$(FLEX)
 	@rm -f $(bindir)/$(FLEX)++
-	cd $(bindir); $(LN_S) $(FLEX) $(FLEX)++
+	cd $(bindir) && $(LN_S) $(FLEX) $(FLEX)++
 	$(INSTALL_DATA) $(FLEXLIB) $(libdir)/libfl.a
-	-cd $(libdir); $(RANLIB) libfl.a
+	-cd $(libdir) && $(RANLIB) libfl.a
 	$(INSTALL_DATA) $(srcdir)/FlexLexer.h $(includedir)/FlexLexer.h
 
 # Note, the following rules delete any vestigial flexdoc installed
@@ -208,7 +207,8 @@ mostlyclean:
 	rm -f a.out *.bak core errs scan.tmp
 
 clean: mostlyclean
-	rm -f parse.c parse.h *.o alloca.c *.lint lex.yy.c lex.yy.cc $(FLEXLIB)
+	rm -f flex parse.c parse.h *.o alloca.c *.lint lex.yy.c lex.yy.cc \
+		$(FLEXLIB) config.log config.cache
 
 distclean: clean
 	rm -f .bootstrap $(FLEX) scan.c tags TAGS Makefile config.status \
@@ -226,7 +226,7 @@ dist2:
 	@rm -rf $(DIST_NAME)
 	@rm -f $(DIST_NAME).tar $(DIST_NAME).tar.Z $(DIST_NAME).tar.gz
 	@mkdir $(DIST_NAME)
-	tar cf - $(DISTFILES) | (cd $(DIST_NAME); tar xfB -)
+	tar cf - $(DISTFILES) | (cd $(DIST_NAME) && tar xfB -)
 	@mv $(DIST_NAME)/scan.c $(DIST_NAME)/initscan.c
 	@chmod 444 $(DIST_NAME)/initscan.c
 	@chmod +w $(DIST_NAME)/Makefile.in
@@ -237,13 +237,24 @@ dist2:
 	gzip <$(DIST_NAME).tar >$(DIST_NAME).tar.gz
 	@rm $(DIST_NAME).tar
 
+# For an explanation of the following Makefile rules, see node
+# `Automatic Remaking' in GNU Autoconf documentation.
 Makefile: $(srcdir)/Makefile.in config.status
-	$(SHELL) config.status
+	CONFIG_FILES=$@ CONFIG_HEADERS= ./config.status
 config.status: configure
-	$(SHELL) config.status --recheck
+	./config.status --recheck
 configure: configure.in
-	cd $(srcdir); autoconf
-config.h: conf.in config.status
+	cd $(srcdir) && autoconf
+config.h: stamp-h
+stamp-h: conf.in config.status
+	CONFIG_FILES= CONFIG_HEADERS=config.h:conf.in ./config.status
+	echo timestamp >stamp-h
+# conf.in: stamp-h.in
+# stamp-h.in: configure.in acconfig.h
+# 	cd $(srcdir) && autoheader
+# 	config.h.in conf.in
+# 	cho timestamp > $(srcdir)/stamp-h.in
 
-# Prevent GNU make v3 from overflowing arg limit on SysV.
+# Tell versions [3.59,3.63) of GNU make not to export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
