@@ -1,6 +1,7 @@
 /* parse.y - parser for flex input */
 
 %token CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
+%token OPTION_OP OPT_OUTFILE OPT_PREFIX
 
 %{
 /*-
@@ -65,6 +66,7 @@ int *scon_stk;
 int scon_stk_ptr, max_scon_stk;
 
 Char clower();
+char *copy_string();
 void build_eof_action();
 void yyerror();
 
@@ -120,6 +122,7 @@ initlex		:
 		;
 
 sect1		:  sect1 startconddecl namelist1
+		|  sect1 options
 		|
 		|  error
 			{ synerr( "unknown error processing section 1" ); }
@@ -127,6 +130,7 @@ sect1		:  sect1 startconddecl namelist1
 
 sect1end	:  SECTEND
 			{
+			check_options();
 			scon_stk = allocate_integer_array( lastsc + 1 );
 			scon_stk_ptr = 0;
 			}
@@ -147,6 +151,22 @@ namelist1	:  namelist1 NAME
 
 		|  error
 			{ synerr( "bad start condition list" ); }
+		;
+
+options		:  OPTION_OP optionlist
+		;
+
+optionlist	:  optionlist option
+		|
+		;
+
+option		:  OPT_OUTFILE '=' NAME
+			{
+			outfilename = copy_string( nmstr );
+			did_outfilename = 1;
+			}
+		|  OPT_PREFIX '=' NAME
+			{ prefix = copy_string( nmstr ); }
 		;
 
 sect2		:  sect2 scon initforrule flexrule '\n'

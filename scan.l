@@ -60,8 +60,8 @@
 %}
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
-%x FIRSTCCL CCL ACTION RECOVER BRACEERROR COMMENT ACTION_STRING
-%x PERCENT_BRACE_ACTION USED_LIST
+%x FIRSTCCL CCL ACTION RECOVER COMMENT ACTION_STRING PERCENT_BRACE_ACTION
+%x OPTION
 
 WS		[ \t]+
 OPTWS		[ \t]*
@@ -82,6 +82,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 %%
 	static int bracelevel, didadef, indented_code, checking_used;
 	static int doing_rule_action = false;
+	static int option_sense;
 
 	int doing_codeblock = false;
 	int i;
@@ -111,34 +112,14 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 			return SECTEND;
 			}
 
-	^"%pointer".*{NL}	{
-			if ( lex_compat )
-				warn( "%pointer incompatible with -l option" );
-			else
-				yytext_is_array = false;
-			++linenum;
-			}
-	^"%array".*{NL}	{
-			if ( C_plus_plus )
-				warn( "%array incompatible with -+ option" );
-			else
-				yytext_is_array = true;
-			++linenum;
-			}
+	^"%pointer".*{NL}	yytext_is_array = false; ++linenum;
+	^"%array".*{NL}		yytext_is_array = true; ++linenum;
 
-	^"%used"	{
-			warn( "%used/%unused have been deprecated" );
-			checking_used = REALLY_USED; BEGIN(USED_LIST);
-			}
-	^"%unused"	{
-			warn( "%used/%unused have been deprecated" );
-			checking_used = REALLY_NOT_USED; BEGIN(USED_LIST);
-			}
-
+	^"%option"	BEGIN(OPTION); return OPTION_OP;
 
 	^"%"[aceknopr]{OPTWS}[0-9]*{OPTWS}{NL}	++linenum;	/* ignore */
 
-	^"%"[^sxanpekotcru{}].*	synerr( "unrecognized '%' directive" );
+	^"%"[^sxaceknopr{}].*	synerr( "unrecognized '%' directive" );
 
 	^{NAME}		{
 			strcpy( nmstr, yytext );
@@ -199,26 +180,66 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 			}
 }
 
-<RECOVER>.*{NL}		++linenum; BEGIN(INITIAL); RETURNNAME;
 
+<OPTION>{
+	{NL}		++linenum; BEGIN(INITIAL);
+	{WS}		option_sense = true;
 
-<USED_LIST>{NL}		++linenum; BEGIN(INITIAL);
-<USED_LIST>{WS}
-<USED_LIST>"reject"	{
-			if ( all_upper( yytext ) )
-				reject_really_used = checking_used;
-			else
-				synerr(
-				"unrecognized %used/%unused construct" );
+	"="		return '=';
+
+	no		option_sense = ! option_sense;
+
+	7bit		csize = option_sense ? 128 : 256;
+	8bit		csize = option_sense ? 256 : 128;
+
+	align		long_align = option_sense;
+	array		yytext_is_array = option_sense;
+	backup		backing_up_report = option_sense;
+	batch		interactive = ! option_sense;
+	"c++"		C_plus_plus = option_sense;
+	caseful|case-sensitive		caseins = ! option_sense;
+	caseless|case-insensitive	caseins = option_sense;
+	debug		ddebug = option_sense;
+	default		spprdflt = ! option_sense;
+	ecs		useecs = option_sense;
+	fast		{
+			useecs = usemecs = false;
+			use_read = fullspd = true;
 			}
-<USED_LIST>"yymore"	{
-			if ( all_lower( yytext ) )
-				yymore_really_used = checking_used;
-			else
-				synerr(
-				"unrecognized %used/%unused construct" );
+	full		{
+			useecs = usemecs = false;
+			use_read = fulltbl = true;
 			}
-<USED_LIST>{NOT_WS}+	synerr( "unrecognized %used/%unused construct" );
+	interactive	interactive = option_sense;
+	lex-compat	lex_compat = option_sense;
+	meta-ecs	usemecs = option_sense;
+	perf-report	performance_report += option_sense ? 1 : -1;
+	pointer		yytext_is_array = ! option_sense;
+	read		use_read = option_sense;
+	reject		reject_really_used = option_sense;
+	stack		action_define( "YY_STACK_USED", option_sense );
+	stdout		use_stdout = option_sense;
+	unput		action_define( "YY_UNPUT_USED", option_sense );
+	verbose		printstats = option_sense;
+	warn		nowarn = ! option_sense;
+	yymore		yymore_really_used = option_sense;
+
+	outfile		return OPT_OUTFILE;
+	prefix		return OPT_PREFIX;
+
+	\"[^"\n]*\"	{
+			strcpy( nmstr, yytext + 1 );
+			nmstr[strlen( nmstr ) - 1] = '\0';
+			return NAME;
+			}
+
+	(([a-mo-z]|n[a-np-z])[a-z\-+]*)|.	{
+			format_synerr( "unrecognized %%option: %s", yytext );
+			BEGIN(RECOVER);
+			}
+}
+
+<RECOVER>.*{NL}		++linenum; BEGIN(INITIAL);
 
 
 <SECT2PROLOG>{
@@ -461,12 +482,6 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 			++linenum;
 			return '}';
 			}
-}
-
-
-<BRACEERROR>{
-	"}"		synerr( "bad name in {}'s" ); BEGIN(SECT2);
-	{NL}		synerr( "missing }" ); ++linenum; BEGIN(SECT2);
 }
 
 
