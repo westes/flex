@@ -1,4 +1,4 @@
-Changes between 2.3 (full) release of 26May90 and 2.2 (alpha) release:
+Changes between 2.3 (full) release of 28Jun90 and 2.2 (alpha) release:
 
     User-visible:
 
@@ -22,22 +22,44 @@ Changes between 2.3 (full) release of 26May90 and 2.2 (alpha) release:
 	  now work, but have been deprecated (in anticipation of making
 	  flex recognize #line directives).
 
-	- It is now documented that flex interprets "^foo|bar" differently
-	  from lex.  flex interprets it as "match either a 'foo' or a 'bar',
-	  providing it comes at the beginning of a line", whereas lex
-	  interprets it as "match either a 'foo' at the beginning of a line,
-	  or a 'bar' anywhere".
-
-	- It is now documented that flex initializes the global "yyin" on
-	  the first call to the scanner, while lex initializes it at
-	  compile-time.
-
-	- It is now documented that yy_switch_to_buffer() can be used
-	  in the yywrap() macro/routine.
-
 	- The funky restrictions on when semi-colons could follow the
 	  YY_NEW_FILE and yyless macros have been removed.  They now
 	  behave identically to functions.
+
+	- A bug in the sample redefinition of YY_INPUT in the documentation
+	  has been corrected.
+
+	- A bug in the sample simple tokener in the documentation has
+	  been corrected.
+
+	- The documentation on the incompatibilities between flex and
+	  lex has been reordered so that the discussion of yylineno
+	  and input() come first, as it's anticipated that these will
+	  be the most common source of headaches.
+
+
+    Things which didn't used to be documented but now are:
+
+	- flex interprets "^foo|bar" differently from lex.  flex interprets
+	  it as "match either a 'foo' or a 'bar', providing it comes at the
+	  beginning of a line", whereas lex interprets it as "match either
+	  a 'foo' at the beginning of a line, or a 'bar' anywhere".
+
+	- flex initializes the global "yyin" on the first call to the
+	  scanner, while lex initializes it at compile-time.
+
+	- yy_switch_to_buffer() can be used in the yywrap() macro/routine.
+
+	- flex scanners do not use stdio for their input, and hence when
+	  writing an interactive scanner one must explictly call fflush()
+	  after writing out a prompt.
+
+	- flex scanner can be made reentrant (after a fashion) by using
+	  "yyrestart( yyin );".  This is useful for interactive scanners
+	  which have interrupt handlers that long-jump out of the scanner.
+
+	- a defense of why yylineno is not supported is included, along
+	  with a suggestion on how to convert scanners which rely on it.
 
 
     Other changes:
@@ -55,6 +77,9 @@ Changes between 2.3 (full) release of 26May90 and 2.2 (alpha) release:
 	- Makefile has been further parameterized to aid in porting.
 
 	- Support for SCO Unix added.
+
+	- Flex now sports the latest & greatest UC copyright notice
+	  (which is only slightly different from the previous one).
 
 	- A note has been added to flexdoc.1 mentioning work in progress
 	  on modifying flex to generate straight C code rather than a
