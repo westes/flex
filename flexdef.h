@@ -390,7 +390,7 @@ extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
 /*
  * tablesext - if true, create external tables
- * tablestoggle - if true, then output extneral tables code
+ * tablestoggle - if true, output external tables code while processing skel
  * tablesfilename - filename for external tables
  * tablesout - FILE stream for external tables
  */
@@ -1094,5 +1094,8 @@ extern char* chomp(char* str);
 
 /* Tables serialization API declarations. */
 #include "tables_shared.h"
+struct yytbl_data * yytbl_data_create (enum yytbl_id id);
+struct yytbl_data *mkftbl (void);
+
 
 #endif /* not defined FLEXDEF_H */

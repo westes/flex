@@ -426,6 +426,36 @@ void gen_find_action()
 		}
 	}
 
+/* mkftbl - make the full table and return the struct */
+
+struct yytbl_data *mkftbl (void)
+{
+	register int i;
+	int     end_of_buffer_action = num_rules + 1;
+	struct yytbl_data *tbl;	
+	int32_t *tdata = 0;
+
+	tbl = yytbl_data_create (YYT_ID_ACCEPT);
+	tbl->t_flags |= YYT_DATA32;
+	tbl->t_hilen = 0;			/* it's a one-dimensional array */
+	tbl->t_lolen = lastdfa + 1;
+
+	tbl->t_data = tdata = (int32_t *) calloc (tbl->t_lolen, sizeof(int32_t));
+
+	dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
+
+	for (i = 1; i <= lastdfa; ++i) {
+		register int anum = dfaacc[i].dfaacc_state;
+
+		tdata[i] = anum;
+
+		if (trace && anum)
+			fprintf (stderr, _("state # %d accepts: [%d]\n"), i, anum);
+	}
+
+	return tbl;
+}
+
 
 /* genftbl - generate full transition table */
 
@@ -1137,6 +1167,8 @@ void make_tables()
 
 	skelout(); /* %% [4.0] - break point in skel */
 
+
+    /* This is where we REALLY begin generating the tables. */
 
 	out_dec( "#define YY_NUM_RULES %d\n", num_rules );
 	out_dec( "#define YY_END_OF_BUFFER %d\n", num_rules + 1 );

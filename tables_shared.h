@@ -72,9 +72,9 @@ enum yytbl_id
 /** bit flags for t_flags field of struct yytbl_data */
 enum yytbl_flags
 {
-    YYT_DATA8  = 0x01,      /**< data is an array of type int8 */
-    YYT_DATA16 = 0x02,      /**< data is an array of type int16 */
-    YYT_DATA32 = 0x04,      /**< data is an array of type int32 */
+    YYT_DATA8  = 0x01,      /**< data is an array of type int8_t */
+    YYT_DATA16 = 0x02,      /**< data is an array of type int16_t */
+    YYT_DATA32 = 0x04,      /**< data is an array of type int32_t */
     YYT_PTRANS = 0x08,      /**< data is a list of indexes of entries
                                  into the expanded `yy_transition'
                                  array. See notes in manual. */
