@@ -656,26 +656,52 @@ int size, element_size;
  */
 void skelout()
 	{
-	if ( skelfile )
-		{
-		char buf[MAXLINE];
+	char buf_storage[MAXLINE];
+	char *buf = buf_storage;
+	int do_copy = 1;
 
-		while ( fgets( buf, MAXLINE, skelfile ) != NULL )
-			if ( buf[0] == '%' && buf[1] == '%' )
-				break;
-		else
-			fputs( buf, stdout );
-		}
-
-	else
+	/* Loop pulling lines either from the skelfile, if we're using
+	 * one, or from the skel[] array.
+	 */
+	while ( skelfile ?
+		(fgets( buf, MAXLINE, skelfile ) != NULL) :
+		((buf = skel[skel_ind++]) != 0) )
 		{ /* copy from skel array */
-		char *buf;
+		if ( buf[0] == '%' )
+			{ /* control line */
+			switch ( buf[1] )
+				{
+				case '%':
+					return;
 
-		while ( (buf = skel[skel_ind++]) )
-			if ( buf[0] == '%' && buf[1] == '%' )
-				break;
+				case '+':
+					do_copy = C_plus_plus;
+					break;
+
+				case '-':
+					do_copy = ! C_plus_plus;
+					break;
+
+				case '*':
+					do_copy = 1;
+					break;
+
+				default:
+					flexfatal(
+						"bad line in skeleton file" );
+				}
+			}
+
+		else if ( do_copy )
+			{
+			if ( skelfile )
+				/* Skeleton file reads include final
+				 * newline, skel[] array does not.
+				 */
+				fputs( buf, stdout );
 			else
 				printf( "%s\n", buf );
+			}
 		}
 	}
 
