@@ -202,6 +202,8 @@ int exit_status;
 
 	{
 	int tblsiz;
+	int unlink();
+
 	if ( skelfile != NULL )
 		{
 		if ( ferror( skelfile ) )
@@ -764,7 +766,7 @@ void readin()
 		printf( "\n#define YY_USES_REJECT\n" );
 
 	if ( C_plus_plus )
-		printf( "\n#include \"yyflexlexer.h\"\n" );
+		printf( "\n#include \"FlexLexer.h\"\n" );
 
 	if ( ddebug )
 		puts( "\n#define FLEX_DEBUG" );
