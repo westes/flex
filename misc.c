@@ -194,23 +194,24 @@ register int c;
 /* copy_string - returns a dynamically allocated copy of a string */
 
 char *copy_string( str )
-register char *str;
+register const char *str;
 	{
-	register char *c;
+	register const char *c1;
+	register char *c2;
 	char *copy;
 	unsigned int size;
 
 	/* find length */
-	for ( c = str; *c; ++c )
+	for ( c1 = str; *c1; ++c1 )
 		;
 
-	size = (c - str + 1) * sizeof( char );
+	size = (c1 - str + 1) * sizeof( char );
 	copy = (char *) flex_alloc( size );
 
 	if ( copy == NULL )
 		flexfatal( "dynamic memory failure in copy_string()" );
 
-	for ( c = copy; (*c++ = *str++) != 0; )
+	for ( c2 = copy; (*c2++ = *str++) != 0; )
 		;
 
 	return copy;
@@ -328,7 +329,7 @@ void dataflush()
 /* flexerror - report an error message and terminate */
 
 void flexerror( msg )
-char msg[];
+const char msg[];
 	{
 	fprintf( stderr, "%s: %s\n", program_name, msg );
 	flexend( 1 );
@@ -338,7 +339,7 @@ char msg[];
 /* flexfatal - report a fatal error message and terminate */
 
 void flexfatal( msg )
-char msg[];
+const char msg[];
 	{
 	fprintf( stderr, "%s: fatal internal error, %s\n", program_name, msg );
 	exit( 1 );
@@ -361,7 +362,7 @@ Char str[];
 /* lerrif - report an error message formatted with one integer argument */
 
 void lerrif( msg, arg )
-char msg[];
+const char msg[];
 int arg;
 	{
 	char errmsg[MAXLINE];
@@ -373,7 +374,7 @@ int arg;
 /* lerrsf - report an error message formatted with one string argument */
 
 void lerrsf( msg, arg )
-char msg[], arg[];
+const char msg[], arg[];
 	{
 	char errmsg[MAXLINE];
 
@@ -625,14 +626,14 @@ Char str[];
  */
 
 void out( str )
-char str[];
+const char str[];
 	{
 	fputs( str, stdout );
 	out_line_count( str );
 	}
 
 void out_dec( fmt, n )
-char fmt[];
+const char fmt[];
 int n;
 	{
 	printf( fmt, n );
@@ -640,7 +641,7 @@ int n;
 	}
 
 void out_dec2( fmt, n1, n2 )
-char fmt[];
+const char fmt[];
 int n1, n2;
 	{
 	printf( fmt, n1, n2 );
@@ -648,7 +649,7 @@ int n1, n2;
 	}
 
 void out_hex( fmt, x )
-char fmt[];
+const char fmt[];
 unsigned int x;
 	{
 	printf( fmt, x );
@@ -656,7 +657,7 @@ unsigned int x;
 	}
 
 void out_line_count( str )
-char str[];
+const char str[];
 	{
 	register int i;
 
@@ -666,7 +667,7 @@ char str[];
 	}
 
 void out_str( fmt, str )
-char fmt[], str[];
+const char fmt[], str[];
 	{
 	printf( fmt, str );
 	out_line_count( fmt );
@@ -674,7 +675,7 @@ char fmt[], str[];
 	}
 
 void out_str3( fmt, s1, s2, s3 )
-char fmt[], s1[], s2[], s3[];
+const char fmt[], s1[], s2[], s3[];
 	{
 	printf( fmt, s1, s2, s3 );
 	out_line_count( fmt );
@@ -684,7 +685,7 @@ char fmt[], s1[], s2[], s3[];
 	}
 
 void out_str_dec( fmt, str, n )
-char fmt[], str[];
+const char fmt[], str[];
 int n;
 	{
 	printf( fmt, str, n );
@@ -702,7 +703,7 @@ int c;
 	}
 
 void outn( str )
-char str[];
+const char str[];
 	{
 	puts( str );
 	out_line_count( str );
@@ -790,7 +791,7 @@ void skelout()
 	 */
 	while ( skelfile ?
 		(fgets( buf, MAXLINE, skelfile ) != NULL) :
-		((buf = skel[skel_ind++]) != 0) )
+		((buf = (char *) skel[skel_ind++]) != 0) )
 		{ /* copy from skel array */
 		if ( buf[0] == '%' )
 			{ /* control line */
