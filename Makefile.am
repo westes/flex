@@ -118,8 +118,6 @@ tblcmp.o: tblcmp.c flexdef.h config.h
 
 #The below recipe for making the ChangeLog will only work if you have a copy of the cvs tree handy so let it fail gracefully.
 
-# Maintainer: you need to make the ChangeLog before you distribute.
-
 ChangeLog:
 	-rcs2log -l 72 -u "vern	Vern	vern@ee.lbl.gov" -u "wlestes	W. L. Estes	wlestes@uncg.edu" | sed s:/usr/local/cvsroot/flex/::g >ChangeLog 
 
