@@ -41,16 +41,24 @@
  * #ifdef chud to fix the problem, courtesy of Francois Pinard.
  */
 #ifdef YYBISON
-/* AIX requires this to be the first thing in the file.  */
+/* AIX requires this to be the first thing in the file.  What a piece.  */
+#ifdef _AIX
+ #pragma alloca
+#endif
+#endif
+
+#include "flexdef.h"
+
+/* The remainder of the alloca() cruft has to come after including flexdef.h,
+ * so HAVE_ALLOCA_H is (possibly) defined.
+ */
+#ifdef YYBISON
 #ifdef __GNUC__
 #define alloca __builtin_alloca
 #else /* not __GNUC__ */
 #if HAVE_ALLOCA_H
 #include <alloca.h>
 #else /* not HAVE_ALLOCA_H */
-#ifdef _AIX
- #pragma alloca
-#else /* not _AIX */
 #ifdef __hpux
 void *alloca ();
 #else /* not __hpux */
@@ -60,15 +68,12 @@ void *alloca ();
 char *alloca ();
 #endif /* not __TURBOC__ */
 #endif /* not __hpux */
-#endif /* not _AIX */
 #endif /* not HAVE_ALLOCA_H */
 #endif /* not __GNUC__ */
 #endif /* YYBISON */
 
 /* Bletch, ^^^^ that was ugly! */
 
-
-#include "flexdef.h"
 
 int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, rulelen;
 int trlcontxt, xcluflg, currccl, cclsorted, varlength, variable_trail_rule;
