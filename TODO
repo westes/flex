@@ -9,7 +9,9 @@
 
 ** take the man-isms out of flex.texi
 
-*** Make "see also" into real xrefs
+** index flex.texi
+
+** think about dividing flex.texi into more sections and subsections
 
 * repackage the distribution
 
