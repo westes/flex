@@ -50,7 +50,7 @@ This manual describes
 a tool for generating programs that perform pattern-matching on text.  The
 manual includes both tutorial and reference sections.
 
-This edition of the @site{flex Manual} documents @code{flex} version
+This edition of the @cite{flex Manual} documents @code{flex} version
 @value{VERSION}. It was last updated @value{UPDATED}.
 
 @menu
