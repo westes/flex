@@ -3874,9 +3874,9 @@ The following Functions are available in a reentrant scanner:
     FILE *yyget_out ( yyscan_t scanner );
     int yyget_lineno ( yyscan_t scanner );
     YY_EXTRA_TYPE yyget_extra ( yyscan_t scanner );
-    bool yyget_debug ( yyscan_t scanner );
+    int  yyget_debug ( yyscan_t scanner );
 
-    void yyset_debug ( bool flag, yyscan_t scanner );
+    void yyset_debug ( int flag, yyscan_t scanner );
     void yyset_in  ( FILE * in_str , yyscan_t scanner );
     void yyset_out  ( FILE * out_str , yyscan_t scanner );
     void yyset_lineno ( int line_number , yyscan_t scanner );
