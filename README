@@ -26,6 +26,8 @@ COPYING - flex's copyright and license
 
 flex.1, flex.texi - user documentation
 
+RoadMap - notes for developers
+
 examples/ - containing examples of some possible flex scanners and a
 few other things. See the file examples/README for more details.
 
