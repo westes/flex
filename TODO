@@ -58,6 +58,11 @@
 
 * C++
 
+** have a separate skeleton for c++
+
+** c++ is getting so broken and different from C, that we need to
+   reevaluate the usefuleness of c++ in flex
+
 ** revisit the C++ API. We get requests to make it more complete.
 
 * distribution
