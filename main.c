@@ -654,6 +654,7 @@ char **argv;
 	defs1_offset = prolog_offset = action_offset = action_index = 0;
 	action_array[0] = '\0';
 
+    /* Enable C++ if program name ends with '+'. */
 	program_name = argv[0];
 
 	if ( program_name[0] != '\0' &&
@@ -665,6 +666,7 @@ char **argv;
 		{
 		arg = argv[0];
 
+        /* Stop at first non-option. */
 		if ( arg[0] != '-' || arg[1] == '\0' )
 			break;
 

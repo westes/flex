@@ -4,6 +4,7 @@ ws    [ \t]
 nonws [^ \t\n]
 word  {ws}*{nonws}+
 
+%option main noyywrap
 %%
 	int cc = 0, wc = 0, lc = 0;
 

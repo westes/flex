@@ -3,6 +3,7 @@
 ws    [ \t]
 nonws [^ \t\n]
 
+%option main noyywrap
 %%
 	int cc = 0, wc = 0, lc = 0;
 

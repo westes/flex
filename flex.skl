@@ -22,15 +22,9 @@
 
 #include <stdlib.h>
 %+
-
-#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7)
-#define THROW_NIL throw()
-#define STD   std::
-#include <iosfwd>
-#else
-#define THROW_NIL
-#define STD
-#include <iostream.h>
+#ifdef __CPLUSPLUS
+#define FLEX_STD   std::
+#include <iostream>
 %*
 #include <unistd.h>
 
@@ -690,14 +684,14 @@ YY_DECL
 %-
 			YY_G(yyin) = stdin;
 %+
-			yyin = &cin;
+			yyin = & FLEX_STD cin;
 %*
 
 		if ( ! YY_G(yyout) )
 %-
 			YY_G(yyout) = stdout;
 %+
-			yyout = &cout;
+			yyout = & FLEX_STD cout;
 %*
 
 		if ( ! YY_G(yy_current_buffer) )
@@ -903,7 +897,7 @@ yyFlexLexer::~yyFlexLexer()
 	yy_delete_buffer( yy_current_buffer YY_CALL_LAST_ARG);
 	}
 
-void yyFlexLexer::switch_streams( STD  istream* new_in, ostream* new_out )
+void yyFlexLexer::switch_streams( FLEX_STD  istream* new_in, FLEX_STD ostream* new_out )
 	{
 	if ( new_in )
 		{
@@ -1298,7 +1292,7 @@ FILE *input_file;
 YY_DECL_LAST_ARG
 #endif
 %+
-void yyFlexLexer::yyrestart( STD istream* input_file )
+void yyFlexLexer::yyrestart( FLEX_STD istream* input_file )
 %*
 	{
 	if ( ! YY_G(yy_current_buffer) )
@@ -1373,7 +1367,7 @@ int size;
 YY_DECL_LAST_ARG
 #endif
 %+
-YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( STD istream* file, int size )
+YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( FLEX_STD istream* file, int size )
 %*
 	{
 	YY_BUFFER_STATE b;
@@ -1444,7 +1438,7 @@ YY_DECL_LAST_ARG
 #ifndef YY_NEVER_INTERACTIVE
 extern "C" int isatty YY_PROTO(( int )) THROW_NIL ;
 #endif
-void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, STD istream* file )
+void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, FLEX_STD istream* file )
 %*
 
 	{
@@ -1701,7 +1695,7 @@ static void yy_fatal_error( yyconst char msg[] )
 
 void yyFlexLexer::LexerError( yyconst char msg[] )
 	{
-	cerr << msg << '\n';
+	FLEX_STD cerr << msg << '\n';
 	exit( YY_EXIT_FAILURE );
 	}
 %*
