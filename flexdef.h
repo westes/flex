@@ -314,30 +314,6 @@
 
 /* Declarations for global variables. */
 
-/* Variables for symbol tables:
- * sctbl - start-condition symbol table
- * ndtbl - name-definition symbol table
- * ccltab - character class text symbol table
- */
-
-struct hash_entry
-	{
-	struct hash_entry *prev, *next;
-	char *name;
-	char *str_val;
-	int int_val;
-	} ;
-
-typedef struct hash_entry **hash_table;
-
-#define NAME_TABLE_HASH_SIZE 101
-#define START_COND_HASH_SIZE 101
-#define CCL_HASH_SIZE 101
-
-extern struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE]; 
-extern struct hash_entry *sctbl[START_COND_HASH_SIZE];
-extern struct hash_entry *ccltab[CCL_HASH_SIZE];
-
 
 /* Variables for flags:
  * printstats - if true (-v), dump statistics
@@ -995,17 +971,11 @@ extern int yywrap PROTO((void));
 
 /* from file sym.c */
 
-/* Add symbol and definitions to symbol table. */
-extern int addsym PROTO((register char[], char*, int, hash_table, int));
-
 /* Save the text of a character class. */
 extern void cclinstal PROTO ((Char [], int));
 
 /* Lookup the number associated with character class. */
 extern int ccllookup PROTO((Char []));
-
-/* Find symbol in symbol table. */
-extern struct hash_entry *findsym PROTO((register char[], hash_table, int ));
 
 extern void ndinstal PROTO((char[], Char[]));	/* install a name definition */
 extern Char *ndlookup PROTO((char[]));	/* lookup a name definition */

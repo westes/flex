@@ -30,17 +30,36 @@
 
 #include "flexdef.h"
 
+/* Variables for symbol tables:
+ * sctbl - start-condition symbol table
+ * ndtbl - name-definition symbol table
+ * ccltab - character class text symbol table
+ */
+
+struct hash_entry
+	{
+	struct hash_entry *prev, *next;
+	char *name;
+	char *str_val;
+	int int_val;
+	} ;
+
+typedef struct hash_entry **hash_table;
+
+#define NAME_TABLE_HASH_SIZE 101
+#define START_COND_HASH_SIZE 101
+#define CCL_HASH_SIZE 101
+
+static struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE]; 
+static struct hash_entry *sctbl[START_COND_HASH_SIZE];
+static struct hash_entry *ccltab[CCL_HASH_SIZE];
+
 
 /* declare functions that have forward references */
 
-int hashfunct PROTO((register char[], int));
-
-
-struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
-struct hash_entry *sctbl[START_COND_HASH_SIZE];
-struct hash_entry *ccltab[CCL_HASH_SIZE];
-
-struct hash_entry *findsym();
+static int addsym PROTO((register char[], char*, int, hash_table, int));
+static struct hash_entry *findsym();
+static int hashfunct PROTO((register char[], int));
 
 
 /* addsym - add symbol and definitions to symbol table
@@ -48,7 +67,7 @@ struct hash_entry *findsym();
  * -1 is returned if the symbol already exists, and the change not made.
  */
 
-int addsym( sym, str_def, int_def, table, table_size )
+static int addsym( sym, str_def, int_def, table, table_size )
 register char sym[];
 char *str_def;
 int int_def;
@@ -127,7 +146,7 @@ Char ccltxt[];
 
 /* findsym - find symbol in symbol table */
 
-struct hash_entry *findsym( sym, table, table_size )
+static struct hash_entry *findsym( sym, table, table_size )
 register char sym[];
 hash_table table;
 int table_size;
@@ -153,7 +172,7 @@ int table_size;
 
 /* hashfunct - compute the hash value for "str" and hash size "hash_size" */
 
-int hashfunct( str, hash_size )
+static int hashfunct( str, hash_size )
 register char str[];
 int hash_size;
 	{
