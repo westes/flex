@@ -25,3 +25,6 @@ test: $(testname)$(EXEEXT)
 
 .c.o:
 	$(CC) -c -o $@ $(INCLUDES) $<
+
+scanner.h: scanner.c
+main.o: scanner.h
