@@ -12,12 +12,15 @@
 %#   %c++-only  -  The following lines are printed for C++ scanners ONLY.
 %#   %c-only    -  The following lines are NOT printed for C++ scanners.
 %#   %c-or-c++  -  The following lines are printed in BOTH C and C++ scanners.
+%#   %if-reentrant     - Print for reentrant scanners.(push)
+%#   %if-not-reentrant - Print for non-reentrant scanners. (push)
+%#   %endif        - Same as pop.
 %#   %%  -  A stop-point, where code is inserted by flex.
 %#          Each stop-point is numbered here and also in the code generator.
 %#          (See gen.c, etc. for details.)
 %#   %not-for-header  -  Begin code that should NOT appear in a ".h" file.
 %#   %ok-for-header   -  %c and %e are used for building a header file.
-%#   %tables-serialization-code-begin
+%#   %if-tables-serialization
 %#
 %#   All control-lines EXCEPT comment lines ("%#") will be inserted into
 %#   the generated scanner as a C-style comment. This is to aid those who
@@ -39,10 +42,9 @@
 #include <stdint.h>
 %pop
 
-%push
-%tables-serialization-code-begin
+%if-tables-serialization
 #include <netinet/in.h>
-%pop
+%endif
 /* end standard C headers. */
 
 %push
@@ -111,7 +113,7 @@
  */
 #define YY_SC_TO_UI(c) ((unsigned int) (unsigned char) c)
 
-#ifdef YY_REENTRANT
+%if-reentrant
 
 /* An opaque pointer. */
 #ifndef YY_TYPEDEF_YY_SCANNER_T
@@ -151,8 +153,9 @@ typedef void* yyscan_t;
 #define yy_flex_debug YY_G(yy_flex_debug_r)
 
 int yylex_init YY_PARAMS((yyscan_t* scanner));
+%endif
 
-#else /* not YY_REENTRANT */
+%if-not-reentrant
 
 /* Define these macros to be no-ops. */
 #define YY_G(var) (var)
@@ -168,7 +171,7 @@ int yylex_init YY_PARAMS((yyscan_t* scanner));
 #define YY_CALL_LAST_ARG
 #define YY_CALL_ONLY_ARG
 
-#endif
+%endif
 
 
 /* For compilers that need traditional function definitions.
@@ -231,15 +234,15 @@ int yylex_init YY_PARAMS((yyscan_t* scanner));
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
-#ifndef YY_REENTRANT
+%if-not-reentrant
 extern size_t yyleng;
-#endif
+%endif
 
 %push
 %c-only
-#ifndef YY_REENTRANT
+%if-not-reentrant
 extern FILE *yyin, *yyout;
-#endif
+%endif
 %pop
 
 #define EOB_ACT_CONTINUE_SCAN 0
@@ -377,9 +380,9 @@ struct yy_buffer_state
 %push
 %c-only Standard (non-C++) definition
 %not-for-header
-#ifndef YY_REENTRANT
+%if-not-reentrant
 static YY_BUFFER_STATE yy_current_buffer = 0;
-#endif
+%endif
 %ok-for-header
 %pop
 
@@ -392,7 +395,7 @@ static YY_BUFFER_STATE yy_current_buffer = 0;
 %push
 %c-only Standard (non-C++) definition
 
-#ifndef YY_REENTRANT
+%if-not-reentrant
 %not-for-header
 /* yy_hold_char holds the character lost when yytext is formed. */
 static char yy_hold_char;
@@ -412,7 +415,7 @@ static int yy_start = 0;	/* start state number */
  */
 static int yy_did_buffer_switch_on_eof;
 %ok-for-header
-#endif /* end !YY_REENTRANT */
+%endif
 
 void yyrestart YY_PARAMS(( FILE *input_file YY_PROTO_LAST_ARG ));
 
@@ -507,7 +510,7 @@ static void yy_fatal_error YY_PARAMS(( yyconst char msg[] YY_PROTO_LAST_ARG ));
 
 %push
 %c-only Reentrant structure and macros (non-C++).
-#ifdef YY_REENTRANT
+%if-reentrant
 
 %not-for-header
 /* Holds the entire state of the reentrant scanner. */
@@ -571,17 +574,18 @@ static int yy_init_globals YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 %not-for-header These go in the .c file only.
 /* This must go here because YYSTYPE and YYLSTYPE are included
  * from bison output in section 1.*/
-#ifdef YY_REENTRANT
+%if-reentrant
 #ifdef YY_BISON_BRIDGE
 #    define yylval YY_G(yylval_r)
 #  ifdef YYLTYPE
 #    define yylloc YY_G(yylloc_r)
 #  endif
 #endif /* YY_BISON_BRIDGE */
-#endif /* YY_REENTRANT */
+%endif
+
 %ok-for-header
 
-#endif /* end if YY_REENTRANT */
+%endif
 
 /* Accessor methods to globals.
    These are made visible to non-reentrant scanners for convenience. */
@@ -695,13 +699,14 @@ static int input YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 
 
 #if YY_STACK_USED
-#ifndef YY_REENTRANT
+%if-not-reentrant
 %not-for-header
 static int yy_start_stack_ptr = 0;
 static int yy_start_stack_depth = 0;
 static int *yy_start_stack = 0;
 %ok-for-header
-#endif
+%endif
+
 #ifndef YY_NO_PUSH_STATE
 static void yy_push_state YY_PARAMS(( int new_state YY_PROTO_LAST_ARG));
 #endif
@@ -774,8 +779,7 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 %pop
 #endif
 
-%push
-%tables-serialization-code-begin structures and prototypes
+%if-tables-serialization structures and prototypes
 m4_include(`tables_shared.h')
 
 /* Load the DFA tables from the given stream.  */
@@ -808,7 +812,7 @@ struct yytbl_reader {
     uint32_t bread; /**< bytes read since beginning of current tableset */
 };
 
-%pop
+%endif
 /* end tables serialization structures and prototypes */
 
 %ok-for-header
@@ -867,12 +871,12 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 #ifdef YY_BISON_BRIDGE
-# ifndef YY_REENTRANT
+%if-not-reentrant
     YYSTYPE * yylval;
 #   ifdef YYLTYPE
       YYLTYPE * yylloc;
 #   endif
-# endif
+%endif
 #endif
 
 %% [7.0] user's declarations go here
@@ -1864,14 +1868,14 @@ void yyFlexLexer::LexerError( yyconst char msg[] )
 
 %push
 %c-only
-#ifdef YY_REENTRANT
+%if-reentrant
 #ifndef YY_NO_GET_EXTRA
 YY_EXTRA_TYPE yyget_extra  YYFARGS0(void)
 {
     return yyextra;
 }
 #endif /* !YY_NO_GET_EXTRA */
-#endif /* YY_REENTRANT */
+%endif
 
 #ifndef YY_NO_GET_LINENO
 int yyget_lineno  YYFARGS0(void)
@@ -1908,14 +1912,14 @@ char *yyget_text  YYFARGS0(void)
 }
 #endif /* !YY_NO_GET_TEXT */
 
-#ifdef YY_REENTRANT
+%if-reentrant
 #ifndef YY_NO_SET_EXTRA
 void yyset_extra YYFARGS1( YY_EXTRA_TYPE ,user_defined)
 {
     yyextra = user_defined ;
 }
 #endif /* !YY_NO_SET_EXTRA */
-#endif /* YY_REENTRANT */
+%endif
 
 #ifndef YY_NO_SET_LINENO
 void yyset_lineno YYFARGS1( int ,line_number)
@@ -1955,7 +1959,7 @@ void yyset_debug YYFARGS1( int ,bdebug)
 #endif /* !YY_NO_SET_DEBUG */
 %pop
 
-#ifdef YY_REENTRANT
+%if-reentrant
 /* Accessor methods for yylval and yylloc */
 
 #ifdef YY_BISON_BRIDGE
@@ -2067,7 +2071,7 @@ int yylex_init( ptr_yy_globals )
     return yy_init_globals ( *ptr_yy_globals );
     }
 
-#endif /* End YY_REENTRANT */
+%endif
 
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
 int yylex_destroy  YYFARGS0(void)
@@ -2090,10 +2094,10 @@ int yylex_destroy  YYFARGS0(void)
     yyfree ( YY_G(yy_state_buf) YY_CALL_LAST_ARG);
 #endif
 
-#ifdef YY_REENTRANT
+%if-reentrant
     /* Destroy the main struct (reentrant only). */
     yyfree ( yyscanner YY_CALL_LAST_ARG );
-#endif
+%endif
 %pop
     return 0;
 }
@@ -2155,8 +2159,7 @@ void yyfree YYFARGS1( void *,ptr)
 	}
 #endif
 
-%push
-%tables-serialization-code-begin definitions
+%if-tables-serialization definitions
 m4_include(`tables_shared.c')
 
 static int yytbl_read8 (void *v, struct yytbl_reader * rd)
@@ -2544,7 +2547,7 @@ int yytables_destroy YYFARGS0(void)
 }
 
 /* end table serialization code definitions */
-%pop
+%endif
 
 #if YY_MAIN
 int main YY_PARAMS((void));
@@ -2552,15 +2555,16 @@ int main YY_PARAMS((void));
 int main ()
 	{
 
-#ifdef YY_REENTRANT
+%if-reentrant
     yyscan_t lexer;
     yylex_init(&lexer);
     yylex( lexer );
     yylex_destroy( lexer);
 
-#else
+%endif
+%if-not-reentrant
 	yylex();
-#endif
+%endif
 
 	return 0;
 	}

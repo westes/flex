@@ -34,8 +34,7 @@
 #include "flexdef.h"
 #include "tables.h"
 
-#define CMD_TABLES_SER_BEGIN "%tables-serialization-code-begin"
-#define CMD_TABLES_SER_END   "%tables-serialization-code-end"
+#define CMD_IF_TABLES_SER    "%if-tables-serialization"
 #define CMD_TABLES_YYDMAP    "%tables-yydmap"
 #define CMD_DEFINE_YYTABLES  "%define-yytables"
 #define CMD_CPP_ONLY         "%c++-only"
@@ -45,15 +44,17 @@
 #define CMD_OK_FOR_HEADER    "%ok-for-header"
 #define CMD_PUSH             "%push"
 #define CMD_POP              "%pop"
+#define CMD_IF_REENTRANT     "%if-reentrant"
+#define CMD_IF_NOT_REENTRANT "%if-not-reentrant"
+#define CMD_ENDIF            "%endif"
 
 /* we allow the skeleton to push and pop. */
 struct sko_state {
     bool dc; /**< do_copy */
-    bool tt; /**< tables_toggle */
 };
 static struct sko_state *sko_stack=0;
 static int sko_len=0,sko_sz=0;
-static void sko_push(bool dc, bool tt)
+static void sko_push(bool dc)
 {
     if(!sko_stack){
         sko_sz = 1;
@@ -67,21 +68,18 @@ static void sko_push(bool dc, bool tt)
     
     /* initialize to zero and push */
     sko_stack[sko_len].dc = dc;
-    sko_stack[sko_len].tt = tt;
     sko_len++;
 }
-static void sko_peek(bool *dc, bool* tt)
+static void sko_peek(bool *dc)
 {
     if(sko_len <= 0)
         flex_die("peek attempt when sko stack is empty");
     if(dc)
         *dc = sko_stack[sko_len-1].dc;
-    if(tt)
-        *tt = sko_stack[sko_len-1].tt;
 }
-static void sko_pop(bool* dc, bool *tt)
+static void sko_pop(bool* dc)
 {
-    sko_peek(dc,tt);
+    sko_peek(dc);
     sko_len--;
     if(sko_len < 0)
         flex_die("popped too many times in skeleton.");
@@ -856,13 +854,12 @@ void skelout ()
 	char    buf_storage[MAXLINE];
 	char   *buf = buf_storage;
 	bool   do_copy = true;
-    bool tablestoggle=false;
 
     /* "reset" the state by clearing the buffer and pushing a '1' */
     if(sko_len > 0)
-        sko_peek(&do_copy,&tablestoggle);
+        sko_peek(&do_copy);
     sko_len = 0;
-    sko_push(do_copy=true,tablestoggle);
+    sko_push(do_copy=true);
 
 
 	/* Loop pulling lines either from the skelfile, if we're using
@@ -897,26 +894,32 @@ void skelout ()
 				return;
 			}
             else if (cmd_match (CMD_PUSH)){
-                sko_push(do_copy,tablestoggle);
+                sko_push(do_copy);
                 if(ddebug){
-                    out_str("/*(state = (%s,",do_copy?"true":"false");
-                    out_str(          "%s)*/",tablestoggle?"true":"false");
+                    out_str("/*(state = (%s) */",do_copy?"true":"false");
                     out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
                 }
             }
             else if (cmd_match (CMD_POP)){
-                sko_pop(&do_copy,&tablestoggle);
+                sko_pop(&do_copy);
                 if(ddebug){
-                    out_str("/*(state = (%s,",do_copy?"true":"false");
-                    out_str(          "%s)*/",tablestoggle?"true":"false");
+                    out_str("/*(state = (%s) */",do_copy?"true":"false");
                     out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
                 }
             }
-			else if (cmd_match (CMD_TABLES_SER_BEGIN)) {
-				tablestoggle = true;
-			}
-			else if (cmd_match (CMD_TABLES_SER_END)) {
-				tablestoggle = false;
+            else if (cmd_match (CMD_IF_REENTRANT)){
+                sko_push(do_copy);
+                do_copy = reentrant && do_copy;
+            }
+            else if (cmd_match (CMD_IF_NOT_REENTRANT)){
+                sko_push(do_copy);
+                do_copy = !reentrant && do_copy;
+            }
+            else if (cmd_match (CMD_ENDIF)){
+                sko_pop(&do_copy);
+            }
+			else if (cmd_match (CMD_IF_TABLES_SER)) {
+                do_copy = do_copy && tablesext;
 			}
 			else if (cmd_match (CMD_TABLES_YYDMAP)) {
 				if (tablesext && yydmap_buf.elts)
@@ -954,10 +957,8 @@ void skelout ()
 			}
 		}
 
-		else if (do_copy) {
-			if (tablesext || !tablestoggle)
-				outn (buf);
-		}
+		else if (do_copy) 
+            outn (buf);
 	}			/* end while */
 }
 
