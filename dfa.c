@@ -14,6 +14,144 @@
 
 #include "flexdef.h"
 
+#ifndef lint
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+#endif
+
+
+/* check_for_backtracking - check a DFA state for backtracking
+ *
+ * synopsis
+ *     int ds, state[numecs];
+ *     check_for_backtracking( ds, state );
+ *
+ * ds is the number of the state to check and state[] is its out-transitions,
+ * indexed by equivalence class, and state_rules[] is the set of rules
+ * associated with this state
+ */
+
+check_for_backtracking( ds, state )
+int ds;
+int state[];
+
+    {
+    if ( (reject && ! dfaacc[ds].dfaacc_set) || ! dfaacc[ds].dfaacc_state )
+	{ /* state is non-accepting */
+	++num_backtracking;
+
+	if ( performance_report )
+	    {
+	    fprintf( stderr, "State #%d is non-accepting -\n", ds );
+
+	    /* identify the state */
+	    dump_associated_rules( ds );
+
+	    /* now identify it further using the out- and jam-transitions */
+	    dump_transitions( state );
+
+	    putc( '\n', stderr );
+	    }
+	}
+    }
+
+
+/* dump_associated_rules - list the rules associated with a DFA state
+ *
+ * synopisis
+ *     int ds;
+ *     dump_associated_rules( ds );
+ *
+ * goes through the set of NFA states associated with the DFA and
+ * extracts the first MAX_ASSOC_RULES unique rules, sorts them,
+ * and writes a report to stderr
+ */
+
+dump_associated_rules( ds )
+int ds;
+
+    {
+    register int i, j;
+    register int rule_set[MAX_ASSOC_RULES + 1];
+    register int num_rules = 0;
+    int *dset = dss[ds];
+    int size = dfasiz[ds];
+    
+    for ( i = 1; i <= size; ++i )
+	{
+	register rule_num = assoc_rule[dset[i]];
+
+	for ( j = 1; j <= num_rules; ++j )
+	    if ( rule_num == rule_set[j] )
+		break;
+
+	if ( j > num_rules )
+	    { /* new rule */
+	    if ( num_rules < MAX_ASSOC_RULES )
+		rule_set[++num_rules] = rule_num;
+	    }
+	}
+
+    bubble( rule_set, num_rules );
+
+    fprintf( stderr, " associated rules:" );
+
+    for ( i = 1; i <= num_rules; ++i )
+	{
+	if ( i % 8 == 1 )
+	    putc( '\n', stderr );
+	
+	fprintf( stderr, "\t%d", rule_set[i] );
+	}
+    
+    putc( '\n', stderr );
+    }
+
+
+/* dump_transitions - list the transitions associated with a DFA state
+ *
+ * synopisis
+ *     int state[numecs];
+ *     dump_transitions( state );
+ *
+ * goes through the set of out-transitions and lists them in human-readable
+ * form (i.e., not as equivalence classes); also lists jam transitions
+ * (i.e., all those which are not out-transitions, plus EOF)
+ */
+
+dump_transitions( state )
+int state[];
+
+    {
+    register int i, ec;
+    int out_char_set[CSIZE + 1];
+
+    for ( i = 1; i <= CSIZE; ++i )
+	{
+	ec = ecgroup[i];
+
+	if ( ec < 0 )
+	    ec = -ec;
+
+	out_char_set[i] = state[ec];
+	}
+    
+    fprintf( stderr, " out-transitions: " );
+
+    list_character_set( out_char_set );
+
+    /* now invert the members of the set to get the jam transitions */
+    for ( i = 1; i <= CSIZE; ++i )
+	out_char_set[i] = ! out_char_set[i];
+
+    fprintf( stderr, "\n jam-transitions: EOF " );
+
+    list_character_set( out_char_set );
+
+    putc( '\n', stderr );
+    }
+
+
 /* epsclosure - construct the epsilon closure of a set of ndfa states
  *
  * synopsis
@@ -156,7 +294,6 @@ int *t, *ns_addr, accset[], *nacc_addr, *hv_addr;
     }
 
 
-
 /* increase_max_dfas - increase the maximum number of DFAs */
 
 increase_max_dfas()
@@ -174,7 +311,7 @@ increase_max_dfas()
     accsiz = reallocate_integer_array( accsiz, current_max_dfas );
     dhash = reallocate_integer_array( dhash, current_max_dfas );
     todo = reallocate_integer_array( todo, current_max_dfas );
-    dss = reallocate_integer_pointer_array( dss, current_max_dfas );
+    dss = reallocate_int_ptr_array( dss, current_max_dfas );
     dfaacc = reallocate_dfaacc_union( dfaacc, current_max_dfas );
 
     /* fix up todo queue */
@@ -251,7 +388,9 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 
     newds = lastdfa;
 
-    if ( ! (dss[newds] = (int *) malloc( (unsigned) ((numstates + 1) * sizeof( int )) )) )
+    dss[newds] = (int *) malloc( (unsigned) ((numstates + 1) * sizeof( int )) );
+
+    if ( ! dss[newds] )
 	flexfatal( "dynamic memory failure in snstods()" );
 
     /* if we haven't already sorted the states in sns, we do so now, so that
@@ -269,7 +408,11 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 
     if ( nacc == 0 )
 	{
-	dfaacc[newds].dfaacc_state = 0;
+	if ( reject )
+	    dfaacc[newds].dfaacc_set = (int *) 0;
+	else
+	    dfaacc[newds].dfaacc_state = 0;
+
 	accsiz[newds] = 0;
 	}
 
@@ -283,10 +426,10 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 
 	bubble( accset, nacc );
 
-	dfaacc[newds].dfaacc_state =
-	    (int) malloc( (unsigned) ((nacc + 1) * sizeof( int )) );
+	dfaacc[newds].dfaacc_set =
+	    (int *) malloc( (unsigned) ((nacc + 1) * sizeof( int )) );
 
-	if ( ! dfaacc[newds].dfaacc_state )
+	if ( ! dfaacc[newds].dfaacc_set )
 	    flexfatal( "dynamic memory failure in snstods()" );
 
 	/* save the accepting set for later */
