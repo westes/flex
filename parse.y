@@ -6,7 +6,7 @@
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant to
  * contract no. DE-AC03-76SF00098 between the United States Department of
  * Energy and the University of California.
@@ -83,7 +83,7 @@ initlex         :
 			scinstal( "INITIAL", false );
 			}
 		;
-			
+
 sect1		:  sect1 startconddecl WHITESPACE namelist1 '\n'
 		|
 		|  error '\n'
@@ -102,7 +102,7 @@ startconddecl   :  SCDECL
 
 			xcluflg = false;
 			}
-		
+
 		|  XSCDECL
 			{ xcluflg = true; }
 		;
@@ -132,7 +132,7 @@ initforrule     :
 			}
 		;
 
-flexrule        :  scon '^' re eol 
+flexrule        :  scon '^' re eol
                         {
 			pat = link_machines( $3, $4 );
 			finish_rule( pat, variable_trail_rule,
@@ -152,18 +152,18 @@ flexrule        :  scon '^' re eol
 			    }
 			}
 
-		|  scon re eol 
+		|  scon re eol
                         {
 			pat = link_machines( $2, $3 );
 			finish_rule( pat, variable_trail_rule,
 				     headcnt, trailcnt );
 
 			for ( i = 1; i <= actvp; ++i )
-			    scset[actvsc[i]] = 
+			    scset[actvsc[i]] =
 				mkbranch( scset[actvsc[i]], pat );
 			}
 
-                |  '^' re eol 
+                |  '^' re eol
 			{
 			pat = link_machines( $2, $3 );
 			finish_rule( pat, variable_trail_rule,
@@ -187,7 +187,7 @@ flexrule        :  scon '^' re eol
 			    }
 			}
 
-                |  re eol 
+                |  re eol
 			{
 			pat = link_machines( $1, $2 );
 			finish_rule( pat, variable_trail_rule,
@@ -381,7 +381,7 @@ singleton       :  singleton '*'
 
 			$$ = mkclos( $1 );
 			}
-			
+
 		|  singleton '+'
 			{
 			varlength = true;
@@ -413,7 +413,7 @@ singleton       :  singleton '*'
 				$$ = mkrep( $1, $3, $5 );
 			    }
 			}
-				
+
 		|  singleton '{' NUMBER ',' '}'
 			{
 			varlength = true;
@@ -458,8 +458,8 @@ singleton       :  singleton '*'
 			    if ( useecs )
 				mkeccl( ccltbl + cclmap[anyccl],
 					ccllen[anyccl], nextecm,
-					ecgroup, csize );
-			    
+					ecgroup, csize, csize );
+
 			    madeany = true;
 			    }
 
@@ -474,12 +474,12 @@ singleton       :  singleton '*'
 			    /* sort characters for fast searching.  We use a
 			     * shell sort since this list could be large.
 			     */
-			    cshell( ccltbl + cclmap[$1], ccllen[$1] );
+			    cshell( ccltbl + cclmap[$1], ccllen[$1], true );
 
 			if ( useecs )
 			    mkeccl( ccltbl + cclmap[$1], ccllen[$1],
-				    nextecm, ecgroup, csize );
-				     
+				    nextecm, ecgroup, csize, csize );
+
 			++rulelen;
 
 			$$ = mkstate( -$1 );
@@ -501,9 +501,6 @@ singleton       :  singleton '*'
 		|  CHAR
 			{
 			++rulelen;
-
-			if ( $1 == '\0' )
-			    uses_NUL = true;
 
 			if ( caseins && $1 >= 'A' && $1 <= 'Z' )
 			    $1 = clower( $1 );
@@ -531,9 +528,6 @@ fullccl		:  '[' ccl ']'
 
 ccl             :  ccl CHAR '-' CHAR
                         {
-			if ( $2 == '\0' || $4 == '\0' )
-			    uses_NUL = true;
-
 			if ( $2 > $4 )
 			    synerr( "negative range in character class" );
 
@@ -556,15 +550,12 @@ ccl             :  ccl CHAR '-' CHAR
 			    cclsorted = cclsorted && ($2 > lastchar);
 			    lastchar = $4;
 			    }
-			
+
 			$$ = $1;
 			}
 
 		|  ccl CHAR
 		        {
-			if ( $2 == '\0' )
-			    uses_NUL = true;
-
 			if ( caseins )
 			    if ( $2 >= 'A' && $2 <= 'Z' )
 				$2 = clower( $2 );
@@ -585,9 +576,6 @@ ccl             :  ccl CHAR '-' CHAR
 
 string		:  string CHAR
                         {
-			if ( $2 == '\0' )
-			    uses_NUL = true;
-
 			if ( caseins )
 			    if ( $2 >= 'A' && $2 <= 'Z' )
 				$2 = clower( $2 );
