@@ -35,7 +35,7 @@ class istream;
 
 #else	/* ! __cplusplus */
 
-#ifdef __STDC__
+#if __STDC__
 
 #define YY_USE_PROTOS
 #define YY_USE_CONST
@@ -86,9 +86,7 @@ class istream;
 /* Action number for EOF rule of a given start state. */
 #define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
 
-/* Special action meaning "start processing a new file".  Now included
- * only for backward compatibility with previous versions of flex.
- */
+/* Special action meaning "start processing a new file". */
 #define YY_NEW_FILE yyrestart( yyin )
 
 #define YY_END_OF_BUFFER_CHAR 0
@@ -102,14 +100,6 @@ extern int yyleng;
 %-
 extern FILE *yyin, *yyout;
 %*
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-	extern int yywrap YY_PROTO(( void ));
-#ifdef __cplusplus
-	}
-#endif
 
 #define EOB_ACT_CONTINUE_SCAN 0
 #define EOB_ACT_END_OF_FILE 1
@@ -164,6 +154,12 @@ struct yy_buffer_state
 	 * characters.
 	 */
 	int yy_n_chars;
+
+	/* Whether we "own" the buffer - i.e., we know we created it,
+	 * and can realloc() it to grow it, and should free() it to
+	 * delete it.
+	 */
+	int yy_is_our_buffer;
 
 	/* Whether this is an "interactive" input source; if so, and
 	 * if we're using stdio for input, then we want to use getc()
@@ -228,6 +224,9 @@ void yyrestart YY_PROTO(( FILE *input_file ));
 void yy_switch_to_buffer YY_PROTO(( YY_BUFFER_STATE new_buffer ));
 void yy_load_buffer_state YY_PROTO(( void ));
 YY_BUFFER_STATE yy_create_buffer YY_PROTO(( FILE *file, int size ));
+YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, char *start, int size ));
+YY_BUFFER_STATE yy_scan_string YY_PROTO(( const char *str ));
+YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( const char *bytes, int len ));
 void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));
 void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
 %*
@@ -239,6 +238,14 @@ static void yy_flex_free YY_PROTO(( void * ));
 #define yy_new_buffer yy_create_buffer
 
 %% yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
+
+#ifndef yywrap
+#ifdef __cplusplus
+extern "C" int yywrap YY_PROTO(( void ));
+#else
+extern int yywrap YY_PROTO(( void ));
+#endif
+#endif
 
 #ifndef yytext_ptr
 static void yy_flex_strncpy YY_PROTO(( char *, const char *, int ));
@@ -406,9 +413,7 @@ YY_DECL
 			yyout = &cout;
 %*
 
-		if ( yy_current_buffer )
-			yy_init_buffer( yy_current_buffer, yyin );
-		else
+		if ( ! yy_current_buffer )
 			yy_current_buffer =
 				yy_create_buffer( yyin, YY_BUF_SIZE );
 
@@ -685,10 +690,16 @@ int yyFlexLexer::yy_get_next_buffer()
 
 			int yy_c_buf_p_offset = yy_c_buf_p - b->yy_ch_buf;
 
-			b->yy_buf_size *= 2;
-			b->yy_ch_buf = (char *)
-				yy_flex_realloc( (void *) b->yy_ch_buf,
-						 b->yy_buf_size );
+			if ( b->yy_is_our_buffer )
+				{
+				b->yy_buf_size *= 2;
+				b->yy_ch_buf = (char *)
+					yy_flex_realloc( (void *) b->yy_ch_buf,
+							 b->yy_buf_size );
+				}
+			else
+				/* Can't grow it, we don't own it. */
+				b->yy_ch_buf = 0;
 
 			if ( ! b->yy_ch_buf )
 				YY_FATAL_ERROR(
@@ -998,7 +1009,6 @@ YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( istream* file, int size )
 	YY_BUFFER_STATE b;
 
 	b = (YY_BUFFER_STATE) yy_flex_alloc( sizeof( struct yy_buffer_state ) );
-
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 
@@ -1008,9 +1018,10 @@ YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( istream* file, int size )
 	 * we need to put in 2 end-of-buffer characters.
 	 */
 	b->yy_ch_buf = (char *) yy_flex_alloc( b->yy_buf_size + 2 );
-
 	if ( ! b->yy_ch_buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
+
+	b->yy_is_our_buffer = 1;
 
 	yy_init_buffer( b, file );
 
@@ -1032,7 +1043,9 @@ void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
 	if ( b == yy_current_buffer )
 		yy_current_buffer = (YY_BUFFER_STATE) 0;
 
-	yy_flex_free( (void *) b->yy_ch_buf );
+	if ( b->yy_is_our_buffer )
+		yy_flex_free( (void *) b->yy_ch_buf );
+
 	yy_flex_free( (void *) b );
 	}
 
@@ -1076,6 +1089,100 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 	b->yy_fill_buffer = 1;
 
 	b->yy_buffer_status = YY_BUFFER_NEW;
+	}
+
+
+%-
+#ifdef YY_USE_PROTOS
+YY_BUFFER_STATE yy_scan_buffer( char *base, char *start, int size )
+#else
+YY_BUFFER_STATE yy_scan_buffer( base, start, size )
+char *base, *start;
+int size;
+#endif
+	{
+	YY_BUFFER_STATE b;
+
+	if ( base[size-2] != YY_END_OF_BUFFER_CHAR ||
+	     base[size-1] != YY_END_OF_BUFFER_CHAR )
+		/* They forgot to leave room for the EOB's. */
+		return 0;
+
+	b = (YY_BUFFER_STATE) yy_flex_alloc( sizeof( struct yy_buffer_state ) );
+	if ( ! b )
+		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
+
+	b->yy_buf_size = size - 2;	/* "- 2" to take care of EOB's */
+	b->yy_ch_buf = base;
+	b->yy_buf_pos = start;
+	b->yy_is_our_buffer = 0;
+	b->yy_input_file = 0;
+	b->yy_n_chars = b->yy_buf_size;
+	b->yy_is_interactive = 0;
+	b->yy_fill_buffer = 0;
+	b->yy_buffer_status = YY_BUFFER_NEW;
+
+	yy_switch_to_buffer( b );
+
+	return b;
+	}
+%*
+
+
+%-
+#ifdef YY_USE_PROTOS
+YY_BUFFER_STATE yy_scan_string( const char *str )
+#else
+YY_BUFFER_STATE yy_scan_string( str )
+const char *str;
+#endif
+	{
+	int len;
+	for ( len = 0; str[len]; ++len )
+		;
+
+	return yy_scan_bytes( str, len );
+	}
+%*
+
+
+%-
+#ifdef YY_USE_PROTOS
+YY_BUFFER_STATE yy_scan_bytes( const char *bytes, int len )
+#else
+YY_BUFFER_STATE yy_scan_bytes( bytes, len )
+const char *bytes;
+int len;
+#endif
+	{
+	YY_BUFFER_STATE b;
+	char *buf;
+	int i, n;
+
+	/* Get memory for full buffer, including space for preceding '\n'
+	 * and trailing EOB's.
+	 */
+	n = len + 3;
+	buf = (char *) yy_flex_alloc( n );
+	if ( ! buf )
+		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
+
+	buf[0] = '\n';
+	for ( i = 0; i < len; ++i )
+		buf[i+1] = bytes[i];
+
+	buf[len+1] = buf[len+2] = YY_END_OF_BUFFER_CHAR;
+
+	b = yy_scan_buffer( buf, &buf[1], n );
+	if ( ! b )
+		YY_FATAL_ERROR( "bad buffer in yy_scan_bytes()" );
+
+	/* It's okay to grow etc. this buffer, and we should throw it
+	 * away when we're done.
+	 */
+	b->yy_is_our_buffer = 1;
+
+	return b;
 	}
 
 
