@@ -33,14 +33,7 @@
 
 * test suite
 
-** Rewrite tests/Makefile.in and friends so that users do not need to
-   alter it when they add tests
-
 ** make test suite more complete
-
-** create a script which sets up a new skeleton test directory with a
-   correct .cvsignore file and other such niceties (Millaway has done
-   this, but it's in perl and that's probably not good.)
 
 ** explicitly describe the copyright state of the entries in
    tests/. millaway has assigned the rights to the test suite to me
