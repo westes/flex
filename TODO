@@ -56,8 +56,6 @@
 
 * generic coding
 
-** include option to generate ide-style error messages.
-
 ** move as much skeleton code as possible out of gen.c and into
   flex.skl
 
