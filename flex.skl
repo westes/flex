@@ -2196,8 +2196,16 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
         return -1;
     }
 
-    /* Allocate space for table. */
-    bytes = td.td_lolen * (td.td_hilen ? td.td_hilen : 1) * dmap->dm_sz;
+    /* Allocate space for table.
+     * The --full yy_transition table is a special case, since we
+     * need the dmap.dm_sz entry to tell us the sizeof the individual
+     * struct members.
+     */
+    if ((td.td_flags & YYTD_STRUCT))
+        bytes = sizeof(struct yy_trans_info) * td.td_lolen * (td.td_hilen ? td.td_hilen : 1);
+    else
+        bytes = td.td_lolen * (td.td_hilen ? td.td_hilen : 1) * dmap->dm_sz;
+
     if(YY_TABLES_VERIFY)
         /* We point to the array itself */
         p = dmap->dm_arr; 
@@ -2283,6 +2291,7 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
             else if ((td.td_flags & YYTD_PTRANS)) {
                 /* t32 is an index into the transition array. */
                 struct yy_trans_info *v;
+
 
                 if (!transdmap){
                     yy_fatal_error("transition table not found" /*TODO: not fatal.*/ YY_CALL_LAST_ARG);

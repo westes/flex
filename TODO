@@ -52,8 +52,6 @@
 
 * Tables API
 
-** Fix deserialization of --fast tables
-
 ** Handle reject-triggered tables
 
 ** Lookup table by name
