@@ -187,10 +187,10 @@ yylex.o: yylex.c flexdef.h flexint.h parse.h
 tags:
 	ctags --c-types='defgmstuv' $(srcdir)/*.[ch]
 
-#The below recipe for making the ChangeLog will only work if you have a copy of the cvs tree handy so let it fail gracefully.
+# Create the ChangeLog
 
 ChangeLog:
-	-rcs2log -l 72 -u "vern	Vern	vern@ee.lbl.gov" -u "wlestes	W. L. Estes	wlestes@uncg.edu" -u "millaway	John Millaway	millaway@acm.org" | sed s:/usr/local/cvsroot/flex/::g >ChangeLog 
+	sh tools/cvs2cl.pl -F trunk -U tools/cvsauthors
 
 if MAINTAINER_MODE
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
