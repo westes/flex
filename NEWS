@@ -60,7 +60,7 @@ Changes between release 2.4.1 (30Nov93) and release 2.3.8:
 
 	  "%array" cannot be used with the '-+' C++ scanner class option.
 
-	- The new '-a' option directs flex to trade off memory for
+	- The new '-Ca' option directs flex to trade off memory for
 	  natural alignment when generating a scanner's tables.  In
 	  particular, table entries that would otherwise be "short"
 	  become "long".
