@@ -43,12 +43,12 @@
 * Can I build nested parsers that work with the same input file?::
 * How can I match text only at the end of a file?::
 * How can I make REJECT cascade across start condition boundaries?::
-* Why can't I use fast or full tables with interactive mode?::
+* Why cant I use fast or full tables with interactive mode?::
 * How much faster is -F or -f than -C?::
-* If I have a simple grammar can't I just parse it with flex?::
-* Why doesn't yyrestart() set the start state back to INITIAL?::
+* If I have a simple grammar cant I just parse it with flex?::
+* Why doesnt yyrestart() set the start state back to INITIAL?::
 * How can I match C-style comments?::
-* The '.' isn't working the way I expected.::
+* The period isnt working the way I expected.::
 * Can I get the flex manual in another format?::
 * Does there exist a "faster" NDFA->DFA algorithm?::
 * How does flex compile the DFA so quickly?::
@@ -67,7 +67,7 @@
 * I am trying to port code from AT&T lex that uses yysptr and yysbuf.::
 * Is there a way to make flex treat NULL like a regular character?::
 * Whenever flex can not match the input it says "flex scanner jammed".::
-* Why doesn't flex have non-greedy operators like perl does?::
+* Why doesnt flex have non-greedy operators like perl does?::
 * Memory leak - 16386 bytes allocated by malloc.::
 * How do I track the byte offset for lseek()?::
 * unnamed-faq-16::
@@ -135,14 +135,11 @@
 * unnamed-faq-101::
 @end menu
 
-
 @node  When was flex born?
 @unnumberedsec When was flex born?
 
-When was flex born?
-
 Vern Paxson took over
-the Software Tools lex project from Jef Poskanzer in 1982.  At that point it
+the @cite{Software Tools} lex project from Jef Poskanzer in 1982.  At that point it
 was written in Ratfor.  Around 1987 or so, Paxson translated it into C, and
 a legend was born :-).
 
@@ -150,7 +147,6 @@ a legend was born :-).
 @unnumberedsec How do I expand \ escape sequences in C-style quoted strings?
 
 How do I expand \ escape sequences in C-style quoted strings?
-
 
 A key point when scanning quoted strings is that you cannot (easily) write
 a single rule that will precisely match the string if you allow things
@@ -163,7 +159,7 @@ matching non-escaped text, one for matching a single escape, one for
 matching an embedded newline, and one for recognizing the end of the
 string.  Each of these rules is then faced with the question of where to
 put its intermediary results.  The best solution is for the rules to
-append their local value of yytext to the end of a "string literal"
+append their local value of yytext to the end of a ``string literal''
 buffer.  A rule like the escape-matcher will append to the buffer the
 meaning of the escape sequence rather than the literal text in yytext.
 In this way, yytext does not need to be modified at all.
@@ -171,15 +167,12 @@ In this way, yytext does not need to be modified at all.
 @node  Why do flex scanners call fileno if it is not ANSI compatible?
 @unnumberedsec Why do flex scanners call fileno if it is not ANSI compatible?
 
-Why do flex scanners call fileno if it is not ANSI compatible?
-
-
 Flex scanners call fileno() in order to get the file descriptor
 corresponding to yyin. The file descriptor may be passed to
 isatty() or read(), depending upon which %options you specified.
-If your system does not have fileno() support. To get rid of the
+If your system does not have fileno() support, to get rid of the
 read() call, do not specify %option read. To get rid of the isatty()
-call, you must specify one of %option always-interactive or 
+call, you must specify one of %option always-interactive or
 %option never-interactive.
 
 @node  Does flex support recursive pattern definitions?
@@ -195,19 +188,16 @@ block   "{"({block}|{statement})*"}"
 @end verbatim
 @end example
 
-No. You cannot have recursive definitions.  The pattern-matching power of 
+No. You cannot have recursive definitions.  The pattern-matching power of
 regular expressions in general (and therefore flex scanners, too) is
 limited.  In particular, regular expressions cannot "balance" parentheses
 to an arbitrary degree.  For example, it's impossible to write a regular
 expression that matches all strings containing the same number of '@{'s
 as '@}'s.  For more powerful pattern matching, you need a parser, such
-as GNU bison. 
+as GNU bison.
 
-@node  How do skip huge chunks of input (tens of megabytes) while using flex?
-@unnumberedsec How do skip huge chunks of input (tens of megabytes) while using flex?
-
-How do skip huge chunks of input (tens of megabytes) while using flex?
-
+@node  How do I skip huge chunks of input (tens of megabytes) while using flex?
+@unnumberedsec How do I skip huge chunks of input (tens of megabytes) while using flex?
 
 Use fseek (or lseek) to position yyin, then call yyrestart().
 
@@ -215,7 +205,6 @@ Use fseek (or lseek) to position yyin, then call yyrestart().
 @unnumberedsec Flex is not matching my patterns in the same order that I defined them.
 
 Flex is not matching my patterns in the same order that I defined them.
-
 
 This is indeed the natural way to expect it to work, however, flex picks the
 rule that matches the most text (i.e., the longest possible input string).
@@ -250,11 +239,10 @@ identifier rule so it no longer matches "data_".  (Of course, you might
 also not have the option of changing the input language ...)
 
 @node  My actions are executing out of order or sometimes not at all.
-@unnumberedsec My actions are executing out of order or sometimes not at all. 
+@unnumberedsec My actions are executing out of order or sometimes not at all.
 
 My actions are executing out of order or sometimes not at all. What's
 happening?
-
 
 Most likely, you have (in error) placed the opening @samp{@{} of the action
 block on a different line than the rule, e.g.,
@@ -262,9 +250,9 @@ block on a different line than the rule, e.g.,
 @example
 @verbatim
 ^(foo|bar)
-   {  <<<--- WRONG!
+{  <<<--- WRONG!
 
-   }
+}
 @end verbatim
 @end example
 
@@ -276,7 +264,7 @@ as follows:
 @verbatim
 ^(foo|bar)   {  // CORRECT!
 
-    }
+}
 @end verbatim
 @end example
 
@@ -287,7 +275,7 @@ How can I have multiple input sources feed into the same scanner at
 the same time?
 
 If...
-@itemize @w
+@itemize
 @item
 your scanner is free of backtracking (verified using flex's -b flag),
 @item
@@ -324,7 +312,6 @@ IPC traffic from sockets, and it works fine.
 
 Can I build nested parsers that work with the same input file?
 
-
 This is not going to work without some additional effort.  The reason is
 that flex block-buffers the input it reads from yyin.  This means that the
 "outermost" yylex(), when called, will automatically slurp up the first 8K
@@ -339,7 +326,6 @@ exclusive start condition for each.
 @unnumberedsec How can I match text only at the end of a file?
 
 How can I match text only at the end of a file?
-
 
 There is no way to write a rule which is "match this text, but only if
 it comes at the end of the file".  You can fake it, though, if you happen
@@ -359,7 +345,6 @@ real EOF next time it's called).  Then you could write:
 
 How can I make REJECT cascade across start condition boundaries?
 
-
 You can do this as follows.  Suppose you have a start condition A, and
 after exhausting all of the possible matches in <A>, you want to try
 matches in <INITIAL>.  Then you could use the following:
@@ -373,27 +358,24 @@ matches in <INITIAL>.  Then you could use the following:
 <A>etc.
 ...
 <A>.|\n  {
-            /* Shortest and last rule in <A>, so
-             * cascaded REJECT's will eventually
-             * wind up matching this rule.  We want
-             * to now switch to the initial state
-             * and try matching from there instead.
-             */
-            yyless(0);    /* put back matched text */
-            BEGIN(INITIAL);
-         }
+/* Shortest and last rule in <A>, so
+* cascaded REJECT's will eventually
+* wind up matching this rule.  We want
+* to now switch to the initial state
+* and try matching from there instead.
+*/
+yyless(0);    /* put back matched text */
+BEGIN(INITIAL);
+}
 @end verbatim
 @end example
 
-@node  Why can't I use fast or full tables with interactive mode?
+@node  Why cant I use fast or full tables with interactive mode?
 @unnumberedsec Why can't I use fast or full tables with interactive mode?
 
-Why can't I use fast or full tables with interactive mode?
-
-
 One of the assumptions
-flex makes is that interactive applications are inherently slow (for just
-that reason, they're waiting on a human).  
+flex makes is that interactive applications are inherently slow (they're
+waiting on a human after all).
 It has to do with how the scanner detects that it must be finished scanning
 a token.  For interactive scanners, after scanning each character the current
 state is looked up in a table (essentially) to see whether there's a chance
@@ -406,36 +388,28 @@ as fast as possible.
 Still, it seems reasonable to allow the user to choose to trade off a bit
 of performance in this area to gain the corresponding flexibility.  There
 might be another reason, though, why fast scanners don't support the
-interactive option 
+interactive option
 
 @node  How much faster is -F or -f than -C?
 @unnumberedsec How much faster is -F or -f than -C?
 
 How much faster is -F or -f than -C?
 
-
 Much faster (factor of 2-3).
 
-@node  If I have a simple grammar can't I just parse it with flex?
+@node  If I have a simple grammar cant I just parse it with flex?
 @unnumberedsec If I have a simple grammar can't I just parse it with flex?
-
-If I have a simple grammar, can't I just parse it with flex?
-
 
 Is your grammar recursive? That's almost always a sign that you're
 better off using a parser/scanner rather than just trying to use a scanner
 alone.
-@node  Why doesn't yyrestart() set the start state back to INITIAL?
+@node  Why doesnt yyrestart() set the start state back to INITIAL?
 @unnumberedsec Why doesn't yyrestart() set the start state back to INITIAL?
-
-Why doesn't yyrestart() set the start state back to INITIAL?
-
-
 
 There are two reasons.  The first is that there might
 be programs that rely on the start state not changing across file changes.
 The second is that with flex 2.4, use of yyrestart() is no longer required,
-so fixing the problem there doesn't solve the more general problem.  
+so fixing the problem there doesn't solve the more general problem.
 
 @node  How can I match C-style comments?
 @unnumberedsec How can I match C-style comments?
@@ -458,12 +432,11 @@ or, worse, this:
 @end verbatim
 @end example
 
-
 The above rules will eat too much input, and blow up on things like:
 
 @example
 @verbatim
-    /* a comment */ do_my_thing( "oops */" );
+/* a comment */ do_my_thing( "oops */" );
 @end verbatim
 @end example
 
@@ -472,21 +445,19 @@ Here is one way which allows you to track line information:
 @example
 @verbatim
 <INITIAL>{
-    "/*"              BEGIN(IN_COMMENT);
+"/*"              BEGIN(IN_COMMENT);
 }
 <IN_COMMENT>{
-    "*/"      BEGIN(INITIAL);
-    [^*\n]+   // eat comment in chunks
-    "*"       // eat the lone star
-    \n        yylineno++;
+"*/"      BEGIN(INITIAL);
+[^*\n]+   // eat comment in chunks
+"*"       // eat the lone star
+\n        yylineno++;
 }
 @end verbatim
 @end example
 
-@node  The '.' isn't working the way I expected.
+@node  The period isnt working the way I expected.
 @unnumberedsec The '.' isn't working the way I expected.
-
-The '.' (dot) isn't working the way I expected.
 
 Here are some tips for using @samp{.}:
 
@@ -511,7 +482,6 @@ If you really want to match ANY character, including newlines, then use @code{(.
 Finally, if you want to match a literal @samp{.} (a period), then use [.] or "."
 @end itemize
 
-
 @node  Can I get the flex manual in another format?
 @unnumberedsec Can I get the flex manual in another format?
 
@@ -522,7 +492,7 @@ You can use the "texi2*" tools to convert the manual to any format
 you desire (e.g., @samp{texi2html}).
 
 @node  Does there exist a "faster" NDFA->DFA algorithm?
-@unnumberedsec Does there exist a "faster" NDFA->DFA algorithm? 
+@unnumberedsec Does there exist a "faster" NDFA->DFA algorithm?
 
 Does there exist a "faster" NDFA->DFA algorithm? Most standard texts (e.g.,
 Aho), imply that NDFA->DFA can take exponential time, since there are
@@ -559,8 +529,7 @@ state can be done very quickly, by first comparing hash values.
 
 How can I use more than 8192 rules?
 
-
-Flex is compiled with an upper limit of 8192 rules per scanner. 
+Flex is compiled with an upper limit of 8192 rules per scanner.
 If you need more than 8192 rules in your scanner, you'll have to recompile flex
 with the following changes in flexdef.h:
 
@@ -583,7 +552,6 @@ is the best way to solve your problem.
 
 How do I abandon a file in the middle of a scan and switch to a new file?
 
-
 Just all yyrestart(newfile). Be sure to reset the start state if you want a
 "fresh" start, since yyrestart does NOT reset the start state back to INITIAL.
 
@@ -599,13 +567,13 @@ can add to the beginning of your rules section:
 @example
 @verbatim
 %%
-    /* Must be indented! */
-    static int did_init = 0;
+/* Must be indented! */
+static int did_init = 0;
 
-    if ( ! did_init ){
-        do_my_init();
-        did_init = 1;
-    }
+if ( ! did_init ){
+do_my_init();
+did_init = 1;
+}
 @end verbatim
 @end example
 
@@ -613,7 +581,6 @@ can add to the beginning of your rules section:
 @unnumberedsec How do I execute code at termination?
 
 How do I execute code at termination (i.e., only after the last scan?)
-
 
 You can specifiy an action for the <<EOF>> rule.
 @node  Where else can I find help?
@@ -639,7 +606,7 @@ I get an error about undefined yywrap().
 You must supply a yywrap() function of your own, or link to libfl.a
 (which provides one), or use
 
-    %option noyywrap
+%option noyywrap
 
 in your source to say you don't want a yywrap() function.
 See the manual page for more details concerning yywrap().
@@ -684,30 +651,29 @@ However, you can do this using multiple input buffers.
 @verbatim
 %%
 macro/[a-z]+	{
-    /* Saw the macro "macro" followed by extra stuff. */
-    main_buffer = YY_CURRENT_BUFFER;
-    expansion_buffer = yy_scan_string(expand(yytext));
-    yy_switch_to_buffer(expansion_buffer);
-    }
+/* Saw the macro "macro" followed by extra stuff. */
+main_buffer = YY_CURRENT_BUFFER;
+expansion_buffer = yy_scan_string(expand(yytext));
+yy_switch_to_buffer(expansion_buffer);
+}
 
 <<EOF>>	{
-    if ( expansion_buffer )
-        {
-        // We were doing an expansion, return to where
-        // we were.
-        yy_switch_to_buffer(main_buffer);
-        yy_delete_buffer(expansion_buffer);
-        expansion_buffer = 0;
-        }
-    else
-        yyterminate();
-    }
+if ( expansion_buffer )
+{
+// We were doing an expansion, return to where
+// we were.
+yy_switch_to_buffer(main_buffer);
+yy_delete_buffer(expansion_buffer);
+expansion_buffer = 0;
+}
+else
+yyterminate();
+}
 @end verbatim
 @end example
 
 You probably will want a stack of expansion buffers to allow nested macros.
 From the above though hopefully the idea is clear.
-
 
 @node How can I build a two-pass scanner?
 @unnumberedsec How can I build a two-pass scanner?
@@ -725,7 +691,6 @@ is a two-pass approach, once through the text and once through the parse
 tree, but the performance hit for the latter is usually an order of magnitude
 smaller, since everything is already classified, in binary format, and
 residing in memory.
-
 
 @node How do I match any string not matched in the preceding rules?
 @unnumberedsec How do I match any string not matched in the preceding rules?
@@ -762,7 +727,6 @@ what they're doing, and then replace input() with an appropriate definition of
 YY_INPUT (see the flex man page).  You shouldn't need to (and must not) replace
 flex's unput() function.
 
-
 @node Is there a way to make flex treat NULL like a regular character?
 @unnumberedsec Is there a way to make flex treat NULL like a regular character?
 
@@ -770,7 +734,6 @@ Is there a way to make flex treat NULL like a regular character?
 
 Yes, \0 and \x00 should both do the trick.  Perhaps you have an ancient
 version of flex.  The latest release is version @value{VERSION}.
-
 
 @node Whenever flex can not match the input it says "flex scanner jammed".
 @unnumberedsec Whenever flex can not match the input it says "flex scanner jammed".
@@ -792,14 +755,12 @@ e.g.,
 
 See %option default for more information.
 
-@node Why doesn't flex have non-greedy operators like perl does?
+@node Why doesnt flex have non-greedy operators like perl does?
 @unnumberedsec Why doesn't flex have non-greedy operators like perl does?
-
-Why doesn't flex have non-greedy operators like perl does?
 
 A DFA can do a non-greedy match by stopping
 the first time it enters an accepting state, instead of consuming input until
-it determines that no further matching is possible (a "jam" state).  This
+it determines that no further matching is possible (a ``jam'' state).  This
 is actually easier to implement than longest leftmost match (which flex does).
 
 But it's also much less useful than longest leftmost match.  In general,
@@ -807,7 +768,7 @@ when you find yourself wishing for non-greedy matching, that's usually a
 sign that you're trying to make the scanner do some parsing.  That's
 generally the wrong approach, since it lacks the power to do a decent job.
 Better is to either introduce a separate parser, or to split the scanner
-into multiple scanners using (exclusive) start conditions.  
+into multiple scanners using (exclusive) start conditions.
 
 You might have
 a separate start state once you've seen the BEGIN. In that state, you
@@ -815,7 +776,6 @@ might then have a regex that will match END (to kick you out of the
 state), and perhaps (.|\n) to get a single character within the chunk ...
 
 This approach also has much better error-reporting properties.
-
 
 @node Memory leak - 16386 bytes allocated by malloc.
 @unnumberedsec Memory leak - 16386 bytes allocated by malloc.
@@ -827,10 +787,10 @@ on.
 The leak is about 16426 bytes.  That is, (8192 * 2 + 2) for the read-buffer, and
 about 40 for struct yy_buffer_state (depending upon alignment). The leak is in
 the non-reentrant C scanner only (NOT in the reentrant scanner, NOT in the C++
-scanner). Since flex doesn't know when you are done, the buffer is never freed. 
+scanner). Since flex doesn't know when you are done, the buffer is never freed.
 
 However, the leak won't multiply since the buffer is reused no matter how many
-times you call yylex(). 
+times you call yylex().
 
 If you want to reclaim the memory when you are completely done scanning, then
 you might try this:
@@ -853,7 +813,7 @@ situation. It is possible that some other globals may need resetting as well.
 @verbatim
 >   We thought that it would be possible to have this number through the
 >   evaluation of the following expression:
-> 
+>
 >   seek_position = (no_buffers)*YY_READ_BUF_SIZE + yy_c_buf_p - yy_current_buffer->yy_ch_buf
 @end verbatim
 @end example
@@ -888,7 +848,7 @@ In-reply-to: Your message of Thu, 08 Dec 94 13:10:58 EST.
 Date: Wed, 14 Dec 94 16:40:47 PST
 From: Vern Paxson <vern>
 
-> We'd like to override the provided LexerInput() and LexerOutput() 
+> We'd like to override the provided LexerInput() and LexerOutput()
 > functions, but we'd like to *not* use iostreams.  Instead, we'd like
 > to use some of our own I/O classes.  Is this possible?
 
@@ -914,10 +874,10 @@ patterns?
 
 In the example below, we want to skip over characters until we see the phrase
 "endskip". The following will @emph{NOT} work correctly (do you see why not?)
-   
+
 @example
 @verbatim
-  /* INCORRECT SCANNER */
+/* INCORRECT SCANNER */
 %x SKIP
 %%
 <INITIAL>startskip   BEGIN(SKIP);
@@ -975,7 +935,7 @@ Date: Wed, 18 Sep 96 10:51:02 PDT
 From: Vern Paxson <vern>
 
 [Note, the most recent flex release is 2.5.4, which you can get from
- ftp.ee.lbl.gov.  It has bug fixes over 2.5.2 and 2.5.3.]
+ftp.ee.lbl.gov.  It has bug fixes over 2.5.2 and 2.5.3.]
 
 > 1. Using the pattern
 >    ([Ff](oot)?)?[Nn](ote)?(\.)?
@@ -998,10 +958,10 @@ preferable.
 
 > 3. I have a pattern that look like this:
 >    pats {p1}|{p2}|{p3}|...|{p50}     (50 patterns ORd)
-> 
+>
 >    running yet another complicated program that includes the following rule:
 >    <snext>{and}/{no4}{bb}{pats}
-> 
+>
 >    gets me to "too complicated - over 32,000 states"...
 
 I can't tell from this example whether the trailing context is variable-length
@@ -1021,11 +981,11 @@ this case '[Ff]oot' is preferred to '(F|f)oot'.
 
 > 4. I changed a rule that looked like this:
 >    <snext8>{and}{bb}/{ROMAN}[^A-Za-z] { BEGIN...
-> 
+>
 >    to the next 2 rules:
 >    <snext8>{and}{bb}/{ROMAN}[A-Za-z] { ECHO;}
 >    <snext8>{and}{bb}/{ROMAN}         { BEGIN...
-> 
+>
 >    Again, I understand the using [^...] will cause a great performance loss
 
 Actually, it doesn't cause any sort of performance loss.  It's a surprising
@@ -1082,14 +1042,13 @@ simplify your scanner - those are certainly preferable!
 
 		Vern
 
-
 To increase the 32K limit (on a machine with 32 bit integers), you increase
 the magnitude of the following in flexdef.h:
 
-        #define JAMSTATE -32766 /* marks a reference to the state that always jams */
-        #define MAXIMUM_MNS 31999
-        #define BAD_SUBSCRIPT -32767
-        #define MAX_SHORT 32700
+#define JAMSTATE -32766 /* marks a reference to the state that always jams */
+#define MAXIMUM_MNS 31999
+#define BAD_SUBSCRIPT -32767
+#define MAX_SHORT 32700
 
 Adding a 0 or two after each should do the trick.
 @end verbatim
@@ -1106,9 +1065,9 @@ In-reply-to: Your message of Thu, 03 Oct 1996 17:24:04 PDT.
 Date: Fri, 04 Oct 1996 11:42:18 PDT
 From: Vern Paxson <vern>
 
->      I assume as long as my *.l file defines the 
->      range of expected character code values (in octal format), flex will 
->      scan the file and read multi-byte characters correctly. But I have no 
+>      I assume as long as my *.l file defines the
+>      range of expected character code values (in octal format), flex will
+>      scan the file and read multi-byte characters correctly. But I have no
 >      confidence in this assumption.
 
 Your lack of confidence is justified - this won't work.
@@ -1183,14 +1142,14 @@ That said ...
 
 > #: main.c:545
 > msgid "  %d protos created\n"
-> 
+>
 > Does proto mean prototype?
 
 Yes - prototypes of state compression tables.
 
 > #: main.c:539
 > msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
-> 
+>
 > Here I'm mainly puzzled by 'nxt-chk'. I guess it means 'next-check'. (?)
 > However, 'template next-check entries' doesn't make much sense to me. To be
 > able to find a good translation I need to know a little bit more about it.
@@ -1208,7 +1167,7 @@ way to compress the tables.
 
 > #: main.c:533
 > msgid "  %d/%d base-def entries created\n"
-> 
+>
 > The same problem here for 'base-def'.
 
 See above.
@@ -1228,14 +1187,14 @@ In-reply-to: Your message of Wed, 13 Nov 1996 17:28:38 PST.
 Date: Wed, 13 Nov 1996 19:51:54 PST
 From: Vern Paxson <vern>
 
-> "unput()" them to input flow, question occurs. If I do this after I scan 
-> a carriage, the variable "yy_current_buffer->yy_at_bol" is changed. That 
-> means the carriage flag has gone. 
+> "unput()" them to input flow, question occurs. If I do this after I scan
+> a carriage, the variable "yy_current_buffer->yy_at_bol" is changed. That
+> means the carriage flag has gone.
 
 You can control this by calling yy_set_bol().  It's described in the manual.
 
->      And if in pre-reading it goes to the end of file, is anything done 
-> to control the end of curren buffer and end of file?   
+>      And if in pre-reading it goes to the end of file, is anything done
+> to control the end of curren buffer and end of file?
 
 No, there's no way to put back an end-of-file.
 
@@ -1259,8 +1218,8 @@ In-reply-to: Your message of Mon, 18 Nov 1996 09:45:02 PST.
 Date: Mon, 18 Nov 1996 10:41:34 PST
 From: Vern Paxson <vern>
 
-> I am not able to use the start condition scope and to use the | (OR) with 
-> rules having start conditions. 
+> I am not able to use the start condition scope and to use the | (OR) with
+> rules having start conditions.
 
 The problem is that if you use '|' as a regular expression operator, for
 example "a|b" meaning "match either 'a' or 'b'", then it must *not* have
@@ -1328,7 +1287,7 @@ From: Vern Paxson <vern>
 
 > In my lexer code, i have the line :
 > ^\*.*          { }
-> 
+>
 > Thus all lines starting with an astrix (*) are comment lines.
 > This does not work !
 
@@ -1364,7 +1323,7 @@ Date: Wed, 27 Nov 1996 10:56:25 PST
 From: Vern Paxson <vern>
 
 >     Organization(s)?/[a-z]
-> 
+>
 > This matched "Organizations" (looking in debug mode, the trailing s
 > was matched with trailing context instead of the optional (s) in the
 > end of the word.
@@ -1409,10 +1368,10 @@ sometimes find there way to me, but some may drop between the cracks.
 
 This is already mentioned in the manual:
 
-     Finally, here's an example of how to  match  C-style  quoted
-     strings using exclusive start conditions, including expanded
-     escape sequences (but not including checking  for  a  string
-     that's too long):
+Finally, here's an example of how to  match  C-style  quoted
+strings using exclusive start conditions, including expanded
+escape sequences (but not including checking  for  a  string
+that's too long):
 
 The reason for not doing the overflow checking is that it will needlessly
 clutter up an example whose main purpose is just to demonstrate how to
@@ -1492,11 +1451,11 @@ From: Vern Paxson <vern>
 
 > #define YY_DECL   int yylex (YYSTYPE *lvalp, struct parser_control
 > *parm)
-> 
+>
 > I have been trying  to get this to work as a C++ scanner, but it does
 > not appear to be possible (warning that it matches no declarations in
 > yyFlexLexer, or something like that).
-> 
+>
 > Is this supposed to be possible, or is it being worked on (I DID
 > notice the comment that scanner classes are still experimental, so I'm
 > not too hopeful)?
@@ -1521,7 +1480,7 @@ Date: Fri, 05 Sep 1997 10:01:54 PDT
 From: Vern Paxson <vern>
 
 > In that example you show how to count comment lines when using
-> C style /* ... */ comments. My question is, shouldn't you take into 
+> C style /* ... */ comments. My question is, shouldn't you take into
 > account a scenario where end of a comment marker occurs inside
 > character or string literals?
 
@@ -1590,9 +1549,9 @@ In-reply-to: Your message of Fri, 12 Sep 1997 15:02:28 PDT.
 Date: Fri, 12 Sep 1997 10:31:50 PDT
 From: Vern Paxson <vern>
 
->      before I start beavering away I wonder if you know of any 
->      place/libraries for flex 
->      desciption files that might already do this or give me a head start ? 
+>      before I start beavering away I wonder if you know of any
+>      place/libraries for flex
+>      desciption files that might already do this or give me a head start ?
 
 Unfortunately, no, I don't.  You might try asking on comp.compilers.
 
@@ -1619,11 +1578,11 @@ From: Vern Paxson <vern>
 > #else
 > it	\<I\>
 > #endif
-> 
+>
 > Now, I can't add states for these, as I have already too many states
 > and the program is very complicated, and I won't be able to handle
 > 10 or 20 more states.
-> 
+>
 > Any trick to do this ?
 
 You might try using m4, or the C preprocessor plus a sed script to
@@ -1689,17 +1648,17 @@ From: Vern Paxson <vern>
 
 > I took a quick look into the flex-sources and altered some #defines in
 > flexdefs.h:
-> 
-> 	#define INITIAL_MNS 64000       
-> 	#define MNS_INCREMENT 1024000   
+>
+> 	#define INITIAL_MNS 64000
+> 	#define MNS_INCREMENT 1024000
 > 	#define MAXIMUM_MNS 64000
 
 The things to fix are to add a couple of zeroes to:
 
-        #define JAMSTATE -32766 /* marks a reference to the state that always jams */
-        #define MAXIMUM_MNS 31999
-        #define BAD_SUBSCRIPT -32767
-        #define MAX_SHORT 32700
+#define JAMSTATE -32766 /* marks a reference to the state that always jams */
+#define MAXIMUM_MNS 31999
+#define BAD_SUBSCRIPT -32767
+#define MAX_SHORT 32700
 
 and, if you get complaints about too many rules, make the following change too:
 
@@ -1724,12 +1683,12 @@ From: Vern Paxson <vern>
 >         stdin_handle = YY_CURRENT_BUFFER;
 >         ifstream fin( "aFile" );
 >         yy_switch_to_buffer( yy_create_buffer( fin, YY_BUF_SIZE ) );
-> 
+>
 > What I'm wanting to do, is pass the contents of a file thru one set
 > of rules and then pass stdin thru another set... It works great if, I
 > don't use the C++ classes. But since everything else that I'm doing is
 > in C++, I thought I'd be consistent.
-> 
+>
 > The problem is that 'yy_create_buffer' is expecting an istream* as it's
 > first argument (as stated in the man page). However, fin is a ifstream
 > object. Any ideas on what I might be doing wrong? Any help would be
@@ -1786,11 +1745,11 @@ From: Vern Paxson <vern>
 
 > /usr/lib/yaccpar: In function `int yyparse()':
 > /usr/lib/yaccpar:184: warning: implicit declaration of function `int yylex(...)'
-> 
-> ld: Undefined symbol 
->    _yylex 
->    _yyparse 
->    _yyin 
+>
+> ld: Undefined symbol
+>    _yylex
+>    _yyparse
+>    _yyin
 
 This is a known problem with Solaris C++ (and/or Solaris yacc).  I believe
 the fix is to explicitly insert some 'extern "C"' statements for the
@@ -1896,7 +1855,7 @@ In-reply-to: Your message of Mon, 12 Jan 1998 18:58:23 PST.
 Date: Mon, 12 Jan 1998 12:03:15 PST
 From: Vern Paxson <vern>
 
-> The problem is how to determine the current position in flex active 
+> The problem is how to determine the current position in flex active
 > buffer when a rule is matched....
 
 You will need to keep track of this explicitly, such as by redefining
@@ -2011,7 +1970,7 @@ From: Vern Paxson <vern>
 
 > I am curious as to
 > whether there is a simple way to backtrack from the generated source to
-> reproduce the lost list of tokens we are searching on.  
+> reproduce the lost list of tokens we are searching on.
 
 In theory, it's straight-forward to go from the DFA representation
 back to a regular-expression representation - the two are isomorphic.
@@ -2043,10 +2002,10 @@ From: Vern Paxson <vern>
 This is exactly what will happen if your input file has embedded NULs.
 From the man page:
 
-     A final note: flex is slow when matching NUL's, particularly
-     when  a  token  contains multiple NUL's.  It's best to write
-     rules which match short amounts of text if it's  anticipated
-     that the text will often include NUL's.
+A final note: flex is slow when matching NUL's, particularly
+when  a  token  contains multiple NUL's.  It's best to write
+rules which match short amounts of text if it's  anticipated
+that the text will often include NUL's.
 
 So that's the first thing to look for.
 
@@ -2104,8 +2063,8 @@ In-reply-to: Your message of Wed, 03 Jun 1998 11:26:22 PDT.
 Date: Wed, 03 Jun 1998 10:22:26 PDT
 From: Vern Paxson <vern>
 
-> I am researching the Y2K problem with General Electric R&D 
-> and need to know if there are any known issues concerning 
+> I am researching the Y2K problem with General Electric R&D
+> and need to know if there are any known issues concerning
 > the above mentioned software and Y2K regardless of version.
 
 There shouldn't be, all it ever does with the date is ask the system
@@ -2157,12 +2116,12 @@ From: Vern Paxson <vern>
 > alpha   [A-Za-z]
 > dig     [0-9]
 > %%
-> 
+>
 > Now you'd expect mylineno to be a member of each instance of class
 > yyFlexLexer, but is this the case?  A look at the lex.yy.cc file seems to
 > indicate otherwise; unless I am missing something the declaration of
 > mylineno seems to be outside any class scope.
-> 
+>
 > How will this work if I want to run a multi-threaded application with each
 > thread creating a FlexLexer instance?
 
@@ -2184,7 +2143,7 @@ Date: Tue, 04 Aug 1998 22:28:45 PDT
 From: Vern Paxson <vern>
 
 > Vern Paxson,
-> 
+>
 > I followed your advice, posted on Usenet bu you, and emailed to me
 > personally by you, on how to overcome the 32K states limit. I'm running
 > on Linux machines.
@@ -2194,7 +2153,7 @@ From: Vern Paxson <vern>
 > #define MAXIMUM_MNS 319990
 > #define BAD_SUBSCRIPT -327670
 > #define MAX_SHORT 327000
-> 
+>
 > and compiled.
 > All looked fine, including check and bigcheck, so I installed.
 
@@ -2280,13 +2239,13 @@ Content-Transfer-Encoding: 7bit
 Hi Vern,
 
 Yesterday, I encountered a strange problem: I use the macro processor m4
-to include some lengthy lists into a .l file. Following is a flex macro 
+to include some lengthy lists into a .l file. Following is a flex macro
 definition that causes some serious pain in my neck:
 
 AUTHOR           ("A. Boucard / L. Boucard"|"A. Dastarac / M. Levent"|"A.Boucaud / L.Boucaud"|"Abderrahim Lamchichi"|"Achmat Dangor"|"Adeline Toullier"|"Adewale Maja-Pearce"|"Ahmed Ziri"|"Akram Ellyas"|"Alain Bihr"|"Alain Gresh"|"Alain Guillemoles"|"Alain Joxe"|"Alain Morice"|"Alain Renon"|"Alain Zecchini"|"Albert Memmi"|"Alberto Manguel"|"Alex De Waal"|"Alfonso Artico"| [...])
 
 The complete list contains about 10kB. When I try to "flex" this file
-(on a Solaris 2.6 machine, using a modified flex 2.5.4 (I only increased 
+(on a Solaris 2.6 machine, using a modified flex 2.5.4 (I only increased
 some of the predefined values in flexdefs.h) I get the error:
 
 myflex/flex -8  sentag.tmp.l
@@ -2298,11 +2257,11 @@ really means "/" and not "trailing context". Furthermore, I tried to
 escape the slashes with backslashes, but with no use, the same error message
 appeared when flexing the code.
 
-Do you have an idea what's going on here? 
+Do you have an idea what's going on here?
 
 Greetings from Germany,
 	Georg
--- 
+--
 Georg Rehm                                     georg@cl-ki.uni-osnabrueck.de
 Institute for Semantic Information Processing, University of Osnabrueck, FRG
 @end verbatim
@@ -2329,7 +2288,7 @@ removing spaces would do the same thing.
 
 The fix is to either rethink how come you're using such a big macro and
 perhaps there's another/better way to do it; or to rebuild flex's own
-scan.c with a larger value for 
+scan.c with a larger value for
 
 	#define YY_BUF_SIZE 16384
 
@@ -2349,12 +2308,12 @@ Date: Sat, 05 Sep 1998 00:59:49 PDT
 From: Vern Paxson <vern>
 
 > %%
-> 
+>
 > "TEST1\n"       { fprintf(stderr, "TEST1\n"); yyless(5); }
 > ^\n             { fprintf(stderr, "empty line\n"); }
 > .               { }
 > \n              { fprintf(stderr, "new line\n"); }
-> 
+>
 > %%
 > -- input ---------------------------------------
 > TEST1
@@ -2399,7 +2358,7 @@ From: Vern Paxson <vern>
 > trying to make my scanner restart with a new file after my parser stops
 > with a parse error. When my compiler restarts, the parser always
 > receives the token after the token (in the old file!) that caused the
-> parser error. 
+> parser error.
 
 I suspect the problem is that your parser has read ahead in order
 to attempt to resolve an ambiguity, and when it's restarted it picks
@@ -2516,10 +2475,10 @@ From: Vern Paxson <vern>
 
 Increase the definitions in flexdef.h for:
 
-        #define JAMSTATE -32766 /* marks a reference to the state that always j
+#define JAMSTATE -32766 /* marks a reference to the state that always j
 ams */
-        #define MAXIMUM_MNS 31999
-        #define BAD_SUBSCRIPT -32767
+#define MAXIMUM_MNS 31999
+#define BAD_SUBSCRIPT -32767
 
 recompile everything, and it should all work.
 
@@ -2599,11 +2558,11 @@ Date: Tue, 15 Jun 1999 08:55:43 -0700
 From: "Aki Niimura" <neko@my-deja.com>
 Message-ID: <KNONDOHDOBGAEAAA@my-deja.com>
 Mime-Version: 1.0
-Cc: 
+Cc:
 X-Sent-Mail: on
-Reply-To: 
+Reply-To:
 X-Mailer: MailCity Service
-Subject: A question on flex C++ scanner 
+Subject: A question on flex C++ scanner
 X-Sender-Ip: 12.72.207.61
 Organization: My Deja Email  (http://www.my-deja.com:80)
 Content-Type: text/plain; charset=us-ascii
@@ -2649,8 +2608,6 @@ Your response would be highly appreciated.
 Best regards,
 Aki Niimura
 
-
-
 --== Sent via Deja.com http://www.deja.com/ ==--
 Share what you know. Learn what you don't.
 @end verbatim
@@ -2662,7 +2619,7 @@ Share what you know. Learn what you don't.
 @example
 @verbatim
 To: neko@my-deja.com
-Subject: Re: A question on flex C++ scanner 
+Subject: Re: A question on flex C++ scanner
 In-reply-to: Your message of Tue, 15 Jun 1999 08:55:43 PDT.
 Date: Tue, 15 Jun 1999 09:04:24 PDT
 From: Vern Paxson <vern>
@@ -2750,10 +2707,10 @@ Date: Thu, 08 Jul 1999 08:20:39 PDT
 From: Vern Paxson <vern>
 
 > I was hoping you could help me with my problem.
-> 
+>
 > I tried compiling (gnu)flex on a Solaris 2.4 machine
 > but when I ran make (after configure) I got an error.
-> 
+>
 > --------------------------------------------------------------
 > gcc -c -I. -I. -g -O parse.c
 > ./flex -t -p  ./scan.l >scan.c
@@ -2761,14 +2718,14 @@ From: Vern Paxson <vern>
 > *** Error code 1
 > make: Fatal error: Command failed for target `scan.c'
 > -------------------------------------------------------------
-> 
-> What's strange to me is that I'm only 
-> trying to install flex now. I then edited the Makefile to 
+>
+> What's strange to me is that I'm only
+> trying to install flex now. I then edited the Makefile to
 > and changed where it says "FLEX = flex" to "FLEX = lex"
 > ( lex: the native Solaris one ) but then it complains about
-> the "-p" option. Is there any way I can compile flex without 
+> the "-p" option. Is there any way I can compile flex without
 > using flex or lex?
-> 
+>
 > Thanks so much for your time.
 
 You managed to step on the bootstrap sequence, which first copies
@@ -2842,7 +2799,7 @@ From: Vern Paxson <vern>
 
 Well, your problem is the
 
-        switch (yybgin-yysvec-1) {      /* witchcraft */
+switch (yybgin-yysvec-1) {      /* witchcraft */
 
 at the beginning of lex rules.  "witchcraft" == "non-portable".  It's
 assuming knowledge of the AT&T lex's internal variables.
@@ -2895,7 +2852,7 @@ From: Vern Paxson <vern>
 
 > However, I do not use unput anywhere. I do use self-referencing
 > rules like this:
-> 
+>
 > UnaryExpr               ({UnionExpr})|("-"{UnaryExpr})
 
 You can't do this - flex is *not* a parser like yacc (which does indeed
@@ -2921,7 +2878,7 @@ If this is exactly your program:
 > digit [0-9]
 > digits {digit}+
 > whitespace [ \t\n]+
-> 
+>
 > %%
 > "[" { printf("open_brac\n");}
 > "]" { printf("close_brac\n");}
@@ -2935,4 +2892,3 @@ then the problem is that the last rule needs to be "{whitespace}" !
 		Vern
 @end verbatim
 @end example
-
