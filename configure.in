@@ -24,7 +24,7 @@ dnl PURPOSE.
 dnl autoconf requirements and initialization
 
 AC_PREREQ(2.54)
-AC_INIT(flex,2.5.23,help-flex@gnu.org)
+AC_INIT(flex,2.5.24,help-flex@gnu.org)
 AC_CONFIG_SRCDIR(scan.l)
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADER(config.h:conf.in)
