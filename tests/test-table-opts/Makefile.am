@@ -22,6 +22,8 @@
 # ------------------------------------------------
 # This test is really a set of tests, one for
 # each compression flag. -Ca, -Cem, etc..
+# Then we test the serializalization mechanism.
+# THEN we compare the serialized tables to the non-serialized.
 # ------------------------------------------------
 
 BISON = @BISON@
@@ -29,17 +31,20 @@ FLEX = $(top_builddir)/flex
 
 testname  := test-table-opts
 allopts   := -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caf -CaF -Cam -Caem
-alltests  := $(foreach opt,$(allopts),test-opt-r$(opt) test-opt-nr$(opt))
+variations := opt-nr opt-r ser-nr ser-r
+alltests  := $(foreach opt,$(allopts), $(foreach vari,$(variations),test-$(vari)$(opt)))
 alltestexe := $(addsuffix $(EXEEXT),$(alltests))
 alltestsrc := $(addsuffix .c,$(alltests))
 alltestobj := $(addsuffix .o,$(alltests))
+alltables  := $(addsuffix .tables,$(alltests))
 
 EXTRA_DIST = scanner.l test.input
-CLEANFILES = scanner.c OUTPUT $(alltestobj) $(alltestsrc) $(alltestexe)
+CLEANFILES = scanner.c OUTPUT $(alltestobj) $(alltestsrc) $(alltestexe)\
+             $(alltables)
 INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
 
 
-test-table-opts: $(alltests)
+test-table-opts: $(alltests) comparison_test
 
 test-opt-r%.c: $(srcdir)/scanner.l
 	$(FLEX) --reentrant $*  -o $@ $<
@@ -47,7 +52,16 @@ test-opt-r%.c: $(srcdir)/scanner.l
 test-opt-nr%.c: $(srcdir)/scanner.l
 	$(FLEX) $* -o $@ $<
 
+test-ser-r%.c: $(srcdir)/scanner.l
+	$(FLEX) --reentrant --tables-file="test-ser-r$*.tables" $*  -o $@ $<
+
+test-ser-nr%.c: $(srcdir)/scanner.l
+	$(FLEX) --tables-file="test-ser-nr$*.tables"  $* -o $@ $<
+
 test-opt%$(EXEEXT): test-opt%.o
+	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
+
+test-ser%$(EXEEXT): test-ser%.o
 	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
 test: $(alltestexe)

@@ -6,3 +6,4 @@ TEMPLATE
 OUTPUT
 .deps
 test-opt-*
+test-ser-*
