@@ -179,7 +179,7 @@ int yylex_init YY_PARAMS((yyscan_t* scanner));
  *        yyscan_t yyscanner;
  */
 #ifdef YY_TRADITIONAL_FUNC_DEFS
-/* Generate rtaditional function defs */
+/* Generate traditional function defs */
 #define YYFARGS0(v) (YY_DEF_ONLY_ARG) YY_DECL_LAST_ARG
 #define YYFARGS1(t1,n1) (n1 YY_DEF_LAST_ARG) t1 n1; YY_DECL_LAST_ARG
 #define YYFARGS2(t1,n1,t2,n2) (n1,n2 YY_DEF_LAST_ARG) t1 n1; t2 n2; YY_DECL_LAST_ARG
