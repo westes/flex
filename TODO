@@ -30,3 +30,8 @@
 
 ** explicitly describe the copyright state of the entries in
    tests/. should this be public domain by default?
+
+* move as much skeleton code as possible out of gen.c and into
+  flex.skl
+
+* create a uniform memory management API
