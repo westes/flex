@@ -43,7 +43,7 @@ static char rcsid[] =
 
 int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, actvp, rulelen;
 int trlcontxt, xcluflg, cclsorted, varlength, variable_trail_rule;
-char clower();
+Char clower();
 
 static int madeany = false;  /* whether we've made the '.' character class */
 int previous_continued_action;	/* whether the previous rule's action was '|' */
@@ -305,8 +305,8 @@ re              :  re '|' series
 			    if ( ! varlength || headcnt != 0 )
 				{
 				fprintf( stderr,
-    "flex: warning - trailing context rule at line %d made variable because\n",
-					 linenum );
+    "%s: warning - trailing context rule at line %d made variable because\n",
+					 program_name, linenum );
 				fprintf( stderr,
 					 "      of preceding '|' action\n" );
 				}
@@ -458,7 +458,7 @@ singleton       :  singleton '*'
 			    if ( useecs )
 				mkeccl( ccltbl + cclmap[anyccl],
 					ccllen[anyccl], nextecm,
-					ecgroup, CSIZE );
+					ecgroup, csize );
 			    
 			    madeany = true;
 			    }
@@ -478,7 +478,7 @@ singleton       :  singleton '*'
 
 			if ( useecs )
 			    mkeccl( ccltbl + cclmap[$1], ccllen[$1],
-				    nextecm, ecgroup, CSIZE );
+				    nextecm, ecgroup, csize );
 				     
 			++rulelen;
 
@@ -622,27 +622,29 @@ build_eof_action()
     }
 
 
-/* synerr - report a syntax error
- *
- * synopsis
- *    char str[];
- *    synerr( str );
- */
+/* synerr - report a syntax error */
 
 synerr( str )
 char str[];
 
     {
     syntaxerror = true;
-    fprintf( stderr, "Syntax error at line %d: %s\n", linenum, str );
+    pinpoint_message( str );
     }
 
 
-/* yyerror - eat up an error message from the parser
- *
- * synopsis
- *    char msg[];
- *    yyerror( msg );
+/* pinpoint_message - write out a message, pinpointing its location */
+
+pinpoint_message( str )
+char str[];
+
+    {
+    fprintf( stderr, "\"%s\", line %d: %s\n", infilename, linenum, str );
+    }
+
+
+/* yyerror - eat up an error message from the parser;
+ *	     currently, messages are ignore
  */
 
 yyerror( msg )
