@@ -26,7 +26,7 @@ EXTRA_DIST = scanner.l parser.y test.input main.c
 CLEANFILES = scanner.c scanner.h parser.c parser.h test-bison-nr $(OBJS) OUTPUT
 OBJS = scanner.o parser.o main.o
 
-INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
+AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir) -I501 507 1002 1001 1000 499 400 100 6 501top_builddir)
 #LDFLAGS = $(top_srcdir)/libfl.a 
 YFLAGS = --defines --output=parser.c --name-prefix="test"
 

@@ -26,7 +26,7 @@ EXTRA_DIST = scanner.l test.input
 CLEANFILES = scanner.c scanner.h test-mem-r OUTPUT $(OBJS)
 OBJS = scanner.o
 
-INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
+AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir) -I501 507 1002 1001 1000 499 400 100 6 501top_builddir)
 #LDFLAGS = $(top_srcdir)/libfl.a 
 
 testname = test-mem-r

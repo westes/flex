@@ -26,7 +26,7 @@ EXTRA_DIST = scanner.l test-1.input test-2.input test-3.input test-4.input test-
 CLEANFILES = scanner.c scanner.h parser.c parser.h test-pthread OUTPUT $(OBJS)
 OBJS = scanner.o # parser.o
 
-INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
+AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir) -I501 507 1002 1001 1000 499 400 100 6 501top_builddir)
 LDFLAGS = -lpthread
 #LFLAGS = --header="scanner.h"
 #YFLAGS = --defines --output=parser.c
