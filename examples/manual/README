@@ -1,17 +1,12 @@
-This directory contains the example programs from the manual, and a few 
-other things as well. To make all the programs, simply type "make",
-and assuming you have flex and gcc, all will be well.
+This directory contains the example programs from the manual, and a
+few other things as well. To make all the programs, simply type "make
+-f Makefile.examples", and assuming you have flex and gcc, all will be
+well.
 
 To build the programs individually, type
 
-   make program_name
+   make -f Makefile.examples program_name
 
 For example:
 
-   make expr
-
-
-The subdirectory FILTER contains a collection of the silly filters
-that have appeared on the Internet over the years. The author of the
-flex manual has included them for fun, but does not guarantee they will
-work with flex, or even work at all.
+   make -f Makefile.examples expr
