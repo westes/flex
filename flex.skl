@@ -1000,7 +1000,7 @@ char msg[];
 #endif
 	{
 %-
-	(void) putc( '\n', stderr );
+	fprintf( stderr, "%s\n", msg );
 %+
 	cerr << msg << '\n';
 %*
