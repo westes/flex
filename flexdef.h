@@ -90,6 +90,7 @@
 
 #define true 1
 #define false 0
+#define unspecified -1
 
 
 /* Special chk[] values marking the slots taking by end-of-buffer and action
@@ -342,8 +343,8 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * continued_action - true if this rule's action is to "fall through" to
  *   the next rule's action (i.e., the '|' action)
  * in_rule - true if we're inside an individual rule, false if not.
- * yymore_really_used - has a REALLY_xxx value indicating whether a
- *   %used or %notused was used with yymore()
+ * yymore_really_used - whether to treat yymore() as really used, regardless
+ *   of what we think based on references to it in the user's actions.
  * reject_really_used - same for REJECT
  */
 
@@ -353,9 +354,6 @@ extern int fullspd, gen_line_dirs, performance_report, backing_up_report;
 extern int C_plus_plus, long_align, use_read, yytext_is_array, csize;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
-#define REALLY_NOT_DETERMINED 0
-#define REALLY_USED 1
-#define REALLY_NOT_USED 2
 extern int yymore_really_used, reject_really_used;
 
 
@@ -372,6 +370,9 @@ extern int yymore_really_used, reject_really_used;
  * backing_up_file - file to summarize backing-up states to
  * infilename - name of input file
  * outfilename - name of output file
+ * did_outfilename - whether outfilename was explicitly set
+ * prefix - the prefix used for externally visible names ("yy" by default)
+ * use_stdout - the -t flag
  * input_files - array holding names of input files
  * num_input_files - size of input_files array
  * program_name - name with which program was invoked 
@@ -391,6 +392,9 @@ extern FILE *skelfile, *yyin, *backing_up_file;
 extern char *skel[];
 extern int skel_ind;
 extern char *infilename, *outfilename;
+extern int did_outfilename;
+extern char *prefix;
+extern int use_stdout;
 extern char **input_files;
 extern int num_input_files;
 extern char *program_name;
@@ -702,11 +706,15 @@ extern void make_tables PROTO((void));	/* generate transition tables */
 
 /* from file main.c */
 
+extern void check_options PROTO((void));
 extern void flexend PROTO((int));
 extern void usage PROTO((void));
 
 
 /* from file misc.c */
+
+/* Add a #define to the action file. */
+extern void action_define PROTO(( char *defname, int value ));
 
 /* Add the given text to the stored actions. */
 extern void add_action PROTO(( char *new_text ));
