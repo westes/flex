@@ -514,17 +514,34 @@ do_action:	/* This label is used only to access EOF actions. */
 	} /* end of yylex */
 
 %+
+#ifdef YY_INTERACTIVE
+int yyFlexLexer::LexerInput( char* buf, int /* max_size */ )
+#else
 int yyFlexLexer::LexerInput( char* buf, int max_size )
+#endif
 	{
 	if ( yyin->eof() || yyin->fail() )
 		return 0;
 
+#ifdef YY_INTERACTIVE
+	yyin->get( buf[0] );
+
+	if ( yyin->eof() )
+		return 0;
+
+	if ( yyin->bad() )
+		return -1;
+
+	return 1;
+
+#else
 	(void) yyin->read( buf, max_size );
 
 	if ( yyin->bad() )
 		return -1;
 	else
 		return yyin->gcount();
+#endif
 	}
 
 void yyFlexLexer::LexerOutput( const char* buf, int size )
@@ -963,7 +980,11 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 
 	b->yy_buf_pos = &b->yy_ch_buf[1];
 
+%-
 	b->is_interactive = file ? isatty( fileno(file) ) : 0;
+%+
+	b->is_interactive = 0;
+%*
 
 	b->yy_eof_status = EOF_NOT_SEEN;
 	}
