@@ -1084,13 +1084,7 @@ void make_tables()
 		indent_put2s( "%s yy_nxt;", trans_offset_type );
 		indent_puts( "};" );
 		indent_down();
-
-		indent_puts(
-			"typedef const struct yy_trans_info *yy_state_type;" );
 		}
-
-	else
-		indent_puts( "typedef int yy_state_type;" );
 
 	if ( fullspd )
 		genctbl();
@@ -1105,8 +1099,13 @@ void make_tables()
 	 */
 	if ( num_backing_up > 0 && ! reject )
 		{
-		indent_puts( "static yy_state_type yy_last_accepting_state;" );
-		indent_puts( "static YY_CHAR *yy_last_accepting_cpos;\n" );
+		if ( ! C_plus_plus )
+			{
+			indent_puts(
+			"static yy_state_type yy_last_accepting_state;" );
+			indent_puts(
+				"static YY_CHAR *yy_last_accepting_cpos;\n" );
+			}
 		}
 
 	if ( nultrans )
@@ -1138,16 +1137,24 @@ void make_tables()
 	if ( reject )
 		{
 		/* Declare state buffer variables. */
-		puts(
+		if ( ! C_plus_plus )
+			{
+			puts(
 	"static yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;" );
-		puts( "static YY_CHAR *yy_full_match;" );
-		puts( "static int yy_lp;" );
+			puts( "static YY_CHAR *yy_full_match;" );
+			puts( "static int yy_lp;" );
+			}
 
 		if ( variable_trailing_context_rules )
 			{
-			puts( "static int yy_looking_for_trail_begin = 0;" );
-			puts( "static int yy_full_lp;" );
-			puts( "static int *yy_full_state;" );
+			if ( ! C_plus_plus )
+				{
+				puts(
+				"static int yy_looking_for_trail_begin = 0;" );
+				puts( "static int yy_full_lp;" );
+				puts( "static int *yy_full_state;" );
+				}
+
 			printf( "#define YY_TRAILING_MASK 0x%x\n",
 				(unsigned int) YY_TRAILING_MASK );
 			printf( "#define YY_TRAILING_HEAD_MASK 0x%x\n",
@@ -1188,8 +1195,12 @@ void make_tables()
 
 	if ( yymore_used )
 		{
-		indent_puts( "static int yy_more_flag = 0;" );
-		indent_puts( "static int yy_more_len = 0;" );
+		if ( ! C_plus_plus )
+			{
+			indent_puts( "static int yy_more_flag = 0;" );
+			indent_puts( "static int yy_more_len = 0;" );
+			}
+
 		indent_puts(
 		"#define yymore() do { yy_more_flag = 1; } while ( 0 )" );
 		indent_puts(
