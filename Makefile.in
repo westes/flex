@@ -76,7 +76,7 @@ DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	configure.in Makefile.in mkskel.sh flex.skl \
 	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC \
 	flex.1 flexdoc.1 \
-	parse.c parse.h scan.c install.sh mkinstalldirs configure
+	scan.c install.sh mkinstalldirs configure
 
 DIST_NAME = flex
 
@@ -197,13 +197,13 @@ mostlyclean:
 	rm -f *~ *.bak core errs
 
 clean: mostlyclean
-	rm -f *.o parse.c *.lint parse.h lex.yy.c $(FLEXLIB)
+	rm -f parse.c parse.h *.o *.lint lex.yy.c $(FLEXLIB)
 
 distclean: clean
-	rm -f .bootstrap scan.c tags TAGS Makefile config.status
+	rm -f .bootstrap flex scan.c tags TAGS Makefile config.status
 
 realclean: distclean
-	rm -f flex flex.man flexdoc.man flex*.tar.gz flex*.tar.Z
+	rm -f flex.man flexdoc.man flex*.tar.gz flex*.tar.Z
 
 dist: flex $(DISTFILES)
 	$(MAKE) DIST_NAME=flex-`sed <version.h 's/[^"]*"//' | sed 's/"//'` dist2
