@@ -4818,7 +4818,7 @@ indexed by name, as described below. The file format is as follows:
 
 @example
 @verbatim
-                 TABLE SET
+                 TABLE SET 1
                 +-------------------------------+
         Header  | uint32          th_magic;     |
                 | uint32          th_hsize;     |
@@ -4828,12 +4828,12 @@ indexed by name, as described below. The file format is as follows:
                 | char            th_name[];    |
                 | uint8           th_pad64[];   |
                 +-------------------------------+
-        Table 1 | uint16          td_id;         |
-                | uint16          td_flags;      |
-                | uint32          td_lolen;      |
-                | uint32          td_hilen;      |
-                | void            td_data[];     |
-                | uint8           td_pad64[];    |
+        Table 1 | uint16          td_id;        |
+                | uint16          td_flags;     |
+                | uint32          td_lolen;     |
+                | uint32          td_hilen;     |
+                | void            td_data[];    |
+                | uint8           td_pad64[];   |
                 +-------------------------------+
         Table 2 |                               |
            .    .                               .
@@ -4898,32 +4898,32 @@ Fields of a table:
 @item td_id
 Specifies the table identifier. Possible values are:
 @table @code
-@item YYT_ID_ACCEPT (0x01)
+@item YYTD_ID_ACCEPT (0x01)
 @code{yy_accept}
-@item YYT_ID_BASE   (0x02)
+@item YYTD_ID_BASE   (0x02)
 @code{yy_base}
-@item YYT_ID_CHK    (0x03)
+@item YYTD_ID_CHK    (0x03)
 @code{yy_chk}
-@item YYT_ID_DEF    (0x04)
+@item YYTD_ID_DEF    (0x04)
 @code{yy_def}
-@item YYT_ID_EC     (0x05)
+@item YYTD_ID_EC     (0x05)
 @code{yy_ec }
-@item YYT_ID_META   (0x06)
+@item YYTD_ID_META   (0x06)
 @code{yy_meta}
-@item YYT_ID_NUL_TRANS (0x07)
+@item YYTD_ID_NUL_TRANS (0x07)
 @code{yy_NUL_trans}
-@item YYT_ID_NXT (0x08)
+@item YYTD_ID_NXT (0x08)
 @code{yy_nxt}. This array may be two dimensional. See the @code{td_hilen}
 field below.
-@item YYT_ID_RULE_CAN_MATCH_EOL (0x09)
+@item YYTD_ID_RULE_CAN_MATCH_EOL (0x09)
 @code{yy_rule_can_match_eol}
-@item YYT_ID_START_STATE_LIST (0x0A)
+@item YYTD_ID_START_STATE_LIST (0x0A)
 @code{yy_start_state_list}. This array is handled specially because it is an
 array of pointers to structs. See the @code{td_flags} field below.
-@item YYT_ID_TRANSITION (0x0B)
+@item YYTD_ID_TRANSITION (0x0B)
 @code{yy_transition}. This array is handled specially because it is an array of
 structs. See the @code{td_lolen} field below.
-@item YYT_ID_ACCLIST (0x0C)
+@item YYTD_ID_ACCLIST (0x0C)
 @code{yy_acclist}
 @end table
 
