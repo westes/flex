@@ -658,6 +658,14 @@ gentabs()
 	 * the indices that will go into the "yy_accept" array, and save the
 	 * indices in the dfaacc array
 	 */
+	int EOB_accepting_list[2];
+
+	/* set up accepting structures for the End Of Buffer state */
+	EOB_accepting_list[0] = 0;
+	EOB_accepting_list[1] = end_of_buffer_action;
+	accsiz[end_of_buffer_state] = 1;
+	dfaacc[end_of_buffer_state].dfaacc_set = EOB_accepting_list;
+
 	printf( C_short_decl, "yy_acclist", max( numas, 1 ) + 1 );
 
 	j = 1;	/* index into "yy_acclist" array */
