@@ -62,6 +62,92 @@ m4_changequote([[, ]])
 #define FLEX_BETA
 #endif
 
+%# Prefixes.
+%# The complexity here is necessary so that m4 preserves
+%# the argument lists to each C function.
+
+
+m4_ifdef( [[M4_YY_PREFIX]],, [[m4_define([[M4_YY_PREFIX]], [[yy]])]])
+
+m4preproc_define(`M4_GEN_PREFIX',
+    ``m4_define(yy[[$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
+
+%if-c++-only
+    /* The c++ scanner is a mess. The FlexLexer.h header file relies on the
+     * following macro.
+     */
+    #define yyFlexLexer M4_YY_PREFIX[[FlexLexer]]
+%endif
+
+%if-c-only
+    M4_GEN_PREFIX(`_create_buffer')
+    M4_GEN_PREFIX(`_delete_buffer')
+    M4_GEN_PREFIX(`_scan_buffer')
+    M4_GEN_PREFIX(`_scan_string')
+    M4_GEN_PREFIX(`_scan_bytes')
+    M4_GEN_PREFIX(`_init_buffer')
+    M4_GEN_PREFIX(`_flush_buffer')
+    M4_GEN_PREFIX(`_load_buffer_state')
+    M4_GEN_PREFIX(`_switch_to_buffer')
+    M4_GEN_PREFIX(`push_buffer_state')
+    M4_GEN_PREFIX(`pop_buffer_state')
+    M4_GEN_PREFIX(`ensure_buffer_stack')
+    M4_GEN_PREFIX(`lex')
+    M4_GEN_PREFIX(`restart')
+    M4_GEN_PREFIX(`lex_init')
+    M4_GEN_PREFIX(`lex_destroy')
+    M4_GEN_PREFIX(`get_debug')
+    M4_GEN_PREFIX(`set_debug')
+    M4_GEN_PREFIX(`get_extra')
+    M4_GEN_PREFIX(`set_extra')
+    M4_GEN_PREFIX(`get_in')
+    M4_GEN_PREFIX(`set_in')
+    M4_GEN_PREFIX(`get_out')
+    M4_GEN_PREFIX(`set_out')
+    M4_GEN_PREFIX(`get_leng')
+    M4_GEN_PREFIX(`get_text')
+    M4_GEN_PREFIX(`get_lineno')
+    M4_GEN_PREFIX(`set_lineno')
+    M4_GEN_PREFIX(`wrap')
+%endif
+
+m4_ifdef( [[M4_YY_BISON_BRIDGE]],
+[[
+    M4_GEN_PREFIX(`get_lval')
+    M4_GEN_PREFIX(`set_lval')
+]])
+
+m4_ifdef( [[M4_YY_BISON_BRIDGE_LOCATIONS]],
+[[
+    M4_GEN_PREFIX(`get_lloc')
+    M4_GEN_PREFIX(`set_lloc')
+]])
+
+
+    M4_GEN_PREFIX(`alloc')
+    M4_GEN_PREFIX(`realloc')
+    M4_GEN_PREFIX(`free')
+
+%if-c-only
+m4_ifdef( [[M4_YY_REENTRANT]],,
+[[
+    M4_GEN_PREFIX(`text')
+    M4_GEN_PREFIX(`leng')
+    M4_GEN_PREFIX(`in')
+    M4_GEN_PREFIX(`out')
+    M4_GEN_PREFIX(`_flex_debug')
+    M4_GEN_PREFIX(`lineno')
+]])
+%endif
+
+
+m4_ifdef( [[M4_YY_TABLES_EXTERNAL]],
+[[
+    M4_GEN_PREFIX(`tables_fload')
+    M4_GEN_PREFIX(`tables_destroy')
+    M4_GEN_PREFIX(`TABLES_NAME')
+]])
+
 /* First, we deal with  platform-specific or compiler-specific issues. */
 
 /* begin standard C headers. */

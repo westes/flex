@@ -141,7 +141,6 @@ static int preproc_level = 1000;
 
 int flex_main PROTO ((int argc, char *argv[]));
 int main PROTO ((int argc, char *argv[]));
-void fix_line_dirs PROTO ((char *, char *, char *, int));
 
 int flex_main (argc, argv)
      int argc;
@@ -408,79 +407,7 @@ void check_options ()
 	if ( bison_bridge_locations)
         buf_m4_define (&m4defs_buf, "M4_YY_BISON_BRIDGE_LOCATIONS", NULL);
 
-	if (strcmp (prefix, "yy")) {
-#define GEN_PREFIX(name) out_str3( "#define yy%s %s%s\n", name, prefix, name )
-		if (C_plus_plus)
-			GEN_PREFIX ("FlexLexer");
-		else {
-			if (!reentrant){
-                GEN_PREFIX ("text");
-                GEN_PREFIX ("leng");
-                GEN_PREFIX ("in");
-                GEN_PREFIX ("out");
-                GEN_PREFIX ("_flex_debug");
-            }
-
-			GEN_PREFIX ("_create_buffer");
-			GEN_PREFIX ("_delete_buffer");
-			GEN_PREFIX ("_scan_buffer");
-			GEN_PREFIX ("_scan_string");
-			GEN_PREFIX ("_scan_bytes");
-			GEN_PREFIX ("_init_buffer");
-			GEN_PREFIX ("_flush_buffer");
-			GEN_PREFIX ("_load_buffer_state");
-			GEN_PREFIX ("_switch_to_buffer");
-			GEN_PREFIX ("push_buffer_state");
-			GEN_PREFIX ("pop_buffer_state");
-			GEN_PREFIX ("ensure_buffer_stack");
-			GEN_PREFIX ("lex");
-			GEN_PREFIX ("restart");
-			GEN_PREFIX ("lex_init");
-			GEN_PREFIX ("lex_destroy");
-			GEN_PREFIX ("get_debug");
-			GEN_PREFIX ("set_debug");
-			GEN_PREFIX ("get_extra");
-			GEN_PREFIX ("set_extra");
-			GEN_PREFIX ("get_in");
-			GEN_PREFIX ("set_in");
-			GEN_PREFIX ("get_out");
-			GEN_PREFIX ("set_out");
-			GEN_PREFIX ("get_leng");
-			GEN_PREFIX ("get_text");
-			GEN_PREFIX ("get_lineno");
-			GEN_PREFIX ("set_lineno");
-
-			if (bison_bridge){
-                GEN_PREFIX ("get_lval");
-                GEN_PREFIX ("set_lval");
-            }
-            if (bison_bridge_locations){
-                GEN_PREFIX ("get_lloc");
-                GEN_PREFIX ("set_lloc");
-            }
-		}
-
-        /* The alloc/realloc/free functions are used internally by the
-         * generated scanner for both and C++.
-         */
-        GEN_PREFIX ("alloc");
-        GEN_PREFIX ("realloc");
-        GEN_PREFIX ("free");
-
-		if (!reentrant)
-			GEN_PREFIX ("lineno");
-
-		if (do_yywrap)
-			GEN_PREFIX ("wrap");
-
-        if (tablesext){
-            GEN_PREFIX ("tables_fload");
-            GEN_PREFIX ("tables_destroy");
-            GEN_PREFIX ("TABLES_NAME");
-        }
-
-		outn ("");
-	}
+    buf_m4_define(&m4defs_buf, "M4_YY_PREFIX", prefix);
 
 	if (did_outfilename)
 		line_directive_out (stdout, 0);
@@ -504,61 +431,6 @@ void check_options ()
 	/* %% [1.0] */
 }
 
-/* Alter #line directives from the generated source, destined
- * for the generated header. We chaneg the line number and filename.
- * linebuf is modified in place.
- */
-void fix_line_dirs (linebuf, outfilename, headerfilename, nlines)
-     char   *linebuf;
-     char   *outfilename;
-     char   *headerfilename;
-     int nlines;
-{
-	char   *pname, *p;
-
-	/* Match pattern:  ^#line +[:digit:]+ +"outfilename" */
-	p = linebuf;
-	if (strncmp (p, "#line ", 6))
-		return;
-	p += 6;
-
-	/* match spaces */
-	while (*p == ' ')
-		p++;
-	if (!isdigit (*p))
-		return;
-
-	/* match numbers */
-	while (isdigit (*p))
-		p++;
-	if (*p != ' ')
-		return;
-
-	/* match spaces */
-	while (*p == ' ')
-		p++;
-	if (*p != '"')
-		return;
-	p++;
-
-	pname = p;
-
-	/* find end of filename. Note: If scanner filename has
-	 * embedded '"' chars, then the generated #line directive
-	 * may fail. */
-	while (*p != '\0' && *p != '"')
-		p++;
-	if (*p != '"')
-		return;
-
-	if (strncmp (pname, outfilename, p - pname) != 0)
-		return;
-
-	/* We have a match. */
-
-	sprintf (linebuf, "#line %d \"%s\"\n", nlines + 2, headerfilename);
-}
-
 /* flexend - terminate flex
  *
  * note
@@ -571,7 +443,6 @@ void flexend (exit_status)
 {
 	static int called_before = -1;	/* prevent infinite recursion. */
 	int     tblsiz;
-	int     i;
 
 	if (++called_before)
 		FLEX_EXIT (exit_status);
@@ -586,61 +457,7 @@ void flexend (exit_status)
 				skelname);
 	}
 
-	/* flex generates the header file by rewinding the output FILE
-	 * pointer. However, since we can't rewind stdout, we must disallow
-	 * %option header if we are writing to stdout. This is a kludge.
-	 * This kludge can be rewritten when we get around to buffering
-	 * Section 1 of the input file, because then we'll have seen all the
-	 * %options BEFORE we begin generating the scanner. The lack of
-	 * buffering causes other problems, too. For example, it is the
-	 * reason we currently can't provide a mechanism to allow the user
-	 * to inject arbitrary class members into the generated C++ scanner. - JM
-	 */
-	if (false && headerfilename && exit_status == 0 && outfile_created
-	    && !ferror (stdout)) {
-		/* Copy the file we just wrote to a header file. */
-#define LINE_SZ 512
-		FILE   *header_out;
-		char    linebuf[LINE_SZ];
-		int     nlines = 0;
-		int     discard = 0;
-
-		/* rewind the outfile file. */
-		fflush (stdout);
-		fseek (stdout, 0L, SEEK_SET);
-
-		header_out = fopen (headerfilename, "w");
-		if (header_out == NULL)
-			lerrsf (_("could not create %s"), headerfilename);
-
-		fprintf (header_out, "#ifndef %sHEADER_H\n", prefix);
-		fprintf (header_out, "#define %sHEADER_H 1\n", prefix);
-		fprintf (header_out, "#define %sIN_HEADER 1\n\n", prefix);
-		fflush (header_out);
-
-		nlines = 4;
-		while (fgets (linebuf, LINE_SZ, stdout)) {
-			if (strstr (linebuf, "YY-DISCARD-FROM-HEADER"))
-				discard++;
-			else if (strstr
-				 (linebuf, "YY-END-DISCARD-FROM-HEADER")) {
-				discard--;
-				continue;
-			}
-
-			if (discard)
-				continue;
-
-			fix_line_dirs (linebuf, outfilename,
-				       headerfilename, nlines);
-			fputs (linebuf, header_out);
-			nlines++;
-		}
-
-		fprintf (header_out, "#line %d \"%s\"\n", (++nlines) + 1,
-			 headerfilename);
-
-		/* Print the start conditions. */
+#if 0 
 		fprintf (header_out,
 			 "#ifdef YY_HEADER_EXPORT_START_CONDITIONS\n");
 		fprintf (header_out,
@@ -825,7 +642,7 @@ void flexend (exit_status)
 				headerfilename);
 		fflush (header_out);
 		fclose (header_out);
-	}
+#endif
 
 	if (exit_status != 0 && outfile_created) {
 		if (ferror (stdout))

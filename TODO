@@ -68,7 +68,9 @@
 
 ** token-type and token buffer support
 
-** move prefixes to m4
+** put start conditions in the header
+
+** check if we still need to #undef macros at the end of a header
 
 * C++
 
