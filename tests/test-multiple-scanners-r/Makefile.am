@@ -39,13 +39,13 @@ scanner-2.c: $(srcdir)/scanner-2.l
 	$(FLEX) $(LFLAGS) --header=scanner-2.h $<
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CC) -o $@ $(OBJS) $(LDFLAGS)
+	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT)
 
 .c.o:
-	$(CC) -c -o $@ $(INCLUDES) $<
+	$(CC) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<
 
 main.o: scanner-1.h scanner-2.h
 scanner-1.h: scanner-1.c

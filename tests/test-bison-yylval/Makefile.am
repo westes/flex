@@ -39,13 +39,13 @@ parser.c: $(srcdir)/parser.y
 	$(BISON) $(YFLAGS) $<
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CC) -o $@ $(OBJS) $(LDFLAGS)
+	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT) < $(srcdir)/test.input
 
 .c.o:
-	$(CC) -c -o $@ $(INCLUDES) $<
+	$(CC) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<
 
 parser.h: parser.c
 main.o: parser.h

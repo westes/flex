@@ -35,11 +35,11 @@ scanner.c: $(srcdir)/scanner.l
 
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CC) -o $@ $(OBJS) $(LDFLAGS)
+	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	test `./$(testname)$(EXEEXT)   < $(srcdir)/test.input` -eq \
 	     `./$(testname)$(EXEEXT) 1 < $(srcdir)/test.input` || exit 1
 
 .c.o:
-	$(CC) -c -o $@ $(INCLUDES) $<
+	$(CC) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<

@@ -48,7 +48,7 @@ test-opt-nr%.c: $(srcdir)/scanner.l
 	$(FLEX) $* -o $@ $<
 
 test-opt%$(EXEEXT): test-opt%.o
-	$(CC) -o $@ $< $(LDFLAGS)
+	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
 test: $(alltestexe)
 	for t in $(alltestexe) ; do \
@@ -56,7 +56,7 @@ test: $(alltestexe)
 	done
 
 .c.o:
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $(INCLUDES) $<
+	$(CC) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<
 
 .PHONY: test-table-opts
 .SECONDARY: $(alltestobj) $(alltestsrc)

@@ -40,10 +40,10 @@ parser.c: $(srcdir)/parser.y
 	$(BISON) $(YFLAGS) $<
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CC) -o $@ $(OBJS) $(LDFLAGS)
+	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	./$(testname) $(srcdir)/test-1.input
 
 .c.o:
-	$(CC) -c -o $@ $(INCLUDES) $<
+	$(CC) -c -o $@ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $<

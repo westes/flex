@@ -36,7 +36,7 @@ scanner.cpp: $(srcdir)/scanner.l
 	$(FLEX) $<
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CXX) -o $@ $(OBJS) $(LDFLAGS)
+	$(CXX) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT) < $(srcdir)/test.input
