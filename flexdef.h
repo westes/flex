@@ -31,14 +31,34 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#if HAVE_STRING_H
+#include "config.h"
+
+#ifdef HAVE_STRING_H
 #include <string.h>
 #else
 #include <strings.h>
 #endif
 
+#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+
+#ifdef HAVE_MALLOC_H
+#include <malloc.h>
+#endif
+
 #if __STDC__
 #include <stdlib.h>
+#endif
+
+#ifdef __BORLANDC__
+/* Gag. */
+#pragma warn -pro
+#pragma warn -rch
+#pragma warn -use
+#pragma warn -aus
+#pragma warn -par
+#pragma warn -pia
 #endif
 
 /* Always be prepared to generate an 8-bit scanner. */
@@ -51,7 +71,7 @@
 #endif
 
 #ifndef PROTO
-#ifdef __STDC__
+#if __STDC__
 #define PROTO(proto) proto
 #else
 #define PROTO(proto) ()
@@ -334,6 +354,8 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  *   otherwise, use fread().
  * yytext_is_array - if true (i.e., %array directive), then declare
  *   yytext as a array instead of a character pointer.  Nice and inefficient.
+ * do_yywrap - do yywrap() processing on EOF.  If false, EOF treated as
+ *   "no more files".
  * csize - size of character set for the scanner we're generating;
  *   128 for 7-bit chars and 256 for 8-bit
  * yymore_used - if true, yymore() is used in input rules
@@ -351,7 +373,8 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
 extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 extern int interactive, caseins, lex_compat, useecs, fulltbl, usemecs;
 extern int fullspd, gen_line_dirs, performance_report, backing_up_report;
-extern int C_plus_plus, long_align, use_read, yytext_is_array, csize;
+extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
+extern int csize;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
 extern int yymore_really_used, reject_really_used;
@@ -445,8 +468,8 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
  * rule_useful - true if we've determined that the rule can be matched
  */
 
-extern int current_mns, num_rules, num_eof_rules, default_rule;
-extern int current_max_rules, lastnfa;
+extern int current_mns, current_max_rules;
+extern int num_rules, num_eof_rules, default_rule, lastnfa;
 extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 extern int *accptnum, *assoc_rule, *state_type;
 extern int *rule_type, *rule_linenum, *rule_useful;
@@ -522,7 +545,8 @@ extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
  * scname - start condition name
  */
 
-extern int lastsc, current_max_scs, *scset, *scbol, *scxclu, *sceof;
+extern int lastsc, *scset, *scbol, *scxclu, *sceof;
+extern int current_max_scs;
 extern char **scname;
 
 
@@ -581,8 +605,8 @@ extern int end_of_buffer_state;
  * ccltbl - holds the characters in each ccl - indexed by cclmap
  */
 
-extern int lastccl, current_maxccls, *cclmap, *ccllen, *cclng, cclreuse;
-extern int current_max_ccl_tbl_size;
+extern int lastccl, *cclmap, *ccllen, *cclng, cclreuse;
+extern int current_maxccls, current_max_ccl_tbl_size;
 extern Char *ccltbl;
 
 
@@ -611,11 +635,11 @@ extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 extern int num_backing_up, bol_needed;
 
-void *allocate_array PROTO((int, int));
-void *reallocate_array PROTO((void*, int, int));
+void *allocate_array PROTO((int, size_t));
+void *reallocate_array PROTO((void*, int, size_t));
 
-void *flex_alloc PROTO((unsigned int));
-void *flex_realloc PROTO((void*, unsigned int));
+void *flex_alloc PROTO((size_t));
+void *flex_realloc PROTO((void*, size_t));
 void flex_free PROTO((void*));
 
 #define allocate_integer_array(size) \
@@ -798,7 +822,7 @@ extern void transition_struct_out PROTO((int, int));
 extern void *yy_flex_xmalloc PROTO(( int ));
 
 /* Set a region of memory to 0. */
-extern void zero_out PROTO((char *, int));
+extern void zero_out PROTO((char *, size_t));
 
 
 /* from file nfa.c */
