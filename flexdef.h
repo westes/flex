@@ -395,6 +395,7 @@ extern int yymore_really_used, reject_really_used;
  * outfilename - name of output file
  * did_outfilename - whether outfilename was explicitly set
  * prefix - the prefix used for externally visible names ("yy" by default)
+ * do_stdinit - whether to initialize yyin/yyout to stdin/stdout
  * use_stdout - the -t flag
  * input_files - array holding names of input files
  * num_input_files - size of input_files array
@@ -417,7 +418,7 @@ extern int skel_ind;
 extern char *infilename, *outfilename;
 extern int did_outfilename;
 extern char *prefix;
-extern int use_stdout;
+extern int do_stdinit, use_stdout;
 extern char **input_files;
 extern int num_input_files;
 extern char *program_name;
