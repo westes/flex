@@ -34,8 +34,10 @@
 # additional info.
 
 YFLAGS = -d
+ACLOCAL_AMFLAGS = -I m4
 
 AUTOMAKE_OPTIONS = \
+	readme-alpha \
 	gnits \
 	check-news \
 	no-texinfo.tex \
@@ -76,8 +78,7 @@ noinst_HEADERS = \
 include_HEADERS = \
 	FlexLexer.h
 
-info_TEXINFOS = \
-	flex.texi
+info_TEXINFOS =	flex.texi
 
 EXTRA_DIST = \
 	AUTHORS \
@@ -91,8 +92,10 @@ EXTRA_DIST = \
 	TODO \
 	autogen.sh \
 	flex.skl \
-	mkskel.sh
-
+	mkskel.sh \
+	ABOUT-NLS \
+	config.rpath \
+	gettext.h
 
 BUILT_SOURCES = \
 	skel.c \
@@ -100,7 +103,13 @@ BUILT_SOURCES = \
 	scan.c
 
 SUBDIRS = \
-	examples
+	m4  \
+	examples \
+	po
+
+localedir = $(datadir)/locale
+INCLUDES = -DLOCALEDIR=\"$(localedir)\" -I@includedir@
+LIBS = @LIBINTL@ @LIBS@
 
 # We have a few dependencies and rules to enumerate. (from the old
 # Makefile.in by Vern)
@@ -132,5 +141,3 @@ ChangeLog:
 	-rcs2log -l 72 -u "vern	Vern	vern@ee.lbl.gov" -u "wlestes	W. L. Estes	wlestes@uncg.edu" -u "millaway	John Millaway	johnmillaway@yahoo.com" | sed s:/usr/local/cvsroot/flex/::g >ChangeLog 
 
 .PHONY: ChangeLog
-
-dist-hook:

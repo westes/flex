@@ -72,10 +72,8 @@
 #include <stdlib.h>
 #endif
 
-/* As an aid for the internationalization patch to flex, which
- * is maintained outside this distribution for copyright reasons.
- */
-#define _(String) (String)
+#include "gettext.h"
+#define _(String) gettext (String)
 
 /* Always be prepared to generate an 8-bit scanner. */
 #define CSIZE 256

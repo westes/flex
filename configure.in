@@ -24,6 +24,7 @@ dnl PURPOSE.
 AC_INIT(scan.l)
 AM_INIT_AUTOMAKE(flex,2.5.6)
 AM_CONFIG_HEADER(config.h:conf.in)
+          AM_GNU_GETTEXT([external])
 
 AC_LN_S
 AC_PROG_CC
@@ -43,5 +44,11 @@ esac
 
 AC_CONFIG_SUBDIRS(tests)
 
-AC_OUTPUT(Makefile examples/Makefile examples/fastwc/Makefile examples/manual/Makefile ,
-[test -z "$CONFIG_HEADERS" || echo timestamp > stamp-h])
+AC_OUTPUT(
+Makefile
+examples/Makefile
+examples/fastwc/Makefile
+examples/manual/Makefile
+m4/Makefile
+po/Makefile.in
+)

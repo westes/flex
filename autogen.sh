@@ -30,7 +30,7 @@
 
 touch ChangeLog
 
-aclocal && autoheader && automake -a && autoconf
+aclocal -I m4 && autoheader && automake -a && autoconf
 
 for i in tests
 do

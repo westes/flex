@@ -136,6 +136,10 @@ char **argv;
 	{
 	int i;
 
+	setlocale(LC_MESSAGES, "");
+	textdomain(PACKAGE);
+	bindtextdomain(PACKAGE, LOCALEDIR);
+
 #ifdef THINK_C
 	argc = ccommand( &argv );
 #endif
