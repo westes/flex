@@ -65,9 +65,6 @@
 /* Maximum line length we'll have to deal with. */
 #define MAXLINE 2048
 
-/* Maximum size of file name. */
-#define FILENAMESIZE 1024
-
 #ifndef min
 #define min(x,y) ((x) < (y) ? (x) : (y))
 #endif
