@@ -852,6 +852,7 @@ void line_pinpoint PROTO(( char[], int ));
 /* Report a formatted syntax error. */
 extern void format_synerr PROTO((char [], char[]));
 extern void synerr PROTO((char []));	/* report a syntax error */
+extern void format_warn PROTO((char [], char[]));
 extern void warn PROTO((char []));	/* report a warning */
 extern int yyparse PROTO((void));	/* the YACC parser */
 
