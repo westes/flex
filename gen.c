@@ -1092,6 +1092,16 @@ make_tables()
 	dataend();
 	}
 
+    if ( ddebug )
+	{ /* spit out table mapping rules to line numbers */
+	printf( C_short_decl, "yy_rule_linenum", num_rules );
+
+	for ( i = 1; i < num_rules; ++i )
+	    mkdata( rule_linenum[i] );
+
+	dataend();
+	}
+
     if ( reject )
 	{
 	/* declare state buffer variables */
@@ -1191,6 +1201,43 @@ make_tables()
     skelout();
     set_indent( 2 );
     gen_find_action();
+
+    skelout();
+    if ( ddebug )
+	{
+	indent_puts( "if ( yy_act == 0 )" );
+	indent_up();
+	indent_puts( "fprintf( stderr, \"--scanner backtracking\\n\" );" );
+	indent_down();
+
+	do_indent();
+	printf( "else if ( yy_act < %d )\n", num_rules );
+	indent_up();
+	indent_puts(
+	"fprintf( stderr, \"--accepting rule at line %d (\\\"%s\\\")\\n\"," );
+	indent_puts( "         yy_rule_linenum[yy_act], yytext );" );
+	indent_down();
+
+	do_indent();
+	printf( "else if ( yy_act == %d )\n", num_rules );
+	indent_up();
+	indent_puts(
+	"fprintf( stderr, \"--accepting default rule (\\\"%s\\\")\\n\"," );
+	indent_puts( "         yytext );" );
+	indent_down();
+
+	do_indent();
+	printf( "else if ( yy_act == %d )\n", num_rules + 1 );
+	indent_up();
+	indent_puts( "fprintf( stderr, \"--(end of buffer or a NUL)\\n\" );" );
+	indent_down();
+
+	do_indent();
+	printf( "else\n" );
+	indent_up();
+	indent_puts( "fprintf( stderr, \"--EOF\\n\" );" );
+	indent_down();
+	}
 
     /* copy actions from action_file to output file */
     skelout();
