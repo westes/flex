@@ -555,11 +555,7 @@ _( "  %d/%d character classes needed %d/%d words of storage, %d reused\n" ),
 			tblsiz );
 		}
 
-#ifndef VMS
 	exit( exit_status );
-#else
-	exit( exit_status + 1 );
-#endif
 	}
 
 
