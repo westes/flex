@@ -128,9 +128,8 @@ register int nacc;
 	    for ( j = 1; j <= nacc; ++j )
 		if ( accset[j] & YY_TRAILING_HEAD_MASK )
 		    {
-		    fprintf( stderr,
-		     "%s: Dangerous trailing context in rule at line %d\n",
-			     program_name, rule_linenum[ar] );
+		    line_warning( "dangerous trailing context",
+			rule_linenum[ar] );
 		    return;
 		    }
 	    }
@@ -140,7 +139,7 @@ register int nacc;
 
 /* dump_associated_rules - list the rules associated with a DFA state
  *
- * synopisis
+ * synopsis
  *     int ds;
  *     FILE *file;
  *     dump_associated_rules( file, ds );
@@ -163,7 +162,7 @@ int ds;
     
     for ( i = 1; i <= size; ++i )
 	{
-	register rule_num = rule_linenum[assoc_rule[dset[i]]];
+	register int rule_num = rule_linenum[assoc_rule[dset[i]]];
 
 	for ( j = 1; j <= num_associated_rules; ++j )
 	    if ( rule_num == rule_set[j] )
@@ -194,7 +193,7 @@ int ds;
 
 /* dump_transitions - list the transitions associated with a DFA state
  *
- * synopisis
+ * synopsis
  *     int state[numecs];
  *     FILE *file;
  *     dump_transitions( file, state );
@@ -464,12 +463,12 @@ void ntod()
 
     inittbl();
 
-    /* check to see whether we should build a separate table for transitions
+    /* Check to see whether we should build a separate table for transitions
      * on NUL characters.  We don't do this for full-speed (-F) scanners,
      * since for them we don't have a simple state number lying around with
      * which to index the table.  We also don't bother doing it for scanners
      * unless (1) NUL is in its own equivalence class (indicated by a
-     * positive value of ecgroup[NUL]), (2) NUL's equilvalence class is
+     * positive value of ecgroup[NUL]), (2) NUL's equivalence class is
      * the last equivalence class, and (3) the number of equivalence classes
      * is the same as the number of characters.  This latter case comes about
      * when useecs is false or when its true but every character still
@@ -566,7 +565,7 @@ void ntod()
 	numstates = 1;
 
 	/* for each start condition, make one state for the case when
-	 * we're at the beginning of the line (the '%' operator) and
+	 * we're at the beginning of the line (the '^' operator) and
 	 * one for the case when we're not
 	 */
 	if ( i % 2 == 1 )
@@ -822,10 +821,7 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 
     newds = lastdfa;
 
-    dss[newds] = (int *) malloc( (unsigned) ((numstates + 1) * sizeof( int )) );
-
-    if ( ! dss[newds] )
-	flexfatal( "dynamic memory failure in snstods()" );
+    dss[newds] = allocate_integer_array( numstates + 1 );
 
     /* if we haven't already sorted the states in sns, we do so now, so that
      * future comparisons with it can be made quickly
@@ -860,15 +856,17 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 
 	bubble( accset, nacc );
 
-	dfaacc[newds].dfaacc_set =
-	    (int *) malloc( (unsigned) ((nacc + 1) * sizeof( int )) );
-
-	if ( ! dfaacc[newds].dfaacc_set )
-	    flexfatal( "dynamic memory failure in snstods()" );
+	dfaacc[newds].dfaacc_set = allocate_integer_array( nacc + 1 );
 
 	/* save the accepting set for later */
 	for ( i = 1; i <= nacc; ++i )
+	    {
 	    dfaacc[newds].dfaacc_set[i] = accset[i];
+
+	    if ( accset[i] <= num_rules )
+		/* Who knows, perhaps a REJECT can yield this rule */
+		rule_useful[accset[i]] = true;
+	    }
 
 	accsiz[newds] = nacc;
 	}
@@ -882,6 +880,9 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 		j = accset[i];
 
 	dfaacc[newds].dfaacc_state = j;
+
+	if ( j <= num_rules )
+	    rule_useful[j] = true;
 	}
 
     *newds_addr = newds;
@@ -985,8 +986,8 @@ bottom:
  */
 
 void sympartition( ds, numstates, symlist, duplist )
-int ds[], numstates, duplist[];
-int symlist[];
+int ds[], numstates;
+int symlist[], duplist[];
 
     {
     int tch, i, j, k, ns, dupfwd[CSIZE + 1], lenccl, cclp, ich;
@@ -1012,9 +1013,9 @@ int symlist[];
 
 	if ( tch != SYM_EPSILON )
 	    {
-	    if ( tch < -lastccl || tch > csize )
+	    if ( tch < -lastccl || tch >= csize )
 		{
-		if ( tch > csize && tch <= CSIZE )
+		if ( tch >= csize && tch <= CSIZE )
 		    flexerror( "scanner requires -8 flag" );
 
 		else
