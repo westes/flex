@@ -4168,10 +4168,6 @@ in braces are simply terminated at the end of the line.
 @chapter Memory Management
 
 @cindex memory management
-@cindex yyalloc, overriding
-@cindex yyrealloc, overriding
-@cindex yyfree, overriding
-@cindex yytext, memory for
 
 This chapter describes how flex handles dynamic memory, and how you can
 override the default behavior.
@@ -4196,11 +4192,12 @@ Flex allocates dynamic memory for four purposes, listed below.
 
 @item Flex allocates memory for the character buffer used to perform pattern
 matching.  Flex must read ahead from the input stream and store it in a large
-character buffer. This buffer is typically the largest chunk of dynamic memory
-flex consumes. This buffer will grow if necessary. Flex frees this memory when
-you call yylex_destroy().  The default (8192 bytes) is almost always too large.
-The ideal size for this buffer is the length of the largest token expected,
-plus 2.  The 2 extra bytes are for housekeeping.
+character buffer.  This buffer is typically the largest chunk of dynamic memory
+flex consumes. This buffer will grow if necessary, doubling the size each time.
+Flex frees this memory when you call yylex_destroy().  The default size of this
+buffer (16384 bytes) is almost always too large.  The ideal size for this
+buffer is the length of the longest token expected.  Flex will allocate a few
+extra bytes for housekeeping.
 
 @item Flex allocates memory the start condition stack. This is the stack used
 for pushing start states, i.e., with yy_push_state(). It will grow if
@@ -4235,12 +4232,95 @@ yylex_destroy().
 @node Overriding The Default Memory Management
 @section Overriding The Default Memory Management
 
-TODO -- Describe how to override yy(alloc,free,realloc),
-YY_READ_BUF_SIZE, YY_BUF_SIZE, YY_START_STACK_INCR, and anything else that
-crops up.
+@cindex yyalloc, overriding
+@cindex yyrealloc, overriding
+@cindex yyfree, overriding
+
+Flex calls the functions @code{yyalloc}, @code{yyrealloc}, and @code{yyfree}
+when it needs to allocate or free memory. By default, these functions are
+wrappers around the standard C functions, @code{malloc}, @code{realloc}, and
+@code{free}, respectively. You can override the default implementations by telling
+flex that you will provide your own implementations.
+
+To override the default implementations, you must do two things:
+
+@enumerate
+
+@item Suppress the default implementations by specifying one or more of the
+following options:
+
+@itemize
+@item @code{%option noyyalloc}
+@item @code{%option noyyrealloc}
+@item @code{%option noyyfree}.
+@end itemize
+
+@item Provide your own implementation of the following functions: @footnote{It
+is not necessary to override all (or any) of the memory management routines.
+You may, for example, override @code{yyrealloc}, but not @code{yyfree} or
+@code{yyalloc}.}
+
+@example
+@verbatim
+// For a non-reentrant scanner
+void * yyalloc (size_t bytes);
+void * yyrealloc (void * ptr, size_t bytes);
+void   yyfree (void * ptr);
+
+// For a reentrant scanner
+void * yyalloc (size_t bytes, void * yy_globals);
+void * yyrealloc (void * ptr, size_t bytes, void * yy_globals);
+void   yyfree (void * ptr, void * yy_globals);
+@end verbatim
+@end example
+
+@end enumerate
+
+In the following example, we will override all three memory routines. We assume
+that there is a custom allocator with garbage collection. In order to make this
+example interesting, we will use a reentrant scanner, passing a pointer to the
+custom allocator through @code{yyextra}.
+
+@exindex overriding the memory routines
+@example
+@verbatim
+%{
+#include "some_allocator.h"
+%}
+
+/* Suppress the default implementations. */
+%option noyyalloc noyyrealloc noyyfree
+%option reentrant
+
+/* Initialize the allocator. */
+#define YY_EXTRA_TYPE  struct allocator*
+#define YY_USER_INIT  yyextra = allocator_create();
+
+%%
+.|\n   ;
+%%
+
+/* Provide our own implementations. */
+void * yyalloc (size_t bytes, void* yy_globals) {
+    return allocator_alloc (yyextra, bytes);
+}
+
+void * yyrealloc (void * ptr, size_t bytes, void* yy_globals) {
+    return allocator_realloc (yyextra, bytes);
+}
+
+void yyfree (void * ptr, void * yy_globals) {      
+    /* Do nothing -- we leave it to the garbage collector. */
+}
+
+@end verbatim
+@end example
+
 
 @node A Note About yytext And Memory
 @section A Note About yytext And Memory
+
+@cindex yytext, memory considerations
 
 When flex finds a match, @code{yytext} points to the first character of the
 match in the input buffer. The string itself is part of the input buffer, and
@@ -4253,11 +4333,11 @@ parser with non-zero lookahead. In order to preserve yytext, you will have to
 copy it with strdup() or a similar function. But this introduces some headache
 because your parser is now responsible for freeing the copy of yytext. If you
 use a yacc or bison parser, (commonly used with flex), you will discover that
-syntax errors in the input can cause this memory to be leaked.
+the error recovery mechanisms can cause memory to be leaked.
 
 To prevent memory leaks from strdup'd yytext, you will have to track the memory
-somehow. Our experience has shown that a garbage collection mechanism or a pooled memory
-mechanism will save you a lot of grief when writing scanners and parsers.
+somehow. Our experience has shown that a garbage collection mechanism or a
+pooled memory mechanism will save you a lot of grief when writing parsers.
 
 @node Diagnostics
 @chapter Diagnostics
