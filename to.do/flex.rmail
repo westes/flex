@@ -4315,4 +4315,128 @@ Help-flex mailing list
 Help-flex@gnu.org
 http://mail.gnu.org/mailman/listinfo/help-flex
 
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From avn@any.ru  Sun Jun 24 03:10:57 2001
+Return-Path: <avn@any.ru>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id DAA10135
+	for <wlestes@localhost>; Sun, 24 Jun 2001 03:10:57 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Sun, 24 Jun 2001 03:10:57 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.uncg.edu (8.11.0/8.11.0) with ESMTP id f5O78ts09193
+	for <wlestes@hermes.email.uncg.edu>; Sun, 24 Jun 2001 03:08:55 -0400 (EDT)
+Received: from ajax2.sovam.com (ajax2.sovam.com [194.67.1.173])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id DAA15567
+	for <wlestes@uncg.edu>; Sun, 24 Jun 2001 03:08:54 -0400 (EDT)
+Received: from ts11-a1.dial.sovam.com ([195.239.68.1]:2044 "EHLO srv2.any"
+	ident: "TIMEDOUT" whoson: "-unregistered-" smtp-auth: <none> TLS-CIPHER:
+	<none> TLS-PEER: <none>) by ajax2.sovam.com with ESMTP
+	id <S426173AbRFXHIs>; Sun, 24 Jun 2001 11:08:48 +0400
+Received: from localhost (avn@localhost)
+	by srv2.any (8.11.3/8.11.3) with ESMTP id f5O7Adg89096
+	for <wlestes@uncg.edu>; Sun, 24 Jun 2001 11:10:39 +0400 (MSD)
+	(envelope-from avn@any.ru)
+Date: 	Sun, 24 Jun 2001 11:10:39 +0400 (MSD)
+From: "Alexey V. Neyman" <avn@any.ru>
+X-X-Sender:  <avn@srv2.any>
+To: <wlestes@uncg.edu>
+Subject: lex generates files that give warnings with gcc
+Message-ID: <20010624111019.R89058-100000@srv2.any>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+
+*** EOOH ***
+Date: 	Sun, 24 Jun 2001 11:10:39 +0400 (MSD)
+From: "Alexey V. Neyman" <avn@any.ru>
+To: <wlestes@uncg.edu>
+Subject: lex generates files that give warnings with gcc
+
+Hello!
+
+I compiled lex-produced files with 'gcc -Wconversion', and it gives
+warnings about passing arguments to fread/fwrite as unsigned due to
+function prototypes. This produces warnings when program is compiled
+under suggested 'strict warnings' in FreeBSD, ${BDECFLAGS}. More, these
+warnings point to .l file that was fed to lex.
+
+You can see detailed problem report, samples of failing code and a
+proposed fix at:
+
+http://www.freebsd.org/cgi/query-pr.cgi?pr=28364
+
+Regards, Alexey.
+PS. Waiting for fix and for FreeBSD to import fixed :)
+
+-- 
+-------------------------------------------------+---------------------------
+         We chose to leave when there was        | Regards, Alexey V. Neyman
+           no longer a reason to stay.           |     mailto: avn@any.ru
+---------------------------------( Arilou, SC2 )-+---------------------------
+
+
+
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From ashalper@usgs.gov  Mon Jul 23 20:31:28 2001
+Return-Path: <ashalper@usgs.gov>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id UAA31191
+	for <wlestes@localhost>; Mon, 23 Jul 2001 20:31:28 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Mon, 23 Jul 2001 20:31:28 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.uncg.edu (8.11.0/8.11.0) with ESMTP id f6O0QmW26609
+	for <wlestes@hermes.email.uncg.edu>; Mon, 23 Jul 2001 20:26:48 -0400 (EDT)
+Received: from gsazflgm01.wr.usgs.gov (gsazflgm01.wr.usgs.gov [130.118.164.152])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id UAA17843
+	for <wlestes@uncg.edu>; Mon, 23 Jul 2001 20:26:47 -0400 (EDT)
+Subject: Re: shared object libfl?
+To: wlestes@uncg.edu
+X-Mailer: Lotus Notes Release 5.0.1b September 30, 1999
+Message-ID: <OF7BEDABA3.AFD35C13-ON07256A92.00837F9F@wr.usgs.gov>
+From: "Andrew S Halper" <ashalper@usgs.gov>
+Date: Mon, 23 Jul 2001 16:56:52 -0700
+X-MIMETrack: Serialize by Router on gsazflgm01/SERVER/USGS/DOI(Release 5.0.7 |March 21, 2001) at
+ 07/23/2001 05:26:49 PM
+MIME-Version: 1.0
+Content-type: text/plain; charset=us-ascii
+
+*** EOOH ***
+Subject: Re: shared object libfl?
+To: wlestes@uncg.edu
+From: "Andrew S Halper" <ashalper@usgs.gov>
+Date: Mon, 23 Jul 2001 16:56:52 -0700
+
+
+----- Forwarded by Andrew S Halper/WRD/USGS/DOI on 07/23/01 04:56 PM -----
+                                                                                                                              
+                    Vern Paxson                                                                                               
+                    <vern@ee.lbl.        To:     "Andrew S Halper" <ashalper@usgs.gov>                                        
+                    gov>                 cc:                                                                                  
+                                         Subject:     Re: shared object libfl?                                                
+                    07/23/01                                                                                                  
+                    05:15 PM                                                                                                  
+                                                                                                                              
+                                                                                                                              
+
+
+
+> Is there any special reason a shared object library is not built by the
+> flex source? Is there a 'configure' option to make one?
+
+Please send this to Will Estes (wlestes@uncg.edu), who has now taken over
+flex maintenance and development.
+
+           Thanks,
+
+                     Vern
+
+
+
 
