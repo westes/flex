@@ -1777,8 +1777,20 @@ assignments to @code{comment_caller} could instead be written
 Flex provides @code{YYSTATE} as an alias for @code{YY_START} (since that
 is what's used by AT&T @code{lex}).
 
-Note that start conditions do not have their own name-space; %s's and %x's
-declare names in the same fashion as #define's.
+For historical reasons, start conditions do not have their own
+name-space within the generated scanner. The start condition names are
+unmodified in the generated scanner. However, they are prefixed
+with @samp{yysc_} in the generated header, where @samp{yy} corresponds
+to the appropriate prefix. Thus, @code{%x comment} produces
+@code{#define comment n} in the scanner, and produces
+@code{#define yysc_comment}
+in the header. If you have already prefixed the start condition,
+then flex attempts to respect your design by honoring the prefix.
+Likewise, flex attempts to respect your capitalization convention.
+
+@xref{option-header}. @xref{option-prefix}.
+
+
 
 Finally, here's an example of how to match C-style quoted strings using
 exclusive start conditions, including expanded escape sequences (but
@@ -2392,8 +2404,11 @@ and then exits.
 @anchor{option-header}
 @item --header=FILE
 instructs flex to write a C header to @file{FILE}. This file contains
-function prototypes, extern variables, and macros used by the scanner.
-It is meant to be included in other C files to avoid compiler warnings.
+function prototypes, extern variables, and types used by the scanner.
+Only the external API is exported by the header file. Many macros that
+are usable from within scanner actions are not exported to the header
+file. This is due to namespace problems and the goal of a clean
+external API.
 The @samp{--header} option is not compatible with the @samp{--c++} option,
 since the C++ scanner provides its own header in @file{yyFlexLexer.h}.
 
@@ -2727,13 +2742,14 @@ then the scanner is written to @file{stdout} but its @code{#line}
 directives (see the @samp{-l} option above) refer to the file
 @file{FILE}.
 
+@anchor{option-prefix}
 @item -PPREFIX, --prefix=PREFIX
 changes the default @samp{yy} prefix used by @code{flex} for all
 globally-visible variable and function names to instead be
 @samp{PREFIX}.  For example, @samp{--prefix=foo} changes the name of
 @code{yytext} to @code{footext}.  It also changes the name of the default
-output file from @file{lex.yy.c} to @file{lex.foo.c}.  Here are all of
-the names affected:
+output file from @file{lex.yy.c} to @file{lex.foo.c}.  Here is a partial
+list of the names affected:
 
 @example
 @verbatim

@@ -568,9 +568,8 @@ int exit_status;
 
             /* Print the prefixed start conditions. */
             for (i=1; i <= lastsc; i++)
-                fprintf(header_out, "#define %sSC_%s %d\n",
-                        strcmp(prefix,"yy") ? prefix : "YY",
-                        scname[i], i-1);
+                fprintf(header_out, "#define %s %d\n",
+                        fix_scname(linebuf,scname[i]), i-1);
 
             /* Kill ALL flex-related macros. This is so the user
              * can #include more than one generated header file. */
