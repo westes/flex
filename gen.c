@@ -50,11 +50,11 @@ static int indent_level = 0; /* each level is 8 spaces */
  * to this is that the fast table representation generally uses the
  * 0 elements of its arrays, too.)
  */
-static char C_int_decl[] = "static const int %s[%d] =\n    {   0,\n";
-static char C_short_decl[] = "static const short int %s[%d] =\n    {   0,\n";
-static char C_long_decl[] = "static const long int %s[%d] =\n    {   0,\n";
+static char C_int_decl[] = "static yyconst int %s[%d] =\n    {   0,\n";
+static char C_short_decl[] = "static yyconst short int %s[%d] =\n    {   0,\n";
+static char C_long_decl[] = "static yyconst long int %s[%d] =\n    {   0,\n";
 static char C_state_decl[] =
-	"static const yy_state_type %s[%d] =\n    {   0,\n";
+	"static yyconst yy_state_type %s[%d] =\n    {   0,\n";
 
 
 /* Indent to the current level. */
@@ -135,7 +135,7 @@ void genctbl()
 	int end_of_buffer_action = num_rules + 1;
 
 	/* Table of verify for transition and offset to next state. */
-	out_dec( "static const struct yy_trans_info yy_transition[%d] =\n",
+	out_dec( "static yyconst struct yy_trans_info yy_transition[%d] =\n",
 		tblend + numecs + 1 );
 	outn( "    {" );
 
@@ -209,7 +209,7 @@ void genctbl()
 
 	/* Table of pointers to start states. */
 	out_dec(
-	"static const struct yy_trans_info *yy_start_state_list[%d] =\n",
+	"static yyconst struct yy_trans_info *yy_start_state_list[%d] =\n",
 		lastsc * 2 + 1 );
 	outn( "    {" );	/* } so vi doesn't get confused */
 
@@ -530,7 +530,7 @@ void gen_next_match()
 		{
 		indent_puts( "{" );	/* } for vi */
 		indent_puts(
-		"register const struct yy_trans_info *yy_trans_info;\n" );
+		"register yyconst struct yy_trans_info *yy_trans_info;\n" );
 		indent_puts( "register YY_CHAR yy_c;\n" );
 		indent_put2s( "for ( yy_c = %s;", char_map );
 		indent_puts(
@@ -697,7 +697,7 @@ void gen_NUL_trans()
 		out_dec( "register int yy_c = %d;\n", NUL_ec );
 
 		indent_puts(
-		"register const struct yy_trans_info *yy_trans_info;\n" );
+		"register yyconst struct yy_trans_info *yy_trans_info;\n" );
 		indent_puts(
 		"yy_trans_info = &yy_current_state[(unsigned int) yy_c];" );
 		indent_puts( "yy_current_state += yy_trans_info->yy_nxt;" );
