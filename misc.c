@@ -184,7 +184,7 @@ register char *str;
 	for ( c = str; *c; ++c )
 		;
 
-	copy = yy_flex_alloc( (c - str + 1) * sizeof( char ) );
+	copy = (char *) yy_flex_alloc( (c - str + 1) * sizeof( char ) );
 
 	if ( copy == NULL )
 		flexfatal( "dynamic memory failure in copy_string()" );
