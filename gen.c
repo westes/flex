@@ -1347,38 +1347,76 @@ void make_tables()
 		indent_puts( "{" );
 		indent_puts( "if ( yy_act == 0 )" );
 		indent_up();
-		indent_puts(
+		indent_puts( C_plus_plus ?
+			"cerr << \"--scanner backing up\\n\";" :
 			"fprintf( stderr, \"--scanner backing up\\n\" );" );
 		indent_down();
 
 		do_indent();
 		out_dec( "else if ( yy_act < %d )\n", num_rules );
 		indent_up();
-		indent_puts(
+
+		if ( C_plus_plus )
+			{
+			indent_puts(
+	"cerr << \"--accepting rule at line \" << yy_rule_linenum[yy_act] <<" );
+			indent_puts(
+			"         \"(\\\"\" << yytext << \"\\\")\\n\";" );
+			}
+		else
+			{
+			indent_puts(
 	"fprintf( stderr, \"--accepting rule at line %d (\\\"%s\\\")\\n\"," );
-		indent_puts( "         yy_rule_linenum[yy_act], yytext );" );
+
+			indent_puts(
+				"         yy_rule_linenum[yy_act], yytext );" );
+			}
+
 		indent_down();
 
 		do_indent();
 		out_dec( "else if ( yy_act == %d )\n", num_rules );
 		indent_up();
-		indent_puts(
+
+		if ( C_plus_plus )
+			{
+			indent_puts(
+"cerr << \"--accepting default rule (\\\"\" << yytext << \"\\\")\\n\";" );
+			}
+		else
+			{
+			indent_puts(
 	"fprintf( stderr, \"--accepting default rule (\\\"%s\\\")\\n\"," );
-		indent_puts( "         yytext );" );
+			indent_puts( "         yytext );" );
+			}
+
 		indent_down();
 
 		do_indent();
 		out_dec( "else if ( yy_act == %d )\n", num_rules + 1 );
 		indent_up();
-		indent_puts(
-	"fprintf( stderr, \"--(end of buffer or a NUL)\\n\" );" );
+
+		indent_puts( C_plus_plus ?
+			"cerr << \"--(end of buffer or a NUL)\\n\";" :
+		"fprintf( stderr, \"--(end of buffer or a NUL)\\n\" );" );
+
 		indent_down();
 
 		do_indent();
 		outn( "else" );
 		indent_up();
-		indent_puts(
+
+		if ( C_plus_plus )
+			{
+			indent_puts(
+	"cerr << \"--EOF (start condition \" << YY_START << \")\\n\";" );
+			}
+		else
+			{
+			indent_puts(
 	"fprintf( stderr, \"--EOF (start condition %d)\\n\", YY_START );" );
+			}
+
 		indent_down();
 
 		indent_puts( "}" );
