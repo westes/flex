@@ -11,9 +11,6 @@ Changes between release 2.5.3 (29May96) and release 2.5.2:
 	- The default main() in libfl.a now repeatedly calls yylex() until
 	  it returns 0, rather than just calling it once.
 
-	- Diffs for porting 2.5.2 to the Acorn machine available in
-	  MISC/Acorn.diffs.gz.
-
 	- Minor tweak for Windows NT Makefile, MISC/NT/Makefile.
 
 
