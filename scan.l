@@ -422,6 +422,7 @@ LEXOPT		[aceknopr]
 	^"%%".*		{
 			sectnum = 3;
 			BEGIN(SECT3);
+			outn("/* Begin user sect3 */");
 			yyterminate(); /* to stop the parser */
 			}
 

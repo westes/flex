@@ -718,6 +718,7 @@ scanopt (svoid, arg, optindex)
 
         optname = pstart;
         namelen = 1;
+        is_short = 1;
 
         if(!find_opt(s, 0, pstart, namelen, &errcode,&opt_offset)) {
             return scanopt_err(s,opt_offset,1,errcode);

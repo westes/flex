@@ -795,10 +795,13 @@ void skelout()
 		if ( buf[0] == '%' )
 			{ /* control line */
 			/* print the control line as a comment. */
-			if (buf[strlen(buf)-1]=='\\')
-				out_str("/* %s */\\\n", buf);
-			else
-				out_str("/* %s */\n", buf);
+			if (buf[1] != '#')
+				{
+				if (buf[strlen(buf)-1]=='\\')
+					out_str("/* %s */\\\n", buf);
+				else
+					out_str("/* %s */\n", buf);
+				}
 				
 			switch ( buf[1] )
 				{
@@ -817,14 +820,18 @@ void skelout()
 					do_copy = 1;
 					break;
 
-				case 'c':
+				case 'c': /* begin linkage-only (non-header) code. */
 					OUT_BEGIN_CODE();
 					break;
 
-				case 'e':
+				case 'e': /* end linkage-only code. */
 					OUT_END_CODE();
 					break;
-
+					
+				case '#':
+					/* a comment in the skel. ignore. */
+					break;
+					
 				default:
 					flexfatal(
 					_( "bad line in skeleton file" ) );

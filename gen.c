@@ -1064,7 +1064,7 @@ void make_tables()
 	register int i;
 	int did_eof_rule = false;
 
-	skelout();
+	skelout(); /* %% [2.0] - break point in skel */
 
 	/* First, take care of YY_DO_BEFORE_ACTION depending on yymore
 	 * being used.
@@ -1081,7 +1081,7 @@ void make_tables()
 		indent_puts( "YY_G(yyleng) = (size_t) (yy_cp - yy_bp); \\" );
 
 	/* Now also deal with copying yytext_ptr to yytext if needed. */
-	skelout();
+	skelout(); /* %% [3.0] - break point in skel */
 	if ( yytext_is_array )
 		{
 		if ( yymore_used )
@@ -1113,7 +1113,7 @@ void make_tables()
 
 	set_indent( 0 );
 
-	skelout();
+	skelout(); /* %% [4.0] - break point in skel */
 
 
 	out_dec( "#define YY_NUM_RULES %d\n", num_rules );
@@ -1338,7 +1338,7 @@ void make_tables()
 
 	line_directive_out( stdout, 0 );
 
-	skelout();
+	skelout(); /* %% [5.0] - break point in skel */
 
 	if ( ! C_plus_plus )
 		{
@@ -1375,7 +1375,7 @@ void make_tables()
 			}
 		}
 
-	skelout();
+	skelout(); /* %% [6.0] - break point in skel */
 
 	indent_puts( "#define YY_RULE_SETUP \\" );
 	indent_up();
@@ -1390,14 +1390,14 @@ void make_tables()
 	indent_puts( "YY_USER_ACTION" );
 	indent_down();
 
-	skelout();
+	skelout(); /* %% [7.0] - break point in skel */
 
 	/* Copy prolog to output file. */
 	out( &action_array[prolog_offset] );
 
 	line_directive_out( stdout, 0 );
 
-	skelout();
+	skelout(); /* %% [8.0] - break point in skel */
 
 	set_indent( 2 );
 
@@ -1413,7 +1413,7 @@ void make_tables()
 		indent_down();
 		}
 
-	skelout();
+	skelout(); /* %% [9.0] - break point in skel */
 
 	gen_start_state();
 
@@ -1421,11 +1421,11 @@ void make_tables()
 	outn( "yy_match:" );
 	gen_next_match();
 
-	skelout();
+	skelout(); /* %% [10.0] - break point in skel */
 	set_indent( 2 );
 	gen_find_action();
 
-	skelout();
+	skelout(); /* %% [11.0] - break point in skel */
 	if ( do_yylineno )
 		{
 		indent_puts( "if ( yy_act != YY_END_OF_BUFFER )" );
@@ -1446,7 +1446,7 @@ void make_tables()
 		indent_down();
 		}
 
-	skelout();
+	skelout(); /* %% [12.0] - break point in skel */
 	if ( ddebug )
 		{
 		indent_puts( "if ( yy_flex_debug )" );
@@ -1532,7 +1532,7 @@ void make_tables()
 		}
 
 	/* Copy actions to output file. */
-	skelout();
+	skelout(); /* %% [13.0] - break point in skel */
 	indent_up();
 	gen_bu_action();
 	out( &action_array[action_offset] );
@@ -1561,7 +1561,7 @@ void make_tables()
 	/* First, deal with backing up and setting up yy_cp if the scanner
 	 * finds that it should JAM on the NUL.
 	 */
-	skelout();
+	skelout(); /* %% [14.0] - break point in skel */
 	set_indent( 4 );
 
 	if ( fullspd || fulltbl )
@@ -1590,19 +1590,19 @@ void make_tables()
 
 	/* Generate code for yy_get_previous_state(). */
 	set_indent( 1 );
-	skelout();
+	skelout(); /* %% [15.0] - break point in skel */
 
 	gen_start_state();
 
 	set_indent( 2 );
-	skelout();
+	skelout(); /* %% [16.0] - break point in skel */
 	gen_next_state( true );
 
 	set_indent( 1 );
-	skelout();
+	skelout(); /* %% [17.0] - break point in skel */
 	gen_NUL_trans();
 
-	skelout();
+	skelout(); /* %% [18.0] - break point in skel */
 	if ( do_yylineno )
 		{ /* update yylineno inside of unput() */
 		indent_puts( "if ( c == '\\n' )" );
@@ -1611,7 +1611,7 @@ void make_tables()
 		indent_down();
 		}
 
-	skelout();
+	skelout(); /* %% [19.0] - break point in skel */
 	/* Update BOL and yylineno inside of input(). */
 	if ( bol_needed )
 		{
@@ -1640,5 +1640,7 @@ void make_tables()
 	line_directive_out( stdout, 1 );
 
 	if ( sectnum == 3 )
+		OUT_BEGIN_CODE();
 		(void) flexscan(); /* copy remainder of input to output */
+		OUT_END_CODE();
 	}

@@ -51,6 +51,7 @@ void readin PROTO((void));
 void set_up_initial_allocations PROTO((void));
 static char * basename2 PROTO((char* path, int should_strip_ext));
 
+
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int interactive, caseins, lex_compat, do_yylineno, useecs, fulltbl, usemecs;
@@ -193,6 +194,9 @@ void check_options()
 		do_yylineno = true;
 		use_read = false;
 		}
+
+	if ( use_stdout && headerfilename )
+	    flexerror( _( "Can't specify header option if writing to stdout.") );
 
 	if ( do_yylineno )
 		/* This should really be "maintain_backup_tables = true" */
@@ -381,6 +385,7 @@ void check_options()
             outn( (char*)(userdef_buf.elts) );
 
 	skelout();
+    /* %% [1.0] */
 	}
 
 
@@ -431,7 +436,7 @@ int exit_status;
 			fprintf(header_out,
 					"#ifndef %sHEADER_H\n"
 					"#define %sHEADER_H 1\n"
-					"#define %sIN_HEADER 1\n",
+					"#define %sIN_HEADER 1\n\n",
 					prefix,prefix,prefix);
 			fflush(header_out);
 
@@ -856,7 +861,7 @@ char **argv;
                         if (strcmp(arg,"b")==0)
                             reentrant_bison_pure = true;
                         else
-                            lerrif(_( "unknown -R option '%c'" ),(int)arg[i]);
+                            lerrif(_( "unknown -R option '%c'" ),(int)arg[0]);
                     }
                     break;
 
@@ -1350,6 +1355,7 @@ _(
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
+"      --header=FILE       create a C header file in addition to the scanner\n"
     
 "\n"
 "Scanner behavior:\n"

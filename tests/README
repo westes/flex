@@ -62,6 +62,8 @@ DESCRIPTION OF TESTS
   basic-r       -  Simple scanner, reentrant.
   bison-yylval  -  Reentrant scanner + pure parser. Requires bison.
   bison-yylloc  -  Reentrant scanner + pure parser. Requires bison.
+  header-nr     -  Test generated header file, non-reentrant.
+  header-r      -  Test generated header file, reentrant.
   include-by-buffer     - YY_BUFFER_STATE, yy_push_state, etc.
   include-by-reentrant  - Nested scanners.
   prefix-nr     - verify prefixes are working, nonreentrant.
