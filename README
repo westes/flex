@@ -1,10 +1,6 @@
 // $Header$
 
-This is release 2.2 of flex - an alpha release.
-
-The intent behind this alpha release is to weed out most of the
-bugs associated with some new features, and to follow up with either
-a beta or full 2.3 release by the end of May.
+This is release 2.3 of flex - a full release.
 
 The flex distribution consists of the following files:
 
