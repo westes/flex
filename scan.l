@@ -59,7 +59,7 @@
 		yymore_used = true;
 %}
 
-%option caseless nodefault outfile="scan.c"
+%option caseless nodefault outfile="scan.c" stack
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
 %x FIRSTCCL CCL ACTION RECOVER COMMENT ACTION_STRING PERCENT_BRACE_ACTION
