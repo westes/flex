@@ -59,3 +59,8 @@ But the inverse is still true.
 ** flex input scanner now recognizes '\r' as an EOL character
 
 See the file ONEWS for changes in earlier releases.
+
+Local Variables:
+mode: text
+mode: outline-minor
+end:
