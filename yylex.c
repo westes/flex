@@ -1,8 +1,5 @@
 /* yylex - scanner front-end for flex */
 
-#include "flexdef.h"
-#include "parse.h"
-
 /*
  * Copyright (c) 1987, the University of California
  * 
@@ -14,6 +11,14 @@
  * may be created provided the new works, if made available to the general
  * public, are made available for use by anyone.
  */
+
+#include "flexdef.h"
+#include "parse.h"
+
+#ifndef lint
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+#endif
 
 /* yylex - scan for a regular expression token
  *
@@ -183,12 +188,8 @@ int yylex()
 		    case 29:
 		    case 30:
 		    case 31:
-			fprintf( stderr, "^%c", 'A' + yylval - 1 );
-			break;
-
 		    case 127:
-			(void) putc( '^', stderr );
-			(void) putc( '@', stderr );
+			fprintf( stderr, "\\%.3o", yylval );
 			break;
 
 		    default:
