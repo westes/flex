@@ -68,6 +68,8 @@ optspec_t flexopts[] = {
 	,			/* Generate batch scanner (opposite of -I). */
 	{"--bison-bridge", OPT_BISON_BRIDGE, 0}
 	,			/* Scanner to be called by a bison pure parser. */
+	{"--bison-locations", OPT_BISON_BRIDGE_LOCATIONS, 0}
+	,			/* Scanner to be called by a bison pure parser. */
 	{"-i", OPT_CASE_INSENSITIVE, 0}
 	,
 	{"--case-insensitive", OPT_CASE_INSENSITIVE, 0}

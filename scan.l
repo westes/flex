@@ -268,7 +268,10 @@ LEXOPT		[aceknopr]
 	array		yytext_is_array = option_sense;
 	backup		backing_up_report = option_sense;
 	batch		interactive = ! option_sense;
-    bison-bridge  bison_bridge = option_sense;
+    bison-bridge     bison_bridge = option_sense;
+    bison-locations  { if((bison_bridge_locations = option_sense))
+                            bison_bridge = true;
+                     }
 	"c++"		C_plus_plus = option_sense;
 	caseful|case-sensitive		caseins = ! option_sense;
 	caseless|case-insensitive	caseins = option_sense;

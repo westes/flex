@@ -54,7 +54,7 @@ int     interactive, caseins, lex_compat, posix_compat, do_yylineno,
 int     fullspd, gen_line_dirs, performance_report, backing_up_report;
 int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
 	csize;
-int     reentrant, bison_bridge;
+int     reentrant, bison_bridge, bison_bridge_locations;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
 int     datapos, dataline, linenum, out_linenum;
@@ -405,13 +405,11 @@ void check_options ()
 			buf_m4_define (&m4defs_buf, "M4_YY_TEXT_IS_ARRAY", NULL);
 	}
 
-	if ( bison_bridge){
+	if ( bison_bridge)
 		buf_m4_define (&m4defs_buf, "M4_YY_BISON_BRIDGE", NULL);
-        /* for now, assume bison is using %locations until I think
-         * of the best way to detect them.
-         */
-		buf_m4_define (&m4defs_buf, "M4_YY_BISON_BRIDGE_LOCATIONS", NULL);
-    }
+
+	if ( bison_bridge_locations)
+        buf_m4_define (&m4defs_buf, "M4_YY_BISON_BRIDGE_LOCATIONS", NULL);
 
 	if (strcmp (prefix, "yy")) {
 #define GEN_PREFIX(name) out_str3( "#define yy%s %s%s\n", name, prefix, name )
@@ -458,6 +456,8 @@ void check_options ()
 			if (bison_bridge){
                 GEN_PREFIX ("get_lval");
                 GEN_PREFIX ("set_lval");
+            }
+            if (bison_bridge_locations){
                 GEN_PREFIX ("get_lloc");
                 GEN_PREFIX ("set_lloc");
             }
@@ -894,6 +894,8 @@ void flexend (exit_status)
 			fputs ("--reentrant", stderr);
         if (bison_bridge)
             fputs ("--bison-bridge", stderr);
+        if (bison_bridge_locations)
+            fputs ("--bison-locations", stderr);
 		if (use_stdout)
 			putc ('t', stderr);
 		if (printstats)
@@ -1075,7 +1077,7 @@ void flexinit (argc, argv)
 	yymore_really_used = reject_really_used = unspecified;
 	interactive = csize = unspecified;
 	do_yywrap = gen_line_dirs = usemecs = useecs = true;
-	reentrant = bison_bridge = false;
+	reentrant = bison_bridge = bison_bridge_locations = false;
 	performance_report = 0;
 	did_outfilename = 0;
 	prefix = "yy";
@@ -1261,6 +1263,10 @@ void flexinit (argc, argv)
 
 		case OPT_BISON_BRIDGE:
 			bison_bridge = true;
+			break;
+
+		case OPT_BISON_BRIDGE_LOCATIONS:
+			bison_bridge = bison_bridge_locations = true;
 			break;
 
 		case OPT_REENTRANT:
