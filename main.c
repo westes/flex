@@ -103,6 +103,7 @@ FILE *backing_up_file;
 int end_of_buffer_state;
 char **input_files;
 int num_input_files;
+jmp_buf flex_main_jmp_buf;
 
 /* Make sure program_name is initialized so we don't crash if writing
  * out an error message before getting the program name from argv[0].
@@ -130,15 +131,22 @@ static int outfile_created = 0;
 static char *skelname = NULL;
 
 
-int main( argc, argv )
+int flex_main( argc, argv )
 int argc;
 char **argv;
 	{
-	int i;
+	int i,exit_status;
 
-	setlocale(LC_MESSAGES, "");
-	textdomain(PACKAGE);
-	bindtextdomain(PACKAGE, LOCALEDIR);
+	/* Set a longjmp target. Yes, I know it's a hack, but it gets worse: The
+	 * return value of setjmp, if non-zero, is the desired exit code PLUS ONE.
+	 * For example, if you want 'main' to return with code '2', then call
+	 * longjmp() with an argument of 3. This is because it is invalid to
+	 * specify a value of 0 to longjmp. FLEX_EXIT(n) should be used instead of
+	 * exit(n);
+	 */
+	exit_status = setjmp(flex_main_jmp_buf);
+	if ( exit_status )
+		return exit_status - 1;
 
 #ifdef THINK_C
 	argc = ccommand( &argv );
@@ -171,6 +179,15 @@ char **argv;
 	return 0;	/* keep compilers/lint happy */
 	}
 
+/* Wrapper around flex_main, so flex_main can be built as a library. */
+int main( argc, argv )
+{
+	setlocale(LC_MESSAGES, "");
+	textdomain(PACKAGE);
+	bindtextdomain(PACKAGE, LOCALEDIR);
+
+    return flex_main(argc,argv);
+}
 
 /* check_options - check user-specified options */
 
@@ -465,7 +482,7 @@ int exit_status;
 	int unlink();
 
 	if( ++called_before )
-		exit( exit_status );
+		FLEX_EXIT( exit_status );
 
 	if ( skelfile != NULL )
 		{
@@ -889,7 +906,7 @@ _( "  %d/%d character classes needed %d/%d words of storage, %d reused\n" ),
 			tblsiz );
 		}
 
-	exit( exit_status );
+	FLEX_EXIT( exit_status );
 	}
 
 
@@ -943,17 +960,16 @@ char **argv;
             /* This will only happen when flexopts array is altered. */
             fprintf(stderr,
                     _("Internal error. flexopts are malformed.\n"));
-            exit(1);
+            FLEX_EXIT(1);
         }
 
         while((rv=scanopt(sopt, &arg, &optind)) != 0){
 
             if (rv < 0) {
                 /* Scanopt has already printed an option-specific error message. */
-                fprintf( stderr, _( "For usage, try\n\t%s --help\n" ),
+                fprintf( stderr, _( "Try `%s --help' for more information.\n" ),
                     program_name );
-                exit( 1 );
-                break;
+                FLEX_EXIT(1);
             }
 
             switch ((enum flexopt_flag_t)rv){
@@ -1036,7 +1052,7 @@ char **argv;
 
             case OPT_HELP:
                     usage();
-                    exit( 0 );
+                    FLEX_EXIT( 0 );
 
             case OPT_INTERACTIVE:
                     interactive = true;
@@ -1128,7 +1144,7 @@ char **argv;
             case OPT_VERSION:
                     printf( _( "%s %s\n" ),
                             program_name, flex_version );
-                    exit( 0 );
+                    FLEX_EXIT( 0 );
 
             case OPT_WARN:
                     nowarn = false;

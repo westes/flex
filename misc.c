@@ -348,7 +348,7 @@ const char msg[];
 	{
 	fprintf( stderr, _( "%s: fatal internal error, %s\n" ),
 		program_name, msg );
-	exit( 1 );
+	FLEX_EXIT( 1 );
 	}
 
 
