@@ -19,6 +19,8 @@
 
 ** pretty up the dvi output; overflows, etc.
 
+** document recent m4 modifications
+
 ** faq
 
 *** clean up the faqs section. The information is good; the texinfo
@@ -52,7 +54,11 @@
 
 ** make test suite more complete
 
-** add a test for yypush_buffer_state/yypop_buffer_state
+*** add a test for yypush_buffer_state/yypop_buffer_state
+
+*** add a test for traditional funcs and protos
+
+*** add a test for #line directive integrity
 
 * generic coding
 
@@ -61,6 +67,10 @@
 
 ** figure out whether we want to add the capability to have
   auto-generated backout rules
+
+** token-type and token buffer support
+
+** check if we still need to #undef macros at the end of a header
 
 * C++
 

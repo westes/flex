@@ -43,6 +43,14 @@ extern bool tablesverify, tablesext;
 		action_define( def, 1 ); \
 	}
 
+#define ACTION_M4_IFDEF(def, should_define) \
+    do{ \
+        if ( should_define ) \
+            buf_m4_define( &m4defs_buf, def, NULL);\
+        else \
+            buf_m4_undefine( &m4defs_buf, def);\
+    } while(0)
+
 #define MARK_END_OF_PROLOG mark_prolog();
 
 #define YY_DECL \
@@ -254,13 +262,18 @@ LEXOPT		[aceknopr]
 
 	align		long_align = option_sense;
 	always-interactive	{
-			action_define( "YY_ALWAYS_INTERACTIVE", option_sense );
+			ACTION_M4_IFDEF( "M4""_YY_ALWAYS_INTERACTIVE", option_sense );
             interactive = option_sense;
 			}
 	array		yytext_is_array = option_sense;
+    ansi-definitions ansi_func_defs = option_sense;
+    ansi-prototypes  ansi_func_protos = option_sense;
 	backup		backing_up_report = option_sense;
 	batch		interactive = ! option_sense;
-    bison-bridge  bison_bridge = option_sense;
+    bison-bridge     bison_bridge = option_sense;
+    bison-locations  { if((bison_bridge_locations = option_sense))
+                            bison_bridge = true;
+                     }
 	"c++"		C_plus_plus = option_sense;
 	caseful|case-sensitive		caseins = ! option_sense;
 	caseless|case-insensitive	caseins = option_sense;
@@ -280,14 +293,14 @@ LEXOPT		[aceknopr]
 	lex-compat	lex_compat = option_sense;
 	posix-compat	posix_compat = option_sense;
 	main		{
-			action_define( "YY_MAIN", option_sense );
+			ACTION_M4_IFDEF( "M4""_YY_MAIN", option_sense);
             /* Override yywrap */
             if( option_sense == true )
                 do_yywrap = false;
 			}
 	meta-ecs	usemecs = option_sense;
 	never-interactive	{
-			action_define( "YY_NEVER_INTERACTIVE", option_sense );
+			ACTION_M4_IFDEF( "M4""_YY_NEVER_INTERACTIVE", option_sense );
             interactive = !option_sense;
 			}
 	perf-report	performance_report += option_sense ? 1 : -1;
@@ -295,45 +308,45 @@ LEXOPT		[aceknopr]
 	read		use_read = option_sense;
     reentrant   reentrant = option_sense;
 	reject		reject_really_used = option_sense;
-	stack		action_define( "YY_STACK_USED", option_sense );
+	stack		ACTION_M4_IFDEF( "M4""_YY_STACK_USED", option_sense );
 	stdinit		do_stdinit = option_sense;
 	stdout		use_stdout = option_sense;
     unistd      ACTION_IFDEF("YY_NO_UNISTD_H", ! option_sense);
-	unput		ACTION_IFDEF("YY_NO_UNPUT", ! option_sense);
+	unput		ACTION_M4_IFDEF("M4""_YY_NO_UNPUT", ! option_sense);
 	verbose		printstats = option_sense;
 	warn		nowarn = ! option_sense;
-	yylineno	do_yylineno = option_sense; ACTION_IFDEF("YY_USE_LINENO", option_sense);
+	yylineno	do_yylineno = option_sense; ACTION_M4_IFDEF("M4""_YY_USE_LINENO", option_sense);
 	yymore		yymore_really_used = option_sense;
 	yywrap      do_yywrap = option_sense;
 
-	yy_push_state	ACTION_IFDEF("YY_NO_PUSH_STATE", ! option_sense);
-	yy_pop_state	ACTION_IFDEF("YY_NO_POP_STATE", ! option_sense);
-	yy_top_state	ACTION_IFDEF("YY_NO_TOP_STATE", ! option_sense);
+	yy_push_state	ACTION_M4_IFDEF("M4""_YY_NO_PUSH_STATE", ! option_sense);
+	yy_pop_state	ACTION_M4_IFDEF("M4""_YY_NO_POP_STATE", ! option_sense);
+	yy_top_state	ACTION_M4_IFDEF("M4""_YY_NO_TOP_STATE", ! option_sense);
 
-	yy_scan_buffer	ACTION_IFDEF("YY_NO_SCAN_BUFFER", ! option_sense);
-	yy_scan_bytes	ACTION_IFDEF("YY_NO_SCAN_BYTES", ! option_sense);
-	yy_scan_string	ACTION_IFDEF("YY_NO_SCAN_STRING", ! option_sense);
+	yy_scan_buffer	ACTION_M4_IFDEF("M4""_YY_NO_SCAN_BUFFER", ! option_sense);
+	yy_scan_bytes	ACTION_M4_IFDEF("M4""_YY_NO_SCAN_BYTES", ! option_sense);
+	yy_scan_string	ACTION_M4_IFDEF("M4""_YY_NO_SCAN_STRING", ! option_sense);
 
-    yyalloc         ACTION_IFDEF("YY_NO_FLEX_ALLOC", ! option_sense);
-    yyrealloc       ACTION_IFDEF("YY_NO_FLEX_REALLOC", ! option_sense);
-    yyfree          ACTION_IFDEF("YY_NO_FLEX_FREE", ! option_sense);
+    yyalloc         ACTION_M4_IFDEF("M4""_YY_NO_FLEX_ALLOC", ! option_sense);
+    yyrealloc       ACTION_M4_IFDEF("M4""_YY_NO_FLEX_REALLOC", ! option_sense);
+    yyfree          ACTION_M4_IFDEF("M4""_YY_NO_FLEX_FREE", ! option_sense);
 
-    yyget_debug     ACTION_IFDEF("YY_NO_GET_DEBUG", ! option_sense);
-    yyset_debug     ACTION_IFDEF("YY_NO_SET_DEBUG", ! option_sense);
-    yyget_extra     ACTION_IFDEF("YY_NO_GET_EXTRA", ! option_sense);
-    yyset_extra     ACTION_IFDEF("YY_NO_SET_EXTRA", ! option_sense);
-    yyget_leng      ACTION_IFDEF("YY_NO_GET_LENG", ! option_sense);
-    yyget_text      ACTION_IFDEF("YY_NO_GET_TEXT", ! option_sense);
-    yyget_lineno    ACTION_IFDEF("YY_NO_GET_LINENO", ! option_sense);
-    yyset_lineno    ACTION_IFDEF("YY_NO_SET_LINENO", ! option_sense);
-    yyget_in        ACTION_IFDEF("YY_NO_GET_IN", ! option_sense);
-    yyset_in        ACTION_IFDEF("YY_NO_SET_IN", ! option_sense);
-    yyget_out       ACTION_IFDEF("YY_NO_GET_OUT", ! option_sense);
-    yyset_out       ACTION_IFDEF("YY_NO_SET_OUT", ! option_sense);
-    yyget_lval      ACTION_IFDEF("YY_NO_GET_LVAL", ! option_sense);
-    yyset_lval      ACTION_IFDEF("YY_NO_SET_LVAL", ! option_sense);
-    yyget_lloc      ACTION_IFDEF("YY_NO_GET_LLOC", ! option_sense);
-    yyset_lloc      ACTION_IFDEF("YY_NO_SET_LLOC", ! option_sense);
+    yyget_debug     ACTION_M4_IFDEF("M4""_YY_NO_GET_DEBUG", ! option_sense);
+    yyset_debug     ACTION_M4_IFDEF("M4""_YY_NO_SET_DEBUG", ! option_sense);
+    yyget_extra     ACTION_M4_IFDEF("M4""_YY_NO_GET_EXTRA", ! option_sense);
+    yyset_extra     ACTION_M4_IFDEF("M4""_YY_NO_SET_EXTRA", ! option_sense);
+    yyget_leng      ACTION_M4_IFDEF("M4""_YY_NO_GET_LENG", ! option_sense);
+    yyget_text      ACTION_M4_IFDEF("M4""_YY_NO_GET_TEXT", ! option_sense);
+    yyget_lineno    ACTION_M4_IFDEF("M4""_YY_NO_GET_LINENO", ! option_sense);
+    yyset_lineno    ACTION_M4_IFDEF("M4""_YY_NO_SET_LINENO", ! option_sense);
+    yyget_in        ACTION_M4_IFDEF("M4""_YY_NO_GET_IN", ! option_sense);
+    yyset_in        ACTION_M4_IFDEF("M4""_YY_NO_SET_IN", ! option_sense);
+    yyget_out       ACTION_M4_IFDEF("M4""_YY_NO_GET_OUT", ! option_sense);
+    yyset_out       ACTION_M4_IFDEF("M4""_YY_NO_SET_OUT", ! option_sense);
+    yyget_lval      ACTION_M4_IFDEF("M4""_YY_NO_GET_LVAL", ! option_sense);
+    yyset_lval      ACTION_M4_IFDEF("M4""_YY_NO_SET_LVAL", ! option_sense);
+    yyget_lloc      ACTION_M4_IFDEF("M4""_YY_NO_GET_LLOC", ! option_sense);
+    yyset_lloc      ACTION_M4_IFDEF("M4""_YY_NO_SET_LLOC", ! option_sense);
 
 	outfile		return OPT_OUTFILE;
 	prefix		return OPT_PREFIX;

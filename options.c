@@ -68,6 +68,8 @@ optspec_t flexopts[] = {
 	,			/* Generate batch scanner (opposite of -I). */
 	{"--bison-bridge", OPT_BISON_BRIDGE, 0}
 	,			/* Scanner to be called by a bison pure parser. */
+	{"--bison-locations", OPT_BISON_BRIDGE_LOCATIONS, 0}
+	,			/* Scanner to be called by a bison pure parser. */
 	{"-i", OPT_CASE_INSENSITIVE, 0}
 	,
 	{"--case-insensitive", OPT_CASE_INSENSITIVE, 0}
@@ -127,6 +129,8 @@ optspec_t flexopts[] = {
 	,
 	{"--posix-compat", OPT_POSIX_COMPAT, 0}
 	,			/* Maximal compatibility with POSIX lex. */
+        {"--preproc=NUM", OPT_PREPROC_LEVEL, 0}
+        ,
 	{"-L", OPT_NO_LINE, 0}
 	,			/* Suppress #line directives in scanner. */
 	{"--noline", OPT_NO_LINE, 0}
@@ -165,8 +169,6 @@ optspec_t flexopts[] = {
 	,			/* Generate a reentrant C scanner. */
 	{"--noreentrant", OPT_NO_REENTRANT, 0}
 	,
-	{"--reentrant-bison", OPT_BISON_BRIDGE, 0}
-	,			/* Deprecated. Replaced by --bison-bridge */
 	{"--reject", OPT_REJECT, 0}
 	,
 	{"--noreject", OPT_NO_REJECT, 0}
@@ -209,6 +211,10 @@ optspec_t flexopts[] = {
 	,
 	{"--nowarn", OPT_NO_WARN, 0}
 	,			/* Suppress warning messages. */
+	{"--noansi-definitions", OPT_NO_ANSI_FUNC_DEFS, 0}
+	,
+	{"--noansi-prototypes", OPT_NO_ANSI_FUNC_PROTOS, 0}
+	,
 	{"--yyclass=NAME", OPT_YYCLASS, 0}
 	,
 	{"--yylineno", OPT_YYLINENO, 0}

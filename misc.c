@@ -111,6 +111,27 @@ void action_define (defname, value)
 }
 
 
+/** Append "m4_define([[defname]],[[value]])m4_dnl\n" to the running buffer.
+ *  @param defname The macro name.
+ *  @param value The macro value, can be NULL, which is the same as the empty string.
+ */
+void action_m4_define (const char *defname, const char * value)
+{
+	char    buf[MAXLINE];
+
+    flexfatal ("DO NOT USE THIS FUNCTION!");
+
+	if ((int) strlen (defname) > MAXLINE / 2) {
+		format_pinpoint_message (_
+					 ("name \"%s\" ridiculously long"),
+					 defname);
+		return;
+	}
+
+	sprintf (buf, "m4_define([[%s]],[[%s]])m4_dnl\n", defname, value?value:"");
+	add_action (buf);
+}
+
 /* Append "new_text" to the running buffer. */
 void add_action (new_text)
      char   *new_text;
@@ -455,11 +476,11 @@ void line_directive_out (output_file, do_infile)
 	if (!gen_line_dirs)
 		return;
 
-	if ((do_infile && !infilename) || (!do_infile && !outfilename))
-		/* don't know the filename to use, skip */
-		return;
+	s1 = do_infile ? infilename : "M4_YY_OUTFILE_NAME";
 
-	s1 = do_infile ? infilename : outfilename;
+	if (do_infile && !s1)
+        s1 = "<stdin>";
+    
 	s2 = filename;
 	s3 = &filename[sizeof (filename) - 2];
 
@@ -704,7 +725,7 @@ void out_dec (fmt, n)
      const char *fmt;
      int n;
 {
-	printf (fmt, n);
+	fprintf (stdout, fmt, n);
 	out_line_count (fmt);
 }
 
@@ -712,7 +733,7 @@ void out_dec2 (fmt, n1, n2)
      const char *fmt;
      int n1, n2;
 {
-	printf (fmt, n1, n2);
+	fprintf (stdout, fmt, n1, n2);
 	out_line_count (fmt);
 }
 
@@ -720,7 +741,7 @@ void out_hex (fmt, x)
      const char *fmt;
      unsigned int x;
 {
-	printf (fmt, x);
+	fprintf (stdout, fmt, x);
 	out_line_count (fmt);
 }
 
@@ -737,7 +758,7 @@ void out_line_count (str)
 void out_str (fmt, str)
      const char *fmt, str[];
 {
-	printf (fmt, str);
+	fprintf (stdout,fmt, str);
 	out_line_count (fmt);
 	out_line_count (str);
 }
@@ -745,7 +766,7 @@ void out_str (fmt, str)
 void out_str3 (fmt, s1, s2, s3)
      const char *fmt, s1[], s2[], s3[];
 {
-	printf (fmt, s1, s2, s3);
+	fprintf (stdout,fmt, s1, s2, s3);
 	out_line_count (fmt);
 	out_line_count (s1);
 	out_line_count (s2);
@@ -756,7 +777,7 @@ void out_str_dec (fmt, str, n)
      const char *fmt, str[];
      int n;
 {
-	printf (fmt, str, n);
+	fprintf (stdout,fmt, str, n);
 	out_line_count (fmt);
 	out_line_count (str);
 }
@@ -764,7 +785,7 @@ void out_str_dec (fmt, str, n)
 void outc (c)
      int c;
 {
-	putc (c, stdout);
+	fputc (c, stdout);
 
 	if (c == '\n')
 		++out_linenum;
@@ -773,9 +794,21 @@ void outc (c)
 void outn (str)
      const char *str;
 {
-	puts (str);
+	fputs (str,stdout);
+    fputc('\n',stdout);
 	out_line_count (str);
 	++out_linenum;
+}
+
+/** Print "m4_define( [[def]], [[val]])m4_dnl\n".
+ * @param def The m4 symbol to define.
+ * @param val The definition; may be NULL.
+ * @return buf
+ */
+void out_m4_define (const char* def, const char* val)
+{
+    const char * fmt = "m4_define( [[%s]], [[%s]])m4_dnl\n";
+    fprintf(stdout, fmt, def, val?val:"");
 }
 
 

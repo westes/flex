@@ -65,7 +65,9 @@ flex_SOURCES = \
 	scanopt.c \
 	buf.c \
 	tables.c \
-	tables_shared.c
+	tables_shared.c \
+	filter.c \
+	regex.c
 
 libfl_a_SOURCES = \
 	libmain.c \
@@ -142,7 +144,7 @@ AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I@includedir@ -I$(top_srcdir)/intl
 LIBS = @LIBINTL@ @LIBS@
 
 skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
-	$(m4) -P -DFLEX_MAJOR_VERSION=`echo $(VERSION)|cut -f 1 -d .` -DFLEX_MINOR_VERSION=`echo $(VERSION)|cut -f 2 -d .` -DFLEX_SUBMINOR_VERSION=`echo $(VERSION)|cut -f 3 -d .` $(srcdir)/flex.skl | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
+	sed 's/m4_/m4postproc_/g; s/m4preproc_/m4_/g' $(srcdir)/flex.skl | $(m4) -P -DFLEX_MAJOR_VERSION=`echo $(VERSION)|cut -f 1 -d .` -DFLEX_MINOR_VERSION=`echo $(VERSION)|cut -f 2 -d .` -DFLEX_SUBMINOR_VERSION=`echo $(VERSION)|cut -f 3 -d .` | sed 's/m4postproc_/m4_/g' | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
 
 # Explicitly describe dependencies.
 # You can recreate this with `gcc -I. -MM *.c'
@@ -168,6 +170,7 @@ tables_shared.o: tables_shared.c flexdef.h flexint.h tables.h \
  tables_shared.h
 tblcmp.o: tblcmp.c flexdef.h flexint.h
 yylex.o: yylex.c flexdef.h flexint.h parse.h
+filter.o: filter.c flexdef.h flexint.h
 
 # Create a tags file.
 tags:

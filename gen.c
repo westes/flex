@@ -125,7 +125,7 @@ static void geneoltbl ()
 {
 	int     i;
 
-	outn ("#ifdef YY_USE_LINENO");
+	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
 	outn ("/* Table of booleans, true if rule could match eol. */");
 	out_str_dec (get_int32_decl (), "yy_rule_can_match_eol",
 		     num_rules + 1);
@@ -139,7 +139,7 @@ static void geneoltbl ()
 		}
 		out ("    };\n");
 	}
-	outn ("#endif");
+	outn ("]])");
 }
 
 
@@ -762,19 +762,19 @@ void gen_next_match ()
 	 * gen_NUL_trans().
 	 */
 	char   *char_map = useecs ?
-		"yy_ec[YY_SC_TO_UI(*yy_cp)]" : "YY_SC_TO_UI(*yy_cp)";
+		"yy_ec[YY_SC_TO_UI(*yy_cp)] " : "YY_SC_TO_UI(*yy_cp)";
 
 	char   *char_map_2 = useecs ?
-		"yy_ec[YY_SC_TO_UI(*++yy_cp)]" : "YY_SC_TO_UI(*++yy_cp)";
+		"yy_ec[YY_SC_TO_UI(*++yy_cp)] " : "YY_SC_TO_UI(*++yy_cp)";
 
 	if (fulltbl) {
 		if (gentables)
 			indent_put2s
-				("while ( (yy_current_state = yy_nxt[yy_current_state][%s]) > 0 )",
+				("while ( (yy_current_state = yy_nxt[yy_current_state][ %s ]) > 0 )",
 				 char_map);
 		else
 			indent_put2s
-				("while ( (yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN +  %s]) > 0 )",
+				("while ( (yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN +  %s ]) > 0 )",
 				 char_map);
 
 		indent_up ();
@@ -1038,12 +1038,12 @@ void gen_start_state ()
 
 		if (reject) {
 			/* Set up for storing up states. */
-			outn ("#ifdef YY_USES_REJECT");
+			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
 			indent_puts
 				("YY_G(yy_state_ptr) = YY_G(yy_state_buf);");
 			indent_puts
 				("*YY_G(yy_state_ptr)++ = yy_current_state;");
-			outn ("#endif");
+			outn ("]])");
 		}
 	}
 }
@@ -1544,7 +1544,7 @@ void make_tables ()
 
 		if (yymore_used) {
 			indent_puts
-				("yy_flex_strncpy( &yytext[YY_G(yy_more_offset)], YY_G(yytext_ptr), yyleng + 1 YY_CALL_LAST_ARG); \\");
+				("yy_flex_strncpy( &yytext[YY_G(yy_more_offset)], YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG); \\");
 			indent_puts ("yyleng += YY_G(yy_more_offset); \\");
 			indent_puts
 				("YY_G(yy_prev_more_offset) = YY_G(yy_more_offset); \\");
@@ -1552,7 +1552,7 @@ void make_tables ()
 		}
 		else {
 			indent_puts
-				("yy_flex_strncpy( yytext, YY_G(yytext_ptr), yyleng + 1 YY_CALL_LAST_ARG); \\");
+				("yy_flex_strncpy( yytext, YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG); \\");
 		}
 	}
 
@@ -1761,7 +1761,7 @@ void make_tables ()
 	}
 
 	if (reject) {
-		outn ("#ifdef YY_USES_REJECT");
+		outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
 		/* Declare state buffer variables. */
 		if (!C_plus_plus && !reentrant) {
 			outn ("static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;");
@@ -1797,7 +1797,7 @@ void make_tables ()
 		outn ("goto find_rule; \\");
 
 		outn ("}");
-		outn ("#endif");
+		outn ("]])\n");
 	}
 
 	else {
@@ -1810,26 +1810,23 @@ void make_tables ()
 	if (yymore_used) {
 		if (!C_plus_plus) {
 			if (yytext_is_array) {
-				outn ("#ifndef YY_REENTRANT");
-				indent_puts
-					("static int yy_more_offset = 0;");
-				indent_puts
-					("static int yy_prev_more_offset = 0;");
-				outn ("#endif");
+				if (!reentrant){
+    				indent_puts ("static int yy_more_offset = 0;");
+                }else{
+                    indent_puts ("static int yy_prev_more_offset = 0;");
+                }
 			}
 			else if (!reentrant) {
-				outn ("#ifndef YY_REENTRANT");
 				indent_puts
 					("static int yy_more_flag = 0;");
 				indent_puts
 					("static int yy_more_len = 0;");
-				outn ("#endif");
 			}
 		}
 
 		if (yytext_is_array) {
 			indent_puts
-				("#define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( yytext YY_CALL_LAST_ARG))");
+				("#define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( yytext M4_YY_CALL_LAST_ARG))");
 			indent_puts ("#define YY_NEED_STRLEN");
 			indent_puts ("#define YY_MORE_ADJ 0");
 			indent_puts
@@ -1863,16 +1860,15 @@ void make_tables ()
 			outn ("#ifndef YYLMAX");
 			outn ("#define YYLMAX 8192");
 			outn ("#endif\n");
-			outn ("#ifndef YY_REENTRANT");
-			outn ("char yytext[YYLMAX];");
-			outn ("char *yytext_ptr;");
-			outn ("#endif");
+			if (!reentrant){
+                outn ("char yytext[YYLMAX];");
+                outn ("char *yytext_ptr;");
+            }
 		}
 
 		else {
-			outn ("#ifndef YY_REENTRANT");
-			outn ("char *yytext;");
-			outn ("#endif");
+			if(! reentrant)
+                outn ("char *yytext;");
 		}
 	}
 
@@ -1978,7 +1974,7 @@ void make_tables ()
 	gen_find_action ();
 
 	skelout ();		/* %% [11.0] - break point in skel */
-	outn ("#ifdef YY_USE_LINENO");
+	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
 	indent_puts
 		("if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )");
 	indent_up ();
@@ -1996,7 +1992,7 @@ void make_tables ()
 	indent_down ();
 	indent_puts ("}");
 	indent_down ();
-	outn ("#endif");
+	outn ("]])");
 
 	skelout ();		/* %% [12.0] - break point in skel */
 	if (ddebug) {

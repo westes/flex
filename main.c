@@ -54,7 +54,7 @@ int     interactive, caseins, lex_compat, posix_compat, do_yylineno,
 int     fullspd, gen_line_dirs, performance_report, backing_up_report;
 int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
 	csize;
-int     reentrant, bison_bridge;
+int     reentrant, bison_bridge, bison_bridge_locations;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
 int     datapos, dataline, linenum, out_linenum;
@@ -105,6 +105,7 @@ int     num_input_files;
 jmp_buf flex_main_jmp_buf;
 bool   *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
+bool    ansi_func_defs, ansi_func_protos;
 
 bool    tablesext, tablesverify, gentables;
 char   *tablesfilename=0,*tablesname=0;
@@ -129,13 +130,18 @@ static char *tablesfile_template = "lex%s.tbl";
 extern unsigned _stklen = 16384;
 #endif
 
+/* From scan.l */
+extern FILE* yyout;
+
 static char outfile_path[MAXLINE];
 static int outfile_created = 0;
 static char *skelname = NULL;
 
+/* For debugging. The max number of filters to apply to skeleton. */
+static int preproc_level = 1000;
+
 int flex_main PROTO ((int argc, char *argv[]));
 int main PROTO ((int argc, char *argv[]));
-void fix_line_dirs PROTO ((char *, char *, char *, int));
 
 int flex_main (argc, argv)
      int argc;
@@ -151,8 +157,13 @@ int flex_main (argc, argv)
 	 * exit(n);
 	 */
 	exit_status = setjmp (flex_main_jmp_buf);
-	if (exit_status)
+	if (exit_status){
+        fflush(stdout);
+        fclose(stdout);
+        while (wait(0) > 0){
+        }
 		return exit_status - 1;
+    }
 
 	flexinit (argc, argv);
 
@@ -222,10 +233,6 @@ void check_options ()
 		use_read = false;
 	}
 
-	/* See comments in flexend() for an explanation of this error condition. */
-	if (use_stdout && headerfilename)
-		flexerror (_
-			   ("Can't specify header option if writing to stdout."));
 
 #if 0
 	/* This makes no sense whatsoever. I'm removing it. */
@@ -304,6 +311,12 @@ void check_options ()
 		}
 	}
 
+    if (!ansi_func_defs)
+        buf_m4_define( &m4defs_buf, "M4_YY_NO_ANSI_FUNC_DEFS", NULL);
+
+    if (!ansi_func_protos)
+        buf_m4_define( &m4defs_buf, "M4_YY_NO_ANSI_FUNC_PROTOS", NULL);
+
 	if (!use_stdout) {
 		FILE   *prev_stdout;
 
@@ -329,8 +342,21 @@ void check_options ()
 		outfile_created = 1;
 	}
 
+    /* Setup the filter chain. */
+    output_chain = filter_create_int(NULL, filter_tee_header, headerfilename);
+    filter_create_ext(output_chain,"m4","-P",0);
+    filter_create_int(output_chain, filter_fix_linedirs, NULL);
+
+    /* For debugging, only run the requested number of filters. */
+    if (preproc_level > 0) {
+        filter_truncate(output_chain, preproc_level);
+        filter_apply_chain(output_chain);
+    }
+    yyout = stdout;
+
+
 	/* always generate the tablesverify flag. */
-	action_define ("YY_TABLES_VERIFY", tablesverify ? 1 : 0);
+	buf_m4_define (&m4defs_buf, "M4_YY_TABLES_VERIFY", tablesverify ? "1" : "0");
 	if (tablesext)
 		gentables = false;
 
@@ -345,7 +371,7 @@ void check_options ()
 		char   *pname = 0;
 		int     nbytes = 0;
 
-		action_define ("YY_TABLES_EXTERNAL", 1);
+		buf_m4_define (&m4defs_buf, "M4_YY_TABLES_EXTERNAL", NULL);
 
 		if (!tablesfilename) {
 			nbytes = strlen (prefix) +
@@ -376,157 +402,55 @@ void check_options ()
 		lerrsf (_("can't open skeleton file %s"), skelname);
 
 	if (reentrant) {
-		outn ("#define YY_REENTRANT 1");
+        buf_m4_define (&m4defs_buf, "M4_YY_REENTRANT", NULL);
 		if (yytext_is_array)
-			outn ("#define YY_TEXT_IS_ARRAY");
+			buf_m4_define (&m4defs_buf, "M4_YY_TEXT_IS_ARRAY", NULL);
 	}
 
 	if ( bison_bridge)
-		outn ("#define YY_BISON_BRIDGE 1");
+		buf_m4_define (&m4defs_buf, "M4_YY_BISON_BRIDGE", NULL);
 
-	if (strcmp (prefix, "yy")) {
-#define GEN_PREFIX(name) out_str3( "#define yy%s %s%s\n", name, prefix, name )
-		if (C_plus_plus)
-			GEN_PREFIX ("FlexLexer");
-		else {
-			outn ("#ifndef YY_REENTRANT");
-			GEN_PREFIX ("text");
-			GEN_PREFIX ("leng");
-			GEN_PREFIX ("in");
-			GEN_PREFIX ("out");
-			GEN_PREFIX ("_flex_debug");
-			outn ("#endif");
-			GEN_PREFIX ("_create_buffer");
-			GEN_PREFIX ("_delete_buffer");
-			GEN_PREFIX ("_scan_buffer");
-			GEN_PREFIX ("_scan_string");
-			GEN_PREFIX ("_scan_bytes");
-			GEN_PREFIX ("_init_buffer");
-			GEN_PREFIX ("_flush_buffer");
-			GEN_PREFIX ("_load_buffer_state");
-			GEN_PREFIX ("_switch_to_buffer");
-			GEN_PREFIX ("push_buffer_state");
-			GEN_PREFIX ("pop_buffer_state");
-			GEN_PREFIX ("ensure_buffer_stack");
-			GEN_PREFIX ("lex");
-			GEN_PREFIX ("restart");
-			GEN_PREFIX ("lex_init");
-			GEN_PREFIX ("lex_destroy");
-			GEN_PREFIX ("get_debug");
-			GEN_PREFIX ("set_debug");
-			GEN_PREFIX ("get_extra");
-			GEN_PREFIX ("set_extra");
-			GEN_PREFIX ("get_in");
-			GEN_PREFIX ("set_in");
-			GEN_PREFIX ("get_out");
-			GEN_PREFIX ("set_out");
-			GEN_PREFIX ("get_leng");
-			GEN_PREFIX ("get_text");
-			GEN_PREFIX ("get_lineno");
-			GEN_PREFIX ("set_lineno");
+	if ( bison_bridge_locations)
+        buf_m4_define (&m4defs_buf, "M4_YY_BISON_BRIDGE_LOCATIONS", NULL);
 
-			outn ("#ifdef YY_BISON_BRIDGE");
-			GEN_PREFIX ("get_lval");
-			GEN_PREFIX ("set_lval");
-			GEN_PREFIX ("get_lloc");
-			GEN_PREFIX ("set_lloc");
-			outn ("#endif");
-
-		}
-
-        /* The alloc/realloc/free functions are used internally by the
-         * generated scanner for both and C++.
-         */
-        GEN_PREFIX ("alloc");
-        GEN_PREFIX ("realloc");
-        GEN_PREFIX ("free");
-
-		if (!reentrant)
-			GEN_PREFIX ("lineno");
-
-		if (do_yywrap)
-			GEN_PREFIX ("wrap");
-
-        if (tablesext){
-            GEN_PREFIX ("tables_fload");
-            GEN_PREFIX ("tables_destroy");
-            GEN_PREFIX ("TABLES_NAME");
-        }
-
-		outn ("");
-	}
+    buf_m4_define(&m4defs_buf, "M4_YY_PREFIX", prefix);
 
 	if (did_outfilename)
 		line_directive_out (stdout, 0);
 
 	if (do_yylineno)
-		buf_strdefine (&userdef_buf, "YY_USE_LINENO", "1");
+		buf_m4_define (&m4defs_buf, "M4_YY_USE_LINENO", NULL);
 
 	/* Create the alignment type. */
 	buf_strdefine (&userdef_buf, "YY_INT_ALIGNED",
 		       long_align ? "long int" : "short int");
 
+    /* Define the start condition macros. */
+    {
+        struct Buf tmpbuf;
+        buf_init(&tmpbuf, sizeof(char));
+        for (i = 1; i <= lastsc; i++) {
+             char *str, *fmt = "#define %s %d\n";
+             
+             str = (char*)flex_alloc(strlen(fmt) + strlen(scname[i]) + (int)(1 + log(i)/log(10)) + 2);
+             sprintf(str, fmt,      scname[i], i - 1);
+             buf_strappend(&tmpbuf, str);
+             free(str);
+        }
+        buf_m4_define(&m4defs_buf, "M4_YY_SC_DEFS", tmpbuf.elts);
+        buf_destroy(&tmpbuf);
+    }
+
+    /* Dump the m4 definitions. */
+    buf_print_strings(&m4defs_buf, stdout);
+    m4defs_buf.nelts = 0; /* memory leak here. */
+    
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)
 		outn ((char *) (userdef_buf.elts));
 
 	skelout ();
 	/* %% [1.0] */
-}
-
-/* Alter #line directives from the generated source, destined
- * for the generated header. We chaneg the line number and filename.
- * linebuf is modified in place.
- */
-void fix_line_dirs (linebuf, outfilename, headerfilename, nlines)
-     char   *linebuf;
-     char   *outfilename;
-     char   *headerfilename;
-     int nlines;
-{
-	char   *pname, *p;
-
-	/* Match pattern:  ^#line +[:digit:]+ +"outfilename" */
-	p = linebuf;
-	if (strncmp (p, "#line ", 6))
-		return;
-	p += 6;
-
-	/* match spaces */
-	while (*p == ' ')
-		p++;
-	if (!isdigit (*p))
-		return;
-
-	/* match numbers */
-	while (isdigit (*p))
-		p++;
-	if (*p != ' ')
-		return;
-
-	/* match spaces */
-	while (*p == ' ')
-		p++;
-	if (*p != '"')
-		return;
-	p++;
-
-	pname = p;
-
-	/* find end of filename. Note: If scanner filename has
-	 * embedded '"' chars, then the generated #line directive
-	 * may fail. */
-	while (*p != '\0' && *p != '"')
-		p++;
-	if (*p != '"')
-		return;
-
-	if (strncmp (pname, outfilename, p - pname) != 0)
-		return;
-
-	/* We have a match. */
-
-	sprintf (linebuf, "#line %d \"%s\"\n", nlines + 2, headerfilename);
 }
 
 /* flexend - terminate flex
@@ -541,7 +465,6 @@ void flexend (exit_status)
 {
 	static int called_before = -1;	/* prevent infinite recursion. */
 	int     tblsiz;
-	int     i;
 
 	if (++called_before)
 		FLEX_EXIT (exit_status);
@@ -556,61 +479,7 @@ void flexend (exit_status)
 				skelname);
 	}
 
-	/* flex generates the header file by rewinding the output FILE
-	 * pointer. However, since we can't rewind stdout, we must disallow
-	 * %option header if we are writing to stdout. This is a kludge.
-	 * This kludge can be rewritten when we get around to buffering
-	 * Section 1 of the input file, because then we'll have seen all the
-	 * %options BEFORE we begin generating the scanner. The lack of
-	 * buffering causes other problems, too. For example, it is the
-	 * reason we currently can't provide a mechanism to allow the user
-	 * to inject arbitrary class members into the generated C++ scanner. - JM
-	 */
-	if (headerfilename && exit_status == 0 && outfile_created
-	    && !ferror (stdout)) {
-		/* Copy the file we just wrote to a header file. */
-#define LINE_SZ 512
-		FILE   *header_out;
-		char    linebuf[LINE_SZ];
-		int     nlines = 0;
-		int     discard = 0;
-
-		/* rewind the outfile file. */
-		fflush (stdout);
-		fseek (stdout, 0L, SEEK_SET);
-
-		header_out = fopen (headerfilename, "w");
-		if (header_out == NULL)
-			lerrsf (_("could not create %s"), headerfilename);
-
-		fprintf (header_out, "#ifndef %sHEADER_H\n", prefix);
-		fprintf (header_out, "#define %sHEADER_H 1\n", prefix);
-		fprintf (header_out, "#define %sIN_HEADER 1\n\n", prefix);
-		fflush (header_out);
-
-		nlines = 4;
-		while (fgets (linebuf, LINE_SZ, stdout)) {
-			if (strstr (linebuf, "YY-DISCARD-FROM-HEADER"))
-				discard++;
-			else if (strstr
-				 (linebuf, "YY-END-DISCARD-FROM-HEADER")) {
-				discard--;
-				continue;
-			}
-
-			if (discard)
-				continue;
-
-			fix_line_dirs (linebuf, outfilename,
-				       headerfilename, nlines);
-			fputs (linebuf, header_out);
-			nlines++;
-		}
-
-		fprintf (header_out, "#line %d \"%s\"\n", (++nlines) + 1,
-			 headerfilename);
-
-		/* Print the start conditions. */
+#if 0 
 		fprintf (header_out,
 			 "#ifdef YY_HEADER_EXPORT_START_CONDITIONS\n");
 		fprintf (header_out,
@@ -620,8 +489,7 @@ void flexend (exit_status)
 		fprintf (header_out,
 			 "#undef INITIAL\n#define INITIAL 0\n");
 		for (i = 2; i <= lastsc; i++)
-			fprintf (header_out, "#define %s %d\n", scname[i],
-				 i - 1);
+			fprintf (header_out, "#define %s %d\n", scname[i], i - 1);
 		fprintf (header_out,
 			 "#endif /* YY_HEADER_EXPORT_START_CONDITIONS */\n\n");
 
@@ -649,19 +517,18 @@ void flexend (exit_status)
                 "YYLMAX",
                 "YYSTATE",
                 "YY_AT_BOL",
-                "YY_BISON_BRIDGE",
                 "YY_BREAK",
                 "YY_BUFFER_EOF_PENDING",
                 "YY_BUFFER_NEW",
                 "YY_BUFFER_NORMAL",
                 "YY_BUF_SIZE",
-                "YY_CALL_LAST_ARG",
-                "YY_CALL_ONLY_ARG",
+                "M4_YY_CALL_LAST_ARG",
+                "M4_YY_CALL_ONLY_ARG",
                 "YY_CURRENT_BUFFER",
                 "YY_DECL",
-                "YY_DECL_LAST_ARG",
-                "YY_DEF_LAST_ARG",
-                "YY_DEF_ONLY_ARG",
+                "M4_YY_DECL_LAST_ARG",
+                "M4_YY_DEF_LAST_ARG",
+                "M4_YY_DEF_ONLY_ARG",
                 "YY_DO_BEFORE_ACTION",
                 "YY_END_OF_BUFFER",
                 "YY_END_OF_BUFFER_CHAR",
@@ -687,59 +554,27 @@ void flexend (exit_status)
                 "YY_MORE_ADJ",
                 "YY_NEED_STRLEN",
                 "YY_NEW_FILE",
-                "YY_NO_FLEX_ALLOC",
-                "YY_NO_FLEX_FREE",
-                "YY_NO_FLEX_REALLOC",
-                "YY_NO_GET_DEBUG",
-                "YY_NO_GET_EXTRA",
-                "YY_NO_GET_IN",
-                "YY_NO_GET_LENG",
-                "YY_NO_GET_LINENO",
-                "YY_NO_GET_LLOC",
-                "YY_NO_GET_LVAL",
-                "YY_NO_GET_OUT",
-                "YY_NO_GET_TEXT",
-                "YY_NO_INPUT",
-                "YY_NO_POP_STATE",
-                "YY_NO_PUSH_STATE",
-                "YY_NO_SCAN_BUFFER",
-                "YY_NO_SCAN_BYTES",
-                "YY_NO_SCAN_STRING",
-                "YY_NO_SET_DEBUG",
-                "YY_NO_SET_EXTRA",
-                "YY_NO_SET_IN",
-                "YY_NO_SET_LINENO",
-                "YY_NO_SET_LLOC",
-                "YY_NO_SET_LVAL",
-                "YY_NO_SET_OUT",
-                "YY_NO_TOP_STATE",
-                "YY_NO_UNISTD_H",
-                "YY_NO_UNPUT",
                 "YY_NULL",
                 "YY_NUM_RULES",
                 "YY_ONLY_ARG",
                 "YY_PARAMS",
                 "YY_PROTO",
-                "YY_PROTO_LAST_ARG",
-                "YY_PROTO_ONLY_ARG void",
+                "M4_YY_PROTO_LAST_ARG",
+                "M4_YY_PROTO_ONLY_ARG void",
                 "YY_READ_BUF_SIZE",
                 "YY_REENTRANT",
                 "YY_RESTORE_YY_MORE_OFFSET",
                 "YY_RULE_SETUP",
                 "YY_SC_TO_UI",
                 "YY_SKIP_YYWRAP",
-                "YY_STACK_USED",
                 "YY_START",
                 "YY_START_STACK_INCR",
                 "YY_STATE_EOF",
                 "YY_STDINIT",
-                "YY_TEXT_IS_ARRAY",
                 "YY_TRAILING_HEAD_MASK",
                 "YY_TRAILING_MASK",
                 "YY_USER_ACTION",
-                "YY_USES_REJECT",
                 "YY_USE_CONST",
-                "YY_USE_LINENO",
                 "YY_USE_PROTOS",
                 "unput",
                 "yyTABLES_NAME",
@@ -828,7 +663,7 @@ void flexend (exit_status)
 				headerfilename);
 		fflush (header_out);
 		fclose (header_out);
-	}
+#endif
 
 	if (exit_status != 0 && outfile_created) {
 		if (ferror (stdout))
@@ -894,6 +729,8 @@ void flexend (exit_status)
 			fputs ("--reentrant", stderr);
         if (bison_bridge)
             fputs ("--bison-bridge", stderr);
+        if (bison_bridge_locations)
+            fputs ("--bison-locations", stderr);
 		if (use_stdout)
 			putc ('t', stderr);
 		if (printstats)
@@ -1075,7 +912,7 @@ void flexinit (argc, argv)
 	yymore_really_used = reject_really_used = unspecified;
 	interactive = csize = unspecified;
 	do_yywrap = gen_line_dirs = usemecs = useecs = true;
-	reentrant = bison_bridge = false;
+	reentrant = bison_bridge = bison_bridge_locations = false;
 	performance_report = 0;
 	did_outfilename = 0;
 	prefix = "yy";
@@ -1084,6 +921,7 @@ void flexinit (argc, argv)
 	tablesext = tablesverify = false;
 	gentables = true;
 	tablesfilename = tablesname = NULL;
+    ansi_func_defs = ansi_func_protos = true;
 
 	sawcmpflag = false;
 
@@ -1098,6 +936,15 @@ void flexinit (argc, argv)
 	buf_init (&defs_buf, sizeof (char *));	/* list of strings */
 	buf_init (&yydmap_buf, sizeof (char));	/* one long string */
 
+    {
+        const char * m4defs_init_str[] = {"m4_changequote\n",
+                                          "m4_changequote([[, ]])\n"};
+        buf_init (&m4defs_buf, sizeof (char *));
+        buf_append (&m4defs_buf, &m4defs_init_str, 2);
+    }
+
+    /* initialize regex lib */
+    flex_init_regex();
 
 	/* Enable C++ if program name ends with '+'. */
 	program_name = basename2 (argv[0], 0);
@@ -1222,6 +1069,10 @@ void flexinit (argc, argv)
 			posix_compat = true;
 			break;
 
+        case OPT_PREPROC_LEVEL:
+            preproc_level = strtol(arg,NULL,0);
+            break;
+
 		case OPT_MAIN:
 			buf_strdefine (&userdef_buf, "YY_MAIN", "1");
 			do_yywrap = false;
@@ -1252,6 +1103,10 @@ void flexinit (argc, argv)
 			bison_bridge = true;
 			break;
 
+		case OPT_BISON_BRIDGE_LOCATIONS:
+			bison_bridge = bison_bridge_locations = true;
+			break;
+
 		case OPT_REENTRANT:
 			reentrant = true;
 			break;
@@ -1277,8 +1132,8 @@ void flexinit (argc, argv)
 			break;
 
 		case OPT_NO_UNISTD_H:
-			buf_strdefine (&userdef_buf, "YY_NO_UNISTD_H",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_UNISTD_H", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_UNISTD_H",0);
 			break;
 
 		case OPT_TABLES_FILE:
@@ -1327,13 +1182,11 @@ void flexinit (argc, argv)
 			break;
 
 		case OPT_ALWAYS_INTERACTIVE:
-			buf_strdefine (&userdef_buf,
-				       "YY_ALWAYS_INTERACTIVE", "1");
+			buf_m4_define (&m4defs_buf, "M4_YY_ALWAYS_INTERACTIVE", 0);
 			break;
 
 		case OPT_NEVER_INTERACTIVE:
-			buf_strdefine (&userdef_buf,
-				       "YY_NEVER_INTERACTIVE", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NEVER_INTERACTIVE", 0);
 			break;
 
 		case OPT_ARRAY:
@@ -1394,7 +1247,8 @@ void flexinit (argc, argv)
 			break;
 
 		case OPT_STACK:
-			buf_strdefine (&userdef_buf, "YY_STACK_USED", "1");
+			//buf_strdefine (&userdef_buf, "YY_STACK_USED", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_STACK_USED",0);
 			break;
 
 		case OPT_STDINIT:
@@ -1441,84 +1295,97 @@ void flexinit (argc, argv)
 			reject_really_used = false;
 			break;
 
+        case OPT_NO_ANSI_FUNC_DEFS:
+            ansi_func_defs = false;
+            break;
+
+        case OPT_NO_ANSI_FUNC_PROTOS:
+            ansi_func_protos = false;
+            break;
+
 		case OPT_NO_YY_PUSH_STATE:
-			buf_strdefine (&userdef_buf, "YY_NO_PUSH_STATE",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_PUSH_STATE", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_PUSH_STATE",0);
 			break;
 		case OPT_NO_YY_POP_STATE:
-			buf_strdefine (&userdef_buf, "YY_NO_POP_STATE",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_POP_STATE", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_POP_STATE",0);
 			break;
 		case OPT_NO_YY_TOP_STATE:
-			buf_strdefine (&userdef_buf, "YY_NO_TOP_STATE",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_TOP_STATE", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_TOP_STATE",0);
 			break;
 		case OPT_NO_UNPUT:
-			buf_strdefine (&userdef_buf, "YY_NO_UNPUT", "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_UNPUT", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_UNPUT",0);
 			break;
 		case OPT_NO_YY_SCAN_BUFFER:
-			buf_strdefine (&userdef_buf, "YY_NO_SCAN_BUFFER",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_SCAN_BUFFER", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_SCAN_BUFFER",0);
 			break;
 		case OPT_NO_YY_SCAN_BYTES:
-			buf_strdefine (&userdef_buf, "YY_NO_SCAN_BYTES",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_SCAN_BYTES", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_SCAN_BYTES",0);
 			break;
 		case OPT_NO_YY_SCAN_STRING:
-			buf_strdefine (&userdef_buf, "YY_NO_SCAN_STRING",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_SCAN_STRING", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_SCAN_STRING",0);
 			break;
 		case OPT_NO_YYGET_EXTRA:
-			buf_strdefine (&userdef_buf, "YY_NO_GET_EXTRA",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_GET_EXTRA", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_EXTRA",0);
 			break;
 		case OPT_NO_YYSET_EXTRA:
-			buf_strdefine (&userdef_buf, "YY_NO_SET_EXTRA",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_SET_EXTRA", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_EXTRA",0);
 			break;
 		case OPT_NO_YYGET_LENG:
-			buf_strdefine (&userdef_buf, "YY_NO_GET_LENG",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_GET_LENG", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LENG",0);
 			break;
 		case OPT_NO_YYGET_TEXT:
-			buf_strdefine (&userdef_buf, "YY_NO_GET_TEXT",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_GET_TEXT", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_TEXT",0);
 			break;
 		case OPT_NO_YYGET_LINENO:
-			buf_strdefine (&userdef_buf, "YY_NO_GET_LINENO",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_GET_LINENO", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LINENO",0);
 			break;
 		case OPT_NO_YYSET_LINENO:
-			buf_strdefine (&userdef_buf, "YY_NO_SET_LINENO",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_SET_LINENO", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LINENO",0);
 			break;
 		case OPT_NO_YYGET_IN:
-			buf_strdefine (&userdef_buf, "YY_NO_GET_IN", "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_GET_IN", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_IN",0);
 			break;
 		case OPT_NO_YYSET_IN:
-			buf_strdefine (&userdef_buf, "YY_NO_SET_IN", "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_SET_IN", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_IN",0);
 			break;
 		case OPT_NO_YYGET_OUT:
-			buf_strdefine (&userdef_buf, "YY_NO_GET_OUT", "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_GET_OUT", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_OUT",0);
 			break;
 		case OPT_NO_YYSET_OUT:
-			buf_strdefine (&userdef_buf, "YY_NO_SET_OUT", "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_SET_OUT", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_OUT",0);
 			break;
 		case OPT_NO_YYGET_LVAL:
-			buf_strdefine (&userdef_buf, "YY_NO_GET_LVAL",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_GET_LVAL", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LVAL",0);
 			break;
 		case OPT_NO_YYSET_LVAL:
-			buf_strdefine (&userdef_buf, "YY_NO_SET_LVAL",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_SET_LVAL", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LVAL",0);
 			break;
 		case OPT_NO_YYGET_LLOC:
-			buf_strdefine (&userdef_buf, "YY_NO_GET_LLOC",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_GET_LLOC", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LLOC",0);
 			break;
 		case OPT_NO_YYSET_LLOC:
-			buf_strdefine (&userdef_buf, "YY_NO_SET_LLOC",
-				       "1");
+			//buf_strdefine (&userdef_buf, "YY_NO_SET_LLOC", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LLOC",0);
 			break;
 
 		}		/* switch */
@@ -1668,8 +1535,10 @@ void readin ()
 				   ("variable trailing context rules cannot be used with -f or -F"));
 	}
 
-	if (reject)
-		outn ("\n#define YY_USES_REJECT");
+	if (reject){
+        out_m4_define( "M4_YY_USES_REJECT", NULL);
+		//outn ("\n#define YY_USES_REJECT");
+    }
 
 	if (!do_yywrap) {
 		outn ("\n#define yywrap(n) 1");
@@ -1697,15 +1566,16 @@ void readin ()
 		OUT_BEGIN_CODE ();
 		/* In reentrant scanner, stdinit is handled in flex.skl. */
 		if (do_stdinit) {
-			outn ("#ifdef YY_REENTRANT");
-			outn ("#ifdef VMS");
-			outn ("#ifdef __VMS_POSIX");
-			outn ("#define YY_STDINIT");
-			outn ("#endif");
-			outn ("#else");
-			outn ("#define YY_STDINIT");
-			outn ("#endif");
-			outn ("#else /* end YY_REENTRANT */");
+			if (reentrant){
+                outn ("#ifdef VMS");
+                outn ("#ifdef __VMS_POSIX");
+                outn ("#define YY_STDINIT");
+                outn ("#endif");
+                outn ("#else");
+                outn ("#define YY_STDINIT");
+                outn ("#endif");
+            }
+
 			outn ("#ifdef VMS");
 			outn ("#ifndef __VMS_POSIX");
 			outn (yy_nostdinit);
@@ -1719,9 +1589,8 @@ void readin ()
 		}
 
 		else {
-			outn ("#ifndef YY_REENTRANT");
-			outn (yy_nostdinit);
-			outn ("#endif");
+			if(!reentrant)
+                outn (yy_nostdinit);
 		}
 		OUT_END_CODE ();
 	}
@@ -1931,7 +1800,10 @@ void usage ()
 		  "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 		  "  -R,  --reentrant         generate a reentrant C scanner\n"
 		  "       --bison-bridge      scanner for bison pure parser.\n"
+		  "       --bison-locations   include yylloc support.\n"
 		  "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+          "       --noansi-definitions old-style function definitions\n"
+          "       --noansi-prototypes  empty parameter list in prototypes\n"
 		  "       --nounistd          do not include <unistd.h>\n"
 		  "       --noFUNCTION        do not generate a particular FUNCTION\n"
 		  "\n" "Miscellaneous:\n"

@@ -243,9 +243,6 @@ void    scinstal (str, xcluflg)
      int     xcluflg;
 {
 
-	/* Generate start condition definition, for use in BEGIN et al. */
-	action_define (str, lastsc);
-
 	if (++lastsc >= current_max_scs)
 		scextend ();
 
