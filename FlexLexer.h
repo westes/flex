@@ -35,6 +35,8 @@
 // If you want to create multiple lexer classes, you use the -P flag
 // to rename each yyFlexLexer to some other xxFlexLexer.
 
+extern "C++" {
+
 #include <iostream.h>
 
 struct yy_buffer_state;
@@ -156,4 +158,7 @@ protected:
 	int yy_more_flag;
 	int yy_more_len;
 };
+
+}
+
 #endif
