@@ -1,6 +1,6 @@
 /* parse.y - parser for flex input */
 
-%token CHAR NUMBER SECTEND SCDECL XSCDECL WHITESPACE NAME PREVCCL EOF_OP
+%token CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
 
 %{
 /*-
@@ -121,9 +121,9 @@ initlex		:
 			}
 		;
 
-sect1		:  sect1 startconddecl WHITESPACE namelist1 '\n'
+sect1		:  sect1 startconddecl namelist1
 		|
-		|  error '\n'
+		|  error
 			{ synerr( "unknown error processing section 1" ); }
 		;
 
@@ -147,7 +147,7 @@ startconddecl	:  SCDECL
 			{ xcluflg = true; }
 		;
 
-namelist1	:  namelist1 WHITESPACE NAME
+namelist1	:  namelist1 NAME
 			{ scinstal( nmstr, xcluflg ); }
 
 		|  NAME
