@@ -35,3 +35,16 @@ include_HEADERS = \
 
 info_TEXINFOS = \
 	flex.texi
+
+noinst_SCRIPTS  = \
+	autogen.sh
+
+EXTRA_DIST = \
+	AUTHORS \
+	COPYING \
+	NEWS \
+	ONEWS \
+	README \
+	RoadMap \
+	THANKS \
+	TODO
