@@ -169,7 +169,7 @@ install: flex $(FLEXLIB) installdirs install.$(INSTALLMAN)
 	@rm -f $(bindir)/flex++
 	$(LN_S) $(bindir)/flex $(bindir)/flex++
 	$(INSTALL_DATA) $(FLEXLIB) $(libdir)/libfl.a
-	-(cd $(libdir); $(RANLIB) $(libdir)/libfl.a)
+	-(cd $(libdir); $(RANLIB) libfl.a)
 	$(INSTALL_DATA) $(srcdir)/FlexLexer.h $(includedir)/FlexLexer.h
 
 install.man: flex.1 flexdoc.1
