@@ -29,7 +29,7 @@ WS    [[:blank:]]
 
 int main (int argc, char** argv )
 {
-    void * lexer;
+    yyscan_t  lexer;
     yylex_init( &lexer );
     yyset_out ( stdout,lexer);
     yyset_in  ( stdin, lexer);

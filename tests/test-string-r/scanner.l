@@ -39,7 +39,7 @@ main ( int argc, char** argv )
     char * buf;
     int len;
     YY_BUFFER_STATE state;
-    void * scanner=NULL;
+    yyscan_t  scanner=NULL;
 
 
     /* Scan a good string. */

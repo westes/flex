@@ -19,7 +19,7 @@
 #endif
 
 /* A naive test for segfaults when accessing yytext. */
-static int process_text(char* s, void* scanner);
+static int process_text(char* s, yyscan_t  scanner);
 
 %}
 
@@ -55,8 +55,8 @@ static int process_text(char* s, void* scanner);
 <INITIAL,STATE_1,STATE_2>[[:space:]\r\n]+  { }
 %%
 
-int yywrap( void * scanner) { return 1; }
-static int process_text(char* s, void* scanner)
+int yywrap( yyscan_t  scanner) { return 1; }
+static int process_text(char* s, yyscan_t  scanner)
 {
     return (int)(*s) + (int) *(s + yyget_leng(scanner)-1);
 }
@@ -96,7 +96,7 @@ void * thread_func ( void* arg )
     for( i =0 ; i < N_SCANS ; i++ )
     {
         int next;
-        void * scanner;
+        yyscan_t  scanner;
         FILE * fp;
 
         pthread_mutex_lock ( &next_lock );

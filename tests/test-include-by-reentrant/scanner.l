@@ -25,7 +25,7 @@
 <GET_FILENAME>{
 [[:alnum:]_.-]+>  {
      /* recurse */
-    void * scanner;
+    yyscan_t  scanner;
     FILE * fp;
     yytext[yyleng-1]='\0';
     if((fp=fopen(yytext,"r"))==NULL) {
@@ -55,7 +55,7 @@ int
 main ( int argc, char** argv )
 {
     FILE * fp;
-    void * scanner;
+    yyscan_t  scanner;
     if( argc != 2 ) {
         fprintf(stderr,"*** Error: Must specifiy one filename.\n");
         exit(-1);

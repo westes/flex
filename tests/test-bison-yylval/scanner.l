@@ -13,7 +13,7 @@ enum yesno_t { no=0, yes=1 };
 %option 8bit outfile="scanner.c" prefix="test"
 %option reentrant-bison
 %option noyywrap nomain nounput noyy_top_state noyywrap nodefault warn
-%option prefix="test"
+%option prefix="test" header="scanner.h"
 %option stack
 
 

@@ -20,7 +20,7 @@ struct Buffer {
 #define YY_EXTRA_TYPE struct Buffer *
 
 /* Save char into junk array at next position. */
-static void append_char (char c,  void* scanner );
+static void append_char (char c,  yyscan_t  scanner );
 
 %}
 
@@ -39,7 +39,7 @@ static void append_char (char c,  void* scanner );
 int
 main ( int argc, char** argv )
 {   
-    void * scanner;
+    yyscan_t  scanner;
     struct Buffer * buf;
     int i;
 
@@ -66,7 +66,7 @@ main ( int argc, char** argv )
 }
 
 /* Save char into junk array at next position. */
-static void append_char (char c,  void* scanner )
+static void append_char (char c,  yyscan_t  scanner )
 {
     struct Buffer *buf, *new_buf;
     buf = testget_extra(scanner);

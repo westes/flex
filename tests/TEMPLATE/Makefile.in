@@ -61,5 +61,5 @@ distclean: clean
 	rm -f Makefile
 
 clean:
-	rm -f scanner.o scanner.c parser.o parser.c parser.h  parser.h $(TESTNAME)
+	rm -f scanner.o scanner.c parser.o parser.c parser.h  parser.h $(TESTNAME) OUTPUT
 

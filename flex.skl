@@ -12,7 +12,7 @@
 %#          Each stop-point is numbered here and also in the code generator.
 %#          (See gen.c, etc. for details.)
 %#   %c  -  Begin linkage code that should NOT appear in a ".h" file.
-%#   %e  -  End linkage code. %c and %e are used
+%#   %e  -  End linkage code. %c and %e are used for building a header file.
 %#
 %#   All control-lines EXCEPT comment lines ("%#") will be inserted into
 %#   the generated scanner as a C-style comment. This is to aid those who
@@ -97,17 +97,23 @@
 
 #ifdef YY_REENTRANT
 
+/* An opaque pointer. */
+#ifndef YY_TYPEDEF_YY_SCANNER_T
+#define YY_TYPEDEF_YY_SCANNER_T
+typedef void* yyscan_t;
+#endif
+
 /* For use wherever a Global is accessed or assigned. */
 #define YY_G(var) (((struct yy_globals_t*)yy_globals)->var)
 
 /* For use in function prototypes to append the additional argument. */
 #ifdef YY_USE_PROTOS
-#define YY_LAST_ARG , void * yy_globals
-#define YY_ONLY_ARG    void * yy_globals
+#define YY_LAST_ARG , yyscan_t yy_globals
+#define YY_ONLY_ARG    yyscan_t yy_globals
 #else
 #define YY_LAST_ARG , yy_globals
 #define YY_ONLY_ARG    yy_globals
-#define YY_DECL_LAST_ARG void * yy_globals;
+#define YY_DECL_LAST_ARG yyscan_t yy_globals;
 #endif
 
 /* For use in function calls to pass the additional argument. */
@@ -123,8 +129,8 @@
 #define yytext YY_G(yytext_r)
 #define yylineno YY_G(yylineno_r)
 
-int yylex_init YY_PROTO((void** scanner));
-int yylex_destroy YY_PROTO((void* scanner));
+int yylex_init YY_PROTO((yyscan_t* scanner));
+int yylex_destroy YY_PROTO((yyscan_t scanner));
 
 #else /* not YY_REENTRANT */
 
@@ -161,7 +167,11 @@ int yylex_destroy YY_PROTO((void* scanner));
 /* Size of default input buffer. */
 #define YY_BUF_SIZE 16384
 
+
+#ifndef YY_TYPEDEF_YY_BUFFER_STATE
+#define YY_TYPEDEF_YY_BUFFER_STATE
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
+#endif
 
 #ifndef YY_REENTRANT
 extern size_t yyleng;
@@ -210,9 +220,14 @@ extern FILE *yyin, *yyout;
  * (without autoconf's help, which isn't available because we want
  * flex-generated scanners to compile on their own).
  */
+
+#ifndef YY_TYPEDEF_YY_SIZE_T
+#define YY_TYPEDEF_YY_SIZE_T
 typedef unsigned int yy_size_t;
+#endif
 
-
+#ifndef YY_STRUCT_YY_BUFFER_STATE
+#define YY_STRUCT_YY_BUFFER_STATE
 struct yy_buffer_state
 	{
 %-
@@ -273,6 +288,7 @@ struct yy_buffer_state
 	 */
 #define YY_BUFFER_EOF_PENDING 2
 	};
+#endif /* !YY_STRUCT_YY_BUFFER_STATE */
 
 %- Standard (non-C++) definition
 %c
@@ -315,17 +331,20 @@ static int yy_did_buffer_switch_on_eof;
 
 void yyrestart YY_PROTO(( FILE *input_file YY_LAST_ARG ));
 
+
 void yy_switch_to_buffer YY_PROTO(( YY_BUFFER_STATE new_buffer YY_LAST_ARG ));
 void yy_load_buffer_state YY_PROTO(( YY_ONLY_ARG ));
 YY_BUFFER_STATE yy_create_buffer YY_PROTO(( FILE *file, int size YY_LAST_ARG ));
 void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b YY_LAST_ARG ));
 void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file YY_LAST_ARG ));
 void yy_flush_buffer YY_PROTO(( YY_BUFFER_STATE b YY_LAST_ARG ));
+
 #define YY_FLUSH_BUFFER yy_flush_buffer( YY_G(yy_current_buffer) YY_CALL_LAST_ARG)
 
 YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, yy_size_t size YY_LAST_ARG ));
 YY_BUFFER_STATE yy_scan_string YY_PROTO(( yyconst char *yy_str YY_LAST_ARG ));
 YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( yyconst char *bytes, int len YY_LAST_ARG ));
+
 %*
 
 %c
@@ -389,6 +408,7 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 %- Reentrant structure and macros (non-C++).
 #ifdef YY_REENTRANT
 
+%c
 struct yy_globals_t
     {
 
@@ -432,9 +452,10 @@ struct yy_globals_t
 #endif
 
     };
+%e
 
 %c
-static int yy_init_globals YY_PROTO(( void * ));
+static int yy_init_globals YY_PROTO(( yyscan_t ));
 %e
 
 /* This must go here because YYSTYPE and YYLSTYPE are included
@@ -444,7 +465,7 @@ static int yy_init_globals YY_PROTO(( void * ));
 #  ifdef YYLTYPE
 #    define yylloc YY_G(yylloc_r)
 #  endif
-#endif
+#endif /* YY_REENTRANT_BISON_PURE */
 
 #endif /* end if YY_REENTRANT */
 
@@ -1952,10 +1973,10 @@ void yyset_lloc( yyllocp YY_LAST_ARG )
 
 
 #ifdef YY_USE_PROTOS
-static int yy_init_globals( void* yy_globals)
+static int yy_init_globals( yyscan_t yy_globals)
 #else
 static int yy_init_globals( yy_globals )
-    void* yy_globals;
+    yyscan_t yy_globals;
 #endif
     {
     /* Initialization is the same as for the non-reentrant scanner.
@@ -1986,22 +2007,22 @@ static int yy_init_globals( yy_globals )
 
 /* User-visible API */
 #ifdef YY_USE_PROTOS
-int yylex_init( void** ptr_yy_globals)
+int yylex_init( yyscan_t* ptr_yy_globals)
 #else
 int yylex_init( ptr_yy_globals )
-    void** ptr_yy_globals;
+    yyscan_t* ptr_yy_globals;
 #endif
     {
-    *ptr_yy_globals = (void *) yy_flex_alloc ( sizeof( struct yy_globals_t ), NULL );
+    *ptr_yy_globals = (yyscan_t) yy_flex_alloc ( sizeof( struct yy_globals_t ), NULL );
     yy_init_globals ( *ptr_yy_globals );
     return 0;
     }
 
 #ifdef YY_USE_PROTOS
-int yylex_destroy( void* yy_globals )
+int yylex_destroy( yyscan_t yy_globals )
 #else
 int yylex_destroy( yy_globals )
-    void* yy_globals;
+    yyscan_t yy_globals;
 #endif
     {
     if( yy_globals )
@@ -2108,7 +2129,7 @@ int main()
 	{
 
 #ifdef YY_REENTRANT
-    void *lexer;
+    yyscan_t lexer;
     yylex_init(&lexer);
     yylex( lexer );
     yylex_destroy( lexer);

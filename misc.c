@@ -40,6 +40,7 @@ char *defname;
 int value;
 	{
 	char buf[MAXLINE];
+	char *cpy;
 
 	if ( (int) strlen( defname ) > MAXLINE / 2 )
 		{
@@ -50,6 +51,10 @@ int value;
 
 	sprintf( buf, "#define %s %d\n", defname, value );
 	add_action( buf );
+
+	/* track #defines so we can undef them when we're done. */
+	cpy = copy_string(defname);
+	buf_append(&defs_buf, &cpy, 1);
 	}
 
 

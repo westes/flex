@@ -66,6 +66,8 @@ DESCRIPTION OF TESTS
   header-r      -  Test generated header file, reentrant.
   include-by-buffer     - YY_BUFFER_STATE, yy_push_state, etc.
   include-by-reentrant  - Nested scanners.
+  multiple-scanners-nr  - #include and run two separate scanners, non-reentrant.
+  multiple-scanners-r   - #include and run two separate scanners, reentrant.
   prefix-nr     - verify prefixes are working, nonreentrant.
   prefix-r      - verify prefixes are working, reentrant.
   pthread       - pthreads test. A NO-OP if libpthread not found.

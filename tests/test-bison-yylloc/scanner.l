@@ -11,7 +11,7 @@ static char* STRDUP(char* s1);
 %option 8bit outfile="scanner.c" prefix="test"
 %option reentrant-bison yylineno
 %option nomain nounput noyy_top_state noyywrap nodefault warn
-%option prefix="test"
+%option prefix="test" header="scanner.h"
 
 
 %%

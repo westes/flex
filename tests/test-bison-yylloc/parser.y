@@ -12,13 +12,7 @@
 #define YYPARSE_PARAM scanner
 #define YYLEX_PARAM   scanner
 
-
 int yyerror(char* msg);
-extern int testlex_init(void**);
-extern int testlex_destroy(void**);
-extern int testset_in(FILE*,void*);
-extern int testlex();
-extern int testget_lineno(void*);
 
 /* A dummy function. A check against seg-faults in yylval->str. */
 int process_text(char* s) {
@@ -72,18 +66,6 @@ line:
 
 int yyerror(char* msg) {
     fprintf(stderr,"%s\n",msg);
-    return 0;
-}
-
-
-int main ( int argc, char** argv )
-{
-    void* scanner;
-    /*yydebug =1;*/
-    testlex_init ( &scanner );
-    testset_in(stdin,scanner);
-    testparse ( scanner );
-    testlex_destroy ( scanner );
     return 0;
 }
 

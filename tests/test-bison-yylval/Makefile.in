@@ -42,7 +42,8 @@ $(TESTNAME): parser.y scanner.l
 		$(YACC) $(YFLAGS) $(srcdir)/parser.y ; \
 		$(CC) $(CPPFLAGS) $(CFLAGS) -c scanner.c ;\
 		$(CC) $(CPPFLAGS) $(CFLAGS) -c parser.c ; \
-		$(CC) $(CFLAGS) -o $(TESTNAME) scanner.o parser.o $(LDFLAGS) $(LIBS) ; \
+		$(CC) $(CPPFLAGS) $(CFLAGS) -c $(srcdir)/main.c ; \
+		$(CC) $(CFLAGS) -o $(TESTNAME) main.o scanner.o parser.o $(LDFLAGS) $(LIBS) ; \
 	fi
 
 test: check
@@ -56,7 +57,7 @@ check: $(TESTNAME)
     fi
 
 clean:
-	rm -f scanner.o scanner.c parser.o parser.c  parser.h $(TESTNAME)
+	rm -f scanner.o scanner.c parser.o parser.c main.o parser.h $(TESTNAME) yyheader.h
 
 
 distclean: clean

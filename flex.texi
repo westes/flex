@@ -3046,7 +3046,7 @@ another instance of itself.
 
     %%
     "eval(".+")"  {  
-                      void * scanner;
+                      yyscan_t scanner;
                       yylex_init( &scanner );
                       yytext[yyleng-1] = ' '; 
 
@@ -3105,7 +3105,7 @@ First, an example of a reentrant scanner:
     %%
     int main ( int argc, char * argv[] ) 
     {
-        void * scanner;
+        yyscan_t scanner;
         
         yylex_init ( &scanner );
         yylex ( scanner );
@@ -3128,6 +3128,7 @@ Here are the things you need to do or know to use the reentrant C API of
 * init and destroy and destroy::  
 * accessor methods::            
 * extra data::                  
+* about yyscan_t::
 @end menu
 
 @node specify reentrant, extra reentrant argument, reentrant detail, reentrant detail
@@ -3154,15 +3155,16 @@ non-reentrant scanner.  Here are the declarations of
 
 @example
 @verbatim
-    static void yy_push_state  ( int new_state , void * yy_globals ) ;
-    static void yy_pop_state  ( void * yy_globals  ) ;
+    static void yy_push_state  ( int new_state , yyscan_t yy_globals ) ;
+    static void yy_pop_state  ( yyscan_t yy_globals  ) ;
 @end verbatim
 @end example
 
 Notice that the argument @code{yy_globals} appears in the declaration of
 both functions.  In fact, all @code{flex} functions in a reentrant
 scanner have this additional argument.  It is always the last argument
-in the argument list, it is always of type @code{void *}, and it is
+in the argument list, it is always of type @code{yyscan_t} (which is
+typedef'd to @code{void *}) and it is
 always named @code{yy_globals}.  As you may have guessed,
 @code{yy_globals} is a pointer to an opaque data structure encapsulating
 the current state of the scanner.  For a list of function declarations,
@@ -3208,9 +3210,9 @@ after @code{yylex}, respectively.
 
 @example
 @verbatim
-    int yylex_init ( void ** ptr_yy_globals ) ;
-    int yylex ( void * yy_globals ) ;
-    int yylex_destroy ( void * yy_globals ) ;
+    int yylex_init ( yyscan_t * ptr_yy_globals ) ;
+    int yylex ( yyscan_t yy_globals ) ;
+    int yylex_destroy ( yyscan_t yy_globals ) ;
 @end verbatim
 @end example
 
@@ -3251,11 +3253,11 @@ variable you want. For example:
 @example
 @verbatim
     /* Set the last character of yytext to NULL. */
-    void chop ( void * scanner )
+    void chop ( yyscan_t scanner )
     {
         int len = yyget_leng( scanner );        
         yyget_text( scanner )[len - 1] = '\0';        
-   }
+    }
 @end verbatim
 @end example
 
@@ -3268,7 +3270,7 @@ The above code may be called from within an action like this:
 @end verbatim
 @end example
 
-@node extra data,  , accessor methods, reentrant detail
+@node extra data, about yyscan_t, accessor methods, reentrant detail
 @subsection Extra Data
 
 User-specific data can be stored in @code{yyextra}.
@@ -3293,8 +3295,8 @@ from within the scanner itself. They are defined as follows:
 @example
 @verbatim
     #define YY_EXTRA_TYPE  void*
-    YY_EXTRA_TYPE  yyget_extra ( void * scanner ) ;
-    void yyset_extra ( YY_EXTRA_TYPE arbitrary_data , void * scanner) ;
+    YY_EXTRA_TYPE  yyget_extra ( yyscan_t scanner ) ;
+    void yyset_extra ( YY_EXTRA_TYPE arbitrary_data , yyscan_t scanner) ;
 @end verbatim
 @end example
 
@@ -3320,7 +3322,7 @@ defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
     %%
     void scan_file( char* filename )
     {
-        void * scanner;
+        yyscan_t scanner;
         struct stat buf;
         
         yylex_init ( &scanner );
@@ -3333,6 +3335,24 @@ defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
    }
 @end verbatim
 @end example
+
+
+@node about yyscan_t,  , extra data, reentrant detail
+@subsection About yyscan_t
+
+@code{yyscan_t} is defined as:
+
+@example
+@verbatim
+     typedef void* yyscan_t;
+@end verbatim
+@end example
+
+It is initialized by @code{yylex_init()} to point to
+an internal structure. You should never access this value
+directly. In particular, you should never attempt to free it
+(use @code{yylex_destroy()} instead.)
+
 
 @node bison pure, reentrant functions, reentrant detail, reentrant
 @section REENTRANT C SCANNERS WITH BISON PURE PARSERS
@@ -3358,10 +3378,11 @@ specified, @code{flex} provides support for the functions
 
 @example
 @verbatim
-    YYSTYPE * yyget_lval ( void * scanner ) ;
-    void yyset_lval ( YYSTYPE * lvalp, void * scanner );
-    YYLTYPE * yyget_lloc ( void * scanner ) ;
-    void yyset_lloc ( YYLTYPE * llocp, void * scanner );
+    YYSTYPE * yyget_lval ( yyscan_t scanner ) ;
+    void yyset_lval ( YYSTYPE * lvalp, yyscan_t scanner );
+
+    YYLTYPE * yyget_lloc ( yyscan_t scanner ) ;
+    void yyset_lloc ( YYLTYPE * llocp, yyscan_t scanner );
 @end verbatim
 @end example
 
@@ -3369,8 +3390,8 @@ Accordingly, the declaration of yylex becomes one of the following:
 
 @example
 @verbatim
-      int yylex ( YYSTYPE * lvalp, void * scanner );
-      int yylex ( YYSTYPE * lvalp, YYLTYPE * llocp, void * scanner );
+      int yylex ( YYSTYPE * lvalp, yyscan_t scanner );
+      int yylex ( YYSTYPE * lvalp, YYLTYPE * llocp, yyscan_t scanner );
 @end verbatim
 @end example
 
@@ -3436,16 +3457,16 @@ The following Functions are available in a reentrant scanner:
 
 @example
 @verbatim
-    char *yyget_text ( void * scanner );
-    int yyget_leng ( void * scanner );
-    FILE *yyget_in ( void * scanner );
-    FILE *yyget_out ( void * scanner );
-    int yyget_lineno ( void * scanner );
-    YY_EXTRA_TYPE yyget_extra ( void * scanner );
-    void yyset_in  ( FILE * in_str , void * scanner );
-    void yyset_out  ( FILE * out_str , void * scanner );
-    void yyset_lineno ( int line_number , void * scanner );
-    void yyset_extra ( YY_EXTRA_TYPE user_defined , void * scanner );
+    char *yyget_text ( yyscan_t scanner );
+    int yyget_leng ( yyscan_t scanner );
+    FILE *yyget_in ( yyscan_t scanner );
+    FILE *yyget_out ( yyscan_t scanner );
+    int yyget_lineno ( yyscan_t scanner );
+    YY_EXTRA_TYPE yyget_extra ( yyscan_t scanner );
+    void yyset_in  ( FILE * in_str , yyscan_t scanner );
+    void yyset_out  ( FILE * out_str , yyscan_t scanner );
+    void yyset_lineno ( int line_number , yyscan_t scanner );
+    void yyset_extra ( YY_EXTRA_TYPE user_defined , yyscan_t scanner );
 @end verbatim
 @end example
 
@@ -3475,10 +3496,10 @@ reentrant-bison} (@samp{--reentrant-bison}) is specified:
 
 @example
 @verbatim
-    YYSTYPE * yyget_lval ( void * scanner );
-    YYLTYPE *yyget_lloc ( void * scanner );
-    void yyset_lval ( YYSTYPE * yylvalp , void * scanner );
-    void yyset_lloc ( YYLTYPE * yyllocp , void * scanner );
+    YYSTYPE * yyget_lval ( yyscan_t scanner );
+    YYLTYPE *yyget_lloc ( yyscan_t scanner );
+    void yyset_lval ( YYSTYPE * yylvalp , yyscan_t scanner );
+    void yyset_lloc ( YYLTYPE * yyllocp , yyscan_t scanner );
     yylval
     yylloc
 @end verbatim

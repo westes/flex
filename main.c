@@ -326,6 +326,12 @@ void check_options()
 			GEN_PREFIX( "FlexLexer" );
 		else
 			{
+            outn( "#ifndef YY_REENTRANT" );
+                GEN_PREFIX( "text" );
+                GEN_PREFIX( "leng" );
+                GEN_PREFIX( "in" );
+                GEN_PREFIX( "out" );
+            outn( "#endif" );
 			GEN_PREFIX( "_create_buffer" );
 			GEN_PREFIX( "_delete_buffer" );
 			GEN_PREFIX( "_scan_buffer" );
@@ -364,6 +370,9 @@ void check_options()
                 outn ( "#define YY_USE_LINENO 1");
 			}
 
+            if ( do_yylineno && !reentrant )
+                GEN_PREFIX( "lineno" );
+
 		if ( do_yywrap )
 			GEN_PREFIX( "wrap" );
 
@@ -381,6 +390,59 @@ void check_options()
     /* %% [1.0] */
 	}
 
+/* Alter #line directives from the generated source, destined
+ * for the generated header. We chaneg the line number and filename.
+ * linebuf is modified in place.
+ */
+void fix_line_dirs(linebuf, outfilename, headerfilename, nlines)
+char * linebuf;
+char * outfilename;
+char * headerfilename;
+int nlines;
+{
+    char *pname, *p;
+    /* Match pattern:  ^#line +[:digit:]+ +"outfilename" */
+    p = linebuf;
+    if (strncmp(p, "#line ", 6))
+        return;
+    p += 6;
+    
+    /* match spaces */
+    while (*p == ' ')
+        p++;    
+    if (!isdigit(*p))
+        return;
+
+    /* match numbers */
+    while (isdigit(*p))
+        p++;
+    if (*p != ' ')
+        return;
+
+    /* match spaces */
+    while (*p == ' ')
+        p++;
+    if (*p != '"')
+        return;
+    p++;
+
+    pname = p;
+    
+    /* find end of filename. Note: If scanner filename has
+     * embedded '"' chars, then the generated #line directive
+     * may fail. */
+    while (*p != '\0' && *p != '"')
+        p++;
+    if (*p != '"')
+        return;
+
+    if (strncmp(pname, outfilename, p-pname) != 0)
+        return;
+
+    /* We have a match. */
+    
+    sprintf(linebuf,"#line %d \"%s\"\n", nlines+2, headerfilename);
+}
 
 /* flexend - terminate flex
  *
@@ -394,6 +456,7 @@ int exit_status;
 	{
 	static int called_before = -1; /* prevent infinite recursion. */
 	int tblsiz;	
+	int i;
 	int unlink();
 
 	if( ++called_before )
@@ -413,10 +476,10 @@ int exit_status;
 	if ( headerfilename && exit_status == 0 && outfile_created && !ferror(stdout))
 		{
 			/* Copy the file we just wrote to a header file. */
-			#define COPY_SZ 512
+			#define LINE_SZ 512
 			FILE *header_out;
-			char copybuf[COPY_SZ];
-			int ncopy;
+			char linebuf[LINE_SZ];
+			int nlines=0;
 
 			/* rewind the outfile file. */
 			fflush(stdout);
@@ -433,11 +496,155 @@ int exit_status;
 					prefix,prefix,prefix);
 			fflush(header_out);
 
-			while((ncopy=fread(copybuf, 1, COPY_SZ, stdout)) > 0) 
-				if ( fwrite(copybuf, 1, ncopy, header_out) <= 0)
-					break;
+            nlines=4;
+			while(fgets(linebuf, LINE_SZ, stdout)) {
+                fix_line_dirs(linebuf, outfilename, headerfilename, nlines);
+				fputs(linebuf, header_out);
+                nlines++;
+            }
 
-			fflush(header_out);
+            /* Kill ALL flex-related macros. This is so the user
+             * can #include more than one generated header file. */
+            fprintf(header_out,"\n");
+            fprintf(header_out,"#undef BEGIN\n");
+            fprintf(header_out,"#undef ECHO\n");
+            fprintf(header_out,"#undef EOB_ACT_CONTINUE_SCAN\n");
+            fprintf(header_out,"#undef EOB_ACT_END_OF_FILE\n");
+            fprintf(header_out,"#undef EOB_ACT_LAST_MATCH\n");
+            fprintf(header_out,"#undef FLEX_SCANNER\n");
+            fprintf(header_out,"#undef FLEX_STD\n");
+            fprintf(header_out,"#undef INITIAL\n");
+            fprintf(header_out,"#undef REJECT\n");
+            fprintf(header_out,"#undef YYLMAX\n");
+            fprintf(header_out,"#undef YYSTATE\n");
+            fprintf(header_out,"#undef YY_AT_BOL\n");
+            fprintf(header_out,"#undef YY_BREAK\n");
+            fprintf(header_out,"#undef YY_BUFFER_EOF_PENDING\n");
+            fprintf(header_out,"#undef YY_BUFFER_NEW\n");
+            fprintf(header_out,"#undef YY_BUFFER_NORMAL\n");
+            fprintf(header_out,"#undef YY_BUF_SIZE\n");
+            fprintf(header_out,"#undef YY_CALL_LAST_ARG\n");
+            fprintf(header_out,"#undef YY_CALL_ONLY_ARG\n");
+            fprintf(header_out,"#undef YY_CURRENT_BUFFER\n");
+            fprintf(header_out,"#undef YY_DECL\n");
+            fprintf(header_out,"#undef YY_DECL_LAST_ARG\n");
+            fprintf(header_out,"#undef YY_DO_BEFORE_ACTION\n");
+            fprintf(header_out,"#undef YY_END_OF_BUFFER\n");
+            fprintf(header_out,"#undef YY_END_OF_BUFFER_CHAR\n");
+            fprintf(header_out,"#undef YY_EXIT_FAILURE\n");
+            fprintf(header_out,"#undef YY_EXTRA_TYPE\n");
+            fprintf(header_out,"#undef YY_FATAL_ERROR\n");
+            fprintf(header_out,"#undef YY_FLEX_DEFINED_ECHO\n");
+            fprintf(header_out,"#undef YY_FLEX_LEX_COMPAT\n");
+            fprintf(header_out,"#undef YY_FLEX_MAJOR_VERSION\n");
+            fprintf(header_out,"#undef YY_FLEX_MINOR_VERSION\n");
+            fprintf(header_out,"#undef YY_FLUSH_BUFFER\n");
+            fprintf(header_out,"#undef YY_G\n");
+            fprintf(header_out,"#undef YY_INPUT\n");
+            fprintf(header_out,"#undef YY_INTERACTIVE\n");
+            fprintf(header_out,"#undef YY_LAST_ARG\n");
+            fprintf(header_out,"#undef YY_LEX_ARGS\n");
+            fprintf(header_out,"#undef YY_MAIN\n");
+            fprintf(header_out,"#undef YY_MORE_ADJ\n");
+            fprintf(header_out,"#undef YY_NEED_STRLEN\n");
+            fprintf(header_out,"#undef YY_NEW_FILE\n");
+            fprintf(header_out,"#undef YY_NO_GET_EXTRA\n");
+            fprintf(header_out,"#undef YY_NO_GET_IN\n");
+            fprintf(header_out,"#undef YY_NO_GET_LENG\n");
+            fprintf(header_out,"#undef YY_NO_GET_LINENO\n");
+            fprintf(header_out,"#undef YY_NO_GET_LLOC\n");
+            fprintf(header_out,"#undef YY_NO_GET_LVAL\n");
+            fprintf(header_out,"#undef YY_NO_GET_OUT\n");
+            fprintf(header_out,"#undef YY_NO_GET_TEXT\n");
+            fprintf(header_out,"#undef YY_NO_INPUT\n");
+            fprintf(header_out,"#undef YY_NO_POP_STATE\n");
+            fprintf(header_out,"#undef YY_NO_PUSH_STATE\n");
+            fprintf(header_out,"#undef YY_NO_SCAN_BUFFER\n");
+            fprintf(header_out,"#undef YY_NO_SCAN_BYTES\n");
+            fprintf(header_out,"#undef YY_NO_SCAN_STRING\n");
+            fprintf(header_out,"#undef YY_NO_SET_EXTRA\n");
+            fprintf(header_out,"#undef YY_NO_SET_IN\n");
+            fprintf(header_out,"#undef YY_NO_SET_LINENO\n");
+            fprintf(header_out,"#undef YY_NO_SET_LLOC\n");
+            fprintf(header_out,"#undef YY_NO_SET_LVAL\n");
+            fprintf(header_out,"#undef YY_NO_SET_OUT\n");
+            fprintf(header_out,"#undef YY_NO_TOP_STATE\n");
+            fprintf(header_out,"#undef YY_NO_UNPUT\n");
+            fprintf(header_out,"#undef YY_NULL\n");
+            fprintf(header_out,"#undef YY_NUM_RULES\n");
+            fprintf(header_out,"#undef YY_ONLY_ARG\n");
+            fprintf(header_out,"#undef YY_PROTO\n");
+            fprintf(header_out,"#undef YY_READ_BUF_SIZE\n");
+            fprintf(header_out,"#undef YY_REENTRANT\n");
+            fprintf(header_out,"#undef YY_REENTRANT_BISON_PURE\n");
+            fprintf(header_out,"#undef YY_RESTORE_YY_MORE_OFFSET\n");
+            fprintf(header_out,"#undef YY_RULE_SETUP\n");
+            fprintf(header_out,"#undef YY_SC_TO_UI\n");
+            fprintf(header_out,"#undef YY_SKIP_YYWRAP\n");
+            fprintf(header_out,"#undef YY_STACK_USED\n");
+            fprintf(header_out,"#undef YY_START\n");
+            fprintf(header_out,"#undef YY_START_STACK_INCR\n");
+            fprintf(header_out,"#undef YY_STATE_EOF\n");
+            fprintf(header_out,"#undef YY_STDINIT\n");
+            fprintf(header_out,"#undef YY_TEXT_IS_ARRAY\n");
+            fprintf(header_out,"#undef YY_TRAILING_HEAD_MASK\n");
+            fprintf(header_out,"#undef YY_TRAILING_MASK\n");
+            fprintf(header_out,"#undef YY_USER_ACTION\n");
+            fprintf(header_out,"#undef YY_USES_REJECT\n");
+            fprintf(header_out,"#undef YY_USE_CONST\n");
+            fprintf(header_out,"#undef YY_USE_LINENO\n");
+            fprintf(header_out,"#undef YY_USE_PROTOS\n");
+            fprintf(header_out,"#undef unput\n");
+            fprintf(header_out,"#undef yy_create_buffer\n");
+            fprintf(header_out,"#undef yy_delete_buffer\n");
+            fprintf(header_out,"#undef yy_flex_debug\n");
+            fprintf(header_out,"#undef yy_flush_buffer\n");
+            fprintf(header_out,"#undef yy_init_buffer\n");
+            fprintf(header_out,"#undef yy_load_buffer_state\n");
+            fprintf(header_out,"#undef yy_new_buffer\n");
+            fprintf(header_out,"#undef yy_scan_buffer\n");
+            fprintf(header_out,"#undef yy_scan_bytes\n");
+            fprintf(header_out,"#undef yy_scan_string\n");
+            fprintf(header_out,"#undef yy_set_bol\n");
+            fprintf(header_out,"#undef yy_set_interactive\n");
+            fprintf(header_out,"#undef yy_switch_to_buffer\n");
+            fprintf(header_out,"#undef yyconst\n");
+            fprintf(header_out,"#undef yyextra\n");
+            fprintf(header_out,"#undef yyget_extra\n");
+            fprintf(header_out,"#undef yyget_in\n");
+            fprintf(header_out,"#undef yyget_leng\n");
+            fprintf(header_out,"#undef yyget_lineno\n");
+            fprintf(header_out,"#undef yyget_lloc\n");
+            fprintf(header_out,"#undef yyget_lval\n");
+            fprintf(header_out,"#undef yyget_out\n");
+            fprintf(header_out,"#undef yyget_text\n");
+            fprintf(header_out,"#undef yyin\n");
+            fprintf(header_out,"#undef yyleng\n");
+            fprintf(header_out,"#undef yyless\n");
+            fprintf(header_out,"#undef yylex\n");
+            fprintf(header_out,"#undef yylex_destroy\n");
+            fprintf(header_out,"#undef yylex_init\n");
+            fprintf(header_out,"#undef yylineno\n");
+            fprintf(header_out,"#undef yylloc\n");
+            fprintf(header_out,"#undef yylval\n");
+            fprintf(header_out,"#undef yymore\n");
+            fprintf(header_out,"#undef yyout\n");
+            fprintf(header_out,"#undef yyrestart\n");
+            fprintf(header_out,"#undef yyset_extra\n");
+            fprintf(header_out,"#undef yyset_in\n");
+            fprintf(header_out,"#undef yyset_lineno\n");
+            fprintf(header_out,"#undef yyset_lloc\n");
+            fprintf(header_out,"#undef yyset_lval\n");
+            fprintf(header_out,"#undef yyset_out\n");
+            fprintf(header_out,"#undef yyterminate\n");
+            fprintf(header_out,"#undef yytext\n");
+            fprintf(header_out,"#undef yytext_ptr\n");
+            fprintf(header_out,"#undef yywrap\n");
+
+			/* undef any of the auto-generated symbols. */
+			for(i=0; i < defs_buf.nelts; i++)
+				fprintf(header_out, "#undef %s\n", ((char**)defs_buf.elts)[i]);
+
 			fprintf(header_out,
 					"\n"
 					"#undef %sIN_HEADER\n"
@@ -446,6 +653,7 @@ int exit_status;
 
 			if ( ferror( header_out ) )
 				lerrsf( _( "error creating header file %s" ), headerfilename);
+			fflush(header_out);
 			fclose(header_out);
 		}
 
@@ -701,8 +909,10 @@ char **argv;
 	defs1_offset = prolog_offset = action_offset = action_index = 0;
 	action_array[0] = '\0';
 
-        /* Initialize any buffers. */
-        buf_init(&userdef_buf, sizeof(char));
+	/* Initialize any buffers. */
+	buf_init(&userdef_buf, sizeof(char));
+	buf_init(&defs_buf, sizeof(char*));
+	
 
     /* Enable C++ if program name ends with '+'. */
 	program_name = basename2(argv[0],0);
@@ -1234,10 +1444,12 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 	if ( ddebug )
 		outn( "\n#define FLEX_DEBUG" );
 
+	OUT_BEGIN_CODE();	
 	if ( csize == 256 )
 		outn( "typedef unsigned char YY_CHAR;" );
 	else
 		outn( "typedef char YY_CHAR;" );
+	OUT_END_CODE();
 
 	if ( C_plus_plus )
 		{
@@ -1283,10 +1495,12 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 		OUT_END_CODE();
 		}
 
+	OUT_BEGIN_CODE();
 	if ( fullspd )
 		outn( "typedef yyconst struct yy_trans_info *yy_state_type;" );
 	else if ( ! C_plus_plus )
 		outn( "typedef int yy_state_type;" );
+	OUT_END_CODE();
 
 	if ( ddebug )
 		outn( "\n#define FLEX_DEBUG" );
