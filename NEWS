@@ -1,4 +1,4 @@
-Changes between release 2.5.2 (19Apr95) and release 2.5.1:
+Changes between release 2.5.2 (25Apr95) and release 2.5.1:
 
 	- The --prefix configuration option now works.
 
@@ -47,6 +47,9 @@ Changes between release 2.5.2 (19Apr95) and release 2.5.1:
 
 	- The alloca() chud necessary to accommodate bison has grown
 	  even uglier, but hopefully more correct.
+
+	- A portability tweak has been added to accommodate compilers that
+	  use char* generic pointers.
 
 	- EBCDIC contact information in the file MISC/EBCDIC has been updated.
 
