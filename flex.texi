@@ -50,38 +50,87 @@ This manual describes
 a tool for generating programs that perform pattern-matching on text.  The
 manual includes both tutorial and reference sections.
 
-This edition of the @code{flex Manual} documents @code{flex} version
-@value{VERSION}. Last updated @value{UPDATED}.
+This edition of the @site{flex Manual} documents @code{flex} version
+@value{VERSION}. It was last updated @value{UPDATED}.
 
 @menu
-* Introduction::
-* Simple Examples::
-* Format::
-* Patterns::
-* Matching::
-* Actions::
-* Generated Scanner::
-* Start Conditions::
-* Multiple Input Buffers::
-* EOF::
-* Misc Macros::
-* User Values::
-* Yacc::
-* Invoking Flex::
-* Scanner Options::
-* Performance::
-* Cxx::
-* Reentrant::
-* Lex and Posix::
-* Memory Management::
-* Diagnostics::
-* Limitations::
-* Bibliography::
-* Copyright::
-* Reporting Bugs::
-* FAQ::
-* Appendices::
-* Indices::
+* Introduction::                
+* Simple Examples::             
+* Format::                      
+* Patterns::                    
+* Matching::                    
+* Actions::                     
+* Generated Scanner::           
+* Start Conditions::            
+* Multiple Input Buffers::      
+* EOF::                         
+* Misc Macros::                 
+* User Values::                 
+* Yacc::                        
+* Invoking Flex::               
+* Scanner Options::             
+* Performance::                 
+* Cxx::                         
+* Reentrant::                   
+* Lex and Posix::               
+* Memory Management::           
+* Diagnostics::                 
+* Limitations::                 
+* Bibliography::                
+* Copyright::                   
+* Reporting Bugs::              
+* Appendices::                  
+* Indices::                     
+
+@detailmenu
+ --- The Detailed Node Listing ---
+
+Format of the Input File
+
+* Definitions Section::
+* Rules Section::
+* User Code Section::
+* Comments in the Input::
+
+Reentrant C Scanners
+
+* Reentrant Uses::
+* Reentrant Overview::
+* Reentrant Example::
+* Reentrant Detail::
+* Bison Pure::
+* Reentrant Functions::
+
+The Reentrant API in Detail
+
+* Specify Reentrant::
+* Extra Reentrant Argument::
+* Global Replacement::
+* Init and Destroy Functions::
+* Accessor Methods::
+* Extra Data::
+* About yyscan_t::
+
+Memory Management
+
+* The Default Memory Management::
+* Overriding The Default Memory Management::
+* A Note About yytext And Memory::
+
+Appendices
+
+* Makefiles and Flex::
+
+Indices
+
+* Concept Index::
+* Index of Functions and Macros::
+* Index of Variables::
+* Index of Data Types::
+* Index of Hooks::
+* Index of Examples::
+
+@end detailmenu
 @end menu
 
 @node Introduction
