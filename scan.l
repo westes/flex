@@ -83,7 +83,7 @@ NOT_NAME	[^[:alpha:]_*\n]+
 
 SCNAME		{NAME}
 
-ESCSEQ		(\\([^\n]|[[:digit:]]{1,3}|x[[:xdigit:]]{1,2}))
+ESCSEQ		(\\([^\n]|[0-7]{1,3}|x[[:xdigit:]]{1,2}))
 
 FIRST_CCL_CHAR	([^\\\n]|{ESCSEQ})
 CCL_CHAR	([^\\\n\]]|{ESCSEQ})
@@ -668,7 +668,7 @@ int yywrap()
 void set_input_file( file )
 char *file;
 	{
-	if ( file )
+	if ( file && strcmp( file, "-" ) )
 		{
 		infilename = copy_string( file );
 		yyin = fopen( infilename, "r" );
