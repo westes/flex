@@ -44,6 +44,13 @@ static int indent_level = 0; /* each level is 4 spaces */
 #define indent_down() (--indent_level)
 #define set_indent(indent_val) indent_level = indent_val
 
+/* *everything* is done in terms of arrays starting at 1, so provide
+ * a null entry for the zero element of all C arrays
+ */
+static char C_short_decl[] = "static const short int %s[%d] =\n    {   0,\n";
+static char C_long_decl[] = "static const long int %s[%d] =\n    {   0,\n";
+static char C_state_decl[] =
+	"static const yy_state_type %s[%d] =\n    {   0,\n";
 
 
 /* indent to the current level */
@@ -97,7 +104,7 @@ gen_bt_action()
     if ( reject || num_backtracking == 0 )
 	return;
 
-    set_indent( 4 );
+    set_indent( 3 );
 
     indent_puts( "case 0: /* must backtrack */" );
     indent_puts( "/* undo the effects of YY_DO_BEFORE_ACTION */" );
@@ -214,12 +221,14 @@ genecs()
 
     {
     register int i, j;
-    static char C_char_decl[] =
-	"static const YY_CHAR %s[%d] =\n    {   %d,\n";
+    static char C_char_decl[] = "static const %s %s[%d] =\n    {   0,\n";
     int numrows;
     Char clower();
 
-    printf( C_char_decl, "yy_ec", csize, uses_NUL ? abs( ecgroup[0] ) : 0 );
+    if ( numecs < csize )
+	printf( C_char_decl, "YY_CHAR", "yy_ec", csize );
+    else
+	printf( C_char_decl, "short", "yy_ec", csize );
 
     for ( i = 1; i < csize; ++i )
 	{
@@ -238,15 +247,9 @@ genecs()
 
 	fputs( "\n\nEquivalence Classes:\n\n", stderr );
 
-	if ( uses_NUL )
-		{
-		fprintf( stderr, "%4s = %-2d\n",
-			 readable_form( 0 ), ecgroup[0] );
-		}
+	numrows = csize / 8;
 
-	numrows = (csize + 1) / 8;
-
-	for ( j = 1; j <= numrows; ++j )
+	for ( j = 0; j < numrows; ++j )
 	    {
 	    for ( i = j; i < csize; i = i + numrows )
 		{
@@ -391,12 +394,6 @@ genftbl()
     register int i;
     int end_of_buffer_action = num_rules + 1;
 
-    /* *everything* is done in terms of arrays starting at 1, so provide
-     * a null entry for the zero element of all C arrays
-     */
-    static char C_short_decl[] =
-	"static const short int %s[%d] =\n    {   0,\n";
-
     printf( C_short_decl, "yy_accept", lastdfa + 1 );
 
 
@@ -425,11 +422,10 @@ genftbl()
 
 /* generate the code to find the next compressed-table state */
 
-gen_next_compressed_state()
+gen_next_compressed_state( char_map )
+char *char_map;
 
     {
-    char *char_map = useecs ? "yy_ec[*yy_cp]" : "*yy_cp";
-
     indent_put2s( "register YY_CHAR yy_c = %s;", char_map );
 
     /* save the backtracking info \before/ computing the next state
@@ -474,7 +470,10 @@ gen_next_compressed_state()
 
 gen_next_match()
 
-    { /* NOTE - changes in here should be reflected in get_next_state() */
+    {
+    /* NOTE - changes in here should be reflected in gen_next_state() and
+     * gen_NUL_trans()
+     */
     char *char_map = useecs ? "yy_ec[*yy_cp]" : "*yy_cp";
     char *char_map_2 = useecs ? "yy_ec[*++yy_cp]" : "*++yy_cp";
     
@@ -539,7 +538,7 @@ gen_next_match()
 	indent_up();
 	indent_puts( "{" );
 
-	gen_next_state();
+	gen_next_state( false );
 
 	indent_puts( "++yy_cp;" );
 
@@ -565,31 +564,135 @@ gen_next_match()
 
 /* generate the code to find the next state */
 
-gen_next_state()
+gen_next_state( worry_about_NULs )
+int worry_about_NULs;
 
     { /* NOTE - changes in here should be reflected in get_next_match() */
-    char *char_map = useecs ? "yy_ec[*yy_cp]" : "*yy_cp";
-    
-    if ( fulltbl )
+    char char_map[256];
+
+    if ( worry_about_NULs && ! nultrans )
 	{
+	if ( useecs )
+	    sprintf( char_map, "(*yy_cp ? yy_ec[*yy_cp] : %d)", NUL_ec );
+	else
+	    sprintf( char_map, "(*yy_cp ? *yy_cp : %d)", NUL_ec );
+	}
+
+    else
+	strcpy( char_map, useecs ? "yy_ec[*yy_cp]" : "*yy_cp" );
+
+    if ( worry_about_NULs && nultrans )
+	{
+	if ( ! fulltbl && ! fullspd )
+	    /* compressed tables backtrack *before* they match */
+	    gen_backtracking();
+
+	indent_puts( "if ( *yy_cp )" );
+	indent_up();
+	indent_puts( "{" );
+	}
+   
+    if ( fulltbl )
 	indent_put2s( "yy_current_state = yy_nxt[yy_current_state][%s];", 
 		char_map );
+    
+    else if ( fullspd )
+	indent_put2s( "yy_current_state += yy_current_state[%s].yy_nxt;",
+		    char_map );
+
+    else
+	gen_next_compressed_state( char_map );
+
+    if ( worry_about_NULs && nultrans )
+	{
+	indent_puts( "}" );
+	indent_down();
+	indent_puts( "else" );
+	indent_up();
+	indent_puts( "yy_current_state = yy_NUL_trans[yy_current_state];" );
+	indent_down();
+	}
+    
+    if ( fullspd || fulltbl )
 	gen_backtracking();
+
+    if ( reject )
+	indent_puts( "*yy_state_ptr++ = yy_current_state;" );
+    }
+
+
+/* generate the code to make a NUL transition */
+
+gen_NUL_trans()
+
+    { /* NOTE - changes in here should be reflected in get_next_match() */
+    int need_backtracking = (num_backtracking > 0 && ! reject);
+
+    if ( need_backtracking )
+	/* we'll need yy_cp lying around for the gen_backtracking() */
+	indent_puts( "register YY_CHAR *yy_cp = yy_c_buf_p;" );
+
+    putchar( '\n' );
+
+    if ( nultrans )
+	{
+	indent_puts( "yy_current_state = yy_NUL_trans[yy_current_state];" );
+	indent_puts( "yy_is_jam = (yy_current_state == 0);" );
+	}
+
+    else if ( fulltbl )
+	{
+	do_indent();
+	printf( "yy_current_state = yy_nxt[yy_current_state][%d];\n",
+		NUL_ec );
+	indent_puts( "yy_is_jam = (yy_current_state <= 0);" );
 	}
 
     else if ( fullspd )
 	{
-	indent_put2s( "yy_current_state += yy_current_state[%s].yy_nxt;",
-		char_map );
-	gen_backtracking();
+	do_indent();
+	printf( "register int yy_c = %d;\n", NUL_ec );
+
+	indent_puts(
+	    "register const struct yy_trans_info *yy_trans_info;\n" );
+	indent_puts( "yy_trans_info = &yy_current_state[yy_c];" );
+	indent_puts( "yy_current_state += yy_trans_info->yy_nxt;" );
+
+	indent_puts( "yy_is_jam = (yy_trans_info->yy_verify != yy_c);" );
 	}
 
     else
 	{
-	gen_next_compressed_state();
+	char NUL_ec_str[20];
+
+	sprintf( NUL_ec_str, "%d", NUL_ec );
+	gen_next_compressed_state( NUL_ec_str );
 
 	if ( reject )
 	    indent_puts( "*yy_state_ptr++ = yy_current_state;" );
+
+	do_indent();
+
+	if ( interactive )
+	    printf( "yy_is_jam = (yy_base[yy_current_state] == %d);\n",
+		    jambase );
+	else
+	    printf( "yy_is_jam = (yy_current_state == %d);\n", jamstate );
+	}
+
+    /* if we've entered an accepting state, backtrack; note that
+     * compressed tables have *already* done such backtracking, so
+     * we needn't bother with it again
+     */
+    if ( need_backtracking && (fullspd || fulltbl) )
+	{
+	putchar( '\n' );
+	indent_puts( "if ( ! yy_is_jam )" );
+	indent_up();
+	indent_puts( "{" );
+	gen_backtracking();
+	indent_puts( "}" );
+	indent_down();
 	}
     }
 
@@ -640,10 +743,6 @@ gentabs()
     /* *everything* is done in terms of arrays starting at 1, so provide
      * a null entry for the zero element of all C arrays
      */
-    static char C_long_decl[] =
-	"static const long int %s[%d] =\n    {   0,\n";
-    static char C_short_decl[] =
-	"static const short int %s[%d] =\n    {   0,\n";
     static char C_char_decl[] =
 	"static const YY_CHAR %s[%d] =\n    {   0,\n";
 
@@ -972,18 +1071,40 @@ make_tables()
     else
 	gentabs();
 
+    if ( nultrans )
+	{
+	printf( C_state_decl, "yy_NUL_trans", lastdfa + 1 );
+
+	for ( i = 1; i <= lastdfa; ++i )
+	    {
+	    if ( fullspd )
+		{
+		if ( nultrans )
+		    printf( "    &yy_transition[%d],\n", base[i] );
+		else
+		    printf( "    0,\n" );
+		}
+	    
+	    else
+		mkdata( nultrans[i] );
+	    }
+
+	dataend();
+	}
+
     if ( reject )
 	{
 	/* declare state buffer variables */
-	puts( "yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;" );
-	puts( "YY_CHAR *yy_full_match;" );
-	puts( "int yy_lp;" );
+	puts(
+	"static yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;" );
+	puts( "static YY_CHAR *yy_full_match;" );
+	puts( "static int yy_lp;" );
 
 	if ( variable_trailing_context_rules )
 	    {
-	    puts( "int yy_looking_for_trail_begin = 0;" );
-	    puts( "int yy_full_lp;" );
-	    puts( "int *yy_full_state;" );
+	    puts( "static int yy_looking_for_trail_begin = 0;" );
+	    puts( "static int yy_full_lp;" );
+	    puts( "static int *yy_full_state;" );
 	    printf( "#define YY_TRAILING_MASK 0x%x\n", YY_TRAILING_MASK );
 	    printf( "#define YY_TRAILING_HEAD_MASK 0x%x\n",
 		    YY_TRAILING_HEAD_MASK );
@@ -1062,10 +1183,13 @@ make_tables()
     skelout();
 
     gen_start_state();
+
+    /* note, don't use any indentation */
+    puts( "yy_match:" );
     gen_next_match();
 
     skelout();
-    set_indent( 3 );
+    set_indent( 2 );
     gen_find_action();
 
     /* copy actions from action_file to output file */
@@ -1091,6 +1215,28 @@ make_tables()
 	}
 
 
+    /* generate code for handling NUL's, if needed */
+
+    /* first, deal with backtracking and setting up yy_cp if the scanner
+     * finds that it should JAM on the NUL
+     */
+    skelout();
+    set_indent( 7 );
+
+    if ( fullspd || fulltbl )
+	indent_puts( "yy_cp = yy_c_buf_p;" );
+    
+    else
+	{ /* compressed table */
+	if ( ! reject && ! interactive )
+	    {
+	    /* do the guaranteed-needed backtrack to figure out the match */
+	    indent_puts( "yy_cp = yy_last_accepting_cpos;" );
+	    indent_puts( "yy_current_state = yy_last_accepting_state;" );
+	    }
+	}
+
+
     /* generate code for yy_get_previous_state() */
     set_indent( 1 );
     skelout();
@@ -1102,7 +1248,11 @@ make_tables()
 
     set_indent( 2 );
     skelout();
-    gen_next_state();
+    gen_next_state( true );
+
+    set_indent( 1 );
+    skelout();
+    gen_NUL_trans();
 
     skelout();
 
