@@ -1354,6 +1354,9 @@ int yyFlexLexer::yy_top_state()
 	}
 #endif
 
+#ifndef YY_EXIT_FAILURE
+#define YY_EXIT_FAILURE 2
+#endif
 
 %-
 #ifdef YY_USE_PROTOS
@@ -1364,7 +1367,7 @@ char msg[];
 #endif
 	{
 	(void) fprintf( stderr, "%s\n", msg );
-	exit( 1 );
+	exit( YY_EXIT_FAILURE );
 	}
 
 %+
@@ -1372,7 +1375,7 @@ char msg[];
 void yyFlexLexer::LexerError( const char msg[] )
 	{
 	cerr << msg << '\n';
-	exit( 1 );
+	exit( YY_EXIT_FAILURE );
 	}
 %*
 
