@@ -74,7 +74,7 @@ LIBSRCS = liballoc.c libmain.c libyywrap.c
 LIBOBJS = liballoc.o libmain.o libyywrap.o
 
 LINTSRCS = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.c \
-	scan.c skel.c sym.c tblcmp.c yylex.c
+	scan.c skel.c sym.c tblcmp.c yylex.c liballoc.c
 
 DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	configure.in Makefile.in mkskel.sh flex.skl \
