@@ -2173,8 +2173,7 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
 {
     struct yytbl_data td;
     struct yytbl_dmap *transdmap=0;
-    int     len, i, rv,pad;
-    size_t  bytes;
+    int     len, i, rv, inner_loop_count;
     void   *p=0;
 
     memset (&td, 0, sizeof (struct yytbl_data));
@@ -2201,6 +2200,9 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
      * need the dmap.dm_sz entry to tell us the sizeof the individual
      * struct members.
      */
+    {
+    size_t  bytes;
+
     if ((td.td_flags & YYTD_STRUCT))
         bytes = sizeof(struct yy_trans_info) * td.td_lolen * (td.td_hilen ? td.td_hilen : 1);
     else
@@ -2212,23 +2214,35 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
     else
         /* We point to the address of a pointer. */
         *dmap->dm_arr = p = (void *) yyalloc (bytes YY_CALL_LAST_ARG);
+    }
 
-    /* read and map each element */
+    /* If it's a struct, we read 2 integers to get one element */
+    if ((td.td_flags & YYTD_STRUCT) != 0)
+        inner_loop_count = 2;
+    else
+        inner_loop_count = 1;
+
+    /* read and map each element.
+     * This loop iterates once for each element of the td_data array.
+     * Notice that we increment 'i' in the inner loop.
+     */
     len = yytbl_calc_total_len (&td);
-    for (i = 0; i < len; /* increment i in j loop */) {
-        int     read_count = 1, j;
+    for (i = 0; i < len; ){
+        int    j;
 
-        /* If it's a struct, read 2 integers */
-        if ((td.td_flags & YYTD_STRUCT) != 0)
-            read_count = 2;
 
-        /* This loop executes at most 2 times. it is to handle YYTD_STRUCT */
-        for (j = 0; j < read_count; j++, i++) {
+        /* This loop really executes exactly 1 or 2 times.
+         * The second time is to handle the second member of the
+         * YYTD_STRUCT for the yy_transition array.
+         */
+        for (j = 0; j < inner_loop_count; j++, i++) {
             int32_t t32;
+
+            /* read into t32 no matter what the real size is. */
+            {
             int16_t t16;
             int8_t  t8;
 
-            /* read into t32 no matter what the real size is. */
             switch (YYTDFLAGS2BYTES (td.td_flags)) {
             case sizeof (int32_t):
                 rv = yytbl_read32 (&t32, rd);
@@ -2244,6 +2258,7 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
             default: 
                 yy_fatal_error("invalid td_flags" /*TODO: not fatal.*/ YY_CALL_LAST_ARG);
                 return -1;
+            }
             }
             if (rv != 0)
                 return -1;
@@ -2317,7 +2332,7 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
                 switch (dmap->dm_sz) {
                 case sizeof (int32_t):
                     if(YY_TABLES_VERIFY ){
-                    if( ((int32_t *) p)[0] != (int32_t) t32)
+                        if( ((int32_t *) p)[0] != (int32_t) t32)
                         yy_fatal_error("tables verification failed at int32_t" YY_CALL_LAST_ARG);
                     }else
                         ((int32_t *) p)[0] = (int32_t) t32;
@@ -2325,7 +2340,7 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
                     break;
                 case sizeof (int16_t):
                     if(YY_TABLES_VERIFY ){
-                    if( ((int16_t *) p)[0] != (int16_t) t32)
+                        if( ((int16_t *) p)[0] != (int16_t) t32)
                         yy_fatal_error("tables verification failed at int16_t" YY_CALL_LAST_ARG);
                     }else
                         ((int16_t *) p)[0] = (int16_t) t32;
@@ -2333,7 +2348,7 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
                     break;
                 case sizeof (int8_t):
                     if(YY_TABLES_VERIFY ){
-                    if( ((int8_t *) p)[0] != (int8_t) t32)
+                        if( ((int8_t *) p)[0] != (int8_t) t32)
                         yy_fatal_error("tables verification failed at int8_t" YY_CALL_LAST_ARG);
                     }else
                         ((int8_t *) p)[0] = (int8_t) t32;
@@ -2349,18 +2364,22 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
     }
 
     /* Now eat padding. */
-    pad = yypad64(rd->bread);
-    while(--pad >= 0){
-        int8_t t8;
-        if(yytbl_read8(&t8,rd) != 0)
-            return -1;
+    {
+        int pad;
+        pad = yypad64(rd->bread);
+        while(--pad >= 0){
+            int8_t t8;
+            if(yytbl_read8(&t8,rd) != 0)
+                return -1;
+        }
     }
 
     return 0;
 }
 
-/* Load the DFA tables from the given stream.  */
-int yytables_load YYFARGS1 (FILE *, fp)
+
+/* Find the key and load the DFA tables from the given stream.  */
+int yytbl_load YYFARGS2 (FILE *, fp, const char *, key)
 {
     struct yytbl_hdr th;
     struct yytbl_reader rd;
@@ -2368,13 +2387,18 @@ int yytables_load YYFARGS1 (FILE *, fp)
     rd.fp = fp;
     rd.bread = 0;
 
-    /* Keep trying until we find the right set of tables */
-    for (;;) {
+    /* Keep trying until we find the right set of tables or end of file. */
+    while (!feof(rd.fp)) {
         if (yytbl_hdr_read (&th, &rd YY_CALL_LAST_ARG) != 0)
             return -1;
 
-        /* TODO: strcmp th_name with search key. For now, we just break out. */
-        break;
+        /* A NULL key means choose the first set of tables. */
+        if (key == NULL)
+            break;
+
+        if (strcmp(th.th_name,key) != 0)
+            /* Skip ahead to next set */
+            fseek(rd.fp, th.th_ssize - th.th_hsize, SEEK_CUR);
     }
 
     while (rd.bread < th.th_ssize){
@@ -2385,6 +2409,15 @@ int yytables_load YYFARGS1 (FILE *, fp)
 
     return 0;
 }
+
+/* Load the DFA tables for this scanner from the given stream.  */
+int yytables_load YYFARGS1 (FILE *, fp)
+{
+    /* TODO: generate key "yytables" using prefix */
+    yytbl_load(fp,NULL YY_CALL_LAST_ARG);
+    return 0;
+}
+
 %tables-serialization-code-end  definitions
 
 #if YY_MAIN
