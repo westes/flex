@@ -772,6 +772,7 @@ void gentabs()
 	/* set up accepting structures for the End Of Buffer state */
 	EOB_accepting_list[0] = 0;
 	EOB_accepting_list[1] = end_of_buffer_action;
+	rule_type[end_of_buffer_action] = RULE_NORMAL;
 	accsiz[end_of_buffer_state] = 1;
 	dfaacc[end_of_buffer_state].dfaacc_set = EOB_accepting_list;
 
