@@ -47,13 +47,16 @@ int     yytbl_fwrite32 (FILE * out, uint32_t v);
 int     yytbl_fwrite16 (FILE * out, uint16_t v);
 int     yytbl_fwrite8 (FILE * out, uint8_t v);
 
-void yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str, const char *name)
+void    yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
+			const char *name)
 {
 	memset (th, 0, sizeof (struct yytbl_hdr));
 
 	th->th_magic = 0xF13C57B1;
-	th->th_hsize = yypad64 (20 + strlen (version_str) + 1 + strlen (name) + 1);
-	th->th_ssize = 0;			// Not known at this point.
+	th->th_hsize =
+		yypad64 (20 + strlen (version_str) + 1 + strlen (name) +
+			 1);
+	th->th_ssize = 0;	// Not known at this point.
 	th->th_flags = 0;
 	th->th_version = copy_string (version_str);
 	th->th_name = copy_string (name);
@@ -65,19 +68,20 @@ struct yytbl_data *yytbl_data_create (enum yytbl_id id)
 
 	td = (struct yytbl_data *) flex_alloc (sizeof (struct yytbl_data));
 	memset (td, 0, sizeof (struct yytbl_data));
+
 	td->t_id = id;
 	return td;
 }
 
-int yytbl_hdr_fwrite (FILE * out, struct yytbl_hdr *th)
+int     yytbl_hdr_fwrite (FILE * out, struct yytbl_hdr *th)
 {
 	size_t  sz, rv;
 	int     pad, bwritten = 0;
 
 	if (yytbl_fwrite32 (out, th->th_magic) < 0
-		|| yytbl_fwrite32 (out, th->th_hsize) < 0
-		|| yytbl_fwrite32 (out, th->th_ssize) < 0
-		|| yytbl_fwrite16 (out, th->th_flags) < 0)
+	    || yytbl_fwrite32 (out, th->th_hsize) < 0
+	    || yytbl_fwrite32 (out, th->th_ssize) < 0
+	    || yytbl_fwrite16 (out, th->th_flags) < 0)
 		return -1;
 	else
 		bwritten += 3 * 4 + 2;
@@ -109,7 +113,7 @@ int yytbl_hdr_fwrite (FILE * out, struct yytbl_hdr *th)
 	return bwritten;
 }
 
-int yytbl_fwrite32 (FILE * out, uint32_t v)
+int     yytbl_fwrite32 (FILE * out, uint32_t v)
 {
 	uint32_t vnet;
 	size_t  bytes, rv;
@@ -122,7 +126,7 @@ int yytbl_fwrite32 (FILE * out, uint32_t v)
 	return bytes;
 }
 
-int yytbl_fwrite16 (FILE * out, uint16_t v)
+int     yytbl_fwrite16 (FILE * out, uint16_t v)
 {
 	uint16_t vnet;
 	size_t  bytes, rv;
@@ -135,7 +139,7 @@ int yytbl_fwrite16 (FILE * out, uint16_t v)
 	return bytes;
 }
 
-int yytbl_fwrite8 (FILE * out, uint8_t v)
+int     yytbl_fwrite8 (FILE * out, uint8_t v)
 {
 	size_t  bytes, rv;
 
@@ -164,7 +168,9 @@ static int min_int_size (void *arr, int32_t len, int sz)
 			curr = abs (((int32_t *) arr)[i]);
 			break;
 		default:
-			fprintf (stderr, "Illegal size (%d) in min_int_size\n", sz);
+			fprintf (stderr,
+				 "Illegal size (%d) in min_int_size\n",
+				 sz);
 			return 32;
 		}
 		if (curr > max)
@@ -187,15 +193,18 @@ static int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i, int j)
 }
 
 /* Transform data to smallest possible of (int32, int16, int8) */
-void yytbl_data_compress (struct yytbl_data *tbl)
+void    yytbl_data_compress (struct yytbl_data *tbl)
 {
 	int32_t i, sz;
 	void   *newdata = 0;
 
-	if (tbl->t_id != YYT_ID_TRANSITION && tbl->t_id != YYT_ID_START_STATE_LIST) {
+	if (tbl->t_id != YYT_ID_TRANSITION
+	    && tbl->t_id != YYT_ID_START_STATE_LIST) {
 		if (tbl->t_hilen == 0) {
 			/* Data is a single-dimensional array of ints */
-			sz = min_int_size (tbl->t_data, tbl->t_lolen, TFLAGS2BYTES (tbl->t_flags));
+			sz =
+				min_int_size (tbl->t_data, tbl->t_lolen,
+					      TFLAGS2BYTES (tbl->t_flags));
 			if (sz == TFLAGS2BYTES (tbl->t_flags))
 				/* No change in this table needed. */
 				return;
@@ -215,12 +224,16 @@ void yytbl_data_compress (struct yytbl_data *tbl)
 					((int8_t *) newdata)[i] = (int8_t) n;
 					break;
 				case sizeof (int16_t):
-					((int16_t *) newdata)[i] = (int16_t) n;
+					
+						((int16_t *) newdata)[i] =
+						(int16_t) n;
 					break;
 				case sizeof (int32_t):
-					((int32_t *) newdata)[i] = (int32_t) n;
+					
+						((int32_t *) newdata)[i] =
+						(int32_t) n;
 					break;
-				default:		/* TODO: ERROR: unknown 'sz' */
+				default:	/* TODO: ERROR: unknown 'sz' */
 					break;
 				}
 			}
@@ -233,10 +246,10 @@ void yytbl_data_compress (struct yytbl_data *tbl)
 		}
 	}
 	else if (tbl->t_id == YYT_ID_TRANSITION) {
-        /* Data is an array of structs */
+		/* Data is an array of structs */
 	}
 	else if (tbl->t_id == YYT_ID_START_STATE_LIST) {
-        /* Data is an array of pointers */
+		/* Data is an array of pointers */
 	}
 }
 

@@ -22,7 +22,7 @@
 /*  PURPOSE. */
 
 
-int yywrap()
-	{
+int     yywrap ()
+{
 	return 1;
-	}
+}

@@ -36,12 +36,11 @@
 
 /* ccl2ecl - convert character classes to set of equivalence classes */
 
-void ccl2ecl()
-	{
-	int i, ich, newlen, cclp, ccls, cclmec;
+void    ccl2ecl ()
+{
+	int     i, ich, newlen, cclp, ccls, cclmec;
 
-	for ( i = 1; i <= lastccl; ++i )
-		{
+	for (i = 1; i <= lastccl; ++i) {
 		/* We loop through each character class, and for each character
 		 * in the class, add the character's equivalence class to the
 		 * new "character" class we are creating.  Thus when we are all
@@ -52,21 +51,19 @@ void ccl2ecl()
 		newlen = 0;
 		cclp = cclmap[i];
 
-		for ( ccls = 0; ccls < ccllen[i]; ++ccls )
-			{
+		for (ccls = 0; ccls < ccllen[i]; ++ccls) {
 			ich = ccltbl[cclp + ccls];
 			cclmec = ecgroup[ich];
 
-			if ( cclmec > 0 )
-				{
+			if (cclmec > 0) {
 				ccltbl[cclp + newlen] = cclmec;
 				++newlen;
-				}
 			}
+		}
 
 		ccllen[i] = newlen;
-		}
 	}
+}
 
 
 /* cre8ecs - associate equivalence class numbers with class members
@@ -77,10 +74,10 @@ void ccl2ecl()
  * Returned is the number of classes.
  */
 
-int cre8ecs( fwd, bck, num )
-int fwd[], bck[], num;
-	{
-	int i, j, numcl;
+int     cre8ecs (fwd, bck, num)
+     int     fwd[], bck[], num;
+{
+	int     i, j, numcl;
 
 	numcl = 0;
 
@@ -89,16 +86,15 @@ int fwd[], bck[], num;
 	 * is positive, then x is the representative of its equivalence
 	 * class.
 	 */
-	for ( i = 1; i <= num; ++i )
-		if ( bck[i] == NIL )
-			{
+	for (i = 1; i <= num; ++i)
+		if (bck[i] == NIL) {
 			bck[i] = ++numcl;
-			for ( j = fwd[i]; j != NIL; j = fwd[j] )
+			for (j = fwd[i]; j != NIL; j = fwd[j])
 				bck[j] = -numcl;
-			}
+		}
 
 	return numcl;
-	}
+}
 
 
 /* mkeccl - update equivalence classes based on character class xtions
@@ -116,12 +112,12 @@ int fwd[], bck[], num;
  * NUL_mapping is the value which NUL (0) should be mapped to.
  */
 
-void mkeccl( ccls, lenccl, fwd, bck, llsiz, NUL_mapping )
-Char ccls[];
-int lenccl, fwd[], bck[], llsiz, NUL_mapping;
-	{
-	int cclp, oldec, newec;
-	int cclm, i, j;
+void    mkeccl (ccls, lenccl, fwd, bck, llsiz, NUL_mapping)
+     Char    ccls[];
+     int     lenccl, fwd[], bck[], llsiz, NUL_mapping;
+{
+	int     cclp, oldec, newec;
+	int     cclm, i, j;
 	static unsigned char cclflags[CSIZE];	/* initialized to all '\0' */
 
 	/* Note that it doesn't matter whether or not the character class is
@@ -130,11 +126,10 @@ int lenccl, fwd[], bck[], llsiz, NUL_mapping;
 
 	cclp = 0;
 
-	while ( cclp < lenccl )
-		{
+	while (cclp < lenccl) {
 		cclm = ccls[cclp];
 
-		if ( NUL_mapping && cclm == 0 )
+		if (NUL_mapping && cclm == 0)
 			cclm = NUL_mapping;
 
 		oldec = bck[cclm];
@@ -142,22 +137,19 @@ int lenccl, fwd[], bck[], llsiz, NUL_mapping;
 
 		j = cclp + 1;
 
-		for ( i = fwd[cclm]; i != NIL && i <= llsiz; i = fwd[i] )
-			{ /* look for the symbol in the character class */
-			for ( ; j < lenccl; ++j )
-				{
+		for (i = fwd[cclm]; i != NIL && i <= llsiz; i = fwd[i]) {	/* look for the symbol in the character class */
+			for (; j < lenccl; ++j) {
 				register int ccl_char;
 
-				if ( NUL_mapping && ccls[j] == 0 )
+				if (NUL_mapping && ccls[j] == 0)
 					ccl_char = NUL_mapping;
 				else
 					ccl_char = ccls[j];
 
-				if ( ccl_char > i )
+				if (ccl_char > i)
 					break;
 
-				if ( ccl_char == i && ! cclflags[j] )
-					{
+				if (ccl_char == i && !cclflags[j]) {
 					/* We found an old companion of cclm
 					 * in the ccl.  Link it into the new
 					 * equivalence class and flag it as
@@ -173,8 +165,8 @@ int lenccl, fwd[], bck[], llsiz, NUL_mapping;
 					/* Get next equivalence class member. */
 					/* continue 2 */
 					goto next_pt;
-					}
 				}
+			}
 
 			/* Symbol isn't in character class.  Put it in the old
 			 * equivalence class.
@@ -182,48 +174,46 @@ int lenccl, fwd[], bck[], llsiz, NUL_mapping;
 
 			bck[i] = oldec;
 
-			if ( oldec != NIL )
+			if (oldec != NIL)
 				fwd[oldec] = i;
 
 			oldec = i;
 
-			next_pt: ;
-			}
+		      next_pt:;
+		}
 
-		if ( bck[cclm] != NIL || oldec != bck[cclm] )
-			{
+		if (bck[cclm] != NIL || oldec != bck[cclm]) {
 			bck[cclm] = NIL;
 			fwd[oldec] = NIL;
-			}
+		}
 
 		fwd[newec] = NIL;
 
 		/* Find next ccl member to process. */
 
-		for ( ++cclp; cclflags[cclp] && cclp < lenccl; ++cclp )
-			{
+		for (++cclp; cclflags[cclp] && cclp < lenccl; ++cclp) {
 			/* Reset "doesn't need processing" flag. */
 			cclflags[cclp] = 0;
-			}
 		}
 	}
+}
 
 
 /* mkechar - create equivalence class for single character */
 
-void mkechar( tch, fwd, bck )
-int tch, fwd[], bck[];
-	{
+void    mkechar (tch, fwd, bck)
+     int     tch, fwd[], bck[];
+{
 	/* If until now the character has been a proper subset of
 	 * an equivalence class, break it away to create a new ec
 	 */
 
-	if ( fwd[tch] != NIL )
+	if (fwd[tch] != NIL)
 		bck[fwd[tch]] = bck[tch];
 
-	if ( bck[tch] != NIL )
+	if (bck[tch] != NIL)
 		fwd[bck[tch]] = fwd[tch];
 
 	fwd[tch] = NIL;
 	bck[tch] = NIL;
-	}
+}

@@ -34,10 +34,10 @@
 
 /* declare functions that have forward references */
 
-void dump_associated_rules PROTO((FILE*, int));
-void dump_transitions PROTO((FILE*, int[]));
-void sympartition PROTO((int[], int, int[], int[]));
-int symfollowset PROTO((int[], int, int, int[]));
+void dump_associated_rules PROTO ((FILE *, int));
+void dump_transitions PROTO ((FILE *, int[]));
+void sympartition PROTO ((int[], int, int[], int[]));
+int symfollowset PROTO ((int[], int, int, int[]));
 
 
 /* check_for_backing_up - check a DFA state for backing up
@@ -49,32 +49,29 @@ int symfollowset PROTO((int[], int, int, int[]));
  * indexed by equivalence class.
  */
 
-void check_for_backing_up( ds, state )
-int ds;
-int state[];
-	{
-	if ( (reject && ! dfaacc[ds].dfaacc_set) ||
-	     (! reject && ! dfaacc[ds].dfaacc_state) )
-		{ /* state is non-accepting */
+void    check_for_backing_up (ds, state)
+     int     ds;
+     int     state[];
+{
+	if ((reject && !dfaacc[ds].dfaacc_set) || (!reject && !dfaacc[ds].dfaacc_state)) {	/* state is non-accepting */
 		++num_backing_up;
 
-		if ( backing_up_report )
-			{
-			fprintf( backing_up_file,
-				_( "State #%d is non-accepting -\n" ), ds );
+		if (backing_up_report) {
+			fprintf (backing_up_file,
+				 _("State #%d is non-accepting -\n"), ds);
 
 			/* identify the state */
-			dump_associated_rules( backing_up_file, ds );
+			dump_associated_rules (backing_up_file, ds);
 
 			/* Now identify it further using the out- and
 			 * jam-transitions.
 			 */
-			dump_transitions( backing_up_file, state );
+			dump_transitions (backing_up_file, state);
 
-			putc( '\n', backing_up_file );
-			}
+			putc ('\n', backing_up_file);
 		}
 	}
+}
 
 
 /* check_trailing_context - check to see if NFA state set constitutes
@@ -99,42 +96,38 @@ int state[];
  *    accset[1 .. nacc] is the list of accepting numbers for the DFA state.
  */
 
-void check_trailing_context( nfa_states, num_states, accset, nacc )
-int *nfa_states, num_states;
-int *accset;
-int nacc;
-	{
+void    check_trailing_context (nfa_states, num_states, accset, nacc)
+     int    *nfa_states, num_states;
+     int    *accset;
+     int     nacc;
+{
 	register int i, j;
 
-	for ( i = 1; i <= num_states; ++i )
-		{
-		int ns = nfa_states[i];
+	for (i = 1; i <= num_states; ++i) {
+		int     ns = nfa_states[i];
 		register int type = state_type[ns];
 		register int ar = assoc_rule[ns];
 
-		if ( type == STATE_NORMAL || rule_type[ar] != RULE_VARIABLE )
-			{ /* do nothing */
-			}
+		if (type == STATE_NORMAL || rule_type[ar] != RULE_VARIABLE) {	/* do nothing */
+		}
 
-		else if ( type == STATE_TRAILING_CONTEXT )
-			{
+		else if (type == STATE_TRAILING_CONTEXT) {
 			/* Potential trouble.  Scan set of accepting numbers
 			 * for the one marking the end of the "head".  We
 			 * assume that this looping will be fairly cheap
 			 * since it's rare that an accepting number set
 			 * is large.
 			 */
-			for ( j = 1; j <= nacc; ++j )
-				if ( accset[j] & YY_TRAILING_HEAD_MASK )
-					{
-					line_warning(
-					_( "dangerous trailing context" ),
-						rule_linenum[ar] );
+			for (j = 1; j <= nacc; ++j)
+				if (accset[j] & YY_TRAILING_HEAD_MASK) {
+					line_warning (_
+						      ("dangerous trailing context"),
+rule_linenum[ar]);
 					return;
-					}
-			}
+				}
 		}
 	}
+}
 
 
 /* dump_associated_rules - list the rules associated with a DFA state
@@ -144,45 +137,43 @@ int nacc;
  * and writes a report to the given file.
  */
 
-void dump_associated_rules( file, ds )
-FILE *file;
-int ds;
-	{
+void    dump_associated_rules (file, ds)
+     FILE   *file;
+     int     ds;
+{
 	register int i, j;
 	register int num_associated_rules = 0;
-	int rule_set[MAX_ASSOC_RULES + 1];
-	int *dset = dss[ds];
-	int size = dfasiz[ds];
+	int     rule_set[MAX_ASSOC_RULES + 1];
+	int    *dset = dss[ds];
+	int     size = dfasiz[ds];
 
-	for ( i = 1; i <= size; ++i )
-		{
+	for (i = 1; i <= size; ++i) {
 		register int rule_num = rule_linenum[assoc_rule[dset[i]]];
 
-		for ( j = 1; j <= num_associated_rules; ++j )
-			if ( rule_num == rule_set[j] )
+		for (j = 1; j <= num_associated_rules; ++j)
+			if (rule_num == rule_set[j])
 				break;
 
-		if ( j > num_associated_rules )
-			{ /* new rule */
-			if ( num_associated_rules < MAX_ASSOC_RULES )
-				rule_set[++num_associated_rules] = rule_num;
-			}
+		if (j > num_associated_rules) {	/* new rule */
+			if (num_associated_rules < MAX_ASSOC_RULES)
+				rule_set[++num_associated_rules] =
+					rule_num;
 		}
-
-	bubble( rule_set, num_associated_rules );
-
-	fprintf( file, _( " associated rule line numbers:" ) );
-
-	for ( i = 1; i <= num_associated_rules; ++i )
-		{
-		if ( i % 8 == 1 )
-			putc( '\n', file );
-
-		fprintf( file, "\t%d", rule_set[i] );
-		}
-
-	putc( '\n', file );
 	}
+
+	bubble (rule_set, num_associated_rules);
+
+	fprintf (file, _(" associated rule line numbers:"));
+
+	for (i = 1; i <= num_associated_rules; ++i) {
+		if (i % 8 == 1)
+			putc ('\n', file);
+
+		fprintf (file, "\t%d", rule_set[i]);
+	}
+
+	putc ('\n', file);
+}
 
 
 /* dump_transitions - list the transitions associated with a DFA state
@@ -196,33 +187,32 @@ int ds;
  * is done to the given file.
  */
 
-void dump_transitions( file, state )
-FILE *file;
-int state[];
-	{
+void    dump_transitions (file, state)
+     FILE   *file;
+     int     state[];
+{
 	register int i, ec;
-	int out_char_set[CSIZE];
+	int     out_char_set[CSIZE];
 
-	for ( i = 0; i < csize; ++i )
-		{
-		ec = ABS( ecgroup[i] );
+	for (i = 0; i < csize; ++i) {
+		ec = ABS (ecgroup[i]);
 		out_char_set[i] = state[ec];
-		}
+	}
 
-	fprintf( file, _( " out-transitions: " ) );
+	fprintf (file, _(" out-transitions: "));
 
-	list_character_set( file, out_char_set );
+	list_character_set (file, out_char_set);
 
 	/* now invert the members of the set to get the jam transitions */
-	for ( i = 0; i < csize; ++i )
-		out_char_set[i] = ! out_char_set[i];
+	for (i = 0; i < csize; ++i)
+		out_char_set[i] = !out_char_set[i];
 
-	fprintf( file, _( "\n jam-transitions: EOF " ) );
+	fprintf (file, _("\n jam-transitions: EOF "));
 
-	list_character_set( file, out_char_set );
+	list_character_set (file, out_char_set);
 
-	putc( '\n', file );
-	}
+	putc ('\n', file);
+}
 
 
 /* epsclosure - construct the epsilon closure of a set of ndfa states
@@ -245,13 +235,13 @@ int state[];
  *  hashval is the hash value for the dfa corresponding to the state set.
  */
 
-int *epsclosure( t, ns_addr, accset, nacc_addr, hv_addr )
-int *t, *ns_addr, accset[], *nacc_addr, *hv_addr;
-	{
+int    *epsclosure (t, ns_addr, accset, nacc_addr, hv_addr)
+     int    *t, *ns_addr, accset[], *nacc_addr, *hv_addr;
+{
 	register int stkpos, ns, tsp;
-	int numstates = *ns_addr, nacc, hashval, transsym, nfaccnum;
-	int stkend, nstate;
-	static int did_stk_init = false, *stk; 
+	int     numstates = *ns_addr, nacc, hashval, transsym, nfaccnum;
+	int     stkend, nstate;
+	static int did_stk_init = false, *stk;
 
 #define MARK_STATE(state) \
 do{ trans1[state] = trans1[state] - MARKER_DIFFERENCE;} while(0)
@@ -301,90 +291,84 @@ ADD_STATE(state); \
 }while(0)
 
 
-	if ( ! did_stk_init )
-		{
-		stk = allocate_integer_array( current_max_dfa_size );
+	if (!did_stk_init) {
+		stk = allocate_integer_array (current_max_dfa_size);
 		did_stk_init = true;
-		}
+	}
 
 	nacc = stkend = hashval = 0;
 
-	for ( nstate = 1; nstate <= numstates; ++nstate )
-		{
+	for (nstate = 1; nstate <= numstates; ++nstate) {
 		ns = t[nstate];
 
 		/* The state could be marked if we've already pushed it onto
 		 * the stack.
 		 */
-		if ( ! IS_MARKED(ns) )
-			{
-			PUT_ON_STACK(ns);
-			CHECK_ACCEPT(ns);
+		if (!IS_MARKED (ns)) {
+			PUT_ON_STACK (ns);
+			CHECK_ACCEPT (ns);
 			hashval += ns;
-			}
 		}
+	}
 
-	for ( stkpos = 1; stkpos <= stkend; ++stkpos )
-		{
+	for (stkpos = 1; stkpos <= stkend; ++stkpos) {
 		ns = stk[stkpos];
 		transsym = transchar[ns];
 
-		if ( transsym == SYM_EPSILON )
-			{
+		if (transsym == SYM_EPSILON) {
 			tsp = trans1[ns] + MARKER_DIFFERENCE;
 
-			if ( tsp != NO_TRANSITION )
-				{
-				if ( ! IS_MARKED(tsp) )
-					STACK_STATE(tsp);
+			if (tsp != NO_TRANSITION) {
+				if (!IS_MARKED (tsp))
+					STACK_STATE (tsp);
 
 				tsp = trans2[ns];
 
-				if ( tsp != NO_TRANSITION && ! IS_MARKED(tsp) )
-					STACK_STATE(tsp);
-				}
+				if (tsp != NO_TRANSITION
+				    && !IS_MARKED (tsp)) STACK_STATE (tsp);
 			}
 		}
+	}
 
 	/* Clear out "visit" markers. */
 
-	for ( stkpos = 1; stkpos <= stkend; ++stkpos )
-		{
-		if ( IS_MARKED(stk[stkpos]) )
-			UNMARK_STATE(stk[stkpos]);
+	for (stkpos = 1; stkpos <= stkend; ++stkpos) {
+		if (IS_MARKED (stk[stkpos]))
+			UNMARK_STATE (stk[stkpos]);
 		else
-			flexfatal(
-			_( "consistency check failed in epsclosure()" ) );
-		}
+			flexfatal (_
+				   ("consistency check failed in epsclosure()"));
+	}
 
 	*ns_addr = numstates;
 	*hv_addr = hashval;
 	*nacc_addr = nacc;
 
 	return t;
-	}
+}
 
 
 /* increase_max_dfas - increase the maximum number of DFAs */
 
-void increase_max_dfas()
-	{
+void    increase_max_dfas ()
+{
 	current_max_dfas += MAX_DFAS_INCREMENT;
 
 	++num_reallocs;
 
-	base = reallocate_integer_array( base, current_max_dfas );
-	def = reallocate_integer_array( def, current_max_dfas );
-	dfasiz = reallocate_integer_array( dfasiz, current_max_dfas );
-	accsiz = reallocate_integer_array( accsiz, current_max_dfas );
-	dhash = reallocate_integer_array( dhash, current_max_dfas );
-	dss = reallocate_int_ptr_array( dss, current_max_dfas );
-	dfaacc = reallocate_dfaacc_union( dfaacc, current_max_dfas );
+	base = reallocate_integer_array (base, current_max_dfas);
+	def = reallocate_integer_array (def, current_max_dfas);
+	dfasiz = reallocate_integer_array (dfasiz, current_max_dfas);
+	accsiz = reallocate_integer_array (accsiz, current_max_dfas);
+	dhash = reallocate_integer_array (dhash, current_max_dfas);
+	dss = reallocate_int_ptr_array (dss, current_max_dfas);
+	dfaacc = reallocate_dfaacc_union (dfaacc, current_max_dfas);
 
-	if ( nultrans )
+	if (nultrans)
 		nultrans =
-			reallocate_integer_array( nultrans, current_max_dfas );
-	}
+			reallocate_integer_array (nultrans,
+						  current_max_dfas);
+}
 
 
 /* ntod - convert an ndfa to a dfa
@@ -393,16 +377,16 @@ void increase_max_dfas()
  * dfa starts out in state #1.
  */
 
-void ntod()
-	{
-	int *accset, ds, nacc, newds;
-	int sym, hashval, numstates, dsize;
-	int num_full_table_rows;	/* used only for -f */
-	int *nset, *dset;
-	int targptr, totaltrans, i, comstate, comfreq, targ;
-	int symlist[CSIZE + 1];
-	int num_start_states;
-	int todo_head, todo_next;
+void    ntod ()
+{
+	int    *accset, ds, nacc, newds;
+	int     sym, hashval, numstates, dsize;
+	int     num_full_table_rows;	/* used only for -f */
+	int    *nset, *dset;
+	int     targptr, totaltrans, i, comstate, comfreq, targ;
+	int     symlist[CSIZE + 1];
+	int     num_start_states;
+	int     todo_head, todo_next;
 
 	/* Note that the following are indexed by *equivalence classes*
 	 * and not by characters.  Since equivalence classes are indexed
@@ -411,14 +395,14 @@ void ntod()
 	 * equivalence class) these arrays must have room for indices
 	 * from 1 to CSIZE, so their size must be CSIZE + 1.
 	 */
-	int duplist[CSIZE + 1], state[CSIZE + 1];
-	int targfreq[CSIZE + 1], targstate[CSIZE + 1];
+	int     duplist[CSIZE + 1], state[CSIZE + 1];
+	int     targfreq[CSIZE + 1], targstate[CSIZE + 1];
 
 	/* accset needs to be large enough to hold all of the rules present
 	 * in the input, *plus* their YY_TRAILING_HEAD_MASK variants.
 	 */
-	accset = allocate_integer_array( (num_rules + 1) * 2 );
-	nset = allocate_integer_array( current_max_dfa_size );
+	accset = allocate_integer_array ((num_rules + 1) * 2);
+	nset = allocate_integer_array (current_max_dfa_size);
 
 	/* The "todo" queue is represented by the head, which is the DFA
 	 * state currently being processed, and the "next", which is the
@@ -428,22 +412,20 @@ void ntod()
 	 */
 	todo_head = todo_next = 0;
 
-	for ( i = 0; i <= csize; ++i )
-		{
+	for (i = 0; i <= csize; ++i) {
 		duplist[i] = NIL;
 		symlist[i] = false;
-		}
+	}
 
-	for ( i = 0; i <= num_rules; ++i )
+	for (i = 0; i <= num_rules; ++i)
 		accset[i] = NIL;
 
-	if ( trace )
-		{
-		dumpnfa( scset[1] );
-		fputs( _( "\n\nDFA Dump:\n\n" ), stderr );
-		}
+	if (trace) {
+		dumpnfa (scset[1]);
+		fputs (_("\n\nDFA Dump:\n\n"), stderr);
+	}
 
-	inittbl();
+	inittbl ();
 
 	/* Check to see whether we should build a separate table for
 	 * transitions on NUL characters.  We don't do this for full-speed
@@ -477,50 +459,46 @@ void ntod()
 	/* Note that the test for ecgroup[0] == numecs below accomplishes
 	 * both (1) and (2) above
 	 */
-	if ( ! fullspd && ecgroup[0] == numecs )
-		{
+	if (!fullspd && ecgroup[0] == numecs) {
 		/* NUL is alone in its equivalence class, which is the
 		 * last one.
 		 */
-		int use_NUL_table = (numecs == csize);
+		int     use_NUL_table = (numecs == csize);
 
-		if ( fulltbl && ! use_NUL_table )
-			{
+		if (fulltbl && !use_NUL_table) {
 			/* We still may want to use the table if numecs
 			 * is a power of 2.
 			 */
-			int power_of_two;
+			int     power_of_two;
 
-			for ( power_of_two = 1; power_of_two <= csize;
-			      power_of_two *= 2 )
-				if ( numecs == power_of_two )
-					{
+			for (power_of_two = 1; power_of_two <= csize;
+			     power_of_two *= 2)
+				if (numecs == power_of_two) {
 					use_NUL_table = true;
 					break;
-					}
-			}
+				}
+		}
 
-		if ( use_NUL_table )
-			nultrans = allocate_integer_array( current_max_dfas );
+		if (use_NUL_table)
+			nultrans =
+				allocate_integer_array (current_max_dfas);
 
 		/* From now on, nultrans != nil indicates that we're
 		 * saving null transitions for later, separate encoding.
 		 */
-		}
+	}
 
 
-	if ( fullspd )
-		{
-		for ( i = 0; i <= numecs; ++i )
+	if (fullspd) {
+		for (i = 0; i <= numecs; ++i)
 			state[i] = 0;
 
-		place_state( state, 0, 0 );
+		place_state (state, 0, 0);
 		dfaacc[0].dfaacc_state = 0;
-		}
+	}
 
-	else if ( fulltbl )
-		{
-		if ( nultrans )
+	else if (fulltbl) {
+		if (nultrans)
 			/* We won't be including NUL's transitions in the
 			 * table, so build it for entries from 0 .. numecs - 1.
 			 */
@@ -536,68 +514,67 @@ void ntod()
 		/* Unless -Ca, declare it "short" because it's a real
 		 * long-shot that that won't be large enough.
 		 */
-		out_str_dec( "static yyconst %s yy_nxt[][%d] =\n    {\n",
-			long_align ? "long" : "short", num_full_table_rows );
+		out_str_dec ("static yyconst %s yy_nxt[][%d] =\n    {\n",
+			     long_align ? "long" : "short",
+			     num_full_table_rows);
 
-		outn( "    {" );
+		outn ("    {");
 
 		/* Generate 0 entries for state #0. */
-		for ( i = 0; i < num_full_table_rows; ++i )
-			mk2data( 0 );
+		for (i = 0; i < num_full_table_rows; ++i)
+			mk2data (0);
 
-		dataflush();
-		outn( "    },\n" );
-		}
+		dataflush ();
+		outn ("    },\n");
+	}
 
 	/* Create the first states. */
 
 	num_start_states = lastsc * 2;
 
-	for ( i = 1; i <= num_start_states; ++i )
-		{
+	for (i = 1; i <= num_start_states; ++i) {
 		numstates = 1;
 
 		/* For each start condition, make one state for the case when
 		 * we're at the beginning of the line (the '^' operator) and
 		 * one for the case when we're not.
 		 */
-		if ( i % 2 == 1 )
+		if (i % 2 == 1)
 			nset[numstates] = scset[(i / 2) + 1];
 		else
 			nset[numstates] =
-				mkbranch( scbol[i / 2], scset[i / 2] );
+				mkbranch (scbol[i / 2], scset[i / 2]);
 
-		nset = epsclosure( nset, &numstates, accset, &nacc, &hashval );
+		nset =
+			epsclosure (nset, &numstates, accset, &nacc,
+				    &hashval);
 
-		if ( snstods( nset, numstates, accset, nacc, hashval, &ds ) )
-			{
+		if (snstods (nset, numstates, accset, nacc, hashval, &ds)) {
 			numas += nacc;
 			totnst += numstates;
 			++todo_next;
 
-			if ( variable_trailing_context_rules && nacc > 0 )
-				check_trailing_context( nset, numstates,
-							accset, nacc );
-			}
+			if (variable_trailing_context_rules && nacc > 0)
+				check_trailing_context (nset, numstates,
+							accset, nacc);
 		}
+	}
 
-	if ( ! fullspd )
-		{
-		if ( ! snstods( nset, 0, accset, 0, 0, &end_of_buffer_state ) )
-			flexfatal(
-			_( "could not create unique end-of-buffer state" ) );
+	if (!fullspd) {
+		if (!snstods (nset, 0, accset, 0, 0, &end_of_buffer_state))
+			flexfatal (_
+				   ("could not create unique end-of-buffer state"));
 
 		++numas;
 		++num_start_states;
 		++todo_next;
-		}
+	}
 
-	while ( todo_head < todo_next )
-		{
+	while (todo_head < todo_next) {
 		targptr = 0;
 		totaltrans = 0;
 
-		for ( i = 1; i <= numecs; ++i )
+		for (i = 1; i <= numecs; ++i)
 			state[i] = 0;
 
 		ds = ++todo_head;
@@ -605,53 +582,57 @@ void ntod()
 		dset = dss[ds];
 		dsize = dfasiz[ds];
 
-		if ( trace )
-			fprintf( stderr, _( "state # %d:\n" ), ds );
+		if (trace)
+			fprintf (stderr, _("state # %d:\n"), ds);
 
-		sympartition( dset, dsize, symlist, duplist );
+		sympartition (dset, dsize, symlist, duplist);
 
-		for ( sym = 1; sym <= numecs; ++sym )
-			{
-			if ( symlist[sym] )
-				{
+		for (sym = 1; sym <= numecs; ++sym) {
+			if (symlist[sym]) {
 				symlist[sym] = 0;
 
-				if ( duplist[sym] == NIL )
-					{
+				if (duplist[sym] == NIL) {
 					/* Symbol has unique out-transitions. */
-					numstates = symfollowset( dset, dsize,
-								sym, nset );
-					nset = epsclosure( nset, &numstates,
-						accset, &nacc, &hashval );
+					numstates =
+						symfollowset (dset, dsize,
+							      sym, nset);
+					nset =
+						epsclosure (nset,
+							    &numstates,
+							    accset, &nacc,
+							    &hashval);
 
-					if ( snstods( nset, numstates, accset,
-						nacc, hashval, &newds ) )
-						{
-						totnst = totnst + numstates;
+					if (snstods
+					    (nset, numstates, accset, nacc,
+					     hashval, &newds)) {
+						totnst =
+							totnst + numstates;
 						++todo_next;
 						numas += nacc;
 
-						if (
-					variable_trailing_context_rules &&
-							nacc > 0 )
-							check_trailing_context(
-								nset, numstates,
-								accset, nacc );
-						}
+						if
+							(variable_trailing_context_rules
+							 && nacc > 0)
+							check_trailing_context
+								(nset,
+								 numstates,
+								 accset,
+								 nacc);
+					}
 
 					state[sym] = newds;
 
-					if ( trace )
-						fprintf( stderr, "\t%d\t%d\n",
-							sym, newds );
+					if (trace)
+						fprintf (stderr,
+							 "\t%d\t%d\n", sym,
+							 newds);
 
 					targfreq[++targptr] = 1;
 					targstate[targptr] = newds;
 					++numuniq;
-					}
+				}
 
-				else
-					{
+				else {
 					/* sym's equivalence class has the same
 					 * transitions as duplist(sym)'s
 					 * equivalence class.
@@ -659,87 +640,83 @@ void ntod()
 					targ = state[duplist[sym]];
 					state[sym] = targ;
 
-					if ( trace )
-						fprintf( stderr, "\t%d\t%d\n",
-							sym, targ );
+					if (trace)
+						fprintf (stderr,
+							 "\t%d\t%d\n", sym,
+							 targ);
 
 					/* Update frequency count for
 					 * destination state.
 					 */
 
 					i = 0;
-					while ( targstate[++i] != targ )
-						;
+					while (targstate[++i] != targ) ;
 
 					++targfreq[i];
 					++numdup;
-					}
+				}
 
 				++totaltrans;
 				duplist[sym] = NIL;
-				}
 			}
+		}
 
-		if ( caseins && ! useecs )
-			{
+		if (caseins && !useecs) {
 			register int j;
 
-			for ( i = 'A', j = 'a'; i <= 'Z'; ++i, ++j )
-				{
-				if ( state[i] == 0 && state[j] != 0 )
+			for (i = 'A', j = 'a'; i <= 'Z'; ++i, ++j) {
+				if (state[i] == 0 && state[j] != 0)
 					/* We're adding a transition. */
 					++totaltrans;
 
-				else if ( state[i] != 0 && state[j] == 0 )
+				else if (state[i] != 0 && state[j] == 0)
 					/* We're taking away a transition. */
 					--totaltrans;
 
 				state[i] = state[j];
-				}
 			}
+		}
 
 		numsnpairs += totaltrans;
 
-		if ( ds > num_start_states )
-			check_for_backing_up( ds, state );
+		if (ds > num_start_states)
+			check_for_backing_up (ds, state);
 
-		if ( nultrans )
-			{
+		if (nultrans) {
 			nultrans[ds] = state[NUL_ec];
 			state[NUL_ec] = 0;	/* remove transition */
-			}
+		}
 
-		if ( fulltbl )
-			{
-			outn( "    {" );
+		if (fulltbl) {
+			outn ("    {");
 
 			/* Supply array's 0-element. */
-			if ( ds == end_of_buffer_state )
-				mk2data( -end_of_buffer_state );
+			if (ds == end_of_buffer_state)
+				mk2data (-end_of_buffer_state);
 			else
-				mk2data( end_of_buffer_state );
+				mk2data (end_of_buffer_state);
 
-			for ( i = 1; i < num_full_table_rows; ++i )
+			for (i = 1; i < num_full_table_rows; ++i)
 				/* Jams are marked by negative of state
 				 * number.
 				 */
-				mk2data( state[i] ? state[i] : -ds );
+				mk2data (state[i] ? state[i] : -ds);
 
-			dataflush();
-			outn( "    },\n" );
-			}
+			dataflush ();
+			outn ("    },\n");
+		}
 
-		else if ( fullspd )
-			place_state( state, ds, totaltrans );
+		else if (fullspd)
+			place_state (state, ds, totaltrans);
 
-		else if ( ds == end_of_buffer_state )
+		else if (ds == end_of_buffer_state)
 			/* Special case this state to make sure it does what
 			 * it's supposed to, i.e., jam on end-of-buffer.
 			 */
-			stack1( ds, 0, 0, JAMSTATE );
+			stack1 (ds, 0, 0, JAMSTATE);
 
-		else /* normal, compressed state */
-			{
+		else {		/* normal, compressed state */
+
 			/* Determine which destination state is the most
 			 * common, and how many transitions to it there are.
 			 */
@@ -747,40 +724,37 @@ void ntod()
 			comfreq = 0;
 			comstate = 0;
 
-			for ( i = 1; i <= targptr; ++i )
-				if ( targfreq[i] > comfreq )
-					{
+			for (i = 1; i <= targptr; ++i)
+				if (targfreq[i] > comfreq) {
 					comfreq = targfreq[i];
 					comstate = targstate[i];
-					}
+				}
 
-			bldtbl( state, ds, totaltrans, comstate, comfreq );
-			}
+			bldtbl (state, ds, totaltrans, comstate, comfreq);
 		}
+	}
 
-	if ( fulltbl )
-		dataend();
+	if (fulltbl)
+		dataend ();
 
-	else if ( ! fullspd )
-		{
-		cmptmps();  /* create compressed template entries */
+	else if (!fullspd) {
+		cmptmps ();	/* create compressed template entries */
 
 		/* Create tables for all the states with only one
 		 * out-transition.
 		 */
-		while ( onesp > 0 )
-			{
-			mk1tbl( onestate[onesp], onesym[onesp], onenext[onesp],
-			onedef[onesp] );
+		while (onesp > 0) {
+			mk1tbl (onestate[onesp], onesym[onesp],
+				onenext[onesp], onedef[onesp]);
 			--onesp;
-			}
-
-		mkdeftbl();
 		}
 
-	flex_free( (void *) accset );
-	flex_free( (void *) nset );
+		mkdeftbl ();
 	}
+
+	flex_free ((void *) accset);
+	flex_free ((void *) nset);
+}
 
 
 /* snstods - converts a set of ndfa states into a dfa state
@@ -793,129 +767,122 @@ void ntod()
  * On return, the dfa state number is in newds.
  */
 
-int snstods( sns, numstates, accset, nacc, hashval, newds_addr )
-int sns[], numstates, accset[], nacc, hashval, *newds_addr;
-	{
-	int didsort = 0;
+int     snstods (sns, numstates, accset, nacc, hashval, newds_addr)
+     int     sns[], numstates, accset[], nacc, hashval, *newds_addr;
+{
+	int     didsort = 0;
 	register int i, j;
-	int newds, *oldsns;
+	int     newds, *oldsns;
 
-	for ( i = 1; i <= lastdfa; ++i )
-		if ( hashval == dhash[i] )
-			{
-			if ( numstates == dfasiz[i] )
-				{
+	for (i = 1; i <= lastdfa; ++i)
+		if (hashval == dhash[i]) {
+			if (numstates == dfasiz[i]) {
 				oldsns = dss[i];
 
-				if ( ! didsort )
-					{
+				if (!didsort) {
 					/* We sort the states in sns so we
 					 * can compare it to oldsns quickly.
 					 * We use bubble because there probably
 					 * aren't very many states.
 					 */
-					bubble( sns, numstates );
+					bubble (sns, numstates);
 					didsort = 1;
-					}
+				}
 
-				for ( j = 1; j <= numstates; ++j )
-					if ( sns[j] != oldsns[j] )
+				for (j = 1; j <= numstates; ++j)
+					if (sns[j] != oldsns[j])
 						break;
 
-				if ( j > numstates )
-					{
+				if (j > numstates) {
 					++dfaeql;
 					*newds_addr = i;
 					return 0;
-					}
+				}
 
 				++hshcol;
-				}
+			}
 
 			else
 				++hshsave;
-			}
+		}
 
 	/* Make a new dfa. */
 
-	if ( ++lastdfa >= current_max_dfas )
-		increase_max_dfas();
+	if (++lastdfa >= current_max_dfas)
+		increase_max_dfas ();
 
 	newds = lastdfa;
 
-	dss[newds] = allocate_integer_array( numstates + 1 );
+	dss[newds] = allocate_integer_array (numstates + 1);
 
 	/* If we haven't already sorted the states in sns, we do so now,
 	 * so that future comparisons with it can be made quickly.
 	 */
 
-	if ( ! didsort )
-		bubble( sns, numstates );
+	if (!didsort)
+		bubble (sns, numstates);
 
-	for ( i = 1; i <= numstates; ++i )
+	for (i = 1; i <= numstates; ++i)
 		dss[newds][i] = sns[i];
 
 	dfasiz[newds] = numstates;
 	dhash[newds] = hashval;
 
-	if ( nacc == 0 )
-		{
-		if ( reject )
+	if (nacc == 0) {
+		if (reject)
 			dfaacc[newds].dfaacc_set = (int *) 0;
 		else
 			dfaacc[newds].dfaacc_state = 0;
 
 		accsiz[newds] = 0;
-		}
+	}
 
-	else if ( reject )
-		{
+	else if (reject) {
 		/* We sort the accepting set in increasing order so the
 		 * disambiguating rule that the first rule listed is considered
 		 * match in the event of ties will work.  We use a bubble
 		 * sort since the list is probably quite small.
 		 */
 
-		bubble( accset, nacc );
+		bubble (accset, nacc);
 
-		dfaacc[newds].dfaacc_set = allocate_integer_array( nacc + 1 );
+		dfaacc[newds].dfaacc_set =
+			allocate_integer_array (nacc + 1);
 
 		/* Save the accepting set for later */
-		for ( i = 1; i <= nacc; ++i )
-			{
+		for (i = 1; i <= nacc; ++i) {
 			dfaacc[newds].dfaacc_set[i] = accset[i];
 
-			if ( accset[i] <= num_rules )
+			if (accset[i] <= num_rules)
 				/* Who knows, perhaps a REJECT can yield
 				 * this rule.
 				 */
 				rule_useful[accset[i]] = true;
-			}
-
-		accsiz[newds] = nacc;
 		}
 
-	else
-		{
+		accsiz[newds] = nacc;
+	}
+
+	else {
 		/* Find lowest numbered rule so the disambiguating rule
 		 * will work.
 		 */
 		j = num_rules + 1;
 
-		for ( i = 1; i <= nacc; ++i )
-			if ( accset[i] < j )
+		for (i = 1; i <= nacc; ++i)
+			if (accset[i] < j)
 				j = accset[i];
 
 		dfaacc[newds].dfaacc_state = j;
 
-		if ( j <= num_rules )
+		if (j <= num_rules)
 			rule_useful[j] = true;
-		}
+	}
 
 	*newds_addr = newds;
 
 	return 1;
-	}
+}
 
 
 /* symfollowset - follow the symbol transitions one step
@@ -925,85 +892,79 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
  *				int transsym, int nset[current_max_dfa_size] );
  */
 
-int symfollowset( ds, dsize, transsym, nset )
-int ds[], dsize, transsym, nset[];
-	{
-	int ns, tsp, sym, i, j, lenccl, ch, numstates, ccllist;
+int     symfollowset (ds, dsize, transsym, nset)
+     int     ds[], dsize, transsym, nset[];
+{
+	int     ns, tsp, sym, i, j, lenccl, ch, numstates, ccllist;
 
 	numstates = 0;
 
-	for ( i = 1; i <= dsize; ++i )
-		{ /* for each nfa state ns in the state set of ds */
+	for (i = 1; i <= dsize; ++i) {	/* for each nfa state ns in the state set of ds */
 		ns = ds[i];
 		sym = transchar[ns];
 		tsp = trans1[ns];
 
-		if ( sym < 0 )
-			{ /* it's a character class */
+		if (sym < 0) {	/* it's a character class */
 			sym = -sym;
 			ccllist = cclmap[sym];
 			lenccl = ccllen[sym];
 
-			if ( cclng[sym] )
-				{
-				for ( j = 0; j < lenccl; ++j )
-					{
+			if (cclng[sym]) {
+				for (j = 0; j < lenccl; ++j) {
 					/* Loop through negated character
 					 * class.
 					 */
 					ch = ccltbl[ccllist + j];
 
-					if ( ch == 0 )
+					if (ch == 0)
 						ch = NUL_ec;
 
-					if ( ch > transsym )
+					if (ch > transsym)
 						/* Transsym isn't in negated
 						 * ccl.
 						 */
 						break;
 
-					else if ( ch == transsym )
-						/* next 2 */ goto bottom;
-					}
+					else if (ch == transsym)
+						/* next 2 */
+						goto bottom;
+				}
 
 				/* Didn't find transsym in ccl. */
 				nset[++numstates] = tsp;
-				}
+			}
 
 			else
-				for ( j = 0; j < lenccl; ++j )
-					{
+				for (j = 0; j < lenccl; ++j) {
 					ch = ccltbl[ccllist + j];
 
-					if ( ch == 0 )
+					if (ch == 0)
 						ch = NUL_ec;
 
-					if ( ch > transsym )
+					if (ch > transsym)
 						break;
-					else if ( ch == transsym )
-						{
+					else if (ch == transsym) {
 						nset[++numstates] = tsp;
 						break;
-						}
 					}
-			}
-
-		else if ( sym >= 'A' && sym <= 'Z' && caseins )
-			flexfatal(
-			_( "consistency check failed in symfollowset" ) );
-
-		else if ( sym == SYM_EPSILON )
-			{ /* do nothing */
-			}
-
-		else if ( ABS( ecgroup[sym] ) == transsym )
-			nset[++numstates] = tsp;
-
-		bottom: ;
+				}
 		}
 
-	return numstates;
+		else if (sym >= 'A' && sym <= 'Z' && caseins)
+			flexfatal (_
+				   ("consistency check failed in symfollowset"));
+
+		else if (sym == SYM_EPSILON) {	/* do nothing */
+		}
+
+		else if (ABS (ecgroup[sym]) == transsym)
+			nset[++numstates] = tsp;
+
+	      bottom:;
 	}
+
+	return numstates;
+}
 
 
 /* sympartition - partition characters with same out-transitions
@@ -1013,86 +974,77 @@ int ds[], dsize, transsym, nset[];
  *			int symlist[numecs], int duplist[numecs] );
  */
 
-void sympartition( ds, numstates, symlist, duplist )
-int ds[], numstates;
-int symlist[], duplist[];
-	{
-	int tch, i, j, k, ns, dupfwd[CSIZE + 1], lenccl, cclp, ich;
+void    sympartition (ds, numstates, symlist, duplist)
+     int     ds[], numstates;
+     int     symlist[], duplist[];
+{
+	int     tch, i, j, k, ns, dupfwd[CSIZE + 1], lenccl, cclp, ich;
 
 	/* Partitioning is done by creating equivalence classes for those
 	 * characters which have out-transitions from the given state.  Thus
 	 * we are really creating equivalence classes of equivalence classes.
 	 */
 
-	for ( i = 1; i <= numecs; ++i )
-		{ /* initialize equivalence class list */
+	for (i = 1; i <= numecs; ++i) {	/* initialize equivalence class list */
 		duplist[i] = i - 1;
 		dupfwd[i] = i + 1;
-		}
+	}
 
 	duplist[1] = NIL;
 	dupfwd[numecs] = NIL;
 
-	for ( i = 1; i <= numstates; ++i )
-		{
+	for (i = 1; i <= numstates; ++i) {
 		ns = ds[i];
 		tch = transchar[ns];
 
-		if ( tch != SYM_EPSILON )
-			{
-			if ( tch < -lastccl || tch >= csize )
-				{
-				flexfatal(
-		_( "bad transition character detected in sympartition()" ) );
-				}
+		if (tch != SYM_EPSILON) {
+			if (tch < -lastccl || tch >= csize) {
+				flexfatal (_
+					   ("bad transition character detected in sympartition()"));
+			}
 
-			if ( tch >= 0 )
-				{ /* character transition */
-				int ec = ecgroup[tch];
+			if (tch >= 0) {	/* character transition */
+				int     ec = ecgroup[tch];
 
-				mkechar( ec, dupfwd, duplist );
+				mkechar (ec, dupfwd, duplist);
 				symlist[ec] = 1;
-				}
+			}
 
-			else
-				{ /* character class */
+			else {	/* character class */
 				tch = -tch;
 
 				lenccl = ccllen[tch];
 				cclp = cclmap[tch];
-				mkeccl( ccltbl + cclp, lenccl, dupfwd,
-					duplist, numecs, NUL_ec );
+				mkeccl (ccltbl + cclp, lenccl, dupfwd,
+					duplist, numecs, NUL_ec);
 
-				if ( cclng[tch] )
-					{
+				if (cclng[tch]) {
 					j = 0;
 
-					for ( k = 0; k < lenccl; ++k )
-						{
+					for (k = 0; k < lenccl; ++k) {
 						ich = ccltbl[cclp + k];
 
-						if ( ich == 0 )
+						if (ich == 0)
 							ich = NUL_ec;
 
-						for ( ++j; j < ich; ++j )
+						for (++j; j < ich; ++j)
 							symlist[j] = 1;
-						}
-
-					for ( ++j; j <= numecs; ++j )
-						symlist[j] = 1;
 					}
 
+					for (++j; j <= numecs; ++j)
+						symlist[j] = 1;
+				}
+
 				else
-					for ( k = 0; k < lenccl; ++k )
-						{
+					for (k = 0; k < lenccl; ++k) {
 						ich = ccltbl[cclp + k];
 
-						if ( ich == 0 )
+						if (ich == 0)
 							ich = NUL_ec;
 
 						symlist[ich] = 1;
-						}
-				}
+					}
 			}
 		}
 	}
+}

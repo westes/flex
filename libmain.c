@@ -21,14 +21,13 @@
 /*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
 /*  PURPOSE. */
 
-extern int yylex();
+extern int yylex ();
 
-int main( argc, argv )
-int argc;
-char *argv[];
-	{
-	while ( yylex() != 0 )
-		;
+int     main (argc, argv)
+     int     argc;
+     char   *argv[];
+{
+	while (yylex () != 0) ;
 
 	return 0;
-	}
+}
