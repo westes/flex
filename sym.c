@@ -1,4 +1,4 @@
-/* flexsym - symbol table routines */
+/* sym - symbol table routines */
 
 /*
  * Copyright (c) 1987, the University of California
@@ -18,21 +18,25 @@ struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
 struct hash_entry *sctbl[START_COND_HASH_SIZE];
 struct hash_entry *ccltab[CCL_HASH_SIZE];
 
+struct hash_entry *findsym();
 
-/* addsym - add symbol and definition to symbol table
+
+/* addsym - add symbol and definitions to symbol table
  *
  * synopsis
- *    char sym[], def[];
+ *    char sym[], *str_def;
+ *    int int_def;
  *    hash_table table;
  *    int table_size;
- *    -1/0 = addsym( sym, def, table, table_size );
+ *    0 / -1 = addsym( sym, def, int_def, table, table_size );
  *
  * -1 is returned if the symbol already exists, and the change not made.
  */
 
-int addsym( sym, def, table, table_size )
+int addsym( sym, str_def, int_def, table, table_size )
 register char sym[];
-char def[];
+char *str_def;
+int int_def;
 hash_table table;
 int table_size;
 
@@ -52,7 +56,7 @@ int table_size;
 	
 	entry = entry->next;
 	}
-    
+
     /* create new entry */
     new_entry = (struct hash_entry *) malloc( sizeof( struct hash_entry ) );
 
@@ -69,7 +73,8 @@ int table_size;
 
     new_entry->prev = NULL;
     new_entry->name = sym;
-    new_entry->val = def;
+    new_entry->str_val = str_def;
+    new_entry->int_val = int_def;
 
     table[hash_val] = new_entry;
 
@@ -95,7 +100,7 @@ int cclnum;
      */
     char *copy_string();
 
-    (void) addsym( copy_string( ccltxt ), (char *) cclnum,
+    (void) addsym( copy_string( ccltxt ), (char *) 0, cclnum,
 		   ccltab, CCL_HASH_SIZE );
     }
 
@@ -112,9 +117,7 @@ int ccllookup( ccltxt )
 char ccltxt[];
 
     {
-    char *getdef();
-
-    return ( (int) getdef( ccltxt, ccltab, CCL_HASH_SIZE ) );
+    return ( findsym( ccltxt, ccltab, CCL_HASH_SIZE )->int_val );
     }
 
 
@@ -135,6 +138,10 @@ int table_size;
 
     {
     register struct hash_entry *entry = table[hashfunct( sym, table_size )];
+    static struct hash_entry empty_entry =
+	{
+	(struct hash_entry *) 0, (struct hash_entry *) 0, NULL, NULL, 0,
+	} ;
 
     while ( entry )
 	{
@@ -143,32 +150,7 @@ int table_size;
 	entry = entry->next;
 	}
 
-    return ( NULL );
-    }
-
-
-/* getdef - get symbol definition from symbol table
- *
- * synopsis
- *    char sym[];
- *    hash_table table;
- *    int table_size;
- *    char *def, *getdef();
- *    def = getdef( sym, table, table_size );
- */
-
-char *getdef( sym, table, table_size )
-register char sym[];
-hash_table table;
-int table_size;
-
-    {
-    register struct hash_entry *entry = findsym( sym, table, table_size );
-
-    if ( entry )
-	return ( entry->val );
-    
-    return ( NULL );
+    return ( &empty_entry );
     }
 
     
@@ -211,7 +193,7 @@ char nd[], def[];
     {
     char *copy_string();
 
-    if ( addsym( copy_string( nd ), copy_string( def ),
+    if ( addsym( copy_string( nd ), copy_string( def ), 0,
 		 ndtbl, NAME_TABLE_HASH_SIZE ) )
 	synerr( "name defined twice" );
     }
@@ -229,9 +211,7 @@ char *ndlookup( nd )
 char nd[];
 
     {
-    char *getdef();
-
-    return ( getdef( nd, ndtbl, NAME_TABLE_HASH_SIZE ) );
+    return ( findsym( nd, ndtbl, NAME_TABLE_HASH_SIZE )->str_val );
     }
 
 
@@ -257,6 +237,10 @@ int xcluflg;
      * declared, and don't put out a define for it, because it
      * would come out as "#define 0 1"
      */
+    /* actually, this is no longer the case.  The default start-condition
+     * is now called "INITIAL".  But we keep the following for the sake
+     * of future robustness.
+     */
 
     if ( strcmp( str, "0" ) )
 	printf( "#define %s %d\n", str, lastsc * 2 );
@@ -273,7 +257,7 @@ int xcluflg;
 	actvsc = reallocate_integer_array( actvsc, current_max_scs );
 	}
 
-    if ( addsym( copy_string( str ), (char *) lastsc,
+    if ( addsym( copy_string( str ), (char *) 0, lastsc,
 	 sctbl, START_COND_HASH_SIZE ) )
 	lerrsf( "start condition %s declared twice", str );
 
@@ -295,5 +279,5 @@ int sclookup( str )
 char str[];
 
     {
-    return ( (int) getdef( str, sctbl, START_COND_HASH_SIZE ) );
+    return ( findsym( str, sctbl, START_COND_HASH_SIZE )->int_val );
     }
