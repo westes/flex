@@ -16,6 +16,9 @@
 
 * repackage the distribution
 
+** address lex-replacement: document or provide an option through
+   configure for creating lex and libl.a files
+
 ** include parse.c and parse.h in distribution
 
 *** remove parse.[ch] from `make clean'
