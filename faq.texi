@@ -144,10 +144,8 @@ the @cite{Software Tools} lex project from Jef Poskanzer in 1982.  At that point
 was written in Ratfor.  Around 1987 or so, Paxson translated it into C, and
 a legend was born :-).
 
-@node  How do I expand \ escape sequences in C-style quoted strings?
+@node How do I expand \ escape sequences in C-style quoted strings?
 @unnumberedsec How do I expand \ escape sequences in C-style quoted strings?
-
-How do I expand \ escape sequences in C-style quoted strings?
 
 A key point when scanning quoted strings is that you cannot (easily) write
 a single rule that will precisely match the string if you allow things
@@ -155,15 +153,15 @@ like embedded escape sequences and newlines.  If you try to match strings
 with a single rule then you'll wind up having to rescan the string anyway
 to find any escape sequences.
 
-Instead you use exclusive start conditions and a set of rules, one for
+Instead you can use exclusive start conditions and a set of rules, one for
 matching non-escaped text, one for matching a single escape, one for
 matching an embedded newline, and one for recognizing the end of the
 string.  Each of these rules is then faced with the question of where to
 put its intermediary results.  The best solution is for the rules to
-append their local value of yytext to the end of a ``string literal''
+append their local value of @code{yytext} to the end of a ``string literal''
 buffer.  A rule like the escape-matcher will append to the buffer the
-meaning of the escape sequence rather than the literal text in yytext.
-In this way, yytext does not need to be modified at all.
+meaning of the escape sequence rather than the literal text in @code{yytext}.
+In this way, @code{yytext} does not need to be modified at all.
 
 @node  Why do flex scanners call fileno if it is not ANSI compatible?
 @unnumberedsec Why do flex scanners call fileno if it is not ANSI compatible?
