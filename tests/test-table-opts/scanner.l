@@ -46,9 +46,13 @@ int main ( int argc, char** argv )
 {
     FILE* fp = NULL;
     void *yyscanner=0;
-#ifdef YY_REENTRANT
+    M4_YY_DECL_GUTS_VAR();
+    
+m4_ifdef( [[M4_YY_REENTRANT]],
+[[
     yylex_init(&yyscanner);
-#endif
+]])
+
 #ifdef YY_TABLES_EXTERNAL
     if((fp  = fopen(argv[1],"r"))== NULL)
         yy_fatal_error("could not open tables file for reading" YY_CALL_LAST_ARG);

@@ -142,6 +142,8 @@ m4preproc_include(`flexint.h')
  */
 #define YY_SC_TO_UI(c) ((unsigned int) (unsigned char) c)
 
+
+
 %if-reentrant
 
 /* An opaque pointer. */
@@ -150,8 +152,10 @@ m4preproc_include(`flexint.h')
 typedef void* yyscan_t;
 #endif
 
+%# Declare yyguts variable
+m4_define( [[M4_YY_DECL_GUTS_VAR]], [[struct yyguts_t * yyg = (struct yyguts_t*)yyscanner]])
 %# For use wherever a Global is accessed or assigned.
-m4_define( [[YY_G]], [[(((struct yyguts_t*)yyscanner)->$1)]])
+m4_define( [[YY_G]], [[yyg->$1]])
 
 %# For use in function prototypes to append the additional argument.
 m4_define( [[YY_PROTO_LAST_ARG]],  [[, yyscan_t yyscanner]])
@@ -189,6 +193,7 @@ int yylex_init YY_PARAMS((yyscan_t* scanner));
 %if-not-reentrant
 
 %# Define these macros to be no-ops.
+m4_define( [[M4_YY_DECL_GUTS_VAR]], [[m4_dnl]])
 m4_define( [[YY_G]], [[($1)]])
 m4_define( [[YY_PROTO_LAST_ARG]])
 m4_define( [[YY_PROTO_ONLY_ARG]],  [[void]])
@@ -955,6 +960,7 @@ YY_DECL
 #   endif
 %endif
 %endif
+    M4_YY_DECL_GUTS_VAR();
 
 %% [7.0] user's declarations go here
 
@@ -1275,6 +1281,7 @@ static int yy_get_next_buffer YYFARGS0(void)
 int yyFlexLexer::yy_get_next_buffer()
 %endif
 	{
+    M4_YY_DECL_GUTS_VAR();
 	register char *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
 	register char *source = YY_G(yytext_ptr);
 	register int number_to_move, i;
@@ -1416,6 +1423,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 	{
 	register yy_state_type yy_current_state;
 	register char *yy_cp;
+    M4_YY_DECL_GUTS_VAR();
 
 %% [15.0] code to get the start state into yy_current_state goes here
 
@@ -1441,6 +1449,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 %endif
 	{
 	register int yy_is_jam;
+    M4_YY_DECL_GUTS_VAR();
 %% [17.0] code to find the next state, and perhaps do backing up, goes here
 
 	return yy_is_jam ? 0 : yy_current_state;
@@ -1456,6 +1465,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 %endif
 	{
 	register char *yy_cp = YY_G(yy_c_buf_p);
+    M4_YY_DECL_GUTS_VAR();
 
 	/* undo effects of setting up yytext */
 	*yy_cp = YY_G(yy_hold_char);
@@ -1511,6 +1521,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 
 	{
 	int c;
+    M4_YY_DECL_GUTS_VAR();
 
 	*YY_G(yy_c_buf_p) = YY_G(yy_hold_char);
 
@@ -1587,6 +1598,8 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
     void yyFlexLexer::yyrestart( std::istream* input_file )
 %endif
 	{
+    M4_YY_DECL_GUTS_VAR();
+
 	if ( ! YY_CURRENT_BUFFER ){
         yyensure_buffer_stack (YY_CALL_ONLY_ARG);
 		YY_CURRENT_BUFFER_LVALUE =
@@ -1604,6 +1617,8 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
     void yyFlexLexer::yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
 %endif
 	{
+    M4_YY_DECL_GUTS_VAR();
+
 	/* TODO. We should be able to replace this entire function body
 	 * with
 	 *		yypop_buffer_state();
@@ -1640,6 +1655,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
     void yyFlexLexer::yy_load_buffer_state()
 %endif
 	{
+    M4_YY_DECL_GUTS_VAR();
 	YY_G(yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_n_chars;
 	YY_G(yytext_ptr) = YY_G(yy_c_buf_p) = YY_CURRENT_BUFFER_LVALUE->yy_buf_pos;
 	yyin = YY_CURRENT_BUFFER_LVALUE->yy_input_file;
@@ -1654,6 +1670,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 %endif
 	{
 	YY_BUFFER_STATE b;
+    M4_YY_DECL_GUTS_VAR();
 
 	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) YY_CALL_LAST_ARG );
 	if ( ! b )
@@ -1682,6 +1699,8 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
     void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
 %endif
 	{
+    M4_YY_DECL_GUTS_VAR();
+
 	if ( ! b )
 		return;
 
@@ -1717,6 +1736,7 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, std::istream* file )
 
 	{
 	int oerrno = errno;
+    M4_YY_DECL_GUTS_VAR();
 
 	yy_flush_buffer( b YY_CALL_LAST_ARG);
 
@@ -1747,6 +1767,7 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, std::istream* file )
     void yyFlexLexer::yy_flush_buffer( YY_BUFFER_STATE b )
 %endif
 	{
+    M4_YY_DECL_GUTS_VAR();
 	if ( ! b )
 		return;
 
@@ -1780,6 +1801,7 @@ void yypush_buffer_state YYFARGS1(YY_BUFFER_STATE,new_buffer)
 void yyFlexLexer::yypush_buffer_state (YY_BUFFER_STATE new_buffer)
 %endif
 {
+    M4_YY_DECL_GUTS_VAR();
 	if (new_buffer == NULL)
 		return;
 
@@ -1817,6 +1839,7 @@ void yypop_buffer_state YYFARGS0(void)
 void yyFlexLexer::yypop_buffer_state (void)
 %endif
 {
+    M4_YY_DECL_GUTS_VAR();
 	if (!YY_CURRENT_BUFFER)
 		return;
 
@@ -1845,6 +1868,7 @@ void yyFlexLexer::yyensure_buffer_stack(void)
 %endif
 {
 	int num_to_alloc;
+    M4_YY_DECL_GUTS_VAR();
 
 	if (!YY_G(yy_buffer_stack)) {
 
@@ -1891,6 +1915,7 @@ m4_ifdef( [[M4_YY_NO_SCAN_BUFFER]],,
 YY_BUFFER_STATE yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 	{
 	YY_BUFFER_STATE b;
+    M4_YY_DECL_GUTS_VAR();
 
 	if ( size < 2 ||
 	     base[size-2] != YY_END_OF_BUFFER_CHAR ||
@@ -1926,6 +1951,7 @@ m4_ifdef( [[M4_YY_NO_SCAN_STRING]],,
 YY_BUFFER_STATE yy_scan_string YYFARGS1( yyconst char *,yy_str)
 	{
 	int len;
+    M4_YY_DECL_GUTS_VAR();
 	for ( len = 0; yy_str[len]; ++len )
 		;
 
@@ -1944,6 +1970,7 @@ YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,bytes, int ,len)
 	char *buf;
 	yy_size_t n;
 	int i;
+    M4_YY_DECL_GUTS_VAR();
 
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = len + 2;
@@ -1980,6 +2007,7 @@ m4_ifdef( [[M4_YY_NO_PUSH_STATE]],,
     void yyFlexLexer::yy_push_state( int new_state )
 %endif
 	{
+    M4_YY_DECL_GUTS_VAR();
 	if ( YY_G(yy_start_stack_ptr) >= YY_G(yy_start_stack_depth) )
 		{
 		yy_size_t new_size;
@@ -2015,6 +2043,7 @@ m4_ifdef( [[M4_YY_NO_POP_STATE]],,
     void yyFlexLexer::yy_pop_state()
 %endif
 	{
+    M4_YY_DECL_GUTS_VAR();
 	if ( --YY_G(yy_start_stack_ptr) < 0 )
 		YY_FATAL_ERROR( "start-condition stack underflow" );
 
@@ -2032,6 +2061,7 @@ m4_ifdef( [[M4_YY_NO_TOP_STATE]],,
     int yyFlexLexer::yy_top_state()
 %endif
 	{
+    M4_YY_DECL_GUTS_VAR();
 	return YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr) - 1];
 	}
 ]])
@@ -2043,6 +2073,7 @@ m4_ifdef( [[M4_YY_NO_TOP_STATE]],,
 %if-c-only
 static void yy_fatal_error YYFARGS1(yyconst char*, msg)
 	{
+    M4_YY_DECL_GUTS_VAR();
 	(void) fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
 	}
@@ -2050,6 +2081,7 @@ static void yy_fatal_error YYFARGS1(yyconst char*, msg)
 %if-c++-only
 void yyFlexLexer::LexerError( yyconst char msg[] )
 	{
+    M4_YY_DECL_GUTS_VAR();
 	std::cerr << msg << std::endl;
 	exit( YY_EXIT_FAILURE );
 	}
@@ -2082,6 +2114,7 @@ m4_ifdef( [[M4_YY_NO_GET_EXTRA]],,
 [[
 YY_EXTRA_TYPE yyget_extra  YYFARGS0(void)
 {
+    M4_YY_DECL_GUTS_VAR();
     return yyextra;
 }
 ]])
@@ -2091,6 +2124,7 @@ m4_ifdef( [[M4_YY_NO_GET_LINENO]],,
 [[
 int yyget_lineno  YYFARGS0(void)
 {
+    M4_YY_DECL_GUTS_VAR();
     return yylineno;
 }
 ]])
@@ -2099,6 +2133,7 @@ m4_ifdef( [[M4_YY_NO_GET_IN]],,
 [[
 FILE *yyget_in  YYFARGS0(void)
 {
+    M4_YY_DECL_GUTS_VAR();
     return yyin;
 }
 ]])
@@ -2107,6 +2142,7 @@ m4_ifdef( [[M4_YY_NO_GET_OUT]],,
 [[
 FILE *yyget_out  YYFARGS0(void)
 {
+    M4_YY_DECL_GUTS_VAR();
     return yyout;
 }
 ]])
@@ -2115,6 +2151,7 @@ m4_ifdef( [[M4_YY_NO_GET_LENG]],,
 [[
 int yyget_leng  YYFARGS0(void)
 {
+    M4_YY_DECL_GUTS_VAR();
     return yyleng;
 }
 ]])
@@ -2123,6 +2160,7 @@ m4_ifdef( [[M4_YY_NO_GET_TEXT]],,
 [[
 char *yyget_text  YYFARGS0(void)
 {
+    M4_YY_DECL_GUTS_VAR();
     return yytext;
 }
 ]])
@@ -2132,6 +2170,7 @@ m4_ifdef( [[M4_YY_NO_SET_EXTRA]],,
 [[
 void yyset_extra YYFARGS1( YY_EXTRA_TYPE ,user_defined)
 {
+    M4_YY_DECL_GUTS_VAR();
     yyextra = user_defined ;
 }
 ]])
@@ -2141,6 +2180,7 @@ m4_ifdef( [[M4_YY_NO_SET_LINENO]],,
 [[
 void yyset_lineno YYFARGS1( int ,line_number)
 {
+    M4_YY_DECL_GUTS_VAR();
     yylineno = line_number;
 }
 ]])
@@ -2150,6 +2190,7 @@ m4_ifdef( [[M4_YY_NO_SET_IN]],,
 [[
 void yyset_in YYFARGS1( FILE * ,in_str)
 {
+    M4_YY_DECL_GUTS_VAR();
     yyin = in_str ;
 }
 ]])
@@ -2158,6 +2199,7 @@ m4_ifdef( [[M4_YY_NO_SET_OUT]],,
 [[
 void yyset_out YYFARGS1( FILE * ,out_str)
 {
+    M4_YY_DECL_GUTS_VAR();
     yyout = out_str ;
 }
 ]])
@@ -2167,6 +2209,7 @@ m4_ifdef( [[M4_YY_NO_GET_DEBUG]],,
 [[
 int yyget_debug  YYFARGS0(void)
 {
+    M4_YY_DECL_GUTS_VAR();
     return yy_flex_debug;
 }
 ]])
@@ -2175,6 +2218,7 @@ m4_ifdef( [[M4_YY_NO_SET_DEBUG]],,
 [[
 void yyset_debug YYFARGS1( int ,bdebug)
 {
+    M4_YY_DECL_GUTS_VAR();
     yy_flex_debug = bdebug ;
 }
 ]])
@@ -2188,6 +2232,7 @@ m4_ifdef( [[M4_YY_NO_GET_LVAL]],,
 [[
 YYSTYPE * yyget_lval  YYFARGS0(void)
 {
+    M4_YY_DECL_GUTS_VAR();
     return yylval;
 }
 ]])
@@ -2196,6 +2241,7 @@ m4_ifdef( [[M4_YY_NO_SET_LVAL]],,
 [[
 void yyset_lval YYFARGS1( YYSTYPE * ,yylvalp)
 {
+    M4_YY_DECL_GUTS_VAR();
     yylval = yylvalp;
 }
 ]])
@@ -2205,6 +2251,7 @@ m4_ifdef( [[M4_YY_NO_GET_LLOC]],,
 [[
 YYLTYPE *yyget_lloc  YYFARGS0(void)
 {
+    M4_YY_DECL_GUTS_VAR();
     return yylloc;
 }
 ]])
@@ -2213,6 +2260,7 @@ m4_ifdef( [[M4_YY_NO_SET_LLOC]],,
 [[
 void yyset_lloc YYFARGS1( YYLTYPE * ,yyllocp)
 {
+    M4_YY_DECL_GUTS_VAR();
     yylloc = yyllocp;
 }
 ]])
@@ -2223,6 +2271,7 @@ void yyset_lloc YYFARGS1( YYLTYPE * ,yyllocp)
 
 static int yy_init_globals YYFARGS0(void)
     {
+    M4_YY_DECL_GUTS_VAR();
     /* Initialization is the same as for the non-reentrant scanner.
        This function is called once per scanner lifetime. */
 
@@ -2306,6 +2355,7 @@ int yylex_init( ptr_yy_globals )
 int yylex_destroy  YYFARGS0(void)
 {
 	int i;
+    M4_YY_DECL_GUTS_VAR();
 
     /* Pop the buffer stack, destroying each element. */
 	while(YY_CURRENT_BUFFER){
@@ -2348,6 +2398,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 static void yy_flex_strncpy YYFARGS3( char*,s1, yyconst char *,s2, int,n)
 	{
 	register int i;
+    M4_YY_DECL_GUTS_VAR();
 	for ( i = 0; i < n; ++i )
 		s1[i] = s2[i];
 	}
@@ -2357,6 +2408,7 @@ static void yy_flex_strncpy YYFARGS3( char*,s1, yyconst char *,s2, int,n)
 static int yy_flex_strlen YYFARGS1( yyconst char *,s)
 	{
 	register int n;
+    M4_YY_DECL_GUTS_VAR();
 	for ( n = 0; s[n]; ++n )
 		;
 
@@ -2368,6 +2420,7 @@ m4_ifdef( [[M4_YY_NO_FLEX_ALLOC]],,
 [[
 void *yyalloc YYFARGS1( yy_size_t ,size)
 	{
+    M4_YY_DECL_GUTS_VAR();
 	return (void *) malloc( size );
 	}
 ]])
@@ -2376,6 +2429,7 @@ m4_ifdef( [[M4_YY_NO_FLEX_REALLOC]],,
 [[
 void *yyrealloc  YYFARGS2( void *,ptr, yy_size_t ,size)
 	{
+    M4_YY_DECL_GUTS_VAR();
 	/* The cast to (char *) in the following accommodates both
 	 * implementations that use char* generic pointers, and those
 	 * that use void* generic pointers.  It works with the latter
@@ -2391,6 +2445,7 @@ m4_ifdef( [[M4_YY_NO_FLEX_FREE]],,
 [[
 void yyfree YYFARGS1( void *,ptr)
 	{
+    M4_YY_DECL_GUTS_VAR();
 	free( (char *) ptr );	/* see yyrealloc() for (char *) cast */
 	}
 ]])
@@ -2437,6 +2492,7 @@ static int yytbl_read32 (void *v, struct yytbl_reader * rd)
 static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *, rd)
 {
     int     bytes;
+    M4_YY_DECL_GUTS_VAR();
     memset (th, 0, sizeof (struct yytbl_hdr));
 
     if (yytbl_read32 (&(th->th_magic), rd) != 0)
@@ -2483,6 +2539,7 @@ static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *
 static struct yytbl_dmap *yytbl_dmap_lookup YYFARGS2(struct yytbl_dmap *, dmap,
                                                       int, id)
 {
+    M4_YY_DECL_GUTS_VAR();
     while (dmap->dm_id)
         if (dmap->dm_id == id)
             return dmap;
@@ -2501,6 +2558,7 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
     struct yytbl_dmap *transdmap=0;
     int     len, i, rv, inner_loop_count;
     void   *p=0;
+    M4_YY_DECL_GUTS_VAR();
 
     memset (&td, 0, sizeof (struct yytbl_data));
 
@@ -2711,6 +2769,7 @@ static int yytbl_fload YYFARGS2(FILE *, fp, const char *, key)
     int rv=0;
     struct yytbl_hdr th;
     struct yytbl_reader rd;
+    M4_YY_DECL_GUTS_VAR();
 
     rd.fp = fp;
     th.th_version = NULL;
@@ -2757,6 +2816,7 @@ return_rv:
 /** Load the DFA tables for this scanner from the given stream.  */
 int yytables_fload YYFARGS1(FILE *, fp)
 {
+    M4_YY_DECL_GUTS_VAR();
     if( yytbl_fload(fp, YYTABLES_NAME YY_CALL_LAST_ARG) != 0)
         return -1;
     return 0;
@@ -2766,6 +2826,7 @@ int yytables_fload YYFARGS1(FILE *, fp)
 int yytables_destroy YYFARGS0(void)
 {   
     struct yytbl_dmap *dmap=0;
+    M4_YY_DECL_GUTS_VAR();
 
     if(!M4_YY_TABLES_VERIFY){
         /* Walk the dmap, freeing the pointers */
@@ -2806,4 +2867,5 @@ int main ()
 	return 0;
 	}
 ]])
+
 %ok-for-header
