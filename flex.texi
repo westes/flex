@@ -4505,7 +4505,7 @@ YY_USER_INIT
 @item
 #line directives
 @item
-%{}'s around actions
+%@{@}'s around actions
 @item
 reentrant C API
 @item
