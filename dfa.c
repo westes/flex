@@ -38,6 +38,14 @@ static char rcsid[] =
 #include "flexdef.h"
 
 
+/* declare functions that have forward references */
+
+void dump_associated_rules PROTO((FILE*, int));
+void dump_transitions PROTO((FILE*, int[]));
+void sympartition PROTO((int[], int, int[], int[]));
+int symfollowset PROTO((int[], int, int, int[]));
+
+
 /* check_for_backtracking - check a DFA state for backtracking
  *
  * synopsis
@@ -49,7 +57,7 @@ static char rcsid[] =
  * associated with this state
  */
 
-check_for_backtracking( ds, state )
+void check_for_backtracking( ds, state )
 int ds;
 int state[];
 
@@ -80,9 +88,7 @@ int state[];
  * synopsis
  *    int nfa_states[num_states+1], num_states;
  *    int accset[nacc+1], nacc;
- *    int check_trailing_context();
- *    true/false = check_trailing_context( nfa_states, num_states,
- *                                         accset, nacc );
+ *    check_trailing_context( nfa_states, num_states, accset, nacc );
  *
  * NOTES
  *    Trailing context is "dangerous" if both the head and the trailing
@@ -98,7 +104,7 @@ int state[];
  *    accset[1 .. nacc] is the list of accepting numbers for the DFA state.
  */
 
-int check_trailing_context( nfa_states, num_states, accset, nacc )
+void check_trailing_context( nfa_states, num_states, accset, nacc )
 int *nfa_states, num_states;
 int *accset;
 register int nacc;
@@ -148,7 +154,7 @@ register int nacc;
  * and writes a report to the given file
  */
 
-dump_associated_rules( file, ds )
+void dump_associated_rules( file, ds )
 FILE *file;
 int ds;
 
@@ -203,7 +209,7 @@ int ds;
  * is done to the given file.
  */
 
-dump_transitions( file, state )
+void dump_transitions( file, state )
 FILE *file;
 int state[];
 
@@ -377,7 +383,7 @@ int *t, *ns_addr, accset[], *nacc_addr, *hv_addr;
 
 /* increase_max_dfas - increase the maximum number of DFAs */
 
-increase_max_dfas()
+void increase_max_dfas()
 
     {
     current_max_dfas += MAX_DFAS_INCREMENT;
@@ -405,7 +411,8 @@ increase_max_dfas()
  *  creates the dfa corresponding to the ndfa we've constructed.  the
  *  dfa starts out in state #1.
  */
-ntod()
+
+void ntod()
 
     {
     int *accset, ds, nacc, newds;
@@ -981,7 +988,7 @@ bottom:
  *    sympartition( ds, numstates, symlist, duplist );
  */
 
-sympartition( ds, numstates, symlist, duplist )
+void sympartition( ds, numstates, symlist, duplist )
 int ds[], numstates, duplist[];
 int symlist[];
 
