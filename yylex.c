@@ -109,10 +109,6 @@ int yylex()
 				fputs( "%x", stderr );
 				break;
 
-			case WHITESPACE:
-				(void) putc( ' ', stderr );
-				break;
-
 			case SECTEND:
 				fputs( "%%\n", stderr );
 
