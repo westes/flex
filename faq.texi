@@ -70,9 +70,8 @@
 * Why doesn't flex have non-greedy operators like perl does?::
 * Memory leak - 16386 bytes allocated by malloc.::
 * How do I track the byte offset for lseek()?::
-* unnamed-faq-1::
 * unnamed-faq-16::
-* unnamed-faq-22::
+* How do I skip as many chars as possible?::
 * unnamed-faq-33::
 * unnamed-faq-42::
 * unnamed-faq-43::
@@ -879,102 +878,6 @@ example,
 yyless(), unput(), or input().)
 
 @c TODO: Evaluate this faq.
-@c TODO: Evaluate this faq.
-@node unnamed-faq-1
-@unnumberedsec unnamed-faq-1
-@example
-@verbatim
-Return-Path: mdonahue@neptune.convex.com
-Received: from 130.168.1.1 by horse.ee.lbl.gov for vern (5.65/1.41)
-	id AA06605; Tue, 7 Jul 92 13:00:27 -0700
-Received: from neptune.convex.com by convex.convex.com (5.64/1.35)
-	id AA13737; Tue, 7 Jul 92 14:24:28 -0500
-Received: by neptune.convex.com (5.64/1.28)
-	id AA27330; Tue, 7 Jul 92 14:24:23 -0500
-From: mdonahue@neptune.convex.com (Mike Donahue)
-Message-Id: <9207071924.AA27330@neptune.convex.com>
-Subject: Re: Flex and Multiple Parsers
-To: vern@horse.ee.lbl.gov (Vern Paxson)
-Date: Tue, 7 Jul 92 14:24:22 CDT
-In-Reply-To: <9207021608.AA25669@horse.ee.lbl.gov>; from "Vern Paxson" at Jul 2, 92 9:08 am
-X-Mailer: ELM [version 2.3 PL11]
-
-
- Thanks for your help, actually my solution ended up being 
- quite different. let me further describe my problem and
- its solution to you just in case someone else has this problem.
-
- Basically we have a library of parsers (I think there are 15).
- Most programs we write also have several of there own parsers and
- call some of the routines in the library.  Therefore each program
- must be able to have several parsers.
-
- To this end I simply changed all the subroutines in the skel file
- to static (just the subroutines)
-
- We have parsers that start parsing a file and find a section that
- needs to be parsed by a library parser (the same file) therefore
- the file pointer and a state must be passed into the new parser
- or the file pointer and state buffers must be global declarations
- (the solution we use in the previous flex and now the new one)
-
- Because the parsers are working on the same file declaring
-  yyout, yytoken, yyin, yytext, and yylen
- and the other variables as static does not work, so I declared each
- as and extern and local(therefore making those variable available to
- all parsers)
-
- I.E.
-
- extern YYCHAR yytext;
- YYCHAR yytext;
-
- The solution is still not yet complete, now there are compiler conflicts
- with the variables that need start states (yy_init, yy_c_buf_p, ...)
- and if these are static each parser will try to re_init since yy_init
- will be set to 1 in every parser.  The solution here was to get rid
- of these declarations and make these variables global to all parsers
- as well (see above).  Now the user must initialize the variables,
- an easy way to do this was to change yyrestart and call it after opening
- a new file for reading :
-
-static void yyrestart( input_file )
-    {
-    /* Below 3 added by MJD for multiple interactive parsers */
-    yy_c_buf_p = (YY_CHAR *) 0;
-    yy_init = 1;        /* whether we need to initialize */
-    yy_start = 0;   /* start state number */
-
-    /* Below 2 added by MJD for multiple interactive parsers */
-    if (!input_file) return;
-    if (!yy_current_buffer) return;
-
-    yy_init_buffer( yy_current_buffer, input_file );
-    yy_load_buffer_state();
-
-    }
-
-I also added a routine called yyopenfile (this is actually in our
-library, not in the skeleton), which opens a file, does the restart
-and sets yyin to the new file pointer, returning a NULL if unsuccessful.
-If this routine is used by all the parsers to open a new file then
-the changes are transparent.
-
-
-Anyways, to make a long story short that has got us going with the new 
-flex and  if anyone else is having trouble with a similar problem
-feel free to give them this solution.
-
-Thanks for your help and the effort you have put in providing flex,
-it is an excellent tool.
-
-Mike
-
-
-@end verbatim
-@end example
-
-@c TODO: Evaluate this faq.
 @node unnamed-faq-16
 @unnumberedsec unnamed-faq-16
 @example
@@ -1003,45 +906,45 @@ in sight), then this sort of thing should become much easier.
 @end verbatim
 @end example
 
-@c TODO: Evaluate this faq.
-@node unnamed-faq-22
-@unnumberedsec unnamed-faq-22
+@node How do I skip as many chars as possible?
+@unnumberedsec How do I skip as many chars as possible?
+
+How do I skip as many chars as possible -- without interfering with the other
+patterns?
+
+In the example below, we want to skip over characters until we see the phrase
+"endskip". The following will @emph{NOT} work correctly (do you see why not?)
+   
 @example
 @verbatim
-To: matute@emf.net
-Subject: Re: Question
-In-reply-to: Your message of Mon, 15 May 95 11:32:12 PDT.
-Date: Mon, 15 May 95 17:03:25 PDT
-From: Vern Paxson <vern>
+  /* INCORRECT SCANNER */
+%x SKIP
+%%
+<INITIAL>startskip   BEGIN(SKIP);
+...
+<SKIP>"endskip"       BEGIN(INITIAL);
+<SKIP>.*             ;
+@end verbatim
+@end example
 
-> %x SKIP
-> ...
-> 
-> <SKIP>"endofit"	 { BEGIN(INITIAL); }
-> <SKIP>.*	;
-> <SKIP>\n	lineno++;
-
+The problem is that the pattern .* will eat up the word "endskip."
 The simplest (but slow) fix is:
 
-<SKIP>"endofit"	 { BEGIN(INITIAL); }
-<SKIP>.	
-<SKIP>\n	lineno++;
+@example
+@verbatim
+<SKIP>"endskip"      BEGIN(INITIAL);
+<SKIP>.              ;
+@end verbatim
+@end example
 
-The better fixes all involve making the second rule match more, without
-making it match "endofit" plus something else.  So for example:
+The fix involves making the second rule match more, without
+making it match "endskip" plus something else.  So for example:
 
-<SKIP>"endofit"	 { BEGIN(INITIAL); }
-<SKIP>.{1,7}
-<SKIP>\n	lineno++;
-
-or
-
-<SKIP>"endofit"	 { BEGIN(INITIAL); }
-<SKIP>[^e\n]+
-<SKIP>.		/* so you eat up e's, too */
-<SKIP>\n	lineno++;
-
-- Vern
+@example
+@verbatim
+<SKIP>"endskip"     BEGIN(INITIAL);
+<SKIP>[^e]+         ;
+<SKIP>.		        ;/* so you eat up e's, too */
 @end verbatim
 @end example
 
