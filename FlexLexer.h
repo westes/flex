@@ -67,7 +67,7 @@ public:
 	virtual int yylex() = 0;
 
 	// Call yylex with new input/output sources.
-	int yylex( istream* new_in = 0, ostream* new_out = 0 )
+	int yylex( istream* new_in, ostream* new_out = 0 )
 		{
 		switch_streams( new_in, new_out );
 		return yylex();
