@@ -4048,7 +4048,7 @@ The precedence of the @samp{@{,@}} (numeric range) operator is
 different.  @code{lex} interprets @samp{abc@{1,3@}} as match one, two,
 or three occurrences of @samp{abc}'', whereas @code{flex} interprets it
 as ``match @samp{ab} followed by one, two, or three occurrences of
-@samp{c}''.  The latter is in agreement with the POSIX specification.
+@samp{c}''.  The former is in agreement with the POSIX specification.
 
 @item 
 The precedence of the @samp{^} operator is different.  @code{lex}
