@@ -3,6 +3,10 @@ This is flex, the fast lexical analyzer generator.
 flex is a tool for generating scanners: programs which recognize
 lexical patterns in text.
 
+The latest official release of flex can be found at:
+
+ftp://ftp.ee.lbl.gov/
+
 Note that flex is distributed under a copyright very similar to that of
 BSD Unix, and not under the GNU General Public License (GPL).
 
