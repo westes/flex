@@ -3,6 +3,18 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* after version 2.5.15
+
+** some more portability fixes were made
+
+** %options and invocation sections of manual merged
+
+** a c++ test was added to the test suite
+
+** we're trying to clean up more files in the test suite's make clean
+   targets
+
+
 * version 2.5.15 released 2002-8-21
 
 ** reject-state buffer is now dynamically allocated and REJECT buffer
