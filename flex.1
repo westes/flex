@@ -2466,7 +2466,18 @@ reads up to
 characters into
 .B buf
 and returns the number of characters read.  To indicate end-of-input,
-return 0 characters.
+return 0 characters.  Note that "interactive" scanners (see the
+.B \-B
+and
+.B \-I
+flags) define the macro
+.B YY_INTERACTIVE.
+If you redefine
+.B LexerInput()
+and need to take different actions depending on whether or not
+the scanner might be scanning an interactive input source, you can
+test for the presence of this name via
+.B #ifdef.
 .TP
 .B
 virtual void LexerOutput( const char* buf, int size )
