@@ -123,7 +123,7 @@ DIST_SUBDIRS = \
 	tests
 
 localedir = $(datadir)/locale
-INCLUDES = -DLOCALEDIR=\"$(localedir)\" -I@includedir@
+INCLUDES = -DLOCALEDIR=\"$(localedir)\" -I@includedir@ -I$(top_srcdir)/intl
 LIBS = @LIBINTL@ @LIBS@
 
 skel.c: flex.skl mkskel.sh
