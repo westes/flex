@@ -23,62 +23,15 @@ static char rcsid[] =
  *
  * synopsis
  *
- *   add_accept( mach, headcnt, trailcnt );
+ *   add_accept( mach, accepting_number );
  *
- * the global ACCNUM is incremented and the new value becomes mach's
- * accepting number.  if headcnt or trailcnt is non-zero then the machine
- * recognizes a pattern with trailing context.  headcnt is the number of
- * characters in the matched part of the pattern, or zero if the matched
- * part has variable length.  trailcnt is the number of trailing context
- * characters in the pattern, or zero if the trailing context has variable
- * length.
+ * accepting_number becomes mach's accepting number.
  */
 
-add_accept( mach, headcnt, trailcnt )
-int mach, headcnt, trailcnt;
+add_accept( mach, accepting_number )
+int mach;
 
     {
-    int astate;
-
-    fprintf( temp_action_file, "case %d:\n", ++accnum );
-
-    if ( headcnt > 0 || trailcnt > 0 )
-	{ /* do trailing context magic to not match the trailing characters */
-	char *scanner_cp =
-	    (fulltbl || fullspd) ? "yy_c_buf_p = yy_cp" : "yy_c_buf_p";
-	char *scanner_bp = (fulltbl || fullspd) ? "yy_bp" : "yy_b_buf_p";
-
-	fprintf( temp_action_file,
-	    "YY_DO_BEFORE_SCAN; /* undo effects of setting up yytext */\n" );
-
-	if ( headcnt > 0 )
-	    {
-	    int head_offset = headcnt - 1;
-
-	    if ( fullspd || fulltbl )
-		/* with the fast skeleton, the character pointer points
-		 * to the *next* character to scan, rather than the one
-		 * that was last scanned
-		 */
-		++head_offset;
-
-	    if ( head_offset > 0 )
-		fprintf( temp_action_file, "%s = %s + %d;\n",
-			 scanner_cp, scanner_bp, head_offset );
-
-	    else
-		fprintf( temp_action_file, "%s = %s;\n",
-			 scanner_cp, scanner_bp );
-	    }
-
-	else
-	    fprintf( temp_action_file, "%s -= %d;\n", scanner_cp, trailcnt );
-    
-	fprintf( temp_action_file, "YY_DO_BEFORE_ACTION; /* set up yytext again */\n" );
-	}
-
-    line_directive_out( temp_action_file );
-
     /* hang the accepting number off an epsilon state.  if it is associated
      * with a state that has a non-epsilon out-transition, then the state
      * will accept BEFORE it makes that transition, i.e., one character
@@ -86,12 +39,12 @@ int mach, headcnt, trailcnt;
      */
 
     if ( transchar[finalst[mach]] == SYM_EPSILON )
-	accptnum[finalst[mach]] = accnum;
+	accptnum[finalst[mach]] = accepting_number;
 
     else
 	{
-	astate = mkstate( SYM_EPSILON );
-	accptnum[astate] = accnum;
+	int astate = mkstate( SYM_EPSILON );
+	accptnum[astate] = accepting_number;
 	mach = link_machines( mach, astate );
 	}
     }
@@ -215,6 +168,82 @@ int mach;
     return ( init );
     }
 
+/* finish_rule - finish up the processing for a rule
+ *
+ * synopsis
+ *
+ *   finish_rule( mach, variable_trail_rule, headcnt, trailcnt );
+ *
+ * An accepting number is added to the given machine.  If variable_trail_rule
+ * is true then the rule has trailing context and both the head and trail
+ * are variable size.  Otherwise if headcnt or trailcnt is non-zero then
+ * the machine recognizes a pattern with trailing context and headcnt is
+ * the number of characters in the matched part of the pattern, or zero
+ * if the matched part has variable length.  trailcnt is the number of
+ * trailing context characters in the pattern, or zero if the trailing
+ * context has variable length.
+ */
+
+finish_rule( mach, variable_trail_rule, headcnt, trailcnt )
+int mach, variable_trail_rule, headcnt, trailcnt;
+
+    {
+    add_accept( mach, num_rules );
+
+    /* we did this in new_rule(), but it often gets the wrong
+     * number because we do it before we start parsing the current rule
+     */
+    rule_type[num_rules] = linenum;
+
+    fprintf( temp_action_file, "case %d:\n", num_rules );
+
+    if ( variable_trail_rule )
+	{
+	rule_type[num_rules] = RULE_VARIABLE;
+
+	if ( performance_report )
+	    fprintf( stderr, "Variable trailing context rule at line %d\n",
+		     rule_linenum[num_rules] );
+
+	variable_trailing_context_rules = true;
+	}
+
+    else
+	{
+	rule_type[num_rules] = RULE_NORMAL;
+
+	if ( headcnt > 0 || trailcnt > 0 )
+	    {
+	    /* do trailing context magic to not match the trailing characters */
+	    char *scanner_cp = "yy_c_buf_p = yy_cp";
+	    char *scanner_bp = "yy_bp";
+
+	    fprintf( temp_action_file,
+	"*yy_cp = yy_hold_char; /* undo effects of setting up yytext */\n" );
+
+	    if ( headcnt > 0 )
+		{
+		if ( headcnt > 0 )
+		    fprintf( temp_action_file, "%s = %s + %d;\n",
+			     scanner_cp, scanner_bp, headcnt );
+
+		else
+		    fprintf( temp_action_file, "%s = %s;\n",
+			     scanner_cp, scanner_bp );
+		}
+
+	    else
+		fprintf( temp_action_file,
+			 "%s -= %d;\n", scanner_cp, trailcnt );
+	
+	    fprintf( temp_action_file,
+		     "YY_DO_BEFORE_ACTION; /* set up yytext again */\n" );
+	    }
+	}
+
+    line_directive_out( temp_action_file );
+    }
+
 
 /* link_machines - connect two machines together
  *
@@ -250,6 +279,49 @@ int first, last;
 	firstst[first] = min( firstst[first], firstst[last] );
 
 	return ( first );
+	}
+    }
+
+
+/* mark_beginning_as_normal - mark each "beginning" state in a machine
+ *                            as being a "normal" (i.e., not trailing context-
+ *                            associated) states
+ *
+ * synopsis
+ *
+ *   mark_beginning_as_normal( mach )
+ *
+ *     mach - machine to mark
+ *
+ * The "beginning" states are the epsilon closure of the first state
+ */
+
+mark_beginning_as_normal( mach )
+register int mach;
+
+    {
+    switch ( state_type[mach] )
+	{
+	case STATE_NORMAL:
+	    /* oh, we've already visited here */
+	    return;
+
+	case STATE_TRAILING_CONTEXT:
+	    state_type[mach] = STATE_NORMAL;
+
+	    if ( transchar[mach] == SYM_EPSILON )
+		{
+		if ( trans1[mach] != NO_TRANSITION )
+		    mark_beginning_as_normal( trans1[mach] );
+
+		if ( trans2[mach] != NO_TRANSITION )
+		    mark_beginning_as_normal( trans2[mach] );
+		}
+	    break;
+
+	default:
+	    flexerror( "bad state type in mark_beginning_as_normal()" );
+	    break;
 	}
     }
 
@@ -456,14 +528,15 @@ int mkrep( mach, lb, ub )
 int mach, lb, ub;
 
     {
-    int base, tail, copy, i;
+    int base_mach, tail, copy, i;
 
-    base = copysingl( mach, lb - 1 );
+    base_mach = copysingl( mach, lb - 1 );
 
     if ( ub == INFINITY )
 	{
 	copy = dupmachine( mach );
-	mach = link_machines( mach, link_machines( base, mkclos( copy ) ) );
+	mach = link_machines( mach,
+			      link_machines( base_mach, mkclos( copy ) ) );
 	}
 
     else
@@ -476,7 +549,7 @@ int mach, lb, ub;
 	    tail = mkopt( link_machines( copy, tail ) );
 	    }
 
-	mach = link_machines( mach, link_machines( base, tail ) );
+	mach = link_machines( mach, link_machines( base_mach, tail ) );
 	}
 
     return ( mach );
@@ -519,6 +592,7 @@ int sym;
 	trans2 = reallocate_integer_array( trans2, current_mns );
 	accptnum = reallocate_integer_array( accptnum, current_mns );
 	assoc_rule = reallocate_integer_array( assoc_rule, current_mns );
+	state_type = reallocate_integer_array( state_type, current_mns );
 	}
 
     firstst[lastnfa] = lastnfa;
@@ -528,7 +602,8 @@ int sym;
     trans1[lastnfa] = NO_TRANSITION;
     trans2[lastnfa] = NO_TRANSITION;
     accptnum[lastnfa] = NIL;
-    assoc_rule[lastnfa] = linenum; /* identify rules by line number in input */
+    assoc_rule[lastnfa] = num_rules;
+    state_type[lastnfa] = current_state_type;
 
     /* fix up equivalence classes base on this transition.  Note that any
      * character which has its own transition gets its own equivalence class.
@@ -584,4 +659,32 @@ int statefrom, stateto;
 	++eps2;
 	trans2[statefrom] = stateto;
 	}
+    }
+
+/* new_rule - initialize for a new rule
+ *
+ * synopsis
+ *
+ *   new_rule();
+ *
+ * the global num_rules is incremented and the any corresponding dynamic
+ * arrays (such as rule_type[]) are grown as needed.
+ */
+
+new_rule()
+
+    {
+    if ( ++num_rules >= current_max_rules )
+	{
+	++num_reallocs;
+	current_max_rules += MAX_RULES_INCREMENT;
+	rule_type = reallocate_integer_array( rule_type, current_max_rules );
+	rule_linenum =
+	    reallocate_integer_array( rule_linenum, current_max_rules );
+	}
+
+    if ( num_rules > MAX_RULE )
+	lerrif( "too many rules (> %d)!", MAX_RULE );
+
+    rule_linenum[num_rules] = linenum;
     }

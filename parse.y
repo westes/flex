@@ -24,7 +24,7 @@ static char rcsid[] =
 #endif
 
 int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, actvp, rulelen;
-int trlcontxt, xcluflg, cclsorted, varlength;
+int trlcontxt, xcluflg, cclsorted, varlength, variable_trail_rule;
 char clower();
 
 static int madeany = false;  /* whether we've made the '.' character class */
@@ -32,7 +32,7 @@ static int madeany = false;  /* whether we've made the '.' character class */
 %}
 
 %%
-goal            :  initlex sect1 sect1end sect2
+goal            :  initlex sect1 sect1end sect2 initforrule
 			{ /* add default rule */
 			int def_rule;
 
@@ -41,13 +41,18 @@ goal            :  initlex sect1 sect1end sect2
 
 			def_rule = mkstate( -pat );
 
-			add_accept( def_rule, 0, 0 );
+			finish_rule( def_rule, variable_trail_rule, 0, 0 );
 
 			for ( i = 1; i <= lastsc; ++i )
 			    scset[i] = mkbranch( scset[i], def_rule );
 
-			fputs( "YY_DEFAULT_ACTION;\n\tYY_BREAK\n",
-			       temp_action_file );
+			if ( spprdflt )
+			    fputs( "YY_FATAL_ERROR( \"flex scanner jammed\" )",
+				   temp_action_file );
+			else
+			    fputs( "ECHO", temp_action_file );
+
+			fputs( ";\n\tYY_BREAK\n", temp_action_file );
 			}
 		;
 
@@ -100,25 +105,38 @@ sect2           :  sect2 initforrule flexrule '\n'
 initforrule     :
 			{
 			/* initialize for a parse of one rule */
-			trlcontxt = varlength = false;
+			trlcontxt = variable_trail_rule = varlength = false;
 			trailcnt = headcnt = rulelen = 0;
+			current_state_type = STATE_NORMAL;
+			new_rule();
 			}
 		;
 
 flexrule        :  scon '^' re eol 
                         {
 			pat = link_machines( $3, $4 );
-			add_accept( pat, headcnt, trailcnt );
+			finish_rule( pat, variable_trail_rule,
+				     headcnt, trailcnt );
 
 			for ( i = 1; i <= actvp; ++i )
 			    scbol[actvsc[i]] =
 				mkbranch( scbol[actvsc[i]], pat );
+
+			if ( ! bol_needed )
+			    {
+			    bol_needed = true;
+
+			    if ( performance_report )
+				fprintf( stderr,
+			"'^' operator results in sub-optimal performance\n" );
+			    }
 			}
 
 		|  scon re eol 
                         {
 			pat = link_machines( $2, $3 );
-			add_accept( pat, headcnt, trailcnt );
+			finish_rule( pat, variable_trail_rule,
+				     headcnt, trailcnt );
 
 			for ( i = 1; i <= actvp; ++i )
 			    scset[actvsc[i]] = 
@@ -128,7 +146,8 @@ flexrule        :  scon '^' re eol
                 |  '^' re eol 
 			{
 			pat = link_machines( $2, $3 );
-			add_accept( pat, headcnt, trailcnt );
+			finish_rule( pat, variable_trail_rule,
+				     headcnt, trailcnt );
 
 			/* add to all non-exclusive start conditions,
 			 * including the default (0) start condition
@@ -137,12 +156,22 @@ flexrule        :  scon '^' re eol
 			for ( i = 1; i <= lastsc; ++i )
 			    if ( ! scxclu[i] )
 				scbol[i] = mkbranch( scbol[i], pat );
+
+			if ( ! bol_needed )
+			    {
+			    bol_needed = true;
+
+			    if ( performance_report )
+				fprintf( stderr,
+			"'^' operator results in sub-optimal performance\n" );
+			    }
 			}
 
                 |  re eol 
 			{
 			pat = link_machines( $1, $2 );
-			add_accept( pat, headcnt, trailcnt );
+			finish_rule( pat, variable_trail_rule,
+				     headcnt, trailcnt );
 
 			for ( i = 1; i <= lastsc; ++i )
 			    if ( ! scxclu[i] )
@@ -207,8 +236,7 @@ eol             :  '$'
 			    {
 			    if ( varlength && headcnt == 0 )
 				/* both head and trail are variable-length */
-				synerr( "illegal trailing context" );
-
+				variable_trail_rule = true;
 			    else
 				trailcnt = rulelen;
 			    }
@@ -223,7 +251,33 @@ re              :  re '|' series
 			}
 
 		|  re2 series
-			{ $$ = link_machines( $1, $2 ); }
+			{
+			if ( transchar[lastst[$2]] != SYM_EPSILON )
+			    /* provide final transition \now/ so it
+			     * will be marked as a trailing context
+			     * state
+			     */
+			    $2 = link_machines( $2, mkstate( SYM_EPSILON ) );
+
+			mark_beginning_as_normal( $2 );
+			current_state_type = STATE_NORMAL;
+
+			if ( varlength && headcnt == 0 )
+			    { /* variable trailing context rule */
+			    /* mark the first part of the rule as the accepting
+			     * "head" part of a trailing context rule
+			     */
+			    /* by the way, we didn't do this at the beginning
+			     * of this production because back then
+			     * current_state_type was set up for a trail
+			     * rule, and add_accept() can create a new
+			     * state ...
+			     */
+			    add_accept( $1, num_rules | YY_TRAILING_HEAD_MASK );
+			    }
+
+			$$ = link_machines( $1, $2 );
+			}
 
 		|  series
 			{ $$ = $1; }
@@ -243,12 +297,14 @@ re2		:  re '/'
 			    trlcontxt = true;
 
 			if ( varlength )
-			    /* the trailing context had better be fixed-length */
+			    /* we hope the trailing context is fixed-length */
 			    varlength = false;
 			else
 			    headcnt = rulelen;
 
 			rulelen = 0;
+
+			current_state_type = STATE_TRAILING_CONTEXT;
 			$$ = $1;
 			}
 		;
@@ -290,13 +346,18 @@ singleton       :  singleton '*'
 			{
 			varlength = true;
 
-			if ( $3 > $5 || $3 <= 0 )
+			if ( $3 > $5 || $3 < 0 )
 			    {
 			    synerr( "bad iteration values" );
 			    $$ = $1;
 			    }
 			else
-			    $$ = mkrep( $1, $3, $5 );
+			    {
+			    if ( $3 == 0 )
+				$$ = mkopt( mkrep( $1, $3, $5 ) );
+			    else
+				$$ = mkrep( $1, $3, $5 );
+			    }
 			}
 				
 		|  singleton '{' NUMBER ',' '}'
@@ -491,7 +552,7 @@ char str[];
 
     {
     syntaxerror = true;
-    fprintf( stderr, "Syntax error at line %d:  %s\n", linenum, str );
+    fprintf( stderr, "Syntax error at line %d: %s\n", linenum, str );
     }
 
 
