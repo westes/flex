@@ -76,7 +76,7 @@ NOT_WS		[^ \t\f\n]
 NL		\n|\r\n|\n\r
 
 NAME		[a-z_][a-z_0-9-]*
-NOT_NAME	[^a-z_\n]+
+NOT_NAME	[^a-z_*\n]+
 
 SCNAME		{NAME}
 
@@ -113,8 +113,8 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 			return SECTEND;
 			}
 
-^"%pointer"		yytext_is_array = false;
-^"%array"		yytext_is_array = true;
+^"%pointer".*\n		++linenum; yytext_is_array = false;
+^"%array".*\n		++linenum; yytext_is_array = true;
 
 ^"%used"		{
 			warn( "%used/%unused have been deprecated" );
@@ -401,6 +401,7 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 <BRACEERROR>{NL}	synerr( "missing }" ); ++linenum; BEGIN(SECT2);
 
 
+<CODEBLOCK_2>"/*"	ACTION_ECHO; BEGIN(ACTION_COMMENT);
 <PERCENT_BRACE_ACTION,CODEBLOCK_2>{OPTWS}"%}".*		bracelevel = 0;
 <PERCENT_BRACE_ACTION,CODEBLOCK_2,ACTION>"reject"	{
 			ACTION_ECHO;
@@ -445,10 +446,17 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 			}
 <ACTION>.		ACTION_ECHO;
 
-<ACTION_COMMENT>"*/"	ACTION_ECHO; BEGIN(ACTION);
-<ACTION_COMMENT>[^*\n]+	ACTION_ECHO;
+<ACTION_COMMENT>"*/"	{
+			ACTION_ECHO;
+			if ( doing_codeblock )
+			    BEGIN(CODEBLOCK_2);
+			else
+			    BEGIN(ACTION);
+			}
+
 <ACTION_COMMENT>"*"	ACTION_ECHO;
-<ACTION_COMMENT>{NL}	++linenum; ACTION_ECHO;
+<ACTION_COMMENT>[^*\n]+	ACTION_ECHO;
+<ACTION_COMMENT>[^*\n]*{NL}	++linenum; ACTION_ECHO;
 
 <ACTION_STRING>[^"\\\n]+	ACTION_ECHO;
 <ACTION_STRING>\\.	ACTION_ECHO;
