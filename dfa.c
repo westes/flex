@@ -390,7 +390,7 @@ void ntod ()
 	int     todo_head, todo_next;
 
 	struct yytbl_data *yynxt_tbl = 0;
-	int32_t *yynxt_data = 0, yynxt_curr = 0;
+	flex_int32_t *yynxt_data = 0, yynxt_curr = 0;
 
 	/* Note that the following are indexed by *equivalence classes*
 	 * and not by characters.  Since equivalence classes are indexed
@@ -529,14 +529,14 @@ void ntod ()
 		yynxt_tbl->td_hilen = 1;
 		yynxt_tbl->td_lolen = num_full_table_rows;
 		yynxt_tbl->td_data = yynxt_data =
-			(int32_t *) calloc (yynxt_tbl->td_lolen *
+			(flex_int32_t *) calloc (yynxt_tbl->td_lolen *
 					    yynxt_tbl->td_hilen,
-					    sizeof (int32_t));
+					    sizeof (flex_int32_t));
 		yynxt_curr = 0;
 
 		buf_prints (&yydmap_buf,
 			    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
-			    long_align ? "int32_t" : "int16_t");
+			    long_align ? "flex_int32_t" : "flex_int16_t");
 
 		/* Unless -Ca, declare it "short" because it's a real
 		 * long-shot that that won't be large enough.
@@ -544,12 +544,12 @@ void ntod ()
 		if (gentables)
 			out_str_dec
 				("static yyconst %s yy_nxt[][%d] =\n    {\n",
-				 long_align ? "int32_t" : "int16_t",
+				 long_align ? "flex_int32_t" : "flex_int16_t",
 				 num_full_table_rows);
 		else {
 			out_dec ("#undef YY_NXT_LOLEN\n#define YY_NXT_LOLEN (%d)\n", num_full_table_rows);
 			out_str ("static yyconst %s *yy_nxt =0;\n",
-				 long_align ? "int32_t" : "int16_t");
+				 long_align ? "flex_int32_t" : "flex_int16_t");
 		}
 
 
@@ -728,10 +728,10 @@ void ntod ()
 			/* Each time we hit here, it's another td_hilen, so we realloc. */
 			yynxt_tbl->td_hilen++;
 			yynxt_tbl->td_data = yynxt_data =
-				(int32_t *) realloc (yynxt_data,
+				(flex_int32_t *) realloc (yynxt_data,
 						     yynxt_tbl->td_hilen *
 						     yynxt_tbl->td_lolen *
-						     sizeof (int32_t));
+						     sizeof (flex_int32_t));
 
 
 			if (gentables)

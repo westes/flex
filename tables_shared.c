@@ -55,9 +55,9 @@ dnl
  *  @param td the table 
  *  @return the number of integers in the table
  */
-yyskel_static int32_t yytbl_calc_total_len (const struct yytbl_data *tbl)
+yyskel_static flex_int32_t yytbl_calc_total_len (const struct yytbl_data *tbl)
 {
-	int32_t n;
+	flex_int32_t n;
 
 	/* total number of ints */
 	n = tbl->td_lolen;
