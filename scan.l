@@ -71,22 +71,22 @@
 %x FIRSTCCL CCL ACTION RECOVER COMMENT ACTION_STRING PERCENT_BRACE_ACTION
 %x OPTION
 
-WS		[ \t]+
-OPTWS		[ \t]*
-NOT_WS		[^ \t\n]
+WS		[[:blank:]]+
+OPTWS		[[:blank:]]*
+NOT_WS		[^[:blank:]\n]
 
 NL		\r?\n
 
-NAME		([a-z_][a-z_0-9-]*)
-NOT_NAME	[^a-z_*\n]+
+NAME		([[:alpha:]_][[:alnum:]_-]*)
+NOT_NAME	[^[:alpha:]_*\n]+
 
 SCNAME		{NAME}
 
-ESCSEQ		(\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2}))
+ESCSEQ		(\\([^\n]|[[:digit:]]{1,3}|x[[:xdigit:]]{1,2}))
 
 FIRST_CCL_CHAR	([^\\\n]|{ESCSEQ})
 CCL_CHAR	([^\\\n\]]|{ESCSEQ})
-CCL_EXPR	("[:"[a-z]+":]")
+CCL_EXPR	("[:"[[:alpha:]]+":]")
 
 LEXOPT		[aceknopr]
 
@@ -128,7 +128,7 @@ LEXOPT		[aceknopr]
 
 	^"%option"	BEGIN(OPTION); return OPTION_OP;
 
-	^"%"{LEXOPT}{OPTWS}[0-9]*{OPTWS}{NL}	++linenum;	/* ignore */
+	^"%"{LEXOPT}{OPTWS}[[:digit:]]*{OPTWS}{NL}	++linenum; /* ignore */
 	^"%"{LEXOPT}{WS}.*{NL}	++linenum;	/* ignore */
 
 	^"%"[^sxaceknopr{}].*	synerr( "unrecognized '%' directive" );
@@ -266,7 +266,7 @@ LEXOPT		[aceknopr]
 			return NAME;
 			}
 
-	(([a-mo-z]|n[a-np-z])[a-z\-+]*)|.	{
+	(([a-mo-z]|n[a-np-z])[[:alpha:]\-+]*)|.	{
 			format_synerr( "unrecognized %%option: %s", yytext );
 			BEGIN(RECOVER);
 			}
@@ -316,8 +316,8 @@ LEXOPT		[aceknopr]
 	^{OPTWS}"<"	BEGIN(SC); return '<';
 	^{OPTWS}"^"	return '^';
 	\"		BEGIN(QUOTE); return '"';
-	"{"/[0-9]	BEGIN(NUM); return '{';
-	"$"/([ \t]|{NL})	return '$';
+	"{"/[[:digit:]]	BEGIN(NUM); return '{';
+	"$"/([[:blank:]]|{NL})	return '$';
 
 	{WS}"%{"		{
 			bracelevel = 1;
@@ -515,7 +515,7 @@ LEXOPT		[aceknopr]
 }
 
 <NUM>{
-	[0-9]+		{
+	[[:digit:]]+	{
 			yylval = myctoi( yytext );
 			return NUMBER;
 			}
@@ -575,7 +575,7 @@ LEXOPT		[aceknopr]
 <ACTION>{
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
-	[^a-z_{}"'/\n]+	ACTION_ECHO;
+	[^[:alpha:]_{}"'/\n]+	ACTION_ECHO;
 	{NAME}		ACTION_ECHO;
 	"'"([^'\\\n]|\\.)*"'"	ACTION_ECHO; /* character constant */
 	\"		ACTION_ECHO; BEGIN(ACTION_STRING);
