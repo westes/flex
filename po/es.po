@@ -9,9 +9,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU flex 2.5.6\n"
-"POT-Creation-Date: 2002-04-18 08:56-0400\n"
-"PO-Revision-Date: 2002-04-29 12:43+0100\n"
+"Project-Id-Version: GNU flex 2.5.8\n"
+"POT-Creation-Date: 2002-06-19 09:43-0400\n"
+"PO-Revision-Date: 2003-01-02 12:06+0100\n"
 "Last-Translator: Nicolás García-Pedrajas <ngarcia-pedrajas@acm.org>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -143,26 +143,26 @@ msgstr "la regla no se puede aplicar"
 msgid "-s option given but default rule can be matched"
 msgstr "se ha especificado la opción -s pero se puede aplicar la regla por defecto"
 
-#: main.c:201
+#: main.c:203
 msgid "Can't use -+ with -l option"
 msgstr "No se puede usar -+ con la opción -l"
 
-#: main.c:204
+#: main.c:206
 msgid "Can't use -f or -F with -l option"
 msgstr "No se pueden usar las opciones -f o -F con la opción -l"
 
-#: main.c:207
+#: main.c:209
 msgid "Can't use -R or -Rb with -l option"
 msgstr "No se pueden usar las opciones -R o -Rb con la opción -l"
 
-#: main.c:221
+#: main.c:223
 msgid "Can't specify header option if writing to stdout."
 msgstr "No se puede especificar una opción de cabecera si se escribe en stdout"
 
 # ¿juntos o juntas?
 # Creo que está bien así em
 # ok ng
-#: main.c:247
+#: main.c:249
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "-Cf/-CF y -Cm no tienen sentido juntos"
 
@@ -171,37 +171,37 @@ msgstr "-Cf/-CF y -Cm no tienen sentido juntos"
 # entonces lo dejo ng
 # Yo creo que en este caso no hace falta porque se leería así:
 # "menos ce efe o menos ce efe mayúscula y menos I son incompatibles". sv
-#: main.c:250
+#: main.c:252
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "-Cf/-CF e -I son incompatibles"
 
-#: main.c:254
+#: main.c:256
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr "-Cf/-CF son incompatibles con el modo de compatibilidad con lex"
 
-#: main.c:258
+#: main.c:260
 #, c-format
 msgid "-Cf/-CF and %option yylineno are incompatible"
 msgstr "-Cf/-CF y la %opción yylineno son incompatibles"
 
-#: main.c:261
+#: main.c:263
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "-Cf y -CF son mutuamente excluyentes"
 
-#: main.c:265
+#: main.c:267
 msgid "Can't use -+ with -CF option"
 msgstr "No se puede usar -+ con la opción -CF"
 
-#: main.c:269
+#: main.c:271
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "%array incompatible con la opción -+"
 
-#: main.c:274
+#: main.c:276
 msgid "Options -+ and -R are mutually exclusive."
 msgstr "-+ y -R son mutuamente excluyentes"
 
-#: main.c:326 main.c:522
+#: main.c:328 main.c:524
 #, c-format
 msgid "could not create %s"
 msgstr "no se pudo crear %s"
@@ -210,7 +210,7 @@ msgstr "no se pudo crear %s"
 # lo mismo de antes ng
 # Lo mismo que antes :) em
 # idem ng+
-#: main.c:332
+#: main.c:334
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "no se puede abrir el archivo de esquema %s"
@@ -231,45 +231,45 @@ msgstr "no se puede abrir el archivo de esquema %s"
 # que decida una tercera persona
 #
 # ## Cambio "leyendo" por "al leer", como en otras traducciones. sv
-#: main.c:490
+#: main.c:492
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "error de entrada al leer el archivo de esquema %s"
 
 # Otra vez :) em
-#: main.c:494
+#: main.c:496
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "error al cerrar el archivo de esquema %s"
 
 # Lo mismo, archivo de seguridad? em
-#: main.c:688
+#: main.c:690
 #, c-format
 msgid "error creating header file %s"
 msgstr "error al crear el archivo de cabecera %s"
 
-#: main.c:696
+#: main.c:698
 #, c-format
 msgid "error writing output file %s"
 msgstr "error al escribir el archivo de salida %s"
 
-#: main.c:700
+#: main.c:702
 #, c-format
 msgid "error closing output file %s"
 msgstr "error al cerrar el archivo de salida %s"
 
-#: main.c:704
+#: main.c:706
 #, c-format
 msgid "error deleting output file %s"
 msgstr "error al borrar el archivo de salida %s"
 
 # Copia de seguridad? em
 # Sugerencia: No hay retroceso. sv
-#: main.c:712
+#: main.c:714
 msgid "No backing up.\n"
 msgstr "Sin retroceso.\n"
 
-#: main.c:715
+#: main.c:717
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "%d estados de retroceso (no-aceptación).\n"
@@ -279,12 +279,12 @@ msgstr "%d estados de retroceso (no-aceptación).\n"
 # "Compressed tables are always back up"
 # (supuesto que back es irregular y su pasado/participio es back y no backed,
 # que ahora mismo no me acuerdo). sv
-#: main.c:719
+#: main.c:721
 msgid "Compressed tables always back up.\n"
 msgstr "Las tablas comprimidas siempre implican un retraso.\n"
 
 # Lo mismo, archivo de seguridad? em
-#: main.c:722
+#: main.c:724
 #, c-format
 msgid "error writing backup file %s"
 msgstr "error al escribir el archivo de seguridad %s"
@@ -292,45 +292,45 @@ msgstr "error al escribir el archivo de seguridad %s"
 #  En todas las traducciones que ha aparecido
 #  he sugerido el uso de copia de seguridad em
 # ok ng
-#: main.c:726
+#: main.c:728
 #, c-format
 msgid "error closing backup file %s"
 msgstr "error al cerrar el archivo de copia de seguridad %s"
 
-#: main.c:732
+#: main.c:734
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr "%s versión %s estadísticas de uso:\n"
 
-#: main.c:735
+#: main.c:737
 msgid "  scanner options: -"
 msgstr "  opciones del analizador: -"
 
 # NFA significa non-deterministic finite automata, así que lo he traducido
 # por AFN
-#: main.c:813
+#: main.c:817
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d estados AFN\n"
 
 # DFA significa deterministic finite autómata, lo he traducido por AFD
-#: main.c:815
+#: main.c:819
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d estados AFD {%d palabras}\n"
 
-#: main.c:817
+#: main.c:821
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d reglas\n"
 
 # Otra vez ;) em
 # modificado como en la anterior ng
-#: main.c:821
+#: main.c:825
 msgid "  No backing up\n"
 msgstr "  Sin retroceso\n"
 
-#: main.c:824
+#: main.c:828
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr "  %d estados de retroceso (no-aceptación)\n"
@@ -338,16 +338,16 @@ msgstr "  %d estados de retroceso (no-aceptación)\n"
 # FIXME.
 # Informar al autor de que esta frase es casi idéntica a una anterior, para
 # que sólo haya que traducirla una vez. sv
-#: main.c:828
+#: main.c:832
 msgid "  Compressed tables always back-up\n"
 msgstr "  Siempre se realiza copia de seguridad de las tablas comprimidas\n"
 
 # Lo mismo "se han usado patrones de comienzo de línea". sv
-#: main.c:832
+#: main.c:836
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  Usados patrones de comienzo-de-línea\n"
 
-#: main.c:834
+#: main.c:838
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d condiciones de activación\n"
@@ -360,16 +360,16 @@ msgstr "  %d/%d condiciones de activación\n"
 # lo de doble épsilon no lo he oído nunca. Creo que hay que dejar el término
 # técnico. ng
 # Tu mandas, no tengo nada que decir a eso em
-#: main.c:837
+#: main.c:841
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr "  %d estados épsilon, %d estados doble épsilon\n"
 
-#: main.c:841
+#: main.c:845
 msgid "  no character classes\n"
 msgstr "  sin clases de caracteres\n"
 
-#: main.c:844
+#: main.c:848
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
 msgstr ""
@@ -380,13 +380,13 @@ msgstr ""
 # ¿Qué tal "  se han creado %d pares estado/estado-siguiente"?
 # Bueno, mejor no lo hagas hasta que no se sepa cómo queda al lado
 # de las otras. sv
-#: main.c:849
+#: main.c:853
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr "  %d pares estado/estado-siguiente creados\n"
 
 # ## Añado sendas eses, ya que son transiciones. sv
-#: main.c:851
+#: main.c:855
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d transiciones únicas/duplicadas\n"
@@ -395,50 +395,50 @@ msgstr "  %d/%d transiciones únicas/duplicadas\n"
 # sí, mejor ng
 # ¿Que había antes? (¿entradas a la tabla?)
 # (entradas *de* la tabla me suena mejor) sv.
-#: main.c:857
+#: main.c:861
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d entradas en la tabla\n"
 
 # ## pongo `comillas' en el base-def. sv
-#: main.c:865
+#: main.c:869
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  %d/%d entradas `base-def' creadas\n"
 
-#: main.c:868
+#: main.c:872
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  %d/%d (pico %d) entradas nxt-chk creadas\n"
 
-#: main.c:871
+#: main.c:875
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr " %d/%d (pico %d) entradas de plantilla nxt-chk creadas\n"
 
 # ¿entradas a la tabla o entradas de la tabla? sv
-#: main.c:875
+#: main.c:879
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d entradas en la tabla vacías\n"
 
-#: main.c:877
+#: main.c:881
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  %d prototipos creados\n"
 
-#: main.c:880
+#: main.c:884
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  %d plantillas creadas, %d usos\n"
 
-#: main.c:888
+#: main.c:892
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  %d/%d clases de equivalencia creadas\n"
 
 # "se han creado..." sv
-#: main.c:896
+#: main.c:900
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  %d/%d clases de metaequivalencia creadas\n"
@@ -456,43 +456,43 @@ msgstr "  %d/%d clases de metaequivalencia creadas\n"
 # un lugar que se puede determinar mediante una transformación directa de su
 # clave, por eso si hay dos claves iguales hay una colisión, porque dos
 # registros van al mismo sitio ng+
-#: main.c:901
+#: main.c:905
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr "  %d (%d almacenadas) colisiones de localización ('hash'), %d AFDs iguales\n"
 
-#: main.c:903
+#: main.c:907
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr "  se necesitan %d conjuntos de relocalización\n"
 
 # Lo mismo que en otro sitio: ¿table entries son entradas a la tabla o
 # de la tabla? sv
-#: main.c:905
+#: main.c:909
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  se necesitan %d entradas totales en la tabla\n"
 
-#: main.c:962
+#: main.c:966
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Error interno. flexopts mal formadas.\n"
 
-#: main.c:970
+#: main.c:974
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Pruebe `%s --help' para más información.\n"
 
-#: main.c:1029
+#: main.c:1033
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "opción -C desconocida '%c'"
 
-#: main.c:1108
+#: main.c:1116
 #, c-format
 msgid "unknown -R option '%c'"
 msgstr "opción -R desconocida '%c'"
 
-#: main.c:1145
+#: main.c:1153
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
@@ -509,7 +509,7 @@ msgstr "%s %s\n"
 # Sugerencia: error fatal. sv
 # con comillas es un término medio. Lo de error grave fue una sugerencia
 # de Enrique, y croe que queda mejor. ng+
-#: main.c:1387
+#: main.c:1395
 msgid "fatal parse error"
 msgstr "error muy grave en el analizador sintáctico"
 
@@ -532,70 +532,70 @@ msgstr "error muy grave en el analizador sintáctico"
 # ##
 # ## Eso no es válido ( solución, usa emacs po-mode :) ) em
 # ## ok, ya estoy instalando linux otra vez ng+
-#: main.c:1399
+#: main.c:1407
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr ""
 "no se pudo crear el archivo de información de las reglas\n"
 "que producen un retroceso del analizador %s"
 
-#: main.c:1421
+#: main.c:1429
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
 msgstr ""
 "-l la opción de compatibilidad con AT&T lex implica una penalización del\n"
 "rendimiento muy alta\n"
 
-#: main.c:1423
+#: main.c:1431
 msgid " and may be the actual source of other reported performance penalties\n"
 msgstr " y puede ser el origen real de otras penalizaciones del rendimiento notificadas\n"
 
-#: main.c:1429
+#: main.c:1437
 #, c-format
 msgid "%%option yylineno entails a large performance penalty\n"
 msgstr "la %%opción yylineno implica una penalización del rendimiento muy alta\n"
 
-#: main.c:1436
+#: main.c:1444
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "-I (interactivo) implica una pequeña penalización del rendimiento\n"
 
-#: main.c:1440
+#: main.c:1448
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "yymore() implica un pequeña penalización del rendimiento\n"
 
-#: main.c:1445
+#: main.c:1453
 msgid "REJECT entails a large performance penalty\n"
 msgstr "REJECT implica una penalización del rendimiento muy alta\n"
 
-#: main.c:1449
+#: main.c:1457
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr ""
 "La existencia de reglas de contexto posterior variable implica una\n"
 "penalización del rendimiento muy alta\n"
 
-#: main.c:1462
+#: main.c:1470
 msgid "REJECT cannot be used with -f or -F"
 msgstr "REJECT no se puede usar con -f o -F"
 
-#: main.c:1465
+#: main.c:1473
 #, c-format
 msgid "%option yylineno cannot be used with -f or -F"
 msgstr "la %opción yylineno no se puede usar con -f o -F"
 
-#: main.c:1468
+#: main.c:1476
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr "las reglas de contexto posterior variable no se pueden usar con -f o -F"
 
-#: main.c:1599
+#: main.c:1607
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
 msgstr "la %option yyclass sólo tiene sentido para los analizadores en C++"
 
-#: main.c:1703
+#: main.c:1711
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Uso: %s [OPCIONES] [FICHERO]...\n"
 
-#: main.c:1706
+#: main.c:1714
 #, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -633,6 +633,7 @@ msgid ""
 "  -B, --batch             generate batch scanner (opposite of -I)\n"
 "  -i, --case-insensitive  ignore case in patterns\n"
 "  -l, --lex-compat        maximal compatibility with original lex\n"
+"  -X, --posix-compat      maximal compatibility with POSIX lex\n"
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 "\n"
@@ -654,7 +655,7 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
-"Generata programas que realizan emparejado de patrones en texto.\n"
+"Genera programas que realizan emparejado de patrones en texto.\n"
 "\n"
 "Compresión de tablas: (por defecto es -Cem)\n"
 "  -Ca, --align      Renuncia a tablas grandes para mejorar la alineación en memoria\n"
@@ -665,6 +666,7 @@ msgstr ""
 "  -Cr, --read       utiliza read() en lugar de stdio para la entrada del analizador\n"
 "  -f, --full        genera una analizar rápido y grande. Igual que -Cfr\n"
 "  -F, --fast        usa la representación de tablas alternativa. Igual que -CFr\n"
+"  -Cem              compresión por defecto (igual que --ecs --meta-ecs)\n"
 "\n"
 "Depurado:\n"
 "  -d, --debug             habilita el modo de depuración en el analizador\n"
@@ -748,11 +750,11 @@ msgstr "%s: error interno muy grave, %s\n"
 msgid "attempt to increase array size failed"
 msgstr "falló el intento de aumentar el tamaño de la matriz"
 
-#: misc.c:842
+#: misc.c:847
 msgid "bad line in skeleton file"
 msgstr "línea incorrecta en el archivo de esquema"
 
-#: misc.c:895
+#: misc.c:892
 msgid "memory allocation failed in yy_flex_xmalloc()"
 msgstr "la reserva de memoria falló en yy_flex_xmalloc()"
 
@@ -806,6 +808,34 @@ msgstr "encontradas demasiadas transiciones en mkxtion()"
 msgid "too many rules (> %d)!"
 msgstr "demasiadas reglas (> %d)!"
 
+#: parse.y:174
+msgid "unknown error processing section 1"
+msgstr "error desconocido en el proceso de la sección 1"
+
+#: parse.y:199 parse.y:362
+msgid "bad start condition list"
+msgstr "lista de condiciones de activación incorrecta"
+
+#: parse.y:326
+msgid "unrecognized rule"
+msgstr "regla no reconocida"
+
+#: parse.y:444 parse.y:457 parse.y:526
+msgid "trailing context used twice"
+msgstr "contexto posterior usado dos veces"
+
+#: parse.y:562 parse.y:572 parse.y:645 parse.y:655
+msgid "bad iteration values"
+msgstr "valores incorrectos para iteración"
+
+#: parse.y:590 parse.y:608 parse.y:673 parse.y:691
+msgid "iteration value must be positive"
+msgstr "los valores para iteración deben ser positivos"
+
+#: parse.y:785
+msgid "negative range in character class"
+msgstr "rango negativo en clase caracteres"
+
 #: scan.l:140
 #, no-c-format
 msgid "unrecognized '%' directive"
@@ -815,27 +845,27 @@ msgstr "directiva '%' no reconocida"
 msgid "incomplete name definition"
 msgstr "definición de nombre incompleta"
 
-#: scan.l:315
+#: scan.l:316
 #, c-format
 msgid "unrecognized %%option: %s"
 msgstr "%%opción no reconocida: %s"
 
-#: scan.l:442 scan.l:542
+#: scan.l:449 scan.l:549
 msgid "bad character class"
 msgstr "clase de caracteres incorrecta"
 
-#: scan.l:474
+#: scan.l:481
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "definición no definida {%s}"
 
-#: scan.l:510
+#: scan.l:517
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "<condición de activación> incorrecta: %s"
 
 # Sugerencia: falta una comilla. sv
-#: scan.l:523
+#: scan.l:530
 msgid "missing quote"
 msgstr "falta comilla"
 
@@ -843,30 +873,30 @@ msgstr "falta comilla"
 # incorrecta la expresión ... em
 # ok, de traducir al final ocurre que acabas hablando al revés,
 # como en inglés ng
-#: scan.l:563
+#: scan.l:570
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "expresión de la clase de caracteres incorrecta: %s"
 
-#: scan.l:579
+#: scan.l:592
 msgid "bad character inside {}'s"
 msgstr "carácter incorrecto dentro de {}'s"
 
 # Sugerencia: "falta una }". sv
-#: scan.l:585
+#: scan.l:598
 msgid "missing }"
 msgstr "falta }"
 
-#: scan.l:658
+#: scan.l:671
 msgid "EOF encountered inside an action"
 msgstr "Fin de archivo (EOF) encontrado dentro de una acción"
 
-#: scan.l:678
+#: scan.l:691
 #, c-format
 msgid "bad character: %s"
 msgstr "carácter incorrecto: %s"
 
-#: scan.l:707
+#: scan.l:720
 #, c-format
 msgid "can't open %s"
 msgstr "no se puede abrir %s"
