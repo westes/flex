@@ -1021,16 +1021,15 @@ much text being pushed back; instead, a run-time error results.
 Also note that you cannot use @code{%array} with C++ scanner classes
 (@pxref{Cxx}).
 
-@c proofread edit stopped here
 @node Actions, Generated Scanner, Matching, Top
 @chapter Actions
-@cindex actions, explanation
 
-Each pattern in a rule has a corresponding action, which can be any
-arbitrary C statement.  The pattern ends at the first non-escaped
+@cindex actions
+Each pattern in a rule has a corresponding @dfn{action}, which can be
+any arbitrary C statement.  The pattern ends at the first non-escaped
 whitespace character; the remainder of the line is its action.  If the
-action is empty, then when the pattern is matched the input token
-is simply discarded.  For example, here is the specification for a program
+action is empty, then when the pattern is matched the input token is
+simply discarded.  For example, here is the specification for a program
 which deletes all occurrences of @samp{zap me} from its input:
 
 @cindex deleting lines from input
@@ -1041,13 +1040,13 @@ which deletes all occurrences of @samp{zap me} from its input:
 @end verbatim
 @end example
 
-(It will copy all other characters in the input to the output since
-they will be matched by the default rule.)
+This example will copy all other characters in the input to the output
+since they will be matched by the default rule.
 
 Here is a program which compresses multiple blanks and tabs down to a
 single blank, and throws away whitespace found at the end of a line:
 
-@cindex whitespace, compressing, example
+@cindex whitespace, compressing
 @cindex compressing whitespace
 @example
 @verbatim
@@ -1060,20 +1059,17 @@ single blank, and throws away whitespace found at the end of a line:
 @cindex %@{ and %@}, in Rules Section
 @cindex actions, use of @{ and @}
 @cindex actions, embedded C strings
-@cindex strings, in actions
-@cindex commments, in actions
+@cindex C-strings, in actions
+@cindex comments, in actions
+If the action contains a @samp{@}}, then the action spans till the
+balancing @samp{@}} is found, and the action may cross multiple lines.
+@code{flex} knows about C strings and comments and won't be fooled by
+braces found within them, but also allows actions to begin with
+@samp{%@{} and will consider the action to be all the text up to the
+next @samp{%@}} (regardless of ordinary braces inside the action).
 
-If the action contains a @samp{@}}, then the action spans till the balancing @samp{@}}
-is found, and the action may cross multiple lines.
-@code{flex}
-knows about C strings and comments and won't be fooled by braces found
-within them, but also allows actions to begin with
-@samp{%@{}
-and will consider the action to be all the text up to the next
-@samp{%@}}
-(regardless of ordinary braces inside the action).
-
-An action consisting solely of a vertical bar ('|') means ``same as the
+@cindex |, in actions
+An action consisting solely of a vertical bar (@samp{|}) means ``same as the
 action for the next rule''.  See below for an illustration.
 
 Actions can include arbitrary C code, including @code{return} statements
@@ -1086,45 +1082,39 @@ return.
 Actions are free to modify @code{yytext} except for lengthening it
 (adding characters to its end--these will overwrite later characters in
 the input stream).  This however does not apply when using @code{%array}
-(@pxref{Matching}). In that case, @code{yytext} may be freely modified in
-any way.
+(@pxref{Matching}). In that case, @code{yytext} may be freely modified
+in any way.
 
 @cindex yyleng, modification of
-@cindex yymore, caveat
-Actions are free to modify
-@code{yyleng}
-except they should not do so if the action also includes use of
-@code{yymore()}
-(see below).
+@cindex yymore, and yyleng
+Actions are free to modify @code{yyleng} except they should not do so if
+the action also includes use of @code{yymore()} (see below).
 
 @cindex preprocessor macros, for use in actions
-
-There are a number of special directives which can be included within
-an action:
+There are a number of special directives which can be included within an
+action:
 
 @table @code
-@cindex ECHO, explanation
 @item  ECHO
+@cindex ECHO
 copies yytext to the scanner's output.
 
-@cindex BEGIN
 @item  BEGIN
+@cindex BEGIN
 followed by the name of a start condition places the scanner in the
 corresponding start condition (see below).
 
-@cindex REJECT, explanation
 @item  REJECT
+@cindex REJECT
 directs the scanner to proceed on to the ``second best'' rule which
 matched the input (or a prefix of the input).  The rule is chosen as
-described above in @ref{Matching}, and @code{yytext} and @code{yyleng} set
-up appropriately.  It may either be one which matched as much text as
-the originally chosen rule but came later in the @code{flex} input file,
-or one which matched less text.  For example, the following will both
-count the words in the input and call the routine @code{special()}
+described above in @ref{Matching}, and @code{yytext} and @code{yyleng}
+set up appropriately.  It may either be one which matched as much text
+as the originally chosen rule but came later in the @code{flex} input
+file, or one which matched less text.  For example, the following will
+both count the words in the input and call the routine @code{special()}
 whenever @samp{frob} is seen:
 
-@cindex REJECT, example
-@cindex REJECT
 @example
 @verbatim
             int word_count = 0;
@@ -1143,6 +1133,7 @@ example, when the following scanner scans the token @samp{abcd}, it will
 write @samp{abcdabcaba} to the output:
 
 @cindex REJECT, calling multiple times
+@cindex |, use of
 @example
 @verbatim
     %%
@@ -1154,35 +1145,28 @@ write @samp{abcdabcaba} to the output:
 @end verbatim
 @end example
 
-(The first three rules share the fourth's action since they use
-the special '|' action.)
-@code{REJECT}
-is a particularly expensive feature in terms of scanner performance;
-if it is used in
-@emph{any}
-of the scanner's actions it will slow down
-@emph{all}
-of the scanner's matching.  Furthermore,
-@code{REJECT}
-cannot be used with the
-@samp{-Cf}
-or
-@samp{-CF}
-options (@pxref{Scanner Options}).
+The first three rules share the fourth's action since they use the
+special @samp{|} action.
+
+@code{REJECT} is a particularly expensive feature in terms of scanner
+performance; if it is used in @emph{any} of the scanner's actions it
+will slow down @emph{all} of the scanner's matching.  Furthermore,
+@code{REJECT} cannot be used with the @samp{-Cf} or @samp{-CF} options
+(@pxref{Scanner Options}).
 
 Note also that unlike the other special actions, @code{REJECT} is a
 @emph{branch}.  code immediately following it in the action will
 @emph{not} be executed.
 
-@cindex yymore(), explanation
 @item  yymore()
+@cindex yymore()
 tells the scanner that the next time it matches a rule, the
 corresponding token should be @emph{appended} onto the current value of
 @code{yytext} rather than replacing it.  For example, given the input
 @samp{mega-kludge} the following will write @samp{mega-mega-kludge} to
 the output:
 
-@cindex yymore(), example
+@cindex yymore(), mega-kludge
 @cindex yymore() to append token to previous token
 @example
 @verbatim
@@ -1201,6 +1185,7 @@ so the
 for the @samp{kludge} rule will actually write @samp{mega-kludge}.
 @end table
 
+@cindex yymore, performance penalty of
 Two notes regarding use of @code{yymore()}.  First, @code{yymore()}
 depends on the value of @code{yyleng} correctly reflecting the size of
 the current token, so you must not modify @code{yyleng} if you are using
@@ -1208,17 +1193,16 @@ the current token, so you must not modify @code{yyleng} if you are using
 scanner's action entails a minor performance penalty in the scanner's
 matching speed.
 
-@cindex yyless(), explanation
+@cindex yyless()
 @code{yyless(n)} returns all but the first @code{n} characters of the
 current token back to the input stream, where they will be rescanned
 when the scanner looks for the next match.  @code{yytext} and
-@code{yyleng} are adjusted appropriately (e.g., @code{yyleng} will now be
-equal to @code{n}).  For example, on the input @samp{foobar} the
+@code{yyleng} are adjusted appropriately (e.g., @code{yyleng} will now
+be equal to @code{n}).  For example, on the input @samp{foobar} the
 following will write out @samp{foobarbar}:
 
-@cindex yyless(), example
+@cindex yyless(), pushing back characters
 @cindex pushing back characters with yyless
-@cindex yyless() to push back characters
 @example
 @verbatim
     %%
@@ -1227,28 +1211,22 @@ following will write out @samp{foobarbar}:
 @end verbatim
 @end example
 
-An argument of 0 to
-@code{yyless()}
-will cause the entire current input string to be scanned again.  Unless you've
-changed how the scanner will subsequently process its input (using
-@code{BEGIN},
-for example), this will result in an endless loop.
+An argument of 0 to @code{yyless()} will cause the entire current input
+string to be scanned again.  Unless you've changed how the scanner will
+subsequently process its input (using @code{BEGIN}, for example), this
+will result in an endless loop.
 
-Note that
-@code{yyless()}
-is a macro and can only be used in the flex input file, not from
-other source files.
+Note that @code{yyless()} is a macro and can only be used in the flex
+input file, not from other source files.
 
-@cindex unput(), explanation
+@cindex unput()
 @cindex pushing back characters with unput
-@code{unput(c)}
-puts the character
-@code{c}
-back onto the input stream.  It will be the next character scanned.
-The following action will take the current token and cause it
-to be rescanned enclosed in parentheses.
+@code{unput(c)} puts the character @code{c} back onto the input stream.
+It will be the next character scanned.  The following action will take
+the current token and cause it to be rescanned enclosed in parentheses.
 
-@cindex unput() to push back characters
+@cindex unput(), pushing back characters
+@cindex pushing back characters with unput()
 @example
 @verbatim
     {
@@ -1268,37 +1246,27 @@ Note that since each @code{unput()} puts the given character back at the
 @emph{beginning} of the input stream, pushing back strings must be done
 back-to-front.
 
-@cindex %pointer, caveat with unput()
-@cindex unput(), caveat with %pointer
-
-An important potential problem when using
-@code{unput()}
-is that if you are using
-@code{%pointer}
-(the default), a call to
-@code{unput()}
-@emph{destroys}
-the contents of
-@code{yytext},
-starting with its rightmost character and devouring one character to
-the left with each call.  If you need the value of yytext preserved
-after a call to
-@code{unput()}
-(as in the above example),
-you must either first copy it elsewhere, or build your scanner using
-@code{%array}
-instead (@pxref{Matching}).
+@cindex %pointer, and unput()
+@cindex unput(), and %pointer
+An important potential problem when using @code{unput()} is that if you
+are using @code{%pointer} (the default), a call to @code{unput()}
+@emph{destroys} the contents of @code{yytext}, starting with its
+rightmost character and devouring one character to the left with each
+call.  If you need the value of @code{yytext} preserved after a call to
+@code{unput()} (as in the above example), you must either first copy it
+elsewhere, or build your scanner using @code{%array} instead
+(@pxref{Matching}).
 
 @cindex pushing back EOF
 @cindex EOF, pushing back
 Finally, note that you cannot put back @samp{EOF} to attempt to mark the
 input stream with an end-of-file.
 
-@cindex input(), explanation
+@cindex input()
 @code{input()} reads the next character from the input stream.  For
 example, the following is one way to eat up C comments:
 
-@cindex comments, example of discarding
+@cindex comments, discarding
 @cindex discarding C comments
 @example
 @verbatim
@@ -1331,36 +1299,32 @@ example, the following is one way to eat up C comments:
 @end example
 
 @cindex input(), and C++
+@cindex yyinput()
 (Note that if the scanner is compiled using @code{C++}, then
 @code{input()} is instead referred to as @b{yyinput()}, in order to
 avoid a name clash with the @code{C++} stream by the name of
 @code{input}.)
 
 @cindex flushing the internal buffer
-@code{YY_FLUSH_BUFFER()}
-flushes the scanner's internal buffer
-so that the next time the scanner attempts to match a token, it will
-first refill the buffer using
-@code{YY_INPUT()}
-(@pxref{Generated Scanner}).  This action is a special case
-of the more general
-@code{yy_flush_buffer()}
-function, described below (@pxref{Multiple Input Buffers})
+@cindex YY_FLUSH_BUFFER()
+@code{YY_FLUSH_BUFFER()} flushes the scanner's internal buffer so that
+the next time the scanner attempts to match a token, it will first
+refill the buffer using @code{YY_INPUT()} (@pxref{Generated Scanner}).
+This action is a special case of the more general
+@code{yy_flush_buffer()} function, described below (@pxref{Multiple
+Input Buffers})
 
-@cindex yyterminate(), explanation
+@cindex yyterminate()
 @cindex terminating with yyterminate()
 @cindex exiting with yyterminate()
 @cindex halting with yyterminate()
-@findex yyterminate
+@code{yyterminate()} can be used in lieu of a return statement in an
+action.  It terminates the scanner and returns a 0 to the scanner's
+caller, indicating ``all done''.  By default, @code{yyterminate()} is
+also called when an end-of-file is encountered.  It is a macro and may
+be redefined.
 
-@code{yyterminate()}
-can be used in lieu of a return statement in an action.  It terminates
-the scanner and returns a 0 to the scanner's caller, indicating ``all done''.
-By default,
-@code{yyterminate()}
-is also called when an end-of-file is encountered.  It is a macro and
-may be redefined.
-
+@c proofread edit stopped here
 @node Generated Scanner, Start Conditions, Actions, Top
 @chapter The Generated Scanner
 
