@@ -28,7 +28,7 @@ OBJS = scanner.o
 
 INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
 LFLAGS = -+
-LDFLAGS = -lstdc++
+#LDFLAGS = 
 
 testname = test-c++-basic
 
@@ -36,7 +36,7 @@ scanner.cpp: $(srcdir)/scanner.l
 	$(FLEX) $(LFLAGS) $<
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
+	$(CXX) -o $@ $(LDFLAGS) $(OBJS)
 
 test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT) < $(srcdir)/test.input
