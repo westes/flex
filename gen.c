@@ -45,8 +45,10 @@ static int indent_level = 0; /* each level is 8 spaces */
 #define indent_down() (--indent_level)
 #define set_indent(indent_val) indent_level = indent_val
 
-/* *Everything* is done in terms of arrays starting at 1, so provide
- * a null entry for the zero element of all C arrays.
+/* Almost everything is done in terms of arrays starting at 1, so provide
+ * a null entry for the zero element of all C arrays.  (The exception
+ * to this is that the fast table representation generally uses the
+ * 0 elements of its arrays, too.)
  */
 static char C_int_decl[] = "static const int %s[%d] =\n    {   0,\n";
 static char C_short_decl[] = "static const short int %s[%d] =\n    {   0,\n";
@@ -169,16 +171,17 @@ void genctbl()
 	/* So that "make test" won't show arb. differences. */
 	nxt[tblend + 2] = 0;
 
-	/* Make sure every state has a end-of-buffer transition and an
+	/* Make sure every state has an end-of-buffer transition and an
 	 * action #.
 	 */
 	for ( i = 0; i <= lastdfa; ++i )
 		{
-		register int anum = dfaacc[i].dfaacc_state;
+		int anum = dfaacc[i].dfaacc_state;
+		int offset = base[i];
 
-		chk[base[i]] = EOB_POSITION;
-		chk[base[i] - 1] = ACTION_POSITION;
-		nxt[base[i] - 1] = anum;	/* action number */
+		chk[offset] = EOB_POSITION;
+		chk[offset - 1] = ACTION_POSITION;
+		nxt[offset - 1] = anum;	/* action number */
 		}
 
 	for ( i = 0; i <= tblend; ++i )
