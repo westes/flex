@@ -147,8 +147,8 @@ flexrule        :  scon '^' rule
 			    bol_needed = true;
 
 			    if ( performance_report )
-				fprintf( stderr,
-			"'^' operator results in sub-optimal performance\n" );
+				pinpoint_message( 
+			    "'^' operator results in sub-optimal performance" );
 			    }
 			}
 
@@ -182,8 +182,8 @@ flexrule        :  scon '^' rule
 			    bol_needed = true;
 
 			    if ( performance_report )
-				fprintf( stderr,
-			"'^' operator results in sub-optimal performance\n" );
+				pinpoint_message(
+			    "'^' operator results in sub-optimal performance" );
 			    }
 			}
 
@@ -203,9 +203,21 @@ flexrule        :  scon '^' rule
 
                 |  EOF_OP
 			{
-			/* this EOF applies only to the INITIAL start cond. */
-			actvsc[actvp = 1] = 1;
-			build_eof_action();
+			/* this EOF applies to all start conditions
+			 * which don't already have EOF actions
+			 */
+			actvp = 0;
+
+			for ( i = 1; i <= lastsc; ++i )
+			    if ( ! sceof[i] )
+				actvsc[++actvp] = i;
+
+			if ( actvp == 0 )
+			    pinpoint_message(
+		"warning - all start conditions already have <<EOF>> rules" );
+
+			else
+			    build_eof_action();
 			}
 
                 |  error
@@ -218,7 +230,8 @@ scon            :  '<' namelist2 '>'
 namelist2       :  namelist2 ',' NAME
                         {
 			if ( (scnum = sclookup( nmstr )) == 0 )
-			    lerrsf( "undeclared start condition %s", nmstr );
+			    format_pinpoint_message(
+				"undeclared start condition %s", nmstr );
 
 			else
 			    actvsc[++actvp] = scnum;
@@ -227,7 +240,8 @@ namelist2       :  namelist2 ',' NAME
 		|  NAME
 			{
 			if ( (scnum = sclookup( nmstr )) == 0 )
-			    lerrsf( "undeclared start condition %s", nmstr );
+			    format_pinpoint_message(
+				"undeclared start condition %s", nmstr );
 			else
 			    actvsc[actvp = 1] = scnum;
 			}
@@ -621,7 +635,7 @@ string		:  string CHAR
  *                    conditions
  */
 
-build_eof_action()
+void build_eof_action()
 
     {
     register int i;
@@ -629,7 +643,8 @@ build_eof_action()
     for ( i = 1; i <= actvp; ++i )
 	{
 	if ( sceof[actvsc[i]] )
-	    lerrsf( "multiple <<EOF>> rules for start condition %s",
+	    format_pinpoint_message(
+		"multiple <<EOF>> rules for start condition %s",
 		    scname[actvsc[i]] );
 
 	else
@@ -646,7 +661,7 @@ build_eof_action()
 
 /* synerr - report a syntax error */
 
-synerr( str )
+void synerr( str )
 char str[];
 
     {
@@ -655,9 +670,24 @@ char str[];
     }
 
 
+/* format_pinpoint_message - write out a message formatted with one string,
+ *			     pinpointing its location
+ */
+
+void format_pinpoint_message( msg, arg )
+char msg[], arg[];
+
+    {
+    char errmsg[MAXLINE];
+
+    (void) sprintf( errmsg, msg, arg );
+    pinpoint_message( errmsg );
+    }
+
+
 /* pinpoint_message - write out a message, pinpointing its location */
 
-pinpoint_message( str )
+void pinpoint_message( str )
 char str[];
 
     {
@@ -669,7 +699,7 @@ char str[];
  *	     currently, messages are ignore
  */
 
-yyerror( msg )
+void yyerror( msg )
 char msg[];
 
     {
