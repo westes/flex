@@ -37,6 +37,7 @@
 #define CMD_TABLES_SER_BEGIN "%tables-serialization-code-begin"
 #define CMD_TABLES_SER_END   "%tables-serialization-code-end"
 #define CMD_TABLES_YYDMAP    "%tables-yydmap"
+#define CMD_DEFINE_YYTABLES  "%define-yytables"
 #define CMD_CPP_ONLY         "%c++-only"
 #define CMD_C_ONLY           "%c-only"
 #define CMD_C_OR_CPP         "%c-or-c++"
@@ -835,6 +836,8 @@ void skelout ()
 
 			/* We've been accused of using cryptic markers in the skel.
 			 * So we'll use emacs-style-hyphenated-commands.
+             * We might consider a hash if this if-else-if-else
+             * chain gets too large.
 			 */
 #define cmd_match(s) (strncmp(buf,(s),strlen(s))==0)
 
@@ -852,6 +855,10 @@ void skelout ()
 				if (tablesext && yydmap_buf.elts)
 					outn ((char *) (yydmap_buf.elts));
 			}
+            else if (cmd_match (CMD_DEFINE_YYTABLES)) {
+                out_str("#define YYTABLES_NAME \"%s\"\n",
+                        tablesname?tablesname:"yytables");
+            }
 			else if (cmd_match (CMD_CPP_ONLY)) {
 				/* only for C++ */
 				do_copy = C_plus_plus;

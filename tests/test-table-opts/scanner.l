@@ -66,6 +66,10 @@ int main ( int argc, char** argv )
     }
     while(yylex(YY_CALL_ONLY_ARG) != 0)
         ;
+        
+#ifdef YY_TABLES_EXTERNAL
+    yytables_destroy(YY_CALL_ONLY_ARG);
+#endif
     yylex_destroy(YY_CALL_ONLY_ARG);
 
     if(argc < 0) /* silence the compiler */

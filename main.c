@@ -54,7 +54,7 @@ int     interactive, caseins, lex_compat, posix_compat, do_yylineno,
 int     fullspd, gen_line_dirs, performance_report, backing_up_report;
 int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
 	csize;
-int     reentrant, reentrant_bison_pure;
+int     reentrant, bison_bridge;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
 int     datapos, dataline, linenum, out_linenum;
@@ -107,7 +107,7 @@ bool   *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
 
 bool    tablesext, tablestoggle, tablesverify, gentables;
-char   *tablesfilename;
+char   *tablesfilename=0,*tablesname=0;
 struct yytbl_writer tableswr;
 
 /* Make sure program_name is initialized so we don't crash if writing
@@ -208,9 +208,9 @@ void check_options ()
 		if (fulltbl || fullspd)
 			flexerror (_("Can't use -f or -F with -l option"));
 
-		if (reentrant || reentrant_bison_pure)
+		if (reentrant || bison_bridge)
 			flexerror (_
-				   ("Can't use -R or -Rb with -l option"));
+				   ("Can't use --reentrant or --bison-bridge with -l option"));
 
 		/* Don't rely on detecting use of yymore() and REJECT,
 		 * just assume they'll be used.
@@ -274,8 +274,11 @@ void check_options ()
 		yytext_is_array = false;
 	}
 
-	if (C_plus_plus && (reentrant || reentrant_bison_pure))
-		flexerror (_("Options -+ and -R are mutually exclusive."));
+	if (C_plus_plus && (reentrant))
+		flexerror (_("Options -+ and --reentrant are mutually exclusive."));
+
+	if (C_plus_plus && bison_bridge)
+		flexerror (_("bison bridge not supported for the C++ scanner."));
 
 
 	if (useecs) {		/* Set up doubly-linked equivalence classes. */
@@ -361,10 +364,9 @@ void check_options ()
 		yytbl_writer_init (&tableswr, tablesout);
 
 		nbytes = strlen (prefix) + strlen ("tables") + 2;
-		pname = (char *) calloc (nbytes, 1);
-		sprintf (pname, "%stables", prefix);
-		yytbl_hdr_init (&hdr, flex_version, pname);
-		free (pname);
+		tablesname = (char *) calloc (nbytes, 1);
+		sprintf (tablesname, "%stables", prefix);
+		yytbl_hdr_init (&hdr, flex_version, tablesname);
 
 		if (yytbl_hdr_fwrite (&tableswr, &hdr) <= 0)
 			flexerror (_("could not write tables header"));
@@ -379,8 +381,8 @@ void check_options ()
 			outn ("#define YY_TEXT_IS_ARRAY");
 	}
 
-	if (reentrant_bison_pure)
-		outn ("#define YY_REENTRANT_BISON_PURE 1");
+	if ( bison_bridge)
+		outn ("#define YY_BISON_BRIDGE 1");
 
 	if (strcmp (prefix, "yy")) {
 #define GEN_PREFIX(name) out_str3( "#define yy%s %s%s\n", name, prefix, name )
@@ -423,7 +425,7 @@ void check_options ()
 			GEN_PREFIX ("realloc");
 			GEN_PREFIX ("free");
 
-			outn ("#ifdef YY_REENTRANT_BISON_PURE");
+			outn ("#ifdef YY_BISON_BRIDGE");
 			GEN_PREFIX ("get_lval");
 			GEN_PREFIX ("set_lval");
 			GEN_PREFIX ("get_lloc");
@@ -432,7 +434,7 @@ void check_options ()
 
 		}
 
-		if (do_yylineno && !reentrant)
+		if (!reentrant)
 			GEN_PREFIX ("lineno");
 
 		if (do_yywrap)
@@ -692,7 +694,7 @@ void flexend (exit_status)
 		fprintf (header_out, "#undef YY_PROTO\n");
 		fprintf (header_out, "#undef YY_READ_BUF_SIZE\n");
 		fprintf (header_out, "#undef YY_REENTRANT\n");
-		fprintf (header_out, "#undef YY_REENTRANT_BISON_PURE\n");
+		fprintf (header_out, "#undef YY_BISON_BRIDGE\n");
 		fprintf (header_out, "#undef YY_RESTORE_YY_MORE_OFFSET\n");
 		fprintf (header_out, "#undef YY_RULE_SETUP\n");
 		fprintf (header_out, "#undef YY_SC_TO_UI\n");
@@ -845,12 +847,10 @@ void flexend (exit_status)
 			putc ('p', stderr);
 		if (spprdflt)
 			putc ('s', stderr);
-		if (reentrant) {
-			putc ('R', stderr);
-
-			if (reentrant_bison_pure)
-				putc ('b', stderr);
-		}
+		if (reentrant)
+			fputs ("--reentrant", stderr);
+        if (bison_bridge)
+            fputs ("--bison-bridge", stderr);
 		if (use_stdout)
 			putc ('t', stderr);
 		if (printstats)
@@ -1032,7 +1032,7 @@ void flexinit (argc, argv)
 	yymore_really_used = reject_really_used = unspecified;
 	interactive = csize = unspecified;
 	do_yywrap = gen_line_dirs = usemecs = useecs = true;
-	reentrant = reentrant_bison_pure = false;
+	reentrant = bison_bridge = false;
 	performance_report = 0;
 	did_outfilename = 0;
 	prefix = "yy";
@@ -1040,7 +1040,7 @@ void flexinit (argc, argv)
 	use_read = use_stdout = false;
 	tablesext = tablestoggle = tablesverify = false;
 	gentables = true;
-	tablesfilename = NULL;
+	tablesfilename = tablesname = NULL;
 
 	sawcmpflag = false;
 
@@ -1205,27 +1205,16 @@ void flexinit (argc, argv)
 			++performance_report;
 			break;
 
-		case OPT_REENTRANT_BISON:
-			reentrant = true;
-			reentrant_bison_pure = true;
+		case OPT_BISON_BRIDGE:
+			bison_bridge = true;
 			break;
 
 		case OPT_REENTRANT:
 			reentrant = true;
-
-			/* Optional 'b' follows -R */
-			if (arg) {
-				if (strcmp (arg, "b") == 0)
-					reentrant_bison_pure = true;
-				else
-					lerrif (_
-						("unknown -R option '%c'"),
-						(int) arg[0]);
-			}
 			break;
 
 		case OPT_NO_REENTRANT:
-			reentrant = reentrant_bison_pure = false;
+			reentrant = false;
 			break;
 
 		case OPT_SKEL:
@@ -1592,7 +1581,7 @@ void readin ()
 		else if (do_yylineno) {
 			fprintf (stderr,
 				 _
-				 ("%%option yylineno entails a large performance penalty\n"));
+				 ("%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"));
 		}
 
 		if (performance_report > 1) {
@@ -1705,12 +1694,10 @@ void readin ()
 		outn ("#define YY_FLEX_LEX_COMPAT");
 
 	if (!C_plus_plus && !reentrant) {
-		outn ("#ifdef YY_USE_LINENO");
 		outn ("extern int yylineno;");
 		OUT_BEGIN_CODE ();
 		outn ("int yylineno = 1;");
 		OUT_END_CODE ();
-		outn ("#endif");
 	}
 
 	if (C_plus_plus) {
@@ -1900,7 +1887,7 @@ void usage ()
 		  "  -L,  --noline            suppress #line directives in scanner\n"
 		  "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 		  "  -R,  --reentrant         generate a reentrant C scanner\n"
-		  "  -Rb, --reentrant-bison   reentrant scanner for bison pure parser.\n"
+		  "       --bison-bridge      scanner for bison pure parser.\n"
 		  "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
 		  "       --nounistd          do not include <unistd.h>\n"
 		  "       --noFUNCTION        do not generate a particular FUNCTION\n"

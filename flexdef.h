@@ -413,7 +413,7 @@ __extension__ typedef unsigned long long int uint64_t;
  * C_plus_plus - if true (i.e., -+ flag), generate a C++ scanner class;
  *   otherwise, a standard C scanner
  * reentrant - if true (-R), generate a reentrant C scanner.
- * reentrant_bison_pure - if true (-Rb), bison pure calling convention.
+ * bison_bridge - if true (--bison-bridge), bison pure calling convention.
  * long_align - if true (-Ca flag), favor long-word alignment.
  * use_read - if true (-f, -F, or -Cr) then use read() for scanner input;
  *   otherwise, use fread().
@@ -440,7 +440,7 @@ extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
 extern int interactive, caseins, lex_compat, posix_compat, do_yylineno;
 extern int useecs, fulltbl, usemecs, fullspd;
 extern int gen_line_dirs, performance_report, backing_up_report;
-extern int reentrant, reentrant_bison_pure;
+extern int reentrant, bison_bridge;
 extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
 extern int csize;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;

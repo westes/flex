@@ -1725,12 +1725,13 @@ void make_tables ()
 		/* End generating yy_NUL_trans */
 	}
 
-	if (ddebug) {		/* Spit out table mapping rules to line numbers. */
-		if (!C_plus_plus && !reentrant) {
-			indent_puts ("extern int yy_flex_debug;");
-			indent_puts ("int yy_flex_debug = 1;\n");
-		}
+	if (!C_plus_plus && !reentrant) {
+		indent_puts ("extern int yy_flex_debug;");
+		indent_put2s ("int yy_flex_debug = %s;\n",
+			      ddebug ? "1" : "0");
+	}
 
+	if (ddebug) {		/* Spit out table mapping rules to line numbers. */
 		out_str_dec (long_align ? get_int32_decl () :
 			     get_int16_decl (), "yy_rule_linenum",
 			     num_rules);

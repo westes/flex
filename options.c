@@ -66,6 +66,8 @@ optspec_t flexopts[] = {
 	,
 	{"--batch", OPT_BATCH, 0}
 	,			/* Generate batch scanner (opposite of -I). */
+	{"--bison-bridge", OPT_BISON_BRIDGE, 0}
+	,			/* Scanner to be called by a bison pure parser. */
 	{"-i", OPT_CASE_INSENSITIVE, 0}
 	,
 	{"--case-insensitive", OPT_CASE_INSENSITIVE, 0}
@@ -157,14 +159,14 @@ optspec_t flexopts[] = {
 	,			/* Define a preprocessor symbol. */
 	{"--read", OPT_READ, 0}
 	,			/* Use read(2) instead of stdio. */
-	{"-R[b]", OPT_REENTRANT, 0}
+	{"-R", OPT_REENTRANT, 0}
 	,
 	{"--reentrant", OPT_REENTRANT, 0}
 	,			/* Generate a reentrant C scanner. */
 	{"--noreentrant", OPT_NO_REENTRANT, 0}
 	,
-	{"--reentrant-bison", OPT_REENTRANT_BISON, 0}
-	,			/* Reentrant scanner to be called by a bison pure parser. */
+	{"--reentrant-bison", OPT_BISON_BRIDGE, 0}
+	,			/* Deprecated. Replaced by --bison-bridge */
 	{"--reject", OPT_REJECT, 0}
 	,
 	{"--noreject", OPT_NO_REJECT, 0}

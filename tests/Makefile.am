@@ -26,8 +26,8 @@ noinst_SCRIPTS = \
 	create-test
 
 SUBDIRS = \
+	test-bison-nr \
 	test-c++-basic \
-	test-table-opts \
 	test-posixly-correct \
 	test-posix \
 	test-mem-r \
@@ -56,7 +56,8 @@ SUBDIRS = \
 	test-pthread \
 	test-string-nr \
 	test-string-r \
-	test-yyextra
+	test-yyextra \
+	test-table-opts
 
 # clean up before running the test suite so we dont test old builds of test code
 

@@ -5,6 +5,7 @@ array-nr              - Use %option array, non-reentrant.
 array-r               - Use %option array, reentrant.
 basic-nr              - Simple scanner, non-reentrant.
 basic-r               - Simple scanner, reentrant.
+bison-nr              - Ordinary bison-bridge.
 bison-yylloc          - Reentrant scanner + pure parser. Requires bison.
 bison-yylval          - Reentrant scanner + pure parser. Requires bison.
 c-cpp-nr              - Compile a C scanner with C++ compiler, nonreentrant.

@@ -539,7 +539,7 @@ struct yyguts_t
     int yy_more_len;
 #endif
 
-#ifdef YY_REENTRANT_BISON_PURE
+#ifdef YY_BISON_BRIDGE
     YYSTYPE * yylval_r;
 #ifdef YYLTYPE
     YYLTYPE * yylloc_r;
@@ -556,12 +556,14 @@ static int yy_init_globals YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 %not-for-header These go in the .c file only.
 /* This must go here because YYSTYPE and YYLSTYPE are included
  * from bison output in section 1.*/
-#ifdef YY_REENTRANT_BISON_PURE
+#ifdef YY_REENTRANT
+#ifdef YY_BISON_BRIDGE
 #    define yylval YY_G(yylval_r)
 #  ifdef YYLTYPE
 #    define yylloc YY_G(yylloc_r)
 #  endif
-#endif /* YY_REENTRANT_BISON_PURE */
+#endif /* YY_BISON_BRIDGE */
+#endif /* YY_REENTRANT */
 %ok-for-header
 
 #endif /* end if YY_REENTRANT */
@@ -621,7 +623,7 @@ int yyget_lineno YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 void yyset_lineno YY_PARAMS(( int line_number YY_PROTO_LAST_ARG ));
 #endif
 
-#ifdef YY_REENTRANT_BISON_PURE
+#ifdef YY_BISON_BRIDGE
 #ifndef YY_NO_GET_LVAL
 YYSTYPE * yyget_lval YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
@@ -634,7 +636,7 @@ void yyset_lval YY_PARAMS(( YYSTYPE * yylvalp YY_PROTO_LAST_ARG ));
     void yyset_lloc YY_PARAMS(( YYLTYPE * yyllocp YY_PROTO_LAST_ARG ));
 #endif
 #endif /* YYLTYPE */
-#endif /* YY_REENTRANT_BISON_PURE */
+#endif /* YY_BISON_BRIDGE */
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -792,7 +794,7 @@ struct yytbl_reader {
 /* If the bison pure parser is used, then bison will provide
    one or two additional arguments. */
 
-#ifdef YY_REENTRANT_BISON_PURE
+#ifdef YY_BISON_BRIDGE
 #  ifdef YYLTYPE 
 #        define YY_LEX_PROTO YY_PARAMS((YYSTYPE * yylvalp, YYLTYPE * yyllocp YY_PROTO_LAST_ARG))
 #        define YY_LEX_DECLARATION YYFARGS2(YYSTYPE *,yylvalp, YYLTYPE *,yyllocp)
@@ -834,10 +836,18 @@ YY_DECL
 	register yy_state_type yy_current_state;
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
+#ifdef YY_BISON_BRIDGE
+# ifndef YY_REENTRANT
+    YYSTYPE * yylval;
+#   ifdef YYLTYPE
+      YYLTYPE * yylloc;
+#   endif
+# endif
+#endif
 
 %% [7.0] user's declarations go here
 
-#ifdef YY_REENTRANT_BISON_PURE
+#ifdef YY_BISON_BRIDGE
     yylval = yylvalp;
 #ifdef YYLTYPE
     yylloc = yyllocp;
@@ -1798,21 +1808,24 @@ void yyFlexLexer::LexerError( yyconst char msg[] )
 
 
 
-#ifdef YY_REENTRANT
-
 /* Accessor  methods (get/set functions) to struct members. */
 
+%c-only
+#ifdef YY_REENTRANT
 #ifndef YY_NO_GET_EXTRA
 YY_EXTRA_TYPE yyget_extra  YYFARGS0(void)
 {
     return yyextra;
 }
 #endif /* !YY_NO_GET_EXTRA */
+#endif /* YY_REENTRANT */
 
 #ifndef YY_NO_GET_LINENO
 int yyget_lineno  YYFARGS0(void)
 {
+#ifdef YY_USE_LINENO
     return yylineno;
+#endif
 }
 #endif /* !YY_NO_GET_LINENO */
 
@@ -1844,12 +1857,14 @@ char *yyget_text  YYFARGS0(void)
 }
 #endif /* !YY_NO_GET_TEXT */
 
+#ifdef YY_REENTRANT
 #ifndef YY_NO_SET_EXTRA
 void yyset_extra YYFARGS1( YY_EXTRA_TYPE ,user_defined)
 {
     yyextra = user_defined ;
 }
 #endif /* !YY_NO_SET_EXTRA */
+#endif /* YY_REENTRANT */
 
 #ifndef YY_NO_SET_LINENO
 void yyset_lineno YYFARGS1( int ,line_number)
@@ -1887,11 +1902,12 @@ void yyset_debug YYFARGS1( int ,bdebug)
     yy_flex_debug = bdebug ;
 }
 #endif /* !YY_NO_SET_DEBUG */
+%c-or-c++
 
-
+#ifdef YY_REENTRANT
 /* Accessor methods for yylval and yylloc */
 
-#ifdef YY_REENTRANT_BISON_PURE
+#ifdef YY_BISON_BRIDGE
 #ifndef YY_NO_GET_LVAL
 YYSTYPE * yyget_lval  YYFARGS0(void)
 {
@@ -1922,7 +1938,7 @@ void yyset_lloc YYFARGS1( YYLTYPE * ,yyllocp)
 #endif /* !YY_NO_SET_LLOC */
 
 #endif /* YYLTYPE */
-#endif /* YY_REENTRANT_BISON_PURE */
+#endif /* YY_BISON_BRIDGE */
 
 
 static int yy_init_globals YYFARGS0(void)
@@ -2110,6 +2126,7 @@ static int yytbl_read32 (void *v, struct yytbl_reader * rd)
     return 0;
 }
 
+/** Read the header */
 static int yytbl_hdr_read YYFARGS2 (struct yytbl_hdr *, th, struct yytbl_reader *, rd)
 {
     int     bytes;
@@ -2141,6 +2158,8 @@ static int yytbl_hdr_read YYFARGS2 (struct yytbl_hdr *, th, struct yytbl_reader 
     /* we read it all into th_version, and point th_name into that data */
     if (fread (th->th_version, 1, bytes, rd->fp) != bytes){
         errno = EIO;
+        free(th->th_version);
+        th->th_version = NULL;
         return -1;
     }
     else
@@ -2377,44 +2396,82 @@ static int yytbl_data_load YYFARGS2 (struct yytbl_dmap *, dmap, struct yytbl_rea
     return 0;
 }
 
+%define-yytables   The name for this specific scanner's tables.
 
 /* Find the key and load the DFA tables from the given stream.  */
 int yytbl_load YYFARGS2 (FILE *, fp, const char *, key)
 {
+    int rv=0;
     struct yytbl_hdr th;
     struct yytbl_reader rd;
 
     rd.fp = fp;
     rd.bread = 0;
+    th.th_version = NULL;
 
     /* Keep trying until we find the right set of tables or end of file. */
     while (!feof(rd.fp)) {
-        if (yytbl_hdr_read (&th, &rd YY_CALL_LAST_ARG) != 0)
-            return -1;
+        if (yytbl_hdr_read (&th, &rd YY_CALL_LAST_ARG) != 0){
+            rv = -1;
+            goto return_rv;
+        }
 
         /* A NULL key means choose the first set of tables. */
         if (key == NULL)
             break;
 
-        if (strcmp(th.th_name,key) != 0)
+        if (strcmp(th.th_name,key) != 0){
             /* Skip ahead to next set */
             fseek(rd.fp, th.th_ssize - th.th_hsize, SEEK_CUR);
+            free(th.th_version);
+            th.th_version = NULL;
+        }
+        else
+            break;
     }
 
     while (rd.bread < th.th_ssize){
         /* Load the data tables */
-        if(yytbl_data_load (yydmap,&rd YY_CALL_LAST_ARG) != 0)
-            return -1;
+        if(yytbl_data_load (yydmap,&rd YY_CALL_LAST_ARG) != 0){
+            rv = -1;
+            goto return_rv;
+        }
     }
 
+return_rv:
+    if(th.th_version){
+        free(th.th_version);
+        th.th_version = NULL;
+    }
+
+    return rv;
+}
+
+/** Load the DFA tables for this scanner from the given stream.  */
+int yytables_load YYFARGS1 (FILE *, fp)
+{
+    if( yytbl_load(fp, YYTABLES_NAME YY_CALL_LAST_ARG) != 0)
+        return -1;
     return 0;
 }
 
-/* Load the DFA tables for this scanner from the given stream.  */
-int yytables_load YYFARGS1 (FILE *, fp)
-{
-    /* TODO: generate key "yytables" using prefix */
-    yytbl_load(fp,NULL YY_CALL_LAST_ARG);
+/** Destroy the loaded tables, freeing memory, etc.. */
+int yytables_destroy YYFARGS0(void)
+{   
+    struct yytbl_dmap *dmap=0;
+
+    if(!YY_TABLES_VERIFY){
+        /* Walk the dmap, freeing the pointers */
+        for(dmap=yydmap; dmap->dm_id; dmap++) {
+            void * v;
+            v = dmap->dm_arr;
+            if(v && *(char**)v){
+                    free(*(char**)v);
+                    *(char**)v = NULL;
+            }
+        }
+    }
+
     return 0;
 }
 

@@ -259,6 +259,7 @@ LEXOPT		[aceknopr]
 	array		yytext_is_array = option_sense;
 	backup		backing_up_report = option_sense;
 	batch		interactive = ! option_sense;
+    bison-bridge  bison_bridge = option_sense;
 	"c++"		C_plus_plus = option_sense;
 	caseful|case-sensitive		caseins = ! option_sense;
 	caseless|case-insensitive	caseins = option_sense;
@@ -291,11 +292,6 @@ LEXOPT		[aceknopr]
 	pointer		yytext_is_array = ! option_sense;
 	read		use_read = option_sense;
     reentrant   reentrant = option_sense;
-    reentrant-bison {
-                /* reentrant-bison implies reentrant. */
-                if ((reentrant_bison_pure = option_sense) != 0)
-                    reentrant = 1;
-            }    
 	reject		reject_really_used = option_sense;
 	stack		action_define( "YY_STACK_USED", option_sense );
 	stdinit		do_stdinit = option_sense;

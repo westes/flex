@@ -97,6 +97,7 @@ tests/test-posix/Makefile
 tests/test-posixly-correct/Makefile
 tests/test-table-opts/Makefile
 tests/test-c++-basic/Makefile
+tests/test-bison-nr/Makefile
 dnl --new-test-here-- This line is processed by tests/create-test.
 )
 
