@@ -445,6 +445,8 @@ YY_DECL
 
 	if ( yy_init )
 		{
+		yy_init = 0;
+
 #ifdef YY_USER_INIT
 		YY_USER_INIT;
 #endif
@@ -471,8 +473,6 @@ YY_DECL
 				yy_create_buffer( yyin, YY_BUF_SIZE );
 
 		yy_load_buffer_state();
-
-		yy_init = 0;
 		}
 
 	while ( 1 )		/* loops until end-of-file is reached */
