@@ -9,7 +9,14 @@
 #include <stdio.h>
 
 #ifdef __STDC__
+
+#ifndef DONT_HAVE_STDLIB_H
 #include <stdlib.h>
+#else
+void *malloc( unsigned );
+void free( void* );
+#endif
+
 #define YY_USE_PROTOS
 #define YY_USE_CONST
 #endif
