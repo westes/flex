@@ -32,7 +32,10 @@ m4_changecom
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION FLEX_MAJOR_VERSION
 #define YY_FLEX_MINOR_VERSION FLEX_MINOR_VERSION
-#define YY_FLEX_SUBMINOR_VERSION FLEX_SUBMINOR_VERSION 
+#define YY_FLEX_SUBMINOR_VERSION FLEX_SUBMINOR_VERSION
+#if YY_FLEX_SUBMINOR_VERSION > 0
+#define FLEX_BETA
+#endif
 
 /* First, we deal with  platform-specific or compiler-specific issues. */
 
