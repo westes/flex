@@ -159,7 +159,7 @@ LEXOPT		[aceknopr]
 	[[:digit:]]+	linenum = myctoi( yytext );
 
 	\"[^"\n]*\"	{
-			flex_free( infilename );
+			flex_free( (void *) infilename );
 			infilename = copy_string( yytext + 1 );
 			infilename[strlen( infilename ) - 1] = '\0';
 			}
