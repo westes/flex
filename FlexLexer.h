@@ -113,6 +113,7 @@ protected:
 
 	void yy_load_buffer_state();
 	void yy_init_buffer( struct yy_buffer_state* b, istream* s );
+	void yy_flush_buffer( struct yy_buffer_state* b );
 
 	int yy_start_stack_ptr;
 	int yy_start_stack_depth;
