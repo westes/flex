@@ -77,14 +77,14 @@ char *new_text;
 /* allocate_array - allocate memory for an integer array of the given size */
 
 void *allocate_array( size, element_size )
-int size, element_size;
+int size;
+size_t element_size;
 	{
 	register void *mem;
-	unsigned int num_bytes = element_size * size;
+	size_t num_bytes = element_size * size;
 
 	mem = flex_alloc( num_bytes );
-
-	if ( mem == NULL )
+	if ( ! mem )
 		flexfatal( "memory allocation failed in allocate_array()" );
 
 	return mem;
@@ -558,7 +558,7 @@ Char array[];
 		case 'r': return '\r';
 		case 't': return '\t';
 
-#ifdef __STDC__
+#if __STDC__
 		case 'a': return '\a';
 		case 'v': return '\v';
 #else
@@ -747,7 +747,7 @@ register int c;
 			case '\r': return "\\r";
 			case '\t': return "\\t";
 
-#ifdef __STDC__
+#if __STDC__
 			case '\a': return "\\a";
 			case '\v': return "\\v";
 #endif
@@ -776,14 +776,14 @@ register int c;
 
 void *reallocate_array( array, size, element_size )
 void *array;
-int size, element_size;
+int size;
+size_t element_size;
 	{
 	register void *new_array;
-	unsigned int num_bytes = element_size * size;
+	size_t num_bytes = element_size * size;
 
 	new_array = flex_realloc( array, num_bytes );
-
-	if ( new_array == NULL )
+	if ( ! new_array )
 		flexfatal( "attempt to increase array size failed" );
 
 	return new_array;
@@ -879,7 +879,7 @@ int element_v, element_n;
 void *yy_flex_xmalloc( size )
 int size;
 	{
-	void *result = flex_alloc( (unsigned) size );
+	void *result = flex_alloc( (size_t) size );
 
 	if ( ! result  )
 		flexfatal( "memory allocation failed in yy_flex_xmalloc()" );
@@ -895,7 +895,7 @@ int size;
 
 void zero_out( region_ptr, size_in_bytes )
 char *region_ptr;
-int size_in_bytes;
+size_t size_in_bytes;
 	{
 	register char *rp, *rp_end;
 
