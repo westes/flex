@@ -5,6 +5,13 @@
 <bookinfo>
 <title>flex: a fast lexical analyzer generator</title>
 
+<copyright>
+<year>1990</year>
+<year>1997</year>
+<holder>The Regents of the University of California.</holder>
+All rights reserved.
+</copyright>
+
 <!--
 @title Flex, version @value{VERSION}
 @subtitle Edition @value{EDITION}, @value{UPDATED}
@@ -13,42 +20,6 @@
 <author><firstname>Vern</firstname><surname>Paxson</surname></author>
 <author><firstname>W. L.</firstname><surname>Estes</surname></author>
 <author><firstname>John</firstname><surname>Millaway</surname></author>
-
-</bookinfo>
-
-<!-- @c  "Macro Hooks" index -->
-@defindex hk
-<!-- @c  "Options" index -->
-@defindex op
-@dircategory Programming
-@direntry
-
-<preface>
-
-This manual describes <application>flex</application>, a tool for generating programs that
-perform pattern-matching on text.  The manual includes both tutorial and
-reference sections.
-
-This edition of @cite{The flex Manual} documents <application>flex</application> version
-@value{VERSION}. It was last updated on @value{UPDATED}.
-
-</preface>
-
-<chapter>
-<title>Copyright</title>
-
-<!-- @cindex copyright of flex -->
-<!-- @cindex distributing flex -->
-
-The flex manual is placed under the same licensing conditions as the
-rest of flex:
-
-<copyright>
-<year>1990</year>
-<year>1997</year>
-<holder>The Regents of the University of California.</holder>
-All rights reserved.
-</copyright>
 
 <legalnotice>
 This code is derived from software contributed to Berkeley by
@@ -86,6 +57,35 @@ IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 PURPOSE.
 </legalnotice>
+
+</bookinfo>
+
+<!-- @c  "Macro Hooks" index -->
+@defindex hk
+<!-- @c  "Options" index -->
+@defindex op
+@dircategory Programming
+@direntry
+
+<preface>
+
+This manual describes <application>flex</application>, a tool for generating programs that
+perform pattern-matching on text.  The manual includes both tutorial and
+reference sections.
+
+This edition of @cite{The flex Manual} documents <application>flex</application> version
+@value{VERSION}. It was last updated on @value{UPDATED}.
+
+</preface>
+
+<chapter>
+<title>Copyright</title>
+
+<!-- @cindex copyright of flex -->
+<!-- @cindex distributing flex -->
+
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
 
 </chapter>
 
@@ -281,7 +281,8 @@ line containing only @samp{%%}.
 * Rules Section::               
 * User Code Section::           
 * Comments in the Input::       
-@end menu-->
+@end menu
+-->
 
 
 <section>
@@ -498,6 +499,7 @@ ruleD   ECHO;
 </programlisting>
 </informalexample>
 
+</section>
 </chapter>
 
 <chapter>
@@ -725,7 +727,7 @@ input yourself, or explicitly use @samp{r/\r\n} for @samp{r$}.
 </listitem>
 </varlistentry>
 
-<varlistentry><term><s>r</term>
+<varlistentry><term>&lt;s&gt;r</term>
 <listitem>
 an @samp{r}, but only in start condition @code{s} (see @ref{Start
 Conditions} for discussion of start conditions).
@@ -733,14 +735,14 @@ Conditions} for discussion of start conditions).
 </listitem>
 </varlistentry>
 
-<varlistentry><term><s1,s2,s3>r</term>
+<varlistentry><term>&lt;s1,s2,s3&gt;r</term>
 <listitem>
 same, but in any of start conditions @code{s1}, @code{s2}, or @code{s3}.
 
 </listitem>
 </varlistentry>
 
-<varlistentry><term><*>r</term>
+<varlistentry><term>&lt;*&gt;r</term>
 <listitem>
 an @samp{r} in any start condition, even an exclusive one.
 
@@ -749,14 +751,14 @@ an @samp{r} in any start condition, even an exclusive one.
 </listitem>
 </varlistentry>
 
-<varlistentry><term><<EOF>></term>
+<varlistentry><term>&lt;&lt;EOF&gt;&gt;</term>
 <listitem>
 an end-of-file.
 
 </listitem>
 </varlistentry>
 
-<varlistentry><term><s1,s2><<EOF>></term>
+<varlistentry><term>&lt;s1,s2&gt;&lt;&lt;EOF&gt;&gt;</term>
 <listitem>
 an end-of-file when in start condition @code{s1} or @code{s2}
 </listitem>
@@ -917,7 +919,7 @@ input unless there's another quote in the input.
 <listitem>
 
 A rule can have at most one instance of trailing context (the @samp{/} operator
-or the @samp{$} operator).  The start condition, @samp{^}, and @samp{<<EOF>>} patterns
+or the @samp{$} operator).  The start condition, @samp{^}, and @samp{&lt;&lt;EOF&gt;&gt;} patterns
 can only occur at the beginning of a pattern, and, as well as with @samp{/} and @samp{$},
 cannot be grouped inside parentheses.  A @samp{^} which does not occur at
 the beginning of a rule or a @samp{$} which does not occur at the end of
@@ -1450,7 +1452,7 @@ the @code{YY_DECL} macro.  For example, you could use:
 
 to give the scanning routine the name @code{lexscan}, returning a float,
 and taking two floats as arguments.  Note that if you give arguments to
-the scanning routine using a K&R-style/non-prototyped function
+the scanning routine using a K&amp;R-style/non-prototyped function
 declaration, you must terminate the definition with a semi-colon (;).
 
 <application>flex</application> generates @samp{C99} function definitions by
@@ -1460,7 +1462,7 @@ bootstrapping gcc on old systems.  Unfortunately, traditional
 definitions prevent us from using any standard data types smaller than
 int (such as short, char, or bool) as function arguments.  For this
 reason, future versions of <application>flex</application> may generate standard C99 code
-only, leaving K&R-style functions to the historians.  Currently, if you
+only, leaving K&amp;R-style functions to the historians.  Currently, if you
 do @strong{not} want @samp{C99} definitions, then you must use 
 @code{%option noansi-definitions}.
 
@@ -1563,8 +1565,8 @@ assigning it to some other @code{FILE} pointer.
 
 <!-- @cindex start conditions -->
 <application>flex</application> provides a mechanism for conditionally activating rules.
-Any rule whose pattern is prefixed with @samp{<sc>} will only be active
-when the scanner is in the @dfn{start condition} named @code{sc}.  For
+Any rule whose pattern is prefixed with @samp{&lt;NAME&gt;} will only be active
+when the scanner is in the @dfn{start condition} named @code{NAME}.  For
 example,
 
 <!-- @c proofread edit stopped here -->
@@ -1647,7 +1649,7 @@ is equivalent to
 </programlisting>
 </informalexample>
 
-Without the @code{<INITIAL,example>} qualifier, the @code{bar} pattern in
+Without the @code{&lt;INITIAL,example&gt;} qualifier, the @code{bar} pattern in
 the second example wouldn't be active (i.e., couldn't match) when in
 start condition @code{example}.  If we just used @code{example>} to
 qualify @code{bar}, though, then it would only be active in
@@ -1657,11 +1659,11 @@ start condition is an inclusive @code{(%s)} start condition.
 
 <!-- @cindex start conditions, special wildcard condition -->
 Also note that the special start-condition specifier
-@code{<*>}
+@code{&lt;*&gt;}
 matches every start condition.  Thus, the above example could also
 have been written:
 
-<!-- @cindex start conditions, use of wildcard condition (<*>) -->
+<!-- @cindex start conditions, use of wildcard condition (&lt;*&gt;) -->
 <informalexample>
 <programlisting>
 <![CDATA[
@@ -1837,7 +1839,7 @@ assignments to @code{comment_caller} could instead be written
 
 <!-- @vindex YY_START -->
 Flex provides @code{YYSTATE} as an alias for @code{YY_START} (since that
-is what's used by AT&T @code{lex}).
+is what's used by <acronym>&amp;</acronym> @code{lex}).
 
 For historical reasons, start conditions do not have their own
 name-space within the generated scanner. The start condition names are
@@ -2095,7 +2097,7 @@ current buffer. It should not be used as an lvalue.
 <!-- @cindex EOF, example using multiple input buffers -->
 Here are two examples of using these features for writing a scanner
 which expands include files (the
-@code{<<EOF>>}
+@code{&lt;&lt;EOF&gt;&gt;}
 feature is discussed below).
 
 This first example uses yypush_buffer_state and yypop_buffer_state. Flex
@@ -2250,7 +2252,7 @@ reflecting the size of the buffer.
 <title>End-of-File Rules</title>
 
 <!-- @cindex EOF, explanation -->
-The special rule @code{<<EOF>>} indicates
+The special rule @code{&lt;&lt;EOF&gt;&gt;} indicates
 actions which are to be taken when an end-of-file is
 encountered and <function>yywrap</function> returns non-zero (i.e., indicates
 no further files to process).  The action must finish
@@ -2284,10 +2286,10 @@ shown in the example above.
 </itemizedlist>
 
 
-<<EOF>> rules may not be used with other patterns; they may only be
-qualified with a list of start conditions.  If an unqualified <<EOF>>
+&lt;&lt;EOF&gt;&gt; rules may not be used with other patterns; they may only be
+qualified with a list of start conditions.  If an unqualified &lt;&lt;EOF&gt;&gt;
 rule is given, it applies to @emph{all} start conditions which do not
-already have <<EOF>> actions.  To specify an <<EOF>> rule for only the
+already have &lt;&lt;EOF&gt;&gt; actions.  To specify an &lt;&lt;EOF&gt;&gt; rule for only the
 initial start condition, use:
 
 <informalexample>
@@ -2556,7 +2558,8 @@ menu. If you want to lookup a particular option by name, @xref{Index of Scanner 
 * Options for Scanner Speed and Size::  
 * Debugging Options::           
 * Miscellaneous Options::       
-@end menu-->
+@end menu
+-->
 
 
 Even though there are many scanner options, a typical scanner might only
@@ -2620,8 +2623,6 @@ corresponding routine not appearing in the generated scanner:
 
 (though <function>yy_push_state</function> and friends won't appear anyway unless
 you use @code{%option stack)}.
-
-</section>
 
 <section>
 <title>Options for Specifing Filenames</title>
@@ -2750,7 +2751,7 @@ not be folded).  For tricky behavior, see @ref{case and character ranges}.
 
 <varlistentry><term>-l, --lex-compat, @code{%option lex-compat}</term>
 <listitem>
-turns on maximum compatibility with the original AT&T @code{lex}
+turns on maximum compatibility with the original <acronym>&amp;</acronym> @code{lex}
 implementation.  Note that this does not mean @emph{full} compatibility.
 Use of this option costs a considerable amount of performance, and it
 cannot be used with the @samp{--c++}, @samp{--full}, @samp{--fast}, @samp{-Cf}, or
@@ -2927,7 +2928,7 @@ in behavior.  At the current writing the known differences between
 
 <listitem>
 
-In POSIX and AT&T @code{lex}, the repeat operator, @samp{@{@}}, has lower
+In POSIX and <acronym>&amp;</acronym> @code{lex}, the repeat operator, @samp{@{@}}, has lower
 precedence than concatenation (thus @samp{ab@{3@}} yields @samp{ababab}).
 Most POSIX utilities use an Extended Regular Expression (ERE) precedence
 that has the precedence of the repeat operator higher than concatenation
@@ -2935,7 +2936,7 @@ that has the precedence of the repeat operator higher than concatenation
 places the precedence of the repeat operator higher than concatenation
 which matches the ERE processing of other POSIX utilities.  When either
 @samp{--posix} or @samp{-l} are specified, <application>flex</application> will use the
-traditional AT&T and POSIX-compliant precedence for the repeat operator
+traditional <acronym>&amp;</acronym> and POSIX-compliant precedence for the repeat operator
 where concatenation has higher precedence than the repeat operator.
 </listitem>
 </itemizedlist>
@@ -3291,7 +3292,6 @@ between small scanners and fast scanners.
 
 <variablelist>
 @opindex -C
-</varlistentry>
 
 <varlistentry><term>-C</term>
 <listitem>
@@ -3688,6 +3688,7 @@ prints the version number to <filename>stdout</filename> and exits.
 </variablelist>
 
 
+</section>
 </chapter>
 
 <chapter>
@@ -4388,10 +4389,9 @@ multi-threaded applications.  Any thread may create and execute a reentrant
 * Reentrant Example::           
 * Reentrant Detail::            
 * Reentrant Functions::         
-@end menu-->
+@end menu
+-->
 
-
-</section>
 
 <section>
 <title>Uses for Reentrant Scanners</title>
@@ -4547,7 +4547,8 @@ Here are the things you need to do or know to use the reentrant C API of
 * Accessor Methods::            
 * Extra Data::                  
 * About yyscan_t::              
-@end menu-->
+@end menu
+-->
 
 
 </section>
@@ -4961,6 +4962,7 @@ yylloc assumes that @code{YYSLYPE} is a valid type.  Typically, these types are
 generated by <application>bison</application>, and are included in section 1 of the <application>flex</application>
 input.
 
+</section>
 </chapter>
 
 <chapter>
@@ -4969,7 +4971,7 @@ input.
 <!-- @cindex POSIX and lex -->
 <!-- @cindex lex (traditional) and POSIX -->
 
-<application>flex</application> is a rewrite of the AT&T Unix @emph{lex} tool (the two
+<application>flex</application> is a rewrite of the <acronym>&amp;</acronym> Unix @emph{lex} tool (the two
 implementations do not share any code, though), with some extensions and
 incompatibilities, both of which are of concern to those who wish to
 write scanners acceptable to both implementations.  <application>flex</application> is fully
@@ -4977,9 +4979,9 @@ compliant with the POSIX @code{lex} specification, except that when
 using @code{%pointer} (the default), a call to <function>unput</function> destroys
 the contents of <varname>yytext</varname>, which is counter to the POSIX
 specification.  In this section we discuss all of the known areas of
-incompatibility between <application>flex</application>, AT&T @code{lex}, and the POSIX
+incompatibility between <application>flex</application>, <acronym>&amp;</acronym> @code{lex}, and the POSIX
 specification.  <application>flex</application>'s @samp{-l} option turns on maximum
-compatibility with the original AT&T @code{lex} implementation, at the
+compatibility with the original <acronym>&amp;</acronym> @code{lex} implementation, at the
 cost of a major loss in the generated scanner's performance.  We note
 below which incompatibilities can be overcome using the @samp{-l}
 option.  <application>flex</application> is fully compatible with @code{lex} with the
@@ -5118,7 +5120,7 @@ and so the string @samp{foo} will match.
 Note that if the definition begins with @samp{^} or ends with @samp{$}
 then it is @emph{not} expanded with parentheses, to allow these
 operators to appear in definitions without losing their special
-meanings.  But the @samp{<s>}, @samp{/}, and @code{<<EOF>>} operators
+meanings.  But the @samp{&lt;s&gt;}, @samp{/}, and @code{&lt;&lt;EOF&gt;&gt;} operators
 cannot be used in a <application>flex</application> definition.
 
 </listitem>
@@ -5169,7 +5171,7 @@ This is not the case with @code{lex} or the POSIX specification.  The
 <listitem>
 
 The precedence of the @samp{@{,@}} (numeric range) operator is
-different.  The AT&T and POSIX specifications of @code{lex}
+different.  The <acronym>&amp;</acronym> and POSIX specifications of @code{lex}
 interpret @samp{abc@{1,3@}} as match one, two,
 or three occurrences of @samp{abc}'', whereas <application>flex</application> interprets it
 as ``match @samp{ab} followed by one, two, or three occurrences of
@@ -5252,11 +5254,11 @@ yy_set_bol()
 <listitem>
 
 YY_AT_BOL()
-   <<EOF>>
+   &lt;&lt;EOF&gt;&gt;
 </listitem>
 <listitem>
 
-<*>
+&lt;*&gt;
 </listitem>
 <listitem>
 
@@ -5338,10 +5340,9 @@ override the default behavior.
 * The Default Memory Management::  
 * Overriding The Default Memory Management::  
 * A Note About yytext And Memory::  
-@end menu-->
+@end menu
+-->
 
-
-</section>
 
 <section>
 <title>The Default Memory Management</title>
@@ -5556,6 +5557,7 @@ To prevent memory leaks from strdup'd yytext, you will have to track the memory
 somehow. Our experience has shown that a garbage collection mechanism or a
 pooled memory mechanism will save you a lot of grief when writing parsers.
 
+</section>
 </chapter>
 
 <chapter>
@@ -5580,10 +5582,10 @@ scanning begins. The tables may be discarded when scanning is finished.
 * Creating Serialized Tables::  
 * Loading and Unloading Serialized Tables::  
 * Tables File Format::          
-@end menu-->
+@end menu
+-->
 
 
-</section>
 
 <section>
 <title>Creating Serialized Tables</title>
@@ -5969,6 +5971,7 @@ calculated from the beginning of this table.
 </varlistentry>
 </variablelist>
 
+</section>
 </chapter>
 
 <chapter>
@@ -6084,8 +6087,8 @@ or, as noted above, switch to using the C++ scanner class.
 </listitem>
 <listitem>
 
-@samp{too many start conditions in <> construct!}  you listed more start
-conditions in a <> construct than exist (so you must have listed at
+@samp{too many start conditions in &lt;&gt; construct!}  you listed more start
+conditions in a &lt;&gt; construct than exist (so you must have listed at
 least one of them twice).
 </listitem>
 </itemizedlist>
@@ -6166,7 +6169,7 @@ You may wish to read more about the following programs:
 The following books may contain material of interest:
 
 John Levine, Tony Mason, and Doug Brown,
-@emph{Lex & Yacc},
+@emph{Lex &amp; Yacc},
 O'Reilly and Associates.  Be sure to get the 2nd edition.
 
 M. E. Lesk and E. Schmidt,
@@ -6177,9 +6180,9 @@ Techniques and Tools}, Addison-Wesley (1986).  Describes the
 pattern-matching techniques used by <application>flex</application> (deterministic finite
 automata).
 
-</section>
+</chapter>
 
-<section>
+<chapter>
 <title>FAQ</title>
 
 From time to time, the <application>flex</application> maintainer receives certain
@@ -6219,7 +6222,7 @@ publish them here.
 * How can I expand macros in the input?::  
 * How can I build a two-pass scanner?::  
 * How do I match any string not matched in the preceding rules?::  
-* I am trying to port code from AT&T lex that uses yysptr and yysbuf.::  
+* I am trying to port code from <acronym>&amp;</acronym> lex that uses yysptr and yysbuf.::  
 * Is there a way to make flex treat NULL like a regular character?::  
 * Whenever flex can not match the input it says "flex scanner jammed".::  
 * Why doesnt flex have non-greedy operators like perl does?::  
@@ -6289,8 +6292,6 @@ publish them here.
 * unnamed-faq-101::             
 @end menu-->
 
-
-</section>
 
 <section>
 <title>When was flex born?</title>
@@ -6394,7 +6395,7 @@ data_.*        yyless( 5 ); BEGIN BLOCKIDSTATE;
 </informalexample>
 
 Another fix would be to make the second rule active only during the
-@code{<BLOCKIDSTATE>} start condition, and make that start condition exclusive
+@code{&lt;BLOCKIDSTATE&gt;} start condition, and make that start condition exclusive
 by declaring it with @code{%x} instead of @code{%s}.
 
 A final fix is to change the input language so that the ambiguity for
@@ -6523,8 +6524,8 @@ real @code{EOF} next time it's called).  Then you could write:
 <title>How can I make REJECT cascade across start condition boundaries?</title>
 
 You can do this as follows.  Suppose you have a start condition @samp{A}, and
-after exhausting all of the possible matches in @samp{<A>}, you want to try
-matches in @samp{<INITIAL>}.  Then you could use the following:
+after exhausting all of the possible matches in @samp{&lt;A&gt;}, you want to try
+matches in @samp{&lt;INITIAL&gt;}.  Then you could use the following:
 
 <informalexample>
 <programlisting>
@@ -6817,7 +6818,7 @@ did_init = 1;
 <section>
 <title>How do I execute code at termination?</title>
 
-You can specify an action for the @code{<<EOF>>} rule.
+You can specify an action for the @code{&lt;&lt;EOF&gt;&gt;} rule.
 
 </section>
 
@@ -6944,9 +6945,9 @@ one to match.
 </section>
 
 <section>
-<title>I am trying to port code from AT&T lex that uses yysptr and yysbuf.</title>
+<title>I am trying to port code from <acronym>&amp;</acronym> lex that uses yysptr and yysbuf.</title>
 
-Those are internal variables pointing into the AT&T scanner's input buffer.  I
+Those are internal variables pointing into the <acronym>&amp;</acronym> scanner's input buffer.  I
 imagine they're being manipulated in user versions of the <function>input</function> and <function>unput</function>
 functions.  If so, what you need to do is analyze those functions to figure out
 what they're doing, and then replace <function>input</function> with an appropriate definition of
@@ -7548,7 +7549,7 @@ trailing context operator, and have it enclosed in ()'s.  Flex does not
 allow this operator to be enclosed in ()'s because doing so allows undefined
 regular expressions such as "(a/b)+".  So the solution is to remove the
 parentheses.  Note that you must also be building the scanner with the -l
-option for AT&T lex compatibility.  Without this option, flex automatically
+option for <acronym>&amp;</acronym> lex compatibility.  Without this option, flex automatically
 encloses the definitions in parentheses.
 
 		Vern
@@ -9179,7 +9180,7 @@ Well, your problem is the
 switch (yybgin-yysvec-1) {      /* witchcraft */
 
 at the beginning of lex rules.  "witchcraft" == "non-portable".  It's
-assuming knowledge of the AT&T lex's internal variables.
+assuming knowledge of the <acronym>&amp;</acronym> lex's internal variables.
 
 For flex, you can probably do the equivalent using a switch on YYSTATE.
 
@@ -9282,18 +9283,13 @@ then the problem is that the last rule needs to be "{whitespace}" !
 ]]>
 </programlisting>
 </informalexample>
+</section>
 
-@appendix Appendices
+<!-- END CHAPTER FAQ -->
+</chapter>
 
-<!--
-@menu
-* Makefiles and Flex::          
-* Bison Bridge::                
-* M4 Dependency::               
-@end menu-->
-
-
-@appendixsec Makefiles and Flex
+<appendix>
+<title>Makefiles and Flex</title>
 
 <!-- @cindex Makefile, syntax -->
 
@@ -9409,9 +9405,9 @@ with your specific implementation of @command{make}.
 For more details on writing Makefiles, see @ref{Top, , , make, The
 GNU Make Manual}.
 
-</section>
+</appendix>
 
-<section>
+<appendix>
 <title>C Scanners with Bison Parsers</title>
 
 <!-- @cindex bison, bridging with flex -->
@@ -9521,9 +9517,9 @@ As you can see, there really is no magic here. We just use
 </programlisting>
 </informalexample>
 
-</section>
+</appendix>
 
-<section>
+<appendix>
 <title>M4 Dependency</title>
 <!-- @cindex m4 -->
 
@@ -9554,12 +9550,11 @@ code such as @code{x[y[z]]}.
 scanner is ordinary C or C++, and does @emph{not} require <application>m4</application>.
 
 
-</section>
-
-<section>
-<title>Indices</title>
+</appendix>
 
 <!--
+<title>Indices</title>
+
 @menu
 * Concept Index::               
 * Index of Functions and Macros::  
@@ -9567,10 +9562,7 @@ scanner is ordinary C or C++, and does @emph{not} require <application>m4</appli
 * Index of Data Types::         
 * Index of Hooks::              
 * Index of Scanner Options::    
-@end menu-->
-
-
-</section>
+@end menu
 
 <section>
 <title>Concept Index</title>
@@ -9619,6 +9611,9 @@ to specific locations in the generated scanner, and may be used to insert arbitr
 <title>Index of Scanner Options</title>
 
 @printindex op
+</section>
+
+-->
 
 <!--
 A vim script to name the faq entries. delete this when faqs are no longer
