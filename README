@@ -57,7 +57,7 @@ ABOUT-NLS - description of internationalization support in flex.
 
 COPYING - flex's copyright and license.
 
-flex.1, flex.texi - user documentation.
+doc/ - user documentation.
 
 RoadMap - notes for developers.
 
