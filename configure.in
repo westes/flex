@@ -28,6 +28,7 @@ AC_INIT(flex,2.5.22,help-flex@gnu.org)
 AC_CONFIG_SRCDIR(scan.l)
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADER(config.h:conf.in)
+AM_MAINTAINER_MODE
 
 dnl checks for programs
 
