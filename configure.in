@@ -46,7 +46,7 @@ AC_PATH_PROG(M4, m4, $srcdir/missing)
 AC_PATH_PROG(INDENT, indent, $srcdir/missing)
 if test "$INDENT" != $srcdir/missing ; then
    AC_MSG_CHECKING(if $INDENT is GNU indent)
-   if $INDENT --version | head -1|grep "GNU indent" > /dev/null ; then
+   if $INDENT --version 2>/dev/null | head -1|grep "GNU indent" > /dev/null ; then
       AC_MSG_RESULT(yes)
    else
       AC_MSG_RESULT(no)
