@@ -234,7 +234,7 @@ dist2:
 	gzip <$(DIST_NAME).tar >$(DIST_NAME).tar.gz
 	@rm $(DIST_NAME).tar
 
-Makefile: Makefile.in config.status
+Makefile: $(srcdir)/Makefile.in config.status
 	$(SHELL) config.status
 config.status: configure
 	$(SHELL) config.status --recheck
