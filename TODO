@@ -4,7 +4,8 @@
 
 * the manual:
 
-** do an end-to-end proofread of the manual
+** do an end-to-end proofread of the manual (this is under way, but is
+   going slowly)
 
 ** faq
 
@@ -30,7 +31,9 @@
 
 * test suite
 
-** integrate the test suite into automake's framework
+** integrate the test suite into automake's framework (note that the
+   test suite can be run from the top level directory with "make
+   check". Still, we want to get it completely under automake's control.)
 
 ** make test suite more complete
 
@@ -43,12 +46,6 @@
     this for the start condition stack, but not for the input
     buffer stack.)
 
-** memory management
-
-*** Complete the memory management api and documentation.
-
-*** create a uniform memory management API
-
 ** figure out whether we want to add the capability to have
   auto-generated backout rules
 
@@ -60,7 +57,8 @@
 
 ** use bootstrapper
 
-** consider if --enable-maintainer-mode is a good thing
+** use clcommit once it's available in a reasonable form
+
 
 Legend:
 
