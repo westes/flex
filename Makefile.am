@@ -110,13 +110,6 @@ BUILT_SOURCES = \
 	skel.c
 
 SUBDIRS = \
-	intl \
-	m4  \
-	examples \
-	po
-
-DIST_SUBDIRS = \
-	intl \
 	m4  \
 	examples \
 	po \

@@ -32,7 +32,7 @@ AM_MAINTAINER_MODE
 
 dnl checks for programs
 
-AM_GNU_GETTEXT
+AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.11.5)
 
 AC_PROG_YACC
@@ -81,7 +81,6 @@ examples/fastwc/Makefile
 examples/manual/Makefile
 m4/Makefile
 po/Makefile.in
-intl/Makefile
 tests/Makefile
 tests/TEMPLATE/Makefile
 tests/test-array-nr/Makefile
