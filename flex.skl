@@ -133,6 +133,7 @@ extern FILE *yyin, *yyout;
 		{ \
 		/* Undo effects of setting up yytext. */ \
 		*yy_cp = yy_hold_char; \
+		YY_RESTORE_YY_MORE_OFFSET \
 		yy_c_buf_p = yy_cp = yy_bp + n - YY_MORE_ADJ; \
 		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 		} \
@@ -317,6 +318,10 @@ static void yyunput YY_PROTO(( int c, char *buf_ptr ));
 
 #ifndef yytext_ptr
 static void yy_flex_strncpy YY_PROTO(( char *, yyconst char *, int ));
+#endif
+
+#ifdef YY_NEED_STRLEN
+static int yy_flex_strlen YY_PROTO(( yyconst char * ));
 #endif
 
 #ifndef YY_NO_INPUT
@@ -518,6 +523,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 		/* Undo the effects of YY_DO_BEFORE_ACTION. */
 		*yy_cp = yy_hold_char;
+		YY_RESTORE_YY_MORE_OFFSET
 
 		if ( yy_current_buffer->yy_buffer_status == YY_BUFFER_NEW )
 			{
@@ -1025,15 +1031,7 @@ int yyFlexLexer::yyinput()
 
 	c = *(unsigned char *) yy_c_buf_p;	/* cast for 8-bit char's */
 
-	/* If we're doing %array, then we don't need to bother preserving
-	 * yytext.  Ironically, not doing so is a win in later preserving
-	 * yytext if we're doing yymore(), because we won't have this
-	 * errant '\0' sitting in the middle of it.
-	 */
-#ifdef yytext_ptr
 	*yy_c_buf_p = '\0';	/* preserve yytext */
-#endif
-
 	yy_hold_char = *++yy_c_buf_p;
 
 %% update BOL and yylineno
@@ -1443,7 +1441,7 @@ void yyFlexLexer::LexerError( yyconst char msg[] )
 		{ \
 		/* Undo effects of setting up yytext. */ \
 		yytext[yyleng] = yy_hold_char; \
-		yy_c_buf_p = yytext + n - YY_MORE_ADJ; \
+		yy_c_buf_p = yytext + n; \
 		yy_hold_char = *yy_c_buf_p; \
 		*yy_c_buf_p = '\0'; \
 		yyleng = n; \
@@ -1466,6 +1464,22 @@ int n;
 	register int i;
 	for ( i = 0; i < n; ++i )
 		s1[i] = s2[i];
+	}
+#endif
+
+#ifdef YY_NEED_STRLEN
+#ifdef YY_USE_PROTOS
+static int yy_flex_strlen( yyconst char *s )
+#else
+static int yy_flex_strlen( s )
+yyconst char *s;
+#endif
+	{
+	register int n;
+	for ( n = 0; s[n]; ++n )
+		;
+
+	return n;
 	}
 #endif
 
