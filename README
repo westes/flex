@@ -1,6 +1,10 @@
 // $Header$
 
-This is release 2.1 of flex - a beta release.
+This is release 2.2 of flex - an alpha release.
+
+The intent behind this alpha release is to weed out most of the
+bugs associated with some new features, and to follow up with either
+a beta or full 2.3 release by the end of May.
 
 The flex distribution consists of the following files:
 
@@ -21,32 +25,29 @@ The flex distribution consists of the following files:
 	tblcmp.c
 	yylex.c
 
+	libmain.c	flex library (-lfl) source
+
 	initscan.c	pre-flex'd version of scan.l
 
 	flex.skel	skeleton for generated scanners
 
-	flex.1		manual entry
+	flexdoc.1	full user documentation
+	flex.1		reference documentation
 
 	Changes		Differences between this release and the previous one
+
 	COPYING		flex's copyright
-	MISC		miscellaneous stuff (e.g., old VMS Makefile) which
-			almost no one will care about
+
+	MISC/		a directory containing miscellaneous porting-related
+			notes (for Atari, MS-DOS, Turbo-C, and VMS)
 
 
-If you have installed a previous version of flex, delete it (after making
-backups, of course).  This will entail removing the source directory,
-/usr/include/{flexskelcom,fastskeldef,flexskeldef}.h, and
-/usr/local/lib/flex.{skel,fastskel}, if that's where you put the various
-pieces.
-
-
-Decide where you want to keep flex.skel (suggestion:  /usr/local/lib) and
-copy it there.  Edit "Makefile" and change the definition of SKELETON_FILE
-to reflect the full pathname of flex.skel.
+Decide where you want to keep flex.skel (suggestion:  /usr/local/lib),
+but don't move it there yet.  Edit "Makefile" and change the definition
+of SKELETON_FILE to reflect the full pathname of flex.skel.
 
 Read the "Porting considerations" note in the Makefile and make
 the necessary changes.
-
 
 To make flex for the first time, use:
 
@@ -61,56 +62,22 @@ Assuming it builds successfully, you can test it using
 
 The "diff" should not show any differences.
 
-If you're feeling adventurous, rebuild scan.c using various
-combinations of FLEX_FLAGS, each time trying "make test" when
-you're done.  To rebuild it, do
+If you're feeling adventurous, issue "make bigtest" and be prepared
+to wait a while.
 
-	rm scan.c
-	make FLEX_FLAGS="..."
+Install flex using:
 
-where "..." is one of:
-
-	-c
-	-ce
-	-cm
-	-cfe
-	-cFe
-
-and testing using:
-
-	make FLEX_FLAGS="..." test
-
-
-Format the manual entry using
-
-	make flex.man
+	make install
 
 
 Please send problems and feedback to:
 
-	vern@{csam.lbl.gov,rtsg.ee.lbl.gov}  or  ucbvax!csam.lbl.gov!vern
-
-	Vern Paxson
-	Real Time Systems
-	Bldg. 46A
-	Lawrence Berkeley Laboratory
-	1 Cyclotron Rd.
-	Berkeley, CA 94720
-
-	(415) 486-6411
-
-
-I will be gone from mid-July '89 through mid-August '89.  From August on,
-the addresses are:
-
-	vern@cs.cornell.edu	(email sent to the former addresses should
-				 continue to be forwarded for quite a while)
+	vern@cs.cornell.edu
+	decvax!cornell!vern
+	vern@LBL (Bitnet)
 
 	Vern Paxson
 	CS Department
-	Grad Office
-	4126 Upson
+	4126 Upson Hall
 	Cornell University
 	Ithaca, NY 14853-7501
-
-	<no phone number yet>
