@@ -119,7 +119,7 @@ gen_bt_action()
 	indent_puts( "yy_cp = yy_last_accepting_cpos;" );
 
     indent_puts( "yy_current_state = yy_last_accepting_state;" );
-    indent_puts( "continue; /* go to \"YY_DO_BEFORE_ACTION\" */" );
+    indent_puts( "goto yy_find_action;" );
     putchar( '\n' );
 
     set_indent( 0 );
