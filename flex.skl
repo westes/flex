@@ -553,6 +553,7 @@ struct yyguts_t
 static int yy_init_globals YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 %e
 
+%c These go in the .c file only.
 /* This must go here because YYSTYPE and YYLSTYPE are included
  * from bison output in section 1.*/
 #ifdef YY_REENTRANT_BISON_PURE
@@ -561,6 +562,7 @@ static int yy_init_globals YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #    define yylloc YY_G(yylloc_r)
 #  endif
 #endif /* YY_REENTRANT_BISON_PURE */
+%e
 
 #endif /* end if YY_REENTRANT */
 
@@ -1968,6 +1970,7 @@ int yylex_init( ptr_yy_globals )
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
 int yylex_destroy  YYFARGS0(void)
 {
+%- SNIP! this currently causes conflicts with the c++ scanner
     /* Destroy the current (main) buffer. */
     yy_delete_buffer( YY_G(yy_current_buffer) YY_CALL_LAST_ARG );
     YY_G(yy_current_buffer) = NULL;
@@ -1989,6 +1992,7 @@ int yylex_destroy  YYFARGS0(void)
     /* Destroy the main struct (reentrant only). */
     yyfree ( yyscanner YY_CALL_LAST_ARG );
 #endif
+%*
     return 0;
 }
 

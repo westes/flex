@@ -23,15 +23,13 @@
 
 %{
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "config.h"
 
 %}
 
 %option 8bit outfile="scanner.cpp" prefix="test"
 %option nounput nomain noyywrap 
-%option warn
+%option warn c++
 
 
 %%
@@ -43,11 +41,11 @@
 int main(void);
 
 int
-main ()
+main (void)
 {
-    yyin = stdin;
-    yyout = stdout;
-    yylex();
-    printf("TEST RETURNING OK.\n");
+    yyFlexLexer f;
+    f.switch_streams(&std::cin, &std::cout);
+    f.yylex();
+    std::cout << "TEST RETURNING OK." << std::endl;
     return 0;
 }
