@@ -61,32 +61,7 @@ void ccl2ecl()
 	    ich = ccltbl[cclp + ccls];
 	    cclmec = ecgroup[ich];
 
-	    if ( xlation && cclmec < 0 )
-		{
-		/* special hack--if we're doing %t tables then it's
-		 * possible that no representative of this character's
-		 * equivalence class is in the ccl.  So waiting till
-		 * we see the representative would be disastrous.  Instead,
-		 * we add this character's equivalence class anyway, if it's
-		 * not already present.
-		 */
-		int j;
-
-		/* this loop makes this whole process n^2; but we don't
-		 * really care about %t performance anyway
-		 */
-		for ( j = 0; j < newlen; ++j )
-		    if ( ccltbl[cclp + j] == -cclmec )
-			break;
-
-		if ( j >= newlen )
-		    { /* no representative yet, add this one in */
-		    ccltbl[cclp + newlen] = -cclmec;
-		    ++newlen;
-		    }
-		}
-
-	    else if ( cclmec > 0 )
+	    if ( cclmec > 0 )
 		{
 		ccltbl[cclp + newlen] = cclmec;
 		++newlen;
@@ -132,88 +107,6 @@ int fwd[], bck[], num;
 	    }
 
     return ( numcl );
-    }
-
-
-/* ecs_from_xlation - associate equivalence class numbers using %t table
- *
- * synopsis
- *    numecs = ecs_from_xlation( ecmap );
- *
- *  Upon return, ecmap will map each character code to its equivalence
- *  class.  The mapping will be positive if the character is the representative
- *  of its class, negative otherwise.
- *
- *  Returns the number of equivalence classes used.
- */
-
-int ecs_from_xlation( ecmap )
-int ecmap[];
-
-    {
-    int i;
-    int nul_is_alone = false;
-    int did_default_xlation_class = false;
-
-    if ( xlation[0] != 0 )
-	{
-	/* if NUL shares its translation with other characters, choose one
-	 * of the other characters as the representative for the equivalence
-	 * class.  This allows a cheap test later to see whether we can
-	 * do away with NUL's equivalence class.
-	 */
-	for ( i = 1; i < csize; ++i )
-	    if ( xlation[i] == -xlation[0] )
-		{
-		xlation[i] = xlation[0];
-		ecmap[0] = -xlation[0];
-		break;
-		}
-
-	if ( i >= csize )
-	    /* didn't find a companion character--remember this fact */
-	    nul_is_alone = true;
-	}
-
-    for ( i = 1; i < csize; ++i )
-	if ( xlation[i] == 0 )
-	    {
-	    if ( did_default_xlation_class )
-		ecmap[i] = -num_xlations;
-	    
-	    else
-		{
-		/* make an equivalence class for those characters not
-		 * specified in the %t table
-		 */
-		++num_xlations;
-		ecmap[i] = num_xlations;
-		did_default_xlation_class = true;
-		}
-	    }
-
-	else
-	    ecmap[i] = xlation[i];
-
-    if ( nul_is_alone )
-	/* force NUL's equivalence class to be the last one */
-	{
-	++num_xlations;
-	ecmap[0] = num_xlations;
-
-	/* there's actually a bug here: if someone is fanatic enough to
-	 * put every character in its own translation class, then right
-	 * now we just promoted NUL's equivalence class to be csize + 1;
-	 * we can handle NUL's class number being == csize (by instead
-	 * putting it in its own table), but we can't handle some *other*
-	 * character having to be put in its own table, too.  So in
-	 * this case we bail out.
-	 */
-	if ( num_xlations > csize )
-	    flexfatal( "too many %t classes!" );
-	}
-
-    return num_xlations;
     }
 
 
