@@ -39,6 +39,8 @@ probably satisfy the need for a man page
 
 ** update gettext support from gettext-0.11 to gettext-0.11.1
 
+** see about not listing flex-generated files and yacc-generated files
+   in _SOURCES as per automake manual
 
 ** subdirectories
 
