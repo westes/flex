@@ -108,22 +108,22 @@ int table_size;
 /* cclinstal - save the text of a character class
  *
  * synopsis
- *    char ccltxt[];
+ *    Char ccltxt[];
  *    int cclnum;
  *    cclinstal( ccltxt, cclnum );
  */
 
 cclinstal( ccltxt, cclnum )
-char ccltxt[];
+Char ccltxt[];
 int cclnum;
 
     {
     /* we don't bother checking the return status because we are not called
      * unless the symbol is new
      */
-    char *copy_string();
+    Char *copy_unsigned_string();
 
-    (void) addsym( copy_string( ccltxt ), (char *) 0, cclnum,
+    (void) addsym( (char *) copy_unsigned_string( ccltxt ), (char *) 0, cclnum,
 		   ccltab, CCL_HASH_SIZE );
     }
 
@@ -131,16 +131,16 @@ int cclnum;
 /* ccllookup - lookup the number associated with character class text
  *
  * synopsis
- *    char ccltxt[];
+ *    Char ccltxt[];
  *    int ccllookup, cclval;
  *    cclval/0 = ccllookup( ccltxt );
  */
 
 int ccllookup( ccltxt )
-char ccltxt[];
+Char ccltxt[];
 
     {
-    return ( findsym( ccltxt, ccltab, CCL_HASH_SIZE )->int_val );
+    return ( findsym( (char *) ccltxt, ccltab, CCL_HASH_SIZE )->int_val );
     }
 
 
@@ -206,17 +206,20 @@ int hash_size;
 /* ndinstal - install a name definition
  *
  * synopsis
- *    char nd[], def[];
+ *    char nd[];
+ *    Char def[];
  *    ndinstal( nd, def );
  */
 
 ndinstal( nd, def )
-char nd[], def[];
+char nd[];
+Char def[];
 
     {
     char *copy_string();
+    Char *copy_unsigned_string();
 
-    if ( addsym( copy_string( nd ), copy_string( def ), 0,
+    if ( addsym( copy_string( nd ), (char *) copy_unsigned_string( def ), 0,
 		 ndtbl, NAME_TABLE_HASH_SIZE ) )
 	synerr( "name defined twice" );
     }
@@ -230,11 +233,11 @@ char nd[], def[];
  *    def/NULL = ndlookup( nd );
  */
 
-char *ndlookup( nd )
+Char *ndlookup( nd )
 char nd[];
 
     {
-    return ( findsym( nd, ndtbl, NAME_TABLE_HASH_SIZE )->str_val );
+    return ( (Char *) findsym( nd, ndtbl, NAME_TABLE_HASH_SIZE )->str_val );
     }
 
 
