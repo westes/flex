@@ -215,8 +215,7 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 
 <SECT2PROLOG><<EOF>>	{
 			MARK_END_OF_PROLOG;
-			sectnum = 3;
-			BEGIN(SECT3);
+			sectnum = 0;
 			yyterminate(); /* to stop the parser */
 			}
 
