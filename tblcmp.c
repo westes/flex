@@ -1,4 +1,4 @@
-/* flexcmp - table compression routines */
+/* tblcmp - table compression routines */
 
 /*
  * Copyright (c) 1987, the University of California
@@ -35,18 +35,18 @@
  * which is similar enough to be usable, and therefore compacting the
  * output tables.
  *    "templates" are a special type of proto.  If a transition table is
- * homogenous or nearly homogenous (all transitions go to the same destination)
- * then the odds are good that future states will also go to the same destination
- * state on basically the same character set.  These homogenous states are
- * so common when dealing with large rule sets that they merit special
- * attention.  If the transition table were simply made into a proto, then
- * (typically) each subsequent, similar state will differ from the proto
- * for two out-transitions.  One of these out-transitions will be that
- * character on which the proto does not go to the common destination,
- * and one will be that character on which the state does not go to the
- * common destination.  Templates, on the other hand, go to the common
- * state on EVERY transition character, and therefore cost only one
- * difference.
+ * homogeneous or nearly homogeneous (all transitions go to the same
+ * destination) then the odds are good that future states will also go
+ * to the same destination state on basically the same character set.
+ * These homogeneous states are so common when dealing with large rule
+ * sets that they merit special attention.  If the transition table were
+ * simply made into a proto, then (typically) each subsequent, similar
+ * state will differ from the proto for two out-transitions.  One of these
+ * out-transitions will be that character on which the proto does not go
+ * to the common destination, and one will be that character on which the
+ * state does not go to the common destination.  Templates, on the other
+ * hand, go to the common state on EVERY transition character, and therefore
+ * cost only one difference.
  */
 
 bldtbl( state, statenum, totaltrans, comstate, comfreq )
@@ -254,8 +254,8 @@ cmptmps()
 
 	/* it is assumed (in a rather subtle way) in the skeleton that
 	 * if we're using meta-equivalence classes, the def[] entry for
-	 * all templates is the jam template, i.e. templates never default
-	 * to other non-jam table entries (e.g. another template)
+	 * all templates is the jam template, i.e., templates never default
+	 * to other non-jam table entries (e.g., another template)
 	 */
 
 	/* leave room for the jam-state after the last real state */
@@ -293,10 +293,10 @@ expand_nxt_chk()
  *     block_start = find_table_space( state, numtrans );
  *
  * State is the state to be added to the full speed transition table.
- * Numtrans is the number of out-transititions for the state.
+ * Numtrans is the number of out-transitions for the state.
  *
  * find_table_space() returns the position of the start of the first block (in
- * chk) able to accomodate the state
+ * chk) able to accommodate the state
  *
  * In determining if a state will or will not fit, find_table_space() must take
  * into account the fact that an end-of-buffer state will be added at [0],
@@ -307,14 +307,14 @@ int find_table_space( state, numtrans )
 int *state, numtrans;
     
     {
-    /* firstfree is the position of the first possible occurence of two
+    /* firstfree is the position of the first possible occurrence of two
      * consecutive unused records in the chk and nxt arrays
      */
     register int i;
     register int *state_ptr, *chk_ptr;
     register int *ptr_to_last_entry_in_state;
 
-    /* if there are too many out-transititions, put the state at the end of
+    /* if there are too many out-transitions, put the state at the end of
      * nxt and chk
      */
     if ( numtrans > MAX_XTIONS_FOR_FULL_INTERIOR_FIT )
@@ -417,10 +417,10 @@ genctbl()
      * flags and states.  We do this by making a state with absolutely no
      * transitions.  We put it at the end of the table.
      */
-    /* at this point, we're guarenteed that there's enough room in nxt[]
+    /* at this point, we're guaranteed that there's enough room in nxt[]
      * and chk[] to hold tblend + numecs entries.  We need just two slots.
      * One for the action and one for the end-of-buffer transition.  We
-     * now *assume* that we're guarenteed the only character we'll try to
+     * now *assume* that we're guaranteed the only character we'll try to
      * index this nxt/chk pair with is EOB, i.e., 0, so we don't have to
      * make sure there's room for jam entries for other characters.
      */
@@ -455,7 +455,7 @@ genctbl()
 	else if ( chk[i] > numecs || chk[i] == 0 )
 	    transition_struct_out( 0, 0 );		/* unused slot */
 
-	else	/* verify, transitition */
+	else	/* verify, transition */
 	    transition_struct_out( chk[i], base[nxt[i]] - (i - chk[i]) );
 	}
 
@@ -476,6 +476,9 @@ genctbl()
 	printf( "    &yy_transition[%d],\n", base[i] );
 
     printf( "    };\n" );
+
+    if ( useecs )
+	genecs();
     }
 
 
@@ -612,53 +615,7 @@ gentabs()
     dataend();
 
     if ( useecs )
-	{
-	/* write out equivalence classes */
-
-	printf( ftl_char_decl, ECARRAY, CSIZE + 1 );
-
-	for ( i = 1; i <= CSIZE; ++i )
-	    {
-	    if ( caseins && (i >= 'A') && (i <= 'Z') )
-		ecgroup[i] = ecgroup[clower( i )];
-
-	    ecgroup[i] = abs( ecgroup[i] );
-	    mkdata( ecgroup[i] );
-	    }
-
-	dataend();
-
-	if ( trace )
-	    {
-	    fputs( "\n\nEquivalence Classes:\n\n", stderr );
-
-	    numrows = (CSIZE + 1) / 8;
-
-	    for ( j = 1; j <= numrows; ++j )
-		{
-		for ( i = j; i <= CSIZE; i = i + numrows )
-		    {
-		    if ( i >= 1 && i <= 31 )
-			fprintf( stderr, "^%c = %-2d",
-				 'A' + i - 1, ecgroup[i] );
-
-		    else if ( i >= 32 && i <= 126 )
-			fprintf( stderr, " %c = %-2d", i, ecgroup[i] );
-
-		    else if ( i == 127 )
-			fprintf( stderr, "^@ = %-2d", ecgroup[i] );
-
-		    else
-			fprintf( stderr, "\nSomething Weird: %d = %d\n", i,
-				 ecgroup[i] );
-
-		    putc( '\t', stderr );
-		    }
-
-		putc( '\n', stderr );
-		}
-	    }
-	}
+	genecs();
 
     if ( usemecs )
 	{
@@ -751,6 +708,61 @@ gentabs()
 	    }
 
 	dataend();
+	}
+    }
+
+
+/* generate equivalence-class tables */
+
+genecs()
+
+    {
+    register int i, j;
+    static char ftl_char_decl[] = "static char %c[%d] =\n    {   0,\n";
+    int numrows;
+
+    printf( ftl_char_decl, ECARRAY, CSIZE + 1 );
+
+    for ( i = 1; i <= CSIZE; ++i )
+	{
+	if ( caseins && (i >= 'A') && (i <= 'Z') )
+	    ecgroup[i] = ecgroup[clower( i )];
+
+	ecgroup[i] = abs( ecgroup[i] );
+	mkdata( ecgroup[i] );
+	}
+
+    dataend();
+
+    if ( trace )
+	{
+	fputs( "\n\nEquivalence Classes:\n\n", stderr );
+
+	numrows = (CSIZE + 1) / 8;
+
+	for ( j = 1; j <= numrows; ++j )
+	    {
+	    for ( i = j; i <= CSIZE; i = i + numrows )
+		{
+		if ( i >= 1 && i <= 31 )
+		    fprintf( stderr, "^%c = %-2d",
+			     'A' + i - 1, ecgroup[i] );
+
+		else if ( i >= 32 && i <= 126 )
+		    fprintf( stderr, " %c = %-2d", i, ecgroup[i] );
+
+		else if ( i == 127 )
+		    fprintf( stderr, "^@ = %-2d", ecgroup[i] );
+
+		else
+		    fprintf( stderr, "\nSomething Weird: %d = %d\n", i,
+			     ecgroup[i] );
+
+		putc( '\t', stderr );
+		}
+
+	    putc( '\n', stderr );
+	    }
 	}
     }
 
@@ -895,12 +907,12 @@ mkdeftbl()
  * is the offset to be used into the base/def tables, and "deflink" is the
  * entry to put in the "def" table entry.  If "deflink" is equal to
  * "JAMSTATE", then no attempt will be made to fit zero entries of "state"
- * (i.e. jam entries) into the table.  It is assumed that by linking to
+ * (i.e., jam entries) into the table.  It is assumed that by linking to
  * "JAMSTATE" they will be taken care of.  In any case, entries in "state"
  * marking transitions to "SAME_TRANS" are treated as though they will be
  * taken care of by whereever "deflink" points.  "totaltrans" is the total
  * number of transitions out of the state.  If it is below a certain threshold,
- * the tables are searched for an interior spot that will accomodate the
+ * the tables are searched for an interior spot that will accommodate the
  * state array.
  */
 
@@ -949,7 +961,7 @@ int numchars, statenum, deflink, totaltrans;
     /* Whether we try to fit the state table in the middle of the table
      * entries we have already generated, or if we just take the state
      * table at the end of the nxt/chk tables, we must make sure that we
-     * have a valid base address (i.e. non-negative).  Note that not only are
+     * have a valid base address (i.e., non-negative).  Note that not only are
      * negative base addresses dangerous at run-time (because indexing the
      * next array with one and a low-valued character might generate an
      * array-out-of-bounds error message), but at compile-time negative
