@@ -78,8 +78,7 @@ LINTSRCS = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.c \
 DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	configure.in config.h.in Makefile.in mkskel.sh skel.c flex.skl \
 	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC \
-	flex.1 flexdoc.1 \
-	scan.c install.sh mkinstalldirs configure
+	flex.1 scan.c install.sh mkinstalldirs configure
 
 DIST_NAME = flex
 
@@ -165,9 +164,6 @@ $(FLEXLIB): $(LIBOBJS)
 $(FLEX).man: flex.1
 	cd $(srcdir); nroff -man flex.1 >$(FLEX).man
 
-$(FLEX)doc.man: flexdoc.1
-	cd $(srcdir); nroff -man flexdoc.1 >$(FLEX)doc.man
-
 install: $(FLEX) $(FLEXLIB) installdirs install.$(INSTALLMAN)
 	$(INSTALL_PROGRAM) $(FLEX) $(bindir)/$(FLEX)
 	@rm -f $(bindir)/$(FLEX)++
@@ -176,13 +172,15 @@ install: $(FLEX) $(FLEXLIB) installdirs install.$(INSTALLMAN)
 	-cd $(libdir); $(RANLIB) libfl.a
 	$(INSTALL_DATA) $(srcdir)/FlexLexer.h $(includedir)/FlexLexer.h
 
-install.man: flex.1 flexdoc.1
+# Note, the following rules delete any vestigial flexdoc installed
+# for a prior flex release.
+install.man: flex.1
+	rm -f $(mandir)/$(FLEX)doc.$(manext)
 	$(INSTALL_DATA) $(srcdir)/flex.1 $(mandir)/$(FLEX).$(manext)
-	$(INSTALL_DATA) $(srcdir)/flexdoc.1 $(mandir)/$(FLEX)doc.$(manext)
 
-install.cat: $(FLEX).man $(FLEX)doc.man
+install.cat: $(FLEX).man
+	rm -f $(mandir)/$(FLEX)doc.$(manext)
 	$(INSTALL_DATA) $(srcdir)/$(FLEX).man $(mandir)/$(FLEX).$(manext)
-	$(INSTALL_DATA) $(srcdir)/$(FLEX)doc.man $(mandir)/$(FLEX)doc.$(manext)
 
 installdirs:
 	$(SHELL) $(srcdir)/mkinstalldirs \
@@ -216,7 +214,7 @@ distclean: clean
 	rm -f .bootstrap $(FLEX) scan.c tags TAGS Makefile config.status
 
 realclean: distclean
-	rm -f $(FLEX).man $(FLEX)doc.man skel.c flex*.tar.gz flex*.tar.Z
+	rm -f $(FLEX).man skel.c flex*.tar.gz flex*.tar.Z
 
 dist: $(FLEX) $(DISTFILES)
 	$(MAKE) DIST_NAME=flex-`sed <version.h 's/[^"]*"//' | sed 's/"//'` dist2
