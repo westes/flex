@@ -127,8 +127,8 @@ register int nacc;
 		if ( accset[j] & YY_TRAILING_HEAD_MASK )
 		    {
 		    fprintf( stderr,
-		     "flex: Dangerous trailing context in rule at line %d\n",
-			     rule_linenum[ar] );
+		     "%s: Dangerous trailing context in rule at line %d\n",
+			     program_name, rule_linenum[ar] );
 		    return;
 		    }
 	    }
@@ -211,13 +211,9 @@ int state[];
     register int i, ec;
     int out_char_set[CSIZE + 1];
 
-    for ( i = 1; i <= CSIZE; ++i )
+    for ( i = 1; i <= csize; ++i )
 	{
-	ec = ecgroup[i];
-
-	if ( ec < 0 )
-	    ec = -ec;
-
+	ec = abs( ecgroup[i] );
 	out_char_set[i] = state[ec];
 	}
     
@@ -226,7 +222,7 @@ int state[];
     list_character_set( file, out_char_set );
 
     /* now invert the members of the set to get the jam transitions */
-    for ( i = 1; i <= CSIZE; ++i )
+    for ( i = 1; i <= csize; ++i )
 	out_char_set[i] = ! out_char_set[i];
 
     fprintf( file, "\n jam-transitions: EOF " );
@@ -435,7 +431,7 @@ ntod()
      */
     todo_head = todo_next = 0;
 
-    for ( i = 0; i <= CSIZE; ++i )
+    for ( i = 0; i <= csize; ++i )
 	{
 	duplist[i] = NIL;
 	symlist[i] = false;
@@ -464,7 +460,7 @@ ntod()
 	/* declare it "short" because it's a real long-shot that that
 	 * won't be large enough
 	 */
-	printf( "static short int %s[][%d] =\n    {\n", NEXTARRAY,
+	printf( "static short int yy_nxt[][%d] =\n    {\n",
 		numecs + 1 ); /* '}' so vi doesn't get too confused */
 
 	/* generate 0 entries for state #0 */
@@ -875,7 +871,7 @@ int ds[], dsize, transsym, nset[];
 	    { /* do nothing */
 	    }
 
-	else if ( ecgroup[sym] == transsym )
+	else if ( abs( ecgroup[sym] ) == transsym )
 	    nset[++numstates] = tsp;
 
 bottom:
@@ -922,13 +918,16 @@ int symlist[];
 
 	if ( tch != SYM_EPSILON )
 	    {
-	    if ( tch < -lastccl || tch > CSIZE )
+	    if ( tch < -lastccl || tch > csize )
 		flexfatal( "bad transition character detected in sympartition()" );
 
 	    if ( tch > 0 )
 		{ /* character transition */
-		mkechar( ecgroup[tch], dupfwd, duplist );
-		symlist[ecgroup[tch]] = 1;
+		/* abs() needed for fake %t ec's */
+		int ec = abs( ecgroup[tch] );
+
+		mkechar( ec, dupfwd, duplist );
+		symlist[ec] = 1;
 		}
 
 	    else
