@@ -748,12 +748,7 @@ and return in the integer variable
 either the
 number of characters read or the constant YY_NULL (0 on Unix systems)
 to indicate EOF.  The default YY_INPUT reads from the
-global file-pointer "yyin", so if you
-just want to change the input file, you needn't redefine
-YY_INPUT - just point yyin at the input file (by assigning it to the
-file pointer returned by
-.B fopen(),
-for example).
+global file-pointer "yyin".
 .LP
 A sample redefinition of YY_INPUT (in the definitions
 section of the input file):
@@ -766,6 +761,9 @@ section of the input file):
     %}
 
 .fi
+This definition will change the input processing to occur
+one character at a time.
+.LP
 You also can add in things like keeping track of the
 input line number this way; but don't expect your scanner to
 go very fast.
@@ -888,7 +886,30 @@ is equivalent to
 (The parentheses around the start condition name are not required but
 are considered good style.)
 .LP
-Here is a scanner which provides two different interpretations
+.B BEGIN
+actions can also be given as indented code at the beginning
+of the rules section.  For example, the following will cause
+the scanner to enter the "SPECIAL" start condition whenever
+.I yylex()
+is called and the global variable
+.I enter_special
+is true:
+.nf
+
+            int enter_special;
+
+    %x SPECIAL
+    %%
+            if ( enter_special )
+                BEGIN(SPECIAL);
+
+    <SPECIAL>blahblahblah
+    ...more rules follow...
+
+.fi
+.LP
+To illustrate the uses of start conditions,
+here is a scanner which provides two different interpretations
 of a string like "123.456".  By default it will treat it as
 as three tokens, the integer "123", a dot ('.'), and the integer "456".
 But if the string is preceded earlier in the line by the string
@@ -986,7 +1007,7 @@ point yyin at a new file to process, in which case the
 action
 .I must
 finish with the special
-.I YY_NEW_FILE
+.B YY_NEW_FILE
 action
 (this is a branch, so subsequent code in the action won't
 be executed), or the action must finish with a
@@ -1041,8 +1062,11 @@ it could be #define'd to call a routine to convert yytext to lower-case.
 In the generated scanner, the actions are all gathered in one large
 switch statement and separated using
 .B YY_BREAK,
-which may be redefined.
-This allows, for example, some C++ users to
+which may be redefined.  By default, it is simply a "break", to separate
+each rule's action from the following rule's.
+Redefining
+.B YY_BREAK
+allows, for example, C++ users to
 #define YY_BREAK to do nothing (while being very careful that every
 rule ends with a "break" or a "return"!) to avoid suffering from
 unreachable statement warnings where because a rule's action ends with
@@ -1889,6 +1913,12 @@ The POSIX draft mentions that an
 .B output()
 routine exists but currently gives no details as to what it does.
 .IP -
+The
+.I lex
+.B %r
+(generate a Ratfor scanner) option is not supported.  It is not part
+of the POSIX draft.
+.IP -
 If you are providing your own yywrap() routine, you must include a
 "#undef yywrap" in the definitions section (section 1).  Note that
 the "#undef" will have to be enclosed in %{}'s.
@@ -1990,6 +2020,46 @@ is (rather surprisingly) truncated to
 .I flex
 does not truncate the action.  Actions that are not enclosed in
 braces are simply terminated at the end of the line.
+.SH DIAGNOSTICS
+.I reject_used_but_not_detected undefined
+or
+.I yymore_used_but_not_detected undefined -
+These errors can occur at compile time.  They indicate that the
+scanner uses
+.B REJECT
+or
+.B yymore()
+but that
+.I flex
+failed to notice the fact, meaning that
+.I flex
+scanned the first two sections looking for occurrences of these actions
+and failed to find any, but somehow you snuck some in (via a #include
+file, for example).  Make an explicit reference to the action in your
+.I flex
+input file.  (Note that previously
+.I flex
+supported a
+.B %used/%unused
+mechanism for dealing with this problem; this feature is still supported
+but now deprecated, and will go away soon unless the author hear's from
+people who can argue compellingly that they need it.)
+.LP
+.I flex scanner jammed -
+a scanner compiled with
+.B -s
+has encountered an input string which wasn't matched by
+any of its rules.
+.LP
+.I flex input buffer overflowed -
+a scanner rule matched a string long enough to overflow the
+scanner's internal input buffer (16K bytes - controlled by
+.B YY_BUF_MAX
+in "flex.skel").
+.LP
+.I fatal internal error, bad transition character detected in sympartition() -
+Your input may contain an eight-bit character (either directly or expressed
+as an escape sequence) and your version of flex was built for 7-bit characters.
 .SH DEFICIENCIES / BUGS
 .LP
 Some trailing context
