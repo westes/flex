@@ -1,4 +1,4 @@
-/* flexdfa - DFA construction routines */
+/* dfa - DFA construction routines */
 
 /*
  * Copyright (c) 1987, the University of California
