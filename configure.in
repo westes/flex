@@ -23,13 +23,18 @@ dnl PURPOSE.
 
 AC_INIT(scan.l)
 AM_INIT_AUTOMAKE(flex,2.5.6)
-AM_CONFIG_HEADER(config.h:conf.in)
+AM_CONFIG_HEADER(
+config.h:conf.in
+tests/config.h:tests/config.in
+)
           AM_GNU_GETTEXT([external])
 
+AC_PROG_YACC
+AC_CHECK_PROG(BISON, bison, bison)
+AM_PROG_LEX
 AC_LN_S
 AC_PROG_CC
-AC_PROG_YACC
-AM_PROG_LEX
+
 AC_PROG_RANLIB
 AC_PATH_PROG(HELP2MAN, help2man, $srcdir/missing)
 
@@ -38,8 +43,6 @@ AC_TYPE_SIZE_T
 AC_HEADER_STDC
 AC_HAVE_HEADERS(string.h malloc.h sys/types.h unistd.h)
 
-AC_CONFIG_SUBDIRS(tests)
-
 AC_OUTPUT(
 Makefile
 examples/Makefile
@@ -47,4 +50,26 @@ examples/fastwc/Makefile
 examples/manual/Makefile
 m4/Makefile
 po/Makefile.in
+tests/Makefile
+tests/TEMPLATE/Makefile
+tests/test-array-nr/Makefile
+tests/test-array-r/Makefile
+tests/test-basic-nr/Makefile
+tests/test-basic-r/Makefile
+tests/test-bison-yylloc/Makefile
+tests/test-bison-yylval/Makefile
+tests/test-c-cpp-nr/Makefile
+tests/test-c-cpp-r/Makefile
+tests/test-header-nr/Makefile
+tests/test-header-r/Makefile
+tests/test-include-by-buffer/Makefile
+tests/test-include-by-reentrant/Makefile
+tests/test-multiple-scanners-nr/Makefile
+tests/test-multiple-scanners-r/Makefile
+tests/test-prefix-nr/Makefile
+tests/test-prefix-r/Makefile
+tests/test-pthread/Makefile
+tests/test-string-nr/Makefile
+tests/test-string-r/Makefile
+tests/test-yyextra/Makefile
 )

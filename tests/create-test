@@ -1,0 +1,25 @@
+#!/bin/sh
+
+TESTFILES="Makefile.am scanner.l parser.y .cvsignore test.input"
+
+if [ ! $# -eq 1 ] ; then
+   exit 1
+fi
+
+mkdir $1
+for i in $TESTFILES ; do
+    cp TEMPLATE/$i $1/$i
+done
+
+sed '$i\
+tests/'"$1"'/Makefile' < ../configure.in > configure.in.tmp
+
+mv configure.in.tmp ../configure.in
+
+sed '/^SUBDIRS/a\
+	'"$1"' \\' < Makefile.am > Makefile.am.tmp
+
+mv Makefile.am.tmp Makefile.am
+
+sed "s:TEMPLATE:$1:g" < "$1"/Makefile.am > "$1"/Makefile.am.tmp
+mv "$1"/Makefile.am.tmp "$1"/Makefile.am

@@ -31,10 +31,3 @@
 touch ChangeLog
 
 aclocal -I m4 && autoheader && automake -a && autoconf
-
-for i in tests
-do
-(    cd $i
-    aclocal && autoheader && autoconf
-)
-done
