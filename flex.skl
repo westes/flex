@@ -179,6 +179,12 @@ struct yy_buffer_state
 	 */
 	int yy_is_interactive;
 
+	/* Whether we're considered to be at the beginning of a line.
+	 * If so, '^' rules will be active on the next match, otherwise
+	 * not.
+	 */
+	int yy_at_bol;
+
 	/* Whether to try to fill the input buffer when we reach the
 	 * end of it.
 	 */
@@ -234,8 +240,7 @@ void yyrestart YY_PROTO(( FILE *input_file ));
 void yy_switch_to_buffer YY_PROTO(( YY_BUFFER_STATE new_buffer ));
 void yy_load_buffer_state YY_PROTO(( void ));
 YY_BUFFER_STATE yy_create_buffer YY_PROTO(( FILE *file, int size ));
-YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, char *start,
-						yy_size_t size ));
+YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, yy_size_t size ));
 YY_BUFFER_STATE yy_scan_string YY_PROTO(( const char *str ));
 YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( const char *bytes, int len ));
 void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));
@@ -254,6 +259,15 @@ static void yy_flex_free YY_PROTO(( void * ));
 		yy_current_buffer = yy_create_buffer( yyin, YY_BUF_SIZE ); \
 	yy_current_buffer->yy_is_interactive = is_interactive; \
 	}
+
+#define yy_set_bol(at_bol) \
+	{ \
+	if ( ! yy_current_buffer ) \
+		yy_current_buffer = yy_create_buffer( yyin, YY_BUF_SIZE ); \
+	yy_current_buffer->yy_at_bol = at_bol; \
+	}
+
+#define YY_AT_BOL() (yy_current_buffer->yy_at_bol)
 
 %% yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
 
@@ -417,6 +431,8 @@ YY_MALLOC_DECL
 #define YY_BREAK break;
 #endif
 
+%% YY_RULE_SETUP definition goes here
+
 YY_DECL
 	{
 	register yy_state_type yy_current_state;
@@ -477,7 +493,7 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
-%% code for yylineno update goes here, if -l option
+%% code for yylineno update (if -l) goes here
 
 do_action:	/* This label is used only to access EOF actions. */
 
@@ -490,7 +506,7 @@ do_action:	/* This label is used only to access EOF actions. */
 	case YY_END_OF_BUFFER:
 		{
 		/* Amount of text matched not including the EOB char. */
-		int yy_amount_of_matched_text = yy_cp - yytext_ptr - 1;
+		int yy_amount_of_matched_text = (int) (yy_cp - yytext_ptr) - 1;
 
 		/* Undo the effects of YY_DO_BEFORE_ACTION. */
 		*yy_cp = yy_hold_char;
@@ -667,7 +683,7 @@ int yyFlexLexer::yy_get_next_buffer()
 %*
 	{
 	register char *dest = yy_current_buffer->yy_ch_buf;
-	register char *source = yytext_ptr - 1; /* copy prev. char, too */
+	register char *source = yytext_ptr;
 	register int number_to_move, i;
 	int ret_val;
 
@@ -697,7 +713,7 @@ int yyFlexLexer::yy_get_next_buffer()
 	/* Try to read more data. */
 
 	/* First move last chars to start of buffer. */
-	number_to_move = yy_c_buf_p - yytext_ptr;
+	number_to_move = (int) (yy_c_buf_p - yytext_ptr) - 1;
 
 	for ( i = 0; i < number_to_move; ++i )
 		*(dest++) = *(source++);
@@ -723,14 +739,22 @@ int yyFlexLexer::yy_get_next_buffer()
 			/* just a shorter name for the current buffer */
 			YY_BUFFER_STATE b = yy_current_buffer;
 
-			int yy_c_buf_p_offset = yy_c_buf_p - b->yy_ch_buf;
+			int yy_c_buf_p_offset =
+				(int) (yy_c_buf_p - b->yy_ch_buf);
 
 			if ( b->yy_is_our_buffer )
 				{
-				b->yy_buf_size *= 2;
+				int new_size = b->yy_buf_size * 2;
+
+				if ( new_size <= 0 )
+					b->yy_buf_size += b->yy_buf_size / 8;
+				else
+					b->yy_buf_size *= 2;
+
 				b->yy_ch_buf = (char *)
+					/* Include room in for 2 EOB chars. */
 					yy_flex_realloc( (void *) b->yy_ch_buf,
-							 b->yy_buf_size );
+							 b->yy_buf_size + 2 );
 				}
 			else
 				/* Can't grow it, we don't own it. */
@@ -757,7 +781,7 @@ int yyFlexLexer::yy_get_next_buffer()
 
 	if ( yy_n_chars == 0 )
 		{
-		if ( number_to_move - YY_MORE_ADJ == 1 )
+		if ( number_to_move == YY_MORE_ADJ )
 			{
 			ret_val = EOB_ACT_END_OF_FILE;
 			yyrestart( yyin );
@@ -778,13 +802,7 @@ int yyFlexLexer::yy_get_next_buffer()
 	yy_current_buffer->yy_ch_buf[yy_n_chars] = YY_END_OF_BUFFER_CHAR;
 	yy_current_buffer->yy_ch_buf[yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
 
-	/* yytext begins at the second character in yy_ch_buf; the first
-	 * character is the one which preceded it before reading in the latest
-	 * buffer; it needs to be kept around in case it's a newline, so
-	 * yy_get_previous_state() will have with '^' rules active.
-	 */
-
-	yytext_ptr = &yy_current_buffer->yy_ch_buf[1];
+	yytext_ptr = &yy_current_buffer->yy_ch_buf[0];
 
 	return ret_val;
 	}
@@ -865,16 +883,13 @@ void yyFlexLexer::yyunput( int c, register char* yy_bp )
 		while ( source > yy_current_buffer->yy_ch_buf )
 			*--dest = *--source;
 
-		yy_cp += dest - source;
-		yy_bp += dest - source;
+		yy_cp += (int) (dest - source);
+		yy_bp += (int) (dest - source);
 		yy_n_chars = yy_current_buffer->yy_buf_size;
 
 		if ( yy_cp < yy_current_buffer->yy_ch_buf + 2 )
 			YY_FATAL_ERROR( "flex scanner push-back overflow" );
 		}
-
-	if ( yy_cp > yy_bp && yy_cp[-1] == '\n' )
-		yy_cp[-2] = '\n';
 
 	*--yy_cp = (char) c;
 
@@ -927,7 +942,8 @@ int yyFlexLexer::yyinput()
 						return EOF;
 						}
 
-					YY_NEW_FILE;
+					if ( ! yy_did_buffer_switch_on_eof )
+						YY_NEW_FILE;
 #ifdef __cplusplus
 					return yyinput();
 #else
@@ -954,6 +970,8 @@ int yyFlexLexer::yyinput()
 	c = *(unsigned char *) yy_c_buf_p;	/* cast for 8-bit char's */
 	*yy_c_buf_p = '\0';	/* preserve yytext */
 	yy_hold_char = *++yy_c_buf_p;
+
+%% update yylineno here, if doing -l
 
 	return c;
 	}
@@ -1098,22 +1116,16 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 %*
 	{
 	b->yy_input_file = file;
-
-	/* We put in the '\n' and start reading from [1] so that an
-	 * initial match-at-newline will be true.
-	 */
-
-	b->yy_ch_buf[0] = '\n';
-	b->yy_n_chars = 1;
+	b->yy_n_chars = 0;
 
 	/* We always need two end-of-buffer characters.  The first causes
 	 * a transition to the end-of-buffer state.  The second causes
 	 * a jam in that state.
 	 */
+	b->yy_ch_buf[0] = YY_END_OF_BUFFER_CHAR;
 	b->yy_ch_buf[1] = YY_END_OF_BUFFER_CHAR;
-	b->yy_ch_buf[2] = YY_END_OF_BUFFER_CHAR;
 
-	b->yy_buf_pos = &b->yy_ch_buf[1];
+	b->yy_buf_pos = &b->yy_ch_buf[0];
 
 %-
 #if YY_ALWAYS_INTERACTIVE
@@ -1129,6 +1141,7 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 	b->yy_is_interactive = 0;
 %*
 
+	b->yy_at_bol = 1;
 	b->yy_fill_buffer = 1;
 
 	b->yy_buffer_status = YY_BUFFER_NEW;
@@ -1138,10 +1151,10 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 #ifndef YY_NO_SCAN_BUFFER
 %-
 #ifdef YY_USE_PROTOS
-YY_BUFFER_STATE yy_scan_buffer( char *base, char *start, yy_size_t size )
+YY_BUFFER_STATE yy_scan_buffer( char *base, yy_size_t size )
 #else
-YY_BUFFER_STATE yy_scan_buffer( base, start, size )
-char *base, *start;
+YY_BUFFER_STATE yy_scan_buffer( base, size )
+char *base;
 yy_size_t size;
 #endif
 	{
@@ -1157,12 +1170,12 @@ yy_size_t size;
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
 
 	b->yy_buf_size = size - 2;	/* "- 2" to take care of EOB's */
-	b->yy_ch_buf = base;
-	b->yy_buf_pos = start;
+	b->yy_buf_pos = b->yy_ch_buf = base;
 	b->yy_is_our_buffer = 0;
 	b->yy_input_file = 0;
 	b->yy_n_chars = b->yy_buf_size;
 	b->yy_is_interactive = 0;
+	b->yy_at_bol = 1;
 	b->yy_fill_buffer = 0;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
@@ -1208,21 +1221,18 @@ int len;
 	yy_size_t n;
 	int i;
 
-	/* Get memory for full buffer, including space for preceding '\n'
-	 * and trailing EOB's.
-	 */
-	n = len + 3;
+	/* Get memory for full buffer, including space for trailing EOB's. */
+	n = len + 2;
 	buf = (char *) yy_flex_alloc( n );
 	if ( ! buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
 
-	buf[0] = '\n';
 	for ( i = 0; i < len; ++i )
-		buf[i+1] = bytes[i];
+		buf[i] = bytes[i];
 
-	buf[len+1] = buf[len+2] = YY_END_OF_BUFFER_CHAR;
+	buf[len] = buf[len+1] = YY_END_OF_BUFFER_CHAR;
 
-	b = yy_scan_buffer( buf, &buf[1], n );
+	b = yy_scan_buffer( buf, n );
 	if ( ! b )
 		YY_FATAL_ERROR( "bad buffer in yy_scan_bytes()" );
 
