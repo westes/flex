@@ -27,7 +27,7 @@ AC_PREREQ(2.54)
 AC_INIT(flex,2.5.21,help-flex@gnu.org)
 AC_CONFIG_SRCDIR(scan.l)
 AM_INIT_AUTOMAKE
-AM_CONFIG_HEADER(config.h:conf.in)
+AC_CONFIG_HEADER(config.h:conf.in)
 
 dnl checks for programs
 
