@@ -31,6 +31,31 @@
 
 /* $Header$ */
 
+
+/* Some versions of bison are broken in that they use alloca() but don't
+ * declare it properly.  The following is the patented (just kidding!)
+ * #ifdef chud to fix the problem, courtesy of Francois Pinard.
+ */
+#ifdef YYBISON
+/* AIX requires this to be the first thing in the file.  */
+#ifdef __GNUC__
+#define alloca __builtin_alloca
+#else /* not __GNUC__ */
+#if HAVE_ALLOCA_H
+#include <alloca.h>
+#else /* not HAVE_ALLOCA_H */
+#ifdef _AIX
+ #pragma alloca
+#else /* not _AIX */
+char *alloca ();
+#endif /* not _AIX */
+#endif /* not HAVE_ALLOCA_H */
+#endif /* not __GNUC__ */
+#endif /* YYBISON */
+
+/* Bletch, ^^^^ that was ugly! */
+
+
 #include "flexdef.h"
 
 int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, actvp, rulelen;
