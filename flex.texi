@@ -608,7 +608,6 @@ ruleD   ECHO;
 @end verbatim
 @end example
 
-@c proofread edit stopped here
 @node Patterns, Matching, Format, Top
 @chapter Patterns
 
@@ -914,11 +913,15 @@ A similar trick will work for matching a @samp{foo} or a
 @samp{bar}-at-the-beginning-of-a-line.
 @end itemize
 
-@c proofread edit stopped here
 @node Matching, Actions, Patterns, Top
 @chapter How the Input Is Matched
-@cindex patterns, how the input is matched
 
+@cindex patterns, matching
+@cindex input, matching
+@cindex trailing context, matching
+@cindex matching, and trailing context
+@cindex matching, length of
+@cindex matching, multiple matches
 When the generated scanner is run, it analyzes its input looking for
 strings which match any of its patterns.  If it finds more than one
 match, it takes the one matching the most text (for trailing context
@@ -927,20 +930,20 @@ will then be returned to the input).  If it finds two or more matches of
 the same length, the rule listed first in the @code{flex} input file is
 chosen.
 
+@cindex token
+@cindex yytext
+@cindex yyleng
 Once the match is determined, the text corresponding to the match
 (called the @dfn{token}) is made available in the global character
-pointer @code{yytext}, and its length in the global integer @code{yyleng}.
-The @dfn{action} corresponding to the matched pattern is then executed
-(@pxref{Actions}), and then the remaining input is scanned for another
-match.
+pointer @code{yytext}, and its length in the global integer
+@code{yyleng}.  The @dfn{action} corresponding to the matched pattern is
+then executed (@pxref{Actions}), and then the remaining input is scanned
+for another match.
 
-@cindex default rule, explanation
-If no match is found, then the
-@dfn{default rule}
-is executed: the next character in the input is considered matched and
-copied to the standard output.  Thus, the simplest valid
-@code{flex}
-input is:
+@cindex default rule
+If no match is found, then the @dfn{default rule} is executed: the next
+character in the input is considered matched and copied to the standard
+output.  Thus, the simplest valid @code{flex} input is:
 
 @cindex minimal scanner
 @example
@@ -949,16 +952,15 @@ input is:
 @end verbatim
 @end example
 
-which generates a scanner that simply copies its input (one character
-at a time) to its output.
+which generates a scanner that simply copies its input (one character at
+a time) to its output.
 
-@cindex yytext, definition of
+@cindex yytext, two types of
 @cindex %array, use of
 @cindex %pointer, use of
-
 @vindex yytext
-Note that @code{yytext} can be defined in two different ways: either as a
-character @emph{pointer} or as a character @emph{array}. You can
+Note that @code{yytext} can be defined in two different ways: either as
+a character @emph{pointer} or as a character @emph{array}. You can
 control which definition @code{flex} uses by including one of the
 special directives @code{%pointer} or @code{%array} in the first
 (definitions) section of your flex input.  The default is
@@ -972,19 +974,12 @@ function destroys the present contents of @code{yytext}, which can be a
 considerable porting headache when moving between different @code{lex}
 versions.
 
-The advantage of
-@code{%array}
-is that you can then modify
-@code{yytext}
-to your heart's content, and calls to
-@code{unput()}
-do not destroy
-@code{yytext}
-(@pxref{Actions}).  Furthermore, existing
-@code{lex}
-programs sometimes access
-@code{yytext}
-externally using declarations of the form:
+@cindex %array, advantages of
+The advantage of @code{%array} is that you can then modify @code{yytext}
+to your heart's content, and calls to @code{unput()} do not destroy
+@code{yytext} (@pxref{Actions}).  Furthermore, existing @code{lex}
+programs sometimes access @code{yytext} externally using declarations of
+the form:
 
 @example
 @verbatim
@@ -1003,8 +998,8 @@ above, with @code{%pointer} yytext grows dynamically to accommodate
 large tokens.  While this means your @code{%pointer} scanner can
 accommodate very large tokens (such as matching entire blocks of
 comments), bear in mind that each time the scanner must resize
-@code{yytext} it also must rescan the entire token from the beginning, so
-matching such tokens can prove slow.  @code{yytext} presently does
+@code{yytext} it also must rescan the entire token from the beginning,
+so matching such tokens can prove slow.  @code{yytext} presently does
 @emph{not} dynamically grow if a call to @code{unput()} results in too
 much text being pushed back; instead, a run-time error results.
 
@@ -1012,6 +1007,7 @@ much text being pushed back; instead, a run-time error results.
 Also note that you cannot use @code{%array} with C++ scanner classes
 (@pxref{Cxx}).
 
+@c proofread edit stopped here
 @node Actions, Generated Scanner, Matching, Top
 @chapter Actions
 @cindex actions, explanation
@@ -8170,17 +8166,7 @@ As you can see, there really is no magic here. We just use
 
 @node Concept Index, Index of Functions and Macros, Indices, Indices
 @unnumberedsec Concept Index
-@cindex beginning of line -- see BOL
-@cindex ^ -- see BOL
-@cindex end of line -- see EOL
-@cindex $ -- see EOL
-@cindex end of file -- see EOF
-@cindex regular expressions -- see Patterns
-@cindex macros, see preprocessor macros
-@cindex freeing memory -- see memory
-@cindex allocating memory see memory
-@cindex malloc -- see memory
-@cindex bison, see also yacc
+
 @printindex cp
 
 @node Index of Functions and Macros, Index of Variables, Concept Index, Indices
