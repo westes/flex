@@ -2,6 +2,9 @@
 
 ** expand the above into individual requests and handle those requests
 
+* integrate the items in the faqs/ directory into the manual or code
+  or similar
+
 * convert flex to use automake
 
 * make flex.texi the authoritative manual
@@ -11,7 +14,12 @@
 ** add flex.texi and its generated info files into the Makefile
    process (best done via automake)
 
-* integrate the items in the faqs/ directory into the manual or code
-  or similar
+* rework the distribution building
+
+** include parse.c and parse.h in distribution
+
+* test suite
 
 ** shape up the tests/ directory so it runs out of the box
+
+** make test suite more complete
