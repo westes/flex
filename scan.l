@@ -520,6 +520,7 @@ LEXOPT		[aceknopr]
 
 
 <SC>{
+	{OPTWS}{NL}{OPTWS}	++linenum;	/* Allow blank lines & continuations */
 	[,*]		return (unsigned char) yytext[0];
 	">"		BEGIN(SECT2); return '>';
 	">"/^		BEGIN(CARETISBOL); return '>';
