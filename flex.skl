@@ -235,10 +235,6 @@ static void yy_pop_state YY_PROTO(( void ));
 static int yy_top_state YY_PROTO(( void ));
 %*
 
-#ifndef yytext_ptr
-static void yy_flex_strcpy YY_PROTO(( char *, const char * ));
-#endif
-
 static void *yy_flex_alloc YY_PROTO(( unsigned int ));
 static void *yy_flex_realloc YY_PROTO(( void *ptr, unsigned int ));
 static void yy_flex_free YY_PROTO(( void * ));
@@ -246,6 +242,10 @@ static void yy_flex_free YY_PROTO(( void * ));
 #define yy_new_buffer yy_create_buffer
 
 %% yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
+
+#ifndef yytext_ptr
+static void yy_flex_strcpy YY_PROTO(( char *, const char * ));
+#endif
 
 %- Standard (non-C++) definition
 #ifdef __cplusplus
