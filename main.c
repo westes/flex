@@ -131,6 +131,11 @@ char **argv;
 	{
 	int i;
 
+	/* Make sure the program name is defined even before possibly
+	 * munching on argv, so argv_fixup can report error messages.
+	 */
+	program_name = "flex"; 
+
 #ifdef THINK_C
 	argc = ccommand( &argv );
 #endif
@@ -574,8 +579,6 @@ char **argv;
 
 	if ( argv[0] && argv[0][0] != '\0' )
 		program_name = argv[0];
-	else
-		program_name = "flex"; 
 
 	if ( program_name[0] != '\0' &&
 	     program_name[strlen( program_name ) - 1] == '+' )
