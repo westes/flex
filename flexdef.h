@@ -46,6 +46,14 @@
 #define DEFAULT_CSIZE 128
 #endif
 
+#ifndef PROTO
+#ifdef __STDC__
+#define PROTO(proto) proto
+#else
+#define PROTO(proto) ()
+#endif
+#endif
+
 
 #ifdef USG
 #define SYS_V
@@ -53,6 +61,18 @@
 
 #ifdef SYS_V
 #include <string.h>
+#else
+
+#include <strings.h>
+#ifdef lint
+char *sprintf(); /* keep lint happy */
+#endif
+#ifdef SCO_UNIX
+void *memset();
+#else
+char *memset();
+#endif
+#endif
 
 #ifdef AMIGA
 #define bzero(s, n) setmem((char *)(s), n, '\0')
@@ -60,33 +80,12 @@
 #define abs(x) ((x) < 0 ? -(x) : (x))
 #endif
 #else
-#define bzero(s, n) memset((char *)(s), '\0', n)
+#define bzero(s, n) (void) memset((char *)(s), '\0', n)
 #endif
 
-#ifndef VMS
-#ifndef SYS_V
-/* System V systems should already declare memset as returning void* */
-char *memset();
-#endif
-#else
-/* memset is needed for old versions of the VMS C runtime library */
-#define memset(s, c, n) \
-	{ \
-	register char *t = s; \
-	register int m = n; \
-	while ( m-- > 0 ) \
-	    *t++ = c; \
-	}
+#ifdef VMS
 #define unlink delete
 #define SHORT_FILE_NAMES
-#endif
-#endif
-
-#ifndef SYS_V
-#include <strings.h>
-#ifdef lint
-char *sprintf(); /* keep lint happy */
-#endif
 #endif
 
 char *malloc(), *realloc();
@@ -608,13 +607,13 @@ extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 extern int num_backtracking, bol_needed;
 
-char *allocate_array(), *reallocate_array();
+void *allocate_array(), *reallocate_array();
 
 #define allocate_integer_array(size) \
 	(int *) allocate_array( size, sizeof( int ) )
 
 #define reallocate_integer_array(array,size) \
-	(int *) reallocate_array( (char *) array, size, sizeof( int ) )
+	(int *) reallocate_array( (void *) array, size, sizeof( int ) )
 
 #define allocate_int_ptr_array(size) \
 	(int **) allocate_array( size, sizeof( int * ) )
@@ -627,22 +626,232 @@ char *allocate_array(), *reallocate_array();
 		allocate_array( size, sizeof( union dfaacc_union ) )
 
 #define reallocate_int_ptr_array(array,size) \
-	(int **) reallocate_array( (char *) array, size, sizeof( int * ) )
+	(int **) reallocate_array( (void *) array, size, sizeof( int * ) )
 
 #define reallocate_char_ptr_array(array,size) \
-	(char **) reallocate_array( (char *) array, size, sizeof( char * ) )
+	(char **) reallocate_array( (void *) array, size, sizeof( char * ) )
 
 #define reallocate_dfaacc_union(array, size) \
-	(union dfaacc_union *)  reallocate_array( (char *) array, size, sizeof( union dfaacc_union ) )
+	(union dfaacc_union *) \
+	reallocate_array( (void *) array, size, sizeof( union dfaacc_union ) )
 
 #define allocate_character_array(size) \
 	(Char *) allocate_array( size, sizeof( Char ) )
 
 #define reallocate_character_array(array,size) \
-	(Char *) reallocate_array( (char *) array, size, sizeof( Char ) )
+	(Char *) reallocate_array( (void *) array, size, sizeof( Char ) )
 
 
 /* used to communicate between scanner and parser.  The type should really
  * be YYSTYPE, but we can't easily get our hands on it.
  */
 extern int yylval;
+
+
+/* external functions that are cross-referenced among the flex source files */
+
+
+/* from file ccl.c */
+
+extern void ccladd PROTO((int, int));	/* Add a single character to a ccl */
+extern int cclinit PROTO(());	/* make an empty ccl */
+extern void cclnegate PROTO((int));	/* negate a ccl */
+
+/* list the members of a set of characters in CCL form */
+extern void list_character_set PROTO((FILE*, int[]));
+
+
+/* from file dfa.c */
+
+/* increase the maximum number of dfas */
+extern void increase_max_dfas PROTO(());
+
+extern void ntod PROTO(());	/* convert a ndfa to a dfa */
+
+
+/* from file ecs.c */
+
+/* convert character classes to set of equivalence classes */
+extern void ccl2ecl PROTO(());
+
+/* associate equivalence class numbers with class members */
+extern int cre8ecs PROTO((int[], int[], int));
+
+/* associate equivalence class numbers using %t table */
+extern int ecs_from_xlation PROTO((int[]));
+
+/* update equivalence classes based on character class transitions */
+extern void mkeccl PROTO((Char[], int, int[], int[], int, int));
+
+/* create equivalence class for single character */
+extern void mkechar PROTO((int, int[], int[]));
+
+
+/* from file gen.c */
+
+extern void make_tables PROTO(());	/* generate transition tables */
+
+
+/* from file main.c */
+
+extern void flexend PROTO((int));
+
+
+/* from file misc.c */
+
+/* write out the actions from the temporary file to lex.yy.c */
+extern void action_out PROTO(());
+
+/* true if a string is all lower case */
+extern int all_lower PROTO((register Char *));
+
+/* true if a string is all upper case */
+extern int all_upper PROTO((register Char *));
+
+/* bubble sort an integer array */
+extern void bubble PROTO((int [], int));
+
+/* shell sort a character array */
+extern void cshell PROTO((Char [], int, int));
+
+extern void dataend PROTO(());	/* finish up a block of data declarations */
+
+/* report an error message and terminate */
+extern void flexerror PROTO((char[]));
+
+/* report a fatal error message and terminate */
+extern void flexfatal PROTO((char[]));
+
+/* report an error message formatted with one integer argument */
+extern void lerrif PROTO((char[], int));
+
+/* report an error message formatted with one string argument */
+extern void lerrsf PROTO((char[], char[]));
+
+/* spit out a "# line" statement */
+extern void line_directive_out PROTO((FILE*));
+
+/* generate a data statment for a two-dimensional array */
+extern void mk2data PROTO((int));
+
+extern void mkdata PROTO((int));	/* generate a data statement */
+
+/* return the integer represented by a string of digits */
+extern int myctoi PROTO((Char []));
+
+/* write out one section of the skeleton file */
+extern void skelout PROTO(());
+
+/* output a yy_trans_info structure */
+extern void transition_struct_out PROTO((int, int));
+
+
+/* from file nfa.c */
+
+/* add an accepting state to a machine */
+extern void add_accept PROTO((int, int));
+
+/* make a given number of copies of a singleton machine */
+extern int copysingl PROTO((int, int));
+
+/* debugging routine to write out an nfa */
+extern void dumpnfa PROTO((int));
+
+/* finish up the processing for a rule */
+extern void finish_rule PROTO((int, int, int, int));
+
+/* connect two machines together */
+extern int link_machines PROTO((int, int));
+
+/* mark each "beginning" state in a machine as being a "normal" (i.e.,
+ * not trailing context associated) state
+ */
+extern void mark_beginning_as_normal PROTO((register int));
+
+/* make a machine that branches to two machines */
+extern int mkbranch PROTO((int, int));
+
+extern int mkclos PROTO((int));	/* convert a machine into a closure */
+extern int mkopt PROTO((int));	/* make a machine optional */
+
+/* make a machine that matches either one of two machines */
+extern int mkor PROTO((int, int));
+
+/* convert a machine into a positive closure */
+extern int mkposcl PROTO((int));
+
+extern int mkrep PROTO((int, int, int));	/* make a replicated machine */
+
+/* create a state with a transition on a given symbol */
+extern int mkstate PROTO((int));
+
+extern void new_rule PROTO(());	/* initialize for a new rule */
+
+
+/* from file parse.y */
+
+/* write out a message formatted with one string, pinpointing its location */
+extern void format_pinpoint_message PROTO((char[], char[]));
+
+/* write out a message, pinpointing its location */
+extern void pinpoint_message PROTO((char[]));
+
+extern void synerr PROTO((char []));	/* report a syntax error */
+extern int yyparse PROTO(());	/* the YACC parser */
+
+
+/* from file scan.l */
+
+extern int flexscan PROTO(());	/* the Flex-generated scanner for flex */
+
+/* open the given file (if NULL, stdin) for scanning */
+extern void set_input_file PROTO((char*));
+
+extern int yywrap PROTO(());	/* wrapup a file in the lexical analyzer */
+
+
+/* from file sym.c */
+
+/* save the text of a character class */
+extern void cclinstal PROTO ((Char [], int));
+
+/* lookup the number associated with character class */
+extern int ccllookup PROTO((Char []));
+
+extern void ndinstal PROTO((char[], Char[]));	/* install a name definition */
+extern void scinstal PROTO((char[], int));	/* make a start condition */
+
+/* lookup the number associated with a start condition */
+extern int sclookup PROTO((char[]));
+
+
+/* from file tblcmp.c */
+
+/* build table entries for dfa state */
+extern void bldtbl PROTO((int[], int, int, int, int));
+
+extern void cmptmps PROTO(());	/* compress template table entries */
+extern void inittbl PROTO(());	/* initialize transition tables */
+extern void mkdeftbl PROTO(());	/* make the default, "jam" table entries */
+
+/* create table entries for a state (or state fragment) which has
+ * only one out-transition */
+extern void mk1tbl PROTO((int, int, int, int));
+
+/* place a state into full speed transition table */
+extern void place_state PROTO((int*, int, int));
+
+/* save states with only one out-transition to be processed later */
+extern void stack1 PROTO((int, int, int, int));
+
+
+/* from file yylex.c */
+
+extern int yylex PROTO(());
+
+
+/* The Unix kernel calls used here */
+
+extern int read PROTO((int, char*, int));
+extern int unlink PROTO((char*));
+extern int write PROTO((int, char*, int));
