@@ -3179,4 +3179,266 @@ Do You Yahoo!?
 Yahoo! Auctions - buy the things you want at great prices
 http://auctions.yahoo.com/
 
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From johnmillaway@yahoo.com  Thu May  3 14:16:31 2001
+Return-Path: <johnmillaway@yahoo.com>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id OAA09489
+	for <wlestes@localhost>; Thu, 3 May 2001 14:16:31 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Thu, 03 May 2001 14:16:31 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f43Hv6q26933
+	for <wlestes@hermes.email.uncg.edu>; Thu, 3 May 2001 13:57:06 -0400 (EDT)
+Received: from web9406.mail.yahoo.com (web9406.mail.yahoo.com [216.136.129.22])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with SMTP id NAA14179
+	for <wlestes@uncg.edu>; Thu, 3 May 2001 13:57:04 -0400 (EDT)
+Message-ID: <20010503175704.85520.qmail@web9406.mail.yahoo.com>
+Received: from [155.247.207.90] by web9406.mail.yahoo.com; Thu, 03 May 2001 10:57:04 PDT
+Date: Thu, 3 May 2001 10:57:04 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Reentrant flex - progress update.
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200105011710.NAA02531@michael.uncg.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+*** EOOH ***
+Date: Thu, 3 May 2001 10:57:04 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Reentrant flex - progress update.
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200105011710.NAA02531@michael.uncg.edu>
+
+Will,
+Progress update: This week is finals week. I'll send the tarballs soon.
+
+I made another, very minor, adjustment a few days ago:  The integer yylineno will
+always be present in reentrant scanners, but only modified by flex if %option
+yylineno is enabled.  Many scanners I have seen and built will disable %option
+yylineno, then declare an integer "lineno" to keep a line count anyway, (because
+the man page warns about the performance penalty of %option yylineno.) This way,
+reentrant flex provides support for users who wish to maintain their own linecount.
+
+  /* just like 'wc -l' */
+  %option reentrant noyylineno main
+  %%
+           yylineno_r = 1;
+
+  \n       yylineno_r++;
+  .        { }
+  <<EOF>>  printf( "%7d", yylineno_r);
+
+Another important note: As far as I know, none of my modifications should have any
+effect on NON-reentrant scanners. In fact, I believe compiled scanners generated
+with the previous version should be binary equivalent to non-reentrant scanners
+generated with the new version. I have not verified this, but if they are not, then
+I may have made an oversight.
+
+-John Millaway
+
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Auctions - buy the things you want at great prices
+http://auctions.yahoo.com/
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Fri May  4 14:36:27 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id OAA13535
+	for <wlestes@localhost>; Fri, 4 May 2001 14:36:27 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Fri, 04 May 2001 14:36:27 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f44II5q04369
+	for <wlestes@hermes.email.uncg.edu>; Fri, 4 May 2001 14:18:05 -0400 (EDT)
+Received: from fencepost.gnu.org (fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id OAA14696
+	for <wlestes@uncg.edu>; Fri, 4 May 2001 14:18:04 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 14vk9T-00065Q-00
+	for <wlestes@uncg.edu>; Fri, 04 May 2001 14:18:03 -0400
+Received: from web9401.mail.yahoo.com ([216.136.129.107])
+	by fencepost.gnu.org with smtp (Exim 3.16 #1 (Debian))
+	id 14vk7I-0005Hj-00
+	for <help-flex@gnu.org>; Fri, 04 May 2001 14:15:48 -0400
+Message-ID: <20010504181547.55844.qmail@web9401.mail.yahoo.com>
+Received: from [155.247.207.90] by web9401.mail.yahoo.com; Fri, 04 May 2001 11:15:47 PDT
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Why is YY_BUF_SIZE not override-able?
+To: help-flex@gnu.org
+In-Reply-To: <20010430181855.46942.qmail@web9407.mail.yahoo.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.3
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Fri, 4 May 2001 11:15:47 -0700 (PDT)
+
+*** EOOH ***
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Why is YY_BUF_SIZE not override-able?
+To: help-flex@gnu.org
+In-Reply-To: <20010430181855.46942.qmail@web9407.mail.yahoo.com>
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Fri, 4 May 2001 11:15:47 -0700 (PDT)
+
+Hi,
+
+Most everything can be overridden by the user. However the size of the input
+buffer, YY_BUF_SIZE, is fixed. Is there a reason why YY_BUF_SIZE can't be
+overridden?
+
+Let's say I knew that all my tokens will match under 80 characters plus newlines,
+plus nulls, plus flex-flags... I might decide to set YY_BUF_SIZE to 100.
+
+-John
+
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Auctions - buy the things you want at great prices
+http://auctions.yahoo.com/
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
+
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From johnmillaway@yahoo.com  Fri May  4 15:44:19 2001
+Return-Path: <johnmillaway@yahoo.com>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id PAA13788
+	for <wlestes@localhost>; Fri, 4 May 2001 15:44:19 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Fri, 04 May 2001 15:44:19 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f44JPXq26400
+	for <wlestes@hermes.email.uncg.edu>; Fri, 4 May 2001 15:25:33 -0400 (EDT)
+Received: from web9407.mail.yahoo.com (web9407.mail.yahoo.com [216.136.129.23])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with SMTP id PAA21302
+	for <wlestes@uncg.edu>; Fri, 4 May 2001 15:25:31 -0400 (EDT)
+Message-ID: <20010504192531.73966.qmail@web9407.mail.yahoo.com>
+Received: from [155.247.207.90] by web9407.mail.yahoo.com; Fri, 04 May 2001 12:25:31 PDT
+Date: Fri, 4 May 2001 12:25:31 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Reentrant flex - test results.
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200105031914.PAA09683@michael.uncg.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+*** EOOH ***
+Date: Fri, 4 May 2001 12:25:31 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Reentrant flex - test results.
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200105031914.PAA09683@michael.uncg.edu>
+
+My concerns are this:
+1. The build relies on bison or yacc. Is this intentional? Why not include the
+parse.c and parse.h in the dist?
+
+2. The TESTS/ "make check" stops at the first error. I'm thinking it may not be
+what we want. The change is simple: Omit the "|| exit -1" part from the commands in
+TESTS/Makefile.in.
+
+3. Since I'm not the autoconf guru, I couldn't find a cleaner way to do all the
+tests. So I just used a /bin/sh loop in the TESTS/Makefile.in.
+
+
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Auctions - buy the things you want at great prices
+http://auctions.yahoo.com/
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From johnmillaway@yahoo.com  Fri May  4 15:56:22 2001
+Return-Path: <johnmillaway@yahoo.com>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id PAA13813
+	for <wlestes@localhost>; Fri, 4 May 2001 15:56:22 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Fri, 04 May 2001 15:56:22 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f44JbZq00252
+	for <wlestes@hermes.email.uncg.edu>; Fri, 4 May 2001 15:37:35 -0400 (EDT)
+Received: from web9406.mail.yahoo.com (web9406.mail.yahoo.com [216.136.129.22])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with SMTP id PAA22444
+	for <wlestes@uncg.edu>; Fri, 4 May 2001 15:37:33 -0400 (EDT)
+Message-ID: <20010504193731.93040.qmail@web9406.mail.yahoo.com>
+Received: from [155.247.207.90] by web9406.mail.yahoo.com; Fri, 04 May 2001 12:37:31 PDT
+Date: Fri, 4 May 2001 12:37:31 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: Reentrant flex - progress update.
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200105041912.PAA13694@michael.uncg.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+*** EOOH ***
+Date: Fri, 4 May 2001 12:37:31 -0700 (PDT)
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: Reentrant flex - progress update.
+To: "W. L. Estes" <wlestes@uncg.edu>
+In-Reply-To: <200105041912.PAA13694@michael.uncg.edu>
+
+> Do you think your test suite is complete? or is it just reasonably
+> thorough? (i.e. if someone thinks a feature isn't tested, should that
+> be a bug?)
+
+No, it is by no means complete. Yes, missing feature tests are bugs of a sort. The
+test suite was designed to cope with all the possible build configurations of a
+generated scanner, while developing flex itself. I didn't want to modify or add one
+feature, but break another. The breakage would easily go unnoticed.
+
+>From the top of my head, I didn't test %array, REJECT, and yy_set_bol, because I
+plain forgot about them. I didn't test the C++ option because it is broken AFAIK.
+All of the tests came in handy at one point or another during the past month,
+though.
+
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Auctions - buy the things you want at great prices
+http://auctions.yahoo.com/
+
 
