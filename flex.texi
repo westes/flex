@@ -1231,24 +1231,16 @@ in start conditions.  It is equivalent to:
 @end verbatim
 @end example
 
-@b{BEGIN(0)}
-returns to the original state where only the rules with
-no start conditions are active.  This state can also be
-referred to as the start-condition "INITIAL", so
-@b{BEGIN(INITIAL)}
-is equivalent to
-@b{BEGIN(0)}.
-(The parentheses around the start condition name are not required but
-are considered good style.)
+@code{BEGIN(0)} returns to the original state where only the rules with
+no start conditions are active.  This state can also be referred to as
+the start-condition @code{INITIAL}, so @code{BEGIN(INITIAL)} is
+equivalent to @code{BEGIN(0)}.  (The parentheses around the start
+condition name are not required but are considered good style.)
 
-@b{BEGIN}
-actions can also be given as indented code at the beginning
-of the rules section.  For example, the following will cause
-the scanner to enter the "SPECIAL" start condition whenever
-@code{yylex()}
-is called and the global variable
-@i{enter_special}
-is true:
+@code{BEGIN} actions can also be given as indented code at the beginning
+of the rules section.  For example, the following will cause the scanner
+to enter the @var{SPECIAL} start condition whenever @code{yylex()} is
+called and the global variable @var{enter_special} is true:
 
 @example
 @verbatim
@@ -1259,36 +1251,33 @@ is true:
             if ( enter_special )
                 BEGIN(SPECIAL);
 
-    SPECIAL>blahblahblah
+    <SPECIAL>blahblahblah
     ...more rules follow...
 @end verbatim
 @end example
 
-
-To illustrate the uses of start conditions,
-here is a scanner which provides two different interpretations
-of a string like "123.456".  By default it will treat it as
-three tokens, the integer "123", a dot ('.'), and the integer "456".
-But if the string is preceded earlier in the line by the string
-"expect-floats"
-it will treat it as a single token, the floating-point number
-123.456:
+To illustrate the uses of start conditions, here is a scanner which
+provides two different interpretations of a string like @samp{123.456}.
+By default it will treat it as three tokens, the integer @samp{123}, a
+dot (@samp{.}), and the integer @samp{456}.  But if the string is
+preceded earlier in the line by the string @samp{expect-floats} it will
+treat it as a single token, the floating-point number @samp{123.456}:
 
 @example
 @verbatim
     %{
-    #include math.h>
+    #include <math.h>
     %}
     %s expect
 
     %%
     expect-floats        BEGIN(expect);
 
-    expect>[0-9]+@samp{.}[0-9]+      {
+    <expect>[0-9]+@samp{.}[0-9]+      {
                 printf( "found a float, = %f\n",
                         atof( yytext ) );
                 }
-    expect>\n           {
+    <expect>\n           {
                 /* that's the end of the line, so
                  * we need another "expect-number"
                  * before we'll recognize any more
@@ -1302,7 +1291,7 @@ it will treat it as a single token, the floating-point number
                         atoi( yytext ) );
                 }
 
-    @samp{.}         printf( "found a dot\n" );
+    "."         printf( "found a dot\n" );
 @end verbatim
 @end example
 
@@ -1317,10 +1306,10 @@ maintaining a count of the current input line.
 
     "/*"         BEGIN(comment);
 
-    comment>[^*\n]*        /* eat anything that's not a '*' */
-    comment>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
-    comment>\n             ++line_num;
-    comment>"*"+"/"        BEGIN(INITIAL);
+    <comment>[^*\n]*        /* eat anything that's not a '*' */
+    <comment>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
+    <comment>\n             ++line_num;
+    <comment>"*"+"/"        BEGIN(INITIAL);
 @end verbatim
 @end example
 
@@ -1347,24 +1336,21 @@ following fashion:
 
     ...
 
-    foo>"/*"    {
+    <foo>"/*"    {
                  comment_caller = foo;
                  BEGIN(comment);
                  }
 
-    comment>[^*\n]*        /* eat anything that's not a '*' */
-    comment>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
-    comment>\n             ++line_num;
-    comment>"*"+"/"        BEGIN(comment_caller);
+    <comment>[^*\n]*        /* eat anything that's not a '*' */
+    <comment>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
+    <comment>\n             ++line_num;
+    <comment>"*"+"/"        BEGIN(comment_caller);
 @end verbatim
 @end example
 
-Furthermore, you can access the current start condition using
-the integer-valued
-@b{YY_START}
-macro.  For example, the above assignments to
-@i{comment_caller}
-could instead be written
+Furthermore, you can access the current start condition using the
+integer-valued @code{YY_START} macro.  For example, the above
+assignments to @var{comment_caller} could instead be written
 
 @example
 @verbatim
@@ -1372,12 +1358,8 @@ could instead be written
 @end verbatim
 @end example
 
-Flex provides
-@b{YYSTATE}
-as an alias for
-@b{YY_START}
-(since that is what's used by AT&T
-@i{lex)}.
+Flex provides @code{YYSTATE} as an alias for @code{YY_START} (since that
+is what's used by AT&T @code{lex}).
 
 Note that start conditions do not have their own name-space; %s's and %x's
 declare names in the same fashion as #define's.
@@ -1397,7 +1379,7 @@ not including checking for a string that's too long):
 
     \"      string_buf_ptr = string_buf; BEGIN(str);
 
-    str>\"        { /* saw closing quote - all done */
+    <str>\"        { /* saw closing quote - all done */
             BEGIN(INITIAL);
             *string_buf_ptr = '\0';
             /* return string constant token type and
@@ -1405,12 +1387,12 @@ not including checking for a string that's too long):
              */
             }
 
-    str>\n        {
+    <str>\n        {
             /* error - unterminated string constant */
             /* generate error message */
             }
 
-    str>\\[0-7]{1,3} {
+    <str>\\[0-7]{1,3} {
             /* octal escape sequence */
             int result;
 
@@ -1422,21 +1404,21 @@ not including checking for a string that's too long):
             *string_buf_ptr++ = result;
             }
 
-    str>\\[0-9]+ {
+    <str>\\[0-9]+ {
             /* generate error - bad escape sequence; something
              * like '\48' or '\0777777'
              */
             }
 
-    str>\\n  *string_buf_ptr++ = '\n';
-    str>\\t  *string_buf_ptr++ = '\t';
-    str>\\r  *string_buf_ptr++ = '\r';
-    str>\\b  *string_buf_ptr++ = '\b';
-    str>\\f  *string_buf_ptr++ = '\f';
+    <str>\\n  *string_buf_ptr++ = '\n';
+    <str>\\t  *string_buf_ptr++ = '\t';
+    <str>\\r  *string_buf_ptr++ = '\r';
+    <str>\\b  *string_buf_ptr++ = '\b';
+    <str>\\f  *string_buf_ptr++ = '\f';
 
-    str>\\(.|\n)  *string_buf_ptr++ = yytext[1];
+    <str>\\(.|\n)  *string_buf_ptr++ = yytext[1];
 
-    str>[^\\\n\"]+        {
+    <str>[^\\\n\"]+        {
             char *yptr = yytext;
 
             while ( *yptr )
@@ -1445,34 +1427,25 @@ not including checking for a string that's too long):
 @end verbatim
 @end example
 
-
 Often, such as in some of the examples above, you wind up writing a
 whole bunch of rules all preceded by the same start condition(s).  Flex
-makes this a little easier and cleaner by introducing a notion of
-start condition
-@i{scope}.
-A start condition scope is begun with:
+makes this a little easier and cleaner by introducing a notion of start
+condition @dfn{scope}.  A start condition scope is begun with:
 
 @example
 @verbatim
-    SCs>{
+    <SCs>{
 @end verbatim
 @end example
 
-where
-@i{SCs}
-is a list of one or more start conditions.  Inside the start condition
-scope, every rule automatically has the prefix
-@i{SCs>}
-applied to it, until a
-@i{'}'}
-which matches the initial
-@i{'{'}.
-So, for example,
+where @code{SCs} is a list of one or more start conditions.  Inside the
+start condition scope, every rule automatically has the prefix
+@code{SCs>} applied to it, until a @samp{@}} which matches the initial
+@samp{@{}.  So, for example,
 
 @example
 @verbatim
-    ESC>{
+    <ESC>{
         "\\n"   return '\n';
         "\\r"   return '\r';
         "\\f"   return '\f';
@@ -1485,57 +1458,56 @@ is equivalent to:
 
 @example
 @verbatim
-    ESC>"\\n"  return '\n';
-    ESC>"\\r"  return '\r';
-    ESC>"\\f"  return '\f';
-    ESC>"\\0"  return '\0';
+    <ESC>"\\n"  return '\n';
+    <ESC>"\\r"  return '\r';
+    <ESC>"\\f"  return '\f';
+    <ESC>"\\0"  return '\0';
 @end verbatim
 @end example
 
 Start condition scopes may be nested.
 
-Three routines are available for manipulating stacks of start conditions:
-@itemize
-}{@b{void yy_push_state(int new_state)}}
-@iem[{@b{void yy_push_state(int new_state)}}]
+The following routines are available for manipulating stacks of start conditions:
+
+@deftypefun  void yy_push_state ( int @var{new_state} )
 pushes the current start condition onto the top of the start condition
 stack and switches to
-@i{new_state}
+@var{new_state}
 as though you had used
-@b{BEGIN new_state}
+@code{BEGIN new_state}
 (recall that start condition names are also integers).
-@iem[{@b{void yy_pop_state()}}]
-pops the top of the stack and switches to it via
-@b{BEGIN}.
-@iem[{@b{int yy_top_state()}}]
-returns the top of the stack without altering the stack's contents.
-@end itemize}
-The start condition stack grows dynamically and so has no built-in
-size limitation.  If memory is exhausted, program execution aborts.
+@end deftypefun
 
-To use start condition stacks, your scanner must include a
-@b{%option stack}
-directive (see Options below).
+@deftypefun void yy_pop_state ()
+pops the top of the stack and switches to it via
+@code{BEGIN}.
+@end deftypefun
+
+@deftypefun int yy_top_state ()
+returns the top of the stack without altering the stack's contents.
+@end deftypefun
+
+The start condition stack grows dynamically and so has no built-in size
+limitation.  If memory is exhausted, program execution aborts.
+
+To use start condition stacks, your scanner must include a @code{%option
+stack} directive (@pxref{invoking flex}).
 
 @node multiple, invoking flex, start conditions, Top
 @chapter MULTIPLE INPUT BUFFERS
 
-Some scanners (such as those which support ``include'' files)
-require reading from several input streams.  As
-@code{flex}
-scanners do a large amount of buffering, one cannot control
-where the next input will be read from by simply writing a
-@b{YY_INPUT}
-which is sensitive to the scanning context.
-@b{YY_INPUT}
-is only called when the scanner reaches the end of its buffer, which
-may be a long time after scanning a statement such as an "include"
-which requires switching the input source.
+Some scanners (such as those which support ``include'' files) require
+reading from several input streams.  As @code{flex} scanners do a large
+amount of buffering, one cannot control where the next input will be
+read from by simply writing a @code{YY_INPUT()} which is sensitive to
+the scanning context.  @code{YY_INPUT()} is only called when the scanner
+reaches the end of its buffer, which may be a long time after scanning a
+statement such as an @code{include} statement which requires switching
+the input source.
 
-To negotiate these sorts of problems,
-@code{flex}
-provides a mechanism for creating and switching between multiple
-input buffers.  An input buffer is created by using:
+To negotiate these sorts of problems, @code{flex} provides a mechanism
+for creating and switching between multiple input buffers.  An input
+buffer is created by using:
 
 @example
 @verbatim
@@ -1543,40 +1515,21 @@ input buffers.  An input buffer is created by using:
 @end verbatim
 @end example
 
-which takes a
-@i{FILE}
-pointer and a size and creates a buffer associated with the given
-file and large enough to hold
-@i{size}
-characters (when in doubt, use
-@b{YY_BUF_SIZE}
-for the size).  It returns a
-@b{YY_BUFFER_STATE}
-handle, which may then be passed to other routines (see below).  The
-@b{YY_BUFFER_STATE}
-type is a pointer to an opaque
-@b{struct yy_buffer_state}
-structure, so you may safely initialize YY_BUFFER_STATE variables to
-@b{((YY_BUFFER_STATE) 0)}
-if you wish, and also refer to the opaque structure in order to
-correctly declare input buffers in source files other than that
-of your scanner.  Note that the
-@i{FILE}
-pointer in the call to
-@b{yy_create_buffer}
-is only used as the value of
-@file{yyin}
-seen by
-@b{YY_INPUT;}
-if you redefine
-@b{YY_INPUT}
-so it no longer uses
-@file{yyin},
-then you can safely pass a nil
-@i{FILE}
-pointer to
-@b{yy_create_buffer}.
-You select a particular buffer to scan from using:
+which takes a @code{FILE} pointer and a size and creates a buffer
+associated with the given file and large enough to hold @var{size}
+characters (when in doubt, use @var{YY_BUF_SIZE} for the size).  It
+returns a @code{YY_BUFFER_STATE} handle, which may then be passed to
+other routines (see below).  The @code{YY_BUFFER_STATE} type is a
+pointer to an opaque @code{struct yy_buffer_state} structure, so you may
+safely initialize @code{YY_BUFFER_STATE} variables to @code{((YY_BUFFER_STATE)
+0)} if you wish, and also refer to the opaque structure in order to
+correctly declare input buffers in source files other than that of your
+scanner.  Note that the @code{FILE} pointer in the call to
+@code{yy_create_buffer} is only used as the value of @file{yyin} seen by
+@code{YY_INPUT}.  If you redefine @code{YY_INPUT()} so it no longer uses
+@file{yyin}, then you can safely pass a nil @code{FILE} pointer to
+@code{yy_create_buffer}.  You select a particular buffer to scan from
+using:
 
 @example
 @verbatim
@@ -1584,21 +1537,12 @@ You select a particular buffer to scan from using:
 @end verbatim
 @end example
 
-switches the scanner's input buffer so subsequent tokens will
-come from
-@i{new_buffer}.
-Note that
-@b{yy_switch_to_buffer()}
-may be used by yywrap() to set things up for continued scanning, instead
-of opening a new file and pointing
-@file{yyin}
-at it.  Note also that switching input sources via either
-@b{yy_switch_to_buffer()}
-or
-@code{yywrap()}
-does
-@emph{not}
-change the start condition.
+The above switches the scanner's input buffer so subsequent tokens will
+come from @var{new_buffer}.  Note that @code{yy_switch_to_buffer()} may
+be used by @code{yywrap()} to set things up for continued scanning,
+instead of opening a new file and pointing @file{yyin} at it.  Note also
+that switching input sources via either @code{yy_switch_to_buffer()} or
+@code{yywrap()} does @emph{not} change the start condition.
 
 @example
 @verbatim
@@ -1606,10 +1550,9 @@ change the start condition.
 @end verbatim
 @end example
 
-is used to reclaim the storage associated with a buffer.  (
-@b{buffer}
-can be nil, in which case the routine does nothing.)
-You can also clear the current contents of a buffer using:
+is used to reclaim the storage associated with a buffer.  (@var{buffer}
+can be nil, in which case the routine does nothing.)  You can also clear
+the current contents of a buffer using:
 
 @example
 @verbatim
@@ -1620,26 +1563,18 @@ You can also clear the current contents of a buffer using:
 This function discards the buffer's contents,
 so the next time the scanner attempts to match a token from the
 buffer, it will first fill the buffer anew using
-@b{YY_INPUT}.
+@code{YY_INPUT()}.
 
-@b{yy_new_buffer()}
-is an alias for
-@b{yy_create_buffer()},
-provided for compatibility with the C++ use of
-@i{new}
-and
-@i{delete}
-for creating and destroying dynamic objects.
+@code{yy_new_buffer()} is an alias for @code{yy_create_buffer()},
+provided for compatibility with the C++ use of @code{new} and
+@code{delete} for creating and destroying dynamic objects.
 
-Finally, the
-@b{YY_CURRENT_BUFFER}
-macro returns a
-@b{YY_BUFFER_STATE}
-handle to the current buffer.
+Finally, the @code{YY_CURRENT_BUFFER} macro returns a
+@code{YY_BUFFER_STATE} handle to the current buffer.
 
 Here is an example of using these features for writing a scanner
 which expands include files (the
-@b{EOF>>}
+@code{<<EOF>>}
 feature is discussed below):
 
 @example
@@ -1661,8 +1596,8 @@ feature is discussed below):
     [a-z]+              ECHO;
     [^a-z\n]*\n?        ECHO;
 
-    incl>[ \t]*      /* eat the whitespace */
-    incl>[^ \t\n]+   { /* got the include file name */
+    <incl>[ \t]*      /* eat the whitespace */
+    <incl>[^ \t\n]+   { /* got the include file name */
             if ( include_stack_ptr >= MAX_INCLUDE_DEPTH )
                 {
                 fprintf( stderr, "Includes nested too deeply" );
@@ -1683,7 +1618,7 @@ feature is discussed below):
             BEGIN(INITIAL);
             }
 
-    EOF>> {
+    <<EOF>> {
             if ( --include_stack_ptr  0 )
                 {
                 yyterminate();
@@ -1699,114 +1634,91 @@ feature is discussed below):
 @end verbatim
 @end example
 
-Three routines are available for setting up input buffers for
-scanning in-memory strings instead of files.  All of them create
-a new input buffer for scanning the string, and return a corresponding
-@b{YY_BUFFER_STATE}
-handle (which you should delete with
-@b{yy_delete_buffer()}
-when done with it).  They also switch to the new buffer using
-@b{yy_switch_to_buffer()},
-so the next call to
-@code{yylex()}
-will start scanning the string.
-@itemize
-}{@b{yy_scan_string(const char *str)}}
-@iem[{@b{yy_scan_string(const char *str)}}]
+The following routines are available for setting up input buffers for
+scanning in-memory strings instead of files.  All of them create a new
+input buffer for scanning the string, and return a corresponding
+@code{YY_BUFFER_STATE} handle (which you should delete with
+@code{yy_delete_buffer()} when done with it).  They also switch to the
+new buffer using @code{yy_switch_to_buffer()}, so the next call to
+@code{yylex()} will start scanning the string.
+
+@deffn Function yy_scan_string ( const char *str )
 scans a NUL-terminated string.
-@iem[{@b{yy_scan_bytes(const char *bytes, int len)}}]
-scans
-@i{len}
-bytes (including possibly NUL's)
-starting at location
-@i{bytes}.
-@end itemize}
-Note that both of these functions create and scan a
-@i{copy}
-of the string or bytes.  (This may be desirable, since
-@code{yylex()}
-modifies the contents of the buffer it is scanning.)  You can avoid the
-copy by using:
-@itemize
-}{@b{yy_scan_buffer(char *base, yy_size_t size)}}
-@iem[{@b{yy_scan_buffer(char *base, yy_size_t size)}}]
-which scans in place the buffer starting at
-@i{base},
-consisting of
-@i{size}
-bytes, the last two bytes of which
-@i{must}
-be
-@b{YY_END_OF_BUFFER_CHAR}
-(ASCII NUL).
-These last two bytes are not scanned; thus, scanning
-consists of
-@b{base[0]}
-through
-@b{base[size-2]},
-inclusive.
-@itemize
-@item
-If you fail to set up
-@i{base}
-in this manner (i.e., forget the final two
-@b{YY_END_OF_BUFFER_CHAR}
-bytes), then
-@b{yy_scan_buffer()}
+@end deffn
+
+@deffn Function yy_scan_bytes ( const char *bytes, int len )
+scans @var{len} bytes (including possibly NUL's) starting at location
+@var{bytes}.
+@end deffn
+
+Note that both of these functions create and scan a @emph{copy} of the
+string or bytes.  (This may be desirable, since @code{yylex()} modifies
+the contents of the buffer it is scanning.)  You can avoid the copy by
+using:
+
+@deffn yy_scan_buffer ( char *base, yy_size_t size )
+which scans in place the buffer starting at @var{base}, consisting of
+@var{size} bytes, the last two bytes of which @emph{must} be
+@var{YY_END_OF_BUFFER_CHAR} (ASCII NUL).  These last two bytes are not
+scanned; thus, scanning consists of @code{base[0]} through
+@code{base[size-2]}, inclusive.
+@end deffn
+
+If you fail to set up @var{base} in this manner (i.e., forget the final
+two @var{YY_END_OF_BUFFER_CHAR} bytes), then @code{yy_scan_buffer()}
 returns a nil pointer instead of creating a new input buffer.
-@item
+
 The type
-@b{yy_size_t}
+@code{yy_size_t}
 is an integral type to which you can cast an integer expression
 reflecting the size of the buffer.
-@end itemize
-@end itemize
 
+@menu
+* eof::                         
+* misc macros::                 
+* user values::                 
+@end menu
+
+@node eof, misc macros, multiple, multiple
 @section END-OF-FILE RULES
 
-The special rule "EOF>>" indicates
+The special rule @code{<<EOF>>} indicates
 actions which are to be taken when an end-of-file is
-encountered and yywrap() returns non-zero (i.e., indicates
+encountered and @code{yywrap()} returns non-zero (i.e., indicates
 no further files to process).  The action must finish
-by doing one of four things:
+by doing one of the following things:
+
 @itemize
 @item 
-assigning
-@file{yyin}
-to a new input file (in previous versions of flex, after doing the
-assignment you had to call the special action
-@b{YY_NEW_FILE;}
-this is no longer necessary);
+assigning @file{yyin} to a new input file (in previous versions of
+@code{flex}, after doing the assignment you had to call the special
+action @code{YY_NEW_FILE}.  This is no longer necessary.)
+
 @item 
-executing a
-@code{return}
-statement;
+executing a @code{return} statement;
+
 @item 
-executing the special
-@code{yyterminate()}
-action;
+executing the special @code{yyterminate()} action.
+
 @item 
-or, switching to a new buffer using
-@b{yy_switch_to_buffer()}
-as shown in the example above.
+or, switching to a new buffer using @code{yy_switch_to_buffer()} as
+shown in the example above.
 @end itemize
-EOF>> rules may not be used with other
-patterns; they may only be qualified with a list of start
-conditions.  If an unqualified EOF>> rule is given, it
-applies to
-@i{all}
-start conditions which do not already have EOF>> actions.  To
-specify an EOF>> rule for only the initial start condition, use
+
+<<EOF>> rules may not be used with other patterns; they may only be
+qualified with a list of start conditions.  If an unqualified <<EOF>>
+rule is given, it applies to @emph{all} start conditions which do not
+already have <<EOF>> actions.  To specify an <<EOF>> rule for only the
+initial start condition, use:
 
 @example
 @verbatim
-    INITIAL>EOF>>
+    <INITIAL><<EOF>>
 @end verbatim
 @end example
 
-
-These rules are useful for catching things like unclosed comments.
-An example:
+These rules are useful for catching things like unclosed comments.  An
+example:
 
 @example
 @verbatim
@@ -1815,11 +1727,11 @@ An example:
 
     ...other rules for dealing with quotes...
 
-    quote>EOF>>   {
+    <quote><<EOF>>   {
              error( "unterminated quote" );
              yyterminate();
              }
-    EOF>>  {
+   <<EOF>>  {
              if ( *++filelist )
                  yyin = fopen( *filelist, "r" );
              else
@@ -1828,20 +1740,16 @@ An example:
 @end verbatim
 @end example
 
+@node misc macros, user values, eof, multiple
 @section MISCELLANEOUS MACROS
 
-The macro
-@b{YY_USER_ACTION}
-can be defined to provide an action
-which is always executed prior to the matched rule's action.  For example,
-it could be #define'd to call a routine to convert yytext to lower-case.
-When
-@b{YY_USER_ACTION}
-is invoked, the variable
-@i{yy_act}
-gives the number of the matched rule (rules are numbered starting with 1).
-Suppose you want to profile how often each of your rules is matched.  The
-following would do the trick:
+The macro @code{YY_USER_ACTION} can be defined to provide an action
+which is always executed prior to the matched rule's action.  For
+example, it could be #define'd to call a routine to convert yytext to
+lower-case.  When @code{YY_USER_ACTION} is invoked, the variable
+@var{yy_act} gives the number of the matched rule (rules are numbered
+starting with 1).  Suppose you want to profile how often each of your
+rules is matched.  The following would do the trick:
 
 @example
 @verbatim
@@ -1849,17 +1757,10 @@ following would do the trick:
 @end verbatim
 @end example
 
-where
-@i{ctr}
-is an array to hold the counts for the different rules.  Note that
-the macro
-@b{YY_NUM_RULES}
-gives the total number of rules (including the default rule), even if
-you use
-@b{--s)},
-so a correct declaration for
-@i{ctr}
-is:
+where @var{ctr} is an array to hold the counts for the different rules.
+Note that the macro @code{YY_NUM_RULES} gives the total number of rules
+(including the default rule), even if you use @samp{-s)}, so a correct
+declaration for @var{ctr} is:
 
 @example
 @verbatim
@@ -1867,61 +1768,43 @@ is:
 @end verbatim
 @end example
 
+The macro @code{YY_USER_INIT} may be defined to provide an action which
+is always executed before the first scan (and before the scanner's
+internal initializations are done).  For example, it could be used to
+call a routine to read in a data table or open a logging file.
 
-The macro
-@b{YY_USER_INIT}
-may be defined to provide an action which is always executed before
-the first scan (and before the scanner's internal initializations are done).
-For example, it could be used to call a routine to read
-in a data table or open a logging file.
+The macro @code{yy_set_interactive(is_interactive)} can be used to
+control whether the current buffer is considered @dfn{interactive}.  An
+interactive buffer is processed more slowly, but must be used when the
+scanner's input source is indeed interactive to avoid problems due to
+waiting to fill buffers (see the discussion of the @samp{-I} flag in
+@ref{invoking flex}).  A non-zero value in the macro invocation marks
+the buffer as interactive, a zero value as non-interactive.  Note that
+use of this macro overrides @code{%option always-interactive} or
+@code{%option never-interactive} (@pxref{invoking flex}).
+@code{yy_set_interactive()} must be invoked prior to beginning to scan
+the buffer that is (or is not) to be considered interactive.
 
-The macro
-@b{yy_set_interactive(is_interactive)}
-can be used to control whether the current buffer is considered
-@i{interactive}.
-An interactive buffer is processed more slowly,
-but must be used when the scanner's input source is indeed
-interactive to avoid problems due to waiting to fill buffers
-(see the discussion of the
-@b{--I}
-flag below).  A non-zero value
-in the macro invocation marks the buffer as interactive, a zero  
-value as non-interactive.  Note that use of this macro overrides
-@b{%option always-interactive}
-or
-@b{%option never-interactive}
-(see Options below).
-@b{yy_set_interactive()}
-must be invoked prior to beginning to scan the buffer that is
-(or is not) to be considered interactive.
+The macro @code{yy_set_bol(at_bol)} can be used to control whether the
+current buffer's scanning context for the next token match is done as
+though at the beginning of a line.  A non-zero macro argument makes
+rules anchored with @samp{^} active, while a zero argument makes
+@samp{^} rules inactive.
 
-The macro
-@b{yy_set_bol(at_bol)}
-can be used to control whether the current buffer's scanning
-context for the next token match is done as though at the
-beginning of a line.  A non-zero macro argument makes rules anchored with
-@samp{^} active, while a zero argument makes @samp{^} rules inactive.
-
-The macro
-@b{YY_AT_BOL()}
-returns true if the next token scanned from the current buffer
-will have @samp{^} rules active, false otherwise.
+The macro @code{YY_AT_BOL()} returns true if the next token scanned from
+the current buffer will have @samp{^} rules active, false otherwise.
 
 In the generated scanner, the actions are all gathered in one large
-switch statement and separated using
-@b{YY_BREAK},
-which may be redefined.  By default, it is simply a "break", to separate
-each rule's action from the following rule's.
-Redefining
-@b{YY_BREAK}
-allows, for example, C++ users to
-#define YY_BREAK to do nothing (while being very careful that every
-rule ends with a "break" or a "return"!) to avoid suffering from
-unreachable statement warnings where because a rule's action ends with
-"return", the
-@b{YY_BREAK}
-is inaccessible.
+switch statement and separated using @code{YY_BREAK}, which may be
+redefined.  By default, it is simply a @code{break}, to separate each
+rule's action from the following rule's.  Redefining @code{YY_BREAK}
+allows, for example, C++ users to #define YY_BREAK to do nothing (while
+being very careful that every rule ends with a @code{break}" or a
+@code{return}!) to avoid suffering from unreachable statement warnings
+where because a rule's action ends with @code{return}, the
+@code{YY_BREAK} is inaccessible.
 
+@node user values,  , misc macros, multiplel
 @section VALUES AVAILABLE TO THE USER
 
 This section summarizes the various values available to the user
@@ -2001,10 +1884,10 @@ returns a
 @b{YY_BUFFER_STATE}
 handle to the current buffer.
 @item 
-@b{YY_START}
+@code{YY_START}
 returns an integer value corresponding to the current start
 condition.  You can subsequently use this value with
-@b{BEGIN}
+@code{BEGIN}
 to return to that start condition.
 @end itemize
 
@@ -2060,7 +1943,7 @@ part of the scanner might look like:
 has the following options:
 @itemize
 }{@b{--b}}
-@iem[{@b{--b}}]
+@item[{@b{--b}}]
 Generate backing-up information to
 @i{lex.backup}.
 This is a list of scanner states which require backing up
@@ -2076,9 +1959,9 @@ is used, the generated scanner will run faster (see the
 flag).  Only users who wish to squeeze every last cycle out of their
 scanners need worry about this option.  (See the section on Performance
 Considerations below.)
-@iem[{@b{--c}}]
+@item[{@b{--c}}]
 is a do-nothing, deprecated option included for POSIX compliance.
-@iem[{@b{--d}}]
+@item[{@b{--d}}]
 makes the generated scanner run in
 @i{debug}
 mode.  Whenever a pattern is recognized and the global
@@ -2100,14 +1983,14 @@ are also generated when the scanner backs up, accepts the
 default rule, reaches the end of its input buffer (or encounters
 a NUL; at this point, the two look the same as far as the scanner's concerned),
 or reaches an end-of-file.
-@iem[{@b{--f}}]
+@item[{@b{--f}}]
 specifies
 @i{fast scanner}.
 No table compression is done and stdio is bypassed.
 The result is large but fast.  This option is equivalent to
 @b{--Cfr}
 (see below).
-@iem[{@b{--h}}]
+@item[{@b{--h}}]
 generates a "help" summary of
 @i{flex's}
 options to
@@ -2118,7 +2001,7 @@ and
 @b{----help}
 are synonyms for
 @b{--h}.
-@iem[{@b{--i}}]
+@item[{@b{--i}}]
 instructs
 @code{flex}
 to generate a
@@ -2130,7 +2013,7 @@ be ignored, and tokens in the input will be matched regardless of case.  The
 matched text given in
 @i{yytext}
 will have the preserved case (i.e., it will not be folded).
-@iem[{@b{--l}}]
+@item[{@b{--l}}]
 turns on maximum compatibility with the original AT&T
 @i{lex}
 implementation.  Note that this does not mean
@@ -2145,10 +2028,10 @@ options.  For details on the compatibilities it provides, see the section
 in the name
 @b{YY_FLEX_LEX_COMPAT}
 being #define'd in the generated scanner.
-@iem[{@b{--n}}]
+@item[{@b{--n}}]
 is another do-nothing, deprecated option included only for
 POSIX compliance.
-@iem[{@b{--p}}]
+@item[{@b{--p}}]
 generates a performance report to stderr.  The report
 consists of comments regarding features of the
 @code{flex}
@@ -2170,7 +2053,7 @@ and the
 @b{--I}
 flag entail minor performance penalties.
 @end itemize%
-@iem[{@b{--s}}]
+@item[{@b{--s}}]
 causes the
 @i{default rule}
 (that unmatched scanner input is echoed to
@@ -2178,13 +2061,13 @@ causes the
 to be suppressed.  If the scanner encounters input that does not
 match any of its rules, it aborts with an error.  This option is
 useful for finding holes in a scanner's rule set.
-@iem[{@b{--t}}]
+@item[{@b{--t}}]
 instructs
 @code{flex}
 to write the scanner it generates to standard output instead
 of
 @b{lex.yy.c}.
-@iem[{@b{--v}}]
+@item[{@b{--v}}]
 specifies that
 @code{flex}
 should write to
@@ -2198,9 +2081,9 @@ user, but the first line identifies the version of
 @b{--V)},
 and the next line the flags used when generating the scanner, including
 those that are on by default.
-@iem[{@b{--w}}]
+@item[{@b{--w}}]
 suppresses warning messages.
-@iem[{@b{--B}}]
+@item[{@b{--B}}]
 instructs
 @code{flex}
 to generate a
@@ -2225,7 +2108,7 @@ or
 options (discussed below), which turn on
 @b{--B}
 automatically anyway.
-@iem[{@b{--F}}]
+@item[{@b{--F}}]
 specifies that the
 \undertext{fast}
 scanner table representation should be used (and stdio
@@ -2257,7 +2140,7 @@ This option is equivalent to
 (see below).  It cannot be used with
 @b{--+}.
 @end itemize%
-@iem[{@b{--I}}]
+@item[{@b{--I}}]
 instructs
 @code{flex}
 to generate an
@@ -2302,7 +2185,7 @@ be interactive by using
 @b{--B}
 (see above).
 @end itemize%
-@iem[{@b{--L}}]
+@item[{@b{--L}}]
 instructs
 @code{flex}
 not to generate
@@ -2319,7 +2202,7 @@ input file (if the errors are due to code in the input file), or
 @i{flex's}
 fault -- you should report these sorts of errors to the email address
 given below).
-@iem[{@b{--R[b]}}]
+@item[{@b{--R[b]}}]
 instructs flex to generate a reentrant C scanner.
 The generated scanner may safely be used in a multi-threaded
 environment. The API for a reentrant scanner is different
@@ -2359,7 +2242,7 @@ and
 do not affect the performance of the scanner.
 
 @end itemize%
-@iem[{@b{--T}}]
+@item[{@b{--T}}]
 makes
 @code{flex}
 run in
@@ -2370,14 +2253,14 @@ concerning
 the form of the input and the resultant non-deterministic and deterministic
 finite automata.  This option is mostly for use in maintaining
 @code{flex}.
-@iem[{@b{--V}}]
+@item[{@b{--V}}]
 prints the version number to
 @i{stdout}
 and exits.
 @b{----version}
 is a synonym for
 @b{--V}.
-@iem[{@b{--7}}]
+@item[{@b{--7}}]
 instructs
 @code{flex}
 to generate a 7-bit scanner, i.e., one which can only recognized 7-bit
@@ -2421,7 +2304,7 @@ discussed see below), flex still defaults to generating an 8-bit
 scanner, since usually with these compression options full 8-bit tables
 are not much more expensive than 7-bit tables.
 @end itemize%
-@iem[{@b{--8}}]
+@item[{@b{--8}}]
 instructs
 @code{flex}
 to generate an 8-bit scanner, i.e., one which can recognize 8-bit
@@ -2437,11 +2320,11 @@ See the discussion of
 above for flex's default behavior and the tradeoffs between 7-bit
 and 8-bit scanners.
 @end itemize%
-@iem[{@b{--+}}]
+@item[{@b{--+}}]
 specifies that you want flex to generate a C++
 scanner class.  See the section on Generating C++ Scanners below for
 details.
-@iem[{@b{--C[aefFmr]}}]
+@item[{@b{--C[aefFmr]}}]
 controls the degree of table compression and, more generally, trade-offs
 between small scanners and fast scanners.
 @itemize
@@ -2521,7 +2404,7 @@ whatever text your previous reads left in the stdio input buffer).
 @item
 @b{--Cr}
 has no effect if you define
-@b{YY_INPUT}
+@code{YY_INPUT()}
 (see The Generated Scanner above).
 @item
 A lone
@@ -2572,7 +2455,7 @@ compression.
 is often a good compromise between speed and size for production
 scanners.
 @end itemize%
-@iem[{@b{--ooutput}}]
+@item[{@b{--ooutput}}]
 directs flex to write the scanner to the file
 @b{output}
 instead of
@@ -2589,7 +2472,7 @@ directives (see the
 @b{\-L}
 option above) refer to the file
 @b{output}.
-@iem[{@b{--Pprefix}}]
+@item[{@b{--Pprefix}}]
 changes the default
 @i{yy}
 prefix used by
@@ -2653,7 +2536,7 @@ as linking with
 @b{--lfl}
 no longer provides one for you by default.
 @end itemize%
-@iem[{@b{--Sskeleton_file}}]
+@item[{@b{--Sskeleton_file}}]
 overrides the default skeleton file from which
 @code{flex}
 constructs its scanners.  You'll never need this option unless you are doing
@@ -2717,7 +2600,7 @@ Some
 provide features otherwise not available:
 @itemize
 }{@b{always-interactive}}
-@iem[{@b{always-interactive}}]
+@item[{@b{always-interactive}}]
 instructs flex to generate a scanner which always considers its input
 "interactive".  Normally, on each new input file the scanner calls
 @b{isatty()}
@@ -2725,7 +2608,7 @@ in an attempt to determine whether
 the scanner's input source is interactive and thus should be read a
 character at a time.  When this option is used, however, then no
 such call is made.
-@iem[{@b{main}}]
+@item[{@b{main}}]
 directs flex to provide a default
 @b{main()}
 program for the scanner, which simply calls
@@ -2733,15 +2616,15 @@ program for the scanner, which simply calls
 This option implies
 @b{noyywrap}
 (see below).
-@iem[{@b{never-interactive}}]
+@item[{@b{never-interactive}}]
 instructs flex to generate a scanner which never considers its input
 "interactive" (again, no call made to
 @b{isatty())}.
 This is the opposite of
 @b{always-interactive}.
-@iem[{@b{stack}}]
+@item[{@b{stack}}]
 enables the use of start condition stacks (see Start Conditions above).
-@iem[{@b{stdinit}}]
+@item[{@b{stdinit}}]
 if set (i.e.,
 @b{%option stdinit)}
 initializes
@@ -2765,7 +2648,7 @@ to be compile-time constant. In a reentrant scanner, however, this is not
 a problem since initialization is performed in
 @b{yylex_init}
 at runtime.
-@iem[{@b{yylineno}}]
+@item[{@b{yylineno}}]
 directs
 @code{flex}
 to generate a scanner that maintains the number of the current line
@@ -2780,7 +2663,7 @@ is accessible regardless of the value of
 however, its value is not modified by flex unless
 @b{%option yylineno}
 is enabled. 
-@iem[{@b{yywrap}}]
+@item[{@b{yywrap}}]
 if unset (i.e.,
 @b{%option noyywrap)},
 makes the scanner not call
@@ -3289,13 +3172,13 @@ provides an abstract base class defining the general scanner class
 interface.  It provides the following member functions:
 @itemize
 }{@b{const char* YYText()}}
-@iem[{@b{const char* YYText()}}]
+@item[{@b{const char* YYText()}}]
 returns the text of the most recently matched token, the equivalent of
 @var{yytext}.
-@iem[{@b{int YYLeng()}}]
+@item[{@b{int YYLeng()}}]
 returns the length of the most recently matched token, the equivalent of
 @var{yyleng}.
-@iem[{@b{int lineno() const}}]
+@item[{@b{int lineno() const}}]
 returns the current input line number
 (see
 @b{%option yylineno)},
@@ -3304,18 +3187,18 @@ or
 if
 @b{%option yylineno}
 was not used.
-@iem[{@b{void set_debug( int flag )}}]
+@item[{@b{void set_debug( int flag )}}]
 sets the debugging flag for the scanner, equivalent to assigning to
 @b{yy_flex_debug}
 (see the Options section above).  Note that you must build the scanner
 using
 @b{%option debug}
 to include debugging information in it.
-@iem[{@b{int debug() const}}]
+@item[{@b{int debug() const}}]
 returns the current setting of the debugging flag.
 @end itemize}
 Also provided are member functions equivalent to
-@b{yy_switch_to_buffer()},
+@code{yy_switch_to_buffer()},
 @b{yy_create_buffer()}
 (though the first argument is an
 @b{istream*}
@@ -3338,7 +3221,7 @@ which is derived from
 It defines the following additional member functions:
 @itemize
 }{\bf}
-@iem[{\bf}]
+@item[{\bf}]
 yyFlexLexer( istream* arg_yyin = 0, ostream* arg_yyout = 0 )
 constructs a
 @b{yyFlexLexer}
@@ -3348,7 +3231,7 @@ the streams default to
 and
 @b{cout},
 respectively.
-@iem[{@b{virtual int yylex()}}]
+@item[{@b{virtual int yylex()}}]
 performs the same role is
 @code{yylex()}
 does for ordinary flex scanners: it scans the input stream, consuming
@@ -3376,7 +3259,7 @@ generates
 that calls
 @b{yyFlexLexer::LexerError()}
 if called).
-@iem[{\bf}]
+@item[{\bf}]
 virtual void switch_streams(istream* new_in = 0,
 \bf
 ostream* new_out = 0)
@@ -3392,7 +3275,7 @@ to
 (ditto), deleting the previous input buffer if
 @b{yyin}
 is reassigned.
-@iem[{\bf}]
+@item[{\bf}]
 int yylex( istream* new_in, ostream* new_out = 0 )
 first switches the input streams via
 @b{switch_streams( new_in, new_out )}
@@ -3405,7 +3288,7 @@ defines the following protected virtual functions which you can redefine
 in derived classes to tailor the scanner:
 @itemize
 }{\bf}
-@iem[{\bf}]
+@item[{\bf}]
 virtual int LexerInput( char* buf, int max_size )
 reads up to
 @b{max_size}
@@ -3424,7 +3307,7 @@ and need to take different actions depending on whether or not
 the scanner might be scanning an interactive input source, you can
 test for the presence of this name via
 @b{#ifdef}.
-@iem[{\bf}]
+@item[{\bf}]
 virtual void LexerOutput( const char* buf, int size )
 writes out
 @b{size}
@@ -3432,7 +3315,7 @@ characters from the buffer
 @b{buf},
 which, while NUL-terminated, may also contain "internal" NUL's if
 the scanner's rules can match text with NUL's in them.
-@iem[{\bf}]
+@item[{\bf}]
 virtual void LexerError( const char* msg )
 reports a fatal error message.  The default version of this function
 writes the message to the stream
@@ -3625,25 +3508,25 @@ The API for reentrant scanners is different than for
 non-reentrant scanners. Here is a quick overview of the API:
 @itemize
 }{@b{1}.}
-@iem[{@b{1}.}]
+@item[{@b{1}.}]
 @b{%option reentrant}
 must be specified.
-@iem[{@b{2}.}]
+@item[{@b{2}.}]
 All functions take one additional argument: 
 @i{yy_globals}
 
-@iem[{@b{3}.}]
+@item[{@b{3}.}]
 All global variables are replaced by their "_r" equivalents.
-@iem[{@b{4}.}]
+@item[{@b{4}.}]
 @b{yylex_init}
 and
 @b{yylex_destroy}
 must be called before and after
 @b{yylex}
 , respectively.
-@iem[{@b{5}.}]
+@item[{@b{5}.}]
 Accessor methods (get/set functions) provide access to common flex variables.
-@iem[{@b{6}.}]
+@item[{@b{6}.}]
 User-specific data can be stored in 
 @i{yyextra_r}{\rm }.
 @end itemize}
@@ -3736,7 +3619,7 @@ For a list of function declarations, see "Functions And Macros Available In
 Reentrant Scanners" below.
 
 Note that preprocessor macros, such as 
-@b{BEGIN}{\rm },
+@code{BEGIN}{\rm },
 @b{ECHO}{\rm ,\ and\ }@b{REJECT}{\rm },
 do not take this additional argument.
 \ind{1indent}
@@ -4269,7 +4152,7 @@ as
 @i{EOF}.
 @item
 Input is instead controlled by defining the
-@b{YY_INPUT}
+@code{YY_INPUT()}
 macro.
 @item
 The
@@ -4477,7 +4360,7 @@ or the POSIX specification:
     yy_set_interactive()
     yy_set_bol()
     YY_AT_BOL()
-    EOF>>
+   <<EOF>>
     *>
     YY_DECL
     YY_START
