@@ -85,7 +85,7 @@ static void dump_mem(FILE* fp){
     fprintf(fp,"}\n");
 }
 
-void * yyalloc(size_t n )
+void * yyalloc(yy_size_t n)
 {
     void * p;
     struct memsz * old;
@@ -115,7 +115,7 @@ void * yyalloc(size_t n )
     return p;
 }
 
-void * yyrealloc(void* p, size_t n )
+void * yyrealloc(void* p, yy_size_t n)
 {
     int i;
     for (i=0; i < arrsz; i++)
@@ -136,7 +136,7 @@ void * yyrealloc(void* p, size_t n )
     exit(1);
 }
 
-void yyfree(void* p )
+void yyfree(void* p)
 {
     int i;
     for (i=0; i < arrsz; i++)
