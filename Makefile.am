@@ -35,7 +35,6 @@
 
 AM_YFLAGS = -d
 ACLOCAL_AMFLAGS = -I m4
-help2man = @HELP2MAN@
 m4 = @M4@
 indent = @INDENT@
 
@@ -44,7 +43,6 @@ AUTOMAKE_OPTIONS = \
 	check-news \
 	dist-bzip2 \
 	1.7
-
 
 bin_PROGRAMS = flex
 lib_LIBRARIES = libfl.a
@@ -85,11 +83,7 @@ noinst_HEADERS = \
 include_HEADERS = \
 	FlexLexer.h
 
-info_TEXINFOS =	flex.texi
-man_MANS = flex.1
-
 MAINTAINERCLEANFILES = \
-	flex.1 \
 	ABOUT-NLS \
 	config.rpath \
 	config.sub \
@@ -98,8 +92,6 @@ MAINTAINERCLEANFILES = \
 	config.sub \
 	config.guess \
 	depcomp \
-	flex.hks \
-	flex.ops \
 	mkinstalldirs \
 	install-sh \
 	ABOUT-NLS \
@@ -132,13 +124,13 @@ EXTRA_DIST = \
 	mkskel.sh \
 	ABOUT-NLS \
 	config.rpath \
-	gettext.h \
-	$(man_MANS)
+	gettext.h
 
 BUILT_SOURCES = \
 	skel.c
 
 SUBDIRS = \
+	doc \
 	m4  \
 	examples \
 	po \
@@ -150,13 +142,6 @@ LIBS = @LIBINTL@ @LIBS@
 
 skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
 	$(m4) -P -DFLEX_MAJOR_VERSION=`echo $(VERSION)|cut -f 1 -d .` -DFLEX_MINOR_VERSION=`echo $(VERSION)|cut -f 2 -d .` -DFLEX_SUBMINOR_VERSION=`echo $(VERSION)|cut -f 3 -d .` $(srcdir)/flex.skl | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
-
-if MAINTAINER_MODE
-$(man_MANS): $(srcdir)/main.c
-	for i in $(man_MANS) ; do \
-	$(help2man) --name='fast lexical analyzer generator' --section=`echo $$i|rev|cut -f 1 -d .|rev` @builddir@/flex > $$i ; \
-	done
-endif
 
 # Explicitly describe dependencies.
 # You can recreate this with `gcc -I. -MM *.c'

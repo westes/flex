@@ -5,6 +5,8 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.28
 
+** moved the flex documentation to a new doc/ subdirectory
+
 ** cleanups to the yy namespace
 
 * version 2.5.28 released 2003-2-12
