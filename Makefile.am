@@ -137,6 +137,7 @@ SUBDIRS = \
 	m4  \
 	examples \
 	po \
+	tools \
 	tests
 
 localedir = $(datadir)/locale
@@ -179,9 +180,8 @@ tags:
 # Create the ChangeLog
 
 ChangeLog:
-	sh tools/cvs2cl.pl -F trunk -U tools/cvsauthors
+	sh $(srcdir)/tools/cvs2cl.pl -F trunk -U $(srcdir)/tools/cvsauthors
 
-if MAINTAINER_MODE
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #
 # Whole idea:
@@ -191,10 +191,30 @@ if MAINTAINER_MODE
 #   3. Make sure to process only the NON-generated .c and .h files.
 #   4. Run indent twice per file. The first time is a test.
 #      Otherwise, indent overwrites your file even if it fails!
-indentfiles = buf.c ccl.c dfa.c ecs.c flexdef.h gen.c libmain.c \
-              libyywrap.c main.c misc.c nfa.c options.c options.h \
-              scanopt.c scanopt.h sym.c tables.c tables.h \
-              tables_shared.c tables_shared.h tblcmp.c
+indentfiles = \
+	buf.c \
+	ccl.c \
+	dfa.c \
+	ecs.c \
+	filter.c \
+	flexdef.h \
+	gen.c \
+	libmain.c \
+	libyywrap.c \
+	main.c \
+	misc.c \
+	nfa.c \
+	options.c \
+	options.h \
+	regex.c \
+	scanopt.c \
+	scanopt.h \
+	sym.c \
+	tables.c \
+	tables.h \
+	tables_shared.c \
+	tables_shared.h \
+	tblcmp.c
 
 indent:
 	if [ -f .indent.pro ] ; then \
@@ -204,6 +224,5 @@ indent:
 		$(indent) < $$f >/dev/null && indent $$f || echo $$f FAILED to indent ;\
 	done \
 	fi
-endif MAINTAINER_MODE
 
 .PHONY: ChangeLog tags indent
