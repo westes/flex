@@ -14,6 +14,11 @@
 
 #include "flexdef.h"
 
+#ifndef lint
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+#endif
+
 /* add_accept - add an accepting state to a machine
  *
  * synopsis
@@ -39,6 +44,10 @@ int mach, headcnt, trailcnt;
 
     if ( headcnt > 0 || trailcnt > 0 )
 	{ /* do trailing context magic to not match the trailing characters */
+	char *scanner_cp =
+	    (fulltbl || fullspd) ? "yy_c_buf_p = yy_cp" : "yy_c_buf_p";
+	char *scanner_bp = (fulltbl || fullspd) ? "yy_bp" : "yy_b_buf_p";
+
 	fprintf( temp_action_file,
 	    "YY_DO_BEFORE_SCAN; /* undo effects of setting up yytext */\n" );
 
@@ -47,22 +56,23 @@ int mach, headcnt, trailcnt;
 	    int head_offset = headcnt - 1;
 
 	    if ( fullspd || fulltbl )
-		/* with the fast skeleton, yy_c_buf_p points to the *next*
-		 * character to scan, rather than the one that was last
-		 * scanned
+		/* with the fast skeleton, the character pointer points
+		 * to the *next* character to scan, rather than the one
+		 * that was last scanned
 		 */
 		++head_offset;
 
 	    if ( head_offset > 0 )
-		fprintf( temp_action_file, "yy_c_buf_p = yy_b_buf_p + %d;\n",
-			 head_offset );
+		fprintf( temp_action_file, "%s = %s + %d;\n",
+			 scanner_cp, scanner_bp, head_offset );
 
 	    else
-		fprintf( temp_action_file, "yy_c_buf_p = yy_b_buf_p;\n" );
+		fprintf( temp_action_file, "%s = %s;\n",
+			 scanner_cp, scanner_bp );
 	    }
 
 	else
-	    fprintf( temp_action_file, "yy_c_buf_p -= %d;\n", trailcnt );
+	    fprintf( temp_action_file, "%s -= %d;\n", scanner_cp, trailcnt );
     
 	fprintf( temp_action_file, "YY_DO_BEFORE_ACTION; /* set up yytext again */\n" );
 	}
@@ -501,22 +511,24 @@ int sym;
 	
 	++num_reallocs;
 
+	firstst = reallocate_integer_array( firstst, current_mns );
+	lastst = reallocate_integer_array( lastst, current_mns );
+	finalst = reallocate_integer_array( finalst, current_mns );
 	transchar = reallocate_integer_array( transchar, current_mns );
 	trans1 = reallocate_integer_array( trans1, current_mns );
 	trans2 = reallocate_integer_array( trans2, current_mns );
 	accptnum = reallocate_integer_array( accptnum, current_mns );
-	firstst = reallocate_integer_array( firstst, current_mns );
-	finalst = reallocate_integer_array( finalst, current_mns );
-	lastst = reallocate_integer_array( lastst, current_mns );
+	assoc_rule = reallocate_integer_array( assoc_rule, current_mns );
 	}
 
+    firstst[lastnfa] = lastnfa;
+    finalst[lastnfa] = lastnfa;
+    lastst[lastnfa] = lastnfa;
     transchar[lastnfa] = sym;
     trans1[lastnfa] = NO_TRANSITION;
     trans2[lastnfa] = NO_TRANSITION;
     accptnum[lastnfa] = NIL;
-    firstst[lastnfa] = lastnfa;
-    finalst[lastnfa] = lastnfa;
-    lastst[lastnfa] = lastnfa;
+    assoc_rule[lastnfa] = linenum; /* identify rules by line number in input */
 
     /* fix up equivalence classes base on this transition.  Note that any
      * character which has its own transition gets its own equivalence class.
