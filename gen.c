@@ -170,9 +170,6 @@ genctbl()
 	nxt[base[i] - 1] = anum;	/* action number */
 	}
 
-    dataline = 0;
-    datapos = 0;
-
     for ( i = 0; i <= tblend; ++i )
 	{
 	if ( chk[i] == EOB_POSITION )
@@ -204,7 +201,7 @@ genctbl()
     for ( i = 0; i <= lastsc * 2; ++i )
 	printf( "    &yy_transition[%d],\n", base[i] );
 
-    printf( "    };\n" );
+    dataend();
 
     if ( useecs )
 	genecs();
@@ -217,13 +214,13 @@ genecs()
 
     {
     register int i, j;
-    static char C_char_decl[] = "static const char %s[%d] =\n    {   0,\n";
+    static char C_char_decl[] = "static const YY_CHAR %s[%d] =\n    {   0,\n";
     int numrows;
-    char clower();
+    Char clower();
 
-    printf( C_char_decl, ECARRAY, CSIZE + 1 );
+    printf( C_char_decl, "yy_ec", csize + 1 );
 
-    for ( i = 1; i <= CSIZE; ++i )
+    for ( i = 1; i <= csize; ++i )
 	{
 	if ( caseins && (i >= 'A') && (i <= 'Z') )
 	    ecgroup[i] = ecgroup[clower( i )];
@@ -238,11 +235,11 @@ genecs()
 	{
 	fputs( "\n\nEquivalence Classes:\n\n", stderr );
 
-	numrows = (CSIZE + 1) / 8;
+	numrows = (csize + 1) / 8;
 
 	for ( j = 1; j <= numrows; ++j )
 	    {
-	    for ( i = j; i <= CSIZE; i = i + numrows )
+	    for ( i = j; i <= csize; i = i + numrows )
 		{
 		char *readable_form();
 
@@ -393,7 +390,7 @@ genftbl()
     static char C_short_decl[] =
 	"static const short int %s[%d] =\n    {   0,\n";
 
-    printf( C_short_decl, ALIST, lastdfa + 1 );
+    printf( C_short_decl, "yy_accept", lastdfa + 1 );
 
 
     dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
@@ -426,7 +423,7 @@ gen_next_compressed_state()
     {
     char *char_map = useecs ? "yy_ec[*yy_cp]" : "*yy_cp";
 
-    indent_put2s( "register char yy_c = %s;", char_map );
+    indent_put2s( "register YY_CHAR yy_c = %s;", char_map );
 
     /* save the backtracking info \before/ computing the next state
      * because we always compute one more state than needed - we
@@ -503,8 +500,8 @@ gen_next_match()
     else if ( fullspd )
 	{
 	indent_puts( "{" );
-	indent_puts( "register struct yy_trans_info *yy_trans_info;\n" );
-	indent_puts( "register char yy_c;\n" );
+	indent_puts( "register const struct yy_trans_info *yy_trans_info;\n" );
+	indent_puts( "register YY_CHAR yy_c;\n" );
 	indent_put2s( "for ( yy_c = %s;", char_map );
 	indent_puts(
 	"      (yy_trans_info = &yy_current_state[yy_c])->yy_verify == yy_c;" );
@@ -641,7 +638,7 @@ gentabs()
     static char C_short_decl[] =
 	"static const short int %s[%d] =\n    {   0,\n";
     static char C_char_decl[] =
-	"static const char %s[%d] =\n    {   0,\n";
+	"static const YY_CHAR %s[%d] =\n    {   0,\n";
 
     acc_array = allocate_integer_array( current_max_dfas );
     nummt = 0;
@@ -657,21 +654,15 @@ gentabs()
 	{
 	/* write out accepting list and pointer list
 	 *
-	 * first we generate the ACCEPT array.  In the process, we compute
-	 * the indices that will go into the ALIST array, and save the
+	 * first we generate the "yy_acclist" array.  In the process, we compute
+	 * the indices that will go into the "yy_accept" array, and save the
 	 * indices in the dfaacc array
 	 */
 	int EOB_accepting_list[2];
 
-	printf( C_short_decl, ACCEPT, max( numas, 1 ) + 1 );
-	
-	/* set up accepting structures for the End Of Buffer state */
-	EOB_accepting_list[0] = 0;
-	EOB_accepting_list[1] = end_of_buffer_action;
-	accsiz[end_of_buffer_state] = 1;
-	dfaacc[end_of_buffer_state].dfaacc_set = EOB_accepting_list;
+	printf( C_short_decl, "yy_acclist", max( numas, 1 ) + 1 );
 
-	j = 1;	/* index into ACCEPT array */
+	j = 1;	/* index into "yy_acclist" array */
 
 	for ( i = 1; i <= lastdfa; ++i )
 	    {
@@ -734,12 +725,12 @@ gentabs()
 	acc_array[i] = 0;
 	}
 
-    /* spit out ALIST array.  If we're doing "reject", it'll be pointers
-     * into the ACCEPT array.  Otherwise it's actual accepting numbers.
+    /* spit out "yy_accept" array.  If we're doing "reject", it'll be pointers
+     * into the "yy_acclist" array.  Otherwise it's actual accepting numbers.
      * In either case, we just dump the numbers.
      */
 
-    /* "lastdfa + 2" is the size of ALIST; includes room for C arrays
+    /* "lastdfa + 2" is the size of "yy_accept"; includes room for C arrays
      * beginning at 0 and for "jam" state
      */
     k = lastdfa + 2;
@@ -752,7 +743,7 @@ gentabs()
 	 */
 	++k;
 
-    printf( C_short_decl, ALIST, k );
+    printf( C_short_decl, "yy_accept", k );
 
     for ( i = 1; i <= lastdfa; ++i )
 	{
@@ -781,7 +772,7 @@ gentabs()
 	if ( trace )
 	    fputs( "\n\nMeta-Equivalence Classes:\n", stderr );
 
-	printf( C_char_decl, MATCHARRAY, numecs + 1 );
+	printf( C_char_decl, "yy_meta", numecs + 1 );
 
 	for ( i = 1; i <= numecs; ++i )
 	    {
@@ -797,7 +788,7 @@ gentabs()
     total_states = lastdfa + numtemps;
 
     printf( tblend > MAX_SHORT ? C_long_decl : C_short_decl,
-	    BASEARRAY, total_states + 1 );
+	    "yy_base", total_states + 1 );
 
     for ( i = 1; i <= lastdfa; ++i )
 	{
@@ -831,7 +822,7 @@ gentabs()
     dataend();
 
     printf( tblend > MAX_SHORT ? C_long_decl : C_short_decl,
-	    DEFARRAY, total_states + 1 );
+	    "yy_def", total_states + 1 );
 
     for ( i = 1; i <= total_states; ++i )
 	mkdata( def[i] );
@@ -839,7 +830,7 @@ gentabs()
     dataend();
 
     printf( lastdfa > MAX_SHORT ? C_long_decl : C_short_decl,
-	    NEXTARRAY, tblend + 1 );
+	    "yy_nxt", tblend + 1 );
 
     for ( i = 1; i <= tblend; ++i )
 	{
@@ -852,7 +843,7 @@ gentabs()
     dataend();
 
     printf( lastdfa > MAX_SHORT ? C_long_decl : C_short_decl,
-	    CHECKARRAY, tblend + 1 );
+	    "yy_chk", tblend + 1 );
 
     for ( i = 1; i <= tblend; ++i )
 	{
@@ -907,6 +898,25 @@ make_tables()
     register int i;
     int did_eof_rule = false;
 
+    skelout();
+
+    /* first, take care of YY_DO_BEFORE_ACTION depending on yymore being used */
+    set_indent( 2 );
+
+    if ( yymore_used )
+	{
+	indent_puts( "yytext -= yy_more_len; \\" );
+	indent_puts( "yyleng = yy_cp - yytext; \\" );
+	}
+
+    else
+	indent_puts( "yyleng = yy_cp - yy_bp; \\" );
+
+    set_indent( 0 );
+    
+    skelout();
+
+
     printf( "#define YY_END_OF_BUFFER %d\n", num_rules + 1 );
 
     if ( fullspd )
@@ -934,7 +944,7 @@ make_tables()
         indent_puts( "};" );
 	indent_down();
 
-	indent_puts( "typedef struct yy_trans_info *yy_state_type;" );
+	indent_puts( "typedef const struct yy_trans_info *yy_state_type;" );
 	}
     
     else
@@ -953,7 +963,7 @@ make_tables()
 	{
 	/* declare state buffer variables */
 	puts( "yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;" );
-	puts( "char *yy_full_match;" );
+	puts( "YY_CHAR *yy_full_match;" );
 	puts( "int yy_lp;" );
 
 	if ( variable_trailing_context_rules )
@@ -997,13 +1007,20 @@ make_tables()
     
     if ( yymore_used )
 	{
-	indent_puts( "static char *yy_more_pos = (char *) 0;" );
-	indent_puts( "#define yymore() (yy_more_pos = yy_bp)" );
+	indent_puts( "static int yy_more_flag = 0;" );
+	indent_puts( "static int yy_doing_yy_more = 0;" );
+	indent_puts( "static int yy_more_len = 0;" );
+	indent_puts(
+	    "#define yymore() { yy_more_flag = 1; }" );
+	indent_puts(
+	    "#define YY_MORE_ADJ (yy_doing_yy_more ? yy_more_len : 0)" );
 	}
-    
-    else
-	indent_puts( "#define yymore() yymore_used_but_not_detected" );
 
+    else
+	{
+	indent_puts( "#define yymore() yymore_used_but_not_detected" );
+	indent_puts( "#define YY_MORE_ADJ 0" );
+	}
 
     skelout();
 
@@ -1019,21 +1036,15 @@ make_tables()
 
     if ( yymore_used )
 	{
-	indent_puts( "if ( yy_more_pos )" );
+	indent_puts( "yy_doing_yy_more = yy_more_flag;" );
+	indent_puts( "if ( yy_doing_yy_more )" );
 	indent_up();
 	indent_puts( "{" );
-	indent_puts( "yy_bp = yy_more_pos;" );
-	indent_puts( "yy_more_pos = (char *) 0;" );
+	indent_puts( "yy_more_len = yyleng;" );
+	indent_puts( "yy_more_flag = 0;" );
 	indent_puts( "}" );
 	indent_down();
-	indent_puts( "else" );
-	indent_up();
-	indent_puts( "yy_bp = yy_cp;" );
-	indent_down();
 	}
-
-    else
-	indent_puts( "yy_bp = yy_cp;" );
 
     skelout();
 
@@ -1072,7 +1083,7 @@ make_tables()
     skelout();
 
     if ( bol_needed )
-	indent_puts( "register char *yy_bp = yytext;\n" );
+	indent_puts( "register YY_CHAR *yy_bp = yytext;\n" );
 
     gen_start_state();
 
