@@ -1162,7 +1162,8 @@ yy_size_t size;
 	{
 	YY_BUFFER_STATE b;
 
-	if ( base[size-2] != YY_END_OF_BUFFER_CHAR ||
+	if ( size < 2 ||
+	     base[size-2] != YY_END_OF_BUFFER_CHAR ||
 	     base[size-1] != YY_END_OF_BUFFER_CHAR )
 		/* They forgot to leave room for the EOB's. */
 		return 0;
