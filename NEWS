@@ -55,7 +55,7 @@ e.g.,  yyget_text, yyget_leng, etc.
 *** Prefix substitution added for new functions.
 
 *** Macro shortcuts to the lengthy get/set functions
-provided for use in actions. e.g.,  yytext_r, yyleng_r, etc.
+provided for use in actions. e.g.,  yytext, yyleng, etc.
 
 *** Arbitrary, user-defined data, "yyextra", may be added to scanner.
 
