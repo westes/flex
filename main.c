@@ -47,14 +47,14 @@ static char flex_version[] = FLEX_VERSION;
 /* declare functions that have forward references */
 
 void flexinit PROTO((int, char**));
-void readin PROTO(());
-void set_up_initial_allocations PROTO(());
+void readin PROTO((void));
+void set_up_initial_allocations PROTO((void));
 
 
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int interactive, caseins, useecs, fulltbl, usemecs;
-int fullspd, gen_line_dirs, performance_report, backtrack_report;
+int fullspd, gen_line_dirs, performance_report, backing_up_report;
 int yytext_is_array, csize;
 int yymore_used, reject, real_reject, continued_action;
 int yymore_really_used, reject_really_used;
@@ -89,11 +89,11 @@ int numsnpairs, jambase, jamstate;
 int lastccl, current_maxccls, *cclmap, *ccllen, *cclng, cclreuse;
 int current_max_ccl_tbl_size;
 Char *ccltbl;
-char *starttime = 0, *endtime, nmstr[MAXLINE];
+char nmstr[MAXLINE];
 int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
-int num_backtracking, bol_needed;
-FILE *backtrack_file;
+int num_backing_up, bol_needed;
+FILE *backing_up_file;
 int end_of_buffer_state;
 char **input_files;
 int num_input_files;
@@ -205,8 +205,6 @@ int exit_status;
 
 	{
 	int tblsiz;
-	char *flex_gettime();
-
 	if ( skelfile != NULL )
 		{
 		if ( ferror( skelfile ) )
@@ -230,25 +228,23 @@ int exit_status;
 			flexfatal( "error occurred when deleting output file" );
 		}
 
-	if ( backtrack_report && backtrack_file )
+	if ( backing_up_report && backing_up_file )
 		{
-		if ( num_backtracking == 0 )
-			fprintf( backtrack_file, "No backtracking.\n" );
+		if ( num_backing_up == 0 )
+			fprintf( backing_up_file, "No backing up.\n" );
 		else if ( fullspd || fulltbl )
-			fprintf( backtrack_file,
-				"%d backtracking (non-accepting) states.\n",
-				num_backtracking );
+			fprintf( backing_up_file,
+				"%d backing up (non-accepting) states.\n",
+				num_backing_up );
 		else
-			fprintf( backtrack_file,
-				"Compressed tables always backtrack.\n" );
+			fprintf( backing_up_file,
+				"Compressed tables always back up.\n" );
 
-		if ( ferror( backtrack_file ) )
-			flexfatal(
-			"error occurred when writing backtracking file" );
+		if ( ferror( backing_up_file ) )
+			flexfatal( "error occurred when writing backup file" );
 
-		else if ( fclose( backtrack_file ) )
-			flexfatal(
-			"error occurred when closing backtracking file" );
+		else if ( fclose( backing_up_file ) )
+			flexfatal( "error occurred when closing backup file" );
 		}
 
 	if ( printstats )
@@ -256,16 +252,9 @@ int exit_status;
 		fprintf( stderr, "%s version %s usage statistics:\n",
 			program_name, flex_version );
 
-		if ( starttime )
-			{
-			endtime = flex_gettime();
-			fprintf( stderr, "  started at %s, finished at %s\n",
-				starttime, endtime );
-			}
-
 		fprintf( stderr, "  scanner options: -" );
 
-		if ( backtrack_report )
+		if ( backing_up_report )
 			putc( 'b', stderr );
 		if ( ddebug )
 			putc( 'd', stderr );
@@ -318,15 +307,15 @@ int exit_status;
 		fprintf( stderr, "  %d rules\n",
 		num_rules + num_eof_rules - 1 /* - 1 for def. rule */ );
 
-		if ( num_backtracking == 0 )
-			fprintf( stderr, "  No backtracking\n" );
+		if ( num_backing_up == 0 )
+			fprintf( stderr, "  No backing up\n" );
 		else if ( fullspd || fulltbl )
 			fprintf( stderr,
-				"  %d backtracking (non-accepting) states\n",
-				num_backtracking );
+				"  %d backing-up (non-accepting) states\n",
+				num_backing_up );
 		else
 			fprintf( stderr,
-				"  compressed tables always backtrack\n" );
+				"  compressed tables always back-up\n" );
 
 		if ( bol_needed )
 			fprintf( stderr,
@@ -417,10 +406,10 @@ char **argv;
 	{
 	int i, sawcmpflag;
 	int csize_given, interactive_given;
-	char *arg, *prefix, *flex_gettime(), *mktemp();
+	char *arg, *prefix, *mktemp();
 
 	printstats = syntaxerror = trace = spprdflt = caseins = false;
-	backtrack_report = ddebug = fulltbl = fullspd = false;
+	backing_up_report = ddebug = fulltbl = fullspd = false;
 	nowarn = yymore_used = continued_action = reject = false;
 	yytext_is_array = yymore_really_used = reject_really_used = false;
 	gen_line_dirs = usemecs = useecs = true;
@@ -438,8 +427,6 @@ char **argv;
 	action_offset = action_index = 0;
 
 	prefix = "yy";
-
-	starttime = flex_gettime();
 
 	program_name = argv[0];
 
@@ -460,7 +447,7 @@ char **argv;
 					break;
 
 				case 'b':
-					backtrack_report = true;
+					backing_up_report = true;
 					break;
 
 				case 'c':
@@ -660,20 +647,20 @@ char **argv;
 	input_files = argv;
 	set_input_file( num_input_files > 0 ? input_files[0] : NULL );
 
-	if ( backtrack_report )
+	if ( backing_up_report )
 		{
 #ifndef SHORT_FILE_NAMES
-		backtrack_file = fopen( "lex.backtrack", "w" );
+		backing_up_file = fopen( "lex.backup", "w" );
 #else
-		backtrack_file = fopen( "lex.bck", "w" );
+		backing_up_file = fopen( "lex.bck", "w" );
 #endif
 
-		if ( backtrack_file == NULL )
-			flexerror( "could not create lex.backtrack" );
+		if ( backing_up_file == NULL )
+			flexerror( "could not create lex.backup" );
 		}
 
 	else
-		backtrack_file = NULL;
+		backing_up_file = NULL;
 
 
 	lastccl = 0;
@@ -696,6 +683,7 @@ char **argv;
 		GEN_PREFIX( "out" );
 		GEN_PREFIX( "restart" );
 		GEN_PREFIX( "text" );
+		GEN_PREFIX( "_flex_debug" );
 		printf( "\n" );
 		}
 
@@ -704,7 +692,7 @@ char **argv;
 	numas = numsnpairs = tmpuses = 0;
 	numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst = 0;
 	numuniq = numdup = hshsave = eofseen = datapos = dataline = 0;
-	num_backtracking = onesp = numprots = 0;
+	num_backing_up = onesp = numprots = 0;
 	variable_trailing_context_rules = bol_needed = false;
 
 	linenum = sectnum = 1;
@@ -866,7 +854,7 @@ void usage()
 		program_name );
 
 	fprintf( stderr,
-		"\t-b  generate backtracking information to lex.backtrack\n" );
+		"\t-b  generate backing-up information to lex.backup\n" );
 	fprintf( stderr, "\t-c  do-nothing POSIX option\n" );
 	fprintf( stderr, "\t-d  turn on debug mode in generated scanner\n" );
 	fprintf( stderr, "\t-f  generate fast, large scanner\n" );
