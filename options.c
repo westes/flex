@@ -105,7 +105,7 @@ optspec_t flexopts[] = {
 	,
 	{"--full", OPT_FULL, 0}
 	,			/* Same as -Cfr. */
-	{"--header[=FILE]", OPT_HEADER, 0}
+	{"--header-file[=FILE]", OPT_HEADER_FILE, 0}
 	,
 	{"-?", OPT_HELP, 0}
 	,

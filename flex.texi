@@ -2404,7 +2404,7 @@ generates a ``help'' summary of @code{flex}'s options to @file{stdout}
 and then exits.
 
 @anchor{option-header}
-@item --header=FILE, @code{%option header="FILE"}
+@item --header-file=FILE, @code{%option header-file="FILE"}
 instructs flex to write a C header to @file{FILE}. This file contains
 function prototypes, extern variables, and types used by the scanner.
 Only the external API is exported by the header file. Many macros that
@@ -2415,7 +2415,7 @@ external API.
 While in the header, the macro @code{yyIN_HEADER} is defined, where @samp{yy}
 is substituted with the appropriate prefix.
 
-The @samp{--header} option is not compatible with the @samp{--c++} option,
+The @samp{--header-file} option is not compatible with the @samp{--c++} option,
 since the C++ scanner provides its own header in @file{yyFlexLexer.h}.
 
 @anchor{option-case-insensitive}
@@ -3887,7 +3887,7 @@ The above code may be called from within an action like this:
 @end verbatim
 @end example
 
-You may find that @code{%option header} is particularly useful for generating
+You may find that @code{%option header-file} is particularly useful for generating
 prototypes of all the accessor functions. @xref{option-header}.
 
 @node Extra Data

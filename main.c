@@ -1301,7 +1301,7 @@ void flexinit (argc, argv)
 			useecs = false;
 			break;
 
-		case OPT_HEADER:
+		case OPT_HEADER_FILE:
 			headerfilename = arg;
 			break;
 
@@ -1864,8 +1864,8 @@ void usage ()
 		  "  -S, --skel=FILE         specify skeleton file\n"
 		  "  -t, --stdout            write scanner on stdout instead of %s\n"
 		  "      --yyclass=NAME      name of C++ class\n"
-		  "      --header=FILE       create a C header file in addition to the scanner\n"
-		  "      --tables-file[=FILE]  write tables to FILE\n" "\n"
+		  "      --header-file=FILE   create a C header file in addition to the scanner\n"
+		  "      --tables-file[=FILE] write tables to FILE\n" "\n"
 		  "Scanner behavior:\n"
 		  "  -7, --7bit              generate 7-bit scanner\n"
 		  "  -8, --8bit              generate 8-bit scanner\n"
