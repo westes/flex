@@ -1460,17 +1460,16 @@ The scanner writes its @code{ECHO} output to the @file{yyout} global
 (default, @file{stdout}), which may be redefined by the user simply by
 assigning it to some other @code{FILE} pointer.
 
-@c proofread edit stopped here
 @node Start Conditions, Multiple Input Buffers, Generated Scanner, Top
 @chapter Start Conditions
 
-@cindex start conditions, explanation
-@code{flex}
-provides a mechanism for conditionally activating rules.  Any rule
-whose pattern is prefixed with @samp{<sc>} will only be active when
-the scanner is in the start condition named @code{sc}.  For example,
+@cindex start conditions
+@code{flex} provides a mechanism for conditionally activating rules.
+Any rule whose pattern is prefixed with @samp{<sc>} will only be active
+when the scanner is in the @dfn{start condition} named @code{sc}.  For
+example,
 
-@cindex start conditions, basic
+@c proofread edit stopped here
 @example
 @verbatim
     <STRING>[^"]*        { /* eat up the string body ... */
