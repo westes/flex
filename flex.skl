@@ -1529,7 +1529,7 @@ static void yy_flex_free( ptr )
 void *ptr;
 #endif
 	{
-	free( ptr );
+	free( (char *) ptr );	// see yy_flex_realloc() for (char *) cast
 	}
 
 #if YY_MAIN
