@@ -766,8 +766,8 @@ void ntod()
 		mkdeftbl();
 		}
 
-	yy_flex_free( (void *) accset );
-	yy_flex_free( (void *) nset );
+	flex_free( (void *) accset );
+	flex_free( (void *) nset );
 	}
 
 

@@ -64,7 +64,7 @@ int size, element_size;
 	register void *mem;
 	unsigned int num_bytes = element_size * size;
 
-	mem = yy_flex_alloc( num_bytes );
+	mem = flex_alloc( num_bytes );
 
 	if ( mem == NULL )
 		flexfatal( "memory allocation failed in allocate_array()" );
@@ -178,7 +178,7 @@ register char *str;
 		;
 
 	size = (c - str + 1) * sizeof( char );
-	copy = (char *) yy_flex_alloc( size );
+	copy = (char *) flex_alloc( size );
 
 	if ( copy == NULL )
 		flexfatal( "dynamic memory failure in copy_string()" );
@@ -747,7 +747,7 @@ int size, element_size;
 	register void *new_array;
 	unsigned int num_bytes = element_size * size;
 
-	new_array = yy_flex_realloc( array, num_bytes );
+	new_array = flex_realloc( array, num_bytes );
 
 	if ( new_array == NULL )
 		flexfatal( "attempt to increase array size failed" );
@@ -845,7 +845,7 @@ int element_v, element_n;
 void *yy_flex_xmalloc( size )
 int size;
 	{
-	void *result = yy_flex_alloc( (unsigned) size );
+	void *result = flex_alloc( (unsigned) size );
 
 	if ( ! result  )
 		flexfatal( "memory allocation failed in yy_flex_xmalloc()" );

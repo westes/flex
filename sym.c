@@ -72,7 +72,7 @@ int table_size;
 
 	/* create new entry */
 	new_entry = (struct hash_entry *)
-		yy_flex_alloc( sizeof( struct hash_entry ) );
+		flex_alloc( sizeof( struct hash_entry ) );
 
 	if ( new_entry == NULL )
 		flexfatal( "symbol table memory allocation failed" );
