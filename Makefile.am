@@ -35,6 +35,7 @@
 
 YFLAGS = -d
 ACLOCAL_AMFLAGS = -I m4
+help2man = @HELP2MAN@
 
 AUTOMAKE_OPTIONS = \
 	readme-alpha \
@@ -79,7 +80,7 @@ include_HEADERS = \
 	FlexLexer.h
 
 info_TEXINFOS =	flex.texi
-man1_MANS = flex.1
+man_MANS = flex.1
 
 EXTRA_DIST = \
 	AUTHORS \
@@ -97,7 +98,7 @@ EXTRA_DIST = \
 	ABOUT-NLS \
 	config.rpath \
 	gettext.h \
-	flex.1
+	$(man_MANS)
 
 BUILT_SOURCES = \
 	skel.c \
@@ -122,8 +123,10 @@ yylex.o: yylex.c parse.h flexdef.h config.h
 skel.c: flex.skl mkskel.sh
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir)/flex.skl >skel.c
 
-flex.1: flex
-	help2man --name='fast lexical analyzer generator' --section=1 ./flex >flex.1
+$(man_MANS): $(srcdir)/main.c
+	for i in $(man_MANS) ; do \
+	$(help2man) --name='flex' --section=`echo $$i|rev|cut -f 1 -d .|rev` flex > $$i ; \
+	done
 
 main.o: main.c flexdef.h config.h version.h
 ccl.o: ccl.c flexdef.h config.h
