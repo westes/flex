@@ -258,6 +258,15 @@ in it:
 @end verbatim
 @end example
 
+@menu
+* definitions section::
+* rules section::
+* user code section::
+@end menu
+
+@node definitions section
+@section Format of the Definitions Section
+
 The
 @i{definitions}
 section contains declarations of simple
@@ -311,6 +320,9 @@ is identical to
 and matches one-or-more digits followed by a '.' followed
 by zero-or-more digits.
 
+@node rules section
+@section Format of the Rules Section
+
 The
 @i{rules}
 section of the
@@ -328,7 +340,10 @@ on the same line.
 
 @xref{Patterns}, for a further description of patterns and actions.
 
-Finally, the user code section is simply copied to
+@node user code section
+@section Format of the User Code Section
+
+The user code section is simply copied to
 @file{lex.yy.c}
 verbatim.
 It is used for companion routines which call or are called
