@@ -2855,10 +2855,9 @@ scanner complaining about the following missing routines:
 .ds
     yywrap
     yy_flex_alloc
-    yy_flex_realloc
-    yy_flex_free
+    ...
 .de
-then you forgot to link your program with
+(and various others) then you forgot to link your program with
 .B \-lfl.
 This run-time library is
 .I required
@@ -3001,7 +3000,8 @@ Casey Leedom,
 Nelson H.F. Beebe, benson@odi.com, Peter A. Bigot, Keith Bostic, Frederic
 Brehm, Nick Christopher, Jason Coughlin, Bill Cox, Dave Curtis, Scott David
 Daniels, Chris G. Demetriou, Mike Donahue, Chuck Doucette, Tom Epperly, Leo
-Eskin, Chris Faylor, Jon Forrest, Eric Goldman, Ulrich Grepel, Jan Hajic,
+Eskin, Chris Faylor, Jon Forrest, Kaveh R. Ghazi,
+Eric Goldman, Ulrich Grepel, Jan Hajic,
 Jarkko Hietaniemi, Eric Hughes, Ceriel Jacobs, Jeffrey R. Jones, Henry
 Juengst, Amir Katz, ken@ken.hilco.com, Kevin B. Kenny, Marq Kole, Ronald
 Lamprecht, Greg Lee, Craig Leres, John Levine, Mohamed el Lozy, Chris
@@ -3014,7 +3014,8 @@ Yap, Nathan Zelle, David Zuhn, and those whose names have slipped my marginal
 mail-archiving skills but whose contributions are appreciated all the
 same.
 .PP
-Thanks to Keith Bostic, John Gilmore, Craig Leres, Bob Mulcahy, G.T.
+Thanks to Keith Bostic, Noah Friedman,
+John Gilmore, Craig Leres, Bob Mulcahy, G.T.
 Nicol, Francois Pinard, Rich Salz, and Richard Stallman for help with various
 distribution headaches.
 .PP
