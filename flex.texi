@@ -352,7 +352,6 @@ the @samp{.} regular expression).
 
 A somewhat more complicated example:
 
-@c proofread edit stopped here
 @exindex Pascal-like language
 @example
 @verbatim
@@ -409,10 +408,9 @@ A somewhat more complicated example:
 @end verbatim
 @end example
 
-This is the beginnings of a simple scanner for a language like
-Pascal.  It identifies different types of
-@dfn{tokens}
-and reports on what it has seen.
+This is the beginnings of a simple scanner for a language like Pascal.
+It identifies different types of @dfn{tokens} and reports on what it has
+seen.
 
 The details of this example will be explained in the following
 sections.
@@ -421,15 +419,13 @@ sections.
 @chapter Format of the Input File
 
 
-@cindex format of the input
+@cindex format of flex input
+@cindex input, format of
 @cindex file format
-@cindex sections of the input
+@cindex sections of flex input
 
-The
-@code{flex}
-input file consists of three sections, separated by a line with just
-@samp{%%}
-in it:
+The @code{flex} input file consists of three sections, separated by a
+line containing only @samp{%%}.
 
 @exindex format of input file
 @example
@@ -449,6 +445,7 @@ in it:
 * Comments in the Input::       
 @end menu
 
+@c proofread edit stopped here
 @node Definitions Section
 @section Format of the Definitions Section
 @cindex format, Definitions Section
