@@ -3,7 +3,9 @@ changes between releases of flex
 
 See the file COPYING for copying conditions
 
-* after version 2.5.10
+* version 2.5.11
+
+** fixed some typos in the manual and we now include texinfo.tex
 
 ** traditional prototypes output for C scanners, controlled by a
    preprocessor symbol; see documentation for details
