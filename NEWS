@@ -1,9 +1,34 @@
+Changes between release 2.4.5 (11Dec93) and release 2.4.4:
+
+	- Fixed bug breaking C++ scanners that use REJECT or variable
+	  trailing context.
+
+	- Fixed serious input problem for interactive scanners on
+	  systems for which char is unsigned.
+
+	- Fixed bug in incorrectly treating '$' operator as variable
+	  trailing context.
+
+	- Fixed bug in -CF table representation that could lead to
+	  corrupt tables.
+
+	- Fixed fairly benign memory leak.
+
+	- Added `extern "C++"' wrapper to FlexLexer.h header.
+
+	- Changed #include of FlexLexer.h to use <> instead of "".
+
+	- Added feature to control whether the scanner attempts to
+	  refill the input buffer once it's exhausted.  This feature
+	  will be documented in the 2.5 release.
+
+
 Changes between release 2.4.4 (07Dec93) and release 2.4.3:
 
 	- Fixed two serious bugs in scanning 8-bit characters.
 
 	- Fixed bug in YY_USER_ACTION that caused it to be executed
-	  inappropriately (on the scanner's on internal actions, and
+	  inappropriately (on the scanner's own internal actions, and
 	  with incorrect yytext/yyleng values).
 
 	- Fixed bug in pointing yyin at a new file and resuming scanning.
