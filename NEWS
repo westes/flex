@@ -1,3 +1,11 @@
+Changes between 2.3 Patch #7 (28Mar91) and 2.3 Patch #6:
+
+	- Fixed out-of-bounds array access that caused bad tables
+	  to be produced on machines where the bad reference happened
+	  to yield a 1.  This caused problems installing or running
+	  flex on some Suns, in particular.
+
+
 Changes between 2.3 Patch #6 (29Aug90) and 2.3 Patch #5:
 
 	- Fixed a serious bug in yymore() which basically made it
