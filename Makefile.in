@@ -167,8 +167,8 @@ install: $(FLEX) $(FLEXLIB) installdirs install.$(INSTALLMAN)
 	$(INSTALL_PROGRAM) $(FLEX) $(bindir)/$(FLEX)
 	@rm -f $(bindir)/$(FLEX)++
 	cd $(bindir) && $(LN_S) $(FLEX) $(FLEX)++
-	$(INSTALL_DATA) $(FLEXLIB) $(libdir)/libfl.a
-	-cd $(libdir) && $(RANLIB) libfl.a
+	$(INSTALL_DATA) $(FLEXLIB) $(libdir)/$(FLEXLIB)
+	-cd $(libdir) && $(RANLIB) $(FLEXLIB)
 	$(INSTALL_DATA) $(srcdir)/FlexLexer.h $(includedir)/FlexLexer.h
 
 # Note, the following rules delete any vestigial flexdoc installed
@@ -187,7 +187,7 @@ installdirs:
 
 uninstall:
 	rm -f $(bindir)/$(FLEX) $(bindir)/$(FLEX)++
-	rm -f $(libdir)/libfl.a
+	rm -f $(libdir)/$(FLEXLIB)
 	rm -f $(includedir)/FlexLexer.h
 	rm -f $(mandir)/$(FLEX).$(manext) $(mandir)/$(FLEX)doc.$(manext)
 
