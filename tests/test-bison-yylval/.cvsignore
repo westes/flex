@@ -6,3 +6,4 @@ scanner.h
 yyheader.h
 test-bison-yylval
 
+OUTPUT
