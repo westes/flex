@@ -2,10 +2,10 @@ BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
 EXTRA_DIST = scanner.l parser.y test.input
-CLEANFILES = scanner.c parser.c parser.h test-c-cpp-r
+CLEANFILES = scanner.c parser.c parser.h test-c-cpp-r $(OBJS) OUTPUT
 OBJS = scanner.o # parser.o
 
-INCLUDES = -I $(srcdir) -I $(top_srcdir)/tests
+INCLUDES = -I $(srcdir) -I $(top_srcdir)
 #LDFLAGS = $(top_srcdir)/libfl.a 
 #YFLAGS = --defines --output=parser.c
 
