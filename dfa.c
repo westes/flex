@@ -211,7 +211,7 @@ int state[];
     register int i, ec;
     int out_char_set[CSIZE];
 
-    for ( i = (uses_NUL ? 0 : 1); i < csize; ++i )
+    for ( i = 0; i < csize; ++i )
 	{
 	ec = abs( ecgroup[i] );
 	out_char_set[i] = state[ec];
@@ -222,7 +222,7 @@ int state[];
     list_character_set( file, out_char_set );
 
     /* now invert the members of the set to get the jam transitions */
-    for ( i = (uses_NUL ? 0 : 1); i < csize; ++i )
+    for ( i = 0; i < csize; ++i )
 	out_char_set[i] = ! out_char_set[i];
 
     fprintf( file, "\n jam-transitions: EOF " );
@@ -391,6 +391,9 @@ increase_max_dfas()
     dhash = reallocate_integer_array( dhash, current_max_dfas );
     dss = reallocate_int_ptr_array( dss, current_max_dfas );
     dfaacc = reallocate_dfaacc_union( dfaacc, current_max_dfas );
+
+    if ( nultrans )
+	nultrans = reallocate_integer_array( nultrans, current_max_dfas );
     }
 
 
@@ -407,6 +410,7 @@ ntod()
     {
     int *accset, ds, nacc, newds;
     int sym, hashval, numstates, dsize;
+    int num_full_table_rows;	/* used only for -f */
     int *nset, *dset;
     int targptr, totaltrans, i, comstate, comfreq, targ;
     int *epsclosure(), snstods(), symlist[CSIZE + 1];
@@ -457,6 +461,59 @@ ntod()
 
     inittbl();
 
+    /* check to see whether we should build a separate table for transitions
+     * on NUL characters.  We don't do this for full-speed (-F) scanners,
+     * since for them we don't have a simple state number lying around with
+     * which to index the table.  We also don't bother doing it for scanners
+     * unless (1) NUL is in its own equivalence class (indicated by a
+     * positive value of ecgroup[NUL]), (2) NUL's equilvalence class is
+     * the last equivalence class, and (3) the number of equivalence classes
+     * is the same as the number of characters.  This latter case comes about
+     * when useecs is false or when its true but every character still
+     * manages to land in its own class (unlikely, but it's cheap to check
+     * for).  If all these things are true then the character code needed
+     * to represent NUL's equivalence class for indexing the tables is
+     * going to take one more bit than the number of characters, and therefore
+     * we won't be assured of being able to fit it into a YY_CHAR variable.
+     * This rules out storing the transitions in a compressed table, since
+     * the code for interpreting them uses a YY_CHAR variable (perhaps it
+     * should just use an integer, though; this is worth pondering ... ###).
+     *
+     * Finally, for full tables, we want the number of entries in the
+     * table to be a power of two so the array references go fast (it
+     * will just take a shift to compute the major index).  If encoding
+     * NUL's transitions in the table will spoil this, we give it its
+     * own table (note that this will be the case if we're not using
+     * equivalence classes).
+     */
+
+    /* note that the test for ecgroup[0] == numecs below accomplishes
+     * both (1) and (2) above
+     */
+    if ( ! fullspd && ecgroup[0] == numecs )
+	{ /* NUL is alone in its equivalence class, which is the last one */
+	int use_NUL_table = (numecs == csize);
+
+	if ( fulltbl && ! use_NUL_table )
+	    { /* we still may want to use the table if numecs is a power of 2 */
+	    int power_of_two;
+
+	    for ( power_of_two = 1; power_of_two <= csize; power_of_two *= 2 )
+		if ( numecs == power_of_two )
+		    {
+		    use_NUL_table = true;
+		    break;
+		    }
+	    }
+
+	if ( use_NUL_table )
+	    nultrans = allocate_integer_array( current_max_dfas );
+	    /* from now on, nultrans != nil indicates that we're
+	     * saving null transitions for later, separate encoding
+	     */
+	}
+
+
     if ( fullspd )
 	{
 	for ( i = 0; i <= numecs; ++i )
@@ -464,16 +521,30 @@ ntod()
 	place_state( state, 0, 0 );
 	}
 
-    if ( fulltbl )
+    else if ( fulltbl )
 	{
+	if ( nultrans )
+	    /* we won't be including NUL's transitions in the table,
+	     * so build it for entries from 0 .. numecs - 1
+	     */
+	    num_full_table_rows = numecs;
+
+	else
+	    /* take into account the fact that we'll be including
+	     * the NUL entries in the transition table.  Build it
+	     * from 0 .. numecs.
+	     */
+	    num_full_table_rows = numecs + 1;
+
 	/* declare it "short" because it's a real long-shot that that
-	 * won't be large enough
+	 * won't be large enough.
 	 */
 	printf( "static short int yy_nxt[][%d] =\n    {\n",
-		numecs + 1 ); /* '}' so vi doesn't get too confused */
+		/* '}' so vi doesn't get too confused */
+		num_full_table_rows );
 
 	/* generate 0 entries for state #0 */
-	for ( i = 0; i <= numecs; ++i )
+	for ( i = 0; i < num_full_table_rows; ++i )
 	    mk2data( 0 );
 
 	/* force ',' and dataflush() next call to mk2data */
@@ -614,6 +685,12 @@ ntod()
 	if ( ds > num_start_states )
 	    check_for_backtracking( ds, state );
 
+	if ( nultrans )
+	    {
+	    nultrans[ds] = state[NUL_ec];
+	    state[NUL_ec] = 0;	/* remove transition */
+	    }
+
 	if ( fulltbl )
 	    {
 	    /* supply array's 0-element */
@@ -622,7 +699,7 @@ ntod()
 	    else
 		mk2data( end_of_buffer_state );
 
-	    for ( i = 1; i <= numecs; ++i )
+	    for ( i = 1; i < num_full_table_rows; ++i )
 		/* jams are marked by negative of state number */
 		mk2data( state[i] ? state[i] : -ds );
 
@@ -846,6 +923,9 @@ int ds[], dsize, transsym, nset[];
 		    { /* loop through negated character class */
 		    ch = ccltbl[ccllist + j];
 
+		    if ( ch == 0 )
+			ch = NUL_ec;
+
 		    if ( ch > transsym )
 			break;	/* transsym isn't in negated ccl */
 
@@ -861,6 +941,9 @@ int ds[], dsize, transsym, nset[];
 		for ( j = 0; j < lenccl; ++j )
 		    {
 		    ch = ccltbl[ccllist + j];
+
+		    if ( ch == 0 )
+			ch = NUL_ec;
 
 		    if ( ch > transsym )
 			break;
@@ -931,7 +1014,7 @@ int symlist[];
 		flexfatal(
 		    "bad transition character detected in sympartition()" );
 
-	    if ( tch > 0 )
+	    if ( tch >= 0 )
 		{ /* character transition */
 		/* abs() needed for fake %t ec's */
 		int ec = abs( ecgroup[tch] );
@@ -946,7 +1029,8 @@ int symlist[];
 
 		lenccl = ccllen[tch];
 		cclp = cclmap[tch];
-		mkeccl( ccltbl + cclp, lenccl, dupfwd, duplist, numecs );
+		mkeccl( ccltbl + cclp, lenccl, dupfwd, duplist, numecs,
+			NUL_ec );
 
 		if ( cclng[tch] )
 		    {
@@ -955,6 +1039,9 @@ int symlist[];
 		    for ( k = 0; k < lenccl; ++k )
 			{
 			ich = ccltbl[cclp + k];
+
+			if ( ich == 0 )
+			    ich = NUL_ec;
 
 			for ( ++j; j < ich; ++j )
 			    symlist[j] = 1;
@@ -968,6 +1055,10 @@ int symlist[];
 		    for ( k = 0; k < lenccl; ++k )
 			{
 			ich = ccltbl[cclp + k];
+
+			if ( ich == 0 )
+			    ich = NUL_ec;
+
 			symlist[ich] = 1;
 			}
 		}
