@@ -50,6 +50,7 @@ examples/fastwc/Makefile
 examples/manual/Makefile
 m4/Makefile
 po/Makefile.in
+intl/Makefile
 tests/Makefile
 tests/TEMPLATE/Makefile
 tests/test-array-nr/Makefile
