@@ -2860,6 +2860,7 @@ return_rv:
 int yytables_fload YYFARGS1(FILE *, fp)
 {
     M4_YY_DECL_GUTS_VAR();
+
     if( yytbl_fload(fp, YYTABLES_NAME M4_YY_CALL_LAST_ARG) != 0)
         return -1;
     return 0;
