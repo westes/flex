@@ -301,8 +301,8 @@ int first, last;
 		{
 		mkxtion( finalst[first], last );
 		finalst[first] = finalst[last];
-		lastst[first] = max( lastst[first], lastst[last] );
-		firstst[first] = min( firstst[first], firstst[last] );
+		lastst[first] = MAX( lastst[first], lastst[last] );
+		firstst[first] = MIN( firstst[first], firstst[last] );
 
 		return first;
 		}

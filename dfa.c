@@ -204,7 +204,7 @@ int state[];
 
 	for ( i = 0; i < csize; ++i )
 		{
-		ec = abs( ecgroup[i] );
+		ec = ABS( ecgroup[i] );
 		out_char_set[i] = state[ec];
 		}
 
@@ -978,7 +978,7 @@ int ds[], dsize, transsym, nset[];
 			{ /* do nothing */
 			}
 
-		else if ( abs( ecgroup[sym] ) == transsym )
+		else if ( ABS( ecgroup[sym] ) == transsym )
 			nset[++numstates] = tsp;
 
 		bottom: ;

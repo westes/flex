@@ -610,7 +610,7 @@ int numchars, statenum, deflink, totaltrans;
 		/* Ensure that the base address we eventually generate is
 		 * non-negative.
 		 */
-		baseaddr = max( tblend + 1, minec );
+		baseaddr = MAX( tblend + 1, minec );
 		}
 
 	tblbase = baseaddr - minec;
@@ -635,7 +635,7 @@ int numchars, statenum, deflink, totaltrans;
 		for ( ++firstfree; chk[firstfree] != 0; ++firstfree )
 			;
 
-	tblend = max( tblend, tbllast );
+	tblend = MAX( tblend, tbllast );
 	}
 
 

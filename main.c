@@ -873,7 +873,7 @@ void readin()
 
 	/* Now map the equivalence class for NUL to its expected place. */
 	ecgroup[0] = ecgroup[csize];
-	NUL_ec = abs( ecgroup[0] );
+	NUL_ec = ABS( ecgroup[0] );
 
 	if ( useecs )
 		ccl2ecl();

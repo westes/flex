@@ -80,7 +80,7 @@ int fwd[], bck[], num;
 
 	numcl = 0;
 
-	/* Create equivalence class numbers.  From now on, abs( bck(x) )
+	/* Create equivalence class numbers.  From now on, ABS( bck(x) )
 	 * is the equivalence class number for object x.  If bck(x)
 	 * is positive, then x is the representative of its equivalence
 	 * class.
