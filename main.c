@@ -55,12 +55,12 @@ int fullspd, gen_line_dirs, performance_report, backing_up_report;
 int C_plus_plus, long_align, use_read, yytext_is_array, csize;
 int yymore_used, reject, real_reject, continued_action;
 int yymore_really_used, reject_really_used;
-int datapos, dataline, linenum;
+int datapos, dataline, linenum, out_linenum;
 FILE *skelfile = NULL;
 int skel_ind = 0;
 char *action_array;
 int action_size, defs1_offset, prolog_offset, action_offset, action_index;
-char *infilename = NULL;
+char *infilename = NULL, *outfilename = NULL;
 int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
 int current_mns, num_rules, num_eof_rules, default_rule;
@@ -101,9 +101,9 @@ static char *outfile_template = "lex.%s.%s";
 #else
 static char *outfile_template = "lex%s.%s";
 #endif
-static char outfile_path[64];
 
 static int outfile_created = 0;
+static int did_outfilename = 0;
 static int use_stdout;
 static char *skelname = NULL;
 static char *prefix = "yy";
@@ -174,7 +174,7 @@ int exit_status;
 		else if ( fclose( stdout ) )
 			flexfatal( "error occurred when closing output file" );
 
-		else if ( unlink( outfile_path ) )
+		else if ( unlink( outfilename ) )
 			flexfatal( "error occurred when deleting output file" );
 		}
 
@@ -253,6 +253,9 @@ int exit_status;
 			putc( 'm', stderr );
 		if ( use_read )
 			putc( 'r', stderr );
+
+		if ( did_outfilename )
+			fprintf( stderr, " -o%s", outfilename );
 
 		if ( skelname )
 			fprintf( stderr, " -S%s", skelname );
@@ -516,6 +519,15 @@ char **argv;
 					 */
 					break;
 
+				case 'o':
+					if ( i != 1 )
+						flexerror(
+					"-o flag must be given separately" );
+
+					outfilename = arg + i + 1;
+					did_outfilename = 1;
+					goto get_next_arg;
+
 				case 'P':
 					if ( i != 1 )
 						flexerror(
@@ -579,7 +591,7 @@ char **argv;
 					exit( 1 );
 				}
 
-		/* Used by -C, -S and -P flags in lieu of a "continue 2"
+		/* Used by -C, -S, -o, and -P flags in lieu of a "continue 2"
 		 * control.
 		 */
 		get_next_arg: ;
@@ -633,19 +645,27 @@ char **argv;
 	if ( ! use_stdout )
 		{
 		FILE *prev_stdout;
-		char *suffix;
 
-		if ( C_plus_plus )
-			suffix = "cc";
-		else
-			suffix = "c";
+		if ( ! did_outfilename )
+			{
+			static char outfile_path[64];
+			char *suffix;
 
-		sprintf( outfile_path, outfile_template, prefix, suffix );
+			if ( C_plus_plus )
+				suffix = "cc";
+			else
+				suffix = "c";
 
-		prev_stdout = freopen( outfile_path, "w", stdout );
+			sprintf( outfile_path, outfile_template,
+				prefix, suffix );
+
+			outfilename = outfile_path;
+			}
+
+		prev_stdout = freopen( outfilename, "w", stdout );
 
 		if ( prev_stdout == NULL )
-			lerrsf( "could not create %s", outfile_path );
+			lerrsf( "could not create %s", outfilename );
 
 		outfile_created = 1;
 		}
@@ -678,7 +698,7 @@ char **argv;
 
 	if ( yy_strcmp( prefix, "yy" ) )
 		{
-#define GEN_PREFIX(name) printf( "#define yy%s %s%s\n", name, prefix, name );
+#define GEN_PREFIX(name) out_str3( "#define yy%s %s%s\n", name, prefix, name );
 		GEN_PREFIX( "FlexLexer" );
 		GEN_PREFIX( "_create_buffer" );
 		GEN_PREFIX( "_delete_buffer" );
@@ -693,7 +713,7 @@ char **argv;
 		GEN_PREFIX( "restart" );
 		GEN_PREFIX( "text" );
 		GEN_PREFIX( "wrap" );
-		printf( "\n" );
+		outn( "" );
 		}
 
 
@@ -705,7 +725,7 @@ char **argv;
 	num_backing_up = onesp = numprots = 0;
 	variable_trailing_context_rules = bol_needed = false;
 
-	linenum = sectnum = 1;
+	out_linenum = linenum = sectnum = 1;
 	firstprot = NIL;
 
 	/* Used in mkprot() so that the first proto goes in slot 1
@@ -749,9 +769,12 @@ char **argv;
 
 void readin()
 	{
+	if ( did_outfilename )
+		line_directive_out( stdout, 0 );
+
 	skelout();
 
-	line_directive_out( (FILE *) 0 );
+	line_directive_out( (FILE *) 0, 1 );
 
 	if ( yyparse() )
 		{
@@ -818,51 +841,50 @@ void readin()
 		}
 
 	if ( csize == 256 )
-		puts( "typedef unsigned char YY_CHAR;" );
+		outn( "typedef unsigned char YY_CHAR;" );
 	else
-		puts( "typedef char YY_CHAR;" );
+		outn( "typedef char YY_CHAR;" );
 
 	if ( C_plus_plus )
 		{
-		puts( "#define yytext_ptr yytext" );
+		outn( "#define yytext_ptr yytext" );
 
 		if ( interactive )
-			puts( "#define YY_INTERACTIVE" );
+			outn( "#define YY_INTERACTIVE" );
 		}
 
 	if ( fullspd )
-		printf(
-		"typedef const struct yy_trans_info *yy_state_type;\n" );
+		outn( "typedef const struct yy_trans_info *yy_state_type;" );
 	else if ( ! C_plus_plus )
-		printf( "typedef int yy_state_type;\n" );
+		outn( "typedef int yy_state_type;" );
 
 	if ( reject )
-		printf( "\n#define YY_USES_REJECT\n" );
+		outn( "\n#define YY_USES_REJECT" );
 
 	if ( ddebug )
-		puts( "\n#define FLEX_DEBUG" );
+		outn( "\n#define FLEX_DEBUG" );
 
 	if ( lex_compat )
 		{
-		printf( "FILE *yyin = stdin, *yyout = stdout;\n" );
-		printf( "extern int yylineno;\n" );
-		printf( "int yylineno = 1;\n" );
+		outn( "FILE *yyin = stdin, *yyout = stdout;" );
+		outn( "extern int yylineno;" );
+		outn( "int yylineno = 1;" );
 		}
 	else if ( ! C_plus_plus )
-		printf( "FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;\n" );
+		outn( "FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;" );
 
 	if ( C_plus_plus )
-		printf( "\n#include <FlexLexer.h>\n" );
+		outn( "\n#include <FlexLexer.h>" );
 
 	else
 		{
 		if ( yytext_is_array )
-			puts( "extern char yytext[];\n" );
+			outn( "extern char yytext[];\n" );
 
 		else
 			{
-			puts( "extern char *yytext;" );
-			puts( "#define yytext_ptr yytext" );
+			outn( "extern char *yytext;" );
+			outn( "#define yytext_ptr yytext" );
 			}
 		}
 
@@ -984,6 +1006,7 @@ void usage()
 	fprintf( stderr, "\t\t-Cm  construct meta-equivalence classes\n" );
 	fprintf( stderr,
 		"\t\t-Cr  use read() instead of stdio for scanner input\n" );
+	fprintf( stderr, "\t-o  specify output filename\n" );
 	fprintf( stderr, "\t-P  specify scanner prefix other than \"yy\"\n" );
 	fprintf( stderr, "\t-S  specify skeleton file\n" );
 	}

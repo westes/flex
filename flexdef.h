@@ -353,12 +353,14 @@ extern int yymore_really_used, reject_really_used;
  * dataline - number of contiguous lines of data in current data
  * 	statement.  Used to generate readable -f output
  * linenum - current input line number
+ * out_linenum - current output line number
  * skelfile - the skeleton file
  * skel - compiled-in skeleton array
  * skel_ind - index into "skel" array, if skelfile is nil
  * yyin - input file
  * backing_up_file - file to summarize backing-up states to
  * infilename - name of input file
+ * outfilename - name of output file
  * input_files - array holding names of input files
  * num_input_files - size of input_files array
  * program_name - name with which program was invoked 
@@ -373,11 +375,11 @@ extern int yymore_really_used, reject_really_used;
  * 	to "action_array"
  */
 
-extern int datapos, dataline, linenum;
+extern int datapos, dataline, linenum, out_linenum;
 extern FILE *skelfile, *yyin, *backing_up_file;
 extern char *skel[];
 extern int skel_ind;
-extern char *infilename;
+extern char *infilename, *outfilename;
 extern char **input_files;
 extern int num_input_files;
 extern char *program_name;
@@ -739,7 +741,7 @@ extern void lerrif PROTO((char[], int));
 extern void lerrsf PROTO((char[], char[]));
 
 /* Spit out a "# line" statement. */
-extern void line_directive_out PROTO((FILE*));
+extern void line_directive_out PROTO((FILE*, int));
 
 /* Mark the current position in the action array as the end of the section 1
  * user defs.
@@ -756,6 +758,21 @@ extern void mkdata PROTO((int));	/* generate a data statement */
 
 /* Return the integer represented by a string of digits. */
 extern int myctoi PROTO((char []));
+
+/* Convert an octal digit string to an integer value. */
+extern int otoi PROTO((Char [] ));
+
+/* Output a (possibly-formatted) string to the generated scanner. */
+extern void out PROTO((char []));
+extern void out_dec PROTO((char [], int));
+extern void out_dec2 PROTO((char [], int, int));
+extern void out_hex PROTO((char [], unsigned int));
+extern void out_line_count PROTO((char []));;
+extern void out_str PROTO((char [], char []));
+extern void out_str3 PROTO((char [], char [], char [], char []));
+extern void out_str_dec PROTO((char [], char [], int));
+extern void outc PROTO((int));
+extern void outn PROTO((char []));
 
 /* Return a printable version of the given character, which might be
  * 8-bit.

@@ -268,7 +268,7 @@ int mach, variable_trail_rule, headcnt, trailcnt;
 	 */
 	add_action( "YY_USER_ACTION\n" );
 
-	line_directive_out( (FILE *) 0 );
+	line_directive_out( (FILE *) 0, 1 );
 	}
 
 

@@ -65,13 +65,13 @@ void do_indent()
 
 	while ( i >= 8 )
 		{
-		putchar( '\t' );
+		outc( '\t' );
 		i -= 8;
 		}
 
 	while ( i > 0 )
 		{
-		putchar( ' ' );
+		outc( ' ' );
 		--i;
 		}
 	}
@@ -121,7 +121,7 @@ void gen_bu_action()
 
 	indent_puts( "yy_current_state = yy_last_accepting_state;" );
 	indent_puts( "goto yy_find_action;" );
-	putchar( '\n' );
+	outc( '\n' );
 
 	set_indent( 0 );
 	}
@@ -135,9 +135,9 @@ void genctbl()
 	int end_of_buffer_action = num_rules + 1;
 
 	/* Table of verify for transition and offset to next state. */
-	printf( "static const struct yy_trans_info yy_transition[%d] =\n",
+	out_dec( "static const struct yy_trans_info yy_transition[%d] =\n",
 		tblend + numecs + 1 );
-	printf( "    {\n" );
+	outn( "    {" );
 
 	/* We want the transition to be represented as the offset to the
 	 * next state, not the actual state number, which is what it currently
@@ -205,17 +205,16 @@ void genctbl()
 	transition_struct_out( chk[tblend + 1], nxt[tblend + 1] );
 	transition_struct_out( chk[tblend + 2], nxt[tblend + 2] );
 
-	printf( "    };\n" );
-	printf( "\n" );
+	outn( "    };\n" );
 
 	/* Table of pointers to start states. */
-	printf(
+	out_dec(
 	"static const struct yy_trans_info *yy_start_state_list[%d] =\n",
 		lastsc * 2 + 1 );
-	printf( "    {\n" );	/* } so vi doesn't get confused */
+	outn( "    {" );	/* } so vi doesn't get confused */
 
 	for ( i = 0; i <= lastsc * 2; ++i )
-		printf( "    &yy_transition[%d],\n", base[i] );
+		out_dec( "    &yy_transition[%d],\n", base[i] );
 
 	dataend();
 
@@ -232,7 +231,7 @@ void genecs()
 	register int i, j;
 	int numrows;
 
-	printf( C_int_decl, "yy_ec", csize );
+	out_str_dec( C_int_decl, "yy_ec", csize );
 
 	for ( i = 1; i < csize; ++i )
 		{
@@ -282,7 +281,7 @@ void gen_find_action()
 		indent_puts( "yy_current_state = *--yy_state_ptr;" );
 		indent_puts( "yy_lp = yy_accept[yy_current_state];" );
 
-		puts(
+		outn(
 		"find_rule: /* we branch to this label when backing up */" );
 
 		indent_puts(
@@ -396,7 +395,7 @@ void genftbl()
 	register int i;
 	int end_of_buffer_action = num_rules + 1;
 
-	printf( long_align ? C_long_decl : C_short_decl,
+	out_str_dec( long_align ? C_long_decl : C_short_decl,
 		"yy_accept", lastdfa + 1 );
 
 	dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
@@ -454,7 +453,7 @@ char *char_map;
 		do_indent();
 
 		/* lastdfa + 2 is the beginning of the templates */
-		printf( "if ( yy_current_state >= %d )\n", lastdfa + 2 );
+		out_dec( "if ( yy_current_state >= %d )\n", lastdfa + 2 );
 
 		indent_up();
 		indent_puts( "yy_c = yy_meta[(unsigned int) yy_c];" );
@@ -496,7 +495,7 @@ void gen_next_match()
 			{
 			indent_puts( "{" );	/* } for vi */
 			gen_backing_up();
-			putchar( '\n' );
+			outc( '\n' );
 			}
 
 		indent_puts( "++yy_cp;" );
@@ -507,7 +506,7 @@ void gen_next_match()
 
 		indent_down();
 
-		putchar( '\n' );
+		outc( '\n' );
 		indent_puts( "yy_current_state = -yy_current_state;" );
 		}
 
@@ -532,7 +531,7 @@ void gen_next_match()
 
 		if ( num_backing_up > 0 )
 			{
-			putchar( '\n' );
+			outc( '\n' );
 			gen_backing_up();	/* { for vi */
 			indent_puts( "}" );
 			}
@@ -559,10 +558,10 @@ void gen_next_match()
 		do_indent();
 
 		if ( interactive )
-			printf( "while ( yy_base[yy_current_state] != %d );\n",
+			out_dec( "while ( yy_base[yy_current_state] != %d );\n",
 				jambase );
 		else
-			printf( "while ( yy_current_state != %d );\n",
+			out_dec( "while ( yy_current_state != %d );\n",
 				jamstate );
 
 		if ( ! reject && ! interactive )
@@ -655,7 +654,7 @@ void gen_NUL_trans()
 		/* We'll need yy_cp lying around for the gen_backing_up(). */
 		indent_puts( "register char *yy_cp = yy_c_buf_p;" );
 
-	putchar( '\n' );
+	outc( '\n' );
 
 	if ( nultrans )
 		{
@@ -667,7 +666,7 @@ void gen_NUL_trans()
 	else if ( fulltbl )
 		{
 		do_indent();
-		printf( "yy_current_state = yy_nxt[yy_current_state][%d];\n",
+		out_dec( "yy_current_state = yy_nxt[yy_current_state][%d];\n",
 			NUL_ec );
 		indent_puts( "yy_is_jam = (yy_current_state <= 0);" );
 		}
@@ -675,7 +674,7 @@ void gen_NUL_trans()
 	else if ( fullspd )
 		{
 		do_indent();
-		printf( "register int yy_c = %d;\n", NUL_ec );
+		out_dec( "register int yy_c = %d;\n", NUL_ec );
 
 		indent_puts(
 		"register const struct yy_trans_info *yy_trans_info;\n" );
@@ -699,7 +698,7 @@ void gen_NUL_trans()
 
 		do_indent();
 
-		printf( "yy_is_jam = (yy_current_state == %d);\n", jamstate );
+		out_dec( "yy_is_jam = (yy_current_state == %d);\n", jamstate );
 		}
 
 	/* If we've entered an accepting state, back up; note that
@@ -708,7 +707,7 @@ void gen_NUL_trans()
 	 */
 	if ( need_backing_up && (fullspd || fulltbl) )
 		{
-		putchar( '\n' );
+		outc( '\n' );
 		indent_puts( "if ( ! yy_is_jam )" );
 		indent_up();
 		indent_puts( "{" );
@@ -783,7 +782,7 @@ void gentabs()
 		accsiz[end_of_buffer_state] = 1;
 		dfaacc[end_of_buffer_state].dfaacc_set = EOB_accepting_list;
 
-		printf( long_align ? C_long_decl : C_short_decl,
+		out_str_dec( long_align ? C_long_decl : C_short_decl,
 			"yy_acclist", MAX( numas, 1 ) + 1 );
 
 		j = 1;	/* index into "yy_acclist" array */
@@ -870,7 +869,7 @@ void gentabs()
 		 */
 		++k;
 
-	printf( long_align ? C_long_decl : C_short_decl, "yy_accept", k );
+	out_str_dec( long_align ? C_long_decl : C_short_decl, "yy_accept", k );
 
 	for ( i = 1; i <= lastdfa; ++i )
 		{
@@ -902,7 +901,7 @@ void gentabs()
 		if ( trace )
 			fputs( "\n\nMeta-Equivalence Classes:\n", stderr );
 
-		printf( C_int_decl, "yy_meta", numecs + 1 );
+		out_str_dec( C_int_decl, "yy_meta", numecs + 1 );
 
 		for ( i = 1; i <= numecs; ++i )
 			{
@@ -918,7 +917,7 @@ void gentabs()
 
 	total_states = lastdfa + numtemps;
 
-	printf( (tblend >= MAX_SHORT || long_align) ?
+	out_str_dec( (tblend >= MAX_SHORT || long_align) ?
 			C_long_decl : C_short_decl,
 		"yy_base", total_states + 1 );
 
@@ -953,7 +952,7 @@ void gentabs()
 
 	dataend();
 
-	printf( (total_states >= MAX_SHORT || long_align) ?
+	out_str_dec( (total_states >= MAX_SHORT || long_align) ?
 			C_long_decl : C_short_decl,
 		"yy_def", total_states + 1 );
 
@@ -962,7 +961,7 @@ void gentabs()
 
 	dataend();
 
-	printf( (total_states >= MAX_SHORT || long_align) ?
+	out_str_dec( (total_states >= MAX_SHORT || long_align) ?
 			C_long_decl : C_short_decl,
 		"yy_nxt", tblend + 1 );
 
@@ -976,7 +975,7 @@ void gentabs()
 
 	dataend();
 
-	printf( (total_states >= MAX_SHORT || long_align) ?
+	out_str_dec( (total_states >= MAX_SHORT || long_align) ?
 			C_long_decl : C_short_decl,
 		"yy_chk", tblend + 1 );
 
@@ -1000,8 +999,8 @@ void indent_put2s( fmt, arg )
 char fmt[], arg[];
 	{
 	do_indent();
-	printf( fmt, arg );
-	putchar( '\n' );
+	out_str( fmt, arg );
+	outn( "" );
 	}
 
 
@@ -1013,7 +1012,7 @@ void indent_puts( str )
 char str[];
 	{
 	do_indent();
-	puts( str );
+	outn( str );
 	}
 
 
@@ -1058,7 +1057,7 @@ void make_tables()
 	skelout();
 
 
-	printf( "#define YY_END_OF_BUFFER %d\n", num_rules + 1 );
+	out_dec( "#define YY_END_OF_BUFFER %d\n", num_rules + 1 );
 
 	if ( fullspd )
 		{
@@ -1117,12 +1116,12 @@ void make_tables()
 
 	if ( nultrans )
 		{
-		printf( C_state_decl, "yy_NUL_trans", lastdfa + 1 );
+		out_str_dec( C_state_decl, "yy_NUL_trans", lastdfa + 1 );
 
 		for ( i = 1; i <= lastdfa; ++i )
 			{
 			if ( fullspd )
-				printf( "    &yy_transition[%d],\n", base[i] );
+				out_dec( "    &yy_transition[%d],\n", base[i] );
 			else
 				mkdata( nultrans[i] );
 			}
@@ -1135,7 +1134,7 @@ void make_tables()
 		indent_puts( "extern int yy_flex_debug;" );
 		indent_puts( "int yy_flex_debug = 1;\n" );
 
-		printf( long_align ? C_long_decl : C_short_decl,
+		out_str_dec( long_align ? C_long_decl : C_short_decl,
 			"yy_rule_linenum", num_rules );
 		for ( i = 1; i < num_rules; ++i )
 			mkdata( rule_linenum[i] );
@@ -1147,58 +1146,58 @@ void make_tables()
 		/* Declare state buffer variables. */
 		if ( ! C_plus_plus )
 			{
-			puts(
+			outn(
 	"static yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;" );
-			puts( "static char *yy_full_match;" );
-			puts( "static int yy_lp;" );
+			outn( "static char *yy_full_match;" );
+			outn( "static int yy_lp;" );
 			}
 
 		if ( variable_trailing_context_rules )
 			{
 			if ( ! C_plus_plus )
 				{
-				puts(
+				outn(
 				"static int yy_looking_for_trail_begin = 0;" );
-				puts( "static int yy_full_lp;" );
-				puts( "static int *yy_full_state;" );
+				outn( "static int yy_full_lp;" );
+				outn( "static int *yy_full_state;" );
 				}
 
-			printf( "#define YY_TRAILING_MASK 0x%x\n",
+			out_hex( "#define YY_TRAILING_MASK 0x%x\n",
 				(unsigned int) YY_TRAILING_MASK );
-			printf( "#define YY_TRAILING_HEAD_MASK 0x%x\n",
+			out_hex( "#define YY_TRAILING_HEAD_MASK 0x%x\n",
 				(unsigned int) YY_TRAILING_HEAD_MASK );
 			}
 
-		puts( "#define REJECT \\" );
-		puts( "{ \\" );		/* } for vi */
-		puts(
+		outn( "#define REJECT \\" );
+		outn( "{ \\" );		/* } for vi */
+		outn(
 	"*yy_cp = yy_hold_char; /* undo effects of setting up yytext */ \\" );
-		puts(
+		outn(
 	"yy_cp = yy_full_match; /* restore poss. backed-over text */ \\" );
 
 		if ( variable_trailing_context_rules )
 			{
-			puts(
+			outn(
 		"yy_lp = yy_full_lp; /* restore orig. accepting pos. */ \\" );
-			puts(
+			outn(
 		"yy_state_ptr = yy_full_state; /* restore orig. state */ \\" );
-			puts(
+			outn(
 	"yy_current_state = *yy_state_ptr; /* restore curr. state */ \\" );
 			}
 
-		puts( "++yy_lp; \\" );
-		puts( "goto find_rule; \\" );
+		outn( "++yy_lp; \\" );
+		outn( "goto find_rule; \\" );
 		/* { for vi */
-		puts( "}" );
+		outn( "}" );
 		}
 
 	else
 		{
-		puts(
+		outn(
 		"/* The intent behind this definition is that it'll catch" );
-		puts( " * any uses of REJECT which flex missed." );
-		puts( " */" );
-		puts( "#define REJECT reject_used_but_not_detected" );
+		outn( " * any uses of REJECT which flex missed." );
+		outn( " */" );
+		outn( "#define REJECT reject_used_but_not_detected" );
 		}
 
 	if ( yymore_used )
@@ -1223,18 +1222,20 @@ void make_tables()
 		{
 		if ( yytext_is_array )
 			{
-			puts( "#ifndef YYLMAX" );
-			puts( "#define YYLMAX 8192" );
-			puts( "#endif\n" );
-			puts( "char yytext[YYLMAX];" );
-			puts( "char *yytext_ptr;" );
+			outn( "#ifndef YYLMAX" );
+			outn( "#define YYLMAX 8192" );
+			outn( "#endif\n" );
+			outn( "char yytext[YYLMAX];" );
+			outn( "char *yytext_ptr;" );
 			}
 
 		else
-			puts( "char *yytext;" );
+			outn( "char *yytext;" );
 		}
 
-	fputs( &action_array[defs1_offset], stdout );
+	out( &action_array[defs1_offset] );
+
+	line_directive_out( stdout, 0 );
 
 	skelout();
 
@@ -1242,33 +1243,35 @@ void make_tables()
 		{
 		if ( use_read )
 			{
-			printf(
-"\tif ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \\\n" );
-			printf(
-		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );\n" );
+			outn(
+"\tif ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \\" );
+			outn(
+		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );" );
 			}
 
 		else
 			{
-			printf(
-			"\tif ( yy_current_buffer->yy_is_interactive ) \\\n" );
-			printf( "\t\t{ \\\n" );
-			printf( "\t\tint c = getc( yyin ); \\\n" );
-			printf( "\t\tresult = c == EOF ? 0 : 1; \\\n" );
-			printf( "\t\tbuf[0] = (char) c; \\\n" );
-			printf( "\t\t} \\\n" );
-			printf(
-	"\telse if ( ((result = fread( buf, 1, max_size, yyin )) == 0) \\\n" );
-			printf( "\t\t  && ferror( yyin ) ) \\\n" );
-			printf(
-		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );\n" );
+			outn(
+			"\tif ( yy_current_buffer->yy_is_interactive ) \\" );
+			outn( "\t\t{ \\" );
+			outn( "\t\tint c = getc( yyin ); \\" );
+			outn( "\t\tresult = c == EOF ? 0 : 1; \\" );
+			outn( "\t\tbuf[0] = (char) c; \\" );
+			outn( "\t\t} \\" );
+			outn(
+	"\telse if ( ((result = fread( buf, 1, max_size, yyin )) == 0) \\" );
+			outn( "\t\t  && ferror( yyin ) ) \\" );
+			outn(
+		"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );" );
 			}
 		}
 
 	skelout();
 
 	/* Copy prolog to output file. */
-	fputs( &action_array[prolog_offset], stdout );
+	out( &action_array[prolog_offset] );
+
+	line_directive_out( stdout, 0 );
 
 	skelout();
 
@@ -1291,7 +1294,7 @@ void make_tables()
 	gen_start_state();
 
 	/* Note, don't use any indentation. */
-	puts( "yy_match:" );
+	outn( "yy_match:" );
 	gen_next_match();
 
 	skelout();
@@ -1330,7 +1333,7 @@ void make_tables()
 		indent_down();
 
 		do_indent();
-		printf( "else if ( yy_act < %d )\n", num_rules );
+		out_dec( "else if ( yy_act < %d )\n", num_rules );
 		indent_up();
 		indent_puts(
 	"fprintf( stderr, \"--accepting rule at line %d (\\\"%s\\\")\\n\"," );
@@ -1338,7 +1341,7 @@ void make_tables()
 		indent_down();
 
 		do_indent();
-		printf( "else if ( yy_act == %d )\n", num_rules );
+		out_dec( "else if ( yy_act == %d )\n", num_rules );
 		indent_up();
 		indent_puts(
 	"fprintf( stderr, \"--accepting default rule (\\\"%s\\\")\\n\"," );
@@ -1346,14 +1349,14 @@ void make_tables()
 		indent_down();
 
 		do_indent();
-		printf( "else if ( yy_act == %d )\n", num_rules + 1 );
+		out_dec( "else if ( yy_act == %d )\n", num_rules + 1 );
 		indent_up();
 		indent_puts(
 	"fprintf( stderr, \"--(end of buffer or a NUL)\\n\" );" );
 		indent_down();
 
 		do_indent();
-		printf( "else\n" );
+		outn( "else" );
 		indent_up();
 		indent_puts(
 	"fprintf( stderr, \"--EOF (start condition %d)\\n\", YY_START );" );
@@ -1367,14 +1370,16 @@ void make_tables()
 	skelout();
 	indent_up();
 	gen_bu_action();
-	fputs( &action_array[action_offset], stdout );
+	out( &action_array[action_offset] );
+
+	line_directive_out( stdout, 0 );
 
 	/* generate cases for any missing EOF rules */
 	for ( i = 1; i <= lastsc; ++i )
 		if ( ! sceof[i] )
 			{
 			do_indent();
-			printf( "case YY_STATE_EOF(%s):\n", scname[i] );
+			out_str( "case YY_STATE_EOF(%s):\n", scname[i] );
 			did_eof_rule = true;
 			}
 
@@ -1441,7 +1446,7 @@ void make_tables()
 
 	/* Copy remainder of input to output. */
 
-	line_directive_out( stdout );
+	line_directive_out( stdout, 1 );
 
 	if ( sectnum == 3 )
 		(void) flexscan(); /* copy remainder of input to output */

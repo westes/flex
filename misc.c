@@ -275,7 +275,7 @@ void dataend()
 		dataflush();
 
 	/* add terminator for initialization; { for vi */
-	puts( "    } ;\n" );
+	outn( "    } ;\n" );
 
 	dataline = 0;
 	datapos = 0;
@@ -286,14 +286,14 @@ void dataend()
 
 void dataflush()
 	{
-	putchar( '\n' );
+	outc( '\n' );
 
 	if ( ++dataline >= NUMDATALINES )
 		{
 		/* Put out a blank line so that the table is grouped into
 		 * large blocks that enable the user to find elements easily.
 		 */
-		putchar( '\n' );
+		outc( '\n' );
 		dataline = 0;
 		}
 
@@ -387,22 +387,40 @@ int ch;
 
 /* line_directive_out - spit out a "# line" statement */
 
-void line_directive_out( output_file )
+void line_directive_out( output_file, do_infile )
 FILE *output_file;
+int do_infile;
 	{
-	if ( infilename && gen_line_dirs )
-		{
-		char directive[MAXLINE];
-		sprintf( directive, "# line %d \"%s\"\n", linenum, infilename );
+	char directive[MAXLINE];
+	static char line_fmt[] = "# line %d \"%s\"\n";
 
-		/* If output_file is nil then we should put the directive in
-		 * the accumulated actions.
-		 */
-		if ( output_file )
-			fputs( directive, output_file );
-		else
-			add_action( directive );
+	if ( ! gen_line_dirs )
+		return;
+
+	if ( (do_infile && ! infilename) || (! do_infile && ! outfilename) )
+		/* don't know the filename to use, skip */
+		return;
+
+	if ( do_infile )
+		sprintf( directive, line_fmt, linenum, infilename );
+	else
+		{
+		if ( output_file == stdout )
+			/* Account for the line directive itself. */
+			++out_linenum;
+
+		sprintf( directive, line_fmt, out_linenum, outfilename );
 		}
+
+	/* If output_file is nil then we should put the directive in
+	 * the accumulated actions.
+	 */
+	if ( output_file )
+		{
+		fputs( directive, output_file );
+		}
+	else
+		add_action( directive );
 	}
 
 
@@ -439,20 +457,20 @@ int value;
 	{
 	if ( datapos >= NUMDATAITEMS )
 		{
-		putchar( ',' );
+		outc( ',' );
 		dataflush();
 		}
 
 	if ( datapos == 0 )
 		/* Indent. */
-		fputs( "    ", stdout );
+		out( "    " );
 
 	else
-		putchar( ',' );
+		outc( ',' );
 
 	++datapos;
 
-	printf( "%5d", value );
+	out_dec( "%5d", value );
 	}
 
 
@@ -466,19 +484,19 @@ int value;
 	{
 	if ( datapos >= NUMDATAITEMS )
 		{
-		putchar( ',' );
+		outc( ',' );
 		dataflush();
 		}
 
 	if ( datapos == 0 )
 		/* Indent. */
-		fputs( "    ", stdout );
+		out( "    " );
 	else
-		putchar( ',' );
+		outc( ',' );
 
 	++datapos;
 
-	printf( "%5d", value );
+	out_dec( "%5d", value );
 	}
 
 
@@ -586,6 +604,96 @@ Char str[];
 
 	(void) sscanf( (char *) str, "%o", &result );
 	return result;
+	}
+
+
+/* out - various flavors of outputing a (possibly formatted) string for the
+ *	 generated scanner, keeping track of the line count.
+ */
+
+void out( str )
+char str[];
+	{
+	fputs( str, stdout );
+	out_line_count( str );
+	}
+
+void out_dec( fmt, n )
+char fmt[];
+int n;
+	{
+	printf( fmt, n );
+	out_line_count( fmt );
+	}
+
+void out_dec2( fmt, n1, n2 )
+char fmt[];
+int n1, n2;
+	{
+	printf( fmt, n1, n2 );
+	out_line_count( fmt );
+	}
+
+void out_hex( fmt, x )
+char fmt[];
+unsigned int x;
+	{
+	printf( fmt, x );
+	out_line_count( fmt );
+	}
+
+void out_line_count( str )
+char str[];
+	{
+	register int i;
+
+	for ( i = 0; str[i]; ++i )
+		if ( str[i] == '\n' )
+			++out_linenum;
+	}
+
+void out_str( fmt, str )
+char fmt[], str[];
+	{
+	printf( fmt, str );
+	out_line_count( fmt );
+	out_line_count( str );
+	}
+
+void out_str3( fmt, s1, s2, s3 )
+char fmt[], s1[], s2[], s3[];
+	{
+	printf( fmt, s1, s2, s3 );
+	out_line_count( fmt );
+	out_line_count( s1 );
+	out_line_count( s2 );
+	out_line_count( s3 );
+	}
+
+void out_str_dec( fmt, str, n )
+char fmt[], str[];
+int n;
+	{
+	printf( fmt, str, n );
+	out_line_count( fmt );
+	out_line_count( str );
+	}
+
+void outc( c )
+int c;
+	{
+	putc( c, stdout );
+
+	if ( c == '\n' )
+		++out_linenum;
+	}
+
+void outn( str )
+char str[];
+	{
+	puts( str );
+	out_line_count( str );
+	++out_linenum;
 	}
 
 
@@ -706,9 +814,9 @@ void skelout()
 				/* Skeleton file reads include final
 				 * newline, skel[] array does not.
 				 */
-				fputs( buf, stdout );
+				out( buf );
 			else
-				printf( "%s\n", buf );
+				outn( buf );
 			}
 		}
 	}
@@ -723,16 +831,16 @@ void skelout()
 void transition_struct_out( element_v, element_n )
 int element_v, element_n;
 	{
-	printf( "%7d, %5d,", element_v, element_n );
+	out_dec2( "%7d, %5d,", element_v, element_n );
 
 	datapos += TRANS_STRUCT_PRINT_LENGTH;
 
 	if ( datapos >= 75 )
 		{
-		putchar( '\n' );
+		outc( '\n' );
 
 		if ( ++dataline % 10 == 0 )
-			putchar( '\n' );
+			outc( '\n' );
 
 		datapos = 0;
 		}

@@ -82,7 +82,7 @@ DIST_NAME = flex
 
 # which "flex" to use to generate scan.c from scan.l
 FLEX = ./flex
-FLEX_FLAGS = -ist $(PERF_REPORT)
+FLEX_FLAGS = -ist -oscan.c $(PERF_REPORT)
 COMPRESSION =
 PERF_REPORT = -p
 
