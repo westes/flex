@@ -99,4 +99,4 @@ tests/test-c++-basic/Makefile
 dnl --new-test-here-- This line is processed by tests/create-test.
 )
 
-AC_OUTPUt
+AC_OUTPUT
