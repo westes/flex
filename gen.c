@@ -1660,7 +1660,9 @@ void make_tables()
 	line_directive_out( stdout, 1 );
 
 	if ( sectnum == 3 )
+		{
 		OUT_BEGIN_CODE();
 		(void) flexscan(); /* copy remainder of input to output */
 		OUT_END_CODE();
+		}
 	}
