@@ -5,6 +5,17 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.22
 
+** more portability fixes
+
+** the manual includes a title page and a table-of-contents when printed
+
+** the test suite can be run with "make check" from the top-level
+   directory
+
+** configure now accepts the --enable-maintainer-mode option
+
+** gettext functionality is now only available externally
+
 ** the constant FLEX_BETA is defined if flex is a beta release
 
 ** the script create-test was not included in the distribution and it
