@@ -2,12 +2,11 @@
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Alexandre Folle de Menezes <afmenez@terra.com.br>, 2002.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.19\n"
 "POT-Creation-Date: 2002-09-05 12:07-0400\n"
-"PO-Revision-Date: 2002-11-25 23:45-0300\n"
+"PO-Revision-Date: 2002-11-29 04:15-0300\n"
 "Last-Translator: Alexandre Folle de Menezes <afmenez@terra.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
 "MIME-Version: 1.0\n"
@@ -17,29 +16,31 @@ msgstr ""
 #: dfa.c:60
 #, c-format
 msgid "State #%d is non-accepting -\n"
-msgstr ""
+msgstr "O estado #%d é não-aceita -\n"
 
 #: dfa.c:123
 msgid "dangerous trailing context"
-msgstr ""
+msgstr "texto final perigoso"
 
 #: dfa.c:165
 msgid " associated rule line numbers:"
-msgstr ""
+msgstr " números de linha de regras associadas:"
 
 #: dfa.c:201
 msgid " out-transitions: "
-msgstr ""
+msgstr " transações de saída: "
 
 #: dfa.c:209
 msgid ""
 "\n"
 " jam-transitions: EOF "
 msgstr ""
+"\n"
+" transições presas: Fim de Arquivo "
 
 #: dfa.c:340
 msgid "consistency check failed in epsclosure()"
-msgstr ""
+msgstr "verificação de consistência falhou em epsclosure()"
 
 #: dfa.c:428
 msgid ""
@@ -48,27 +49,31 @@ msgid ""
 "DFA Dump:\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Despejo DFA:\n"
+"\n"
 
 #: dfa.c:589
 msgid "could not create unique end-of-buffer state"
-msgstr ""
+msgstr "impossível criar um estadp único de final de buffer"
 
 #: dfa.c:610
 #, c-format
 msgid "state # %d:\n"
-msgstr ""
+msgstr "estado # %d:\n"
 
 #: dfa.c:783
 msgid "Could not write yynxt_tbl[][]"
-msgstr ""
+msgstr "Impossível escrever yynxt_tbl[][]"
 
 #: dfa.c:1006
 msgid "consistency check failed in symfollowset"
-msgstr ""
+msgstr "verificação de consistência falhou em symfollowset"
 
 #: dfa.c:1054
 msgid "bad transition character detected in sympartition()"
-msgstr ""
+msgstr "caractere de transição inválido detectado em sympartition()"
 
 #: gen.c:424 gen.c:463
 msgid ""
@@ -77,11 +82,15 @@ msgid ""
 "Equivalence Classes:\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Classes de Equivalência:\n"
+"\n"
 
 #: gen.c:647 gen.c:673 gen.c:1158
 #, c-format
 msgid "state # %d accepts: [%d]\n"
-msgstr ""
+msgstr "estado # %d aceita: [%d]\n"
 
 #: gen.c:1066
 #, c-format
@@ -136,281 +145,281 @@ msgstr "Impossível escrever yynultrans_tbl"
 
 #: main.c:164
 msgid "rule cannot be matched"
-msgstr ""
+msgstr "aplicação da regra não gerou nenhum resultado"
 
 #: main.c:169
 msgid "-s option given but default rule can be matched"
-msgstr ""
+msgstr "a opção -s foi fornecida, mas a regra padrão pode ser aplicada"
 
 #: main.c:205
 msgid "Can't use -+ with -l option"
-msgstr ""
+msgstr "Impossível usar -+ com a opção -l"
 
 #: main.c:208
 msgid "Can't use -f or -F with -l option"
-msgstr ""
+msgstr "Impossível usar -f ou -F  com a opção -l"
 
 #: main.c:212
 msgid "Can't use -R or -Rb with -l option"
-msgstr ""
+msgstr "Impossível usar -R ou -Rb com a opção -l"
 
 #: main.c:227
 msgid "Can't specify header option if writing to stdout."
-msgstr ""
+msgstr "Impossível especificar a opção de cabeçalho se escrevendo em stdout."
 
 #: main.c:253
 msgid "-Cf/-CF and -Cm don't make sense together"
-msgstr ""
+msgstr "-Cf/-CF e -Cm não fazem sentido juntos"
 
 #: main.c:256
 msgid "-Cf/-CF and -I are incompatible"
-msgstr ""
+msgstr "-Cf/-CF e -I são incompatíveis"
 
 #: main.c:260
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
-msgstr ""
+msgstr "-Cf/-CF são incompatíveis com o modo de compatibilidade lex"
 
 #: main.c:265
 msgid "-Cf and -CF are mutually exclusive"
-msgstr ""
+msgstr "-Cf e -CF são mutuamente exclusivos"
 
 #: main.c:269
 msgid "Can't use -+ with -CF option"
-msgstr ""
+msgstr "Impossível usar -+ com a opção -CF"
 
 #: main.c:272
 #, c-format
 msgid "%array incompatible with -+ option"
-msgstr ""
+msgstr "%array é incompatível com a opção -+"
 
 #: main.c:277
 msgid "Options -+ and -R are mutually exclusive."
-msgstr ""
+msgstr "As opções -+ e -R são mutuamente exclusivas."
 
 #: main.c:323 main.c:343 main.c:556
 #, c-format
 msgid "could not create %s"
-msgstr ""
+msgstr "impossível criar %s"
 
 #: main.c:357
 msgid "could not write tables header"
-msgstr ""
+msgstr "impossível escrever o cabeçalho das tabelas"
 
 #: main.c:361
 #, c-format
 msgid "can't open skeleton file %s"
-msgstr ""
+msgstr "impossível abrir o arquivo esqueleto %s"
 
 #: main.c:523
 #, c-format
 msgid "input error reading skeleton file %s"
-msgstr ""
+msgstr "erro lendo o arquivo esqueleto %s"
 
 #: main.c:527
 #, c-format
 msgid "error closing skeleton file %s"
-msgstr ""
+msgstr "erro fechando o arquivo esqueleto %s"
 
 #: main.c:769
 #, c-format
 msgid "error creating header file %s"
-msgstr ""
+msgstr "erro criando o arquivo cabeçalho %s"
 
 #: main.c:777
 #, c-format
 msgid "error writing output file %s"
-msgstr ""
+msgstr "erro escrevendo arquivo de saída %s"
 
 #: main.c:781
 #, c-format
 msgid "error closing output file %s"
-msgstr ""
+msgstr "erro fechando arquivo de saída %s"
 
 #: main.c:785
 #, c-format
 msgid "error deleting output file %s"
-msgstr ""
+msgstr "erro removendo arquivo de saída %s"
 
 #: main.c:792
 msgid "No backing up.\n"
-msgstr ""
+msgstr "Impossível restaurar.\n"
 
 #: main.c:796
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
-msgstr ""
+msgstr "%d fazendo cópia de segurança de estados (não-aceita).\n"
 
 #: main.c:800
 msgid "Compressed tables always back up.\n"
-msgstr ""
+msgstr "Tabelas compactadas sempre têm cópias de segurança.\n"
 
 #: main.c:803
 #, c-format
 msgid "error writing backup file %s"
-msgstr ""
+msgstr "erro escrevendo cópia de segurança %s"
 
 #: main.c:807
 #, c-format
 msgid "error closing backup file %s"
-msgstr ""
+msgstr "erro fechando cópia de segurança %s"
 
 #: main.c:812
 #, c-format
 msgid "%s version %s usage statistics:\n"
-msgstr ""
+msgstr "%s versão %s estatísticas de uso:\n"
 
 #: main.c:815
 msgid "  scanner options: -"
-msgstr ""
+msgstr "  opções de scanner: -"
 
 #: main.c:894
 #, c-format
 msgid "  %d/%d NFA states\n"
-msgstr ""
+msgstr "  %d/%d estados NFA\n"
 
 #: main.c:896
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
-msgstr ""
+msgstr "  %d/%d estados DFA (%d palavras)\n"
 
 #: main.c:898
 #, c-format
 msgid "  %d rules\n"
-msgstr ""
+msgstr "  %d regras\n"
 
 #: main.c:903
 msgid "  No backing up\n"
-msgstr ""
+msgstr "  Sem cópia de segurança\n"
 
 #: main.c:907
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
-msgstr ""
+msgstr "  %d fazendo cópia de segurança de estados (não-aceita)\n"
 
 #: main.c:912
 msgid "  Compressed tables always back-up\n"
-msgstr ""
+msgstr "  Tabelas compactadas sempre têm cópias de segurança\n"
 
 #: main.c:916
 msgid "  Beginning-of-line patterns used\n"
-msgstr ""
+msgstr "  Padrões de início-de-linha usados\n"
 
 #: main.c:918
 #, c-format
 msgid "  %d/%d start conditions\n"
-msgstr ""
+msgstr "  %d/%d condições de início\n"
 
 #: main.c:922
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
-msgstr ""
+msgstr "  %d estados epsilon, %d estados epsilon duplo\n"
 
 #: main.c:926
 msgid "  no character classes\n"
-msgstr ""
+msgstr "  nenhuma classe de caracteres\n"
 
 #: main.c:930
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-msgstr ""
+msgstr "  %d/%d classes de caracters precisaram de %d/%d palavras de armazenamento, %d reusadas\n"
 
 #: main.c:935
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
-msgstr ""
+msgstr "  %d pares estado/próximoestado criados\n"
 
 #: main.c:938
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
-msgstr ""
+msgstr "  %d/%d transições únicas/duplicadas\n"
 
 #: main.c:943
 #, c-format
 msgid "  %d table entries\n"
-msgstr ""
+msgstr "  %d entradas de tabela\n"
 
 #: main.c:951
 #, c-format
 msgid "  %d/%d base-def entries created\n"
-msgstr ""
+msgstr "  %d/%d entradas base-def criadas\n"
 
 #: main.c:955
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
-msgstr ""
+msgstr "  %d/%d (pico %d) entradas nxt-chk criadas\n"
 
 #: main.c:959
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
-msgstr ""
+msgstr "  %d/%d (pico %d) modelos de entradas nxt-chk criadas\n"
 
 #: main.c:963
 #, c-format
 msgid "  %d empty table entries\n"
-msgstr ""
+msgstr "  %d entradas vazias na tabela\n"
 
 #: main.c:965
 #, c-format
 msgid "  %d protos created\n"
-msgstr ""
+msgstr "  %d protos criados\n"
 
 #: main.c:968
 #, c-format
 msgid "  %d templates created, %d uses\n"
-msgstr ""
+msgstr "  %d modelos criados, %d usos\n"
 
 #: main.c:976
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
-msgstr ""
+msgstr "  %d/%d classes de equivalência criadas\n"
 
 #: main.c:984
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
-msgstr ""
+msgstr "  %d/%d classes de meta-equivalência criadas\n"
 
 #: main.c:990
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
-msgstr ""
+msgstr "  %d (%d salvas) colisões de hash, %d DFAs iguais\n"
 
 #: main.c:992
 #, c-format
 msgid "  %d sets of reallocations needed\n"
-msgstr ""
+msgstr "  %d conjuntos de realocação necessários\n"
 
 #: main.c:994
 #, c-format
 msgid "  %d total table entries needed\n"
-msgstr ""
+msgstr "  %d total de entradas de tabela necessárias\n"
 
 #: main.c:1056
 msgid "Internal error. flexopts are malformed.\n"
-msgstr ""
+msgstr "Erro interno. flexopts estão malformados.\n"
 
 #: main.c:1066
 #, c-format
 msgid "Try `%s --help' for more information.\n"
-msgstr ""
+msgstr "Tente `%s --help' para maiores informações.\n"
 
 #: main.c:1123
 #, c-format
 msgid "unknown -C option '%c'"
-msgstr ""
+msgstr "opção -C '%c' desconecida"
 
 #: main.c:1207
 #, c-format
 msgid "unknown -R option '%c'"
-msgstr ""
+msgstr "opção -R '%c' desconecida"
 
 #: main.c:1251
 #, c-format
 msgid "%s %s\n"
-msgstr ""
+msgstr "%s %s\n"
 
 #: main.c:1514
 msgid "fatal parse error"
-msgstr ""
+msgstr "erro fatal de análise"
 
 #: main.c:1546
 #, c-format
@@ -467,7 +476,7 @@ msgstr ""
 #: main.c:1840
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
-msgstr ""
+msgstr "Uso: %s [OPÇÕES] [ARQUIVO]...\n"
 
 #: main.c:1843
 #, c-format
@@ -578,15 +587,18 @@ msgid ""
 "\n"
 "********** beginning dump of nfa with start state %d\n"
 msgstr ""
+"\n"
+"\n"
+"********** iniciando despejo de nfa com estado inicial %d\n"
 
 #: nfa.c:115
 #, c-format
 msgid "state # %4d\t"
-msgstr ""
+msgstr "estado # %4d\t"
 
 #: nfa.c:130
 msgid "********** end of dump\n"
-msgstr ""
+msgstr "********** final do despejo\n"
 
 #: nfa.c:174
 msgid "empty machine in dupmachine()"
@@ -613,7 +625,7 @@ msgstr ""
 #: nfa.c:703
 #, c-format
 msgid "too many rules (> %d)!"
-msgstr ""
+msgstr "muitas regras (> %d)!"
 
 #: parse.y:175
 msgid "unknown error processing section 1"
@@ -633,24 +645,24 @@ msgstr ""
 
 #: parse.y:566 parse.y:576 parse.y:649 parse.y:659
 msgid "bad iteration values"
-msgstr ""
+msgstr "valores de iteração inválidos"
 
 #: parse.y:594 parse.y:612 parse.y:677 parse.y:695
 msgid "iteration value must be positive"
-msgstr ""
+msgstr "valor de iteração deve ser positivo"
 
 #: parse.y:798
 msgid "negative range in character class"
-msgstr ""
+msgstr "faixa negativa na classe de caracteres"
 
 #: scan.l:61 scan.l:162 scan.l:219 scan.l:352 scan.l:491 scan.l:541
 msgid "Input line too long\n"
-msgstr ""
+msgstr "Linha de entrada muito longa\n"
 
 #: scan.l:153
 #, no-c-format
 msgid "unrecognized '%' directive"
-msgstr ""
+msgstr "diretiva '%' não reconhecida"
 
 #: scan.l:236
 msgid "incomplete name definition"
@@ -659,30 +671,30 @@ msgstr "definição de nome incompleta"
 #: scan.l:360
 #, c-format
 msgid "unrecognized %%option: %s"
-msgstr ""
+msgstr "%%opção não reconhecida: %s"
 
 #: scan.l:501 scan.l:620
 msgid "bad character class"
-msgstr ""
+msgstr "classe de caractere inválida"
 
 #: scan.l:548
 #, c-format
 msgid "undefined definition {%s}"
-msgstr ""
+msgstr "definição indefinida {%s}"
 
 #: scan.l:588
 #, c-format
 msgid "bad <start condition>: %s"
-msgstr ""
+msgstr "<condição de início> inválida: %s"
 
 #: scan.l:601
 msgid "missing quote"
-msgstr "faltou \""
+msgstr "faltou aspa"
 
 #: scan.l:641
 #, c-format
 msgid "bad character class expression: %s"
-msgstr ""
+msgstr "expressão de classe de caractere inválida: %s"
 
 #: scan.l:663
 msgid "bad character inside {}'s"
@@ -694,7 +706,7 @@ msgstr "faltou }"
 
 #: scan.l:742
 msgid "EOF encountered inside an action"
-msgstr ""
+msgstr "Fim de Arquivo encontrado dentro de uma ação"
 
 #: scan.l:762
 #, c-format
@@ -738,7 +750,7 @@ msgstr "Erro desconhecido=(%d)\n"
 
 #: sym.c:100
 msgid "symbol table memory allocation failed"
-msgstr ""
+msgstr "alocação da memória da tabela de símbolos falhou"
 
 #: sym.c:203
 msgid "name defined twice"
@@ -747,7 +759,7 @@ msgstr "nome definido duas vezes"
 #: sym.c:257
 #, c-format
 msgid "start condition %s declared twice"
-msgstr ""
+msgstr "condição de início %s declarada duas vezes"
 
 #: yylex.c:56
 msgid "premature EOF"
