@@ -54,7 +54,7 @@ extern void argv_fixup PROTO((int *, char ***));
 
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
-int interactive, caseins, lex_compat, useecs, fulltbl, usemecs;
+int interactive, caseins, lex_compat, do_yylineno, useecs, fulltbl, usemecs;
 int fullspd, gen_line_dirs, performance_report, backing_up_report;
 int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap, csize;
 int yymore_used, reject, real_reject, continued_action, in_rule;
@@ -190,8 +190,13 @@ void check_options()
 		yymore_really_used = reject_really_used = true;
 
 		yytext_is_array = true;
+		do_yylineno = true;
 		use_read = false;
 		}
+
+	if ( do_yylineno )
+		/* This should really be "maintain_backup_tables = true" */
+		reject_really_used = true;
 
 	if ( csize == unspecified )
 		{
@@ -209,14 +214,26 @@ void check_options()
 			interactive = true;
 		}
 
-	if ( (fulltbl || fullspd) && usemecs )
-		flexerror( _( "-Cf/-CF and -Cm don't make sense together" ) );
+	if ( fulltbl || fullspd )
+		{
+		if ( usemecs )
+			flexerror(
+			_( "-Cf/-CF and -Cm don't make sense together" ) );
 
-	if ( (fulltbl || fullspd) && interactive )
-		flexerror( _( "-Cf/-CF and -I are incompatible" ) );
+		if ( interactive )
+			flexerror( _( "-Cf/-CF and -I are incompatible" ) );
 
-	if ( fulltbl && fullspd )
-		flexerror( _( "-Cf and -CF are mutually exclusive" ) );
+		if ( lex_compat )
+			flexerror(
+		_( "-Cf/-CF are incompatible with lex-compatibility mode" ) );
+
+		if ( do_yylineno )
+			flexerror(
+			_( "-Cf/-CF and %option yylineno are incompatible" ) );
+
+		if ( fulltbl && fullspd )
+			flexerror( _( "-Cf and -CF are mutually exclusive" ) );
+		}
 
 	if ( C_plus_plus && fullspd )
 		flexerror( _( "Can't use -+ with -CF option" ) );
@@ -570,7 +587,7 @@ char **argv;
 	printstats = syntaxerror = trace = spprdflt = caseins = false;
 	lex_compat = C_plus_plus = backing_up_report = ddebug = fulltbl = false;
 	fullspd = long_align = nowarn = yymore_used = continued_action = false;
-	yytext_is_array = in_rule = reject = false;
+	do_yylineno = yytext_is_array = in_rule = reject = false;
 	yymore_really_used = reject_really_used = unspecified;
 	interactive = csize = unspecified;
 	do_yywrap = gen_line_dirs = usemecs = useecs = do_stdinit = true;
@@ -871,6 +888,12 @@ _( "-l AT&T lex compatibility option entails a large performance penalty\n" ) );
 _( " and may be the actual source of other reported performance penalties\n" ) );
 			}
 
+		else if ( do_yylineno )
+			{
+			fprintf( stderr,
+	_( "%%option yylineno entails a large performance penalty\n" ) );
+			}
+
 		if ( performance_report > 1 )
 			{
 			if ( interactive )
@@ -902,6 +925,9 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 		if ( real_reject )
 			flexerror(
 				_( "REJECT cannot be used with -f or -F" ) );
+		else if ( do_yylineno )
+			flexerror(
+			_( "%option yylineno cannot be used with -f or -F" ) );
 		else
 			flexerror(
 	_( "variable trailing context rules cannot be used with -f or -F" ) );
@@ -960,8 +986,10 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 		outn( "\n#define FLEX_DEBUG" );
 
 	if ( lex_compat )
-		{
 		outn( "#define YY_FLEX_LEX_COMPAT" );
+
+	if ( do_yylineno && ! C_plus_plus )
+		{
 		outn( "extern int yylineno;" );
 		outn( "int yylineno = 1;" );
 		}
@@ -976,6 +1004,7 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 			outn( "\t{" );
 			outn(
 "\tLexerError( \"yyFlexLexer::yylex invoked but %option yyclass used\" );" );
+			outn( "\treturn 0;" );
 			outn( "\t}" );
 	
 			out_str( "\n#define YY_DECL int %s::yylex()\n",

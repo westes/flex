@@ -260,6 +260,7 @@ LEXOPT		[aceknopr]
 	unput		ACTION_IFDEF("YY_NO_UNPUT", ! option_sense);
 	verbose		printstats = option_sense;
 	warn		nowarn = ! option_sense;
+	yylineno	do_yylineno = option_sense;
 	yymore		yymore_really_used = option_sense;
 	yywrap		do_yywrap = option_sense;
 
