@@ -84,7 +84,7 @@ int size, element_size;
 /* all_lower - true if a string is all lower-case */
 
 int all_lower( str )
-register Char *str;
+register char *str;
 	{
 	while ( *str )
 		{
@@ -100,7 +100,7 @@ register Char *str;
 /* all_upper - true if a string is all upper-case */
 
 int all_upper( str )
-register Char *str;
+register char *str;
 	{
 	while ( *str )
 		{
