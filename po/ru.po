@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.8\n"
 "POT-Creation-Date: 2002-06-19 09:43-0400\n"
-"PO-Revision-Date: 2002-07-06 12:52+0400\n"
+"PO-Revision-Date: 2002-07-20 13:29+0400\n"
 "Last-Translator: Dmitry S. Sivachenko <dima@Chg.RU>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -655,9 +655,8 @@ msgid "unknown error processing section 1"
 msgstr "неизвестная ошибка при обработке раздела 1"
 
 #: parse.y:199 parse.y:362
-#, fuzzy
 msgid "bad start condition list"
-msgstr "неверное <начальное условие>: %s"
+msgstr "неверный список начальных условий"
 
 #: parse.y:326
 msgid "unrecognized rule"
