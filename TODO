@@ -56,8 +56,6 @@
 
 ** Lookup table by name
 
-** rename _fwrite t _write since writer was created
-
 ** create user API for tables deserialization
 
 ** document API and --tables-* options

@@ -52,10 +52,10 @@
  */
 #define TFLAGS_CLRDATA(flg) ((flg) & ~(YYTD_DATA8 | YYTD_DATA16 | YYTD_DATA32))
 
-int     yytbl_fwrite32 (struct yytbl_writer *wr, uint32_t v);
-int     yytbl_fwrite16 (struct yytbl_writer *wr, uint16_t v);
-int     yytbl_fwrite8 (struct yytbl_writer *wr, uint8_t v);
-int     yytbl_fwriten (struct yytbl_writer *wr, void *v, int32_t len);
+int     yytbl_write32 (struct yytbl_writer *wr, uint32_t v);
+int     yytbl_write16 (struct yytbl_writer *wr, uint16_t v);
+int     yytbl_write8 (struct yytbl_writer *wr, uint8_t v);
+int     yytbl_writen (struct yytbl_writer *wr, void *v, int32_t len);
 static int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i);
 
 
@@ -119,13 +119,13 @@ int yytbl_data_destroy (struct yytbl_data *td)
 }
 
 /** Write enough padding to bring the file pointer to a 64-bit boundary. */
-static int yytbl_fwrite_pad64 (struct yytbl_writer *wr)
+static int yytbl_write_pad64 (struct yytbl_writer *wr)
 {
 	int     pad, bwritten = 0;
 
 	pad = yypad64 (wr->total_written);
 	while (pad-- > 0)
-		if (yytbl_fwrite8 (wr, 0) < 0)
+		if (yytbl_write8 (wr, 0) < 0)
 			return -1;
 		else
 			bwritten++;
@@ -142,31 +142,31 @@ int yytbl_hdr_fwrite (struct yytbl_writer *wr, const struct yytbl_hdr *th)
 	size_t  sz, rv;
 	int     bwritten = 0;
 
-	if (yytbl_fwrite32 (wr, th->th_magic) < 0
-	    || yytbl_fwrite32 (wr, th->th_hsize) < 0)
+	if (yytbl_write32 (wr, th->th_magic) < 0
+	    || yytbl_write32 (wr, th->th_hsize) < 0)
 		flex_die (_("th_magic|th_hsize write32 failed"));
 	bwritten += 8;
 
 	if (fgetpos (wr->out, &(wr->th_ssize_pos)) != 0)
 		flex_die (_("fgetpos failed"));
 
-	if (yytbl_fwrite32 (wr, th->th_ssize) < 0
-	    || yytbl_fwrite16 (wr, th->th_flags) < 0)
+	if (yytbl_write32 (wr, th->th_ssize) < 0
+	    || yytbl_write16 (wr, th->th_flags) < 0)
 		flex_die (_("th_ssize|th_flags write failed"));
 	bwritten += 6;
 
 	sz = strlen (th->th_version) + 1;
-	if ((rv = yytbl_fwriten (wr, th->th_version, sz)) != sz)
+	if ((rv = yytbl_writen (wr, th->th_version, sz)) != sz)
 		flex_die (_("th_version writen failed"));
 	bwritten += rv;
 
 	sz = strlen (th->th_name) + 1;
-	if ((rv = yytbl_fwriten (wr, th->th_name, sz)) != sz)
+	if ((rv = yytbl_writen (wr, th->th_name, sz)) != sz)
 		flex_die (_("th_name writen failed"));
 	bwritten += rv;
 
 	/* add padding */
-	if ((rv = yytbl_fwrite_pad64 (wr)) < 0)
+	if ((rv = yytbl_write_pad64 (wr)) < 0)
 		flex_die (_("pad64 failed"));
 	bwritten += rv;
 
@@ -190,19 +190,19 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 	int32_t i, total_len;
 	fpos_t  pos;
 
-	if ((rv = yytbl_fwrite16 (wr, td->td_id)) < 0)
+	if ((rv = yytbl_write16 (wr, td->td_id)) < 0)
 		return -1;
 	bwritten += rv;
 
-	if ((rv = yytbl_fwrite16 (wr, td->td_flags)) < 0)
+	if ((rv = yytbl_write16 (wr, td->td_flags)) < 0)
 		return -1;
 	bwritten += rv;
 
-	if ((rv = yytbl_fwrite32 (wr, td->td_hilen)) < 0)
+	if ((rv = yytbl_write32 (wr, td->td_hilen)) < 0)
 		return -1;
 	bwritten += rv;
 
-	if ((rv = yytbl_fwrite32 (wr, td->td_lolen)) < 0)
+	if ((rv = yytbl_write32 (wr, td->td_lolen)) < 0)
 		return -1;
 	bwritten += rv;
 
@@ -210,13 +210,13 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 	for (i = 0; i < total_len; i++) {
 		switch (YYTDFLAGS2BYTES (td->td_flags)) {
 		case sizeof (int8_t):
-			rv = yytbl_fwrite8 (wr, yytbl_data_geti (td, i));
+			rv = yytbl_write8 (wr, yytbl_data_geti (td, i));
 			break;
 		case sizeof (int16_t):
-			rv = yytbl_fwrite16 (wr, yytbl_data_geti (td, i));
+			rv = yytbl_write16 (wr, yytbl_data_geti (td, i));
 			break;
 		case sizeof (int32_t):
-			rv = yytbl_fwrite32 (wr, yytbl_data_geti (td, i));
+			rv = yytbl_write32 (wr, yytbl_data_geti (td, i));
 			break;
 		default:
 			flex_die (_("invalid td_flags detected"));
@@ -235,7 +235,7 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 	}
 
 	/* add padding */
-	if ((rv = yytbl_fwrite_pad64 (wr)) < 0) {
+	if ((rv = yytbl_write_pad64 (wr)) < 0) {
 		flex_die (_("pad64 failed"));
 		return -1;
 	}
@@ -244,7 +244,7 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 	/* Now go back and update the th_hsize member */
 	if (fgetpos (wr->out, &pos) != 0
 	    || fsetpos (wr->out, &(wr->th_ssize_pos)) != 0
-	    || yytbl_fwrite32 (wr, wr->total_written) < 0
+	    || yytbl_write32 (wr, wr->total_written) < 0
 	    || fsetpos (wr->out, &pos)) {
 		flex_die (_("get|set|fwrite32 failed"));
 		return -1;
@@ -261,7 +261,7 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
  *  @param  len  number of bytes
  *  @return  -1 on error. number of bytes written on success.
  */
-int yytbl_fwriten (struct yytbl_writer *wr, void *v, int32_t len)
+int yytbl_writen (struct yytbl_writer *wr, void *v, int32_t len)
 {
 	size_t  rv;
 
@@ -277,7 +277,7 @@ int yytbl_fwriten (struct yytbl_writer *wr, void *v, int32_t len)
  *  @param  v    a dword in host byte order
  *  @return  -1 on error. number of bytes written on success.
  */
-int yytbl_fwrite32 (struct yytbl_writer *wr, uint32_t v)
+int yytbl_write32 (struct yytbl_writer *wr, uint32_t v)
 {
 	uint32_t vnet;
 	size_t  bytes, rv;
@@ -296,7 +296,7 @@ int yytbl_fwrite32 (struct yytbl_writer *wr, uint32_t v)
  *  @param  v    a word in host byte order
  *  @return  -1 on error. number of bytes written on success.
  */
-int yytbl_fwrite16 (struct yytbl_writer *wr, uint16_t v)
+int yytbl_write16 (struct yytbl_writer *wr, uint16_t v)
 {
 	uint16_t vnet;
 	size_t  bytes, rv;
@@ -315,7 +315,7 @@ int yytbl_fwrite16 (struct yytbl_writer *wr, uint16_t v)
  *  @param  v    the value to be written
  *  @return  -1 on error. number of bytes written on success.
  */
-int yytbl_fwrite8 (struct yytbl_writer *wr, uint8_t v)
+int yytbl_write8 (struct yytbl_writer *wr, uint8_t v)
 {
 	size_t  bytes, rv;
 
