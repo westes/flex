@@ -8,9 +8,27 @@
 
 #include <stdio.h>
 
+#ifdef __STDC__
+#include <stdlib.h>
+#define YY_USE_PROTOS
+#define YY_USE_CONST
+#endif
+
+
+/* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
+#ifdef c_plusplus
+#ifndef __cplusplus
+#define __cplusplus
+#endif
+#endif
+
 
 #ifdef __cplusplus
+
+#ifndef __STDC__
 #include <stdlib.h>
+#endif
+
 #include <osfcn.h>
 
 /* use prototypes in function declarations */
@@ -21,10 +39,6 @@
 
 #endif
 
-#ifdef __STDC__
-#define YY_USE_PROTOS
-#define YY_USE_CONST
-#endif
 
 #ifdef __TURBOC__
 #define YY_USE_CONST
@@ -35,10 +49,9 @@
 #define const
 #endif
 
+
 #ifdef YY_USE_PROTOS
 #define YY_PROTO(proto) proto
-char *malloc( unsigned size );
-int free( char * );
 #else
 #define YY_PROTO(proto) ()
 /* there's no standard place to get these definitions */
@@ -46,6 +59,7 @@ char *malloc();
 int free();
 int read();
 #endif
+
 
 /* amount of stuff to slurp up with each read */
 #ifndef YY_READ_BUF_SIZE
@@ -78,12 +92,29 @@ int read();
 #define yyterminate() return ( YY_NULL )
 
 /* report a fatal error */
+
+/* The funky do-while is used to turn this macro definition into
+ * a single C statement (which needs a semi-colon terminator).
+ * This avoids problems with code like:
+ *
+ * 	if ( something_happens )
+ *		YY_FATAL_ERROR( "oops, the something happened" );
+ *	else
+ *		everything_okay();
+ *
+ * Prior to using the do-while the compiler would get upset at the
+ * "else" because it interpreted the "if" statement as being all
+ * done when it reached the ';' after the YY_FATAL_ERROR() call.
+ */
+
 #define YY_FATAL_ERROR(msg) \
-	{ \
-	(void) fputs( msg, stderr ); \
-	(void) putc( '\n', stderr ); \
-	exit( 1 ); \
-	}
+	do \
+		{ \
+		(void) fputs( msg, stderr ); \
+		(void) putc( '\n', stderr ); \
+		exit( 1 ); \
+		} \
+	while ( 0 )
 
 /* default yywrap function - always treat EOF as an EOF */
 #define yywrap() 1
@@ -98,10 +129,13 @@ int read();
 #define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
 
 /* special action meaning "start processing a new file" */
-#define YY_NEW_FILE { \
-	yy_init_buffer( yy_current_buffer, yyin ); \
-	yy_load_buffer_state(); \
-	}
+#define YY_NEW_FILE \
+	do \
+		{ \
+		yy_init_buffer( yy_current_buffer, yyin ); \
+		yy_load_buffer_state(); \
+		} \
+	while ( 0 )
 
 /* default declaration of generated scanner - a define so the user can
  * easily add parameters
@@ -137,12 +171,14 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
 /* return all but the first 'n' matched characters back to the input stream */
 #define yyless(n) \
-	{ \
-	/* undo effects of setting up yytext */ \
-	*yy_cp = yy_hold_char; \
-	yy_c_buf_p = yy_cp = yy_bp + n; \
-	YY_DO_BEFORE_ACTION; /* set up yytext again */ \
-	}
+	do \
+		{ \
+		/* undo effects of setting up yytext */ \
+		*yy_cp = yy_hold_char; \
+		yy_c_buf_p = yy_cp = yy_bp + n; \
+		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
+		} \
+	while ( 0 )
 
 #define unput(c) yyunput( c, yytext )
 
@@ -189,6 +225,10 @@ static int yy_n_chars;		/* number of characters read into yy_ch_buf */
 #define YY_USER_ACTION
 #endif
 
+#ifndef YY_USER_INIT
+#define YY_USER_INIT
+#endif
+
 extern YY_CHAR *yytext;
 extern int yyleng;
 extern FILE *yyin, *yyout;
@@ -208,9 +248,6 @@ static YY_CHAR *yy_c_buf_p = (YY_CHAR *) 0;
 static int yy_init = 1;		/* whether we need to initialize */
 static int yy_start = 0;	/* start state number */
 
-static yy_state_type yy_last_accepting_state;
-static YY_CHAR *yy_last_accepting_cpos;
-
 /* flag which is used to allow yywrap()'s to do buffer switches
  * instead of setting up a fresh yyin.  A bit of a hack ...
  */
@@ -226,6 +263,8 @@ void yy_load_buffer_state YY_PROTO(( void ));
 YY_BUFFER_STATE yy_create_buffer YY_PROTO(( FILE *file, int size ));
 void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));
 void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
+
+#define yy_new_buffer yy_create_buffer
 
 #ifdef __cplusplus
 static int yyinput YY_PROTO(( void ));
@@ -243,6 +282,8 @@ YY_DECL
 
     if ( yy_init )
 	{
+	YY_USER_INIT;
+
 	if ( ! yy_start )
 	    yy_start = 1;	/* first start state */
 
