@@ -49,7 +49,6 @@ RANLIB = @RANLIB@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
-COMPRESS = compress
 
 # You normally do not need to modify anything below this point.
 # ------------------------------------------------------------
@@ -225,7 +224,8 @@ dist2:
 	@chmod 444 $(DIST_NAME)/initscan.c
 	@chmod +w $(DIST_NAME)/Makefile.in
 	tar chf $(DIST_NAME).tar $(DIST_NAME)
-	$(COMPRESS) $(DIST_NAME).tar
+	compress <$(DIST_NAME).tar >$(DIST_NAME).tar.Z
+	gzip <$(DIST_NAME).tar >$(DIST_NAME).tar.gz
 
 Makefile: Makefile.in config.status
 	$(SHELL) config.status
