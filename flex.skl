@@ -53,12 +53,6 @@ class istream;
 #define YY_USE_PROTOS
 #endif
 
-/* Take care of end-of-line incompatibilities.  We do this by defining
- * YY_UNIX_NEWLINE iff '\n' is '\012'.
- */
-#if '\n' == '\012'
-#define YY_UNIX_NEWLINE
-#endif
 
 #ifndef YY_USE_CONST
 #ifndef const
@@ -80,17 +74,8 @@ class istream;
  * integer for use as an array index.  If the signed char is negative,
  * we want to instead treat it as an 8-bit unsigned char, hence the
  * double cast.
- *
- * It's here that we take care of systems on which '\n' is some value
- * other than '\012'.
  */
-#ifdef YY_UNIX_NEWLINE
 #define YY_SC_TO_UI(c) ((unsigned int) (unsigned char) c)
-#else
-#define YY_SC_TO_UI(c) \
-	(c == '\n' ? (unsigned int) '\012' : \
-			((unsigned int) (unsigned char) c))
-#endif
 
 /* Enter a start condition.  This macro really ought to take a parameter,
  * but we do it the disgusting crufty way forced on us by the ()-less
