@@ -751,15 +751,15 @@ char **argv;
 
 void readin()
 	{
-	skelout();
-
-	if ( ddebug )
-		puts( "#define FLEX_DEBUG" );
-
 	if ( csize == 256 )
 		puts( "typedef unsigned char YY_CHAR;" );
 	else
 		puts( "typedef char YY_CHAR;" );
+
+	skelout();
+
+	if ( ddebug )
+		puts( "#define FLEX_DEBUG" );
 
 	line_directive_out( stdout );
 
