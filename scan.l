@@ -60,7 +60,7 @@
 %}
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
-%x FIRSTCCL CCL ACTION RECOVER BRACEERROR C_COMMENT ACTION_COMMENT
+%x FIRSTCCL CCL ACTION RECOVER BRACEERROR COMMENT
 %x ACTION_STRING PERCENT_BRACE_ACTION USED_LIST CODEBLOCK_2
 
 WS		[ \t]+
@@ -88,7 +88,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
 
 ^{WS}			indented_code = true; BEGIN(CODEBLOCK);
-^"/*"			ACTION_ECHO; BEGIN(C_COMMENT);
+^"/*"			ACTION_ECHO; yy_push_state( COMMENT );
 ^"%s"{NAME}?		return SCDECL;
 ^"%x"{NAME}?		return XSCDECL;
 ^"%{".*{NL}		{
@@ -98,7 +98,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 			BEGIN(CODEBLOCK);
 			}
 
-{WS}			return WHITESPACE;
+{WS}			/* discard */
 
 ^"%%".*			{
 			sectnum = 2;
@@ -146,19 +146,16 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 
 {SCNAME}		RETURNNAME;
 ^{OPTWS}{NL}		++linenum; /* allows blank lines in section 1 */
-{OPTWS}{NL}		++linenum; return '\n';
+{OPTWS}{NL}		ACTION_ECHO; ++linenum; /* maybe end of comment line */
 
 
-<C_COMMENT>"*/"		ACTION_ECHO; BEGIN(INITIAL);
-<C_COMMENT>"*/".*{NL}	++linenum; ACTION_ECHO; BEGIN(INITIAL);
-<C_COMMENT>[^*\n]+	ACTION_ECHO;
-<C_COMMENT>"*"		ACTION_ECHO;
-<C_COMMENT>{NL}		++linenum; ACTION_ECHO;
+<COMMENT>"*/"		ACTION_ECHO; yy_pop_state();
+<COMMENT>"*"		ACTION_ECHO;
+<COMMENT>[^*\n]+	ACTION_ECHO;
+<COMMENT>[^*\n]*{NL}	++linenum; ACTION_ECHO;
 
 
 <CODEBLOCK>^"%}".*{NL}	++linenum; BEGIN(INITIAL);
-<CODEBLOCK>"reject"	ACTION_ECHO; CHECK_REJECT(yytext);
-<CODEBLOCK>"yymore"	ACTION_ECHO; CHECK_YYMORE(yytext);
 <CODEBLOCK>{NAME}|{NOT_NAME}|.	ACTION_ECHO;
 <CODEBLOCK>{NL}		{
 			++linenum;
@@ -426,13 +423,13 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 <BRACEERROR>{NL}	synerr( "missing }" ); ++linenum; BEGIN(SECT2);
 
 
-<CODEBLOCK_2>"/*"	ACTION_ECHO; BEGIN(ACTION_COMMENT);
+<ACTION,CODEBLOCK_2>"/*"	ACTION_ECHO; yy_push_state( COMMENT );
 <PERCENT_BRACE_ACTION,CODEBLOCK_2>{OPTWS}"%}".*		bracelevel = 0;
-<PERCENT_BRACE_ACTION,CODEBLOCK_2,ACTION>"reject"	{
+<PERCENT_BRACE_ACTION,CODEBLOCK,CODEBLOCK_2,ACTION>"reject"	{
 			ACTION_ECHO;
 			CHECK_REJECT(yytext);
 			}
-<PERCENT_BRACE_ACTION,CODEBLOCK_2,ACTION>"yymore"	{
+<PERCENT_BRACE_ACTION,CODEBLOCK,CODEBLOCK_2,ACTION>"yymore"	{
 			ACTION_ECHO;
 			CHECK_YYMORE(yytext);
 			}
@@ -457,7 +454,6 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 <ACTION>"}"		ACTION_ECHO; --bracelevel;
 <ACTION>[^a-z_{}"'/\n]+	ACTION_ECHO;
 <ACTION>{NAME}		ACTION_ECHO;
-<ACTION>"/*"		ACTION_ECHO; BEGIN(ACTION_COMMENT);
 <ACTION>"'"([^'\\\n]|\\.)*"'"	ACTION_ECHO; /* character constant */
 <ACTION>\"		ACTION_ECHO; BEGIN(ACTION_STRING);
 <ACTION>{NL}		{
@@ -471,25 +467,13 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 			}
 <ACTION>.		ACTION_ECHO;
 
-<ACTION_COMMENT>"*/"	{
-			ACTION_ECHO;
-			if ( doing_codeblock )
-				BEGIN(CODEBLOCK_2);
-			else
-				BEGIN(ACTION);
-			}
-
-<ACTION_COMMENT>"*"	ACTION_ECHO;
-<ACTION_COMMENT>[^*\n]+	ACTION_ECHO;
-<ACTION_COMMENT>[^*\n]*{NL}	++linenum; ACTION_ECHO;
-
 <ACTION_STRING>[^"\\\n]+	ACTION_ECHO;
 <ACTION_STRING>\\.	ACTION_ECHO;
 <ACTION_STRING>{NL}	++linenum; ACTION_ECHO;
 <ACTION_STRING>\"	ACTION_ECHO; BEGIN(ACTION);
 <ACTION_STRING>.	ACTION_ECHO;
 
-<ACTION,ACTION_COMMENT,ACTION_STRING><<EOF>>	{
+<COMMENT,ACTION,ACTION_STRING><<EOF>>	{
 			synerr( "EOF encountered inside an action" );
 			yyterminate();
 			}
