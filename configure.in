@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl
-AC_INIT(initscan.c)
+AC_INIT(scan.l)
 AC_CONFIG_HEADER(config.h:conf.in)
 
 AC_LN_S
