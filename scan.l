@@ -255,6 +255,7 @@ LEXOPT		[aceknopr]
 	align		long_align = option_sense;
 	always-interactive	{
 			action_define( "YY_ALWAYS_INTERACTIVE", option_sense );
+            interactive = option_sense;
 			}
 	array		yytext_is_array = option_sense;
 	backup		backing_up_report = option_sense;
@@ -287,6 +288,7 @@ LEXOPT		[aceknopr]
 	meta-ecs	usemecs = option_sense;
 	never-interactive	{
 			action_define( "YY_NEVER_INTERACTIVE", option_sense );
+            interactive = !option_sense;
 			}
 	perf-report	performance_report += option_sense ? 1 : -1;
 	pointer		yytext_is_array = ! option_sense;
