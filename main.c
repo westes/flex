@@ -55,7 +55,7 @@ void set_up_initial_allocations PROTO((void));
 int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int interactive, caseins, useecs, fulltbl, usemecs;
 int fullspd, gen_line_dirs, performance_report, backing_up_report;
-int yytext_is_array, csize;
+int C_plus_plus, yytext_is_array, csize;
 int yymore_used, reject, real_reject, continued_action;
 int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum;
@@ -254,6 +254,8 @@ int exit_status;
 
 		fprintf( stderr, "  scanner options: -" );
 
+		if ( C_plus_plus )
+			putc( '+', stderr );
 		if ( backing_up_report )
 			putc( 'b', stderr );
 		if ( ddebug )
@@ -409,7 +411,7 @@ char **argv;
 	char *arg, *prefix, *mktemp();
 
 	printstats = syntaxerror = trace = spprdflt = caseins = false;
-	backing_up_report = ddebug = fulltbl = fullspd = false;
+	C_plus_plus = backing_up_report = ddebug = fulltbl = fullspd = false;
 	nowarn = yymore_used = continued_action = reject = false;
 	yytext_is_array = yymore_really_used = reject_really_used = false;
 	gen_line_dirs = usemecs = useecs = true;
@@ -441,6 +443,10 @@ char **argv;
 		for ( i = 1; arg[i] != '\0'; ++i )
 			switch ( arg[i] )
 				{
+				case '+':
+					C_plus_plus = true;
+					break;
+
 				case 'B':
 					interactive = false;
 					interactive_given = true;
@@ -684,8 +690,10 @@ char **argv;
 		GEN_PREFIX( "restart" );
 		GEN_PREFIX( "text" );
 		GEN_PREFIX( "_flex_debug" );
+		GEN_PREFIX( "FlexLexer" );
 		printf( "\n" );
 		}
+
 
 	lastdfa = lastnfa = 0;
 	num_rules = num_eof_rules = default_rule = 0;
@@ -746,8 +754,46 @@ void readin()
 
 	skelout();
 
+	if ( yytext_is_array )
+		{
+		if ( C_plus_plus )
+			flexerror( "%array and C++ scanners are incompatible" );
+
+		puts( "extern char yytext[];\n" );
+		puts( "#ifndef YYLMAX" );
+		puts( "#define YYLMAX YY_READ_BUF_SIZE" );
+		puts( "#endif YYLMAX\n" );
+		puts( "char yytext[YYLMAX];" );
+		puts( "YY_CHAR *yytext_ptr;" );
+		}
+
+	else
+		{
+		if ( ! C_plus_plus )
+			{
+			puts( "extern YY_CHAR *yytext;" );
+			puts( "YY_CHAR *yytext;" );
+			}
+
+		puts( "#define yytext_ptr yytext" );
+		}
+
+	if ( fullspd )
+		printf(
+		"typedef const struct yy_trans_info *yy_state_type;\n" );
+	else
+		printf( "typedef int yy_state_type;\n" );
+
+	if ( reject )
+		printf( "\n#define YY_USES_REJECT\n" );
+
+	if ( C_plus_plus )
+		printf( "\n#include \"yyflexlexer.h\"\n" );
+
 	if ( ddebug )
-		puts( "#define FLEX_DEBUG" );
+		puts( "\n#define FLEX_DEBUG" );
+
+	skelout();
 
 	line_directive_out( stdout );
 
@@ -768,23 +814,6 @@ void readin()
 
 	if ( useecs )
 		ccl2ecl();
-
-	if ( yytext_is_array )
-		{
-		puts( "extern char yytext[];\n" );
-		puts( "#ifndef YYLMAX" );
-		puts( "#define YYLMAX YY_READ_BUF_SIZE" );
-		puts( "#endif YYLMAX\n" );
-		puts( "char yytext[YYLMAX];" );
-		puts( "YY_CHAR *yytext_ptr;" );
-		}
-
-	else
-		{
-		puts( "extern YY_CHAR *yytext;" );
-		puts( "YY_CHAR *yytext;" );
-		puts( "#define yytext_ptr yytext" );
-		}
 	}
 
 
@@ -850,7 +879,7 @@ void set_up_initial_allocations()
 void usage()
 	{
 	fprintf( stderr,
-	"%s [-bcdfhinpstvwBFILTV78 -C[efmF] -Sskeleton] [filename ...]\n",
+	"%s [-bcdfhinpstvwBFILTV78+ -C[efmF] -Pprefix -Sskeleton] [file ...]\n",
 		program_name );
 
 	fprintf( stderr,
@@ -879,6 +908,7 @@ void usage()
 	fprintf( stderr, "\t-V  report %s version\n", program_name );
 	fprintf( stderr, "\t-7  generate 7-bit scanner\n" );
 	fprintf( stderr, "\t-8  generate 8-bit scanner\n" );
+	fprintf( stderr, "\t-+  generate C++ scanner class\n" );
 	fprintf( stderr,
 	"\t-C  specify degree of table compression (default is -Cem):\n" );
 	fprintf( stderr, "\t\t-Ce  construct equivalence classes\n" );
@@ -887,5 +917,6 @@ void usage()
 	fprintf( stderr, "\t\t-Cm  construct meta-equivalence classes\n" );
 	fprintf( stderr,
 	"\t\t-CF  do not compress scanner tables; use -F representation\n" );
+	fprintf( stderr, "\t-P  specify scanner prefix other than \"yy\"\n" );
 	fprintf( stderr, "\t-S  specify non-default skeleton file\n" );
 	}
