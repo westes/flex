@@ -20,6 +20,9 @@
 #ifdef __cplusplus
 
 #include <stdlib.h>
+%+
+#include <iostream.h>
+%*
 #include <osfcn.h>
 
 /* Use prototypes in function declarations. */
@@ -120,8 +123,11 @@
 #define YY_FATAL_ERROR(msg) \
 	do \
 		{ \
-		(void) fputs( msg, stderr ); \
+%-
 		(void) putc( '\n', stderr ); \
+%+
+		cerr << msg << '\n'; \
+%*
 		exit( 1 ); \
 		} \
 	while ( 0 )
@@ -171,7 +177,9 @@
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
 extern int yyleng;
+%-
 extern FILE *yyin, *yyout;
+%*
 
 #ifdef __cplusplus
 extern "C" {
@@ -204,7 +212,11 @@ extern "C" {
 
 struct yy_buffer_state
 	{
+%-
 	FILE *yy_input_file;
+%+
+	istream* yy_input_file;
+%*
 
 	YY_CHAR *yy_ch_buf;		/* input buffer */
 	YY_CHAR *yy_buf_pos;		/* current position in input buffer */
@@ -323,10 +335,18 @@ YY_DECL
 			yy_start = 1;	/* first start state */
 
 		if ( ! yyin )
+%-
 			yyin = stdin;
+%+
+			yyin = &cin;
+%*
 
 		if ( ! yyout )
+%-
 			yyout = stdout;
+%+
+			yyout = &cout;
+%*
 
 		if ( yy_current_buffer )
 			yy_init_buffer( yy_current_buffer, yyin );
@@ -481,7 +501,11 @@ do_action:	/* This label is used only to access EOF actions. */
 
 	default:
 #ifdef FLEX_DEBUG
+%-
 		printf( "action # %d\n", yy_act );
+%+
+		cout << "action # " << yy_act << '\n';
+%*
 #endif
 		YY_FATAL_ERROR(
 			"fatal flex scanner internal error--no action found" );
@@ -489,6 +513,25 @@ do_action:	/* This label is used only to access EOF actions. */
 		} /* end of scanning one token */
 	} /* end of yylex */
 
+%+
+int yyFlexLexer::LexerInput( char* buf, int max_size )
+	{
+	if ( yyin->eof() || yyin->fail() )
+		return 0;
+
+	(void) yyin->read( buf, max_size );
+
+	if ( yyin->bad() )
+		return -1;
+	else
+		return yyin->gcount();
+	}
+
+void yyFlexLexer::LexerOutput( const char* buf, int size )
+	{
+	(void) yyout->write( buf, size );
+	}
+%*
 
 /* yy_get_next_buffer - try to read in a new buffer
  *
@@ -772,7 +815,7 @@ void yyrestart( input_file )
 FILE *input_file;
 #endif
 %+
-void yyFlexLexer::yyrestart( FILE *input_file )
+void yyFlexLexer::yyrestart( istream* input_file )
 %*
 	{
 	if ( ! yy_current_buffer )
@@ -843,7 +886,7 @@ FILE *file;
 int size;
 #endif
 %+
-YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( FILE* file, int size )
+YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( istream* file, int size )
 %*
 	{
 	YY_BUFFER_STATE b;
@@ -897,7 +940,7 @@ YY_BUFFER_STATE b;
 FILE *file;
 #endif
 %+
-void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, FILE* file )
+void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 %*
 	{
 	b->yy_input_file = file;
