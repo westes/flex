@@ -1105,5 +1105,28 @@ extern jmp_buf flex_main_jmp_buf;
 /* Removes all \n and \r chars from tail of str. returns str. */
 extern char *chomp (char *str);
 
+/* ctype functions forced to return boolean */
+#define b_isalnum(c) (isalnum(c)?true:false)
+#define b_isalpha(c) (isalpha(c)?true:false)
+#define b_isascii(c) (isascii(c)?true:false)
+#define b_isblank(c) (isblank(c)?true:false)
+#define b_iscntrl(c) (iscntrl(c)?true:false)
+#define b_isdigit(c) (isdigit(c)?true:false)
+#define b_isgraph(c) (isgraph(c)?true:false)
+#define b_islower(c) (islower(c)?true:false)
+#define b_isprint(c) (isprint(c)?true:false)
+#define b_ispunct(c) (ispunct(c)?true:false)
+#define b_isspace(c) (isspace(c)?true:false)
+#define b_isupper(c) (isupper(c)?true:false)
+#define b_isxdigit(c) (isxdigit(c)?true:false)
+
+/* return true if char is uppercase or lowercase. */
+bool has_case(int c);
+
+/* Change case of character if possible. */
+int reverse_case(int c);
+
+/* return false if [c1-c2] is ambiguous for a caseless scanner. */
+bool range_covers_case (int c1, int c2);
 
 #endif /* not defined FLEXDEF_H */

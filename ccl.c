@@ -158,3 +158,42 @@ void    list_character_set (file, cset)
 
 	putc (']', file);
 }
+
+/** Determines if the range [c1-c2] is unambiguous in a case-insensitive
+ * scanner.  Specifically, if a lowercase or uppercase character, x, is in the
+ * range [c1-c2], then we require that UPPERCASE(x) and LOWERCASE(x) must also
+ * be in the range. If not, then this range is ambiguous, and the function
+ * returns false.  For example, [@-_] spans [a-z] but not [A-Z].  Beware that
+ * [a-z] will be labeled ambiguous because it does not include [A-Z].
+ *
+ * @param c1 the lower end of the range
+ * @param c2 the upper end of the range
+ * @return true if [c1-c2] is not ambiguous for a caseless scanner.
+ */
+bool range_covers_case (int c1, int c2)
+{
+	int     i, o;
+
+	for (i = c1; i <= c2; i++) {
+		if (has_case (i)) {
+			o = reverse_case (i);
+			if (o < c1 || c2 < o)
+				return false;
+		}
+	}
+	return true;
+}
+
+/** Reverse the case of a character, if possible.
+ * @return c if case-reversal does not apply.
+ */
+int reverse_case (int c)
+{
+	return isupper (c) ? tolower (c) : (islower (c) ? toupper (c) : c);
+}
+
+/** Return true if c is uppercase or lowercase. */
+bool has_case (int c)
+{
+	return (isupper (c) || islower (c)) ? true : false;
+}
