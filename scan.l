@@ -33,6 +33,12 @@
 #include "parse.h"
 
 #define ACTION_ECHO add_action( yytext )
+#define ACTION_IFDEF(def, should_define) \
+	{ \
+	if ( should_define ) \
+		action_define( def, 1 ); \
+	}
+
 #define MARK_END_OF_PROLOG mark_prolog();
 
 #define YY_DECL \
@@ -57,8 +63,6 @@
 #define CHECK_YYMORE(str) \
 	if ( all_lower( str ) ) \
 		yymore_used = true;
-
-#define YY_NO_TOP_STATE
 %}
 
 %option caseless nodefault outfile="scan.c" stack
@@ -200,6 +204,9 @@ LEXOPT		[aceknopr]
 	8bit		csize = option_sense ? 256 : 128;
 
 	align		long_align = option_sense;
+	always-interactive	{
+			action_define( "YY_ALWAYS_INTERACTIVE", option_sense );
+			}
 	array		yytext_is_array = option_sense;
 	backup		backing_up_report = option_sense;
 	batch		interactive = ! option_sense;
@@ -217,20 +224,29 @@ LEXOPT		[aceknopr]
 			useecs = usemecs = false;
 			use_read = fulltbl = true;
 			}
+	input		ACTION_IFDEF("YY_NO_INPUT", ! option_sense);
 	interactive	interactive = option_sense;
 	lex-compat	lex_compat = option_sense;
 	meta-ecs	usemecs = option_sense;
+	never-interactive	{
+			action_define( "YY_NEVER_INTERACTIVE", option_sense );
+			}
 	perf-report	performance_report += option_sense ? 1 : -1;
 	pointer		yytext_is_array = ! option_sense;
 	read		use_read = option_sense;
 	reject		reject_really_used = option_sense;
 	stack		action_define( "YY_STACK_USED", option_sense );
+	stdinit		do_stdinit = option_sense;
 	stdout		use_stdout = option_sense;
-	unput		action_define( "YY_UNPUT_USED", option_sense );
+	unput		ACTION_IFDEF("YY_NO_UNPUT", ! option_sense);
 	verbose		printstats = option_sense;
 	warn		nowarn = ! option_sense;
 	yymore		yymore_really_used = option_sense;
 	yywrap		do_yywrap = option_sense;
+
+	yy_scan_buffer	ACTION_IFDEF("YY_NO_SCAN_BUFFER", ! option_sense);
+	yy_scan_bytes	ACTION_IFDEF("YY_NO_SCAN_BYTES", ! option_sense);
+	yy_scan_string	ACTION_IFDEF("YY_NO_SCAN_STRING", ! option_sense);
 
 	outfile		return OPT_OUTFILE;
 	prefix		return OPT_PREFIX;
