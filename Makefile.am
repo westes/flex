@@ -98,7 +98,9 @@ EXTRA_DIST = \
 	faqs 
 
 BUILT_SOURCES = \
-	skel.c
+	skel.c \
+	parse.c \
+scan.c
 
 # We have a few dependencies and rules to enumerate. (from the old
 # Makefile.in by Vern)
