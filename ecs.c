@@ -14,6 +14,11 @@
 
 #include "flexdef.h"
 
+#ifndef lint
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+#endif
+
 /* ccl2ecl - convert character classes to set of equivalence classes
  *
  * synopsis
@@ -110,6 +115,8 @@ int lenccl, fwd[], bck[], llsiz;
     int cclp, oldec, newec;
     int cclm, i, j;
 
+#define PROCFLG 0x80
+
     /* note that it doesn't matter whether or not the character class is
      * negated.  The same results will be obtained in either case.
      */
@@ -126,7 +133,7 @@ int lenccl, fwd[], bck[], llsiz;
 
 	for ( i = fwd[cclm]; i != NIL && i <= llsiz; i = fwd[i] )
 	    { /* look for the symbol in the character class */
-	    for ( ; j < lenccl && ccls[j] <= i; ++j )
+	    for ( ; j < lenccl && (ccls[j] <= i || (ccls[j] & PROCFLG)); ++j )
 		if ( ccls[j] == i )
 		    {
 		    /* we found an old companion of cclm in the ccl.
@@ -137,10 +144,11 @@ int lenccl, fwd[], bck[], llsiz;
 		    bck[i] = newec;
 		    fwd[newec] = i;
 		    newec = i;
-		    ccls[j] = -i;	/* set flag so we don't reprocess */
+		    ccls[j] |= PROCFLG;	/* set flag so we don't reprocess */
 
 		    /* get next equivalence class member */
-		    /* next 2 */ goto next_pt;
+		    /* continue 2 */
+		    goto next_pt;
 		    }
 
 	    /* symbol isn't in character class.  Put it in the old equivalence
@@ -167,10 +175,10 @@ next_pt:
 
 	/* find next ccl member to process */
 
-	for ( ++cclp; ccls[cclp] < 0 && cclp < lenccl; ++cclp )
+	for ( ++cclp; (ccls[cclp] & PROCFLG) && cclp < lenccl; ++cclp )
 	    {
 	    /* reset "doesn't need processing" flag */
-	    ccls[cclp] = -ccls[cclp];
+	    ccls[cclp] &= ~PROCFLG;
 	    }
 	}
     }
