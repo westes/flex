@@ -498,9 +498,7 @@ For example, the following will both count the
 words in the input and call the routine special() whenever "frob" is seen:
 .nf
 
-    %{
-    int word_count = 0;
-    %}
+	    int word_count = 0;
     %%
 
     frob        special(); REJECT;
@@ -535,6 +533,14 @@ if it is used in
 of the scanner's actions it will slow down
 .I all
 of the scanner's matching.
+.IP
+Note also that unlike the other special actions,
+.B REJECT
+is a
+.I branch;
+code immediately following it in the action will
+.I not
+be executed.
 .IP -
 .B yymore()
 tells the scanner that the next time it matches a rule, the corresponding
@@ -555,7 +561,9 @@ First "mega-" is matched and echoed to the output.  Then "kludge"
 is matched, but the previous "mega-" is still hanging around at the
 beginning of
 .B yytext
-so the ECHO for the "kludge" rule will actually write "mega-kludge".
+so the
+.B ECHO
+for the "kludge" rule will actually write "mega-kludge".
 The presence of
 .B yymore()
 in the scanner's action entails a minor performance penalty in the
@@ -577,13 +585,14 @@ will now be equal to
 "foobarbar":
 .nf
 
+    %%
     foobar    ECHO; yyless(3);
     [a-z]+    ECHO;
 
 .fi
 An argument of 0 to
 .B yyless
-will cause the current input string to be scanned again.  Unless you've
+will cause the entire current input string to be scanned again.  Unless you've
 changed how the scanner will subsequently process its input (using
 .B BEGIN,
 for example), this will result in an endless loop.
@@ -644,11 +653,15 @@ the following is one way to eat up C comments:
 
 .fi
 .IP -
-.I yyterminate()
+.B yyterminate()
 can be used in lieu of a return statement in an action.  It terminates
 the scanner and returns a 0 to the scanner's caller, indicating "all done".
+Subsequent calls to the scanner will immediately return unless preceded
+by a call to
+.B yyrestart()
+(see below).
 By default,
-.I yyterminate()
+.B yyterminate()
 is also called when an end-of-file is encountered.  It is a macro and
 may be redefined.
 .SH THE GENERATED SCANNER
@@ -679,7 +692,7 @@ the "YY_DECL" macro.  For example, you could use:
     #define YY_DECL float lexscan( a, b ) float a, b;
 
 .fi
-to give it the the scanning routine the name
+to give the scanning routine the name
 .I lexscan,
 returning a float, and taking two floats as arguments.  Note that
 if you give arguments to the scanning routine using a
@@ -690,16 +703,22 @@ Whenever
 .B yylex()
 is called, it scans tokens from the global input file
 .I yyin
-(default, stdin).  It continues until it either reaches
+(which defaults to stdin).  It continues until it either reaches
 an end-of-file (at which point it returns the value 0) or
 one of its actions executes a
 .I return
 statement.
-In the former case, the scanner may not be called again unless
-.B void yyrestart( FILE *input_file )
-is called, to point
+In the former case, when called again the scanner will immediately
+return unless
+.B yyrestart()
+is called to point
 .I yyin
-at the new input_file.  In the latter case (i.e., when an action
+at the new input file.  (
+.B yyrestart()
+takes one argument, a
+.B FILE *
+pointer.)
+In the latter case (i.e., when an action
 executes a return), the scanner may then be called again and it
 will resume scanning where it left off.
 .LP
@@ -721,14 +740,15 @@ and return in the integer variable
 either the
 number of characters read or the constant YY_NULL (0 on Unix systems)
 to indicate EOF.  The default YY_INPUT reads from the
-global file-pointer "yyin" (which is by default
-.I stdin),
-so if you
+global file-pointer "yyin", so if you
 just want to change the input file, you needn't redefine
-YY_INPUT - just point yyin at the input file.
+YY_INPUT - just point yyin at the input file (by assigning it to the
+file pointer returned by
+.B fopen(),
+for example).
 .LP
-A sample redefinition of YY_INPUT (in the definitions section of the input
-file):
+A sample redefinition of YY_INPUT (in the definitions
+section of the input file):
 .nf
 
     %{
@@ -745,7 +765,9 @@ go very fast.
 When the scanner receives an end-of-file indication from YY_INPUT,
 it then checks the
 .B yywrap()
-function.  If it returns false (zero), then it is assumed that the
+function.  If
+.B yywrap()
+returns false (zero), then it is assumed that the
 function has gone ahead and set up
 .I yyin
 to point to another input file, and scanning continues.  If it returns
@@ -755,7 +777,7 @@ caller.
 The default
 .B yywrap()
 always returns 1.  Presently, to redefine it you must first
-"#undef yywrap", as it is currently implemented as a macro.  As noted
+"#undef yywrap", as it is currently implemented as a macro.  As indicated
 by the hedging in the previous sentence, it may be changed to
 a true function in the near future.
 .LP
@@ -764,7 +786,9 @@ The scanner writes its
 output to the
 .I yyout
 global (default, stdout), which may be redefined by the user simply
-by assigning it to some other FILE*.
+by assigning it to some other
+.B FILE
+pointer.
 .SH START CONDITIONS
 .I flex
 provides a mechanism for conditionally activating rules.  Any rule
@@ -815,13 +839,18 @@ If it is
 then
 .I only
 rules qualified with the start condition will be active.
-So a set of rules conditioned on the same exclusive start condition
+A set of rules contingent on the same exclusive start condition
 describe a scanner which is independent of any of the other rules in the
 .I flex
 input.  Because of this,
 exclusive start conditions make it easy to specify "mini-scanners"
 which scan portions of the input that are syntactically different
 from the rest (e.g., comments).
+.LP
+The default rule (to
+.B ECHO
+any unmatched character) remains active in exclusive start conditions.
+### you are here
 .LP
 .B BEGIN(0)
 returns to the original state where only the rules with
@@ -916,7 +945,7 @@ action
 be executed), or the action must finish with a
 .I return
 or
-.I yyterminate()
+.B yyterminate()
 statement.  <<EOF>> rules may not be used with other
 patterns; they may only be qualified with a list of start
 conditions.  If an unqualified <<EOF>> rule is given, it
@@ -1300,7 +1329,9 @@ has not yet been accepted into the draft.
 .IP -
 .B output()
 is not supported.
-Output from the ECHO macro is done to the file-pointer
+Output from the
+.B ECHO
+macro is done to the file-pointer
 "yyout" (default
 .I stdout).
 .IP
@@ -1316,7 +1347,7 @@ The POSIX draft
 specifies that yywrap() is a function and this is unlikely to change; so
 .I flex users are warned
 that
-.I yywrap()
+.B yywrap()
 is likely to be changed to a function in the near future.
 .IP -
 The precedence of the
