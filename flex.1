@@ -1,9 +1,9 @@
-.TH FLEX 1 "24 February 1990" "Version 2.2"
+.TH FLEX 1 "20 March 1990" "Version 2.2"
 .SH NAME
 flex - fast lexical analyzer generator
 .SH SYNOPSIS
 .B flex
-.B [-bcdfinpstvFILT -C[efmF] -Sskeleton]
+.B [-bcdfinpstvFILT8 -C[efmF] -Sskeleton]
 .I [filename ...]
 .SH DESCRIPTION
 .I flex
@@ -230,7 +230,7 @@ if it is missing, the second
 .B %%
 in the input file may be skipped, too.
 .LP
-In the definitions and rule sections, any
+In the definitions and rules sections, any
 .I indented
 text or text enclosed in
 .B %{
@@ -369,24 +369,36 @@ quote in the input.
 A rule can have at most one instance of trailing context (the '/' operator
 or the '$' operator).  The start condition, '^', and "<<EOF>>" patterns
 can only occur at the beginning of a pattern, and, as well as with '/' and '$',
-cannot be grouped inside parentheses.  The following are all illegal:
+cannot be grouped inside parentheses.  A '^' which does not occur at
+the beginning of a rule or a '$' which does not occur at the end of
+a rule loses its special properties and is treated as a normal character.
+.IP
+The following are illegal:
 .nf
 
     foo/bar$
-    foo|(bar$)
-    foo|^bar
     <sc1>foo<sc2>bar
 
 .fi
-Note that the first of these, though, can be written "foo/bar\\n", and
-the second could be written as two rules using the special '|' action (see
-below):
+Note that the first of these, can be written "foo/bar\\n".
+.IP
+The following will result in '$' or '^' being treated as a normal character:
+.nf
+
+    foo|(bar$)
+    foo|^bar
+
+.fi
+If what's wanted is a "foo" or a bar-followed-by-a-newline, the following
+could be used (the special '|' action is explained below):
 .nf
 
     foo      |
-    ^bar     /* action goes here */
+    bar$     /* action goes here */
 
 .fi
+A similar trick will work for matching a foo or a
+bar-at-the-beginning-of-a-line.
 .SH HOW THE INPUT IS MATCHED
 When the generated scanner is run, it analyzes its input looking
 for strings which match any of its patterns.  If it finds more than
@@ -540,7 +552,13 @@ if it is used in
 .I any
 of the scanner's actions it will slow down
 .I all
-of the scanner's matching.
+of the scanner's matching.  Furthermore,
+.B REJECT
+cannot be used with the
+.I -f
+or
+.I -F
+options (see below).
 .IP
 Note also that unlike the other special actions,
 .B REJECT
@@ -660,6 +678,16 @@ the following is one way to eat up C comments:
                 }
 
 .fi
+(Note that if the scanner is compiled using
+.B C++,
+then
+.B input()
+is instead referred to as
+.B yyinput(),
+in order to avoid a name clash with the
+.B C++
+stream by the name of
+.I input.)
 .IP -
 .B yyterminate()
 can be used in lieu of a return statement in an action.  It terminates
@@ -998,23 +1026,142 @@ a full-fledged
 feature in the future.)  Note, though, that
 start conditions do not have their own name-space; %s's and %x's
 declare names in the same fashion as #define's.
+.SH MULTIPLE INPUT BUFFERS
+Some scanners (such as those which support "include" files)
+require reading from several input streams.  As
+.I flex
+scanners do a large amount of buffering, one cannot control
+where the next input will be read from by simply writing a
+.B YY_INPUT
+which is sensitive to the scanning context.
+.B YY_INPUT
+is only called when the scanner reaches the end of its buffer, which
+may be a long time after scanning a statement such as an "include"
+which requires switching the input source.
+.LP
+To negotiate these sorts of problems,
+.I flex
+provides a mechanism for creating and switching between multiple
+input buffers.  An input buffer is created by using:
+.nf
+
+    YY_BUFFER_STATE yy_create_buffer( FILE *file, int size )
+
+.fi
+which takes a
+.I FILE
+pointer and a size and creates a buffer associated with the given
+file and large enough to hold
+.I size
+characters (when in doubt, use
+.B YY_BUF_SIZE
+for the size).  It returns a
+.B YY_BUFFER_STATE
+handle, which may then be passed to other routines:
+.nf
+
+    void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
+
+.fi
+switches the scanner's input buffer so subsequent tokens will
+come from
+.I new_buffer.
+.nf
+
+    void yy_delete_buffer( YY_BUFFER_STATE buffer )
+
+.fi
+is used to reclaim the storage associated with a buffer.
+.LP
+Finally, the
+.B YY_CURRENT_BUFFER
+macro returns a
+.B YY_BUFFER_STATE
+handle to the current buffer.
+.LP
+Here is an example of using these features for writing a scanner
+which expands include files (the
+.B <<EOF>>
+feature is discussed below):
+.nf
+
+    /* the "incl" state is used for picking up the name
+     * of an include file
+     */
+    %x incl
+
+    %{
+    #define MAX_INCLUDE_DEPTH 10
+    YY_BUFFER_STATE include_stack[MAX_INCLUDE_DEPTH];
+    int include_stack_ptr = 0;
+    %}
+
+    %%
+    include             BEGIN(incl);
+
+    [a-z]+              ECHO;
+    [^a-z\\n]*\\n?        ECHO;
+
+    <incl>[ \\t]*      /* eat the whitespace */
+    <incl>[^ \\t\\n]+   { /* got the include file name */
+            if ( include_stack_ptr >= MAX_INCLUDE_DEPTH )
+                {
+                fprintf( stderr, "Includes nested too deeply" );
+                exit( 1 );
+                }
+
+            include_stack[include_stack_ptr++] =
+                YY_CURRENT_BUFFER;
+
+            yyin = fopen( yytext, "r" );
+
+            if ( ! yyin )
+                error( ... );
+
+            yy_switch_to_buffer(
+                yy_create_buffer( yyin, YY_BUF_SIZE ) );
+
+            BEGIN(INITIAL);
+            }
+
+    <<EOF>> {
+            if ( --include_stack_ptr < 0 )
+                {
+                yyterminate();
+                }
+
+            else
+                yy_switch_to_buffer(
+                     include_stack[include_stack_ptr] );
+            }
+
+.fi
 .SH END-OF-FILE RULES
 The special rule "<<EOF>>" indicates
 actions which are to be taken when an end-of-file is
 encountered and yywrap() returns non-zero (i.e., indicates
-no further files to process).  The action can either
-point yyin at a new file to process, in which case the
-action
-.I must
-finish with the special
+no further files to process).  The action must finish
+by doing one of four things:
+.IP -
+the special
 .B YY_NEW_FILE
-action
-(this is a branch, so subsequent code in the action won't
-be executed), or the action must finish with a
+action, if
+.I yyin
+has been pointed at a new file to process;
+.IP -
+a
 .I return
-or
+statement;
+.IP -
+the special
 .B yyterminate()
-statement.  <<EOF>> rules may not be used with other
+action;
+.IP -
+or, switching to a new buffer using
+.B yy_switch_to_buffer()
+as shown in the example above.
+.LP
+<<EOF>> rules may not be used with other
 patterns; they may only be qualified with a list of start
 conditions.  If an unqualified <<EOF>> rule is given, it
 applies only to the
@@ -1042,10 +1189,10 @@ An example:
              }
     <<EOF>>  {
              if ( *++filelist )
-                     {
-                     yyin = fopen( *filelist, "r" );
-                     YY_NEW_FILE;
-                     }
+                 {
+                 yyin = fopen( *filelist, "r" );
+                 YY_NEW_FILE;
+                 }
              else
                 yyterminate();
              }
@@ -1210,17 +1357,15 @@ write to
 a line of the form:
 .nf
 
-    --accepting rule #n ("the matched text")
+    --accepting rule at line 53 ("the matched text")
 
 .fi
-Rules are numbered sequentially with the first one being 1.  Rule #0
-is executed when the scanner backtracks; Rule #(n+1) (where
-.I n
-is the number of rules in the
-.I flex
-input) indicates the default action; Rule #(n+2) indicates
-that the input buffer is empty and needs to be refilled and then the scan
-restarted.  Rules beyond (n+2) are end-of-file actions.
+The line number refers to the location of the rule in the file
+defining the scanner (i.e., the file that was fed to flex).  Messages
+are also generated when the scanner backtracks, accepts the
+default rule, reaches the end of its input buffer (or encounters
+a NUL; at this point, the two look the same as far as the scanner's concerned),
+or reaches an end-of-file.
 .TP
 .B -f
 specifies (take your pick)
@@ -1256,7 +1401,7 @@ consists of comments regarding features of the
 input file which will cause a loss of performance in the resulting scanner.
 Note that the use of
 .I REJECT
-and variable trailing context (see the BUGS section below)
+and variable trailing context (see the BUGS section in flex(1))
 entails a substantial performance penalty; use of
 .I yymore(),
 the
@@ -1294,7 +1439,9 @@ user, but the
 first line identifies the version of
 .I flex,
 which is useful for figuring
-out where you stand with respect to patches and new releases.
+out where you stand with respect to patches and new releases,
+and the next two lines give the date when the scanner was created
+and a summary of the flags which were in effect.
 .TP
 .B -F
 specifies that the
@@ -1402,6 +1549,30 @@ concerning
 the form of the input and the resultant non-deterministic and deterministic
 finite automata.  This option is mostly for use in maintaining
 .I flex.
+.TP
+.B -8
+instructs
+.I flex
+to generate an 8-bit scanner, i.e., one which can recognize 8-bit
+characters.  On some sites,
+.I flex
+is installed with this option as the default.  On others, the default
+is 7-bit characters.  To see which is the case, check the verbose
+.B (-v)
+output for "equivalence classes created".  If the denominator of
+the number shown is 128, then by default
+.I flex
+is generating 7-bit characters.  If it is 256, then the default is
+8-bit characters and the
+.B -8
+flag is not required (but may be a good idea to keep the scanner
+specification portable).  Feeding a 7-bit scanner 8-bit characters
+will result in infinite loops, bus errors, or other such fireworks,
+so when in doubt, use the flag.  Note that if equivalence classes
+are used, 8-bit scanners take only slightly more table space than
+7-bit scanners (128 bytes, to be exact); if equivalence classes are
+not used, however, then the tables may grow up to twice their
+7-bit size.
 .TP 
 .B -C[efmF]
 controls the degree of table compression.
@@ -1548,19 +1719,19 @@ the file looks like:
 .nf
 
     State #6 is non-accepting -
-     associated rules:
+     associated rule line numbers:
            2       3
      out-transitions: [ o ]
      jam-transitions: EOF [ \\001-n  p-\\177 ]
 
     State #8 is non-accepting -
-     associated rules:
+     associated rule line numbers:
            3
      out-transitions: [ a ]
      jam-transitions: EOF [ \\001-`  b-\\177 ]
 
     State #9 is non-accepting -
-     associated rules:
+     associated rule line numbers:
            3
      out-transitions: [ r ]
      jam-transitions: EOF [ \\001-q  s-\\177 ]
@@ -1571,7 +1742,8 @@ the file looks like:
 The first few lines tell us that there's a scanner state in
 which it can make a transition on an 'o' but not on any other
 character, and the in that state currently scanned text does not match
-any rule.
+any rule.  The state occurs when trying to match the rules found
+at lines 2 and 3 in the input file.
 If the scanner is in that state and then reads
 something other than an 'o', it will have to backtrack to find
 a rule which is matched.  With
@@ -1663,7 +1835,7 @@ Note that here the special '|' action does
 .I not
 provide any savings, and can even make things worse (see
 .B BUGS
-below).
+in flex(1)).
 .LP
 Another area where the user can increase a scanner's performance
 (and one that's easier to implement) arises from the fact that
@@ -1800,6 +1972,14 @@ Compiled with
 this is about as fast as one can get a
 .I flex 
 scanner to go for this particular problem.
+.LP
+A final note:
+.I flex
+is slow when matching NUL's, particularly when a token contains
+multiple NUL's.
+It's best to write rules which match
+.I short
+amounts of text if it's anticipated that the text will often include NUL's.
 .SH INCOMPATIBILITIES WITH LEX AND POSIX
 .I flex
 is a rewrite of the Unix
@@ -1869,6 +2049,15 @@ definition.
 .IP
 The POSIX draft interpretation is the same as
 .I flex's.
+.IP -
+To specify a character class which matches anything but a left bracket (']'),
+in
+.I lex
+one can use "[^]]" but with
+.I flex
+one must use "[^\]]".  The latter works with
+.I lex,
+too.
 .IP -
 The undocumented
 .I lex
@@ -2053,102 +2242,23 @@ any of its rules.
 .LP
 .I flex input buffer overflowed -
 a scanner rule matched a string long enough to overflow the
-scanner's internal input buffer (16K bytes - controlled by
-.B YY_BUF_MAX
-in "flex.skel").
+scanner's internal input buffer (16K bytes by default - controlled by
+.B YY_BUF_SIZE
+in "flex.skel".  Note that to redefine this macro, you must first
+.B #undefine
+it).
 .LP
-.I fatal internal error, bad transition character detected in sympartition() -
-Your input may contain an eight-bit character (either directly or expressed
-as an escape sequence) and your version of flex was built for 7-bit characters.
+.I scanner requires -8 flag -
+Your scanner specification includes recognizing 8-bit characters and
+you did not specify the -8 flag (and your site has not installed flex
+with -8 as the default).
+.LP
+.I too many %t classes! -
+You managed to put every single character into its own %t class.
+.I flex
+requires that at least one of the classes share characters.
 .SH DEFICIENCIES / BUGS
-.LP
-Some trailing context
-patterns cannot be properly matched and generate
-warning messages ("Dangerous trailing context").  These are
-patterns where the ending of the
-first part of the rule matches the beginning of the second
-part, such as "zx*/xy*", where the 'x*' matches the 'x' at
-the beginning of the trailing context.  (Note that the POSIX draft
-states that the text matched by such patterns is undefined.)
-.LP
-For some trailing context rules, parts which are actually fixed-length are
-not recognized as such, leading to the abovementioned performance loss.
-In particular, parts using '|' or {n} (such as "foo{3}") are always
-considered variable-length.
-.LP
-Combining trailing context with the special '|' action can result in
-.I fixed
-trailing context being turned into the more expensive
-.I variable
-trailing context.  For example, this happens in the following example:
-.nf
-
-    %%
-    abc      |
-    xyz/def
-
-.fi
-.LP
-Use of unput() invalidates yytext and yyleng.
-.LP
-Use of unput() to push back more text than was matched can
-result in the pushed-back text matching a beginning-of-line ('^')
-rule even though it didn't come at the beginning of the line
-(though this is rare!).
-.LP
-Nulls are not allowed in
-.I flex
-inputs or in the inputs to
-scanners generated by
-.I flex.
-Their presence generates fatal errors.
-.LP
-.I flex
-does not generate correct #line directives for code internal
-to the scanner; thus, bugs in
-.I flex.skel
-yield bogus line numbers.
-.LP
-The
-.B -d
-option should use the
-.I line
-number corresponding to the matched rule rather than the
-.I rule
-number, which is
-close-to-useless.
-.LP
-Due to both buffering of input and read-ahead, you cannot intermix
-calls to <stdio.h> routines, such as, for example,
-.B getchar(),
-with
-.I flex
-rules and expect it to work.  Call
-.B input()
-instead.
-.LP
-The total table entries listed by the
-.B -v
-flag excludes the number of table entries needed to determine
-what rule has been matched.  The number of entries is equal
-to the number of DFA states if the scanner does not use REJECT,
-and somewhat greater than the number of states if it does.
-.LP
-It would be useful if
-.I flex
-wrote to lex.yy.c a summary of the flags used in
-its generation (such as which table compression options).
-.LP
-Some of the macros, such as
-.B yywrap(),
-may in the future become functions which live in the
-.B -ll
-library.  This will doubtless break a lot of code, but may be
-required for POSIX-compliance.
-.LP
-The
-.I flex
-internal algorithms need documentation.
+See flex(1).
 .SH "SEE ALSO"
 .LP
 flex(1), lex(1), yacc(1), sed(1), awk(1).
@@ -2173,12 +2283,13 @@ Jef Poskanzer, Dave Tallman, Frank Whaley, Ken Yap, and those whose names
 have slipped my marginal mail-archiving skills but whose contributions
 are appreciated all the same.
 .LP
-Thanks to Keith Bostic, John Gilmore, Bob
+Thanks to Keith Bostic, John Gilmore, Craig Leres, Bob
 Mulcahy, Rich Salz, and Richard Stallman for help with various distribution
 headaches.
 .LP
-Thanks to Esmond Pitt for 8-bit character support, Benson Margulies and Fred
-Burke for C++ support, and Ove Ewerlid for supporting NUL's.
+Thanks to Esmond Pitt for 8-bit character support; to Benson Margulies and Fred
+Burke for C++ support; to Ove Ewerlid for the basics of support for
+NUL's; and to Eric Hughes for the basics of support for multiple buffers.
 .LP
 This work was primarily done when I was at the Real Time Systems Group
 at the Lawrence Berkeley Laboratory in Berkeley, CA.  Many thanks to all there
