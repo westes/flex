@@ -27,8 +27,8 @@
 #ifndef lint
 
 static char copyright[] =
-    "@(#) Copyright (c) 1989 The Regents of the University of California.\n\
-     All rights reserved.\n";
+    "@(#) Copyright (c) 1989 The Regents of the University of California.\n";
+static char CR_continuation[] = "@(#) All rights reserved.\n";
 
 static char rcsid[] =
     "@(#) $Header$ (LBL)";
@@ -159,7 +159,9 @@ int dupmachine( mach )
 int mach;
 
     {
-    int i, state, init, last = lastst[mach], state_offset;
+    int i, init, state_offset;
+    int state = 0;
+    int last = lastst[mach];
 
     for ( i = firstst[mach]; i <= last; ++i )
 	{
@@ -175,6 +177,9 @@ int mach;
 
 	accptnum[state] = accptnum[i];
 	}
+
+    if ( state == 0 )
+	flexfatal( "empty machine in dupmachine()" );
 
     state_offset = state - i + 1;
 
