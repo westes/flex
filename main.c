@@ -857,17 +857,11 @@ void readin()
 			{
 			puts( "\n#include <string.h>\n" );
 			puts( "extern char yytext[];\n" );
-			puts( "#ifndef YYLMAX" );
-			puts( "#define YYLMAX YY_READ_BUF_SIZE" );
-			puts( "#endif YYLMAX\n" );
-			puts( "char yytext[YYLMAX];" );
-			puts( "char *yytext_ptr;" );
 			}
 
 		else
 			{
 			puts( "extern char *yytext;" );
-			puts( "char *yytext;" );
 			puts( "#define yytext_ptr yytext" );
 			}
 		}

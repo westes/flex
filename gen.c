@@ -1221,6 +1221,21 @@ void make_tables()
 		indent_puts( "#define YY_MORE_ADJ 0" );
 		}
 
+	if ( ! C_plus_plus )
+		{
+		if ( yytext_is_array )
+			{
+			puts( "#ifndef YYLMAX" );
+			puts( "#define YYLMAX 8192" );
+			puts( "#endif\n" );
+			puts( "char yytext[YYLMAX];" );
+			puts( "char *yytext_ptr;" );
+			}
+
+		else
+			puts( "char *yytext;" );
+		}
+
 	fputs( &action_array[defs1_offset], stdout );
 
 	skelout();
