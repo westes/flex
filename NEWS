@@ -3,7 +3,9 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* after version 2.5.27
+* version 2.5.28 released 2003-2-12
+
+** flex is now hosted at sourceforge
 
 ** Fixed trailing slash bug in YY_INPUT macro def
 
