@@ -45,22 +45,13 @@ class istream;
 #endif	/* __STDC__ */
 #endif	/* ! __cplusplus */
 
-#ifndef __TURBOC__
-/* Some C preprocessors barf when they see the following #pragma's,
- * even though __TURBOC__ isn't defined so they should just skip them.
- * So we comment them out by leaving this comment
- open
-#endif
 #ifdef __TURBOC__
-#pragma warn -rch
-#pragma warn -use
+ #pragma warn -rch
+ #pragma warn -use
 #include <io.h>
 #include <stdlib.h>
 #define YY_USE_CONST
 #define YY_USE_PROTOS
-#endif
-#ifndef __TURBOC__
- close open comment above */
 #endif
 
 #ifndef YY_USE_CONST
