@@ -124,9 +124,14 @@
 #define isascii(c) ((c) <= 0177)
 #endif
 
-
+#ifdef HAVE_STDBOOL_H
+#include <stdbool.h>
+#else
+#define bool int
 #define true 1
 #define false 0
+#endif
+
 #define unspecified -1
 
 

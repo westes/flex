@@ -31,18 +31,18 @@ AM_CONFIG_HEADER(config.h:conf.in)
 AC_PROG_YACC
 AC_CHECK_PROG(BISON, bison, bison)
 AM_PROG_LEX
-AC_LN_S
+AC_PROG_LN_S
 AC_PROG_CC
 
 AC_PROG_RANLIB
 AC_PATH_PROG(HELP2MAN, help2man, $srcdir/missing)
 
-AC_CONST
+AC_C_CONST
 AC_TYPE_SIZE_T
 AC_HEADER_STDC
-AC_HAVE_HEADERS(string.h malloc.h sys/types.h unistd.h)
+AC_CHECK_HEADERS(string.h malloc.h sys/types.h unistd.h stdbool.h)
 
-AC_OUTPUT(
+AC_CONFIG_FILES(
 Makefile
 examples/Makefile
 examples/fastwc/Makefile
@@ -75,4 +75,6 @@ tests/test-lineno-nr/Makefile
 tests/test-lineno-r/Makefile
 tests/test-debug-r/Makefile
 tests/test-debug-nr/Makefile
+dnl --new-test-here-- This line is processed by tests/create-test.
 )
+AC_OUTPUT
