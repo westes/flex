@@ -62,8 +62,8 @@ dnl checks for libraries
 dnl checks for header files
 
 AC_HEADER_STDC
-AC_CHECK_HEADERS(string.h sys/types.h unistd.h stdbool.h)
-AC_CHECK_HEADERS(cunistd netinet/in.h)
+AC_CHECK_HEADERS(sys/types.h unistd.h stdbool.h)
+AC_CHECK_HEADERS(cunistd)
 
 dnl checks for types
 

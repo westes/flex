@@ -30,12 +30,11 @@ m4_changecom
 %#   edit the skeleton.
 %#
 #define FLEX_SCANNER
-#define YY_FLEX_VERSION VERSION
+#define YY_FLEX_MAJOR_VERSION FLEX_MAJOR_VERSION
+#define YY_FLEX_MINOR_VERSION FLEX_MINOR_VERSION
+#define YY_FLEX_SUBMINOR_VERSION FLEX_SUBMINOR_VERSION 
 
 /* First, we deal with  platform-specific or compiler-specific issues. */
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 
 /* begin standard C headers. */
 %push
@@ -46,20 +45,6 @@ m4_changecom
 #include <stdlib.h>
 
 /* We try to get some modern integral types defined */
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_INTTYPES_H
-#include <inttypes.h>
-#endif
-
-/* sometimes, inttypes.h doesn't do everything that we would have
-hoped, so we make sure we have what we need. We try to avoid
-redefinition warnings though. The idea is that if we have int8_t then
-we probably have the other int*_t types. The logic is similar with
-uint*_t types. */
-
-#ifndef HAVE_INT8_T
 
 /* Exact integral types.  */
 
@@ -74,9 +59,6 @@ typedef long int int64_t;
 # else
 __extension__ typedef long long int int64_t;
 # endif
-#endif /* ! HAVE_INT8_T */
-
-#ifndef HAVE_UINT8_T
 
 /* Unsigned.  */
 
@@ -89,7 +71,6 @@ typedef unsigned long int uint64_t;
 #else
 __extension__ typedef unsigned long long int uint64_t;
 #endif
-#endif /* ! HAVE_UINT8_T */
 
 /* Limits of integral types. */
 #ifndef INT8_MIN
