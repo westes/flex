@@ -727,7 +727,7 @@ int state[], statenum, comstate;
 
     {
     int i, numdiff, tmpbase, tmp[CSIZE + 1];
-    char transset[CSIZE + 1];
+    Char transset[CSIZE + 1];
     int tsptr;
 
     ++numtemps;
