@@ -68,6 +68,7 @@
 * Is there a way to make flex treat NULL like a regular character?::
 * Whenever flex can not match the input it says "flex scanner jammed".::
 * Why doesn't flex have non-greedy operators like perl does?::
+* Memory leak - 16386 bytes allocated by malloc.::
 @end menu
 
 
@@ -750,4 +751,30 @@ might then have a regex that will match END (to kick you out of the
 state), and perhaps (.|\n) to get a single character within the chunk ...
 
 This approach also has much better error-reporting properties.
+
+
+@node Memory leak - 16386 bytes allocated by malloc.
+@unnumberedsec Memory leak - 16386 bytes allocated by malloc.
+
+The leak is ~16426 bytes.  That is, (8192 * 2 + 2) for the read-buffer, and
+about 40 for struct yy_buffer_state (depending upon alignment). The leak is in
+the non-reentrant C scanner only (NOT in the reentrant scanner, NOT in the C++
+scanner). Since flex doesn't know when you are done, the buffer is never freed. 
+
+However, the leak won't multiply since the buffer is reused no matter how many
+times you call yylex(). 
+
+If you want to reclaim the memory when you are completely done scanning, then
+you might try this:
+
+@example
+@verbatim
+/* For non-reentrant C scanner only. */
+yy_delete_buffer(yy_current_buffer);
+yy_init = 1;
+@end verbatim
+@end example
+
+Note: yy_init is an "internal variable", and hasn't been tested in this
+situation. It is possible that some other globals may need resetting as well.
 
