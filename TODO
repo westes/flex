@@ -4,6 +4,9 @@
 
 * the manual:
 
+** clean up the faqs section. The information is good; the texinfo
+   could use some touching up.
+
 ** discuss prototypes  %%
 
 ** create a section on flex design, features, etc.
