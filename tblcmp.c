@@ -491,7 +491,7 @@ genctbl()
 gentabs()
 
     {
-    int i, j, k, numrows, *accset, nacc, *acc_array;
+    int i, j, k, *accset, nacc, *acc_array;
     char clower();
 
     /* *everything* is done in terms of arrays starting at 1, so provide
