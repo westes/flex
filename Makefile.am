@@ -41,7 +41,9 @@ AUTOMAKE_OPTIONS = \
 	readme-alpha \
 	gnits \
 	check-news \
-	dist-bzip2
+	dist-bzip2 \
+	1.6
+
 
 bin_PROGRAMS = flex
 lib_LIBRARIES = libfl.a
