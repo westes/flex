@@ -254,51 +254,51 @@ int *t, *ns_addr, accset[], *nacc_addr, *hv_addr;
 	static int did_stk_init = false, *stk; 
 
 #define MARK_STATE(state) \
-trans1[state] = trans1[state] - MARKER_DIFFERENCE;
+do{ trans1[state] = trans1[state] - MARKER_DIFFERENCE;} while(0)
 
 #define IS_MARKED(state) (trans1[state] < 0)
 
 #define UNMARK_STATE(state) \
-trans1[state] = trans1[state] + MARKER_DIFFERENCE;
+do{ trans1[state] = trans1[state] + MARKER_DIFFERENCE;} while(0)
 
 #define CHECK_ACCEPT(state) \
-{ \
+do{ \
 nfaccnum = accptnum[state]; \
 if ( nfaccnum != NIL ) \
 accset[++nacc] = nfaccnum; \
-}
+}while(0)
 
-#define DO_REALLOCATION \
-{ \
+#define DO_REALLOCATION() \
+do { \
 current_max_dfa_size += MAX_DFA_SIZE_INCREMENT; \
 ++num_reallocs; \
 t = reallocate_integer_array( t, current_max_dfa_size ); \
 stk = reallocate_integer_array( stk, current_max_dfa_size ); \
-} \
+}while(0) \
 
 #define PUT_ON_STACK(state) \
-{ \
+do { \
 if ( ++stkend >= current_max_dfa_size ) \
-DO_REALLOCATION \
+DO_REALLOCATION(); \
 stk[stkend] = state; \
-MARK_STATE(state) \
-}
+MARK_STATE(state); \
+}while(0)
 
 #define ADD_STATE(state) \
-{ \
+do { \
 if ( ++numstates >= current_max_dfa_size ) \
-DO_REALLOCATION \
+DO_REALLOCATION(); \
 t[numstates] = state; \
 hashval += state; \
-}
+}while(0)
 
 #define STACK_STATE(state) \
-{ \
-PUT_ON_STACK(state) \
-CHECK_ACCEPT(state) \
+do { \
+PUT_ON_STACK(state); \
+CHECK_ACCEPT(state); \
 if ( nfaccnum != NIL || transchar[state] != SYM_EPSILON ) \
-ADD_STATE(state) \
-}
+ADD_STATE(state); \
+}while(0)
 
 
 	if ( ! did_stk_init )
@@ -318,8 +318,8 @@ ADD_STATE(state) \
 		 */
 		if ( ! IS_MARKED(ns) )
 			{
-			PUT_ON_STACK(ns)
-			CHECK_ACCEPT(ns)
+			PUT_ON_STACK(ns);
+			CHECK_ACCEPT(ns);
 			hashval += ns;
 			}
 		}
@@ -336,12 +336,12 @@ ADD_STATE(state) \
 			if ( tsp != NO_TRANSITION )
 				{
 				if ( ! IS_MARKED(tsp) )
-					STACK_STATE(tsp)
+					STACK_STATE(tsp);
 
 				tsp = trans2[ns];
 
 				if ( tsp != NO_TRANSITION && ! IS_MARKED(tsp) )
-					STACK_STATE(tsp)
+					STACK_STATE(tsp);
 				}
 			}
 		}
@@ -351,7 +351,7 @@ ADD_STATE(state) \
 	for ( stkpos = 1; stkpos <= stkend; ++stkpos )
 		{
 		if ( IS_MARKED(stk[stkpos]) )
-			UNMARK_STATE(stk[stkpos])
+			UNMARK_STATE(stk[stkpos]);
 		else
 			flexfatal(
 			_( "consistency check failed in epsclosure()" ) );
