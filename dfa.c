@@ -40,17 +40,79 @@ int state[];
 	{ /* state is non-accepting */
 	++num_backtracking;
 
-	if ( performance_report )
+	if ( backtrack_report )
 	    {
-	    fprintf( stderr, "State #%d is non-accepting -\n", ds );
+	    fprintf( backtrack_file, "State #%d is non-accepting -\n", ds );
 
 	    /* identify the state */
-	    dump_associated_rules( ds );
+	    dump_associated_rules( backtrack_file, ds );
 
 	    /* now identify it further using the out- and jam-transitions */
-	    dump_transitions( state );
+	    dump_transitions( backtrack_file, state );
 
-	    putc( '\n', stderr );
+	    putc( '\n', backtrack_file );
+	    }
+	}
+    }
+
+
+/* check_trailing_context - check to see if NFA state set constitutes
+ *                          "dangerous" trailing context
+ *
+ * synopsis
+ *    int nfa_states[num_states+1], num_states;
+ *    int accset[nacc+1], nacc;
+ *    int check_trailing_context();
+ *    true/false = check_trailing_context( nfa_states, num_states,
+ *                                         accset, nacc );
+ *
+ * NOTES
+ *    Trailing context is "dangerous" if both the head and the trailing
+ *  part are of variable size \and/ there's a DFA state which contains
+ *  both an accepting state for the head part of the rule and NFA states
+ *  which occur after the beginning of the trailing context.
+ *  When such a rule is matched, it's impossible to tell if having been
+ *  in the DFA state indicates the beginning of the trailing context
+ *  or further-along scanning of the pattern.  In these cases, a warning
+ *  message is issued.
+ *
+ *    nfa_states[1 .. num_states] is the list of NFA states in the DFA.
+ *    accset[1 .. nacc] is the list of accepting numbers for the DFA state.
+ */
+
+int check_trailing_context( nfa_states, num_states, accset, nacc )
+int *nfa_states, num_states;
+int *accset;
+register int nacc;
+
+    {
+    register int i, j;
+
+    for ( i = 1; i <= num_states; ++i )
+	{
+	int ns = nfa_states[i];
+	register int type = state_type[ns];
+	register int ar = assoc_rule[ns];
+
+	if ( type == STATE_NORMAL || rule_type[ar] != RULE_VARIABLE )
+	    { /* do nothing */
+	    }
+
+	else if ( type == STATE_TRAILING_CONTEXT )
+	    {
+	    /* potential trouble.  Scan set of accepting numbers for
+	     * the one marking the end of the "head".  We assume that
+	     * this looping will be fairly cheap since it's rare that
+	     * an accepting number set is large.
+	     */
+	    for ( j = 1; j <= nacc; ++j )
+		if ( accset[j] & YY_TRAILING_HEAD_MASK )
+		    {
+		    fprintf( stderr,
+		     "flex: Dangerous trailing context in rule at line %d\n",
+			     rule_linenum[ar] );
+		    return;
+		    }
 	    }
 	}
     }
@@ -60,51 +122,53 @@ int state[];
  *
  * synopisis
  *     int ds;
- *     dump_associated_rules( ds );
+ *     FILE *file;
+ *     dump_associated_rules( file, ds );
  *
  * goes through the set of NFA states associated with the DFA and
  * extracts the first MAX_ASSOC_RULES unique rules, sorts them,
- * and writes a report to stderr
+ * and writes a report to the given file
  */
 
-dump_associated_rules( ds )
+dump_associated_rules( file, ds )
+FILE *file;
 int ds;
 
     {
     register int i, j;
-    register int rule_set[MAX_ASSOC_RULES + 1];
-    register int num_rules = 0;
+    register int num_associated_rules = 0;
+    int rule_set[MAX_ASSOC_RULES + 1];
     int *dset = dss[ds];
     int size = dfasiz[ds];
     
     for ( i = 1; i <= size; ++i )
 	{
-	register rule_num = assoc_rule[dset[i]];
+	register rule_num = rule_linenum[assoc_rule[dset[i]]];
 
-	for ( j = 1; j <= num_rules; ++j )
+	for ( j = 1; j <= num_associated_rules; ++j )
 	    if ( rule_num == rule_set[j] )
 		break;
 
-	if ( j > num_rules )
+	if ( j > num_associated_rules )
 	    { /* new rule */
-	    if ( num_rules < MAX_ASSOC_RULES )
-		rule_set[++num_rules] = rule_num;
+	    if ( num_associated_rules < MAX_ASSOC_RULES )
+		rule_set[++num_associated_rules] = rule_num;
 	    }
 	}
 
-    bubble( rule_set, num_rules );
+    bubble( rule_set, num_associated_rules );
 
-    fprintf( stderr, " associated rules:" );
+    fprintf( file, " associated rules:" );
 
-    for ( i = 1; i <= num_rules; ++i )
+    for ( i = 1; i <= num_associated_rules; ++i )
 	{
 	if ( i % 8 == 1 )
-	    putc( '\n', stderr );
+	    putc( '\n', file );
 	
-	fprintf( stderr, "\t%d", rule_set[i] );
+	fprintf( file, "\t%d", rule_set[i] );
 	}
     
-    putc( '\n', stderr );
+    putc( '\n', file );
     }
 
 
@@ -112,14 +176,17 @@ int ds;
  *
  * synopisis
  *     int state[numecs];
- *     dump_transitions( state );
+ *     FILE *file;
+ *     dump_transitions( file, state );
  *
  * goes through the set of out-transitions and lists them in human-readable
  * form (i.e., not as equivalence classes); also lists jam transitions
- * (i.e., all those which are not out-transitions, plus EOF)
+ * (i.e., all those which are not out-transitions, plus EOF).  The dump
+ * is done to the given file.
  */
 
-dump_transitions( state )
+dump_transitions( file, state )
+FILE *file;
 int state[];
 
     {
@@ -136,26 +203,26 @@ int state[];
 	out_char_set[i] = state[ec];
 	}
     
-    fprintf( stderr, " out-transitions: " );
+    fprintf( file, " out-transitions: " );
 
-    list_character_set( out_char_set );
+    list_character_set( file, out_char_set );
 
     /* now invert the members of the set to get the jam transitions */
     for ( i = 1; i <= CSIZE; ++i )
 	out_char_set[i] = ! out_char_set[i];
 
-    fprintf( stderr, "\n jam-transitions: EOF " );
+    fprintf( file, "\n jam-transitions: EOF " );
 
-    list_character_set( out_char_set );
+    list_character_set( file, out_char_set );
 
-    putc( '\n', stderr );
+    putc( '\n', file );
     }
 
 
 /* epsclosure - construct the epsilon closure of a set of ndfa states
  *
  * synopsis
- *    int t[current_max_dfa_size], numstates, accset[accnum + 1], nacc;
+ *    int t[current_max_dfa_size], numstates, accset[num_rules + 1], nacc;
  *    int hashval;
  *    int *epsclosure();
  *    t = epsclosure( t, &numstates, accset, &nacc, &hashval );
@@ -299,8 +366,6 @@ int *t, *ns_addr, accset[], *nacc_addr, *hv_addr;
 increase_max_dfas()
 
     {
-    int old_max = current_max_dfas;
-
     current_max_dfas += MAX_DFAS_INCREMENT;
 
     ++num_reallocs;
@@ -310,20 +375,8 @@ increase_max_dfas()
     dfasiz = reallocate_integer_array( dfasiz, current_max_dfas );
     accsiz = reallocate_integer_array( accsiz, current_max_dfas );
     dhash = reallocate_integer_array( dhash, current_max_dfas );
-    todo = reallocate_integer_array( todo, current_max_dfas );
     dss = reallocate_int_ptr_array( dss, current_max_dfas );
     dfaacc = reallocate_dfaacc_union( dfaacc, current_max_dfas );
-
-    /* fix up todo queue */
-    if ( todo_next < todo_head )
-	{ /* queue was wrapped around the end */
-	register int i;
-
-	for ( i = 0; i < todo_next; ++i )
-	    todo[old_max + i] = todo[i];
-	
-	todo_next += old_max;
-	}
     }
 
 
@@ -345,6 +398,7 @@ ntod()
     int targptr, totaltrans, i, comstate, comfreq, targ;
     int *epsclosure(), snstods(), symlist[CSIZE + 1];
     int num_start_states;
+    int todo_head, todo_next;
 
     /* this is so find_table_space(...) will know where to start looking in
      * chk/nxt for unused records for space to put in the state
@@ -352,21 +406,16 @@ ntod()
     if ( fullspd )
 	firstfree = 0;
 
-    accset = allocate_integer_array( accnum + 1 );
+    accset = allocate_integer_array( num_rules + 1 );
     nset = allocate_integer_array( current_max_dfa_size );
 
+    /* the "todo" queue is represented by the head, which is the DFA
+     * state currently being processed, and the "next", which is the
+     * next DFA state number available (not in use).  We depend on the
+     * fact that snstods() returns DFA's \in increasing order/, and thus
+     * need only know the bounds of the dfas to be processed.
+     */
     todo_head = todo_next = 0;
-
-#define ADD_QUEUE_ELEMENT(element) \
-	if ( ++element >= current_max_dfas ) \
-	    { /* check for queue overflowing */ \
-	    if ( todo_head == 0 ) \
-		increase_max_dfas(); \
-	    else \
-		element = 0; \
-	    }
-
-#define NEXT_QUEUE_ELEMENT(element) ((element + 1) % (current_max_dfas + 1))
 
     for ( i = 0; i <= CSIZE; ++i )
 	{
@@ -374,7 +423,7 @@ ntod()
 	symlist[i] = false;
 	}
 
-    for ( i = 0; i <= accnum; ++i )
+    for ( i = 0; i <= num_rules; ++i )
 	accset[i] = NIL;
 
     if ( trace )
@@ -397,7 +446,7 @@ ntod()
 	/* declare it "short" because it's a real long-shot that that
 	 * won't be large enough
 	 */
-	printf( "static short int %c[][%d] =\n    {\n", NEXTARRAY,
+	printf( "static short int %s[][%d] =\n    {\n", NEXTARRAY,
 		numecs + 1 ); /* '}' so vi doesn't get too confused */
 
 	/* generate 0 entries for state #0 */
@@ -432,11 +481,12 @@ ntod()
 
 	if ( snstods( nset, numstates, accset, nacc, hashval, &ds ) )
 	    {
-	    numas = numas + nacc;
-	    totnst = totnst + numstates;
+	    numas += nacc;
+	    totnst += numstates;
+	    ++todo_next;
 
-	    todo[todo_next] = ds;
-	    ADD_QUEUE_ELEMENT(todo_next);
+	    if ( variable_trailing_context_rules && nacc > 0 )
+		check_trailing_context( nset, numstates, accset, nacc );
 	    }
 	}
 
@@ -445,14 +495,12 @@ ntod()
 	if ( ! snstods( nset, 0, accset, 0, 0, &end_of_buffer_state ) )
 	    flexfatal( "could not create unique end-of-buffer state" );
 
-	numas += 1;
+	++numas;
 	++num_start_states;
-
-	todo[todo_next] = end_of_buffer_state;
-	ADD_QUEUE_ELEMENT(todo_next);
+	++todo_next;
 	}
 
-    while ( todo_head != todo_next )
+    while ( todo_head < todo_next )
 	{
 	targptr = 0;
 	totaltrans = 0;
@@ -460,8 +508,7 @@ ntod()
 	for ( i = 1; i <= numecs; ++i )
 	    state[i] = 0;
 
-	ds = todo[todo_head];
-	todo_head = NEXT_QUEUE_ELEMENT(todo_head);
+	ds = ++todo_head;
 
 	dset = dss[ds];
 	dsize = dfasiz[ds];
@@ -487,9 +534,12 @@ ntod()
 				  nacc, hashval, &newds ) )
 			{
 			totnst = totnst + numstates;
-			todo[todo_next] = newds;
-			ADD_QUEUE_ELEMENT(todo_next);
-			numas = numas + nacc;
+			++todo_next;
+			numas += nacc;
+
+			if ( variable_trailing_context_rules && nacc > 0 )
+			    check_trailing_context( nset, numstates,
+				accset, nacc );
 			}
 
 		    state[sym] = newds;
@@ -606,14 +656,13 @@ ntod()
 
 	mkdeftbl();
 	}
-    
     }
 
 
 /* snstods - converts a set of ndfa states into a dfa state
  *
  * synopsis
- *    int sns[numstates], numstates, newds, accset[accnum + 1], nacc, hashval;
+ *    int sns[numstates], numstates, newds, accset[num_rules + 1], nacc, hashval;
  *    int snstods();
  *    is_new_state = snstods( sns, numstates, accset, nacc, hashval, &newds );
  *
@@ -724,7 +773,7 @@ int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 
     else
 	{ /* find lowest numbered rule so the disambiguating rule will work */
-	j = accnum + 1;
+	j = num_rules + 1;
 
 	for ( i = 1; i <= nacc; ++i )
 	    if ( accset[i] < j )
