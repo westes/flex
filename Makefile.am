@@ -162,4 +162,28 @@ tags:
 ChangeLog:
 	-rcs2log -l 72 -u "vern	Vern	vern@ee.lbl.gov" -u "wlestes	W. L. Estes	wlestes@uncg.edu" -u "millaway	John Millaway	millaway@acm.org" | sed s:/usr/local/cvsroot/flex/::g >ChangeLog 
 
-.PHONY: ChangeLog tags
+# Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
+#
+# Whole idea:
+#   1. Check for .indent.pro, otherwise indent will use unknown
+#      settings, or worse, the GNU defaults.)
+#   2. Check that this is GNU indent.
+#   3. Make sure to process only the NON-generated .c and .h files.
+#   4. Run indent twice per file. The first time is a test.
+#      Otherwise, indent overwrites your file even if it fails!
+indentfiles = buf.c ccl.c dfa.c ecs.c flexdef.h gen.c libmain.c \
+              libyywrap.c main.c misc.c nfa.c options.c options.h \
+              scanopt.c scanopt.h sym.c tables.c tables_shared.h \
+              tblcmp.c yylex.c
+
+indent:
+	echo "indent target is not activated.";  exit 1
+	test -f .indent.pro
+	indent --version | grep GNU
+	for f in $(indentfiles);\
+	do\
+		echo indenting $$f ;\
+		indent < $$f >/dev/null && indent $$f || echo $$f FAILED ;\
+	done
+
+.PHONY: ChangeLog tags indent
