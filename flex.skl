@@ -126,14 +126,10 @@
 /* Action number for EOF rule of a given start state. */
 #define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
 
-/* Special action meaning "start processing a new file". */
-#define YY_NEW_FILE \
-	do \
-		{ \
-		yy_init_buffer( yy_current_buffer, yyin ); \
-		yy_load_buffer_state(); \
-		} \
-	while ( 0 )
+/* Special action meaning "start processing a new file".  Now included
+ * only for backward compatibility with previous versions of flex.
+ */
+#define YY_NEW_FILE yyrestart( yyin )
 
 /* Default declaration of generated scanner - a define so the user can
  * easily add parameters.
@@ -201,10 +197,12 @@ struct yy_buffer_state
 	int yy_eof_status;
 #define EOF_NOT_SEEN 0
 	/* "Pending" happens when the EOF has been seen but there's still
-	 * some text to process.
+	 * some text to process.  Note that when we actually see the EOF,
+	 * we switch the status back to "not seen" (via yyrestart()), so
+	 * that the user can continue scanning by just pointing yyin at
+	 * a new input file.
 	 */
 #define EOF_PENDING 1
-#define EOF_DONE 2
 	};
 
 static YY_BUFFER_STATE yy_current_buffer = 0;
@@ -512,7 +510,7 @@ static int yy_get_next_buffer()
 		if ( number_to_move - YY_MORE_ADJ == 1 )
 			{
 			ret_val = EOB_ACT_END_OF_FILE;
-			yy_current_buffer->yy_eof_status = EOF_DONE;
+			yyrestart( yyin );
 			}
 
 		else
@@ -699,6 +697,9 @@ void yyrestart( input_file )
 FILE *input_file;
 #endif
 	{
+	if ( ! yy_current_buffer )
+		yy_current_buffer = yy_create_buffer( yyin, YY_BUF_SIZE );
+
 	yy_init_buffer( yy_current_buffer, input_file );
 	yy_load_buffer_state();
 	}
