@@ -53,6 +53,9 @@ Changes between release 2.5.2 (19Apr95) and release 2.5.1:
 	- An OS/2 Makefile and config.h for flex 2.5 is now available in
 	  MISC/OS2/, contributed by Kai Uwe Rommel.
 
+	- The descrip.mms file for building flex under VMS has been updated,
+	  thanks to Pat Rankin.
+
 	- The notes on building flex for the Amiga have been updated for
 	  flex 2.5, contributed by Andreas Scherer.
 
