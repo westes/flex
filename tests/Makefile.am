@@ -61,7 +61,6 @@ SUBDIRS = \
 test:
 	NOK=;\
 	NFAIL=;\
-	NSKIP=;\
 	for dir in $(SUBDIRS) ; do \
 		echo Executing test "$$dir" ; \
 		( cd "$$dir" && $(MAKE) test  > OUTPUT 2>&1 ) ; \
@@ -75,6 +74,5 @@ test:
 		esac; \
 	done ; \
 	echo Results: ; \
-	echo Tests succeeded: `echo @ECHO_N@ $$NOK@ECHO_C@|wc -c`; \
-	echo Tests SKIPPED: `echo @ECHO_N@ $$NSKIP@ECHO_C@|wc -c`; \
-	echo Tests FAILED: `echo @ECHO_N@ $$NFAIL@ECHO_C@|wc -c` ;
+	echo Tests succeeded: `echo @ECHO_N@ "$$NOK@ECHO_C@"|wc -c`; \
+	echo Tests FAILED: `echo @ECHO_N@ "$$NFAIL@ECHO_C@"|wc -c` ;
