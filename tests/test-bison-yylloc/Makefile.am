@@ -2,8 +2,8 @@ BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
 EXTRA_DIST = scanner.l parser.y test.input
-CLEANFILES = scanner.c parser.c parser.h test-bison-yylloc
-OBJS = scanner.o parser.o
+CLEANFILES = scanner.c parser.c parser.h test-bison-yylloc $(OBJS)
+OBJS = scanner.o parser.o main.o
 
 INCLUDES = -I $(srcdir) -I $(top_srcdir)/tests
 #LDFLAGS = $(top_srcdir)/libfl.a 
@@ -25,3 +25,6 @@ test: $(testname)$(EXEEXT)
 
 .c.o:
 	$(CC) -c -o $@ $(INCLUDES) $<
+
+parser.h: parser.c
+scanner.c main.o: parser.h
