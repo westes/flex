@@ -41,7 +41,6 @@ AUTOMAKE_OPTIONS = \
 	readme-alpha \
 	gnits \
 	check-news \
-	no-texinfo.tex \
 	dist-bzip2
 
 bin_PROGRAMS = flex
