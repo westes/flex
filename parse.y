@@ -15,7 +15,13 @@
 %token CHAR NUMBER SECTEND SCDECL XSCDECL WHITESPACE NAME PREVCCL
 
 %{
+
 #include "flexdef.h"
+
+#ifndef lint
+static char rcsid[] =
+    "@(#) $Header$ (LBL)";
+#endif
 
 int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, actvp, rulelen;
 int trlcontxt, xcluflg, cclsorted, varlength;
@@ -27,6 +33,22 @@ static int madeany = false;  /* whether we've made the '.' character class */
 
 %%
 goal            :  initlex sect1 sect1end sect2
+			{ /* add default rule */
+			int def_rule;
+
+			pat = cclinit();
+			cclnegate( pat );
+
+			def_rule = mkstate( -pat );
+
+			add_accept( def_rule, 0, 0 );
+
+			for ( i = 1; i <= lastsc; ++i )
+			    scset[i] = mkbranch( scset[i], def_rule );
+
+			fputs( "YY_DEFAULT_ACTION;\n\tYY_BREAK\n",
+			       temp_action_file );
+			}
 		;
 
 initlex         :
@@ -89,7 +111,8 @@ flexrule        :  scon '^' re eol
 			add_accept( pat, headcnt, trailcnt );
 
 			for ( i = 1; i <= actvp; ++i )
-			    scbol[actvsc[i]] = mkbranch( scbol[actvsc[i]], pat );
+			    scbol[actvsc[i]] =
+				mkbranch( scbol[actvsc[i]], pat );
 			}
 
 		|  scon re eol 
@@ -98,7 +121,8 @@ flexrule        :  scon '^' re eol
 			add_accept( pat, headcnt, trailcnt );
 
 			for ( i = 1; i <= actvp; ++i )
-			    scset[actvsc[i]] = mkbranch( scset[actvsc[i]], pat );
+			    scset[actvsc[i]] = 
+				mkbranch( scset[actvsc[i]], pat );
 			}
 
                 |  '^' re eol 
