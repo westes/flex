@@ -1,3 +1,17 @@
+Changes between 2.2 Patch #1 (23Mar90) and 2.2 (alpha) release:
+
+	- Makefile fixes: definition of MAKE variable for systems
+	  which don't have it; installation of flexdoc.1 along with
+	  flex.1; *fixed two bugs which could cause "bigtest" to fail*.
+
+	- flex.skel fix for compiling with g++.
+
+	- README and flexdoc.1 no longer list an out-of-date BITNET address
+	  for contacting me.
+	
+	- minor typos and formatting changes to flex.1 and flexdoc.1.
+
+
 Changes between 2.2 (alpha) release of March '90 and previous release:
 
     User-visible:
