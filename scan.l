@@ -253,7 +253,6 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 <SECT2>^"^"		return '^';
 <SECT2>\"		BEGIN(QUOTE); return '"';
 <SECT2>"{"/[0-9]		BEGIN(NUM); return '{';
-<SECT2>"{"[^0-9\n][^}\n]*	BEGIN(BRACEERROR);
 <SECT2>"$"/([ \t]|{NL})	return '$';
 
 <SECT2>{WS}"%{"		{
@@ -357,7 +356,7 @@ CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 				}
 			}
 
-<SECT2>[/|*+?.()]	return (unsigned char) yytext[0];
+<SECT2>[/|*+?.(){}]	return (unsigned char) yytext[0];
 <SECT2>.		RETURNCHAR;
 
 
