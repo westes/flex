@@ -26,6 +26,8 @@ noinst_SCRIPTS = \
 	create-test
 
 SUBDIRS = \
+	test-posixly-correct \
+	test-posix \
 	test-mem-r \
 	test-mem-nr \
 	test-debug-nr \

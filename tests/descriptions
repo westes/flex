@@ -1,20 +1,31 @@
 DESCRIPTION OF TESTS
 
-  TEMPLATE      -  A NO-OP skeleton scanner.
-  basic-nr      -  Simple scanner, non-reentrant.
-  basic-r       -  Simple scanner, reentrant.
-  bison-yylval  -  Reentrant scanner + pure parser. Requires bison.
-  bison-yylloc  -  Reentrant scanner + pure parser. Requires bison.
-  header-nr     -  Test generated header file, non-reentrant.
-  header-r      -  Test generated header file, reentrant.
-  include-by-buffer     - YY_BUFFER_STATE, yy_push_state, etc.
-  include-by-reentrant  - Nested scanners.
-  multiple-scanners-nr  - #include and run two separate scanners, non-reentrant.
-  multiple-scanners-r   - #include and run two separate scanners, reentrant.
-  prefix-nr     - verify prefixes are working, nonreentrant.
-  prefix-r      - verify prefixes are working, reentrant.
-  pthread       - pthreads test. A NO-OP if libpthread not found.
-  string-nr     - Scan strings, non-reentrant.
-  string-r      - Scan strings, reentrant.
-  c-cpp-nr      - Compile a C scanner with C++ compiler, nonreentrant.
-  c-cpp-r       - Compile a C scanner with C++ compiler, reentrant.
+TEMPLATE              - A NO-OP skeleton scanner.
+array-nr              - Use %option array, non-reentrant. 
+array-r               - Use %option array, reentrant.
+basic-nr              - Simple scanner, non-reentrant.
+basic-r               - Simple scanner, reentrant.
+bison-yylloc          - Reentrant scanner + pure parser. Requires bison.
+bison-yylval          - Reentrant scanner + pure parser. Requires bison.
+c-cpp-nr              - Compile a C scanner with C++ compiler, nonreentrant.
+c-cpp-r               - Compile a C scanner with C++ compiler, reentrant.
+debug-nr              - Use yy_flex_debug, non-reentrant.
+debug-r               - Use debugging functions, reentrant.
+header-nr             - Test generated header file, non-reentrant.
+header-r              - Test generated header file, reentrant.
+include-by-buffer     - YY_BUFFER_STATE, yy_push_state, etc.
+include-by-reentrant  - Nested scanners.
+lineno-nr             - Use %option yylineno, non-reentrant.
+lineno-r              - Use %option yylineno, reentrant.
+mem-nr                - Override memory api, non-reentrant.
+mem-r                 - Override memory api, reentrant.
+multiple-scanners-nr  - #include and run two separate scanners, non-reentrant.
+multiple-scanners-r   - #include and run two separate scanners, reentrant.
+posix                 - Test %option posix-compat.
+posixly-correct       - Test POSIXLY_CORRECT variable.
+prefix-nr             - Verify prefixes are working, nonreentrant.
+prefix-r              - Verify prefixes are working, reentrant.
+pthread               - Pthreads test. A NO-OP if libpthread not found.
+string-nr             - Scan strings, non-reentrant.
+string-r              - Scan strings, reentrant.
+yyextra               - Test yyextra.

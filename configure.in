@@ -77,6 +77,8 @@ tests/test-debug-r/Makefile
 tests/test-debug-nr/Makefile
 tests/test-mem-nr/Makefile
 tests/test-mem-r/Makefile
+tests/test-posix/Makefile
+tests/test-posixly-correct/Makefile
 dnl --new-test-here-- This line is processed by tests/create-test.
 )
 AC_OUTPUT
