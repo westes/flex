@@ -26,11 +26,8 @@ AC_INIT(flex,2.5.11,help-flex@gnu.org)
 AC_CONFIG_SRCDIR(scan.l)
 AM_INIT_AUTOMAKE(flex,2.5.11)
 AM_CONFIG_HEADER(config.h:conf.in)
-          AM_GNU_GETTEXT([external])
-dnl if this worked, it'd be great
-dnl We're using 0.11.3 as I see no reason to switch to a differently
-broken gettext with a higher version number
-dnl AM_GNU_GETTEXT_VERSION(0.11.3)
+          AM_GNU_GETTEXT
+AM_GNU_GETTEXT_VERSION(0.11.5)
 
 AC_PROG_YACC
 AC_CHECK_PROG(BISON, bison, bison)
