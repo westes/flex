@@ -513,7 +513,7 @@ scanopt_err(s,opt_offset,is_short,err)
             fprintf(stderr,"option `%s' doesn't allow an argument\n",optname);
             break;
         case SCANOPT_ERR_ARG_NOT_FOUND:
-            fprintf(stderr,"option `%s' requires an an argument\n",optname);
+            fprintf(stderr,"option `%s' requires an argument\n",optname);
             break;
         case SCANOPT_ERR_OPT_AMBIGUOUS:
             fprintf(stderr,"option `%s' is ambiguous\n",optname);
