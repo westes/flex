@@ -186,7 +186,7 @@ installdirs:
 
 uninstall:
 	rm -f $(bindir)/flex $(bindir)/flex++
-	rm -f $libdir)/libfl.a
+	rm -f $(libdir)/libfl.a
 	rm -f $(includedir)/FlexLexer.h
 	rm -f $(mandir)/flex.$(manext) $(mandir)/flexdoc.$(manext)
 
