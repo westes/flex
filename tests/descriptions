@@ -28,4 +28,5 @@ prefix-r              - Verify prefixes are working, reentrant.
 pthread               - Pthreads test. A NO-OP if libpthread not found.
 string-nr             - Scan strings, non-reentrant.
 string-r              - Scan strings, reentrant.
+table-opts            - Try every table compression option.
 yyextra               - Test yyextra.

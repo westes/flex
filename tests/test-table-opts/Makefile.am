@@ -19,30 +19,44 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
+# ------------------------------------------------
+# This test is really a set of tests, one for
+# each compression flag. -Ca, -Cem, etc..
+# ------------------------------------------------
+
 BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
+testname  := test-table-opts
+allopts   := -Ca -Ce -Cf -CF -Cm -Cem
+alltests  := $(foreach opt,$(allopts),test-opt-r$(opt) test-opt-nr$(opt))
+alltestexe := $(addsuffix $(EXEEXT),$(alltests))
+alltestsrc := $(addsuffix .c,$(alltests))
+alltestobj := $(addsuffix .o,$(alltests))
+
 EXTRA_DIST = scanner.l test.input
-CLEANFILES = scanner.c parser.c parser.h test-cpp-nr $(OBJS) OUTPUT
-OBJS = scanner.o
-
+CLEANFILES = scanner.c OUTPUT $(alltestobj) $(alltestsrc) $(alltestexe)
 INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
-#LDFLAGS = $(top_srcdir)/libfl.a 
-#YFLAGS = --defines --output=parser.c
 
-testname = test-c-cpp-nr
 
-scanner.c: $(srcdir)/scanner.l
-	$(FLEX) $<
+test-table-opts: $(alltests)
 
-parser.c: $(srcdir)/parser.y
-	$(BISON) $(YFLAGS) $<
+test-opt-r%.c: $(srcdir)/scanner.l
+	$(FLEX) --reentrant $*  -o $@ $<
 
-$(testname)$(EXEEXT): $(OBJS)
-	$(CXX) -o $(testname)$(EXEEXT) $(OBJS) $(LDFLAGS)
+test-opt-nr%.c: $(srcdir)/scanner.l
+	$(FLEX) $* -o $@ $<
 
-test: $(testname)$(EXEEXT)
-	./$(testname)$(EXEEXT) < $(srcdir)/test.input
+test-opt%$(EXEEXT): test-opt%.o
+	$(CC) -o $@ $< $(LDFLAGS)
+
+test: $(alltestexe)
+	for t in $(alltestexe) ; do \
+		./$$t < $(srcdir)/test.input ; \
+	done
 
 .c.o:
-	$(CXX) -c -o $@ $(INCLUDES) $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $(INCLUDES) $<
+
+.PHONY: test-table-opts
+.SECONDARY: $(alltestobj) $(alltestsrc)

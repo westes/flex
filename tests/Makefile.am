@@ -26,6 +26,7 @@ noinst_SCRIPTS = \
 	create-test
 
 SUBDIRS = \
+	test-table-opts \
 	test-posixly-correct \
 	test-posix \
 	test-mem-r \

@@ -81,6 +81,7 @@ tests/test-mem-nr/Makefile
 tests/test-mem-r/Makefile
 tests/test-posix/Makefile
 tests/test-posixly-correct/Makefile
+tests/test-table-opts/Makefile
 dnl --new-test-here-- This line is processed by tests/create-test.
 )
 
