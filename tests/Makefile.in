@@ -1,0 +1,33 @@
+# @(#) $Header$ (LBL)
+
+@SET_MAKE@
+
+TESTDIRS= @TESTDIRS@
+
+srcdir= @srcdir@
+
+all:
+	for dir in $(TESTDIRS) ; do \
+       (cd "$$dir" && $(MAKE) ) || exit -1; \
+    done
+
+check: 
+	for dir in $(TESTDIRS) ; do \
+       (cd "$$dir" && $(MAKE) check ) || exit -1; \
+    done && echo "CHECKS SUCCESSFULL"
+
+distclean: clean
+	for dir in $(TESTDIRS) ; do \
+       if test -f "$$dir/Makefile" ; then \
+          (cd "$$dir" && $(MAKE) distclean ) || exit -1; \
+       fi \
+    done
+	rm -f config.h config.status config.log Makefile
+
+clean:
+	for dir in $(TESTDIRS) ; do \
+       if test -f "$$dir/Makefile" ; then \
+           (cd "$$dir" && $(MAKE) clean ) || exit -1; \
+       fi \
+    done
+

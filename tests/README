@@ -1,0 +1,69 @@
+This file describes the flex tests.
+
+
+WHO SHOULD USE THE TESTS
+
+The test suite is intended to be used by flex developers, i.e., anyone hacking
+the flex distribution. If you are simply installing flex, then you can ignore
+this directory and its contents.
+
+
+STRUCTURE OF THE TESTS
+
+The test suite consists of several flex scanners, one per directory, known
+to work with the most recent version of flex. In general, after you modify your
+copy of the flex distribution, you should re-run the tests. Some of the tests
+may require certain tools to be available (e.g., bison, diff). If any test
+returns an error or generates an error message, then your modifications *may*
+have broken a feature of flex.
+
+
+HOW TO RUN THE TESTS
+
+To build and execute all tests:
+
+  $ cd TESTS/
+  $ make
+  $ make check
+
+
+To build and execute a single test:
+
+  $ cd TESTS/
+  $ cd test-pthread-nr
+  $ make 
+  $ make check
+
+
+HOW TO ADD A NEW TEST
+
+ - Copy the TESTS/TEMPLATE directory, then
+   modify the skeleton scanner (and parser if necessary).
+
+ - On success, your test should return zero.
+   On error, your test should return non-zero and print a message
+   to stderr.
+
+ - You must modify the last few lines of TESTS/Makefile.in
+   by adding your new test directory, and the Makefile target.
+
+ - Each test assumes that the newly-built binary "flex" is in the 
+   directory above the TESTS directory.
+
+DESCRIPTION OF TESTS
+
+  TEMPLATE      -  A NO-OP skeleton scanner.
+  basic-nr      -  Simple scanner, non-reentrant.
+  basic-r       -  Simple scanner, reentrant.
+  bison-yylval  -  Reentrant scanner + pure parser. Requires bison.
+  bison-yylloc  -  Reentrant scanner + pure parser. Requires bison.
+  include-by-buffer     - YY_BUFFER_STATE, yy_push_state, etc.
+  include-by-reentrant  - Nested scanners.
+  prefix-nr     - verify prefixes are working, nonreentrant.
+  prefix-r      - verify prefixes are working, reentrant.
+  pthread       - pthreads test. A NO-OP if libpthread not found.
+  string-nr     - Scan strings, non-reentrant.
+  string-r      - Scan strings, reentrant.
+  yyextra       - User-specific data in reentrant scanner.
+
+

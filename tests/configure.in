@@ -1,0 +1,53 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(TEMPLATE/parser.y)
+
+AC_CONFIG_HEADER(config.h:config.in)
+
+dnl Checks for libraries.
+dnl Replace `main' with a function in -lpthread:
+AC_CHECK_LIB(pthread, pthread_create)
+
+AC_LN_S
+AC_PROG_YACC
+AC_PROG_CC
+AC_PROG_RANLIB
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+AC_CONST
+AC_TYPE_SIZE_T
+AC_HEADER_STDC
+AC_HAVE_HEADERS(string.h malloc.h sys/types.h)
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(malloc.h unistd.h)
+
+
+dnl The case statement is copied from the top directory.
+case "$YACC" in
+*bison*)
+  AC_ALLOCA
+  ;;
+esac
+
+dnl Some of the tests may want bison, not "bison -y". We try.
+AC_CHECK_PROG(BISON,bison,bison)
+if test -z "$BISON" ; then
+    BISON="$YACC"
+fi
+
+AC_SUBST(TESTDIRS)dnl
+TESTDIRS="test-string-r test-pthread \
+          test-bison-yylval test-include-by-reentrant \
+          TEMPLATE test-basic-nr test-basic-r \
+          test-include-by-buffer test-string-nr \
+          test-bison-yylloc test-yyextra test-prefix-nr \
+          test-prefix-r"
+
+AC_OUTPUT( Makefile test-string-r/Makefile test-pthread/Makefile
+           test-bison-yylval/Makefile test-include-by-reentrant/Makefile
+           TEMPLATE/Makefile test-basic-nr/Makefile test-basic-r/Makefile
+           test-include-by-buffer/Makefile test-string-nr/Makefile
+           test-bison-yylloc/Makefile test-yyextra/Makefile
+           test-prefix-nr/Makefile test-prefix-r/Makefile)
+
