@@ -5,6 +5,8 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.26
 
+** flex now works with recent bison versions
+
 ** new pt_br translation from the translation project
 
 * version 2.5.26 released 2003-1-14
