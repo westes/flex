@@ -68,6 +68,7 @@ AC_CHECK_HEADERS(cunistd netinet/in.h)
 dnl checks for types
 
 AC_TYPE_SIZE_T
+AC_CHECK_TYPES([int8_t, uint8_t])
 
 dnl checks for functions
 
