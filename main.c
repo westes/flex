@@ -1785,6 +1785,7 @@ void usage ()
 		  "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 		  "  -R,  --reentrant         generate a reentrant C scanner\n"
 		  "       --bison-bridge      scanner for bison pure parser.\n"
+		  "       --bison-locations   include yylloc support.\n"
 		  "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
 		  "       --nounistd          do not include <unistd.h>\n"
 		  "       --noFUNCTION        do not generate a particular FUNCTION\n"
