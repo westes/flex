@@ -1,3 +1,78 @@
+Changes between release 2.4 (04Oct93) and release 2.3:
+
+skeleton file: John Gilmore
+	flex.skel -> flex.skl
+	-S to go away unless hear it's useful
+yywrap() a function
+must link with libfl.a
+C++: Kent Williams
+	use for reentrant scanners
+	C++ streams: Tom Epperly
+	lex.yy.cc
+	FlexLexer.h
+	flex++
+no temp file
+manual/
+detects if -8 flag needed
+-h for help
+buffer dynamically enlarges; but *slow* to match big tokens
+	and doesn't do so on unput()
+fewer porting headaches; memset(), malloc() type in particular
+MISC/
+-P prefix
+-V
+<*>
+%array/%pointer
+	use %array to avoid input()/unput() trashing yytext
+	YYLMAX
+	not with -+
+flex -V
+-8 by default (except -C{f,F}?); -7 supported
+-A align option, promotes short -> long
+number of fencepost table expansion bugs fixed
+YY_START: integer value, can do stacks
+yyrestart() no longer needed; just point yyin at a new file
+fencepost bug fixes
+'#' no longer a comment character
+\n in flex input can optionally include leading or trailing \r
+warnings for rules that can't be matched; REJECT obviates
+more consistent identification of error locations
+yyleng a global
+definitions can now include leading '^' or trailing '$'
+scanners are -I interactive if compressed, by default; -B
+warnings for unmatchable rules; if -s given but default rule can be matched
+YY_USER_ACTION only called for real actions
+many misc bug fixes thanks to Gerhard Wilhelms
+\n\r stuff
+yyless() usable in section 3 (Ceriel Jacobs)
+formfeed no longer a whitespace character
+run-time detection of out-of-range characters (8 bit when built for 7 bit)
+%t nuked
+yyleng may be modified
+-w: suppress warnings
+-p -p: report minor performance problems, too
+no more time information in -v output
+MISC/fastwc
+MISC/debflex.awk (Francois)
+MISC/testxxLexerl.l
+YY_NEW_FILE no longer needed
+definitions with ^, $ allowed; not expanded inside parens
+version.h
+
+corrected doc: -C options are cumulative
+	may modify yytext but not lengthen it (append chars)
+	modifying last char may affect anchoring
+	backtracking -> backing up
+	unindented comments allowed in first section, but not in second
+	yyless() only usable in scanner source, not externally
+	yyrestart(yyin) throws away current buffer
+	high-speed scanners: match as much text as possible w/ each rule
+	beginning-of-line operator is fairly cheap
+	unput() expensive, yyless() cheap
+	corrected backing-up example
+
+code reformatted
+
 Changes between 2.3 Patch #8 (21Feb93) and 2.3 Patch #7:
 
 	- Fixed bugs in dynamic memory allocation leading to grievous
