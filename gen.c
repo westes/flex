@@ -393,7 +393,6 @@ void gen_find_action()
 			indent_puts( "if ( yy_act == 0 )" );
 			indent_up();
 			indent_puts( "{ /* have to back up */" );
-
 			indent_puts( "yy_cp = yy_last_accepting_cpos;" );
 			indent_puts(
 				"yy_current_state = yy_last_accepting_state;" );
