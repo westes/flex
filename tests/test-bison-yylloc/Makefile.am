@@ -23,7 +23,7 @@ BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
 EXTRA_DIST = scanner.l parser.y test.input main.c
-CLEANFILES = scanner.c parser.c parser.h test-bison-yylloc $(OBJS) OUTPUT
+CLEANFILES = scanner.c scanner.h parser.c parser.h test-bison-yylloc $(OBJS) OUTPUT
 OBJS = scanner.o parser.o main.o
 
 INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
