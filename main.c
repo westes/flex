@@ -931,5 +931,5 @@ void usage()
 	fprintf( stderr,
 	"\t\t-CF  do not compress scanner tables; use -F representation\n" );
 	fprintf( stderr, "\t-P  specify scanner prefix other than \"yy\"\n" );
-	fprintf( stderr, "\t-S  specify non-default skeleton file\n" );
+	fprintf( stderr, "\t-S  specify skeleton file\n" );
 	}
