@@ -5,24 +5,24 @@
 * the manual:
 
 ** integrate the items in the faqs/ directory into the manual or code
-  or similar
+  or similar (millaway is working on this; much of the FAQS directory
+  is old or uninformative)
 
 *** create a section on flex design, features, etc.
 
-* repackage the distribution
+* address lex-replacement: document or provide an option through
+   configure for creating lex and libl.a files (but remember this has
+   posix implications)
 
-** address lex-replacement: document or provide an option through
-   configure for creating lex and libl.a files
-
-*** decide what to do about abc{1,3} being broken in the posix standard
+* getext
 
 ** update gettext support from gettext-0.11 to gettext-0.11.2
 
 ** make sure all flex modules use gettext translation facilities
 
-** subdirectories
+*subdirectories
 
-*** in examples/manual, integrate the Makefile.examples into the
+** in examples/manual, integrate the Makefile.examples into the
     Makefile.am
 
 * test suite
@@ -33,7 +33,7 @@
    tests/. millaway has assigned the rights to the test suite to me
    and so the test suite will be under the flex license.
 
-* generic coding issues
+* generic coding
 
 ** move as much skeleton code as possible out of gen.c and into
   flex.skl

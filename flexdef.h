@@ -333,6 +333,7 @@
  * interactive - if true (-I), generate an interactive scanner
  * caseins - if true (-i), generate a case-insensitive scanner
  * lex_compat - if true (-l), maximize compatibility with AT&T lex
+ * posix_compat - if true (-X), maximize compatibility with POSIX lex
  * do_yylineno - if true, generate code to maintain yylineno
  * useecs - if true (-Ce flag), use equivalence classes
  * fulltbl - if true (-Cf flag), don't compress the DFA state table
@@ -370,7 +371,7 @@
  */
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
-extern int interactive, caseins, lex_compat, do_yylineno;
+extern int interactive, caseins, lex_compat, posix_compat, do_yylineno;
 extern int useecs, fulltbl, usemecs, fullspd;
 extern int gen_line_dirs, performance_report, backing_up_report;
 extern int reentrant, reentrant_bison_pure;

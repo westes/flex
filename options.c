@@ -81,6 +81,8 @@ optspec_t  flexopts[] = {
 {"--interactive",       OPT_INTERACTIVE,0},/* Generate interactive scanner (opposite of -B). */
 {"-l",                  OPT_LEX_COMPAT,0},
 {"--lex-compat",        OPT_LEX_COMPAT,0},/* Maximal compatibility with original lex. */
+{"-X",                  OPT_POSIX_COMPAT,0},
+{"--posix-compat",      OPT_POSIX_COMPAT,0},/* Maximal compatibility with POSIX lex. */
 {"-L",                  OPT_NO_LINE,0},/* Suppress #line directives in scanner. */
 {"--noline",            OPT_NO_LINE,0},/* Suppress #line directives in scanner. */
 {"--main",              OPT_MAIN,0}, /* use built-in main() function. */

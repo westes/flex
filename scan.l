@@ -246,6 +246,7 @@ LEXOPT		[aceknopr]
 	input		ACTION_IFDEF("YY_NO_INPUT", ! option_sense);
 	interactive	interactive = option_sense;
 	lex-compat	lex_compat = option_sense;
+	posix-compat	posix_compat = option_sense;
 	main		{
 			action_define( "YY_MAIN", option_sense );
             /* Override yywrap */
@@ -362,7 +363,13 @@ LEXOPT		[aceknopr]
 	^{OPTWS}"<"	BEGIN(SC); return '<';
 	^{OPTWS}"^"	return '^';
 	\"		BEGIN(QUOTE); return '"';
-	"{"/[[:digit:]]	BEGIN(NUM); return '{';
+	"{"/[[:digit:]]	{
+			BEGIN(NUM);
+			if ( lex_compat || posix_compat )
+				return BEGIN_REPEAT_POSIX;
+			else
+				return BEGIN_REPEAT_FLEX;
+			}
 	"$"/([[:blank:]]|{NL})	return '$';
 
 	{WS}"%{"		{
@@ -573,7 +580,13 @@ LEXOPT		[aceknopr]
 			}
 
 	","		return ',';
-	"}"		BEGIN(SECT2); return '}';
+	"}"		{
+			BEGIN(SECT2);
+			if ( lex_compat || posix_compat )
+				return END_REPEAT_POSIX;
+			else
+				return END_REPEAT_FLEX;
+			}
 
 	.		{
 			synerr( _( "bad character inside {}'s" ) );

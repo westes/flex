@@ -60,6 +60,7 @@ enum flexopt_flag_t {
     OPT_HELP,
     OPT_INTERACTIVE,
     OPT_LEX_COMPAT,
+    OPT_POSIX_COMPAT,
     OPT_MAIN,
     OPT_META_ECS,
     OPT_NEVER_INTERACTIVE,

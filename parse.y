@@ -6,6 +6,25 @@
 %token CCE_ALNUM CCE_ALPHA CCE_BLANK CCE_CNTRL CCE_DIGIT CCE_GRAPH
 %token CCE_LOWER CCE_PRINT CCE_PUNCT CCE_SPACE CCE_UPPER CCE_XDIGIT
 
+/*
+ *POSIX and AT&T lex place the
+ * precedence of the repeat operator, {}, below that of concatenation.
+ * Thus, ab{3} is ababab.  Most other POSIX utilities use an Extended
+ * Regular Expression (ERE) precedence that has the repeat operator
+ * higher than concatenation.  This causes ab{3} to yield abbb.
+ *
+ * In order to support the POSIX and AT&T precedence and the flex
+ * precedence we define two token sets for the begin and end tokens of
+ * the repeat operator, '{' and '}'.  The lexical scanner chooses
+ * which tokens to return based on whether posix_compat or lex_compat
+ * are specified. Specifying either posix_compat or lex_compat will
+ * cause flex to parse scanner files as per the AT&T and
+ * POSIX-mandated behavior.
+ */
+
+%token BEGIN_REPEAT_POSIX END_REPEAT_POSIX BEGIN_REPEAT_FLEX END_REPEAT_FLEX
+
+
 %{
 /*  Copyright (c) 1990 The Regents of the University of California. */
 /*  All rights reserved. */
@@ -152,7 +171,7 @@ sect1		:  sect1 startconddecl namelist1
 		|  sect1 options
 		|
 		|  error
-			{ synerr( "unknown error processing section 1" ); }
+			{ synerr( _("unknown error processing section 1") ); }
 		;
 
 sect1end	:  SECTEND
@@ -177,7 +196,7 @@ namelist1	:  namelist1 NAME
 			{ scinstal( nmstr, xcluflg ); }
 
 		|  error
-			{ synerr( "bad start condition list" ); }
+			{ synerr( _("bad start condition list") ); }
 		;
 
 options		:  OPTION_OP optionlist
@@ -304,7 +323,7 @@ flexrule	:  '^' rule
 			}
 
 		|  error
-			{ synerr( "unrecognized rule" ); }
+			{ synerr( _("unrecognized rule") ); }
 		;
 
 scon_stk_ptr	:
@@ -340,7 +359,7 @@ namelist2	:  namelist2 ',' sconname
 		|  sconname
 
 		|  error
-			{ synerr( "bad start condition list" ); }
+			{ synerr( _("bad start condition list") ); }
 		;
 
 sconname	:  NAME
@@ -422,7 +441,7 @@ rule		:  re2 re
 			}
 
 		|  re2 re '$'
-			{ synerr( "trailing context used twice" ); }
+			{ synerr( _("trailing context used twice") ); }
 
 		|  re '$'
 			{
@@ -435,7 +454,7 @@ rule		:  re2 re
 
 			if ( trlcontxt )
 				{
-				synerr( "trailing context used twice" );
+				synerr( _("trailing context used twice") );
 				$$ = mkstate( SYM_EPSILON );
 				}
 
@@ -504,7 +523,7 @@ re2		:  re '/'
 			 */
 
 			if ( trlcontxt )
-				synerr( "trailing context used twice" );
+				synerr( _("trailing context used twice") );
 			else
 				trlcontxt = true;
 
@@ -533,6 +552,69 @@ series		:  series singleton
 
 		|  singleton
 			{ $$ = $1; }
+
+		|  series BEGIN_REPEAT_POSIX NUMBER ',' NUMBER END_REPEAT_POSIX
+			{
+			varlength = true;
+
+			if ( $3 > $5 || $3 < 0 )
+				{
+				synerr( _("bad iteration values") );
+				$$ = $1;
+				}
+			else
+				{
+				if ( $3 == 0 )
+					{
+					if ( $5 <= 0 )
+						{
+						synerr(
+						_("bad iteration values") );
+						$$ = $1;
+						}
+					else
+						$$ = mkopt(
+							mkrep( $1, 1, $5 ) );
+					}
+				else
+					$$ = mkrep( $1, $3, $5 );
+				}
+			}
+
+		|  series BEGIN_REPEAT_POSIX NUMBER ',' END_REPEAT_POSIX
+			{
+			varlength = true;
+
+			if ( $3 <= 0 )
+				{
+				synerr( _("iteration value must be positive") );
+				$$ = $1;
+				}
+
+			else
+				$$ = mkrep( $1, $3, INFINITY );
+			}
+
+		|  series BEGIN_REPEAT_POSIX NUMBER END_REPEAT_POSIX
+			{
+			/* The series could be something like "(foo)",
+			 * in which case we have no idea what its length
+			 * is, so we punt here.
+			 */
+			varlength = true;
+
+			if ( $3 <= 0 )
+				{
+				  synerr( _("iteration value must be positive")
+					  );
+				$$ = $1;
+				}
+
+			else
+				$$ = link_machines( $1,
+						copysingl( $1, $3 - 1 ) );
+			}
+
 		;
 
 singleton	:  singleton '*'
@@ -554,13 +636,13 @@ singleton	:  singleton '*'
 			$$ = mkopt( $1 );
 			}
 
-		|  singleton '{' NUMBER ',' NUMBER '}'
+		|  singleton BEGIN_REPEAT_FLEX NUMBER ',' NUMBER END_REPEAT_FLEX
 			{
 			varlength = true;
 
 			if ( $3 > $5 || $3 < 0 )
 				{
-				synerr( "bad iteration values" );
+				synerr( _("bad iteration values") );
 				$$ = $1;
 				}
 			else
@@ -570,7 +652,7 @@ singleton	:  singleton '*'
 					if ( $5 <= 0 )
 						{
 						synerr(
-						"bad iteration values" );
+						_("bad iteration values") );
 						$$ = $1;
 						}
 					else
@@ -582,13 +664,13 @@ singleton	:  singleton '*'
 				}
 			}
 
-		|  singleton '{' NUMBER ',' '}'
+		|  singleton BEGIN_REPEAT_FLEX NUMBER ',' END_REPEAT_FLEX
 			{
 			varlength = true;
 
 			if ( $3 <= 0 )
 				{
-				synerr( "iteration value must be positive" );
+				synerr( _("iteration value must be positive") );
 				$$ = $1;
 				}
 
@@ -596,7 +678,7 @@ singleton	:  singleton '*'
 				$$ = mkrep( $1, $3, INFINITY );
 			}
 
-		|  singleton '{' NUMBER '}'
+		|  singleton BEGIN_REPEAT_FLEX NUMBER END_REPEAT_FLEX
 			{
 			/* The singleton could be something like "(foo)",
 			 * in which case we have no idea what its length
@@ -606,7 +688,7 @@ singleton	:  singleton '*'
 
 			if ( $3 <= 0 )
 				{
-				synerr( "iteration value must be positive" );
+				synerr( _("iteration value must be positive") );
 				$$ = $1;
 				}
 
@@ -700,7 +782,7 @@ ccl		:  ccl CHAR '-' CHAR
 				}
 
 			if ( $2 > $4 )
-				synerr( "negative range in character class" );
+				synerr( _("negative range in character class") );
 
 			else
 				{

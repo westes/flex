@@ -3,10 +3,19 @@ changes between releases of flex
 
 See the file COPYING for copying conditions
 
+* version 2.5.8
+
+** a new --posix option generates scanners with posix-style abc{1,3}
+   compatible parsing, see manual for the screwy details
+
 * version 2.5.7
 
+** configure.in now includes a call to AC_PREREQ to enforce the
+   requirement for autoconf at least 2.50 (This only effects you if
+   you're doing flex development.)
+
 ** configure now uses autoconf's versioning information and configure
-** --help reports the bug-reporting address for flex
+   --help reports the bug-reporting address for flex
 
 ** test suite now only reports success versus failure; reporting
    skipped is problematic under the current setup

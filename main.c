@@ -54,7 +54,7 @@ static char * basename2 PROTO((char* path, int should_strip_ext));
 
 /* these globals are all defined and commented in flexdef.h */
 int printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
-int interactive, caseins, lex_compat, do_yylineno, useecs, fulltbl, usemecs;
+int interactive, caseins, lex_compat, posix_compat, do_yylineno, useecs, fulltbl, usemecs;
 int fullspd, gen_line_dirs, performance_report, backing_up_report;
 int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap, csize;
 int reentrant, reentrant_bison_pure;
@@ -746,6 +746,8 @@ int exit_status;
 			putc( 'i', stderr );
 		if ( lex_compat )
 			putc( 'l', stderr );
+		if ( posix_compat )
+			putc( 'X', stderr );
 		if ( performance_report > 0 )
 			putc( 'p', stderr );
 		if ( performance_report > 1 )
@@ -923,7 +925,7 @@ char **argv;
         scanopt_t sopt;
 
 	printstats = syntaxerror = trace = spprdflt = caseins = false;
-	lex_compat = C_plus_plus = backing_up_report = ddebug = fulltbl = false;
+	lex_compat = posix_compat = C_plus_plus = backing_up_report = ddebug = fulltbl = false;
 	fullspd = long_align = nowarn = yymore_used = continued_action = false;
 	do_yylineno = yytext_is_array = in_rule = reject = do_stdinit = false;
 	yymore_really_used = reject_really_used = unspecified;
@@ -1066,6 +1068,10 @@ char **argv;
 
             case OPT_LEX_COMPAT:
                     lex_compat = true;
+                    break;
+
+            case OPT_POSIX_COMPAT:
+                    posix_compat = true;
                     break;
 
             case OPT_MAIN:
@@ -1743,6 +1749,7 @@ _(
 "  -B, --batch             generate batch scanner (opposite of -I)\n"
 "  -i, --case-insensitive  ignore case in patterns\n"
 "  -l, --lex-compat        maximal compatibility with original lex\n"
+"  -X, --posix-compat      maximal compatibility with POSIX lex\n"
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 

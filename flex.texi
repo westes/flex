@@ -610,7 +610,9 @@ operators, @samp{-}, @samp{]]}, and, at the beginning of the class, @samp{^}.
 @cindex patterns, precedence of operators
 The regular expressions listed above are grouped according to
 precedence, from highest precedence at the top to lowest at the bottom.
-Those grouped together have equal precedence.  For example,
+Those grouped together have equal precedence (see special note on the
+precedence of the repeat operator, @samp{@{@}}, under the documentation
+for the @samp{--posix} POSIX compliance option).  For example,
 
 @exindex patterns, grouping and precedence
 @example
@@ -2376,6 +2378,27 @@ option is mostly for use in maintaining @code{flex}.
 @item -V, --version
 prints the version number to @file{stdout} and exits. 
 
+@item -X, --posix
+turns on maximum compatibility with the POSIX 1003.2-1992 definition of
+@code{lex}.  Since @code{flex} was originally designed to implement the
+POSIX definition of @code{lex} this generally involves very few changes
+in behavior.  At the current writing the known differences between
+@code{flex} and the POSIX standard are:
+
+@itemize
+@item 
+In POSIX and AT&T @code{lex}, the repeat operator, @samp{@{@}}, has lower
+precedence than concatenation (thus @samp{ab@{3@}} yields @samp{ababab}).
+Most POSIX utilities use an Extended Regular Expression (ERE) precedence
+that has the precedence of the repeat operator higher than concatenation
+(which causes @samp{ab@{3@}} to yield @samp{abbb}).  By default, @code{flex}
+places the precedence of the repeat operator higher than concatenation
+which matches the ERE processing of other POSIX utilities.  When either
+@samp{--posix} or @samp{-l} are specified, @code{flex} will use the
+traditional AT&T and POSIX-compliant precedence for the repeat operator
+where concatenation has higher precedence than the repeat operator.
+@end itemize
+
 @item -7, --7bit
 instructs @code{flex} to generate a 7-bit scanner, i.e., one which can
 only recognize 7-bit characters in its input.  The advantage of using
@@ -4045,10 +4068,12 @@ This is not the case with @code{lex} or the POSIX specification.  The
 
 @item 
 The precedence of the @samp{@{,@}} (numeric range) operator is
-different.  @code{lex} interprets @samp{abc@{1,3@}} as match one, two,
+different.  The AT&T and POSIX specifications of @code{lex}
+interpret @samp{abc@{1,3@}} as match one, two,
 or three occurrences of @samp{abc}'', whereas @code{flex} interprets it
 as ``match @samp{ab} followed by one, two, or three occurrences of
-@samp{c}''.  The former is in agreement with the POSIX specification.
+@samp{c}''.  The @samp{-l} and @samp{--posix} options do away with this
+incompatibility.
 
 @item 
 The precedence of the @samp{^} operator is different.  @code{lex}
