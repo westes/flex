@@ -30,6 +30,8 @@ probably satisfy the need for a man page
 
 ** fix case of node names and generally make the manual prettier to read
 
+* document what folks can expect when they get a cvs snapshot
+
 * repackage the distribution
 
 ** address lex-replacement: document or provide an option through
