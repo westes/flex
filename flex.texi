@@ -88,35 +88,35 @@ This edition of the @cite{flex Manual} documents @code{flex} version
 
 Format of the Input File
 
-* Definitions Section::
-* Rules Section::
-* User Code Section::
-* Comments in the Input::
+* Definitions Section::         
+* Rules Section::               
+* User Code Section::           
+* Comments in the Input::       
 
 Reentrant C Scanners
 
-* Reentrant Uses::
-* Reentrant Overview::
-* Reentrant Example::
-* Reentrant Detail::
-* Bison Pure::
-* Reentrant Functions::
+* Reentrant Uses::              
+* Reentrant Overview::          
+* Reentrant Example::           
+* Reentrant Detail::            
+* Bison Pure::                  
+* Reentrant Functions::         
 
 The Reentrant API in Detail
 
-* Specify Reentrant::
-* Extra Reentrant Argument::
-* Global Replacement::
-* Init and Destroy Functions::
-* Accessor Methods::
-* Extra Data::
-* About yyscan_t::
+* Specify Reentrant::           
+* Extra Reentrant Argument::    
+* Global Replacement::          
+* Init and Destroy Functions::  
+* Accessor Methods::            
+* Extra Data::                  
+* About yyscan_t::              
 
 Memory Management
 
-* The Default Memory Management::
-* Overriding The Default Memory Management::
-* A Note About yytext And Memory::
+* The Default Memory Management::  
+* Overriding The Default Memory Management::  
+* A Note About yytext And Memory::  
 
 FAQ
 
@@ -208,7 +208,6 @@ FAQ
 * unnamed-faq-86::              
 * unnamed-faq-87::              
 * unnamed-faq-88::              
-* unnamed-faq-89::              
 * unnamed-faq-90::              
 * unnamed-faq-91::              
 * unnamed-faq-92::              
@@ -224,16 +223,16 @@ FAQ
 
 Appendices
 
-* Makefiles and Flex::
+* Makefiles and Flex::          
 
 Indices
 
-* Concept Index::
-* Index of Functions and Macros::
-* Index of Variables::
-* Index of Data Types::
-* Index of Hooks::
-* Index of Examples::
+* Concept Index::               
+* Index of Functions and Macros::  
+* Index of Variables::          
+* Index of Data Types::         
+* Index of Hooks::              
+* Index of Examples::           
 
 @end detailmenu
 @end menu
@@ -420,10 +419,10 @@ in it:
 @end example
 
 @menu
-* Definitions Section::
-* Rules Section::
-* User Code Section::
-* Comments in the Input::
+* Definitions Section::         
+* Rules Section::               
+* User Code Section::           
+* Comments in the Input::       
 @end menu
 
 @node Definitions Section
@@ -3511,12 +3510,12 @@ reentrant @code{flex} scanner without the need for synchronization with
 other threads.
 
 @menu
-* Reentrant Uses::
-* Reentrant Overview::
-* Reentrant Example::
-* Reentrant Detail::
-* Bison Pure::
-* Reentrant Functions::
+* Reentrant Uses::              
+* Reentrant Overview::          
+* Reentrant Example::           
+* Reentrant Detail::            
+* Bison Pure::                  
+* Reentrant Functions::         
 @end menu
 
 @node Reentrant Uses
@@ -3641,13 +3640,13 @@ Here are the things you need to do or know to use the reentrant C API of
 @code{flex}.
 
 @menu
-* Specify Reentrant::
-* Extra Reentrant Argument::
-* Global Replacement::
-* Init and Destroy Functions::
-* Accessor Methods::
-* Extra Data::
-* About yyscan_t::
+* Specify Reentrant::           
+* Extra Reentrant Argument::    
+* Global Replacement::          
+* Init and Destroy Functions::  
+* Accessor Methods::            
+* Extra Data::                  
+* About yyscan_t::              
 @end menu
 
 @node Specify Reentrant
@@ -4347,9 +4346,9 @@ This chapter describes how flex handles dynamic memory, and how you can
 override the default behavior.
 
 @menu
-* The Default Memory Management::
-* Overriding The Default Memory Management::
-* A Note About yytext And Memory::
+* The Default Memory Management::  
+* Overriding The Default Memory Management::  
+* A Note About yytext And Memory::  
 @end menu
 
 @node The Default Memory Management
@@ -4830,7 +4829,6 @@ publish them here.
 * unnamed-faq-86::              
 * unnamed-faq-87::              
 * unnamed-faq-88::              
-* unnamed-faq-89::              
 * unnamed-faq-90::              
 * unnamed-faq-91::              
 * unnamed-faq-92::              
@@ -4886,7 +4884,6 @@ call, you must specify one of @code{%option always-interactive} or
 @node  Does flex support recursive pattern definitions?
 @unnumberedsec Does flex support recursive pattern definitions?
 
-Does flex support recursive pattern definitions?
 e.g.,
 
 @example
@@ -4898,35 +4895,32 @@ block   "{"({block}|{statement})*"}"
 
 No. You cannot have recursive definitions.  The pattern-matching power of
 regular expressions in general (and therefore flex scanners, too) is
-limited.  In particular, regular expressions cannot "balance" parentheses
+limited.  In particular, regular expressions cannot ``balance'' parentheses
 to an arbitrary degree.  For example, it's impossible to write a regular
 expression that matches all strings containing the same number of '@{'s
 as '@}'s.  For more powerful pattern matching, you need a parser, such
-as GNU bison.
+as @cite{GNU bison}.
 
 @node  How do I skip huge chunks of input (tens of megabytes) while using flex?
 @unnumberedsec How do I skip huge chunks of input (tens of megabytes) while using flex?
 
-Use fseek (or lseek) to position yyin, then call yyrestart().
+Use @code{fseek()} (or @code{lseek()}) to position yyin, then call @code{yyrestart()}.
 
 @node  Flex is not matching my patterns in the same order that I defined them.
 @unnumberedsec Flex is not matching my patterns in the same order that I defined them.
 
-Flex is not matching my patterns in the same order that I defined them.
-
-This is indeed the natural way to expect it to work, however, flex picks the
+@code{flex} picks the
 rule that matches the most text (i.e., the longest possible input string).
-This is because flex uses an entirely different matching technique
-("deterministic finite automata") that actually does all of the matching
+This is because @code{flex} uses an entirely different matching technique
+(``deterministic finite automata'') that actually does all of the matching
 simultaneously, in parallel.  (Seems impossible, but it's actually a fairly
 simple technique once you understand the principles.)
 
 A side-effect of this parallel matching is that when the input matches more
-than one rule, flex scanners pick the rule that matched the *most* text. This
-is explained further in the manual, in the section "How the input
-is Matched".
+than one rule, @code{flex} scanners pick the rule that matched the @emph{most} text. This
+is explained further in the manual, in the section @xref{Mathing}.
 
-If you want flex to choose a shorter match, then you can work around this
+If you want @code{flex} to choose a shorter match, then you can work around this
 behavior by expanding your short
 rule to match more text, then put back the extra:
 
@@ -4937,15 +4931,16 @@ data_.*        yyless( 5 ); BEGIN BLOCKIDSTATE;
 @end example
 
 Another fix would be to make the second rule active only during the
-<BLOCKIDSTATE> start condition, and make that start condition exclusive
-by declaring it with %x instead of %s.
+@code{<BLOCKIDSTATE>} start condition, and make that start condition exclusive
+by declaring it with @code{%x} instead of @code{%s}.
 
 A final fix is to change the input language so that the ambiguity for
-data_ is removed, by adding characters to it that don't match the
-identifier rule, or by removing characters (such as '_') from the
-identifier rule so it no longer matches "data_".  (Of course, you might
-also not have the option of changing the input language ...)
+@samp{data_} is removed, by adding characters to it that don't match the
+identifier rule, or by removing characters (such as @samp{_}) from the
+identifier rule so it no longer matches @samp{data_}.  (Of course, you might
+also not have the option of changing the input language.)
 
+@c Will's faq fixes made it here
 @node  My actions are executing out of order or sometimes not at all.
 @unnumberedsec My actions are executing out of order or sometimes not at all.
 
@@ -7195,28 +7190,6 @@ recompile everything, and it should all work.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unnamed-faq-89
-@unnumberedsec unnamed-faq-89
-@example
-@verbatim
-To: John Victor J <vjohn@its.soft.net>
-Subject: Re: flex---is thread safe
-In-reply-to: Your message of Sun, 23 May 1999 12:56:56 +0530.
-Date: Sun, 23 May 1999 00:32:53 PDT
-From: Vern Paxson <vern>
-
->      I would like to know whether flex is thread safe???
-
-I take it you mean the scanners it generates and not flex itself.
-
-The answer is (still) No, except if you use the -+ option to generate
-a C++ scanning class (and if your stream library is thread-safe).
-
-		Vern
-@end verbatim
-@end example
-
-@c TODO: Evaluate this faq.
 @node unnamed-faq-90
 @unnumberedsec unnamed-faq-90
 @example
@@ -7605,7 +7578,7 @@ then the problem is that the last rule needs to be "{whitespace}" !
 @appendix Appendices
 
 @menu
-* Makefiles and Flex::
+* Makefiles and Flex::          
 @end menu
 
 @node Makefiles and Flex
@@ -7721,12 +7694,12 @@ GNU Make Manual}.
 @unnumbered Indices
 
 @menu
-* Concept Index::
-* Index of Functions and Macros::
-* Index of Variables::
-* Index of Data Types::
-* Index of Hooks::
-* Index of Examples::
+* Concept Index::               
+* Index of Functions and Macros::  
+* Index of Variables::          
+* Index of Data Types::         
+* Index of Hooks::              
+* Index of Examples::           
 @end menu
 
 @node Concept Index
