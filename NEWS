@@ -12,6 +12,8 @@ Changes between release 2.4.3 (03Dec93) and release 2.4.2:
 
 	- More robust solution to 2.4.2's flexfatal() bug fix.
 
+	- Some lint tweaks.
+
 
 Changes between release 2.4.2 (01Dec93) and release 2.4.1:
 
