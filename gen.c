@@ -246,6 +246,49 @@ void genctbl()
 	}
 
 
+/* mkecstbl - Make equivalence-class tables. */
+
+struct yytbl_data *mkecstbl (void)
+{
+	register int i, j;
+	int     numrows;
+	struct yytbl_data *tbl = 0;
+	int32_t *tdata = 0;
+
+	tbl = yytbl_data_create (YYT_ID_EC);
+	tbl->t_flags |= YYT_DATA32;
+	tbl->t_hilen = 0;
+	tbl->t_lolen = csize;
+
+	tbl->t_data = tdata = (int32_t *) calloc (tbl->t_lolen, sizeof (int32_t));
+
+	for (i = 1; i < csize; ++i) {
+		if (caseins && isupper (i))
+			ecgroup[i] = ecgroup[tolower (i)];
+
+		ecgroup[i] = ABS (ecgroup[i]);
+		tdata[i] = ecgroup[i];
+	}
+
+	if (trace) {
+		fputs (_("\n\nEquivalence Classes:\n\n"), stderr);
+
+		numrows = csize / 8;
+
+		for (j = 0; j < numrows; ++j) {
+			for (i = j; i < csize; i = i + numrows) {
+				fprintf (stderr, "%4s = %-2d", readable_form (i), ecgroup[i]);
+
+				putc (' ', stderr);
+			}
+
+			putc ('\n', stderr);
+		}
+	}
+
+	return tbl;
+}
+
 /* Generate equivalence-class tables. */
 
 void genecs()

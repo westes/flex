@@ -225,9 +225,10 @@ int mach, variable_trail_rule, headcnt, trailcnt, pcont_act;
 
 	sprintf( action_text, "case %d:\n", num_rules );
 	add_action( action_text );
-	sprintf( action_text, "/* rule %d can match eol = %s*/\n",
-			num_rules, rule_has_nl[num_rules]? "true":"false");
-	add_action( action_text );
+	if ( rule_has_nl[num_rules] ){
+		sprintf( action_text, "/* rule %d can match eol */\n", num_rules);
+		add_action( action_text );
+	}
 
 
 	if ( variable_trail_rule )
