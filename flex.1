@@ -3501,7 +3501,12 @@ or
 .B %option yylineno
 is used.
 .IP
-yylineno is not part of the POSIX specification.
+.B yylineno
+should be maintained on a per-buffer basis, rather than a per-scanner
+(single global variable) basis.
+.IP
+.B yylineno
+is not part of the POSIX specification.
 .IP -
 The
 .B input()
