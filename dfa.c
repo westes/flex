@@ -48,9 +48,9 @@ int symfollowset PROTO ((int[], int, int, int[]));
  * indexed by equivalence class.
  */
 
-void    check_for_backing_up (ds, state)
-     int     ds;
-     int     state[];
+void check_for_backing_up (ds, state)
+     int ds;
+     int state[];
 {
 	if ((reject && !dfaacc[ds].dfaacc_set) || (!reject && !dfaacc[ds].dfaacc_state)) {	/* state is non-accepting */
 		++num_backing_up;
@@ -95,10 +95,10 @@ void    check_for_backing_up (ds, state)
  *    accset[1 .. nacc] is the list of accepting numbers for the DFA state.
  */
 
-void    check_trailing_context (nfa_states, num_states, accset, nacc)
+void check_trailing_context (nfa_states, num_states, accset, nacc)
      int    *nfa_states, num_states;
      int    *accset;
-     int     nacc;
+     int nacc;
 {
 	register int i, j;
 
@@ -121,7 +121,7 @@ void    check_trailing_context (nfa_states, num_states, accset, nacc)
 				if (accset[j] & YY_TRAILING_HEAD_MASK) {
 					line_warning (_
 						      ("dangerous trailing context"),
-rule_linenum[ar]);
+						      rule_linenum[ar]);
 					return;
 				}
 		}
@@ -136,9 +136,9 @@ rule_linenum[ar]);
  * and writes a report to the given file.
  */
 
-void    dump_associated_rules (file, ds)
+void dump_associated_rules (file, ds)
      FILE   *file;
-     int     ds;
+     int ds;
 {
 	register int i, j;
 	register int num_associated_rules = 0;
@@ -186,9 +186,9 @@ void    dump_associated_rules (file, ds)
  * is done to the given file.
  */
 
-void    dump_transitions (file, state)
+void dump_transitions (file, state)
      FILE   *file;
-     int     state[];
+     int state[];
 {
 	register int i, ec;
 	int     out_char_set[CSIZE];
@@ -324,7 +324,8 @@ ADD_STATE(state); \
 				tsp = trans2[ns];
 
 				if (tsp != NO_TRANSITION
-				    && !IS_MARKED (tsp)) STACK_STATE (tsp);
+				    && !IS_MARKED (tsp))
+					STACK_STATE (tsp);
 			}
 		}
 	}
@@ -349,7 +350,7 @@ ADD_STATE(state); \
 
 /* increase_max_dfas - increase the maximum number of DFAs */
 
-void    increase_max_dfas ()
+void increase_max_dfas ()
 {
 	current_max_dfas += MAX_DFAS_INCREMENT;
 
@@ -376,7 +377,7 @@ void    increase_max_dfas ()
  * dfa starts out in state #1.
  */
 
-void    ntod ()
+void ntod ()
 {
 	int    *accset, ds, nacc, newds;
 	int     sym, hashval, numstates, dsize;
@@ -386,6 +387,9 @@ void    ntod ()
 	int     symlist[CSIZE + 1];
 	int     num_start_states;
 	int     todo_head, todo_next;
+
+	struct yytbl_data *yynxt_tbl = 0;
+	int32_t *yynxt_data = 0, yynxt_curr = 0;
 
 	/* Note that the following are indexed by *equivalence classes*
 	 * and not by characters.  Since equivalence classes are indexed
@@ -510,6 +514,25 @@ void    ntod ()
 			 */
 			num_full_table_rows = numecs + 1;
 
+		/* Begin generating yy_nxt[][]
+		 * This spans the entire LONG function.
+		 * This table is tricky because we don't know how big it will be.
+		 * So we'll have to realloc() on the way...
+		 * we'll wait until we can calculate yynxt_tbl->td_hilen.
+		 */
+		yynxt_tbl =
+			(struct yytbl_data *) calloc (1,
+						      sizeof (struct
+							      yytbl_data));
+		yytbl_data_init (yynxt_tbl, YYT_ID_NXT);
+		yynxt_tbl->td_hilen = 1;
+		yynxt_tbl->td_lolen = num_full_table_rows;
+		yynxt_tbl->td_data = yynxt_data =
+			(int32_t *) calloc (yynxt_tbl->td_lolen *
+					    yynxt_tbl->td_hilen,
+					    sizeof (int32_t));
+		yynxt_curr = 0;
+
 		/* Unless -Ca, declare it "short" because it's a real
 		 * long-shot that that won't be large enough.
 		 */
@@ -520,8 +543,10 @@ void    ntod ()
 		outn ("    {");
 
 		/* Generate 0 entries for state #0. */
-		for (i = 0; i < num_full_table_rows; ++i)
+		for (i = 0; i < num_full_table_rows; ++i) {
 			mk2data (0);
+			yynxt_data[yynxt_curr++] = 0;
+		}
 
 		dataflush ();
 		outn ("    },\n");
@@ -544,9 +569,8 @@ void    ntod ()
 			nset[numstates] =
 				mkbranch (scbol[i / 2], scset[i / 2]);
 
-		nset =
-			epsclosure (nset, &numstates, accset, &nacc,
-				    &hashval);
+		nset = epsclosure (nset, &numstates, accset, &nacc,
+				   &hashval);
 
 		if (snstods (nset, numstates, accset, nacc, hashval, &ds)) {
 			numas += nacc;
@@ -568,6 +592,7 @@ void    ntod ()
 		++num_start_states;
 		++todo_next;
 	}
+
 
 	while (todo_head < todo_next) {
 		targptr = 0;
@@ -595,23 +620,20 @@ void    ntod ()
 					numstates =
 						symfollowset (dset, dsize,
 							      sym, nset);
-					nset =
-						epsclosure (nset,
-							    &numstates,
-							    accset, &nacc,
-							    &hashval);
+					nset = epsclosure (nset,
+							   &numstates,
+							   accset, &nacc,
+							   &hashval);
 
 					if (snstods
 					    (nset, numstates, accset, nacc,
 					     hashval, &newds)) {
-						totnst =
-							totnst + numstates;
+						totnst = totnst +
+							numstates;
 						++todo_next;
 						numas += nacc;
 
-						if
-							(variable_trailing_context_rules
-							 && nacc > 0)
+						if (variable_trailing_context_rules && nacc > 0)
 							check_trailing_context
 								(nset,
 								 numstates,
@@ -687,19 +709,38 @@ void    ntod ()
 		}
 
 		if (fulltbl) {
+
+			/* Each time we hit here, it's another td_hilen, so we realloc. */
+			yynxt_tbl->td_hilen++;
+			yynxt_tbl->td_data = yynxt_data =
+				(int32_t *) realloc (yynxt_data,
+						     yynxt_tbl->td_hilen *
+						     yynxt_tbl->td_lolen *
+						     sizeof (int32_t));
+
+
 			outn ("    {");
 
 			/* Supply array's 0-element. */
-			if (ds == end_of_buffer_state)
+			if (ds == end_of_buffer_state) {
 				mk2data (-end_of_buffer_state);
-			else
+				yynxt_data[yynxt_curr++] =
+					-end_of_buffer_state;
+			}
+			else {
 				mk2data (end_of_buffer_state);
+				yynxt_data[yynxt_curr++] =
+					end_of_buffer_state;
+			}
 
-			for (i = 1; i < num_full_table_rows; ++i)
+			for (i = 1; i < num_full_table_rows; ++i) {
 				/* Jams are marked by negative of state
 				 * number.
 				 */
 				mk2data (state[i] ? state[i] : -ds);
+				yynxt_data[yynxt_curr++] =
+					state[i] ? state[i] : -ds;
+			}
 
 			dataflush ();
 			outn ("    },\n");
@@ -733,8 +774,19 @@ void    ntod ()
 		}
 	}
 
-	if (fulltbl)
+	if (fulltbl) {
 		dataend ();
+		if (tablesext) {
+			yytbl_data_compress (yynxt_tbl);
+			if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)
+				flexerror (_
+					   ("Could not write yynxt_tbl[][]"));
+		}
+		if (yynxt_tbl) {
+			yytbl_data_destroy (yynxt_tbl);
+			yynxt_tbl = 0;
+		}
+	}
 
 	else if (!fullspd) {
 		cmptmps ();	/* create compressed template entries */
@@ -766,8 +818,8 @@ void    ntod ()
  * On return, the dfa state number is in newds.
  */
 
-int     snstods (sns, numstates, accset, nacc, hashval, newds_addr)
-     int     sns[], numstates, accset[], nacc, hashval, *newds_addr;
+int snstods (sns, numstates, accset, nacc, hashval, newds_addr)
+     int sns[], numstates, accset[], nacc, hashval, *newds_addr;
 {
 	int     didsort = 0;
 	register int i, j;
@@ -891,8 +943,8 @@ int     snstods (sns, numstates, accset, nacc, hashval, newds_addr)
  *				int transsym, int nset[current_max_dfa_size] );
  */
 
-int     symfollowset (ds, dsize, transsym, nset)
-     int     ds[], dsize, transsym, nset[];
+int symfollowset (ds, dsize, transsym, nset)
+     int ds[], dsize, transsym, nset[];
 {
 	int     ns, tsp, sym, i, j, lenccl, ch, numstates, ccllist;
 
@@ -973,9 +1025,9 @@ int     symfollowset (ds, dsize, transsym, nset)
  *			int symlist[numecs], int duplist[numecs] );
  */
 
-void    sympartition (ds, numstates, symlist, duplist)
-     int     ds[], numstates;
-     int     symlist[], duplist[];
+void sympartition (ds, numstates, symlist, duplist)
+     int ds[], numstates;
+     int symlist[], duplist[];
 {
 	int     tch, i, j, k, ns, dupfwd[CSIZE + 1], lenccl, cclp, ich;
 

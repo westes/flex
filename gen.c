@@ -271,10 +271,6 @@ struct yytbl_data *mkctbl (void)
 	tdata[curr++] = chk[tblend + 2];
 	tdata[curr++] = nxt[tblend + 2];
 
-	/* TODO: deal with this: 
-	   if (useecs)
-	   genecs ();
-	 */
 	return tbl;
 }
 
@@ -620,7 +616,9 @@ void gen_find_action ()
 	}
 }
 
-/* mkftbl - make the full table and return the struct */
+/* mkftbl - make the full table and return the struct .
+ * you should call mkecstbl() after this.
+ */
 
 struct yytbl_data *mkftbl (void)
 {
@@ -1505,16 +1503,56 @@ void make_tables ()
 	if (fullspd) {
 		genctbl ();
 		if (tablesext) {
-			/* TODO: mkctbl(); */
+			struct yytbl_data *tbl;
+
+			tbl = mkctbl ();
+			yytbl_data_compress (tbl);
+			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
+				flexerror (_("Could not write ftbl"));
+			yytbl_data_destroy (tbl);
+			tbl = 0;
+
+			if (useecs) {
+				tbl = mkecstbl ();
+				yytbl_data_compress (tbl);
+				if (yytbl_data_fwrite (&tableswr, tbl) < 0)
+					flexerror (_
+						   ("Could not write ecstbl"));
+				yytbl_data_destroy (tbl);
+				tbl = 0;
+			}
 		}
 	}
-	else if (fulltbl)
+	else if (fulltbl) {
 		genftbl ();
+		if (tablesext) {
+			struct yytbl_data *tbl;
+
+			tbl = mkftbl ();
+			yytbl_data_compress (tbl);
+			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
+				flexerror (_("Could not write ftbl"));
+			yytbl_data_destroy (tbl);
+			tbl = 0;
+
+			if (useecs) {
+				tbl = mkecstbl ();
+				yytbl_data_compress (tbl);
+				if (yytbl_data_fwrite (&tableswr, tbl) < 0)
+					flexerror (_
+						   ("Could not write ecstbl"));
+				yytbl_data_destroy (tbl);
+				tbl = 0;
+			}
+		}
+	}
 	else
 		gentabs ();
 
-	if (do_yylineno)
+	if (do_yylineno) {
 		geneoltbl ();
+		/* TODO: call mkeoltbl() */
+	}
 
 	/* Definitions for backing up.  We don't need them if REJECT
 	 * is being used because then we use an alternative backin-up
