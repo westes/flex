@@ -27,8 +27,8 @@
 #ifndef lint
 
 static char copyright[] =
-    "@(#) Copyright (c) 1989 The Regents of the University of California.\n\
-     All rights reserved.\n";
+    "@(#) Copyright (c) 1989 The Regents of the University of California.\n";
+static char CR_continuation[] = "@(#) All rights reserved.\n";
 
 static char rcsid[] =
     "@(#) $Header$ (LBL)";
