@@ -1,3 +1,8 @@
+Changes between 2.2 Patch #3 (30Mar90) and 2.2 Patch #2:
+
+	- fixed bug which caused -I scanners to bomb
+
+
 Changes between 2.2 Patch #2 (27Mar90) and 2.2 Patch #1:
 
 	- fixed bug writing past end of input buffer in yyunput()
