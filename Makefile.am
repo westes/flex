@@ -130,6 +130,7 @@ BUILT_SOURCES = \
 	skel.c
 
 SUBDIRS = \
+	. \
 	doc \
 	m4  \
 	examples \
