@@ -110,9 +110,10 @@
 	*yy_cp = '\0'; \
 	yy_c_buf_p = yy_cp;
 
-#define EOB_ACT_RESTART_SCAN 0
-#define EOB_ACT_END_OF_FILE 1
-#define EOB_ACT_LAST_MATCH 2
+#define EOB_ACT_NUL_TRANS 0
+#define EOB_ACT_CONTINUE_SCAN 1
+#define EOB_ACT_END_OF_FILE 2
+#define EOB_ACT_LAST_MATCH 3
 
 /* return all but the first 'n' matched characters back to the input stream */
 #define yyless(n) \
@@ -162,12 +163,14 @@ static YY_CHAR *yy_last_accepting_cpos;
 
 #ifdef YY_USE_PROTOS
 static yy_state_type yy_get_previous_state( void );
+static yy_state_type yy_try_NUL_trans( void );
 static int yy_get_next_buffer( void );
 static void yyunput( int c, YY_CHAR *buf_ptr );
 static int input( void );
 void yyrestart( FILE *input_file );
 #else
 static yy_state_type yy_get_previous_state();
+static yy_state_type yy_try_NUL_trans();
 static int yy_get_next_buffer();
 static void yyunput();
 static int input();
@@ -234,93 +237,130 @@ new_file:
 
 %% code to set up and find next match goes here
 
-	/* bogus while loop to let YY_BACK_TRACK, EOB_ACT_LAST_MATCH,
-	 * and EOF actions branch here without introducing an optimizer-
-	 * daunting goto
-	 */
-	while ( 1 )
-	    {
+yy_find_action:
 %% code to find the action number goes here
 
-	    YY_DO_BEFORE_ACTION;
-	    YY_USER_ACTION;
+	YY_DO_BEFORE_ACTION;
+	YY_USER_ACTION;
 
 #ifdef FLEX_DEBUG
-	    fprintf( stderr, "--accepting rule #%d (\"%s\")\n",
-		     yy_act, yytext );
+	fprintf( stderr, "--accepting rule #%d (\"%s\")\n",
+		 yy_act, yytext );
 #endif
 
 do_action:	/* this label is used only to access EOF actions */
-	    switch ( yy_act )
-		{
+	switch ( yy_act )
+	    {
 %% actions go here
 
-		case YY_END_OF_BUFFER:
-		    /* undo the effects of YY_DO_BEFORE_ACTION */
-		    *yy_cp = yy_hold_char;
+	    case YY_END_OF_BUFFER:
+		{
+		/* amount of text matched not including the EOB char */
+		int yy_amount_of_matched_text = yy_cp - yytext - 1;
 
-		    switch ( yy_get_next_buffer() )
+		/* undo the effects of YY_DO_BEFORE_ACTION */
+		*yy_cp = yy_hold_char;
+
+		switch ( yy_get_next_buffer() )
+		    {
+		    case EOB_ACT_END_OF_FILE:
 			{
-			case EOB_ACT_END_OF_FILE:
+			if ( yywrap() )
 			    {
-			    if ( yywrap() )
-				{
-				/* note: because we've taken care in
-				 * yy_get_next_buffer() to have set up yytext,
-				 * we can now set up yy_c_buf_p so that if some
-				 * total hoser (like flex itself) wants
-				 * to call the scanner after we return the
-				 * YY_NULL, it'll still work - another YY_NULL
-				 * will get returned.
-				 */
-				yy_c_buf_p = yytext;
-
-				yy_act = YY_STATE_EOF((yy_start - 1) / 2);
-				goto do_action;
-				}
-
-			    else
-				YY_NEW_FILE;
-			    }
-			    break;
-
-			case EOB_ACT_RESTART_SCAN:
+			    /* note: because we've taken care in
+			     * yy_get_next_buffer() to have set up yytext,
+			     * we can now set up yy_c_buf_p so that if some
+			     * total hoser (like flex itself) wants
+			     * to call the scanner after we return the
+			     * YY_NULL, it'll still work - another YY_NULL
+			     * will get returned.
+			     */
 			    yy_c_buf_p = yytext + YY_MORE_ADJ;
-			    yy_hold_char = *yy_c_buf_p;
-			    break;
 
-			case EOB_ACT_LAST_MATCH:
-			    yy_c_buf_p = &yy_ch_buf[yy_n_chars];
+			    yy_act = YY_STATE_EOF((yy_start - 1) / 2);
+			    goto do_action;
+			    }
 
-			    yy_current_state = yy_get_previous_state();
-
-			    yy_cp = yy_c_buf_p;
-			    yy_bp = yytext + YY_MORE_ADJ;
-			    continue; /* go to "YY_DO_BEFORE_ACTION" */
+			else
+			    YY_NEW_FILE;
 			}
-		    break;
+			break;
 
-		default:
-#ifdef FLEX_DEBUG
-		    printf( "action # %d\n", yy_act );
-#endif
-		    YY_FATAL_ERROR( "fatal flex scanner internal error" );
+		    case EOB_ACT_NUL_TRANS:
+			{
+			yy_state_type yy_next_state;
+
+			yy_c_buf_p = yytext + yy_amount_of_matched_text;
+
+			yy_current_state = yy_get_previous_state();
+
+			/* okay, we're now positioned to make the
+			 * NUL transition.  We couldn't have
+			 * yy_get_previous_state() go ahead and do it
+			 * for us because it doesn't know how to deal
+			 * with the possibility of jamming (and we
+			 * don't want to build jamming into it because
+			 * then it will run more slowly)
+			 */
+
+			yy_next_state = yy_try_NUL_trans( yy_current_state );
+
+			yy_bp = yytext + YY_MORE_ADJ;
+
+			if ( yy_next_state )
+			    {
+			    /* consume the NUL */
+			    yy_cp = ++yy_c_buf_p;
+			    yy_current_state = yy_next_state;
+			    goto yy_match;
+			    }
+
+			else
+			    {
+%% code to do backtracking for compressed tables and set up yy_cp goes here
+			    goto yy_find_action;
+			    }
+			}
+
+		    case EOB_ACT_CONTINUE_SCAN:
+			yy_c_buf_p = yytext + yy_amount_of_matched_text;
+
+			yy_current_state = yy_get_previous_state();
+
+			yy_cp = yy_c_buf_p;
+			yy_bp = yytext + YY_MORE_ADJ;
+			goto yy_match;
+
+		    case EOB_ACT_LAST_MATCH:
+			yy_c_buf_p = &yy_ch_buf[yy_n_chars];
+
+			yy_current_state = yy_get_previous_state();
+
+			yy_cp = yy_c_buf_p;
+			yy_bp = yytext + YY_MORE_ADJ;
+			goto yy_find_action;
+		    }
+		break;
 		}
 
-	    break; /* exit bogus while loop */
+	    default:
+#ifdef FLEX_DEBUG
+		printf( "action # %d\n", yy_act );
+#endif
+		YY_FATAL_ERROR( "fatal flex scanner internal error" );
 	    }
 	}
     }
 
 
-/* yy_get_next_buffer - try to read in new buffer
+/* yy_get_next_buffer - try to read in a new buffer
  *
  * synopsis
  *     int yy_get_next_buffer();
  *     
  * returns a code representing an action
  *     EOB_ACT_LAST_MATCH - 
- *     EOB_ACT_RESTART_SCAN - restart the scanner
+ *     EOB_ACT_CONTINUE_SCAN - continue scanning from current position
  *     EOB_ACT_END_OF_FILE - end of file
  */
 
@@ -331,12 +371,10 @@ static int yy_get_next_buffer()
     register YY_CHAR *source = yytext - 1; /* copy prev. char, too */
     register int number_to_move, i;
     int ret_val;
-    
-    if ( yy_c_buf_p != &yy_ch_buf[yy_n_chars + 1] )
-	{
-	YY_FATAL_ERROR( "NULL in input" );
-	/*NOTREACHED*/
-	}
+
+    if ( yy_c_buf_p < &yy_ch_buf[yy_n_chars + 1] )
+	/* this happens when we see a NUL */
+	return ( EOB_ACT_NUL_TRANS );
 
     /* try to read more data */
 
@@ -374,7 +412,7 @@ static int yy_get_next_buffer()
 	}
 
     else
-	ret_val = EOB_ACT_RESTART_SCAN;
+	ret_val = EOB_ACT_CONTINUE_SCAN;
 
     yy_n_chars += number_to_move;
     yy_ch_buf[yy_n_chars] = YY_END_OF_BUFFER_CHAR;
@@ -414,6 +452,23 @@ static yy_state_type yy_get_previous_state()
 	}
 
     return ( yy_current_state );
+    }
+
+
+/* yy_try_NUL_trans - try to make a transition on the NUL character
+ *
+ * synopsis
+ *     next_state = yy_try_NUL_trans( current_state );
+ */
+
+static yy_state_type yy_try_NUL_trans( yy_current_state )
+register yy_state_type yy_current_state;
+
+    {
+    register int yy_is_jam;
+%% code to find the next state, and perhaps do backtracking, goes here
+
+    return ( yy_is_jam ? 0 : yy_current_state );
     }
 
 
@@ -481,7 +536,7 @@ static int input()
 		{
 		if ( yywrap() )
 		    {
-		    yy_c_buf_p = yytext;
+		    yy_c_buf_p = yytext + YY_MORE_ADJ;
 		    return ( EOF );
 		    }
 
@@ -497,7 +552,11 @@ static int input()
 		}
 		break;
 
-	    case EOB_ACT_RESTART_SCAN:
+	    case EOB_ACT_NUL_TRANS:
+		*yy_c_buf_p = '\0';
+		break;
+
+	    case EOB_ACT_CONTINUE_SCAN:
 		yy_c_buf_p = yytext + YY_MORE_ADJ;
 		break;
 
