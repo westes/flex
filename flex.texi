@@ -856,14 +856,35 @@ For example, the following character classes are all equivalent:
 @end verbatim
 @end example
 
+Some notes on patterns are in order.
+
+
+@itemize
 @cindex case-insensitive, effect on character classes
-If your scanner is case-insensitive (the @samp{-i} flag), then
+@item If your scanner is case-insensitive (the @samp{-i} flag), then
 @samp{[:upper:]} and @samp{[:lower:]} are equivalent to
 @samp{[:alpha:]}.
 
-Some notes on patterns are in order.
+@anchor{case and character ranges}
+@item Character classes with ranges, such as @samp{[a-Z]}, should be used with
+caution in a case-insensitive scanner if the range spans upper or lowercase
+characters. Flex does not know if you want to fold all upper and lowercase
+characters together, or if you want the literal numeric range specified (with
+no case folding). When in doubt, flex will assume that you meant the literal
+numeric range, and will issue a warning. The exception to this rule is a
+character range such as @samp{[a-z]} or @samp{[S-W]} where it is obvious that you
+want case-folding to occur. Here are some examples with the @samp{-i} flag
+enabled:
 
-@itemize
+@multitable {@samp{[a-zA-Z]}} {ambiguous} {@samp{[A-Z\[\\\]_`a-t]}} {@samp{[@@A-Z\[\\\]_`abc]}}
+@item Range @tab Result @tab Literal Range @tab Alternate Range
+@item @samp{[a-t]} @tab ok @tab @samp{[a-tA-T]} @tab
+@item @samp{[A-T]} @tab ok @tab @samp{[a-tA-T]} @tab
+@item @samp{[A-t]} @tab ambiguous @tab @samp{[A-Z\[\\\]_`a-t]} @tab @samp{[a-tA-T]}
+@item @samp{[_-@{]} @tab ambiguous @tab @samp{[_`a-z@{]} @tab @samp{[_`a-zA-Z@{]}
+@item @samp{[@@-C]} @tab ambiguous @tab @samp{[@@ABC]} @tab @samp{[@@A-Z\[\\\]_`abc]}
+@end multitable
+
 @cindex end of line, in negated character classes
 @cindex EOL, in negated character classes
 @item
@@ -2445,7 +2466,7 @@ instructs @code{flex} to generate a @dfn{case-insensitive} scanner.  The
 case of letters given in the @code{flex} input patterns will be ignored,
 and tokens in the input will be matched regardless of case.  The matched
 text given in @code{yytext} will have the preserved case (i.e., it will
-not be folded).
+not be folded).  For tricky behavior, see @ref{case and character ranges}.
 
 
 
