@@ -120,12 +120,6 @@ localedir = $(datadir)/locale
 INCLUDES = -DLOCALEDIR=\"$(localedir)\" -I@includedir@
 LIBS = @LIBINTL@ @LIBS@
 
-# We have a few dependencies and rules to enumerate. (from the old
-# Makefile.in by Vern)
-
-scan.o: scan.c parse.h flexdef.h config.h
-yylex.o: yylex.c parse.h flexdef.h config.h
-
 skel.c: flex.skl mkskel.sh
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir)/flex.skl >skel.c
 
@@ -134,20 +128,26 @@ $(man_MANS): $(srcdir)/main.c
 	$(help2man) --name='fast lexical analyzer generator' --section=`echo $$i|rev|cut -f 1 -d .|rev` @builddir@/flex > $$i ; \
 	done
 
-main.o: main.c flexdef.h config.h version.h
-ccl.o: ccl.c flexdef.h config.h
-dfa.o: dfa.c flexdef.h config.h
-ecs.o: ecs.c flexdef.h config.h
-gen.o: gen.c flexdef.h config.h
-misc.o: misc.c flexdef.h config.h
-nfa.o: nfa.c flexdef.h config.h
-parse.o: parse.c flexdef.h config.h
-skel.o: skel.c flexdef.h config.h
-sym.o: sym.c flexdef.h config.h
-tblcmp.o: tblcmp.c flexdef.h config.h
-options.o: options.c options.h scanopt.h flexdef.h config.h
-scanopt.o: scanopt.c scanopt.h flexdef.h config.h
-buf.o: buf.c flexdef.h
+# Explicitly describe dependencies.
+# You can recreate this with `gcc -I. -MM *.c'
+buf.o: buf.c flexdef.h config.h gettext.h
+ccl.o: ccl.c flexdef.h config.h gettext.h
+dfa.o: dfa.c flexdef.h config.h gettext.h
+ecs.o: ecs.c flexdef.h config.h gettext.h
+gen.o: gen.c flexdef.h config.h gettext.h
+libmain.o: libmain.c
+libyywrap.o: libyywrap.c
+main.o: main.c flexdef.h config.h gettext.h version.h options.h scanopt.h
+misc.o: misc.c flexdef.h config.h gettext.h
+nfa.o: nfa.c flexdef.h config.h gettext.h
+options.o: options.c options.h scanopt.h flexdef.h config.h gettext.h
+parse.o: parse.c flexdef.h config.h gettext.h
+scan.o: scan.c flexdef.h config.h gettext.h parse.h
+scanopt.o: scanopt.c scanopt.h flexdef.h config.h gettext.h
+skel.o: skel.c flexdef.h config.h gettext.h
+sym.o: sym.c flexdef.h config.h gettext.h
+tblcmp.o: tblcmp.c flexdef.h config.h gettext.h
+yylex.o: yylex.c flexdef.h config.h gettext.h parse.h
 
 # Create a tags file.
 tags:
