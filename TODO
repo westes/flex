@@ -4,6 +4,8 @@
 
 * the manual:
 
+** revisit discussion of yylineno performance %%
+
 ** clean up the faqs section. The information is good; the texinfo
    could use some touching up.
 
