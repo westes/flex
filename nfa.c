@@ -218,6 +218,12 @@ int mach, variable_trail_rule, headcnt, trailcnt;
      */
     rule_linenum[num_rules] = linenum;
 
+    /* if this is a continued action, then the line-number has
+     * already been updated, giving us the wrong number
+     */
+    if ( continued_action )
+	--rule_linenum[num_rules];
+
     fprintf( temp_action_file, "case %d:\n", num_rules );
 
     if ( variable_trail_rule )
