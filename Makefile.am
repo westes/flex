@@ -33,6 +33,8 @@
 # For MS-DOS, add "-DMS_DOS" to DEFS.  See the directory MISC/MSDOS for
 # additional info.
 
+YFLAGS = -d
+
 AUTOMAKE_OPTIONS = \
 	gnits \
 	check-news \
