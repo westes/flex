@@ -22,15 +22,12 @@
 BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
-EXTRA_DIST = scanner.l parser.y test.input
+EXTRA_DIST = scanner.l test.input
 CLEANFILES = scanner.c test-reject-* OUTPUT $(OBJS)
 OBJS = test-reject-nr.o test-reject-r.o test-reject-ver.o \
        test-reject-ser.o
 
 INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
-#LDFLAGS = $(top_srcdir)/libfl.a 
-#LFLAGS = --header="scanner.h"
-#YFLAGS = --defines --output=parser.c
 
 tests = test-reject-nr$(EXEEXT) test-reject-r$(EXEEXT) \
         test-reject-ser$(EXEEXT) test-reject-ver$(EXEEXT)
