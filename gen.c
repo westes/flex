@@ -1023,6 +1023,8 @@ void gentabs()
 		}
 
 	dataend();
+
+	flex_free( (void *) acc_array );
 	}
 
 
