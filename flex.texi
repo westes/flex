@@ -4940,12 +4940,8 @@ identifier rule, or by removing characters (such as @samp{_}) from the
 identifier rule so it no longer matches @samp{data_}.  (Of course, you might
 also not have the option of changing the input language.)
 
-@c Will's faq fixes made it here
 @node  My actions are executing out of order or sometimes not at all.
 @unnumberedsec My actions are executing out of order or sometimes not at all.
-
-My actions are executing out of order or sometimes not at all. What's
-happening?
 
 Most likely, you have (in error) placed the opening @samp{@{} of the action
 block on a different line than the rule, e.g.,
@@ -4959,7 +4955,7 @@ block on a different line than the rule, e.g.,
 @end verbatim
 @end example
 
-flex requires that the opening @samp{@{} of an action associated with a rule
+@code{flex} requires that the opening @samp{@{} of an action associated with a rule
 begin on the same line as does the rule.  You need instead to write your rules
 as follows:
 
@@ -4974,42 +4970,40 @@ as follows:
 @node  How can I have multiple input sources feed into the same scanner at the same time?
 @unnumberedsec How can I have multiple input sources feed into the same scanner at the same time?
 
-How can I have multiple input sources feed into the same scanner at
-the same time?
-
-If...
+If @dots{}
 @itemize
 @item
-your scanner is free of backtracking (verified using flex's -b flag),
+your scanner is free of backtracking (verified using @code{flex}'s @samp{-b} flag),
 @item
-AND you run it interactively (-I option; default unless using special table
+AND you run your scanner interactively (@samp{-I} option; default unless using special table
 compression options),
 @item
-AND you feed it one character at a time by redefining YY_INPUT to do so,
+AND you feed it one character at a time by redefining @code{YY_INPUT} to do so,
 @end itemize
 
 then every time it matches a token, it will have exhausted its input
 buffer (because the scanner is free of backtracking).  This means you
-can safely use select() at the point and only call yylex() for another
-token if select() indicates there's data available.
+can safely use @code{select()} at the point and only call @code{yylex()} for another
+token if @code{select()} indicates there's data available.
 
-That is, move the select() out from the input function to a point where
-it determines whether yylex() gets called for the next token.
+That is, move the @code{select()} out from the input function to a point where
+it determines whether @code{yylex()} gets called for the next token.
 
 With this approach, you will still have problems if your input can arrive
-piecemeal; select() could inform you that the beginning of a token is
-available, you call yylex() to get it, but it winds up blocking waiting
+piecemeal; @code{select()} could inform you that the beginning of a token is
+available, you call @code{yylex()} to get it, but it winds up blocking waiting
 for the later characters in the token.
 
-Here's another way:  Move your input multiplexing inside of YY_INPUT.  That
-is, whenever YY_INPUT is called, it select()'s to see where input is
+Here's another way:  Move your input multiplexing inside of @code{YY_INPUT}.  That
+is, whenever @code{YY_INPUT} is called, it @code{select()}'s to see where input is
 available.  If input is available for the scanner, it reads and returns the
 next byte.  If input is available from another source, it calls whatever
 function is responsible for reading from that source.  (If no input is
-available, it blocks until some is.)  I've used this technique in an
-interpreter I wrote that both reads keyboard input using a flex scanner and
+available, it blocks until some input is available.)  I've used this technique in an
+interpreter I wrote that both reads keyboard input using a @code{flex} scanner and
 IPC traffic from sockets, and it works fine.
 
+@c faq edit stopped here
 @node  Can I build nested parsers that work with the same input file?
 @unnumberedsec Can I build nested parsers that work with the same input file?
 
