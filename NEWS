@@ -5,6 +5,16 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.19
 
+** Added %option bison-bridge (--bison-bridge)
+
+** Removed %option reentrant-bison/--reentrant-bison/-Rb
+
+** yylineno is present in all scanners; Modified nasty performance
+   penalty warning with yylineno in documentation
+
+** test-table-opts is now run last in the test suite because it's so fat
+
+
 ** flex can, to some extent, diagnose where internal problems occur
 
 ** new translations from the translation project: fr, ca, de, ru, sv
