@@ -324,6 +324,9 @@ void check_options()
 			GEN_PREFIX( "out" );
 			GEN_PREFIX( "restart" );
 			GEN_PREFIX( "text" );
+
+			if ( do_yylineno )
+				GEN_PREFIX( "lineno" );
 			}
 
 		if ( do_yywrap )
