@@ -5,6 +5,10 @@ See the file COPYING for copying conditions.
 
 * version 2.5.6
 
+** gettext support added (from gettext 0.11)
+
+** distribution now built under automake 1.6 and autoconf 2.53
+
 ** command-line option parsing happens differently now:
 
 *** Added long option parsing
