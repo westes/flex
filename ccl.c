@@ -71,7 +71,7 @@ int cclinit()
     {
     if ( ++lastccl >= current_maxccls )
 	{
-	current_maxccls += MAXCCLS_INCREMENT;
+	current_maxccls += MAX_CCLS_INCREMENT;
 
 	++num_reallocs;
 
@@ -118,21 +118,23 @@ int cclp;
  *
  * synopsis
  *     int cset[CSIZE + 1];
+ *     FILE *file;
  *     list_character_set( cset );
  *
- * writes to stderr a character-class representation of those characters
- * present in the given set.  A character is present if it has a non-zero
- * value in the set array.
+ * writes to the given file a character-class representation of those
+ * characters present in the given set.  A character is present if it
+ * has a non-zero value in the set array.
  */
 
-list_character_set( cset )
+list_character_set( file, cset )
+FILE *file;
 int cset[];
 
     {
     register int i;
     char *readable_form();
 
-    putc( '[', stderr );
+    putc( '[', file );
 
     for ( i = 1; i <= CSIZE; ++i )
 	{
@@ -140,20 +142,20 @@ int cset[];
 	    {
 	    register int start_char = i;
 
-	    putc( ' ', stderr );
+	    putc( ' ', file );
 
-	    fputs( readable_form( i ), stderr );
+	    fputs( readable_form( i ), file );
 
 	    while ( ++i <= CSIZE && cset[i] )
 		;
 
 	    if ( i - 1 > start_char )
 		/* this was a run */
-		fprintf( stderr, "-%s", readable_form( i - 1 ) );
+		fprintf( file, "-%s", readable_form( i - 1 ) );
 
-	    putc( ' ', stderr );
+	    putc( ' ', file );
 	    }
 	}
 
-    putc( ']', stderr );
+    putc( ']', file );
     }
