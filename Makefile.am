@@ -121,7 +121,7 @@ INCLUDES = -DLOCALEDIR=\"$(localedir)\" -I@includedir@
 LIBS = @LIBINTL@ @LIBS@
 
 skel.c: flex.skl mkskel.sh
-	$(SHELL) $(srcdir)/mkskel.sh $(srcdir)/flex.skl >skel.c
+	m4 -P $(srcdir)/flex.skl | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
 
 $(man_MANS): $(srcdir)/main.c
 	for i in $(man_MANS) ; do \

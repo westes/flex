@@ -29,7 +29,7 @@ cat <<!
 const char *skel[] = {
 !
 
-sed 's/\\/&&/g' $* | sed 's/"/\\"/g' | sed 's/.*/  "&",/'
+sed 's/\\/&&/g' | sed 's/"/\\"/g' | sed 's/.*/  "&",/'
 
 cat <<!
   0
