@@ -51,7 +51,7 @@ DIGIT [[:digit:]]
 
 "yylineno++"          yylineno++;
 "yylineno--"          yylineno--;
-[[:space:]]+
+[[:blank:]]+
 {WORD}
 {DIGIT}+(\n{DIGIT}+)*
 \n

@@ -46,7 +46,7 @@ WS    [[:blank:]]
 ^{IDENT}+{WS}*={WS}*[[:digit:]]+{WS}*\r?\n    { return 102;}
 ^{WS}*#.*\r?\n     { }
 ^{WS}*\r?\n        { }
-.|\r|\n  { fprintf(stderr,"Invalid line.\n"); exit(-1);}
+.|\n  { fprintf(stderr,"Invalid line.\n"); exit(-1);}
 
 %%
 

@@ -36,7 +36,7 @@
 %}
 
 %option prefix="test" outfile="scanner.c" 
-%option nounput noyywrap yylineno warn nodefault
+%option nounput noyywrap noyylineno warn nodefault
 
 IDENT [[:alnum:]_-]
 WS    [[:blank:]]
@@ -47,7 +47,7 @@ WS    [[:blank:]]
 ^{IDENT}+{WS}*={WS}*[[:digit:]]+{WS}*\r?\n    { return 102;}
 ^{WS}*#.*\r?\n     { }
 ^{WS}*\r?\n        { }
-.  { fprintf(stderr,"Invalid line.\n"); exit(-1);}
+.|\n  { fprintf(stderr,"Invalid line.\n"); exit(-1);}
 
 %%
 
