@@ -20,6 +20,8 @@
 
 ** update gettext support from gettext-0.11 to gettext-0.11.1
 
+** make sure all flex modules use gettext translation facilities
+
 ** see about not listing flex-generated files and yacc-generated files
    in _SOURCES as per automake manual
 
