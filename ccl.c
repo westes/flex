@@ -41,13 +41,13 @@ static char rcsid[] =
  *
  * synopsis
  *    int cclp;
- *    char ch;
+ *    int ch;
  *    ccladd( cclp, ch );
  */
 
 ccladd( cclp, ch )
 int cclp;
-char ch;
+int ch;
 
     {
     int ind, len, newpos, i;
@@ -154,7 +154,7 @@ int cset[];
 
     putc( '[', file );
 
-    for ( i = 1; i <= CSIZE; ++i )
+    for ( i = 1; i <= csize; ++i )
 	{
 	if ( cset[i] )
 	    {
@@ -164,7 +164,7 @@ int cset[];
 
 	    fputs( readable_form( i ), file );
 
-	    while ( ++i <= CSIZE && cset[i] )
+	    while ( ++i <= csize && cset[i] )
 		;
 
 	    if ( i - 1 > start_char )
