@@ -37,7 +37,7 @@ int value;
 	{
 	char buf[MAXLINE];
 
-	if ( strlen( defname ) > MAXLINE / 2 )
+	if ( (int) strlen( defname ) > MAXLINE / 2 )
 		{
 		format_pinpoint_message( _( "name \"%s\" ridiculously long" ), 
 			defname );
