@@ -506,7 +506,7 @@ static void yy_fatal_error YY_PARAMS(( yyconst char msg[] YY_PROTO_LAST_ARG ));
 %pop
 %push
 %c++-only
-#include <cunistd>
+#include <unistd.h>
 %pop
 #endif /* !YY_NO_UNISTD_H */
 
