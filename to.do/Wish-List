@@ -1,123 +1,277 @@
+// Good idea. It might be easier to auto-prefix them instead.
 start conditions given own name space by making them structure fields
 	#define BEGIN(x) yy_start_state = yy_states->x
-reentrant/
-streams/
+
+// Easy.
 yylineno maintained per input buffer
+
+// Done.
 use yyconst instead of const, to fix __STDC__ == 0 problem
+
+// We rely on %option unput instead.
 scan input for unput()
+
+// Not worth the effort.
 -CF/-Cf support interactive scanners
+
+// What does this mean?
 reject_really_used -> maintain_backup_tables
+
+// Would be easier to rewrite it.
 full library encapsulation: flex'ing on the fly
+
+// Currently, max=32k states. Is this an unreasonable limit?
 fix MAX_MNS/MARKER_DIFFERENCE to not be a hard limit
+
+// Not doable, especially for the regex operator precedence case.
 Two flags to warn when something is seen that lex or posix might interpret
   differently; this should be quite doable as -l already exists. Proposed
   names: -Wl, -Wp.
+
+// Done.
 reentrant C scanners
+
+// Why not use fseek/lseek ?
 yy_fseek() for positioning in input file
+
+// What does this mean?
 set-able "at beginning of line" , no more unput() trashes yytext?
+
+// Doable.
 yy_unput_string(); unput() shifts yytext to preserve it, grows buffer as needed
+
+// Bleh.
 yy_malloc_type as void* so can be easily switched to char* for poor
 	hopeless bastards running SunSoft stuff?
+
+// Done.
 public "TODO" file, requesting help?
+
+// Done.
 test -P to make sure it's not broken now due to e.g. yy_scan_string
-%option
+
+// What does this mean?
 hook for treating input interactively even if not isatty()
-scan.l:22:error message :-( (see flex.todo)
+
+// Easy.
 document yy_fill_buffer
+
+// Are these tools even updated anymore?
 lint, gcc-lint
+
+// Obsolete.
 -lfl removed from flex.1
+
+// What does this mean?
 merge 2.4.6, e.g., NEWS
+
+// Is it bothering anyone?
 '|' action copies action instead of omitting break
+
+// Doable.
 if yy_current_buffer defined on entry to yylex(), don't promote nil yyin
 	to stdin, etc.
+
+// Inevitable, but a daunting task.
 multibyte character flex
 
-
+// Done ("traditional")
 ANSI only
+
+// Obsolete.
 multiple inclusion of <stdlib.h>?
+
+// Put on back burner.
 [=...=] POSIX stuff
-+flex.todo
+
+// Done.
 yylineno, yycol by checking for whether rules can match embedded newlines,
 	only trailing newlines, always trailing newlines, or no newlines
+
+// Bleh.
 compute transition path to each DFA state, to aid in backtracking
 	for each state, store pointer to predecessor, character for xtion
+
+// Obsolete.
 merge flex.1, flexdoc.1?
+
+// In the works.
 bison++ interface
+
+// What is this supposed to do?
 YYLEXER_NAME
+
+// Moot. C++ will get an overhaul eventually.
 out-line FlexLexer destructors
+
+// What does this mean?
 GNU readline contrib?
+
+// Done.
 isatty() decl?
+
+// I think this is obsolete.
 #ifdef chud for unput() etc. not being used?
 	"../scan.l", line 207: warning:  ::yy_did_buffer_switch_on_eof defined but not used
 	cc   -c  -g scan.c
 	"scan.cc", line 1752: warning: statement not reached
+
+// Done.
 alloca.c removed from Makefile
+
+// Doable.
 // comments
 
+// Done. (%% lines in skel)
 output partitioning for e.g., scanning tables, actions, etc.
 
- 497  09/11 14:17-PDT  3450 To:t_bonner@oscar  Re: Modifying yytext in an actio
-MISC stuff non-writeable
+// Done.
 texinfo version of manual
 
-	ALSO: document how to do so (including no need to redefine unput()),
-		whether feature added or not
-
+// What does this mean?
 example of "error" backtracking rules as opposed to "catch-all"
+
+// What does this mean?
 get rid of get_previous_state via accepting #'s tied to previous state #'s
+
+// Doable.
 -p tells something about backtracking
+
+// Done.
 easy way to scan strings instead of files
+
+// Useful, but tricky.
 input() across buffer boundaries, buffer overflow; unput() fix
+
+// Done.
 start state stack
+
+// I guess this is handled by the set_bol() stuff.
 NLSTATE - sets "in newline" state; also mechanism to clear "in newline" state
+
+// Unreachable rules are flagged. Is this what is meant?
 checks for bogus backtrack rules  ... - rule shadowing
+
+// Done.
 document incompatibility with lex when unput()'ing a newline
 	after a newline has been read
+
+// Incorrect. They are allowed.
 document that comments are not allowed on definition lines
 	foo  bar  /* the "foo" definition ... */
+
+// What does this mean?
 perhaps indented code in section 2 leads to warnings?
+
+// Easy.
 #line directives for code at beginning of scanner routine
+
+// Done.
 nuke %used etc.
+
+// Done.
 hooks for direct access to the buffer, e.g. for flushing it
+
+// Done.
 options in .l file as well as on command line; particularly the rename-prefix
 	option
+
+// Done.
 clarify "eat up * not followed by /" in <comment> example; move it to
     performance, offer simpler version for start states
+
+// Doable.
 hook for finding out how much text can be safely pushed back
+
+// What does this mean?
 the .backtrack code knows how to identify characters that cause transitions 
 	(you wanted this for some clearer error messages for the
 	 "default rule can be matched")
+
+// Obsolete.
 yy_switch_to_buffer sets yy_init to 0?
+
+// Excellent idea.
 handy library routines, such as yy_C_comment(), yy_C_string(),
+
+// Done.
 obey #line directives in input; first, get rid of # comments ...
+
+// Done.
 flex.h header for declarations of e.g., yymore(), yytext?
 	but what about %array making the yytext definition out of date?
+
+// What does this mean?
 merge w/ okeeffe code
+
+// Easy.
 rearrange the Performance Considerations section so that the easy
     fixes come first
+
+// Done.
 copyright notice in manuals?
+
+// Doable.
 input() updates yytext and yyleng; perhaps unput too???;
 	right now it trashes them (doesn't restore '\0')
+
+// No. yyleng should not be modifable.
 document that yyleng can now be modified
 	except if yymore() used?
+
+// Icky.
 anchoring allowed inside ()'s - (^abc|def$)
+
+// 
 unput() propagates non-newline state too?
+
+// Not doable. Anchors chars are only special at ends of RE.
 complain about invalid anchoring - foo(^abc), (^abc)+
+
+// Not likely.
 library in its own directory
+
+// Done.
 yylineno
+
+// Why?
 example in flexdoc on YY_INPUT reading from input()
+
+// Not currently doable.
 redesign for retargetability (i.e., use w/ other languages ...)
+
+// ???
 clean up escape expansion
+
+// In progress.
 bison @N
+
+// Done.
 example for doc. on scanning strings w/ escapes in them:
+
+// Done.
 POSIX/
+
+// Done.
 get rid of duplicated code between "re2 re" rule and "re '$'" rule
+
+// Obsolete.
 preformatted man pages for VMS sites, possibly using col -b to get rid
 	of backspaces ...
+
+// Interesting.
 slurp entire input file into mega-buffer; allows pointers to in-place
 	identifiers
+
+// Done.
 lex compatibility flag
+
+// Done.
 update flags in docs
+
+// Done. It's still there.
 -n removed from POSIX?
+
+// Obsolete.
 "MAKE = ..." shouldn't be commented out, or else bigtest can fail
 BSD man macros
