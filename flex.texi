@@ -3754,6 +3754,17 @@ takes one argument, which is the value returned (via an argument) by
 @code{yylex_init}.  Otherwise, it behaves the same as the non-reentrant
 version of @code{yylex}.
 
+@code{yylex_init} returns 0 (zero) on success, or non-zero on failure,
+in which case, errno is set to one of the following values:
+
+@itemize
+@item ENOMEM
+Memory allocation error. @xref{memory-management}.
+@item EINVAL
+Invalid argument.
+@end itemize
+
+
 The function @code{yylex_destroy} should be
 called to free resources used by the scanner. After @code{yylex_destroy}
 is called, the contents of @code{yyscanner} should not be used.  Of
@@ -4340,7 +4351,7 @@ in braces are simply terminated at the end of the line.
 @chapter Memory Management
 
 @cindex memory management
-
+@anchor{memory-management}
 This chapter describes how flex handles dynamic memory, and how you can
 override the default behavior.
 

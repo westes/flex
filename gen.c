@@ -1516,10 +1516,10 @@ void make_tables()
 		else
 			{
 			indent_puts(
-	"fprintf( stderr, \"--accepting rule at line %d (\\\"%s\\\")\\n\"," );
+	"fprintf( stderr, \"--accepting rule at line %ld (\\\"%s\\\")\\n\"," );
 
 			indent_puts(
-				"         yy_rule_linenum[yy_act], yytext );" );
+				"         (long)yy_rule_linenum[yy_act], yytext );" );
 			}
 
 		indent_down();
