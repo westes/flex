@@ -205,7 +205,7 @@ struct yy_buffer_state
 %-
 	FILE *yy_input_file;
 %+
-	STD istream* yy_input_file;
+	FLEX_STD istream* yy_input_file;
 %*
 
 	char *yy_ch_buf;		/* input buffer */
@@ -867,7 +867,7 @@ do_action:	/* This label is used only to access EOF actions. */
 	} /* end of yylex */
 
 %+
-yyFlexLexer::yyFlexLexer( STD istream* arg_yyin, ostream* arg_yyout )
+yyFlexLexer::yyFlexLexer( FLEX_STD istream* arg_yyin, FLEX_STD ostream* arg_yyout )
 	{
 	yyin = arg_yyin;
 	yyout = arg_yyout;

@@ -39,13 +39,13 @@ number	{num1}|{num2}
 			}
 		}
 
-{number}	cout << "number " << YYText() << '\n';
+{number}	FLEX_STD cout << "number " << YYText() << '\n';
 
 \n		mylineno++;
 
-{name}		cout << "name " << YYText() << '\n';
+{name}		FLEX_STD cout << "name " << YYText() << '\n';
 
-{string}	cout << "string " << YYText() << '\n';
+{string}	FLEX_STD cout << "string " << YYText() << '\n';
 
 %%
 
