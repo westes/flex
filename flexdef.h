@@ -734,6 +734,9 @@ extern int all_upper PROTO((register Char *));
 /* Bubble sort an integer array. */
 extern void bubble PROTO((int [], int));
 
+/* Check a character to make sure it's in the expected range. */
+extern void check_char PROTO((int c));
+
 /* Shell sort a character array. */
 extern void cshell PROTO((Char [], int, int));
 
@@ -765,6 +768,11 @@ extern void mkdata PROTO((int));	/* generate a data statement */
 
 /* Return the integer represented by a string of digits. */
 extern int myctoi PROTO((Char []));
+
+/* Return a printable version of the given character, which might be
+ * 8-bit
+ */
+extern char *readable_form PROTO((int));
 
 /* Write out one section of the skeleton file. */
 extern void skelout PROTO((void));
