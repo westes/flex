@@ -99,7 +99,7 @@ int read();
  * we don't want an extra ';' after the "return" because that will cause
  * some compilers to complain about unreachable statements.
  */
-#define yyterminate() return ( YY_NULL )
+#define yyterminate() return YY_NULL
 
 /* report a fatal error */
 
@@ -165,11 +165,13 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
 %% section 1 definitions go here
 
+#define yytext_ptr yytext
+
 /* done after the current pattern has been matched and before the
  * corresponding action - sets up yytext
  */
 #define YY_DO_BEFORE_ACTION \
-	yytext = yy_bp; \
+	yytext_ptr = yy_bp; \
 %% code to fiddle yytext and yyleng for yymore() goes here
 	yy_hold_char = *yy_cp; \
 	*yy_cp = '\0'; \
@@ -190,7 +192,7 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 		} \
 	while ( 0 )
 
-#define unput(c) yyunput( c, yytext )
+#define unput(c) yyunput( c, yytext_ptr )
 
 
 struct yy_buffer_state
@@ -200,7 +202,7 @@ struct yy_buffer_state
     YY_CHAR *yy_ch_buf;		/* input buffer */
     YY_CHAR *yy_buf_pos;	/* current position in input buffer */
 
-    /* size of input buffer in bytes, not including room for EOB characters*/
+    /* size of input buffer in bytes, not including room for EOB characters */
     int yy_buf_size;	
 
     /* number of characters read into yy_ch_buf, not including EOB characters */
@@ -215,7 +217,7 @@ struct yy_buffer_state
 #define EOF_DONE 2
     };
 
-static YY_BUFFER_STATE yy_current_buffer;
+static YY_BUFFER_STATE yy_current_buffer = 0;
 
 /* we provide macros for accessing buffer states in case in the
  * future we want to put the buffer states in a more general
@@ -229,15 +231,6 @@ static YY_CHAR yy_hold_char;
 
 static int yy_n_chars;		/* number of characters read into yy_ch_buf */
 
-
-
-#ifndef YY_USER_ACTION
-#define YY_USER_ACTION
-#endif
-
-#ifndef YY_USER_INIT
-#define YY_USER_INIT
-#endif
 
 extern YY_CHAR *yytext;
 extern int yyleng;
@@ -292,7 +285,9 @@ YY_DECL
 
     if ( yy_init )
 	{
+#ifdef YY_USER_INIT
 	YY_USER_INIT;
+#endif
 
 	if ( ! yy_start )
 	    yy_start = 1;	/* first start state */
@@ -332,7 +327,13 @@ yy_find_action:
 %% code to find the action number goes here
 
 	YY_DO_BEFORE_ACTION;
-	YY_USER_ACTION;
+
+#ifdef YY_USER_ACTION
+	if ( yy_act != YY_END_OF_BUFFER )
+	    {
+	    YY_USER_ACTION;
+	    }
+#endif
 
 do_action:	/* this label is used only to access EOF actions */
 
@@ -345,7 +346,7 @@ do_action:	/* this label is used only to access EOF actions */
 	    case YY_END_OF_BUFFER:
 		{
 		/* amount of text matched not including the EOB char */
-		int yy_amount_of_matched_text = yy_cp - yytext - 1;
+		int yy_amount_of_matched_text = yy_cp - yytext_ptr - 1;
 
 		/* undo the effects of YY_DO_BEFORE_ACTION */
 		*yy_cp = yy_hold_char;
@@ -361,7 +362,7 @@ do_action:	/* this label is used only to access EOF actions */
 		    {
 		    yy_state_type yy_next_state;
 
-		    yy_c_buf_p = yytext + yy_amount_of_matched_text;
+		    yy_c_buf_p = yytext_ptr + yy_amount_of_matched_text;
 
 		    yy_current_state = yy_get_previous_state();
 
@@ -376,7 +377,7 @@ do_action:	/* this label is used only to access EOF actions */
 
 		    yy_next_state = yy_try_NUL_trans( yy_current_state );
 
-		    yy_bp = yytext + YY_MORE_ADJ;
+		    yy_bp = yytext_ptr + YY_MORE_ADJ;
 
 		    if ( yy_next_state )
 			{
@@ -409,7 +410,7 @@ do_action:	/* this label is used only to access EOF actions */
 			     * YY_NULL, it'll still work - another YY_NULL
 			     * will get returned.
 			     */
-			    yy_c_buf_p = yytext + YY_MORE_ADJ;
+			    yy_c_buf_p = yytext_ptr + YY_MORE_ADJ;
 
 			    yy_act = YY_STATE_EOF((yy_start - 1) / 2);
 			    goto do_action;
@@ -424,12 +425,12 @@ do_action:	/* this label is used only to access EOF actions */
 			break;
 
 		    case EOB_ACT_CONTINUE_SCAN:
-			yy_c_buf_p = yytext + yy_amount_of_matched_text;
+			yy_c_buf_p = yytext_ptr + yy_amount_of_matched_text;
 
 			yy_current_state = yy_get_previous_state();
 
 			yy_cp = yy_c_buf_p;
-			yy_bp = yytext + YY_MORE_ADJ;
+			yy_bp = yytext_ptr + YY_MORE_ADJ;
 			goto yy_match;
 
 		    case EOB_ACT_LAST_MATCH:
@@ -439,7 +440,7 @@ do_action:	/* this label is used only to access EOF actions */
 			yy_current_state = yy_get_previous_state();
 
 			yy_cp = yy_c_buf_p;
-			yy_bp = yytext + YY_MORE_ADJ;
+			yy_bp = yytext_ptr + YY_MORE_ADJ;
 			goto yy_find_action;
 		    }
 		break;
@@ -471,7 +472,7 @@ static int yy_get_next_buffer()
 
     {
     register YY_CHAR *dest = yy_current_buffer->yy_ch_buf;
-    register YY_CHAR *source = yytext - 1; /* copy prev. char, too */
+    register YY_CHAR *source = yytext_ptr - 1; /* copy prev. char, too */
     register int number_to_move, i;
     int ret_val;
 
@@ -482,7 +483,7 @@ static int yy_get_next_buffer()
     /* try to read more data */
 
     /* first move last chars to start of buffer */
-    number_to_move = yy_c_buf_p - yytext;
+    number_to_move = yy_c_buf_p - yytext_ptr;
 
     for ( i = 0; i < number_to_move; ++i )
 	*(dest++) = *(source++);
@@ -510,7 +511,7 @@ static int yy_get_next_buffer()
 
     if ( yy_n_chars == 0 )
 	{
-	if ( number_to_move == 1 )
+	if ( number_to_move - YY_MORE_ADJ == 1 )
 	    {
 	    ret_val = EOB_ACT_END_OF_FILE;
 	    yy_current_buffer->yy_eof_status = EOF_DONE;
@@ -536,9 +537,9 @@ static int yy_get_next_buffer()
      * yy_get_previous_state() will have with '^' rules active
      */
 
-    yytext = &yy_current_buffer->yy_ch_buf[1];
+    yytext_ptr = &yy_current_buffer->yy_ch_buf[1];
 
-    return ( ret_val );
+    return ret_val;
     }
 
 
@@ -556,12 +557,12 @@ static yy_state_type yy_get_previous_state()
 
 %% code to get the start state into yy_current_state goes here
 
-    for ( yy_cp = yytext + YY_MORE_ADJ; yy_cp < yy_c_buf_p; ++yy_cp )
+    for ( yy_cp = yytext_ptr + YY_MORE_ADJ; yy_cp < yy_c_buf_p; ++yy_cp )
 	{
 %% code to find the next state goes here
 	}
 
-    return ( yy_current_state );
+    return yy_current_state;
     }
 
 
@@ -582,7 +583,7 @@ register yy_state_type yy_current_state;
     register int yy_is_jam;
 %% code to find the next state, and perhaps do backtracking, goes here
 
-    return ( yy_is_jam ? 0 : yy_current_state );
+    return yy_is_jam ? 0 : yy_current_state;
     }
 
 
@@ -655,7 +656,7 @@ static int input()
 
 	else
 	    { /* need more input */
-	    yytext = yy_c_buf_p;
+	    yytext_ptr = yy_c_buf_p;
 	    ++yy_c_buf_p;
 
 	    switch ( yy_get_next_buffer() )
@@ -664,22 +665,21 @@ static int input()
 		    {
 		    if ( yywrap() )
 			{
-			yy_c_buf_p = yytext + YY_MORE_ADJ;
-			return ( EOF );
+			yy_c_buf_p = yytext_ptr + YY_MORE_ADJ;
+			return EOF;
 			}
 
 		    YY_NEW_FILE;
 
 #ifdef __cplusplus
-		    return ( yyinput() );
+		    return yyinput();
 #else
-		    return ( input() );
+		    return input();
 #endif
 		    }
-		    break;
 
 		case EOB_ACT_CONTINUE_SCAN:
-		    yy_c_buf_p = yytext + YY_MORE_ADJ;
+		    yy_c_buf_p = yytext_ptr + YY_MORE_ADJ;
 		    break;
 
 		case EOB_ACT_LAST_MATCH:
@@ -695,7 +695,7 @@ static int input()
     c = *yy_c_buf_p;
     yy_hold_char = *++yy_c_buf_p;
 
-    return ( c );
+    return c;
     }
 
 
@@ -751,7 +751,7 @@ void yy_load_buffer_state()
 
     {
     yy_n_chars = yy_current_buffer->yy_n_chars;
-    yytext = yy_c_buf_p = yy_current_buffer->yy_buf_pos;
+    yytext_ptr = yy_c_buf_p = yy_current_buffer->yy_buf_pos;
     yyin = yy_current_buffer->yy_input_file;
     yy_hold_char = *yy_c_buf_p;
     }
@@ -785,7 +785,7 @@ int size;
 
     yy_init_buffer( b, file );
 
-    return ( b );
+    return b;
     }
 
 
