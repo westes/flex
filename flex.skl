@@ -92,19 +92,10 @@ m4preproc_include(`flexint.h')
 
 #ifdef __cplusplus
 
-/* C++ compilers do not understand traditional function definitions. */
-#ifdef YY_TRADITIONAL_FUNC_DEFS
-#undef YY_TRADITIONAL_FUNC_DEFS
-#endif
-
 /* The "const" storage-class-modifier is valid. */
 #define YY_USE_CONST
 
 #else	/* ! __cplusplus */
-
-/* We are not in a C++ compiler, so by default,
-   we generate C99 function defs, unless you explicitly ask
-   for traditional defs by defining YY_TRADITIONAL_FUNC_DEFS */
 
 #if __STDC__
 
@@ -232,13 +223,23 @@ m4_define([[M4_YY_CALL_ONLY_ARG]])
  *        char * y;
  *        yyscan_t yyscanner;
  */
-m4_ifdef( [[YY_TRADITIONAL_FUNC_DEFS]],
+m4_ifdef( [[M4_YY_TRADITIONAL_FUNC_DEFS]],
 [[
 %# Generate traditional function defs
-    #define YYFARGS0(v) (M4_YY_DEF_ONLY_ARG) M4_YY_DECL_LAST_ARG
-    #define YYFARGS1(t1,n1) (n1 M4_YY_DEF_LAST_ARG) t1 n1; M4_YY_DECL_LAST_ARG
-    #define YYFARGS2(t1,n1,t2,n2) (n1,n2 M4_YY_DEF_LAST_ARG) t1 n1; t2 n2; M4_YY_DECL_LAST_ARG
-    #define YYFARGS3(t1,n1,t2,n2,t3,n3) (n1,n2,n3 M4_YY_DEF_LAST_ARG) t1 n1; t2 n2; t3 n3; M4_YY_DECL_LAST_ARG
+    m4_define( [[YYFARGS0]], [[(M4_YY_DEF_ONLY_ARG)
+        M4_YY_DECL_LAST_ARG]])
+    m4_define( [[YYFARGS1]], [[($2 M4_YY_DEF_LAST_ARG)
+        $1 $2;
+        M4_YY_DECL_LAST_ARG]])
+    m4_define( [[YYFARGS2]], [[($2,$4 M4_YY_DEF_LAST_ARG)
+        $1 $2;
+        $3 $4;
+        M4_YY_DECL_LAST_ARG]])
+    m4_define( [[YYFARGS3]], [[($2,$4,$6 M4_YY_DEF_LAST_ARG)
+        $1 $2;
+        $3 $4;
+        $5 $6;
+        M4_YY_DECL_LAST_ARG]])
 ]],
 [[
 %# Generate C99 function defs.
@@ -294,7 +295,8 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
 
-#ifdef YY_USE_LINENO
+m4_ifdef( [[M4_YY_USE_LINENO]],
+[[
 /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
  *       access to the local variable yy_act. Since yyless() is a macro, it would break
  *       existing scanners that call yyless() from OUTSIDE yylex. 
@@ -309,9 +311,10 @@ extern FILE *yyin, *yyout;
 				if ( yytext[yyl] == '\n' )\
 					--yylineno;\
         }while(0)
-#else
+]],
+[[
 #define YY_LESS_LINENO(n)
-#endif
+]])
 
 /* The funky do-while in the following #define is used to turn the definition
  * int a single C statement (which needs a semi-colon terminator).  This
@@ -1501,10 +1504,12 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 	*--yy_cp = (char) c;
 
 %% [18.0] update yylineno here
-#ifdef YY_USE_LINENO
+m4_ifdef( [[M4_YY_USE_LINENO]],
+[[
     if ( c == '\n' )
         --yylineno;
-#endif
+]])
+
 	YY_G(yytext_ptr) = yy_bp;
 	YY_G(yy_hold_char) = *yy_cp;
 	YY_G(yy_c_buf_p) = yy_cp;
@@ -2292,9 +2297,10 @@ static int yy_init_globals YYFARGS0(void)
        This function is called once per scanner lifetime. */
 
   /* We do not touch yylineno unless the option is enabled. */
-#ifdef YY_USE_LINENO
+m4_ifdef( [[M4_YY_USE_LINENO]],
+[[
     yylineno =  1;
-#endif
+]])
     YY_G(yy_buffer_stack) = 0;
     YY_G(yy_buffer_stack_top) = 0;
     YY_G(yy_buffer_stack_max) = 0;

@@ -125,7 +125,7 @@ static void geneoltbl ()
 {
 	int     i;
 
-	outn ("#ifdef YY_USE_LINENO");
+	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
 	outn ("/* Table of booleans, true if rule could match eol. */");
 	out_str_dec (get_int32_decl (), "yy_rule_can_match_eol",
 		     num_rules + 1);
@@ -139,7 +139,7 @@ static void geneoltbl ()
 		}
 		out ("    };\n");
 	}
-	outn ("#endif");
+	outn ("]])");
 }
 
 
@@ -1978,7 +1978,7 @@ void make_tables ()
 	gen_find_action ();
 
 	skelout ();		/* %% [11.0] - break point in skel */
-	outn ("#ifdef YY_USE_LINENO");
+	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
 	indent_puts
 		("if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )");
 	indent_up ();
@@ -1996,7 +1996,7 @@ void make_tables ()
 	indent_down ();
 	indent_puts ("}");
 	indent_down ();
-	outn ("#endif");
+	outn ("]])");
 
 	skelout ();		/* %% [12.0] - break point in skel */
 	if (ddebug) {

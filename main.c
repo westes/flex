@@ -483,7 +483,7 @@ void check_options ()
 		line_directive_out (stdout, 0);
 
 	if (do_yylineno)
-		buf_strdefine (&userdef_buf, "YY_USE_LINENO", "1");
+		buf_m4_define (&m4defs_buf, "M4_YY_USE_LINENO", NULL);
 
 	/* Create the alignment type. */
 	buf_strdefine (&userdef_buf, "YY_INT_ALIGNED",
@@ -735,7 +735,6 @@ void flexend (exit_status)
                 "YY_TRAILING_MASK",
                 "YY_USER_ACTION",
                 "YY_USE_CONST",
-                "YY_USE_LINENO",
                 "YY_USE_PROTOS",
                 "unput",
                 "yyTABLES_NAME",
