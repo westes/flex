@@ -59,7 +59,7 @@
 	else \
 	 { \
 	   synerr(_("Input line too long\n")); \
-	   exit(EXIT_FAILURE);  \
+	   FLEX_EXIT(EXIT_FAILURE);  \
 	 }  \
 	return NAME;
 
@@ -160,7 +160,7 @@ LEXOPT		[aceknopr]
 			else 
 			 { 
 			   synerr( _("Input line too long\n")); 
-			   exit(EXIT_FAILURE);  
+			   FLEX_EXIT(EXIT_FAILURE);  
 			 }
 
 			didadef = false;
@@ -217,7 +217,7 @@ LEXOPT		[aceknopr]
  		        else
  		         {
  		           synerr( _("Input line too long\n"));
- 		           exit(EXIT_FAILURE); 
+ 		           FLEX_EXIT(EXIT_FAILURE); 
 			 }
 			/* Skip trailing whitespace. */
 			for ( i = strlen( (char *) nmdef ) - 1;
@@ -350,7 +350,7 @@ LEXOPT		[aceknopr]
 			else 
 			 { 
 			   synerr( _("Input line too long\n")); 
-			   exit(EXIT_FAILURE);  
+			   FLEX_EXIT(EXIT_FAILURE);  
 			 }
 			nmstr[strlen( nmstr ) - 1] = '\0';
 			return NAME;
@@ -489,7 +489,7 @@ LEXOPT		[aceknopr]
 			else 
 			 { 
 			   synerr( _("Input line too long\n")); 
-			   exit(EXIT_FAILURE);  
+			   FLEX_EXIT(EXIT_FAILURE);  
 			 } 
 
 			/* Check to see if we've already encountered this
@@ -539,7 +539,7 @@ LEXOPT		[aceknopr]
  			else 
  			 { 
  			   synerr( _("Input line too long\n")); 
- 			   exit(EXIT_FAILURE);  
+ 			   FLEX_EXIT(EXIT_FAILURE);  
  			 }			
 nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
