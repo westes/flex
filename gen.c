@@ -79,6 +79,26 @@ void do_indent()
 		}
 	}
 
+/* Generate the table for possible eol matches. */
+static void geneoltbl()
+{
+	int i;
+
+	outn("#ifdef YY_USE_LINENO" );
+	outn( "/* Table of booleans, true if rule could match eol. */" );
+	out_dec("static const int yy_rule_can_match_eol[%d] =\n    {\n    ",
+			num_rules + 1);
+
+	for (i = 0; i < num_rules; i++){
+		out_dec("%d, ", rule_has_nl[i]?1:0);
+		/* format nicely, 20 numbers per line. */
+		if ((i%20) == 19)
+			out("\n    ");
+	}
+	out_dec("%d\n    };\n", rule_has_nl[i]?1:0);
+	outn( "#endif" );
+}
+
 
 /* Generate the code to keep backing-up information. */
 
@@ -214,7 +234,7 @@ void genctbl()
 	out_dec(
 	"static yyconst struct yy_trans_info *yy_start_state_list[%d] =\n",
 		lastsc * 2 + 1 );
-	outn( "    {" );	/* } so vi doesn't get confused */
+	outn( "    {" );
 
 	for ( i = 0; i <= lastsc * 2; ++i )
 		out_dec( "    &yy_transition[%d],\n", base[i] );
@@ -512,7 +532,7 @@ void gen_next_match()
 
 		if ( num_backing_up > 0 )
 			{
-			indent_puts( "{" );	/* } for vi */
+			indent_puts( "{" );
 			gen_backing_up();
 			outc( '\n' );
 			}
@@ -520,7 +540,7 @@ void gen_next_match()
 		indent_puts( "++yy_cp;" );
 
 		if ( num_backing_up > 0 )
-			/* { for vi */
+
 			indent_puts( "}" );
 
 		indent_down();
@@ -531,7 +551,7 @@ void gen_next_match()
 
 	else if ( fullspd )
 		{
-		indent_puts( "{" );	/* } for vi */
+		indent_puts( "{" );
 		indent_puts(
 		"register yyconst struct yy_trans_info *yy_trans_info;\n" );
 		indent_puts( "register YY_CHAR yy_c;\n" );
@@ -544,18 +564,18 @@ void gen_next_match()
 		indent_up();
 
 		if ( num_backing_up > 0 )
-			indent_puts( "{" );	/* } for vi */
+			indent_puts( "{" );
 
 		indent_puts( "yy_current_state += yy_trans_info->yy_nxt;" );
 
 		if ( num_backing_up > 0 )
 			{
 			outc( '\n' );
-			gen_backing_up();	/* { for vi */
+			gen_backing_up();
 			indent_puts( "}" );
 			}
 
-		indent_down();	/* { for vi */
+		indent_down();
 		indent_puts( "}" );
 		}
 
@@ -564,13 +584,13 @@ void gen_next_match()
 		indent_puts( "do" );
 
 		indent_up();
-		indent_puts( "{" );	/* } for vi */
+		indent_puts( "{" );
 
 		gen_next_state( false );
 
 		indent_puts( "++yy_cp;" );
 
-		/* { for vi */
+
 		indent_puts( "}" );
 		indent_down();
 
@@ -626,7 +646,7 @@ int worry_about_NULs;
 
 		indent_puts( "if ( *yy_cp )" );
 		indent_up();
-		indent_puts( "{" );	/* } for vi */
+		indent_puts( "{" );
 		}
 
 	if ( fulltbl )
@@ -644,7 +664,7 @@ int worry_about_NULs;
 
 	if ( worry_about_NULs && nultrans )
 		{
-		/* { for vi */
+
 		indent_puts( "}" );
 		indent_down();
 		indent_puts( "else" );
@@ -1132,7 +1152,7 @@ void make_tables()
 		set_indent( 0 );
 		indent_puts( "struct yy_trans_info" );
 		indent_up();
-		indent_puts( "{" ); 	/* } for vi */
+		indent_puts( "{" );
 
 		if ( long_align )
 			indent_puts( "long yy_verify;" );
@@ -1159,6 +1179,9 @@ void make_tables()
 	else
 		gentabs();
 
+	if ( do_yylineno )
+		geneoltbl();
+        
 	/* Definitions for backing up.  We don't need them if REJECT
 	 * is being used because then we use an alternative backin-up
 	 * technique instead.
@@ -1232,7 +1255,7 @@ void make_tables()
 			}
 
 		outn( "#define REJECT \\" );
-		outn( "{ \\" );		/* } for vi */
+		outn( "{ \\" );
 		outn(
 	"*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \\" );
 		outn(
@@ -1250,7 +1273,7 @@ void make_tables()
 
 		outn( "++yy_lp; \\" );
 		outn( "goto find_rule; \\" );
-		/* { for vi */
+
 		outn( "}" );
 		}
 
@@ -1446,9 +1469,8 @@ void make_tables()
 	gen_find_action();
 
 	skelout(); /* %% [11.0] - break point in skel */
-	if ( do_yylineno )
-		{
-		indent_puts( "if ( yy_act != YY_END_OF_BUFFER )" );
+	outn( "#ifdef YY_USE_LINENO" );
+		indent_puts( "if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )" );
 		indent_up();
 		indent_puts( "{" );
 		indent_puts( "int yyl;" );
@@ -1464,7 +1486,7 @@ void make_tables()
 		indent_down();
 		indent_puts( "}" );
 		indent_down();
-		}
+    outn( "#endif" );
 
 	skelout(); /* %% [12.0] - break point in skel */
 	if ( ddebug )
@@ -1623,14 +1645,6 @@ void make_tables()
 	gen_NUL_trans();
 
 	skelout(); /* %% [18.0] - break point in skel */
-	if ( do_yylineno )
-		{ /* update yylineno inside of unput() */
-		indent_puts( "if ( c == '\\n' )" );
-		indent_up();
-		indent_puts( "--yylineno;" );
-		indent_down();
-		}
-
 	skelout(); /* %% [19.0] - break point in skel */
 	/* Update BOL and yylineno inside of input(). */
 	if ( bol_needed )

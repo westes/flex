@@ -52,6 +52,10 @@ int ch;
 		if ( ccltbl[ind + i] == ch )
 			return;
 
+	/* mark newlines */
+	if (ch == nlch)
+		ccl_has_nl[cclp] = true;
+	
 	newpos = ind + len;
 
 	if ( newpos >= current_max_ccl_tbl_size )
@@ -82,6 +86,7 @@ int cclinit()
 		cclmap = reallocate_integer_array( cclmap, current_maxccls );
 		ccllen = reallocate_integer_array( ccllen, current_maxccls );
 		cclng = reallocate_integer_array( cclng, current_maxccls );
+		ccl_has_nl = reallocate_bool_array( ccl_has_nl, current_maxccls );
 		}
 
 	if ( lastccl == 1 )
@@ -98,6 +103,7 @@ int cclinit()
 
 	ccllen[lastccl] = 0;
 	cclng[lastccl] = 0;	/* ccl's start out life un-negated */
+	ccl_has_nl[lastccl] = false;
 
 	return lastccl;
 	}
@@ -109,6 +115,7 @@ void cclnegate( cclp )
 int cclp;
 	{
 	cclng[cclp] = 1;
+	ccl_has_nl[cclp] = !ccl_has_nl[cclp];
 	}
 
 

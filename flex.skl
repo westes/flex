@@ -1283,7 +1283,10 @@ void yyFlexLexer::yyunput( int c, register char* yy_bp)
 	*--yy_cp = (char) c;
 
 %% [18.0] update yylineno here
-
+#ifdef YY_USE_LINENO
+    if ( c == '\n' )
+        --yylineno;
+#endif
 	YY_G(yytext_ptr) = yy_bp;
 	YY_G(yy_hold_char) = *yy_cp;
 	YY_G(yy_c_buf_p) = yy_cp;

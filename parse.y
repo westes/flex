@@ -109,12 +109,12 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 
 /* Expand a POSIX character class expression. */
 #define CCL_EXPR(func) \
-	{ \
+	do{ \
 	int c; \
 	for ( c = 0; c < csize; ++c ) \
 		if ( isascii(c) && func(c) ) \
 			ccladd( currccl, c ); \
-	}
+	}while(0)
 
 /* While POSIX defines isblank(), it's not ANSI C. */
 #define IS_BLANK(c) ((c) == ' ' || (c) == '\t')
@@ -144,7 +144,7 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 			 */
 			default_rule = num_rules;
 
-			finish_rule( def_rule, false, 0, 0 );
+			finish_rule( def_rule, false, 0, 0, 0);
 
 			for ( i = 1; i <= lastsc; ++i )
 				scset[i] = mkbranch( scset[i], def_rule );
@@ -243,7 +243,7 @@ flexrule	:  '^' rule
 			{
 			pat = $2;
 			finish_rule( pat, variable_trail_rule,
-				headcnt, trailcnt );
+				headcnt, trailcnt , previous_continued_action);
 
 			if ( scon_stk_ptr > 0 )
 				{
@@ -279,7 +279,7 @@ flexrule	:  '^' rule
 			{
 			pat = $1;
 			finish_rule( pat, variable_trail_rule,
-				headcnt, trailcnt );
+				headcnt, trailcnt , previous_continued_action);
 
 			if ( scon_stk_ptr > 0 )
 				{
@@ -415,6 +415,7 @@ rule		:  re2 re
 				/* Mark as variable. */
 				varlength = true;
 				headcnt = 0;
+
 				}
 
 			if ( lex_compat || (varlength && headcnt == 0) )
@@ -734,12 +735,18 @@ singleton	:  singleton '*'
 
 			++rulelen;
 
+			if (ccl_has_nl[$1])
+				rule_has_nl[num_rules] = true;
+
 			$$ = mkstate( -$1 );
 			}
 
 		|  PREVCCL
 			{
 			++rulelen;
+
+			if (ccl_has_nl[$1])
+				rule_has_nl[num_rules] = true;
 
 			$$ = mkstate( -$1 );
 			}
@@ -756,6 +763,9 @@ singleton	:  singleton '*'
 
 			if ( caseins && $1 >= 'A' && $1 <= 'Z' )
 				$1 = clower( $1 );
+
+			if ($1 == nlch)
+				rule_has_nl[num_rules] = true;
 
 			$$ = mkstate( $1 );
 			}
@@ -825,29 +835,32 @@ ccl		:  ccl CHAR '-' CHAR
 			}
 		;
 
-ccl_expr:	   CCE_ALNUM	{ CCL_EXPR(isalnum) }
-		|  CCE_ALPHA	{ CCL_EXPR(isalpha) }
-		|  CCE_BLANK	{ CCL_EXPR(IS_BLANK) }
-		|  CCE_CNTRL	{ CCL_EXPR(iscntrl) }
-		|  CCE_DIGIT	{ CCL_EXPR(isdigit) }
-		|  CCE_GRAPH	{ CCL_EXPR(isgraph) }
-		|  CCE_LOWER	{ CCL_EXPR(islower) }
-		|  CCE_PRINT	{ CCL_EXPR(isprint) }
-		|  CCE_PUNCT	{ CCL_EXPR(ispunct) }
-		|  CCE_SPACE	{ CCL_EXPR(isspace) }
+ccl_expr:	   CCE_ALNUM	{ CCL_EXPR(isalnum); }
+		|  CCE_ALPHA	{ CCL_EXPR(isalpha); }
+		|  CCE_BLANK	{ CCL_EXPR(IS_BLANK); }
+		|  CCE_CNTRL	{ CCL_EXPR(iscntrl); }
+		|  CCE_DIGIT	{ CCL_EXPR(isdigit); }
+		|  CCE_GRAPH	{ CCL_EXPR(isgraph); }
+		|  CCE_LOWER	{ CCL_EXPR(islower); }
+		|  CCE_PRINT	{ CCL_EXPR(isprint); }
+		|  CCE_PUNCT	{ CCL_EXPR(ispunct); }
+		|  CCE_SPACE	{ CCL_EXPR(isspace); }
 		|  CCE_UPPER	{
 				if ( caseins )
-					CCL_EXPR(islower)
+					CCL_EXPR(islower);
 				else
-					CCL_EXPR(isupper)
+					CCL_EXPR(isupper);
 				}
-		|  CCE_XDIGIT	{ CCL_EXPR(isxdigit) }
+		|  CCE_XDIGIT	{ CCL_EXPR(isxdigit); }
 		;
 		
 string		:  string CHAR
 			{
 			if ( caseins && $2 >= 'A' && $2 <= 'Z' )
 				$2 = clower( $2 );
+
+			if ( $2 == nlch )
+				rule_has_nl[num_rules] = true;
 
 			++rulelen;
 

@@ -477,6 +477,9 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
  * 	context
  * rule_linenum - line number associated with rule
  * rule_useful - true if we've determined that the rule can be matched
+ * rule_has_nl - true if rule could possibly match a newline
+ * ccl_has_nl - true if current ccl could match a newline
+ * nlch - default eol char
  */
 
 extern int maximum_mns, current_mns, current_max_rules;
@@ -484,6 +487,8 @@ extern int num_rules, num_eof_rules, default_rule, lastnfa;
 extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 extern int *accptnum, *assoc_rule, *state_type;
 extern int *rule_type, *rule_linenum, *rule_useful;
+extern bool *rule_has_nl, *ccl_has_nl;
+extern int nlch;
 
 /* Different types of states; values are useful as masks, as well, for
  * routines like check_trailing_context().
@@ -658,6 +663,12 @@ void flex_free PROTO((void*));
 
 #define reallocate_integer_array(array,size) \
 	(int *) reallocate_array( (void *) array, size, sizeof( int ) )
+
+#define allocate_bool_array(size) \
+	(bool *) allocate_array( size, sizeof( bool ) )
+
+#define reallocate_bool_array(array,size) \
+	(bool *) reallocate_array( (void *) array, size, sizeof( bool ) )
 
 #define allocate_int_ptr_array(size) \
 	(int **) allocate_array( size, sizeof( int * ) )
@@ -919,7 +930,7 @@ extern int copysingl PROTO((int, int));
 extern void dumpnfa PROTO((int));
 
 /* Finish up the processing for a rule. */
-extern void finish_rule PROTO((int, int, int, int));
+extern void finish_rule PROTO((int, int, int, int, int));
 
 /* Connect two machines together. */
 extern int link_machines PROTO((int, int));

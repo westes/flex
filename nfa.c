@@ -198,8 +198,8 @@ int mach;
  * context has variable length.
  */
 
-void finish_rule( mach, variable_trail_rule, headcnt, trailcnt )
-int mach, variable_trail_rule, headcnt, trailcnt;
+void finish_rule( mach, variable_trail_rule, headcnt, trailcnt, pcont_act )
+int mach, variable_trail_rule, headcnt, trailcnt, pcont_act;
 	{
 	char action_text[MAXLINE];
 
@@ -216,8 +216,19 @@ int mach, variable_trail_rule, headcnt, trailcnt;
 	if ( continued_action )
 		--rule_linenum[num_rules];
 
+
+	/* If the previous rule was continued action, then we inherit the
+	 * previous newline flag, possibly overriding the current one.
+	 */
+	if ( pcont_act && rule_has_nl[num_rules-1] )
+		rule_has_nl[num_rules] = true;
+
 	sprintf( action_text, "case %d:\n", num_rules );
 	add_action( action_text );
+	sprintf( action_text, "/* rule %d can match eol = %s*/\n",
+			num_rules, rule_has_nl[num_rules]? "true":"false");
+	add_action( action_text );
+
 
 	if ( variable_trail_rule )
 		{
@@ -702,6 +713,8 @@ void new_rule()
 							current_max_rules );
 		rule_useful = reallocate_integer_array( rule_useful,
 							current_max_rules );
+		rule_has_nl = reallocate_bool_array( rule_has_nl,
+							current_max_rules );
 		}
 
 	if ( num_rules > MAX_RULE )
@@ -709,4 +722,5 @@ void new_rule()
 
 	rule_linenum[num_rules] = linenum;
 	rule_useful[num_rules] = false;
+	rule_has_nl[num_rules] = false;
 	}

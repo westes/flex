@@ -104,6 +104,8 @@ int end_of_buffer_state;
 char **input_files;
 int num_input_files;
 jmp_buf flex_main_jmp_buf;
+bool *rule_has_nl, *ccl_has_nl;
+int nlch = '\n';
 
 /* Make sure program_name is initialized so we don't crash if writing
  * out an error message before getting the program name from argv[0].
@@ -227,9 +229,12 @@ void check_options()
 	if ( use_stdout && headerfilename )
 	    flexerror( _( "Can't specify header option if writing to stdout.") );
 
+#if 0
+    /* This makes no sense whatsoever. I'm removing it. */
 	if ( do_yylineno )
 		/* This should really be "maintain_backup_tables = true" */
 		reject_really_used = true;
+#endif
 
 	if ( csize == unspecified )
 		{
@@ -260,9 +265,6 @@ void check_options()
 			flexerror(
 		_( "-Cf/-CF are incompatible with lex-compatibility mode" ) );
 
-		if ( do_yylineno )
-			flexerror(
-			_( "-Cf/-CF and %option yylineno are incompatible" ) );
 
 		if ( fulltbl && fullspd )
 			flexerror( _( "-Cf and -CF are mutually exclusive" ) );
@@ -398,8 +400,6 @@ void check_options()
             GEN_PREFIX( "set_lloc" );
             outn( "#endif" );
 
-            if ( do_yylineno && reentrant)
-                outn ( "#define YY_USE_LINENO 1");
 			}
 
             if ( do_yylineno && !reentrant )
@@ -414,9 +414,12 @@ void check_options()
 	if ( did_outfilename )
 		line_directive_out( stdout, 0 );
 
-        /* Dump the user defined preproc directives. */
-        if (userdef_buf.elts)
-            outn( (char*)(userdef_buf.elts) );
+	if ( do_yylineno )
+		buf_strdefine(&userdef_buf,"YY_USE_LINENO","1");
+
+	/* Dump the user defined preproc directives. */
+	if (userdef_buf.elts)
+		outn( (char*)(userdef_buf.elts) );
 
 	skelout();
     /* %% [1.0] */
@@ -1506,7 +1509,7 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 				_( "REJECT cannot be used with -f or -F" ) );
 		else if ( do_yylineno )
 			flexerror(
-			_( "%option yylineno cannot be used with -f or -F" ) );
+			_( "%option yylineno cannot be used with REJECT" ) );
 		else
 			flexerror(
 	_( "variable trailing context rules cannot be used with -f or -F" ) );
@@ -1585,12 +1588,14 @@ _( "Variable trailing context rules entail a large performance penalty\n" ) );
 	if ( lex_compat )
 		outn( "#define YY_FLEX_LEX_COMPAT" );
 
-	if ( do_yylineno && ! C_plus_plus && ! reentrant )
+	if ( ! C_plus_plus && ! reentrant )
 		{
+        outn( "#ifdef YY_USE_LINENO" );
 		outn( "extern int yylineno;" );
 		OUT_BEGIN_CODE();
 		outn( "int yylineno = 1;" );
 		OUT_END_CODE();
+        outn( "#endif" );
 		}
 
 	if ( C_plus_plus )
@@ -1674,6 +1679,7 @@ void set_up_initial_allocations()
 	rule_type = allocate_integer_array( current_max_rules );
 	rule_linenum = allocate_integer_array( current_max_rules );
 	rule_useful = allocate_integer_array( current_max_rules );
+    rule_has_nl = allocate_bool_array( current_max_rules );
 
 	current_max_scs = INITIAL_MAX_SCS;
 	scset = allocate_integer_array( current_max_scs );
@@ -1686,6 +1692,7 @@ void set_up_initial_allocations()
 	cclmap = allocate_integer_array( current_maxccls );
 	ccllen = allocate_integer_array( current_maxccls );
 	cclng = allocate_integer_array( current_maxccls );
+    ccl_has_nl = allocate_bool_array( current_maxccls );
 
 	current_max_ccl_tbl_size = INITIAL_MAX_CCL_TBL_SIZE;
 	ccltbl = allocate_Character_array( current_max_ccl_tbl_size );
