@@ -102,7 +102,11 @@ FILE *backing_up_file;
 int end_of_buffer_state;
 char **input_files;
 int num_input_files;
-char *program_name;
+
+/* Make sure program_name is initialized so we don't crash if writing
+ * out an error message before getting the program name from argv[0].
+ */
+char *program_name = "flex";
 
 #ifndef SHORT_FILE_NAMES
 static char *outfile_template = "lex.%s.%s";
@@ -130,11 +134,6 @@ int argc;
 char **argv;
 	{
 	int i;
-
-	/* Make sure the program name is defined even before possibly
-	 * munching on argv, so argv_fixup can report error messages.
-	 */
-	program_name = "flex"; 
 
 #ifdef THINK_C
 	argc = ccommand( &argv );
@@ -577,8 +576,7 @@ char **argv;
 	defs1_offset = prolog_offset = action_offset = action_index = 0;
 	action_array[0] = '\0';
 
-	if ( argv[0] && argv[0][0] != '\0' )
-		program_name = argv[0];
+	program_name = argv[0];
 
 	if ( program_name[0] != '\0' &&
 	     program_name[strlen( program_name ) - 1] == '+' )
