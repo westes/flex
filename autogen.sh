@@ -24,6 +24,12 @@
 # If you see no configure script, then run ./autogen.sh to create it
 # and procede with the "normal" build procedures.
 
+#if we pretend to have a ChangeLog, then automake is less
+#worried. (Don't worry, we *do* have a ChangeLog, we just need the
+#Makefile first.)
+
+touch ChangeLog
+
 aclocal && autoheader && automake -a && autoconf
 
 for i in tests
