@@ -2364,58 +2364,6 @@ you - search for "reentrant".
 		Vern
 
 
-1, filed, answered,,
-X-Coding-System: nil
-Mail-from: From vern@daffy.ee.lbl.gov  Tue Apr 17 12:34:26 2001
-Return-Path: <vern@daffy.ee.lbl.gov>
-Received: from localhost (localhost [127.0.0.1])
-	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA01409
-	for <wlestes@localhost>; Tue, 17 Apr 2001 12:34:26 -0400
-Received: from imap.uncg.edu
-	by localhost with IMAP (fetchmail-5.1.0)
-	for wlestes@localhost (single-drop); Tue, 17 Apr 2001 12:34:26 -0400 (EDT)
-Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
-	by hermes.email.uncg.edu (8.11.0/8.11.0) with ESMTP id f3HGFpe27457
-	for <wlestes@hermes.email.uncg.edu>; Tue, 17 Apr 2001 12:15:51 -0400 (EDT)
-Received: from daffy.ee.lbl.gov (daffy.ee.lbl.gov [131.243.1.31])
-	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id MAA20041
-	for <wlestes@uncg.edu>; Tue, 17 Apr 2001 12:15:49 -0400 (EDT)
-Received: (from vern@localhost)
-	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f3HGFoP19785;
-	Tue, 17 Apr 2001 09:15:50 -0700 (PDT)
-Message-Id: <200104171615.f3HGFoP19785@daffy.ee.lbl.gov>
-To: "W. L. Estes" <wlestes@uncg.edu>
-Subject: Re: Flex comments
-In-reply-to: Your message of Tue, 17 Apr 2001 08:57:41 PDT.
-Date: Tue, 17 Apr 2001 09:15:50 PDT
-From: Vern Paxson <vern@ee.lbl.gov>
-
-*** EOOH ***
-To: "W. L. Estes" <wlestes@uncg.edu>
-Subject: Re: Flex comments
-In-reply-to: Your message of Tue, 17 Apr 2001 08:57:41 PDT.
-Date: Tue, 17 Apr 2001 09:15:50 PDT
-From: Vern Paxson <vern@ee.lbl.gov>
-
-> If there is more detail in the original message, could you forward it
-> to me?
-
-That was the whole message.  The basic problem that people run into
-is they want reentrant scanners, so no statics or global variables.
-The general strategy for this is to have a new yylex() interface in
-which the caller passes in a struct that has all of the otherwise-global
-variables.  This is a bit tricky to do cleanly because you can't switch
-to that as *the* interface, of course, because it would break the
-existing API; which means you have to be able to generate two forms of
-the skeleton file, one for the existing API with the statics/globals,
-and one without them and the struct definition instead.
-
-There's probably some more discussion on this in the mail tarball I sent
-you - search for "reentrant".
-
-		Vern
-
-
 1,,
 X-Coding-System: nil
 Mail-from: From help-flex-admin@gnu.org  Wed Apr 25 00:20:40 2001
@@ -4198,5 +4146,173 @@ Bill Fenlason
 
 
 
+
+
+1, answered,,
+X-Coding-System: nil
+Mail-from: From vern@daffy.ee.lbl.gov  Sun Jun 17 03:08:59 2001
+Return-Path: <vern@daffy.ee.lbl.gov>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id DAA06939
+	for <wlestes@localhost>; Sun, 17 Jun 2001 03:08:58 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Sun, 17 Jun 2001 03:08:58 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.uncg.edu (8.11.0/8.11.0) with ESMTP id f5H76cs21638
+	for <wlestes@hermes.email.uncg.edu>; Sun, 17 Jun 2001 03:06:38 -0400 (EDT)
+Received: from daffy.ee.lbl.gov (daffy.ee.lbl.gov [131.243.1.31])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id DAA19164
+	for <wlestes@uncg.edu>; Sun, 17 Jun 2001 03:06:38 -0400 (EDT)
+Received: (from vern@localhost)
+	by daffy.ee.lbl.gov (8.10.0/8.10.0) id f5H76So24900;
+	Sun, 17 Jun 2001 00:06:28 -0700 (PDT)
+Message-Id: <200106170706.f5H76So24900@daffy.ee.lbl.gov>
+To: Theo de Raadt <deraadt@cvs.openbsd.org>
+Subject: Re: lex license
+Cc: wlestes@uncg.edu
+In-reply-to: Your message of Sat, 02 Jun 2001 13:15:37 PDT.
+Date: Sun, 17 Jun 2001 00:06:28 PDT
+From: Vern Paxson <vern@ee.lbl.gov>
+
+*** EOOH ***
+To: Theo de Raadt <deraadt@cvs.openbsd.org>
+Subject: Re: lex license
+Cc: wlestes@uncg.edu
+In-reply-to: Your message of Sat, 02 Jun 2001 13:15:37 PDT.
+Date: Sun, 17 Jun 2001 00:06:28 PDT
+From: Vern Paxson <vern@ee.lbl.gov>
+
+> Specifically, this license does not grant modification
+> rights -- which must be explicitly granted under copyright law.
+
+Yes, this came up a while ago, and I put together a flex release with
+a modified copyright that begins:
+
+        Redistribution and use in source and binary forms, with or
+        without modification, are permitted provided that:
+
+However, that version didn't get fully integrated into the sources I sent
+to Will.  It's in the COPYING file but not in the individual source files,
+just because I hadn't gotten around to it.
+
+Will, feel free to update the copyrights in each of the files with the
+one in COPYING.
+
+		Vern
+
+
+1,,
+X-Coding-System: nil
+Mail-from: From help-flex-admin@gnu.org  Sun Jun 17 13:08:17 2001
+Return-Path: <help-flex-admin@gnu.org>
+Received: from localhost (localhost [127.0.0.1])
+	by michael.uncg.edu (8.9.3/8.9.3) with ESMTP id NAA08097
+	for <wlestes@localhost>; Sun, 17 Jun 2001 13:08:17 -0400
+Received: from imap.uncg.edu
+	by localhost with IMAP (fetchmail-5.1.0)
+	for wlestes@localhost (single-drop); Sun, 17 Jun 2001 13:08:17 -0400 (EDT)
+Received: from external-gw.uncg.edu (external-gw.uncg.edu [152.13.2.70])
+	by hermes.uncg.edu (8.11.0/8.11.0) with ESMTP id f5HH62s28053
+	for <wlestes@hermes.email.uncg.edu>; Sun, 17 Jun 2001 13:06:02 -0400 (EDT)
+Received: from fencepost.gnu.org (we-refuse-to-spy-on-our-users@fencepost.gnu.org [199.232.76.164])
+	by external-gw.uncg.edu (8.9.3/8.9.3) with ESMTP id NAA09353
+	for <wlestes@uncg.edu>; Sun, 17 Jun 2001 13:06:02 -0400 (EDT)
+Received: from localhost ([127.0.0.1] helo=fencepost.gnu.org)
+	by fencepost.gnu.org with esmtp (Exim 3.16 #1 (Debian))
+	id 15Bfzu-0005ly-00
+	for <wlestes@uncg.edu>; Sun, 17 Jun 2001 13:06:02 -0400
+Received: from web9406.mail.yahoo.com ([216.136.129.22])
+	by fencepost.gnu.org with smtp (Exim 3.16 #1 (Debian))
+	id 15BfxJ-0005iZ-00
+	for <help-flex@gnu.org>; Sun, 17 Jun 2001 13:03:21 -0400
+Message-ID: <20010617170320.76960.qmail@web9406.mail.yahoo.com>
+Received: from [205.197.108.252] by web9406.mail.yahoo.com; Sun, 17 Jun 2001 10:03:20 PDT
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: yylineno
+To: Bill Fenlason <BillFen@Ulster.Net>
+Cc: help-flex@gnu.org
+In-Reply-To: <001601c0f6ce$b174eda0$0400a8c0@abit>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Sender: help-flex-admin@gnu.org
+Errors-To: help-flex-admin@gnu.org
+X-BeenThere: help-flex@gnu.org
+X-Mailman-Version: 2.0.5
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Sun, 17 Jun 2001 10:03:20 -0700 (PDT)
+
+*** EOOH ***
+From: "John W. Millaway" <johnmillaway@yahoo.com>
+Subject: Re: yylineno
+To: Bill Fenlason <BillFen@Ulster.Net>
+Cc: help-flex@gnu.org
+In-Reply-To: <001601c0f6ce$b174eda0$0400a8c0@abit>
+Sender: help-flex-admin@gnu.org
+Precedence: bulk
+List-Help: <mailto:help-flex-request@gnu.org?subject=help>
+List-Post: <mailto:help-flex@gnu.org>
+List-Subscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=subscribe>
+List-Id: Users list for Flex,
+	the GNU lexical analyser generator <help-flex.gnu.org>
+List-Unsubscribe: <http://mail.gnu.org/mailman/listinfo/help-flex>,
+	<mailto:help-flex-request@gnu.org?subject=unsubscribe>
+List-Archive: <http://mail.gnu.org/pipermail/help-flex/>
+Date: Sun, 17 Jun 2001 10:03:20 -0700 (PDT)
+
+> How do you (or would you) keep track of the token offset within the line?
+> 
+
+By this, do you mean the "column"?  If your tokens do not span lines,
+then you can use yyleng. If the tokens do span lines,
+then you have to rescan the token. Yuk!
+
+%%
+  /* This is untested code. But in the right spirit ! */
+  static int yycol=0, next_col=0;
+  char* _p;
+
+  /* Update yycol for tokens that do not contain '\n' */
+  #define COL()  yycol=next_col; next_col += yyleng
+
+  /* Update yycol for tokens that may possibly contain '\n' */
+  #define COLN() do{ \
+                   yycol=next_col; \
+                   for(_p=yytext; *_p; _p++,next_col++)  \
+                      if( *_p == '\n' )  \
+                         next_col = -1; \
+                 }while(0)
+
+  #define NEWL() yycol = next_col= 0
+
+foo|bar  { COL();  printf("%d: %s\n" ,  yycol, yytext); }
+\n       { NEWL(); printf("%d: NEWL\n", yycol); }
+foo\nbar { COLN(); printf("%d: %s\n" ,  yycol, yytext); }
+
+%%
+
+-John
+
+
+
+__________________________________________________
+Do You Yahoo!?
+Spot the hottest trends in music, movies, and more.
+http://buzz.yahoo.com/
+
+_______________________________________________
+Help-flex mailing list
+Help-flex@gnu.org
+http://mail.gnu.org/mailman/listinfo/help-flex
 
 
