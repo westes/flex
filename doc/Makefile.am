@@ -4,7 +4,9 @@ info_TEXINFOS =	flex.texi
 man_MANS = flex.1
 
 MAINTAINERCLEANFILES = \
-	flex.1 \
+	flex.1
+
+CLEANFILES = \
 	flex.hks \
 	flex.ops
 
