@@ -85,11 +85,14 @@
 
 ** use bootstrapper
 
-** use clcommit once it's available in a reasonable form
+** remove texinfo.tex from the cvs tree; it only needs to be present
+   on the system where the flex release is put together
 
-** remove the need for --enable-maintainer-mode; this means putting
-   the ChangeLog under cvs control and making sure that the manpage is
-   only rebuilt under reasonable conditions
+** remove need for --enable-maintainer-mode configure switch
+
+*** use clcommit to manage ChangeLog
+
+*** make sure man page is rebuilt under reasonable conditions
 
 Legend:
 
