@@ -23,7 +23,7 @@ BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
 EXTRA_DIST = scanner-1.l scanner-2.l main.cpp
-CLEANFILES = scanner-1.cpp scanner-1.h test-c++-multiple-scanners OUTPUT $(OBJS) scanner-2.cpp scanner-2.h
+CLEANFILES = scanner-1.cpp test-c++-multiple-scanners OUTPUT $(OBJS) scanner-2.cpp
 OBJS = scanner-1.o scanner-2.o main.o
 
 AM_CXXFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
@@ -33,10 +33,10 @@ AM_CXXFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
 testname = test-c++-multiple-scanners
 
 scanner-1.cpp: $(srcdir)/scanner-1.l
-	$(FLEX) -+ $(LFLAGS) --header=scanner-1.h $<
+	$(FLEX) -+ $(LFLAGS) $<
 
 scanner-2.cpp: $(srcdir)/scanner-2.l
-	$(FLEX) -+ $(LFLAGS) --header=scanner-2.h $<
+	$(FLEX) -+ $(LFLAGS) $<
 
 $(testname)$(EXEEXT): $(OBJS)
 	$(CXX) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
