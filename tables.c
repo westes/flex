@@ -116,6 +116,10 @@ int yytbl_data_init (struct yytbl_data *td, enum yytbl_id id)
 	return 0;
 }
 
+/** Clean up table and data array.
+ *  @param td will be destroyed
+ *  @return 0 on success
+ */
 int yytbl_data_destroy (struct yytbl_data *td)
 {
 	if (td->td_data)
@@ -124,6 +128,8 @@ int yytbl_data_destroy (struct yytbl_data *td)
 	free (td);
 	return 0;
 }
+
+/** Write enough padding to bring the file pointer to a 64-bit boundary. */
 static int yytbl_fwrite_pad64 (struct yytbl_writer *wr)
 {
 	int     pad, bwritten = 0;
@@ -149,37 +155,35 @@ int yytbl_hdr_fwrite (struct yytbl_writer *wr, const struct yytbl_hdr *th)
 
 	if (yytbl_fwrite32 (wr, th->th_magic) < 0
 	    || yytbl_fwrite32 (wr, th->th_hsize) < 0)
-		return -1;
+		flex_die (_("th_magic|th_hsize write32 failed"));
 	bwritten += 8;
 
 	if (fgetpos (wr->out, &(wr->th_ssize_pos)) != 0)
-		return -1;
+		flex_die (_("fgetpos failed"));
 
 	if (yytbl_fwrite32 (wr, th->th_ssize) < 0
 	    || yytbl_fwrite16 (wr, th->th_flags) < 0)
-		return -1;
+		flex_die (_("th_ssize|th_flags write failed"));
 	bwritten += 6;
 
 	sz = strlen (th->th_version) + 1;
 	if ((rv = yytbl_fwriten (wr, th->th_version, sz)) != sz)
-		return -1;
+		flex_die (_("th_version writen failed"));
 	bwritten += rv;
 
 	sz = strlen (th->th_name) + 1;
 	if ((rv = yytbl_fwriten (wr, th->th_name, sz)) != sz)
-		return 1;
+		flex_die (_("th_name writen failed"));
 	bwritten += rv;
 
 	/* add padding */
 	if ((rv = yytbl_fwrite_pad64 (wr)) < 0)
-		return -1;
+		flex_die (_("pad64 failed"));
 	bwritten += rv;
 
 	/* Sanity check */
-	if (bwritten != th->th_hsize) {
-		/* Oops. */
-		return -1;
-	}
+	if (bwritten != th->th_hsize)
+		flex_die (_("pad64 failed"));
 
 	return bwritten;
 }
@@ -225,30 +229,37 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 		case sizeof (int32_t):
 			rv = yytbl_fwrite32 (wr, yytbl_data_geti (td, i));
 			break;
-		default:	/* TODO: error. Something really wrong. */
+		default:
+			flex_die (_("invalid td_flags detected"));
 		}
-		if (rv < 0)
+		if (rv < 0) {
+			flex_die (_("error while writing tables"));
 			return -1;
+		}
 		bwritten += rv;
 	}
 
 	/* Sanity check */
 	if (bwritten != (12 + total_len * TFLAGS2BYTES (td->td_flags))) {
-		/* Oops. */
+		flex_die (_("insanity detected"));
 		return -1;
 	}
 
 	/* add padding */
-	if ((rv = yytbl_fwrite_pad64 (wr)) < 0)
+	if ((rv = yytbl_fwrite_pad64 (wr)) < 0) {
+		flex_die (_("pad64 failed"));
 		return -1;
+	}
 	bwritten += rv;
 
 	/* Now go back and update the th_hsize member */
 	if (fgetpos (wr->out, &pos) != 0
 	    || fsetpos (wr->out, &(wr->th_ssize_pos)) != 0
 	    || yytbl_fwrite32 (wr, wr->total_written) < 0
-	    || fsetpos (wr->out, &pos))
+	    || fsetpos (wr->out, &pos)) {
+		flex_die (_("get|set|fwrite32 failed"));
 		return -1;
+	}
 	else
 		/* Don't count the int we just wrote. */
 		wr->total_written -= sizeof (int32_t);
@@ -375,7 +386,8 @@ int32_t yytbl_data_getijk (const struct yytbl_data * tbl, int i, int j,
 		return ((int32_t *) (tbl->td_data))[(i * lo + j) * (k +
 								    1) +
 						    k];
-	default:		/* TODO: error. major foobar somewhere. */
+	default:
+		flex_die (_("invalid td_flags detected"));
 		break;
 	}
 
@@ -399,7 +411,8 @@ static int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i)
 		return ((int16_t *) (tbl->td_data))[i];
 	case sizeof (int32_t):
 		return ((int32_t *) (tbl->td_data))[i];
-	default:		/* TODO: error. major foobar somewhere. */
+	default:
+		flex_die (_("invalid td_flags detected"));
 		break;
 	}
 	return 0;
@@ -426,7 +439,8 @@ static void yytbl_data_seti (const struct yytbl_data *tbl, int i,
 	case sizeof (int32_t):
 		((int32_t *) (tbl->td_data))[i] = (int32_t) newval;
 		break;
-	default:		/* TODO: error. major foobar somewhere. */
+	default:
+		flex_die (_("invalid td_flags detected"));
 		break;
 	}
 }
@@ -487,7 +501,7 @@ void yytbl_data_compress (struct yytbl_data *tbl)
 		return;
 
 	if (newsz > TFLAGS2BYTES (tbl->td_flags)) {
-		/* TODO: ERROR. The code is wrong somewhere. */
+		flex_die (_("detected negative compression"));
 		return;
 	}
 

@@ -914,6 +914,16 @@ extern void flexerror PROTO ((const char *));
 /* Report a fatal error message and terminate. */
 extern void flexfatal PROTO ((const char *));
 
+/* Report a fatal error with a pinpoint, and terminate */
+#define flex_die(msg) \
+    do{ \
+        fprintf (stderr,\
+                _("%s: fatal internal error at %s:%d (%s): %s\n"),\
+                program_name, __FILE__, (int)__LINE__,\
+                __func__,msg);\
+        FLEX_EXIT(1);\
+    }while(0)
+
 /* Convert a hexadecimal digit string to an integer value. */
 extern int htoi PROTO ((Char[]));
 
