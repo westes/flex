@@ -88,6 +88,31 @@ include_HEADERS = \
 info_TEXINFOS =	flex.texi
 man_MANS = flex.1
 
+MAINTAINERCLEANFILES = \
+	flex.1 \
+	ABOUT-NLS \
+	config.rpath \
+	config.sub \
+	config.guess \
+	configure \
+	config.sub \
+	config.guess \
+	depcomp \
+	flex.hks \
+	flex.ops \
+	mkinstalldirs \
+	install-sh \
+	ABOUT-NLS \
+	ChangeLog \
+	INSTALL \
+	conf.in \
+	aclocal.m4 \
+	Makefile.in \
+	mdate-sh \
+	missing
+
+
+
 EXTRA_DIST = \
 	.indent.pro \
 	AUTHORS \
