@@ -5,6 +5,9 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.14
 
+** skeleton now processed by m4 before mkskel.sh; (this only matters
+   if you want to change the skeleton or if you're doing flex development)
+
 ** zh_cn translation added from translation project
 
 ** a bug that caused a segfault has now been fixed

@@ -37,6 +37,7 @@ AC_PROG_CC
 
 AC_PROG_RANLIB
 AC_PATH_PROG(HELP2MAN, help2man, $srcdir/missing)
+AC_PATH_PROG(M4, m4, $srcdir/missing)
 
 AC_C_CONST
 AC_TYPE_SIZE_T

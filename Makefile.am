@@ -36,6 +36,7 @@
 YFLAGS = -d
 ACLOCAL_AMFLAGS = -I m4
 help2man = @HELP2MAN@
+m4 = @M4@
 
 AUTOMAKE_OPTIONS = \
 	readme-alpha \
@@ -123,7 +124,7 @@ INCLUDES = -DLOCALEDIR=\"$(localedir)\" -I@includedir@
 LIBS = @LIBINTL@ @LIBS@
 
 skel.c: flex.skl mkskel.sh
-	m4 -P $(srcdir)/flex.skl | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
+	$(m4) -P $(srcdir)/flex.skl | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
 
 $(man_MANS): $(srcdir)/main.c
 	for i in $(man_MANS) ; do \
