@@ -3,6 +3,11 @@ changes between releases of flex
 
 See the file COPYING for copying conditions
 
+* after version 2.5.10
+
+** traditional prototypes output for C scanners, controlled by a
+   preprocessor symbol; see documentation for details
+
 * version 2.5.10 released 2002-7-24
 
 ** yy_globals renamed to yyscanner and yy_globals_t renamed to
