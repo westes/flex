@@ -32,8 +32,6 @@ static char rcsid[] =
     "@(#) $Header$ (LBL)";
 #endif
 
-#undef yywrap
-
 #include "flexdef.h"
 #include "parse.h"
 
