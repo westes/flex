@@ -1093,7 +1093,7 @@ void make_tables()
 		if ( yymore_used )
 			{
 			indent_puts(
-"yy_flex_strncpy( &YY_G(yytext)[YY_G(yy_more_offset)], YY_G(yytext_ptr), YY_G(yyleng) + 1 ); \\" );
+"yy_flex_strncpy( &YY_G(yytext)[YY_G(yy_more_offset)], YY_G(yytext_ptr), YY_G(yyleng) + 1 YY_CALL_LAST_ARG); \\" );
 			indent_puts( "YY_G(yyleng) += YY_G(yy_more_offset); \\" );
 			indent_puts(
 				"YY_G(yy_prev_more_offset) = YY_G(yy_more_offset); \\" );
@@ -1102,7 +1102,7 @@ void make_tables()
 		else
 			{
 			indent_puts(
-		"yy_flex_strncpy( YY_G(yytext), YY_G(yytext_ptr), YY_G(yyleng) + 1 ); \\" );
+		"yy_flex_strncpy( YY_G(yytext), YY_G(yytext_ptr), YY_G(yyleng) + 1 YY_CALL_LAST_ARG); \\" );
 			}
 		}
 
@@ -1282,7 +1282,7 @@ void make_tables()
 		if ( yytext_is_array )
 			{
 			indent_puts(
-	"#define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( YY_G(yytext) ))" );
+	"#define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( YY_G(yytext) YY_CALL_LAST_ARG))" );
 			indent_puts( "#define YY_NEED_STRLEN" );
 			indent_puts( "#define YY_MORE_ADJ 0" );
 			indent_puts( "#define YY_RESTORE_YY_MORE_OFFSET \\" );
