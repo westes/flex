@@ -402,6 +402,20 @@ do_action:	/* This label is used only to access EOF actions. */
 		/* Undo the effects of YY_DO_BEFORE_ACTION. */
 		*yy_cp = yy_hold_char;
 
+		if ( yy_current_buffer->yy_input_file != yyin )
+			{
+			/* This can happen if we scan a file, yywrap() returns
+			 * 1, and then later the user points yyin at a new
+			 * file to resume scanning.  We have to assure
+			 * consistency between yy_current_buffer and our
+			 * globals.  Here is the right place to do so, because
+			 * this is the first action (other than possibly a
+			 * back-up) that will match for the new input file.
+			 */
+			yy_current_buffer->yy_input_file = yyin;
+			yy_n_chars = yy_current_buffer->yy_n_chars;
+			}
+
 		/* Note that here we test for yy_c_buf_p "<=" to the position
 		 * of the first EOB in the buffer, since yy_c_buf_p will
 		 * already have been incremented past the NUL character
