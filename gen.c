@@ -457,7 +457,7 @@ char *char_map;
 	printf( "if ( yy_current_state >= %d )\n", lastdfa + 2 );
 
 	indent_up();
-	indent_puts( "yy_c = yy_meta[yy_c];" );
+	indent_puts( "yy_c = yy_meta[(unsigned int) yy_c];" );
 	indent_down();
 	}
 
@@ -676,11 +676,7 @@ void gen_NUL_trans()
 
 	do_indent();
 
-	if ( interactive )
-	    printf( "yy_is_jam = (yy_base[yy_current_state] == %d);\n",
-		    jambase );
-	else
-	    printf( "yy_is_jam = (yy_current_state == %d);\n", jamstate );
+	printf( "yy_is_jam = (yy_current_state == %d);\n", jamstate );
 	}
 
     /* if we've entered an accepting state, backtrack; note that
@@ -902,7 +898,7 @@ void gentabs()
 
     total_states = lastdfa + numtemps;
 
-    printf( tblend > MAX_SHORT ? C_long_decl : C_short_decl,
+    printf( total_states > MAX_SHORT ? C_long_decl : C_short_decl,
 	    "yy_base", total_states + 1 );
 
     for ( i = 1; i <= lastdfa; ++i )
@@ -1020,8 +1016,8 @@ void make_tables()
 
     if ( yymore_used )
 	{
-	indent_puts( "yytext -= yy_more_len; \\" );
-	indent_puts( "yyleng = yy_cp - yytext; \\" );
+	indent_puts( "yytext_ptr -= yy_more_len; \\" );
+	indent_puts( "yyleng = yy_cp - yytext_ptr; \\" );
 	}
 
     else
@@ -1125,9 +1121,10 @@ void make_tables()
 	    puts( "static int yy_looking_for_trail_begin = 0;" );
 	    puts( "static int yy_full_lp;" );
 	    puts( "static int *yy_full_state;" );
-	    printf( "#define YY_TRAILING_MASK 0x%x\n", YY_TRAILING_MASK );
+	    printf( "#define YY_TRAILING_MASK 0x%x\n",
+		    (unsigned int) YY_TRAILING_MASK );
 	    printf( "#define YY_TRAILING_HEAD_MASK 0x%x\n",
-		    YY_TRAILING_HEAD_MASK );
+		    (unsigned int) YY_TRAILING_HEAD_MASK );
 	    }
 
 	puts( "#define REJECT \\" );
@@ -1165,7 +1162,7 @@ void make_tables()
 	indent_puts( "static int yy_doing_yy_more = 0;" );
 	indent_puts( "static int yy_more_len = 0;" );
 	indent_puts(
-	    "#define yymore() { yy_more_flag = 1; }" );
+	    "#define yymore() do { yy_more_flag = 1; } while ( 0 )" );
 	indent_puts(
 	    "#define YY_MORE_ADJ (yy_doing_yy_more ? yy_more_len : 0)" );
 	}
@@ -1178,19 +1175,8 @@ void make_tables()
 
     skelout();
 
-    if ( ferror( temp_action_file ) )
-	flexfatal( "error occurred when writing temporary action file" );
-
-    else if ( fclose( temp_action_file ) )
-	flexfatal( "error occurred when closing temporary action file" );
-
-    temp_action_file = fopen( action_file_name, "r" );
-
-    if ( temp_action_file == NULL )
-	flexfatal( "could not re-open temporary action file" );
-
-    /* copy prolog from action_file to output file */
-    action_out();
+    /* copy prolog to output file */
+    fputs( prolog, stdout );
 
     skelout();
 
@@ -1265,11 +1251,11 @@ void make_tables()
 	indent_down();
 	}
 
-    /* copy actions from action_file to output file */
+    /* copy actions to output file */
     skelout();
     indent_up();
     gen_bt_action();
-    action_out();
+    fputs( action, stdout );
 
     /* generate cases for any missing EOF rules */
     for ( i = 1; i <= lastsc; ++i )
@@ -1315,7 +1301,7 @@ void make_tables()
     skelout();
 
     if ( bol_needed )
-	indent_puts( "register YY_CHAR *yy_bp = yytext;\n" );
+	indent_puts( "register YY_CHAR *yy_bp = yytext_ptr;\n" );
 
     gen_start_state();
 
