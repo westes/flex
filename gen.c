@@ -658,8 +658,6 @@ gentabs()
 	 * the indices that will go into the "yy_accept" array, and save the
 	 * indices in the dfaacc array
 	 */
-	int EOB_accepting_list[2];
-
 	printf( C_short_decl, "yy_acclist", max( numas, 1 ) + 1 );
 
 	j = 1;	/* index into "yy_acclist" array */
