@@ -207,7 +207,7 @@ gcc-lint: $(LINTSRCS)
 	gcc -Dlint -Wall $(LINTSRCS) >flex.gcc-lint 2>&1
 
 mostlyclean:
-	rm -f *~ a.out *.bak core errs scan.tmp
+	rm -f a.out *.bak core errs scan.tmp
 
 clean: mostlyclean
 	rm -f parse.c parse.h *.o alloca.c *.lint lex.yy.c lex.yy.cc $(FLEXLIB)
