@@ -147,9 +147,13 @@ options.o: options.c options.h scanopt.h flexdef.h config.h
 scanopt.o: scanopt.c scanopt.h flexdef.h config.h
 buf.o: buf.c flexdef.h
 
+# Create a tags file.
+tags:
+	ctags --c-types='defgmstuv' *.[ch]
+
 #The below recipe for making the ChangeLog will only work if you have a copy of the cvs tree handy so let it fail gracefully.
 
 ChangeLog:
 	-rcs2log -l 72 -u "vern	Vern	vern@ee.lbl.gov" -u "wlestes	W. L. Estes	wlestes@uncg.edu" -u "millaway	John Millaway	millaway@acm.org | sed s:/usr/local/cvsroot/flex/::g >ChangeLog 
 
-.PHONY: ChangeLog
+.PHONY: ChangeLog tags
