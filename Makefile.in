@@ -77,7 +77,7 @@ LINTSRCS = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.c \
 
 DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	configure.in conf.in Makefile.in mkskel.sh flex.skl \
-	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC \
+	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC TESTS \
 	flex.1 scan.c install.sh mkinstalldirs configure
 
 DIST_NAME = flex
@@ -210,11 +210,11 @@ gcc-lint: $(LINTSRCS)
 mostlyclean:
 	rm -f a.out *.bak core errs scan.tmp
 
-clean: mostlyclean
+clean: TESTclean mostlyclean
 	rm -f flex parse.c parse.h *.o alloca.c *.lint lex.yy.c lex.yy.cc \
 		$(FLEXLIB) config.log config.cache
 
-distclean: clean
+distclean: TESTdistclean clean
 	rm -f .bootstrap $(FLEX) scan.c tags TAGS Makefile config.status \
 		config.h stamp-h config.log config.cache
 
@@ -223,7 +223,18 @@ maintainer-clean: distclean
 	@echo "it deletes files that may require special tools to rebuild."
 	rm -f $(FLEX).man skel.c flex*.tar.gz flex*.tar.Z
 
-dist: $(FLEX) $(DISTFILES) parse.c parse.h $(srcdir)/$(FLEX).man
+TESTclean:
+	if test -e "TESTS/Makefile" ; then \
+		cd TESTS && $(MAKE) clean ; \
+	fi
+
+TESTdistclean:
+	if test -e "TESTS/Makefile" ; then \
+		cd TESTS && $(MAKE) distclean  ; \
+	fi
+
+
+dist: $(FLEX) TESTdistclean $(DISTFILES) parse.c parse.h $(srcdir)/$(FLEX).man
 	$(MAKE) DIST_NAME=flex-`sed <version.h 's/[^"]*"//' | sed 's/"//'` dist2
 
 dist2:
