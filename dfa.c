@@ -413,7 +413,10 @@ void ntod()
 	int duplist[CSIZE + 1], state[CSIZE + 1];
 	int targfreq[CSIZE + 1], targstate[CSIZE + 1];
 
-	accset = allocate_integer_array( num_rules + 1 );
+	/* accset needs to be large enough to hold all of the rules present
+	 * in the input, *plus* their YY_TRAILING_HEAD_MASK variants.
+	 */
+	accset = allocate_integer_array( (num_rules + 1) * 2 );
 	nset = allocate_integer_array( current_max_dfa_size );
 
 	/* The "todo" queue is represented by the head, which is the DFA
