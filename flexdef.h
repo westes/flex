@@ -777,10 +777,10 @@ extern void gen_start_state PROTO((void));
 extern void gentabs PROTO((void));
 
 /* Write out a formatted string at the current indentation level. */
-extern void indent_put2s PROTO((char[], char[]));
+extern void indent_put2s PROTO((const char *, const char *));
 
 /* Write out a string + newline at the current indentation level. */
-extern void indent_puts PROTO((char[]));
+extern void indent_puts PROTO((const char *));
 
 extern void make_tables PROTO((void));	/* generate transition tables */
 
@@ -831,19 +831,19 @@ extern void dataend PROTO((void));
 extern void dataflush PROTO((void));
 
 /* Report an error message and terminate. */
-extern void flexerror PROTO((const char[]));
+extern void flexerror PROTO((const char *));
 
 /* Report a fatal error message and terminate. */
-extern void flexfatal PROTO((const char[]));
+extern void flexfatal PROTO((const char *));
 
 /* Convert a hexadecimal digit string to an integer value. */
 extern int htoi PROTO((Char[]));
 
 /* Report an error message formatted with one integer argument. */
-extern void lerrif PROTO((const char[], int));
+extern void lerrif PROTO((const char *, int));
 
 /* Report an error message formatted with one string argument. */
-extern void lerrsf PROTO((const char[], const char[]));
+extern void lerrsf PROTO((const char *, const char *));
 
 /* Spit out a "#line" statement. */
 extern void line_directive_out PROTO((FILE*, int));
@@ -862,7 +862,7 @@ extern void mk2data PROTO((int));
 extern void mkdata PROTO((int));	/* generate a data statement */
 
 /* Return the integer represented by a string of digits. */
-extern int myctoi PROTO((char []));
+extern int myctoi PROTO((const char *));
 
 /* Return character corresponding to escape sequence. */
 extern Char myesc PROTO((Char[]));
@@ -871,17 +871,17 @@ extern Char myesc PROTO((Char[]));
 extern int otoi PROTO((Char [] ));
 
 /* Output a (possibly-formatted) string to the generated scanner. */
-extern void out PROTO((const char []));
-extern void out_dec PROTO((const char [], int));
-extern void out_dec2 PROTO((const char [], int, int));
-extern void out_hex PROTO((const char [], unsigned int));
-extern void out_line_count PROTO((const char []));
-extern void out_str PROTO((const char [], const char []));
+extern void out PROTO((const char *));
+extern void out_dec PROTO((const char *, int));
+extern void out_dec2 PROTO((const char *, int, int));
+extern void out_hex PROTO((const char *, unsigned int));
+extern void out_line_count PROTO((const char *));
+extern void out_str PROTO((const char *, const char *));
 extern void out_str3
-	PROTO((const char [], const char [], const char [], const char []));
-extern void out_str_dec PROTO((const char [], const char [], int));
+	PROTO((const char *, const char *, const char *, const char *));
+extern void out_str_dec PROTO((const char *, const char *, int));
 extern void outc PROTO((int));
-extern void outn PROTO((const char []));
+extern void outn PROTO((const char *));
 
 /* Return a printable version of the given character, which might be
  * 8-bit.
@@ -949,23 +949,23 @@ extern void new_rule PROTO((void));	/* initialize for a new rule */
 extern void build_eof_action PROTO((void));
 
 /* Write out a message formatted with one string, pinpointing its location. */
-extern void format_pinpoint_message PROTO((char[], char[]));
+extern void format_pinpoint_message PROTO((const char *, const char *));
 
 /* Write out a message, pinpointing its location. */
-extern void pinpoint_message PROTO((char[]));
+extern void pinpoint_message PROTO((const char *));
 
 /* Write out a warning, pinpointing it at the given line. */
-extern void line_warning PROTO(( char[], int ));
+extern void line_warning PROTO(( const char *, int ));
 
 /* Write out a message, pinpointing it at the given line. */
-extern void line_pinpoint PROTO(( char[], int ));
+extern void line_pinpoint PROTO(( const char *, int ));
 
 /* Report a formatted syntax error. */
-extern void format_synerr PROTO((char [], char[]));
-extern void synerr PROTO((char []));	/* report a syntax error */
-extern void format_warn PROTO((char [], char[]));
-extern void warn PROTO((char []));	/* report a warning */
-extern void yyerror PROTO((char []));	/* report a parse error */
+extern void format_synerr PROTO((const char *, const char *));
+extern void synerr PROTO((const char *));	/* report a syntax error */
+extern void format_warn PROTO((const char *, const char *));
+extern void warn PROTO((const char *));	/* report a warning */
+extern void yyerror PROTO((const char *));	/* report a parse error */
 extern int yyparse PROTO((void));	/* the YACC parser */
 
 
@@ -989,15 +989,15 @@ extern void cclinstal PROTO ((Char [], int));
 /* Lookup the number associated with character class. */
 extern int ccllookup PROTO((Char []));
 
-extern void ndinstal PROTO((char[], Char[]));	/* install a name definition */
-extern Char *ndlookup PROTO((char[]));	/* lookup a name definition */
+extern void ndinstal PROTO((const char *, Char[]));	/* install a name definition */
+extern Char *ndlookup PROTO((const char *));	/* lookup a name definition */
 
 /* Increase maximum number of SC's. */
 extern void scextend PROTO((void));
-extern void scinstal PROTO((char[], int));	/* make a start condition */
+extern void scinstal PROTO((const char *, int));	/* make a start condition */
 
 /* Lookup the number associated with a start condition. */
-extern int sclookup PROTO((char[]));
+extern int sclookup PROTO((const char *));
 
 
 /* from file tblcmp.c */

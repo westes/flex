@@ -334,7 +334,7 @@ void dataflush()
 /* flexerror - report an error message and terminate */
 
 void flexerror( msg )
-const char msg[];
+const char *msg;
 	{
 	fprintf( stderr, "%s: %s\n", program_name, msg );
 	flexend( 1 );
@@ -344,7 +344,7 @@ const char msg[];
 /* flexfatal - report a fatal error message and terminate */
 
 void flexfatal( msg )
-const char msg[];
+const char *msg;
 	{
 	fprintf( stderr, _( "%s: fatal internal error, %s\n" ),
 		program_name, msg );
@@ -368,7 +368,7 @@ Char str[];
 /* lerrif - report an error message formatted with one integer argument */
 
 void lerrif( msg, arg )
-const char msg[];
+const char *msg;
 int arg;
 	{
 	char errmsg[MAXLINE];
@@ -380,7 +380,7 @@ int arg;
 /* lerrsf - report an error message formatted with one string argument */
 
 void lerrsf( msg, arg )
-const char msg[], arg[];
+const char *msg, arg[];
 	{
 	char errmsg[MAXLINE];
 
@@ -397,7 +397,7 @@ int do_infile;
 	{
 	char directive[MAXLINE], filename[MAXLINE];
 	char *s1, *s2, *s3;
-	static char line_fmt[] = "#line %d \"%s\"\n";
+	static const char *line_fmt = "#line %d \"%s\"\n";
 
 	if ( ! gen_line_dirs )
 		return;
@@ -523,7 +523,7 @@ int value;
 /* myctoi - return the integer represented by a string of digits */
 
 int myctoi( array )
-char array[];
+char *array;
 	{
 	int val = 0;
 
@@ -630,14 +630,14 @@ Char str[];
  */
 
 void out( str )
-const char str[];
+const char *str;
 	{
 	fputs( str, stdout );
 	out_line_count( str );
 	}
 
 void out_dec( fmt, n )
-const char fmt[];
+const char *fmt;
 int n;
 	{
 	printf( fmt, n );
@@ -645,7 +645,7 @@ int n;
 	}
 
 void out_dec2( fmt, n1, n2 )
-const char fmt[];
+const char *fmt;
 int n1, n2;
 	{
 	printf( fmt, n1, n2 );
@@ -653,7 +653,7 @@ int n1, n2;
 	}
 
 void out_hex( fmt, x )
-const char fmt[];
+const char *fmt;
 unsigned int x;
 	{
 	printf( fmt, x );
@@ -661,7 +661,7 @@ unsigned int x;
 	}
 
 void out_line_count( str )
-const char str[];
+const char *str;
 	{
 	register int i;
 
@@ -671,7 +671,7 @@ const char str[];
 	}
 
 void out_str( fmt, str )
-const char fmt[], str[];
+const char *fmt, str[];
 	{
 	printf( fmt, str );
 	out_line_count( fmt );
@@ -679,7 +679,7 @@ const char fmt[], str[];
 	}
 
 void out_str3( fmt, s1, s2, s3 )
-const char fmt[], s1[], s2[], s3[];
+const char *fmt, s1[], s2[], s3[];
 	{
 	printf( fmt, s1, s2, s3 );
 	out_line_count( fmt );
@@ -689,7 +689,7 @@ const char fmt[], s1[], s2[], s3[];
 	}
 
 void out_str_dec( fmt, str, n )
-const char fmt[], str[];
+const char *fmt, str[];
 int n;
 	{
 	printf( fmt, str, n );
@@ -707,7 +707,7 @@ int c;
 	}
 
 void outn( str )
-const char str[];
+const char *str;
 	{
 	puts( str );
 	out_line_count( str );

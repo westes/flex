@@ -38,8 +38,8 @@
 
 void gen_next_state PROTO((int));
 void genecs PROTO((void));
-void indent_put2s PROTO((char [], char []));
-void indent_puts PROTO((char []));
+void indent_put2s PROTO((const char *, const char *));
+void indent_puts PROTO((const char *));
 
 
 static int indent_level = 0; /* each level is 8 spaces */
@@ -53,10 +53,10 @@ static int indent_level = 0; /* each level is 8 spaces */
  * to this is that the fast table representation generally uses the
  * 0 elements of its arrays, too.)
  */
-static char C_int_decl[] = "static yyconst int %s[%d] =\n    {   0,\n";
-static char C_short_decl[] = "static yyconst short int %s[%d] =\n    {   0,\n";
-static char C_long_decl[] = "static yyconst long int %s[%d] =\n    {   0,\n";
-static char C_state_decl[] =
+static const char *C_int_decl = "static yyconst int %s[%d] =\n    {   0,\n";
+static const char *C_short_decl = "static yyconst short int %s[%d] =\n    {   0,\n";
+static const char *C_long_decl = "static yyconst long int %s[%d] =\n    {   0,\n";
+static const char *C_state_decl =
 	"static yyconst yy_state_type %s[%d] =\n    {   0,\n";
 
 
@@ -1036,7 +1036,7 @@ void gentabs()
  */
 
 void indent_put2s( fmt, arg )
-char fmt[], arg[];
+const char *fmt, *arg;
 	{
 	do_indent();
 	out_str( fmt, arg );
@@ -1049,7 +1049,7 @@ char fmt[], arg[];
  */
 
 void indent_puts( str )
-char str[];
+const char *str;
 	{
 	do_indent();
 	outn( str );
