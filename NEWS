@@ -95,7 +95,7 @@ Changes between release 2.4 (30Nov93) and release 2.3:
 
 	- Scanners with compressed tables are now "interactive" (-I option)
 	  by default.  You can suppress this attribute (which makes them
-	  run slighly slower) using the new '-B' flag.
+	  run slightly slower) using the new '-B' flag.
 
 	- Flex now generates 8-bit scanners by default, unless you use the
 	  -Cf or -CF compression options (-Cfe  and -CFe result in 8-bit
