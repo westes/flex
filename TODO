@@ -9,6 +9,8 @@
 
 ** take the man-isms out of flex.texi
 
+*** Make "see also" into real xrefs
+
 ** add flex.texi and its generated info files into the Makefile
    process (best done via automake)
 
