@@ -113,8 +113,8 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 			return SECTEND;
 			}
 
-^"%pointer".*\n		++linenum; yytext_is_array = false;
-^"%array".*\n		++linenum; yytext_is_array = true;
+^"%pointer".*{NL}	++linenum; yytext_is_array = false;
+^"%array".*{NL}		++linenum; yytext_is_array = true;
 
 ^"%used"		{
 			warn( "%used/%unused have been deprecated" );
@@ -126,9 +126,9 @@ CCL_CHAR	[^\\\n\]]|{ESCSEQ}
 			}
 
 
-^"%"[aceknopr]{WS}.*{NL}	++linenum;	/* ignore */
+^"%"[aceknopr]{OPTWS}[0-9]*{OPTWS}{NL}	++linenum;	/* ignore */
 
-^"%"[^sxanpekotcru{}]{OPTWS}	synerr( "unrecognized '%' directive" );
+^"%"[^sxanpekotcru{}].*	synerr( "unrecognized '%' directive" );
 
 ^{NAME}			{
 			(void) strcpy( nmstr, (char *) yytext );
