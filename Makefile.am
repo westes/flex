@@ -123,7 +123,7 @@ yylex.o: yylex.c parse.h flexdef.h config.h
 skel.c: flex.skl mkskel.sh
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir)/flex.skl >skel.c
 
-$(man_MANS): $(srcdir)/flex
+$(man_MANS): $(srcdir)/main.c
 	for i in $(man_MANS) ; do \
 	$(help2man) --name='fast lexical analyzer generator' --section=`echo $$i|rev|cut -f 1 -d .|rev` $(srcdir)/flex > $$i ; \
 	done
