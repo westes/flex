@@ -27,7 +27,7 @@ GNU gettext 0.11.5; for i18n
 flex (latest beta release);  for bootstrap of scan.l
 help2man 1.27; to generate man page
 tar, gzip, etc.; for packaging of the source distribution
-GNU texinfo 4.2;  to build and test the flex manual
+GNU texinfo 4.3d;  to build and test the flex manual
 perl; GNU automake and GNU autoconf now depend on perl to run
 GNU indent 2.8; for indenting the flex source the way we want it done
 
