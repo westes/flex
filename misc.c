@@ -31,13 +31,6 @@
 #include "flexdef.h"
 
 
-
-/* declare functions that have forward references */
-
-void dataflush PROTO((void));
-int otoi PROTO((Char []));
-
-
 void action_define( defname, value )
 char *defname;
 int value;
