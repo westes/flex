@@ -641,6 +641,7 @@ yyFlexLexer::yyFlexLexer( istream* arg_yyin, ostream* arg_yyout )
 	yy_c_buf_p = 0;
 	yy_init = 1;
 	yy_start = 0;
+	yy_flex_debug = 0;
 
 	yy_did_buffer_switch_on_eof = 0;
 
