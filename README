@@ -16,9 +16,9 @@ BSD Unix, and not under the GNU General Public License (GPL), except for
 the "configure" script, which is covered by the GPL.
 
 Many thanks to the 2.5 beta-testers for finding bugs and helping test and
-increase portability: Scott David Daniels, Charles Elliott, Joe Gayda,
-Chris Meier, James Nordby, Terrence O'Kane, Karsten Pahnke, Francois Pinard,
-Pat Rankin, Andreas Scherer, Marc Wiese, Nathan Zelle.
+increase portability: Stan Adermann, Scott David Daniels, Charles Elliott,
+Joe Gayda, Chris Meier, James Nordby, Terrence O'Kane, Karsten Pahnke,
+Francois Pinard, Pat Rankin, Andreas Scherer, Marc Wiese, Nathan Zelle.
 
 Please send bug reports and feedback to: Vern Paxson (vern@ee.lbl.gov).
 
