@@ -19,7 +19,6 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
-BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
 builddir = @builddir@

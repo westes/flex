@@ -28,7 +28,7 @@
 # 'test-mul' checks that we can store multiple tables in a single file.
 # ------------------------------------------------
 
-BISON = @BISON@
+
 FLEX = $(top_builddir)/flex
 
 testname  := test-table-opts

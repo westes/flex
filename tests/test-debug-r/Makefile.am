@@ -19,7 +19,7 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
-BISON = @BISON@
+
 FLEX = $(top_builddir)/flex
 
 EXTRA_DIST = scanner.l test.input
