@@ -740,6 +740,21 @@ int element_v, element_n;
 	}
 
 
+/* The following is only needed when building flex's parser using certain
+ * broken versions of bison.
+ */
+void *yy_flex_xmalloc( size )
+int size;
+	{
+	void *result = yy_flex_alloc( size );
+
+	if ( ! result  )
+		flexfatal( "memory allocation failed in yy_flex_xmalloc()" );
+
+	return result;
+	}
+
+
 /* zero_out - set a region of memory to 0
  *
  * Sets region_ptr[0] through region_ptr[size_in_bytes - 1] to zero.
