@@ -10,7 +10,7 @@ misc.c
 nfa.c
 options.c
 parse.c
-scan.c
+scan.l
 scanopt.c
 skel.c
 sym.c
