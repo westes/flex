@@ -62,7 +62,7 @@ dnl checks for libraries
 dnl checks for header files
 
 AC_HEADER_STDC
-AC_CHECK_HEADERS(string.h malloc.h sys/types.h unistd.h stdbool.h)
+AC_CHECK_HEADERS(string.h sys/types.h unistd.h stdbool.h)
 AC_CHECK_HEADERS(cunistd netinet/in.h)
 
 dnl checks for types
@@ -82,6 +82,7 @@ m4/Makefile
 po/Makefile.in
 intl/Makefile
 tests/Makefile
+tests/TEMPLATE/Makefile
 tests/test-array-nr/Makefile
 tests/test-array-r/Makefile
 tests/test-basic-nr/Makefile
