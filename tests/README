@@ -1,21 +1,23 @@
-This file describes the flex tests.
+This file describes the flex test suite.
 
-WHO SHOULD USE THE TESTS
+WHO SHOULD USE THE TEST SUITE?
 
 The test suite is intended to be used by flex developers, i.e., anyone hacking
 the flex distribution. If you are simply installing flex, then you can ignore
 this directory and its contents.
 
-STRUCTURE OF THE TESTS
+STRUCTURE OF THE TEST SUITE
 
-The test suite consists of several flex scanners, one per directory, known
-to work with the most recent version of flex. In general, after you modify your
-copy of the flex distribution, you should re-run the tests. Some of the tests
-may require certain tools to be available (e.g., bison, diff). If any test
-returns an error or generates an error message, then your modifications *may*
-have broken a feature of flex.
+The test suite consists of several directories, each containing a
+scanner known to work with the most recent version of flex. In
+general, after you modify your copy of the flex distribution, you
+should re-run the test suite. Some of the tests may require certain tools
+to be available (e.g., bison, diff). If any test returns an error or
+generates an error message, then your modifications *may* have broken
+a feature of flex. At a minimum, you'll want to investigate the
+failure and determine if it's truly significant.
 
-HOW TO RUN THE TESTS
+HOW TO RUN THE TEST SUITE
 
 To build and execute all tests:
 
@@ -25,12 +27,12 @@ To build and execute all tests:
 To build and execute a single test:
 
   $ cd tests/ # from the top level of the flex tree.
-  $ cd test-pthread-nr
+  $ cd test-pthread-nr # for example
   $ make check
 
-HOW TO ADD A NEW TEST
+HOW TO ADD A NEW TEST TO THE TEST SUITE
 
- - Run the perl script `create-test.pl` found in this directory.
+ - RUN the perl script `create-test.pl` found in this directory.
    If it works, skip the next step.
 
  - Copy the tests/TEMPLATE directory, then modify the skeleton scanner
@@ -57,25 +59,4 @@ HOW TO ADD A NEW TEST
  - Each test assumes that the newly-built binary "flex" is in the 
    directory above the tests directory.
 
- -  Add a description of your new test to the end of this file.
-
-DESCRIPTION OF TESTS
-
-  TEMPLATE      -  A NO-OP skeleton scanner.
-  basic-nr      -  Simple scanner, non-reentrant.
-  basic-r       -  Simple scanner, reentrant.
-  bison-yylval  -  Reentrant scanner + pure parser. Requires bison.
-  bison-yylloc  -  Reentrant scanner + pure parser. Requires bison.
-  header-nr     -  Test generated header file, non-reentrant.
-  header-r      -  Test generated header file, reentrant.
-  include-by-buffer     - YY_BUFFER_STATE, yy_push_state, etc.
-  include-by-reentrant  - Nested scanners.
-  multiple-scanners-nr  - #include and run two separate scanners, non-reentrant.
-  multiple-scanners-r   - #include and run two separate scanners, reentrant.
-  prefix-nr     - verify prefixes are working, nonreentrant.
-  prefix-r      - verify prefixes are working, reentrant.
-  pthread       - pthreads test. A NO-OP if libpthread not found.
-  string-nr     - Scan strings, non-reentrant.
-  string-r      - Scan strings, reentrant.
-  c-cpp-nr      - Compile a C scanner with C++ compiler, nonreentrant.
-  c-cpp-r       - Compile a C scanner with C++ compiler, reentrant.
+ -  Add a description of your new test to the end of the file `descriptions'.
