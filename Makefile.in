@@ -224,7 +224,6 @@ dist2:
 	@chmod +w $(DIST_NAME)/Makefile.in
 	tar chf $(DIST_NAME).tar $(DIST_NAME)
 	$(COMPRESS) $(DIST_NAME).tar
-	@rm -rf $(DIST_NAME)
 
 Makefile: Makefile.in config.status
 	$(SHELL) config.status
