@@ -53,7 +53,7 @@ extern bool tablesverify, tablesext;
 	return CHAR;
 
 #define RETURNNAME \
-	if(strlen(yytext) < MAXLINE) \
+	if(yyleng < MAXLINE) \
          { \
 	strcpy( nmstr, yytext ); \
 	 } \
@@ -154,7 +154,7 @@ LEXOPT		[aceknopr]
 	^"%"[^sxaceknopr{}].*	synerr( _( "unrecognized '%' directive" ) );
 
 	^{NAME}		{
-			if(strlen(yytext) < MAXLINE) 
+			if(yyleng < MAXLINE) 
         		 { 
 			strcpy( nmstr, yytext );
 			 } 
@@ -211,7 +211,7 @@ LEXOPT		[aceknopr]
 	{WS}		/* separates name and definition */
 
 	{NOT_WS}[^\r\n]*	{
- 		        if(strlen(yytext) < MAXLINE)
+ 		        if(yyleng < MAXLINE)
  		         {
 			strcpy( (char *) nmdef, yytext );
  		         } 
@@ -350,7 +350,7 @@ LEXOPT		[aceknopr]
 
 
 	\"[^"\n]*\"	{
-			if(strlen(yytext + 1 ) < MAXLINE) 
+			if(yyleng-1 < MAXLINE) 
         		 { 
 			strcpy( nmstr, yytext + 1 );
 			 } 
@@ -489,7 +489,7 @@ LEXOPT		[aceknopr]
 	"["({FIRST_CCL_CHAR}|{CCL_EXPR})({CCL_CHAR}|{CCL_EXPR})*	{
 			int cclval;
 
-			if(strlen(yytext ) < MAXLINE) 
+			if(yyleng < MAXLINE) 
         		 { 
 			strcpy( nmstr, yytext );
 			 } 
@@ -539,7 +539,7 @@ LEXOPT		[aceknopr]
             end_ch = yytext[yyleng-1];
             end_is_ws = end_ch != '}' ? 1 : 0;
 
- 			if(strlen(yytext + 1 ) < MAXLINE) 
+ 			if(yyleng-1 < MAXLINE) 
          		 { 
 			strcpy( nmstr, yytext + 1 );
  			 } 
