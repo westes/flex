@@ -1580,7 +1580,7 @@ starting at location
 .PP
 Note that both of these functions create and scan a
 .I copy
-of the string or bytes.  (This may be desireable, since
+of the string or bytes.  (This may be desirable, since
 .I yylex()
 modifies the contents of the buffer it is scanning.)  You can avoid the
 copy by using:
@@ -1714,7 +1714,7 @@ The macro
 can be used to control whether the current buffer's scanning
 context for the next token match is done as though at the
 beginning of a line.  A non-zero macro argument makes rules anchored with
-'^' active, while a zero argumed makes '^' rules inactive.
+'^' active, while a zero argument makes '^' rules inactive.
 .PP
 The macro
 .B YY_AT_BOL()
@@ -2151,7 +2151,7 @@ between small scanners and fast scanners.
 generated scanner for faster performance because the elements of
 the tables are better aligned for memory access and computation.  On some
 RISC architectures, fetching and manipulating longwords is more efficient
-than with smaller-sized datums such as shortwords.  This option can
+than with smaller-sized units such as shortwords.  This option can
 double the size of the tables used by your scanner.
 .IP
 .B \-Ce
@@ -3384,7 +3384,7 @@ file, for example).  Use
 .B %option reject
 or
 .B %option yymore
-to indicate to flex that you really do use these featurs.
+to indicate to flex that you really do use these features.
 .PP
 .I flex scanner jammed -
 a scanner compiled with
