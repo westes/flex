@@ -32,3 +32,6 @@ few other things. See the file examples/README for more details.
 TODO, to.do/ - outstanding bug reports, desired features, etc.
 
 faqs/ - frequently asked questions
+
+misc/ - assorted files which may be of interest when building flex on
+platforms other than *nix ones. See misc/README for more information
