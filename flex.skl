@@ -2116,9 +2116,9 @@ YY_DECL_LAST_ARG
  * your own version */
 #ifndef YY_NO_FLEX_ALLOC
 #ifdef YY_USE_PROTOS
-static void *yy_flex_alloc( yy_size_t size YY_LAST_ARG )
+void *yy_flex_alloc( yy_size_t size YY_LAST_ARG )
 #else
-static void *yy_flex_alloc( size YY_LAST_ARG )
+void *yy_flex_alloc( size YY_LAST_ARG )
 yy_size_t size;
 YY_DECL_LAST_ARG
 #endif
@@ -2131,9 +2131,9 @@ YY_DECL_LAST_ARG
  * to your own version. */
 #ifndef YY_NO_FLEX_REALLOC
 #ifdef YY_USE_PROTOS
-static void *yy_flex_realloc( void *ptr, yy_size_t size YY_LAST_ARG )
+void *yy_flex_realloc( void *ptr, yy_size_t size YY_LAST_ARG )
 #else
-static void *yy_flex_realloc( ptr, size YY_LAST_ARG )
+void *yy_flex_realloc( ptr, size YY_LAST_ARG )
 void *ptr;
 yy_size_t size;
 YY_DECL_LAST_ARG
@@ -2154,9 +2154,9 @@ YY_DECL_LAST_ARG
  * your own version.*/
 #ifndef YY_NO_FLEX_FREE
 #ifdef YY_USE_PROTOS
-static void yy_flex_free( void *ptr YY_LAST_ARG )
+void yy_flex_free( void *ptr YY_LAST_ARG )
 #else
-static void yy_flex_free( ptr YY_LAST_ARG )
+void yy_flex_free( ptr YY_LAST_ARG )
 void *ptr;
 YY_DECL_LAST_ARG
 #endif
