@@ -384,6 +384,16 @@ extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
 extern int csize;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
+/*
+ * tablesext - if true, create external tables
+ * tablestoggle - if true, then output extneral tables code
+ * tablesfilename - filename for external tables
+ * tablesout - FILE stream for external tables
+ */
+extern bool  tablesext, tablestoggle;
+extern char* tablesfilename;
+extern FILE* tablesout;
+
 extern int yymore_really_used, reject_really_used;
 
 

@@ -842,9 +842,10 @@ void skelout()
 					/* a comment in the skel. ignore. */
 					break;
 
-                case 't':
-                    /* %t - toggle tables api */
-                    break;
+				case 't':
+					/* %t - toggle tables api */
+					tablestoggle = !tablestoggle;
+					break;
 
 				default:
 					flexfatal(
@@ -853,7 +854,10 @@ void skelout()
 			}
 
 		else if ( do_copy )
+			{
+			if (tablesext || !tablestoggle)
 				outn( buf );
+			}
 		}
 	}
 

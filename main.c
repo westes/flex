@@ -105,6 +105,10 @@ jmp_buf flex_main_jmp_buf;
 bool *rule_has_nl, *ccl_has_nl;
 int nlch = '\n';
 
+bool  tablesext, tablestoggle;
+char* tablesfilename;
+FILE* tablesout;
+
 /* Make sure program_name is initialized so we don't crash if writing
  * out an error message before getting the program name from argv[0].
  */
@@ -966,6 +970,9 @@ char **argv;
 	prefix = "yy";
 	yyclass = 0;
 	use_read = use_stdout = false;
+    tablesext = tablestoggle = false;
+    tablesfilename = NULL;
+    tablesout = NULL;
 
 	sawcmpflag = false;
 
@@ -1169,7 +1176,11 @@ char **argv;
             case OPT_NO_UNISTD_H:
                     buf_strdefine(&userdef_buf,"YY_NO_UNISTD_H", "1");
                     break;
-                
+
+            case OPT_TABLES:
+                    tablesext = true;
+                    break;
+
             case OPT_TRACE:
                     trace = true;
                     break;
@@ -1794,6 +1805,7 @@ _(
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
 "      --header=FILE       create a C header file in addition to the scanner\n"
+"      --tables[=FILE]     write tables to FILE\n"
     
 "\n"
 "Scanner behavior:\n"

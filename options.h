@@ -112,6 +112,7 @@ enum flexopt_flag_t {
     OPT_STACK,
     OPT_STDINIT,
     OPT_STDOUT,
+    OPT_TABLES,
     OPT_TRACE,
     OPT_NO_UNISTD_H,
     OPT_VERBOSE,

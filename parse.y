@@ -2,6 +2,7 @@
 
 %token CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
 %token OPTION_OP OPT_OUTFILE OPT_PREFIX OPT_YYCLASS OPT_HEADER
+%token OPT_TABLES
 
 %token CCE_ALNUM CCE_ALPHA CCE_BLANK CCE_CNTRL CCE_DIGIT CCE_GRAPH
 %token CCE_LOWER CCE_PRINT CCE_PUNCT CCE_SPACE CCE_UPPER CCE_XDIGIT
@@ -217,6 +218,8 @@ option		:  OPT_OUTFILE '=' NAME
 			{ yyclass = copy_string( nmstr ); }
 		|  OPT_HEADER '=' NAME
 			{ headerfilename = copy_string( nmstr ); }
+	    |  OPT_TABLES '=' NAME
+            { tablesext = true; tablesfilename = copy_string( nmstr ); }
 		;
 
 sect2		:  sect2 scon initforrule flexrule '\n'

@@ -316,6 +316,7 @@ LEXOPT		[aceknopr]
 	prefix		return OPT_PREFIX;
 	yyclass		return OPT_YYCLASS;
 	header      return OPT_HEADER;
+	tables      return OPT_TABLES;
 
 	\"[^"\n]*\"	{
 			strcpy( nmstr, yytext + 1 );
