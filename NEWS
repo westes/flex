@@ -3,7 +3,13 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* after version 2.5.15
+* version 2.5.16 released 2002-8-28
+
+** c++ scanners compile again
+
+** there is now an indent target in the top-level Makefile. configure
+   checks for GNU indent which is required for proper operation of the
+   indent target
 
 ** some more portability fixes were made
 
@@ -13,7 +19,6 @@ See the file COPYING for copying conditions.
 
 ** we're trying to clean up more files in the test suite's make clean
    targets
-
 
 * version 2.5.15 released 2002-8-21
 
