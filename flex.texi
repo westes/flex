@@ -289,7 +289,7 @@ Indices
 
 If you have problems with @code{flex} or think you have found a bug,
 please send mail detailing your problem to
-@email{help-flex@@gnu.org}. Patches are always welcome.
+@email{lex-help@@lists.sourceforge.net}. Patches are always welcome.
 
 @node Introduction, Simple Examples, Reporting Bugs, Top
 @chapter Introduction
@@ -5705,8 +5705,9 @@ You can specify an action for the @code{<<EOF>>} rule.
 @node  Where else can I find help?
 @unnumberedsec Where else can I find help?
 
-The @code{help-flex} email list is served by GNU. See @uref{http://www.gnu.org/} for
-details on how to subscribe or search the archives.
+You can find the flex homepage on the web at
+@uref{http://lex.sourceforge.net/}. See that page for details about flex
+mailing lists as well.
 
 @node  Can I include comments in the "rules" section of the file?
 @unnumberedsec Can I include comments in the "rules" section of the file?
