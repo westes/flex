@@ -2,12 +2,12 @@ BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
 EXTRA_DIST = scanner.l test.input
-CLEANFILES = scanner.c test-lineno-nr OUTPUT $(OBJS)
+CLEANFILES = scanner.c test-lineno-r OUTPUT $(OBJS)
 OBJS = scanner.o
 
 INCLUDES = -I $(srcdir) -I $(top_srcdir)
 
-testname = test-lineno-nr
+testname = test-lineno-r
 
 scanner.c: $(srcdir)/scanner.l
 	$(FLEX) $(LFLAGS) $<
