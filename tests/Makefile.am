@@ -25,7 +25,7 @@ EXTRA_DIST = \
 noinst_SCRIPTS = \
 	create-test
 
-SUBDIRS = \
+DIST_SUBDIRS = \
 	test-reject \
 	test-bison-nr \
 	test-c++-basic \
@@ -38,6 +38,40 @@ SUBDIRS = \
 	test-lineno-r \
 	test-lineno-nr \
 	TEMPLATE \
+	test-array-nr \
+	test-array-r \
+	test-basic-nr \
+	test-basic-r \
+	test-bison-yylloc \
+	test-bison-yylval \
+	test-c-cpp-nr \
+	test-c-cpp-r \
+	test-header-nr \
+	test-header-r \
+	test-include-by-buffer \
+	test-include-by-reentrant \
+	test-multiple-scanners-nr \
+	test-multiple-scanners-r \
+	test-prefix-nr \
+	test-prefix-r \
+	test-pthread \
+	test-string-nr \
+	test-string-r \
+	test-yyextra \
+	test-table-opts
+
+SUBDIRS = \
+	test-reject \
+	test-bison-nr \
+	test-c++-basic \
+	test-posixly-correct \
+	test-posix \
+	test-mem-r \
+	test-mem-nr \
+	test-debug-nr \
+	test-debug-r \
+	test-lineno-r \
+	test-lineno-nr \
 	test-array-nr \
 	test-array-r \
 	test-basic-nr \
