@@ -1,3 +1,14 @@
+Changes between release 2.5.3 (29May96) and release 2.5.2:
+
+	- Some serious bugs in yymore() have been fixed.  In particular,
+	  when using AT&T-lex-compatibility or %array, you can intermix
+	  calls to input(), unput(), and yymore().  (This still doesn't
+	  work for %pointer, and isn't likely to in the future.)
+
+	- A bug in handling NUL's in the input stream of scanners using
+	  REJECT has been fixed.
+
+
 Changes between release 2.5.2 (25Apr95) and release 2.5.1:
 
 	- The --prefix configuration option now works.
