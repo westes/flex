@@ -5,7 +5,7 @@ EXTRA_DIST = scanner-1.l scanner-2.l main.c
 CLEANFILES = scanner-1.c scanner-1.h test-multiple-scanners-r OUTPUT $(OBJS) scanner-2.c scanner-2.h
 OBJS = scanner-1.o scanner-2.o main.o
 
-INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir)
+INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
 #LDFLAGS = $(top_srcdir)/libfl.a 
 #YFLAGS = --defines --output=parser.c
 

@@ -61,13 +61,7 @@ test:
 			0 )  echo Test "$$DIR" succeeded.; \
 				NOK=0$$NOK;\
 				;; \
-			1 )  echo Test "$$DIR" FAILED. See "$$dir"/OUTPUT for details. ; \
-				NFAIL=0$$NFAIL; \
-				;; \
-			2 )  echo Test "$$DIR" was SKIPPED. See "$$dir"/OUTPUT for details.; \
-				NSKIP=0$$NSKIP; \
-				;; \
-			* )  echo Test "$$DIR" reported an unknown exit status. Assuming that means it failed. See "$$DIR"/OUTPUT for details.; \
+			* )  echo Test "$$DIR" FAILED. See "$$dir"/OUTPUT for details. ; \
 				NFAIL=0$$NFAIL; \
 				;; \
 		esac; \

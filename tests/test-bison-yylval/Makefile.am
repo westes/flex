@@ -5,7 +5,7 @@ EXTRA_DIST = scanner.l parser.y test.input main.c
 CLEANFILES = scanner.c parser.c parser.h test-bison-yylval $(OBJS) OUTPUT
 OBJS = parser.o scanner.o main.o
 
-INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir)
+INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
 #LDFLAGS = $(top_srcdir)/libfl.a 
 YFLAGS = --defines --output=parser.c --name-prefix="test"
 

@@ -5,7 +5,7 @@ EXTRA_DIST = scanner.l test.input
 CLEANFILES = scanner.c parser.c parser.h test-c-cpp-r $(OBJS) OUTPUT
 OBJS = scanner.o
 
-INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir)
+INCLUDES = -I $(srcdir) -I $(top_srcdir) -I $(top_builddir) -I .
 #LDFLAGS = $(top_srcdir)/libfl.a 
 #YFLAGS = --defines --output=parser.c
 
