@@ -35,6 +35,7 @@
 #include "flexdef.h"
 #include "version.h"
 #include "options.h"
+#include "tables.h"
 
 static char flex_version[] = FLEX_VERSION;
 
@@ -350,7 +351,7 @@ void check_options ()
 		nbytes = strlen (prefix) + strlen ("tables") + 2;
 		pname = (char *) calloc (nbytes, 1);
 		sprintf (pname, "%stables", prefix);
-		yytbl_hdr_init (&hdr, "TODO", pname);
+		yytbl_hdr_init (&hdr, flex_version, pname);
 		free (pname);
 
 		if (yytbl_hdr_fwrite (&tableswr, &hdr) <= 0)

@@ -32,6 +32,7 @@
 /*  PURPOSE. */
 
 #include "flexdef.h"
+#include "tables.h"
 
 
 /* declare functions that have forward references */
@@ -92,7 +93,7 @@ struct yytbl_data *mkeoltbl (void)
 
 	tbl = (struct yytbl_data *) calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYT_ID_RULE_CAN_MATCH_EOL);
-	tbl->td_flags = YYT_DATA8;
+	tbl->td_flags = YYTD_DATA8;
 	tbl->td_lolen = num_rules + 1;
 	tbl->td_data = tdata =
 		(int8_t *) calloc (tbl->td_lolen, sizeof (int8_t));
@@ -190,7 +191,7 @@ struct yytbl_data *mkctbl (void)
 
 	tbl = (struct yytbl_data *) calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYT_ID_TRANSITION);
-	tbl->td_flags |= YYT_DATA32;
+	tbl->td_flags = YYTD_DATA32 | YYTD_STRUCT;
 	tbl->td_hilen = 0;
 	tbl->td_lolen = tblend + numecs + 1;	/* number of structs */
 
@@ -287,7 +288,7 @@ struct yytbl_data *mkssltbl (struct yytbl_data *trans_tbl)
 
 	tbl = (struct yytbl_data *) calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYT_ID_START_STATE_LIST);
-	tbl->td_flags = YYT_DATA32;
+	tbl->td_flags = YYTD_DATA32 | YYTD_PTRANS;
 	tbl->td_hilen = 0;
 	tbl->td_lolen = lastsc * 2 + 1;
 
@@ -405,7 +406,7 @@ struct yytbl_data *mkecstbl (void)
 
 	tbl = (struct yytbl_data *) calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYT_ID_EC);
-	tbl->td_flags |= YYT_DATA32;
+	tbl->td_flags |= YYTD_DATA32;
 	tbl->td_hilen = 0;
 	tbl->td_lolen = csize;
 
@@ -629,7 +630,7 @@ struct yytbl_data *mkftbl (void)
 
 	tbl = (struct yytbl_data *) calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYT_ID_ACCEPT);
-	tbl->td_flags |= YYT_DATA32;
+	tbl->td_flags |= YYTD_DATA32;
 	tbl->td_hilen = 0;	/* it's a one-dimensional array */
 	tbl->td_lolen = lastdfa + 1;
 
@@ -1482,10 +1483,8 @@ void make_tables ()
 		indent_up ();
 		indent_puts ("{");
 
-		if (long_align)
-			indent_puts ("long yy_verify;");
-		else
-			indent_puts ("short yy_verify;");
+		/* We require that yy_verify and yy_nxt must be of the same size int. */
+		indent_put2s ("%s yy_verify;", trans_offset_type);
 
 		/* In cases where its sister yy_verify *is* a "yes, there is
 		 * a transition", yy_nxt is the offset (in records) to the
@@ -1496,6 +1495,23 @@ void make_tables ()
 		 */
 
 		indent_put2s ("%s yy_nxt;", trans_offset_type);
+		indent_puts ("};");
+		indent_down ();
+	}
+	else {
+		/* We generate a bogus 'struct yy_trans_info' data type
+		 * so we can guarantee that it is always declared in the skel.
+		 * This is so we can compile "sizeof(struct yy_trans_info)"
+		 * in any scanner.
+		 */
+		indent_puts
+			("/* This struct is not used in this scanner,");
+		indent_puts ("   but its presence is necessary. */");
+		indent_puts ("struct yy_trans_info");
+		indent_up ();
+		indent_puts ("{");
+		indent_puts ("long yy_verify;");
+		indent_puts ("long yy_nxt;");
 		indent_puts ("};");
 		indent_down ();
 	}
@@ -1578,6 +1594,8 @@ void make_tables ()
 						      sizeof (struct
 							      yytbl_data));
 		yytbl_data_init (yynultrans_tbl, YYT_ID_NUL_TRANS);
+		if (fullspd)
+			yynultrans_tbl->td_flags |= YYTD_PTRANS;
 		yynultrans_tbl->td_lolen = lastdfa + 1;
 		yynultrans_tbl->td_data = yynultrans_data =
 			(int32_t *) calloc (yynultrans_tbl->td_lolen,

@@ -30,6 +30,7 @@
 /*  PURPOSE. */
 
 #include "flexdef.h"
+#include "tables.h"
 
 /* declare functions that have forward references */
 

@@ -67,7 +67,8 @@ flex_SOURCES = \
 	options.c \
 	scanopt.c \
 	buf.c \
-	tables.c
+	tables.c \
+	tables_shared.c
 
 libfl_a_SOURCES = \
 	libmain.c \
@@ -78,6 +79,7 @@ noinst_HEADERS = \
 	version.h \
 	options.h \
 	scanopt.h \
+	tables.h \
 	tables_shared.h
 
 include_HEADERS = \
@@ -134,25 +136,27 @@ $(man_MANS): $(srcdir)/main.c
 
 # Explicitly describe dependencies.
 # You can recreate this with `gcc -I. -MM *.c'
-buf.o: buf.c flexdef.h config.h gettext.h tables_shared.h
-ccl.o: ccl.c flexdef.h config.h gettext.h tables_shared.h
-dfa.o: dfa.c flexdef.h config.h gettext.h tables_shared.h
-ecs.o: ecs.c flexdef.h config.h gettext.h tables_shared.h
-gen.o: gen.c flexdef.h config.h gettext.h tables_shared.h
+buf.o: buf.c flexdef.h
+ccl.o: ccl.c flexdef.h
+dfa.o: dfa.c flexdef.h tables.h tables_shared.h
+ecs.o: ecs.c flexdef.h
+gen.o: gen.c flexdef.h tables.h tables_shared.h
 libmain.o: libmain.c
 libyywrap.o: libyywrap.c
-main.o: main.c flexdef.h config.h gettext.h tables_shared.h version.h options.h scanopt.h
-misc.o: misc.c flexdef.h config.h gettext.h tables_shared.h
-nfa.o: nfa.c flexdef.h config.h gettext.h tables_shared.h
-options.o: options.c options.h scanopt.h flexdef.h config.h gettext.h tables_shared.h
-parse.o: parse.c flexdef.h config.h gettext.h tables_shared.h
-scan.o: scan.c flexdef.h config.h gettext.h tables_shared.h parse.h
-scanopt.o: scanopt.c scanopt.h flexdef.h config.h gettext.h tables_shared.h
-skel.o: skel.c flexdef.h config.h gettext.h tables_shared.h
-sym.o: sym.c flexdef.h config.h gettext.h tables_shared.h
-tables.o: tables.c flexdef.h config.h gettext.h tables_shared.h
-tblcmp.o: tblcmp.c flexdef.h config.h gettext.h tables_shared.h
-yylex.o: yylex.c flexdef.h config.h gettext.h tables_shared.h parse.h
+main.o: main.c flexdef.h version.h options.h scanopt.h tables.h \
+ tables_shared.h
+misc.o: misc.c flexdef.h tables.h tables_shared.h
+nfa.o: nfa.c flexdef.h
+options.o: options.c options.h scanopt.h flexdef.h
+parse.o: parse.c flexdef.h tables.h tables_shared.h
+scan.o: scan.c flexdef.h parse.h
+scanopt.o: scanopt.c flexdef.h scanopt.h
+skel.o: skel.c flexdef.h
+sym.o: sym.c flexdef.h
+tables.o: tables.c flexdef.h tables.h tables_shared.h
+tables_shared.o: tables_shared.c flexdef.h tables.h tables_shared.h
+tblcmp.o: tblcmp.c flexdef.h
+yylex.o: yylex.c flexdef.h parse.h
 
 # Create a tags file.
 tags:
@@ -174,8 +178,8 @@ ChangeLog:
 #      Otherwise, indent overwrites your file even if it fails!
 indentfiles = buf.c ccl.c dfa.c ecs.c flexdef.h gen.c libmain.c \
               libyywrap.c main.c misc.c nfa.c options.c options.h \
-              scanopt.c scanopt.h sym.c tables.c tables_shared.h \
-              tblcmp.c yylex.c
+              scanopt.c scanopt.h sym.c tables.c tables.h \
+              tables_shared.c tables_shared.h tblcmp.c
 
 indent:
 	if [ -f .indent.pro ] ; then \

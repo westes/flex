@@ -70,6 +70,7 @@
 #endif
 
 #include "flexdef.h"
+#include "tables.h"
 
 /* The remainder of the alloca() cruft has to come after including flexdef.h,
  * so HAVE_ALLOCA_H is (possibly) defined.

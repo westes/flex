@@ -32,6 +32,7 @@
 /*  PURPOSE. */
 
 #include "flexdef.h"
+#include "tables.h"
 
 /* Append "#define defname value\n" to the running buffer. */
 void    action_define (defname, value)

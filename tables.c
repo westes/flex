@@ -1,4 +1,4 @@
-/*  tables.h - tables serialization code
+/*  tables.c - tables serialization code
  *
  *  Copyright (c) 1990 The Regents of the University of California.
  *  All rights reserved.
@@ -34,39 +34,31 @@
 
 
 #include "flexdef.h"
+#include "tables.h"
 
 /** Calculate (0-7) = number bytes needed to pad n to next 64-bit boundary. */
 #define yypad64(n) ((8-((n)%8))%8)
 
-/** Extract corresponding data size_t from td_flags */
-#define TFLAGS2BYTES(td_flags)\
-        (((td_flags) & YYT_DATA8)\
-            ? sizeof(int8_t)\
-            :(((td_flags) & YYT_DATA16)\
-                ? sizeof(int16_t)\
-                :sizeof(int32_t)))
-
 /** Convert size_t to t_flag.
  *  @param n in {1,2,4}
- *  @return YYT_DATA*. 
+ *  @return YYTD_DATA*. 
  */
 #define BYTES2TFLAG(n)\
     (((n) == sizeof(int8_t))\
-        ? YYT_DATA8\
+        ? YYTD_DATA8\
         :(((n)== sizeof(int16_t))\
-            ? YYT_DATA16\
-            : YYT_DATA32))
+            ? YYTD_DATA16\
+            : YYTD_DATA32))
 
-/** Clear YYT_DATA* bit flags
- * @return the flag with the YYT_DATA* bits cleared
+/** Clear YYTD_DATA* bit flags
+ * @return the flag with the YYTD_DATA* bits cleared
  */
-#define TFLAGS_CLRDATA(flg) ((flg) & ~(YYT_DATA8 | YYT_DATA16 | YYT_DATA32))
+#define TFLAGS_CLRDATA(flg) ((flg) & ~(YYTD_DATA8 | YYTD_DATA16 | YYTD_DATA32))
 
 int     yytbl_fwrite32 (struct yytbl_writer *wr, uint32_t v);
 int     yytbl_fwrite16 (struct yytbl_writer *wr, uint16_t v);
 int     yytbl_fwrite8 (struct yytbl_writer *wr, uint8_t v);
 int     yytbl_fwriten (struct yytbl_writer *wr, void *v, int32_t len);
-static int32_t tbl_get_total_len (struct yytbl_data *tbl);
 static int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i);
 
 
@@ -92,7 +84,7 @@ int yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
 {
 	memset (th, 0, sizeof (struct yytbl_hdr));
 
-	th->th_magic = 0xF13C57B1;
+	th->th_magic = YYTBL_MAGIC;
 	th->th_hsize = 14 + strlen (version_str) + 1 + strlen (name) + 1;
 	th->th_hsize += yypad64 (th->th_hsize);
 	th->th_ssize = 0;	// Not known at this point.
@@ -112,7 +104,7 @@ int yytbl_data_init (struct yytbl_data *td, enum yytbl_id id)
 
 	memset (td, 0, sizeof (struct yytbl_data));
 	td->td_id = id;
-	td->td_flags = YYT_DATA32;
+	td->td_flags = YYTD_DATA32;
 	return 0;
 }
 
@@ -217,9 +209,9 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 		return -1;
 	bwritten += rv;
 
-	total_len = tbl_get_total_len (td);
+	total_len = yytbl_calc_total_len (td);
 	for (i = 0; i < total_len; i++) {
-		switch (TFLAGS2BYTES (td->td_flags)) {
+		switch (YYTDFLAGS2BYTES (td->td_flags)) {
 		case sizeof (int8_t):
 			rv = yytbl_fwrite8 (wr, yytbl_data_geti (td, i));
 			break;
@@ -240,7 +232,7 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 	}
 
 	/* Sanity check */
-	if (bwritten != (12 + total_len * TFLAGS2BYTES (td->td_flags))) {
+	if (bwritten != (12 + total_len * YYTDFLAGS2BYTES (td->td_flags))) {
 		flex_die (_("insanity detected"));
 		return -1;
 	}
@@ -338,26 +330,6 @@ int yytbl_fwrite8 (struct yytbl_writer *wr, uint8_t v)
 	return bytes;
 }
 
-/** Get the number of integers in this table. This is NOT the
- *  same thing as the number of elements.
- *  @param td the table 
- *  @return the number of integers in the table
- */
-static int32_t tbl_get_total_len (struct yytbl_data *tbl)
-{
-
-	int32_t n;
-
-	/* total number of ints */
-	n = tbl->td_lolen;
-	if (tbl->td_hilen > 0)
-		n *= tbl->td_hilen;
-
-	if (tbl->td_id == YYT_ID_TRANSITION)
-		n *= 2;
-	return n;
-}
-
 
 /** Extract data element [i][j] from array data tables. 
  * @param tbl data table
@@ -374,7 +346,7 @@ int32_t yytbl_data_getijk (const struct yytbl_data * tbl, int i, int j,
 	k %= 2;
 	lo = tbl->td_lolen;
 
-	switch (TFLAGS2BYTES (tbl->td_flags)) {
+	switch (YYTDFLAGS2BYTES (tbl->td_flags)) {
 	case sizeof (int8_t):
 		return ((int8_t *) (tbl->td_data))[(i * lo + j) * (k + 1) +
 						   k];
@@ -404,7 +376,7 @@ int32_t yytbl_data_getijk (const struct yytbl_data * tbl, int i, int j,
 static int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i)
 {
 
-	switch (TFLAGS2BYTES (tbl->td_flags)) {
+	switch (YYTDFLAGS2BYTES (tbl->td_flags)) {
 	case sizeof (int8_t):
 		return ((int8_t *) (tbl->td_data))[i];
 	case sizeof (int16_t):
@@ -429,7 +401,7 @@ static void yytbl_data_seti (const struct yytbl_data *tbl, int i,
 			     int32_t newval)
 {
 
-	switch (TFLAGS2BYTES (tbl->td_flags)) {
+	switch (YYTDFLAGS2BYTES (tbl->td_flags)) {
 	case sizeof (int8_t):
 		((int8_t *) (tbl->td_data))[i] = (int8_t) newval;
 		break;
@@ -455,7 +427,7 @@ static size_t min_int_size (struct yytbl_data *tbl)
 	uint32_t i, total_len;
 	int32_t max = 0;
 
-	total_len = tbl_get_total_len (tbl);
+	total_len = yytbl_calc_total_len (tbl);
 
 	for (i = 0; i < total_len; i++) {
 		int32_t n;
@@ -496,16 +468,16 @@ void yytbl_data_compress (struct yytbl_data *tbl)
 	newsz = min_int_size (tbl);
 
 
-	if (newsz == TFLAGS2BYTES (tbl->td_flags))
+	if (newsz == YYTDFLAGS2BYTES (tbl->td_flags))
 		/* No change in this table needed. */
 		return;
 
-	if (newsz > TFLAGS2BYTES (tbl->td_flags)) {
+	if (newsz > YYTDFLAGS2BYTES (tbl->td_flags)) {
 		flex_die (_("detected negative compression"));
 		return;
 	}
 
-	total_len = tbl_get_total_len (tbl);
+	total_len = yytbl_calc_total_len (tbl);
 	newtbl.td_data = calloc (total_len, newsz);
 	newtbl.td_flags =
 		TFLAGS_CLRDATA (newtbl.td_flags) | BYTES2TFLAG (newsz);

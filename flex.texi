@@ -4761,18 +4761,21 @@ The data arrays are one-dimensional by default, but may be
 two dimensional as specified in the @code{td_hilen} field.
 
 @table @code
-@item YYT_DATA8 (0x01)
+@item YYTD_DATA8 (0x01)
 The data is serialized as an array of type int8.
-@item YYT_DATA16 (0x02)
+@item YYTD_DATA16 (0x02)
 The data is serialized as an array of type int16.
-@item YYT_DATA32 (0x04)
+@item YYTD_DATA32 (0x04)
 The data is serialized as an array of type int32.
-@item YYT_PTRANS (0x08)
+@item YYTD_PTRANS (0x08)
 The data is a list of indexes of entries in the expanded @code{yy_transition}
 array.  Each index should be expanded to a pointer to the corresponding entry
-in the @code{yy_transition} array. It is not guaranteed that the
-@code{yy_transition} array has already been seen, but we can still calculate
-the offsets.
+in the @code{yy_transition} array. We count on the fact that the
+@code{yy_transition} array has already been seen.
+@item YYTD_STRUCT (0x10)
+The data is a list of yy_trans_info structs, each of which consists of
+two integers. There is no padding between struct elements.
+The type of each member is determined by the above flags.
 @end table
 
 @item td_lolen
