@@ -41,10 +41,10 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <stdint.h>
 %pop
 
 %if-tables-serialization
+#include <stdint.h>
 #include <netinet/in.h>
 %endif
 /* end standard C headers. */
