@@ -214,7 +214,6 @@ void scextend()
 	scxclu = reallocate_integer_array( scxclu, current_max_scs );
 	sceof = reallocate_integer_array( sceof, current_max_scs );
 	scname = reallocate_char_ptr_array( scname, current_max_scs );
-	actvsc = reallocate_integer_array( actvsc, current_max_scs );
 	}
 
 
