@@ -5,7 +5,15 @@ See the file COPYING for copying conditions
 
 * after version 2.5.11
 
+** updated gettext support to 0.11.5
+
 ** new fr translation from the translation project
+
+** bison is no longer needed to build flex. If you are building flex
+   from a release (i.e., not from a cvs snapshot), then you don't need
+   to have a pre-built lex around either (unless you modify scan.l, of
+   course). (This has been true for some time, but was not mentioned
+   here.)
 
 * version 2.5.11 released 2002-7-31
 
@@ -137,7 +145,7 @@ But the inverse is still true
 ** Developer test suite added
 
 *** TESTS/ directory has been added. Users can 
-'make check' in the TESTS directory to execute the test suite
+'make test' in the TESTS directory to execute the test suite
 
 ** Support for bison variables yylval and yylloc added
 
