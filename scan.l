@@ -75,7 +75,7 @@ WS		[ \t]+
 OPTWS		[ \t]*
 NOT_WS		[^ \t\n]
 
-NL		(\n|\r\n|\n\r)
+NL		\r?\n
 
 NAME		([a-z_][a-z_0-9-]*)
 NOT_NAME	[^a-z_*\n]+
