@@ -178,6 +178,8 @@ protected:
 
 	int yy_more_flag;
 	int yy_more_len;
+	int yy_more_offset;
+	int yy_prev_more_offset;
 };
 
 #endif
