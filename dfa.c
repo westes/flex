@@ -209,9 +209,9 @@ int state[];
 
     {
     register int i, ec;
-    int out_char_set[CSIZE + 1];
+    int out_char_set[CSIZE];
 
-    for ( i = 1; i <= csize; ++i )
+    for ( i = (uses_NUL ? 0 : 1); i < csize; ++i )
 	{
 	ec = abs( ecgroup[i] );
 	out_char_set[i] = state[ec];
@@ -222,7 +222,7 @@ int state[];
     list_character_set( file, out_char_set );
 
     /* now invert the members of the set to get the jam transitions */
-    for ( i = 1; i <= csize; ++i )
+    for ( i = (uses_NUL ? 0 : 1); i < csize; ++i )
 	out_char_set[i] = ! out_char_set[i];
 
     fprintf( file, "\n jam-transitions: EOF " );
@@ -406,13 +406,22 @@ ntod()
 
     {
     int *accset, ds, nacc, newds;
-    int duplist[CSIZE + 1], sym, hashval, numstates, dsize;
-    int targfreq[CSIZE + 1], targstate[CSIZE + 1], state[CSIZE + 1];
+    int sym, hashval, numstates, dsize;
     int *nset, *dset;
     int targptr, totaltrans, i, comstate, comfreq, targ;
     int *epsclosure(), snstods(), symlist[CSIZE + 1];
     int num_start_states;
     int todo_head, todo_next;
+
+    /* note that the following are indexed by *equivalence classes*
+     * and not by characters.  Since equivalence classes are indexed
+     * beginning with 1, even if the scanner accepts NUL's, this
+     * means that (since every character is potentially in its own
+     * equivalence class) these arrays must have room for indices
+     * from 1 to CSIZE, so their size must be CSIZE + 1.
+     */
+    int duplist[CSIZE + 1], state[CSIZE + 1];
+    int targfreq[CSIZE + 1], targstate[CSIZE + 1];
 
     /* this is so find_table_space(...) will know where to start looking in
      * chk/nxt for unused records for space to put in the state
@@ -919,7 +928,8 @@ int symlist[];
 	if ( tch != SYM_EPSILON )
 	    {
 	    if ( tch < -lastccl || tch > csize )
-		flexfatal( "bad transition character detected in sympartition()" );
+		flexfatal(
+		    "bad transition character detected in sympartition()" );
 
 	    if ( tch > 0 )
 		{ /* character transition */

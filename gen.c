@@ -214,13 +214,14 @@ genecs()
 
     {
     register int i, j;
-    static char C_char_decl[] = "static const YY_CHAR %s[%d] =\n    {   0,\n";
+    static char C_char_decl[] =
+	"static const YY_CHAR %s[%d] =\n    {   %d,\n";
     int numrows;
     Char clower();
 
-    printf( C_char_decl, "yy_ec", csize + 1 );
+    printf( C_char_decl, "yy_ec", csize, uses_NUL ? abs( ecgroup[0] ) : 0 );
 
-    for ( i = 1; i <= csize; ++i )
+    for ( i = 1; i < csize; ++i )
 	{
 	if ( caseins && (i >= 'A') && (i <= 'Z') )
 	    ecgroup[i] = ecgroup[clower( i )];
@@ -233,16 +234,22 @@ genecs()
 
     if ( trace )
 	{
+	char *readable_form();
+
 	fputs( "\n\nEquivalence Classes:\n\n", stderr );
+
+	if ( uses_NUL )
+		{
+		fprintf( stderr, "%4s = %-2d\n",
+			 readable_form( 0 ), ecgroup[0] );
+		}
 
 	numrows = (csize + 1) / 8;
 
 	for ( j = 1; j <= numrows; ++j )
 	    {
-	    for ( i = j; i <= csize; i = i + numrows )
+	    for ( i = j; i < csize; i = i + numrows )
 		{
-		char *readable_form();
-
 		fprintf( stderr, "%4s = %-2d",
 			 readable_form( i ), ecgroup[i] );
 

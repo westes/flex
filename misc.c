@@ -610,12 +610,6 @@ Char array[];
 
 	    array[sptr] = c;
 
-	    if ( esc_char == '\0' )
-		{
-		synerr( "escape sequence for null not allowed" );
-		return ( 1 );
-		}
-
 	    return ( esc_char );
 	    }
 

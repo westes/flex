@@ -233,7 +233,7 @@ cmptmps()
 	 * transitions
 	 */
 
-	nummecs = cre8ecs( tecfwd, tecbck, numecs );
+	nummecs = cre8ecs( tecfwd, tecbck, numecs, 1 );
 	}
     
     else

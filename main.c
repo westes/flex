@@ -60,7 +60,7 @@ int current_state_type;
 int variable_trailing_context_rules;
 int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
-int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs, tecfwd[CSIZE + 1];
+int numecs, nextecm[CSIZE], ecgroup[CSIZE], nummecs, tecfwd[CSIZE + 1];
 int tecbck[CSIZE + 1];
 int *xlation = (int *) 0;
 int num_xlations;
@@ -79,7 +79,7 @@ Char *ccltbl;
 char *starttime, *endtime, nmstr[MAXLINE];
 int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
-int num_backtracking, bol_needed;
+int num_backtracking, bol_needed, uses_NUL;
 FILE *temp_action_file;
 FILE *backtrack_file;
 int end_of_buffer_state;
@@ -95,12 +95,6 @@ static char *outfile = "lexyy.c";
 #endif
 static int outfile_created = 0;
 
-
-/* flex - main program
- *
- * synopsis (from the shell)
- *    flex [-v] [file ...]
- */
 
 main( argc, argv )
 int argc;
@@ -206,7 +200,7 @@ int status;
 	(void) unlink( outfile );
 	}
 
-    if ( backtrack_report )
+    if ( backtrack_report && backtrack_file )
 	{
 	if ( num_backtracking == 0 )
 	    fprintf( backtrack_file, "No backtracking.\n" );
@@ -550,7 +544,7 @@ get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
     numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst = 0;
     numuniq = numdup = hshsave = eofseen = datapos = dataline = 0;
     num_backtracking = onesp = numprots = 0;
-    variable_trailing_context_rules = bol_needed = false;
+    variable_trailing_context_rules = bol_needed = uses_NUL = false;
 
     linenum = sectnum = 1;
     firstprot = NIL;
@@ -565,9 +559,9 @@ get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
     if ( useecs )
 	{
 	/* set up doubly-linked equivalence classes */
-	ecgroup[1] = NIL;
+	ecgroup[0] = NIL;
 
-	for ( i = 2; i <= csize; ++i )
+	for ( i = 1; i < csize; ++i )
 	    {
 	    ecgroup[i] = i - 1;
 	    nextecm[i - 1] = i;
@@ -578,7 +572,7 @@ get_next_arg: /* used by -C and -S flags in lieu of a "continue 2" control */
 
     else
 	{ /* put everything in its own equivalence class */
-	for ( i = 1; i <= csize; ++i )
+	for ( i = 0; i < csize; ++i )
 	    {
 	    ecgroup[i] = i;
 	    nextecm[i] = BAD_SUBSCRIPT;	/* to catch errors */
@@ -627,7 +621,11 @@ readin()
 
     else if ( useecs )
 	{
-	numecs = cre8ecs( nextecm, ecgroup, csize );
+	if ( uses_NUL )
+	    numecs = cre8ecs( nextecm, ecgroup, csize, 0 );
+	else
+	    numecs = cre8ecs( nextecm, ecgroup, csize - 1, 1 );
+
 	ccl2ecl();
 	}
 

@@ -135,14 +135,14 @@ ESCSEQ		\\([^\n]|[0-9]{1,3}|x[0-9a-f]{1,2})
 			char *malloc();
 
 			++linenum;
-			xlation = (int *) malloc( sizeof( int ) * (csize + 1) );
-
-			for ( i = 1; i <= csize; ++i )
-			    xlation[i] = 0;
+			xlation = (int *) malloc( sizeof( int ) * csize );
 
 			if ( ! xlation )
 			    flexfatal(
 				"dynamic memory failure building %t table" );
+
+			for ( i = 0; i < csize; ++i )
+			    xlation[i] = 0;
 
 			num_xlations = 0;
 

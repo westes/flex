@@ -503,7 +503,7 @@ singleton       :  singleton '*'
 			++rulelen;
 
 			if ( $1 == '\0' )
-			    synerr( "null in rule" );
+			    uses_NUL = true;
 
 			if ( caseins && $1 >= 'A' && $1 <= 'Z' )
 			    $1 = clower( $1 );
@@ -531,6 +531,9 @@ fullccl		:  '[' ccl ']'
 
 ccl             :  ccl CHAR '-' CHAR
                         {
+			if ( $2 == '\0' || $4 == '\0' )
+			    uses_NUL = true;
+
 			if ( $2 > $4 )
 			    synerr( "negative range in character class" );
 
@@ -559,6 +562,9 @@ ccl             :  ccl CHAR '-' CHAR
 
 		|  ccl CHAR
 		        {
+			if ( $2 == '\0' )
+			    uses_NUL = true;
+
 			if ( caseins )
 			    if ( $2 >= 'A' && $2 <= 'Z' )
 				$2 = clower( $2 );
@@ -579,6 +585,9 @@ ccl             :  ccl CHAR '-' CHAR
 
 string		:  string CHAR
                         {
+			if ( $2 == '\0' )
+			    uses_NUL = true;
+
 			if ( caseins )
 			    if ( $2 >= 'A' && $2 <= 'Z' )
 				$2 = clower( $2 );
