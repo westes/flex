@@ -70,7 +70,7 @@
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
 %x FIRSTCCL CCL ACTION RECOVER COMMENT ACTION_STRING PERCENT_BRACE_ACTION
-%x OPTION
+%x OPTION LINEDIR
 
 WS		[[:blank:]]+
 OPTWS		[[:blank:]]*
@@ -104,6 +104,7 @@ LEXOPT		[aceknopr]
 <INITIAL>{
 	^{WS}		indented_code = true; BEGIN(CODEBLOCK);
 	^"/*"		ACTION_ECHO; yy_push_state( COMMENT );
+	^#{OPTWS}line{WS}	yy_push_state( LINEDIR );
 	^"%s"{NAME}?	return SCDECL;
 	^"%x"{NAME}?	return XSCDECL;
 	^"%{".*{NL}	{
@@ -151,6 +152,18 @@ LEXOPT		[aceknopr]
 	"*"		ACTION_ECHO;
 	[^*\n]+		ACTION_ECHO;
 	[^*\n]*{NL}	++linenum; ACTION_ECHO;
+}
+
+<LINEDIR>{
+	\n		yy_pop_state();
+	[[:digit:]]+	linenum = myctoi( yytext );
+
+	\"[^"\n]*\"	{
+			flex_free( infilename );
+			infilename = copy_string( yytext + 1 );
+			infilename[strlen( infilename ) - 1] = '\0';
+			}
+	.		/* ignore spurious characters */
 }
 
 <CODEBLOCK>{
@@ -649,7 +662,7 @@ char *file;
 	{
 	if ( file )
 		{
-		infilename = file;
+		infilename = copy_string( file );
 		yyin = fopen( infilename, "r" );
 
 		if ( yyin == NULL )
@@ -659,7 +672,7 @@ char *file;
 	else
 		{
 		yyin = stdin;
-		infilename = "<stdin>";
+		infilename = copy_string( "<stdin>" );
 		}
 	}
 
@@ -682,5 +695,6 @@ size_t size;
 void flex_free( ptr )
 void *ptr;
 	{
-	free( ptr );
+	if ( ptr )
+		free( ptr );
 	}
