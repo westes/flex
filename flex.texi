@@ -2358,6 +2358,7 @@ The result is large but fast.  This option is equivalent to
 generates a ``help'' summary of @code{flex}'s options to @file{stdout}
 and then exits.
 
+@anchor{option-header}
 @item --header=FILE
 instructs flex to write a C header to @file{FILE}. This file contains
 function prototypes, extern variables, and macros used by the scanner.
@@ -3830,6 +3831,9 @@ The above code may be called from within an action like this:
     .+\n    { chop( yyscanner );}
 @end verbatim
 @end example
+
+You may find that @code{%option header} is particularly useful for generating
+prototypes of all the accessor functions. @xref{option-header}.
 
 @node Extra Data
 @subsection Extra Data
