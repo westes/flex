@@ -10,4 +10,10 @@ AC_PROG_INSTALL
 AC_CONST
 AC_STDC_HEADERS
 
+case "$YACC" in
+*bison*)
+  AC_ALLOCA
+  ;;
+esac
+
 AC_OUTPUT(Makefile)
