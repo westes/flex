@@ -1,4 +1,4 @@
-/* scan.l - scanner for flex input */
+/* scan.l - scanner for flex input -*-C-*- */
 
 %{
 /*  Copyright (c) 1990 The Regents of the University of California. */
