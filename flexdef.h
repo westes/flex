@@ -140,7 +140,7 @@ char *sprintf(); /* keep lint happy */
 #define JAMSTATE -32766	/* marks a reference to the state that always jams */
 
 /* enough so that if it's subtracted from an NFA state number, the result
- * is guarenteed to be negative
+ * is guaranteed to be negative
  */
 #define MARKER_DIFFERENCE 32000
 #define MAXIMUM_MNS 31999
@@ -190,7 +190,7 @@ char *sprintf(); /* keep lint happy */
  */
 #define ACCEPTABLE_DIFF_PERCENTAGE 50
 
-/* the percentage the number of homogenous out-transitions of a state
+/* the percentage the number of homogeneous out-transitions of a state
  * must be of the number of total out-transitions of the state in order
  * to consider making a template from the state
  */
@@ -244,7 +244,8 @@ struct hash_entry
     {
     struct hash_entry *prev, *next;
     char *name;
-    char *val;
+    char *str_val;
+    int int_val;
     } ;
 
 typedef struct hash_entry *hash_table[];
@@ -346,7 +347,7 @@ extern int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 
 /* variables for managing equivalence classes:
  * numecs - number of equivalence classes
- * nextecm - forward link of Equivalenc Class members
+ * nextecm - forward link of Equivalence Class members
  * ecgroup - class number or backward link of EC members
  * nummecs - number of meta-equivalence classes (used to compress
  *   templates)
