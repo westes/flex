@@ -37,7 +37,7 @@
 
 
 class FlexLexer {
- public:
+public:
 	virtual ~FlexLexer()	{ }
 
 	const char* YYText()	{ return yytext; }
@@ -57,7 +57,7 @@ protected:
 
 
 class yyFlexLexer : public FlexLexer {
- public:
+public:
 	// arg_yyin and arg_yyout default to the cin and cout, but we
 	// only make that assignment when initializing in yylex().
 	yyFlexLexer( istream* arg_yyin = 0, ostream* arg_yyout = 0 )
@@ -95,7 +95,7 @@ class yyFlexLexer : public FlexLexer {
 
 	virtual int yylex();
 
- protected:
+protected:
 	virtual int LexerInput( char* buf, int max_size );
 	virtual void LexerOutput( const char* buf, int size );
 
