@@ -2,3 +2,4 @@ Makefile
 scanner.c
 test-c-cpp-nr
 OUTPUT
+Makefile.in

@@ -4,3 +4,4 @@ parser.h
 scanner.c
 test-basic-r
 OUTPUT
+Makefile.in

@@ -7,3 +7,4 @@ yyheader.h
 test-bison-yylval
 
 OUTPUT
+Makefile.in
