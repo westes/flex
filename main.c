@@ -564,9 +564,16 @@ int exit_status;
                 nlines++;
             }
 
+            fprintf(header_out,"#line %d \"%s\"\n", (++nlines)+1, headerfilename);
+
+            /* Print the prefixed start conditions. */
+            for (i=1; i <= lastsc; i++)
+                fprintf(header_out, "#define %sSC_%s %d\n",
+                        strcmp(prefix,"yy") ? prefix : "YY",
+                        scname[i], i-1);
+
             /* Kill ALL flex-related macros. This is so the user
              * can #include more than one generated header file. */
-            fprintf(header_out,"#line %d \"%s\"", (++nlines)+1, headerfilename);
             fprintf(header_out,"\n");
             fprintf(header_out,"#undef BEGIN\n");
             fprintf(header_out,"#undef ECHO\n");
