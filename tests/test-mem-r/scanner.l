@@ -46,15 +46,15 @@
 %%
 
 <INITIAL>{
-"("         { printf("yy_push_state(parens)\n"); yy_push_state(parens,yy_globals); }
+"("         { printf("yy_push_state(parens)\n"); yy_push_state(parens,yyscanner); }
 len=[0-9]+  { printf("About read token where %s\n",yytext); }
 0+          { }
 .|\n        { }
 }
 
 <parens>{
-"("         { printf("yy_push_state(parens)\n"); yy_push_state(parens,yy_globals); }
-")"         { printf("yy_pop_state()\n");yy_pop_state(yy_globals);}
+"("         { printf("yy_push_state(parens)\n"); yy_push_state(parens,yyscanner); }
+")"         { printf("yy_pop_state()\n");yy_pop_state(yyscanner);}
 [^()\n]+     { }
 .|\n        { }
 }
@@ -82,7 +82,7 @@ static void dump_mem(FILE* fp){
     fprintf(fp,"}\n");
 }
 
-void * yyalloc(size_t n , void* yy_globals)
+void * yyalloc(size_t n , void* yyscanner)
 {
     void * p;
     struct memsz * old;
@@ -112,7 +112,7 @@ void * yyalloc(size_t n , void* yy_globals)
     return p;
 }
 
-void * yyrealloc(void* p, size_t n , void* yy_globals)
+void * yyrealloc(void* p, size_t n , void* yyscanner)
 {
     int i;
     for (i=0; i < arrsz; i++)
@@ -133,7 +133,7 @@ void * yyrealloc(void* p, size_t n , void* yy_globals)
     exit(1);
 }
 
-void yyfree(void* p , void* yy_globals)
+void yyfree(void* p , void* yyscanner)
 {
     int i;
     for (i=0; i < arrsz; i++)

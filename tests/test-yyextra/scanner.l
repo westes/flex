@@ -55,7 +55,7 @@ static void append_char (char c,  yyscan_t  scanner );
 
 %%
 
-.|\r|\n  { append_char (yytext[0],yy_globals); }
+.|\r|\n  { append_char (yytext[0],yyscanner); }
 
 %%
 

@@ -3414,7 +3414,7 @@ scanners. Here is a quick overview of the API:
 @code{%option reentrant} must be specified.
 
 @item
-All functions take one additional argument: @code{yy_globals}
+All functions take one additional argument: @code{yyscanner}
 
 @item
 All global variables are replaced by their macro equivalents.
@@ -3443,9 +3443,9 @@ First, an example of a reentrant scanner:
     %option reentrant stack
     %x COMMENT
     %%
-    "//"                 yy_push_state( COMMENT, yy_globals);
+    "//"                 yy_push_state( COMMENT, yyscanner);
     .|\n
-    <COMMENT>\n          yy_pop_state( yy_globals );
+    <COMMENT>\n          yy_pop_state( yyscanner );
     <COMMENT>[^\n]+      fprintf( yyout, "%s\n", yytext);
     %%
     int main ( int argc, char * argv[] )
@@ -3492,28 +3492,28 @@ necessary. The default is to generate a non-reentrant scanner.
 @subsection The Extra Argument
 
 @cindex reentrant, calling functions
-@vindex yy_globals (reentrant only)
-All functions take one additional argument: @code{yy_globals}.
+@vindex yyscanner (reentrant only)
+All functions take one additional argument: @code{yyscanner}.
 
 Notice that the calls to @code{yy_push_state} and @code{yy_pop_state}
-both have an argument, @code{yy_globals} , that is not present in a
+both have an argument, @code{yyscanner} , that is not present in a
 non-reentrant scanner.  Here are the declarations of
 @code{yy_push_state} and @code{yy_pop_state} in the generated scanner:
 
 @example
 @verbatim
-    static void yy_push_state  ( int new_state , yyscan_t yy_globals ) ;
-    static void yy_pop_state  ( yyscan_t yy_globals  ) ;
+    static void yy_push_state  ( int new_state , yyscan_t yyscanner ) ;
+    static void yy_pop_state  ( yyscan_t yyscanner  ) ;
 @end verbatim
 @end example
 
-Notice that the argument @code{yy_globals} appears in the declaration of
+Notice that the argument @code{yyscanner} appears in the declaration of
 both functions.  In fact, all @code{flex} functions in a reentrant
 scanner have this additional argument.  It is always the last argument
 in the argument list, it is always of type @code{yyscan_t} (which is
 typedef'd to @code{void *}) and it is
-always named @code{yy_globals}.  As you may have guessed,
-@code{yy_globals} is a pointer to an opaque data structure encapsulating
+always named @code{yyscanner}.  As you may have guessed,
+@code{yyscanner} is a pointer to an opaque data structure encapsulating
 the current state of the scanner.  For a list of function declarations,
 see @ref{Reentrant Functions}. Note that preprocessor macros, such as
 @code{BEGIN}, @code{ECHO}, and @code{REJECT}, do not take this
@@ -3536,7 +3536,7 @@ externally. Currently, each macro expands to a member of an internal struct, e.g
 
 @example
 @verbatim
-#define yytext (((struct yy_globals_t*)yy_globals)->yytext_r)
+#define yytext (((struct yyguts_t*)yyscanner)->yytext_r)
 @end verbatim
 @end example
 
@@ -3564,8 +3564,8 @@ after @code{yylex}, respectively.
 @example
 @verbatim
     int yylex_init ( yyscan_t * ptr_yy_globals ) ;
-    int yylex ( yyscan_t yy_globals ) ;
-    int yylex_destroy ( yyscan_t yy_globals ) ;
+    int yylex ( yyscan_t yyscanner ) ;
+    int yylex_destroy ( yyscan_t yyscanner ) ;
 @end verbatim
 @end example
 
@@ -3584,7 +3584,7 @@ version of @code{yylex}.
 
 The function @code{yylex_destroy} should be
 called to free resources used by the scanner. After @code{yylex_destroy}
-is called, the contents of @code{yy_globals} should not be used.  Of
+is called, the contents of @code{yyscanner} should not be used.  Of
 course, there is no need to destroy a scanner if you plan to reuse it.
 A @code{flex} scanner (both reentrant and non-reentrant) may be
 restarted by calling @code{yyrestart}.
@@ -3644,7 +3644,7 @@ The above code may be called from within an action like this:
 @example
 @verbatim
     %%
-    .+\n    { chop( yy_globals );}
+    .+\n    { chop( yyscanner );}
 @end verbatim
 @end example
 
@@ -4273,9 +4273,9 @@ void * yyrealloc (void * ptr, size_t bytes);
 void   yyfree (void * ptr);
 
 // For a reentrant scanner
-void * yyalloc (size_t bytes, void * yy_globals);
-void * yyrealloc (void * ptr, size_t bytes, void * yy_globals);
-void   yyfree (void * ptr, void * yy_globals);
+void * yyalloc (size_t bytes, void * yyscanner);
+void * yyrealloc (void * ptr, size_t bytes, void * yyscanner);
+void   yyfree (void * ptr, void * yyscanner);
 @end verbatim
 @end example
 
@@ -4306,15 +4306,15 @@ custom allocator through @code{yyextra}.
 %%
 
 /* Provide our own implementations. */
-void * yyalloc (size_t bytes, void* yy_globals) {
+void * yyalloc (size_t bytes, void* yyscanner) {
     return allocator_alloc (yyextra, bytes);
 }
 
-void * yyrealloc (void * ptr, size_t bytes, void* yy_globals) {
+void * yyrealloc (void * ptr, size_t bytes, void* yyscanner) {
     return allocator_realloc (yyextra, bytes);
 }
 
-void yyfree (void * ptr, void * yy_globals) {      
+void yyfree (void * ptr, void * yyscanner) {      
     /* Do nothing -- we leave it to the garbage collector. */
 }
 

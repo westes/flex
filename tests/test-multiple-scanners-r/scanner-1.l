@@ -38,13 +38,13 @@
 %x OFF
 %%
 <INITIAL>{
-on    yy_push_state(ON, yy_globals); return 10;
-off   yy_push_state(OFF, yy_globals); return 11;
+on    yy_push_state(ON, yyscanner); return 10;
+off   yy_push_state(OFF, yyscanner); return 11;
 .|\n  return 12;
 }
-<ON>.|\n  yy_pop_state(yy_globals); return 13;
+<ON>.|\n  yy_pop_state(yyscanner); return 13;
 
-<OFF>.|\n yy_pop_state(yy_globals); return 14;
+<OFF>.|\n yy_pop_state(yyscanner); return 14;
 
 %%
 

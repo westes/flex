@@ -97,20 +97,20 @@ typedef void* yyscan_t;
 #endif
 
 /* For use wherever a Global is accessed or assigned. */
-#define YY_G(var) (((struct yy_globals_t*)yy_globals)->var)
+#define YY_G(var) (((struct yyguts_t*)yyscanner)->var)
 
 /* For use in function prototypes to append the additional argument. */
-#define YY_PROTO_LAST_ARG , yyscan_t yy_globals
-#define YY_PROTO_ONLY_ARG    yyscan_t yy_globals
+#define YY_PROTO_LAST_ARG , yyscan_t yyscanner
+#define YY_PROTO_ONLY_ARG    yyscan_t yyscanner
 
 /* For use in function definitions to append the additional argument. */
-#define YY_DEF_LAST_ARG , yy_globals
-#define YY_DEF_ONLY_ARG    yy_globals
-#define YY_DECL_LAST_ARG yyscan_t yy_globals;
+#define YY_DEF_LAST_ARG , yyscanner
+#define YY_DEF_ONLY_ARG    yyscanner
+#define YY_DECL_LAST_ARG yyscan_t yyscanner;
 
 /* For use in function calls to pass the additional argument. */
-#define YY_CALL_LAST_ARG  , yy_globals
-#define YY_CALL_ONLY_ARG   yy_globals
+#define YY_CALL_LAST_ARG  , yyscanner
+#define YY_CALL_ONLY_ARG   yyscanner
 
 /* For convenience, these vars (plus the bison vars far below)
    are macros in the reentrant scanner. */
@@ -419,7 +419,8 @@ static void yy_fatal_error YY_PARAMS(( yyconst char msg[] ));
 #ifdef YY_REENTRANT
 
 %c
-struct yy_globals_t
+/* Holds the entire state of the reentrant scanner. */
+struct yyguts_t
     {
 
     /* User-defined. Not touched by flex. */
@@ -1865,8 +1866,8 @@ void yyset_lloc ( yyllocp YY_DEF_LAST_ARG )
 #endif /* YY_REENTRANT_BISON_PURE */
 
 
-static int yy_init_globals( yy_globals )
-    yyscan_t yy_globals;
+static int yy_init_globals( yyscanner )
+    yyscan_t yyscanner;
     {
     /* Initialization is the same as for the non-reentrant scanner.
        This function is called once per scanner lifetime. */
@@ -1898,7 +1899,7 @@ static int yy_init_globals( yy_globals )
 int yylex_init( ptr_yy_globals )
     yyscan_t* ptr_yy_globals;
     {
-    *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yy_globals_t ), NULL );
+    *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), NULL );
     yy_init_globals ( *ptr_yy_globals );
     return 0;
     }
@@ -1924,7 +1925,7 @@ int yylex_destroy ( YY_DEF_ONLY_ARG )
 
 #ifdef YY_REENTRANT
     /* Destroy the main struct (reentrant only). */
-    yyfree ( yy_globals YY_CALL_LAST_ARG );
+    yyfree ( yyscanner YY_CALL_LAST_ARG );
 #endif
     return 0;
 }

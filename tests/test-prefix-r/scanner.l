@@ -42,15 +42,15 @@
 
     /* Compile, but do not execute the following code. */
     if( 0 ) {
-        FOO_create_buffer( (FILE*)0, 0, yy_globals);
-        FOO_delete_buffer( (YY_BUFFER_STATE)0, yy_globals);
-        FOO_flush_buffer( (YY_BUFFER_STATE)0, yy_globals);
-        FOO_init_buffer( (YY_BUFFER_STATE)0, (FILE*)0, yy_globals);
-        FOO_load_buffer_state( yy_globals);
-        FOO_scan_buffer( (char*)0, (yy_size_t)0, yy_globals);
-        FOO_scan_bytes( (yyconst char*)0, 0, yy_globals);
-        FOO_scan_string( (yyconst char*)0, yy_globals);
-        FOO_switch_to_buffer( (YY_BUFFER_STATE)0, yy_globals);
+        FOO_create_buffer( (FILE*)0, 0, yyscanner);
+        FOO_delete_buffer( (YY_BUFFER_STATE)0, yyscanner);
+        FOO_flush_buffer( (YY_BUFFER_STATE)0, yyscanner);
+        FOO_init_buffer( (YY_BUFFER_STATE)0, (FILE*)0, yyscanner);
+        FOO_load_buffer_state( yyscanner);
+        FOO_scan_buffer( (char*)0, (yy_size_t)0, yyscanner);
+        FOO_scan_bytes( (yyconst char*)0, 0, yyscanner);
+        FOO_scan_string( (yyconst char*)0, yyscanner);
+        FOO_switch_to_buffer( (YY_BUFFER_STATE)0, yyscanner);
         FOOrestart( (FILE*)0, (yyscan_t )0);
 
         FOOget_extra( (yyscan_t )0 );

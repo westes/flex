@@ -49,13 +49,13 @@ enum yesno_t { no=0, yes=1 };
         
 
 <INITIAL>{
-"</"       { NEED_TAG_NAME= yes; yy_push_state( IN_TAG, yy_globals); return LTSLASH;}
-"<"[^[:alpha:]]  { yy_push_state(DISCARD_THRU_GT,yy_globals); }
-"<"        { NEED_TAG_NAME= yes; yy_push_state( IN_TAG, yy_globals); return  LT; }
-[^<]{1,512} { yyget_lval(yy_globals)->str = STRDUP(yytext); return TEXT;}
+"</"       { NEED_TAG_NAME= yes; yy_push_state( IN_TAG, yyscanner); return LTSLASH;}
+"<"[^[:alpha:]]  { yy_push_state(DISCARD_THRU_GT,yyscanner); }
+"<"        { NEED_TAG_NAME= yes; yy_push_state( IN_TAG, yyscanner); return  LT; }
+[^<]{1,512} { yyget_lval(yyscanner)->str = STRDUP(yytext); return TEXT;}
 }
 <IN_TAG>{
-">"  { yy_pop_state( yy_globals ); return GT; }
+">"  { yy_pop_state( yyscanner ); return GT; }
 [[:alpha:]][[:alnum:]]* {
         if( NEED_TAG_NAME == yes){
             NEED_TAG_NAME=no;
@@ -68,7 +68,7 @@ enum yesno_t { no=0, yes=1 };
 }
 <DISCARD_THRU_GT>{
 [^>]{1,512} { }
-">"        { yy_pop_state(yy_globals);}
+">"        { yy_pop_state(yyscanner);}
 }
 %%
 
