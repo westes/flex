@@ -883,10 +883,3 @@ extern void stack1 PROTO((int, int, int, int));
 /* from file yylex.c */
 
 extern int yylex PROTO((void));
-
-
-/* The Unix system calls used here. */
-
-extern int read PROTO((int, char*, int));
-extern int unlink PROTO((char*));
-extern int write PROTO((int, char*, int));
