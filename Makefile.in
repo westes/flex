@@ -197,15 +197,15 @@ mostlyclean:
 	rm -f *~ *.bak core errs
 
 clean: mostlyclean
-	rm -f flex *.o parse.c *.lint parse.h lex.yy.c $(FLEXLIB)
+	rm -f *.o parse.c *.lint parse.h lex.yy.c $(FLEXLIB)
 
 distclean: clean
 	rm -f .bootstrap scan.c tags TAGS Makefile config.status
 
 realclean: distclean
-	rm -f flex.man flexdoc.man flex*.tar.gz flex*.tar.Z
+	rm -f flex flex.man flexdoc.man flex*.tar.gz flex*.tar.Z
 
-dist: $(DISTFILES)
+dist: flex $(DISTFILES)
 	$(MAKE) DIST_NAME=flex-`sed <version.h 's/[^"]*"//' | sed 's/"//'` dist2
 
 dist2:
