@@ -1139,6 +1139,12 @@ void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
 
 
 %-
+#ifndef YY_ALWAYS_INTERACTIVE
+#ifndef YY_NEVER_INTERACTIVE
+extern int isatty YY_PROTO(( int ));
+#endif
+#endif
+
 #ifdef YY_USE_PROTOS
 void yy_init_buffer( YY_BUFFER_STATE b, FILE *file )
 #else
@@ -1146,9 +1152,12 @@ void yy_init_buffer( b, file )
 YY_BUFFER_STATE b;
 FILE *file;
 #endif
+
 %+
+extern "C" int isatty YY_PROTO(( int ));
 void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 %*
+
 	{
 	b->yy_input_file = file;
 	b->yy_n_chars = 0;
@@ -1169,7 +1178,7 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 #if YY_NEVER_INTERACTIVE
 	b->yy_is_interactive = 0;
 #else
-	b->yy_is_interactive = file ? isatty( fileno(file) ) : 0;
+	b->yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;
 #endif
 #endif
 %+
