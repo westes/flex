@@ -80,7 +80,7 @@ DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	configure.in Makefile.in mkskel.sh flex.skl \
 	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC \
 	flex.1 flexdoc.1 \
-	configure
+	scan.c configure
 
 DIST_NAME = flex
 
@@ -211,7 +211,7 @@ realclean: distclean
 	rm -f flex.man flexdoc.man flex*.tar.gz flex*.tar.Z
 
 dist: $(DISTFILES)
-	$(MAKE) DIST_NAME=`pwd | sed 's|.*/||'` dist2
+	$(MAKE) DIST_NAME=flex-`sed <version.h 's/[^"]*"//' | sed 's/"//'` dist2
 
 dist2:
 	@rm -rf $(DIST_NAME)
