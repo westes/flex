@@ -65,7 +65,7 @@
 		yymore_used = true;
 %}
 
-%option caseless nodefault outfile="scan.c" stack
+%option caseless nodefault outfile="scan.c" stack noyy_top_state
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
 %x FIRSTCCL CCL ACTION RECOVER COMMENT ACTION_STRING PERCENT_BRACE_ACTION
@@ -244,6 +244,10 @@ LEXOPT		[aceknopr]
 	yymore		yymore_really_used = option_sense;
 	yywrap		do_yywrap = option_sense;
 
+	yy_push_state	ACTION_IFDEF("YY_NO_PUSH_STATE", ! option_sense);
+	yy_pop_state	ACTION_IFDEF("YY_NO_POP_STATE", ! option_sense);
+	yy_top_state	ACTION_IFDEF("YY_NO_TOP_STATE", ! option_sense);
+
 	yy_scan_buffer	ACTION_IFDEF("YY_NO_SCAN_BUFFER", ! option_sense);
 	yy_scan_bytes	ACTION_IFDEF("YY_NO_SCAN_BYTES", ! option_sense);
 	yy_scan_string	ACTION_IFDEF("YY_NO_SCAN_STRING", ! option_sense);
@@ -276,6 +280,7 @@ LEXOPT		[aceknopr]
 			if ( bracelevel <= 0 )
 				{ /* not in %{ ... %} */
 				yyless( 0 );	/* put it all back */
+				yy_set_bol( 1 );
 				mark_prolog();
 				BEGIN(SECT2);
 				}
