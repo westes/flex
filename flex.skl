@@ -661,6 +661,7 @@ yyFlexLexer::yyFlexLexer( istream* arg_yyin, ostream* arg_yyout )
 	yy_looking_for_trail_begin = 0;
 	yy_more_flag = 0;
 	yy_more_len = 0;
+	yy_more_offset = yy_prev_more_offset = 0;
 
 	yy_start_stack_ptr = yy_start_stack_depth = 0;
 	yy_start_stack = 0;
