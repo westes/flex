@@ -1,11 +1,4 @@
-/*
- *  Definitions for flex.
- *
- * modification history
- * --------------------
- * 02b kg, vp   30sep87  .added definitions for fast scanner; misc. cleanup
- * 02a vp       27jun86  .translated into C/FTL
- */
+/* flexdef - definitions file for flex */
 
 /*
  * Copyright (c) 1987, the University of California
@@ -19,16 +12,38 @@
  * public, are made available for use by anyone.
  */
 
+/* @(#) $Header$ (LBL) */
+
+#ifndef FILE
 #include <stdio.h>
+#endif
 
 #ifdef SV
 #include <string.h>
-#define bzero(s, n) memset((char *)(s), '\000', (unsigned)(n))
+#define bzero(s, n) memset((char *)(s), '\0', (unsigned)(n))
+#ifndef VMS
+char *memset();
 #else
+/* memset is needed for old versions of the VMS C runtime library */
+#define memset(s, c, n) \
+	{ \
+	register char *t = s; \
+	register unsigned int m = n; \
+	while ( m-- > 0 ) \
+	    *t++ = c; \
+	}
+#define unlink delete
+#define SHORT_FILE_NAMES
+#endif
+#endif
+
+#ifndef SV
 #include <strings.h>
 #endif
 
+#ifdef lint
 char *sprintf(); /* keep lint happy */
+#endif
 
 
 /* maximum line length we'll have to deal with */
@@ -37,8 +52,13 @@ char *sprintf(); /* keep lint happy */
 /* maximum size of file name */
 #define FILENAMESIZE 1024
 
-#define min(x,y) (x < y ? x : y)
-#define max(x,y) (x > y ? x : y)
+#define min(x,y) ((x) < (y) ? (x) : (y))
+#define max(x,y) ((x) > (y) ? (x) : (y))
+
+#ifdef MS_DOS
+#define abs(x) ((x) < 0 ? -(x) : (x))
+#define SHORT_FILE_NAMES
+#endif
 
 #define true 1
 #define false 0
@@ -52,11 +72,10 @@ char *sprintf(); /* keep lint happy */
 #define FAST_SKELETON_FILE "flex.fastskel"
 #endif
 
-/* special nxt[] action number for the "at the end of the input buffer" state */
-/* note: -1 is already taken by YY_NEW_FILE */
-#define END_OF_BUFFER_ACTION -3
-/* action number for default action for fast scanners */
-#define DEFAULT_ACTION -2
+/* special internal nxt[] action number for the "at the end of the
+ * input buffer" state
+ */
+#define END_OF_BUFFER_ACTION 0
 
 /* special chk[] values marking the slots taking by end-of-buffer and action
  * numbers
@@ -219,7 +238,12 @@ char *sprintf(); /* keep lint happy */
  * around through the interior of the internal fast table looking for a
  * spot for it
  */
-#define MAX_XTIONS_FOR_FULL_INTERIOR_FIT 4
+#define MAX_XTIONS_FULL_INTERIOR_FIT 4
+
+/* maximum number of rules which will be reported as being associated
+ * with a DFA state
+ */
+#define MAX_ASSOC_RULES 100
 
 /* number that, if used to subscript an array, has a good chance of producing
  * an error; should be small enough to fit into a short
@@ -274,11 +298,13 @@ extern struct hash_entry *ccltab[CCL_HASH_SIZE];
  * reject - if true (-r flag), generate tables for REJECT macro
  * fullspd - if true (-F flag), use Jacobson method of table representation
  * gen_line_dirs - if true (i.e., no -L flag), generate #line directives
+ * performance_report - if true (i.e., -p flag), generate a report relating
+ *   to scanner performance
  */
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, spprdflt;
 extern int interactive, caseins, useecs, fulltbl, usemecs, reject;
-extern int fullspd, gen_line_dirs;
+extern int fullspd, gen_line_dirs, performance_report;
 
 
 /* variables used in the flex input routines:
@@ -314,6 +340,7 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
 /* variables for nfa machine data:
  * current_mns - current maximum on number of NFA states
  * accnum - number of the last accepting state
+ * lastnfa - last nfa state number created
  * firstst - physically the first state of a fragment
  * lastst - last physical state of fragment
  * finalst - last logical state of fragment
@@ -321,12 +348,12 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
  * trans1 - transition state
  * trans2 - 2nd transition state for epsilons
  * accptnum - accepting number
- * lastnfa - last nfa state number created
+ * assoc_rule - rule associated with this NFA state (or 0 if none)
  */
 
-extern int current_mns;
-extern int accnum, *firstst, *lastst, *finalst, *transchar;
-extern int *trans1, *trans2, *accptnum, lastnfa;
+extern int current_mns, accnum, lastnfa;
+extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
+extern int *accptnum, *assoc_rule;
 
 
 /* variables for protos:
@@ -450,11 +477,13 @@ extern char *ccltbl;
  * numuniq - number of unique transitions
  * numdup - number of duplicate transitions
  * hshsave - number of hash collisions saved by checking number of states
+ * num_backtracking - number of DFA states requiring back-tracking
  */
 
 extern char *starttime, *endtime, nmstr[MAXLINE];
 extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
+extern int num_backtracking;
 
 char *allocate_array(), *reallocate_array();
 
@@ -464,14 +493,14 @@ char *allocate_array(), *reallocate_array();
 #define reallocate_integer_array(array,size) \
 	(int *) reallocate_array( (char *) array, size, sizeof( int ) )
 
-#define allocate_integer_pointer_array(size) \
+#define allocate_int_ptr_array(size) \
 	(int **) allocate_array( size, sizeof( int * ) )
 
 #define allocate_dfaacc_union(size) \
 	(union dfaacc_union *) \
 		allocate_array( size, sizeof( union dfaacc_union ) )
 
-#define reallocate_integer_pointer_array(array,size) \
+#define reallocate_int_ptr_array(array,size) \
 	(int **) reallocate_array( (char *) array, size, sizeof( int * ) )
 
 #define reallocate_dfaacc_union(array, size) \
