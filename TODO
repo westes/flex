@@ -20,6 +20,8 @@
 
 ** convert flex to use automake
 
+** gettextify flex
+
 * test suite
 
 ** Rewrite tests/Makefile.* so that users do not need to alter it when
