@@ -11,7 +11,7 @@ sys/types.h. If that doesn't work for you, then define
 FLEX_NEED_INTEGRAL_TYPE_DEFINITIONS. If that gives you problems, check
 that your header files and such are happy. */
 
-#if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901
+#if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
 #include <inttypes.h>
 #endif
 #ifndef FLEX_NEED_INTEGRAL_TYPE_DEFINITIONS
