@@ -15,20 +15,21 @@ that in a cvs snapshot.
 
 You will need various external tools in order to build the distribution. Here is
 a (possibly incomplete) list of the required tools. Always get the latest
-version of each tool:
+version of each tool; we list the versions used in development of
+flex, but the listed versions may not work for you.
 
 compiler suite;  e.g., gcc
 bash or some other fairly robust sh-style shell
 GNU bison;  to generate parse.c from parse.y
-GNU m4; required by BNU autoconf (yes, it *must* be GNU m4)
-GNU autoconf and GNU automake; for generating Makefiles etc.
-GNU gettext; for i18n
-flex;  for bootstrap of scan.l
-help2man; to generate man page
+GNU m4 1.4; required by BNU autoconf (yes, it *must* be GNU m4)
+GNU autoconf 2.54 and GNU automake 1.7; for generating Makefiles etc.
+GNU gettext 0.11.5; for i18n
+flex (latest beta release);  for bootstrap of scan.l
+help2man 1.27; to generate man page
 tar, gzip, etc.; for packaging of the source distribution
-texinfo tools;  to build and test the flex manual
+GNU texinfo 4.2;  to build and test the flex manual
 perl; GNU automake and GNU autoconf now depend on perl to run
-GNU indent; for indenting the flex source the way we want it done
+GNU indent 2.8; for indenting the flex source the way we want it done
 
 ONce you have all the necessary tools installed, life becomes
 simple. To prepare the flex tree for building, run the script:
@@ -41,4 +42,5 @@ GNU-style configure script to be able to work.
 
 From this point on, building flex follows the usual configure, make,
 make install routine, almost. When configuring the flex tree, pass the
---enable-maintainer-mode option to configure.
+--enable-maintainer-mode option to configure. If you forget, you will
+see errors about a missing file `version.texi'.
