@@ -26,7 +26,7 @@ EXTRA_DIST = scanner.l
 CLEANFILES = scanner.c scanner.h test-posixly-correct OUTPUT $(OBJS)
 OBJS = scanner.o 
 
-AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir) -I501 507 1002 1001 1000 499 400 100 6 501top_builddir)
+AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
 #LDFLAGS = $(top_srcdir)/libfl.a 
 #LFLAGS = --header="scanner.h"
 

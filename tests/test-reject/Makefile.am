@@ -27,7 +27,7 @@ CLEANFILES = scanner.c test-reject-* OUTPUT $(OBJS)
 OBJS = test-reject-nr.o test-reject-r.o test-reject-ver.o \
        test-reject-ser.o
 
-AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir) -I501 507 1002 1001 1000 499 400 100 6 501top_builddir)
+AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
 
 tests = test-reject-nr$(EXEEXT) test-reject-r$(EXEEXT) \
         test-reject-ser$(EXEEXT) test-reject-ver$(EXEEXT)

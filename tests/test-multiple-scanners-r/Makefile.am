@@ -28,7 +28,7 @@ CLEANFILES = scanner-1.c scanner-1.h test-multiple-scanners-r OUTPUT\
              scanner-2.tables
 OBJS = scanner-1.o scanner-2.o main.o
 
-AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir) -I501 507 1002 1001 1000 499 400 100 6 501top_builddir)
+AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
 #LDFLAGS = $(top_srcdir)/libfl.a 
 #YFLAGS = --defines --output=parser.c
 

@@ -65,7 +65,7 @@ alltables  := $(addsuffix .tables,$(alltests))
 EXTRA_DIST = scanner.l test.input
 CLEANFILES = scanner.c OUTPUT test-*.o test-*.c test-*.tables \
              all-ser.tables core $(alltests)
-AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir) -I501 507 1002 1001 1000 499 400 100 6 501top_builddir)
+AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
 
 test: test-table-opts
 test-table-opts: $(alltests)
