@@ -24,14 +24,6 @@
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-#ifndef lint
-
-static char copyright[] =
-    "@(#) Copyright (c) 1989 The Regents of the University of California.\n\
-     All rights reserved.\n";
-
-#endif
-
 /* @(#) $Header$ (LBL) */
 
 #ifndef FILE
