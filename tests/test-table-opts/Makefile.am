@@ -28,7 +28,7 @@ BISON = @BISON@
 FLEX = $(top_builddir)/flex
 
 testname  := test-table-opts
-allopts   := -Ca -Ce -Cf -CF -Cm -Cem
+allopts   := -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caf -CaF -Cam -Caem
 alltests  := $(foreach opt,$(allopts),test-opt-r$(opt) test-opt-nr$(opt))
 alltestexe := $(addsuffix $(EXEEXT),$(alltests))
 alltestsrc := $(addsuffix .c,$(alltests))
@@ -52,7 +52,7 @@ test-opt%$(EXEEXT): test-opt%.o
 
 test: $(alltestexe)
 	for t in $(alltestexe) ; do \
-		./$$t < $(srcdir)/test.input ; \
+		./$$t < $(srcdir)/test.input || exit 1 ; \
 	done
 
 .c.o:
