@@ -1,9 +1,10 @@
-#! /usr/bin/perl -w
+#! /usr/bin/env perl
 # vim:set autoindent smartindent expandtab tabstop=4 softtabstop=4 shiftwidth=4 textwidth=0:
 # Author and scapegoat if this breaks: Millaway
 use Fcntl qw(:seek);
 use File::Copy;
 use strict;
+$^W = 1; # same as perl -w
 my $USAGE = q{
     Usage:
         create-test.pl [-p] [-+] TEST_NAME
