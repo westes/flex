@@ -57,7 +57,7 @@ char *malloc();
 /* this used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite()
  */
-#define ECHO fwrite( (char *) yytext, yyleng, 1, yyout )
+#define ECHO (void) fwrite( (char *) yytext, yyleng, 1, yyout )
 
 /* gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
  * is returned in "result".
@@ -156,13 +156,12 @@ struct yy_buffer_state
 #define EOF_DONE 2
     };
 
-static struct yy_buffer_state *yy_original_buffer;
-static struct yy_buffer_state *yy_current_buffer;
+static YY_BUFFER_STATE yy_current_buffer;
 
-/* we provide macros for accessing the buffer states in case in the
- * future we want to put the buffer states in a more general "scanner state"
+/* we provide macros for accessing buffer states in case in the
+ * future we want to put the buffer states in a more general
+ * "scanner state"
  */
-#define YY_ORIGINAL_BUFFER yy_original_buffer
 #define YY_CURRENT_BUFFER yy_current_buffer
 
 
@@ -200,15 +199,15 @@ static yy_state_type yy_last_accepting_state;
 static YY_CHAR *yy_last_accepting_cpos;
 
 static yy_state_type yy_get_previous_state YY_PROTO(( void ));
-static yy_state_type yy_try_NUL_trans YY_PROTO(( void ));
+static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
 static int yy_get_next_buffer YY_PROTO(( void ));
-static void yyunput YY_PROTO(( int c, YY_CHAR *buf_ptr ));
+static void yyunput YY_PROTO(( YY_CHAR c, YY_CHAR *buf_ptr ));
 void yyrestart YY_PROTO(( FILE *input_file ));
-void yy_switch_to_buffer YY_PROTO(( struct yy_buffer_state *new_buffer ));
+void yy_switch_to_buffer YY_PROTO(( YY_BUFFER_STATE new_buffer ));
 void yy_load_buffer_state YY_PROTO(( void ));
-struct yy_buffer_state *yy_create_buffer YY_PROTO(( FILE *file, int size ));
-void yy_delete_buffer YY_PROTO(( struct yy_buffer_state *b ));
-void yy_init_buffer YY_PROTO(( struct yy_buffer_state *b, FILE *file ));
+YY_BUFFER_STATE yy_create_buffer YY_PROTO(( FILE *file, int size ));
+void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));
+void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
 
 #ifdef __cplusplus
 static int yyinput YY_PROTO(( void ));
@@ -238,8 +237,7 @@ YY_DECL
 	if ( yy_current_buffer )
 	    yy_init_buffer( yy_current_buffer, yyin );
 	else
-	    yy_original_buffer =
-		yy_current_buffer = yy_create_buffer( yyin, YY_BUF_SIZE );
+	    yy_current_buffer = yy_create_buffer( yyin, YY_BUF_SIZE );
 
 	yy_load_buffer_state();
 
@@ -506,10 +504,10 @@ register yy_state_type yy_current_state;
 
 
 #ifdef YY_USE_PROTOS
-static void yyunput( int c, register YY_CHAR *yy_bp )
+static void yyunput( YY_CHAR c, register YY_CHAR *yy_bp )
 #else
 static void yyunput( c, yy_bp )
-int c;
+YY_CHAR c;
 register YY_CHAR *yy_bp;
 #endif
 
@@ -628,10 +626,10 @@ FILE *input_file;
 
 
 #ifdef YY_USE_PROTOS
-void yy_switch_to_buffer( struct yy_buffer_state *new_buffer )
+void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
 #else
 void yy_switch_to_buffer( new_buffer )
-struct yy_buffer_state *new_buffer;
+YY_BUFFER_STATE new_buffer;
 #endif
 
     {
@@ -666,17 +664,17 @@ void yy_load_buffer_state()
 
 
 #ifdef YY_USE_PROTOS
-struct yy_buffer_state *yy_create_buffer( FILE *file, int size )
+YY_BUFFER_STATE yy_create_buffer( FILE *file, int size )
 #else
-struct yy_buffer_state *yy_create_buffer( file, size )
+YY_BUFFER_STATE yy_create_buffer( file, size )
 FILE *file;
 int size;
 #endif
 
     {
-    struct yy_buffer_state *b;
+    YY_BUFFER_STATE b;
 
-    b = (struct yy_buffer_state *) malloc( sizeof( struct yy_buffer_state ) );
+    b = (YY_BUFFER_STATE) malloc( sizeof( struct yy_buffer_state ) );
 
     if ( ! b )
 	YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
@@ -685,7 +683,7 @@ int size;
      * we need to put in 2 end-of-buffer characters.
      */
     b->yy_buf_size = size + 2;
-    b->yy_ch_buf = (YY_CHAR *) malloc( b->yy_buf_size );
+    b->yy_ch_buf = (YY_CHAR *) malloc( (unsigned) b->yy_buf_size );
 
     if ( ! b->yy_ch_buf )
 	YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
@@ -697,15 +695,15 @@ int size;
 
 
 #ifdef YY_USE_PROTOS
-void yy_delete_buffer( struct yy_buffer_state *b )
+void yy_delete_buffer( YY_BUFFER_STATE b )
 #else
 void yy_delete_buffer( b )
-struct yy_buffer_state *b;
+YY_BUFFER_STATE b;
 #endif
 
     {
     if ( b == yy_current_buffer )
-	yy_current_buffer = (struct yy_buffer_state *) 0;
+	yy_current_buffer = (YY_BUFFER_STATE) 0;
 
     free( (char *) b->yy_ch_buf );
     free( (char *) b );
@@ -713,10 +711,10 @@ struct yy_buffer_state *b;
 
 
 #ifdef YY_USE_PROTOS
-void yy_init_buffer( struct yy_buffer_state *b, FILE *file )
+void yy_init_buffer( YY_BUFFER_STATE b, FILE *file )
 #else
 void yy_init_buffer( b, file )
-struct yy_buffer_state *b;
+YY_BUFFER_STATE b;
 FILE *file;
 #endif
 
