@@ -1,4 +1,4 @@
-/* flexmisc - miscellaneous flex routines */
+/* misc - miscellaneous flex routines */
 
 /*
  * Copyright (c) 1987, the University of California
