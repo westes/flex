@@ -1,4 +1,4 @@
-/* flexparse.y - parser for flex input */
+/* parse.y - parser for flex input */
 
 /*
  * Copyright (c) 1987, the University of California
@@ -34,7 +34,7 @@ initlex         :
 			/* initialize for processing rules */
 
 			/* create default DFA start condition */
-			scinstal( "0", false );
+			scinstal( "INITIAL", false );
 			}
 		;
 			
@@ -291,7 +291,11 @@ singleton       :  singleton '*'
 
 		|  singleton '{' NUMBER '}'
 			{
-			rulelen = rulelen + $3;
+			/* the singleton could be something like "(foo)",
+			 * in which case we have no idea what its length
+			 * is, so we punt here.
+			 */
+			varlength = true;
 
 			if ( $3 <= 0 )
 			    {
