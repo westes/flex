@@ -411,6 +411,7 @@ register char *yy_bp;
 
 	yy_cp += dest - source;
 	yy_bp += dest - source;
+	yy_n_chars = YY_BUF_SIZE;
 
 	if ( yy_cp < yy_ch_buf + 2 )
 	    YY_FATAL_ERROR( "flex scanner push-back overflow" );
