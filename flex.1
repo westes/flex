@@ -1,4 +1,4 @@
-.TH FLEX 1 "March 1995" "Version 2.5"
+.TH FLEX 1 "April 1995" "Version 2.5"
 .SH NAME
 flex \- fast lexical analyzer generator
 .SH SYNOPSIS
@@ -1641,7 +1641,9 @@ change the start condition.
     void yy_delete_buffer( YY_BUFFER_STATE buffer )
 
 .fi
-is used to reclaim the storage associated with a buffer.
+is used to reclaim the storage associated with a buffer.  (
+.B buffer
+can be nil, in which case the routine does nothing.)
 You can also clear the current contents of a buffer using:
 .nf
 
@@ -2637,8 +2639,9 @@ directives in the first section of the scanner specification.
 You can specify multiple options with a single
 .B %option
 directive, and multiple directives in the first section of your flex input
-file.  Most
-options are given simply as names, optionally preceded by the
+file.
+.PP
+Most options are given simply as names, optionally preceded by the
 word "no" (with no intervening whitespace) to negate their meaning.
 A number are equivalent to flex flags or their negation:
 .nf
@@ -2708,18 +2711,26 @@ This is the opposite of
 enables the use of start condition stacks (see Start Conditions above).
 .TP
 .B stdinit
-if unset (i.e.,
-.B %option nostdinit)
+if set (i.e.,
+.B %option stdinit)
 initializes
 .I yyin
 and
 .I yyout
-to nil
-.I FILE
-pointers, instead of
+to
 .I stdin
 and
-.I stdout.
+.I stdout,
+instead of the default of
+.I nil.
+Some existing
+.I lex
+programs depend on this behavior, even though it is not compliant with
+ANSI C, which does not require
+.I stdin
+and
+.I stdout
+to be compile-time constant.
 .TP
 .B yylineno
 directs
@@ -2804,7 +2815,10 @@ See Generating C++ Scanners, below, for additional information.
 .PP
 A number of options are available for lint purists who want to suppress
 the appearance of unneeded routines in the generated scanner.  Each of the
-following, if unset, results in the corresponding routine not appearing in
+following, if unset
+(e.g.,
+.B %option nounput
+), results in the corresponding routine not appearing in
 the generated scanner:
 .nf
 
@@ -3298,7 +3312,7 @@ to
 is reassigned.
 .TP
 .B
-int yylex( istream* new_in = 0, ostream* new_out = 0 )
+int yylex( istream* new_in, ostream* new_out = 0 )
 first switches the input streams via
 .B switch_streams( new_in, new_out )
 and then returns the value of
@@ -3988,6 +4002,7 @@ Thanks to the many
 .I flex
 beta-testers, feedbackers, and contributors, especially Francois Pinard,
 Casey Leedom,
+Robert Abramovitz,
 Stan Adermann, Terry Allen, David Barker-Plummer, John Basrai,
 Nelson H.F. Beebe, benson@odi.com,
 Karl Berry, Peter A. Bigot, Simon Blanchard,
@@ -3996,7 +4011,8 @@ Brian Clapper, J.T. Conklin,
 Jason Coughlin, Bill Cox, Nick Cropper, Dave Curtis, Scott David
 Daniels, Chris G. Demetriou, Theo Deraadt,
 Mike Donahue, Chuck Doucette, Tom Epperly, Leo Eskin,
-Chris Faylor, Chris Flatters, Jon Forrest, Joe Gayda, Kaveh R. Ghazi,
+Chris Faylor, Chris Flatters, Jon Forrest, Jeffrey Friedl,
+Joe Gayda, Kaveh R. Ghazi, Wolfgang Glunz,
 Eric Goldman, Christopher M. Gould, Ulrich Grepel, Peer Griebel,
 Jan Hajic, Charles Hemphill, NORO Hideo,
 Jarkko Hietaniemi, Scott Hofmann,
@@ -4017,7 +4033,7 @@ Frederic Raimbault, Pat Rankin, Rick Richardson,
 Kevin Rodgers, Kai Uwe Rommel, Jim Roskind, Alberto Santini,
 Andreas Scherer, Darrell Schiebel, Raf Schietekat,
 Doug Schmidt, Philippe Schnoebelen, Andreas Schwab,
-Alex Siegel, Eckehard Stolz, Jan-Erik Strvmquist,
+Larry Schwimmer, Alex Siegel, Eckehard Stolz, Jan-Erik Strvmquist,
 Mike Stump, Paul Stuart, Dave Tallman, Ian Lance Taylor,
 Chris Thewalt, Richard M. Timoney, Jodi Tsai,
 Paul Tuinenga, Gary Weik, Frank Whaley, Gerhard Wilhelms, Kent Williams, Ken
