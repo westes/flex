@@ -4623,7 +4623,34 @@ scanning begins. The tables may be discarded when scanning is finished.
 @cindex tables, creating serialized
 @cindex creating serialized tables
 
-how to create serialized tables
+@code{%option tables-file="foo.tables"} (@code{--tables-file=foo.tables})
+instructs flex to save the DFA tables to the file @file{foo.tables}. The tables
+will @emph{not} be embedded in the generated scanner. The scanner will not
+function on its own. It is now dependent upon the serialized tables. You must
+load the tables from this file at runtime before you can scan anything. 
+
+If you do not specify a filename to @code{--tables-file}, the tables will be
+saved to @file{lex.yy.tables}, where @samp{yy} is the appropriate prefix.
+
+If your project uses several different scanners, you can concatenate the
+serialized tables into one file, and flex will find the correct scanner, using
+the scanner prefix as the lookup key. An example follows:
+
+@exindex serialized tables, multiple scanners
+@example
+@verbatim
+$ flex --tables-file --prefix=cpp cpp.l
+$ flex --tables-file --prefix=c   c.l
+$ cat lex.cpp.tables lex.c.tables  >  all.tables
+@end verbatim
+@end example
+
+The above example created two scanners, @samp{cpp}, and @samp{c}. Since we did
+not specify a filename, the tables were serialized to @file{lex.c.tables} and
+@file{lex.cpp.tables}, respectively. Then, we concatenated the two files
+together into @file{all.tables}, presumably to distribute that file with our
+project.  At runtime, we will open the file and tell flex to load the tables.
+Flex will find the correct tables automatically. (See next section).
 
 @node Loading Serialized Tables
 @section Loading Serialized Tables
@@ -4684,15 +4711,16 @@ indexed by name, as described below. The file format is as follows:
 @end verbatim
 @end example
 
-The above diagram shows that a complete set consists of a header followed by
-multiple tables. Furthermore, multiple complete sets may be present in the same
-file, each set with its own header and tables. The sets are contiguous in the
-file. The only way to know if another set follows is to check the next four
-bytes for the magic number. The header and tables sections are padded to 64-bit
-boundaries. Below we describe each field in detail. This format does not
-specify how the scanner will expand the given data, i.e., data may be
-serialized as int16, but expanded to an int32 array.
-Remember, @emph{all integer values are in network byte order}. 
+The above diagram shows that a complete set of tables consists of a header
+followed by multiple individual tables. Furthermore, multiple complete sets may
+be present in the same file, each set with its own header and tables. The sets
+are contiguous in the file. The only way to know if another set follows is to
+check the next four bytes for the magic number (or check for EOF). The header
+and tables sections are padded to 64-bit boundaries. Below we describe each
+field in detail. This format does not specify how the scanner will expand the
+given data, i.e., data may be serialized as int8, but expanded to an int32
+array at runtime. This is to reduce the size of the serialized data where
+possible.  Remember, @emph{all integer values are in network byte order}. 
 
 @noindent
 Fields of a table header:
@@ -4702,23 +4730,26 @@ Fields of a table header:
 Magic number, always 0xF13C57B1.
 
 @item th_hsize
-Size of this entire header, in bytes.
+Size of this entire header, in bytes, including all fields plus any padding.
 
 @item th_ssize
-Size of this entire set, in bytes.
+Size of this entire set, in bytes, including the header, all tables, plus
+any padding.
 
 @item th_flags
 Bit flags for this table set. Currently unused.
 
 @item th_version[]
-Flex version numbers in NUL-termninated string format. e.g., @samp{2.5.13a}
+Flex version in NULL-termninated string format. e.g., @samp{2.5.13a}. This is
+the version of flex that was used to create the serialized tables.
 
 @item th_name[]
 Contains the name of this table set. The default is @samp{yytables},
-and is prefixed accordingly. Must be NUL-terminated.
+and is prefixed accordingly, e.g., @samp{footables}. Must be NULL-terminated.
 
 @item th_pad64[]
-Zero or more NUL bytes, padding the entire header to the next 64-bit boundary.
+Zero or more NULL bytes, padding the entire header to the next 64-bit boundary
+as calculated from the beginning of the header.
 @end table
 
 @noindent
@@ -4774,12 +4805,14 @@ in the @code{yy_transition} array. We count on the fact that the
 @code{yy_transition} array has already been seen.
 @item YYTD_STRUCT (0x10)
 The data is a list of yy_trans_info structs, each of which consists of
-two integers. There is no padding between struct elements.
-The type of each member is determined by the above flags.
+two integers. There is no padding between struct elements or between structs.
+The type of each member is determined by the @code{YYTD_DATA*} bits.
 @end table
 
 @item td_lolen
-Specifies the number of elements in the lowest dimension array.
+Specifies the number of elements in the lowest dimension array. If this is
+a one-dimensional array, then it is simply the number of elements in this array.
+The element size is determined by the @code{td_flags} field.
 
 @item td_hilen
 If @code{td_hilen} is non-zero, then the data is a two-dimensional array.
@@ -4787,22 +4820,22 @@ Otherwise, the data is a one-dimensional array. @code{td_hilen} contains the
 number of elements in the higher dimensional array, and @code{td_lolen} contains
 the number of elements in the lowest dimension.
 
-Conceptually, @code{td_data} is either @code{int td_data[td_lolen]},
-or @code{int td_data[td_hilen][td_lolen]}.  It is possible for both @code{td_lolen}
-and @code{td_hilen} to be zero, in which case @code{td_data} is a zero length
-array, and no data is loaded, i.e., this table is simply skipped. A special
-case is made when @code{td_id} equals @code{YYT_ID_TRANSITION}, then
-@code{td_lolen} is the number of structs in the array. Each struct contains two
-integer fields, with the @code{yy_verify} field first, followed by the
-@code{yy_nxt} field.
+Conceptually, @code{td_data} is either @code{sometype td_data[td_lolen]}, or
+@code{sometype td_data[td_hilen][td_lolen]}, where @code{sometype} is specified
+by the @code{td_flags} field.  It is possible for both @code{td_lolen} and
+@code{td_hilen} to be zero, in which case @code{td_data} is a zero length
+array, and no data is loaded, i.e., this table is simply skipped. Flex does not
+currently generate tables of zero length.
 
 @item td_data[]
-The table data. This array may be a one- or two-dimensional array, of type int8,
-int16, or int32, depending upon the values in the  @code{td_flags}, @code{td_lolen}, and
-@code{td_hilen} fields.
+The table data. This array may be a one- or two-dimensional array, of type
+@code{int8}, @code{int16}, @code{int32}, @code{struct yy_trans_info}, or
+@code{struct yy_trans_info*},  depending upon the values in the
+@code{td_flags}, @code{td_lolen}, and @code{td_hilen} fields.
 
 @item td_pad64[]
-Zero or more NUL bytes, padding the table to the next 64-bit boundary.
+Zero or more NULL bytes, padding the entire table to the next 64-bit boundary as
+calculated from the beginning of this table.
 @end table
 
 @node Diagnostics
