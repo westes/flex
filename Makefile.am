@@ -91,7 +91,11 @@ EXTRA_DIST = \
 	TODO \
 	autogen.sh \
 	flex.skl \
-	mkskel.sh
+	mkskel.sh \
+	tests \
+	to.do \
+	examples \
+	faqs 
 
 BUILT_SOURCES = \
 	skel.c
@@ -128,8 +132,7 @@ ChangeLog:
 .PHONY: ChangeLog
 
 dist-hook:
-	-for i in tests to.do examples faqs ; \
-		do \
-		cvs -d /usr/local/cvsroot -Q export -D today -d $(PACKAGE)-$(VERSION)/$$i $(PACKAGE)/$$i ; \
-	done
+	-if test ! "x$(distdir)" = "x" ; then \
+         rm -rf `find $(distdir)/ -name CVS` ;\
+     fi;
 	-cd $(PACKAGE)-$(VERSION) && ./autogen.sh
