@@ -1,1 +1,5 @@
-This is alpha quality code. Use at your own wrisk
+This is not an official release of flex. This code may not even be
+functional. Use at your own risk.
+
+Beta versions and cvs snapshots of flex can be had at
+ftp://ftp.uncg.edu/people/wlestes/.
