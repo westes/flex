@@ -5,33 +5,33 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: flex 2.5.8\n"
-"POT-Creation-Date: 2002-06-19 09:43-0400\n"
-"PO-Revision-Date: 2002-06-20 09:34+0200\n"
+"Project-Id-Version: flex 2.5.19\n"
+"POT-Creation-Date: 2002-09-05 12:07-0400\n"
+"PO-Revision-Date: 2002-09-07 19:42+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: dfa.c:64
+#: dfa.c:60
 #, c-format
 msgid "State #%d is non-accepting -\n"
 msgstr "Tillstånd %d är icke-accepterande -\n"
 
-#: dfa.c:131
+#: dfa.c:123
 msgid "dangerous trailing context"
 msgstr "farligt efterföljande sammanhang"
 
-#: dfa.c:174
+#: dfa.c:165
 msgid " associated rule line numbers:"
 msgstr " radnummer för associerad regel:"
 
-#: dfa.c:212
+#: dfa.c:201
 msgid " out-transitions: "
 msgstr " utövergångar: "
 
-#: dfa.c:220
+#: dfa.c:209
 msgid ""
 "\n"
 " jam-transitions: EOF "
@@ -39,11 +39,11 @@ msgstr ""
 "\n"
 " stoppövergångar: filslut "
 
-#: dfa.c:357
+#: dfa.c:340
 msgid "consistency check failed in epsclosure()"
 msgstr "konsekvenskontrollen misslyckades i epsclosure()"
 
-#: dfa.c:443
+#: dfa.c:428
 msgid ""
 "\n"
 "\n"
@@ -64,15 +64,21 @@ msgstr "kunde inte skapa ett unikt buffertsluttillstånd"
 msgid "state # %d:\n"
 msgstr "tillstånd %d:\n"
 
-#: dfa.c:994
+# Det här är ju helt sjukt. Har buggrapporterat detta att det bör
+# ersättas med %s
+#: dfa.c:783
+msgid "Could not write yynxt_tbl[][]"
+msgstr "Kunde inte skriva yynxt_tbl[][]"
+
+#: dfa.c:1006
 msgid "consistency check failed in symfollowset"
 msgstr "konsekvenskontrollen misslyckades i symfollowset"
 
-#: dfa.c:1047
+#: dfa.c:1054
 msgid "bad transition character detected in sympartition()"
 msgstr "otillåtet övergångstecken funnet i sympartition()"
 
-#: gen.c:251
+#: gen.c:424 gen.c:463
 msgid ""
 "\n"
 "\n"
@@ -84,17 +90,21 @@ msgstr ""
 "Ekvivalensklasser:\n"
 "\n"
 
-#: gen.c:429 gen.c:913
+#: gen.c:647 gen.c:673 gen.c:1158
 #, c-format
 msgid "state # %d accepts: [%d]\n"
 msgstr "tillstånd %d accepterar: [%d]\n"
 
-#: gen.c:834
+#: gen.c:1066
 #, c-format
 msgid "state # %d accepts: "
 msgstr "tillstånd %d accepterar: "
 
-#: gen.c:936
+#: gen.c:1176
+msgid "Could not write yyacc_tbl"
+msgstr "Kunde inte skriva yyacc_tbl"
+
+#: gen.c:1202
 msgid ""
 "\n"
 "\n"
@@ -104,346 +114,377 @@ msgstr ""
 "\n"
 "Metaekvivalensklasser:\n"
 
-#: main.c:163
+#: gen.c:1221
+msgid "Could not write yymeta_tbl"
+msgstr "Kunde inte skriva yymeta_tbl"
+
+#: gen.c:1278
+msgid "Could not write yybase_tbl"
+msgstr "Kunde inte skriva yybase_tbl"
+
+#: gen.c:1308
+msgid "Could not write yydef_tbl"
+msgstr "Kunde inte skriva yydef_tbl"
+
+#: gen.c:1342
+msgid "Could not write yynxt_tbl"
+msgstr "Kunde inte skriva yynxt_tbl"
+
+#: gen.c:1372
+msgid "Could not write yychk_tbl"
+msgstr "Kunde inte skriva yychk_tbl"
+
+#: gen.c:1511 gen.c:1534
+msgid "Could not write ftbl"
+msgstr "Kunde inte skriva ftbl"
+
+#: gen.c:1520 gen.c:1543
+msgid "Could not write ecstbl"
+msgstr "Kunde inte skriva ecstbl"
+
+#: gen.c:1604
+msgid "Could not write yynultrans_tbl"
+msgstr "Kunde inte skriva yynultrans_tbl"
+
+#: main.c:164
 msgid "rule cannot be matched"
 msgstr "regeln kan inte matchas"
 
-#: main.c:168
+#: main.c:169
 msgid "-s option given but default rule can be matched"
 msgstr "flaggan -s angiven men standardregeln kan följas"
 
-#: main.c:203
+#: main.c:205
 msgid "Can't use -+ with -l option"
 msgstr "-+ kan inte användas tillsammans med flaggan -l"
 
-#: main.c:206
+#: main.c:208
 msgid "Can't use -f or -F with -l option"
 msgstr "-f eller -F kan inte användas tillsammans med flaggan -l"
 
-#: main.c:209
+#: main.c:212
 msgid "Can't use -R or -Rb with -l option"
 msgstr "-R eller -Rb kan inte användas tillsammans med flaggan -l"
 
-#: main.c:223
+#: main.c:227
 msgid "Can't specify header option if writing to stdout."
 msgstr "Kan inte ange huvudflagga då utskrift sker till standard ut."
 
-#: main.c:249
+#: main.c:253
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "-Cf/-CF och -Cm kan inte användas tillsammans"
 
-#: main.c:252
+#: main.c:256
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "-Cf/-CF och -I kan inte användas tillsammans"
 
-#: main.c:256
+#: main.c:260
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr "-Cf/-CF kan inte användas i lex-kompatibilitetsläge"
 
-#: main.c:260
-#, c-format
-msgid "-Cf/-CF and %option yylineno are incompatible"
-msgstr "-Cf/-CF och %option yylineno kan inte användas tillsammans"
-
-#: main.c:263
+#: main.c:265
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "-Cf och -CF är ömsesidigt uteslutande"
 
-#: main.c:267
+#: main.c:269
 msgid "Can't use -+ with -CF option"
 msgstr "-+ kan inte användas tillsammans med flaggan -CF"
 
-#: main.c:271
+#: main.c:272
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "%array kan inte användas tillsammans med flaggan -+"
 
-#: main.c:276
+#: main.c:277
 msgid "Options -+ and -R are mutually exclusive."
 msgstr "Flaggorna -+ och -R är ömsesidigt uteslutande."
 
-#: main.c:328 main.c:524
+#: main.c:323 main.c:343 main.c:556
 #, c-format
 msgid "could not create %s"
 msgstr "kunde inte skapa %s"
 
-#: main.c:334
+#: main.c:357
+msgid "could not write tables header"
+msgstr "kunde inte skriva tabellhuvud"
+
+#: main.c:361
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "kan inte öppna mallfilen %s"
 
-#: main.c:492
+#: main.c:523
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "indatafel vid läsande av mallfilen %s"
 
-#: main.c:496
+#: main.c:527
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "fel vid stängande av mallfilen %s"
 
-#: main.c:690
+#: main.c:769
 #, c-format
 msgid "error creating header file %s"
 msgstr "fel vid skapande av huvudfilen %s"
 
-#: main.c:698
+#: main.c:777
 #, c-format
 msgid "error writing output file %s"
 msgstr "fel vid skrivande av utfilen %s"
 
-#: main.c:702
+#: main.c:781
 #, c-format
 msgid "error closing output file %s"
 msgstr "fel vid stängande av utfilen %s"
 
-#: main.c:706
+#: main.c:785
 #, c-format
 msgid "error deleting output file %s"
 msgstr "fel vid borttagning av utfilen %s"
 
 # "Back up" i det här sammanhanget handlar om att flexmaskinen backar.
-#: main.c:714
+#: main.c:792
 msgid "No backing up.\n"
 msgstr "Backar inte.\n"
 
-#: main.c:717
+#: main.c:796
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "%d säkerhetskopierande (icke-accepterande) tillstånd.\n"
 
-#: main.c:721
+#: main.c:800
 msgid "Compressed tables always back up.\n"
 msgstr "Komprimerade tabeller säkerhetskopierar alltid.\n"
 
-#: main.c:724
+#: main.c:803
 #, c-format
 msgid "error writing backup file %s"
 msgstr "fel när säkerhetskopian %s skulle skrivas"
 
-#: main.c:728
+#: main.c:807
 #, c-format
 msgid "error closing backup file %s"
 msgstr "fel när säkerhetskopian %s skulle stängas"
 
-#: main.c:734
+#: main.c:812
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr "Statistik över användning av %s version %s:\n"
 
-#: main.c:737
+#: main.c:815
 msgid "  scanner options: -"
 msgstr "  inläsarflaggor: -"
 
-#: main.c:817
+#: main.c:894
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d NFA-tillstånd\n"
 
-#: main.c:819
+#: main.c:896
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d DFA-tillstånd (%d ord)\n"
 
-#: main.c:821
+#: main.c:898
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d regler\n"
 
-#: main.c:825
+#: main.c:903
 msgid "  No backing up\n"
 msgstr "  Inget säkerhetskopierande\n"
 
-#: main.c:828
+#: main.c:907
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr "  %d (icke-accepterande) tillstånd för säkerhetskopiering\n"
 
-#: main.c:832
+#: main.c:912
 msgid "  Compressed tables always back-up\n"
 msgstr "  Komprimerade tabeller säkerhetskopierar alltid\n"
 
-#: main.c:836
+#: main.c:916
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  Början-av-rad-mönster använda\n"
 
-#: main.c:838
+#: main.c:918
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d startvillkor\n"
 
-#: main.c:841
+#: main.c:922
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr "  %d epsilontillstånd, %d dubbla epsilontillstånd\n"
 
-#: main.c:845
+#: main.c:926
 msgid "  no character classes\n"
 msgstr "  inga teckenklasser\n"
 
-#: main.c:848
+#: main.c:930
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
 msgstr "  %d/%d teckenklasser behövde %d/%d ord för lagring, %d återanvända\n"
 
-#: main.c:853
+#: main.c:935
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr "  %d par med tillstånd/nästa-tillstånd skapade\n"
 
-#: main.c:855
+#: main.c:938
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d unika/duplicerade övergångar\n"
 
-#: main.c:861
+#: main.c:943
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d tabellposter\n"
 
-#: main.c:869
+#: main.c:951
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  %d/%d basstandardposter skapade\n"
 
-#: main.c:872
+#: main.c:955
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  %d/%d (max %d) poster för nästa kontroll skapade\n"
 
-#: main.c:875
+#: main.c:959
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr "  %d/%d (max %d) mallposter för nästa kontroll skapade\n"
 
-#: main.c:879
+#: main.c:963
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d tomma tabellposter\n"
 
-#: main.c:881
+#: main.c:965
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  %d prototyper skapade\n"
 
-#: main.c:884
+#: main.c:968
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  %d mallar skapade, %d användningar\n"
 
-#: main.c:892
+#: main.c:976
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  %d/%d ekvivalensklasser skapade\n"
 
-#: main.c:900
+#: main.c:984
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  %d/%d metaekvivalensklasser skapade\n"
 
-#: main.c:905
+#: main.c:990
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr "  %d (%d sparade) hashkollisioner, %d DFA lika\n"
 
-#: main.c:907
+#: main.c:992
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr "  %d uppsättningar med omallokeringar krävdes\n"
 
-#: main.c:909
+#: main.c:994
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  %d tabellposter krävs totalt\n"
 
-#: main.c:966
+#: main.c:1056
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Internt fel. flexopts är felaktiga.\n"
 
-#: main.c:974
+#: main.c:1066
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Prova \"%s --help\" för mer information.\n"
 
-#: main.c:1033
+#: main.c:1123
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "okänd flagga till -C \"%c\""
 
-#: main.c:1116
+#: main.c:1207
 #, c-format
 msgid "unknown -R option '%c'"
 msgstr "okänd flagga till -R \"%c\""
 
-#: main.c:1153
+#: main.c:1251
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
 
-#: main.c:1395
+#: main.c:1514
 msgid "fatal parse error"
 msgstr "allvarligt fel vid tolkningen"
 
-#: main.c:1407
+#: main.c:1546
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr "kunde inte skapa filen %s med säkerhetskopieringsinformation"
 
-#: main.c:1429
+#: main.c:1567
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
 msgstr "flaggan -l för beteende som AT&T:s lex medför en väsentlig prestandaförlust\n"
 
-#: main.c:1431
+#: main.c:1570
 msgid " and may be the actual source of other reported performance penalties\n"
 msgstr " och kan vara den egentliga orsaken till andra rapporter om detta\n"
 
-#: main.c:1437
+#: main.c:1576
 #, c-format
 msgid "%%option yylineno entails a large performance penalty\n"
 msgstr "%%option yylineno medför en väsentlig prestandaförlust\n"
 
-#: main.c:1444
+#: main.c:1583
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "-I (interaktiv) medför en mindre prestandaförlust\n"
 
-#: main.c:1448
+#: main.c:1588
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "yymore() medför en mindre prestandaförlust\n"
 
-#: main.c:1453
+#: main.c:1594
 msgid "REJECT entails a large performance penalty\n"
 msgstr "REJECT medför en väsentlig prestandaförlust\n"
 
-#: main.c:1457
+#: main.c:1599
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr "Regler för varierbar efterföljande sammanhang medför en väsentlig prestandaförlust\n"
 
-#: main.c:1470
+#: main.c:1611
 msgid "REJECT cannot be used with -f or -F"
 msgstr "REJECT kan inte användas tillsammans med -f eller -F"
 
-#: main.c:1473
+#: main.c:1614
 #, c-format
-msgid "%option yylineno cannot be used with -f or -F"
-msgstr "%option yylineno kan inte användas tillsammans med -f eller -F"
+msgid "%option yylineno cannot be used with REJECT"
+msgstr "%option yylineno kan inte användas tillsammans med REJECT"
 
-#: main.c:1476
+#: main.c:1617
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr ""
 "regler för varierbar efterföljande kontext kan inte användas\n"
 "tillsammans med -f eller -F"
 
-#: main.c:1607
+#: main.c:1733
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
 msgstr "%option yyclass är bara meningsfull för C++-inläsare"
 
-#: main.c:1711
+#: main.c:1840
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Användning: %s [FLAGGOR] [FIL]...\n"
 
-#: main.c:1714
+#: main.c:1843
 #, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -473,7 +514,8 @@ msgid ""
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header=FILE       create a C header file in addition to the scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
+"      --tables-file[=FILE] write tables to FILE\n"
 "\n"
 "Scanner behavior:\n"
 "  -7, --7bit              generate 7-bit scanner\n"
@@ -532,7 +574,8 @@ msgstr ""
 "  -S, --skel=FIL          ange mallfil\n"
 "  -t, --stdout            skriv inläsare på standard ut istället för %s\n"
 "      --yyclass=NAMN      namn på C++-klass\n"
-"      --header=FIL        skapa en C-huvudfil förutom inläsaren\n"
+"      --header-file=FIL   skapa en C-huvudfil förutom inläsaren\n"
+"      --tables-file[=FIL] skriv tabeller till FIL\n"
 "\n"
 "Beteende för inläsare:\n"
 "  -7, --7bit              generera 7-bitarsinläsare\n"
@@ -562,47 +605,47 @@ msgstr ""
 "  -h, --help              visa detta hjälpmeddelande\n"
 "  -V, --version           visa versionsinformation för %s\n"
 
-#: misc.c:47
+#: misc.c:46
 #, c-format
 msgid "name \"%s\" ridiculously long"
 msgstr "namnet \"%s\" är löjligt långt"
 
-#: misc.c:101
+#: misc.c:100
 msgid "memory allocation failed in allocate_array()"
 msgstr "minnesallokeringen misslyckades i allocate_array()"
 
-#: misc.c:179
+#: misc.c:175
 #, c-format
 msgid "bad character '%s' detected in check_char()"
 msgstr "otillåtet tecken \"%s\" funnet i check_char()"
 
-#: misc.c:184
+#: misc.c:180
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "inläsaren kräver flaggan -8 för att kunna använda tecknet %s"
 
-#: misc.c:217
+#: misc.c:213
 msgid "dynamic memory failure in copy_string()"
 msgstr "dynamiskt minnesfel i copy_string()"
 
-#: misc.c:349
+#: misc.c:339
 #, c-format
 msgid "%s: fatal internal error, %s\n"
 msgstr "%s: allvarligt internt fel, %s\n"
 
-#: misc.c:775
+#: misc.c:772
 msgid "attempt to increase array size failed"
 msgstr "försök att öka arraystorlek misslyckades"
 
-#: misc.c:847
+#: misc.c:844
 msgid "bad line in skeleton file"
 msgstr "otillåten rad i mallfilen"
 
-#: misc.c:892
+#: misc.c:890
 msgid "memory allocation failed in yy_flex_xmalloc()"
 msgstr "minnesallokeringen misslyckades i yy_flex_xmalloc()"
 
-#: nfa.c:103
+#: nfa.c:104
 #, c-format
 msgid ""
 "\n"
@@ -622,146 +665,150 @@ msgstr "tillstånd %4d\t"
 msgid "********** end of dump\n"
 msgstr "********** slut på utskrift\n"
 
-#: nfa.c:176
+#: nfa.c:174
 msgid "empty machine in dupmachine()"
 msgstr "tom maskin i dupmachine()"
 
-#: nfa.c:228
+#: nfa.c:240
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
 msgstr "Regel för varierbar efterföljande kontext på rad %d\n"
 
-#: nfa.c:350
+#: nfa.c:353
 msgid "bad state type in mark_beginning_as_normal()"
 msgstr "otillåten tillståndstyp i mark_beginning_as_normal()"
 
-#: nfa.c:603
+#: nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "indatareglerna är för komplicerade (>= %d NFA-tillstånd)"
 
-#: nfa.c:682
+#: nfa.c:677
 msgid "found too many transitions in mkxtion()"
 msgstr "fann för många övergångar i mkxtion()"
 
-#: nfa.c:708
+#: nfa.c:703
 #, c-format
 msgid "too many rules (> %d)!"
 msgstr "för många regler (> %d)!"
 
-#: parse.y:174
+#: parse.y:175
 msgid "unknown error processing section 1"
 msgstr "okänt fel vid tolkning av avsnitt 1"
 
-#: parse.y:199 parse.y:362
+#: parse.y:200 parse.y:365
 msgid "bad start condition list"
 msgstr "felaktig lista med startvillkor"
 
-#: parse.y:326
+#: parse.y:329
 msgid "unrecognized rule"
 msgstr "okänd regel"
 
-#: parse.y:444 parse.y:457 parse.y:526
+#: parse.y:448 parse.y:461 parse.y:530
 msgid "trailing context used twice"
 msgstr "efterföljande kontext används två gånger"
 
-#: parse.y:562 parse.y:572 parse.y:645 parse.y:655
+#: parse.y:566 parse.y:576 parse.y:649 parse.y:659
 msgid "bad iteration values"
 msgstr "felaktiga iterationsvärden"
 
-#: parse.y:590 parse.y:608 parse.y:673 parse.y:691
+#: parse.y:594 parse.y:612 parse.y:677 parse.y:695
 msgid "iteration value must be positive"
 msgstr "iterationsvärde måste vara positivt"
 
-#: parse.y:785
+#: parse.y:798
 msgid "negative range in character class"
 msgstr "negativt intervall i teckenklass"
 
-#: scan.l:140
+#: scan.l:61 scan.l:162 scan.l:219 scan.l:352 scan.l:491 scan.l:541
+msgid "Input line too long\n"
+msgstr "För lång indatarad\n"
+
+#: scan.l:153
 #, no-c-format
 msgid "unrecognized '%' directive"
-msgstr "okänt %-direktiv"
+msgstr "okänt \"%\"-direktiv"
 
-#: scan.l:207
+#: scan.l:236
 msgid "incomplete name definition"
 msgstr "ofullständig namndefinition"
 
-#: scan.l:316
+#: scan.l:360
 #, c-format
 msgid "unrecognized %%option: %s"
 msgstr "okänd %%option: %s"
 
-#: scan.l:449 scan.l:549
+#: scan.l:501 scan.l:620
 msgid "bad character class"
 msgstr "otillåten teckenklass"
 
-#: scan.l:481
+#: scan.l:548
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "odefinierad definition {%s}"
 
-#: scan.l:517
+#: scan.l:588
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "otillåtet <startvillkor>: %s"
 
-#: scan.l:530
+#: scan.l:601
 msgid "missing quote"
 msgstr "citationstecken saknas"
 
-#: scan.l:570
+#: scan.l:641
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "otillåtet uttryck för teckenklass: %s"
 
-#: scan.l:592
+#: scan.l:663
 msgid "bad character inside {}'s"
 msgstr "otillåtet tecken inom {}"
 
-#: scan.l:598
+#: scan.l:669
 msgid "missing }"
 msgstr "} saknas"
 
-#: scan.l:671
+#: scan.l:742
 msgid "EOF encountered inside an action"
 msgstr "filslut påträffat inuti en handling"
 
-#: scan.l:691
+#: scan.l:762
 #, c-format
 msgid "bad character: %s"
 msgstr "otillåtet tecken: %s"
 
-#: scan.l:720
+#: scan.l:791
 #, c-format
 msgid "can't open %s"
 msgstr "kan inte öppna %s"
 
-#: scanopt.c:267
+#: scanopt.c:291
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
 msgstr "Användning: %s [FLAGGOR]...\n"
 
-#: scanopt.c:516
+#: scanopt.c:565
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
 msgstr "flaggan \"%s\" tar inget argument\n"
 
-#: scanopt.c:519
+#: scanopt.c:570
 #, c-format
 msgid "option `%s' requires an argument\n"
 msgstr "flaggan \"%s\" kräver ett argument\n"
 
-#: scanopt.c:522
+#: scanopt.c:574
 #, c-format
 msgid "option `%s' is ambiguous\n"
 msgstr "flaggan \"%s\" är tvetydig\n"
 
-#: scanopt.c:525
+#: scanopt.c:578
 #, c-format
 msgid "Unrecognized option `%s'\n"
 msgstr "Okänd flagga \"%s\"\n"
 
-#: scanopt.c:528
+#: scanopt.c:582
 #, c-format
 msgid "Unknown error=(%d)\n"
 msgstr "Okänt fel=(%d)\n"
@@ -770,27 +817,33 @@ msgstr "Okänt fel=(%d)\n"
 msgid "symbol table memory allocation failed"
 msgstr "minnesallokering för symboltabell misslyckades"
 
-#: sym.c:210
+#: sym.c:203
 msgid "name defined twice"
 msgstr "namnet definierat två gånger"
 
-#: sym.c:265
+#: sym.c:257
 #, c-format
 msgid "start condition %s declared twice"
 msgstr "startvillkoret %s deklarerat två gånger"
 
-#: yylex.c:58
+#: yylex.c:56
 msgid "premature EOF"
 msgstr "för tidigt filslut"
 
-#: yylex.c:207
+#: yylex.c:198
 msgid "End Marker\n"
 msgstr "Slutmarkering\n"
 
-#: yylex.c:212
+#: yylex.c:204
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr "*Något märkligt* - tecken: %d värde: %d\n"
+
+#~ msgid "Could not write %s"
+#~ msgstr "Kunde inte skriva %s"
+
+#~ msgid "-Cf/-CF and %option yylineno are incompatible"
+#~ msgstr "-Cf/-CF och %option yylineno kan inte användas tillsammans"
 
 #~ msgid ""
 #~ "For usage, try\n"
