@@ -1741,7 +1741,7 @@ the file looks like:
 .fi
 The first few lines tell us that there's a scanner state in
 which it can make a transition on an 'o' but not on any other
-character, and the in that state currently scanned text does not match
+character, and that in that state the currently scanned text does not match
 any rule.  The state occurs when trying to match the rules found
 at lines 2 and 3 in the input file.
 If the scanner is in that state and then reads
@@ -2055,7 +2055,7 @@ in
 .I lex
 one can use "[^]]" but with
 .I flex
-one must use "[^\]]".  The latter works with
+one must use "[^\\]]".  The latter works with
 .I lex,
 too.
 .IP -
@@ -2307,6 +2307,5 @@ Send comments to:
 
      vern@cs.cornell.edu
      decvax!cornell!vern
-     vern@LBL (bitnet)
 
 .fi
