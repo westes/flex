@@ -31,10 +31,6 @@
 
 *** add a test for the --posix option %%
 
-** explicitly describe the copyright state of the entries in
-   tests/. millaway has assigned the rights to the test suite to me
-   and so the test suite will be under the flex license.
-
 * generic coding
 
 ** pay attention to the POSIXLY_CORRECT variable (this is from the GNU
@@ -45,8 +41,14 @@
 
 ** create a uniform memory management API
 
+** pass reentrant state to the memory management functions for
+   consistancy's sake %%
+
 ** figure out whether we want to add the capability to have
   auto-generated backout rules
+
+** yylineno is global, not per-buffer
+
 
 * C++
 
