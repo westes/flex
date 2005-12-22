@@ -810,7 +810,7 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 ]])
 
 
-m4_ifdef( [[M4_YY_IN_HEADER]],
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 static int yy_init_globals M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 ]])
