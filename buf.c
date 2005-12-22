@@ -89,7 +89,7 @@ struct Buf *buf_linedir (struct Buf *buf, const char* filename, int lineno)
 {
     char   *t, *fmt = "#line %d \"%s\"\n";
     
-    t = flex_alloc (strlen (fmt) + strlen (filename) + (int)(1 + log(lineno>=0?lineno:-lineno)/log(10)) + 1);
+    t = flex_alloc (strlen (fmt) + strlen (filename) + (int)(1 + log10(lineno>=0?lineno:-lineno)) + 1);
     sprintf (t, fmt, lineno, filename);
     buf = buf_strappend (buf, t);
     flex_free (t);

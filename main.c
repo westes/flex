@@ -436,7 +436,7 @@ void check_options ()
         for (i = 1; i <= lastsc; i++) {
              char *str, *fmt = "#define %s %d\n";
 
-             str = (char*)flex_alloc(strlen(fmt) + strlen(scname[i]) + (int)(1 + log(i)/log(10)) + 2);
+             str = (char*)flex_alloc(strlen(fmt) + strlen(scname[i]) + (int)(1 + log10(i)) + 2);
              sprintf(str, fmt,      scname[i], i - 1);
              buf_strappend(&tmpbuf, str);
              free(str);
