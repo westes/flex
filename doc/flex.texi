@@ -8278,11 +8278,15 @@ code from unwanted @code{m4} processing.
 @itemize
 
 @item Do not use symbols that begin with, @samp{m4_}, such as, @samp{m4_define},
-or @samp{m4_include}, since those are reserved for @code{m4} macro names.
+or @samp{m4_include}, since those are reserved for @code{m4} macro names. If for 
+some reason you need m4_ as a prefix, use a preprocessor #define to get your
+symbol past m4 unmangled.
 
 @item Do not use the strings @samp{[[} or @samp{]]} anywhere in your code. The
-former is not valid in C, except within comments, but the latter is valid in
-code such as @code{x[y[z]]}.
+former is not valid in C, except within comments and strings, but the latter is valid in
+code such as @code{x[y[z]]}. The solution is simple. To get the literal string 
+@code{"]]"}, use @code{"]""]"}. To get the array notation @code{x[y[z]]},
+use @code{x[y[z] ]}.
 
 @end itemize
 
