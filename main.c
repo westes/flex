@@ -136,6 +136,7 @@ extern FILE* yyout;
 static char outfile_path[MAXLINE];
 static int outfile_created = 0;
 static char *skelname = NULL;
+static int _stdout_closed = 0; /* flag to prevent double-fclose() on stdout. */
 
 /* For debugging. The max number of filters to apply to skeleton. */
 static int preproc_level = 1000;
@@ -158,8 +159,10 @@ int flex_main (argc, argv)
 	 */
 	exit_status = setjmp (flex_main_jmp_buf);
 	if (exit_status){
-        fflush(stdout);
-        fclose(stdout);
+        if (stdout && !_stdout_closed && !ferror(stdout)){
+            fflush(stdout);
+            fclose(stdout);
+        }
         while (wait(0) > 0){
         }
 		return exit_status - 1;
@@ -683,7 +686,7 @@ void flexend (exit_status)
 			lerrsf (_("error writing output file %s"),
 				outfilename);
 
-		else if (fclose (stdout))
+		else if ((_stdout_closed = 1) && fclose (stdout))
 			lerrsf (_("error closing output file %s"),
 				outfilename);
 
