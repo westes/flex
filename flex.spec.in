@@ -7,6 +7,7 @@ Group: Development/Tools
 Source: ftp://ftp.ee.lbl.gov/%{name}-%{version}.tar.gz
 Prefix: %{_prefix}
 BuildRoot: %{_tmppath}/%{name}-%{version}
+Prereq: /sbin/install-info
 
 %description
 The flex program generates scanners.  Scanners are programs which can
@@ -29,9 +30,18 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
+rm -f ${RPM_BUILD_ROOT}/%{_infodir}/dir
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
+
+%post
+/sbin/install-info %{_infodir}/flex.info.gz %{_infodir}/dir
+
+%postun
+if [ "$1" = 0 ]; then
+    /sbin/install-info --del %{_infodir}/flex.info.gz %{_infodir}/dir
+fi
 
 %files
 %defattr(-,root,root)
@@ -40,3 +50,5 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/*
 %{_libdir}/*
 %{_includedir}/FlexLexer.h
+%{_infodir}/flex.info*
+%{_datadir}/locale/*
