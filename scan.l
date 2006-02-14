@@ -35,6 +35,7 @@
 #include "flexdef.h"
 #include "parse.h"
 extern bool tablesverify, tablesext;
+extern int trlcontxt; /* Set in  parse.y for each rule. */
 
 #define ACTION_ECHO add_action( yytext )
 #define ACTION_IFDEF(def, should_define) \
@@ -613,7 +614,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 				if ( lex_compat || nmdefptr[0] == '^' ||
 				     (len > 0 && nmdefptr[len - 1] == '$')
-                     || end_is_ws)
+                     || (end_is_ws && trlcontxt))
 					{ /* don't use ()'s after all */
 					PUT_BACK_STRING((char *) nmdefptr, 0);
 
