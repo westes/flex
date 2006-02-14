@@ -293,12 +293,23 @@ int filter_tee_header (struct filter *chain)
 		fputs ("m4_undefine( [[M4_YY_IN_HEADER]])m4_dnl\n", to_h);
 
 		fflush (to_h);
-		fclose (to_h);
+	    if (ferror (to_h))
+		    lerrsf (_("error writing output file %s"),
+                (char *) chain->extra);
+
+    	else if (fclose (to_h))
+	    	lerrsf (_("error closing output file %s"),
+                (char *) chain->extra);
 	}
 
 	fflush (to_c);
-	fclose (to_c);
+	if (ferror (to_c))
+		lerrsf (_("error writing output file %s"),
+			outfilename ? outfilename : "<stdout>");
 
+	else if (fclose (to_c))
+		lerrsf (_("error closing output file %s"),
+			outfilename ? outfilename : "<stdout>");
 
 	while (wait (0) > 0) ;
 
@@ -380,6 +391,13 @@ int filter_fix_linedirs (struct filter *chain)
 		lineno++;
 	}
 	fflush (stdout);
+	if (ferror (stdout))
+		lerrsf (_("error writing output file %s"),
+			outfilename ? outfilename : "<stdout>");
+
+	else if (fclose (stdout))
+		lerrsf (_("error closing output file %s"),
+			outfilename ? outfilename : "<stdout>");
 
 	return 0;
 }

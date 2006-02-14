@@ -148,7 +148,7 @@ int flex_main (argc, argv)
      int argc;
      char   *argv[];
 {
-	int     i, exit_status;
+	int     i, exit_status, child_status;
 
 	/* Set a longjmp target. Yes, I know it's a hack, but it gets worse: The
 	 * return value of setjmp, if non-zero, is the desired exit code PLUS ONE.
@@ -163,9 +163,17 @@ int flex_main (argc, argv)
             fflush(stdout);
             fclose(stdout);
         }
-        while (wait(0) > 0){
+        while (wait(&child_status) > 0){
+            if (!WIFEXITED (child_status)
+                || WEXITSTATUS (child_status) != 0){
+                /* report an error of a child
+                 */
+                if( exit_status <= 1 )
+                    exit_status = 2;
+
+            }
         }
-		return exit_status - 1;
+        return exit_status - 1;
     }
 
 	flexinit (argc, argv);
@@ -1601,7 +1609,6 @@ void readin ()
 			outn ("#endif");
 			outn ("#else");
 			outn (yy_stdinit);
-			outn ("#endif");
 			outn ("#endif");
 		}
 

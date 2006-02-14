@@ -21,8 +21,7 @@
 /*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
 /*  PURPOSE. */
 
-
-int     yywrap ()
+int     yywrap (void)
 {
 	return 1;
 }
