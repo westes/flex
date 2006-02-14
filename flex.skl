@@ -3278,6 +3278,8 @@ int main ()
 ]])
 
 %ok-for-header
+m4_ifdef( [[M4_YY_IN_HEADER]],
+[[
 #undef YY_NEW_FILE
 #undef YY_FLUSH_BUFFER
 #undef yy_set_bol
@@ -3289,3 +3291,4 @@ int main ()
 #undef YY_DECL_IS_OURS
 #undef YY_DECL
 #endif
+]])
