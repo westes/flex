@@ -83,6 +83,7 @@ AC_CHECK_HEADERS(unistd.h stdbool.h  netinet/in.h limits.h)
 AC_CHECK_HEADERS( sys/wait.h sys/params.h)
 AC_CHECK_HEADERS(cunistd)
 AC_CHECK_HEADERS(locale.h libintl.h)
+AC_CHECK_HEADERS(regex.h)
 
 dnl checks for types
 
