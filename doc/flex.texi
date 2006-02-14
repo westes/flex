@@ -3869,7 +3869,7 @@ Here is an example of a simple C++ scanner:
 If you want to create multiple (different) lexer classes, you use the
 @samp{-P} flag (or the @code{prefix=} option) to rename each
 @code{yyFlexLexer} to some other @samp{xxFlexLexer}.  You then can
-include @file{FlexLexer.h>} in your other sources once per lexer class,
+include @file{<FlexLexer.h>} in your other sources once per lexer class,
 first renaming @code{yyFlexLexer} as follows:
 
 @cindex include files, with C++
@@ -3879,11 +3879,11 @@ first renaming @code{yyFlexLexer} as follows:
 @verbatim
     #undef yyFlexLexer
     #define yyFlexLexer xxFlexLexer
-    #include <FflexLexer.h>
+    #include <FlexLexer.h>
 
     #undef yyFlexLexer
     #define yyFlexLexer zzFlexLexer
-    #include FlexLexer.h>
+    #include <FlexLexer.h>
 @end verbatim
 @end example
 
