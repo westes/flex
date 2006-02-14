@@ -209,9 +209,11 @@ int main (argc, argv)
      char   *argv[];
 {
 #if ENABLE_NLS
+#if HAVE_LOCALE_H
 	setlocale (LC_MESSAGES, "");
 	textdomain (PACKAGE);
 	bindtextdomain (PACKAGE, LOCALEDIR);
+#endif
 #endif
 
 	return flex_main (argc, argv);

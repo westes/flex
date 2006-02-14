@@ -88,7 +88,6 @@ static void dump_mem(FILE* fp){
 void * yyalloc(yy_size_t n)
 {
     void * p;
-    struct memsz * old;
     int i;
 
     total_mem += n;

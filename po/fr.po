@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.31\n"
 "Report-Msgid-Bugs-To: lex-help@lists.sourceforge.net\n"
-"POT-Creation-Date: 2004-05-03 10:42-0400\n"
+"POT-Creation-Date: 2006-02-14 12:28-0500\n"
 "PO-Revision-Date: 2004-05-10 08:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -28,14 +28,17 @@ msgid "dangerous trailing context"
 msgstr "le contexte traîné est dangereux"
 
 #: dfa.c:166
+#, c-format
 msgid " associated rule line numbers:"
 msgstr " numéros de ligne associés à la règle :"
 
 #: dfa.c:202
+#, c-format
 msgid " out-transitions: "
 msgstr " transitions de sortie : "
 
 #: dfa.c:210
+#, c-format
 msgid ""
 "\n"
 " jam-transitions: EOF "
@@ -160,300 +163,310 @@ msgstr "Ne peut écrire eoltbl"
 msgid "Could not write yynultrans_tbl"
 msgstr "ne peut écrire yynultrnas_tbl"
 
-#: main.c:176
+#: main.c:187
 msgid "rule cannot be matched"
 msgstr "la règle ne peut être pairée"
 
-#: main.c:181
+#: main.c:192
 msgid "-s option given but default rule can be matched"
 msgstr "l'option -s est donnée mais la règle par défaut peut être reconnue"
 
-#: main.c:218
+#: main.c:229
 msgid "Can't use -+ with -l option"
 msgstr "L'option -+ ne peut être combinée à -l"
 
-#: main.c:221
+#: main.c:232
 msgid "Can't use -f or -F with -l option"
 msgstr "Les options -f et -F ne peuvent être combinées à -l"
 
-#: main.c:225
+#: main.c:236
 msgid "Can't use --reentrant or --bison-bridge with -l option"
 msgstr ""
 "Les options  --reentrant ou --bison-bridge ne peuvent être combinées à "
 "l'option -l"
 
-#: main.c:262
+#: main.c:273
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "-Cf/-CF et -Cm ne peuvent être spécifiés ensemble"
 
-#: main.c:265
+#: main.c:276
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "-Cf/-CF et -I sont incompatibles"
 
-#: main.c:269
+#: main.c:280
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr ""
 "l'option -Cf/-CF n'est pas compatible avec le mode de compatibilité « lex »"
 
-#: main.c:274
+#: main.c:285
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "-Cf et -CF sont mutuellement exclusifs"
 
-#: main.c:278
+#: main.c:289
 msgid "Can't use -+ with -CF option"
 msgstr "L'option -+ ne peut être combinée à -CF"
 
-#: main.c:281
+#: main.c:292
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "%array incompatible avec l'option -+"
 
-#: main.c:286
+#: main.c:297
 msgid "Options -+ and --reentrant are mutually exclusive."
 msgstr "Les options +- et --reentrant sont mutuellement exclusives."
 
-#: main.c:289
+#: main.c:300
 msgid "bison bridge not supported for the C++ scanner."
 msgstr "bridge bison n'est pas supporté pour l'analyseur C++"
 
-#: main.c:341 main.c:389
+#: main.c:352 main.c:400
 #, c-format
 msgid "could not create %s"
 msgstr "impossible de créer %s"
 
-#: main.c:402
+#: main.c:413
 msgid "could not write tables header"
 msgstr "ne peut écrire les tables d'en-tête"
 
-#: main.c:406
+#: main.c:417
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "impossible d'ouvrir le fichier canevas %s"
 
-#: main.c:487
+#: main.c:498
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "erreur lors de la lecture du fichier canevas %s"
 
-#: main.c:491
+#: main.c:502
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "erreur lors de la fermeture du fichier canevas %s"
 
-#: main.c:675
+#: main.c:686
 #, c-format
 msgid "error creating header file %s"
 msgstr "erreur de création du fichier d'en-tête %s"
 
-#: main.c:683
+#: main.c:694
 #, c-format
 msgid "error writing output file %s"
 msgstr "erreur lors de l'écriture du fichier de sortie %s"
 
-#: main.c:687
+#: main.c:698
 #, c-format
 msgid "error closing output file %s"
 msgstr "erreur lors de la fermeture du fichier de sortie %s"
 
-#: main.c:691
+#: main.c:702
 #, c-format
 msgid "error deleting output file %s"
 msgstr "erreur lors de l'effacement du fichier de sortie %s"
 
-#: main.c:698
+#: main.c:709
+#, c-format
 msgid "No backing up.\n"
 msgstr "Pas de retour-arrière.\n"
 
-#: main.c:702
+#: main.c:713
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "%d états avec retour arrière (non-acceptants).\n"
 
-#: main.c:706
+#: main.c:717
+#, c-format
 msgid "Compressed tables always back up.\n"
 msgstr "Les tables comprimées font toujours des retours-arrière.\n"
 
-#: main.c:709
+#: main.c:720
 #, c-format
 msgid "error writing backup file %s"
 msgstr "erreur lors de l'écriture du fichier de sauvegarde %s"
 
-#: main.c:713
+#: main.c:724
 #, c-format
 msgid "error closing backup file %s"
 msgstr "erreur lors de la fermeture du fichier de sauvegarde %s"
 
-#: main.c:718
+#: main.c:729
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr "« %s » version %s, statistiques d'utilisation :\n"
 
-#: main.c:721
+#: main.c:732
+#, c-format
 msgid "  scanner options: -"
 msgstr "  options de l'analyseur lexical : -"
 
-#: main.c:800
+#: main.c:811
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d états NFA\n"
 
-#: main.c:802
+#: main.c:813
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d états AFD (%d mots)\n"
 
-#: main.c:804
+#: main.c:815
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d règles\n"
 
-#: main.c:809
+#: main.c:820
+#, c-format
 msgid "  No backing up\n"
 msgstr "  Pas de retour arrière\n"
 
-#: main.c:813
+#: main.c:824
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr "  %d états avec retour arrière (si non-acceptants)\n"
 
-#: main.c:818
+#: main.c:829
+#, c-format
 msgid "  Compressed tables always back-up\n"
 msgstr "  Les tables comprimées font toujours des retours arrière\n"
 
-#: main.c:822
+#: main.c:833
+#, c-format
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  Modèles utilisés en début de ligne\n"
 
-#: main.c:824
+#: main.c:835
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d conditions de départ\n"
 
-#: main.c:828
+#: main.c:839
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr "  %d états epsilon, %d états double epsilon\n"
 
-#: main.c:832
+#: main.c:843
+#, c-format
 msgid "  no character classes\n"
 msgstr "  pas de classes de caractères\n"
 
-#: main.c:836
+#: main.c:847
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
 msgstr ""
 "  %d/%d classes de caractères requises %d/%d mots-mémoire, %d recyclés\n"
 
-#: main.c:841
+#: main.c:852
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr "  %d paires state/nextstate produites\n"
 
-#: main.c:844
+#: main.c:855
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d transitions uniques/dupliquées\n"
 
-#: main.c:849
+#: main.c:860
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d entrées dans la table\n"
 
-#: main.c:857
+#: main.c:868
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  %d/%d entrées base-def produites\n"
 
-#: main.c:861
+#: main.c:872
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  %d/%d (max %d) entrées nxt-chk produites\n"
 
-#: main.c:865
+#: main.c:876
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr "  %d/%d (max %d) entrées de modèle nxt-chk produites\n"
 
-#: main.c:869
+#: main.c:880
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d entrées vides dans la table\n"
 
-#: main.c:871
+#: main.c:882
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  %d prototypes produits\n"
 
-#: main.c:874
+#: main.c:885
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  %d modèles produits, %d usages\n"
 
-#: main.c:882
+#: main.c:893
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  %d/%d classes d'équivalence produites\n"
 
-#: main.c:890
+#: main.c:901
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  %d/%d classes de méta-équivalence produites\n"
 
-#: main.c:896
+#: main.c:907
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr "  %d (%d sauvés) collisions durant dispersion, %d AFD égaux\n"
 
-#: main.c:898
+#: main.c:909
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr "  %d ensembles de réallocations requis\n"
 
-#: main.c:900
+#: main.c:911
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  %d entrées requises dans la table, au total\n"
 
-#: main.c:975
+#: main.c:986
+#, c-format
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Erreur interne. Les options « flexopts » sont mal composées.\n"
 
-#: main.c:985
+#: main.c:996
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Essayer « %s --help » pour plus d'informations.\n"
 
-#: main.c:1042
+#: main.c:1053
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "l'option -C « %c » inconnue"
 
-#: main.c:1171
+#: main.c:1182
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
 
-#: main.c:1446
+#: main.c:1457
 msgid "fatal parse error"
 msgstr "erreur de lecture fatale"
 
-#: main.c:1478
+#: main.c:1489
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr ""
 "impossible de créer le fichier d'information sur les retours-arrière %s"
 
-#: main.c:1499
+#: main.c:1510
+#, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
 msgstr ""
 "L'option -l de compatibilité avec le « lex » d'AT&T entraîne une importante\n"
 "perte de performance\n"
 
-#: main.c:1502
+#: main.c:1513
+#, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
 msgstr " et peuvent être cause d'autres vices de performance observés\n"
 
-#: main.c:1508
+#: main.c:1519
 #, c-format
 msgid ""
 "%%option yylineno entails a performance penalty ONLY on rules that can match "
@@ -462,50 +475,54 @@ msgstr ""
 "%%option yylineno entraîne une importante perte de performance SEULEMENT\n"
 "sur les règles pouvant concorder avec le caractère de retour de chartiot\n"
 
-#: main.c:1515
+#: main.c:1526
+#, c-format
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "l'option -I (interactif) entraîne une faible perte de performance\n"
 
-#: main.c:1520
+#: main.c:1531
+#, c-format
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "yymore() entraîne une faible baisse de performance\n"
 
-#: main.c:1526
+#: main.c:1537
+#, c-format
 msgid "REJECT entails a large performance penalty\n"
 msgstr "REJECT entraîne une importante baisse de performance\n"
 
-#: main.c:1531
+#: main.c:1542
+#, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr ""
 "Les règles de contexte traîné variable entraînent une importante baisse de\n"
 "performance\n"
 
-#: main.c:1543
+#: main.c:1554
 msgid "REJECT cannot be used with -f or -F"
 msgstr "REJECT ne peut pas être utilisé avec -f ou -F"
 
-#: main.c:1546
+#: main.c:1557
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr "%option yylineno ne peut être utilisé avec REJECT"
 
-#: main.c:1549
+#: main.c:1560
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr ""
 "les règles de contexte traîné variable ne peuvent pas être utilisées avec\n"
 "-f ou -F"
 
-#: main.c:1665
+#: main.c:1675
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
 msgstr "%option yyclass n'a de sens qu'avec les analyseurs C++"
 
-#: main.c:1772
+#: main.c:1782
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Usage: %s [OPTIONS] [fichier]...\n"
 
-#: main.c:1775
+#: main.c:1785
 #, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -700,6 +717,7 @@ msgid "state # %4d\t"
 msgstr "état n° %4d\t"
 
 #: nfa.c:130
+#, c-format
 msgid "********** end of dump\n"
 msgstr "********** fin du vidage\n"
 
@@ -885,6 +903,7 @@ msgid "premature EOF"
 msgstr "fin de fichier inattendue"
 
 #: yylex.c:198
+#, c-format
 msgid "End Marker\n"
 msgstr "Marqueur de Fin\n"
 

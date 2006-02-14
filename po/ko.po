@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.2\n"
 "Report-Msgid-Bugs-To: lex-help@lists.sourceforge.net\n"
-"POT-Creation-Date: 2004-05-03 10:42-0400\n"
+"POT-Creation-Date: 2006-02-14 12:28-0500\n"
 "PO-Revision-Date: 1997-02-05 20:30\n"
 "Last-Translator: Choi Jun Ho <junker@jazz.snu.ac.kr>\n"
 "Language-Team: Korean <ko@li.org>\n"
@@ -24,14 +24,17 @@ msgid "dangerous trailing context"
 msgstr "위험한 추적 문맥"
 
 #: dfa.c:166
+#, c-format
 msgid " associated rule line numbers:"
 msgstr " 관련 규칙 행번호:"
 
 #: dfa.c:202
+#, c-format
 msgid " out-transitions: "
 msgstr " 나가는 쪽 전이: "
 
 #: dfa.c:210
+#, c-format
 msgid ""
 "\n"
 " jam-transitions: EOF "
@@ -161,342 +164,358 @@ msgstr "%s를 만들 수 없습니다"
 msgid "Could not write yynultrans_tbl"
 msgstr ""
 
-#: main.c:176
+#: main.c:187
 msgid "rule cannot be matched"
 msgstr "맞는 규칙을 찾을 수 없습니다"
 
-#: main.c:181
+#: main.c:192
 msgid "-s option given but default rule can be matched"
 msgstr "-s 옵션이 주어졌지만 기본 규칙이 적용될 수 있습니다"
 
-#: main.c:218
+#: main.c:229
 msgid "Can't use -+ with -l option"
 msgstr "-l옵션에는 -+옵션을 같이 쓸 수 없습니다"
 
-#: main.c:221
+#: main.c:232
 msgid "Can't use -f or -F with -l option"
 msgstr "-l옵션에 -f나 -F옵션을 쓸 수 없습니다"
 
-#: main.c:225
+#: main.c:236
 #, fuzzy
 msgid "Can't use --reentrant or --bison-bridge with -l option"
 msgstr "-l옵션에 -f나 -F옵션을 쓸 수 없습니다"
 
-#: main.c:262
+#: main.c:273
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "-Cf/-CF는 -Cm와 같이 쓰면 의미가 없습니다"
 
-#: main.c:265
+#: main.c:276
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "-Cf/-CF와 -I는 같이 쓸 수 없습니다"
 
-#: main.c:269
+#: main.c:280
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr "-Cf/-CF 는 lex호환 모드와는 같이 쓸 수 없습니다"
 
-#: main.c:274
+#: main.c:285
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "-Cf와 -CF는 같이 쓸 수 없습니다"
 
-#: main.c:278
+#: main.c:289
 msgid "Can't use -+ with -CF option"
 msgstr "-CF옵션에 -+옵션을 같이 쓸 수 없습니다"
 
-#: main.c:281
+#: main.c:292
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "%array는 -+옵션과 같이 쓸 수 없습니다"
 
-#: main.c:286
+#: main.c:297
 #, fuzzy
 msgid "Options -+ and --reentrant are mutually exclusive."
 msgstr "-Cf와 -CF는 같이 쓸 수 없습니다"
 
-#: main.c:289
+#: main.c:300
 msgid "bison bridge not supported for the C++ scanner."
 msgstr ""
 
-#: main.c:341 main.c:389
+#: main.c:352 main.c:400
 #, c-format
 msgid "could not create %s"
 msgstr "%s를 만들 수 없습니다"
 
-#: main.c:402
+#: main.c:413
 #, fuzzy
 msgid "could not write tables header"
 msgstr "%s를 만들 수 없습니다"
 
-#: main.c:406
+#: main.c:417
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "스켈레톤 파일 %s를 열 수 없습니다"
 
-#: main.c:487
+#: main.c:498
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "스켈레톤 파일 %s를 읽는 도중 오류가 발생했습니다"
 
-#: main.c:491
+#: main.c:502
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "스켈레톤 파일 %s를 닫는데 오류가 발생했습니다"
 
-#: main.c:675
+#: main.c:686
 #, fuzzy, c-format
 msgid "error creating header file %s"
 msgstr "백업 파일 %s를 쓰는데 오류가 발생했습니다"
 
-#: main.c:683
+#: main.c:694
 #, c-format
 msgid "error writing output file %s"
 msgstr "출력파일 %s를 쓰는 데 오류가 발생했습니다"
 
-#: main.c:687
+#: main.c:698
 #, c-format
 msgid "error closing output file %s"
 msgstr "출력파일 %s를 닫는데 오류가 발생했습니다"
 
-#: main.c:691
+#: main.c:702
 #, c-format
 msgid "error deleting output file %s"
 msgstr "출력파일 %s를 지우는 데 오류가 발생했습니다"
 
-#: main.c:698
+#: main.c:709
+#, c-format
 msgid "No backing up.\n"
 msgstr "되돌림이 없습니다.\n"
 
-#: main.c:702
+#: main.c:713
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "%d개의 되돌림(받아들이지 않는) 상태.\n"
 
-#: main.c:706
+#: main.c:717
+#, c-format
 msgid "Compressed tables always back up.\n"
 msgstr " 압축된 테이블은 항상 백업합니다.\n"
 
-#: main.c:709
+#: main.c:720
 #, c-format
 msgid "error writing backup file %s"
 msgstr "백업 파일 %s를 쓰는데 오류가 발생했습니다"
 
-#: main.c:713
+#: main.c:724
 #, c-format
 msgid "error closing backup file %s"
 msgstr "백업 파일 %s를 닫는데 오류가 발생했습니다"
 
-#: main.c:718
+#: main.c:729
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr "%s 버전 %s 사용 통계:\n"
 
-#: main.c:721
+#: main.c:732
+#, c-format
 msgid "  scanner options: -"
 msgstr "  스캐너 옵션: -"
 
-#: main.c:800
+#: main.c:811
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d개의 NFA 상태\n"
 
-#: main.c:802
+#: main.c:813
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d개의 DFA 상태 (%d 단어)\n"
 
-#: main.c:804
+#: main.c:815
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d개의 규칙\n"
 
-#: main.c:809
+#: main.c:820
+#, c-format
 msgid "  No backing up\n"
 msgstr "  되돌림이 없습니다\n"
 
-#: main.c:813
+#: main.c:824
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr "  %d개의 되돌림(받아들이지 않는) 상태\n"
 
-#: main.c:818
+#: main.c:829
+#, c-format
 msgid "  Compressed tables always back-up\n"
 msgstr " 압축된 테이블은 항상 백업합니다\n"
 
-#: main.c:822
+#: main.c:833
+#, c-format
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  행 시작(beginning-of-line) 유형을 사용하였습니다\n"
 
-#: main.c:824
+#: main.c:835
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d개의 시작조건\n"
 
-#: main.c:828
+#: main.c:839
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr "  %d개의 엡실론 상태, %d개의 이중 엡실론 상태\n"
 
-#: main.c:832
+#: main.c:843
+#, c-format
 msgid "  no character classes\n"
 msgstr "  문자류가 없습니다\n"
 
-#: main.c:836
+#: main.c:847
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-msgstr "  %d/%d 문자 집합에 %d/%d개의 저장용 문자가 필요했고, %d개는 재사용되었습니다.\n"
+msgstr ""
+"  %d/%d 문자 집합에 %d/%d개의 저장용 문자가 필요했고, %d개는 재사용되었습니"
+"다.\n"
 
-#: main.c:841
+#: main.c:852
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr "  %d개의 상태/다음 상태 쌍이 만들어졌습니다\n"
 
-#: main.c:844
+#: main.c:855
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d개의 유일한/중복되는 전이\n"
 
-#: main.c:849
+#: main.c:860
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d개의 테이블 엔트리\n"
 
-#: main.c:857
+#: main.c:868
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  %d/%d base-def 엔트리가 만들어졌습니다\n"
 
-#: main.c:861
+#: main.c:872
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  %d/%d (최대 %d) nxt-chk 엔트리가 만들어졌습니다\n"
 
-#: main.c:865
+#: main.c:876
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr "  %d/%d (최대 %d) 템플리트 nxt-chk 엔트리가 만들어졌습니다\n"
 
-#: main.c:869
+#: main.c:880
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d개의 빈 테이블 엔트리\n"
 
-#: main.c:871
+#: main.c:882
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  %d개의 원형이 만들어졌습니다\n"
 
-#: main.c:874
+#: main.c:885
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  %d개의 템플리트가 만들어지고, %d개를 씁니다\n"
 
-#: main.c:882
+#: main.c:893
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  %d/%d개의 동치류가 만들어졌습니다\n"
 
-#: main.c:890
+#: main.c:901
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  %d/%d 메타 동치류가 만들어졌습니다\n"
 
-#: main.c:896
+#: main.c:907
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr "  %d(%d 저장됨)개의 해싱 충돌로 %d개의 DFA가 같게 처리됩니다\n"
 
-#: main.c:898
+#: main.c:909
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr "  %d개의 재할당 집합이 필요합니다\n"
 
-#: main.c:900
+#: main.c:911
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  총 %d개의 테이블 엔트리가 필요합니다\n"
 
-#: main.c:975
+#: main.c:986
+#, c-format
 msgid "Internal error. flexopts are malformed.\n"
 msgstr ""
 
-#: main.c:985
+#: main.c:996
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr ""
 
-#: main.c:1042
+#: main.c:1053
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "알 수 없는 -C 옵션 '%c'"
 
-#: main.c:1171
+#: main.c:1182
 #, fuzzy, c-format
 msgid "%s %s\n"
 msgstr "%s 버전 %s\n"
 
-#: main.c:1446
+#: main.c:1457
 msgid "fatal parse error"
 msgstr "치명적인 파싱 에러"
 
-#: main.c:1478
+#: main.c:1489
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr "되돌림 정보 파일 %s를 만들 수 없었습니다"
 
-#: main.c:1499
+#: main.c:1510
+#, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
 msgstr "-l AT&T lex 호환 옵션은 큰 성능 저하를 일으킵니다\n"
 
-#: main.c:1502
+#: main.c:1513
+#, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
 msgstr " 그리고 아마도 다른 보고된 성능 저하의 실제 원인일 것입니다\n"
 
-#: main.c:1508
+#: main.c:1519
 #, fuzzy, c-format
 msgid ""
 "%%option yylineno entails a performance penalty ONLY on rules that can match "
 "newline characters\n"
 msgstr "%%option yylineno는 큰 성능저하를 일으킵니다\n"
 
-#: main.c:1515
+#: main.c:1526
+#, c-format
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "-I (대화형) 은 소규모의 성능저하를 일으킵니다\n"
 
-#: main.c:1520
+#: main.c:1531
+#, c-format
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "yymore()는 소규모의 성능저하를 일으킵니다\n"
 
-#: main.c:1526
+#: main.c:1537
+#, c-format
 msgid "REJECT entails a large performance penalty\n"
 msgstr "REJECT는 큰 성능저하를 일으킵니다\n"
 
-#: main.c:1531
+#: main.c:1542
+#, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr "가변 추적 문맥 규칙은 큰 성능저하를 일으킵니다\n"
 
-#: main.c:1543
+#: main.c:1554
 msgid "REJECT cannot be used with -f or -F"
 msgstr "REJECT는 -f나 -F옵션과 같이 쓸 수 없습니다"
 
-#: main.c:1546
+#: main.c:1557
 #, fuzzy, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr "%option yylineno은 -f나 -F옵션과 같이 쓸 수 없습니다"
 
-#: main.c:1549
+#: main.c:1560
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr "가변 추적 문맥 규칙은 -f나 -F옵션과 같이 쓸 수 없습니다"
 
-#: main.c:1665
+#: main.c:1675
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
 msgstr "%option yyclass는 C++스캐너에게만 의미가 있습니다"
 
-#: main.c:1772
+#: main.c:1782
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr ""
 
-#: main.c:1775
+#: main.c:1785
 #, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -619,6 +638,7 @@ msgid "state # %4d\t"
 msgstr "상태 번호 %4d\t"
 
 #: nfa.c:130
+#, c-format
 msgid "********** end of dump\n"
 msgstr "********** 출력 끝\n"
 
@@ -806,6 +826,7 @@ msgid "premature EOF"
 msgstr "갑작스런 EOF"
 
 #: yylex.c:198
+#, c-format
 msgid "End Marker\n"
 msgstr "종료 표시\n"
 
@@ -838,7 +859,8 @@ msgstr "*무언가 이상합니다* - tok: %d val: %d\n"
 
 #~ msgid ""
 #~ "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"
-#~ msgstr "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -o출력파일 -P접두사 -S스켈레톤]\n"
+#~ msgstr ""
+#~ "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -o출력파일 -P접두사 -S스켈레톤]\n"
 
 #~ msgid "\t[--help --version] [file ...]\n"
 #~ msgstr "\t[--help --version] [파일 ...]\n"
@@ -931,7 +953,8 @@ msgstr "*무언가 이상합니다* - tok: %d val: %d\n"
 #~ msgstr "\t\t-Cm  메타 동치류를 만듭니다\n"
 
 #~ msgid "\t\t-Cr  use read() instead of stdio for scanner input\n"
-#~ msgstr "\t\t-Cr  스캐너 입력을 stdio라이브러리 대신 read()시스템 콜을 사용합니다\n"
+#~ msgstr ""
+#~ "\t\t-Cr  스캐너 입력을 stdio라이브러리 대신 read()시스템 콜을 사용합니다\n"
 
 #~ msgid "\t-o  specify output filename\n"
 #~ msgstr "\t-o  출력 파일이름을 지정합니다\n"
