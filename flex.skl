@@ -168,6 +168,7 @@ m4_ifdef( [[M4_YY_TABLES_EXTERNAL]],
 %endif
 
 %if-tables-serialization
+#include <sys/types.h>
 #include <netinet/in.h>
 %endif
 /* end standard C headers. */
@@ -2253,11 +2254,11 @@ m4_ifdef( [[M4_YY_NO_SCAN_STRING]],,
  * @note If you want to scan bytes that may contain NUL values, then use
  *       yy_scan_bytes() instead.
  */
-YY_BUFFER_STATE yy_scan_string YYFARGS1( yyconst char *,str)
+YY_BUFFER_STATE yy_scan_string YYFARGS1( yyconst char *, yystr)
 {
     m4_dnl M4_YY_DECL_GUTS_VAR();
 
-	return yy_scan_bytes( str, strlen(str) M4_YY_CALL_LAST_ARG);
+	return yy_scan_bytes( yystr, strlen(yystr) M4_YY_CALL_LAST_ARG);
 }
 %endif
 ]])
@@ -2273,7 +2274,7 @@ m4_ifdef( [[M4_YY_NO_SCAN_BYTES]],,
  * M4_YY_DOC_PARAM
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,bytes, int ,len)
+YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,yybytes, int ,_yybytes_len)
 {
 	YY_BUFFER_STATE b;
 	char *buf;
@@ -2282,15 +2283,15 @@ YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,bytes, int ,len)
     m4_dnl M4_YY_DECL_GUTS_VAR();
 
 	/* Get memory for full buffer, including space for trailing EOB's. */
-	n = len + 2;
+	n = _yybytes_len + 2;
 	buf = (char *) yyalloc( n M4_YY_CALL_LAST_ARG );
 	if ( ! buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
 
-	for ( i = 0; i < len; ++i )
-		buf[i] = bytes[i];
+	for ( i = 0; i < _yybytes_len; ++i )
+		buf[i] = yybytes[i];
 
-	buf[len] = buf[len+1] = YY_END_OF_BUFFER_CHAR;
+	buf[_yybytes_len] = buf[_yybytes_len+1] = YY_END_OF_BUFFER_CHAR;
 
 	b = yy_scan_buffer( buf, n M4_YY_CALL_LAST_ARG);
 	if ( ! b )
