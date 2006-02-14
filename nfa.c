@@ -539,7 +539,7 @@ int     mkposcl (state)
  *          number of times to "ub" number of times
  *
  * note
- *   if "ub" is INFINITY then "new" matches "lb" or more occurrences of "mach"
+ *   if "ub" is INFINITE_REPEAT then "new" matches "lb" or more occurrences of "mach"
  */
 
 int     mkrep (mach, lb, ub)
@@ -549,7 +549,7 @@ int     mkrep (mach, lb, ub)
 
 	base_mach = copysingl (mach, lb - 1);
 
-	if (ub == INFINITY) {
+	if (ub == INFINITE_REPEAT) {
 		copy = dupmachine (mach);
 		mach = link_machines (mach,
 				      link_machines (base_mach,

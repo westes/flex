@@ -604,7 +604,7 @@ series		:  series singleton
 				}
 
 			else
-				$$ = mkrep( $1, $3, INFINITY );
+				$$ = mkrep( $1, $3, INFINITE_REPEAT );
 			}
 
 		|  series BEGIN_REPEAT_POSIX NUMBER END_REPEAT_POSIX
@@ -687,7 +687,7 @@ singleton	:  singleton '*'
 				}
 
 			else
-				$$ = mkrep( $1, $3, INFINITY );
+				$$ = mkrep( $1, $3, INFINITE_REPEAT );
 			}
 
 		|  singleton BEGIN_REPEAT_FLEX NUMBER END_REPEAT_FLEX
