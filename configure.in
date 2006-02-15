@@ -97,6 +97,7 @@ AC_CONFIG_FILES(
 flex.spec
 Makefile
 doc/Makefile
+website/Makefile
 examples/Makefile
 examples/fastwc/Makefile
 examples/manual/Makefile

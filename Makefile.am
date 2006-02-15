@@ -118,7 +118,6 @@ EXTRA_DIST = \
 	ONEWS \
 	README \
 	README.cvs-snapshot \
-	RoadMap \
 	THANKS \
 	TODO \
 	autogen.sh \
@@ -138,7 +137,8 @@ SUBDIRS = \
 	examples \
 	po \
 	tools \
-	tests
+	tests \
+	website
 
 localedir = $(datadir)/locale
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I@includedir@ -I$(top_srcdir)/intl
