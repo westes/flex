@@ -82,7 +82,10 @@ m4preproc_define(`M4_GEN_PREFIX',
 
 %if-c++-only
     /* The c++ scanner is a mess. The FlexLexer.h header file relies on the
-     * following macro.
+     * following macro. This is required in order to pass the c++-multiple-scanners
+     * test in the regression suite. We get reports that it breaks inheritance.
+     * We will address this in a future release of flex, or omit the C++ scanner
+     * altogether.
      */
     #define yyFlexLexer M4_YY_PREFIX[[FlexLexer]]
 %endif

@@ -1,0 +1,89 @@
+This is a list of bugs still in the queue at lex.sf.net at the time we closed
+out the project.
+
+-------------------------------------------------------------
+
+Some strict compilers warn about a few internal flex variables signedness. They
+are bogus warnings and can be ignored, but people send in reports nonethless.
+
+-------------------------------------------------------------
+
+The initializer of the yy_transition array in the
+generated scanner
+contains fewer entries than the declared size of the array.
+
+Examples include yy_transition[6504] with 6250 entries,
+yy_transition[13215] with 12961 entries. This looks
+like it
+is always 254 fewer entries than the declared size.
+
+This bug is present in flex 2.5.4a as well. It appears to be harmless.
+
+-------------------------------------------------------------
+The examples in the chapter "Generating C++ Scanners"
+contain suspicious code. Attached is a patch that
+corrects this, and after these
+modifications this example compiles and works.
+
+-------------------------------------------------------------
+
+C++ scanners derived from the yyFlexLexer base class
+will not compile with flex-2.5.31 because the
+&lt;FlexLexer.h&gt; automatically gets included into the
+scanner twice. Because yyFlexLexer is now defined by
+default even if no prefix is specified, including
+FlexLexer.h twice causes the class yyFlexLexer to be
+declared twice. In flex-2.5.4 because yyFlexLexer was
+not defined by flex in the scanner code, including
+FlexLexer.h more than once only declared yyFlexLexer
+once. I appreciate that this is because of the M4
+additions to flex, but I can not find a way to stop
+flex defining yyFlexLexer if it is not needed.
+
+Here is an example of a class that will not compile:
+
+derived_lexer.h:
+
+#ifndef __derived_lexer__
+#define __derived_lexer__
+
+#include &lt;FlexLexer.h&gt;
+
+class derived_lexer : public yyFlexLexer
+{
+public:
+derived_lexer(std::istream* arg_yyin = 0) :
+yyFlexLexer(arg_yyin){}
+int yylex();
+int x;
+};
+#endif
+
+derived_lexer.l:
+
+%{
+#include &quot;derived_lexer.h&quot;
+%}
+
+%option yyclass=&quot;derived_lexer&quot;
+
+%%
+[0-9]+ {
+x = atoi(yytext);
+}
+%%
+
+main.cpp:
+
+#include &quot;derived_lexer.h&quot;
+#include &lt;fstream&gt;
+
+int main()
+{
+std::ifstream input;
+input.open(&quot;input&quot;);
+derived_lexer lexer(&amp;input);
+lexer.yylex();
+}
+
+-------------------------------------------------------------
