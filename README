@@ -59,8 +59,6 @@ COPYING - flex's copyright and license.
 
 doc/ - user documentation.
 
-RoadMap - notes for developers.
-
 examples/ - containing examples of some possible flex scanners and a
 few other things. See the file examples/README for more details.
 
