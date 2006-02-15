@@ -26,6 +26,8 @@ dist_noinst_SCRIPTS = \
 	create-test
 
 DIST_SUBDIRS = \
+	test-rescan-r \
+	test-rescan-nr \
 	test-basic-nr \
 	test-basic-r \
 	test-bison-yylloc \
@@ -67,6 +69,8 @@ DIST_SUBDIRS = \
 	test-table-opts
 
 SUBDIRS = \
+	test-rescan-r \
+	test-rescan-nr \
 	test-basic-nr \
 	test-basic-r \
 	test-bison-yylloc \

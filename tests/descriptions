@@ -34,6 +34,8 @@ prefix-nr             - Verify prefixes are working, nonreentrant.
 prefix-r              - Verify prefixes are working, reentrant.
 pthread               - Pthreads test. A NO-OP if libpthread not found.
 reject                - Check REJECT code.
+rescan-nr             - Reuse same scanner several times, nonreentrant.
+rescan-r              - Reuse same scanner several times, reentrant.
 string-nr             - Scan strings, non-reentrant.
 string-r              - Scan strings, reentrant.
 table-opts            - Try every table compression option.

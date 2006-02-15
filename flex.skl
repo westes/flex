@@ -66,6 +66,10 @@ m4_changequote([[, ]])
 m4_ifdef( [[M4_YY_IN_HEADER]], , [[m4_define([[M4_YY_NOT_IN_HEADER]], [[]])]])
 m4_ifdef( [[M4_YY_REENTRANT]], , [[m4_define([[M4_YY_NOT_REENTRANT]], [[]])]])
 
+%# This is the m4 way to say "(stack_used || is_reentrant)
+m4_ifdef( [[M4_YY_STACK_USED]], [[m4_define([[M4_YY_HAS_START_STACK_VARS]])]])
+m4_ifdef( [[M4_YY_REENTRANT]],  [[m4_define([[M4_YY_HAS_START_STACK_VARS]])]])
+
 %# Prefixes.
 %# The complexity here is necessary so that m4 preserves
 %# the argument lists to each C function.
@@ -610,7 +614,7 @@ int yyleng;
 
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = (char *) 0;
-static int yy_init = 1;		/* whether we need to initialize */
+static int yy_init = 0;		/* whether we need to initialize */
 static int yy_start = 0;	/* start state number */
 
 /* Flag which is used to allow yywrap()'s to do buffer switches
@@ -811,10 +815,12 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 ]])
 
 
+%if-c-only
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 static int yy_init_globals M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 ]])
+%endif
 
 %if-reentrant
 
@@ -978,7 +984,7 @@ m4_ifdef( [[M4_YY_NOT_REENTRANT]],
     [[
         static int yy_start_stack_ptr = 0;
         static int yy_start_stack_depth = 0;
-        static int *yy_start_stack = 0;
+        static int *yy_start_stack = NULL;
     ]])
 ]])
 
@@ -1209,9 +1215,9 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
     yylloc = yylloc_param;
 ]])
 
-	if ( YY_G(yy_init) )
+	if ( !YY_G(yy_init) )
 		{
-		YY_G(yy_init) = 0;
+		YY_G(yy_init) = 1;
 
 #ifdef YY_USER_INIT
 		YY_USER_INIT;
@@ -1418,7 +1424,7 @@ yyFlexLexer::yyFlexLexer( std::istream* arg_yyin, std::ostream* arg_yyout )
 	yyin = arg_yyin;
 	yyout = arg_yyout;
 	yy_c_buf_p = 0;
-	yy_init = 1;
+	yy_init = 0;
 	yy_start = 0;
 	yy_flex_debug = 0;
 	yylineno = 1;	// this will only get updated if %option yylineno
@@ -1431,7 +1437,7 @@ yyFlexLexer::yyFlexLexer( std::istream* arg_yyin, std::ostream* arg_yyout )
 	yy_more_offset = yy_prev_more_offset = 0;
 
 	yy_start_stack_ptr = yy_start_stack_depth = 0;
-	yy_start_stack = 0;
+	yy_start_stack = NULL;
 
     YY_G(yy_buffer_stack) = 0;
     YY_G(yy_buffer_stack_top) = 0;
@@ -2669,11 +2675,48 @@ void yyset_lloc YYFARGS1( YYLTYPE * ,yylloc_param)
 %endif
 
 
+/* User-visible API */
+
+/* yylex_init is special because it creates the scanner itself, so it is
+ * the ONLY reentrant function that doesn't take the scanner as the last argument.
+ * That's why we explicitly handle the declaration, instead of using our macros.
+ */
+m4_ifdef( [[M4_YY_NO_ANSI_FUNC_DEFS]],
+[[
+int yylex_init( ptr_yy_globals )
+    yyscan_t* ptr_yy_globals;
+]],
+[[
+int yylex_init(yyscan_t* ptr_yy_globals)
+]])
+{
+    if (ptr_yy_globals == NULL){
+        errno = EINVAL;
+        return 1;
+    }
+
+    *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), NULL );
+
+    if (*ptr_yy_globals == NULL){
+        errno = ENOMEM;
+        return 1;
+    }
+
+    /* By setting to 0xAA, we expose bugs in yy_init_globals. Leave at 0x00 for releases. */
+    memset(*ptr_yy_globals,0x00,sizeof(struct yyguts_t));
+
+    return yy_init_globals ( *ptr_yy_globals );
+}
+
+%endif
+
+%if-c-only
 static int yy_init_globals YYFARGS0(void)
 {
     M4_YY_DECL_GUTS_VAR();
     /* Initialization is the same as for the non-reentrant scanner.
-       This function is called once per scanner lifetime. */
+     * This function is called from yylex_destroy(), so don't allocate here.
+     */
 
 m4_ifdef( [[M4_YY_USE_LINENO]],
 [[
@@ -2687,11 +2730,15 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
     YY_G(yy_buffer_stack_top) = 0;
     YY_G(yy_buffer_stack_max) = 0;
     YY_G(yy_c_buf_p) = (char *) 0;
-    YY_G(yy_init) = 1;
+    YY_G(yy_init) = 0;
     YY_G(yy_start) = 0;
+
+m4_ifdef( [[M4_YY_HAS_START_STACK_VARS]],
+[[
     YY_G(yy_start_stack_ptr) = 0;
     YY_G(yy_start_stack_depth) = 0;
-    YY_G(yy_start_stack) = (int *) 0;
+    YY_G(yy_start_stack) =  NULL;
+]])
 
 m4_ifdef( [[M4_YY_USES_REJECT]],
 [[
@@ -2722,40 +2769,8 @@ m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]],
      */
     return 0;
 }
-
-/* User-visible API */
-
-/* yylex_init is special because it creates the scanner itself, so it is
- * the ONLY reentrant function that doesn't take the scanner as the last argument.
- * That's why we explicitly handle the declaration, instead of using our macros.
- */
-m4_ifdef( [[M4_YY_NO_ANSI_FUNC_DEFS]],
-[[
-int yylex_init( ptr_yy_globals )
-    yyscan_t* ptr_yy_globals;
-]],
-[[
-int yylex_init(yyscan_t* ptr_yy_globals)
-]])
-{
-    if (ptr_yy_globals == NULL){
-        errno = EINVAL;
-        return 1;
-    }
-
-    *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), NULL );
-
-    if (*ptr_yy_globals == NULL){
-        errno = ENOMEM;
-        return 1;
-    }
-
-    memset(*ptr_yy_globals,0,sizeof(struct yyguts_t));
-
-    return yy_init_globals ( *ptr_yy_globals );
-}
-
 %endif
+
 
 %if-c-only SNIP! this currently causes conflicts with the c++ scanner
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
@@ -2774,10 +2789,7 @@ int yylex_destroy  YYFARGS0(void)
 	yyfree(YY_G(yy_buffer_stack) M4_YY_CALL_LAST_ARG);
 	YY_G(yy_buffer_stack) = NULL;
 
-%# This is the m4 way to say "if (stack_used || is_reentrant){ destroy_stack }"
-m4_ifdef( [[M4_YY_STACK_USED]], [[m4_define([[M4_YY_DESTROY_START_STACK]])]])
-m4_ifdef( [[M4_YY_REENTRANT]],  [[m4_define([[M4_YY_DESTROY_START_STACK]])]])
-m4_ifdef( [[M4_YY_DESTROY_START_STACK]],
+m4_ifdef( [[M4_YY_HAS_START_STACK_VARS]],
 [[
     /* Destroy the start condition stack. */
         yyfree( YY_G(yy_start_stack) M4_YY_CALL_LAST_ARG );
@@ -2787,11 +2799,17 @@ m4_ifdef( [[M4_YY_DESTROY_START_STACK]],
 m4_ifdef( [[M4_YY_USES_REJECT]],
 [[
     yyfree ( YY_G(yy_state_buf) M4_YY_CALL_LAST_ARG);
+    YY_G(yy_state_buf)  = NULL;
 ]])
+
+    /* Reset the globals. This is important in a non-reentrant scanner so the next time
+     * yylex() is called, initialization will occur. */
+    yy_init_globals( M4_YY_CALL_ONLY_ARG);
 
 %if-reentrant
     /* Destroy the main struct (reentrant only). */
     yyfree ( yyscanner M4_YY_CALL_LAST_ARG );
+    yyscanner = NULL;
 %endif
     return 0;
 }
