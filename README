@@ -6,10 +6,10 @@ lexical patterns in text.
 More information about flex as well as the latest official release of
 flex can be found at:
 
-http://lex.sourceforge.net/
+http://flex.sourceforge.net/
 
 Of particular interest is the mailing list
-lex-announce@lists.sourceforge.net as that is where posts will be made
+flex-announce@lists.sourceforge.net as that is where posts will be made
 announcing new releases of flex.
 
 Note that flex is distributed under a copyright very similar to that of
@@ -43,7 +43,7 @@ IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 PURPOSE.
 
-Please send bug reports and feedback to lex-help@lists.sourceforge.net.
+Please send bug reports and feedback to flex-help@lists.sourceforge.net.
 
 The flex distribution contains the following files which may be of interest:
 

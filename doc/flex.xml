@@ -94,7 +94,7 @@ This edition of @cite{The flex Manual} documents <application>flex</application>
 <para>
 If you have problems with <application>flex</application> or think you have found a bug,
 please send mail detailing your problem to
-@email{lex-help@@lists.sourceforge.net}. Patches are always welcome.
+@email{flex-help@@lists.sourceforge.net}. Patches are always welcome.
 </para>
 
 </chapter>
@@ -7017,7 +7017,7 @@ You can specify an action for the @code{&lt;&lt;EOF&gt;&gt;} rule.
 <title>Where else can I find help?</title>
 
 You can find the flex homepage on the web at
-@uref{http://lex.sourceforge.net/}. See that page for details about flex
+@uref{http://flex.sourceforge.net/}. See that page for details about flex
 mailing lists as well.
 
 </section>
