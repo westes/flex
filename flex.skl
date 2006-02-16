@@ -418,6 +418,10 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #ifndef YY_BUF_SIZE
 #define YY_BUF_SIZE 16384
 #endif
+
+/* The state buf must be large enough to hold one state per character in the main buffer.
+ */
+#define YY_STATE_BUF_SIZE   ((YY_BUF_SIZE + 2) * sizeof(yy_state_type))
 ]])
 
 
@@ -1228,8 +1232,9 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 
 m4_ifdef( [[M4_YY_USES_REJECT]],
 [[
+        /* Create the reject buffer large enough to save one state per allowed character. */
         if ( ! YY_G(yy_state_buf) )
-            YY_G(yy_state_buf) = (yy_state_type *)yyalloc(YY_BUF_SIZE + 2  M4_YY_CALL_LAST_ARG);
+            YY_G(yy_state_buf) = (yy_state_type *)yyalloc(YY_STATE_BUF_SIZE  M4_YY_CALL_LAST_ARG);
 ]])
 
 		if ( ! YY_G(yy_start) )
@@ -1449,7 +1454,7 @@ yyFlexLexer::yyFlexLexer( std::istream* arg_yyin, std::ostream* arg_yyout )
 
 m4_ifdef( [[M4_YY_USES_REJECT]],
 [[
-	yy_state_buf = new yy_state_type[YY_BUF_SIZE + 2];
+	yy_state_buf = new yy_state_type[YY_STATE_BUF_SIZE];
 ]],
 [[
 	yy_state_buf = 0;

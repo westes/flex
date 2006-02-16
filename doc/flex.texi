@@ -4703,12 +4703,15 @@ character buffer.  This buffer is typically the largest chunk of dynamic memory
 flex consumes. This buffer will grow if necessary, doubling the size each time.
 Flex frees this memory when you call yylex_destroy().  The default size of this
 buffer (16384 bytes) is almost always too large.  The ideal size for this
-buffer is the length of the longest token expected.  Flex will allocate a few
-extra bytes for housekeeping.
+buffer is the length of the longest token expected, in bytes, plus a little more.  Flex will allocate a few
+extra bytes for housekeeping. Currently, to override the size of the input buffer
+you must @code{#define YY_BUF_SIZE} to whatever number of bytes you want. We don't plan
+to change this in the near future, but we reserve the right to do so if we ever add a more robust memory management
+API. 
 
-@item 16kb for the REJECT state. This will only be allocated if you use REJECT.
-The size is the same as the input buffer, so if you override the size of the
-input buffer, then you automatically override the size of this buffer as well.
+@item 64kb for the REJECT state. This will only be allocated if you use REJECT.
+The size is the large enough to hold the same number of states as characters in the input buffer. If you override the size of the
+input buffer (via @code{YY_BUF_SIZE}), then you automatically override the size of this buffer as well.
 
 @item 100 bytes for the start condition stack.
 Flex allocates memory for the start condition stack. This is the stack used
