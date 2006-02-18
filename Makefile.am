@@ -137,8 +137,7 @@ SUBDIRS = \
 	examples \
 	po \
 	tools \
-	tests \
-	website
+	tests
 
 localedir = $(datadir)/locale
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I@includedir@ -I$(top_srcdir)/intl
