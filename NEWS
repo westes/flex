@@ -3,14 +3,21 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* after version 2.5.31
+* version 2.5.33 released 2006-2-20
+
+** all flex resources are now to be found from the website at
+   http://flex.sourceforge.net/
+
+** there was no release 2.5.32 published
+
+** numerous bug and security fixes
 
 ** new nl, vi, sv, ro, po, ga, ca, fr, tr translations from the translation project
 
 ** upgrade to use gettext 0.12 (this now makes the "pdf" and "ps"
    targets in the build system able to be run successfully)
 
-* version 2.5.31 rleased 2003-4-1
+* version 2.5.31 released 2003-4-1
 
 ** remove --enable-maintainer-mode configure option; none of the
    Makefiles were using it and it can be unduely confusing
