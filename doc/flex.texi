@@ -8272,7 +8272,8 @@ As you can see, there really is no magic here. We just use
 @section M4 Dependency
 @cindex m4
 The macro processor @code{m4}@footnote{The use of m4 is subject to change in
-future revisions of flex.} must be installed wherever flex is installed.
+future revisions of flex. It is not part of the public API of flex. Do not depend on it.}
+must be installed wherever flex is installed.
 @code{flex} invokes @samp{m4}, found by searching the directories in the
 @code{PATH} environment variable. Any code you place in section 1 or in the
 actions will be sent through m4. Please follow these rules to protect your
