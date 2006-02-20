@@ -87,3 +87,21 @@ lexer.yylex();
 }
 
 -------------------------------------------------------------
+
+Hi, the anomally is that if I generate a c++ parser it will not make 
+yy_scan_buffer and friends.
+this is happenning on flex version 2.5.4.
+Is this the intent, if so how do I make a c++ parser read from my buffer?
+
+P.S. in c++ it will only generate:
+#ifndef YY_NO_SCAN_BUFFER
+#endif
+
+
+#ifndef YY_NO_SCAN_STRING
+#endif
+
+
+#ifndef YY_NO_SCAN_BYTES
+#endif
+-------------------------------------------------------------
