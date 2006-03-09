@@ -3,6 +3,10 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* after version 2.5.33
+
+** new ga, nl translations from the translation project
+
 * version 2.5.33 released 2006-2-20
 
 ** all flex resources are now to be found from the website at
