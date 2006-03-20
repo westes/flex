@@ -153,20 +153,22 @@ bool filter_apply_chain (struct filter * chain)
 
 	if (pid == 0) {
 		/* child */
+
+        /* We need stdin (the FILE* stdin) to connect to this new pipe.
+         * There is no portable way to set stdin to a new file descriptor,
+         * as stdin is not an lvalue on some systems (BSD).
+         * So we dup the new pipe onto the stdin descriptor and use a no-op fseek
+         * to sync the stream. This is a Hail Mary situation. It seems to work.
+         */
 		close (pipes[1]);
-		if (dup2 (pipes[0], 0) == -1)
+		if (dup2 (pipes[0], fileno (stdin)) == -1)
 			flexfatal (_("dup2(pipes[0],0)"));
 		close (pipes[0]);
+        fseek (stdin, 0, SEEK_CUR);
 
 		/* run as a filter, either internally or by exec */
 		if (chain->filter_func) {
 			int     r;
-
-			/* setup streams again */
-			if ( ! fdopen (0, "r"))
-				flexfatal (_("fdopen(0) failed"));
-			if (!fdopen (1, "w"))
-				flexfatal (_("fdopen(1) failed"));
 
 			if ((r = chain->filter_func (chain)) == -1)
 				flexfatal (_("filter_func failed"));
@@ -183,11 +185,10 @@ bool filter_apply_chain (struct filter * chain)
 
 	/* Parent */
 	close (pipes[0]);
-	if (dup2 (pipes[1], 1) == -1)
+	if (dup2 (pipes[1], fileno (stdout)) == -1)
 		flexfatal (_("dup2(pipes[1],1)"));
 	close (pipes[1]);
-	if ( !fdopen (1, "w"))
-		flexfatal (_("fdopen(1) failed"));
+    fseek (stdout, 0, SEEK_CUR);
 
 	return true;
 }
