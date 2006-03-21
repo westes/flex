@@ -629,7 +629,7 @@ Char myesc (array)
 	case 't':
 		return '\t';
 
-#if __STDC__
+#if defined (__STDC__)
 	case 'a':
 		return '\a';
 	case 'v':
@@ -835,7 +835,7 @@ char   *readable_form (c)
 		case '\t':
 			return "\\t";
 
-#if __STDC__
+#if defined (__STDC__)
 		case '\a':
 			return "\\a";
 		case '\v':

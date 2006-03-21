@@ -94,7 +94,7 @@
 #endif
 
 #ifndef PROTO
-#if __STDC__
+#if defined(__STDC__)
 #define PROTO(proto) proto
 #else
 #define PROTO(proto) ()
