@@ -134,7 +134,7 @@ void action_m4_define (const char *defname, const char * value)
 
 /* Append "new_text" to the running buffer. */
 void add_action (new_text)
-     char   *new_text;
+     const char   *new_text;
 {
 	int     len = strlen (new_text);
 

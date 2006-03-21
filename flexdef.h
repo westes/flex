@@ -817,7 +817,7 @@ extern void usage PROTO ((void));
 extern void action_define PROTO ((const char *defname, int value));
 
 /* Add the given text to the stored actions. */
-extern void add_action PROTO ((char *new_text));
+extern void add_action PROTO ((const char *new_text));
 
 /* True if a string is all lower case. */
 extern int all_lower PROTO ((register char *));

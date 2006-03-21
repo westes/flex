@@ -762,7 +762,9 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			}
 	}
 
-	{NAME}|{NOT_NAME}|.	ACTION_ECHO;
+    {M4QSTART}  ACTION_ECHO_QEND;
+    {M4QEND}    ACTION_ECHO_QEND;
+    .           ACTION_ECHO;
 	{NL}		{
 			++linenum;
 			ACTION_ECHO;
@@ -783,7 +785,10 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 <ACTION>{
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
-	[^[:alpha:]_{}"'/\n]+	ACTION_ECHO;
+    {M4QSTART}  ACTION_ECHO_QEND;
+    {M4QEND}    ACTION_ECHO_QEND;
+	[^[:alpha:]_{}"'/\n\[\]]+	ACTION_ECHO;
+    [\[\]]      ACTION_ECHO;
 	{NAME}		ACTION_ECHO;
 	"'"([^'\\\n]|\\.)*"'"	ACTION_ECHO; /* character constant */
 	\"		ACTION_ECHO; BEGIN(ACTION_STRING);
