@@ -835,28 +835,6 @@ int yywrap()
 	}
 
 
-/* set_input_file - open the given file (if NULL, stdin) for scanning */
-
-void set_input_file( file )
-char *file;
-	{
-	if ( file && strcmp( file, "-" ) )
-		{
-		infilename = copy_string( file );
-		yyin = fopen( infilename, "r" );
-
-		if ( yyin == NULL )
-			lerrsf( _( "can't open %s" ), file );
-		}
-
-	else
-		{
-		yyin = stdin;
-		infilename = copy_string( "<stdin>" );
-		}
-
-	linenum = 1;
-	}
 
 
 /* Wrapper routines for accessing the scanner's malloc routines. */

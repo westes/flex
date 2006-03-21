@@ -367,7 +367,7 @@ void check_options ()
     /* For debugging, only run the requested number of filters. */
     if (preproc_level > 0) {
         filter_truncate(output_chain, preproc_level);
-        filter_apply_chain(output_chain);
+        filter_apply_chain(output_chain, true);
     }
     yyout = stdout;
 

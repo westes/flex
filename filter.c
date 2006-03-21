@@ -126,7 +126,7 @@ struct filter *filter_create_int (struct filter *chain,
  *  @param chain The head of the chain.
  *  @return true on success.
  */
-bool filter_apply_chain (struct filter * chain)
+bool filter_apply_chain (struct filter * chain, const bool parent_to_child)
 {
 	int     pid, pipes[2];
 
@@ -135,7 +135,7 @@ bool filter_apply_chain (struct filter * chain)
 	 * to be children of the main flex process.
 	 */
 	if (chain)
-		filter_apply_chain (chain->next);
+		filter_apply_chain (chain->next, parent_to_child);
 	else
 		return true;
 
@@ -154,17 +154,29 @@ bool filter_apply_chain (struct filter * chain)
 	if (pid == 0) {
 		/* child */
 
-        /* We need stdin (the FILE* stdin) to connect to this new pipe.
-         * There is no portable way to set stdin to a new file descriptor,
-         * as stdin is not an lvalue on some systems (BSD).
-         * So we dup the new pipe onto the stdin descriptor and use a no-op fseek
-         * to sync the stream. This is a Hail Mary situation. It seems to work.
+        /* For the parent_to_child direction, we need stdin (the FILE* stdin)
+         * to connect to this new pipe.  There is no portable way to set stdin
+         * to a new file descriptor, as stdin is not an lvalue on some systems
+         * (BSD).  So we dup the new pipe onto the stdin descriptor and use a
+         * no-op fseek to sync the stream.  This is a Hail Mary situation. It
+         * seems to work.  Note that the same concept applies, but opposite,
+         * for child_to_parent filters.
          */
-		close (pipes[1]);
-		if (dup2 (pipes[0], fileno (stdin)) == -1)
-			flexfatal (_("dup2(pipes[0],0)"));
-		close (pipes[0]);
-        fseek (stdin, 0, SEEK_CUR);
+
+        if (parent_to_child){
+            close (pipes[1]);
+            if (dup2 (pipes[0], fileno (stdin)) == -1)
+                flexfatal (_("dup2(pipes[0],0)"));
+            close (pipes[0]);
+            fseek (stdin, 0, SEEK_CUR);
+        }
+        else{
+            close (pipes[0]);
+            if (dup2 (pipes[1], fileno (stdout)) == -1)
+                flexfatal (_("dup2(pipes[1],1)"));
+            close (pipes[1]);
+            fseek (stdout, 0, SEEK_CUR);
+        }
 
 		/* run as a filter, either internally or by exec */
 		if (chain->filter_func) {
@@ -184,11 +196,20 @@ bool filter_apply_chain (struct filter * chain)
 	}
 
 	/* Parent */
-	close (pipes[0]);
-	if (dup2 (pipes[1], fileno (stdout)) == -1)
-		flexfatal (_("dup2(pipes[1],1)"));
-	close (pipes[1]);
-    fseek (stdout, 0, SEEK_CUR);
+    if (parent_to_child){
+        close (pipes[0]);
+        if (dup2 (pipes[1], fileno (stdout)) == -1)
+            flexfatal (_("dup2(pipes[1],1)"));
+        close (pipes[1]);
+        fseek (stdout, 0, SEEK_CUR);
+    }
+    else{
+        close (pipes[1]);
+        if (dup2 (pipes[0], fileno (stdin)) == -1)
+            flexfatal (_("dup2(pipes[0],0)"));
+        close (pipes[0]);
+        fseek (stdin, 0, SEEK_CUR);
+    }
 
 	return true;
 }
@@ -246,7 +267,7 @@ int filter_tee_header (struct filter *chain)
 		if (freopen ((char *) chain->extra, "w", stdout) == NULL)
 			flexfatal (_("freopen(headerfilename) failed"));
 
-		filter_apply_chain (chain->next);
+		filter_apply_chain (chain->next, true);
 		to_h = stdout;
 	}
 
@@ -401,6 +422,30 @@ int filter_fix_linedirs (struct filter *chain)
 			outfilename ? outfilename : "<stdout>");
 
 	return 0;
+}
+
+/* set_input_file - open the given file (if NULL, stdin) for scanning */
+
+void set_input_file( file )
+char *file;
+{
+    /* Preprocess the input to quote m4 escapes.*/
+	if ( file && strcmp( file, "-" ) )
+		{
+		infilename = copy_string( file );
+		yyin = fopen( infilename, "r" );
+
+		if ( yyin == NULL )
+			lerrsf( _( "can't open %s" ), file );
+		}
+
+	else
+		{
+		yyin = stdin;
+		infilename = copy_string( "<stdin>" );
+		}
+
+	linenum = 1;
 }
 
 /* vim:set expandtab cindent tabstop=4 softtabstop=4 shiftwidth=4 textwidth=0: */
