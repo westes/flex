@@ -137,6 +137,8 @@ static char outfile_path[MAXLINE];
 static int outfile_created = 0;
 static char *skelname = NULL;
 static int _stdout_closed = 0; /* flag to prevent double-fclose() on stdout. */
+const char *escaped_qstart = "[[]]M4_YY_NOOP[M4_YY_NOOP[M4_YY_NOOP[[]]";
+const char *escaped_qend   = "[[]]M4_YY_NOOP]M4_YY_NOOP]M4_YY_NOOP[[]]";
 
 /* For debugging. The max number of filters to apply to skeleton. */
 static int preproc_level = 1000;
@@ -367,7 +369,7 @@ void check_options ()
     /* For debugging, only run the requested number of filters. */
     if (preproc_level > 0) {
         filter_truncate(output_chain, preproc_level);
-        filter_apply_chain(output_chain, true);
+        filter_apply_chain(output_chain);
     }
     yyout = stdout;
 

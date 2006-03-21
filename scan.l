@@ -36,6 +36,7 @@
 #include "parse.h"
 extern bool tablesverify, tablesext;
 extern int trlcontxt; /* Set in  parse.y for each rule. */
+extern const char *escaped_qstart, *escaped_qend;
 
 #define ACTION_ECHO add_action( yytext )
 #define ACTION_IFDEF(def, should_define) \
@@ -43,6 +44,9 @@ extern int trlcontxt; /* Set in  parse.y for each rule. */
 	if ( should_define ) \
 		action_define( def, 1 ); \
 	}
+
+#define ACTION_ECHO_QSTART add_action (escaped_qstart)
+#define ACTION_ECHO_QEND   add_action (escaped_qend)
 
 #define ACTION_M4_IFDEF(def, should_define) \
     do{ \
@@ -117,6 +121,9 @@ CCL_EXPR	("[:"[[:alpha:]]+":]")
 
 LEXOPT		[aceknopr]
 
+M4QSTART    "[["
+M4QEND      "]]"
+
 %%
 	static int bracelevel, didadef, indented_code;
 	static int doing_rule_action = false;
@@ -146,7 +153,7 @@ LEXOPT		[aceknopr]
                 brace_depth = 1;
                 yy_push_state(CODEBLOCK_MATCH_BRACE);
             }
-    
+
     ^"%top".*   synerr( _("malformed '%top' directive") );
 
 	{WS}		/* discard */
@@ -172,14 +179,14 @@ LEXOPT		[aceknopr]
 	^"%"[^sxaceknopr{}].*	synerr( _( "unrecognized '%' directive" ) );
 
 	^{NAME}		{
-			if(yyleng < MAXLINE) 
-        		 { 
+			if(yyleng < MAXLINE)
+        		 {
 			strcpy( nmstr, yytext );
-			 } 
-			else 
-			 { 
-			   synerr( _("Input line too long\n")); 
-			   FLEX_EXIT(EXIT_FAILURE);  
+			 }
+			else
+			 {
+			   synerr( _("Input line too long\n"));
+			   FLEX_EXIT(EXIT_FAILURE);
 			 }
 
 			didadef = false;
@@ -195,8 +202,10 @@ LEXOPT		[aceknopr]
 <COMMENT>{
 	"*/"		ACTION_ECHO; yy_pop_state();
 	"*"		ACTION_ECHO;
-	[^*\n]+		ACTION_ECHO;
-	[^*\n]*{NL}	++linenum; ACTION_ECHO;
+    {M4QSTART}  ACTION_ECHO_QSTART;
+    {M4QEND}    ACTION_ECHO_QEND;
+	[^*\n]      ACTION_ECHO;
+	{NL}	    ++linenum; ACTION_ECHO;
 }
 
 <LINEDIR>{
@@ -214,7 +223,9 @@ LEXOPT		[aceknopr]
 <CODEBLOCK>{
 	^"%}".*{NL}	++linenum; BEGIN(INITIAL);
 
-	{NAME}|{NOT_NAME}|.	ACTION_ECHO;
+    {M4QSTART}  ACTION_ECHO_QSTART;
+    {M4QEND}    ACTION_ECHO_QEND;
+	.	        ACTION_ECHO;
 
 	{NL}		{
 			++linenum;
@@ -233,7 +244,7 @@ LEXOPT		[aceknopr]
                     buf_strnappend(&top_buf, yytext, yyleng);
             }
 
-    "{"     {   
+    "{"     {
                 brace_depth++;
                 buf_strnappend(&top_buf, yytext, yyleng);
             }
@@ -243,9 +254,12 @@ LEXOPT		[aceknopr]
                 buf_strnappend(&top_buf, yytext, yyleng);
             }
 
-    [^{}\r\n]+  {
+    {M4QSTART}  buf_strnappend(&top_buf, escaped_qstart, strlen(escaped_qstart));
+    {M4QEND}    buf_strnappend(&top_buf, escaped_qend, strlen(escaped_qend));
+
+    [^{}\r\n]  {
                 buf_strnappend(&top_buf, yytext, yyleng);
-                }
+               }
 
     <<EOF>>     {
                 linenum = brace_start_line;
@@ -262,11 +276,11 @@ LEXOPT		[aceknopr]
  		        if(yyleng < MAXLINE)
  		         {
 			strcpy( (char *) nmdef, yytext );
- 		         } 
+ 		         }
  		        else
  		         {
  		           synerr( _("Input line too long\n"));
- 		           FLEX_EXIT(EXIT_FAILURE); 
+ 		           FLEX_EXIT(EXIT_FAILURE);
 			 }
 			/* Skip trailing whitespace. */
 			for ( i = strlen( (char *) nmdef ) - 1;
@@ -401,14 +415,14 @@ LEXOPT		[aceknopr]
 
 
 	\"[^"\n]*\"	{
-			if(yyleng-1 < MAXLINE) 
-        		 { 
+			if(yyleng-1 < MAXLINE)
+        		 {
 			strcpy( nmstr, yytext + 1 );
-			 } 
-			else 
-			 { 
-			   synerr( _("Input line too long\n")); 
-			   FLEX_EXIT(EXIT_FAILURE);  
+			 }
+			else
+			 {
+			   synerr( _("Input line too long\n"));
+			   FLEX_EXIT(EXIT_FAILURE);
 			 }
 			nmstr[strlen( nmstr ) - 1] = '\0';
 			return NAME;
@@ -442,7 +456,7 @@ LEXOPT		[aceknopr]
 				ACTION_ECHO;
 			}
 
-	.*		ACTION_ECHO;
+	.		ACTION_ECHO;
 	{NL}	++linenum; ACTION_ECHO;
 
 	<<EOF>>		{
@@ -540,15 +554,15 @@ LEXOPT		[aceknopr]
 	"["({FIRST_CCL_CHAR}|{CCL_EXPR})({CCL_CHAR}|{CCL_EXPR})*	{
 			int cclval;
 
-			if(yyleng < MAXLINE) 
-        		 { 
+			if(yyleng < MAXLINE)
+        		 {
 			strcpy( nmstr, yytext );
-			 } 
-			else 
-			 { 
-			   synerr( _("Input line too long\n")); 
-			   FLEX_EXIT(EXIT_FAILURE);  
-			 } 
+			 }
+			else
+			 {
+			   synerr( _("Input line too long\n"));
+			   FLEX_EXIT(EXIT_FAILURE);
+			 }
 
 			/* Check to see if we've already encountered this
 			 * ccl.
@@ -586,19 +600,19 @@ LEXOPT		[aceknopr]
 	"{"{NAME}"}"[[:space:]]?	 {
 			register Char *nmdefptr;
             int end_is_ws, end_ch;
-            
+
             end_ch = yytext[yyleng-1];
             end_is_ws = end_ch != '}' ? 1 : 0;
 
- 			if(yyleng-1 < MAXLINE) 
-         		 { 
+ 			if(yyleng-1 < MAXLINE)
+         		 {
 			strcpy( nmstr, yytext + 1 );
- 			 } 
- 			else 
- 			 { 
- 			   synerr( _("Input line too long\n")); 
- 			   FLEX_EXIT(EXIT_FAILURE);  
- 			 }			
+ 			 }
+ 			else
+ 			 {
+ 			   synerr( _("Input line too long\n"));
+ 			   FLEX_EXIT(EXIT_FAILURE);
+ 			 }
 nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 			if ( (nmdefptr = ndlookup( nmstr )) == 0 )
@@ -813,7 +827,10 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 
 <SECT3>{
-	.*(\n?)		ECHO;
+    {M4QSTART}  fwrite (escaped_qstart, 1, strlen(escaped_qstart), yyout);
+    {M4QEND}    fwrite (escaped_qend, 1, strlen(escaped_qend), yyout);
+	[^\[\]\n]*(\n?) ECHO;
+	(.|\n)      ECHO;
 	<<EOF>>		sectnum = 0; yyterminate();
 }
 
@@ -835,6 +852,28 @@ int yywrap()
 	}
 
 
+/* set_input_file - open the given file (if NULL, stdin) for scanning */
+
+void set_input_file( file )
+char *file;
+	{
+	if ( file && strcmp( file, "-" ) )
+		{
+		infilename = copy_string( file );
+		yyin = fopen( infilename, "r" );
+
+		if ( yyin == NULL )
+			lerrsf( _( "can't open %s" ), file );
+		}
+
+	else
+		{
+		yyin = stdin;
+		infilename = copy_string( "<stdin>" );
+		}
+
+	linenum = 1;
+	}
 
 
 /* Wrapper routines for accessing the scanner's malloc routines. */

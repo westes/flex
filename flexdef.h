@@ -1160,7 +1160,7 @@ extern struct filter *filter_create_ext PROTO((struct filter * chain, const char
 struct filter *filter_create_int PROTO((struct filter *chain,
 				  int (*filter_func) (struct filter *),
                   void *extra));
-extern bool filter_apply_chain PROTO((struct filter * chain, const bool parent_to_child));
+extern bool filter_apply_chain PROTO((struct filter * chain));
 extern int filter_truncate (struct filter * chain, int max_len);
 extern int filter_tee_header PROTO((struct filter *chain));
 extern int filter_fix_linedirs PROTO((struct filter *chain));
