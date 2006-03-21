@@ -65,5 +65,16 @@ test: $(tests)
 	./$(testname)-ver$(EXEEXT) $(testname)-ver.tables < $(srcdir)/test.input
 	./$(testname)-ser$(EXEEXT) $(testname)-ser.tables < $(srcdir)/test.input
 
-.c.o:
+test-reject-nr.o: test-reject-nr.c
 	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<
+
+test-reject-ver.o: test-reject-ver.c
+	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) -DTEST_HAS_TABLES_EXTERNAL $(CFLAGS) $<
+
+test-reject-ser.o: test-reject-ser.c
+	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) -DTEST_HAS_TABLES_EXTERNAL $(CFLAGS) $<
+
+test-reject-r.o: test-reject-r.c
+	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) -DTEST_IS_REENTRANT $(CFLAGS) $<
+
+
