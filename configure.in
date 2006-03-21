@@ -145,6 +145,7 @@ tests/test-c++-multiple-scanners/Makefile
 tests/test-top/Makefile
 tests/test-rescan-nr/Makefile
 tests/test-rescan-r/Makefile
+tests/test-quotes/Makefile
 dnl --new-test-here-- This line is processed by tests/create-test.
 )
 

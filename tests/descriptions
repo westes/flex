@@ -33,6 +33,7 @@ posixly-correct       - Test POSIXLY_CORRECT variable.
 prefix-nr             - Verify prefixes are working, nonreentrant.
 prefix-r              - Verify prefixes are working, reentrant.
 pthread               - Pthreads test. A NO-OP if libpthread not found.
+quotes                - Verify user code is not mangled by m4.
 reject                - Check REJECT code.
 rescan-nr             - Reuse same scanner several times, nonreentrant.
 rescan-r              - Reuse same scanner several times, reentrant.
