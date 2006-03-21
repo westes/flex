@@ -122,8 +122,14 @@ test-mul: $(serexe)
 		./$$t all-ser.tables < $(srcdir)/test.input || { echo $$t FAILED; exit 1; } ;  \
 	done
 
-.c.o:
-	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<
+test-opt-nr-%.o: test-opt-nr-%.c ; $(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<
+test-ser-nr-%.o: test-ser-nr-%.c ; $(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) -DTEST_HAS_TABLES_EXTERNAL $(CFLAGS) $<
+test-ver-nr-%.o: test-ver-nr-%.c ; $(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) -DTEST_HAS_TABLES_EXTERNAL $(CFLAGS) $<
+
+test-opt-r-%.o:  test-opt-r-%.c  ; $(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) -DTEST_IS_REENTRANT $(CFLAGS) $<
+test-ser-r-%.o:  test-ser-r-%.c  ; $(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT $(CFLAGS) $<
+test-ver-r-%.o:  test-ver-r-%.c  ; $(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT $(CFLAGS) $<
+
 
 .PHONY: test-table-opts test test-opt test-ser test-ver test-mul
 .SECONDARY: $(allobj) $(allsrc)
