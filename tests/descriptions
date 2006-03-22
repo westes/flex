@@ -8,6 +8,7 @@ basic-r               - Simple scanner, reentrant.
 bison-nr              - Ordinary bison-bridge.
 bison-yylloc          - Reentrant scanner + pure parser. Requires bison.
 bison-yylval          - Reentrant scanner + pure parser. Requires bison.
+ccl                   - Character classes.
 c-cpp-nr              - Compile a C scanner with C++ compiler, nonreentrant.
 c-cpp-r               - Compile a C scanner with C++ compiler, reentrant.
 c++-basic             - The C++ scanner.

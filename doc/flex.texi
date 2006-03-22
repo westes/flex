@@ -886,7 +886,10 @@ For example, the following character classes are all equivalent:
 @end verbatim
 @end example
 
-Some notes on patterns are in order.
+A word of caution. Character classes are expanded immediately when seen in the @code{flex} input. 
+This means the character classes are sensitive to the locale in which @code{flex}
+is executed, and the resulting scanner will not be sensitive to the runtime locale.
+This may or may not be desirable.
 
 
 @itemize
@@ -926,6 +929,23 @@ regular expression tools treat negated character classes, but
 unfortunately the inconsistency is historically entrenched.  Matching
 newlines means that a pattern like @samp{[^"]*} can match the entire
 input unless there's another quote in the input.
+
+Flex allows negation of character class expressions by prepending @samp{^} to
+the POSIX character class name.
+
+@example
+@verbatim
+    [:^alnum:] [:^alpha:] [:^blank:]
+    [:^cntrl:] [:^digit:] [:^graph:]
+    [:^lower:] [:^print:] [:^punct:]
+    [:^space:] [:^upper:] [:^xdigit:]
+@end verbatim
+@end example
+
+Flex will issue a warning if the expressions @samp{[:^upper:]} and
+@samp{[:^lower:]} appear in a case-insensitive scanner, since their meaning is
+unclear. The current behavior is to skip them entirely, but this may change
+without notice in future revisions of flex.
 
 @cindex trailing context, limits of
 @cindex ^ as non-special character in patterns

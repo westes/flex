@@ -117,7 +117,7 @@ ESCSEQ		(\\([^\n]|[0-7]{1,3}|x[[:xdigit:]]{1,2}))
 
 FIRST_CCL_CHAR	([^\\\n]|{ESCSEQ})
 CCL_CHAR	([^\\\n\]]|{ESCSEQ})
-CCL_EXPR	("[:"[[:alpha:]]+":]")
+CCL_EXPR	("[:"^?[[:alpha:]]+":]")
 
 LEXOPT		[aceknopr]
 
@@ -708,6 +708,19 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 	"[:space:]"	BEGIN(CCL); return CCE_SPACE;
 	"[:upper:]"	BEGIN(CCL); return CCE_UPPER;
 	"[:xdigit:]"	BEGIN(CCL); return CCE_XDIGIT;
+
+	"[:^alnum:]"	BEGIN(CCL); return CCE_NEG_ALNUM;
+	"[:^alpha:]"	BEGIN(CCL); return CCE_NEG_ALPHA;
+	"[:^blank:]"	BEGIN(CCL); return CCE_NEG_BLANK;
+	"[:^cntrl:]"	BEGIN(CCL); return CCE_NEG_CNTRL;
+	"[:^digit:]"	BEGIN(CCL); return CCE_NEG_DIGIT;
+	"[:^graph:]"	BEGIN(CCL); return CCE_NEG_GRAPH;
+	"[:^lower:]"	BEGIN(CCL); return CCE_NEG_LOWER;
+	"[:^print:]"	BEGIN(CCL); return CCE_NEG_PRINT;
+	"[:^punct:]"	BEGIN(CCL); return CCE_NEG_PUNCT;
+	"[:^space:]"	BEGIN(CCL); return CCE_NEG_SPACE;
+	"[:^upper:]"	BEGIN(CCL); return CCE_NEG_UPPER;
+	"[:^xdigit:]"	BEGIN(CCL); return CCE_NEG_XDIGIT;
 	{CCL_EXPR}	{
 			format_synerr(
 				_( "bad character class expression: %s" ),

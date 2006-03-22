@@ -7,6 +7,8 @@
 %token CCE_ALNUM CCE_ALPHA CCE_BLANK CCE_CNTRL CCE_DIGIT CCE_GRAPH
 %token CCE_LOWER CCE_PRINT CCE_PUNCT CCE_SPACE CCE_UPPER CCE_XDIGIT
 
+%token CCE_NEG_ALNUM CCE_NEG_ALPHA CCE_NEG_BLANK CCE_NEG_CNTRL CCE_NEG_DIGIT CCE_NEG_GRAPH
+%token CCE_NEG_LOWER CCE_NEG_PRINT CCE_NEG_PUNCT CCE_NEG_SPACE CCE_NEG_UPPER CCE_NEG_XDIGIT
 /*
  *POSIX and AT&T lex place the
  * precedence of the repeat operator, {}, below that of concatenation.
@@ -122,6 +124,15 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 	int c; \
 	for ( c = 0; c < csize; ++c ) \
 		if ( isascii(c) && func(c) ) \
+			ccladd( currccl, c ); \
+	}while(0)
+
+/* negated class */
+#define CCL_NEG_EXPR(func) \
+	do{ \
+	int c; \
+	for ( c = 0; c < csize; ++c ) \
+		if ( !func(c) ) \
 			ccladd( currccl, c ); \
 	}while(0)
 
@@ -872,7 +883,8 @@ ccl		:  ccl CHAR '-' CHAR
 			}
 		;
 
-ccl_expr:	   CCE_ALNUM	{ CCL_EXPR(isalnum); }
+ccl_expr:	   
+           CCE_ALNUM	{ CCL_EXPR(isalnum); }
 		|  CCE_ALPHA	{ CCL_EXPR(isalpha); }
 		|  CCE_BLANK	{ CCL_EXPR(IS_BLANK); }
 		|  CCE_CNTRL	{ CCL_EXPR(iscntrl); }
@@ -882,13 +894,36 @@ ccl_expr:	   CCE_ALNUM	{ CCL_EXPR(isalnum); }
 		|  CCE_PRINT	{ CCL_EXPR(isprint); }
 		|  CCE_PUNCT	{ CCL_EXPR(ispunct); }
 		|  CCE_SPACE	{ CCL_EXPR(isspace); }
+		|  CCE_XDIGIT	{ CCL_EXPR(isxdigit); }
 		|  CCE_UPPER	{
 				if ( caseins )
 					CCL_EXPR(islower);
 				else
 					CCL_EXPR(isupper);
 				}
-		|  CCE_XDIGIT	{ CCL_EXPR(isxdigit); }
+
+        |  CCE_NEG_ALNUM	{ CCL_NEG_EXPR(isalnum); }
+		|  CCE_NEG_ALPHA	{ CCL_NEG_EXPR(isalpha); }
+		|  CCE_NEG_BLANK	{ CCL_NEG_EXPR(IS_BLANK); }
+		|  CCE_NEG_CNTRL	{ CCL_NEG_EXPR(iscntrl); }
+		|  CCE_NEG_DIGIT	{ CCL_NEG_EXPR(isdigit); }
+		|  CCE_NEG_GRAPH	{ CCL_NEG_EXPR(isgraph); }
+		|  CCE_NEG_PRINT	{ CCL_NEG_EXPR(isprint); }
+		|  CCE_NEG_PUNCT	{ CCL_NEG_EXPR(ispunct); }
+		|  CCE_NEG_SPACE	{ CCL_NEG_EXPR(isspace); }
+		|  CCE_NEG_XDIGIT	{ CCL_NEG_EXPR(isxdigit); }
+		|  CCE_NEG_LOWER	{ 
+				if ( caseins )
+					warn(_("[:^lower:] is ambiguous in case insensitive scanner"));
+				else
+					CCL_NEG_EXPR(islower);
+				}
+		|  CCE_NEG_UPPER	{
+				if ( caseins )
+					warn(_("[:^upper:] ambiguous in case insensitive scanner"));
+				else
+					CCL_NEG_EXPR(isupper);
+				}
 		;
 		
 string		:  string CHAR
