@@ -693,7 +693,7 @@ character EXCEPT an uppercase letter.
 any character EXCEPT an uppercase letter or
 a newline
 
-@item [a-z]{-}[aeiou]
+@item [a-z]@{-@}[aeiou]
 the lowercase consonants
 
 @item r*
