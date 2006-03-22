@@ -59,7 +59,7 @@ void flex_regcomp(regex_t *preg, const char *regex, int cflags)
 
         errbuf = (char*)flex_alloc(errbuf_sz *sizeof(char));
 		regerror (err, preg, errbuf, errbuf_sz);
-		sprintf (errbuf, "regcomp failed: %s\n", errbuf);
+		snprintf (errbuf, errbuf_sz, "regcomp failed: %s\n", errbuf);
 
 		flexfatal (errbuf);
         free(errbuf);

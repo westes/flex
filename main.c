@@ -344,7 +344,7 @@ void check_options ()
 			else
 				suffix = "c";
 
-			sprintf (outfile_path, outfile_template,
+			snprintf (outfile_path, sizeof(outfile_path), outfile_template,
 				 prefix, suffix);
 
 			outfilename = outfile_path;
@@ -393,11 +393,9 @@ void check_options ()
 		buf_m4_define (&m4defs_buf, "M4_YY_TABLES_EXTERNAL", NULL);
 
 		if (!tablesfilename) {
-			nbytes = strlen (prefix) +
-				strlen (tablesfile_template) + 2;
-			tablesfilename = pname =
-				(char *) calloc (nbytes, 1);
-			sprintf (pname, tablesfile_template, prefix);
+			nbytes = strlen (prefix) + strlen (tablesfile_template) + 2;
+			tablesfilename = pname = (char *) calloc (nbytes, 1);
+			snprintf (pname, nbytes, tablesfile_template, prefix);
 		}
 
 		if ((tablesout = fopen (tablesfilename, "w")) == NULL)
@@ -410,7 +408,7 @@ void check_options ()
 
 		nbytes = strlen (prefix) + strlen ("tables") + 2;
 		tablesname = (char *) calloc (nbytes, 1);
-		sprintf (tablesname, "%stables", prefix);
+		snprintf (tablesname, nbytes, "%stables", prefix);
 		yytbl_hdr_init (&hdr, flex_version, tablesname);
 
 		if (yytbl_hdr_fwrite (&tableswr, &hdr) <= 0)
@@ -450,9 +448,10 @@ void check_options ()
         buf_init(&tmpbuf, sizeof(char));
         for (i = 1; i <= lastsc; i++) {
              char *str, *fmt = "#define %s %d\n";
+             size_t strsz;
 
-             str = (char*)flex_alloc(strlen(fmt) + strlen(scname[i]) + (int)(1 + log10(i)) + 2);
-             sprintf(str, fmt,      scname[i], i - 1);
+             str = (char*)flex_alloc(strsz = strlen(fmt) + strlen(scname[i]) + (int)(1 + log10(i)) + 2);
+             snprintf(str, strsz, fmt,      scname[i], i - 1);
              buf_strappend(&tmpbuf, str);
              free(str);
         }
@@ -1778,7 +1777,7 @@ void usage ()
 	FILE   *f = stdout;
 
 	if (!did_outfilename) {
-		sprintf (outfile_path, outfile_template,
+		snprintf (outfile_path, sizeof(outfile_path), outfile_template,
 			 prefix, C_plus_plus ? "cc" : "c");
 		outfilename = outfile_path;
 	}

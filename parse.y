@@ -930,7 +930,7 @@ void build_eof_action()
 		else
 			{
 			sceof[scon_stk[i]] = true;
-			sprintf( action_text, "case YY_STATE_EOF(%s):\n",
+			snprintf( action_text, sizeof(action_text), "case YY_STATE_EOF(%s):\n",
 				scname[scon_stk[i]] );
 			add_action( action_text );
 			}
@@ -955,7 +955,7 @@ const char *msg, arg[];
 	{
 	char errmsg[MAXLINE];
 
-	(void) sprintf( errmsg, msg, arg );
+	(void) snprintf( errmsg, sizeof(errmsg), msg, arg );
 	synerr( errmsg );
 	}
 
@@ -977,7 +977,7 @@ const char *msg, arg[];
 	{
 	char warn_msg[MAXLINE];
 
-	(void) sprintf( warn_msg, msg, arg );
+	snprintf( warn_msg, sizeof(warn_msg), msg, arg );
 	warn( warn_msg );
 	}
 
@@ -999,7 +999,7 @@ const char *msg, arg[];
 	{
 	char errmsg[MAXLINE];
 
-	(void) sprintf( errmsg, msg, arg );
+	snprintf( errmsg, sizeof(errmsg), msg, arg );
 	pinpoint_message( errmsg );
 	}
 
@@ -1023,7 +1023,7 @@ int line;
 
 	if ( ! nowarn )
 		{
-		sprintf( warning, "warning, %s", str );
+		snprintf( warning, sizeof(warning), "warning, %s", str );
 		line_pinpoint( warning, line );
 		}
 	}

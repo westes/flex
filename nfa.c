@@ -222,10 +222,10 @@ void    finish_rule (mach, variable_trail_rule, headcnt, trailcnt,
 	if (pcont_act && rule_has_nl[num_rules - 1])
 		rule_has_nl[num_rules] = true;
 
-	sprintf (action_text, "case %d:\n", num_rules);
+	snprintf (action_text, sizeof(action_text), "case %d:\n", num_rules);
 	add_action (action_text);
 	if (rule_has_nl[num_rules]) {
-		sprintf (action_text, "/* rule %d can match eol */\n",
+		snprintf (action_text, sizeof(action_text), "/* rule %d can match eol */\n",
 			 num_rules);
 		add_action (action_text);
 	}
@@ -257,13 +257,13 @@ void    finish_rule (mach, variable_trail_rule, headcnt, trailcnt,
 				("*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */\n");
 
 			if (headcnt > 0) {
-				sprintf (action_text, "%s = %s + %d;\n",
+				snprintf (action_text, sizeof(action_text), "%s = %s + %d;\n",
 					 scanner_cp, scanner_bp, headcnt);
 				add_action (action_text);
 			}
 
 			else {
-				sprintf (action_text, "%s -= %d;\n",
+				snprintf (action_text, sizeof(action_text), "%s -= %d;\n",
 					 scanner_cp, trailcnt);
 				add_action (action_text);
 			}

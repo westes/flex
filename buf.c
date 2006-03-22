@@ -71,9 +71,10 @@ struct Buf *buf_print_strings(struct Buf * buf, FILE* out)
 struct Buf *buf_prints (struct Buf *buf, const char *fmt, const char *s)
 {
 	char   *t;
+        size_t tsz;
 
-	t = flex_alloc (strlen (fmt) + strlen (s) + 1);
-	sprintf (t, fmt, s);
+	t = flex_alloc (tsz = strlen (fmt) + strlen (s) + 1);
+	snprintf (t, tsz, fmt, s);
 	buf = buf_strappend (buf, t);
 	flex_free (t);
 	return buf;
@@ -88,9 +89,10 @@ struct Buf *buf_prints (struct Buf *buf, const char *fmt, const char *s)
 struct Buf *buf_linedir (struct Buf *buf, const char* filename, int lineno)
 {
     char   *t, *fmt = "#line %d \"%s\"\n";
+    size_t tsz;
     
-    t = flex_alloc (strlen (fmt) + strlen (filename) + (int)(1 + log10(lineno>=0?lineno:-lineno)) + 1);
-    sprintf (t, fmt, lineno, filename);
+    t = flex_alloc (tsz = strlen (fmt) + strlen (filename) + (int)(1 + log10(lineno>=0?lineno:-lineno)) + 1);
+    snprintf (t, tsz, fmt, lineno, filename);
     buf = buf_strappend (buf, t);
     flex_free (t);
     return buf;
@@ -156,11 +158,12 @@ struct Buf *buf_m4_define (struct Buf *buf, const char* def, const char* val)
 {
     const char * fmt = "m4_define( [[%s]], [[%s]])m4_dnl\n";
     char * str;
+    size_t strsz;
 
     val = val?val:"";
-    str = (char*)flex_alloc(strlen(fmt) + strlen(def) + strlen(val) + 2);
+    str = (char*)flex_alloc(strsz = strlen(fmt) + strlen(def) + strlen(val) + 2);
 
-    sprintf(str, fmt, def, val);
+    snprintf(str, strsz, fmt, def, val);
     buf_append(buf, &str, 1);
     return buf;
 }
@@ -174,10 +177,11 @@ struct Buf *buf_m4_undefine (struct Buf *buf, const char* def)
 {
     const char * fmt = "m4_undefine( [[%s]])m4_dnl\n";
     char * str;
+    size_t strsz;
 
-    str = (char*)flex_alloc(strlen(fmt) + strlen(def) + 2);
+    str = (char*)flex_alloc(strsz = strlen(fmt) + strlen(def) + 2);
 
-    sprintf(str, fmt, def);
+    snprintf(str, strsz, fmt, def);
     buf_append(buf, &str, 1);
     return buf;
 }

@@ -362,7 +362,7 @@ int filter_fix_linedirs (struct filter *chain)
 				       "<stdout>") == 0) {
 				/* Adjust the line directives. */
 				in_gen = true;
-				sprintf (buf, "#line %d \"%s\"\n",
+				snprintf (buf, readsz, "#line %d \"%s\"\n",
 					 lineno + 1, fname);
 				free (fname);
 
