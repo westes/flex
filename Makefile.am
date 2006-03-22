@@ -140,7 +140,7 @@ SUBDIRS = \
 	tests
 
 localedir = $(datadir)/locale
-AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I@includedir@ -I$(top_srcdir)/intl
+AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/intl
 LIBS = @LIBINTL@ @LIBS@
 
 skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
