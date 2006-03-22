@@ -693,6 +693,9 @@ character EXCEPT an uppercase letter.
 any character EXCEPT an uppercase letter or
 a newline
 
+@item [a-z]{-}[aeiou]
+the lowercase consonants
+
 @item r*
 zero or more r's, where r is any regular expression
 
@@ -946,6 +949,16 @@ Flex will issue a warning if the expressions @samp{[:^upper:]} and
 @samp{[:^lower:]} appear in a case-insensitive scanner, since their meaning is
 unclear. The current behavior is to skip them entirely, but this may change
 without notice in future revisions of flex.
+
+@item
+
+The @samp{@{-@}} operator computes the difference of two character classes. For
+example, @samp{[a-c]@{-@}[b-z]} represents all the characters in the class
+@samp{[a-c]} that are not in the class @samp{[b-z]} (which in this case, is
+just the single character @samp{a}). The @samp{@{-@}} operator is left
+associative, so @samp{[abc]@{-@}[b]@{-@}[c]} is the same as @samp{[a]}. Be careful
+not to accidently create an empty set, which will never match.
+
 
 @cindex trailing context, limits of
 @cindex ^ as non-special character in patterns
