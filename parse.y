@@ -9,6 +9,9 @@
 
 %token CCE_NEG_ALNUM CCE_NEG_ALPHA CCE_NEG_BLANK CCE_NEG_CNTRL CCE_NEG_DIGIT CCE_NEG_GRAPH
 %token CCE_NEG_LOWER CCE_NEG_PRINT CCE_NEG_PUNCT CCE_NEG_SPACE CCE_NEG_UPPER CCE_NEG_XDIGIT
+
+%left CCL_OP_DIFF
+
 /*
  *POSIX and AT&T lex place the
  * precedence of the repeat operator, {}, below that of concatenation.
@@ -792,9 +795,14 @@ singleton	:  singleton '*'
 			$$ = mkstate( $1 );
 			}
 		;
+fullccl:
+        fullccl CCL_OP_DIFF braceccl  { $$ = ccl_set_diff ($1, $3); }
+    |   braceccl
+    ;
 
-fullccl		:  '[' ccl ']'
-			{ $$ = $2; }
+braceccl: 
+
+            '[' ccl ']' { $$ = $2; }
 
 		|  '[' '^' ccl ']'
 			{

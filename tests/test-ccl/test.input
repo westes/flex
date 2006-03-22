@@ -8,3 +8,8 @@
 ^punct:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF 	Z@punct@
 ^cntrl:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF~!@#$%^&*(){}[]':;"<>,./?\+=_-`@cntrl@
 ^xdigit:ghijklmnopqrstuvwxyzGHIJKLMNOPQRSTUVWXYZ 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@xdigit@
+a-d:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@a-d@
+l-xyz:abcdefghijklmnopqrstuvw@l-xyz@
+abcd-bc:aaaaddddaaaa@abcd-bc@
+abcde-b-c:aaaaddddeeee@abcde-b-c@
+^XY-^XYZ:ZZZZZZZZZZZ@^XY-^XYZ@

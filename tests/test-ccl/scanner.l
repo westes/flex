@@ -37,16 +37,22 @@
 
 %%
 
-"^alpha:"[[:^alpha:]]+@alpha@\n        printf("OK: %s", yytext); ++yylineno; return 1;
-"^digit:"[[:^digit:]]+@digit@\n        printf("OK: %s", yytext); ++yylineno; return 1;
-"^alnum:"[[:^alnum:]]+@alnum@\n        printf("OK: %s", yytext); ++yylineno; return 1;
-"^upper:"[[:^upper:]]+@upper@\n        printf("OK: %s", yytext); ++yylineno; return 1;
-"^lower:"[[:^lower:]]+@lower@\n        printf("OK: %s", yytext); ++yylineno; return 1;
-"^space:"[[:^space:]]+@space@\n        printf("OK: %s", yytext); ++yylineno; return 1;
-"^blank:"[[:^blank:]]+@blank@\n        printf("OK: %s", yytext); ++yylineno; return 1;
-"^punct:"[[:^punct:]]+@punct@\n        printf("OK: %s", yytext); ++yylineno; return 1;
-"^cntrl:"[[:^cntrl:]]+@cntrl@\n        printf("OK: %s", yytext); ++yylineno; return 1;
-"^xdigit:"[[:^xdigit:]]+@xdigit@\n      printf("OK: %s", yytext); ++yylineno; return 1;
+^"^alpha:"[[:^alpha:]]+@alpha@\n        printf("OK: %s", yytext); ++yylineno; return 1;
+^"^digit:"[[:^digit:]]+@digit@\n        printf("OK: %s", yytext); ++yylineno; return 1;
+^"^alnum:"[[:^alnum:]]+@alnum@\n        printf("OK: %s", yytext); ++yylineno; return 1;
+^"^upper:"[[:^upper:]]+@upper@\n        printf("OK: %s", yytext); ++yylineno; return 1;
+^"^lower:"[[:^lower:]]+@lower@\n        printf("OK: %s", yytext); ++yylineno; return 1;
+^"^space:"[[:^space:]]+@space@\n        printf("OK: %s", yytext); ++yylineno; return 1;
+^"^blank:"[[:^blank:]]+@blank@\n        printf("OK: %s", yytext); ++yylineno; return 1;
+^"^punct:"[[:^punct:]]+@punct@\n        printf("OK: %s", yytext); ++yylineno; return 1;
+^"^cntrl:"[[:^cntrl:]]+@cntrl@\n        printf("OK: %s", yytext); ++yylineno; return 1;
+^"^xdigit:"[[:^xdigit:]]+@xdigit@\n      printf("OK: %s", yytext); ++yylineno; return 1;
+
+^"a-d:"[[:alpha:]]{-}[[:digit:]]+@a-d@\n  printf("OK: %s", yytext); ++yylineno; return 1;
+^"l-xyz:"([[:lower:]]{-}[xyz])+@l-xyz@\n    printf("OK: %s", yytext); ++yylineno; return 1;
+^"abcd-bc:"([abcd]{-}[bc])+@abcd-bc@\n          printf("OK: %s", yytext); ++yylineno; return 1;
+^"abcde-b-c:"([abcde]{-}[b]{-}[c])+@abcde-b-c@\n    printf("OK: %s", yytext); ++yylineno; return 1;
+^"^XY-^XYZ:"([^XY]{-}[^XYZ])+@^XY-^XYZ@\n    printf("OK: %s", yytext); ++yylineno; return 1;
 
 .|\n                       {
     printf("ERROR: at line %d\n", yylineno);

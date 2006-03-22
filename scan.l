@@ -592,6 +592,7 @@ M4QEND      "]]"
 				return '[';
 				}
 			}
+    "{-}"       return CCL_OP_DIFF;
 
     /* Check for :space: at the end of the rule so we don't
      * wrap the expanded regex in '(' ')' -- breaking trailing

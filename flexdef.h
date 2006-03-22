@@ -719,6 +719,7 @@ extern int yylval;
 extern void ccladd PROTO ((int, int));	/* add a single character to a ccl */
 extern int cclinit PROTO ((void));	/* make an empty ccl */
 extern void cclnegate PROTO ((int));	/* negate a ccl */
+extern int ccl_set_diff (int a, int b); /* set difference of two ccls. */
 
 /* List the members of a set of characters in CCL form. */
 extern void list_character_set PROTO ((FILE *, int[]));

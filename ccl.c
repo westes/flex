@@ -33,6 +33,23 @@
 
 #include "flexdef.h"
 
+/* return true if the chr is in the ccl. Takes negation into account. */
+static bool
+ccl_contains (const int cclp, const int ch)
+{
+	int     ind, len, i;
+
+	len = ccllen[cclp];
+	ind = cclmap[cclp];
+
+	for (i = 0; i < len; ++i)
+		if (ccltbl[ind + i] == ch)
+			return !cclng[cclp];
+
+    return cclng[cclp];
+}
+
+
 /* ccladd - add a single character to a ccl */
 
 void    ccladd (cclp, ch)
@@ -69,6 +86,69 @@ void    ccladd (cclp, ch)
 
 	ccllen[cclp] = len + 1;
 	ccltbl[newpos] = ch;
+}
+
+/* dump_cclp - same thing as list_character_set, but for cclps.  */
+
+static void    dump_cclp (FILE* file, int cclp)
+{
+	register int i;
+
+	putc ('[', file);
+
+	for (i = 0; i < csize; ++i) {
+		if (ccl_contains(cclp, i)){
+			register int start_char = i;
+
+			putc (' ', file);
+
+			fputs (readable_form (i), file);
+
+			while (++i < csize && ccl_contains(cclp,i)) ;
+
+			if (i - 1 > start_char)
+				/* this was a run */
+				fprintf (file, "-%s",
+					 readable_form (i - 1));
+
+			putc (' ', file);
+		}
+	}
+
+	putc (']', file);
+}
+
+
+
+/* ccl_set_diff - create a new ccl as the set difference of the two given ccls. */
+int
+ccl_set_diff (int a, int b)
+{
+    int  d, ch;
+
+    /* create new class  */
+    d = cclinit();
+
+    /* In order to handle negation, we spin through all possible chars,
+     * addding each char in a that is not in b.
+     * (This could be O(n^2), but n is small and bounded.)
+     */
+	for ( ch = 0; ch < csize; ++ch )
+        if (ccl_contains (a, ch) && !ccl_contains(b, ch))
+            ccladd (d, ch);
+
+    /* debug */
+    if (0){
+        fprintf(stderr, "ccl_set_diff (");
+            fprintf(stderr, "\n    ");
+            dump_cclp (stderr, a);
+            fprintf(stderr, "\n    ");
+            dump_cclp (stderr, b);
+            fprintf(stderr, "\n    ");
+            dump_cclp (stderr, d);
+        fprintf(stderr, "\n)\n");
+    }
+    return d;
 }
 
 
