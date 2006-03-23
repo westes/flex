@@ -265,6 +265,7 @@ Appendices
 * Makefiles and Flex::          
 * Bison Bridge::                
 * M4 Dependency::               
+* Common Patterns::               
 
 Indices
 
@@ -8088,6 +8089,7 @@ See @ref{Top, , , bison, the GNU Bison Manual}.
 * Makefiles and Flex::          
 * Bison Bridge::                
 * M4 Dependency::               
+* Common Patterns::               
 @end menu
 
 @node Makefiles and Flex, Bison Bridge, Appendices, Appendices
@@ -8301,7 +8303,7 @@ As you can see, there really is no magic here. We just use
 @end verbatim
 @end example
 
-@node M4 Dependency, , Bison Bridge, Appendices
+@node M4 Dependency, Common Patterns, Bison Bridge, Appendices
 @section M4 Dependency
 @cindex m4
 The macro processor @code{m4}@footnote{The use of m4 is subject to change in
@@ -8329,6 +8331,38 @@ use @code{x[y[z] ]}.
 
 @code{m4} is only required at the time you run @code{flex}. The generated
 scanner is ordinary C or C++, and does @emph{not} require @code{m4}.
+
+@node Common Patterns, ,M4 Dependency, Appendices
+@section Common Patterns
+@cindex patterns, common
+
+This appendix provides examples of common regular expressions you might use
+in your scanner.
+
+Numbers
+
+@table @asis
+
+@item an signed integer
+@code{[+-]?([[:digit:]]@{-@}[0])[[:digit:]]*}
+
+@item a hexadecimal constant
+@code{0x[[:xdigit:]]+}
+
+@item an octal constant
+@code{0[0123456]+}
+
+@item a decimal constant
+@code{[+-]([[:digit:]]@{-@}[0])[[:digit:]]*("."[[:digit:]]+)?}
+
+@c TODO
+@item a C99 floating point constant
+@code{[+-] ([[:digit:]]*"."[[:digit:]]+|[[:digit:]]+\.)  ([E]?[[:digit:]]+)  [FL]?     |INF|INFINITY|(NAN("("")")?)}
+
+(See C99 section 6.4.4.2.)
+
+
+@end table
 
 
 @node Indices,  , Appendices, Top
