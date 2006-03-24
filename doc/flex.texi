@@ -8339,28 +8339,100 @@ scanner is ordinary C or C++, and does @emph{not} require @code{m4}.
 This appendix provides examples of common regular expressions you might use
 in your scanner.
 
-Numbers
+@menu
+* Numbers::         
+* Quoted Constructs::       
+* Addresses::       
+@end menu
+
+
+@node Numbers, Quoted Constructs, ,Common Patterns
+@subsection Numbers
 
 @table @asis
 
-@item an signed integer
-@code{[+-]?([[:digit:]]@{-@}[0])[[:digit:]]*}
+@item C99 decimal constant
+@code{([[:digit:]]@{-@}[0])[[:digit:]]*}
 
-@item a hexadecimal constant
-@code{0x[[:xdigit:]]+}
+@item C99 hexadecimal constant
+@code{0[xX][[:xdigit:]]+}
 
-@item an octal constant
-@code{0[0123456]+}
+@item C99 octal constant
+@code{0[0123456]*}
 
-@item a decimal constant
-@code{[+-]([[:digit:]]@{-@}[0])[[:digit:]]*("."[[:digit:]]+)?}
+@item C99 floating point constant
+@verbatim
+ {dseq}      ([[:digit:]]+)
+ {dseq_opt}  ([[:digit:]]*)
+ {frac}      (({dseq_opt}"."{dseq})|{dseq}".")
+ {exp}       ([eE][+-]?{dseq})
+ {exp_opt}   ({exp}?)
+ {fsuff}     [flFL]
+ {fsuff_opt} ({fsuff}?)
+ {hpref}     (0[xX])
+ {hdseq}     ([[:xdigit:]]+)
+ {hdseq_opt} ([[:xdigit:]]*)
+ {hfrac}     (({hdseq_opt}"."{hdseq})|({hdseq}"."))
+ {bexp}      ([pP][+-]?{dseq})
+ {dfc}       (({frac}{exp_opt}{fsuff_opt})|({dseq}{exp}{fsuff_opt}))
+ {hfc}       (({hpref}{hfrac}{bexp}{fsuff_opt})|({hpref}{hdseq}{bexp}{fsuff_opt}))
 
-@c TODO
-@item a C99 floating point constant
-@code{[+-] ([[:digit:]]*"."[[:digit:]]+|[[:digit:]]+\.)  ([E]?[[:digit:]]+)  [FL]?     |INF|INFINITY|(NAN("("")")?)}
+ {c99_floating_point_constant}  ({dfc}|{hfc})
+@end verbatim
 
-(See C99 section 6.4.4.2.)
+See C99 section 6.4.4.2 for the gory details.
 
+@end table
+
+@node Quoted Constructs, Addresses, Numbers, Common Patterns
+@subsection Quoted Constructs
+
+@table @asis
+@item C99 String Literal
+@code{L?\"([^\"\\\n]|(\\['\"?\\abfnrtv])|(\\([0123456]@{1,3@}))|(\\x[[:xdigit:]]+)|(\\[uU]([[:xdigit:]]@{4@})))*\"}
+
+@item C99 Comment
+@code{("/*"([^*]|"*"[^/])*"*/")|(/(\\\n)*/[^\n]*)}
+
+Note that in C99, a @samp{//}-style comment may be split across lines,  and, contrary to popular belief,
+does not include the trailing @samp{\n} character.
+
+A better way to scan @samp{/* */} comments is by line, rather than matching
+possibly huge comments all at once. This will allow you to scan comments of
+unlimited length, as long as line breaks appear at sane intervals. This is also
+more efficient when used with automatic line number processing. @xref{option-yylineno}.
+
+@verbatim
+<INITIAL>{
+    "/*"      BEGIN(COMMENT);
+}
+<COMMENT>{
+    "*/"      BEGIN(0);
+    [^*\n]+   ;
+    "*"[^/]   ;
+    \n        ;
+}
+@end verbatim
+
+@end table
+
+@node Addresses, ,Quoted Constructs, Common Patterns
+@subsection Addresses
+
+@table @asis
+
+@item IPv4 Address
+@code{(([[:digit:]]@{1,3@}".")@{3@}([[:digit:]]@{1,3@}))}
+
+@item IPv6 Address
+@verbatim
+hex4         ([[:xdigit:]]{1,4})
+hexseq       ({hex4}(:{hex4}*))
+hexpart      ({hexseq}|({hexseq}::({hexseq}?))|::{hexseq})
+IPv6address  ({hexpart}(":"{IPv4address})?)
+@end verbatim
+
+See RFC 2373 for details.
 
 @end table
 
