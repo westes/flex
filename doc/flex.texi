@@ -8108,7 +8108,9 @@ This requires you to carefully plan your Makefile.
 Modern @command{make} programs understand that @file{foo.l} is intended to
 generate @file{lex.yy.c} or @file{foo.c}, and will behave
 accordingly@footnote{GNU @command{make} and GNU @command{automake} are two such
-programs that provide implicit rules for flex-generated scanners.}.  The
+programs that provide implicit rules for flex-generated scanners.}@footnote{GNU @command{automake}
+may generate code to execute flex in lex-compatible mode, or to stdout. If this is not what you want,
+then you should provide an explicit rule in your Makefile.am}.  The
 following Makefile does not explicitly instruct @command{make} how to build
 @file{foo.c} from @file{foo.l}. Instead, it relies on the implicit rules of the
 @command{make} program to build the intermediate file, @file{scan.c}:
@@ -8325,7 +8327,9 @@ symbol past m4 unmangled.
 former is not valid in C, except within comments and strings, but the latter is valid in
 code such as @code{x[y[z]]}. The solution is simple. To get the literal string 
 @code{"]]"}, use @code{"]""]"}. To get the array notation @code{x[y[z]]},
-use @code{x[y[z] ]}.
+use @code{x[y[z] ]}. Flex will attempt to detect these sequences in user code, and
+escape them. However, it's best to avoid this complexity where possible, by
+removing such sequences from your code.
 
 @end itemize
 
@@ -8341,12 +8345,13 @@ in your scanner.
 
 @menu
 * Numbers::         
+* Identifiers::         
 * Quoted Constructs::       
 * Addresses::       
 @end menu
 
 
-@node Numbers, Quoted Constructs, ,Common Patterns
+@node Numbers, Identifiers, ,Common Patterns
 @subsection Numbers
 
 @table @asis
@@ -8384,15 +8389,33 @@ See C99 section 6.4.4.2 for the gory details.
 
 @end table
 
-@node Quoted Constructs, Addresses, Numbers, Common Patterns
+@node Identifiers, Quoted Constructs, Numbers, Common Patterns
+@subsection Identifiers
+
+@table @asis
+
+@item C99 Identifier
+@verbatim
+ucn        ((\\u([[:xdigit:]]{4}))|(\\U([[:xdigit:]]{8})))
+nondigit    [_[:alpha:]]
+c99_id     ([_[:alpha:]]|{ucn})([_[:alnum:]]|{ucn})*
+@end verbatim
+
+Technically, the above pattern does not encompass all possible C99 identifiers, since C99 allows for
+"implementation-defined" characters. In practice, C compilers follow the above pattern, with the
+addition of the @samp{$} character.
+
+@end table
+
+@node Quoted Constructs, Addresses, Identifiers, Common Patterns
 @subsection Quoted Constructs
 
 @table @asis
 @item C99 String Literal
-@code{L?\"([^\"\\\n]|(\\['\"?\\abfnrtv])|(\\([0123456]@{1,3@}))|(\\x[[:xdigit:]]+)|(\\[uU]([[:xdigit:]]@{4@})))*\"}
+@code{L?\"([^\"\\\n]|(\\['\"?\\abfnrtv])|(\\([0123456]@{1,3@}))|(\\x[[:xdigit:]]+)|(\\u([[:xdigit:]]@{4@}))|(\\U([[:xdigit:]]@{8@})))*\"}
 
 @item C99 Comment
-@code{("/*"([^*]|"*"[^/])*"*/")|(/(\\\n)*/[^\n]*)}
+@code{("/*"([^*]|"*"[^/])*"*/")|("/"(\\\n)*"/"[^\n]*)}
 
 Note that in C99, a @samp{//}-style comment may be split across lines,  and, contrary to popular belief,
 does not include the trailing @samp{\n} character.
@@ -8432,7 +8455,14 @@ hexpart      ({hexseq}|({hexseq}::({hexseq}?))|::{hexseq})
 IPv6address  ({hexpart}(":"{IPv4address})?)
 @end verbatim
 
-See RFC 2373 for details.
+See RFC2373 for details.
+
+@item URI
+@code{(([^:/?#]+):)?("//"([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?}
+
+This pattern is nearly useless, since it allows just about any character to
+appear in a URI, including spaces and control characters.  See RFC2396 for
+details.
 
 @end table
 
