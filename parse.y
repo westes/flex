@@ -786,7 +786,7 @@ singleton	:  singleton '*'
 			{
 			++rulelen;
 
-			if ( caseins && $1 >= 'A' && $1 <= 'Z' )
+			if ( caseins && isupper($1))
 				$1 = clower( $1 );
 
 			if ($1 == nlch)
@@ -867,7 +867,7 @@ ccl		:  ccl CHAR '-' CHAR
 
 		|  ccl CHAR
 			{
-			if ( caseins && $2 >= 'A' && $2 <= 'Z' )
+			if ( caseins && isupper($2))
 				$2 = clower( $2 );
 
 			ccladd( $1, $2 );
@@ -936,7 +936,7 @@ ccl_expr:
 		
 string		:  string CHAR
 			{
-			if ( caseins && $2 >= 'A' && $2 <= 'Z' )
+			if ( caseins && isupper($2))
 				$2 = clower( $2 );
 
 			if ( $2 == nlch )
