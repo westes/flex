@@ -15,6 +15,7 @@ c++-basic             - The C++ scanner.
 c++-multiple-scanners - Multiple C++ scanners.
 debug-nr              - Use yy_flex_debug, non-reentrant.
 debug-r               - Use debugging functions, reentrant.
+extended              - Extended pattern syntax.
 header-nr             - Test generated header file, non-reentrant.
 header-r              - Test generated header file, reentrant.
 include-by-buffer     - YY_BUFFER_STATE, yy_push_state, etc.

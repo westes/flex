@@ -26,6 +26,7 @@ dist_noinst_SCRIPTS = \
 	create-test
 
 DIST_SUBDIRS = \
+	test-extended \
 	test-ccl \
 	test-quotes \
 	test-rescan-r \
@@ -71,6 +72,7 @@ DIST_SUBDIRS = \
 	test-table-opts
 
 SUBDIRS = \
+	test-extended \
 	test-ccl \
 	test-quotes \
 	test-rescan-r \

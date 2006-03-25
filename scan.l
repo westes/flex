@@ -101,6 +101,9 @@ extern const char *escaped_qstart, *escaped_qend;
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
 %x FIRSTCCL CCL ACTION RECOVER COMMENT ACTION_STRING PERCENT_BRACE_ACTION
 %x OPTION LINEDIR CODEBLOCK_MATCH_BRACE
+%x GROUP_WITH_PARAMS
+%x GROUP_MINUS_PARAMS
+%x EXTENDED_COMMENT
 
 WS		[[:blank:]]+
 OPTWS		[[:blank:]]*
@@ -206,6 +209,12 @@ M4QEND      "]]"
     {M4QEND}    ACTION_ECHO_QEND;
 	[^*\n]      ACTION_ECHO;
 	{NL}	    ++linenum; ACTION_ECHO;
+}
+
+<EXTENDED_COMMENT>{
+    ")"         BEGIN(SECT2);
+    [^\n\)]+      ;
+    {NL}        ++linenum;        
 }
 
 <LINEDIR>{
@@ -594,6 +603,7 @@ M4QEND      "]]"
 			}
     "{-}"       return CCL_OP_DIFF;
 
+
     /* Check for :space: at the end of the rule so we don't
      * wrap the expanded regex in '(' ')' -- breaking trailing
      * context.
@@ -646,6 +656,11 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 				}
 			}
 
+    "(?#"       BEGIN(EXTENDED_COMMENT);
+    "(?"        BEGIN(GROUP_WITH_PARAMS); return '('; /* TODO: push parameterized rule state. */
+    "("         return '('; /* TODO: push  parameterized rule state. */
+    ")"         return ')'; /* TODO: pop  parameterized rule state. */
+
 	[/|*+?.(){}]	return (unsigned char) yytext[0];
 	.		RETURNCHAR;
 }
@@ -678,6 +693,17 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			}
 }
 
+<GROUP_WITH_PARAMS>{
+    ":"     BEGIN(SECT2);
+    "-"     BEGIN(GROUP_MINUS_PARAMS);
+    i       ; /* TODO: temporarily case-insensitive. */
+    s       ; /* TODO: temporary dot-all. */
+}
+<GROUP_MINUS_PARAMS>{
+    ":"     BEGIN(SECT2);
+    i       ; /* TODO: temporarily NOT case-insensitive. */
+    s       ; /* TODO: temporarily NOT dot-all. */
+}
 
 <FIRSTCCL>{
 	"^"/[^-\]\n]	BEGIN(CCL); return '^';
@@ -834,6 +860,10 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			yyterminate();
 			}
 
+<EXTENDED_COMMENT,GROUP_WITH_PARAMS,GROUP_MINUS_PARAMS><<EOF>>	{
+			synerr( _( "EOF encountered inside pattern" ) );
+			yyterminate();
+			}
 
 <SECT2,QUOTE,FIRSTCCL,CCL>{ESCSEQ}	{
 			yylval = myesc( (Char *) yytext );

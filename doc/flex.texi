@@ -746,6 +746,11 @@ the character with hexadecimal value 2a
 @item (r)
 match an @samp{r}; parentheses are used to override precedence (see below)
 
+@item (?# comment )
+omit everything within @samp{()}. The first @samp{)}
+character encountered ends the pattern. It is not possible to for the comment
+to contain a @samp{)} character. The comment may span lines.
+
 @cindex concatenation, in patterns
 @item rs
 the regular expression @samp{r} followed by the regular expression @samp{s}; called
