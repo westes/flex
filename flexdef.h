@@ -48,6 +48,12 @@
 #include <string.h>
 #include <math.h>
 #endif
+#ifdef HAVE_ASSERT_H
+#include <assert.h>
+#else
+#define assert(Pred)
+#endif
+
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
@@ -257,7 +263,7 @@
 
 /* The percentage the number of homogeneous out-transitions of a state
  * must be of the number of total out-transitions of the state in order
- * that the state's transition table is first compared with a potential 
+ * that the state's transition table is first compared with a potential
  * template of the most common out-transition instead of with the first
  * proto in the proto queue.
  */
@@ -410,7 +416,7 @@ extern int yymore_really_used, reject_really_used;
  * use_stdout - the -t flag
  * input_files - array holding names of input files
  * num_input_files - size of input_files array
- * program_name - name with which program was invoked 
+ * program_name - name with which program was invoked
  *
  * action_array - array to hold the rule actions
  * action_size - size of action_array
@@ -1179,5 +1185,25 @@ char   *regmatch_cpy (regmatch_t * m, char *dest, const char *src);
 int regmatch_len (regmatch_t * m);
 int regmatch_strtol (regmatch_t * m, const char *src, char **endptr, int base);
 bool regmatch_empty (regmatch_t * m);
+
+/* From "scanflags.h" */
+typedef unsigned int scanflags_t;
+extern scanflags_t* _sf_stk;
+extern size_t _sf_n, _sf_max; /**< stack of scanner flags. */
+#define _SF_CASE_INS   0x0001
+#define _SF_DOT_ALL    0x0002
+#define _SF_SKIP_WS    0x0004
+
+#define sf_top()           (_sf_stk[sf_n])
+#define sf_case_ins()      (sf_top() & _SF_CASE_INS)
+#define sf_dot_all()       (sf_top() & _SF_DOT_ALL)
+#define sf_skip_ws()       (sf_top() & _SF_SKIP_WS)
+#define sf_set_case_ins(X)      ((X) ? (sf_top() |= _SF_CASE_INS) : (sf_top() &= ~_SF_CASE_INS))
+#define sf_set_dot_all(X)       ((X) ? (sf_top() |= _SF_DOT_ALL)  : (sf_top() &= ~_SF_DOT_ALL))
+#define sf_set_skip_ws(X)       ((X) ? (sf_top() |= _SF_SKIP_WS)  : (sf_top() &= ~_SF_SKIP_WS))
+
+extern void sf_push(void);
+extern void sf_pop(void);
+
 
 #endif /* not defined FLEXDEF_H */

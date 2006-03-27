@@ -84,6 +84,7 @@ AC_CHECK_HEADERS( sys/wait.h sys/params.h)
 AC_CHECK_HEADERS(cunistd)
 AC_CHECK_HEADERS(locale.h libintl.h)
 AC_CHECK_HEADERS(regex.h)
+AC_CHECK_HEADERS(assert.h)
 
 dnl checks for types
 
