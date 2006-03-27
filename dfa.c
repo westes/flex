@@ -697,21 +697,6 @@ void ntod ()
 			}
 		}
 
-		if (caseins && !useecs) {
-			register int j;
-
-			for (i = 'A', j = 'a'; i <= 'Z'; ++i, ++j) {
-				if (state[i] == 0 && state[j] != 0)
-					/* We're adding a transition. */
-					++totaltrans;
-
-				else if (state[i] != 0 && state[j] == 0)
-					/* We're taking away a transition. */
-					--totaltrans;
-
-				state[i] = state[j];
-			}
-		}
 
 		numsnpairs += totaltrans;
 
@@ -1017,10 +1002,6 @@ int symfollowset (ds, dsize, transsym, nset)
 					}
 				}
 		}
-
-		else if (sym >= 'A' && sym <= 'Z' && caseins)
-			flexfatal (_
-				   ("consistency check failed in symfollowset"));
 
 		else if (sym == SYM_EPSILON) {	/* do nothing */
 		}

@@ -28,6 +28,7 @@
 #include "config.h"
 /*#include "parser.h" */
 
+#define err_abort() do{printf("ERROR: flex line %d. input line %d.\n", __LINE__, yylineno); abort();} while(0)
 %}
 
 %option 8bit outfile="scanner.c" prefix="test"
@@ -53,11 +54,15 @@
 ^"abcd-bc:"([abcd]{-}[bc])+@abcd-bc@\n          printf("OK: %s", yytext); ++yylineno; return 1;
 ^"abcde-b-c:"([abcde]{-}[b]{-}[c])+@abcde-b-c@\n    printf("OK: %s", yytext); ++yylineno; return 1;
 ^"^XY-^XYZ:"([^XY]{-}[^XYZ])+@^XY-^XYZ@\n    printf("OK: %s", yytext); ++yylineno; return 1;
+^"ia:"(?i:a)+@ia@\n                          printf("OK: %s", yytext); ++yylineno; return 1;
+^"iabc:"(?i:abc)+@iabc@\n                    printf("OK: %s", yytext); ++yylineno; return 1;
+^"ia-c:"(?i:[a-c]+)@ia-c@\n                             printf("OK: %s", yytext); ++yylineno; return 1;
 
-.|\n                       {
-    printf("ERROR: at line %d\n", yylineno);
-    abort();
-    }
+    /* We don't want this one to match. */
+^"check-a:"(?i:(?-i:A))@\n               err_abort();
+^"check-a:"(?i:(?-i:(?i:A)))@\n          printf("OK: %s", yytext); ++yylineno; return 1;
+
+.|\n                       { err_abort(); }
 %%
 
 int main(void);

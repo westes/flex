@@ -34,24 +34,24 @@
 #include "flexdef.h"
 
 scanflags_t* _sf_stk = NULL;
-size_t _sf_n=0, _sf_max=0;
+size_t _sf_top_ix=0, _sf_max=0;
 
 void
 sf_push (void)
 {
-    if (_sf_n + 1 >= _sf_max)
+    if (_sf_top_ix + 1 >= _sf_max)
         _sf_stk = (scanflags_t*) flex_realloc ( (void*) _sf_stk, sizeof(scanflags_t) * (_sf_max += 32));
 
     // copy the top element
-    _sf_stk[_sf_n + 1] = _sf_stk[_sf_n];
-    ++_sf_n;
+    _sf_stk[_sf_top_ix + 1] = _sf_stk[_sf_top_ix];
+    ++_sf_top_ix;
 }
 
 void
 sf_pop (void)
 {
-    assert(_sf_n > 0);
-    --_sf_n;
+    assert(_sf_top_ix > 0);
+    --_sf_top_ix;
 }
 
 /* one-time initialization. Should be called before any sf_ functions. */
@@ -60,7 +60,7 @@ sf_init (void)
 {
     assert(_sf_stk == NULL);
     _sf_stk = (scanflags_t*) flex_alloc ( sizeof(scanflags_t) * (_sf_max = 32));
-    _sf_stk[_sf_n] = 0;
+    _sf_stk[_sf_top_ix] = 0;
 }
 
 /* vim:set expandtab cindent tabstop=4 softtabstop=4 shiftwidth=4 textwidth=0: */

@@ -341,7 +341,6 @@
  * nowarn - if true (-w), do not generate warnings
  * spprdflt - if true (-s), suppress the default rule
  * interactive - if true (-I), generate an interactive scanner
- * caseins - if true (-i), generate a case-insensitive scanner
  * lex_compat - if true (-l), maximize compatibility with AT&T lex
  * posix_compat - if true (-X), maximize compatibility with POSIX lex
  * do_yylineno - if true, generate code to maintain yylineno
@@ -383,7 +382,7 @@
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
 	spprdflt;
-extern int interactive, caseins, lex_compat, posix_compat, do_yylineno;
+extern int interactive, lex_compat, posix_compat, do_yylineno;
 extern int useecs, fulltbl, usemecs, fullspd;
 extern int gen_line_dirs, performance_report, backing_up_report;
 extern int reentrant, bison_bridge_lval, bison_bridge_lloc;
@@ -1189,19 +1188,18 @@ bool regmatch_empty (regmatch_t * m);
 /* From "scanflags.h" */
 typedef unsigned int scanflags_t;
 extern scanflags_t* _sf_stk;
-extern size_t _sf_n, _sf_max; /**< stack of scanner flags. */
+extern size_t _sf_top_ix, _sf_max; /**< stack of scanner flags. */
 #define _SF_CASE_INS   0x0001
 #define _SF_DOT_ALL    0x0002
 #define _SF_SKIP_WS    0x0004
-
-#define sf_top()           (_sf_stk[sf_n])
+#define sf_top()           (_sf_stk[_sf_top_ix])
 #define sf_case_ins()      (sf_top() & _SF_CASE_INS)
 #define sf_dot_all()       (sf_top() & _SF_DOT_ALL)
 #define sf_skip_ws()       (sf_top() & _SF_SKIP_WS)
 #define sf_set_case_ins(X)      ((X) ? (sf_top() |= _SF_CASE_INS) : (sf_top() &= ~_SF_CASE_INS))
 #define sf_set_dot_all(X)       ((X) ? (sf_top() |= _SF_DOT_ALL)  : (sf_top() &= ~_SF_DOT_ALL))
 #define sf_set_skip_ws(X)       ((X) ? (sf_top() |= _SF_SKIP_WS)  : (sf_top() &= ~_SF_SKIP_WS))
-
+extern void sf_init(void);
 extern void sf_push(void);
 extern void sf_pop(void);
 

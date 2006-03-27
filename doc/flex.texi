@@ -746,6 +746,34 @@ the character with hexadecimal value 2a
 @item (r)
 match an @samp{r}; parentheses are used to override precedence (see below)
 
+@item (?r-s:pattern)
+apply option @samp{r} and omit option @samp{s} while interpreting pattern.
+Options may be zero or more of the characters @samp{i}, @samp{s}, or @samp{x}.
+
+@samp{i} means case-insensitive. @samp{-i} means case-sensitive.
+
+@samp{s} alters the meaning of the @samp{.} syntax to match any single byte whatsoever.
+@samp{-s} alters the meaning of @samp{.} to match any byte except @samp{\n}.
+
+@samp{x} ignores comments and whitespace in patterns. Whitespace is ignored unless
+it is backslash-escaped, contained within @samp{""}s, or appears inside a 
+character class. TODO -- Do we ignore Perl comments, C comments, or both?
+
+The following are all valid:
+
+@verbatim
+(?:foo)         same as  (foo)
+(?i:ab7)        same as  ([aA][bB]7)
+(?-i:ab)        same as  (ab)
+(?s:.)          same as  [\x00-\xFF]
+(?-s:.)         same as  [^\n]
+(?ix-s: a . b)  same as  ([Aa][^\n][bB])
+(?x:a  b)       same as  ("ab")
+(?x:a\ b)       same as  ("a b")
+(?x:a" "b)      same as  ("a b")
+(?x:a[ ]b)      same as  ("a b")
+@end verbatim
+
 @item (?# comment )
 omit everything within @samp{()}. The first @samp{)}
 character encountered ends the pattern. It is not possible to for the comment

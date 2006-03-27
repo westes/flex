@@ -786,13 +786,14 @@ singleton	:  singleton '*'
 			{
 			++rulelen;
 
-			if ( caseins && isupper($1))
-				$1 = clower( $1 );
-
 			if ($1 == nlch)
 				rule_has_nl[num_rules] = true;
 
-			$$ = mkstate( $1 );
+            if (sf_case_ins() && has_case($1))
+                /* create an alternation, as in (a|A) */
+                $$ = mkor (mkstate($1), mkstate(reverse_case($1)));
+            else
+                $$ = mkstate( $1 );
 			}
 		;
 fullccl:
@@ -814,24 +815,17 @@ braceccl:
 ccl		:  ccl CHAR '-' CHAR
 			{
 
-			if (caseins)
+			if (sf_case_ins())
 			  {
-			    /* Squish the character range to lowercase only if BOTH
-			     * ends of the range are uppercase.
-			     */
-			    if (isupper ($2) && isupper ($4))
-			      {
-				$2 = tolower ($2);
-				$4 = tolower ($4);
-			      }
 
 			    /* If one end of the range has case and the other
 			     * does not, or the cases are different, then we're not
 			     * sure what range the user is trying to express.
 			     * Examples: [@-z] or [S-t]
 			     */
-			    else if (has_case ($2) != has_case ($4)
-				     || (has_case ($2) && (b_islower ($2) != b_islower ($4))))
+			    if (has_case ($2) != has_case ($4)
+				     || (has_case ($2) && (b_islower ($2) != b_islower ($4)))
+				     || (has_case ($2) && (b_isupper ($2) != b_isupper ($4))))
 			      format_warn3 (
 			      _("the character range [%c-%c] is ambiguous in a case-insensitive scanner"),
 					    $2, $4);
@@ -860,6 +854,19 @@ ccl		:  ccl CHAR '-' CHAR
 				 */
 				cclsorted = cclsorted && ($2 > lastchar);
 				lastchar = $4;
+
+                /* Do it again for upper/lowercase */
+                if (sf_case_ins() && has_case($2) && has_case($4)){
+                    $2 = reverse_case ($2);
+                    $4 = reverse_case ($4);
+                    
+                    for ( i = $2; i <= $4; ++i )
+                        ccladd( $1, i );
+
+                    cclsorted = cclsorted && ($2 > lastchar);
+                    lastchar = $4;
+                }
+
 				}
 
 			$$ = $1;
@@ -867,12 +874,19 @@ ccl		:  ccl CHAR '-' CHAR
 
 		|  ccl CHAR
 			{
-			if ( caseins && isupper($2))
-				$2 = clower( $2 );
-
 			ccladd( $1, $2 );
 			cclsorted = cclsorted && ($2 > lastchar);
 			lastchar = $2;
+
+            /* Do it again for upper/lowercase */
+            if (sf_case_ins() && has_case($2)){
+                $1 = reverse_case ($2);
+                ccladd ($1, reverse_case ($2));
+
+                cclsorted = cclsorted && ($2 > lastchar);
+                lastchar = $2;
+            }
+
 			$$ = $1;
 			}
 
@@ -898,16 +912,19 @@ ccl_expr:
 		|  CCE_CNTRL	{ CCL_EXPR(iscntrl); }
 		|  CCE_DIGIT	{ CCL_EXPR(isdigit); }
 		|  CCE_GRAPH	{ CCL_EXPR(isgraph); }
-		|  CCE_LOWER	{ CCL_EXPR(islower); }
+		|  CCE_LOWER	{ 
+                          CCL_EXPR(islower);
+                          if (sf_case_ins())
+                              CCL_EXPR(isupper);
+                        }
 		|  CCE_PRINT	{ CCL_EXPR(isprint); }
 		|  CCE_PUNCT	{ CCL_EXPR(ispunct); }
 		|  CCE_SPACE	{ CCL_EXPR(isspace); }
 		|  CCE_XDIGIT	{ CCL_EXPR(isxdigit); }
 		|  CCE_UPPER	{
-				if ( caseins )
-					CCL_EXPR(islower);
-				else
-					CCL_EXPR(isupper);
+                    CCL_EXPR(isupper);
+                    if (sf_case_ins())
+                        CCL_EXPR(islower);
 				}
 
         |  CCE_NEG_ALNUM	{ CCL_NEG_EXPR(isalnum); }
@@ -921,13 +938,13 @@ ccl_expr:
 		|  CCE_NEG_SPACE	{ CCL_NEG_EXPR(isspace); }
 		|  CCE_NEG_XDIGIT	{ CCL_NEG_EXPR(isxdigit); }
 		|  CCE_NEG_LOWER	{ 
-				if ( caseins )
+				if ( sf_case_ins() )
 					warn(_("[:^lower:] is ambiguous in case insensitive scanner"));
 				else
 					CCL_NEG_EXPR(islower);
 				}
 		|  CCE_NEG_UPPER	{
-				if ( caseins )
+				if ( sf_case_ins() )
 					warn(_("[:^upper:] ambiguous in case insensitive scanner"));
 				else
 					CCL_NEG_EXPR(isupper);
@@ -936,15 +953,17 @@ ccl_expr:
 		
 string		:  string CHAR
 			{
-			if ( caseins && isupper($2))
-				$2 = clower( $2 );
-
 			if ( $2 == nlch )
 				rule_has_nl[num_rules] = true;
 
 			++rulelen;
 
-			$$ = link_machines( $1, mkstate( $2 ) );
+            if (sf_case_ins() && has_case($2))
+                $$ = mkor (mkstate($2), mkstate(reverse_case($2)));
+            else
+                $$ = mkstate ($2);
+
+			$$ = link_machines( $1, $$);
 			}
 
 		|

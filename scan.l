@@ -338,8 +338,8 @@ M4QEND      "]]"
                             bison_bridge_lval = true;
                      }
 	"c++"		C_plus_plus = option_sense;
-	caseful|case-sensitive		caseins = ! option_sense;
-	caseless|case-insensitive	caseins = option_sense;
+	caseful|case-sensitive		sf_set_case_ins(!option_sense);
+	caseless|case-insensitive	sf_set_case_ins(option_sense);
 	debug		ddebug = option_sense;
 	default		spprdflt = ! option_sense;
 	ecs		useecs = option_sense;
@@ -657,9 +657,9 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			}
 
     "(?#"       BEGIN(EXTENDED_COMMENT);
-    "(?"        BEGIN(GROUP_WITH_PARAMS); return '('; /* TODO: push parameterized rule state. */
-    "("         return '('; /* TODO: push  parameterized rule state. */
-    ")"         return ')'; /* TODO: pop  parameterized rule state. */
+    "(?"        sf_push(); BEGIN(GROUP_WITH_PARAMS); return '(';
+    "("         sf_push(); return '(';
+    ")"         sf_pop(); return ')';
 
 	[/|*+?.(){}]	return (unsigned char) yytext[0];
 	.		RETURNCHAR;
@@ -696,13 +696,15 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 <GROUP_WITH_PARAMS>{
     ":"     BEGIN(SECT2);
     "-"     BEGIN(GROUP_MINUS_PARAMS);
-    i       ; /* TODO: temporarily case-insensitive. */
-    s       ; /* TODO: temporary dot-all. */
+    i       sf_set_case_ins(1);
+    s       sf_set_dot_all(1);
+    x       sf_set_skip_ws(1);
 }
 <GROUP_MINUS_PARAMS>{
     ":"     BEGIN(SECT2);
-    i       ; /* TODO: temporarily NOT case-insensitive. */
-    s       ; /* TODO: temporarily NOT dot-all. */
+    i       sf_set_case_ins(0);
+    s       sf_set_dot_all(0);
+    x       sf_set_skip_ws(0);
 }
 
 <FIRSTCCL>{

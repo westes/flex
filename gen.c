@@ -447,9 +447,6 @@ struct yytbl_data *mkecstbl (void)
 		(flex_int32_t *) calloc (tbl->td_lolen, sizeof (flex_int32_t));
 
 	for (i = 1; i < csize; ++i) {
-		if (caseins && isupper (i))
-			ecgroup[i] = ecgroup[tolower (i)];
-
 		ecgroup[i] = ABS (ecgroup[i]);
 		tdata[i] = ecgroup[i];
 	}
@@ -471,9 +468,6 @@ void genecs ()
 	out_str_dec (get_int32_decl (), "yy_ec", csize);
 
 	for (i = 1; i < csize; ++i) {
-		if (caseins && (i >= 'A') && (i <= 'Z'))
-			ecgroup[i] = ecgroup[clower (i)];
-
 		ecgroup[i] = ABS (ecgroup[i]);
 		mkdata (ecgroup[i]);
 	}

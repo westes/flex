@@ -49,7 +49,7 @@ static char *basename2 PROTO ((char *path, int should_strip_ext));
 
 /* these globals are all defined and commented in flexdef.h */
 int     printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
-int     interactive, caseins, lex_compat, posix_compat, do_yylineno,
+int     interactive, lex_compat, posix_compat, do_yylineno,
 	useecs, fulltbl, usemecs;
 int     fullspd, gen_line_dirs, performance_report, backing_up_report;
 int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
@@ -740,7 +740,7 @@ void flexend (exit_status)
 			putc ('b', stderr);
 		if (ddebug)
 			putc ('d', stderr);
-		if (caseins)
+		if (sf_case_ins())
 			putc ('i', stderr);
 		if (lex_compat)
 			putc ('l', stderr);
@@ -929,7 +929,7 @@ void flexinit (argc, argv)
 	char   *arg;
 	scanopt_t sopt;
 
-	printstats = syntaxerror = trace = spprdflt = caseins = false;
+	printstats = syntaxerror = trace = spprdflt = false;
 	lex_compat = posix_compat = C_plus_plus = backing_up_report =
 		ddebug = fulltbl = false;
 	fullspd = long_align = nowarn = yymore_used = continued_action =
@@ -970,6 +970,8 @@ void flexinit (argc, argv)
         buf_init (&m4defs_buf, sizeof (char *));
         buf_append (&m4defs_buf, &m4defs_init_str, 2);
     }
+
+    sf_init ();
 
     /* initialize regex lib */
     flex_init_regex();
@@ -1086,7 +1088,7 @@ void flexinit (argc, argv)
 			break;
 
 		case OPT_CASE_INSENSITIVE:
-			caseins = true;
+			sf_set_case_ins(true);
 			break;
 
 		case OPT_LEX_COMPAT:
