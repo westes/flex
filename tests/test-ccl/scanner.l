@@ -67,6 +67,13 @@
 ^"dot-all-1:"(?-s:XXX.*)@dot-all-1@\n    err_abort(); 
 ^"dot-all-1:"(?s:XXX.*)@dot-all-1@\n    a_ok();
 
+^"x1:"(?x:   a | b  )+@x1@\n              a_ok();
+^"x2:"(?x:   a |
+        (?# Comment )
+    b
+    )+@x2@\n              a_ok();
+
+
 .|\n                       { err_abort(); }
 %%
 

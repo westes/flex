@@ -212,7 +212,7 @@ M4QEND      "]]"
 }
 
 <EXTENDED_COMMENT>{
-    ")"         BEGIN(SECT2);
+    ")"         yy_pop_state();
     [^\n\)]+      ;
     {NL}        ++linenum;        
 }
@@ -508,7 +508,20 @@ M4QEND      "]]"
 				return '\n';
 				}
 			}
-	{WS}"|".*{NL}	continued_action = true; ++linenum; return '\n';
+	{WS}"|".*{NL}	{
+                        if (sf_skip_ws()){
+                            /* We're in the middle of a (?x: ) pattern. */
+                            /* Push back everything starting at the "|" */
+                            size_t amt;
+                            amt = strchr (yytext, '|') - yytext;
+                            yyless(amt);
+                        }
+                        else {
+                            continued_action = true;
+                            ++linenum;
+                            return '\n';
+                        }
+                    }
 
 	^{WS}"/*"	{
 			yyless( yyleng - 2 );	/* put back '/', '*' */
@@ -517,37 +530,48 @@ M4QEND      "]]"
 			BEGIN(ACTION);
 			}
 
-	^{WS}		/* allow indented rules */
+	^{WS}		/* allow indented rules */ ;
 
 	{WS}		{
-			/* This rule is separate from the one below because
-			 * otherwise we get variable trailing context, so
-			 * we can't build the scanner using -{f,F}.
-			 */
-			bracelevel = 0;
-			continued_action = false;
-			BEGIN(ACTION);
+            if (sf_skip_ws()){
+                /* We're in the middle of a (?x: ) pattern. */
+            }
+            else{
+                /* This rule is separate from the one below because
+                 * otherwise we get variable trailing context, so
+                 * we can't build the scanner using -{f,F}.
+                 */
+                bracelevel = 0;
+                continued_action = false;
+                BEGIN(ACTION);
 
-			if ( in_rule )
-				{
-				doing_rule_action = true;
-				in_rule = false;
-				return '\n';
-				}
+                if ( in_rule )
+                    {
+                    doing_rule_action = true;
+                    in_rule = false;
+                    return '\n';
+                    }
+            }
 			}
 
 	{OPTWS}{NL}	{
-			bracelevel = 0;
-			continued_action = false;
-			BEGIN(ACTION);
-			unput( '\n' );	/* so <ACTION> sees it */
+            if (sf_skip_ws()){
+                /* We're in the middle of a (?x: ) pattern. */
+                ++linenum;
+            }
+            else{
+                bracelevel = 0;
+                continued_action = false;
+                BEGIN(ACTION);
+                unput( '\n' );	/* so <ACTION> sees it */
 
-			if ( in_rule )
-				{
-				doing_rule_action = true;
-				in_rule = false;
-				return '\n';
-				}
+                if ( in_rule )
+                    {
+                    doing_rule_action = true;
+                    in_rule = false;
+                    return '\n';
+                    }
+            }
 			}
 
 	^{OPTWS}"<<EOF>>"	|
@@ -639,7 +663,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 				if ( lex_compat || nmdefptr[0] == '^' ||
 				     (len > 0 && nmdefptr[len - 1] == '$')
-                     || (end_is_ws && trlcontxt))
+                     || (end_is_ws && trlcontxt && !sf_skip_ws()))
 					{ /* don't use ()'s after all */
 					PUT_BACK_STRING((char *) nmdefptr, 0);
 
@@ -656,7 +680,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 				}
 			}
 
-    "(?#"       BEGIN(EXTENDED_COMMENT);
+    "(?#"       yy_push_state(EXTENDED_COMMENT);
     "(?"        sf_push(); BEGIN(GROUP_WITH_PARAMS); return '(';
     "("         sf_push(); return '(';
     ")"         sf_pop(); return ')';
