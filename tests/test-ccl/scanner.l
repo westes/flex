@@ -29,6 +29,7 @@
 /*#include "parser.h" */
 
 #define err_abort() do{printf("ERROR: flex line %d. input line %d.\n", __LINE__, yylineno); abort();} while(0)
+#define a_ok()      do{printf("OK: flex line %d. input line %d.\n", __LINE__, yylineno); return 1;}while(0)
 %}
 
 %option 8bit outfile="scanner.c" prefix="test"
@@ -61,6 +62,10 @@
     /* We don't want this one to match. */
 ^"check-a:"(?i:(?-i:A))@\n               err_abort();
 ^"check-a:"(?i:(?-i:(?i:A)))@\n          printf("OK: %s", yytext); ++yylineno; return 1;
+
+    /* We don't want this one to match. */
+^"dot-all-1:"(?-s:XXX.*)@dot-all-1@\n    err_abort(); 
+^"dot-all-1:"(?s:XXX.*)@dot-all-1@\n    a_ok();
 
 .|\n                       { err_abort(); }
 %%

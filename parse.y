@@ -105,13 +105,14 @@ char *alloca ();
 /* Bletch, ^^^^ that was ugly! */
 
 
-int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, rulelen;
+int pat, scnum, eps, headcnt, trailcnt, lastchar, i, rulelen;
 int trlcontxt, xcluflg, currccl, cclsorted, varlength, variable_trail_rule;
 
 int *scon_stk;
 int scon_stk_ptr;
 
 static int madeany = false;  /* whether we've made the '.' character class */
+static int ccldot, cclany;
 int previous_continued_action;	/* whether the previous rule's action was '|' */
 
 #define format_warn3(fmt, a1, a2) \
@@ -728,21 +729,33 @@ singleton	:  singleton '*'
 			if ( ! madeany )
 				{
 				/* Create the '.' character class. */
-				anyccl = cclinit();
-				ccladd( anyccl, '\n' );
-				cclnegate( anyccl );
+                    ccldot = cclinit();
+                    ccladd( ccldot, '\n' );
+                    cclnegate( ccldot );
 
-				if ( useecs )
-					mkeccl( ccltbl + cclmap[anyccl],
-						ccllen[anyccl], nextecm,
-						ecgroup, csize, csize );
+                    if ( useecs )
+                        mkeccl( ccltbl + cclmap[ccldot],
+                            ccllen[ccldot], nextecm,
+                            ecgroup, csize, csize );
+
+				/* Create the (?s:'.') character class. */
+                    cclany = cclinit();
+                    cclnegate( cclany );
+
+                    if ( useecs )
+                        mkeccl( ccltbl + cclmap[cclany],
+                            ccllen[cclany], nextecm,
+                            ecgroup, csize, csize );
 
 				madeany = true;
 				}
 
 			++rulelen;
 
-			$$ = mkstate( -anyccl );
+            if (sf_dot_all())
+                $$ = mkstate( -cclany );
+            else
+                $$ = mkstate( -ccldot );
 			}
 
 		|  fullccl

@@ -17,3 +17,7 @@ ia:AaAa@ia@
 iabc:ABCabcAbCaBc@iabc@
 ia-c:ABCabcAbCaBc@ia-c@
 check-a:a@
+dot-all-1:XXX junk
+              junk
+              junk
+            @dot-all-1@
