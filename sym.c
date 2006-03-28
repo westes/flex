@@ -168,7 +168,6 @@ static struct hash_entry *findsym (sym, table, table_size)
 	return &empty_entry;
 }
 
-
 /* hashfunct - compute the hash value for "str" and hash size "hash_size" */
 
 static int hashfunct (str, hash_size)

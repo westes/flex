@@ -621,7 +621,12 @@ M4QEND      "]]"
 			/* Check to see if we've already encountered this
 			 * ccl.
 			 */
-			if ( (cclval = ccllookup( (Char *) nmstr )) != 0 )
+			if (0 /* <--- This "0" effectively disables the reuse of a
+                   * character class (purely based on its source text).
+                   * The reason it was disabled is so yacc/bison can parse
+                   * ccl operations, such as ccl difference and union.
+                   */
+                &&  (cclval = ccllookup( (Char *) nmstr )) != 0 )
 				{
 				if ( input() != ']' )
 					synerr( _( "bad character class" ) );
@@ -647,6 +652,7 @@ M4QEND      "]]"
 				}
 			}
     "{-}"       return CCL_OP_DIFF;
+    "{+}"       return CCL_OP_UNION;
 
 
     /* Check for :space: at the end of the rule so we don't

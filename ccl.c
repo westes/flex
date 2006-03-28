@@ -151,6 +151,37 @@ ccl_set_diff (int a, int b)
     return d;
 }
 
+/* ccl_set_union - create a new ccl as the set union of the two given ccls. */
+int
+ccl_set_union (int a, int b)
+{
+    int  d, i;
+
+    /* create new class  */
+    d = cclinit();
+
+    /* Add all of a */
+    for (i = 0; i < ccllen[a]; ++i)
+		ccladd (d, ccltbl[cclmap[a] + i]);
+
+    /* Add all of b */
+    for (i = 0; i < ccllen[b]; ++i)
+		ccladd (d, ccltbl[cclmap[b] + i]);
+
+    /* debug */
+    if (0){
+        fprintf(stderr, "ccl_set_union (%d + %d = %d", a, b, d);
+            fprintf(stderr, "\n    ");
+            dump_cclp (stderr, a);
+            fprintf(stderr, "\n    ");
+            dump_cclp (stderr, b);
+            fprintf(stderr, "\n    ");
+            dump_cclp (stderr, d);
+        fprintf(stderr, "\n)\n");
+    }
+    return d;
+}
+
 
 /* cclinit - return an empty ccl */
 

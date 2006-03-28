@@ -10,7 +10,7 @@
 %token CCE_NEG_ALNUM CCE_NEG_ALPHA CCE_NEG_BLANK CCE_NEG_CNTRL CCE_NEG_DIGIT CCE_NEG_GRAPH
 %token CCE_NEG_LOWER CCE_NEG_PRINT CCE_NEG_PUNCT CCE_NEG_SPACE CCE_NEG_UPPER CCE_NEG_XDIGIT
 
-%left CCL_OP_DIFF
+%left CCL_OP_DIFF CCL_OP_UNION
 
 /*
  *POSIX and AT&T lex place the
@@ -760,7 +760,6 @@ singleton	:  singleton '*'
 
 		|  fullccl
 			{
-			if ( ! cclsorted )
 				/* Sort characters for fast searching.  We
 				 * use a shell sort since this list could
 				 * be large.
@@ -810,7 +809,8 @@ singleton	:  singleton '*'
 			}
 		;
 fullccl:
-        fullccl CCL_OP_DIFF braceccl  { $$ = ccl_set_diff ($1, $3); }
+        fullccl CCL_OP_DIFF  braceccl  { $$ = ccl_set_diff  ($1, $3); }
+    |   fullccl CCL_OP_UNION braceccl  { $$ = ccl_set_union ($1, $3); }
     |   braceccl
     ;
 

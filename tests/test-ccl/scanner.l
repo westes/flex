@@ -55,6 +55,10 @@
 ^"abcd-bc:"([abcd]{-}[bc])+@abcd-bc@\n          printf("OK: %s", yytext); ++yylineno; return 1;
 ^"abcde-b-c:"([abcde]{-}[b]{-}[c])+@abcde-b-c@\n    printf("OK: %s", yytext); ++yylineno; return 1;
 ^"^XY-^XYZ:"([^XY]{-}[^XYZ])+@^XY-^XYZ@\n    printf("OK: %s", yytext); ++yylineno; return 1;
+
+^"a+d:"([[:alpha:]]{+}[[:digit:]])+"@a+d@"\n    a_ok();
+^"a-u+Q:"([[:alpha:]]{-}[[:upper:]]{+}[Q])+"@a-u+Q@"\n    a_ok();
+
 ^"ia:"(?i:a)+@ia@\n                          printf("OK: %s", yytext); ++yylineno; return 1;
 ^"iabc:"(?i:abc)+@iabc@\n                    printf("OK: %s", yytext); ++yylineno; return 1;
 ^"ia-c:"(?i:[a-c]+)@ia-c@\n                             printf("OK: %s", yytext); ++yylineno; return 1;

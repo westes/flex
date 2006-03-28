@@ -997,6 +997,13 @@ just the single character @samp{a}). The @samp{@{-@}} operator is left
 associative, so @samp{[abc]@{-@}[b]@{-@}[c]} is the same as @samp{[a]}. Be careful
 not to accidently create an empty set, which will never match.
 
+@item
+
+The @samp{@{+@}} operator computes the union of two character classes. For
+example, @samp{[a-z]@{+@}[0-9]} is the same as @samp{[a-z0-9]}. This operator
+is useful when preceded by the result of a difference operation, as in,
+@samp{[[:alpha:]]@{-@}[[:lower:]]@{+@}[q]}, which is equivalent to
+@samp{[A-Zq]} in the "C" locale.
 
 @cindex trailing context, limits of
 @cindex ^ as non-special character in patterns
