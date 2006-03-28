@@ -757,7 +757,7 @@ Options may be zero or more of the characters @samp{i}, @samp{s}, or @samp{x}.
 
 @samp{x} ignores comments and whitespace in patterns. Whitespace is ignored unless
 it is backslash-escaped, contained within @samp{""}s, or appears inside a 
-character class. TODO -- Do we ignore Perl comments, C comments, or both?
+character class.
 
 The following are all valid:
 
@@ -772,6 +772,10 @@ The following are all valid:
 (?x:a\ b)       same as  ("a b")
 (?x:a" "b)      same as  ("a b")
 (?x:a[ ]b)      same as  ("a b")
+(?x:a
+    /* comment */
+    b
+    c)          same as  (abc)
 @end verbatim
 
 @item (?# comment )

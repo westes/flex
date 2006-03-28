@@ -104,6 +104,7 @@ extern const char *escaped_qstart, *escaped_qend;
 %x GROUP_WITH_PARAMS
 %x GROUP_MINUS_PARAMS
 %x EXTENDED_COMMENT
+%x COMMENT_DISCARD
 
 WS		[[:blank:]]+
 OPTWS		[[:blank:]]*
@@ -209,6 +210,14 @@ M4QEND      "]]"
     {M4QEND}    ACTION_ECHO_QEND;
 	[^*\n]      ACTION_ECHO;
 	{NL}	    ++linenum; ACTION_ECHO;
+}
+
+<COMMENT_DISCARD>{
+        /* This is the same as COMMENT, but is discarded rather than output. */
+	"*/"		yy_pop_state();
+    "*"         ;
+	[^*\n]      ;
+	{NL}	    ++linenum;
 }
 
 <EXTENDED_COMMENT>{
@@ -485,7 +494,12 @@ M4QEND      "]]"
 			BEGIN(PERCENT_BRACE_ACTION);
 			}
 
-	^{OPTWS}"<"	BEGIN(SC); return '<';
+	^{OPTWS}"<"	    {
+                        /* Allow "<" to appear in (?x) patterns. */
+                        if (!sf_skip_ws())
+                            BEGIN(SC);
+                        return '<';
+                    }
 	^{OPTWS}"^"	return '^';
 	\"		BEGIN(QUOTE); return '"';
 	"{"/[[:digit:]]	{
@@ -524,10 +538,17 @@ M4QEND      "]]"
                     }
 
 	^{WS}"/*"	{
-			yyless( yyleng - 2 );	/* put back '/', '*' */
-			bracelevel = 0;
-			continued_action = false;
-			BEGIN(ACTION);
+
+                if (sf_skip_ws()){
+                    /* We're in the middle of a (?x: ) pattern. */
+                    yy_push_state(COMMENT_DISCARD);
+                }
+                else{
+                    yyless( yyleng - 2 );	/* put back '/', '*' */
+                    bracelevel = 0;
+                    continued_action = false;
+                    BEGIN(ACTION);
+                }
 			}
 
 	^{WS}		/* allow indented rules */ ;
@@ -680,8 +701,35 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 				}
 			}
 
-    "(?#"       yy_push_state(EXTENDED_COMMENT);
-    "(?"        sf_push(); BEGIN(GROUP_WITH_PARAMS); return '(';
+    "/*"        {
+                    if (sf_skip_ws())
+                        yy_push_state(COMMENT_DISCARD);
+                    else{
+                        /* Push back the "*" and return "/" as usual. */
+                        yyless(1);
+                        return '/';
+                    }
+                }
+
+    "(?#"       {
+                    if (lex_compat || posix_compat){
+                        /* Push back the "?#" and treat it like a normal parens. */
+                        yyless(1);
+                        sf_push(); 
+                        return '(';
+                    }
+                    else
+                        yy_push_state(EXTENDED_COMMENT);
+                }
+    "(?"        {
+                    sf_push();
+                    if (lex_compat || posix_compat)
+                        /* Push back the "?" and treat it like a normal parens. */
+                        yyless(1);
+                    else
+                        BEGIN(GROUP_WITH_PARAMS);
+                    return '(';
+                }
     "("         sf_push(); return '(';
     ")"         sf_pop(); return ')';
 
@@ -881,7 +929,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 	.		ACTION_ECHO;
 }
 
-<COMMENT,ACTION,ACTION_STRING><<EOF>>	{
+<COMMENT,COMMENT_DISCARD,ACTION,ACTION_STRING><<EOF>>	{
 			synerr( _( "EOF encountered inside an action" ) );
 			yyterminate();
 			}
