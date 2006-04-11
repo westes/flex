@@ -141,7 +141,7 @@ static int yytbl_write_pad64 (struct yytbl_writer *wr)
  */
 int yytbl_hdr_fwrite (struct yytbl_writer *wr, const struct yytbl_hdr *th)
 {
-	size_t  sz, rv;
+	int  sz, rv;
 	int     bwritten = 0;
 
 	if (yytbl_write32 (wr, th->th_magic) < 0
@@ -173,7 +173,7 @@ int yytbl_hdr_fwrite (struct yytbl_writer *wr, const struct yytbl_hdr *th)
 	bwritten += rv;
 
 	/* Sanity check */
-	if (bwritten != th->th_hsize)
+	if (bwritten != (int) th->th_hsize)
 		flex_die (_("pad64 failed"));
 
 	return bwritten;
@@ -187,7 +187,7 @@ int yytbl_hdr_fwrite (struct yytbl_writer *wr, const struct yytbl_hdr *th)
  */
 int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 {
-	size_t  rv;
+	int  rv;
 	flex_int32_t bwritten = 0;
 	flex_int32_t i, total_len;
 	fpos_t  pos;
@@ -231,7 +231,7 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 	}
 
 	/* Sanity check */
-	if (bwritten != (12 + total_len * YYTDFLAGS2BYTES (td->td_flags))) {
+	if (bwritten != (int) (12 + total_len * YYTDFLAGS2BYTES (td->td_flags))) {
 		flex_die (_("insanity detected"));
 		return -1;
 	}
@@ -265,7 +265,7 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
  */
 int yytbl_writen (struct yytbl_writer *wr, void *v, flex_int32_t len)
 {
-	size_t  rv;
+	int  rv;
 
 	rv = fwrite (v, 1, len, wr->out);
 	if (rv != len)
@@ -467,11 +467,11 @@ void yytbl_data_compress (struct yytbl_data *tbl)
 	newsz = min_int_size (tbl);
 
 
-	if (newsz == YYTDFLAGS2BYTES (tbl->td_flags))
+	if (newsz == (int) YYTDFLAGS2BYTES (tbl->td_flags))
 		/* No change in this table needed. */
 		return;
 
-	if (newsz > YYTDFLAGS2BYTES (tbl->td_flags)) {
+	if (newsz > (int) YYTDFLAGS2BYTES (tbl->td_flags)) {
 		flex_die (_("detected negative compression"));
 		return;
 	}
