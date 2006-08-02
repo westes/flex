@@ -1,40 +1,37 @@
 # Catalan translation of flex message catalogs.
-# Copyright © 2002, 2003 Free Software Foundation, Inc.
-# Jordi Mallach <jordi@sindominio.net>, 2002, 2003.
+# Copyright Â© 2002, 2003, 2006 Free Software Foundation, Inc.
+# Jordi Mallach <jordi@sindominio.net>, 2002, 2003, 2006.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: flex 2.5.31\n"
+"Project-Id-Version: flex 2.5.33\n"
 "Report-Msgid-Bugs-To: lex-help@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-02-14 12:28-0500\n"
-"PO-Revision-Date: 2003-11-07 14:33+0100\n"
+"POT-Creation-Date: 2006-02-20 21:46-0500\n"
+"PO-Revision-Date: 2006-04-13 22:21+0200\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: dfa.c:61
 #, c-format
 msgid "State #%d is non-accepting -\n"
-msgstr "L'estat #%d és no-acceptar -\n"
+msgstr "L'estat #%d Ã©s no-acceptar -\n"
 
 #: dfa.c:124
 msgid "dangerous trailing context"
-msgstr "Context posterior perillós"
+msgstr "Context posterior perillÃ³s"
 
 #: dfa.c:166
-#, c-format
 msgid " associated rule line numbers:"
-msgstr " números de línia associats a la regla:"
+msgstr " nÃºmeros de lÃ­nia associats a la regla:"
 
 #: dfa.c:202
-#, c-format
 msgid " out-transitions: "
 msgstr " fi de transicions: "
 
 #: dfa.c:210
-#, c-format
 msgid ""
 "\n"
 " jam-transitions: EOF "
@@ -44,7 +41,7 @@ msgstr ""
 
 #: dfa.c:341
 msgid "consistency check failed in epsclosure()"
-msgstr "la prova de consistència ha fallat en epsclosure()"
+msgstr "la comprovaciÃ³ de consistÃ¨ncia ha fallat en epsclosure()"
 
 #: dfa.c:429
 msgid ""
@@ -55,12 +52,12 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Volcat AFD:\n"
+"Bolcat AFD:\n"
 "\n"
 
 #: dfa.c:604
 msgid "could not create unique end-of-buffer state"
-msgstr "no s'ha pogut crear un estat únic de final-de-buffer"
+msgstr "no s'ha pogut crear un estat Ãºnic de final-de-bÃºfer"
 
 #: dfa.c:625
 #, c-format
@@ -73,11 +70,11 @@ msgstr "No s'ha pogut escriure yynxt_tbl[][]"
 
 #: dfa.c:1023
 msgid "consistency check failed in symfollowset"
-msgstr "Ha fallat la prova de consistència en symfollowset"
+msgstr "Ha fallat la prova de consistÃ¨ncia en symfollowset"
 
 #: dfa.c:1071
 msgid "bad transition character detected in sympartition()"
-msgstr "caràcter de transició incorrecte detectat en sympartition()"
+msgstr "carÃ cter de transiciÃ³ incorrecte detectat en sympartition()"
 
 #: gen.c:484
 msgid ""
@@ -88,7 +85,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Classes d'equivalència:\n"
+"Classes d'equivalÃ¨ncia:\n"
 "\n"
 
 #: gen.c:668 gen.c:697 gen.c:1221
@@ -121,7 +118,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Classes de metaequivalència:\n"
+"Classes de metaequivalÃ¨ncia:\n"
 
 #: gen.c:1299
 msgid "Could not write yymeta_tbl"
@@ -161,374 +158,347 @@ msgstr "No s'ha pogut escriure yynultrans_tbl"
 
 #: main.c:187
 msgid "rule cannot be matched"
-msgstr "la regla no es pot satisfer"
+msgstr "no es pot satisfer la regla"
 
 #: main.c:192
 msgid "-s option given but default rule can be matched"
-msgstr "S'ha especificat l'opció -s però es pot aplicar la regla per defecte"
+msgstr "S'ha especificat l'opciÃ³ -s perÃ² es pot aplicar la regla per defecte"
 
-#: main.c:229
+#: main.c:231
 msgid "Can't use -+ with -l option"
-msgstr "No es pot fer servir -+ amb l'opció -l"
+msgstr "No es pot fer servir -+ amb l'opciÃ³ -l"
 
-#: main.c:232
+#: main.c:234
 msgid "Can't use -f or -F with -l option"
-msgstr "No es pot fer servir -f o -F amb l'opció -l"
+msgstr "No es pot fer servir -f o -F amb l'opciÃ³ -l"
 
-#: main.c:236
+#: main.c:238
 msgid "Can't use --reentrant or --bison-bridge with -l option"
-msgstr "No es pot fer servir --reentrant o --bison-bridge amb l'opció -l"
+msgstr "No es pot fer servir --reentrant o --bison-bridge amb l'opciÃ³ -l"
 
-#: main.c:273
+#: main.c:275
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "-Cf/-CF i -Cm no tenen sentit juntes"
 
-#: main.c:276
+#: main.c:278
 msgid "-Cf/-CF and -I are incompatible"
-msgstr "-Cf/-CF i -I són incompatibles"
+msgstr "-Cf/-CF i -I sÃ³n incompatibles"
 
-#: main.c:280
+#: main.c:282
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF són incompatibles amb el mode de compatibilitat amb lex"
+msgstr "-Cf/-CF sÃ³n incompatibles amb el mode de compatibilitat amb lex"
 
-#: main.c:285
+#: main.c:287
 msgid "-Cf and -CF are mutually exclusive"
-msgstr "-Cf i -CF són mútuament excloents"
+msgstr "-Cf i -CF sÃ³n mÃºtuament excloents"
 
-#: main.c:289
+#: main.c:291
 msgid "Can't use -+ with -CF option"
-msgstr "No es pot fer servir -+ amb l'opció -CF"
+msgstr "No es pot fer servir -+ amb l'opciÃ³ -CF"
 
-#: main.c:292
+#: main.c:294
 #, c-format
 msgid "%array incompatible with -+ option"
-msgstr "%array incompatible amb l'opció -+"
+msgstr "%array Ã©s incompatible amb l'opciÃ³ -+"
 
-#: main.c:297
+#: main.c:299
 msgid "Options -+ and --reentrant are mutually exclusive."
-msgstr "Les opcions -+ i --reentrant són mútuament excloents"
+msgstr "Les opcions -+ i --reentrant sÃ³n mÃºtuament excloents"
 
-#: main.c:300
+#: main.c:302
 msgid "bison bridge not supported for the C++ scanner."
-msgstr "No es suporta «bison bridge» per a l'analitzador de C++"
+msgstr "No es suporta Â«bison bridgeÂ» per a l'analitzador de C++"
 
-#: main.c:352 main.c:400
+#: main.c:354 main.c:402
 #, c-format
 msgid "could not create %s"
 msgstr "no s'ha pogut crear %s"
 
-#: main.c:413
+#: main.c:415
 msgid "could not write tables header"
-msgstr "no s'ha pogut crear la capçalera de les taules"
+msgstr "no s'ha pogut crear la capÃ§alera de les taules"
 
-#: main.c:417
+#: main.c:419
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "No es pot obrir el fitxer d'esquema %s"
 
-#: main.c:498
+#: main.c:500
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "error d'entrada al llegir el fitxer d'esquema %s"
 
-#: main.c:502
+#: main.c:504
 #, c-format
 msgid "error closing skeleton file %s"
-msgstr "error al tancar el fitxer d'esquema %s"
+msgstr "s'ha produÃ¯t un error en tancar el fitxer d'esquema %s"
 
-#: main.c:686
+#: main.c:688
 #, c-format
 msgid "error creating header file %s"
-msgstr "error al crear el fitxer de capçalera %s"
+msgstr "s'ha produÃ¯t un error en crear el fitxer de capÃ§alera %s"
 
-#: main.c:694
+#: main.c:696
 #, c-format
 msgid "error writing output file %s"
-msgstr "error al escriure el fitxer d'eixida %s"
+msgstr "s'ha produÃ¯t un error en escriure el fitxer d'eixida %s"
 
-#: main.c:698
+#: main.c:700
 #, c-format
 msgid "error closing output file %s"
-msgstr "error al tancar el fitxer d'eixida %s"
+msgstr "s'ha produÃ¯t un error en tancar el fitxer d'eixida %s"
 
-#: main.c:702
+#: main.c:704
 #, c-format
 msgid "error deleting output file %s"
-msgstr "error al borrar el fitxer d'eixida %s"
+msgstr "s'ha produÃ¯t un error en suprimir el fitxer d'eixida %s"
 
-#: main.c:709
-#, c-format
+#: main.c:711
 msgid "No backing up.\n"
-msgstr "No hi ha retrocés.\n"
+msgstr "No hi ha retrocÃ©s.\n"
 
-#: main.c:713
+#: main.c:715
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
-msgstr "%d estats de retrocés (no-acceptació).\n"
+msgstr "%d estats de retrocÃ©s (no-acceptaciÃ³).\n"
 
-#: main.c:717
-#, c-format
+#: main.c:719
 msgid "Compressed tables always back up.\n"
 msgstr "Les taules comprimides sempre impliquen un retard.\n"
 
-#: main.c:720
+#: main.c:722
 #, c-format
 msgid "error writing backup file %s"
-msgstr "error al escriure el fitxer de còpia de seguretat %s"
+msgstr "s'ha produÃ¯t un error en escriure el fitxer de cÃ²pia de seguretat %s"
 
-#: main.c:724
+#: main.c:726
 #, c-format
 msgid "error closing backup file %s"
-msgstr "error al tancar el fitxer de còpia de seguretat %s"
+msgstr "s'ha produÃ¯t un error en tancar el fitxer de cÃ²pia de seguretat %s"
 
-#: main.c:729
+#: main.c:731
 #, c-format
 msgid "%s version %s usage statistics:\n"
-msgstr "%s versió %s estadístiques d'ús:\n"
+msgstr "estadÃ­stiques d'Ãºs de %s versiÃ³ %s:\n"
 
-#: main.c:732
-#, c-format
+#: main.c:734
 msgid "  scanner options: -"
 msgstr "  opcions de l'analitzador: -"
 
-# NFA == Autómata finit no-determinista. jm
-#: main.c:811
+# NFA == AutÃ³mata finit no-determinista. jm
+#: main.c:813
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d estats AFN\n"
 
-# DFA == Autómata finit deterministic. jm
-#: main.c:813
+# DFA == AutÃ³mata finit deterministic. jm
+#: main.c:815
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d estats AFD (%d paraules)\n"
 
-#: main.c:815
+#: main.c:817
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d regles\n"
 
-#: main.c:820
-#, c-format
+#: main.c:822
 msgid "  No backing up\n"
-msgstr "  Sense retrocés\n"
+msgstr "  Sense retrocÃ©s\n"
 
-#: main.c:824
+#: main.c:826
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
-msgstr "  %d estats de retrocés (no-acceptació)\n"
+msgstr "  %d estats de retrocÃ©s (no-acceptaciÃ³)\n"
 
-# Es refereix a còpia de seguretat, o retrocés? jm
-#: main.c:829
-#, c-format
+# Es refereix a cÃ²pia de seguretat, o retrocÃ©s? jm
+#: main.c:831
 msgid "  Compressed tables always back-up\n"
-msgstr "  Sempre es realitza còpia de seguretat de les taules comprimides\n"
-
-#: main.c:833
-#, c-format
-msgid "  Beginning-of-line patterns used\n"
-msgstr "  Utilitzats patrons de principi-de-línia\n"
+msgstr "  Sempre es realitza cÃ²pia de seguretat de les taules comprimides\n"
 
 #: main.c:835
+msgid "  Beginning-of-line patterns used\n"
+msgstr "  Utilitzats patrons de principi-de-lÃ­nia\n"
+
+#: main.c:837
 #, c-format
 msgid "  %d/%d start conditions\n"
-msgstr "  %d/%d condicions d'activació\n"
+msgstr "  %d/%d condicions d'activaciÃ³\n"
 
-#: main.c:839
+#: main.c:841
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
-msgstr "  %d estats èpsilon, %d estats doble èpsilon\n"
+msgstr "  %d estats Ã¨psilon, %d estats doble Ã¨psilon\n"
 
-#: main.c:843
-#, c-format
+#: main.c:845
 msgid "  no character classes\n"
-msgstr "  sense classes de caràcter\n"
+msgstr "  sense classes de carÃ cter\n"
 
-#: main.c:847
+#: main.c:849
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-msgstr ""
-"  les classes de caràcters %d/%d necessitaren %d/%d paraules de magatzement, "
-"%d reutilitzades\n"
+msgstr "  les classes de carÃ cters %d/%d necessitaren %d/%d paraules de magatzement, %d reutilitzades\n"
 
-#: main.c:852
+#: main.c:854
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
-msgstr "  %d parells estat/estat-següent creats\n"
+msgstr "  %d parells estat/estat-segÃ¼ent creats\n"
 
-#: main.c:855
+#: main.c:857
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
-msgstr "  %d/%d transicions úniques/duplicades\n"
+msgstr "  %d/%d transicions Ãºniques/duplicades\n"
 
-#: main.c:860
+#: main.c:862
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d entrades de la taula\n"
 
-#: main.c:868
+#: main.c:870
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  %d/%d entrades base-def creades\n"
 
-#: main.c:872
+#: main.c:874
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  %d/%d (pic %d) entrades nxt-chk creades\n"
 
-#: main.c:876
+#: main.c:878
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr "  %d/%d (pic %d) entrades de plantilla nxt-chk creades\n"
 
-#: main.c:880
+#: main.c:882
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d entrades de la tabla buides\n"
 
-#: main.c:882
+#: main.c:884
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  %d prototips creats\n"
 
-#: main.c:885
+#: main.c:887
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  %d plantilles creades, %d usos\n"
 
-#: main.c:893
+#: main.c:895
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
-msgstr "  %d/%d classes d'equivalència creades\n"
+msgstr "  %d/%d classes d'equivalÃ¨ncia creades\n"
 
-#: main.c:901
+#: main.c:903
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
-msgstr "  %d/%d classes de meta-equivalència creades\n"
+msgstr "  %d/%d classes de meta-equivalÃ¨ncia creades\n"
 
 # Hash? jm
-# segons un company de treballa que estudia a la UOC, allí
-# les "hashtables" s'anomenen "taules de DISPERSIÓ". En aquest context
-# no sé que dir-te. ear
-#: main.c:907
-#, c-format
-msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
-msgstr ""
-"  %d (%d desades) col·lisions de localització («hash»), %d AFD iguals\n"
-
+# segons un company de treballa que estudia a la UOC, allÃ­
+# les "hashtables" s'anomenen "taules de DISPERSIÃ“". En aquest context
+# no sÃ© que dir-te. ear
 #: main.c:909
 #, c-format
-msgid "  %d sets of reallocations needed\n"
-msgstr "  es necessiten %d conjunts de relocalització\n"
+msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
+msgstr "  %d (%d desades) colÂ·lisions d'ubicaciÃ³ (Â«hashÂ»), %d AFD iguals\n"
 
 #: main.c:911
+#, c-format
+msgid "  %d sets of reallocations needed\n"
+msgstr "  es necessiten %d conjunts de relocalitzaciÃ³\n"
+
+#: main.c:913
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  es necessiten %d entrades totals de la taula\n"
 
-#: main.c:986
-#, c-format
+#: main.c:988
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Error intern. Els flexopts estan malformats.\n"
 
-#: main.c:996
+#: main.c:998
 #, c-format
 msgid "Try `%s --help' for more information.\n"
-msgstr "Proveu «%s --help» per a obtindre més informació.\n"
+msgstr "Proveu Â«%s --helpÂ» per a obtindre mÃ©s informaciÃ³.\n"
 
-#: main.c:1053
+#: main.c:1055
 #, c-format
 msgid "unknown -C option '%c'"
-msgstr "opció de -C desconeguda «%c»"
+msgstr "opciÃ³ de -C desconeguda Â«%cÂ»"
 
-#: main.c:1182
+#: main.c:1184
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
 
-# Hmm. No se si açò està be. jm
-#: main.c:1457
+# Hmm. No se si aÃ§Ã² estÃ  be. jm
+#: main.c:1459
 msgid "fatal parse error"
-msgstr "error fatal al analitzar sintàcticament"
+msgstr "s'ha produÃ¯t un error fatal d'anÃ lisi sintÃ ctic"
 
-#: main.c:1489
+#: main.c:1491
 #, c-format
 msgid "could not create backing-up info file %s"
-msgstr "no s'ha pogut crear un fitxer d'informació del retrocés %s"
+msgstr "no s'ha pogut crear un fitxer d'informaciÃ³ del retrocÃ©s %s"
 
-#: main.c:1510
-#, c-format
+#: main.c:1512
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr ""
-"-l l'opció de compatibilitat amb AT&T lex implica una penalització del "
-"rendiment molt gran\n"
+msgstr "-l l'opciÃ³ de compatibilitat amb AT&T lex implica una penalitzaciÃ³ del rendiment molt gran\n"
 
-#: main.c:1513
-#, c-format
+#: main.c:1515
 msgid " and may be the actual source of other reported performance penalties\n"
-msgstr ""
-" i pot ser l'origen real d'altres penalitzacions del rendiment notificades\n"
+msgstr " i pot ser l'origen real d'altres penalitzacions del rendiment notificades\n"
 
-#: main.c:1519
+#: main.c:1521
 #, c-format
-msgid ""
-"%%option yylineno entails a performance penalty ONLY on rules that can match "
-"newline characters\n"
-msgstr ""
-"l'%%opció yylineno implica una penalització del rendiment NOMÉS en regles "
-"que poden fer coincidir caràcters de nova línia\n"
+msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "l'%%opciÃ³ yylineno implica una penalitzaciÃ³ del rendiment NOMÃ‰S en regles que poden fer coincidir carÃ cters de nova lÃ­nia\n"
 
-#: main.c:1526
-#, c-format
+#: main.c:1528
 msgid "-I (interactive) entails a minor performance penalty\n"
-msgstr "-I (interactiu) implica una xicoteta penalització del rendiment\n"
+msgstr "-I (interactiu) implica una xicoteta penalitzaciÃ³ del rendiment\n"
 
-#: main.c:1531
-#, c-format
+#: main.c:1533
 msgid "yymore() entails a minor performance penalty\n"
-msgstr "yymore() implica una xicoteta penalització del rendiment\n"
+msgstr "yymore() implica una xicoteta penalitzaciÃ³ del rendiment\n"
 
-#: main.c:1537
-#, c-format
+#: main.c:1539
 msgid "REJECT entails a large performance penalty\n"
-msgstr "REJECT implica una penalització del rendiment molt gran\n"
+msgstr "REJECT implica una penalitzaciÃ³ del rendiment molt gran\n"
 
-#: main.c:1542
-#, c-format
+#: main.c:1544
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
-"Les regles de context posterior variable implica una penalització del "
-"rendiment molt gran\n"
+msgstr "Les regles de context posterior variable implica una penalitzaciÃ³ del rendiment molt gran\n"
 
-#: main.c:1554
+#: main.c:1556
 msgid "REJECT cannot be used with -f or -F"
 msgstr "REJECT no es pot fer servir amb -f o -F"
 
-#: main.c:1557
+#: main.c:1559
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
-msgstr "l'%opció yylineno no es pot fer servir amb REJECT"
+msgstr "l'%opciÃ³ yylineno no es pot fer servir amb REJECT"
 
-#: main.c:1560
+#: main.c:1562
 msgid "variable trailing context rules cannot be used with -f or -F"
-msgstr ""
-"Les regles de context posterior variable no es poden utilitzar amb -f o -F"
+msgstr "Les regles de context posterior variable no es poden utilitzar amb -f o -F"
 
-#: main.c:1675
+#: main.c:1677
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
-msgstr "l'%opció yyclass només te sentit per a analitzadors de C++"
+msgstr "l'%opciÃ³ yyclass nomÃ©s tÃ© sentit per a analitzadors de C++"
 
-#: main.c:1782
+#: main.c:1784
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
-msgstr "Forma d'ús: %s [OPCIONS] [FITXER]...\n"
+msgstr "Forma d'Ãºs: %s [OPCIONS] [FITXER]...\n"
 
-# Al grep jo sempre he traduït match com a coincidir. No sé, no m'agrada
-# molt això de text emparellat.
-# Encara que coincident tampoc no m'acaba de convéncer. ear
+# Al grep jo sempre he traduÃ¯t match com a coincidir. No sÃ©, no m'agrada
+# molt aixÃ² de text emparellat.
+# Encara que coincident tampoc no m'acaba de convÃ©ncer. ear
 # I que faig amb "reentrant" i "parser"? jm
-#: main.c:1785
+#: main.c:1787
 #, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -558,8 +528,7 @@ msgid ""
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the "
-"scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "\n"
 "Scanner behavior:\n"
@@ -595,96 +564,87 @@ msgid ""
 msgstr ""
 "Genera programes que realitzen emparellaments de patrons en text.\n"
 "\n"
-"Compressió de taules:\n"
-"  -Ca, --align      renuncia a taules més grans a canvi de una millor "
-"alineació\n"
-"  -Ce, --ecs        construeix classes d'equivalència\n"
-"  -Cf               no comprimeix les taules; utilitza la representació -f\n"
-"  -CF               no comprimeix les taules; utilitza la representació -F\n"
-"  -Cm, --meta-ecs   construeix classes de metaequivalència\n"
-"  -Cr, --read       utilitza read() en lloc de stdio com a entrada de "
-"l'analitzador\n"
-"  -f, --full        genera un analitzador ràpid i gran. El mateix que -Cfr\n"
-"  -F, --fast        usa una representació alternativa de taules. El mateix "
-"que -CFr\n"
-"  -Cem              compressió per defecte (el mateix que --ecs --meta-ecs)\n"
+"CompressiÃ³ de taules:\n"
+"  -Ca, --align      renuncia a taules mÃ©s grans a canvi de una millor alineaciÃ³\n"
+"  -Ce, --ecs        construeix classes d'equivalÃ¨ncia\n"
+"  -Cf               no comprimeixes les taules; utilitza la representaciÃ³ -f\n"
+"  -CF               no comprimeixes les taules; utilitza la representaciÃ³ -F\n"
+"  -Cm, --meta-ecs   construeix classes de metaequivalÃ¨ncia\n"
+"  -Cr, --read       utilitza read() en lloc de stdio com a entrada de l'analitzador\n"
+"  -f, --full        genera un analitzador rÃ pid i gran. El mateix que -Cfr\n"
+"  -F, --fast        usa una representaciÃ³ alternativa de taules. El mateix que -CFr\n"
+"  -Cem              compressiÃ³ per defecte (el mateix que --ecs --meta-ecs)\n"
 "\n"
-"Depuració:\n"
-"  -d, --debug             activa el mode de depuració en l'analitzador\n"
-"  -b, --backup            escriu l'informació dels retrocessos en %s\n"
+"DepuraciÃ³:\n"
+"  -d, --debug             activa el mode de depuraciÃ³ en l'analitzador\n"
+"  -b, --backup            escriu l'informaciÃ³ dels retrocessos en %s\n"
 "  -p, --perf-report       escriu l'informe de rendiment en stderr\n"
-"  -s, --nodefault         suprimeix la regla per defecte de visualitzar "
-"(ECHO) el text no emparellat\n"
-"  -T, --trace             %s hauria d'executar-se en mode traça\n"
-"  -w, --nowarn            no genera avisos\n"
-"  -v, --verbose           escriu un resum de les estadístiques de "
-"l'analitzador en stdout\n"
+"  -s, --nodefault         suprimeix la regla per defecte de visualitzar (ECHO) el text no emparellat\n"
+"  -T, --trace             %s hauria d'executar-se en mode traÃ§a\n"
+"  -w, --nowarn            no generes avisos\n"
+"  -v, --verbose           escriu un resum de les estadÃ­stiques de l'analitzador en stdout\n"
 "\n"
 "Fitxers:\n"
 "  -o, --outfile=FITXER    especifica el fitxer d'eixida\n"
 "  -S, --skel=FITXER       especifica el fitxer d'esquema\n"
 "  -t, --stdout            escriu l'analitzador en stdout en lloc de %s\n"
 "      --yyclass=NOM       nom de la classe C++\n"
-"      --header-file=FITXER   crea un fitxer de capçaleres de C a més de "
-"l'analitzador\n"
+"      --header-file=FITXER   crea un fitxer de capÃ§aleres de C a mÃ©s de l'analitzador\n"
 "      --tables-file=[FITXER] escriu les taules en FITXER\n"
 "\n"
 "Comportament de l'analitzador:\n"
 "  -7, --7bit              genera un analitzador de 7 bits\n"
 "  -8, --8bit              genera un analitzador de 8 bits\n"
-"  -B, --batch             genera un analitzador no interactiu (el contrari a "
-"-I)\n"
-"  -i, --case-insensitive  Ignora les diferències de majúscules i minúscules "
-"en els patrons\n"
-"  -l, --lex-compat        compatibilitat màxima amb el lex original\n"
-"  -X, --posix-compat      compatibilitat màxima amb el lex POSIX\n"
-"  -I, --interactive       genera un analitzador interactiu (el contrari a -"
-"B)\n"
-"      --yylineno          traçar el compte de línies en yylineno\n"
+"  -B, --batch             genera un analitzador no interactiu (el contrari a -I)\n"
+"  -i, --case-insensitive  Ignora les diferÃ¨ncies de majÃºscules i minÃºscules en els patrons\n"
+"  -l, --lex-compat        compatibilitat mÃ xima amb el lex original\n"
+"  -X, --posix-compat      compatibilitat mÃ xima amb el lex POSIX\n"
+"  -I, --interactive       genera un analitzador interactiu (el contrari a -B)\n"
+"      --yylineno          traÃ§a el compte de lÃ­nies en yylineno\n"
 "\n"
 "Codi generat:\n"
 "  -+,  --c++               genera un analitzador de la classe C++\n"
-"  -Dmacro[=defn]           #define macro defn (defn és «1» per defecte)\n"
+"  -Dmacro[=defn]           #define macro defn (defn Ã©s Â«1Â» per defecte)\n"
 "  -L,  --noline            suprimeix les directives #line en l'analitzador\n"
-"  -P,  --prefix=CADENA     utilitza CADENA com prefix en comptes de «yy»\n"
+"  -P,  --prefix=CADENA     utilitza CADENA com prefix en comptes de Â«yyÂ»\n"
 "  -R,  --reentrant         genera un analitzador de C reentrant\n"
 "       --bison-bridge      analitzador per a l'analitzador pur de bison\n"
 "       --bison-locations   inclou suport per a yylloc\n"
 "       --stdinit           inicialitza yyin/yyout a stdin/stdout\n"
 "       --noansi-definitions estil antic de definicions de funcions\n"
-"       --noansi-prototypes  llista de paràmetres buida als prototips\n"
-"       --nounistd          no inclou <unistd.h>\n"
-"       --noFUNCIÓ          no genera una FUNCIÓ en particular\n"
+"       --noansi-prototypes  llista de parÃ metres buida als prototips\n"
+"       --nounistd          no inclogues <unistd.h>\n"
+"       --noFUNCIÃ“          no generes una FUNCIÃ“ en particular\n"
 "\n"
-"Miscel·lània:\n"
-"  -c                      opció POSIX sense efecte\n"
-"  -n                      opció POSIX sense efecte\n"
+"MiscelÂ·lÃ nia:\n"
+"  -c                      opciÃ³ POSIX sense efecte\n"
+"  -n                      opciÃ³ POSIX sense efecte\n"
 "  -?\n"
 "  -h, --help              mostra aquest missatge d'ajuda\n"
-"  -V, --version           informa de la versió de %s\n"
+"  -V, --version           informa de la versiÃ³ de %s\n"
 
 #: misc.c:100 misc.c:126
 #, c-format
 msgid "name \"%s\" ridiculously long"
-msgstr "el nom «%s» és ridículament llarg"
+msgstr "el nom Â«%sÂ» Ã©s ridÃ­culament llarg"
 
 #: misc.c:175
 msgid "memory allocation failed in allocate_array()"
-msgstr "ha fallat l'assignació de memòria en allocate_array()"
+msgstr "ha fallat l'assignaciÃ³ de memÃ²ria en allocate_array()"
 
 #: misc.c:250
 #, c-format
 msgid "bad character '%s' detected in check_char()"
-msgstr "caràcter incorrecte «%s» detectat en check_char()"
+msgstr "carÃ cter incorrecte Â«%sÂ» detectat en check_char()"
 
 #: misc.c:255
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
-msgstr "l'analitzador requereix l'opció -8 per a fer servir el caràcter %s"
+msgstr "l'analitzador requereix l'opciÃ³ -8 per a fer servir el carÃ cter %s"
 
 #: misc.c:288
 msgid "dynamic memory failure in copy_string()"
-msgstr "errada de la memòria dinàmica en copy_string()"
+msgstr "errada de la memÃ²ria dinÃ mica en copy_string()"
 
 #: misc.c:422
 #, c-format
@@ -693,15 +653,15 @@ msgstr "%s: error intern fatal, %s\n"
 
 #: misc.c:875
 msgid "attempt to increase array size failed"
-msgstr "ha fallat l'intent d'augmentar el tamany de la matriu"
+msgstr "ha fallat l'intent d'augmentar la mida de la matriu"
 
 #: misc.c:1002
 msgid "bad line in skeleton file"
-msgstr "línia incorrecta en el fitxer d'esquema"
+msgstr "lÃ­nia incorrecta en el fitxer d'esquema"
 
 #: misc.c:1051
 msgid "memory allocation failed in yy_flex_xmalloc()"
-msgstr "ha fallat l'assignació de memòria en yy_flex_xmalloc()"
+msgstr "ha fallat l'assignaciÃ³ de memÃ²ria en yy_flex_xmalloc()"
 
 #: nfa.c:104
 #, c-format
@@ -712,7 +672,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"********** començant el volcat del afn amb l'estat inicial %d\n"
+"********** s'estÃ  comenÃ§ant el bolcat de l'afn amb l'estat inicial %d\n"
 
 #: nfa.c:115
 #, c-format
@@ -720,18 +680,17 @@ msgid "state # %4d\t"
 msgstr "estat # %4d\t"
 
 #: nfa.c:130
-#, c-format
 msgid "********** end of dump\n"
-msgstr "********** final del volcat\n"
+msgstr "********** final del bolcat\n"
 
 #: nfa.c:174
 msgid "empty machine in dupmachine()"
-msgstr "màquina buida en dupmachine()"
+msgstr "mÃ quina buida en dupmachine()"
 
 #: nfa.c:240
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
-msgstr "Regla de context posterior variable en la línia %d\n"
+msgstr "Regla de context posterior variable en la lÃ­nia %d\n"
 
 #: nfa.c:353
 msgid "bad state type in mark_beginning_as_normal()"
@@ -740,7 +699,7 @@ msgstr "tipus d'estat incorrecte en mark_beginning_as_normal()"
 #: nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
-msgstr "les regles d'entrada són massa complicades (>= %d estats AFN)"
+msgstr "les regles d'entrada sÃ³n massa complicades (>= %d estats AFN)"
 
 #: nfa.c:677
 msgid "found too many transitions in mkxtion()"
@@ -753,11 +712,11 @@ msgstr "massa regles (> %d)!"
 
 #: parse.y:183
 msgid "unknown error processing section 1"
-msgstr "error desconegut al processar la secció 1"
+msgstr "s'ha produÃ¯t un error desconegut en processar la secciÃ³ 1"
 
 #: parse.y:208 parse.y:373
 msgid "bad start condition list"
-msgstr "condició de començament incorrecta"
+msgstr "condiciÃ³ de comenÃ§ament incorrecta"
 
 #: parse.y:337
 msgid "unrecognized rule"
@@ -769,91 +728,89 @@ msgstr "s'ha utilitzat el context posterior dos vegades"
 
 #: parse.y:574 parse.y:584 parse.y:657 parse.y:667
 msgid "bad iteration values"
-msgstr "valors d'iteració incorrectes"
+msgstr "valors d'iteraciÃ³ incorrectes"
 
 #: parse.y:602 parse.y:620 parse.y:685 parse.y:703
 msgid "iteration value must be positive"
-msgstr "el valor d'iteració ha de ser positiu"
+msgstr "el valor d'iteraciÃ³ ha de ser positiu"
 
 #: parse.y:817 parse.y:827
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"el rang de caràcters [%c-%c] és ambigu en un analitzador insensible a les "
-"majúscules i minúscules"
+msgstr "el rang de carÃ cters [%c-%c] Ã©s ambigu en un analitzador insensible a les majÃºscules i minÃºscules"
 
 #: parse.y:832
 msgid "negative range in character class"
-msgstr "rang negatiu en classe de caràcter"
+msgstr "rang negatiu en classe de carÃ cter"
 
-#: scan.l:70 scan.l:180 scan.l:267 scan.l:409 scan.l:548 scan.l:598
+#: scan.l:71 scan.l:181 scan.l:268 scan.l:410 scan.l:549 scan.l:599
 msgid "Input line too long\n"
-msgstr "La línia d'entrada és massa llarga\n"
+msgstr "La lÃ­nia d'entrada Ã©s massa llarga\n"
 
-#: scan.l:149
+#: scan.l:150
 #, c-format
 msgid "malformed '%top' directive"
-msgstr "directiva «%top» malformada"
+msgstr "directiva Â«%topÂ» malformada"
 
-#: scan.l:171
+#: scan.l:172
 #, no-c-format
 msgid "unrecognized '%' directive"
-msgstr "directiva «%» no reconeguda"
+msgstr "directiva Â«%Â» no reconeguda"
 
-#: scan.l:251
+#: scan.l:252
 msgid "Unmatched '{'"
-msgstr "«|» no emparellat"
+msgstr "Â«|Â» no emparellat"
 
-#: scan.l:284
+#: scan.l:285
 msgid "incomplete name definition"
-msgstr "definició del nom incompleta"
+msgstr "definiciÃ³ del nom incompleta"
 
-#: scan.l:417
+#: scan.l:418
 #, c-format
 msgid "unrecognized %%option: %s"
-msgstr "%%opció no reconeguda: %s"
+msgstr "%%opciÃ³ no reconeguda: %s"
 
-#: scan.l:558 scan.l:677
+#: scan.l:559 scan.l:678
 msgid "bad character class"
-msgstr "classe de caràcter incorrecta"
+msgstr "classe de carÃ cter incorrecta"
 
-#: scan.l:605
+#: scan.l:606
 #, c-format
 msgid "undefined definition {%s}"
-msgstr "definició no definida {%s}"
+msgstr "definiciÃ³ no definida {%s}"
 
-#: scan.l:645
+#: scan.l:646
 #, c-format
 msgid "bad <start condition>: %s"
-msgstr "<condició d'activació> incorrecta: %s"
+msgstr "<condiciÃ³ d'activaciÃ³> incorrecta: %s"
 
-#: scan.l:658
+#: scan.l:659
 msgid "missing quote"
-msgstr "falta una cometa"
+msgstr "manca una cometa"
 
-#: scan.l:698
+#: scan.l:699
 #, c-format
 msgid "bad character class expression: %s"
-msgstr "expressió de la classe de caràcters incorrecta: %s"
+msgstr "expressiÃ³ de la classe de carÃ cters incorrecta: %s"
 
-#: scan.l:720
+#: scan.l:721
 msgid "bad character inside {}'s"
-msgstr "caràcter incorrecte dins de {}"
+msgstr "carÃ cter incorrecte dins de {}"
 
-#: scan.l:726
+#: scan.l:727
 msgid "missing }"
-msgstr "falta una }"
+msgstr "manca una }"
 
-#: scan.l:799
+#: scan.l:800
 msgid "EOF encountered inside an action"
-msgstr "EOF trobat dins d'una acció"
+msgstr "s'ha trobat un EOF dins d'una acciÃ³"
 
-#: scan.l:819
+#: scan.l:820
 #, c-format
 msgid "bad character: %s"
-msgstr "caràcter incorrecte: %s"
+msgstr "carÃ cter incorrecte: %s"
 
-#: scan.l:848
+#: scan.l:849
 #, c-format
 msgid "can't open %s"
 msgstr "no es pot obrir %s"
@@ -861,27 +818,27 @@ msgstr "no es pot obrir %s"
 #: scanopt.c:291
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
-msgstr "Forma d'ús: %s [OPCIONS...\n"
+msgstr "Forma d'Ãºs: %s [OPCIONS]...\n"
 
 #: scanopt.c:565
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
-msgstr "l'opció «%s» no accepta arguments\n"
+msgstr "l'opciÃ³ Â«%sÂ» no accepta arguments\n"
 
 #: scanopt.c:570
 #, c-format
 msgid "option `%s' requires an argument\n"
-msgstr "l'opció «%s» requereix un argument\n"
+msgstr "l'opciÃ³ Â«%sÂ» requereix un argument\n"
 
 #: scanopt.c:574
 #, c-format
 msgid "option `%s' is ambiguous\n"
-msgstr "l'opció «%s» és ambígua\n"
+msgstr "l'opciÃ³ Â«%sÂ» Ã©s ambÃ­gua\n"
 
 #: scanopt.c:578
 #, c-format
 msgid "Unrecognized option `%s'\n"
-msgstr "Opció no reconeguda «%s»\n"
+msgstr "OpciÃ³ no reconeguda Â«%sÂ»\n"
 
 #: scanopt.c:582
 #, c-format
@@ -890,7 +847,7 @@ msgstr "Error desconegut=(%d)\n"
 
 #: sym.c:100
 msgid "symbol table memory allocation failed"
-msgstr "ha fallat l'assignació de memòria per a la taula de símbols"
+msgstr "ha fallat l'assignaciÃ³ de memÃ²ria per a la taula de sÃ­mbols"
 
 #: sym.c:203
 msgid "name defined twice"
@@ -899,99 +856,93 @@ msgstr "el nom ha sigut definit dos vegades"
 #: sym.c:254
 #, c-format
 msgid "start condition %s declared twice"
-msgstr "la condició d'activació %s ha sigut declarada dos vegades"
+msgstr "la condiciÃ³ d'activaciÃ³ %s ha sigut declarada dos vegades"
 
 #: yylex.c:56
 msgid "premature EOF"
 msgstr "EOF prematur"
 
 #: yylex.c:198
-#, c-format
 msgid "End Marker\n"
 msgstr "Marcador de fi\n"
 
 #: yylex.c:204
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
-msgstr "*Algo estrany* - terminal: %d val: %d\n"
+msgstr "*Quelcom estrany* - terminal: %d val: %d\n"
 
 #~ msgid "Can't specify header option if writing to stdout."
-#~ msgstr "No es pot especificar l'opció de capçalera si s'escriu a stdout."
+#~ msgstr "No es pot especificar l'opciÃ³ de capÃ§alera si s'escriu a stdout."
 
 #~ msgid "unknown -R option '%c'"
-#~ msgstr "opció de -R desconeguda «%c»"
+#~ msgstr "opciÃ³ de -R desconeguda Â«%cÂ»"
 
 #~ msgid "-Cf/-CF and %option yylineno are incompatible"
-#~ msgstr "-Cf/-CF i l'%opció yylineno són incompatibles"
+#~ msgstr "-Cf/-CF i l'%opciÃ³ yylineno sÃ³n incompatibles"
 
 #~ msgid ""
 #~ "For usage, try\n"
 #~ "\t%s --help\n"
 #~ msgstr ""
-#~ "Per al mode d'ús, proveu\n"
+#~ "Per al mode d'Ãºs, proveu\n"
 #~ "\t%s --help\n"
 
 #~ msgid "-P flag must be given separately"
-#~ msgstr "la opció -P s'ha d'especificar per separat"
+#~ msgstr "la opciÃ³ -P s'ha d'especificar per separat"
 
 #~ msgid "-o flag must be given separately"
-#~ msgstr "l'opció -o s'ha d'especificar per separat"
+#~ msgstr "l'opciÃ³ -o s'ha d'especificar per separat"
 
 #~ msgid "-S flag must be given separately"
-#~ msgstr "l'opció -S s'ha d'especificar per separat"
+#~ msgstr "l'opciÃ³ -S s'ha d'especificar per separat"
 
 #~ msgid "-C flag must be given separately"
-#~ msgstr "l'opció -C s'ha de donar per separat"
+#~ msgstr "l'opciÃ³ -C s'ha de donar per separat"
 
-#~ msgid ""
-#~ "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"
-#~ msgstr ""
-#~ "%s [--bcdfhilnpstvwBFILTV78+? -C[aefFmr] -oeixida -Pprefix -Sesquema]\n"
+#~ msgid "%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"
+#~ msgstr "%s [--bcdfhilnpstvwBFILTV78+? -C[aefFmr] -oeixida -Pprefix -Sesquema]\n"
 
 #~ msgid "\t[--help --version] [file ...]\n"
 #~ msgstr "\t[--help --version] [fitxer ...]\n"
 
 #~ msgid "\t-b  generate backing-up information to %s\n"
-#~ msgstr "\t-b  genera la informació dels retrocessos efectuats a %s\n"
+#~ msgstr "\t-b  genera la informaciÃ³ dels retrocessos efectuats a %s\n"
 
 #~ msgid "\t-c  do-nothing POSIX option\n"
-#~ msgstr "\t-c  opció POSIX sense efecte\n"
+#~ msgstr "\t-c  opciÃ³ POSIX sense efecte\n"
 
 #~ msgid "\t-d  turn on debug mode in generated scanner\n"
-#~ msgstr "\t-d  activa el mode de depuració en l'analitzador generat\n"
+#~ msgstr "\t-d  activa el mode de depuraciÃ³ en l'analitzador generat\n"
 
 #~ msgid "\t-f  generate fast, large scanner\n"
-#~ msgstr "\t-f  genera un analitzador ràpid i gran\n"
+#~ msgstr "\t-f  genera un analitzador rÃ pid i gran\n"
 
 #~ msgid "\t-h  produce this help message\n"
 #~ msgstr "\t-h  mostra aquest missatge d'ajuda\n"
 
 #~ msgid "\t-i  generate case-insensitive scanner\n"
-#~ msgstr "\t-i  genera un analitzador insensible a majúscules i minúscules\n"
+#~ msgstr "\t-i  genera un analitzador insensible a majÃºscules i minÃºscules\n"
 
 #~ msgid "\t-l  maximal compatibility with original lex\n"
-#~ msgstr "\t-l  compatibilitat màxima amb el lex original\n"
+#~ msgstr "\t-l  compatibilitat mÃ xima amb el lex original\n"
 
 #~ msgid "\t-n  do-nothing POSIX option\n"
-#~ msgstr "\t-n opció POSIX sense efecte\n"
+#~ msgstr "\t-n opciÃ³ POSIX sense efecte\n"
 
 #~ msgid "\t-p  generate performance report to stderr\n"
 #~ msgstr "\t-p  genera l'informe de rendiment en stderr\n"
 
-# Al grep jo sempre he traduït match com a coincidir. No sé, no m'agrada
-# molt això de text emparellat.
-# Encara que coincident tampoc no m'acaba de convéncer. ear
+# Al grep jo sempre he traduÃ¯t match com a coincidir. No sÃ©, no m'agrada
+# molt aixÃ² de text emparellat.
+# Encara que coincident tampoc no m'acaba de convÃ©ncer. ear
 #~ msgid "\t-s  suppress default rule to ECHO unmatched text\n"
-#~ msgstr ""
-#~ "\t-s  suprimeix la regla per defecte de visualitzar (ECHO) el text no "
-#~ "emparellat\n"
+#~ msgstr "\t-s  suprimeix la regla per defecte de visualitzar (ECHO) el text no emparellat\n"
 
 #~ msgid "\t-t  write generated scanner on stdout instead of %s\n"
-#~ msgstr ""
-#~ "\t-t  escriu l'analitzador generat en l'eixida estàndard en lloc de %s\n"
+#~ msgstr "\t-t  escriu l'analitzador generat en l'eixida estÃ ndard en lloc de %s\n"
 
 #~ msgid "\t-v  write summary of scanner statistics to f\n"
-#~ msgstr "\t-v  escriu un resum de les estadístiques en f\n"
+#~ msgstr "\t-v  escriu un resum de les estadÃ­stiques en f\n"
 
 #~ msgid "\t-w  do not generate warnings\n"
 #~ msgstr "\t-w  no genera avisos\n"
@@ -1000,7 +951,7 @@ msgstr "*Algo estrany* - terminal: %d val: %d\n"
 #~ msgstr "\t-B  genera un analitzador no interactiu (el contrari a -I)\n"
 
 #~ msgid "\t-F  use alternative fast scanner representation\n"
-#~ msgstr "\t-F  usa la representació alternativa d'analitzador ràpid\n"
+#~ msgstr "\t-F  usa la representaciÃ³ alternativa d'analitzador rÃ pid\n"
 
 #~ msgid "\t-I  generate interactive scanner (opposite of -B)\n"
 #~ msgstr "\t-I  genera analitzador interactiu (el contrari a -B)\n"
@@ -1009,10 +960,10 @@ msgstr "*Algo estrany* - terminal: %d val: %d\n"
 #~ msgstr "\t-L  suprimeix les directives #line en l'analitzador\n"
 
 #~ msgid "\t-T  %s should run in trace mode\n"
-#~ msgstr "\t-T  %s hauria de executarse en mode traça\n"
+#~ msgstr "\t-T  %s hauria de executarse en mode traÃ§a\n"
 
 #~ msgid "\t-V  report %s version\n"
-#~ msgstr "\t-V  informa de la versió de %s\n"
+#~ msgstr "\t-V  informa de la versiÃ³ de %s\n"
 
 #~ msgid "\t-7  generate 7-bit scanner\n"
 #~ msgstr "\t-7  genera un analitzador de 7 bits\n"
@@ -1027,39 +978,33 @@ msgstr "*Algo estrany* - terminal: %d val: %d\n"
 #~ msgstr "\t-?  produeix aquest missatge d'ajuda\n"
 
 #~ msgid "\t-C  specify degree of table compression (default is -Cem):\n"
-#~ msgstr ""
-#~ "\t-C  especifica el grau de compressió de la taula (per defecte -Cem):\n"
+#~ msgstr "\t-C  especifica el grau de compressiÃ³ de la taula (per defecte -Cem):\n"
 
 #~ msgid "\t\t-Ca  trade off larger tables for better memory alignment\n"
 #~ msgstr ""
-#~ "\t\t-Ca  renuncia a taules més grans a canvi de una millor alineació\n"
-#~ "\t\t     de la memòria\n"
+#~ "\t\t-Ca  renuncia a taules mÃ©s grans a canvi de una millor alineaciÃ³\n"
+#~ "\t\t     de la memÃ²ria\n"
 
 #~ msgid "\t\t-Ce  construct equivalence classes\n"
-#~ msgstr "\t\t-Ce  construeix classes d'equivalència\n"
+#~ msgstr "\t\t-Ce  construeix classes d'equivalÃ¨ncia\n"
 
 #~ msgid "\t\t-Cf  do not compress scanner tables; use -f representation\n"
-#~ msgstr ""
-#~ "\t\t-Cf  no comprimeix les taules de l'analitzador; utilitza la "
-#~ "representació -f\n"
+#~ msgstr "\t\t-Cf  no comprimeix les taules de l'analitzador; utilitza la representaciÃ³ -f\n"
 
 #~ msgid "\t\t-CF  do not compress scanner tables; use -F representation\n"
-#~ msgstr ""
-#~ "\t\t-CF  no comprimeix les taules de l'analitzador; utilitza la "
-#~ "representació -F\n"
+#~ msgstr "\t\t-CF  no comprimeix les taules de l'analitzador; utilitza la representaciÃ³ -F\n"
 
 #~ msgid "\t\t-Cm  construct meta-equivalence classes\n"
-#~ msgstr "\t\t-Cm  construeix classes de metaequivalència\n"
+#~ msgstr "\t\t-Cm  construeix classes de metaequivalÃ¨ncia\n"
 
 #~ msgid "\t\t-Cr  use read() instead of stdio for scanner input\n"
-#~ msgstr ""
-#~ "\t\t-Cr  utilitza read() en lloc de stdio com a entrada de l'analitzador\n"
+#~ msgstr "\t\t-Cr  utilitza read() en lloc de stdio com a entrada de l'analitzador\n"
 
 #~ msgid "\t-o  specify output filename\n"
 #~ msgstr "\t-o  especifica el fitxer d'eixida\n"
 
 #~ msgid "\t-P  specify scanner prefix other than \"yy\"\n"
-#~ msgstr "\t-P  especifica un prefix de l'analitzador diferent a «yy»\n"
+#~ msgstr "\t-P  especifica un prefix de l'analitzador diferent a Â«yyÂ»\n"
 
 #~ msgid "\t-S  specify skeleton file\n"
 #~ msgstr "\t-S  especifica el fitxer d'esquema\n"
@@ -1068,4 +1013,4 @@ msgstr "*Algo estrany* - terminal: %d val: %d\n"
 #~ msgstr "\t--help     produeix aquest missatge d'ajuda\n"
 
 #~ msgid "\t--version  report %s version\n"
-#~ msgstr "\t--version  informa de la versió de %s\n"
+#~ msgstr "\t--version  informa de la versiÃ³ de %s\n"
