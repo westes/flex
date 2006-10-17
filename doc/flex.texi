@@ -4082,14 +4082,20 @@ First, an example of a reentrant scanner:
 @example
 @verbatim
     /* This scanner prints "//" comments. */
-    %option reentrant stack
+
+    %option reentrant stack noyywrap
     %x COMMENT
+
     %%
+
     "//"                 yy_push_state( COMMENT, yyscanner);
     .|\n
+
     <COMMENT>\n          yy_pop_state( yyscanner );
     <COMMENT>[^\n]+      fprintf( yyout, "%s\n", yytext);
+
     %%
+
     int main ( int argc, char * argv[] )
     {
         yyscan_t scanner;
