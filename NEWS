@@ -5,7 +5,10 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.33
 
-* added new unit test for c++ and yywrap
+** memory leaks removed from the C++ scanner (but the C++ scanner is
+still experimental and may change radically without notice)
+
+** added new unit test for c++ and yywrap
 
 ** portability fixes to some unit tests
 

@@ -51,6 +51,7 @@ main ()
     yyin = stdin;
     yyout = stdout;
     yylex();
+    yylex_destroy();
     printf("TEST RETURNING OK.\n");
     return 0;
 }

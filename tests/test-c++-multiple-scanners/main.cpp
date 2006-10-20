@@ -47,6 +47,8 @@ main ( int argc, char** argv )
             S2_ok = S2->yylex();
     }
     printf("TEST RETURNING OK.\n");
+    delete S1;
+    delete S2;
     return 0;
 }
 
