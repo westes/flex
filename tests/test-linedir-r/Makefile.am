@@ -46,8 +46,8 @@ $(testname)$(EXEEXT): $(OBJS)
 
 test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT) < $(srcdir)/test.input
-	cat -n scanner.c | grep '#line' | grep scanner.c | awk -f $(srcdir)/check-lines.awk
-	cat -n scanner.h | grep '#line' | grep scanner.h | awk -f $(srcdir)/check-lines.awk
+	cat -n scanner.c | grep '#line' | grep scanner.c | $(AWK) -f $(srcdir)/check-lines.awk
+	cat -n scanner.h | grep '#line' | grep scanner.h | $(AWK) -f $(srcdir)/check-lines.awk
 
 .c.o:
 	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<
