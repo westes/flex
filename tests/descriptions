@@ -44,3 +44,4 @@ string-r              - Scan strings, reentrant.
 table-opts            - Try every table compression option.
 top                   - Test %top directive.
 yyextra               - Test yyextra.
+c++-yywrap            - test yywrap in c++ scanner

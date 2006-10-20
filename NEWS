@@ -4,6 +4,9 @@ changes between releases of flex.
 See the file COPYING for copying conditions.
 
 * after version 2.5.33
+
+* added new unit test for c++ and yywrap
+
 ** portability fixes to some unit tests
 
 ** new ca,  vi, ga, nl translations from the translation project
