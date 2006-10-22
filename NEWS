@@ -5,7 +5,24 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.33
 
-** memory leaks removed from the C++ scanner (but the C++ scanner is
+** pattern language expanded; see the manual for details
+
+*** pattern options added to specify patterns as case-insensitive or
+    case-sensitive
+
+*** pattern options to specify whether the "." character should match
+    the newline character
+
+*** pattern options added to allow ignoring of whitespace in patterns
+
+*** POSIX character classes may be negated in patterns
+
+*** patterns may now use set difference, union  operators
+
+** the manual now contains an appendix listing various common patterns
+   which may be useful when writing scanners
+
+** some memory leaks were removed from the C++ scanner (but the C++ scanner is
   still experimental and may change radically without notice)
 
 ** c++ scanners can now use yywrap
