@@ -25,7 +25,7 @@
 %}
 
 %option 8bit outfile="scanner-2.cpp" prefix="S2_"
-%option nounput nomain noyywrap
+%option nounput nomain
 %option warn stack noyy_top_state
 
 %x OFF
@@ -41,3 +41,8 @@ off   yy_push_state(OFF); return 4;
 <OFF>.|\n yy_pop_state(); return 7;
 %%
 
+int S2_FlexLexer::yywrap()
+{
+    std::cout << "NOW WRAPPING." << std::endl;
+    return 1;
+}

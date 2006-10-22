@@ -6,7 +6,9 @@ See the file COPYING for copying conditions.
 * after version 2.5.33
 
 ** memory leaks removed from the C++ scanner (but the C++ scanner is
-still experimental and may change radically without notice)
+  still experimental and may change radically without notice)
+
+** c++ scanners can now use yywrap
 
 ** added new unit test for c++ and yywrap
 
