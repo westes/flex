@@ -24,7 +24,7 @@ FLEX = $(top_builddir)/flex
 builddir = @builddir@
 
 EXTRA_DIST = scanner.l parser.y test.input
-CLEANFILES = scanner.c scanner.h parser.c parser.h TEMPLATE OUTPUT $(OBJS)
+CLEANFILES = scanner.c scanner.h parser.c parser.h $(testname)$(EXEEXT) OUTPUT $(OBJS)
 OBJS = scanner.o # parser.o
 
 AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir) -I$(top_builddir)
