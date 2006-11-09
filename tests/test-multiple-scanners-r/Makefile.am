@@ -25,7 +25,7 @@ FLEX = $(top_builddir)/flex
 builddir = @builddir@
 
 EXTRA_DIST = scanner-1.l scanner-2.l main.c
-CLEANFILES = scanner-1.c scanner-1.h test-multiple-scanners-r OUTPUT\
+CLEANFILES = scanner-1.c scanner-1.h $(testname)$(EXEEXT) OUTPUT\
              $(OBJS) scanner-2.c scanner-2.h scanner-1.tables \
              scanner-2.tables
 OBJS = scanner-1.o scanner-2.o main.o

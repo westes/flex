@@ -25,7 +25,7 @@ FLEX = $(top_builddir)/flex
 builddir = @builddir@
 
 EXTRA_DIST = scanner.l test.input main.c check-lines.awk
-CLEANFILES = scanner.c scanner.h test-linedir-r OUTPUT $(OBJS)
+CLEANFILES = scanner.c scanner.h $(testname)$(EXEEXT) OUTPUT $(OBJS)
 OBJS = scanner.o main.o
 
 AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir) -I$(builddir)

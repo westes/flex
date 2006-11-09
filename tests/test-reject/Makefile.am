@@ -23,7 +23,7 @@
 FLEX = $(top_builddir)/flex
 
 EXTRA_DIST = scanner.l test.input
-CLEANFILES = scanner.c test-reject-* OUTPUT $(OBJS)
+CLEANFILES = scanner.c $(testname)$(EXEEXT)-* OUTPUT $(OBJS)
 OBJS = test-reject-nr.o test-reject-r.o test-reject-ver.o \
        test-reject-ser.o
 

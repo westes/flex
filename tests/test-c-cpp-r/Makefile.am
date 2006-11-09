@@ -23,7 +23,7 @@
 FLEX = $(top_builddir)/flex
 
 EXTRA_DIST = scanner.l test.input
-CLEANFILES = scanner.cpp test-c-cpp-r $(OBJS) OUTPUT
+CLEANFILES = scanner.cpp $(testname)$(EXEEXT) $(OBJS) OUTPUT
 OBJS = scanner.o
 
 AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
