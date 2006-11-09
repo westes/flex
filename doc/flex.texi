@@ -118,7 +118,7 @@ Format of the Input File
 
 Scanner Options
 
-* Options for Specifing Filenames::  
+* Options for Specifying Filenames::  
 * Options Affecting Scanner Behavior::  
 * Code-Level And API Options::  
 * Options for Scanner Speed and Size::  
@@ -171,9 +171,9 @@ FAQ
 * Why cant I use fast or full tables with interactive mode?::  
 * How much faster is -F or -f than -C?::  
 * If I have a simple grammar cant I just parse it with flex?::  
-* Why doesnt yyrestart() set the start state back to INITIAL?::  
+* Why doesn't yyrestart() set the start state back to INITIAL?::  
 * How can I match C-style comments?::  
-* The period isnt working the way I expected.::  
+* The period isn't working the way I expected.::  
 * Can I get the flex manual in another format?::  
 * Does there exist a "faster" NDFA->DFA algorithm?::  
 * How does flex compile the DFA so quickly?::  
@@ -191,7 +191,7 @@ FAQ
 * I am trying to port code from AT&T lex that uses yysptr and yysbuf.::  
 * Is there a way to make flex treat NULL like a regular character?::  
 * Whenever flex can not match the input it says "flex scanner jammed".::  
-* Why doesnt flex have non-greedy operators like perl does?::  
+* Why doesn't flex have non-greedy operators like perl does?::  
 * Memory leak - 16386 bytes allocated by malloc.::  
 * How do I track the byte offset for lseek()?::  
 * How do I use my own I/O classes in a C++ scanner?::  
@@ -995,7 +995,7 @@ example, @samp{[a-c]@{-@}[b-z]} represents all the characters in the class
 @samp{[a-c]} that are not in the class @samp{[b-z]} (which in this case, is
 just the single character @samp{a}). The @samp{@{-@}} operator is left
 associative, so @samp{[abc]@{-@}[b]@{-@}[c]} is the same as @samp{[a]}. Be careful
-not to accidently create an empty set, which will never match.
+not to accidentally create an empty set, which will never match.
 
 @item
 
@@ -1254,7 +1254,7 @@ whenever @samp{frob} is seen:
 @end verbatim
 @end example
 
-Without the @code{REJECT}, any occurences of @samp{frob} in the input
+Without the @code{REJECT}, any occurrences of @samp{frob} in the input
 would not be counted as words, since the scanner normally executes only
 one action per token.  Multiple uses of @code{REJECT} are allowed, each
 one finding the next best choice to the currently active rule.  For
@@ -1284,7 +1284,7 @@ will slow down @emph{all} of the scanner's matching.  Furthermore,
 (@pxref{Scanner Options}).
 
 Note also that unlike the other special actions, @code{REJECT} is a
-@emph{branch}.  code immediately following it in the action will
+@emph{branch}.  Code immediately following it in the action will
 @emph{not} be executed.
 
 @item  yymore()
@@ -1622,7 +1622,7 @@ condition, and
 will be active only when the current start condition is either
 @code{INITIAL}, @code{STRING}, or @code{QUOTE}.
 
-@cindex start conditions, inclusive v.s. exclusive
+@cindex start conditions, inclusive v.s.@: exclusive
 Start conditions are declared in the definitions (first) section of the
 input using unindented lines beginning with either @samp{%s} or
 @samp{%x} followed by a list of names.  The former declares
@@ -2486,7 +2486,7 @@ The various @code{flex} options are categorized by function in the following
 menu. If you want to lookup a particular option by name, @xref{Index of Scanner Options}.
 
 @menu
-* Options for Specifing Filenames::  
+* Options for Specifying Filenames::  
 * Options Affecting Scanner Behavior::  
 * Code-Level And API Options::  
 * Options for Scanner Speed and Size::  
@@ -2509,7 +2509,7 @@ specify the following options:
 The first line specifies the general type of scanner we want. The second line
 specifies that we are being careful. The third line asks flex to track line
 numbers. The last line tells flex what to name the files. (The options can be
-specified in any order. We just dividied them.)
+specified in any order. We just divided them.)
 
 @code{flex} also provides a mechanism for controlling options within the
 scanner specification itself, rather than from the flex command-line.
@@ -2552,8 +2552,8 @@ corresponding routine not appearing in the generated scanner:
 (though @code{yy_push_state()} and friends won't appear anyway unless
 you use @code{%option stack)}.
 
-@node Options for Specifing Filenames, Options Affecting Scanner Behavior, Scanner Options, Scanner Options
-@section Options for Specifing Filenames
+@node Options for Specifying Filenames, Options Affecting Scanner Behavior, Scanner Options, Scanner Options
+@section Options for Specifying Filenames
 
 @table @samp
 
@@ -2625,7 +2625,7 @@ the serialized tables match the in-code tables, instead of loading them.
 
 @end table
 
-@node Options Affecting Scanner Behavior, Code-Level And API Options, Options for Specifing Filenames, Scanner Options
+@node Options Affecting Scanner Behavior, Code-Level And API Options, Options for Specifying Filenames, Scanner Options
 @section Options Affecting Scanner Behavior
 
 @table @samp
@@ -3341,7 +3341,7 @@ those that are on by default.
 @opindex warn
 @item --warn, @code{%option warn}
 warn about certain things. In particular, if the default rule can be
-matched but no defualt rule has been given, the flex will warn you.
+matched but no default rule has been given, the flex will warn you.
 We recommend using this option always.
 
 @end table
@@ -3788,7 +3788,7 @@ returns the current input line number (see @code{%option yylineno)}, or
 @item void set_debug( int flag )
 sets the debugging flag for the scanner, equivalent to assigning to
 @code{yy_flex_debug} (@pxref{Scanner Options}).  Note that you must build
-the scannerusing @code{%option debug} to include debugging information
+the scanner using @code{%option debug} to include debugging information
 in it.
 
 @findex  debug (C++ only)
@@ -5117,7 +5117,7 @@ any padding.
 Bit flags for this table set. Currently unused.
 
 @item th_version[]
-Flex version in NULL-termninated string format. e.g., @samp{2.5.13a}. This is
+Flex version in NULL-terminated string format. e.g., @samp{2.5.13a}. This is
 the version of flex that was used to create the serialized tables.
 
 @item th_name[]
@@ -5403,9 +5403,9 @@ publish them here.
 * Why cant I use fast or full tables with interactive mode?::  
 * How much faster is -F or -f than -C?::  
 * If I have a simple grammar cant I just parse it with flex?::  
-* Why doesnt yyrestart() set the start state back to INITIAL?::  
+* Why doesn't yyrestart() set the start state back to INITIAL?::  
 * How can I match C-style comments?::  
-* The period isnt working the way I expected.::  
+* The period isn't working the way I expected.::  
 * Can I get the flex manual in another format?::  
 * Does there exist a "faster" NDFA->DFA algorithm?::  
 * How does flex compile the DFA so quickly?::  
@@ -5423,7 +5423,7 @@ publish them here.
 * I am trying to port code from AT&T lex that uses yysptr and yysbuf.::  
 * Is there a way to make flex treat NULL like a regular character?::  
 * Whenever flex can not match the input it says "flex scanner jammed".::  
-* Why doesnt flex have non-greedy operators like perl does?::  
+* Why doesn't flex have non-greedy operators like perl does?::  
 * Memory leak - 16386 bytes allocated by malloc.::  
 * How do I track the byte offset for lseek()?::  
 * How do I use my own I/O classes in a C++ scanner?::  
@@ -5699,7 +5699,7 @@ matches in @samp{<INITIAL>}.  Then you could use the following:
 ...
 <A>.|\n  {
 /* Shortest and last rule in <A>, so
-* cascaded REJECT's will eventually
+* cascaded REJECTs will eventually
 * wind up matching this rule.  We want
 * to now switch to the initial state
 * and try matching from there instead.
@@ -5742,7 +5742,7 @@ Is your grammar recursive? That's almost always a sign that you're
 better off using a parser/scanner rather than just trying to use a scanner
 alone.
 
-@node  Why doesnt yyrestart() set the start state back to INITIAL?
+@node  Why doesn't yyrestart() set the start state back to INITIAL?
 @unnumberedsec Why doesn't yyrestart() set the start state back to INITIAL?
 
 There are two reasons.  The first is that there might
@@ -5793,7 +5793,7 @@ Here is one way which allows you to track line information:
 @end verbatim
 @end example
 
-@node  The period isnt working the way I expected.
+@node  The period isn't working the way I expected.
 @unnumberedsec The '.' isn't working the way I expected.
 
 Here are some tips for using @samp{.}:
@@ -6008,7 +6008,7 @@ residing in memory.
 
 One way to assign precedence, is to place the more specific rules first. If
 two rules would match the same input (same sequence of characters) then the
-first rule listed in the @code{flex} input wins. e.g.,
+first rule listed in the @code{flex} input wins, e.g.,
 
 @example
 @verbatim
@@ -6043,7 +6043,7 @@ version of @code{flex}.  The latest release is version @value{VERSION}.
 @node Whenever flex can not match the input it says "flex scanner jammed".
 @unnumberedsec Whenever flex can not match the input it says "flex scanner jammed".
 
-You need to add a rule that matches the otherwise-unmatched text.
+You need to add a rule that matches the otherwise-unmatched text,
 e.g.,
 
 @example
@@ -6058,7 +6058,7 @@ e.g.,
 
 See @code{%option default} for more information.
 
-@node Why doesnt flex have non-greedy operators like perl does?
+@node Why doesn't flex have non-greedy operators like perl does?
 @unnumberedsec Why doesn't flex have non-greedy operators like perl does?
 
 A DFA can do a non-greedy match by stopping
