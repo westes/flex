@@ -22,21 +22,12 @@ for i in $TESTFILES ; do
     cp TEMPLATE/$i $1/$i
 done
 
-# Modify .cvsignore
 echo "$1" >> "$1"/.cvsignore
 
-# Modify top-level configure.in
-sed '/--new-test-here--/i\
-tests/'"$1"'/Makefile' < ../configure.in > configure.in.tmp
+sed -i '/--new-test-here--/i\
+tests/'"$1"'/Makefile' ../configure.in
 
-mv configure.in.tmp ../configure.in
+sed -i '/^\(DIST_\)\?SUBDIRS/a\
+	'"$1"' \\' Makefile.am
 
-# Modify  Makefile.am
-sed '/^\(DIST_\)\?SUBDIRS/a\
-	'"$1"' \\' < Makefile.am > Makefile.am.tmp
-
-mv Makefile.am.tmp Makefile.am
-
-# Modify new-test/Makefile.am
-sed "s:TEMPLATE:$1:g" < "$1"/Makefile.am > "$1"/Makefile.am.tmp
-mv "$1"/Makefile.am.tmp "$1"/Makefile.am
+sed -i "s:TEMPLATE:$1:g" "$1"/Makefile.am
