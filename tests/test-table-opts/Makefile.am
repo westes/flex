@@ -28,7 +28,6 @@
 # 'test-mul' checks that we can store multiple tables in a single file.
 # ------------------------------------------------
 
-
 FLEX = $(top_builddir)/flex
 
 testname  := test-table-opts
@@ -63,12 +62,11 @@ sertables  := $(addsuffix .tables,$(sertests))
 alltables  := $(addsuffix .tables,$(alltests))
 
 EXTRA_DIST = scanner.l test.input
-CLEANFILES = scanner.c OUTPUT test-*.o test-*.c test-*.tables \
-             all-ser.tables core $(alltests)
+CLEANFILES = scanner.c OUTPUT $(allobj) $(allsrc) $(alltables) \
+             all-ser.tables $(allexe)
 AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
 
-test: test-table-opts
-test-table-opts: $(alltests)
+test: test-opt test-ser test-ver test-mul
 
 test-opt-r%.c: $(srcdir)/scanner.l
 	$(FLEX) -L -P $(subst -,_,$(basename $(@F))) --reentrant $*  -o $@ $<
@@ -130,6 +128,5 @@ test-opt-r-%.o:  test-opt-r-%.c  ; $(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) -DT
 test-ser-r-%.o:  test-ser-r-%.c  ; $(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT $(CFLAGS) $<
 test-ver-r-%.o:  test-ver-r-%.c  ; $(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT $(CFLAGS) $<
 
-
-.PHONY: test-table-opts test test-opt test-ser test-ver test-mul
+.PHONY: test test-opt test-ser test-ver test-mul
 .SECONDARY: $(allobj) $(allsrc)
