@@ -19,7 +19,6 @@ configure
 depcomp
 flex
 flex-*
-flex.spec
 install-sh
 missing
 mkinstalldirs
