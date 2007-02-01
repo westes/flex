@@ -1,7 +1,7 @@
 help2man = @HELP2MAN@
 
 info_TEXINFOS =	flex.texi
-man_MANS = flex.1
+dist_man_MANS = flex.1
 
 MAINTAINERCLEANFILES = \
 	flex.1
