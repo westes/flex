@@ -10,5 +10,7 @@ CLEANFILES = \
 
 $(dist_man_MANS): $(top_srcdir)/main.c
 	for i in $(dist_man_MANS) ; do \
-	$(help2man) --name='fast lexical analyzer generator' --section=`echo $$i|rev|cut -f 1 -d .|rev` ../flex > $$i ; \
+	$(help2man) --name='$(PACKAGE_NAME)' \
+	--section=`echo $$i | sed -e 's/.*\.\([^.]*\)$$/\1/'` \
+	 ../flex$(EXEEXT) > $$i || rm -f $$i ; \
 	done

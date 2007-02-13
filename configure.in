@@ -24,7 +24,8 @@ dnl PURPOSE.
 dnl autoconf requirements and initialization
 
 AC_PREREQ(2.54)
-AC_INIT(flex,2.5.33,flex-help@lists.sourceforge.net)
+AC_INIT([the fast lexical analyser generator], [2.5.33],
+[flex-help@lists.sourceforge.net], [flex])
 AC_CONFIG_SRCDIR(scan.l)
 AM_INIT_AUTOMAKE(gnits dist-bzip2)
 AC_CONFIG_HEADER(config.h:conf.in)
