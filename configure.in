@@ -26,7 +26,7 @@ dnl autoconf requirements and initialization
 AC_PREREQ(2.54)
 AC_INIT(flex,2.5.33,flex-help@lists.sourceforge.net)
 AC_CONFIG_SRCDIR(scan.l)
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE(gnits check-news dist-bzip2)
 AC_CONFIG_HEADER(config.h:conf.in)
 
 dnl checks for programs

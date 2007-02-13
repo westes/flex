@@ -38,12 +38,6 @@ ACLOCAL_AMFLAGS = -I m4
 m4 = @M4@
 indent = @INDENT@
 
-AUTOMAKE_OPTIONS = \
-	gnits \
-	check-news \
-	dist-bzip2 \
-	1.7
-
 bin_PROGRAMS = flex
 lib_LIBRARIES = libfl.a
 
@@ -151,12 +145,13 @@ yylex.o: yylex.c flexdef.h flexint.h parse.h
 filter.o: filter.c flexdef.h flexint.h
 
 # Create a tags file.
+
 tags:
 	ctags --c-types='defgmstuv' $(srcdir)/*.[ch]
 
 # Create the ChangeLog, but only if we're inside a cvs working directory
 
-ChangeLog:
+ChangeLog: $(srcdir)/tools/cvsauthors $(srcdir)/tools/cvs2cl.pl
 	if [ -d CVS ] ; then \
 		sh $(srcdir)/tools/cvs2cl.pl -F trunk -U $(srcdir)/tools/cvsauthors \
 	; fi
