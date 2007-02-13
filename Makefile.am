@@ -86,31 +86,7 @@ noinst_HEADERS = \
 include_HEADERS = \
 	FlexLexer.h
 
-MAINTAINERCLEANFILES = \
-	ABOUT-NLS \
-	config.rpath \
-	config.sub \
-	config.guess \
-	configure \
-	config.sub \
-	config.guess \
-	depcomp \
-	mkinstalldirs \
-	install-sh \
-	ABOUT-NLS \
-	ChangeLog \
-	INSTALL \
-	conf.in \
-	aclocal.m4 \
-	Makefile.in \
-	mdate-sh \
-	missing
-
-
-
 EXTRA_DIST = \
-	flex.spec.in \
-	flex.spec \
 	.indent.pro \
 	AUTHORS \
 	COPYING \
