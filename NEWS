@@ -5,7 +5,8 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.33
 
-** pattern language expanded; see the manual for details
+** pattern language expanded; see the manual for details on the below
+   highlights
 
 *** pattern options added to specify patterns as case-insensitive or
     case-sensitive
@@ -17,13 +18,14 @@ See the file COPYING for copying conditions.
 
 *** POSIX character classes may be negated in patterns
 
-*** patterns may now use set difference, union  operators
+*** patterns may now use set difference, union operators
 
 ** the manual now contains an appendix listing various common patterns
    which may be useful when writing scanners
 
-** some memory leaks were removed from the C++ scanner (but the C++ scanner is
-  still experimental and may change radically without notice)
+** some memory leaks were removed from the C++ scanner (but the C++
+  scanner is still experimental and may change radically without
+  notice)
 
 ** c++ scanners can now use yywrap
 
@@ -31,7 +33,14 @@ See the file COPYING for copying conditions.
 
 ** portability fixes to some unit tests
 
-** new ca,  vi, ga, nl translations from the translation project
+** flex man page and flex manual in pdf now distributed with flex
+   sources
+
+** new ca, vi, ga, nl translations from the translation project
+
+** flex no longer comes with an rpm spec file
+
+** flex development now happens with automake 1.9.6
 
 * version 2.5.33 released 2006-2-20
 
