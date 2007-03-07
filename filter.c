@@ -354,24 +354,43 @@ int filter_fix_linedirs (struct filter *chain)
 			num = regmatch_strtol (&m[1], buf, NULL, 0);
 			fname = regmatch_dup (&m[2], buf);
 
-			if (strcmp
-			    (fname, outfilename ? outfilename : "<stdout>")
-			    == 0
-			    || strcmp (fname,
-				       headerfilename ? headerfilename :
-				       "<stdout>") == 0) {
+			if (strcmp (fname,
+				outfilename ? outfilename : "<stdout>")
+					== 0
+			 || strcmp (fname,
+			 	headerfilename ? headerfilename : "<stdout>")
+					== 0) {
+
+				char    *s1, *s2;
+				char	filename[MAXLINE];
+
+				s1 = fname;
+				s2 = filename;
+
+				while ((s2 - filename) < (MAXLINE - 1) && *s1) {
+					/* Escape the backslash */
+					if (*s1 == '\\')
+						*s2++ = '\\';
+					/* Escape the double quote */
+					if (*s1 == '\"')
+						*s2++ = '\\';
+					/* Copy the character as usual */
+					*s2++ = *s1++;
+				}
+
+				*s2 = '\0';
+
 				/* Adjust the line directives. */
 				in_gen = true;
 				snprintf (buf, readsz, "#line %d \"%s\"\n",
-					 lineno + 1, fname);
-				free (fname);
-
+					  lineno + 1, filename);
 			}
 			else {
 				/* it's a #line directive for code we didn't write */
 				in_gen = false;
 			}
 
+			free (fname);
 			last_was_blank = false;
 		}
 

@@ -5,6 +5,11 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.33
 
+** flex better escapes filenames with special characters in them
+(resolves#1623600)
+
+** a memory leak was plugged(resolves bug #1601111)
+
 ** pattern language expanded; see the manual for details on the below
    highlights
 
