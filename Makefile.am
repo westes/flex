@@ -88,7 +88,7 @@ EXTRA_DIST = \
 	NEWS \
 	ONEWS \
 	README \
-	README.cvs-snapshot \
+	README.cvs \
 	THANKS \
 	TODO \
 	autogen.sh \
