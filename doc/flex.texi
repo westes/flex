@@ -292,9 +292,9 @@ Indices
 @cindex bugs, reporting
 @cindex reporting bugs
 
-If you have problems with @code{flex} or think you have found a bug,
-please send mail detailing your problem to
-@email{flex-help@@lists.sourceforge.net}. Patches are always welcome.
+If you find a bug in @code{flex}, please report it using
+the SourceForge Bug Tracking facilities which can be found on
+@url{http://sourceforge.net/projects/flex,flex's SourceForge Page}.
 
 @node Introduction, Simple Examples, Reporting Bugs, Top
 @chapter Introduction

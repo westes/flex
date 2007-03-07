@@ -8,9 +8,21 @@ flex can be found at:
 
 http://flex.sourceforge.net/
 
-Of particular interest is the mailing list
-flex-announce@lists.sourceforge.net as that is where posts will be made
+Bug reports should be submitted using the SourceForge Bug Tracker
+facilities which can be found from flex's SourceForge project page at:
+
+http://sourceforge.net/projects/flex
+
+There are several mailing lists available as well:
+
+flex-announce@lists.sourceforge.net - where posts will be made
 announcing new releases of flex.
+
+flex-help@lists.sourceforge.net - where you can post questions about
+using flex
+
+flex-devel@lists.sourceforge.net - where you can discuss development of
+flex itself
 
 Note that flex is distributed under a copyright very similar to that of
 BSD Unix, and not under the GNU General Public License (GPL).
@@ -42,8 +54,6 @@ THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
 IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 PURPOSE.
-
-Please send bug reports and feedback to flex-help@lists.sourceforge.net.
 
 The flex distribution contains the following files which may be of interest:
 
