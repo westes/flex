@@ -413,13 +413,13 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define YY_END_OF_BUFFER_CHAR 0
 ]])
 
-m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
-[[
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
 #define YY_BUF_SIZE 16384
 #endif
 
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
+[[
 /* The state buf must be large enough to hold one state per character in the main buffer.
  */
 #define YY_STATE_BUF_SIZE   ((YY_BUF_SIZE + 2) * sizeof(yy_state_type))
