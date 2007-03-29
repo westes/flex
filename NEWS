@@ -5,6 +5,9 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.33
 
+** SourceForge feature request #1658379: Expose YY_BUF_SIZE in the
+	header file.
+
 ** flex better escapes filenames with special characters in them
 (resolves#1623600)
 
