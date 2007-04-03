@@ -1,8 +1,9 @@
 \input texinfo.tex @c -*-texinfo-*-
 @c %**start of header
 @setfilename flex.info
-@settitle flex: a fast lexical analyzer generator
+@settitle Flex: The Fast Lexical Analyzer Generator
 @include version.texi
+@set authors Vern Paxson, Will Estes and John Millaway
 @c  "Macro Hooks" index
 @defindex hk
 @c  "Options" index
@@ -17,6 +18,9 @@
 
 The flex manual is placed under the same licensing conditions as the
 rest of flex:
+
+Copyright @copyright{} 2001, 2002, 2003, 2004, 2005, 2006, 2007 The Flex
+Project.
 
 Copyright @copyright{} 1990, 1997 The Regents of the University of California.
 All rights reserved.
@@ -54,18 +58,16 @@ PURPOSE.
 @end copying
 
 @titlepage
-@title Flex, version @value{VERSION}
+@title Flex
 @subtitle A fast scanner generator
 @subtitle Edition @value{EDITION}, @value{UPDATED}
-@author Vern Paxson
-@author W. L. Estes
-@author John Millaway
+@author @value{authors}
 @page
 @vskip 0pt plus 1filll
 @insertcopying
 @end titlepage
 @contents
-
+@ifnottex
 @node Top, Copyright, (dir), (dir)
 @top flex
 
@@ -75,6 +77,8 @@ reference sections.
 
 This edition of @cite{The flex Manual} documents @code{flex} version
 @value{VERSION}. It was last updated on @value{UPDATED}.
+
+This manual was written by @value{authors}.
 
 @menu
 * Copyright::                   
@@ -278,7 +282,7 @@ Indices
 
 @end detailmenu
 @end menu
-
+@end ifnottex
 @node Copyright, Reporting Bugs, Top, Top
 @chapter Copyright
 
