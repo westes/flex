@@ -1194,7 +1194,7 @@ single blank, and throws away whitespace found at the end of a line:
 @cindex actions, embedded C strings
 @cindex C-strings, in actions
 @cindex comments, in actions
-If the action contains a @samp{@}}, then the action spans till the
+If the action contains a @samp{@{}, then the action spans till the
 balancing @samp{@}} is found, and the action may cross multiple lines.
 @code{flex} knows about C strings and comments and won't be fooled by
 braces found within them, but also allows actions to begin with
@@ -1676,7 +1676,7 @@ is equivalent to
 
 Without the @code{<INITIAL,example>} qualifier, the @code{bar} pattern in
 the second example wouldn't be active (i.e., couldn't match) when in
-start condition @code{example}.  If we just used @code{example>} to
+start condition @code{example}.  If we just used @code{<example>} to
 qualify @code{bar}, though, then it would only be active in
 @code{example} and not in @code{INITIAL}, while in the first example
 it's active in both, because in the first example the @code{example}
@@ -2377,7 +2377,7 @@ switch statement and separated using @code{YY_BREAK}, which may be
 redefined.  By default, it is simply a @code{break}, to separate each
 rule's action from the following rule's.  Redefining @code{YY_BREAK}
 allows, for example, C++ users to #define YY_BREAK to do nothing (while
-being very careful that every rule ends with a @code{break}" or a
+being very careful that every rule ends with a @code{break} or a
 @code{return}!) to avoid suffering from unreachable statement warnings
 where because a rule's action ends with @code{return}, the
 @code{YY_BREAK} is inaccessible.
@@ -3057,9 +3057,9 @@ to find them.
 @anchor{option-yyclass}
 @opindex ---yyclass
 @opindex yyclass
-@item --yyclass, @code{%option yyclass="NAME"}
+@item --yyclass=NAME, @code{%option yyclass="NAME"}
 only applies when generating a C++ scanner (the @samp{--c++} option).  It
-informs @code{flex} that you have derived @code{foo} as a subclass of
+informs @code{flex} that you have derived @code{NAME} as a subclass of
 @code{yyFlexLexer}, so @code{flex} will place your actions in the member
 function @code{foo::yylex()} instead of @code{yyFlexLexer::yylex()}.  It
 also generates a @code{yyFlexLexer::yylex()} member function that emits
@@ -3225,7 +3225,7 @@ the @emph{identifier} rule is present and you then use a hash table or some such
 to detect the keywords, you're better off using
 @samp{--fast}.
 
-This option is equivalent to @samp{-CFr} (see below).  It cannot be used
+This option is equivalent to @samp{-CFr}.  It cannot be used
 with @samp{--c++}.
 
 @end table
@@ -3356,18 +3356,17 @@ We recommend using this option always.
 @table @samp
 @opindex -c
 @item -c
-is a do-nothing option included for POSIX compliance.
+A do-nothing option included for POSIX compliance.
 
 @opindex -h
 @opindex ---help
-generates
 @item -h, -?, --help
 generates a ``help'' summary of @code{flex}'s options to @file{stdout}
 and then exits.
 
 @opindex -n
 @item -n
-is another do-nothing option included only for
+Another do-nothing option included for
 POSIX compliance.
 
 @opindex -V
@@ -3412,7 +3411,7 @@ with the first two all being quite expensive and the last two being
 quite cheap.  Note also that @code{unput()} is implemented as a routine
 call that potentially does quite a bit of work, while @code{yyless()} is
 a quite-cheap macro. So if you are just putting back some excess text
-you scanned, use @code{ss()}.
+you scanned, use @code{yyless()}.
 
 @code{REJECT} should be avoided at all costs when performance is
 important.  It is a particularly expensive option.
@@ -5911,13 +5910,13 @@ can add to the beginning of your rules section:
 @example
 @verbatim
 %%
-/* Must be indented! */
-static int did_init = 0;
+    /* Must be indented! */
+    static int did_init = 0;
 
-if ( ! did_init ){
+    if ( ! did_init ){
 do_my_init();
-did_init = 1;
-}
+        did_init = 1;
+    }
 @end verbatim
 @end example
 
@@ -5997,7 +5996,7 @@ From the above though hopefully the idea is clear.
 
 One way to do it is to filter the first pass to a temporary file,
 then process the temporary file on the second pass. You will probably see a
-performance hit, do to all the disk I/O.
+performance hit, due to all the disk I/O.
 
 When you need to look ahead far forward like this, it almost always means
 that the right solution is to build a parse tree of the entire input, then
