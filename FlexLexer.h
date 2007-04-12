@@ -62,8 +62,8 @@ class FlexLexer {
 public:
 	virtual ~FlexLexer()	{ }
 
-	const char* YYText()	{ return yytext; }
-	int YYLeng()		{ return yyleng; }
+	const char* YYText() const	{ return yytext; }
+	int YYLeng()	const	{ return yyleng; }
 
 	virtual void
 		yy_switch_to_buffer( struct yy_buffer_state* new_buffer ) = 0;
