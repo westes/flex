@@ -144,11 +144,6 @@ tblcmp.o: tblcmp.c flexdef.h flexint.h
 yylex.o: yylex.c flexdef.h flexint.h parse.h
 filter.o: filter.c flexdef.h flexint.h
 
-# Create a tags file.
-
-tags:
-	ctags --c-types='defgmstuv' $(srcdir)/*.[ch]
-
 # Create the ChangeLog, but only if we're inside a cvs working directory
 
 ChangeLog: $(srcdir)/tools/cvsauthors $(srcdir)/tools/cvs2cl.pl
