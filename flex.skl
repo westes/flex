@@ -54,6 +54,32 @@ m4_changequote([[, ]])
 %#   the generated scanner as a C-style comment. This is to aid those who
 %#   edit the skeleton.
 %#
+
+%not-for-header
+%if-not-reentrant
+m4_ifelse(M4_YY_PREFIX,yy,,
+#define yy_create_buffer M4_YY_PREFIX[[_create_buffer]]
+#define yy_delete_buffer M4_YY_PREFIX[[_delete_buffer]]
+#define yy_flex_debug M4_YY_PREFIX[[_flex_debug]]
+#define yy_init_buffer M4_YY_PREFIX[[_init_buffer]]
+#define yy_flush_buffer M4_YY_PREFIX[[_flush_buffer]]
+#define yy_load_buffer_state M4_YY_PREFIX[[_load_buffer_state]]
+#define yy_switch_to_buffer M4_YY_PREFIX[[_switch_to_buffer]]
+#define yyin M4_YY_PREFIX[[in]]
+#define yyleng M4_YY_PREFIX[[leng]]
+#define yylex M4_YY_PREFIX[[lex]]
+#define yylineno M4_YY_PREFIX[[lineno]]
+#define yyout M4_YY_PREFIX[[out]]
+#define yyrestart M4_YY_PREFIX[[restart]]
+#define yytext M4_YY_PREFIX[[text]]
+#define yywrap M4_YY_PREFIX[[wrap]]
+#define yyalloc M4_YY_PREFIX[[alloc]]
+#define yyrealloc M4_YY_PREFIX[[realloc]]
+#define yyfree M4_YY_PREFIX[[free]]
+)
+%endif
+%ok-for-header
+
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION FLEX_MAJOR_VERSION
 #define YY_FLEX_MINOR_VERSION FLEX_MINOR_VERSION
