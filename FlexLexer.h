@@ -99,12 +99,12 @@ protected:
 };
 
 }
-#endif
+#endif // FLEXLEXER_H
 
 #if defined(yyFlexLexer) || ! defined(yyFlexLexerOnce)
 // Either this is the first time through (yyFlexLexerOnce not defined),
 // or this is a repeated include to define a different flavor of
-// yyFlexLexer, as discussed in the flex man page.
+// yyFlexLexer, as discussed in the flex manual.
 #define yyFlexLexerOnce
 
 extern "C++" {
@@ -202,4 +202,5 @@ protected:
 
 }
 
-#endif
+#endif // yyFlexLexer || ! yyFlexLexerOnce
+
