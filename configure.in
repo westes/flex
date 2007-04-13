@@ -1,36 +1,37 @@
-dnl Process this file with autoconf to produce a configure script.
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
 
-dnl This file is part of flex.
+# This file is part of flex.
 
-dnl Redistribution and use in source and binary forms, with or without
-dnl modification, are permitted provided that the following conditions
-dnl are met:
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
 
-dnl 1. Redistributions of source code must retain the above copyright
-dnl notice, this list of conditions and the following disclaimer.
-dnl 2. Redistributions in binary form must reproduce the above copyright
-dnl notice, this list of conditions and the following disclaimer in the
-dnl documentation and/or other materials provided with the distribution.
+# 1. Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+# notice, this list of conditions and the following disclaimer in the
+# documentation and/or other materials provided with the distribution.
 
-dnl Neither the name of the University nor the names of its contributors
-dnl may be used to endorse or promote products derived from this software
-dnl without specific prior written permission.
+# Neither the name of the University nor the names of its contributors
+# may be used to endorse or promote products derived from this software
+# without specific prior written permission.
 
-dnl THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
-dnl IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
-dnl WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-dnl PURPOSE.
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE.
 
-dnl autoconf requirements and initialization
+# autoconf requirements and initialization
 
-AC_PREREQ(2.54)
+AC_PREREQ(2.59)
 AC_INIT([the fast lexical analyser generator], [2.5.33],
 [flex-help@lists.sourceforge.net], [flex])
-AC_CONFIG_SRCDIR(scan.l)
-AM_INIT_AUTOMAKE(gnits dist-bzip2)
-AC_CONFIG_HEADER(config.h:conf.in)
+AC_CONFIG_SRCDIR([scan.l])
+AM_INIT_AUTOMAKE([gnits dist-bzip2])
+AC_CONFIG_HEADER([config.h:conf.in])
 
-dnl checks for programs
+# checks for programs
 
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.12)
@@ -41,13 +42,16 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_LN_S
 AC_PROG_RANLIB
+AC_PROG_AWK
+AC_PROG_INSTALL
 
 AC_PATH_PROG(BISON, bison,bison)
 AC_PATH_PROG(HELP2MAN, help2man, help2man)
 
-
 # Check for a GNU m4 that supports --prefix-builtins
+
 AC_PATH_PROGS(M4, gm4 gnum4 m4, m4)
+
 if test x"$M4" != x; then
   AC_MSG_CHECKING([for GNU m4])
   case `$M4 --help < /dev/null 2>&1` in
@@ -58,10 +62,11 @@ if test x"$M4" != x; then
 else
    AC_MSG_ERROR([GNU M4 1.4 is required]) ;
 fi
+
 AC_DEFINE_UNQUOTED([M4], ["$M4"], [Define to the GNU M4 executable name.])
 
 AC_PATH_PROG(INDENT, indent, indent)
-dnl if INDENT is set to 'indent' then we didn't find indent
+# if INDENT is set to 'indent' then we didn't find indent
 if test "$INDENT" != indent ; then
    AC_MSG_CHECKING(if $INDENT is GNU indent)
    if $INDENT --version 2>/dev/null | head -n 1|grep "GNU indent" > /dev/null ; then
@@ -74,26 +79,26 @@ else
    AC_MSG_WARN(no indent program found: make indent target will not function)
 fi
 
-dnl checks for libraries
-AC_CHECK_LIB(m, log)
+# checks for libraries
 
-dnl checks for header files
-
+AC_FUNC_ALLOCA
 AC_HEADER_STDC
-AC_CHECK_HEADERS(unistd.h stdbool.h  netinet/in.h limits.h)
-AC_CHECK_HEADERS( sys/wait.h sys/params.h)
-AC_CHECK_HEADERS(cunistd)
-AC_CHECK_HEADERS(locale.h libintl.h)
-AC_CHECK_HEADERS(regex.h)
-AC_CHECK_HEADERS(assert.h)
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS([inttypes.h libintl.h limits.h locale.h malloc.h netinet/in.h stddef.h stdlib.h string.h strings.h unistd.h])
+AC_CHECK_LIB(m, log10)
 
-dnl checks for types
+# Checks for typedefs, structures, and compiler characteristics.
 
+AC_HEADER_STDBOOL
+AC_C_CONST
 AC_TYPE_SIZE_T
 
-dnl checks for functions
+# Checks for library functions.
 
-AC_CHECK_DECLS(__func__)
+AC_FUNC_FORK
+AC_FUNC_MALLOC
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([dup2 isascii memset pow regcomp setlocale strchr strtol])
 
 AC_CONFIG_FILES(
 Makefile
