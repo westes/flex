@@ -1647,11 +1647,11 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 	else
 		ret_val = EOB_ACT_CONTINUE_SCAN;
 
-	if ((yy_size_t) (yy_n_chars + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
+	if ((yy_size_t) (YY_G(yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
-		yy_size_t new_size = yy_n_chars + number_to_move + (yy_n_chars >> 1);
+		yy_size_t new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1);
 		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) yyrealloc(
-			(void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, new_size);
+			(void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, new_size M4_YY_CALL_LAST_ARG );
 	}
 
 	YY_G(yy_n_chars) += number_to_move;
