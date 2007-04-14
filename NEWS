@@ -5,6 +5,10 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.33
 
+** flex now provides for a libfl_pic.a compiled with position
+   independent code. Particularly useful when including a flex scanner
+   in a shared library and with more recent versions of gcc. Thanks to the Debian project for the idea.
+
 ** SourceForge feature request #1658379: Expose YY_BUF_SIZE in the
 	header file.
 
