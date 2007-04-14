@@ -1,3 +1,4 @@
+*.tar.bz2
 *.tar.gz
 .bootstrap
 .deps
@@ -8,6 +9,7 @@ Makefile
 Makefile.in
 aclocal.m4
 autom4te.cache
+compile
 conf.in
 config.cache
 config.guess
