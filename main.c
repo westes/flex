@@ -213,6 +213,7 @@ int main (argc, argv)
 #if ENABLE_NLS
 #if HAVE_LOCALE_H
 	setlocale (LC_MESSAGES, "");
+        setlocale (LC_CTYPE, "");
 	textdomain (PACKAGE);
 	bindtextdomain (PACKAGE, LOCALEDIR);
 #endif
