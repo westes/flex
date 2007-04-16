@@ -162,7 +162,7 @@ Serialized Tables
 FAQ
 
 * When was flex born?::         
-* How do I expand \ escape sequences in C-style quoted strings?::  
+* How do I expand backslash-escape sequences in C-style quoted strings?::  
 * Why do flex scanners call fileno if it is not ANSI compatible?::  
 * Does flex support recursive pattern definitions?::  
 * How do I skip huge chunks of input (tens of megabytes) while using flex?::  
@@ -607,7 +607,8 @@ The presence of this section is optional; if it is missing, the second
 @section Comments in the Input
 
 @cindex comments, syntax of
-Flex supports C-style comments, that is, anything between /* and */ is
+Flex supports C-style comments, that is, anything between @samp{/*} and
+@samp{*/} is
 considered a comment. Whenever flex encounters a comment, it copies the
 entire comment verbatim to the generated source code. Comments may
 appear just about anywhere, but with the following exceptions:
@@ -5393,7 +5394,7 @@ publish them here.
 
 @menu
 * When was flex born?::         
-* How do I expand \ escape sequences in C-style quoted strings?::  
+* How do I expand backslash-escape sequences in C-style quoted strings?::  
 * Why do flex scanners call fileno if it is not ANSI compatible?::  
 * Does flex support recursive pattern definitions?::  
 * How do I skip huge chunks of input (tens of megabytes) while using flex?::  
@@ -5504,8 +5505,8 @@ the @cite{Software Tools} lex project from Jef Poskanzer in 1982.  At that point
 was written in Ratfor.  Around 1987 or so, Paxson translated it into C, and
 a legend was born :-).
 
-@node How do I expand \ escape sequences in C-style quoted strings?
-@unnumberedsec How do I expand \ escape sequences in C-style quoted strings?
+@node How do I expand backslash-escape sequences in C-style quoted strings?
+@unnumberedsec How do I expand backslash-escape sequences in C-style quoted strings?
 
 A key point when scanning quoted strings is that you cannot (easily) write
 a single rule that will precisely match the string if you allow things
