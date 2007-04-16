@@ -38,7 +38,7 @@ $(testname)$(EXEEXT): $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
-	./$(testname)$(EXEEXT) < $(srcdir)/test.input | diff -q test.input -
+	./$(testname)$(EXEEXT) < $(srcdir)/test.input | diff -q $(srcdir)/test.input -
 
 .c.o:
 	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<

@@ -24,7 +24,7 @@ FLEX = $(top_builddir)/flex
 builddir = @builddir@
 
 EXTRA_DIST = scanner.l test.input
-CLEANFILES = scanner.c scanner.h $(testname)$(EXEEXT) OUTPUT $(OBJS)
+CLEANFILES = l.out c.out  scanner.c scanner.h $(testname)$(EXEEXT) OUTPUT $(OBJS)
 OBJS = scanner.o
 
 AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir) -I$(top_builddir)
@@ -38,7 +38,7 @@ $(testname)$(EXEEXT): $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
-	grep TEST_XXX < scanner.l | sed 's/^ *//' > l.out
+	grep TEST_XXX < $(srcdir)/scanner.l | sed 's/^ *//' > l.out
 	grep TEST_XXX < scanner.c | sed 's/^ *//' > c.out
 	diff -q l.out c.out
 	./$(testname)$(EXEEXT) < $(srcdir)/test.input
