@@ -1167,9 +1167,9 @@ m4_ifdef( [[M4_YY_BISON_LVAL]],
     m4_dnl  The bison pure parser is used. Redefine yylex to
     m4_dnl  accept the lval parameter.
 
-    m4_define( [[M4_YY_LEX_PROTO]],
+    m4_define( [[M4_YY_LEX_PROTO]], [[\]]
                [[M4_YY_PARAMS(YYSTYPE * yylval_param M4_YY_PROTO_LAST_ARG)]])
-    m4_define( [[M4_YY_LEX_DECLARATION]],
+    m4_define( [[M4_YY_LEX_DECLARATION]], [[\]]
                [[YYFARGS1(YYSTYPE *,yylval_param)]])
 ]])
 
@@ -1177,9 +1177,9 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 [[
     m4_dnl  Locations are used. yylex should also accept the ylloc parameter.
 
-    m4_define( [[M4_YY_LEX_PROTO]],
+    m4_define( [[M4_YY_LEX_PROTO]], [[\]]
                [[M4_YY_PARAMS(YYSTYPE * yylval_param, YYLTYPE * yylloc_param M4_YY_PROTO_LAST_ARG)]])
-    m4_define( [[M4_YY_LEX_DECLARATION]],
+    m4_define( [[M4_YY_LEX_DECLARATION]], [[\]]
                [[YYFARGS2(YYSTYPE *,yylval_param, YYLTYPE *,yylloc_param)]])
 ]])
 
