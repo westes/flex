@@ -2842,6 +2842,12 @@ m4_ifdef( [[M4_YY_HAS_START_STACK_VARS]],
         YY_G(yy_start_stack) = NULL;
 ]])
 
+%if-c++-only
+	delete [] YY_G(yy_state_buf);
+	yyfree(YY_G(yy_start_stack) M4_YY_CALL_LAST_ARG );
+%endif
+
+%if-c-only
 m4_ifdef( [[M4_YY_USES_REJECT]],
 [[
     yyfree ( YY_G(yy_state_buf) M4_YY_CALL_LAST_ARG);
@@ -2939,6 +2945,7 @@ static int yytbl_read8 (void *v, struct yytbl_reader * rd)
     }
     rd->bread += sizeof(flex_uint8_t);
     return 0;
+%endif
 }
 
 static int yytbl_read16 (void *v, struct yytbl_reader * rd)
