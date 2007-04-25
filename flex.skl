@@ -1488,6 +1488,14 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 ]])
 }
 
+yyFlexLexer::~yyFlexLexer()
+{
+	delete [] yy_state_buf;
+	yyfree( yy_start_stack M4_YY_CALL_LAST_ARG );
+	yy_delete_buffer( YY_CURRENT_BUFFER M4_YY_CALL_LAST_ARG);
+	yyfree( yy_buffer_stack M4_YY_CALL_LAST_ARG );
+}
+
 void yyFlexLexer::switch_streams( std::istream* new_in, std::ostream* new_out )
 {
 	if ( new_in )
@@ -2807,14 +2815,9 @@ m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]],
 %endif
 
 
-%if-c-or-c++
-%if-c-only
+%if-c-only SNIP! this currently causes conflicts with the c++ scanner
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
 int yylex_destroy  YYFARGS0(void)
-%endif
-%if-c++-only
-yyFlexLexer::~yyFlexLexer()
-%endif
 {
     M4_YY_DECL_GUTS_VAR();
 
@@ -2829,12 +2832,6 @@ yyFlexLexer::~yyFlexLexer()
 	yyfree(YY_G(yy_buffer_stack) M4_YY_CALL_LAST_ARG);
 	YY_G(yy_buffer_stack) = NULL;
 
-%if-c++-only
-	delete [] YY_G(yy_state_buf);
-	yyfree(YY_G(yy_start_stack) M4_YY_CALL_LAST_ARG );
-%endif
-
-%if-c-only
 m4_ifdef( [[M4_YY_HAS_START_STACK_VARS]],
 [[
     /* Destroy the start condition stack. */
@@ -2858,7 +2855,6 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
     yyscanner = NULL;
 %endif
     return 0;
-%endif
 }
 %endif
 
