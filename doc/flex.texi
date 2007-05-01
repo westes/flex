@@ -1,7 +1,7 @@
 \input texinfo.tex @c -*-texinfo-*-
 @c %**start of header
 @setfilename flex.info
-@settitle Flex: The Fast Lexical Analyzer Generator
+@settitle Lexical Analysis With Flex
 @include version.texi
 @set authors Vern Paxson, Will Estes and John Millaway
 @c  "Macro Hooks" index
@@ -58,8 +58,7 @@ PURPOSE.
 @end copying
 
 @titlepage
-@title Flex
-@subtitle A fast scanner generator
+@title @value{title}
 @subtitle Edition @value{EDITION}, @value{UPDATED}
 @author @value{authors}
 @page
