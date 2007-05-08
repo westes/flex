@@ -5,6 +5,8 @@ See the file COPYING for copying conditions.
 
 * after version 2.5.33
 
+** better checking after yyalloc/yyrealloc (resolves bug #1595967)
+
 ** flex now provides for a libfl_pic.a compiled with position
    independent code. Particularly useful when including a flex scanner
    in a shared library and with more recent versions of gcc. Thanks to the Debian project for the idea.
@@ -13,7 +15,7 @@ See the file COPYING for copying conditions.
 	header file.
 
 ** flex better escapes filenames with special characters in them
-(resolves#1623600)
+   (resolves bug #1623600)
 
 ** a memory leak was plugged(resolves bug #1601111)
 

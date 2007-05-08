@@ -1262,6 +1262,8 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
         /* Create the reject buffer large enough to save one state per allowed character. */
         if ( ! YY_G(yy_state_buf) )
             YY_G(yy_state_buf) = (yy_state_type *)yyalloc(YY_STATE_BUF_SIZE  M4_YY_CALL_LAST_ARG);
+            if ( ! YY_G(yy_state_buf) )
+                YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
 ]])
 
 		if ( ! YY_G(yy_start) )
@@ -1686,6 +1688,8 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 		yy_size_t new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1);
 		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) yyrealloc(
 			(void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, new_size M4_YY_CALL_LAST_ARG );
+		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
+			YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
 	}
 
 	YY_G(yy_n_chars) += number_to_move;
@@ -2221,6 +2225,9 @@ void yyFlexLexer::yyensure_buffer_stack(void)
 		YY_G(yy_buffer_stack) = (struct yy_buffer_state**)yyalloc
 								(num_to_alloc * sizeof(struct yy_buffer_state*)
 								M4_YY_CALL_LAST_ARG);
+		if ( ! YY_G(yy_buffer_stack) )
+			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
+								  
 		
 		memset(YY_G(yy_buffer_stack), 0, num_to_alloc * sizeof(struct yy_buffer_state*));
 				
@@ -2239,6 +2246,8 @@ void yyFlexLexer::yyensure_buffer_stack(void)
 								(YY_G(yy_buffer_stack),
 								num_to_alloc * sizeof(struct yy_buffer_state*)
 								M4_YY_CALL_LAST_ARG);
+		if ( ! YY_G(yy_buffer_stack) )
+			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
 
 		/* zero only the new slots.*/
 		memset(YY_G(yy_buffer_stack) + YY_G(yy_buffer_stack_max), 0, grow_size * sizeof(struct yy_buffer_state*));
@@ -2382,8 +2391,7 @@ m4_ifdef( [[M4_YY_NO_PUSH_STATE]],,
 					(void *) YY_G(yy_start_stack), new_size M4_YY_CALL_LAST_ARG );
 
 		if ( ! YY_G(yy_start_stack) )
-			YY_FATAL_ERROR(
-			"out of memory expanding start-condition stack" );
+			YY_FATAL_ERROR( "out of memory expanding start-condition stack" );
 		}
 
 	YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr)++] = YY_START;
@@ -2989,6 +2997,8 @@ static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *
     /* Allocate enough space for the version and name fields */
     bytes = th->th_hsize - 14;
     th->th_version = (char *) yyalloc (bytes M4_YY_CALL_LAST_ARG);
+    if ( ! th->th_version )
+        YY_FATAL_ERROR( "out of dynamic memory in yytbl_hdr_read()" );
 
     /* we read it all into th_version, and point th_name into that data */
     if (fread (th->th_version, 1, bytes, rd->fp) != bytes){
@@ -3068,6 +3078,8 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
     else
         /* We point to the address of a pointer. */
         *dmap->dm_arr = p = (void *) yyalloc (bytes M4_YY_CALL_LAST_ARG);
+        if ( ! p )
+            YY_FATAL_ERROR( "out of dynamic memory in yytbl_data_load()" );
     }
 
     /* If it's a struct, we read 2 integers to get one element */
