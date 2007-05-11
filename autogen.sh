@@ -29,4 +29,4 @@
 #Makefile first.)
 
 touch ChangeLog
-autoreconf --force --install --verbose
+autoreconf --install --verbose
