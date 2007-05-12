@@ -35,9 +35,9 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
-#include "config.h"
+#include <config.h>
 
-#ifdef HAVE_LIBPTHREAD
+#ifdef HAVE_PTHREAD_H
 #include <pthread.h>
 #endif
 
@@ -84,10 +84,10 @@ static int process_text(char* s, yyscan_t  scanner)
     return (int)(*s) + (int) *(s + yyget_leng(scanner)-1);
 }
 
-int main(void);
+int main(int ARGC, char *ARGV[]);
 
 #ifndef HAVE_LIBPTHREAD
-  int main () {
+  int main (int ARGC, char *ARGV[]) {
     printf(
        "TEST ABORTED because pthread library not available \n"
        "-- This is expected on some systems. It is not a flex error.\n" );
@@ -120,7 +120,7 @@ void * thread_func ( void* arg )
 
     for( i =0 ; i < N_SCANS ; i++ )
     {
-        int main(void);
+        int main(int ARGC, char *ARGV[]);
 
         int next;
         yyscan_t  scanner;
@@ -150,23 +150,23 @@ void * thread_func ( void* arg )
     return NULL;
 }
 
-int main ()
+int main (int ARGC, char *ARGV[])
 {
     int i;
     pthread_t threads[N_THREADS];
 
-    if( argc < 2 ) {
+    if( ARGC < 2 ) {
         fprintf(stderr,"*** Error: No filenames specified.\n");
         exit(-1);
     }
 
     /* Allocate and initialize the locks. One for each filename in ARGV. */
-    file_locks = (pthread_mutex_t*)malloc( (argc-1) * sizeof(pthread_mutex_t));
-    for( i = 0; i < argc-1; i++)
+    file_locks = (pthread_mutex_t*)malloc( (ARGC-1) * sizeof(pthread_mutex_t));
+    for( i = 0; i < ARGC-1; i++)
         pthread_mutex_init( &file_locks[i], NULL );
 
-    n_files = argc -1;
-    filenames = argv + 1;
+    n_files = ARGC -1;
+    filenames = ARGV + 1;
     next_file = 0;
 
     /* prevent threads from starting until all threads have been created. */
@@ -190,7 +190,7 @@ int main ()
         printf("Thread %d done.\n", i ); fflush(stdout);
     }
 
-    for( i = 0; i < argc-1; i++)
+    for( i = 0; i < ARGC-1; i++)
         pthread_mutex_destroy( &file_locks[i] );
 
     pthread_mutex_destroy( &next_lock );

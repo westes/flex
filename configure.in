@@ -87,6 +87,16 @@ AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([inttypes.h libintl.h limits.h locale.h malloc.h netinet/in.h stddef.h stdlib.h string.h strings.h unistd.h])
 AC_CHECK_LIB(m, log10)
 
+# The test test-pthread uses libpthread, so we check for it here, but
+# all we need is the preprocessor symbol defined since we don't need
+# LIBS to include libpthread for building flex.
+
+AC_CHECK_LIB(pthread, pthread_mutex_lock,
+AC_DEFINE([HAVE_LIBPTHREAD], 1, [pthread library] ),
+AC_DEFINE([HAVE_LIBPTHREAD], 0, [pthread library] )
+)
+AC_CHECK_HEADERS([pthread.h])
+
 # Checks for typedefs, structures, and compiler characteristics.
 
 AC_HEADER_STDBOOL
