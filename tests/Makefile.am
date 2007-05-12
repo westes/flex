@@ -26,6 +26,7 @@ dist_noinst_SCRIPTS = \
 	create-test
 
 DIST_SUBDIRS = \
+	test-concatenated-options \
 	test-c++-yywrap \
 	test-extended \
 	test-ccl \
@@ -73,6 +74,7 @@ DIST_SUBDIRS = \
 	test-table-opts
 
 SUBDIRS = \
+	test-concatenated-options \
 	test-c++-yywrap \
 	test-extended \
 	test-ccl \
