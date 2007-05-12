@@ -789,12 +789,12 @@ int     scanopt (svoid, arg, optindex)
 		}
 
 		optarg = pstart + 1;
-		arglen = 0;
-		while (optarg[arglen])
-			arglen++;
-
-		if (arglen == 0)
+		if (!*optarg) {
 			optarg = NULL;
+			arglen = 0;
+		}
+		else
+			arglen = strlen (optarg);
 	}
 
 	/* At this point, we have a long or short option matched at opt_offset into
@@ -812,13 +812,16 @@ int     scanopt (svoid, arg, optindex)
 
 	/* case: no args allowed */
 	if (auxp->flags & ARG_NONE) {
-		if (optarg) {
+		if (optarg && !is_short) {
 			scanopt_err (s, opt_offset, is_short, errcode =
 				     SCANOPT_ERR_ARG_NOT_ALLOWED);
 			INC_INDEX (s, 1);
 			return errcode;
 		}
-		INC_INDEX (s, 1);
+		else if (!optarg)
+			INC_INDEX (s, 1);
+		else
+			s->subscript++;
 		return optp->r_val;
 	}
 
