@@ -5,6 +5,9 @@ See the file COPYING for copying conditions.
 
 * version 2.5.34
 
+** The flex program now parses multiple short concatenated options (resolves bug
+  #1619820). Thanks to Petr Machata of Red Hat on this issue.
+
 ** better checking after yyalloc/yyrealloc (resolves bug #1595967)
 
 ** flex now provides for a libfl_pic.a compiled with position
