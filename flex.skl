@@ -132,6 +132,7 @@ m4preproc_define(`M4_GEN_PREFIX',
     M4_GEN_PREFIX(`lex')
     M4_GEN_PREFIX(`restart')
     M4_GEN_PREFIX(`lex_init')
+    M4_GEN_PREFIX(`lex_init_extra')
     M4_GEN_PREFIX(`lex_destroy')
     M4_GEN_PREFIX(`get_debug')
     M4_GEN_PREFIX(`set_debug')
@@ -820,6 +821,12 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
     yy_state_type *yy_state_ptr;
     char *yy_full_match;
     int yy_lp;
+
+    /* These are only needed for trailing context rules,
+     * but there's no conditional variable for that yet. */
+    int yy_looking_for_trail_begin;
+    int yy_full_lp;
+    int *yy_full_state;
 ]])
 
 m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]],
@@ -1456,6 +1463,8 @@ do_action:	/* This label is used only to access EOF actions. */
 
 %if-c++-only
 %not-for-header
+/* The contents of this function are C++ specific, so the YY_G macro is not used.
+ */
 yyFlexLexer::yyFlexLexer( std::istream* arg_yyin, std::ostream* arg_yyout )
 {
 	yyin = arg_yyin;
@@ -1476,9 +1485,9 @@ yyFlexLexer::yyFlexLexer( std::istream* arg_yyin, std::ostream* arg_yyout )
 	yy_start_stack_ptr = yy_start_stack_depth = 0;
 	yy_start_stack = NULL;
 
-    YY_G(yy_buffer_stack) = 0;
-    YY_G(yy_buffer_stack_top) = 0;
-    YY_G(yy_buffer_stack_max) = 0;
+	yy_buffer_stack = 0;
+	yy_buffer_stack_top = 0;
+	yy_buffer_stack_max = 0;
 
 
 m4_ifdef( [[M4_YY_USES_REJECT]],
@@ -1490,6 +1499,8 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 ]])
 }
 
+/* The contents of this function are C++ specific, so the YY_G macro is not used.
+ */
 yyFlexLexer::~yyFlexLexer()
 {
 	delete [] yy_state_buf;
@@ -1498,6 +1509,8 @@ yyFlexLexer::~yyFlexLexer()
 	yyfree( yy_buffer_stack M4_YY_CALL_LAST_ARG );
 }
 
+/* The contents of this function are C++ specific, so the YY_G macro is not used.
+ */
 void yyFlexLexer::switch_streams( std::istream* new_in, std::ostream* new_out )
 {
 	if ( new_in )
@@ -2759,7 +2772,51 @@ int yylex_init(yyscan_t* ptr_yy_globals)
     return yy_init_globals ( *ptr_yy_globals );
 }
 
-%endif
+
+/* yylex_init_extra has the same functionality as yylex_init, but follows the
+ * convention of taking the scanner as the last argument. Note however, that
+ * this is a *pointer* to a scanner, as it will be allocated by this call (and
+ * is the reason, too, why this function also must handle its own declaration).
+ * The user defined value in the first argument will be available to yyalloc in
+ * the yyextra field.
+ */
+m4_ifdef( [[M4_YY_NO_ANSI_FUNC_DEFS]],
+[[
+int yylex_init_extra( yy_user_defined, ptr_yy_globals )
+    YY_EXTRA_TYPE yy_user_defined;
+    yyscan_t* ptr_yy_globals;
+]],
+[[
+int yylex_init_extra( YY_EXTRA_TYPE yy_user_defined, yyscan_t* ptr_yy_globals )
+]])
+{
+    struct yyguts_t dummy_yyguts;
+
+    yyset_extra (yy_user_defined, &dummy_yyguts);
+
+    if (ptr_yy_globals == NULL){
+        errno = EINVAL;
+        return 1;
+    }
+	
+    *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), &dummy_yyguts );
+	
+    if (*ptr_yy_globals == NULL){
+        errno = ENOMEM;
+        return 1;
+    }
+    
+    /* By setting to 0xAA, we expose bugs in
+    yy_init_globals. Leave at 0x00 for releases. */
+    memset(*ptr_yy_globals,0x00,sizeof(struct yyguts_t));
+    
+    yyset_extra (yy_user_defined, *ptr_yy_globals);
+    
+    return yy_init_globals ( *ptr_yy_globals );
+}
+
+%endif if-c-only
+
 
 %if-c-only
 static int yy_init_globals YYFARGS0(void)

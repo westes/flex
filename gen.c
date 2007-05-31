@@ -525,15 +525,15 @@ void gen_find_action ()
 		if (variable_trailing_context_rules) {
 			indent_puts
 				("if ( yy_act & YY_TRAILING_HEAD_MASK ||");
-			indent_puts ("     yy_looking_for_trail_begin )");
+			indent_puts ("     YY_G(yy_looking_for_trail_begin) )");
 			indent_up ();
 			indent_puts ("{");
 
 			indent_puts
-				("if ( yy_act == yy_looking_for_trail_begin )");
+				("if ( yy_act == YY_G(yy_looking_for_trail_begin) )");
 			indent_up ();
 			indent_puts ("{");
-			indent_puts ("yy_looking_for_trail_begin = 0;");
+			indent_puts ("YY_G(yy_looking_for_trail_begin) = 0;");
 			indent_puts ("yy_act &= ~YY_TRAILING_HEAD_MASK;");
 			indent_puts ("break;");
 			indent_puts ("}");
@@ -547,9 +547,9 @@ void gen_find_action ()
 			indent_up ();
 			indent_puts ("{");
 			indent_puts
-				("yy_looking_for_trail_begin = yy_act & ~YY_TRAILING_MASK;");
+				("YY_G(yy_looking_for_trail_begin) = yy_act & ~YY_TRAILING_MASK;");
 			indent_puts
-				("yy_looking_for_trail_begin |= YY_TRAILING_HEAD_MASK;");
+				("YY_G(yy_looking_for_trail_begin) |= YY_TRAILING_HEAD_MASK;");
 
 			if (real_reject) {
 				/* Remember matched text in case we back up
@@ -558,8 +558,8 @@ void gen_find_action ()
 				indent_puts
 					("YY_G(yy_full_match) = yy_cp;");
 				indent_puts
-					("yy_full_state = YY_G(yy_state_ptr);");
-				indent_puts ("yy_full_lp = YY_G(yy_lp);");
+					("YY_G(yy_full_state) = YY_G(yy_state_ptr);");
+				indent_puts ("YY_G(yy_full_lp) = YY_G(yy_lp);");
 			}
 
 			indent_puts ("}");
@@ -570,8 +570,8 @@ void gen_find_action ()
 			indent_puts ("{");
 			indent_puts ("YY_G(yy_full_match) = yy_cp;");
 			indent_puts
-				("yy_full_state = YY_G(yy_state_ptr);");
-			indent_puts ("yy_full_lp = YY_G(yy_lp);");
+				("YY_G(yy_full_state) = YY_G(yy_state_ptr);");
+			indent_puts ("YY_G(yy_full_lp) = YY_G(yy_lp);");
 			indent_puts ("break;");
 			indent_puts ("}");
 			indent_down ();
@@ -1764,7 +1764,7 @@ void make_tables ()
 		}
 
 		if (variable_trailing_context_rules) {
-			if (!C_plus_plus) {
+			if (!C_plus_plus && !reentrant) {
 				outn ("static int yy_looking_for_trail_begin = 0;");
 				outn ("static int yy_full_lp;");
 				outn ("static int *yy_full_state;");
@@ -1782,8 +1782,8 @@ void make_tables ()
 		outn ("yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \\");
 
 		if (variable_trailing_context_rules) {
-			outn ("YY_G(yy_lp) = yy_full_lp; /* restore orig. accepting pos. */ \\");
-			outn ("YY_G(yy_state_ptr) = yy_full_state; /* restore orig. state */ \\");
+			outn ("YY_G(yy_lp) = YY_G(yy_full_lp); /* restore orig. accepting pos. */ \\");
+			outn ("YY_G(yy_state_ptr) = YY_G(yy_full_state); /* restore orig. state */ \\");
 			outn ("yy_current_state = *YY_G(yy_state_ptr); /* restore curr. state */ \\");
 		}
 

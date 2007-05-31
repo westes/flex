@@ -641,6 +641,7 @@ void flexend (exit_status)
                 "yylex",
                 "yylex_destroy",
                 "yylex_init",
+                "yylex_init_extra",
                 "yylineno",
                 "yylloc",
                 "yylval",
