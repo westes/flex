@@ -69,6 +69,7 @@ DIST_SUBDIRS = \
 	test-string-nr \
 	test-string-r \
 	test-yyextra \
+	test-alloc-extra \
 	test-noansi-nr \
 	test-noansi-r \
 	test-table-opts
@@ -115,6 +116,7 @@ SUBDIRS = \
 	test-string-nr \
 	test-string-r \
 	test-yyextra \
+	test-alloc-extra \
 	test-noansi-nr \
 	test-noansi-r \
 	test-top \
