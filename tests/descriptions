@@ -46,3 +46,4 @@ top                   - Test %top directive.
 yyextra               - Test yyextra.
 alloc-extra           - Test yy_init_extra and providing your own yyalloc.
 c++-yywrap            - test yywrap in c++ scanner
+concatenated-options - test parsing of multiple concatenated short options
