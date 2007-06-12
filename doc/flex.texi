@@ -4149,7 +4149,7 @@ All functions take one additional argument: @code{yyscanner}.
 Notice that the calls to @code{yy_push_state} and @code{yy_pop_state}
 both have an argument, @code{yyscanner} , that is not present in a
 non-reentrant scanner.  Here are the declarations of
-@code{yy_push_state} and @code{yy_pop_state} in the generated scanner:
+@code{yy_push_state} and @code{yy_pop_state} in the reentrant scanner:
 
 @example
 @verbatim
@@ -4222,19 +4222,26 @@ after @code{yylex}, respectively.
 
 The function @code{yylex_init} must be called before calling any other
 function. The argument to @code{yylex_init} is the address of an
-uninitialized pointer to be filled in by @code{flex}. The contents of
-@code{ptr_yy_globals} need not be initialized, since @code{flex} will
-overwrite it anyway. The value stored in @code{ptr_yy_globals} should
-thereafter be passed to @code{yylex()} and @b{yylex_destroy()}.  Flex
+uninitialized pointer to be filled in by @code{yylex_init}, overwriting
+any previous contents. The function @code{yylex_init_extra} may be used
+instead, taking as its first argument a variable of type @code{YY_EXTRA_TYPE}.
+See the section on yyextra, below, for more details.
+
+The value stored in @code{ptr_yy_globals} should
+thereafter be passed to @code{yylex} and @code{yylex_destroy}.  Flex
 does not save the argument passed to @code{yylex_init}, so it is safe to
-pass the address of a local pointer to @code{yylex_init}.  The function
+pass the address of a local pointer to @code{yylex_init} so long as it remains
+in scope for the duration of all calls to the scanner, up to and including
+the call to @code{yylex_destroy}.
+
+The function
 @code{yylex} should be familiar to you by now. The reentrant version
 takes one argument, which is the value returned (via an argument) by
 @code{yylex_init}.  Otherwise, it behaves the same as the non-reentrant
 version of @code{yylex}.
 
-@code{yylex_init} returns 0 (zero) on success, or non-zero on failure,
-in which case, errno is set to one of the following values:
+Both @code{yylex_init} and @code{yylex_init_extra} returns 0 (zero) on success,
+or non-zero on failure, in which case errno is set to one of the following values:
 
 @itemize
 @item ENOMEM
@@ -4330,9 +4337,7 @@ In a non-reentrant scanner, the only way to do this would be through the
 use of global variables.
 @code{Flex} allows you to store arbitrary, ``extra'' data in a scanner.
 This data is accessible through the accessor methods
-@code{yyget_extra}
-and
-@code{yyset_extra}
+@code{yyget_extra} and @code{yyset_extra}
 from outside the scanner, and through the shortcut macro
 @code{yyextra}
 from within the scanner itself. They are defined as follows:
@@ -4347,6 +4352,11 @@ from within the scanner itself. They are defined as follows:
     void           yyset_extra ( YY_EXTRA_TYPE arbitrary_data , yyscan_t scanner);
 @end verbatim
 @end example
+
+In addition, an extra form of @code{yylex_init} is provided,
+@code{yylex_init_extra}. This function is provided so that the yyextra value can
+be accessed from within the very first yyalloc, used to allocate
+the scanner itself.
 
 By default, @code{YY_EXTRA_TYPE} is defined as type @code{void *}.  You
 will have to cast @code{yyextra} and the return value from
@@ -4373,14 +4383,17 @@ defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
     {
         yyscan_t scanner;
         struct stat buf;
+        FILE *in;
 
-        yylex_init ( &scanner );
-        yyset_in( fopen(filename,"r"), scanner );
+        in = fopen( filename, "r" );
+        stat( filename, &buf );
 
-        stat( filename, &buf);
-        yyset_extra( &buf, scanner );
-        yylex ( scanner );
+        yylex_init_extra( buf, &scanner );
+        yyset_in( in, scanner );
+        yylex( scanner );
         yylex_destroy( scanner );
+
+        fclose( in );
    }
 @end verbatim
 @end example
