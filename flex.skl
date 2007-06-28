@@ -56,6 +56,7 @@ m4_changequote([[, ]])
 %#
 
 %not-for-header
+%if-c-only
 %if-not-reentrant
 m4_ifelse(M4_YY_PREFIX,yy,,
 #define yy_create_buffer M4_YY_PREFIX[[_create_buffer]]
@@ -77,6 +78,7 @@ m4_ifelse(M4_YY_PREFIX,yy,,
 #define yyrealloc M4_YY_PREFIX[[realloc]]
 #define yyfree M4_YY_PREFIX[[free]]
 )
+%endif
 %endif
 %ok-for-header
 
