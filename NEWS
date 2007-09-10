@@ -7,6 +7,8 @@ See the file COPYING for copying conditions.
 
 ** introduce yylex_init_extra; see the manual for details
 
+** introduce %option extra-type="your_type *" (resolves bug #1744505)
+
 ** The flex program now parses multiple short concatenated options (resolves bug
   #1619820). Thanks to Petr Machata of Red Hat on this issue.
 

@@ -4215,6 +4215,7 @@ after @code{yylex}, respectively.
 @example
 @verbatim
     int yylex_init ( yyscan_t * ptr_yy_globals ) ;
+    int yylex_init_extra ( YY_EXTRA_TYPE user_defined, yyscan_t * ptr_yy_globals ) ;
     int yylex ( yyscan_t yyscanner ) ;
     int yylex_destroy ( yyscan_t yyscanner ) ;
 @end verbatim
@@ -4359,10 +4360,8 @@ be accessed from within the very first yyalloc, used to allocate
 the scanner itself.
 
 By default, @code{YY_EXTRA_TYPE} is defined as type @code{void *}.  You
-will have to cast @code{yyextra} and the return value from
-@code{yyget_extra} to the appropriate value each time you access the
-extra data.  To avoid casting, you may override the default type by
-defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
+may redefine this type using @code{%option extra-type="your_type"} in 
+the scanner:
 
 @cindex YY_EXTRA_TYPE, defining your own type
 @example
@@ -4371,9 +4370,9 @@ defining @code{YY_EXTRA_TYPE} in section 1 of your scanner:
     %{
     #include <sys/stat.h>
     #include <unistd.h>
-    #define YY_EXTRA_TYPE  struct stat*
     %}
     %option reentrant
+    %option extra-type="struct stat *"
     %%
 
     __filesize__     printf( "%ld", yyextra->st_size  );

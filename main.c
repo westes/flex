@@ -65,7 +65,7 @@ int     action_size, defs1_offset, prolog_offset, action_offset,
 	action_index;
 char   *infilename = NULL, *outfilename = NULL, *headerfilename = NULL;
 int     did_outfilename;
-char   *prefix, *yyclass;
+char   *prefix, *yyclass, *extra_type = NULL;
 int     do_stdinit, use_stdout;
 int     onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int     onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
@@ -333,6 +333,9 @@ void check_options ()
 
     if (!ansi_func_protos)
         buf_m4_define( &m4defs_buf, "M4_YY_NO_ANSI_FUNC_PROTOS", NULL);
+
+    if (extra_type)
+        buf_m4_define( &m4defs_buf, "M4_EXTRA_TYPE_DEFS", extra_type);
 
 	if (!use_stdout) {
 		FILE   *prev_stdout;

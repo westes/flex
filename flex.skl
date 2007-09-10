@@ -332,7 +332,6 @@ m4_define( [[M4_YY_INCR_LINENO]],
     }while(0)
 ]])
 
-int yylex_init M4_YY_PARAMS(yyscan_t* scanner);
 %endif
 
 
@@ -780,9 +779,16 @@ m4_ifdef( [[M4_YY_NO_UNISTD_H]],,
 #endif
 ]])
 
+m4_ifdef( [[M4_EXTRA_TYPE_DEFS]],
+[[
+#define YY_EXTRA_TYPE M4_EXTRA_TYPE_DEFS
+]],
+[[
 #ifndef YY_EXTRA_TYPE
 #define YY_EXTRA_TYPE void *
 #endif
+]]
+)
 
 %if-c-only Reentrant structure and macros (non-C++).
 %if-reentrant
@@ -881,6 +887,10 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
     #    define yylloc YY_G(yylloc_r)
     ]])
 ]])
+
+int yylex_init M4_YY_PARAMS(yyscan_t* scanner);
+
+int yylex_init_extra M4_YY_PARAMS( YY_EXTRA_TYPE user_defined, yyscan_t* scanner);
 
 %endif
 

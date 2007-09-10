@@ -420,6 +420,7 @@ M4QEND      "]]"
     yyget_lloc      ACTION_M4_IFDEF("M4""_YY_NO_GET_LLOC", ! option_sense);
     yyset_lloc      ACTION_M4_IFDEF("M4""_YY_NO_SET_LLOC", ! option_sense);
 
+	extra-type	return OPT_EXTRA_TYPE;
 	outfile		return OPT_OUTFILE;
 	prefix		return OPT_PREFIX;
 	yyclass		return OPT_YYCLASS;
