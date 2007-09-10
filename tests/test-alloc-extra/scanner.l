@@ -39,7 +39,6 @@ struct Check {
     char *bar;
     char qux;
 };
-#define YY_EXTRA_TYPE struct Check *
 
 /* Save char into junk array at next position. */
 static void check_extra ( yyscan_t  scanner );
@@ -52,6 +51,7 @@ void *yyalloc ( size_t size, yyscan_t  scanner );
 %option 8bit outfile="scanner.c" prefix="test"
 %option nounput nomain noyywrap nodefault
 %option warn
+%option extra-type="struct Check *"
 %option reentrant
 %option noyyalloc
 
