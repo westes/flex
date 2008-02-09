@@ -522,14 +522,9 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define unput(c) yyunput( c, YY_G(yytext_ptr) M4_YY_CALL_LAST_ARG )
 ]])
 
-/* The following is because we cannot portably get our hands on size_t
- * (without autoconf's help, which isn't available because we want
- * flex-generated scanners to compile on their own).
- */
-
 #ifndef YY_TYPEDEF_YY_SIZE_T
 #define YY_TYPEDEF_YY_SIZE_T
-typedef unsigned int yy_size_t;
+typedef size_t yy_size_t;
 #endif
 
 #ifndef YY_STRUCT_YY_BUFFER_STATE
