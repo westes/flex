@@ -889,6 +889,8 @@ int yylex_init_extra M4_YY_PARAMS( YY_EXTRA_TYPE user_defined, yyscan_t* scanner
 
 %endif
 
+%endif End reentrant structures and macros.
+
 /* Accessor methods to globals.
    These are made visible to non-reentrant scanners for convenience. */
 
@@ -978,7 +980,6 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
     ]])
 ]])
 %endif
-%endif End reentrant structures and macros.
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
