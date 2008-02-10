@@ -10,7 +10,7 @@ See the file COPYING for copying conditions.
 
 ** change yy_size_t to be size_t (resolves bug #1849812)
 
-** new de, nl, pl, pt_br translations from the translation project
+** new de, nl, pl, pt_br, vi translations from the translation project
 
 * version 2.5.34 released 2007-12-12
 

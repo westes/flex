@@ -1,20 +1,21 @@
 # Vietnamese translation for Flex.
-# Copyright © 2006 Free Software Foundation, Inc.
-# Clytie Siddall <clytie@riverland.net.au>, 2005-2006.
+# Copyright © 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the flex-2.5.34 package.
+# Clytie Siddall <clytie@riverland.net.au>, 2005-2008.
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: flex-2.5.33\n"
-"Report-Msgid-Bugs-To: lex-help@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-02-20 21:46-0500\n"
-"PO-Revision-Date: 2006-07-01 16:57+0930\n"
+"Project-Id-Version: flex 2.5.34\n"
+"Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2007-12-12 16:05-0500\n"
+"PO-Revision-Date: 2008-02-10 17:40+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: LocFactoryEditor 1.6b36\n"
+"X-Generator: LocFactoryEditor 1.7b3\n"
 
 #: dfa.c:61
 #, c-format
@@ -26,14 +27,17 @@ msgid "dangerous trailing context"
 msgstr "ngữ cảnh theo sau là nguy hiểm"
 
 #: dfa.c:166
+#, c-format
 msgid " associated rule line numbers:"
-msgstr " số hiệu dòng quy tắc tương ứng:"
+msgstr " số thứ tự dòng quy tắc tương ứng:"
 
 #: dfa.c:202
+#, c-format
 msgid " out-transitions: "
 msgstr " việc chuyển tiếp xuất: "
 
 #: dfa.c:210
+#, c-format
 msgid ""
 "\n"
 " jam-transitions: EOF "
@@ -59,26 +63,22 @@ msgstr ""
 
 #: dfa.c:604
 msgid "could not create unique end-of-buffer state"
-msgstr "không thể tạo tính trạng kết thúc bộ đệm duy nhất"
+msgstr "không thể tạo tình trạng kết thúc bộ đệm duy nhất"
 
 #: dfa.c:625
 #, c-format
 msgid "state # %d:\n"
-msgstr "tính trạng # %d:\n"
+msgstr "tình trạng # %d:\n"
 
-#: dfa.c:800
+#: dfa.c:785
 msgid "Could not write yynxt_tbl[][]"
 msgstr "Không thể ghi « yynxt_tbl[][] »"
 
-#: dfa.c:1023
-msgid "consistency check failed in symfollowset"
-msgstr "việc kiểm tra sự thống nhất bị lỗi trong symfollowset"
-
-#: dfa.c:1071
+#: dfa.c:1052
 msgid "bad transition character detected in sympartition()"
 msgstr "phát hiện ký tự chuyển tiếp sai trong sympartition()"
 
-#: gen.c:484
+#: gen.c:478
 msgid ""
 "\n"
 "\n"
@@ -90,29 +90,29 @@ msgstr ""
 "Hạng độ tương đương:\n"
 "\n"
 
-#: gen.c:668 gen.c:697 gen.c:1221
+#: gen.c:662 gen.c:691 gen.c:1215
 #, c-format
 msgid "state # %d accepts: [%d]\n"
 msgstr "tình trạng # %d chấp nhận: [%d]\n"
 
-#: gen.c:1116
+#: gen.c:1110
 #, c-format
 msgid "state # %d accepts: "
-msgstr "tính trạng # %d chấp nhận: "
+msgstr "tình trạng # %d chấp nhận: "
 
-#: gen.c:1163
+#: gen.c:1157
 msgid "Could not write yyacclist_tbl"
 msgstr "Không thể ghi « yyacclist_tbl »"
 
-#: gen.c:1239
+#: gen.c:1233
 msgid "Could not write yyacc_tbl"
 msgstr "Không thể ghi « yyacc_tbl »"
 
-#: gen.c:1254 gen.c:1639 gen.c:1662
+#: gen.c:1248 gen.c:1633 gen.c:1656
 msgid "Could not write ecstbl"
 msgstr "Không thể ghi « ecstbl »"
 
-#: gen.c:1277
+#: gen.c:1271
 msgid ""
 "\n"
 "\n"
@@ -122,373 +122,387 @@ msgstr ""
 "\n"
 "Hạng siêu tương đương:\n"
 
-#: gen.c:1299
+#: gen.c:1293
 msgid "Could not write yymeta_tbl"
 msgstr "Không thể ghi « yymeta_tbl »"
 
-#: gen.c:1360
+#: gen.c:1354
 msgid "Could not write yybase_tbl"
 msgstr "Không thể ghi « yybase_tbl »"
 
-#: gen.c:1394
+#: gen.c:1388
 msgid "Could not write yydef_tbl"
 msgstr "Không thể ghi « yydef_tbl »"
 
-#: gen.c:1434
+#: gen.c:1428
 msgid "Could not write yynxt_tbl"
 msgstr "Không thể ghi « yynxt_tbl »"
 
-#: gen.c:1470
+#: gen.c:1464
 msgid "Could not write yychk_tbl"
 msgstr "Không thể ghi « yychk_tbl »"
 
-#: gen.c:1624 gen.c:1653
+#: gen.c:1618 gen.c:1647
 msgid "Could not write ftbl"
 msgstr "Không thể ghi « ftbl »"
 
-#: gen.c:1630
+#: gen.c:1624
 msgid "Could not write ssltbl"
 msgstr "Không thể ghi « ssltbl »"
 
-#: gen.c:1681
+#: gen.c:1675
 msgid "Could not write eoltbl"
 msgstr "Không thể ghi « eoltbl »"
 
-#: gen.c:1741
+#: gen.c:1735
 msgid "Could not write yynultrans_tbl"
 msgstr "Không thể ghi « yynultrans_tbl »"
 
-#: main.c:187
+#: main.c:189
 msgid "rule cannot be matched"
 msgstr "quy tắc không thể được khớp"
 
-#: main.c:192
+#: main.c:194
 msgid "-s option given but default rule can be matched"
 msgstr "đưa ra tùy chọn « -s » còn quy tắc mặc định có thể được khớp"
 
-#: main.c:231
+#: main.c:234
 msgid "Can't use -+ with -l option"
 msgstr "Không thể dùng ký tư « -+ » với tùy chọn « -l »"
 
-#: main.c:234
+#: main.c:237
 msgid "Can't use -f or -F with -l option"
 msgstr "Không thể dùng cờ « -f » hoặc « -F » với tùy chọn « -l »"
 
-#: main.c:238
+#: main.c:241
 msgid "Can't use --reentrant or --bison-bridge with -l option"
 msgstr "Không thể dùng đối số « --reentrant » (điều vào lại) hoặc « --bison-bridge » (chiếc cầu bison) với tùy chọn « -l »"
 
-#: main.c:275
-msgid "-Cf/-CF and -Cm don't make sense together"
-msgstr "Hai tùy chọn « -Cf/-CF » và « -Cm » không có ý nghĩa với nhau"
-
 #: main.c:278
+msgid "-Cf/-CF and -Cm don't make sense together"
+msgstr "Hai tùy chọn « -Cf/-CF » và « -Cm » với nhau thì không có ý nghĩa"
+
+#: main.c:281
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "Hai tùy chọn « -Cf/-CF » và « -I » không tương thích với nhau"
 
-#: main.c:282
+#: main.c:285
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr "Tùy chọn « -Cf/-CF » không tương thích với chế độ « lex-compatibility » (tương thích với lex)"
 
-#: main.c:287
+#: main.c:290
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "Hai tùy chọn « -Cf » and « -CF » loại từ lẫn nhau"
 
-#: main.c:291
+#: main.c:294
 msgid "Can't use -+ with -CF option"
 msgstr "Không thể dùng ký tự « -+ » với tùy chọn « -CF »"
 
-#: main.c:294
+#: main.c:297
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "« %array » (mảng) không tương thích với tùy chọn « -+ »"
 
-#: main.c:299
+#: main.c:302
 msgid "Options -+ and --reentrant are mutually exclusive."
 msgstr "Hai tùy chọn « - + » và « --reentrant » (điều vào lại) loại từ lẫn nhau."
 
-#: main.c:302
+#: main.c:305
 msgid "bison bridge not supported for the C++ scanner."
 msgstr "bison bridge (chiếc cầu bison) không được hỗ trợ với bộ quét C++."
 
-#: main.c:354 main.c:402
+#: main.c:360 main.c:406
 #, c-format
 msgid "could not create %s"
 msgstr "không thể tạo %s"
 
-#: main.c:415
+#: main.c:419
 msgid "could not write tables header"
 msgstr "không thể ghi phần đầu bảng"
 
-#: main.c:419
+#: main.c:423
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "không thể mở tập tin khung sườn %s"
 
-#: main.c:500
+#: main.c:505
 #, c-format
 msgid "input error reading skeleton file %s"
-msgstr "gặp lỗi nhập khi đọc tập tin khung sườn %s"
+msgstr "gặp lỗi nhập vào khi đọc tập tin khung sườn %s"
 
-#: main.c:504
+#: main.c:509
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "gặp lỗi khi đóng tập tin khung sườn %s"
 
-#: main.c:688
+#: main.c:694
 #, c-format
 msgid "error creating header file %s"
 msgstr "gặp lỗi khi tạo tập tin phần đầu %s"
 
-#: main.c:696
+#: main.c:702
 #, c-format
 msgid "error writing output file %s"
 msgstr "gặp lỗi khi ghi tập tin xuất %s"
 
-#: main.c:700
+#: main.c:706
 #, c-format
 msgid "error closing output file %s"
 msgstr "gặp lỗi khi đóng tập tin xuất %s"
 
-#: main.c:704
+#: main.c:710
 #, c-format
 msgid "error deleting output file %s"
 msgstr "gặp lỗi khi xoá bỏ tập tin xuất %s"
 
-#: main.c:711
+#: main.c:717
+#, c-format
 msgid "No backing up.\n"
 msgstr "Không sao lưu.\n"
 
-#: main.c:715
+#: main.c:721
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "%d đang sao lưu các tình trạng (kiểu không chấp nhận).\n"
 
-#: main.c:719
+#: main.c:725
+#, c-format
 msgid "Compressed tables always back up.\n"
-msgstr "Bảng đã nén luôn luôn sao lưu.\n"
+msgstr "Bảng đã nén lúc nào cũng sao lưu.\n"
 
-#: main.c:722
+#: main.c:728
 #, c-format
 msgid "error writing backup file %s"
 msgstr "găp lỗi khi ghi tập tin sao lưu %s"
 
-#: main.c:726
+#: main.c:732
 #, c-format
 msgid "error closing backup file %s"
 msgstr "gặp lỗi khi đóng tập tin sao lưu %s"
 
-#: main.c:731
+#: main.c:737
 #, c-format
 msgid "%s version %s usage statistics:\n"
-msgstr "%s phiên bản %s thống kê cách sử dụng:\n"
+msgstr "%s phiên bản %s thống kê sử dụng:\n"
 
-#: main.c:734
+#: main.c:740
+#, c-format
 msgid "  scanner options: -"
 msgstr "  tùy chọn bộ quét: —"
 
-#: main.c:813
+#: main.c:819
 #, c-format
 msgid "  %d/%d NFA states\n"
-msgstr "  %d/%d tính trạng NFA\n"
+msgstr "  %d/%d tình trạng NFA\n"
 
-#: main.c:815
+#: main.c:821
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
-msgstr "  %d/%d tính trạng DFA (%d từ)\n"
+msgstr "  %d/%d tình trạng DFA (%d từ)\n"
 
-#: main.c:817
+#: main.c:823
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d quy tắc\n"
 
-#: main.c:822
+#: main.c:828
+#, c-format
 msgid "  No backing up\n"
 msgstr "  Không sao lưu\n"
 
-#: main.c:826
+#: main.c:832
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
-msgstr "  %d đang sao lưu tình trạng (kiểu không chấp nhận)\n"
+msgstr "  %d đang sao lưu các tình trạng (kiểu không chấp nhận)\n"
 
-#: main.c:831
+#: main.c:837
+#, c-format
 msgid "  Compressed tables always back-up\n"
-msgstr "  Bảng đã nén luôn luôn sao lưu\n"
+msgstr "  Bảng đã nén lúc nào cũng sao lưu\n"
 
-#: main.c:835
+#: main.c:841
+#, c-format
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  Dùng mẫu kiểu đầu dòng\n"
 
-#: main.c:837
+#: main.c:843
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d điều kiện bắt đầu\n"
 
-#: main.c:841
+#: main.c:847
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
-msgstr "  %d tính trạng épxilông (ε), %d tính trạng épxilông đôi\n"
+msgstr "  %d tình trạng épxilông (ε), %d tình trạng épxilông đôi\n"
 
-#: main.c:845
+#: main.c:851
+#, c-format
 msgid "  no character classes\n"
 msgstr "  không có hạng ký tự\n"
 
-#: main.c:849
+#: main.c:855
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
 msgstr "  %d/%d hạng ky tự cần thiết %d/%d từ sức chứa, %d được dùng lại\n"
 
-#: main.c:854
+#: main.c:860
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
-msgstr "  %d cặp tính trạng/tính trạng tới đã được tạo\n"
+msgstr "  %d cặp tình trạng/tình trạng kế tiếp đã được tạo\n"
 
-#: main.c:857
+#: main.c:863
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d việc chuyên tiếp duy nhất/trùng\n"
 
-#: main.c:862
+#: main.c:868
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d mục nhập bảng\n"
 
-#: main.c:870
+#: main.c:876
 #, c-format
 msgid "  %d/%d base-def entries created\n"
-msgstr "  %d/%d mục base-def (định nghĩa cơ bản) đã được tạo\n"
+msgstr "  %d/%d mục nhập base-def (định nghĩa cơ bản) đã được tạo\n"
 
-#: main.c:874
+#: main.c:880
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
-msgstr "  %d/%d (tối đa %d) mục nxt-chk (kiểm tra tới) đã được tạo\n"
+msgstr "  %d/%d (tối đa %d) mục nhập nxt-chk (kiểm tra kế tiếp) đã được tạo\n"
 
-#: main.c:878
+#: main.c:884
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
-msgstr "  %d/%d (tối đa %d) mục biểu mẫu nxt-chk (kiểm tra tới) đã được tạo\n"
+msgstr "  %d/%d (tối đa %d) mục nhập biểu mẫu nxt-chk (kiểm tra kế tiếp) đã được tạo\n"
 
-#: main.c:882
+#: main.c:888
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d mục nhập bảng trống\n"
 
-#: main.c:884
+#: main.c:890
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  %d proto (vật đầu tiên) đã được tạo\n"
 
-#: main.c:887
+#: main.c:893
 #, c-format
 msgid "  %d templates created, %d uses\n"
-msgstr "  %d biểu mẫu đã được tạo, %d lần dùng\n"
+msgstr "  %d mẫu đã được tạo, %d lần dùng\n"
 
-#: main.c:895
+#: main.c:901
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  %d/%d hạng kiểu tương đương đã được tạo\n"
 
-#: main.c:903
+#: main.c:909
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  %d/%d hạng siêu tương đương đã được tạo\n"
 
-#: main.c:909
+#: main.c:915
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
-msgstr "  %d (%d được lưu) lần va chạm với băm, %d DFA bằng nhau\n"
+msgstr "  %d (%d được lưu) lần va chạm với hash, %d DFA bằng nhau\n"
 
-#: main.c:911
+#: main.c:917
 #, c-format
 msgid "  %d sets of reallocations needed\n"
-msgstr "  cần thiết %d tập điều phân chia lại\n"
+msgstr "  cần thiết %d tập hợp điều phân chia lại\n"
 
-#: main.c:913
+#: main.c:919
 #, c-format
 msgid "  %d total table entries needed\n"
-msgstr "  cần thiết tổng số mục nhập bảng %d\n"
+msgstr "  cần thiết tổng mục nhập bảng %d\n"
 
-#: main.c:988
+#: main.c:996
+#, c-format
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Gặp lỗi nội bộ vì những flexopt dạng sai.\n"
 
-#: main.c:998
+#: main.c:1006
 #, c-format
 msgid "Try `%s --help' for more information.\n"
-msgstr "Hãy thử lệnh « %s --help » (trợ giúp) để xem thông tin thêm.\n"
+msgstr "Hãy thử lệnh « %s --help » (trợ giúp) để xem thêm thông tin.\n"
 
-#: main.c:1055
+#: main.c:1063
 #, c-format
 msgid "unknown -C option '%c'"
-msgstr "không biết tùy chọn « -C » là « %c »"
+msgstr "không rõ tùy chọn « -C » là « %c »"
 
-#: main.c:1184
+#: main.c:1192
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
 
-#: main.c:1459
+#: main.c:1467
 msgid "fatal parse error"
-msgstr "gặp lỗi phân tách nghiêm trọng"
+msgstr "gặp lỗi phân tích nghiêm trọng"
 
-#: main.c:1491
+#: main.c:1499
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr "không thể tạo tập tin thông tin sao lưu %s"
 
-#: main.c:1512
+#: main.c:1520
+#, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr "Tùy chọn kiểu tương thích « -l » AT&T lex giảm hiệu suất nhiều\n"
+msgstr "Tùy chọn kiểu tương thích lex AT&T « -l »  rất giảm hiệu suất\n"
 
-#: main.c:1515
+#: main.c:1523
+#, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
 msgstr " thì có lẽ thật gây ra trường hợp giảm hiệu suất khác\n"
 
-#: main.c:1521
+#: main.c:1529
 #, c-format
 msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
-msgstr "%%tùy chọn « yylineno » giảm hiệu suất CHỈ với quy tắc khớp với ký tự dòng mới thôi\n"
+msgstr "%%tùy chọn « yylineno » giảm hiệu suất CHỈ với quy tắc khớp với ký tự dòng mới\n"
 
-#: main.c:1528
+#: main.c:1536
+#, c-format
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "Tùy chọn « -I » (tương tác) giảm hiệu suất một ít\n"
 
-#: main.c:1533
+#: main.c:1541
+#, c-format
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "yymore() giảm hiệu suất một ít\n"
 
-#: main.c:1539
+#: main.c:1547
+#, c-format
 msgid "REJECT entails a large performance penalty\n"
-msgstr "REJECT (đuổi ra) giảm tốc độ nhiều\n"
+msgstr "REJECT (đuổi ra) rất giảm hiệu suất\n"
 
-#: main.c:1544
+#: main.c:1552
+#, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr "Quy tắc ngữ cảnh theo sau biến giảm hiệu suất nhiều\n"
+msgstr "Quy tắc ngữ cảnh theo sau biến rất giảm hiệu suất\n"
 
-#: main.c:1556
+#: main.c:1564
 msgid "REJECT cannot be used with -f or -F"
 msgstr "Không cho phép dùng REJECT (đuổi ra) với tùy chọn « -f » hay « -F »"
 
-#: main.c:1559
+#: main.c:1567
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr "Không cho phép dùng %option (tùy chọn) « yylineno » với REJECT (đuổi ra)"
 
-#: main.c:1562
+#: main.c:1570
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr "không cho phép dùng quy tắc ngữ cảnh theo sau biến với tùy chọn « -f » hay « -F »"
 
-#: main.c:1677
+#: main.c:1691
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
 msgstr "%option (tùy chọn) « yyclass » chỉ có ý nghĩa với bộ quét C++"
 
-#: main.c:1784
+#: main.c:1798
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
-msgstr "Cách sử dụng: %s [TUY_CHỌN] [TẬP_TIN]...\n"
+msgstr "Sử dụng: %s [TUY_CHỌN] [TẬP_TIN]...\n"
 
-#: main.c:1787
+#: main.c:1801
 #, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -628,7 +642,7 @@ msgstr ""
 #: misc.c:100 misc.c:126
 #, c-format
 msgid "name \"%s\" ridiculously long"
-msgstr "tên « %s » quá dài"
+msgstr "tên « %s » là dài nhố nhăng"
 
 #: misc.c:175
 msgid "memory allocation failed in allocate_array()"
@@ -655,7 +669,7 @@ msgstr "%s: gặp lỗi nôi bộ nghiêm trọng, %s\n"
 
 #: misc.c:875
 msgid "attempt to increase array size failed"
-msgstr "việc cố gắng tăng kích cỡ mảng đã thất bại"
+msgstr "việc thử tăng kích cỡ mảng đã thất bại"
 
 #: misc.c:1002
 msgid "bad line in skeleton file"
@@ -674,20 +688,21 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"********** bắt đầu đổ NFA có tính trạng bắt đầu là %d\n"
+"********** bắt đầu đổ NFA có tình trạng bắt đầu là %d\n"
 
 #: nfa.c:115
 #, c-format
 msgid "state # %4d\t"
-msgstr "tính trạng # %4d\t"
+msgstr "tình trạng # %4d\t"
 
 #: nfa.c:130
+#, c-format
 msgid "********** end of dump\n"
 msgstr "********** đổ xong\n"
 
 #: nfa.c:174
 msgid "empty machine in dupmachine()"
-msgstr "máy trống trong dupmachine() (trùng máy)"
+msgstr "máy trống trong dupmachine() (nhân đôi máy)"
 
 #: nfa.c:240
 #, c-format
@@ -696,12 +711,12 @@ msgstr "Gặp quy tắc ngữ cảnh theo sau biến tại dòng %d\n"
 
 #: nfa.c:353
 msgid "bad state type in mark_beginning_as_normal()"
-msgstr "kiểu tính trạng sai trong mark_beginning_as_normal() (đánh dấu đầu là thường)"
+msgstr "kiểu tình trạng sai trong mark_beginning_as_normal() (đánh dấu đầu là thường)"
 
 #: nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
-msgstr "các quy tắc nhập là quá phức tạp (≥ %d tình trạng NFA)"
+msgstr "các quy tắc nhập vào là quá phức tạp (≥ %d tình trạng NFA)"
 
 #: nfa.c:677
 msgid "found too many transitions in mkxtion()"
@@ -712,107 +727,119 @@ msgstr "gặp quá nhiều việc chuyển tiếp trong mkxtion()"
 msgid "too many rules (> %d)!"
 msgstr "quá nhiều quy tắc (> %d) !"
 
-#: parse.y:183
+#: parse.y:159
 msgid "unknown error processing section 1"
 msgstr "gặp lỗi không rõ khi xử lý phần 1"
 
-#: parse.y:208 parse.y:373
+#: parse.y:184 parse.y:351
 msgid "bad start condition list"
 msgstr "danh sách điều kiện bắt đầu là sai"
 
-#: parse.y:337
+#: parse.y:315
 msgid "unrecognized rule"
-msgstr "gặp quy tắc không được nhận diện"
+msgstr "gặp quy tắc không được nhận dạng"
 
-#: parse.y:456 parse.y:469 parse.y:538
+#: parse.y:434 parse.y:447 parse.y:516
 msgid "trailing context used twice"
-msgstr "ngữ cảnh theo sau đã được dùng hai lần"
+msgstr "ngữ cảnh theo sau được dùng hai lần"
 
-#: parse.y:574 parse.y:584 parse.y:657 parse.y:667
+#: parse.y:552 parse.y:562 parse.y:635 parse.y:645
 msgid "bad iteration values"
 msgstr "gặp giá trị lặp lại sai"
 
-#: parse.y:602 parse.y:620 parse.y:685 parse.y:703
+#: parse.y:580 parse.y:598 parse.y:663 parse.y:681
 msgid "iteration value must be positive"
 msgstr "giá trị lặp lại phải là số dương"
 
-#: parse.y:817 parse.y:827
+#: parse.y:806 parse.y:816
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
 msgstr "phạm vị ký tự [%c-%c] là mơ hồ trong bộ quét bỏ qua chữ hoa/thường"
 
-#: parse.y:832
+#: parse.y:821
 msgid "negative range in character class"
 msgstr "gặp phạm vị âm trong hạng ký tự"
 
-#: scan.l:71 scan.l:181 scan.l:268 scan.l:410 scan.l:549 scan.l:599
+#: parse.y:918
+msgid "[:^lower:] is ambiguous in case insensitive scanner"
+msgstr "[:^lower:] là mơ hồ trong bộ quét bỏ qua chữ hoa/thường"
+
+#: parse.y:924
+msgid "[:^upper:] ambiguous in case insensitive scanner"
+msgstr "[:^upper:] là mơ hồ trong bộ quét bỏ qua chữ hoa/thường"
+
+#: scan.l:75 scan.l:192 scan.l:300 scan.l:443 scan.l:618 scan.l:676
 msgid "Input line too long\n"
 msgstr "dòng nhập quá dài\n"
 
-#: scan.l:150
+#: scan.l:161
 #, c-format
 msgid "malformed '%top' directive"
-msgstr "chỉ thị kiểu « %top » dạng sai (_đỉnh_)"
+msgstr "chỉ thị kiểu « %top » (đầu) dạng sai"
 
-#: scan.l:172
+#: scan.l:183
 #, no-c-format
 msgid "unrecognized '%' directive"
-msgstr "gặp chỉ thị kiểu « % » không được nhận diện"
+msgstr "gặp chỉ thị kiểu « % » không được nhận dạng"
 
-#: scan.l:252
+#: scan.l:284
 msgid "Unmatched '{'"
 msgstr "Chưa khớp « { »"
 
-#: scan.l:285
+#: scan.l:317
 msgid "incomplete name definition"
 msgstr "lời đinh nghĩa tên chưa hoàn tất"
 
-#: scan.l:418
+#: scan.l:451
 #, c-format
 msgid "unrecognized %%option: %s"
-msgstr "gặp tùy chọn %% không được nhận diện: %s"
+msgstr "gặp tùy chọn %% không được nhận dạng: %s"
 
-#: scan.l:559 scan.l:678
+#: scan.l:633 scan.l:800
 msgid "bad character class"
 msgstr "hạng ký tự sai"
 
-#: scan.l:606
+#: scan.l:683
 #, c-format
 msgid "undefined definition {%s}"
-msgstr "chưa định nghĩa lời định nghĩa {%s}"
+msgstr "chưa xác định lời định nghĩa {%s}"
 
-#: scan.l:646
+#: scan.l:755
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "<start condition> (điệu kiện bắt đầu) sai: %s"
 
-#: scan.l:659
+#: scan.l:768
 msgid "missing quote"
-msgstr "dấu trích dẫn còn thiếu"
+msgstr "thiếu dấu trích dẫn"
 
-#: scan.l:699
+#: scan.l:834
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "biểu thức hạng ký tự sai: %s"
 
-#: scan.l:721
+#: scan.l:856
 msgid "bad character inside {}'s"
 msgstr "có ký tự sai ở trong hai dấu ngoặc móc {}"
 
-#: scan.l:727
+#: scan.l:862
 msgid "missing }"
 msgstr "thiếu }"
 
-#: scan.l:800
+#: scan.l:940
 msgid "EOF encountered inside an action"
-msgstr "gặp kết thúc tập tin ở trong hành động"
+msgstr "gặp kết thúc tập tin ở trong một hành động"
 
-#: scan.l:820
+#: scan.l:945
+msgid "EOF encountered inside pattern"
+msgstr "gặp kết thúc tập tin ở trong mẫu"
+
+#: scan.l:967
 #, c-format
 msgid "bad character: %s"
 msgstr "ký tự sai: %s"
 
-#: scan.l:849
+#: scan.l:996
 #, c-format
 msgid "can't open %s"
 msgstr "không thể mở %s"
@@ -820,7 +847,7 @@ msgstr "không thể mở %s"
 #: scanopt.c:291
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
-msgstr "Cách sử dụng: %s [TÙY_CHỌN]...\n"
+msgstr "Sử dụng: %s [TÙY_CHỌN]...\n"
 
 #: scanopt.c:565
 #, c-format
@@ -840,22 +867,22 @@ msgstr "tùy chọn « %s » là mơ hồ\n"
 #: scanopt.c:578
 #, c-format
 msgid "Unrecognized option `%s'\n"
-msgstr "Gặp tùy chọn « %s » không được nhận diện\n"
+msgstr "Không nhận ra tùy chọn « %s »\n"
 
 #: scanopt.c:582
 #, c-format
 msgid "Unknown error=(%d)\n"
-msgstr "Không biết lỗi=(%d)\n"
+msgstr "Không rõ lỗi=(%d)\n"
 
 #: sym.c:100
 msgid "symbol table memory allocation failed"
-msgstr "việc phân chia bộ nhớ của bảng ký hiệu đã thất bại"
+msgstr "lỗi phân chia bộ nhớ của bảng ký hiệu"
 
-#: sym.c:203
+#: sym.c:202
 msgid "name defined twice"
-msgstr "tên đã được định nghĩa hai lần"
+msgstr "tên đã được xác định hai lần"
 
-#: sym.c:254
+#: sym.c:253
 #, c-format
 msgid "start condition %s declared twice"
 msgstr "điều kiện bắt đầu %s đã được tuyên bố hai lần"
@@ -865,6 +892,7 @@ msgid "premature EOF"
 msgstr "gặp kết thúc tập tin quá sớm"
 
 #: yylex.c:198
+#, c-format
 msgid "End Marker\n"
 msgstr "Dấu kết thúc\n"
 
