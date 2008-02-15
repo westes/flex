@@ -5,8 +5,11 @@ See the file COPYING for copying conditions.
 
 * version 2.5.35
 
+** fixed bug that prevented flex from accepting certain comments in the
+  scanner file (resolves bugs #1849809 and #1849805)
+
 ** fix bug that prevented headers for all functions from being generated
-(resolves bug #1628314)
+  (resolves bug #1628314)
 
 ** change yy_size_t to be size_t (resolves bug #1849812)
 

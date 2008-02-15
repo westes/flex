@@ -856,8 +856,8 @@ ccl		:  ccl CHAR '-' CHAR
 
             /* Do it again for upper/lowercase */
             if (sf_case_ins() && has_case($2)){
-                $1 = reverse_case ($2);
-                ccladd ($1, reverse_case ($2));
+                $2 = reverse_case ($2);
+                ccladd ($1, $2);
 
                 cclsorted = cclsorted && ($2 > lastchar);
                 lastchar = $2;
