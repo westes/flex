@@ -3,7 +3,7 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* version 2.5.35
+* version 2.5.35 released 2008-02-26
 
 ** fixed bug that prevented flex from accepting certain comments in the
   scanner file (resolves bugs #1849809 and #1849805)
