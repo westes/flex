@@ -3,6 +3,8 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* version 2.5.36
+
 * version 2.5.35 released 2008-02-26
 
 ** fixed bug that prevented flex from accepting certain comments in the
