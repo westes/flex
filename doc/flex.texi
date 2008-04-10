@@ -382,7 +382,7 @@ A somewhat more complicated example:
 
     %{
     /* need this for the call to atof() below */
-    #include math.h>
+    #include <math.h>
     %}
 
     DIGIT    [0-9]
