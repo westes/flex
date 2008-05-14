@@ -354,7 +354,8 @@ Here's another simple example:
     .       ++num_chars;
 
     %%
-    main()
+
+    int main()
             {
             yylex();
             printf( "# of lines = %d, # of chars = %d\n",
@@ -416,9 +417,7 @@ A somewhat more complicated example:
 
     %%
 
-    main( argc, argv )
-    int argc;
-    char **argv;
+    int main( int argc, char **argv )
         {
         ++argv, --argc;  /* skip over program name */
         if ( argc > 0 )
