@@ -27,7 +27,7 @@ CLEANFILES = scanner.c scanner.h parser.c parser.h $(testname)$(EXEEXT) OUTPUT $
 OBJS = scanner.o # parser.o
 
 AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
-LDFLAGS = -lpthread
+LIBS = -lpthread
 #LFLAGS = --header="scanner.h"
 #YFLAGS = --defines --output=parser.c
 
@@ -37,7 +37,7 @@ scanner.c: $(srcdir)/scanner.l
 	$(FLEX) $(LFLAGS) $<
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
+	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	./$(testname) $(srcdir)/test-*.input
