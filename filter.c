@@ -161,6 +161,7 @@ bool filter_apply_chain (struct filter * chain)
          * to sync the stream. This is a Hail Mary situation. It seems to work.
          */
 		close (pipes[1]);
+clearerr(stdin);
 		if (dup2 (pipes[0], fileno (stdin)) == -1)
 			flexfatal (_("dup2(pipes[0],0)"));
 		close (pipes[0]);
