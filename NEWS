@@ -5,6 +5,12 @@ See the file COPYING for copying conditions.
 
 * version 2.5.36
 
+** various bug fixes that prevent certain error conditions from
+   persisting when they should not persist
+
+** improvements to the test suite so it behaves better when linking
+   compiled files
+
 ** new translations from the translation project: fr
 
 * version 2.5.35 released 2008-02-26
