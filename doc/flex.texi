@@ -1575,8 +1575,8 @@ condition remains unchanged; it does @emph{not} revert to
 @code{INITIAL}.
 
 @cindex yywrap, default for
-@cindex nowrap, %option
-@cindex %option nowrap
+@cindex noyywrap, %option
+@cindex %option noyywrapp
 If you do not supply your own version of @code{yywrap()}, then you must
 either use @code{%option noyywrap} (in which case the scanner behaves as
 though @code{yywrap()} returned 1), or you must link with @samp{-lfl} to
