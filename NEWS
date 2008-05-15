@@ -5,6 +5,9 @@ See the file COPYING for copying conditions.
 
 * version 2.5.36
 
+** various manual fixes, including correcting the name of a %option and
+   updating some simple examples to use ANSI C syntax
+
 ** various bug fixes that prevent certain error conditions from
    persisting when they should not persist
 
