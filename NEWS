@@ -5,6 +5,9 @@ See the file COPYING for copying conditions.
 
 * version 2.5.36
 
+** various portability fixes that quiet compiler warnings on 64-bit
+   hosts
+
 ** various manual fixes, including correcting the name of a %option and
    updating some simple examples to use ANSI C syntax
 
