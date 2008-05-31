@@ -90,21 +90,22 @@ noinst_HEADERS = \
 include_HEADERS = \
 	FlexLexer.h
 
-EXTRA_DIST = \
-	.indent.pro \
+dist_doc_DATA = \
+	ABOUT-NLS \
 	AUTHORS \
 	COPYING \
-	INSTALL \
 	NEWS \
 	ONEWS \
 	README \
 	README.cvs \
-	THANKS \
-	TODO \
+	TODO
+
+EXTRA_DIST = \
+	.indent.pro \
+	INSTALL \
 	autogen.sh \
 	flex.skl \
 	mkskel.sh \
-	ABOUT-NLS \
 	config.rpath \
 	gettext.h
 
