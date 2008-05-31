@@ -15,7 +15,7 @@ config.cache
 config.guess
 config.h
 config.log
-config.status
+config.status*
 config.sub
 configure
 depcomp
