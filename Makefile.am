@@ -91,7 +91,6 @@ include_HEADERS = \
 	FlexLexer.h
 
 dist_doc_DATA = \
-	ABOUT-NLS \
 	AUTHORS \
 	COPYING \
 	NEWS \
@@ -102,6 +101,7 @@ dist_doc_DATA = \
 
 EXTRA_DIST = \
 	.indent.pro \
+	ABOUT-NLS \
 	INSTALL \
 	autogen.sh \
 	flex.skl \
