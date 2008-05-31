@@ -30,3 +30,4 @@ scan.c
 skel.c
 stamp-*
 config.rpath
+ylwrap
