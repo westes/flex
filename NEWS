@@ -19,6 +19,9 @@ See the file COPYING for copying conditions.
 
 ** new translations from the translation project: fr
 
+** the flex distribution is now built with automake 1.10.1 and automake
+   2.61
+
 * version 2.5.35 released 2008-02-26
 
 ** fixed bug that prevented flex from accepting certain comments in the
