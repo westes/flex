@@ -1,8 +1,8 @@
 \input texinfo.tex @c -*-texinfo-*-
 @c %**start of header
-@setfilename flex.info
-@settitle Lexical Analysis With Flex
 @include version.texi
+@setfilename flex.info
+@settitle Lexical Analysis With Flex, for Flex @value{@version}
 @set authors Vern Paxson, Will Estes and John Millaway
 @c  "Macro Hooks" index
 @defindex hk
@@ -58,7 +58,7 @@ PURPOSE.
 @end copying
 
 @titlepage
-@title @value{title}
+@title Lexical Analysis with Flex
 @subtitle Edition @value{EDITION}, @value{UPDATED}
 @author @value{authors}
 @page
