@@ -84,8 +84,7 @@ fi
 AC_FUNC_ALLOCA
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([inttypes.h libintl.h limits.h locale.h malloc.h
-netinet/in.h stddef.h stdlib.h string.h strings.h unistd.h regex.h])
+AC_CHECK_HEADERS([inttypes.h libintl.h limits.h locale.h malloc.h netinet/in.h stddef.h stdlib.h string.h strings.h unistd.h regex.h])
 AC_CHECK_LIB(m, log10)
 
 # The test test-pthread uses libpthread, so we check for it here, but
