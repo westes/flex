@@ -1,7 +1,7 @@
 \input texinfo.tex @c -*-texinfo-*-
 @c %**start of header
-@include version.texi
 @setfilename flex.info
+@include version.texi
 @settitle Lexical Analysis With Flex, for Flex @value{@version}
 @set authors Vern Paxson, Will Estes and John Millaway
 @c  "Macro Hooks" index
@@ -1756,7 +1756,7 @@ treat it as a single token, the floating-point number @samp{123.456}:
     %%
     expect-floats        BEGIN(expect);
 
-    <expect>[0-9]+@samp{.}[0-9]+      {
+    <expect>[0-9]+.[0-9]+      {
                 printf( "found a float, = %f\n",
                         atof( yytext ) );
                 }
@@ -3401,7 +3401,7 @@ which degrade performance.  These are, from most expensive to least:
     %option interactive
     %option always-interactive
 
-    @samp{^} beginning-of-line operator
+    ^ beginning-of-line operator
     yymore()
 @end verbatim
 @end example
@@ -3886,11 +3886,15 @@ Here is an example of a simple C++ scanner:
 @cindex C++ scanners, use of
 @example
 @verbatim
-        // An example of using the flex C++ scanner class.
+     // An example of using the flex C++ scanner class.
 
     %{
+    #include <iostream>
+    using namespace std;
     int mylineno = 0;
     %}
+
+    %option noyywrap
 
     string  \"[^\n"]+\"
 
@@ -3915,7 +3919,7 @@ Here is an example of a simple C++ scanner:
                 if(c == '\n')
                     ++mylineno;
 
-                else if(c == @samp{*})
+                else if(c == '*')
                     {
                     if((c = yyinput()) == '/')
                         break;
@@ -3925,23 +3929,23 @@ Here is an example of a simple C++ scanner:
                 }
             }
 
-    {number}  cout  "number "  YYText()  '\n';
+    {number}  cout << "number " << YYText() << '\n';
 
     \n        mylineno++;
 
-    {name}    cout  "name "  YYText()  '\n';
+    {name}    cout << "name " << YYText() << '\n';
 
-    {string}  cout  "string "  YYText()  '\n';
+    {string}  cout << "string " << YYText() << '\n';
 
     %%
 
     int main( int /* argc */, char** /* argv */ )
-        {
-        @code{flex}Lexer* lexer = new yyFlexLexer;
+    {
+        FlexLexer* lexer = new yyFlexLexer;
         while(lexer->yylex() != 0)
             ;
         return 0;
-        }
+    }
 @end verbatim
 @end example
 
@@ -4564,7 +4568,7 @@ called again, you may get the following message:
 @cindex error messages, end of buffer missed
 @example
 @verbatim
-    fatal @code{flex} scanner internal error--end of buffer missed
+    fatal flex scanner internal error--end of buffer missed
 @end verbatim
 @end example
 
