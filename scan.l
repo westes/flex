@@ -189,7 +189,7 @@ M4QEND      "]]"
 			 }
 			else
 			 {
-			   synerr( _("Input line too long\n"));
+			   synerr( _("Definition name too long\n"));
 			   FLEX_EXIT(EXIT_FAILURE);
 			 }
 
@@ -297,7 +297,7 @@ M4QEND      "]]"
  		         }
  		        else
  		         {
- 		           synerr( _("Input line too long\n"));
+ 		           format_synerr( _("Definition value for {%s} too long\n"), nmstr);
  		           FLEX_EXIT(EXIT_FAILURE);
 			 }
 			/* Skip trailing whitespace. */
@@ -440,7 +440,7 @@ M4QEND      "]]"
 			 }
 			else
 			 {
-			   synerr( _("Input line too long\n"));
+			   synerr( _("Option line too long\n"));
 			   FLEX_EXIT(EXIT_FAILURE);
 			 }
 			nmstr[strlen( nmstr ) - 1] = '\0';
