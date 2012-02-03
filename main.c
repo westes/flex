@@ -1577,7 +1577,7 @@ void readin ()
 
 	if (!do_yywrap) {
 		if (!C_plus_plus) {
-			outn ("\n#define yywrap(n) 1");
+			outn ("\n#define yywrap() 1");
 		}
 		outn ("#define YY_SKIP_YYWRAP");
 	}
