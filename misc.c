@@ -61,6 +61,8 @@ static void sko_push(bool dc)
     if(!sko_stack){
         sko_sz = 1;
         sko_stack = (struct sko_state*)flex_alloc(sizeof(struct sko_state)*sko_sz);
+        if (!sko_stack)
+            flexfatal(_("allocation of sko_stack failed"));
         sko_len = 0;
     }
     if(sko_len >= sko_sz){
@@ -454,12 +456,26 @@ void lerrif (msg, arg)
 /* lerrsf - report an error message formatted with one string argument */
 
 void lerrsf (msg, arg)
-     const char *msg, arg[];
+	const char *msg, arg[];
 {
 	char    errmsg[MAXLINE];
 
-	snprintf (errmsg, sizeof(errmsg), msg, arg);
+	snprintf (errmsg, sizeof(errmsg)-1, msg, arg);
+	errmsg[sizeof(errmsg)-1] = 0; /* ensure NULL termination */
 	flexerror (errmsg);
+}
+
+
+/* lerrsf_fatal - as lerrsf, but call flexfatal */
+
+void lerrsf_fatal (msg, arg)
+	const char *msg, arg[];
+{
+	char    errmsg[MAXLINE];
+
+	snprintf (errmsg, sizeof(errmsg)-1, msg, arg);
+	errmsg[sizeof(errmsg)-1] = 0; /* ensure NULL termination */
+	flexfatal (errmsg);
 }
 
 

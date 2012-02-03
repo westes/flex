@@ -455,6 +455,8 @@ void check_options ()
              size_t strsz;
 
              str = (char*)flex_alloc(strsz = strlen(fmt) + strlen(scname[i]) + (int)(1 + log10(i)) + 2);
+             if (!str)
+               flexfatal(_("allocation of macro definition failed"));
              snprintf(str, strsz, fmt,      scname[i], i - 1);
              buf_strappend(&tmpbuf, str);
              free(str);
