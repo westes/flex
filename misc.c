@@ -184,7 +184,7 @@ int all_lower (str)
      register char *str;
 {
 	while (*str) {
-		if (!isascii ((Char) * str) || !islower (*str))
+		if (!isascii ((Char) * str) || !islower ((Char) * str))
 			return 0;
 		++str;
 	}
@@ -199,7 +199,7 @@ int all_upper (str)
      register char *str;
 {
 	while (*str) {
-		if (!isascii ((Char) * str) || !isupper (*str))
+		if (!isascii ((Char) * str) || !isupper ((Char) * str))
 			return 0;
 		++str;
 	}
@@ -675,7 +675,7 @@ Char myesc (array)
 			int     sptr = 2;
 
 			while (isascii (array[sptr]) &&
-			       isxdigit ((char) array[sptr]))
+			       isxdigit (array[sptr]))
 				/* Don't increment inside loop control
 				 * because if isdigit() is a macro it might
 				 * expand into multiple increments ...
