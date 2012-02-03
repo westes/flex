@@ -17,7 +17,8 @@ See the file COPYING for copying conditions.
 ** improvements to the test suite so it behaves better when linking
    compiled files
 
-** new translations from the translation project: ca, fi, fr, ga
+** new translations from the translation project: ca, da, es, fi, fr,
+   ga, ko, pt_br, ro, ru, sv, zh_cn
 
 ** the flex distribution is now built with automake 1.10.1 and automake
    2.61

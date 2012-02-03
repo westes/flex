@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.8\n"
-"Report-Msgid-Bugs-To: lex-help@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-02-14 12:28-0500\n"
+"Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2008-02-26 16:34-0500\n"
 "PO-Revision-Date: 2002-08-18 10:37+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
@@ -65,19 +65,15 @@ msgstr "无法创建独立的 end-of-buffer 状态"
 msgid "state # %d:\n"
 msgstr "状态 # %d：\n"
 
-#: dfa.c:800
+#: dfa.c:785
 msgid "Could not write yynxt_tbl[][]"
 msgstr ""
 
-#: dfa.c:1023
-msgid "consistency check failed in symfollowset"
-msgstr "symfollowset 中的一致性检查失败"
-
-#: dfa.c:1071
+#: dfa.c:1052
 msgid "bad transition character detected in sympartition()"
 msgstr "在 sympartition() 检测到错误的变换字符"
 
-#: gen.c:484
+#: gen.c:478
 msgid ""
 "\n"
 "\n"
@@ -89,424 +85,424 @@ msgstr ""
 "等价类：\n"
 "\n"
 
-#: gen.c:668 gen.c:697 gen.c:1221
+#: gen.c:662 gen.c:691 gen.c:1215
 #, c-format
 msgid "state # %d accepts: [%d]\n"
 msgstr ""
 
-#: gen.c:1116
+#: gen.c:1110
 #, c-format
 msgid "state # %d accepts: "
 msgstr ""
 
-#: gen.c:1163
+#: gen.c:1157
 msgid "Could not write yyacclist_tbl"
 msgstr ""
 
-#: gen.c:1239
+#: gen.c:1233
 msgid "Could not write yyacc_tbl"
 msgstr ""
 
-#: gen.c:1254 gen.c:1639 gen.c:1662
+#: gen.c:1248 gen.c:1633 gen.c:1656
 #, fuzzy
 msgid "Could not write ecstbl"
 msgstr "无法创建 %s"
 
-#: gen.c:1277
+#: gen.c:1271
 msgid ""
 "\n"
 "\n"
 "Meta-Equivalence Classes:\n"
 msgstr ""
 
-#: gen.c:1299
+#: gen.c:1293
 msgid "Could not write yymeta_tbl"
 msgstr ""
 
-#: gen.c:1360
+#: gen.c:1354
 #, fuzzy
 msgid "Could not write yybase_tbl"
 msgstr "无法创建 %s"
 
-#: gen.c:1394
+#: gen.c:1388
 msgid "Could not write yydef_tbl"
 msgstr ""
 
-#: gen.c:1434
+#: gen.c:1428
 msgid "Could not write yynxt_tbl"
 msgstr ""
 
-#: gen.c:1470
+#: gen.c:1464
 msgid "Could not write yychk_tbl"
 msgstr ""
 
-#: gen.c:1624 gen.c:1653
+#: gen.c:1618 gen.c:1647
 #, fuzzy
 msgid "Could not write ftbl"
 msgstr "无法创建 %s"
 
-#: gen.c:1630
+#: gen.c:1624
 #, fuzzy
 msgid "Could not write ssltbl"
 msgstr "无法创建 %s"
 
-#: gen.c:1681
+#: gen.c:1675
 #, fuzzy
 msgid "Could not write eoltbl"
 msgstr "无法创建 %s"
 
-#: gen.c:1741
+#: gen.c:1735
 msgid "Could not write yynultrans_tbl"
 msgstr ""
 
-#: main.c:187
+#: main.c:189
 msgid "rule cannot be matched"
 msgstr "无法匹配规则"
 
-#: main.c:192
+#: main.c:194
 msgid "-s option given but default rule can be matched"
 msgstr ""
 
-#: main.c:229
+#: main.c:234
 msgid "Can't use -+ with -l option"
 msgstr ""
 
-#: main.c:232
+#: main.c:237
 msgid "Can't use -f or -F with -l option"
 msgstr ""
 
-#: main.c:236
+#: main.c:241
 msgid "Can't use --reentrant or --bison-bridge with -l option"
 msgstr ""
 
-#: main.c:273
+#: main.c:278
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr ""
 
-#: main.c:276
+#: main.c:281
 msgid "-Cf/-CF and -I are incompatible"
 msgstr ""
 
-#: main.c:280
+#: main.c:285
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr ""
 
-#: main.c:285
+#: main.c:290
 msgid "-Cf and -CF are mutually exclusive"
 msgstr ""
 
-#: main.c:289
+#: main.c:294
 msgid "Can't use -+ with -CF option"
 msgstr ""
 
-#: main.c:292
+#: main.c:297
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr ""
 
-#: main.c:297
+#: main.c:302
 msgid "Options -+ and --reentrant are mutually exclusive."
 msgstr ""
 
-#: main.c:300
+#: main.c:305
 msgid "bison bridge not supported for the C++ scanner."
 msgstr ""
 
-#: main.c:352 main.c:400
+#: main.c:360 main.c:406
 #, c-format
 msgid "could not create %s"
 msgstr "无法创建 %s"
 
-#: main.c:413
+#: main.c:419
 #, fuzzy
 msgid "could not write tables header"
 msgstr "无法创建 %s"
 
-#: main.c:417
+#: main.c:423
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "无法打开骨架文件 %s"
 
-#: main.c:498
+#: main.c:505
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "读取骨架文件 %s 时输入错误"
 
-#: main.c:502
+#: main.c:509
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "关闭骨架文件 %s 出错"
 
-#: main.c:686
+#: main.c:694
 #, c-format
 msgid "error creating header file %s"
 msgstr "创建头文件 %s 出错"
 
-#: main.c:694
+#: main.c:702
 #, c-format
 msgid "error writing output file %s"
 msgstr "写入输出文件 %s 出错"
 
-#: main.c:698
+#: main.c:706
 #, c-format
 msgid "error closing output file %s"
 msgstr "关闭输出文件 %s 出错"
 
-#: main.c:702
+#: main.c:710
 #, c-format
 msgid "error deleting output file %s"
 msgstr "删除输出文件 %s 出错"
 
-#: main.c:709
+#: main.c:717
 #, c-format
 msgid "No backing up.\n"
 msgstr ""
 
-#: main.c:713
+#: main.c:721
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr ""
 
-#: main.c:717
+#: main.c:725
 #, c-format
 msgid "Compressed tables always back up.\n"
 msgstr ""
 
-#: main.c:720
+#: main.c:728
 #, c-format
 msgid "error writing backup file %s"
 msgstr "写入备份文件 %s 出错"
 
-#: main.c:724
+#: main.c:732
 #, c-format
 msgid "error closing backup file %s"
 msgstr "关闭备份文件 %s 出错"
 
-#: main.c:729
+#: main.c:737
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr ""
 
-#: main.c:732
+#: main.c:740
 #, c-format
 msgid "  scanner options: -"
 msgstr "  扫描器选项：-"
 
-#: main.c:811
+#: main.c:819
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr ""
 
-#: main.c:813
+#: main.c:821
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr ""
 
-#: main.c:815
+#: main.c:823
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d 条规则\n"
 
-#: main.c:820
+#: main.c:828
 #, c-format
 msgid "  No backing up\n"
 msgstr ""
 
-#: main.c:824
+#: main.c:832
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr ""
 
-#: main.c:829
+#: main.c:837
 #, c-format
 msgid "  Compressed tables always back-up\n"
 msgstr ""
 
-#: main.c:833
+#: main.c:841
 #, c-format
 msgid "  Beginning-of-line patterns used\n"
 msgstr ""
 
-#: main.c:835
+#: main.c:843
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr ""
 
-#: main.c:839
+#: main.c:847
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr ""
 
-#: main.c:843
+#: main.c:851
 #, c-format
 msgid "  no character classes\n"
 msgstr ""
 
-#: main.c:847
+#: main.c:855
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
 msgstr ""
 
-#: main.c:852
+#: main.c:860
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr ""
 
-#: main.c:855
+#: main.c:863
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr ""
 
-#: main.c:860
+#: main.c:868
 #, c-format
 msgid "  %d table entries\n"
 msgstr ""
 
-#: main.c:868
+#: main.c:876
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr ""
 
-#: main.c:872
+#: main.c:880
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr ""
 
-#: main.c:876
+#: main.c:884
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr ""
 
-#: main.c:880
+#: main.c:888
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr ""
 
-#: main.c:882
+#: main.c:890
 #, c-format
 msgid "  %d protos created\n"
 msgstr ""
 
-#: main.c:885
+#: main.c:893
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr ""
 
-#: main.c:893
+#: main.c:901
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr ""
 
-#: main.c:901
+#: main.c:909
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr ""
 
-#: main.c:907
+#: main.c:915
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr ""
 
-#: main.c:909
+#: main.c:917
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr ""
 
-#: main.c:911
+#: main.c:919
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr ""
 
-#: main.c:986
+#: main.c:996
 #, c-format
 msgid "Internal error. flexopts are malformed.\n"
 msgstr ""
 
-#: main.c:996
+#: main.c:1006
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr ""
 
-#: main.c:1053
+#: main.c:1063
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "未知的 -C 选项“%c”"
 
-#: main.c:1182
+#: main.c:1192
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
 
-#: main.c:1457
+#: main.c:1467
 msgid "fatal parse error"
 msgstr "致命的解析错误"
 
-#: main.c:1489
+#: main.c:1499
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr ""
 
-#: main.c:1510
+#: main.c:1520
 #, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
 msgstr ""
 
-#: main.c:1513
+#: main.c:1523
 #, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
 msgstr ""
 
-#: main.c:1519
+#: main.c:1529
 #, c-format
 msgid ""
 "%%option yylineno entails a performance penalty ONLY on rules that can match "
 "newline characters\n"
 msgstr ""
 
-#: main.c:1526
+#: main.c:1536
 #, c-format
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr ""
 
-#: main.c:1531
+#: main.c:1541
 #, c-format
 msgid "yymore() entails a minor performance penalty\n"
 msgstr ""
 
-#: main.c:1537
+#: main.c:1547
 #, c-format
 msgid "REJECT entails a large performance penalty\n"
 msgstr ""
 
-#: main.c:1542
+#: main.c:1552
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr ""
 
-#: main.c:1554
+#: main.c:1564
 msgid "REJECT cannot be used with -f or -F"
 msgstr ""
 
-#: main.c:1557
+#: main.c:1567
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr ""
 
-#: main.c:1560
+#: main.c:1570
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr ""
 
-#: main.c:1675
+#: main.c:1691
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
 msgstr ""
 
-#: main.c:1782
+#: main.c:1798
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "用法：%s [选项] [文件]...\n"
 
-#: main.c:1785
+#: main.c:1801
 #, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -660,107 +656,120 @@ msgstr ""
 msgid "too many rules (> %d)!"
 msgstr "规则过多 (> %d)！"
 
-#: parse.y:183
+#: parse.y:159
 msgid "unknown error processing section 1"
 msgstr "未知的错误处理节 1"
 
-#: parse.y:208 parse.y:373
+#: parse.y:184 parse.y:351
 msgid "bad start condition list"
 msgstr "错误的起始状态列表"
 
-#: parse.y:337
+#: parse.y:315
 msgid "unrecognized rule"
 msgstr "不能识别的规则"
 
-#: parse.y:456 parse.y:469 parse.y:538
+#: parse.y:434 parse.y:447 parse.y:516
 msgid "trailing context used twice"
 msgstr ""
 
-#: parse.y:574 parse.y:584 parse.y:657 parse.y:667
+#: parse.y:552 parse.y:562 parse.y:635 parse.y:645
 msgid "bad iteration values"
 msgstr ""
 
-#: parse.y:602 parse.y:620 parse.y:685 parse.y:703
+#: parse.y:580 parse.y:598 parse.y:663 parse.y:681
 msgid "iteration value must be positive"
 msgstr ""
 
-#: parse.y:817 parse.y:827
+#: parse.y:806 parse.y:816
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
 msgstr ""
 
-#: parse.y:832
+#: parse.y:821
 msgid "negative range in character class"
 msgstr ""
 
-#: scan.l:70 scan.l:180 scan.l:267 scan.l:409 scan.l:548 scan.l:598
+#: parse.y:918
+msgid "[:^lower:] is ambiguous in case insensitive scanner"
+msgstr ""
+
+#: parse.y:924
+msgid "[:^upper:] ambiguous in case insensitive scanner"
+msgstr ""
+
+#: scan.l:75 scan.l:192 scan.l:300 scan.l:443 scan.l:618 scan.l:676
 msgid "Input line too long\n"
 msgstr ""
 
-#: scan.l:149
+#: scan.l:161
 #, c-format
 msgid "malformed '%top' directive"
 msgstr ""
 
-#: scan.l:171
+#: scan.l:183
 #, no-c-format
 msgid "unrecognized '%' directive"
 msgstr ""
 
-#: scan.l:251
+#: scan.l:284
 msgid "Unmatched '{'"
 msgstr ""
 
-#: scan.l:284
+#: scan.l:317
 msgid "incomplete name definition"
 msgstr "不完整的名称定义"
 
-#: scan.l:417
+#: scan.l:451
 #, c-format
 msgid "unrecognized %%option: %s"
 msgstr "不能识别的 %%选项：%s"
 
-#: scan.l:558 scan.l:677
+#: scan.l:633 scan.l:800
 msgid "bad character class"
 msgstr "错误的字符类别"
 
-#: scan.l:605
+#: scan.l:683
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "未定义的定义 {%s}"
 
-#: scan.l:645
+#: scan.l:755
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "错误 <起始条件>：%s"
 
-#: scan.l:658
+#: scan.l:768
 msgid "missing quote"
 msgstr "遗漏引号"
 
-#: scan.l:698
+#: scan.l:834
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "错误的字符类别表达式：%s"
 
-#: scan.l:720
+#: scan.l:856
 msgid "bad character inside {}'s"
 msgstr ""
 
-#: scan.l:726
+#: scan.l:862
 msgid "missing }"
 msgstr "遗漏 }"
 
-#: scan.l:799
+#: scan.l:940
 msgid "EOF encountered inside an action"
 msgstr "在动作中文件结束"
 
-#: scan.l:819
+#: scan.l:945
+#, fuzzy
+msgid "EOF encountered inside pattern"
+msgstr "在动作中文件结束"
+
+#: scan.l:967
 #, c-format
 msgid "bad character: %s"
 msgstr "错误的字符：%s"
 
-#: scan.l:848
+#: scan.l:996
 #, c-format
 msgid "can't open %s"
 msgstr "无法打开 %s"
@@ -799,11 +808,11 @@ msgstr "未知错误=(%d)\n"
 msgid "symbol table memory allocation failed"
 msgstr "符号表内存分配失败"
 
-#: sym.c:203
+#: sym.c:202
 msgid "name defined twice"
 msgstr "名称定义了两次"
 
-#: sym.c:254
+#: sym.c:253
 #, c-format
 msgid "start condition %s declared twice"
 msgstr "起始条件 %s 声明了两次"
@@ -821,6 +830,9 @@ msgstr ""
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr ""
+
+#~ msgid "consistency check failed in symfollowset"
+#~ msgstr "symfollowset 中的一致性检查失败"
 
 #~ msgid "unknown -R option '%c'"
 #~ msgstr "未知的 -R 选项“%c”"
