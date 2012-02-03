@@ -968,6 +968,10 @@ void build_eof_action()
 		else
 			{
 			sceof[scon_stk[i]] = true;
+
+			if (previous_continued_action /* && previous action was regular */)
+				add_action("YY_RULE_SETUP\n");
+
 			snprintf( action_text, sizeof(action_text), "case YY_STATE_EOF(%s):\n",
 				scname[scon_stk[i]] );
 			add_action( action_text );
