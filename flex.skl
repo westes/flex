@@ -218,6 +218,7 @@ m4preproc_include(`flexint.h')
 #include <iostream> 
 #include <errno.h>
 #include <cstdlib>
+#include <cstdio>
 #include <cstring>
 /* end standard C++ headers. */
 %endif
