@@ -18,7 +18,7 @@ See the file COPYING for copying conditions.
    compiled files
 
 ** new translations from the translation project: ca, da, es, fi, fr,
-   ga, ko, pt_br, ro, ru, sv, zh_cn
+   ga, ko, pt_br, ro, ru, sv, tr, zh_cn
 
 ** the flex distribution is now built with automake 1.10.1 and automake
    2.61
