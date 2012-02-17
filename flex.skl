@@ -2055,25 +2055,6 @@ static void yy_load_buffer_state  YYFARGS0(void)
 }
 
 
-%if-c-only
-m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]],,
-[[
-    m4_ifdef( [[M4_YY_NEVER_INTERACTIVE]],,
-    [[
-#ifndef __cplusplus
-extern int isatty M4_YY_PARAMS( int );
-#endif /* __cplusplus */
-    ]])
-]])
-%endif
-
-%if-c++-only
-m4_ifdef( [[M4_YY_NEVER_INTERACTIVE]],,
-[[
-extern "C" int isatty M4_YY_PARAMS( int );
-]])
-%endif
-
 /* Initializes or reinitializes a buffer.
  * This function is sometimes called more than once on the same buffer,
  * such as during a yyrestart() or at EOF.
