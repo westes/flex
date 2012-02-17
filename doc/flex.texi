@@ -19,8 +19,8 @@
 The flex manual is placed under the same licensing conditions as the
 rest of flex:
 
-Copyright @copyright{} 2001, 2002, 2003, 2004, 2005, 2006, 2007 The Flex
-Project.
+Copyright @copyright{} 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
 
 Copyright @copyright{} 1990, 1997 The Regents of the University of California.
 All rights reserved.
@@ -8518,17 +8518,29 @@ more efficient when used with automatic line number processing. @xref{option-yyl
 @table @asis
 
 @item IPv4 Address
-@code{(([[:digit:]]@{1,3@}".")@{3@}([[:digit:]]@{1,3@}))}
+@verbatim
+dec-octet     [0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]
+IPv4address   {dec-octet}\.{dec-octet}\.{dec-octet}\.{dec-octet}
+@end verbatim
 
 @item IPv6 Address
 @verbatim
-hex4         ([[:xdigit:]]{1,4})
-hexseq       ({hex4}(:{hex4}*))
-hexpart      ({hexseq}|({hexseq}::({hexseq}?))|::{hexseq})
-IPv6address  ({hexpart}(":"{IPv4address})?)
+h16           [0-9A-Fa-f]{1,4}
+ls32          {h16}:{h16}|{IPv4address}
+IPv6address   ({h16}:){6}{ls32}|
+              ::({h16}:){5}{ls32}|
+              ({h16})?::({h16}:){4}{ls32}|
+              (({h16}:){0,1}{h16})?::({h16}:){3}{ls32}|
+              (({h16}:){0,2}{h16})?::({h16}:){2}{ls32}|
+              (({h16}:){0,3}{h16})?::{h16}:{ls32}|
+              (({h16}:){0,4}{h16})?::{ls32}|
+              (({h16}:){0,5}{h16})?::{h16}|
+              (({h16}:){0,6}{h16})?::
 @end verbatim
 
-See RFC2373 for details.
+See @uref{http://www.ietf.org/rfc/rfc2373.txt, RFC 2373} for details.
+Note that you have to fold the definition of @code{IPv6address} into one
+line and that it also matches the ``unspecified address'' ``::''.
 
 @item URI
 @code{(([^:/?#]+):)?("//"([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?}
