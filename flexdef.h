@@ -849,8 +849,8 @@ extern int all_lower PROTO ((register char *));
 /* True if a string is all upper case. */
 extern int all_upper PROTO ((register char *));
 
-/* Bubble sort an integer array. */
-extern void bubble PROTO ((int[], int));
+/* Compare two integers for use by qsort. */
+extern int intcmp PROTO ((const void *, const void *));
 
 /* Check a character to make sure it's in the expected range. */
 extern void check_char PROTO ((int c));
@@ -864,8 +864,8 @@ extern char *copy_string PROTO ((register const char *));
 /* Returns a dynamically allocated copy of a (potentially) unsigned string. */
 extern Char *copy_unsigned_string PROTO ((register Char *));
 
-/* Shell sort a character array. */
-extern void cshell PROTO ((Char[], int, int));
+/* Compare two characters for use by qsort with '\0' sorting last. */
+extern int cclcmp PROTO ((const void *, const void *));
 
 /* Finish up a block of data declarations. */
 extern void dataend PROTO ((void));

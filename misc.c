@@ -210,33 +210,11 @@ int all_upper (str)
 }
 
 
-/* bubble - bubble sort an integer array in increasing order
- *
- * synopsis
- *   int v[n], n;
- *   void bubble( v, n );
- *
- * description
- *   sorts the first n elements of array v and replaces them in
- *   increasing order.
- *
- * passed
- *   v - the array to be sorted
- *   n - the number of elements of 'v' to be sorted
- */
+/* intcmp - compares two integers for use by qsort. */
 
-void bubble (v, n)
-     int v[], n;
+int intcmp (const void *a, const void *b)
 {
-	register int i, j, k;
-
-	for (i = n; i > 1; --i)
-		for (j = 1; j < i; ++j)
-			if (v[j] > v[j + 1]) {	/* compare */
-				k = v[j];	/* exchange */
-				v[j] = v[j + 1];
-				v[j + 1] = k;
-			}
+  return *(const int *) a - *(const int *) b;
 }
 
 
@@ -316,52 +294,17 @@ Char   *copy_unsigned_string (str)
 }
 
 
-/* cshell - shell sort a character array in increasing order
- *
- * synopsis
- *
- *   Char v[n];
- *   int n, special_case_0;
- *   cshell( v, n, special_case_0 );
- *
- * description
- *   Does a shell sort of the first n elements of array v.
- *   If special_case_0 is true, then any element equal to 0
- *   is instead assumed to have infinite weight.
- *
- * passed
- *   v - array to be sorted
- *   n - number of elements of v to be sorted
- */
+/* cclcmp - compares two characters for use by qsort with '\0' sorting last. */
 
-void cshell (v, n, special_case_0)
-     Char v[];
-     int n, special_case_0;
+int cclcmp (const void *a, const void *b)
 {
-	int     gap, i, j, jg;
-	Char    k;
-
-	for (gap = n / 2; gap > 0; gap = gap / 2)
-		for (i = gap; i < n; ++i)
-			for (j = i - gap; j >= 0; j = j - gap) {
-				jg = j + gap;
-
-				if (special_case_0) {
-					if (v[jg] == 0)
-						break;
-
-					else if (v[j] != 0
-						 && v[j] <= v[jg])
-						break;
-				}
-
-				else if (v[j] <= v[jg])
-					break;
-
-				k = v[j];
-				v[j] = v[jg];
-				v[jg] = k;
-			}
+  if (!*(const Char *) a)
+	return 1;
+  else
+	if (!*(const Char *) b)
+	  return - 1;
+	else
+	  return *(const Char *) a - *(const Char *) b;
 }
 
 

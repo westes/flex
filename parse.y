@@ -723,11 +723,9 @@ singleton	:  singleton '*'
 
 		|  fullccl
 			{
-				/* Sort characters for fast searching.  We
-				 * use a shell sort since this list could
-				 * be large.
+				/* Sort characters for fast searching.
 				 */
-				cshell( ccltbl + cclmap[$1], ccllen[$1], true );
+				qsort( ccltbl + cclmap[$1], ccllen[$1], sizeof (*ccltbl), cclcmp );
 
 			if ( useecs )
 				mkeccl( ccltbl + cclmap[$1], ccllen[$1],
