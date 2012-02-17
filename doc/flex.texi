@@ -8533,9 +8533,9 @@ See RFC2373 for details.
 @item URI
 @code{(([^:/?#]+):)?("//"([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?}
 
-This pattern is nearly useless, since it allows just about any character to
-appear in a URI, including spaces and control characters.  See RFC2396 for
-details.
+This pattern is nearly useless, since it allows just about any character
+to appear in a URI, including spaces and control characters.  See
+@uref{http://www.ietf.org/rfc/rfc2396.txt, RFC 2396} for details.
 
 @end table
 
