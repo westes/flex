@@ -1438,12 +1438,12 @@ avoid a name clash with the @code{C++} stream by the name of
 @code{input}.)
 
 @cindex flushing the internal buffer
-@cindex YY_FLUSH_BUFFER()
-@code{YY_FLUSH_BUFFER()} flushes the scanner's internal buffer so that
+@cindex YY_FLUSH_BUFFER
+@code{YY_FLUSH_BUFFER;} flushes the scanner's internal buffer so that
 the next time the scanner attempts to match a token, it will first
 refill the buffer using @code{YY_INPUT()} (@pxref{Generated Scanner}).
 This action is a special case of the more general
-@code{yy_flush_buffer()} function, described below (@pxref{Multiple
+@code{yy_flush_buffer;} function, described below (@pxref{Multiple
 Input Buffers})
 
 @cindex yyterminate()
