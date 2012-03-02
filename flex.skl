@@ -2613,7 +2613,7 @@ void yyset_lineno YYFARGS1( int ,line_number)
     [[
         /* lineno is only valid if an input buffer exists. */
         if (! YY_CURRENT_BUFFER )
-           yy_fatal_error( "yyset_lineno called with no buffer" M4_YY_CALL_LAST_ARG); 
+           YY_FATAL_ERROR( "yyset_lineno called with no buffer" );
     ]])
     yylineno = line_number;
 }
@@ -2635,7 +2635,7 @@ void yyset_column YYFARGS1( int , column_no)
     [[
         /* column is only valid if an input buffer exists. */
         if (! YY_CURRENT_BUFFER )
-           yy_fatal_error( "yyset_column called with no buffer" M4_YY_CALL_LAST_ARG); 
+           YY_FATAL_ERROR( "yyset_column called with no buffer" );
     ]])
     yycolumn = column_no;
 }
@@ -3030,7 +3030,7 @@ static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *
         return -1;
 
     if (th->th_magic != YYTBL_MAGIC){
-        yy_fatal_error("bad magic number" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);
+        YY_FATAL_ERROR( "bad magic number" );   /* TODO: not fatal. */
         return -1;
     }
 
@@ -3041,7 +3041,7 @@ static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *
 
     /* Sanity check on header size. Greater than 1k suggests some funny business. */
     if (th->th_hsize < 16 || th->th_hsize > 1024){
-        yy_fatal_error("insane header size detected" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);
+        YY_FATAL_ERROR( "insane header size detected" );   /* TODO: not fatal. */
         return -1;
     }
 
@@ -3106,7 +3106,7 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
     transdmap = yytbl_dmap_lookup (dmap, YYTD_ID_TRANSITION M4_YY_CALL_LAST_ARG);
 
     if ((dmap = yytbl_dmap_lookup (dmap, td.td_id M4_YY_CALL_LAST_ARG)) == NULL){
-        yy_fatal_error("table id not found in map." /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);
+        YY_FATAL_ERROR( "table id not found in map." );   /* TODO: not fatal. */
         return -1;
     }
 
@@ -3173,7 +3173,7 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
                 t32 = t8;
                 break;
             default: 
-                yy_fatal_error("invalid td_flags" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);
+                YY_FATAL_ERROR( "invalid td_flags" );   /* TODO: not fatal. */
                 return -1;
             }
             }
@@ -3193,26 +3193,26 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
                 case sizeof (flex_int32_t):
                     if (M4_YY_TABLES_VERIFY){
                         if( ((flex_int32_t *) v)[0] != (flex_int32_t) t32)
-                           yy_fatal_error("tables verification failed at YYTD_STRUCT flex_int32_t" M4_YY_CALL_LAST_ARG);
+                           YY_FATAL_ERROR( "tables verification failed at YYTD_STRUCT flex_int32_t" );
                     }else
                         ((flex_int32_t *) v)[0] = (flex_int32_t) t32;
                     break;
                 case sizeof (flex_int16_t):
                     if (M4_YY_TABLES_VERIFY ){
                         if(((flex_int16_t *) v)[0] != (flex_int16_t) t32)
-                        yy_fatal_error("tables verification failed at YYTD_STRUCT flex_int16_t" M4_YY_CALL_LAST_ARG);
+                        YY_FATAL_ERROR( "tables verification failed at YYTD_STRUCT flex_int16_t" );
                     }else
                         ((flex_int16_t *) v)[0] = (flex_int16_t) t32;
                     break;
                 case sizeof(flex_int8_t):
                     if (M4_YY_TABLES_VERIFY ){
                          if( ((flex_int8_t *) v)[0] != (flex_int8_t) t32)
-                        yy_fatal_error("tables verification failed at YYTD_STRUCT flex_int8_t" M4_YY_CALL_LAST_ARG);
+                        YY_FATAL_ERROR( "tables verification failed at YYTD_STRUCT flex_int8_t" );
                     }else
                         ((flex_int8_t *) v)[0] = (flex_int8_t) t32;
                     break;
                 default:
-                    yy_fatal_error("invalid dmap->dm_sz for struct" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);
+                    YY_FATAL_ERROR( "invalid dmap->dm_sz for struct" );   /* TODO: not fatal. */
                     return -1;
                 }
 
@@ -3226,7 +3226,7 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 
 
                 if (!transdmap){
-                    yy_fatal_error("transition table not found" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);
+                    YY_FATAL_ERROR( "transition table not found" );   /* TODO: not fatal. */
                     return -1;
                 }
                 
@@ -3237,7 +3237,7 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 
                 if(M4_YY_TABLES_VERIFY ){
                     if( ((struct yy_trans_info **) p)[0] != v)
-                        yy_fatal_error("tables verification failed at YYTD_PTRANS" M4_YY_CALL_LAST_ARG);
+                        YY_FATAL_ERROR( "tables verification failed at YYTD_PTRANS" );
                 }else
                     ((struct yy_trans_info **) p)[0] = v;
                 
@@ -3250,7 +3250,7 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
                 case sizeof (flex_int32_t):
                     if(M4_YY_TABLES_VERIFY ){
                         if( ((flex_int32_t *) p)[0] != (flex_int32_t) t32)
-                        yy_fatal_error("tables verification failed at flex_int32_t" M4_YY_CALL_LAST_ARG);
+                        YY_FATAL_ERROR( "tables verification failed at flex_int32_t" );
                     }else
                         ((flex_int32_t *) p)[0] = (flex_int32_t) t32;
                     p = ((flex_int32_t *) p) + 1;
@@ -3258,7 +3258,7 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
                 case sizeof (flex_int16_t):
                     if(M4_YY_TABLES_VERIFY ){
                         if( ((flex_int16_t *) p)[0] != (flex_int16_t) t32)
-                        yy_fatal_error("tables verification failed at flex_int16_t" M4_YY_CALL_LAST_ARG);
+                        YY_FATAL_ERROR( "tables verification failed at flex_int16_t" );
                     }else
                         ((flex_int16_t *) p)[0] = (flex_int16_t) t32;
                     p = ((flex_int16_t *) p) + 1;
@@ -3266,13 +3266,13 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
                 case sizeof (flex_int8_t):
                     if(M4_YY_TABLES_VERIFY ){
                         if( ((flex_int8_t *) p)[0] != (flex_int8_t) t32)
-                        yy_fatal_error("tables verification failed at flex_int8_t" M4_YY_CALL_LAST_ARG);
+                        YY_FATAL_ERROR( "tables verification failed at flex_int8_t" );
                     }else
                         ((flex_int8_t *) p)[0] = (flex_int8_t) t32;
                     p = ((flex_int8_t *) p) + 1;
                     break;
                 default:
-                    yy_fatal_error("invalid dmap->dm_sz for plain int" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);
+                    YY_FATAL_ERROR( "invalid dmap->dm_sz for plain int" );   /* TODO: not fatal. */
                     return -1;
                 }
             }

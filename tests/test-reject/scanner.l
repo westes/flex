@@ -52,17 +52,17 @@ int main ( int argc, char** argv )
 
 #ifdef TEST_HAS_TABLES_EXTERNAL
     if((fp  = fopen(argv[1],"r"))== NULL)
-        yy_fatal_error("could not open tables file for reading" M4_YY_CALL_LAST_ARG);
+        YY_FATAL_ERROR("could not open tables file for reading");
 
     if(yytables_fload(fp M4_YY_CALL_LAST_ARG) < 0)
-        yy_fatal_error("yytables_fload returned < 0" M4_YY_CALL_LAST_ARG);
+        YY_FATAL_ERROR("yytables_fload returned < 0");
     if(M4_YY_TABLES_VERIFY)
         exit(0);
 #endif
     
     if(argc > 2){
         if((fp  = fopen(argv[2],"r"))== NULL)
-            yy_fatal_error("could not open input file for reading" M4_YY_CALL_LAST_ARG);
+            YY_FATAL_ERROR("could not open input file for reading");
         yyin = fp;
     }
     while(yylex(M4_YY_CALL_ONLY_ARG) != 0)
