@@ -456,11 +456,7 @@ void line_directive_out (output_file, do_infile)
 	if (do_infile)
 		snprintf (directive, sizeof(directive), line_fmt, linenum, filename);
 	else {
-		if (output_file == stdout)
-			/* Account for the line directive itself. */
-			++out_linenum;
-
-		snprintf (directive, sizeof(directive), line_fmt, out_linenum, filename);
+		snprintf (directive, sizeof(directive), line_fmt, 0, filename);
 	}
 
 	/* If output_file is nil then we should put the directive in
@@ -677,7 +673,6 @@ void out (str)
      const char *str;
 {
 	fputs (str, stdout);
-	out_line_count (str);
 }
 
 void out_dec (fmt, n)
@@ -685,7 +680,6 @@ void out_dec (fmt, n)
      int n;
 {
 	fprintf (stdout, fmt, n);
-	out_line_count (fmt);
 }
 
 void out_dec2 (fmt, n1, n2)
@@ -693,7 +687,6 @@ void out_dec2 (fmt, n1, n2)
      int n1, n2;
 {
 	fprintf (stdout, fmt, n1, n2);
-	out_line_count (fmt);
 }
 
 void out_hex (fmt, x)
@@ -701,35 +694,18 @@ void out_hex (fmt, x)
      unsigned int x;
 {
 	fprintf (stdout, fmt, x);
-	out_line_count (fmt);
-}
-
-void out_line_count (str)
-     const char *str;
-{
-	register int i;
-
-	for (i = 0; str[i]; ++i)
-		if (str[i] == '\n')
-			++out_linenum;
 }
 
 void out_str (fmt, str)
      const char *fmt, str[];
 {
 	fprintf (stdout,fmt, str);
-	out_line_count (fmt);
-	out_line_count (str);
 }
 
 void out_str3 (fmt, s1, s2, s3)
      const char *fmt, s1[], s2[], s3[];
 {
 	fprintf (stdout,fmt, s1, s2, s3);
-	out_line_count (fmt);
-	out_line_count (s1);
-	out_line_count (s2);
-	out_line_count (s3);
 }
 
 void out_str_dec (fmt, str, n)
@@ -737,17 +713,12 @@ void out_str_dec (fmt, str, n)
      int n;
 {
 	fprintf (stdout,fmt, str, n);
-	out_line_count (fmt);
-	out_line_count (str);
 }
 
 void outc (c)
      int c;
 {
 	fputc (c, stdout);
-
-	if (c == '\n')
-		++out_linenum;
 }
 
 void outn (str)
@@ -755,8 +726,6 @@ void outn (str)
 {
 	fputs (str,stdout);
     fputc('\n',stdout);
-	out_line_count (str);
-	++out_linenum;
 }
 
 /** Print "m4_define( [[def]], [[val]])m4_dnl\n".

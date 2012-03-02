@@ -416,7 +416,6 @@ extern int yymore_really_used, reject_really_used;
  * dataline - number of contiguous lines of data in current data
  * 	statement.  Used to generate readable -f output
  * linenum - current input line number
- * out_linenum - current output line number
  * skelfile - the skeleton file
  * skel - compiled-in skeleton array
  * skel_ind - index into "skel" array, if skelfile is nil
@@ -444,7 +443,7 @@ extern int yymore_really_used, reject_really_used;
  * 	to "action_array"
  */
 
-extern int datapos, dataline, linenum, out_linenum;
+extern int datapos, dataline, linenum;
 extern FILE *skelfile, *yyin, *backing_up_file;
 extern const char *skel[];
 extern int skel_ind;
@@ -939,7 +938,6 @@ extern void out PROTO ((const char *));
 extern void out_dec PROTO ((const char *, int));
 extern void out_dec2 PROTO ((const char *, int, int));
 extern void out_hex PROTO ((const char *, unsigned int));
-extern void out_line_count PROTO ((const char *));
 extern void out_str PROTO ((const char *, const char *));
 extern void out_str3
 PROTO ((const char *, const char *, const char *, const char *));

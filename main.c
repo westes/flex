@@ -57,7 +57,7 @@ int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
 int     reentrant, bison_bridge_lval, bison_bridge_lloc;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
-int     datapos, dataline, linenum, out_linenum;
+int     datapos, dataline, linenum;
 FILE   *skelfile = NULL;
 int     skel_ind = 0;
 char   *action_array;
@@ -1443,7 +1443,7 @@ void flexinit (argc, argv)
 	num_backing_up = onesp = numprots = 0;
 	variable_trailing_context_rules = bol_needed = false;
 
-	out_linenum = linenum = sectnum = 1;
+	linenum = sectnum = 1;
 	firstprot = NIL;
 
 	/* Used in mkprot() so that the first proto goes in slot 1
