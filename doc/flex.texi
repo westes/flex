@@ -5086,8 +5086,8 @@ indexed by name, as described below. The file format is as follows:
                 +-------------------------------+
         Table 1 | uint16          td_id;        |
                 | uint16          td_flags;     |
-                | uint32          td_lolen;     |
                 | uint32          td_hilen;     |
+                | uint32          td_lolen;     |
                 | void            td_data[];    |
                 | uint8           td_pad64[];   |
                 +-------------------------------+
@@ -5206,11 +5206,6 @@ two integers. There is no padding between struct elements or between structs.
 The type of each member is determined by the @code{YYTD_DATA*} bits.
 @end table
 
-@item td_lolen
-Specifies the number of elements in the lowest dimension array. If this is
-a one-dimensional array, then it is simply the number of elements in this array.
-The element size is determined by the @code{td_flags} field.
-
 @item td_hilen
 If @code{td_hilen} is non-zero, then the data is a two-dimensional array.
 Otherwise, the data is a one-dimensional array. @code{td_hilen} contains the
@@ -5224,11 +5219,16 @@ by the @code{td_flags} field.  It is possible for both @code{td_lolen} and
 array, and no data is loaded, i.e., this table is simply skipped. Flex does not
 currently generate tables of zero length.
 
+@item td_lolen
+Specifies the number of elements in the lowest dimension array. If this is
+a one-dimensional array, then it is simply the number of elements in this array.
+The element size is determined by the @code{td_flags} field.
+
 @item td_data[]
 The table data. This array may be a one- or two-dimensional array, of type
 @code{int8}, @code{int16}, @code{int32}, @code{struct yy_trans_info}, or
 @code{struct yy_trans_info*},  depending upon the values in the
-@code{td_flags}, @code{td_lolen}, and @code{td_hilen} fields.
+@code{td_flags}, @code{td_hilen}, and @code{td_lolen} fields.
 
 @item td_pad64[]
 Zero or more NULL bytes, padding the entire table to the next 64-bit boundary as
