@@ -963,6 +963,22 @@ m4_ifdef( [[M4_YY_NO_SET_LINENO]],,
 void yyset_lineno M4_YY_PARAMS( int line_number M4_YY_PROTO_LAST_ARG );
 ]])
 
+m4_ifdef( [[M4_YY_REENTRANT]],
+[[
+m4_ifdef( [[M4_YY_NO_GET_COLUMN]],,
+[[
+int yyget_column  M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
+]])
+]])
+
+m4_ifdef( [[M4_YY_REENTRANT]],
+[[
+m4_ifdef( [[M4_YY_NO_SET_COLUMN]],,
+[[
+void yyset_column M4_YY_PARAMS( int column_no M4_YY_PROTO_LAST_ARG );
+]])
+]])
+
 %if-bison-bridge
 m4_ifdef( [[M4_YY_NO_GET_LVAL]],,
 [[
