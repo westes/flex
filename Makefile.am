@@ -66,6 +66,9 @@ flex_SOURCES = \
 	filter.c \
 	regex.c
 
+
+LDADD = lib/libcompat.a
+
 libfl_a_SOURCES = \
 	libmain.c \
 	libyywrap.c
@@ -113,6 +116,7 @@ BUILT_SOURCES = \
 	skel.c
 
 SUBDIRS = \
+	lib \
 	. \
 	doc \
 	examples \
