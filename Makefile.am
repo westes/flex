@@ -205,4 +205,8 @@ indent:
 	done \
 	fi
 
+install-exec-hook:
+	cd $(DESTDIR)/$(bindir) && \
+		$(LN_S)  flex$(EXEEXT) flex++$(EXEEXT)
+
 .PHONY: ChangeLog tags indent
