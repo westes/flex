@@ -90,13 +90,20 @@ struct Buf *buf_prints (struct Buf *buf, const char *fmt, const char *s)
  */
 struct Buf *buf_linedir (struct Buf *buf, const char* filename, int lineno)
 {
-    char   *t, *fmt = "#line %d \"%s\"\n";
-    size_t tsz;
-    
-    t = flex_alloc (tsz = strlen (fmt) + strlen (filename) + (int)(1 + log10(lineno>=0?lineno:-lineno)) + 1);
+    char *dst, *src, *t;
+
+    t = flex_alloc (strlen ("#line \"\"\n")          +   /* constant parts */
+                    2 * strlen (filename)            +   /* filename with possibly all backslashes escaped */
+                    (int) (1 + log10 (abs (lineno))) +   /* line number */
+                    1);                                  /* NUL */
     if (!t)
-        flexfatal (_("Allocation of buffer for line directive failed"));
-    snprintf (t, tsz, fmt, lineno, filename);
+      flexfatal (_("Allocation of buffer for line directive failed"));
+    for (dst = t + sprintf (t, "#line %d \"", lineno), src = filename; *src; *dst++ = *src++)
+      if (*src == '\\')   /* escape backslashes */
+        *dst++ = '\\';
+    *dst++ = '"';
+    *dst++ = '\n';
+    *dst   = '\0';
     buf = buf_strappend (buf, t);
     flex_free (t);
     return buf;
