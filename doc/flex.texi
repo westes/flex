@@ -4812,7 +4812,7 @@ to change this in the near future, but we reserve the right to do so if we ever 
 API. 
 
 @item 64kb for the REJECT state. This will only be allocated if you use REJECT.
-The size is the large enough to hold the same number of states as characters in the input buffer. If you override the size of the
+The size is  large enough to hold the same number of states as characters in the input buffer. If you override the size of the
 input buffer (via @code{YY_BUF_SIZE}), then you automatically override the size of this buffer as well.
 
 @item 100 bytes for the start condition stack.
