@@ -1661,7 +1661,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 ]],
 [[
 			/* just a shorter name for the current buffer */
-			YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
+			YY_BUFFER_STATE b = YY_CURRENT_BUFFER_LVALUE;
 
 			int yy_c_buf_p_offset =
 				(int) (YY_G(yy_c_buf_p) - b->yy_ch_buf);
