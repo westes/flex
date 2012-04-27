@@ -8431,7 +8431,7 @@ in your scanner.
 @code{0[xX][[:xdigit:]]+}
 
 @item C99 octal constant
-@code{0[0123456]*}
+@code{0[01234567]*}
 
 @item C99 floating point constant
 @verbatim
