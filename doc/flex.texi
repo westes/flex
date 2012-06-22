@@ -4274,7 +4274,7 @@ it when done:
 
         yylex_init(&scanner);
 
-        while ((tok=yylex()) > 0)
+        while ((tok=yylex(scanner)) > 0)
             printf("tok=%d  yytext=%s\n", tok, yyget_text(scanner));
 
         yylex_destroy(scanner);
