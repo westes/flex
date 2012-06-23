@@ -2,7 +2,7 @@
 @c %**start of header
 @setfilename flex.info
 @include version.texi
-@settitle Lexical Analysis With Flex, for Flex @value{@version}
+@settitle Lexical Analysis With Flex, for Flex @value{VERSION}
 @set authors Vern Paxson, Will Estes and John Millaway
 @c  "Macro Hooks" index
 @defindex hk
