@@ -3,7 +3,7 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* version 2.5.36
+* version 2.5.36 released 2012-07-20
 
 ** various portability fixes that quiet compiler warnings on 64-bit
    hosts
