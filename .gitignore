@@ -31,3 +31,5 @@ skel.c
 stamp-*
 config.rpath
 ylwrap
+*.o
+*.a
