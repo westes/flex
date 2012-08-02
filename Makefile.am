@@ -158,11 +158,11 @@ tblcmp.o: tblcmp.c flexdef.h flexint.h
 yylex.o: yylex.c flexdef.h flexint.h parse.h
 filter.o: filter.c flexdef.h flexint.h
 
-# Create the ChangeLog, but only if we're inside a cvs working directory
+# Create the ChangeLog, but only if we're inside a git working directory
 
-ChangeLog: $(srcdir)/tools/cvsauthors $(srcdir)/tools/cvs2cl.pl
-	if [ -d CVS ] ; then \
-		sh $(srcdir)/tools/cvs2cl.pl -F trunk -U $(srcdir)/tools/cvsauthors \
+ChangeLog: $(srcdir)/tools/git2cl
+	if [ -d $(srcdir)/.git ] ; then \
+		$(srcdir)/tools/git2cl > $@ \
 	; fi
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
