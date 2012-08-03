@@ -3,6 +3,16 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* version 2.5.37 released 2012-08-03
+
+** Import flex into git. See
+   git://flex.git.sourceforge.net/gitroot/flex/flex.
+
+** Fix make install target to not fail when the flex++ program is
+   already installed
+
+** New translations from the translation project: de, fi, pl, vi
+
 * version 2.5.36 released 2012-07-20
 
 ** various portability fixes that quiet compiler warnings on 64-bit
