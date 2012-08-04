@@ -1972,7 +1972,7 @@ void make_tables ()
 		("if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )");
 	indent_up ();
 	indent_puts ("{");
-	indent_puts ("int yyl;");
+	indent_puts ("yy_size_t yyl;");
 	do_indent ();
 	out_str ("for ( yyl = %s; yyl < yyleng; ++yyl )\n",
 		 yymore_used ? (yytext_is_array ? "YY_G(yy_prev_more_offset)" :

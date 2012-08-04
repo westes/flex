@@ -2360,7 +2360,7 @@ YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,yybytes, yy_size_t ,_yyb
 	YY_BUFFER_STATE b;
 	char *buf;
 	yy_size_t n;
-	int i;
+	yy_size_t i;
     m4_dnl M4_YY_DECL_GUTS_VAR();
 
 	/* Get memory for full buffer, including space for trailing EOB's. */
