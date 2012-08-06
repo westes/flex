@@ -33,3 +33,6 @@ config.rpath
 ylwrap
 *.o
 *.a
+*~
+*.orig
+*.rej
