@@ -21,6 +21,8 @@
  * PURPOSE.
  */
 
+%parse-param { void* scanner }
+
 /* 
    How to compile:
    bison --defines --output-file="parser.c" --name-prefix="test" parser.y
@@ -32,10 +34,8 @@
 #include "config.h"
 
 #define YYERROR_VERBOSE 1
-#define YYPARSE_PARAM scanner
 #define YYLEX_PARAM   scanner
 
-int yyerror(char* msg);
 extern int testget_lineno(void*);
 
 
@@ -89,7 +89,7 @@ line:
 
 %%
 
-int yyerror(char* msg) {
+int yyerror(void* scanner, char* msg) {
     fprintf(stderr,"%s\n",msg);
     return 0;
 }

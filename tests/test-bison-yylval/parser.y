@@ -25,6 +25,7 @@
    How to compile:
    bison --defines --output-file="parser.c" --name-prefix="test" parser.y
  */
+%parse-param { void* scanner }
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,10 +33,7 @@
 #include "config.h"
 
 #define YYERROR_VERBOSE 1
-#define YYPARSE_PARAM scanner
 #define YYLEX_PARAM   scanner
-
-int yyerror(char* msg);
 
 
 /* A dummy function. A check against seg-faults in yylval->str. */
@@ -76,7 +74,7 @@ starttag:  LT      TAGNAME GT { process_text($2); free($2);} ;
 endtag:    LTSLASH TAGNAME GT { process_text($2);free($2);} ;
 %%
 
-int yyerror(char* msg) {
+int yyerror(void* scanner, char* msg) {
     fprintf(stderr,"%s\n",msg);
     return 0;
 }
