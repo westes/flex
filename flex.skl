@@ -727,6 +727,11 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 %% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
 
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
+[[
+%% [1.5] DFA
+]])
+
 %if-c-only Standard (non-C++) definition
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],

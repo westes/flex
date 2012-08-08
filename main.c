@@ -182,6 +182,8 @@ int flex_main (argc, argv)
 
 	readin ();
 
+	skelout ();
+	/* %% [1.5] DFA */
 	ntod ();
 
 	for (i = 1; i <= num_rules; ++i)
