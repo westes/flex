@@ -240,11 +240,6 @@ void check_options ()
 			flexerror (_
 				   ("Can't use --reentrant or --bison-bridge with -l option"));
 
-		/* Don't rely on detecting use of yymore() and REJECT,
-		 * just assume they'll be used.
-		 */
-		yymore_really_used = reject_really_used = true;
-
 		yytext_is_array = true;
 		do_yylineno = true;
 		use_read = false;
