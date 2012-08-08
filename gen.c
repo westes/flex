@@ -874,7 +874,7 @@ void gen_next_state (worry_about_NULs)
 
 	else
 		strcpy (char_map, useecs ?
-			"yy_ec[YY_SC_TO_UI(*yy_cp)]" :
+			"yy_ec[YY_SC_TO_UI(*yy_cp)] " :
 			"YY_SC_TO_UI(*yy_cp)");
 
 	if (worry_about_NULs && nultrans) {
