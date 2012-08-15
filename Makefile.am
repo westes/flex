@@ -99,7 +99,6 @@ dist_doc_DATA = \
 	NEWS \
 	ONEWS \
 	README \
-	README.cvs \
 	TODO
 
 EXTRA_DIST = \
