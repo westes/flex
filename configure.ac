@@ -27,7 +27,7 @@
 AC_INIT([the fast lexical analyser generator], [2.5.37],
 [flex-help@lists.sourceforge.net], [flex])
 AC_CONFIG_SRCDIR([scan.l])
-AM_INIT_AUTOMAKE([gnits dist-bzip2 1.10])
+AM_INIT_AUTOMAKE([gnits dist-bzip2 dist-xz 1.10])
 AC_CONFIG_HEADER([config.h:conf.in])
 AC_CONFIG_LIBOBJ_DIR([lib])
 
