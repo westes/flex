@@ -36,10 +36,10 @@ scanner.cpp: $(srcdir)/scanner.l
 	$(FLEX) $(LFLAGS) $<
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CXX) -o $@ $(LDFLAGS) $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(LDFLAGS) $(OBJS)
 
 test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT) $(srcdir)/test.input $(srcdir)/test.input $(srcdir)/test.input
 
 .cpp.o:
-	$(CXX) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<
+	$(CXX) $(CXXFLAGS) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $<

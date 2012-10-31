@@ -35,7 +35,7 @@ scanner.c: $(srcdir)/scanner.l
 
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	test `./$(testname)$(EXEEXT)   < $(srcdir)/test.input` -eq \

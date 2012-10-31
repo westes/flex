@@ -35,7 +35,7 @@ scanner.c: $(srcdir)/scanner.l
 	$(FLEX) $(LFLAGS) $<
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	grep TEST_XXX < $(srcdir)/scanner.l | sed 's/^ *//' > l.out

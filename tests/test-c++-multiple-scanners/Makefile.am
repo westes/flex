@@ -40,7 +40,7 @@ scanner-2.cpp: $(srcdir)/scanner-2.l
 	$(FLEX) -+ $(LFLAGS) $<
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CXX) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
+	$(CXX) $(CXXFLAGS) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	$(builddir)/$(testname)$(EXEEXT) < $(srcdir)/test.input

@@ -46,7 +46,7 @@ parser.h: parser.c
 main.o: scanner.h parser.h
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT) < $(srcdir)/test.input

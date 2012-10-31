@@ -87,13 +87,13 @@ test-ver-nr%.c: $(srcdir)/scanner.l
 	$(FLEX) -L -P $(subst -,_,$(basename $(@F))) --tables-file="test-ver-nr$*.tables" --tables-verify $* -o $@ $<
 
 test-opt%$(EXEEXT): test-opt%.o
-	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
 test-ser%$(EXEEXT): test-ser%.o
-	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
 test-ver%$(EXEEXT): test-ver%.o
-	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
 test-opt: $(optexe)
 	for t in $(optexe) ; do \

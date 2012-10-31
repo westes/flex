@@ -46,16 +46,16 @@ test-reject-r.c: $(srcdir)/scanner.l
 	$(FLEX) --reentrant -o $@ $(LFLAGS) $<
 
 test-reject-nr$(EXEEXT): test-reject-nr.o
-	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
 test-reject-ver$(EXEEXT): test-reject-ver.o
-	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
 test-reject-ser$(EXEEXT): test-reject-ser.o
-	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
 test-reject-r$(EXEEXT): test-reject-r.o
-	$(CC) -o $@ $(LDFLAGS) $< $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
 $(testname)$(EXEEXT): $(OBJS)
 

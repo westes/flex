@@ -36,7 +36,7 @@ scanner.c: $(srcdir)/scanner.l
 	POSIXLY_CORRECT=1 $(FLEX) $(LFLAGS) $<
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	./$(testname)$(EXEEXT)

@@ -37,7 +37,7 @@ scanner.c: $(srcdir)/scanner.l
 	$(FLEX) $(LFLAGS) $<
 
 $(testname)$(EXEEXT): $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) $(LOADLIBES)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
 	./$(testname) $(srcdir)/test-*.input
