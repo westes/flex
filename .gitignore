@@ -32,7 +32,11 @@ stamp-*
 config.rpath
 ylwrap
 *.o
-*.a
+.libs
+*.lo
+*.la
+libtool
+ltmain.sh
 *~
 *.orig
 *.rej
