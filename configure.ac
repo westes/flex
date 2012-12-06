@@ -26,6 +26,9 @@
 
 AC_INIT([the fast lexical analyser generator], [2.5.37],
 [flex-help@lists.sourceforge.net], [flex])
+SHARED_VERSION_INFO="2:0:0"
+AC_SUBST(SHARED_VERSION_INFO)
+
 AC_CONFIG_SRCDIR([scan.l])
 AM_INIT_AUTOMAKE([gnits dist-bzip2 dist-xz 1.10])
 AC_CONFIG_HEADER([config.h:conf.in])

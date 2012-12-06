@@ -73,9 +73,13 @@ libfl_la_SOURCES = \
 	libmain.c \
 	libyywrap.c
 
+libfl_la_LDFLAGS = -no-undefined -version-info @SHARED_VERSION_INFO@
+
 libfl_pic_la_SOURCES = \
 	libmain.c \
 	libyywrap.c
+
+libfl_pic_la_LDFLAGS = -no-undefined -version-info @SHARED_VERSION_INFO@
 
 noinst_HEADERS = \
 	flexdef.h \
