@@ -1,0 +1,928 @@
+# Traditional Chinese Messages for flex.
+# Copyright (C) 2002 The Flex Project (msgids)
+# This file is distributed under the same license as the flex package.
+# Wang Li <charles@linux.net.cn>, 2002.
+# Wei-Lun Chao <bluebat@member.fsf.org>, 2009, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: flex 2.5.37\n"
+"Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2012-07-22 20:48-0400\n"
+"PO-Revision-Date: 2013-02-12 23:23+0800\n"
+"Last-Translator: Wei-Lun Chao <bluebat@member.fsf.org>\n"
+"Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: buf.c:78
+msgid "Allocation of buffer to print string failed"
+msgstr "給予緩衝區配額以列印字串時失敗"
+
+#: buf.c:100
+msgid "Allocation of buffer for line directive failed"
+msgstr "給予緩衝區配額用於列指令時失敗"
+
+#: buf.c:177
+msgid "Allocation of buffer for m4 def failed"
+msgstr "給予緩衝區配額用於 m4 def 時失敗"
+
+#: buf.c:197
+msgid "Allocation of buffer for m4 undef failed"
+msgstr "給予緩衝區配額用於 m4 undef 時失敗"
+
+#: dfa.c:61
+#, c-format
+msgid "State #%d is non-accepting -\n"
+msgstr "#%d 正處於非存取狀態 -\n"
+
+#: dfa.c:124
+msgid "dangerous trailing context"
+msgstr "不安全的末端內文"
+
+#: dfa.c:166
+#, c-format
+msgid " associated rule line numbers:"
+msgstr " 關聯的規則列號："
+
+#: dfa.c:202
+#, c-format
+msgid " out-transitions: "
+msgstr " 外轉換："
+
+#: dfa.c:210
+#, c-format
+msgid ""
+"\n"
+" jam-transitions: EOF "
+msgstr ""
+"\n"
+" 合併轉換：檔案結尾 "
+
+#: dfa.c:341
+msgid "consistency check failed in epsclosure()"
+msgstr "epsclosure() 中的一致性檢查失敗"
+
+#: dfa.c:429
+msgid ""
+"\n"
+"\n"
+"DFA Dump:\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+" DFA 傾印：\n"
+"\n"
+
+#: dfa.c:604
+msgid "could not create unique end-of-buffer state"
+msgstr "無法建立獨一的緩衝區結尾狀態"
+
+#: dfa.c:625
+#, c-format
+msgid "state # %d:\n"
+msgstr "狀態 # %d：\n"
+
+#: dfa.c:785
+msgid "Could not write yynxt_tbl[][]"
+msgstr "無法寫入 yynxt_tbl[][]"
+
+#: dfa.c:1049
+msgid "bad transition character detected in sympartition()"
+msgstr "在 sympartition() 偵測到不當的轉換字元"
+
+#: gen.c:478
+msgid ""
+"\n"
+"\n"
+"Equivalence Classes:\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"等價類別：\n"
+"\n"
+
+#: gen.c:662 gen.c:691 gen.c:1215
+#, c-format
+msgid "state # %d accepts: [%d]\n"
+msgstr "狀態 # %d 接受：[%d]\n"
+
+#: gen.c:1110
+#, c-format
+msgid "state # %d accepts: "
+msgstr "狀態 # %d 接受："
+
+#: gen.c:1157
+msgid "Could not write yyacclist_tbl"
+msgstr "無法寫入 yyacclist_tbl"
+
+#: gen.c:1233
+msgid "Could not write yyacc_tbl"
+msgstr "無法寫入 yyacc_tbl"
+
+#: gen.c:1248 gen.c:1633 gen.c:1656
+msgid "Could not write ecstbl"
+msgstr "無法寫入 ecstbl"
+
+#: gen.c:1271
+msgid ""
+"\n"
+"\n"
+"Meta-Equivalence Classes:\n"
+msgstr ""
+"\n"
+"\n"
+" 後設等價類別：\n"
+
+#: gen.c:1293
+msgid "Could not write yymeta_tbl"
+msgstr "無法寫入 yymeta_tbl"
+
+#: gen.c:1354
+msgid "Could not write yybase_tbl"
+msgstr "無法寫入 yybase_tbl"
+
+#: gen.c:1388
+msgid "Could not write yydef_tbl"
+msgstr "無法寫入 yydef_tbl"
+
+#: gen.c:1428
+msgid "Could not write yynxt_tbl"
+msgstr "無法寫入 yynxt_tbl"
+
+#: gen.c:1464
+msgid "Could not write yychk_tbl"
+msgstr "無法寫入 yychk_tbl"
+
+#: gen.c:1618 gen.c:1647
+msgid "Could not write ftbl"
+msgstr "無法寫入 ftbl"
+
+#: gen.c:1624
+msgid "Could not write ssltbl"
+msgstr "無法寫入 ssltbl"
+
+#: gen.c:1675
+msgid "Could not write eoltbl"
+msgstr "無法寫入 eoltbl"
+
+#: gen.c:1735
+msgid "Could not write yynultrans_tbl"
+msgstr "無法寫入 yynultrans_tbl"
+
+#: main.c:189
+msgid "rule cannot be matched"
+msgstr "規則無法吻合"
+
+#: main.c:194
+msgid "-s option given but default rule can be matched"
+msgstr "-s 選項已給定但是可以吻合預設規則"
+
+#: main.c:234
+msgid "Can't use -+ with -l option"
+msgstr "無法將 -+ 與 -l 選項共同使用"
+
+#: main.c:237
+msgid "Can't use -f or -F with -l option"
+msgstr "無法將 -f 或 -F 與 -l 選項共同使用"
+
+#: main.c:241
+msgid "Can't use --reentrant or --bison-bridge with -l option"
+msgstr "無法將 --reentrant 或 --bison-bridge 與 -l 選項共同使用"
+
+#: main.c:278
+msgid "-Cf/-CF and -Cm don't make sense together"
+msgstr "-Cf/-CF 和 -Cm 共用時不具任何意義"
+
+#: main.c:281
+msgid "-Cf/-CF and -I are incompatible"
+msgstr "-Cf/-CF 和 -I 是不相容的"
+
+#: main.c:285
+msgid "-Cf/-CF are incompatible with lex-compatibility mode"
+msgstr "-Cf/-CF 與 lex 相容模式是不相容的"
+
+#: main.c:290
+msgid "-Cf and -CF are mutually exclusive"
+msgstr "-Cf 和 -CF 是互斥的"
+
+#: main.c:294
+msgid "Can't use -+ with -CF option"
+msgstr "無法將 -+ 與 -CF 選項共同使用"
+
+#: main.c:297
+#, c-format
+msgid "%array incompatible with -+ option"
+msgstr "%array 與 -+ 選項不相容"
+
+#: main.c:302
+msgid "Options -+ and --reentrant are mutually exclusive."
+msgstr "選項 -+ 和 --reentrant 是互斥的。"
+
+#: main.c:305
+msgid "bison bridge not supported for the C++ scanner."
+msgstr "bison 橋接器不受 C++ 掃描程式支援。"
+
+#: main.c:360 main.c:406
+#, c-format
+msgid "could not create %s"
+msgstr "無法建立 %s"
+
+#: main.c:419
+msgid "could not write tables header"
+msgstr "無法寫入表頭"
+
+#: main.c:423
+#, c-format
+msgid "can't open skeleton file %s"
+msgstr "無法開啟架構檔案 %s"
+
+#: main.c:459
+msgid "allocation of macro definition failed"
+msgstr "給予巨集定義配額時失敗"
+
+#: main.c:507
+#, c-format
+msgid "input error reading skeleton file %s"
+msgstr "讀取架構檔案 %s 時輸入錯誤"
+
+#: main.c:511
+#, c-format
+msgid "error closing skeleton file %s"
+msgstr "關閉架構檔案 %s 時發生錯誤"
+
+#: main.c:696
+#, c-format
+msgid "error creating header file %s"
+msgstr "建立標頭檔案 %s 時發生錯誤"
+
+#: main.c:704
+#, c-format
+msgid "error writing output file %s"
+msgstr "寫入輸出檔案 %s 時發生錯誤"
+
+#: main.c:708
+#, c-format
+msgid "error closing output file %s"
+msgstr "關閉輸出檔案 %s 時發生錯誤"
+
+#: main.c:712
+#, c-format
+msgid "error deleting output file %s"
+msgstr "刪除輸出檔案 %s 時發生錯誤"
+
+#: main.c:719
+#, c-format
+msgid "No backing up.\n"
+msgstr "沒有備份。\n"
+
+#: main.c:723
+#, c-format
+msgid "%d backing up (non-accepting) states.\n"
+msgstr "%d 備份 (非接受) 狀態。\n"
+
+#: main.c:727
+#, c-format
+msgid "Compressed tables always back up.\n"
+msgstr "壓縮過的表格自動備份。\n"
+
+#: main.c:730
+#, c-format
+msgid "error writing backup file %s"
+msgstr "寫入備份檔案 %s 時發生錯誤"
+
+#: main.c:734
+#, c-format
+msgid "error closing backup file %s"
+msgstr "關閉備份檔案 %s 時發生錯誤"
+
+#: main.c:739
+#, c-format
+msgid "%s version %s usage statistics:\n"
+msgstr "%s 版本 %s 用法統計：\n"
+
+#: main.c:742
+#, c-format
+msgid "  scanner options: -"
+msgstr "  掃描程式選項：-"
+
+#: main.c:821
+#, c-format
+msgid "  %d/%d NFA states\n"
+msgstr "  %d/%d NFA 狀態\n"
+
+#: main.c:823
+#, c-format
+msgid "  %d/%d DFA states (%d words)\n"
+msgstr "  %d/%d DFA 狀態 (%d 個字詞)\n"
+
+#: main.c:825
+#, c-format
+msgid "  %d rules\n"
+msgstr "  %d 條規則\n"
+
+#: main.c:830
+#, c-format
+msgid "  No backing up\n"
+msgstr "  沒有備份\n"
+
+#: main.c:834
+#, c-format
+msgid "  %d backing-up (non-accepting) states\n"
+msgstr "  %d 備份 (非接受) 狀態\n"
+
+#: main.c:839
+#, c-format
+msgid "  Compressed tables always back-up\n"
+msgstr "  壓縮過的表格自動備份\n"
+
+#: main.c:843
+#, c-format
+msgid "  Beginning-of-line patterns used\n"
+msgstr "  列首式樣已使用\n"
+
+#: main.c:845
+#, c-format
+msgid "  %d/%d start conditions\n"
+msgstr "  %d/%d 起始條件\n"
+
+#: main.c:849
+#, c-format
+msgid "  %d epsilon states, %d double epsilon states\n"
+msgstr "  %d ε狀態，%d 雙倍ε狀態\n"
+
+#: main.c:853
+#, c-format
+msgid "  no character classes\n"
+msgstr "  無字元類別\n"
+
+#: main.c:857
+#, c-format
+msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
+msgstr "  %d/%d 字元類別所需 %d/%d 字詞的儲存體，%d 重新使用\n"
+
+#: main.c:862
+#, c-format
+msgid "  %d state/nextstate pairs created\n"
+msgstr "  %d 狀態/下一狀態對已建立\n"
+
+#: main.c:865
+#, c-format
+msgid "  %d/%d unique/duplicate transitions\n"
+msgstr "  %d/%d 獨一/重複轉換\n"
+
+#: main.c:870
+#, c-format
+msgid "  %d table entries\n"
+msgstr "  %d 表格項目\n"
+
+#: main.c:878
+#, c-format
+msgid "  %d/%d base-def entries created\n"
+msgstr "  %d/%d base-def 項目已建立\n"
+
+#: main.c:882
+#, c-format
+msgid "  %d/%d (peak %d) nxt-chk entries created\n"
+msgstr "  %d/%d (尖峰 %d) nxt-chk 項目已建立\n"
+
+#: main.c:886
+#, c-format
+msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
+msgstr "  %d/%d (尖峰 %d) 模板 nxt-chk 項目已建立\n"
+
+#: main.c:890
+#, c-format
+msgid "  %d empty table entries\n"
+msgstr "  %d 清空表格項目\n"
+
+#: main.c:892
+#, c-format
+msgid "  %d protos created\n"
+msgstr "  %d 原型已建立\n"
+
+#: main.c:895
+#, c-format
+msgid "  %d templates created, %d uses\n"
+msgstr "  %d 範本已建立，%d 使用\n"
+
+#: main.c:903
+#, c-format
+msgid "  %d/%d equivalence classes created\n"
+msgstr "  %d/%d 等價類別已建立\n"
+
+#: main.c:911
+#, c-format
+msgid "  %d/%d meta-equivalence classes created\n"
+msgstr "  %d/%d 後設等價類別已建立\n"
+
+#: main.c:917
+#, c-format
+msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
+msgstr "  %d (%d 已儲存) 雜湊碰撞，%d DFAs 相等\n"
+
+#: main.c:919
+#, c-format
+msgid "  %d sets of reallocations needed\n"
+msgstr "  需要 %d 組重新配置\n"
+
+#: main.c:921
+#, c-format
+msgid "  %d total table entries needed\n"
+msgstr "  總計需要 %d 表格項目\n"
+
+#: main.c:998
+#, c-format
+msgid "Internal error. flexopts are malformed.\n"
+msgstr "內部錯誤。flexopts 功能異常。\n"
+
+#: main.c:1008
+#, c-format
+msgid "Try `%s --help' for more information.\n"
+msgstr "嘗試「%s --help」以獲得更多資訊。\n"
+
+#: main.c:1065
+#, c-format
+msgid "unknown -C option '%c'"
+msgstr "不明 -C 選項「%c」"
+
+#: main.c:1194
+#, c-format
+msgid "%s %s\n"
+msgstr "%s %s\n"
+
+#: main.c:1469
+msgid "fatal parse error"
+msgstr "嚴重的解析錯誤"
+
+#: main.c:1501
+#, c-format
+msgid "could not create backing-up info file %s"
+msgstr "無法建立備份資訊檔案 %s"
+
+#: main.c:1522
+#, c-format
+msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
+msgstr "-l AT&T lex 相容性選項會導致大幅效能減退\n"
+
+#: main.c:1525
+#, c-format
+msgid " and may be the actual source of other reported performance penalties\n"
+msgstr " 同時也許是其他回報效能減退的實際來源\n"
+
+#: main.c:1531
+#, c-format
+msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "%%option yylineno 導致效能減退，只有當該規則該吻合新列字元時才會\n"
+
+#: main.c:1538
+#, c-format
+msgid "-I (interactive) entails a minor performance penalty\n"
+msgstr "-I (互動式) 導致小幅效能減退\n"
+
+#: main.c:1543
+#, c-format
+msgid "yymore() entails a minor performance penalty\n"
+msgstr "yymore() 導致小幅效能減退\n"
+
+#: main.c:1549
+#, c-format
+msgid "REJECT entails a large performance penalty\n"
+msgstr "REJECT 導致大幅效能減退\n"
+
+#: main.c:1554
+#, c-format
+msgid "Variable trailing context rules entail a large performance penalty\n"
+msgstr "變數末尾內文規則導致大幅效能減退\n"
+
+#: main.c:1566
+msgid "REJECT cannot be used with -f or -F"
+msgstr "REJECT 無法與 -f 或 -F 共同使用"
+
+#: main.c:1569
+#, c-format
+msgid "%option yylineno cannot be used with REJECT"
+msgstr "%option yylineno 無法與 REJECT 共同使用"
+
+#: main.c:1572
+msgid "variable trailing context rules cannot be used with -f or -F"
+msgstr "變數末尾內文規則無法與 -f 或 -F 共同使用"
+
+#: main.c:1695
+#, c-format
+msgid "%option yyclass only meaningful for C++ scanners"
+msgstr "%option yyclass 只對於 C++ 掃描程式有意義"
+
+#: main.c:1802
+#, c-format
+msgid "Usage: %s [OPTIONS] [FILE]...\n"
+msgstr "用法：%s [選項] [檔案]…\n"
+
+#: main.c:1805
+#, c-format
+msgid ""
+"Generates programs that perform pattern-matching on text.\n"
+"\n"
+"Table Compression:\n"
+"  -Ca, --align      trade off larger tables for better memory alignment\n"
+"  -Ce, --ecs        construct equivalence classes\n"
+"  -Cf               do not compress tables; use -f representation\n"
+"  -CF               do not compress tables; use -F representation\n"
+"  -Cm, --meta-ecs   construct meta-equivalence classes\n"
+"  -Cr, --read       use read() instead of stdio for scanner input\n"
+"  -f, --full        generate fast, large scanner. Same as -Cfr\n"
+"  -F, --fast        use alternate table representation. Same as -CFr\n"
+"  -Cem              default compression (same as --ecs --meta-ecs)\n"
+"\n"
+"Debugging:\n"
+"  -d, --debug             enable debug mode in scanner\n"
+"  -b, --backup            write backing-up information to %s\n"
+"  -p, --perf-report       write performance report to stderr\n"
+"  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
+"  -T, --trace             %s should run in trace mode\n"
+"  -w, --nowarn            do not generate warnings\n"
+"  -v, --verbose           write summary of scanner statistics to stdout\n"
+"\n"
+"Files:\n"
+"  -o, --outfile=FILE      specify output filename\n"
+"  -S, --skel=FILE         specify skeleton file\n"
+"  -t, --stdout            write scanner on stdout instead of %s\n"
+"      --yyclass=NAME      name of C++ class\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
+"      --tables-file[=FILE] write tables to FILE\n"
+"\n"
+"Scanner behavior:\n"
+"  -7, --7bit              generate 7-bit scanner\n"
+"  -8, --8bit              generate 8-bit scanner\n"
+"  -B, --batch             generate batch scanner (opposite of -I)\n"
+"  -i, --case-insensitive  ignore case in patterns\n"
+"  -l, --lex-compat        maximal compatibility with original lex\n"
+"  -X, --posix-compat      maximal compatibility with POSIX lex\n"
+"  -I, --interactive       generate interactive scanner (opposite of -B)\n"
+"      --yylineno          track line count in yylineno\n"
+"\n"
+"Generated code:\n"
+"  -+,  --c++               generate C++ scanner class\n"
+"  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
+"  -L,  --noline            suppress #line directives in scanner\n"
+"  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
+"  -R,  --reentrant         generate a reentrant C scanner\n"
+"       --bison-bridge      scanner for bison pure parser.\n"
+"       --bison-locations   include yylloc support.\n"
+"       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+"       --noansi-definitions old-style function definitions\n"
+"       --noansi-prototypes  empty parameter list in prototypes\n"
+"       --nounistd          do not include <unistd.h>\n"
+"       --noFUNCTION        do not generate a particular FUNCTION\n"
+"\n"
+"Miscellaneous:\n"
+"  -c                      do-nothing POSIX option\n"
+"  -n                      do-nothing POSIX option\n"
+"  -?\n"
+"  -h, --help              produce this help message\n"
+"  -V, --version           report %s version\n"
+msgstr ""
+"產生能夠根據文字進行式樣匹配的程式。\n"
+"\n"
+"表格壓縮：\n"
+"  -Ca，--align      換掉較大表格以獲取較佳記憶體對位\n"
+"  -Ce，--ecs        建構等價類別\n"
+"  -Cf               不壓縮表格；使用 -f 表示法\n"
+"  -CF               不壓縮表格；使用 -F 表示法\n"
+"  -Cm，--meta-ecs   構造後設等價類別\n"
+"  -Cr，--read       使用 read() 以代替 stdio 用於掃描程式的輸入\n"
+"  -f, --full        產生快速，大型掃描程式。如同 -Cfr\n"
+"  -F, --fast        使用交替表格表示法。如同 -CFr\n"
+"  -Cem              預設壓縮 (如同 --ecs --meta-ecs)\n"
+"\n"
+"偵錯：\n"
+"  -d, --debug             在掃描程式中啟用除錯模式\n"
+"  -b, --backup            寫入備份資訊到 %s\n"
+"  -p, --perf-report       將效能報告寫入標準勘誤\n"
+"  -s, --nodefault         抑制預設規則以回應不符合的文字\n"
+"  -T, --trace             %s 應該在追蹤模式中運行\n"
+"  -w, --nowarn            不產生警告\n"
+"  -v, --verbose           將概要的掃描程式統計寫入標準輸出\n"
+"\n"
+"檔案：\n"
+"  -o, --outfile=檔案      指定輸出檔名\n"
+"  -S, --skel=檔案         指定架構檔案\n"
+"  -t, --stdout            將掃描程式寫入標準輸出以代替 %s\n"
+"      --yyclass=名稱      C++ 類別的名稱\n"
+"      --header-file=檔案   掃描程式之外建立 C 標頭檔\n"
+"      --tables-file[=檔案] 將表格寫入檔案\n"
+"\n"
+"掃描程式行為：\n"
+"  -7, --7bit              產生七位元掃描程式\n"
+"  -8, --8bit              產生八位元掃描程式\n"
+"  -B, --batch             產生批次掃描程式 (相對於 -I)\n"
+"  -i, --case-insensitive  忽略式樣中的大小寫\n"
+"  -l, --lex-compat        與原始 lex 最大相容\n"
+"  -X, --posix-compat      與 POSIX lex 最大相容\n"
+"  -I, --interactive       產生互動式掃描程式 (相對於 -B)\n"
+"      --yylineno          在 yylineno 中計數軌列\n"
+"\n"
+"產生的編碼：\n"
+"  -+,  --c++               產生 C++ 掃描程式類別\n"
+"  -Dmacro [=defn]          #define 巨集 defn  (預設 defn 為「1」)\n"
+"  -L,  --noline            在掃描程式中抑制 # 列指令\n"
+"  -P,  --prefix=字串       使用字串做為前綴以代替「yy」\n"
+"  -R,  --reentrant         產生重新進入 C 掃描程式\n"
+"       --bison-bridge      掃描程式用於 bison pure 剖析器。\n"
+"       --bison-locations   包含 yylloc 支援。\n"
+"       --stdinit           初始化 yyin/yyout 到標準輸入/標準輸出\n"
+"       --noansi-definitions 舊式函式定義\n"
+"       --noansi-prototypes  在原型中清空參數清單\n"
+"       --nounistd          不包含 <unistd.h>\n"
+"       --noFUNCTION        不產生特定函式\n"
+"\n"
+"雜項：\n"
+"  -c                      do-nothing POSIX 選項\n"
+"  -n                      do-nothing POSIX 選項\n"
+"  -?\n"
+"  -h, --help              產生這個說明訊息\n"
+"  -V, --version           報告 %s 版本\n"
+
+#: misc.c:65
+msgid "allocation of sko_stack failed"
+msgstr "給予 sko_stack 配額時失敗"
+
+#: misc.c:102 misc.c:128
+#, c-format
+msgid "name \"%s\" ridiculously long"
+msgstr "名稱「%s」有荒謬的長度"
+
+#: misc.c:177
+msgid "memory allocation failed in allocate_array()"
+msgstr "在 allocatearray() 中記憶體配置失敗"
+
+#: misc.c:230
+#, c-format
+msgid "bad character '%s' detected in check_char()"
+msgstr "在 checkchar() 中偵測到不當的字元「%s」"
+
+#: misc.c:235
+#, c-format
+msgid "scanner requires -8 flag to use the character %s"
+msgstr "掃描程式需要 -8 旗標以使用字元 %s"
+
+#: misc.c:268
+msgid "dynamic memory failure in copy_string()"
+msgstr "在 copystring() 中動態記憶體失敗"
+
+#: misc.c:367
+#, c-format
+msgid "%s: fatal internal error, %s\n"
+msgstr "%s：嚴重內部錯誤，%s\n"
+
+#: misc.c:803
+msgid "attempt to increase array size failed"
+msgstr "試圖增加陣列大小時失敗"
+
+#: misc.c:930
+msgid "bad line in skeleton file"
+msgstr "架構檔案中不當的列"
+
+#: misc.c:979
+msgid "memory allocation failed in yy_flex_xmalloc()"
+msgstr "在 yy_flex_xmalloc() 中的記憶體配置失敗"
+
+#: nfa.c:104
+#, c-format
+msgid ""
+"\n"
+"\n"
+"********** beginning dump of nfa with start state %d\n"
+msgstr ""
+"\n"
+"\n"
+"********** 開始輸出起始狀態為 %d 的 NFA\n"
+
+#: nfa.c:115
+#, c-format
+msgid "state # %4d\t"
+msgstr "狀態 # %4d\t"
+
+#: nfa.c:130
+#, c-format
+msgid "********** end of dump\n"
+msgstr "********** 傾印結束\n"
+
+#: nfa.c:174
+msgid "empty machine in dupmachine()"
+msgstr "在 dupmachine() 中清空機器"
+
+#: nfa.c:240
+#, c-format
+msgid "Variable trailing context rule at line %d\n"
+msgstr "變數末尾內文規則於列 %d\n"
+
+#: nfa.c:353
+msgid "bad state type in mark_beginning_as_normal()"
+msgstr "在 mark_beginning_as_normal() 中有不當的狀態輸入"
+
+#: nfa.c:598
+#, c-format
+msgid "input rules are too complicated (>= %d NFA states)"
+msgstr "輸入規則太複雜 (>= %d NFA 狀態)"
+
+#: nfa.c:677
+msgid "found too many transitions in mkxtion()"
+msgstr "在 mkxtion() 中找到太多轉換"
+
+#: nfa.c:703
+#, c-format
+msgid "too many rules (> %d)!"
+msgstr "太多規則 (> %d)！"
+
+#: parse.y:159
+msgid "unknown error processing section 1"
+msgstr "不明的錯誤處理區段 1"
+
+#: parse.y:184 parse.y:351
+msgid "bad start condition list"
+msgstr "不當的起始條件清單"
+
+#: parse.y:315
+msgid "unrecognized rule"
+msgstr "無法辨識的規則"
+
+#: parse.y:434 parse.y:447 parse.y:516
+msgid "trailing context used twice"
+msgstr "末尾內文已使用兩次"
+
+#: parse.y:552 parse.y:562 parse.y:635 parse.y:645
+msgid "bad iteration values"
+msgstr "不當的迭代值"
+
+#: parse.y:580 parse.y:598 parse.y:663 parse.y:681
+msgid "iteration value must be positive"
+msgstr "迭代值必須是正值"
+
+#: parse.y:804 parse.y:814
+#, c-format
+msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
+msgstr "在大小寫不須相符的掃描程式中，字元範圍 [%c-%c] 是模稜兩可的"
+
+#: parse.y:819
+msgid "negative range in character class"
+msgstr "在字元類別中有負值範圍"
+
+#: parse.y:916
+msgid "[:^lower:] is ambiguous in case insensitive scanner"
+msgstr "在大小寫不須相符的掃描程式中，[:^lower:] 是模稜兩可的"
+
+#: parse.y:922
+msgid "[:^upper:] ambiguous in case insensitive scanner"
+msgstr "在大小寫不須相符的掃描程式中，[:^upper:] 是模稜兩可的"
+
+#: scan.l:75 scan.l:618 scan.l:676
+msgid "Input line too long\n"
+msgstr "輸入列太長\n"
+
+#: scan.l:161
+#, c-format
+msgid "malformed '%top' directive"
+msgstr "異常的「%top」指令"
+
+#: scan.l:183
+#, no-c-format
+msgid "unrecognized '%' directive"
+msgstr "無法辨識的「%」指令"
+
+#: scan.l:192
+msgid "Definition name too long\n"
+msgstr "定義名稱太長\n"
+
+#: scan.l:284
+msgid "Unmatched '{'"
+msgstr "不成對的「{」"
+
+#: scan.l:300
+#, c-format
+msgid "Definition value for {%s} too long\n"
+msgstr "{%s} 的定義值太長\n"
+
+#: scan.l:317
+msgid "incomplete name definition"
+msgstr "不完整的名稱定義"
+
+#: scan.l:443
+msgid "Option line too long\n"
+msgstr "選項列太長\n"
+
+#: scan.l:451
+#, c-format
+msgid "unrecognized %%option: %s"
+msgstr "無法辨識的 %%option：%s"
+
+#: scan.l:633 scan.l:800
+msgid "bad character class"
+msgstr "不當的字元類別"
+
+#: scan.l:683
+#, c-format
+msgid "undefined definition {%s}"
+msgstr "未定義的定義 {%s}"
+
+#: scan.l:755
+#, c-format
+msgid "bad <start condition>: %s"
+msgstr "不當的 <起始條件>：%s"
+
+#: scan.l:768
+msgid "missing quote"
+msgstr "缺少引號"
+
+#: scan.l:834
+#, c-format
+msgid "bad character class expression: %s"
+msgstr "不當的字元類別運算式：%s"
+
+#: scan.l:856
+msgid "bad character inside {}'s"
+msgstr "不當字元於 {} 內部"
+
+#: scan.l:862
+msgid "missing }"
+msgstr "缺少 }"
+
+#: scan.l:940
+msgid "EOF encountered inside an action"
+msgstr "在動作之內遇到檔案結束"
+
+#: scan.l:945
+msgid "EOF encountered inside pattern"
+msgstr "在式樣之內遇到檔案結束"
+
+#: scan.l:967
+#, c-format
+msgid "bad character: %s"
+msgstr "不當的字元：%s"
+
+#: scan.l:996
+#, c-format
+msgid "can't open %s"
+msgstr "無法開啟 %s"
+
+#: scanopt.c:291
+#, c-format
+msgid "Usage: %s [OPTIONS]...\n"
+msgstr "用法：%s [選項]…\n"
+
+#: scanopt.c:564
+#, c-format
+msgid "option `%s' doesn't allow an argument\n"
+msgstr "選項「%s」不允許任何引數\n"
+
+#: scanopt.c:569
+#, c-format
+msgid "option `%s' requires an argument\n"
+msgstr "選項「%s」需要一個引數\n"
+
+#: scanopt.c:573
+#, c-format
+msgid "option `%s' is ambiguous\n"
+msgstr "選項「%s」是模稜兩可的\n"
+
+#: scanopt.c:577
+#, c-format
+msgid "Unrecognized option `%s'\n"
+msgstr "無法辨識的選項 %s\n"
+
+#: scanopt.c:581
+#, c-format
+msgid "Unknown error=(%d)\n"
+msgstr "不明錯誤=(%d)\n"
+
+#: sym.c:100
+msgid "symbol table memory allocation failed"
+msgstr "符號表記憶體配置失敗"
+
+#: sym.c:202
+msgid "name defined twice"
+msgstr "名稱定義了兩次"
+
+#: sym.c:253
+#, c-format
+msgid "start condition %s declared twice"
+msgstr "起始條件 %s 宣告了兩次"
+
+#: yylex.c:56
+msgid "premature EOF"
+msgstr "過早出現檔案結尾"
+
+#: yylex.c:198
+#, c-format
+msgid "End Marker\n"
+msgstr "結束標誌\n"
+
+#: yylex.c:204
+#, c-format
+msgid "*Something Weird* - tok: %d val: %d\n"
+msgstr "*情況很怪異* - tok：%d val：%d\n"
