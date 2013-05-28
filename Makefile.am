@@ -209,7 +209,7 @@ indent:
 	fi
 
 install-exec-hook:
-	cd $(DESTDIR)/$(bindir) && \
+	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) -f flex$(EXEEXT) flex++$(EXEEXT)
 
 .PHONY: ChangeLog tags indent
