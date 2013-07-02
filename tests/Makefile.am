@@ -53,6 +53,7 @@ DIST_SUBDIRS = \
 	test-debug-r \
 	test-lineno-r \
 	test-lineno-nr \
+	test-lineno-trailing \
 	test-linedir-r \
 	TEMPLATE \
 	test-top \
@@ -102,6 +103,7 @@ SUBDIRS = \
 	test-debug-r \
 	test-lineno-r \
 	test-lineno-nr \
+	test-lineno-trailing \
 	test-linedir-r \
 	test-array-nr \
 	test-array-r \

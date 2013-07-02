@@ -257,12 +257,23 @@ void    finish_rule (mach, variable_trail_rule, headcnt, trailcnt,
 				("*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */\n");
 
 			if (headcnt > 0) {
+				if (rule_has_nl[num_rules]) {
+					snprintf (action_text, sizeof(action_text),
+						"YY_LINENO_REWIND_TO(%s + %d);\n", scanner_bp, headcnt);
+					add_action (action_text);
+				}
 				snprintf (action_text, sizeof(action_text), "%s = %s + %d;\n",
 					 scanner_cp, scanner_bp, headcnt);
 				add_action (action_text);
 			}
 
 			else {
+				if (rule_has_nl[num_rules]) {
+					snprintf (action_text, sizeof(action_text),
+						 "YY_LINENO_REWIND_TO(yy_cp - %d);\n", trailcnt);
+					add_action (action_text);
+				}
+
 				snprintf (action_text, sizeof(action_text), "%s -= %d;\n",
 					 scanner_cp, trailcnt);
 				add_action (action_text);

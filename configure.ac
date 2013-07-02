@@ -146,6 +146,7 @@ tests/test-string-r/Makefile
 tests/test-yyextra/Makefile
 tests/test-alloc-extra/Makefile
 tests/test-lineno-nr/Makefile
+tests/test-lineno-trailing/Makefile
 tests/test-lineno-r/Makefile
 tests/test-linedir-r/Makefile
 tests/test-debug-r/Makefile
