@@ -30,7 +30,7 @@ SHARED_VERSION_INFO="2:0:0"
 AC_SUBST(SHARED_VERSION_INFO)
 
 AC_CONFIG_SRCDIR([scan.l])
-AM_INIT_AUTOMAKE([gnits dist-bzip2 dist-xz 1.10])
+AM_INIT_AUTOMAKE([gnu check-news std-options dist-bzip2 dist-xz 1.10])
 AC_CONFIG_HEADER([config.h:conf.in])
 AC_CONFIG_LIBOBJ_DIR([lib])
 
