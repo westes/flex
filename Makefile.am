@@ -120,7 +120,6 @@ SUBDIRS = \
 	doc \
 	examples \
 	po \
-	tools \
 	tests
 
 localedir = $(datadir)/locale

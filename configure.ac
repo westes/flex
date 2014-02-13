@@ -118,7 +118,6 @@ examples/fastwc/Makefile
 examples/manual/Makefile
 lib/Makefile
 po/Makefile.in
-tools/Makefile
 tests/Makefile
 tests/TEMPLATE/Makefile
 tests/test-array-nr/Makefile
