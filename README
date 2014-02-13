@@ -13,6 +13,10 @@ flex at:
 
 http://sourceforge.net/tracker/?group_id=97492&atid=618177
 
+The flex codebase is kept in git at:
+
+https://github.com/westes/flex
+
 There are several mailing lists available as well:
 
 flex-announce@lists.sourceforge.net - where posts will be made
@@ -50,17 +54,6 @@ TODO - outstanding bug reports, desired features, etc.
 tests/ - regression tests. See TESTS/README for details.
 
 po/ - internationalization support files.
-
-The flex codebase is kept in git at:
-
-git://flex.git.sourceforge.net/gitrepos/flex/flex
-
-for readonly access and:
-
-ssh://username@flex.git.sourceforge.net/gitrepos/flex/flex
-
-for read-write access, where "username" is your sourceforge username
-that has ben granted write access to flex's git repository.
 
 You need the following tools to build flex from the maintainer's
 repository:
