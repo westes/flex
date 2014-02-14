@@ -1,12 +1,11 @@
 # Перевод сообщений flex.
-# Copyright (C) 1999 Free Software Foundation, Inc.
+# Copyright (C) 2002 The Flex Project
 # Dmitry S. Sivachenko <dima@Chg.RU>, 1999, 2000, 2001, 2002.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.19\n"
-"Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-02-26 16:34-0500\n"
+"POT-Creation-Date: 2002-09-05 12:07-0400\n"
 "PO-Revision-Date: 2002-09-08 10:54+0400\n"
 "Last-Translator: Dmitry S. Sivachenko <mitya@cavia.pp.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -14,37 +13,34 @@ msgstr ""
 "Content-Type: text/plain; charset=koi8-r\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: dfa.c:61
+#: dfa.c:60
 #, c-format
 msgid "State #%d is non-accepting -\n"
 msgstr "Состояние #%d недопустимо -\n"
 
-#: dfa.c:124
+#: dfa.c:123
 msgid "dangerous trailing context"
 msgstr "опасный замыкающий контекст"
 
-#: dfa.c:166
-#, c-format
+#: dfa.c:165
 msgid " associated rule line numbers:"
 msgstr " номера строк ассоциированного правила:"
 
-#: dfa.c:202
-#, c-format
+#: dfa.c:201
 msgid " out-transitions: "
 msgstr ""
 
-#: dfa.c:210
-#, c-format
+#: dfa.c:209
 msgid ""
 "\n"
 " jam-transitions: EOF "
 msgstr ""
 
-#: dfa.c:341
+#: dfa.c:340
 msgid "consistency check failed in epsclosure()"
 msgstr "ошибка при проверке на целостность в epsclosure()"
 
-#: dfa.c:429
+#: dfa.c:428
 msgid ""
 "\n"
 "\n"
@@ -56,24 +52,28 @@ msgstr ""
 "Дамп ДКА:\n"
 "\n"
 
-#: dfa.c:604
+#: dfa.c:589
 msgid "could not create unique end-of-buffer state"
 msgstr "невозможно создать уникальное состояние конца буфера"
 
-#: dfa.c:625
+#: dfa.c:610
 #, c-format
 msgid "state # %d:\n"
 msgstr "состояние # %d:\n"
 
-#: dfa.c:785
+#: dfa.c:783
 msgid "Could not write yynxt_tbl[][]"
 msgstr "Не удается записать yynxt_tbl[][]"
 
-#: dfa.c:1052
+#: dfa.c:1006
+msgid "consistency check failed in symfollowset"
+msgstr "ошибка при проверке на целостность в symfollowset"
+
+#: dfa.c:1054
 msgid "bad transition character detected in sympartition()"
 msgstr "обнаружен неверный переходный символ в sympartition()"
 
-#: gen.c:478
+#: gen.c:424 gen.c:463
 msgid ""
 "\n"
 "\n"
@@ -85,30 +85,21 @@ msgstr ""
 "Классы эквивалентности:\n"
 "\n"
 
-#: gen.c:662 gen.c:691 gen.c:1215
+#: gen.c:647 gen.c:673 gen.c:1158
 #, c-format
 msgid "state # %d accepts: [%d]\n"
 msgstr "состояние # %d допускает: [%d]\n"
 
-#: gen.c:1110
+#: gen.c:1066
 #, c-format
 msgid "state # %d accepts: "
 msgstr "состояние # %d допускает: "
 
-#: gen.c:1157
-#, fuzzy
-msgid "Could not write yyacclist_tbl"
-msgstr "Не удается записать yyacc_tbl"
-
-#: gen.c:1233
+#: gen.c:1176
 msgid "Could not write yyacc_tbl"
 msgstr "Не удается записать yyacc_tbl"
 
-#: gen.c:1248 gen.c:1633 gen.c:1656
-msgid "Could not write ecstbl"
-msgstr "Невозможно записать ecstbl"
-
-#: gen.c:1271
+#: gen.c:1202
 msgid ""
 "\n"
 "\n"
@@ -118,399 +109,375 @@ msgstr ""
 "\n"
 "Метаэквивалентных Классов:\n"
 
-#: gen.c:1293
+#: gen.c:1221
 msgid "Could not write yymeta_tbl"
 msgstr "Не удается записать yymeta_tbl"
 
-#: gen.c:1354
+#: gen.c:1278
 msgid "Could not write yybase_tbl"
 msgstr "Невозможно записать yybase_tbl"
 
-#: gen.c:1388
+#: gen.c:1308
 msgid "Could not write yydef_tbl"
 msgstr "Невозможно записать yydef_tbl"
 
-#: gen.c:1428
+#: gen.c:1342
 msgid "Could not write yynxt_tbl"
 msgstr "Невозможно записать yynxt_tbl"
 
-#: gen.c:1464
+#: gen.c:1372
 msgid "Could not write yychk_tbl"
 msgstr "Невозможно записать yychk_tbl"
 
-#: gen.c:1618 gen.c:1647
+#: gen.c:1511 gen.c:1534
 msgid "Could not write ftbl"
 msgstr "Невозможно записать ftbl"
 
-#: gen.c:1624
-#, fuzzy
-msgid "Could not write ssltbl"
+#: gen.c:1520 gen.c:1543
+msgid "Could not write ecstbl"
 msgstr "Невозможно записать ecstbl"
 
-#: gen.c:1675
-#, fuzzy
-msgid "Could not write eoltbl"
-msgstr "Невозможно записать ecstbl"
-
-#: gen.c:1735
+#: gen.c:1604
 msgid "Could not write yynultrans_tbl"
 msgstr "Невозможно записать yynultrans_tbl"
 
-#: main.c:189
+#: main.c:164
 msgid "rule cannot be matched"
 msgstr "невозножно применить правило"
 
-#: main.c:194
+#: main.c:169
 msgid "-s option given but default rule can be matched"
 msgstr "указана опция -s, но правило по умолчанию не может быть применено"
 
-#: main.c:234
+#: main.c:205
 msgid "Can't use -+ with -l option"
 msgstr "Использование -+ с ключем -l невозможно"
 
-#: main.c:237
+#: main.c:208
 msgid "Can't use -f or -F with -l option"
 msgstr "Использование -f или -F с ключем -l невозможно"
 
-#: main.c:241
-#, fuzzy
-msgid "Can't use --reentrant or --bison-bridge with -l option"
+#: main.c:212
+msgid "Can't use -R or -Rb with -l option"
 msgstr "Использование -R или -Rb с ключем -l невозможно"
 
-#: main.c:278
+#: main.c:227
+msgid "Can't specify header option if writing to stdout."
+msgstr "Невозможно указать параметр header при выводе на stdout."
+
+#: main.c:253
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "-Cf/-CF и -Cm вместе не имеют смысла"
 
-#: main.c:281
+#: main.c:256
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "-Cf/-CF и -I несовместимы"
 
-#: main.c:285
+#: main.c:260
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr "-Cf/-CF несовместны с режимом lex-совместимости"
 
-#: main.c:290
+#: main.c:265
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "-Cf и -CF являются взаимоисключающими"
 
-#: main.c:294
+#: main.c:269
 msgid "Can't use -+ with -CF option"
 msgstr "Использование -+ с ключем -CF невозможно"
 
-#: main.c:297
+#: main.c:272
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "%array несовместим с ключем -+"
 
-#: main.c:302
-#, fuzzy
-msgid "Options -+ and --reentrant are mutually exclusive."
+#: main.c:277
+msgid "Options -+ and -R are mutually exclusive."
 msgstr "Ключи -+ и -R являются взаимоисключающими"
 
-#: main.c:305
-msgid "bison bridge not supported for the C++ scanner."
-msgstr ""
-
-#: main.c:360 main.c:406
+#: main.c:323 main.c:343 main.c:556
 #, c-format
 msgid "could not create %s"
 msgstr "невозможно создать %s"
 
-#: main.c:419
+#: main.c:357
 msgid "could not write tables header"
 msgstr "неудается записать заголовок таблиц"
 
-#: main.c:423
+#: main.c:361
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "не удается открыть файл-каркас %s"
 
-#: main.c:505
+#: main.c:523
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "ошибка чтения файла-каркаса %s"
 
-#: main.c:509
+#: main.c:527
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "ошибка при закрытии файла-каркаса %s"
 
-#: main.c:694
+#: main.c:769
 #, c-format
 msgid "error creating header file %s"
 msgstr "ошибка создания заголовочного файла %s"
 
-#: main.c:702
+#: main.c:777
 #, c-format
 msgid "error writing output file %s"
 msgstr "ошибка записи в выходной файл %s"
 
-#: main.c:706
+#: main.c:781
 #, c-format
 msgid "error closing output file %s"
 msgstr "ошибка закрытия выходного файла %s"
 
-#: main.c:710
+#: main.c:785
 #, c-format
 msgid "error deleting output file %s"
 msgstr "ошибка при удалении выходного файла %s"
 
-#: main.c:717
-#, c-format
+#: main.c:792
 msgid "No backing up.\n"
 msgstr ""
 
-#: main.c:721
+#: main.c:796
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "возврат на %d (недопустимых) состояний.\n"
 
-#: main.c:725
-#, c-format
+#: main.c:800
 msgid "Compressed tables always back up.\n"
 msgstr "Сжатые таблицы всегда сохраняются.\n"
 
-#: main.c:728
+#: main.c:803
 #, c-format
 msgid "error writing backup file %s"
 msgstr "ошибка записи резервной копии файла %s"
 
-#: main.c:732
+#: main.c:807
 #, c-format
 msgid "error closing backup file %s"
 msgstr "ошибка при закрытии резервной копии файла %s"
 
-#: main.c:737
+#: main.c:812
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr "статистика использования %s версии %s:\n"
 
-#: main.c:740
-#, c-format
+#: main.c:815
 msgid "  scanner options: -"
 msgstr "  опции сканера: -"
 
-#: main.c:819
+#: main.c:894
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d состояний НКА\n"
 
-#: main.c:821
+#: main.c:896
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d состояний ДКА (%d слов)\n"
 
-#: main.c:823
+#: main.c:898
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d правил\n"
 
-#: main.c:828
-#, c-format
+#: main.c:903
 msgid "  No backing up\n"
 msgstr ""
 
-#: main.c:832
+#: main.c:907
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr "  сохранены %d (недопустимых) состояний\n"
 
-#: main.c:837
-#, c-format
+#: main.c:912
 msgid "  Compressed tables always back-up\n"
 msgstr "  Сжатые таблицы всегда сохраняются\n"
 
-#: main.c:841
-#, c-format
+#: main.c:916
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  Используются шаблоны начала строки\n"
 
-#: main.c:843
+#: main.c:918
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d стартовых условий\n"
 
-#: main.c:847
+#: main.c:922
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr ""
 
-#: main.c:851
-#, c-format
+#: main.c:926
 msgid "  no character classes\n"
 msgstr "  отсутствуют классы символов\n"
 
-#: main.c:855
+#: main.c:930
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-msgstr ""
-"  %d/%d классов символов требуют %d/%d слов для хранения, %d повторно "
-"использовано\n"
+msgstr "  %d/%d классов символов требуют %d/%d слов для хранения, %d повторно использовано\n"
 
-#: main.c:860
+#: main.c:935
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr "  создано %d пар состояние/след_состояние\n"
 
-#: main.c:863
+#: main.c:938
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d уникальных/повторяющихся переходов\n"
 
-#: main.c:868
+#: main.c:943
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d элементов таблицы\n"
 
-#: main.c:876
+#: main.c:951
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  создано %d/%d base-def элементов\n"
 
-#: main.c:880
+#: main.c:955
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  создано %d/%d (пик %d) nxt-chk элементов\n"
 
-#: main.c:884
+#: main.c:959
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr "  создано %d/%d (пик %d) шаблонных nxt-chk элементов\n"
 
-#: main.c:888
+#: main.c:963
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d пустых элементов таблицы\n"
 
-#: main.c:890
+#: main.c:965
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  создано %d прототипов\n"
 
-#: main.c:893
+#: main.c:968
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  создано %d шаблонов, %d использований\n"
 
-#: main.c:901
+#: main.c:976
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  созданы классы эквивалентности %d/%d\n"
 
-#: main.c:909
+#: main.c:984
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  %d/%d метаэквивалентных классов создано\n"
 
-#: main.c:915
+#: main.c:990
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr "  %d (%d записано) коллизий хэш-таблицы, %d эквивалентных ДКА\n"
 
-#: main.c:917
+#: main.c:992
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr "  требуется %d наборов повторных размещений\n"
 
-#: main.c:919
+#: main.c:994
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  всего требуется %d элементов таблицы\n"
 
-#: main.c:996
-#, c-format
+#: main.c:1056
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Внутренняя ошибка.  Неправильно заданы ключи flex.\n"
 
-#: main.c:1006
+#: main.c:1066
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Попробуйте `%s --help' для получения более подробного описания.\n"
 
-#: main.c:1063
+#: main.c:1123
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "неизвестный -C ключ '%c'"
 
-#: main.c:1192
+#: main.c:1207
+#, c-format
+msgid "unknown -R option '%c'"
+msgstr "неизвестный -R ключ '%c'"
+
+#: main.c:1251
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
 
-#: main.c:1467
+#: main.c:1514
 msgid "fatal parse error"
 msgstr "фатальная ошибка разбора"
 
-#: main.c:1499
+#: main.c:1546
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr "неудается создать запасной информационный файл %s"
 
-#: main.c:1520
-#, c-format
+#: main.c:1567
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr ""
-"Опция -l совместимости с AT&T lex влечет значительное снижение "
-"производительности\n"
+msgstr "Опция -l совместимости с AT&T lex влечет значительное снижение производительности\n"
 
-#: main.c:1523
-#, c-format
+#: main.c:1570
 msgid " and may be the actual source of other reported performance penalties\n"
-msgstr ""
-" и также может быть истинным источником проблем с производительностью\n"
+msgstr " и также может быть истинным источником проблем с производительностью\n"
 
-#: main.c:1529
-#, fuzzy, c-format
-msgid ""
-"%%option yylineno entails a performance penalty ONLY on rules that can match "
-"newline characters\n"
+#: main.c:1576
+#, c-format
+msgid "%%option yylineno entails a large performance penalty\n"
 msgstr "%%option yylineno влечет значительное снижение производительности\n"
 
-#: main.c:1536
-#, c-format
+#: main.c:1583
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "-I (интерактивный) влечет незначительное снижение производительности\n"
 
-#: main.c:1541
-#, c-format
+#: main.c:1588
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "yymore() приводит к небольшому снижению производительности\n"
 
-#: main.c:1547
-#, c-format
+#: main.c:1594
 msgid "REJECT entails a large performance penalty\n"
 msgstr "REJECT влечет значительное снижение производительности\n"
 
-#: main.c:1552
-#, c-format
+#: main.c:1599
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr ""
 
-#: main.c:1564
+#: main.c:1611
 msgid "REJECT cannot be used with -f or -F"
 msgstr "REJECT не может быть использован вместе с -f или -F"
 
-#: main.c:1567
+#: main.c:1614
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr "%option yylineno не может быть использовано с REJECT"
 
-#: main.c:1570
+#: main.c:1617
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr ""
 
-#: main.c:1691
+#: main.c:1733
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
 msgstr "%option yyclass имеет смысл только для сканеров на C++"
 
-#: main.c:1798
+#: main.c:1840
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Использование: %s [КЛЮЧИ] [ФАЙЛ]...\n"
 
-#: main.c:1801
-#, fuzzy, c-format
+#: main.c:1843
+#, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
 "\n"
@@ -539,8 +506,7 @@ msgid ""
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the "
-"scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "\n"
 "Scanner behavior:\n"
@@ -559,11 +525,8 @@ msgid ""
 "  -L,  --noline            suppress #line directives in scanner\n"
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant C scanner\n"
-"       --bison-bridge      scanner for bison pure parser.\n"
-"       --bison-locations   include yylloc support.\n"
+"  -Rb, --reentrant-bison   reentrant scanner for bison pure parser.\n"
 "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
-"       --noansi-definitions old-style function definitions\n"
-"       --noansi-prototypes  empty parameter list in prototypes\n"
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 "\n"
@@ -641,43 +604,43 @@ msgstr ""
 "  -h, --help              выдать эту справку\n"
 "  -V, --version           выдать версию %s\n"
 
-#: misc.c:100 misc.c:126
+#: misc.c:46
 #, c-format
 msgid "name \"%s\" ridiculously long"
 msgstr "имя \"%s\" нелепо длинное"
 
-#: misc.c:175
+#: misc.c:100
 msgid "memory allocation failed in allocate_array()"
 msgstr "ошибка выделения памяти в allocate_array()"
 
-#: misc.c:250
+#: misc.c:175
 #, c-format
 msgid "bad character '%s' detected in check_char()"
 msgstr "найден неверный символ '%s' в check_char()"
 
-#: misc.c:255
+#: misc.c:180
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "для использования символа %s сканеру требуется ключ -8"
 
-#: misc.c:288
+#: misc.c:213
 msgid "dynamic memory failure in copy_string()"
 msgstr "ошибка при работе с динамической памятью в copy_string()"
 
-#: misc.c:422
+#: misc.c:339
 #, c-format
 msgid "%s: fatal internal error, %s\n"
 msgstr "%s: фатальная внутренняя ошибка, %s\n"
 
-#: misc.c:875
+#: misc.c:772
 msgid "attempt to increase array size failed"
 msgstr "ошибка увеличения размера массива"
 
-#: misc.c:1002
+#: misc.c:844
 msgid "bad line in skeleton file"
 msgstr "неверная строка в файле-каркасе"
 
-#: misc.c:1051
+#: misc.c:890
 msgid "memory allocation failed in yy_flex_xmalloc()"
 msgstr "ошибка при выделении памяти в yy_flex_xmalloc()"
 
@@ -698,7 +661,6 @@ msgid "state # %4d\t"
 msgstr "состояние # %4d\t"
 
 #: nfa.c:130
-#, c-format
 msgid "********** end of dump\n"
 msgstr "********* конец дампа\n"
 
@@ -729,120 +691,93 @@ msgstr "найдено слишком много переходов в mkxtion()"
 msgid "too many rules (> %d)!"
 msgstr "слишком много правил (> %d)!"
 
-#: parse.y:159
+#: parse.y:175
 msgid "unknown error processing section 1"
 msgstr "неизвестная ошибка при обработке раздела 1"
 
-#: parse.y:184 parse.y:351
+#: parse.y:200 parse.y:365
 msgid "bad start condition list"
 msgstr "неверный список начальных условий"
 
-#: parse.y:315
+#: parse.y:329
 msgid "unrecognized rule"
 msgstr "нераспознанное правило"
 
-#: parse.y:434 parse.y:447 parse.y:516
+#: parse.y:448 parse.y:461 parse.y:530
 msgid "trailing context used twice"
 msgstr "замыкающий контекст используется дважды"
 
-#: parse.y:552 parse.y:562 parse.y:635 parse.y:645
+#: parse.y:566 parse.y:576 parse.y:649 parse.y:659
 msgid "bad iteration values"
 msgstr ""
 
-#: parse.y:580 parse.y:598 parse.y:663 parse.y:681
+#: parse.y:594 parse.y:612 parse.y:677 parse.y:695
 msgid "iteration value must be positive"
 msgstr ""
 
-#: parse.y:806 parse.y:816
-#, c-format
-msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr ""
-
-#: parse.y:821
+#: parse.y:798
 msgid "negative range in character class"
 msgstr "отрицательный диапазон в классе символов"
 
-#: parse.y:918
-msgid "[:^lower:] is ambiguous in case insensitive scanner"
-msgstr ""
-
-#: parse.y:924
-msgid "[:^upper:] ambiguous in case insensitive scanner"
-msgstr ""
-
-#: scan.l:75 scan.l:192 scan.l:300 scan.l:443 scan.l:618 scan.l:676
+#: scan.l:61 scan.l:162 scan.l:219 scan.l:352 scan.l:491 scan.l:541
 msgid "Input line too long\n"
 msgstr "Слишком длинная входная строка\n"
 
-#: scan.l:161
-#, fuzzy, c-format
-msgid "malformed '%top' directive"
-msgstr "нераспознанная '%' директива"
-
-#: scan.l:183
+#: scan.l:153
 #, no-c-format
 msgid "unrecognized '%' directive"
 msgstr "нераспознанная '%' директива"
 
-#: scan.l:284
-msgid "Unmatched '{'"
-msgstr ""
-
-#: scan.l:317
+#: scan.l:236
 msgid "incomplete name definition"
 msgstr "неполное определение имени"
 
-#: scan.l:451
+#: scan.l:360
 #, c-format
 msgid "unrecognized %%option: %s"
 msgstr "нераспознанный %%option: %s"
 
-#: scan.l:633 scan.l:800
+#: scan.l:501 scan.l:620
 msgid "bad character class"
 msgstr "неверный класс символа"
 
-#: scan.l:683
+#: scan.l:548
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "неопределенное определение {%s}"
 
-#: scan.l:755
+#: scan.l:588
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "неверное <начальное условие>: %s"
 
-#: scan.l:768
+#: scan.l:601
 msgid "missing quote"
 msgstr "отсутствуют кавычки"
 
-#: scan.l:834
+#: scan.l:641
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "неверное выражение класса символа: %s"
 
-#: scan.l:856
+#: scan.l:663
 msgid "bad character inside {}'s"
 msgstr "неверный символ внутри {}"
 
-#: scan.l:862
+#: scan.l:669
 msgid "missing }"
 msgstr "отсутствует }"
 
-#: scan.l:940
+#: scan.l:742
 msgid "EOF encountered inside an action"
 msgstr "встречен EOF внутри действия"
 
-#: scan.l:945
-#, fuzzy
-msgid "EOF encountered inside pattern"
-msgstr "встречен EOF внутри действия"
-
-#: scan.l:967
+#: scan.l:762
 #, c-format
 msgid "bad character: %s"
 msgstr "неверный символ: %s"
 
-#: scan.l:996
+#: scan.l:791
 #, c-format
 msgid "can't open %s"
 msgstr "невозможно открыть %s"
@@ -881,11 +816,11 @@ msgstr "Неизвестная ошибка=(%d)\n"
 msgid "symbol table memory allocation failed"
 msgstr "ошибка при выделении памяти под символы"
 
-#: sym.c:202
+#: sym.c:203
 msgid "name defined twice"
 msgstr "имя определено дважды"
 
-#: sym.c:253
+#: sym.c:257
 #, c-format
 msgid "start condition %s declared twice"
 msgstr "стартовое условие %s описано дважды"
@@ -895,7 +830,6 @@ msgid "premature EOF"
 msgstr "неожиданный конец файла"
 
 #: yylex.c:198
-#, c-format
 msgid "End Marker\n"
 msgstr "Метка конца\n"
 
@@ -903,12 +837,3 @@ msgstr "Метка конца\n"
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr "*Что-то не так* - tok: %d val: %d\n"
-
-#~ msgid "consistency check failed in symfollowset"
-#~ msgstr "ошибка при проверке на целостность в symfollowset"
-
-#~ msgid "Can't specify header option if writing to stdout."
-#~ msgstr "Невозможно указать параметр header при выводе на stdout."
-
-#~ msgid "unknown -R option '%c'"
-#~ msgstr "неизвестный -R ключ '%c'"
