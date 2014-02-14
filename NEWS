@@ -11,6 +11,8 @@ See the file COPYING for copying conditions.
 
 *** update nl, pt_BR, vi translations from the translation project
 
+*** rename zh_tw to its proper zh_TW name
+
 * version 2.5.37 released 2012-08-03
 
 ** Import flex into git. See
