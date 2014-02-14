@@ -1,12 +1,11 @@
 # Mesajele în limba românã pentru pachetul flex.
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Copyright (C) 2003 The Flex Project
 # Eugen Hoanca <eugenh@urban-grafx.ro>, 2003.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.31\n"
-"Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-02-26 16:34-0500\n"
+"POT-Creation-Date: 2003-04-01 11:33-0500\n"
 "PO-Revision-Date: 2003-11-22 11:07+0200\n"
 "Last-Translator: Eugen Hoanca <eugenh@urban-grafx.ro>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -24,17 +23,14 @@ msgid "dangerous trailing context"
 msgstr "context de sfârºit(trailing) periculos"
 
 #: dfa.c:166
-#, c-format
 msgid " associated rule line numbers:"
 msgstr " numerele de linie asociate regulii:"
 
 #: dfa.c:202
-#, c-format
 msgid " out-transitions: "
 msgstr " tranziþii exterioare(out): "
 
 #: dfa.c:210
-#, c-format
 msgid ""
 "\n"
 " jam-transitions: EOF "
@@ -67,15 +63,19 @@ msgstr "nu am putut crea sfârºit unic pentru starea buffer-ului"
 msgid "state # %d:\n"
 msgstr "stare # %d:\n"
 
-#: dfa.c:785
+#: dfa.c:800
 msgid "Could not write yynxt_tbl[][]"
 msgstr "Nu am putut scrie yynxt_tbl[][]"
 
-#: dfa.c:1052
+#: dfa.c:1023
+msgid "consistency check failed in symfollowset"
+msgstr "verificare de consistenþã eºuatã în symfollowset"
+
+#: dfa.c:1071
 msgid "bad transition character detected in sympartition()"
 msgstr "caracter greºit de tranziþie detectat în sympartition()"
 
-#: gen.c:478
+#: gen.c:484
 msgid ""
 "\n"
 "\n"
@@ -87,29 +87,29 @@ msgstr ""
 "Clase de Echivalenþã:\n"
 "\n"
 
-#: gen.c:662 gen.c:691 gen.c:1215
+#: gen.c:668 gen.c:697 gen.c:1221
 #, c-format
 msgid "state # %d accepts: [%d]\n"
 msgstr "starea # %d acceptã: [%d]\n"
 
-#: gen.c:1110
+#: gen.c:1116
 #, c-format
 msgid "state # %d accepts: "
 msgstr "starea # %d acceptã: "
 
-#: gen.c:1157
+#: gen.c:1163
 msgid "Could not write yyacclist_tbl"
 msgstr "Nu am putut scrie yyacclist_tbl"
 
-#: gen.c:1233
+#: gen.c:1239
 msgid "Could not write yyacc_tbl"
 msgstr "Nu am putut scrie yyacc_tbl"
 
-#: gen.c:1248 gen.c:1633 gen.c:1656
+#: gen.c:1254 gen.c:1639 gen.c:1662
 msgid "Could not write ecstbl"
 msgstr "Nu am putut scrie ecstbl"
 
-#: gen.c:1271
+#: gen.c:1277
 msgid ""
 "\n"
 "\n"
@@ -119,397 +119,373 @@ msgstr ""
 "\n"
 "Clase de Meta-Echivalenþã:\n"
 
-#: gen.c:1293
+#: gen.c:1299
 msgid "Could not write yymeta_tbl"
 msgstr "Nu am putut scrie yymeta_tbl"
 
-#: gen.c:1354
+#: gen.c:1360
 msgid "Could not write yybase_tbl"
 msgstr "Nu am putut scrie yybase_tbl"
 
-#: gen.c:1388
+#: gen.c:1394
 msgid "Could not write yydef_tbl"
 msgstr "Nu am putut scrie yydef_tbl"
 
-#: gen.c:1428
+#: gen.c:1434
 msgid "Could not write yynxt_tbl"
 msgstr "Nu am putut scrie yynxt_tbl"
 
-#: gen.c:1464
+#: gen.c:1470
 msgid "Could not write yychk_tbl"
 msgstr "Nu am putut scrie yychk_tbl"
 
-#: gen.c:1618 gen.c:1647
+#: gen.c:1624 gen.c:1653
 msgid "Could not write ftbl"
 msgstr "Nu am putut scrie ftbl"
 
-#: gen.c:1624
+#: gen.c:1630
 msgid "Could not write ssltbl"
 msgstr "Nu am putut scrie ssltbl"
 
-#: gen.c:1675
+#: gen.c:1681
 msgid "Could not write eoltbl"
 msgstr "Nu am putut scrie eoltbl"
 
-#: gen.c:1735
+#: gen.c:1741
 msgid "Could not write yynultrans_tbl"
 msgstr "Nu am putut scrie yynultrans_tbl"
 
-#: main.c:189
+#: main.c:176
 msgid "rule cannot be matched"
 msgstr "regula nu se potriveºte cu nimic"
 
-#: main.c:194
+#: main.c:181
 msgid "-s option given but default rule can be matched"
 msgstr "a fost datã opþiunea -s dar regula implicitã se poate potrivi"
 
-#: main.c:234
+#: main.c:217
 msgid "Can't use -+ with -l option"
 msgstr "Nu se poate folosi -+ cu opþiunea -l"
 
-#: main.c:237
+#: main.c:220
 msgid "Can't use -f or -F with -l option"
 msgstr "Nu se poate folosi -f sau -F cu opþiunea -l"
 
-#: main.c:241
+#: main.c:224
 msgid "Can't use --reentrant or --bison-bridge with -l option"
 msgstr "Nu se poate folosi --reentrant sau --bison-bridge cu opþiunea -l"
 
-#: main.c:278
+#: main.c:261
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "-Cf/-CF ºi -Cm nu au sens folosite împreunã"
 
-#: main.c:281
+#: main.c:264
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "-Cf/-CF ºi -I sunt incompatibile"
 
-#: main.c:285
+#: main.c:268
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr "-Cf/-CF sunt incompatibile cu module de compatibilitate lex"
 
-#: main.c:290
+#: main.c:273
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "-Cf ºi -CF se exclud reciproc"
 
-#: main.c:294
+#: main.c:277
 msgid "Can't use -+ with -CF option"
 msgstr "Nu se poate folosi -+ cu opþiunea -CF"
 
-#: main.c:297
+#: main.c:280
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "%array incompatibil cu opþiunea -+"
 
-#: main.c:302
+#: main.c:285
 msgid "Options -+ and --reentrant are mutually exclusive."
 msgstr "Opþiunile -+ and --reentrant se exclud reciproc"
 
-#: main.c:305
+#: main.c:288
 msgid "bison bridge not supported for the C++ scanner."
 msgstr "bridge bison nu este suportat pentru scannerul C++."
 
-#: main.c:360 main.c:406
+#: main.c:340 main.c:385
 #, c-format
 msgid "could not create %s"
 msgstr "nu am putut crea %s"
 
-#: main.c:419
+#: main.c:398
 msgid "could not write tables header"
 msgstr "Nu am putut scrie capul de tabel"
 
-#: main.c:423
+#: main.c:402
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "nu am putut deschide fiºierul schelet %s"
 
-#: main.c:505
+#: main.c:483
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "eroare de intrare(input) în timpul citirii fiºierului schelet %s"
 
-#: main.c:509
+#: main.c:487
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "eroare în închiderea fiºierului schelet %s"
 
-#: main.c:694
+#: main.c:671
 #, c-format
 msgid "error creating header file %s"
 msgstr "eroare în crearea fiºierului de header %s"
 
-#: main.c:702
+#: main.c:679
 #, c-format
 msgid "error writing output file %s"
 msgstr "eroare în scrierea fiºierului de output %s"
 
-#: main.c:706
+#: main.c:683
 #, c-format
 msgid "error closing output file %s"
 msgstr "eroare în închiderea fiºierului de output %s"
 
-#: main.c:710
+#: main.c:687
 #, c-format
 msgid "error deleting output file %s"
 msgstr "eroare în ºtergerea fiºierului de output %s"
 
-#: main.c:717
-#, c-format
+#: main.c:694
 msgid "No backing up.\n"
 msgstr "Nu se revine (backing-up).\n"
 
-#: main.c:721
+#: main.c:698
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "%d salvare de (inacceptabile) stãri.\n"
 
-#: main.c:725
-#, c-format
+#: main.c:702
 msgid "Compressed tables always back up.\n"
 msgstr "Tabelele compresate întotdeauna au back-up.\n"
 
-#: main.c:728
+#: main.c:705
 #, c-format
 msgid "error writing backup file %s"
 msgstr "eroare în scrierea fiºierului de backup %s"
 
-#: main.c:732
+#: main.c:709
 #, c-format
 msgid "error closing backup file %s"
 msgstr "eroare în închiderea fiºierului de backup %s"
 
-#: main.c:737
+#: main.c:714
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr "%s versiunea %s statistici de folosire:\n"
 
-#: main.c:740
-#, c-format
+#: main.c:717
 msgid "  scanner options: -"
 msgstr "  opþiuni de scanner: -"
 
-#: main.c:819
+#: main.c:796
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d stãri NFA\n"
 
-#: main.c:821
+#: main.c:798
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d stãri DFA (%d cuvinte)\n"
 
-#: main.c:823
+#: main.c:800
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d reguli\n"
 
-#: main.c:828
-#, c-format
+#: main.c:805
 msgid "  No backing up\n"
 msgstr "  Nu se face backup\n"
 
-#: main.c:832
+#: main.c:809
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr "  %d salvare de (inacceptabile) stãri\n"
 
-#: main.c:837
-#, c-format
+#: main.c:814
 msgid "  Compressed tables always back-up\n"
 msgstr "  Tabelele compresate întotdeauna au back-up\n"
 
-#: main.c:841
-#, c-format
+#: main.c:818
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  Tipare de începuturi de linie folosite\n"
 
-#: main.c:843
+#: main.c:820
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d condiþii de start\n"
 
-#: main.c:847
+#: main.c:824
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr "  %d stãri epsilon, %d stãri dublu epsilon\n"
 
-#: main.c:851
-#, c-format
+#: main.c:828
 msgid "  no character classes\n"
 msgstr "  nici o clasã de caractere\n"
 
-#: main.c:855
+#: main.c:832
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-msgstr ""
-"  %d/%d clase de caractere necesare %d/%d cuvinte de stocare, %d refolosite\n"
+msgstr "  %d/%d clase de caractere necesare %d/%d cuvinte de stocare, %d refolosite\n"
 
-#: main.c:860
+#: main.c:837
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr "  %d perechi de stare/stareurmãtoare create\n"
 
-#: main.c:863
+#: main.c:840
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d tranziþii unice/duplicate\n"
 
-#: main.c:868
+#: main.c:845
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d intrãri în tabele\n"
 
-#: main.c:876
+#: main.c:853
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  %d/%d base-def intrãri create\n"
 
-#: main.c:880
+#: main.c:857
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  %d/%d (maxim %d) nxt-chk intrãri create\n"
 
-#: main.c:884
+#: main.c:861
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr "  %d/%d (maxim %d) model nxt-chk intrãri create\n"
 
-#: main.c:888
+#: main.c:865
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d intrãri în tabel goale\n"
 
-#: main.c:890
+#: main.c:867
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  %d prototipuri create\n"
 
-#: main.c:893
+#: main.c:870
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  %d modele create, %d folosiri\n"
 
-#: main.c:901
+#: main.c:878
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  %d/%d clase de echivalenþã create\n"
 
-#: main.c:909
+#: main.c:886
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  %d/%d clase de  meta-echivalenþã create\n"
 
-#: main.c:915
+#: main.c:892
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr "  %d (%d salvate) coliziuni disipate(hash), %d egaluri de DFA-uril\n"
 
-#: main.c:917
+#: main.c:894
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr "  %d seturi de realocãri necesare\n"
 
-#: main.c:919
+#: main.c:896
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  %d intrãri totale în tabel necesare\n"
 
-#: main.c:996
-#, c-format
+#: main.c:971
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Eroare internã. Opþiunile flex(flexopts) sunt malformate.\n"
 
-#: main.c:1006
+#: main.c:981
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Încercaþi `%s --help' pentru mai multe informaþii.\n"
 
-#: main.c:1063
+#: main.c:1038
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "opþiune -C necunoscutã `%c'"
 
-#: main.c:1192
+#: main.c:1167
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
 
-#: main.c:1467
+#: main.c:1442
 msgid "fatal parse error"
 msgstr "eroare fatalã de analizã(parse)"
 
-#: main.c:1499
+#: main.c:1474
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr "nu s-a putut crea fiºierul de informaþii de back-up %s"
 
-#: main.c:1520
-#, c-format
+#: main.c:1495
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr ""
-"-l opþiunea de compatibilitate AT&T lex determinã o scãdere drasticã a "
-"performanþei\n"
+msgstr "-l opþiunea de compatibilitate AT&T lex determinã o scãdere drasticã a performanþei\n"
 
-#: main.c:1523
-#, c-format
+#: main.c:1498
 msgid " and may be the actual source of other reported performance penalties\n"
 msgstr "ºi poate fi sursa realã a altor scãderi de performanþã raportate\n"
 
-#: main.c:1529
+#: main.c:1504
 #, c-format
-msgid ""
-"%%option yylineno entails a performance penalty ONLY on rules that can match "
-"newline characters\n"
-msgstr ""
-"%%opþiunea yylineno determinã o scãdere drasticã a performanþei DOAR în "
-"regulile care se potrivesc caracterelor linie_nouã(newline)\n"
+msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "%%opþiunea yylineno determinã o scãdere drasticã a performanþei DOAR în regulile care se potrivesc caracterelor linie_nouã(newline)\n"
 
-#: main.c:1536
-#, c-format
+#: main.c:1511
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "-I (interactiãe) determinã o scãdere minorã a performanþei\n"
 
-#: main.c:1541
-#, c-format
+#: main.c:1516
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "yymore() determinã o scãdere minorã a performanþei\n"
 
-#: main.c:1547
-#, c-format
+#: main.c:1522
 msgid "REJECT entails a large performance penalty\n"
 msgstr "REJECT determinã o scãdere drasticã a performanþei\n"
 
-#: main.c:1552
-#, c-format
+#: main.c:1527
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
-"Contextul de sfârºit(trailing) variabil determinã o scãdere drasticã a "
-"performanþei\n"
+msgstr "Contextul de sfârºit(trailing) variabil determinã o scãdere drasticã a performanþei\n"
 
-#: main.c:1564
+#: main.c:1539
 msgid "REJECT cannot be used with -f or -F"
 msgstr "REJECT nu poate fi folosit cu -f sau -F"
 
-#: main.c:1567
+#: main.c:1542
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr "%opþiunea yylineno nu poate fi folositã cu REJECT"
 
-#: main.c:1570
+#: main.c:1545
 msgid "variable trailing context rules cannot be used with -f or -F"
-msgstr ""
-"contextul de sfârºit(trailing) variabil nu poate fi folosit cu -f sau -F"
+msgstr "contextul de sfârºit(trailing) variabil nu poate fi folosit cu -f sau -F"
 
-#: main.c:1691
+#: main.c:1661
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
 msgstr "%opþunea yyclass este folositoare doar pentru scannerele C++"
 
-#: main.c:1798
+#: main.c:1768
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Folosire: %s [OPÞIUNI] [FIªIER]...\n"
 
-#: main.c:1801
+#: main.c:1771
 #, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -539,8 +515,7 @@ msgid ""
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the "
-"scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "\n"
 "Scanner behavior:\n"
@@ -577,16 +552,13 @@ msgstr ""
 "Genereazã programe care cautã potriviri de tipare pe un text\n"
 "\n"
 "Compresie de tabele:\n"
-"  -Ca, --align      renunþã la tabelele mari în favoarea unui aliniament mai "
-"bun al memoriei\n"
+"  -Ca, --align      renunþã la tabelele mari în favoarea unui aliniament mai bun al memoriei\n"
 "  -Ce, --ecs        construieºte clase de echivalenþã\n"
 "  -Cf               nu compreseazã tabelele; foloseºte reprezentare -f \n"
 "  -CF               nu compreseazã tabelele; foloseºte reprezentare -F\n"
 "  -Cm, --meta-ecs   construieºte clase de meta-echivalenþã\n"
-"  -Cr, --read       foloseºte read() în loc de stdio pentru intrarea de "
-"scanner\n"
-"  -F, --fast        foloseºte reprezentare alternativã de tabele. Asemãnãtor "
-"lui -CFr\n"
+"  -Cr, --read       foloseºte read() în loc de stdio pentru intrarea de scanner\n"
+"  -F, --fast        foloseºte reprezentare alternativã de tabele. Asemãnãtor lui -CFr\n"
 "  -f, --full        genereazã scannere rapide, mari. Asemãnãtor lui -Cfr\n"
 "  -Cem              compresie implicitã (asemãnãtor lui --ecs --meta-ecs)\n"
 "\n"
@@ -594,12 +566,10 @@ msgstr ""
 "  -d, --debug             activeazã modul debug în scanner\n"
 "  -b, --backup            scriere de informaþii de backup în %s\n"
 "  -p, --perf-report       scrie raportul de performanþã la stderr\n"
-"  -s, --nodefault         eliminã regula implicitã de ECHO text care nu se "
-"potriveºte\n"
+"  -s, --nodefault         eliminã regula implicitã de ECHO text care nu se potriveºte\n"
 "  -T, --trace             %s ar trebui sã ruleze în mod trace\n"
 "  -w, --nowarn            nu genereazã avertismente\n"
-"  -v, --verbose           scrie cuprinsul statisticilor scanner-ului la "
-"stdout\n"
+"  -v, --verbose           scrie cuprinsul statisticilor scanner-ului la stdout\n"
 "\n"
 "Fiºiere:\n"
 "  -o, --outfile=FIªIER      specificã numele de fiºier de ieºire\n"
@@ -612,8 +582,7 @@ msgstr ""
 "Comportament scanner:\n"
 "  -7, --7bit              genereazã scanner pe 7-biþi\n"
 "  -8, --8bit              genereazã scanner pe 8-biþi\n"
-"  -B, --batch             genereazã scanner comandã(batch) (inversul lui -"
-"I)\n"
+"  -B, --batch             genereazã scanner comandã(batch) (inversul lui -I)\n"
 "  -i, --case-insensitive  ignorã cazul în tipare\n"
 "  -l, --lex-compat        compatibilitate maximã cu lex original\n"
 "  -X, --posix-compat      compatibilitate maximã cu lex POSIX\n"
@@ -698,7 +667,6 @@ msgid "state # %4d\t"
 msgstr "stare # %4d\t"
 
 #: nfa.c:130
-#, c-format
 msgid "********** end of dump\n"
 msgstr "********** sfârºit de aducere(dump)\n"
 
@@ -729,128 +697,107 @@ msgstr "s-au gãsit prea multe tranziþii în mkxtion()"
 msgid "too many rules (> %d)!"
 msgstr "prea multe reguli (> %d)!"
 
-#: parse.y:159
+#: parse.y:183
 msgid "unknown error processing section 1"
 msgstr "eroare necunoscutã în procesarea secþiunii 1"
 
-#: parse.y:184 parse.y:351
+#: parse.y:208 parse.y:373
 msgid "bad start condition list"
 msgstr "listã de stãri în condiþie proastã"
 
-#: parse.y:315
+#: parse.y:337
 msgid "unrecognized rule"
 msgstr "regulã necunoscutã"
 
-#: parse.y:434 parse.y:447 parse.y:516
+#: parse.y:456 parse.y:469 parse.y:538
 msgid "trailing context used twice"
 msgstr "context de sfârºit(trailing) utilizat de douã ori"
 
-#: parse.y:552 parse.y:562 parse.y:635 parse.y:645
+#: parse.y:574 parse.y:584 parse.y:657 parse.y:667
 msgid "bad iteration values"
 msgstr "valori de iteraþie greºite"
 
-#: parse.y:580 parse.y:598 parse.y:663 parse.y:681
+#: parse.y:602 parse.y:620 parse.y:685 parse.y:703
 msgid "iteration value must be positive"
 msgstr "valoarea iteraþiei trebuie sã fie pozitivã"
 
-#: parse.y:806 parse.y:816
+#: parse.y:817 parse.y:827
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"intervalul(range) de caracter [%c %c] este ambiguu într-un scanner caz-"
-"insenzitiv"
+msgstr "intervalul(range) de caracter [%c %c] este ambiguu într-un scanner caz-insenzitiv"
 
-#: parse.y:821
+#: parse.y:832
 msgid "negative range in character class"
 msgstr "domeniu negativ în clasa de caractere"
 
-#: parse.y:918
-#, fuzzy
-msgid "[:^lower:] is ambiguous in case insensitive scanner"
-msgstr ""
-"intervalul(range) de caracter [%c %c] este ambiguu într-un scanner caz-"
-"insenzitiv"
-
-#: parse.y:924
-#, fuzzy
-msgid "[:^upper:] ambiguous in case insensitive scanner"
-msgstr ""
-"intervalul(range) de caracter [%c %c] este ambiguu într-un scanner caz-"
-"insenzitiv"
-
-#: scan.l:75 scan.l:192 scan.l:300 scan.l:443 scan.l:618 scan.l:676
+#: scan.l:70 scan.l:180 scan.l:267 scan.l:409 scan.l:548 scan.l:598
 msgid "Input line too long\n"
 msgstr "Linie de intrare(input) prea lungã\n"
 
-#: scan.l:161
+#: scan.l:149
 #, c-format
 msgid "malformed '%top' directive"
 msgstr "directivã '%top' malformatã"
 
-#: scan.l:183
+#: scan.l:171
 #, no-c-format
 msgid "unrecognized '%' directive"
 msgstr "directivã '%' necunoscutã"
 
-#: scan.l:284
+#: scan.l:251
 msgid "Unmatched '{'"
 msgstr "'{' fãrã corespondent"
 
-#: scan.l:317
+#: scan.l:284
 msgid "incomplete name definition"
 msgstr "definire de nume incompletã"
 
-#: scan.l:451
+#: scan.l:417
 #, c-format
 msgid "unrecognized %%option: %s"
 msgstr "%%opþiune necunoscutã: %s"
 
-#: scan.l:633 scan.l:800
+#: scan.l:558 scan.l:677
 msgid "bad character class"
 msgstr "clasã de caractere greºitã"
 
-#: scan.l:683
+#: scan.l:605
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "definiþie nedefinitã {%s}"
 
-#: scan.l:755
+#: scan.l:645
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "<condiþie de start> greºitã: %s"
 
-#: scan.l:768
+#: scan.l:658
 msgid "missing quote"
 msgstr "menþionare(quote) lipsã"
 
-#: scan.l:834
+#: scan.l:698
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "expresie clasã caracter greºitã: %s"
 
-#: scan.l:856
+#: scan.l:720
 msgid "bad character inside {}'s"
 msgstr "caracter eronat între {}"
 
-#: scan.l:862
+#: scan.l:726
 msgid "missing }"
 msgstr "lipseºte }"
 
-#: scan.l:940
+#: scan.l:799
 msgid "EOF encountered inside an action"
 msgstr "EOF întâlnit în mijlocul acþiunii"
 
-#: scan.l:945
-#, fuzzy
-msgid "EOF encountered inside pattern"
-msgstr "EOF întâlnit în mijlocul acþiunii"
-
-#: scan.l:967
+#: scan.l:819
 #, c-format
 msgid "bad character: %s"
 msgstr "caracter eronat: %s"
 
-#: scan.l:996
+#: scan.l:848
 #, c-format
 msgid "can't open %s"
 msgstr "nu pot deschide %s"
@@ -889,11 +836,11 @@ msgstr "Eroare necunoscutã=(%d)\n"
 msgid "symbol table memory allocation failed"
 msgstr "alocare de memorie pentru tabela de simboluri eºuatã"
 
-#: sym.c:202
+#: sym.c:203
 msgid "name defined twice"
 msgstr "nume definit de douã ori"
 
-#: sym.c:253
+#: sym.c:254
 #, c-format
 msgid "start condition %s declared twice"
 msgstr "condiþie de start %s definitã de douã ori"
@@ -903,7 +850,6 @@ msgid "premature EOF"
 msgstr "EOF prematur"
 
 #: yylex.c:198
-#, c-format
 msgid "End Marker\n"
 msgstr "Marcaj de sfârºit\n"
 
@@ -911,9 +857,6 @@ msgstr "Marcaj de sfârºit\n"
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr "*Ceva Ciudat* - tok: %d val: %d\n"
-
-#~ msgid "consistency check failed in symfollowset"
-#~ msgstr "verificare de consistenþã eºuatã în symfollowset"
 
 #~ msgid "Can't specify header option if writing to stdout."
 #~ msgstr "Nu se poate specifica opþiunea de header dacã se scrie la stdout"
