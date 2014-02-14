@@ -54,7 +54,8 @@ SUBDIRS = \
 	doc \
 	examples \
 	po \
-	tests
+	tests \
+	tools
 
 # Create the ChangeLog, but only if we're inside a git working directory
 

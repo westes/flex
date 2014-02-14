@@ -120,6 +120,7 @@ examples/manual/Makefile
 lib/Makefile
 po/Makefile.in
 src/Makefile
+tools/Makefile
 tests/Makefile
 tests/TEMPLATE/Makefile
 tests/test-array-nr/Makefile
