@@ -46,10 +46,7 @@ dist_doc_DATA = \
 
 EXTRA_DIST = \
 	.indent.pro \
-	ABOUT-NLS \
-	INSTALL \
-	autogen.sh \
-	config.rpath
+	autogen.sh
 
 SUBDIRS = \
 	lib \
