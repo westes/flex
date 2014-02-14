@@ -1,17 +1,3 @@
-* sourceforge migration
-
-** Move CVS to sourceforge (estes) %%
-
-** test the mailing lists (estes) %%
-
-** inform GNU folks about changeover (estes) %%
-
-* resolve the items in the to.do directory
-
-** expand the above into individual requests and handle those requests
-
-** transfer to.do/Wishlist contents to top level TODO file
-
 * the manual:
 
 ** do an end-to-end proofread of the manual (this is under way, but is
@@ -32,10 +18,6 @@
 *** include something about lexing/parsing fortran
 
 ** create a section on flex design, features, etc.
-
-* address lex-replacement: document or provide an option through
-   configure for creating lex and libl.a files (but remember this has
-   posix implications)
 
 * getext
 
@@ -76,24 +58,7 @@
 
 ** have a separate skeleton for c++
 
-** c++ is getting so broken and different from C, that we need to
-   reevaluate the usefuleness of c++ in flex
-
 ** revisit the C++ API. We get requests to make it more complete.
-
-* distribution
-
-** use bootstrapper
-
-** remove texinfo.tex from the cvs tree; it only needs to be present
-   on the system where the flex release is put together
-
-** use clcommit to manage ChangeLog
-
-Legend:
-
-*, **, ***: outline depth
-%% at end of item: must be adressed before next major release
 
 Local Variables:
 Mode: text
