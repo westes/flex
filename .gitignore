@@ -17,6 +17,7 @@ build-aux
 config.log
 config.status
 configure
+flex-*/
 libtool
 mkinstalldirs
 stamp-*
