@@ -23,9 +23,9 @@ CLEANFILES = \
 	flex.vr \
 	flex.vrs
 
-$(dist_man_MANS): $(top_srcdir)/main.c
+$(dist_man_MANS): $(top_srcdir)/src/main.c
 	for i in $(dist_man_MANS) ; do \
 	$(help2man) --name='$(PACKAGE_NAME)' \
 	--section=`echo $$i | sed -e 's/.*\.\([^.]*\)$$/\1/'` \
-	 ../flex$(EXEEXT) > $$i || rm -f $$i ; \
+	 $(top_srcdir)/src/flex$(EXEEXT) > $$i || rm -f $$i ; \
 	done

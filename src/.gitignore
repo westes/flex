@@ -1,0 +1,10 @@
+*.la
+*.lo
+*.o
+config.h
+config.h.in
+flex
+parse.c
+parse.h
+scan.c
+skel.c
