@@ -1,0 +1,9 @@
+# Rules to fetch the translation project's po files for a domain
+
+# Just rsync the *.po files for a particular textual domain into the
+# po/ subdirectory of the project's source tree
+
+getpo:
+	rsync -Ltvz  translationproject.org::tp/latest/flex/*.po $(top_srcdir)/po
+
+.PHONY: getpo
