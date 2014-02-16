@@ -1,46 +1,73 @@
-# Перевод сообщений flex.
-# Copyright (C) 2002 The Flex Project
-# Dmitry S. Sivachenko <dima@Chg.RU>, 1999, 2000, 2001, 2002.
+# Russian translation for flex.
+# Copyright (C) 2013 The Flex Project (msgids)
+# This file is distributed under the same license as the flex package.
 #
+# Dmitry S. Sivachenko <dima@Chg.RU>, 1999, 2000, 2001, 2002.
+# Yuri Kozlov <yuray@komyakino.ru>, 2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: flex 2.5.19\n"
-"POT-Creation-Date: 2002-09-05 12:07-0400\n"
-"PO-Revision-Date: 2002-09-08 10:54+0400\n"
-"Last-Translator: Dmitry S. Sivachenko <mitya@cavia.pp.ru>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"Project-Id-Version: flex 2.5.38\n"
+"Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2014-02-11 16:15-0500\n"
+"PO-Revision-Date: 2014-02-16 10:00+0400\n"
+"Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
+"Language-Team: Russian <gnu@mx.ru>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=koi8-r\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 1.4\n"
 
-#: dfa.c:60
+#: buf.c:78
+msgid "Allocation of buffer to print string failed"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╡я▀п╢п╣п╩п╦я┌я▄ п╠я┐я└п╣я─ п╢п╩я▐ п╡я▀п╡п╬п╢п╦п╪п╬п╧ я│я┌я─п╬п╨п╦"
+
+#: buf.c:100
+msgid "Allocation of buffer for line directive failed"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╡я▀п╢п╣п╩п╦я┌я▄ п╠я┐я└п╣я─ п╢п╩я▐ я│я┌я─п╬п╨п╬п╡п╬п╧ п╢п╦я─п╣п╨я┌п╦п╡я▀"
+
+#: buf.c:177
+msgid "Allocation of buffer for m4 def failed"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╡я▀п╢п╣п╩п╦я┌я▄ п╠я┐я└п╣я─ п╢п╩я▐ m4 def"
+
+#: buf.c:197
+msgid "Allocation of buffer for m4 undef failed"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╡я▀п╢п╣п╩п╦я┌я▄ п╠я┐я└п╣я─ п╢п╩я▐ m4 undef"
+
+#: dfa.c:61
 #, c-format
 msgid "State #%d is non-accepting -\n"
-msgstr "Состояние #%d недопустимо -\n"
+msgstr "п║п╬я│я┌п╬я▐п╫п╦п╣ #%d п╫п╣ п╢п╬п©я┐я│п╨п╟п╣я┌ -\n"
 
-#: dfa.c:123
+#: dfa.c:124
 msgid "dangerous trailing context"
-msgstr "опасный замыкающий контекст"
+msgstr "п╬п©п╟я│п╫я▀п╧ п╥п╟п╪я▀п╨п╟я▌я┴п╦п╧ п╨п╬п╫я┌п╣п╨я│я┌"
 
-#: dfa.c:165
+#: dfa.c:166
+#, c-format
 msgid " associated rule line numbers:"
-msgstr " номера строк ассоциированного правила:"
+msgstr " п╫п╬п╪п╣я─п╟ я│я┌я─п╬п╨ п╟я│я│п╬я├п╦п╦я─п╬п╡п╟п╫п╫п╬пЁп╬ п©я─п╟п╡п╦п╩п╟:"
 
-#: dfa.c:201
+#: dfa.c:202
+#, c-format
 msgid " out-transitions: "
-msgstr ""
+msgstr " out-п©п╣я─п╣я┘п╬п╢я▀: "
 
-#: dfa.c:209
+#: dfa.c:210
+#, c-format
 msgid ""
 "\n"
 " jam-transitions: EOF "
 msgstr ""
+"\n"
+" jam-п©п╣я─п╣я┘п╬п╢я▀: EOF "
 
-#: dfa.c:340
+#: dfa.c:341
 msgid "consistency check failed in epsclosure()"
-msgstr "ошибка при проверке на целостность в epsclosure()"
+msgstr "п╬я┬п╦п╠п╨п╟ п©я─п╦ п©я─п╬п╡п╣я─п╨п╣ п╫п╟ я├п╣п╩п╬я│я┌п╫п╬я│я┌я▄ п╡ epsclosure()"
 
-#: dfa.c:428
+#: dfa.c:429
 msgid ""
 "\n"
 "\n"
@@ -49,31 +76,27 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Дамп ДКА:\n"
+"п■п╟п╪п© п■п п░:\n"
 "\n"
 
-#: dfa.c:589
+#: dfa.c:604
 msgid "could not create unique end-of-buffer state"
-msgstr "невозможно создать уникальное состояние конца буфера"
+msgstr "п╫п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ я┐п╫п╦п╨п╟п╩я▄п╫п╬п╣ я│п╬я│я┌п╬я▐п╫п╦п╣ п╨п╬п╫я├п╟ п╠я┐я└п╣я─п╟"
 
-#: dfa.c:610
+#: dfa.c:625
 #, c-format
 msgid "state # %d:\n"
-msgstr "состояние # %d:\n"
+msgstr "я│п╬я│я┌п╬я▐п╫п╦п╣ # %d:\n"
 
-#: dfa.c:783
+#: dfa.c:785
 msgid "Could not write yynxt_tbl[][]"
-msgstr "Не удается записать yynxt_tbl[][]"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ yynxt_tbl[][]"
 
-#: dfa.c:1006
-msgid "consistency check failed in symfollowset"
-msgstr "ошибка при проверке на целостность в symfollowset"
-
-#: dfa.c:1054
+#: dfa.c:1049
 msgid "bad transition character detected in sympartition()"
-msgstr "обнаружен неверный переходный символ в sympartition()"
+msgstr "п╬п╠п╫п╟я─я┐п╤п╣п╫ п╫п╣п╡п╣я─п╫я▀п╧ п©п╣я─п╣я┘п╬п╢п╫я▀п╧ я│п╦п╪п╡п╬п╩ п╡ sympartition()"
 
-#: gen.c:424 gen.c:463
+#: gen.c:478
 msgid ""
 "\n"
 "\n"
@@ -82,24 +105,32 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Классы эквивалентности:\n"
+"п п╩п╟я│я│я▀ я█п╨п╡п╦п╡п╟п╩п╣п╫я┌п╫п╬я│я┌п╦:\n"
 "\n"
 
-#: gen.c:647 gen.c:673 gen.c:1158
+#: gen.c:662 gen.c:691 gen.c:1215
 #, c-format
 msgid "state # %d accepts: [%d]\n"
-msgstr "состояние # %d допускает: [%d]\n"
+msgstr "я│п╬я│я┌п╬я▐п╫п╦п╣ # %d п╢п╬п©я┐я│п╨п╟п╣я┌: [%d]\n"
 
-#: gen.c:1066
+#: gen.c:1110
 #, c-format
 msgid "state # %d accepts: "
-msgstr "состояние # %d допускает: "
+msgstr "я│п╬я│я┌п╬я▐п╫п╦п╣ # %d п╢п╬п©я┐я│п╨п╟п╣я┌: "
 
-#: gen.c:1176
+#: gen.c:1157
+msgid "Could not write yyacclist_tbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ yyacclist_tbl"
+
+#: gen.c:1233
 msgid "Could not write yyacc_tbl"
-msgstr "Не удается записать yyacc_tbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ yyacc_tbl"
 
-#: gen.c:1202
+#: gen.c:1248 gen.c:1633 gen.c:1656
+msgid "Could not write ecstbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ ecstbl"
+
+#: gen.c:1271
 msgid ""
 "\n"
 "\n"
@@ -107,376 +138,393 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Метаэквивалентных Классов:\n"
+"п°п╣я┌п╟-я█п╨п╡п╦п╡п╟п╩п╣п╫я┌п╫я▀п╣ п п╩п╟я│я│я▀:\n"
 
-#: gen.c:1221
+#: gen.c:1293
 msgid "Could not write yymeta_tbl"
-msgstr "Не удается записать yymeta_tbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ yymeta_tbl"
 
-#: gen.c:1278
+#: gen.c:1354
 msgid "Could not write yybase_tbl"
-msgstr "Невозможно записать yybase_tbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ yybase_tbl"
 
-#: gen.c:1308
+#: gen.c:1388
 msgid "Could not write yydef_tbl"
-msgstr "Невозможно записать yydef_tbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ yydef_tbl"
 
-#: gen.c:1342
+#: gen.c:1428
 msgid "Could not write yynxt_tbl"
-msgstr "Невозможно записать yynxt_tbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ yynxt_tbl"
 
-#: gen.c:1372
+#: gen.c:1464
 msgid "Could not write yychk_tbl"
-msgstr "Невозможно записать yychk_tbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ yychk_tbl"
 
-#: gen.c:1511 gen.c:1534
+#: gen.c:1618 gen.c:1647
 msgid "Could not write ftbl"
-msgstr "Невозможно записать ftbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ ftbl"
 
-#: gen.c:1520 gen.c:1543
-msgid "Could not write ecstbl"
-msgstr "Невозможно записать ecstbl"
+#: gen.c:1624
+msgid "Could not write ssltbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ ssltbl"
 
-#: gen.c:1604
+#: gen.c:1675
+msgid "Could not write eoltbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ eoltbl"
+
+#: gen.c:1735
 msgid "Could not write yynultrans_tbl"
-msgstr "Невозможно записать yynultrans_tbl"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ yynultrans_tbl"
 
-#: main.c:164
+#: main.c:191
 msgid "rule cannot be matched"
-msgstr "невозножно применить правило"
+msgstr "п╫п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©я─п╦п╪п╣п╫п╦я┌я▄ п©я─п╟п╡п╦п╩п╬"
 
-#: main.c:169
+#: main.c:196
 msgid "-s option given but default rule can be matched"
-msgstr "указана опция -s, но правило по умолчанию не может быть применено"
+msgstr "я┐п╨п╟п╥п╟п╫ п©п╟я─п╟п╪п╣я┌я─ -s, п╫п╬ п©я─п╟п╡п╦п╩п╬ п©п╬ я┐п╪п╬п╩я┤п╟п╫п╦я▌ п╫п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п©я─п╦п╪п╣п╫п╣п╫п╬"
 
-#: main.c:205
+#: main.c:236
 msgid "Can't use -+ with -l option"
-msgstr "Использование -+ с ключем -l невозможно"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄ -+ я│ п©п╟я─п╟п╪п╣я┌я─п╬п╪ -l"
 
-#: main.c:208
+#: main.c:239
 msgid "Can't use -f or -F with -l option"
-msgstr "Использование -f или -F с ключем -l невозможно"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄ -f п╦п╩п╦ -F я│ п©п╟я─п╟п╪п╣я┌я─п╬п╪ -l"
 
-#: main.c:212
-msgid "Can't use -R or -Rb with -l option"
-msgstr "Использование -R или -Rb с ключем -l невозможно"
+#: main.c:243
+msgid "Can't use --reentrant or --bison-bridge with -l option"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄ --reentrant п╦п╩п╦ --bison-bridge я│ п©п╟я─п╟п╪п╣я┌я─п╬п╪ -l"
 
-#: main.c:227
-msgid "Can't specify header option if writing to stdout."
-msgstr "Невозможно указать параметр header при выводе на stdout."
-
-#: main.c:253
+#: main.c:275
 msgid "-Cf/-CF and -Cm don't make sense together"
-msgstr "-Cf/-CF и -Cm вместе не имеют смысла"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─я▀ -Cf/-CF п╦ -Cm п╡п╪п╣я│я┌п╣ п╫п╣ п╦п╪п╣я▌я┌ я│п╪я▀я│п╩п╟"
 
-#: main.c:256
+#: main.c:278
 msgid "-Cf/-CF and -I are incompatible"
-msgstr "-Cf/-CF и -I несовместимы"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─я▀ -Cf/-CF п╦ -I п╫п╣я│п╬п╡п╪п╣я│я┌п╦п╪я▀"
 
-#: main.c:260
+#: main.c:282
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF несовместны с режимом lex-совместимости"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─я▀ -Cf/-CF п╫п╣я│п╬п╡п╪п╣я│я┌п╦п╪я▀ я│ я─п╣п╤п╦п╪п╬п╪ lex-я│п╬п╡п╪п╣я│я┌п╦п╪п╬я│я┌п╦"
 
-#: main.c:265
+#: main.c:287
 msgid "-Cf and -CF are mutually exclusive"
-msgstr "-Cf и -CF являются взаимоисключающими"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─я▀ -Cf п╦ -CF я▐п╡п╩я▐я▌я┌я│я▐ п╡п╥п╟п╦п╪п╬п╦я│п╨п╩я▌я┤п╟я▌я┴п╦п╪п╦"
 
-#: main.c:269
+#: main.c:291
 msgid "Can't use -+ with -CF option"
-msgstr "Использование -+ с ключем -CF невозможно"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄ -+ я│ п©п╟я─п╟п╪п╣я┌я─п╬п╪ -CF"
 
-#: main.c:272
+#: main.c:294
 #, c-format
 msgid "%array incompatible with -+ option"
-msgstr "%array несовместим с ключем -+"
+msgstr "%array п╫п╣я│п╬п╡п╪п╣я│я┌п╦п╪ я│ п©п╟я─п╟п╪п╣я┌я─п╬п╪ -+"
 
-#: main.c:277
-msgid "Options -+ and -R are mutually exclusive."
-msgstr "Ключи -+ и -R являются взаимоисключающими"
+#: main.c:299
+msgid "Options -+ and --reentrant are mutually exclusive."
+msgstr "п÷п╟я─п╟п╪п╣я┌я─я▀ -+ п╦ --reentrant я▐п╡п╩я▐я▌я┌я│я▐ п╡п╥п╟п╦п╪п╬п╦я│п╨п╩я▌я┤п╟я▌я┴п╦п╪п╦."
 
-#: main.c:323 main.c:343 main.c:556
+#: main.c:302
+msgid "bison bridge not supported for the C++ scanner."
+msgstr "bison bridge п╫п╣ п©п╬п╢п╢п╣я─п╤п╦п╡п╟п╣я┌я│я▐ п╢п╩я▐ я│п╨п╟п╫п╣я─п╟ C++."
+
+#: main.c:357 main.c:403
 #, c-format
 msgid "could not create %s"
-msgstr "невозможно создать %s"
+msgstr "п╫п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ %s"
 
-#: main.c:357
+#: main.c:416
 msgid "could not write tables header"
-msgstr "неудается записать заголовок таблиц"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©п╦я│п╟я┌я▄ п╥п╟пЁп╬п╩п╬п╡п╬п╨ я┌п╟п╠п╩п╦я├"
 
-#: main.c:361
+#: main.c:420
 #, c-format
 msgid "can't open skeleton file %s"
-msgstr "не удается открыть файл-каркас %s"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╬я┌п╨я─я▀я┌я▄ я└п╟п╧п╩-п╨п╟я─п╨п╟я│ %s"
 
-#: main.c:523
+#: main.c:456
+msgid "allocation of macro definition failed"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я─п╟п╥п╪п╣я│я┌п╦я┌я▄ п╬п©я─п╣п╢п╣п╩п╣п╫п╦п╣ п╪п╟п╨я─п╬я│п╟"
+
+#: main.c:504
 #, c-format
 msgid "input error reading skeleton file %s"
-msgstr "ошибка чтения файла-каркаса %s"
+msgstr "п╬я┬п╦п╠п╨п╟ я┤я┌п╣п╫п╦я▐ я└п╟п╧п╩п╟-п╨п╟я─п╨п╟я│п╟ %s"
 
-#: main.c:527
+#: main.c:508
 #, c-format
 msgid "error closing skeleton file %s"
-msgstr "ошибка при закрытии файла-каркаса %s"
+msgstr "п╬я┬п╦п╠п╨п╟ п©я─п╦ п╥п╟п╨я─я▀я┌п╦п╦ я└п╟п╧п╩п╟-п╨п╟я─п╨п╟я│п╟ %s"
 
-#: main.c:769
+#: main.c:693
 #, c-format
 msgid "error creating header file %s"
-msgstr "ошибка создания заголовочного файла %s"
+msgstr "п╬я┬п╦п╠п╨п╟ я│п╬п╥п╢п╟п╫п╦я▐ п╥п╟пЁп╬п╩п╬п╡п╬я┤п╫п╬пЁп╬ я└п╟п╧п╩п╟ %s"
 
-#: main.c:777
+#: main.c:701
 #, c-format
 msgid "error writing output file %s"
-msgstr "ошибка записи в выходной файл %s"
+msgstr "п╬я┬п╦п╠п╨п╟ п╥п╟п©п╦я│п╦ п╡ п╡я▀я┘п╬п╢п╫п╬п╧ я└п╟п╧п╩ %s"
 
-#: main.c:781
+#: main.c:705
 #, c-format
 msgid "error closing output file %s"
-msgstr "ошибка закрытия выходного файла %s"
+msgstr "п╬я┬п╦п╠п╨п╟ п╥п╟п╨я─я▀я┌п╦я▐ п╡я▀я┘п╬п╢п╫п╬пЁп╬ я└п╟п╧п╩п╟ %s"
 
-#: main.c:785
+#: main.c:709
 #, c-format
 msgid "error deleting output file %s"
-msgstr "ошибка при удалении выходного файла %s"
+msgstr "п╬я┬п╦п╠п╨п╟ я┐п╢п╟п╩п╣п╫п╦я▐ п╡я▀я┘п╬п╢п╫п╬пЁп╬ я└п╟п╧п╩п╟ %s"
 
-#: main.c:792
+#: main.c:716
+#, c-format
 msgid "No backing up.\n"
-msgstr ""
+msgstr "п═п╣п╥п╣я─п╡п╫п╬п╣ п╨п╬п©п╦я─п╬п╡п╟п╫п╦п╣ п╬я┌п╨п╩я▌я┤п╣п╫п╬.\n"
 
-#: main.c:796
+#: main.c:720
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
-msgstr "возврат на %d (недопустимых) состояний.\n"
+msgstr "я─п╣п╥п╣я─п╡п╫п╬п╣ п╨п╬п©п╦я─п╬п╡п╟п╫п╦п╣ %d (п╫п╣п╢п╬п©я┐я│я┌п╦п╪я▀я┘) я│п╬я│я┌п╬я▐п╫п╦п╧.\n"
 
-#: main.c:800
+#: main.c:724
+#, c-format
 msgid "Compressed tables always back up.\n"
-msgstr "Сжатые таблицы всегда сохраняются.\n"
+msgstr "п═п╣п╥п╣я─п╡п╫п╬п╣ п╨п╬п©п╦я─п╬п╡п╟п╫п╦п╣ я│п╤п╟я┌я▀я┘ я┌п╟п╠п╩п╦я├ п╡я▀п©п╬п╩п╫я▐п╣я┌я│я▐ п╡я│п╣пЁп╢п╟.\n"
 
-#: main.c:803
+#: main.c:727
 #, c-format
 msgid "error writing backup file %s"
-msgstr "ошибка записи резервной копии файла %s"
+msgstr "п╬я┬п╦п╠п╨п╟ п╥п╟п©п╦я│п╦ я─п╣п╥п╣я─п╡п╫п╬п╧ п╨п╬п©п╦п╦ я└п╟п╧п╩п╟ %s"
 
-#: main.c:807
+#: main.c:731
 #, c-format
 msgid "error closing backup file %s"
-msgstr "ошибка при закрытии резервной копии файла %s"
+msgstr "п╬я┬п╦п╠п╨п╟ п╥п╟п╨я─я▀я┌п╦я▐ я─п╣п╥п╣я─п╡п╫п╬п╧ п╨п╬п©п╦п╦ я└п╟п╧п╩п╟ %s"
 
-#: main.c:812
+#: main.c:736
 #, c-format
 msgid "%s version %s usage statistics:\n"
-msgstr "статистика использования %s версии %s:\n"
+msgstr "я│я┌п╟я┌п╦я│я┌п╦п╨п╟ п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦я▐ %s п╡п╣я─я│п╦п╦ %s:\n"
 
-#: main.c:815
+#: main.c:739
+#, c-format
 msgid "  scanner options: -"
-msgstr "  опции сканера: -"
+msgstr "  п©п╟я─п╟п╪п╣я┌я─я▀ я│п╨п╟п╫п╣я─п╟: -"
 
-#: main.c:894
+#: main.c:818
 #, c-format
 msgid "  %d/%d NFA states\n"
-msgstr "  %d/%d состояний НКА\n"
+msgstr "  %d/%d я│п╬я│я┌п╬я▐п╫п╦п╧ п²п п░\n"
 
-#: main.c:896
+#: main.c:820
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
-msgstr "  %d/%d состояний ДКА (%d слов)\n"
+msgstr "  %d/%d я│п╬я│я┌п╬я▐п╫п╦п╧ п■п п░ (%d я│п╩п╬п╡)\n"
 
-#: main.c:898
+#: main.c:822
 #, c-format
 msgid "  %d rules\n"
-msgstr "  %d правил\n"
+msgstr "  %d п©я─п╟п╡п╦п╩\n"
 
-#: main.c:903
+#: main.c:827
+#, c-format
 msgid "  No backing up\n"
-msgstr ""
+msgstr "  п═п╣п╥п╣я─п╡п╫п╬п╣ п╨п╬п©п╦я─п╬п╡п╟п╫п╦п╣ п╬я┌п╨п╩я▌я┤п╣п╫п╬\n"
 
-#: main.c:907
+#: main.c:831
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
-msgstr "  сохранены %d (недопустимых) состояний\n"
+msgstr "  я─п╣п╥п╣я─п╡п╫п╬п╣ п╨п╬п©п╦я─п╬п╡п╟п╫п╦п╣ %d (п╫п╣п╢п╬п©я┐я│я┌п╦п╪я▀я┘) я│п╬я│я┌п╬я▐п╫п╦п╧\n"
 
-#: main.c:912
+#: main.c:836
+#, c-format
 msgid "  Compressed tables always back-up\n"
-msgstr "  Сжатые таблицы всегда сохраняются\n"
+msgstr "  п═п╣п╥п╣я─п╡п╫п╬п╣ п╨п╬п©п╦я─п╬п╡п╟п╫п╦п╣ я│п╤п╟я┌я▀я┘ я┌п╟п╠п╩п╦я├ п╡я▀п©п╬п╩п╫я▐п╣я┌я│я▐ п╡я│п╣пЁп╢п╟\n"
+
+#: main.c:840
+#, c-format
+msgid "  Beginning-of-line patterns used\n"
+msgstr "  п≤я│п©п╬п╩я▄п╥я┐я▌я┌я│я▐ я┬п╟п╠п╩п╬п╫я▀ п╫п╟я┤п╟п╩п╟ я│я┌я─п╬п╨п╦\n"
+
+#: main.c:842
+#, c-format
+msgid "  %d/%d start conditions\n"
+msgstr "  %d/%d п╫п╟я┤п╟п╩я▄п╫я▀я┘ я┐я│п╩п╬п╡п╦п╧\n"
+
+#: main.c:846
+#, c-format
+msgid "  %d epsilon states, %d double epsilon states\n"
+msgstr "  %d я█п©я│п╦п╩п╬п╫-я│п╬я│я┌п╬я▐п╫п╦п╧, %d п╢п╡п╬п╧п╫я▀я┘ я█п©я│п╦п╩п╬п╫-я│п╬я│я┌п╬я▐п╫п╦п╧\n"
+
+#: main.c:850
+#, c-format
+msgid "  no character classes\n"
+msgstr "  п╬я┌я│я┐я┌я│я┌п╡я┐я▌я┌ п╨п╩п╟я│я│я▀ я│п╦п╪п╡п╬п╩п╬п╡\n"
+
+#: main.c:854
+#, c-format
+msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
+msgstr "  %d/%d п╨п╩п╟я│я│п╬п╡ я│п╦п╪п╡п╬п╩п╬п╡ я┌я─п╣п╠я┐я▌я┌ %d/%d я│п╩п╬п╡ п╢п╩я▐ я┘я─п╟п╫п╣п╫п╦я▐, %d п©п╬п╡я┌п╬я─п╫п╬ п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╬\n"
+
+#: main.c:859
+#, c-format
+msgid "  %d state/nextstate pairs created\n"
+msgstr "  я│п╬п╥п╢п╟п╫п╬ %d п©п╟я─ я│п╬я│я┌п╬я▐п╫п╦п╣/я│п╩п╣п╢_я│п╬я│я┌п╬я▐п╫п╦п╣\n"
+
+#: main.c:862
+#, c-format
+msgid "  %d/%d unique/duplicate transitions\n"
+msgstr "  %d/%d я┐п╫п╦п╨п╟п╩я▄п╫я▀я┘/п©п╬п╡я┌п╬я─я▐я▌я┴п╦я┘я│я▐ п©п╣я─п╣я┘п╬п╢п╬п╡\n"
+
+#: main.c:867
+#, c-format
+msgid "  %d table entries\n"
+msgstr "  %d я█п╩п╣п╪п╣п╫я┌п╬п╡ я┌п╟п╠п╩п╦я├я▀\n"
+
+#: main.c:875
+#, c-format
+msgid "  %d/%d base-def entries created\n"
+msgstr "  я│п╬п╥п╢п╟п╫п╬ %d/%d base-def я█п╩п╣п╪п╣п╫я┌п╬п╡\n"
+
+#: main.c:879
+#, c-format
+msgid "  %d/%d (peak %d) nxt-chk entries created\n"
+msgstr "  я│п╬п╥п╢п╟п╫п╬ %d/%d (п©п╦п╨ %d) nxt-chk я█п╩п╣п╪п╣п╫я┌п╬п╡\n"
+
+#: main.c:883
+#, c-format
+msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
+msgstr "  я│п╬п╥п╢п╟п╫п╬ %d/%d (п©п╦п╨ %d) я┬п╟п╠п╩п╬п╫п╫я▀я┘ nxt-chk я█п╩п╣п╪п╣п╫я┌п╬п╡\n"
+
+#: main.c:887
+#, c-format
+msgid "  %d empty table entries\n"
+msgstr "  %d п©я┐я│я┌я▀я┘ я█п╩п╣п╪п╣п╫я┌п╬п╡ я┌п╟п╠п╩п╦я├я▀\n"
+
+#: main.c:889
+#, c-format
+msgid "  %d protos created\n"
+msgstr "  я│п╬п╥п╢п╟п╫п╬ %d п©я─п╬я┌п╬я┌п╦п©п╬п╡\n"
+
+#: main.c:892
+#, c-format
+msgid "  %d templates created, %d uses\n"
+msgstr "  я│п╬п╥п╢п╟п╫п╬ %d я┬п╟п╠п╩п╬п╫п╬п╡, %d п╦я│п©п╬п╩я▄п╥я┐я▌я┌я│я▐\n"
+
+#: main.c:900
+#, c-format
+msgid "  %d/%d equivalence classes created\n"
+msgstr "  я│п╬п╥п╢п╟п╫я▀ п╨п╩п╟я│я│я▀ я█п╨п╡п╦п╡п╟п╩п╣п╫я┌п╫п╬я│я┌п╦ %d/%d\n"
+
+#: main.c:908
+#, c-format
+msgid "  %d/%d meta-equivalence classes created\n"
+msgstr "  %d/%d п╪п╣я┌п╟-я█п╨п╡п╦п╡п╟п╩п╣п╫я┌п╫я▀я┘ п╨п╩п╟я│я│п╬п╡ я│п╬п╥п╢п╟п╫п╬\n"
+
+#: main.c:914
+#, c-format
+msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
+msgstr "  %d (%d п╥п╟п©п╦я│п╟п╫п╬) п╨п╬п╩п╩п╦п╥п╦п╧ я┘я█я┬-я┌п╟п╠п╩п╦я├я▀, %d я█п╨п╡п╦п╡п╟п╩п╣п╫я┌п╫я▀я┘ п■п п░\n"
 
 #: main.c:916
-msgid "  Beginning-of-line patterns used\n"
-msgstr "  Используются шаблоны начала строки\n"
+#, c-format
+msgid "  %d sets of reallocations needed\n"
+msgstr "  я┌я─п╣п╠я┐п╣я┌я│я▐ %d п╫п╟п╠п╬я─п╬п╡ п©п╬п╡я┌п╬я─п╫я▀я┘ я─п╟п╥п╪п╣я┴п╣п╫п╦п╧\n"
 
 #: main.c:918
 #, c-format
-msgid "  %d/%d start conditions\n"
-msgstr "  %d/%d стартовых условий\n"
-
-#: main.c:922
-#, c-format
-msgid "  %d epsilon states, %d double epsilon states\n"
-msgstr ""
-
-#: main.c:926
-msgid "  no character classes\n"
-msgstr "  отсутствуют классы символов\n"
-
-#: main.c:930
-#, c-format
-msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-msgstr "  %d/%d классов символов требуют %d/%d слов для хранения, %d повторно использовано\n"
-
-#: main.c:935
-#, c-format
-msgid "  %d state/nextstate pairs created\n"
-msgstr "  создано %d пар состояние/след_состояние\n"
-
-#: main.c:938
-#, c-format
-msgid "  %d/%d unique/duplicate transitions\n"
-msgstr "  %d/%d уникальных/повторяющихся переходов\n"
-
-#: main.c:943
-#, c-format
-msgid "  %d table entries\n"
-msgstr "  %d элементов таблицы\n"
-
-#: main.c:951
-#, c-format
-msgid "  %d/%d base-def entries created\n"
-msgstr "  создано %d/%d base-def элементов\n"
-
-#: main.c:955
-#, c-format
-msgid "  %d/%d (peak %d) nxt-chk entries created\n"
-msgstr "  создано %d/%d (пик %d) nxt-chk элементов\n"
-
-#: main.c:959
-#, c-format
-msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
-msgstr "  создано %d/%d (пик %d) шаблонных nxt-chk элементов\n"
-
-#: main.c:963
-#, c-format
-msgid "  %d empty table entries\n"
-msgstr "  %d пустых элементов таблицы\n"
-
-#: main.c:965
-#, c-format
-msgid "  %d protos created\n"
-msgstr "  создано %d прототипов\n"
-
-#: main.c:968
-#, c-format
-msgid "  %d templates created, %d uses\n"
-msgstr "  создано %d шаблонов, %d использований\n"
-
-#: main.c:976
-#, c-format
-msgid "  %d/%d equivalence classes created\n"
-msgstr "  созданы классы эквивалентности %d/%d\n"
-
-#: main.c:984
-#, c-format
-msgid "  %d/%d meta-equivalence classes created\n"
-msgstr "  %d/%d метаэквивалентных классов создано\n"
-
-#: main.c:990
-#, c-format
-msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
-msgstr "  %d (%d записано) коллизий хэш-таблицы, %d эквивалентных ДКА\n"
-
-#: main.c:992
-#, c-format
-msgid "  %d sets of reallocations needed\n"
-msgstr "  требуется %d наборов повторных размещений\n"
-
-#: main.c:994
-#, c-format
 msgid "  %d total table entries needed\n"
-msgstr "  всего требуется %d элементов таблицы\n"
+msgstr "  п╡я│п╣пЁп╬ я┌я─п╣п╠я┐п╣я┌я│я▐ %d я█п╩п╣п╪п╣п╫я┌п╬п╡ я┌п╟п╠п╩п╦я├я▀\n"
 
-#: main.c:1056
+#: main.c:995
+#, c-format
 msgid "Internal error. flexopts are malformed.\n"
-msgstr "Внутренняя ошибка.  Неправильно заданы ключи flex.\n"
+msgstr "п▓п╫я┐я┌я─п╣п╫п╫я▐я▐ п╬я┬п╦п╠п╨п╟. п²п╣п©я─п╟п╡п╦п╩я▄п╫п╬п╣ п╥п╫п╟я┤п╣п╫п╦п╣ flexopts.\n"
 
-#: main.c:1066
+#: main.c:1005
 #, c-format
 msgid "Try `%s --help' for more information.\n"
-msgstr "Попробуйте `%s --help' для получения более подробного описания.\n"
+msgstr "п÷п╬п©я─п╬п╠я┐п╧я┌п╣ б╚%s --helpб╩ п╢п╩я▐ п©п╬п╩я┐я┤п╣п╫п╦я▐ п╠п╬п╩п╣п╣ п©п╬п╢я─п╬п╠п╫п╬пЁп╬ п╬п©п╦я│п╟п╫п╦я▐.\n"
 
-#: main.c:1123
+#: main.c:1062
 #, c-format
 msgid "unknown -C option '%c'"
-msgstr "неизвестный -C ключ '%c'"
+msgstr "п╫п╣п╦п╥п╡п╣я│я┌п╫п╬п╣ п╥п╫п╟я┤п╣п╫п╦п╣ б╚%cб╩ п╢п╩я▐ -C"
 
-#: main.c:1207
-#, c-format
-msgid "unknown -R option '%c'"
-msgstr "неизвестный -R ключ '%c'"
-
-#: main.c:1251
+#: main.c:1191
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
 
-#: main.c:1514
+#: main.c:1466
 msgid "fatal parse error"
-msgstr "фатальная ошибка разбора"
+msgstr "я└п╟я┌п╟п╩я▄п╫п╟я▐ п╬я┬п╦п╠п╨п╟ я─п╟п╥п╠п╬я─п╟"
+
+#: main.c:1498
+#, c-format
+msgid "could not create backing-up info file %s"
+msgstr "п╫п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ я─п╣п╥п╣я─п╡п╫я┐я▌ п╨п╬п©п╦я▌ п╦п╫я└п╬я─п╪п╟я├п╦п╬п╫п╫п╬пЁп╬ я└п╟п╧п╩п╟ %s"
+
+#: main.c:1519
+#, c-format
+msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─ -l я│п╬п╡п╪п╣я│я┌п╦п╪п╬я│я┌п╦ я│ AT&T lex п╡п╩п╣я┤я▒я┌ п╥п╫п╟я┤п╦я┌п╣п╩я▄п╫п╬п╣ я│п╫п╦п╤п╣п╫п╦п╣ п©я─п╬п╦п╥п╡п╬п╢п╦я┌п╣п╩я▄п╫п╬я│я┌п╦\n"
+
+#: main.c:1522
+#, c-format
+msgid " and may be the actual source of other reported performance penalties\n"
+msgstr " п╦ я┌п╟п╨п╤п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п╦я│я┌п╦п╫п╫я▀п╪ п╦я│я┌п╬я┤п╫п╦п╨п╬п╪ п©я─п╬п╠п╩п╣п╪ я│ п©я─п╬п╦п╥п╡п╬п╢п╦я┌п╣п╩я▄п╫п╬я│я┌я▄я▌\n"
+
+#: main.c:1528
+#, c-format
+msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "%%option yylineno п╡п╩п╣я┤я▒я┌ п╥п╫п╟я┤п╦я┌п╣п╩я▄п╫п╬п╣ я│п╫п╦п╤п╣п╫п╦п╣ п©я─п╬п╦п╥п╡п╬п╢п╦я┌п╣п╩я▄п╫п╬я│я┌п╦ п╒п·п⌡п╛п п· п╢п╩я▐ п©я─п╟п╡п╦п╩, п╨п╬я┌п╬я─я▀п╣ п╪п╬пЁя┐я┌ я│п╬п╡п©п╟п╢п╟я┌я▄ я│ я│п╦п╪п╡п╬п╩п╟п╪п╦ п╫п╬п╡п╬п╧ я│я┌я─п╬п╨п╦\n"
+
+#: main.c:1535
+#, c-format
+msgid "-I (interactive) entails a minor performance penalty\n"
+msgstr "-I (п╦п╫я┌п╣я─п╟п╨я┌п╦п╡п╫я▀п╧) п╡п╩п╣я┤я▒я┌ п╫п╣п╥п╫п╟я┤п╦я┌п╣п╩я▄п╫п╬п╣ я│п╫п╦п╤п╣п╫п╦п╣ п©я─п╬п╦п╥п╡п╬п╢п╦я┌п╣п╩я▄п╫п╬я│я┌п╦\n"
+
+#: main.c:1540
+#, c-format
+msgid "yymore() entails a minor performance penalty\n"
+msgstr "yymore() п©я─п╦п╡п╬п╢п╦я┌ п╨ п╫п╣п╠п╬п╩я▄я┬п╬п╪я┐ я│п╫п╦п╤п╣п╫п╦я▌ п©я─п╬п╦п╥п╡п╬п╢п╦я┌п╣п╩я▄п╫п╬я│я┌п╦\n"
 
 #: main.c:1546
 #, c-format
-msgid "could not create backing-up info file %s"
-msgstr "неудается создать запасной информационный файл %s"
-
-#: main.c:1567
-msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr "Опция -l совместимости с AT&T lex влечет значительное снижение производительности\n"
-
-#: main.c:1570
-msgid " and may be the actual source of other reported performance penalties\n"
-msgstr " и также может быть истинным источником проблем с производительностью\n"
-
-#: main.c:1576
-#, c-format
-msgid "%%option yylineno entails a large performance penalty\n"
-msgstr "%%option yylineno влечет значительное снижение производительности\n"
-
-#: main.c:1583
-msgid "-I (interactive) entails a minor performance penalty\n"
-msgstr "-I (интерактивный) влечет незначительное снижение производительности\n"
-
-#: main.c:1588
-msgid "yymore() entails a minor performance penalty\n"
-msgstr "yymore() приводит к небольшому снижению производительности\n"
-
-#: main.c:1594
 msgid "REJECT entails a large performance penalty\n"
-msgstr "REJECT влечет значительное снижение производительности\n"
+msgstr "REJECT п╡п╩п╣я┤я▒я┌ п╥п╫п╟я┤п╦я┌п╣п╩я▄п╫п╬п╣ я│п╫п╦п╤п╣п╫п╦п╣ п©я─п╬п╦п╥п╡п╬п╢п╦я┌п╣п╩я▄п╫п╬я│я┌п╦\n"
 
-#: main.c:1599
+#: main.c:1551
+#, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
+msgstr "п÷я─п╟п╡п╦п╩п╟ я│ п©п╣я─п╣п╪п╣п╫п╫я▀п╪ п╥п╟п╪я▀п╨п╟я▌я┴п╦п╪ п╨п╬п╫я┌п╣п╨я│я┌п╬п╪ п©я─п╦п╡п╬п╢я▐я┌ п╨ п╥п╫п╟я┤п╦я┌п╣п╩я▄п╫п╬п╪я┐ я│п╫п╦п╤п╣п╫п╦я▌ п©я─п╬п╦п╥п╡п╬п╢п╦я┌п╣п╩я▄п╫п╬я│я┌п╦\n"
 
-#: main.c:1611
+#: main.c:1563
 msgid "REJECT cannot be used with -f or -F"
-msgstr "REJECT не может быть использован вместе с -f или -F"
+msgstr "REJECT п╫п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫ п╡п╪п╣я│я┌п╣ я│ -f п╦п╩п╦ -F"
 
-#: main.c:1614
+#: main.c:1566
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
-msgstr "%option yylineno не может быть использовано с REJECT"
+msgstr "%option yylineno п╫п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫ я│ REJECT"
 
-#: main.c:1617
+#: main.c:1569
 msgid "variable trailing context rules cannot be used with -f or -F"
-msgstr ""
+msgstr "п©я─п╟п╡п╦п╩п╟ я│ п©п╣я─п╣п╪п╣п╫п╫я▀п╪ п╥п╟п╪я▀п╨п╟я▌я┴п╦п╪ п╨п╬п╫я┌п╣п╨я│я┌п╬п╪ п╫п╣ п╪п╬пЁя┐я┌ п╠я▀я┌я▄ п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫я▀ я│ -f п╦п╩п╦ -F"
 
-#: main.c:1733
+#: main.c:1692
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
-msgstr "%option yyclass имеет смысл только для сканеров на C++"
+msgstr "%option yyclass п╦п╪п╣п╣я┌ я│п╪я▀я│п╩ я┌п╬п╩я▄п╨п╬ п╢п╩я▐ я│п╨п╟п╫п╣я─п╬п╡ C++"
 
-#: main.c:1840
+#: main.c:1799
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
-msgstr "Использование: %s [КЛЮЧИ] [ФАЙЛ]...\n"
+msgstr "п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣: %s [п÷п░п═п░п°п∙п╒п═п╚] [п╓п░п≥п⌡]Б─╕\n"
 
-#: main.c:1843
+#: main.c:1802
 #, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -525,8 +573,11 @@ msgid ""
 "  -L,  --noline            suppress #line directives in scanner\n"
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant C scanner\n"
-"  -Rb, --reentrant-bison   reentrant scanner for bison pure parser.\n"
+"       --bison-bridge      scanner for bison pure parser.\n"
+"       --bison-locations   include yylloc support.\n"
 "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+"       --noansi-definitions old-style function definitions\n"
+"       --noansi-prototypes  empty parameter list in prototypes\n"
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 "\n"
@@ -537,112 +588,118 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
-"Генерирует программы, производящие манипуляции с текстом по шаблонам.\n"
+"п⌠п╣п╫п╣я─п╦я─я┐п╣я┌ п©я─п╬пЁя─п╟п╪п╪я▀, п©я─п╬п╦п╥п╡п╬п╢я▐я┴п╦п╣ п╪п╟п╫п╦п©я┐п╩я▐я├п╦п╦ я│ я┌п╣п╨я│я┌п╬п╪ п©п╬ я┬п╟п╠п╩п╬п╫п╟п╪.\n"
 "\n"
-"Сжатие таблиц:\n"
-"  -Ca, --align       допускать больший размер таблиц для\n"
-"                     лучшего выравнивания в памяти\n"
-"  -Ce, --ecs         создавать классы эквивалентности\n"
-"  -Cf                не сжимать таблицы; использовать -f представление\n"
-"  -CF                не сжимать таблицы; использовать -F представление\n"
-"  -Cm, --meta-ecs    создавать классы метаэквивалентности\n"
-"  -Cr, --read        использовать read() вместо stdio для\n"
-"                     входных данных сканера\n"
-"  -f, --full         создать быстрый, большой сканер.  То же, что  и -Cfr\n"
-"  -F, --fast         использовать альтернативное представление таблиц.\n"
-"                     То же, что и -CFr\n"
-"  -Cem               степень сжатия по умолчанию\n"
-"                     (то же что и --ecs --meta-ecs)\n"
+"п║п╤п╟я┌п╦п╣ я┌п╟п╠п╩п╦я├:\n"
+"  -Ca, --align       п╢п╬п©я┐я│п╨п╟я┌я▄ п╠п╬п╩я▄я┬п╦п╧ я─п╟п╥п╪п╣я─ я┌п╟п╠п╩п╦я├ п╢п╩я▐\n"
+"                     п╩я┐я┤я┬п╣пЁп╬ п╡я▀я─п╟п╡п╫п╦п╡п╟п╫п╦я▐ п╡ п©п╟п╪я▐я┌п╦\n"
+"  -Ce, --ecs         я│п╬п╥п╢п╟п╡п╟я┌я▄ п╨п╩п╟я│я│я▀ я█п╨п╡п╦п╡п╟п╩п╣п╫я┌п╫п╬я│я┌п╦\n"
+"  -Cf                п╫п╣ я│п╤п╦п╪п╟я┌я▄ я┌п╟п╠п╩п╦я├я▀; п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄ -f п©я─п╣п╢я│я┌п╟п╡п╩п╣п╫п╦п╣\n"
+"  -CF                п╫п╣ я│п╤п╦п╪п╟я┌я▄ я┌п╟п╠п╩п╦я├я▀; п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄ -F п©я─п╣п╢я│я┌п╟п╡п╩п╣п╫п╦п╣\n"
+"  -Cm, --meta-ecs    я│п╬п╥п╢п╟п╡п╟я┌я▄ п╨п╩п╟я│я│я▀ п╪п╣я┌п╟-я█п╨п╡п╦п╡п╟п╩п╣п╫я┌п╫п╬я│я┌п╦\n"
+"  -Cr, --read        п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄ read() п╡п╪п╣я│я┌п╬ stdio п╢п╩я▐\n"
+"                     п╡я┘п╬п╢п╫я▀я┘ п╢п╟п╫п╫я▀я┘ я│п╨п╟п╫п╣я─п╟\n"
+"  -f, --full         я│п╬п╥п╢п╟я┌я▄ п╠я▀я│я┌я─я▀п╧, п╠п╬п╩я▄я┬п╬п╧ я│п╨п╟п╫п╣я─. п╒п╬ п╤п╣, я┤я┌п╬ п╦ -Cfr\n"
+"  -F, --fast         п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄ п╟п╩я▄я┌п╣я─п╫п╟я┌п╦п╡п╫п╬п╣ п©я─п╣п╢я│я┌п╟п╡п╩п╣п╫п╦п╣ я┌п╟п╠п╩п╦я├.\n"
+"                     п╒п╬ п╤п╣, я┤я┌п╬ п╦ -CFr\n"
+"  -Cem               я│я┌п╣п©п╣п╫я▄ я│п╤п╟я┌п╦я▐ п©п╬ я┐п╪п╬п╩я┤п╟п╫п╦я▌\n"
+"                     (я┌п╬ п╤п╣ я┤я┌п╬ п╦ --ecs --meta-ecs)\n"
 "\n"
-"Отладка:\n"
-"  -d, --debug             включить режим отладки в сканер\n"
-"  -b, --backup            записать запасную копию в %s\n"
-"  -p, --perf-report       записать отчет о производительности в stderr\n"
-"  -s, --nodefault         подавлять правило по умолчанию для вывода (ECHO)\n"
-"                          текста, который не подошел ни к одному правилу\n"
-"  -T, --trace             %s должен запускаться в режиме трассировки\n"
-"  -w, --nowarn            не выдавать предупреждений\n"
-"  -v, --verbose           записать суммарную статистику сканера в stdout\n"
+"п·я┌п╩п╟п╢п╨п╟:\n"
+"  -d, --debug             п╡п╨п╩я▌я┤п╦я┌я▄ я─п╣п╤п╦п╪ п╬я┌п╩п╟п╢п╨п╦ п╡ я│п╨п╟п╫п╣я─\n"
+"  -b, --backup            п╥п╟п©п╦я│п╟я┌я▄ я─п╣п╥п╣я─п╡п╫я┐я▌ п╨п╬п©п╦я▌ п╡ %s\n"
+"  -p, --perf-report       п╥п╟п©п╦я│п╟я┌я▄ п╬я┌я┤я▒я┌ п╬ п©я─п╬п╦п╥п╡п╬п╢п╦я┌п╣п╩я▄п╫п╬я│я┌п╦ п╡ stderr\n"
+"  -s, --nodefault         п©п╬п╢п╟п╡п╩я▐я┌я▄ п©я─п╟п╡п╦п╩п╬ п©п╬ я┐п╪п╬п╩я┤п╟п╫п╦я▌ п╢п╩я▐ п╡я▀п╡п╬п╢п╟ (ECHO)\n"
+"                          я┌п╣п╨я│я┌п╟, п╨п╬я┌п╬я─я▀п╧ п╫п╣ п©п╬п╢п╬я┬я▒п╩ п╫п╦ п╨ п╬п╢п╫п╬п╪я┐ п©я─п╟п╡п╦п╩я┐\n"
+"  -T, --trace             %s п╢п╬п╩п╤п╣п╫ п╥п╟п©я┐я│п╨п╟я┌я▄я│я▐ п╡ я─п╣п╤п╦п╪п╣ я┌я─п╟я│я│п╦я─п╬п╡п╨п╦\n"
+"  -w, --nowarn            п╫п╣ п╡я▀п╢п╟п╡п╟я┌я▄ п©я─п╣п╢я┐п©я─п╣п╤п╢п╣п╫п╦п╧\n"
+"  -v, --verbose           п╥п╟п©п╦я│п╟я┌я▄ я│я┐п╪п╪п╟я─п╫я┐я▌ я│я┌п╟я┌п╦я│я┌п╦п╨я┐ я│п╨п╟п╫п╣я─п╟ п╡ stdout\n"
 "\n"
-"Файлы:\n"
-"  -o, --outfile=ФАЙЛ      указать имя выходного файла\n"
-"  -S, --skel=ФАЙЛ         указать файл каркаса\n"
-"  -t, --stdout            записать сканер в stdout вместо %s\n"
-"      --yyclass=ИМЯ       имя класса Си++\n"
-"      --header-file=ФАЙЛ  создать кроме сканера заголовочный файл Си\n"
-"      --tables-files=ФАЙЛ записать таблицы в ФАЙЛ\n"
+"п╓п╟п╧п╩я▀:\n"
+"  -o, --outfile=п╓п░п≥п⌡        я┐п╨п╟п╥п╟я┌я▄ п╦п╪я▐ п╡я▀я┘п╬п╢п╫п╬пЁп╬ я└п╟п╧п╩п╟\n"
+"  -S, --skel=п╓п░п≥п⌡           я┐п╨п╟п╥п╟я┌я▄ я└п╟п╧п╩ п╨п╟я─п╨п╟я│п╟\n"
+"  -t, --stdout              п╥п╟п©п╦я│п╟я┌я▄ я│п╨п╟п╫п╣я─ п╡ stdout п╡п╪п╣я│я┌п╬ %s\n"
+"      --yyclass=п≤п°п╞         п╦п╪я▐ п╨п╩п╟я│я│п╟ C++\n"
+"      --header-file=п╓п░п≥п⌡    я│п╬п╥п╢п╟я┌я▄ п╨я─п╬п╪п╣ я│п╨п╟п╫п╣я─п╟ п╥п╟пЁп╬п╩п╬п╡п╬я┤п╫я▀п╧ я└п╟п╧п╩ C\n"
+"      --tables-file[=п╓п░п≥п⌡] п╥п╟п©п╦я│п╟я┌я▄ я┌п╟п╠п╩п╦я├я▀ п╡ п╓п░п≥п⌡\n"
 "\n"
-"Поведение сканера:\n"
-"  -7, --7bit              создать 7-битный сканер\n"
-"  -8, --8bit              создать 8-битный сканер\n"
-"  -B, --batch             создавать пакетный сканер\n"
-"                          (в противоположность к -I)\n"
-"  -i, --case-insensitive  игнорировать регистр букв в шаблонах\n"
-"  -l, --lex-compat        максимальная совместимость с первоначальным lex\n"
-"  -X, --posix-compat      максимальная совместимость с POSIX lex\n"
-"  -I, --interactive       создать интерактивный сканер\n"
-"                          (в противоположность к -B)\n"
-"      --yylineno          отслеживать число строк в yylineno\n"
+"п÷п╬п╡п╣п╢п╣п╫п╦п╣ я│п╨п╟п╫п╣я─п╟:\n"
+"  -7, --7bit              я│п╬п╥п╢п╟я┌я▄ 7-п╠п╦я┌п╫я▀п╧ я│п╨п╟п╫п╣я─\n"
+"  -8, --8bit              я│п╬п╥п╢п╟я┌я▄ 8-п╠п╦я┌п╫я▀п╧ я│п╨п╟п╫п╣я─\n"
+"  -B, --batch             я│п╬п╥п╢п╟я┌я▄ п©п╟п╨п╣я┌п╫я▀п╧ я│п╨п╟п╫п╣я─\n"
+"                          (п╡ п©я─п╬я┌п╦п╡п╬п©п╬п╩п╬п╤п╫п╬я│я┌я▄ п╨ -I)\n"
+"  -i, --case-insensitive  п╦пЁп╫п╬я─п╦я─п╬п╡п╟я┌я▄ я─п╣пЁп╦я│я┌я─ п╠я┐п╨п╡ п╡ я┬п╟п╠п╩п╬п╫п╟я┘\n"
+"  -l, --lex-compat        п╪п╟п╨я│п╦п╪п╟п╩я▄п╫п╟я▐ я│п╬п╡п╪п╣я│я┌п╦п╪п╬я│я┌я▄ я│ п╬я─п╦пЁп╦п╫п╟п╩я▄п╫я▀п╪ lex\n"
+"  -X, --posix-compat      п╪п╟п╨я│п╦п╪п╟п╩я▄п╫п╟я▐ я│п╬п╡п╪п╣я│я┌п╦п╪п╬я│я┌я▄ я│ POSIX lex\n"
+"  -I, --interactive       я│п╬п╥п╢п╟я┌я▄ п╦п╫я┌п╣я─п╟п╨я┌п╦п╡п╫я▀п╧ я│п╨п╟п╫п╣я─\n"
+"                          (п╡ п©я─п╬я┌п╦п╡п╬п©п╬п╩п╬п╤п╫п╬я│я┌я▄ п╨ -B)\n"
+"      --yylineno          п╬я┌я│п╩п╣п╤п╦п╡п╟я┌я▄ я┤п╦я│п╩п╬ я│я┌я─п╬п╨ п╡ yylineno\n"
 "\n"
-"Генерируемый код:\n"
-"  -+,  --c++              создавать Си++ класс сканера\n"
-"  -Dmacro[=defn]          #define macro defn (по умолчанию defn='1')\n"
-"  -L,  --noline           подавить директивы #line в сканере\n"
-"  -P,  --prefix=СТРОКА    использовать СТРОКУ в качестве префикса\n"
-"                          вместо \"yy\"\n"
-"  -R,  --reentrant        создавать повторно входимый сканер на Си\n"
-"  -Rb, --reentrant-bison  повторно входимый сканер для повторно входимого\n"
-"                          синтаксического анализатора bison\n"
-"       --stdinit          инициализировать yyin/yyout в stdin/stdout\n"
-"       --nounistd         не включать <unistd.h>\n"
-"       --noФУНКЦИЯ        не генерировать определенную ФУНКЦИЮ\n"
+"п⌠п╣п╫п╣я─п╦я─я┐п╣п╪я▀п╧ п╨п╬п╢:\n"
+"  -+,  --c++                я│п╬п╥п╢п╟я┌я▄ п╨п╩п╟я│я│ я│п╨п╟п╫п╣я─п╟ п║++\n"
+"  -Dmacro[=defn]            #define macro defn (п©п╬ я┐п╪п╬п╩я┤п╟п╫п╦я▌ defn='1')\n"
+"  -L,  --noline             п╫п╣ я│п╬п╥п╢п╟п╡п╟я┌я▄ п╢п╦я─п╣п╨я┌п╦п╡я▀ #line п╡ я│п╨п╟п╫п╣я─п╣\n"
+"  -P,  --prefix=п║п╒п═п·п п░      п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄ п║п╒п═п·п пё п╡ п╨п╟я┤п╣я│я┌п╡п╣ п©я─п╣я└п╦п╨я│п╟\n"
+"                            п╡п╪п╣я│я┌п╬ б╚yyб╩\n"
+"  -R,  --reentrant          я│п╬п╥п╢п╟я┌я▄ я─п╣п╣п╫я┌п╣я─п╟п╠п╣п╩я▄п╫я▀п╧ я│п╨п╟п╫п╣я─ п╫п╟ C\n"
+"       --bison-bridge       я│п╨п╟п╫п╣я─ п╢п╩я▐ п╟п╫п╟п╩п╦п╥п╟я┌п╬я─п╟ я┌п╬п╩я▄п╨п╬ п╫п╟ bison\n"
+"       --bison-locations    п╡п╨п╩я▌я┤п╦я┌я▄ п©п╬п╢п╢п╣я─п╤п╨я┐ yylloc\n"
+"       --stdinit            п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ yyin/yyout п╡ stdin/stdout\n"
+"       --noansi-definitions п╬п©я─п╣п╢п╣п╩п╣п╫п╦я▐ я└я┐п╫п╨я├п╦п╧ п╡ я│я┌п╟я─п╬п╪ я│я┌п╦п╩п╣\n"
+"       --noansi-prototypes  п©я┐я│я┌п╬п╧ я│п©п╦я│п╬п╨ п©п╟я─п╟п╪п╣я┌я─п╬п╡ п╡ п©я─п╬я┌п╬я┌п╦п©п╟я┘\n"
+"       --nounistd           п╫п╣ п╡п╨п╩я▌я┤п╟я┌я▄ <unistd.h>\n"
+"       --noп╓пёп²п п╕п≤п╞          п╫п╣ пЁп╣п╫п╣я─п╦я─п╬п╡п╟я┌я▄ п╬п©я─п╣п╢п╣п╩я▒п╫п╫я┐я▌ п╓пёп²п п╕п≤п╝\n"
 "\n"
-"Разное:\n"
-"  -с                      ключ для соместимости с POSIX (ничего не делает)\n"
-"  -n                      ключ для соместимости с POSIX (ничего не делает)\n"
+"п═п╟п╥п╫п╬п╣:\n"
+"  -я│                      п╫п╦я┤п╣пЁп╬ п╫п╣ п╢п╣п╩п╟я▌я┴п╦п╧ п©п╟я─п╟п╪п╣я┌я─ POSIX\n"
+"  -n                      п╫п╦я┤п╣пЁп╬ п╫п╣ п╢п╣п╩п╟я▌я┴п╦п╧ п©п╟я─п╟п╪п╣я┌я─ POSIX\n"
 "  -?\n"
-"  -h, --help              выдать эту справку\n"
-"  -V, --version           выдать версию %s\n"
+"  -h, --help              п©п╬п╨п╟п╥п╟я┌я▄ я█я┌я┐ я│п©я─п╟п╡п╨я┐\n"
+"  -V, --version           п©п╬п╨п╟п╥п╟я┌я▄ п╡п╣я─я│п╦я▌ %s\n"
 
-#: misc.c:46
+#: misc.c:65
+msgid "allocation of sko_stack failed"
+msgstr "п╫п╣ я┐п╢п╟п╩п╬я│я▄ я─п╟п╥п╪п╣я│я┌п╦я┌я▄ sko_stack"
+
+#: misc.c:102 misc.c:128
 #, c-format
 msgid "name \"%s\" ridiculously long"
-msgstr "имя \"%s\" нелепо длинное"
+msgstr "п╦п╪я▐ б╚%sб╩ п╫п╣п╩п╣п©п╬ п╢п╩п╦п╫п╫п╬п╣"
 
-#: misc.c:100
+#: misc.c:177
 msgid "memory allocation failed in allocate_array()"
-msgstr "ошибка выделения памяти в allocate_array()"
+msgstr "п╬я┬п╦п╠п╨п╟ п╡я▀п╢п╣п╩п╣п╫п╦я▐ п©п╟п╪я▐я┌п╦ п╡ allocate_array()"
 
-#: misc.c:175
+#: misc.c:230
 #, c-format
 msgid "bad character '%s' detected in check_char()"
-msgstr "найден неверный символ '%s' в check_char()"
+msgstr "п╫п╟п╧п╢п╣п╫ п╫п╣п╡п╣я─п╫я▀п╧ я│п╦п╪п╡п╬п╩ б╚%sб╩ п╡ check_char()"
 
-#: misc.c:180
+#: misc.c:235
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
-msgstr "для использования символа %s сканеру требуется ключ -8"
+msgstr "п╢п╩я▐ п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦я▐ я│п╦п╪п╡п╬п╩п╟ %s я│п╨п╟п╫п╣я─я┐ я┌я─п╣п╠я┐п╣я┌я│я▐ п©п╟я─п╟п╪п╣я┌я─ -8"
 
-#: misc.c:213
+#: misc.c:268
 msgid "dynamic memory failure in copy_string()"
-msgstr "ошибка при работе с динамической памятью в copy_string()"
+msgstr "п╬я┬п╦п╠п╨п╟ п©я─п╦ я─п╟п╠п╬я┌п╣ я│ п╢п╦п╫п╟п╪п╦я┤п╣я│п╨п╬п╧ п©п╟п╪я▐я┌я▄я▌ п╡ copy_string()"
 
-#: misc.c:339
+#: misc.c:367
 #, c-format
 msgid "%s: fatal internal error, %s\n"
-msgstr "%s: фатальная внутренняя ошибка, %s\n"
+msgstr "%s: я└п╟я┌п╟п╩я▄п╫п╟я▐ п╡п╫я┐я┌я─п╣п╫п╫я▐я▐ п╬я┬п╦п╠п╨п╟, %s\n"
 
-#: misc.c:772
+#: misc.c:803
 msgid "attempt to increase array size failed"
-msgstr "ошибка увеличения размера массива"
+msgstr "п╬я┬п╦п╠п╨п╟ п©я─п╦ п©п╬п©я▀я┌п╨п╣ я┐п╡п╣п╩п╦я┤п╦я┌я▄ я─п╟п╥п╪п╣я─ п╪п╟я│я│п╦п╡п╟"
 
-#: misc.c:844
+#: misc.c:930
 msgid "bad line in skeleton file"
-msgstr "неверная строка в файле-каркасе"
+msgstr "п╫п╣п╡п╣я─п╫п╟я▐ я│я┌я─п╬п╨п╟ п╡ я└п╟п╧п╩п╣-п╨п╟я─п╨п╟я│п╣"
 
-#: misc.c:890
+#: misc.c:979
 msgid "memory allocation failed in yy_flex_xmalloc()"
-msgstr "ошибка при выделении памяти в yy_flex_xmalloc()"
+msgstr "п╬я┬п╦п╠п╨п╟ п©я─п╦ п╡я▀п╢п╣п╩п╣п╫п╦п╦ п©п╟п╪я▐я┌п╦ п╡ yy_flex_xmalloc()"
 
 #: nfa.c:104
 #, c-format
@@ -653,187 +710,237 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"******** начало дампа конечного автомата с начальным состоянием %d\n"
+"******** п╫п╟я┤п╟п╩п╬ п╢п╟п╪п©п╟ п╨п╬п╫п╣я┤п╫п╬пЁп╬ п╟п╡я┌п╬п╪п╟я┌п╟ я│ п╫п╟я┤п╟п╩я▄п╫я▀п╪ я│п╬я│я┌п╬я▐п╫п╦п╣п╪ %d\n"
 
 #: nfa.c:115
 #, c-format
 msgid "state # %4d\t"
-msgstr "состояние # %4d\t"
+msgstr "я│п╬я│я┌п╬я▐п╫п╦п╣ # %4d\t"
 
 #: nfa.c:130
+#, c-format
 msgid "********** end of dump\n"
-msgstr "********* конец дампа\n"
+msgstr "********* п╨п╬п╫п╣я├ п╢п╟п╪п©п╟\n"
 
 #: nfa.c:174
 msgid "empty machine in dupmachine()"
-msgstr "пустой автомат в dupmachine()"
+msgstr "п©я┐я│я┌п╬п╧ п╟п╡я┌п╬п╪п╟я┌ п╡ dupmachine()"
 
 #: nfa.c:240
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
-msgstr ""
+msgstr "п÷я─п╟п╡п╦п╩п╬ я│ п©п╣я─п╣п╪п╣п╫п╫я▀п╪ п╥п╟п╪я▀п╨п╟я▌я┴п╦п╪ п╨п╬п╫я┌п╣п╨я│я┌п╬п╪ п╡ я│я┌я─п╬п╨п╣ %d\n"
 
-#: nfa.c:353
+#: nfa.c:364
 msgid "bad state type in mark_beginning_as_normal()"
-msgstr "неверный тип состояния в mark_beginning_as_normal()"
+msgstr "п╫п╣п╡п╣я─п╫я▀п╧ я┌п╦п© я│п╬я│я┌п╬я▐п╫п╦я▐ п╡ mark_beginning_as_normal()"
 
-#: nfa.c:598
+#: nfa.c:609
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
-msgstr "входные правила слишком сложные (>= %d состояний НКА)"
+msgstr "п╡я┘п╬п╢п╫я▀п╣ п©я─п╟п╡п╦п╩п╟ я│п╩п╦я┬п╨п╬п╪ я│п╩п╬п╤п╫я▀п╣ (>= %d я│п╬я│я┌п╬я▐п╫п╦п╧ п²п п░)"
 
-#: nfa.c:677
+#: nfa.c:688
 msgid "found too many transitions in mkxtion()"
-msgstr "найдено слишком много переходов в mkxtion()"
+msgstr "п╫п╟п╧п╢п╣п╫п╬ я│п╩п╦я┬п╨п╬п╪ п╪п╫п╬пЁп╬ п©п╣я─п╣я┘п╬п╢п╬п╡ п╡ mkxtion()"
 
-#: nfa.c:703
+#: nfa.c:714
 #, c-format
 msgid "too many rules (> %d)!"
-msgstr "слишком много правил (> %d)!"
+msgstr "я│п╩п╦я┬п╨п╬п╪ п╪п╫п╬пЁп╬ п©я─п╟п╡п╦п╩ (> %d)!"
 
-#: parse.y:175
+#: parse.y:159
 msgid "unknown error processing section 1"
-msgstr "неизвестная ошибка при обработке раздела 1"
+msgstr "п╫п╣п╦п╥п╡п╣я│я┌п╫п╟я▐ п╬я┬п╦п╠п╨п╟ п©я─п╦ п╬п╠я─п╟п╠п╬я┌п╨п╣ я─п╟п╥п╢п╣п╩п╟ 1"
 
-#: parse.y:200 parse.y:365
+#: parse.y:184 parse.y:351
 msgid "bad start condition list"
-msgstr "неверный список начальных условий"
+msgstr "п╫п╣п╡п╣я─п╫я▀п╧ я│п©п╦я│п╬п╨ п╫п╟я┤п╟п╩я▄п╫я▀я┘ я┐я│п╩п╬п╡п╦п╧"
 
-#: parse.y:329
+#: parse.y:315
 msgid "unrecognized rule"
-msgstr "нераспознанное правило"
+msgstr "п╫п╣я─п╟я│п©п╬п╥п╫п╟п╫п╫п╬п╣ п©я─п╟п╡п╦п╩п╬"
 
-#: parse.y:448 parse.y:461 parse.y:530
+#: parse.y:434 parse.y:447 parse.y:516
 msgid "trailing context used twice"
-msgstr "замыкающий контекст используется дважды"
+msgstr "п╥п╟п╪я▀п╨п╟я▌я┴п╦п╧ п╨п╬п╫я┌п╣п╨я│я┌ п╦я│п©п╬п╩я▄п╥я┐п╣я┌я│я▐ п╢п╡п╟п╤п╢я▀"
 
-#: parse.y:566 parse.y:576 parse.y:649 parse.y:659
+#: parse.y:552 parse.y:562 parse.y:635 parse.y:645
 msgid "bad iteration values"
-msgstr ""
+msgstr "п╫п╣п╡п╣я─п╫я▀п╣ п╥п╫п╟я┤п╣п╫п╦я▐ п╦я┌п╣я─п╟я├п╦п╧"
 
-#: parse.y:594 parse.y:612 parse.y:677 parse.y:695
+#: parse.y:580 parse.y:598 parse.y:663 parse.y:681
 msgid "iteration value must be positive"
-msgstr ""
+msgstr "п╥п╫п╟я┤п╣п╫п╦п╣ п╦я┌п╣я─п╟я├п╦п╧ п╢п╬п╩п╤п╫п╬ п╠я▀я┌я▄ п©п╬п╩п╬п╤п╦я┌п╣п╩я▄п╫я▀п╪"
 
-#: parse.y:798
+#: parse.y:804 parse.y:814
+#, c-format
+msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
+msgstr "п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣ я│п╦п╪п╡п╬п╩я▄п╫п╬пЁп╬ п╢п╦п╟п©п╟п╥п╬п╫п╟ [%c-%c] я│п╬п╪п╫п╦я┌п╣п╩я▄п╫п╬ п╡ я│п╨п╟п╫п╣я─п╣, п╫п╣ я┤я┐п╡я│я┌п╡п╦я┌п╣п╩я▄п╫п╬п╪ п╨ я─п╣пЁп╦я│я┌я─я┐"
+
+#: parse.y:819
 msgid "negative range in character class"
-msgstr "отрицательный диапазон в классе символов"
+msgstr "п╬я┌я─п╦я├п╟я┌п╣п╩я▄п╫я▀п╧ п╢п╦п╟п©п╟п╥п╬п╫ п╡ п╨п╩п╟я│я│п╣ я│п╦п╪п╡п╬п╩п╬п╡"
 
-#: scan.l:61 scan.l:162 scan.l:219 scan.l:352 scan.l:491 scan.l:541
+#: parse.y:916
+msgid "[:^lower:] is ambiguous in case insensitive scanner"
+msgstr "п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣ [:^lower:] я│п╬п╪п╫п╦я┌п╣п╩я▄п╫п╬ п╢п╩я▐ я│п╨п╟п╫п╣я─п╟, п╫п╣ я┤я┐п╡я│я┌п╡п╦я┌п╣п╩я▄п╫п╬пЁп╬ п╨ я─п╣пЁп╦я│я┌я─я┐"
+
+#: parse.y:922
+msgid "[:^upper:] ambiguous in case insensitive scanner"
+msgstr "п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣ [:^upper:] я│п╬п╪п╫п╦я┌п╣п╩я▄п╫п╬ п╢п╩я▐ я│п╨п╟п╫п╣я─п╟, п╫п╣ я┤я┐п╡я│я┌п╡п╦я┌п╣п╩я▄п╫п╬пЁп╬ п╨ я─п╣пЁп╦я│я┌я─я┐"
+
+#: scan.l:75 scan.l:618 scan.l:676
 msgid "Input line too long\n"
-msgstr "Слишком длинная входная строка\n"
+msgstr "п║п╩п╦я┬п╨п╬п╪ п╢п╩п╦п╫п╫п╟я▐ п╡я┘п╬п╢п╫п╟я▐ я│я┌я─п╬п╨п╟\n"
 
-#: scan.l:153
+#: scan.l:161
+#, c-format
+msgid "malformed '%top' directive"
+msgstr "п╫п╣я─п╟я│п©п╬п╥п╫п╟п╫п╫п╟я▐ п╢п╦я─п╣п╨я┌п╦п╡п╟ б╚%topб╩"
+
+#: scan.l:183
 #, no-c-format
 msgid "unrecognized '%' directive"
-msgstr "нераспознанная '%' директива"
+msgstr "п╫п╣я─п╟я│п©п╬п╥п╫п╟п╫п╫п╟я▐ п╢п╦я─п╣п╨я┌п╦п╡п╟ б╚%б╩"
 
-#: scan.l:236
+#: scan.l:192
+msgid "Definition name too long\n"
+msgstr "п║п╩п╦я┬п╨п╬п╪ п╢п╩п╦п╫п╫п╬п╣ п╬п©я─п╣п╢п╣п╩п╣п╫п╦п╣ п╦п╪п╣п╫п╦\n"
+
+#: scan.l:284
+msgid "Unmatched '{'"
+msgstr "п²п╣п©п╟я─п╫п╟я▐ б╚{б╩"
+
+#: scan.l:300
+#, c-format
+msgid "Definition value for {%s} too long\n"
+msgstr "п║п╩п╦я┬п╨п╬п╪ п╢п╩п╦п╫п╫п╬п╣ п╬п©я─п╣п╢п╣п╩п╣п╫п╦п╣ п╥п╫п╟я┤п╣п╫п╦я▐ п╢п╩я▐ {%s}\n"
+
+#: scan.l:317
 msgid "incomplete name definition"
-msgstr "неполное определение имени"
+msgstr "п╫п╣п©п╬п╩п╫п╬п╣ п╬п©я─п╣п╢п╣п╩п╣п╫п╦п╣ п╦п╪п╣п╫п╦"
 
-#: scan.l:360
+#: scan.l:443
+msgid "Option line too long\n"
+msgstr "п║п╩п╦я┬п╨п╬п╪ п╢п╩п╦п╫п╫я▀п╧ п©п╟я─п╟п╪п╣я┌я─\n"
+
+#: scan.l:451
 #, c-format
 msgid "unrecognized %%option: %s"
-msgstr "нераспознанный %%option: %s"
+msgstr "п╫п╣я─п╟я│п©п╬п╥п╫п╟п╫п╫я▀п╧ %%option: %s"
 
-#: scan.l:501 scan.l:620
+#: scan.l:633 scan.l:800
 msgid "bad character class"
-msgstr "неверный класс символа"
+msgstr "п╫п╣п╡п╣я─п╫я▀п╧ п╨п╩п╟я│я│ я│п╦п╪п╡п╬п╩п╟"
 
-#: scan.l:548
+#: scan.l:683
 #, c-format
 msgid "undefined definition {%s}"
-msgstr "неопределенное определение {%s}"
+msgstr "п╫п╣п╬п©я─п╣п╢п╣п╩п╣п╫п╫п╬п╣ п╬п©я─п╣п╢п╣п╩п╣п╫п╦п╣ {%s}"
 
-#: scan.l:588
+#: scan.l:755
 #, c-format
 msgid "bad <start condition>: %s"
-msgstr "неверное <начальное условие>: %s"
+msgstr "п╫п╣п╡п╣я─п╫п╬п╣ <п╫п╟я┤п╟п╩я▄п╫п╬п╣ я┐я│п╩п╬п╡п╦п╣>: %s"
 
-#: scan.l:601
+#: scan.l:768
 msgid "missing quote"
-msgstr "отсутствуют кавычки"
+msgstr "п╬я┌я│я┐я┌я│я┌п╡я┐я▌я┌ п╨п╟п╡я▀я┤п╨п╦"
 
-#: scan.l:641
+#: scan.l:834
 #, c-format
 msgid "bad character class expression: %s"
-msgstr "неверное выражение класса символа: %s"
+msgstr "п╫п╣п╡п╣я─п╫п╬п╣ п╡я▀я─п╟п╤п╣п╫п╦п╣ п╨п╩п╟я│я│п╟ я│п╦п╪п╡п╬п╩п╟: %s"
 
-#: scan.l:663
+#: scan.l:856
 msgid "bad character inside {}'s"
-msgstr "неверный символ внутри {}"
+msgstr "п╫п╣п╡п╣я─п╫я▀п╧ я│п╦п╪п╡п╬п╩ п╡п╫я┐я┌я─п╦ {}"
 
-#: scan.l:669
+#: scan.l:862
 msgid "missing }"
-msgstr "отсутствует }"
+msgstr "п╬я┌я│я┐я┌я│я┌п╡я┐п╣я┌ }"
 
-#: scan.l:742
+#: scan.l:940
 msgid "EOF encountered inside an action"
-msgstr "встречен EOF внутри действия"
+msgstr "п╡я│я┌я─п╣я┤п╣п╫ EOF п╡п╫я┐я┌я─п╦ п╢п╣п╧я│я┌п╡п╦я▐"
 
-#: scan.l:762
+#: scan.l:945
+msgid "EOF encountered inside pattern"
+msgstr "п╡я│я┌я─п╣я┤п╣п╫ EOF п╡п╫я┐я┌я─п╦ я┬п╟п╠п╩п╬п╫п╟"
+
+#: scan.l:967
 #, c-format
 msgid "bad character: %s"
-msgstr "неверный символ: %s"
+msgstr "п╫п╣п╡п╣я─п╫я▀п╧ я│п╦п╪п╡п╬п╩: %s"
 
-#: scan.l:791
+#: scan.l:996
 #, c-format
 msgid "can't open %s"
-msgstr "невозможно открыть %s"
+msgstr "п╫п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╬я┌п╨я─я▀я┌я▄ %s"
 
 #: scanopt.c:291
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
-msgstr "Использование: %s [КЛЮЧИ]...\n"
+msgstr "п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣: %s [п÷п░п═п░п°п∙п╒п═п╚]Б─╕\n"
 
-#: scanopt.c:565
+#: scanopt.c:564
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
-msgstr "ключ `%s' должен использоваться без аргумента\n"
+msgstr "п©п╟я─п╟п╪п╣я┌я─ б╚%sб╩ п╢п╬п╩п╤п╣п╫ п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄я│я▐ п╠п╣п╥ п╟я─пЁя┐п╪п╣п╫я┌п╟\n"
 
-#: scanopt.c:570
+#: scanopt.c:569
 #, c-format
 msgid "option `%s' requires an argument\n"
-msgstr "ключ `%s' должен использоваться с аргументом\n"
+msgstr "п©п╟я─п╟п╪п╣я┌я─ б╚%sб╩ п╢п╬п╩п╤п╣п╫ п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄я│я▐ я│ п╟я─пЁя┐п╪п╣п╫я┌п╬п╪\n"
 
-#: scanopt.c:574
+#: scanopt.c:573
 #, c-format
 msgid "option `%s' is ambiguous\n"
-msgstr "неоднозначный ключ `%s'\n"
+msgstr "п╫п╣п╬п╢п╫п╬п╥п╫п╟я┤п╫я▀п╧ п╨п╩я▌я┤ б╚%sб╩\n"
 
-#: scanopt.c:578
+#: scanopt.c:577
 #, c-format
 msgid "Unrecognized option `%s'\n"
-msgstr "Нераспознанный ключ `%s'\n"
+msgstr "п²п╣я─п╟я│п©п╬п╥п╫п╟п╫п╫я▀п╧ п©п╟я─п╟п╪п╣я┌я─ б╚%sб╩\n"
 
-#: scanopt.c:582
+#: scanopt.c:581
 #, c-format
 msgid "Unknown error=(%d)\n"
-msgstr "Неизвестная ошибка=(%d)\n"
+msgstr "п²п╣п╦п╥п╡п╣я│я┌п╫п╟я▐ п╬я┬п╦п╠п╨п╟=(%d)\n"
 
 #: sym.c:100
 msgid "symbol table memory allocation failed"
-msgstr "ошибка при выделении памяти под символы"
+msgstr "п╬я┬п╦п╠п╨п╟ п©я─п╦ п╡я▀п╢п╣п╩п╣п╫п╦п╦ п©п╟п╪я▐я┌п╦ п╢п╩я▐ я┌п╟п╠п╩п╦я├я▀ я│п╦п╪п╡п╬п╩п╬п╡"
 
-#: sym.c:203
+#: sym.c:202
 msgid "name defined twice"
-msgstr "имя определено дважды"
+msgstr "п╦п╪я▐ п╬п©я─п╣п╢п╣п╩п╣п╫п╬ п╢п╡п╟п╤п╢я▀"
 
-#: sym.c:257
+#: sym.c:253
 #, c-format
 msgid "start condition %s declared twice"
-msgstr "стартовое условие %s описано дважды"
+msgstr "п╫п╟я┤п╟п╩я▄п╫п╬п╣ я┐я│п╩п╬п╡п╦п╣ %s п╬п©п╦я│п╟п╫п╬ п╢п╡п╟п╤п╢я▀"
 
 #: yylex.c:56
 msgid "premature EOF"
-msgstr "неожиданный конец файла"
+msgstr "п╫п╣п╬п╤п╦п╢п╟п╫п╫я▀п╧ EOF"
 
 #: yylex.c:198
+#, c-format
 msgid "End Marker\n"
-msgstr "Метка конца\n"
+msgstr "п°п╣я┌п╨п╟ п╨п╬п╫я├п╟\n"
 
 #: yylex.c:204
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
-msgstr "*Что-то не так* - tok: %d val: %d\n"
+msgstr "*п╖я┌п╬-я┌п╬ п╫п╣ я┌п╟п╨* Б─■ tok: %d val: %d\n"
+
+#~ msgid "consistency check failed in symfollowset"
+#~ msgstr "п╬я┬п╦п╠п╨п╟ п©я─п╦ п©я─п╬п╡п╣я─п╨п╣ п╫п╟ я├п╣п╩п╬я│я┌п╫п╬я│я┌я▄ п╡ symfollowset"
+
+#~ msgid "Can't specify header option if writing to stdout."
+#~ msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я┐п╨п╟п╥п╟я┌я▄ п©п╟я─п╟п╪п╣я┌я─ header п©я─п╦ п╡я▀п╡п╬п╢п╣ п╫п╟ stdout."
+
+#~ msgid "unknown -R option '%c'"
+#~ msgstr "п╫п╣п╦п╥п╡п╣я│я┌п╫я▀п╧ -R п╨п╩я▌я┤ '%c'"
