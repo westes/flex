@@ -3,6 +3,8 @@ localedir = $(datadir)/locale
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/intl
 LIBS = @LIBINTL@ @LIBS@
 
+m4 = @M4@
+
 bin_PROGRAMS = flex
 lib_LTLIBRARIES = \
 	libfl.la \

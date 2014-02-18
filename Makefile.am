@@ -34,7 +34,6 @@
 # additional info.
 
 ACLOCAL_AMFLAGS = -I m4
-m4 = @M4@
 indent = @INDENT@
 
 dist_doc_DATA = \
