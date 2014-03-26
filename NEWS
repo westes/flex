@@ -3,7 +3,11 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* version 2.5.38
+* flex version  2.5.39 released 2014-03-26
+
+** no user visible changes in this release
+
+* version 2.5.38 released 2014-02-14
 
 ** internationalization
 
