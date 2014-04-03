@@ -1934,9 +1934,9 @@ condition @dfn{scope}.  A start condition scope is begun with:
 @end verbatim
 @end example
 
-where @code{SCs} is a list of one or more start conditions.  Inside the
+where @code{<SCs>} is a list of one or more start conditions.  Inside the
 start condition scope, every rule automatically has the prefix
-@code{SCs>} applied to it, until a @samp{@}} which matches the initial
+@code{<SCs>} applied to it, until a @samp{@}} which matches the initial
 @samp{@{}.  So, for example,
 
 @cindex extended scope of start conditions
