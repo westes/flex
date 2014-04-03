@@ -895,7 +895,7 @@ And to match a sequence of zero or more repetitions of @samp{foo} and
 @cindex character classes in patterns
 In addition to characters and ranges of characters, character classes
 can also contain @dfn{character class expressions}.  These are
-expressions enclosed inside @samp{[}: and @samp{:]} delimiters (which
+expressions enclosed inside @samp{[:} and @samp{:]} delimiters (which
 themselves must appear between the @samp{[} and @samp{]} of the
 character class. Other elements may occur inside the character class,
 too).  The valid expressions are:
