@@ -2646,7 +2646,7 @@ void yyset_extra YYFARGS1( YY_EXTRA_TYPE ,user_defined)
 m4_ifdef( [[M4_YY_NO_SET_LINENO]],,
 [[
 /** Set the current line number.
- * @param line_number
+ * @param line_number line number
  * M4_YY_DOC_PARAM
  */
 void yyset_lineno YYFARGS1( int ,line_number)
@@ -2668,7 +2668,7 @@ m4_ifdef( [[M4_YY_REENTRANT]],
 m4_ifdef( [[M4_YY_NO_SET_COLUMN]],,
 [[
 /** Set the current column.
- * @param line_number
+ * @param column_no column number
  * M4_YY_DOC_PARAM
  */
 void yyset_column YYFARGS1( int , column_no)
