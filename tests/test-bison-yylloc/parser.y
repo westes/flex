@@ -22,6 +22,7 @@
  */
 
 %parse-param { void* scanner }
+%lex-param { void* scanner }
 
 /* 
    How to compile:
@@ -34,7 +35,6 @@
 #include "config.h"
 
 #define YYERROR_VERBOSE 1
-#define YYLEX_PARAM   scanner
 
 extern int testget_lineno(void*);
 
@@ -52,7 +52,7 @@ int process_text(char* s) {
 
 %}
 
-%pure_parser
+%pure-parser
 
 %union  {
     int  lineno;

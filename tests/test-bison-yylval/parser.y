@@ -26,6 +26,7 @@
    bison --defines --output-file="parser.c" --name-prefix="test" parser.y
  */
 %parse-param { void* scanner }
+%lex-param { void* scanner }
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,7 +34,6 @@
 #include "config.h"
 
 #define YYERROR_VERBOSE 1
-#define YYLEX_PARAM   scanner
 
 
 /* A dummy function. A check against seg-faults in yylval->str. */
@@ -49,7 +49,7 @@ int process_text(char* s) {
 
 %}
 
-%pure_parser
+%pure-parser
 
 %union  {
     long unused;
