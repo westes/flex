@@ -23,7 +23,6 @@
 
 /* TEST scanner.
    Basic non-reentrant scanner.
-   Compile with:  flex scanner.l
 
    Sample Input:
        # this is a comment
@@ -35,7 +34,7 @@
 #include "config.h"
 %}
 
-%option prefix="test" outfile="scanner.c" 
+%option prefix="test"
 %option nounput noyywrap noyylineno warn nodefault
 
 IDENT [[:alnum:]_-]
@@ -63,4 +62,3 @@ int main ()
     printf("TEST RETURNING OK.\n");
     return 0;
 }
-

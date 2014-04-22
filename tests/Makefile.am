@@ -31,6 +31,9 @@ check_PROGRAMS = \
 
 basic_nr_SOURCES = basic-nr.l
 
+EXTRA_DIST = \
+basic-nr.txt
+
 # specify how to process .l files in order to test the flex built by make all
 
 FLEX = $(top_builddir)/src/flex
