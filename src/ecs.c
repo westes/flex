@@ -191,7 +191,7 @@ void    mkeccl (ccls, lenccl, fwd, bck, llsiz, NUL_mapping)
 
 		/* Find next ccl member to process. */
 
-		for (++cclp; cclflags[cclp] && cclp < lenccl; ++cclp) {
+		for (++cclp; cclp < lenccl && cclflags[cclp]; ++cclp) {
 			/* Reset "doesn't need processing" flag. */
 			cclflags[cclp] = 0;
 		}
