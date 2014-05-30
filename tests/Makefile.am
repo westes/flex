@@ -27,12 +27,15 @@ TESTS = $(check_PROGRAMS)
 LOG_COMPILER = $(srcdir)/testwrapper.sh
 
 check_PROGRAMS = \
-	basic-nr
+	basic-nr \
+	basic-r
 
 basic_nr_SOURCES = basic-nr.l
+basic_r_SOURCES = basic-r.l
 
 EXTRA_DIST = \
-basic-nr.txt
+basic-nr.txt \
+	basic-r.txt
 
 # specify how to process .l files in order to test the flex built by make all
 

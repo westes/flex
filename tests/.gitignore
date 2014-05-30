@@ -2,3 +2,5 @@
 *.o
 basic-nr
 basic-nr.c
+basic-r
+basic-r.c
