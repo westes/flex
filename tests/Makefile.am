@@ -36,6 +36,7 @@ basic_nr_SOURCES = basic-nr.l
 basic_r_SOURCES = basic-r.l
 
 EXTRA_DIST = \
+	testwrapper.sh \
 	alloc-extra.txt \
 basic-nr.txt \
 	basic-r.txt
