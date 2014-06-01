@@ -1,7 +1,0 @@
-Makefile
-parser.c
-parser.h
-scanner.c
-test-array-nr
-OUTPUT
-Makefile.in
