@@ -19,9 +19,6 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
-EXTRA_DIST = \
-	README
-
 TESTS = $(check_PROGRAMS)
 
 LOG_COMPILER = $(srcdir)/testwrapper.sh
@@ -39,6 +36,7 @@ basic_nr_SOURCES = basic-nr.l
 basic_r_SOURCES = basic-r.l
 
 EXTRA_DIST = \
+	README \
 	testwrapper.sh \
 	alloc-extra.txt \
 	array-nr.txt \
