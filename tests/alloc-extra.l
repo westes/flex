@@ -48,7 +48,7 @@ void *yyalloc ( size_t size, yyscan_t  scanner );
 
 %}
 
-%option 8bit outfile="scanner.c" prefix="test"
+%option 8bit  prefix="test"
 %option nounput nomain noyywrap nodefault
 %option warn
 %option extra-type="struct Check *"

@@ -1,5 +1,7 @@
 *.log
 *.o
+alloc-extra
+alloc-extra.c
 basic-nr
 basic-nr.c
 basic-r

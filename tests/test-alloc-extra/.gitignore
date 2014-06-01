@@ -1,6 +1,0 @@
-.cvsignore
-Makefile
-Makefile.in
-scanner.c
-test-alloc-extra
-OUTPUT

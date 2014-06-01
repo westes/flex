@@ -27,13 +27,16 @@ TESTS = $(check_PROGRAMS)
 LOG_COMPILER = $(srcdir)/testwrapper.sh
 
 check_PROGRAMS = \
+	alloc-extra \
 	basic-nr \
 	basic-r
 
+alloc_extra_SOURCES = alloc-extra.l
 basic_nr_SOURCES = basic-nr.l
 basic_r_SOURCES = basic-r.l
 
 EXTRA_DIST = \
+	alloc-extra.txt \
 basic-nr.txt \
 	basic-r.txt
 
