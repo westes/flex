@@ -25,6 +25,7 @@ EXTRA_DIST = \
 TESTS = $(check_PROGRAMS)
 
 LOG_COMPILER = $(srcdir)/testwrapper.sh
+AM_LOG_FLAGS = $(srcdir)
 
 check_PROGRAMS = \
 	alloc-extra \
