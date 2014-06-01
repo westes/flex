@@ -27,11 +27,13 @@ AM_LOG_FLAGS = $(srcdir)
 check_PROGRAMS = \
 	alloc-extra \
 	array-nr \
+	array-r \
 	basic-nr \
 	basic-r
 
 alloc_extra_SOURCES = alloc-extra.l
 array_nr_SOURCES = array-nr.l
+array_r_SOURCES = array-r.l
 basic_nr_SOURCES = basic-nr.l
 basic_r_SOURCES = basic-r.l
 
@@ -40,6 +42,7 @@ EXTRA_DIST = \
 	testwrapper.sh \
 	alloc-extra.txt \
 	array-nr.txt \
+	array-r.txt \
 basic-nr.txt \
 	basic-r.txt
 

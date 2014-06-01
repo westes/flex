@@ -4,6 +4,8 @@ alloc-extra
 alloc-extra.c
 array-nr
 array-nr.c
+array-r
+array-r.c
 basic-nr
 basic-nr.c
 basic-r
