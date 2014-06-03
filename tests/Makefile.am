@@ -24,18 +24,26 @@ TESTS = $(check_PROGRAMS)
 LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = $(srcdir)
 
+AM_YFLAGS = -d -p test
+
 check_PROGRAMS = \
 	alloc-extra \
 	array-nr \
 	array-r \
 	basic-nr \
-	basic-r
+	basic-r \
+	bison-nr
 
 alloc_extra_SOURCES = alloc-extra.l
 array_nr_SOURCES = array-nr.l
 array_r_SOURCES = array-r.l
 basic_nr_SOURCES = basic-nr.l
 basic_r_SOURCES = basic-r.l
+bison_nr_SOURCES = bison-nr-scanner.l bison-nr-parser.y bison-nr-main.c
+
+BUILT_SOURCES = \
+	bison-nr-scanner.h \
+	bison-nr-parser.h
 
 EXTRA_DIST = \
 	README \
@@ -44,7 +52,9 @@ EXTRA_DIST = \
 	array-nr.txt \
 	array-r.txt \
 basic-nr.txt \
-	basic-r.txt
+	basic-r.txt \
+	bison-nr-scanner.h \
+	bison-nr.txt
 
 # specify how to process .l files in order to test the flex built by make all
 
@@ -52,3 +62,6 @@ FLEX = $(top_builddir)/src/flex
 
 .l.c:
 	$(FLEX) -o $@ $<
+
+bison-nr-main($objext): bison-nr-parser.h bison-nr-scanner.h
+bison-nr-scanner.h: bison-nr-scanner.c

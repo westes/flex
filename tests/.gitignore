@@ -1,4 +1,5 @@
 *.log
+*.trs
 *.o
 alloc-extra
 alloc-extra.c
@@ -10,3 +11,6 @@ basic-nr
 basic-nr.c
 basic-r
 basic-r.c
+bison-nr
+bison-nr-scanner.[ch]
+bison-nr-parser.[ch]

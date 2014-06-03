@@ -21,8 +21,8 @@
  * PURPOSE.
  */
 
-#include "parser.h"
-#include "scanner.h"
+#include "bison-nr-parser.h"
+#include "bison-nr-scanner.h"
 
 extern int testparse(void);
 
