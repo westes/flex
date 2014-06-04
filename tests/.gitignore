@@ -22,3 +22,5 @@ bison_yylval_parser.[ch]
 bison_yylval_scanner.[ch]
 ccl
 ccl.c
+debug_nr
+debug_nr.c
