@@ -25,7 +25,7 @@
 /* The scanner expects to link to bison yylval . */
 #include <stdio.h>
 #include <stdlib.h>
-#include "parser.h"
+#include "bison-yylval-parser.h"
 #include "config.h"
 static char* STRDUP(char* s1);
 
@@ -33,10 +33,10 @@ enum yesno_t { no=0, yes=1 };
 #define YY_EXTRA_TYPE  enum yesno_t
 %}
 
-%option 8bit outfile="scanner.c" prefix="test"
+%option 8bit prefix="test"
 %option reentrant bison-bridge
 %option noyywrap nomain nounput noyy_top_state noyywrap nodefault warn
-%option prefix="test" header="scanner.h"
+%option header="bison-yylval-scanner.h"
 %option stack
 
 

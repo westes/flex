@@ -33,7 +33,8 @@ check_PROGRAMS = \
 	basic-nr \
 	basic-r \
 	bison-nr \
-	bison-yylloc
+	bison-yylloc \
+	bison-yylval
 
 alloc_extra_SOURCES = alloc-extra.l
 array_nr_SOURCES = array-nr.l
@@ -42,12 +43,15 @@ basic_nr_SOURCES = basic-nr.l
 basic_r_SOURCES = basic-r.l
 bison_nr_SOURCES = bison-nr-scanner.l bison-nr-parser.y bison-nr-main.c
 bison_yylloc_SOURCES = bison-yylloc-scanner.l bison-yylloc-parser.y bison-yylloc-main.c
+bison_yylval_SOURCES = bison-yylval-scanner.l bison-yylval-parser.y bison-yylval-main.c
 
 BUILT_SOURCES = \
 	bison-nr-scanner.h \
 	bison-nr-parser.h \
 	bison-yylloc-parser.h \
-	bison-yylloc-scanner.h
+	bison-yylloc-scanner.h \
+	bison-yylval-parser.h \
+	bison-yylval-scanner.h
 
 EXTRA_DIST = \
 	README \
@@ -60,7 +64,9 @@ basic-nr.txt \
 	bison-nr-scanner.h \
 	bison-nr.txt \
 	bison-yylloc-scanner.h \
-	bison-yylloc.txt
+	bison-yylloc.txt \
+	bison-yylval-scanner.h \
+	bison-yylval.txt
 
 # specify how to process .l files in order to test the flex built by make all
 
@@ -74,3 +80,6 @@ bison-nr-scanner.h: bison-nr-scanner.c
 
 bison-yylloc-main$(objext): bison-yylloc-parser.h bison-yylloc-scanner.h
 bison-yylloc-scanner.h: bison-yylloc-scanner.c
+
+bison-yylval-main$(objext): bison-yylval-parser.h bison-yylval-scanner.h
+bison-yylval-scanner.h: bison-yylval-scanner.c

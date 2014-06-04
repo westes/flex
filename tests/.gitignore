@@ -17,3 +17,6 @@ bison-nr-parser.[ch]
 bison-yylloc
 bison-yylloc-parser.[ch]
 bison-yylloc-scanner.[ch]
+bison-yylval
+bison-yylval-parser.[ch]
+bison-yylval-scanner.[ch]
