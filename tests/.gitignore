@@ -26,3 +26,5 @@ debug_nr
 debug_nr.c
 debug_r
 debug_r.c
+extended
+extended.c
