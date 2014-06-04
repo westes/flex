@@ -1,3 +1,5 @@
+mdate-sh
+texinfo.tex
 flex.aux
 flex.cp
 flex.cps
@@ -24,3 +26,4 @@ flex.pdf
 flex.ps
 version.texi
 flex.html
+flex.t2p
