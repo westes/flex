@@ -21,26 +21,43 @@
  * PURPOSE.
  */
 
-%{
-/* Build "scanner.c". 
-   The scanner is not important. 
-   This test is really about compilation. See "main.c".
-*/
-#include <stdio.h>
-#include <stdlib.h>
-#include "config.h"
+#include "header_r_scanner.h"
 
-%}
+/* The scanner itself is not important here.
+ * We simply try to use all the functions that are exported in the
+ * header, to see if we get any compiler warnings.
+ */
+int
+main ( int argc, char** argv )
+{
+    yyscan_t  scanner;
+    FILE *fp;
+    char * extra = "EXTRA";
+    
+    testlex_init(&scanner);
+    testset_in(stdin,scanner);
+    testset_out(stdout,scanner);    
+    testset_extra(extra,scanner);
+    
+    fp = testget_in(scanner);
+    fp = testget_out(scanner);
 
-%option reentrant
-%option 8bit outfile="scanner.c" prefix="test"
-%option nounput nomain noyywrap 
-%option warn
+    while(testlex(scanner)) {
+        char * text;
+        int line;
+        line = testget_lineno(scanner);
+        text = testget_text(scanner);
+        
+        if( (char*)testget_extra(scanner) != extra)
+            break;
+        
+        if ( !text || line < 0)
+            continue;
+    }
+    testlex_destroy(scanner);
+    printf("TEST RETURNING OK.\n");
+    return 0;
+}
 
 
-%%
-
-.|\n              { }
-
-%%
-
+/* vim:set tabstop=8 softtabstop=4 shiftwidth=4: */
