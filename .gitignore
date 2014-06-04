@@ -13,7 +13,6 @@ Makefile
 Makefile.in
 aclocal.m4
 autom4te.cache
-build-aux
 config.log
 config.status
 configure
@@ -21,3 +20,13 @@ flex-*/
 libtool
 mkinstalldirs
 stamp-*
+compile
+config.guess
+config.rpath
+config.sub
+depcomp
+install-sh
+ltmain.sh
+missing
+test-driver
+ylwrap
