@@ -36,7 +36,8 @@ check_PROGRAMS = \
 	bison_yylloc \
 	bison_yylval \
 	ccl \
-	debug_nr
+	debug_nr \
+	debug_r
 
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
@@ -48,6 +49,7 @@ bison_yylloc_SOURCES = bison_yylloc_scanner.l bison_yylloc_parser.y bison_yylloc
 bison_yylval_SOURCES = bison_yylval_scanner.l bison_yylval_parser.y bison_yylval_main.c
 ccl_SOURCES = ccl.l
 debug_nr_SOURCES = debug_nr.l
+debug_r_SOURCES = debug_r.l
 
 BUILT_SOURCES = \
 	bison_nr_scanner.h \
@@ -72,7 +74,8 @@ basic_nr.txt \
 	bison_yylval_scanner.h \
 	bison_yylval.txt \
 	ccl.txt \
-	debug_nr.txt
+	debug_nr.txt \
+	debug_r.txt
 
 # specify how to process .l files in order to test the flex built by make all
 
