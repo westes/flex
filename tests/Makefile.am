@@ -27,46 +27,46 @@ AM_LOG_FLAGS = $(srcdir)
 AM_YFLAGS = -d -p test
 
 check_PROGRAMS = \
-	alloc-extra \
-	array-nr \
-	array-r \
-	basic-nr \
-	basic-r \
-	bison-nr \
-	bison-yylloc \
-	bison-yylval
+	alloc_extra \
+	array_nr \
+	array_r \
+	basic_nr \
+	basic_r \
+	bison_nr \
+	bison_yylloc \
+	bison_yylval
 
-alloc_extra_SOURCES = alloc-extra.l
-array_nr_SOURCES = array-nr.l
-array_r_SOURCES = array-r.l
-basic_nr_SOURCES = basic-nr.l
-basic_r_SOURCES = basic-r.l
-bison_nr_SOURCES = bison-nr-scanner.l bison-nr-parser.y bison-nr-main.c
-bison_yylloc_SOURCES = bison-yylloc-scanner.l bison-yylloc-parser.y bison-yylloc-main.c
-bison_yylval_SOURCES = bison-yylval-scanner.l bison-yylval-parser.y bison-yylval-main.c
+alloc_extra_SOURCES = alloc_extra.l
+array_nr_SOURCES = array_nr.l
+array_r_SOURCES = array_r.l
+basic_nr_SOURCES = basic_nr.l
+basic_r_SOURCES = basic_r.l
+bison_nr_SOURCES = bison_nr_scanner.l bison_nr_parser.y bison_nr_main.c
+bison_yylloc_SOURCES = bison_yylloc_scanner.l bison_yylloc_parser.y bison_yylloc_main.c
+bison_yylval_SOURCES = bison_yylval_scanner.l bison_yylval_parser.y bison_yylval_main.c
 
 BUILT_SOURCES = \
-	bison-nr-scanner.h \
-	bison-nr-parser.h \
-	bison-yylloc-parser.h \
-	bison-yylloc-scanner.h \
-	bison-yylval-parser.h \
-	bison-yylval-scanner.h
+	bison_nr_scanner.h \
+	bison_nr_parser.h \
+	bison_yylloc_parser.h \
+	bison_yylloc_scanner.h \
+	bison_yylval_parser.h \
+	bison_yylval_scanner.h
 
 EXTRA_DIST = \
 	README \
 	testwrapper.sh \
-	alloc-extra.txt \
-	array-nr.txt \
-	array-r.txt \
-basic-nr.txt \
-	basic-r.txt \
-	bison-nr-scanner.h \
-	bison-nr.txt \
-	bison-yylloc-scanner.h \
-	bison-yylloc.txt \
-	bison-yylval-scanner.h \
-	bison-yylval.txt
+	alloc_extra.txt \
+	array_nr.txt \
+	array_r.txt \
+basic_nr.txt \
+	basic_r.txt \
+	bison_nr_scanner.h \
+	bison_nr.txt \
+	bison_yylloc_scanner.h \
+	bison_yylloc.txt \
+	bison_yylval_scanner.h \
+	bison_yylval.txt
 
 # specify how to process .l files in order to test the flex built by make all
 
@@ -75,11 +75,11 @@ FLEX = $(top_builddir)/src/flex
 .l.c:
 	$(FLEX) -o $@ $<
 
-bison-nr-main($objext): bison-nr-parser.h bison-nr-scanner.h
-bison-nr-scanner.h: bison-nr-scanner.c
+bison_nr_main($objext): bison_nr_parser.h bison_nr_scanner.h
+bison_nr_scanner.h: bison_nr_scanner.c
 
-bison-yylloc-main$(objext): bison-yylloc-parser.h bison-yylloc-scanner.h
-bison-yylloc-scanner.h: bison-yylloc-scanner.c
+bison_yylloc_main$(objext): bison_yylloc_parser.h bison_yylloc_scanner.h
+bison_yylloc_scanner.h: bison_yylloc_scanner.c
 
-bison-yylval-main$(objext): bison-yylval-parser.h bison-yylval-scanner.h
-bison-yylval-scanner.h: bison-yylval-scanner.c
+bison_yylval_main$(objext): bison_yylval_parser.h bison_yylval_scanner.h
+bison_yylval_scanner.h: bison_yylval_scanner.c

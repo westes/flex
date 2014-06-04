@@ -25,7 +25,7 @@
 /* The scanner expects to link to bison yylval . */
 #include <stdio.h>
 #include <stdlib.h>
-#include "bison-nr-parser.h"
+#include "bison_nr_parser.h"
 #include "config.h"
 static char* STRDUP(char* s1);
 #define YY_EXTRA_TYPE int
@@ -34,7 +34,7 @@ static char* STRDUP(char* s1);
 %option 8bit prefix="test"
 %option bison-locations yylineno
 %option nomain nounput noyy_top_state noyywrap nodefault warn
-%option prefix="test" header="bison-nr-scanner.h" yylineno
+%option prefix="test" header="bison_nr_scanner.h" yylineno
 
 
 %%

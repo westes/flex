@@ -21,20 +21,45 @@
  * PURPOSE.
  */
 
-#include "bison-yylloc-parser.h"
-#include "bison-yylloc-scanner.h"
+%{
+/* The scanner expects to link to bison yylval . */
+#include <stdio.h>
+#include <stdlib.h>
+#include "bison_yylloc_parser.h"
+#include "config.h"
+static char* STRDUP(char* s1);
+#define YY_EXTRA_TYPE int
+%}
 
-int main ( int argc, char** argv )
+%option 8bit prefix="test"
+%option reentrant bison-bridge bison-locations yylineno
+%option nomain nounput noyy_top_state noyywrap nodefault warn
+%option header="bison_yylloc_scanner.h"
+
+
+%%
+
+    if ( !yyextra)
+        yyextra = 1;
+
+^[[:digit:]]+  { 
+        yylval->lineno = yyextra++;
+        yylloc->first_line = (int)strtol(yytext,NULL,10);
+        return LINENO;
+    }
+":"  { return COLON; }
+" "  { return SPACE; }
+"="  { return EQUAL; }
+[[:alnum:]_]+ {  yylval->str = STRDUP(yytext); return IDENT;}
+
+\r|\n { }
+.     { yyterminate();}
+%%
+
+
+static char* STRDUP(char* s1)
 {
-    yyscan_t scanner;
-    /*yydebug =1;*/
-    testlex_init ( &scanner );
-    testset_in(stdin,scanner);
-    testparse ( scanner );
-    testlex_destroy ( scanner );
-    return 0;
+    char* s2 = (char*)malloc(strlen(s1)+1);
+    sprintf(s2,"%s",s1);
+    return s2;
 }
-
-
-
-/* vim:set tabstop=8 softtabstop=4 shiftwidth=4: */

@@ -21,16 +21,17 @@
  * PURPOSE.
  */
 
-#include "bison-nr-parser.h"
-#include "bison-nr-scanner.h"
-
-extern int testparse(void);
+#include "bison_yylloc_parser.h"
+#include "bison_yylloc_scanner.h"
 
 int main ( int argc, char** argv )
 {
+    yyscan_t scanner;
     /*yydebug =1;*/
-    testin = stdin;
-    testparse ( );
+    testlex_init ( &scanner );
+    testset_in(stdin,scanner);
+    testparse ( scanner );
+    testlex_destroy ( scanner );
     return 0;
 }
 

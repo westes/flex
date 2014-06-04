@@ -26,7 +26,7 @@
 
 /* 
    How to compile:
-   bison --defines --output-file="bison-yylloc-parser.c" --name-prefix="test" parser.y
+   bison --defines --output-file="bison_yylloc_parser.c" --name-prefix="test" parser.y
  */
 %{
 #include <stdio.h>
