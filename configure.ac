@@ -26,6 +26,7 @@
 
 AC_INIT([the fast lexical analyser generator], [2.6.0-pre],
 [flex-help@lists.sourceforge.net], [flex])
+LT_INIT
 SHARED_VERSION_INFO="2:0:0"
 AC_SUBST(SHARED_VERSION_INFO)
 AC_CONFIG_SRCDIR([src/scan.l])
@@ -45,7 +46,6 @@ AC_PROG_CC
 AC_PROG_CXX
 AM_PROG_CC_C_O
 AC_PROG_LN_S
-LT_INIT
 AC_PROG_AWK
 AC_PROG_INSTALL
 
