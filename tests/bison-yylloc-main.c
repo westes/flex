@@ -21,8 +21,8 @@
  * PURPOSE.
  */
 
-#include "parser.h"
-#include "scanner.h"
+#include "bison-yylloc-parser.h"
+#include "bison-yylloc-scanner.h"
 
 int main ( int argc, char** argv )
 {

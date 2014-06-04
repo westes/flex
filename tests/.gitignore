@@ -14,3 +14,6 @@ basic-r.c
 bison-nr
 bison-nr-scanner.[ch]
 bison-nr-parser.[ch]
+bison-yylloc
+bison-yylloc-parser.[ch]
+bison-yylloc-scanner.[ch]

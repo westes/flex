@@ -25,16 +25,16 @@
 /* The scanner expects to link to bison yylval . */
 #include <stdio.h>
 #include <stdlib.h>
-#include "parser.h"
+#include "bison-yylloc-parser.h"
 #include "config.h"
 static char* STRDUP(char* s1);
 #define YY_EXTRA_TYPE int
 %}
 
-%option 8bit outfile="scanner.c" prefix="test"
+%option 8bit prefix="test"
 %option reentrant bison-bridge bison-locations yylineno
 %option nomain nounput noyy_top_state noyywrap nodefault warn
-%option prefix="test" header="scanner.h"
+%option header="bison-yylloc-scanner.h"
 
 
 %%
