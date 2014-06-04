@@ -38,7 +38,8 @@ check_PROGRAMS = \
 	ccl \
 	debug_nr \
 	debug_r \
-	extended
+	extended \
+	header_nr
 
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
@@ -52,6 +53,7 @@ ccl_SOURCES = ccl.l
 debug_nr_SOURCES = debug_nr.l
 debug_r_SOURCES = debug_r.l
 extended_SOURCES = extended.l
+header_nr_SOURCES = header_nr_scanner.l header_nr_main.c
 
 BUILT_SOURCES = \
 	bison_nr_scanner.h \
@@ -59,7 +61,8 @@ BUILT_SOURCES = \
 	bison_yylloc_parser.h \
 	bison_yylloc_scanner.h \
 	bison_yylval_parser.h \
-	bison_yylval_scanner.h
+	bison_yylval_scanner.h \
+	header_nr_scanner.h
 
 EXTRA_DIST = \
 	README \
@@ -78,7 +81,9 @@ basic_nr.txt \
 	ccl.txt \
 	debug_nr.txt \
 	debug_r.txt \
-	extended.txt
+	extended.txt \
+	header_nr_scanner.h \
+	header_nr.txt
 
 # specify how to process .l files in order to test the flex built by make all
 
@@ -95,3 +100,6 @@ bison_yylloc_scanner.h: bison_yylloc_scanner.c
 
 bison_yylval_main$(objext): bison_yylval_parser.h bison_yylval_scanner.h
 bison_yylval_scanner.h: bison_yylval_scanner.c
+
+header_nr_main$(objext): header_nr_scanner.h
+header_nr_scanner.h: header_nr_scanner.c

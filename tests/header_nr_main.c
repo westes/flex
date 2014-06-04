@@ -21,22 +21,17 @@
  * PURPOSE.
  */
 
-%{
-/* A template scanner file to build "scanner.c". */
-#include <stdio.h>
-#include <stdlib.h>
-#include "config.h"
+#include "header_nr_scanner.h"
 
-%}
+int
+main ( int argc, char** argv )
+{
+    testin = stdin;
+    testout = stdout;
+    testlex();
+    printf("TEST RETURNING OK.\n");
+    return 0;
+}
 
-%option 8bit outfile="scanner.c" prefix="test" header="scanner.h"
-%option nounput nomain noyywrap 
-%option warn
 
-
-%%
-
-.|\n              { }
-
-%%
-
+/* vim:set tabstop=8 softtabstop=4 shiftwidth=4: */
