@@ -39,7 +39,7 @@
 
 %}
 
-%option 8bit outfile="scanner.c" prefix="test"
+%option 8bit prefix="test"
 %option nounput nomain noyywrap
 %option warn stack nodefault reentrant
 %option noyyalloc noyyrealloc noyyfree
