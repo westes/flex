@@ -40,7 +40,8 @@ check_PROGRAMS = \
 	debug_r \
 	extended \
 	header_nr \
-	header_r
+	header_r \
+	mem_nr
 
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
@@ -56,6 +57,7 @@ debug_r_SOURCES = debug_r.l
 extended_SOURCES = extended.l
 header_nr_SOURCES = header_nr_scanner.l header_nr_main.c
 header_r_SOURCES = header_r_scanner.l header_r_main.c
+mem_nr_SOURCES = mem_nr.l
 
 BUILT_SOURCES = \
 	bison_nr_scanner.h \
@@ -88,7 +90,8 @@ basic_nr.txt \
 	header_nr_scanner.h \
 	header_nr.txt \
 	header_r_scanner.h \
-	header_r.txt
+	header_r.txt \
+	mem_nr.txt
 
 # specify how to process .l files in order to test the flex built by make all
 

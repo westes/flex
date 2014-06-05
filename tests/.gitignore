@@ -32,3 +32,5 @@ header_nr
 header_nr_scanner.[ch]
 header_r
 header_r_scanner.[ch]
+mem_nr
+mem_nr.c
