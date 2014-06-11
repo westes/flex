@@ -24,7 +24,7 @@
 
 # autoconf requirements and initialization
 
-AC_INIT([the fast lexical analyser generator], [2.6.0],
+AC_INIT([the fast lexical analyser generator], [2.6.0-pre],
 [flex-help@lists.sourceforge.net], [flex])
 SHARED_VERSION_INFO="2:0:0"
 AC_SUBST(SHARED_VERSION_INFO)
