@@ -42,3 +42,5 @@ noansi_r
 noansi_r.c
 posix
 posix.c
+prefix_nr
+prefix_nr.c
