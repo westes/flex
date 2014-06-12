@@ -46,7 +46,8 @@ check_PROGRAMS = \
 	noansi_nr \
 	noansi_r \
 	posix \
-	prefix_nr
+	prefix_nr \
+	prefix_r
 
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
@@ -68,6 +69,7 @@ noansi_nr_SOURCES = noansi_nr.l
 noansi_r_SOURCES = noansi_r.l
 posix_SOURCES = posix.l
 prefix_nr_SOURCES = prefix_nr.l
+prefix_r_SOURCES = prefix_r.l
 
 BUILT_SOURCES = \
 	bison_nr_scanner.h \
@@ -105,7 +107,8 @@ basic_nr.txt \
 	mem_r.txt \
 	noansi_nr.txt \
 	noansi_r.txt \
-	prefix_nr.txt
+	prefix_nr.txt \
+	prefix_r.txt
 
 # specify how to process .l files in order to test the flex built by make all
 

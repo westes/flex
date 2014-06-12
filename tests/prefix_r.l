@@ -30,7 +30,7 @@
 
 %}
 %option reentrant
-%option 8bit outfile="scanner.c" prefix="FOO"
+%option 8bit prefix="FOO"
 %option nounput nomain noyywrap 
 %option warn
 

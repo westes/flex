@@ -44,3 +44,5 @@ posix
 posix.c
 prefix_nr
 prefix_nr.c
+prefix_r
+prefix_r.c
