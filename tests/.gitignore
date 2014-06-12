@@ -40,3 +40,5 @@ noansi_nr
 noansi_nr.c
 noansi_r
 noansi_r.c
+posix
+posix.c
