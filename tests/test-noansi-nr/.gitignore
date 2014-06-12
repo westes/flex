@@ -1,7 +1,0 @@
-Makefile
-parser.c
-parser.h
-scanner.c
-test-noansi-nr
-OUTPUT
-Makefile.in

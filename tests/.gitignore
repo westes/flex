@@ -36,3 +36,5 @@ mem_nr
 mem_nr.c
 mem_r
 mem_r.c
+noansi_nr
+noansi_nr.c

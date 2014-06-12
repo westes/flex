@@ -35,7 +35,7 @@
 #include "config.h"
 %}
 
-%option prefix="test" outfile="scanner.c" 
+%option prefix="test" 
 %option nounput noyywrap noyylineno warn nodefault
 %option noansi-prototypes noansi-definitions
 
