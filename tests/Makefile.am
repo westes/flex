@@ -48,7 +48,8 @@ check_PROGRAMS = \
 	posix \
 	prefix_nr \
 	prefix_r \
-	string_nr
+	string_nr \
+string_r
 
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
@@ -72,6 +73,7 @@ posix_SOURCES = posix.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
 string_nr_SOURCES = string_nr.l
+string_r_SOURCES = string_r.l
 
 BUILT_SOURCES = \
 	bison_nr_scanner.h \
