@@ -20,6 +20,10 @@ bison_yylloc_scanner.[ch]
 bison_yylval
 bison_yylval_parser.[ch]
 bison_yylval_scanner.[ch]
+c_cxx_nr
+c_cxx_nr.cc
+c_cxx_r
+c_cxx_r.cc
 ccl
 ccl.c
 cxx_basic

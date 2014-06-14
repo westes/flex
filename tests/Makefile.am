@@ -35,6 +35,8 @@ check_PROGRAMS = \
 	bison_nr \
 	bison_yylloc \
 	bison_yylval \
+	c_cxx_nr \
+	c_cxx_r \
 	ccl \
 	cxx_basic \
 	debug_nr \
@@ -63,6 +65,8 @@ basic_r_SOURCES = basic_r.l
 bison_nr_SOURCES = bison_nr_scanner.l bison_nr_parser.y bison_nr_main.c
 bison_yylloc_SOURCES = bison_yylloc_scanner.l bison_yylloc_parser.y bison_yylloc_main.c
 bison_yylval_SOURCES = bison_yylval_scanner.l bison_yylval_parser.y bison_yylval_main.c
+c_cxx_nr_SOURCES = c_cxx_nr.lll
+c_cxx_r_SOURCES = c_cxx_r.lll
 ccl_SOURCES = ccl.l
 cxx_basic_SOURCES = cxx_basic.ll
 debug_nr_SOURCES = debug_nr.l
@@ -90,6 +94,8 @@ BUILT_SOURCES = \
 	bison_yylloc_scanner.h \
 	bison_yylval_parser.h \
 	bison_yylval_scanner.h \
+	c_cxx_nr.cc \
+	c_cxx_r.cc \
 	header_nr_scanner.h \
 	header_r_scanner.h \
 	top.h
@@ -108,8 +114,12 @@ basic_nr.txt \
 	bison_yylloc.txt \
 	bison_yylval_scanner.h \
 	bison_yylval.txt \
-	cxx_basic.txt \
+	c_cxx_nr.cc \
+	c_cxx_nr.txt \
+	c_cxx_r.cc \
+	c_cxx_r.txt \
 	ccl.txt \
+	cxx_basic.txt \
 	debug_nr.txt \
 	debug_r.txt \
 	extended.txt \
@@ -145,6 +155,12 @@ bison_yylloc_scanner.h: bison_yylloc_scanner.c
 
 bison_yylval_main$(objext): bison_yylval_parser.h bison_yylval_scanner.h
 bison_yylval_scanner.h: bison_yylval_scanner.c
+
+# automake does not support compiling flex scanners output in C as C++
+# so we explicitly sayhow, using the .lll suffix for the lex input file
+
+.lll.cc:
+	$(FLEX) -o $@ $<
 
 header_nr_main$(objext): header_nr_scanner.h
 header_nr_scanner.h: header_nr_scanner.c
