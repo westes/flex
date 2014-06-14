@@ -52,3 +52,5 @@ string_r
 string_r.c
 top
 top.[ch]
+yyextra
+yyextra.c

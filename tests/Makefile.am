@@ -50,7 +50,8 @@ check_PROGRAMS = \
 	prefix_r \
 	string_nr \
 string_r \
-	top
+	top \
+	yyextra
 
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
@@ -76,6 +77,7 @@ prefix_r_SOURCES = prefix_r.l
 string_nr_SOURCES = string_nr.l
 string_r_SOURCES = string_r.l
 top_SOURCES = top.l top_main.c
+yyextra_SOURCES = yyextra.l
 
 BUILT_SOURCES = \
 	bison_nr_scanner.h \
@@ -116,7 +118,9 @@ basic_nr.txt \
 	noansi_r.txt \
 	prefix_nr.txt \
 	prefix_r.txt \
-	top.txt
+	top.h \
+	top.txt \
+	yyextra.txt
 
 # specify how to process .l files in order to test the flex built by make all
 
