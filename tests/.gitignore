@@ -42,6 +42,8 @@ noansi_r
 noansi_r.c
 posix
 posix.c
+posixly_correct
+posixly_correct.c
 prefix_nr
 prefix_nr.c
 prefix_r

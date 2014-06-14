@@ -46,6 +46,7 @@ check_PROGRAMS = \
 	noansi_nr \
 	noansi_r \
 	posix \
+	posixly_correct \
 	prefix_nr \
 	prefix_r \
 	string_nr \
@@ -72,6 +73,7 @@ mem_r_SOURCES = mem_r.l
 noansi_nr_SOURCES = noansi_nr.l
 noansi_r_SOURCES = noansi_r.l
 posix_SOURCES = posix.l
+posixly_correct_SOURCES = posixly_correct.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
 string_nr_SOURCES = string_nr.l
@@ -143,6 +145,9 @@ header_nr_scanner.h: header_nr_scanner.c
 
 header_r_main$(objext): header_r_scanner.h
 header_r_scanner.h: header_r_scanner.c
+
+posixly_correct.c: posixly_correct.l
+	POSIXLY_CORRECT=1 $(FLEX) -o $@ $<
 
 top_main$(objext): top.h
 top.h: top.c
