@@ -36,6 +36,7 @@ check_PROGRAMS = \
 	bison_yylloc \
 	bison_yylval \
 	ccl \
+	cxx_basic \
 	debug_nr \
 	debug_r \
 	extended \
@@ -63,6 +64,7 @@ bison_nr_SOURCES = bison_nr_scanner.l bison_nr_parser.y bison_nr_main.c
 bison_yylloc_SOURCES = bison_yylloc_scanner.l bison_yylloc_parser.y bison_yylloc_main.c
 bison_yylval_SOURCES = bison_yylval_scanner.l bison_yylval_parser.y bison_yylval_main.c
 ccl_SOURCES = ccl.l
+cxx_basic_SOURCES = cxx_basic.ll
 debug_nr_SOURCES = debug_nr.l
 debug_r_SOURCES = debug_r.l
 extended_SOURCES = extended.l
@@ -106,6 +108,7 @@ basic_nr.txt \
 	bison_yylloc.txt \
 	bison_yylval_scanner.h \
 	bison_yylval.txt \
+	cxx_basic.txt \
 	ccl.txt \
 	debug_nr.txt \
 	debug_r.txt \
@@ -130,6 +133,9 @@ FLEX = $(top_builddir)/src/flex
 
 .l.c:
 	$(FLEX) -o $@ $<
+
+.ll.cc:
+	$(FLEX) -+ -o $@ $<
 
 bison_nr_main($objext): bison_nr_parser.h bison_nr_scanner.h
 bison_nr_scanner.h: bison_nr_scanner.c
