@@ -46,3 +46,5 @@ prefix_nr
 prefix_nr.c
 prefix_r
 prefix_r.c
+string_nr
+string_nr.c
