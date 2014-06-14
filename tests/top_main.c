@@ -21,7 +21,7 @@
  * PURPOSE.
  */
 
-#include "scanner.h"
+#include "top.h"
 
 /* The scanner itself is not important here.
  * We simply try to use all the functions that are exported in the

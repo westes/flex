@@ -40,7 +40,7 @@
 }
 
 %option reentrant
-%option 8bit outfile="scanner.c" prefix="test"
+%option 8bit header="top.h" prefix="test"
 %option nounput nomain noyywrap 
 %option warn
 
