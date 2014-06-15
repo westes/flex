@@ -29,8 +29,8 @@
 
 %}
 
-%option header="scanner-2.h"
-%option 8bit outfile="scanner-2.c" prefix="S2_"
+%option header="multiple_scanners_nr_2.h"
+%option 8bit prefix="S2_"
 %option nounput nomain noyywrap
 %option warn stack noyy_top_state
 

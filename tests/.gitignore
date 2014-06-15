@@ -44,6 +44,8 @@ mem_nr
 mem_nr.c
 mem_r
 mem_r.c
+multiple_scanners_nr
+multiple_scanners_nr_[12].[ch]
 noansi_nr
 noansi_nr.c
 noansi_r

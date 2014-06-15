@@ -47,6 +47,7 @@ check_PROGRAMS = \
 	header_r \
 	mem_nr \
 	mem_r \
+	multiple_scanners_nr \
 	noansi_nr \
 	noansi_r \
 	posix \
@@ -78,6 +79,7 @@ header_nr_SOURCES = header_nr_scanner.l header_nr_main.c
 header_r_SOURCES = header_r_scanner.l header_r_main.c
 mem_nr_SOURCES = mem_nr.l
 mem_r_SOURCES = mem_r.l
+multiple_scanners_nr_SOURCES = multiple_scanners_nr_main.c multiple_scanners_nr_1.l multiple_scanners_nr_2.l
 noansi_nr_SOURCES = noansi_nr.l
 noansi_r_SOURCES = noansi_r.l
 posix_SOURCES = posix.l
@@ -100,6 +102,8 @@ BUILT_SOURCES = \
 	c_cxx_r.cc \
 	header_nr_scanner.h \
 	header_r_scanner.h \
+	multiple_scanners_nr_1.h \
+	multiple_scanners_nr_2.h \
 	top.h
 
 EXTRA_DIST = \
@@ -133,6 +137,8 @@ basic_nr.txt \
 	mem_nr.txt \
 	mem_r.txt \
 	noansi_nr.txt \
+	multiple_scanners_nr_1.h \
+	multiple_scanners_nr_2.h \
 	noansi_r.txt \
 	prefix_nr.txt \
 	prefix_r.txt \
@@ -170,6 +176,10 @@ header_nr_scanner.h: header_nr_scanner.c
 
 header_r_main$(objext): header_r_scanner.h
 header_r_scanner.h: header_r_scanner.c
+
+multiple_scanners_nr_main.$(OBJEXT): multiple_scanners_nr_1.h multiple_scanners_nr_2.h
+multiple_scanners_nr_1.h: multiple_scanners_nr_1.c
+multiple_scanners_nr_2.h: multiple_scanners_nr_2.c
 
 posixly_correct.c: posixly_correct.l
 	POSIXLY_CORRECT=1 $(FLEX) -o $@ $<
