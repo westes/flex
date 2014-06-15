@@ -28,6 +28,8 @@ ccl
 ccl.c
 cxx_basic
 cxx_basic.cc
+cxx_multiple_scanners
+cxx_multiple_scanners_[12].cc
 debug_nr
 debug_nr.c
 debug_r

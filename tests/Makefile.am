@@ -39,6 +39,7 @@ check_PROGRAMS = \
 	c_cxx_r \
 	ccl \
 	cxx_basic \
+	cxx_multiple_scanners \
 	debug_nr \
 	debug_r \
 	extended \
@@ -69,6 +70,7 @@ c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
 ccl_SOURCES = ccl.l
 cxx_basic_SOURCES = cxx_basic.ll
+cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
 debug_nr_SOURCES = debug_nr.l
 debug_r_SOURCES = debug_r.l
 extended_SOURCES = extended.l
@@ -120,6 +122,7 @@ basic_nr.txt \
 	c_cxx_r.txt \
 	ccl.txt \
 	cxx_basic.txt \
+	cxx_multiple_scanners.txt \
 	debug_nr.txt \
 	debug_r.txt \
 	extended.txt \

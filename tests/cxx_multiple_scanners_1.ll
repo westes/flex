@@ -24,7 +24,7 @@
 
 %}
 
-%option 8bit outfile="scanner-1.cpp" prefix="S1_"
+%option 8bit prefix="S1_"
 %option nounput nomain noyywrap
 %option warn stack noyy_top_state
 

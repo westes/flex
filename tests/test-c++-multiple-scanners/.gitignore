@@ -1,7 +1,0 @@
-Makefile
-Makefile.in
-scanner-1.cpp
-scanner-2.cpp
-OUTPUT
-.deps
-test-c++-multiple-scanners

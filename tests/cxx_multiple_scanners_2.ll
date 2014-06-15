@@ -24,7 +24,7 @@
 
 %}
 
-%option 8bit outfile="scanner-2.cpp" prefix="S2_"
+%option 8bit prefix="S2_"
 %option nounput nomain
 %option warn stack noyy_top_state
 
