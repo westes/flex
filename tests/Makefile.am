@@ -71,6 +71,7 @@ simple_tests = \
 	posixly_correct \
 	prefix_nr \
 	prefix_r \
+	quotes \
 	string_nr \
 string_r \
 	top \
@@ -112,6 +113,7 @@ posix_SOURCES = posix.l
 posixly_correct_SOURCES = posixly_correct.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
+quotes_SOURCES = quotes.l
 reject_nr_reject_SOURCES = reject.l4
 reject_r_reject_SOURCES = reject.l4
 reject_ver_table_SOURCES = reject.l4
@@ -185,6 +187,7 @@ basic_nr.txt \
 	reject_r.reject.c \
 	reject_ver.table.c \
 	reject_ser.table.c \
+	quotes.txt \
 	top.h \
 	top.txt \
 	yyextra.txt
@@ -199,7 +202,7 @@ FLEX = $(top_builddir)/src/flex
 .ll.cc:
 	$(FLEX) -+ -o $@ $<
 
-bison_nr_main($objext): bison_nr_parser.h bison_nr_scanner.h
+bison_nr_main.($OBJEXT): bison_nr_parser.h bison_nr_scanner.h
 bison_nr_scanner.h: bison_nr_scanner.c
 
 bison_yylloc_main$(objext): bison_yylloc_parser.h bison_yylloc_scanner.h

@@ -69,6 +69,8 @@ reject_ver.table
 reject_ver.table.c
 reject_ser.table
 reject_ser.table.c
+quotes
+quotes.c
 string_nr
 string_nr.c
 string_r
