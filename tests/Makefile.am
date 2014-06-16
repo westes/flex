@@ -205,10 +205,10 @@ FLEX = $(top_builddir)/src/flex
 bison_nr_main.($OBJEXT): bison_nr_parser.h bison_nr_scanner.h
 bison_nr_scanner.h: bison_nr_scanner.c
 
-bison_yylloc_main$(objext): bison_yylloc_parser.h bison_yylloc_scanner.h
+bison_yylloc_main.$(OBJEXT): bison_yylloc_parser.h bison_yylloc_scanner.h
 bison_yylloc_scanner.h: bison_yylloc_scanner.c
 
-bison_yylval_main$(objext): bison_yylval_parser.h bison_yylval_scanner.h
+bison_yylval_main.$(OBJEXT): bison_yylval_parser.h bison_yylval_scanner.h
 bison_yylval_scanner.h: bison_yylval_scanner.c
 
 # automake does not support compiling flex scanners output in C as C++
@@ -217,10 +217,10 @@ bison_yylval_scanner.h: bison_yylval_scanner.c
 .lll.cc:
 	$(FLEX) -o $@ $<
 
-header_nr_main$(objext): header_nr_scanner.h
+header_nr_main.$(OBJEXT): header_nr_scanner.h
 header_nr_scanner.h: header_nr_scanner.c
 
-header_r_main$(objext): header_r_scanner.h
+header_r_main.$(OBJEXT): header_r_scanner.h
 header_r_scanner.h: header_r_scanner.c
 
 multiple_scanners_nr_main.$(OBJEXT): multiple_scanners_nr_1.h multiple_scanners_nr_2.h
@@ -258,5 +258,5 @@ reject_ser.table.c: reject.l4
 reject_ser.table$(EXEEXT): reject_ser.table.$(OBJEXT)
 	$(LINK) $^
 
-top_main$(objext): top.h
+top_main.$(OBJEXT): top.h
 top.h: top.c
