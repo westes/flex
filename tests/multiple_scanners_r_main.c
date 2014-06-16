@@ -21,8 +21,8 @@
  * PURPOSE.
  */
 
-#include "scanner-1.h"
-#include "scanner-2.h"
+#include "multiple_scanners_r_1.h"
+#include "multiple_scanners_r_2.h"
 
 int
 main ( int argc, char** argv )
@@ -34,26 +34,6 @@ main ( int argc, char** argv )
     
     S1_lex_init(&scan1);
     S2_lex_init(&scan2);
-
-    if((fp = fopen("scanner-1.tables","r")) == 0){
-        fprintf(stderr,"Could not open scanner-1.tables.\n");
-        exit(1);
-    }
-    if(S1_tables_fload(fp,scan1) != 0){
-        fprintf(stderr,"Could not load scanner-1.tables.\n");
-        exit(1);
-    }
-    fclose(fp);
-
-    if((fp = fopen("scanner-2.tables","r")) == 0){
-        fprintf(stderr,"Could not open scanner-2.tables.\n");
-        exit(1);
-    }
-    if(S2_tables_fload(fp,scan2) != 0){
-        fprintf(stderr,"Could not load scanner-2.tables.\n");
-        exit(1);
-    }
-    fclose(fp);
 
     S1_set_out(stdout,scan1);
     S2_set_out(S1_get_out(scan1),scan2);
@@ -71,9 +51,6 @@ main ( int argc, char** argv )
     }
     S1__delete_buffer(buff1, scan1);
     S2__delete_buffer(buff2, scan2);
-
-    S1_tables_destroy(scan1);
-    S2_tables_destroy(scan2);
 
     S1_lex_destroy(scan1);
     S2_lex_destroy(scan2);
