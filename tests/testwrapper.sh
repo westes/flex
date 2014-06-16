@@ -7,10 +7,11 @@
 INPUT_DIRECTORY=""
 INPUT_NAME=""
 
-while getopts :d:i:t OPTION ; do
+while getopts :d:i:rt OPTION ; do
     case $OPTION in
         d) INPUT_DIRECTORY=$OPTARG ;;
         i) INPUTNAME="$OPTARG" ;;
+        r) USE_REDIRECT=1 ;;
         t) USE_TABLES=1 ;;
     esac
     done
@@ -20,7 +21,7 @@ TESTNAME="${!$OPTIND}"
 INPUTNAME=${INPUT_NAME:-`basename $TESTNAME`.txt}
 
 if [ -f $INPUT_DIRECTORY/$INPUT_NAME ] ; then
-    $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}${TESTNAME}} < $INPUT_DIRECTORY/$INPUT_NAME
+    $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}${TESTNAME}} ${USE_REDIRECT:+'<'} $INPUT_DIRECTORY/$INPUT_NAME
 else
     $TESTNAME
 fi

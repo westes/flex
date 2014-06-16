@@ -27,20 +27,23 @@ TESTS = $(check_PROGRAMS)
 # automake knows how to distinguish between the various kinds of tests
 # we have.
 
-TEST_EXTENSIONS = .reject .table
+TEST_EXTENSIONS = .reject .table .direct
 
 LOG_COMPILER = $(srcdir)/testwrapper.sh
-AM_LOG_FLAGS = -d $(srcdir)
+AM_LOG_FLAGS = -d $(srcdir) -r
 
 REJECT_LOG_COMPILER = $(srcdir)/testwrapper.sh
-AM_REJECT_LOG_FLAGS = -d $(srcdir) -i reject.txt
+AM_REJECT_LOG_FLAGS = -d $(srcdir) -i reject.txt -r
 
 TABLE_LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_TABLE_LOG_FLAGS = -d $(srcdir) -i reject.txt -t
 
+DIRECT_LOG_COMPILER=$(srcdir)/testwrapper.sh
+AM_DIRECT_LOG_FLAGS = -d $(srcdir)
+
 AM_YFLAGS = -d -p test
 
-check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS)
+check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS)
 
 simple_tests = \
 	alloc_extra \
@@ -85,6 +88,9 @@ TABLE_TESTS = \
 	reject_ver.table \
 	reject_ser.table
 
+DIRECT_TESTS = \
+	rescan_nr
+
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
 array_r_SOURCES = array_r.l
@@ -118,6 +124,7 @@ reject_nr_reject_SOURCES = reject.l4
 reject_r_reject_SOURCES = reject.l4
 reject_ver_table_SOURCES = reject.l4
 reject_ser_table_SOURCES = reject.l4
+rescan_nr_SOURCES = rescan_nr.l
 string_nr_SOURCES = string_nr.l
 string_r_SOURCES = string_r.l
 top_SOURCES = top.l top_main.c
@@ -187,6 +194,7 @@ basic_nr.txt \
 	reject_r.reject.c \
 	reject_ver.table.c \
 	reject_ser.table.c \
+	rescan_nr.txt \
 	quotes.txt \
 	top.h \
 	top.txt \

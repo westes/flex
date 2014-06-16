@@ -27,7 +27,7 @@
 #include <stdlib.h>
 %}
 
-%option 8bit outfile="scanner.c" prefix="test"
+%option 8bit prefix="test"
 %option nounput nomain noyywrap
 %option warn stack never-interactive
 %x STATE_1

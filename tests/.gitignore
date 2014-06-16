@@ -69,6 +69,8 @@ reject_ver.table
 reject_ver.table.c
 reject_ser.table
 reject_ser.table.c
+rescan_nr
+rescan_nr.c
 quotes
 quotes.c
 string_nr
