@@ -1,6 +1,7 @@
 *.log
 *.trs
 *.o
+*.tables
 alloc_extra
 alloc_extra.c
 array_nr
@@ -60,6 +61,14 @@ prefix_nr
 prefix_nr.c
 prefix_r
 prefix_r.c
+reject_nr.reject
+reject_nr.reject.c
+reject_r.reject
+reject_r.reject.c
+reject_ver.table
+reject_ver.table.c
+reject_ser.table
+reject_ser.table.c
 string_nr
 string_nr.c
 string_r

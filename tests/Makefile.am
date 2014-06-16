@@ -21,12 +21,28 @@
 
 TESTS = $(check_PROGRAMS)
 
+# The script testwrapper.sh will run most tests as is. A couple tests
+# in the suite end in .reject, .table and the like so that we can pass
+# different arguments to the test runner. We list those extensions so
+# automake knows how to distinguish between the various kinds of tests
+# we have.
+
+TEST_EXTENSIONS = .reject .table
+
 LOG_COMPILER = $(srcdir)/testwrapper.sh
-AM_LOG_FLAGS = $(srcdir)
+AM_LOG_FLAGS = -d $(srcdir)
+
+REJECT_LOG_COMPILER = $(srcdir)/testwrapper.sh
+AM_REJECT_LOG_FLAGS = -d $(srcdir) -i reject.txt
+
+TABLE_LOG_COMPILER = $(srcdir)/testwrapper.sh
+AM_TABLE_LOG_FLAGS = -d $(srcdir) -i reject.txt -t
 
 AM_YFLAGS = -d -p test
 
-check_PROGRAMS = \
+check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS)
+
+simple_tests = \
 	alloc_extra \
 	array_nr \
 	array_r \
@@ -60,6 +76,14 @@ string_r \
 	top \
 	yyextra
 
+reject_tests = \
+	reject_nr.reject \
+	reject_r.reject
+
+TABLE_TESTS = \
+	reject_ver.table \
+	reject_ser.table
+
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
 array_r_SOURCES = array_r.l
@@ -88,6 +112,10 @@ posix_SOURCES = posix.l
 posixly_correct_SOURCES = posixly_correct.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
+reject_nr_reject_SOURCES = reject.l4
+reject_r_reject_SOURCES = reject.l4
+reject_ver_table_SOURCES = reject.l4
+reject_ser_table_SOURCES = reject.l4
 string_nr_SOURCES = string_nr.l
 string_r_SOURCES = string_r.l
 top_SOURCES = top.l top_main.c
@@ -108,6 +136,10 @@ BUILT_SOURCES = \
 	multiple_scanners_nr_2.h \
 	multiple_scanners_r_1.h \
 	multiple_scanners_r_2.h \
+	reject_nr.reject.c \
+	reject_r.reject.c \
+	reject_ver.table.c \
+reject_ser.table \
 	top.h
 
 EXTRA_DIST = \
@@ -148,6 +180,11 @@ basic_nr.txt \
 	noansi_r.txt \
 	prefix_nr.txt \
 	prefix_r.txt \
+	reject.txt \
+	reject_nr.reject.c \
+	reject_r.reject.c \
+	reject_ver.table.c \
+	reject_ser.table.c \
 	top.h \
 	top.txt \
 	yyextra.txt
@@ -193,6 +230,30 @@ multiple_scanners_r_2.h: multiple_scanners_r_2.c
 
 posixly_correct.c: posixly_correct.l
 	POSIXLY_CORRECT=1 $(FLEX) -o $@ $<
+
+reject_nr.reject.c: reject.l4
+	$(FLEX) -o $@ $<
+
+reject_nr.reject$(EXEEXT): reject_nr.reject.$(OBJEXT)
+	$(LINK) $^
+
+reject_r.reject.c: reject.l4
+	$(FLEX) --reentrant -o $@ $<
+
+reject_r.reject$(EXEEXT): reject_r.reject.$(OBJEXT)
+	$(LINK) $^
+
+reject_ver.table.c: reject.l4
+	$(FLEX) -o $@ --tables-verify --tables-file=$(*F).tables $<
+
+reject_ver.table$(EXEEXT): reject_ver.table.$(OBJEXT)
+	$(LINK) $^
+
+reject_ser.table.c: reject.l4
+	$(FLEX) -o $@ --tables-file=$(*F).tables $<
+
+reject_ser.table$(EXEEXT): reject_ser.table.$(OBJEXT)
+	$(LINK) $^
 
 top_main$(objext): top.h
 top.h: top.c
