@@ -19,7 +19,7 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
-TESTS = $(check_PROGRAMS)
+TESTS = $(check_PROGRAMS) options.cn
 
 # The script testwrapper.sh will run most tests as is. A couple tests
 # in the suite end in .reject, .table and the like so that we can pass
@@ -27,7 +27,7 @@ TESTS = $(check_PROGRAMS)
 # automake knows how to distinguish between the various kinds of tests
 # we have.
 
-TEST_EXTENSIONS = .reject .table .direct
+TEST_EXTENSIONS = .reject .table .direct .cn
 
 LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
@@ -40,6 +40,9 @@ AM_TABLE_LOG_FLAGS = -d $(srcdir) -i reject.txt -t
 
 DIRECT_LOG_COMPILER=$(srcdir)/testwrapper.sh
 AM_DIRECT_LOG_FLAGS = -d $(srcdir)
+
+CN_LOG_COMPILER=$(srcdir)/options.cn
+AM_CN_LOG_FLAGS=$(FLEX)
 
 AM_YFLAGS = -d -p test
 
@@ -214,7 +217,8 @@ basic_nr.txt \
 	quotes.txt \
 	top.h \
 	top.txt \
-	yyextra.txt
+	yyextra.txt \
+	options.cn
 
 # specify how to process .l files in order to test the flex built by make all
 
