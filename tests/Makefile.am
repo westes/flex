@@ -81,15 +81,14 @@ string_r \
 	yyextra
 
 reject_tests = \
-	reject_nr.reject \
-	reject_r.reject
+	reject_nr.reject
 
 TABLE_TESTS = \
-	reject_ver.table \
-	reject_ser.table
+	reject_ver.table
 
 DIRECT_TESTS = \
-	rescan_nr
+	rescan_nr.direct \
+	rescan_r.direct
 
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
@@ -124,7 +123,8 @@ reject_nr_reject_SOURCES = reject.l4
 reject_r_reject_SOURCES = reject.l4
 reject_ver_table_SOURCES = reject.l4
 reject_ser_table_SOURCES = reject.l4
-rescan_nr_SOURCES = rescan_nr.l
+rescan_nr_direct_SOURCES = rescan_nr.direct.l
+rescan_r_direct_SOURCES = rescan_r.direct.l
 string_nr_SOURCES = string_nr.l
 string_r_SOURCES = string_r.l
 top_SOURCES = top.l top_main.c
@@ -148,7 +148,7 @@ BUILT_SOURCES = \
 	reject_nr.reject.c \
 	reject_r.reject.c \
 	reject_ver.table.c \
-reject_ser.table \
+	reject_ser.table.c \
 	top.h
 
 EXTRA_DIST = \
@@ -194,7 +194,8 @@ basic_nr.txt \
 	reject_r.reject.c \
 	reject_ver.table.c \
 	reject_ser.table.c \
-	rescan_nr.txt \
+	rescan_nr.direct.txt \
+	rescan_r.direct.txt \
 	quotes.txt \
 	top.h \
 	top.txt \
