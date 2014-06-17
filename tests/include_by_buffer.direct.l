@@ -3,7 +3,7 @@
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
- * are met:
+f * are met:
  * 
  * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
@@ -31,7 +31,7 @@
 #include "config.h"
 %}
 
-%option 8bit outfile="scanner.c" prefix="test"
+%option 8bit prefix="test"
 %option nounput nomain noyywrap
 %option warn
 
@@ -87,7 +87,7 @@ main ( int argc, char** argv )
 {
     FILE * fp;
     if( argc != 2 ) {
-        fprintf(stderr,"*** Error: Must specifiy one filename.\n");
+        fprintf(stderr,"*** Error: Must specify one filename.\n");
         exit(-1);
     }
     if((fp=fopen(argv[1],"r"))==NULL) {

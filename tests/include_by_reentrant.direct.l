@@ -31,7 +31,7 @@
 #include "config.h"
 %}
 
-%option 8bit outfile="scanner.c" prefix="test"
+%option 8bit prefix="test"
 %option nounput nomain noyywrap 
 %option reentrant
 %option warn
@@ -84,7 +84,7 @@ main ( argc, argv )
     FILE * fp;
     yyscan_t  scanner;
     if( argc != 2 ) {
-        fprintf(stderr,"*** Error: Must specifiy one filename.\n");
+        fprintf(stderr,"*** Error: Must specify one filename.\n");
         exit(-1);
     }
     if((fp=fopen(argv[1],"r"))==NULL) {

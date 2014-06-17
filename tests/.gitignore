@@ -41,6 +41,12 @@ header_nr
 header_nr_scanner.[ch]
 header_r
 header_r_scanner.[ch]
+include_by_buffer.direct
+include_by_buffer.direct.c
+include_by_push.direct
+include_by_push.direct.c
+include_by_reentrant.direct
+include_by_reentrant.direct.c
 mem_nr
 mem_nr.c
 mem_r

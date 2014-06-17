@@ -87,6 +87,9 @@ TABLE_TESTS = \
 	reject_ver.table
 
 DIRECT_TESTS = \
+	include_by_buffer.direct \
+	include_by_push.direct \
+	include_by_reentrant.direct \
 	rescan_nr.direct \
 	rescan_r.direct
 
@@ -108,6 +111,9 @@ debug_r_SOURCES = debug_r.l
 extended_SOURCES = extended.l
 header_nr_SOURCES = header_nr_scanner.l header_nr_main.c
 header_r_SOURCES = header_r_scanner.l header_r_main.c
+include_by_buffer_direct_SOURCES = include_by_buffer.direct.l
+include_by_push_direct_SOURCES = include_by_push.direct.l
+include_by_reentrant_direct_SOURCES = include_by_reentrant.direct.l
 mem_nr_SOURCES = mem_nr.l
 mem_r_SOURCES = mem_r.l
 multiple_scanners_nr_SOURCES = multiple_scanners_nr_main.c multiple_scanners_nr_1.l multiple_scanners_nr_2.l
@@ -179,6 +185,15 @@ basic_nr.txt \
 	header_nr.txt \
 	header_r_scanner.h \
 	header_r.txt \
+	include_by_buffer.direct.txt \
+	include_by_buffer.direct_2.txt \
+	include_by_buffer.direct_3.txt \
+	include_by_push.direct.txt \
+	include_by_push.direct_2.txt \
+	include_by_push.direct_3.txt \
+	include_by_reentrant.direct.txt \
+	include_by_reentrant.direct_2.txt \
+	include_by_reentrant.direct_3.txt \
 	mem_nr.txt \
 	mem_r.txt \
 	noansi_nr.txt \
@@ -231,6 +246,12 @@ header_nr_scanner.h: header_nr_scanner.c
 
 header_r_main.$(OBJEXT): header_r_scanner.h
 header_r_scanner.h: header_r_scanner.c
+
+include_by_buffer.direct$(EXE): include_by_buffer.direct.txt include_by_buffer.direct_2.txt include_by_buffer.direct_3.txt
+
+include_by_push.direct$(EXE): include_by_push.direct.txt include_by_push.direct_2.txt include_by_push.direct_3.txt
+
+include_by_reentrant.direct$(EXE): include_by_reentrant.direct.txt include_by_reentrant.direct_2.txt include_by_reentrant.direct_3.txt
 
 multiple_scanners_nr_main.$(OBJEXT): multiple_scanners_nr_1.h multiple_scanners_nr_2.h
 multiple_scanners_nr_1.h: multiple_scanners_nr_1.c
