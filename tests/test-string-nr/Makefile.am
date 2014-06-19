@@ -20,13 +20,13 @@
 # PURPOSE.
 
 
-FLEX = $(top_builddir)/flex
+FLEX = $(top_builddir)/src/flex
 
 EXTRA_DIST = scanner.l 
 CLEANFILES = scanner.c scanner.h parser.c parser.h $(testname)$(EXEEXT) OUTPUT $(OBJS)
 OBJS = scanner.o # parser.o
 
-AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
+AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir)/src -I$(top_builddir)
 #LDFLAGS = $(top_srcdir)/libfl.a 
 #LFLAGS = --header="scanner.h"
 #YFLAGS = --defines --output=parser.c

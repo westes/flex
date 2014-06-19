@@ -19,7 +19,7 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
-FLEX = $(top_builddir)/flex
+FLEX = $(top_builddir)/src/flex
 
 builddir = @builddir@
 
