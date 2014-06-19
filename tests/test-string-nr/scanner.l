@@ -61,7 +61,7 @@ int main(void);
 int
 main ()
 {
-    char * buf;
+    YY_CHAR* buf;
     int len;
     YY_BUFFER_STATE state;
 
@@ -82,8 +82,8 @@ main ()
        We make a copy, since the buffer will be modified by flex.*/
     printf("Testing: yy_scan_buffer(%s): ",INPUT_STRING_1); fflush(stdout);
     len = strlen(INPUT_STRING_1) + 2;
-    buf = (char*)malloc( len );
-    strcpy( buf, INPUT_STRING_1);
+    buf = (YY_CHAR*)malloc( len*sizeof(YY_CHAR) );
+    strcpy( (char*)buf, INPUT_STRING_1);
     buf[ len -2 ]  = 0; /* Flex requires two NUL bytes at end of buffer. */
     buf[ len -1 ] =0;
 

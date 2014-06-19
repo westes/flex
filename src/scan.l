@@ -425,6 +425,7 @@ M4QEND      "]]"
 	prefix		return OPT_PREFIX;
 	yyclass		return OPT_YYCLASS;
 	header(-file)?      return OPT_HEADER;
+	header-char(-file)? return OPT_HEADER_CHAR;
 	tables-file         return OPT_TABLES;
 	tables-verify   {
                     tablesverify = option_sense;

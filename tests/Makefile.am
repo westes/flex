@@ -122,7 +122,8 @@ SUBDIRS = \
 	test-noansi-nr \
 	test-noansi-r \
 	test-top \
-	test-table-opts
+	test-table-opts \
+	test-tests_strutils
 
 # clean up before running the test suite so we dont test old builds of test code
 

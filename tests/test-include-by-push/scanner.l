@@ -48,7 +48,7 @@
 [[:alnum:]_.-]+>  {
      /* recurse */
     yytext[yyleng-1]='\0';
-    if((yyin=fopen(yytext,"r"))==NULL) {
+    if((yyin=fopen((char*)yytext,"r"))==NULL) {
         fprintf(stderr,"*** Error: Could not open include file \"%s\".\n",yytext);
         yyterminate();
     }
