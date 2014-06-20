@@ -170,6 +170,8 @@ tests/test-ccl/Makefile
 tests/test-extended/Makefile
 tests/test-c++-yywrap/Makefile
 tests/test-concatenated-options/Makefile
+tests/test-tests_strutils/Makefile
+tests/test-charset/Makefile
 dnl --new-test-here-- This line is processed by tests/create-test.
 )
 

@@ -349,6 +349,7 @@ M4QEND      "]]"
 	"c++"		C_plus_plus = option_sense;
 	caseful|case-sensitive		sf_set_case_ins(!option_sense);
 	caseless|case-insensitive	sf_set_case_ins(option_sense);
+	charset		charset_enabled = true;
 	debug		ddebug = option_sense;
 	default		spprdflt = ! option_sense;
 	ecs		useecs = option_sense;
@@ -425,7 +426,9 @@ M4QEND      "]]"
 	prefix		return OPT_PREFIX;
 	yyclass		return OPT_YYCLASS;
 	header(-file)?      return OPT_HEADER;
+	header-char(-file)? return OPT_HEADER_CHAR;
 	tables-file         return OPT_TABLES;
+	charset-source      return OPT_CHARSET_SOURCE;
 	tables-verify   {
                     tablesverify = option_sense;
                     if(!tablesext && option_sense)
