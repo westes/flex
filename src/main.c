@@ -107,7 +107,8 @@ int     num_input_files;
 jmp_buf flex_main_jmp_buf;
 bool   *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
-bool    ansi_func_defs, ansi_func_protos;
+bool    ansi_func_defs, ansi_func_protos, charset_enabled = false;
+char   *charset_source = NULL;
 
 bool    tablesext, tablesverify, gentables;
 char   *tablesfilename=0,*tablesname=0;
@@ -476,6 +477,12 @@ void check_options ()
 
 	if (do_yylineno)
 		buf_m4_define (&m4defs_buf, "M4_YY_USE_LINENO", NULL);
+
+	if(charset_enabled)
+		buf_m4_define(&m4defs_buf, "M4_YY_CHARSET", NULL);
+
+	if(charset_source)
+		buf_m4_define(&m4defs_buf, "M4_YY_CHARSET_SOURCE", charset_source);
 
 	/* Create the alignment type. */
 	buf_strdefine (&userdef_buf, "YY_INT_ALIGNED",
@@ -1506,6 +1513,10 @@ void readin ()
 	static char character_type_char[] = "typedef char YY_CHAR;";
 	static char character_defined[] = "#define YY_CHAR_DEFINED";
 
+	static char charset_handler_t[] = "typedef size_t(*yycharset_handler_t)(char*,char*,size_t,YY_CHAR*,size_t,size_t*);\n";
+	static char charset_handler_t_reentrant[] = "typedef size_t(*yycharset_handler_t)(char*,char*,size_t,YY_CHAR*,size_t,size_t*,yyscan_t);\n";
+
+
 	line_directive_out ((FILE *) 0, 1);
 
 	if (yyparse ()) {
@@ -1737,6 +1748,12 @@ void readin ()
 				outn ("extern YY_CHAR yytext[];\n");
 		}
 		else {
+			/* This prevents warning of "already defined macro" in multiple
+			 * non-reentrant scanners */
+			outn("#ifdef yytext_ptr");
+			outn("#undef yytext_ptr");
+			outn("#endif");
+
 			if (reentrant) {
 				outn ("#define yytext_ptr yytext_r");
 			}
@@ -1749,6 +1766,22 @@ void readin ()
 		if (yyclass)
 			flexerror (_
 				   ("%option yyclass only meaningful for C++ scanners"));
+	}
+
+	outn("");
+
+	if(charset_enabled) {
+		if(!reentrant)
+			outn(charset_handler_t);
+		else
+			outn(charset_handler_t_reentrant);
+
+		OUT_BEGIN_CODE ();
+		if(!C_plus_plus && !reentrant) {
+			outn("char *yycharset = NULL;");
+			outn("yycharset_handler_t yycharset_handler = NULL;");
+		}
+		OUT_END_CODE ();
 	}
 
 	if (useecs)

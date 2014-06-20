@@ -396,6 +396,7 @@ char *alloca ();
  *   of what we think based on references to it in the user's actions.
  * reject_really_used - same for REJECT
  * trace_hex - use hexadecimal numbers in trace/debug outputs instead of octals
+ * charset_enabled - true if charset interface has been enabled
  */
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
@@ -411,6 +412,7 @@ extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
 extern int yymore_really_used, reject_really_used;
 extern int trace_hex;
+extern bool charset_enabled;
 
 /* Variables used in the flex input routines:
  * datapos - characters on current output line
@@ -435,6 +437,8 @@ extern int trace_hex;
  * num_input_files - size of input_files array
  * program_name - name with which program was invoked
  *
+ * charset_source - character set that has been declared as used in source file
+ *
  * action_array - array to hold the rule actions
  * action_size - size of action_array
  * defs1_offset - index where the user's section 1 definitions start
@@ -456,6 +460,8 @@ extern int do_stdinit, use_stdout;
 extern char **input_files;
 extern int num_input_files;
 extern char *program_name;
+
+extern char *charset_source;
 
 extern char *action_array;
 extern int action_size;
