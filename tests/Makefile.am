@@ -73,7 +73,8 @@ DIST_SUBDIRS = \
 	test-alloc-extra \
 	test-noansi-nr \
 	test-noansi-r \
-	test-table-opts
+	test-table-opts \
+	test-charset
 
 SUBDIRS = \
 	test-concatenated-options \
@@ -123,7 +124,8 @@ SUBDIRS = \
 	test-noansi-r \
 	test-top \
 	test-table-opts \
-	test-tests_strutils
+	test-tests_strutils \
+	test-charset
 
 # clean up before running the test suite so we dont test old builds of test code
 
