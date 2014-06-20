@@ -1,8 +1,8 @@
 /* parse.y - parser for flex input */
 
 %token CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
-%token OPTION_OP OPT_OUTFILE OPT_PREFIX OPT_YYCLASS OPT_HEADER OPT_HEADER_CHAR OPT_EXTRA_TYPE
-%token OPT_TABLES
+%token OPTION_OP OPT_OUTFILE OPT_PREFIX OPT_YYCLASS OPT_HEADER OPT_HEADER_CHAR
+%token OPT_EXTRA_TYPE OPT_TABLES OPT_CHARSET_SOURCE
 
 %token CCE_ALNUM CCE_ALPHA CCE_BLANK CCE_CNTRL CCE_DIGIT CCE_GRAPH
 %token CCE_LOWER CCE_PRINT CCE_PUNCT CCE_SPACE CCE_UPPER CCE_XDIGIT
@@ -208,6 +208,8 @@ option		:  OPT_OUTFILE '=' NAME
 			{ headercharfilename = copy_string( nmstr ); }
 	    |  OPT_TABLES '=' NAME
             { tablesext = true; tablesfilename = copy_string( nmstr ); }
+        |  OPT_CHARSET_SOURCE '=' NAME
+            { charset_source = copy_string(nmstr); }
 		;
 
 sect2		:  sect2 scon initforrule flexrule '\n'
