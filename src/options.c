@@ -117,6 +117,8 @@ optspec_t flexopts[] = {
 	,
 	{"--help", OPT_HELP, 0}
 	,			/* Produce this help message. */
+	{"--hex", OPT_HEX, 0}
+	,			/* Use hexadecimals in debug/trace outputs */
 	{"-I", OPT_INTERACTIVE, 0}
 	,
 	{"--interactive", OPT_INTERACTIVE, 0}

@@ -748,7 +748,7 @@ void out_m4_define (const char* def, const char* val)
 char   *readable_form (c)
      register int c;
 {
-	static char rform[10];
+	static char rform[20];
 
 	if ((c >= 0 && c < 32) || c >= 127) {
 		switch (c) {
@@ -771,7 +771,10 @@ char   *readable_form (c)
 #endif
 
 		default:
-			snprintf (rform, sizeof(rform), "\\%.3o", (unsigned int) c);
+			if(trace_hex)
+				snprintf (rform, sizeof(rform), "\\x%.2x", (unsigned int) c);
+			else
+				snprintf (rform, sizeof(rform), "\\%.3o", (unsigned int) c);
 			return rform;
 		}
 	}

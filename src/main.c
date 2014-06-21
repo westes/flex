@@ -57,6 +57,7 @@ int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
 int     reentrant, bison_bridge_lval, bison_bridge_lloc;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
+int     trace_hex = 0;
 int     datapos, dataline, linenum;
 FILE   *skelfile = NULL;
 int     skel_ind = 0;
@@ -1421,7 +1422,8 @@ void flexinit (argc, argv)
 			//buf_strdefine (&userdef_buf, "YY_NO_SET_LLOC", "1");
             buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LLOC",0);
 			break;
-
+		case OPT_HEX:
+			trace_hex = 1;
 		}		/* switch */
 	}			/* while scanopt() */
 
@@ -1818,6 +1820,7 @@ void usage ()
 		  "  -T, --trace             %s should run in trace mode\n"
 		  "  -w, --nowarn            do not generate warnings\n"
 		  "  -v, --verbose           write summary of scanner statistics to stdout\n"
+		  "      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 		  "\n" "Files:\n"
 		  "  -o, --outfile=FILE      specify output filename\n"
 		  "  -S, --skel=FILE         specify skeleton file\n"
