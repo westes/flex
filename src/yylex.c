@@ -150,11 +150,12 @@ int     yylex ()
 				break;
 
 			default:
-				if (!isascii (yylval) || !isprint (yylval))
-					fprintf (stderr,
-						 "\\%.3o",
-						 (unsigned int) yylval);
-				else
+				if (!isascii (yylval) || !isprint (yylval)) {
+					if(trace_hex)
+						fprintf (stderr, "\\x%02x", (unsigned int) yylval);
+					else
+						fprintf (stderr, "\\%.3o", (unsigned int) yylval);
+				} else
 					(void) putc (yylval, stderr);
 				break;
 			}

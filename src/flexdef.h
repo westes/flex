@@ -395,6 +395,7 @@ char *alloca ();
  * yymore_really_used - whether to treat yymore() as really used, regardless
  *   of what we think based on references to it in the user's actions.
  * reject_really_used - same for REJECT
+ * trace_hex - use hexadecimal numbers in trace/debug outputs instead of octals
  */
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
@@ -409,7 +410,7 @@ extern int csize;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
 extern int yymore_really_used, reject_really_used;
-
+extern int trace_hex;
 
 /* Variables used in the flex input routines:
  * datapos - characters on current output line
