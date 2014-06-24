@@ -96,8 +96,16 @@ public:
 	int debug() const		{ return yy_flex_debug; }
 	void set_debug( int flag )	{ yy_flex_debug = flag; }
 
+#ifdef YY_CHARSET
+	void set_charset(char *charset);
+	char* get_charset();
+#endif
+
 protected:
 	YY_CHAR* yytext;
+#ifdef YY_CHARSET
+	char *yycharset;
+#endif
 	int yyleng;
 	int yylineno;		// only maintained if you use %option yylineno
 	int yy_flex_debug;	// only has effect with -d or "%option debug"
@@ -157,6 +165,15 @@ protected:
 	yy_state_type yy_get_previous_state();
 	yy_state_type yy_try_NUL_trans( yy_state_type current_state );
 	int yy_get_next_buffer();
+
+#ifdef YY_CHARSET
+	size_t yycharset_convert(char* source, size_t source_bytes, YY_CHAR* target,
+		size_t target_length, size_t* converted_bytes);
+	virtual size_t yycharset_handler(char *charset,
+		char *source, size_t source_bytes,
+		YY_CHAR *target, size_t target_length,
+		size_t *converted_bytes);
+#endif
 
 	FLEX_STD istream* yyin;	// input source for default LexerInput
 	FLEX_STD ostream* yyout;	// output sink for default LexerOutput

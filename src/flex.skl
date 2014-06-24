@@ -922,7 +922,12 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 
 m4_ifdef( [[M4_YY_CHARSET]], [[
     char *yycharset_r; /** current charset name */
+]])
+
+m4_ifdef( [[M4_YY_CXX]],,[[
+m4_ifdef( [[M4_YY_CHARSET]],[[
     yycharset_handler_t yycharset_handler_r; /** charset handle function */
+]])
 ]])
 
     }; /* end struct yyguts_t */
@@ -1049,19 +1054,20 @@ m4_ifdef( [[M4_YY_REENTRANT]],[[
 m4_ifdef( [[M4_YY_CHARSET]],[[
 m4_ifdef( [[M4_YY_NO_GET_CHARSET]],,[[
 char *yyget_charset M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
+%if-c-only
 yycharset_handler_t yyget_charset_handler M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
+%endif
 ]])
 ]])
 ]])
 
 m4_ifdef( [[M4_YY_REENTRANT]],[[
-/* YY_REENTRANT */
 m4_ifdef( [[M4_YY_CHARSET]], [[
-/* YY_CHARSET */
 m4_ifdef( [[M4_YY_NO_SET_CHARSET]],,[[
-/* !YY_NO_SET_CHARSET */
 void yyset_charset M4_YY_PARAMS( char *charset M4_YY_PROTO_LAST_ARG );
+%if-c-only
 void yyset_charset_handler M4_YY_PARAMS( yycharset_handler_t charset_handler M4_YY_PROTO_LAST_ARG );
+%endif
 ]])
 ]])
 ]])
@@ -1689,10 +1695,18 @@ m4_ifdef( [[M4_YY_CHARSET]],[[
 /* yycharset_convert - convert incoming data from arbitrary
  *    charset into internal representation
  */
+%if-c-only
 static size_t yycharset_convert YYFARGS5(
         char*, source, size_t, source_bytes,
         YY_CHAR*, target, size_t, target_length,
         size_t*, converted_bytes) {
+%endif
+%if-c++-only
+size_t yyFlexLexer::yycharset_convert(
+        char* source, size_t source_bytes,
+        YY_CHAR* target, size_t target_length,
+        size_t* converted_bytes) {
+%endif
     M4_YY_DECL_GUTS_VAR();
     if(strcmp(yycharset, "M4_YY_CHARSET_SOURCE")==0) {
         if(target_length < source_bytes)
@@ -1700,15 +1714,28 @@ static size_t yycharset_convert YYFARGS5(
         strncpy((char*)target, source, source_bytes);
         *converted_bytes = source_bytes;
         return source_bytes;
-    } else if(yycharset_handler)
+    }
+%if-c-only
+    else if(yycharset_handler)
+%endif
         return yycharset_handler(yycharset, source, source_bytes,
             target, target_length, converted_bytes M4_YY_CALL_LAST_ARG);
-    else {
-        char msg[256];
-        snprintf(msg, sizeof(msg),
-            "Unsupported character encoding: %s", yycharset);
-        YY_FATAL_ERROR(msg);
-    }
+
+/* Code below just outputs an error message saying that selected encoding
+ * is not supported. In C scanner it is an end part of yycharset_convert,
+ * while in C++ scanner it is a default implementation of yycharset_handler */
+%if-c++-only
+}
+
+size_t yyFlexLexer::yycharset_handler(char *charset,
+        char *source, size_t source_bytes,
+        YY_CHAR *target, size_t target_length,
+        size_t *converted_bytes) {
+%endif
+    char msg[256];
+    snprintf(msg, sizeof(msg),
+        "Unsupported character encoding: %s", yycharset);
+    YY_FATAL_ERROR(msg);
     return 0;
 }
 ]])
@@ -2719,33 +2746,55 @@ int yyget_column  YYFARGS0(void)
 }
 ]])
 ]])
+%endif
 
-m4_ifdef( [[M4_YY_REENTRANT]],[[
-m4_ifdef( [[M4_YY_CHARSET]], [[
-m4_ifdef( [[M4_YY_NO_GET_CHARSET]],,[[
-/** Get the currently set charset name
+m4_ifdef([[M4_YY_CHARSET]],[[
+    m4_ifdef([[M4_YY_REENTRANT]],[[
+
+        m4_ifdef([[M4_YY_NO_GET_CHARSET]],,[[
+            m4_define([[M4_YY_GET_CHARSET]],[[
+                char* yyget_charset YYFARGS0(void)
+            ]])
+        ]])
+
+        m4_ifdef([[M4_YY_NO_GET_CHARSET_HANDLER]],,[[
+            m4_define([[M4_YY_GET_CHARSET_HANDLER]],[[
+                yycharset_handler_t yyget_charset_handler YYFARGS0(void)
+            ]])
+        ]])
+    ]])
+
+    m4_ifdef([[M4_YY_CXX]], [[
+        m4_define( [[M4_YY_GET_CHARSET]], [[
+            char *FlexLexer::get_charset()
+        ]])
+    ]])
+]])
+
+m4_ifdef( [[M4_YY_GET_CHARSET]], [[
+/** Get the current charset name
  * M4_YY_DOC_PARAM
+ * @return charset name
  */
-char *yyget_charset  YYFARGS0(void)
+M4_YY_GET_CHARSET
 {
     M4_YY_DECL_GUTS_VAR();
     return yycharset;
 }
 ]])
 
-m4_ifdef( [[M4_YY_NO_GET_CHARSET_HANDLER]],,[[
+m4_ifdef( [[M4_YY_GET_CHARSET_HANDLER]],[[
 /** Get the currently set charset handler
  * M4_YY_DOC_PARAM
  */
-yycharset_handler_t yyget_charset_handler YYFARGS0(void)
+M4_YY_GET_CHARSET_HANDLER
 {
     M4_YY_DECL_GUTS_VAR();
     return yycharset_handler;
 }
 ]])
-]])
-]])
 
+%if-c-only
 m4_ifdef( [[M4_YY_NO_GET_IN]],,
 [[
 /** Get the input stream.
@@ -2851,22 +2900,44 @@ void yyset_column YYFARGS1( int , column_no)
 }
 ]])
 ]])
+%endif
 
-m4_ifdef( [[M4_YY_REENTRANT]],[[
-m4_ifdef( [[M4_YY_CHARSET]], [[
-m4_ifdef( [[M4_YY_NO_SET_CHARSET]],,[[
+m4_ifdef([[M4_YY_CHARSET]], [[
+    m4_ifdef([[M4_YY_REENTRANT]],[[
+
+        m4_ifdef([[M4_YY_NO_SET_CHARSET]],,[[
+            m4_define([[M4_YY_SET_CHARSET]], [[
+                void yyset_charset YYFARGS1(char*, charset)
+            ]])
+        ]])
+
+        m4_ifdef([[M4_YY_NO_SET_CHARSET_HANDLER]],,[[
+            m4_define([[M4_YY_SET_CHARSET_HANDLER]],[[
+                void yyset_charset_handler YYFARGS1(yycharset_handler_t, charset_handler)
+            ]])
+        ]])
+    ]])
+
+    m4_ifdef( [[M4_YY_CXX]],[[
+        m4_define( [[M4_YY_SET_CHARSET]], [[
+            void FlexLexer::set_charset(char *charset)
+        ]])
+    ]])
+]])
+
+m4_ifdef( [[M4_YY_SET_CHARSET]],[[
 /** Set the current charset name
  * @param charset charset name
  * M4_YY_DOC_PARAM
  */
-void yyset_charset YYFARGS1( char*, charset)
+M4_YY_SET_CHARSET
 {
     M4_YY_DECL_GUTS_VAR();
     yycharset = strdup(charset);
 }
 ]])
 
-m4_ifdef( [[M4_YY_NO_SET_CHARSET_HANDLER]],,[[
+m4_ifdef( [[M4_YY_SET_CHARSET_HANDLER]],[[
 /** Set the current charset handler
  * @param charset_handler handler function
  * M4_YY_DOC_PARAM
@@ -2877,10 +2948,8 @@ void yyset_charset_handler YYFARGS1( yycharset_handler_t, charset_handler)
     yycharset_handler = charset_handler;
 }
 ]])
-]])
-]])
 
-
+%if-c-only
 m4_ifdef( [[M4_YY_NO_SET_IN]],,
 [[
 /** Set the input stream. This does not discard the current

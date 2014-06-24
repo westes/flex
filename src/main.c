@@ -304,6 +304,8 @@ void check_options ()
 	if (C_plus_plus && bison_bridge_lval)
 		flexerror (_("bison bridge not supported for the C++ scanner."));
 
+	if(C_plus_plus)
+		buf_m4_define( &m4defs_buf, "M4_YY_CXX", NULL);
 
 	if (useecs) {		/* Set up doubly-linked equivalence classes. */
 
@@ -1662,6 +1664,9 @@ void readin ()
 		fflush(char_header_file);
 	}
 	OUT_END_CODE ();
+
+	if(charset_enabled)
+		outn ("#define YY_CHARSET");
 
 	if (C_plus_plus) {
 		outn ("#define yytext_ptr yytext");
