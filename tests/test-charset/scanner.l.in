@@ -37,9 +37,17 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "config.h"
 
 m4_ifdef(`VARIANT_REENTRANT', `#define VARIANT_REENTRANT 1', `')
+m4_ifdef(`VARIANT_CPLUSPLUS', `#define VARIANT_CPLUSPLUS 1', `')
+
+#if VARIANT_CPLUSPLUS
+#define out(str) (*yyout << str)
+#else
+#define out(str) (fprintf(yyout, str))
+#endif
 
 %}
 
@@ -48,16 +56,20 @@ m4_ifdef(`VARIANT_REENTRANT', `#define VARIANT_REENTRANT 1', `')
 %option warn
 
 m4_ifdef(`VARIANT_REENTRANT', `%option reentrant', `')
-
-
-%%
-
-[A-ZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞ]         { fprintf(yyout, "U"); }
-[a-zàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿß]       { fprintf(yyout, "L"); }
-[0-9]                                       { fprintf(yyout, "N"); }
+m4_ifdef(`VARIANT_CPLUSPLUS', `%option c++')
 
 %%
 
+[A-ZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞ]         { out("U"); }
+[a-zàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿß]       { out("L"); }
+[0-9]                                       { out("N"); }
+
+%%
+
+#if VARIANT_CPLUSPLUS
+class TestFlexLexer: public yyFlexLexer {
+public:
+#endif
 /*
  * The function provided by scanner to handle encodings. It gets set of incoming
  * bytes and convert into set of characters in internal representation - in the
@@ -76,12 +88,18 @@ m4_ifdef(`VARIANT_REENTRANT', `%option reentrant', `')
  * RETURNS: number of characters that has been written into "target" buffer.
  *         Must not be greater than value of "target_length" parameter.
  */
+#if VARIANT_CPLUSPLUS
+size_t yycharset_handler(char *charset, char* source, size_t source_bytes,
+        YY_CHAR* target, size_t target_length, size_t* converted_bytes)
+#else
 size_t charset_handler(char *charset, char* source, size_t source_bytes,
         YY_CHAR* target, size_t target_length, size_t* converted_bytes
 #if VARIANT_REENTRANT
         , yyscan_t yyscanner
 #endif
-        ) {
+        )
+#endif
+{
     /* conversion from CP850 to ISO-8859-1. Unrepresentable values are set to -1 */
     static int conversion_table_cp850[256] = {
 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
@@ -150,6 +168,10 @@ size_t charset_handler(char *charset, char* source, size_t source_bytes,
     return source_bytes;
 }
 
+#if VARIANT_CPLUSPLUS
+};
+#endif
+
 int main (int argc, char *argv[])
 {
     if(argc < 2) {
@@ -158,15 +180,24 @@ int main (int argc, char *argv[])
     }
     char *charset = argv[1];
 
-#if VARIANT_REENTRANT
+#if VARIANT_CPLUSPLUS
+    TestFlexLexer lexer;
+    lexer.set_charset(charset);
+    assert(strcmp(lexer.get_charset(), charset)==0);
+    lexer.yylex();
+#elif VARIANT_REENTRANT
     yyscan_t lexer;
 
     yylex_init(&lexer);
 
     yyset_in(stdin, lexer);
     yyset_out(stdout, lexer);
+
     yyset_charset(charset, lexer);
+    assert(strcmp(yyget_charset(lexer), charset)==0);
+
     yyset_charset_handler(charset_handler, lexer);
+    assert(yyget_charset_handler(lexer) == charset_handler);
 
     yylex( lexer );
 

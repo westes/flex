@@ -45,13 +45,22 @@ scanner-nr.l: $(srcdir)/scanner.l.in
 scanner-r.l: $(srcdir)/scanner.l.in
 	m4 -P -DVARIANT_REENTRANT=1 $< > $@
 
+scanner-cxx.l: $(srcdir)/scanner.l.in
+	m4 -P -DVARIANT_CPLUSPLUS=1 $< > $@
+
 scanner-%.c: scanner-%.l
+	$(FLEX) -o $@ $<
+
+scanner.cpp: scanner-cxx.l
 	$(FLEX) -o $@ $<
 
 test-charset-%$(EXEEXT): scanner-%.c
 	$(CC) $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LOADLIBES)
 
-test-charset-%-test: test-charset-%$(EXEEXT)
+test-charset-cpp$(EXEEXT): scanner.cpp
+	$(CXX) $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) -o $@ $(LDFLAGS) $< $(LOADLIBES)
+
+test-charset-%-test: test-charset-%$(EXEEXT) test-charset-cpp
 	for c in $(cases) ; do \
 		(./$(<) $$c < $(srcdir)/test-$$c.input | diff -au - $(srcdir)/test-$$c.output) || (echo "Test $$exe failed in $$c case"; exit 1 ); \
 	done
