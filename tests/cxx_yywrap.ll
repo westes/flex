@@ -28,7 +28,7 @@
 
 %}
 
-%option 8bit outfile="scanner.cpp" prefix="test"
+%option 8bit prefix="test"
 %option nounput nomain
 %option warn c++
 

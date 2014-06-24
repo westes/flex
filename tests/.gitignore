@@ -31,6 +31,8 @@ cxx_basic
 cxx_basic.cc
 cxx_multiple_scanners
 cxx_multiple_scanners_[12].cc
+cxx_yywrap.i3
+cxx_yywrap.cc
 debug_nr
 debug_nr.c
 debug_r

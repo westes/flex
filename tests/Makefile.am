@@ -27,7 +27,7 @@ TESTS = $(check_PROGRAMS) options.cn
 # automake knows how to distinguish between the various kinds of tests
 # we have.
 
-TEST_EXTENSIONS = .reject .table .direct .cn
+TEST_EXTENSIONS = .reject .table .direct .cn .i3
 
 LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
@@ -44,9 +44,12 @@ AM_DIRECT_LOG_FLAGS = -d $(srcdir)
 CN_LOG_COMPILER=$(srcdir)/options.cn
 AM_CN_LOG_FLAGS=$(FLEX)
 
+I3_LOG_COMPILER=$(srcdir)/testwrapper.sh
+AM_I3_LOG_FLAGS=-i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt
+
 AM_YFLAGS = -d -p test
 
-check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS)
+check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS)
 
 simple_tests = \
 	alloc_extra \
@@ -96,6 +99,9 @@ DIRECT_TESTS = \
 	rescan_nr.direct \
 	rescan_r.direct
 
+ I3_TESTS = \
+	cxx_yywrap.i3
+
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
 array_r_SOURCES = array_r.l
@@ -109,6 +115,7 @@ c_cxx_r_SOURCES = c_cxx_r.lll
 ccl_SOURCES = ccl.l
 cxx_basic_SOURCES = cxx_basic.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
+cxx_yywrap_i3_SOURCES = cxx_yywrap.ll
 debug_nr_SOURCES = debug_nr.l
 debug_r_SOURCES = debug_r.l
 extended_SOURCES = extended.l
@@ -181,6 +188,7 @@ basic_nr.txt \
 	ccl.txt \
 	cxx_basic.txt \
 	cxx_multiple_scanners.txt \
+	cxx_yywrap.txt \
 	debug_nr.txt \
 	debug_r.txt \
 	extended.txt \

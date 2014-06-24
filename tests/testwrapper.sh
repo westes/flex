@@ -6,12 +6,20 @@
 
 INPUT_DIRECTORY=""
 INPUT_NAME=""
+INPUT_COUNT=0
 USE_REDIRECT=0
 
 while getopts :d:i:rt OPTION ; do
     case $OPTION in
         d) INPUT_DIRECTORY=$OPTARG ;;
-        i) INPUT_NAME="$OPTARG" ;;
+        i)
+            if [ "$INPUT_NAME" == "" ] ; then
+                INPUT_NAME="$OPTARG"
+            else
+                INPUT_NAME="$INPUT_NAME $OPTARG"
+            fi
+            INPUT_COUNT=$(($INPUT_COUNT+1))
+            ;;
         r) USE_REDIRECT=1 ;;
         t) USE_TABLES=1 ;;
     esac
@@ -20,6 +28,11 @@ while getopts :d:i:rt OPTION ; do
 TESTNAME="${!OPTIND}"
 
 INPUT_NAME=${INPUT_NAME:-`basename $TESTNAME`.txt}
+
+if [ $INPUT_COUNT -gt 1 ] ; then
+    $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME}.tables} ${INPUT_NAME}
+    exit $?
+    fi
 
 if [ -f ${INPUT_DIRECTORY}/${INPUT_NAME} ] ; then
     if [ $USE_REDIRECT == 1 ] ; then
