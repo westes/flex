@@ -87,10 +87,12 @@ string_r \
 	yyextra
 
 reject_tests = \
-	reject_nr.reject
+	reject_nr.reject \
+	reject_r.reject
 
 TABLE_TESTS = \
-	reject_ver.table
+	reject_ver.table \
+	reject_ser.table
 
 DIRECT_TESTS = \
 	include_by_buffer.direct \
@@ -219,7 +221,9 @@ basic_nr.txt \
 	reject_nr.reject.c \
 	reject_r.reject.c \
 	reject_ver.table.c \
+	reject_ver.table.tables \
 	reject_ser.table.c \
+	reject_ser.table.tables \
 	rescan_nr.direct.txt \
 	rescan_r.direct.txt \
 	quotes.txt \
@@ -285,17 +289,26 @@ reject_nr.reject$(EXEEXT): reject_nr.reject.$(OBJEXT)
 reject_r.reject.c: reject.l4
 	$(FLEX) --reentrant -o $@ $<
 
+reject_r.reject.$(OBJEXT): reject_r.reject.c
+	$(COMPILE) -DTEST_IS_REENTRANT -c -o $@ $<
+
 reject_r.reject$(EXEEXT): reject_r.reject.$(OBJEXT)
 	$(LINK) $^
 
 reject_ver.table.c: reject.l4
-	$(FLEX) -o $@ --tables-verify --tables-file=$(*F).tables $<
+	$(FLEX) -o $@ --tables-verify --tables-file=$(basename $@).tables $<
+
+reject_ver.table.$(OBJEXT): reject_ver.table.c
+	$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<
 
 reject_ver.table$(EXEEXT): reject_ver.table.$(OBJEXT)
 	$(LINK) $^
 
 reject_ser.table.c: reject.l4
-	$(FLEX) -o $@ --tables-file=$(*F).tables $<
+	$(FLEX) -o $@ --tables-file=$(basename $@).tables $<
+
+reject_ser.table.$(OBJEXT): reject_ser.table.c
+	$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<
 
 reject_ser.table$(EXEEXT): reject_ser.table.$(OBJEXT)
 	$(LINK) $^
