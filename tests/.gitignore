@@ -69,6 +69,8 @@ prefix_nr
 prefix_nr.c
 prefix_r
 prefix_r.c
+pthread.pthread
+pthread.c
 reject_nr.reject
 reject_nr.reject.c
 reject_r.reject

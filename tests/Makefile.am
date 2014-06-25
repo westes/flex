@@ -27,7 +27,7 @@ TESTS = $(check_PROGRAMS) options.cn
 # automake knows how to distinguish between the various kinds of tests
 # we have.
 
-TEST_EXTENSIONS = .reject .table .direct .cn .i3
+TEST_EXTENSIONS = .reject .table .direct .cn .i3 .pthread
 
 LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
@@ -47,9 +47,12 @@ AM_CN_LOG_FLAGS=$(FLEX)
 I3_LOG_COMPILER=$(srcdir)/testwrapper.sh
 AM_I3_LOG_FLAGS=-i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt
 
+PTHREAD_LOG_COMPILER=$(srcdir)/testwrapper.sh
+AM_PTHREAD_LOG_FLAGS=-i $(srcdir)/pthread_1.txt -i $(srcdir)/pthread_2.txt -i $(srcdir)/pthread_3.txt -i $(srcdir)/pthread_4.txt -i $(srcdir)/pthread_5.txt
+
 AM_YFLAGS = -d -p test
 
-check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS)
+check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS)
 
 simple_tests = \
 	alloc_extra \
@@ -104,6 +107,9 @@ DIRECT_TESTS = \
  I3_TESTS = \
 	cxx_yywrap.i3
 
+PTHREAD_TESTS = \
+	pthread.pthread
+
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
 array_r_SOURCES = array_r.l
@@ -136,6 +142,7 @@ posix_SOURCES = posix.l
 posixly_correct_SOURCES = posixly_correct.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
+pthread_pthread_SOURCES = pthread.l
 quotes_SOURCES = quotes.l
 reject_nr_reject_SOURCES = reject.l4
 reject_r_reject_SOURCES = reject.l4
@@ -217,6 +224,11 @@ basic_nr.txt \
 	noansi_r.txt \
 	prefix_nr.txt \
 	prefix_r.txt \
+	pthread_1.txt \
+	pthread_2.txt \
+	pthread_3.txt \
+	pthread_4.txt \
+	pthread_5.txt \
 	reject.txt \
 	reject_nr.reject.c \
 	reject_r.reject.c \
@@ -231,6 +243,8 @@ basic_nr.txt \
 	top.txt \
 	yyextra.txt \
 	options.cn
+
+pthread_pthread_LDADD = -lpthread
 
 # specify how to process .l files in order to test the flex built by make all
 
