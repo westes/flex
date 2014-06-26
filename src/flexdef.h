@@ -460,7 +460,6 @@ extern char *action_array;
 extern int action_size;
 extern int defs1_offset, prolog_offset, action_offset, action_index;
 
-
 /* Variables for stack of states having only one out-transition:
  * onestate - state number
  * onesym - transition symbol
