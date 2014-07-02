@@ -115,7 +115,8 @@ PTHREAD_TESTS = \
 
 ONE_TESTS = \
 	lineno_nr.one \
-	lineno_r.one
+	lineno_r.one \
+	lineno_trailing.one
 
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
@@ -141,6 +142,7 @@ include_by_push_direct_SOURCES = include_by_push.direct.l
 include_by_reentrant_direct_SOURCES = include_by_reentrant.direct.l
 lineno_nr_one_SOURCES = lineno_nr.l
 lineno_r_one_SOURCES = lineno_r.l
+lineno_trailing_one_SOURCES = lineno_trailing.l
 mem_nr_SOURCES = mem_nr.l
 mem_r_SOURCES = mem_r.l
 multiple_scanners_nr_SOURCES = multiple_scanners_nr_main.c multiple_scanners_nr_1.l multiple_scanners_nr_2.l
@@ -225,6 +227,7 @@ basic_nr.txt \
 	include_by_reentrant.direct_3.txt \
 	lineno_nr.one.txt \
 	lineno_r.one.txt \
+	lineno_trailing.one.txt \
 	mem_nr.txt \
 	mem_r.txt \
 	noansi_nr.txt \
