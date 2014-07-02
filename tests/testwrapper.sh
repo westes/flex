@@ -9,7 +9,7 @@ INPUT_NAME=""
 INPUT_COUNT=0
 USE_REDIRECT=0
 
-while getopts :d:i:rt OPTION ; do
+while getopts :d:i:rt1 OPTION ; do
     case $OPTION in
         d) INPUT_DIRECTORY=$OPTARG ;;
         i)
@@ -22,12 +22,18 @@ while getopts :d:i:rt OPTION ; do
             ;;
         r) USE_REDIRECT=1 ;;
         t) USE_TABLES=1 ;;
+        1) DO_COMPARISON=1 ;;
     esac
     done
 
 TESTNAME="${!OPTIND}"
 
 INPUT_NAME=${INPUT_NAME:-`basename $TESTNAME`.txt}
+
+if [ "$DO_COMPARISON" == "1" ] ; then
+    test `$TESTNAME 1 < $INPUT_DIRECTORY/$INPUT_NAME` -eq `$TESTNAME < $INPUT_DIRECTORY/$INPUT_NAME`
+    exit $?
+    fi
 
 if [ $INPUT_COUNT -gt 1 ] ; then
     $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME}.tables} ${INPUT_NAME}

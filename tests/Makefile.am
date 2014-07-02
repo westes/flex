@@ -27,7 +27,7 @@ TESTS = $(check_PROGRAMS) options.cn
 # automake knows how to distinguish between the various kinds of tests
 # we have.
 
-TEST_EXTENSIONS = .reject .table .direct .cn .i3 .pthread
+TEST_EXTENSIONS = .reject .table .direct .cn .i3 .pthread .one
 
 LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
@@ -50,9 +50,12 @@ AM_I3_LOG_FLAGS=-i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt -i $(src
 PTHREAD_LOG_COMPILER=$(srcdir)/testwrapper.sh
 AM_PTHREAD_LOG_FLAGS=-i $(srcdir)/pthread_1.txt -i $(srcdir)/pthread_2.txt -i $(srcdir)/pthread_3.txt -i $(srcdir)/pthread_4.txt -i $(srcdir)/pthread_5.txt
 
+ONE_LOG_COMPILER = $(srcdir)/testwrapper.sh
+AM_ONE_LOG_FLAGS = -1 -d $(srcdir)
+
 AM_YFLAGS = -d -p test
 
-check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS)
+check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS)
 
 simple_tests = \
 	alloc_extra \
@@ -110,6 +113,9 @@ DIRECT_TESTS = \
 PTHREAD_TESTS = \
 	pthread.pthread
 
+ONE_TESTS = \
+	lineno_nr.one
+
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
 array_r_SOURCES = array_r.l
@@ -132,6 +138,7 @@ header_r_SOURCES = header_r_scanner.l header_r_main.c
 include_by_buffer_direct_SOURCES = include_by_buffer.direct.l
 include_by_push_direct_SOURCES = include_by_push.direct.l
 include_by_reentrant_direct_SOURCES = include_by_reentrant.direct.l
+lineno_nr_one_SOURCES = lineno_nr.l
 mem_nr_SOURCES = mem_nr.l
 mem_r_SOURCES = mem_r.l
 multiple_scanners_nr_SOURCES = multiple_scanners_nr_main.c multiple_scanners_nr_1.l multiple_scanners_nr_2.l
@@ -214,6 +221,7 @@ basic_nr.txt \
 	include_by_reentrant.direct.txt \
 	include_by_reentrant.direct_2.txt \
 	include_by_reentrant.direct_3.txt \
+	lineno_nr.one.txt \
 	mem_nr.txt \
 	mem_r.txt \
 	noansi_nr.txt \

@@ -49,6 +49,8 @@ include_by_push.direct
 include_by_push.direct.c
 include_by_reentrant.direct
 include_by_reentrant.direct.c
+lineno_nr.one
+lineno_nr.c
 mem_nr
 mem_nr.c
 mem_r
