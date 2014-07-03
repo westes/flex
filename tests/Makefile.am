@@ -110,8 +110,10 @@ DIRECT_TESTS = \
  I3_TESTS = \
 	cxx_yywrap.i3
 
+if want_pthread
 PTHREAD_TESTS = \
 	pthread.pthread
+endif
 
 ONE_TESTS = \
 	lineno_nr.one \

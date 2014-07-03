@@ -93,6 +93,7 @@ AC_DEFINE([HAVE_LIBPTHREAD], 1, [pthread library] ),
 AC_DEFINE([HAVE_LIBPTHREAD], 0, [pthread library] )
 )
 AC_CHECK_HEADERS([pthread.h])
+AM_CONDITIONAL([want_pthread], [test x$ac_cv_lib_pthread_pthread_mutex_lock = xyes])
 
 AC_CHECK_LIB(m, log10)
 
