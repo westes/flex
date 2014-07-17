@@ -1404,7 +1404,7 @@ example, the following is one way to eat up C comments:
 @verbatim
     %%
     "/*"        {
-                register int c;
+                int c;
 
                 for ( ; ; )
                     {

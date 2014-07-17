@@ -844,10 +844,10 @@ extern void action_define PROTO ((const char *defname, int value));
 extern void add_action PROTO ((const char *new_text));
 
 /* True if a string is all lower case. */
-extern int all_lower PROTO ((register char *));
+extern int all_lower PROTO ((char *));
 
 /* True if a string is all upper case. */
-extern int all_upper PROTO ((register char *));
+extern int all_upper PROTO ((char *));
 
 /* Compare two integers for use by qsort. */
 extern int intcmp PROTO ((const void *, const void *));
@@ -859,10 +859,10 @@ extern void check_char PROTO ((int c));
 extern Char clower PROTO ((int));
 
 /* Returns a dynamically allocated copy of a string. */
-extern char *copy_string PROTO ((register const char *));
+extern char *copy_string PROTO ((const char *));
 
 /* Returns a dynamically allocated copy of a (potentially) unsigned string. */
-extern Char *copy_unsigned_string PROTO ((register Char *));
+extern Char *copy_unsigned_string PROTO ((Char *));
 
 /* Compare two characters for use by qsort with '\0' sorting last. */
 extern int cclcmp PROTO ((const void *, const void *));
@@ -988,7 +988,7 @@ extern int link_machines PROTO ((int, int));
 /* Mark each "beginning" state in a machine as being a "normal" (i.e.,
  * not trailing context associated) state.
  */
-extern void mark_beginning_as_normal PROTO ((register int));
+extern void mark_beginning_as_normal PROTO ((int));
 
 /* Make a machine that branches to two machines. */
 extern int mkbranch PROTO ((int, int));

@@ -5,7 +5,7 @@
 
 main()
 {
-	register int c, cc = 0, wc = 0, lc = 0;
+	int c, cc = 0, wc = 0, lc = 0;
 	FILE *f = stdin;
 
 	while ((c = getc(f)) != EOF) {
