@@ -136,8 +136,8 @@ diff -c flex-2.5.4.orig/flex.skl flex-2.5.4/flex.skl
 *** 881,886 ****
 --- 912,918 ----
   	{
-  	register yy_state_type yy_current_state;
-  	register char *yy_cp;
+  	yy_state_type yy_current_state;
+  	char *yy_cp;
 + 	char *yy_bp;
   
   %% code to get the start state into yy_current_state goes here
