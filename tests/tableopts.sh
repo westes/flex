@@ -7,26 +7,31 @@
 # inclusion in a Makefile.am, typically by redirecting the output and then an automake include directive.
 
 for kind in opt ser ver ; do
-for threading in nr r ; do
-for opt in -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem ; do
-    testname=tableopts_${kind}_${threading}${opt}.${kind}
-    if [ "${TABLEOPTS_TESTS}" = "" ] ;then
-        TABLEOPTS_TESTS=${testname}
-        tableopts_tables=${testname}.tables
-    else
-        TABLEOPTS_TESTS="${TABLEOPTS_TESTS} ${testname}"
-        tableopts_tables="${tableopts_tables} ${testname}.tables"
-    fi
-    bare_opt=${opt#-}
-    cat << EOF
+    for threading in nr r ; do
+        for opt in -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem ; do
+            testname=tableopts_${kind}_${threading}${opt}.${kind}
+            if [ "${TABLEOPTS_TESTS}" = "" ] ;then
+                TABLEOPTS_TESTS=${testname}
+                if [ "$kind" = "ser" -o "$kind" = "ver" ] ; then
+                    tableopts_tables=${testname}.tables
+                fi
+            else
+                TABLEOPTS_TESTS="${TABLEOPTS_TESTS} ${testname}"
+                if [ "$kind" = "ser" -o "$kind" = "ver" ] ; then
+                    tableopts_tables="${tableopts_tables} ${testname}.tables"
+                fi
+            fi
+
+            bare_opt=${opt#-}
+            cat << EOF
 tableopts_${kind}_${threading}_${bare_opt}_${kind}_SOURCES = tableopts.l4
 
 ${testname}\$(EXEEXT): tableopts_${kind}_${threading}${opt}.\$(OBJEXT)
 	\$(LINK) -o \$@ \$<
 
 EOF
-done
-done
+        done
+    done
 done
 
 echo TABLEOPTS_TESTS = ${TABLEOPTS_TESTS}

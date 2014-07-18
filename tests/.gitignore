@@ -99,3 +99,7 @@ top
 top.[ch]
 yyextra
 yyextra.c
+tableopts_*.c
+*.opt
+*.ser
+*.ver
