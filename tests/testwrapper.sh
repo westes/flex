@@ -1,4 +1,5 @@
 #!/bin/bash -vx
+set -euo pipefail
 
 # testwrapper.sh: run a flex test, typically called by a Makefile
 
@@ -8,6 +9,7 @@ INPUT_DIRECTORY=""
 INPUT_NAME=""
 INPUT_COUNT=0
 USE_REDIRECT=0
+DO_COMPARISON=0
 
 while getopts :d:i:rt1 OPTION ; do
     case $OPTION in
@@ -30,7 +32,7 @@ TESTNAME="${!OPTIND}"
 
 INPUT_NAME=${INPUT_NAME:-`basename $TESTNAME`.txt}
 
-if [ "$DO_COMPARISON" == "1" ] ; then
+if [ "$DO_COMPARISON" -eq "1" ] ; then
     test `$TESTNAME 1 < $INPUT_DIRECTORY/$INPUT_NAME` -eq `$TESTNAME < $INPUT_DIRECTORY/$INPUT_NAME`
     exit $?
     fi

@@ -1,10 +1,15 @@
-#!/bin/sh
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
 
 # This script is present to generate the automake _SOURCES variables
 # for the tableopts_* tests. It also generates the linking rules for
 # each test since automake isn't able to handle the pattern rules that
 # would be natural to use. Output is written to standard output for
 # inclusion in a Makefile.am, typically by redirecting the output and then an automake include directive.
+
+TABLEOPTS_TESTS=""
+tableopts_tables=""
 
 for kind in opt ser ver ; do
     for threading in nr r ; do
