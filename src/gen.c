@@ -507,7 +507,8 @@ void gen_find_action ()
 		indent_puts ("yy_current_state = *--YY_G(yy_state_ptr);");
 		indent_puts ("YY_G(yy_lp) = yy_accept[yy_current_state];");
 
-		outn ("find_rule: /* we branch to this label when backing up */");
+		if(reject_really_used)
+			outn ("find_rule: /* we branch to this label when backing up */");
 
 		indent_puts
 			("for ( ; ; ) /* until we find what rule we matched */");
