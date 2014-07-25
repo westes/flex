@@ -30,6 +30,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
+#include "parser.h"
+#include "scanner.h"
 
 #define YYERROR_VERBOSE 1
 /* #define YYPARSE_PARAM scanner */
