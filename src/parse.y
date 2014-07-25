@@ -1086,4 +1086,5 @@ int line;
 void yyerror( msg )
 const char *msg;
 	{
+		(void)msg;
 	}

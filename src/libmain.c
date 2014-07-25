@@ -25,8 +25,10 @@ extern int yylex (void);
 
 int     main (int argc, char *argv[])
 {
-	while (yylex () != 0)
-		continue;
+	(void)argc;
+	(void)argv;
+
+	while (yylex () != 0) ;
 
 	return 0;
 }

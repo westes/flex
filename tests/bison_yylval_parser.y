@@ -75,6 +75,7 @@ endtag:    LTSLASH TAGNAME GT { process_text($2);free($2);} ;
 %%
 
 int yyerror(void* scanner, char* msg) {
+    (void)scanner;
     fprintf(stderr,"%s\n",msg);
     return 0;
 }
