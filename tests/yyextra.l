@@ -48,7 +48,7 @@ static void append_char (char c,  yyscan_t  scanner );
 %}
 
 %option 8bit prefix="test"
-%option nounput nomain noyywrap nodefault
+%option nounput nomain noyywrap nodefault noinput
 %option warn
 %option reentrant
 

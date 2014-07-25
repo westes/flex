@@ -34,7 +34,7 @@
 
 %option reentrant
 %option 8bit prefix="test" header="header_r_scanner.h"
-%option nounput nomain noyywrap 
+%option nounput nomain noyywrap noinput
 %option warn
 
 

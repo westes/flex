@@ -41,7 +41,7 @@ int tests_ok[NUM_TESTS] =  { 0 };
 %}
 
 %option 8bit prefix="test"
-%option nounput nomain noyywrap
+%option nounput nomain noyywrap noinput
 %option warn
 
 

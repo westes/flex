@@ -36,7 +36,7 @@
 %}
 
 %option prefix="test" 
-%option nounput noyywrap noyylineno warn nodefault
+%option nounput noyywrap noyylineno warn nodefault noinput
 %option noansi-prototypes noansi-definitions
 
 IDENT [[:alnum:]_-]

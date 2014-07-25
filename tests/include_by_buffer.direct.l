@@ -32,7 +32,7 @@ f * are met:
 %}
 
 %option 8bit prefix="test"
-%option nounput nomain noyywrap
+%option nounput nomain noyywrap noinput
 %option warn
 
 %x GET_FILENAME

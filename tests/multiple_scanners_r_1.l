@@ -31,7 +31,7 @@
 
 %option header="multiple_scanners_r_1.h"
 %option 8bit prefix="S1_"
-%option nounput nomain noyywrap noyy_top_state
+%option nounput nomain noyywrap noinput noyy_top_state
 %option warn stack reentrant
 
 %x ON

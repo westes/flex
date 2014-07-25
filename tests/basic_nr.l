@@ -35,7 +35,7 @@
 %}
 
 %option prefix="test"
-%option nounput noyywrap noyylineno warn nodefault
+%option nounput noyywrap noyylineno warn nodefault noinput
 
 IDENT [[:alnum:]_-]
 WS    [[:blank:]]

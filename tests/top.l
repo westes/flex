@@ -41,7 +41,7 @@
 
 %option reentrant
 %option 8bit header="top.h" prefix="test"
-%option nounput nomain noyywrap 
+%option nounput nomain noyywrap noinput
 %option warn
 
 

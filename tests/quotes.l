@@ -56,7 +56,7 @@ static int foo (int i){
 %}
 
 %option 8bit prefix="test"
-%option nounput nomain noyywrap 
+%option nounput nomain noyywrap noinput
 %option warn
 
 

@@ -28,7 +28,7 @@
 %}
 
 %option 8bit prefix="test"
-%option nounput nomain noyywrap reentrant
+%option nounput nomain noyywrap noinput reentrant
 %option warn stack never-interactive
 %x STATE_1
 

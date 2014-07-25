@@ -33,8 +33,8 @@ static char* STRDUP(char* s1);
 
 %option 8bit prefix="test"
 %option bison-locations yylineno
-%option nomain nounput noyy_top_state noyywrap nodefault warn
 %option prefix="test" header="bison_nr_scanner.h" yylineno
+%option nomain nounput noyy_top_state noyywrap nodefault noinput warn
 
 
 %%

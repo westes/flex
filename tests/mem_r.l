@@ -40,7 +40,7 @@
 %}
 
 %option 8bit prefix="test"
-%option nounput nomain noyywrap
+%option nounput nomain noyywrap noinput noyy_top_state
 %option warn stack nodefault reentrant
 %option noyyalloc noyyrealloc noyyfree
 

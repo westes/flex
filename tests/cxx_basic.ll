@@ -28,9 +28,8 @@
 %}
 
 %option 8bit prefix="test"
-%option nounput nomain noyywrap 
 %option warn c++
-
+%option nounput nomain noinput noyywrap 
 
 %%
 

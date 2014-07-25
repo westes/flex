@@ -31,7 +31,7 @@
 %}
 
 %option 8bit prefix="test"
-%option nounput nomain noyywrap 
+%option nounput nomain noyywrap noinput
 %option warn array reentrant
 
 

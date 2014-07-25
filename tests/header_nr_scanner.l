@@ -30,7 +30,7 @@
 %}
 
 %option 8bit prefix="test" header="header_nr_scanner.h"
-%option nounput nomain noyywrap 
+%option nounput nomain noyywrap noinput
 %option warn
 
 
