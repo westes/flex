@@ -40,7 +40,7 @@
 %}
 
 %option 8bit outfile="scanner.c" prefix="test"
-%option nounput nomain noyywrap
+%option nounput nomain noyywrap noinput noyy_top_state
 %option warn stack nodefault reentrant
 %option noyyalloc noyyrealloc noyyfree
 
@@ -87,6 +87,8 @@ static void dump_mem(FILE* fp){
 
 void * yyalloc(yy_size_t n , void* yyscanner)
 {
+    (void)yyscanner;
+
     void * p;
     int i;
 
@@ -116,6 +118,8 @@ void * yyalloc(yy_size_t n , void* yyscanner)
 
 void * yyrealloc(void* p, yy_size_t n , void* yyscanner)
 {
+    (void)yyscanner;
+
     int i;
     for (i=0; i < arrsz; i++)
         if ( ptrs[i].p == p){
@@ -137,6 +141,8 @@ void * yyrealloc(void* p, yy_size_t n , void* yyscanner)
 
 void yyfree(void* p , void* yyscanner)
 {
+    (void)yyscanner;
+
     int i;
     for (i=0; i < arrsz; i++)
         if ( ptrs[i].p == p){

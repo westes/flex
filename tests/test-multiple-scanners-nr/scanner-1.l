@@ -31,7 +31,7 @@
 
 %option header="scanner-1.h"
 %option 8bit outfile="scanner-1.c" prefix="S1_"
-%option nounput nomain noyywrap
+%option nounput nomain noyywrap noinput
 %option warn stack noyy_top_state
 
 %x ON

@@ -95,7 +95,7 @@ extern const char *escaped_qstart, *escaped_qend;
 
 %}
 
-%option caseless nodefault stack noyy_top_state
+%option caseless nodefault noreject stack noyy_top_state
 %option nostdinit
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE

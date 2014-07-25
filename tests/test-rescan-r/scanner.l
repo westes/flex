@@ -28,7 +28,7 @@
 %}
 
 %option 8bit outfile="scanner.c" prefix="test"
-%option nounput nomain noyywrap reentrant
+%option nounput nomain noyywrap noinput reentrant
 %option warn stack never-interactive
 %x STATE_1
 
@@ -51,6 +51,8 @@ main (int argc, char* const argv[])
     FILE* fp;
     int i;
     yyscan_t  yyscanner;
+
+    (void)argc;
 
     if ((fp = fopen(argv[1],"r")) == NULL){
         perror("Failed to open input file.");

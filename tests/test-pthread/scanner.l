@@ -47,7 +47,7 @@ static int process_text(char* s, yyscan_t  scanner);
 %}
 
 %option 8bit outfile="scanner.c" prefix="test"
-%option nounput nomain nodefault
+%option nounput nomain nodefault noinput
 %option yywrap
 %option reentrant
 %option warn
@@ -78,9 +78,13 @@ static int process_text(char* s, yyscan_t  scanner);
 <INITIAL,STATE_1,STATE_2>[[:space:]\r\n]+  { }
 %%
 
-int yywrap( yyscan_t  scanner) { return 1; }
+int yywrap( yyscan_t  scanner) {
+    (void)scanner;
+    return 1;
+}
 static int process_text(char* s, yyscan_t  scanner)
 {
+    (void)scanner;
     return (int)(*s) + (int) *(s + yyget_leng(scanner)-1);
 }
 
@@ -113,6 +117,8 @@ static char **filenames;
 void * thread_func ( void* arg )
 {
     int i;
+
+    (void)arg;
 
     /* Wait for go-ahead. */
     pthread_mutex_lock( &go_ahead);

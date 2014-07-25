@@ -30,12 +30,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
+#include "parser.h"
+#include "scanner.h"
 
 #define YYERROR_VERBOSE 1
 /* #define YYPARSE_PARAM scanner */
 /* #define YYLEX_PARAM   scanner */
 
-int yyerror(char* msg);
+int yyerror(const char* msg);
 extern int testget_lineno(void);
 
 
@@ -89,7 +91,7 @@ line:
 
 %%
 
-int yyerror(char* msg) {
+int yyerror(const char* msg) {
     fprintf(stderr,"%s\n",msg);
     return 0;
 }

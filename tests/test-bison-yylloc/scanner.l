@@ -33,7 +33,7 @@ static char* STRDUP(char* s1);
 
 %option 8bit outfile="scanner.c" prefix="test"
 %option reentrant bison-bridge bison-locations yylineno
-%option nomain nounput noyy_top_state noyywrap nodefault warn
+%option nomain nounput noyy_top_state noyywrap nodefault noinput warn
 %option prefix="test" header="scanner.h"
 
 

@@ -30,7 +30,7 @@
 %}
 
 %option 8bit outfile="scanner.c" prefix="test" header="scanner.h"
-%option nounput nomain noyywrap 
+%option nounput nomain noyywrap noinput
 %option warn
 
 

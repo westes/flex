@@ -82,7 +82,7 @@ static int PRINTLEN PROTO ((struct _scanopt_t *, int));
 static int RVAL PROTO ((struct _scanopt_t *, int));
 static int FLAGS PROTO ((struct _scanopt_t *, int));
 static const char *DESC PROTO ((struct _scanopt_t *, int));
-static int scanopt_err PROTO ((struct _scanopt_t *, int, int, int));
+static int scanopt_err PROTO ((struct _scanopt_t *, int, int));
 static int matchlongopt PROTO ((char *, char **, int *, char **, int *));
 static int find_opt
 PROTO ((struct _scanopt_t *, int, char *, int, int *, int *opt_offset));
@@ -529,18 +529,13 @@ int     scanopt_usage (scanner, fp, usage)
 #endif /* no scanopt_usage */
 
 
-static int scanopt_err (s, opt_offset, is_short, err)
+static int scanopt_err (s, is_short, err)
      struct _scanopt_t *s;
-     int     opt_offset;
      int     is_short;
      int     err;
 {
 	const char *optname = "";
 	char    optchar[2];
-	const optspec_t *opt = NULL;
-
-	if (opt_offset >= 0)
-		opt = s->options + opt_offset;
 
 	if (!s->no_err_msg) {
 
@@ -749,7 +744,7 @@ int     scanopt (svoid, arg, optindex)
 			if (!find_opt
 			    (s, 1, optname, namelen, &errcode,
 			     &opt_offset)) {
-				scanopt_err (s, opt_offset, 0, errcode);
+				scanopt_err (s, 0, errcode);
 				return errcode;
 			}
 			/* We handle this below. */
@@ -784,7 +779,7 @@ int     scanopt (svoid, arg, optindex)
 
 		if (!find_opt
 		    (s, 0, pstart, namelen, &errcode, &opt_offset)) {
-			return scanopt_err (s, opt_offset, 1, errcode);
+			return scanopt_err (s, 1, errcode);
 		}
 
 		optarg = pstart + 1;
@@ -812,8 +807,7 @@ int     scanopt (svoid, arg, optindex)
 	/* case: no args allowed */
 	if (auxp->flags & ARG_NONE) {
 		if (optarg && !is_short) {
-			scanopt_err (s, opt_offset, is_short, errcode =
-				     SCANOPT_ERR_ARG_NOT_ALLOWED);
+			scanopt_err (s, is_short, errcode = SCANOPT_ERR_ARG_NOT_ALLOWED);
 			INC_INDEX (s, 1);
 			return errcode;
 		}
@@ -827,8 +821,7 @@ int     scanopt (svoid, arg, optindex)
 	/* case: required */
 	if (auxp->flags & ARG_REQ) {
 		if (!optarg && !has_next)
-			return scanopt_err (s, opt_offset, is_short,
-					    SCANOPT_ERR_ARG_NOT_FOUND);
+			return scanopt_err (s, is_short, SCANOPT_ERR_ARG_NOT_FOUND);
 
 		if (!optarg) {
 			/* Let the next argv element become the argument. */

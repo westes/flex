@@ -22,6 +22,7 @@
  */
 
 #include "scanner.h"
+#include "assert.h"
 
 /* The scanner itself is not important here.
  * We simply try to use all the functions that are exported in the
@@ -30,6 +31,9 @@
 int
 main ( int argc, char** argv )
 {
+    (void)argc;
+    (void)argv;
+
     yyscan_t  scanner;
     FILE *fp;
     char * extra = "EXTRA";
@@ -40,7 +44,9 @@ main ( int argc, char** argv )
     testset_extra(extra,scanner);
     
     fp = testget_in(scanner);
+    assert(fp == stdin);
     fp = testget_out(scanner);
+    assert(fp == stdout);
 
     while(testlex(scanner)) {
         char * text;

@@ -28,6 +28,9 @@ extern int testparse(void);
 
 int main ( int argc, char** argv )
 {
+	(void)argc;
+	(void)argv;
+
     /*yydebug =1;*/
     testin = stdin;
     testparse ( );

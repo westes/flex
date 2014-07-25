@@ -32,6 +32,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
+#include "parser.h"
+#include "scanner.h"
+
+int yyerror(YYLTYPE *location, void* scanner, const char* msg);
 
 #define YYERROR_VERBOSE 1
 #define YYLEX_PARAM   scanner
@@ -78,7 +82,7 @@ line:
         /* Check lineno. */
         if( $1 != @1.first_line || $1 != testget_lineno(scanner))
         {
-            yyerror("Parse failed: Line numbers do not match.");
+            yyerror(0, 0, "Parse failed: Line numbers do not match.");
             YYABORT;
         }
 
@@ -89,7 +93,9 @@ line:
 
 %%
 
-int yyerror(void* scanner, char* msg) {
+int yyerror(YYLTYPE *location, void* scanner, const char* msg) {
+    (void)location;
+    (void)scanner;
     fprintf(stderr,"%s\n",msg);
     return 0;
 }

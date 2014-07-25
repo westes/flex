@@ -2491,7 +2491,8 @@ m4_ifdef( [[M4_YY_NO_TOP_STATE]],,
 %if-c-only
 static void yy_fatal_error YYFARGS1(yyconst char*, msg)
 {
-    m4_dnl M4_YY_DECL_GUTS_VAR();
+	M4_YY_DECL_GUTS_VAR();
+	M4_YY_NOOP_GUTS_VAR();
 	(void) fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
 }
@@ -2974,6 +2975,9 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #ifndef yytext_ptr
 static void yy_flex_strncpy YYFARGS3( char*,s1, yyconst char *,s2, int,n)
 {
+	M4_YY_DECL_GUTS_VAR();
+	M4_YY_NOOP_GUTS_VAR();
+
 	int i;
 	for ( i = 0; i < n; ++i )
 		s1[i] = s2[i];
@@ -2999,6 +3003,8 @@ m4_ifdef( [[M4_YY_NO_FLEX_ALLOC]],,
 [[
 void *yyalloc YYFARGS1( yy_size_t ,size)
 {
+	M4_YY_DECL_GUTS_VAR();
+	M4_YY_NOOP_GUTS_VAR();
 	return (void *) malloc( size );
 }
 ]])
@@ -3007,6 +3013,9 @@ m4_ifdef( [[M4_YY_NO_FLEX_REALLOC]],,
 [[
 void *yyrealloc  YYFARGS2( void *,ptr, yy_size_t ,size)
 {
+	M4_YY_DECL_GUTS_VAR();
+	M4_YY_NOOP_GUTS_VAR();
+
 	/* The cast to (char *) in the following accommodates both
 	 * implementations that use char* generic pointers, and those
 	 * that use void* generic pointers.  It works with the latter
@@ -3022,6 +3031,8 @@ m4_ifdef( [[M4_YY_NO_FLEX_FREE]],,
 [[
 void yyfree YYFARGS1( void *,ptr)
 {
+	M4_YY_DECL_GUTS_VAR();
+	M4_YY_NOOP_GUTS_VAR();
 	free( (char *) ptr );	/* see yyrealloc() for (char *) cast */
 }
 ]])
@@ -3067,7 +3078,7 @@ static int yytbl_read32 (void *v, struct yytbl_reader * rd)
 /** Read the header */
 static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *, rd)
 {
-    int     bytes;
+    size_t  bytes;
     memset (th, 0, sizeof (struct yytbl_hdr));
 
     if (yytbl_read32 (&(th->th_magic), rd) != 0)
@@ -3116,8 +3127,11 @@ static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *
 static struct yytbl_dmap *yytbl_dmap_lookup YYFARGS2(struct yytbl_dmap *, dmap,
                                                       int, id)
 {
+	M4_YY_DECL_GUTS_VAR();
+	M4_YY_NOOP_GUTS_VAR();
+
     while (dmap->dm_id)
-        if (dmap->dm_id == id)
+        if ((int)(dmap->dm_id) == id)
             return dmap;
         else
             dmap++;

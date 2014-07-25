@@ -35,7 +35,7 @@ enum yesno_t { no=0, yes=1 };
 
 %option 8bit outfile="scanner.c" prefix="test"
 %option reentrant bison-bridge
-%option noyywrap nomain nounput noyy_top_state noyywrap nodefault warn
+%option noyywrap nomain nounput noyy_top_state noyywrap nodefault noinput warn
 %option prefix="test" header="scanner.h"
 %option stack
 
