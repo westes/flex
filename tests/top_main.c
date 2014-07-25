@@ -21,6 +21,8 @@
  * PURPOSE.
  */
 
+#include <assert.h>
+
 #include "top.h"
 
 /* The scanner itself is not important here.
@@ -43,7 +45,9 @@ main ( int argc, char** argv )
     testset_extra(extra,scanner);
     
     fp = testget_in(scanner);
+    assert(fp == stdin);
     fp = testget_out(scanner);
+    assert(fp == stdout);
 
     while(testlex(scanner)) {
         char * text;
@@ -61,6 +65,3 @@ main ( int argc, char** argv )
     printf("TEST RETURNING OK.\n");
     return 0;
 }
-
-
-/* vim:set tabstop=8 softtabstop=4 shiftwidth=4: */

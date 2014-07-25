@@ -21,6 +21,8 @@
  * PURPOSE.
  */
 
+#include <assert.h>
+
 #include "multiple_scanners_nr_1.h"
 #include "multiple_scanners_nr_2.h"
 
@@ -30,11 +32,27 @@ main ( int argc, char** argv )
     (void)argc;
     (void)argv;
 
+<<<<<<< HEAD:tests/multiple_scanners_nr_main.c
     int S1_ok=1, S2_ok=1;
     YY_BUFFER_STATE buff1, buff2;
     S1_out = S2_out = stdout;
     buff1 = S1__scan_string("foo on bar off");
     buff2 = S2__scan_string("on blah blah off foo on bar off");
+=======
+    yyscan_t  scanner;
+    FILE *fp;
+    char * extra = "EXTRA";
+    
+    testlex_init(&scanner);
+    testset_in(stdin,scanner);
+    testset_out(stdout,scanner);    
+    testset_extra(extra,scanner);
+    
+    fp = testget_in(scanner);
+    assert(fp == stdin);
+    fp = testget_out(scanner);
+    assert(fp == stdout);
+>>>>>>> Remove a few `unused variable` warnings:tests/test-linedir-r/main.c
 
     /* scan simultaneously. */
     while(S1_ok || S2_ok)
