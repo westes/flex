@@ -53,6 +53,11 @@
 #    define FLEX_STD std::
 #  endif
 
+#ifndef YY_CHAR_DEFINED
+#define YY_CHAR_DEFINED
+typedef unsigned char YY_CHAR;
+#endif
+
 extern "C++" {
 
 struct yy_buffer_state;
@@ -62,7 +67,7 @@ class FlexLexer {
 public:
 	virtual ~FlexLexer()	{ }
 
-	const char* YYText() const	{ return yytext; }
+	const YY_CHAR* YYText() const	{ return yytext; }
 	int YYLeng()	const	{ return yyleng; }
 
 	virtual void
@@ -91,8 +96,16 @@ public:
 	int debug() const		{ return yy_flex_debug; }
 	void set_debug( int flag )	{ yy_flex_debug = flag; }
 
+#ifdef YY_CHARSET
+	void set_charset(char *charset);
+	char* get_charset();
+#endif
+
 protected:
-	char* yytext;
+	YY_CHAR* yytext;
+#ifdef YY_CHARSET
+	char *yycharset;
+#endif
 	int yyleng;
 	int yylineno;		// only maintained if you use %option yylineno
 	int yy_flex_debug;	// only has effect with -d or "%option debug"
@@ -134,7 +147,7 @@ protected:
 	virtual void LexerOutput( const char* buf, int size );
 	virtual void LexerError( const char* msg );
 
-	void yyunput( int c, char* buf_ptr );
+	void yyunput( int c, YY_CHAR* buf_ptr );
 	int yyinput();
 
 	void yy_load_buffer_state();
@@ -153,17 +166,26 @@ protected:
 	yy_state_type yy_try_NUL_trans( yy_state_type current_state );
 	int yy_get_next_buffer();
 
+#ifdef YY_CHARSET
+	size_t yycharset_convert(char* source, size_t source_bytes, YY_CHAR* target,
+		size_t target_length, size_t* converted_bytes);
+	virtual size_t yycharset_handler(char *charset,
+		char *source, size_t source_bytes,
+		YY_CHAR *target, size_t target_length,
+		size_t *converted_bytes);
+#endif
+
 	FLEX_STD istream* yyin;	// input source for default LexerInput
 	FLEX_STD ostream* yyout;	// output sink for default LexerOutput
 
 	// yy_hold_char holds the character lost when yytext is formed.
-	char yy_hold_char;
+	YY_CHAR yy_hold_char;
 
 	// Number of characters read into yy_ch_buf.
 	int yy_n_chars;
 
 	// Points to current character in buffer.
-	char* yy_c_buf_p;
+	YY_CHAR* yy_c_buf_p;
 
 	int yy_init;		// whether we need to initialize
 	int yy_start;		// start state number
@@ -182,12 +204,12 @@ protected:
 	// on use of certain flex features (like REJECT or yymore()).
 
 	yy_state_type yy_last_accepting_state;
-	char* yy_last_accepting_cpos;
+	YY_CHAR* yy_last_accepting_cpos;
 
 	yy_state_type* yy_state_buf;
 	yy_state_type* yy_state_ptr;
 
-	char* yy_full_match;
+	YY_CHAR* yy_full_match;
 	int* yy_full_state;
 	int yy_full_lp;
 

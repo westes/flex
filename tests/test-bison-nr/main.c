@@ -21,6 +21,7 @@
  * PURPOSE.
  */
 
+#include "scanner_char.h"
 #include "parser.h"
 #include "scanner.h"
 

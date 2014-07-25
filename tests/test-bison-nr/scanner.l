@@ -25,38 +25,32 @@
 /* The scanner expects to link to bison yylval . */
 #include <stdio.h>
 #include <stdlib.h>
+#include "strutils.h"
 #include "parser.h"
 #include "config.h"
-static char* STRDUP(char* s1);
 #define YY_EXTRA_TYPE int
 %}
 
 %option 8bit outfile="scanner.c" prefix="test"
 %option bison-locations yylineno
 %option nomain nounput noyy_top_state noyywrap nodefault warn
-%option prefix="test" header="scanner.h" yylineno
+%option prefix="test" header="scanner.h" header-char="scanner_char.h" yylineno
 
 
 %%
 
 ^[[:digit:]]+  { 
         yylval->lineno = yylineno;
-        yylloc->first_line = (int)strtol(yytext,NULL,10);
+        yylloc->first_line = (int)yy_utils_strtol(yytext,NULL,10);
         return LINENO;
     }
 ":"  { return COLON; }
 " "  { return SPACE; }
 "="  { return EQUAL; }
-[[:alnum:]_]+ {  yylval->str = STRDUP(yytext); return IDENT;}
+[[:alnum:]_]+ {  yylval->str = yy_utils_strdup(yytext); return IDENT;}
 
 \r|\n { }
 .     { yyterminate();}
 %%
 
 
-static char* STRDUP(char* s1)
-{
-    char* s2 = (char*)malloc(strlen(s1)+1);
-    sprintf(s2,"%s",s1);
-    return s2;
-}
