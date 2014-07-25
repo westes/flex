@@ -35,7 +35,7 @@
 %}
 
 %option 8bit outfile="scanner.c" prefix="test"
-%option nounput nomain noyywrap yylineno reentrant
+%option nounput nomain noyywrap noinput yylineno reentrant
 %option warn
 
 WORD [[:alpha:]]+

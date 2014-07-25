@@ -29,7 +29,7 @@
 %}
 
 %option 8bit
-%option nounput nomain noyywrap 
+%option nounput nomain noyywrap noinput
 %option warn yylineno
 
 

@@ -47,7 +47,7 @@ static int process_text(char* s, yyscan_t  scanner);
 %}
 
 %option 8bit outfile="scanner.c" prefix="test"
-%option nounput nomain nodefault
+%option nounput nomain nodefault noinput
 %option yywrap
 %option reentrant
 %option warn

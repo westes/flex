@@ -31,7 +31,7 @@
 
 %option header="scanner-2.h"
 %option 8bit outfile="scanner-2.c" prefix="S2_"
-%option nounput nomain noyywrap
+%option nounput nomain noyywrap noinput
 %option warn stack reentrant noyy_top_state
 %option tables-file="scanner-2.tables"
 

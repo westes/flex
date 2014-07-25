@@ -34,7 +34,7 @@
 %}
 
 %option prefix="test" outfile="scanner.c" 
-%option nounput noyywrap noyylineno warn nodefault
+%option nounput noyywrap noyylineno warn nodefault noinput
 %option reentrant
 %option noansi-definitions noansi-prototypes
 
