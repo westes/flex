@@ -39,7 +39,7 @@ scanner.c: $(srcdir)/scanner.l
 scanner.h: scanner.c
 scanner.o: parser.h
 
-parser.c: $(srcdir)/parser.y
+parser.c: $(srcdir)/parser.y scanner.h
 	$(BISON) $(YFLAGS) $<
 parser.h: parser.c
 
