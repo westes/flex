@@ -361,11 +361,9 @@ int filter_fix_linedirs (struct filter *chain)
 		if (buf[0] == '#'
 			&& regexec (&regex_linedir, buf, 3, m, 0) == 0) {
 
-			int     num;
 			char   *fname;
 
 			/* extract the line number and filename */
-			num = regmatch_strtol (&m[1], buf, NULL, 0);
 			fname = regmatch_dup (&m[2], buf);
 
 			if (strcmp (fname,
