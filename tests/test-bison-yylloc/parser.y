@@ -90,6 +90,7 @@ line:
 %%
 
 int yyerror(void* scanner, char* msg) {
+    (void)scanner;
     fprintf(stderr,"%s\n",msg);
     return 0;
 }

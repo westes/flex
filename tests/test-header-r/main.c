@@ -30,6 +30,9 @@
 int
 main ( int argc, char** argv )
 {
+    (void)argc;
+    (void)argv;
+
     yyscan_t  scanner;
     FILE *fp;
     char * extra = "EXTRA";

@@ -27,6 +27,10 @@
 int main ( int argc, char** argv )
 {
     yyscan_t scanner;
+
+    (void)argc;
+    (void)argv;
+
     /*yydebug =1;*/
     testlex_init ( &scanner );
     testset_in(stdin,scanner);

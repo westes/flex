@@ -51,6 +51,8 @@ main (int argc, char* const argv[])
     FILE* fp;
     int i;
 
+    (void)argc;
+
     if ((fp = fopen(argv[1],"r")) == NULL){
         perror("Failed to open input file.");
         return 1;

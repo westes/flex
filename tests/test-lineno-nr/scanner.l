@@ -82,6 +82,8 @@ main ( argc,  argv )
     int argc;
     char** argv;
 {
+    (void)argv;
+
     if( argc > 1 )
         printf("%d\n", count_newlines(stdin));
 
