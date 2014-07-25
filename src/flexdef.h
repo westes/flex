@@ -425,6 +425,7 @@ extern int trace_hex;
  * infilename - name of input file
  * outfilename - name of output file
  * headerfilename - name of the .h file to generate
+ * headercharfilename - name of the .h file to fill with character type defintion
  * did_outfilename - whether outfilename was explicitly set
  * prefix - the prefix used for externally visible names ("yy" by default)
  * yyclass - yyFlexLexer subclass to use for YY_DECL
@@ -448,7 +449,7 @@ extern int datapos, dataline, linenum;
 extern FILE *skelfile, *yyin, *backing_up_file;
 extern const char *skel[];
 extern int skel_ind;
-extern char *infilename, *outfilename, *headerfilename;
+extern char *infilename, *outfilename, *headerfilename, *headercharfilename;
 extern int did_outfilename;
 extern char *prefix, *yyclass, *extra_type;
 extern int do_stdinit, use_stdout;

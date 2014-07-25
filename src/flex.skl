@@ -274,7 +274,7 @@ m4_ifdef( [[M4_YY_NO_ANSI_FUNC_PROTOS]],
  * we want to instead treat it as an 8-bit unsigned char, hence the
  * double cast.
  */
-#define YY_SC_TO_UI(c) ((unsigned int) (unsigned char) c)
+#define YY_SC_TO_UI(c) ((unsigned int) (YY_CHAR)c)
 %ok-for-header
 
 
@@ -513,7 +513,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
             }while(0)
     #define YY_LINENO_REWIND_TO(dst) \
             do {\
-                const char *p;\
+                const YY_CHAR *p;\
                 for ( p = yy_cp-1; p >= (dst); --p)\
                     if ( *p == '\n' )\
                         --yylineno;\
@@ -547,6 +547,8 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define unput(c) yyunput( c, YY_G(yytext_ptr) M4_YY_CALL_LAST_ARG )
 ]])
 
+%% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
+
 #ifndef YY_STRUCT_YY_BUFFER_STATE
 #define YY_STRUCT_YY_BUFFER_STATE
 struct yy_buffer_state
@@ -560,8 +562,8 @@ struct yy_buffer_state
 %endif
 
 
-	char *yy_ch_buf;		/* input buffer */
-	char *yy_buf_pos;		/* current position in input buffer */
+	YY_CHAR *yy_ch_buf;     /* input buffer */
+	YY_CHAR *yy_buf_pos;    /* current position in input buffer */
 
 	/* Size of input buffer in bytes, not including room for EOB
 	 * characters.
@@ -659,12 +661,12 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 %if-not-reentrant
 %not-for-header
 /* yy_hold_char holds the character lost when yytext is formed. */
-static char yy_hold_char;
+static YY_CHAR yy_hold_char;
 static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */
 yy_size_t yyleng;
 
 /* Points to current character in buffer. */
-static char *yy_c_buf_p = (char *) 0;
+static YY_CHAR *yy_c_buf_p = (YY_CHAR *) 0;
 static int yy_init = 0;		/* whether we need to initialize */
 static int yy_start = 0;	/* start state number */
 
@@ -695,7 +697,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define YY_FLUSH_BUFFER yy_flush_buffer( YY_CURRENT_BUFFER M4_YY_CALL_LAST_ARG)
 ]])
 
-YY_BUFFER_STATE yy_scan_buffer M4_YY_PARAMS( char *base, yy_size_t size M4_YY_PROTO_LAST_ARG );
+YY_BUFFER_STATE yy_scan_buffer M4_YY_PARAMS( YY_CHAR *base, yy_size_t size M4_YY_PROTO_LAST_ARG );
 YY_BUFFER_STATE yy_scan_string M4_YY_PARAMS( yyconst char *yy_str M4_YY_PROTO_LAST_ARG );
 YY_BUFFER_STATE yy_scan_bytes M4_YY_PARAMS( yyconst char *bytes, yy_size_t len M4_YY_PROTO_LAST_ARG );
 
@@ -740,8 +742,6 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 ]])
-
-%% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
@@ -827,10 +827,10 @@ struct yyguts_t
     size_t yy_buffer_stack_top; /**< index of top of stack. */
     size_t yy_buffer_stack_max; /**< capacity of stack. */
     YY_BUFFER_STATE * yy_buffer_stack; /**< Stack as an array. */
-    char yy_hold_char;
+    YY_CHAR yy_hold_char;
     yy_size_t yy_n_chars;
     yy_size_t yyleng_r;
-    char *yy_c_buf_p;
+    YY_CHAR *yy_c_buf_p;
     int yy_init;
     int yy_start;
     int yy_did_buffer_switch_on_eof;
@@ -838,7 +838,7 @@ struct yyguts_t
     int yy_start_stack_depth;
     int *yy_start_stack;
     yy_state_type yy_last_accepting_state;
-    char* yy_last_accepting_cpos;
+    YY_CHAR* yy_last_accepting_cpos;
 
     int yylineno_r;
     int yy_flex_debug_r;
@@ -847,7 +847,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 [[
     yy_state_type *yy_state_buf;
     yy_state_type *yy_state_ptr;
-    char *yy_full_match;
+    YY_CHAR *yy_full_match;
     int yy_lp;
 
     /* These are only needed for trailing context rules,
@@ -859,13 +859,13 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 
 m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]],
 [[
-    char yytext_r[YYLMAX];
-    char *yytext_ptr;
+    YY_CHAR yytext_r[YYLMAX];
+    YY_CHAR *yytext_ptr;
     int yy_more_offset;
     int yy_prev_more_offset;
 ]],
 [[
-    char *yytext_r;
+    YY_CHAR *yytext_r;
     int yy_more_flag;
     int yy_more_len;
 ]])
@@ -971,7 +971,7 @@ yy_size_t yyget_leng M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 
 m4_ifdef( [[M4_YY_NO_GET_TEXT]],,
 [[
-char *yyget_text M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
+YY_CHAR *yyget_text M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 ]])
 
 m4_ifdef( [[M4_YY_NO_GET_LINENO]],,
@@ -1043,7 +1043,7 @@ extern int yywrap M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 %endif
 
 #ifndef yytext_ptr
-static void yy_flex_strncpy M4_YY_PARAMS( char *, yyconst char *, int M4_YY_PROTO_LAST_ARG);
+static void yy_flex_strncpy M4_YY_PARAMS( YY_CHAR *, yyconst YY_CHAR *, int M4_YY_PROTO_LAST_ARG);
 #endif
 
 #ifdef YY_NEED_STRLEN
@@ -1123,7 +1123,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define ECHO do { if (fwrite( yytext, yyleng, 1, yyout )) {} } while (0)
 %endif
 %if-c++-only C++ definition
-#define ECHO LexerOutput( yytext, yyleng )
+#define ECHO LexerOutput( reinterpret_cast<char*>(yytext), yyleng )
 %endif
 #endif
 ]])
@@ -1282,7 +1282,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 YY_DECL
 {
 	yy_state_type yy_current_state;
-	char *yy_cp, *yy_bp;
+	YY_CHAR *yy_cp, *yy_bp;
 	int yy_act;
     M4_YY_DECL_GUTS_VAR();
 
@@ -1418,7 +1418,7 @@ do_action:	/* This label is used only to access EOF actions. */
 		 * end-of-buffer state).  Contrast this with the test
 		 * in input().
 		 */
-		if ( YY_G(yy_c_buf_p) <= &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[YY_G(yy_n_chars)] )
+		if ( ((YY_CHAR*)(YY_G(yy_c_buf_p))) <= &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[YY_G(yy_n_chars)] )
 			{ /* This was really a NUL. */
 			yy_state_type yy_next_state;
 
@@ -1496,8 +1496,9 @@ do_action:	/* This label is used only to access EOF actions. */
 				goto yy_match;
 
 			case EOB_ACT_LAST_MATCH:
-				YY_G(yy_c_buf_p) =
-				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[YY_G(yy_n_chars)];
+				YY_G(yy_c_buf_p) = ((YY_CHAR*)(
+				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[YY_G(yy_n_chars)]
+				));
 
 				yy_current_state = yy_get_previous_state( M4_YY_CALL_ONLY_ARG );
 
@@ -1633,12 +1634,12 @@ int yyFlexLexer::yy_get_next_buffer()
 %endif
 {
     M4_YY_DECL_GUTS_VAR();
-	char *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
-	char *source = YY_G(yytext_ptr);
+	YY_CHAR *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
+	YY_CHAR *source = YY_G(yytext_ptr);
 	int number_to_move, i;
 	int ret_val;
 
-	if ( YY_G(yy_c_buf_p) > &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[YY_G(yy_n_chars) + 1] )
+	if ( YY_G(yy_c_buf_p) > ((YY_CHAR*)( &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[YY_G(yy_n_chars) + 1])) )
 		YY_FATAL_ERROR(
 		"fatal flex scanner internal error--end of buffer missed" );
 
@@ -1692,7 +1693,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 			YY_BUFFER_STATE b = YY_CURRENT_BUFFER_LVALUE;
 
 			int yy_c_buf_p_offset =
-				(int) (YY_G(yy_c_buf_p) - b->yy_ch_buf);
+				(int) (YY_G(yy_c_buf_p) - ((YY_CHAR*)(b->yy_ch_buf)) );
 
 			if ( b->yy_is_our_buffer )
 				{
@@ -1703,10 +1704,10 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 				else
 					b->yy_buf_size *= 2;
 
-				b->yy_ch_buf = (char *)
+				b->yy_ch_buf = (YY_CHAR *)
 					/* Include room in for 2 EOB chars. */
 					yyrealloc( (void *) b->yy_ch_buf,
-							 b->yy_buf_size + 2 M4_YY_CALL_LAST_ARG );
+							 (b->yy_buf_size + 2)*sizeof(YY_CHAR) M4_YY_CALL_LAST_ARG );
 				}
 			else
 				/* Can't grow it, we don't own it. */
@@ -1755,8 +1756,8 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 	if ((yy_size_t) (YY_G(yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
 		yy_size_t new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1);
-		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) yyrealloc(
-			(void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, new_size M4_YY_CALL_LAST_ARG );
+		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (YY_CHAR *) yyrealloc(
+			(void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, new_size*sizeof(YY_CHAR) M4_YY_CALL_LAST_ARG );
 		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
 			YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
 	}
@@ -1782,7 +1783,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 %endif
 {
 	yy_state_type yy_current_state;
-	char *yy_cp;
+	YY_CHAR *yy_cp;
     M4_YY_DECL_GUTS_VAR();
 
 %% [15.0] code to get the start state into yy_current_state goes here
@@ -1820,13 +1821,13 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 %if-c-only
 m4_ifdef( [[M4_YY_NO_UNPUT]],,
 [[
-    static void yyunput YYFARGS2( int,c, char *,yy_bp)
+    static void yyunput YYFARGS2( int,c, YY_CHAR *,yy_bp)
 %endif
 %if-c++-only
-    void yyFlexLexer::yyunput( int c, char* yy_bp)
+    void yyFlexLexer::yyunput( int c, YY_CHAR* yy_bp)
 %endif
 {
-	char *yy_cp;
+	YY_CHAR *yy_cp;
     M4_YY_DECL_GUTS_VAR();
 
     yy_cp = YY_G(yy_c_buf_p);
@@ -1838,9 +1839,9 @@ m4_ifdef( [[M4_YY_NO_UNPUT]],,
 		{ /* need to shift things up to make room */
 		/* +2 for EOB chars. */
 		yy_size_t number_to_move = YY_G(yy_n_chars) + 2;
-		char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
+		YY_CHAR *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
 					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
-		char *source =
+		YY_CHAR *source =
 				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move];
 
 		while ( source > YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
@@ -2062,7 +2063,7 @@ static void yy_load_buffer_state  YYFARGS0(void)
 	/* yy_ch_buf has to be 2 characters longer than the size given because
 	 * we need to put in 2 end-of-buffer characters.
 	 */
-	b->yy_ch_buf = (char *) yyalloc( b->yy_buf_size + 2 M4_YY_CALL_LAST_ARG );
+	b->yy_ch_buf = (YY_CHAR *) yyalloc( (b->yy_buf_size + 2)*sizeof(YY_CHAR) M4_YY_CALL_LAST_ARG );
 	if ( ! b->yy_ch_buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 
@@ -2319,7 +2320,7 @@ m4_ifdef( [[M4_YY_NO_SCAN_BUFFER]],,
  * M4_YY_DOC_PARAM
  * @return the newly allocated buffer state object. 
  */
-YY_BUFFER_STATE yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
+YY_BUFFER_STATE yy_scan_buffer  YYFARGS2( YY_CHAR *,base, yy_size_t ,size)
 {
 	YY_BUFFER_STATE b;
     m4_dnl M4_YY_DECL_GUTS_VAR();
@@ -2386,14 +2387,14 @@ m4_ifdef( [[M4_YY_NO_SCAN_BYTES]],,
 YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,yybytes, yy_size_t ,_yybytes_len)
 {
 	YY_BUFFER_STATE b;
-	char *buf;
+	YY_CHAR *buf;
 	yy_size_t n;
 	yy_size_t i;
     m4_dnl M4_YY_DECL_GUTS_VAR();
 
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = _yybytes_len + 2;
-	buf = (char *) yyalloc( n M4_YY_CALL_LAST_ARG );
+	buf = (YY_CHAR *) yyalloc( n*sizeof(YY_CHAR) M4_YY_CALL_LAST_ARG );
 	if ( ! buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
 
@@ -2621,7 +2622,7 @@ yy_size_t yyget_leng  YYFARGS0(void)
  */
 m4_ifdef( [[M4_YY_NO_GET_TEXT]],,
 [[
-char *yyget_text  YYFARGS0(void)
+YY_CHAR *yyget_text  YYFARGS0(void)
 {
     M4_YY_DECL_GUTS_VAR();
     return yytext;
@@ -2875,7 +2876,7 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
     YY_G(yy_buffer_stack) = 0;
     YY_G(yy_buffer_stack_top) = 0;
     YY_G(yy_buffer_stack_max) = 0;
-    YY_G(yy_c_buf_p) = (char *) 0;
+    YY_G(yy_c_buf_p) = (YY_CHAR *) 0;
     YY_G(yy_init) = 0;
     YY_G(yy_start) = 0;
 
@@ -2972,7 +2973,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #ifndef yytext_ptr
-static void yy_flex_strncpy YYFARGS3( char*,s1, yyconst char *,s2, int,n)
+static void yy_flex_strncpy YYFARGS3( YY_CHAR*,s1, yyconst YY_CHAR *,s2, int,n)
 {
 	int i;
 	for ( i = 0; i < n; ++i )

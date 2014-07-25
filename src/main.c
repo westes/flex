@@ -64,7 +64,7 @@ int     skel_ind = 0;
 char   *action_array;
 int     action_size, defs1_offset, prolog_offset, action_offset,
 	action_index;
-char   *infilename = NULL, *outfilename = NULL, *headerfilename = NULL;
+char   *infilename = NULL, *outfilename = NULL, *headerfilename = NULL, *headercharfilename = NULL;
 int     did_outfilename;
 char   *prefix, *yyclass, *extra_type = NULL;
 int     do_stdinit, use_stdout;
@@ -100,6 +100,7 @@ int     sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int     tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 int     num_backing_up, bol_needed;
 FILE   *backing_up_file;
+FILE   *char_header_file = NULL;
 int     end_of_buffer_state;
 char  **input_files;
 int     num_input_files;
@@ -368,6 +369,42 @@ void check_options ()
     filter_create_ext(output_chain, m4, "-P", 0);
     filter_create_int(output_chain, filter_fix_linedirs, NULL);
 
+    if(headerfilename && !headercharfilename) {
+        char *suffix = ".h";
+        char *basesuffix = "_char";
+        size_t suffix_len = strlen(suffix);
+        size_t basesuffix_len = strlen(basesuffix);
+
+        size_t headerfilename_len = strlen(headerfilename);
+
+        char *p = strstr(headerfilename, suffix);
+        if(p && headerfilename+headerfilename_len-suffix_len == p)
+            headerfilename_len -= suffix_len; /* cut out suffix */
+
+        headercharfilename = malloc(headerfilename_len+basesuffix_len+suffix_len+1);
+        p = headercharfilename;
+
+        strncpy(p, headerfilename, headerfilename_len);
+        p += headerfilename_len;
+
+        strncpy(p, basesuffix, basesuffix_len);
+        p += basesuffix_len;
+
+        strncpy(p, suffix, suffix_len);
+    }
+
+    /* Setup char header file */
+    if(headercharfilename) {
+        char_header_file = fopen(headercharfilename, "w");
+        fprintf(char_header_file, "#pragma once\n");
+        fprintf(char_header_file, "\n");
+        fflush(char_header_file);
+
+        buf_strappend(&userdef_buf, "#include \"");
+        buf_strappend(&userdef_buf, headercharfilename);
+        buf_strappend(&userdef_buf, "\"\n");
+    }
+
     /* For debugging, only run the requested number of filters. */
     if (preproc_level > 0) {
         filter_truncate(output_chain, preproc_level);
@@ -499,6 +536,10 @@ void flexend (exit_status)
 
 	if (++called_before)
 		FLEX_EXIT (exit_status);
+
+	if(char_header_file && fclose (char_header_file))
+			lerrsf (_("error closing char header file %s"),
+				headercharfilename);
 
 	if (skelfile != NULL) {
 		if (ferror (skelfile))
@@ -1461,6 +1502,9 @@ void readin ()
 	static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
 	static char yy_nostdinit[] =
 		"FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;";
+	static char character_type_uchar[] = "typedef unsigned char YY_CHAR;";
+	static char character_type_char[] = "typedef char YY_CHAR;";
+	static char character_defined[] = "#define YY_CHAR_DEFINED";
 
 	line_directive_out ((FILE *) 0, 1);
 
@@ -1590,10 +1634,22 @@ void readin ()
 		outn ("\n#define FLEX_DEBUG");
 
 	OUT_BEGIN_CODE ();
-	if (csize == 256)
-		outn ("typedef unsigned char YY_CHAR;");
-	else
-		outn ("typedef char YY_CHAR;");
+	outn("#ifndef YY_CHAR_DEFINED");
+	if (csize == 256) {
+		outn (character_type_uchar);
+		if(char_header_file)
+			fprintf(char_header_file, "%s\n", character_type_uchar);
+	} else {
+		outn (character_type_char);
+		if(char_header_file)
+			fprintf(char_header_file, "%s\n", character_type_char);
+	}
+	outn(character_defined);
+	outn("#endif");
+	if(char_header_file) {
+		fprintf(char_header_file, "%s\n", character_defined);
+		fflush(char_header_file);
+	}
 	OUT_END_CODE ();
 
 	if (C_plus_plus) {
@@ -1678,14 +1734,14 @@ void readin ()
 		 */
 		if (yytext_is_array) {
 			if (!reentrant)
-				outn ("extern char yytext[];\n");
+				outn ("extern YY_CHAR yytext[];\n");
 		}
 		else {
 			if (reentrant) {
 				outn ("#define yytext_ptr yytext_r");
 			}
 			else {
-				outn ("extern char *yytext;");
+				outn ("extern YY_CHAR *yytext;");
 				outn ("#define yytext_ptr yytext");
 			}
 		}

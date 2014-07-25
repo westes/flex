@@ -19,37 +19,17 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
+testname = test-tests_strutils
 
-FLEX = $(top_builddir)/flex
+OBJS = test_strutils.o
 
-builddir = @builddir@
-
-EXTRA_DIST = scanner.l parser.y test.input main.c
-CLEANFILES = scanner.c scanner.h parser.c parser.h $(testname)$(EXEEXT) $(OBJS) OUTPUT
-OBJS = scanner.o parser.o main.o
-
-AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_srcdir)/tests -I$(top_builddir) -I$(builddir)
-#LDFLAGS = $(top_srcdir)/libfl.a 
-YFLAGS = --defines --output=parser.c --name-prefix="test"
-
-testname = test-bison-yylloc
-
-scanner.c: $(srcdir)/scanner.l
-	$(FLEX) $<
-scanner.h: scanner.c
-scanner.o: parser.h
-
-parser.c: $(srcdir)/parser.y
-	$(BISON) $(YFLAGS) $<
-parser.h: parser.c
-
-main.o: scanner.h parser.h
+AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir)/tests
 
 $(testname)$(EXEEXT): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(OBJS) $(LOADLIBES)
 
 test: $(testname)$(EXEEXT)
-	./$(testname)$(EXEEXT) < $(srcdir)/test.input
+	./$(testname)$(EXEEXT)
 
 .c.o:
 	$(CC) -c -o $@ $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS) $<
