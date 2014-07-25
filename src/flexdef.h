@@ -904,13 +904,13 @@ extern void flexfatal PROTO ((const char *));
 extern int htoi PROTO ((Char[]));
 
 /* Report an error message formatted with one integer argument. */
-extern void lerrif PROTO ((const char *, int));
+extern void lerrif PROTO ((const char *, ...));
 
 /* Report an error message formatted with one string argument. */
-extern void lerrsf PROTO ((const char *, const char *));
+extern void lerrsf PROTO ((const char *, ...));
 
 /* Like lerrsf, but also exit after displaying message. */
-extern void lerrsf_fatal PROTO ((const char *, const char *));
+extern void lerrsf_fatal PROTO ((const char *, ...));
 
 /* Spit out a "#line" statement. */
 extern void line_directive_out PROTO ((FILE *, int));
