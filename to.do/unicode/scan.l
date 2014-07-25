@@ -434,7 +434,7 @@ LEXOPT		[aceknopr]
 			}
 
 	"{"{NAME}"}"	{
-			register Char *nmdefptr;
+			Char *nmdefptr;
 
 			strcpy( nmstr, yytext + 1 );
 			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */

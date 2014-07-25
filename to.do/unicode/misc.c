@@ -82,7 +82,7 @@ void *allocate_array( size, element_size )
 int size;
 size_t element_size;
 	{
-	register void *mem;
+	void *mem;
 	size_t num_bytes = element_size * size;
 
 	mem = flex_alloc( num_bytes );
@@ -97,7 +97,7 @@ size_t element_size;
 /* all_lower - true if a string is all lower-case */
 
 int all_lower( str )
-register char *str;
+char *str;
 	{
 	while ( *str )
 		{
@@ -113,7 +113,7 @@ register char *str;
 /* all_upper - true if a string is all upper-case */
 
 int all_upper( str )
-register char *str;
+char *str;
 	{
 	while ( *str )
 		{
@@ -144,7 +144,7 @@ register char *str;
 void bubble( v, n )
 int v[], n;
 	{
-	register int i, j, k;
+	int i, j, k;
 
 	for ( i = n; i > 1; --i )
 		for ( j = 1; j < i; ++j )
@@ -187,7 +187,7 @@ int c;
 /* clower - replace upper-case letter to lower-case */
 
 Char clower( c )
-register int c;
+int c;
 	{
 	return (Char) ((isascii( c ) && isupper( c )) ? tolower( c ) : c);
 	}
@@ -196,10 +196,10 @@ register int c;
 /* copy_string - returns a dynamically allocated copy of a string */
 
 char *copy_string( str )
-register const char *str;
+const char *str;
 	{
-	register const char *c1;
-	register char *c2;
+	const char *c1;
+	char *c2;
 	char *copy;
 	unsigned int size;
 
@@ -225,9 +225,9 @@ register const char *str;
  */
 
 Char *copy_unsigned_string( str )
-register Char *str;
+Char *str;
 	{
-	register Char *c;
+	Char *c;
 	Char *copy;
 
 	/* find length */
@@ -661,7 +661,7 @@ unsigned int x;
 void out_line_count( str )
 const char str[];
 	{
-	register int i;
+	int i;
 
 	for ( i = 0; str[i]; ++i )
 		if ( str[i] == '\n' )
@@ -719,7 +719,7 @@ const char str[];
  */
 
 char *readable_form( c )
-register int c;
+int c;
 	{
 	static char rform[10];
 
@@ -765,7 +765,7 @@ void *array;
 int size;
 size_t element_size;
 	{
-	register void *new_array;
+	void *new_array;
 	size_t num_bytes = element_size * size;
 
 	new_array = flex_realloc( array, num_bytes );
@@ -884,7 +884,7 @@ void zero_out( region_ptr, size_in_bytes )
 char *region_ptr;
 size_t size_in_bytes;
 	{
-	register char *rp, *rp_end;
+	char *rp, *rp_end;
 
 	rp = region_ptr;
 	rp_end = region_ptr + size_in_bytes;

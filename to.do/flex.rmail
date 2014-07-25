@@ -457,9 +457,9 @@ from ftp://ftp.ee.lbl.gov/.vp-flex-reentrant.tar.gz .
 > flex -t -Pcap_string_ cap_string.flex > cap_string.c
 > cc -Wall   -c -o cap_string.o cap_string.c
 > cap_string.flex:163: parse error before `{'
-> cap_string.flex:165: register name not specified for `yy_cp'
-> cap_string.flex:165: register name not specified for `yy_bp'
-> cap_string.flex:166: register name not specified for `yy_act'
+> cap_string.flex:165: name not specified for `yy_cp'
+> cap_string.flex:165: name not specified for `yy_bp'
+> cap_string.flex:166: name not specified for `yy_act'
 > cap_string.flex:39: parse error before `if'
 > ...
 

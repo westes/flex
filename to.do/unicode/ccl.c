@@ -120,7 +120,7 @@ void list_character_set( file, cset )
 FILE *file;
 int cset[];
 	{
-	register int i;
+	int i;
 
 	putc( '[', file );
 
@@ -128,7 +128,7 @@ int cset[];
 		{
 		if ( cset[i] )
 			{
-			register int start_char = i;
+			int start_char = i;
 
 			putc( ' ', file );
 

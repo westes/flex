@@ -323,7 +323,7 @@ GEN.C 632: (gen_NUL_trans(): I have rewritten 'yy_try_NUL_trans()'. The new
 
     if ( need_backtracking )
 	/ * we'll need yy_cp lying around for the gen_backtracking() * /
-	indent_puts( "register YY_CHAR *yy_cp = yy_c_buf_p;" ); */
+	indent_puts( "YY_CHAR *yy_cp = yy_c_buf_p;" ); */
 
     GEN.C, line 674ff:
 /*	if ( reject )
@@ -458,7 +458,7 @@ GEN.C 1317: (make_tables(): In the generation of 'yy_get_previous_state()' the
     yymore-prefix instead of the current run.)
 
     if ( bol_needed )
-	indent_puts( "register YY_CHAR *yy_bp = yytext + YY_MORE_ADJ;\n" );
+	indent_puts( "YY_CHAR *yy_bp = yytext + YY_MORE_ADJ;\n" );
 
 FLEX.SKEL 589ff: (yyunput(): The function 'yyunput()' should be rewritten.
     First of all the example for 'unput()' in file flexdoc doesn't work:
@@ -492,7 +492,7 @@ FLEX.SKEL 589ff: (yyunput(): The function 'yyunput()' should be rewritten.
 
     Remark: The parameter 'yytext' in " yyunput( c, yytext ) " is not really
     necessary since 'yytext' is a global variable. You could also set
-    " register YY_CHAR *yy_bp = yytext; " at the beginning of 'yyunput()'.)
+    " YY_CHAR *yy_bp = yytext; " at the beginning of 'yyunput()'.)
 
     Replace lines 622 - 623 in FLEX.SKEL:
 
