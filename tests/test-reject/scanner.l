@@ -48,6 +48,8 @@ int main ( int argc, char** argv )
 
 #ifdef TEST_IS_REENTRANT
     yylex_init(&yyscanner);
+#else
+    (void)yyscanner;
 #endif
 
 #ifdef TEST_HAS_TABLES_EXTERNAL
