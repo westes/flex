@@ -364,7 +364,6 @@ int filter_fix_linedirs (struct filter *chain)
 			char   *fname;
 
 			/* extract the line number and filename */
-			(void)regmatch_strtol (&m[1], buf, NULL, 0);
 			fname = regmatch_dup (&m[2], buf);
 
 			if (strcmp (fname,
