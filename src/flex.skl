@@ -3078,7 +3078,7 @@ static int yytbl_read32 (void *v, struct yytbl_reader * rd)
 /** Read the header */
 static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *, rd)
 {
-    int     bytes;
+    size_t  bytes;
     memset (th, 0, sizeof (struct yytbl_hdr));
 
     if (yytbl_read32 (&(th->th_magic), rd) != 0)
@@ -3131,7 +3131,7 @@ static struct yytbl_dmap *yytbl_dmap_lookup YYFARGS2(struct yytbl_dmap *, dmap,
 	M4_YY_NOOP_GUTS_VAR();
 
     while (dmap->dm_id)
-        if (dmap->dm_id == id)
+        if ((int)(dmap->dm_id) == id)
             return dmap;
         else
             dmap++;
