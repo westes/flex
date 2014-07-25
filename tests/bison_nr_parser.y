@@ -30,8 +30,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
-#include "parser.h"
-#include "scanner.h"
+#include "bison_nr_parser.h"
+#include "bison_nr_scanner.h"
 
 #define YYERROR_VERBOSE 1
 /* #define YYPARSE_PARAM scanner */

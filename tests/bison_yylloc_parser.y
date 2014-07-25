@@ -33,8 +33,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
-#include "parser.h"
-#include "scanner.h"
+#include "bison_yylloc_parser.h"
+#include "bison_yylloc_scanner.h"
 
 int yyerror(YYLTYPE *location, void* scanner, const char* msg);
 
