@@ -46,7 +46,7 @@ static int STRCASECMP (a, b)
      const char *a;
      const char *b;
 {
-	while (tolower (*a++) == tolower (*b++)) ;
+	while (tolower ((unsigned char)*a++) == tolower ((unsigned char)*b++)) ;
 	return b - a;
 }
 #endif
@@ -212,7 +212,7 @@ scanopt_t *scanopt_init (options, argc, argv, flags)
 		aux->namelen = 0;
 		for (p = pname + 1; *p; p++) {
 			/* detect required arg */
-			if (*p == '=' || isspace (*p)
+			if (*p == '=' || isspace ((unsigned char)*p)
 			    || !(aux->flags & IS_LONG)) {
 				if (aux->namelen == 0)
 					aux->namelen = p - pname;
@@ -481,7 +481,7 @@ int     scanopt_usage (scanner, fp, usage)
 
 					while (*p && n < maxlen[1]
 					       && *p != '\n') {
-						if (isspace ((Char)(*p))
+						if (isspace ((unsigned char)(*p))
 						    || *p == '-') lastws =
 								p;
 						n++;
@@ -537,10 +537,6 @@ static int scanopt_err (s, opt_offset, is_short, err)
 {
 	const char *optname = "";
 	char    optchar[2];
-	const optspec_t *opt = NULL;
-
-	if (opt_offset >= 0)
-		opt = s->options + opt_offset;
 
 	if (!s->no_err_msg) {
 

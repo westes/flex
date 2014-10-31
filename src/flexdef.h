@@ -40,7 +40,7 @@
 #endif
 
 /* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
+#if !defined(__GNUC__) && !defined(__lint__)
 # if HAVE_ALLOCA_H
 #  include <alloca.h>
 # else
@@ -903,14 +903,19 @@ extern void flexfatal PROTO ((const char *));
 /* Convert a hexadecimal digit string to an integer value. */
 extern int htoi PROTO ((Char[]));
 
-/* Report an error message formatted with one integer argument. */
-extern void lerrif PROTO ((const char *, ...));
+/* Report an error message formatted  */
+extern void lerr PROTO ((const char *, ...))
+#if defined(__GNUC__) && __GNUC__ >= 3
+    __attribute__((__format__(__printf__, 1, 2)))
+#endif
+;
 
-/* Report an error message formatted with one string argument. */
-extern void lerrsf PROTO ((const char *, ...));
-
-/* Like lerrsf, but also exit after displaying message. */
-extern void lerrsf_fatal PROTO ((const char *, ...));
+/* Like lerr, but also exit after displaying message. */
+extern void lerr_fatal PROTO ((const char *, ...))
+#if defined(__GNUC__) && __GNUC__ >= 3
+    __attribute__((__format__(__printf__, 1, 2)))
+#endif
+;
 
 /* Spit out a "#line" statement. */
 extern void line_directive_out PROTO ((FILE *, int));

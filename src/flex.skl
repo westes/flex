@@ -755,6 +755,9 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 static yy_state_type yy_get_previous_state M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 static yy_state_type yy_try_NUL_trans M4_YY_PARAMS( yy_state_type current_state  M4_YY_PROTO_LAST_ARG);
 static int yy_get_next_buffer M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
+#if defined(__GNUC__) && __GNUC__ >= 3
+__attribute__((__noreturn__))
+#endif
 static void yy_fatal_error M4_YY_PARAMS( yyconst char msg[] M4_YY_PROTO_LAST_ARG );
 ]])
 
@@ -951,7 +954,7 @@ FILE *yyget_in M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 
 m4_ifdef( [[M4_YY_NO_SET_IN]],,
 [[
-void yyset_in  M4_YY_PARAMS( FILE * in_str M4_YY_PROTO_LAST_ARG );
+void yyset_in  M4_YY_PARAMS( FILE * _in_str M4_YY_PROTO_LAST_ARG );
 ]])
 
 m4_ifdef( [[M4_YY_NO_GET_OUT]],,
@@ -961,7 +964,7 @@ FILE *yyget_out M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 
 m4_ifdef( [[M4_YY_NO_SET_OUT]],,
 [[
-void yyset_out  M4_YY_PARAMS( FILE * out_str M4_YY_PROTO_LAST_ARG );
+void yyset_out  M4_YY_PARAMS( FILE * _out_str M4_YY_PROTO_LAST_ARG );
 ]])
 
 m4_ifdef( [[M4_YY_NO_GET_LENG]],,
@@ -981,7 +984,7 @@ int yyget_lineno M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 
 m4_ifdef( [[M4_YY_NO_SET_LINENO]],,
 [[
-void yyset_lineno M4_YY_PARAMS( int line_number M4_YY_PROTO_LAST_ARG );
+void yyset_lineno M4_YY_PARAMS( int _line_number M4_YY_PROTO_LAST_ARG );
 ]])
 
 m4_ifdef( [[M4_YY_REENTRANT]],
@@ -996,7 +999,7 @@ m4_ifdef( [[M4_YY_REENTRANT]],
 [[
 m4_ifdef( [[M4_YY_NO_SET_COLUMN]],,
 [[
-void yyset_column M4_YY_PARAMS( int column_no M4_YY_PROTO_LAST_ARG );
+void yyset_column M4_YY_PARAMS( int _column_no M4_YY_PROTO_LAST_ARG );
 ]])
 ]])
 
@@ -1035,10 +1038,12 @@ extern int yywrap M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 #endif
 
 %not-for-header
+#ifndef YY_NO_UNPUT
     m4_ifdef( [[M4_YY_NO_UNPUT]],,
     [[
     static void yyunput M4_YY_PARAMS( int c, char *buf_ptr  M4_YY_PROTO_LAST_ARG);
     ]])
+#endif
 %ok-for-header
 %endif
 
@@ -1082,7 +1087,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
     m4_ifdef( [[M4_YY_NO_PUSH_STATE]],,
     [[
-    static void yy_push_state M4_YY_PARAMS( int new_state M4_YY_PROTO_LAST_ARG);
+    static void yy_push_state M4_YY_PARAMS( int _new_state M4_YY_PROTO_LAST_ARG);
     ]])
     m4_ifdef( [[M4_YY_NO_POP_STATE]],,
     [[
@@ -1138,7 +1143,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 %% [5.0] fread()/read() definition of YY_INPUT goes here unless we're doing C++ \
 \
 %if-c++-only C++ definition \
-	if ( (result = LexerInput( (char *) buf, max_size )) < 0 ) \
+	if ( (int)(result = LexerInput( (char *) buf, max_size )) < 0 ) \
 		YY_FATAL_ERROR( "input in flex scanner failed" );
 %endif
 
@@ -1267,7 +1272,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Code executed at the end of each rule. */
 #ifndef YY_BREAK
-#define YY_BREAK break;
+#define YY_BREAK /*LINTED*/break;
 #endif
 ]])
 
@@ -1356,7 +1361,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 	{
 %% [7.0] user's declarations go here
 
-	while ( 1 )		/* loops until end-of-file is reached */
+	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
 %% [8.0] yymore()-related code goes here
 		yy_cp = YY_G(yy_c_buf_p);
@@ -1635,7 +1640,7 @@ int yyFlexLexer::yy_get_next_buffer()
     M4_YY_DECL_GUTS_VAR();
 	char *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
 	char *source = YY_G(yytext_ptr);
-	int number_to_move, i;
+	yy_size_t number_to_move, i;
 	int ret_val;
 
 	if ( YY_G(yy_c_buf_p) > &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[YY_G(yy_n_chars) + 1] )
@@ -1664,7 +1669,7 @@ int yyFlexLexer::yy_get_next_buffer()
 	/* Try to read more data. */
 
 	/* First move last chars to start of buffer. */
-	number_to_move = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr)) - 1;
+	number_to_move = (yy_size_t) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr)) - 1;
 
 	for ( i = 0; i < number_to_move; ++i )
 		*(dest++) = *(source++);
@@ -1817,6 +1822,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 }
 
 
+#ifndef YY_NO_UNPUT
 %if-c-only
 m4_ifdef( [[M4_YY_NO_UNPUT]],,
 [[
@@ -1872,6 +1878,7 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
 %if-c-only
 ]])
 %endif
+#endif
 
 %if-c-only
 #ifndef YY_NO_INPUT
@@ -2057,7 +2064,7 @@ static void yy_load_buffer_state  YYFARGS0(void)
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 
-	b->yy_buf_size = size;
+	b->yy_buf_size = (yy_size_t)size;
 
 	/* yy_ch_buf has to be 2 characters longer than the size given because
 	 * we need to put in 2 end-of-buffer characters.
@@ -2290,7 +2297,7 @@ void yyFlexLexer::yyensure_buffer_stack(void)
 	if (YY_G(yy_buffer_stack_top) >= (YY_G(yy_buffer_stack_max)) - 1){
 
 		/* Increase the buffer to prepare for a possible push. */
-		int grow_size = 8 /* arbitrary grow size */;
+		yy_size_t grow_size = 8 /* arbitrary grow size */;
 
 		num_to_alloc = YY_G(yy_buffer_stack_max) + grow_size;
 		YY_G(yy_buffer_stack) = (struct yy_buffer_state**)yyrealloc
@@ -2420,10 +2427,10 @@ YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,yybytes, yy_size_t ,_yyb
 m4_ifdef( [[M4_YY_NO_PUSH_STATE]],,
 [[
 %if-c-only
-    static void yy_push_state YYFARGS1( int ,new_state)
+    static void yy_push_state YYFARGS1( int ,_new_state)
 %endif
 %if-c++-only
-    void yyFlexLexer::yy_push_state( int new_state )
+    void yyFlexLexer::yy_push_state( int _new_state )
 %endif
 {
     M4_YY_DECL_GUTS_VAR();
@@ -2447,7 +2454,7 @@ m4_ifdef( [[M4_YY_NO_PUSH_STATE]],,
 
 	YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr)++] = YY_START;
 
-	BEGIN(new_state);
+	BEGIN(_new_state);
 }
 ]])
 
@@ -2646,10 +2653,10 @@ void yyset_extra YYFARGS1( YY_EXTRA_TYPE ,user_defined)
 m4_ifdef( [[M4_YY_NO_SET_LINENO]],,
 [[
 /** Set the current line number.
- * @param line_number line number
+ * @param _line_number line number
  * M4_YY_DOC_PARAM
  */
-void yyset_lineno YYFARGS1( int ,line_number)
+void yyset_lineno YYFARGS1( int ,_line_number)
 {
     M4_YY_DECL_GUTS_VAR();
 
@@ -2659,7 +2666,7 @@ void yyset_lineno YYFARGS1( int ,line_number)
         if (! YY_CURRENT_BUFFER )
            YY_FATAL_ERROR( "yyset_lineno called with no buffer" );
     ]])
-    yylineno = line_number;
+    yylineno = _line_number;
 }
 ]])
 
@@ -2668,10 +2675,10 @@ m4_ifdef( [[M4_YY_REENTRANT]],
 m4_ifdef( [[M4_YY_NO_SET_COLUMN]],,
 [[
 /** Set the current column.
- * @param column_no column number
+ * @param _column_no column number
  * M4_YY_DOC_PARAM
  */
-void yyset_column YYFARGS1( int , column_no)
+void yyset_column YYFARGS1( int , _column_no)
 {
     M4_YY_DECL_GUTS_VAR();
 
@@ -2681,7 +2688,7 @@ void yyset_column YYFARGS1( int , column_no)
         if (! YY_CURRENT_BUFFER )
            YY_FATAL_ERROR( "yyset_column called with no buffer" );
     ]])
-    yycolumn = column_no;
+    yycolumn = _column_no;
 }
 ]])
 ]])
@@ -2691,23 +2698,23 @@ m4_ifdef( [[M4_YY_NO_SET_IN]],,
 [[
 /** Set the input stream. This does not discard the current
  * input buffer.
- * @param in_str A readable stream.
+ * @param _in_str A readable stream.
  * M4_YY_DOC_PARAM
  * @see yy_switch_to_buffer
  */
-void yyset_in YYFARGS1( FILE * ,in_str)
+void yyset_in YYFARGS1( FILE * ,_in_str)
 {
     M4_YY_DECL_GUTS_VAR();
-    yyin = in_str ;
+    yyin = _in_str ;
 }
 ]])
 
 m4_ifdef( [[M4_YY_NO_SET_OUT]],,
 [[
-void yyset_out YYFARGS1( FILE * ,out_str)
+void yyset_out YYFARGS1( FILE * ,_out_str)
 {
     M4_YY_DECL_GUTS_VAR();
-    yyout = out_str ;
+    yyout = _out_str ;
 }
 ]])
 
@@ -2723,10 +2730,10 @@ int yyget_debug  YYFARGS0(void)
 
 m4_ifdef( [[M4_YY_NO_SET_DEBUG]],,
 [[
-void yyset_debug YYFARGS1( int ,bdebug)
+void yyset_debug YYFARGS1( int ,_bdebug)
 {
     M4_YY_DECL_GUTS_VAR();
-    yy_flex_debug = bdebug ;
+    yy_flex_debug = _bdebug ;
 }
 ]])
 %endif

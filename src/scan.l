@@ -993,7 +993,7 @@ char *file;
 		yyin = fopen( infilename, "r" );
 
 		if ( yyin == NULL )
-			lerrsf( _( "can't open %s" ), file );
+			lerr( _( "can't open %s" ), file );
 		}
 
 	else

@@ -135,9 +135,6 @@ struct filter *filter_create_int (struct filter *chain,
 bool filter_apply_chain (struct filter * chain)
 {
 	int     pid, pipes[2];
-	int     r;
-	const int readsz = 512;
-	char   *buf;
 
 
 	/* Tricky recursion, since we want to begin the chain
@@ -189,7 +186,7 @@ clearerr(stdin);
 		else {
 			execvp (chain->argv[0],
 				(char **const) (chain->argv));
-            lerrsf_fatal ( _("exec of %s failed"),
+            lerr_fatal ( _("exec of %s failed"),
                     chain->argv[0]);
 		}
 
@@ -312,21 +309,21 @@ int filter_tee_header (struct filter *chain)
 
 		fflush (to_h);
 		if (ferror (to_h))
-			lerrsf (_("error writing output file %s"),
+			lerr (_("error writing output file %s"),
 				(char *) chain->extra);
 
 		else if (fclose (to_h))
-			lerrsf (_("error closing output file %s"),
+			lerr (_("error closing output file %s"),
 				(char *) chain->extra);
 	}
 
 	fflush (to_c);
 	if (ferror (to_c))
-		lerrsf (_("error writing output file %s"),
+		lerr (_("error writing output file %s"),
 			outfilename ? outfilename : "<stdout>");
 
 	else if (fclose (to_c))
-		lerrsf (_("error closing output file %s"),
+		lerr (_("error closing output file %s"),
 			outfilename ? outfilename : "<stdout>");
 
 	while (wait (0) > 0) ;
@@ -364,11 +361,10 @@ int filter_fix_linedirs (struct filter *chain)
 		if (buf[0] == '#'
 			&& regexec (&regex_linedir, buf, 3, m, 0) == 0) {
 
-			int     num;
 			char   *fname;
 
 			/* extract the line number and filename */
-			num = regmatch_strtol (&m[1], buf, NULL, 0);
+			(void)regmatch_strtol (&m[1], buf, NULL, 0);
 			fname = regmatch_dup (&m[2], buf);
 
 			if (strcmp (fname,
@@ -431,11 +427,11 @@ int filter_fix_linedirs (struct filter *chain)
 	}
 	fflush (stdout);
 	if (ferror (stdout))
-		lerrsf (_("error writing output file %s"),
+		lerr (_("error writing output file %s"),
 			outfilename ? outfilename : "<stdout>");
 
 	else if (fclose (stdout))
-		lerrsf (_("error closing output file %s"),
+		lerr (_("error closing output file %s"),
 			outfilename ? outfilename : "<stdout>");
 
 	return 0;

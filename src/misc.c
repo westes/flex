@@ -113,11 +113,12 @@ void action_define (defname, value)
 }
 
 
+#ifdef notdef
 /** Append "m4_define([[defname]],[[value]])m4_dnl\n" to the running buffer.
  *  @param defname The macro name.
  *  @param value The macro value, can be NULL, which is the same as the empty string.
  */
-void action_m4_define (const char *defname, const char * value)
+static void action_m4_define (const char *defname, const char * value)
 {
 	char    buf[MAXLINE];
 
@@ -133,6 +134,7 @@ void action_m4_define (const char *defname, const char * value)
 	snprintf (buf, sizeof(buf), "m4_define([[%s]],[[%s]])m4_dnl\n", defname, value?value:"");
 	add_action (buf);
 }
+#endif
 
 /* Append "new_text" to the running buffer. */
 void add_action (new_text)
@@ -227,11 +229,11 @@ void check_char (c)
      int c;
 {
 	if (c >= CSIZE)
-		lerrsf (_("bad character '%s' detected in check_char()"),
+		lerr (_("bad character '%s' detected in check_char()"),
 			readable_form (c));
 
 	if (c >= csize)
-		lerrsf (_
+		lerr (_
 			("scanner requires -8 flag to use the character %s"),
 			readable_form (c));
 }
@@ -383,9 +385,9 @@ int htoi (str)
 }
 
 
-/* lerrif - report an error message formatted with one integer argument */
+/* lerr - report an error message */
 
-void lerrif (const char *msg, ...) {
+void lerr (const char *msg, ...) {
 	char    errmsg[MAXLINE];
 	va_list args;
 
@@ -396,32 +398,16 @@ void lerrif (const char *msg, ...) {
 }
 
 
-/* lerrsf - report an error message formatted with one string argument */
+/* lerr_fatal - as lerr, but call flexfatal */
 
-void lerrsf (const char *msg, ...)
-{
-	char    errmsg[MAXLINE];
-	va_list args;
-
-	va_start(args, msg);
-	vsnprintf (errmsg, sizeof(errmsg)-1, msg, args);
-	va_end(args);
-	errmsg[sizeof(errmsg)-1] = 0; /* ensure NULL termination */
-	flexerror (errmsg);
-}
-
-
-/* lerrsf_fatal - as lerrsf, but call flexfatal */
-
-void lerrsf_fatal (const char *msg, ...)
+void lerr_fatal (const char *msg, ...)
 {
 	char    errmsg[MAXLINE];
 	va_list args;
 	va_start(args, msg);
 
-	vsnprintf (errmsg, sizeof(errmsg)-1, msg, args);
+	vsnprintf (errmsg, sizeof(errmsg), msg, args);
 	va_end(args);
-	errmsg[sizeof(errmsg)-1] = 0; /* ensure NULL termination */
 	flexfatal (errmsg);
 }
 

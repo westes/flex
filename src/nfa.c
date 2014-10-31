@@ -605,7 +605,7 @@ int     mkstate (sym)
 {
 	if (++lastnfa >= current_mns) {
 		if ((current_mns += MNS_INCREMENT) >= maximum_mns)
-			lerrif (_
+			lerr(_
 				("input rules are too complicated (>= %d NFA states)"),
 current_mns);
 
@@ -711,7 +711,7 @@ void    new_rule ()
 	}
 
 	if (num_rules > MAX_RULE)
-		lerrif (_("too many rules (> %d)!"), MAX_RULE);
+		lerr (_("too many rules (> %d)!"), MAX_RULE);
 
 	rule_linenum[num_rules] = linenum;
 	rule_useful[num_rules] = false;

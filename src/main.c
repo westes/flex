@@ -118,13 +118,13 @@ struct yytbl_writer tableswr;
 char   *program_name = "flex";
 
 #ifndef SHORT_FILE_NAMES
-static char *outfile_template = "lex.%s.%s";
-static char *backing_name = "lex.backup";
-static char *tablesfile_template = "lex.%s.tables";
+static const char outfile_template[] = "lex.%s.%s";
+static const char backing_name[] = "lex.backup";
+static const char tablesfile_template[] = "lex.%s.tables";
 #else
-static char *outfile_template = "lex%s.%s";
-static char *backing_name = "lex.bck";
-static char *tablesfile_template = "lex%s.tbl";
+static const char outfile_template[] = "lex%s.%s";
+static const char backing_name[] = "lex.bck";
+static const char tablesfile_template[] = "lex%s.tbl";
 #endif
 
 #ifdef MS_DOS
@@ -355,7 +355,7 @@ void check_options ()
 		prev_stdout = freopen (outfilename, "w+", stdout);
 
 		if (prev_stdout == NULL)
-			lerrsf (_("could not create %s"), outfilename);
+			lerr (_("could not create %s"), outfilename);
 
 		outfile_created = 1;
 	}
@@ -401,7 +401,7 @@ void check_options ()
 		}
 
 		if ((tablesout = fopen (tablesfilename, "w")) == NULL)
-			lerrsf (_("could not create %s"), tablesfilename);
+			lerr (_("could not create %s"), tablesfilename);
 		if (pname)
 			free (pname);
 		tablesfilename = 0;
@@ -418,7 +418,7 @@ void check_options ()
 	}
 
 	if (skelname && (skelfile = fopen (skelname, "r")) == NULL)
-		lerrsf (_("can't open skeleton file %s"), skelname);
+		lerr (_("can't open skeleton file %s"), skelname);
 
 	if (reentrant) {
         buf_m4_define (&m4defs_buf, "M4_YY_REENTRANT", NULL);
@@ -502,11 +502,11 @@ void flexend (exit_status)
 
 	if (skelfile != NULL) {
 		if (ferror (skelfile))
-			lerrsf (_("input error reading skeleton file %s"),
+			lerr (_("input error reading skeleton file %s"),
 				skelname);
 
 		else if (fclose (skelfile))
-			lerrsf (_("error closing skeleton file %s"),
+			lerr (_("error closing skeleton file %s"),
 				skelname);
 	}
 
@@ -691,7 +691,7 @@ void flexend (exit_status)
 		fprintf (header_out, "#endif /* %sHEADER_H */\n", prefix);
 
 		if (ferror (header_out))
-			lerrsf (_("error creating header file %s"),
+			lerr (_("error creating header file %s"),
 				headerfilename);
 		fflush (header_out);
 		fclose (header_out);
@@ -699,15 +699,15 @@ void flexend (exit_status)
 
 	if (exit_status != 0 && outfile_created) {
 		if (ferror (stdout))
-			lerrsf (_("error writing output file %s"),
+			lerr (_("error writing output file %s"),
 				outfilename);
 
 		else if ((_stdout_closed = 1) && fclose (stdout))
-			lerrsf (_("error closing output file %s"),
+			lerr (_("error closing output file %s"),
 				outfilename);
 
 		else if (unlink (outfilename))
-			lerrsf (_("error deleting output file %s"),
+			lerr (_("error deleting output file %s"),
 				outfilename);
 	}
 
@@ -725,11 +725,11 @@ void flexend (exit_status)
 				 _("Compressed tables always back up.\n"));
 
 		if (ferror (backing_up_file))
-			lerrsf (_("error writing backup file %s"),
+			lerr (_("error writing backup file %s"),
 				backing_name);
 
 		else if (fclose (backing_up_file))
-			lerrsf (_("error closing backup file %s"),
+			lerr (_("error closing backup file %s"),
 				backing_name);
 	}
 
@@ -1059,9 +1059,9 @@ void flexinit (argc, argv)
 					break;
 
 				default:
-					lerrif (_
+					lerr (_
 						("unknown -C option '%c'"),
-						(int) arg[i]);
+						arg[i]);
 					break;
 				}
 			break;
@@ -1496,7 +1496,7 @@ void readin ()
 	if (backing_up_report) {
 		backing_up_file = fopen (backing_name, "w");
 		if (backing_up_file == NULL)
-			lerrsf (_
+			lerr (_
 				("could not create backing-up info file %s"),
 				backing_name);
 	}
@@ -1579,9 +1579,9 @@ void readin ()
 	if (!do_yywrap) {
 		if (!C_plus_plus) {
 			 if (reentrant)
-				outn ("\n#define yywrap(yyscanner) 1");
+				outn ("\n#define yywrap(yyscanner) (/*CONSTCOND*/1)");
 			 else
-				outn ("\n#define yywrap() 1");
+				outn ("\n#define yywrap() (/*CONSTCOND*/1)");
 		}
 		outn ("#define YY_SKIP_YYWRAP");
 	}
