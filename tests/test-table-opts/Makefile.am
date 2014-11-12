@@ -28,7 +28,7 @@
 # 'test-mul' checks that we can store multiple tables in a single file.
 # ------------------------------------------------
 
-FLEX = $(top_builddir)/flex
+FLEX = $(top_builddir)/src/flex
 
 testname  := test-table-opts
 allopts   := -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem
@@ -64,7 +64,7 @@ alltables  := $(addsuffix .tables,$(alltests))
 EXTRA_DIST = scanner.l test.input
 CLEANFILES = scanner.c OUTPUT $(allobj) $(allsrc) $(alltables) \
              all-ser.tables $(allexe)
-AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
+AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir)/src -I$(top_builddir)
 
 test: test-opt test-ser test-ver test-mul
 

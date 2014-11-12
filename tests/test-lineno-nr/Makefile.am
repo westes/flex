@@ -20,13 +20,13 @@
 # PURPOSE.
 
 
-FLEX = $(top_builddir)/flex
+FLEX = $(top_builddir)/src/flex
 
 EXTRA_DIST = scanner.l test.input
 CLEANFILES = scanner.c $(testname)$(EXEEXT) OUTPUT $(OBJS)
 OBJS = scanner.o
 
-AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)
+AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir)/src -I$(top_builddir)
 
 testname = test-lineno-nr
 

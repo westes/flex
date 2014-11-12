@@ -19,7 +19,7 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
-FLEX = $(top_builddir)/flex
+FLEX = $(top_builddir)/src/flex
 
 builddir = @builddir@
 
@@ -27,7 +27,7 @@ EXTRA_DIST = scanner.l parser.y test.input
 CLEANFILES = scanner.c scanner.h parser.c parser.h $(testname)$(EXEEXT) OUTPUT $(OBJS)
 OBJS = scanner.o # parser.o
 
-AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir) -I$(top_builddir)
+AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir)/src -I$(top_builddir)
 #LDFLAGS = $(top_srcdir)/libfl.a 
 #LFLAGS = --header="scanner.h"
 #YFLAGS = --defines --output=parser.c
