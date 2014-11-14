@@ -26,14 +26,15 @@
 
 AC_INIT([the fast lexical analyser generator], [2.6.0-pre],
 [flex-help@lists.sourceforge.net], [flex])
-LT_INIT
-SHARED_VERSION_INFO="2:0:0"
-AC_SUBST(SHARED_VERSION_INFO)
 AC_CONFIG_SRCDIR([src/scan.l])
+AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([gnu check-news std-options dist-bzip2 dist-xz parallel-tests 1.14.1])
 AC_CONFIG_HEADER([src/config.h])
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_MACRO_DIR([m4])
+LT_INIT
+SHARED_VERSION_INFO="2:0:0"
+AC_SUBST(SHARED_VERSION_INFO)
 
 # checks for programs
 
