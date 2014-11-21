@@ -65,7 +65,7 @@ static flex_int32_t yytbl_data_getijk (const struct yytbl_data *tbl, int i,
 
 /** Initialize the table writer.
  *  @param wr an uninitialized writer
- *  @param the output file
+ *  @param out the output file
  *  @return 0 on success
  */
 int yytbl_writer_init (struct yytbl_writer *wr, FILE * out)
@@ -96,7 +96,7 @@ int yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
 }
 
 /** Allocate and initialize a table data structure.
- *  @param tbl a pointer to an uninitialized table
+ *  @param td a pointer to an uninitialized table
  *  @param id  the table identifier
  *  @return 0 on success
  */
@@ -137,7 +137,7 @@ static int yytbl_write_pad64 (struct yytbl_writer *wr)
 }
 
 /** write the header.
- *  @param out the output stream
+ *  @param wr the output stream
  *  @param th table header to be written
  *  @return -1 on error, or bytes written on success.
  */
@@ -183,7 +183,7 @@ int yytbl_hdr_fwrite (struct yytbl_writer *wr, const struct yytbl_hdr *th)
 
 
 /** Write this table.
- *  @param out the file writer
+ *  @param wr the file writer
  *  @param td table data to be written
  *  @return -1 on error, or bytes written on success.
  */
