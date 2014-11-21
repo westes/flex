@@ -721,7 +721,6 @@ void outn (str)
 /** Print "m4_define( [[def]], [[val]])m4_dnl\n".
  * @param def The m4 symbol to define.
  * @param val The definition; may be NULL.
- * @return buf
  */
 void out_m4_define (const char* def, const char* val)
 {

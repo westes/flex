@@ -52,7 +52,7 @@ dnl
 
 /** Get the number of integers in this table. This is NOT the
  *  same thing as the number of elements.
- *  @param td the table 
+ *  @param tbl the table
  *  @return the number of integers in the table
  */
 yyskel_static flex_int32_t yytbl_calc_total_len (const struct yytbl_data *tbl)

@@ -113,7 +113,6 @@ char   *regmatch_cpy (regmatch_t * m, char *dest, const char *src)
 
 /** Get the length in characters of the match.
  * @param m A match as returned by regexec().
- * @param src The source string that was passed to regexec().
  * @return The length of the match.
  */
 int regmatch_len (regmatch_t * m)
