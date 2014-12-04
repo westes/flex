@@ -31,7 +31,8 @@ flex_SOURCES = \
 	tables.c \
 	tables_shared.c \
 	filter.c \
-	regex.c
+	regex.c \
+	emit_myclass.c
 
 LDADD = ../lib/libcompat.la
 

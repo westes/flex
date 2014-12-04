@@ -32,6 +32,7 @@
 /*  PURPOSE. */
 
 
+#include "emit_myclass.h"
 #include "flexdef.h"
 #include "version.h"
 #include "options.h"
@@ -1660,6 +1661,7 @@ void readin ()
 		}
 
 		if (yyclass) {
+     		        emit_myclass(yyclass);
 			outn ("int yyFlexLexer::yylex()");
 			outn ("\t{");
 			outn ("\tLexerError( \"yyFlexLexer::yylex invoked but %option yyclass used\" );");
