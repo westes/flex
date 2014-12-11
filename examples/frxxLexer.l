@@ -3,7 +3,6 @@
 %option noyywrap
 
 %{
-#include "myclass.yy.h"
 int mylineno = 0;
 %}
 

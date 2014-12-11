@@ -1655,6 +1655,9 @@ void readin ()
 
 	if (C_plus_plus) {
 		outn ("\n#include <FlexLexer.h>");
+		if (yyclass) {
+		  out_str("\n#include \"%s.yy.h\"", yyclass);
+		}
 
  		if (!do_yywrap) {
 			outn("\nint yyFlexLexer::yywrap() { return 1; }");
