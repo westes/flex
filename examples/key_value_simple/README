@@ -1,0 +1,14 @@
+A quick demo of the modifications I've made to the C++ scanner. This is
+just a simple key/value scanner. The format is key = value. Comments
+can be added on separate lines or at the end of lines with #. Values
+can be quoted. Hashmarks appearing within quoted strings will be part
+of the string and not counted as a comment.
+
+I generated frkv.yy.h with "flex --c++ --yyclass=frkv -o frkv.yy.cc frkv.l"
+and then added the boost signals and key boolean value to to the class.
+Note that rerunning flex once this file exists will NOT overwrite your
+customized header file. It will regenerate the .yy.cc file, though.
+
+Once I got done modifying the header, compile with g++ -c frkv.yy.c,
+g++ -c main.c, g++ -o frkv main.o frkv.yy.o. Test with cat test.txt | ./frkv
+
