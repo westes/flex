@@ -147,9 +147,7 @@ static int preproc_level = 1000;
 int flex_main PROTO ((int argc, char *argv[]));
 int main PROTO ((int argc, char *argv[]));
 
-int flex_main (argc, argv)
-     int argc;
-     char   *argv[];
+int flex_main (int argc, char *argv[])
 {
 	int     i, exit_status, child_status;
 
@@ -209,9 +207,7 @@ int flex_main (argc, argv)
 }
 
 /* Wrapper around flex_main, so flex_main can be built as a library. */
-int main (argc, argv)
-     int argc;
-     char   *argv[];
+int main (int argc, char *argv[])
 {
 #if ENABLE_NLS
 #if HAVE_LOCALE_H
@@ -227,7 +223,7 @@ int main (argc, argv)
 
 /* check_options - check user-specified options */
 
-void check_options ()
+void check_options (void)
 {
 	int     i;
     const char * m4 = NULL;
@@ -490,9 +486,7 @@ void check_options ()
  *    This routine does not return.
  */
 
-void flexend (exit_status)
-     int exit_status;
-
+void flexend (int exit_status)
 {
 	static int called_before = -1;	/* prevent infinite recursion. */
 	int     tblsiz;
@@ -926,9 +920,7 @@ void flexend (exit_status)
 
 /* flexinit - initialize flex */
 
-void flexinit (argc, argv)
-     int argc;
-     char  **argv;
+void flexinit (int argc, char **argv)
 {
 	int     i, sawcmpflag, rv, optind;
 	char   *arg;
@@ -1456,7 +1448,7 @@ void flexinit (argc, argv)
 
 /* readin - read in the rules section of the input file(s) */
 
-void readin ()
+void readin (void)
 {
 	static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
 	static char yy_nostdinit[] =
@@ -1715,7 +1707,7 @@ void readin ()
 
 /* set_up_initial_allocations - allocate memory for internal tables */
 
-void set_up_initial_allocations ()
+void set_up_initial_allocations (void)
 {
 	maximum_mns = (long_align ? MAXIMUM_MNS_LONG : MAXIMUM_MNS);
 	current_mns = INITIAL_MNS;
@@ -1775,9 +1767,7 @@ void set_up_initial_allocations ()
 
 /* extracts basename from path, optionally stripping the extension "\.*"
  * (same concept as /bin/sh `basename`, but different handling of extension). */
-static char *basename2 (path, strip_ext)
-     char   *path;
-     int strip_ext;		/* boolean */
+static char *basename2 (char *path, int /* boolean */ strip_ext)
 {
 	char   *b, *e = 0;
 
@@ -1793,7 +1783,7 @@ static char *basename2 (path, strip_ext)
 	return b;
 }
 
-void usage ()
+void usage (void)
 {
 	FILE   *f = stdout;
 
