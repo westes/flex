@@ -52,9 +52,7 @@ ccl_contains (const int cclp, const int ch)
 
 /* ccladd - add a single character to a ccl */
 
-void    ccladd (cclp, ch)
-     int     cclp;
-     int     ch;
+void ccladd (int cclp, int ch)
 {
 	int     ind, len, newpos, i;
 
@@ -185,7 +183,7 @@ ccl_set_union (int a, int b)
 
 /* cclinit - return an empty ccl */
 
-int     cclinit ()
+int     cclinit (void)
 {
 	if (++lastccl >= current_maxccls) {
 		current_maxccls += MAX_CCLS_INCREMENT;
@@ -225,8 +223,7 @@ int     cclinit ()
 
 /* cclnegate - negate the given ccl */
 
-void    cclnegate (cclp)
-     int     cclp;
+void    cclnegate (int cclp)
 {
 	cclng[cclp] = 1;
 	ccl_has_nl[cclp] = !ccl_has_nl[cclp];
@@ -240,9 +237,7 @@ void    cclnegate (cclp)
  * has a non-zero value in the cset array.
  */
 
-void    list_character_set (file, cset)
-     FILE   *file;
-     int     cset[];
+void    list_character_set (FILE *file, int cset[])
 {
 	int i;
 
