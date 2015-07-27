@@ -400,7 +400,7 @@ void ntod ()
 	 * from 1 to CSIZE, so their size must be CSIZE + 1.
 	 */
 	int     duplist[CSIZE + 1], state[CSIZE + 1];
-	int     targfreq[CSIZE + 1], targstate[CSIZE + 1];
+	int     targfreq[CSIZE + 1] = {0}, targstate[CSIZE + 1];
 
 	/* accset needs to be large enough to hold all of the rules present
 	 * in the input, *plus* their YY_TRAILING_HEAD_MASK variants.
