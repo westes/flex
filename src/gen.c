@@ -1525,7 +1525,7 @@ void make_tables (void)
 {
 	int i;
 	int did_eof_rule = false;
-	struct yytbl_data *yynultrans_tbl;
+	struct yytbl_data *yynultrans_tbl = NULL;
 
 
 	skelout ();		/* %% [2.0] - break point in skel */
@@ -1755,9 +1755,13 @@ void make_tables (void)
 			    0)
 				flexerror (_
 					   ("Could not write yynultrans_tbl"));
+		}
+
+		if (yynultrans_tbl != NULL) {
 			yytbl_data_destroy (yynultrans_tbl);
 			yynultrans_tbl = NULL;
-		}
+        }
+
 		/* End generating yy_NUL_trans */
 	}
 
