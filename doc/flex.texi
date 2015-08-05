@@ -4910,8 +4910,10 @@ custom allocator through @code{yyextra}.
 %option reentrant
 
 /* Initialize the allocator. */
+%{
 #define YY_EXTRA_TYPE  struct allocator*
 #define YY_USER_INIT  yyextra = allocator_create();
+%}
 
 %%
 .|\n   ;
