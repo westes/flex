@@ -542,7 +542,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 	while ( 0 )
 ]])
 
-m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],make
 [[
 #define unput(c) yyunput( c, YY_G(yytext_ptr) M4_YY_CALL_LAST_ARG )
 ]])
