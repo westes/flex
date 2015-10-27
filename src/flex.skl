@@ -556,7 +556,7 @@ struct yy_buffer_state
 %endif
 
 %if-c++-only
-	std::istream* yy_input_file;
+	std::istream& yy_input_file;
 %endif
 
 
@@ -1526,7 +1526,7 @@ do_action:	/* This label is used only to access EOF actions. */
 %not-for-header
 /* The contents of this function are C++ specific, so the YY_G macro is not used.
  */
-yyFlexLexer::yyFlexLexer( std::istream* arg_yyin, std::ostream* arg_yyout )
+yyFlexLexer::yyFlexLexer( std::istream& arg_yyin, std::ostream& arg_yyout )
 {
 	yyin = arg_yyin;
 	yyout = arg_yyout;
@@ -1572,7 +1572,7 @@ yyFlexLexer::~yyFlexLexer()
 
 /* The contents of this function are C++ specific, so the YY_G macro is not used.
  */
-void yyFlexLexer::switch_streams( std::istream* new_in, std::ostream* new_out )
+void yyFlexLexer::switch_streams( std::istream& new_in, std::ostream& new_out )
 {
 	if ( new_in )
 		{
@@ -1973,7 +1973,7 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
     void yyrestart  YYFARGS1( FILE *,input_file)
 %endif
 %if-c++-only
-    void yyFlexLexer::yyrestart( std::istream* input_file )
+    void yyFlexLexer::yyrestart( std::istream& input_file )
 %endif
 {
     M4_YY_DECL_GUTS_VAR();
@@ -2054,7 +2054,7 @@ static void yy_load_buffer_state  YYFARGS0(void)
     YY_BUFFER_STATE yy_create_buffer  YYFARGS2( FILE *,file, int ,size)
 %endif
 %if-c++-only
-    YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( std::istream* file, int size )
+    YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( std::istream& file, int size )
 %endif
 {
 	YY_BUFFER_STATE b;
@@ -2114,7 +2114,7 @@ static void yy_load_buffer_state  YYFARGS0(void)
     static void yy_init_buffer  YYFARGS2( YY_BUFFER_STATE ,b, FILE *,file)
 %endif
 %if-c++-only
-    void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, std::istream* file )
+    void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, std::istream& file )
 %endif
 
 {
