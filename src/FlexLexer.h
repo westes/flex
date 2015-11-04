@@ -75,7 +75,7 @@ public:
 	virtual int yylex() = 0;
 
 	// Call yylex with new input/output sources.
-	int yylex( FLEX_STD istream& new_in, FLEX_STD ostream& new_out = std::cout )
+	int yylex( FLEX_STD istream& new_in, FLEX_STD ostream& new_out )
 		{
 		switch_streams( new_in, new_out );
 		return yylex();
@@ -83,8 +83,8 @@ public:
 
 	// Switch to new input/output streams.  A nil stream pointer
 	// indicates "keep the current one".
-	virtual void switch_streams( FLEX_STD istream& new_in = std::cin,
-					FLEX_STD ostream& new_out = std::cout ) = 0;
+	virtual void switch_streams( FLEX_STD istream& new_in,
+					FLEX_STD ostream& new_out ) = 0;
 
 	int lineno() const		{ return yylineno; }
 
@@ -113,7 +113,12 @@ class yyFlexLexer : public FlexLexer {
 public:
 	// arg_yyin and arg_yyout default to the cin and cout, but we
 	// only make that assignment when initializing in yylex().
-	yyFlexLexer( FLEX_STD istream& arg_yyin = std::cin, FLEX_STD ostream& arg_yyout = std::cout );
+	yyFlexLexer( FLEX_STD istream& arg_yyin, FLEX_STD ostream& arg_yyout );
+	yyFlexLexer( FLEX_STD istream* arg_yyin = 0, FLEX_STD ostream* arg_yyout = 0 );
+private:
+	void ctor_common();
+
+public:
 
 	virtual ~yyFlexLexer();
 
@@ -127,6 +132,7 @@ public:
 
 	virtual int yylex();
 	virtual void switch_streams( FLEX_STD istream& new_in, FLEX_STD ostream& new_out );
+	virtual void switch_streams( FLEX_STD istream* new_in, FLEX_STD ostream* new_out = 0 );
 	virtual int yywrap();
 
 protected:

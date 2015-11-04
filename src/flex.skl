@@ -1530,11 +1530,29 @@ do_action:	/* This label is used only to access EOF actions. */
 %if-c++-only
 %not-for-header
 /* The contents of this function are C++ specific, so the YY_G macro is not used.
+ * This constructor simply maintains backward compatibility.
+ * DEPRECATED
  */
-yyFlexLexer::yyFlexLexer( std::istream& arg_yyin, std::ostream& arg_yyout )
+yyFlexLexer::yyFlexLexer( FLEX_STD istream* arg_yyin, FLEX_STD ostream* arg_yyout ):
+	yyin(arg_yyin ? arg_yyin->rdbuf() : std::cin.rdbuf()),
+	yyout(arg_yyout ? arg_yyout->rdbuf() : std::cout.rdbuf())
 {
-	yyin.rdbuf(arg_yyin.rdbuf());
-	yyout.rdbuf(arg_yyout.rdbuf());
+	ctor_common();
+}
+
+/* The contents of this function are C++ specific, so the YY_G macro is not used.
+ */
+yyFlexLexer::yyFlexLexer( std::istream& arg_yyin, std::ostream& arg_yyout ):
+	yyin(arg_yyin.rdbuf()),
+	yyout(arg_yyout.rdbuf())
+{
+	ctor_common();
+}
+
+/* The contents of this function are C++ specific, so the YY_G macro is not used.
+ */
+void yyFlexLexer::ctor_common()
+{
 	yy_c_buf_p = 0;
 	yy_init = 0;
 	yy_start = 0;
@@ -1579,14 +1597,27 @@ yyFlexLexer::~yyFlexLexer()
  */
 void yyFlexLexer::switch_streams( std::istream& new_in, std::ostream& new_out )
 {
-	if ( new_in )
-		{
-		yy_delete_buffer( YY_CURRENT_BUFFER M4_YY_CALL_LAST_ARG);
-		yy_switch_to_buffer( yy_create_buffer( new_in, YY_BUF_SIZE  M4_YY_CALL_LAST_ARG) M4_YY_CALL_LAST_ARG);
-		}
+	// was if( new_in )
+	yy_delete_buffer( YY_CURRENT_BUFFER M4_YY_CALL_LAST_ARG);
+	yy_switch_to_buffer( yy_create_buffer( new_in, YY_BUF_SIZE  M4_YY_CALL_LAST_ARG) M4_YY_CALL_LAST_ARG);
 
-	if ( new_out )
-		yyout.rdbuf(new_out.rdbuf());
+	// was if( new_out )
+	yyout.rdbuf(new_out.rdbuf());
+}
+
+/* The contents of this function are C++ specific, so the YY_G macro is not used.
+ */
+void yyFlexLexer::switch_streams( std::istream* new_in, std::ostream* new_out )
+{
+	if( ! new_in ) {
+		new_in = &yyin;
+	}
+
+	if ( ! new_out ) {
+		new_out = &yyout;
+	}
+
+	switch_streams(*new_in, *new_out);
 }
 
 #ifdef YY_INTERACTIVE
