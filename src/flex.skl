@@ -2024,6 +2024,18 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
 	yy_load_buffer_state( M4_YY_CALL_ONLY_ARG );
 }
 
+%if-c++-only
+/** Delegate to the new version that takes an istream reference.
+ * @param input_file A readable stream.
+ * M4_YY_DOC_PARAM
+ * @note This function does not reset the start condition to @c INITIAL .
+ */
+void yyFlexLexer::yyrestart( std::istream* input_file )
+{
+	yyrestart( *input_file );
+}
+%endif
+
 /** Switch to a different input buffer.
  * @param new_buffer The new input buffer.
  * M4_YY_DOC_PARAM
@@ -2120,6 +2132,19 @@ static void yy_load_buffer_state  YYFARGS0(void)
 
 	return b;
 }
+
+%if-c++-only
+/** Delegate creation of buffers to the new version that takes an istream reference.
+ * @param file A readable stream.
+ * @param size The character buffer size in bytes. When in doubt, use @c YY_BUF_SIZE.
+ * M4_YY_DOC_PARAM
+ * @return the allocated buffer state.
+ */
+	YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( std::istream* file, int size )
+{
+	return yy_create_buffer( *file, size );
+}
+%endif
 
 /** Destroy the buffer.
  * @param b a buffer created with yy_create_buffer()
