@@ -67,6 +67,8 @@ EXTRA_DIST = \
 BUILT_SOURCES = \
 	skel.c
 
+MAINTAINERCLEANFILES = skel.c
+
 skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
 	sed 's/m4_/m4postproc_/g; s/m4preproc_/m4_/g' $(srcdir)/flex.skl | $(m4) -P -DFLEX_MAJOR_VERSION=`echo $(VERSION)|cut -f 1 -d .` -DFLEX_MINOR_VERSION=`echo $(VERSION)|cut -f 2 -d .` -DFLEX_SUBMINOR_VERSION=`echo $(VERSION)|cut -f 3 -d .` | sed 's/m4postproc_/m4_/g' | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
 
