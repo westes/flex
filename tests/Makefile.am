@@ -319,10 +319,10 @@ pthread_pthread_LDADD = -lpthread
 
 FLEX = $(top_builddir)/src/flex
 
-.l.c:
+.l.c: $(FLEX)
 	$(FLEX) -o $@ $<
 
-.ll.cc:
+.ll.cc: $(FLEX)
 	$(FLEX) -+ -o $@ $<
 
 bison_nr_main.($OBJEXT): bison_nr_parser.h bison_nr_scanner.h
@@ -337,7 +337,7 @@ bison_yylval_scanner.h: bison_yylval_scanner.c
 # automake does not support compiling flex scanners output in C as C++
 # so we explicitly sayhow, using the .lll suffix for the lex input file
 
-.lll.cc:
+.lll.cc: $(FLEX)
 	$(FLEX) -o $@ $<
 
 header_nr_main.$(OBJEXT): header_nr_scanner.h
@@ -360,16 +360,16 @@ multiple_scanners_r_main.$(OBJEXT): multiple_scanners_r_1.h multiple_scanners_r_
 multiple_scanners_r_1.h: multiple_scanners_r_1.c
 multiple_scanners_r_2.h: multiple_scanners_r_2.c
 
-posixly_correct.c: posixly_correct.l
+posixly_correct.c: posixly_correct.l $(FLEX)
 	POSIXLY_CORRECT=1 $(FLEX) -o $@ $<
 
-reject_nr.reject.c: reject.l4
+reject_nr.reject.c: reject.l4 $(FLEX)
 	$(FLEX) -o $@ $<
 
 reject_nr.reject$(EXEEXT): reject_nr.reject.$(OBJEXT)
 	$(LINK) $^
 
-reject_r.reject.c: reject.l4
+reject_r.reject.c: reject.l4 $(FLEX)
 	$(FLEX) --reentrant -o $@ $<
 
 reject_r.reject.$(OBJEXT): reject_r.reject.c
@@ -378,7 +378,7 @@ reject_r.reject.$(OBJEXT): reject_r.reject.c
 reject_r.reject$(EXEEXT): reject_r.reject.$(OBJEXT)
 	$(LINK) $^
 
-reject_ver.table.c: reject.l4
+reject_ver.table.c: reject.l4 $(FLEX)
 	$(FLEX) -o $@ --tables-verify --tables-file=$(basename $@).tables $<
 
 reject_ver.table.$(OBJEXT): reject_ver.table.c
@@ -387,7 +387,7 @@ reject_ver.table.$(OBJEXT): reject_ver.table.c
 reject_ver.table$(EXEEXT): reject_ver.table.$(OBJEXT)
 	$(LINK) $^
 
-reject_ser.table.c: reject.l4
+reject_ser.table.c: reject.l4 $(FLEX)
 	$(FLEX) -o $@ --tables-file=$(basename $@).tables $<
 
 reject_ser.table.$(OBJEXT): reject_ser.table.c
@@ -421,13 +421,13 @@ tableopts_c := $(addsuffix .c,$(tableopts_tests))
 OPT_LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_OPT_LOG_FLAGS = -d $(srcdir) -i tableopts.txt -r
 
-tableopts_opt_nr%.c: tableopts.l4
+tableopts_opt_nr%.c: tableopts.l4 $(FLEX)
 	$(FLEX) -P $(subst -,_,$(basename $(*F))) $* -o $@ $<
 
 tableopts_opt_nr%.$(OBJEXT): tableopts_opt_nr%.c 
 	$(COMPILE) -c -o $@ $<
 
-tableopts_opt_r%.c: tableopts.l4
+tableopts_opt_r%.c: tableopts.l4 $(FLEX)
 	$(FLEX) -P $(subst -,_,$(basename $(*F))) --reentrant $*  -o $@ $<
 
 tableopts_opt_r%.$(OBJEXT):  tableopts_opt_r%.c 
@@ -436,13 +436,13 @@ tableopts_opt_r%.$(OBJEXT):  tableopts_opt_r%.c
 SER_LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_SER_LOG_FLAGS = -d $(srcdir) -i tableopts.txt -r -t
 
-tableopts_ser_nr%.c: tableopts.l4
+tableopts_ser_nr%.c: tableopts.l4 $(FLEX)
 	$(FLEX) -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ser_nr$*.ser.tables"  $* -o $@ $<
 
 tableopts_ser_nr%.$(OBJEXT): tableopts_ser_nr%.c 
 	$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<
 
-tableopts_ser_r%.c: tableopts.l4
+tableopts_ser_r%.c: tableopts.l4 $(FLEX)
 	$(FLEX) -P $(subst -,_,$(basename $(*F))) -R --tables-file="tableopts_ser_r$*.ser.tables" $*  -o $@ $<
 
 tableopts_ser_r%.$(OBJEXT):  tableopts_ser_r%.c
@@ -451,7 +451,7 @@ tableopts_ser_r%.$(OBJEXT):  tableopts_ser_r%.c
 VER_LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_VER_LOG_FLAGS = -d $(srcdir) -i tableopts.txt -r -t
 
-tableopts_ver_nr%.c: tableopts.l4
+tableopts_ver_nr%.c: tableopts.l4 $(FLEX)
 	$(FLEX) -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ver_nr$*.ver.tables" --tables-verify $* -o $@ $<
 
 tableopts_ver_nr%.$(OBJEXT): tableopts_ver_nr%.c 
@@ -460,7 +460,7 @@ tableopts_ver_nr%.$(OBJEXT): tableopts_ver_nr%.c
 tableopts_ver_nr%.ver$(EXEEXT): tableopts_ver_nr%.$(OBJEXT)
 	$(LINK) -o $@ $^
 
-tableopts_ver_r%.c: tableopts.l4
+tableopts_ver_r%.c: tableopts.l4 $(FLEX)
 	$(FLEX) -P $(subst -,_,$(basename $(*F))) -R --tables-file="tableopts_ver_r$*.ver.tables" --tables-verify $*  -o $@ $<
 
 tableopts_ver_r%.$(OBJEXT):  tableopts_ver_r%.c  
