@@ -88,7 +88,7 @@ simple_tests = \
 	prefix_r \
 	quotes \
 	string_nr \
-string_r \
+	string_r \
 	top \
 	yyextra
 
@@ -107,7 +107,7 @@ DIRECT_TESTS = \
 	rescan_nr.direct \
 	rescan_r.direct
 
- I3_TESTS = \
+I3_TESTS = \
 	cxx_yywrap.i3
 
 if want_pthread
@@ -169,26 +169,75 @@ top_SOURCES = top.l top_main.c
 yyextra_SOURCES = yyextra.l
 
 BUILT_SOURCES = \
-	bison_nr_scanner.h \
+	alloc_extra.c \
+	array_nr.c \
+	array_r.c \
+	basic_nr.c \
+	basic_r.c \
+	bison_nr_parser.c \
 	bison_nr_parser.h \
+	bison_nr_scanner.c \
+	bison_nr_scanner.h \
+	bison_yylloc_parser.c \
 	bison_yylloc_parser.h \
+	bison_yylloc_scanner.c \
 	bison_yylloc_scanner.h \
+	bison_yylval_parser.c \
 	bison_yylval_parser.h \
+	bison_yylval_scanner.c \
 	bison_yylval_scanner.h \
+	ccl.c \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
+	cxx_basic.cc \
+	cxx_multiple_scanners_1.cc \
+	cxx_multiple_scanners_2.cc \
+	cxx_yywrap.cc \
+	debug_nr.c \
+	debug_r.c \
+	extended.c \
+	header_nr_scanner.c \
 	header_nr_scanner.h \
+	header_r_scanner.c \
 	header_r_scanner.h \
+	include_by_buffer.direct.c \
+	include_by_push.direct.c \
+	include_by_reentrant.direct.c \
+	lineno_nr.c \
+	lineno_r.c \
+	lineno_trailing.c \
+	mem_nr.c \
+	mem_r.c \
+	multiple_scanners_nr_1.c \
 	multiple_scanners_nr_1.h \
+	multiple_scanners_nr_2.c \
 	multiple_scanners_nr_2.h \
+	multiple_scanners_r_1.c \
 	multiple_scanners_r_1.h \
+	multiple_scanners_r_2.c \
 	multiple_scanners_r_2.h \
+	noansi_nr.c \
+	noansi_r.c \
+	posix.c \
+	posixly_correct.c \
+	prefix_nr.c \
+	prefix_r.c \
+	pthread.c \
+	quotes.c \
 	reject_nr.reject.c \
 	reject_r.reject.c \
 	reject_ver.table.c \
 	reject_ser.table.c \
+	rescan_nr.direct.c \
+	rescan_r.direct.c \
+	string_nr.c \
+	string_r.c \
+	top.c \
 	top.h \
+	yyextra.c \
 	$(tableopts_c)
+
+CLEANFILES = $(BUILT_SOURCES)
 
 EXTRA_DIST = \
 	README \
@@ -196,7 +245,7 @@ EXTRA_DIST = \
 	alloc_extra.txt \
 	array_nr.txt \
 	array_r.txt \
-basic_nr.txt \
+	basic_nr.txt \
 	basic_r.txt \
 	bison_nr_scanner.h \
 	bison_nr.txt \
