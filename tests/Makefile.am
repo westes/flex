@@ -310,6 +310,7 @@ EXTRA_DIST = \
 	yyextra.txt \
 	$(tableopts_c) \
 	$(tableopts_tables) \
+	tableopts.sh \
 	tableopts.txt \
 	options.cn
 
