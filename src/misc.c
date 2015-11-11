@@ -38,6 +38,7 @@
 #define CMD_TABLES_YYDMAP    "%tables-yydmap"
 #define CMD_DEFINE_YYTABLES  "%define-yytables"
 #define CMD_IF_CPP_ONLY      "%if-c++-only"
+#define CMD_CPP_HACK         "%if-not-cpp-hack"
 #define CMD_IF_C_ONLY        "%if-c-only"
 #define CMD_IF_C_OR_CPP      "%if-c-or-c++"
 #define CMD_NOT_FOR_HEADER   "%not-for-header"
@@ -897,6 +898,11 @@ void skelout ()
                 sko_push(do_copy);
 				do_copy = C_plus_plus;
 			}
+			else if (cmd_match (CMD_CPP_HACK)) {
+			    /* Ignore this section for C++ */
+			    sko_push(do_copy);
+			    do_copy = false;
+			  }
 			else if (cmd_match (CMD_IF_C_ONLY)) {
 				/* %- only for C */
                 sko_push(do_copy);

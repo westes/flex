@@ -347,6 +347,7 @@ M4QEND      "]]"
                             bison_bridge_lval = true;
                      }
 	"c++"		C_plus_plus = option_sense;
+        "cpphack"       frcpphack = option_sense;
 	caseful|case-sensitive		sf_set_case_ins(!option_sense);
 	caseless|case-insensitive	sf_set_case_ins(option_sense);
 	debug		ddebug = option_sense;

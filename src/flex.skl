@@ -109,6 +109,7 @@ m4preproc_define(`M4_GEN_PREFIX',
     ``m4_define(yy[[$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
 
 %if-c++-only
+%if-not-cpp-hack
     /* The c++ scanner is a mess. The FlexLexer.h header file relies on the
      * following macro. This is required in order to pass the c++-multiple-scanners
      * test in the regression suite. We get reports that it breaks inheritance.
@@ -116,6 +117,7 @@ m4preproc_define(`M4_GEN_PREFIX',
      * altogether.
      */
     #define yyFlexLexer M4_YY_PREFIX[[FlexLexer]]
+%endif
 %endif
 
 %if-c-only

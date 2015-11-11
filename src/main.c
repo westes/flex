@@ -59,6 +59,7 @@ int     reentrant, bison_bridge_lval, bison_bridge_lloc;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
 int     trace_hex = 0;
+int     frcpphack = 0;
 int     datapos, dataline, linenum;
 FILE   *skelfile = NULL;
 int     skel_ind = 0;

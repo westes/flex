@@ -408,6 +408,7 @@ extern bool ansi_func_defs, ansi_func_protos;
 extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
 extern int csize;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
+extern int frcpphack;
 
 extern int yymore_really_used, reject_really_used;
 extern int trace_hex;

@@ -105,6 +105,11 @@ protected:
 	int yy_flex_debug;	// only has effect with -d or "%option debug"
 };
 
+}
+#endif // __FLEX_LEXER_H
+#if defined(yyFlexLexer) || ! defined(yyFlexLexerOnce)
+#define yyFlexLexerOnce
+extern "C++" {
 class yyFlexLexer : public FlexLexer {
 public:
 	// arg_yyin and arg_yyout default to the cin and cout, but we
@@ -198,5 +203,4 @@ protected:
 
 }
 
-#endif // __FLEX_LEXER_H
-
+#endif // yyFlexLexer || !yyFlexLexerOnce
