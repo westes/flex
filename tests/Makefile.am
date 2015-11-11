@@ -409,7 +409,7 @@ top.h: top.c
 tableopts.am: tableopts.sh
 	$(srcdir)/tableopts.sh > $(srcdir)/tableopts.am
 
-include tableopts.am
+include $(srcdir)/tableopts.am
 
 tableopts   := -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem
 tableopts_opt_tests :=  $(foreach opt,$(tableopts), tableopts_opt_nr$(opt) tableopts_opt_r$(opt))
