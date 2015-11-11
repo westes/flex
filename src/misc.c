@@ -898,7 +898,7 @@ void skelout ()
                 sko_push(do_copy);
 				do_copy = C_plus_plus;
 			}
-			else if (cmd_match (CMD_CPP_HACK)) {
+			else if (cmd_match (CMD_CPP_HACK) && frcpphack) {
 			    /* Ignore this section for C++ */
 			    sko_push(do_copy);
 			    do_copy = false;

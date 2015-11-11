@@ -1,6 +1,8 @@
-	// An example of using the flex C++ scanner class. Run flex with flex --c++ --yyclass=myclass -o myclass.yy.cc frxxLexer.l
+	// An example of using the flex C++ scanner class. Run flex with flex -o myclass.yy.cc frxxLexer.l
 
 %option noyywrap c++ cpphack
+%option yyclass="myclass"
+
 
 %{
 int mylineno = 0;
