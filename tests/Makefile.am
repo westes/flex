@@ -241,7 +241,6 @@ CLEANFILES = $(BUILT_SOURCES)
 
 EXTRA_DIST = \
 	README \
-	testwrapper.sh \
 	alloc_extra.txt \
 	array_nr.txt \
 	array_r.txt \
@@ -310,9 +309,14 @@ EXTRA_DIST = \
 	yyextra.txt \
 	$(tableopts_c) \
 	$(tableopts_tables) \
-	tableopts.sh \
-	tableopts.txt \
-	options.cn
+	tableopts.txt
+
+dist_noinst_SCRIPTS = \
+	tableopts.sh
+
+dist_check_SCRIPTS = \
+	options.cn \
+	testwrapper.sh
 
 pthread_pthread_LDADD = -lpthread
 
