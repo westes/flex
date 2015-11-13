@@ -36,7 +36,7 @@ REJECT_LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_REJECT_LOG_FLAGS = -d $(srcdir) -i reject.txt -r
 
 TABLE_LOG_COMPILER = $(srcdir)/testwrapper.sh
-AM_TABLE_LOG_FLAGS = -d $(srcdir) -i reject.txt -t
+AM_TABLE_LOG_FLAGS = -d $(builddir) -i $(srcdir)/reject.txt -t
 
 DIRECT_LOG_COMPILER=$(srcdir)/testwrapper.sh
 AM_DIRECT_LOG_FLAGS = -d $(srcdir)
@@ -169,7 +169,30 @@ top_SOURCES = top.l top_main.c
 yyextra_SOURCES = yyextra.l
 
 BUILT_SOURCES = \
-	alloc_extra.c \
+	bison_nr_parser.h \
+	bison_nr_scanner.h \
+	bison_yylloc_parser.h \
+	bison_yylloc_scanner.h \
+	bison_yylval_parser.h \
+	bison_yylval_scanner.h \
+	header_nr_scanner.h \
+	header_r_scanner.h \
+	multiple_scanners_nr_1.h \
+	multiple_scanners_nr_2.h \
+	multiple_scanners_r_1.h \
+	multiple_scanners_r_2.h \
+	top.h
+
+# Normally, automake would distribute files built by flex. Since the
+# point of the test suite is to test the files that flex builds, and
+# since anyone who has the flex distribution can build a flex binary
+# without having a flex binary, we want to not distribute the files
+# built by flex in the test suite. The dist-hook target accomplishes
+# this goal. It's also handy to have the list of files to clean since
+# automake doesn't know about the whacky ways in which we're abusing
+# it.
+
+CLEANFILES = \
 	array_nr.c \
 	array_r.c \
 	basic_nr.c \
@@ -186,9 +209,9 @@ BUILT_SOURCES = \
 	bison_yylval_parser.h \
 	bison_yylval_scanner.c \
 	bison_yylval_scanner.h \
-	ccl.c \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
+	ccl.c \
 	cxx_basic.cc \
 	cxx_multiple_scanners_1.cc \
 	cxx_multiple_scanners_2.cc \
@@ -226,18 +249,25 @@ BUILT_SOURCES = \
 	quotes.c \
 	reject_nr.reject.c \
 	reject_r.reject.c \
-	reject_ver.table.c \
 	reject_ser.table.c \
+	reject_ser.table.tables \
+	reject_ver.table.c \
+	reject_ver.table.tables \
 	rescan_nr.direct.c \
 	rescan_r.direct.c \
 	string_nr.c \
 	string_r.c \
 	top.c \
-	top.h \
+	top.h  \
 	yyextra.c \
-	$(tableopts_c)
+alloc_extra.c \
+	$(tableopts_c) \
+	$(tableopts_tables)
 
-CLEANFILES = $(BUILT_SOURCES)
+dist-hook:
+	for file in $(CLEANFILES) ; do \
+	rm -f $(distdir)/$$file \
+	; done
 
 EXTRA_DIST = \
 	README \
@@ -246,15 +276,10 @@ EXTRA_DIST = \
 	array_r.txt \
 	basic_nr.txt \
 	basic_r.txt \
-	bison_nr_scanner.h \
 	bison_nr.txt \
-	bison_yylloc_scanner.h \
 	bison_yylloc.txt \
-	bison_yylval_scanner.h \
 	bison_yylval.txt \
-	c_cxx_nr.cc \
 	c_cxx_nr.txt \
-	c_cxx_r.cc \
 	c_cxx_r.txt \
 	ccl.txt \
 	cxx_basic.txt \
@@ -263,9 +288,7 @@ EXTRA_DIST = \
 	debug_nr.txt \
 	debug_r.txt \
 	extended.txt \
-	header_nr_scanner.h \
 	header_nr.txt \
-	header_r_scanner.h \
 	header_r.txt \
 	include_by_buffer.direct.txt \
 	include_by_buffer.direct_2.txt \
@@ -282,10 +305,6 @@ EXTRA_DIST = \
 	mem_nr.txt \
 	mem_r.txt \
 	noansi_nr.txt \
-	multiple_scanners_nr_1.h \
-	multiple_scanners_nr_2.h \
-	multiple_scanners_r_1.h \
-	multiple_scanners_r_2.h \
 	noansi_r.txt \
 	prefix_nr.txt \
 	prefix_r.txt \
@@ -295,20 +314,11 @@ EXTRA_DIST = \
 	pthread_4.txt \
 	pthread_5.txt \
 	reject.txt \
-	reject_nr.reject.c \
-	reject_r.reject.c \
-	reject_ver.table.c \
-	reject_ver.table.tables \
-	reject_ser.table.c \
-	reject_ser.table.tables \
 	rescan_nr.direct.txt \
 	rescan_r.direct.txt \
 	quotes.txt \
-	top.h \
 	top.txt \
 	yyextra.txt \
-	$(tableopts_c) \
-	$(tableopts_tables) \
 	tableopts.txt
 
 dist_noinst_SCRIPTS = \
@@ -439,7 +449,7 @@ tableopts_opt_r%.$(OBJEXT):  tableopts_opt_r%.c
 	$(COMPILE) -DTEST_IS_REENTRANT -c -o $@ $<
 
 SER_LOG_COMPILER = $(srcdir)/testwrapper.sh
-AM_SER_LOG_FLAGS = -d $(srcdir) -i tableopts.txt -r -t
+AM_SER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r -t
 
 tableopts_ser_nr%.c: tableopts.l4 $(FLEX)
 	$(FLEX) -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ser_nr$*.ser.tables"  $* -o $@ $<
@@ -454,7 +464,7 @@ tableopts_ser_r%.$(OBJEXT):  tableopts_ser_r%.c
 	$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT -c -o $@ $<
 
 VER_LOG_COMPILER = $(srcdir)/testwrapper.sh
-AM_VER_LOG_FLAGS = -d $(srcdir) -i tableopts.txt -r -t
+AM_VER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r -t
 
 tableopts_ver_nr%.c: tableopts.l4 $(FLEX)
 	$(FLEX) -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ver_nr$*.ver.tables" --tables-verify $* -o $@ $<
