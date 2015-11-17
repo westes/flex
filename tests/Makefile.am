@@ -54,6 +54,7 @@ ONE_LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_ONE_LOG_FLAGS = -1 -d $(srcdir)
 
 AM_YFLAGS = -d -p test
+AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 
 check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
 
@@ -134,6 +135,7 @@ ccl_SOURCES = ccl.l
 cxx_basic_SOURCES = cxx_basic.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
 cxx_yywrap_i3_SOURCES = cxx_yywrap.ll
+cxx_yywrap_i3_CPPFLAGS = -I$(top_srcdir)/src
 debug_nr_SOURCES = debug_nr.l
 debug_r_SOURCES = debug_r.l
 extended_SOURCES = extended.l
