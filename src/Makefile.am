@@ -78,6 +78,7 @@ BUILT_SOURCES = \
 	flex.stage1
 
 MAINTAINERCLEANFILES = skel.c
+DISTCLEANFILES = scan_stage1.c
 
 scan_stage1.lll: scan.l
 	cp scan.l scan_stage1.lll
