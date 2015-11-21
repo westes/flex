@@ -32,6 +32,7 @@
 /*  PURPOSE. */
 
 
+#include "emit_myclass.h"
 #include "flexdef.h"
 #include "version.h"
 #include "options.h"
@@ -58,6 +59,7 @@ int     reentrant, bison_bridge_lval, bison_bridge_lloc;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
 int     trace_hex = 0;
+int     frcpphack = 0;
 int     datapos, dataline, linenum;
 FILE   *skelfile = NULL;
 int     skel_ind = 0;
@@ -1646,12 +1648,16 @@ void readin (void)
 
 	if (C_plus_plus) {
 		outn ("\n#include <FlexLexer.h>");
+		if (yyclass) {
+		  out_str("\n#include \"%s.yy.h\"", yyclass);
+		}
 
  		if (!do_yywrap) {
 			outn("\nint yyFlexLexer::yywrap() { return 1; }");
 		}
 
 		if (yyclass) {
+     		        emit_myclass(yyclass);
 			outn ("int yyFlexLexer::yylex()");
 			outn ("\t{");
 			outn ("\tLexerError( \"yyFlexLexer::yylex invoked but %option yyclass used\" );");

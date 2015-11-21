@@ -27,25 +27,32 @@
 //  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 //  PURPOSE.
 
-// This file defines FlexLexer, an abstract class which specifies the
-// external interface provided to flex C++ lexer objects, and yyFlexLexer,
-// which defines a particular lexer class.
+// Did away with previous #define solution. If you want to use multiple
+// scanners, or if you want to add some stuff to your class, 
+// do the following:
 //
-// If you want to create multiple lexer classes, you use the -P flag
-// to rename each yyFlexLexer to some other xxFlexLexer.  You then
-// include <FlexLexer.h> in your other sources once per lexer class:
+// * Call flex with --c++ --yyclass-myclass -o myclass.yy.cc myclass.l
+// * This will look for a myclass.yy.h file. If it doesn't find one
+//   it will derive a new class from yyFlexLexer and set up yylex for
+//   it. The header will not be overwritten if it exists, so you
+//   can change it if you want to. It's probably safer to derive
+//   your final class from that class instead, so if you do ever
+//   accidentally clobber it, you won't have to redo your class
+//   definition.
+// * #include myclass.yy.h wherever you want to use the object.
+//   There shouldn't be any problem using multiple lexers in the
+//   same file.
 //
-//	#undef yyFlexLexer
-//	#define yyFlexLexer xxFlexLexer
-//	#include <FlexLexer.h>
+// Note that code you write in your .l file is called in the
+// context of this class, so you could add methods and members
+// to your myclass class, and they should be accessible to states
+// in your .l file.
 //
-//	#undef yyFlexLexer
-//	#define yyFlexLexer zzFlexLexer
-//	#include <FlexLexer.h>
-//	...
+// I could probably consolidate both the classes in this file into
+// the FlexLexer class, but it's best not to make too many changes
+// when working in an unfamiliar codebase.
 
 #ifndef __FLEX_LEXER_H
-// Never included before - need to define base class.
 #define __FLEX_LEXER_H
 
 #include <iostream>
@@ -110,16 +117,10 @@ protected:
 };
 
 }
-#endif // FLEXLEXER_H
-
+#endif // __FLEX_LEXER_H
 #if defined(yyFlexLexer) || ! defined(yyFlexLexerOnce)
-// Either this is the first time through (yyFlexLexerOnce not defined),
-// or this is a repeated include to define a different flavor of
-// yyFlexLexer, as discussed in the flex manual.
 #define yyFlexLexerOnce
-
 extern "C++" {
-
 class yyFlexLexer : public FlexLexer {
 public:
 	// arg_yyin and arg_yyout default to the cin and cout, but we
@@ -221,5 +222,4 @@ protected:
 
 }
 
-#endif // yyFlexLexer || ! yyFlexLexerOnce
-
+#endif // yyFlexLexer || !yyFlexLexerOnce

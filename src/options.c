@@ -275,6 +275,7 @@ optspec_t flexopts[] = {
 	,
 	{"--noyyset_lloc", OPT_NO_YYSET_LLOC, 0}
 	,
+	{"--cpphack", OPT_CPP_FLEXLEXER_HACK, 0},
 
 	{0, 0, 0}		/* required final NULL entry. */
 };

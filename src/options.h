@@ -127,7 +127,8 @@ enum flexopt_flag_t {
 	OPT_YYCLASS,
 	OPT_YYLINENO,
 	OPT_YYMORE,
-	OPT_YYWRAP
+	OPT_YYWRAP,
+	OPT_CPP_FLEXLEXER_HACK
 };
 
 #endif
