@@ -6,11 +6,12 @@ LIBS = @LIBINTL@ @LIBS@
 m4 = @M4@
 
 bin_PROGRAMS = flex
+noinst_PROGRAMS = flex.stage1
 lib_LTLIBRARIES = \
 	libfl.la \
 	libfl_pic.la
 
-flex_SOURCES = \
+COMMON_FILES = \
 	ccl.c \
 	dfa.c \
 	ecs.c \
@@ -20,7 +21,6 @@ flex_SOURCES = \
 	misc.c \
 	nfa.c \
 	parse.y \
-	scan.l \
 	skel.c \
 	sym.c \
 	tblcmp.c \
@@ -32,6 +32,14 @@ flex_SOURCES = \
 	tables_shared.c \
 	filter.c \
 	regex.c
+
+flex_SOURCES = \
+	scan_stage1.lll \
+	$(COMMON_FILES)
+
+flex_stage1_SOURCES = \
+	scan.l \
+	$(COMMON_FILES)
 
 LDADD = ../lib/libcompat.la
 
@@ -65,9 +73,18 @@ EXTRA_DIST = \
 	gettext.h
 
 BUILT_SOURCES = \
-	skel.c
+	skel.c \
+	scan_stage1.lll \
+	flex.stage1
 
 MAINTAINERCLEANFILES = skel.c
+CLEANFILES = scan_stage1.c
+
+scan_stage1.lll: scan.l
+	cp scan.l scan_stage1.lll
+
+.lll.c: flex.stage1
+	$(AM_V_LEX)$(am__skiplex) $(SHELL) $(YLWRAP) $< $(LEX_OUTPUT_ROOT).c $@ -- $(builddir)/flex.stage1 $(AM_LFLAGS) $(LFLAGS)
 
 skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
 	sed 's/m4_/m4postproc_/g; s/m4preproc_/m4_/g' $(srcdir)/flex.skl | $(m4) -P -DFLEX_MAJOR_VERSION=`echo $(VERSION)|cut -f 1 -d .` -DFLEX_MINOR_VERSION=`echo $(VERSION)|cut -f 2 -d .` -DFLEX_SUBMINOR_VERSION=`echo $(VERSION)|cut -f 3 -d .` | sed 's/m4postproc_/m4_/g' | $(SHELL) $(srcdir)/mkskel.sh  >skel.c
