@@ -124,10 +124,7 @@ struct Buf *buf_concat(struct Buf* dest, const struct Buf* src)
 
 
 /* Appends n characters in str to buf. */
-struct Buf *buf_strnappend (buf, str, n)
-     struct Buf *buf;
-     const char *str;
-     int n;
+struct Buf *buf_strnappend (struct Buf *buf, const char *str, int n)
 {
 	buf_append (buf, str, n + 1);
 
@@ -138,18 +135,13 @@ struct Buf *buf_strnappend (buf, str, n)
 }
 
 /* Appends characters in str to buf. */
-struct Buf *buf_strappend (buf, str)
-     struct Buf *buf;
-     const char *str;
+struct Buf *buf_strappend (struct Buf *buf, const char *str)
 {
 	return buf_strnappend (buf, str, strlen (str));
 }
 
 /* appends "#define str def\n" */
-struct Buf *buf_strdefine (buf, str, def)
-     struct Buf *buf;
-     const char *str;
-     const char *def;
+struct Buf *buf_strdefine (struct Buf *buf, const char *str, const char *def)
 {
 	buf_strappend (buf, "#define ");
 	buf_strappend (buf, " ");
@@ -203,9 +195,7 @@ struct Buf *buf_m4_undefine (struct Buf *buf, const char* def)
 }
 
 /* create buf with 0 elements, each of size elem_size. */
-void buf_init (buf, elem_size)
-     struct Buf *buf;
-     size_t elem_size;
+void buf_init (struct Buf *buf, size_t elem_size)
 {
 	buf->elts = (void *) 0;
 	buf->nelts = 0;
@@ -214,8 +204,7 @@ void buf_init (buf, elem_size)
 }
 
 /* frees memory */
-void buf_destroy (buf)
-     struct Buf *buf;
+void buf_destroy (struct Buf *buf)
 {
 	if (buf && buf->elts)
 		flex_free (buf->elts);
@@ -229,10 +218,7 @@ void buf_destroy (buf)
  * We grow by mod(512) boundaries.
  */
 
-struct Buf *buf_append (buf, ptr, n_elem)
-     struct Buf *buf;
-     const void *ptr;
-     int n_elem;
+struct Buf *buf_append (struct Buf *buf, const void *ptr, int n_elem)
 {
 	int     n_alloc = 0;
 

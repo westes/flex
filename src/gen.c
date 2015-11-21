@@ -1497,8 +1497,7 @@ void gentabs (void)
  * current indentation level, adding a final newline.
  */
 
-void indent_put2s (fmt, arg)
-     const char *fmt, *arg;
+void indent_put2s (const char *fmt, const char *arg)
 {
 	do_indent ();
 	out_str (fmt, arg);
@@ -1510,8 +1509,7 @@ void indent_put2s (fmt, arg)
  * newline.
  */
 
-void indent_puts (str)
-     const char *str;
+void indent_puts (const char *str)
 {
 	do_indent ();
 	outn (str);

@@ -54,6 +54,7 @@ ONE_LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_ONE_LOG_FLAGS = -1 -d $(srcdir)
 
 AM_YFLAGS = -d -p test
+AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 
 check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
 
