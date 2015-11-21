@@ -135,7 +135,6 @@ ccl_SOURCES = ccl.l
 cxx_basic_SOURCES = cxx_basic.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
 cxx_yywrap_i3_SOURCES = cxx_yywrap.ll
-cxx_yywrap_i3_CPPFLAGS = -I$(top_srcdir)/src
 debug_nr_SOURCES = debug_nr.l
 debug_r_SOURCES = debug_r.l
 extended_SOURCES = extended.l
