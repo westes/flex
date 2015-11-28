@@ -94,7 +94,7 @@ int    *accsiz, *dhash, numas;
 int     numsnpairs, jambase, jamstate;
 int     lastccl, *cclmap, *ccllen, *cclng, cclreuse;
 int     current_maxccls, current_max_ccl_tbl_size;
-Char   *ccltbl;
+unsigned char   *ccltbl;
 char    nmstr[MAXLINE];
 int     sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int     tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;

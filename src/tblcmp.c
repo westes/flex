@@ -678,7 +678,7 @@ void    mkprot (int state[], int statenum, int comstate)
 void    mktemplate (int state[], int statenum, int comstate)
 {
 	int     i, numdiff, tmpbase, tmp[CSIZE + 1];
-	Char    transset[CSIZE + 1];
+	unsigned char    transset[CSIZE + 1];
 	int     tsptr;
 
 	++numtemps;
