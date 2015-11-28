@@ -182,7 +182,7 @@ void   *allocate_array (int size, size_t element_size)
 int all_lower (char *str)
 {
 	while (*str) {
-		if (!isascii ((Char) * str) || !islower ((Char) * str))
+		if (!isascii ((unsigned char) * str) || !islower ((unsigned char) * str))
 			return 0;
 		++str;
 	}
@@ -196,7 +196,7 @@ int all_lower (char *str)
 int all_upper (char *str)
 {
 	while (*str) {
-		if (!isascii ((Char) * str) || !isupper ((Char) * str))
+		if (!isascii ((unsigned char) * str) || !isupper ((unsigned char) * str))
 			return 0;
 		++str;
 	}
@@ -234,9 +234,9 @@ void check_char (int c)
 
 /* clower - replace upper-case letter to lower-case */
 
-Char clower (int c)
+unsigned char clower (int c)
 {
-	return (Char) ((isascii (c) && isupper (c)) ? tolower (c) : c);
+	return (unsigned char) ((isascii (c) && isupper (c)) ? tolower (c) : c);
 }
 
 
@@ -269,10 +269,10 @@ char   *copy_string (const char *str)
  *    returns a dynamically allocated copy of a (potentially) unsigned string
  */
 
-Char   *copy_unsigned_string (Char *str)
+unsigned char   *copy_unsigned_string (unsigned char *str)
 {
-	Char *c;
-	Char   *copy;
+	unsigned char *c;
+	unsigned char   *copy;
 
 	/* find length */
 	for (c = str; *c; ++c) ;
@@ -289,13 +289,13 @@ Char   *copy_unsigned_string (Char *str)
 
 int cclcmp (const void *a, const void *b)
 {
-  if (!*(const Char *) a)
+  if (!*(const unsigned char *) a)
 	return 1;
   else
-	if (!*(const Char *) b)
+	if (!*(const unsigned char *) b)
 	  return - 1;
 	else
-	  return *(const Char *) a - *(const Char *) b;
+	  return *(const unsigned char *) a - *(const unsigned char *) b;
 }
 
 
@@ -361,7 +361,7 @@ void flexfatal (const char *msg)
 
 /* htoi - convert a hexadecimal digit string to an integer value */
 
-int htoi (Char str[])
+int htoi (unsigned char str[])
 {
 	unsigned int result;
 
@@ -539,9 +539,9 @@ int myctoi (const char *array)
 
 /* myesc - return character corresponding to escape sequence */
 
-Char myesc (Char array[])
+unsigned char myesc (unsigned char array[])
 {
-	Char    c, esc_char;
+	unsigned char    c, esc_char;
 
 	switch (array[1]) {
 	case 'b':
@@ -626,7 +626,7 @@ Char myesc (Char array[])
 
 /* otoi - convert an octal digit string to an integer value */
 
-int otoi (Char str[])
+int otoi (unsigned char str[])
 {
 	unsigned int result;
 

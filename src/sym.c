@@ -114,7 +114,7 @@ static int addsym (char sym[], char *str_def, int int_def, hash_table table, int
 
 /* cclinstal - save the text of a character class */
 
-void    cclinstal (Char ccltxt[], int cclnum)
+void    cclinstal (unsigned char ccltxt[], int cclnum)
 {
 	/* We don't bother checking the return status because we are not
 	 * called unless the symbol is new.
@@ -130,7 +130,7 @@ void    cclinstal (Char ccltxt[], int cclnum)
  * Returns 0 if there's no CCL associated with the text.
  */
 
-int     ccllookup (Char ccltxt[])
+int     ccllookup (unsigned char ccltxt[])
 {
 	return findsym ((char *) ccltxt, ccltab, CCL_HASH_SIZE)->int_val;
 }
@@ -178,7 +178,7 @@ static int hashfunct (const char *str, int hash_size)
 
 /* ndinstal - install a name definition */
 
-void    ndinstal (const char *name, Char definition[])
+void    ndinstal (const char *name, unsigned char definition[])
 {
 
 	if (addsym (copy_string (name),
@@ -193,9 +193,9 @@ void    ndinstal (const char *name, Char definition[])
  * Returns a nil pointer if the name definition does not exist.
  */
 
-Char   *ndlookup (const char *nd)
+unsigned char   *ndlookup (const char *nd)
 {
-	return (Char *) findsym (nd, ndtbl, NAME_TABLE_HASH_SIZE)->str_val;
+	return (unsigned char *) findsym (nd, ndtbl, NAME_TABLE_HASH_SIZE)->str_val;
 }
 
 
