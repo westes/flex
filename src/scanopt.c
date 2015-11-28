@@ -173,7 +173,7 @@ scanopt_t *scanopt_init (const optspec_t *options, int argc, char **argv, int fl
 	s->aux = (struct _aux *) malloc (s->optc * sizeof (struct _aux));
 
 	for (i = 0; i < s->optc; i++) {
-		const Char *p, *pname;
+		const unsigned char *p, *pname;
 		const struct optspec_t *opt;
 		struct _aux *aux;
 
@@ -184,11 +184,11 @@ scanopt_t *scanopt_init (const optspec_t *options, int argc, char **argv, int fl
 
 		if (opt->opt_fmt[0] == '-' && opt->opt_fmt[1] == '-') {
 			aux->flags |= IS_LONG;
-			pname = (const Char *)(opt->opt_fmt + 2);
+			pname = (const unsigned char *)(opt->opt_fmt + 2);
 			s->has_long = 1;
 		}
 		else {
-			pname = (const Char *)(opt->opt_fmt + 1);
+			pname = (const unsigned char *)(opt->opt_fmt + 1);
 			s->has_short = 1;
 		}
 		aux->printlen = strlen (opt->opt_fmt);

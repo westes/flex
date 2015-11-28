@@ -99,9 +99,9 @@ int     cre8ecs (int fwd[], int bck[], int num)
 /* mkeccl - update equivalence classes based on character class xtions
  *
  * synopsis
- *    Char ccls[];
+ *    unsigned char ccls[];
  *    int lenccl, fwd[llsiz], bck[llsiz], llsiz, NUL_mapping;
- *    void mkeccl( Char ccls[], int lenccl, int fwd[llsiz], int bck[llsiz],
+ *    void mkeccl( unsigned char ccls[], int lenccl, int fwd[llsiz], int bck[llsiz],
  *			int llsiz, int NUL_mapping );
  *
  * ccls contains the elements of the character class, lenccl is the
@@ -111,7 +111,7 @@ int     cre8ecs (int fwd[], int bck[], int num)
  * NUL_mapping is the value which NUL (0) should be mapped to.
  */
 
-void    mkeccl (Char ccls[], int lenccl, int fwd[], int bck[], int llsiz, int NUL_mapping)
+void    mkeccl (unsigned char ccls[], int lenccl, int fwd[], int bck[], int llsiz, int NUL_mapping)
 {
 	int     cclp, oldec, newec;
 	int     cclm, i, j;
