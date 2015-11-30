@@ -11,27 +11,27 @@ lib_LTLIBRARIES = \
 	libfl_pic.la
 
 flex_SOURCES = \
+	buf.c \
 	ccl.c \
 	dfa.c \
 	ecs.c \
-	scanflags.c \
+	filter.c \
 	gen.c \
 	main.c \
 	misc.c \
 	nfa.c \
+	options.c \
 	parse.y \
+	regex.c \
 	scan.l \
+	scanflags.c \
+	scanopt.c \
 	skel.c \
 	sym.c \
-	tblcmp.c \
-	yylex.c \
-	options.c \
-	scanopt.c \
-	buf.c \
 	tables.c \
 	tables_shared.c \
-	filter.c \
-	regex.c
+	tblcmp.c \
+	yylex.c
 
 LDADD = ../lib/libcompat.la
 
