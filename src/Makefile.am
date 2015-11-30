@@ -64,9 +64,6 @@ EXTRA_DIST = \
 	mkskel.sh \
 	gettext.h
 
-BUILT_SOURCES = \
-	skel.c
-
 MAINTAINERCLEANFILES = skel.c
 
 skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
