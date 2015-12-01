@@ -738,7 +738,13 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
                     return '(';
                 }
     "("         sf_push(); return '(';
-    ")"         sf_pop(); return ')';
+    ")"         {
+                    if (_sf_top_ix > 0) {
+                        sf_pop();
+                        return ')';
+                    } else
+                        synerr(_("unbalanced parenthesis"));
+                }
 
 	[/|*+?.(){}]	return (unsigned char) yytext[0];
 	.		RETURNCHAR;
