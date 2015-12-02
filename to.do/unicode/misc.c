@@ -193,33 +193,6 @@ register int c;
 	}
 
 
-/* copy_string - returns a dynamically allocated copy of a string */
-
-char *copy_string( str )
-register const char *str;
-	{
-	register const char *c1;
-	register char *c2;
-	char *copy;
-	unsigned int size;
-
-	/* find length */
-	for ( c1 = str; *c1; ++c1 )
-		;
-
-	size = (c1 - str + 1) * sizeof( char );
-	copy = (char *) flex_alloc( size );
-
-	if ( copy == NULL )
-		flexfatal( _( "dynamic memory failure in copy_string()" ) );
-
-	for ( c2 = copy; (*c2++ = *str++) != 0; )
-		;
-
-	return copy;
-	}
-
-
 /* copy_unsigned_string -
  *    returns a dynamically allocated copy of a (potentially) unsigned string
  */

@@ -841,9 +841,6 @@ extern void check_char PROTO((int c));
 /* Replace upper-case letter to lower-case. */
 extern Char clower PROTO((int));
 
-/* Returns a dynamically allocated copy of a string. */
-extern char *copy_string PROTO((register const char *));
-
 /* Returns a dynamically allocated copy of a (potentially) unsigned string. */
 extern Char *copy_unsigned_string PROTO((register Char *));
 
