@@ -193,19 +193,19 @@ optionlist	:  optionlist option
 
 option		:  OPT_OUTFILE '=' NAME
 			{
-			outfilename = copy_string( nmstr );
+			outfilename = xstrdup(nmstr);
 			did_outfilename = 1;
 			}
 		|  OPT_EXTRA_TYPE '=' NAME
-			{ extra_type = copy_string( nmstr ); }
+			{ extra_type = xstrdup(nmstr); }
 		|  OPT_PREFIX '=' NAME
-			{ prefix = copy_string( nmstr ); }
+			{ prefix = xstrdup(nmstr); }
 		|  OPT_YYCLASS '=' NAME
-			{ yyclass = copy_string( nmstr ); }
+			{ yyclass = xstrdup(nmstr); }
 		|  OPT_HEADER '=' NAME
-			{ headerfilename = copy_string( nmstr ); }
+			{ headerfilename = xstrdup(nmstr); }
 	    |  OPT_TABLES '=' NAME
-            { tablesext = true; tablesfilename = copy_string( nmstr ); }
+            { tablesext = true; tablesfilename = xstrdup(nmstr); }
 		;
 
 sect2		:  sect2 scon initforrule flexrule '\n'

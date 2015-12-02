@@ -181,7 +181,7 @@ static int hashfunct (const char *str, int hash_size)
 void    ndinstal (const char *name, unsigned char definition[])
 {
 
-	if (addsym (copy_string (name),
+	if (addsym (xstrdup(name),
 		    (char *) copy_unsigned_string (definition), 0,
 		    ndtbl, NAME_TABLE_HASH_SIZE))
 			synerr (_("name defined twice"));
@@ -227,7 +227,7 @@ void    scinstal (const char *str, int xcluflg)
 	if (++lastsc >= current_max_scs)
 		scextend ();
 
-	scname[lastsc] = copy_string (str);
+	scname[lastsc] = xstrdup(str);
 
 	if (addsym (scname[lastsc], (char *) 0, lastsc,
 		    sctbl, START_COND_HASH_SIZE))

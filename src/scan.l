@@ -232,7 +232,7 @@ M4QEND      "]]"
 
 	\"[^"\n]*\"	{
 			flex_free( (void *) infilename );
-			infilename = copy_string( yytext + 1 );
+			infilename = xstrdup(yytext + 1);
 			infilename[strlen( infilename ) - 1] = '\0';
 			}
 	.		/* ignore spurious characters */
@@ -994,7 +994,7 @@ void set_input_file( char *file )
 	{
 	if ( file && strcmp( file, "-" ) )
 		{
-		infilename = copy_string( file );
+		infilename = xstrdup(file);
 		yyin = fopen( infilename, "r" );
 
 		if ( yyin == NULL )
@@ -1004,7 +1004,7 @@ void set_input_file( char *file )
 	else
 		{
 		yyin = stdin;
-		infilename = copy_string( "<stdin>" );
+		infilename = xstrdup("<stdin>");
 		}
 
 	linenum = 1;

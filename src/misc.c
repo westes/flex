@@ -106,7 +106,7 @@ void action_define (const char *defname, int value)
 	add_action (buf);
 
 	/* track #defines so we can undef them when we're done. */
-	cpy = copy_string (defname);
+	cpy = xstrdup(defname);
 	buf_append (&defs_buf, &cpy, 1);
 }
 
@@ -240,28 +240,14 @@ unsigned char clower (int c)
 }
 
 
-/* copy_string - returns a dynamically allocated copy of a string */
-
-char   *copy_string (const char *str)
+char *xstrdup(const char *s)
 {
-	const char *c1;
-	char *c2;
-	char   *copy;
-	unsigned int size;
+	char *s2;
 
-	/* find length */
-	for (c1 = str; *c1; ++c1) ;
+	if ((s2 = strdup(s)) == NULL)
+		flexfatal (_("memory allocation failure in xstrdup()"));
 
-	size = (c1 - str + 1) * sizeof (char);
-
-	copy = (char *) flex_alloc (size);
-
-	if (copy == NULL)
-		flexfatal (_("dynamic memory failure in copy_string()"));
-
-	for (c2 = copy; (*c2++ = *str++) != 0;) ;
-
-	return copy;
+	return s2;
 }
 
 

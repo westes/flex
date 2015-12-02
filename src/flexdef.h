@@ -857,8 +857,8 @@ extern void check_char PROTO ((int c));
 /* Replace upper-case letter to lower-case. */
 extern unsigned char clower PROTO ((int));
 
-/* Returns a dynamically allocated copy of a string. */
-extern char *copy_string PROTO ((const char *));
+/* strdup() that fails fatally on allocation failures. */
+extern char *xstrdup(const char *);
 
 /* Returns a dynamically allocated copy of a (potentially) unsigned string. */
 extern unsigned char *copy_unsigned_string PROTO ((unsigned char *));

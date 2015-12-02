@@ -90,8 +90,8 @@ int yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
 	th->th_hsize += yypad64 (th->th_hsize);
 	th->th_ssize = 0;	// Not known at this point.
 	th->th_flags = 0;
-	th->th_version = copy_string (version_str);
-	th->th_name = copy_string (name);
+	th->th_version = xstrdup(version_str);
+	th->th_name = xstrdup(name);
 	return 0;
 }
 
