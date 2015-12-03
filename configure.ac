@@ -48,8 +48,23 @@ AC_PROG_LN_S
 AC_PROG_AWK
 AC_PROG_INSTALL
 
-AC_PATH_PROG(BISON, bison,bison)
-AC_PATH_PROG(HELP2MAN, help2man, help2man)
+AC_PATH_PROG([BISON], bison, no)
+AS_IF([test "$BISON" != no],[],
+	[ AC_SUBST([BISON], [\${top_srcdir}/build-aux/missing bison]) 
+	  AC_MSG_NOTICE(no bison program found: only required for maintainers)
+	])
+
+AC_PATH_PROG([HELP2MAN], help2man, no)
+AS_IF([test "$HELP2MAN" != no],[],i
+	[ AC_SUBST([HELP2MAN], [\${top_srcdir}/build-aux/missing help2man])
+	  AC_MSG_NOTICE(no help2man program found: only required for maintainers)
+	])
+
+AC_PATH_PROGS([TEXI2DVI], [texi2dvi gtexi2dvi], [no])
+AS_IF([test "$TEXI2DVI" != no],[],
+	[ AC_SUBST([TEXI2DVI], [:])
+	  AC_MSG_NOTICE(no texi2dvi program found: only required for maintainers)
+	])
 
 # Check for a m4 that supports -P
 
