@@ -63,12 +63,12 @@ public:
         int YYLeng()	const	{ return yyleng; }
 
         virtual void
-                yy_switch_to_buffer( struct yy_buffer_state* new_buffer ) = 0;
-        virtual struct yy_buffer_state*
+                yy_switch_to_buffer( yy_buffer_state* new_buffer ) = 0;
+        virtual yy_buffer_state*
                 yy_create_buffer( std::istream* s, int size ) = 0;
-        virtual struct yy_buffer_state*
+        virtual yy_buffer_state*
                 yy_create_buffer( std::istream& s, int size ) = 0;
-        virtual void yy_delete_buffer( struct yy_buffer_state* b ) = 0;
+        virtual void yy_delete_buffer( yy_buffer_state* b ) = 0;
         virtual void yyrestart( std::istream* s ) = 0;
         virtual void yyrestart( std::istream& s ) = 0;
 
@@ -130,14 +130,14 @@ public:
 
         virtual ~yyFlexLexer();
 
-        void yy_switch_to_buffer( struct yy_buffer_state* new_buffer );
-        struct yy_buffer_state* yy_create_buffer( std::istream* s, int size );
-        struct yy_buffer_state* yy_create_buffer( std::istream& s, int size );
-        void yy_delete_buffer( struct yy_buffer_state* b );
+        void yy_switch_to_buffer( yy_buffer_state* new_buffer );
+        yy_buffer_state* yy_create_buffer( std::istream* s, int size );
+        yy_buffer_state* yy_create_buffer( std::istream& s, int size );
+        void yy_delete_buffer( yy_buffer_state* b );
         void yyrestart( std::istream* s );
         void yyrestart( std::istream& s );
 
-        void yypush_buffer_state( struct yy_buffer_state* new_buffer );
+        void yypush_buffer_state( yy_buffer_state* new_buffer );
         void yypop_buffer_state();
 
         virtual int yylex();
@@ -154,8 +154,8 @@ protected:
         int yyinput();
 
         void yy_load_buffer_state();
-        void yy_init_buffer( struct yy_buffer_state* b, std::istream& s );
-        void yy_flush_buffer( struct yy_buffer_state* b );
+        void yy_init_buffer( yy_buffer_state* b, std::istream& s );
+        void yy_flush_buffer( yy_buffer_state* b );
 
         int yy_start_stack_ptr;
         int yy_start_stack_depth;
@@ -191,7 +191,7 @@ protected:
 
         size_t yy_buffer_stack_top; /**< index of top of stack. */
         size_t yy_buffer_stack_max; /**< capacity of stack. */
-        struct yy_buffer_state ** yy_buffer_stack; /**< Stack as an array. */
+        yy_buffer_state ** yy_buffer_stack; /**< Stack as an array. */
         void yyensure_buffer_stack(void);
 
         // The following are not always needed, but may be depending
