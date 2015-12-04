@@ -50,8 +50,6 @@
 
 #include <iostream>
 
-extern "C++" {
-
 struct yy_buffer_state;
 typedef int yy_state_type;
 
@@ -105,8 +103,6 @@ protected:
         int yylineno;		// only maintained if you use %option yylineno
         int yy_flex_debug;	// only has effect with -d or "%option debug"
 };
-
-}
 #endif // FLEXLEXER_H
 
 #if defined(yyFlexLexer) || ! defined(yyFlexLexerOnce)
@@ -114,8 +110,6 @@ protected:
 // or this is a repeated include to define a different flavor of
 // yyFlexLexer, as discussed in the flex manual.
 #define yyFlexLexerOnce
-
-extern "C++" {
 
 class yyFlexLexer : public FlexLexer {
 public:
@@ -215,7 +209,5 @@ protected:
         int yy_more_offset;
         int yy_prev_more_offset;
 };
-
-}
 
 #endif // yyFlexLexer || ! yyFlexLexerOnce
