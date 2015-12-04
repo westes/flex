@@ -533,7 +533,6 @@ void flexend (int exit_status)
                 "EOB_ACT_END_OF_FILE",
                 "EOB_ACT_LAST_MATCH",
                 "FLEX_SCANNER",
-                "FLEX_STD",
                 "REJECT",
                 "YYFARGS0",
                 "YYFARGS1",
