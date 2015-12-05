@@ -870,7 +870,7 @@ int snstods (int sns[], int numstates, int accset[], int nacc, int hashval, int 
 
 	if (nacc == 0) {
 		if (reject)
-			dfaacc[newds].dfaacc_set = (int *) 0;
+			dfaacc[newds].dfaacc_set = NULL;
 		else
 			dfaacc[newds].dfaacc_state = 0;
 

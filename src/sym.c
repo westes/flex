@@ -121,7 +121,7 @@ void    cclinstal (unsigned char ccltxt[], int cclnum)
 	 */
 
 	(void) addsym ((char *) copy_unsigned_string (ccltxt),
-		       (char *) 0, cclnum, ccltab, CCL_HASH_SIZE);
+		       NULL, cclnum, ccltab, CCL_HASH_SIZE);
 }
 
 
@@ -141,8 +141,7 @@ int     ccllookup (unsigned char ccltxt[])
 static struct hash_entry *findsym (const char *sym, hash_table table, int table_size)
 {
 	static struct hash_entry empty_entry = {
-		(struct hash_entry *) 0, (struct hash_entry *) 0,
-		(char *) 0, (char *) 0, 0,
+		NULL, NULL, NULL, NULL, 0,
 	};
 	struct hash_entry *sym_entry =
 
@@ -229,7 +228,7 @@ void    scinstal (const char *str, int xcluflg)
 
 	scname[lastsc] = xstrdup(str);
 
-	if (addsym (scname[lastsc], (char *) 0, lastsc,
+	if (addsym(scname[lastsc], NULL, lastsc,
 		    sctbl, START_COND_HASH_SIZE))
 			format_pinpoint_message (_
 						 ("start condition %s declared twice"),
