@@ -1451,9 +1451,9 @@ void readin (void)
 {
 	static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
 	static char yy_nostdinit[] =
-		"FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;";
+		"FILE *yyin = NULL, *yyout = NULL;";
 
-	line_directive_out ((FILE *) 0, 1);
+	line_directive_out(NULL, 1);
 
 	if (yyparse ()) {
 		pinpoint_message (_("fatal parse error"));
@@ -1760,7 +1760,7 @@ void set_up_initial_allocations (void)
 	dss = allocate_int_ptr_array (current_max_dfas);
 	dfaacc = allocate_dfaacc_union (current_max_dfas);
 
-	nultrans = (int *) 0;
+	nultrans = NULL;
 }
 
 

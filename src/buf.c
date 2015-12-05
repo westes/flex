@@ -197,7 +197,7 @@ struct Buf *buf_m4_undefine (struct Buf *buf, const char* def)
 /* create buf with 0 elements, each of size elem_size. */
 void buf_init (struct Buf *buf, size_t elem_size)
 {
-	buf->elts = (void *) 0;
+	buf->elts = NULL;
 	buf->nelts = 0;
 	buf->elt_size = elem_size;
 	buf->nmax = 0;
@@ -208,7 +208,7 @@ void buf_destroy (struct Buf *buf)
 {
 	if (buf && buf->elts)
 		flex_free (buf->elts);
-	buf->elts = (void *) 0;
+	buf->elts = NULL;
 }
 
 
