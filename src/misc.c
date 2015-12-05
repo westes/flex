@@ -251,26 +251,6 @@ char *xstrdup(const char *s)
 }
 
 
-/* copy_unsigned_string -
- *    returns a dynamically allocated copy of a (potentially) unsigned string
- */
-
-unsigned char   *copy_unsigned_string (unsigned char *str)
-{
-	unsigned char *c;
-	unsigned char   *copy;
-
-	/* find length */
-	for (c = str; *c; ++c) ;
-
-	copy = allocate_Character_array (c - str + 1);
-
-	for (c = copy; (*c++ = *str++) != 0;) ;
-
-	return copy;
-}
-
-
 /* cclcmp - compares two characters for use by qsort with '\0' sorting last. */
 
 int cclcmp (const void *a, const void *b)
