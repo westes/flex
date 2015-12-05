@@ -860,9 +860,6 @@ extern unsigned char clower PROTO ((int));
 /* strdup() that fails fatally on allocation failures. */
 extern char *xstrdup(const char *);
 
-/* Returns a dynamically allocated copy of a (potentially) unsigned string. */
-extern unsigned char *copy_unsigned_string PROTO ((unsigned char *));
-
 /* Compare two characters for use by qsort with '\0' sorting last. */
 extern int cclcmp PROTO ((const void *, const void *));
 

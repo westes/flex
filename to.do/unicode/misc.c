@@ -193,29 +193,6 @@ register int c;
 	}
 
 
-/* copy_unsigned_string -
- *    returns a dynamically allocated copy of a (potentially) unsigned string
- */
-
-Char *copy_unsigned_string( str )
-register Char *str;
-	{
-	register Char *c;
-	Char *copy;
-
-	/* find length */
-	for ( c = str; *c; ++c )
-		;
-
-	copy = allocate_Character_array( c - str + 1 );
-
-	for ( c = copy; (*c++ = *str++) != 0; )
-		;
-
-	return copy;
-	}
-
-
 /* cshell - shell sort a character array in increasing order
  *
  * synopsis

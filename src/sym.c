@@ -120,7 +120,7 @@ void    cclinstal (unsigned char ccltxt[], int cclnum)
 	 * called unless the symbol is new.
 	 */
 
-	(void) addsym ((char *) copy_unsigned_string (ccltxt),
+	(void) addsym (xstrdup(ccltxt),
 		       (char *) 0, cclnum, ccltab, CCL_HASH_SIZE);
 }
 
@@ -182,7 +182,7 @@ void    ndinstal (const char *name, unsigned char definition[])
 {
 
 	if (addsym (xstrdup(name),
-		    (char *) copy_unsigned_string (definition), 0,
+		    xstrdup(definition), 0,
 		    ndtbl, NAME_TABLE_HASH_SIZE))
 			synerr (_("name defined twice"));
 }
