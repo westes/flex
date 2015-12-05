@@ -569,7 +569,7 @@ static int matchlongopt (char *str, char **optname, int *optlen, char **arg, int
 {
 	char   *p;
 
-	*optname = *arg = (char *) 0;
+	*optname = *arg = NULL;
 	*optlen = *arglen = 0;
 
 	/* Match regex /--./   */
