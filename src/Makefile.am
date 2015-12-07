@@ -6,11 +6,20 @@ LIBS = @LIBINTL@ @LIBS@
 m4 = @M4@
 
 bin_PROGRAMS = flex
+noinst_PROGRAMS = stage1flex
 lib_LTLIBRARIES = \
 	libfl.la \
 	libfl_pic.la
 
+stage1flex_SOURCES = \
+	scan.l \
+	$(COMMON_SOURCES)
+
 flex_SOURCES = \
+	stage1scan.l \
+	$(COMMON_SOURCES)
+
+COMMON_SOURCES = \
 	buf.c \
 	ccl.c \
 	dfa.c \
@@ -23,7 +32,6 @@ flex_SOURCES = \
 	options.c \
 	parse.y \
 	regex.c \
-	scan.l \
 	scanflags.c \
 	scanopt.c \
 	skel.c \
@@ -64,6 +72,8 @@ EXTRA_DIST = \
 	mkskel.sh \
 	gettext.h
 
+DISTCLEANFILES = stage1scan.c
+
 MAINTAINERCLEANFILES = skel.c
 
 $(srcdir)/skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
@@ -75,6 +85,12 @@ $(srcdir)/skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
 	  sed 's/m4postproc_/m4_/g' |					   \
 	  $(SHELL) $(srcdir)/mkskel.sh >skel.c.tmp
 	mv skel.c.tmp $(srcdir)/skel.c
+
+stage1scan.l: scan.l
+	cp $(srcdir)/scan.l $(srcdir)/stage1scan.l
+
+stage1scan.c: stage1scan.l stage1flex$(EXEEXT)
+	$(top_builddir)/src/stage1flex$(EXEEXT) -o $@ $<
 
 # Explicitly describe dependencies.
 # You can recreate this with `gcc -I. -MM *.c'

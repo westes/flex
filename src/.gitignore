@@ -8,3 +8,5 @@ parse.c
 parse.h
 scan.c
 skel.c
+stage1scan.[cl]
+stage1flex
