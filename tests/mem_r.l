@@ -93,12 +93,12 @@ void * yyalloc(yy_size_t n , void* yyscanner)
     int i;
 
     total_mem += n;
-    p = (void*)malloc(n);
+    p = malloc(n);
 
     if( nptrs >= arrsz){
         /* increase array size by 1 */
         arrsz++;
-        ptrs = (struct memsz*)realloc( ptrs, arrsz * sizeof(struct memsz));
+        ptrs = realloc(ptrs, arrsz * sizeof(struct memsz));
         ptrs[nptrs].p = 0;
         ptrs[nptrs].sz = 0;
     }
@@ -125,7 +125,7 @@ void * yyrealloc(void* p, yy_size_t n , void* yyscanner)
         if ( ptrs[i].p == p){
             total_mem -= ptrs[i].sz;
             total_mem += n;
-            ptrs[i].p = (void*)realloc(p,n);
+            ptrs[i].p = realloc(p, n);
             ptrs[i].sz = n;
 
             printf("yyflex_realloc(%#10lx,%8ld) total=%8ld return=%8lx\n",
@@ -168,7 +168,7 @@ main ()
 {
     yyscan_t scanner;
     arrsz = 1;
-    ptrs  = (struct memsz*)calloc(1,sizeof(struct memsz));
+    ptrs  = calloc(1, sizeof(struct memsz));
     nptrs = 0;
 
     yylex_init(&scanner);

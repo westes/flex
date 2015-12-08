@@ -167,7 +167,7 @@ int main (int ARGC, char *ARGV[])
     }
 
     /* Allocate and initialize the locks. One for each filename in ARGV. */
-    file_locks = (pthread_mutex_t*)malloc( (ARGC-1) * sizeof(pthread_mutex_t));
+    file_locks = malloc((ARGC-1) * sizeof(pthread_mutex_t));
     for( i = 0; i < ARGC-1; i++)
         pthread_mutex_init( &file_locks[i], NULL );
 
