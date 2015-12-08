@@ -1015,12 +1015,12 @@ void set_input_file( char *file )
 
 void *flex_alloc( size_t size )
 	{
-	return (void *) malloc( size );
+	return malloc(size);
 	}
 
 void *flex_realloc( void *ptr, size_t size )
 	{
-	return (void *) realloc( ptr, size );
+	return realloc(ptr, size);
 	}
 
 void flex_free( void *ptr )

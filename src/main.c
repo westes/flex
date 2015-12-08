@@ -392,7 +392,7 @@ void check_options (void)
 
 		if (!tablesfilename) {
 			nbytes = strlen (prefix) + strlen (tablesfile_template) + 2;
-			tablesfilename = pname = (char *) calloc (nbytes, 1);
+			tablesfilename = pname = calloc(nbytes, 1);
 			snprintf (pname, nbytes, tablesfile_template, prefix);
 		}
 
@@ -405,7 +405,7 @@ void check_options (void)
 		yytbl_writer_init (&tableswr, tablesout);
 
 		nbytes = strlen (prefix) + strlen ("tables") + 2;
-		tablesname = (char *) calloc (nbytes, 1);
+		tablesname = calloc(nbytes, 1);
 		snprintf (tablesname, nbytes, "%stables", prefix);
 		yytbl_hdr_init (&hdr, flex_version, tablesname);
 

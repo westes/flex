@@ -692,14 +692,14 @@ char *file;
 void *flex_alloc( size )
 size_t size;
 	{
-	return (void *) malloc( size );
+	return malloc(size);
 	}
 
 void *flex_realloc( ptr, size )
 void *ptr;
 size_t size;
 	{
-	return (void *) realloc( ptr, size );
+	return realloc(ptr, size);
 	}
 
 void flex_free( ptr )

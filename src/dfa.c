@@ -511,15 +511,13 @@ void ntod (void)
 		 * So we'll have to realloc() on the way...
 		 * we'll wait until we can calculate yynxt_tbl->td_hilen.
 		 */
-		yynxt_tbl =
-			(struct yytbl_data *) calloc (1,
-						      sizeof (struct
-							      yytbl_data));
+		yynxt_tbl = calloc(1, sizeof (struct yytbl_data));
+     
 		yytbl_data_init (yynxt_tbl, YYTD_ID_NXT);
 		yynxt_tbl->td_hilen = 1;
 		yynxt_tbl->td_lolen = num_full_table_rows;
 		yynxt_tbl->td_data = yynxt_data =
-			(flex_int32_t *) calloc (yynxt_tbl->td_lolen *
+			calloc(yynxt_tbl->td_lolen *
 					    yynxt_tbl->td_hilen,
 					    sizeof (flex_int32_t));
 		yynxt_curr = 0;
@@ -703,7 +701,7 @@ void ntod (void)
 			/* Each time we hit here, it's another td_hilen, so we realloc. */
 			yynxt_tbl->td_hilen++;
 			yynxt_tbl->td_data = yynxt_data =
-				(flex_int32_t *) realloc (yynxt_data,
+				realloc (yynxt_data,
 						     yynxt_tbl->td_hilen *
 						     yynxt_tbl->td_lolen *
 						     sizeof (flex_int32_t));

@@ -56,7 +56,7 @@ static char* STRDUP(char* s1);
 
 static char* STRDUP(char* s1)
 {
-    char* s2 = (char*)malloc(strlen(s1)+1);
+    char* s2 = malloc(strlen(s1)+1);
     sprintf(s2,"%s",s1);
     return s2;
 }
