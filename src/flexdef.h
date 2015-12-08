@@ -682,48 +682,46 @@ void   *flex_realloc PROTO ((void *, size_t));
 void flex_free PROTO ((void *));
 
 #define allocate_integer_array(size) \
-	(int *) allocate_array( size, sizeof( int ) )
+	allocate_array(size, sizeof(int))
 
 #define reallocate_integer_array(array,size) \
-	(int *) reallocate_array( (void *) array, size, sizeof( int ) )
+	reallocate_array((void *) array, size, sizeof(int))
 
 #define allocate_bool_array(size) \
-	(bool *) allocate_array( size, sizeof( bool ) )
+	allocate_array(size, sizeof(bool))
 
 #define reallocate_bool_array(array,size) \
-	(bool *) reallocate_array( (void *) array, size, sizeof( bool ) )
+	reallocate_array((void *) array, size, sizeof(bool))
 
 #define allocate_int_ptr_array(size) \
-	(int **) allocate_array( size, sizeof( int * ) )
+	allocate_array(size, sizeof(int *))
 
 #define allocate_char_ptr_array(size) \
-	(char **) allocate_array( size, sizeof( char * ) )
+	allocate_array(size, sizeof(char *))
 
 #define allocate_dfaacc_union(size) \
-	(union dfaacc_union *) \
-		allocate_array( size, sizeof( union dfaacc_union ) )
+	allocate_array(size, sizeof(union dfaacc_union))
 
 #define reallocate_int_ptr_array(array,size) \
-	(int **) reallocate_array( (void *) array, size, sizeof( int * ) )
+	reallocate_array((void *) array, size, sizeof(int *))
 
 #define reallocate_char_ptr_array(array,size) \
-	(char **) reallocate_array( (void *) array, size, sizeof( char * ) )
+	reallocate_array((void *) array, size, sizeof(char *))
 
 #define reallocate_dfaacc_union(array, size) \
-	(union dfaacc_union *) \
-	reallocate_array( (void *) array, size, sizeof( union dfaacc_union ) )
+	reallocate_array((void *) array, size, sizeof(union dfaacc_union))
 
 #define allocate_character_array(size) \
-	(char *) allocate_array( size, sizeof( char ) )
+	allocate_array( size, sizeof(char))
 
 #define reallocate_character_array(array,size) \
-	(char *) reallocate_array( (void *) array, size, sizeof( char ) )
+	reallocate_array((void *) array, size, sizeof(char))
 
 #define allocate_Character_array(size) \
-	(unsigned char *) allocate_array( size, sizeof( unsigned char ) )
+	allocate_array(size, sizeof(unsigned char))
 
 #define reallocate_Character_array(array,size) \
-	(unsigned char *) reallocate_array( (void *) array, size, sizeof( unsigned char ) )
+	reallocate_array((void *) array, size, sizeof(unsigned char))
 
 
 /* Used to communicate between scanner and parser.  The type should really
