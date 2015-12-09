@@ -818,10 +818,9 @@ int     scanopt_destroy (scanopt_t *svoid)
 	struct _scanopt_t *s;
 
 	s = (struct _scanopt_t *) svoid;
-	if (s) {
-		if (s->aux)
-			free (s->aux);
-		free (s);
+	if (s != NULL) {
+		free(s->aux);
+		free(s);
 	}
 	return 0;
 }
