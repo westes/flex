@@ -115,8 +115,7 @@ int yytbl_data_init (struct yytbl_data *td, enum yytbl_id id)
  */
 int yytbl_data_destroy (struct yytbl_data *td)
 {
-	if (td->td_data)
-		free (td->td_data);
+	free(td->td_data);
 	td->td_data = 0;
 	free (td);
 	return 0;

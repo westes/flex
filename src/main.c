@@ -398,8 +398,7 @@ void check_options (void)
 
 		if ((tablesout = fopen (tablesfilename, "w")) == NULL)
 			lerr (_("could not create %s"), tablesfilename);
-		if (pname)
-			free (pname);
+		free(pname);
 		tablesfilename = 0;
 
 		yytbl_writer_init (&tableswr, tablesout);
