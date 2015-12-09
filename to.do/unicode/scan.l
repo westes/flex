@@ -159,7 +159,7 @@ LEXOPT		[aceknopr]
 	[[:digit:]]+	linenum = myctoi( yytext );
 
 	\"[^"\n]*\"	{
-			flex_free( (void *) infilename );
+			free(infilename);
 			infilename = xstrdup(yytext + 1);
 			infilename[strlen( infilename ) - 1] = '\0';
 			}
@@ -684,14 +684,4 @@ char *file;
 		}
 
 	linenum = 1;
-	}
-
-
-/* Wrapper routines for accessing the scanner's malloc routines. */
-
-void flex_free( ptr )
-void *ptr;
-	{
-	if ( ptr )
-		free( ptr );
 	}

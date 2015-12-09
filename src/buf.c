@@ -79,7 +79,7 @@ struct Buf *buf_prints (struct Buf *buf, const char *fmt, const char *s)
 	    flexfatal (_("Allocation of buffer to print string failed"));
 	snprintf (t, tsz, fmt, s);
 	buf = buf_strappend (buf, t);
-	flex_free (t);
+	free(t);
 	return buf;
 }
 
@@ -107,7 +107,7 @@ struct Buf *buf_linedir (struct Buf *buf, const char* filename, int lineno)
     *dst++ = '\n';
     *dst   = '\0';
     buf = buf_strappend (buf, t);
-    flex_free (t);
+    free(t);
     return buf;
 }
 
@@ -209,9 +209,10 @@ void buf_init (struct Buf *buf, size_t elem_size)
 /* frees memory */
 void buf_destroy (struct Buf *buf)
 {
-	if (buf && buf->elts)
-		flex_free (buf->elts);
-	buf->elts = NULL;
+	if (buf) {
+		free(buf->elts);
+		buf->elts = NULL;
+	}
 }
 
 

@@ -677,8 +677,6 @@ extern int num_backing_up, bol_needed;
 void   *allocate_array PROTO ((int, size_t));
 void   *reallocate_array PROTO ((void *, int, size_t));
 
-void flex_free PROTO ((void *));
-
 #define allocate_integer_array(size) \
 	allocate_array(size, sizeof(int))
 

@@ -231,7 +231,7 @@ M4QEND      "]]"
 	[[:digit:]]+	linenum = myctoi( yytext );
 
 	\"[^"\n]*\"	{
-			flex_free( (void *) infilename );
+			free(infilename);
 			infilename = xstrdup(yytext + 1);
 			infilename[strlen( infilename ) - 1] = '\0';
 			}
@@ -1008,13 +1008,4 @@ void set_input_file( char *file )
 		}
 
 	linenum = 1;
-	}
-
-
-/* Wrapper routines for accessing the scanner's malloc routines. */
-
-void flex_free( void *ptr )
-	{
-	if ( ptr )
-		free( ptr );
 	}
