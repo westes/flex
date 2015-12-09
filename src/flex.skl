@@ -3083,7 +3083,7 @@ void *yyalloc YYFARGS1( yy_size_t ,size)
 {
 	M4_YY_DECL_GUTS_VAR();
 	M4_YY_NOOP_GUTS_VAR();
-	return (void *) malloc( size );
+	return malloc(size);
 }
 ]])
 
@@ -3101,7 +3101,7 @@ void *yyrealloc  YYFARGS2( void *,ptr, yy_size_t ,size)
 	 * any pointer type to void*, and deal with argument conversions
 	 * as though doing an assignment.
 	 */
-	return (void *) realloc( (char *) ptr, size );
+	return realloc(ptr, size);
 }
 ]])
 
