@@ -824,22 +824,3 @@ int size;
 
 	return result;
 	}
-
-
-/* zero_out - set a region of memory to 0
- *
- * Sets region_ptr[0] through region_ptr[size_in_bytes - 1] to zero.
- */
-
-void zero_out( region_ptr, size_in_bytes )
-char *region_ptr;
-size_t size_in_bytes;
-	{
-	register char *rp, *rp_end;
-
-	rp = region_ptr;
-	rp_end = region_ptr + size_in_bytes;
-
-	while ( rp < rp_end )
-		*rp++ = 0;
-	}

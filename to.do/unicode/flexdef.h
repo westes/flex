@@ -913,9 +913,6 @@ extern void transition_struct_out PROTO((int, int));
 /* Only needed when using certain broken versions of bison to build parse.c. */
 extern void *yy_flex_xmalloc PROTO(( int ));
 
-/* Set a region of memory to 0. */
-extern void zero_out PROTO((char *, size_t));
-
 
 /* from file nfa.c */
 
