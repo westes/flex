@@ -149,11 +149,6 @@ char *alloca ();
 #endif
 
 
-/* ANSI C does not guarantee that isascii() is defined */
-#ifndef isascii
-#define isascii(c) ((c) <= 0177)
-#endif
-
 #define unspecified -1
 
 /* Special chk[] values marking the slots taking by end-of-buffer and action
