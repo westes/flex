@@ -906,22 +906,6 @@ void   *yy_flex_xmalloc (int size)
 }
 
 
-/* zero_out - set a region of memory to 0
- *
- * Sets region_ptr[0] through region_ptr[size_in_bytes - 1] to zero.
- */
-
-void zero_out (char *region_ptr, size_t size_in_bytes)
-{
-	char *rp, *rp_end;
-
-	rp = region_ptr;
-	rp_end = region_ptr + size_in_bytes;
-
-	while (rp < rp_end)
-		*rp++ = 0;
-}
-
 /* Remove all '\n' and '\r' characters, if any, from the end of str.
  * str can be any null-terminated string, or NULL.
  * returns str. */
