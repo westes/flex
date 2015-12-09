@@ -85,7 +85,7 @@ size_t element_size;
 	register void *mem;
 	size_t num_bytes = element_size * size;
 
-	mem = flex_alloc( num_bytes );
+	mem = malloc(num_bytes);
 	if ( ! mem )
 		flexfatal(
 			_( "memory allocation failed in allocate_array()" ) );
@@ -815,8 +815,9 @@ int element_v, element_n;
 void *yy_flex_xmalloc( size )
 int size;
 	{
-	void *result = flex_alloc( (size_t) size );
+	void *result;
 
+	result = malloc(size);
 	if ( ! result  )
 		flexfatal(
 			_( "memory allocation failed in yy_flex_xmalloc()" ) );

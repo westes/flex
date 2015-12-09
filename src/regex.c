@@ -57,10 +57,10 @@ void flex_regcomp(regex_t *preg, const char *regex, int cflags)
         const int errbuf_sz = 200;
         char *errbuf, *rxerr;
 
-		errbuf = (char*)flex_alloc(errbuf_sz *sizeof(char));
+		errbuf = malloc(errbuf_sz * sizeof(char));
 		if (!errbuf)
 			flexfatal(_("Unable to allocate buffer to report regcomp"));
-		rxerr = (char*)flex_alloc(errbuf_sz *sizeof(char));
+		rxerr = malloc(errbuf_sz * sizeof(char));
 		if (!rxerr)
 			flexfatal(_("Unable to allocate buffer for regerror"));
 		regerror (err, preg, rxerr, errbuf_sz);
@@ -85,7 +85,7 @@ char   *regmatch_dup (regmatch_t * m, const char *src)
 	if (m == NULL || m->rm_so < 0)
 		return NULL;
 	len = m->rm_eo - m->rm_so;
-	str = (char *) flex_alloc ((len + 1) * sizeof (char));
+	str = malloc((len + 1) * sizeof(char));
 	if (!str)
 		flexfatal(_("Unable to allocate a copy of the match"));
 	strncpy (str, src + m->rm_so, len);

@@ -47,9 +47,9 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
 	va_list ap;
 
 	/* allocate and initialize new filter */
-	f = (struct filter *) flex_alloc (sizeof (struct filter));
+	f = malloc(sizeof(struct filter));
 	if (!f)
-		flexerror (_("flex_alloc failed (f) in filter_create_ext"));
+		flexerror(_("malloc failed (f) in filter_create_ext"));
 	memset (f, 0, sizeof (*f));
 	f->filter_func = NULL;
 	f->extra = NULL;
@@ -66,11 +66,9 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
 
 	/* allocate argv, and populate it with the argument list. */
 	max_args = 8;
-	f->argv =
-		(const char **) flex_alloc (sizeof (char *) *
-					    (max_args + 1));
+	f->argv = malloc(sizeof(char *) * (max_args + 1));
 	if (!f->argv)
-		flexerror (_("flex_alloc failed (f->argv) in filter_create_ext"));
+		flexerror(_("malloc failed (f->argv) in filter_create_ext"));
 	f->argv[f->argc++] = cmd;
 
 	va_start (ap, cmd);
@@ -107,9 +105,9 @@ struct filter *filter_create_int (struct filter *chain,
 	struct filter *f;
 
 	/* allocate and initialize new filter */
-	f = (struct filter *) flex_alloc (sizeof (struct filter));
+	f = malloc(sizeof(struct filter));
 	if (!f)
-		flexerror (_("flex_alloc failed in filter_create_int"));
+		flexerror(_("malloc failed in filter_create_int"));
 	memset (f, 0, sizeof (*f));
 	f->next = NULL;
 	f->argc = 0;
@@ -288,9 +286,9 @@ int filter_tee_header (struct filter *chain)
 	fprintf (to_c, "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
 		 outfilename ? outfilename : "<stdout>");
 
-	buf = (char *) flex_alloc (readsz);
+	buf = malloc(readsz);
 	if (!buf)
-		flexerror (_("flex_alloc failed in filter_tee_header"));
+		flexerror(_("malloc failed in filter_tee_header"));
 	while (fgets (buf, readsz, stdin)) {
 		fputs (buf, to_c);
 		if (write_header)
@@ -349,9 +347,9 @@ int filter_fix_linedirs (struct filter *chain)
 	if (!chain)
 		return 0;
 
-	buf = (char *) flex_alloc (readsz);
+	buf = malloc(readsz);
 	if (!buf)
-		flexerror (_("flex_alloc failed in filter_fix_linedirs"));
+		flexerror(_("malloc failed in filter_fix_linedirs"));
 
 	while (fgets (buf, readsz, stdin)) {
 
