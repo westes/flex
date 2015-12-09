@@ -689,13 +689,6 @@ char *file;
 
 /* Wrapper routines for accessing the scanner's malloc routines. */
 
-void *flex_realloc( ptr, size )
-void *ptr;
-size_t size;
-	{
-	return realloc(ptr, size);
-	}
-
 void flex_free( ptr )
 void *ptr;
 	{

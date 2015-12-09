@@ -75,12 +75,7 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
 	while ((s = va_arg (ap, const char *)) != NULL) {
 		if (f->argc >= max_args) {
 			max_args += 8;
-			f->argv =
-				(const char **) flex_realloc (f->argv,
-							      sizeof (char
-								      *) *
-							      (max_args +
-							       1));
+			f->argv = realloc(f->argv, sizeof(char*) * (max_args + 1));
 		}
 		f->argv[f->argc++] = s;
 	}

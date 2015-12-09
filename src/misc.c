@@ -67,7 +67,8 @@ static void sko_push(bool dc)
     }
     if(sko_len >= sko_sz){
         sko_sz *= 2;
-        sko_stack = (struct sko_state*)flex_realloc(sko_stack,sizeof(struct sko_state)*sko_sz);
+        sko_stack = realloc(sko_stack,
+			sizeof(struct sko_state) * sko_sz);
     }
     
     /* initialize to zero and push */
@@ -719,7 +720,7 @@ void   *reallocate_array (void *array, int size, size_t element_size)
 	void *new_array;
 	size_t  num_bytes = element_size * size;
 
-	new_array = flex_realloc (array, num_bytes);
+	new_array = realloc(array, num_bytes);
 	if (!new_array)
 		flexfatal (_("attempt to increase array size failed"));
 
