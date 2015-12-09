@@ -88,8 +88,7 @@ static int addsym (char sym[], char *str_def, int int_def, hash_table table, int
 	}
 
 	/* create new entry */
-	new_entry = (struct hash_entry *)
-		flex_alloc (sizeof (struct hash_entry));
+	new_entry = malloc(sizeof(struct hash_entry));
 
 	if (new_entry == NULL)
 		flexfatal (_("symbol table memory allocation failed"));

@@ -73,7 +73,8 @@ struct Buf *buf_prints (struct Buf *buf, const char *fmt, const char *s)
 	char   *t;
         size_t tsz;
 
-	t = flex_alloc (tsz = strlen (fmt) + strlen (s) + 1);
+	tsz = strlen(fmt) + strlen(s) + 1;
+	t = malloc(tsz);
 	if (!t)
 	    flexfatal (_("Allocation of buffer to print string failed"));
 	snprintf (t, tsz, fmt, s);
@@ -93,7 +94,7 @@ struct Buf *buf_linedir (struct Buf *buf, const char* filename, int lineno)
     char *dst, *t;
     const char *src;
 
-    t = flex_alloc (strlen ("#line \"\"\n")          +   /* constant parts */
+    t = malloc(strlen("#line \"\"\n")          +   /* constant parts */
                     2 * strlen (filename)            +   /* filename with possibly all backslashes escaped */
                     (int) (1 + log10 (abs (lineno))) +   /* line number */
                     1);                                  /* NUL */
@@ -165,7 +166,8 @@ struct Buf *buf_m4_define (struct Buf *buf, const char* def, const char* val)
     size_t strsz;
 
     val = val?val:"";
-    str = (char*)flex_alloc(strsz = strlen(fmt) + strlen(def) + strlen(val) + 2);
+    strsz = strlen(fmt) + strlen(def) + strlen(val) + 2;
+    str = malloc(strsz);
     if (!str)
         flexfatal (_("Allocation of buffer for m4 def failed"));
 
@@ -185,7 +187,8 @@ struct Buf *buf_m4_undefine (struct Buf *buf, const char* def)
     char * str;
     size_t strsz;
 
-    str = (char*)flex_alloc(strsz = strlen(fmt) + strlen(def) + 2);
+    strsz = strlen(fmt) + strlen(def) + 2;
+    str = malloc(strsz);
     if (!str)
         flexfatal (_("Allocation of buffer for m4 undef failed"));
 
