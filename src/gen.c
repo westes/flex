@@ -1476,7 +1476,7 @@ void gentabs (void)
 	}
 	/* End generating yy_chk */
 
-	flex_free ((void *) acc_array);
+	free(acc_array);
 }
 
 

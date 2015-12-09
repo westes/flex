@@ -793,8 +793,8 @@ void ntod (void)
 		mkdeftbl ();
 	}
 
-	flex_free ((void *) accset);
-	flex_free ((void *) nset);
+	free(accset);
+	free(nset);
 }
 
 
