@@ -1013,11 +1013,6 @@ void set_input_file( char *file )
 
 /* Wrapper routines for accessing the scanner's malloc routines. */
 
-void *flex_realloc( void *ptr, size_t size )
-	{
-	return realloc(ptr, size);
-	}
-
 void flex_free( void *ptr )
 	{
 	if ( ptr )

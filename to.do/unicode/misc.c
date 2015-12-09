@@ -718,7 +718,7 @@ size_t element_size;
 	register void *new_array;
 	size_t num_bytes = element_size * size;
 
-	new_array = flex_realloc( array, num_bytes );
+	new_array = realloc(array, num_bytes);
 	if ( ! new_array )
 		flexfatal( _( "attempt to increase array size failed" ) );
 
