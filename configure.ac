@@ -24,7 +24,7 @@
 
 # autoconf requirements and initialization
 
-AC_INIT([the fast lexical analyser generator], [2.6.0], [flex-help@lists.sourceforge.net], [flex])
+AC_INIT([the fast lexical analyser generator],[2.6.0],[flex-help@lists.sourceforge.net],[flex])
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
 LT_INIT
@@ -47,6 +47,7 @@ AM_PROG_CC_C_O
 AC_PROG_LN_S
 AC_PROG_AWK
 AC_PROG_INSTALL
+AC_PROG_RANLIB
 
 AC_PATH_PROG([BISON], bison, no)
 AS_IF([test "$BISON" != no],[],
@@ -124,7 +125,7 @@ AC_FUNC_ALLOCA
 AC_FUNC_FORK
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([dup2 isascii memset pow regcomp setlocale strchr strtol])
+AC_CHECK_FUNCS([dup2 memset pow regcomp setlocale strchr strdup strtol])
 
 AC_CONFIG_FILES(
 Makefile
