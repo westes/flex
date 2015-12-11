@@ -3,6 +3,10 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* version 2.6.1
+
+** Resolved sf bugs #155, #195.
+
 * version 2.6.0 released 2015-11-17
 
 ** User Visible Changes
