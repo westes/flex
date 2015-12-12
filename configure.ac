@@ -125,7 +125,15 @@ AC_FUNC_ALLOCA
 AC_FUNC_FORK
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([dup2 memset pow regcomp setlocale strchr strdup strtol])
+AC_CHECK_FUNCS([dup2 \
+		memset \
+		pow \
+		reallocarray \
+		regcomp \
+		setlocale \
+		strchr \
+		strdup \
+		strtol])
 
 AC_CONFIG_FILES(
 Makefile
