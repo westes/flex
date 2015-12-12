@@ -111,18 +111,6 @@
 #endif
 #endif
 
-#ifdef VMS
-#ifndef __VMS_POSIX
-#define unlink remove
-#define SHORT_FILE_NAMES
-#endif
-#endif
-
-#ifdef MS_DOS
-#define SHORT_FILE_NAMES
-#endif
-
-
 /* Maximum line length we'll have to deal with. */
 #define MAXLINE 2048
 
