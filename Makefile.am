@@ -27,11 +27,6 @@
 # and 7-bit scanners when using uncompressed tables (-f or -F options).
 # For flex to always generate 8-bit scanners, add "-DDEFAULT_CSIZE=256"
 # to DEFS.
-#
-# For Vax/VMS, add "-DVMS" to DEFS.
-#
-# For MS-DOS, add "-DMS_DOS" to DEFS.  See the directory MISC/MSDOS for
-# additional info.
 
 ACLOCAL_AMFLAGS = -I m4
 indent = @INDENT@
