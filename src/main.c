@@ -117,19 +117,9 @@ struct yytbl_writer tableswr;
  */
 char   *program_name = "flex";
 
-#ifndef SHORT_FILE_NAMES
 static const char outfile_template[] = "lex.%s.%s";
 static const char backing_name[] = "lex.backup";
 static const char tablesfile_template[] = "lex.%s.tables";
-#else
-static const char outfile_template[] = "lex%s.%s";
-static const char backing_name[] = "lex.bck";
-static const char tablesfile_template[] = "lex%s.tbl";
-#endif
-
-#ifdef MS_DOS
-extern unsigned _stklen = 16384;
-#endif
 
 /* From scan.l */
 extern FILE* yyout;
