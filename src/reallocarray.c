@@ -17,7 +17,7 @@
 
 /* OPENBSD ORIGINAL: lib/libc/stdlib/reallocarray.c */
 
-#include "includes.h"
+#include "config.h"
 #ifndef HAVE_REALLOCARRAY
 
 #include <sys/types.h>
