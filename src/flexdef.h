@@ -645,6 +645,10 @@ extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 extern int num_backing_up, bol_needed;
 
+#ifndef HAVE_REALLOCARRAY
+void *reallocarray(void *, size_t, size_t);
+#endif
+
 void   *allocate_array PROTO ((int, size_t));
 void   *reallocate_array PROTO ((void *, int, size_t));
 
