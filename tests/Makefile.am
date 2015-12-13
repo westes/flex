@@ -19,6 +19,8 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
+AM_CPPFLAGS = -I$(top_srcdir)/src
+
 TESTS = $(check_PROGRAMS) options.cn
 
 # The script testwrapper.sh will run most tests as is. A couple tests
