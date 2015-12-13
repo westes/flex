@@ -30,10 +30,10 @@ while getopts :d:i:rt1 OPTION ; do
 
 TESTNAME="${!OPTIND}"
 
-INPUT_NAME=${INPUT_NAME:-`basename $TESTNAME`.txt}
+INPUT_NAME=${INPUT_NAME:-$INPUT_DIRECTORY/`basename $TESTNAME`.txt}
 
 if [ "$DO_COMPARISON" -eq "1" ] ; then
-    test `$TESTNAME 1 < $INPUT_DIRECTORY/$INPUT_NAME` -eq `$TESTNAME < $INPUT_DIRECTORY/$INPUT_NAME`
+    test `$TESTNAME 1 < $INPUT_NAME` -eq `$TESTNAME < $INPUT_NAME`
     exit $?
     fi
 
@@ -42,11 +42,11 @@ if [ $INPUT_COUNT -gt 1 ] ; then
     exit $?
     fi
 
-if [ -f ${INPUT_DIRECTORY}/${INPUT_NAME} ] ; then
+if [ -f ${INPUT_NAME} ] ; then
     if [ $USE_REDIRECT == 1 ] ; then
-        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME}.tables} < $INPUT_DIRECTORY/$INPUT_NAME
+        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME}.tables} < $INPUT_NAME
     else
-        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME}.tables} $INPUT_DIRECTORY/$INPUT_NAME
+        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME}.tables} $INPUT_NAME
     fi
 else
     $TESTNAME
