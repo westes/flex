@@ -34,10 +34,10 @@
 
 /* declare functions that have forward references */
 
-void dump_associated_rules PROTO ((FILE *, int));
-void dump_transitions PROTO ((FILE *, int[]));
-void sympartition PROTO ((int[], int, int[], int[]));
-int symfollowset PROTO ((int[], int, int, int[]));
+void	dump_associated_rules(FILE *, int);
+void	dump_transitions(FILE *, int[]);
+void	sympartition(int[], int, int[], int[]);
+int	symfollowset(int[], int, int, int[]);
 
 
 /* check_for_backing_up - check a DFA state for backing up

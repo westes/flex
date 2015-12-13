@@ -36,8 +36,8 @@
 
 /* declare functions that have forward references */
 
-int dupmachine PROTO ((int));
-void mkxtion PROTO ((int, int));
+int	dupmachine(int);
+void	mkxtion(int, int);
 
 
 /* add_accept - add an accepting state to a machine

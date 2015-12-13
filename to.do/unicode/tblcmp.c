@@ -33,11 +33,11 @@
 
 /* declarations for functions that have forward references */
 
-void mkentry PROTO((register int*, int, int, int, int));
-void mkprot PROTO((int[], int, int));
-void mktemplate PROTO((int[], int, int));
-void mv2front PROTO((int));
-int tbldiff PROTO((int[], int, int[]));
+void	mkentry(int *, int, int, int, int);
+void	mkprot(int[], int, int);
+void	mktemplate(int[], int, int);
+void	mv2front(int);
+int	tbldiff(int[], int, int[]);
 
 
 /* bldtbl - build table entries for dfa state

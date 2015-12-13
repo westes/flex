@@ -43,12 +43,12 @@ static char flex_version[] = FLEX_VERSION;
 
 /* declare functions that have forward references */
 
-void flexinit PROTO((int, char**));
-void readin PROTO((void));
-void set_up_initial_allocations PROTO((void));
+void flexinit(int, char **);
+void readin(void);
+void set_up_initial_allocations(void);
 
 #ifdef NEED_ARGV_FIXUP
-extern void argv_fixup PROTO((int *, char ***));
+extern void argv_fixup(int *, char ***);
 #endif
 
 
