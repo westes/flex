@@ -8,11 +8,6 @@ flex can be found at:
 
 http://flex.sourceforge.net/
 
-Bug reports should be submitted using the SourceForge Bug Tracker for
-flex at:
-
-http://sourceforge.net/tracker/?group_id=97492&atid=618177
-
 The flex codebase is kept in git at:
 
 https://github.com/westes/flex
@@ -35,24 +30,15 @@ http://sourceforge.net/mail/?group_id=97492
 The flex distribution contains the following files which may be of interest:
 
 README - This file.
-
 NEWS - current version number and list of user-visible changes.
-
 INSTALL - basic installation information.
-
 ABOUT-NLS - description of internationalization support in flex.
-
 COPYING - flex's copyright and license.
-
 doc/ - user documentation.
-
 examples/ - containing examples of some possible flex scanners and a
-few other things. See the file examples/README for more details.
-
+	few other things. See the file examples/README for more details.
 TODO - outstanding bug reports, desired features, etc.
-
 tests/ - regression tests. See TESTS/README for details.
-
 po/ - internationalization support files.
 
 You need the following tools to build flex from the maintainer's
