@@ -128,7 +128,7 @@ AC_FUNC_REALLOC
 
 AC_CHECK_FUNCS([dup2 memset pow reallocarray regcomp setlocale strchr strdup strtol])
 
-if [ "$ac_cv_func_reallocarray" = "no" ] ; then
+if test "$ac_cv_func_reallocarray" = "no" ; then
    AC_LIBOBJ([reallocarray])
 fi
 

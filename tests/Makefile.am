@@ -33,7 +33,7 @@ LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
 
 REJECT_LOG_COMPILER = $(srcdir)/testwrapper.sh
-AM_REJECT_LOG_FLAGS = -d $(srcdir) -i reject.txt -r
+AM_REJECT_LOG_FLAGS = -d $(srcdir) -i $(srcdir)/reject.txt -r
 
 TABLE_LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_TABLE_LOG_FLAGS = -d $(builddir) -i $(srcdir)/reject.txt -t
@@ -435,7 +435,7 @@ tableopts_tests  := $(tableopts_opttests) $(tableopts_vertests) $(tableopts_sert
 tableopts_c := $(addsuffix .c,$(tableopts_tests))
 
 OPT_LOG_COMPILER = $(srcdir)/testwrapper.sh
-AM_OPT_LOG_FLAGS = -d $(srcdir) -i tableopts.txt -r
+AM_OPT_LOG_FLAGS = -d $(srcdir) -i $(srcdir)/tableopts.txt -r
 
 tableopts_opt_nr%.c: tableopts.l4 $(FLEX)
 	$(FLEX) -P $(subst -,_,$(basename $(*F))) $* -o $@ $<
