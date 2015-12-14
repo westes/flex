@@ -12,6 +12,9 @@ The flex codebase is kept in git at:
 
 https://github.com/westes/flex
 
+Bugs and pull requests should be filed against flex using github's
+issue tracker and pull request facilities.
+
 There are several mailing lists available as well:
 
 flex-announce@lists.sourceforge.net - where posts will be made
