@@ -75,15 +75,14 @@ struct _scanopt_t {
 };
 
 /* Accessor functions. These WOULD be one-liners, but portability calls. */
-static const char *NAME PROTO ((struct _scanopt_t *, int));
-static int PRINTLEN PROTO ((struct _scanopt_t *, int));
-static int RVAL PROTO ((struct _scanopt_t *, int));
-static int FLAGS PROTO ((struct _scanopt_t *, int));
-static const char *DESC PROTO ((struct _scanopt_t *, int));
-static int scanopt_err PROTO ((struct _scanopt_t *, int, int));
-static int matchlongopt PROTO ((char *, char **, int *, char **, int *));
-static int find_opt
-PROTO ((struct _scanopt_t *, int, char *, int, int *, int *opt_offset));
+static const char *NAME(struct _scanopt_t *, int);
+static int PRINTLEN(struct _scanopt_t *, int);
+static int RVAL(struct _scanopt_t *, int);
+static int FLAGS(struct _scanopt_t *, int);
+static const char *DESC(struct _scanopt_t *, int);
+static int scanopt_err(struct _scanopt_t *, int, int);
+static int matchlongopt(char *, char **, int *, char **, int *);
+static int find_opt((struct _scanopt_t *, int, char *, int, int *, int *opt_offset));
 
 static const char *NAME (struct _scanopt_t *s, int i)
 {
@@ -112,7 +111,7 @@ static const char *DESC (struct _scanopt_t *s, int i)
 }
 
 #ifndef NO_SCANOPT_USAGE
-static int get_cols PROTO ((void));
+static int get_cols (void);
 
 static int get_cols (void)
 {
