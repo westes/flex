@@ -135,7 +135,6 @@ const char *escaped_qend   = "[[]]M4_YY_NOOP]M4_YY_NOOP]M4_YY_NOOP[[]]";
 static int preproc_level = 1000;
 
 int flex_main PROTO ((int argc, char *argv[]));
-int main PROTO ((int argc, char *argv[]));
 
 int flex_main (int argc, char *argv[])
 {
