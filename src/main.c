@@ -41,10 +41,10 @@ static char flex_version[] = FLEX_VERSION;
 
 /* declare functions that have forward references */
 
-void flexinit PROTO ((int, char **));
-void readin PROTO ((void));
-void set_up_initial_allocations PROTO ((void));
-static char *basename2 PROTO ((char *path, int should_strip_ext));
+void flexinit(int, char **);
+void readin(void);
+void set_up_initial_allocations(void);
+static char *basename2(char *path, int should_strip_ext);
 
 
 /* these globals are all defined and commented in flexdef.h */

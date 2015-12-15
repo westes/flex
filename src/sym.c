@@ -59,12 +59,12 @@ static struct hash_entry *ccltab[CCL_HASH_SIZE];
 
 /* declare functions that have forward references */
 
-static int addsym PROTO ((char[], char *, int, hash_table, int));
+static int addsym(char[], char *, int, hash_table, int);
 static struct hash_entry *findsym PROTO ((const char *sym,
 					  hash_table table,
 
 					  int table_size));
-static int hashfunct PROTO ((const char *, int));
+static int hashfunct(const char *, int);
 
 
 /* addsym - add symbol and definitions to symbol table
