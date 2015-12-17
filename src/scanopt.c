@@ -82,7 +82,7 @@ static int FLAGS(struct _scanopt_t *, int);
 static const char *DESC(struct _scanopt_t *, int);
 static int scanopt_err(struct _scanopt_t *, int, int);
 static int matchlongopt(char *, char **, int *, char **, int *);
-static int find_opt((struct _scanopt_t *, int, char *, int, int *, int *opt_offset));
+static int find_opt(struct _scanopt_t *, int, char *, int, int *, int *opt_offset);
 
 static const char *NAME (struct _scanopt_t *s, int i)
 {
