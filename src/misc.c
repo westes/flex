@@ -102,7 +102,7 @@ void action_define (const char *defname, int value)
 		return;
 	}
 
-	snprintf (buf, sizeof(buf), "#define %s %d\n", defname, value);
+	snprintf (buf, sizeof(buf), "M4_YY_ALIAS( [[%s]], [[%d]])\n", defname, value);
 	add_action (buf);
 
 	/* track #defines so we can undef them when we're done. */
@@ -260,7 +260,7 @@ void dataend (void)
 			dataflush ();
 
 		/* add terminator for initialization; { for vi */
-		outn ("    } ;\n");
+		outn ("INDENT[[]]LAST_ROW");
 	}
 	dataline = 0;
 	datapos = 0;
@@ -275,13 +275,13 @@ void dataflush (void)
 	if (!gentables)
 		return;
 
-	outc ('\n');
+	out ("TABLE_BLOCK[[]]");
 
 	if (++dataline >= NUMDATALINES) {
 		/* Put out a blank line so that the table is grouped into
 		 * large blocks that enable the user to find elements easily.
 		 */
-		outc ('\n');
+		out ("TABLE_BLOCK[[]]");
 		dataline = 0;
 	}
 
@@ -343,7 +343,7 @@ void line_directive_out (FILE *output_file, int do_infile)
 {
 	char    directive[MAXLINE*2], filename[MAXLINE];
 	char   *s1, *s2, *s3;
-	static const char line_fmt[] = "#line %d \"%s\"\n";
+	static const char line_fmt[] = "M4_YY_LINE_DIRECTIVE( [[%d]], %s)\n";
 
 	if (!gen_line_dirs)
 		return;
@@ -418,20 +418,20 @@ void mk2data (int value)
 		return;
 
 	if (datapos >= NUMDATAITEMS) {
-		outc (',');
+		out ("COLUMN_SEPARATOR[[]]");
 		dataflush ();
 	}
 
 	if (datapos == 0)
 		/* Indent. */
-		out ("    ");
+		out ("INDENT[[]]");
 
 	else
-		outc (',');
+		out ("COLUMN_SEPARATOR[[]]");
 
 	++datapos;
 
-	out_dec ("%5d", value);
+	out_dec ("TABLE_DATA(%5d)[[]]", value);
 }
 
 
@@ -447,19 +447,19 @@ void mkdata (int value)
 		return;
 
 	if (datapos >= NUMDATAITEMS) {
-		outc (',');
+		out ("COLUMN_SEPARATOR[[]]");
 		dataflush ();
 	}
 
 	if (datapos == 0)
 		/* Indent. */
-		out ("    ");
+		out ("INDENT[[]]");
 	else
-		outc (',');
+		out ("COLUMN_SEPARATOR[[]]");
 
 	++datapos;
 
-	out_dec ("%5d", value);
+	out_dec ("TABLE_DATA(%5d)[[]]", value);
 }
 
 
@@ -579,6 +579,11 @@ void out_str (const char *fmt, const char str[])
 	fprintf (stdout,fmt, str);
 }
 
+void out_str2 (const char *fmt, const char s1[], const char s2[])
+{
+  fprintf (stdout,fmt, s1, s2);
+}
+
 void out_str3 (const char *fmt, const char s1[], const char s2[], const char s3[])
 {
 	fprintf (stdout,fmt, s1, s2, s3);
@@ -587,6 +592,11 @@ void out_str3 (const char *fmt, const char s1[], const char s2[], const char s3[
 void out_str_dec (const char *fmt, const char str[], int n)
 {
 	fprintf (stdout,fmt, str, n);
+}
+
+void out_str2_dec (const char *fmt, const char s1[], const char s2[], int n)
+{
+  fprintf (stdout,fmt, s1, s2, n);
 }
 
 void outc (int c)
@@ -610,6 +620,25 @@ void out_m4_define (const char* def, const char* val)
     fprintf(stdout, fmt, def, val?val:"");
 }
 
+/** Print "m4_define( [[def]], [[val]])m4_dnl\n".
+ * @param def The m4 symbol to define.
+ * @param val The definition; may be NULL.
+ */
+void out_m4_define_dec (const char* def, const int val)
+{
+    const char * fmt = "m4_define( [[%s]], [[%d]])m4_dnl\n";
+    fprintf(stdout, fmt, def, val);
+}
+
+/** Print "m4_define( [[def]], 0x[[val]])m4_dnl\n".
+ * @param def The m4 symbol to define.
+ * @param val The definition; may be NULL.
+ */
+void out_m4_define_hex (const char* def, const unsigned int val)
+{
+    const char * fmt = "m4_define( [[%s]], [[0x%x]])m4_dnl\n";
+    fprintf(stdout, fmt, def, val);
+}
 
 /* readable_form - return the the human-readable form of a character
  *
@@ -716,9 +745,9 @@ void skelout (void)
 			/* print the control line as a comment. */
 			if (ddebug && buf[1] != '#') {
 				if (buf[strlen (buf) - 1] == '\\')
-					out_str ("/* %s */\\\n", buf);
+					out_str ("M4_YY_COMMENT([[ %s ]])\\\n", buf);
 				else
-					out_str ("/* %s */\n", buf);
+					out_str ("M4_YY_COMMENT([[ %s ]])\n", buf);
 			}
 
 			/* We've been accused of using cryptic markers in the skel.
@@ -738,14 +767,14 @@ void skelout (void)
             else if (cmd_match (CMD_PUSH)){
                 sko_push(do_copy);
                 if(ddebug){
-                    out_str("/*(state = (%s) */",do_copy?"true":"false");
+                    out_str("M4_YY_COMMENT([[ (state = (%s)) ]])",do_copy?"true":"false");
                 }
                 out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
             }
             else if (cmd_match (CMD_POP)){
                 sko_pop(&do_copy);
                 if(ddebug){
-                    out_str("/*(state = (%s) */",do_copy?"true":"false");
+                    out_str("M4_YY_COMMENT([[ (state = (%s)) ]])",do_copy?"true":"false");
                 }
                 out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
             }
@@ -777,7 +806,7 @@ void skelout (void)
 			}
             else if (cmd_match (CMD_DEFINE_YYTABLES)) {
                 if ( tablesext )
-                    out_str( "#define YYTABLES_NAME \"%s\"\n",
+                    out_str( "M4_YY_ALIAS( YYTABLES_NAME, \"%s\")",
                            tablesname ? tablesname : "yytables" );
             }
 			else if (cmd_match (CMD_IF_CPP_ONLY)) {
@@ -827,15 +856,15 @@ void transition_struct_out (int element_v, int element_n)
 	if (!gentables)
 		return;
 
-	out_dec2 (" {%4d,%4d },", element_v, element_n);
+	out_dec2 ("BEGIN_STRUCT[[]]%4d[[]]NEXT_SLOT[[]]%4d[[]]LAST_SLOT[[]]NEXT_STRUCT[[]]", element_v, element_n);
 
 	datapos += TRANS_STRUCT_PRINT_LENGTH;
 
 	if (datapos >= 79 - TRANS_STRUCT_PRINT_LENGTH) {
-		outc ('\n');
+		outn ("[[]]TABLE_BLOCK[[]]");
 
 		if (++dataline % 10 == 0)
-			outc ('\n');
+			outn ("[[]]TABLE_BLOCK[[]]");
 
 		datapos = 0;
 	}

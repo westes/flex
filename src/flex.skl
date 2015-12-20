@@ -56,6 +56,232 @@ m4_changequote([[, ]])
 %#   edit the skeleton.
 %#
 
+%#
+%#   Macros that customize this skeleton to a specific target language.
+%#
+
+%#   Define language-specific macros controlling emission.
+%#   Skeleton authors must alter these to conform to their target language.
+
+%#   Define target language features.
+m4_define( [[M4_YY_COMMENT]], [[/* $1 */]] )
+m4_define( [[M4_YY_ALIAS]], [[#define $1 $2]] )
+m4_define( [[M4_YY_LINE_DIRECTIVE]], [[#line $1 "$2"]] )
+
+%#   Define the standard input and output files, with and without initialization.
+m4_define( [[M4_YY_STDFILES]], [[extern FILE *yyin, *yyout;]] )
+m4_define( [[M4_YY_STDINIT]], [[FILE *yyin=stdin, *yyout=stdout;]] )
+m4_define( [[M4_YY_NO_STDINIT]], [[FILE *yyin=NULL, *yyout=NULL;]] )
+
+%#   Defines type macros emitted by flex.
+m4_define( [[M4_YY_TRANS_INFO_TYPE]], [[struct yy_trans_info]] )
+m4_define( [[M4_YY_TRANS_INFO_P_TYPE]], [[struct yy_trans_info*]] )
+m4_define( [[M4_YY_TRANS_INFO_PP_TYPE]], [[struct yy_trans_info**]] )
+
+%#   Defines a table with a parameterized name and dimension.
+%#      /param1 - name of the table
+%#      /param2 - number of rows
+m4_define( [[DEFINE_TABLE_2D]], [[static const YY_INT_ALIGNED $1 [][$2] =
+{
+]] )
+
+%#   Defines an array with a parameterized name and dimension.
+%#      /param1 - name of the table
+%#      /param2 - number of cells
+m4_define( [[DEFINE_ARRAY]], [[static const YY_INT_ALIGNED $1 [$2] =
+{ 0,
+]] )
+m4_define( [[DEFINE_LONG_ARRAY]], [[static const flex_int32_t $1 [$2] =
+{ 0,
+]] )
+m4_define( [[DEFINE_STATE_ARRAY]], [[static const yy_state_type $1 [$2] =
+{ 0,
+]] )
+m4_define( [[DEFINE_CHAR_ARRAY]], [[static const YY_CHAR $1 [$2] =
+{ 0,
+]] )
+%# One-off typed arrays. Usually structs.
+%# Zero-indexed, unlike all the other arrays.
+m4_define( [[DEFINE_TYPE_ARRAY]], [[static const $1 $2 [$3] =
+{
+]] )
+
+%#   Like DEFINE_TABLE, but for strictly empty tables
+%#      /param1 - name of the table
+m4_define( [[DEFINE_TABLE_EMPTY]], [[static const YY_INT_ALIGNED * $1 = 0;
+]] )
+m4_define( [[DEFINE_LONG_TABLE_EMPTY]], [[static const flex_int32_t * $1 = 0;
+]] )
+m4_define( [[DEFINE_STATE_TABLE_EMPTY]], [[static const yy_state_type * $1 = 0;
+]] )
+m4_define( [[DEFINE_CHAR_TABLE_EMPTY]], [[static const YY_CHAR * $1 = 0;
+]] )
+m4_define( [[DEFINE_TYPE_TABLE_EMPTY]], [[static const $1 $2 = 0;
+]] )
+
+
+%#   Defines the end-of-table syntax
+m4_define( [[END_TABLE]], [[}]] )
+
+%#   Defines the row separator syntax
+m4_define( [[BEGIN_ROW]], [[{]] )
+m4_define( [[END_ROW]], [[},
+]] )
+m4_define( [[LAST_ROW]], [[} ;
+]] )
+
+%# Define structure & slot syntax
+m4_define( [[BEGIN_STRUCT]], [[{]] )
+m4_define( [[NEXT_STRUCT]], [[},]] )
+m4_define( [[LAST_STRUCT]], [[}]] )
+m4_define( [[NEXT_SLOT]], [[,]] )
+m4_define( [[LAST_SLOT]], [[]] )
+
+%#   Defines the column separator syntax
+m4_define( [[COLUMN_SEPARATOR]], [[,]] )
+
+%#   Defines the table entry syntax
+%#      /param1 - the table entry
+m4_define( [[TABLE_DATA]], [[$1]] )
+
+%#   Defines spacing for pretty-printing tables
+m4_define( [[INDENT]], [[    ]] )
+m4_define( [[TABLE_BLOCK]], [[
+]] )
+
+%#   Defines lookup syntax for a table entry
+m4_define( [[LOOKUP_TABLE_ENTRY]], [[$1[$2]]] )
+m4_define( [[REFERENCE_TABLE_ENTRY]], [[&$1[$2]]] )
+
+%#   Defines an entry in the table map emitted by the %tables-yydmap command
+%#      /param1 - A table ID constant
+%#      /param2 - A handle for a table, usually a symbol/name/etc
+m4_define( [[YYDMAP_ENTRY]], [[ {$1, (void**)&$2, sizeof(YY_INT_ALIGNED)},
+]] )
+m4_define( [[YYDMAP_ENTRY_LONG]], [[ {$1, (void**)&$2, sizeof(flex_int32_t)},
+]] )
+m4_define( [[YYDMAP_ENTRY_TYPE]], [[ {$1, (void**)&$2, sizeof($3)},
+]] )
+
+%#   Defines the syntax for matching EOF rules in yylex.
+m4_define( [[EOF_RULE]], [[case YY_STATE_EOF($1):
+]] )
+
+%#   Redefines the YY_NXT_LOLEN constant used to index tables in the C/C++ scanner
+%#      /param1 - the new (integer) value of YY_NXT_LOLEN
+m4_define( [[RESET_NXT_LOLEN]], [[#undef YY_NXT_LOLEN
+#define YY_NXT_LOLEN ($1)
+]] )
+
+
+%#   The skeleton uses the following macros to implement CLI switch-controlled emissions.
+%#   They are either emitted directly from main.c in flexinit() and readin() or by M4_YY_USERDEF.  
+%#   They are listed here for documentation's sake.  They are wrapped in m4_undefs to ensure they 
+%#   don't break anything if they're uncommented and unused.  This way you can uncomment them in a
+%#   new skeleton to indicate that they are ignored in your code.
+
+%# m4_undef( [[M4_YY_MORE_USED]] )
+%# m4_undef( [[M4_YY_USES_REJECT]] )
+%# m4_undef( [[M4_YY_SKIP_YYWRAP]] )
+%# m4_undef( [[M4_FLEX_DEBUG]] )
+%# m4_undef( [[M4_YY_REENTRANT]] )
+%# m4_undef( [[M4_YYTEXT_PTR]] )
+%# m4_undef( [[M4_YY_INTERACTIVE]] )
+%# m4_undef( [[M4_DO_STDINIT]] )
+%# m4_undef( [[M4_YY_FULLSPD]] )
+%# m4_undef( [[M4_LEX_COMPAT]] )
+%# m4_undef( [[M4_YYCLASS]] )
+%# m4_undef( [[M4_YY_TEXT_IS_ARRAY]] )
+%# m4_undef( [[M4_YY_MAIN]] )
+%# m4_undef( [[M4_YY_NO_UNISTD_H]] )
+%# m4_undef( [[M4_YY_ALWAYS_INTERACTIVE]] )
+%# m4_undef( [[M4_YY_NEVER_INTERACTIVE]] )
+%# m4_undef( [[M4_YY_STACK_USED]] )
+%# m4_undef( [[M4_YYCLASS]] )
+%# m4_undef( [[M4_YY_NO_PUSH_STATE]] )
+%# m4_undef( [[M4_YY_NO_POP_STATE]] )
+%# m4_undef( [[M4_YY_NO_TOP_STATE]] )
+%# m4_undef( [[M4_YY_NO_UNPUT]] )
+%# m4_undef( [[M4_YY_NO_SCAN_BUFFER]] )
+%# m4_undef( [[M4_YY_NO_SCAN_BYTES]] )
+%# m4_undef( [[M4_YY_NO_SCAN_STRING]] )
+%# m4_undef( [[M4_YY_NO_GET_EXTRA]] )
+%# m4_undef( [[M4_YY_NO_SET_EXTRA]] )
+%# m4_undef( [[M4_YY_NO_GET_LENG]] )
+%# m4_undef( [[M4_YY_NO_GET_TEXT]] )
+%# m4_undef( [[M4_YY_NO_GET_LINENO]] )
+%# m4_undef( [[M4_YY_NO_SET_LINENO]] )
+%# m4_undef( [[M4_YY_NO_GET_IN]] )
+%# m4_undef( [[M4_YY_NO_SET_IN]] )
+%# m4_undef( [[M4_YY_NO_GET_OUT]] )
+%# m4_undef( [[M4_YY_NO_SET_OUT]] )
+%# m4_undef( [[M4_YY_NO_GET_LVAL]] )
+%# m4_undef( [[M4_YY_NO_SET_LVAL]] )
+%# m4_undef( [[M4_YY_NO_GET_LLOC]] )
+%# m4_undef( [[M4_YY_NO_SET_LLOC]] )
+%# m4_undef( [[M4_VARIABLE_TRAILING_CONTEXT_RULES]] )
+%# m4_undef( [[M4_YY_USE_READ]] )
+%# m4_undef( [[M4_YY_BOL_NEEDED]] )
+%# m4_undef( [[M4_YY_USE_ECS]] )
+%# m4_undef( [[M4_YY_NUM_RULES]] )
+%# m4_undef( [[M4_YY_END_OF_BUFFER]] )
+%# m4_undef( [[M4_YY_NEEDS_BACKING_UP]] )
+
+%# The skeleton uses the following macros during state table generation.
+%# Skeleton authors must determine how to translate these values into
+%# their target language.  That will depend heavily upon how you plan
+%# to walk the tables.  The C/C++ skeletons will provide some guidance.
+%# The macros are listed here without m4 decoration for documentation only.
+
+%# M4_YY_NUM_RULES
+%# M4_YY_END_OF_BUFFER
+%# M4_YY_TRANS_OFFSET_TYPE
+%# M4_YY_TRAILING_MASK
+%# M4_YY_TRAILING_HEAD_MASK
+
+%#
+%#   Begin actual emission of code
+%#
+
+%% [1.0] Pause to allow Flex to set options from the command line, etc.
+
+%#   Defines table alignment macro.  
+%#   The test macro is defined when the -Ca command line argument is specified.
+%#   Possibly only useful in skeletons for C/C++ and kin.
+m4_ifdef([[M4_YY_LONG_ALIGNED]], [[
+#define YY_INT_ALIGNED flex_int32_t]], [[
+#define YY_INT_ALIGNED flex_int16_t
+]] )
+
+%#   Emit the user-defined top block from the input.
+m4_ifdef( [[M4_YY_TOP_BLOCK]], M4_YY_TOP_BLOCK )
+
+%#   Emit any user-defined constants from the input or command line.
+m4_ifdef( [[M4_YY_MAIN]], [[#define YY_MAIN 1]], [[#define YY_MAIN 0]] )
+m4_ifdef( [[M4_YY_USERDEF]], M4_YY_USERDEF )
+
+%#   Emit the right definitions for yywrap
+%if-c-only
+m4_ifdef( [[M4_YY_SKIP_YYWRAP]], [[
+  m4_ifdef( [[M4_YY_REENTRANT]], [[
+    #define M4_YY_PREFIX[[wrap(yyscanner)]] (/*CONSTCOND*/1)
+  ]], [[
+    #define M4_YY_PREFIX[[wrap()]] (/*CONSTCOND*/1)
+  ]] )
+]] )
+%endif
+
+%#   Enable debugging, or not
+m4_ifdef( [[M4_FLEX_DEBUG]], [[#define FLEX_DEBUG (/*CONSTCOND*/1)]], [[
+  m4_define( [[M4_YY_NO_GET_DEBUG]], 0 )
+  m4_define( [[M4_YY_NO_SET_DEBUG]], 0 )
+]] )
+
+
+%#   Define handling for the --lex-compat flag
+m4_ifdef( [[M4_LEX_COMPAT]], [[#define YY_FLEX_LEX_COMPAT]] )
+
+
 %not-for-header
 %if-c-only
 %if-not-reentrant
@@ -98,19 +324,19 @@ m4_ifelse(M4_YY_PREFIX,yy,,
 #endif
 
 %# Some negated symbols
-m4_ifdef( [[M4_YY_IN_HEADER]], , [[m4_define([[M4_YY_NOT_IN_HEADER]], [[]])]])
-m4_ifdef( [[M4_YY_REENTRANT]], , [[m4_define([[M4_YY_NOT_REENTRANT]], [[]])]])
+m4_ifdef( [[M4_YY_IN_HEADER]], , [[m4_define( [[M4_YY_NOT_IN_HEADER]], [[]] )]] )
+m4_ifdef( [[M4_YY_REENTRANT]], , [[m4_define( [[M4_YY_NOT_REENTRANT]], [[]] )]] )
 
 %# This is the m4 way to say "(stack_used || is_reentrant)
-m4_ifdef( [[M4_YY_STACK_USED]], [[m4_define([[M4_YY_HAS_START_STACK_VARS]])]])
-m4_ifdef( [[M4_YY_REENTRANT]],  [[m4_define([[M4_YY_HAS_START_STACK_VARS]])]])
+m4_ifdef( [[M4_YY_STACK_USED]], [[m4_define( [[M4_YY_HAS_START_STACK_VARS]], [[]] ) ]] )
+m4_ifdef( [[M4_YY_REENTRANT]],  [[m4_define( [[M4_YY_HAS_START_STACK_VARS]], [[]] ) ]] )
 
 %# Prefixes.
 %# The complexity here is necessary so that m4 preserves
 %# the argument lists to each C function.
 
 
-m4_ifdef( [[M4_YY_PREFIX]],, [[m4_define([[M4_YY_PREFIX]], [[yy]])]])
+m4_ifdef( [[M4_YY_PREFIX]],, [[m4_define( [[M4_YY_PREFIX]], [[yy]] )]] )
 
 m4preproc_define(`M4_GEN_PREFIX',``
 [[#ifdef yy$1
@@ -168,7 +394,7 @@ m4_ifelse(M4_YY_PREFIX,yy,,
     [[
         M4_GEN_PREFIX(`get_column')
         M4_GEN_PREFIX(`set_column')
-    ]])
+    ]] )
     M4_GEN_PREFIX(`wrap')
 )
 %endif
@@ -177,13 +403,13 @@ m4_ifdef( [[M4_YY_BISON_LVAL]],
 [[
     M4_GEN_PREFIX(`get_lval')
     M4_GEN_PREFIX(`set_lval')
-]])
+]] )
 
 m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 [[
     M4_GEN_PREFIX(`get_lloc')
     M4_GEN_PREFIX(`set_lloc')
-]])
+]] )
 
 
 m4_ifelse(M4_YY_PREFIX,yy,,
@@ -212,7 +438,7 @@ m4_ifdef( [[M4_YY_TABLES_EXTERNAL]],
     M4_GEN_PREFIX(`tables_fload')
     M4_GEN_PREFIX(`tables_destroy')
     M4_GEN_PREFIX(`TABLES_NAME')
-]])
+]] )
 
 /* First, we deal with  platform-specific or compiler-specific issues. */
 
@@ -259,11 +485,102 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 %endif
 
 %if-c-or-c++
+m4preproc_include(`flexint.h')
 m4preproc_include(`flexint_shared.h')
 %endif
 
-/* TODO: this is always defined, so inline it */
+%if-c-or-c++
+#ifndef yyconst
 #define yyconst const
+#endif
+%endif
+
+%#   Define the flex_uint8_t type
+m4_ifdef( [[M4_YY_IN_HEADER]], , [[typedef flex_uint8_t YY_CHAR;]] )
+
+%if-c++-only
+%#   Define the yytext_ptr macro, if needed
+m4_ifdef( [[M4_YYTEXT_PTR]], [[#define yytext_ptr yytext]] )
+%endif
+
+%#   Declare the standard yyin and yyout files
+m4_ifdef( [[M4_YY_IN_HEADER]], [[M4_YY_STDFILES]], [[
+  m4_ifdef( [[M4_DO_STDINIT]], [[
+    m4_ifdef( [[M4_YY_REENTRANT]], [[
+#ifdef VMS
+  #ifdef __VMS_POSIX
+    #define YY_STDINIT
+  #endif
+#else
+  #define YY_STDINIT
+#endif
+    ]])
+  ]])
+]])
+
+%#  Define what to emit for the -F CLI swtich
+m4_ifdef( [[M4_YY_IN_HEADER]], ,  [[
+  m4_ifdef( [[M4_YY_FULLSPD]], 
+            [[typedef const struct yy_trans_info *yy_state_type;]] )
+]] )
+%if-c-only
+m4_ifdef( [[M4_YY_IN_HEADER]], ,  [[
+  m4_ifdef( [[M4_YY_FULLSPD]], , [[typedef int yy_state_type;]] )
+]] )
+%endif
+
+%#   Define yylineno for C
+%if-c-only
+m4_ifdef( [[M4_YY_REENTRANT]], , [[
+    extern int yylineno;
+  m4_ifdef( [[M4_YY_IN_HEADER]], , [[
+	int yylineno = 1;
+    ]] )
+]] )
+%endif
+
+%#   Define C++ specifics
+%if-c++-only
+#include <FlexLexer.h>
+
+m4_ifdef( [[M4_YY_SKIP_YYWRAP]], [[
+int yyFlexLexer::yywrap() { return 1; }
+]] )
+
+m4_ifdef( [[M4_YYCLASS]], [[
+int yyFlexLexer::yylex()
+{
+    LexerError( "yyFlexLexer::yylex invoked but %option yyclass used" );
+    return 0;
+}
+
+#define YY_DECL int M4_YYCLASS::yylex()
+]] )
+%endif
+
+%#   Define yytext_ptr in C 
+%if-c-only
+m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]], [[
+  m4_ifdef( [[M4_YY_REENTRANT]], [[
+#ifdef yytext_ptr
+#undef yytext_ptr
+#endif
+  ]], [[
+extern char yytext[];
+  ]] ) 
+]], [[
+  m4_ifdef( [[M4_YY_REENTRANT]], [[
+#define yytext_ptr yytext_r
+  ]], [[
+extern char *yytext;
+
+#ifdef yytext_ptr
+#undef yytext_ptr
+#endif
+#define yytext_ptr yytext
+  ]] )
+]] )
+%endif
 
 #if defined(__GNUC__) && __GNUC__ >= 3
 #define yynoreturn __attribute__((__noreturn__))
@@ -423,9 +740,13 @@ extern int yyleng;
 
 %if-c-only
 %if-not-reentrant
-extern FILE *yyin, *yyout;
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]], [[
+M4_YY_NO_STDINIT
+]] )
 %endif
 %endif
+
+
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
@@ -650,11 +971,22 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 ]])
 
-%% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
+m4_ifdef(  [[M4_YY_FULLSPD]], , [[
+/* This struct is not used in this scanner */
+/* but its presence is necessary. */]]
+)
+#ifndef YY_STRUCT_YY_TRANS_INFO
+#define YY_STRUCT_YY_TRANS_INFO
+struct yy_trans_info
+{
+    flex_int[[]]M4_YY_TRANS_OFFSET_TYPE[[]]_t yy_verify;
+    flex_int[[]]M4_YY_TRANS_OFFSET_TYPE[[]]_t yy_nxt;
+};
+#endif /* YY_STRUCT_YY_TRANS_INFO */
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
-%% [1.5] DFA
+%% [2.0] DFA
 ]])
 
 %if-c-only Standard (non-C++) definition
@@ -671,17 +1003,190 @@ static void yynoreturn yy_fatal_error ( const char* msg M4_YY_PROTO_LAST_ARG );
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
+/* Report a fatal error. */
+#ifndef YY_FATAL_ERROR
+%if-c-only
+#define YY_FATAL_ERROR(msg) yy_fatal_error( msg M4_YY_CALL_LAST_ARG)
+%endif
+%if-c++-only
+#define YY_FATAL_ERROR(msg) LexerError( msg )
+%endif
+#endif
+]])
+
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
+[[
 /* Done after the current pattern has been matched and before the
  * corresponding action - sets up yytext.
  */
 #define YY_DO_BEFORE_ACTION \
 	YY_G(yytext_ptr) = yy_bp; \
-%% [2.0] code to fiddle yytext and yyleng for yymore() goes here \
+m4_ifdef( [[M4_YY_MORE_USED]], [[ \
+  m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]], [[ \
+	yyleng = (int) (yy_cp - yy_bp); \
+  ]], [[ \
+	YY_G(yytext_ptr) -= YY_G(yy_more_len); \
+	yyleng = (int) (yy_cp - YY_G(yytext_ptr)); \
+  ]] ) \
+]], [[ \
+	yyleng = (int) (yy_cp - yy_bp); \
+]] ) \
 	YY_G(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
-%% [3.0] code to copy yytext_ptr to yytext[] goes here, if %array \
-	YY_G(yy_c_buf_p) = yy_cp;
-%% [4.0] data tables for the DFA and the user's section 1 definitions go here
+m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]], [[ \
+    m4_ifdef( [[M4_YY_MORE_USED]], [[ \
+	if ( yyleng + YY_G(yy_more_offset) >= YYLMAX ) \
+    ]], [[ \
+	if ( yyleng >= YYLMAX ) \
+    ]] ) \
+	YY_FATAL_ERROR( "token too large, exceeds YYLMAX" ); \
+    m4_ifdef( [[M4_YY_MORE_USED]], [[ \
+	yy_flex_strncpy( &yytext[YY_G(yy_more_offset)], YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG); \
+	yyleng += YY_G(yy_more_offset); \
+	YY_G(yy_prev_more_offset) = YY_G(yy_more_offset); \
+	YY_G(yy_more_offset) = 0; \
+    ]], [[ \
+	yy_flex_strncpy( yytext, YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG); \
+    ]] ) \
+]] ) \
+    YY_G(yy_c_buf_p) = yy_cp;
+
+#define YY_NUM_RULES M4_YY_NUM_RULES
+#define YY_END_OF_BUFFER M4_YY_END_OF_BUFFER
+
+
+
+%# TODO: The tables have to be output here, but the code to do it is a mess of spaghetti.
+%#       It looks like it'll work best to create commands like %tables-yydmap that dump
+%#       the individual tables.  The gen.c functions will write the tables into buffers
+%#       the same way we do the table map.
+%#
+%#       In the meantime, we need to ensure that defines for the various table options get
+%#       propogated into the output stream so we can test them here in the skeleton.
+%#
+%#       In other words, gen.c:1611-1742, 1750-1757 goes here
+
+
+%if-c-only
+m4_ifdef( [[M4_YY_REENTRANT]], , [[
+    extern int yy_flex_debug;
+m4_ifdef( [[M4_FLEX_DEBUG]],
+          [[int yy_flex_debug = 1;]],
+          [[int yy_flex_debug = 0;]] )
+]])
+%endif
+
+m4_ifdef( [[M4_YY_USES_REJECT]],
+[[
+		/* Declare state buffer variables. */
+%if-c-only
+m4_ifdef( [[M4_YY_REENTRANT]], , [[
+			static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;
+			static char *yy_full_match;
+			static int yy_lp;
+]] )
+%endif
+
+m4_ifdef( [[M4_VARIABLE_TRAILING_CONTEXT_RULES]],
+[[
+%if-c-only
+			static int yy_looking_for_trail_begin = 0;
+			static int yy_full_lp;
+			static int *yy_full_state;
+%endif
+]] )
+			#define YY_TRAILING_MASK M4_YY_TRAILING_MASK
+			#define YY_TRAILING_HEAD_MASK M4_YY_TRAILING_HEAD_MASK
+
+		#define REJECT \
+		{ \
+		*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \
+		yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \
+m4_ifdef( [[M4_VARIABLE_TRAILING_CONTEXT_RULES]], [[ \
+			YY_G(yy_lp) = YY_G(yy_full_lp); /* restore orig. accepting pos. */ \
+			YY_G(yy_state_ptr) = YY_G(yy_full_state); /* restore orig. state */ \
+			yy_current_state = *YY_G(yy_state_ptr); /* restore curr. state */ \
+]] ) \
+		++YY_G(yy_lp); \
+		goto find_rule; \
+		}
+]],
+[[
+		/* The intent behind this definition is that it'll catch
+		 * any uses of REJECT which flex missed.
+		 */
+		#define REJECT reject_used_but_not_detected
+]] )
+
+m4_ifdef( [[M4_YY_MORE_USED]], [[
+%if-c-only
+m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]], [[
+    m4_ifdef( [[M4_YY_REENTRANT]], [[]], [[
+    		static int yy_more_offset = 0;
+            static int yy_prev_more_offset = 0;
+    ]] )
+]],
+[[
+m4_ifdef( [[M4_YY_REENTRANT]], [[]], [[
+			static int yy_more_flag = 0;
+			static int yy_more_len = 0;
+]] )
+]] )
+%endif
+
+m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]], [[
+			#define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( yytext M4_YY_CALL_LAST_ARG))
+			#define YY_NEED_STRLEN
+			#define YY_MORE_ADJ 0
+			#define YY_RESTORE_YY_MORE_OFFSET \
+			{ \
+                YY_G(yy_more_offset) = YY_G(yy_prev_more_offset); \
+                yyleng -= YY_G(yy_more_offset); \
+			}
+]],
+[[
+			#define yymore() (YY_G(yy_more_flag) = 1)
+			#define YY_MORE_ADJ YY_G(yy_more_len)
+			#define YY_RESTORE_YY_MORE_OFFSET
+]] )
+]],
+[[
+		#define yymore() yymore_used_but_not_detected
+		#define YY_MORE_ADJ 0
+		#define YY_RESTORE_YY_MORE_OFFSET
+]] )
+
+%if-c-only
+m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]], [[
+			#ifndef YYLMAX
+			#define YYLMAX 8192
+			#endif
+m4_ifdef( [[M4_YY_REENTRANT]], [[]], [[
+            char yytext[YYLMAX];
+            char *yytext_ptr;
+]] )
+]],
+[[
+m4_ifdef( [[M4_YY_REENTRANT]], [[]], [[char *yytext;]] )
+]] )
+%endif
+
+%if-c-only
+%# Definitions for backing up.  We don't need them if REJECT
+%# is being used because then we use an alternative backin-up
+%# technique instead.
+m4_ifdef( [[M4_YY_NEEDS_BACKING_UP]], [[
+  m4_ifdef( [[M4_YY_USES_REJECT]], , [[
+    m4_ifdef( [[M4_YY_REENTRANT]], , [[
+static yy_state_type yy_last_accepting_state;
+static char *yy_last_accepting_cpos;
+    ]] )
+  ]] )
+]] )
+%endif
+
+%# TODO: Insert at this point the equivalents of gen.c:1879-1884.
+%% [3.0] the user's section 1 definitions go here
 ]])
 
 m4_ifdef( [[M4_YY_IN_HEADER]], [[#ifdef YY_HEADER_EXPORT_START_CONDITIONS]])
@@ -931,13 +1436,13 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
  * section 1.
  */
 
-#ifndef YY_SKIP_YYWRAP
+m4_ifdef( [[M4_YY_SKIP_YYWRAP]], , [[
 #ifdef __cplusplus
 extern "C" int yywrap ( M4_YY_PROTO_ONLY_ARG );
 #else
 extern int yywrap ( M4_YY_PROTO_ONLY_ARG );
 #endif
-#endif
+]] )
 
 %not-for-header
 #ifndef YY_NO_UNPUT
@@ -1042,12 +1547,54 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
  */
 #ifndef YY_INPUT
 #define YY_INPUT(buf,result,max_size) \
-%% [5.0] fread()/read() definition of YY_INPUT goes here unless we're doing C++ \
+%if-c-only \
+m4_ifdef( [[M4_YY_USE_READ]], [[ \
+	errno=0; \
+	while ( (result = (int) read( fileno(yyin), buf, (yy_size_t) max_size )) < 0 ) \
+	{ \
+		if( errno != EINTR) \
+		{ \
+			YY_FATAL_ERROR( "input in flex scanner failed" ); \
+			break; \
+		} \
+		errno=0; \
+		clearerr(yyin); \
+	} \
+]], [[ \
+    if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \
+	{ \
+		int c = '*'; \
+		int n; \
+		for ( n = 0; n < max_size && \
+			(c = getc( yyin )) != EOF && c != '\n'; ++n ) \
+			buf[n] = (char) c; \
+			if ( c == '\n' ) \
+                buf[n++] = (char) c; \
+			if ( c == EOF && ferror( yyin ) ) \
+                YY_FATAL_ERROR( "input in flex scanner failed" ); \
+			result = n; \
+	} \
+	else \
+	{ \
+        errno=0; \
+		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) \
+		{ \
+			if( errno != EINTR) \
+			{ \
+                YY_FATAL_ERROR( "input in flex scanner failed" ); \
+                break; \
+			} \
+            errno=0; \
+            clearerr(yyin); \
+        } \
+	} \
+]] ) \
+%endif \
 \
 %if-c++-only C++ definition \
 	if ( (int)(result = LexerInput( (char *) buf, max_size )) < 0 ) \
-		YY_FATAL_ERROR( "input in flex scanner failed" );
-%endif
+		YY_FATAL_ERROR( "input in flex scanner failed" ); \
+%endif \
 
 #endif
 ]])
@@ -1068,18 +1615,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define YY_START_STACK_INCR 25
 #endif
 
-m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
-[[
-/* Report a fatal error. */
-#ifndef YY_FATAL_ERROR
-%if-c-only
-#define YY_FATAL_ERROR(msg) yy_fatal_error( msg M4_YY_CALL_LAST_ARG)
-%endif
-%if-c++-only
-#define YY_FATAL_ERROR(msg) LexerError( msg )
-%endif
-#endif
-]])
+
 
 %if-tables-serialization structures and prototypes
 m4preproc_include(`tables_shared.h')
@@ -1180,8 +1716,88 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
-%% [6.0] YY_RULE_SETUP definition goes here
+#define YY_RULE_SETUP \
+m4_ifdef( [[M4_YY_BOL_NEEDED]], [[ \
+	if ( yyleng > 0 ) \
+        YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (yytext[yyleng - 1] == '\n'); \
+]], [[]] ) \
+	YY_USER_ACTION
 ]])
+
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
+[[
+m4_define( [[M4_YY_BACKING_UP]], [[
+m4_ifdef( [[M4_YY_NEEDS_BACKING_UP]], [[
+  m4_ifdef( [[M4_YY_USES_REJECT]], , [[
+    m4_ifdef( [[M4_YY_FULLSPD]], [[
+	if ( yy_current_state[-1].yy_nxt ) {
+    ]], [[
+	if ( yy_accept[yy_current_state] ) {
+    ]] )
+		YY_G(yy_last_accepting_state) = yy_current_state;
+		YY_G(yy_last_accepting_cpos) = yy_cp;
+	}
+    ]] )
+  ]] )
+]] )
+
+m4_define( [[M4_YY_NEXT_COMPRESSED_STATE]], [[
+	YY_CHAR yy_c = $1[[]];
+
+	 /* Save the backing-up info \before/ computing the next state
+	 * because we always compute one more state than needed - we
+	 * always proceed until we reach a jam state
+	 */
+	M4_YY_BACKING_UP()
+
+	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
+	{
+		yy_current_state = (int) yy_def[yy_current_state];
+
+  m4_ifdef( [[M4_YY_USE_MECS]], [[
+		/* We've arranged it so that templates are never chained
+		 * to one another.  This means we can afford to make a
+		 * very simple test to see if we need to convert to
+		 * yy_c's meta-equivalence class without worrying
+		 * about erroneously looking up the meta-equivalence
+		 * class twice
+		 */
+
+		/* [[M4_YY_LASTDFA]] (magic number M4_YY_LASTDFA[[]]) + 2 is the beginning of the templates */
+		if ( yy_current_state >= ( M4_YY_LASTDFA + 2) )
+			yy_c = yy_meta[yy_c];
+  ]] )
+	}
+	
+	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
+]] )
+
+m4_define( [[M4_YY_GEN_START_STATE]], [[
+m4_ifdef( [[M4_YY_FULLSPD]], [[
+  m4_ifdef( [[M4_YY_BOL_NEEDED]], [[
+		yy_current_state = yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()];
+  ]], [[
+		yy_current_state = yy_start_state_list[YY_G(yy_start)];
+  ]] )
+]],[[
+		yy_current_state = YY_G(yy_start);
+
+  m4_ifdef( [[M4_YY_BOL_NEEDED]], [[
+		yy_current_state += YY_AT_BOL();
+  ]] )
+
+  m4_ifdef( [[M4_YY_USES_REJECT]], [[
+		/* Set up for storing up states. */
+		YY_G(yy_state_ptr) = YY_G(yy_state_buf);
+		*YY_G(yy_state_ptr)++ = yy_current_state;
+  ]] )
+]] )
+]] )
+
+]] )
+
+
+
 
 %not-for-header
 /** The main scanner function which does all the work.
@@ -1191,7 +1807,7 @@ YY_DECL
 	yy_state_type yy_current_state;
 	char *yy_cp, *yy_bp;
 	int yy_act;
-    M4_YY_DECL_GUTS_VAR();
+	M4_YY_DECL_GUTS_VAR();
 
 m4_ifdef( [[M4_YY_NOT_REENTRANT]],
 [[
@@ -1230,7 +1846,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 			YY_G(yy_state_buf) = (yy_state_type *)yyalloc(YY_STATE_BUF_SIZE  M4_YY_CALL_LAST_ARG);
 		if ( ! YY_G(yy_state_buf) )
 			YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
-]])
+]] )
 
 		if ( ! YY_G(yy_start) )
 			YY_G(yy_start) = 1;	/* first start state */
@@ -1261,11 +1877,20 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 		}
 
 	{
-%% [7.0] user's declarations go here
-
+%# This one might be needed because of the action_array output
+%% [4.0] user's declarations go here
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
+	{
+m4_ifdef( [[M4_YY_MORE_USED]], [[ 
+  m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]], , [[
+		YY_G(yy_more_len) = 0;
+		if ( YY_G(yy_more_flag) )
 		{
-%% [8.0] yymore()-related code goes here
+			YY_G(yy_more_len) = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr));
+			YY_G(yy_more_flag) = 0;
+		}
+  ]] )
+]] )
 		yy_cp = YY_G(yy_c_buf_p);
 
 		/* Support of yytext. */
@@ -1276,25 +1901,300 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 		 */
 		yy_bp = yy_cp;
 
-%% [9.0] code to set up and find next match goes here
+		M4_YY_GEN_START_STATE()
+
+yy_match:
+m4_ifdef( [[M4_YY_USE_ECS]], [[
+  m4_define( [[M4_YY_ECS_CHAR_MAP]], [[ yy_ec[YY_SC_TO_UI(*yy_cp)] ]] )
+  m4_define( [[M4_YY_ECS_CHAR_MAP_2]], [[ yy_ec[YY_SC_TO_UI(*++yy_cp)] ]] )
+]], [[
+  m4_define( [[M4_YY_ECS_CHAR_MAP]], [[ YY_SC_TO_UI(*yy_cp) ]] )
+  m4_define( [[M4_YY_ECS_CHAR_MAP_2]], [[ YY_SC_TO_UI(*++yy_cp) ]] )
+]] )
+
+m4_ifdef( [[M4_YY_FULLTBL]], [[
+  m4_ifdef( [[M4_YY_GENTABLES]], [[
+		while ( (yy_current_state = yy_nxt[yy_current_state][ M4_YY_ECS_CHAR_MAP ]) > 0 )
+  ]], [[
+		while ( (yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN +  M4_YY_ECS_CHAR_MAP ]) > 0 )
+  ]] )
+  m4_ifdef( [[M4_YY_NEEDS_BACKING_UP]], [[
+		{
+		M4_YY_BACKING_UP
+  ]] )
+		++yy_cp;
+  m4_ifdef( [[M4_YY_NEEDS_BACKING_UP]], [[
+		}
+  ]] )
+		yy_current_state = -yy_current_state;
+]], [[
+  m4_ifdef( [[M4_YY_FULLSPD]], [[
+		{
+			const struct yy_trans_info *yy_trans_info;
+			YY_CHAR yy_c;
+			for ( yy_c = M4_YY_ECS_CHAR_MAP;
+			      (yy_trans_info = &yy_current_state[yy_c])->yy_verify == yy_c;
+			       yy_c = M4_YY_ECS_CHAR_MAP_2 )
+    m4_ifdef( [[M4_YY_NEEDS_BACKING_UP]], [[
+			{
+    ]] )
+			yy_current_state += yy_trans_info->yy_nxt;
+    m4_ifdef( [[M4_YY_NEEDS_BACKING_UP]], [[
+  
+			M4_YY_BACKING_UP
+			}
+    ]] )
+		}
+  ]], [[
+		do
+		{
+
+%# /* Expansion/translation of gen_next_state(false); defined in gen.c */
+      m4_ifdef( [[M4_YY_FULLTBL]], [[
+        m4_ifdef( [[M4_YY_GENTABLES]], [[
+                          yy_current_state = yy_nxt[yy_current_state][ M4_YY_ECS_CHAR_MAP ];
+        ]], [[
+                          yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + M4_YY_ECS_CHAR_MAP ];
+        ]] )
+      ]], [[
+        m4_ifdef( [[M4_YY_FULLSPD]], [[
+                  yy_current_state += yy_current_state[ M4_YY_ECS_CHAR_MAP ].yy_nxt;
+        ]], [[
+                  /* gen_next_compressed_state (char_map); */
+                  M4_YY_NEXT_COMPRESSED_STATE(M4_YY_ECS_CHAR_MAP)
+                  
+        ]] )
+      ]] )
+
+      m4_ifdef( [[M4_YY_FULLSPD]], [[
+                  M4_YY_BACKING_UP
+      ]], [[
+        m4_ifdef( [[M4__YY_FULLTBL]], [[
+                  M4_YY_BACKING_UP
+        ]] )
+      ]] )
+
+      m4_ifdef( [[M4_YY_USES_REJECT]], [[
+                  *YY_G(yy_state_ptr)++ = yy_current_state;
+      ]] )
+%# End of gen_next_state(false)
+    
+		++yy_cp;
+		}
+    m4_ifdef( [[M4_YY_INTERACTIVE]], [[
+		while ( yy_base[yy_current_state] != M4_YY_JAMBASE );
+    ]], [[
+		while ( yy_current_state != M4_YY_JAMSTATE );
+    ]] )
+    m4_ifdef( [[M4_YY_USES_REJECT]], , [[
+      m4_ifdef( [[M4_YY_INTERACTIVE]], , [[
+		/* Do the guaranteed-needed backing up to figure out
+		 * the match.
+		 */
+		yy_cp = YY_G(yy_last_accepting_cpos);
+		yy_current_state = YY_G(yy_last_accepting_state);
+      ]] )
+    ]] )
+  ]] )
+]] )
+%# END TODO: gen.c:1996 Translate gen_next_match here.
 
 yy_find_action:
-%% [10.0] code to find the action number goes here
+m4_ifdef( [[M4_YY_FULLSPD]], [[
+		yy_act = yy_current_state[-1].yy_nxt;
+]], [[
+  m4_ifdef( [[M4_YY_FULLTBL]], [[
+		yy_act = yy_accept[yy_current_state];
+  ]], [[
+    m4_ifdef( [[M4_YY_USES_REJECT]], [[
+		yy_current_state = *--YY_G(yy_state_ptr);
+		YY_G(yy_lp) = yy_accept[yy_current_state];
 
+find_rule: /* we branch to this label when backing up */
+
+		for ( ; ; ) /* until we find what rule we matched */
+		{                
+			if ( YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1] )
+			{
+				yy_act = yy_acclist[YY_G(yy_lp)];
+
+        m4_ifdef( [[M4_VARIABLE_TRAILING_CONTEXT_RULES]], [[
+				if ( yy_act & YY_TRAILING_HEAD_MASK ||
+					YY_G(yy_looking_for_trail_begin) )
+				{
+
+					if ( yy_act == YY_G(yy_looking_for_trail_begin) )
+			
+					{
+						YY_G(yy_looking_for_trail_begin) = 0;
+						yy_act &= ~YY_TRAILING_HEAD_MASK;
+						break;
+					}
+
+				}
+				else if ( yy_act & YY_TRAILING_MASK )
+				{
+					YY_G(yy_looking_for_trail_begin) = yy_act & ~YY_TRAILING_MASK;
+					YY_G(yy_looking_for_trail_begin) |= YY_TRAILING_HEAD_MASK;
+
+					/* Remember matched text in case we back up
+					 * due to REJECT.
+					 */
+					YY_G(yy_full_match) = yy_cp;
+					YY_G(yy_full_state) = YY_G(yy_state_ptr);
+					YY_G(yy_full_lp) = YY_G(yy_lp);
+				}
+				else
+				{
+					YY_G(yy_full_match) = yy_cp;
+					YY_G(yy_full_state) = YY_G(yy_state_ptr);
+					YY_G(yy_full_lp) = YY_G(yy_lp);
+					break;
+				}
+                        
+				++YY_G(yy_lp);
+				goto find_rule;
+        ]], [[
+			/* Remember matched text in case we back up due to
+			 * trailing context plus REJECT.
+			 */
+			{
+				YY_G(yy_full_match) = yy_cp;
+				break;
+			}
+        ]] )
+
+			}
+
+		--yy_cp;
+
+		/* We could consolidate the following two lines with those at
+		 * the beginning, but at the cost of complaints that we're
+		 * branching inside a loop.
+		 */
+		yy_current_state = *--YY_G(yy_state_ptr);
+		YY_G(yy_lp) = yy_accept[yy_current_state];
+
+		}
+
+	
+    ]], [[
+		/* compressed */
+		yy_act = yy_accept[yy_current_state];
+      m4_ifdef( [[M4_YY_INTERACTIVE]], [[
+        m4_ifdef( [[M4_YY_USES_REJECT]], , [[
+		/* Do the guaranteed-needed backing up to figure out
+		 * the match.
+		 */
+		if ( yy_act == 0 )
+		{ /* have to back up */
+			yy_cp = YY_G(yy_last_accepting_cpos);
+			yy_current_state = YY_G(yy_last_accepting_state);
+			yy_act = yy_accept[yy_current_state];
+		}
+        ]] )
+      ]] )
+    ]] )
+  ]] )
+]] )
 		YY_DO_BEFORE_ACTION;
 
-%% [11.0] code for yylineno update goes here
+m4_ifdef( [[M4_YY_USE_LINENO]],[[
+		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+		{
+			int yyl;
+    m4_ifdef( [[M4_YYMORE_USED]], [[
+      m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]], [[
+			for ( yyl = YY_G(yy_prev_more_offset); yyl < yyleng; ++yyl )
+      ]], [[
+			for ( yyl = YY_G(yy_more_len); yyl < yyleng; ++yyl )
+      ]] )
+    ]], [[
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+    ]] )
+				if ( yytext[yyl] == '\n' )
+					M4_YY_INCR_LINENO();
+		}
+]] )
 
 do_action:	/* This label is used only to access EOF actions. */
 
-%% [12.0] debug code goes here
+m4_ifdef( [[M4_FLEX_DEBUG]], [[
+		if ( yy_flex_debug )
+		{
+			if ( yy_act == 0 )
+%if-c++-only
+				std::cerr << "--scanner backing up\n";
+%endif
+%if-c-only
+				fprintf( stderr, "--scanner backing up\n" );
+%endif
+			else if ( yy_act < M4_YY_NUM_RULES )
+%if-c++-only
+				std::cerr << "--accepting rule at line " << yy_rule_linenum[yy_act] <<
+						"(\"" << yytext << "\")\n";
+%endif
+%if-c-only
+				fprintf( stderr, "--accepting rule at line %ld (\"%s\")\n",
+					(long)yy_rule_linenum[yy_act], yytext );
+%endif
+			else if ( yy_act == M4_YY_NUM_RULES )
+%if-c++-only
+				std::cerr << "--accepting default rule (\"" << yytext << "\")\n";
+%endif
+%if-c-only
+				fprintf( stderr, "--accepting default rule (\"%s\")\n", yytext );
+%endif
+			else if ( yy_act == (M4_YY_NUM_RULES + 1) )
+%if-c++-only
+				std::cerr << "--(end of buffer or a NUL)\n";
+%endif
+%if-c-only
+				fprintf( stderr, "--(end of buffer or a NUL)\n" );
+%endif
+			else
+%if-c++-only
+				std::cerr << "--EOF (start condition " << YY_START << ")\n";
+%endif
+%if-c-only
+				fprintf( stderr, "--EOF (start condition %d)\n", YY_START );
+%endif
+		}
+]] )
 
 		switch ( yy_act )
 	{ /* beginning of action switch */
-%% [13.0] actions go here
+m4_ifdef( [[M4_YY_USES_REJECT]], , [[
+  m4_ifdef( [[M4_YY_NEEDS_BACKING_UP]], [[
+	case 0: /* must back up */
+		/* undo the effects of YY_DO_BEFORE_ACTION */
+		*yy_cp = YY_G(yy_hold_char);
+
+    m4_ifdef( [[M4_YY_FULLSPD]], [[
+		yy_cp = YY_G(yy_last_accepting_cpos) + 1;
+    ]], [[
+      m4_ifdef( [[M4_YY_FULLTBL]], [[
+		yy_cp = YY_G(yy_last_accepting_cpos) + 1;
+      ]], [[
+		/* Backing-up info for compressed tables is taken \after/
+		 * yy_cp has been incremented for the next state.
+		 */
+		yy_cp = YY_G(yy_last_accepting_cpos);
+      ]] )
+    ]] )
+		yy_current_state = YY_G(yy_last_accepting_state);
+		goto yy_find_action;
+  ]] )
+]] )
+
+%% [5.0] actions go here
+
+m4_ifdef( [[M4_YY_DID_EOF_RULE]], [[
+		yyterminate();
+]] )
 
 	case YY_END_OF_BUFFER:
-		{
+	{
 		/* Amount of text matched not including the EOB char. */
 		int yy_amount_of_matched_text = (int) (yy_cp - YY_G(yytext_ptr)) - 1;
 
@@ -1303,7 +2203,7 @@ do_action:	/* This label is used only to access EOF actions. */
 		YY_RESTORE_YY_MORE_OFFSET
 
 		if ( YY_CURRENT_BUFFER_LVALUE->yy_buffer_status == YY_BUFFER_NEW )
-			{
+		{
 			/* We're scanning a new file or input source.  It's
 			 * possible that this happened because the user
 			 * just pointed yyin at a new source and called
@@ -1321,7 +2221,7 @@ do_action:	/* This label is used only to access EOF actions. */
 			YY_CURRENT_BUFFER_LVALUE->yy_input_file = yyin.rdbuf();
 %endif
 			YY_CURRENT_BUFFER_LVALUE->yy_buffer_status = YY_BUFFER_NORMAL;
-			}
+		}
 
 		/* Note that here we test for yy_c_buf_p "<=" to the position
 		 * of the first EOB in the buffer, since yy_c_buf_p will
@@ -1331,7 +2231,7 @@ do_action:	/* This label is used only to access EOF actions. */
 		 * in input().
 		 */
 		if ( YY_G(yy_c_buf_p) <= &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[YY_G(yy_n_chars)] )
-			{ /* This was really a NUL. */
+		{ 	/* This was really a NUL. */
 			yy_state_type yy_next_state;
 
 			YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + yy_amount_of_matched_text;
@@ -1352,28 +2252,57 @@ do_action:	/* This label is used only to access EOF actions. */
 			yy_bp = YY_G(yytext_ptr) + YY_MORE_ADJ;
 
 			if ( yy_next_state )
-				{
+			{
 				/* Consume the NUL. */
 				yy_cp = ++YY_G(yy_c_buf_p);
 				yy_current_state = yy_next_state;
 				goto yy_match;
-				}
-
-			else
-				{
-%% [14.0] code to do back-up for compressed tables and set up yy_cp goes here
-				goto yy_find_action;
-				}
 			}
 
-		else switch ( yy_get_next_buffer( M4_YY_CALL_ONLY_ARG ) )
+			else
 			{
+m4_ifdef( [[M4_YY_FULLSPD]], [[
+				yy_cp = YY_G(yy_c_buf_p);
+]], [[
+  m4_ifdef( [[M4_YY_FULLTBL]], [[
+				yy_cp = YY_G(yy_c_buf_p);
+  ]], [[
+				/* compressed table */
+    m4_ifdef( [[M4_YY_USES_REJECT]], [[
+				/* Still need to initialize yy_cp, though
+				* yy_current_state was set up by
+				* yy_get_previous_state().
+				*/
+				yy_cp = YY_G(yy_c_buf_p);
+    ]], [[
+      m4_ifdef( [[M4_YY_INTERACTIVE]], [[
+				/* Still need to initialize yy_cp, though
+				* yy_current_state was set up by
+				* yy_get_previous_state().
+				*/
+				yy_cp = YY_G(yy_c_buf_p);
+      ]], [[
+				/* Do the guaranteed-needed backing up to figure
+				 * out the match.
+				 */
+				yy_cp = YY_G(yy_last_accepting_cpos);
+				yy_current_state = YY_G(yy_last_accepting_state);
+      ]] )
+    ]] )
+  ]] )
+]] )
+				goto yy_find_action;
+			}
+		}
+
+		else switch ( yy_get_next_buffer( M4_YY_CALL_ONLY_ARG ) )
+		{
 			case EOB_ACT_END_OF_FILE:
-				{
+			{
 				YY_G(yy_did_buffer_switch_on_eof) = 0;
 
-				if ( yywrap( M4_YY_CALL_ONLY_ARG ) )
-					{
+				if ( yywrap(M4_YY_CALL_ONLY_ARG) )
+				{
 					/* Note: because we've taken care in
 					 * yy_get_next_buffer() to have set up
 					 * yytext, we can now set up
@@ -1387,15 +2316,15 @@ do_action:	/* This label is used only to access EOF actions. */
 
 					yy_act = YY_STATE_EOF(YY_START);
 					goto do_action;
-					}
+				}
 
 				else
-					{
+				{
 					if ( ! YY_G(yy_did_buffer_switch_on_eof) )
 						YY_NEW_FILE;
-					}
-				break;
 				}
+				break;
+			}
 
 			case EOB_ACT_CONTINUE_SCAN:
 				YY_G(yy_c_buf_p) =
@@ -1416,9 +2345,9 @@ do_action:	/* This label is used only to access EOF actions. */
 				yy_cp = YY_G(yy_c_buf_p);
 				yy_bp = YY_G(yytext_ptr) + YY_MORE_ADJ;
 				goto yy_find_action;
-			}
-		break;
 		}
+		break;
+	}
 
 	default:
 		YY_FATAL_ERROR(
@@ -1730,12 +2659,70 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 	char *yy_cp;
     M4_YY_DECL_GUTS_VAR();
 
-%% [15.0] code to get the start state into yy_current_state goes here
+    M4_YY_GEN_START_STATE()
 
 	for ( yy_cp = YY_G(yytext_ptr) + YY_MORE_ADJ; yy_cp < YY_G(yy_c_buf_p); ++yy_cp )
-		{
-%% [16.0] code to find the next state goes here
-		}
+	{
+%# Expansion/translation of gen_next_state (true); defined in gen.c */
+m4_ifdef( [[M4_YY_NULTRANS]], [[
+  m4_ifdef( [[M4_YY_USE_ECS]], [[
+    m4_define( [[M4_YY_ECS_CHAR_MAP_3]], [[yy_ec[YY_SC_TO_UI(*yy_cp)] ]] )
+  ]], [[
+    m4_define( [[M4_YY_ECS_CHAR_MAP_3]], [[YY_SC_TO_UI(*yy_cp)]] )
+  ]] )
+]], [[
+  m4_ifdef( [[M4_YY_USE_ECS]], [[
+    m4_define( [[M4_YY_ECS_CHAR_MAP_3]], [[(*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : M4_YY_NUL_EC)]] )
+  ]], [[
+    m4_define( [[M4_YY_ECS_CHAR_MAP_3]], [[(*yy_cp ? YY_SC_TO_UI(*yy_cp) : M4_YY_NUL_EC)]] )
+  ]] )
+]] )
+
+m4_ifdef( [[M4_YY_NULTRANS]], [[
+  m4_ifdef( [[M4_YY_FULLTBL]], , [[
+    m4_ifdef( [[M4_YY_FULLSPD]], , [[
+	/* Compressed tables back up *before* they match. */
+	M4_YY_BACKING_UP
+    ]] )
+  ]] )
+	if ( *yy_cp )
+	{
+]] )
+
+m4_ifdef( [[M4_YY_FULLTBL]], [[
+  m4_ifdef( [[M4_YY_GENTABLES]], [[
+		yy_current_state = yy_nxt[yy_current_state][ M4_YY_ECS_CHAR_MAP_3 ];
+  ]], [[
+		yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + M4_YY_ECS_CHAR_MAP_3 ];
+  ]] )
+]], [[
+  m4_ifdef( [[M4_YY_FULLSPD]], [[
+		yy_current_state += yy_current_state[ M4_YY_ECS_CHAR_MAP_3 ].yy_nxt;
+  ]], [[
+		/* gen_next_compressed_state (char_map); */
+		M4_YY_NEXT_COMPRESSED_STATE(M4_YY_ECS_CHAR_MAP_3)
+  ]] )
+]] )
+
+m4_ifdef( [[M4_YY_NULTRANS]], [[
+	}
+	else
+		yy_current_state = yy_NUL_trans[yy_current_state];
+]] )
+
+m4_ifdef( [[M4_YY_FULLSPD]], [[
+	M4_YY_BACKING_UP
+]], [[
+  m4_ifdef( [[M4_YY_FULLTBL]], [[
+	M4_YY_BACKING_UP
+  ]] )
+]] )
+
+m4_ifdef( [[M4_YY_USES_REJECT]], [[
+	*YY_G(yy_state_ptr)++ = yy_current_state;
+]] )
+%# End of gen_next_state(true)
+	}
 
 	return yy_current_state;
 }
@@ -1754,8 +2741,65 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 %endif
 {
 	int yy_is_jam;
-    M4_YY_DECL_GUTS_VAR(); /* This var may be unused depending upon options. */
-%% [17.0] code to find the next state, and perhaps do backing up, goes here
+	M4_YY_DECL_GUTS_VAR(); /* This var may be unused depending upon options. */
+        char *yy_cp = YY_G(yy_c_buf_p);
+        
+%# /* Translation of gen_NUL_trans(); defined in gen.c */
+
+m4_ifdef( [[M4_YY_NULTRANS]], [[
+	yy_current_state = yy_NUL_trans[yy_current_state];
+	yy_is_jam = (yy_current_state == 0);
+]], [[
+  m4_ifdef( [[M4_YY_FULLTBL]], [[
+    m4_ifdef( [[M4_YY_GENTABLES]], [[
+	yy_current_state = yy_nxt[yy_current_state][M4_YY_NUL_EC[[]]];
+    ]], [[
+	yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + M4_YY_NUL_EC[[]]];
+    ]] )
+	yy_is_jam = (yy_current_state <= 0);
+  ]], [[
+    m4_ifdef( [[M4_YY_FULLSPD]], [[
+	int yy_c = M4_YY_NUL_EC[[]];
+	const struct yy_trans_info *yy_trans_info;
+	yy_trans_info = &yy_current_state[(unsigned int) yy_c];
+	yy_current_state += yy_trans_info->yy_nxt;
+	yy_is_jam = (yy_trans_info->yy_verify != yy_c);
+    ]], [[
+%# /*		gen_next_compressed_state ([[M4_YY_NUL_EC]]); */
+	M4_YY_NEXT_COMPRESSED_STATE(M4_YY_NUL_EC)
+		
+	yy_is_jam = (yy_current_state == M4_YY_JAMSTATE[[]]);
+
+      m4_ifdef( [[M4_YY_USES_REJECT]], [[
+	/* Only stack this state if it's a transition we
+	 * actually make.  If we stack it on a jam, then
+	 * the state stack and yy_c_buf_p get out of sync.
+	 */
+	if ( ! yy_is_jam )
+		*YY_G(yy_state_ptr)++ = yy_current_state;
+      ]] )
+    ]] )
+  ]] )
+]] )
+
+m4_ifdef( [[M4_YY_NEEDS_BACKING_UP]], [[
+  m4_ifdef( [[M4_YY_REJECT]], , [[
+    m4_ifdef( [[M4_YY_FULLSPD]], [[
+	if ( ! yy_is_jam )
+	{
+		M4_YY_BACKING_UP
+	}
+    ]], [[
+      m4_ifdef( [[M4_YY_FULLTBL]], [[
+	if ( ! yy_is_jam )
+	{
+		M4_YY_BACKING_UP
+	}
+      ]])
+    ]] )
+  ]] )
+]] )
+
 
 	M4_YY_NOOP_GUTS_VAR();
 return yy_is_jam ? 0 : yy_current_state;
@@ -1773,15 +2817,15 @@ m4_ifdef( [[M4_YY_NO_UNPUT]],,
 %endif
 {
 	char *yy_cp;
-    M4_YY_DECL_GUTS_VAR();
+	M4_YY_DECL_GUTS_VAR();
 
-    yy_cp = YY_G(yy_c_buf_p);
+	yy_cp = YY_G(yy_c_buf_p);
 
 	/* undo effects of setting up yytext */
 	*yy_cp = YY_G(yy_hold_char);
 
 	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-		{ /* need to shift things up to make room */
+	{ 	/* need to shift things up to make room */
 		/* +2 for EOB chars. */
 		int number_to_move = YY_G(yy_n_chars) + 2;
 		char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
@@ -1799,16 +2843,15 @@ m4_ifdef( [[M4_YY_NO_UNPUT]],,
 
 		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
 			YY_FATAL_ERROR( "flex scanner push-back overflow" );
-		}
+	}
 
 	*--yy_cp = (char) c;
 
-%% [18.0] update yylineno here
 m4_ifdef( [[M4_YY_USE_LINENO]],
 [[
-    if ( c == '\n' ){
-        --yylineno;
-    }
+	if ( c == '\n' ){
+		--yylineno;
+	}
 ]])
 
 	YY_G(yytext_ptr) = yy_bp;
@@ -1896,8 +2939,22 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
 	*YY_G(yy_c_buf_p) = '\0';	/* preserve yytext */
 	YY_G(yy_hold_char) = *++YY_G(yy_c_buf_p);
 
-%% [19.0] update BOL and yylineno
-
+m4_ifdef( [[M4_YY_BOL_NEEDED]], [[
+	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
+  m4_ifdef( [[M4_YY_LINENO]], [[
+	if ( YY_CURRENT_BUFFER_LVALUE->yy_at_bol )
+	{
+		M4_YY_INCR_LINENO();
+	}
+  ]] )
+]], [[
+  m4_ifdef( [[M4_YY_LINENO]], [[
+	if ( c == '\n' )
+	{
+		M4_YY_INCR_LINENO();
+	}
+  ]] )
+]] )
 	return c;
 }
 %if-c-only

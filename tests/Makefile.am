@@ -406,6 +406,9 @@ posixly_correct.c: posixly_correct.l $(FLEX)
 
 reject_nr.reject.c: reject.l4 $(FLEX)
 	$(AM_V_LEX)$(FLEX) --unsafe-no-m4-sect3-escape -o $@ $<
+	
+reject_nr.reject.$(OBJEXT): reject_nr.reject.c
+	$(AM_V_CC)$(COMPILE) -c -o $@ $<
 
 reject_nr.reject$(EXEEXT): reject_nr.reject.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) $^

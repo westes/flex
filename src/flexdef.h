@@ -399,6 +399,7 @@ extern int trace_hex;
  * action_offset - index where the non-prolog starts in action_array
  * action_index - index where the next action should go, with respect
  * 	to "action_array"
+ * always_interactive - if true, generate an interactive scanner
  */
 
 extern int datapos, dataline, linenum;
@@ -730,45 +731,13 @@ extern void mkechar(int, int[], int[]);
 
 /* from file gen.c */
 
-extern void do_indent(void);	/* indent to the current level */
-
-/* Generate the code to keep backing-up information. */
-extern void gen_backing_up(void);
-
-/* Generate the code to perform the backing up. */
-extern void gen_bu_action(void);
-
 /* Generate full speed compressed transition table. */
 extern void genctbl(void);
 
-/* Generate the code to find the action number. */
-extern void gen_find_action(void);
-
 extern void genftbl(void);	/* generate full transition table */
-
-/* Generate the code to find the next compressed-table state. */
-extern void gen_next_compressed_state(char *);
-
-/* Generate the code to find the next match. */
-extern void gen_next_match(void);
-
-/* Generate the code to find the next state. */
-extern void gen_next_state(int);
-
-/* Generate the code to make a NUL transition. */
-extern void gen_NUL_trans(void);
-
-/* Generate the code to find the start state. */
-extern void gen_start_state(void);
 
 /* Generate data statements for the transition tables. */
 extern void gentabs(void);
-
-/* Write out a formatted string at the current indentation level. */
-extern void indent_put2s(const char *, const char *);
-
-/* Write out a string + newline at the current indentation level. */
-extern void indent_puts(const char *);
 
 extern void make_tables(void);	/* generate transition tables */
 
@@ -884,11 +853,15 @@ extern void out_dec(const char *, int);
 extern void out_dec2(const char *, int, int);
 extern void out_hex(const char *, unsigned int);
 extern void out_str(const char *, const char *);
+extern void out_str2(const char *, const char *, const char *);
 extern void out_str3(const char *, const char *, const char *, const char *);
 extern void out_str_dec(const char *, const char *, int);
+extern void out_str2_dec (const char *, const char *, const char *, int);
 extern void outc(int);
 extern void outn(const char *);
 extern void out_m4_define(const char* def, const char* val);
+extern void out_m4_define_dec(const char* def, const int val);
+extern void out_m4_define_hex(const char* def, const unsigned int val);
 
 /* Return a printable version of the given character, which might be
  * 8-bit.
@@ -1048,6 +1021,7 @@ extern struct Buf *buf_strappend(struct Buf *, const char *str);
 extern struct Buf *buf_strnappend(struct Buf *, const char *str, int nchars);
 extern struct Buf *buf_strdefine(struct Buf * buf, const char *str, const char *def);
 extern struct Buf *buf_prints(struct Buf *buf, const char *fmt, const char* s);
+extern struct Buf *buf_printns(struct Buf *buf, const char *fmt, const int count, ...);
 extern struct Buf *buf_m4_define(struct Buf *buf, const char* def, const char* val);
 extern struct Buf *buf_m4_undefine(struct Buf *buf, const char* def);
 extern struct Buf *buf_print_strings(struct Buf * buf, FILE* out);
