@@ -32,6 +32,8 @@
 /*  PURPOSE. */
 
 
+#include <libgen.h>
+
 #include "flexdef.h"
 #include "version.h"
 #include "options.h"
@@ -44,7 +46,6 @@ static char flex_version[] = FLEX_VERSION;
 void flexinit(int, char **);
 void readin(void);
 void set_up_initial_allocations(void);
-static char *basename2(char *path);
 
 
 /* these globals are all defined and commented in flexdef.h */
@@ -1000,9 +1001,9 @@ void flexinit (int argc, char **argv)
     flex_init_regex();
 
 	/* Enable C++ if program name ends with '+'. */
-	program_name = basename2 (argv[0]);
+	program_name = basename (argv[0]);
 
-	if (program_name[0] != '\0' &&
+	if (program_name != NULL &&
 	    program_name[strlen (program_name) - 1] == '+')
 		C_plus_plus = true;
 
@@ -1790,18 +1791,6 @@ void set_up_initial_allocations (void)
 	nultrans = NULL;
 }
 
-
-/* extracts basename from path, optionally stripping the extension "\.*"
- * (same concept as /bin/sh `basename`, but different handling of extension). */
-static char *basename2 (char *path)
-{
-	char   *b;
-
-	for (b = path; *path; path++)
-		if (*path == '/')
-			b = path + 1;
-	return b;
-}
 
 void usage (void)
 {
