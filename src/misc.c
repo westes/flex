@@ -521,19 +521,10 @@ unsigned char myesc (unsigned char array[])
 		return '\r';
 	case 't':
 		return '\t';
-
-#if defined (__STDC__)
 	case 'a':
 		return '\a';
 	case 'v':
 		return '\v';
-#else
-	case 'a':
-		return '\007';
-	case 'v':
-		return '\013';
-#endif
-
 	case '0':
 	case '1':
 	case '2':
@@ -684,14 +675,10 @@ char   *readable_form (int c)
 			return "\\r";
 		case '\t':
 			return "\\t";
-
-#if defined (__STDC__)
 		case '\a':
 			return "\\a";
 		case '\v':
 			return "\\v";
-#endif
-
 		default:
 			if(trace_hex)
 				snprintf (rform, sizeof(rform), "\\x%.2x", (unsigned int) c);
