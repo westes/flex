@@ -47,9 +47,6 @@
 #ifdef __cplusplus
 extern  "C" {
 #endif
-#ifndef PROTO
-#define PROTO(args) args
-#endif
 /* Error codes. */ enum scanopt_err_t {
 		SCANOPT_ERR_OPT_UNRECOGNIZED = -1,	/* Unrecognized option. */
 		SCANOPT_ERR_OPT_AMBIGUOUS = -2,	/* It matched more than one option name. */
@@ -85,12 +82,12 @@ extern  "C" {
  *   flags   - Control behavior.
  * Return:  A malloc'd pointer .
  */
-	scanopt_t *scanopt_init PROTO ((const optspec_t * options,
-					int argc, char **argv, int flags));
+	scanopt_t *scanopt_init (const optspec_t * options, int argc,
+				 char **argv, int flags);
 
 /* Frees memory used by scanner.
  * Always returns 0. */
-	int scanopt_destroy PROTO ((scanopt_t * scanner));
+	int scanopt_destroy (scanopt_t * scanner);
 
 #ifndef NO_SCANOPT_USAGE
 /* Prints a usage message based on contents of optlist.
@@ -100,10 +97,7 @@ extern  "C" {
  *   usage    - Text to be prepended to option list. May be NULL.
  * Return:  Always returns 0 (zero).
  */
-	int scanopt_usage
-		PROTO (
-		       (scanopt_t * scanner, FILE * fp,
-			const char *usage));
+	int scanopt_usage (scanopt_t * scanner, FILE * fp, const char *usage);
 #endif
 
 /* Scans command-line options in argv[].
@@ -120,10 +114,7 @@ extern  "C" {
  *          < 0 on error (return value is an error code).
  *
  */
-	int scanopt
-		PROTO (
-		       (scanopt_t * scanner, char **optarg,
-			int *optindex));
+	int scanopt (scanopt_t * scanner, char **optarg, int *optindex);
 
 #ifdef __cplusplus
 }

@@ -134,7 +134,7 @@ const char *escaped_qend   = "[[]]M4_YY_NOOP]M4_YY_NOOP]M4_YY_NOOP[[]]";
 /* For debugging. The max number of filters to apply to skeleton. */
 static int preproc_level = 1000;
 
-int flex_main PROTO ((int argc, char *argv[]));
+int flex_main (int argc, char *argv[]);
 
 int flex_main (int argc, char *argv[])
 {
