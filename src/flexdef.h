@@ -103,14 +103,6 @@
 #define DEFAULT_CSIZE 128
 #endif
 
-#ifndef PROTO
-#if defined(__STDC__)
-#define PROTO(proto) proto
-#else
-#define PROTO(proto) ()
-#endif
-#endif
-
 /* Maximum line length we'll have to deal with. */
 #define MAXLINE 2048
 

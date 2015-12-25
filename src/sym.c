@@ -60,10 +60,8 @@ static struct hash_entry *ccltab[CCL_HASH_SIZE];
 /* declare functions that have forward references */
 
 static int addsym(char[], char *, int, hash_table, int);
-static struct hash_entry *findsym PROTO ((const char *sym,
-					  hash_table table,
-
-					  int table_size));
+static struct hash_entry *findsym (const char *sym, hash_table table,
+				   int table_size);
 static int hashfunct(const char *, int);
 
 
