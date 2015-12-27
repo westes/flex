@@ -32,6 +32,8 @@
 /*  PURPOSE. */
 
 
+#include <libgen.h>
+
 #include "flexdef.h"
 #include "version.h"
 #include "options.h"
