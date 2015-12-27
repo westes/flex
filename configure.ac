@@ -94,9 +94,7 @@ fi
 
 # checks for headers
 
-AC_HEADER_STDC
-AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([inttypes.h libintl.h limits.h locale.h malloc.h netinet/in.h regex.h stddef.h stdlib.h string.h strings.h unistd.h])
+AC_CHECK_HEADERS([inttypes.h libintl.h limits.h locale.h malloc.h netinet/in.h regex.h unistd.h])
 
 # checks for libraries
 
