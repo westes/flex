@@ -129,16 +129,13 @@ AC_FUNC_REALLOC
 AC_CHECK_FUNCS(dup2 dnl
 memset dnl
 pow dnl
-reallocarray dnl
 regcomp dnl
 setlocale dnl
 strchr dnl
 strdup dnl
 strtol)
 
-if test "$ac_cv_func_reallocarray" = "no" ; then
-   AC_LIBOBJ([reallocarray])
-fi
+AC_REPLACE_FUNCS(reallocarray)
 
 AC_CONFIG_FILES(
 Makefile
