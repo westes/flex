@@ -45,6 +45,7 @@
 #include <stdarg.h>
 #include <setjmp.h>
 #include <ctype.h>
+#include <libgen.h> /* for XPG version of basename(3) */
 #include <string.h>
 #include <math.h>
 #endif
