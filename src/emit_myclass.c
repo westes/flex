@@ -6,13 +6,13 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-void emit_myclass(char *classname)
+void emit_myclass(const char * const classname)
 {
   char *fnamebuf;
-  const char *suffix = ".yy.h";
+  const char * const suffix = ".yy.h";
   fnamebuf = calloc(strlen(classname) + strlen(suffix) + 1, sizeof(char));
   strcat(fnamebuf, classname);
-  strcat(fnamebuf, ".yy.h");
+  strcat(fnamebuf, suffix);
   struct stat statbuf;
   int retval = stat(fnamebuf, &statbuf);
   if (-1 == retval) {

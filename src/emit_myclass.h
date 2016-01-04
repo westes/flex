@@ -18,6 +18,6 @@
 // be able to pass pointeres and references to any of your scanners
 // using yyFlexLexer as a base class.
 
-void emit_myclass(char *classname);
+void emit_myclass(const char * const classname);
 
 #endif
