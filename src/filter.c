@@ -167,6 +167,8 @@ clearerr(stdin);
 			flexfatal (_("dup2(pipes[0],0)"));
 		close (pipes[0]);
         fseek (stdin, 0, SEEK_CUR);
+        ungetc(' ', stdin); /* still an evil hack, but one that works better */
+        (void)fgetc(stdin); /* on NetBSD than the fseek attempt does */
 
 		/* run as a filter, either internally or by exec */
 		if (chain->filter_func) {
