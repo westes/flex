@@ -1,7 +1,7 @@
 AM_YFLAGS = -d
 localedir = $(datadir)/locale
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/intl
-LIBS = @LIBINTL@ @LIBS@
+LIBS = @LIBS@
 
 m4 = @M4@
 
@@ -41,7 +41,7 @@ COMMON_SOURCES = \
 	tblcmp.c \
 	yylex.c
 
-LDADD = ../lib/libcompat.la
+LDADD = ../lib/libcompat.la @LIBINTL@
 
 libfl_la_SOURCES = \
 	libmain.c \
