@@ -55,7 +55,7 @@ int main ( int argc, char** argv )
 #endif
 
 #ifdef TEST_HAS_TABLES_EXTERNAL
-    if((fp  = fopen(argv[1],"r"))== NULL)
+    if((fp  = fopen(argv[1],"rb"))== NULL)
         YY_FATAL_ERROR("could not open tables file for reading");
 
     if(yytables_fload(fp M4_YY_CALL_LAST_ARG) < 0)
