@@ -29,6 +29,8 @@ f * are met:
 #include <stdio.h>
 #include <stdlib.h>
 #include "config.h"
+
+int error = 0;
 %}
 
 %option 8bit prefix="test"
@@ -56,6 +58,7 @@ int include_stack_ptr = 0;
     include_stack[include_stack_ptr++] = YY_CURRENT_BUFFER;
     if((yyin=fopen(yytext,"r"))==NULL) {
         fprintf(stderr,"*** Error: Could not open include file \"%s\".\n",yytext);
+        error = 1;
         yyterminate();
     }
     yy_switch_to_buffer( yy_create_buffer( yyin, YY_BUF_SIZE ));
@@ -63,6 +66,7 @@ int include_stack_ptr = 0;
     }
 .|\n  {
     fprintf(stderr,"Invalid input \"%s\".\n", yytext);
+    error = 1;
     yyterminate();
    }
 }
@@ -97,6 +101,9 @@ main ( int argc, char** argv )
     yyin = fp;
     yyout = stdout;
     yylex();
-    printf("TEST RETURNING OK.\n");
+    if (!error)
+        printf("TEST RETURNING OK.\n");
+    else
+        exit(-1);
     return 0;
 }
