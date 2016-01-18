@@ -296,8 +296,7 @@ Indices
 @cindex reporting bugs
 
 If you find a bug in @code{flex}, please report it using
-the SourceForge Bug Tracking facilities which can be found on
-@url{http://sourceforge.net/projects/flex,flex's SourceForge Page}.
+GitHub's issue tracking facility at @url{https://github.com/westes/flex/issues/}
 
 @node Introduction, Simple Examples, Reporting Bugs, Top
 @chapter Introduction
