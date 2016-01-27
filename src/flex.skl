@@ -740,7 +740,7 @@ static int yy_get_next_buffer M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 #if defined(__GNUC__) && __GNUC__ >= 3
 __attribute__((__noreturn__))
 #endif
-static void yy_fatal_error M4_YY_PARAMS( yyconst char msg[] M4_YY_PROTO_LAST_ARG );
+static void yy_fatal_error M4_YY_PARAMS( yyconst char* msg M4_YY_PROTO_LAST_ARG );
 ]])
 
 %endif
@@ -2558,7 +2558,7 @@ static void yy_fatal_error YYFARGS1(yyconst char*, msg)
 }
 %endif
 %if-c++-only
-void yyFlexLexer::LexerError( yyconst char msg[] )
+void yyFlexLexer::LexerError( yyconst char* msg )
 {
     M4_YY_DECL_GUTS_VAR();
 	std::cerr << msg << std::endl;
