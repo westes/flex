@@ -226,6 +226,12 @@ m4preproc_include(`flexint.h')
 /* TODO: this is always defined, so inline it */
 #define yyconst const
 
+#if defined(__GNUC__) && __GNUC__ >= 3
+#define yynoreturn __attribute__((__noreturn__))
+#else
+#define yynoreturn
+#endif
+
 %# For compilers that can not handle prototypes.
 %# e.g.,
 %# The function prototype
@@ -737,10 +743,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 static yy_state_type yy_get_previous_state M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 static yy_state_type yy_try_NUL_trans M4_YY_PARAMS( yy_state_type current_state  M4_YY_PROTO_LAST_ARG);
 static int yy_get_next_buffer M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
-#if defined(__GNUC__) && __GNUC__ >= 3
-__attribute__((__noreturn__))
-#endif
-static void yy_fatal_error M4_YY_PARAMS( yyconst char* msg M4_YY_PROTO_LAST_ARG );
+static void yynoreturn yy_fatal_error M4_YY_PARAMS( yyconst char* msg M4_YY_PROTO_LAST_ARG );
 ]])
 
 %endif
@@ -2549,7 +2552,7 @@ m4_ifdef( [[M4_YY_NO_TOP_STATE]],,
 #endif
 
 %if-c-only
-static void yy_fatal_error YYFARGS1(yyconst char*, msg)
+static void yynoreturn yy_fatal_error YYFARGS1(yyconst char*, msg)
 {
 	M4_YY_DECL_GUTS_VAR();
 	M4_YY_NOOP_GUTS_VAR();
