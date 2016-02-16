@@ -852,8 +852,7 @@ void skelout (void)
  * element_n.  Formats the output with spaces and carriage returns.
  */
 
-void transition_struct_out (element_v, element_n)
-     int element_v, element_n;
+void transition_struct_out (int element_v, int element_n)
 {
 
 	/* short circuit any output */

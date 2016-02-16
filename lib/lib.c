@@ -3,5 +3,5 @@
  * moving something that flex treats as a library function into this
  * directory. */
 
-void do_nothing(){ return;}
+void do_nothing(void){ return;}
 

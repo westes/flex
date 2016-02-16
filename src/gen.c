@@ -725,8 +725,7 @@ void genftbl (void)
 
 /* Generate the code to find the next compressed-table state. */
 
-void gen_next_compressed_state (char_map)
-     char   *char_map;
+void gen_next_compressed_state (char *char_map)
 {
 	indent_put2s ("YY_CHAR yy_c = %s;", char_map);
 
@@ -876,8 +875,7 @@ void gen_next_match (void)
 
 /* Generate the code to find the next state. */
 
-void gen_next_state (worry_about_NULs)
-     int worry_about_NULs;
+void gen_next_state (int worry_about_NULs)
 {				/* NOTE - changes in here should be reflected in gen_next_match() */
 	char    char_map[256];
 
