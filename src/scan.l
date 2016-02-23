@@ -364,6 +364,7 @@ M4QEND      "]]"
 	interactive	interactive = option_sense;
 	lex-compat	lex_compat = option_sense;
 	posix-compat	posix_compat = option_sense;
+	line		gen_line_dirs = option_sense;
 	main		{
 			ACTION_M4_IFDEF( "M4""_YY_MAIN", option_sense);
             /* Override yywrap */
