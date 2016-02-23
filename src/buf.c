@@ -95,6 +95,9 @@ struct Buf *buf_linedir (struct Buf *buf, const char* filename, int lineno)
     const char *src;
     size_t tsz;
 
+    if (gen_line_dirs)
+	return buf;
+
     tsz = strlen("#line \"\"\n")                +   /* constant parts */
                2 * strlen (filename)            +   /* filename with possibly all backslashes escaped */
                (int) (1 + log10 (abs (lineno))) +   /* line number */
