@@ -237,8 +237,8 @@ struct Buf *buf_append (struct Buf *buf, const void *ptr, int n_elem)
 	/* May need to alloc more. */
 	if (n_elem + buf->nelts > buf->nmax) {
 
-		/* exact amount needed... */
-		n_alloc = (n_elem + buf->nelts) * buf->elt_size;
+		/* exact count needed... */
+		n_alloc = n_elem + buf->nelts;
 
 		/* ...plus some extra */
 		if (((n_alloc * buf->elt_size) % 512) != 0
