@@ -559,7 +559,7 @@ struct yy_buffer_state
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	yy_size_t yy_n_chars;
+	int yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -648,7 +648,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 %not-for-header
 /* yy_hold_char holds the character lost when yytext is formed. */
 static char yy_hold_char;
-static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */
+static int yy_n_chars;		/* number of characters read into yy_ch_buf */
 yy_size_t yyleng;
 
 /* Points to current character in buffer. */
@@ -816,7 +816,7 @@ struct yyguts_t
     size_t yy_buffer_stack_max; /**< capacity of stack. */
     YY_BUFFER_STATE * yy_buffer_stack; /**< Stack as an array. */
     char yy_hold_char;
-    yy_size_t yy_n_chars;
+    int yy_n_chars;
     yy_size_t yyleng_r;
     char *yy_c_buf_p;
     int yy_init;
@@ -1778,9 +1778,9 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 	else
 		ret_val = EOB_ACT_CONTINUE_SCAN;
 
-	if ((yy_size_t) (YY_G(yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
+	if ((int) (YY_G(yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
-		yy_size_t new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1);
+		int new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1);
 		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) yyrealloc(
 			(void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, new_size M4_YY_CALL_LAST_ARG );
 		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
@@ -1864,7 +1864,7 @@ m4_ifdef( [[M4_YY_NO_UNPUT]],,
 	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
 		{ /* need to shift things up to make room */
 		/* +2 for EOB chars. */
-		yy_size_t number_to_move = YY_G(yy_n_chars) + 2;
+		int number_to_move = YY_G(yy_n_chars) + 2;
 		char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
 					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
 		char *source =
