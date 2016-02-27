@@ -51,21 +51,19 @@ AC_PROG_RANLIB
 
 AC_PATH_PROG([BISON], bison, no)
 AS_IF([test "$BISON" != no],[],
-	[ AC_SUBST([BISON], [\${top_srcdir}/build-aux/missing bison]) 
+	[ AC_SUBST([BISON], [\${top_srcdir}/build-aux/missing bison])
 	  AC_MSG_NOTICE(no bison program found: only required for maintainers)
 	])
 
-AC_PATH_PROG([HELP2MAN], help2man, no)
-AS_IF([test "$HELP2MAN" != no],[],i
-	[ AC_SUBST([HELP2MAN], [\${top_srcdir}/build-aux/missing help2man])
-	  AC_MSG_NOTICE(no help2man program found: only required for maintainers)
-	])
+AC_PATH_PROG([HELP2MAN], help2man, [\${top_srcdir}/build-aux/missing help2man])
+  AS_IF([test -z "$ac_cv_path_HELP2MAN" ],[],
+    AC_MSG_WARN(program not found: help2man: building man page will not work)
+  )
 
-AC_PATH_PROGS([TEXI2DVI], [gtexi2dvi texi2dvi], [no])
-AS_IF([test "$TEXI2DVI" != no],[],
-	[ AC_SUBST([TEXI2DVI], [:])
-	  AC_MSG_NOTICE(no texi2dvi program found: only required for maintainers)
-	])
+AC_PATH_PROGS([TEXI2DVI], [gtexi2dvi texi2dvi], [\${top_srcdir}/build-aux/missing texi2dvi])
+  AS_IF([test -z "$ac_cv_path_TEXI2DVI" ], [],
+    AC_MSG_WARN(texi2dvi: program not found: building pdf version of manual will not work)
+  )
 
 # Check for a m4 that supports -P
 
