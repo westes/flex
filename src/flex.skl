@@ -1744,7 +1744,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 
 			YY_G(yy_c_buf_p) = &b->yy_ch_buf[yy_c_buf_p_offset];
 
-			num_to_read = YY_CURRENT_BUFFER_LVALUE->yy_buf_size -
+			num_to_read = (int) YY_CURRENT_BUFFER_LVALUE->yy_buf_size -
 						number_to_move - 1;
 ]])
 			}
@@ -1876,7 +1876,7 @@ m4_ifdef( [[M4_YY_NO_UNPUT]],,
 		yy_cp += (int) (dest - source);
 		yy_bp += (int) (dest - source);
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
-			YY_G(yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
+			YY_G(yy_n_chars) = (int) YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
 
 		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
 			YY_FATAL_ERROR( "flex scanner push-back overflow" );
@@ -2430,7 +2430,7 @@ YY_BUFFER_STATE yy_scan_string YYFARGS1( yyconst char *, yystr)
 {
     m4_dnl M4_YY_DECL_GUTS_VAR();
 
-	return yy_scan_bytes( yystr, strlen(yystr) M4_YY_CALL_LAST_ARG);
+	return yy_scan_bytes( yystr, (int) strlen(yystr) M4_YY_CALL_LAST_ARG);
 }
 %endif
 ]])
@@ -2455,7 +2455,7 @@ YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,yybytes, yy_size_t ,_yyb
     m4_dnl M4_YY_DECL_GUTS_VAR();
 
 	/* Get memory for full buffer, including space for trailing EOB's. */
-	n = _yybytes_len + 2;
+	n = (yy_size_t) _yybytes_len + 2;
 	buf = (char *) yyalloc( n M4_YY_CALL_LAST_ARG );
 	if ( ! buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
@@ -2495,7 +2495,7 @@ m4_ifdef( [[M4_YY_NO_PUSH_STATE]],,
 		yy_size_t new_size;
 
 		YY_G(yy_start_stack_depth) += YY_START_STACK_INCR;
-		new_size = YY_G(yy_start_stack_depth) * sizeof( int );
+		new_size = (yy_size_t) YY_G(yy_start_stack_depth) * sizeof( int );
 
 		if ( ! YY_G(yy_start_stack) )
 			YY_G(yy_start_stack) = (int *) yyalloc( new_size M4_YY_CALL_LAST_ARG );
