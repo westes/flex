@@ -21,6 +21,8 @@
 /*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
 /*  PURPOSE. */
 
+#include <stdlib.h>
+
 extern int yylex (void);
 
 int     main (int argc, char *argv[])
