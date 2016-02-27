@@ -83,7 +83,7 @@ void ccladd (int cclp, int ch)
 	}
 
 	ccllen[cclp] = len + 1;
-	ccltbl[newpos] = ch;
+	ccltbl[newpos] = (unsigned char) ch;
 }
 
 /* dump_cclp - same thing as list_character_set, but for cclps.  */
