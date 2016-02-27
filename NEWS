@@ -5,7 +5,43 @@ See the file COPYING for copying conditions.
 
 * version 2.6.1
 
-** Resolved sf bugs #155, #195.
+** flex resources
+
+*** The flex project is now hosted at github. Consider this a "period of transition". In particular, you should start at https://github.com/westes/flex for the flex codebase, issue tracking and pull requests.
+
+*** New releases of flex are to be found at https://github.com/westes/flex/releases.
+
+** flex internals
+
+*** Flex now uses more modern and more standard names for variable types. There's more work to be done on that front yet, though.
+
+*** A number of compiler warnings have been remedied.
+
+*** Line directives should now  work as expected and be absent when that is expected.
+
+** test suite
+
+*** When running the test suite, c++ files are compiled with the c++ header inside the flex distribution, rather than relying on the build system's flex header , which might not be installed yet or which might be out of date with respect to what flex tests expect.
+
+*** Some portability fixes in the test suite such as opening files for reading in binary mode
+
+** Building flex
+
+*** The file src/scan.c asdistributed  with flex source is now built with the current version of flex. Occasionally this had to be done manually to pick up new flex features. It's now just a part of flex's build system.
+
+*** The pdf version of the manual is no longer distributed with flex, although if you have the texinfo package installed, you can still build it.
+
+*** lots of general build system cleanup
+
+*** the build system tries a bit harder to find libtoolize and texi2dvi.
+
+*** When help2man and texi2dvi are missing, the error messages are now much more helpful.
+
+** bug fixes
+
+*** resolved github issues #53, #54, #55, #61.
+
+*** Resolved sf bugs #128, #129, #155, #160, #184, #187, #195.
 
 * version 2.6.0 released 2015-11-17
 
