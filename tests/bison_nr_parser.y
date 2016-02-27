@@ -54,7 +54,7 @@ int process_text(char* s) {
 
 %}
 
-%pure_parser
+%pure-parser
 
 %union  {
     int  lineno;
