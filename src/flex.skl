@@ -2326,7 +2326,7 @@ static void yyensure_buffer_stack YYFARGS0(void)
 void yyFlexLexer::yyensure_buffer_stack(void)
 %endif
 {
-	int num_to_alloc;
+	yy_size_t num_to_alloc;
     M4_YY_DECL_GUTS_VAR();
 
 	if (!YY_G(yy_buffer_stack)) {
