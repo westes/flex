@@ -465,7 +465,7 @@ typedef size_t yy_size_t;
 #endif
 
 %if-not-reentrant
-extern yy_size_t yyleng;
+extern int yyleng;
 %endif
 
 %if-c-only
@@ -649,7 +649,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 /* yy_hold_char holds the character lost when yytext is formed. */
 static char yy_hold_char;
 static int yy_n_chars;		/* number of characters read into yy_ch_buf */
-yy_size_t yyleng;
+int yyleng;
 
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = NULL;
@@ -685,7 +685,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 YY_BUFFER_STATE yy_scan_buffer M4_YY_PARAMS( char *base, yy_size_t size M4_YY_PROTO_LAST_ARG );
 YY_BUFFER_STATE yy_scan_string M4_YY_PARAMS( yyconst char *yy_str M4_YY_PROTO_LAST_ARG );
-YY_BUFFER_STATE yy_scan_bytes M4_YY_PARAMS( yyconst char *bytes, yy_size_t len M4_YY_PROTO_LAST_ARG );
+YY_BUFFER_STATE yy_scan_bytes M4_YY_PARAMS( yyconst char *bytes, int len M4_YY_PROTO_LAST_ARG );
 
 %endif
 
@@ -817,7 +817,7 @@ struct yyguts_t
     YY_BUFFER_STATE * yy_buffer_stack; /**< Stack as an array. */
     char yy_hold_char;
     int yy_n_chars;
-    yy_size_t yyleng_r;
+    int yyleng_r;
     char *yy_c_buf_p;
     int yy_init;
     int yy_start;
@@ -954,7 +954,7 @@ void yyset_out  M4_YY_PARAMS( FILE * _out_str M4_YY_PROTO_LAST_ARG );
 
 m4_ifdef( [[M4_YY_NO_GET_LENG]],,
 [[
-yy_size_t yyget_leng M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
+			int yyget_leng M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );
 ]])
 
 m4_ifdef( [[M4_YY_NO_GET_TEXT]],,
@@ -1722,7 +1722,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 
 			if ( b->yy_is_our_buffer )
 				{
-				yy_size_t new_size = b->yy_buf_size * 2;
+				int new_size = b->yy_buf_size * 2;
 
 				if ( new_size <= 0 )
 					b->yy_buf_size += b->yy_buf_size / 8;
@@ -1931,7 +1931,7 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
 
 		else
 			{ /* need more input */
-			yy_size_t offset = YY_G(yy_c_buf_p) - YY_G(yytext_ptr);
+			int offset = YY_G(yy_c_buf_p) - YY_G(yytext_ptr);
 			++YY_G(yy_c_buf_p);
 
 			switch ( yy_get_next_buffer( M4_YY_CALL_ONLY_ARG ) )
@@ -2326,7 +2326,7 @@ static void yyensure_buffer_stack YYFARGS0(void)
 void yyFlexLexer::yyensure_buffer_stack(void)
 %endif
 {
-	yy_size_t num_to_alloc;
+	int num_to_alloc;
     M4_YY_DECL_GUTS_VAR();
 
 	if (!YY_G(yy_buffer_stack)) {
@@ -2446,7 +2446,7 @@ m4_ifdef( [[M4_YY_NO_SCAN_BYTES]],,
  * M4_YY_DOC_PARAM
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,yybytes, yy_size_t ,_yybytes_len)
+YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,yybytes, int ,_yybytes_len)
 {
 	YY_BUFFER_STATE b;
 	char *buf;
@@ -2673,7 +2673,7 @@ m4_ifdef( [[M4_YY_NO_GET_LENG]],,
 /** Get the length of the current token.
  * M4_YY_DOC_PARAM
  */
-yy_size_t yyget_leng  YYFARGS0(void)
+int yyget_leng  YYFARGS0(void)
 {
     M4_YY_DECL_GUTS_VAR();
     return yyleng;
