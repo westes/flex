@@ -987,9 +987,6 @@ extern int flexscan(void);
 /* Open the given file (if NULL, stdin) for scanning. */
 extern void set_input_file(char *);
 
-/* Wrapup a file in the lexical analyzer. */
-extern int yywrap(void);
-
 
 /* from file sym.c */
 
