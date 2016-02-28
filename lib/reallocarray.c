@@ -19,6 +19,7 @@
 
 #include <config.h>
 #ifndef HAVE_REALLOCARRAY
+#undef reallocarray
 
 #include <sys/types.h>
 #include <errno.h>
@@ -26,6 +27,8 @@
 #include <stdint.h>
 #endif
 #include <stdlib.h>
+
+void *reallocarray(void *, size_t, size_t);
 
 /*
  * This is sqrt(SIZE_MAX+1), as s1*s2 <= SIZE_MAX
