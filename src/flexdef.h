@@ -679,12 +679,6 @@ void   *reallocate_array(void *, int, size_t);
 	reallocate_array((void *) array, size, sizeof(unsigned char))
 
 
-/* Used to communicate between scanner and parser.  The type should really
- * be YYSTYPE, but we can't easily get our hands on it.
- */
-extern int yylval;
-
-
 /* External functions that are cross-referenced among the flex source files. */
 
 
