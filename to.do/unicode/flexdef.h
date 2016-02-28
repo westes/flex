@@ -853,7 +853,7 @@ extern void flexerror PROTO((const char[]));
 extern void flexfatal PROTO((const char[]));
 
 /* Convert a hexadecimal digit string to an integer value. */
-extern int htoi PROTO((Char[]));
+extern unsigned int htoui PROTO((Char[]));
 
 /* Report an error message formatted with one integer argument. */
 extern void lerrif PROTO((const char[], int));
@@ -883,8 +883,8 @@ extern int myctoi PROTO((char []));
 /* Return character corresponding to escape sequence. */
 extern int myesc PROTO((Char[]));
 
-/* Convert an octal digit string to an integer value. */
-extern int otoi PROTO((Char [] ));
+/* Convert an octal digit string to an unsigned integer value. */
+extern unsigned int otoui PROTO((Char [] ));
 
 /* Output a (possibly-formatted) string to the generated scanner. */
 extern void out PROTO((const char []));

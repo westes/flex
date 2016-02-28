@@ -299,9 +299,9 @@ const char msg[];
 	}
 
 
-/* htoi - convert a hexadecimal digit string to an integer value */
+/* htoui - convert a hexadecimal digit string to an unsigned integer value */
 
-int htoi( str )
+unsigned int htoui( str )
 Char str[];
 	{
 	unsigned int result;
@@ -526,7 +526,7 @@ Char array[];
 			c = array[sptr];
 			array[sptr] = '\0';
 
-			esc_char = otoi( array + 1 );
+			esc_char = otoui( array + 1 );
 
 			array[sptr] = c;
 
@@ -548,7 +548,7 @@ Char array[];
 			c = array[sptr];
 			array[sptr] = '\0';
 
-			esc_char = htoi( array + 2 );
+			esc_char = htoui( array + 2 );
 
 			array[sptr] = c;
 
@@ -561,9 +561,9 @@ Char array[];
 	}
 
 
-/* otoi - convert an octal digit string to an integer value */
+/* otoui - convert an octal digit string to an unsigned integer value */
 
-int otoi( str )
+unsigned int otoui( str )
 Char str[];
 	{
 	unsigned int result;

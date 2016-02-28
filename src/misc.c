@@ -326,9 +326,9 @@ void flexfatal (const char *msg)
 }
 
 
-/* htoi - convert a hexadecimal digit string to an integer value */
+/* htoui - convert a hexadecimal digit string to an unsigned integer value */
 
-int htoi (unsigned char str[])
+unsigned int htoui (unsigned char str[])
 {
 	unsigned int result;
 
@@ -547,7 +547,7 @@ unsigned char myesc (unsigned char array[])
 			c = array[sptr];
 			array[sptr] = '\0';
 
-			esc_char = otoi (array + 1);
+			esc_char = (unsigned char) otoui (array + 1);
 
 			array[sptr] = c;
 
@@ -569,7 +569,7 @@ unsigned char myesc (unsigned char array[])
 			c = array[sptr];
 			array[sptr] = '\0';
 
-			esc_char = htoi (array + 2);
+			esc_char = (unsigned char) htoui (array + 2);
 
 			array[sptr] = c;
 
@@ -582,9 +582,9 @@ unsigned char myesc (unsigned char array[])
 }
 
 
-/* otoi - convert an octal digit string to an integer value */
+/* otoui - convert an octal digit string to an unsigned integer value */
 
-int otoi (unsigned char str[])
+unsigned int otoui (unsigned char str[])
 {
 	unsigned int result;
 

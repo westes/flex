@@ -844,7 +844,7 @@ extern void flexfatal(const char *);
 #endif /* ! HAVE_DECL___func__ */
 
 /* Convert a hexadecimal digit string to an integer value. */
-extern int htoi(unsigned char[]);
+extern unsigned int htoui(unsigned char[]);
 
 /* Report an error message formatted  */
 extern void lerr(const char *, ...)
@@ -883,7 +883,7 @@ extern int myctoi(const char *);
 extern unsigned char myesc(unsigned char[]);
 
 /* Convert an octal digit string to an integer value. */
-extern int otoi(unsigned char[]);
+extern unsigned int otoui(unsigned char[]);
 
 /* Output a (possibly-formatted) string to the generated scanner. */
 extern void out(const char *);
