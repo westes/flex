@@ -241,26 +241,26 @@ struct Buf *buf_append (struct Buf *buf, const void *ptr, int n_elem)
 		n_alloc = n_elem + buf->nelts;
 
 		/* ...plus some extra */
-		if (((n_alloc * buf->elt_size) % 512) != 0
+		if ((((size_t) n_alloc * buf->elt_size) % 512) != 0
 		    && buf->elt_size < 512)
-			n_alloc +=
-				(512 -
-				 ((n_alloc * buf->elt_size) % 512)) /
-				buf->elt_size;
+			n_alloc += (int)
+				((512 -
+				 (((size_t) n_alloc * buf->elt_size) % 512)) /
+				buf->elt_size);
 
 		if (!buf->elts)
 			buf->elts =
-				allocate_array (n_alloc, buf->elt_size);
+				allocate_array ((int) n_alloc, buf->elt_size);
 		else
 			buf->elts =
-				reallocate_array (buf->elts, n_alloc,
+				reallocate_array (buf->elts, (int) n_alloc,
 						  buf->elt_size);
 
 		buf->nmax = n_alloc;
 	}
 
-	memcpy ((char *) buf->elts + buf->nelts * buf->elt_size, ptr,
-		n_elem * buf->elt_size);
+	memcpy (buf->elts + (size_t) buf->nelts * buf->elt_size, ptr,
+		(size_t) n_elem * buf->elt_size);
 	buf->nelts += n_elem;
 
 	return buf;
