@@ -577,7 +577,7 @@ static int matchlongopt (char *str, char **optname, int *optlen, char **arg, int
 		return 0;
 
 	p += 2;
-	*optname = (char *) p;
+	*optname = p;
 
 	/* find the end of optname */
 	while (*p && *p != '=')
@@ -618,11 +618,9 @@ static int find_opt (struct _scanopt_t *s, int lookup_long, char *optstart, int
 		return 0;
 
 	for (i = 0; i < s->optc; i++) {
-		char   *optname;
+		const char   *optname;
 
-		optname =
-			(char *) (s->options[i].opt_fmt +
-				  (lookup_long ? 2 : 1));
+		optname = s->options[i].opt_fmt + (lookup_long ? 2 : 1);
 
 		if (lookup_long && (s->aux[i].flags & IS_LONG)) {
 			if (len > s->aux[i].namelen)
