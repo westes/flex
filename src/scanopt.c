@@ -37,18 +37,6 @@
 
 /* Internal structures */
 
-#ifdef HAVE_STRCASECMP
-#define STRCASECMP(a,b) strcasecmp(a,b)
-#else
-static int STRCASECMP (const char *, const char *);
-
-static int STRCASECMP (const char *a, const char *b)
-{
-	while (tolower ((unsigned char)*a++) == tolower ((unsigned char)*b++)) ;
-	return b - a;
-}
-#endif
-
 #define ARG_NONE 0x01
 #define ARG_REQ  0x02
 #define ARG_OPT  0x04
@@ -299,7 +287,7 @@ int     scanopt_usage (scanopt_t *scanner, FILE *fp, const char *usage)
 				}
 				if (!ptr_if_no_alias
 				    &&
-				    STRCASECMP (NAME (s, (*ue_curr)->idx),
+				    strcasecmp (NAME (s, (*ue_curr)->idx),
 						NAME (s, ue->idx)) > 0) {
 					ptr_if_no_alias = ue_curr;
 				}
