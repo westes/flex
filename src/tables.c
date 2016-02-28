@@ -55,7 +55,7 @@
 int     yytbl_write32 (struct yytbl_writer *wr, flex_uint32_t v);
 int     yytbl_write16 (struct yytbl_writer *wr, flex_uint16_t v);
 int     yytbl_write8 (struct yytbl_writer *wr, flex_uint8_t v);
-int     yytbl_writen (struct yytbl_writer *wr, void *v, flex_int32_t len);
+int     yytbl_writen (struct yytbl_writer *wr, void *v, int len);
 static flex_int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i);
 /* XXX Not used
 static flex_int32_t yytbl_data_getijk (const struct yytbl_data *tbl, int i,
@@ -264,11 +264,11 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
  *  @param  len  number of bytes
  *  @return  -1 on error. number of bytes written on success.
  */
-int yytbl_writen (struct yytbl_writer *wr, void *v, flex_int32_t len)
+int yytbl_writen (struct yytbl_writer *wr, void *v, int len)
 {
 	int  rv;
 
-	rv = fwrite (v, 1, len, wr->out);
+	rv = (int) fwrite (v, 1, (size_t) len, wr->out);
 	if (rv != len)
 		return -1;
 	wr->total_written += len;
