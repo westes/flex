@@ -1732,7 +1732,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 				b->yy_ch_buf = (char *)
 					/* Include room in for 2 EOB chars. */
 					yyrealloc( (void *) b->yy_ch_buf,
-							 b->yy_buf_size + 2 M4_YY_CALL_LAST_ARG );
+							 (yy_size_t) (b->yy_buf_size + 2) M4_YY_CALL_LAST_ARG );
 				}
 			else
 				/* Can't grow it, we don't own it. */
@@ -2102,12 +2102,12 @@ static void yy_load_buffer_state  YYFARGS0(void)
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 
-	b->yy_buf_size = (yy_size_t)size;
+	b->yy_buf_size = size;
 
 	/* yy_ch_buf has to be 2 characters longer than the size given because
 	 * we need to put in 2 end-of-buffer characters.
 	 */
-	b->yy_ch_buf = (char *) yyalloc( b->yy_buf_size + 2 M4_YY_CALL_LAST_ARG );
+	b->yy_ch_buf = (char *) yyalloc( (yy_size_t) (b->yy_buf_size + 2) M4_YY_CALL_LAST_ARG );
 	if ( ! b->yy_ch_buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 
@@ -2397,7 +2397,7 @@ YY_BUFFER_STATE yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
 
-	b->yy_buf_size = size - 2;	/* "- 2" to take care of EOB's */
+	b->yy_buf_size = (int) (size - 2);	/* "- 2" to take care of EOB's */
 	b->yy_buf_pos = b->yy_ch_buf = base;
 	b->yy_is_our_buffer = 0;
 	b->yy_input_file = NULL;
