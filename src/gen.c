@@ -1949,7 +1949,7 @@ void make_tables (void)
 		++indent_level;
 		indent_puts ("{");
 		indent_puts
-			("YY_G(yy_more_len) = YY_G(yy_c_buf_p) - YY_G(yytext_ptr);");
+			("YY_G(yy_more_len) = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr));");
 		indent_puts ("YY_G(yy_more_flag) = 0;");
 		indent_puts ("}");
 		--indent_level;
