@@ -420,7 +420,7 @@ void    inittbl (void)
 {
 	int i;
 
-	memset(chk, 0, current_max_xpairs * sizeof(int));
+	memset(chk, 0, (size_t) current_max_xpairs * sizeof(int));
 
 	tblend = 0;
 	firstfree = tblend + 1;
