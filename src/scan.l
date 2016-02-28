@@ -78,8 +78,10 @@ extern const char *escaped_qstart, *escaped_qend;
 	return NAME;
 
 #define PUT_BACK_STRING(str, start) \
-	for ( i = strlen( str ) - 1; i >= start; --i ) \
-		unput((str)[i])
+	{ size_t i = strlen( str );	\
+	  while ( i > start )		\
+	    unput((str)[--i]);		\
+	}
 
 #define CHECK_REJECT(str) \
 	if ( all_upper( str ) ) \
@@ -134,7 +136,7 @@ M4QEND      "]]"
 	static int option_sense;
 
 	int doing_codeblock = false;
-	int i, brace_depth=0, brace_start_line=0;
+	int brace_depth=0, brace_start_line=0;
 	char nmdef[MAXLINE];
 
 
@@ -301,12 +303,12 @@ M4QEND      "]]"
  		           FLEX_EXIT(EXIT_FAILURE);
 			 }
 			/* Skip trailing whitespace. */
-			for ( i = strlen( nmdef ) - 1;
-			      i >= 0 && (nmdef[i] == ' ' || nmdef[i] == '\t');
-			      --i )
-				;
-
-			nmdef[i + 1] = '\0';
+			{
+			    size_t i = strlen( nmdef );
+			    while (i > 0 && (nmdef[i-1] == ' ' || nmdef[i-1] == '\t'))
+			       --i;
+			    nmdef[i] = '\0';
+			}
 
 			ndinstal( nmstr, nmdef );
 			didadef = true;
