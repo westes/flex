@@ -123,7 +123,7 @@ static struct yytbl_data *mkeoltbl (void)
 	tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYTD_ID_RULE_CAN_MATCH_EOL);
 	tbl->td_flags = YYTD_DATA8;
-	tbl->td_lolen = num_rules + 1;
+	tbl->td_lolen = (flex_uint32_t) (num_rules + 1);
 	tbl->td_data = tdata =
 		calloc(tbl->td_lolen, sizeof (flex_int8_t));
 
@@ -231,7 +231,7 @@ static struct yytbl_data *mkctbl (void)
 	yytbl_data_init (tbl, YYTD_ID_TRANSITION);
 	tbl->td_flags = YYTD_DATA32 | YYTD_STRUCT;
 	tbl->td_hilen = 0;
-	tbl->td_lolen = tblend + numecs + 1;	/* number of structs */
+	tbl->td_lolen = (flex_uint32_t) (tblend + numecs + 1);	/* number of structs */
 
 	tbl->td_data = tdata =
 		calloc(tbl->td_lolen * 2, sizeof (flex_int32_t));
@@ -327,7 +327,7 @@ static struct yytbl_data *mkssltbl (void)
 	yytbl_data_init (tbl, YYTD_ID_START_STATE_LIST);
 	tbl->td_flags = YYTD_DATA32 | YYTD_PTRANS;
 	tbl->td_hilen = 0;
-	tbl->td_lolen = lastsc * 2 + 1;
+	tbl->td_lolen = (flex_uint32_t) (lastsc * 2 + 1);
 
 	tbl->td_data = tdata =
 		calloc(tbl->td_lolen, sizeof (flex_int32_t));
@@ -457,7 +457,7 @@ static struct yytbl_data *mkecstbl (void)
 	yytbl_data_init (tbl, YYTD_ID_EC);
 	tbl->td_flags |= YYTD_DATA32;
 	tbl->td_hilen = 0;
-	tbl->td_lolen = csize;
+	tbl->td_lolen = (flex_uint32_t) csize;
 
 	tbl->td_data = tdata =
 		calloc(tbl->td_lolen, sizeof (flex_int32_t));
@@ -663,7 +663,7 @@ struct yytbl_data *mkftbl (void)
 	yytbl_data_init (tbl, YYTD_ID_ACCEPT);
 	tbl->td_flags |= YYTD_DATA32;
 	tbl->td_hilen = 0;	/* it's a one-dimensional array */
-	tbl->td_lolen = lastdfa + 1;
+	tbl->td_lolen = (flex_uint32_t) (lastdfa + 1);
 
 	tbl->td_data = tdata =
 		calloc(tbl->td_lolen, sizeof (flex_int32_t));
@@ -1106,7 +1106,7 @@ void gentabs (void)
 
         yyacclist_tbl = calloc(1,sizeof(struct yytbl_data));
         yytbl_data_init (yyacclist_tbl, YYTD_ID_ACCLIST);
-        yyacclist_tbl->td_lolen  = MAX(numas,1) + 1;
+        yyacclist_tbl->td_lolen  = (flex_uint32_t) (MAX(numas,1) + 1);
         yyacclist_tbl->td_data = yyacclist_data = 
             calloc(yyacclist_tbl->td_lolen, sizeof (flex_int32_t));
         yyacclist_curr = 1;
@@ -1215,7 +1215,7 @@ void gentabs (void)
 
 	yyacc_tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (yyacc_tbl, YYTD_ID_ACCEPT);
-	yyacc_tbl->td_lolen = k;
+	yyacc_tbl->td_lolen = (flex_uint32_t) k;
 	yyacc_tbl->td_data = yyacc_data =
 		calloc(yyacc_tbl->td_lolen, sizeof (flex_int32_t));
     yyacc_curr=1;
@@ -1272,7 +1272,7 @@ void gentabs (void)
 		flex_int32_t *yymecs_data = 0;
 		yymeta_tbl = calloc(1, sizeof (struct yytbl_data));
 		yytbl_data_init (yymeta_tbl, YYTD_ID_META);
-		yymeta_tbl->td_lolen = numecs + 1;
+		yymeta_tbl->td_lolen = (flex_uint32_t) (numecs + 1);
 		yymeta_tbl->td_data = yymecs_data =
 			calloc(yymeta_tbl->td_lolen,
 					    sizeof (flex_int32_t));
@@ -1320,7 +1320,7 @@ void gentabs (void)
 		     || long_align) ? "flex_uint32_t" : "flex_uint16_t");
 	yybase_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yybase_tbl, YYTD_ID_BASE);
-	yybase_tbl->td_lolen = total_states + 1;
+	yybase_tbl->td_lolen = (flex_uint32_t) (total_states + 1);
 	yybase_tbl->td_data = yybase_data =
 		calloc(yybase_tbl->td_lolen,
 				    sizeof (flex_int32_t));
@@ -1378,7 +1378,7 @@ void gentabs (void)
 
 	yydef_tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (yydef_tbl, YYTD_ID_DEF);
-	yydef_tbl->td_lolen = total_states + 1;
+	yydef_tbl->td_lolen = (flex_uint32_t) (total_states + 1);
 	yydef_tbl->td_data = yydef_data =
 		calloc(yydef_tbl->td_lolen, sizeof (flex_int32_t));
 
@@ -1410,7 +1410,7 @@ void gentabs (void)
 
 	yynxt_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yynxt_tbl, YYTD_ID_NXT);
-	yynxt_tbl->td_lolen = tblend + 1;
+	yynxt_tbl->td_lolen = (flex_uint32_t) (tblend + 1);
 	yynxt_tbl->td_data = yynxt_data =
 		calloc (yynxt_tbl->td_lolen, sizeof (flex_int32_t));
 
@@ -1447,7 +1447,7 @@ void gentabs (void)
 
 	yychk_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yychk_tbl, YYTD_ID_CHK);
-	yychk_tbl->td_lolen = tblend + 1;
+	yychk_tbl->td_lolen = (flex_uint32_t) (tblend + 1);
 	yychk_tbl->td_data = yychk_data =
 		calloc(yychk_tbl->td_lolen, sizeof (flex_int32_t));
 
@@ -1706,7 +1706,7 @@ void make_tables (void)
 		yytbl_data_init (yynultrans_tbl, YYTD_ID_NUL_TRANS);
 		if (fullspd)
 			yynultrans_tbl->td_flags |= YYTD_PTRANS;
-		yynultrans_tbl->td_lolen = lastdfa + 1;
+		yynultrans_tbl->td_lolen = (flex_uint32_t) (lastdfa + 1);
 		yynultrans_tbl->td_data = yynultrans_data =
 			calloc(yynultrans_tbl->td_lolen,
 					    sizeof (flex_int32_t));

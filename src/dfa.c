@@ -515,7 +515,7 @@ void ntod (void)
      
 		yytbl_data_init (yynxt_tbl, YYTD_ID_NXT);
 		yynxt_tbl->td_hilen = 1;
-		yynxt_tbl->td_lolen = num_full_table_rows;
+		yynxt_tbl->td_lolen = (flex_uint32_t) num_full_table_rows;
 		yynxt_tbl->td_data = yynxt_data =
 			calloc(yynxt_tbl->td_lolen *
 					    yynxt_tbl->td_hilen,
