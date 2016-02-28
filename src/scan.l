@@ -528,8 +528,7 @@ M4QEND      "]]"
                         if (sf_skip_ws()){
                             /* We're in the middle of a (?x: ) pattern. */
                             /* Push back everything starting at the "|" */
-                            size_t amt;
-                            amt = strchr (yytext, '|') - yytext;
+                            int amt = (int) (strchr (yytext, '|') - yytext);
                             yyless(amt);
                         }
                         else {
