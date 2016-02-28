@@ -399,7 +399,7 @@ extern int trace_hex;
  */
 
 extern int datapos, dataline, linenum;
-extern FILE *skelfile, *yyin, *backing_up_file;
+extern FILE *skelfile, *backing_up_file;
 extern const char *skel[];
 extern int skel_ind;
 extern char *infilename, *outfilename, *headerfilename;
