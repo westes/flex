@@ -1156,9 +1156,9 @@ bool regmatch_empty (regmatch_t * m);
 typedef unsigned int scanflags_t;
 extern scanflags_t* _sf_stk;
 extern size_t _sf_top_ix, _sf_max; /**< stack of scanner flags. */
-#define _SF_CASE_INS   0x0001
-#define _SF_DOT_ALL    0x0002
-#define _SF_SKIP_WS    0x0004
+#define _SF_CASE_INS   ((scanflags_t) 0x0001)
+#define _SF_DOT_ALL    ((scanflags_t) 0x0002)
+#define _SF_SKIP_WS    ((scanflags_t) 0x0004)
 #define sf_top()           (_sf_stk[_sf_top_ix])
 #define sf_case_ins()      (sf_top() & _SF_CASE_INS)
 #define sf_dot_all()       (sf_top() & _SF_DOT_ALL)
