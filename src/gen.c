@@ -37,10 +37,7 @@
 
 /* declare functions that have forward references */
 
-void	gen_next_state(int);
 void	genecs(void);
-void	indent_put2s(const char *, const char *);
-void	indent_puts(const char *);
 
 
 static int indent_level = 0;	/* each level is 8 spaces */
