@@ -1875,7 +1875,7 @@ void make_tables (void)
 	if (!C_plus_plus) {
 		if (use_read) {
 			outn ("\terrno=0; \\");
-			outn ("\twhile ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \\");
+			outn ("\twhile ( (result = (int) read( fileno(yyin), buf, max_size )) < 0 ) \\");
 			outn ("\t{ \\");
 			outn ("\t\tif( errno != EINTR) \\");
 			outn ("\t\t{ \\");
