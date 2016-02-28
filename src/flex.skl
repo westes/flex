@@ -1931,7 +1931,7 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
 
 		else
 			{ /* need more input */
-			int offset = YY_G(yy_c_buf_p) - YY_G(yytext_ptr);
+			int offset = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr));
 			++YY_G(yy_c_buf_p);
 
 			switch ( yy_get_next_buffer( M4_YY_CALL_ONLY_ARG ) )
