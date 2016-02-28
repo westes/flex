@@ -996,7 +996,7 @@ extern void cclinstal(char[], int);
 /* Lookup the number associated with character class. */
 extern int ccllookup(char[]);
 
-extern void ndinstal(const char *, unsigned char[]);	/* install a name definition */
+extern void ndinstal(const char *, char[]);	/* install a name definition */
 extern unsigned char *ndlookup(const char *);	/* lookup a name definition */
 
 /* Increase maximum number of SC's. */

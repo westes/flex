@@ -135,7 +135,7 @@ M4QEND      "]]"
 
 	int doing_codeblock = false;
 	int i, brace_depth=0, brace_start_line=0;
-	unsigned char nmdef[MAXLINE];
+	char nmdef[MAXLINE];
 
 
 <INITIAL>{
@@ -293,7 +293,7 @@ M4QEND      "]]"
 	{NOT_WS}[^\r\n]*	{
  		        if(yyleng < MAXLINE)
  		         {
-			strcpy( (char *) nmdef, yytext );
+			strcpy( nmdef, yytext );
  		         }
  		        else
  		         {
@@ -301,7 +301,7 @@ M4QEND      "]]"
  		           FLEX_EXIT(EXIT_FAILURE);
 			 }
 			/* Skip trailing whitespace. */
-			for ( i = strlen( (char *) nmdef ) - 1;
+			for ( i = strlen( nmdef ) - 1;
 			      i >= 0 && (nmdef[i] == ' ' || nmdef[i] == '\t');
 			      --i )
 				;

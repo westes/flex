@@ -174,7 +174,7 @@ static int hashfunct (const char *str, int hash_size)
 
 /* ndinstal - install a name definition */
 
-void    ndinstal (const char *name, unsigned char definition[])
+void    ndinstal (const char *name, char definition[])
 {
 
 	if (addsym (xstrdup(name),
