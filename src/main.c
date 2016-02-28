@@ -351,7 +351,7 @@ void check_options (void)
     if ( !(m4 = getenv("M4"))) {
 	    char *slash;
 		m4 = M4;
-		if (slash = strrchr(M4, '/')) {
+		if ((slash = strrchr(M4, '/')) != NULL) {
 			m4 = slash+1;
 			/* break up $PATH */
 			const char *path = getenv("PATH");
