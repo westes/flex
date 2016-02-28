@@ -167,7 +167,7 @@ void add_action (const char *new_text)
 void   *allocate_array (int size, size_t element_size)
 {
 	void *mem;
-	size_t  num_bytes = element_size * size;
+	size_t  num_bytes = element_size * (size_t) size;
 
 	mem = malloc(num_bytes);
 	if (!mem)
@@ -692,7 +692,7 @@ char   *readable_form (int c)
 		return "' '";
 
 	else {
-		rform[0] = c;
+		rform[0] = (char) c;
 		rform[1] = '\0';
 
 		return rform;
@@ -705,7 +705,7 @@ char   *readable_form (int c)
 void   *reallocate_array (void *array, int size, size_t element_size)
 {
 	void *new_array;
-	size_t  num_bytes = element_size * size;
+	size_t  num_bytes = element_size * (size_t) size;
 
 	new_array = realloc(array, num_bytes);
 	if (!new_array)

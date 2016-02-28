@@ -186,21 +186,21 @@ scanopt_t *scanopt_init (const optspec_t *options, int argc, char **argv, int fl
 			if (*p == '=' || isspace ((unsigned char)*p)
 			    || !(aux->flags & IS_LONG)) {
 				if (aux->namelen == 0)
-					aux->namelen = p - pname;
+					aux->namelen = (int) (p - pname);
 				aux->flags |= ARG_REQ;
 				aux->flags &= ~ARG_NONE;
 			}
 			/* detect optional arg. This overrides required arg. */
 			if (*p == '[') {
 				if (aux->namelen == 0)
-					aux->namelen = p - pname;
+					aux->namelen = (int) (p - pname);
 				aux->flags &= ~(ARG_REQ | ARG_NONE);
 				aux->flags |= ARG_OPT;
 				break;
 			}
 		}
 		if (aux->namelen == 0)
-			aux->namelen = p - pname;
+			aux->namelen = (int) (p - pname);
 	}
 	return (scanopt_t *) s;
 }
@@ -571,7 +571,7 @@ static int matchlongopt (char *str, char **optname, int *optlen, char **arg, int
 	while (*p && *p != '=')
 		++p;
 
-	*optlen = p - *optname;
+	*optlen = (int) (p - *optname);
 
 	if (!*p)
 		/* an option with no '=...' part. */
@@ -583,7 +583,7 @@ static int matchlongopt (char *str, char **optname, int *optlen, char **arg, int
 	*arg = p;
 	while (*p)
 		++p;
-	*arglen = p - *arg;
+	*arglen = (int) (p - *arg);
 
 	return 1;
 }
@@ -614,7 +614,7 @@ static int find_opt (struct _scanopt_t *s, int lookup_long, char *optstart, int
 			if (len > s->aux[i].namelen)
 				continue;
 
-			if (strncmp (optname, optstart, len) == 0) {
+			if (strncmp (optname, optstart, (size_t) len) == 0) {
 				nmatch++;
 				*opt_offset = i;
 

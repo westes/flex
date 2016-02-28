@@ -685,7 +685,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 			else
 				{ /* push back name surrounded by ()'s */
-				int len = strlen( nmdefptr );
+				size_t len = strlen( nmdefptr );
                 if (end_is_ws)
                     unput(end_ch);
 

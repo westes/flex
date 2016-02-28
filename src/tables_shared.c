@@ -57,7 +57,7 @@ dnl
  */
 yyskel_static flex_int32_t yytbl_calc_total_len (const struct yytbl_data *tbl)
 {
-	flex_int32_t n;
+	flex_uint32_t n;
 
 	/* total number of ints */
 	n = tbl->td_lolen;
@@ -66,5 +66,5 @@ yyskel_static flex_int32_t yytbl_calc_total_len (const struct yytbl_data *tbl)
 
 	if (tbl->td_id == YYTD_ID_TRANSITION)
 		n *= 2;
-	return n;
+	return (flex_int32_t) n;
 }

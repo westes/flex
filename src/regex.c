@@ -54,7 +54,7 @@ void flex_regcomp(regex_t *preg, const char *regex, int cflags)
 	memset (preg, 0, sizeof (regex_t));
 
 	if ((err = regcomp (preg, regex, cflags)) != 0) {
-        const int errbuf_sz = 200;
+        const size_t errbuf_sz = 200;
         char *errbuf, *rxerr;
 
 		errbuf = malloc(errbuf_sz * sizeof(char));
@@ -80,11 +80,11 @@ void flex_regcomp(regex_t *preg, const char *regex, int cflags)
 char   *regmatch_dup (regmatch_t * m, const char *src)
 {
 	char   *str;
-	int     len;
+	size_t  len;
 
 	if (m == NULL || m->rm_so < 0)
 		return NULL;
-	len = m->rm_eo - m->rm_so;
+	len = (size_t) (m->rm_eo - m->rm_so);
 	str = malloc((len + 1) * sizeof(char));
 	if (!str)
 		flexfatal(_("Unable to allocate a copy of the match"));
@@ -107,7 +107,7 @@ char   *regmatch_cpy (regmatch_t * m, char *dest, const char *src)
 		return dest;
 	}
 
-	snprintf (dest, regmatch_len(m), "%s", src + m->rm_so);
+	snprintf (dest, (size_t) regmatch_len(m), "%s", src + m->rm_so);
     return dest;
 }
 
@@ -150,7 +150,7 @@ int regmatch_strtol (regmatch_t * m, const char *src, char **endptr,
 	else
 		s = regmatch_dup (m, src);
 
-	n = strtol (s, endptr, base);
+	n = (int) strtol (s, endptr, base);
 
 	if (s != buf)
 		free (s);

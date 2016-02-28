@@ -360,14 +360,14 @@ void check_options (void)
 			} else {
 				do {
 					char m4_path[PATH_MAX];
-					int length = strlen(path);
+					size_t length = strlen(path);
 					struct stat sbuf;
 
 					const char *endOfDir = strchr(path, ':');
 					if (!endOfDir)
 						endOfDir = path+length;
 
-					if ((endOfDir-path+2) >= sizeof(m4_path)) {
+					if (endOfDir + 2 >= path + sizeof(m4_path)) {
 					    path = endOfDir+1;
 						continue;
 					}
@@ -413,7 +413,7 @@ void check_options (void)
 		FILE   *tablesout;
 		struct yytbl_hdr hdr;
 		char   *pname = 0;
-		int     nbytes = 0;
+		size_t  nbytes = 0;
 
 		buf_m4_define (&m4defs_buf, "M4_YY_TABLES_EXTERNAL", NULL);
 
@@ -1124,7 +1124,7 @@ void flexinit (int argc, char **argv)
 			break;
 
         case OPT_PREPROC_LEVEL:
-            preproc_level = strtol(arg,NULL,0);
+            preproc_level = (int) strtol(arg,NULL,0);
             break;
 
 		case OPT_MAIN:
@@ -1287,7 +1287,7 @@ void flexinit (int argc, char **argv)
 				}
 				else {
 					buf_strnappend (&userdef_buf, arg,
-							def - arg);
+							(int) (def - arg));
 					buf_strappend (&userdef_buf, " ");
 					buf_strappend (&userdef_buf,
 						       def + 1);
