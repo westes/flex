@@ -273,9 +273,9 @@ LEXOPT		[aceknopr]
 	yy_scan_bytes	ACTION_IFDEF("YY_NO_SCAN_BYTES", ! option_sense);
 	yy_scan_string	ACTION_IFDEF("YY_NO_SCAN_STRING", ! option_sense);
 
-	outfile		return OPT_OUTFILE;
-	prefix		return OPT_PREFIX;
-	yyclass		return OPT_YYCLASS;
+	outfile		return TOK_OUTFILE;
+	prefix		return TOK_PREFIX;
+	yyclass		return TOK_YYCLASS;
 
 	\"[^"\n]*\"	{
 			strcpy( nmstr, yytext + 1 );

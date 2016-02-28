@@ -422,9 +422,9 @@ M4QEND      "]]"
     yyset_lloc      ACTION_M4_IFDEF("M4""_YY_NO_SET_LLOC", ! option_sense);
 
 	extra-type	return OPT_EXTRA_TYPE;
-	outfile		return OPT_OUTFILE;
-	prefix		return OPT_PREFIX;
-	yyclass		return OPT_YYCLASS;
+	outfile		return TOK_OUTFILE;
+	prefix		return TOK_PREFIX;
+	yyclass		return TOK_YYCLASS;
 	header(-file)?      return OPT_HEADER;
 	tables-file         return OPT_TABLES;
 	tables-verify   {
