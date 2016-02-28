@@ -128,7 +128,7 @@ LEXOPT		[aceknopr]
 	^"%pointer".*{NL}	yytext_is_array = false; ++linenum;
 	^"%array".*{NL}		yytext_is_array = true; ++linenum;
 
-	^"%option"	BEGIN(OPTION); return OPTION_OP;
+	^"%option"	BEGIN(OPTION); return TOK_OPTION;
 
 	^"%"{LEXOPT}{OPTWS}[[:digit:]]*{OPTWS}{NL}	++linenum; /* ignore */
 	^"%"{LEXOPT}{WS}.*{NL}	++linenum;	/* ignore */

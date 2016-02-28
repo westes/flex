@@ -174,7 +174,7 @@ M4QEND      "]]"
 	^"%pointer".*{NL}	yytext_is_array = false; ++linenum;
 	^"%array".*{NL}		yytext_is_array = true; ++linenum;
 
-	^"%option"	BEGIN(OPTION); return OPTION_OP;
+	^"%option"	BEGIN(OPTION); return TOK_OPTION;
 
 	^"%"{LEXOPT}{OPTWS}[[:digit:]]*{OPTWS}{NL}	++linenum; /* ignore */
 	^"%"{LEXOPT}{WS}.*{NL}	++linenum;	/* ignore */
@@ -421,12 +421,12 @@ M4QEND      "]]"
     yyget_lloc      ACTION_M4_IFDEF("M4""_YY_NO_GET_LLOC", ! option_sense);
     yyset_lloc      ACTION_M4_IFDEF("M4""_YY_NO_SET_LLOC", ! option_sense);
 
-	extra-type	return OPT_EXTRA_TYPE;
+	extra-type	return TOK_EXTRA_TYPE;
 	outfile		return TOK_OUTFILE;
 	prefix		return TOK_PREFIX;
 	yyclass		return TOK_YYCLASS;
-	header(-file)?      return OPT_HEADER;
-	tables-file         return OPT_TABLES;
+	header(-file)?      return TOK_HEADER_FILE;
+	tables-file         return TOK_TABLES_FILE;
 	tables-verify   {
                     tablesverify = option_sense;
                     if(!tablesext && option_sense)

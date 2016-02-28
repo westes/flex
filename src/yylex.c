@@ -174,7 +174,7 @@ int     yylex (void)
 			fprintf (stderr, "<<EOF>>");
 			break;
 
-		case OPTION_OP:
+		case TOK_OPTION:
 			fprintf (stderr, "%s ", yytext);
 			break;
 
