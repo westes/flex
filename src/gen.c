@@ -450,7 +450,7 @@ void genctbl (void)
 
 /* mkecstbl - Make equivalence-class tables.  */
 
-struct yytbl_data *mkecstbl (void)
+static struct yytbl_data *mkecstbl (void)
 {
 	int i;
 	struct yytbl_data *tbl = 0;
