@@ -111,7 +111,7 @@ static int addsym (char sym[], char *str_def, int int_def, hash_table table, int
 
 /* cclinstal - save the text of a character class */
 
-void    cclinstal (unsigned char ccltxt[], int cclnum)
+void    cclinstal (char ccltxt[], int cclnum)
 {
 	/* We don't bother checking the return status because we are not
 	 * called unless the symbol is new.
@@ -127,9 +127,9 @@ void    cclinstal (unsigned char ccltxt[], int cclnum)
  * Returns 0 if there's no CCL associated with the text.
  */
 
-int     ccllookup (unsigned char ccltxt[])
+int     ccllookup (char ccltxt[])
 {
-	return findsym ((char *) ccltxt, ccltab, CCL_HASH_SIZE)->int_val;
+	return findsym (ccltxt, ccltab, CCL_HASH_SIZE)->int_val;
 }
 
 

@@ -628,7 +628,7 @@ M4QEND      "]]"
                    * The reason it was disabled is so yacc/bison can parse
                    * ccl operations, such as ccl difference and union.
                    */
-                &&  (cclval = ccllookup( (unsigned char *) nmstr )) != 0 )
+                &&  (cclval = ccllookup( nmstr )) != 0 )
 				{
 				if ( input() != ']' )
 					synerr( _( "bad character class" ) );
@@ -642,7 +642,7 @@ M4QEND      "]]"
 				/* We fudge a bit.  We know that this ccl will
 				 * soon be numbered as lastccl + 1 by cclinit.
 				 */
-				cclinstal( (unsigned char *) nmstr, lastccl + 1 );
+				cclinstal( nmstr, lastccl + 1 );
 
 				/* Push back everything but the leading bracket
 				 * so the ccl can be rescanned.

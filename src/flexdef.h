@@ -991,10 +991,10 @@ extern void set_input_file(char *);
 /* from file sym.c */
 
 /* Save the text of a character class. */
-extern void cclinstal(unsigned char[], int);
+extern void cclinstal(char[], int);
 
 /* Lookup the number associated with character class. */
-extern int ccllookup(unsigned char[]);
+extern int ccllookup(char[]);
 
 extern void ndinstal(const char *, unsigned char[]);	/* install a name definition */
 extern unsigned char *ndlookup(const char *);	/* lookup a name definition */
