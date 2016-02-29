@@ -997,7 +997,7 @@ extern void cclinstal(char[], int);
 extern int ccllookup(char[]);
 
 extern void ndinstal(const char *, char[]);	/* install a name definition */
-extern unsigned char *ndlookup(const char *);	/* lookup a name definition */
+extern char *ndlookup(const char *);	/* lookup a name definition */
 
 /* Increase maximum number of SC's. */
 extern void scextend(void);

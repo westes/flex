@@ -662,7 +662,7 @@ M4QEND      "]]"
      * context.
      */
 	"{"{NAME}"}"[[:space:]]?	 {
-			unsigned char *nmdefptr;
+			char *nmdefptr;
             int end_is_ws, end_ch;
 
             end_ch = yytext[yyleng-1];
@@ -686,7 +686,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 			else
 				{ /* push back name surrounded by ()'s */
-				int len = strlen( (char *) nmdefptr );
+				int len = strlen( nmdefptr );
                 if (end_is_ws)
                     unput(end_ch);
 
@@ -694,7 +694,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 				     (len > 0 && nmdefptr[len - 1] == '$')
                      || (end_is_ws && trlcontxt && !sf_skip_ws()))
 					{ /* don't use ()'s after all */
-					PUT_BACK_STRING((char *) nmdefptr, 0);
+					PUT_BACK_STRING(nmdefptr, 0);
 
 					if ( nmdefptr[0] == '^' )
 						BEGIN(CARETISBOL);
@@ -703,7 +703,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 				else
 					{
 					unput(')');
-					PUT_BACK_STRING((char *) nmdefptr, 0);
+					PUT_BACK_STRING(nmdefptr, 0);
 					unput('(');
 					}
 				}

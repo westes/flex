@@ -189,9 +189,9 @@ void    ndinstal (const char *name, char definition[])
  * Returns a nil pointer if the name definition does not exist.
  */
 
-unsigned char   *ndlookup (const char *nd)
+char   *ndlookup (const char *nd)
 {
-	return (unsigned char *) findsym (nd, ndtbl, NAME_TABLE_HASH_SIZE)->str_val;
+	return findsym (nd, ndtbl, NAME_TABLE_HASH_SIZE)->str_val;
 }
 
 
