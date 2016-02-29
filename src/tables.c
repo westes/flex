@@ -481,7 +481,7 @@ void yytbl_data_compress (struct yytbl_data *tbl)
 	}
 
 	total_len = yytbl_calc_total_len (tbl);
-	newtbl.td_data = calloc (total_len, newsz);
+	newtbl.td_data = calloc ((size_t) total_len, newsz);
 	newtbl.td_flags =
 		TFLAGS_CLRDATA (newtbl.td_flags) | BYTES2TFLAG (newsz);
 

@@ -66,7 +66,7 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
 
 	/* allocate argv, and populate it with the argument list. */
 	max_args = 8;
-	f->argv = malloc(sizeof(char *) * (max_args + 1));
+	f->argv = malloc(sizeof(char *) * (size_t) (max_args + 1));
 	if (!f->argv)
 		flexerror(_("malloc failed (f->argv) in filter_create_ext"));
 	f->argv[f->argc++] = cmd;
@@ -75,7 +75,7 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
 	while ((s = va_arg (ap, const char *)) != NULL) {
 		if (f->argc >= max_args) {
 			max_args += 8;
-			f->argv = realloc(f->argv, sizeof(char*) * (max_args + 1));
+			f->argv = realloc(f->argv, sizeof(char*) * (size_t) (max_args + 1));
 		}
 		f->argv[f->argc++] = s;
 	}
@@ -283,7 +283,7 @@ int filter_tee_header (struct filter *chain)
 	fprintf (to_c, "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
 		 outfilename ? outfilename : "<stdout>");
 
-	buf = malloc(readsz);
+	buf = malloc((size_t) readsz);
 	if (!buf)
 		flexerror(_("malloc failed in filter_tee_header"));
 	while (fgets (buf, readsz, stdin)) {

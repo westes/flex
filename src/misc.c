@@ -60,7 +60,7 @@ static void sko_push(bool dc)
 {
     if(!sko_stack){
         sko_sz = 1;
-        sko_stack = malloc(sizeof(struct sko_state) * sko_sz);
+        sko_stack = malloc(sizeof(struct sko_state) * (size_t) sko_sz);
         if (!sko_stack)
             flexfatal(_("allocation of sko_stack failed"));
         sko_len = 0;
@@ -68,7 +68,7 @@ static void sko_push(bool dc)
     if(sko_len >= sko_sz){
         sko_sz *= 2;
         sko_stack = realloc(sko_stack,
-			sizeof(struct sko_state) * sko_sz);
+			sizeof(struct sko_state) * (size_t) sko_sz);
     }
     
     /* initialize to zero and push */
@@ -883,7 +883,7 @@ void   *yy_flex_xmalloc (int size)
 {
 	void   *result;
 
-	result = malloc(size);
+	result = malloc((size_t) size);
 	if (!result)
 		flexfatal (_
 			   ("memory allocation failed in yy_flex_xmalloc()"));
