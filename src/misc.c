@@ -138,7 +138,7 @@ static void action_m4_define (const char *defname, const char * value)
 /* Append "new_text" to the running buffer. */
 void add_action (const char *new_text)
 {
-	int     len = strlen (new_text);
+	int     len = (int) strlen (new_text);
 
 	while (len + action_index >= action_size - 10 /* slop */ ) {
 		int     new_size = action_size * 2;

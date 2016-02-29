@@ -272,8 +272,8 @@ M4QEND      "]]"
                 buf_strnappend(&top_buf, yytext, yyleng);
             }
 
-    {M4QSTART}  buf_strnappend(&top_buf, escaped_qstart, strlen(escaped_qstart));
-    {M4QEND}    buf_strnappend(&top_buf, escaped_qend, strlen(escaped_qend));
+    {M4QSTART}  buf_strnappend(&top_buf, escaped_qstart, (int) strlen(escaped_qstart));
+    {M4QEND}    buf_strnappend(&top_buf, escaped_qend, (int) strlen(escaped_qend));
 
     [^{}\r\n]  {
                 buf_strnappend(&top_buf, yytext, yyleng);
