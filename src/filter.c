@@ -336,7 +336,7 @@ int filter_tee_header (struct filter *chain)
 int filter_fix_linedirs (struct filter *chain)
 {
 	char   *buf;
-	const int readsz = 512;
+	const size_t readsz = 512;
 	int     lineno = 1;
 	bool    in_gen = true;	/* in generated code */
 	bool    last_was_blank = false;
@@ -348,7 +348,7 @@ int filter_fix_linedirs (struct filter *chain)
 	if (!buf)
 		flexerror(_("malloc failed in filter_fix_linedirs"));
 
-	while (fgets (buf, readsz, stdin)) {
+	while (fgets (buf, (int) readsz, stdin)) {
 
 		regmatch_t m[10];
 
