@@ -56,7 +56,8 @@ void    ccl2ecl (void)
 			cclmec = ecgroup[ich];
 
 			if (cclmec > 0) {
-				ccltbl[cclp + newlen] = cclmec;
+				/* Note: range 1..256 is mapped to 1..255,0 */
+				ccltbl[cclp + newlen] = (unsigned char) cclmec;
 				++newlen;
 			}
 		}

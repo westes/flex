@@ -703,7 +703,8 @@ void    mktemplate (int state[], int statenum, int comstate)
 		if (state[i] == 0)
 			tnxt[tmpbase + i] = 0;
 		else {
-			transset[tsptr++] = i;
+			/* Note: range 1..256 is mapped to 1..255,0 */
+			transset[tsptr++] = (unsigned char) i;
 			tnxt[tmpbase + i] = comstate;
 		}
 
