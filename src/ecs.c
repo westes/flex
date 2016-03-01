@@ -56,7 +56,9 @@ void    ccl2ecl (void)
 			cclmec = ecgroup[ich];
 
 			if (cclmec > 0) {
-				ccltbl[cclp + newlen] = cclmec;
+                          	if (cclmec >= UCHAR_MAX)
+                            		flex_die("cclmec overflow");
+				ccltbl[cclp + newlen] = (unsigned char) cclmec;
 				++newlen;
 			}
 		}

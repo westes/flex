@@ -703,7 +703,9 @@ void    mktemplate (int state[], int statenum, int comstate)
 		if (state[i] == 0)
 			tnxt[tmpbase + i] = 0;
 		else {
-			transset[tsptr++] = i;
+			if (i >= UCHAR_MAX)
+				flex_die("transset overflow");
+			transset[tsptr++] = (unsigned char) i;
 			tnxt[tmpbase + i] = comstate;
 		}
 
