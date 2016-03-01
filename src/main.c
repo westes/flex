@@ -474,7 +474,7 @@ void check_options (void)
              char *str, *fmt = "#define %s %d\n";
              size_t strsz;
 
-             strsz = strlen(fmt) + strlen(scname[i]) + (int)(1 + log10(i)) + 2;
+             strsz = strlen(fmt) + strlen(scname[i]) + (size_t)(1 + ceil (log10(i))) + 2;
              str = malloc(strsz);
              if (!str)
                flexfatal(_("allocation of macro definition failed"));

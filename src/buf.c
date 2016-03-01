@@ -100,7 +100,7 @@ struct Buf *buf_linedir (struct Buf *buf, const char* filename, int lineno)
 
     tsz = strlen("#line \"\"\n")                +   /* constant parts */
                2 * strlen (filename)            +   /* filename with possibly all backslashes escaped */
-               (int) (1 + log10 (abs (lineno))) +   /* line number */
+               (size_t) (1 + ceil (log10 (abs (lineno)))) +   /* line number */
                1;                                   /* NUL */
     t = malloc(tsz);
     if (!t)
