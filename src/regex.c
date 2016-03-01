@@ -82,7 +82,7 @@ char   *regmatch_dup (regmatch_t * m, const char *src)
 	char   *str;
 	size_t  len;
 
-	if (m == NULL || m->rm_so < 0)
+	if (m == NULL || m->rm_so < 0 || m->rm_eo < m->rm_so)
 		return NULL;
 	len = (size_t) (m->rm_eo - m->rm_so);
 	str = malloc((len + 1) * sizeof(char));

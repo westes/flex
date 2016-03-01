@@ -437,7 +437,7 @@ static size_t min_int_size (struct yytbl_data *tbl)
 
 		n = abs (yytbl_data_geti (tbl, i));
 
-		if (n > max)
+		if (max < n)
 			max = n;
 	}
 
