@@ -86,7 +86,7 @@ int yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
 	memset (th, 0, sizeof (struct yytbl_hdr));
 
 	th->th_magic = YYTBL_MAGIC;
-	th->th_hsize = 14 + strlen (version_str) + 1 + strlen (name) + 1;
+	th->th_hsize = (flex_uint32_t) (14 + strlen (version_str) + 1 + strlen (name) + 1);
 	th->th_hsize += yypad64 (th->th_hsize);
 	th->th_ssize = 0;	// Not known at this point.
 	th->th_flags = 0;
@@ -213,13 +213,13 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 	for (i = 0; i < total_len; i++) {
 		switch (YYTDFLAGS2BYTES (td->td_flags)) {
 		case sizeof (flex_int8_t):
-			rv = yytbl_write8 (wr, yytbl_data_geti (td, i));
+			rv = yytbl_write8 (wr, (flex_uint8_t) yytbl_data_geti (td, i));
 			break;
 		case sizeof (flex_int16_t):
-			rv = yytbl_write16 (wr, yytbl_data_geti (td, i));
+			rv = yytbl_write16 (wr, (flex_uint16_t) yytbl_data_geti (td, i));
 			break;
 		case sizeof (flex_int32_t):
-			rv = yytbl_write32 (wr, yytbl_data_geti (td, i));
+			rv = yytbl_write32 (wr, (flex_uint32_t) yytbl_data_geti (td, i));
 			break;
 		default:
 			flex_die (_("invalid td_flags detected"));
@@ -232,7 +232,7 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 	}
 
 	/* Sanity check */
-	if (bwritten != (int) (12 + total_len * YYTDFLAGS2BYTES (td->td_flags))) {
+	if (bwritten != (12 + total_len * (int) YYTDFLAGS2BYTES (td->td_flags))) {
 		flex_die (_("insanity detected"));
 		return -1;
 	}
@@ -427,7 +427,7 @@ static void yytbl_data_seti (const struct yytbl_data *tbl, int i,
  */
 static size_t min_int_size (struct yytbl_data *tbl)
 {
-	flex_uint32_t i, total_len;
+	flex_int32_t i, total_len;
 	flex_int32_t max = 0;
 
 	total_len = yytbl_calc_total_len (tbl);
@@ -483,8 +483,8 @@ void yytbl_data_compress (struct yytbl_data *tbl)
 
 	total_len = yytbl_calc_total_len (tbl);
 	newtbl.td_data = calloc ((size_t) total_len, newsz);
-	newtbl.td_flags =
-		TFLAGS_CLRDATA (newtbl.td_flags) | BYTES2TFLAG (newsz);
+	newtbl.td_flags = (flex_uint16_t)
+		(TFLAGS_CLRDATA (newtbl.td_flags) | BYTES2TFLAG (newsz));
 
 	for (i = 0; i < total_len; i++) {
 		flex_int32_t g;
