@@ -45,7 +45,7 @@ extern  "C" {
 #include "tables_shared.h"
 struct yytbl_writer {
 	FILE   *out;
-	flex_uint32_t total_written;
+	int total_written;
 			    /**< bytes written so far */
 	fpos_t  th_ssize_pos;
 			    /**< position of th_ssize */

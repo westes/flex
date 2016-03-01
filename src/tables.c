@@ -247,14 +247,14 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 	/* Now go back and update the th_hsize member */
 	if (fgetpos (wr->out, &pos) != 0
 	    || fsetpos (wr->out, &(wr->th_ssize_pos)) != 0
-	    || yytbl_write32 (wr, wr->total_written) < 0
+	    || yytbl_write32 (wr, (flex_uint32_t) wr->total_written) < 0
 	    || fsetpos (wr->out, &pos)) {
 		flex_die (_("get|set|fwrite32 failed"));
 		return -1;
 	}
 	else
 		/* Don't count the int we just wrote. */
-		wr->total_written -= sizeof (flex_int32_t);
+		wr->total_written -= (int) sizeof (flex_int32_t);
 	return bwritten;
 }
 
