@@ -283,11 +283,11 @@ int yytbl_writen (struct yytbl_writer *wr, void *v, flex_int32_t len)
 int yytbl_write32 (struct yytbl_writer *wr, flex_uint32_t v)
 {
 	flex_uint32_t vnet;
-	size_t  bytes, rv;
+	int  bytes, rv;
 
 	vnet = htonl (v);
-	bytes = sizeof (flex_uint32_t);
-	rv = fwrite (&vnet, bytes, 1, wr->out);
+	bytes = (int) sizeof (flex_uint32_t);
+	rv = (int) fwrite (&vnet, (size_t) bytes, 1, wr->out);
 	if (rv != 1)
 		return -1;
 	wr->total_written += bytes;
@@ -302,11 +302,11 @@ int yytbl_write32 (struct yytbl_writer *wr, flex_uint32_t v)
 int yytbl_write16 (struct yytbl_writer *wr, flex_uint16_t v)
 {
 	flex_uint16_t vnet;
-	size_t  bytes, rv;
+	int  bytes, rv;
 
 	vnet = htons (v);
-	bytes = sizeof (flex_uint16_t);
-	rv = fwrite (&vnet, bytes, 1, wr->out);
+	bytes = (int) sizeof (flex_uint16_t);
+	rv = (int) fwrite (&vnet, (size_t) bytes, 1, wr->out);
 	if (rv != 1)
 		return -1;
 	wr->total_written += bytes;
@@ -320,10 +320,10 @@ int yytbl_write16 (struct yytbl_writer *wr, flex_uint16_t v)
  */
 int yytbl_write8 (struct yytbl_writer *wr, flex_uint8_t v)
 {
-	size_t  bytes, rv;
+	int  bytes, rv;
 
-	bytes = sizeof (flex_uint8_t);
-	rv = fwrite (&v, bytes, 1, wr->out);
+	bytes = (int) sizeof (flex_uint8_t);
+	rv = (int) fwrite (&v, (size_t) bytes, 1, wr->out);
 	if (rv != 1)
 		return -1;
 	wr->total_written += bytes;
