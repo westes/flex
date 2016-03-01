@@ -460,7 +460,8 @@ static size_t min_int_size (struct yytbl_data *tbl)
  */
 void yytbl_data_compress (struct yytbl_data *tbl)
 {
-	flex_int32_t i, newsz, total_len;
+	flex_int32_t i, total_len;
+	size_t newsz;
 	struct yytbl_data newtbl;
 
 	yytbl_data_init (&newtbl, tbl->td_id);
@@ -471,11 +472,11 @@ void yytbl_data_compress (struct yytbl_data *tbl)
 	newsz = min_int_size (tbl);
 
 
-	if (newsz == (int) YYTDFLAGS2BYTES (tbl->td_flags))
+	if (newsz == YYTDFLAGS2BYTES (tbl->td_flags))
 		/* No change in this table needed. */
 		return;
 
-	if (newsz > (int) YYTDFLAGS2BYTES (tbl->td_flags)) {
+	if (newsz > YYTDFLAGS2BYTES (tbl->td_flags)) {
 		flex_die (_("detected negative compression"));
 		return;
 	}
