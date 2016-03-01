@@ -1661,7 +1661,7 @@ int yyFlexLexer::yy_get_next_buffer()
     M4_YY_DECL_GUTS_VAR();
 	char *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
 	char *source = YY_G(yytext_ptr);
-	yy_size_t number_to_move, i;
+	int number_to_move, i;
 	int ret_val;
 
 	if ( YY_G(yy_c_buf_p) > &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[YY_G(yy_n_chars) + 1] )
@@ -1690,7 +1690,7 @@ int yyFlexLexer::yy_get_next_buffer()
 	/* Try to read more data. */
 
 	/* First move last chars to start of buffer. */
-	number_to_move = (yy_size_t) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr)) - 1;
+	number_to_move = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr) - 1);
 
 	for ( i = 0; i < number_to_move; ++i )
 		*(dest++) = *(source++);
@@ -1778,7 +1778,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 	else
 		ret_val = EOB_ACT_CONTINUE_SCAN;
 
-	if ((int) (YY_G(yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
+	if ((YY_G(yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
 		int new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1);
 		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) yyrealloc(
