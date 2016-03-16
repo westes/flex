@@ -43,9 +43,6 @@ struct Check {
 /* Save char into junk array at next position. */
 static void check_extra ( yyscan_t  scanner );
 
-/* Special yyalloc */
-void *yyalloc ( size_t size, yyscan_t  scanner );
-
 %}
 
 %option 8bit  prefix="test"

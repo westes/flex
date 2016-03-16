@@ -40,8 +40,6 @@ int yyerror(YYLTYPE *location, void* scanner, const char* msg);
 
 #define YYERROR_VERBOSE 1
 
-extern int testget_lineno(void*);
-
 
 /* A dummy function. A check against seg-faults in yylval->str. */
 static int process_text(char* s) {

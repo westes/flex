@@ -24,7 +24,6 @@
 #include "bison_nr_parser.h"
 #include "bison_nr_scanner.h"
 
-extern int testparse(void);
 
 int main ( int argc, char** argv )
 {
