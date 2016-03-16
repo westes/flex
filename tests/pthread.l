@@ -126,8 +126,6 @@ void * thread_func ( void* arg )
 
     for( i =0 ; i < N_SCANS ; i++ )
     {
-        int main(int ARGC, char *ARGV[]);
-
         int next;
         yyscan_t  scanner;
         FILE * fp;
