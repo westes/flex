@@ -164,7 +164,7 @@ void yyfree(void* p , void* yyscanner)
 int main(void);
 
 int
-main ()
+main (void)
 {
     yyscan_t scanner;
     arrsz = 1;

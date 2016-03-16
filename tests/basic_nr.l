@@ -52,7 +52,7 @@ WS    [[:blank:]]
 
 int main(void);
 
-int main ()
+int main (void)
 {
     yyin = stdin;
     yyout = stdout;

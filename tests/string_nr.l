@@ -59,7 +59,7 @@
 int main(void);
 
 int
-main ()
+main (void)
 {
     char * buf;
     int len;

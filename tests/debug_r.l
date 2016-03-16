@@ -40,7 +40,7 @@
 
 int main(void);
 
-int main ()
+int main (void)
 {
     yyscan_t  lexer;
     yylex_init( &lexer );

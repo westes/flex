@@ -65,7 +65,7 @@ void *yyalloc ( size_t size, yyscan_t  scanner );
 int main(void);
 
 int
-main ()
+main (void)
 {   
     yyscan_t scanner;
     struct Check check;

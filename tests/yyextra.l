@@ -62,7 +62,7 @@ static void append_char (char c,  yyscan_t  scanner );
 int main(void);
 
 int
-main ()
+main (void)
 {   
     yyscan_t  scanner;
     struct Buffer * buf;

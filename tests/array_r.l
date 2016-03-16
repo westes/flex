@@ -45,7 +45,7 @@
 int main(void);
 
 int
-main ()
+main (void)
 {
     yyscan_t lexer;
     

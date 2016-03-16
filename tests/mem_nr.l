@@ -158,7 +158,7 @@ void yyfree(void* p)
 int main(void);
 
 int
-main ()
+main (void)
 {
     arrsz = 1;
     ptrs  = calloc(1, sizeof(struct memsz));

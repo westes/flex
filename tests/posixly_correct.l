@@ -53,7 +53,7 @@ ab{3}    tests_ok[0] = 1; return 0;
 %%
 
 
-int main ()
+int main (void)
 {
     YY_BUFFER_STATE state;
     int i;
