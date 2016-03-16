@@ -3110,7 +3110,7 @@ static int yytbl_read8 (void *v, struct yytbl_reader * rd)
         errno = EIO;
         return -1;
     }
-    rd->bread += sizeof(flex_uint8_t);
+    rd->bread += (flex_uint32_t) sizeof(flex_uint8_t);
     return 0;
 }
 
@@ -3122,7 +3122,7 @@ static int yytbl_read16 (void *v, struct yytbl_reader * rd)
         return -1;
     }
     *((flex_uint16_t *) v) = ntohs (*((flex_uint16_t *) v));
-    rd->bread += sizeof(flex_uint16_t);
+    rd->bread += (flex_uint32_t) sizeof(flex_uint16_t);
     return 0;
 }
 
@@ -3134,7 +3134,7 @@ static int yytbl_read32 (void *v, struct yytbl_reader * rd)
         return -1;
     }
     *((flex_uint32_t *) v) = ntohl (*((flex_uint32_t *) v));
-    rd->bread += sizeof(flex_uint32_t);
+    rd->bread += (flex_uint32_t) sizeof(flex_uint32_t);
     return 0;
 }
 
@@ -3177,7 +3177,7 @@ static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *
         return -1;
     }
     else
-        rd->bread += bytes;
+        rd->bread += (flex_uint32_t) bytes;
 
     th->th_name = th->th_version + strlen (th->th_version) + 1;
     return 0;
