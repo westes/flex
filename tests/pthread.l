@@ -114,7 +114,7 @@ static pthread_mutex_t *file_locks;
 static char **filenames;
 
 
-void * thread_func ( void* arg )
+static void * thread_func ( void* arg )
 {
     int i;
 
