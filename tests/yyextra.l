@@ -72,7 +72,7 @@ main (void)
     buf->curr_len =0;
     buf->max_len = 4; 
     buf->grow_len = 100;
-    buf->data = malloc(buf->max_len);
+    buf->data = malloc((size_t) buf->max_len);
  
     testlex_init(&scanner);
     testset_in( stdin, scanner);
@@ -103,7 +103,7 @@ static void append_char (char c,  yyscan_t  scanner )
         new_buf = malloc(sizeof(struct Buffer));
         new_buf->max_len = buf->max_len + buf->grow_len;
         new_buf->grow_len = buf->grow_len;
-        new_buf->data = malloc(new_buf->max_len);
+        new_buf->data = malloc((size_t) new_buf->max_len);
         for( new_buf->curr_len = 0;
              new_buf->curr_len < buf->curr_len;
              new_buf->curr_len++ )

@@ -62,7 +62,7 @@ int
 main (void)
 {
     char * buf;
-    int len;
+    size_t len;
     YY_BUFFER_STATE state;
 
 
