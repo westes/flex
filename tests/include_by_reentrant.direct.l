@@ -77,9 +77,7 @@
 int main (int argc, char** argv);
 
 int
-main ( argc, argv )
-    int argc;
-    char ** argv;
+main ( int argc, char **argv )
 {
     FILE * fp;
     yyscan_t  scanner;
