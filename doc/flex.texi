@@ -408,7 +408,7 @@ A somewhat more complicated example:
 
     "+"|"-"|"*"|"/"   printf( "An operator: %s\n", yytext );
 
-    "{"[\^{}}\n]*"}"     /* eat up one-line comments */
+    "{"[^{}\n]*"}"     /* eat up one-line comments */
 
     [ \t\n]+          /* eat up whitespace */
 
