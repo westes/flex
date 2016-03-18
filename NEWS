@@ -3,6 +3,26 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
+* version 2.6.2
+
+** flex internals
+
+*** more compilation warnings were squashed in generated scanners
+
+*** prevented a buffer overflow that could occur when input buffers were the exact wrong size
+
+** test suite
+
+*** general code cleanups in a number of tests now make the test suite compile much more cleanly
+
+** build system
+
+*** Portability warnings when generating Makefile.in files are now suppressed; they were just noise and the use of GNU extensions in Makefile.{am,in,} was intentional and well known.
+
+** bugs
+
+*** resolved gh#67
+
 * version 2.6.1 released 2016-03-01
 
 ** flex resources
