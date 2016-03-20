@@ -752,7 +752,7 @@ void gen_next_compressed_state (char *char_map)
 		out_dec ("if ( yy_current_state >= %d )\n", lastdfa + 2);
 
 		++indent_level;
-		indent_puts ("yy_c = yy_meta[(unsigned int) yy_c];");
+		indent_puts ("yy_c = yy_meta[yy_c];");
 		--indent_level;
 	}
 
@@ -760,7 +760,7 @@ void gen_next_compressed_state (char *char_map)
 	--indent_level;
 
 	indent_puts
-		("yy_current_state = yy_nxt[yy_base[yy_current_state] + (flex_int16_t) yy_c];");
+		("yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];");
 }
 
 
@@ -814,7 +814,7 @@ void gen_next_match (void)
 		indent_puts ("YY_CHAR yy_c;\n");
 		indent_put2s ("for ( yy_c = %s;", char_map);
 		indent_puts
-			("      (yy_trans_info = &yy_current_state[(unsigned int) yy_c])->");
+			("      (yy_trans_info = &yy_current_state[yy_c])->");
 		indent_puts ("yy_verify == yy_c;");
 		indent_put2s ("      yy_c = %s )", char_map_2);
 
