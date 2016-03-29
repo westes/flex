@@ -15,9 +15,13 @@ stage1flex_SOURCES = \
 	scan.l \
 	$(COMMON_SOURCES)
 
+stage1flex_CFLAGS = $(AM_CFLAGS)
+
 flex_SOURCES = \
 	stage1scan.l \
 	$(COMMON_SOURCES)
+
+flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
 
 COMMON_SOURCES = \
 	buf.c \

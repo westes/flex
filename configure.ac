@@ -48,6 +48,18 @@ AC_PROG_LN_S
 AC_PROG_AWK
 AC_PROG_INSTALL
 
+# allow passing a variable `WARNINGFLAGS',
+#   either when invoking `configure', or when invoking `make'
+# default to something useful if GCC was detected
+
+AC_ARG_ENABLE([warnings],
+  [AS_HELP_STRING([--enable-warnings],
+                  [enable a bunch of compiler warning flags (defaults to GCC warning flags).])],
+  [AS_IF([test "x$GCC" == xyes],
+    [ : ${WARNINGFLAGS="-Wall -Wextra -Wmissing-prototypes -Wstrict-prototypes -Wnested-externs -Wold-style-definition -Wredundant-decls -Wconversion -Wno-unused-but-set-variable"} ])])
+
+AC_SUBST([WARNINGFLAGS])
+
 AC_PATH_PROG([BISON], bison, no)
 AS_IF([test "$BISON" != no],[],
 	[ AC_SUBST([BISON], [\${top_srcdir}/build-aux/missing bison])
