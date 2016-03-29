@@ -72,20 +72,6 @@ static const char *get_state_decl (void)
 		: "static yyconst yy_state_type * %s = 0;\n";
 }
 
-static const char *get_uint16_decl (void)
-{
-	return (gentables)
-		? "static yyconst flex_uint16_t %s[%d] =\n    {   0,\n"
-		: "static yyconst flex_uint16_t * %s = 0;\n";
-}
-
-static const char *get_uint32_decl (void)
-{
-	return (gentables)
-		? "static yyconst flex_uint32_t %s[%d] =\n    {   0,\n"
-		: "static yyconst flex_uint32_t * %s = 0;\n";
-}
-
 static const char *get_yy_char_decl (void)
 {
 	return (gentables)
@@ -1311,13 +1297,13 @@ void gentabs (void)
 
 	/* Begin generating yy_base */
 	out_str_dec ((tblend >= INT16_MAX || long_align) ?
-		     get_uint32_decl () : get_uint16_decl (),
+		     get_int32_decl () : get_int16_decl (),
 		     "yy_base", total_states + 1);
 
 	buf_prints (&yydmap_buf,
 		    "\t{YYTD_ID_BASE, (void**)&yy_base, sizeof(%s)},\n",
 		    (tblend >= INT16_MAX
-		     || long_align) ? "flex_uint32_t" : "flex_uint16_t");
+		     || long_align) ? "flex_int32_t" : "flex_int16_t");
 	yybase_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yybase_tbl, YYTD_ID_BASE);
 	yybase_tbl->td_lolen = (flex_uint32_t) (total_states + 1);
@@ -1400,13 +1386,13 @@ void gentabs (void)
 
 	/* Begin generating yy_nxt */
 	out_str_dec ((total_states >= INT16_MAX || long_align) ?
-		     get_uint32_decl () : get_uint16_decl (), "yy_nxt",
+		     get_int32_decl () : get_int16_decl (), "yy_nxt",
 		     tblend + 1);
 
 	buf_prints (&yydmap_buf,
 		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
 		    (total_states >= INT16_MAX
-		     || long_align) ? "flex_uint32_t" : "flex_uint16_t");
+		     || long_align) ? "flex_int32_t" : "flex_int16_t");
 
 	yynxt_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yynxt_tbl, YYTD_ID_NXT);
