@@ -25,20 +25,27 @@ COMMON_SOURCES = \
 	dfa.c \
 	ecs.c \
 	filter.c \
+	flexdef.h \
+	flexint.h \
 	gen.c \
 	main.c \
 	misc.c \
 	nfa.c \
 	options.c \
+	options.h \
 	parse.y \
 	regex.c \
 	scanflags.c \
 	scanopt.c \
+	scanopt.h \
 	skel.c \
 	sym.c \
 	tables.c \
+	tables.h \
 	tables_shared.c \
+	tables_shared.h \
 	tblcmp.c \
+	version.h \
 	yylex.c
 
 LDADD = ../lib/libcompat.la @LIBINTL@
@@ -54,15 +61,6 @@ libfl_pic_la_SOURCES = \
 	libyywrap.c
 
 libfl_pic_la_LDFLAGS = -version-info @SHARED_VERSION_INFO@
-
-noinst_HEADERS = \
-	flexdef.h \
-	flexint.h \
-	version.h \
-	options.h \
-	scanopt.h \
-	tables.h \
-	tables_shared.h
 
 include_HEADERS = \
 	FlexLexer.h
@@ -92,32 +90,13 @@ stage1scan.l: scan.l
 stage1scan.c: stage1scan.l stage1flex$(EXEEXT)
 	$(top_builddir)/src/stage1flex$(EXEEXT) -o $@ $<
 
-# Explicitly describe dependencies.
-# You can recreate this with `gcc -I. -MM *.c'
-buf.o: buf.c flexdef.h flexint.h
-ccl.o: ccl.c flexdef.h flexint.h
-dfa.o: dfa.c flexdef.h flexint.h tables.h tables_shared.h
-ecs.o: ecs.c flexdef.h flexint.h
-scanflags.o: scanflags.c flexdef.h flexint.h
-gen.o: gen.c flexdef.h flexint.h tables.h tables_shared.h
-libmain.o: libmain.c
-libyywrap.o: libyywrap.c
-main.o: main.c flexdef.h flexint.h version.h options.h scanopt.h \
- tables.h tables_shared.h
-misc.o: misc.c flexdef.h flexint.h tables.h tables_shared.h
-nfa.o: nfa.c flexdef.h flexint.h
-options.o: options.c options.h scanopt.h flexdef.h flexint.h
-parse.o: parse.c flexdef.h flexint.h tables.h tables_shared.h
-scan.o: scan.c flexdef.h flexint.h parse.h
-scanopt.o: scanopt.c flexdef.h flexint.h scanopt.h
-skel.o: skel.c flexdef.h flexint.h
-sym.o: sym.c flexdef.h flexint.h
-tables.o: tables.c flexdef.h flexint.h tables.h tables_shared.h
-tables_shared.o: tables_shared.c flexdef.h flexint.h tables.h \
- tables_shared.h
-tblcmp.o: tblcmp.c flexdef.h flexint.h
-yylex.o: yylex.c flexdef.h flexint.h parse.h
-filter.o: filter.c flexdef.h flexint.h
+# make needs to be told to make parse.h so that parallelized runs will
+# not fail.
+
+main.c : parse.h
+scan.c : parse.h
+stage1scan.c : parse.h
+yylex.c : parse.h
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #
