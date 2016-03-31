@@ -2,6 +2,7 @@ src/buf.c
 src/ccl.c
 src/dfa.c
 src/ecs.c
+src/flex.skl
 src/gen.c
 src/libmain.c
 src/libyywrap.c
@@ -12,7 +13,6 @@ src/options.c
 src/parse.y
 src/scan.l
 src/scanopt.c
-src/skel.c
 src/sym.c
 src/tblcmp.c
 src/yylex.c
