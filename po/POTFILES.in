@@ -2,7 +2,6 @@ src/buf.c
 src/ccl.c
 src/dfa.c
 src/ecs.c
-src/flex.skl
 src/gen.c
 src/libmain.c
 src/libyywrap.c
