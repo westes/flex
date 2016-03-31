@@ -18,8 +18,10 @@ stage1flex_SOURCES = \
 stage1flex_CFLAGS = $(AM_CFLAGS)
 
 flex_SOURCES = \
-	stage1scan.l \
 	$(COMMON_SOURCES)
+
+nodist_flex_SOURCES = \
+	stage1scan.c
 
 flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
 
@@ -88,11 +90,8 @@ $(srcdir)/skel.c: flex.skl mkskel.sh flexint.h tables_shared.h
 	  $(SHELL) $(srcdir)/mkskel.sh >skel.c.tmp
 	mv skel.c.tmp $(srcdir)/skel.c
 
-stage1scan.l: scan.l
-	cp $(srcdir)/scan.l $(srcdir)/stage1scan.l
-
-stage1scan.c: stage1scan.l stage1flex$(EXEEXT)
-	$(top_builddir)/src/stage1flex$(EXEEXT) -o $@ $<
+stage1scan.c: scan.l stage1flex$(EXEEXT)
+	./stage1flex$(EXEEXT) -o $@ $<
 
 # make needs to be told to make parse.h so that parallelized runs will
 # not fail.
