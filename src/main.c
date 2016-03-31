@@ -375,7 +375,7 @@ void check_options (void)
 					strncpy(m4_path, path, sizeof(m4_path));
 					m4_path[endOfDir-path] = '/';
 					m4_path[endOfDir-path+1] = '\0';
-					strncat(m4_path, m4, sizeof(m4_path));
+					strncat(m4_path, m4, sizeof(m4_path) - strlen(m4_path) - 1);
 					if (stat(m4_path, &sbuf) == 0 &&
 						(S_ISREG(sbuf.st_mode)) && sbuf.st_mode & S_IXUSR) {
 						m4 = strdup(m4_path);
