@@ -23,6 +23,8 @@ CLEANFILES = \
 	flex.vr \
 	flex.vrs
 
-flex.1 : ../src/flex$(EXEEXT)
-	$(help2man) --name='$(PACKAGE_NAME)' --section=1 --output=$@ $< || \
-		rm -f $@
+flex.1: ../src/flex$(EXEEXT)
+	$(help2man) --name='$(PACKAGE_NAME)' --section=1 \
+	--source='The Flex Project' --manual='Programming' \
+	--output=$@ $< \
+	|| rm -f $@
