@@ -40,8 +40,8 @@ AM_REJECT_LOG_FLAGS = -d $(srcdir) -i $(srcdir)/reject.txt -r
 TABLE_LOG_COMPILER = $(srcdir)/testwrapper.sh
 AM_TABLE_LOG_FLAGS = -d $(builddir) -i $(srcdir)/reject.txt -t
 
-DIRECT_LOG_COMPILER=$(srcdir)/testwrapper.sh
-AM_DIRECT_LOG_FLAGS = -d $(srcdir)
+DIRECT_LOG_COMPILER=$(srcdir)/testwrapper-direct.sh
+AM_DIRECT_LOG_FLAGS = -b $(abs_builddir) -s $(srcdir)
 
 CN_LOG_COMPILER=$(srcdir)/options.cn
 AM_CN_LOG_FLAGS=$(FLEX)
@@ -331,6 +331,7 @@ dist_noinst_SCRIPTS = \
 
 dist_check_SCRIPTS = \
 	options.cn \
+	testwrapper-direct.sh \
 	testwrapper.sh
 
 pthread_pthread_LDADD = -lpthread
