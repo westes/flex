@@ -366,12 +366,6 @@ header_nr_scanner.h: header_nr_scanner.c
 header_r_main.$(OBJEXT): header_r_scanner.h
 header_r_scanner.h: header_r_scanner.c
 
-include_by_buffer.direct$(EXE): include_by_buffer.direct.txt include_by_buffer.direct_2.txt include_by_buffer.direct_3.txt
-
-include_by_push.direct$(EXE): include_by_push.direct.txt include_by_push.direct_2.txt include_by_push.direct_3.txt
-
-include_by_reentrant.direct$(EXE): include_by_reentrant.direct.txt include_by_reentrant.direct_2.txt include_by_reentrant.direct_3.txt
-
 multiple_scanners_nr_main.$(OBJEXT): multiple_scanners_nr_1.h multiple_scanners_nr_2.h
 multiple_scanners_nr_1.h: multiple_scanners_nr_1.c
 multiple_scanners_nr_2.h: multiple_scanners_nr_2.c
