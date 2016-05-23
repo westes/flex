@@ -111,30 +111,6 @@ void action_define (const char *defname, int value)
 	buf_append (&defs_buf, &cpy, 1);
 }
 
-
-#ifdef notdef
-/** Append "m4_define([[defname]],[[value]])m4_dnl\n" to the running buffer.
- *  @param defname The macro name.
- *  @param value The macro value, can be NULL, which is the same as the empty string.
- */
-static void action_m4_define (const char *defname, const char * value)
-{
-	char    buf[MAXLINE];
-
-    flexfatal ("DO NOT USE THIS FUNCTION!");
-
-	if ((int) strlen (defname) > MAXLINE / 2) {
-		format_pinpoint_message (_
-					 ("name \"%s\" ridiculously long"),
-					 defname);
-		return;
-	}
-
-	snprintf (buf, sizeof(buf), "m4_define([[%s]],[[%s]])m4_dnl\n", defname, value?value:"");
-	add_action (buf);
-}
-#endif
-
 /* Append "new_text" to the running buffer. */
 void add_action (const char *new_text)
 {
