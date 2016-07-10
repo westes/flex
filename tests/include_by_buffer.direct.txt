@@ -1,3 +1,0 @@
-Beginning of "include_by_buffer.direct.txt"
-#include <include_by_buffer.direct_2.txt>
-End of "include_by_buffer.direct.txt"

@@ -31,11 +31,12 @@
 #include "config.h"
 
 #ifndef DEFINE_ME
-#error "DEFINE_ME undefined!"
+#define DEFINE_ME 1
 #endif
 %}
 
 %top{
+#undef DEFINE_ME
 #define DEFINE_ME 1
 }
 
