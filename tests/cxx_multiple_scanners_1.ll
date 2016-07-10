@@ -27,6 +27,7 @@
 %option 8bit prefix="S1_"
 %option nounput nomain noyywrap
 %option warn stack noyy_top_state
+%option c++
 
 %x ON
 %x OFF

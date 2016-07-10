@@ -32,11 +32,32 @@
 /*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
 /*  PURPOSE. */
 
+#include <unordered_map>
+
 #include "flexdef.h"
+
+#include "context.h"
+#include "sym.h"
+#include "misc.h"
+#include "scanflags.h"
+#include "ccl.h"
+#include "sym.h"
+#include "ecs.h"
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 #include "parse.h"
+
 extern bool tablesverify, tablesext;
 extern int trlcontxt; /* Set in  parse.y for each rule. */
-extern const char *escaped_qstart, *escaped_qend;
+
+const String escaped_qstart = "[[]]M4""_YY_NOOP[M4""_YY_NOOP[M4""_YY_NOOP[[]]";
+const String escaped_qend = "[[]]M4""_YY_NOOP]M4""_YY_NOOP]M4""_YY_NOOP[[]]";
+
+// ndtbl - name-definition symbol table
+std::unordered_map<String, String> ndtbl;
 
 #define ACTION_ECHO add_action( yytext )
 #define ACTION_IFDEF(def, should_define) \
@@ -51,12 +72,10 @@ extern const char *escaped_qstart, *escaped_qend;
 #define ACTION_M4_IFDEF(def, should_define) \
     do{ \
         if ( should_define ) \
-            buf_m4_define( &m4defs_buf, def, NULL);\
+            m4defs_buf.m4define(def); \
         else \
-            buf_m4_undefine( &m4defs_buf, def);\
+            m4defs_buf.m4undefine(def); \
     } while(0)
-
-#define MARK_END_OF_PROLOG mark_prolog();
 
 #define YY_DECL \
 	int flexscan(void)
@@ -66,39 +85,37 @@ extern const char *escaped_qstart, *escaped_qend;
 	return CHAR;
 
 #define RETURNNAME \
-	if(yyleng < MAXLINE) \
-         { \
-	strcpy( nmstr, yytext ); \
-	 } \
-	else \
-	 { \
-	   synerr(_("Input line too long\n")); \
-	   FLEX_EXIT(EXIT_FAILURE);  \
-	 }  \
+	nmstr = yytext; \
 	return NAME;
 
 #define PUT_BACK_STRING(str, start) \
-	{ size_t i = strlen( str );	\
-	  while ( i > start )		\
-	    unput((str)[--i]);		\
-	}
+    {                               \
+        size_t i = strlen(str);     \
+        while (i > start)           \
+            unput((str)[--i]);      \
+    }
 
 #define CHECK_REJECT(str) \
-	if ( all_upper( str ) ) \
+	if ( is_all_upper( str ) ) \
 		reject = true;
 
 #define CHECK_YYMORE(str) \
-	if ( all_lower( str ) ) \
+	if ( is_all_lower( str ) ) \
 		yymore_used = true;
 
 #define YY_USER_INIT \
 	if ( getenv("POSIXLY_CORRECT") ) \
 		posix_compat = true;
 
+#ifdef WIN32
+#include <io.h>
+#define isatty _isatty
+#endif
 %}
 
 %option caseless nodefault noreject stack noyy_top_state
 %option nostdinit
+%option nounistd
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
 %x FIRSTCCL CCL ACTION RECOVER COMMENT ACTION_STRING PERCENT_BRACE_ACTION
@@ -137,7 +154,7 @@ M4QEND      "]]"
 
 	int doing_codeblock = false;
 	int brace_depth=0, brace_start_line=0;
-	char nmdef[MAXLINE];
+	String nmdef;
 
 
 <INITIAL>{
@@ -148,14 +165,18 @@ M4QEND      "]]"
 	^"%x"{NAME}?	return XSCDECL;
 	^"%{".*{NL}	{
 			++linenum;
-			line_directive_out(NULL, 1);
+			line_directive_out(false, true);
 			indented_code = false;
 			BEGIN(CODEBLOCK);
 			}
     ^"%top"[[:blank:]]*"{"[[:blank:]]*{NL}    {
                 brace_start_line = linenum;
                 ++linenum;
-                buf_linedir( &top_buf, infilename?infilename:"<stdin>", linenum);
+                {
+                    std::string fn = !infilename.empty() ? infilename : "<stdin>";
+                    replace_all(fn, "\\", "\\\\");
+                    top_buf.addLine("#line " + std::to_string(linenum) + " \"" + fn + "\"");
+                }
                 brace_depth = 1;
                 yy_push_state(CODEBLOCK_MATCH_BRACE);
             }
@@ -168,7 +189,7 @@ M4QEND      "]]"
 			sectnum = 2;
 			bracelevel = 0;
 			mark_defs1();
-			line_directive_out(NULL, 1);
+			line_directive_out(false, true);
 			BEGIN(SECT2PROLOG);
 			return SECTEND;
 			}
@@ -185,16 +206,7 @@ M4QEND      "]]"
 	^"%"[^sxaceknopr{}].*	synerr( _( "unrecognized '%' directive" ) );
 
 	^{NAME}		{
-			if(yyleng < MAXLINE)
-        		 {
-			strcpy( nmstr, yytext );
-			 }
-			else
-			 {
-			   synerr( _("Definition name too long\n"));
-			   FLEX_EXIT(EXIT_FAILURE);
-			 }
-
+			nmstr = yytext;
 			didadef = false;
 			BEGIN(PICKUPDEF);
 			}
@@ -225,17 +237,15 @@ M4QEND      "]]"
 <EXTENDED_COMMENT>{
     ")"         yy_pop_state();
     [^\n\)]+      ;
-    {NL}        ++linenum;        
+    {NL}        ++linenum;
 }
 
 <LINEDIR>{
 	\n		yy_pop_state();
-	[[:digit:]]+	linenum = myctoi( yytext );
+	[[:digit:]]+	linenum = std::stoi( yytext );
 
 	\"[^"\n]*\"	{
-			free(infilename);
-			infilename = xstrdup(yytext + 1);
-			infilename[strlen( infilename ) - 1] = '\0';
+			infilename = yytext + 1;
 			}
 	.		/* ignore spurious characters */
 }
@@ -261,24 +271,24 @@ M4QEND      "]]"
                     /* TODO: Matched. */
                     yy_pop_state();
                 }else
-                    buf_strnappend(&top_buf, yytext, yyleng);
+                    top_buf.addText(yytext, yyleng);
             }
 
     "{"     {
                 brace_depth++;
-                buf_strnappend(&top_buf, yytext, yyleng);
+                top_buf.addText(yytext, yyleng);
             }
 
     {NL}    {
                 ++linenum;
-                buf_strnappend(&top_buf, yytext, yyleng);
+                top_buf.addText(yytext, yyleng);
             }
 
-    {M4QSTART}  buf_strnappend(&top_buf, escaped_qstart, (int) strlen(escaped_qstart));
-    {M4QEND}    buf_strnappend(&top_buf, escaped_qend, (int) strlen(escaped_qend));
+    {M4QSTART}  top_buf.addText(escaped_qstart);
+    {M4QEND}    top_buf.addText(escaped_qend);
 
     [^{}\r\n]  {
-                buf_strnappend(&top_buf, yytext, yyleng);
+                top_buf.addText(yytext, yyleng);
                }
 
     <<EOF>>     {
@@ -293,24 +303,16 @@ M4QEND      "]]"
 	{WS}		/* separates name and definition */
 
 	{NOT_WS}[^\r\n]*	{
- 		        if(yyleng < MAXLINE)
- 		         {
-			strcpy( nmdef, yytext );
- 		         }
- 		        else
- 		         {
- 		           format_synerr( _("Definition value for {%s} too long\n"), nmstr);
- 		           FLEX_EXIT(EXIT_FAILURE);
-			 }
+			nmdef = yytext;
 			/* Skip trailing whitespace. */
-			{
-			    size_t i = strlen( nmdef );
-			    while (i > 0 && (nmdef[i-1] == ' ' || nmdef[i-1] == '\t'))
-			       --i;
-			    nmdef[i] = '\0';
-			}
+            while (nmdef.back() == ' ' || nmdef.back() == '\t')
+                nmdef.resize(nmdef.size() - 1);
 
-			ndinstal( nmstr, nmdef );
+            auto i = ndtbl.find(nmstr);
+            if (i != ndtbl.end())
+                synerr(_("name defined twice"));
+            ndtbl[nmstr] = nmdef;
+
 			didadef = true;
 			}
 
@@ -370,7 +372,7 @@ M4QEND      "]]"
 	main		{
 			ACTION_M4_IFDEF( "M4""_YY_MAIN", option_sense);
             /* Override yywrap */
-            if( option_sense == true )
+            if( option_sense )
                 do_yywrap = false;
 			}
 	meta-ecs	usemecs = option_sense;
@@ -437,16 +439,8 @@ M4QEND      "]]"
 
 
 	\"[^"\n]*\"	{
-			if(yyleng-1 < MAXLINE)
-        		 {
-			strcpy( nmstr, yytext + 1 );
-			 }
-			else
-			 {
-			   synerr( _("Option line too long\n"));
-			   FLEX_EXIT(EXIT_FAILURE);
-			 }
-			nmstr[strlen( nmstr ) - 1] = '\0';
+			nmstr = yytext + 1;
+            nmstr.resize(nmstr.size() - 1);
 			return NAME;
 			}
 
@@ -609,50 +603,15 @@ M4QEND      "]]"
 			}
 
 	"["({FIRST_CCL_CHAR}|{CCL_EXPR})({CCL_CHAR}|{CCL_EXPR})*	{
-			int cclval;
+			nmstr = yytext;
 
-			if(yyleng < MAXLINE)
-        		 {
-			strcpy( nmstr, yytext );
-			 }
-			else
-			 {
-			   synerr( _("Input line too long\n"));
-			   FLEX_EXIT(EXIT_FAILURE);
-			 }
+                /* Push back everything but the leading bracket
+                 * so the ccl can be rescanned.
+                 */
+                yyless( 1 );
 
-			/* Check to see if we've already encountered this
-			 * ccl.
-			 */
-			if (0 /* <--- This "0" effectively disables the reuse of a
-                   * character class (purely based on its source text).
-                   * The reason it was disabled is so yacc/bison can parse
-                   * ccl operations, such as ccl difference and union.
-                   */
-                &&  (cclval = ccllookup( nmstr )) != 0 )
-				{
-				if ( input() != ']' )
-					synerr( _( "bad character class" ) );
-
-				yylval = cclval;
-				++cclreuse;
-				return PREVCCL;
-				}
-			else
-				{
-				/* We fudge a bit.  We know that this ccl will
-				 * soon be numbered as lastccl + 1 by cclinit.
-				 */
-				cclinstal( nmstr, lastccl + 1 );
-
-				/* Push back everything but the leading bracket
-				 * so the ccl can be rescanned.
-				 */
-				yyless( 1 );
-
-				BEGIN(FIRSTCCL);
-				return '[';
-				}
+                BEGIN(FIRSTCCL);
+                return '[';
 			}
     "{-}"       return CCL_OP_DIFF;
     "{+}"       return CCL_OP_UNION;
@@ -663,31 +622,27 @@ M4QEND      "]]"
      * context.
      */
 	"{"{NAME}"}"[[:space:]]?	 {
-			char *nmdefptr;
+			String nmdefptr;
             int end_is_ws, end_ch;
 
             end_ch = yytext[yyleng-1];
             end_is_ws = end_ch != '}' ? 1 : 0;
 
- 			if(yyleng-1 < MAXLINE)
-         		 {
-			strcpy( nmstr, yytext + 1 );
- 			 }
- 			else
- 			 {
- 			   synerr( _("Input line too long\n"));
- 			   FLEX_EXIT(EXIT_FAILURE);
- 			 }
-nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
+			nmstr = yytext + 1;
+            nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
+            nmstr = nmstr.c_str();
 
-			if ( (nmdefptr = ndlookup( nmstr )) == 0 )
+            auto i = ndtbl.find(nmstr);
+            if (i == ndtbl.end())
 				format_synerr(
 					_( "undefined definition {%s}" ),
-						nmstr );
-
+						nmstr.c_str() );
 			else
 				{ /* push back name surrounded by ()'s */
-				size_t len = strlen( nmdefptr );
+
+                nmdefptr = i->second;
+
+				int len = nmdefptr.size();
                 if (end_is_ws)
                     unput(end_ch);
 
@@ -695,7 +650,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 				     (len > 0 && nmdefptr[len - 1] == '$')
                      || (end_is_ws && trlcontxt && !sf_skip_ws()))
 					{ /* don't use ()'s after all */
-					PUT_BACK_STRING(nmdefptr, 0);
+					PUT_BACK_STRING(nmdefptr.c_str(), 0);
 
 					if ( nmdefptr[0] == '^' )
 						BEGIN(CARETISBOL);
@@ -704,7 +659,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 				else
 					{
 					unput(')');
-					PUT_BACK_STRING(nmdefptr, 0);
+					PUT_BACK_STRING(nmdefptr.c_str(), 0);
 					unput('(');
 					}
 				}
@@ -724,7 +679,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
                     if (lex_compat || posix_compat){
                         /* Push back the "?#" and treat it like a normal parens. */
                         yyless(1);
-                        sf_push(); 
+                        sf_push();
                         return '(';
                     }
                     else
@@ -847,7 +802,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 <NUM>{
 	[[:digit:]]+	{
-			yylval = myctoi( yytext );
+			yylval = std::stoi( yytext );
 			return NUMBER;
 			}
 
@@ -965,10 +920,10 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 
 <SECT3>{
-    {M4QSTART}  fwrite (escaped_qstart, 1, strlen(escaped_qstart), yyout);
-    {M4QEND}    fwrite (escaped_qend, 1, strlen(escaped_qend), yyout);
-	[^\[\]\n]*(\n?) ECHO;
-	(.|\n)      ECHO;
+    {M4QSTART}  processed_file << escaped_qstart;
+    {M4QEND}    processed_file << escaped_qend;
+	[^\[\]\n]*(\n?) processed_file << yytext;
+	(.|\n)      processed_file << yytext;
 	<<EOF>>		sectnum = 0; yyterminate();
 }
 
@@ -976,38 +931,34 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 %%
 
-
-int yywrap(void)
-	{
-	if ( --num_input_files > 0 )
-		{
-		set_input_file( *++input_files );
-		return 0;
-		}
-
-	else
-		return 1;
-	}
-
-
 /* set_input_file - open the given file (if NULL, stdin) for scanning */
+void set_input_file(const String &file)
+{
+    if (!file.empty() && file != "-")
+    {
+        infilename = file;
+        yyin = fopen(infilename.c_str(), "r");
 
-void set_input_file( char *file )
-	{
-	if ( file && strcmp( file, "-" ) )
-		{
-		infilename = xstrdup(file);
-		yyin = fopen( infilename, "r" );
+        if (yyin == NULL)
+            lerr(_("can't open %s"), file.c_str());
+    }
+    else
+    {
+        yyin = stdin;
+        infilename = "<stdin>";
+    }
 
-		if ( yyin == NULL )
-			lerr( _( "can't open %s" ), file );
-		}
+    linenum = 1;
+}
 
-	else
-		{
-		yyin = stdin;
-		infilename = xstrdup("<stdin>");
-		}
-
-	linenum = 1;
-	}
+int yywrap()
+{
+    if (input_files.size())
+    {
+        set_input_file(input_files.front());
+        input_files.pop();
+        return 0;
+    }
+    else
+        return 1;
+}

@@ -1,0 +1,7 @@
+%option main nodefault nounistd
+
+%%
+
+.
+
+%%

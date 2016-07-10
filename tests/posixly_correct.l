@@ -33,7 +33,7 @@
 #include "config.h"
 
 #define NUM_TESTS 1
-char * tests[NUM_TESTS] =  { "ababab"};
+char * tests[NUM_TESTS] =  { "abbb"};
 int main(void);
 
 int tests_ok[NUM_TESTS] =  { 0 };

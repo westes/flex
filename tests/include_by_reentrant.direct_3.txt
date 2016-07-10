@@ -1,2 +1,0 @@
-Beginning of "include_by_reentrant.direct_3.txt".
-End of "include_by_reentrant.direct_3.txt".

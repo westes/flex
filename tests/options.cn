@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# Test that flex handles the grouped noop options -c and -n properly.
-
-echo %% | $1 -cn -o /dev/null

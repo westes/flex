@@ -1,0 +1,54 @@
+language: cpp
+
+notifications:
+  email:
+    recipients:
+      - egor.pugin@gmail.com
+    on_failure: change
+  
+sudo: required
+dist: trusty
+
+os:
+  - linux
+  #- osx
+
+branches:
+  only:
+    - master
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-5
+    - g++-5
+    - flex
+    - bison
+    - texinfo
+    - help2man
+
+before_install:
+  - if [[ $TRAVIS_OS_NAME == linux   ]]; then LINUX=true; fi
+  - if [[ $TRAVIS_OS_NAME == osx     ]]; then OSX=true; fi
+  
+  - if [[ $OSX ]]; then brew update; fi
+  #- if [[ $OSX ]]; then brew outdated <package-name> || brew upgrade <package-name>; fi
+
+install:
+  - if [[ $LINUX ]]; then wget --no-check-certificate http://www.cmake.org/files/v3.4/cmake-3.4.1-Linux-x86_64.sh; fi
+  - if [[ $LINUX ]]; then sudo sh cmake-3.4.1-Linux-x86_64.sh --skip-license --prefix=/usr; fi
+  - if [[ $LINUX && "$CXX" = "g++" ]]; then export CXX="g++-5" CC="gcc-5"; fi
+  
+  #- if [[ $OSX   && "$CXX" = "clang++" ]]; then export CXX="clang++-3.7" CC="clang-3.7"; fibefore_install:
+  
+  #- if [[ $OSX ]]; then brew install cmake flex bison; fi
+  #- if [[ $OSX ]]; then brew install llvm --with-clang; fi
+  - if [[ $OSX ]]; then clang --version; fi
+
+script:
+  - mkdir build
+  - cd build
+  - if [[ $LINUX ]]; then cmake .. -DWITH_TESTS=1 && make -j2 && ctest; fi
+  - if [[ $OSX ]];   then cmake .. -DWITH_TESTS=1 && make -j2 && ctest; fi

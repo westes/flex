@@ -4,22 +4,10 @@
 *.tar.gz
 *.tar.xz
 *~
-.deps
-.libs
-ABOUT-NLS
+
 ChangeLog
 INSTALL
-Makefile
-Makefile.in
-aclocal.m4
-autom4te.cache
-autoscan.log
-config.log
-config.status
-configure
-configure.scan
-flex-*/
-libtool
-stamp-*
-m4/
-build-aux/
+
+# build dirs
+/win*
+/build*

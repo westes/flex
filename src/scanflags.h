@@ -1,4 +1,4 @@
-/*  tables.h - tables serialization code
+/*  scanflags.h - flags used by scanning
  *
  *  Copyright (c) 1990 The Regents of the University of California.
  *  All rights reserved.
@@ -34,41 +34,24 @@
 
 #pragma once
 
-#include <stdio.h>
+#include <stdlib.h>
 
-#include "common.h"
-#include "flexint.h"
+typedef unsigned int scanflags_t;
+extern scanflags_t *_sf_stk;
+extern size_t _sf_top_ix, _sf_max; /**< stack of scanner flags. */
 
-/* Tables serialization API declarations. */
-#include "tables_shared.h"
+#define _SF_CASE_INS ((scanflags_t) 0x0001)
+#define _SF_DOT_ALL ((scanflags_t) 0x0002)
+#define _SF_SKIP_WS ((scanflags_t) 0x0004)
 
-struct yytbl_writer
-{
-    FILE *out;
-    flex_uint32_t total_written;
-    /**< bytes written so far */
-    fpos_t th_ssize_pos;
-    /**< position of th_ssize */
-};
+#define sf_top() (_sf_stk[_sf_top_ix])
+#define sf_case_ins() (sf_top() & _SF_CASE_INS)
+#define sf_dot_all() (sf_top() & _SF_DOT_ALL)
+#define sf_skip_ws() (sf_top() & _SF_SKIP_WS)
+#define sf_set_case_ins(X) ((X) ? (sf_top() |= _SF_CASE_INS) : (sf_top() &= ~_SF_CASE_INS))
+#define sf_set_dot_all(X) ((X) ? (sf_top() |= _SF_DOT_ALL) : (sf_top() &= ~_SF_DOT_ALL))
+#define sf_set_skip_ws(X) ((X) ? (sf_top() |= _SF_SKIP_WS) : (sf_top() &= ~_SF_SKIP_WS))
 
-/* These are used by main.c, gen.c, etc.
- * tablesext - if true, create external tables
- * tablesfilename - filename for external tables
- * tablesname - name that goes in serialized data, e.g., "yytables"
- * tableswr -  writer for external tables
- * tablesverify - true if tables-verify option specified
- * gentables - true if we should spit out the normal C tables
- */
-extern bool tablesext, tablesverify, gentables;
-extern String tablesfilename, tablesname;
-extern struct yytbl_writer tableswr;
-
-int yytbl_writer_init(struct yytbl_writer *, FILE *);
-int yytbl_hdr_init(struct yytbl_hdr *th, const String& version_str, const String& name);
-int yytbl_data_init(struct yytbl_data *tbl, enum yytbl_id id);
-int yytbl_data_destroy(struct yytbl_data *td);
-int yytbl_hdr_fwrite(struct yytbl_writer *wr,
-                     const struct yytbl_hdr *th);
-int yytbl_data_fwrite(struct yytbl_writer *wr, struct yytbl_data *td);
-void yytbl_data_compress(struct yytbl_data *tbl);
-struct yytbl_data *mkftbl(void);
+extern void sf_init(void);
+extern void sf_push(void);
+extern void sf_pop(void);
