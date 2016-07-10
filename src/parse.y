@@ -64,12 +64,19 @@
 /*  PURPOSE. */
 
 #include "flexdef.h"
+
+#include "sym.h"
 #include "tables.h"
+#include "misc.h"
+#include "ccl.h"
+#include "scanflags.h"
+#include "nfa.h"
+#include "ecs.h"
 
 int pat, scnum, eps, headcnt, trailcnt, lastchar, i, rulelen;
-int trlcontxt, xcluflg, currccl, cclsorted, varlength, variable_trail_rule;
+int trlcontxt, xcluflg, currccl, varlength, variable_trail_rule;
 
-int *scon_stk;
+std::vector<int> scon_stk;
 int scon_stk_ptr;
 
 static int madeany = false;  /* whether we've made the '.' character class */
@@ -114,6 +121,16 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 
 %}
 
+%{
+
+/* Build the "<<EOF>>" action for the active start conditions. */
+void build_eof_action();
+
+/* from file yylex.c */
+int yylex(void);
+
+%}
+
 %%
 goal		:  initlex sect1 sect1end sect2 initforrule
 			{ /* add default rule */
@@ -127,16 +144,15 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 			/* Remember the number of the default rule so we
 			 * don't generate "can't match" warnings for it.
 			 */
-			default_rule = num_rules;
+			default_rule = rules.size() - 1;
 
 			finish_rule( def_rule, false, 0, 0, 0);
 
-			for ( i = 1; i <= lastsc; ++i )
-				scset[i] = mkbranch( scset[i], def_rule );
+			for ( i = 1; i < start_conditions.size(); ++i )
+				start_conditions[i].set = mkbranch( start_conditions[i].set, def_rule );
 
 			if ( spprdflt )
-				add_action(
-				"YY_FATAL_ERROR( \"flex scanner jammed\" )" );
+				add_action("YY_FATAL_ERROR( \"flex scanner jammed\" )" );
 			else
 				add_action( "ECHO" );
 
@@ -162,7 +178,7 @@ sect1		:  sect1 startconddecl namelist1
 sect1end	:  SECTEND
 			{
 			check_options();
-			scon_stk = allocate_integer_array( lastsc + 1 );
+			scon_stk.resize(start_conditions.size() + 1);
 			scon_stk_ptr = 0;
 			}
 		;
@@ -193,19 +209,19 @@ optionlist	:  optionlist option
 
 option		:  TOK_OUTFILE '=' NAME
 			{
-			outfilename = xstrdup(nmstr);
+			outfilename = nmstr;
 			did_outfilename = 1;
 			}
 		|  TOK_EXTRA_TYPE '=' NAME
-			{ extra_type = xstrdup(nmstr); }
+			{ extra_type = nmstr; }
 		|  TOK_PREFIX '=' NAME
-			{ prefix = xstrdup(nmstr); }
+			{ prefix = nmstr; }
 		|  TOK_YYCLASS '=' NAME
-			{ yyclass = xstrdup(nmstr); }
+			{ yyclass = nmstr; }
 		|  TOK_HEADER_FILE '=' NAME
-			{ headerfilename = xstrdup(nmstr); }
+			{ headerfilename = nmstr; }
 	    |  TOK_TABLES_FILE '=' NAME
-            { tablesext = true; tablesfilename = xstrdup(nmstr); }
+            { tablesext = true; tablesfilename = nmstr; }
 		;
 
 sect2		:  sect2 scon initforrule flexrule '\n'
@@ -220,7 +236,7 @@ initforrule	:
 			/* Initialize for a parse of one rule. */
 			trlcontxt = variable_trail_rule = varlength = false;
 			trailcnt = headcnt = rulelen = 0;
-			current_state_type = STATE_NORMAL;
+			current_state_type = StateType::Normal;
 			previous_continued_action = continued_action;
 			in_rule = true;
 
@@ -237,21 +253,16 @@ flexrule	:  '^' rule
 			if ( scon_stk_ptr > 0 )
 				{
 				for ( i = 1; i <= scon_stk_ptr; ++i )
-					scbol[scon_stk[i]] =
-						mkbranch( scbol[scon_stk[i]],
-								pat );
+					start_conditions[scon_stk[i]].bol = mkbranch( start_conditions[scon_stk[i]].bol, pat );
 				}
-
 			else
 				{
 				/* Add to all non-exclusive start conditions,
 				 * including the default (0) start condition.
 				 */
-
-				for ( i = 1; i <= lastsc; ++i )
-					if ( ! scxclu[i] )
-						scbol[i] = mkbranch( scbol[i],
-									pat );
+				for ( i = 1; i < start_conditions.size(); ++i )
+					if ( ! start_conditions[i].xclu )
+						start_conditions[i].bol = mkbranch( start_conditions[i].bol, pat );
 				}
 
 			if ( ! bol_needed )
@@ -259,32 +270,26 @@ flexrule	:  '^' rule
 				bol_needed = true;
 
 				if ( performance_report > 1 )
-					pinpoint_message(
-			"'^' operator results in sub-optimal performance" );
+					pinpoint_message("'^' operator results in sub-optimal performance" );
 				}
 			}
 
 		|  rule
 			{
 			pat = $1;
-			finish_rule( pat, variable_trail_rule,
-				headcnt, trailcnt , previous_continued_action);
+			finish_rule( pat, variable_trail_rule, headcnt, trailcnt , previous_continued_action);
 
 			if ( scon_stk_ptr > 0 )
 				{
 				for ( i = 1; i <= scon_stk_ptr; ++i )
-					scset[scon_stk[i]] =
-						mkbranch( scset[scon_stk[i]],
-								pat );
+					start_conditions[scon_stk[i]].set = mkbranch( start_conditions[scon_stk[i]].set, pat );
 				}
 
 			else
 				{
-				for ( i = 1; i <= lastsc; ++i )
-					if ( ! scxclu[i] )
-						scset[i] =
-							mkbranch( scset[i],
-								pat );
+				for ( i = 1; i < start_conditions.size(); ++i )
+					if ( ! start_conditions[i].xclu )
+						start_conditions[i].set = mkbranch( start_conditions[i].set, pat );
 				}
 			}
 
@@ -292,20 +297,18 @@ flexrule	:  '^' rule
 			{
 			if ( scon_stk_ptr > 0 )
 				build_eof_action();
-	
+
 			else
 				{
 				/* This EOF applies to all start conditions
 				 * which don't already have EOF actions.
 				 */
-				for ( i = 1; i <= lastsc; ++i )
-					if ( ! sceof[i] )
+				for ( i = 1; i < start_conditions.size(); ++i )
+					if ( ! start_conditions[i].eof )
 						scon_stk[++scon_stk_ptr] = i;
 
 				if ( scon_stk_ptr == 0 )
-					warn(
-			"all start conditions already have <<EOF>> rules" );
-
+					warn("all start conditions already have <<EOF>> rules" );
 				else
 					build_eof_action();
 				}
@@ -326,7 +329,7 @@ scon		:  '<' scon_stk_ptr namelist2 '>'
 			{
 			$$ = scon_stk_ptr;
 
-			for ( i = 1; i <= lastsc; ++i )
+			for ( i = 1; i < start_conditions.size(); ++i )
 				{
 				int j;
 
@@ -354,17 +357,13 @@ namelist2	:  namelist2 ',' sconname
 sconname	:  NAME
 			{
 			if ( (scnum = sclookup( nmstr )) == 0 )
-				format_pinpoint_message(
-					"undeclared start condition %s",
-					nmstr );
+				format_pinpoint_message("undeclared start condition %s", nmstr );
 			else
 				{
 				for ( i = 1; i <= scon_stk_ptr; ++i )
 					if ( scon_stk[i] == scnum )
 						{
-						format_warn(
-							"<%s> specified twice",
-							scname[scnum] );
+						format_warn("<%s> specified twice", start_conditions[scnum].name.c_str());
 						break;
 						}
 
@@ -376,16 +375,15 @@ sconname	:  NAME
 
 rule		:  re2 re
 			{
-			if ( transchar[lastst[$2]] != SYM_EPSILON )
+			if ( nfas[nfas[$2].lastst].transchar != SYM_EPSILON )
 				/* Provide final transition \now/ so it
 				 * will be marked as a trailing context
 				 * state.
 				 */
-				$2 = link_machines( $2,
-						mkstate( SYM_EPSILON ) );
+				$2 = link_machines( $2, mkstate( SYM_EPSILON ) );
 
 			mark_beginning_as_normal( $2 );
-			current_state_type = STATE_NORMAL;
+			current_state_type = StateType::Normal;
 
 			if ( previous_continued_action )
 				{
@@ -419,11 +417,10 @@ rule		:  re2 re
 				 * trail rule, and add_accept() can create
 				 * a new state ...
 				 */
-				add_accept( $1,
-					num_rules | YY_TRAILING_HEAD_MASK );
+				add_accept( $1, (rules.size() - 1) | YY_TRAILING_HEAD_MASK );
 				variable_trail_rule = true;
 				}
-			
+
 			else
 				trailcnt = rulelen;
 
@@ -440,7 +437,7 @@ rule		:  re2 re
 			rulelen = 1;
 			varlength = false;
 
-			current_state_type = STATE_TRAILING_CONTEXT;
+			current_state_type = StateType::TrailingContext;
 
 			if ( trlcontxt )
 				{
@@ -464,8 +461,7 @@ rule		:  re2 re
 				/* Again, see the comment in the rule for
 				 * "re2 re" above.
 				 */
-				add_accept( $1,
-					num_rules | YY_TRAILING_HEAD_MASK );
+				add_accept( $1, (rules.size() - 1) | YY_TRAILING_HEAD_MASK );
 				variable_trail_rule = true;
 				}
 
@@ -527,7 +523,7 @@ re2		:  re '/'
 
 			rulelen = 0;
 
-			current_state_type = STATE_TRAILING_CONTEXT;
+			current_state_type = StateType::TrailingContext;
 			$$ = $1;
 			}
 		;
@@ -697,18 +693,14 @@ singleton	:  singleton '*'
                     cclnegate( ccldot );
 
                     if ( useecs )
-                        mkeccl( ccltbl + cclmap[ccldot],
-                            ccllen[ccldot], nextecm,
-                            ecgroup, csize, csize );
+                        mkeccl( ccls[ccldot].table, nextecm, ecgroup, csize, csize );
 
 				/* Create the (?s:'.') character class. */
                     cclany = cclinit();
                     cclnegate( cclany );
 
                     if ( useecs )
-                        mkeccl( ccltbl + cclmap[cclany],
-                            ccllen[cclany], nextecm,
-                            ecgroup, csize, csize );
+                        mkeccl( ccls[cclany].table, nextecm, ecgroup, csize, csize );
 
 				madeany = true;
 				}
@@ -723,18 +715,13 @@ singleton	:  singleton '*'
 
 		|  fullccl
 			{
-				/* Sort characters for fast searching.
-				 */
-				qsort( ccltbl + cclmap[$1], (size_t) ccllen[$1], sizeof (*ccltbl), cclcmp );
-
 			if ( useecs )
-				mkeccl( ccltbl + cclmap[$1], ccllen[$1],
-					nextecm, ecgroup, csize, csize );
+				mkeccl( ccls[$1].table, nextecm, ecgroup, csize, csize );
 
 			++rulelen;
 
-			if (ccl_has_nl[$1])
-				rule_has_nl[num_rules] = true;
+			if (ccls[$1].has_nl)
+				rules[rules.size() - 1].has_nl = true;
 
 			$$ = mkstate( -$1 );
 			}
@@ -743,8 +730,8 @@ singleton	:  singleton '*'
 			{
 			++rulelen;
 
-			if (ccl_has_nl[$1])
-				rule_has_nl[num_rules] = true;
+			if (ccls[$1].has_nl)
+				rules[rules.size() - 1].has_nl = true;
 
 			$$ = mkstate( -$1 );
 			}
@@ -760,7 +747,7 @@ singleton	:  singleton '*'
 			++rulelen;
 
 			if ($1 == nlch)
-				rule_has_nl[num_rules] = true;
+				rules[rules.size() - 1].has_nl = true;
 
             if (sf_case_ins() && has_case($1))
                 /* create an alternation, as in (a|A) */
@@ -775,7 +762,7 @@ fullccl:
     |   braceccl
     ;
 
-braceccl: 
+braceccl:
 
             '[' ccl ']' { $$ = $2; }
 
@@ -826,18 +813,16 @@ ccl		:  ccl CHAR '-' CHAR
 				/* Keep track if this ccl is staying in
 				 * alphabetical order.
 				 */
-				cclsorted = cclsorted && ($2 > lastchar);
 				lastchar = $4;
 
                 /* Do it again for upper/lowercase */
                 if (sf_case_ins() && has_case($2) && has_case($4)){
                     $2 = reverse_case ($2);
                     $4 = reverse_case ($4);
-                    
+
                     for ( i = $2; i <= $4; ++i )
                         ccladd( $1, i );
 
-                    cclsorted = cclsorted && ($2 > lastchar);
                     lastchar = $4;
                 }
 
@@ -849,7 +834,6 @@ ccl		:  ccl CHAR '-' CHAR
 		|  ccl CHAR
 			{
 			ccladd( $1, $2 );
-			cclsorted = cclsorted && ($2 > lastchar);
 			lastchar = $2;
 
             /* Do it again for upper/lowercase */
@@ -857,7 +841,6 @@ ccl		:  ccl CHAR '-' CHAR
                 $2 = reverse_case ($2);
                 ccladd ($1, $2);
 
-                cclsorted = cclsorted && ($2 > lastchar);
                 lastchar = $2;
             }
 
@@ -866,27 +849,24 @@ ccl		:  ccl CHAR '-' CHAR
 
 		|  ccl ccl_expr
 			{
-			/* Too hard to properly maintain cclsorted. */
-			cclsorted = false;
 			$$ = $1;
 			}
 
 		|
 			{
-			cclsorted = true;
 			lastchar = 0;
 			currccl = $$ = cclinit();
 			}
 		;
 
-ccl_expr:	   
+ccl_expr:
            CCE_ALNUM	{ CCL_EXPR(isalnum); }
 		|  CCE_ALPHA	{ CCL_EXPR(isalpha); }
 		|  CCE_BLANK	{ CCL_EXPR(IS_BLANK); }
 		|  CCE_CNTRL	{ CCL_EXPR(iscntrl); }
 		|  CCE_DIGIT	{ CCL_EXPR(isdigit); }
 		|  CCE_GRAPH	{ CCL_EXPR(isgraph); }
-		|  CCE_LOWER	{ 
+		|  CCE_LOWER	{
                           CCL_EXPR(islower);
                           if (sf_case_ins())
                               CCL_EXPR(isupper);
@@ -911,7 +891,7 @@ ccl_expr:
 		|  CCE_NEG_PUNCT	{ CCL_NEG_EXPR(ispunct); }
 		|  CCE_NEG_SPACE	{ CCL_NEG_EXPR(isspace); }
 		|  CCE_NEG_XDIGIT	{ CCL_NEG_EXPR(isxdigit); }
-		|  CCE_NEG_LOWER	{ 
+		|  CCE_NEG_LOWER	{
 				if ( sf_case_ins() )
 					warn(_("[:^lower:] is ambiguous in case insensitive scanner"));
 				else
@@ -924,11 +904,11 @@ ccl_expr:
 					CCL_NEG_EXPR(isupper);
 				}
 		;
-		
+
 string		:  string CHAR
 			{
 			if ( $2 == nlch )
-				rule_has_nl[num_rules] = true;
+				rules[rules.size() - 1].has_nl = true;
 
 			++rulelen;
 
@@ -958,32 +938,28 @@ void build_eof_action(void)
 
 	for ( i = 1; i <= scon_stk_ptr; ++i )
 		{
-		if ( sceof[scon_stk[i]] )
-			format_pinpoint_message(
-				"multiple <<EOF>> rules for start condition %s",
-				scname[scon_stk[i]] );
-
+		if ( start_conditions[scon_stk[i]].eof )
+			format_pinpoint_message("multiple <<EOF>> rules for start condition %s", start_conditions[scon_stk[i]].name.c_str());
 		else
 			{
-			sceof[scon_stk[i]] = true;
+			start_conditions[scon_stk[i]].eof = true;
 
 			if (previous_continued_action /* && previous action was regular */)
 				add_action("YY_RULE_SETUP\n");
 
-			snprintf( action_text, sizeof(action_text), "case YY_STATE_EOF(%s):\n",
-				scname[scon_stk[i]] );
+			snprintf( action_text, sizeof(action_text), "case YY_STATE_EOF(%s):\n", start_conditions[scon_stk[i]].name.c_str());
 			add_action( action_text );
 			}
 		}
 
-	line_directive_out(NULL, 1);
+	line_directive_out(false, true);
 
 	/* This isn't a normal rule after all - don't count it as
 	 * such, so we don't have any holes in the rule numbering
 	 * (which make generating "rule can never match" warnings
 	 * more difficult.
 	 */
-	--num_rules;
+    rules.pop_back();
 	++num_eof_rules;
 	}
 
@@ -1030,11 +1006,11 @@ void warn( const char *str )
  *			     pinpointing its location
  */
 
-void format_pinpoint_message( const char *msg, const char arg[] )
+void format_pinpoint_message( const String &msg, const String &arg )
 	{
 	char errmsg[MAXLINE];
 
-	snprintf( errmsg, sizeof(errmsg), msg, arg );
+	snprintf( errmsg, sizeof(errmsg), msg.c_str(), arg.c_str() );
 	pinpoint_message( errmsg );
 	}
 
@@ -1065,7 +1041,7 @@ void line_warning( const char *str, int line )
 
 void line_pinpoint( const char *str, int line )
 	{
-	fprintf( stderr, "%s:%d: %s\n", infilename, line, str );
+	fprintf( stderr, "%s:%d: %s\n", infilename.c_str(), line, str );
 	}
 
 

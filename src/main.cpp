@@ -1,4 +1,4 @@
-/*  tables.h - tables serialization code
+/*  main.cpp - main flex file
  *
  *  Copyright (c) 1990 The Regents of the University of California.
  *  All rights reserved.
@@ -32,43 +32,21 @@
  *  PURPOSE.
  */
 
-#pragma once
+#include <locale>
 
-#include <stdio.h>
+#include "gettext.h"
 
-#include "common.h"
-#include "flexint.h"
+int flex_main(int argc, char *argv[]);
 
-/* Tables serialization API declarations. */
-#include "tables_shared.h"
-
-struct yytbl_writer
+/* Wrapper around flex_main, so flex_main can be built as a library. */
+int main(int argc, char *argv[])
 {
-    FILE *out;
-    flex_uint32_t total_written;
-    /**< bytes written so far */
-    fpos_t th_ssize_pos;
-    /**< position of th_ssize */
-};
+#if ENABLE_NLS
+    setlocale(LC_MESSAGES, "");
+    setlocale(LC_CTYPE, "");
+    textdomain(PACKAGE);
+    bindtextdomain(PACKAGE, LOCALEDIR);
+#endif
 
-/* These are used by main.c, gen.c, etc.
- * tablesext - if true, create external tables
- * tablesfilename - filename for external tables
- * tablesname - name that goes in serialized data, e.g., "yytables"
- * tableswr -  writer for external tables
- * tablesverify - true if tables-verify option specified
- * gentables - true if we should spit out the normal C tables
- */
-extern bool tablesext, tablesverify, gentables;
-extern String tablesfilename, tablesname;
-extern struct yytbl_writer tableswr;
-
-int yytbl_writer_init(struct yytbl_writer *, FILE *);
-int yytbl_hdr_init(struct yytbl_hdr *th, const String& version_str, const String& name);
-int yytbl_data_init(struct yytbl_data *tbl, enum yytbl_id id);
-int yytbl_data_destroy(struct yytbl_data *td);
-int yytbl_hdr_fwrite(struct yytbl_writer *wr,
-                     const struct yytbl_hdr *th);
-int yytbl_data_fwrite(struct yytbl_writer *wr, struct yytbl_data *td);
-void yytbl_data_compress(struct yytbl_data *tbl);
-struct yytbl_data *mkftbl(void);
+    return flex_main(argc, argv);
+}

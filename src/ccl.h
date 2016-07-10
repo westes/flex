@@ -1,4 +1,4 @@
-/*  tables.h - tables serialization code
+/*  ccl.h - routines for character classes
  *
  *  Copyright (c) 1990 The Regents of the University of California.
  *  All rights reserved.
@@ -36,39 +36,11 @@
 
 #include <stdio.h>
 
-#include "common.h"
-#include "flexint.h"
+void ccladd(int, int);           /* add a single character to a ccl */
+int cclinit(void);               /* make an empty ccl */
+void cclnegate(int);             /* negate a ccl */
+int ccl_set_diff(int a, int b);  /* set difference of two ccls. */
+int ccl_set_union(int a, int b); /* set union of two ccls. */
 
-/* Tables serialization API declarations. */
-#include "tables_shared.h"
-
-struct yytbl_writer
-{
-    FILE *out;
-    flex_uint32_t total_written;
-    /**< bytes written so far */
-    fpos_t th_ssize_pos;
-    /**< position of th_ssize */
-};
-
-/* These are used by main.c, gen.c, etc.
- * tablesext - if true, create external tables
- * tablesfilename - filename for external tables
- * tablesname - name that goes in serialized data, e.g., "yytables"
- * tableswr -  writer for external tables
- * tablesverify - true if tables-verify option specified
- * gentables - true if we should spit out the normal C tables
- */
-extern bool tablesext, tablesverify, gentables;
-extern String tablesfilename, tablesname;
-extern struct yytbl_writer tableswr;
-
-int yytbl_writer_init(struct yytbl_writer *, FILE *);
-int yytbl_hdr_init(struct yytbl_hdr *th, const String& version_str, const String& name);
-int yytbl_data_init(struct yytbl_data *tbl, enum yytbl_id id);
-int yytbl_data_destroy(struct yytbl_data *td);
-int yytbl_hdr_fwrite(struct yytbl_writer *wr,
-                     const struct yytbl_hdr *th);
-int yytbl_data_fwrite(struct yytbl_writer *wr, struct yytbl_data *td);
-void yytbl_data_compress(struct yytbl_data *tbl);
-struct yytbl_data *mkftbl(void);
+/* List the members of a set of characters in CCL form. */
+void list_character_set(FILE *, int[]);
