@@ -939,7 +939,9 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 <ACTION_STRING>{
 	[^"\\\n]+	ACTION_ECHO;
 	\\.		ACTION_ECHO;
-	{NL}		++linenum; ACTION_ECHO; BEGIN(ACTION);
+        {M4QEND}        ACTION_ECHO_QEND;
+        {M4QSTART}      ACTION_ECHO_QSTART;
+	{NL}		++linenum; ACTION_ECHO;
 	\"		ACTION_ECHO; BEGIN(ACTION);
 	.		ACTION_ECHO;
 }
