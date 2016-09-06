@@ -23,3 +23,8 @@ libtool
 stamp-*
 m4/
 build-aux/
+build/
+*.po
+*.o
+*.so
+*.a
