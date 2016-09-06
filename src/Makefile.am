@@ -140,6 +140,7 @@ indent:
 	for f in $(indentfiles);\
 	do\
 		echo indenting $$f ;\
+		f='$(srcdir)'/$$f; \
 		$(indent) < $$f >/dev/null && indent $$f || echo $$f FAILED to indent ;\
 	done \
 	fi
