@@ -241,9 +241,9 @@ M4QEND      "]]"
 	.		/* ignore spurious characters */
 }
 <ACTION,CODEBLOCK,ACTION_STRING,PERCENT_BRACE_ACTION,COMMENT>{
+   "M4"|"YY"|"m4" add_action(M4QSTART); ACTION_ECHO; add_action(M4QEND);
    {M4QSTART}   ACTION_ECHO_QSTART;
    {M4QEND}     ACTION_ECHO_QEND;
-   "M4"|"YY"    add_action(M4QSTART); ACTION_ECHO; add_action(M4QEND);
 }
 
 <CODEBLOCK>{
@@ -279,8 +279,11 @@ M4QEND      "]]"
 
     {M4QSTART}  buf_strnappend(&top_buf, escaped_qstart, (int) strlen(escaped_qstart));
     {M4QEND}    buf_strnappend(&top_buf, escaped_qend, (int) strlen(escaped_qend));
-    "M4"        buf_strnappend(&top_buf, M4QSTART "M4" M4QEND, 6);
-    "YY"        buf_strnappend(&top_buf, M4QSTART "YY" M4QEND, 6);
+    m4|M4|YY   {
+       buf_strnappend(&top_buf, M4QSTART, 2);
+       buf_strnappend(&top_buf, yytext, 2);
+       buf_strnappend(&top_buf, M4QEND, 2);
+    }
 
     [^{}\r\n]  {
                 buf_strnappend(&top_buf, yytext, yyleng);
@@ -968,6 +971,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 
 <SECT3>{
+    /* "M4"|"m4"|"YY" fprintf (yyout, "[[%s]]", yytext); */
     {M4QSTART}  fwrite (escaped_qstart, 1, strlen(escaped_qstart) - 0, yyout);
     {M4QEND}    fwrite (escaped_qend, 1, strlen(escaped_qend) - 0, yyout);
 	[^\[\]\n]*(\n?) ECHO;
