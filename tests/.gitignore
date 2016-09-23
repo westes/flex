@@ -63,10 +63,6 @@ multiple_scanners_nr
 multiple_scanners_nr_[12].[ch]
 multiple_scanners_r
 multiple_scanners_r_[12].[ch]
-noansi_nr
-noansi_nr.c
-noansi_r
-noansi_r.c
 posix
 posix.c
 posixly_correct

@@ -106,7 +106,6 @@ int     num_input_files;
 jmp_buf flex_main_jmp_buf;
 bool   *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
-bool    ansi_func_defs, ansi_func_protos;
 
 bool    tablesext, tablesverify, gentables;
 char   *tablesfilename=0,*tablesname=0;
@@ -310,12 +309,6 @@ void check_options (void)
 			nextecm[i] = BAD_SUBSCRIPT;	/* to catch errors */
 		}
 	}
-
-    if (!ansi_func_defs)
-        buf_m4_define( &m4defs_buf, "M4_YY_NO_ANSI_FUNC_DEFS", NULL);
-
-    if (!ansi_func_protos)
-        buf_m4_define( &m4defs_buf, "M4_YY_NO_ANSI_FUNC_PROTOS", NULL);
 
     if (extra_type)
         buf_m4_define( &m4defs_buf, "M4_EXTRA_TYPE_DEFS", extra_type);
@@ -972,7 +965,6 @@ void flexinit (int argc, char **argv)
 	tablesext = tablesverify = false;
 	gentables = true;
 	tablesfilename = tablesname = NULL;
-    ansi_func_defs = ansi_func_protos = true;
 
 	sawcmpflag = false;
 
@@ -1348,14 +1340,6 @@ void flexinit (int argc, char **argv)
 		case OPT_NO_REJECT:
 			reject_really_used = false;
 			break;
-
-        case OPT_NO_ANSI_FUNC_DEFS:
-            ansi_func_defs = false;
-            break;
-
-        case OPT_NO_ANSI_FUNC_PROTOS:
-            ansi_func_protos = false;
-            break;
 
 		case OPT_NO_YY_PUSH_STATE:
 			//buf_strdefine (&userdef_buf, "YY_NO_PUSH_STATE", "1");
@@ -1847,8 +1831,6 @@ void usage (void)
 		  "       --bison-bridge      scanner for bison pure parser.\n"
 		  "       --bison-locations   include yylloc support.\n"
 		  "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
-          "       --noansi-definitions old-style function definitions\n"
-          "       --noansi-prototypes  empty parameter list in prototypes\n"
 		  "       --nounistd          do not include <unistd.h>\n"
 		  "       --noFUNCTION        do not generate a particular FUNCTION\n"
 		  "\n" "Miscellaneous:\n"
