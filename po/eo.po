@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.37\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-09-23 11:03-0400\n"
+"POT-Creation-Date: 2012-07-22 20:48-0400\n"
 "PO-Revision-Date: 2012-09-08 07:15-0300\n"
 "Last-Translator: Felipe Castro <fefcas@gmail.com>\n"
 "Language-Team: Esperanto <translation-team-eo@lists.sourceforge.net>\n"
@@ -16,42 +16,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/buf.c:79
+#: buf.c:78
 msgid "Allocation of buffer to print string failed"
 msgstr "Rezervo de bufro por printi ĉenon fiaskis"
 
-#: src/buf.c:107
+#: buf.c:100
 msgid "Allocation of buffer for line directive failed"
 msgstr "Rezervo de bufro por linia instrukcio fiaskis"
 
-#: src/buf.c:177
+#: buf.c:177
 msgid "Allocation of buffer for m4 def failed"
 msgstr "Rezervo de bufro por 'm4 def' fiaskis"
 
-#: src/buf.c:198
+#: buf.c:197
 msgid "Allocation of buffer for m4 undef failed"
 msgstr "Rezervo de bufro por 'm4 undef' fiaskis"
 
-#: src/dfa.c:59
+#: dfa.c:61
 #, c-format
 msgid "State #%d is non-accepting -\n"
 msgstr "Stato #%d estas ne-akceptanta -\n"
 
-#: src/dfa.c:119
+#: dfa.c:124
 msgid "dangerous trailing context"
 msgstr "danĝera vosta kunteksto"
 
-#: src/dfa.c:159
+#: dfa.c:166
 #, c-format
 msgid " associated rule line numbers:"
 msgstr " lini-numeroj de asociita regulo:"
 
-#: src/dfa.c:193
+#: dfa.c:202
 #, c-format
 msgid " out-transitions: "
 msgstr " for-transigoj: "
 
-#: src/dfa.c:201
+#: dfa.c:210
 #, c-format
 msgid ""
 "\n"
@@ -60,11 +60,11 @@ msgstr ""
 "\n"
 " ĵam-transigoj: EOF "
 
-#: src/dfa.c:331
+#: dfa.c:341
 msgid "consistency check failed in epsclosure()"
 msgstr "kontrolo pri kohereco fiaskis ĉe epsclosure()"
 
-#: src/dfa.c:419
+#: dfa.c:429
 msgid ""
 "\n"
 "\n"
@@ -76,24 +76,24 @@ msgstr ""
 "Nekropsio DFA:\n"
 "\n"
 
-#: src/dfa.c:592
+#: dfa.c:604
 msgid "could not create unique end-of-buffer state"
 msgstr "ne eblis krei unikan staton de bufro-fino"
 
-#: src/dfa.c:613
+#: dfa.c:625
 #, c-format
 msgid "state # %d:\n"
 msgstr "stato * %d:\n"
 
-#: src/dfa.c:773
+#: dfa.c:785
 msgid "Could not write yynxt_tbl[][]"
 msgstr "Ne eblis skribi yynxt_tbl[][]"
 
-#: src/dfa.c:1033
+#: dfa.c:1049
 msgid "bad transition character detected in sympartition()"
 msgstr "malĝusta transiga signo estis detektata en sympartition()"
 
-#: src/gen.c:480
+#: gen.c:478
 msgid ""
 "\n"
 "\n"
@@ -105,29 +105,29 @@ msgstr ""
 "Ekvivalentecaj Klasoj:\n"
 "\n"
 
-#: src/gen.c:665 src/gen.c:694 src/gen.c:1214
+#: gen.c:662 gen.c:691 gen.c:1215
 #, c-format
 msgid "state # %d accepts: [%d]\n"
 msgstr "stato # %d akceptas: [%d]\n"
 
-#: src/gen.c:1111
+#: gen.c:1110
 #, c-format
 msgid "state # %d accepts: "
 msgstr "stato # %d akceptas: "
 
-#: src/gen.c:1158
+#: gen.c:1157
 msgid "Could not write yyacclist_tbl"
 msgstr "Ne eblis skribi yyacclist_tbl"
 
-#: src/gen.c:1232
+#: gen.c:1233
 msgid "Could not write yyacc_tbl"
 msgstr "Ne eblis skribi yyacc_tbl"
 
-#: src/gen.c:1247 src/gen.c:1619 src/gen.c:1642
+#: gen.c:1248 gen.c:1633 gen.c:1656
 msgid "Could not write ecstbl"
 msgstr "Ne eblis skribi ecstbl"
 
-#: src/gen.c:1267
+#: gen.c:1271
 msgid ""
 "\n"
 "\n"
@@ -137,400 +137,392 @@ msgstr ""
 "\n"
 "Meta-Ekvivalentecaj Klasoj:\n"
 
-#: src/gen.c:1289
+#: gen.c:1293
 msgid "Could not write yymeta_tbl"
 msgstr "Ne eblis skribi yymeta_tbl"
 
-#: src/gen.c:1348
+#: gen.c:1354
 msgid "Could not write yybase_tbl"
 msgstr "Ne eblis skribi yybase_tbl"
 
-#: src/gen.c:1380
+#: gen.c:1388
 msgid "Could not write yydef_tbl"
 msgstr "Ne eblis skribi yydef_tbl"
 
-#: src/gen.c:1418
+#: gen.c:1428
 msgid "Could not write yynxt_tbl"
 msgstr "Ne eblis skribi yynxt_tbl"
 
-#: src/gen.c:1452
+#: gen.c:1464
 msgid "Could not write yychk_tbl"
 msgstr "Ne eblis skribi yychk_tbl"
 
-#: src/gen.c:1604 src/gen.c:1633
+#: gen.c:1618 gen.c:1647
 msgid "Could not write ftbl"
 msgstr "Ne eblis skribi ftbl"
 
-#: src/gen.c:1610
+#: gen.c:1624
 msgid "Could not write ssltbl"
 msgstr "Ne eblis skribi ssltbl"
 
-#: src/gen.c:1661
+#: gen.c:1675
 msgid "Could not write eoltbl"
 msgstr "Ne eblis skribi eoltbl"
 
-#: src/gen.c:1718
+#: gen.c:1735
 msgid "Could not write yynultrans_tbl"
 msgstr "Ne eblis skribi yynultrans_tbl"
 
-#: src/main.c:179
+#: main.c:189
 msgid "rule cannot be matched"
 msgstr "regulo ne povas esti korespondata"
 
-#: src/main.c:184
+#: main.c:194
 msgid "-s option given but default rule can be matched"
-msgstr ""
-"la modifilo -s estis indikata sed la apriora regulo povas esti korespondata"
+msgstr "la modifilo -s estis indikata sed la apriora regulo povas esti korespondata"
 
-#: src/main.c:222
+#: main.c:234
 msgid "Can't use -+ with -l option"
 msgstr "Ne eblas uzi -+ kun la modifilo -l"
 
-#: src/main.c:225
+#: main.c:237
 msgid "Can't use -f or -F with -l option"
 msgstr "Ne eblas uzi -f aŭ -F kun la modifilo -l"
 
-#: src/main.c:229
+#: main.c:241
 msgid "Can't use --reentrant or --bison-bridge with -l option"
 msgstr "Ne eblas uzi --reentrant aŭ --bison-bridge kun la modifilo -l"
 
-#: src/main.c:261
+#: main.c:278
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "Sensencas -Cf/-CF kaj -Cm kune"
 
-#: src/main.c:264
+#: main.c:281
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "-Cf/-CF kaj -I malakordas"
 
-#: src/main.c:268
+#: main.c:285
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr "-Cf/-CF malakordas kun lex-akorda reĝimo"
 
-#: src/main.c:273
+#: main.c:290
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "-Cf kaj -CF estas reciproke ekskluzivaj"
 
-#: src/main.c:277
+#: main.c:294
 msgid "Can't use -+ with -CF option"
 msgstr "Ne eblas uzi -+ kun la modifilo -CF"
 
-#: src/main.c:280
+#: main.c:297
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "%array malakordas kun modifilo -+"
 
-#: src/main.c:285
+#: main.c:302
 msgid "Options -+ and --reentrant are mutually exclusive."
 msgstr "Modifiloj -+ kaj --reentrant estas reciproke ekskluzivaj."
 
-#: src/main.c:288
+#: main.c:305
 msgid "bison bridge not supported for the C++ scanner."
 msgstr "bison-ponto ne estas subtenata por la skanilo C++."
 
-#: src/main.c:343 src/main.c:427
+#: main.c:360 main.c:406
 #, c-format
 msgid "could not create %s"
 msgstr "ne eblis krei %s"
 
-#: src/main.c:439
+#: main.c:419
 msgid "could not write tables header"
 msgstr "ne eblis skribi tabel-kapojn"
 
-#: src/main.c:443
+#: main.c:423
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "ne eblas malfermi la skeletan dosieron %s"
 
-#: src/main.c:480
+#: main.c:459
 msgid "allocation of macro definition failed"
 msgstr "rezervo de makroa difino fiaskis"
 
-#: src/main.c:527
+#: main.c:507
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "eniga eraro dum lego de la skeleta dosiero %s"
 
-#: src/main.c:531
+#: main.c:511
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "eraro dum fermo de la skeleta dosiero %s"
 
-#: src/main.c:715
+#: main.c:696
 #, c-format
 msgid "error creating header file %s"
 msgstr "eraro dum kreo de la kap-dosiero %s"
 
-#: src/main.c:723
+#: main.c:704
 #, c-format
 msgid "error writing output file %s"
 msgstr "eraro dum skribo de la eliga dosiero %s"
 
-#: src/main.c:727
+#: main.c:708
 #, c-format
 msgid "error closing output file %s"
 msgstr "eraro dum fermo de la eliga dosiero %s"
 
-#: src/main.c:731
+#: main.c:712
 #, c-format
 msgid "error deleting output file %s"
 msgstr "eraro dum forigo de eliga dosiero %s"
 
-#: src/main.c:738
+#: main.c:719
 #, c-format
 msgid "No backing up.\n"
 msgstr "Sen savkopiado.\n"
 
-#: src/main.c:742
+#: main.c:723
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "%d savkopiadas (ne-akceptantajn) statojn.\n"
 
-#: src/main.c:746
+#: main.c:727
 #, c-format
 msgid "Compressed tables always back up.\n"
 msgstr "Densigitaj tabeloj ĉiam estas savkopiataj.\n"
 
-#: src/main.c:749
+#: main.c:730
 #, c-format
 msgid "error writing backup file %s"
 msgstr "eraro dum skribo de la savkopia dosiero %s"
 
-#: src/main.c:753
+#: main.c:734
 #, c-format
 msgid "error closing backup file %s"
 msgstr "eraro dum fermo de la savkopia dosiero %s"
 
-#: src/main.c:758
+#: main.c:739
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr "%s versio %s statistikoj pri usado:\n"
 
-#: src/main.c:761
+#: main.c:742
 #, c-format
 msgid "  scanner options: -"
 msgstr "  skanilaj modifiloj: -"
 
-#: src/main.c:840
+#: main.c:821
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d statoj NFA\n"
 
-#: src/main.c:842
+#: main.c:823
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d statoj DFA (%d vortoj)\n"
 
-#: src/main.c:844
+#: main.c:825
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d reguloj\n"
 
-#: src/main.c:849
+#: main.c:830
 #, c-format
 msgid "  No backing up\n"
 msgstr "  Sen savkopiado\n"
 
-#: src/main.c:853
+#: main.c:834
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr "  %d savkopianta (ne-akceptantajn) statojn\n"
 
-#: src/main.c:858
+#: main.c:839
 #, c-format
 msgid "  Compressed tables always back-up\n"
 msgstr "  Densigitaj tabeloj ĉiam savkopiite\n"
 
-#: src/main.c:862
+#: main.c:843
 #, c-format
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  modeloj komenco-de-linio estas uzataj\n"
 
-#: src/main.c:864
+#: main.c:845
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d komencaj kondiĉoj\n"
 
-#: src/main.c:868
+#: main.c:849
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr "  %d epsilonaj statoj, %d duoblaj epsilonaj statoj\n"
 
-#: src/main.c:872
+#: main.c:853
 #, c-format
 msgid "  no character classes\n"
 msgstr "  neniu signo-klaso\n"
 
-#: src/main.c:876
+#: main.c:857
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
 msgstr "  %d/%d signo-klasoj bezonis %d/%d vortojn da memoro, %d reuzitaj\n"
 
-#: src/main.c:881
+#: main.c:862
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr "  %d stato/sekvstato-paroj estis kreataj\n"
 
-#: src/main.c:884
+#: main.c:865
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d unikaj/duobligitaj transigoj\n"
 
-#: src/main.c:889
+#: main.c:870
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d tabel-enigoj\n"
 
-#: src/main.c:897
+#: main.c:878
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  %d/%d bazo-def enigoj estis kreataj\n"
 
-#: src/main.c:901
+#: main.c:882
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  %d/%d (pinto %d) enigoj nxt-chk estis kreataj\n"
 
-#: src/main.c:905
+#: main.c:886
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr "  %d/%d (pinto %d) ŝablonaj enigoj nxt-chk estis kreataj\n"
 
-#: src/main.c:909
+#: main.c:890
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d malplenaj tabel-enigoj\n"
 
-#: src/main.c:911
+#: main.c:892
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  %d protoj estis kreataj\n"
 
-#: src/main.c:914
+#: main.c:895
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  %d ŝablonoj estis kreataj, %d uzoj\n"
 
-#: src/main.c:922
+#: main.c:903
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  %d/%d ekvivalento-klasoj estis kreataj\n"
 
-#: src/main.c:930
+#: main.c:911
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  %d/%d metaekvivalento-klasoj estis kreataj\n"
 
-#: src/main.c:936
+#: main.c:917
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr "  %d (%d konservitaj) haketaj kolizioj, %d DFA egalaj\n"
 
-#: src/main.c:938
+#: main.c:919
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr "  %d aroj de relokigoj estas bezonataj\n"
 
-#: src/main.c:940
+#: main.c:921
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  entute %d tabel-enigoj estas bezonataj\n"
 
-#: src/main.c:1015
+#: main.c:998
 #, c-format
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Interna eraro. 'flexopt' estas misformitaj.\n"
 
-#: src/main.c:1025
+#: main.c:1008
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Provu '%s --help' por pli da informo.\n"
 
-#: src/main.c:1082
+#: main.c:1065
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "nekonata modifilo -C '%c'"
 
-#: src/main.c:1211
+#: main.c:1194
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
 
-#: src/main.c:1487
+#: main.c:1469
 msgid "fatal parse error"
 msgstr "neriparebla analiz-eraro"
 
-#: src/main.c:1519
+#: main.c:1501
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr "ne eblis krei savkopiad-informan dosieron %s"
 
-#: src/main.c:1540
+#: main.c:1522
 #, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr ""
-"La modifilo -l AT&T de akordigo al lex alportas grandan malaltigon de "
-"rendimento\n"
+msgstr "La modifilo -l AT&T de akordigo al lex alportas grandan malaltigon de rendimento\n"
 
-#: src/main.c:1543
+#: main.c:1525
 #, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
-msgstr ""
-" kaj povas esti la vera fonto de aliaj raportitaj malaltigoj de rendimento\n"
+msgstr " kaj povas esti la vera fonto de aliaj raportitaj malaltigoj de rendimento\n"
 
-#: src/main.c:1549
+#: main.c:1531
 #, c-format
-msgid ""
-"%%option yylineno entails a performance penalty ONLY on rules that can match "
-"newline characters\n"
-msgstr ""
-"%%option yylineno alportas malaltigon de rendimento NUR kun reguloj kiuj "
-"povas akordiĝi kun novliniaj signoj\n"
+msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "%%option yylineno alportas malaltigon de rendimento NUR kun reguloj kiuj povas akordiĝi kun novliniaj signoj\n"
 
-#: src/main.c:1556
+#: main.c:1538
 #, c-format
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "-I (interage) alportas etan malaltigon de rendimento\n"
 
-#: src/main.c:1561
+#: main.c:1543
 #, c-format
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "yymore() alportas etan malaltigon de rendimento\n"
 
-#: src/main.c:1567
+#: main.c:1549
 #, c-format
 msgid "REJECT entails a large performance penalty\n"
 msgstr "REJECT alportas grandan malaltigon de rendimento\n"
 
-#: src/main.c:1572
+#: main.c:1554
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr "Variabla vosta kunteksto alportas grandan malaltigon de rendimento\n"
 
-#: src/main.c:1584
+#: main.c:1566
 msgid "REJECT cannot be used with -f or -F"
 msgstr "REJECT ne povas esti uzata kun -f aŭ F"
 
-#: src/main.c:1587
+#: main.c:1569
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr "%option yylineno ne povas esti uzata kun REJECT"
 
-#: src/main.c:1590
+#: main.c:1572
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr "variablaj vostaj kuntekstaj reguloj ne povas esti uzataj kun -f aŭ F"
 
-#: src/main.c:1715
+#: main.c:1695
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
 msgstr "%option yyclass nur koheras por skaniloj C++"
 
-#: src/main.c:1802
+#: main.c:1802
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Uzado: %s [MODIFILOJ] [DOSIERO]...\n"
 
-#: src/main.c:1805
-#, fuzzy, c-format
+#: main.c:1805
+#, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
 "\n"
@@ -553,16 +545,13 @@ msgid ""
 "  -T, --trace             %s should run in trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
-"      --hex               use hexadecimal numbers instead of octal in debug "
-"outputs\n"
 "\n"
 "Files:\n"
 "  -o, --outfile=FILE      specify output filename\n"
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the "
-"scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "\n"
 "Scanner behavior:\n"
@@ -584,6 +573,8 @@ msgid ""
 "       --bison-bridge      scanner for bison pure parser.\n"
 "       --bison-locations   include yylloc support.\n"
 "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+"       --noansi-definitions old-style function definitions\n"
+"       --noansi-prototypes  empty parameter list in prototypes\n"
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 "\n"
@@ -597,8 +588,7 @@ msgstr ""
 "Generas programojn kiuj prilaboras modelo-kongruon en tekstoj.\n"
 "\n"
 "Tabela Densigo:\n"
-"  -Ca, --align      prilaboras pli grandajn tabelojn por pli bone organizi "
-"memoron\n"
+"  -Ca, --align      prilaboras pli grandajn tabelojn por pli bone organizi memoron\n"
 "  -Ce, --ecs        konstrui ekvivalento-klasojn\n"
 "  -Cf               ne densigi tabelojn; uzi reprezenton -f\n"
 "  -CF               ne densigi tabelojn; uzi reprezenton -F\n"
@@ -612,12 +602,10 @@ msgstr ""
 "  -d, --debug             ebligi rafinigan reĝimon en la skanilo\n"
 "  -b, --backup            skribi savkopian informon al %s\n"
 "  -p, --perf-report       skribi raporton pri rendimento al 'stderr'\n"
-"  -s, --nodefault         demeti aprioran regulon por EĤIGI nekongruan "
-"tekston\n"
+"  -s, --nodefault         demeti aprioran regulon por EĤIGI nekongruan tekston\n"
 "  -T, --trace             %s devos funkcii sub spura reĝimo\n"
 "  -w, --nowarn            ne generi avertojn\n"
-"  -v, --verbose           skribi resumon de la skanilaj statistikoj al "
-"'stdout'\n"
+"  -v, --verbose           skribi resumon de la skanilaj statistikoj al 'stdout'\n"
 "\n"
 "Dosieroj:\n"
 "  -o, --outfile=DOSIERO       indiki eligan dosiernomon\n"
@@ -639,14 +627,15 @@ msgstr ""
 "\n"
 "Generata kodumaĵo:\n"
 "  -+,  --c++               generi klason de skanilo C++\n"
-"  -Dmacro[=defn]           uzi #define por makroo defn  (apriora defn estas "
-"'1')\n"
+"  -Dmacro[=defn]           uzi #define por makroo defn  (apriora defn estas '1')\n"
 "  -L,  --noline            demeti instrukciojn  #line en la skanilo\n"
 "  -P,  --prefix=ĈENO       uzi ĈENOn kiel prefikson anstataŭ \"yy\"\n"
 "  -R,  --reentrant         generi reenigan skanilon C\n"
 "       --bison-bridge      skanilo por nur-bizon analizilo.\n"
 "       --bison-locations   inkluzivigi subtenon al yylloc.\n"
 "       --stdinit           ekigi yyin/yyout al stdin/stdout\n"
+"       --noansi-definitions malmodern-stilaj difinoj de funkcioj\n"
+"       --noansi-prototypes  malplena parametro-listo en prototipoj\n"
 "       --nounistd          ne inkluzivigi <unistd.h>\n"
 "       --noFUNKCIO         ne generi specifan FUNKCIOn\n"
 "\n"
@@ -657,52 +646,51 @@ msgstr ""
 "  -h, --help              produkti tiun ĉi help-mesaĝon\n"
 "  -V, --version           raporti la version de %s\n"
 
-#: src/misc.c:65
+#: misc.c:65
 msgid "allocation of sko_stack failed"
 msgstr "rezervo de sko_stack fiaskis"
 
-#: src/misc.c:101
+#: misc.c:102 misc.c:128
 #, c-format
 msgid "name \"%s\" ridiculously long"
 msgstr "la nomo \"%s\" estas ridinde longa"
 
-#: src/misc.c:151
+#: misc.c:177
 msgid "memory allocation failed in allocate_array()"
 msgstr "rezervo de memoro fiaskis en allocate_array()"
 
-#: src/misc.c:201
+#: misc.c:230
 #, c-format
 msgid "bad character '%s' detected in check_char()"
 msgstr "malĝusta signo '%s' estis detektata en check_char()"
 
-#: src/misc.c:206
+#: misc.c:235
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "la skanilo postulas la flagon -8 por uzi la signon %s"
 
-#: src/misc.c:225
-#, fuzzy
-msgid "memory allocation failure in xstrdup()"
-msgstr "rezervo de memoro fiaskis en allocate_array()"
+#: misc.c:268
+msgid "dynamic memory failure in copy_string()"
+msgstr "fiasko de dinamika memoro en copy_string()"
 
-#: src/misc.c:299
+#: misc.c:367
 #, c-format
 msgid "%s: fatal internal error, %s\n"
 msgstr "%s: neriparebla interna eraro, %s\n"
 
-#: src/misc.c:688
+#: misc.c:803
 msgid "attempt to increase array size failed"
 msgstr "provo pliigi grandon de tabelo fiaskis"
 
-#: src/misc.c:815
+#: misc.c:930
 msgid "bad line in skeleton file"
 msgstr "malĝusta linio en skeleta dosiero"
 
-#: src/misc.c:865
+#: misc.c:979
 msgid "memory allocation failed in yy_flex_xmalloc()"
 msgstr "rezervo de memoro fiaskis en yy_flex_xmalloc()"
 
-#: src/nfa.c:100
+#: nfa.c:104
 #, c-format
 msgid ""
 "\n"
@@ -713,233 +701,226 @@ msgstr ""
 "\n"
 "********** komenco de ŝuto de nfa kun ekstato %d\n"
 
-#: src/nfa.c:111
+#: nfa.c:115
 #, c-format
 msgid "state # %4d\t"
 msgstr "stato # %4d\t"
 
-#: src/nfa.c:126
+#: nfa.c:130
 #, c-format
 msgid "********** end of dump\n"
 msgstr "********** fino de ŝuto\n"
 
-#: src/nfa.c:169
+#: nfa.c:174
 msgid "empty machine in dupmachine()"
 msgstr "malplena maŝino en dupmachine()"
 
-#: src/nfa.c:234
+#: nfa.c:240
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
 msgstr "Variabla vosta kunteksta regulo ĉe linio %d\n"
 
-#: src/nfa.c:356
+#: nfa.c:353
 msgid "bad state type in mark_beginning_as_normal()"
 msgstr "malĝusta stat-tipo en mark_beginning_as_normal()"
 
-#: src/nfa.c:594
+#: nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "enigaj reguloj estas tro komplikaj (>= %d statoj NFA)"
 
-#: src/nfa.c:672
+#: nfa.c:677
 msgid "found too many transitions in mkxtion()"
 msgstr "tro multe da transigoj estis trovataj en mkxtion()"
 
-#: src/nfa.c:698
+#: nfa.c:703
 #, c-format
 msgid "too many rules (> %d)!"
 msgstr "tro multe da reguoloj (> %d)!"
 
-#: src/parse.y:159
+#: parse.y:159
 msgid "unknown error processing section 1"
 msgstr "Nekonata erar-proceza sekcio 1"
 
-#: src/parse.y:184 src/parse.y:351
+#: parse.y:184 parse.y:351
 msgid "bad start condition list"
 msgstr "malĝusta komenc-kondiĉa listo"
 
-#: src/parse.y:315
+#: parse.y:315
 msgid "unrecognized rule"
 msgstr "nerekonata regulo"
 
-#: src/parse.y:434 src/parse.y:447 src/parse.y:516
+#: parse.y:434 parse.y:447 parse.y:516
 msgid "trailing context used twice"
 msgstr "vosta kunteksto estis uzata duoble"
 
-#: src/parse.y:552 src/parse.y:562 src/parse.y:635 src/parse.y:645
+#: parse.y:552 parse.y:562 parse.y:635 parse.y:645
 msgid "bad iteration values"
 msgstr "malĝustaj iteraciaj valoroj"
 
-#: src/parse.y:580 src/parse.y:598 src/parse.y:663 src/parse.y:681
+#: parse.y:580 parse.y:598 parse.y:663 parse.y:681
 msgid "iteration value must be positive"
 msgstr "iteracia valoro devas esti pozitiva"
 
-#: src/parse.y:804 src/parse.y:814
+#: parse.y:804 parse.y:814
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
 msgstr "la signara intervalo [%c-%c] estas dusenca en sen-uskleca skanilo"
 
-#: src/parse.y:819
+#: parse.y:819
 msgid "negative range in character class"
 msgstr "negativa intervalo en signo-klaso"
 
-#: src/parse.y:916
+#: parse.y:916
 msgid "[:^lower:] is ambiguous in case insensitive scanner"
 msgstr "[:^lower:] estas dusenca en sen-uskleca skanilo"
 
-#: src/parse.y:922
+#: parse.y:922
 msgid "[:^upper:] ambiguous in case insensitive scanner"
 msgstr "[:^upper:] estas dusenca en sen-uskleca skanilo"
 
-#: src/scan.l:75 src/scan.l:620 src/scan.l:678
+#: scan.l:75 scan.l:618 scan.l:676
 msgid "Input line too long\n"
 msgstr "Eniga linio tro longas\n"
 
-#: src/scan.l:163
+#: scan.l:161
 #, c-format
 msgid "malformed '%top' directive"
 msgstr "misformita instrukcio '%top'"
 
-#: src/scan.l:185
+#: scan.l:183
 #, no-c-format
 msgid "unrecognized '%' directive"
 msgstr "nerekonita instrukcio '%'"
 
-#: src/scan.l:194
+#: scan.l:192
 msgid "Definition name too long\n"
 msgstr "Nom-difino tro longas\n"
 
-#: src/scan.l:286
+#: scan.l:284
 msgid "Unmatched '{'"
 msgstr "Senpara '{'"
 
-#: src/scan.l:302
+#: scan.l:300
 #, c-format
 msgid "Definition value for {%s} too long\n"
 msgstr "Valor-difino por {%s} tro longas\n"
 
-#: src/scan.l:319
+#: scan.l:317
 msgid "incomplete name definition"
 msgstr "nekompleta nom-difino"
 
-#: src/scan.l:446
+#: scan.l:443
 msgid "Option line too long\n"
 msgstr "Linio de modifiloj tro longas\n"
 
-#: src/scan.l:454
+#: scan.l:451
 #, c-format
 msgid "unrecognized %%option: %s"
 msgstr "nerekonita %%modifilo: %s"
 
-#: src/scan.l:635 src/scan.l:808
+#: scan.l:633 scan.l:800
 msgid "bad character class"
 msgstr "malĝusta signo-klaso"
 
-#: src/scan.l:685
+#: scan.l:683
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "nedifinita difino {%s}"
 
-#: src/scan.l:748
-msgid "unbalanced parenthesis"
-msgstr ""
-
-#: src/scan.l:763
+#: scan.l:755
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "malĝusta <komenca kondiĉo>: %s"
 
-#: src/scan.l:776
+#: scan.l:768
 msgid "missing quote"
 msgstr "mankas citilo"
 
-#: src/scan.l:842
+#: scan.l:834
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "malĝusta signo-klasa esprimo: %s"
 
-#: src/scan.l:864
+#: scan.l:856
 msgid "bad character inside {}'s"
 msgstr "malĝusta signo interne de {}"
 
-#: src/scan.l:870
+#: scan.l:862
 msgid "missing }"
 msgstr "mankas }"
 
-#: src/scan.l:948
+#: scan.l:940
 msgid "EOF encountered inside an action"
 msgstr "EOF estis trovata interne de ago"
 
-#: src/scan.l:953
+#: scan.l:945
 msgid "EOF encountered inside pattern"
 msgstr "EOF estis trovata interne de modelo"
 
-#: src/scan.l:975
+#: scan.l:967
 #, c-format
 msgid "bad character: %s"
 msgstr "malĝusta signo: %s"
 
-#: src/scan.l:1003
+#: scan.l:996
 #, c-format
 msgid "can't open %s"
 msgstr "ne eblas malfermi %s"
 
-#: src/scanopt.c:259
+#: scanopt.c:291
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
 msgstr "Uzado: %s [MODIFILOJ]...\n"
 
-#: src/scanopt.c:524
+#: scanopt.c:564
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
 msgstr "la modifilo '%s' ne permesas argumenton\n"
 
-#: src/scanopt.c:529
+#: scanopt.c:569
 #, c-format
 msgid "option `%s' requires an argument\n"
 msgstr "la modifilo '%s' postulas argumenton\n"
 
-#: src/scanopt.c:533
+#: scanopt.c:573
 #, c-format
 msgid "option `%s' is ambiguous\n"
 msgstr "la modifilo '%s' estas dusenca\n"
 
-#: src/scanopt.c:537
+#: scanopt.c:577
 #, c-format
 msgid "Unrecognized option `%s'\n"
 msgstr "Nerekonita modifilo '%s'\n"
 
-#: src/scanopt.c:541
+#: scanopt.c:581
 #, c-format
 msgid "Unknown error=(%d)\n"
 msgstr "Nekonata eraro=(%d)\n"
 
-#: src/sym.c:92
+#: sym.c:100
 msgid "symbol table memory allocation failed"
 msgstr "rezervo de simbol-tabela memoro fiaskis"
 
-#: src/sym.c:183
+#: sym.c:202
 msgid "name defined twice"
 msgstr "nomo estis difinata duoble"
 
-#: src/sym.c:231
+#: sym.c:253
 #, c-format
 msgid "start condition %s declared twice"
 msgstr "la komenca kondiĉo %s estis deklarata duoble"
 
-#: src/yylex.c:56
+#: yylex.c:56
 msgid "premature EOF"
 msgstr "tro frua EOF"
 
-#: src/yylex.c:199
+#: yylex.c:198
 #, c-format
 msgid "End Marker\n"
 msgstr "Fino-markilo\n"
 
-#: src/yylex.c:205
+#: yylex.c:204
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr "*Io Stranga* - ero: %d val: %d\n"
-
-#~ msgid "dynamic memory failure in copy_string()"
-#~ msgstr "fiasko de dinamika memoro en copy_string()"
