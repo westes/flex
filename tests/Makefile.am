@@ -83,8 +83,6 @@ simple_tests = \
 	mem_r \
 	multiple_scanners_nr \
 	multiple_scanners_r \
-	noansi_nr \
-	noansi_r \
 	posix \
 	posixly_correct \
 	prefix_nr \
@@ -152,10 +150,6 @@ mem_nr_SOURCES = mem_nr.l
 mem_r_SOURCES = mem_r.l
 multiple_scanners_nr_SOURCES = multiple_scanners_nr_main.c multiple_scanners_nr_1.l multiple_scanners_nr_2.l
 multiple_scanners_r_SOURCES = multiple_scanners_r_main.c multiple_scanners_r_1.l multiple_scanners_r_2.l
-noansi_nr_SOURCES = noansi_nr.l
-noansi_nr_CFLAGS = $(CFLAGS)
-noansi_r_SOURCES = noansi_r.l
-noansi_r_CFLAGS = $(CFLAGS)
 posix_SOURCES = posix.l
 posixly_correct_SOURCES = posixly_correct.l
 prefix_nr_SOURCES = prefix_nr.l
@@ -244,8 +238,6 @@ CLEANFILES = \
 	multiple_scanners_r_1.h \
 	multiple_scanners_r_2.c \
 	multiple_scanners_r_2.h \
-	noansi_nr.c \
-	noansi_r.c \
 	posix.c \
 	posixly_correct.c \
 	prefix_nr.c \
@@ -309,8 +301,6 @@ EXTRA_DIST = \
 	lineno_trailing.one.txt \
 	mem_nr.txt \
 	mem_r.txt \
-	noansi_nr.txt \
-	noansi_r.txt \
 	prefix_nr.txt \
 	prefix_r.txt \
 	pthread_1.txt \

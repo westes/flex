@@ -1491,15 +1491,14 @@ the scanning routine using a K&R-style/non-prototyped function
 declaration, you must terminate the definition with a semi-colon (;).
 
 @code{flex} generates @samp{C99} function definitions by
-default. However flex does have the ability to generate obsolete, er,
-@samp{traditional}, function definitions. This is to support
+default. Flex used toFlex used to have the ability to generate obsolete, er,
+@samp{traditional}, function definitions. This was to support
 bootstrapping gcc on old systems.  Unfortunately, traditional
 definitions prevent us from using any standard data types smaller than
-int (such as short, char, or bool) as function arguments.  For this
-reason, future versions of @code{flex} may generate standard C99 code
-only, leaving K&R-style functions to the historians.  Currently, if you
-do @strong{not} want @samp{C99} definitions, then you must use 
-@code{%option noansi-definitions}.
+int (such as short, char, or bool) as function arguments.  Furthermore,
+traditional definitions support added extra complexity in the skeleton file.
+For this reason, current versions of @code{flex} generate standard C99 code
+only, leaving K&R-style functions to the historians.
 
 @cindex stdin, default for yyin
 @cindex yyin
@@ -2860,19 +2859,13 @@ calls @code{yylex()} again).
 @opindex ---option-ansi-definitions
 @opindex ansi-definitions
 @item --ansi-definitions, @code{%option ansi-definitions}
-instruct flex to generate ANSI C99 definitions for functions.
-This option is enabled by default.
-If @code{%option noansi-definitions} is specified, then the obsolete style
-is generated.
+Deprecated, ignored
 
 @anchor{option-ansi-prototypes}
 @opindex ---option-ansi-prototypes
 @opindex ansi-prototypes
 @item --ansi-prototypes, @code{%option ansi-prototypes}
-instructs flex to generate ANSI C99 prototypes for functions. 
-This option is enabled by default.
-If @code{noansi-prototypes} is specified, then
-prototypes will have empty parameter lists.
+Deprecated, ignored
 
 @anchor{option-bison-bridge}
 @opindex ---bison-bridge

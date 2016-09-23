@@ -1,5 +1,0 @@
-# this is a comment
-foo = "bar"
-num = 43
-setting = false
-
