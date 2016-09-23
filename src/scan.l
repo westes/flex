@@ -340,8 +340,6 @@ M4QEND      "]]"
             interactive = option_sense;
 			}
 	array		yytext_is_array = option_sense;
-    ansi-definitions ansi_func_defs = option_sense;
-    ansi-prototypes  ansi_func_protos = option_sense;
 	backup		backing_up_report = option_sense;
 	batch		interactive = ! option_sense;
     bison-bridge     bison_bridge_lval = option_sense;
