@@ -21,17 +21,16 @@
 #  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 #  PURPOSE.
 
-cat <<!
-/* File created from flex.skl via mkskel.sh */
+echo '/* File created from flex.skl via mkskel.sh */
 
 #include "flexdef.h"
 
-const char *skel[] = {
-!
+const char *skel[] = {'
 
-sed 's/\\/&&/g' | sed 's/"/\\"/g' | sed 's/.*/  "&",/'
+sed 's/m4_/m4preproc_/g
+s/a4_/4_/g
+s/[\\"]/\\&/g
+s/.*/  "&",/'
 
-cat <<!
-  0
-};
-!
+echo '  0
+};'
