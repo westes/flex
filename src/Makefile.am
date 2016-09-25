@@ -81,12 +81,11 @@ DISTCLEANFILES = stage1scan.c
 MAINTAINERCLEANFILES = skel.c
 
 skel.c: flex.skl mkskel.sh flexint.h tables_shared.h tables_shared.c
-	sed 's/m4_/m4postproc_/g; s/m4preproc_/m4_/g' $< | \
+	sed 's/4_/a4_/g; s/m4preproc_/m4_/g' $< | \
 	  $(m4) -P -I $(srcdir)						   \
 	    -DFLEX_MAJOR_VERSION=`   echo $(VERSION)|cut -f 1 -d .`	   \
 	    -DFLEX_MINOR_VERSION=`   echo $(VERSION)|cut -f 2 -d .`	   \
 	    -DFLEX_SUBMINOR_VERSION=`echo $(VERSION)|cut -f 3 -d .` |	   \
-	  sed 's/m4postproc_/m4_/g' |					   \
 	  $(SHELL) $(srcdir)/mkskel.sh > $@.tmp
 	mv $@.tmp $@
 
