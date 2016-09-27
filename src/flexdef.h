@@ -1063,6 +1063,7 @@ extern struct Buf defs_buf;    /* a char* buffer to save #define'd some symbols 
 extern struct Buf yydmap_buf;  /* a string buffer to hold yydmap elements */
 extern struct Buf m4defs_buf;  /* Holds m4 definitions. */
 extern struct Buf top_buf;     /* contains %top code. String buffer. */
+extern bool no_section3_escape; /* True if the undocumented option --unsafe-no-m4-sect3-escape was passed */
 
 /* For blocking out code from the header file. */
 #define OUT_BEGIN_CODE() outn("m4_ifdef( [[M4_YY_IN_HEADER]],,[[")

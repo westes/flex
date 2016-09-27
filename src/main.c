@@ -1427,6 +1427,10 @@ void flexinit (int argc, char **argv)
 			break;
 		case OPT_HEX:
 			trace_hex = 1;
+                        break;
+                case OPT_NO_SECT3_ESCAPE:
+                        no_section3_escape = true;
+                        break;
 		}		/* switch */
 	}			/* while scanopt() */
 

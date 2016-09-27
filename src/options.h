@@ -125,7 +125,8 @@ enum flexopt_flag_t {
 	OPT_YYCLASS,
 	OPT_YYLINENO,
 	OPT_YYMORE,
-	OPT_YYWRAP
+	OPT_YYWRAP,
+        OPT_NO_SECT3_ESCAPE,
 };
 
 #endif

@@ -271,7 +271,8 @@ optspec_t flexopts[] = {
 	,
 	{"--noyyset_lloc", OPT_NO_YYSET_LLOC, 0}
 	,
-
+        {"--unsafe-no-m4-sect3-escape", OPT_NO_SECT3_ESCAPE, 0}
+        ,
 	{0, 0, 0}		/* required final NULL entry. */
 };
 
