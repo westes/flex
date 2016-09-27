@@ -67,29 +67,29 @@ main (void)
 
 
     /* Scan a good string. */
-    printf("Testing: yy_scan_string(%s): ",INPUT_STRING_1); fflush(stdout);
-    state = yy_scan_string ( INPUT_STRING_1 );
-    yylex();
+    printf("Testing: test_scan_string(%s): ",INPUT_STRING_1); fflush(stdout);
+    state = test_scan_string ( INPUT_STRING_1 );
+    testlex();
     yy_delete_buffer(state);
 
     /* Scan only the first 12 chars of a string. */
-    printf("Testing: yy_scan_bytes(%s): ",INPUT_STRING_2); fflush(stdout);
-    state = yy_scan_bytes  ( INPUT_STRING_2, 12 );
-    yylex();
-    yy_delete_buffer(state);
+    printf("Testing: test_scan_bytes(%s): ",INPUT_STRING_2); fflush(stdout);
+    state = test_scan_bytes  ( INPUT_STRING_2, 12 );
+    testlex();
+    test_delete_buffer(state);
 
     /* Scan directly from a buffer.
        We make a copy, since the buffer will be modified by flex.*/
-    printf("Testing: yy_scan_buffer(%s): ",INPUT_STRING_1); fflush(stdout);
+    printf("Testing: test_scan_buffer(%s): ",INPUT_STRING_1); fflush(stdout);
     len = strlen(INPUT_STRING_1) + 2;
     buf = malloc(len);
     strcpy( buf, INPUT_STRING_1);
     buf[ len -2 ]  = 0; /* Flex requires two NUL bytes at end of buffer. */
     buf[ len -1 ] =0;
 
-    state = yy_scan_buffer( buf, len );
-    yylex();
-    yy_delete_buffer(state);
+    state = test_scan_buffer( buf, len );
+    testlex();
+    test_delete_buffer(state);
     
     printf("TEST RETURNING OK.\n");
     return 0;

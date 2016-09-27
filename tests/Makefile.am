@@ -393,7 +393,7 @@ reject_ver.table$(EXEEXT): reject_ver.table.$(OBJEXT)
 	$(LINK) $^
 
 reject_ser.table.c: reject.l4 $(FLEX)
-	$(FLEX) -o $@ --tables-file=$(basename $@).tables $<
+	$(FLEX) -o $@ --unsafe-no-m4-sect3-escape --tables-file=$(basename $@).tables $<
 
 reject_ser.table.$(OBJEXT): reject_ser.table.c
 	$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<

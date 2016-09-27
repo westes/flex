@@ -48,10 +48,10 @@ int main(void);
 int
 main ()
 {
-    yyin = stdin;
-    yyout = stdout;
-    yylex();
-    yylex_destroy();
+    testin = stdin;
+    testout = stdout;
+    testlex();
+    testlex_destroy();
     printf("TEST RETURNING OK.\n");
     return 0;
 }

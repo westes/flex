@@ -87,11 +87,11 @@ main (int argc, char **argv)
 
     else{
         yyscan_t s;
-        yylex_init(&s);
-        yyset_in(stdin,s);
-        yyset_out(stdout,s);
-        yylex(s);
-        yylex_destroy(s);
+        testlex_init(&s);
+        testset_in(stdin,s);
+        testset_out(stdout,s);
+        testlex(s);
+        testlex_destroy(s);
     }
     return 0;
 }

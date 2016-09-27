@@ -59,11 +59,11 @@ int error = 0;
         error = 1;
         yyterminate();
     }
-    yylex_init(&scanner);
-    yyset_in( fp, scanner);
-    yyset_out( stdout, scanner);
-    yylex(scanner);
-    yylex_destroy(scanner);
+    testlex_init(&scanner);
+    testset_in( fp, scanner);
+    testset_out( stdout, scanner);
+    testlex(scanner);
+    testlex_destroy(scanner);
 
     BEGIN(0);
     }
@@ -93,11 +93,11 @@ main ( int argc, char **argv )
         fprintf(stderr,"*** Error: fopen(%s) failed.\n",argv[1]);
         exit(-1);
     }
-    yylex_init(&scanner);
-    yyset_in( fp, scanner);
-    yyset_out( stdout, scanner);
-    yylex(scanner);
-    yylex_destroy(scanner);
+    testlex_init(&scanner);
+    testset_in( fp, scanner);
+    testset_out( stdout, scanner);
+    testlex(scanner);
+    testlex_destroy(scanner);
     if (!error)
         printf("TEST RETURNING OK.\n");
     else

@@ -47,7 +47,7 @@ int main ( int argc, char** argv )
     M4_YY_DECL_GUTS_VAR();
 
 #ifdef TEST_IS_REENTRANT
-    yylex_init(&yyscanner);
+    testlex_init(&yyscanner);
 #else
     (void)yyscanner;
 #endif
@@ -67,13 +67,13 @@ int main ( int argc, char** argv )
             YY_FATAL_ERROR("could not open input file for reading");
         yyin = fp;
     }
-    while(yylex(M4_YY_CALL_ONLY_ARG) != 0)
+    while(testlex(M4_YY_CALL_ONLY_ARG) != 0)
         ;
         
 #ifdef TEST_HAS_TABLES_EXTERNAL
-    yytables_destroy(M4_YY_CALL_ONLY_ARG);
+    testtables_destroy(M4_YY_CALL_ONLY_ARG);
 #endif
-    yylex_destroy(M4_YY_CALL_ONLY_ARG);
+    testlex_destroy(M4_YY_CALL_ONLY_ARG);
 
     if(argc < 0) /* silence the compiler */
         yyscanner = (void*)fp;

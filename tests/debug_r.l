@@ -43,17 +43,17 @@ int main(void);
 int main (void)
 {
     yyscan_t  lexer;
-    yylex_init( &lexer );
-    yyset_out ( stdout,lexer);
-    yyset_in  ( stdin, lexer);
+    testlex_init( &lexer );
+    testset_out ( stdout,lexer);
+    testset_in  ( stdin, lexer);
     
     /* Just see if the next line compiles. */
     testset_debug (testget_debug(lexer), lexer);
     
-    while( yylex(lexer) )
+    while( testlex(lexer) )
     {
     }
-    yylex_destroy( lexer );
+    testlex_destroy( lexer );
     printf("TEST RETURNING OK.\n");
     return 0;
 }

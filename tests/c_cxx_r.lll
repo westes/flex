@@ -49,13 +49,13 @@ int
 main ()
 {
     yyscan_t  lexer;
-    yylex_init( &lexer );
-    yyset_out ( stdout,lexer);
-    yyset_in  ( stdin, lexer);
-    while( yylex(lexer) )
+    testlex_init( &lexer );
+    testset_out ( stdout,lexer);
+    testset_in  ( stdin, lexer);
+    while( testlex(lexer) )
     {
     }
-    yylex_destroy( lexer );
+    testlex_destroy( lexer );
     printf("TEST RETURNING OK.\n");
     return 0;
 }

@@ -63,9 +63,9 @@ int main (void)
 
     /* Run the tests */
     for (i=0; i < NUM_TESTS; i++){
-        printf("Testing: yy_scan_string(%s): ", tests[i]);
-        state = yy_scan_string(tests[i]);
-        yylex();
+        printf("Testing: test_scan_string(%s): ", tests[i]);
+        state = test_scan_string(tests[i]);
+        testlex();
         yy_delete_buffer(state);
         printf("... %s\n", tests_ok[i] ? "OK" : "FAILED");
     }

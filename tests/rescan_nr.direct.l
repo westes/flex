@@ -58,14 +58,14 @@ main (int argc, char* const argv[])
         return 1;
     }
 
-    yyset_out ( stdout);
+    testset_out ( stdout);
 
     for (i=0; i <  4; ++i){
         rewind(fp);
-        yyset_in  ( fp);
-        while( yylex() )
+        testset_in  ( fp);
+        while( testlex() )
             ;
-        yylex_destroy();
+        testlex_destroy();
     }
     printf("TEST RETURNING OK.\n");
     return 0;

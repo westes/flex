@@ -166,8 +166,8 @@ main (void)
 
     yyin = stdin;
     yyout = stdout;
-    yylex();
-    yylex_destroy();
+    testlex();
+    testlex_destroy();
     free(ptrs);
 
     if ( nptrs > 0 || total_mem > 0){
