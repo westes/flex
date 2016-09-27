@@ -60,18 +60,18 @@ main (int argc, char* const argv[])
     }
 
     printf("Test 1: Reusing same scanner.\n");
-    yylex_init( &yyscanner );
-    yyset_out ( stdout, yyscanner);
+    testlex_init( &yyscanner );
+    testset_out ( stdout, yyscanner);
 
     for (i=0; i <  4; ++i){
 
         rewind(fp);
-        yyset_in  ( fp, yyscanner);
+        testset_in  ( fp, yyscanner);
 
-        while( yylex(yyscanner) )
+        while( testlex(yyscanner) )
             ;
     }
-    yylex_destroy( yyscanner );
+    testlex_destroy( yyscanner );
     printf("Test 1 OK\n\n");
 
     printf("Test 2: Rescanning with new scanner each time.\n");
@@ -80,14 +80,14 @@ main (int argc, char* const argv[])
 
     for (i=0; i < 4; ++i){
         yyscan_t  s;
-        yylex_init( &s );
-        yyset_out ( stdout, s);
+        testlex_init( &s );
+        testset_out ( stdout, s);
         rewind(fp);
-        yyset_in  ( fp, s);
+        testset_in  ( fp, s);
 
-        while( yylex(s) )
+        while( testlex(s) )
             ;
-        yylex_destroy( s );
+        testlex_destroy( s );
     }
     printf("Test 2 OK\n\n");
 

@@ -85,7 +85,7 @@ static void dump_mem(FILE* fp){
     fprintf(fp,"}\n");
 }
 
-void * yyalloc(yy_size_t n , void* yyscanner)
+void * testalloc(yy_size_t n , void* yyscanner)
 {
     (void)yyscanner;
 
@@ -116,7 +116,7 @@ void * yyalloc(yy_size_t n , void* yyscanner)
     return p;
 }
 
-void * yyrealloc(void* p, yy_size_t n , void* yyscanner)
+void * testrealloc(void* p, yy_size_t n , void* yyscanner)
 {
     (void)yyscanner;
 
@@ -139,7 +139,7 @@ void * yyrealloc(void* p, yy_size_t n , void* yyscanner)
     exit(1);
 }
 
-void yyfree(void* p , void* yyscanner)
+void testfree(void* p , void* yyscanner)
 {
     (void)yyscanner;
 
@@ -171,11 +171,11 @@ main (void)
     ptrs  = calloc(1, sizeof(struct memsz));
     nptrs = 0;
 
-    yylex_init(&scanner);
-    yyset_in(stdin,scanner);
-    yyset_out(stdout,scanner);
-    yylex(scanner);
-    yylex_destroy(scanner);
+    testlex_init(&scanner);
+    testset_in(stdin,scanner);
+    testset_out(stdout,scanner);
+    testlex(scanner);
+    testlex_destroy(scanner);
     free(ptrs);
 
     if ( nptrs > 0 || total_mem > 0){

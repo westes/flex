@@ -75,8 +75,8 @@ main (void)
     testset_in(stdin, scanner);
     testset_out(stdout, scanner);
 
-    /* Test to confirm that yyalloc was called from
-     * yylex_init_extra with the yyextra argument.
+    /* Test to confirm that testalloc was called from
+     * testlex_init_extra with the testextra argument.
      */
     check_extra(scanner);
 
@@ -86,7 +86,7 @@ main (void)
     return 0;
 }
 
-void *yyalloc(size_t size, yyscan_t scanner)
+void *testalloc(size_t size, yyscan_t scanner)
 {
     struct Check *check;
     check = testget_extra(scanner);

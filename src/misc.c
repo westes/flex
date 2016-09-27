@@ -362,8 +362,8 @@ void line_directive_out (FILE *output_file, int do_infile)
 	s3 = &filename[sizeof (filename) - 2];
 
 	while (s2 < s3 && *s1) {
-		if (*s1 == '\\')
-			/* Escape the '\' */
+		if (*s1 == '\\' || *s1 == '"')
+			/* Escape the '\' or '"' */
 			*s2++ = '\\';
 
 		*s2++ = *s1++;
@@ -512,7 +512,8 @@ unsigned char myesc (unsigned char array[])
 		{		/* \<octal> */
 			int     sptr = 1;
 
-			while (isascii (array[sptr]) &&
+			while (sptr <= 3 &&
+                               isascii (array[sptr]) &&
 			       isdigit (array[sptr]))
 				/* Don't increment inside loop control
 				 * because if isdigit() is a macro it might

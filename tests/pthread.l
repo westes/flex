@@ -78,14 +78,14 @@ static int process_text(char* s, yyscan_t  scanner);
 <INITIAL,STATE_1,STATE_2>[[:space:]\r\n]+  { }
 %%
 
-int yywrap( yyscan_t  scanner) {
+int testwrap( yyscan_t  scanner) {
     (void)scanner;
     return 1;
 }
 static int process_text(char* s, yyscan_t  scanner)
 {
     (void)scanner;
-    return (int)(*s) + (int) *(s + yyget_leng(scanner)-1);
+    return (int)(*s) + (int) *(s + testget_leng(scanner)-1);
 }
 
 int main(int ARGC, char *ARGV[]);
@@ -136,19 +136,19 @@ static void * thread_func ( void* arg )
 
         pthread_mutex_lock ( &file_locks[ next ] );
 
-        yylex_init( &scanner );
+        testlex_init( &scanner );
         /*printf("Scanning file %s  #%d\n",filenames[next],i); fflush(stdout); */
         if((fp = fopen(filenames[next],"r"))==NULL) {
             perror("fopen");
             return NULL;
         }
-        yyset_in(fp,scanner);
+        testset_in(fp,scanner);
 
-        while( yylex( scanner) != 0)
+        while( testlex( scanner) != 0)
         {
         }
         fclose(fp);
-        yylex_destroy(scanner);
+        testlex_destroy(scanner);
         pthread_mutex_unlock ( &file_locks[ next ] );
     }
     return NULL;

@@ -37,18 +37,19 @@
 
 
 /* yylex - scan for a regular expression token */
-
 extern char *yytext;
+extern FILE *yyout;
+bool no_section3_escape = false;
 int     yylex (void)
 {
 	int     toktype;
 	static int beglin = false;
 
-	if (eofseen)
+	if (eofseen) {
 		toktype = EOF;
-	else
+        } else {
 		toktype = flexscan ();
-
+        }
 	if (toktype == EOF || toktype == 0) {
 		eofseen = 1;
 
