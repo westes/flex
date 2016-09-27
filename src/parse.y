@@ -140,7 +140,7 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 			else
 				add_action( "ECHO" );
 
-			add_action( ";\n\tYY_BREAK\n" );
+			add_action( ";\n\tYY_BREAK]]\n" );
 			}
 		;
 
@@ -977,6 +977,7 @@ void build_eof_action(void)
 		}
 
 	line_directive_out(NULL, 1);
+        add_action("[[");
 
 	/* This isn't a normal rule after all - don't count it as
 	 * such, so we don't have any holes in the rule numbering

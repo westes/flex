@@ -55,7 +55,7 @@ int error = 0;
         error = 1;
         yyterminate();
     }
-    yypush_buffer_state( yy_create_buffer( yyin, YY_BUF_SIZE ));
+    testpush_buffer_state( yy_create_buffer( yyin, YY_BUF_SIZE ));
     BEGIN(0);
     }
 .|\n  {
@@ -67,7 +67,7 @@ int error = 0;
 
 <<EOF>> {
            fclose(yyin);
-           yypop_buffer_state();
+           testpop_buffer_state();
            if(!YY_CURRENT_BUFFER)
                yyterminate();
         }

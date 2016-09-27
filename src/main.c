@@ -127,8 +127,8 @@ static char outfile_path[MAXLINE];
 static int outfile_created = 0;
 static char *skelname = NULL;
 static int _stdout_closed = 0; /* flag to prevent double-fclose() on stdout. */
-const char *escaped_qstart = "[[]]M4_YY_NOOP[M4_YY_NOOP[M4_YY_NOOP[[]]";
-const char *escaped_qend   = "[[]]M4_YY_NOOP]M4_YY_NOOP]M4_YY_NOOP[[]]";
+const char *escaped_qstart = "]]M4_YY_NOOP[M4_YY_NOOP[M4_YY_NOOP[[";
+const char *escaped_qend   = "]]M4_YY_NOOP]M4_YY_NOOP]M4_YY_NOOP[[";
 
 /* For debugging. The max number of filters to apply to skeleton. */
 static int preproc_level = 1000;
@@ -640,7 +640,7 @@ void flexend (int exit_status)
 				"yypop_buffer_state",
 				"yyensure_buffer_stack",
                 "yyalloc",
-                "yyconst",
+                "const",
                 "yyextra",
                 "yyfree",
                 "yyget_debug",
@@ -1641,7 +1641,7 @@ void readin (void)
 
 	OUT_BEGIN_CODE ();
 	if (fullspd)
-		outn ("typedef yyconst struct yy_trans_info *yy_state_type;");
+		outn ("typedef const struct yy_trans_info *yy_state_type;");
 	else if (!C_plus_plus)
 		outn ("typedef int yy_state_type;");
 	OUT_END_CODE ();
