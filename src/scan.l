@@ -973,7 +973,12 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 
 <SECT3>{
-    "M4"|"m4"|"YY" no_section3_escape  || 1? fputs(yytext, stdout) : fprintf (yyout, "[[%s]]", yytext);
+    "M4"|"m4"|"YY" {
+        if (no_section3_escape) {
+           ECHO;
+        } else
+           fprintf (yyout, "[[%s]]", yytext);
+    }
     {M4QSTART}  fwrite (escaped_qstart, 1, strlen(escaped_qstart) - 0, yyout);
     {M4QEND}    fwrite (escaped_qend, 1, strlen(escaped_qend) - 0, yyout);
 	[^\[\]MmY\n]*(\n?) ECHO;

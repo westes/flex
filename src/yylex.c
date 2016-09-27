@@ -39,7 +39,7 @@
 /* yylex - scan for a regular expression token */
 extern char *yytext;
 extern FILE *yyout;
-bool no_section3_escape;
+bool no_section3_escape = false;
 int     yylex (void)
 {
 	int     toktype;
@@ -47,10 +47,6 @@ int     yylex (void)
 
 	if (eofseen) {
 		toktype = EOF;
-        } else if (sectnum == 3 && !no_section3_escape) {
-                fputs("[[", yyout);
-                toktype = flexscan();
-                fputs("]]m4_dnl\n", yyout);
         } else {
 		toktype = flexscan ();
         }
