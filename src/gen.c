@@ -53,30 +53,30 @@ static int indent_level = 0;	/* each level is 8 spaces */
 static const char *get_int16_decl (void)
 {
 	return (gentables)
-		? "static yyconst flex_int16_t %s[%d] =\n    {   0,\n"
-		: "static yyconst flex_int16_t * %s = 0;\n";
+		? "static const flex_int16_t %s[%d] =\n    {   0,\n"
+		: "static const flex_int16_t * %s = 0;\n";
 }
 
 
 static const char *get_int32_decl (void)
 {
 	return (gentables)
-		? "static yyconst flex_int32_t %s[%d] =\n    {   0,\n"
-		: "static yyconst flex_int32_t * %s = 0;\n";
+		? "static const flex_int32_t %s[%d] =\n    {   0,\n"
+		: "static const flex_int32_t * %s = 0;\n";
 }
 
 static const char *get_state_decl (void)
 {
 	return (gentables)
-		? "static yyconst yy_state_type %s[%d] =\n    {   0,\n"
-		: "static yyconst yy_state_type * %s = 0;\n";
+		? "static const yy_state_type %s[%d] =\n    {   0,\n"
+		: "static const yy_state_type * %s = 0;\n";
 }
 
 static const char *get_yy_char_decl (void)
 {
 	return (gentables)
-		? "static yyconst YY_CHAR %s[%d] =\n    {   0,\n"
-		: "static yyconst YY_CHAR * %s = 0;\n";
+		? "static const YY_CHAR %s[%d] =\n    {   0,\n"
+		: "static const YY_CHAR * %s = 0;\n";
 }
 
 /* Indent to the current level. */
@@ -339,9 +339,9 @@ void genctbl (void)
 
 	/* Table of verify for transition and offset to next state. */
 	if (gentables)
-		out_dec ("static yyconst struct yy_trans_info yy_transition[%d] =\n    {\n", tblend + numecs + 1);
+		out_dec ("static const struct yy_trans_info yy_transition[%d] =\n    {\n", tblend + numecs + 1);
 	else
-		outn ("static yyconst struct yy_trans_info *yy_transition = 0;");
+		outn ("static const struct yy_trans_info *yy_transition = 0;");
 
 	/* We want the transition to be represented as the offset to the
 	 * next state, not the actual state number, which is what it currently
@@ -413,9 +413,9 @@ void genctbl (void)
 
 	/* Table of pointers to start states. */
 	if (gentables)
-		out_dec ("static yyconst struct yy_trans_info *yy_start_state_list[%d] =\n", lastsc * 2 + 1);
+		out_dec ("static const struct yy_trans_info *yy_start_state_list[%d] =\n", lastsc * 2 + 1);
 	else
-		outn ("static yyconst struct yy_trans_info **yy_start_state_list =0;");
+		outn ("static const struct yy_trans_info **yy_start_state_list =0;");
 
 	if (gentables) {
 		outn ("    {");
@@ -796,7 +796,7 @@ void gen_next_match (void)
 	else if (fullspd) {
 		indent_puts ("{");
 		indent_puts
-			("yyconst struct yy_trans_info *yy_trans_info;\n");
+			("const struct yy_trans_info *yy_trans_info;\n");
 		indent_puts ("YY_CHAR yy_c;\n");
 		indent_put2s ("for ( yy_c = %s;", char_map);
 		indent_puts
@@ -963,7 +963,7 @@ void gen_NUL_trans (void)
 		out_dec ("int yy_c = %d;\n", NUL_ec);
 
 		indent_puts
-			("yyconst struct yy_trans_info *yy_trans_info;\n");
+			("const struct yy_trans_info *yy_trans_info;\n");
 		indent_puts
 			("yy_trans_info = &yy_current_state[(unsigned int) yy_c];");
 		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
@@ -2150,7 +2150,11 @@ void make_tables (void)
 
 	if (sectnum == 3) {
 		OUT_BEGIN_CODE ();
+                if (!no_section3_escape)
+                   fputs("[[", stdout);
 		(void) flexscan ();	/* copy remainder of input to output */
+                if (!no_section3_escape)
+                   fputs("]]", stdout);
 		OUT_END_CODE ();
 	}
 }
