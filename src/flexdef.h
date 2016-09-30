@@ -1066,7 +1066,7 @@ extern struct Buf top_buf;     /* contains %top code. String buffer. */
 extern bool no_section3_escape; /* True if the undocumented option --unsafe-no-m4-sect3-escape was passed */
 
 /* For blocking out code from the header file. */
-#define OUT_BEGIN_CODE() outn("m4_ifdef( [[M4_YY_IN_HEADER]],,[[")
+#define OUT_BEGIN_CODE() outn("m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl")
 #define OUT_END_CODE()   outn("]])")
 
 /* For setjmp/longjmp (instead of calling exit(2)). Linkage in main.c */
