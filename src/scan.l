@@ -114,6 +114,7 @@ extern const char *escaped_qstart, *escaped_qend;
 %x EXTENDED_COMMENT
 %x COMMENT_DISCARD
 %x SECT3_NOESCAPE
+%x CHARACTER_CONSTANT
 
 WS		[[:blank:]]+
 OPTWS		[[:blank:]]*
@@ -244,7 +245,7 @@ M4QEND      "]]"
 			}
 	.		/* ignore spurious characters */
 }
-<ACTION,CODEBLOCK,ACTION_STRING,PERCENT_BRACE_ACTION,COMMENT>{
+<ACTION,CODEBLOCK,ACTION_STRING,PERCENT_BRACE_ACTION,COMMENT,CHARACTER_CONSTANT>{
    M4|YY|m4 add_action(M4QSTART); ACTION_ECHO; add_action(M4QEND);
    {M4QSTART}   ACTION_ECHO_QSTART;
    {M4QEND}     ACTION_ECHO_QEND;
@@ -927,7 +928,8 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 	[^[:alpha:]_{}\"'/\n\[\]]+	ACTION_ECHO;
     [\[\]]      ACTION_ECHO;
 	{NAME}		ACTION_ECHO;
-	"'"([^\'\\\n]|\\.)*"'"	ACTION_ECHO; /* character constant */
+        "'"([^\'\\\n]|\\.)"'" ACTION_ECHO; /* character constant */
+        "'"             ACTION_ECHO; yy_push_state(CHARACTER_CONSTANT);
 	\"		ACTION_ECHO; BEGIN(ACTION_STRING);
 	{NL}		{
 			++linenum;
@@ -946,13 +948,19 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 <ACTION_STRING>{
 	[^\]\"\\\n\[MmY]+	ACTION_ECHO;
+	\"		ACTION_ECHO; BEGIN(ACTION);
+}
+<CHARACTER_CONSTANT>{
+	[^\[\]\'\\\nMmY]+       ACTION_ECHO;
+        \'              ACTION_ECHO; yy_pop_state();
+}
+<ACTION_STRING,CHARACTER_CONSTANT>{
 	\\.		ACTION_ECHO;
 	{NL}		++linenum; ACTION_ECHO;
-	\"		ACTION_ECHO; BEGIN(ACTION);
 	.		ACTION_ECHO;
 }
 
-<COMMENT,COMMENT_DISCARD,ACTION,ACTION_STRING><<EOF>>	{
+<COMMENT,COMMENT_DISCARD,ACTION,ACTION_STRING,CHARACTER_CONSTANT><<EOF>>	{
 			synerr( _( "EOF encountered inside an action" ) );
 			yyterminate();
 			}
