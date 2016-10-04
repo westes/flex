@@ -74,6 +74,7 @@ simple_tests = \
 	ccl \
 	cxx_basic \
 	cxx_multiple_scanners \
+	cxx_restart \
 	debug_nr \
 	debug_r \
 	extended \
@@ -133,6 +134,7 @@ c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
 ccl_SOURCES = ccl.l
 cxx_basic_SOURCES = cxx_basic.ll
+cxx_restart_SOURCES = cxx_restart.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
 cxx_yywrap_i3_SOURCES = cxx_yywrap.ll
 debug_nr_SOURCES = debug_nr.l
@@ -214,6 +216,7 @@ CLEANFILES = \
 	cxx_basic.cc \
 	cxx_multiple_scanners_1.cc \
 	cxx_multiple_scanners_2.cc \
+	cxx_restart.cc \
 	cxx_yywrap.cc \
 	debug_nr.c \
 	debug_r.c \
@@ -281,6 +284,7 @@ EXTRA_DIST = \
 	ccl.txt \
 	cxx_basic.txt \
 	cxx_multiple_scanners.txt \
+	cxx_restart.txt \
 	cxx_yywrap.txt \
 	debug_nr.txt \
 	debug_r.txt \
