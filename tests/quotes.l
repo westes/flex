@@ -38,6 +38,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "config.h"
+#include <assert.h>
 /*#include "parser.h" */
 
 /* sect 1 block    [ 1 ]        TEST_XXX */
@@ -74,6 +75,7 @@ f       return 1+foo(a[b[c[0]]]);
             /* action block  [[[ 3 ]]]      TEST_XXX */
             /* action block [[[[ 4 ]]]]     TEST_XXX */
             /* action block ]] unmatched [[ TEST_XXX */
+            assert(!strcmp("m4_define(alpha, beta)", "m4_""define(alpha, beta)"));
             return 1+foo(a[b[c[0]]]);  //   TEST_XXX
          }
 %%
@@ -88,13 +90,17 @@ static int bar (int i){
 }
 int main(void);
 
+#define CONCAT_IDENTS(a, b) a##b
 int
 main (void)
 {
-    yyin = stdin;
+    // m4_m4exit(100)
+    FILE *M4_YY_NOT_IN_HEADER = stdin;
+    yyin = CONCAT_IDENTS(M4_, YY_NOT_IN_HEADER);
     yyout = stdout;
     while (yylex())
         ;
+    assert(!strcmp("YY_G( alpha)", "Y""Y_G( alpha)"));
     printf("TEST RETURNING OK.\n");
     return bar(0);
 }
