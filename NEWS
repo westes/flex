@@ -7,15 +7,30 @@ See the file COPYING for copying conditions.
 
 ** flex internals
 
+*** a segfalt involving yyrestart(NULL) has been fixed
+
+*** flex should now handle quoting when mixed with m4 processing correctly
+
+*** flex handles `[[' and `]]' correctly
+
+*** flex no longer generates non-ANSI code
+
 *** more compilation warnings were squashed in generated scanners
 
 *** prevented a buffer overflow that could occur when input buffers were the exact wrong size
 
 ** test suite
 
+*** input filenames on MSWindows are now calculated correctly
+
 *** general code cleanups in a number of tests now make the test suite compile much more cleanly
 
 ** build system
+
+*** a new option to configure --enable-warnings to encapsulate passing
+    of warning-related flags which is useful in testing flex
+
+*** make indent now works for out of source builds
 
 *** Portability warnings when generating Makefile.in files are now suppressed; they were just noise and the use of GNU extensions in Makefile.{am,in,} was intentional and well known.
 
