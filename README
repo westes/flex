@@ -3,17 +3,9 @@ This is flex, the fast lexical analyzer generator.
 flex is a tool for generating scanners: programs which recognize
 lexical patterns in text.
 
-More information about flex as well as the latest official release of
-flex can be found at:
+The flex codebase is kept in [git on github.](https://github.com/westes/flex)
 
-http://flex.sourceforge.net/
-
-The flex codebase is kept in git at:
-
-https://github.com/westes/flex
-
-Bugs and pull requests should be filed against flex using github's
-issue tracker and pull request facilities.
+Use github's [issues](https://github.com/westes/flex/issues) and [pull request](https://github.com/westes/flex) features to file bugs and submit patches.
 
 There are several mailing lists available as well:
 
