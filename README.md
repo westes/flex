@@ -3,17 +3,9 @@ This is flex, the fast lexical analyzer generator.
 flex is a tool for generating scanners: programs which recognize
 lexical patterns in text.
 
-More information about flex as well as the latest official release of
-flex can be found at:
+The flex codebase is kept in [git on github.](https://github.com/westes/flex)
 
-http://flex.sourceforge.net/
-
-The flex codebase is kept in git at:
-
-https://github.com/westes/flex
-
-Bugs and pull requests should be filed against flex using github's
-issue tracker and pull request facilities.
+Use github's [issues](https://github.com/westes/flex/issues) and [pull request](https://github.com/westes/flex) features to file bugs and submit patches.
 
 There are several mailing lists available as well:
 
@@ -40,7 +32,6 @@ COPYING - flex's copyright and license.
 doc/ - user documentation.
 examples/ - containing examples of some possible flex scanners and a
 	few other things. See the file examples/README for more details.
-TODO - outstanding bug reports, desired features, etc.
 tests/ - regression tests. See TESTS/README for details.
 po/ - internationalization support files.
 
@@ -56,7 +47,6 @@ automake; for Makefile generation
 gettext; for i18n support
 help2man; to generate the flex man page
 tar, gzip, etc.; for packaging of the source distribution
-
 GNU texinfo; to build and test the flex manual. Note that if you want
 to build the dvi/ps/pdf versions of the documentation you will need
 texi2dvi and related programs, along with a sufficiently powerful
@@ -64,7 +54,6 @@ implementation of \TeX to process them. See your operating system
 documentation for how to achieve this. The printable versions of the
 manual are not built unless specifically requested, but the targets
 are included by automake.
-
 GNU indent; for indenting the flex source the way we want it done
 
 In cases where the versions of the above tools matter, the file
@@ -109,5 +98,3 @@ THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
 IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 PURPOSE.
-
-
