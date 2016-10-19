@@ -36,7 +36,7 @@ dist_doc_DATA = \
 	COPYING \
 	NEWS \
 	ONEWS \
-	README
+	README.md
 
 EXTRA_DIST = \
 	.indent.pro \
