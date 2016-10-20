@@ -62,7 +62,11 @@ static int foo (int i){
 
 
 %%
-
+  /* indented code    [ 1 ] */
+  /* indented code   [[ 2 ]] */
+  /* indented code  [[[ 3 ]]] */
+  /* indented code [[[[ 4 ]]]] */
+  /* indented code ]] unmatched [[ */
 a       /* action comment    [ 1 ]          */ ;
 b       /* action comment   [[ 2 ]]         */ ;
 c       /* action comment  [[[ 3 ]]]        */ ;
@@ -76,7 +80,7 @@ f       return 1+foo(a[b[c[0]]]);
             /* action block [[[[ 4 ]]]]     TEST_XXX */
             /* action block ]] unmatched [[ TEST_XXX */
             assert(!strcmp("m4_define(alpha, beta)", "m4_""define(alpha, beta)"));
-            return 1+foo(a[b[c[0]]]);  //   TEST_XXX
+            return 1+foo(a[b[c[0]]]);  /*   TEST_XXX */
          }
 %%
 
@@ -94,7 +98,7 @@ int main(void);
 int
 main (void)
 {
-    // m4_m4exit(100)
+    /* m4_m4exit(100) */
     FILE *M4_YY_NOT_IN_HEADER = stdin;
     yyin = CONCAT_IDENTS(M4_, YY_NOT_IN_HEADER);
     yyout = stdout;
