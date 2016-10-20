@@ -41,8 +41,8 @@ extern const char *escaped_qstart, *escaped_qend;
 #define M4QSTART "[""["
 #define M4QEND "]""]"
 
-#define SECT3_ESCAPED_QSTART "[" M4QEND M4QSTART "[" M4QEND M4QSTART
-#define SECT3_ESCAPED_QEND M4QEND "]" M4QSTART M4QEND "]" M4QSTART
+#define ESCAPED_QSTART "[" M4QEND M4QSTART "[" M4QEND M4QSTART
+#define ESCAPED_QEND M4QEND "]" M4QSTART M4QEND "]" M4QSTART
 
 #define ACTION_ECHO add_action( yytext )
 #define ACTION_IFDEF(def, should_define) \
@@ -51,8 +51,8 @@ extern const char *escaped_qstart, *escaped_qend;
 		action_define( def, 1 ); \
 	}
 
-#define ACTION_ECHO_QSTART add_action (SECT3_ESCAPED_QSTART)
-#define ACTION_ECHO_QEND   add_action (SECT3_ESCAPED_QEND)
+#define ACTION_ECHO_QSTART add_action (ESCAPED_QSTART)
+#define ACTION_ECHO_QEND   add_action (ESCAPED_QEND)
 
 #define ACTION_M4_IFDEF(def, should_define) \
     do{ \
@@ -75,13 +75,13 @@ extern const char *escaped_qstart, *escaped_qend;
 	if(yyleng < MAXLINE) \
          { \
 	strcpy( nmstr, yytext ); \
+	return NAME; \
 	 } \
 	else \
-	 { \
+	 do { \
 	   synerr(_("Input line too long\n")); \
 	   FLEX_EXIT(EXIT_FAILURE);  \
-	 }  \
-	return NAME;
+	 } while (0)
 
 #define PUT_BACK_STRING(str, start) \
 	{ size_t i = strlen( str );	\
@@ -101,10 +101,19 @@ extern const char *escaped_qstart, *escaped_qend;
 	if ( getenv("POSIXLY_CORRECT") ) \
 		posix_compat = true;
 
-#define START_CODEBLOCK do { add_action(M4QSTART); BEGIN(CODEBLOCK); } while(0)
-#define END_CODEBLOCK do { add_action(M4QEND); BEGIN(INITIAL); } while (0)
-#define CODEBLOCK_QSTART "[]""][""[""[]""][""["
-#define CODEBLOCK_QEND "]""]""][""[""]""]""][""["
+#define START_CODEBLOCK(x) do { \
+    /* Emit the needed line directive... */\
+    if (indented_code == false) linenum++; \
+    line_directive_out(NULL, 1); \
+    add_action(M4QSTART); \
+    yy_push_state(CODEBLOCK); \
+    if ((indented_code = x)) ACTION_ECHO; \
+    } while(0)
+#define END_CODEBLOCK do { \
+     yy_pop_state();\
+    add_action(M4QEND); \
+     line_directive_out(NULL, 0);\
+      } while (0)
 %}
 
 %option caseless nodefault noreject stack noyy_top_state
@@ -153,17 +162,12 @@ M4QEND      "]""]"
 
 
 <INITIAL>{
-	^{WS}		indented_code = true; START_CODEBLOCK;
+	^{WS}		START_CODEBLOCK(true);
 	^"/*"		add_action("/*[""["); yy_push_state( COMMENT );
 	^#{OPTWS}line{WS}	yy_push_state( LINEDIR );
 	^"%s"{NAME}?	return SCDECL;
 	^"%x"{NAME}?	return XSCDECL;
-	^"%{".*{NL}	{
-			++linenum;
-			line_directive_out(NULL, 1);
-			indented_code = false;
-			START_CODEBLOCK;
-			}
+	^"%{".*{NL}	START_CODEBLOCK(false);
     ^"%top"[[:blank:]]*"{"[[:blank:]]*{NL}    {
                 brace_start_line = linenum;
                 ++linenum;
@@ -478,7 +482,7 @@ COMMENT,CODE_COMMENT>{
 	^"%{".*	++bracelevel; yyless( 2 );	/* eat only %{ */
 	^"%}".*	--bracelevel; yyless( 2 );	/* eat only %} */
 
-	^{WS}.*	ACTION_ECHO;	/* indented code in prolog */
+	^{WS} START_CODEBLOCK(true); /* indented code in prolog */
 
 	^{NOT_WS}.*	{	/* non-indented code */
 			if ( bracelevel <= 0 )
