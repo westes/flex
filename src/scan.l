@@ -139,8 +139,8 @@ CCL_EXPR	("[:"^?[[:alpha:]]+":]")
 
 LEXOPT		[aceknopr]
 
-M4QSTART    "[["
-M4QEND      "]]"
+M4QSTART    "[""["
+M4QEND      "]""]"
 
 %%
 	static int bracelevel, didadef, indented_code;
@@ -915,7 +915,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			     (doing_codeblock && indented_code) )
 				{
 				if ( doing_rule_action )
-					add_action( "\tYY_BREAK]]\n" );
+					add_action( "\tYY_BREAK]""]\n" );
 
 				doing_rule_action = doing_codeblock = false;
 				BEGIN(SECT2);
@@ -940,7 +940,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			if ( bracelevel == 0 )
 				{
 				if ( doing_rule_action )
-					add_action( "\tYY_BREAK]]\n" );
+					add_action( "\tYY_BREAK]""]\n" );
 
 				doing_rule_action = false;
 				BEGIN(SECT2);
