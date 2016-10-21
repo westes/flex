@@ -1,6 +1,0 @@
-Hello, my name name is %NAME. Actually 
-"%NAME" isn't my real name, it is the
-alias I use when I'm on %HOST, which
-is the %HOSTTYPE I use. My HOME 
-directory is %HOME. 
-

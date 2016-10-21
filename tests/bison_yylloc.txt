@@ -1,4 +1,0 @@
-0001: FIRSTNAME=firstname
-0002: MIDDLENAME=middle
-0003: LASTNAME=lastname
-0004: ADDRESS=address
