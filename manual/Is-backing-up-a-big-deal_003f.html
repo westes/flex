@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Is backing up a big deal?</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Is backing up a big deal?">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Is backing up a big deal?">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="Can-I-fake-multi_002dbyte-character-support_003f.html#Can-I-fake-multi_002dbyte-character-support_003f" rel="next" title="Can I fake multi-byte character support?">
+<link href="Are-certain-equivalent-patterns-faster-than-others_003f.html#Are-certain-equivalent-patterns-faster-than-others_003f" rel="prev" title="Are certain equivalent patterns faster than others?">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Is-backing-up-a-big-deal_003f"></a>
+<div class="header">
+<p>
+Next: <a href="Can-I-fake-multi_002dbyte-character-support_003f.html#Can-I-fake-multi_002dbyte-character-support_003f" accesskey="n" rel="next">Can I fake multi-byte character support?</a>, Previous: <a href="Are-certain-equivalent-patterns-faster-than-others_003f.html#Are-certain-equivalent-patterns-faster-than-others_003f" accesskey="p" rel="prev">Are certain equivalent patterns faster than others?</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Is-backing-up-a-big-deal_003f-1"></a>
+<h3 class="unnumberedsec">Is backing up a big deal?</h3>
+<div class="example">
+<pre class="verbatim">To: Adoram Rogel &lt;adoram@hybridge.com&gt;
+Subject: Re: Flex 2.5.2 performance questions
+In-reply-to: Your message of Thu, 19 Sep 96 10:16:04 EDT.
+Date: Thu, 19 Sep 96 09:58:00 PDT
+From: Vern Paxson &lt;vern&gt;
+
+&gt; a lot about the backing up problem.
+&gt; I believe that there lies my biggest problem, and I'll try to improve
+&gt; it.
+
+Since you have variable trailing context, this is a bigger performance
+problem.  Fixing it is usually easier than fixing backing up, which in a
+complicated scanner (yours seems to fit the bill) can be extremely
+difficult to do correctly.
+
+You also don't mention what flags you are using for your scanner.
+-f makes a large speed difference, and -Cfe buys you nearly as much
+speed but the resulting scanner is considerably smaller.
+
+&gt; I have an | operator in {and} and in {pats} so both of them are variable
+&gt; length.
+
+-p should have reported this.
+
+&gt; Is changing one of them to fixed-length is enough ?
+
+Yes.
+
+&gt; Is it possible to change the 32,000 states limit ?
+
+Yes.  I've appended instructions on how.  Before you make this change,
+though, you should think about whether there are ways to fundamentally
+simplify your scanner - those are certainly preferable!
+
+		Vern
+
+To increase the 32K limit (on a machine with 32 bit integers), you increase
+the magnitude of the following in flexdef.h:
+
+#define JAMSTATE -32766 /* marks a reference to the state that always jams */
+#define MAXIMUM_MNS 31999
+#define BAD_SUBSCRIPT -32767
+#define MAX_SHORT 32700
+
+Adding a 0 or two after each should do the trick.
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Can-I-fake-multi_002dbyte-character-support_003f.html#Can-I-fake-multi_002dbyte-character-support_003f" accesskey="n" rel="next">Can I fake multi-byte character support?</a>, Previous: <a href="Are-certain-equivalent-patterns-faster-than-others_003f.html#Are-certain-equivalent-patterns-faster-than-others_003f" accesskey="p" rel="prev">Are certain equivalent patterns faster than others?</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

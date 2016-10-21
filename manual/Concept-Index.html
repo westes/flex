@@ -1,0 +1,576 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Concept Index</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Concept Index">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Concept Index">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Indices.html#Indices" rel="up" title="Indices">
+<link href="Index-of-Functions-and-Macros.html#Index-of-Functions-and-Macros" rel="next" title="Index of Functions and Macros">
+<link href="Indices.html#Indices" rel="prev" title="Indices">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Concept-Index"></a>
+<div class="header">
+<p>
+Next: <a href="Index-of-Functions-and-Macros.html#Index-of-Functions-and-Macros" accesskey="n" rel="next">Index of Functions and Macros</a>, Previous: <a href="Indices.html#Indices" accesskey="p" rel="prev">Indices</a>, Up: <a href="Indices.html#Indices" accesskey="u" rel="up">Indices</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Concept-Index-1"></a>
+<h3 class="unnumberedsec">Concept Index</h3>
+
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-Index_cp_symbol-1"><b>$</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_symbol-2"><b>%</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_symbol-3"><b>&lt;</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_symbol-4"><b>[</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_symbol-5"><b>^</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_symbol-6"><b>|</b></a>
+ &nbsp; 
+<br>
+<a class="summary-letter" href="#Concept-Index_cp_letter-A"><b>A</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-B"><b>B</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-C"><b>C</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-D"><b>D</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-E"><b>E</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-F"><b>F</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-G"><b>G</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-H"><b>H</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-I"><b>I</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-K"><b>K</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-L"><b>L</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-M"><b>M</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-N"><b>N</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-O"><b>O</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-P"><b>P</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-R"><b>R</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-S"><b>S</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-T"><b>T</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-U"><b>U</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-V"><b>V</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-W"><b>W</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-Y"><b>Y</b></a>
+ &nbsp; 
+</td></tr></table>
+<table class="index-cp" border="0">
+<tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_symbol-1">$</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-_0024-as-normal-character-in-patterns">$ as normal character in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_symbol-2">%</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-_0025array_002c-advantages-of">%array, advantages of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-_0025array_002c-use-of">%array, use of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-_0025array_002c-with-C_002b_002b">%array, with C++</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-_0025option-noyywrapp">%option noyywrapp</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-_0025pointer_002c-and-unput_0028_0029">%pointer, and unput()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-_0025pointer_002c-use-of">%pointer, use of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-_0025top">%top</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-_0025_007b-and-_0025_007d_002c-in-Definitions-Section">%{ and %}, in Definitions Section</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-_0025_007b-and-_0025_007d_002c-in-Rules-Section">%{ and %}, in Rules Section</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_symbol-3">&lt;</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="EOF.html#index-_003c_003cEOF_003e_003e_002c-use-of">&lt;&lt;EOF&gt;&gt;, use of</a>:</td><td>&nbsp;</td><td valign="top"><a href="EOF.html#EOF">EOF</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_symbol-4">[</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-_005b_005d-in-patterns">[] in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_symbol-5">^</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-_005e-as-non_002dspecial-character-in-patterns">^ as non-special character in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_symbol-6">|</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-_007c_002c-in-actions">|, in actions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-_007c_002c-use-of">|, use of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-A">A</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Accessor-Methods.html#index-accessor-functions_002c-use-of">accessor functions, use of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Accessor-Methods.html#Accessor-Methods">Accessor Methods</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-actions">actions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-actions_002c-embedded-C-strings">actions, embedded C strings</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Misc-Macros.html#index-actions_002c-redefining-YY_005fBREAK">actions, redefining YY_BREAK</a>:</td><td>&nbsp;</td><td valign="top"><a href="Misc-Macros.html#Misc-Macros">Misc Macros</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-actions_002c-use-of-_007b-and-_007d">actions, use of { and }</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-aliases_002c-how-to-define">aliases, how to define</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Scanner-Options.html#index-arguments_002c-command_002dline">arguments, command-line</a>:</td><td>&nbsp;</td><td valign="top"><a href="Scanner-Options.html#Scanner-Options">Scanner Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="User-Values.html#index-array_002c-default-size-for-yytext">array, default size for yytext</a>:</td><td>&nbsp;</td><td valign="top"><a href="User-Values.html#User-Values">User Values</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-B">B</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-backing-up_002c-eliminating">backing up, eliminating</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-backing-up_002c-eliminating-by-adding-error-rules">backing up, eliminating by adding error rules</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-backing-up_002c-eliminating-with-catch_002dall-rule">backing up, eliminating with catch-all rule</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-backing-up_002c-example-of-eliminating">backing up, example of eliminating</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-BEGIN">BEGIN</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-BEGIN_002c-explanation">BEGIN, explanation</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-beginning-of-line_002c-in-patterns">beginning of line, in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Bison-Bridge.html#index-bison_002c-bridging-with-flex">bison, bridging with flex</a>:</td><td>&nbsp;</td><td valign="top"><a href="Bison-Bridge.html#Bison-Bridge">Bison Bridge</a></td></tr>
+<tr><td></td><td valign="top"><a href="Bison-Bridge.html#index-bison_002c-parser">bison, parser</a>:</td><td>&nbsp;</td><td valign="top"><a href="Bison-Bridge.html#Bison-Bridge">Bison Bridge</a></td></tr>
+<tr><td></td><td valign="top"><a href="Bison-Bridge.html#index-bison_002c-scanner-to-be-called-from-bison">bison, scanner to be called from bison</a>:</td><td>&nbsp;</td><td valign="top"><a href="Bison-Bridge.html#Bison-Bridge">Bison Bridge</a></td></tr>
+<tr><td></td><td valign="top"><a href="Misc-Macros.html#index-BOL_002c-checking-the-BOL-flag">BOL, checking the BOL flag</a>:</td><td>&nbsp;</td><td valign="top"><a href="Misc-Macros.html#Misc-Macros">Misc Macros</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-BOL_002c-in-patterns">BOL, in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Misc-Macros.html#index-BOL_002c-setting-it">BOL, setting it</a>:</td><td>&nbsp;</td><td valign="top"><a href="Misc-Macros.html#Misc-Macros">Misc Macros</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-braces-in-patterns">braces in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Reporting-Bugs.html#index-bugs_002c-reporting">bugs, reporting</a>:</td><td>&nbsp;</td><td valign="top"><a href="Reporting-Bugs.html#Reporting-Bugs">Reporting Bugs</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-C">C</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-C-code-in-flex-input">C code in flex input</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Cxx.html#index-C_002b_002b">C++</a>:</td><td>&nbsp;</td><td valign="top"><a href="Cxx.html#Cxx">Cxx</a></td></tr>
+<tr><td></td><td valign="top"><a href="User-Values.html#index-C_002b_002b-and-_0025array">C++ and %array</a>:</td><td>&nbsp;</td><td valign="top"><a href="User-Values.html#User-Values">User Values</a></td></tr>
+<tr><td></td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#index-C_002b_002b-I_002fO_002c-customizing">C++ I/O, customizing</a>:</td><td>&nbsp;</td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f">How do I use my own I/O classes in a C++ scanner?</a></td></tr>
+<tr><td></td><td valign="top"><a href="Cxx.html#index-C_002b_002b-scanners_002c-including-multiple-scanners">C++ scanners, including multiple scanners</a>:</td><td>&nbsp;</td><td valign="top"><a href="Cxx.html#Cxx">Cxx</a></td></tr>
+<tr><td></td><td valign="top"><a href="Cxx.html#index-C_002b_002b-scanners_002c-use-of">C++ scanners, use of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Cxx.html#Cxx">Cxx</a></td></tr>
+<tr><td></td><td valign="top"><a href="Cxx.html#index-c_002b_002b_002c-experimental-form-of-scanner-class">c++, experimental form of scanner class</a>:</td><td>&nbsp;</td><td valign="top"><a href="Cxx.html#Cxx">Cxx</a></td></tr>
+<tr><td></td><td valign="top"><a href="Cxx.html#index-C_002b_002b_002c-multiple-different-scanners">C++, multiple different scanners</a>:</td><td>&nbsp;</td><td valign="top"><a href="Cxx.html#Cxx">Cxx</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-C_002dstrings_002c-in-actions">C-strings, in actions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-case_002dinsensitive_002c-effect-on-character-classes">case-insensitive, effect on character classes</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-character-classes-in-patterns">character classes in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-character-classes-in-patterns_002c-syntax-of">character classes in patterns, syntax of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-character-classes_002c-equivalence-of">character classes, equivalence of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-clearing-an-input-buffer">clearing an input buffer</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="Scanner-Options.html#index-command_002dline-options">command-line options</a>:</td><td>&nbsp;</td><td valign="top"><a href="Scanner-Options.html#Scanner-Options">Scanner Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-comments-in-flex-input">comments in flex input</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Comments-in-the-Input.html#index-comments-in-the-input">comments in the input</a>:</td><td>&nbsp;</td><td valign="top"><a href="Comments-in-the-Input.html#Comments-in-the-Input">Comments in the Input</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-comments_002c-discarding">comments, discarding</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-comments_002c-example-of-scanning-C-comments">comments, example of scanning C comments</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-comments_002c-in-actions">comments, in actions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Comments-in-the-Input.html#index-comments_002c-in-rules-section">comments, in rules section</a>:</td><td>&nbsp;</td><td valign="top"><a href="Comments-in-the-Input.html#Comments-in-the-Input">Comments in the Input</a></td></tr>
+<tr><td></td><td valign="top"><a href="Comments-in-the-Input.html#index-comments_002c-syntax-of">comments, syntax of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Comments-in-the-Input.html#Comments-in-the-Input">Comments in the Input</a></td></tr>
+<tr><td></td><td valign="top"><a href="Comments-in-the-Input.html#index-comments_002c-valid-uses-of">comments, valid uses of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Comments-in-the-Input.html#Comments-in-the-Input">Comments in the Input</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-compressing-whitespace">compressing whitespace</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-concatenation_002c-in-patterns">concatenation, in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Copyright.html#index-copyright-of-flex">copyright of flex</a>:</td><td>&nbsp;</td><td valign="top"><a href="Copyright.html#Copyright">Copyright</a></td></tr>
+<tr><td></td><td valign="top"><a href="Simple-Examples.html#index-counting-characters-and-lines">counting characters and lines</a>:</td><td>&nbsp;</td><td valign="top"><a href="Simple-Examples.html#Simple-Examples">Simple Examples</a></td></tr>
+<tr><td></td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#index-customizing-I_002fO-in-C_002b_002b-scanners">customizing I/O in C++ scanners</a>:</td><td>&nbsp;</td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f">How do I use my own I/O classes in a C++ scanner?</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-D">D</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Simple-Examples.html#index-default-rule">default rule</a>:</td><td>&nbsp;</td><td valign="top"><a href="Simple-Examples.html#Simple-Examples">Simple Examples</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-default-rule-1">default rule</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-defining-pattern-aliases">defining pattern aliases</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-Definitions_002c-in-flex-input">Definitions, in flex input</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-deleting-lines-from-input">deleting lines from input</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-discarding-C-comments">discarding C comments</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Copyright.html#index-distributing-flex">distributing flex</a>:</td><td>&nbsp;</td><td valign="top"><a href="Copyright.html#Copyright">Copyright</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-E">E</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-ECHO">ECHO</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-ECHO_002c-and-yyout">ECHO, and yyout</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-embedding-C-code-in-flex-input">embedding C code in flex input</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-end-of-file_002c-in-patterns">end of file, in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-end-of-line_002c-in-negated-character-classes">end of line, in negated character classes</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-end-of-line_002c-in-patterns">end of line, in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-end_002dof_002dfile_002c-and-yyrestart_0028_0029">end-of-file, and yyrestart()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-EOF-and-yyrestart_0028_0029">EOF and yyrestart()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-EOF-in-patterns_002c-syntax-of">EOF in patterns, syntax of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-EOF_002c-example-using-multiple-input-buffers">EOF, example using multiple input buffers</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="EOF.html#index-EOF_002c-explanation">EOF, explanation</a>:</td><td>&nbsp;</td><td valign="top"><a href="EOF.html#EOF">EOF</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-EOF_002c-pushing-back">EOF, pushing back</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-EOL_002c-in-negated-character-classes">EOL, in negated character classes</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-EOL_002c-in-patterns">EOL, in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Lex-and-Posix.html#index-error-messages_002c-end-of-buffer-missed">error messages, end of buffer missed</a>:</td><td>&nbsp;</td><td valign="top"><a href="Lex-and-Posix.html#Lex-and-Posix">Lex and Posix</a></td></tr>
+<tr><td></td><td valign="top"><a href="Diagnostics.html#index-error-reporting_002c-diagnostic-messages">error reporting, diagnostic messages</a>:</td><td>&nbsp;</td><td valign="top"><a href="Diagnostics.html#Diagnostics">Diagnostics</a></td></tr>
+<tr><td></td><td valign="top"><a href="Cxx.html#index-error-reporting_002c-in-C_002b_002b">error reporting, in C++</a>:</td><td>&nbsp;</td><td valign="top"><a href="Cxx.html#Cxx">Cxx</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-error-rules_002c-to-eliminate-backing-up">error rules, to eliminate backing up</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-escape-sequences-in-patterns_002c-syntax-of">escape sequences in patterns, syntax of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-exiting-with-yyterminate_0028_0029">exiting with yyterminate()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Cxx.html#index-experimental-form-of-c_002b_002b-scanner-class">experimental form of c++ scanner class</a>:</td><td>&nbsp;</td><td valign="top"><a href="Cxx.html#Cxx">Cxx</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-extended-scope-of-start-conditions">extended scope of start conditions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-F">F</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Format.html#index-file-format">file format</a>:</td><td>&nbsp;</td><td valign="top"><a href="Format.html#Format">Format</a></td></tr>
+<tr><td></td><td valign="top"><a href="Tables-File-Format.html#index-file-format_002c-serialized-tables">file format, serialized tables</a>:</td><td>&nbsp;</td><td valign="top"><a href="Tables-File-Format.html#Tables-File-Format">Tables File Format</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-flushing-an-input-buffer">flushing an input buffer</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-flushing-the-internal-buffer">flushing the internal buffer</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Format.html#index-format-of-flex-input">format of flex input</a>:</td><td>&nbsp;</td><td valign="top"><a href="Format.html#Format">Format</a></td></tr>
+<tr><td></td><td valign="top"><a href="Format.html#index-format-of-input-file">format of input file</a>:</td><td>&nbsp;</td><td valign="top"><a href="Format.html#Format">Format</a></td></tr>
+<tr><td></td><td valign="top"><a href="Loading-and-Unloading-Serialized-Tables.html#index-freeing-tables">freeing tables</a>:</td><td>&nbsp;</td><td valign="top"><a href="Loading-and-Unloading-Serialized-Tables.html#Loading-and-Unloading-Serialized-Tables">Loading and Unloading Serialized Tables</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-G">G</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-getting-current-start-state-with-YY_005fSTART">getting current start state with YY_START</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-H">H</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-halting-with-yyterminate_0028_0029">halting with yyterminate()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-handling-include-files-with-multiple-input-buffers">handling include files with multiple input buffers</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-handling-include-files-with-multiple-input-buffers-1">handling include files with multiple input buffers</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="Cxx.html#index-header-files_002c-with-C_002b_002b">header files, with C++</a>:</td><td>&nbsp;</td><td valign="top"><a href="Cxx.html#Cxx">Cxx</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-I">I</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Cxx.html#index-include-files_002c-with-C_002b_002b">include files, with C++</a>:</td><td>&nbsp;</td><td valign="top"><a href="Cxx.html#Cxx">Cxx</a></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-input-file_002c-Definitions-section">input file, Definitions section</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Rules-Section.html#index-input-file_002c-Rules-Section">input file, Rules Section</a>:</td><td>&nbsp;</td><td valign="top"><a href="Rules-Section.html#Rules-Section">Rules Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="User-Code-Section.html#index-input-file_002c-user-code-Section">input file, user code Section</a>:</td><td>&nbsp;</td><td valign="top"><a href="User-Code-Section.html#User-Code-Section">User Code Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-input_0028_0029">input()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-input_0028_0029_002c-and-C_002b_002b">input(), and C++</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Format.html#index-input_002c-format-of">input, format of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Format.html#Format">Format</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-input_002c-matching">input, matching</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-K">K</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-keywords_002c-for-performance">keywords, for performance</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-L">L</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Lex-and-Posix.html#index-lex-_0028traditional_0029-and-POSIX">lex (traditional) and POSIX</a>:</td><td>&nbsp;</td><td valign="top"><a href="Lex-and-Posix.html#Lex-and-Posix">Lex and Posix</a></td></tr>
+<tr><td></td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#index-LexerInput_002c-overriding">LexerInput, overriding</a>:</td><td>&nbsp;</td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f">How do I use my own I/O classes in a C++ scanner?</a></td></tr>
+<tr><td></td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#index-LexerOutput_002c-overriding">LexerOutput, overriding</a>:</td><td>&nbsp;</td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f">How do I use my own I/O classes in a C++ scanner?</a></td></tr>
+<tr><td></td><td valign="top"><a href="Limitations.html#index-limitations-of-flex">limitations of flex</a>:</td><td>&nbsp;</td><td valign="top"><a href="Limitations.html#Limitations">Limitations</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-literal-text-in-patterns_002c-syntax-of">literal text in patterns, syntax of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Loading-and-Unloading-Serialized-Tables.html#index-loading-tables-at-runtime">loading tables at runtime</a>:</td><td>&nbsp;</td><td valign="top"><a href="Loading-and-Unloading-Serialized-Tables.html#Loading-and-Unloading-Serialized-Tables">Loading and Unloading Serialized Tables</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-M">M</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="M4-Dependency.html#index-m4">m4</a>:</td><td>&nbsp;</td><td valign="top"><a href="M4-Dependency.html#M4-Dependency">M4 Dependency</a></td></tr>
+<tr><td></td><td valign="top"><a href="Makefiles-and-Flex.html#index-Makefile_002c-example-of-implicit-rules">Makefile, example of implicit rules</a>:</td><td>&nbsp;</td><td valign="top"><a href="Makefiles-and-Flex.html#Makefiles-and-Flex">Makefiles and Flex</a></td></tr>
+<tr><td></td><td valign="top"><a href="Makefiles-and-Flex.html#index-Makefile_002c-explicit-example">Makefile, explicit example</a>:</td><td>&nbsp;</td><td valign="top"><a href="Makefiles-and-Flex.html#Makefiles-and-Flex">Makefiles and Flex</a></td></tr>
+<tr><td></td><td valign="top"><a href="Makefiles-and-Flex.html#index-Makefile_002c-syntax">Makefile, syntax</a>:</td><td>&nbsp;</td><td valign="top"><a href="Makefiles-and-Flex.html#Makefiles-and-Flex">Makefiles and Flex</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-matching-C_002dstyle-double_002dquoted-strings">matching C-style double-quoted strings</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-matching_002c-and-trailing-context">matching, and trailing context</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-matching_002c-length-of">matching, length of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-matching_002c-multiple-matches">matching, multiple matches</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Cxx.html#index-member-functions_002c-C_002b_002b">member functions, C++</a>:</td><td>&nbsp;</td><td valign="top"><a href="Cxx.html#Cxx">Cxx</a></td></tr>
+<tr><td></td><td valign="top"><a href="Memory-Management.html#index-memory-management">memory management</a>:</td><td>&nbsp;</td><td valign="top"><a href="Memory-Management.html#Memory-Management">Memory Management</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-memory_002c-allocating-input-buffers">memory, allocating input buffers</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="Init-and-Destroy-Functions.html#index-memory_002c-considerations-for-reentrant-scanners">memory, considerations for reentrant scanners</a>:</td><td>&nbsp;</td><td valign="top"><a href="Init-and-Destroy-Functions.html#Init-and-Destroy-Functions">Init and Destroy Functions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-memory_002c-deleting-input-buffers">memory, deleting input buffers</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-memory_002c-for-start-condition-stacks">memory, for start condition stacks</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Serialized-Tables.html#index-memory_002c-serialized-tables">memory, serialized tables</a>:</td><td>&nbsp;</td><td valign="top"><a href="Serialized-Tables.html#Serialized-Tables">Serialized Tables</a></td></tr>
+<tr><td></td><td valign="top"><a href="Loading-and-Unloading-Serialized-Tables.html#index-memory_002c-serialized-tables-1">memory, serialized tables</a>:</td><td>&nbsp;</td><td valign="top"><a href="Loading-and-Unloading-Serialized-Tables.html#Loading-and-Unloading-Serialized-Tables">Loading and Unloading Serialized Tables</a></td></tr>
+<tr><td></td><td valign="top"><a href="Cxx.html#index-methods_002c-c_002b_002b">methods, c++</a>:</td><td>&nbsp;</td><td valign="top"><a href="Cxx.html#Cxx">Cxx</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-minimal-scanner">minimal scanner</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-multiple-input-streams">multiple input streams</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-N">N</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Lex-and-Posix.html#index-name-definitions_002c-not-POSIX">name definitions, not POSIX</a>:</td><td>&nbsp;</td><td valign="top"><a href="Lex-and-Posix.html#Lex-and-Posix">Lex and Posix</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-negating-ranges-in-patterns">negating ranges in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-newline_002c-matching-in-patterns">newline, matching in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Lex-and-Posix.html#index-non_002dPOSIX-features-of-flex">non-POSIX features of flex</a>:</td><td>&nbsp;</td><td valign="top"><a href="Lex-and-Posix.html#Lex-and-Posix">Lex and Posix</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-noyywrap_002c-_0025option">noyywrap, %option</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-NULL-character-in-patterns_002c-syntax-of">NULL character in patterns, syntax of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-O">O</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-octal-characters-in-patterns">octal characters in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Scanner-Options.html#index-options_002c-command_002dline">options, command-line</a>:</td><td>&nbsp;</td><td valign="top"><a href="Scanner-Options.html#Scanner-Options">Scanner Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#index-overriding-LexerInput">overriding LexerInput</a>:</td><td>&nbsp;</td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f">How do I use my own I/O classes in a C++ scanner?</a></td></tr>
+<tr><td></td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#index-overriding-LexerOutput">overriding LexerOutput</a>:</td><td>&nbsp;</td><td valign="top"><a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f">How do I use my own I/O classes in a C++ scanner?</a></td></tr>
+<tr><td></td><td valign="top"><a href="Overriding-The-Default-Memory-Management.html#index-overriding-the-memory-routines">overriding the memory routines</a>:</td><td>&nbsp;</td><td valign="top"><a href="Overriding-The-Default-Memory-Management.html#Overriding-The-Default-Memory-Management">Overriding The Default Memory Management</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-P">P</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Simple-Examples.html#index-Pascal_002dlike-language">Pascal-like language</a>:</td><td>&nbsp;</td><td valign="top"><a href="Simple-Examples.html#Simple-Examples">Simple Examples</a></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-pattern-aliases_002c-defining">pattern aliases, defining</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-pattern-aliases_002c-expansion-of">pattern aliases, expansion of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-pattern-aliases_002c-how-to-define">pattern aliases, how to define</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Definitions-Section.html#index-pattern-aliases_002c-use-of">pattern aliases, use of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Definitions-Section.html#Definitions-Section">Definitions Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Lex-and-Posix.html#index-patterns-and-actions-on-different-lines">patterns and actions on different lines</a>:</td><td>&nbsp;</td><td valign="top"><a href="Lex-and-Posix.html#Lex-and-Posix">Lex and Posix</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-patterns_002c-character-class-equivalence">patterns, character class equivalence</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Common-Patterns.html#index-patterns_002c-common">patterns, common</a>:</td><td>&nbsp;</td><td valign="top"><a href="Common-Patterns.html#Common-Patterns">Common Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-patterns_002c-end-of-line">patterns, end of line</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-patterns_002c-grouping-and-precedence">patterns, grouping and precedence</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-patterns_002c-in-rules-section">patterns, in rules section</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-patterns_002c-invalid-trailing-context">patterns, invalid trailing context</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-patterns_002c-matching">patterns, matching</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-patterns_002c-precedence-of-operators">patterns, precedence of operators</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-patterns_002c-repetitions-with-grouping">patterns, repetitions with grouping</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-patterns_002c-special-characters-treated-as-non_002dspecial">patterns, special characters treated as non-special</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-patterns_002c-syntax">patterns, syntax</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-patterns_002c-syntax-1">patterns, syntax</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-patterns_002c-tuning-for-performance">patterns, tuning for performance</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-patterns_002c-valid-character-classes">patterns, valid character classes</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-performance-optimization_002c-matching-longer-tokens">performance optimization, matching longer tokens</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-performance-optimization_002c-recognizing-keywords">performance optimization, recognizing keywords</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-performance_002c-backing-up">performance, backing up</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-performance_002c-considerations">performance, considerations</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-performance_002c-using-keywords">performance, using keywords</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-popping-an-input-buffer">popping an input buffer</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="Lex-and-Posix.html#index-POSIX-and-lex">POSIX and lex</a>:</td><td>&nbsp;</td><td valign="top"><a href="Lex-and-Posix.html#Lex-and-Posix">Lex and Posix</a></td></tr>
+<tr><td></td><td valign="top"><a href="Lex-and-Posix.html#index-POSIX-comp_003bcompliance">POSIX comp;compliance</a>:</td><td>&nbsp;</td><td valign="top"><a href="Lex-and-Posix.html#Lex-and-Posix">Lex and Posix</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-POSIX_002c-character-classes-in-patterns_002c-syntax-of">POSIX, character classes in patterns, syntax of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-preprocessor-macros_002c-for-use-in-actions">preprocessor macros, for use in actions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-pushing-an-input-buffer">pushing an input buffer</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-pushing-back-characters-with-unput">pushing back characters with unput</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-pushing-back-characters-with-unput_0028_0029">pushing back characters with unput()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-pushing-back-characters-with-yyless">pushing back characters with yyless</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-pushing-back-EOF">pushing back EOF</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-R">R</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-ranges-in-patterns">ranges in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-ranges-in-patterns_002c-negating">ranges in patterns, negating</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-recognizing-C-comments">recognizing C comments</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Reentrant-Uses.html#index-reentrant-scanners_002c-multiple-interleaved-scanners">reentrant scanners, multiple interleaved scanners</a>:</td><td>&nbsp;</td><td valign="top"><a href="Reentrant-Uses.html#Reentrant-Uses">Reentrant Uses</a></td></tr>
+<tr><td></td><td valign="top"><a href="Reentrant-Uses.html#index-reentrant-scanners_002c-recursive-invocation">reentrant scanners, recursive invocation</a>:</td><td>&nbsp;</td><td valign="top"><a href="Reentrant-Uses.html#Reentrant-Uses">Reentrant Uses</a></td></tr>
+<tr><td></td><td valign="top"><a href="Global-Replacement.html#index-reentrant_002c-accessing-flex-variables">reentrant, accessing flex variables</a>:</td><td>&nbsp;</td><td valign="top"><a href="Global-Replacement.html#Global-Replacement">Global Replacement</a></td></tr>
+<tr><td></td><td valign="top"><a href="Accessor-Methods.html#index-reentrant_002c-accessor-functions">reentrant, accessor functions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Accessor-Methods.html#Accessor-Methods">Accessor Methods</a></td></tr>
+<tr><td></td><td valign="top"><a href="Reentrant-Overview.html#index-reentrant_002c-API-explanation">reentrant, API explanation</a>:</td><td>&nbsp;</td><td valign="top"><a href="Reentrant-Overview.html#Reentrant-Overview">Reentrant Overview</a></td></tr>
+<tr><td></td><td valign="top"><a href="Extra-Reentrant-Argument.html#index-reentrant_002c-calling-functions">reentrant, calling functions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Extra-Reentrant-Argument.html#Extra-Reentrant-Argument">Extra Reentrant Argument</a></td></tr>
+<tr><td></td><td valign="top"><a href="Reentrant-Example.html#index-reentrant_002c-example-of">reentrant, example of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Reentrant-Example.html#Reentrant-Example">Reentrant Example</a></td></tr>
+<tr><td></td><td valign="top"><a href="Reentrant.html#index-reentrant_002c-explanation">reentrant, explanation</a>:</td><td>&nbsp;</td><td valign="top"><a href="Reentrant.html#Reentrant">Reentrant</a></td></tr>
+<tr><td></td><td valign="top"><a href="Extra-Data.html#index-reentrant_002c-extra-data">reentrant, extra data</a>:</td><td>&nbsp;</td><td valign="top"><a href="Extra-Data.html#Extra-Data">Extra Data</a></td></tr>
+<tr><td></td><td valign="top"><a href="Init-and-Destroy-Functions.html#index-reentrant_002c-initialization">reentrant, initialization</a>:</td><td>&nbsp;</td><td valign="top"><a href="Init-and-Destroy-Functions.html#Init-and-Destroy-Functions">Init and Destroy Functions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-regular-expressions_002c-in-patterns">regular expressions, in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-REJECT">REJECT</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-REJECT_002c-calling-multiple-times">REJECT, calling multiple times</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-REJECT_002c-performance-costs">REJECT, performance costs</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Reporting-Bugs.html#index-reporting-bugs">reporting bugs</a>:</td><td>&nbsp;</td><td valign="top"><a href="Reporting-Bugs.html#Reporting-Bugs">Reporting Bugs</a></td></tr>
+<tr><td></td><td valign="top"><a href="Lex-and-Posix.html#index-restarting-the-scanner">restarting the scanner</a>:</td><td>&nbsp;</td><td valign="top"><a href="Lex-and-Posix.html#Lex-and-Posix">Lex and Posix</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-RETURN_002c-within-actions">RETURN, within actions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Simple-Examples.html#index-rules_002c-default">rules, default</a>:</td><td>&nbsp;</td><td valign="top"><a href="Simple-Examples.html#Simple-Examples">Simple Examples</a></td></tr>
+<tr><td></td><td valign="top"><a href="Rules-Section.html#index-rules_002c-in-flex-input">rules, in flex input</a>:</td><td>&nbsp;</td><td valign="top"><a href="Rules-Section.html#Rules-Section">Rules Section</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-S">S</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Introduction.html#index-scanner_002c-definition-of">scanner, definition of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Introduction.html#Introduction">Introduction</a></td></tr>
+<tr><td></td><td valign="top"><a href="Format.html#index-sections-of-flex-input">sections of flex input</a>:</td><td>&nbsp;</td><td valign="top"><a href="Format.html#Format">Format</a></td></tr>
+<tr><td></td><td valign="top"><a href="Serialized-Tables.html#index-serialization">serialization</a>:</td><td>&nbsp;</td><td valign="top"><a href="Serialized-Tables.html#Serialized-Tables">Serialized Tables</a></td></tr>
+<tr><td></td><td valign="top"><a href="Creating-Serialized-Tables.html#index-serialization-of-tables">serialization of tables</a>:</td><td>&nbsp;</td><td valign="top"><a href="Creating-Serialized-Tables.html#Creating-Serialized-Tables">Creating Serialized Tables</a></td></tr>
+<tr><td></td><td valign="top"><a href="Creating-Serialized-Tables.html#index-serialized-tables_002c-multiple-scanners">serialized tables, multiple scanners</a>:</td><td>&nbsp;</td><td valign="top"><a href="Creating-Serialized-Tables.html#Creating-Serialized-Tables">Creating Serialized Tables</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-stack_002c-input-buffer-pop">stack, input buffer pop</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-stack_002c-input-buffer-push">stack, input buffer push</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-stacks_002c-routines-for-manipulating">stacks, routines for manipulating</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-condition_002c-applying-to-multiple-patterns">start condition, applying to multiple patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions">start conditions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions_002c-behavior-of-default-rule">start conditions, behavior of default rule</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions_002c-exclusive">start conditions, exclusive</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions_002c-for-different-interpretations-of-same-input">start conditions, for different interpretations of same input</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-start-conditions_002c-in-patterns">start conditions, in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions_002c-inclusive">start conditions, inclusive</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions_002c-inclusive-v_002es_002e-exclusive">start conditions, inclusive v.s. exclusive</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions_002c-integer-values">start conditions, integer values</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions_002c-multiple">start conditions, multiple</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions_002c-special-wildcard-condition">start conditions, special wildcard condition</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions_002c-use-of-a-stack">start conditions, use of a stack</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions_002c-use-of-wildcard-condition-_0028_003c_002a_003e_0029">start conditions, use of wildcard condition (&lt;*&gt;)</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-start-conditions_002c-using-BEGIN">start conditions, using BEGIN</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-stdin_002c-default-for-yyin">stdin, default for yyin</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-stdout_002c-as-default-for-yyout">stdout, as default for yyout</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-strings_002c-scanning-strings-instead-of-files">strings, scanning strings instead of files</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-T">T</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Creating-Serialized-Tables.html#index-tables_002c-creating-serialized">tables, creating serialized</a>:</td><td>&nbsp;</td><td valign="top"><a href="Creating-Serialized-Tables.html#Creating-Serialized-Tables">Creating Serialized Tables</a></td></tr>
+<tr><td></td><td valign="top"><a href="Tables-File-Format.html#index-tables_002c-file-format">tables, file format</a>:</td><td>&nbsp;</td><td valign="top"><a href="Tables-File-Format.html#Tables-File-Format">Tables File Format</a></td></tr>
+<tr><td></td><td valign="top"><a href="Loading-and-Unloading-Serialized-Tables.html#index-tables_002c-freeing">tables, freeing</a>:</td><td>&nbsp;</td><td valign="top"><a href="Loading-and-Unloading-Serialized-Tables.html#Loading-and-Unloading-Serialized-Tables">Loading and Unloading Serialized Tables</a></td></tr>
+<tr><td></td><td valign="top"><a href="Loading-and-Unloading-Serialized-Tables.html#index-tables_002c-loading-and-unloading">tables, loading and unloading</a>:</td><td>&nbsp;</td><td valign="top"><a href="Loading-and-Unloading-Serialized-Tables.html#Loading-and-Unloading-Serialized-Tables">Loading and Unloading Serialized Tables</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-terminating-with-yyterminate_0028_0029">terminating with yyterminate()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-token">token</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-trailing-context_002c-in-patterns">trailing context, in patterns</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-trailing-context_002c-limits-of">trailing context, limits of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-trailing-context_002c-matching">trailing context, matching</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-trailing-context_002c-performance-costs">trailing context, performance costs</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-trailing-context_002c-variable-length">trailing context, variable length</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-U">U</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-unput_0028_0029">unput()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-unput_0028_0029_002c-and-_0025pointer">unput(), and %pointer</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-unput_0028_0029_002c-pushing-back-characters">unput(), pushing back characters</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="User-Code-Section.html#index-user-code_002c-in-flex-input">user code, in flex input</a>:</td><td>&nbsp;</td><td valign="top"><a href="User-Code-Section.html#User-Code-Section">User Code Section</a></td></tr>
+<tr><td></td><td valign="top"><a href="Simple-Examples.html#index-username-expansion">username expansion</a>:</td><td>&nbsp;</td><td valign="top"><a href="Simple-Examples.html#Simple-Examples">Simple Examples</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-using-integer-values-of-start-condition-names">using integer values of start condition names</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-V">V</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Patterns.html#index-verbatim-text-in-patterns_002c-syntax-of">verbatim text in patterns, syntax of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Patterns.html#Patterns">Patterns</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-W">W</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Limitations.html#index-warning_002c-dangerous-trailing-context">warning, dangerous trailing context</a>:</td><td>&nbsp;</td><td valign="top"><a href="Limitations.html#Limitations">Limitations</a></td></tr>
+<tr><td></td><td valign="top"><a href="Diagnostics.html#index-warning_002c-rule-cannot-be-matched">warning, rule cannot be matched</a>:</td><td>&nbsp;</td><td valign="top"><a href="Diagnostics.html#Diagnostics">Diagnostics</a></td></tr>
+<tr><td></td><td valign="top"><a href="Diagnostics.html#index-warnings_002c-diagnostic-messages">warnings, diagnostic messages</a>:</td><td>&nbsp;</td><td valign="top"><a href="Diagnostics.html#Diagnostics">Diagnostics</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-whitespace_002c-compressing">whitespace, compressing</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-Y">Y</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Yacc.html#index-yacc-interface">yacc interface</a>:</td><td>&nbsp;</td><td valign="top"><a href="Yacc.html#Yacc">Yacc</a></td></tr>
+<tr><td></td><td valign="top"><a href="Yacc.html#index-yacc_002c-interface">yacc, interface</a>:</td><td>&nbsp;</td><td valign="top"><a href="Yacc.html#Yacc">Yacc</a></td></tr>
+<tr><td></td><td valign="top"><a href="Overriding-The-Default-Memory-Management.html#index-yyalloc_002c-overriding">yyalloc, overriding</a>:</td><td>&nbsp;</td><td valign="top"><a href="Overriding-The-Default-Memory-Management.html#Overriding-The-Default-Memory-Management">Overriding The Default Memory Management</a></td></tr>
+<tr><td></td><td valign="top"><a href="Overriding-The-Default-Memory-Management.html#index-yyfree_002c-overriding">yyfree, overriding</a>:</td><td>&nbsp;</td><td valign="top"><a href="Overriding-The-Default-Memory-Management.html#Overriding-The-Default-Memory-Management">Overriding The Default Memory Management</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-yyin">yyin</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-yyinput_0028_0029">yyinput()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-yyleng">yyleng</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-yyleng_002c-modification-of">yyleng, modification of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-yyless_0028_0029">yyless()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-yyless_0028_0029_002c-pushing-back-characters">yyless(), pushing back characters</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-yylex_0028_0029_002c-in-generated-scanner">yylex(), in generated scanner</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-yylex_0028_0029_002c-overriding">yylex(), overriding</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-yylex_002c-overriding-the-prototype-of">yylex, overriding the prototype of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Reentrant-Functions.html#index-yylineno_002c-in-a-reentrant-scanner">yylineno, in a reentrant scanner</a>:</td><td>&nbsp;</td><td valign="top"><a href="Reentrant-Functions.html#Reentrant-Functions">Reentrant Functions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Performance.html#index-yylineno_002c-performance-costs">yylineno, performance costs</a>:</td><td>&nbsp;</td><td valign="top"><a href="Performance.html#Performance">Performance</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-yymore_0028_0029">yymore()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-yymore_0028_0029-to-append-token-to-previous-token">yymore() to append token to previous token</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-yymore_0028_0029_002c-mega_002dkludge">yymore(), mega-kludge</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-yymore_002c-and-yyleng">yymore, and yyleng</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-yymore_002c-performance-penalty-of">yymore, performance penalty of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-yyout">yyout</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Overriding-The-Default-Memory-Management.html#index-yyrealloc_002c-overriding">yyrealloc, overriding</a>:</td><td>&nbsp;</td><td valign="top"><a href="Overriding-The-Default-Memory-Management.html#Overriding-The-Default-Memory-Management">Overriding The Default Memory Management</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-yyrestart_0028_0029">yyrestart()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-yyterminate_0028_0029">yyterminate()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-yytext">yytext</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="User-Values.html#index-yytext_002c-default-array-size">yytext, default array size</a>:</td><td>&nbsp;</td><td valign="top"><a href="User-Values.html#User-Values">User Values</a></td></tr>
+<tr><td></td><td valign="top"><a href="A-Note-About-yytext-And-Memory.html#index-yytext_002c-memory-considerations">yytext, memory considerations</a>:</td><td>&nbsp;</td><td valign="top"><a href="A-Note-About-yytext-And-Memory.html#A-Note-About-yytext-And-Memory">A Note About yytext And Memory</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-yytext_002c-modification-of">yytext, modification of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Matching.html#index-yytext_002c-two-types-of">yytext, two types of</a>:</td><td>&nbsp;</td><td valign="top"><a href="Matching.html#Matching">Matching</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-yywrap_0028_0029">yywrap()</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-yywrap_002c-default-for">yywrap, default for</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Multiple-Input-Buffers.html#index-YY_005fCURRENT_005fBUFFER_002c-and-multiple-buffers-Finally_002c-the-macro">YY_CURRENT_BUFFER, and multiple buffers Finally, the macro</a>:</td><td>&nbsp;</td><td valign="top"><a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a></td></tr>
+<tr><td></td><td valign="top"><a href="Extra-Data.html#index-YY_005fEXTRA_005fTYPE_002c-defining-your-own-type">YY_EXTRA_TYPE, defining your own type</a>:</td><td>&nbsp;</td><td valign="top"><a href="Extra-Data.html#Extra-Data">Extra Data</a></td></tr>
+<tr><td></td><td valign="top"><a href="Actions.html#index-YY_005fFLUSH_005fBUFFER">YY_FLUSH_BUFFER</a>:</td><td>&nbsp;</td><td valign="top"><a href="Actions.html#Actions">Actions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-YY_005fINPUT">YY_INPUT</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Generated-Scanner.html#index-YY_005fINPUT_002c-overriding">YY_INPUT, overriding</a>:</td><td>&nbsp;</td><td valign="top"><a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a></td></tr>
+<tr><td></td><td valign="top"><a href="Start-Conditions.html#index-YY_005fSTART_002c-example">YY_START, example</a>:</td><td>&nbsp;</td><td valign="top"><a href="Start-Conditions.html#Start-Conditions">Start Conditions</a></td></tr>
+<tr><td></td><td valign="top"><a href="Misc-Macros.html#index-YY_005fUSER_005fACTION-to-track-each-time-a-rule-is-matched">YY_USER_ACTION to track each time a rule is matched</a>:</td><td>&nbsp;</td><td valign="top"><a href="Misc-Macros.html#Misc-Macros">Misc Macros</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+</table>
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-Index_cp_symbol-1"><b>$</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_symbol-2"><b>%</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_symbol-3"><b>&lt;</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_symbol-4"><b>[</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_symbol-5"><b>^</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_symbol-6"><b>|</b></a>
+ &nbsp; 
+<br>
+<a class="summary-letter" href="#Concept-Index_cp_letter-A"><b>A</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-B"><b>B</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-C"><b>C</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-D"><b>D</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-E"><b>E</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-F"><b>F</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-G"><b>G</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-H"><b>H</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-I"><b>I</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-K"><b>K</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-L"><b>L</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-M"><b>M</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-N"><b>N</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-O"><b>O</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-P"><b>P</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-R"><b>R</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-S"><b>S</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-T"><b>T</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-U"><b>U</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-V"><b>V</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-W"><b>W</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-Y"><b>Y</b></a>
+ &nbsp; 
+</td></tr></table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Index-of-Functions-and-Macros.html#Index-of-Functions-and-Macros" accesskey="n" rel="next">Index of Functions and Macros</a>, Previous: <a href="Indices.html#Indices" accesskey="p" rel="prev">Indices</a>, Up: <a href="Indices.html#Indices" accesskey="u" rel="up">Indices</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

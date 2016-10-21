@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Generated Scanner</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Generated Scanner">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Generated Scanner">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Start-Conditions.html#Start-Conditions" rel="next" title="Start Conditions">
+<link href="Actions.html#Actions" rel="prev" title="Actions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Generated-Scanner"></a>
+<div class="header">
+<p>
+Next: <a href="Start-Conditions.html#Start-Conditions" accesskey="n" rel="next">Start Conditions</a>, Previous: <a href="Actions.html#Actions" accesskey="p" rel="prev">Actions</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="The-Generated-Scanner"></a>
+<h2 class="chapter">9 The Generated Scanner</h2>
+
+<a name="index-yylex_0028_0029_002c-in-generated-scanner"></a>
+<p>The output of <code>flex</code> is the file <samp>lex.yy.c</samp>, which contains
+the scanning routine <code>yylex()</code>, a number of tables used by it for
+matching tokens, and a number of auxiliary routines and macros.  By
+default, <code>yylex()</code> is declared as follows:
+</p>
+<div class="example">
+<pre class="verbatim">    int yylex()
+        {
+        ... various definitions and the actions in here ...
+        }
+</pre></div>
+
+<a name="index-yylex_0028_0029_002c-overriding"></a>
+<p>(If your environment supports function prototypes, then it will be
+<code>int yylex( void )</code>.)  This definition may be changed by defining
+the <code>YY_DECL</code> macro.  For example, you could use:
+</p>
+<a name="index-yylex_002c-overriding-the-prototype-of"></a>
+<div class="example">
+<pre class="verbatim">    #define YY_DECL float lexscan( a, b ) float a, b;
+</pre></div>
+
+<p>to give the scanning routine the name <code>lexscan</code>, returning a float,
+and taking two floats as arguments.  Note that if you give arguments to
+the scanning routine using a K&amp;R-style/non-prototyped function
+declaration, you must terminate the definition with a semi-colon (;).
+</p>
+<p><code>flex</code> generates &lsquo;<samp>C99</samp>&rsquo; function definitions by
+default. Flex used toFlex used to have the ability to generate obsolete, er,
+&lsquo;<samp>traditional</samp>&rsquo;, function definitions. This was to support
+bootstrapping gcc on old systems.  Unfortunately, traditional
+definitions prevent us from using any standard data types smaller than
+int (such as short, char, or bool) as function arguments.  Furthermore,
+traditional definitions support added extra complexity in the skeleton file.
+For this reason, current versions of <code>flex</code> generate standard C99 code
+only, leaving K&amp;R-style functions to the historians.
+</p>
+<a name="index-stdin_002c-default-for-yyin"></a>
+<a name="index-yyin"></a>
+<p>Whenever <code>yylex()</code> is called, it scans tokens from the global input
+file <samp>yyin</samp> (which defaults to stdin).  It continues until it
+either reaches an end-of-file (at which point it returns the value 0) or
+one of its actions executes a <code>return</code> statement.
+</p>
+<a name="index-EOF-and-yyrestart_0028_0029"></a>
+<a name="index-end_002dof_002dfile_002c-and-yyrestart_0028_0029"></a>
+<a name="index-yyrestart_0028_0029"></a>
+<p>If the scanner reaches an end-of-file, subsequent calls are undefined
+unless either <samp>yyin</samp> is pointed at a new input file (in which case
+scanning continues from that file), or <code>yyrestart()</code> is called.
+<code>yyrestart()</code> takes one argument, a <code>FILE *</code> pointer (which
+can be NULL, if you&rsquo;ve set up <code>YY_INPUT</code> to scan from a source other
+than <code>yyin</code>), and initializes <samp>yyin</samp> for scanning from that
+file.  Essentially there is no difference between just assigning
+<samp>yyin</samp> to a new input file or using <code>yyrestart()</code> to do so;
+the latter is available for compatibility with previous versions of
+<code>flex</code>, and because it can be used to switch input files in the
+middle of scanning.  It can also be used to throw away the current input
+buffer, by calling it with an argument of <samp>yyin</samp>; but it would be
+better to use <code>YY_FLUSH_BUFFER</code> (see <a href="Actions.html#Actions">Actions</a>).  Note that
+<code>yyrestart()</code> does <em>not</em> reset the start condition to
+<code>INITIAL</code> (see <a href="Start-Conditions.html#Start-Conditions">Start Conditions</a>).
+</p>
+<a name="index-RETURN_002c-within-actions"></a>
+<p>If <code>yylex()</code> stops scanning due to executing a <code>return</code>
+statement in one of the actions, the scanner may then be called again
+and it will resume scanning where it left off.
+</p>
+<a name="index-YY_005fINPUT"></a>
+<p>By default (and for purposes of efficiency), the scanner uses
+block-reads rather than simple <code>getc()</code> calls to read characters
+from <samp>yyin</samp>.  The nature of how it gets its input can be controlled
+by defining the <code>YY_INPUT</code> macro.  The calling sequence for
+<code>YY_INPUT()</code> is <code>YY_INPUT(buf,result,max_size)</code>.  Its action
+is to place up to <code>max_size</code> characters in the character array
+<code>buf</code> and return in the integer variable <code>result</code> either the
+number of characters read or the constant <code>YY_NULL</code> (0 on Unix
+systems) to indicate &lsquo;<samp>EOF</samp>&rsquo;.  The default <code>YY_INPUT</code> reads from
+the global file-pointer <samp>yyin</samp>.
+</p>
+<a name="index-YY_005fINPUT_002c-overriding"></a>
+<p>Here is a sample definition of <code>YY_INPUT</code> (in the definitions
+section of the input file):
+</p>
+<div class="example">
+<pre class="verbatim">    %{
+    #define YY_INPUT(buf,result,max_size) \
+        { \
+        int c = getchar(); \
+        result = (c == EOF) ? YY_NULL : (buf[0] = c, 1); \
+        }
+    %}
+</pre></div>
+
+<p>This definition will change the input processing to occur one character
+at a time.
+</p>
+<a name="index-yywrap_0028_0029"></a>
+<p>When the scanner receives an end-of-file indication from YY_INPUT, it
+then checks the <code>yywrap()</code> function.  If <code>yywrap()</code> returns
+false (zero), then it is assumed that the function has gone ahead and
+set up <samp>yyin</samp> to point to another input file, and scanning
+continues.  If it returns true (non-zero), then the scanner terminates,
+returning 0 to its caller.  Note that in either case, the start
+condition remains unchanged; it does <em>not</em> revert to
+<code>INITIAL</code>.
+</p>
+<a name="index-yywrap_002c-default-for"></a>
+<a name="index-noyywrap_002c-_0025option"></a>
+<a name="index-_0025option-noyywrapp"></a>
+<p>If you do not supply your own version of <code>yywrap()</code>, then you must
+either use <code>%option noyywrap</code> (in which case the scanner behaves as
+though <code>yywrap()</code> returned 1), or you must link with &lsquo;<samp>-lfl</samp>&rsquo; to
+obtain the default version of the routine, which always returns 1.
+</p>
+<p>For scanning from in-memory buffers (e.g., scanning strings), see
+<a href="Multiple-Input-Buffers.html#Scanning-Strings">Scanning Strings</a>. See <a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a>.
+</p>
+<a name="index-ECHO_002c-and-yyout"></a>
+<a name="index-yyout"></a>
+<a name="index-stdout_002c-as-default-for-yyout"></a>
+<p>The scanner writes its <code>ECHO</code> output to the <samp>yyout</samp> global
+(default, <samp>stdout</samp>), which may be redefined by the user simply by
+assigning it to some other <code>FILE</code> pointer.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Start-Conditions.html#Start-Conditions" accesskey="n" rel="next">Start Conditions</a>, Previous: <a href="Actions.html#Actions" accesskey="p" rel="prev">Actions</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

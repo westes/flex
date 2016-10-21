@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-68</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-68">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-68">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="unnamed_002dfaq_002d69.html#unnamed_002dfaq_002d69" rel="next" title="unnamed-faq-69">
+<link href="unnamed_002dfaq_002d67.html#unnamed_002dfaq_002d67" rel="prev" title="unnamed-faq-67">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="unnamed_002dfaq_002d68"></a>
+<div class="header">
+<p>
+Next: <a href="unnamed_002dfaq_002d69.html#unnamed_002dfaq_002d69" accesskey="n" rel="next">unnamed-faq-69</a>, Previous: <a href="unnamed_002dfaq_002d67.html#unnamed_002dfaq_002d67" accesskey="p" rel="prev">unnamed-faq-67</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="unnamed_002dfaq_002d68-1"></a>
+<h3 class="unnumberedsec">unnamed-faq-68</h3>
+<div class="example">
+<pre class="verbatim">To: &quot;Bart Niswonger&quot; &lt;NISWONGR@almaden.ibm.com&gt;
+Subject: Re: flex 2.5: c++ scanners &amp; start conditions
+In-reply-to: Your message of Tue, 06 Jan 1998 10:34:21 PST.
+Date: Tue, 06 Jan 1998 19:19:30 PST
+From: Vern Paxson &lt;vern&gt;
+
+&gt; The problem is that when I do this (using %option c++) start
+&gt; conditions seem to not apply.
+
+The BEGIN macro modifies the yy_start variable.  For C scanners, this
+is a static with scope visible through the whole file.  For C++ scanners,
+it's a member variable, so it only has visible scope within a member
+function.  Your lexbegin() routine is not a member function when you
+build a C++ scanner, so it's not modifying the correct yy_start.  The
+diagnostic that indicates this is that you found you needed to add
+a declaration of yy_start in order to get your scanner to compile when
+using C++; instead, the correct fix is to make lexbegin() a member
+function (by deriving from yyFlexLexer).
+
+		Vern
+</pre></div>
+
+
+
+
+</body>
+</html>

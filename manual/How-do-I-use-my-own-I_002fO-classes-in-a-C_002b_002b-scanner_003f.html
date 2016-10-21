@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: How do I use my own I/O classes in a C++ scanner?</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: How do I use my own I/O classes in a C++ scanner?">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: How do I use my own I/O classes in a C++ scanner?">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="How-do-I-skip-as-many-chars-as-possible_003f.html#How-do-I-skip-as-many-chars-as-possible_003f" rel="next" title="How do I skip as many chars as possible?">
+<link href="How-do-I-track-the-byte-offset-for-lseek_0028_0029_003f.html#How-do-I-track-the-byte-offset-for-lseek_0028_0029_003f" rel="prev" title="How do I track the byte offset for lseek()?">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f"></a>
+<div class="header">
+<p>
+Next: <a href="How-do-I-skip-as-many-chars-as-possible_003f.html#How-do-I-skip-as-many-chars-as-possible_003f" accesskey="n" rel="next">How do I skip as many chars as possible?</a>, Previous: <a href="How-do-I-track-the-byte-offset-for-lseek_0028_0029_003f.html#How-do-I-track-the-byte-offset-for-lseek_0028_0029_003f" accesskey="p" rel="prev">How do I track the byte offset for lseek()?</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f-1"></a>
+<h3 class="section">How do I use my own I/O classes in a C++ scanner?</h3>
+
+<p>When the flex C++ scanning class rewrite finally happens, then this sort of thing should become much easier.
+</p>
+<a name="index-LexerOutput_002c-overriding"></a>
+<a name="index-LexerInput_002c-overriding"></a>
+<a name="index-overriding-LexerOutput"></a>
+<a name="index-overriding-LexerInput"></a>
+<a name="index-customizing-I_002fO-in-C_002b_002b-scanners"></a>
+<a name="index-C_002b_002b-I_002fO_002c-customizing"></a>
+<p>You can do this by passing the various functions (such as <code>LexerInput()</code>
+and <code>LexerOutput()</code>) NULL <code>iostream*</code>&rsquo;s, and then
+dealing with your own I/O classes surreptitiously (i.e., stashing them in
+special member variables).  This works because the only assumption about
+the lexer regarding what&rsquo;s done with the iostream&rsquo;s is that they&rsquo;re
+ultimately passed to <code>LexerInput()</code> and <code>LexerOutput</code>, which then do whatever
+is necessary with them.
+</p>
+
+
+
+</body>
+</html>

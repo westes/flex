@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: User Values</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: User Values">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: User Values">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Yacc.html#Yacc" rel="next" title="Yacc">
+<link href="Misc-Macros.html#Misc-Macros" rel="prev" title="Misc Macros">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="User-Values"></a>
+<div class="header">
+<p>
+Next: <a href="Yacc.html#Yacc" accesskey="n" rel="next">Yacc</a>, Previous: <a href="Misc-Macros.html#Misc-Macros" accesskey="p" rel="prev">Misc Macros</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Values-Available-To-the-User"></a>
+<h2 class="chapter">14 Values Available To the User</h2>
+
+<p>This chapter summarizes the various values available to the user in the
+rule actions.
+</p>
+<dl compact="compact">
+<dd><a name="index-yytext-2"></a>
+</dd>
+<dt><code>char *yytext</code></dt>
+<dd><p>holds the text of the current token.  It may be modified but not
+lengthened (you cannot append characters to the end).
+</p>
+<a name="index-yytext_002c-default-array-size"></a>
+<a name="index-array_002c-default-size-for-yytext"></a>
+<a name="index-YYLMAX"></a>
+<p>If the special directive <code>%array</code> appears in the first section of
+the scanner description, then <code>yytext</code> is instead declared
+<code>char yytext[YYLMAX]</code>, where <code>YYLMAX</code> is a macro definition
+that you can redefine in the first section if you don&rsquo;t like the default
+value (generally 8KB).  Using <code>%array</code> results in somewhat slower
+scanners, but the value of <code>yytext</code> becomes immune to calls to
+<code>unput()</code>, which potentially destroy its value when <code>yytext</code> is
+a character pointer.  The opposite of <code>%array</code> is <code>%pointer</code>,
+which is the default.
+</p>
+<a name="index-C_002b_002b-and-_0025array"></a>
+<p>You cannot use <code>%array</code> when generating C++ scanner classes (the
+&lsquo;<samp>-+</samp>&rsquo; flag).
+</p>
+<a name="index-yyleng-1"></a>
+</dd>
+<dt><code>int yyleng</code></dt>
+<dd><p>holds the length of the current token.
+</p>
+<a name="index-yyin-1"></a>
+</dd>
+<dt><code>FILE *yyin</code></dt>
+<dd><p>is the file which by default <code>flex</code> reads from.  It may be
+redefined but doing so only makes sense before scanning begins or after
+an EOF has been encountered.  Changing it in the midst of scanning will
+have unexpected results since <code>flex</code> buffers its input; use
+<code>yyrestart()</code> instead.  Once scanning terminates because an
+end-of-file has been seen, you can assign <samp>yyin</samp> at the new input
+file and then call the scanner again to continue scanning.
+</p>
+<a name="index-yyrestart"></a>
+</dd>
+<dt><code>void yyrestart( FILE *new_file )</code></dt>
+<dd><p>may be called to point <samp>yyin</samp> at the new input file.  The
+switch-over to the new file is immediate (any previously buffered-up
+input is lost).  Note that calling <code>yyrestart()</code> with <samp>yyin</samp>
+as an argument thus throws away the current input buffer and continues
+scanning the same input file.
+</p>
+<a name="index-yyout-1"></a>
+</dd>
+<dt><code>FILE *yyout</code></dt>
+<dd><p>is the file to which <code>ECHO</code> actions are done.  It can be reassigned
+by the user.
+</p>
+<a name="index-YY_005fCURRENT_005fBUFFER"></a>
+</dd>
+<dt><code>YY_CURRENT_BUFFER</code></dt>
+<dd><p>returns a <code>YY_BUFFER_STATE</code> handle to the current buffer.
+</p>
+<a name="index-YY_005fSTART-1"></a>
+</dd>
+<dt><code>YY_START</code></dt>
+<dd><p>returns an integer value corresponding to the current start condition.
+You can subsequently use this value with <code>BEGIN</code> to return to that
+start condition.
+</p></dd>
+</dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Yacc.html#Yacc" accesskey="n" rel="next">Yacc</a>, Previous: <a href="Misc-Macros.html#Misc-Macros" accesskey="p" rel="prev">Misc Macros</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

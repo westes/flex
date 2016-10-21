@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Simple Examples</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Simple Examples">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Simple Examples">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Format.html#Format" rel="next" title="Format">
+<link href="Introduction.html#Introduction" rel="prev" title="Introduction">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Simple-Examples"></a>
+<div class="header">
+<p>
+Next: <a href="Format.html#Format" accesskey="n" rel="next">Format</a>, Previous: <a href="Introduction.html#Introduction" accesskey="p" rel="prev">Introduction</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Some-Simple-Examples"></a>
+<h2 class="chapter">4 Some Simple Examples</h2>
+
+<p>First some simple examples to get the flavor of how one uses
+<code>flex</code>.
+</p>
+<a name="index-username-expansion"></a>
+<p>The following <code>flex</code> input specifies a scanner which, when it
+encounters the string &lsquo;<samp>username</samp>&rsquo; will replace it with the user&rsquo;s
+login name:
+</p>
+<div class="example">
+<pre class="verbatim">    %%
+    username    printf( &quot;%s&quot;, getlogin() );
+</pre></div>
+
+<a name="index-default-rule"></a>
+<a name="index-rules_002c-default"></a>
+<p>By default, any text not matched by a <code>flex</code> scanner is copied to
+the output, so the net effect of this scanner is to copy its input file
+to its output with each occurrence of &lsquo;<samp>username</samp>&rsquo; expanded.  In this
+input, there is just one rule.  &lsquo;<samp>username</samp>&rsquo; is the <em>pattern</em> and
+the &lsquo;<samp>printf</samp>&rsquo; is the <em>action</em>.  The &lsquo;<samp>%%</samp>&rsquo; symbol marks the
+beginning of the rules.
+</p>
+<p>Here&rsquo;s another simple example:
+</p>
+<a name="index-counting-characters-and-lines"></a>
+<div class="example">
+<pre class="verbatim">            int num_lines = 0, num_chars = 0;
+
+    %%
+    \n      ++num_lines; ++num_chars;
+    .       ++num_chars;
+
+    %%
+
+    int main()
+            {
+            yylex();
+            printf( &quot;# of lines = %d, # of chars = %d\n&quot;,
+                    num_lines, num_chars );
+            }
+</pre></div>
+
+<p>This scanner counts the number of characters and the number of lines in
+its input. It produces no output other than the final report on the
+character and line counts.  The first line declares two globals,
+<code>num_lines</code> and <code>num_chars</code>, which are accessible both inside
+<code>yylex()</code> and in the <code>main()</code> routine declared after the
+second &lsquo;<samp>%%</samp>&rsquo;.  There are two rules, one which matches a newline
+(&lsquo;<samp>\n</samp>&rsquo;) and increments both the line count and the character count,
+and one which matches any character other than a newline (indicated by
+the &lsquo;<samp>.</samp>&rsquo; regular expression).
+</p>
+<p>A somewhat more complicated example:
+</p>
+<a name="index-Pascal_002dlike-language"></a>
+<div class="example">
+<pre class="verbatim">    /* scanner for a toy Pascal-like language */
+
+    %{
+    /* need this for the call to atof() below */
+    #include &lt;math.h&gt;
+    %}
+
+    DIGIT    [0-9]
+    ID       [a-z][a-z0-9]*
+
+    %%
+
+    {DIGIT}+    {
+                printf( &quot;An integer: %s (%d)\n&quot;, yytext,
+                        atoi( yytext ) );
+                }
+
+    {DIGIT}+&quot;.&quot;{DIGIT}*        {
+                printf( &quot;A float: %s (%g)\n&quot;, yytext,
+                        atof( yytext ) );
+                }
+
+    if|then|begin|end|procedure|function        {
+                printf( &quot;A keyword: %s\n&quot;, yytext );
+                }
+
+    {ID}        printf( &quot;An identifier: %s\n&quot;, yytext );
+
+    &quot;+&quot;|&quot;-&quot;|&quot;*&quot;|&quot;/&quot;   printf( &quot;An operator: %s\n&quot;, yytext );
+
+    &quot;{&quot;[^{}\n]*&quot;}&quot;     /* eat up one-line comments */
+
+    [ \t\n]+          /* eat up whitespace */
+
+    .           printf( &quot;Unrecognized character: %s\n&quot;, yytext );
+
+    %%
+
+    int main( int argc, char **argv )
+        {
+        ++argv, --argc;  /* skip over program name */
+        if ( argc &gt; 0 )
+                yyin = fopen( argv[0], &quot;r&quot; );
+        else
+                yyin = stdin;
+
+        yylex();
+        }
+</pre></div>
+
+<p>This is the beginnings of a simple scanner for a language like Pascal.
+It identifies different types of <em>tokens</em> and reports on what it has
+seen.
+</p>
+<p>The details of this example will be explained in the following
+sections.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Format.html#Format" accesskey="n" rel="next">Format</a>, Previous: <a href="Introduction.html#Introduction" accesskey="p" rel="prev">Introduction</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

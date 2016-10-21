@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Misc Macros</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Misc Macros">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Misc Macros">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="User-Values.html#User-Values" rel="next" title="User Values">
+<link href="EOF.html#EOF" rel="prev" title="EOF">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Misc-Macros"></a>
+<div class="header">
+<p>
+Next: <a href="User-Values.html#User-Values" accesskey="n" rel="next">User Values</a>, Previous: <a href="EOF.html#EOF" accesskey="p" rel="prev">EOF</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Miscellaneous-Macros"></a>
+<h2 class="chapter">13 Miscellaneous Macros</h2>
+
+<a name="index-YY_005fUSER_005fACTION"></a>
+<p>The macro <code>YY_USER_ACTION</code> can be defined to provide an action
+which is always executed prior to the matched rule&rsquo;s action.  For
+example, it could be #define&rsquo;d to call a routine to convert yytext to
+lower-case.  When <code>YY_USER_ACTION</code> is invoked, the variable
+<code>yy_act</code> gives the number of the matched rule (rules are numbered
+starting with 1).  Suppose you want to profile how often each of your
+rules is matched.  The following would do the trick:
+</p>
+<a name="index-YY_005fUSER_005fACTION-to-track-each-time-a-rule-is-matched"></a>
+<div class="example">
+<pre class="verbatim">    #define YY_USER_ACTION ++ctr[yy_act]
+</pre></div>
+
+<a name="index-YY_005fNUM_005fRULES"></a>
+<p>where <code>ctr</code> is an array to hold the counts for the different rules.
+Note that the macro <code>YY_NUM_RULES</code> gives the total number of rules
+(including the default rule), even if you use &lsquo;<samp>-s)</samp>&rsquo;, so a correct
+declaration for <code>ctr</code> is:
+</p>
+<div class="example">
+<pre class="verbatim">    int ctr[YY_NUM_RULES];
+</pre></div>
+
+<a name="index-YY_005fUSER_005fINIT"></a>
+<p>The macro <code>YY_USER_INIT</code> may be defined to provide an action which
+is always executed before the first scan (and before the scanner&rsquo;s
+internal initializations are done).  For example, it could be used to
+call a routine to read in a data table or open a logging file.
+</p>
+<a name="index-yy_005fset_005finteractive"></a>
+<p>The macro <code>yy_set_interactive(is_interactive)</code> can be used to
+control whether the current buffer is considered <em>interactive</em>.  An
+interactive buffer is processed more slowly, but must be used when the
+scanner&rsquo;s input source is indeed interactive to avoid problems due to
+waiting to fill buffers (see the discussion of the &lsquo;<samp>-I</samp>&rsquo; flag in
+<a href="Scanner-Options.html#Scanner-Options">Scanner Options</a>).  A non-zero value in the macro invocation marks
+the buffer as interactive, a zero value as non-interactive.  Note that
+use of this macro overrides <code>%option always-interactive</code> or
+<code>%option never-interactive</code> (see <a href="Scanner-Options.html#Scanner-Options">Scanner Options</a>).
+<code>yy_set_interactive()</code> must be invoked prior to beginning to scan
+the buffer that is (or is not) to be considered interactive.
+</p>
+<a name="index-BOL_002c-setting-it"></a>
+<a name="index-yy_005fset_005fbol"></a>
+<p>The macro <code>yy_set_bol(at_bol)</code> can be used to control whether the
+current buffer&rsquo;s scanning context for the next token match is done as
+though at the beginning of a line.  A non-zero macro argument makes
+rules anchored with &lsquo;<samp>^</samp>&rsquo; active, while a zero argument makes
+&lsquo;<samp>^</samp>&rsquo; rules inactive.
+</p>
+<a name="index-BOL_002c-checking-the-BOL-flag"></a>
+<a name="index-YY_005fAT_005fBOL"></a>
+<p>The macro <code>YY_AT_BOL()</code> returns true if the next token scanned from
+the current buffer will have &lsquo;<samp>^</samp>&rsquo; rules active, false otherwise.
+</p>
+<a name="index-actions_002c-redefining-YY_005fBREAK"></a>
+<a name="index-YY_005fBREAK"></a>
+<p>In the generated scanner, the actions are all gathered in one large
+switch statement and separated using <code>YY_BREAK</code>, which may be
+redefined.  By default, it is simply a <code>break</code>, to separate each
+rule&rsquo;s action from the following rule&rsquo;s.  Redefining <code>YY_BREAK</code>
+allows, for example, C++ users to #define YY_BREAK to do nothing (while
+being very careful that every rule ends with a <code>break</code> or a
+<code>return</code>!) to avoid suffering from unreachable statement warnings
+where because a rule&rsquo;s action ends with <code>return</code>, the
+<code>YY_BREAK</code> is inaccessible.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="User-Values.html#User-Values" accesskey="n" rel="next">User Values</a>, Previous: <a href="EOF.html#EOF" accesskey="p" rel="prev">EOF</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

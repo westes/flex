@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-87</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-87">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-87">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="unnamed_002dfaq_002d88.html#unnamed_002dfaq_002d88" rel="next" title="unnamed-faq-88">
+<link href="unnamed_002dfaq_002d86.html#unnamed_002dfaq_002d86" rel="prev" title="unnamed-faq-86">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="unnamed_002dfaq_002d87"></a>
+<div class="header">
+<p>
+Next: <a href="unnamed_002dfaq_002d88.html#unnamed_002dfaq_002d88" accesskey="n" rel="next">unnamed-faq-88</a>, Previous: <a href="unnamed_002dfaq_002d86.html#unnamed_002dfaq_002d86" accesskey="p" rel="prev">unnamed-faq-86</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="unnamed_002dfaq_002d87-1"></a>
+<h3 class="unnumberedsec">unnamed-faq-87</h3>
+<div class="example">
+<pre class="verbatim">To: Erick Branderhorst &lt;Erick.Branderhorst@asml.nl&gt;
+Subject: Re: flex input buffer
+In-reply-to: Your message of Tue, 09 Feb 1999 13:53:46 PST.
+Date: Tue, 09 Feb 1999 21:03:37 PST
+From: Vern Paxson &lt;vern&gt;
+
+&gt; In the flex.skl file the size of the default input buffers is set.  Can you
+&gt; explain why this size is set and why it is such a high number.
+
+It's large to optimize performance when scanning large files.  You can
+safely make it a lot lower if needed.
+
+		Vern
+</pre></div>
+
+
+
+
+</body>
+</html>

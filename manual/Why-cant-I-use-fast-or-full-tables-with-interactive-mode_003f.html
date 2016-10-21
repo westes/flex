@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Why cant I use fast or full tables with interactive mode?</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Why cant I use fast or full tables with interactive mode?">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Why cant I use fast or full tables with interactive mode?">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="How-much-faster-is-_002dF-or-_002df-than-_002dC_003f.html#How-much-faster-is-_002dF-or-_002df-than-_002dC_003f" rel="next" title="How much faster is -F or -f than -C?">
+<link href="How-can-I-make-REJECT-cascade-across-start-condition-boundaries_003f.html#How-can-I-make-REJECT-cascade-across-start-condition-boundaries_003f" rel="prev" title="How can I make REJECT cascade across start condition boundaries?">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Why-cant-I-use-fast-or-full-tables-with-interactive-mode_003f"></a>
+<div class="header">
+<p>
+Next: <a href="How-much-faster-is-_002dF-or-_002df-than-_002dC_003f.html#How-much-faster-is-_002dF-or-_002df-than-_002dC_003f" accesskey="n" rel="next">How much faster is -F or -f than -C?</a>, Previous: <a href="How-can-I-make-REJECT-cascade-across-start-condition-boundaries_003f.html#How-can-I-make-REJECT-cascade-across-start-condition-boundaries_003f" accesskey="p" rel="prev">How can I make REJECT cascade across start condition boundaries?</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Why-can_0027t-I-use-fast-or-full-tables-with-interactive-mode_003f"></a>
+<h3 class="unnumberedsec">Why can&rsquo;t I use fast or full tables with interactive mode?</h3>
+
+<p>One of the assumptions
+flex makes is that interactive applications are inherently slow (they&rsquo;re
+waiting on a human after all).
+It has to do with how the scanner detects that it must be finished scanning
+a token.  For interactive scanners, after scanning each character the current
+state is looked up in a table (essentially) to see whether there&rsquo;s a chance
+of another input character possibly extending the length of the match.  If
+not, the scanner halts.  For non-interactive scanners, the end-of-token test
+is much simpler, basically a compare with 0, so no memory bus cycles.  Since
+the test occurs in the innermost scanning loop, one would like to make it go
+as fast as possible.
+</p>
+<p>Still, it seems reasonable to allow the user to choose to trade off a bit
+of performance in this area to gain the corresponding flexibility.  There
+might be another reason, though, why fast scanners don&rsquo;t support the
+interactive option.
+</p>
+
+
+
+</body>
+</html>

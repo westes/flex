@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Reentrant Functions</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Reentrant Functions">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Reentrant Functions">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Reentrant.html#Reentrant" rel="up" title="Reentrant">
+<link href="Lex-and-Posix.html#Lex-and-Posix" rel="next" title="Lex and Posix">
+<link href="About-yyscan_005ft.html#About-yyscan_005ft" rel="prev" title="About yyscan_t">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Reentrant-Functions"></a>
+<div class="header">
+<p>
+Previous: <a href="Reentrant-Detail.html#Reentrant-Detail" accesskey="p" rel="prev">Reentrant Detail</a>, Up: <a href="Reentrant.html#Reentrant" accesskey="u" rel="up">Reentrant</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Functions-and-Macros-Available-in-Reentrant-C-Scanners"></a>
+<h3 class="section">19.5 Functions and Macros Available in Reentrant C Scanners</h3>
+
+<p>The following Functions are available in a reentrant scanner:
+</p>
+<a name="index-yyget_005ftext"></a>
+<a name="index-yyget_005fleng"></a>
+<a name="index-yyget_005fin"></a>
+<a name="index-yyget_005fout"></a>
+<a name="index-yyget_005flineno"></a>
+<a name="index-yyset_005fin"></a>
+<a name="index-yyset_005fout"></a>
+<a name="index-yyset_005flineno"></a>
+<a name="index-yyget_005fdebug"></a>
+<a name="index-yyset_005fdebug"></a>
+<a name="index-yyget_005fextra-1"></a>
+<a name="index-yyset_005fextra-1"></a>
+
+<div class="example">
+<pre class="verbatim">    char *yyget_text ( yyscan_t scanner );
+    int yyget_leng ( yyscan_t scanner );
+    FILE *yyget_in ( yyscan_t scanner );
+    FILE *yyget_out ( yyscan_t scanner );
+    int yyget_lineno ( yyscan_t scanner );
+    YY_EXTRA_TYPE yyget_extra ( yyscan_t scanner );
+    int  yyget_debug ( yyscan_t scanner );
+
+    void yyset_debug ( int flag, yyscan_t scanner );
+    void yyset_in  ( FILE * in_str , yyscan_t scanner );
+    void yyset_out  ( FILE * out_str , yyscan_t scanner );
+    void yyset_lineno ( int line_number , yyscan_t scanner );
+    void yyset_extra ( YY_EXTRA_TYPE user_defined , yyscan_t scanner );
+</pre></div>
+
+<p>There are no &ldquo;set&rdquo; functions for yytext and yyleng. This is intentional.
+</p>
+<p>The following Macro shortcuts are available in actions in a reentrant
+scanner:
+</p>
+<div class="example">
+<pre class="verbatim">    yytext
+    yyleng
+    yyin
+    yyout
+    yylineno
+    yyextra
+    yy_flex_debug
+</pre></div>
+
+<a name="index-yylineno_002c-in-a-reentrant-scanner"></a>
+<p>In a reentrant C scanner, support for yylineno is always present
+(i.e., you may access yylineno), but the value is never modified by
+<code>flex</code> unless <code>%option yylineno</code> is enabled. This is to allow
+the user to maintain the line count independently of <code>flex</code>.
+</p>
+<a name="bison_002dfunctions"></a><p>The following functions and macros are made available when <code>%option
+bison-bridge</code> (&lsquo;<samp>--bison-bridge</samp>&rsquo;) is specified:
+</p>
+<div class="example">
+<pre class="verbatim">    YYSTYPE * yyget_lval ( yyscan_t scanner );
+    void yyset_lval ( YYSTYPE * yylvalp , yyscan_t scanner );
+    yylval
+</pre></div>
+
+<p>The following functions and macros are made available
+when <code>%option bison-locations</code> (&lsquo;<samp>--bison-locations</samp>&rsquo;) is specified:
+</p>
+<div class="example">
+<pre class="verbatim">    YYLTYPE *yyget_lloc ( yyscan_t scanner );
+    void yyset_lloc ( YYLTYPE * yyllocp , yyscan_t scanner );
+    yylloc
+</pre></div>
+
+<p>Support for yylval assumes that <code>YYSTYPE</code> is a valid type.  Support for
+yylloc assumes that <code>YYSLYPE</code> is a valid type.  Typically, these types are
+generated by <code>bison</code>, and are included in section 1 of the <code>flex</code>
+input.
+</p>
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Reentrant-Detail.html#Reentrant-Detail" accesskey="p" rel="prev">Reentrant Detail</a>, Up: <a href="Reentrant.html#Reentrant" accesskey="u" rel="up">Reentrant</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Init and Destroy Functions</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Init and Destroy Functions">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Init and Destroy Functions">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Reentrant-Detail.html#Reentrant-Detail" rel="up" title="Reentrant Detail">
+<link href="Accessor-Methods.html#Accessor-Methods" rel="next" title="Accessor Methods">
+<link href="Global-Replacement.html#Global-Replacement" rel="prev" title="Global Replacement">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Init-and-Destroy-Functions"></a>
+<div class="header">
+<p>
+Next: <a href="Accessor-Methods.html#Accessor-Methods" accesskey="n" rel="next">Accessor Methods</a>, Previous: <a href="Global-Replacement.html#Global-Replacement" accesskey="p" rel="prev">Global Replacement</a>, Up: <a href="Reentrant-Detail.html#Reentrant-Detail" accesskey="u" rel="up">Reentrant Detail</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Init-and-Destroy-Functions-1"></a>
+<h4 class="subsection">19.4.4 Init and Destroy Functions</h4>
+
+<a name="index-memory_002c-considerations-for-reentrant-scanners"></a>
+<a name="index-reentrant_002c-initialization"></a>
+<a name="index-yylex_005finit"></a>
+<a name="index-yylex_005fdestroy"></a>
+
+<p><code>yylex_init</code> and <code>yylex_destroy</code> must be called before and
+after <code>yylex</code>, respectively.
+</p>
+<div class="example">
+<pre class="verbatim">    int yylex_init ( yyscan_t * ptr_yy_globals ) ;
+    int yylex_init_extra ( YY_EXTRA_TYPE user_defined, yyscan_t * ptr_yy_globals ) ;
+    int yylex ( yyscan_t yyscanner ) ;
+    int yylex_destroy ( yyscan_t yyscanner ) ;
+</pre></div>
+
+<p>The function <code>yylex_init</code> must be called before calling any other
+function. The argument to <code>yylex_init</code> is the address of an
+uninitialized pointer to be filled in by <code>yylex_init</code>, overwriting
+any previous contents. The function <code>yylex_init_extra</code> may be used
+instead, taking as its first argument a variable of type <code>YY_EXTRA_TYPE</code>.
+See the section on yyextra, below, for more details.
+</p>
+<p>The value stored in <code>ptr_yy_globals</code> should
+thereafter be passed to <code>yylex</code> and <code>yylex_destroy</code>.  Flex
+does not save the argument passed to <code>yylex_init</code>, so it is safe to
+pass the address of a local pointer to <code>yylex_init</code> so long as it remains
+in scope for the duration of all calls to the scanner, up to and including
+the call to <code>yylex_destroy</code>.
+</p>
+<p>The function
+<code>yylex</code> should be familiar to you by now. The reentrant version
+takes one argument, which is the value returned (via an argument) by
+<code>yylex_init</code>.  Otherwise, it behaves the same as the non-reentrant
+version of <code>yylex</code>.
+</p>
+<p>Both <code>yylex_init</code> and <code>yylex_init_extra</code> returns 0 (zero) on success,
+or non-zero on failure, in which case errno is set to one of the following values:
+</p>
+<ul>
+<li> ENOMEM
+Memory allocation error. See <a href="Memory-Management.html#memory_002dmanagement">memory-management</a>.
+</li><li> EINVAL
+Invalid argument.
+</li></ul>
+
+
+<p>The function <code>yylex_destroy</code> should be
+called to free resources used by the scanner. After <code>yylex_destroy</code>
+is called, the contents of <code>yyscanner</code> should not be used.  Of
+course, there is no need to destroy a scanner if you plan to reuse it.
+A <code>flex</code> scanner (both reentrant and non-reentrant) may be
+restarted by calling <code>yyrestart</code>.
+</p>
+<p>Below is an example of a program that creates a scanner, uses it, then destroys
+it when done:
+</p>
+<div class="example">
+<pre class="verbatim">    int main ()
+    {
+        yyscan_t scanner;
+        int tok;
+
+        yylex_init(&amp;scanner);
+
+        while ((tok=yylex(scanner)) &gt; 0)
+            printf(&quot;tok=%d  yytext=%s\n&quot;, tok, yyget_text(scanner));
+
+        yylex_destroy(scanner);
+        return 0;
+    }
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Accessor-Methods.html#Accessor-Methods" accesskey="n" rel="next">Accessor Methods</a>, Previous: <a href="Global-Replacement.html#Global-Replacement" accesskey="p" rel="prev">Global Replacement</a>, Up: <a href="Reentrant-Detail.html#Reentrant-Detail" accesskey="u" rel="up">Reentrant Detail</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

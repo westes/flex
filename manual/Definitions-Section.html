@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Definitions Section</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Definitions Section">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Definitions Section">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Format.html#Format" rel="up" title="Format">
+<link href="Rules-Section.html#Rules-Section" rel="next" title="Rules Section">
+<link href="Format.html#Format" rel="prev" title="Format">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Definitions-Section"></a>
+<div class="header">
+<p>
+Next: <a href="Rules-Section.html#Rules-Section" accesskey="n" rel="next">Rules Section</a>, Previous: <a href="Format.html#Format" accesskey="p" rel="prev">Format</a>, Up: <a href="Format.html#Format" accesskey="u" rel="up">Format</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Format-of-the-Definitions-Section"></a>
+<h3 class="section">5.1 Format of the Definitions Section</h3>
+
+<a name="index-input-file_002c-Definitions-section"></a>
+<a name="index-Definitions_002c-in-flex-input"></a>
+<p>The <em>definitions section</em> contains declarations of simple <em>name</em>
+definitions to simplify the scanner specification, and declarations of
+<em>start conditions</em>, which are explained in a later section.
+</p>
+<a name="index-aliases_002c-how-to-define"></a>
+<a name="index-pattern-aliases_002c-how-to-define"></a>
+<p>Name definitions have the form:
+</p>
+<div class="example">
+<pre class="verbatim">    name definition
+</pre></div>
+
+<p>The &lsquo;<samp>name</samp>&rsquo; is a word beginning with a letter or an underscore
+(&lsquo;<samp>_</samp>&rsquo;) followed by zero or more letters, digits, &lsquo;<samp>_</samp>&rsquo;, or
+&lsquo;<samp>-</samp>&rsquo; (dash).  The definition is taken to begin at the first
+non-whitespace character following the name and continuing to the end of
+the line.  The definition can subsequently be referred to using
+&lsquo;<samp>{name}</samp>&rsquo;, which will expand to &lsquo;<samp>(definition)</samp>&rsquo;.  For example,
+</p>
+<a name="index-pattern-aliases_002c-defining"></a>
+<a name="index-defining-pattern-aliases"></a>
+<div class="example">
+<pre class="verbatim">    DIGIT    [0-9]
+    ID       [a-z][a-z0-9]*
+</pre></div>
+
+<p>Defines &lsquo;<samp>DIGIT</samp>&rsquo; to be a regular expression which matches a single
+digit, and &lsquo;<samp>ID</samp>&rsquo; to be a regular expression which matches a letter
+followed by zero-or-more letters-or-digits.  A subsequent reference to
+</p>
+<a name="index-pattern-aliases_002c-use-of"></a>
+<div class="example">
+<pre class="verbatim">    {DIGIT}+&quot;.&quot;{DIGIT}*
+</pre></div>
+
+<p>is identical to
+</p>
+<div class="example">
+<pre class="verbatim">    ([0-9])+&quot;.&quot;([0-9])*
+</pre></div>
+
+<p>and matches one-or-more digits followed by a &lsquo;<samp>.</samp>&rsquo; followed by
+zero-or-more digits.
+</p>
+<a name="index-comments-in-flex-input"></a>
+<p>An unindented comment (i.e., a line
+beginning with &lsquo;<samp>/*</samp>&rsquo;) is copied verbatim to the output up
+to the next &lsquo;<samp>*/</samp>&rsquo;.
+</p>
+<a name="index-_0025_007b-and-_0025_007d_002c-in-Definitions-Section"></a>
+<a name="index-embedding-C-code-in-flex-input"></a>
+<a name="index-C-code-in-flex-input"></a>
+<p>Any <em>indented</em> text or text enclosed in &lsquo;<samp>%{</samp>&rsquo; and &lsquo;<samp>%}</samp>&rsquo;
+is also copied verbatim to the output (with the %{ and %} symbols
+removed).  The %{ and %} symbols must appear unindented on lines by
+themselves.
+</p>
+<a name="index-_0025top"></a>
+
+<p>A <code>%top</code> block is similar to a &lsquo;<samp>%{</samp>&rsquo; ... &lsquo;<samp>%}</samp>&rsquo; block, except
+that the code in a <code>%top</code> block is relocated to the <em>top</em> of the
+generated file, before any flex definitions <a name="DOCF1" href="#FOOT1"><sup>1</sup></a>. 
+The <code>%top</code> block is useful when you want certain preprocessor macros to be
+defined or certain files to be included before the generated code.
+The single characters, &lsquo;<samp>{</samp>&rsquo;  and &lsquo;<samp>}</samp>&rsquo; are used to delimit the
+<code>%top</code> block, as show in the example below:
+</p>
+<div class="example">
+<pre class="verbatim">    %top{
+        /* This code goes at the &quot;top&quot; of the generated file. */
+        #include &lt;stdint.h&gt;
+        #include &lt;inttypes.h&gt;
+    }
+</pre></div>
+
+<p>Multiple <code>%top</code> blocks are allowed, and their order is preserved.
+</p>
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT1" href="#DOCF1">(1)</a></h3>
+<p>Actually,
+<code>yyIN_HEADER</code> is defined before the &lsquo;<samp>%top</samp>&rsquo; block.</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Rules-Section.html#Rules-Section" accesskey="n" rel="next">Rules Section</a>, Previous: <a href="Format.html#Format" accesskey="p" rel="prev">Format</a>, Up: <a href="Format.html#Format" accesskey="u" rel="up">Format</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: How do I skip as many chars as possible?</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: How do I skip as many chars as possible?">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: How do I skip as many chars as possible?">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="deleteme00.html#deleteme00" rel="next" title="deleteme00">
+<link href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f" rel="prev" title="How do I use my own I/O classes in a C++ scanner?">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="How-do-I-skip-as-many-chars-as-possible_003f"></a>
+<div class="header">
+<p>
+Next: <a href="deleteme00.html#deleteme00" accesskey="n" rel="next">deleteme00</a>, Previous: <a href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html#How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f" accesskey="p" rel="prev">How do I use my own I/O classes in a C++ scanner?</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="How-do-I-skip-as-many-chars-as-possible_003f-1"></a>
+<h3 class="unnumberedsec">How do I skip as many chars as possible?</h3>
+
+<p>How do I skip as many chars as possible &ndash; without interfering with the other
+patterns?
+</p>
+<p>In the example below, we want to skip over characters until we see the phrase
+&quot;endskip&quot;. The following will <em>NOT</em> work correctly (do you see why not?)
+</p>
+<div class="example">
+<pre class="verbatim">/* INCORRECT SCANNER */
+%x SKIP
+%%
+&lt;INITIAL&gt;startskip   BEGIN(SKIP);
+...
+&lt;SKIP&gt;&quot;endskip&quot;       BEGIN(INITIAL);
+&lt;SKIP&gt;.*             ;
+</pre></div>
+
+<p>The problem is that the pattern .* will eat up the word &quot;endskip.&quot;
+The simplest (but slow) fix is:
+</p>
+<div class="example">
+<pre class="verbatim">&lt;SKIP&gt;&quot;endskip&quot;      BEGIN(INITIAL);
+&lt;SKIP&gt;.              ;
+</pre></div>
+
+<p>The fix involves making the second rule match more, without
+making it match &quot;endskip&quot; plus something else.  So for example:
+</p>
+<div class="example">
+<pre class="verbatim">&lt;SKIP&gt;&quot;endskip&quot;     BEGIN(INITIAL);
+&lt;SKIP&gt;[^e]+         ;
+&lt;SKIP&gt;.		        ;/* so you eat up e's, too */
+</pre></div>
+
+
+
+
+</body>
+</html>

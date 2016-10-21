@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Extra Data</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Extra Data">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Extra Data">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Reentrant-Detail.html#Reentrant-Detail" rel="up" title="Reentrant Detail">
+<link href="About-yyscan_005ft.html#About-yyscan_005ft" rel="next" title="About yyscan_t">
+<link href="Accessor-Methods.html#Accessor-Methods" rel="prev" title="Accessor Methods">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Extra-Data"></a>
+<div class="header">
+<p>
+Next: <a href="About-yyscan_005ft.html#About-yyscan_005ft" accesskey="n" rel="next">About yyscan_t</a>, Previous: <a href="Accessor-Methods.html#Accessor-Methods" accesskey="p" rel="prev">Accessor Methods</a>, Up: <a href="Reentrant-Detail.html#Reentrant-Detail" accesskey="u" rel="up">Reentrant Detail</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Extra-Data-1"></a>
+<h4 class="subsection">19.4.6 Extra Data</h4>
+
+<a name="index-reentrant_002c-extra-data"></a>
+<a name="index-yyextra"></a>
+<p>User-specific data can be stored in <code>yyextra</code>.
+</p>
+<p>In a reentrant scanner, it is unwise to use global variables to
+communicate with or maintain state between different pieces of your program.
+However, you may need access to external data or invoke external functions
+from within the scanner actions.
+Likewise, you may need to pass information to your scanner
+(e.g., open file descriptors, or database connections).
+In a non-reentrant scanner, the only way to do this would be through the
+use of global variables.
+<code>Flex</code> allows you to store arbitrary, &ldquo;extra&rdquo; data in a scanner.
+This data is accessible through the accessor methods
+<code>yyget_extra</code> and <code>yyset_extra</code>
+from outside the scanner, and through the shortcut macro
+<code>yyextra</code>
+from within the scanner itself. They are defined as follows:
+</p>
+<a name="index-YY_005fEXTRA_005fTYPE-_0028reentrant-only_0029"></a>
+<a name="index-yyget_005fextra"></a>
+<a name="index-yyset_005fextra"></a>
+<div class="example">
+<pre class="verbatim">    #define YY_EXTRA_TYPE  void*
+    YY_EXTRA_TYPE  yyget_extra ( yyscan_t scanner );
+    void           yyset_extra ( YY_EXTRA_TYPE arbitrary_data , yyscan_t scanner);
+</pre></div>
+
+<p>In addition, an extra form of <code>yylex_init</code> is provided,
+<code>yylex_init_extra</code>. This function is provided so that the yyextra value can
+be accessed from within the very first yyalloc, used to allocate
+the scanner itself.
+</p>
+<p>By default, <code>YY_EXTRA_TYPE</code> is defined as type <code>void *</code>.  You
+may redefine this type using <code>%option extra-type=&quot;your_type&quot;</code> in 
+the scanner:
+</p>
+<a name="index-YY_005fEXTRA_005fTYPE_002c-defining-your-own-type"></a>
+<div class="example">
+<pre class="verbatim">    /* An example of overriding YY_EXTRA_TYPE. */
+    %{
+    #include &lt;sys/stat.h&gt;
+    #include &lt;unistd.h&gt;
+    %}
+    %option reentrant
+    %option extra-type=&quot;struct stat *&quot;
+    %%
+
+    __filesize__     printf( &quot;%ld&quot;, yyextra-&gt;st_size  );
+    __lastmod__      printf( &quot;%ld&quot;, yyextra-&gt;st_mtime );
+    %%
+    void scan_file( char* filename )
+    {
+        yyscan_t scanner;
+        struct stat buf;
+        FILE *in;
+
+        in = fopen( filename, &quot;r&quot; );
+        stat( filename, &amp;buf );
+
+        yylex_init_extra( buf, &amp;scanner );
+        yyset_in( in, scanner );
+        yylex( scanner );
+        yylex_destroy( scanner );
+
+        fclose( in );
+   }
+</pre></div>
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="About-yyscan_005ft.html#About-yyscan_005ft" accesskey="n" rel="next">About yyscan_t</a>, Previous: <a href="Accessor-Methods.html#Accessor-Methods" accesskey="p" rel="prev">Accessor Methods</a>, Up: <a href="Reentrant-Detail.html#Reentrant-Detail" accesskey="u" rel="up">Reentrant Detail</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

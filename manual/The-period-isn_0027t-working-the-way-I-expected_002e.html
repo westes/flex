@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: The period isn't working the way I expected.</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: The period isn't working the way I expected.">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: The period isn't working the way I expected.">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="Can-I-get-the-flex-manual-in-another-format_003f.html#Can-I-get-the-flex-manual-in-another-format_003f" rel="next" title="Can I get the flex manual in another format?">
+<link href="How-can-I-match-C_002dstyle-comments_003f.html#How-can-I-match-C_002dstyle-comments_003f" rel="prev" title="How can I match C-style comments?">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="The-period-isn_0027t-working-the-way-I-expected_002e"></a>
+<div class="header">
+<p>
+Next: <a href="Can-I-get-the-flex-manual-in-another-format_003f.html#Can-I-get-the-flex-manual-in-another-format_003f" accesskey="n" rel="next">Can I get the flex manual in another format?</a>, Previous: <a href="How-can-I-match-C_002dstyle-comments_003f.html#How-can-I-match-C_002dstyle-comments_003f" accesskey="p" rel="prev">How can I match C-style comments?</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="The-_0027_002e_0027-isn_0027t-working-the-way-I-expected_002e"></a>
+<h3 class="unnumberedsec">The &rsquo;.&rsquo; isn&rsquo;t working the way I expected.</h3>
+
+<p>Here are some tips for using &lsquo;<samp>.</samp>&rsquo;:
+</p>
+<ul>
+<li> A common mistake is to place the grouping parenthesis AFTER an operator, when
+you really meant to place the parenthesis BEFORE the operator, e.g., you
+probably want this <code>(foo|bar)+</code> and NOT this <code>(foo|bar+)</code>.
+
+<p>The first pattern matches the words &lsquo;<samp>foo</samp>&rsquo; or &lsquo;<samp>bar</samp>&rsquo; any number of
+times, e.g., it matches the text &lsquo;<samp>barfoofoobarfoo</samp>&rsquo;. The
+second pattern matches a single instance of <code>foo</code> or a single instance of
+<code>bar</code> followed by one or more &lsquo;<samp>r</samp>&rsquo;s, e.g., it matches the text <code>barrrr</code> .
+</p></li><li> A &lsquo;<samp>.</samp>&rsquo; inside &lsquo;<samp>[]</samp>&rsquo;&rsquo;s just means a literal&lsquo;<samp>.</samp>&rsquo; (period),
+and NOT &ldquo;any character except newline&rdquo;.
+</li><li> Remember that &lsquo;<samp>.</samp>&rsquo; matches any character EXCEPT &lsquo;<samp>\n</samp>&rsquo; (and &lsquo;<samp>EOF</samp>&rsquo;).
+If you really want to match ANY character, including newlines, then use <code>(.|\n)</code>
+Beware that the regex <code>(.|\n)+</code> will match your entire input!
+</li><li> Finally, if you want to match a literal &lsquo;<samp>.</samp>&rsquo; (a period), then use &lsquo;<samp>[.]</samp>&rsquo; or &lsquo;<samp>&quot;.&quot;</samp>&rsquo;
+</li></ul>
+
+
+
+
+</body>
+</html>

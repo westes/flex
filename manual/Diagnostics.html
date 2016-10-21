@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Diagnostics</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Diagnostics">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Diagnostics">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Limitations.html#Limitations" rel="next" title="Limitations">
+<link href="Tables-File-Format.html#Tables-File-Format" rel="prev" title="Tables File Format">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Diagnostics"></a>
+<div class="header">
+<p>
+Next: <a href="Limitations.html#Limitations" accesskey="n" rel="next">Limitations</a>, Previous: <a href="Serialized-Tables.html#Serialized-Tables" accesskey="p" rel="prev">Serialized Tables</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Diagnostics-1"></a>
+<h2 class="chapter">23 Diagnostics</h2>
+
+<a name="index-error-reporting_002c-diagnostic-messages"></a>
+<a name="index-warnings_002c-diagnostic-messages"></a>
+
+<p>The following is a list of <code>flex</code> diagnostic messages:
+</p>
+<ul>
+<li> &lsquo;<samp>warning, rule cannot be matched</samp>&rsquo; indicates that the given rule
+cannot be matched because it follows other rules that will always match
+the same text as it.  For example, in the following &lsquo;<samp>foo</samp>&rsquo; cannot be
+matched because it comes after an identifier &ldquo;catch-all&rdquo; rule:
+
+<a name="index-warning_002c-rule-cannot-be-matched"></a>
+<div class="example">
+<pre class="verbatim">    [a-z]+    got_identifier();
+    foo       got_foo();
+</pre></div>
+
+<p>Using <code>REJECT</code> in a scanner suppresses this warning.
+</p>
+</li><li> &lsquo;<samp>warning, -s option given but default rule can be matched</samp>&rsquo; means
+that it is possible (perhaps only in a particular start condition) that
+the default rule (match any single character) is the only one that will
+match a particular input.  Since &lsquo;<samp>-s</samp>&rsquo; was given, presumably this is
+not intended.
+
+</li><li> <code>reject_used_but_not_detected undefined</code> or
+<code>yymore_used_but_not_detected undefined</code>. These errors can occur
+at compile time.  They indicate that the scanner uses <code>REJECT</code> or
+<code>yymore()</code> but that <code>flex</code> failed to notice the fact, meaning
+that <code>flex</code> scanned the first two sections looking for occurrences
+of these actions and failed to find any, but somehow you snuck some in
+(via a #include file, for example).  Use <code>%option reject</code> or
+<code>%option yymore</code> to indicate to <code>flex</code> that you really do use
+these features.
+
+</li><li> &lsquo;<samp>flex scanner jammed</samp>&rsquo;. a scanner compiled with
+&lsquo;<samp>-s</samp>&rsquo; has encountered an input string which wasn&rsquo;t matched by any of
+its rules.  This error can also occur due to internal problems.
+
+</li><li> &lsquo;<samp>token too large, exceeds YYLMAX</samp>&rsquo;. your scanner uses <code>%array</code>
+and one of its rules matched a string longer than the <code>YYLMAX</code>
+constant (8K bytes by default).  You can increase the value by
+#define&rsquo;ing <code>YYLMAX</code> in the definitions section of your <code>flex</code>
+input.
+
+</li><li> &lsquo;<samp>scanner requires -8 flag to use the character 'x'</samp>&rsquo;. Your scanner
+specification includes recognizing the 8-bit character &lsquo;<samp>'x'</samp>&rsquo; and
+you did not specify the -8 flag, and your scanner defaulted to 7-bit
+because you used the &lsquo;<samp>-Cf</samp>&rsquo; or &lsquo;<samp>-CF</samp>&rsquo; table compression options.
+See the discussion of the &lsquo;<samp>-7</samp>&rsquo; flag, <a href="Scanner-Options.html#Scanner-Options">Scanner Options</a>, for
+details.
+
+</li><li> &lsquo;<samp>flex scanner push-back overflow</samp>&rsquo;. you used <code>unput()</code> to push
+back so much text that the scanner&rsquo;s buffer could not hold both the
+pushed-back text and the current token in <code>yytext</code>.  Ideally the
+scanner should dynamically resize the buffer in this case, but at
+present it does not.
+
+</li><li> &lsquo;<samp>input buffer overflow, can't enlarge buffer because scanner uses
+REJECT</samp>&rsquo;.  the scanner was working on matching an extremely large token
+and needed to expand the input buffer.  This doesn&rsquo;t work with scanners
+that use <code>REJECT</code>.
+
+</li><li> &lsquo;<samp>fatal flex scanner internal error--end of buffer missed</samp>&rsquo;. This can
+occur in a scanner which is reentered after a long-jump has jumped out
+(or over) the scanner&rsquo;s activation frame.  Before reentering the
+scanner, use:
+<div class="example">
+<pre class="verbatim">    yyrestart( yyin );
+</pre></div>
+<p>or, as noted above, switch to using the C++ scanner class.
+</p>
+</li><li> &lsquo;<samp>too many start conditions in &lt;&gt; construct!</samp>&rsquo;  you listed more start
+conditions in a &lt;&gt; construct than exist (so you must have listed at
+least one of them twice).
+</li></ul>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Limitations.html#Limitations" accesskey="n" rel="next">Limitations</a>, Previous: <a href="Serialized-Tables.html#Serialized-Tables" accesskey="p" rel="prev">Serialized Tables</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

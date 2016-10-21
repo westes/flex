@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: The | operator is not doing what I want</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: The | operator is not doing what I want">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: The | operator is not doing what I want">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="Why-can_0027t-flex-understand-this-variable-trailing-context-pattern_003f.html#Why-can_0027t-flex-understand-this-variable-trailing-context-pattern_003f" rel="next" title="Why can't flex understand this variable trailing context pattern?">
+<link href="unput_0028_0029-messes-up-yy_005fat_005fbol.html#unput_0028_0029-messes-up-yy_005fat_005fbol" rel="prev" title="unput() messes up yy_at_bol">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="The-_007c-operator-is-not-doing-what-I-want"></a>
+<div class="header">
+<p>
+Next: <a href="Why-can_0027t-flex-understand-this-variable-trailing-context-pattern_003f.html#Why-can_0027t-flex-understand-this-variable-trailing-context-pattern_003f" accesskey="n" rel="next">Why can't flex understand this variable trailing context pattern?</a>, Previous: <a href="unput_0028_0029-messes-up-yy_005fat_005fbol.html#unput_0028_0029-messes-up-yy_005fat_005fbol" accesskey="p" rel="prev">unput() messes up yy_at_bol</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="The-_007c-operator-is-not-doing-what-I-want-1"></a>
+<h3 class="unnumberedsec">The | operator is not doing what I want</h3>
+<div class="example">
+<pre class="verbatim">To: Alain.ISSARD@st.com
+Subject: Re: Start condition with FLEX
+In-reply-to: Your message of Mon, 18 Nov 1996 09:45:02 PST.
+Date: Mon, 18 Nov 1996 10:41:34 PST
+From: Vern Paxson &lt;vern&gt;
+
+&gt; I am not able to use the start condition scope and to use the | (OR) with
+&gt; rules having start conditions.
+
+The problem is that if you use '|' as a regular expression operator, for
+example &quot;a|b&quot; meaning &quot;match either 'a' or 'b'&quot;, then it must *not* have
+any blanks around it.  If you instead want the special '|' *action* (which
+from your scanner appears to be the case), which is a way of giving two
+different rules the same action:
+
+	foo	|
+	bar	matched_foo_or_bar();
+
+then '|' *must* be separated from the first rule by whitespace and *must*
+be followed by a new line.  You *cannot* write it as:
+
+	foo | bar	matched_foo_or_bar();
+
+even though you might think you could because yacc supports this syntax.
+The reason for this unfortunately incompatibility is historical, but it's
+unlikely to be changed.
+
+Your problems with start condition scope are simply due to syntax errors
+from your use of '|' later confusing flex.
+
+Let me know if you still have problems.
+
+		Vern
+</pre></div>
+
+
+
+
+</body>
+</html>

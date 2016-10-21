@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Reentrant Uses</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Reentrant Uses">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Reentrant Uses">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Reentrant.html#Reentrant" rel="up" title="Reentrant">
+<link href="Reentrant-Overview.html#Reentrant-Overview" rel="next" title="Reentrant Overview">
+<link href="Reentrant.html#Reentrant" rel="prev" title="Reentrant">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Reentrant-Uses"></a>
+<div class="header">
+<p>
+Next: <a href="Reentrant-Overview.html#Reentrant-Overview" accesskey="n" rel="next">Reentrant Overview</a>, Previous: <a href="Reentrant.html#Reentrant" accesskey="p" rel="prev">Reentrant</a>, Up: <a href="Reentrant.html#Reentrant" accesskey="u" rel="up">Reentrant</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Uses-for-Reentrant-Scanners"></a>
+<h3 class="section">19.1 Uses for Reentrant Scanners</h3>
+
+<p>However, there are other uses for a reentrant scanner.  For example, you
+could scan two or more files simultaneously to implement a <code>diff</code> at
+the token level (i.e., instead of at the character level):
+</p>
+<a name="index-reentrant-scanners_002c-multiple-interleaved-scanners"></a>
+<div class="example">
+<pre class="verbatim">    /* Example of maintaining more than one active scanner. */
+
+    do {
+        int tok1, tok2;
+
+        tok1 = yylex( scanner_1 );
+        tok2 = yylex( scanner_2 );
+
+        if( tok1 != tok2 )
+            printf(&quot;Files are different.&quot;);
+
+   } while ( tok1 &amp;&amp; tok2 );
+</pre></div>
+
+<p>Another use for a reentrant scanner is recursion.
+(Note that a recursive scanner can also be created using a non-reentrant scanner and
+buffer states. See <a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a>.)
+</p>
+<p>The following crude scanner supports the &lsquo;<samp>eval</samp>&rsquo; command by invoking
+another instance of itself.
+</p>
+<a name="index-reentrant-scanners_002c-recursive-invocation"></a>
+<div class="example">
+<pre class="verbatim">    /* Example of recursive invocation. */
+
+    %option reentrant
+
+    %%
+    &quot;eval(&quot;.+&quot;)&quot;  {
+                      yyscan_t scanner;
+                      YY_BUFFER_STATE buf;
+
+                      yylex_init( &amp;scanner );
+                      yytext[yyleng-1] = ' ';
+
+                      buf = yy_scan_string( yytext + 5, scanner );
+                      yylex( scanner );
+
+                      yy_delete_buffer(buf,scanner);
+                      yylex_destroy( scanner );
+                 }
+    ...
+    %%
+</pre></div>
+
+
+
+
+</body>
+</html>

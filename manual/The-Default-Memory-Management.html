@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: The Default Memory Management</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: The Default Memory Management">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: The Default Memory Management">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Memory-Management.html#Memory-Management" rel="up" title="Memory Management">
+<link href="Overriding-The-Default-Memory-Management.html#Overriding-The-Default-Memory-Management" rel="next" title="Overriding The Default Memory Management">
+<link href="Memory-Management.html#Memory-Management" rel="prev" title="Memory Management">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="The-Default-Memory-Management"></a>
+<div class="header">
+<p>
+Next: <a href="Overriding-The-Default-Memory-Management.html#Overriding-The-Default-Memory-Management" accesskey="n" rel="next">Overriding The Default Memory Management</a>, Previous: <a href="Memory-Management.html#Memory-Management" accesskey="p" rel="prev">Memory Management</a>, Up: <a href="Memory-Management.html#Memory-Management" accesskey="u" rel="up">Memory Management</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="The-Default-Memory-Management-1"></a>
+<h3 class="section">21.1 The Default Memory Management</h3>
+
+<p>Flex allocates dynamic memory during initialization, and once in a while from
+within a call to yylex(). Initialization takes place during the first call to
+yylex(). Thereafter, flex may reallocate more memory if it needs to enlarge a
+buffer. As of version 2.5.9 Flex will clean up all memory when you call <code>yylex_destroy</code>
+See <a href="Memory-leak-_002d-16386-bytes-allocated-by-malloc_002e.html#faq_002dmemory_002dleak">faq-memory-leak</a>.
+</p>
+<p>Flex allocates dynamic memory for four purposes, listed below <a name="DOCF2" href="#FOOT2"><sup>2</sup></a> 
+</p>
+<dl compact="compact">
+<dt>16kB for the input buffer.</dt>
+<dd><p>Flex allocates memory for the character buffer used to perform pattern
+matching.  Flex must read ahead from the input stream and store it in a large
+character buffer.  This buffer is typically the largest chunk of dynamic memory
+flex consumes. This buffer will grow if necessary, doubling the size each time.
+Flex frees this memory when you call yylex_destroy().  The default size of this
+buffer (16384 bytes) is almost always too large.  The ideal size for this
+buffer is the length of the longest token expected, in bytes, plus a little more.  Flex will allocate a few
+extra bytes for housekeeping. Currently, to override the size of the input buffer
+you must <code>#define YY_BUF_SIZE</code> to whatever number of bytes you want. We don&rsquo;t plan
+to change this in the near future, but we reserve the right to do so if we ever add a more robust memory management
+API. 
+</p>
+</dd>
+<dt>64kb for the REJECT state. This will only be allocated if you use REJECT.</dt>
+<dd><p>The size is  large enough to hold the same number of states as characters in the input buffer. If you override the size of the
+input buffer (via <code>YY_BUF_SIZE</code>), then you automatically override the size of this buffer as well.
+</p>
+</dd>
+<dt>100 bytes for the start condition stack.</dt>
+<dd><p>Flex allocates memory for the start condition stack. This is the stack used
+for pushing start states, i.e., with yy_push_state(). It will grow if
+necessary.  Since the states are simply integers, this stack doesn&rsquo;t consume
+much memory.  This stack is not present if <code>%option stack</code> is not
+specified.  You will rarely need to tune this buffer. The ideal size for this
+stack is the maximum depth expected.  The memory for this stack is
+automatically destroyed when you call yylex_destroy(). See <a href="Options-Affecting-Scanner-Behavior.html#option_002dstack">option-stack</a>.
+</p>
+</dd>
+<dt>40 bytes for each YY_BUFFER_STATE.</dt>
+<dd><p>Flex allocates memory for each YY_BUFFER_STATE. The buffer state itself
+is about 40 bytes, plus an additional large character buffer (described above.)
+The initial buffer state is created during initialization, and with each call
+to yy_create_buffer(). You can&rsquo;t tune the size of this, but you can tune the
+character buffer as described above. Any buffer state that you explicitly
+create by calling yy_create_buffer() is <em>NOT</em> destroyed automatically. You
+must call yy_delete_buffer() to free the memory. The exception to this rule is
+that flex will delete the current buffer automatically when you call
+yylex_destroy(). If you delete the current buffer, be sure to set it to NULL.
+That way, flex will not try to delete the buffer a second time (possibly
+crashing your program!) At the time of this writing, flex does not provide a
+growable stack for the buffer states.  You have to manage that yourself.
+See <a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a>.
+</p>
+</dd>
+<dt>84 bytes for the reentrant scanner guts</dt>
+<dd><p>Flex allocates about 84 bytes for the reentrant scanner structure when
+you call yylex_init(). It is destroyed when the user calls yylex_destroy().
+</p>
+</dd>
+</dl>
+
+
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT2" href="#DOCF2">(2)</a></h3>
+<p>The
+quantities given here are approximate, and may vary due to host architecture,
+compiler configuration, or due to future enhancements to flex.</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Overriding-The-Default-Memory-Management.html#Overriding-The-Default-Memory-Management" accesskey="n" rel="next">Overriding The Default Memory Management</a>, Previous: <a href="Memory-Management.html#Memory-Management" accesskey="p" rel="prev">Memory Management</a>, Up: <a href="Memory-Management.html#Memory-Management" accesskey="u" rel="up">Memory Management</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

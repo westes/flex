@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-91</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-91">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-91">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="unnamed_002dfaq_002d92.html#unnamed_002dfaq_002d92" rel="next" title="unnamed-faq-92">
+<link href="unnamed_002dfaq_002d90.html#unnamed_002dfaq_002d90" rel="prev" title="unnamed-faq-90">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="unnamed_002dfaq_002d91"></a>
+<div class="header">
+<p>
+Next: <a href="unnamed_002dfaq_002d92.html#unnamed_002dfaq_002d92" accesskey="n" rel="next">unnamed-faq-92</a>, Previous: <a href="unnamed_002dfaq_002d90.html#unnamed_002dfaq_002d90" accesskey="p" rel="prev">unnamed-faq-90</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="unnamed_002dfaq_002d91-1"></a>
+<h3 class="unnumberedsec">unnamed-faq-91</h3>
+<div class="example">
+<pre class="verbatim">Received: from mc-qout4.whowhere.com (mc-qout4.whowhere.com [209.185.123.18])
+	by ee.lbl.gov (8.9.3/8.9.3) with SMTP id IAA05100
+	for &lt;vern@ee.lbl.gov&gt;; Tue, 15 Jun 1999 08:56:06 -0700 (PDT)
+Received: from Unknown/Local ([?.?.?.?]) by my-deja.com; Tue Jun 15 08:55:43 1999
+To: vern@ee.lbl.gov
+Date: Tue, 15 Jun 1999 08:55:43 -0700
+From: &quot;Aki Niimura&quot; &lt;neko@my-deja.com&gt;
+Message-ID: &lt;KNONDOHDOBGAEAAA@my-deja.com&gt;
+Mime-Version: 1.0
+Cc:
+X-Sent-Mail: on
+Reply-To:
+X-Mailer: MailCity Service
+Subject: A question on flex C++ scanner
+X-Sender-Ip: 12.72.207.61
+Organization: My Deja Email  (http://www.my-deja.com:80)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+Dear Dr. Paxon,
+
+I have been using flex for years.
+It works very well on many projects.
+Most case, I used it to generate a scanner on C language.
+However, one project I needed to generate  a scanner
+on C++ lanuage. Thanks to your enhancement, flex did
+the job.
+
+Currently, I'm working on enhancing my previous project.
+I need to deal with multiple input streams (recursive
+inclusion) in this scanner (C++).
+I did similar thing for another scanner (C) as you
+explained in your documentation.
+
+The generated scanner (C++) has necessary methods:
+- switch_to_buffer(struct yy_buffer_state *b)
+- yy_create_buffer(istream *is, int sz)
+- yy_delete_buffer(struct yy_buffer_state *b)
+
+However, I couldn't figure out how to access current
+buffer (yy_current_buffer).
+
+yy_current_buffer is a protected member of yyFlexLexer.
+I can't access it directly.
+Then, I thought yy_create_buffer() with is = 0 might
+return current stream buffer. But it seems not as far
+as I checked the source. (flex 2.5.4)
+
+I went through the Web in addition to Flex documentation.
+However, it hasn't been successful, so far.
+
+It is not my intention to bother you, but, can you
+comment about how to obtain the current stream buffer?
+
+Your response would be highly appreciated.
+
+Best regards,
+Aki Niimura
+
+--== Sent via Deja.com http://www.deja.com/ ==--
+Share what you know. Learn what you don't.
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="unnamed_002dfaq_002d92.html#unnamed_002dfaq_002d92" accesskey="n" rel="next">unnamed-faq-92</a>, Previous: <a href="unnamed_002dfaq_002d90.html#unnamed_002dfaq_002d90" accesskey="p" rel="prev">unnamed-faq-90</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

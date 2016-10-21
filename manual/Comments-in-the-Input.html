@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Comments in the Input</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Comments in the Input">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Comments in the Input">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Format.html#Format" rel="up" title="Format">
+<link href="Patterns.html#Patterns" rel="next" title="Patterns">
+<link href="User-Code-Section.html#User-Code-Section" rel="prev" title="User Code Section">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Comments-in-the-Input"></a>
+<div class="header">
+<p>
+Previous: <a href="User-Code-Section.html#User-Code-Section" accesskey="p" rel="prev">User Code Section</a>, Up: <a href="Format.html#Format" accesskey="u" rel="up">Format</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Comments-in-the-Input-1"></a>
+<h3 class="section">5.4 Comments in the Input</h3>
+
+<a name="index-comments_002c-syntax-of"></a>
+<p>Flex supports C-style comments, that is, anything between &lsquo;<samp>/*</samp>&rsquo; and
+&lsquo;<samp>*/</samp>&rsquo; is
+considered a comment. Whenever flex encounters a comment, it copies the
+entire comment verbatim to the generated source code. Comments may
+appear just about anywhere, but with the following exceptions:
+</p>
+<ul>
+<li> <a name="index-comments_002c-in-rules-section"></a>
+Comments may not appear in the Rules Section wherever flex is expecting
+a regular expression. This means comments may not appear at the
+beginning of a line, or immediately following a list of scanner states.
+</li><li> Comments may not appear on an &lsquo;<samp>%option</samp>&rsquo; line in the Definitions
+Section.
+</li></ul>
+
+<p>If you want to follow a simple rule, then always begin a comment on a
+new line, with one or more whitespace characters before the initial
+&lsquo;<samp>/*</samp>&rsquo;).  This rule will work anywhere in the input file.
+</p>
+<p>All the comments in the following example are valid:
+</p>
+<a name="index-comments_002c-valid-uses-of"></a>
+<a name="index-comments-in-the-input"></a>
+<div class="example">
+<pre class="verbatim">%{
+/* code block */
+%}
+
+/* Definitions Section */
+%x STATE_X
+
+%%
+    /* Rules Section */
+ruleA   /* after regex */ { /* code block */ } /* after code block */
+        /* Rules Section (indented) */
+&lt;STATE_X&gt;{
+ruleC   ECHO;
+ruleD   ECHO;
+%{
+/* code block */
+%}
+}
+%%
+/* User Code Section */
+
+</pre></div>
+
+
+
+
+</body>
+</html>

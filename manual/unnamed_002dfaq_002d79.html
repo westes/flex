@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-79</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-79">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-79">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="unnamed_002dfaq_002d80.html#unnamed_002dfaq_002d80" rel="next" title="unnamed-faq-80">
+<link href="unnamed_002dfaq_002d78.html#unnamed_002dfaq_002d78" rel="prev" title="unnamed-faq-78">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="unnamed_002dfaq_002d79"></a>
+<div class="header">
+<p>
+Next: <a href="unnamed_002dfaq_002d80.html#unnamed_002dfaq_002d80" accesskey="n" rel="next">unnamed-faq-80</a>, Previous: <a href="unnamed_002dfaq_002d78.html#unnamed_002dfaq_002d78" accesskey="p" rel="prev">unnamed-faq-78</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="unnamed_002dfaq_002d79-1"></a>
+<h3 class="unnumberedsec">unnamed-faq-79</h3>
+<div class="example">
+<pre class="verbatim">To: Adoram Rogel &lt;adoram@hybridge.com&gt;
+Subject: Re: More than 32K states change hangs
+In-reply-to: Your message of Tue, 04 Aug 1998 16:55:39 PDT.
+Date: Tue, 04 Aug 1998 22:28:45 PDT
+From: Vern Paxson &lt;vern&gt;
+
+&gt; Vern Paxson,
+&gt;
+&gt; I followed your advice, posted on Usenet bu you, and emailed to me
+&gt; personally by you, on how to overcome the 32K states limit. I'm running
+&gt; on Linux machines.
+&gt; I took the full source of version 2.5.4 and did the following changes in
+&gt; flexdef.h:
+&gt; #define JAMSTATE -327660
+&gt; #define MAXIMUM_MNS 319990
+&gt; #define BAD_SUBSCRIPT -327670
+&gt; #define MAX_SHORT 327000
+&gt;
+&gt; and compiled.
+&gt; All looked fine, including check and bigcheck, so I installed.
+
+Hmmm, you shouldn't increase MAX_SHORT, though looking through my email
+archives I see that I did indeed recommend doing so.  Try setting it back
+to 32700; that should suffice that you no longer need -Ca.  If it still
+hangs, then the interesting question is - where?
+
+&gt; Compiling the same hanged program with a out-of-the-box (RedHat 4.2
+&gt; distribution of Linux)
+&gt; flex 2.5.4 binary works.
+
+Since Linux comes with source code, you should diff it against what
+you have to see what problems they missed.
+
+&gt; Should I always compile with the -Ca option now ? even short and simple
+&gt; filters ?
+
+No, definitely not.  It's meant to be for those situations where you
+absolutely must squeeze every last cycle out of your scanner.
+
+		Vern
+</pre></div>
+
+
+
+
+</body>
+</html>

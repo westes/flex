@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Options for Scanner Speed and Size</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Options for Scanner Speed and Size">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Options for Scanner Speed and Size">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Scanner-Options.html#Scanner-Options" rel="up" title="Scanner Options">
+<link href="Debugging-Options.html#Debugging-Options" rel="next" title="Debugging Options">
+<link href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options" rel="prev" title="Code-Level And API Options">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Options-for-Scanner-Speed-and-Size"></a>
+<div class="header">
+<p>
+Next: <a href="Debugging-Options.html#Debugging-Options" accesskey="n" rel="next">Debugging Options</a>, Previous: <a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options" accesskey="p" rel="prev">Code-Level And API Options</a>, Up: <a href="Scanner-Options.html#Scanner-Options" accesskey="u" rel="up">Scanner Options</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Options-for-Scanner-Speed-and-Size-1"></a>
+<h3 class="section">16.4 Options for Scanner Speed and Size</h3>
+
+<dl compact="compact">
+<dt>&lsquo;<samp>-C[aefFmr]</samp>&rsquo;</dt>
+<dd><p>controls the degree of table compression and, more generally, trade-offs
+between small scanners and fast scanners.
+</p>
+<dl compact="compact">
+<dd><a name="index-_002dC"></a>
+</dd>
+<dt>&lsquo;<samp>-C</samp>&rsquo;</dt>
+<dd><p>A lone &lsquo;<samp>-C</samp>&rsquo; specifies that the scanner tables should be compressed
+but neither equivalence classes nor meta-equivalence classes should be
+used.
+</p>
+<a name="option_002dalign"></a><a name="index-_002dCa"></a>
+<a name="index-_002d_002d_002dalign"></a>
+<a name="index-align"></a>
+</dd>
+<dt>&lsquo;<samp>-Ca, --align, <code>%option align</code></samp>&rsquo;</dt>
+<dd><p>(&ldquo;align&rdquo;) instructs flex to trade off larger tables in the
+generated scanner for faster performance because the elements of
+the tables are better aligned for memory access and computation.  On some
+RISC architectures, fetching and manipulating longwords is more efficient
+than with smaller-sized units such as shortwords.  This option can
+quadruple the size of the tables used by your scanner.
+</p>
+<a name="option_002decs"></a><a name="index-_002dCe"></a>
+<a name="index-_002d_002d_002decs"></a>
+<a name="index-ecs"></a>
+</dd>
+<dt>&lsquo;<samp>-Ce, --ecs, <code>%option ecs</code></samp>&rsquo;</dt>
+<dd><p>directs <code>flex</code> to construct <em>equivalence classes</em>, i.e., sets
+of characters which have identical lexical properties (for example, if
+the only appearance of digits in the <code>flex</code> input is in the
+character class &ldquo;[0-9]&rdquo; then the digits &rsquo;0&rsquo;, &rsquo;1&rsquo;, ..., &rsquo;9&rsquo; will all be
+put in the same equivalence class).  Equivalence classes usually give
+dramatic reductions in the final table/object file sizes (typically a
+factor of 2-5) and are pretty cheap performance-wise (one array look-up
+per character scanned).
+</p>
+<a name="index-_002dCf"></a>
+</dd>
+<dt>&lsquo;<samp>-Cf</samp>&rsquo;</dt>
+<dd><p>specifies that the <em>full</em> scanner tables should be generated -
+<code>flex</code> should not compress the tables by taking advantages of
+similar transition functions for different states.
+</p>
+<a name="index-_002dCF"></a>
+</dd>
+<dt>&lsquo;<samp>-CF</samp>&rsquo;</dt>
+<dd><p>specifies that the alternate fast scanner representation (described
+above under the &lsquo;<samp>--fast</samp>&rsquo; flag) should be used.  This option cannot be
+used with &lsquo;<samp>--c++</samp>&rsquo;.
+</p>
+<a name="option_002dmeta_002decs"></a><a name="index-_002dCm"></a>
+<a name="index-_002d_002d_002dmeta_002decs"></a>
+<a name="index-meta_002decs"></a>
+</dd>
+<dt>&lsquo;<samp>-Cm, --meta-ecs, <code>%option meta-ecs</code></samp>&rsquo;</dt>
+<dd><p>directs
+<code>flex</code>
+to construct
+<em>meta-equivalence classes</em>,
+which are sets of equivalence classes (or characters, if equivalence
+classes are not being used) that are commonly used together.  Meta-equivalence
+classes are often a big win when using compressed tables, but they
+have a moderate performance impact (one or two <code>if</code> tests and one
+array look-up per character scanned).
+</p>
+<a name="option_002dread"></a><a name="index-_002dCr"></a>
+<a name="index-_002d_002d_002dread"></a>
+<a name="index-read"></a>
+</dd>
+<dt>&lsquo;<samp>-Cr, --read, <code>%option read</code></samp>&rsquo;</dt>
+<dd><p>causes the generated scanner to <em>bypass</em> use of the standard I/O
+library (<code>stdio</code>) for input.  Instead of calling <code>fread()</code> or
+<code>getc()</code>, the scanner will use the <code>read()</code> system call,
+resulting in a performance gain which varies from system to system, but
+in general is probably negligible unless you are also using &lsquo;<samp>-Cf</samp>&rsquo;
+or &lsquo;<samp>-CF</samp>&rsquo;.  Using &lsquo;<samp>-Cr</samp>&rsquo; can cause strange behavior if, for
+example, you read from <samp>yyin</samp> using <code>stdio</code> prior to calling
+the scanner (because the scanner will miss whatever text your previous
+reads left in the <code>stdio</code> input buffer).  &lsquo;<samp>-Cr</samp>&rsquo; has no effect
+if you define <code>YY_INPUT()</code> (see <a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a>).
+</p></dd>
+</dl>
+
+<p>The options &lsquo;<samp>-Cf</samp>&rsquo; or &lsquo;<samp>-CF</samp>&rsquo; and &lsquo;<samp>-Cm</samp>&rsquo; do not make sense
+together - there is no opportunity for meta-equivalence classes if the
+table is not being compressed.  Otherwise the options may be freely
+mixed, and are cumulative.
+</p>
+<p>The default setting is &lsquo;<samp>-Cem</samp>&rsquo;, which specifies that <code>flex</code>
+should generate equivalence classes and meta-equivalence classes.  This
+setting provides the highest degree of table compression.  You can trade
+off faster-executing scanners at the cost of larger tables with the
+following generally being true:
+</p>
+<div class="example">
+<pre class="verbatim">    slowest &amp; smallest
+          -Cem
+          -Cm
+          -Ce
+          -C
+          -C{f,F}e
+          -C{f,F}
+          -C{f,F}a
+    fastest &amp; largest
+</pre></div>
+
+<p>Note that scanners with the smallest tables are usually generated and
+compiled the quickest, so during development you will usually want to
+use the default, maximal compression.
+</p>
+<p>&lsquo;<samp>-Cfe</samp>&rsquo; is often a good compromise between speed and size for
+production scanners.
+</p>
+<a name="option_002dfull"></a><a name="index-_002df"></a>
+<a name="index-_002d_002d_002dfull"></a>
+<a name="index-full"></a>
+</dd>
+<dt>&lsquo;<samp>-f, --full, <code>%option full</code></samp>&rsquo;</dt>
+<dd><p>specifies
+<em>fast scanner</em>.
+No table compression is done and <code>stdio</code> is bypassed.
+The result is large but fast.  This option is equivalent to
+&lsquo;<samp>--Cfr</samp>&rsquo;
+</p>
+
+<a name="option_002dfast"></a><a name="index-_002dF"></a>
+<a name="index-_002d_002d_002dfast"></a>
+<a name="index-fast"></a>
+</dd>
+<dt>&lsquo;<samp>-F, --fast, <code>%option fast</code></samp>&rsquo;</dt>
+<dd><p>specifies that the <em>fast</em> scanner table representation should be
+used (and <code>stdio</code> bypassed).  This representation is about as fast
+as the full table representation &lsquo;<samp>--full</samp>&rsquo;, and for some sets of
+patterns will be considerably smaller (and for others, larger).  In
+general, if the pattern set contains both <em>keywords</em> and a
+catch-all, <em>identifier</em> rule, such as in the set:
+</p>
+<div class="example">
+<pre class="verbatim">    &quot;case&quot;    return TOK_CASE;
+    &quot;switch&quot;  return TOK_SWITCH;
+    ...
+    &quot;default&quot; return TOK_DEFAULT;
+    [a-z]+    return TOK_ID;
+</pre></div>
+
+<p>then you&rsquo;re better off using the full table representation.  If only
+the <em>identifier</em> rule is present and you then use a hash table or some such
+to detect the keywords, you&rsquo;re better off using
+&lsquo;<samp>--fast</samp>&rsquo;.
+</p>
+<p>This option is equivalent to &lsquo;<samp>-CFr</samp>&rsquo;.  It cannot be used
+with &lsquo;<samp>--c++</samp>&rsquo;.
+</p>
+</dd>
+</dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Debugging-Options.html#Debugging-Options" accesskey="n" rel="next">Debugging Options</a>, Previous: <a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options" accesskey="p" rel="prev">Code-Level And API Options</a>, Up: <a href="Scanner-Options.html#Scanner-Options" accesskey="u" rel="up">Scanner Options</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

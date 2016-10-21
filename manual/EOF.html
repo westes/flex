@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: EOF</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: EOF">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: EOF">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Misc-Macros.html#Misc-Macros" rel="next" title="Misc Macros">
+<link href="Multiple-Input-Buffers.html#Multiple-Input-Buffers" rel="prev" title="Multiple Input Buffers">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="EOF"></a>
+<div class="header">
+<p>
+Next: <a href="Misc-Macros.html#Misc-Macros" accesskey="n" rel="next">Misc Macros</a>, Previous: <a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers" accesskey="p" rel="prev">Multiple Input Buffers</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="End_002dof_002dFile-Rules"></a>
+<h2 class="chapter">12 End-of-File Rules</h2>
+
+<a name="index-EOF_002c-explanation"></a>
+<p>The special rule <code>&lt;&lt;EOF&gt;&gt;</code> indicates
+actions which are to be taken when an end-of-file is
+encountered and <code>yywrap()</code> returns non-zero (i.e., indicates
+no further files to process).  The action must finish
+by doing one of the following things:
+</p>
+<ul>
+<li> <a name="index-YY_005fNEW_005fFILE-_0028now-obsolete_0029"></a>
+assigning <samp>yyin</samp> to a new input file (in previous versions of
+<code>flex</code>, after doing the assignment you had to call the special
+action <code>YY_NEW_FILE</code>.  This is no longer necessary.)
+
+</li><li> executing a <code>return</code> statement;
+
+</li><li> executing the special <code>yyterminate()</code> action.
+
+</li><li> or, switching to a new buffer using <code>yy_switch_to_buffer()</code> as
+shown in the example above.
+</li></ul>
+
+<p>&lt;&lt;EOF&gt;&gt; rules may not be used with other patterns; they may only be
+qualified with a list of start conditions.  If an unqualified &lt;&lt;EOF&gt;&gt;
+rule is given, it applies to <em>all</em> start conditions which do not
+already have &lt;&lt;EOF&gt;&gt; actions.  To specify an &lt;&lt;EOF&gt;&gt; rule for only the
+initial start condition, use:
+</p>
+<div class="example">
+<pre class="verbatim">    &lt;INITIAL&gt;&lt;&lt;EOF&gt;&gt;
+</pre></div>
+
+<p>These rules are useful for catching things like unclosed comments.  An
+example:
+</p>
+<a name="index-_003c_003cEOF_003e_003e_002c-use-of"></a>
+<div class="example">
+<pre class="verbatim">    %x quote
+    %%
+
+    ...other rules for dealing with quotes...
+
+    &lt;quote&gt;&lt;&lt;EOF&gt;&gt;   {
+             error( &quot;unterminated quote&quot; );
+             yyterminate();
+             }
+   &lt;&lt;EOF&gt;&gt;  {
+             if ( *++filelist )
+                 yyin = fopen( *filelist, &quot;r&quot; );
+             else
+                yyterminate();
+             }
+</pre></div>
+
+
+
+
+</body>
+</html>

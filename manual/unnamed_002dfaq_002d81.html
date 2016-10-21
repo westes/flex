@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-81</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-81">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: unnamed-faq-81">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="unnamed_002dfaq_002d82.html#unnamed_002dfaq_002d82" rel="next" title="unnamed-faq-82">
+<link href="unnamed_002dfaq_002d80.html#unnamed_002dfaq_002d80" rel="prev" title="unnamed-faq-80">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="unnamed_002dfaq_002d81"></a>
+<div class="header">
+<p>
+Next: <a href="unnamed_002dfaq_002d82.html#unnamed_002dfaq_002d82" accesskey="n" rel="next">unnamed-faq-82</a>, Previous: <a href="unnamed_002dfaq_002d80.html#unnamed_002dfaq_002d80" accesskey="p" rel="prev">unnamed-faq-80</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="unnamed_002dfaq_002d81-1"></a>
+<h3 class="unnumberedsec">unnamed-faq-81</h3>
+<div class="example">
+<pre class="verbatim">Received: from 131.173.17.11 (131.173.17.11 [131.173.17.11])
+	by ee.lbl.gov (8.9.1/8.9.1) with ESMTP id AAA03838
+	for &lt;vern@ee.lbl.gov&gt;; Thu, 20 Aug 1998 00:47:57 -0700 (PDT)
+Received: from hal.cl-ki.uni-osnabrueck.de (hal.cl-ki.Uni-Osnabrueck.DE [131.173.141.2])
+	by deimos.rz.uni-osnabrueck.de (8.8.7/8.8.8) with ESMTP id JAA34694
+	for &lt;vern@ee.lbl.gov&gt;; Thu, 20 Aug 1998 09:47:55 +0200
+Received: (from georg@localhost) by hal.cl-ki.uni-osnabrueck.de (8.6.12/8.6.12) id JAA34834 for vern@ee.lbl.gov; Thu, 20 Aug 1998 09:47:54 +0200
+From: Georg Rehm &lt;georg@hal.cl-ki.uni-osnabrueck.de&gt;
+Message-Id: &lt;199808200747.JAA34834@hal.cl-ki.uni-osnabrueck.de&gt;
+Subject: &quot;flex scanner push-back overflow&quot;
+To: vern@ee.lbl.gov
+Date: Thu, 20 Aug 1998 09:47:54 +0200 (MEST)
+Reply-To: Georg.Rehm@CL-KI.Uni-Osnabrueck.DE
+X-NoJunk: Do NOT send commercial mail, spam or ads to this address!
+X-URL: http://www.cl-ki.uni-osnabrueck.de/~georg/
+X-Mailer: ELM [version 2.4ME+ PL28 (25)]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+Hi Vern,
+
+Yesterday, I encountered a strange problem: I use the macro processor m4
+to include some lengthy lists into a .l file. Following is a flex macro
+definition that causes some serious pain in my neck:
+
+AUTHOR           (&quot;A. Boucard / L. Boucard&quot;|&quot;A. Dastarac / M. Levent&quot;|&quot;A.Boucaud / L.Boucaud&quot;|&quot;Abderrahim Lamchichi&quot;|&quot;Achmat Dangor&quot;|&quot;Adeline Toullier&quot;|&quot;Adewale Maja-Pearce&quot;|&quot;Ahmed Ziri&quot;|&quot;Akram Ellyas&quot;|&quot;Alain Bihr&quot;|&quot;Alain Gresh&quot;|&quot;Alain Guillemoles&quot;|&quot;Alain Joxe&quot;|&quot;Alain Morice&quot;|&quot;Alain Renon&quot;|&quot;Alain Zecchini&quot;|&quot;Albert Memmi&quot;|&quot;Alberto Manguel&quot;|&quot;Alex De Waal&quot;|&quot;Alfonso Artico&quot;| [...])
+
+The complete list contains about 10kB. When I try to &quot;flex&quot; this file
+(on a Solaris 2.6 machine, using a modified flex 2.5.4 (I only increased
+some of the predefined values in flexdefs.h) I get the error:
+
+myflex/flex -8  sentag.tmp.l
+flex scanner push-back overflow
+
+When I remove the slashes in the macro definition everything works fine.
+As I understand it, the double quotes escape the slash-character so it
+really means &quot;/&quot; and not &quot;trailing context&quot;. Furthermore, I tried to
+escape the slashes with backslashes, but with no use, the same error message
+appeared when flexing the code.
+
+Do you have an idea what's going on here?
+
+Greetings from Germany,
+	Georg
+--
+Georg Rehm                                     georg@cl-ki.uni-osnabrueck.de
+Institute for Semantic Information Processing, University of Osnabrueck, FRG
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="unnamed_002dfaq_002d82.html#unnamed_002dfaq_002d82" accesskey="n" rel="next">unnamed-faq-82</a>, Previous: <a href="unnamed_002dfaq_002d80.html#unnamed_002dfaq_002d80" accesskey="p" rel="prev">unnamed-faq-80</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

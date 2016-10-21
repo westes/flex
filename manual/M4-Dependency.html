@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: M4 Dependency</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: M4 Dependency">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: M4 Dependency">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Appendices.html#Appendices" rel="up" title="Appendices">
+<link href="Common-Patterns.html#Common-Patterns" rel="next" title="Common Patterns">
+<link href="Bison-Bridge.html#Bison-Bridge" rel="prev" title="Bison Bridge">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="M4-Dependency"></a>
+<div class="header">
+<p>
+Next: <a href="Common-Patterns.html#Common-Patterns" accesskey="n" rel="next">Common Patterns</a>, Previous: <a href="Bison-Bridge.html#Bison-Bridge" accesskey="p" rel="prev">Bison Bridge</a>, Up: <a href="Appendices.html#Appendices" accesskey="u" rel="up">Appendices</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="M4-Dependency-1"></a>
+<h3 class="section">A.3 M4 Dependency</h3>
+<a name="index-m4"></a>
+<p>The macro processor <code>m4</code><a name="DOCF8" href="#FOOT8"><sup>8</sup></a>
+must be installed wherever flex is installed.
+<code>flex</code> invokes &lsquo;<samp>m4</samp>&rsquo;, found by searching the directories in the
+<code>PATH</code> environment variable. Any code you place in section 1 or in the
+actions will be sent through m4. Please follow these rules to protect your
+code from unwanted <code>m4</code> processing.
+</p>
+<ul>
+<li> Do not use symbols that begin with, &lsquo;<samp>m4_</samp>&rsquo;, such as, &lsquo;<samp>m4_define</samp>&rsquo;,
+or &lsquo;<samp>m4_include</samp>&rsquo;, since those are reserved for <code>m4</code> macro names. If for 
+some reason you need m4_ as a prefix, use a preprocessor #define to get your
+symbol past m4 unmangled.
+
+</li><li> Do not use the strings &lsquo;<samp>[[</samp>&rsquo; or &lsquo;<samp>]]</samp>&rsquo; anywhere in your code. The
+former is not valid in C, except within comments and strings, but the latter is valid in
+code such as <code>x[y[z]]</code>. The solution is simple. To get the literal string 
+<code>&quot;]]&quot;</code>, use <code>&quot;]&quot;&quot;]&quot;</code>. To get the array notation <code>x[y[z]]</code>,
+use <code>x[y[z] ]</code>. Flex will attempt to detect these sequences in user code, and
+escape them. However, it&rsquo;s best to avoid this complexity where possible, by
+removing such sequences from your code.
+
+</li></ul>
+
+<p><code>m4</code> is only required at the time you run <code>flex</code>. The generated
+scanner is ordinary C or C++, and does <em>not</em> require <code>m4</code>.
+</p>
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT8" href="#DOCF8">(8)</a></h3>
+<p>The use of m4 is subject to change in
+future revisions of flex. It is not part of the public API of flex. Do not depend on it.</p>
+</div>
+
+
+
+</body>
+</html>

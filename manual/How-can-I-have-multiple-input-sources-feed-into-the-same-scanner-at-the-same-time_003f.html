@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: How can I have multiple input sources feed into the same scanner at the same time?</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: How can I have multiple input sources feed into the same scanner at the same time?">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: How can I have multiple input sources feed into the same scanner at the same time?">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="Can-I-build-nested-parsers-that-work-with-the-same-input-file_003f.html#Can-I-build-nested-parsers-that-work-with-the-same-input-file_003f" rel="next" title="Can I build nested parsers that work with the same input file?">
+<link href="My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e.html#My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e" rel="prev" title="My actions are executing out of order or sometimes not at all.">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="How-can-I-have-multiple-input-sources-feed-into-the-same-scanner-at-the-same-time_003f"></a>
+<div class="header">
+<p>
+Next: <a href="Can-I-build-nested-parsers-that-work-with-the-same-input-file_003f.html#Can-I-build-nested-parsers-that-work-with-the-same-input-file_003f" accesskey="n" rel="next">Can I build nested parsers that work with the same input file?</a>, Previous: <a href="My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e.html#My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e" accesskey="p" rel="prev">My actions are executing out of order or sometimes not at all.</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="How-can-I-have-multiple-input-sources-feed-into-the-same-scanner-at-the-same-time_003f-1"></a>
+<h3 class="unnumberedsec">How can I have multiple input sources feed into the same scanner at the same time?</h3>
+
+<p>If &hellip;
+</p><ul>
+<li> your scanner is free of backtracking (verified using <code>flex</code>&rsquo;s &lsquo;<samp>-b</samp>&rsquo; flag),
+</li><li> AND you run your scanner interactively (&lsquo;<samp>-I</samp>&rsquo; option; default unless using special table
+compression options),
+</li><li> AND you feed it one character at a time by redefining <code>YY_INPUT</code> to do so,
+</li></ul>
+
+<p>then every time it matches a token, it will have exhausted its input
+buffer (because the scanner is free of backtracking).  This means you
+can safely use <code>select()</code> at the point and only call <code>yylex()</code> for another
+token if <code>select()</code> indicates there&rsquo;s data available.
+</p>
+<p>That is, move the <code>select()</code> out from the input function to a point where
+it determines whether <code>yylex()</code> gets called for the next token.
+</p>
+<p>With this approach, you will still have problems if your input can arrive
+piecemeal; <code>select()</code> could inform you that the beginning of a token is
+available, you call <code>yylex()</code> to get it, but it winds up blocking waiting
+for the later characters in the token.
+</p>
+<p>Here&rsquo;s another way:  Move your input multiplexing inside of <code>YY_INPUT</code>.  That
+is, whenever <code>YY_INPUT</code> is called, it <code>select()</code>&rsquo;s to see where input is
+available.  If input is available for the scanner, it reads and returns the
+next byte.  If input is available from another source, it calls whatever
+function is responsible for reading from that source.  (If no input is
+available, it blocks until some input is available.)  I&rsquo;ve used this technique in an
+interpreter I wrote that both reads keyboard input using a <code>flex</code> scanner and
+IPC traffic from sockets, and it works fine.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Can-I-build-nested-parsers-that-work-with-the-same-input-file_003f.html#Can-I-build-nested-parsers-that-work-with-the-same-input-file_003f" accesskey="n" rel="next">Can I build nested parsers that work with the same input file?</a>, Previous: <a href="My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e.html#My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e" accesskey="p" rel="prev">My actions are executing out of order or sometimes not at all.</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

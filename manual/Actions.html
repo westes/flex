@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Actions</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Actions">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Actions">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Generated-Scanner.html#Generated-Scanner" rel="next" title="Generated Scanner">
+<link href="Matching.html#Matching" rel="prev" title="Matching">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Actions"></a>
+<div class="header">
+<p>
+Next: <a href="Generated-Scanner.html#Generated-Scanner" accesskey="n" rel="next">Generated Scanner</a>, Previous: <a href="Matching.html#Matching" accesskey="p" rel="prev">Matching</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Actions-1"></a>
+<h2 class="chapter">8 Actions</h2>
+
+<a name="index-actions"></a>
+<p>Each pattern in a rule has a corresponding <em>action</em>, which can be
+any arbitrary C statement.  The pattern ends at the first non-escaped
+whitespace character; the remainder of the line is its action.  If the
+action is empty, then when the pattern is matched the input token is
+simply discarded.  For example, here is the specification for a program
+which deletes all occurrences of &lsquo;<samp>zap me</samp>&rsquo; from its input:
+</p>
+<a name="index-deleting-lines-from-input"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    &quot;zap me&quot;
+</pre></div>
+
+<p>This example will copy all other characters in the input to the output
+since they will be matched by the default rule.
+</p>
+<p>Here is a program which compresses multiple blanks and tabs down to a
+single blank, and throws away whitespace found at the end of a line:
+</p>
+<a name="index-whitespace_002c-compressing"></a>
+<a name="index-compressing-whitespace"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    [ \t]+        putchar( ' ' );
+    [ \t]+$       /* ignore this token */
+</pre></div>
+
+<a name="index-_0025_007b-and-_0025_007d_002c-in-Rules-Section"></a>
+<a name="index-actions_002c-use-of-_007b-and-_007d"></a>
+<a name="index-actions_002c-embedded-C-strings"></a>
+<a name="index-C_002dstrings_002c-in-actions"></a>
+<a name="index-comments_002c-in-actions"></a>
+<p>If the action contains a &lsquo;<samp>{</samp>&rsquo;, then the action spans till the
+balancing &lsquo;<samp>}</samp>&rsquo; is found, and the action may cross multiple lines.
+<code>flex</code> knows about C strings and comments and won&rsquo;t be fooled by
+braces found within them, but also allows actions to begin with
+&lsquo;<samp>%{</samp>&rsquo; and will consider the action to be all the text up to the
+next &lsquo;<samp>%}</samp>&rsquo; (regardless of ordinary braces inside the action).
+</p>
+<a name="index-_007c_002c-in-actions"></a>
+<p>An action consisting solely of a vertical bar (&lsquo;<samp>|</samp>&rsquo;) means &ldquo;same as the
+action for the next rule&rdquo;.  See below for an illustration.
+</p>
+<p>Actions can include arbitrary C code, including <code>return</code> statements
+to return a value to whatever routine called <code>yylex()</code>.  Each time
+<code>yylex()</code> is called it continues processing tokens from where it
+last left off until it either reaches the end of the file or executes a
+return.
+</p>
+<a name="index-yytext_002c-modification-of"></a>
+<p>Actions are free to modify <code>yytext</code> except for lengthening it
+(adding characters to its end&ndash;these will overwrite later characters in
+the input stream).  This however does not apply when using <code>%array</code>
+(see <a href="Matching.html#Matching">Matching</a>). In that case, <code>yytext</code> may be freely modified
+in any way.
+</p>
+<a name="index-yyleng_002c-modification-of"></a>
+<a name="index-yymore_002c-and-yyleng"></a>
+<p>Actions are free to modify <code>yyleng</code> except they should not do so if
+the action also includes use of <code>yymore()</code> (see below).
+</p>
+<a name="index-preprocessor-macros_002c-for-use-in-actions"></a>
+<p>There are a number of special directives which can be included within an
+action:
+</p>
+<dl compact="compact">
+<dt><code>ECHO</code></dt>
+<dd><a name="index-ECHO"></a>
+<p>copies yytext to the scanner&rsquo;s output.
+</p>
+</dd>
+<dt><code>BEGIN</code></dt>
+<dd><a name="index-BEGIN"></a>
+<p>followed by the name of a start condition places the scanner in the
+corresponding start condition (see below).
+</p>
+</dd>
+<dt><code>REJECT</code></dt>
+<dd><a name="index-REJECT"></a>
+<p>directs the scanner to proceed on to the &ldquo;second best&rdquo; rule which
+matched the input (or a prefix of the input).  The rule is chosen as
+described above in <a href="Matching.html#Matching">Matching</a>, and <code>yytext</code> and <code>yyleng</code>
+set up appropriately.  It may either be one which matched as much text
+as the originally chosen rule but came later in the <code>flex</code> input
+file, or one which matched less text.  For example, the following will
+both count the words in the input and call the routine <code>special()</code>
+whenever &lsquo;<samp>frob</samp>&rsquo; is seen:
+</p>
+<div class="example">
+<pre class="verbatim">            int word_count = 0;
+    %%
+
+    frob        special(); REJECT;
+    [^ \t\n]+   ++word_count;
+</pre></div>
+
+<p>Without the <code>REJECT</code>, any occurrences of &lsquo;<samp>frob</samp>&rsquo; in the input
+would not be counted as words, since the scanner normally executes only
+one action per token.  Multiple uses of <code>REJECT</code> are allowed, each
+one finding the next best choice to the currently active rule.  For
+example, when the following scanner scans the token &lsquo;<samp>abcd</samp>&rsquo;, it will
+write &lsquo;<samp>abcdabcaba</samp>&rsquo; to the output:
+</p>
+<a name="index-REJECT_002c-calling-multiple-times"></a>
+<a name="index-_007c_002c-use-of"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    a        |
+    ab       |
+    abc      |
+    abcd     ECHO; REJECT;
+    .|\n     /* eat up any unmatched character */
+</pre></div>
+
+<p>The first three rules share the fourth&rsquo;s action since they use the
+special &lsquo;<samp>|</samp>&rsquo; action.
+</p>
+<p><code>REJECT</code> is a particularly expensive feature in terms of scanner
+performance; if it is used in <em>any</em> of the scanner&rsquo;s actions it
+will slow down <em>all</em> of the scanner&rsquo;s matching.  Furthermore,
+<code>REJECT</code> cannot be used with the &lsquo;<samp>-Cf</samp>&rsquo; or &lsquo;<samp>-CF</samp>&rsquo; options
+(see <a href="Scanner-Options.html#Scanner-Options">Scanner Options</a>).
+</p>
+<p>Note also that unlike the other special actions, <code>REJECT</code> is a
+<em>branch</em>.  Code immediately following it in the action will
+<em>not</em> be executed.
+</p>
+</dd>
+<dt><code>yymore()</code></dt>
+<dd><a name="index-yymore_0028_0029"></a>
+<p>tells the scanner that the next time it matches a rule, the
+corresponding token should be <em>appended</em> onto the current value of
+<code>yytext</code> rather than replacing it.  For example, given the input
+&lsquo;<samp>mega-kludge</samp>&rsquo; the following will write &lsquo;<samp>mega-mega-kludge</samp>&rsquo; to
+the output:
+</p>
+<a name="index-yymore_0028_0029_002c-mega_002dkludge"></a>
+<a name="index-yymore_0028_0029-to-append-token-to-previous-token"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    mega-    ECHO; yymore();
+    kludge   ECHO;
+</pre></div>
+
+<p>First &lsquo;<samp>mega-</samp>&rsquo; is matched and echoed to the output.  Then &lsquo;<samp>kludge</samp>&rsquo;
+is matched, but the previous &lsquo;<samp>mega-</samp>&rsquo; is still hanging around at the
+beginning of
+<code>yytext</code>
+so the
+<code>ECHO</code>
+for the &lsquo;<samp>kludge</samp>&rsquo; rule will actually write &lsquo;<samp>mega-kludge</samp>&rsquo;.
+</p></dd>
+</dl>
+
+<a name="index-yymore_002c-performance-penalty-of"></a>
+<p>Two notes regarding use of <code>yymore()</code>.  First, <code>yymore()</code>
+depends on the value of <code>yyleng</code> correctly reflecting the size of
+the current token, so you must not modify <code>yyleng</code> if you are using
+<code>yymore()</code>.  Second, the presence of <code>yymore()</code> in the
+scanner&rsquo;s action entails a minor performance penalty in the scanner&rsquo;s
+matching speed.
+</p>
+<a name="index-yyless_0028_0029"></a>
+<p><code>yyless(n)</code> returns all but the first <code>n</code> characters of the
+current token back to the input stream, where they will be rescanned
+when the scanner looks for the next match.  <code>yytext</code> and
+<code>yyleng</code> are adjusted appropriately (e.g., <code>yyleng</code> will now
+be equal to <code>n</code>).  For example, on the input &lsquo;<samp>foobar</samp>&rsquo; the
+following will write out &lsquo;<samp>foobarbar</samp>&rsquo;:
+</p>
+<a name="index-yyless_0028_0029_002c-pushing-back-characters"></a>
+<a name="index-pushing-back-characters-with-yyless"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    foobar    ECHO; yyless(3);
+    [a-z]+    ECHO;
+</pre></div>
+
+<p>An argument of 0 to <code>yyless()</code> will cause the entire current input
+string to be scanned again.  Unless you&rsquo;ve changed how the scanner will
+subsequently process its input (using <code>BEGIN</code>, for example), this
+will result in an endless loop.
+</p>
+<p>Note that <code>yyless()</code> is a macro and can only be used in the flex
+input file, not from other source files.
+</p>
+<a name="index-unput_0028_0029"></a>
+<a name="index-pushing-back-characters-with-unput"></a>
+<p><code>unput(c)</code> puts the character <code>c</code> back onto the input stream.
+It will be the next character scanned.  The following action will take
+the current token and cause it to be rescanned enclosed in parentheses.
+</p>
+<a name="index-unput_0028_0029_002c-pushing-back-characters"></a>
+<a name="index-pushing-back-characters-with-unput_0028_0029"></a>
+<div class="example">
+<pre class="verbatim">    {
+    int i;
+    /* Copy yytext because unput() trashes yytext */
+    char *yycopy = strdup( yytext );
+    unput( ')' );
+    for ( i = yyleng - 1; i &gt;= 0; --i )
+        unput( yycopy[i] );
+    unput( '(' );
+    free( yycopy );
+    }
+</pre></div>
+
+<p>Note that since each <code>unput()</code> puts the given character back at the
+<em>beginning</em> of the input stream, pushing back strings must be done
+back-to-front.
+</p>
+<a name="index-_0025pointer_002c-and-unput_0028_0029"></a>
+<a name="index-unput_0028_0029_002c-and-_0025pointer"></a>
+<p>An important potential problem when using <code>unput()</code> is that if you
+are using <code>%pointer</code> (the default), a call to <code>unput()</code>
+<em>destroys</em> the contents of <code>yytext</code>, starting with its
+rightmost character and devouring one character to the left with each
+call.  If you need the value of <code>yytext</code> preserved after a call to
+<code>unput()</code> (as in the above example), you must either first copy it
+elsewhere, or build your scanner using <code>%array</code> instead
+(see <a href="Matching.html#Matching">Matching</a>).
+</p>
+<a name="index-pushing-back-EOF"></a>
+<a name="index-EOF_002c-pushing-back"></a>
+<p>Finally, note that you cannot put back &lsquo;<samp>EOF</samp>&rsquo; to attempt to mark the
+input stream with an end-of-file.
+</p>
+<a name="index-input_0028_0029"></a>
+<p><code>input()</code> reads the next character from the input stream.  For
+example, the following is one way to eat up C comments:
+</p>
+<a name="index-comments_002c-discarding"></a>
+<a name="index-discarding-C-comments"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    &quot;/*&quot;        {
+                int c;
+
+                for ( ; ; )
+                    {
+                    while ( (c = input()) != '*' &amp;&amp;
+                            c != EOF )
+                        ;    /* eat up text of comment */
+
+                    if ( c == '*' )
+                        {
+                        while ( (c = input()) == '*' )
+                            ;
+                        if ( c == '/' )
+                            break;    /* found the end */
+                        }
+
+                    if ( c == EOF )
+                        {
+                        error( &quot;EOF in comment&quot; );
+                        break;
+                        }
+                    }
+                }
+</pre></div>
+
+<a name="index-input_0028_0029_002c-and-C_002b_002b"></a>
+<a name="index-yyinput_0028_0029"></a>
+<p>(Note that if the scanner is compiled using <code>C++</code>, then
+<code>input()</code> is instead referred to as <b>yyinput()</b>, in order to
+avoid a name clash with the <code>C++</code> stream by the name of
+<code>input</code>.)
+</p>
+<a name="index-flushing-the-internal-buffer"></a>
+<a name="index-YY_005fFLUSH_005fBUFFER"></a>
+<p><code>YY_FLUSH_BUFFER;</code> flushes the scanner&rsquo;s internal buffer so that
+the next time the scanner attempts to match a token, it will first
+refill the buffer using <code>YY_INPUT()</code> (see <a href="Generated-Scanner.html#Generated-Scanner">Generated Scanner</a>).
+This action is a special case of the more general
+<code>yy_flush_buffer;</code> function, described below (see <a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers">Multiple Input Buffers</a>)
+</p>
+<a name="index-yyterminate_0028_0029"></a>
+<a name="index-terminating-with-yyterminate_0028_0029"></a>
+<a name="index-exiting-with-yyterminate_0028_0029"></a>
+<a name="index-halting-with-yyterminate_0028_0029"></a>
+<p><code>yyterminate()</code> can be used in lieu of a return statement in an
+action.  It terminates the scanner and returns a 0 to the scanner&rsquo;s
+caller, indicating &ldquo;all done&rdquo;.  By default, <code>yyterminate()</code> is
+also called when an end-of-file is encountered.  It is a macro and may
+be redefined.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Generated-Scanner.html#Generated-Scanner" accesskey="n" rel="next">Generated Scanner</a>, Previous: <a href="Matching.html#Matching" accesskey="p" rel="prev">Matching</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

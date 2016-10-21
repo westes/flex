@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Lex and Posix</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Lex and Posix">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Lex and Posix">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Memory-Management.html#Memory-Management" rel="next" title="Memory Management">
+<link href="Reentrant-Functions.html#Reentrant-Functions" rel="prev" title="Reentrant Functions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Lex-and-Posix"></a>
+<div class="header">
+<p>
+Next: <a href="Memory-Management.html#Memory-Management" accesskey="n" rel="next">Memory Management</a>, Previous: <a href="Reentrant.html#Reentrant" accesskey="p" rel="prev">Reentrant</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Incompatibilities-with-Lex-and-Posix"></a>
+<h2 class="chapter">20 Incompatibilities with Lex and Posix</h2>
+
+<a name="index-POSIX-and-lex"></a>
+<a name="index-lex-_0028traditional_0029-and-POSIX"></a>
+
+<p><code>flex</code> is a rewrite of the AT&amp;T Unix <em>lex</em> tool (the two
+implementations do not share any code, though), with some extensions and
+incompatibilities, both of which are of concern to those who wish to
+write scanners acceptable to both implementations.  <code>flex</code> is fully
+compliant with the POSIX <code>lex</code> specification, except that when
+using <code>%pointer</code> (the default), a call to <code>unput()</code> destroys
+the contents of <code>yytext</code>, which is counter to the POSIX
+specification.  In this section we discuss all of the known areas of
+incompatibility between <code>flex</code>, AT&amp;T <code>lex</code>, and the POSIX
+specification.  <code>flex</code>&rsquo;s &lsquo;<samp>-l</samp>&rsquo; option turns on maximum
+compatibility with the original AT&amp;T <code>lex</code> implementation, at the
+cost of a major loss in the generated scanner&rsquo;s performance.  We note
+below which incompatibilities can be overcome using the &lsquo;<samp>-l</samp>&rsquo;
+option.  <code>flex</code> is fully compatible with <code>lex</code> with the
+following exceptions:
+</p>
+<ul>
+<li> The undocumented <code>lex</code> scanner internal variable <code>yylineno</code> is
+not supported unless &lsquo;<samp>-l</samp>&rsquo; or <code>%option yylineno</code> is used.
+
+</li><li> <code>yylineno</code> should be maintained on a per-buffer basis, rather than
+a per-scanner (single global variable) basis.
+
+</li><li> <code>yylineno</code> is not part of the POSIX specification.
+
+</li><li> The <code>input()</code> routine is not redefinable, though it may be called
+to read characters following whatever has been matched by a rule.  If
+<code>input()</code> encounters an end-of-file the normal <code>yywrap()</code>
+processing is done.  A &ldquo;real&rdquo; end-of-file is returned by
+<code>input()</code> as <code>EOF</code>.
+
+</li><li> Input is instead controlled by defining the <code>YY_INPUT()</code> macro.
+
+</li><li> The <code>flex</code> restriction that <code>input()</code> cannot be redefined is
+in accordance with the POSIX specification, which simply does not
+specify any way of controlling the scanner&rsquo;s input other than by making
+an initial assignment to <samp>yyin</samp>.
+
+</li><li> The <code>unput()</code> routine is not redefinable.  This restriction is in
+accordance with POSIX.
+
+</li><li> <code>flex</code> scanners are not as reentrant as <code>lex</code> scanners.  In
+particular, if you have an interactive scanner and an interrupt handler
+which long-jumps out of the scanner, and the scanner is subsequently
+called again, you may get the following message:
+
+<a name="index-error-messages_002c-end-of-buffer-missed"></a>
+<div class="example">
+<pre class="verbatim">    fatal flex scanner internal error--end of buffer missed
+</pre></div>
+
+<p>To reenter the scanner, first use:
+</p>
+<a name="index-restarting-the-scanner"></a>
+<div class="example">
+<pre class="verbatim">    yyrestart( yyin );
+</pre></div>
+
+<p>Note that this call will throw away any buffered input; usually this
+isn&rsquo;t a problem with an interactive scanner. See <a href="Reentrant.html#Reentrant">Reentrant</a>, for
+<code>flex</code>&rsquo;s reentrant API.
+</p>
+</li><li> Also note that <code>flex</code> C++ scanner classes
+<em>are</em>
+reentrant, so if using C++ is an option for you, you should use
+them instead.  See <a href="Cxx.html#Cxx">Cxx</a>, and <a href="Reentrant.html#Reentrant">Reentrant</a>  for details.
+
+</li><li> <code>output()</code> is not supported.  Output from the <b>ECHO</b> macro is
+done to the file-pointer <code>yyout</code> (default <samp>stdout)</samp>.
+
+</li><li> <code>output()</code> is not part of the POSIX specification.
+
+</li><li> <code>lex</code> does not support exclusive start conditions (%x), though they
+are in the POSIX specification.
+
+</li><li> When definitions are expanded, <code>flex</code> encloses them in parentheses.
+With <code>lex</code>, the following:
+
+<a name="index-name-definitions_002c-not-POSIX"></a>
+<div class="example">
+<pre class="verbatim">    NAME    [A-Z][A-Z0-9]*
+    %%
+    foo{NAME}?      printf( &quot;Found it\n&quot; );
+    %%
+</pre></div>
+
+<p>will not match the string &lsquo;<samp>foo</samp>&rsquo; because when the macro is expanded
+the rule is equivalent to &lsquo;<samp>foo[A-Z][A-Z0-9]*?</samp>&rsquo;  and the precedence
+is such that the &lsquo;<samp>?</samp>&rsquo; is associated with &lsquo;<samp>[A-Z0-9]*</samp>&rsquo;.  With
+<code>flex</code>, the rule will be expanded to &lsquo;<samp>foo([A-Z][A-Z0-9]*)?</samp>&rsquo;
+and so the string &lsquo;<samp>foo</samp>&rsquo; will match.
+</p>
+</li><li> Note that if the definition begins with &lsquo;<samp>^</samp>&rsquo; or ends with &lsquo;<samp>$</samp>&rsquo;
+then it is <em>not</em> expanded with parentheses, to allow these
+operators to appear in definitions without losing their special
+meanings.  But the &lsquo;<samp>&lt;s&gt;</samp>&rsquo;, &lsquo;<samp>/</samp>&rsquo;, and <code>&lt;&lt;EOF&gt;&gt;</code> operators
+cannot be used in a <code>flex</code> definition.
+
+</li><li> Using &lsquo;<samp>-l</samp>&rsquo; results in the <code>lex</code> behavior of no parentheses
+around the definition.
+
+</li><li> The POSIX specification is that the definition be enclosed in parentheses.
+
+</li><li> Some implementations of <code>lex</code> allow a rule&rsquo;s action to begin on a
+separate line, if the rule&rsquo;s pattern has trailing whitespace:
+
+<a name="index-patterns-and-actions-on-different-lines"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    foo|bar&lt;space here&gt;
+      { foobar_action();}
+</pre></div>
+
+<p><code>flex</code> does not support this feature.
+</p>
+</li><li> The <code>lex</code> <code>%r</code> (generate a Ratfor scanner) option is not
+supported.  It is not part of the POSIX specification.
+
+</li><li> After a call to <code>unput()</code>, <em>yytext</em> is undefined until the
+next token is matched, unless the scanner was built using <code>%array</code>.
+This is not the case with <code>lex</code> or the POSIX specification.  The
+&lsquo;<samp>-l</samp>&rsquo; option does away with this incompatibility.
+
+</li><li> The precedence of the &lsquo;<samp>{,}</samp>&rsquo; (numeric range) operator is
+different.  The AT&amp;T and POSIX specifications of <code>lex</code>
+interpret &lsquo;<samp>abc{1,3}</samp>&rsquo; as match one, two,
+or three occurrences of &lsquo;<samp>abc</samp>&rsquo;&rdquo;, whereas <code>flex</code> interprets it
+as &ldquo;match &lsquo;<samp>ab</samp>&rsquo; followed by one, two, or three occurrences of
+&lsquo;<samp>c</samp>&rsquo;&rdquo;.  The &lsquo;<samp>-l</samp>&rsquo; and &lsquo;<samp>--posix</samp>&rsquo; options do away with this
+incompatibility.
+
+</li><li> The precedence of the &lsquo;<samp>^</samp>&rsquo; operator is different.  <code>lex</code>
+interprets &lsquo;<samp>^foo|bar</samp>&rsquo; as &ldquo;match either &rsquo;foo&rsquo; at the beginning of a
+line, or &rsquo;bar&rsquo; anywhere&rdquo;, whereas <code>flex</code> interprets it as &ldquo;match
+either &lsquo;<samp>foo</samp>&rsquo; or &lsquo;<samp>bar</samp>&rsquo; if they come at the beginning of a
+line&rdquo;.  The latter is in agreement with the POSIX specification.
+
+</li><li> The special table-size declarations such as <code>%a</code> supported by
+<code>lex</code> are not required by <code>flex</code> scanners..  <code>flex</code>
+ignores them.
+</li><li> The name <code>FLEX_SCANNER</code> is <code>#define</code>&rsquo;d so scanners may be
+written for use with either <code>flex</code> or <code>lex</code>.  Scanners also
+include <code>YY_FLEX_MAJOR_VERSION</code>,  <code>YY_FLEX_MINOR_VERSION</code>
+and <code>YY_FLEX_SUBMINOR_VERSION</code>
+indicating which version of <code>flex</code> generated the scanner. For
+example, for the 2.5.22 release, these defines would be 2,  5 and 22
+respectively. If the version of <code>flex</code> being used is a beta
+version, then the symbol <code>FLEX_BETA</code> is defined.
+
+</li><li> The symbols &lsquo;<samp>[[</samp>&rsquo; and &lsquo;<samp>]]</samp>&rsquo; in the code sections of the input
+may conflict with the m4 delimiters. See <a href="M4-Dependency.html#M4-Dependency">M4 Dependency</a>.
+
+
+</li></ul>
+
+<a name="index-POSIX-comp_003bcompliance"></a>
+<a name="index-non_002dPOSIX-features-of-flex"></a>
+<p>The following <code>flex</code> features are not included in <code>lex</code> or the
+POSIX specification:
+</p>
+<ul>
+<li> C++ scanners
+</li><li> %option
+</li><li> start condition scopes
+</li><li> start condition stacks
+</li><li> interactive/non-interactive scanners
+</li><li> yy_scan_string() and friends
+</li><li> yyterminate()
+</li><li> yy_set_interactive()
+</li><li> yy_set_bol()
+</li><li> YY_AT_BOL()
+   &lt;&lt;EOF&gt;&gt;
+</li><li> &lt;*&gt;
+</li><li> YY_DECL
+</li><li> YY_START
+</li><li> YY_USER_ACTION
+</li><li> YY_USER_INIT
+</li><li> #line directives
+</li><li> %{}&rsquo;s around actions
+</li><li> reentrant C API
+</li><li> multiple actions on a line
+</li><li> almost all of the <code>flex</code> command-line options
+</li></ul>
+
+<p>The feature &ldquo;multiple actions on a line&rdquo;
+refers to the fact that with <code>flex</code> you can put multiple actions on
+the same line, separated with semi-colons, while with <code>lex</code>, the
+following:
+</p>
+<div class="example">
+<pre class="verbatim">    foo    handle_foo(); ++num_foos_seen;
+</pre></div>
+
+<p>is (rather surprisingly) truncated to
+</p>
+<div class="example">
+<pre class="verbatim">    foo    handle_foo();
+</pre></div>
+
+<p><code>flex</code> does not truncate the action.  Actions that are not enclosed
+in braces are simply terminated at the end of the line.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Memory-Management.html#Memory-Management" accesskey="n" rel="next">Memory Management</a>, Previous: <a href="Reentrant.html#Reentrant" accesskey="p" rel="prev">Reentrant</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

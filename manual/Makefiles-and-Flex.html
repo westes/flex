@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Makefiles and Flex</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Makefiles and Flex">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Makefiles and Flex">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Appendices.html#Appendices" rel="up" title="Appendices">
+<link href="Bison-Bridge.html#Bison-Bridge" rel="next" title="Bison Bridge">
+<link href="Appendices.html#Appendices" rel="prev" title="Appendices">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Makefiles-and-Flex"></a>
+<div class="header">
+<p>
+Next: <a href="Bison-Bridge.html#Bison-Bridge" accesskey="n" rel="next">Bison Bridge</a>, Previous: <a href="Appendices.html#Appendices" accesskey="p" rel="prev">Appendices</a>, Up: <a href="Appendices.html#Appendices" accesskey="u" rel="up">Appendices</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Makefiles-and-Flex-1"></a>
+<h3 class="appendixsec">A.1 Makefiles and Flex</h3>
+
+<a name="index-Makefile_002c-syntax"></a>
+
+<p>In this appendix, we provide tips for writing Makefiles to build your scanners.
+</p>
+<p>In a traditional build environment, we say that the <samp>.c</samp> files are the
+sources, and the <samp>.o</samp> files are the intermediate files. When using
+<code>flex</code>, however, the <samp>.l</samp> files are the sources, and the generated
+<samp>.c</samp> files (along with the <samp>.o</samp> files) are the intermediate files.
+This requires you to carefully plan your Makefile.
+</p>
+<p>Modern <code>make</code> programs understand that <samp>foo.l</samp> is intended to
+generate <samp>lex.yy.c</samp> or <samp>foo.c</samp>, and will behave
+accordingly<a name="DOCF4" href="#FOOT4"><sup>4</sup></a><a name="DOCF5" href="#FOOT5"><sup>5</sup></a>.  The
+following Makefile does not explicitly instruct <code>make</code> how to build
+<samp>foo.c</samp> from <samp>foo.l</samp>. Instead, it relies on the implicit rules of the
+<code>make</code> program to build the intermediate file, <samp>scan.c</samp>:
+</p>
+<a name="index-Makefile_002c-example-of-implicit-rules"></a>
+<div class="example">
+<pre class="verbatim">    # Basic Makefile -- relies on implicit rules
+    # Creates &quot;myprogram&quot; from &quot;scan.l&quot; and &quot;myprogram.c&quot;
+    #
+    LEX=flex
+    myprogram: scan.o myprogram.o
+    scan.o: scan.l
+
+</pre></div>
+
+
+<p>For simple cases, the above may be sufficient. For other cases,
+you may have to explicitly instruct <code>make</code> how to build your scanner.
+The following is an example of a Makefile containing explicit rules:
+</p>
+<a name="index-Makefile_002c-explicit-example"></a>
+<div class="example">
+<pre class="verbatim">    # Basic Makefile -- provides explicit rules
+    # Creates &quot;myprogram&quot; from &quot;scan.l&quot; and &quot;myprogram.c&quot;
+    #
+    LEX=flex
+    myprogram: scan.o myprogram.o
+            $(CC) -o $@  $(LDFLAGS) $^
+
+    myprogram.o: myprogram.c
+            $(CC) $(CPPFLAGS) $(CFLAGS) -o $@ -c $^
+
+    scan.o: scan.c
+            $(CC) $(CPPFLAGS) $(CFLAGS) -o $@ -c $^
+
+    scan.c: scan.l
+            $(LEX) $(LFLAGS) -o $@ $^
+
+    clean:
+            $(RM) *.o scan.c
+
+</pre></div>
+
+<p>Notice in the above example that <samp>scan.c</samp> is in the <code>clean</code> target.
+This is because we consider the file <samp>scan.c</samp> to be an intermediate file.
+</p>
+<p>Finally, we provide a realistic example of a <code>flex</code> scanner used with a
+<code>bison</code> parser<a name="DOCF6" href="#FOOT6"><sup>6</sup></a>.
+There is a tricky problem we have to deal with. Since a <code>flex</code> scanner
+will typically include a header file (e.g., <samp>y.tab.h</samp>) generated by the
+parser, we need to be sure that the header file is generated BEFORE the scanner
+is compiled. We handle this case in the following example:
+</p>
+<div class="example">
+<pre class="verbatim">    # Makefile example -- scanner and parser.
+    # Creates &quot;myprogram&quot; from &quot;scan.l&quot;, &quot;parse.y&quot;, and &quot;myprogram.c&quot;
+    #
+    LEX     = flex
+    YACC    = bison -y
+    YFLAGS  = -d
+    objects = scan.o parse.o myprogram.o
+
+    myprogram: $(objects)
+    scan.o: scan.l parse.c
+    parse.o: parse.y
+    myprogram.o: myprogram.c
+
+</pre></div>
+
+<p>In the above example, notice the line,
+</p>
+<div class="example">
+<pre class="verbatim">    scan.o: scan.l parse.c
+</pre></div>
+
+<p>, which lists the file <samp>parse.c</samp> (the generated parser) as a dependency of
+<samp>scan.o</samp>. We want to ensure that the parser is created before the scanner
+is compiled, and the above line seems to do the trick. Feel free to experiment
+with your specific implementation of <code>make</code>.
+</p>
+
+<p>For more details on writing Makefiles, see <cite><a href="http://www.gnu.org/software/make/manual/html_node/index.html#Top">The
+GNU Make Manual</a></cite>.
+</p>
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT4" href="#DOCF4">(4)</a></h3>
+<p>GNU <code>make</code> and GNU <code>automake</code> are two such
+programs that provide implicit rules for flex-generated scanners.</p>
+<h3><a name="FOOT5" href="#DOCF5">(5)</a></h3>
+<p>GNU <code>automake</code>
+may generate code to execute flex in lex-compatible mode, or to stdout. If this is not what you want,
+then you should provide an explicit rule in your Makefile.am</p>
+<h3><a name="FOOT6" href="#DOCF6">(6)</a></h3>
+<p>This example also applies to yacc parsers.</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Bison-Bridge.html#Bison-Bridge" accesskey="n" rel="next">Bison Bridge</a>, Previous: <a href="Appendices.html#Appendices" accesskey="p" rel="prev">Appendices</a>, Up: <a href="Appendices.html#Appendices" accesskey="u" rel="up">Appendices</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

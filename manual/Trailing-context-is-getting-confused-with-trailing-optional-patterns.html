@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Trailing context is getting confused with trailing optional patterns</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Trailing context is getting confused with trailing optional patterns">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Trailing context is getting confused with trailing optional patterns">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="Is-flex-GNU-or-not_003f.html#Is-flex-GNU-or-not_003f" rel="next" title="Is flex GNU or not?">
+<link href="The-_005e-operator-isn_0027t-working.html#The-_005e-operator-isn_0027t-working" rel="prev" title="The ^ operator isn't working">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Trailing-context-is-getting-confused-with-trailing-optional-patterns"></a>
+<div class="header">
+<p>
+Next: <a href="Is-flex-GNU-or-not_003f.html#Is-flex-GNU-or-not_003f" accesskey="n" rel="next">Is flex GNU or not?</a>, Previous: <a href="The-_005e-operator-isn_0027t-working.html#The-_005e-operator-isn_0027t-working" accesskey="p" rel="prev">The ^ operator isn't working</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Trailing-context-is-getting-confused-with-trailing-optional-patterns-1"></a>
+<h3 class="unnumberedsec">Trailing context is getting confused with trailing optional patterns</h3>
+<div class="example">
+<pre class="verbatim">To: Adoram Rogel &lt;adoram@hybridge.com&gt;
+Subject: Re: Flex 2.5.4 BOF ???
+In-reply-to: Your message of Tue, 26 Nov 1996 16:10:41 PST.
+Date: Wed, 27 Nov 1996 10:56:25 PST
+From: Vern Paxson &lt;vern&gt;
+
+&gt;     Organization(s)?/[a-z]
+&gt;
+&gt; This matched &quot;Organizations&quot; (looking in debug mode, the trailing s
+&gt; was matched with trailing context instead of the optional (s) in the
+&gt; end of the word.
+
+That should only happen with lex.  Flex can properly match this pattern.
+(That might be what you're saying, I'm just not sure.)
+
+&gt; Is there a way to avoid this dangerous trailing context problem ?
+
+Unfortunately, there's no easy way.  On the other hand, I don't see why
+it should be a problem.  Lex's matching is clearly wrong, and I'd hope
+that usually the intent remains the same as expressed with the pattern,
+so flex's matching will be correct.
+
+		Vern
+</pre></div>
+
+
+
+
+</body>
+</html>

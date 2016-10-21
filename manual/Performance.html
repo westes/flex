@@ -1,0 +1,433 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Performance</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Performance">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Performance">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Cxx.html#Cxx" rel="next" title="Cxx">
+<link href="Miscellaneous-Options.html#Miscellaneous-Options" rel="prev" title="Miscellaneous Options">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Performance"></a>
+<div class="header">
+<p>
+Next: <a href="Cxx.html#Cxx" accesskey="n" rel="next">Cxx</a>, Previous: <a href="Scanner-Options.html#Scanner-Options" accesskey="p" rel="prev">Scanner Options</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Performance-Considerations"></a>
+<h2 class="chapter">17 Performance Considerations</h2>
+
+<a name="index-performance_002c-considerations"></a>
+<p>The main design goal of <code>flex</code> is that it generate high-performance
+scanners.  It has been optimized for dealing well with large sets of
+rules.  Aside from the effects on scanner speed of the table compression
+&lsquo;<samp>-C</samp>&rsquo; options outlined above, there are a number of options/actions
+which degrade performance.  These are, from most expensive to least:
+</p>
+<a name="index-REJECT_002c-performance-costs"></a>
+<a name="index-yylineno_002c-performance-costs"></a>
+<a name="index-trailing-context_002c-performance-costs"></a>
+<div class="example">
+<pre class="verbatim">    REJECT
+    arbitrary trailing context
+
+    pattern sets that require backing up
+    %option yylineno
+    %array
+
+    %option interactive
+    %option always-interactive
+
+    ^ beginning-of-line operator
+    yymore()
+</pre></div>
+
+<p>with the first two all being quite expensive and the last two being
+quite cheap.  Note also that <code>unput()</code> is implemented as a routine
+call that potentially does quite a bit of work, while <code>yyless()</code> is
+a quite-cheap macro. So if you are just putting back some excess text
+you scanned, use <code>yyless()</code>.
+</p>
+<p><code>REJECT</code> should be avoided at all costs when performance is
+important.  It is a particularly expensive option.
+</p>
+<p>There is one case when <code>%option yylineno</code> can be expensive. That is when
+your patterns match long tokens that could <em>possibly</em> contain a newline
+character. There is no performance penalty for rules that can not possibly
+match newlines, since flex does not need to check them for newlines.  In
+general, you should avoid rules such as <code>[^f]+</code>, which match very long
+tokens, including newlines, and may possibly match your entire file! A better
+approach is to separate <code>[^f]+</code> into two rules:
+</p>
+<div class="example">
+<pre class="verbatim">%option yylineno
+%%
+    [^f\n]+
+    \n+
+</pre></div>
+
+<p>The above scanner does not incur a performance penalty.
+</p>
+<a name="index-patterns_002c-tuning-for-performance"></a>
+<a name="index-performance_002c-backing-up"></a>
+<a name="index-backing-up_002c-example-of-eliminating"></a>
+<p>Getting rid of backing up is messy and often may be an enormous amount
+of work for a complicated scanner.  In principal, one begins by using
+the &lsquo;<samp>-b</samp>&rsquo; flag to generate a <samp>lex.backup</samp> file.  For example,
+on the input:
+</p>
+<a name="index-backing-up_002c-eliminating"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    foo        return TOK_KEYWORD;
+    foobar     return TOK_KEYWORD;
+</pre></div>
+
+<p>the file looks like:
+</p>
+<div class="example">
+<pre class="verbatim">    State #6 is non-accepting -
+     associated rule line numbers:
+           2       3
+     out-transitions: [ o ]
+     jam-transitions: EOF [ \001-n  p-\177 ]
+
+    State #8 is non-accepting -
+     associated rule line numbers:
+           3
+     out-transitions: [ a ]
+     jam-transitions: EOF [ \001-`  b-\177 ]
+
+    State #9 is non-accepting -
+     associated rule line numbers:
+           3
+     out-transitions: [ r ]
+     jam-transitions: EOF [ \001-q  s-\177 ]
+
+    Compressed tables always back up.
+</pre></div>
+
+<p>The first few lines tell us that there&rsquo;s a scanner state in which it can
+make a transition on an &rsquo;o&rsquo; but not on any other character, and that in
+that state the currently scanned text does not match any rule.  The
+state occurs when trying to match the rules found at lines 2 and 3 in
+the input file.  If the scanner is in that state and then reads
+something other than an &rsquo;o&rsquo;, it will have to back up to find a rule
+which is matched.  With a bit of headscratching one can see that this
+must be the state it&rsquo;s in when it has seen &lsquo;<samp>fo</samp>&rsquo;.  When this has
+happened, if anything other than another &lsquo;<samp>o</samp>&rsquo; is seen, the scanner
+will have to back up to simply match the &lsquo;<samp>f</samp>&rsquo; (by the default rule).
+</p>
+<p>The comment regarding State #8 indicates there&rsquo;s a problem when
+&lsquo;<samp>foob</samp>&rsquo; has been scanned.  Indeed, on any character other than an
+&lsquo;<samp>a</samp>&rsquo;, the scanner will have to back up to accept &quot;foo&quot;.  Similarly,
+the comment for State #9 concerns when &lsquo;<samp>fooba</samp>&rsquo; has been scanned and
+an &lsquo;<samp>r</samp>&rsquo; does not follow.
+</p>
+<p>The final comment reminds us that there&rsquo;s no point going to all the
+trouble of removing backing up from the rules unless we&rsquo;re using
+&lsquo;<samp>-Cf</samp>&rsquo; or &lsquo;<samp>-CF</samp>&rsquo;, since there&rsquo;s no performance gain doing so
+with compressed scanners.
+</p>
+<a name="index-error-rules_002c-to-eliminate-backing-up"></a>
+<p>The way to remove the backing up is to add &ldquo;error&rdquo; rules:
+</p>
+<a name="index-backing-up_002c-eliminating-by-adding-error-rules"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    foo         return TOK_KEYWORD;
+    foobar      return TOK_KEYWORD;
+
+    fooba       |
+    foob        |
+    fo          {
+                /* false alarm, not really a keyword */
+                return TOK_ID;
+                }
+</pre></div>
+
+<p>Eliminating backing up among a list of keywords can also be done using a
+&ldquo;catch-all&rdquo; rule:
+</p>
+<a name="index-backing-up_002c-eliminating-with-catch_002dall-rule"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    foo         return TOK_KEYWORD;
+    foobar      return TOK_KEYWORD;
+
+    [a-z]+      return TOK_ID;
+</pre></div>
+
+<p>This is usually the best solution when appropriate.
+</p>
+<p>Backing up messages tend to cascade.  With a complicated set of rules
+it&rsquo;s not uncommon to get hundreds of messages.  If one can decipher
+them, though, it often only takes a dozen or so rules to eliminate the
+backing up (though it&rsquo;s easy to make a mistake and have an error rule
+accidentally match a valid token.  A possible future <code>flex</code> feature
+will be to automatically add rules to eliminate backing up).
+</p>
+<p>It&rsquo;s important to keep in mind that you gain the benefits of eliminating
+backing up only if you eliminate <em>every</em> instance of backing up.
+Leaving just one means you gain nothing.
+</p>
+<p><em>Variable</em> trailing context (where both the leading and trailing
+parts do not have a fixed length) entails almost the same performance
+loss as <code>REJECT</code> (i.e., substantial).  So when possible a rule
+like:
+</p>
+<a name="index-trailing-context_002c-variable-length"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    mouse|rat/(cat|dog)   run();
+</pre></div>
+
+<p>is better written:
+</p>
+<div class="example">
+<pre class="verbatim">    %%
+    mouse/cat|dog         run();
+    rat/cat|dog           run();
+</pre></div>
+
+<p>or as
+</p>
+<div class="example">
+<pre class="verbatim">    %%
+    mouse|rat/cat         run();
+    mouse|rat/dog         run();
+</pre></div>
+
+<p>Note that here the special &rsquo;|&rsquo; action does <em>not</em> provide any
+savings, and can even make things worse (see <a href="Limitations.html#Limitations">Limitations</a>).
+</p>
+<p>Another area where the user can increase a scanner&rsquo;s performance (and
+one that&rsquo;s easier to implement) arises from the fact that the longer the
+tokens matched, the faster the scanner will run.  This is because with
+long tokens the processing of most input characters takes place in the
+(short) inner scanning loop, and does not often have to go through the
+additional work of setting up the scanning environment (e.g.,
+<code>yytext</code>) for the action.  Recall the scanner for C comments:
+</p>
+<a name="index-performance-optimization_002c-matching-longer-tokens"></a>
+<div class="example">
+<pre class="verbatim">    %x comment
+    %%
+            int line_num = 1;
+
+    &quot;/*&quot;         BEGIN(comment);
+
+    &lt;comment&gt;[^*\n]*
+    &lt;comment&gt;&quot;*&quot;+[^*/\n]*
+    &lt;comment&gt;\n             ++line_num;
+    &lt;comment&gt;&quot;*&quot;+&quot;/&quot;        BEGIN(INITIAL);
+</pre></div>
+
+<p>This could be sped up by writing it as:
+</p>
+<div class="example">
+<pre class="verbatim">    %x comment
+    %%
+            int line_num = 1;
+
+    &quot;/*&quot;         BEGIN(comment);
+
+    &lt;comment&gt;[^*\n]*
+    &lt;comment&gt;[^*\n]*\n      ++line_num;
+    &lt;comment&gt;&quot;*&quot;+[^*/\n]*
+    &lt;comment&gt;&quot;*&quot;+[^*/\n]*\n ++line_num;
+    &lt;comment&gt;&quot;*&quot;+&quot;/&quot;        BEGIN(INITIAL);
+</pre></div>
+
+<p>Now instead of each newline requiring the processing of another action,
+recognizing the newlines is distributed over the other rules to keep the
+matched text as long as possible.  Note that <em>adding</em> rules does
+<em>not</em> slow down the scanner!  The speed of the scanner is
+independent of the number of rules or (modulo the considerations given
+at the beginning of this section) how complicated the rules are with
+regard to operators such as &lsquo;<samp>*</samp>&rsquo; and &lsquo;<samp>|</samp>&rsquo;.
+</p>
+<a name="index-keywords_002c-for-performance"></a>
+<a name="index-performance_002c-using-keywords"></a>
+<p>A final example in speeding up a scanner: suppose you want to scan
+through a file containing identifiers and keywords, one per line
+and with no other extraneous characters, and recognize all the
+keywords.  A natural first approach is:
+</p>
+<a name="index-performance-optimization_002c-recognizing-keywords"></a>
+<div class="example">
+<pre class="verbatim">    %%
+    asm      |
+    auto     |
+    break    |
+    ... etc ...
+    volatile |
+    while    /* it's a keyword */
+
+    .|\n     /* it's not a keyword */
+</pre></div>
+
+<p>To eliminate the back-tracking, introduce a catch-all rule:
+</p>
+<div class="example">
+<pre class="verbatim">    %%
+    asm      |
+    auto     |
+    break    |
+    ... etc ...
+    volatile |
+    while    /* it's a keyword */
+
+    [a-z]+   |
+    .|\n     /* it's not a keyword */
+</pre></div>
+
+<p>Now, if it&rsquo;s guaranteed that there&rsquo;s exactly one word per line, then we
+can reduce the total number of matches by a half by merging in the
+recognition of newlines with that of the other tokens:
+</p>
+<div class="example">
+<pre class="verbatim">    %%
+    asm\n    |
+    auto\n   |
+    break\n  |
+    ... etc ...
+    volatile\n |
+    while\n  /* it's a keyword */
+
+    [a-z]+\n |
+    .|\n     /* it's not a keyword */
+</pre></div>
+
+<p>One has to be careful here, as we have now reintroduced backing up
+into the scanner.  In particular, while
+<em>we</em>
+know that there will never be any characters in the input stream
+other than letters or newlines,
+<code>flex</code>
+can&rsquo;t figure this out, and it will plan for possibly needing to back up
+when it has scanned a token like &lsquo;<samp>auto</samp>&rsquo; and then the next character
+is something other than a newline or a letter.  Previously it would
+then just match the &lsquo;<samp>auto</samp>&rsquo; rule and be done, but now it has no &lsquo;<samp>auto</samp>&rsquo;
+rule, only a &lsquo;<samp>auto\n</samp>&rsquo; rule.  To eliminate the possibility of backing up,
+we could either duplicate all rules but without final newlines, or,
+since we never expect to encounter such an input and therefore don&rsquo;t
+how it&rsquo;s classified, we can introduce one more catch-all rule, this
+one which doesn&rsquo;t include a newline:
+</p>
+<div class="example">
+<pre class="verbatim">    %%
+    asm\n    |
+    auto\n   |
+    break\n  |
+    ... etc ...
+    volatile\n |
+    while\n  /* it's a keyword */
+
+    [a-z]+\n |
+    [a-z]+   |
+    .|\n     /* it's not a keyword */
+</pre></div>
+
+<p>Compiled with &lsquo;<samp>-Cf</samp>&rsquo;, this is about as fast as one can get a
+<code>flex</code> scanner to go for this particular problem.
+</p>
+<p>A final note: <code>flex</code> is slow when matching <code>NUL</code>s,
+particularly when a token contains multiple <code>NUL</code>s.  It&rsquo;s best to
+write rules which match <em>short</em> amounts of text if it&rsquo;s anticipated
+that the text will often include <code>NUL</code>s.
+</p>
+<p>Another final note regarding performance: as mentioned in
+<a href="Matching.html#Matching">Matching</a>, dynamically resizing <code>yytext</code> to accommodate huge
+tokens is a slow process because it presently requires that the (huge)
+token be rescanned from the beginning.  Thus if performance is vital,
+you should attempt to match &ldquo;large&rdquo; quantities of text but not
+&ldquo;huge&rdquo; quantities, where the cutoff between the two is at about 8K
+characters per token.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Cxx.html#Cxx" accesskey="n" rel="next">Cxx</a>, Previous: <a href="Scanner-Options.html#Scanner-Options" accesskey="p" rel="prev">Scanner Options</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

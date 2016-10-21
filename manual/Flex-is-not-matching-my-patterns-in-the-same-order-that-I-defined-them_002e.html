@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Flex is not matching my patterns in the same order that I defined them.</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Flex is not matching my patterns in the same order that I defined them.">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Flex is not matching my patterns in the same order that I defined them.">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e.html#My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e" rel="next" title="My actions are executing out of order or sometimes not at all.">
+<link href="How-do-I-skip-huge-chunks-of-input-_0028tens-of-megabytes_0029-while-using-flex_003f.html#How-do-I-skip-huge-chunks-of-input-_0028tens-of-megabytes_0029-while-using-flex_003f" rel="prev" title="How do I skip huge chunks of input (tens of megabytes) while using flex?">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Flex-is-not-matching-my-patterns-in-the-same-order-that-I-defined-them_002e"></a>
+<div class="header">
+<p>
+Next: <a href="My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e.html#My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e" accesskey="n" rel="next">My actions are executing out of order or sometimes not at all.</a>, Previous: <a href="How-do-I-skip-huge-chunks-of-input-_0028tens-of-megabytes_0029-while-using-flex_003f.html#How-do-I-skip-huge-chunks-of-input-_0028tens-of-megabytes_0029-while-using-flex_003f" accesskey="p" rel="prev">How do I skip huge chunks of input (tens of megabytes) while using flex?</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Flex-is-not-matching-my-patterns-in-the-same-order-that-I-defined-them_002e-1"></a>
+<h3 class="unnumberedsec">Flex is not matching my patterns in the same order that I defined them.</h3>
+
+<p><code>flex</code> picks the
+rule that matches the most text (i.e., the longest possible input string).
+This is because <code>flex</code> uses an entirely different matching technique
+(&ldquo;deterministic finite automata&rdquo;) that actually does all of the matching
+simultaneously, in parallel.  (Seems impossible, but it&rsquo;s actually a fairly
+simple technique once you understand the principles.)
+</p>
+<p>A side-effect of this parallel matching is that when the input matches more
+than one rule, <code>flex</code> scanners pick the rule that matched the <em>most</em> text. This
+is explained further in the manual, in the section See <a href="Matching.html#Matching">Matching</a>.
+</p>
+<p>If you want <code>flex</code> to choose a shorter match, then you can work around this
+behavior by expanding your short
+rule to match more text, then put back the extra:
+</p>
+<div class="example">
+<pre class="verbatim">data_.*        yyless( 5 ); BEGIN BLOCKIDSTATE;
+</pre></div>
+
+<p>Another fix would be to make the second rule active only during the
+<code>&lt;BLOCKIDSTATE&gt;</code> start condition, and make that start condition exclusive
+by declaring it with <code>%x</code> instead of <code>%s</code>.
+</p>
+<p>A final fix is to change the input language so that the ambiguity for
+&lsquo;<samp>data_</samp>&rsquo; is removed, by adding characters to it that don&rsquo;t match the
+identifier rule, or by removing characters (such as &lsquo;<samp>_</samp>&rsquo;) from the
+identifier rule so it no longer matches &lsquo;<samp>data_</samp>&rsquo;.  (Of course, you might
+also not have the option of changing the input language.)
+</p>
+
+
+
+</body>
+</html>

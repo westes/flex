@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Overriding The Default Memory Management</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Overriding The Default Memory Management">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Overriding The Default Memory Management">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Memory-Management.html#Memory-Management" rel="up" title="Memory Management">
+<link href="A-Note-About-yytext-And-Memory.html#A-Note-About-yytext-And-Memory" rel="next" title="A Note About yytext And Memory">
+<link href="The-Default-Memory-Management.html#The-Default-Memory-Management" rel="prev" title="The Default Memory Management">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Overriding-The-Default-Memory-Management"></a>
+<div class="header">
+<p>
+Next: <a href="A-Note-About-yytext-And-Memory.html#A-Note-About-yytext-And-Memory" accesskey="n" rel="next">A Note About yytext And Memory</a>, Previous: <a href="The-Default-Memory-Management.html#The-Default-Memory-Management" accesskey="p" rel="prev">The Default Memory Management</a>, Up: <a href="Memory-Management.html#Memory-Management" accesskey="u" rel="up">Memory Management</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Overriding-The-Default-Memory-Management-1"></a>
+<h3 class="section">21.2 Overriding The Default Memory Management</h3>
+
+<a name="index-yyalloc_002c-overriding"></a>
+<a name="index-yyrealloc_002c-overriding"></a>
+<a name="index-yyfree_002c-overriding"></a>
+
+<p>Flex calls the functions <code>yyalloc</code>, <code>yyrealloc</code>, and <code>yyfree</code>
+when it needs to allocate or free memory. By default, these functions are
+wrappers around the standard C functions, <code>malloc</code>, <code>realloc</code>, and
+<code>free</code>, respectively. You can override the default implementations by telling
+flex that you will provide your own implementations.
+</p>
+<p>To override the default implementations, you must do two things:
+</p>
+<ol>
+<li> Suppress the default implementations by specifying one or more of the
+following options:
+
+<ul>
+<li> <a name="index-noyyalloc"></a>
+<code>%option noyyalloc</code>
+</li><li> <code>%option noyyrealloc</code>
+</li><li> <code>%option noyyfree</code>.
+</li></ul>
+
+</li><li> Provide your own implementation of the following functions: <a name="DOCF3" href="#FOOT3"><sup>3</sup></a>
+
+<div class="example">
+<pre class="verbatim">// For a non-reentrant scanner
+void * yyalloc (size_t bytes);
+void * yyrealloc (void * ptr, size_t bytes);
+void   yyfree (void * ptr);
+
+// For a reentrant scanner
+void * yyalloc (size_t bytes, void * yyscanner);
+void * yyrealloc (void * ptr, size_t bytes, void * yyscanner);
+void   yyfree (void * ptr, void * yyscanner);
+</pre></div>
+
+</li></ol>
+
+<p>In the following example, we will override all three memory routines. We assume
+that there is a custom allocator with garbage collection. In order to make this
+example interesting, we will use a reentrant scanner, passing a pointer to the
+custom allocator through <code>yyextra</code>.
+</p>
+<a name="index-overriding-the-memory-routines"></a>
+<div class="example">
+<pre class="verbatim">%{
+#include &quot;some_allocator.h&quot;
+%}
+
+/* Suppress the default implementations. */
+%option noyyalloc noyyrealloc noyyfree
+%option reentrant
+
+/* Initialize the allocator. */
+%{
+#define YY_EXTRA_TYPE  struct allocator*
+#define YY_USER_INIT  yyextra = allocator_create();
+%}
+
+%%
+.|\n   ;
+%%
+
+/* Provide our own implementations. */
+void * yyalloc (size_t bytes, void* yyscanner) {
+    return allocator_alloc (yyextra, bytes);
+}
+
+void * yyrealloc (void * ptr, size_t bytes, void* yyscanner) {
+    return allocator_realloc (yyextra, bytes);
+}
+
+void yyfree (void * ptr, void * yyscanner) {      
+    /* Do nothing -- we leave it to the garbage collector. */
+}
+
+</pre></div>
+
+
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT3" href="#DOCF3">(3)</a></h3>
+<p>It
+is not necessary to override all (or any) of the memory management routines.
+You may, for example, override <code>yyrealloc</code>, but not <code>yyfree</code> or
+<code>yyalloc</code>.</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="A-Note-About-yytext-And-Memory.html#A-Note-About-yytext-And-Memory" accesskey="n" rel="next">A Note About yytext And Memory</a>, Previous: <a href="The-Default-Memory-Management.html#The-Default-Memory-Management" accesskey="p" rel="prev">The Default Memory Management</a>, Up: <a href="Memory-Management.html#Memory-Management" accesskey="u" rel="up">Memory Management</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

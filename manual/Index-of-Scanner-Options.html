@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Index of Scanner Options</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Index of Scanner Options">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Index of Scanner Options">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Indices.html#Indices" rel="up" title="Indices">
+<link href="Index-of-Hooks.html#Index-of-Hooks" rel="prev" title="Index of Hooks">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Index-of-Scanner-Options"></a>
+<div class="header">
+<p>
+Previous: <a href="Index-of-Hooks.html#Index-of-Hooks" accesskey="p" rel="prev">Index of Hooks</a>, Up: <a href="Indices.html#Indices" accesskey="u" rel="up">Indices</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Index-of-Scanner-Options-1"></a>
+<h3 class="unnumberedsec">Index of Scanner Options</h3>
+
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Index-of-Scanner-Options_op_symbol-1"><b>-</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_symbol-2"><b>7</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_symbol-3"><b>8</b></a>
+ &nbsp; 
+<br>
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-A"><b>A</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-B"><b>B</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-C"><b>C</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-D"><b>D</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-E"><b>E</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-F"><b>F</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-H"><b>H</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-I"><b>I</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-L"><b>L</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-M"><b>M</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-N"><b>N</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-O"><b>O</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-P"><b>P</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-R"><b>R</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-S"><b>S</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-T"><b>T</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-V"><b>V</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-W"><b>W</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-Y"><b>Y</b></a>
+ &nbsp; 
+</td></tr></table>
+<table class="index-op" border="0">
+<tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_symbol-1">-</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002b">-+</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002d7bit">&mdash;7bit</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002d8bit">&mdash;8bit</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002d_002d_002dalign">&mdash;align</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002dalways_002dinteractive">&mdash;always-interactive</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002darray">&mdash;array</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002d_002d_002dbackup">&mdash;backup</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002dbatch">&mdash;batch</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002dbison_002dbridge">&mdash;bison-bridge</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002dbison_002dlocations">&mdash;bison-locations</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002dc_002b_002b">&mdash;c++</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002dcase_002dinsensitive">&mdash;case-insensitive</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002d_002d_002ddebug">&mdash;debug</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002ddefault">&mdash;default</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002d_002d_002decs">&mdash;ecs</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002d_002d_002dfast">&mdash;fast</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002d_002d_002dfull">&mdash;full</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-_002d_002d_002dheader_002dfile">&mdash;header-file</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td></td><td valign="top"><a href="Miscellaneous-Options.html#index-_002d_002d_002dhelp">&mdash;help</a>:</td><td>&nbsp;</td><td valign="top"><a href="Miscellaneous-Options.html#Miscellaneous-Options">Miscellaneous Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002dinteractive">&mdash;interactive</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002dlex_002dcompat">&mdash;lex-compat</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002dmain">&mdash;main</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002d_002d_002dmeta_002decs">&mdash;meta-ecs</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002dnever_002dinteractive">&mdash;never-interactive</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002d_002d_002dnodefault">&mdash;nodefault</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002dnoline">&mdash;noline</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002dnounistd">&mdash;nounistd</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002d_002d_002dnowarn">&mdash;nowarn</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002doption_002dansi_002ddefinitions">&mdash;option-ansi-definitions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002doption_002dansi_002dprototypes">&mdash;option-ansi-prototypes</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-_002d_002d_002doutfile">&mdash;outfile</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002d_002d_002dperf_002dreport">&mdash;perf-report</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002dpointer">&mdash;pointer</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002dposix">&mdash;posix</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002dprefix">&mdash;prefix</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002d_002d_002dread">&mdash;read</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002dreentrant">&mdash;reentrant</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-_002d_002d_002dskel">&mdash;skel</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002dstack">&mdash;stack</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002dstdinit">&mdash;stdinit</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-_002d_002d_002dstdout">&mdash;stdout</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-_002d_002d_002dtables_002dfile">&mdash;tables-file</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-_002d_002d_002dtables_002dverify">&mdash;tables-verify</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002d_002d_002dtrace">&mdash;trace</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002d_002d_002dverbose">&mdash;verbose</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Miscellaneous-Options.html#index-_002d_002d_002dversion">&mdash;version</a>:</td><td>&nbsp;</td><td valign="top"><a href="Miscellaneous-Options.html#Miscellaneous-Options">Miscellaneous Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002d_002d_002dwarn">&mdash;warn</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002d_002d_002dyyclass">&mdash;yyclass</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002dyylineno">&mdash;yylineno</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d_002d_002dyywrap">&mdash;yywrap</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d7">-7</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002d8">-8</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002dB">-B</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002db">-b</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002dC">-C</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Miscellaneous-Options.html#index-_002dc">-c</a>:</td><td>&nbsp;</td><td valign="top"><a href="Miscellaneous-Options.html#Miscellaneous-Options">Miscellaneous Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002dCa">-Ca</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002dCe">-Ce</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002dCf">-Cf</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002dCF">-CF</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002dCm">-Cm</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002dCr">-Cr</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002dd">-d</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002df">-f</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-_002dF">-F</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Miscellaneous-Options.html#index-_002dh">-h</a>:</td><td>&nbsp;</td><td valign="top"><a href="Miscellaneous-Options.html#Miscellaneous-Options">Miscellaneous Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002di">-i</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002dI">-I</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002dl">-l</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002dL">-L</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Miscellaneous-Options.html#index-_002dn">-n</a>:</td><td>&nbsp;</td><td valign="top"><a href="Miscellaneous-Options.html#Miscellaneous-Options">Miscellaneous Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-_002do">-o</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002dP">-P</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002dp">-p</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-_002dR">-R</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002ds">-s</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-_002dt">-t</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002dT">-T</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002dv">-v</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Miscellaneous-Options.html#index-_002dV">-V</a>:</td><td>&nbsp;</td><td valign="top"><a href="Miscellaneous-Options.html#Miscellaneous-Options">Miscellaneous Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-_002dw">-w</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-_002dX">-X</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_symbol-2">7</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-7bit">7bit</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_symbol-3">8</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-8bit">8bit</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-A">A</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-align">align</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-always_002dinteractive">always-interactive</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-ansi_002ddefinitions">ansi-definitions</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-ansi_002dprototypes">ansi-prototypes</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-array">array</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-B">B</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-backup">backup</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-batch">batch</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-bison_002dbridge">bison-bridge</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-bison_002dlocations">bison-locations</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-C">C</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-c_002b_002b">c++</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-case_002dinsensitive">case-insensitive</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-D">D</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-debug">debug</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-default">default</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-E">E</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-ecs">ecs</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-F">F</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-fast">fast</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-full">full</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-H">H</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-header_002dfile">header-file</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-I">I</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-interactive">interactive</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-L">L</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-lex_002dcompat">lex-compat</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-M">M</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-main">main</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-meta_002decs">meta-ecs</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-N">N</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-nodefault">nodefault</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-noline">noline</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-nounistd">nounistd</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-nowarn">nowarn</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Overriding-The-Default-Memory-Management.html#index-noyyalloc">noyyalloc</a>:</td><td>&nbsp;</td><td valign="top"><a href="Overriding-The-Default-Memory-Management.html#Overriding-The-Default-Memory-Management">Overriding The Default Memory Management</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-O">O</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-outfile">outfile</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-P">P</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-perf_002dreport">perf-report</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-pointer">pointer</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-posix">posix</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-prefix">prefix</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-R">R</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#index-read">read</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size">Options for Scanner Speed and Size</a></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-reentrant">reentrant</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-S">S</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-stack">stack</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-stdinit">stdinit</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-stdout">stdout</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-T">T</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-tables_002dfile">tables-file</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-for-Specifying-Filenames.html#index-tables_002dverify">tables-verify</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames">Options for Specifying Filenames</a></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-trace">trace</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-V">V</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-verbose">verbose</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-W">W</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Debugging-Options.html#index-warn">warn</a>:</td><td>&nbsp;</td><td valign="top"><a href="Debugging-Options.html#Debugging-Options">Debugging Options</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Index-of-Scanner-Options_op_letter-Y">Y</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#index-yyclass">yyclass</a>:</td><td>&nbsp;</td><td valign="top"><a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options">Code-Level And API Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-yylineno">yylineno</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td></td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#index-yywrap">yywrap</a>:</td><td>&nbsp;</td><td valign="top"><a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior">Options Affecting Scanner Behavior</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+</table>
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Index-of-Scanner-Options_op_symbol-1"><b>-</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_symbol-2"><b>7</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_symbol-3"><b>8</b></a>
+ &nbsp; 
+<br>
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-A"><b>A</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-B"><b>B</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-C"><b>C</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-D"><b>D</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-E"><b>E</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-F"><b>F</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-H"><b>H</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-I"><b>I</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-L"><b>L</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-M"><b>M</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-N"><b>N</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-O"><b>O</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-P"><b>P</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-R"><b>R</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-S"><b>S</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-T"><b>T</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-V"><b>V</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-W"><b>W</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Index-of-Scanner-Options_op_letter-Y"><b>Y</b></a>
+ &nbsp; 
+</td></tr></table>
+
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Index-of-Hooks.html#Index-of-Hooks" accesskey="p" rel="prev">Index of Hooks</a>, Up: <a href="Indices.html#Indices" accesskey="u" rel="up">Indices</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

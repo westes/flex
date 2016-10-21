@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Matching</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Matching">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Matching">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Actions.html#Actions" rel="next" title="Actions">
+<link href="Patterns.html#Patterns" rel="prev" title="Patterns">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Matching"></a>
+<div class="header">
+<p>
+Next: <a href="Actions.html#Actions" accesskey="n" rel="next">Actions</a>, Previous: <a href="Patterns.html#Patterns" accesskey="p" rel="prev">Patterns</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="How-the-Input-Is-Matched"></a>
+<h2 class="chapter">7 How the Input Is Matched</h2>
+
+<a name="index-patterns_002c-matching"></a>
+<a name="index-input_002c-matching"></a>
+<a name="index-trailing-context_002c-matching"></a>
+<a name="index-matching_002c-and-trailing-context"></a>
+<a name="index-matching_002c-length-of"></a>
+<a name="index-matching_002c-multiple-matches"></a>
+<p>When the generated scanner is run, it analyzes its input looking for
+strings which match any of its patterns.  If it finds more than one
+match, it takes the one matching the most text (for trailing context
+rules, this includes the length of the trailing part, even though it
+will then be returned to the input).  If it finds two or more matches of
+the same length, the rule listed first in the <code>flex</code> input file is
+chosen.
+</p>
+<a name="index-token"></a>
+<a name="index-yytext"></a>
+<a name="index-yyleng"></a>
+<p>Once the match is determined, the text corresponding to the match
+(called the <em>token</em>) is made available in the global character
+pointer <code>yytext</code>, and its length in the global integer
+<code>yyleng</code>.  The <em>action</em> corresponding to the matched pattern is
+then executed (see <a href="Actions.html#Actions">Actions</a>), and then the remaining input is scanned
+for another match.
+</p>
+<a name="index-default-rule-1"></a>
+<p>If no match is found, then the <em>default rule</em> is executed: the next
+character in the input is considered matched and copied to the standard
+output.  Thus, the simplest valid <code>flex</code> input is:
+</p>
+<a name="index-minimal-scanner"></a>
+<div class="example">
+<pre class="verbatim">    %%
+</pre></div>
+
+<p>which generates a scanner that simply copies its input (one character at
+a time) to its output.
+</p>
+<a name="index-yytext_002c-two-types-of"></a>
+<a name="index-_0025array_002c-use-of"></a>
+<a name="index-_0025pointer_002c-use-of"></a>
+<a name="index-yytext-1"></a>
+<p>Note that <code>yytext</code> can be defined in two different ways: either as
+a character <em>pointer</em> or as a character <em>array</em>. You can
+control which definition <code>flex</code> uses by including one of the
+special directives <code>%pointer</code> or <code>%array</code> in the first
+(definitions) section of your flex input.  The default is
+<code>%pointer</code>, unless you use the &lsquo;<samp>-l</samp>&rsquo; lex compatibility option,
+in which case <code>yytext</code> will be an array.  The advantage of using
+<code>%pointer</code> is substantially faster scanning and no buffer overflow
+when matching very large tokens (unless you run out of dynamic memory).
+The disadvantage is that you are restricted in how your actions can
+modify <code>yytext</code> (see <a href="Actions.html#Actions">Actions</a>), and calls to the <code>unput()</code>
+function destroys the present contents of <code>yytext</code>, which can be a
+considerable porting headache when moving between different <code>lex</code>
+versions.
+</p>
+<a name="index-_0025array_002c-advantages-of"></a>
+<p>The advantage of <code>%array</code> is that you can then modify <code>yytext</code>
+to your heart&rsquo;s content, and calls to <code>unput()</code> do not destroy
+<code>yytext</code> (see <a href="Actions.html#Actions">Actions</a>).  Furthermore, existing <code>lex</code>
+programs sometimes access <code>yytext</code> externally using declarations of
+the form:
+</p>
+<div class="example">
+<pre class="verbatim">    extern char yytext[];
+</pre></div>
+
+<p>This definition is erroneous when used with <code>%pointer</code>, but correct
+for <code>%array</code>.
+</p>
+<p>The <code>%array</code> declaration defines <code>yytext</code> to be an array of
+<code>YYLMAX</code> characters, which defaults to a fairly large value.  You
+can change the size by simply #define&rsquo;ing <code>YYLMAX</code> to a different
+value in the first section of your <code>flex</code> input.  As mentioned
+above, with <code>%pointer</code> yytext grows dynamically to accommodate
+large tokens.  While this means your <code>%pointer</code> scanner can
+accommodate very large tokens (such as matching entire blocks of
+comments), bear in mind that each time the scanner must resize
+<code>yytext</code> it also must rescan the entire token from the beginning,
+so matching such tokens can prove slow.  <code>yytext</code> presently does
+<em>not</em> dynamically grow if a call to <code>unput()</code> results in too
+much text being pushed back; instead, a run-time error results.
+</p>
+<a name="index-_0025array_002c-with-C_002b_002b"></a>
+<p>Also note that you cannot use <code>%array</code> with C++ scanner classes
+(see <a href="Cxx.html#Cxx">Cxx</a>).
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Actions.html#Actions" accesskey="n" rel="next">Actions</a>, Previous: <a href="Patterns.html#Patterns" accesskey="p" rel="prev">Patterns</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

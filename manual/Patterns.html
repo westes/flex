@@ -1,0 +1,507 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Patterns</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Patterns">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Patterns">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Matching.html#Matching" rel="next" title="Matching">
+<link href="Comments-in-the-Input.html#Comments-in-the-Input" rel="prev" title="Comments in the Input">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Patterns"></a>
+<div class="header">
+<p>
+Next: <a href="Matching.html#Matching" accesskey="n" rel="next">Matching</a>, Previous: <a href="Format.html#Format" accesskey="p" rel="prev">Format</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Patterns-1"></a>
+<h2 class="chapter">6 Patterns</h2>
+
+<a name="index-patterns_002c-in-rules-section"></a>
+<a name="index-regular-expressions_002c-in-patterns"></a>
+<p>The patterns in the input (see <a href="Rules-Section.html#Rules-Section">Rules Section</a>) are written using an
+extended set of regular expressions.  These are:
+</p>
+<a name="index-patterns_002c-syntax"></a>
+<a name="index-patterns_002c-syntax-1"></a>
+<dl compact="compact">
+<dt>&lsquo;<samp>x</samp>&rsquo;</dt>
+<dd><p>match the character &rsquo;x&rsquo;
+</p>
+</dd>
+<dt>&lsquo;<samp>.</samp>&rsquo;</dt>
+<dd><p>any character (byte) except newline
+</p>
+<a name="index-_005b_005d-in-patterns"></a>
+<a name="index-character-classes-in-patterns_002c-syntax-of"></a>
+<a name="index-POSIX_002c-character-classes-in-patterns_002c-syntax-of"></a>
+</dd>
+<dt>&lsquo;<samp>[xyz]</samp>&rsquo;</dt>
+<dd><p>a <em>character class</em>; in this case, the pattern
+matches either an &rsquo;x&rsquo;, a &rsquo;y&rsquo;, or a &rsquo;z&rsquo;
+</p>
+<a name="index-ranges-in-patterns"></a>
+</dd>
+<dt>&lsquo;<samp>[abj-oZ]</samp>&rsquo;</dt>
+<dd><p>a &quot;character class&quot; with a range in it; matches
+an &rsquo;a&rsquo;, a &rsquo;b&rsquo;, any letter from &rsquo;j&rsquo; through &rsquo;o&rsquo;,
+or a &rsquo;Z&rsquo;
+</p>
+<a name="index-ranges-in-patterns_002c-negating"></a>
+<a name="index-negating-ranges-in-patterns"></a>
+</dd>
+<dt>&lsquo;<samp>[^A-Z]</samp>&rsquo;</dt>
+<dd><p>a &quot;negated character class&quot;, i.e., any character
+but those in the class.  In this case, any
+character EXCEPT an uppercase letter.
+</p>
+</dd>
+<dt>&lsquo;<samp>[^A-Z\n]</samp>&rsquo;</dt>
+<dd><p>any character EXCEPT an uppercase letter or
+a newline
+</p>
+</dd>
+<dt>&lsquo;<samp>[a-z]{-}[aeiou]</samp>&rsquo;</dt>
+<dd><p>the lowercase consonants
+</p>
+</dd>
+<dt>&lsquo;<samp>r*</samp>&rsquo;</dt>
+<dd><p>zero or more r&rsquo;s, where r is any regular expression
+</p>
+</dd>
+<dt>&lsquo;<samp>r+</samp>&rsquo;</dt>
+<dd><p>one or more r&rsquo;s
+</p>
+</dd>
+<dt>&lsquo;<samp>r?</samp>&rsquo;</dt>
+<dd><p>zero or one r&rsquo;s (that is, &ldquo;an optional r&rdquo;)
+</p>
+<a name="index-braces-in-patterns"></a>
+</dd>
+<dt>&lsquo;<samp>r{2,5}</samp>&rsquo;</dt>
+<dd><p>anywhere from two to five r&rsquo;s
+</p>
+</dd>
+<dt>&lsquo;<samp>r{2,}</samp>&rsquo;</dt>
+<dd><p>two or more r&rsquo;s
+</p>
+</dd>
+<dt>&lsquo;<samp>r{4}</samp>&rsquo;</dt>
+<dd><p>exactly 4 r&rsquo;s
+</p>
+<a name="index-pattern-aliases_002c-expansion-of"></a>
+</dd>
+<dt>&lsquo;<samp>{name}</samp>&rsquo;</dt>
+<dd><p>the expansion of the &lsquo;<samp>name</samp>&rsquo; definition
+(see <a href="Format.html#Format">Format</a>).
+</p>
+<a name="index-literal-text-in-patterns_002c-syntax-of"></a>
+<a name="index-verbatim-text-in-patterns_002c-syntax-of"></a>
+</dd>
+<dt>&lsquo;<samp>&quot;[xyz]\&quot;foo&quot;</samp>&rsquo;</dt>
+<dd><p>the literal string: &lsquo;<samp>[xyz]&quot;foo</samp>&rsquo;
+</p>
+<a name="index-escape-sequences-in-patterns_002c-syntax-of"></a>
+</dd>
+<dt>&lsquo;<samp>\X</samp>&rsquo;</dt>
+<dd><p>if X is &lsquo;<samp>a</samp>&rsquo;, &lsquo;<samp>b</samp>&rsquo;, &lsquo;<samp>f</samp>&rsquo;, &lsquo;<samp>n</samp>&rsquo;, &lsquo;<samp>r</samp>&rsquo;, &lsquo;<samp>t</samp>&rsquo;, or
+&lsquo;<samp>v</samp>&rsquo;, then the ANSI-C interpretation of &lsquo;<samp>\x</samp>&rsquo;.  Otherwise, a
+literal &lsquo;<samp>X</samp>&rsquo; (used to escape operators such as &lsquo;<samp>*</samp>&rsquo;)
+</p>
+<a name="index-NULL-character-in-patterns_002c-syntax-of"></a>
+</dd>
+<dt>&lsquo;<samp>\0</samp>&rsquo;</dt>
+<dd><p>a NUL character (ASCII code 0)
+</p>
+<a name="index-octal-characters-in-patterns"></a>
+</dd>
+<dt>&lsquo;<samp>\123</samp>&rsquo;</dt>
+<dd><p>the character with octal value 123
+</p>
+</dd>
+<dt>&lsquo;<samp>\x2a</samp>&rsquo;</dt>
+<dd><p>the character with hexadecimal value 2a
+</p>
+</dd>
+<dt>&lsquo;<samp>(r)</samp>&rsquo;</dt>
+<dd><p>match an &lsquo;<samp>r</samp>&rsquo;; parentheses are used to override precedence (see below)
+</p>
+</dd>
+<dt>&lsquo;<samp>(?r-s:pattern)</samp>&rsquo;</dt>
+<dd><p>apply option &lsquo;<samp>r</samp>&rsquo; and omit option &lsquo;<samp>s</samp>&rsquo; while interpreting pattern.
+Options may be zero or more of the characters &lsquo;<samp>i</samp>&rsquo;, &lsquo;<samp>s</samp>&rsquo;, or &lsquo;<samp>x</samp>&rsquo;.
+</p>
+<p>&lsquo;<samp>i</samp>&rsquo; means case-insensitive. &lsquo;<samp>-i</samp>&rsquo; means case-sensitive.
+</p>
+<p>&lsquo;<samp>s</samp>&rsquo; alters the meaning of the &lsquo;<samp>.</samp>&rsquo; syntax to match any single byte whatsoever.
+&lsquo;<samp>-s</samp>&rsquo; alters the meaning of &lsquo;<samp>.</samp>&rsquo; to match any byte except &lsquo;<samp>\n</samp>&rsquo;.
+</p>
+<p>&lsquo;<samp>x</samp>&rsquo; ignores comments and whitespace in patterns. Whitespace is ignored unless
+it is backslash-escaped, contained within &lsquo;<samp>&quot;&quot;</samp>&rsquo;s, or appears inside a 
+character class.
+</p>
+<p>The following are all valid:
+</p>
+<pre class="verbatim">(?:foo)         same as  (foo)
+(?i:ab7)        same as  ([aA][bB]7)
+(?-i:ab)        same as  (ab)
+(?s:.)          same as  [\x00-\xFF]
+(?-s:.)         same as  [^\n]
+(?ix-s: a . b)  same as  ([Aa][^\n][bB])
+(?x:a  b)       same as  (&quot;ab&quot;)
+(?x:a\ b)       same as  (&quot;a b&quot;)
+(?x:a&quot; &quot;b)      same as  (&quot;a b&quot;)
+(?x:a[ ]b)      same as  (&quot;a b&quot;)
+(?x:a
+    /* comment */
+    b
+    c)          same as  (abc)
+</pre>
+</dd>
+<dt>&lsquo;<samp>(?# comment )</samp>&rsquo;</dt>
+<dd><p>omit everything within &lsquo;<samp>()</samp>&rsquo;. The first &lsquo;<samp>)</samp>&rsquo;
+character encountered ends the pattern. It is not possible to for the comment
+to contain a &lsquo;<samp>)</samp>&rsquo; character. The comment may span lines.
+</p>
+<a name="index-concatenation_002c-in-patterns"></a>
+</dd>
+<dt>&lsquo;<samp>rs</samp>&rsquo;</dt>
+<dd><p>the regular expression &lsquo;<samp>r</samp>&rsquo; followed by the regular expression &lsquo;<samp>s</samp>&rsquo;; called
+<em>concatenation</em>
+</p>
+</dd>
+<dt>&lsquo;<samp>r|s</samp>&rsquo;</dt>
+<dd><p>either an &lsquo;<samp>r</samp>&rsquo; or an &lsquo;<samp>s</samp>&rsquo;
+</p>
+<a name="index-trailing-context_002c-in-patterns"></a>
+</dd>
+<dt>&lsquo;<samp>r/s</samp>&rsquo;</dt>
+<dd><p>an &lsquo;<samp>r</samp>&rsquo; but only if it is followed by an &lsquo;<samp>s</samp>&rsquo;.  The text matched by &lsquo;<samp>s</samp>&rsquo; is
+included when determining whether this rule is the longest match, but is
+then returned to the input before the action is executed.  So the action
+only sees the text matched by &lsquo;<samp>r</samp>&rsquo;.  This type of pattern is called
+<em>trailing context</em>.  (There are some combinations of &lsquo;<samp>r/s</samp>&rsquo; that flex
+cannot match correctly. See <a href="Limitations.html#Limitations">Limitations</a>, regarding dangerous trailing
+context.)
+</p>
+<a name="index-beginning-of-line_002c-in-patterns"></a>
+<a name="index-BOL_002c-in-patterns"></a>
+</dd>
+<dt>&lsquo;<samp>^r</samp>&rsquo;</dt>
+<dd><p>an &lsquo;<samp>r</samp>&rsquo;, but only at the beginning of a line (i.e.,
+when just starting to scan, or right after a
+newline has been scanned).
+</p>
+<a name="index-end-of-line_002c-in-patterns"></a>
+<a name="index-EOL_002c-in-patterns"></a>
+</dd>
+<dt>&lsquo;<samp>r$</samp>&rsquo;</dt>
+<dd><p>an &lsquo;<samp>r</samp>&rsquo;, but only at the end of a line (i.e., just before a
+newline).  Equivalent to &lsquo;<samp>r/\n</samp>&rsquo;.
+</p>
+<a name="index-newline_002c-matching-in-patterns"></a>
+<p>Note that <code>flex</code>&rsquo;s notion of &ldquo;newline&rdquo; is exactly
+whatever the C compiler used to compile <code>flex</code>
+interprets &lsquo;<samp>\n</samp>&rsquo; as; in particular, on some DOS
+systems you must either filter out &lsquo;<samp>\r</samp>&rsquo;s in the
+input yourself, or explicitly use &lsquo;<samp>r/\r\n</samp>&rsquo; for &lsquo;<samp>r$</samp>&rsquo;.
+</p>
+<a name="index-start-conditions_002c-in-patterns"></a>
+</dd>
+<dt>&lsquo;<samp>&lt;s&gt;r</samp>&rsquo;</dt>
+<dd><p>an &lsquo;<samp>r</samp>&rsquo;, but only in start condition <code>s</code> (see <a href="Start-Conditions.html#Start-Conditions">Start Conditions</a> for discussion of start conditions).
+</p>
+</dd>
+<dt>&lsquo;<samp>&lt;s1,s2,s3&gt;r</samp>&rsquo;</dt>
+<dd><p>same, but in any of start conditions <code>s1</code>, <code>s2</code>, or <code>s3</code>.
+</p>
+</dd>
+<dt>&lsquo;<samp>&lt;*&gt;r</samp>&rsquo;</dt>
+<dd><p>an &lsquo;<samp>r</samp>&rsquo; in any start condition, even an exclusive one.
+</p>
+<a name="index-end-of-file_002c-in-patterns"></a>
+<a name="index-EOF-in-patterns_002c-syntax-of"></a>
+</dd>
+<dt>&lsquo;<samp>&lt;&lt;EOF&gt;&gt;</samp>&rsquo;</dt>
+<dd><p>an end-of-file.
+</p>
+</dd>
+<dt>&lsquo;<samp>&lt;s1,s2&gt;&lt;&lt;EOF&gt;&gt;</samp>&rsquo;</dt>
+<dd><p>an end-of-file when in start condition <code>s1</code> or <code>s2</code>
+</p></dd>
+</dl>
+
+<p>Note that inside of a character class, all regular expression operators
+lose their special meaning except escape (&lsquo;<samp>\</samp>&rsquo;) and the character class
+operators, &lsquo;<samp>-</samp>&rsquo;, &lsquo;<samp>]]</samp>&rsquo;, and, at the beginning of the class, &lsquo;<samp>^</samp>&rsquo;.
+</p>
+<a name="index-patterns_002c-precedence-of-operators"></a>
+<p>The regular expressions listed above are grouped according to
+precedence, from highest precedence at the top to lowest at the bottom.
+Those grouped together have equal precedence (see special note on the
+precedence of the repeat operator, &lsquo;<samp>{}</samp>&rsquo;, under the documentation
+for the &lsquo;<samp>--posix</samp>&rsquo; POSIX compliance option).  For example,
+</p>
+<a name="index-patterns_002c-grouping-and-precedence"></a>
+<div class="example">
+<pre class="verbatim">    foo|bar*
+</pre></div>
+
+<p>is the same as
+</p>
+<div class="example">
+<pre class="verbatim">    (foo)|(ba(r*))
+</pre></div>
+
+<p>since the &lsquo;<samp>*</samp>&rsquo; operator has higher precedence than concatenation,
+and concatenation higher than alternation (&lsquo;<samp>|</samp>&rsquo;).  This pattern
+therefore matches <em>either</em> the string &lsquo;<samp>foo</samp>&rsquo; <em>or</em> the
+string &lsquo;<samp>ba</samp>&rsquo; followed by zero-or-more &lsquo;<samp>r</samp>&rsquo;&rsquo;s.  To match
+&lsquo;<samp>foo</samp>&rsquo; or zero-or-more repetitions of the string &lsquo;<samp>bar</samp>&rsquo;, use:
+</p>
+<div class="example">
+<pre class="verbatim">    foo|(bar)*
+</pre></div>
+
+<p>And to match a sequence of zero or more repetitions of &lsquo;<samp>foo</samp>&rsquo; and
+&lsquo;<samp>bar</samp>&rsquo;:
+</p>
+<a name="index-patterns_002c-repetitions-with-grouping"></a>
+<div class="example">
+<pre class="verbatim">    (foo|bar)*
+</pre></div>
+
+<a name="index-character-classes-in-patterns"></a>
+<p>In addition to characters and ranges of characters, character classes
+can also contain <em>character class expressions</em>.  These are
+expressions enclosed inside &lsquo;<samp>[:</samp>&rsquo; and &lsquo;<samp>:]</samp>&rsquo; delimiters (which
+themselves must appear between the &lsquo;<samp>[</samp>&rsquo; and &lsquo;<samp>]</samp>&rsquo; of the
+character class. Other elements may occur inside the character class,
+too).  The valid expressions are:
+</p>
+<a name="index-patterns_002c-valid-character-classes"></a>
+<div class="example">
+<pre class="verbatim">    [:alnum:] [:alpha:] [:blank:]
+    [:cntrl:] [:digit:] [:graph:]
+    [:lower:] [:print:] [:punct:]
+    [:space:] [:upper:] [:xdigit:]
+</pre></div>
+
+<p>These expressions all designate a set of characters equivalent to the
+corresponding standard C <code>isXXX</code> function.  For example,
+&lsquo;<samp>[:alnum:]</samp>&rsquo; designates those characters for which <code>isalnum()</code>
+returns true - i.e., any alphabetic or numeric character.  Some systems
+don&rsquo;t provide <code>isblank()</code>, so flex defines &lsquo;<samp>[:blank:]</samp>&rsquo; as a
+blank or a tab.
+</p>
+<p>For example, the following character classes are all equivalent:
+</p>
+<a name="index-character-classes_002c-equivalence-of"></a>
+<a name="index-patterns_002c-character-class-equivalence"></a>
+<div class="example">
+<pre class="verbatim">    [[:alnum:]]
+    [[:alpha:][:digit:]]
+    [[:alpha:][0-9]]
+    [a-zA-Z0-9]
+</pre></div>
+
+<p>A word of caution. Character classes are expanded immediately when seen in the <code>flex</code> input. 
+This means the character classes are sensitive to the locale in which <code>flex</code>
+is executed, and the resulting scanner will not be sensitive to the runtime locale.
+This may or may not be desirable.
+</p>
+
+<ul>
+<li> <a name="index-case_002dinsensitive_002c-effect-on-character-classes"></a>
+If your scanner is case-insensitive (the &lsquo;<samp>-i</samp>&rsquo; flag), then
+&lsquo;<samp>[:upper:]</samp>&rsquo; and &lsquo;<samp>[:lower:]</samp>&rsquo; are equivalent to
+&lsquo;<samp>[:alpha:]</samp>&rsquo;.
+
+<a name="case-and-character-ranges"></a></li><li> Character classes with ranges, such as &lsquo;<samp>[a-Z]</samp>&rsquo;, should be used with
+caution in a case-insensitive scanner if the range spans upper or lowercase
+characters. Flex does not know if you want to fold all upper and lowercase
+characters together, or if you want the literal numeric range specified (with
+no case folding). When in doubt, flex will assume that you meant the literal
+numeric range, and will issue a warning. The exception to this rule is a
+character range such as &lsquo;<samp>[a-z]</samp>&rsquo; or &lsquo;<samp>[S-W]</samp>&rsquo; where it is obvious that you
+want case-folding to occur. Here are some examples with the &lsquo;<samp>-i</samp>&rsquo; flag
+enabled:
+
+<table>
+<tr><td>Range</td><td>Result</td><td>Literal Range</td><td>Alternate Range</td></tr>
+<tr><td>&lsquo;<samp>[a-t]</samp>&rsquo;</td><td>ok</td><td>&lsquo;<samp>[a-tA-T]</samp>&rsquo;</td><td></td></tr>
+<tr><td>&lsquo;<samp>[A-T]</samp>&rsquo;</td><td>ok</td><td>&lsquo;<samp>[a-tA-T]</samp>&rsquo;</td><td></td></tr>
+<tr><td>&lsquo;<samp>[A-t]</samp>&rsquo;</td><td>ambiguous</td><td>&lsquo;<samp>[A-Z\[\\\]_`a-t]</samp>&rsquo;</td><td>&lsquo;<samp>[a-tA-T]</samp>&rsquo;</td></tr>
+<tr><td>&lsquo;<samp>[_-{]</samp>&rsquo;</td><td>ambiguous</td><td>&lsquo;<samp>[_`a-z{]</samp>&rsquo;</td><td>&lsquo;<samp>[_`a-zA-Z{]</samp>&rsquo;</td></tr>
+<tr><td>&lsquo;<samp>[@-C]</samp>&rsquo;</td><td>ambiguous</td><td>&lsquo;<samp>[@ABC]</samp>&rsquo;</td><td>&lsquo;<samp>[@A-Z\[\\\]_`abc]</samp>&rsquo;</td></tr>
+</table>
+
+</li><li> <a name="index-end-of-line_002c-in-negated-character-classes"></a>
+<a name="index-EOL_002c-in-negated-character-classes"></a>
+A negated character class such as the example &lsquo;<samp>[^A-Z]</samp>&rsquo; above
+<em>will</em> match a newline unless &lsquo;<samp>\n</samp>&rsquo; (or an equivalent escape
+sequence) is one of the characters explicitly present in the negated
+character class (e.g., &lsquo;<samp>[^A-Z\n]</samp>&rsquo;).  This is unlike how many other
+regular expression tools treat negated character classes, but
+unfortunately the inconsistency is historically entrenched.  Matching
+newlines means that a pattern like &lsquo;<samp>[^&quot;]*</samp>&rsquo; can match the entire
+input unless there&rsquo;s another quote in the input.
+
+<p>Flex allows negation of character class expressions by prepending &lsquo;<samp>^</samp>&rsquo; to
+the POSIX character class name.
+</p>
+<div class="example">
+<pre class="verbatim">    [:^alnum:] [:^alpha:] [:^blank:]
+    [:^cntrl:] [:^digit:] [:^graph:]
+    [:^lower:] [:^print:] [:^punct:]
+    [:^space:] [:^upper:] [:^xdigit:]
+</pre></div>
+
+<p>Flex will issue a warning if the expressions &lsquo;<samp>[:^upper:]</samp>&rsquo; and
+&lsquo;<samp>[:^lower:]</samp>&rsquo; appear in a case-insensitive scanner, since their meaning is
+unclear. The current behavior is to skip them entirely, but this may change
+without notice in future revisions of flex.
+</p>
+</li><li> 
+The &lsquo;<samp>{-}</samp>&rsquo; operator computes the difference of two character classes. For
+example, &lsquo;<samp>[a-c]{-}[b-z]</samp>&rsquo; represents all the characters in the class
+&lsquo;<samp>[a-c]</samp>&rsquo; that are not in the class &lsquo;<samp>[b-z]</samp>&rsquo; (which in this case, is
+just the single character &lsquo;<samp>a</samp>&rsquo;). The &lsquo;<samp>{-}</samp>&rsquo; operator is left
+associative, so &lsquo;<samp>[abc]{-}[b]{-}[c]</samp>&rsquo; is the same as &lsquo;<samp>[a]</samp>&rsquo;. Be careful
+not to accidentally create an empty set, which will never match.
+
+</li><li> 
+The &lsquo;<samp>{+}</samp>&rsquo; operator computes the union of two character classes. For
+example, &lsquo;<samp>[a-z]{+}[0-9]</samp>&rsquo; is the same as &lsquo;<samp>[a-z0-9]</samp>&rsquo;. This operator
+is useful when preceded by the result of a difference operation, as in,
+&lsquo;<samp>[[:alpha:]]{-}[[:lower:]]{+}[q]</samp>&rsquo;, which is equivalent to
+&lsquo;<samp>[A-Zq]</samp>&rsquo; in the &quot;C&quot; locale.
+
+</li><li> <a name="index-trailing-context_002c-limits-of"></a>
+<a name="index-_005e-as-non_002dspecial-character-in-patterns"></a>
+<a name="index-_0024-as-normal-character-in-patterns"></a>
+A rule can have at most one instance of trailing context (the &lsquo;<samp>/</samp>&rsquo; operator
+or the &lsquo;<samp>$</samp>&rsquo; operator).  The start condition, &lsquo;<samp>^</samp>&rsquo;, and &lsquo;<samp>&lt;&lt;EOF&gt;&gt;</samp>&rsquo; patterns
+can only occur at the beginning of a pattern, and, as well as with &lsquo;<samp>/</samp>&rsquo; and &lsquo;<samp>$</samp>&rsquo;,
+cannot be grouped inside parentheses.  A &lsquo;<samp>^</samp>&rsquo; which does not occur at
+the beginning of a rule or a &lsquo;<samp>$</samp>&rsquo; which does not occur at the end of
+a rule loses its special properties and is treated as a normal character.
+
+</li><li> The following are invalid:
+
+<a name="index-patterns_002c-invalid-trailing-context"></a>
+<div class="example">
+<pre class="verbatim">    foo/bar$
+    &lt;sc1&gt;foo&lt;sc2&gt;bar
+</pre></div>
+
+<p>Note that the first of these can be written &lsquo;<samp>foo/bar\n</samp>&rsquo;.
+</p>
+</li><li> The following will result in &lsquo;<samp>$</samp>&rsquo; or &lsquo;<samp>^</samp>&rsquo; being treated as a normal character:
+
+<a name="index-patterns_002c-special-characters-treated-as-non_002dspecial"></a>
+<div class="example">
+<pre class="verbatim">    foo|(bar$)
+    foo|^bar
+</pre></div>
+
+<p>If the desired meaning is a &lsquo;<samp>foo</samp>&rsquo; or a
+&lsquo;<samp>bar</samp>&rsquo;-followed-by-a-newline, the following could be used (the
+special <code>|</code> action is explained below, see <a href="Actions.html#Actions">Actions</a>):
+</p>
+<a name="index-patterns_002c-end-of-line"></a>
+<div class="example">
+<pre class="verbatim">    foo      |
+    bar$     /* action goes here */
+</pre></div>
+
+<p>A similar trick will work for matching a &lsquo;<samp>foo</samp>&rsquo; or a
+&lsquo;<samp>bar</samp>&rsquo;-at-the-beginning-of-a-line.
+</p></li></ul>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Matching.html#Matching" accesskey="n" rel="next">Matching</a>, Previous: <a href="Format.html#Format" accesskey="p" rel="prev">Format</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

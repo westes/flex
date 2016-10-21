@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Are certain equivalent patterns faster than others?</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Are certain equivalent patterns faster than others?">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Are certain equivalent patterns faster than others?">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="FAQ.html#FAQ" rel="up" title="FAQ">
+<link href="Is-backing-up-a-big-deal_003f.html#Is-backing-up-a-big-deal_003f" rel="next" title="Is backing up a big deal?">
+<link href="deleteme00.html#deleteme00" rel="prev" title="deleteme00">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Are-certain-equivalent-patterns-faster-than-others_003f"></a>
+<div class="header">
+<p>
+Next: <a href="Is-backing-up-a-big-deal_003f.html#Is-backing-up-a-big-deal_003f" accesskey="n" rel="next">Is backing up a big deal?</a>, Previous: <a href="deleteme00.html#deleteme00" accesskey="p" rel="prev">deleteme00</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Are-certain-equivalent-patterns-faster-than-others_003f-1"></a>
+<h3 class="unnumberedsec">Are certain equivalent patterns faster than others?</h3>
+<div class="example">
+<pre class="verbatim">To: Adoram Rogel &lt;adoram@orna.hybridge.com&gt;
+Subject: Re: Flex 2.5.2 performance questions
+In-reply-to: Your message of Wed, 18 Sep 96 11:12:17 EDT.
+Date: Wed, 18 Sep 96 10:51:02 PDT
+From: Vern Paxson &lt;vern&gt;
+
+[Note, the most recent flex release is 2.5.4, which you can get from
+ftp.ee.lbl.gov.  It has bug fixes over 2.5.2 and 2.5.3.]
+
+&gt; 1. Using the pattern
+&gt;    ([Ff](oot)?)?[Nn](ote)?(\.)?
+&gt;    instead of
+&gt;    (((F|f)oot(N|n)ote)|((N|n)ote)|((N|n)\.)|((F|f)(N|n)(\.)))
+&gt;    (in a very complicated flex program) caused the program to slow from
+&gt;    300K+/min to 100K/min (no other changes were done).
+
+These two are not equivalent.  For example, the first can match &quot;footnote.&quot;
+but the second can only match &quot;footnote&quot;.  This is almost certainly the
+cause in the discrepancy - the slower scanner run is matching more tokens,
+and/or having to do more backing up.
+
+&gt; 2. Which of these two are better: [Ff]oot or (F|f)oot ?
+
+From a performance point of view, they're equivalent (modulo presumably
+minor effects such as memory cache hit rates; and the presence of trailing
+context, see below).  From a space point of view, the first is slightly
+preferable.
+
+&gt; 3. I have a pattern that look like this:
+&gt;    pats {p1}|{p2}|{p3}|...|{p50}     (50 patterns ORd)
+&gt;
+&gt;    running yet another complicated program that includes the following rule:
+&gt;    &lt;snext&gt;{and}/{no4}{bb}{pats}
+&gt;
+&gt;    gets me to &quot;too complicated - over 32,000 states&quot;...
+
+I can't tell from this example whether the trailing context is variable-length
+or fixed-length (it could be the latter if {and} is fixed-length).  If it's
+variable length, which flex -p will tell you, then this reflects a basic
+performance problem, and if you can eliminate it by restructuring your
+scanner, you will see significant improvement.
+
+&gt;    so I divided {pats} to {pats1}, {pats2},..., {pats5} each consists of about
+&gt;    10 patterns and changed the rule to be 5 rules.
+&gt;    This did compile, but what is the rule of thumb here ?
+
+The rule is to avoid trailing context other than fixed-length, in which for
+a/b, either the 'a' pattern or the 'b' pattern have a fixed length.  Use
+of the '|' operator automatically makes the pattern variable length, so in
+this case '[Ff]oot' is preferred to '(F|f)oot'.
+
+&gt; 4. I changed a rule that looked like this:
+&gt;    &lt;snext8&gt;{and}{bb}/{ROMAN}[^A-Za-z] { BEGIN...
+&gt;
+&gt;    to the next 2 rules:
+&gt;    &lt;snext8&gt;{and}{bb}/{ROMAN}[A-Za-z] { ECHO;}
+&gt;    &lt;snext8&gt;{and}{bb}/{ROMAN}         { BEGIN...
+&gt;
+&gt;    Again, I understand the using [^...] will cause a great performance loss
+
+Actually, it doesn't cause any sort of performance loss.  It's a surprising
+fact about regular expressions that they always match in linear time
+regardless of how complex they are.
+
+&gt;    but are there any specific rules about it ?
+
+See the &quot;Performance Considerations&quot; section of the man page, and also
+the example in MISC/fastwc/.
+
+		Vern
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Is-backing-up-a-big-deal_003f.html#Is-backing-up-a-big-deal_003f" accesskey="n" rel="next">Is backing up a big deal?</a>, Previous: <a href="deleteme00.html#deleteme00" accesskey="p" rel="prev">deleteme00</a>, Up: <a href="FAQ.html#FAQ" accesskey="u" rel="up">FAQ</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

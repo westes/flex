@@ -1,0 +1,476 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Start Conditions</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Start Conditions">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Start Conditions">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Multiple-Input-Buffers.html#Multiple-Input-Buffers" rel="next" title="Multiple Input Buffers">
+<link href="Generated-Scanner.html#Generated-Scanner" rel="prev" title="Generated Scanner">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Start-Conditions"></a>
+<div class="header">
+<p>
+Next: <a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers" accesskey="n" rel="next">Multiple Input Buffers</a>, Previous: <a href="Generated-Scanner.html#Generated-Scanner" accesskey="p" rel="prev">Generated Scanner</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Start-Conditions-1"></a>
+<h2 class="chapter">10 Start Conditions</h2>
+
+<a name="index-start-conditions"></a>
+<p><code>flex</code> provides a mechanism for conditionally activating rules.
+Any rule whose pattern is prefixed with &lsquo;<samp>&lt;sc&gt;</samp>&rsquo; will only be active
+when the scanner is in the <em>start condition</em> named <code>sc</code>.  For
+example,
+</p>
+<div class="example">
+<pre class="verbatim">    &lt;STRING&gt;[^&quot;]*        { /* eat up the string body ... */
+                ...
+                }
+</pre></div>
+
+<p>will be active only when the scanner is in the <code>STRING</code> start
+condition, and
+</p>
+<a name="index-start-conditions_002c-multiple"></a>
+<div class="example">
+<pre class="verbatim">    &lt;INITIAL,STRING,QUOTE&gt;\.        { /* handle an escape ... */
+                ...
+                }
+</pre></div>
+
+<p>will be active only when the current start condition is either
+<code>INITIAL</code>, <code>STRING</code>, or <code>QUOTE</code>.
+</p>
+<a name="index-start-conditions_002c-inclusive-v_002es_002e-exclusive"></a>
+<p>Start conditions are declared in the definitions (first) section of the
+input using unindented lines beginning with either &lsquo;<samp>%s</samp>&rsquo; or
+&lsquo;<samp>%x</samp>&rsquo; followed by a list of names.  The former declares
+<em>inclusive</em> start conditions, the latter <em>exclusive</em> start
+conditions.  A start condition is activated using the <code>BEGIN</code>
+action.  Until the next <code>BEGIN</code> action is executed, rules with the
+given start condition will be active and rules with other start
+conditions will be inactive.  If the start condition is inclusive, then
+rules with no start conditions at all will also be active.  If it is
+exclusive, then <em>only</em> rules qualified with the start condition
+will be active.  A set of rules contingent on the same exclusive start
+condition describe a scanner which is independent of any of the other
+rules in the <code>flex</code> input.  Because of this, exclusive start
+conditions make it easy to specify &ldquo;mini-scanners&rdquo; which scan portions
+of the input that are syntactically different from the rest (e.g.,
+comments).
+</p>
+<p>If the distinction between inclusive and exclusive start conditions
+is still a little vague, here&rsquo;s a simple example illustrating the
+connection between the two.  The set of rules:
+</p>
+<a name="index-start-conditions_002c-inclusive"></a>
+<div class="example">
+<pre class="verbatim">    %s example
+    %%
+
+    &lt;example&gt;foo   do_something();
+
+    bar            something_else();
+</pre></div>
+
+<p>is equivalent to
+</p>
+<a name="index-start-conditions_002c-exclusive"></a>
+<div class="example">
+<pre class="verbatim">    %x example
+    %%
+
+    &lt;example&gt;foo   do_something();
+
+    &lt;INITIAL,example&gt;bar    something_else();
+</pre></div>
+
+<p>Without the <code>&lt;INITIAL,example&gt;</code> qualifier, the <code>bar</code> pattern in
+the second example wouldn&rsquo;t be active (i.e., couldn&rsquo;t match) when in
+start condition <code>example</code>.  If we just used <code>&lt;example&gt;</code> to
+qualify <code>bar</code>, though, then it would only be active in
+<code>example</code> and not in <code>INITIAL</code>, while in the first example
+it&rsquo;s active in both, because in the first example the <code>example</code>
+start condition is an inclusive <code>(%s)</code> start condition.
+</p>
+<a name="index-start-conditions_002c-special-wildcard-condition"></a>
+<p>Also note that the special start-condition specifier
+<code>&lt;*&gt;</code>
+matches every start condition.  Thus, the above example could also
+have been written:
+</p>
+<a name="index-start-conditions_002c-use-of-wildcard-condition-_0028_003c_002a_003e_0029"></a>
+<div class="example">
+<pre class="verbatim">    %x example
+    %%
+
+    &lt;example&gt;foo   do_something();
+
+    &lt;*&gt;bar    something_else();
+</pre></div>
+
+<p>The default rule (to <code>ECHO</code> any unmatched character) remains active
+in start conditions.  It is equivalent to:
+</p>
+<a name="index-start-conditions_002c-behavior-of-default-rule"></a>
+<div class="example">
+<pre class="verbatim">    &lt;*&gt;.|\n     ECHO;
+</pre></div>
+
+<a name="index-BEGIN_002c-explanation"></a>
+<a name="index-BEGIN-1"></a>
+<a name="index-INITIAL"></a>
+<p><code>BEGIN(0)</code> returns to the original state where only the rules with
+no start conditions are active.  This state can also be referred to as
+the start-condition <code>INITIAL</code>, so <code>BEGIN(INITIAL)</code> is
+equivalent to <code>BEGIN(0)</code>.  (The parentheses around the start
+condition name are not required but are considered good style.)
+</p>
+<p><code>BEGIN</code> actions can also be given as indented code at the beginning
+of the rules section.  For example, the following will cause the scanner
+to enter the <code>SPECIAL</code> start condition whenever <code>yylex()</code> is
+called and the global variable <code>enter_special</code> is true:
+</p>
+<a name="index-start-conditions_002c-using-BEGIN"></a>
+<div class="example">
+<pre class="verbatim">            int enter_special;
+
+    %x SPECIAL
+    %%
+            if ( enter_special )
+                BEGIN(SPECIAL);
+
+    &lt;SPECIAL&gt;blahblahblah
+    ...more rules follow...
+</pre></div>
+
+<p>To illustrate the uses of start conditions, here is a scanner which
+provides two different interpretations of a string like &lsquo;<samp>123.456</samp>&rsquo;.
+By default it will treat it as three tokens, the integer &lsquo;<samp>123</samp>&rsquo;, a
+dot (&lsquo;<samp>.</samp>&rsquo;), and the integer &lsquo;<samp>456</samp>&rsquo;.  But if the string is
+preceded earlier in the line by the string &lsquo;<samp>expect-floats</samp>&rsquo; it will
+treat it as a single token, the floating-point number &lsquo;<samp>123.456</samp>&rsquo;:
+</p>
+<a name="index-start-conditions_002c-for-different-interpretations-of-same-input"></a>
+<div class="example">
+<pre class="verbatim">    %{
+    #include &lt;math.h&gt;
+    %}
+    %s expect
+
+    %%
+    expect-floats        BEGIN(expect);
+
+    &lt;expect&gt;[0-9]+.[0-9]+      {
+                printf( &quot;found a float, = %f\n&quot;,
+                        atof( yytext ) );
+                }
+    &lt;expect&gt;\n           {
+                /* that's the end of the line, so
+                 * we need another &quot;expect-number&quot;
+                 * before we'll recognize any more
+                 * numbers
+                 */
+                BEGIN(INITIAL);
+                }
+
+    [0-9]+      {
+                printf( &quot;found an integer, = %d\n&quot;,
+                        atoi( yytext ) );
+                }
+
+    &quot;.&quot;         printf( &quot;found a dot\n&quot; );
+</pre></div>
+
+<a name="index-comments_002c-example-of-scanning-C-comments"></a>
+<p>Here is a scanner which recognizes (and discards) C comments while
+maintaining a count of the current input line.
+</p>
+<a name="index-recognizing-C-comments"></a>
+<div class="example">
+<pre class="verbatim">    %x comment
+    %%
+            int line_num = 1;
+
+    &quot;/*&quot;         BEGIN(comment);
+
+    &lt;comment&gt;[^*\n]*        /* eat anything that's not a '*' */
+    &lt;comment&gt;&quot;*&quot;+[^*/\n]*   /* eat up '*'s not followed by '/'s */
+    &lt;comment&gt;\n             ++line_num;
+    &lt;comment&gt;&quot;*&quot;+&quot;/&quot;        BEGIN(INITIAL);
+</pre></div>
+
+<p>This scanner goes to a bit of trouble to match as much
+text as possible with each rule.  In general, when attempting to write
+a high-speed scanner try to match as much possible in each rule, as
+it&rsquo;s a big win.
+</p>
+<p>Note that start-conditions names are really integer values and
+can be stored as such.  Thus, the above could be extended in the
+following fashion:
+</p>
+<a name="index-start-conditions_002c-integer-values"></a>
+<a name="index-using-integer-values-of-start-condition-names"></a>
+<div class="example">
+<pre class="verbatim">    %x comment foo
+    %%
+            int line_num = 1;
+            int comment_caller;
+
+    &quot;/*&quot;         {
+                 comment_caller = INITIAL;
+                 BEGIN(comment);
+                 }
+
+    ...
+
+    &lt;foo&gt;&quot;/*&quot;    {
+                 comment_caller = foo;
+                 BEGIN(comment);
+                 }
+
+    &lt;comment&gt;[^*\n]*        /* eat anything that's not a '*' */
+    &lt;comment&gt;&quot;*&quot;+[^*/\n]*   /* eat up '*'s not followed by '/'s */
+    &lt;comment&gt;\n             ++line_num;
+    &lt;comment&gt;&quot;*&quot;+&quot;/&quot;        BEGIN(comment_caller);
+</pre></div>
+
+<a name="index-YY_005fSTART_002c-example"></a>
+<p>Furthermore, you can access the current start condition using the
+integer-valued <code>YY_START</code> macro.  For example, the above
+assignments to <code>comment_caller</code> could instead be written
+</p>
+<a name="index-getting-current-start-state-with-YY_005fSTART"></a>
+<div class="example">
+<pre class="verbatim">    comment_caller = YY_START;
+</pre></div>
+
+<a name="index-YY_005fSTART"></a>
+<p>Flex provides <code>YYSTATE</code> as an alias for <code>YY_START</code> (since that
+is what&rsquo;s used by AT&amp;T <code>lex</code>).
+</p>
+<p>For historical reasons, start conditions do not have their own
+name-space within the generated scanner. The start condition names are
+unmodified in the generated scanner and generated header.
+See <a href="Options-for-Specifying-Filenames.html#option_002dheader">option-header</a>. See <a href="Code_002dLevel-And-API-Options.html#option_002dprefix">option-prefix</a>.
+</p>
+
+
+<p>Finally, here&rsquo;s an example of how to match C-style quoted strings using
+exclusive start conditions, including expanded escape sequences (but
+not including checking for a string that&rsquo;s too long):
+</p>
+<a name="index-matching-C_002dstyle-double_002dquoted-strings"></a>
+<div class="example">
+<pre class="verbatim">    %x str
+
+    %%
+            char string_buf[MAX_STR_CONST];
+            char *string_buf_ptr;
+
+
+    \&quot;      string_buf_ptr = string_buf; BEGIN(str);
+
+    &lt;str&gt;\&quot;        { /* saw closing quote - all done */
+            BEGIN(INITIAL);
+            *string_buf_ptr = '\0';
+            /* return string constant token type and
+             * value to parser
+             */
+            }
+
+    &lt;str&gt;\n        {
+            /* error - unterminated string constant */
+            /* generate error message */
+            }
+
+    &lt;str&gt;\\[0-7]{1,3} {
+            /* octal escape sequence */
+            int result;
+
+            (void) sscanf( yytext + 1, &quot;%o&quot;, &amp;result );
+
+            if ( result &gt; 0xff )
+                    /* error, constant is out-of-bounds */
+
+            *string_buf_ptr++ = result;
+            }
+
+    &lt;str&gt;\\[0-9]+ {
+            /* generate error - bad escape sequence; something
+             * like '\48' or '\0777777'
+             */
+            }
+
+    &lt;str&gt;\\n  *string_buf_ptr++ = '\n';
+    &lt;str&gt;\\t  *string_buf_ptr++ = '\t';
+    &lt;str&gt;\\r  *string_buf_ptr++ = '\r';
+    &lt;str&gt;\\b  *string_buf_ptr++ = '\b';
+    &lt;str&gt;\\f  *string_buf_ptr++ = '\f';
+
+    &lt;str&gt;\\(.|\n)  *string_buf_ptr++ = yytext[1];
+
+    &lt;str&gt;[^\\\n\&quot;]+        {
+            char *yptr = yytext;
+
+            while ( *yptr )
+                    *string_buf_ptr++ = *yptr++;
+            }
+</pre></div>
+
+<a name="index-start-condition_002c-applying-to-multiple-patterns"></a>
+<p>Often, such as in some of the examples above, you wind up writing a
+whole bunch of rules all preceded by the same start condition(s).  Flex
+makes this a little easier and cleaner by introducing a notion of start
+condition <em>scope</em>.  A start condition scope is begun with:
+</p>
+<div class="example">
+<pre class="verbatim">    &lt;SCs&gt;{
+</pre></div>
+
+<p>where <code>&lt;SCs&gt;</code> is a list of one or more start conditions.  Inside the
+start condition scope, every rule automatically has the prefix
+<code>&lt;SCs&gt;</code> applied to it, until a &lsquo;<samp>}</samp>&rsquo; which matches the initial
+&lsquo;<samp>{</samp>&rsquo;.  So, for example,
+</p>
+<a name="index-extended-scope-of-start-conditions"></a>
+<div class="example">
+<pre class="verbatim">    &lt;ESC&gt;{
+        &quot;\\n&quot;   return '\n';
+        &quot;\\r&quot;   return '\r';
+        &quot;\\f&quot;   return '\f';
+        &quot;\\0&quot;   return '\0';
+    }
+</pre></div>
+
+<p>is equivalent to:
+</p>
+<div class="example">
+<pre class="verbatim">    &lt;ESC&gt;&quot;\\n&quot;  return '\n';
+    &lt;ESC&gt;&quot;\\r&quot;  return '\r';
+    &lt;ESC&gt;&quot;\\f&quot;  return '\f';
+    &lt;ESC&gt;&quot;\\0&quot;  return '\0';
+</pre></div>
+
+<p>Start condition scopes may be nested.
+</p>
+<a name="index-stacks_002c-routines-for-manipulating"></a>
+<a name="index-start-conditions_002c-use-of-a-stack"></a>
+
+<p>The following routines are available for manipulating stacks of start conditions:
+</p>
+<dl>
+<dt><a name="index-yy_005fpush_005fstate"></a>Function: <em>void</em> <strong>yy_push_state</strong> <em>( int <code>new_state</code> )</em></dt>
+<dd><p>pushes the current start condition onto the top of the start condition
+stack and switches to
+<code>new_state</code>
+as though you had used
+<code>BEGIN new_state</code>
+(recall that start condition names are also integers).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-yy_005fpop_005fstate"></a>Function: <em>void</em> <strong>yy_pop_state</strong> <em>()</em></dt>
+<dd><p>pops the top of the stack and switches to it via
+<code>BEGIN</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-yy_005ftop_005fstate"></a>Function: <em>int</em> <strong>yy_top_state</strong> <em>()</em></dt>
+<dd><p>returns the top of the stack without altering the stack&rsquo;s contents.
+</p></dd></dl>
+
+<a name="index-memory_002c-for-start-condition-stacks"></a>
+<p>The start condition stack grows dynamically and so has no built-in size
+limitation.  If memory is exhausted, program execution aborts.
+</p>
+<p>To use start condition stacks, your scanner must include a <code>%option
+stack</code> directive (see <a href="Scanner-Options.html#Scanner-Options">Scanner Options</a>).
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Multiple-Input-Buffers.html#Multiple-Input-Buffers" accesskey="n" rel="next">Multiple Input Buffers</a>, Previous: <a href="Generated-Scanner.html#Generated-Scanner" accesskey="p" rel="prev">Generated Scanner</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

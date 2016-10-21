@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Creating Serialized Tables</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Creating Serialized Tables">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Creating Serialized Tables">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Serialized-Tables.html#Serialized-Tables" rel="up" title="Serialized Tables">
+<link href="Loading-and-Unloading-Serialized-Tables.html#Loading-and-Unloading-Serialized-Tables" rel="next" title="Loading and Unloading Serialized Tables">
+<link href="Serialized-Tables.html#Serialized-Tables" rel="prev" title="Serialized Tables">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Creating-Serialized-Tables"></a>
+<div class="header">
+<p>
+Next: <a href="Loading-and-Unloading-Serialized-Tables.html#Loading-and-Unloading-Serialized-Tables" accesskey="n" rel="next">Loading and Unloading Serialized Tables</a>, Previous: <a href="Serialized-Tables.html#Serialized-Tables" accesskey="p" rel="prev">Serialized Tables</a>, Up: <a href="Serialized-Tables.html#Serialized-Tables" accesskey="u" rel="up">Serialized Tables</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Creating-Serialized-Tables-1"></a>
+<h3 class="section">22.1 Creating Serialized Tables</h3>
+<a name="index-tables_002c-creating-serialized"></a>
+<a name="index-serialization-of-tables"></a>
+
+<p>You may create a scanner with serialized tables by specifying:
+</p>
+<div class="example">
+<pre class="verbatim">    %option tables-file=FILE
+or
+    --tables-file=FILE
+</pre></div>
+
+<p>These options instruct flex to save the DFA tables to the file <var>FILE</var>. The tables
+will <em>not</em> be embedded in the generated scanner. The scanner will not
+function on its own. The scanner will be dependent upon the serialized tables. You must
+load the tables from this file at runtime before you can scan anything. 
+</p>
+<p>If you do not specify a filename to <code>--tables-file</code>, the tables will be
+saved to <samp>lex.yy.tables</samp>, where &lsquo;<samp>yy</samp>&rsquo; is the appropriate prefix.
+</p>
+<p>If your project uses several different scanners, you can concatenate the
+serialized tables into one file, and flex will find the correct set of tables,
+using the scanner prefix as part of the lookup key. An example follows:
+</p>
+<a name="index-serialized-tables_002c-multiple-scanners"></a>
+<div class="example">
+<pre class="verbatim">$ flex --tables-file --prefix=cpp cpp.l
+$ flex --tables-file --prefix=c   c.l
+$ cat lex.cpp.tables lex.c.tables  &gt;  all.tables
+</pre></div>
+
+<p>The above example created two scanners, &lsquo;<samp>cpp</samp>&rsquo;, and &lsquo;<samp>c</samp>&rsquo;. Since we did
+not specify a filename, the tables were serialized to <samp>lex.c.tables</samp> and
+<samp>lex.cpp.tables</samp>, respectively. Then, we concatenated the two files
+together into <samp>all.tables</samp>, which we will distribute with our project. At
+runtime, we will open the file and tell flex to load the tables from it.  Flex
+will find the correct tables automatically. (See next section).
+</p>
+
+
+
+</body>
+</html>

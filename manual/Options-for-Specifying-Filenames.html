@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Options for Specifying Filenames</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Options for Specifying Filenames">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Options for Specifying Filenames">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Scanner-Options.html#Scanner-Options" rel="up" title="Scanner Options">
+<link href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior" rel="next" title="Options Affecting Scanner Behavior">
+<link href="Scanner-Options.html#Scanner-Options" rel="prev" title="Scanner Options">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Options-for-Specifying-Filenames"></a>
+<div class="header">
+<p>
+Next: <a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior" accesskey="n" rel="next">Options Affecting Scanner Behavior</a>, Previous: <a href="Scanner-Options.html#Scanner-Options" accesskey="p" rel="prev">Scanner Options</a>, Up: <a href="Scanner-Options.html#Scanner-Options" accesskey="u" rel="up">Scanner Options</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Options-for-Specifying-Filenames-1"></a>
+<h3 class="section">16.1 Options for Specifying Filenames</h3>
+
+<dl compact="compact">
+<dd>
+<a name="option_002dheader"></a><a name="index-_002d_002d_002dheader_002dfile"></a>
+<a name="index-header_002dfile"></a>
+</dd>
+<dt>&lsquo;<samp>--header-file=FILE, <code>%option header-file=&quot;FILE&quot;</code></samp>&rsquo;</dt>
+<dd><p>instructs flex to write a C header to <samp>FILE</samp>. This file contains
+function prototypes, extern variables, and types used by the scanner.
+Only the external API is exported by the header file. Many macros that
+are usable from within scanner actions are not exported to the header
+file. This is due to namespace problems and the goal of a clean
+external API.
+</p>
+<p>While in the header, the macro <code>yyIN_HEADER</code> is defined, where &lsquo;<samp>yy</samp>&rsquo;
+is substituted with the appropriate prefix.
+</p>
+<p>The &lsquo;<samp>--header-file</samp>&rsquo; option is not compatible with the &lsquo;<samp>--c++</samp>&rsquo; option,
+since the C++ scanner provides its own header in <samp>yyFlexLexer.h</samp>.
+</p>
+
+
+<a name="option_002doutfile"></a><a name="index-_002do"></a>
+<a name="index-_002d_002d_002doutfile"></a>
+<a name="index-outfile"></a>
+</dd>
+<dt>&lsquo;<samp>-oFILE, --outfile=FILE, <code>%option outfile=&quot;FILE&quot;</code></samp>&rsquo;</dt>
+<dd><p>directs flex to write the scanner to the file <samp>FILE</samp> instead of
+<samp>lex.yy.c</samp>.  If you combine &lsquo;<samp>--outfile</samp>&rsquo; with the &lsquo;<samp>--stdout</samp>&rsquo; option,
+then the scanner is written to <samp>stdout</samp> but its <code>#line</code>
+directives (see the &lsquo;<samp>-l</samp>&rsquo; option above) refer to the file
+<samp>FILE</samp>.
+</p>
+
+
+<a name="option_002dstdout"></a><a name="index-_002dt"></a>
+<a name="index-_002d_002d_002dstdout"></a>
+<a name="index-stdout"></a>
+</dd>
+<dt>&lsquo;<samp>-t, --stdout, <code>%option stdout</code></samp>&rsquo;</dt>
+<dd><p>instructs <code>flex</code> to write the scanner it generates to standard
+output instead of <samp>lex.yy.c</samp>.
+</p>
+
+
+<a name="index-_002d_002d_002dskel"></a>
+</dd>
+<dt>&lsquo;<samp>-SFILE, --skel=FILE</samp>&rsquo;</dt>
+<dd><p>overrides the default skeleton file from which
+<code>flex</code>
+constructs its scanners.  You&rsquo;ll never need this option unless you are doing
+<code>flex</code>
+maintenance or development.
+</p>
+<a name="index-_002d_002d_002dtables_002dfile"></a>
+<a name="index-tables_002dfile"></a>
+</dd>
+<dt>&lsquo;<samp>--tables-file=FILE</samp>&rsquo;</dt>
+<dd><p>Write serialized scanner dfa tables to FILE. The generated scanner will not
+contain the tables, and requires them to be loaded at runtime.
+See <a href="Serialized-Tables.html#serialization">serialization</a>.
+</p>
+<a name="index-_002d_002d_002dtables_002dverify"></a>
+<a name="index-tables_002dverify"></a>
+</dd>
+<dt>&lsquo;<samp>--tables-verify</samp>&rsquo;</dt>
+<dd><p>This option is for flex development. We document it here in case you stumble
+upon it by accident or in case you suspect some inconsistency in the serialized
+tables.  Flex will serialize the scanner dfa tables but will also generate the
+in-code tables as it normally does. At runtime, the scanner will verify that
+the serialized tables match the in-code tables, instead of loading them. 
+</p>
+</dd>
+</dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior" accesskey="n" rel="next">Options Affecting Scanner Behavior</a>, Previous: <a href="Scanner-Options.html#Scanner-Options" accesskey="p" rel="prev">Scanner Options</a>, Up: <a href="Scanner-Options.html#Scanner-Options" accesskey="u" rel="up">Scanner Options</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

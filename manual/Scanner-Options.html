@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Scanner Options</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Scanner Options">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Scanner Options">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames" rel="next" title="Options for Specifying Filenames">
+<link href="Yacc.html#Yacc" rel="prev" title="Yacc">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Scanner-Options"></a>
+<div class="header">
+<p>
+Next: <a href="Performance.html#Performance" accesskey="n" rel="next">Performance</a>, Previous: <a href="Yacc.html#Yacc" accesskey="p" rel="prev">Yacc</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Scanner-Options-1"></a>
+<h2 class="chapter">16 Scanner Options</h2>
+
+<a name="index-command_002dline-options"></a>
+<a name="index-options_002c-command_002dline"></a>
+<a name="index-arguments_002c-command_002dline"></a>
+
+<p>The various <code>flex</code> options are categorized by function in the following
+menu. If you want to lookup a particular option by name, See <a href="Index-of-Scanner-Options.html#Index-of-Scanner-Options">Index of Scanner Options</a>.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Options-for-Specifying-Filenames.html#Options-for-Specifying-Filenames" accesskey="1">Options for Specifying Filenames</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Options-Affecting-Scanner-Behavior.html#Options-Affecting-Scanner-Behavior" accesskey="2">Options Affecting Scanner Behavior</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Code_002dLevel-And-API-Options.html#Code_002dLevel-And-API-Options" accesskey="3">Code-Level And API Options</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size" accesskey="4">Options for Scanner Speed and Size</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Debugging-Options.html#Debugging-Options" accesskey="5">Debugging Options</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Miscellaneous-Options.html#Miscellaneous-Options" accesskey="6">Miscellaneous Options</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<p>Even though there are many scanner options, a typical scanner might only
+specify the following options:
+</p>
+<div class="example">
+<pre class="verbatim">%option   8bit reentrant bison-bridge
+%option   warn nodefault
+%option   yylineno
+%option   outfile=&quot;scanner.c&quot; header-file=&quot;scanner.h&quot;
+</pre></div>
+
+<p>The first line specifies the general type of scanner we want. The second line
+specifies that we are being careful. The third line asks flex to track line
+numbers. The last line tells flex what to name the files. (The options can be
+specified in any order. We just divided them.)
+</p>
+<p><code>flex</code> also provides a mechanism for controlling options within the
+scanner specification itself, rather than from the flex command-line.
+This is done by including <code>%option</code> directives in the first section
+of the scanner specification.  You can specify multiple options with a
+single <code>%option</code> directive, and multiple directives in the first
+section of your flex input file.
+</p>
+<p>Most options are given simply as names, optionally preceded by the
+word &lsquo;<samp>no</samp>&rsquo; (with no intervening whitespace) to negate their meaning.
+The names are the same as their long-option equivalents (but without the
+leading &lsquo;<samp>--</samp>&rsquo; ).
+</p>
+<p><code>flex</code> scans your rule actions to determine whether you use the
+<code>REJECT</code> or <code>yymore()</code> features.  The <code>REJECT</code> and
+<code>yymore</code> options are available to override its decision as to
+whether you use the options, either by setting them (e.g., <code>%option
+reject)</code> to indicate the feature is indeed used, or unsetting them to
+indicate it actually is not used (e.g., <code>%option noyymore)</code>.
+</p>
+
+<p>A number of options are available for lint purists who want to suppress
+the appearance of unneeded routines in the generated scanner.  Each of
+the following, if unset (e.g., <code>%option nounput</code>), results in the
+corresponding routine not appearing in the generated scanner:
+</p>
+<div class="example">
+<pre class="verbatim">    input, unput
+    yy_push_state, yy_pop_state, yy_top_state
+    yy_scan_buffer, yy_scan_bytes, yy_scan_string
+
+    yyget_extra, yyset_extra, yyget_leng, yyget_text,
+    yyget_lineno, yyset_lineno, yyget_in, yyset_in,
+    yyget_out, yyset_out, yyget_lval, yyset_lval,
+    yyget_lloc, yyset_lloc, yyget_debug, yyset_debug
+</pre></div>
+
+<p>(though <code>yy_push_state()</code> and friends won&rsquo;t appear anyway unless
+you use <code>%option stack)</code>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Performance.html#Performance" accesskey="n" rel="next">Performance</a>, Previous: <a href="Yacc.html#Yacc" accesskey="p" rel="prev">Yacc</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

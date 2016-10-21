@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Extra Reentrant Argument</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Extra Reentrant Argument">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Extra Reentrant Argument">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Reentrant-Detail.html#Reentrant-Detail" rel="up" title="Reentrant Detail">
+<link href="Global-Replacement.html#Global-Replacement" rel="next" title="Global Replacement">
+<link href="Specify-Reentrant.html#Specify-Reentrant" rel="prev" title="Specify Reentrant">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Extra-Reentrant-Argument"></a>
+<div class="header">
+<p>
+Next: <a href="Global-Replacement.html#Global-Replacement" accesskey="n" rel="next">Global Replacement</a>, Previous: <a href="Specify-Reentrant.html#Specify-Reentrant" accesskey="p" rel="prev">Specify Reentrant</a>, Up: <a href="Reentrant-Detail.html#Reentrant-Detail" accesskey="u" rel="up">Reentrant Detail</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="The-Extra-Argument"></a>
+<h4 class="subsection">19.4.2 The Extra Argument</h4>
+
+<a name="index-reentrant_002c-calling-functions"></a>
+<a name="index-yyscanner-_0028reentrant-only_0029"></a>
+<p>All functions take one additional argument: <code>yyscanner</code>.
+</p>
+<p>Notice that the calls to <code>yy_push_state</code> and <code>yy_pop_state</code>
+both have an argument, <code>yyscanner</code> , that is not present in a
+non-reentrant scanner.  Here are the declarations of
+<code>yy_push_state</code> and <code>yy_pop_state</code> in the reentrant scanner:
+</p>
+<div class="example">
+<pre class="verbatim">    static void yy_push_state  ( int new_state , yyscan_t yyscanner ) ;
+    static void yy_pop_state  ( yyscan_t yyscanner  ) ;
+</pre></div>
+
+<p>Notice that the argument <code>yyscanner</code> appears in the declaration of
+both functions.  In fact, all <code>flex</code> functions in a reentrant
+scanner have this additional argument.  It is always the last argument
+in the argument list, it is always of type <code>yyscan_t</code> (which is
+typedef&rsquo;d to <code>void *</code>) and it is
+always named <code>yyscanner</code>.  As you may have guessed,
+<code>yyscanner</code> is a pointer to an opaque data structure encapsulating
+the current state of the scanner.  For a list of function declarations,
+see <a href="Reentrant-Functions.html#Reentrant-Functions">Reentrant Functions</a>. Note that preprocessor macros, such as
+<code>BEGIN</code>, <code>ECHO</code>, and <code>REJECT</code>, do not take this
+additional argument.
+</p>
+
+
+
+</body>
+</html>

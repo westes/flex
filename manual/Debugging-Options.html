@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Debugging Options</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Debugging Options">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Debugging Options">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Scanner-Options.html#Scanner-Options" rel="up" title="Scanner Options">
+<link href="Miscellaneous-Options.html#Miscellaneous-Options" rel="next" title="Miscellaneous Options">
+<link href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size" rel="prev" title="Options for Scanner Speed and Size">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Debugging-Options"></a>
+<div class="header">
+<p>
+Next: <a href="Miscellaneous-Options.html#Miscellaneous-Options" accesskey="n" rel="next">Miscellaneous Options</a>, Previous: <a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size" accesskey="p" rel="prev">Options for Scanner Speed and Size</a>, Up: <a href="Scanner-Options.html#Scanner-Options" accesskey="u" rel="up">Scanner Options</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Debugging-Options-1"></a>
+<h3 class="section">16.5 Debugging Options</h3>
+
+<dl compact="compact">
+<dd>
+<a name="option_002dbackup"></a><a name="index-_002db"></a>
+<a name="index-_002d_002d_002dbackup"></a>
+<a name="index-backup"></a>
+</dd>
+<dt>&lsquo;<samp>-b, --backup, <code>%option backup</code></samp>&rsquo;</dt>
+<dd><p>Generate backing-up information to <samp>lex.backup</samp>.  This is a list of
+scanner states which require backing up and the input characters on
+which they do so.  By adding rules one can remove backing-up states.  If
+<em>all</em> backing-up states are eliminated and &lsquo;<samp>-Cf</samp>&rsquo; or <code>-CF</code>
+is used, the generated scanner will run faster (see the &lsquo;<samp>--perf-report</samp>&rsquo; flag).
+Only users who wish to squeeze every last cycle out of their scanners
+need worry about this option.  (see <a href="Performance.html#Performance">Performance</a>).
+</p>
+
+
+<a name="option_002ddebug"></a><a name="index-_002dd"></a>
+<a name="index-_002d_002d_002ddebug"></a>
+<a name="index-debug"></a>
+</dd>
+<dt>&lsquo;<samp>-d, --debug, <code>%option debug</code></samp>&rsquo;</dt>
+<dd><p>makes the generated scanner run in <em>debug</em> mode.  Whenever a pattern
+is recognized and the global variable <code>yy_flex_debug</code> is non-zero
+(which is the default), the scanner will write to <samp>stderr</samp> a line
+of the form:
+</p>
+<div class="example">
+<pre class="verbatim">    -accepting rule at line 53 (&quot;the matched text&quot;)
+</pre></div>
+
+<p>The line number refers to the location of the rule in the file defining
+the scanner (i.e., the file that was fed to flex).  Messages are also
+generated when the scanner backs up, accepts the default rule, reaches
+the end of its input buffer (or encounters a NUL; at this point, the two
+look the same as far as the scanner&rsquo;s concerned), or reaches an
+end-of-file.
+</p>
+
+
+<a name="option_002dperf_002dreport"></a><a name="index-_002dp"></a>
+<a name="index-_002d_002d_002dperf_002dreport"></a>
+<a name="index-perf_002dreport"></a>
+</dd>
+<dt>&lsquo;<samp>-p, --perf-report, <code>%option perf-report</code></samp>&rsquo;</dt>
+<dd><p>generates a performance report to <samp>stderr</samp>.  The report consists of
+comments regarding features of the <code>flex</code> input file which will
+cause a serious loss of performance in the resulting scanner.  If you
+give the flag twice, you will also get comments regarding features that
+lead to minor performance losses.
+</p>
+<p>Note that the use of <code>REJECT</code>, and
+variable trailing context (see <a href="Limitations.html#Limitations">Limitations</a>) entails a substantial
+performance penalty; use of <code>yymore()</code>, the &lsquo;<samp>^</samp>&rsquo; operator, and
+the &lsquo;<samp>--interactive</samp>&rsquo; flag entail minor performance penalties.
+</p>
+
+
+<a name="option_002dnodefault"></a><a name="index-_002ds"></a>
+<a name="index-_002d_002d_002dnodefault"></a>
+<a name="index-nodefault"></a>
+</dd>
+<dt>&lsquo;<samp>-s, --nodefault, <code>%option nodefault</code></samp>&rsquo;</dt>
+<dd><p>causes the <em>default rule</em> (that unmatched scanner input is echoed
+to <samp>stdout)</samp> to be suppressed.  If the scanner encounters input
+that does not match any of its rules, it aborts with an error.  This
+option is useful for finding holes in a scanner&rsquo;s rule set.
+</p>
+
+
+<a name="option_002dtrace"></a><a name="index-_002dT"></a>
+<a name="index-_002d_002d_002dtrace"></a>
+<a name="index-trace"></a>
+</dd>
+<dt>&lsquo;<samp>-T, --trace, <code>%option trace</code></samp>&rsquo;</dt>
+<dd><p>makes <code>flex</code> run in <em>trace</em> mode.  It will generate a lot of
+messages to <samp>stderr</samp> concerning the form of the input and the
+resultant non-deterministic and deterministic finite automata.  This
+option is mostly for use in maintaining <code>flex</code>.
+</p>
+
+
+<a name="option_002dnowarn"></a><a name="index-_002dw"></a>
+<a name="index-_002d_002d_002dnowarn"></a>
+<a name="index-nowarn"></a>
+</dd>
+<dt>&lsquo;<samp>-w, --nowarn, <code>%option nowarn</code></samp>&rsquo;</dt>
+<dd><p>suppresses warning messages.
+</p>
+
+
+<a name="option_002dverbose"></a><a name="index-_002dv"></a>
+<a name="index-_002d_002d_002dverbose"></a>
+<a name="index-verbose"></a>
+</dd>
+<dt>&lsquo;<samp>-v, --verbose, <code>%option verbose</code></samp>&rsquo;</dt>
+<dd><p>specifies that <code>flex</code> should write to <samp>stderr</samp> a summary of
+statistics regarding the scanner it generates.  Most of the statistics
+are meaningless to the casual <code>flex</code> user, but the first line
+identifies the version of <code>flex</code> (same as reported by &lsquo;<samp>--version</samp>&rsquo;),
+and the next line the flags used when generating the scanner, including
+those that are on by default.
+</p>
+
+
+<a name="option_002dwarn"></a><a name="index-_002d_002d_002dwarn"></a>
+<a name="index-warn"></a>
+</dd>
+<dt>&lsquo;<samp>--warn, <code>%option warn</code></samp>&rsquo;</dt>
+<dd><p>warn about certain things. In particular, if the default rule can be
+matched but no default rule has been given, the flex will warn you.
+We recommend using this option always.
+</p>
+</dd>
+</dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Miscellaneous-Options.html#Miscellaneous-Options" accesskey="n" rel="next">Miscellaneous Options</a>, Previous: <a href="Options-for-Scanner-Speed-and-Size.html#Options-for-Scanner-Speed-and-Size" accesskey="p" rel="prev">Options for Scanner Speed and Size</a>, Up: <a href="Scanner-Options.html#Scanner-Options" accesskey="u" rel="up">Scanner Options</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

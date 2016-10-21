@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<!-- Created by GNU Texinfo 6.1, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Lexical Analysis With Flex, for Flex 2.6.2: Reentrant Overview</title>
+
+<meta name="description" content="Lexical Analysis With Flex, for Flex 2.6.2: Reentrant Overview">
+<meta name="keywords" content="Lexical Analysis With Flex, for Flex 2.6.2: Reentrant Overview">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Indices.html#Indices" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Reentrant.html#Reentrant" rel="up" title="Reentrant">
+<link href="Reentrant-Example.html#Reentrant-Example" rel="next" title="Reentrant Example">
+<link href="Reentrant-Uses.html#Reentrant-Uses" rel="prev" title="Reentrant Uses">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Reentrant-Overview"></a>
+<div class="header">
+<p>
+Next: <a href="Reentrant-Example.html#Reentrant-Example" accesskey="n" rel="next">Reentrant Example</a>, Previous: <a href="Reentrant-Uses.html#Reentrant-Uses" accesskey="p" rel="prev">Reentrant Uses</a>, Up: <a href="Reentrant.html#Reentrant" accesskey="u" rel="up">Reentrant</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html#Indices" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="An-Overview-of-the-Reentrant-API"></a>
+<h3 class="section">19.2 An Overview of the Reentrant API</h3>
+
+<a name="index-reentrant_002c-API-explanation"></a>
+<p>The API for reentrant scanners is different than for non-reentrant
+scanners. Here is a quick overview of the API:
+</p>
+<ul>
+<li><code>%option reentrant</code> must be specified.
+
+</li><li> All functions take one additional argument: <code>yyscanner</code>
+
+</li><li> All global variables are replaced by their macro equivalents.
+(We tell you this because it may be important to you during debugging.)
+
+</li><li> <code>yylex_init</code> and <code>yylex_destroy</code> must be called before and
+after <code>yylex</code>, respectively.
+
+</li><li> Accessor methods (get/set functions) provide access to common
+<code>flex</code> variables.
+
+</li><li> User-specific data can be stored in <code>yyextra</code>.
+</li></ul>
+
+
+
+
+</body>
+</html>
