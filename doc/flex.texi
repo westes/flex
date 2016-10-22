@@ -1491,7 +1491,7 @@ the scanning routine using a K&R-style/non-prototyped function
 declaration, you must terminate the definition with a semi-colon (;).
 
 @code{flex} generates @samp{C99} function definitions by
-default. Flex used toFlex used to have the ability to generate obsolete, er,
+default. Flex used to have the ability to generate obsolete, er,
 @samp{traditional}, function definitions. This was to support
 bootstrapping gcc on old systems.  Unfortunately, traditional
 definitions prevent us from using any standard data types smaller than
