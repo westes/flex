@@ -62,7 +62,11 @@ static int foo (int i){
 
 
 %%
-
+  // indented code    [ 1 ]
+  // indented code   [[ 2 ]]
+  // indented code  [[[ 3 ]]]
+  // indented code [[[[ 4 ]]]]
+  // indented code ]] unmatched [[
 a       /* action comment    [ 1 ]          */ ;
 b       /* action comment   [[ 2 ]]         */ ;
 c       /* action comment  [[[ 3 ]]]        */ ;
