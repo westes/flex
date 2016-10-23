@@ -102,17 +102,19 @@ extern const char *escaped_qstart, *escaped_qend;
 		posix_compat = true;
 
 #define START_CODEBLOCK(x) do { \
-    /* Emit the needed line directive... */\
-    if (indented_code == false) linenum++; \
-    line_directive_out(NULL, 1); \
-    add_action(M4QSTART); \
-    yy_push_state(CODEBLOCK); \
-    if ((indented_code = x)) ACTION_ECHO; \
-    } while(0)
+     /* Emit the needed line directive... */\
+     if (indented_code == false) { \
+         linenum++; \
+         line_directive_out(NULL, 1); \
+     } \
+     add_action(M4QSTART); \
+     yy_push_state(CODEBLOCK); \
+     if ((indented_code = x)) ACTION_ECHO; \
+     } while(0)
 #define END_CODEBLOCK do { \
      yy_pop_state();\
     add_action(M4QEND); \
-     line_directive_out(NULL, 0);\
+     if (!indented_code) line_directive_out(NULL, 0);\
       } while (0)
 %}
 
