@@ -2,7 +2,7 @@
 *.rej
 *.tar.bz2
 *.tar.gz
-*.tar.xz
+*.tar.lz
 *~
 .deps
 .libs

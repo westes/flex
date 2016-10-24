@@ -27,6 +27,8 @@ See the file COPYING for copying conditions.
 
 ** build system
 
+*** the xz archive has been replaced with an lzip archive
+
 *** a new option to configure --enable-warnings to encapsulate passing
     of warning-related flags which is useful in testing flex
 
