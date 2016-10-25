@@ -466,7 +466,7 @@ void check_options(void)
         {
             nbytes = prefix.size() + strlen(tablesfile_template) + 2;
             tablesfilename = pname = (decltype(pname))calloc(nbytes, 1);
-            snprintf(pname, nbytes, tablesfile_template, prefix);
+            snprintf(pname, nbytes, tablesfile_template, prefix.c_str());
         }
 
         if ((tablesout = fopen(tablesfilename.c_str(), "wb")) == NULL)
