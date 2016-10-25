@@ -24,7 +24,7 @@
 
 # autoconf requirements and initialization
 
-AC_INIT([the fast lexical analyser generator],[2.6.2],[flex-help@lists.sourceforge.net],[flex])
+AC_INIT([the fast lexical analyser generator],[2.6.3],[flex-help@lists.sourceforge.net],[flex])
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
 LT_INIT
