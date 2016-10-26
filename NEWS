@@ -5,6 +5,12 @@ See the file COPYING for copying conditions.
 
 * version 2.6.3
 
+** build
+
+*** the PIC version of libfl was not correctly built. It is no longer
+    included in the build/installation targets of flex since it was
+    unused.
+
 * version 2.6.2 released 2016-10-24
 
 ** flex internals

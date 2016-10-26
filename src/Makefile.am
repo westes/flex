@@ -8,8 +8,7 @@ m4 = @M4@
 bin_PROGRAMS = flex
 noinst_PROGRAMS = stage1flex
 lib_LTLIBRARIES = \
-	libfl.la \
-	libfl_pic.la
+	libfl.la
 
 stage1flex_SOURCES = \
 	scan.l \
@@ -61,12 +60,6 @@ libfl_la_SOURCES = \
 	libyywrap.c
 
 libfl_la_LDFLAGS = -version-info @SHARED_VERSION_INFO@
-
-libfl_pic_la_SOURCES = \
-	libmain.c \
-	libyywrap.c
-
-libfl_pic_la_LDFLAGS = -version-info @SHARED_VERSION_INFO@
 
 include_HEADERS = \
 	FlexLexer.h
