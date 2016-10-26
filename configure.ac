@@ -101,6 +101,16 @@ else
    AC_MSG_WARN(no indent program found: make indent target will not function)
 fi
 
+# Check for a modern flex.
+
+AC_MSG_CHECKING(if $LEX is $PACKAGE $PACKAGE_VERSION)
+AM_CONDITIONAL([STAGE1FLEX], [test "`$LEX --version`" != "$PACKAGE $PACKAGE_VERSION"])
+AM_COND_IF([STAGE1FLEX],
+           [AC_MSG_RESULT(no); \
+            test "x$build" != "x$host" && \
+            AC_MSG_WARN(cross compiling but using stage1flex)],
+           [AC_MSG_RESULT(yes)])
+
 # checks for headers
 
 AC_CHECK_HEADERS([inttypes.h libintl.h limits.h locale.h malloc.h netinet/in.h regex.h unistd.h])
