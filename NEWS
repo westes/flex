@@ -11,6 +11,10 @@ See the file COPYING for copying conditions.
     included in the build/installation targets of flex since it was
     unused.
 
+*** the distributed man page is only rebuilt when the relevant source
+    files change or when the binary doesn't exist. In particular, this
+    is friendlier to cross compilation. Resolves #108
+
 * version 2.6.2 released 2016-10-24
 
 ** flex internals
