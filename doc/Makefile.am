@@ -23,8 +23,8 @@ CLEANFILES = \
 	flex.vr \
 	flex.vrs
 
-flex.1: ../src/flex$(EXEEXT)
+flex.1: $(top_srcdir)/configure.ac $(top_srcdir)/src/flex.skl $(top_srcdir)/src/options.c $(top_srcdir)/src/options.h | $(top_builddir)/src/flex$(EXEEXT)
 	$(help2man) --name='$(PACKAGE_NAME)' --section=1 \
 	--source='The Flex Project' --manual='Programming' \
-	--output=$@ $< \
+	--output=$@ $| \
 	|| rm -f $@
