@@ -67,13 +67,13 @@ AS_IF([test "$BISON" != no],[],
 	])
 
 AC_PATH_PROG([HELP2MAN], help2man, [\${top_srcdir}/build-aux/missing help2man])
-  AS_IF([test -z "$ac_cv_path_HELP2MAN" ],[],
+  AS_IF([test "$HELP2MAN" = "\${top_srcdir}/build-aux/missing help2man"],
     AC_MSG_WARN(program not found: help2man: building man page will not work)
   )
 
 AC_PATH_PROGS([TEXI2DVI], [gtexi2dvi texi2dvi], [\${top_srcdir}/build-aux/missing texi2dvi])
-  AS_IF([test -z "$ac_cv_path_TEXI2DVI" ], [],
-    AC_MSG_WARN(texi2dvi: program not found: building pdf version of manual will not work)
+  AS_IF([test "$TEXI2DVI" = "\${top_srcdir}/build-aux/missing texi2dvi"],
+    AC_MSG_WARN(program not found: texi2dvi: building pdf version of manual will not work)
   )
 
 # Check for a m4 that supports -P
