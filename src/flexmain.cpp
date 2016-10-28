@@ -123,6 +123,7 @@ struct yytbl_writer tableswr;
 void set_input_file(const String &);
 
 void usage();
+int yyparse();
 
 /* Make sure program_name is initialized so we don't crash if writing
  * out an error message before getting the program name from argv[0].
