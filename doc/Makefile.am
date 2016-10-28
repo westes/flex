@@ -4,7 +4,7 @@ FLEX = $(top_builddir)/src/flex$(EXEEXT)
 
 info_TEXINFOS =	flex.texi
 dist_man_MANS = flex.1
-DISTCLEANFILES = flex.1
+MAINTAINERCLEANFILES = flex.1
 
 CLEANFILES = \
 	flex.aux \
