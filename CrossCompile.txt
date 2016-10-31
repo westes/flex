@@ -1,0 +1,37 @@
+Notes for building flex for cross-toolchain
+-------------------------------------------
+
+Flex generates scanner code for C and C++, and has no architecture-
+specific parts. Therefore flex's build system does not support
+'--target' option that people would use to configuring a cross-
+compiler. However, flex has one library, libfl, that is intended to be
+linked with flex-generated code and installed to the target system.
+
+If you are building flex intended to be used with a cross-toolchain,
+for the main flex program you should disable libfl while configuring:
+
+```bash
+./configure --disable-libfl && make && make install
+```
+
+This way you won't get a useless library built for your host system.
+
+You may run configure again and build libfl for the target.
+For example:
+
+```bash
+./configure --build=$(build-aux/config.guess) --host=${target} &&
+cd src &&
+make src/libfl.la &&
+make DESTDIR=${sysroot} install-libLTLIBRARIES
+```
+
+(For now the commands of building and installing libfl alone is tricky.
+This might be fixed in the future.)
+
+
+Notes for cross-compiling flex
+------------------------------
+
+To be documented
+
