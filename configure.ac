@@ -60,6 +60,12 @@ AC_ARG_ENABLE([warnings],
 
 AC_SUBST([WARNINGFLAGS])
 
+AC_ARG_ENABLE([libfl],
+  [AS_HELP_STRING([--disable-libfl],
+                  [do not build -lfl runtime support library])],
+  [], [enable_libfl=yes])
+AM_CONDITIONAL([ENABLE_LIBFL], [test "$enable_libfl" = yes])
+
 AC_PATH_PROG([BISON], bison, no)
 AS_IF([test "$BISON" != no],[],
 	[ AC_SUBST([BISON], [\${top_srcdir}/build-aux/missing bison])
