@@ -7,8 +7,14 @@ m4 = @M4@
 
 bin_PROGRAMS = flex
 noinst_PROGRAMS = stage1flex
-lib_LTLIBRARIES = \
-	libfl.la
+
+if ENABLE_LIBFL
+lib_LTLIBRARIES = libfl.la
+libfl_la_SOURCES = \
+	libmain.c \
+	libyywrap.c
+libfl_la_LDFLAGS = -version-info @SHARED_VERSION_INFO@
+endif
 
 stage1flex_SOURCES = \
 	scan.l \
@@ -54,12 +60,6 @@ COMMON_SOURCES = \
 	yylex.c
 
 LDADD = ../lib/libcompat.la @LIBINTL@
-
-libfl_la_SOURCES = \
-	libmain.c \
-	libyywrap.c
-
-libfl_la_LDFLAGS = -version-info @SHARED_VERSION_INFO@
 
 include_HEADERS = \
 	FlexLexer.h
