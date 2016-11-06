@@ -55,7 +55,7 @@ AC_PROG_INSTALL
 AC_ARG_ENABLE([warnings],
   [AS_HELP_STRING([--enable-warnings],
                   [enable a bunch of compiler warning flags (defaults to GCC warning flags).])],
-  [AS_IF([test "x$GCC" == xyes],
+  [AS_IF([test "x$GCC" = xyes],
     [ : ${WARNINGFLAGS="-Wall -Wextra -Wmissing-prototypes -Wstrict-prototypes -Wnested-externs -Wold-style-definition -Wredundant-decls -Wconversion -Wno-unused-but-set-variable"} ])])
 
 AC_SUBST([WARNINGFLAGS])
