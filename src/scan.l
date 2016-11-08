@@ -936,10 +936,9 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
 	[^[:alpha:]_{}\"'/\n\[\]]+	ACTION_ECHO;
-        [\[\]]      ACTION_ECHO;
         {NAME}		ACTION_ECHO;
         "'"([^\'\\\n]|\\.)"'" ACTION_ECHO; /* character constant */
-        "'"             ACTION_ECHO; yy_push_state(CHARACTER_CONSTANT);
+        "'"             ACTION_ECHO; BEGIN(CHARACTER_CONSTANT);
 	\"		ACTION_ECHO; BEGIN(ACTION_STRING);
 	{NL} {
 			++linenum;
@@ -952,20 +951,22 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
                 BEGIN(SECT2);
             }
         }
+        .      ACTION_ECHO;
 }
 
 <ACTION_STRING>{
-	[^\]\"\\\n\[]+	ACTION_ECHO;
+	[^\[\]\"\\\n]+	ACTION_ECHO;
 	\"		ACTION_ECHO; BEGIN(ACTION);
 }
 <CHARACTER_CONSTANT>{
-	[^\[\]\'\\\n]+       ACTION_ECHO;
-    \'              ACTION_ECHO; yy_pop_state();
+	[^\[\]\'\\\n]+  ACTION_ECHO;
+        \'              ACTION_ECHO; BEGIN(ACTION);
 }
 <ACTION_STRING,CHARACTER_CONSTANT>{
-	\\.		ACTION_ECHO;
-	{NL}	++linenum; ACTION_ECHO;
-        [\]\['"]	ACTION_ECHO;
+        (\\\n)*         ACTION_ECHO;
+	\\(\\\n)*.	ACTION_ECHO;
+	{NL}	++linenum; ACTION_ECHO; BEGIN(ACTION);
+        .	ACTION_ECHO;
 }
 
 <COMMENT,CODE_COMMENT,COMMENT_DISCARD,ACTION,ACTION_STRING,CHARACTER_CONSTANT><<EOF>>	{

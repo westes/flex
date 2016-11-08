@@ -88,6 +88,7 @@ simple_tests = \
 	posixly_correct \
 	prefix_nr \
 	prefix_r \
+	quote_in_comment \
 	quotes \
 	string_nr \
 	string_r \
@@ -122,6 +123,7 @@ ONE_TESTS = \
 	lineno_r.one \
 	lineno_trailing.one
 
+quote_in_comment_SOURCES = quote_in_comment.l
 alloc_extra_SOURCES = alloc_extra.l
 array_nr_SOURCES = array_nr.l
 array_r_SOURCES = array_r.l
@@ -246,6 +248,7 @@ CLEANFILES = \
 	prefix_nr.c \
 	prefix_r.c \
 	pthread.c \
+	quote_in_comment.c \
 	quotes.c \
 	reject_nr.reject.c \
 	reject_r.reject.c \
@@ -315,6 +318,7 @@ EXTRA_DIST = \
 	reject.txt \
 	rescan_nr.direct.txt \
 	rescan_r.direct.txt \
+	quote_in_comment.txt \
 	quotes.txt \
 	top.txt \
 	yyextra.txt \
