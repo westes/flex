@@ -87,6 +87,8 @@ rescan_nr.direct
 rescan_nr.direct.c
 rescan_r.direct
 rescan_r.direct.c
+quote_in_comment
+quote_in_comment.c
 quotes
 quotes.c
 string_nr
