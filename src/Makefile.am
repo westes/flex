@@ -6,15 +6,18 @@ LIBS = @LIBS@
 m4 = @M4@
 
 bin_PROGRAMS = flex
-noinst_PROGRAMS = stage1flex
 lib_LTLIBRARIES = \
 	libfl.la
+
+if STAGE1FLEX
+noinst_PROGRAMS = stage1flex
 
 stage1flex_SOURCES = \
 	scan.l \
 	$(COMMON_SOURCES)
 
 stage1flex_CFLAGS = $(AM_CFLAGS)
+endif
 
 flex_SOURCES = \
 	$(COMMON_SOURCES)
@@ -82,15 +85,21 @@ skel.c: flex.skl mkskel.sh flexint.h tables_shared.h tables_shared.c
 	  $(SHELL) $(srcdir)/mkskel.sh > $@.tmp
 	mv $@.tmp $@
 
+if STAGE1FLEX
 stage1scan.c: scan.l stage1flex$(EXEEXT)
 	./stage1flex$(EXEEXT) -o $@ $<
+stage1scan.c : parse.h
+else
+stage1scan.c: scan.l
+	$(LEX) -o $@ $<
+stage1scan.c : parse.h
+endif
 
 # make needs to be told to make parse.h so that parallelized runs will
 # not fail.
 
 main.c : parse.h
 scan.c : parse.h
-stage1scan.c : parse.h
 yylex.c : parse.h
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
