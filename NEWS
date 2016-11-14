@@ -7,6 +7,10 @@ See the file COPYING for copying conditions.
 
 ** build
 
+*** It is now possible to build flex without building the accompanying
+    libfl. This is friendlier to cross compilation. See the
+    --disable-libfl option to configure. Resolves #99.
+
 *** the PIC version of libfl was not correctly built. It is no longer
     included in the build/installation targets of flex since it was
     unused.
