@@ -83,7 +83,7 @@ skel.c: flex.skl mkskel.sh flexint.h tables_shared.h tables_shared.c
 	mv $@.tmp $@
 
 stage1scan.c: scan.l stage1flex$(EXEEXT)
-	./stage1flex$(EXEEXT) -o $@ $<
+	./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $<
 
 # make needs to be told to make parse.h so that parallelized runs will
 # not fail.
