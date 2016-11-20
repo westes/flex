@@ -136,8 +136,14 @@ AC_TYPE_SIZE_T
 
 AC_FUNC_ALLOCA
 AC_FUNC_FORK
+dnl Autoconf bug: AC_FUNC_MALLOC and AC_FUNC_REALLOC might not warn of cross
+dnl compilation. Workaround this.
 AC_FUNC_MALLOC
+AS_IF([test "$cross_compiling" = yes],
+   AC_MSG_WARN([result $ac_cv_func_malloc_0_nonnull guessed because of cross compilation]))
 AC_FUNC_REALLOC
+AS_IF([test "$cross_compiling" = yes],
+   AC_MSG_WARN([result $ac_cv_func_realloc_0_nonnull guessed because of cross compilation]))
 
 AC_CHECK_FUNCS(dup2 dnl
 memset dnl
