@@ -28,7 +28,7 @@ AC_INIT([the fast lexical analyser generator],[2.6.3],[flex-help@lists.sourcefor
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
 LT_INIT
-AM_INIT_AUTOMAKE([-Wno-portability foreign check-news std-options dist-lzip parallel-tests 1.14.1])
+AM_INIT_AUTOMAKE([-Wno-portability foreign check-news std-options dist-lzip parallel-tests subdir-objects 1.14.1])
 AC_CONFIG_HEADER([src/config.h])
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_MACRO_DIR([m4])
@@ -136,8 +136,14 @@ AC_TYPE_SIZE_T
 
 AC_FUNC_ALLOCA
 AC_FUNC_FORK
+dnl Autoconf bug: AC_FUNC_MALLOC and AC_FUNC_REALLOC might not warn of cross
+dnl compilation. Workaround this.
 AC_FUNC_MALLOC
+AS_IF([test "$cross_compiling" = yes],
+   AC_MSG_WARN([result $ac_cv_func_malloc_0_nonnull guessed because of cross compilation]))
 AC_FUNC_REALLOC
+AS_IF([test "$cross_compiling" = yes],
+   AC_MSG_WARN([result $ac_cv_func_realloc_0_nonnull guessed because of cross compilation]))
 
 AC_CHECK_FUNCS(dup2 dnl
 memset dnl

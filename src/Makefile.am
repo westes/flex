@@ -59,7 +59,7 @@ COMMON_SOURCES = \
 	version.h \
 	yylex.c
 
-LDADD = ../lib/libcompat.la @LIBINTL@
+LDADD = $(LIBOBJS) @LIBINTL@
 
 include_HEADERS = \
 	FlexLexer.h
