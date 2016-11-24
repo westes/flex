@@ -7,6 +7,10 @@ See the file COPYING for copying conditions.
 
 ** build
 
+*** The compatibility functions in lib/ are no longer built as a
+    library. Instead, they are built as $(LIBOBJ) objects. This is
+    simpler and friendlier to cross compilation.
+
 *** It is now possible to build flex without building the accompanying
     libfl. This is friendlier to cross compilation. See the
     --disable-libfl option to configure. Resolves #99.
