@@ -6,7 +6,9 @@ LIBS = @LIBS@
 m4 = @M4@
 
 bin_PROGRAMS = flex
+if ENABLE_BOOTSTRAP
 noinst_PROGRAMS = stage1flex
+endif
 
 if ENABLE_LIBFL
 lib_LTLIBRARIES = libfl.la
@@ -82,16 +84,21 @@ skel.c: flex.skl mkskel.sh flexint.h tables_shared.h tables_shared.c
 	  $(SHELL) $(srcdir)/mkskel.sh > $@.tmp
 	mv $@.tmp $@
 
+if ENABLE_BOOTSTRAP
 stage1scan.c: scan.l stage1flex$(EXEEXT)
 	./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $<
+else
+stage1scan.c: scan.c
+	sed 's|^\(#line .*\)"'`printf %s $< | sed 's|[][\\\\.*]|\\\\&|g'`'"|\1"$@"|g' $< > $@
+endif
 
 # make needs to be told to make parse.h so that parallelized runs will
 # not fail.
 
-main.c : parse.h
-scan.c : parse.h
-stage1scan.c : parse.h
-yylex.c : parse.h
+main.c: parse.h
+yylex.c: parse.h
+stage1flex-scan.$(OBJEXT): parse.h
+flex-stage1scan.$(OBJEXT): parse.h
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #

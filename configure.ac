@@ -66,6 +66,15 @@ AC_ARG_ENABLE([libfl],
   [], [enable_libfl=yes])
 AM_CONDITIONAL([ENABLE_LIBFL], [test "x$enable_libfl" = xyes])
 
+# --disable-bootstrap is intended only to workaround problems with bootstrap
+# (e.g. when cross-compiling flex or when bootstrapping has bugs).
+# Ideally we should be able to bootstrap even when cross-compiling.
+AC_ARG_ENABLE([bootstrap],
+  [AS_HELP_STRING([--disable-bootstrap],
+                  [don't perform a bootstrap when building flex])],
+  [], [enable_bootstrap=yes])
+AM_CONDITIONAL([ENABLE_BOOTSTRAP], [test "x$enable_bootstrap" = xyes])
+
 AC_PATH_PROG([BISON], bison, no)
 AS_IF([test "$BISON" != no],[],
 	[ AC_SUBST([BISON], [\${top_srcdir}/build-aux/missing bison])
