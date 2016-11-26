@@ -10,11 +10,11 @@ noinst_PROGRAMS = stage1flex
 
 if ENABLE_LIBFL
 lib_LTLIBRARIES = libfl.la
+endif
 libfl_la_SOURCES = \
 	libmain.c \
 	libyywrap.c
 libfl_la_LDFLAGS = -version-info @SHARED_VERSION_INFO@
-endif
 
 stage1flex_SOURCES = \
 	scan.l \
