@@ -64,7 +64,7 @@ AC_ARG_ENABLE([libfl],
   [AS_HELP_STRING([--disable-libfl],
                   [do not build -lfl runtime support library])],
   [], [enable_libfl=yes])
-AM_CONDITIONAL([ENABLE_LIBFL], [test "$enable_libfl" = yes])
+AM_CONDITIONAL([ENABLE_LIBFL], [test "x$enable_libfl" = xyes])
 
 AC_PATH_PROG([BISON], bison, no)
 AS_IF([test "$BISON" != no],[],
@@ -122,7 +122,7 @@ AC_DEFINE([HAVE_LIBPTHREAD], 1, [pthread library] ),
 AC_DEFINE([HAVE_LIBPTHREAD], 0, [pthread library] )
 )
 AC_CHECK_HEADERS([pthread.h])
-AM_CONDITIONAL([want_pthread], [test x$ac_cv_lib_pthread_pthread_mutex_lock = xyes])
+AM_CONDITIONAL([want_pthread], [test "x$ac_cv_lib_pthread_pthread_mutex_lock" = xyes])
 
 AC_CHECK_LIB(m, log10)
 
