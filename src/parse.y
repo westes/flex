@@ -199,7 +199,9 @@ option		:  TOK_OUTFILE '=' NAME
 		|  TOK_EXTRA_TYPE '=' NAME
 			{ extra_type = xstrdup(nmstr); }
 		|  TOK_PREFIX '=' NAME
-			{ prefix = xstrdup(nmstr); }
+			{ prefix = xstrdup(nmstr);
+                          if (strchr(prefix, '[') || strchr(prefix, ']'))
+                              flexerror(_("Prefix must not contain [ or ]")); }
 		|  TOK_YYCLASS '=' NAME
 			{ yyclass = xstrdup(nmstr); }
 		|  TOK_HEADER_FILE '=' NAME

@@ -166,7 +166,7 @@ struct Buf *buf_strdefine (struct Buf *buf, const char *str, const char *def)
  */
 struct Buf *buf_m4_define (struct Buf *buf, const char* def, const char* val)
 {
-    const char * fmt = "m4_define( [[%s]], [[%s]])m4_dnl\n";
+    const char * fmt = "m4_define( [[%s]], [[[[%s]]]])m4_dnl\n";
     char * str;
     size_t strsz;
 

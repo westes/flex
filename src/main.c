@@ -447,6 +447,8 @@ void check_options (void)
 	if ( bison_bridge_lloc)
         buf_m4_define (&m4defs_buf, "<M4_YY_BISON_LLOC>", NULL);
 
+    if (strchr(prefix, '[') || strchr(prefix, ']'))
+        flexerror(_("Prefix cannot include '[' or ']'"));
     buf_m4_define(&m4defs_buf, "M4_YY_PREFIX", prefix);
 
 	if (did_outfilename)
