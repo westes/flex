@@ -3,9 +3,26 @@ changes between releases of flex.
 
 See the file COPYING for copying conditions.
 
-* version 2.6.3
+* version 2.6.3 released 2016-12-30
+
+** scanner
+
+*** several bug fixes resolved problems introduced in recent flex
+    versions regarding processing of comments, literals and various
+    quoting scenarios.
+
+*** If the path to m4 was sufficiently long, a buffer overflow could
+    occur. This has been resolved. The fix also removes dependence on
+    the constant PATH_MAX.
 
 ** build
+
+*** A new configure option --disable-bootstrap changes the behavior of
+    the build system when building flex. The default
+    "--enable-bootstrap" behavior is to build flex, then to use that
+    flex to build flex again. With --disable-bootstrap, the scanner is
+    simply built by sedding the scanner source. This is friendlier to
+    cross compilation.
 
 *** The compatibility functions in lib/ are no longer built as a
     library. Instead, they are built as $(LIBOBJ) objects. This is
@@ -22,6 +39,10 @@ See the file COPYING for copying conditions.
 *** the distributed man page is only rebuilt when the relevant source
     files change or when the binary doesn't exist. In particular, this
     is friendlier to cross compilation. Resolves #108
+
+** test
+
+*** the shell scripts in the test suite are more portable across different shell implementations.
 
 * version 2.6.2 released 2016-10-24
 
