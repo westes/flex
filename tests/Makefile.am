@@ -171,21 +171,6 @@ string_r_SOURCES = string_r.l
 top_SOURCES = top.l top_main.c
 yyextra_SOURCES = yyextra.l
 
-BUILT_SOURCES = \
-	bison_nr_parser.h \
-	bison_nr_scanner.h \
-	bison_yylloc_parser.h \
-	bison_yylloc_scanner.h \
-	bison_yylval_parser.h \
-	bison_yylval_scanner.h \
-	header_nr_scanner.h \
-	header_r_scanner.h \
-	multiple_scanners_nr_1.h \
-	multiple_scanners_nr_2.h \
-	multiple_scanners_r_1.h \
-	multiple_scanners_r_2.h \
-	top.h
-
 # Normally, automake would distribute files built by flex. Since the
 # point of the test suite is to test the files that flex builds, and
 # since anyone who has the flex distribution can build a flex binary
@@ -196,6 +181,7 @@ BUILT_SOURCES = \
 # it.
 
 CLEANFILES = \
+	alloc_extra.c \
 	array_nr.c \
 	array_r.c \
 	basic_nr.c \
@@ -263,7 +249,6 @@ CLEANFILES = \
 	top.c \
 	top.h  \
 	yyextra.c \
-alloc_extra.c \
 	$(tableopts_c) \
 	$(tableopts_tables)
 
