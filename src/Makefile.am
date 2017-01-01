@@ -135,12 +135,14 @@ indentfiles = \
 	tables_shared.h \
 	tblcmp.c
 
-indent:
-	if [ -f .indent.pro ] ; then \
-	for f in $(indentfiles);\
-	do\
-		echo indenting $$f ;\
-		f='$(srcdir)'/$$f; \
-		$(indent) < $$f >/dev/null && indent $$f || echo $$f FAILED to indent ;\
-	done \
-	fi
+indent: $(top_srcdir)/.indent.pro
+	cd $(top_srcdir) && \
+	for f in $(indentfiles); do \
+		f=src/$$f; \
+		echo indenting $$f; \
+		INDENT_PROFILE=.indent.pro $(INDENT) <$$f >/dev/null && \
+		INDENT_PROFILE=.indent.pro $(INDENT) $$f || \
+		echo $$f FAILED to indent; \
+	done;
+
+.PHONY: indent
