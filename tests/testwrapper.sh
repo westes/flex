@@ -33,14 +33,16 @@ TESTNAME="${!OPTIND}"
 INPUT_NAME=${INPUT_NAME:-$INPUT_DIRECTORY/`basename ${TESTNAME%.exe}`.txt}
 
 if [ "$DO_COMPARISON" -eq "1" ] ; then
-    test `$TESTNAME 1 < $INPUT_NAME` -eq `$TESTNAME < $INPUT_NAME`
+    TEST_OUTPUT=`$TESTNAME < $INPUT_NAME`
+    REF_OUTPUT=`$TESTNAME 1 < $INPUT_NAME`
+    test "$TEST_OUTPUT" -eq "$REF_OUTPUT"
     exit $?
-    fi
+fi
 
 if [ $INPUT_COUNT -gt 1 ] ; then
     $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} ${INPUT_NAME}
     exit $?
-    fi
+fi
 
 if [ -f ${INPUT_NAME} ] ; then
     if [ $USE_REDIRECT == 1 ] ; then
