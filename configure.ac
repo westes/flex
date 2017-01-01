@@ -102,19 +102,13 @@ AC_CACHE_CHECK([for m4 that supports -P], [ac_cv_path_M4],
 AC_SUBST([M4], [$ac_cv_path_M4])
 AC_DEFINE_UNQUOTED([M4], ["$M4"], [Define to the m4 executable name.])
 
-AC_PATH_PROG(INDENT, indent, indent)
-# if INDENT is set to 'indent' then we didn't find indent
-if test "$INDENT" != indent ; then
-   AC_MSG_CHECKING(if $INDENT is GNU indent)
-   if $INDENT --version 2>/dev/null | head -n 1|grep "GNU indent" > /dev/null ; then
-      AC_MSG_RESULT(yes)
-   else
-      AC_MSG_RESULT(no)
-      AC_MSG_WARN($INDENT does not appear to be GNU indent.)
-   fi
-else
-   AC_MSG_WARN(no indent program found: make indent target will not function)
-fi
+AC_PATH_PROG([INDENT], indent, [\${top_srcdir}/build-aux/missing indent])
+  AC_MSG_CHECKING(if $INDENT is GNU indent)
+  AS_IF([$INDENT --version 2>/dev/null | head -n 1 | grep "GNU indent" >/dev/null],
+    [AC_MSG_RESULT(yes)],
+    [AC_MSG_RESULT(no)
+     AC_MSG_WARN($INDENT does not appear to be GNU indent; 'make indent' may not function properly)
+    ])
 
 # checks for headers
 
