@@ -50,7 +50,8 @@ stderr, which will have been redirected to the log file created by the
 automake test suite harness.
 
 ** If your test is skipped (e.g., because bison was not found), then
-   the test should return 2 (two).
+   the test should return 77 (seventy-seven). This is the exit status that
+   would be recognized by automake's "test-driver" as _skipped_.
 
 ** Once your work is done, submit a patch via the flex development
    mailing list, the github pull request mechanism or some other
