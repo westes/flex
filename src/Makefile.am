@@ -1,5 +1,4 @@
 AM_YFLAGS = -d
-localedir = $(datadir)/locale
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
 LIBS = @LIBS@
 
