@@ -92,6 +92,10 @@ stage1scan.c: scan.c
 	sed 's|^\(#line .*\)"'`printf %s $< | sed 's|[][\\\\.*]|\\\\&|g'`'"|\1"$@"|g' $< > $@
 endif
 
+dist-hook: scan.l flex$(EXEEXT)
+	./flex$(EXEEXT) -o scan.c $< && \
+	mv scan.c $(distdir)
+
 # make needs to be told to make parse.h so that parallelized runs will
 # not fail.
 
