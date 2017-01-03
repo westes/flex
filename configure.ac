@@ -40,6 +40,11 @@ AC_SUBST(SHARED_VERSION_INFO)
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.19])
 AC_PROG_YACC
+AS_IF([test "$YACC" != 'bison -y'], [
+	YACC="\${top_srcdir}/build-aux/missing bison -y"
+	AC_MSG_NOTICE(no bison program found: only required for maintainers)
+	])
+AM_CONDITIONAL([HAVE_BISON], [test "$YACC" = 'bison -y'])
 AM_PROG_LEX
 AC_PROG_CC
 AC_PROG_CXX
@@ -74,12 +79,6 @@ AC_ARG_ENABLE([bootstrap],
                   [don't perform a bootstrap when building flex])],
   [], [enable_bootstrap=yes])
 AM_CONDITIONAL([ENABLE_BOOTSTRAP], [test "x$enable_bootstrap" = xyes])
-
-AC_PATH_PROG([BISON], bison, no)
-AS_IF([test "$BISON" != no],[],
-	[ AC_SUBST([BISON], [\${top_srcdir}/build-aux/missing bison])
-	  AC_MSG_NOTICE(no bison program found: only required for maintainers)
-	])
 
 AC_PATH_PROG([HELP2MAN], help2man, [\${top_srcdir}/build-aux/missing help2man])
   AS_IF([test "$HELP2MAN" = "\${top_srcdir}/build-aux/missing help2man"],
