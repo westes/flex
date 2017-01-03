@@ -339,15 +339,24 @@ FLEX = $(top_builddir)/src/flex
 
 bison_nr_main.$(OBJEXT): bison_nr_parser.h bison_nr_scanner.h
 bison_nr_scanner.$(OBJEXT): bison_nr_parser.h
+
 bison_nr_scanner.h: bison_nr_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 bison_yylloc_main.$(OBJEXT): bison_yylloc_parser.h bison_yylloc_scanner.h
 bison_yylloc_scanner.$(OBJEXT): bison_yylloc_parser.h
+
 bison_yylloc_scanner.h: bison_yylloc_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 bison_yylval_main.$(OBJEXT): bison_yylval_parser.h bison_yylval_scanner.h
 bison_yylval_scanner.$(OBJEXT): bison_yylval_parser.h
+
 bison_yylval_scanner.h: bison_yylval_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 # automake does not support compiling flex scanners output in C as C++
 # so we explicitly sayhow, using the .lll suffix for the lex input file
@@ -356,18 +365,36 @@ bison_yylval_scanner.h: bison_yylval_scanner.c
 	$(FLEX) -o $@ $<
 
 header_nr_main.$(OBJEXT): header_nr_scanner.h
+
 header_nr_scanner.h: header_nr_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 header_r_main.$(OBJEXT): header_r_scanner.h
+
 header_r_scanner.h: header_r_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 multiple_scanners_nr_main.$(OBJEXT): multiple_scanners_nr_1.h multiple_scanners_nr_2.h
+
 multiple_scanners_nr_1.h: multiple_scanners_nr_1.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
+
 multiple_scanners_nr_2.h: multiple_scanners_nr_2.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 multiple_scanners_r_main.$(OBJEXT): multiple_scanners_r_1.h multiple_scanners_r_2.h
+
 multiple_scanners_r_1.h: multiple_scanners_r_1.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
+
 multiple_scanners_r_2.h: multiple_scanners_r_2.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 posixly_correct.c: posixly_correct.l $(FLEX)
 	POSIXLY_CORRECT=1 $(FLEX) -o $@ $<
