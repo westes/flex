@@ -2435,7 +2435,7 @@ static void yynoreturn yy_fatal_error YYFARGS1(const char*, msg)
 {
 	M4_YY_DECL_GUTS_VAR();
 	M4_YY_NOOP_GUTS_VAR();
-	(void) fprintf( stderr, "%s\n", msg );
+	fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
 }
 %endif
