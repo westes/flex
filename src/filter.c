@@ -296,7 +296,8 @@ int filter_tee_header (struct filter *chain)
 		fprintf (to_h, "\n");
 
 		/* write a fake line number. It will get fixed by the linedir filter. */
-		fprintf (to_h, "#line 4000 \"M4_YY_OUTFILE_NAME\"\n");
+		if (gen_line_dirs)
+			fprintf (to_h, "#line 4000 \"M4_YY_OUTFILE_NAME\"\n");
 
 		fprintf (to_h, "#undef %sIN_HEADER\n", prefix);
 		fprintf (to_h, "#endif /* %sHEADER_H */\n", prefix);
