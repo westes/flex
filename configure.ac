@@ -157,7 +157,7 @@ strchr dnl
 strdup dnl
 strtol)
 
-AC_REPLACE_FUNCS(reallocarray)
+AC_CHECK_FUNCS(reallocarray)
 
 AC_CONFIG_FILES(
 Makefile
