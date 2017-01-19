@@ -143,9 +143,14 @@ void add_action (const char *new_text)
 void   *allocate_array (int size, size_t element_size)
 {
 	void *mem;
-	size_t  num_bytes = element_size * (size_t) size;
-
-	mem = malloc(num_bytes);
+#if HAVE_REALLOCARRAY
+	/* reallocarray has built-in overflow detection */
+	mem = reallocarray(NULL, (size_t) size, element_size);
+#else
+	size_t num_bytes = (size_t) size * element_size;
+	mem = (size && SIZE_MAX / (size_t) size < element_size) ? NULL :
+		malloc(num_bytes);
+#endif
 	if (!mem)
 		flexfatal (_
 			   ("memory allocation failed in allocate_array()"));
@@ -682,9 +687,14 @@ char   *readable_form (int c)
 void   *reallocate_array (void *array, int size, size_t element_size)
 {
 	void *new_array;
-	size_t  num_bytes = element_size * (size_t) size;
-
-	new_array = realloc(array, num_bytes);
+#if HAVE_REALLOCARRAY
+	/* reallocarray has built-in overflow detection */
+	new_array = reallocarray(array, (size_t) size, element_size);
+#else
+	size_t num_bytes = (size_t) size * element_size;
+	new_array = (size && SIZE_MAX / (size_t) size < element_size) ? NULL :
+		realloc(array, num_bytes);
+#endif
 	if (!new_array)
 		flexfatal (_("attempt to increase array size failed"));
 
