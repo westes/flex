@@ -276,7 +276,7 @@ void check_options (void)
 		flexerror (_("Can't use -+ with -CF option"));
 
 	if (C_plus_plus && yytext_is_array) {
-		warn (_("%array incompatible with -+ option"));
+		lwarn (_("%array incompatible with -+ option"));
 		yytext_is_array = false;
 	}
 
