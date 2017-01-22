@@ -361,16 +361,17 @@ void check_options (void)
 						endOfDir = path+length;
 
 					{
-						char m4_path[endOfDir-path + 1 + m4_length + 1];
+						char *m4_path = calloc(endOfDir-path + 1 + m4_length + 1, 1);
 
 						memcpy(m4_path, path, endOfDir-path);
 						m4_path[endOfDir-path] = '/';
 						memcpy(m4_path + (endOfDir-path) + 1, m4, m4_length + 1);
 						if (stat(m4_path, &sbuf) == 0 &&
 							(S_ISREG(sbuf.st_mode)) && sbuf.st_mode & S_IXUSR) {
-							m4 = strdup(m4_path);
+							m4 = m4_path;
 							break;
 						}
+						free(m4_path);
 					}
 					path = endOfDir+1;
 				} while (path[0]);
