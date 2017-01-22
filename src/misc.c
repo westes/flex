@@ -30,9 +30,9 @@
 /*  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED */
 /*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
 /*  PURPOSE. */
-
 #include "flexdef.h"
 #include "tables.h"
+#include <stdarg.h>
 
 #define CMD_IF_TABLES_SER    "%if-tables-serialization"
 #define CMD_TABLES_YYDMAP    "%tables-yydmap"
