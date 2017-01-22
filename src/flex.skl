@@ -61,11 +61,17 @@ m4_changequote([[, ]])
 m4_ifelse(M4_YY_PREFIX,yy,,
 #define yy_create_buffer M4_YY_PREFIX[[_create_buffer]]
 #define yy_delete_buffer M4_YY_PREFIX[[_delete_buffer]]
-#define yy_flex_debug M4_YY_PREFIX[[_flex_debug]]
+#define yy_scan_buffer M4_YY_PREFIX[[_scan_buffer]]
+#define yy_scan_string M4_YY_PREFIX[[_scan_string]]
+#define yy_scan_bytes M4_YY_PREFIX[[_scan_bytes]]
 #define yy_init_buffer M4_YY_PREFIX[[_init_buffer]]
 #define yy_flush_buffer M4_YY_PREFIX[[_flush_buffer]]
 #define yy_load_buffer_state M4_YY_PREFIX[[_load_buffer_state]]
 #define yy_switch_to_buffer M4_YY_PREFIX[[_switch_to_buffer]]
+#define yypush_buffer_state M4_YY_PREFIX[[push_buffer_state]]
+#define yypop_buffer_state M4_YY_PREFIX[[pop_buffer_state]]
+#define yyensure_buffer_stack M4_YY_PREFIX[[ensure_buffer_stack]]
+#define yy_flex_debug M4_YY_PREFIX[[_flex_debug]]
 #define yyin M4_YY_PREFIX[[in]]
 #define yyleng M4_YY_PREFIX[[leng]]
 #define yylex M4_YY_PREFIX[[lex]]
@@ -107,7 +113,7 @@ m4_ifdef( [[M4_YY_PREFIX]],, [[m4_define([[M4_YY_PREFIX]], [[yy]])]])
 
 m4preproc_define(`M4_GEN_PREFIX',
     ``[[#define yy$1 ]]M4_YY_PREFIX[[$1]]
-m4_define([[yy$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
+%# m4_define([[yy$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
 
 %if-c++-only
     /* The c++ scanner is a mess. The FlexLexer.h header file relies on the
@@ -120,6 +126,7 @@ m4_define([[yy$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
 %endif
 
 %if-c-only
+m4_ifelse(M4_YY_PREFIX,yy,,
     M4_GEN_PREFIX(`_create_buffer')
     M4_GEN_PREFIX(`_delete_buffer')
     M4_GEN_PREFIX(`_scan_buffer')
@@ -155,6 +162,7 @@ m4_define([[yy$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
         M4_GEN_PREFIX(`set_column')
     ]])
     M4_GEN_PREFIX(`wrap')
+)
 %endif
 
 m4_ifdef( [[M4_YY_BISON_LVAL]],
@@ -170,11 +178,14 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 ]])
 
 
+m4_ifelse(M4_YY_PREFIX,yy,,
     M4_GEN_PREFIX(`alloc')
     M4_GEN_PREFIX(`realloc')
     M4_GEN_PREFIX(`free')
+)
 
 %if-c-only
+m4_ifelse(M4_YY_PREFIX,yy,,
 m4_ifdef( [[M4_YY_NOT_REENTRANT]],
 [[
     M4_GEN_PREFIX(`text')
@@ -184,6 +195,7 @@ m4_ifdef( [[M4_YY_NOT_REENTRANT]],
     M4_GEN_PREFIX(`_flex_debug')
     M4_GEN_PREFIX(`lineno')
 ]])
+)
 %endif
 
 
