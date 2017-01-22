@@ -976,6 +976,7 @@ extern void synerr(const char *);	/* report a syntax error */
 extern void format_warn(const char *, const char *);
 extern void lwarn(const char *);	/* report a warning */
 extern void yyerror(const char *);	/* report a parse error */
+extern int yyparse(void);		/* the YACC parser */
 
 
 /* from file scan.l */
