@@ -76,7 +76,7 @@ CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
 MAINTAINERCLEANFILES = skel.c
 
 skel.c: flex.skl mkskel.sh flexint.h tables_shared.h tables_shared.c
-	sed 's/4_/a4_/g; s/m4preproc_/m4_/g' $< | \
+	sed 's/4_/a4_/g; s/m4preproc_/m4_/g' flex.skl | \
 	  $(m4) -P -I $(srcdir)						   \
 	    -DFLEX_MAJOR_VERSION=`   echo $(VERSION)|cut -f 1 -d .`	   \
 	    -DFLEX_MINOR_VERSION=`   echo $(VERSION)|cut -f 2 -d .`	   \
