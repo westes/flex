@@ -1,3 +1,4 @@
+/*	$NetBSD: flexdef.h,v 1.3 2017/01/02 17:45:27 christos Exp $	*/
 
 /* flexdef - definitions file for flex */
 
@@ -974,8 +975,9 @@ extern void line_pinpoint(const char *, int);
 extern void format_synerr(const char *, const char *);
 extern void synerr(const char *);	/* report a syntax error */
 extern void format_warn(const char *, const char *);
-extern void warn(const char *);	/* report a warning */
+extern void lwarn(const char *);	/* report a warning */
 extern void yyerror(const char *);	/* report a parse error */
+extern int yyparse(void);		/* the YACC parser */
 
 
 /* from file scan.l */

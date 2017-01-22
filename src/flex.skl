@@ -61,11 +61,17 @@ m4_changequote([[, ]])
 m4_ifelse(M4_YY_PREFIX,yy,,
 #define yy_create_buffer M4_YY_PREFIX[[_create_buffer]]
 #define yy_delete_buffer M4_YY_PREFIX[[_delete_buffer]]
-#define yy_flex_debug M4_YY_PREFIX[[_flex_debug]]
+#define yy_scan_buffer M4_YY_PREFIX[[_scan_buffer]]
+#define yy_scan_string M4_YY_PREFIX[[_scan_string]]
+#define yy_scan_bytes M4_YY_PREFIX[[_scan_bytes]]
 #define yy_init_buffer M4_YY_PREFIX[[_init_buffer]]
 #define yy_flush_buffer M4_YY_PREFIX[[_flush_buffer]]
 #define yy_load_buffer_state M4_YY_PREFIX[[_load_buffer_state]]
 #define yy_switch_to_buffer M4_YY_PREFIX[[_switch_to_buffer]]
+#define yypush_buffer_state M4_YY_PREFIX[[push_buffer_state]]
+#define yypop_buffer_state M4_YY_PREFIX[[pop_buffer_state]]
+#define yyensure_buffer_stack M4_YY_PREFIX[[ensure_buffer_stack]]
+#define yy_flex_debug M4_YY_PREFIX[[_flex_debug]]
 #define yyin M4_YY_PREFIX[[in]]
 #define yyleng M4_YY_PREFIX[[leng]]
 #define yylex M4_YY_PREFIX[[lex]]
@@ -107,7 +113,7 @@ m4_ifdef( [[M4_YY_PREFIX]],, [[m4_define([[M4_YY_PREFIX]], [[yy]])]])
 
 m4preproc_define(`M4_GEN_PREFIX',
     ``[[#define yy$1 ]]M4_YY_PREFIX[[$1]]
-m4_define([[yy$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
+%# m4_define([[yy$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
 
 %if-c++-only
     /* The c++ scanner is a mess. The FlexLexer.h header file relies on the
@@ -120,6 +126,7 @@ m4_define([[yy$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
 %endif
 
 %if-c-only
+m4_ifelse(M4_YY_PREFIX,yy,,
     M4_GEN_PREFIX(`_create_buffer')
     M4_GEN_PREFIX(`_delete_buffer')
     M4_GEN_PREFIX(`_scan_buffer')
@@ -155,6 +162,7 @@ m4_define([[yy$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
         M4_GEN_PREFIX(`set_column')
     ]])
     M4_GEN_PREFIX(`wrap')
+)
 %endif
 
 m4_ifdef( [[M4_YY_BISON_LVAL]],
@@ -170,11 +178,14 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 ]])
 
 
+m4_ifelse(M4_YY_PREFIX,yy,,
     M4_GEN_PREFIX(`alloc')
     M4_GEN_PREFIX(`realloc')
     M4_GEN_PREFIX(`free')
+)
 
 %if-c-only
+m4_ifelse(M4_YY_PREFIX,yy,,
 m4_ifdef( [[M4_YY_NOT_REENTRANT]],
 [[
     M4_GEN_PREFIX(`text')
@@ -184,6 +195,7 @@ m4_ifdef( [[M4_YY_NOT_REENTRANT]],
     M4_GEN_PREFIX(`_flex_debug')
     M4_GEN_PREFIX(`lineno')
 ]])
+)
 %endif
 
 
@@ -198,6 +210,9 @@ m4_ifdef( [[M4_YY_TABLES_EXTERNAL]],
 
 /* begin standard C headers. */
 %if-c-only
+#ifdef _LIBC
+#include "namespace.h"
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -214,9 +229,12 @@ m4_ifdef( [[M4_YY_TABLES_EXTERNAL]],
 m4preproc_include(`flexint.h')
 %endif
 
-%if-c++-only
 /* begin standard C++ headers. */
-#include <iostream>
+%if-c++-only
+#ifdef _LIBC
+#include "namespace.h"
+#endif
+#include <iostream> 
 #include <errno.h>
 #include <cstdlib>
 #include <cstdio>
@@ -380,7 +398,7 @@ typedef size_t yy_size_t;
 #endif
 
 %if-not-reentrant
-extern int yyleng;
+extern yy_size_t yyleng;
 %endif
 
 %if-c-only
@@ -405,7 +423,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
      */
     #define  YY_LESS_LINENO(n) \
             do { \
-                int yyl;\
+                yy_size_t yyl;\
                 for ( yyl = n; yyl < yyleng; ++yyl )\
                     if ( yytext[yyl] == '\n' )\
                         --yylineno;\
@@ -457,12 +475,12 @@ struct yy_buffer_state
 	/* Size of input buffer in bytes, not including room for EOB
 	 * characters.
 	 */
-	int yy_buf_size;
+	yy_size_t yy_buf_size;
 
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	int yy_n_chars;
+	yy_size_t yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -547,8 +565,8 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 %not-for-header
 /* yy_hold_char holds the character lost when yytext is formed. */
 static char yy_hold_char;
-static int yy_n_chars;		/* number of characters read into yy_ch_buf */
-int yyleng;
+static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */
+yy_size_t yyleng;
 
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = NULL;
@@ -564,7 +582,7 @@ static int yy_did_buffer_switch_on_eof;
 
 void yyrestart ( FILE *input_file M4_YY_PROTO_LAST_ARG );
 void yy_switch_to_buffer ( YY_BUFFER_STATE new_buffer M4_YY_PROTO_LAST_ARG );
-YY_BUFFER_STATE yy_create_buffer ( FILE *file, int size M4_YY_PROTO_LAST_ARG );
+YY_BUFFER_STATE yy_create_buffer ( FILE *file, yy_size_t size M4_YY_PROTO_LAST_ARG );
 void yy_delete_buffer ( YY_BUFFER_STATE b M4_YY_PROTO_LAST_ARG );
 void yy_flush_buffer ( YY_BUFFER_STATE b M4_YY_PROTO_LAST_ARG );
 void yypush_buffer_state ( YY_BUFFER_STATE new_buffer M4_YY_PROTO_LAST_ARG );
@@ -580,7 +598,7 @@ static void yy_init_buffer ( YY_BUFFER_STATE b, FILE *file M4_YY_PROTO_LAST_ARG 
 
 YY_BUFFER_STATE yy_scan_buffer ( char *base, yy_size_t size M4_YY_PROTO_LAST_ARG );
 YY_BUFFER_STATE yy_scan_string ( const char *yy_str M4_YY_PROTO_LAST_ARG );
-YY_BUFFER_STATE yy_scan_bytes ( const char *bytes, int len M4_YY_PROTO_LAST_ARG );
+YY_BUFFER_STATE yy_scan_bytes ( const char *bytes, yy_size_t len M4_YY_PROTO_LAST_ARG );
 
 %endif
 
@@ -695,8 +713,8 @@ struct yyguts_t
     size_t yy_buffer_stack_max; /**< capacity of stack. */
     YY_BUFFER_STATE * yy_buffer_stack; /**< Stack as an array. */
     char yy_hold_char;
-    int yy_n_chars;
-    int yyleng_r;
+    yy_size_t yy_n_chars;
+    yy_size_t yyleng_r;
     char *yy_c_buf_p;
     int yy_init;
     int yy_start;
@@ -833,7 +851,7 @@ void yyset_out  ( FILE * _out_str M4_YY_PROTO_LAST_ARG );
 
 m4_ifdef( [[M4_YY_NO_GET_LENG]],,
 [[
-			int yyget_leng ( M4_YY_PROTO_ONLY_ARG );
+			yy_size_t yyget_leng ( M4_YY_PROTO_ONLY_ARG );
 ]])
 
 m4_ifdef( [[M4_YY_NO_GET_TEXT]],,
@@ -1485,9 +1503,9 @@ void yyFlexLexer::switch_streams( std::istream* new_in, std::ostream* new_out )
 }
 
 #ifdef YY_INTERACTIVE
-int yyFlexLexer::LexerInput( char* buf, int /* max_size */ )
+int yyFlexLexer::LexerInput( char* buf, yy_size_t /* max_size */ )
 #else
-int yyFlexLexer::LexerInput( char* buf, int max_size )
+int yyFlexLexer::LexerInput( char* buf, yy_size_t max_size )
 #endif
 {
 	if ( yyin.eof() || yyin.fail() )
@@ -1540,7 +1558,7 @@ int yyFlexLexer::yy_get_next_buffer()
     M4_YY_DECL_GUTS_VAR();
 	char *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
 	char *source = YY_G(yytext_ptr);
-	int number_to_move, i;
+	yy_size_t number_to_move, i;
 	int ret_val;
 
 	if ( YY_G(yy_c_buf_p) > &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[YY_G(yy_n_chars) + 1] )
@@ -1569,7 +1587,7 @@ int yyFlexLexer::yy_get_next_buffer()
 	/* Try to read more data. */
 
 	/* First move last chars to start of buffer. */
-	number_to_move = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr) - 1);
+	number_to_move = (yy_size_t) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr) - 1);
 
 	for ( i = 0; i < number_to_move; ++i )
 		*(dest++) = *(source++);
@@ -1582,7 +1600,7 @@ int yyFlexLexer::yy_get_next_buffer()
 
 	else
 		{
-			int num_to_read =
+			yy_size_t num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
@@ -1601,7 +1619,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 
 			if ( b->yy_is_our_buffer )
 				{
-				int new_size = b->yy_buf_size * 2;
+				yy_size_t new_size = b->yy_buf_size * 2;
 
 				if ( new_size <= 0 )
 					b->yy_buf_size += b->yy_buf_size / 8;
@@ -1659,7 +1677,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 
 	if ((YY_G(yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
-		int new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1);
+		yy_size_t new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1);
 		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) yyrealloc(
 			(void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, (yy_size_t) new_size M4_YY_CALL_LAST_ARG );
 		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
@@ -1743,7 +1761,7 @@ m4_ifdef( [[M4_YY_NO_UNPUT]],,
 	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
 		{ /* need to shift things up to make room */
 		/* +2 for EOB chars. */
-		int number_to_move = YY_G(yy_n_chars) + 2;
+		yy_size_t number_to_move = YY_G(yy_n_chars) + 2;
 		char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
 					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
 		char *source =
@@ -1755,7 +1773,7 @@ m4_ifdef( [[M4_YY_NO_UNPUT]],,
 		yy_cp += (int) (dest - source);
 		yy_bp += (int) (dest - source);
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
-			YY_G(yy_n_chars) = (int) YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
+			YY_G(yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
 
 		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
 			YY_FATAL_ERROR( "flex scanner push-back overflow" );
@@ -1810,7 +1828,7 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
 
 		else
 			{ /* need more input */
-			int offset = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr));
+			yy_size_t offset = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr));
 			++YY_G(yy_c_buf_p);
 
 			switch ( yy_get_next_buffer( M4_YY_CALL_ONLY_ARG ) )
@@ -1971,10 +1989,10 @@ static void yy_load_buffer_state  (M4_YY_DEF_ONLY_ARG)
  * @return the allocated buffer state.
  */
 %if-c-only
-    YY_BUFFER_STATE yy_create_buffer  YYFARGS2( FILE *,file, int ,size)
+    YY_BUFFER_STATE yy_create_buffer  YYFARGS2( FILE *,file, yy_size_t ,size)
 %endif
 %if-c++-only
-    YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( std::istream& file, int size )
+    YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( std::istream& file, yy_size_t size )
 %endif
 {
 	YY_BUFFER_STATE b;
@@ -2007,7 +2025,7 @@ static void yy_load_buffer_state  (M4_YY_DEF_ONLY_ARG)
  * M4_YY_DOC_PARAM
  * @return the allocated buffer state.
  */
-	YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( std::istream* file, int size )
+	YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( std::istream* file, yy_size_t size )
 {
 	return yy_create_buffer( *file, size );
 }
@@ -2279,7 +2297,7 @@ YY_BUFFER_STATE yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
 
-	b->yy_buf_size = (int) (size - 2);	/* "- 2" to take care of EOB's */
+	b->yy_buf_size = (size - 2);	/* "- 2" to take care of EOB's */
 	b->yy_buf_pos = b->yy_ch_buf = base;
 	b->yy_is_our_buffer = 0;
 	b->yy_input_file = NULL;
@@ -2312,7 +2330,7 @@ YY_BUFFER_STATE yy_scan_string YYFARGS1( const char *, yystr)
 {
     m4_dnl M4_YY_DECL_GUTS_VAR();
 
-	return yy_scan_bytes( yystr, (int) strlen(yystr) M4_YY_CALL_LAST_ARG);
+	return yy_scan_bytes( yystr, strlen(yystr) M4_YY_CALL_LAST_ARG);
 }
 %endif
 ]])
@@ -2328,12 +2346,12 @@ m4_ifdef( [[M4_YY_NO_SCAN_BYTES]],,
  * M4_YY_DOC_PARAM
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( const char *,yybytes, int ,_yybytes_len)
+YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( const char *,yybytes, yy_size_t ,_yybytes_len)
 {
 	YY_BUFFER_STATE b;
 	char *buf;
 	yy_size_t n;
-	int i;
+	yy_size_t i;
     m4_dnl M4_YY_DECL_GUTS_VAR();
 
 	/* Get memory for full buffer, including space for trailing EOB's. */
@@ -2555,7 +2573,7 @@ m4_ifdef( [[M4_YY_NO_GET_LENG]],,
 /** Get the length of the current token.
  * M4_YY_DOC_PARAM
  */
-int yyget_leng  (M4_YY_DEF_ONLY_ARG)
+yy_size_t yyget_leng  (M4_YY_DEF_ONLY_ARG)
 {
     M4_YY_DECL_GUTS_VAR();
     return yyleng;
