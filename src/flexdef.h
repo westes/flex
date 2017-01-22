@@ -71,6 +71,7 @@
 #endif
 #include <sys/wait.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #ifdef HAVE_REGEX_H
 #include <regex.h>
 #endif
