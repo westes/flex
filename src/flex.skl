@@ -214,8 +214,8 @@ m4_ifdef( [[M4_YY_TABLES_EXTERNAL]],
 m4preproc_include(`flexint.h')
 %endif
 
-%if-c++-only
 /* begin standard C++ headers. */
+%if-c++-only
 #include <iostream>
 #include <errno.h>
 #include <cstdlib>
