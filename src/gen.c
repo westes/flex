@@ -509,8 +509,12 @@ void gen_find_action (void)
 		indent_puts ("yy_current_state = *--YY_G(yy_state_ptr);");
 		indent_puts ("YY_G(yy_lp) = yy_accept[yy_current_state];");
 
+		if (!variable_trailing_context_rules)
+			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
 		if(reject_really_used)
 			outn ("find_rule: /* we branch to this label when backing up */");
+		if (!variable_trailing_context_rules)
+			outn ("]])\n");
 
 		indent_puts
 			("for ( ; ; ) /* until we find what rule we matched */");
