@@ -259,7 +259,7 @@ struct Buf *buf_append (struct Buf *buf, const void *ptr, int n_elem)
 		buf->nmax = n_alloc;
 	}
 
-	memcpy (buf->elts + (size_t) buf->nelts * buf->elt_size, ptr,
+	memcpy ((char *) buf->elts + (size_t) buf->nelts * buf->elt_size, ptr,
 		(size_t) n_elem * buf->elt_size);
 	buf->nelts += n_elem;
 
