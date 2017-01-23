@@ -74,7 +74,7 @@ extern const char *escaped_qstart, *escaped_qend;
 #define RETURNNAME \
 	if(yyleng < MAXLINE) \
          { \
-	strlcpy( nmstr, yytext, sizeof(nmstr) ); \
+	strncpy( nmstr, yytext, sizeof(nmstr) ); \
 	return NAME; \
 	 } \
 	else \
@@ -207,7 +207,7 @@ M4QEND      "]""]"
 	^{NAME}		{
 			if(yyleng < MAXLINE)
         		 {
-			strlcpy( nmstr, yytext, sizeof(nmstr) );
+			strncpy( nmstr, yytext, sizeof(nmstr) );
 			 }
 			else
 			 {
@@ -318,7 +318,7 @@ M4QEND      "]""]"
 	{NOT_WS}[^\r\n]*	{
  		        if(yyleng < MAXLINE)
  		         {
-			strlcpy( nmdef, yytext, sizeof(nmdef) );
+			strncpy( nmdef, yytext, sizeof(nmdef) );
  		         }
  		        else
  		         {
@@ -460,7 +460,7 @@ M4QEND      "]""]"
 	\"[^"\n]*\"	{
 			if(yyleng-1 < MAXLINE)
         		 {
-			strlcpy( nmstr, yytext + 1, sizeof(nmstr) );
+			strncpy( nmstr, yytext + 1, sizeof(nmstr) );
 			 }
 			else
 			 {
@@ -637,7 +637,7 @@ M4QEND      "]""]"
 
 			if(yyleng < MAXLINE)
         		 {
-			strlcpy( nmstr, yytext, sizeof(nmstr) );
+			strncpy( nmstr, yytext, sizeof(nmstr) );
 			 }
 			else
 			 {
@@ -695,7 +695,7 @@ M4QEND      "]""]"
 
  			if(yyleng-1 < MAXLINE)
          		 {
-			strlcpy( nmstr, yytext + 1, sizeof(nmstr) );
+			strncpy( nmstr, yytext + 1, sizeof(nmstr) );
  			 }
  			else
  			 {
