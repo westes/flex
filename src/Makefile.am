@@ -95,8 +95,15 @@ endif
 # make needs to be told to make parse.h so that parallelized runs will
 # not fail.
 
-main.c: parse.h
-yylex.c: parse.h
+# main.c
+stage1flex-main.$(OBJEXT): parse.h
+flex-main.$(OBJEXT): parse.h
+
+# yylex.c
+stage1flex-yylex.$(OBJEXT): parse.h
+flex-yylex.$(OBJEXT): parse.h
+
+# scan.c and stage1scan.c
 stage1flex-scan.$(OBJEXT): parse.h
 flex-stage1scan.$(OBJEXT): parse.h
 
