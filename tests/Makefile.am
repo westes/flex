@@ -129,12 +129,18 @@ array_nr_SOURCES = array_nr.l
 array_r_SOURCES = array_r.l
 basic_nr_SOURCES = basic_nr.l
 basic_r_SOURCES = basic_r.l
+if HAVE_BISON
 bison_nr_SOURCES = bison_nr_scanner.l bison_nr_parser.y bison_nr_main.c
 nodist_bison_nr_SOURCES = bison_nr_parser.h bison_nr_scanner.h
 bison_yylloc_SOURCES = bison_yylloc_scanner.l bison_yylloc_parser.y bison_yylloc_main.c
 nodist_bison_yylloc_SOURCES = bison_yylloc_parser.h bison_yylloc_scanner.h
 bison_yylval_SOURCES = bison_yylval_scanner.l bison_yylval_parser.y bison_yylval_main.c
 nodist_bison_yylval_SOURCES = bison_yylval_parser.h bison_yylval_scanner.h
+else
+bison_nr_SOURCES = no_bison_stub.c
+bison_yylloc_SOURCES = no_bison_stub.c
+bison_yylval_SOURCES = no_bison_stub.c
+endif
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
 ccl_SOURCES = ccl.l
