@@ -113,10 +113,8 @@ DIRECT_TESTS = \
 I3_TESTS = \
 	cxx_yywrap.i3
 
-if want_pthread
 PTHREAD_TESTS = \
 	pthread.pthread
-endif
 
 ONE_TESTS = \
 	lineno_nr.one \
@@ -331,7 +329,7 @@ dist_check_SCRIPTS = \
 	testwrapper-direct.sh \
 	testwrapper.sh
 
-pthread_pthread_LDADD = -lpthread
+pthread_pthread_LDADD = @LIBPTHREAD@
 
 # specify how to process .l files in order to test the flex built by make all
 

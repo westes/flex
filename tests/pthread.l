@@ -27,7 +27,7 @@
 
    We create N_THREADS number of threads. Each thread has it's own scanner.
    Each thread selects one of the files specified in ARGV, scans it, then
-   closes it. This is repeated N_SCANS numebr of times for each thread.
+   closes it. This is repeated N_SCANS number of times for each thread.
 
    The idea is to press the scanner to break under threads.
    If we see  "Scanner Jammed", then we know
@@ -90,18 +90,18 @@ static int process_text(char* s, yyscan_t  scanner)
 
 int main(int ARGC, char *ARGV[]);
 
-#ifndef HAVE_LIBPTHREAD
-  int main (int ARGC, char *ARGV[]) {
-    printf(
+#ifndef HAVE_PTHREAD_H
+int main (int ARGC, char *ARGV[]) {
+    puts(
        "TEST ABORTED because pthread library not available \n"
-       "-- This is expected on some systems. It is not a flex error.\n" );
-    return 0;
-  }
+       "-- This is expected on some systems. It is not a flex error.");
+    /* Exit status for a skipped test */
+    return 77;
+}
 #else
 
 #define N_THREADS 4
 #define N_SCANS   20
-#define INPUT_FILE "test.input"
 
 /* Each thread selects the next file to scan in round-robin fashion.
    If there are less files than threads, some threads may block. */
@@ -204,5 +204,5 @@ int main (int ARGC, char *ARGV[])
     return 0;
 }
 
-#endif /* HAVE_LIBPTHREAD */
+#endif /* HAVE_PTHREAD_H */
 

@@ -119,12 +119,12 @@ AC_CHECK_HEADERS([inttypes.h libintl.h limits.h locale.h malloc.h netinet/in.h r
 # all we need is the preprocessor symbol defined since we don't need
 # LIBS to include libpthread for building flex.
 
+LIBPTHREAD=''
 AC_CHECK_LIB(pthread, pthread_mutex_lock,
-AC_DEFINE([HAVE_LIBPTHREAD], 1, [pthread library] ),
-AC_DEFINE([HAVE_LIBPTHREAD], 0, [pthread library] )
-)
-AC_CHECK_HEADERS([pthread.h])
-AM_CONDITIONAL([want_pthread], [test "x$ac_cv_lib_pthread_pthread_mutex_lock" = xyes])
+   [AC_CHECK_HEADERS([pthread.h], [LIBPTHREAD=-lpthread],
+      [AC_MSG_WARN([pthread tests will be skipped])])],
+   [AC_MSG_WARN([pthread tests will be skipped])])
+AC_SUBST([LIBPTHREAD])
 
 AC_CHECK_LIB(m, log10)
 
