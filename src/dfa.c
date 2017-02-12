@@ -463,14 +463,9 @@ void ntod (void)
 			/* We still may want to use the table if numecs
 			 * is a power of 2.
 			 */
-			int     power_of_two;
-
-			for (power_of_two = 1; power_of_two <= csize;
-			     power_of_two *= 2)
-				if (numecs == power_of_two) {
-					use_NUL_table = true;
-					break;
-				}
+			if (numecs <= csize && is_power_of_2(numecs)) {
+				use_NUL_table = true;
+			}
 		}
 
 		if (use_NUL_table)

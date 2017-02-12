@@ -109,6 +109,8 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 #endif
 
+/* Whether an integer is a power of two */
+#define is_power_of_2(n) ((n) > 0 && ((n) & ((n) - 1)) == 0)
 
 #define unspecified -1
 
