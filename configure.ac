@@ -24,7 +24,7 @@
 
 # autoconf requirements and initialization
 
-AC_INIT([the fast lexical analyser generator],[2.6.3],[flex-help@lists.sourceforge.net],[flex])
+AC_INIT([the fast lexical analyser generator],[2.6.4],[flex-help@lists.sourceforge.net],[flex])
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
 LT_INIT
@@ -40,6 +40,11 @@ AC_SUBST(SHARED_VERSION_INFO)
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.19])
 AC_PROG_YACC
+AS_IF([test "$YACC" != 'bison -y'], [
+	YACC="\${top_srcdir}/build-aux/missing bison -y"
+	AC_MSG_NOTICE(no bison program found: only required for maintainers)
+	])
+AM_CONDITIONAL([HAVE_BISON], [test "$YACC" = 'bison -y'])
 AM_PROG_LEX
 AC_PROG_CC
 AX_PROG_CC_FOR_BUILD
@@ -78,12 +83,6 @@ AM_CONDITIONAL([ENABLE_BOOTSTRAP], [test "x$enable_bootstrap" = xyes])
 
 AM_CONDITIONAL([CROSS], [test "x$cross_compiling" = xyes])
 
-AC_PATH_PROG([BISON], bison, no)
-AS_IF([test "$BISON" != no],[],
-	[ AC_SUBST([BISON], [\${top_srcdir}/build-aux/missing bison])
-	  AC_MSG_NOTICE(no bison program found: only required for maintainers)
-	])
-
 AC_PATH_PROG([HELP2MAN], help2man, [\${top_srcdir}/build-aux/missing help2man])
   AS_IF([test "$HELP2MAN" = "\${top_srcdir}/build-aux/missing help2man"],
     AC_MSG_WARN(help2man: program not found: building man page will not work)
@@ -105,19 +104,13 @@ AC_CACHE_CHECK([for m4 that supports -P], [ac_cv_path_M4],
 AC_SUBST([M4], [$ac_cv_path_M4])
 AC_DEFINE_UNQUOTED([M4], ["$M4"], [Define to the m4 executable name.])
 
-AC_PATH_PROG(INDENT, indent, indent)
-# if INDENT is set to 'indent' then we didn't find indent
-if test "$INDENT" != indent ; then
-   AC_MSG_CHECKING(if $INDENT is GNU indent)
-   if $INDENT --version 2>/dev/null | head -n 1|grep "GNU indent" > /dev/null ; then
-      AC_MSG_RESULT(yes)
-   else
-      AC_MSG_RESULT(no)
-      AC_MSG_WARN($INDENT does not appear to be GNU indent.)
-   fi
-else
-   AC_MSG_WARN(no indent program found: make indent target will not function)
-fi
+AC_PATH_PROG([INDENT], indent, [\${top_srcdir}/build-aux/missing indent])
+  AC_MSG_CHECKING(if $INDENT is GNU indent)
+  AS_IF([$INDENT --version 2>/dev/null | head -n 1 | grep "GNU indent" >/dev/null],
+    [AC_MSG_RESULT(yes)],
+    [AC_MSG_RESULT(no)
+     AC_MSG_WARN($INDENT does not appear to be GNU indent; 'make indent' may not function properly)
+    ])
 
 # checks for headers
 
@@ -166,7 +159,7 @@ strchr dnl
 strdup dnl
 strtol)
 
-AC_REPLACE_FUNCS(reallocarray)
+AC_CHECK_FUNCS(reallocarray)
 
 AC_CONFIG_FILES(
 Makefile

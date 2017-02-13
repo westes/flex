@@ -54,21 +54,17 @@ void flex_regcomp(regex_t *preg, const char *regex, int cflags)
 	memset (preg, 0, sizeof (regex_t));
 
 	if ((err = regcomp (preg, regex, cflags)) != 0) {
-        const size_t errbuf_sz = 200;
-        char *errbuf, *rxerr;
+		const size_t errbuf_sz = 200;
+		char *errbuf;
+		int n;
 
 		errbuf = malloc(errbuf_sz * sizeof(char));
 		if (!errbuf)
 			flexfatal(_("Unable to allocate buffer to report regcomp"));
-		rxerr = malloc(errbuf_sz * sizeof(char));
-		if (!rxerr)
-			flexfatal(_("Unable to allocate buffer for regerror"));
-		regerror (err, preg, rxerr, errbuf_sz);
-		snprintf (errbuf, errbuf_sz, "regcomp for \"%s\" failed: %s", regex, rxerr);
+		n = snprintf(errbuf, errbuf_sz, "regcomp for \"%s\" failed: ", regex);
+		regerror(err, preg, errbuf+n, errbuf_sz-(size_t)n);
 
-		flexfatal (errbuf);
-        free(errbuf);
-        free(rxerr);
+		flexfatal (errbuf); /* never returns - no need to free(errbuf) */
 	}
 }
 

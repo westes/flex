@@ -31,28 +31,28 @@ TESTS = $(check_PROGRAMS) options.cn
 
 TEST_EXTENSIONS = .reject .table .direct .cn .i3 .pthread .one .opt .ser .ver
 
-LOG_COMPILER = $(srcdir)/testwrapper.sh
+LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
 
-REJECT_LOG_COMPILER = $(srcdir)/testwrapper.sh
+REJECT_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_REJECT_LOG_FLAGS = -d $(srcdir) -i $(srcdir)/reject.txt -r
 
-TABLE_LOG_COMPILER = $(srcdir)/testwrapper.sh
+TABLE_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_TABLE_LOG_FLAGS = -d $(builddir) -i $(srcdir)/reject.txt -t
 
-DIRECT_LOG_COMPILER=$(srcdir)/testwrapper-direct.sh
+DIRECT_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper-direct.sh
 AM_DIRECT_LOG_FLAGS = -b $(abs_builddir) -s $(srcdir)
 
-CN_LOG_COMPILER=$(srcdir)/options.cn
-AM_CN_LOG_FLAGS=$(FLEX)
+CN_LOG_COMPILER = $(SHELL) $(srcdir)/options.cn
+AM_CN_LOG_FLAGS = $(FLEX)
 
-I3_LOG_COMPILER=$(srcdir)/testwrapper.sh
-AM_I3_LOG_FLAGS=-i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt
+I3_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
+AM_I3_LOG_FLAGS = -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt
 
-PTHREAD_LOG_COMPILER=$(srcdir)/testwrapper.sh
-AM_PTHREAD_LOG_FLAGS=-i $(srcdir)/pthread_1.txt -i $(srcdir)/pthread_2.txt -i $(srcdir)/pthread_3.txt -i $(srcdir)/pthread_4.txt -i $(srcdir)/pthread_5.txt
+PTHREAD_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
+AM_PTHREAD_LOG_FLAGS = -i $(srcdir)/pthread_1.txt -i $(srcdir)/pthread_2.txt -i $(srcdir)/pthread_3.txt -i $(srcdir)/pthread_4.txt -i $(srcdir)/pthread_5.txt
 
-ONE_LOG_COMPILER = $(srcdir)/testwrapper.sh
+ONE_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_ONE_LOG_FLAGS = -1 -d $(srcdir)
 
 AM_YFLAGS = -d -p test
@@ -129,9 +129,18 @@ array_nr_SOURCES = array_nr.l
 array_r_SOURCES = array_r.l
 basic_nr_SOURCES = basic_nr.l
 basic_r_SOURCES = basic_r.l
+if HAVE_BISON
 bison_nr_SOURCES = bison_nr_scanner.l bison_nr_parser.y bison_nr_main.c
+nodist_bison_nr_SOURCES = bison_nr_parser.h bison_nr_scanner.h
 bison_yylloc_SOURCES = bison_yylloc_scanner.l bison_yylloc_parser.y bison_yylloc_main.c
+nodist_bison_yylloc_SOURCES = bison_yylloc_parser.h bison_yylloc_scanner.h
 bison_yylval_SOURCES = bison_yylval_scanner.l bison_yylval_parser.y bison_yylval_main.c
+nodist_bison_yylval_SOURCES = bison_yylval_parser.h bison_yylval_scanner.h
+else
+bison_nr_SOURCES = no_bison_stub.c
+bison_yylloc_SOURCES = no_bison_stub.c
+bison_yylval_SOURCES = no_bison_stub.c
+endif
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
 ccl_SOURCES = ccl.l
@@ -143,7 +152,9 @@ debug_nr_SOURCES = debug_nr.l
 debug_r_SOURCES = debug_r.l
 extended_SOURCES = extended.l
 header_nr_SOURCES = header_nr_scanner.l header_nr_main.c
+nodist_header_nr_SOURCES = header_nr_scanner.h
 header_r_SOURCES = header_r_scanner.l header_r_main.c
+nodist_header_r_SOURCES = header_r_scanner.h
 include_by_buffer_direct_SOURCES = include_by_buffer.direct.l
 include_by_push_direct_SOURCES = include_by_push.direct.l
 include_by_reentrant_direct_SOURCES = include_by_reentrant.direct.l
@@ -153,7 +164,9 @@ lineno_trailing_one_SOURCES = lineno_trailing.l
 mem_nr_SOURCES = mem_nr.l
 mem_r_SOURCES = mem_r.l
 multiple_scanners_nr_SOURCES = multiple_scanners_nr_main.c multiple_scanners_nr_1.l multiple_scanners_nr_2.l
+nodist_multiple_scanners_nr_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
 multiple_scanners_r_SOURCES = multiple_scanners_r_main.c multiple_scanners_r_1.l multiple_scanners_r_2.l
+nodist_multiple_scanners_r_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
 posix_SOURCES = posix.l
 posixly_correct_SOURCES = posixly_correct.l
 prefix_nr_SOURCES = prefix_nr.l
@@ -169,22 +182,8 @@ rescan_r_direct_SOURCES = rescan_r.direct.l
 string_nr_SOURCES = string_nr.l
 string_r_SOURCES = string_r.l
 top_SOURCES = top.l top_main.c
+nodist_top_SOURCES = top.h
 yyextra_SOURCES = yyextra.l
-
-BUILT_SOURCES = \
-	bison_nr_parser.h \
-	bison_nr_scanner.h \
-	bison_yylloc_parser.h \
-	bison_yylloc_scanner.h \
-	bison_yylval_parser.h \
-	bison_yylval_scanner.h \
-	header_nr_scanner.h \
-	header_r_scanner.h \
-	multiple_scanners_nr_1.h \
-	multiple_scanners_nr_2.h \
-	multiple_scanners_r_1.h \
-	multiple_scanners_r_2.h \
-	top.h
 
 # Normally, automake would distribute files built by flex. Since the
 # point of the test suite is to test the files that flex builds, and
@@ -196,6 +195,7 @@ BUILT_SOURCES = \
 # it.
 
 CLEANFILES = \
+	alloc_extra.c \
 	array_nr.c \
 	array_r.c \
 	basic_nr.c \
@@ -263,7 +263,6 @@ CLEANFILES = \
 	top.c \
 	top.h  \
 	yyextra.c \
-alloc_extra.c \
 	$(tableopts_c) \
 	$(tableopts_tables)
 
@@ -344,14 +343,26 @@ FLEX = $(top_builddir)/src/flex
 .ll.cc: $(FLEX)
 	$(FLEX) -+ -o $@ $<
 
-bison_nr_main.($OBJEXT): bison_nr_parser.h bison_nr_scanner.h
+bison_nr_main.$(OBJEXT): bison_nr_parser.h bison_nr_scanner.h
+bison_nr_scanner.$(OBJEXT): bison_nr_parser.h
+
 bison_nr_scanner.h: bison_nr_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 bison_yylloc_main.$(OBJEXT): bison_yylloc_parser.h bison_yylloc_scanner.h
+bison_yylloc_scanner.$(OBJEXT): bison_yylloc_parser.h
+
 bison_yylloc_scanner.h: bison_yylloc_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 bison_yylval_main.$(OBJEXT): bison_yylval_parser.h bison_yylval_scanner.h
+bison_yylval_scanner.$(OBJEXT): bison_yylval_parser.h
+
 bison_yylval_scanner.h: bison_yylval_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 # automake does not support compiling flex scanners output in C as C++
 # so we explicitly sayhow, using the .lll suffix for the lex input file
@@ -360,18 +371,36 @@ bison_yylval_scanner.h: bison_yylval_scanner.c
 	$(FLEX) -o $@ $<
 
 header_nr_main.$(OBJEXT): header_nr_scanner.h
+
 header_nr_scanner.h: header_nr_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 header_r_main.$(OBJEXT): header_r_scanner.h
+
 header_r_scanner.h: header_r_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 multiple_scanners_nr_main.$(OBJEXT): multiple_scanners_nr_1.h multiple_scanners_nr_2.h
+
 multiple_scanners_nr_1.h: multiple_scanners_nr_1.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
+
 multiple_scanners_nr_2.h: multiple_scanners_nr_2.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 multiple_scanners_r_main.$(OBJEXT): multiple_scanners_r_1.h multiple_scanners_r_2.h
+
 multiple_scanners_r_1.h: multiple_scanners_r_1.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
+
 multiple_scanners_r_2.h: multiple_scanners_r_2.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 posixly_correct.c: posixly_correct.l $(FLEX)
 	POSIXLY_CORRECT=1 $(FLEX) -o $@ $<
@@ -419,7 +448,7 @@ top.h: top.c
 # it can be / is generated by a shell script, tableopts.sh.
 
 tableopts.am: tableopts.sh
-	$(srcdir)/tableopts.sh > $(srcdir)/tableopts.am
+	$(SHELL) $(srcdir)/tableopts.sh > $(srcdir)/tableopts.am
 
 include $(srcdir)/tableopts.am
 
@@ -431,7 +460,7 @@ tableopts_tests  := $(tableopts_opttests) $(tableopts_vertests) $(tableopts_sert
 
 tableopts_c := $(addsuffix .c,$(tableopts_tests))
 
-OPT_LOG_COMPILER = $(srcdir)/testwrapper.sh
+OPT_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_OPT_LOG_FLAGS = -d $(srcdir) -i $(srcdir)/tableopts.txt -r
 
 tableopts_opt_nr%.c: tableopts.l4 $(FLEX)
@@ -446,7 +475,7 @@ tableopts_opt_r%.c: tableopts.l4 $(FLEX)
 tableopts_opt_r%.$(OBJEXT):  tableopts_opt_r%.c 
 	$(COMPILE) -DTEST_IS_REENTRANT -c -o $@ $<
 
-SER_LOG_COMPILER = $(srcdir)/testwrapper.sh
+SER_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_SER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r -t
 
 tableopts_ser_nr%.c: tableopts.l4 $(FLEX)
@@ -461,7 +490,7 @@ tableopts_ser_r%.c: tableopts.l4 $(FLEX)
 tableopts_ser_r%.$(OBJEXT):  tableopts_ser_r%.c
 	$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT -c -o $@ $<
 
-VER_LOG_COMPILER = $(srcdir)/testwrapper.sh
+VER_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_VER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r -t
 
 tableopts_ver_nr%.c: tableopts.l4 $(FLEX)

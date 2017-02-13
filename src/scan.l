@@ -74,7 +74,7 @@ extern const char *escaped_qstart, *escaped_qend;
 #define RETURNNAME \
 	if(yyleng < MAXLINE) \
          { \
-	strcpy( nmstr, yytext ); \
+	strncpy( nmstr, yytext, sizeof(nmstr) ); \
 	return NAME; \
 	 } \
 	else \
@@ -207,7 +207,7 @@ M4QEND      "]""]"
 	^{NAME}		{
 			if(yyleng < MAXLINE)
         		 {
-			strcpy( nmstr, yytext );
+			strncpy( nmstr, yytext, sizeof(nmstr) );
 			 }
 			else
 			 {
@@ -263,8 +263,7 @@ M4QEND      "]""]"
 			}
 	.		/* ignore spurious characters */
 }
-<ACTION,CODEBLOCK,ACTION_STRING,PERCENT_BRACE_ACTION,CHARACTER_CONSTANT,
-COMMENT,CODE_COMMENT>{
+<ACTION,CODEBLOCK,ACTION_STRING,PERCENT_BRACE_ACTION,CHARACTER_CONSTANT,COMMENT,CODE_COMMENT>{
    {M4QSTART}   ACTION_ECHO_QSTART;
    {M4QEND}     ACTION_ECHO_QEND;
 }
@@ -319,7 +318,7 @@ COMMENT,CODE_COMMENT>{
 	{NOT_WS}[^\r\n]*	{
  		        if(yyleng < MAXLINE)
  		         {
-			strcpy( nmdef, yytext );
+			strncpy( nmdef, yytext, sizeof(nmdef) );
  		         }
  		        else
  		         {
@@ -461,7 +460,7 @@ COMMENT,CODE_COMMENT>{
 	\"[^"\n]*\"	{
 			if(yyleng-1 < MAXLINE)
         		 {
-			strcpy( nmstr, yytext + 1 );
+			strncpy( nmstr, yytext + 1, sizeof(nmstr) );
 			 }
 			else
 			 {
@@ -638,7 +637,7 @@ COMMENT,CODE_COMMENT>{
 
 			if(yyleng < MAXLINE)
         		 {
-			strcpy( nmstr, yytext );
+			strncpy( nmstr, yytext, sizeof(nmstr) );
 			 }
 			else
 			 {
@@ -696,7 +695,7 @@ COMMENT,CODE_COMMENT>{
 
  			if(yyleng-1 < MAXLINE)
          		 {
-			strcpy( nmstr, yytext + 1 );
+			strncpy( nmstr, yytext + 1, sizeof(nmstr) );
  			 }
  			else
  			 {

@@ -30,7 +30,6 @@
 /*  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED */
 /*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
 /*  PURPOSE. */
-
 #include "flexdef.h"
 #include "tables.h"
 
@@ -143,9 +142,14 @@ void add_action (const char *new_text)
 void   *allocate_array (int size, size_t element_size)
 {
 	void *mem;
-	size_t  num_bytes = element_size * (size_t) size;
-
-	mem = malloc(num_bytes);
+#if HAVE_REALLOCARRAY
+	/* reallocarray has built-in overflow detection */
+	mem = reallocarray(NULL, (size_t) size, element_size);
+#else
+	size_t num_bytes = (size_t) size * element_size;
+	mem = (size && SIZE_MAX / (size_t) size < element_size) ? NULL :
+		malloc(num_bytes);
+#endif
 	if (!mem)
 		flexfatal (_
 			   ("memory allocation failed in allocate_array()"));
@@ -348,7 +352,7 @@ void line_directive_out (FILE *output_file, int do_infile)
 {
 	char    directive[MAXLINE], filename[MAXLINE];
 	char   *s1, *s2, *s3;
-	static const char *line_fmt = "#line %d \"%s\"\n";
+	static const char line_fmt[] = "#line %d \"%s\"\n";
 
 	if (!gen_line_dirs)
 		return;
@@ -682,9 +686,14 @@ char   *readable_form (int c)
 void   *reallocate_array (void *array, int size, size_t element_size)
 {
 	void *new_array;
-	size_t  num_bytes = element_size * (size_t) size;
-
-	new_array = realloc(array, num_bytes);
+#if HAVE_REALLOCARRAY
+	/* reallocarray has built-in overflow detection */
+	new_array = reallocarray(array, (size_t) size, element_size);
+#else
+	size_t num_bytes = (size_t) size * element_size;
+	new_array = (size && SIZE_MAX / (size_t) size < element_size) ? NULL :
+		realloc(array, num_bytes);
+#endif
 	if (!new_array)
 		flexfatal (_("attempt to increase array size failed"));
 

@@ -1,9 +1,11 @@
-#!/bin/bash -vx
-set -euo pipefail
+#!/bin/sh
+set -vx
+set -euvx
 
 # testwrapper.sh: run a flex test, typically called by a Makefile
 
-# Each test will exercise some feature or aspect of flex. Run the test with any input it may need.
+# Each test will exercise some feature or aspect of flex. Run the test with any
+# input it may need.
 
 INPUT_DIRECTORY=""
 INPUT_NAME=""
@@ -15,7 +17,7 @@ while getopts :d:i:rt1 OPTION ; do
     case $OPTION in
         d) INPUT_DIRECTORY=$OPTARG ;;
         i)
-            if [ "$INPUT_NAME" == "" ] ; then
+            if [ "$INPUT_NAME" = "" ] ; then
                 INPUT_NAME="$OPTARG"
             else
                 INPUT_NAME="$INPUT_NAME $OPTARG"
@@ -26,24 +28,27 @@ while getopts :d:i:rt1 OPTION ; do
         t) USE_TABLES=1 ;;
         1) DO_COMPARISON=1 ;;
     esac
-    done
+done
 
-TESTNAME="${!OPTIND}"
+shift $(($OPTIND-1))
+TESTNAME=$1
 
-INPUT_NAME=${INPUT_NAME:-$INPUT_DIRECTORY/`basename ${TESTNAME%.exe}`.txt}
+INPUT_NAME=${INPUT_NAME:-$INPUT_DIRECTORY/`basename "${TESTNAME%.exe}"`.txt}
 
-if [ "$DO_COMPARISON" -eq "1" ] ; then
-    test `$TESTNAME 1 < $INPUT_NAME` -eq `$TESTNAME < $INPUT_NAME`
+if [ $DO_COMPARISON = 1 ] ; then
+    TEST_OUTPUT=`$TESTNAME < $INPUT_NAME`
+    REF_OUTPUT=`$TESTNAME 1 < $INPUT_NAME`
+    test "$TEST_OUTPUT" -eq "$REF_OUTPUT"
     exit $?
-    fi
+fi
 
 if [ $INPUT_COUNT -gt 1 ] ; then
     $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} ${INPUT_NAME}
     exit $?
-    fi
+fi
 
 if [ -f ${INPUT_NAME} ] ; then
-    if [ $USE_REDIRECT == 1 ] ; then
+    if [ $USE_REDIRECT = 1 ] ; then
         $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} < $INPUT_NAME
     else
         $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} $INPUT_NAME

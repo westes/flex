@@ -71,6 +71,7 @@
 #endif
 #include <sys/wait.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #ifdef HAVE_REGEX_H
 #include <regex.h>
 #endif
@@ -974,8 +975,9 @@ extern void line_pinpoint(const char *, int);
 extern void format_synerr(const char *, const char *);
 extern void synerr(const char *);	/* report a syntax error */
 extern void format_warn(const char *, const char *);
-extern void warn(const char *);	/* report a warning */
+extern void lwarn(const char *);	/* report a warning */
 extern void yyerror(const char *);	/* report a parse error */
+extern int yyparse(void);		/* the YACC parser */
 
 
 /* from file scan.l */
