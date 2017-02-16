@@ -94,7 +94,7 @@ endif
 dist-hook: scan.l flex$(EXEEXT)
 	chmod u+w $(distdir)/scan.c && \
 	./flex$(EXEEXT) -o scan.c $< && \
-	cp scan.c $(distdir)
+	mv scan.c $(distdir)
 
 # make needs to be told to make parse.h so that parallelized runs will
 # not fail.
