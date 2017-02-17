@@ -57,24 +57,22 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
-#ifdef HAVE_UNISTD_H
+/* Required: dup() and dup2() in <unistd.h> */
 #include <unistd.h>
-#endif
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #endif
 #ifdef HAVE_SYS_PARAMS_H
 #include <sys/params.h>
 #endif
-#ifdef HAVE_SYS_STAT_H
+/* Required: stat() in <sys/stat.h> */
 #include <sys/stat.h>
-#endif
+/* Required: wait() in <sys/wait.h> */
 #include <sys/wait.h>
 #include <stdbool.h>
 #include <stdarg.h>
-#ifdef HAVE_REGEX_H
+/* Required: regcomp(), regexec() and regerror() in <regex.h> */
 #include <regex.h>
-#endif
 #include "flexint.h"
 
 /* We use gettext. So, when we write strings which should be translated, we mark them with _() */
