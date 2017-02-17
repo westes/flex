@@ -73,6 +73,8 @@
 #include <stdarg.h>
 /* Required: regcomp(), regexec() and regerror() in <regex.h> */
 #include <regex.h>
+/* Required: strcasecmp() in <strings.h> */
+#include <strings.h>
 #include "flexint.h"
 
 /* We use gettext. So, when we write strings which should be translated, we mark them with _() */
