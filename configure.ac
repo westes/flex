@@ -111,7 +111,10 @@ AC_PATH_PROG([INDENT], indent, [\${top_srcdir}/build-aux/missing indent])
 
 # checks for headers
 
-AC_CHECK_HEADERS([inttypes.h libintl.h limits.h locale.h malloc.h netinet/in.h regex.h unistd.h])
+AC_CHECK_HEADERS([regex.h sys/stat.h sys/wait.h unistd.h], [],
+  [AC_MSG_ERROR(required header not found on your system)])
+
+AC_CHECK_HEADERS([inttypes.h libintl.h limits.h locale.h malloc.h netinet/in.h])
 
 # checks for libraries
 
@@ -147,16 +150,20 @@ AC_FUNC_REALLOC
 AS_IF([test "$cross_compiling" = yes],
    AC_MSG_WARN([result $ac_cv_func_realloc_0_nonnull guessed because of cross compilation]))
 
-AC_CHECK_FUNCS(dup2 dnl
+AC_CHECK_FUNCS([dup2 dnl
 memset dnl
-pow dnl
 regcomp dnl
-setlocale dnl
 strchr dnl
 strdup dnl
-strtol)
+strtol dnl
+], [], [AC_MSG_ERROR(required library function not found on your system)])
 
-AC_CHECK_FUNCS(reallocarray)
+# Optional library functions
+AC_CHECK_FUNCS([dnl
+pow dnl           Used only by "examples/manual/expr"
+setlocale dnl     Needed only if NLS is enabled
+reallocarray dnl  OpenBSD function. We have replacement if not available.
+])
 
 AC_CONFIG_FILES(
 Makefile
