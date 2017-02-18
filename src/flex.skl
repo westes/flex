@@ -1363,11 +1363,6 @@ do_action:	/* This label is used only to access EOF actions. */
 					goto do_action;
 					}
 
-				else
-					{
-					if ( ! YY_G(yy_did_buffer_switch_on_eof) )
-						YY_NEW_FILE;
-					}
 				break;
 				}
 
