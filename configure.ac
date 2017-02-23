@@ -47,6 +47,7 @@ AS_IF([test "$YACC" != 'bison -y'], [
 AM_CONDITIONAL([HAVE_BISON], [test "$YACC" = 'bison -y'])
 AM_PROG_LEX
 AC_PROG_CC
+AX_PROG_CC_FOR_BUILD
 AC_PROG_CXX
 AM_PROG_CC_C_O
 AC_PROG_LN_S
@@ -79,6 +80,8 @@ AC_ARG_ENABLE([bootstrap],
                   [don't perform a bootstrap when building flex])],
   [], [enable_bootstrap=yes])
 AM_CONDITIONAL([ENABLE_BOOTSTRAP], [test "x$enable_bootstrap" = xyes])
+
+AM_CONDITIONAL([CROSS], [test "x$cross_compiling" = xyes])
 
 AC_PATH_PROG([HELP2MAN], help2man, [\${top_srcdir}/build-aux/missing help2man])
   AS_IF([test "$HELP2MAN" = "\${top_srcdir}/build-aux/missing help2man"],

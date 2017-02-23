@@ -21,7 +21,25 @@ stage1flex_SOURCES = \
 	scan.l \
 	$(COMMON_SOURCES)
 
+if CROSS
+stage1flex_LDADD =
+stage1flex_SOURCES += \
+		      ../lib/malloc.c \
+		      ../lib/realloc.c \
+		      ../lib/reallocarray.c
+stage1flex_LINK = $(LIBTOOL) --tag=CC --mode=link $(CC_FOR_BUILD) \
+		  $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@
+
+$(stage1flex_OBJECTS): CC=$(CC_FOR_BUILD)
+$(stage1flex_OBJECTS): CFLAGS=$(CFLAGS_FOR_BUILD)
+$(stage1flex_OBJECTS): CPP=$(CPP_FOR_BUILD)
+$(stage1flex_OBJECTS): CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
+$(stage1flex_OBJECTS): LDFLAGS=$(LDFLAGS_FOR_BUILD)
+else
+stage1flex_LDADD = $(LDADD)
+stage1flex_LINK = $(LINK)
 stage1flex_CFLAGS = $(AM_CFLAGS)
+endif
 
 flex_SOURCES = \
 	$(COMMON_SOURCES)
