@@ -2072,7 +2072,7 @@ static void yy_load_buffer_state  (M4_YY_DEF_ONLY_ARG)
 	b->yy_input_file = file;
 %endif
 %if-c++-only
-	b->yy_input_file = file.rdbuf();
+	b->yy_input_file = (&file == 0) ? NULL : file.rdbuf();
 %endif
 	b->yy_fill_buffer = 1;
 
