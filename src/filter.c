@@ -291,6 +291,7 @@ int filter_tee_header (struct filter *chain)
 		if (write_header)
 			fputs (buf, to_h);
 	}
+	free (buf);
 
 	if (write_header) {
 		fprintf (to_h, "\n");
@@ -420,6 +421,7 @@ int filter_fix_linedirs (struct filter *chain)
 		fputs (buf, stdout);
 		lineno++;
 	}
+	free (buf);
 	fflush (stdout);
 	if (ferror (stdout))
 		lerr (_("error writing output file %s"),
