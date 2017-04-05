@@ -247,7 +247,6 @@ int filter_tee_header (struct filter *chain)
 
 	if ((to_cfd = dup (1)) == -1)
 		flexfatal (_("dup(1) failed"));
-	to_c = fdopen (to_cfd, "w");
 
 	if (write_header) {
 		if (freopen ((char *) chain->extra, "w", stdout) == NULL)
@@ -256,6 +255,8 @@ int filter_tee_header (struct filter *chain)
 		filter_apply_chain (chain->next);
 		to_h = stdout;
 	}
+
+	to_c = fdopen (to_cfd, "w");
 
 	/* Now to_c is a pipe to the C branch, and to_h is a pipe to the H branch.
 	 */
