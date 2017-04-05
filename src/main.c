@@ -61,7 +61,7 @@ int     trace_hex = 0;
 int     datapos, dataline, linenum;
 FILE   *skelfile = NULL;
 int     skel_ind = 0;
-char   *action_array;
+char   *action_array = NULL;
 int     action_size, defs1_offset, prolog_offset, action_offset,
 	action_index;
 char   *infilename = NULL, *outfilename = NULL, *headerfilename = NULL;
@@ -133,12 +133,67 @@ const char *escaped_qend   = "]]M4_YY_NOOP]M4_YY_NOOP]M4_YY_NOOP[[";
 /* For debugging. The max number of filters to apply to skeleton. */
 static int preproc_level = 1000;
 
+void flex_atexit (void)
+{
+	/* Free everything allocated in flexinit */
+	free (action_array);
+
+	buf_destroy (&userdef_buf);
+	buf_destroy (&defs_buf);
+	buf_destroy (&yydmap_buf);
+	buf_destroy (&top_buf);
+	buf_destroy (&m4defs_buf);
+
+	/* Free everything allocated in set_up_initial_allocations */
+	free (firstst);
+	free (lastst);
+	free (finalst);
+	free (transchar);
+	free (trans1);
+	free (trans2);
+	free (accptnum);
+	free (assoc_rule);
+	free (state_type);
+
+	free (rule_type);
+	free (rule_linenum);
+	free (rule_useful);
+	free (rule_has_nl);
+
+	free (scset);
+	free (scbol);
+	free (scxclu);
+	free (sceof);
+	free (scname);
+
+	free (cclmap);
+	free (ccllen);
+	free (cclng);
+	free (ccl_has_nl);
+
+	free (ccltbl);
+
+	free (nxt);
+	free (chk);
+
+	free (tnxt);
+
+	free (base);
+	free (def);
+	free (dfasiz);
+	free (accsiz);
+	free (dhash);
+	free (dss);
+	free (dfaacc);
+}
+
 int flex_main (int argc, char *argv[]);
 
 int flex_main (int argc, char *argv[])
 {
 	int     i, exit_status, child_status;
 
+	atexit(flex_atexit);
 	/* Set a longjmp target. Yes, I know it's a hack, but it gets worse: The
 	 * return value of setjmp, if non-zero, is the desired exit code PLUS ONE.
 	 * For example, if you want 'main' to return with code '2', then call
