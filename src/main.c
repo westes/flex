@@ -133,8 +133,12 @@ const char *escaped_qend   = "]]M4_YY_NOOP]M4_YY_NOOP]M4_YY_NOOP[[";
 /* For debugging. The max number of filters to apply to skeleton. */
 static int preproc_level = 1000;
 
+static char *m4_path = NULL;
+
 void flex_atexit (void)
 {
+	free (m4_path);
+
 	/* Free everything allocated in flexinit */
 	free (action_array);
 
@@ -400,13 +404,11 @@ void check_options (void)
 	    char *slash;
 		m4 = M4;
 		if ((slash = strrchr(M4, '/')) != NULL) {
-			m4 = slash+1;
 			/* break up $PATH */
 			const char *path = getenv("PATH");
-			if (!path) {
-				m4 = M4;
-			} else {
-				int m4_length = strlen(m4);
+			if (path) {
+				int m4_length = strlen(slash+1);
+				m4 = slash+1;
 				do {
 					size_t length = strlen(path);
 					struct stat sbuf;
@@ -415,19 +417,18 @@ void check_options (void)
 					if (!endOfDir)
 						endOfDir = path+length;
 
-					{
-						char *m4_path = calloc(endOfDir-path + 1 + m4_length + 1, 1);
+					m4_path = calloc(endOfDir-path + 1 + m4_length + 1, 1);
 
-						memcpy(m4_path, path, endOfDir-path);
-						m4_path[endOfDir-path] = '/';
-						memcpy(m4_path + (endOfDir-path) + 1, m4, m4_length + 1);
-						if (stat(m4_path, &sbuf) == 0 &&
-							(S_ISREG(sbuf.st_mode)) && sbuf.st_mode & S_IXUSR) {
-							m4 = m4_path;
-							break;
-						}
-						free(m4_path);
+					memcpy(m4_path, path, endOfDir-path);
+					m4_path[endOfDir-path] = '/';
+					memcpy(m4_path + (endOfDir-path) + 1, m4, m4_length + 1);
+					if (stat(m4_path, &sbuf) == 0 &&
+						(S_ISREG(sbuf.st_mode)) && sbuf.st_mode & S_IXUSR) {
+						m4 = m4_path;
+						break;
 					}
+					free(m4_path);
+					m4_path = NULL;
 					path = endOfDir+1;
 				} while (path[0]);
 				if (!path[0])
@@ -445,6 +446,8 @@ void check_options (void)
     }
     filter_destroy_chain(output_chain);
     output_chain = NULL;
+    free(m4_path);
+    m4_path = NULL;
     yyout = stdout;
 
 
