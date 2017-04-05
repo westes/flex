@@ -1049,8 +1049,11 @@ struct Buf {
 	int     nmax;		/* max capacity of elements. */
 };
 
+typedef void (*DestroyFunc) (void *);
+
 extern void buf_init(struct Buf * buf, size_t elem_size);
 extern void buf_destroy(struct Buf * buf);
+extern void buf_destroy_full(struct Buf * buf, DestroyFunc destroy);
 extern struct Buf *buf_append(struct Buf * buf, const void *ptr, int n_elem);
 extern struct Buf *buf_concat(struct Buf* dest, const struct Buf* src);
 extern struct Buf *buf_strappend(struct Buf *, const char *str);

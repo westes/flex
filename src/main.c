@@ -139,10 +139,10 @@ void flex_atexit (void)
 	free (action_array);
 
 	buf_destroy (&userdef_buf);
-	buf_destroy (&defs_buf);
+	buf_destroy_full (&defs_buf, (DestroyFunc)free);
 	buf_destroy (&yydmap_buf);
 	buf_destroy (&top_buf);
-	buf_destroy (&m4defs_buf);
+	buf_destroy_full (&m4defs_buf, (DestroyFunc)free);
 
 	/* Free everything allocated in set_up_initial_allocations */
 	free (firstst);
@@ -543,7 +543,7 @@ void check_options (void)
 
     /* Dump the m4 definitions. */
     buf_print_strings(&m4defs_buf, stdout);
-    m4defs_buf.nelts = 0; /* memory leak here. */
+    buf_destroy_full(&m4defs_buf, (DestroyFunc)free);
 
     /* Place a bogus line directive, it will be fixed in the filter. */
     if (gen_line_dirs)
@@ -1037,8 +1037,9 @@ void flexinit (int argc, char **argv)
 	buf_init (&top_buf, sizeof (char));	    /* one long string */
 
     {
-        const char * m4defs_init_str[] = {"m4_changequote\n",
-                                          "m4_changequote([[, ]])\n"};
+        char * m4defs_init_str[2];
+        m4defs_init_str[0] = xstrdup ("m4_changequote\n");
+        m4defs_init_str[1] = xstrdup ("m4_changequote([[, ]])\n");
         buf_init (&m4defs_buf, sizeof (char *));
         buf_append (&m4defs_buf, &m4defs_init_str, 2);
     }

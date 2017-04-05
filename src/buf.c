@@ -217,9 +217,20 @@ void buf_destroy (struct Buf *buf)
 	if (buf) {
 		free(buf->elts);
 		buf->elts = NULL;
+		buf->nelts = 0;
 	}
 }
 
+void buf_destroy_full(struct Buf * buf, DestroyFunc destroy)
+{
+	void **p;
+	if (!buf)
+		return;
+	for (p = (void **)buf->elts;
+	     p < (void **)buf->elts + buf->nelts; p++)
+		destroy(*p);
+	buf_destroy(buf);
+}
 
 /* appends ptr[] to buf, grow if necessary.
  * n_elem is number of elements in ptr[], NOT bytes.
