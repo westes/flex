@@ -1134,6 +1134,7 @@ extern bool filter_apply_chain(struct filter * chain);
 extern int filter_truncate(struct filter * chain, int max_len);
 extern int filter_tee_header(struct filter *chain);
 extern int filter_fix_linedirs(struct filter *chain);
+extern void filter_destroy_chain(struct filter *chain);
 
 
 /*

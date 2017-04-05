@@ -443,6 +443,8 @@ void check_options (void)
         filter_truncate(output_chain, preproc_level);
         filter_apply_chain(output_chain);
     }
+    filter_destroy_chain(output_chain);
+    output_chain = NULL;
     yyout = stdout;
 
 

@@ -176,6 +176,7 @@ clearerr(stdin);
 
 			if ((r = chain->filter_func (chain)) == -1)
 				flexfatal (_("filter_func failed"));
+			filter_destroy_chain(output_chain);
 			exit (0);
 		}
 		else {
@@ -185,6 +186,7 @@ clearerr(stdin);
                     chain->argv[0]);
 		}
 
+		filter_destroy_chain(output_chain);
 		exit (1);
 	}
 
@@ -313,6 +315,7 @@ int filter_tee_header (struct filter *chain)
 			lerr (_("error closing output file %s"),
 				(char *) chain->extra);
 	}
+	filter_destroy_chain(output_chain);
 
 	fflush (to_c);
 	if (ferror (to_c))
@@ -432,6 +435,21 @@ int filter_fix_linedirs (struct filter *chain)
 			outfilename ? outfilename : "<stdout>");
 
 	return 0;
+}
+
+/** Free each member of the filter chain.
+ *  @param chain The head of the chain.
+ */
+void filter_destroy_chain (struct filter *chain)
+{
+	struct filter *curr, *next;
+	curr = chain;
+	while (curr != NULL) {
+		next = curr->next;
+		free(curr->argv);
+		free(curr);
+		curr = next;
+	}
 }
 
 /* vim:set expandtab cindent tabstop=4 softtabstop=4 shiftwidth=4 textwidth=0: */
