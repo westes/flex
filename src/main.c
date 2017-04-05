@@ -1073,6 +1073,7 @@ void flexinit (int argc, char **argv)
 				 _
 				 ("Try `%s --help' for more information.\n"),
 				 program_name);
+			scanopt_destroy (sopt);
 			FLEX_EXIT (1);
 		}
 
@@ -1154,6 +1155,7 @@ void flexinit (int argc, char **argv)
 
 		case OPT_HELP:
 			usage ();
+			scanopt_destroy (sopt);
 			FLEX_EXIT (0);
 
 		case OPT_INTERACTIVE:
@@ -1258,6 +1260,7 @@ void flexinit (int argc, char **argv)
 
 		case OPT_VERSION:
 			printf (_("%s %s\n"), program_name, flex_version);
+			scanopt_destroy (sopt);
 			FLEX_EXIT (0);
 
 		case OPT_WARN:
