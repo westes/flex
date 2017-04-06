@@ -61,6 +61,7 @@ struct yytbl_writer {
  */
 extern bool tablesext, tablesverify,gentables;
 extern char *tablesfilename, *tablesname;
+extern bool is_tablesfilename_alloc;
 extern struct yytbl_writer tableswr;
 
 int     yytbl_writer_init (struct yytbl_writer *, FILE *);

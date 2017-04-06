@@ -206,8 +206,12 @@ option		:  TOK_OUTFILE '=' NAME
 			{ yyclass = xstrdup(nmstr); }
 		|  TOK_HEADER_FILE '=' NAME
 			{ headerfilename = xstrdup(nmstr); }
-	    |  TOK_TABLES_FILE '=' NAME
-            { tablesext = true; tablesfilename = xstrdup(nmstr); }
+		|  TOK_TABLES_FILE '=' NAME
+			{
+			free(tablesfilename);
+			tablesext = true;
+			tablesfilename = xstrdup(nmstr);
+			}
 		;
 
 sect2		:  sect2 scon initforrule flexrule '\n'

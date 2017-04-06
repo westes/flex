@@ -144,6 +144,7 @@ void flex_atexit (void)
 		if (tablesout != NULL)
 			fclose (tablesout);
 		free (tablesname);
+		free (tablesfilename);
 	}
 
 	free (m4_path);
@@ -480,20 +481,19 @@ void check_options (void)
 
 	if (tablesext) {
 		struct yytbl_hdr hdr;
-		char   *pname = 0;
 		size_t  nbytes = 0;
 
 		buf_m4_define (&m4defs_buf, "M4_YY_TABLES_EXTERNAL", NULL);
 
 		if (!tablesfilename) {
 			nbytes = strlen (prefix) + strlen (tablesfile_template) + 2;
-			tablesfilename = pname = calloc(nbytes, 1);
-			snprintf (pname, nbytes, tablesfile_template, prefix);
+			tablesfilename = calloc(nbytes, 1);
+			snprintf (tablesfilename, nbytes, tablesfile_template, prefix);
 		}
 
 		if ((tablesout = fopen (tablesfilename, "w")) == NULL)
 			lerr (_("could not create %s"), tablesfilename);
-		free(pname);
+		free(tablesfilename);
 		tablesfilename = 0;
 
 		yytbl_writer_init (&tableswr, tablesout);
@@ -1264,7 +1264,8 @@ void flexinit (int argc, char **argv)
 
 		case OPT_TABLES_FILE:
 			tablesext = true;
-			tablesfilename = arg;
+			free (tablesfilename);
+			tablesfilename = xstrdup (arg);
 			break;
 
 		case OPT_TABLES_VERIFY:
