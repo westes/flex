@@ -1146,6 +1146,7 @@ extern void filter_destroy_chain(struct filter *chain);
 
 extern regex_t regex_linedir, regex_blank_line;
 bool flex_init_regex(void);
+void flex_finalize_regex(void);
 void flex_regcomp(regex_t *preg, const char *regex, int cflags);
 char   *regmatch_dup (regmatch_t * m, const char *src);
 char   *regmatch_cpy (regmatch_t * m, char *dest, const char *src);

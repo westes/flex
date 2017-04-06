@@ -167,6 +167,8 @@ void flex_atexit (void)
 	/* Free everything allocated in flexinit */
 	free (action_array);
 
+	flex_finalize_regex ();
+
 	buf_destroy (&userdef_buf);
 	buf_destroy_full (&defs_buf, (DestroyFunc)free);
 	buf_destroy (&yydmap_buf);

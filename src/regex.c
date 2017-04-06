@@ -42,6 +42,12 @@ bool flex_init_regex(void)
     return true;
 }
 
+void flex_finalize_regex(void)
+{
+    regfree(&regex_linedir);
+    regfree(&regex_blank_line);
+}
+
 /** Compiles a regular expression or dies trying.
  * @param preg  Same as for regcomp().
  * @param regex Same as for regcomp().
