@@ -109,6 +109,7 @@ int     nlch = '\n';
 
 bool    tablesext, tablesverify, gentables;
 char   *tablesfilename=0,*tablesname=0;
+FILE   *tablesout = NULL;
 struct yytbl_writer tableswr;
 
 /* Make sure program_name is initialized so we don't crash if writing
@@ -138,6 +139,12 @@ static char *m4_path = NULL;
 void flex_atexit (void)
 {
 	int i;
+
+	if (tablesext) {
+		if (tablesout != NULL)
+			fclose (tablesout);
+		free (tablesname);
+	}
 
 	free (m4_path);
 	free (nultrans);
@@ -472,7 +479,6 @@ void check_options (void)
 
 
 	if (tablesext) {
-		FILE   *tablesout;
 		struct yytbl_hdr hdr;
 		char   *pname = 0;
 		size_t  nbytes = 0;
