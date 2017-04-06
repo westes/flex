@@ -141,6 +141,8 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 				add_action( "ECHO" );
 
 			add_action( ";\n\tYY_BREAK]]\n" );
+
+			free(scon_stk);
 			}
 		;
 
