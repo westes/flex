@@ -157,6 +157,8 @@ void flex_atexit (void)
 			free (dfaacc[i].dfaacc_set);
 	}
 
+	free_sym_tables ();
+
 	/* Free everything allocated in flexinit */
 	free (action_array);
 

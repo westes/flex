@@ -1009,6 +1009,9 @@ extern void scinstal(const char *, int);	/* make a start condition */
 /* Lookup the number associated with a start condition. */
 extern int sclookup(const char *);
 
+/* Free symbol tables */
+void free_sym_tables (void);
+
 
 /* from file tblcmp.c */
 
