@@ -88,7 +88,7 @@ char  **scname;
 int     current_max_dfa_size, current_max_xpairs;
 int     current_max_template_xpairs, current_max_dfas;
 int     lastdfa, *nxt, *chk, *tnxt;
-int    *base, *def, *nultrans, NUL_ec, tblend, firstfree, **dss, *dfasiz;
+int    *base, *def, *nultrans = NULL, NUL_ec, tblend, firstfree, **dss, *dfasiz;
 union dfaacc_union *dfaacc;
 int    *accsiz, *dhash, numas;
 int     numsnpairs, jambase, jamstate;
@@ -138,6 +138,7 @@ static char *m4_path = NULL;
 void flex_atexit (void)
 {
 	free (m4_path);
+	free (nultrans);
 
 	/* Free everything allocated in flexinit */
 	free (action_array);
@@ -1837,8 +1838,6 @@ void set_up_initial_allocations (void)
 	dhash = allocate_integer_array (current_max_dfas);
 	dss = allocate_int_ptr_array (current_max_dfas);
 	dfaacc = allocate_dfaacc_union (current_max_dfas);
-
-	nultrans = NULL;
 }
 
 
