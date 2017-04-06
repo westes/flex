@@ -1174,6 +1174,7 @@ extern size_t _sf_top_ix, _sf_max; /**< stack of scanner flags. */
 extern void sf_init(void);
 extern void sf_push(void);
 extern void sf_pop(void);
+extern void sf_finalize(void);
 
 
 #endif /* not defined FLEXDEF_H */

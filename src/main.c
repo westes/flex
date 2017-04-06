@@ -171,6 +171,8 @@ void flex_atexit (void)
 
 	close_input_file ();
 
+	sf_finalize ();
+
 	buf_destroy (&userdef_buf);
 	buf_destroy_full (&defs_buf, (DestroyFunc)free);
 	buf_destroy (&yydmap_buf);
