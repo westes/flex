@@ -95,6 +95,17 @@ int yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
 	return 0;
 }
 
+/** Clean up name and version strings of table header.
+ *  @param th The table header to clean up
+ *  @return 0 on success
+ */
+int yytbl_hdr_finalize (struct yytbl_hdr *th)
+{
+	free (th->th_version);
+	free (th->th_name);
+	return 0;
+}
+
 /** Allocate and initialize a table data structure.
  *  @param td a pointer to an uninitialized table
  *  @param id  the table identifier

@@ -67,6 +67,7 @@ extern struct yytbl_writer tableswr;
 int     yytbl_writer_init (struct yytbl_writer *, FILE *);
 int     yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
 			const char *name);
+int     yytbl_hdr_finalize (struct yytbl_hdr *th);
 int     yytbl_data_init (struct yytbl_data *tbl, enum yytbl_id id);
 int     yytbl_data_destroy (struct yytbl_data *td);
 int     yytbl_hdr_fwrite (struct yytbl_writer *wr,

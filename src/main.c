@@ -518,6 +518,8 @@ void check_options (void)
 
 		if (yytbl_hdr_fwrite (&tableswr, &hdr) <= 0)
 			flexerror (_("could not write tables header"));
+
+		yytbl_hdr_finalize (&hdr);
 	}
 
 	if (skelname && (skelfile = fopen (skelname, "r")) == NULL)
