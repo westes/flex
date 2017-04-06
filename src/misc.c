@@ -88,6 +88,11 @@ static void sko_pop(bool* dc)
     if(sko_len < 0)
         flex_die("popped too many times in skeleton.");
 }
+static void sko_free(void)
+{
+    free(sko_stack);
+    sko_stack = NULL;
+}
 
 /* Append "#define defname value\n" to the running buffer. */
 void action_define (const char *defname, int value)
@@ -829,6 +834,9 @@ void skelout (void)
 		else if (do_copy) 
             outn (buf);
 	}			/* end while */
+
+	/* This point is only reached on the final call */
+	sko_free();
 }
 
 
