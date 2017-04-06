@@ -159,6 +159,11 @@ void flex_atexit (void)
 
 	free_sym_tables ();
 
+	free (outfilename);
+	free (headerfilename);
+	free (prefix);
+	free (yyclass);
+
 	/* Free everything allocated in flexinit */
 	free (action_array);
 
@@ -406,7 +411,7 @@ void check_options (void)
 			snprintf (outfile_path, sizeof(outfile_path), outfile_template,
 				 prefix, suffix);
 
-			outfilename = outfile_path;
+			outfilename = xstrdup(outfile_path);
 		}
 
 		prev_stdout = freopen (outfilename, "w+", stdout);
@@ -1038,7 +1043,7 @@ void flexinit (int argc, char **argv)
 	reentrant = bison_bridge_lval = bison_bridge_lloc = false;
 	performance_report = 0;
 	did_outfilename = 0;
-	prefix = "yy";
+	prefix = xstrdup("yy");
 	yyclass = 0;
 	use_read = use_stdout = false;
 	tablesext = tablesverify = false;
@@ -1215,12 +1220,14 @@ void flexinit (int argc, char **argv)
 			break;
 
 		case OPT_OUTFILE:
-			outfilename = arg;
+			free (outfilename);
+			outfilename = xstrdup (arg);
 			did_outfilename = 1;
 			break;
 
 		case OPT_PREFIX:
-			prefix = arg;
+			free (prefix);
+			prefix = xstrdup (arg);
 			break;
 
 		case OPT_PERF_REPORT:
@@ -1336,7 +1343,8 @@ void flexinit (int argc, char **argv)
 			break;
 
 		case OPT_HEADER_FILE:
-			headerfilename = arg;
+			free (headerfilename);
+			headerfilename = xstrdup (arg);
 			break;
 
 		case OPT_META_ECS:
@@ -1390,7 +1398,8 @@ void flexinit (int argc, char **argv)
 			break;
 
 		case OPT_YYCLASS:
-			yyclass = arg;
+			free (yyclass);
+			yyclass = xstrdup (arg);
 			break;
 
 		case OPT_YYLINENO:
