@@ -990,6 +990,9 @@ extern int flexscan(void);
 /* Open the given file (if NULL, stdin) for scanning. */
 extern void set_input_file(char *);
 
+/* Close the scanned file. */
+extern void close_input_file(void);
+
 
 /* from file sym.c */
 

@@ -169,6 +169,8 @@ void flex_atexit (void)
 
 	flex_finalize_regex ();
 
+	close_input_file ();
+
 	buf_destroy (&userdef_buf);
 	buf_destroy_full (&defs_buf, (DestroyFunc)free);
 	buf_destroy (&yydmap_buf);
