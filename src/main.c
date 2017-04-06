@@ -139,6 +139,7 @@ void flex_atexit (void)
 {
 	free (m4_path);
 	free (nultrans);
+	free (extra_type);
 
 	/* Free everything allocated in flexinit */
 	free (action_array);
