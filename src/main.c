@@ -137,9 +137,17 @@ static char *m4_path = NULL;
 
 void flex_atexit (void)
 {
+	int i;
+
 	free (m4_path);
 	free (nultrans);
 	free (extra_type);
+
+	for (i = 1; i <= lastdfa; i++) {
+		free (dss[i]);
+		if (reject && (i != end_of_buffer_state))
+			free (dfaacc[i].dfaacc_set);
+	}
 
 	/* Free everything allocated in flexinit */
 	free (action_array);
