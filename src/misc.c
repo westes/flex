@@ -306,18 +306,6 @@ void flexfatal (const char *msg)
 }
 
 
-/* htoui - convert a hexadecimal digit string to an unsigned integer value */
-
-unsigned int htoui (unsigned char str[])
-{
-	unsigned int result;
-
-	(void) sscanf ((char *) str, "%x", &result);
-
-	return result;
-}
-
-
 /* lerr - report an error message */
 
 void lerr (const char *msg, ...)
@@ -528,7 +516,7 @@ unsigned char myesc (unsigned char array[])
 			c = array[sptr];
 			array[sptr] = '\0';
 
-			esc_char = (unsigned char) otoui (array + 1);
+			esc_char = (unsigned char) strtoul (array + 1, NULL, 8);
 
 			array[sptr] = c;
 
@@ -550,7 +538,7 @@ unsigned char myesc (unsigned char array[])
 			c = array[sptr];
 			array[sptr] = '\0';
 
-			esc_char = (unsigned char) htoui (array + 2);
+			esc_char = (unsigned char) strtoul (array + 2, NULL, 16);
 
 			array[sptr] = c;
 
@@ -560,17 +548,6 @@ unsigned char myesc (unsigned char array[])
 	default:
 		return array[1];
 	}
-}
-
-
-/* otoui - convert an octal digit string to an unsigned integer value */
-
-unsigned int otoui (unsigned char str[])
-{
-	unsigned int result;
-
-	(void) sscanf ((char *) str, "%o", &result);
-	return result;
 }
 
 
