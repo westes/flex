@@ -176,7 +176,7 @@ clearerr(stdin);
 
 			if ((r = chain->filter_func (chain)) == -1)
 				flexfatal (_("filter_func failed"));
-			exit (0);
+			FLEX_EXIT (0);
 		}
 		else {
 			execvp (chain->argv[0],
@@ -185,7 +185,7 @@ clearerr(stdin);
                     chain->argv[0]);
 		}
 
-		exit (1);
+		FLEX_EXIT (1);
 	}
 
 	/* Parent */
@@ -324,7 +324,7 @@ int filter_tee_header (struct filter *chain)
 
 	while (wait (0) > 0) ;
 
-	exit (0);
+	FLEX_EXIT (0);
 	return 0;
 }
 
