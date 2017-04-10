@@ -505,13 +505,9 @@ unsigned char myesc (unsigned char array[])
 			int     sptr = 1;
 
 			while (sptr <= 3 &&
-                               isascii (array[sptr]) &&
-			       isdigit (array[sptr]))
-				/* Don't increment inside loop control
-				 * because if isdigit() is a macro it might
-				 * expand into multiple increments ...
-				 */
+                               array[sptr] >= '0' && array[sptr] <= '7') {
 				++sptr;
+			}
 
 			c = array[sptr];
 			array[sptr] = '\0';
@@ -527,13 +523,13 @@ unsigned char myesc (unsigned char array[])
 		{		/* \x<hex> */
 			int     sptr = 2;
 
-			while (isascii (array[sptr]) &&
-			       isxdigit (array[sptr]))
+			while (sptr <= 3 && isxdigit (array[sptr])) {
 				/* Don't increment inside loop control
-				 * because if isdigit() is a macro it might
+				 * because if isxdigit() is a macro it might
 				 * expand into multiple increments ...
 				 */
 				++sptr;
+			}
 
 			c = array[sptr];
 			array[sptr] = '\0';
