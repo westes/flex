@@ -310,8 +310,8 @@ void check_options (void)
 		}
 	}
 
-    if (extra_type)
-        buf_m4_define( &m4defs_buf, "M4_EXTRA_TYPE_DEFS", extra_type);
+	if (extra_type)
+		buf_m4_define( &m4defs_buf, "M4_EXTRA_TYPE_DEFS", extra_type);
 
 	if (!use_stdout) {
 		FILE   *prev_stdout;
