@@ -79,6 +79,8 @@ static int addsym (char sym[], char *str_def, int int_def, hash_table table, int
 
 	while (sym_entry) {
 		if (!strcmp (sym, sym_entry->name)) {	/* entry already exists */
+			free (sym);
+			free (str_def);
 			return -1;
 		}
 
@@ -246,4 +248,29 @@ str);
 int     sclookup (const char *str)
 {
 	return findsym (str, sctbl, START_COND_HASH_SIZE)->int_val;
+}
+
+static void free_hash_table (hash_table table, int table_size)
+{
+	int i;
+	struct hash_entry *curr, *next;
+
+	for (i = 0; i < table_size; i++) {
+		curr = table[i];
+		while (curr != NULL) {
+			next = curr->next;
+			free (curr->name);
+			free (curr->str_val);
+			free (curr);
+			curr = next;
+		}
+		table[i] = NULL;
+	}
+}
+
+void free_sym_tables (void)
+{
+	free_hash_table (ndtbl, NAME_TABLE_HASH_SIZE);
+	free_hash_table (sctbl, START_COND_HASH_SIZE);
+	free_hash_table (ccltab, CCL_HASH_SIZE);
 }

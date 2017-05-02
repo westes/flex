@@ -984,6 +984,9 @@ extern int flexscan(void);
 /* Open the given file (if NULL, stdin) for scanning. */
 extern void set_input_file(char *);
 
+/* Close the scanned file. */
+extern void close_input_file(void);
+
 
 /* from file sym.c */
 
@@ -1002,6 +1005,9 @@ extern void scinstal(const char *, int);	/* make a start condition */
 
 /* Lookup the number associated with a start condition. */
 extern int sclookup(const char *);
+
+/* Free symbol tables */
+void free_sym_tables (void);
 
 
 /* from file tblcmp.c */
@@ -1043,8 +1049,11 @@ struct Buf {
 	int     nmax;		/* max capacity of elements. */
 };
 
+typedef void (*DestroyFunc) (void *);
+
 extern void buf_init(struct Buf * buf, size_t elem_size);
 extern void buf_destroy(struct Buf * buf);
+extern void buf_destroy_full(struct Buf * buf, DestroyFunc destroy);
 extern struct Buf *buf_append(struct Buf * buf, const void *ptr, int n_elem);
 extern struct Buf *buf_concat(struct Buf* dest, const struct Buf* src);
 extern struct Buf *buf_strappend(struct Buf *, const char *str);
@@ -1125,6 +1134,7 @@ extern bool filter_apply_chain(struct filter * chain);
 extern int filter_truncate(struct filter * chain, int max_len);
 extern int filter_tee_header(struct filter *chain);
 extern int filter_fix_linedirs(struct filter *chain);
+extern void filter_destroy_chain(struct filter *chain);
 
 
 /*
@@ -1133,6 +1143,7 @@ extern int filter_fix_linedirs(struct filter *chain);
 
 extern regex_t regex_linedir, regex_blank_line;
 bool flex_init_regex(void);
+void flex_finalize_regex(void);
 void flex_regcomp(regex_t *preg, const char *regex, int cflags);
 char   *regmatch_dup (regmatch_t * m, const char *src);
 char   *regmatch_cpy (regmatch_t * m, char *dest, const char *src);
@@ -1157,6 +1168,7 @@ extern size_t _sf_top_ix, _sf_max; /**< stack of scanner flags. */
 extern void sf_init(void);
 extern void sf_push(void);
 extern void sf_pop(void);
+extern void sf_finalize(void);
 
 
 #endif /* not defined FLEXDEF_H */

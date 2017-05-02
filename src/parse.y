@@ -141,6 +141,8 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 				add_action( "ECHO" );
 
 			add_action( ";\n\tYY_BREAK]]\n" );
+
+			free(scon_stk);
 			}
 		;
 
@@ -193,21 +195,38 @@ optionlist	:  optionlist option
 
 option		:  TOK_OUTFILE '=' NAME
 			{
+			free(outfilename);
 			outfilename = xstrdup(nmstr);
 			did_outfilename = 1;
 			}
 		|  TOK_EXTRA_TYPE '=' NAME
-			{ extra_type = xstrdup(nmstr); }
+			{
+			free(extra_type);
+			extra_type = xstrdup(nmstr);
+			}
 		|  TOK_PREFIX '=' NAME
-			{ prefix = xstrdup(nmstr);
-                          if (strchr(prefix, '[') || strchr(prefix, ']'))
-                              flexerror(_("Prefix must not contain [ or ]")); }
+			{
+			free(prefix);
+			prefix = xstrdup(nmstr);
+			if (strchr(prefix, '[') || strchr(prefix, ']'))
+				flexerror(_("Prefix must not contain [ or ]"));
+			}
 		|  TOK_YYCLASS '=' NAME
-			{ yyclass = xstrdup(nmstr); }
+			{
+			free(yyclass);
+			yyclass = xstrdup(nmstr);
+			}
 		|  TOK_HEADER_FILE '=' NAME
-			{ headerfilename = xstrdup(nmstr); }
-	    |  TOK_TABLES_FILE '=' NAME
-            { tablesext = true; tablesfilename = xstrdup(nmstr); }
+			{
+			free(headerfilename);
+			headerfilename = xstrdup(nmstr);
+			}
+		|  TOK_TABLES_FILE '=' NAME
+			{
+			free(tablesfilename);
+			tablesext = true;
+			tablesfilename = xstrdup(nmstr);
+			}
 		;
 
 sect2		:  sect2 scon initforrule flexrule '\n'

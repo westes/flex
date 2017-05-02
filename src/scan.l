@@ -1046,3 +1046,16 @@ void set_input_file( char *file )
 
 	linenum = 1;
 	}
+
+void close_input_file(void)
+	{
+		if (yyin != NULL) {
+			fclose(yyin);
+			yyin = NULL;
+		}
+		if (infilename != NULL) {
+			free(infilename);
+			infilename = NULL;
+		}
+		yylex_destroy ();
+	}

@@ -176,6 +176,7 @@ clearerr(stdin);
 
 			if ((r = chain->filter_func (chain)) == -1)
 				flexfatal (_("filter_func failed"));
+			filter_destroy_chain(output_chain);
 			exit (0);
 		}
 		else {
@@ -185,6 +186,7 @@ clearerr(stdin);
                     chain->argv[0]);
 		}
 
+		filter_destroy_chain(output_chain);
 		exit (1);
 	}
 
@@ -245,7 +247,6 @@ int filter_tee_header (struct filter *chain)
 
 	if ((to_cfd = dup (1)) == -1)
 		flexfatal (_("dup(1) failed"));
-	to_c = fdopen (to_cfd, "w");
 
 	if (write_header) {
 		if (freopen ((char *) chain->extra, "w", stdout) == NULL)
@@ -254,6 +255,8 @@ int filter_tee_header (struct filter *chain)
 		filter_apply_chain (chain->next);
 		to_h = stdout;
 	}
+
+	to_c = fdopen (to_cfd, "w");
 
 	/* Now to_c is a pipe to the C branch, and to_h is a pipe to the H branch.
 	 */
@@ -291,6 +294,7 @@ int filter_tee_header (struct filter *chain)
 		if (write_header)
 			fputs (buf, to_h);
 	}
+	free (buf);
 
 	if (write_header) {
 		fprintf (to_h, "\n");
@@ -312,6 +316,7 @@ int filter_tee_header (struct filter *chain)
 			lerr (_("error closing output file %s"),
 				(char *) chain->extra);
 	}
+	filter_destroy_chain(output_chain);
 
 	fflush (to_c);
 	if (ferror (to_c))
@@ -420,6 +425,7 @@ int filter_fix_linedirs (struct filter *chain)
 		fputs (buf, stdout);
 		lineno++;
 	}
+	free (buf);
 	fflush (stdout);
 	if (ferror (stdout))
 		lerr (_("error writing output file %s"),
@@ -430,6 +436,21 @@ int filter_fix_linedirs (struct filter *chain)
 			outfilename ? outfilename : "<stdout>");
 
 	return 0;
+}
+
+/** Free each member of the filter chain.
+ *  @param chain The head of the chain.
+ */
+void filter_destroy_chain (struct filter *chain)
+{
+	struct filter *curr, *next;
+	curr = chain;
+	while (curr != NULL) {
+		next = curr->next;
+		free(curr->argv);
+		free(curr);
+		curr = next;
+	}
 }
 
 /* vim:set expandtab cindent tabstop=4 softtabstop=4 shiftwidth=4 textwidth=0: */

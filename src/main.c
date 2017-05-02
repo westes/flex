@@ -61,7 +61,7 @@ int     trace_hex = 0;
 int     datapos, dataline, linenum;
 FILE   *skelfile = NULL;
 int     skel_ind = 0;
-char   *action_array;
+char   *action_array = NULL;
 int     action_size, defs1_offset, prolog_offset, action_offset,
 	action_index;
 char   *infilename = NULL, *outfilename = NULL, *headerfilename = NULL;
@@ -88,7 +88,7 @@ char  **scname;
 int     current_max_dfa_size, current_max_xpairs;
 int     current_max_template_xpairs, current_max_dfas;
 int     lastdfa, *nxt, *chk, *tnxt;
-int    *base, *def, *nultrans, NUL_ec, tblend, firstfree, **dss, *dfasiz;
+int    *base, *def, *nultrans = NULL, NUL_ec, tblend, firstfree, **dss, *dfasiz;
 union dfaacc_union *dfaacc;
 int    *accsiz, *dhash, numas;
 int     numsnpairs, jambase, jamstate;
@@ -109,6 +109,7 @@ int     nlch = '\n';
 
 bool    tablesext, tablesverify, gentables;
 char   *tablesfilename=0,*tablesname=0;
+FILE   *tablesout = NULL;
 struct yytbl_writer tableswr;
 
 /* Make sure program_name is initialized so we don't crash if writing
@@ -133,12 +134,101 @@ const char *escaped_qend   = "]]M4_YY_NOOP]M4_YY_NOOP]M4_YY_NOOP[[";
 /* For debugging. The max number of filters to apply to skeleton. */
 static int preproc_level = 1000;
 
+static char *m4_path = NULL;
+
+void flex_atexit (void)
+{
+	int i;
+
+	if (tablesext) {
+		if (tablesout != NULL)
+			fclose (tablesout);
+		free (tablesname);
+		free (tablesfilename);
+	}
+
+	free (m4_path);
+	free (nultrans);
+	free (extra_type);
+
+	for (i = 1; i <= lastdfa; i++) {
+		free (dss[i]);
+		if (reject && (i != end_of_buffer_state))
+			free (dfaacc[i].dfaacc_set);
+	}
+
+	free_sym_tables ();
+
+	free (outfilename);
+	free (headerfilename);
+	free (prefix);
+	free (yyclass);
+
+	/* Free everything allocated in flexinit */
+	free (action_array);
+
+	flex_finalize_regex ();
+
+	close_input_file ();
+
+	sf_finalize ();
+
+	buf_destroy (&userdef_buf);
+	buf_destroy_full (&defs_buf, (DestroyFunc)free);
+	buf_destroy (&yydmap_buf);
+	buf_destroy (&top_buf);
+	buf_destroy_full (&m4defs_buf, (DestroyFunc)free);
+
+	/* Free everything allocated in set_up_initial_allocations */
+	free (firstst);
+	free (lastst);
+	free (finalst);
+	free (transchar);
+	free (trans1);
+	free (trans2);
+	free (accptnum);
+	free (assoc_rule);
+	free (state_type);
+
+	free (rule_type);
+	free (rule_linenum);
+	free (rule_useful);
+	free (rule_has_nl);
+
+	free (scset);
+	free (scbol);
+	free (scxclu);
+	free (sceof);
+	free (scname);
+
+	free (cclmap);
+	free (ccllen);
+	free (cclng);
+	free (ccl_has_nl);
+
+	free (ccltbl);
+
+	free (nxt);
+	free (chk);
+
+	free (tnxt);
+
+	free (base);
+	free (def);
+	free (dfasiz);
+	free (accsiz);
+	free (dhash);
+	free (dss);
+	free (dfaacc);
+}
+
 int flex_main (int argc, char *argv[]);
 
 int flex_main (int argc, char *argv[])
 {
 	int     i, exit_status, child_status;
 
+	atexit(flex_atexit);
 	/* Set a longjmp target. Yes, I know it's a hack, but it gets worse: The
 	 * return value of setjmp, if non-zero, is the desired exit code PLUS ONE.
 	 * For example, if you want 'main' to return with code '2', then call
@@ -327,7 +417,7 @@ void check_options (void)
 			snprintf (outfile_path, sizeof(outfile_path), outfile_template,
 				 prefix, suffix);
 
-			outfilename = outfile_path;
+			outfilename = xstrdup(outfile_path);
 		}
 
 		prev_stdout = freopen (outfilename, "w+", stdout);
@@ -345,13 +435,11 @@ void check_options (void)
 	    char *slash;
 		m4 = M4;
 		if ((slash = strrchr(M4, '/')) != NULL) {
-			m4 = slash+1;
 			/* break up $PATH */
 			const char *path = getenv("PATH");
-			if (!path) {
-				m4 = M4;
-			} else {
-				int m4_length = strlen(m4);
+			if (path) {
+				int m4_length = strlen(slash+1);
+				m4 = slash+1;
 				do {
 					size_t length = strlen(path);
 					struct stat sbuf;
@@ -360,19 +448,18 @@ void check_options (void)
 					if (!endOfDir)
 						endOfDir = path+length;
 
-					{
-						char *m4_path = calloc(endOfDir-path + 1 + m4_length + 1, 1);
+					m4_path = calloc(endOfDir-path + 1 + m4_length + 1, 1);
 
-						memcpy(m4_path, path, endOfDir-path);
-						m4_path[endOfDir-path] = '/';
-						memcpy(m4_path + (endOfDir-path) + 1, m4, m4_length + 1);
-						if (stat(m4_path, &sbuf) == 0 &&
-							(S_ISREG(sbuf.st_mode)) && sbuf.st_mode & S_IXUSR) {
-							m4 = m4_path;
-							break;
-						}
-						free(m4_path);
+					memcpy(m4_path, path, endOfDir-path);
+					m4_path[endOfDir-path] = '/';
+					memcpy(m4_path + (endOfDir-path) + 1, m4, m4_length + 1);
+					if (stat(m4_path, &sbuf) == 0 &&
+						(S_ISREG(sbuf.st_mode)) && sbuf.st_mode & S_IXUSR) {
+						m4 = m4_path;
+						break;
 					}
+					free(m4_path);
+					m4_path = NULL;
 					path = endOfDir+1;
 				} while (path[0]);
 				if (!path[0])
@@ -388,6 +475,10 @@ void check_options (void)
         filter_truncate(output_chain, preproc_level);
         filter_apply_chain(output_chain);
     }
+    filter_destroy_chain(output_chain);
+    output_chain = NULL;
+    free(m4_path);
+    m4_path = NULL;
     yyout = stdout;
 
 
@@ -402,22 +493,20 @@ void check_options (void)
 
 
 	if (tablesext) {
-		FILE   *tablesout;
 		struct yytbl_hdr hdr;
-		char   *pname = 0;
 		size_t  nbytes = 0;
 
 		buf_m4_define (&m4defs_buf, "M4_YY_TABLES_EXTERNAL", NULL);
 
 		if (!tablesfilename) {
 			nbytes = strlen (prefix) + strlen (tablesfile_template) + 2;
-			tablesfilename = pname = calloc(nbytes, 1);
-			snprintf (pname, nbytes, tablesfile_template, prefix);
+			tablesfilename = calloc(nbytes, 1);
+			snprintf (tablesfilename, nbytes, tablesfile_template, prefix);
 		}
 
 		if ((tablesout = fopen (tablesfilename, "w")) == NULL)
 			lerr (_("could not create %s"), tablesfilename);
-		free(pname);
+		free(tablesfilename);
 		tablesfilename = 0;
 
 		yytbl_writer_init (&tableswr, tablesout);
@@ -429,6 +518,8 @@ void check_options (void)
 
 		if (yytbl_hdr_fwrite (&tableswr, &hdr) <= 0)
 			flexerror (_("could not write tables header"));
+
+		yytbl_hdr_finalize (&hdr);
 	}
 
 	if (skelname && (skelfile = fopen (skelname, "r")) == NULL)
@@ -488,7 +579,7 @@ void check_options (void)
 
     /* Dump the m4 definitions. */
     buf_print_strings(&m4defs_buf, stdout);
-    m4defs_buf.nelts = 0; /* memory leak here. */
+    buf_destroy_full(&m4defs_buf, (DestroyFunc)free);
 
     /* Place a bogus line directive, it will be fixed in the filter. */
     if (gen_line_dirs)
@@ -960,7 +1051,7 @@ void flexinit (int argc, char **argv)
 	reentrant = bison_bridge_lval = bison_bridge_lloc = false;
 	performance_report = 0;
 	did_outfilename = 0;
-	prefix = "yy";
+	prefix = xstrdup("yy");
 	yyclass = 0;
 	use_read = use_stdout = false;
 	tablesext = tablesverify = false;
@@ -982,8 +1073,9 @@ void flexinit (int argc, char **argv)
 	buf_init (&top_buf, sizeof (char));	    /* one long string */
 
     {
-        const char * m4defs_init_str[] = {"m4_changequote\n",
-                                          "m4_changequote([[, ]])\n"};
+        char * m4defs_init_str[2];
+        m4defs_init_str[0] = xstrdup ("m4_changequote\n");
+        m4defs_init_str[1] = xstrdup ("m4_changequote([[, ]])\n");
         buf_init (&m4defs_buf, sizeof (char *));
         buf_append (&m4defs_buf, &m4defs_init_str, 2);
     }
@@ -1017,6 +1109,7 @@ void flexinit (int argc, char **argv)
 				 _
 				 ("Try `%s --help' for more information.\n"),
 				 program_name);
+			scanopt_destroy (sopt);
 			FLEX_EXIT (1);
 		}
 
@@ -1098,6 +1191,7 @@ void flexinit (int argc, char **argv)
 
 		case OPT_HELP:
 			usage ();
+			scanopt_destroy (sopt);
 			FLEX_EXIT (0);
 
 		case OPT_INTERACTIVE:
@@ -1134,12 +1228,14 @@ void flexinit (int argc, char **argv)
 			break;
 
 		case OPT_OUTFILE:
-			outfilename = arg;
+			free (outfilename);
+			outfilename = xstrdup (arg);
 			did_outfilename = 1;
 			break;
 
 		case OPT_PREFIX:
-			prefix = arg;
+			free (prefix);
+			prefix = xstrdup (arg);
 			break;
 
 		case OPT_PERF_REPORT:
@@ -1185,7 +1281,8 @@ void flexinit (int argc, char **argv)
 
 		case OPT_TABLES_FILE:
 			tablesext = true;
-			tablesfilename = arg;
+			free (tablesfilename);
+			tablesfilename = xstrdup (arg);
 			break;
 
 		case OPT_TABLES_VERIFY:
@@ -1202,6 +1299,7 @@ void flexinit (int argc, char **argv)
 
 		case OPT_VERSION:
 			printf (_("%s %s\n"), program_name, flex_version);
+			scanopt_destroy (sopt);
 			FLEX_EXIT (0);
 
 		case OPT_WARN:
@@ -1253,7 +1351,8 @@ void flexinit (int argc, char **argv)
 			break;
 
 		case OPT_HEADER_FILE:
-			headerfilename = arg;
+			free (headerfilename);
+			headerfilename = xstrdup (arg);
 			break;
 
 		case OPT_META_ECS:
@@ -1307,7 +1406,8 @@ void flexinit (int argc, char **argv)
 			break;
 
 		case OPT_YYCLASS:
-			yyclass = arg;
+			free (yyclass);
+			yyclass = xstrdup (arg);
 			break;
 
 		case OPT_YYLINENO:
@@ -1773,8 +1873,6 @@ void set_up_initial_allocations (void)
 	dhash = allocate_integer_array (current_max_dfas);
 	dss = allocate_int_ptr_array (current_max_dfas);
 	dfaacc = allocate_dfaacc_union (current_max_dfas);
-
-	nultrans = NULL;
 }
 
 

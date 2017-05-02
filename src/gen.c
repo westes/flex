@@ -1160,6 +1160,9 @@ void gentabs (void)
             yytbl_data_compress (yyacclist_tbl);
             if (yytbl_data_fwrite (&tableswr, yyacclist_tbl) < 0)
                 flexerror (_("Could not write yyacclist_tbl"));
+        }
+
+        if (yyacclist_tbl != NULL) {
             yytbl_data_destroy (yyacclist_tbl);
             yyacclist_tbl = NULL;
         }
@@ -1234,6 +1237,9 @@ void gentabs (void)
 		yytbl_data_compress (yyacc_tbl);
 		if (yytbl_data_fwrite (&tableswr, yyacc_tbl) < 0)
 			flexerror (_("Could not write yyacc_tbl"));
+	}
+
+	if (yyacc_tbl != NULL) {
 		yytbl_data_destroy (yyacc_tbl);
 		yyacc_tbl = NULL;
 	}
@@ -1291,6 +1297,9 @@ void gentabs (void)
 			if (yytbl_data_fwrite (&tableswr, yymeta_tbl) < 0)
 				flexerror (_
 					   ("Could not write yymeta_tbl"));
+		}
+
+		if (yymeta_tbl != NULL) {
 			yytbl_data_destroy (yymeta_tbl);
 			yymeta_tbl = NULL;
 		}
@@ -1350,6 +1359,9 @@ void gentabs (void)
 		yytbl_data_compress (yybase_tbl);
 		if (yytbl_data_fwrite (&tableswr, yybase_tbl) < 0)
 			flexerror (_("Could not write yybase_tbl"));
+	}
+
+	if (yybase_tbl != NULL) {
 		yytbl_data_destroy (yybase_tbl);
 		yybase_tbl = NULL;
 	}
@@ -1382,6 +1394,9 @@ void gentabs (void)
 		yytbl_data_compress (yydef_tbl);
 		if (yytbl_data_fwrite (&tableswr, yydef_tbl) < 0)
 			flexerror (_("Could not write yydef_tbl"));
+	}
+
+	if (yydef_tbl != NULL) {
 		yytbl_data_destroy (yydef_tbl);
 		yydef_tbl = NULL;
 	}
@@ -1420,6 +1435,9 @@ void gentabs (void)
 		yytbl_data_compress (yynxt_tbl);
 		if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)
 			flexerror (_("Could not write yynxt_tbl"));
+	}
+
+	if (yynxt_tbl != NULL) {
 		yytbl_data_destroy (yynxt_tbl);
 		yynxt_tbl = NULL;
 	}
@@ -1454,6 +1472,9 @@ void gentabs (void)
 		yytbl_data_compress (yychk_tbl);
 		if (yytbl_data_fwrite (&tableswr, yychk_tbl) < 0)
 			flexerror (_("Could not write yychk_tbl"));
+	}
+
+	if (yychk_tbl != NULL) {
 		yytbl_data_destroy (yychk_tbl);
 		yychk_tbl = NULL;
 	}

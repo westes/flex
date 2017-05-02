@@ -68,4 +68,12 @@ sf_init (void)
     _sf_stk[_sf_top_ix] = 0;
 }
 
+void
+sf_finalize (void)
+{
+    assert(_sf_stk != NULL);
+    free(_sf_stk);
+    _sf_stk = NULL;
+}
+
 /* vim:set expandtab cindent tabstop=4 softtabstop=4 shiftwidth=4 textwidth=0: */

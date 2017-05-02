@@ -226,12 +226,12 @@ void dump_transitions (FILE *file, int state[])
  *  hashval is the hash value for the dfa corresponding to the state set.
  */
 
+static int did_stk_init = false, *stk;
 int    *epsclosure (int *t, int *ns_addr, int accset[], int *nacc_addr, int *hv_addr)
 {
 	int     stkpos, ns, tsp;
 	int     numstates = *ns_addr, nacc, hashval, transsym, nfaccnum;
 	int     stkend, nstate;
-	static int did_stk_init = false, *stk;
 
 #define MARK_STATE(state) \
 do{ trans1[state] = trans1[state] - MARKER_DIFFERENCE;} while(0)
@@ -790,6 +790,10 @@ void ntod (void)
 
 	free(accset);
 	free(nset);
+	if (did_stk_init) {
+		free(stk);
+		did_stk_init = false;
+	}
 }
 
 
