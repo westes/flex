@@ -46,6 +46,6 @@ fi
 
 if ! test -f ChangeLog; then
    touch ChangeLog
-f
+fi
 "$LIBTOOLIZE" --install --force
 autoreconf --install --force
