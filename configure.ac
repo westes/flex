@@ -28,7 +28,7 @@ AC_INIT([the fast lexical analyser generator],[2.6.4],[flex-help@lists.sourcefor
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
 LT_INIT
-AM_INIT_AUTOMAKE([-Wno-portability foreign check-news std-options dist-lzip parallel-tests subdir-objects 1.14.1])
+AM_INIT_AUTOMAKE([1.11.3 -Wno-portability foreign check-news std-options dist-lzip parallel-tests subdir-objects])
 AC_CONFIG_HEADER([src/config.h])
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_MACRO_DIR([m4])
@@ -38,7 +38,7 @@ AC_SUBST(SHARED_VERSION_INFO)
 # checks for programs
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.19])
+AM_GNU_GETTEXT_VERSION([0.18])
 AC_PROG_YACC
 AS_IF([test "$YACC" != 'bison -y'], [
 	YACC="\${top_srcdir}/build-aux/missing bison -y"
