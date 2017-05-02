@@ -24,10 +24,28 @@
 # If you see no configure script, then run ./autogen.sh to create it
 # and procede with the "normal" build procedures.
 
+# use LIBTOOLIZE, if set
+LIBTOOLIZE_ORIG="$LIBTOOLIZE";
+if test "x$LIBTOOLIZE" = "x"; then LIBTOOLIZE=libtoolize; fi
+
+# test libtoolize
+$LIBTOOLIZE --version 2>/dev/null
+if test "$?" -ne 0; then
+   LIBTOOLIZE=glibtoolize
+   $LIBTOOLIZE --version 2>/dev/null
+   if test "$?" -ne 0; then
+      echo "error: libtoolize not working, re-run with LIBTOOLIZE=/path/to/libtoolize"
+      echo "       LIBTOOLIZE is currently \"$LIBTOOLIZE_ORIG\""
+      exit 1
+   fi
+fi
+
 #if we pretend to have a ChangeLog, then automake is less
 #worried. (Don't worry, we *do* have a ChangeLog, we just need the
 #Makefile first.)
 
-touch ChangeLog
-libtoolize --install --force || glibtoolize --install --force
+if ! test -f ChangeLog; then
+   touch ChangeLog
+fi
+"$LIBTOOLIZE" --install --force
 autoreconf --install --force
