@@ -45,5 +45,5 @@ fi
 #Makefile first.)
 
 touch ChangeLog
-LIBTOOLIZE --install --force
+"$LIBTOOLIZE" --install --force
 autoreconf --install --force
