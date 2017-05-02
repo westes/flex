@@ -44,6 +44,8 @@ fi
 #worried. (Don't worry, we *do* have a ChangeLog, we just need the
 #Makefile first.)
 
-touch ChangeLog
+if ! test -f ChangeLog; then
+   touch ChangeLog
+f
 "$LIBTOOLIZE" --install --force
 autoreconf --install --force
