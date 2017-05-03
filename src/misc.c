@@ -791,9 +791,6 @@ void skelout (void)
 				/* %e end linkage-only code. */
 				OUT_END_CODE ();
 			}
-			else if (buf[1] == '#') {
-				/* %# a comment in the skel. ignore. */
-			}
 			else {
 				flexfatal (_("bad line in skeleton file"));
 			}
