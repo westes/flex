@@ -1506,11 +1506,11 @@ void make_tables (void)
 	if (yymore_used && !yytext_is_array) {
 		indent_puts ("YY_G(yytext_ptr) -= YY_G(yy_more_len); \\");
 		indent_puts
-			("yyleng = (int) (yy_cp - YY_G(yytext_ptr)); \\");
+			("yyleng = (yy_size_t)(yy_cp - YY_G(yytext_ptr)); \\");
 	}
 
 	else
-		indent_puts ("yyleng = (int) (yy_cp - yy_bp); \\");
+		indent_puts ("yyleng = (yy_size_t)(yy_cp - yy_bp); \\");
 
 	/* Now also deal with copying yytext_ptr to yytext if needed. */
 	skelout ();		/* %% [3.0] - break point in skel */
@@ -1881,7 +1881,7 @@ void make_tables (void)
 			outn ("\tif ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \\");
 			outn ("\t\t{ \\");
 			outn ("\t\tint c = '*'; \\");
-			outn ("\t\tint n; \\");
+			outn ("\t\tyy_size_t n; \\");
 			outn ("\t\tfor ( n = 0; n < max_size && \\");
 			outn ("\t\t\t     (c = getc( yyin )) != EOF && c != '\\n'; ++n ) \\");
 			outn ("\t\t\tbuf[n] = (char) c; \\");
@@ -1894,7 +1894,7 @@ void make_tables (void)
 			outn ("\telse \\");
 			outn ("\t\t{ \\");
 			outn ("\t\terrno=0; \\");
-			outn ("\t\twhile ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) \\");
+			outn ("\t\twhile ( (result = fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) \\");
 			outn ("\t\t\t{ \\");
 			outn ("\t\t\tif( errno != EINTR) \\");
 			outn ("\t\t\t\t{ \\");
@@ -1963,7 +1963,7 @@ void make_tables (void)
 		("if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )");
 	++indent_level;
 	indent_puts ("{");
-	indent_puts ("int yyl;");
+	indent_puts ("yy_size_t yyl;");
 	do_indent ();
 	out_str ("for ( yyl = %s; yyl < yyleng; ++yyl )\n",
 		 yymore_used ? (yytext_is_array ? "YY_G(yy_prev_more_offset)" :
