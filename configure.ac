@@ -175,7 +175,6 @@ doc/Makefile
 examples/Makefile
 examples/fastwc/Makefile
 examples/manual/Makefile
-lib/Makefile
 po/Makefile.in
 src/Makefile
 tools/Makefile
