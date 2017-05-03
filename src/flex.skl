@@ -112,9 +112,15 @@ m4_ifdef( [[M4_YY_REENTRANT]],  [[m4_define([[M4_YY_HAS_START_STACK_VARS]])]])
 m4_ifdef( [[M4_YY_PREFIX]],, [[m4_define([[M4_YY_PREFIX]], [[yy]])]])
 
 m4preproc_define(`M4_GEN_PREFIX',``
-[[#define yy$1 ]]M4_YY_PREFIX[[$1]]
+[[#ifdef yy$1
+#define ]]M4_YY_PREFIX[[$1_ALREADY_DEFINED
+#else
+#define yy$1 ]]M4_YY_PREFIX[[$1
+#endif]]
 'm4preproc_divert(1)`
-[[#undef yy$1]]'m4preproc_divert(0)')
+[[#ifndef ]]M4_YY_PREFIX[[$1_ALREADY_DEFINED
+#undef yy$1
+#endif]]'m4preproc_divert(0)')
 
 %if-c++-only
     /* The c++ scanner is a mess. The FlexLexer.h header file relies on the
