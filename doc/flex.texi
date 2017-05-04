@@ -2182,7 +2182,7 @@ manages its own input buffer stack manually (instead of letting flex do it).
             }
 
     <<EOF>> {
-            if ( --include_stack_ptr  0 )
+            if ( --include_stack_ptr == 0 )
                 {
                 yyterminate();
                 }
