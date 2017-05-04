@@ -6,8 +6,9 @@
 %#      pre-compilation stage of flex. Only macros starting
 %#      with `m4preproc_' are processed, and quoting is normal.
 %#
-%#   2. The preprocessed skeleton is translated verbatim into a
-%#      C array, saved as "skel.c" and compiled into the flex binary.
+%#   2. The preprocessed skeleton is translated into a C array, saved
+%#      as "skel.c" and compiled into the flex binary. The %# comment
+%#      lines are removed.
 %#
 %#   3. At runtime, the skeleton is generated and filtered (again)
 %#      through m4. Macros beginning with `m4_' will be processed.
