@@ -1,5 +1,6 @@
 *.orig
 *.rej
+*.sig
 *.tar.gz
 *.tar.lz
 *~
