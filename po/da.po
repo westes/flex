@@ -8,52 +8,52 @@ msgid ""
 msgstr ""
 "Project-Id-Version: flex-2.5.38\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2014-02-11 16:15-0500\n"
+"POT-Creation-Date: 2017-05-06 10:49-0400\n"
 "PO-Revision-Date: 2015-04-26 09:12+0200\n"
 "Last-Translator: Keld Simonsen <keld@keldix.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 
-#: buf.c:78
+#: src/buf.c:79
 msgid "Allocation of buffer to print string failed"
 msgstr "Tildeling af buffer til udskrivningsstreng mislykkedes"
 
-#: buf.c:100
+#: src/buf.c:107
 msgid "Allocation of buffer for line directive failed"
 msgstr "Tildeling af buffer til linjedirektiv mislykkedes"
 
-#: buf.c:177
+#: src/buf.c:177
 msgid "Allocation of buffer for m4 def failed"
 msgstr "Tildeling af buffer til m4 def mislykkedes"
 
-#: buf.c:197
+#: src/buf.c:198
 msgid "Allocation of buffer for m4 undef failed"
 msgstr "Tildeling af buffer til m4 undef mislykkedes"
 
-#: dfa.c:61
+#: src/dfa.c:59
 #, c-format
 msgid "State #%d is non-accepting -\n"
 msgstr "Tilstand %d er ikke-accepterende -\n"
 
-#: dfa.c:124
+#: src/dfa.c:119
 msgid "dangerous trailing context"
 msgstr "farlig efterfølgende kontekst"
 
-#: dfa.c:166
+#: src/dfa.c:159
 #, c-format
 msgid " associated rule line numbers:"
 msgstr " linjenummer for associeret regel:"
 
-#: dfa.c:202
+#: src/dfa.c:193
 #, c-format
 msgid " out-transitions: "
 msgstr " ud-overgange: "
 
-#: dfa.c:210
+#: src/dfa.c:201
 #, c-format
 msgid ""
 "\n"
@@ -62,11 +62,11 @@ msgstr ""
 "\n"
 " stopovergange: filslut "
 
-#: dfa.c:341
+#: src/dfa.c:331
 msgid "consistency check failed in epsclosure()"
 msgstr "konsistenskontrollen mislykkedes i epsclosure()"
 
-#: dfa.c:429
+#: src/dfa.c:419
 msgid ""
 "\n"
 "\n"
@@ -78,26 +78,26 @@ msgstr ""
 "DFA-udskrift:\n"
 "\n"
 
-#: dfa.c:604
+#: src/dfa.c:587
 msgid "could not create unique end-of-buffer state"
 msgstr "kunne ikke oprette en unik buffersluttilstand"
 
-#: dfa.c:625
+#: src/dfa.c:608
 #, c-format
 msgid "state # %d:\n"
 msgstr "tilstand %d:\n"
 
 # Dette er ju helt sjukt. Har buggrapporteret dette at det bør
 # erstatas med %s
-#: dfa.c:785
+#: src/dfa.c:768
 msgid "Could not write yynxt_tbl[][]"
 msgstr "Kunne ikke skrive yynxt_tbl[][]"
 
-#: dfa.c:1049
+#: src/dfa.c:1028
 msgid "bad transition character detected in sympartition()"
 msgstr "forkert overgangstegn fundet i sympartition()"
 
-#: gen.c:478
+#: src/gen.c:480
 msgid ""
 "\n"
 "\n"
@@ -109,29 +109,29 @@ msgstr ""
 "Ækvivalensklasser:\n"
 "\n"
 
-#: gen.c:662 gen.c:691 gen.c:1215
+#: src/gen.c:669 src/gen.c:698 src/gen.c:1218
 #, c-format
 msgid "state # %d accepts: [%d]\n"
 msgstr "tilstand %d accepterer: [%d]\n"
 
-#: gen.c:1110
+#: src/gen.c:1115
 #, c-format
 msgid "state # %d accepts: "
 msgstr "tilstand %d accepterer: "
 
-#: gen.c:1157
+#: src/gen.c:1162
 msgid "Could not write yyacclist_tbl"
 msgstr "Kunne ikke skrive yyacclist_tbl"
 
-#: gen.c:1233
+#: src/gen.c:1236
 msgid "Could not write yyacc_tbl"
 msgstr "Kunne ikke skrive yyacc_tbl"
 
-#: gen.c:1248 gen.c:1633 gen.c:1656
+#: src/gen.c:1251 src/gen.c:1623 src/gen.c:1646
 msgid "Could not write ecstbl"
 msgstr "Kunne ikke skrive esctbl"
 
-#: gen.c:1271
+#: src/gen.c:1271
 msgid ""
 "\n"
 "\n"
@@ -141,394 +141,405 @@ msgstr ""
 "\n"
 "Meta-ækvivalensklasser:\n"
 
-#: gen.c:1293
+#: src/gen.c:1293
 msgid "Could not write yymeta_tbl"
 msgstr "Kunne ikke skrive yymeta_tbl"
 
-#: gen.c:1354
+#: src/gen.c:1352
 msgid "Could not write yybase_tbl"
 msgstr "kunne ikke oprette yybase_tbl"
 
-#: gen.c:1388
+#: src/gen.c:1384
 msgid "Could not write yydef_tbl"
 msgstr "Kunne ikke oprette yydef_tbl"
 
-#: gen.c:1428
+#: src/gen.c:1422
 msgid "Could not write yynxt_tbl"
 msgstr "Kunne ikke skrive yynxt_tbl"
 
-#: gen.c:1464
+#: src/gen.c:1456
 msgid "Could not write yychk_tbl"
 msgstr "Kunne ikke skrive yychk_tbl"
 
-#: gen.c:1618 gen.c:1647
+#: src/gen.c:1608 src/gen.c:1637
 msgid "Could not write ftbl"
 msgstr "Kunne ikke skrive ftbl"
 
-#: gen.c:1624
+#: src/gen.c:1614
 msgid "Could not write ssltbl"
 msgstr "Kunne ikke skrive ssltbl"
 
-#: gen.c:1675
+#: src/gen.c:1665
 msgid "Could not write eoltbl"
 msgstr "Kunne ikke skrive eoltbl"
 
-#: gen.c:1735
+#: src/gen.c:1722
 msgid "Could not write yynultrans_tbl"
 msgstr "Kunne ikke skrive yynultrans_tbl"
 
-#: main.c:191
+#: src/main.c:178
 msgid "rule cannot be matched"
 msgstr "reglen kan ikke matches"
 
-#: main.c:196
+#: src/main.c:183
 msgid "-s option given but default rule can be matched"
 msgstr "flaget -s angivet, men standardreglen kan følges"
 
-#: main.c:236
+#: src/main.c:221
 msgid "Can't use -+ with -l option"
 msgstr "-+ kan ikke bruges sammen med flaget -l"
 
-#: main.c:239
+#: src/main.c:224
 msgid "Can't use -f or -F with -l option"
 msgstr "-f eller -F kan ikke bruges sammen med -l"
 
-#: main.c:243
+#: src/main.c:228
 msgid "Can't use --reentrant or --bison-bridge with -l option"
 msgstr "Kan ikke bruge --reentrant eller --bison-bridge sammen med flaget -l"
 
-#: main.c:275
+#: src/main.c:260
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "-Cf/-CF og -Cm kan ikke bruges sammen"
 
-#: main.c:278
+#: src/main.c:263
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "-Cf/-CF og -I kan ikke bruges sammen"
 
-#: main.c:282
+#: src/main.c:267
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr "-Cf/-CF kan ikke bruges i lex-kompatibilitetstilstand"
 
-#: main.c:287
+#: src/main.c:272
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "-Cf og -CF er gensidigt udelukkende"
 
-#: main.c:291
+#: src/main.c:276
 msgid "Can't use -+ with -CF option"
 msgstr "-+ kan ikke bruges sammen med flaget -CF"
 
-#: main.c:294
+#: src/main.c:279
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "-+ kan ikke bruges sammen med %array"
 
-#: main.c:299
+#: src/main.c:284
 msgid "Options -+ and --reentrant are mutually exclusive."
 msgstr "Flagene -+ og --reentrant er gensidigt udelukkende."
 
-#: main.c:302
+#: src/main.c:287
 msgid "bison bridge not supported for the C++ scanner."
 msgstr "bisonbro understøttes ikke for C++-skanneren."
 
-#: main.c:357 main.c:403
+#: src/main.c:336 src/main.c:419
 #, c-format
 msgid "could not create %s"
 msgstr "kunne ikke oprette %s"
 
-#: main.c:416
+#: src/main.c:431
 msgid "could not write tables header"
 msgstr "kunne ikke skrive tabellhoved"
 
-#: main.c:420
+#: src/main.c:435
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "kan ikke åbne skabelonfilen %s"
 
-#: main.c:456
+#: src/main.c:450
+msgid "Prefix cannot include '[' or ']'"
+msgstr ""
+
+#: src/main.c:474
 msgid "allocation of macro definition failed"
 msgstr "tildeling af makro-definition mislykkedes"
 
-#: main.c:504
+#: src/main.c:521
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "fejl ved læsning af skabelonsfilen %s"
 
-#: main.c:508
+#: src/main.c:525
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "fejl ved lukning af skabelonfilen %s"
 
-#: main.c:693
+#: src/main.c:709
 #, c-format
 msgid "error creating header file %s"
 msgstr "fejl ved oprettelsen af headerfilen %s"
 
-#: main.c:701
+#: src/main.c:717
 #, c-format
 msgid "error writing output file %s"
 msgstr "fejl ved skrivning af udfilen %s"
 
-#: main.c:705
+#: src/main.c:721
 #, c-format
 msgid "error closing output file %s"
 msgstr "fejl ved lukning af udfilen %s"
 
-#: main.c:709
+#: src/main.c:725
 #, c-format
 msgid "error deleting output file %s"
 msgstr "fejl ved sletning af udfilen %s"
 
-#: main.c:716
+#: src/main.c:732
 #, c-format
 msgid "No backing up.\n"
 msgstr "Ingen sikkerhedskopiering.\n"
 
-#: main.c:720
+#: src/main.c:736
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "%d sikkerhedskopierer (ikke-accepterende) tilstande.\n"
 
-#: main.c:724
+#: src/main.c:740
 #, c-format
 msgid "Compressed tables always back up.\n"
 msgstr "Komprimerete tabeller backer alltid tillbaka.\n"
 
-#: main.c:727
+#: src/main.c:743
 #, c-format
 msgid "error writing backup file %s"
 msgstr "fejl ved skrivning af sikkerhedskopifilen %s"
 
-#: main.c:731
+#: src/main.c:747
 #, c-format
 msgid "error closing backup file %s"
 msgstr "fejl ved lukning af sikerhedskopifilen %s"
 
-#: main.c:736
+#: src/main.c:752
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr "Statistik over brugaf %s version %s:\n"
 
-#: main.c:739
+#: src/main.c:755
 #, c-format
 msgid "  scanner options: -"
 msgstr "  fortolkningsflag: -"
 
-#: main.c:818
+#: src/main.c:834
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d NFA-tilstand\n"
 
-#: main.c:820
+#: src/main.c:836
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d DFA-tilstand (%d ord)\n"
 
-#: main.c:822
+#: src/main.c:838
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d regler\n"
 
-#: main.c:827
+#: src/main.c:843
 #, c-format
 msgid "  No backing up\n"
 msgstr "  Ingen sikkerhedskopiering\n"
 
-#: main.c:831
+#: src/main.c:847
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr "  %d sikkerhedskopierer (ikke-accepterende) tilstande.\n"
 
-#: main.c:836
+#: src/main.c:852
 #, c-format
 msgid "  Compressed tables always back-up\n"
 msgstr "  Komprimerede tabeller bakker altid tilbake\n"
 
-#: main.c:840
+#: src/main.c:856
 #, c-format
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  Begyndelse-af-linje-mønster brugt\n"
 
-#: main.c:842
+#: src/main.c:858
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d startbetingelse\n"
 
-#: main.c:846
+#: src/main.c:862
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr "  %d epsilontilstande, %d dobbelte epsilontilstande\n"
 
-#: main.c:850
+#: src/main.c:866
 #, c-format
 msgid "  no character classes\n"
 msgstr "  ingen tegnklasser\n"
 
-#: main.c:854
+#: src/main.c:870
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
 msgstr "  %d/%d tegnklasser behøvede %d/%d ord for gemning, %d genbrugte\n"
 
-#: main.c:859
+#: src/main.c:875
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr "  %d par med tilstand/næste-tilstand oprettede\n"
 
-#: main.c:862
+#: src/main.c:878
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d unikke/duplikerede overgange\n"
 
-#: main.c:867
+#: src/main.c:883
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d tabelposter\n"
 
-#: main.c:875
+#: src/main.c:891
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  %d/%d base/standard-poster oprettede\n"
 
-#: main.c:879
+#: src/main.c:895
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  %d/%d (max %d) næste/test-poster oprettede\n"
 
-#: main.c:883
+#: src/main.c:899
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr "  %d/%d (max %d) skablon-næste/test-poster oprettede\n"
 
-#: main.c:887
+#: src/main.c:903
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d tomme tabelposter\n"
 
-#: main.c:889
+#: src/main.c:905
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  %d prototyper oprettede\n"
 
-#: main.c:892
+#: src/main.c:908
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  %d skabloner oprettede, %d formål\n"
 
-#: main.c:900
+#: src/main.c:916
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  %d/%d ækvivalensklasser oprettet\n"
 
-#: main.c:908
+#: src/main.c:924
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  %d/%d meta-ækvivalensklasser oprettede\n"
 
-#: main.c:914
+#: src/main.c:930
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr "  %d (%d gemte) hash-kollisioner, %d DFA'er er ens\n"
 
-#: main.c:916
+#: src/main.c:932
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr "  %d opsætninger med omallokeringer krævedes\n"
 
-#: main.c:918
+#: src/main.c:934
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  %d totale tabelposter kræves\n"
 
-#: main.c:995
+#: src/main.c:1008
 #, c-format
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Intern fejl. flexopts er fejlbehæftede.\n"
 
-#: main.c:1005
+#: src/main.c:1018
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Prøv '%s --help' for mere information.\n"
 
-#: main.c:1062
+#: src/main.c:1075
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "ukendt flag til -C '%c'"
 
-#: main.c:1191
+#: src/main.c:1204
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
 
-#: main.c:1466
+#: src/main.c:1476
 msgid "fatal parse error"
 msgstr "uoprettelig fejl ved analysen"
 
-#: main.c:1498
+#: src/main.c:1508
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr "kunne ikke oprette sikkerhedskopi af info-fil %s"
 
-#: main.c:1519
+#: src/main.c:1529
 #, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr "flaget -l for opførsel som AT&T's lex medfører et væsentligt præstationstab\n"
+msgstr ""
+"flaget -l for opførsel som AT&T's lex medfører et væsentligt præstationstab\n"
 
-#: main.c:1522
+#: src/main.c:1532
 #, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
 msgstr " og kan være den egentlige årsag til andre rapporter om dette\n"
 
-#: main.c:1528
+#: src/main.c:1538
 #, c-format
-msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
-msgstr "%%option yylineno medfører et præstationstab KUN på regler der kan matche nylinje-tegn\n"
+msgid ""
+"%%option yylineno entails a performance penalty ONLY on rules that can match "
+"newline characters\n"
+msgstr ""
+"%%option yylineno medfører et præstationstab KUN på regler der kan matche "
+"nylinje-tegn\n"
 
-#: main.c:1535
+#: src/main.c:1545
 #, c-format
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "-I (interaktiv) medfører et mindre præstationstab\n"
 
-#: main.c:1540
+#: src/main.c:1550
 #, c-format
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "yymore() medfører et mindre præstationstab\n"
 
-#: main.c:1546
+#: src/main.c:1556
 #, c-format
 msgid "REJECT entails a large performance penalty\n"
 msgstr "REJECT medfører et væsentligt præstationstab\n"
 
-#: main.c:1551
+#: src/main.c:1561
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr "Regler for variabel efterfølgende kontekst medfører et væsentlig præstationstab\n"
+msgstr ""
+"Regler for variabel efterfølgende kontekst medfører et væsentlig "
+"præstationstab\n"
 
-#: main.c:1563
+#: src/main.c:1573
 msgid "REJECT cannot be used with -f or -F"
 msgstr "REJECT kan ikke bruges sammen med -f eller -F"
 
-#: main.c:1566
+#: src/main.c:1576
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr "%option yylineno kan ikke bruges sammen med REJECT"
 
-#: main.c:1569
+#: src/main.c:1579
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr ""
 "regler for variabel efterfølgende kontekst kan ikke bruges\n"
 "sammen med -f eller -F"
 
-#: main.c:1692
+#: src/main.c:1704
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
 msgstr "%option yyclass er kun meningsfyldt for C++-fortolkere"
 
-#: main.c:1799
+#: src/main.c:1791
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Brug: %s [FLAG] [FIL]...\n"
 
-#: main.c:1802
-#, c-format
+#: src/main.c:1794
+#, fuzzy, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
 "\n"
@@ -551,13 +562,16 @@ msgid ""
 "  -T, --trace             %s should run in trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
+"      --hex               use hexadecimal numbers instead of octal in debug "
+"outputs\n"
 "\n"
 "Files:\n"
 "  -o, --outfile=FILE      specify output filename\n"
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the scanner\n"
+"      --header-file=FILE   create a C header file in addition to the "
+"scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "\n"
 "Scanner behavior:\n"
@@ -579,8 +593,6 @@ msgid ""
 "       --bison-bridge      scanner for bison pure parser.\n"
 "       --bison-locations   include yylloc support.\n"
 "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
-"       --noansi-definitions old-style function definitions\n"
-"       --noansi-prototypes  empty parameter list in prototypes\n"
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 "\n"
@@ -594,7 +606,8 @@ msgstr ""
 "Genererer programmer som udfører mønstergenkendelse på tekst.\n"
 "\n"
 "Tabel-kompression: (normalt -Cem)\n"
-"  -Ca, --align      brug bedre hukommelses-tilpasning i stedet for mindre tabeller\n"
+"  -Ca, --align      brug bedre hukommelses-tilpasning i stedet for mindre "
+"tabeller\n"
 "  -Ce, --ecs        konstruér ækvivalensklasser\n"
 "  -Cf               komprimér ikke tabeller; brug -f repræsentation\n"
 "  -CF               komprimér ikke tabeller; brug -F repræsentation\n"
@@ -608,7 +621,8 @@ msgstr ""
 "  -d, --debug             aktivér fejlsøgnings-tilstand i skanneren\n"
 "  -b, --backup            skriv sikkerhedskopi-information til %s\n"
 "  -p, --perf-report       skriv ydelses-rapport på stdfejl\n"
-"  -s, --nodefault         undertryk normal regel om at udskrive tekst der ikke passede\n"
+"  -s, --nodefault         undertryk normal regel om at udskrive tekst der "
+"ikke passede\n"
 "  -T, --trace             %s bør køre i sporings-tilstand\n"
 "  -w, --nowarn            generér ikke advarsler\n"
 "  -v, --verbose           skriv sammendrag af skanner-statistik til stdud\n"
@@ -625,7 +639,8 @@ msgstr ""
 "  -7, --7bit              generér 7-bit-skanner\n"
 "  -8, --8bit              generér 8-bit-skanner\n"
 "  -B, --batch             generér batch-skanner (modsat -I)\n"
-"  -i, --case-insensitive  ignorér forskel på små og store bogstaver i mønstre\n"
+"  -i, --case-insensitive  ignorér forskel på små og store bogstaver i "
+"mønstre\n"
 "  -l, --lex-compat        maksimal kompatibilitet med oprindelig lex\n"
 "  -X, --posix-compat      maksimal kompatibilitet med POSIX lex\n"
 "  -I, --interactive       generér interaktiv skanner (modsat -B)\n"
@@ -652,51 +667,52 @@ msgstr ""
 "  -h, --help              udskriv denne hjælpebesked\n"
 "  -V, --version           udskriv %s version\n"
 
-#: misc.c:65
+#: src/misc.c:64
 msgid "allocation of sko_stack failed"
 msgstr "tildeling af sko_stack mislykkedes"
 
-#: misc.c:102 misc.c:128
+#: src/misc.c:100
 #, c-format
 msgid "name \"%s\" ridiculously long"
 msgstr "navnet '%s' er latterligt langt"
 
-#: misc.c:177
+#: src/misc.c:155
 msgid "memory allocation failed in allocate_array()"
 msgstr "hukommelsestildelingen mislykkedes i allocate_array()"
 
-#: misc.c:230
+#: src/misc.c:205
 #, c-format
 msgid "bad character '%s' detected in check_char()"
 msgstr "forkert tegn '%s' fundet i check_char()"
 
-#: misc.c:235
+#: src/misc.c:210
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "skanneren kræver flaget -8 for at kunne bruge tegnet %s"
 
-#: misc.c:268
-msgid "dynamic memory failure in copy_string()"
-msgstr "dynamisk hukommelsesfejl i copy_string()"
+#: src/misc.c:229
+#, fuzzy
+msgid "memory allocation failure in xstrdup()"
+msgstr "hukommelsestildelingen mislykkedes i allocate_array()"
 
-#: misc.c:367
+#: src/misc.c:303
 #, c-format
 msgid "%s: fatal internal error, %s\n"
 msgstr "%s: uoprettelig intern fejl, %s\n"
 
-#: misc.c:803
+#: src/misc.c:671
 msgid "attempt to increase array size failed"
 msgstr "forsøg på at øge arraystørrelse mislykkedes"
 
-#: misc.c:930
+#: src/misc.c:795
 msgid "bad line in skeleton file"
 msgstr "forkert linje i skeletfilen"
 
-#: misc.c:979
+#: src/misc.c:845
 msgid "memory allocation failed in yy_flex_xmalloc()"
 msgstr "hukommelsestildelingen mislykkedes i yy_flex_xmalloc()"
 
-#: nfa.c:104
+#: src/nfa.c:100
 #, c-format
 msgid ""
 "\n"
@@ -707,226 +723,237 @@ msgstr ""
 "\n"
 "********** begynder udskrift af nfa med starttilstand %d\n"
 
-#: nfa.c:115
+#: src/nfa.c:111
 #, c-format
 msgid "state # %4d\t"
 msgstr "tilstand %4d\t"
 
-#: nfa.c:130
+#: src/nfa.c:126
 #, c-format
 msgid "********** end of dump\n"
 msgstr "********** slut på udskrift\n"
 
-#: nfa.c:174
+#: src/nfa.c:169
 msgid "empty machine in dupmachine()"
 msgstr "tom maskine i dupmachine()"
 
-#: nfa.c:240
+#: src/nfa.c:234
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
 msgstr "Regel for variabel efterfølgende kontekst på linje %d\n"
 
-#: nfa.c:364
+#: src/nfa.c:357
 msgid "bad state type in mark_beginning_as_normal()"
 msgstr "forkert tilstandstype i mark_beginning_as_normal()"
 
-#: nfa.c:609
+#: src/nfa.c:595
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "inddatareglerne er for komplicerede (>= %d NFA-tilstand)"
 
-#: nfa.c:688
+#: src/nfa.c:673
 msgid "found too many transitions in mkxtion()"
 msgstr "fandt for mange overgange i mkxtion()"
 
-#: nfa.c:714
+#: src/nfa.c:699
 #, c-format
 msgid "too many rules (> %d)!"
 msgstr "for mange regler (> %d)!"
 
-#: parse.y:159
+#: src/parse.y:159
 msgid "unknown error processing section 1"
 msgstr "ukendt fejl ved tolkning af sektion 1"
 
-#: parse.y:184 parse.y:351
+#: src/parse.y:184 src/parse.y:353
 msgid "bad start condition list"
 msgstr "forkert liste af startbetingelser"
 
-#: parse.y:315
+#: src/parse.y:204
+msgid "Prefix must not contain [ or ]"
+msgstr ""
+
+#: src/parse.y:317
 msgid "unrecognized rule"
 msgstr "ukendt regel"
 
-#: parse.y:434 parse.y:447 parse.y:516
+#: src/parse.y:436 src/parse.y:449 src/parse.y:518
 msgid "trailing context used twice"
 msgstr "efterfølgende kontekst brugt to gange"
 
-#: parse.y:552 parse.y:562 parse.y:635 parse.y:645
+#: src/parse.y:554 src/parse.y:564 src/parse.y:637 src/parse.y:647
 msgid "bad iteration values"
 msgstr "fejlagtige iterationsværdier"
 
-#: parse.y:580 parse.y:598 parse.y:663 parse.y:681
+#: src/parse.y:582 src/parse.y:600 src/parse.y:665 src/parse.y:683
 msgid "iteration value must be positive"
 msgstr "iterationsværdi skal være positiv"
 
-#: parse.y:804 parse.y:814
+#: src/parse.y:806 src/parse.y:816
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
 msgstr "tegnintervallet [%c-%c] er flertydigt i en versalufølsom skanner"
 
-#: parse.y:819
+#: src/parse.y:821
 msgid "negative range in character class"
 msgstr "negativt interval i tegnklasse"
 
-#: parse.y:916
+#: src/parse.y:918
 msgid "[:^lower:] is ambiguous in case insensitive scanner"
 msgstr "[:^lower:] er flertydigt i en versalufølsom skanner"
 
-#: parse.y:922
+#: src/parse.y:924
 msgid "[:^upper:] ambiguous in case insensitive scanner"
 msgstr "[:^upper:] er flertydigt i en versalufølsom skanner"
 
-#: scan.l:75 scan.l:618 scan.l:676
+#: src/scan.l:82 src/scan.l:644 src/scan.l:702
 msgid "Input line too long\n"
 msgstr "For lang inddatalinje\n"
 
-#: scan.l:161
+#: src/scan.l:183
 #, c-format
 msgid "malformed '%top' directive"
 msgstr "fejlagtigt '%top'-direktiv"
 
-#: scan.l:183
+#: src/scan.l:205
 #, no-c-format
 msgid "unrecognized '%' directive"
 msgstr "ukendt '%'-direktiv"
 
-#: scan.l:192
+#: src/scan.l:214
 msgid "Definition name too long\n"
 msgstr "For langt definitionsnavn\n"
 
-#: scan.l:284
+#: src/scan.l:309
 msgid "Unmatched '{'"
 msgstr "Ensomt '{'"
 
-#: scan.l:300
+#: src/scan.l:325
 #, c-format
 msgid "Definition value for {%s} too long\n"
 msgstr "Definitionsværdi for (%s) for langt\n"
 
-#: scan.l:317
+#: src/scan.l:342
 msgid "incomplete name definition"
 msgstr "ufuldstændig navnedefinition"
 
-#: scan.l:443
+#: src/scan.l:467
 msgid "Option line too long\n"
 msgstr "For lang valgmulighedslinje\n"
 
-#: scan.l:451
+#: src/scan.l:475
 #, c-format
 msgid "unrecognized %%option: %s"
 msgstr "ukendt %%option: %s"
 
-#: scan.l:633 scan.l:800
+#: src/scan.l:659 src/scan.l:832
 msgid "bad character class"
 msgstr "forkert tegnklasse"
 
-#: scan.l:683
+#: src/scan.l:709
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "udefinieret definition {%s}"
 
-#: scan.l:755
+#: src/scan.l:772
+msgid "unbalanced parenthesis"
+msgstr ""
+
+#: src/scan.l:787
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "forkert <startbetingelse>: %s"
 
-#: scan.l:768
+#: src/scan.l:800
 msgid "missing quote"
 msgstr "citationstegn savnes"
 
-#: scan.l:834
+#: src/scan.l:866
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "forkert udtryk for tegnklasse: %s"
 
-#: scan.l:856
+#: src/scan.l:888
 msgid "bad character inside {}'s"
 msgstr "forkert tegn imellem {}"
 
-#: scan.l:862
+#: src/scan.l:894
 msgid "missing }"
 msgstr "} savnes"
 
-#: scan.l:940
+#: src/scan.l:972
 msgid "EOF encountered inside an action"
 msgstr "filslutning mødt inden i en handling"
 
-#: scan.l:945
+#: src/scan.l:977
 msgid "EOF encountered inside pattern"
 msgstr "filslutning mødt inden i et mønster"
 
-#: scan.l:967
+#: src/scan.l:1010
 #, c-format
 msgid "bad character: %s"
 msgstr "forkert tegn: %s"
 
-#: scan.l:996
+#: src/scan.l:1038
 #, c-format
 msgid "can't open %s"
 msgstr "kan ikke åbne %s"
 
-#: scanopt.c:291
+#: src/scanopt.c:259
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
 msgstr "Brug: %s [FLAG]...\n"
 
-#: scanopt.c:564
+#: src/scanopt.c:524
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
 msgstr "flaget '%s' tager ikke noget argument\n"
 
-#: scanopt.c:569
+#: src/scanopt.c:529
 #, c-format
 msgid "option `%s' requires an argument\n"
 msgstr "flaget '%s' kræver et argument\n"
 
-#: scanopt.c:573
+#: src/scanopt.c:533
 #, c-format
 msgid "option `%s' is ambiguous\n"
 msgstr "flaget '%s' er flertydig\n"
 
-#: scanopt.c:577
+#: src/scanopt.c:537
 #, c-format
 msgid "Unrecognized option `%s'\n"
 msgstr "Ukendt flag: '%s'\n"
 
-#: scanopt.c:581
+#: src/scanopt.c:541
 #, c-format
 msgid "Unknown error=(%d)\n"
 msgstr "Ukendt fejl=(%d)\n"
 
-#: sym.c:100
+#: src/sym.c:92
 msgid "symbol table memory allocation failed"
 msgstr "hukommelsestildeling for symboltabel mislykkedes"
 
-#: sym.c:202
+#: src/sym.c:183
 msgid "name defined twice"
 msgstr "navnet defineret to gange"
 
-#: sym.c:253
+#: src/sym.c:231
 #, c-format
 msgid "start condition %s declared twice"
 msgstr "startbetingelse %s deklareret to gange"
 
-#: yylex.c:56
+#: src/yylex.c:57
 msgid "premature EOF"
 msgstr "for tidlig filslut"
 
-#: yylex.c:198
+#: src/yylex.c:200
 #, c-format
 msgid "End Marker\n"
 msgstr "Slutmarkering\n"
 
-#: yylex.c:204
+#: src/yylex.c:206
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr "*Noget mærkeligt* - tegn: %d værdi: %d\n"
+
+#~ msgid "dynamic memory failure in copy_string()"
+#~ msgstr "dynamisk hukommelsesfejl i copy_string()"

@@ -8,54 +8,54 @@ msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.36\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-07-22 20:48-0400\n"
+"POT-Creation-Date: 2017-05-06 10:49-0400\n"
 "PO-Revision-Date: 2012-08-02 21:16+0200\n"
 "Last-Translator: Jorma Karvonen <karvonen.jorma@gmail.com>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "Language: fi\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: buf.c:78
+#: src/buf.c:79
 msgid "Allocation of buffer to print string failed"
 msgstr "Puskurin varaaminen merkkijonon tulostamiseen epäonnistui"
 
-#: buf.c:100
+#: src/buf.c:107
 msgid "Allocation of buffer for line directive failed"
 msgstr "Puskurin varaaminen rividirektiiville epäonnistui"
 
-#: buf.c:177
+#: src/buf.c:177
 msgid "Allocation of buffer for m4 def failed"
 msgstr "Puskurin varaaminen m4 def -määrittelylle epäonnistui"
 
-#: buf.c:197
+#: src/buf.c:198
 msgid "Allocation of buffer for m4 undef failed"
 msgstr "Puskurin varaaminen m4 undef -määrittelylle epäonnistui"
 
-#: dfa.c:61
+#: src/dfa.c:59
 #, c-format
 msgid "State #%d is non-accepting -\n"
 msgstr "Tila #%d on ei-hyväksyvä -\n"
 
 # Sanastollisessa analyysissä (lexical analysis) esimerkiksi kauttaviivalla ilmoitetaan, että viivan jälkeinen teksti kuuluu "trailing context"-tekstiin
-#: dfa.c:124
+#: src/dfa.c:119
 msgid "dangerous trailing context"
 msgstr "vaarallinen jättökonteksti"
 
-#: dfa.c:166
+#: src/dfa.c:159
 #, c-format
 msgid " associated rule line numbers:"
 msgstr " yhdistetyt sääntörivinumerot:"
 
-#: dfa.c:202
+#: src/dfa.c:193
 #, c-format
 msgid " out-transitions: "
 msgstr " ulossiirtymät: "
 
-#: dfa.c:210
+#: src/dfa.c:201
 #, c-format
 msgid ""
 "\n"
@@ -64,12 +64,12 @@ msgstr ""
 "\n"
 " ruuhkasiirtymät: TIEDOSTONLOPPUMERKKI "
 
-#: dfa.c:341
+#: src/dfa.c:331
 msgid "consistency check failed in epsclosure()"
 msgstr "yhtenäisyystarkistus epäonnistui epsclosure()-funktiossa"
 
 #  DFA on akronyymi käsitteelle "deterministic finite automaton" eli deterministinen äärellinen automaatti.
-#: dfa.c:429
+#: src/dfa.c:419
 msgid ""
 "\n"
 "\n"
@@ -81,24 +81,24 @@ msgstr ""
 "Deterministisen äärellisen automaatin vedos:\n"
 "\n"
 
-#: dfa.c:604
+#: src/dfa.c:587
 msgid "could not create unique end-of-buffer state"
 msgstr "ei voitu luoda uniikkia puskurinlopputilaa"
 
-#: dfa.c:625
+#: src/dfa.c:608
 #, c-format
 msgid "state # %d:\n"
 msgstr "tila numero %d:\n"
 
-#: dfa.c:785
+#: src/dfa.c:768
 msgid "Could not write yynxt_tbl[][]"
 msgstr "Ei voitu kirjoittaa yynxt_tbl[][]"
 
-#: dfa.c:1049
+#: src/dfa.c:1028
 msgid "bad transition character detected in sympartition()"
 msgstr "väärä siirtymämerkki havaittu funktiossa sympartition()"
 
-#: gen.c:478
+#: src/gen.c:480
 msgid ""
 "\n"
 "\n"
@@ -110,29 +110,29 @@ msgstr ""
 "Ekvivalenssiluokat:\n"
 "\n"
 
-#: gen.c:662 gen.c:691 gen.c:1215
+#: src/gen.c:669 src/gen.c:698 src/gen.c:1218
 #, c-format
 msgid "state # %d accepts: [%d]\n"
 msgstr "tila numero %d hyväksyy: [%d]\n"
 
-#: gen.c:1110
+#: src/gen.c:1115
 #, c-format
 msgid "state # %d accepts: "
 msgstr "tila numero %d hyväksyy: "
 
-#: gen.c:1157
+#: src/gen.c:1162
 msgid "Could not write yyacclist_tbl"
 msgstr "Ei voitu kirjoittaa: yyacclist_tbl"
 
-#: gen.c:1233
+#: src/gen.c:1236
 msgid "Could not write yyacc_tbl"
 msgstr "Ei voitu kirjoittaa: yyacc_tbl"
 
-#: gen.c:1248 gen.c:1633 gen.c:1656
+#: src/gen.c:1251 src/gen.c:1623 src/gen.c:1646
 msgid "Could not write ecstbl"
 msgstr "Ei voitu kirjoitaa ecstbl"
 
-#: gen.c:1271
+#: src/gen.c:1271
 msgid ""
 "\n"
 "\n"
@@ -142,394 +142,409 @@ msgstr ""
 "\n"
 "Meta-ekvivalenssiluokkia:\n"
 
-#: gen.c:1293
+#: src/gen.c:1293
 msgid "Could not write yymeta_tbl"
 msgstr "Ei voitu kirjoittaa: yymeta_tbl"
 
-#: gen.c:1354
+#: src/gen.c:1352
 msgid "Could not write yybase_tbl"
 msgstr "Ei voitu kirjoittaa: yybase_tbl"
 
-#: gen.c:1388
+#: src/gen.c:1384
 msgid "Could not write yydef_tbl"
 msgstr "Ei voitu kirjoittaa: yydef_tbl"
 
-#: gen.c:1428
+#: src/gen.c:1422
 msgid "Could not write yynxt_tbl"
 msgstr "Ei voitu kirjoittaa: yynxt_tbl"
 
-#: gen.c:1464
+#: src/gen.c:1456
 msgid "Could not write yychk_tbl"
 msgstr "Ei voitu kirjoittaa: yychk_tbl"
 
-#: gen.c:1618 gen.c:1647
+#: src/gen.c:1608 src/gen.c:1637
 msgid "Could not write ftbl"
 msgstr "Ei voitu kirjoittaa: ftbl"
 
-#: gen.c:1624
+#: src/gen.c:1614
 msgid "Could not write ssltbl"
 msgstr "Ei voitu kirjoittaa: ssltbl"
 
-#: gen.c:1675
+#: src/gen.c:1665
 msgid "Could not write eoltbl"
 msgstr "Ei voitu kirjoittaa: eoltbl"
 
-#: gen.c:1735
+#: src/gen.c:1722
 msgid "Could not write yynultrans_tbl"
 msgstr "Ei voitu kirjoittaa: yynultrans_tbl"
 
-#: main.c:189
+#: src/main.c:178
 msgid "rule cannot be matched"
 msgstr "sääntö ei voinut täsmätä"
 
-#: main.c:194
+#: src/main.c:183
 msgid "-s option given but default rule can be matched"
 msgstr "valitsin -s annettu mutta oletussääntö ei voinut täsmätä"
 
-#: main.c:234
+#: src/main.c:221
 msgid "Can't use -+ with -l option"
 msgstr "Ei voi käyttää -+ valitsimen -l kanssa"
 
-#: main.c:237
+#: src/main.c:224
 msgid "Can't use -f or -F with -l option"
 msgstr "Ei voi käyttää valitsinta -f tai -F valitsimen -l kanssa"
 
-#: main.c:241
+#: src/main.c:228
 msgid "Can't use --reentrant or --bison-bridge with -l option"
-msgstr "Ei voi käyttää valitsinta --reentrant tai --bison-bridge valitsimen -l kanssa"
+msgstr ""
+"Ei voi käyttää valitsinta --reentrant tai --bison-bridge valitsimen -l kanssa"
 
-#: main.c:278
+#: src/main.c:260
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "-Cf/-CF ja -Cm eivät ole järkeviä yhdessä"
 
-#: main.c:281
+#: src/main.c:263
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "-Cf/-CF ja -I ovat yhteensopimattomia"
 
-#: main.c:285
+#: src/main.c:267
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr "-Cf/-CF ovat yhteensopimattomia lex-yhteensopivuustilassa"
 
-#: main.c:290
+#: src/main.c:272
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "-Cf ja -CF ovat toisensa poissulkevia"
 
-#: main.c:294
+#: src/main.c:276
 msgid "Can't use -+ with -CF option"
 msgstr "Ei voi käyttää valitsinta -+ valitsimen -CF kanssa"
 
-#: main.c:297
+#: src/main.c:279
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "%array on yhteensopimaton valitsimen -+ kanssa"
 
-#: main.c:302
+#: src/main.c:284
 msgid "Options -+ and --reentrant are mutually exclusive."
 msgstr "Valitsimen -+ ja --reentrant ovat toisensa poissulkevia."
 
 #  bison bridge tarkoittaa, että flex käyttää bison-ohjelmaa analyysissä
-#: main.c:305
+#: src/main.c:287
 msgid "bison bridge not supported for the C++ scanner."
 msgstr "”bison bridge”-menettelyä ei tueta C++-skannerille."
 
-#: main.c:360 main.c:406
+#: src/main.c:336 src/main.c:419
 #, c-format
 msgid "could not create %s"
 msgstr "ei voitu luoda %s"
 
-#: main.c:419
+#: src/main.c:431
 msgid "could not write tables header"
 msgstr "ei voitu kirjoittaa tauluotsaketta"
 
-#: main.c:423
+#: src/main.c:435
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "ei voi avata kehystiedostoa %s"
 
-#: main.c:459
+#: src/main.c:450
+msgid "Prefix cannot include '[' or ']'"
+msgstr ""
+
+#: src/main.c:474
 msgid "allocation of macro definition failed"
 msgstr "Makromäärityksen varaaminen epäonnistui"
 
-#: main.c:507
+#: src/main.c:521
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "syötevirhe luettaessa kehystiedostoa %s"
 
-#: main.c:511
+#: src/main.c:525
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "virhe suljettaessa kehystiedostoa %s"
 
-#: main.c:696
+#: src/main.c:709
 #, c-format
 msgid "error creating header file %s"
 msgstr "virhe luotaessa otsaketiedostoa %s"
 
-#: main.c:704
+#: src/main.c:717
 #, c-format
 msgid "error writing output file %s"
 msgstr "virhe kirjoitettaessa tulostetiedostoa %s"
 
-#: main.c:708
+#: src/main.c:721
 #, c-format
 msgid "error closing output file %s"
 msgstr "virhe suljettaessa tulostetiedostoa %s"
 
-#: main.c:712
+#: src/main.c:725
 #, c-format
 msgid "error deleting output file %s"
 msgstr "virhe poistettaessa tulostetiedostoa %s"
 
-#: main.c:719
+#: src/main.c:732
 #, c-format
 msgid "No backing up.\n"
 msgstr "Ei varmuuskopiointia.\n"
 
-#: main.c:723
+#: src/main.c:736
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "%d (ei-hyväksyvää) varmuuskopiointitilaa.\n"
 
-#: main.c:727
+#: src/main.c:740
 #, c-format
 msgid "Compressed tables always back up.\n"
 msgstr "Tiivistetyt taulut varmuuskopioidaan aina.\n"
 
-#: main.c:730
+#: src/main.c:743
 #, c-format
 msgid "error writing backup file %s"
 msgstr "virhe kirjoitettaessa varmuuskopiotiedostoa %s"
 
-#: main.c:734
+#: src/main.c:747
 #, c-format
 msgid "error closing backup file %s"
 msgstr "virhe suljettaessa varmuuskopiotiedostoa %s"
 
-#: main.c:739
+#: src/main.c:752
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr "%s-version %s käyttötilastot:\n"
 
-#: main.c:742
+#: src/main.c:755
 #, c-format
 msgid "  scanner options: -"
 msgstr "  skannerivalitsimet: -"
 
 #  Epädeterministinen äärellinen automaatti, lyh. NFA (engl. non-deterministic finite-state automaton)
-#: main.c:821
+#: src/main.c:834
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d Epädeterministisen äärellisen automaatin tilaa\n"
 
-#: main.c:823
+#: src/main.c:836
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d Deterministisen äärellisen automaatin tilaa (%d sanaa)\n"
 
-#: main.c:825
+#: src/main.c:838
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d sääntöä\n"
 
-#: main.c:830
+#: src/main.c:843
 #, c-format
 msgid "  No backing up\n"
 msgstr "  Ei varmuuskopiointia\n"
 
-#: main.c:834
+#: src/main.c:847
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr "  %d (ei-hyväksyvää) varmuuskopiotilaa\n"
 
-#: main.c:839
+#: src/main.c:852
 #, c-format
 msgid "  Compressed tables always back-up\n"
 msgstr "  Tiivistetyt taulut varmuuskopioidaan aina\n"
 
-#: main.c:843
+#: src/main.c:856
 #, c-format
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  Rivin-alku-malleja käytetään\n"
 
-#: main.c:845
+#: src/main.c:858
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d-käynnistysehtoja\n"
 
-#: main.c:849
+#: src/main.c:862
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr "  %d epsilon-tilaa, %d double epsilon-tilaa\n"
 
-#: main.c:853
+#: src/main.c:866
 #, c-format
 msgid "  no character classes\n"
 msgstr "  ei merkkiluokkia\n"
 
-#: main.c:857
+#: src/main.c:870
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-msgstr "  %d/%d merkkiluokkaa tarvittu %d/%d tallennussanaan, %d käytetty uudelleen\n"
+msgstr ""
+"  %d/%d merkkiluokkaa tarvittu %d/%d tallennussanaan, %d käytetty uudelleen\n"
 
-#: main.c:862
+#: src/main.c:875
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr "  %d tila/seuraavatila-paria luotu\n"
 
-#: main.c:865
+#: src/main.c:878
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d uniikkia/kaksoiskappelsiirtymää\n"
 
-#: main.c:870
+#: src/main.c:883
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d-tauluriviä\n"
 
-#: main.c:878
+#: src/main.c:891
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  %d/%d base-def-alkiota luotu\n"
 
-#: main.c:882
+#: src/main.c:895
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  %d/%d (huippu %d) nxt-chk-alkiota luotu\n"
 
-#: main.c:886
+#: src/main.c:899
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr "  %d/%d (huippu %d) malline nxt-chk-alkiota luotu\n"
 
-#: main.c:890
+#: src/main.c:903
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d tyhjää taulualkiota\n"
 
-#: main.c:892
+#: src/main.c:905
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  %d protoa luotu\n"
 
-#: main.c:895
+#: src/main.c:908
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  %d mallinetta luotu, %d käytetään\n"
 
-#: main.c:903
+#: src/main.c:916
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  %d/%d ekvivalenssiluokkaa luotu\n"
 
-#: main.c:911
+#: src/main.c:924
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  %d/%d meta-ekvivalenssiluokkaa luotu\n"
 
-#: main.c:917
+#: src/main.c:930
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
-msgstr "  %d (%d tallennettu) hash-törmäykset, yhtäsuuri kuin %d Deterministisen äärellisen automaatin törmäystä\n"
+msgstr ""
+"  %d (%d tallennettu) hash-törmäykset, yhtäsuuri kuin %d Deterministisen "
+"äärellisen automaatin törmäystä\n"
 
-#: main.c:919
+#: src/main.c:932
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr "  %d uudelleenvarausjoukkoa tarvittu\n"
 
-#: main.c:921
+#: src/main.c:934
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  %d taulukkoalkiota tarvittu yhteensä\n"
 
-#: main.c:998
+#: src/main.c:1008
 #, c-format
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Sisäinen virhe. flex-valitsimet ovat vääränmuotoisia.\n"
 
-#: main.c:1008
+#: src/main.c:1018
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Lisätietoja käskyllä ”%s --help”.\n"
 
-#: main.c:1065
+#: src/main.c:1075
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "tuntematon valitsin -C ”%c”"
 
-#: main.c:1194
+#: src/main.c:1204
 #, c-format
 msgid "%s %s\n"
 msgstr "%s %s\n"
 
-#: main.c:1469
+#: src/main.c:1476
 msgid "fatal parse error"
 msgstr "vakava jäsennysvirhe"
 
-#: main.c:1501
+#: src/main.c:1508
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr "ei voitu luoda varmuuskopiotietotiedostoa %s"
 
-#: main.c:1522
+#: src/main.c:1529
 #, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr "-l AT&T lex-yhteensopivuusvalitsin tuo mukanaan ison suorituskykysakon\n"
+msgstr ""
+"-l AT&T lex-yhteensopivuusvalitsin tuo mukanaan ison suorituskykysakon\n"
 
-#: main.c:1525
+#: src/main.c:1532
 #, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
-msgstr " ja saattaa olla muiden ilmoitettujen suorituskykysakkojen todellinen lähde\n"
+msgstr ""
+" ja saattaa olla muiden ilmoitettujen suorituskykysakkojen todellinen lähde\n"
 
-#: main.c:1531
+#: src/main.c:1538
 #, c-format
-msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
-msgstr "%%option yylineno tuo mukanaan suorituskykysakon VAIN säännöissä, jotka voivat täsmätä rivinvaihtomerkkeihin\n"
+msgid ""
+"%%option yylineno entails a performance penalty ONLY on rules that can match "
+"newline characters\n"
+msgstr ""
+"%%option yylineno tuo mukanaan suorituskykysakon VAIN säännöissä, jotka "
+"voivat täsmätä rivinvaihtomerkkeihin\n"
 
-#: main.c:1538
+#: src/main.c:1545
 #, c-format
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "-I (interaktiivinen) tuo mukanaan pienemmän suorituskykysakon\n"
 
-#: main.c:1543
+#: src/main.c:1550
 #, c-format
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "yymore() tuo mukanaan pienemmän suorituskykysakon\n"
 
-#: main.c:1549
+#: src/main.c:1556
 #, c-format
 msgid "REJECT entails a large performance penalty\n"
 msgstr "REJECT tuo mukanaan ison suorituskykyrangaistuksen\n"
 
-#: main.c:1554
+#: src/main.c:1561
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr "Muuttujajättökontekstisäännöt tuovat mukanaan ison suorityskykysakon\n"
 
-#: main.c:1566
+#: src/main.c:1573
 msgid "REJECT cannot be used with -f or -F"
 msgstr "REJECT ei voida käyttää valitsimen -f tai -F kanssa"
 
-#: main.c:1569
+#: src/main.c:1576
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr "%option yylineno ei voi käyttää REJECT:n kanssa"
 
-#: main.c:1572
+#: src/main.c:1579
 msgid "variable trailing context rules cannot be used with -f or -F"
-msgstr "muuttujajättökontekstisääntöjä ei voida käyttää valitsimen -f tai -F kanssa"
+msgstr ""
+"muuttujajättökontekstisääntöjä ei voida käyttää valitsimen -f tai -F kanssa"
 
-#: main.c:1695
+#: src/main.c:1704
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
 msgstr "%option yyclass on merkityksellinen vain C++-skannereille"
 
-#: main.c:1802
+#: src/main.c:1791
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Käyttö: %s [VALITSIMET] [TIEDOSTO]...\n"
 
-#: main.c:1805
-#, c-format
+#: src/main.c:1794
+#, fuzzy, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
 "\n"
@@ -552,13 +567,16 @@ msgid ""
 "  -T, --trace             %s should run in trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
+"      --hex               use hexadecimal numbers instead of octal in debug "
+"outputs\n"
 "\n"
 "Files:\n"
 "  -o, --outfile=FILE      specify output filename\n"
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the scanner\n"
+"      --header-file=FILE   create a C header file in addition to the "
+"scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "\n"
 "Scanner behavior:\n"
@@ -580,8 +598,6 @@ msgid ""
 "       --bison-bridge      scanner for bison pure parser.\n"
 "       --bison-locations   include yylloc support.\n"
 "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
-"       --noansi-definitions old-style function definitions\n"
-"       --noansi-prototypes  empty parameter list in prototypes\n"
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 "\n"
@@ -595,12 +611,14 @@ msgstr ""
 "Luo ohjelmia, jotka suorittavat tekstin mallintäsmäystä.\n"
 "\n"
 "Taulutiivistys:\n"
-"  -Ca, --align      kompromissi laajoissa taulukoissa parempaa muistitasausta varten\n"
+"  -Ca, --align      kompromissi laajoissa taulukoissa parempaa "
+"muistitasausta varten\n"
 "  -Ce, --ecs        rakenna ekvivalenssiluokkia\n"
 "  -Cf               älä tiivistä tauluja; käytä valitsinta -f esittelyyn\n"
 "  -CF               älä tiivistä tauluja; käytä valitsinta -F esittelyyn\n"
 "  -Cm, --meta-ecs   rakenna meta-ekvivalenssiluokkia\n"
-"  -Cr, --read       käytä funktiota read() eikä vakiosyötettä skannerisyötteenä\n"
+"  -Cr, --read       käytä funktiota read() eikä vakiosyötettä "
+"skannerisyötteenä\n"
 "  -f, --full        tuota nopea, laaja skanneri. Sama kuin -Cfr\n"
 "  -F, --fast        käytä vaihtoehtoista tauluesittelyä. Sama kuin -CFr\n"
 "  -Cem              oletustiivistys (sama kuin --ecs --meta-ecs)\n"
@@ -609,15 +627,18 @@ msgstr ""
 "  -d, --debug             ota käyttöön virheenjäljitystila skannerissa\n"
 "  -b, --backup            kirjoita varmuuskopiotietoja osoitteeseen %s\n"
 "  -p, --perf-report       kirjoita suorituskykyraportti vakiovirheeseen\n"
-"  -s, --nodefault         vaimenna oletussääntö ECHO-täsmäämättömään tekstiin\n"
+"  -s, --nodefault         vaimenna oletussääntö ECHO-täsmäämättömään "
+"tekstiin\n"
 "  -T, --trace             %s pitäisi suorittaa jäljitystilassa\n"
 "  -w, --nowarn            älä tuota varoituksia\n"
-"  -v, --verbose           kirjoita yhteenveto skanneritilastoista vakiotulosteeseen\n"
+"  -v, --verbose           kirjoita yhteenveto skanneritilastoista "
+"vakiotulosteeseen\n"
 "\n"
 "Tiedostot:\n"
 "  -o, --outfile=TIEDOSTO       määritä tulostetiedostonimi\n"
 "  -S, --skel=TIEDOSTO          määritä runkotiedosto\n"
-"  -t, --stdout                 kirjoita skanneri vakiotulosteeseen eikä kohteeseen %s\n"
+"  -t, --stdout                 kirjoita skanneri vakiotulosteeseen eikä "
+"kohteeseen %s\n"
 "      --yyclass=NIMI           C++-luokan nimi\n"
 "      --header-file=TIEDOSTO   tuota C-otsaketiedosto etsijän lisäksi\n"
 "      --tables-file[=TIEDOSTO] kirjoita taulut TIEDOSTOon\n"
@@ -627,9 +648,11 @@ msgstr ""
 "  -8, --8bit               tuota 8-bittinen skanneri\n"
 "  -B, --batch              tuota eräajoskanneri (päinvastoin kuin -I)\n"
 "  -i, --case-insensitive   älä välitä kirjainkoosta malleissa\n"
-"  -l, --lex-compat         maksimiyhteensopivuus alkueräisen lex-ohjelman kanssa\n"
+"  -l, --lex-compat         maksimiyhteensopivuus alkueräisen lex-ohjelman "
+"kanssa\n"
 "  -X, --posix-compat       maksimiyhteensopivuus POSIX lex-ohjelman kanssa\n"
-"  -I, --interactive        tuota interaktiivinen skanneri (päinvastoin kuin -B)\n"
+"  -I, --interactive        tuota interaktiivinen skanneri (päinvastoin kuin -"
+"B)\n"
 "      --yylineno           jäljitä rivilukumäärä yylineno-ohjelmassa\n"
 "\n"
 "Generoitu koodi:\n"
@@ -640,7 +663,8 @@ msgstr ""
 "  -R,  --reentrant         tuota vapaakäyntinen C-skanneri\n"
 "       --bison-bridge      skanneri ”bison pure”-jäsentimelle.\n"
 "       --bison-locations   sisällytä yylloc-tuki.\n"
-"       --stdinit           alusta yyin/yyout vakiosyötteeseen/vakiotulosteeseen\n"
+"       --stdinit           alusta yyin/yyout vakiosyötteeseen/"
+"vakiotulosteeseen\n"
 "       --noansi-definitions vanhantyyliset funktiomäärittelyt\n"
 "       --noansi-prototypes  tyhjä parametriluettelo prototyypeissä\n"
 "       --nounistd          älä sisällytä <unistd.h>-tiedostoa\n"
@@ -653,51 +677,52 @@ msgstr ""
 "  -h, --help               tuota tämä opastesanoma\n"
 "  -V, --version            ilmoita %s-versio\n"
 
-#: misc.c:65
+#: src/misc.c:64
 msgid "allocation of sko_stack failed"
 msgstr "sko_stack-varaaminen epäonnistui"
 
-#: misc.c:102 misc.c:128
+#: src/misc.c:100
 #, c-format
 msgid "name \"%s\" ridiculously long"
 msgstr "nimi ”%s” on naurettavan pitkä"
 
-#: misc.c:177
+#: src/misc.c:155
 msgid "memory allocation failed in allocate_array()"
 msgstr "muistinvaraus epäonnistui funktiossa allocate_array()"
 
-#: misc.c:230
+#: src/misc.c:205
 #, c-format
 msgid "bad character '%s' detected in check_char()"
 msgstr "väärä merkki ”%s” havaittu funktiossa check_char()"
 
-#: misc.c:235
+#: src/misc.c:210
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "skanneri vaatiin lipun -8 käytettäväksi merkille %s"
 
-#: misc.c:268
-msgid "dynamic memory failure in copy_string()"
-msgstr "dynaaminen muistivirhe funktiossa copy_string()"
+#: src/misc.c:229
+#, fuzzy
+msgid "memory allocation failure in xstrdup()"
+msgstr "muistinvaraus epäonnistui funktiossa allocate_array()"
 
-#: misc.c:367
+#: src/misc.c:303
 #, c-format
 msgid "%s: fatal internal error, %s\n"
 msgstr "%s: vakava sisäinen virhe, %s\n"
 
-#: misc.c:803
+#: src/misc.c:671
 msgid "attempt to increase array size failed"
 msgstr "yritys taulukon koon kasvattamiseksi epäonnistui"
 
-#: misc.c:930
+#: src/misc.c:795
 msgid "bad line in skeleton file"
 msgstr "väärä rivi kehystiedostossa"
 
-#: misc.c:979
+#: src/misc.c:845
 msgid "memory allocation failed in yy_flex_xmalloc()"
 msgstr "muistinvaraus epäonnistui funktiossa yy_flex_xmalloc()"
 
-#: nfa.c:104
+#: src/nfa.c:100
 #, c-format
 msgid ""
 "\n"
@@ -706,228 +731,246 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"********** Epädeterministisen äärellisen automaatin vedoksen alku aloitustilassa %d\n"
+"********** Epädeterministisen äärellisen automaatin vedoksen alku "
+"aloitustilassa %d\n"
 
-#: nfa.c:115
+#: src/nfa.c:111
 #, c-format
 msgid "state # %4d\t"
 msgstr "tila numero %4d\t"
 
-#: nfa.c:130
+#: src/nfa.c:126
 #, c-format
 msgid "********** end of dump\n"
 msgstr "********** vedoksen loppu\n"
 
-#: nfa.c:174
+#: src/nfa.c:169
 msgid "empty machine in dupmachine()"
 msgstr "tyhjä kone funktiossa dupmachine()"
 
-#: nfa.c:240
+#: src/nfa.c:234
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
 msgstr "Muuttujajättökontekstisääntö rivillä %d\n"
 
-#: nfa.c:353
+#: src/nfa.c:357
 msgid "bad state type in mark_beginning_as_normal()"
 msgstr "väärä tilatyyppi funktiossa mark_beginning_as_normal()"
 
-#: nfa.c:598
+#: src/nfa.c:595
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
-msgstr "syötesäännöt ovat liian mutkikkaita (>= %d Epädeterministisen äärellisen automaatin tilaa)"
+msgstr ""
+"syötesäännöt ovat liian mutkikkaita (>= %d Epädeterministisen äärellisen "
+"automaatin tilaa)"
 
-#: nfa.c:677
+#: src/nfa.c:673
 msgid "found too many transitions in mkxtion()"
 msgstr "löytyi liian monta siirtymää funktiossa mkxtion()"
 
-#: nfa.c:703
+#: src/nfa.c:699
 #, c-format
 msgid "too many rules (> %d)!"
 msgstr "liian moni sääntöjä (> %d)!"
 
-#: parse.y:159
+#: src/parse.y:159
 msgid "unknown error processing section 1"
 msgstr "tuntematon virhe käsiteltäessä lohkoa 1"
 
-#: parse.y:184 parse.y:351
+#: src/parse.y:184 src/parse.y:353
 msgid "bad start condition list"
 msgstr "väärä alkuehtoluettelo"
 
-#: parse.y:315
+#: src/parse.y:204
+msgid "Prefix must not contain [ or ]"
+msgstr ""
+
+#: src/parse.y:317
 msgid "unrecognized rule"
 msgstr "tunnistamaton sääntö"
 
-#: parse.y:434 parse.y:447 parse.y:516
+#: src/parse.y:436 src/parse.y:449 src/parse.y:518
 msgid "trailing context used twice"
 msgstr "jättökontekstia käytetty kahdesti"
 
-#: parse.y:552 parse.y:562 parse.y:635 parse.y:645
+#: src/parse.y:554 src/parse.y:564 src/parse.y:637 src/parse.y:647
 msgid "bad iteration values"
 msgstr "vääriä iteraatioarvoja"
 
-#: parse.y:580 parse.y:598 parse.y:663 parse.y:681
+#: src/parse.y:582 src/parse.y:600 src/parse.y:665 src/parse.y:683
 msgid "iteration value must be positive"
 msgstr "iteraatioarvon on oltava positiivinen"
 
-#: parse.y:804 parse.y:814
+#: src/parse.y:806 src/parse.y:816
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr "merkkialue [%c-%c] ei ole yksiselitteinen skannerissa, joka ei välitä kirjainkoosta"
+msgstr ""
+"merkkialue [%c-%c] ei ole yksiselitteinen skannerissa, joka ei välitä "
+"kirjainkoosta"
 
-#: parse.y:819
+#: src/parse.y:821
 msgid "negative range in character class"
 msgstr "negatiivinen lukualue merkkiluokassa"
 
-#: parse.y:916
+#: src/parse.y:918
 msgid "[:^lower:] is ambiguous in case insensitive scanner"
-msgstr "[:^lower:] ei ole yksiselitteinen skannerissa, joka ei välitä kirjainkoosta"
+msgstr ""
+"[:^lower:] ei ole yksiselitteinen skannerissa, joka ei välitä kirjainkoosta"
 
-#: parse.y:922
+#: src/parse.y:924
 msgid "[:^upper:] ambiguous in case insensitive scanner"
-msgstr "[:^upper:] ei ole yksiselitteinen skannerissa, joka ei välit kirjainkoosta"
+msgstr ""
+"[:^upper:] ei ole yksiselitteinen skannerissa, joka ei välit kirjainkoosta"
 
-#: scan.l:75 scan.l:618 scan.l:676
+#: src/scan.l:82 src/scan.l:644 src/scan.l:702
 msgid "Input line too long\n"
 msgstr "Syöterivi on liian pitkä\n"
 
-#: scan.l:161
+#: src/scan.l:183
 #, c-format
 msgid "malformed '%top' directive"
 msgstr "vääränmuotoinen ”%top”-direktiivi"
 
-#: scan.l:183
+#: src/scan.l:205
 #, no-c-format
 msgid "unrecognized '%' directive"
 msgstr "tunnistamaton ”%”-direktiivi"
 
-#: scan.l:192
+#: src/scan.l:214
 msgid "Definition name too long\n"
 msgstr "Määritysnimi on liian pitkä\n"
 
-#: scan.l:284
+#: src/scan.l:309
 msgid "Unmatched '{'"
 msgstr "Pariton ”{”"
 
-#: scan.l:300
+#: src/scan.l:325
 #, c-format
 msgid "Definition value for {%s} too long\n"
 msgstr "Määritysarvo kohteelle {%s} on liian pitkä\n"
 
-#: scan.l:317
+#: src/scan.l:342
 msgid "incomplete name definition"
 msgstr "epätäydellinen nimimäärittely"
 
-#: scan.l:443
+#: src/scan.l:467
 msgid "Option line too long\n"
 msgstr "Valitsinrivi on liian pitkä\n"
 
-#: scan.l:451
+#: src/scan.l:475
 #, c-format
 msgid "unrecognized %%option: %s"
 msgstr "tunnistamaton %%valitsin: %s"
 
-#: scan.l:633 scan.l:800
+#: src/scan.l:659 src/scan.l:832
 msgid "bad character class"
 msgstr "väärä merkkiluokka"
 
-#: scan.l:683
+#: src/scan.l:709
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "määrittelemätön määrittely {%s}"
 
-#: scan.l:755
+#: src/scan.l:772
+msgid "unbalanced parenthesis"
+msgstr ""
+
+#: src/scan.l:787
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "virheellinen <aloitusehto>: %s"
 
-#: scan.l:768
+#: src/scan.l:800
 msgid "missing quote"
 msgstr "puuttuva lainausmerkki"
 
-#: scan.l:834
+#: src/scan.l:866
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "väärä merkkiluokkalauseke: %s"
 
-#: scan.l:856
+#: src/scan.l:888
 msgid "bad character inside {}'s"
 msgstr "väärä merkki aaltosulkeiden {} sisällä"
 
-#: scan.l:862
+#: src/scan.l:894
 msgid "missing }"
 msgstr "puuttuva }"
 
-#: scan.l:940
+#: src/scan.l:972
 msgid "EOF encountered inside an action"
 msgstr "Tiedoston loppumerkki EOF tavattu toiminnon sisällä"
 
-#: scan.l:945
+#: src/scan.l:977
 msgid "EOF encountered inside pattern"
 msgstr "Tiedoston loppumerkki EOF tavattu mallin sisällä"
 
-#: scan.l:967
+#: src/scan.l:1010
 #, c-format
 msgid "bad character: %s"
 msgstr "väärä merkki: %s"
 
-#: scan.l:996
+#: src/scan.l:1038
 #, c-format
 msgid "can't open %s"
 msgstr "ei voi avata %s"
 
-#: scanopt.c:291
+#: src/scanopt.c:259
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
 msgstr "Käyttö: %s [VALITSIMET]...\n"
 
-#: scanopt.c:564
+#: src/scanopt.c:524
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
 msgstr "valitsin ”%s” ei salli argumenttia\n"
 
-#: scanopt.c:569
+#: src/scanopt.c:529
 #, c-format
 msgid "option `%s' requires an argument\n"
 msgstr "valitsin ”%s” vaatii argumentin\n"
 
-#: scanopt.c:573
+#: src/scanopt.c:533
 #, c-format
 msgid "option `%s' is ambiguous\n"
 msgstr "valitsin ”%s” ei ole yksiselitteinen\n"
 
-#: scanopt.c:577
+#: src/scanopt.c:537
 #, c-format
 msgid "Unrecognized option `%s'\n"
 msgstr "Tunnistamaton valitsin ”%s”\n"
 
-#: scanopt.c:581
+#: src/scanopt.c:541
 #, c-format
 msgid "Unknown error=(%d)\n"
 msgstr "Tuntematon virhe=(%d)\n"
 
-#: sym.c:100
+#: src/sym.c:92
 msgid "symbol table memory allocation failed"
 msgstr "symbolitaulun muistinvaraus epäonnistui"
 
-#: sym.c:202
+#: src/sym.c:183
 msgid "name defined twice"
 msgstr "nimi määritelty kahdesti"
 
-#: sym.c:253
+#: src/sym.c:231
 #, c-format
 msgid "start condition %s declared twice"
 msgstr "alkuehto %s esitelty kahdesti"
 
-#: yylex.c:56
+#: src/yylex.c:57
 msgid "premature EOF"
 msgstr "ennenaikainen tiedoston loppumerkki EOF"
 
-#: yylex.c:198
+#: src/yylex.c:200
 #, c-format
 msgid "End Marker\n"
 msgstr "Loppumerkki\n"
 
-#: yylex.c:204
+#: src/yylex.c:206
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr "*Jotain outoa - tok: %d arvo: %d\n"
+
+#~ msgid "dynamic memory failure in copy_string()"
+#~ msgstr "dynaaminen muistivirhe funktiossa copy_string()"
