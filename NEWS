@@ -1,11 +1,65 @@
-This is the file NEWS for the flex package. It records user -visible
-changes between releases of flex.
+flex NEWS
 
-See the file COPYING for copying conditions.
+* Noteworthy changes in release ?.? (????-??-??) [?]
 
-* version 2.6.4
+** build
 
-* version 2.6.3 released 2016-12-30
+*** The indent target now knows about flex's new (as of 2.6.0)
+    layout. The indent rules it would apply are not correct and do
+    need to be fixed.
+
+*** The files included in the flex distribution are now built by the
+    version of flex that is included in the distribution.
+
+*** The configure script has a better idea of which headers are
+    required to build flex. It will also error when missing functions
+    are detected.
+
+*** We have lowered the versions of automake and gettext that
+    configure.ac lists as required for building flex. In autogen.sh,
+    we now check for how to call libtoolize and use what we find in
+    the rest of the script.
+
+*** Since files in lib/ are picked up as needed by src/, we no longer
+    generate a Makefile for that directory.
+
+*** Flex can be cross compiled.
+
+** documentation
+
+*** Some typos were removed from the manual.
+
+** scanner
+
+*** Some minor performance enhancements.
+
+*** We honor user defined yy_* macros again. We are also more careful
+    to not leak macro definitions into header files.
+
+*** A number of portability fixes were introduced so building flex is
+    more reliable on more platforms. Additionally, outdated function
+    calls were removed.
+
+*** When building the flex executable itself, %# comments from
+    flex.skl are removed when generating the C source code array. This
+    reduces the size of flex.
+
+** test suite
+
+*** All scripts in the test suite are now run by $(SHELL) and the
+    needed portability fixes have been included.
+
+*** Test suite dependencies are handled much better. This only matters
+    if you are actively developing flex or its test suite.
+
+*** Tests that depend on platform dependent features now properly skip
+    when those platforms are not present.
+
+*** When running "make check", you can now pas V=0 to silence more of
+    the build. This is useful when you're less connncerned about the
+    details of building and linking the test programs themselves.
+
+* Noteworthy changes in release 2.6.3 (2016-12-30) [stable]
 
 ** scanner
 
@@ -683,6 +737,8 @@ But the inverse is still true
 ** flex input scanner now recognizes '\r' as an EOL character
 
 See the file ONEWS for changes in earlier releases.
+
+See the file COPYING for copying conditions.
 
 Local Variables:
 mode: text
