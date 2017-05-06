@@ -13,9 +13,9 @@ tableopts_opt_nr_Cf_opt_SOURCES = tableopts.l4
 tableopts_opt_nr-Cf.opt$(EXEEXT): tableopts_opt_nr-Cf.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_opt_nr_CF_opt_SOURCES = tableopts.l4
+tableopts_opt_nr_C_F_opt_SOURCES = tableopts.l4
 
-tableopts_opt_nr-CF.opt$(EXEEXT): tableopts_opt_nr-CF.$(OBJEXT)
+tableopts_opt_nr-C_F.opt$(EXEEXT): tableopts_opt_nr-C_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_opt_nr_Cm_opt_SOURCES = tableopts.l4
@@ -38,9 +38,9 @@ tableopts_opt_nr_Caef_opt_SOURCES = tableopts.l4
 tableopts_opt_nr-Caef.opt$(EXEEXT): tableopts_opt_nr-Caef.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_opt_nr_CaeF_opt_SOURCES = tableopts.l4
+tableopts_opt_nr_Cae_F_opt_SOURCES = tableopts.l4
 
-tableopts_opt_nr-CaeF.opt$(EXEEXT): tableopts_opt_nr-CaeF.$(OBJEXT)
+tableopts_opt_nr-Cae_F.opt$(EXEEXT): tableopts_opt_nr-Cae_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_opt_nr_Cam_opt_SOURCES = tableopts.l4
@@ -68,9 +68,9 @@ tableopts_opt_r_Cf_opt_SOURCES = tableopts.l4
 tableopts_opt_r-Cf.opt$(EXEEXT): tableopts_opt_r-Cf.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_opt_r_CF_opt_SOURCES = tableopts.l4
+tableopts_opt_r_C_F_opt_SOURCES = tableopts.l4
 
-tableopts_opt_r-CF.opt$(EXEEXT): tableopts_opt_r-CF.$(OBJEXT)
+tableopts_opt_r-C_F.opt$(EXEEXT): tableopts_opt_r-C_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_opt_r_Cm_opt_SOURCES = tableopts.l4
@@ -93,9 +93,9 @@ tableopts_opt_r_Caef_opt_SOURCES = tableopts.l4
 tableopts_opt_r-Caef.opt$(EXEEXT): tableopts_opt_r-Caef.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_opt_r_CaeF_opt_SOURCES = tableopts.l4
+tableopts_opt_r_Cae_F_opt_SOURCES = tableopts.l4
 
-tableopts_opt_r-CaeF.opt$(EXEEXT): tableopts_opt_r-CaeF.$(OBJEXT)
+tableopts_opt_r-Cae_F.opt$(EXEEXT): tableopts_opt_r-Cae_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_opt_r_Cam_opt_SOURCES = tableopts.l4
@@ -123,9 +123,9 @@ tableopts_ser_nr_Cf_ser_SOURCES = tableopts.l4
 tableopts_ser_nr-Cf.ser$(EXEEXT): tableopts_ser_nr-Cf.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_ser_nr_CF_ser_SOURCES = tableopts.l4
+tableopts_ser_nr_C_F_ser_SOURCES = tableopts.l4
 
-tableopts_ser_nr-CF.ser$(EXEEXT): tableopts_ser_nr-CF.$(OBJEXT)
+tableopts_ser_nr-C_F.ser$(EXEEXT): tableopts_ser_nr-C_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_ser_nr_Cm_ser_SOURCES = tableopts.l4
@@ -148,9 +148,9 @@ tableopts_ser_nr_Caef_ser_SOURCES = tableopts.l4
 tableopts_ser_nr-Caef.ser$(EXEEXT): tableopts_ser_nr-Caef.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_ser_nr_CaeF_ser_SOURCES = tableopts.l4
+tableopts_ser_nr_Cae_F_ser_SOURCES = tableopts.l4
 
-tableopts_ser_nr-CaeF.ser$(EXEEXT): tableopts_ser_nr-CaeF.$(OBJEXT)
+tableopts_ser_nr-Cae_F.ser$(EXEEXT): tableopts_ser_nr-Cae_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_ser_nr_Cam_ser_SOURCES = tableopts.l4
@@ -178,9 +178,9 @@ tableopts_ser_r_Cf_ser_SOURCES = tableopts.l4
 tableopts_ser_r-Cf.ser$(EXEEXT): tableopts_ser_r-Cf.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_ser_r_CF_ser_SOURCES = tableopts.l4
+tableopts_ser_r_C_F_ser_SOURCES = tableopts.l4
 
-tableopts_ser_r-CF.ser$(EXEEXT): tableopts_ser_r-CF.$(OBJEXT)
+tableopts_ser_r-C_F.ser$(EXEEXT): tableopts_ser_r-C_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_ser_r_Cm_ser_SOURCES = tableopts.l4
@@ -203,9 +203,9 @@ tableopts_ser_r_Caef_ser_SOURCES = tableopts.l4
 tableopts_ser_r-Caef.ser$(EXEEXT): tableopts_ser_r-Caef.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_ser_r_CaeF_ser_SOURCES = tableopts.l4
+tableopts_ser_r_Cae_F_ser_SOURCES = tableopts.l4
 
-tableopts_ser_r-CaeF.ser$(EXEEXT): tableopts_ser_r-CaeF.$(OBJEXT)
+tableopts_ser_r-Cae_F.ser$(EXEEXT): tableopts_ser_r-Cae_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_ser_r_Cam_ser_SOURCES = tableopts.l4
@@ -233,9 +233,9 @@ tableopts_ver_nr_Cf_ver_SOURCES = tableopts.l4
 tableopts_ver_nr-Cf.ver$(EXEEXT): tableopts_ver_nr-Cf.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_ver_nr_CF_ver_SOURCES = tableopts.l4
+tableopts_ver_nr_C_F_ver_SOURCES = tableopts.l4
 
-tableopts_ver_nr-CF.ver$(EXEEXT): tableopts_ver_nr-CF.$(OBJEXT)
+tableopts_ver_nr-C_F.ver$(EXEEXT): tableopts_ver_nr-C_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_ver_nr_Cm_ver_SOURCES = tableopts.l4
@@ -258,9 +258,9 @@ tableopts_ver_nr_Caef_ver_SOURCES = tableopts.l4
 tableopts_ver_nr-Caef.ver$(EXEEXT): tableopts_ver_nr-Caef.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_ver_nr_CaeF_ver_SOURCES = tableopts.l4
+tableopts_ver_nr_Cae_F_ver_SOURCES = tableopts.l4
 
-tableopts_ver_nr-CaeF.ver$(EXEEXT): tableopts_ver_nr-CaeF.$(OBJEXT)
+tableopts_ver_nr-Cae_F.ver$(EXEEXT): tableopts_ver_nr-Cae_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_ver_nr_Cam_ver_SOURCES = tableopts.l4
@@ -288,9 +288,9 @@ tableopts_ver_r_Cf_ver_SOURCES = tableopts.l4
 tableopts_ver_r-Cf.ver$(EXEEXT): tableopts_ver_r-Cf.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_ver_r_CF_ver_SOURCES = tableopts.l4
+tableopts_ver_r_C_F_ver_SOURCES = tableopts.l4
 
-tableopts_ver_r-CF.ver$(EXEEXT): tableopts_ver_r-CF.$(OBJEXT)
+tableopts_ver_r-C_F.ver$(EXEEXT): tableopts_ver_r-C_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_ver_r_Cm_ver_SOURCES = tableopts.l4
@@ -313,9 +313,9 @@ tableopts_ver_r_Caef_ver_SOURCES = tableopts.l4
 tableopts_ver_r-Caef.ver$(EXEEXT): tableopts_ver_r-Caef.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-tableopts_ver_r_CaeF_ver_SOURCES = tableopts.l4
+tableopts_ver_r_Cae_F_ver_SOURCES = tableopts.l4
 
-tableopts_ver_r-CaeF.ver$(EXEEXT): tableopts_ver_r-CaeF.$(OBJEXT)
+tableopts_ver_r-Cae_F.ver$(EXEEXT): tableopts_ver_r-Cae_F.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
 tableopts_ver_r_Cam_ver_SOURCES = tableopts.l4
@@ -328,6 +328,6 @@ tableopts_ver_r_Caem_ver_SOURCES = tableopts.l4
 tableopts_ver_r-Caem.ver$(EXEEXT): tableopts_ver_r-Caem.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $<
 
-TABLEOPTS_TESTS = tableopts_opt_nr-Ca.opt tableopts_opt_nr-Ce.opt tableopts_opt_nr-Cf.opt tableopts_opt_nr-CF.opt tableopts_opt_nr-Cm.opt tableopts_opt_nr-Cem.opt tableopts_opt_nr-Cae.opt tableopts_opt_nr-Caef.opt tableopts_opt_nr-CaeF.opt tableopts_opt_nr-Cam.opt tableopts_opt_nr-Caem.opt tableopts_opt_r-Ca.opt tableopts_opt_r-Ce.opt tableopts_opt_r-Cf.opt tableopts_opt_r-CF.opt tableopts_opt_r-Cm.opt tableopts_opt_r-Cem.opt tableopts_opt_r-Cae.opt tableopts_opt_r-Caef.opt tableopts_opt_r-CaeF.opt tableopts_opt_r-Cam.opt tableopts_opt_r-Caem.opt tableopts_ser_nr-Ca.ser tableopts_ser_nr-Ce.ser tableopts_ser_nr-Cf.ser tableopts_ser_nr-CF.ser tableopts_ser_nr-Cm.ser tableopts_ser_nr-Cem.ser tableopts_ser_nr-Cae.ser tableopts_ser_nr-Caef.ser tableopts_ser_nr-CaeF.ser tableopts_ser_nr-Cam.ser tableopts_ser_nr-Caem.ser tableopts_ser_r-Ca.ser tableopts_ser_r-Ce.ser tableopts_ser_r-Cf.ser tableopts_ser_r-CF.ser tableopts_ser_r-Cm.ser tableopts_ser_r-Cem.ser tableopts_ser_r-Cae.ser tableopts_ser_r-Caef.ser tableopts_ser_r-CaeF.ser tableopts_ser_r-Cam.ser tableopts_ser_r-Caem.ser tableopts_ver_nr-Ca.ver tableopts_ver_nr-Ce.ver tableopts_ver_nr-Cf.ver tableopts_ver_nr-CF.ver tableopts_ver_nr-Cm.ver tableopts_ver_nr-Cem.ver tableopts_ver_nr-Cae.ver tableopts_ver_nr-Caef.ver tableopts_ver_nr-CaeF.ver tableopts_ver_nr-Cam.ver tableopts_ver_nr-Caem.ver tableopts_ver_r-Ca.ver tableopts_ver_r-Ce.ver tableopts_ver_r-Cf.ver tableopts_ver_r-CF.ver tableopts_ver_r-Cm.ver tableopts_ver_r-Cem.ver tableopts_ver_r-Cae.ver tableopts_ver_r-Caef.ver tableopts_ver_r-CaeF.ver tableopts_ver_r-Cam.ver tableopts_ver_r-Caem.ver
+TABLEOPTS_TESTS = tableopts_opt_nr-Ca.opt tableopts_opt_nr-Ce.opt tableopts_opt_nr-Cf.opt tableopts_opt_nr-C_F.opt tableopts_opt_nr-Cm.opt tableopts_opt_nr-Cem.opt tableopts_opt_nr-Cae.opt tableopts_opt_nr-Caef.opt tableopts_opt_nr-Cae_F.opt tableopts_opt_nr-Cam.opt tableopts_opt_nr-Caem.opt tableopts_opt_r-Ca.opt tableopts_opt_r-Ce.opt tableopts_opt_r-Cf.opt tableopts_opt_r-C_F.opt tableopts_opt_r-Cm.opt tableopts_opt_r-Cem.opt tableopts_opt_r-Cae.opt tableopts_opt_r-Caef.opt tableopts_opt_r-Cae_F.opt tableopts_opt_r-Cam.opt tableopts_opt_r-Caem.opt tableopts_ser_nr-Ca.ser tableopts_ser_nr-Ce.ser tableopts_ser_nr-Cf.ser tableopts_ser_nr-C_F.ser tableopts_ser_nr-Cm.ser tableopts_ser_nr-Cem.ser tableopts_ser_nr-Cae.ser tableopts_ser_nr-Caef.ser tableopts_ser_nr-Cae_F.ser tableopts_ser_nr-Cam.ser tableopts_ser_nr-Caem.ser tableopts_ser_r-Ca.ser tableopts_ser_r-Ce.ser tableopts_ser_r-Cf.ser tableopts_ser_r-C_F.ser tableopts_ser_r-Cm.ser tableopts_ser_r-Cem.ser tableopts_ser_r-Cae.ser tableopts_ser_r-Caef.ser tableopts_ser_r-Cae_F.ser tableopts_ser_r-Cam.ser tableopts_ser_r-Caem.ser tableopts_ver_nr-Ca.ver tableopts_ver_nr-Ce.ver tableopts_ver_nr-Cf.ver tableopts_ver_nr-C_F.ver tableopts_ver_nr-Cm.ver tableopts_ver_nr-Cem.ver tableopts_ver_nr-Cae.ver tableopts_ver_nr-Caef.ver tableopts_ver_nr-Cae_F.ver tableopts_ver_nr-Cam.ver tableopts_ver_nr-Caem.ver tableopts_ver_r-Ca.ver tableopts_ver_r-Ce.ver tableopts_ver_r-Cf.ver tableopts_ver_r-C_F.ver tableopts_ver_r-Cm.ver tableopts_ver_r-Cem.ver tableopts_ver_r-Cae.ver tableopts_ver_r-Caef.ver tableopts_ver_r-Cae_F.ver tableopts_ver_r-Cam.ver tableopts_ver_r-Caem.ver
 
-tableopts_tables =  tableopts_ser_nr-Ca.ser.tables tableopts_ser_nr-Ce.ser.tables tableopts_ser_nr-Cf.ser.tables tableopts_ser_nr-CF.ser.tables tableopts_ser_nr-Cm.ser.tables tableopts_ser_nr-Cem.ser.tables tableopts_ser_nr-Cae.ser.tables tableopts_ser_nr-Caef.ser.tables tableopts_ser_nr-CaeF.ser.tables tableopts_ser_nr-Cam.ser.tables tableopts_ser_nr-Caem.ser.tables tableopts_ser_r-Ca.ser.tables tableopts_ser_r-Ce.ser.tables tableopts_ser_r-Cf.ser.tables tableopts_ser_r-CF.ser.tables tableopts_ser_r-Cm.ser.tables tableopts_ser_r-Cem.ser.tables tableopts_ser_r-Cae.ser.tables tableopts_ser_r-Caef.ser.tables tableopts_ser_r-CaeF.ser.tables tableopts_ser_r-Cam.ser.tables tableopts_ser_r-Caem.ser.tables tableopts_ver_nr-Ca.ver.tables tableopts_ver_nr-Ce.ver.tables tableopts_ver_nr-Cf.ver.tables tableopts_ver_nr-CF.ver.tables tableopts_ver_nr-Cm.ver.tables tableopts_ver_nr-Cem.ver.tables tableopts_ver_nr-Cae.ver.tables tableopts_ver_nr-Caef.ver.tables tableopts_ver_nr-CaeF.ver.tables tableopts_ver_nr-Cam.ver.tables tableopts_ver_nr-Caem.ver.tables tableopts_ver_r-Ca.ver.tables tableopts_ver_r-Ce.ver.tables tableopts_ver_r-Cf.ver.tables tableopts_ver_r-CF.ver.tables tableopts_ver_r-Cm.ver.tables tableopts_ver_r-Cem.ver.tables tableopts_ver_r-Cae.ver.tables tableopts_ver_r-Caef.ver.tables tableopts_ver_r-CaeF.ver.tables tableopts_ver_r-Cam.ver.tables tableopts_ver_r-Caem.ver.tables
+tableopts_tables =  tableopts_ser_nr-Ca.ser.tables tableopts_ser_nr-Ce.ser.tables tableopts_ser_nr-Cf.ser.tables tableopts_ser_nr-C_F.ser.tables tableopts_ser_nr-Cm.ser.tables tableopts_ser_nr-Cem.ser.tables tableopts_ser_nr-Cae.ser.tables tableopts_ser_nr-Caef.ser.tables tableopts_ser_nr-Cae_F.ser.tables tableopts_ser_nr-Cam.ser.tables tableopts_ser_nr-Caem.ser.tables tableopts_ser_r-Ca.ser.tables tableopts_ser_r-Ce.ser.tables tableopts_ser_r-Cf.ser.tables tableopts_ser_r-C_F.ser.tables tableopts_ser_r-Cm.ser.tables tableopts_ser_r-Cem.ser.tables tableopts_ser_r-Cae.ser.tables tableopts_ser_r-Caef.ser.tables tableopts_ser_r-Cae_F.ser.tables tableopts_ser_r-Cam.ser.tables tableopts_ser_r-Caem.ser.tables tableopts_ver_nr-Ca.ver.tables tableopts_ver_nr-Ce.ver.tables tableopts_ver_nr-Cf.ver.tables tableopts_ver_nr-C_F.ver.tables tableopts_ver_nr-Cm.ver.tables tableopts_ver_nr-Cem.ver.tables tableopts_ver_nr-Cae.ver.tables tableopts_ver_nr-Caef.ver.tables tableopts_ver_nr-Cae_F.ver.tables tableopts_ver_nr-Cam.ver.tables tableopts_ver_nr-Caem.ver.tables tableopts_ver_r-Ca.ver.tables tableopts_ver_r-Ce.ver.tables tableopts_ver_r-Cf.ver.tables tableopts_ver_r-C_F.ver.tables tableopts_ver_r-Cm.ver.tables tableopts_ver_r-Cem.ver.tables tableopts_ver_r-Cae.ver.tables tableopts_ver_r-Caef.ver.tables tableopts_ver_r-Cae_F.ver.tables tableopts_ver_r-Cam.ver.tables tableopts_ver_r-Caem.ver.tables
