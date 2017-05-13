@@ -648,6 +648,7 @@ void flexend (int exit_status)
                 "yyget_extra",
                 "yyget_in",
                 "yyget_leng",
+                "yyget_column",
                 "yyget_lineno",
                 "yyget_lloc",
                 "yyget_lval",
@@ -670,6 +671,7 @@ void flexend (int exit_status)
                 "yyset_debug",
                 "yyset_extra",
                 "yyset_in",
+                "yyset_column",
                 "yyset_lineno",
                 "yyset_lloc",
                 "yyset_lval",
@@ -1393,6 +1395,14 @@ void flexinit (int argc, char **argv)
 		case OPT_NO_YYSET_LINENO:
 			//buf_strdefine (&userdef_buf, "YY_NO_SET_LINENO", "1");
             buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LINENO",0);
+			break;
+		case OPT_NO_YYGET_COLUMN:
+			//buf_strdefine (&userdef_buf, "YY_NO_GET_COLUMN", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_COLUMN",0);
+			break;
+		case OPT_NO_YYSET_COLUMN:
+			//buf_strdefine (&userdef_buf, "YY_NO_SET_COLUMN", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_COLUMN",0);
 			break;
 		case OPT_NO_YYGET_IN:
 			//buf_strdefine (&userdef_buf, "YY_NO_GET_IN", "1");

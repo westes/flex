@@ -255,6 +255,10 @@ optspec_t flexopts[] = {
 	,
 	{"--noyyset_lineno", OPT_NO_YYSET_LINENO, 0}
 	,
+	{"--noyyget_column", OPT_NO_YYGET_COLUMN, 0}
+	,
+	{"--noyyset_column", OPT_NO_YYSET_COLUMN, 0}
+	,
 	{"--noyyget_in", OPT_NO_YYGET_IN, 0}
 	,
 	{"--noyyset_in", OPT_NO_YYSET_IN, 0}
