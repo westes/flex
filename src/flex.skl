@@ -15,7 +15,7 @@
 %#      The quoting is "[[" and "]]" so we don't interfere with
 %#      user code.
 %#
-%# All generate macros for the m4 stage contain the text "m4" or "M4"
+%# All generated macros for the m4 stage contain the text "m4" or "M4"
 %# in them. This is to distinguish them from CPP macros.
 %# The exception to this rule is YY_G, which is an m4 macro,
 %# but it needs to be remain short because it is used everywhere.
