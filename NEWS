@@ -2,6 +2,10 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** The options {no,}yy{get,set}_column are now supported.
+
 ** test
 
 *** Tests of the options -C*f and -C*F will now run correctly on
