@@ -4,6 +4,9 @@ flex NEWS
 
 ** scanner
 
+*** flex emits correct line number directives when line numbers refer
+    to the file containing the line number directives.
+
 *** The options {no,}yy{get,set}_column are now supported.
 
 ** test
