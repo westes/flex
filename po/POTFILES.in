@@ -9,8 +9,8 @@ src/main.c
 src/misc.c
 src/nfa.c
 src/options.c
-src/parse.y
-src/scan.l
+src/parse.c
+src/scan.c
 src/scanopt.c
 src/sym.c
 src/tblcmp.c
