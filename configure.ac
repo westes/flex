@@ -166,6 +166,7 @@ strtol dnl
 AC_CHECK_FUNCS([dnl
 pow dnl           Used only by "examples/manual/expr"
 setlocale dnl     Needed only if NLS is enabled
+reallocarr dnl    NetBSD function. Use reallocarray if not available.
 reallocarray dnl  OpenBSD function. We have replacement if not available.
 ])
 
