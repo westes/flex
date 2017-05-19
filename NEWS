@@ -2,6 +2,10 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** build
+
+*** A crash during building on NetBSD has been fixed.
+
 ** scanner
 
 *** flex emits correct line number directives when line numbers refer
