@@ -62,6 +62,8 @@ optspec_t flexopts[] = {
 	,
 	{"--backup", OPT_BACKUP, 0}
 	,			/* Generate backing-up information to lex.backup. */
+	{"--backup-file=FILE", OPT_BACKUP_FILE, 0}
+	,			/* Generate backing-up information to FILE. */
 	{"-B", OPT_BATCH, 0}
 	,
 	{"--batch", OPT_BATCH, 0}
