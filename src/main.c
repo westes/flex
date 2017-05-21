@@ -117,7 +117,7 @@ struct yytbl_writer tableswr;
 char   *program_name = "flex";
 
 static const char outfile_template[] = "lex.%s.%s";
-static const char backing_name[] = "lex.backup";
+static const char *backing_name = "lex.backup";
 static const char tablesfile_template[] = "lex.%s.tables";
 
 /* From scan.l */
@@ -1035,6 +1035,11 @@ void flexinit (int argc, char **argv)
 			backing_up_report = true;
 			break;
 
+		case OPT_BACKUP_FILE:
+			backing_up_report = true;
+                        backing_name = arg;
+			break;
+
 		case OPT_DONOTHING:
 			break;
 
@@ -1827,7 +1832,8 @@ void usage (void)
 		  "  -t, --stdout            write scanner on stdout instead of %s\n"
 		  "      --yyclass=NAME      name of C++ class\n"
 		  "      --header-file=FILE   create a C header file in addition to the scanner\n"
-		  "      --tables-file[=FILE] write tables to FILE\n" "\n"
+		  "      --tables-file[=FILE] write tables to FILE\n"
+		  "      --backup-file=FILE  write backing-up information to FILE\n" "\n"
 		  "Scanner behavior:\n"
 		  "  -7, --7bit              generate 7-bit scanner\n"
 		  "  -8, --8bit              generate 8-bit scanner\n"
