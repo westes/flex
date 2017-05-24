@@ -17,7 +17,11 @@ tableopts_tables=""
 for kind in opt ser ver ; do
     for threading in nr r ; do
         for opt in -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem ; do
-            testname=tableopts_${kind}_${threading}${opt/%F/_F}.${kind}
+            bare_opt=${opt#-}
+            # The filenames must work on case-insensitive filesystems.
+            bare_opt=`echo ${bare_opt}| sed 's/F$/_F/'`
+
+            testname=tableopts_${kind}_${threading}-${bare_opt}.${kind}
             if [ "${TABLEOPTS_TESTS}" = "" ] ;then
                 TABLEOPTS_TESTS=${testname}
                 if [ "$kind" = "ser" ] || [ "$kind" = "ver" ] ; then
@@ -30,12 +34,10 @@ for kind in opt ser ver ; do
                 fi
             fi
 
-            bare_opt=${opt#-}
-            bare_opt=${bare_opt/%F/_F}
             cat << EOF
 tableopts_${kind}_${threading}_${bare_opt}_${kind}_SOURCES = tableopts.l4
 
-${testname}\$(EXEEXT): tableopts_${kind}_${threading}${opt/%F/_F}.\$(OBJEXT)
+${testname}\$(EXEEXT): tableopts_${kind}_${threading}-${bare_opt}.\$(OBJEXT)
 	\$(AM_V_CCLD)\$(LINK) -o \$@ \$<
 
 EOF
