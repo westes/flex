@@ -1,4 +1,5 @@
 #!/bin/sh
+echo 'set -euvx'
 set -euvx
 
 # testwrapper.sh: run a flex test, typically called by a Makefile
