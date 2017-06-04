@@ -1,5 +1,5 @@
 #!/bin/sh
-set -vx
+echo 'set -euvx'
 set -euvx
 
 # testwrapper-direct.sh: run some specialized flex tests that care where
