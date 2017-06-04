@@ -33,7 +33,7 @@ interest:
 * COPYING - flex's copyright and license.
 * doc/ - user documentation.
 * examples/ - containing examples of some possible flex scanners and a
-	      few other things. See the file examples/README for more
+              few other things. See the file examples/README for more
               details.
 * tests/ - regression tests. See TESTS/README for details.
 * po/ - internationalization support files.
@@ -43,7 +43,7 @@ repository:
 
 * compiler suite - flex is built with gcc
 * bash, or a good Bourne-style shell
-* m4 - m4 -p needs to work; GNU m4 and a few others are suitable
+* m4 - `m4 -P` needs to work; GNU m4 and a few others are suitable
 * GNU bison;  to generate parse.c from parse.y
 * autoconf; for handling the build system
 * automake; for Makefile generation
@@ -74,11 +74,13 @@ in the top level of the flex source tree.
 This script calls the various tools needed to get flex ready for the
 GNU-style configure script to be able to work.
 
-From this point on, building flex follows the usual  routine:
+From this point on, building flex follows the usual routine:
 
 ```bash
 configure && make && make install
 ```
+
+---
 
 This file is part of flex.
 
