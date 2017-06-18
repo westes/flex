@@ -1,0 +1,975 @@
+# Ukrainian translations for flex.
+# Copyright (C) 2017 The Flex Project (msgids)
+# This file is distributed under the same license as the flex package.
+#
+# Viktor Shepel <shepelvictor@bigmir.net>, 2017.
+# Yuri Chornoivan <yurchor@ukr.net>, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: flex 2.5.38\n"
+"Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2017-05-24 18:00-0400\n"
+"PO-Revision-Date: 2017-06-17 09:26+0300\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 1.5\n"
+
+#: src/buf.c:79
+msgid "Allocation of buffer to print string failed"
+msgstr "Не вдалось виділити буфер для рядка, що виводиться"
+
+#: src/buf.c:107
+msgid "Allocation of buffer for line directive failed"
+msgstr "Не вдалось виділити буфер для рядкової директиви"
+
+#: src/buf.c:177
+msgid "Allocation of buffer for m4 def failed"
+msgstr "Не вдалось виділити буфер для m4 def"
+
+#: src/buf.c:198
+msgid "Allocation of buffer for m4 undef failed"
+msgstr "Не вдалось виділити буфер для m4 undef"
+
+#: src/dfa.c:59
+#, c-format
+msgid "State #%d is non-accepting -\n"
+msgstr "Стан #%d не є допустимим -\n"
+
+#: src/dfa.c:119
+msgid "dangerous trailing context"
+msgstr "небезпечний замикаючий контекст"
+
+#: src/dfa.c:159
+#, c-format
+msgid " associated rule line numbers:"
+msgstr " номера рядків асоційованого правила:"
+
+#: src/dfa.c:193
+#, c-format
+msgid " out-transitions: "
+msgstr " out-переходи: "
+
+#: src/dfa.c:201
+#, c-format
+msgid ""
+"\n"
+" jam-transitions: EOF "
+msgstr ""
+"\n"
+" jam-переходи: EOF "
+
+#: src/dfa.c:331
+msgid "consistency check failed in epsclosure()"
+msgstr "помилка при перевірці на цілісність у epsclosure()"
+
+#: src/dfa.c:419
+msgid ""
+"\n"
+"\n"
+"DFA Dump:\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Дамп ДСА:\n"
+"\n"
+
+#: src/dfa.c:587
+msgid "could not create unique end-of-buffer state"
+msgstr "неможливо створити унікальний стан end_of_buffer"
+
+#: src/dfa.c:608
+#, c-format
+msgid "state # %d:\n"
+msgstr "стан # %d:\n"
+
+#: src/dfa.c:768
+msgid "Could not write yynxt_tbl[][]"
+msgstr "Неможливо записати yynxt_tbl[][]"
+
+#: src/dfa.c:1028
+msgid "bad transition character detected in sympartition()"
+msgstr "виявлено невірний символ переходу в sympartition()"
+
+#: src/gen.c:480
+msgid ""
+"\n"
+"\n"
+"Equivalence Classes:\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Класи еквівалентності:\n"
+"\n"
+
+#: src/gen.c:669 src/gen.c:698 src/gen.c:1218
+#, c-format
+msgid "state # %d accepts: [%d]\n"
+msgstr "стан # %d приймає: [%d]\n"
+
+#: src/gen.c:1115
+#, c-format
+msgid "state # %d accepts: "
+msgstr "стан # %d приймає: "
+
+#: src/gen.c:1162
+msgid "Could not write yyacclist_tbl"
+msgstr "Неможливо записати yyacclist_tbl"
+
+#: src/gen.c:1236
+msgid "Could not write yyacc_tbl"
+msgstr "Неможливо записати yyacc_tbl"
+
+#: src/gen.c:1251 src/gen.c:1623 src/gen.c:1646
+msgid "Could not write ecstbl"
+msgstr "Неможливо записати ecstbl"
+
+#: src/gen.c:1271
+msgid ""
+"\n"
+"\n"
+"Meta-Equivalence Classes:\n"
+msgstr ""
+"\n"
+"\n"
+"Мета-Еквівалентні Класи:\n"
+
+#: src/gen.c:1293
+msgid "Could not write yymeta_tbl"
+msgstr "Неможливо записати yymeta_tbl"
+
+#: src/gen.c:1352
+msgid "Could not write yybase_tbl"
+msgstr "Неможливо записати yybase_tbl"
+
+#: src/gen.c:1384
+msgid "Could not write yydef_tbl"
+msgstr "Неможливо записати yydef_tbl"
+
+#: src/gen.c:1422
+msgid "Could not write yynxt_tbl"
+msgstr "Неможливо записати yynxt_tbl"
+
+#: src/gen.c:1456
+msgid "Could not write yychk_tbl"
+msgstr "Неможливо записати yychk_tbl"
+
+#: src/gen.c:1608 src/gen.c:1637
+msgid "Could not write ftbl"
+msgstr "Неможливо записати ftbl"
+
+#: src/gen.c:1614
+msgid "Could not write ssltbl"
+msgstr "Неможливо записати ssltbl"
+
+#: src/gen.c:1665
+msgid "Could not write eoltbl"
+msgstr "Неможливо записати eoltbl"
+
+#: src/gen.c:1722
+msgid "Could not write yynultrans_tbl"
+msgstr "Неможливо записати yynultrans_tbl"
+
+#: src/main.c:178
+msgid "rule cannot be matched"
+msgstr "неможливо застосувати правило"
+
+#: src/main.c:183
+msgid "-s option given but default rule can be matched"
+msgstr ""
+"вказано параметр -s, але правило за замовчуванням може бути застосоване"
+
+#: src/main.c:221
+msgid "Can't use -+ with -l option"
+msgstr "Неможливо використовувати -+ з параметром -l"
+
+#: src/main.c:224
+msgid "Can't use -f or -F with -l option"
+msgstr "Неможливо використовувати -f або -F з параметром -l"
+
+#: src/main.c:228
+msgid "Can't use --reentrant or --bison-bridge with -l option"
+msgstr ""
+"Неможливо використовувати --reentrant або --bison-bridge з параметром -l"
+
+#: src/main.c:260
+msgid "-Cf/-CF and -Cm don't make sense together"
+msgstr "Параметри -Cf/-CF і -Cm разом не мають сенсу"
+
+#: src/main.c:263
+msgid "-Cf/-CF and -I are incompatible"
+msgstr "Параметри -Cf/-CF і -I несумісні"
+
+#: src/main.c:267
+msgid "-Cf/-CF are incompatible with lex-compatibility mode"
+msgstr "Параметри -Cf/-CF несумісні з режимом lex-compatibility"
+
+#: src/main.c:272
+msgid "-Cf and -CF are mutually exclusive"
+msgstr "Параметри -Cf і -CF є взаємовиключними"
+
+#: src/main.c:276
+msgid "Can't use -+ with -CF option"
+msgstr "Неможливо використовувати -+ з параметром -CF"
+
+#: src/main.c:279
+#, c-format
+msgid "%array incompatible with -+ option"
+msgstr "%array несумісний з параметром -+"
+
+#: src/main.c:284
+msgid "Options -+ and --reentrant are mutually exclusive."
+msgstr "Параметри -+ і --reentrant є взаємовиключними."
+
+#: src/main.c:287
+msgid "bison bridge not supported for the C++ scanner."
+msgstr "bison bridge не підтримується для сканера C++."
+
+#: src/main.c:336 src/main.c:419
+#, c-format
+msgid "could not create %s"
+msgstr "неможливо створити %s"
+
+#: src/main.c:431
+msgid "could not write tables header"
+msgstr "Неможливо записати заголовок таблиць"
+
+#: src/main.c:435
+#, c-format
+msgid "can't open skeleton file %s"
+msgstr "Неможливо відкрити файл-каркас %s"
+
+#: src/main.c:450
+msgid "Prefix cannot include '[' or ']'"
+msgstr "Префікс не може містити «[» або «]»"
+
+#: src/main.c:474
+msgid "allocation of macro definition failed"
+msgstr "Не вдалось розмістити визначення макросу"
+
+#: src/main.c:521
+#, c-format
+msgid "input error reading skeleton file %s"
+msgstr "помилка читання файла-каркаса %s"
+
+#: src/main.c:525
+#, c-format
+msgid "error closing skeleton file %s"
+msgstr "помилка при закритті файла-каркаса %s"
+
+#: src/main.c:711
+#, c-format
+msgid "error creating header file %s"
+msgstr "помилка створення файла-заголовку %s"
+
+#: src/main.c:719
+#, c-format
+msgid "error writing output file %s"
+msgstr "помилка запису у вихідний файл %s"
+
+#: src/main.c:723
+#, c-format
+msgid "error closing output file %s"
+msgstr "помилка закриття вихідного файла %s"
+
+#: src/main.c:727
+#, c-format
+msgid "error deleting output file %s"
+msgstr "помилка видалення вихідного файла %s"
+
+#: src/main.c:734
+#, c-format
+msgid "No backing up.\n"
+msgstr "Резервне копіювання вимкнено.\n"
+
+#: src/main.c:738
+#, c-format
+msgid "%d backing up (non-accepting) states.\n"
+msgstr "резервне копіювання %d (недопустимих) станів.\n"
+
+#: src/main.c:742
+#, c-format
+msgid "Compressed tables always back up.\n"
+msgstr "Створення резервних копій стислих таблиць виконується завжди.\n"
+
+#: src/main.c:745
+#, c-format
+msgid "error writing backup file %s"
+msgstr "помилка запису резервної копії файла %s"
+
+#: src/main.c:749
+#, c-format
+msgid "error closing backup file %s"
+msgstr "помилка закриття резервної копії файла %s"
+
+#: src/main.c:754
+#, c-format
+msgid "%s version %s usage statistics:\n"
+msgstr "статистика використання %s версії %s:\n"
+
+#: src/main.c:757
+#, c-format
+msgid "  scanner options: -"
+msgstr "  параметри сканера: -"
+
+#: src/main.c:836
+#, c-format
+msgid "  %d/%d NFA states\n"
+msgstr "  %d/%d станів НСА\n"
+
+#: src/main.c:838
+#, c-format
+msgid "  %d/%d DFA states (%d words)\n"
+msgstr "  %d/%d станів ДСА (%d слів)\n"
+
+#: src/main.c:840
+#, c-format
+msgid "  %d rules\n"
+msgstr "  %d правил\n"
+
+#: src/main.c:845
+#, c-format
+msgid "  No backing up\n"
+msgstr " Резервне копіювання вимкнено\n"
+
+#: src/main.c:849
+#, c-format
+msgid "  %d backing-up (non-accepting) states\n"
+msgstr " резервне копіювання %d (недопустимих) станів\n"
+
+#: src/main.c:854
+#, c-format
+msgid "  Compressed tables always back-up\n"
+msgstr " Створення резервних копій стислих таблиць виконується завжди\n"
+
+#: src/main.c:858
+#, c-format
+msgid "  Beginning-of-line patterns used\n"
+msgstr " Використовуються шаблони початку рядка\n"
+
+#: src/main.c:860
+#, c-format
+msgid "  %d/%d start conditions\n"
+msgstr "  %d/%d початкових умов\n"
+
+#: src/main.c:864
+#, c-format
+msgid "  %d epsilon states, %d double epsilon states\n"
+msgstr "  %d епсилон-станів, %d подвійних епсилон-станів\n"
+
+#: src/main.c:868
+#, c-format
+msgid "  no character classes\n"
+msgstr "  відсутні класи символів\n"
+
+#: src/main.c:872
+#, c-format
+msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
+msgstr ""
+"  %d/%d символьних класів потребують %d/%d слів для зберігання, %d "
+"використано вдруге\n"
+
+#: src/main.c:877
+#, c-format
+msgid "  %d state/nextstate pairs created\n"
+msgstr " створено %d пар стан/наступний-стан\n"
+
+#: src/main.c:880
+#, c-format
+msgid "  %d/%d unique/duplicate transitions\n"
+msgstr "  %d/%d унікальних/повторюваних переходів\n"
+
+#: src/main.c:885
+#, c-format
+msgid "  %d table entries\n"
+msgstr "  %d елементів таблиці\n"
+
+#: src/main.c:893
+#, c-format
+msgid "  %d/%d base-def entries created\n"
+msgstr " створено %d/%d base-def елементів\n"
+
+#: src/main.c:897
+#, c-format
+msgid "  %d/%d (peak %d) nxt-chk entries created\n"
+msgstr "  створено %d/%d (пік %d) записів nxt-chk\n"
+
+#: src/main.c:901
+#, c-format
+msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
+msgstr "  створено %d/%d (пік %d) шаблонних записів nxt-chk\n"
+
+#: src/main.c:905
+#, c-format
+msgid "  %d empty table entries\n"
+msgstr "  %d порожніх елементів таблиці\n"
+
+#: src/main.c:907
+#, c-format
+msgid "  %d protos created\n"
+msgstr "  створено %d прототипів\n"
+
+#: src/main.c:910
+#, c-format
+msgid "  %d templates created, %d uses\n"
+msgstr "  створено %d шаблонів, %d використовується\n"
+
+#: src/main.c:918
+#, c-format
+msgid "  %d/%d equivalence classes created\n"
+msgstr "  створено класів еквівалентності %d/%d\n"
+
+#: src/main.c:926
+#, c-format
+msgid "  %d/%d meta-equivalence classes created\n"
+msgstr "  створено класів мета-еквівалентності %d/%d\n"
+
+#: src/main.c:932
+#, c-format
+msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
+msgstr "  %d (%d записано) колізій хеш-таблиці, %d еквівалентних ДСА\n"
+
+#: src/main.c:934
+#, c-format
+msgid "  %d sets of reallocations needed\n"
+msgstr "  потрібно %d наборів повторних розміщень\n"
+
+#: src/main.c:936
+#, c-format
+msgid "  %d total table entries needed\n"
+msgstr "  всього потрібно %d елементів таблиці\n"
+
+#: src/main.c:1010
+#, c-format
+msgid "Internal error. flexopts are malformed.\n"
+msgstr "Внутрішня помилка. Неправильне значення flexopts.\n"
+
+#: src/main.c:1020
+#, c-format
+msgid "Try `%s --help' for more information.\n"
+msgstr "Спробуйте «%s --help» для отримання більш докладного опису.\n"
+
+#: src/main.c:1077
+#, c-format
+msgid "unknown -C option '%c'"
+msgstr "невідоме значення «%c» для параметру -C"
+
+#: src/main.c:1206
+#, c-format
+msgid "%s %s\n"
+msgstr "%s %s\n"
+
+#: src/main.c:1486
+msgid "fatal parse error"
+msgstr "фатальна помилка розбору"
+
+#: src/main.c:1518
+#, c-format
+msgid "could not create backing-up info file %s"
+msgstr "неможливо створити резервну копію інформаційного файла %s"
+
+#: src/main.c:1539
+#, c-format
+msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
+msgstr ""
+"Параметр -l сумісності з AT&T lex спричиняє значне зниження продуктивності\n"
+
+#: src/main.c:1542
+#, c-format
+msgid " and may be the actual source of other reported performance penalties\n"
+msgstr "і також може бути істинним джерелом проблем з продуктивністю\n"
+
+#: src/main.c:1548
+#, c-format
+msgid ""
+"%%option yylineno entails a performance penalty ONLY on rules that can match "
+"newline characters\n"
+msgstr ""
+"%%option yylineno спричиняе значне зниження продуктивності ТІЛЬКИ для "
+"правил, котрі описують символи нового рядка\n"
+
+#: src/main.c:1555
+#, c-format
+msgid "-I (interactive) entails a minor performance penalty\n"
+msgstr "-I (інтерактивний) спричиняе незначне зниження продуктивності\n"
+
+#: src/main.c:1560
+#, c-format
+msgid "yymore() entails a minor performance penalty\n"
+msgstr "yymore() спричиняе незначне зниження продуктивності\n"
+
+#: src/main.c:1566
+#, c-format
+msgid "REJECT entails a large performance penalty\n"
+msgstr "REJECT спричиняе значне зниження продуктивності\n"
+
+#: src/main.c:1571
+#, c-format
+msgid "Variable trailing context rules entail a large performance penalty\n"
+msgstr ""
+"Правила котрі мають замикаючий контекст змінної довжини значно знижують "
+"продуктивність\n"
+
+#: src/main.c:1583
+msgid "REJECT cannot be used with -f or -F"
+msgstr "REJECT не може бути використано разом з -f або -F"
+
+#: src/main.c:1586
+#, c-format
+msgid "%option yylineno cannot be used with REJECT"
+msgstr "%option yylineno не може бути використано з REJECT"
+
+#: src/main.c:1589
+msgid "variable trailing context rules cannot be used with -f or -F"
+msgstr ""
+"Правила котрі мають замикаючий контекст змінної довжини не можуть бути "
+"використані з -f or -F"
+
+#: src/main.c:1714
+#, c-format
+msgid "%option yyclass only meaningful for C++ scanners"
+msgstr "%option yyclass має сенс тільки для сканерів C++"
+
+#: src/main.c:1801
+#, c-format
+msgid "Usage: %s [OPTIONS] [FILE]...\n"
+msgstr "Використання: %s [ПАРАМЕТРИ] [ФАЙЛ]…\n"
+
+#: src/main.c:1804
+#, fuzzy, c-format
+msgid ""
+"Generates programs that perform pattern-matching on text.\n"
+"\n"
+"Table Compression:\n"
+"  -Ca, --align      trade off larger tables for better memory alignment\n"
+"  -Ce, --ecs        construct equivalence classes\n"
+"  -Cf               do not compress tables; use -f representation\n"
+"  -CF               do not compress tables; use -F representation\n"
+"  -Cm, --meta-ecs   construct meta-equivalence classes\n"
+"  -Cr, --read       use read() instead of stdio for scanner input\n"
+"  -f, --full        generate fast, large scanner. Same as -Cfr\n"
+"  -F, --fast        use alternate table representation. Same as -CFr\n"
+"  -Cem              default compression (same as --ecs --meta-ecs)\n"
+"\n"
+"Debugging:\n"
+"  -d, --debug             enable debug mode in scanner\n"
+"  -b, --backup            write backing-up information to %s\n"
+"  -p, --perf-report       write performance report to stderr\n"
+"  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
+"  -T, --trace             %s should run in trace mode\n"
+"  -w, --nowarn            do not generate warnings\n"
+"  -v, --verbose           write summary of scanner statistics to stdout\n"
+"      --hex               use hexadecimal numbers instead of octal in debug "
+"outputs\n"
+"\n"
+"Files:\n"
+"  -o, --outfile=FILE      specify output filename\n"
+"  -S, --skel=FILE         specify skeleton file\n"
+"  -t, --stdout            write scanner on stdout instead of %s\n"
+"      --yyclass=NAME      name of C++ class\n"
+"      --header-file=FILE   create a C header file in addition to the "
+"scanner\n"
+"      --tables-file[=FILE] write tables to FILE\n"
+"\n"
+"Scanner behavior:\n"
+"  -7, --7bit              generate 7-bit scanner\n"
+"  -8, --8bit              generate 8-bit scanner\n"
+"  -B, --batch             generate batch scanner (opposite of -I)\n"
+"  -i, --case-insensitive  ignore case in patterns\n"
+"  -l, --lex-compat        maximal compatibility with original lex\n"
+"  -X, --posix-compat      maximal compatibility with POSIX lex\n"
+"  -I, --interactive       generate interactive scanner (opposite of -B)\n"
+"      --yylineno          track line count in yylineno\n"
+"\n"
+"Generated code:\n"
+"  -+,  --c++               generate C++ scanner class\n"
+"  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
+"  -L,  --noline            suppress #line directives in scanner\n"
+"  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
+"  -R,  --reentrant         generate a reentrant C scanner\n"
+"       --bison-bridge      scanner for bison pure parser.\n"
+"       --bison-locations   include yylloc support.\n"
+"       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+"       --nounistd          do not include <unistd.h>\n"
+"       --noFUNCTION        do not generate a particular FUNCTION\n"
+"\n"
+"Miscellaneous:\n"
+"  -c                      do-nothing POSIX option\n"
+"  -n                      do-nothing POSIX option\n"
+"  -?\n"
+"  -h, --help              produce this help message\n"
+"  -V, --version           report %s version\n"
+msgstr ""
+"Генерує програми, що знаходять шаблони у тексті.\n"
+"\n"
+"Стиснення таблиць:\n"
+"  -Ca, --align       вирівняти таблиці у пам'яті збільшивши розмір\n"
+"                     їх елементів\n"
+"  -Ce, --ecs         створювати класи еквівалентності\n"
+"  -Cf                не стискати таблиці; використовувати -f представлення\n"
+"  -CF                не стискати таблиці; використовувати -F представлення\n"
+"  -Cm, --meta-ecs    створювати класи мета-еквівалентності\n"
+"  -Cr, --read        використати read() замість stdio як\n"
+"                     вхідні дані сканера\n"
+"  -f, --full         створити швидкий, великий сканер. Теж саме, що -Cfr\n"
+"  -F, --fast         застосувати альтернативний опис таблиць.\n"
+"                     Теж саме, що -CFr\n"
+"  -Cem               степінь стиснення за замовчуванням\n"
+"                     (теж саме, що --ecs --meta-ecs)\n"
+"\n"
+"Налагодження:\n"
+"  -d, --debug             увімкнути режим налагодження сканера\n"
+"  -b, --backup            записати резервну копію до %s\n"
+"  -p, --perf-report       записати звіт про продуктивність до stderr\n"
+"  -s, --nodefault         припинити вивід тексту (ECHO до stdout)\n"
+"                          що не збігається з жодним правилом\n"
+"  -T, --trace             %s повинен запускатися у режимі трасування\n"
+"  -w, --nowarn            не видавати попереджень\n"
+"  -v, --verbose           записати підсумкову статистику сканера до stdout\n"
+"\n"
+"Файли:\n"
+"  -o, --outfile=ФАЙЛ        вказати ім'я вихідного файла\n"
+"  -S, --skel=ФАЙЛ           вказати файл каркасу\n"
+"  -t, --stdout              записати сканер до stdout замість %s\n"
+"      --yyclass=ІМ'Я        ім'я класу C++\n"
+"      --header-file=ФАЙЛ    створити C файл заголовок сканера\n"
+"      --tables-file[=ФАЙЛ]  записати таблиці у ФАЙЛ\n"
+"\n"
+"Поведінка сканера:\n"
+"  -7, --7bit              створити 7-бітний сканер\n"
+"  -8, --8bit              створити 8-бітний сканер\n"
+"  -B, --batch             створити пакетний сканер\n"
+"                          (протилежна за властивостями до опції -I)\n"
+"  -i, --case-insensitive  ігнорувати регістр символів у шаблонах\n"
+"  -l, --lex-compat        максимальна сумісність з оригінальним lex\n"
+"  -X, --posix-compat      максимальна сумісність з POSIX lex\n"
+"  -I, --interactive       створити інтерактивний сканер\n"
+"                          (протилежна за властивостями до опції -B)\n"
+"      --yylineno          відслідковувати число рядків у yylineno\n"
+"\n"
+"Генерація коду:\n"
+"  -+,  --c++                створити C++ клас сканера\n"
+"  -Dmacro[=defn]            #define macro defn (за замовчуванням defn='1')\n"
+"  -L,  --noline             не створювати #line директиви для сканера\n"
+"  -P,  --prefix=РЯДОК       використати РЯДОК як префікс замість «yy»\n"
+"  -R,  --reentrant          генерувати реентерабельний C-сканер\n"
+"       --bison-bridge       сканер тільки для bison аналізатору\n"
+"       --bison-locations    додати підтримку yylloc\n"
+"       --stdinit            ініціалізувати yyin/yyout до stdin/stdout\n"
+"       --noansi-definitions визначення функцій у застарілому стилі\n"
+"       --noansi-prototypes  порожній список параметрів у прототипах\n"
+"       --nounistd           не додавати <unistd.h>\n"
+"       --noФУНКЦІЯ          не генерувати задану функцію ФУНКЦІЯ\n"
+"\n"
+"Інше:\n"
+"  -с                      недіючий POSIX параметр\n"
+"  -n                      недіючий POSIX параметр\n"
+"  -?\n"
+"  -h, --help              показати цю довідку\n"
+"  -V, --version           показати версію %s\n"
+
+#: src/misc.c:64
+msgid "allocation of sko_stack failed"
+msgstr "не вдалось отримати пам’ять під sko_stack"
+
+#: src/misc.c:100
+#, c-format
+msgid "name \"%s\" ridiculously long"
+msgstr "ім'я «%s» занадто довге"
+
+#: src/misc.c:149 src/misc.c:162
+msgid "memory allocation failed in allocate_array()"
+msgstr "помилка виділення пам'яті у allocate_array()"
+
+#: src/misc.c:212
+#, c-format
+msgid "bad character '%s' detected in check_char()"
+msgstr "check_char() виявив недопустимий символ «%s»"
+
+#: src/misc.c:217
+#, c-format
+msgid "scanner requires -8 flag to use the character %s"
+msgstr "для використання символу %s сканер потребує опцію -8"
+
+#: src/misc.c:236
+msgid "memory allocation failure in xstrdup()"
+msgstr "помилка виділення пам'яті у xstrdup()"
+
+#: src/misc.c:310
+#, c-format
+msgid "%s: fatal internal error, %s\n"
+msgstr "%s: фатальна внутрішня помилка, %s\n"
+
+#: src/misc.c:671 src/misc.c:683
+msgid "attempt to increase array size failed"
+msgstr "помилка при спробі збільшити розмір масиву"
+
+#: src/misc.c:807
+msgid "bad line in skeleton file"
+msgstr "невідомий рядок у файлі-каркасі"
+
+#: src/misc.c:857
+msgid "memory allocation failed in yy_flex_xmalloc()"
+msgstr "помилка виділення пам'яті у yy_flex_xmalloc()"
+
+#: src/nfa.c:100
+#, c-format
+msgid ""
+"\n"
+"\n"
+"********** beginning dump of nfa with start state %d\n"
+msgstr ""
+"\n"
+"\n"
+"********** початок дампу НСА з початковим станом %d\n"
+
+#: src/nfa.c:111
+#, c-format
+msgid "state # %4d\t"
+msgstr "стан # %4d\t"
+
+#: src/nfa.c:126
+#, c-format
+msgid "********** end of dump\n"
+msgstr "********** кінець дампу\n"
+
+#: src/nfa.c:169
+msgid "empty machine in dupmachine()"
+msgstr "порожній автомат у dupmachine()"
+
+#: src/nfa.c:234
+#, c-format
+msgid "Variable trailing context rule at line %d\n"
+msgstr "Правило із замикаючим контекстом змінної довжини у стрічці %d\n"
+
+#: src/nfa.c:357
+msgid "bad state type in mark_beginning_as_normal()"
+msgstr "невідомий тип стану у mark_beginning_as_normal()"
+
+#: src/nfa.c:595
+#, c-format
+msgid "input rules are too complicated (>= %d NFA states)"
+msgstr "вхідні правила занадто складні (>= %d станів НСА)"
+
+#: src/nfa.c:673
+msgid "found too many transitions in mkxtion()"
+msgstr "знайдено занадто багато переходів у mkxtion()"
+
+#: src/nfa.c:699
+#, c-format
+msgid "too many rules (> %d)!"
+msgstr "занадто багато правил (> %d)!"
+
+#: src/parse.y:159
+msgid "unknown error processing section 1"
+msgstr "невідома помилка при обробці розділу 1"
+
+#: src/parse.y:184 src/parse.y:353
+msgid "bad start condition list"
+msgstr "невірний список початкових умов"
+
+#: src/parse.y:204
+msgid "Prefix must not contain [ or ]"
+msgstr "Префікс не може містити символи «[» або «]»"
+
+#: src/parse.y:317
+msgid "unrecognized rule"
+msgstr "нерозпізнане правило"
+
+#: src/parse.y:436 src/parse.y:449 src/parse.y:518
+msgid "trailing context used twice"
+msgstr "замикаючий контекст використано двічі"
+
+#: src/parse.y:554 src/parse.y:564 src/parse.y:637 src/parse.y:647
+msgid "bad iteration values"
+msgstr "невірно сформований діапазон ітерацій"
+
+#: src/parse.y:582 src/parse.y:600 src/parse.y:665 src/parse.y:683
+msgid "iteration value must be positive"
+msgstr "кількість ітерацій повинна бути додатнім числом"
+
+#: src/parse.y:806 src/parse.y:816
+#, c-format
+msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
+msgstr ""
+"використання діапазону символів [%c-%c] є двозначним для сканера, що не "
+"чутливий до регістру символів"
+
+#: src/parse.y:821
+msgid "negative range in character class"
+msgstr ""
+"символьний клас описано діапазоном, перший елемент котрого більший за "
+"останній"
+
+#: src/parse.y:918
+msgid "[:^lower:] is ambiguous in case insensitive scanner"
+msgstr ""
+"використання [:^lower:] є невизначеним для сканера, що не чутливий до "
+"регістру символів"
+
+#: src/parse.y:924
+msgid "[:^upper:] ambiguous in case insensitive scanner"
+msgstr ""
+"використання [:^upper:] є невизначеним для сканера, що не чутливий до "
+"регістру символів"
+
+#: src/scan.l:82 src/scan.l:646 src/scan.l:704
+msgid "Input line too long\n"
+msgstr "Занадто довгий вхідний рядок\n"
+
+#: src/scan.l:183
+#, c-format
+msgid "malformed '%top' directive"
+msgstr "нерозпізнана директива «%top»"
+
+#: src/scan.l:205
+#, no-c-format
+msgid "unrecognized '%' directive"
+msgstr "нерозпізнана директива «%»"
+
+#: src/scan.l:214
+msgid "Definition name too long\n"
+msgstr "Визначення має занадто довге ім'я\n"
+
+#: src/scan.l:309
+msgid "Unmatched '{'"
+msgstr "Непарна «{»"
+
+#: src/scan.l:325
+#, c-format
+msgid "Definition value for {%s} too long\n"
+msgstr "Визначення {%s} має занадто довге значення\n"
+
+#: src/scan.l:342
+msgid "incomplete name definition"
+msgstr "неповне визначення імені"
+
+#: src/scan.l:469
+msgid "Option line too long\n"
+msgstr "Занадто довгий параметр\n"
+
+#: src/scan.l:477
+#, c-format
+msgid "unrecognized %%option: %s"
+msgstr "нерозпізнаний %%option: %s"
+
+#: src/scan.l:661 src/scan.l:834
+msgid "bad character class"
+msgstr "помилковий символьний клас"
+
+#: src/scan.l:711
+#, c-format
+msgid "undefined definition {%s}"
+msgstr "нерозпізнане визначення {%s}"
+
+#: src/scan.l:774
+msgid "unbalanced parenthesis"
+msgstr "незбалансовані круглі дужки"
+
+#: src/scan.l:789
+#, c-format
+msgid "bad <start condition>: %s"
+msgstr "невірно сформованана <умова, що активує правило>: %s"
+
+#: src/scan.l:802
+msgid "missing quote"
+msgstr "відсутні лапки"
+
+#: src/scan.l:868
+#, c-format
+msgid "bad character class expression: %s"
+msgstr "символьний клас заданий некоректним виразом: %s"
+
+#: src/scan.l:890
+msgid "bad character inside {}'s"
+msgstr "неприйнятний символ всередині {}"
+
+#: src/scan.l:896
+msgid "missing }"
+msgstr "відсутній }"
+
+#: src/scan.l:974
+msgid "EOF encountered inside an action"
+msgstr "знайдено EOF всередині коду котрий асоційований з правилом"
+
+#: src/scan.l:979
+msgid "EOF encountered inside pattern"
+msgstr "знайдено EOF всередині шаблону, що задає правило"
+
+#: src/scan.l:1012
+#, c-format
+msgid "bad character: %s"
+msgstr "неочікуваний символ: %s"
+
+#: src/scan.l:1040
+#, c-format
+msgid "can't open %s"
+msgstr "неможливо відкрити %s"
+
+#: src/scanopt.c:259
+#, c-format
+msgid "Usage: %s [OPTIONS]...\n"
+msgstr "Використання: %s [ПАРАМЕТРИ]…\n"
+
+#: src/scanopt.c:524
+#, c-format
+msgid "option `%s' doesn't allow an argument\n"
+msgstr "параметр «%s» повинен використовуватись без аргументу\n"
+
+#: src/scanopt.c:529
+#, c-format
+msgid "option `%s' requires an argument\n"
+msgstr "параметр «% s» повинен використовуватись з аргументом\n"
+
+#: src/scanopt.c:533
+#, c-format
+msgid "option `%s' is ambiguous\n"
+msgstr "параметр «%s» є двозначним\n"
+
+#: src/scanopt.c:537
+#, c-format
+msgid "Unrecognized option `%s'\n"
+msgstr "Нерозпізнаний параметр «%s»\n"
+
+#: src/scanopt.c:541
+#, c-format
+msgid "Unknown error=(%d)\n"
+msgstr "Невідома помилка=(%d)\n"
+
+#: src/sym.c:92
+msgid "symbol table memory allocation failed"
+msgstr "помилка виділення пам'яті для таблиці символів"
+
+#: src/sym.c:183
+msgid "name defined twice"
+msgstr "ім'я визначено двічі"
+
+#: src/sym.c:231
+#, c-format
+msgid "start condition %s declared twice"
+msgstr "початкова умова %s описана двічі"
+
+#: src/yylex.c:57
+msgid "premature EOF"
+msgstr "неочікуваний EOF"
+
+#: src/yylex.c:200
+#, c-format
+msgid "End Marker\n"
+msgstr "Мітка кінця\n"
+
+#: src/yylex.c:206
+#, c-format
+msgid "*Something Weird* - tok: %d val: %d\n"
+msgstr "*Щось не так* — tok: %d val: %d\n"
+
+#~ msgid "dynamic memory failure in copy_string()"
+#~ msgstr "помилка під час роботи з динамічною пам’яттю у copy_string()"
