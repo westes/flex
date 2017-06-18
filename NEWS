@@ -6,6 +6,10 @@ flex NEWS
 
 *** A crash during building on NetBSD has been fixed.
 
+** documentation
+
+*** a new Ukrainian translation has been submitted from the Translation Project.
+
 ** scanner
 
 *** flex emits correct line number directives when line numbers refer
