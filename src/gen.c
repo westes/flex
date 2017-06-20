@@ -1234,9 +1234,9 @@ void gentabs (void)
 		yytbl_data_compress (yyacc_tbl);
 		if (yytbl_data_fwrite (&tableswr, yyacc_tbl) < 0)
 			flexerror (_("Could not write yyacc_tbl"));
-		yytbl_data_destroy (yyacc_tbl);
-		yyacc_tbl = NULL;
 	}
+	yytbl_data_destroy (yyacc_tbl);
+	yyacc_tbl = NULL;
 	/* End generating yy_accept */
 
 	if (useecs) {
@@ -1289,11 +1289,10 @@ void gentabs (void)
 		if (tablesext) {
 			yytbl_data_compress (yymeta_tbl);
 			if (yytbl_data_fwrite (&tableswr, yymeta_tbl) < 0)
-				flexerror (_
-					   ("Could not write yymeta_tbl"));
-			yytbl_data_destroy (yymeta_tbl);
-			yymeta_tbl = NULL;
+				flexerror (_("Could not write yymeta_tbl"));
 		}
+		yytbl_data_destroy (yymeta_tbl);
+		yymeta_tbl = NULL;
 		/* End generating yy_meta */
 	}
 
@@ -1350,9 +1349,9 @@ void gentabs (void)
 		yytbl_data_compress (yybase_tbl);
 		if (yytbl_data_fwrite (&tableswr, yybase_tbl) < 0)
 			flexerror (_("Could not write yybase_tbl"));
-		yytbl_data_destroy (yybase_tbl);
-		yybase_tbl = NULL;
 	}
+	yytbl_data_destroy (yybase_tbl);
+	yybase_tbl = NULL;
 	/* End generating yy_base */
 
 
@@ -1382,9 +1381,9 @@ void gentabs (void)
 		yytbl_data_compress (yydef_tbl);
 		if (yytbl_data_fwrite (&tableswr, yydef_tbl) < 0)
 			flexerror (_("Could not write yydef_tbl"));
-		yytbl_data_destroy (yydef_tbl);
-		yydef_tbl = NULL;
 	}
+	yytbl_data_destroy (yydef_tbl);
+	yydef_tbl = NULL;
 	/* End generating yy_def */
 
 
@@ -1420,9 +1419,9 @@ void gentabs (void)
 		yytbl_data_compress (yynxt_tbl);
 		if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)
 			flexerror (_("Could not write yynxt_tbl"));
-		yytbl_data_destroy (yynxt_tbl);
-		yynxt_tbl = NULL;
 	}
+	yytbl_data_destroy (yynxt_tbl);
+	yynxt_tbl = NULL;
 	/* End generating yy_nxt */
 
 	/* Begin generating yy_chk */
@@ -1454,9 +1453,9 @@ void gentabs (void)
 		yytbl_data_compress (yychk_tbl);
 		if (yytbl_data_fwrite (&tableswr, yychk_tbl) < 0)
 			flexerror (_("Could not write yychk_tbl"));
-		yytbl_data_destroy (yychk_tbl);
-		yychk_tbl = NULL;
 	}
+	yytbl_data_destroy (yychk_tbl);
+	yychk_tbl = NULL;
 	/* End generating yy_chk */
 
 	free(acc_array);
