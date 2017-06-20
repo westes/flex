@@ -230,8 +230,7 @@ int filter_tee_header (struct filter *chain)
 	 * header file at the same time.
 	 */
 
-	const int readsz = 512;
-	char   *buf;
+	char    buf[512];
 	int     to_cfd = -1;
 	FILE   *to_c = NULL, *to_h = NULL;
 	bool    write_header;
@@ -283,10 +282,7 @@ int filter_tee_header (struct filter *chain)
 	fprintf (to_c, "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
 		 outfilename ? outfilename : "<stdout>");
 
-	buf = malloc((size_t) readsz);
-	if (!buf)
-		flexerror(_("malloc failed in filter_tee_header"));
-	while (fgets (buf, readsz, stdin)) {
+	while (fgets (buf, sizeof buf, stdin)) {
 		fputs (buf, to_c);
 		if (write_header)
 			fputs (buf, to_h);
@@ -336,18 +332,14 @@ int filter_tee_header (struct filter *chain)
  */
 int filter_fix_linedirs (struct filter *chain)
 {
-	char   *buf;
-	const size_t readsz = 512;
+	char   buf[512];
+	const size_t readsz = sizeof buf;
 	int     lineno = 1;
 	bool    in_gen = true;	/* in generated code */
 	bool    last_was_blank = false;
 
 	if (!chain)
 		return 0;
-
-	buf = malloc(readsz);
-	if (!buf)
-		flexerror(_("malloc failed in filter_fix_linedirs"));
 
 	while (fgets (buf, (int) readsz, stdin)) {
 
