@@ -12,6 +12,8 @@ flex NEWS
 
 ** scanner
 
+*** Some memory leaks have been fixed.
+
 *** A long standing bug that effected expressions of the form c{i,j}
     where 'c' is a character and {i,j} describes the number of times
     to match against 'c' when case sensitivity was turned on has been
