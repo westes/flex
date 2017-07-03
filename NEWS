@@ -12,6 +12,11 @@ flex NEWS
 
 ** scanner
 
+*** A long standing bug that effected expressions of the form c{i,j}
+    where 'c' is a character and {i,j} describes the number of times
+    to match against 'c' when case sensitivity was turned on has been
+    fixed.
+
 *** New option: --backup-file allows setting the name of the file
     written containing backing up information. Useful if you need
     backing up information multiple scanners in the same directory.
