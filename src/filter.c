@@ -326,7 +326,9 @@ int filter_tee_header (struct filter *chain)
 
 static bool is_blank_line (const char *str)
 {
-	return (regexec (&regex_blank_line, str, 0, NULL, 0) == 0);
+	while (isspace(*str))
+		str++;
+	return (*str == '\0');
 }
 
 /** Adjust the line numbers in the #line directives of the generated scanner.

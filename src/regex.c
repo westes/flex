@@ -25,10 +25,8 @@
 
 
 static const char* REGEXP_LINEDIR = "^#line ([[:digit:]]+) \"(.*)\"";
-static const char* REGEXP_BLANK_LINE = "^[[:space:]]*$";
 
 regex_t regex_linedir; /**< matches line directives */
-regex_t regex_blank_line; /**< matches blank lines */
 
 
 /** Initialize the regular expressions.
@@ -37,8 +35,6 @@ regex_t regex_blank_line; /**< matches blank lines */
 bool flex_init_regex(void)
 {
     flex_regcomp(&regex_linedir, REGEXP_LINEDIR, REG_EXTENDED);
-    flex_regcomp(&regex_blank_line, REGEXP_BLANK_LINE, REG_EXTENDED);
-
     return true;
 }
 
