@@ -141,27 +141,24 @@ void add_action (const char *new_text)
 
 void   *allocate_array (int size, size_t element_size)
 {
-	void *mem;
+	void *new_array;
 #if HAVE_REALLOCARR
-	mem = NULL;
-	if (reallocarr(&mem, (size_t) size, element_size))
-		flexfatal (_
-			   ("memory allocation failed in allocate_array()"));
-
-	return mem;
-#elif HAVE_REALLOCARRAY
-	/* reallocarray has built-in overflow detection */
-	mem = reallocarray(NULL, (size_t) size, element_size);
+	new_array = NULL;
+	if (reallocarr(&new_array, (size_t) size, element_size))
+		flexfatal (_("memory allocation failed in allocate_array()"));
 #else
+# if HAVE_REALLOCARRAY
+	new_array = reallocarray(NULL, (size_t) size, element_size);
+# else
+	/* Do manual overflow detection */
 	size_t num_bytes = (size_t) size * element_size;
-	mem = (size && SIZE_MAX / (size_t) size < element_size) ? NULL :
+	new_array = (size && SIZE_MAX / (size_t) size < element_size) ? NULL :
 		malloc(num_bytes);
+# endif
+	if (!new_array)
+		flexfatal (_("memory allocation failed in allocate_array()"));
 #endif
-	if (!mem)
-		flexfatal (_
-			   ("memory allocation failed in allocate_array()"));
-
-	return mem;
+	return new_array;
 }
 
 
@@ -667,21 +664,21 @@ void   *reallocate_array (void *array, int size, size_t element_size)
 {
 	void *new_array;
 #if HAVE_REALLOCARR
-	if (reallocarr(&array, (size_t) size, element_size))
+	new_array = array;
+	if (reallocarr(&new_array, (size_t) size, element_size))
 		flexfatal (_("attempt to increase array size failed"));
-
-	return array;
-#elif HAVE_REALLOCARRAY
-	/* reallocarray has built-in overflow detection */
-	new_array = reallocarray(array, (size_t) size, element_size);
 #else
+# if HAVE_REALLOCARRAY
+	new_array = reallocarray(array, (size_t) size, element_size);
+# else
+	/* Do manual overflow detection */
 	size_t num_bytes = (size_t) size * element_size;
 	new_array = (size && SIZE_MAX / (size_t) size < element_size) ? NULL :
 		realloc(array, num_bytes);
-#endif
+# endif
 	if (!new_array)
 		flexfatal (_("attempt to increase array size failed"));
-
+#endif
 	return new_array;
 }
 
