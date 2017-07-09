@@ -732,7 +732,10 @@ void skelout (void)
 			 */
 #define cmd_match(s) (strncmp(buf,(s),strlen(s))==0)
 
-			if (buf[1] == '%') {
+		if (buf[1] == '#') {
+                	/* %# indicates comment line to be ignored */
+            	} 
+		else if (buf[1] == '%') {
 				/* %% is a break point for skelout() */
 				return;
 			}
