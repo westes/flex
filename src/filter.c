@@ -324,6 +324,19 @@ int filter_tee_header (struct filter *chain)
 	return 0;
 }
 
+static bool is_blank_line (const char *str)
+{
+#if 1 /* faster */
+	while (isspace(*str))
+		str++;
+	return (*str == '\0');
+#endif
+#if 0 /* smaller */
+	char c;
+	return (sscanf(str, " %c", &c) < 1);
+#endif
+}
+
 /** Adjust the line numbers in the #line directives of the generated scanner.
  * After the m4 expansion, the line numbers are incorrect since the m4 macros
  * can add or remove lines.  This only adjusts line numbers for generated code,
@@ -395,9 +408,7 @@ int filter_fix_linedirs (struct filter *chain)
 		}
 
 		/* squeeze blank lines from generated code */
-		else if (in_gen
-			 && regexec (&regex_blank_line, buf, 0, NULL,
-				     0) == 0) {
+		else if (in_gen && is_blank_line(buf)) {
 			if (last_was_blank)
 				continue;
 			else
