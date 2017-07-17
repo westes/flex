@@ -994,7 +994,7 @@ void flexinit (int argc, char **argv)
     flex_init_regex();
 
 	/* Enable C++ if program name ends with '+'. */
-	program_name = basename (argv[0]);
+	program_name = BASENAME(argv[0]);
 
 	if (program_name != NULL &&
 	    program_name[strlen (program_name) - 1] == '+')

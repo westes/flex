@@ -247,16 +247,7 @@ int     scanopt_usage (scanopt_t *scanner, FILE *fp, const char *usage)
 		fprintf (fp, "%s\n", usage);
 	}
 	else {
-		/* Find the basename of argv[0] */
-		const char *p;
-
-		p = s->argv[0] + strlen (s->argv[0]);
-		while (p != s->argv[0] && *p != '/')
-			--p;
-		if (*p == '/')
-			p++;
-
-		fprintf (fp, _("Usage: %s [OPTIONS]...\n"), p);
+		fprintf (fp, _("Usage: %s [OPTIONS]...\n"), BASENAME(s->argv[0]) );
 	}
 	fprintf (fp, "\n");
 
