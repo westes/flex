@@ -247,7 +247,7 @@ int     scanopt_usage (scanopt_t *scanner, FILE *fp, const char *usage)
 		fprintf (fp, "%s\n", usage);
 	}
 	else {
-		fprintf (fp, _("Usage: %s [OPTIONS]...\n"), BASENAME(s->argv[0]) );
+		fprintf (fp, _("Usage: %s [OPTIONS]...\n"), s->argv[0]);
 	}
 	fprintf (fp, "\n");
 

@@ -996,7 +996,7 @@ void flexinit (int argc, char **argv)
     flex_init_regex();
 
 	/* Enable C++ if program name ends with '+'. */
-	program_name = BASENAME(argv[0]);
+	program_name = argv[0];
 
 	if (program_name != NULL &&
 	    program_name[strlen (program_name) - 1] == '+')
@@ -1208,7 +1208,7 @@ void flexinit (int argc, char **argv)
 			break;
 
 		case OPT_VERSION:
-			printf (_("%s %s\n"), program_name, flex_version);
+			printf (_("%s %s\n"), (C_plus_plus ? "flex++" : "flex"), flex_version);
 			FLEX_EXIT (0);
 
 		case OPT_WARN:
