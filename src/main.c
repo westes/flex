@@ -1208,7 +1208,7 @@ void flexinit (int argc, char **argv)
 			break;
 
 		case OPT_VERSION:
-			printf (_("%s %s\n"), (C_plus_plus ? "flex++" : "flex"), flex_version);
+			printf ("%s %s\n", (C_plus_plus ? "flex++" : "flex"), flex_version);
 			FLEX_EXIT (0);
 
 		case OPT_WARN:
