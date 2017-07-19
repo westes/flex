@@ -79,6 +79,8 @@ COMMON_SOURCES = \
 
 LDADD = $(LIBOBJS) @LIBINTL@
 
+$(LIBOBJS): $(LIBOBJDIR)$(am__dirstamp)
+
 include_HEADERS = \
 	FlexLexer.h
 
