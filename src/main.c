@@ -1860,6 +1860,6 @@ void usage (void)
 		  "  -?\n"
 		  "  -h, --help              produce this help message\n"
 		  "  -V, --version           report %s version\n"),
-		 backing_name, program_name, outfile_path, program_name);
+		 backing_name, "flex", outfile_path, "flex");
 
 }
