@@ -33,37 +33,34 @@
 
 
 #include "flexdef.h"
+#include "functional/operations.h"
+#include "functional/character-class.h"
+
+static void deep_copy(list_t* destination, list_t* source) {
+	if (is_empty(source)) {
+		return;
+	}
+
+	deep_copy_character_class(head(destination), head(source));
+	deep_copy(tail(destination), tail(source));
+}
 
 /* ccl2ecl - convert character classes to set of equivalence classes */
 
 void    ccl2ecl (void)
 {
-	int     i, ich, newlen, cclp, ccls, cclmec;
+	list_t* character_classes = map(
+		character_class_at_index,
+		range(1, lastccl + 1)
+	);
 
-	for (i = 1; i <= lastccl; ++i) {
-		/* We loop through each character class, and for each character
-		 * in the class, add the character's equivalence class to the
-		 * new "character" class we are creating.  Thus when we are all
-		 * done, character classes will really consist of collections
-		 * of equivalence classes
-		 */
+	list_t* equivalence_classes = map(
+		to_equivalence_class,
+		character_classes
+	);
 
-		newlen = 0;
-		cclp = cclmap[i];
-
-		for (ccls = 0; ccls < ccllen[i]; ++ccls) {
-			ich = ccltbl[cclp + ccls];
-			cclmec = ecgroup[ich];
-
-			if (cclmec > 0) {
-				/* Note: range 1..256 is mapped to 1..255,0 */
-				ccltbl[cclp + newlen] = (unsigned char) cclmec;
-				++newlen;
-			}
-		}
-
-		ccllen[i] = newlen;
-	}
+	deep_copy(character_classes, equivalence_classes);
+	gc_collect();
 }
 
 
