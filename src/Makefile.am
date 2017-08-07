@@ -49,6 +49,18 @@ nodist_flex_SOURCES = \
 flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
 
 COMMON_SOURCES = \
+	functional/boxes.c \
+	functional/boxes.h \
+	functional/character-class.c \
+	functional/character-class.h \
+	functional/function.c \
+	functional/function.h \
+	functional/gc.c \
+	functional/gc.h \
+	functional/list.c \
+	functional/list.h \
+	functional/operations.c \
+	functional/operations.h \
 	buf.c \
 	ccl.c \
 	dfa.c \
@@ -130,6 +142,18 @@ flex-stage1scan.$(OBJEXT): parse.h
 #   4. Run indent twice per file. The first time is a test.
 #      Otherwise, indent overwrites your file even if it fails!
 indentfiles = \
+	functional/boxes.c \
+	functional/boxes.h \
+	functional/character-class.c \
+	functional/character-class.h \
+	functional/function.c \
+	functional/function.h \
+	functional/gc.c \
+	functional/gc.h \
+	functional/list.c \
+	functional/list.h \
+	functional/operations.c \
+	functional/operations.h \
 	buf.c \
 	ccl.c \
 	dfa.c \
