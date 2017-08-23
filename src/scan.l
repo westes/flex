@@ -101,23 +101,6 @@ extern const char *escaped_qstart, *escaped_qend;
 	if ( getenv("POSIXLY_CORRECT") ) \
 		posix_compat = true;
 
-#define START_CODEBLOCK(x) do { \
-    /* Emit the needed line directive... */\
-    if (indented_code == false) { \
-        linenum++; \
-        line_directive_out(NULL, 1); \
-    } \
-    add_action(M4QSTART); \
-    yy_push_state(CODEBLOCK); \
-    if ((indented_code = x)) ACTION_ECHO; \
-} while(0)
-
-#define END_CODEBLOCK do { \
-    yy_pop_state();\
-    add_action(M4QEND); \
-    if (!indented_code) line_directive_out(NULL, 0);\
-} while (0)
-
 %}
 
 %option caseless nodefault noreject stack noyy_top_state
@@ -166,12 +149,12 @@ M4QEND      "]""]"
 
 
 <INITIAL>{
-	^{WS}		START_CODEBLOCK(true);
+	^{WS}		indented_code = true;add_action(M4QSTART);yy_push_state(CODEBLOCK);ACTION_ECHO;
 	^"/*"		add_action("/*[""["); yy_push_state( COMMENT );
 	^#{OPTWS}line{WS}	yy_push_state( LINEDIR );
 	^"%s"{NAME}?	return SCDECL;
 	^"%x"{NAME}?	return XSCDECL;
-	^"%{".*{NL}	START_CODEBLOCK(false);
+	^"%{".*{NL}	indented_code = false;linenum++;line_directive_out(NULL, 1);add_action(M4QSTART);yy_push_state(CODEBLOCK);
     ^"%top"[[:blank:]]*"{"[[:blank:]]*{NL}    {
                 brace_start_line = linenum;
                 ++linenum;
@@ -184,11 +167,13 @@ M4QEND      "]""]"
 
 	{WS}		/* discard */
 
-	^"%%".*		{
+	^"%%".*{NL}		{
 			sectnum = 2;
 			bracelevel = 0;
 			mark_defs1();
+			linenum++;
 			line_directive_out(NULL, 1);
+			indented_code = false;
 			BEGIN(SECT2PROLOG);
 			return SECTEND;
 			}
@@ -269,14 +254,9 @@ M4QEND      "]""]"
 }
 
 <CODEBLOCK>{
-	^"%}".*{NL}	++linenum; END_CODEBLOCK;
-	[^\n%\[\]]*         ACTION_ECHO;
+	^"%}".*{NL}	yy_pop_state();add_action(M4QEND);++linenum;line_directive_out(NULL, 0);
+	{NL}        ++linenum;ACTION_ECHO;if ( indented_code ) {yy_pop_state();add_action(M4QEND); }
         .		ACTION_ECHO;
-	{NL}		{
-			++linenum;
-			ACTION_ECHO;
-			if ( indented_code ) END_CODEBLOCK;
-			}
 }
 
 <CODEBLOCK_MATCH_BRACE>{
@@ -487,7 +467,7 @@ M4QEND      "]""]"
 	^"%{".*	++bracelevel; yyless( 2 );	/* eat only %{ */
 	^"%}".*	--bracelevel; yyless( 2 );	/* eat only %} */
 
-	^{WS} START_CODEBLOCK(true); /* indented code in prolog */
+	^{WS}   indented_code = true;add_action(M4QSTART);yy_push_state(CODEBLOCK);ACTION_ECHO; /* indented code in prolog */
 
 	^{NOT_WS}.*	{
         /* non-indented code */
@@ -498,7 +478,7 @@ M4QEND      "]""]"
             mark_prolog();
             BEGIN(SECT2);
         } else {
-            START_CODEBLOCK(true);
+            indented_code = true;add_action(M4QSTART);yy_push_state(CODEBLOCK);ACTION_ECHO;
         }
     }
 
@@ -519,6 +499,7 @@ M4QEND      "]""]"
 			indented_code = false;
 			doing_codeblock = true;
 			bracelevel = 1;
+			line_directive_out(NULL, 1);
 			BEGIN(PERCENT_BRACE_ACTION);
 			}
 
@@ -541,6 +522,7 @@ M4QEND      "]""]"
 
 	{WS}"%{"		{
 			bracelevel = 1;
+			line_directive_out(NULL, 1);
 			BEGIN(PERCENT_BRACE_ACTION);
 
 			if ( in_rule )
