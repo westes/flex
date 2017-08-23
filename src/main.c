@@ -492,7 +492,7 @@ void check_options (void)
 
     /* Place a bogus line directive, it will be fixed in the filter. */
     if (gen_line_dirs)
-        outn("#line 0 \"M4_YY_OUTFILE_NAME\"\n");
+        outn(m4_line_dir_dummy);
 
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)

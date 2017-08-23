@@ -1116,6 +1116,7 @@ struct filter {
 };
 
 /* output filter chain */
+extern const char* m4_line_dir_dummy;
 extern struct filter * output_chain;
 extern struct filter *filter_create_ext (struct filter * chain, const char *cmd, ...);
 struct filter *filter_create_int(struct filter *chain,

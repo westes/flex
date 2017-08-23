@@ -345,45 +345,24 @@ void lerr_fatal (const char *msg, ...)
 
 void line_directive_out (FILE *output_file, int do_infile)
 {
-	char    directive[MAXLINE], filename[MAXLINE];
-	char   *s1, *s2, *s3;
-	static const char line_fmt[] = "#line %d \"%s\"\n";
+    char   directive[MAXLINE];
+    char   *d;
 
-	if (!gen_line_dirs)
-		return;
+    if (!gen_line_dirs)
+        return;
 
-	s1 = do_infile ? infilename : "M4_YY_OUTFILE_NAME";
+    if ( do_infile )
+    {
+        snprintf (directive, sizeof(directive), "#line %d \"%s\"\n", linenum, infilename ? infilename : "<stdin>");
+        d = &directive[0];
+    }
+    else
+        d = (char*) m4_line_dir_dummy;
 
-	if (do_infile && !s1)
-        s1 = "<stdin>";
-    
-	s2 = filename;
-	s3 = &filename[sizeof (filename) - 2];
-
-	while (s2 < s3 && *s1) {
-		if (*s1 == '\\' || *s1 == '"')
-			/* Escape the '\' or '"' */
-			*s2++ = '\\';
-
-		*s2++ = *s1++;
-	}
-
-	*s2 = '\0';
-
-	if (do_infile)
-		snprintf (directive, sizeof(directive), line_fmt, linenum, filename);
-	else {
-		snprintf (directive, sizeof(directive), line_fmt, 0, filename);
-	}
-
-	/* If output_file is nil then we should put the directive in
-	 * the accumulated actions.
-	 */
-	if (output_file) {
-		fputs (directive, output_file);
-	}
-	else
-		add_action (directive);
+    if (output_file)
+        fputs (d, output_file);
+    else
+        add_action (d);
 }
 
 

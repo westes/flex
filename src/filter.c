@@ -22,6 +22,9 @@
 /*  PURPOSE. */
 
 #include "flexdef.h"
+
+#define M4_LINE_DIR_DUMMY_BEG      "#line XYZ "
+const char* m4_line_dir_dummy     = M4_LINE_DIR_DUMMY_BEG "\"M4_YY_OUTFILE_NAME\"\n";
 static const char * check_4_gnu_m4 =
     "m4_dnl ifdef(`__gnu__', ,"
     "`errprint(Flex requires GNU M4. Set the PATH or set the M4 environment variable to its path name.)"
@@ -293,7 +296,7 @@ int filter_tee_header (struct filter *chain)
 
 		/* write a fake line number. It will get fixed by the linedir filter. */
 		if (gen_line_dirs)
-			fprintf (to_h, "#line 4000 \"M4_YY_OUTFILE_NAME\"\n");
+			fprintf (to_h, m4_line_dir_dummy);
 
 		fprintf (to_h, "#undef %sIN_HEADER\n", prefix);
 		fprintf (to_h, "#endif /* %sHEADER_H */\n", prefix);
@@ -332,10 +335,11 @@ static bool is_blank_line (const char *str)
 }
 
 /** Adjust the line numbers in the #line directives of the generated scanner.
- * After the m4 expansion, the line numbers are incorrect since the m4 macros
- * can add or remove lines.  This only adjusts line numbers for generated code,
- * not user code. This also happens to be a good place to squeeze multiple
- * blank lines into a single blank line.
+ * After the m4 expansion, the line numbers might not be incorrect since the 
+ * m4 macros can add or remove lines.  This only fills in line numbers for 
+ * generated code (labelled as XYZ), not user code. 
+ * This also happens to be a good place to squeeze multiple blank lines into 
+ * a single blank line.
  */
 int filter_fix_linedirs (struct filter *chain)
 {
@@ -349,58 +353,17 @@ int filter_fix_linedirs (struct filter *chain)
 		return 0;
 
 	while (fgets (buf, (int) readsz, stdin)) {
-
-		regmatch_t m[10];
-
-		/* Check for #line directive. */
-		if (buf[0] == '#'
-			&& regexec (&regex_linedir, buf, 3, m, 0) == 0) {
-
-			char   *fname;
-
-			/* extract the line number and filename */
-			fname = regmatch_dup (&m[2], buf);
-
-			if (strcmp (fname,
-				outfilename ? outfilename : "<stdout>")
-					== 0
-			 || strcmp (fname,
-			 	headerfilename ? headerfilename : "<stdout>")
-					== 0) {
-
-				char    *s1, *s2;
-				char	filename[MAXLINE];
-
-				s1 = fname;
-				s2 = filename;
-
-				while ((s2 - filename) < (MAXLINE - 1) && *s1) {
-					/* Escape the backslash */
-					if (*s1 == '\\')
-						*s2++ = '\\';
-					/* Escape the double quote */
-					if (*s1 == '\"')
-						*s2++ = '\\';
-					/* Copy the character as usual */
-					*s2++ = *s1++;
-				}
-
-				*s2 = '\0';
-
-				/* Adjust the line directives. */
-				in_gen = true;
-				snprintf (buf, readsz, "#line %d \"%s\"\n",
-					  lineno + 1, filename);
-			}
-			else {
-				/* it's a #line directive for code we didn't write */
-				in_gen = false;
-			}
-
-			free (fname);
+        
+		/* adjust lineno in our dummy #line directive */
+		if (buf[0] == '#' && strstr(buf, M4_LINE_DIR_DUMMY_BEG ) == buf ) {
 			last_was_blank = false;
+			in_gen = true;
+			snprintf (buf, readsz, "#line %d %s\n",++lineno, buf + strlen(M4_LINE_DIR_DUMMY_BEG));
 		}
-
+        else if (buf[0] == '#' && strstr(buf, "#line" ) == buf ) {
+            last_was_blank = false;
+            in_gen = false;
+        }
 		/* squeeze blank lines from generated code */
 		else if (in_gen && is_blank_line(buf)) {
 			if (last_was_blank)
@@ -410,7 +373,8 @@ int filter_fix_linedirs (struct filter *chain)
 		}
 
 		else {
-			/* it's a line of normal, non-empty code. */
+			/* it's a line of normal, non-empty code
+                or user code we do not touch */
 			last_was_blank = false;
 		}
 
