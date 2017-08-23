@@ -136,11 +136,12 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 
 			if ( spprdflt )
 				add_action(
-				"YY_FATAL_ERROR( \"flex scanner jammed\" )" );
+				"YY_FATAL_ERROR( \"flex scanner jammed\" );\n" );
 			else
-				add_action( "ECHO" );
+				add_action( "ECHO;\n" );
 
-			add_action( ";\n\tYY_BREAK]]\n" );
+			add_action(m4_line_dir_dummy);
+			add_action( "\tYY_BREAK]]\n" );
 			}
 		;
 
