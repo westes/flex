@@ -241,10 +241,13 @@ M4QEND      "]""]"
 	\n		yy_pop_state();
 	[[:digit:]]+	linenum = myctoi( yytext );
 
-	\"[^"\n]*\"	{
+	\"[^"\n]+\"	{
 			free(infilename);
 			infilename = xstrdup(yytext + 1);
 			infilename[strlen( infilename ) - 1] = '\0';
+			/* convert '\' to '/' */
+			char* p = infilename;
+			while((p = strchr(p, '\\'))){*p++ = '/';}
 			}
 	.		/* ignore spurious characters */
 }
@@ -1017,6 +1020,8 @@ void set_input_file( char *file )
 		{
 		infilename = xstrdup(file);
 		yyin = fopen( infilename, "r" );
+		char* p= infilename;
+		while( (p=strchr(p,'\\'))){*p++='/';}
 
 		if ( yyin == NULL )
 			lerr( _( "can't open %s" ), file );
