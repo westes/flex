@@ -4,6 +4,9 @@ flex NEWS
 
 ** build
 
+*** Various edge cases, mostly involving out-of-tree builds have been
+    accounted for in the autotools build system.
+
 *** A crash during building on NetBSD has been fixed.
 
 ** documentation
@@ -21,7 +24,8 @@ flex NEWS
 
 *** New option: --backup-file allows setting the name of the file
     written containing backing up information. Useful if you need
-    backing up information multiple scanners in the same directory.
+    backing up information from multiple scanners in the same
+    directory.
 
 *** flex emits correct line number directives when line numbers refer
     to the file containing the line number directives.
