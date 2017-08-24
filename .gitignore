@@ -14,6 +14,7 @@ Makefile.in
 aclocal.m4
 autom4te.cache
 autoscan.log
+build-aux/
 config.log
 config.status
 configure
@@ -21,6 +22,5 @@ configure.scan
 flex-*/
 libfl.pc
 libtool
-stamp-*
 m4/
-build-aux/
+stamp-*
