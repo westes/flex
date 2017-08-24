@@ -19,6 +19,7 @@ config.status
 configure
 configure.scan
 flex-*/
+libfl.pc
 libtool
 stamp-*
 m4/
