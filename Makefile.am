@@ -64,3 +64,6 @@ install-exec-hook:
 		$(LN_S) -f flex$(EXEEXT) flex++$(EXEEXT)
 
 .PHONY: ChangeLog indent
+
+pkgconfigdir = @pkgconfigdir@
+pkgconfig_DATA = libfl.pc

@@ -54,6 +54,9 @@ AC_PROG_LN_S
 AC_PROG_AWK
 AC_PROG_INSTALL
 
+pkgconfigdir=${libdir}/pkgconfig
+AC_SUBST(pkgconfigdir)
+
 # allow passing a variable `WARNINGFLAGS',
 #   either when invoking `configure', or when invoking `make'
 # default to something useful if GCC was detected
@@ -180,6 +183,7 @@ po/Makefile.in
 src/Makefile
 tools/Makefile
 tests/Makefile
+libfl.pc
 )
 
 AC_OUTPUT
