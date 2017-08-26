@@ -49,9 +49,6 @@ SUBDIRS = \
 	tests \
 	tools
 
-pkgconfigdir = @pkgconfigdir@
-pkgconfig_DATA = libfl.pc
-
 # Create the ChangeLog, but only if we're inside a git working directory
 
 ChangeLog: $(srcdir)/tools/git2cl

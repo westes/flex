@@ -1,6 +1,7 @@
 AM_YFLAGS = -d
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
 LIBS = @LIBS@
+pkgconfigdir = @pkgconfigdir@
 
 m4 = @M4@
 
@@ -11,6 +12,7 @@ endif
 
 if ENABLE_LIBFL
 lib_LTLIBRARIES = libfl.la
+pkgconfig_DATA = libfl.pc
 endif
 libfl_la_SOURCES = \
 	libmain.c \
