@@ -1,7 +1,11 @@
 FLEX = $(top_builddir)/src/flex$(EXEEXT)
 
 info_TEXINFOS =	flex.texi
+
+if ENABLE_PROGRAM
 dist_man_MANS = flex.1
+endif
+
 MAINTAINERCLEANFILES = flex.1
 
 CLEANFILES = *.aux *.cp *.cps *.fn *.fns *.hk *.hks *.ky *.log \

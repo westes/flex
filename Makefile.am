@@ -62,8 +62,10 @@ ChangeLog: $(srcdir)/tools/git2cl
 indent:
 	cd src && $(MAKE) $(AM_MAKEFLAGS) indent
 
+if ENABLE_PROGRAM
 install-exec-hook:
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) -f flex$(EXEEXT) flex++$(EXEEXT)
+endif
 
 .PHONY: ChangeLog indent
