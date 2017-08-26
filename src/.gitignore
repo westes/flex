@@ -4,6 +4,7 @@
 config.h
 config.h.in
 flex
+libfl.pc
 parse.c
 parse.h
 scan.c

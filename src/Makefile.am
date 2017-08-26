@@ -9,6 +9,9 @@ if ENABLE_BOOTSTRAP
 noinst_PROGRAMS = stage1flex
 endif
 
+pkgconfigdir = @pkgconfigdir@
+pkgconfig_DATA = libfl.pc
+
 if ENABLE_LIBFL
 lib_LTLIBRARIES = libfl.la
 endif

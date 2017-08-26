@@ -180,10 +180,10 @@ examples/Makefile
 examples/fastwc/Makefile
 examples/manual/Makefile
 po/Makefile.in
+src/libfl.pc
 src/Makefile
 tools/Makefile
 tests/Makefile
-libfl.pc
 )
 
 AC_OUTPUT
