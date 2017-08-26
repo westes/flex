@@ -1,6 +1,7 @@
 AM_YFLAGS = -d
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
 LIBS = @LIBS@
+pkgconfigdir = @pkgconfigdir@
 
 m4 = @M4@
 
@@ -9,11 +10,9 @@ if ENABLE_BOOTSTRAP
 noinst_PROGRAMS = stage1flex
 endif
 
-pkgconfigdir = @pkgconfigdir@
-pkgconfig_DATA = libfl.pc
-
 if ENABLE_LIBFL
 lib_LTLIBRARIES = libfl.la
+pkgconfig_DATA = libfl.pc
 endif
 libfl_la_SOURCES = \
 	libmain.c \
