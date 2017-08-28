@@ -49,6 +49,29 @@ SUBDIRS = \
 	tests \
 	tools
 
+# Convenience targets to build libfl only
+# These are actually wrappers around automake- and libtool-generated targets
+
+libfl:
+	cd src && $(MAKE) $(AM_MAKEFLAGS) libfl.la libfl.pc
+
+install-libfl:
+	cd src && \
+	$(MAKE) $(AM_MAKEFLAGS) lib_LTLIBRARIES=libfl.la \
+	pkgconfig_DATA=libfl.pc install-libLTLIBRARIES install-pkgconfigDATA
+
+uninstall-libfl:
+	cd src && \
+	$(MAKE) $(AM_MAKEFLAGS) \
+	lib_LTLIBRARIES=libfl.la pkgconfig_DATA=libfl.pc \
+	uninstall-libLTLIBRARIES uninstall-pkgconfigDATA
+
+# libfl.pc is cleaned via 'distclean' target
+clean-libfl:
+	cd src && \
+	$(MAKE) $(AM_MAKEFLAGS) lib_LTLIBRARIES=libfl.la clean-libLTLIBRARIES \
+	clean-libtool
+
 # Create the ChangeLog, but only if we're inside a git working directory
 
 ChangeLog: $(srcdir)/tools/git2cl
@@ -63,4 +86,5 @@ install-exec-hook:
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) -f flex$(EXEEXT) flex++$(EXEEXT)
 
-.PHONY: ChangeLog indent
+.PHONY: libfl install-libfl uninstall-libfl clean-libfl \
+	ChangeLog indent
