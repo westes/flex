@@ -5,7 +5,10 @@ pkgconfigdir = @pkgconfigdir@
 
 m4 = @M4@
 
+if ENABLE_PROGRAM
 bin_PROGRAMS = flex
+endif
+
 if ENABLE_BOOTSTRAP
 noinst_PROGRAMS = stage1flex
 endif

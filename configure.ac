@@ -75,6 +75,12 @@ AC_ARG_ENABLE([libfl],
   [], [enable_libfl=yes])
 AM_CONDITIONAL([ENABLE_LIBFL], [test "x$enable_libfl" = xyes])
 
+AC_ARG_ENABLE([program],
+  [AS_HELP_STRING([--disable-program],
+                  [do not build the flex program, only the libfl library])],
+  [], [enable_program=yes])
+AM_CONDITIONAL([ENABLE_PROGRAM], [test "x$enable_program" = xyes])
+
 # --disable-bootstrap is intended only to workaround problems with bootstrap
 # (e.g. when cross-compiling flex or when bootstrapping has bugs).
 # Ideally we should be able to bootstrap even when cross-compiling.
