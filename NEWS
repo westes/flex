@@ -4,6 +4,10 @@ flex NEWS
 
 ** build
 
+*** The flex distribution now includes a file, src/libfl.pc, to allow
+    using pkgconfig to find out what flags to use when building
+    against libfl from flex.
+
 *** Various edge cases, mostly involving out-of-tree builds have been
     accounted for in the autotools build system.
 
