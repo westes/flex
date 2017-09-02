@@ -4,6 +4,9 @@ flex NEWS
 
 ** build
 
+*** The flex build system now includes Makefile targets at the top
+    level to allow just building and installing libfl.
+
 *** The flex distribution now includes a file, src/libfl.pc, to allow
     using pkgconfig to find out what flags to use when building
     against libfl from flex.
