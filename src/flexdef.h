@@ -37,6 +37,12 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
+#if defined(malloc) || defined(realloc)
+/* Must forward declare or scan.c would compile to wrong code. */
+#include <stddef.h>
+extern void *rpl_malloc(size_t);
+extern void *rpl_realloc(void *, size_t);
+#endif
 #endif
 
 #include <stdio.h>
