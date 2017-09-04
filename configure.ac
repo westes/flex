@@ -25,8 +25,10 @@
 # autoconf requirements and initialization
 
 AC_INIT([the fast lexical analyser generator],[2.6.4],[flex-help@lists.sourceforge.net],[flex])
+AC_PREREQ([2.60])
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
+AC_USE_SYSTEM_EXTENSIONS
 LT_INIT
 AM_INIT_AUTOMAKE([1.15 -Wno-portability foreign std-options dist-lzip parallel-tests subdir-objects])
 AC_CONFIG_HEADER([src/config.h])
