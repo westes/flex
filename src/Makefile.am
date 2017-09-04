@@ -99,18 +99,31 @@ skel.c: flex.skl mkskel.sh flexint.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir) $(m4) $(VERSION) > $@.tmp
 	mv $@.tmp $@
 
+scan.c: scan.l scan.template
+	$(LEX) $(AM_LFLAGS) $(LFLAGS) -o $@ $(srcdir)/scan.l
+	mv $@ $@.new
+	cat $(srcdir)/scan.template $@.new > $@
+	rm -f $@.new
+
 if ENABLE_BOOTSTRAP
-stage1scan.c: scan.l stage1flex$(EXEEXT)
+stage1scan.c: scan.l stage1flex$(EXEEXT) scan.template
 	./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $(srcdir)/scan.l
+	mv $@ $@.new
+	cat $(srcdir)/scan.template $@.new > $@
+	rm -f $@.new
 else
 stage1scan.c: scan.c
 	sed 's|^\(#line .*\)"'`printf %s $< | sed 's|[][\\\\.*]|\\\\&|g'`'"|\1"$@"|g' $< > $@
 endif
 
-dist-hook: scan.l flex$(EXEEXT)
+dist-hook: scan.l flex$(EXEEXT) scan.template
 	chmod u+w $(distdir)/scan.c && \
 	./flex$(EXEEXT) -o scan.c $< && \
+	mv scan.c scan.c.new
+	cat $(srcdir)/scan.template scan.c.new > scan.c
+	rm -f scan.c.new
 	mv scan.c $(distdir)
+	cp $(srcdir)/scan.template $(distdir)
 
 # make needs to be told to make parse.h so that parallelized runs will
 # not fail.
