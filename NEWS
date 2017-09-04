@@ -4,6 +4,11 @@ flex NEWS
 
 ** build
 
+*** Flex now includes its own <config.h> header before including
+    system headers so that any system specific features detected by
+    configure are taken into account during compilation of flex
+    itself.
+
 *** The flex build system now includes Makefile targets at the top
     level to allow just building and installing libfl.
 
