@@ -1,5 +1,11 @@
 /* scan.l - scanner for flex input -*-C-*- */
 
+%top{
+/* flexdef.h includes config.h, which may contain macros that alter the API */
+/* of libc functions. Must include first before any libc header. */
+#include "flexdef.h"
+}
+
 %{
 /*  Copyright (c) 1990 The Regents of the University of California. */
 /*  All rights reserved. */
@@ -32,7 +38,6 @@
 /*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
 /*  PURPOSE. */
 
-#include "flexdef.h"
 #include "parse.h"
 extern bool tablesverify, tablesext;
 extern int trlcontxt; /* Set in  parse.y for each rule. */
