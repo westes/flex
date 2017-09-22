@@ -366,14 +366,8 @@ int     scanopt_usage (scanopt_t *scanner, FILE *fp, const char *usage)
 	}
 	desccol = maxlen[0] + indent * 2;
 
-#define PRINT_SPACES(fp,n)\
-    do{\
-        int _n;\
-        _n=(n);\
-        while(_n-- > 0)\
-            fputc(' ',(fp));\
-    }while(0)
-
+#define PRINT_SPACES(fp,n) \
+	fprintf((fp), "%*s", (n), "")
 
 	/* Second pass (same as above loop), this time we print. */
 	/* Sloppy hack: We iterate twice. The first time we print short and long options.
