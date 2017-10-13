@@ -45,7 +45,6 @@
 #include <setjmp.h>
 #include <ctype.h>
 #include <string.h>
-#define BASENAME(p)   strrchr(p, '/') ? strrchr(p, '/') + 1 : strrchr(p, '\\') ? strrchr(p, '\\') + 1 : p
 #include <math.h>
 
 #ifdef HAVE_ASSERT_H
