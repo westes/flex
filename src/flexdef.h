@@ -466,7 +466,9 @@ extern int num_rules, num_eof_rules, default_rule, lastnfa;
 extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 extern int *accptnum, *assoc_rule, *state_type;
 extern int *rule_type, *rule_linenum, *rule_useful;
-extern bool *rule_has_nl, *ccl_has_nl;
+/* rule_has_nl[] and ccl_has_nl[] are meant to be bool array, but
+ * allocated as char array for size. */
+extern char *rule_has_nl, *ccl_has_nl;
 extern int nlch;
 
 /* Different types of states; values are useful as masks, as well, for
@@ -638,12 +640,6 @@ void   *reallocate_array(void *, int, size_t);
 
 #define reallocate_integer_array(array,size) \
 	reallocate_array((void *) array, size, sizeof(int))
-
-#define allocate_bool_array(size) \
-	allocate_array(size, sizeof(bool))
-
-#define reallocate_bool_array(array,size) \
-	reallocate_array((void *) array, size, sizeof(bool))
 
 #define allocate_int_ptr_array(size) \
 	allocate_array(size, sizeof(int *))

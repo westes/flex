@@ -104,7 +104,9 @@ int     end_of_buffer_state;
 char  **input_files;
 int     num_input_files;
 jmp_buf flex_main_jmp_buf;
-bool   *rule_has_nl, *ccl_has_nl;
+/* rule_has_nl[] and ccl_has_nl[] are meant to be bool array, but
+ * allocated as char array for size. */
+char   *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
 
 bool    tablesext, tablesverify, gentables;
@@ -1753,7 +1755,7 @@ void set_up_initial_allocations (void)
 	rule_type = allocate_integer_array (current_max_rules);
 	rule_linenum = allocate_integer_array (current_max_rules);
 	rule_useful = allocate_integer_array (current_max_rules);
-	rule_has_nl = allocate_bool_array (current_max_rules);
+	rule_has_nl = allocate_array(current_max_rules, sizeof(char));
 
 	current_max_scs = INITIAL_MAX_SCS;
 	scset = allocate_integer_array (current_max_scs);
@@ -1766,7 +1768,7 @@ void set_up_initial_allocations (void)
 	cclmap = allocate_integer_array (current_maxccls);
 	ccllen = allocate_integer_array (current_maxccls);
 	cclng = allocate_integer_array (current_maxccls);
-	ccl_has_nl = allocate_bool_array (current_maxccls);
+	ccl_has_nl = allocate_array(current_maxccls, sizeof(char));
 
 	current_max_ccl_tbl_size = INITIAL_MAX_CCL_TBL_SIZE;
 	ccltbl = allocate_Character_array (current_max_ccl_tbl_size);
