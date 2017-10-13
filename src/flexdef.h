@@ -465,10 +465,10 @@ extern int maximum_mns, current_mns, current_max_rules;
 extern int num_rules, num_eof_rules, default_rule, lastnfa;
 extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 extern int *accptnum, *assoc_rule, *state_type;
-extern int *rule_type, *rule_linenum, *rule_useful;
-/* rule_has_nl[] and ccl_has_nl[] are meant to be bool array, but
- * allocated as char array for size. */
-extern char *rule_has_nl, *ccl_has_nl;
+extern int *rule_type, *rule_linenum;
+/* rule_useful[], rule_has_nl[] and ccl_has_nl[] are meant to be bool
+ * arrays, but allocated as char arrays for size. */
+extern char *rule_useful, *rule_has_nl, *ccl_has_nl;
 extern int nlch;
 
 /* Different types of states; values are useful as masks, as well, for

@@ -691,8 +691,8 @@ void    new_rule (void)
 						      current_max_rules);
 		rule_linenum = reallocate_integer_array (rule_linenum,
 							 current_max_rules);
-		rule_useful = reallocate_integer_array (rule_useful,
-							current_max_rules);
+		rule_useful = reallocate_array(rule_useful,
+					current_max_rules, sizeof(char));
 		rule_has_nl = reallocate_array(rule_has_nl,
 					current_max_rules, sizeof(char));
 	}
