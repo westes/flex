@@ -464,14 +464,14 @@ static struct yytbl_data *mkecstbl (void)
 
 void genecs (void)
 {
-	int i, j;
+	int ch, row;
 	int     numrows;
 
 	out_str_dec (get_yy_char_decl (), "yy_ec", csize);
 
-	for (i = 1; i < csize; ++i) {
-		ecgroup[i] = ABS (ecgroup[i]);
-		mkdata (ecgroup[i]);
+	for (ch = 1; ch < csize; ++ch) {
+		ecgroup[ch] = ABS (ecgroup[ch]);
+		mkdata (ecgroup[ch]);
 	}
 
 	dataend ();
@@ -479,12 +479,13 @@ void genecs (void)
 	if (trace) {
 		fputs (_("\n\nEquivalence Classes:\n\n"), stderr);
 
+		/* Print in 8 columns */
 		numrows = csize / 8;
 
-		for (j = 0; j < numrows; ++j) {
-			for (i = j; i < csize; i = i + numrows) {
+		for (row = 0; row < numrows; ++row) {
+			for (ch = row; ch < csize; ch += numrows) {
 				fprintf (stderr, "%4s = %-2d",
-					 readable_form (i), ecgroup[i]);
+					 readable_form (ch), ecgroup[ch]);
 
 				putc (' ', stderr);
 			}
