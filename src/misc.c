@@ -116,15 +116,14 @@ void add_action (const char *new_text)
 	int     len = (int) strlen (new_text);
 
 	while (len + action_index >= action_size - 10 /* slop */ ) {
-		int     new_size = action_size * 2;
 
-		if (new_size <= 0)
+		if (action_size > INT_MAX / 2)
 			/* Increase just a little, to try to avoid overflow
 			 * on 16-bit machines.
 			 */
 			action_size += action_size / 8;
 		else
-			action_size = new_size;
+			action_size = action_size * 2;
 
 		action_array =
 			reallocate_character_array (action_array,
