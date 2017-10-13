@@ -73,6 +73,13 @@ void ccladd (int cclp, int ch)
 
 	newpos = ind + len;
 
+	/* For a non-last cclp, expanding the set will overflow and overwrite a
+	 * char in the next cclp.
+	 * FIXME: Need another allocation scheme for ccl's. */
+	if (cclp != lastccl) {
+		flexfatal(_("internal error: trying to add a char to a non-last ccl.\n"));
+	}
+
 	if (newpos >= current_max_ccl_tbl_size) {
 		current_max_ccl_tbl_size += MAX_CCL_TBL_SIZE_INCREMENT;
 
