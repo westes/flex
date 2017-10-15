@@ -542,7 +542,10 @@ extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
  * scname - start condition name
  */
 
-extern int lastsc, *scset, *scbol, *scxclu, *sceof;
+extern int lastsc, *scset, *scbol;
+/* scxclu[] and sceof[] are meant to be bool arrays, but allocated as
+ * char arrays for size. */
+extern char *scxclu, *sceof;
 extern int current_max_scs;
 extern char **scname;
 
@@ -983,7 +986,7 @@ extern char *ndlookup(const char *);	/* lookup a name definition */
 
 /* Increase maximum number of SC's. */
 extern void scextend(void);
-extern void scinstal(const char *, int);	/* make a start condition */
+extern void scinstal(const char *, bool);	/* make a start condition */
 
 /* Lookup the number associated with a start condition. */
 extern int sclookup(const char *);

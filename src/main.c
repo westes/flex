@@ -82,7 +82,10 @@ int     protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int     numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs,
 	tecfwd[CSIZE + 1];
 int     tecbck[CSIZE + 1];
-int     lastsc, *scset, *scbol, *scxclu, *sceof;
+int     lastsc, *scset, *scbol;
+/* scxclu[] and sceof[] are meant to be bool arrays, but allocated as
+ * char arrays for size. */
+char   *scxclu, *sceof;
 int     current_max_scs;
 char  **scname;
 int     current_max_dfa_size, current_max_xpairs;
@@ -1760,8 +1763,8 @@ void set_up_initial_allocations (void)
 	current_max_scs = INITIAL_MAX_SCS;
 	scset = allocate_integer_array (current_max_scs);
 	scbol = allocate_integer_array (current_max_scs);
-	scxclu = allocate_integer_array (current_max_scs);
-	sceof = allocate_integer_array (current_max_scs);
+	scxclu = allocate_array(current_max_scs, sizeof(char));
+	sceof = allocate_array(current_max_scs, sizeof(char));
 	scname = allocate_char_ptr_array (current_max_scs);
 
 	current_maxccls = INITIAL_MAX_CCLS;
