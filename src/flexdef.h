@@ -908,7 +908,7 @@ extern int copysingl(int, int);
 extern void dumpnfa(int);
 
 /* Finish up the processing for a rule. */
-extern void finish_rule(int, int, int, int, int);
+extern void finish_rule(int, bool, int, int, int);
 
 /* Connect two machines together. */
 extern int link_machines(int, int);

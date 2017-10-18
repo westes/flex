@@ -40,7 +40,7 @@
 
 #include "parse.h"
 extern bool tablesverify, tablesext;
-extern int trlcontxt; /* Set in  parse.y for each rule. */
+extern bool trlcontxt; /* Set in parse.y for each rule. */
 extern const char *escaped_qstart, *escaped_qend;
 
 #define M4QSTART "[""["
