@@ -163,7 +163,7 @@ M4QEND      "]""]"
 %%
 	static int bracelevel, didadef, indented_code;
 	static int doing_rule_action = false;
-	static int option_sense;
+	static bool option_sense;
 
 	int doing_codeblock = false;
 	int brace_depth=0, brace_start_line=0;
@@ -396,7 +396,7 @@ M4QEND      "]""]"
 	main		{
 			ACTION_M4_IFDEF( "M4""_YY_MAIN", option_sense);
             /* Override yywrap */
-            if( option_sense == true )
+            if (option_sense)
                 do_yywrap = false;
 			}
 	meta-ecs	usemecs = option_sense;
@@ -459,7 +459,7 @@ M4QEND      "]""]"
 	tables-file         return TOK_TABLES_FILE;
 	tables-verify   {
                     tablesverify = option_sense;
-                    if(!tablesext && option_sense)
+                    if (!tablesext && option_sense)
                         tablesext = true;
                     }
 
