@@ -162,7 +162,7 @@ M4QEND      "]""]"
 
 %%
 	static int bracelevel, didadef, indented_code;
-	static int doing_rule_action = false;
+	static bool doing_rule_action = false;
 	static bool option_sense;
 
 	int doing_codeblock = false;
