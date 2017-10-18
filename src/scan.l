@@ -165,7 +165,7 @@ M4QEND      "]""]"
 	static bool doing_rule_action = false;
 	static bool option_sense;
 
-	int doing_codeblock = false;
+	static bool doing_codeblock = false;
 	int brace_depth=0, brace_start_line=0;
 	char nmdef[MAXLINE];
 
