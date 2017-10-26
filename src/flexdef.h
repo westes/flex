@@ -356,8 +356,9 @@
 
 extern bool printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
 	spprdflt;
-extern int interactive, lex_compat, posix_compat, do_yylineno;
-extern int useecs, fulltbl, usemecs, fullspd;
+extern int interactive;
+extern bool lex_compat, posix_compat, do_yylineno;
+extern bool useecs, fulltbl, usemecs, fullspd;
 extern int gen_line_dirs, performance_report, backing_up_report;
 extern int reentrant, bison_bridge_lval, bison_bridge_lloc;
 extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;

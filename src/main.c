@@ -49,9 +49,10 @@ void set_up_initial_allocations(void);
 
 /* these globals are all defined and commented in flexdef.h */
 bool    printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
-int     interactive, lex_compat, posix_compat, do_yylineno,
-	useecs, fulltbl, usemecs;
-int     fullspd, gen_line_dirs, performance_report, backing_up_report;
+int     interactive;
+bool    lex_compat, posix_compat, do_yylineno;
+bool    useecs, fulltbl, usemecs, fullspd;
+int     gen_line_dirs, performance_report, backing_up_report;
 int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
 	csize;
 int     reentrant, bison_bridge_lval, bison_bridge_lloc;
