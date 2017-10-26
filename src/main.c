@@ -54,8 +54,8 @@ bool    lex_compat, posix_compat, do_yylineno;
 bool    useecs, fulltbl, usemecs, fullspd, gen_line_dirs;
 int     performance_report;
 bool    backing_up_report;
-int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
-	csize;
+bool    C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
+int     csize;
 bool    reentrant, bison_bridge_lval, bison_bridge_lloc;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;

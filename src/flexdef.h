@@ -362,7 +362,7 @@ extern bool useecs, fulltbl, usemecs, fullspd, gen_line_dirs;
 extern int performance_report;
 extern bool backing_up_report;
 extern bool reentrant, bison_bridge_lval, bison_bridge_lloc;
-extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
+extern bool C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
 extern int csize;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
