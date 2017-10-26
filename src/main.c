@@ -67,7 +67,7 @@ int     action_size, defs1_offset, prolog_offset, action_offset,
 char   *infilename = NULL, *outfilename = NULL, *headerfilename = NULL;
 int     did_outfilename;
 char   *prefix, *yyclass, *extra_type = NULL;
-int     do_stdinit, use_stdout;
+bool    do_stdinit, use_stdout;
 int     onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int     onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
 int     maximum_mns, current_mns, current_max_rules;

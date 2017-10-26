@@ -406,7 +406,7 @@ extern int skel_ind;
 extern char *infilename, *outfilename, *headerfilename;
 extern int did_outfilename;
 extern char *prefix, *yyclass, *extra_type;
-extern int do_stdinit, use_stdout;
+extern bool do_stdinit, use_stdout;
 extern char **input_files;
 extern int num_input_files;
 extern char *program_name;
