@@ -65,7 +65,7 @@ char   *action_array;
 int     action_size, defs1_offset, prolog_offset, action_offset,
 	action_index;
 char   *infilename = NULL, *outfilename = NULL, *headerfilename = NULL;
-int     did_outfilename;
+bool    did_outfilename;
 char   *prefix, *yyclass, *extra_type = NULL;
 bool    do_stdinit, use_stdout;
 int     onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
@@ -966,7 +966,7 @@ void flexinit (int argc, char **argv)
 	do_yywrap = gen_line_dirs = usemecs = useecs = true;
 	reentrant = bison_bridge_lval = bison_bridge_lloc = false;
 	performance_report = 0;
-	did_outfilename = 0;
+	did_outfilename = false;
 	prefix = "yy";
 	yyclass = 0;
 	use_read = use_stdout = false;
@@ -1147,7 +1147,7 @@ void flexinit (int argc, char **argv)
 
 		case OPT_OUTFILE:
 			outfilename = arg;
-			did_outfilename = 1;
+			did_outfilename = true;
 			break;
 
 		case OPT_PREFIX:

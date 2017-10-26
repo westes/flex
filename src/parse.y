@@ -196,7 +196,7 @@ optionlist	:  optionlist option
 option		:  TOK_OUTFILE '=' NAME
 			{
 			outfilename = xstrdup(nmstr);
-			did_outfilename = 1;
+			did_outfilename = true;
 			}
 		|  TOK_EXTRA_TYPE '=' NAME
 			{ extra_type = xstrdup(nmstr); }

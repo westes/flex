@@ -404,7 +404,7 @@ extern FILE *skelfile, *backing_up_file;
 extern const char *skel[];
 extern int skel_ind;
 extern char *infilename, *outfilename, *headerfilename;
-extern int did_outfilename;
+extern bool did_outfilename;
 extern char *prefix, *yyclass, *extra_type;
 extern bool do_stdinit, use_stdout;
 extern char **input_files;
