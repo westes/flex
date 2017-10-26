@@ -488,7 +488,7 @@ extern int current_state_type;
 /* True if the input rules include a rule with both variable-length head
  * and trailing context, false otherwise.
  */
-extern int variable_trailing_context_rules;
+extern bool variable_trailing_context_rules;
 
 
 /* Variables for protos:

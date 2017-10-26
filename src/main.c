@@ -76,7 +76,7 @@ int    *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 int    *accptnum, *assoc_rule, *state_type;
 int    *rule_type, *rule_linenum;
 int     current_state_type;
-int     variable_trailing_context_rules;
+bool    variable_trailing_context_rules;
 int     numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int     protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int     numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs,
