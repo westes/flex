@@ -354,7 +354,7 @@
  * trace_hex - use hexadecimal numbers in trace/debug outputs instead of octals
  */
 
-extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
+extern bool printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
 	spprdflt;
 extern int interactive, lex_compat, posix_compat, do_yylineno;
 extern int useecs, fulltbl, usemecs, fullspd;

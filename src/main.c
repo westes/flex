@@ -48,7 +48,7 @@ void set_up_initial_allocations(void);
 
 
 /* these globals are all defined and commented in flexdef.h */
-int     printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
+bool    printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int     interactive, lex_compat, posix_compat, do_yylineno,
 	useecs, fulltbl, usemecs;
 int     fullspd, gen_line_dirs, performance_report, backing_up_report;
@@ -1466,7 +1466,8 @@ void flexinit (int argc, char **argv)
 	numas = numsnpairs = tmpuses = 0;
 	numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst =
 		0;
-	numuniq = numdup = hshsave = eofseen = datapos = dataline = 0;
+	numuniq = numdup = hshsave = datapos = dataline = 0;
+	eofseen = false;
 	num_backing_up = onesp = numprots = 0;
 	variable_trailing_context_rules = bol_needed = false;
 
