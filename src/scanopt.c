@@ -141,7 +141,6 @@ scanopt_t *scanopt_init (const optspec_t *options, int argc, char **argv, int fl
 	s = malloc(sizeof (struct _scanopt_t));
 
 	s->options = options;
-	s->optc = 0;
 	s->argc = argc;
 	s->argv = (char **) argv;
 	s->index = 1;
