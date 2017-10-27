@@ -255,9 +255,7 @@ void dataend (void)
 
 void dataflush (void)
 {
-	/* short circuit any output */
-	if (!gentables)
-		return;
+	assert(gentables);
 
 	outc ('\n');
 

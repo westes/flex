@@ -547,9 +547,10 @@ void ntod (void)
 			yynxt_data[yynxt_curr++] = 0;
 		}
 
-		dataflush ();
-		if (gentables)
+		if (gentables) {
+			dataflush();
 			outn ("    },\n");
+		}
 	}
 
 	/* Create the first states. */
@@ -728,9 +729,10 @@ void ntod (void)
 					state[i] ? state[i] : -ds;
 			}
 
-			dataflush ();
-			if (gentables)
+			if (gentables) {
+				dataflush();
 				outn ("    },\n");
+			}
 		}
 
 		else if (fullspd)
