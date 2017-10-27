@@ -776,22 +776,10 @@ extern void list_character_set(FILE *, int[]);
 
 /* from file dfa.c */
 
-/* Check a DFA state for backing up. */
-extern void check_for_backing_up(int, int[]);
-
-/* Check to see if NFA state set constitutes "dangerous" trailing context. */
-extern void check_trailing_context(int *, int, int *, int);
-
-/* Construct the epsilon closure of a set of ndfa states. */
-extern int *epsclosure(int *, int *, int[], int *, int *);
-
 /* Increase the maximum number of dfas. */
 extern void increase_max_dfas(void);
 
 extern size_t ntod(void);	/* convert a ndfa to a dfa */
-
-/* Converts a set of ndfa states into a dfa state. */
-extern int snstods(int[], int, int[], int, int, int *);
 
 
 /* from file ecs.c */
