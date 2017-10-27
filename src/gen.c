@@ -43,7 +43,7 @@ struct yy_trans_info {int32_t yy_verify; int32_t yy_nxt;};
 
 /* declare functions that have forward references */
 
-void	genecs(void);
+static void genecs(void);
 
 struct packtype_t *optimize_pack(size_t sz)
 {
@@ -243,7 +243,7 @@ static struct yytbl_data *mkssltbl (void)
 
 /* genctbl - generates full speed compressed transition table */
 
-void genctbl (void)
+static void genctbl(void)
 {
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
@@ -363,7 +363,7 @@ static struct yytbl_data *mkecstbl (void)
 
 /* Generate equivalence-class tables. */
 
-void genecs (void)
+static void genecs(void)
 {
 	int ch, row;
 	int     numrows;
@@ -403,7 +403,7 @@ void genecs (void)
  * you should call mkecstbl() after this.
  */
 
-struct yytbl_data *mkftbl (void)
+static struct yytbl_data *mkftbl(void)
 {
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
@@ -437,7 +437,7 @@ struct yytbl_data *mkftbl (void)
 
 /* genftbl - generate full transition table */
 
-void genftbl (void)
+static void genftbl(void)
 {
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
@@ -474,7 +474,7 @@ void genftbl (void)
 
 /* gentabs - generate data statements for the transition tables */
 
-void gentabs (void)
+static void gentabs(void)
 {
 	int     sz, i, j, k, *accset, nacc, *acc_array, total_states;
 	int     end_of_buffer_action = num_rules + 1;

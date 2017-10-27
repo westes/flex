@@ -799,8 +799,6 @@ extern void mkechar(int, int[], int[]);
 
 /* from file gen.c */
 
-extern void do_indent(void);	/* indent to the current level */
-
 /* Set a conditional amd make it visible in generated code */
 extern void visible_define (const char *);
 
@@ -809,21 +807,6 @@ extern void visible_define_str (const char *, const char *);
 
 /* This time the value part is an int */
 extern void visible_define_int (const char *, const int);
-
-/* Generate full speed compressed transition table. */
-extern void genctbl(void);
-
-/* generate full transition table */
-extern void genftbl(void);
-
-/* Generate data statements for the transition tables. */
-extern void gentabs(void);
-
-/* Write out a formatted string at the current indentation level. */
-extern void indent_put2s(const char *, const char *);
-
-/* Write out a string + newline at the current indentation level. */
-extern void indent_puts(const char *);
 
 /* generate transition tables */
 extern void make_tables(void);
