@@ -195,9 +195,7 @@ void dataend (const char *endit)
 
 void dataflush (void)
 {
-	/* short circuit any output */
-	if (!gentables)
-		return;
+	assert (gentables);
 
 	if (datapos > 0)
 		outc ('\n');

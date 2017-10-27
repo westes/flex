@@ -516,9 +516,10 @@ size_t ntod (void)
 			yynxt_data[yynxt_curr++] = 0;
 		}
 
-		dataflush ();
-		if (gentables)
+		if (gentables) {
+			dataflush ();
 			outn ("M4_HOOK_TABLE_CONTINUE");
+		}
 	}
 
 	/* Create the first states. */
@@ -695,9 +696,10 @@ size_t ntod (void)
 					state[i] ? state[i] : -ds;
 			}
 
-			dataflush ();
-			if (gentables)
+			if (gentables) {
+				dataflush ();
 				outn ("M4_HOOK_TABLE_CONTINUE");
+			}
 		}
 
 		else if (ctrl.fullspd)
