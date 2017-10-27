@@ -723,46 +723,6 @@ extern void mkechar(int, int[], int[]);
 
 /* from file gen.c */
 
-extern void do_indent(void);	/* indent to the current level */
-
-/* Generate the code to keep backing-up information. */
-extern void gen_backing_up(void);
-
-/* Generate the code to perform the backing up. */
-extern void gen_bu_action(void);
-
-/* Generate full speed compressed transition table. */
-extern void genctbl(void);
-
-/* Generate the code to find the action number. */
-extern void gen_find_action(void);
-
-extern void genftbl(void);	/* generate full transition table */
-
-/* Generate the code to find the next compressed-table state. */
-extern void gen_next_compressed_state(char *);
-
-/* Generate the code to find the next match. */
-extern void gen_next_match(void);
-
-/* Generate the code to find the next state. */
-extern void gen_next_state(int);
-
-/* Generate the code to make a NUL transition. */
-extern void gen_NUL_trans(void);
-
-/* Generate the code to find the start state. */
-extern void gen_start_state(void);
-
-/* Generate data statements for the transition tables. */
-extern void gentabs(void);
-
-/* Write out a formatted string at the current indentation level. */
-extern void indent_put2s(const char *, const char *);
-
-/* Write out a string + newline at the current indentation level. */
-extern void indent_puts(const char *);
-
 extern void make_tables(void);	/* generate transition tables */
 
 
