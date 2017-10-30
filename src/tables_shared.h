@@ -63,12 +63,6 @@ dnl  flex code (hence the name "_shared").
 #define YYTBL_MAGIC 0xF13C57B1
 #endif
 
-/** Calculate (0-7) = number bytes needed to pad n to next 64-bit boundary. */
-#ifndef yypad64
-#define yypad64(n) ((8-((n)%8))%8)
-#endif
-
-
 #ifndef YYTABLES_TYPES
 #define YYTABLES_TYPES
 /** Possible values for td_id field. Each one corresponds to a
