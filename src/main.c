@@ -197,7 +197,7 @@ int flex_main (int argc, char *argv[])
 /* Wrapper around flex_main, so flex_main can be built as a library. */
 int main (int argc, char *argv[])
 {
-#if ENABLE_NLS
+#ifdef ENABLE_NLS
 #if HAVE_LOCALE_H
 	setlocale (LC_MESSAGES, "");
         setlocale (LC_CTYPE, "");
