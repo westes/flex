@@ -76,8 +76,10 @@
 #include <strings.h>
 #include "flexint.h"
 
-/* We use gettext. So, when we write strings which should be translated, we mark them with _() */
-#ifdef ENABLE_NLS
+/* We use gettext. So, when we write strings which should be translated, we
+ * mark them with _()
+ */
+#if defined(ENABLE_NLS) && ENABLE_NLS
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif /* HAVE_LOCALE_H */
