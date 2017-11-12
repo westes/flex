@@ -733,8 +733,7 @@ int     scanopt (scanopt_t *svoid, char **arg, int *optindex)
 
 	/* Look ahead in argv[] to see if there is something
 	 * that we can use as an argument (if needed). */
-	has_next = s->index + 1 < s->argc
-		&& strcmp ("--", s->argv[s->index + 1]) != 0;
+	has_next = s->index + 1 < s->argc;
 
 	optp = s->options + opt_offset;
 	auxp = s->aux + opt_offset;
