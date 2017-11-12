@@ -68,7 +68,7 @@ static int PRINTLEN(struct _scanopt_t *, int);
 static int RVAL(struct _scanopt_t *, int);
 static int FLAGS(struct _scanopt_t *, int);
 static const char *DESC(struct _scanopt_t *, int);
-static int scanopt_err(struct _scanopt_t *, int, int);
+static void scanopt_err(struct _scanopt_t *, int, int);
 static int matchlongopt(char *, char **, int *, char **, int *);
 static int find_opt(struct _scanopt_t *, int, char *, int, int *, int *opt_offset);
 
@@ -457,7 +457,7 @@ int     scanopt_usage (scanopt_t *scanner, FILE *fp, const char *usage)
 #endif /* no scanopt_usage */
 
 
-static int scanopt_err (struct _scanopt_t *s, int is_short, int err)
+static void scanopt_err(struct _scanopt_t *s, int is_short, int err)
 {
 	const char *optname = "";
 	char    optchar[2];
@@ -502,7 +502,6 @@ static int scanopt_err (struct _scanopt_t *s, int is_short, int err)
 			break;
 		}
 	}
-	return err;
 }
 
 
@@ -689,7 +688,8 @@ int     scanopt (scanopt_t *svoid, char **arg, int *optindex)
 
 		if (!find_opt
 		    (s, 0, pstart, namelen, &errcode, &opt_offset)) {
-			return scanopt_err (s, 1, errcode);
+			scanopt_err(s, 1, errcode);
+			return errcode;
 		}
 
 		optarg = pstart + 1;
@@ -717,9 +717,9 @@ int     scanopt (scanopt_t *svoid, char **arg, int *optindex)
 	/* case: no args allowed */
 	if (auxp->flags & ARG_NONE) {
 		if (optarg && !is_short) {
-			scanopt_err (s, is_short, errcode = SCANOPT_ERR_ARG_NOT_ALLOWED);
+			scanopt_err(s, is_short, SCANOPT_ERR_ARG_NOT_ALLOWED);
 			INC_INDEX (s, 1);
-			return errcode;
+			return SCANOPT_ERR_ARG_NOT_ALLOWED;
 		}
 		else if (!optarg)
 			INC_INDEX (s, 1);
@@ -730,8 +730,10 @@ int     scanopt (scanopt_t *svoid, char **arg, int *optindex)
 
 	/* case: required */
 	if (auxp->flags & ARG_REQ) {
-		if (!optarg && !has_next)
-			return scanopt_err (s, is_short, SCANOPT_ERR_ARG_NOT_FOUND);
+		if (!optarg && !has_next) {
+			scanopt_err(s, is_short, SCANOPT_ERR_ARG_NOT_FOUND);
+			return SCANOPT_ERR_ARG_NOT_FOUND;
+		}
 
 		if (!optarg) {
 			/* Let the next argv element become the argument. */
