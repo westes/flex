@@ -3300,9 +3300,7 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 
     /* Now eat padding. */
     {
-        int pad;
-        pad = yypad64(rd->bread);
-        while(--pad >= 0){
+        while (rd->bread % (8 * sizeof(flex_uint8_t)) > 0) {
             flex_int8_t t8;
             if(yytbl_read8(&t8,rd) != 0)
                 return -1;
