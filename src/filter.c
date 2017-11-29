@@ -47,10 +47,9 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
 	va_list ap;
 
 	/* allocate and initialize new filter */
-	f = malloc(sizeof(struct filter));
+	f = calloc(sizeof(struct filter), 1);
 	if (!f)
-		flexerror(_("malloc failed (f) in filter_create_ext"));
-	memset (f, 0, sizeof (*f));
+		flexerror(_("calloc failed (f) in filter_create_ext"));
 	f->filter_func = NULL;
 	f->extra = NULL;
 	f->next = NULL;
@@ -100,10 +99,9 @@ struct filter *filter_create_int (struct filter *chain,
 	struct filter *f;
 
 	/* allocate and initialize new filter */
-	f = malloc(sizeof(struct filter));
+	f = calloc(sizeof(struct filter), 1);
 	if (!f)
-		flexerror(_("malloc failed in filter_create_int"));
-	memset (f, 0, sizeof (*f));
+		flexerror(_("calloc failed in filter_create_int"));
 	f->next = NULL;
 	f->argc = 0;
 	f->argv = NULL;
