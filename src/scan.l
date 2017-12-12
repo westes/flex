@@ -450,6 +450,7 @@ M4QEND      "]""]"
     yyset_lval      ACTION_M4_IFDEF("M4""_YY_NO_SET_LVAL", ! option_sense);
     yyget_lloc      ACTION_M4_IFDEF("M4""_YY_NO_GET_LLOC", ! option_sense);
     yyset_lloc      ACTION_M4_IFDEF("M4""_YY_NO_SET_LLOC", ! option_sense);
+    yyset_interactive ACTION_M4_IFDEF("M4""_YY_NO_SET_INTERACTIVE", ! option_sense);
 
 	extra-type	return TOK_EXTRA_TYPE;
 	outfile		return TOK_OUTFILE;

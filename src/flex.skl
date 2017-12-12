@@ -164,6 +164,7 @@ m4_ifelse(M4_YY_PREFIX,yy,,
     M4_GEN_PREFIX(`get_text')
     M4_GEN_PREFIX(`get_lineno')
     M4_GEN_PREFIX(`set_lineno')
+    M4_GEN_PREFIX(`set_interactive')
     m4_ifdef( [[M4_YY_REENTRANT]],
     [[
         M4_GEN_PREFIX(`get_column')
@@ -618,6 +619,7 @@ void yyfree ( void * M4_YY_PROTO_LAST_ARG );
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
+
 #define yy_new_buffer yy_create_buffer
 #define yy_set_interactive(is_interactive) \
 	{ \
@@ -847,6 +849,11 @@ FILE *yyget_in ( M4_YY_PROTO_ONLY_ARG );
 m4_ifdef( [[M4_YY_NO_SET_IN]],,
 [[
 void yyset_in  ( FILE * _in_str M4_YY_PROTO_LAST_ARG );
+]])
+
+m4_ifdef( [[M4_YY_NO_SET_INTERACTIVE]],,
+[[
+void yyset_interactive  (int is_interactive M4_YY_PROTO_LAST_ARG );
 ]])
 
 m4_ifdef( [[M4_YY_NO_GET_OUT]],,
@@ -2662,6 +2669,24 @@ void yyset_column YYFARGS1( int , _column_no)
 ]])
 ]])
 
+m4_ifdef( [[M4_YY_NO_SET_INTERACTIVE]],,
+[[
+void yyset_interactive YYFARGS1(int, is_interactive)
+{  
+    M4_YY_DECL_GUTS_VAR();
+
+    m4_ifdef( [[M4_YY_REENTRANT]],
+    [[
+        if ( ! YY_CURRENT_BUFFER ) { 
+            yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG);
+            YY_CURRENT_BUFFER_LVALUE = 
+                yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG);
+        }
+    ]])
+
+    (YY_CURRENT_BUFFER_LVALUE)->yy_is_interactive = is_interactive;
+}
+]])
 
 m4_ifdef( [[M4_YY_NO_SET_IN]],,
 [[
@@ -2749,6 +2774,8 @@ void yyset_lloc YYFARGS1( YYLTYPE * ,yylloc_param)
 }
     ]])
 ]])
+
+
 
 %endif
 

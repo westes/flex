@@ -1441,6 +1441,10 @@ void flexinit (int argc, char **argv)
 			//buf_strdefine (&userdef_buf, "YY_NO_SET_LLOC", "1");
             buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LLOC",0);
 			break;
+    case OPT_NO_YYSET_INTERACTIVE:
+      //buf_strdefine (&userdef_buf, "YY_NO_SET_INTERACTIVE", "1");
+            buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_INTERACTIVE",0);
+      break;
 		case OPT_HEX:
 			trace_hex = 1;
                         break;
