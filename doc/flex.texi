@@ -1625,7 +1625,8 @@ will be active only when the current start condition is either
 @cindex start conditions, inclusive v.s.@: exclusive
 Start conditions are declared in the definitions (first) section of the
 input using unindented lines beginning with either @samp{%s} or
-@samp{%x} followed by a list of names.  The former declares
+@samp{%x} followed by a list of one or more names, delimited by
+blanks or tabs, until the end of line.  The former declares
 @dfn{inclusive} start conditions, the latter @dfn{exclusive} start
 conditions.  A start condition is activated using the @code{BEGIN}
 action.  Until the next @code{BEGIN} action is executed, rules with the

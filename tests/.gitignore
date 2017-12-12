@@ -91,6 +91,8 @@ quote_in_comment
 quote_in_comment.c
 quotes
 quotes.c
+scname_excl_decl1.c
+scname_incl_decl1.c
 string_nr
 string_nr.c
 string_r

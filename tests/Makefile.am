@@ -90,6 +90,8 @@ simple_tests = \
 	prefix_r \
 	quote_in_comment \
 	quotes \
+	scname_excl_decl1 \
+	scname_incl_decl1 \
 	string_nr \
 	string_r \
 	top \
@@ -177,6 +179,8 @@ reject_ver_table_SOURCES = reject.l4
 reject_ser_table_SOURCES = reject.l4
 rescan_nr_direct_SOURCES = rescan_nr.direct.l
 rescan_r_direct_SOURCES = rescan_r.direct.l
+scname_excl_decl1_SOURCES = scname_excl_decl1.l
+scname_incl_decl1_SOURCES = scname_incl_decl1.l
 string_nr_SOURCES = string_nr.l
 string_r_SOURCES = string_r.l
 top_SOURCES = top.l top_main.c
@@ -256,6 +260,8 @@ CLEANFILES = \
 	reject_ver.table.tables \
 	rescan_nr.direct.c \
 	rescan_r.direct.c \
+	scname_excl_decl1.c \
+	scname_incl_decl1.c \
 	string_nr.c \
 	string_r.c \
 	top.c \

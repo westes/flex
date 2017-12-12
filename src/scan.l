@@ -174,8 +174,8 @@ M4QEND      "]""]"
 	^{WS}		START_CODEBLOCK(true);
 	^"/*"		add_action("/*[""["); yy_push_state( COMMENT );
 	^#{OPTWS}line{WS}	yy_push_state( LINEDIR );
-	^"%s"{NAME}?	return SCDECL;
-	^"%x"{NAME}?	return XSCDECL;
+	^"%s"       return SCDECL;
+	^"%x"       return XSCDECL;
 	^"%{".*{NL}	START_CODEBLOCK(false);
     ^"%top"[[:blank:]]*"{"[[:blank:]]*{NL}    {
                 brace_start_line = linenum;
