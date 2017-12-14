@@ -641,6 +641,7 @@ void flexend (int exit_status)
 				"yypop_buffer_state",
 				"yyensure_buffer_stack",
                 "yyalloc",
+                "yycalloc",
                 "const",
                 "yyextra",
                 "yyfree",

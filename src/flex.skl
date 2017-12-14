@@ -82,6 +82,7 @@ m4_ifelse(M4_YY_PREFIX,yy,,
 #define yytext M4_YY_PREFIX[[text]]
 #define yywrap M4_YY_PREFIX[[wrap]]
 #define yyalloc M4_YY_PREFIX[[alloc]]
+#define yycalloc M4_YY_PREFIX[[calloc]]
 #define yyrealloc M4_YY_PREFIX[[realloc]]
 #define yyfree M4_YY_PREFIX[[free]]
 )
@@ -188,6 +189,7 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 
 m4_ifelse(M4_YY_PREFIX,yy,,
     M4_GEN_PREFIX(`alloc')
+    M4_GEN_PREFIX(`calloc')
     M4_GEN_PREFIX(`realloc')
     M4_GEN_PREFIX(`free')
 )
@@ -613,6 +615,7 @@ YY_BUFFER_STATE yy_scan_bytes ( const char *bytes, int len M4_YY_PROTO_LAST_ARG 
 %endif
 
 void *yyalloc ( yy_size_t M4_YY_PROTO_LAST_ARG );
+void *yycalloc ( yy_size_t, yy_size_t M4_YY_PROTO_LAST_ARG );
 void *yyrealloc ( void *, yy_size_t M4_YY_PROTO_LAST_ARG );
 void yyfree ( void * M4_YY_PROTO_LAST_ARG );
 
@@ -2966,6 +2969,16 @@ void *yyalloc YYFARGS1( yy_size_t ,size)
 	M4_YY_DECL_GUTS_VAR();
 	M4_YY_NOOP_GUTS_VAR();
 	return malloc(size);
+}
+]])
+
+m4_ifdef( [[M4_YY_NO_FLEX_CALLOC]],,
+[[
+void *yycalloc YYFARGS2( yy_size_t, n, yy_size_t,size)
+{
+	M4_YY_DECL_GUTS_VAR();
+	M4_YY_NOOP_GUTS_VAR();
+	return calloc(n, size);
 }
 ]])
 

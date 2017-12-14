@@ -429,6 +429,7 @@ M4QEND      "]""]"
 	yy_scan_string	ACTION_M4_IFDEF("M4""_YY_NO_SCAN_STRING", ! option_sense);
 
     yyalloc         ACTION_M4_IFDEF("M4""_YY_NO_FLEX_ALLOC", ! option_sense);
+    yycalloc        ACTION_M4_IFDEF("M4""_YY_NO_FLEX_CALLOC", ! option_sense);
     yyrealloc       ACTION_M4_IFDEF("M4""_YY_NO_FLEX_REALLOC", ! option_sense);
     yyfree          ACTION_M4_IFDEF("M4""_YY_NO_FLEX_FREE", ! option_sense);
 

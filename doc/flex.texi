@@ -2993,6 +2993,7 @@ list of the names affected:
     yytext
     yywrap
     yyalloc
+    yycalloc
     yyrealloc
     yyfree
 @end verbatim
@@ -4848,10 +4849,11 @@ you call yylex_init(). It is destroyed when the user calls yylex_destroy().
 @section Overriding The Default Memory Management
 
 @cindex yyalloc, overriding
+@cindex yycalloc, overriding
 @cindex yyrealloc, overriding
 @cindex yyfree, overriding
 
-Flex calls the functions @code{yyalloc}, @code{yyrealloc}, and @code{yyfree}
+Flex calls the functions @code{yyalloc}, @code{yycalloc}, @code{yyrealloc}, and @code{yyfree}
 when it needs to allocate or free memory. By default, these functions are
 wrappers around the standard C functions, @code{malloc}, @code{realloc}, and
 @code{free}, respectively. You can override the default implementations by telling
@@ -4867,6 +4869,7 @@ following options:
 @itemize
 @opindex noyyalloc
 @item @code{%option noyyalloc}
+@item @code{%option noyycalloc}
 @item @code{%option noyyrealloc}
 @item @code{%option noyyfree}.
 @end itemize
@@ -4880,11 +4883,13 @@ You may, for example, override @code{yyrealloc}, but not @code{yyfree} or
 @verbatim
 // For a non-reentrant scanner
 void * yyalloc (size_t bytes);
+void * yycalloc (size_t n, size_t bytes);
 void * yyrealloc (void * ptr, size_t bytes);
 void   yyfree (void * ptr);
 
 // For a reentrant scanner
 void * yyalloc (size_t bytes, void * yyscanner);
+void * yycalloc (size_t n, size_t bytes, void * yyscanner);
 void * yyrealloc (void * ptr, size_t bytes, void * yyscanner);
 void   yyfree (void * ptr, void * yyscanner);
 @end verbatim
@@ -4905,7 +4910,7 @@ custom allocator through @code{yyextra}.
 %}
 
 /* Suppress the default implementations. */
-%option noyyalloc noyyrealloc noyyfree
+%option noyyalloc noyycalloc noyyrealloc noyyfree
 %option reentrant
 
 /* Initialize the allocator. */
@@ -4921,6 +4926,10 @@ custom allocator through @code{yyextra}.
 /* Provide our own implementations. */
 void * yyalloc (size_t bytes, void* yyscanner) {
     return allocator_alloc (yyextra, bytes);
+}
+
+void * yycalloc (size_t n, size_t bytes, void* yyscanner) {
+    return allocator_calloc (yyextra, n, bytes);
 }
 
 void * yyrealloc (void * ptr, size_t bytes, void* yyscanner) {
