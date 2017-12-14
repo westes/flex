@@ -621,15 +621,6 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 
 #define yy_new_buffer yy_create_buffer
-#define yy_set_interactive(is_interactive) \
-	{ \
-	if ( ! YY_CURRENT_BUFFER ){ \
-        yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG); \
-		YY_CURRENT_BUFFER_LVALUE =    \
-            yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG); \
-	} \
-	YY_CURRENT_BUFFER_LVALUE->yy_is_interactive = is_interactive; \
-	}
 #define yy_set_bol(at_bol) \
 	{ \
 	if ( ! YY_CURRENT_BUFFER ){\
@@ -3449,7 +3440,6 @@ m4_ifdef( [[M4_YY_IN_HEADER]],
 #undef YY_FLUSH_BUFFER
 #undef yy_set_bol
 #undef yy_new_buffer
-#undef yy_set_interactive
 #undef YY_DO_BEFORE_ACTION
 
 #ifdef YY_DECL_IS_OURS
