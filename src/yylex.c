@@ -125,7 +125,7 @@ int     yylex (void)
 			fprintf (stderr, "'%s'", nmstr);
 			break;
 
-		case CHAR:
+		case TOK_CHAR:
 			switch (yylval) {
 			case '<':
 			case '>':

@@ -74,7 +74,7 @@ extern const char *escaped_qstart, *escaped_qend;
 
 #define RETURNCHAR \
 	yylval = (unsigned char) yytext[0]; \
-	return CHAR;
+	return TOK_CHAR;
 
 #define RETURNNAME \
 	if(yyleng < MAXLINE) \
@@ -991,7 +991,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			if ( YY_START == FIRSTCCL )
 				BEGIN(CCL);
 
-			return CHAR;
+			return TOK_CHAR;
 			}
 
 <SECT3>{

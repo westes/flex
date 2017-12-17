@@ -1,6 +1,6 @@
 /* parse.y - parser for flex input */
 
-%token CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
+%token TOK_CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
 %token TOK_OPTION TOK_OUTFILE TOK_PREFIX TOK_YYCLASS TOK_HEADER_FILE TOK_EXTRA_TYPE
 %token TOK_TABLES_FILE
 
@@ -757,7 +757,7 @@ singleton	:  singleton '*'
 		|  '(' re ')'
 			{ $$ = $2; }
 
-		|  CHAR
+		|  TOK_CHAR
 			{
 			++rulelen;
 
@@ -788,7 +788,7 @@ braceccl:
 			}
 		;
 
-ccl		:  ccl CHAR '-' CHAR
+ccl		:  ccl TOK_CHAR '-' TOK_CHAR
 			{
 
 			if (sf_case_ins())
@@ -848,7 +848,7 @@ ccl		:  ccl CHAR '-' CHAR
 			$$ = $1;
 			}
 
-		|  ccl CHAR
+		|  ccl TOK_CHAR
 			{
 			ccladd( $1, $2 );
 			cclsorted = cclsorted && ($2 > lastchar);
@@ -927,7 +927,7 @@ ccl_expr:
 				}
 		;
 		
-string		:  string CHAR
+string		:  string TOK_CHAR
 			{
 			if ( $2 == nlch )
 				rule_has_nl[num_rules] = true;
