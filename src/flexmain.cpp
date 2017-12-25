@@ -123,6 +123,7 @@ struct yytbl_writer tableswr;
 void set_input_file(const String &);
 
 void usage();
+int yyparse();
 
 /* Make sure program_name is initialized so we don't crash if writing
  * out an error message before getting the program name from argv[0].
@@ -467,7 +468,7 @@ void check_options(void)
         {
             nbytes = prefix.size() + strlen(tablesfile_template) + 2;
             tablesfilename = pname = (decltype(pname))calloc(nbytes, 1);
-            snprintf(pname, nbytes, tablesfile_template, prefix);
+            snprintf(pname, nbytes, tablesfile_template, prefix.c_str());
         }
 
         if ((tablesout = fopen(tablesfilename.c_str(), "wb")) == NULL)
