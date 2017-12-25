@@ -259,60 +259,60 @@ void epsclosure(std::vector<int> &t, int *ns_addr, std::vector<int> &accset, int
 //#define MARKER_DIFFERENCE (nfas.size() + 2)
 #define MARKER_DIFFERENCE (1'000'000'000)
 
-#define MARK_STATE(state)                                  \
-    do                                                     \
-    {                                                      \
+#define MARK_STATE(state)                                            \
+    do                                                               \
+    {                                                                \
         nfas[state].trans1 = nfas[state].trans1 - MARKER_DIFFERENCE; \
     } while (0)
 
 #define IS_MARKED(state) (nfas[state].trans1 < 0)
 
-#define UNMARK_STATE(state)                                \
-    do                                                     \
-    {                                                      \
+#define UNMARK_STATE(state)                                          \
+    do                                                               \
+    {                                                                \
         nfas[state].trans1 = nfas[state].trans1 + MARKER_DIFFERENCE; \
     } while (0)
 
-#define CHECK_ACCEPT(state)            \
-    do                                 \
-    {                                  \
-        nfaccnum = nfas[state].accptnum;    \
-        if (nfaccnum != NIL)           \
-            accset[++nacc] = nfaccnum; \
+#define CHECK_ACCEPT(state)              \
+    do                                   \
+    {                                    \
+        nfaccnum = nfas[state].accptnum; \
+        if (nfaccnum != NIL)             \
+            accset[++nacc] = nfaccnum;   \
     } while (0)
 
-#define DO_REALLOCATION(x)                                                 \
-    do                                                                    \
-    {                                                                     \
-        t.resize(x);     \
-        stk.resize(x); \
+#define DO_REALLOCATION(x) \
+    do                     \
+    {                      \
+        t.resize(x);       \
+        stk.resize(x);     \
     } while (0)
 
-#define PUT_ON_STACK(state)                   \
-    do                                        \
-    {                                         \
-        if (++stkend + 1 > stk.size()) \
-            DO_REALLOCATION(stkend + 1);                \
-        stk[stkend] = state;                  \
-        MARK_STATE(state);                    \
+#define PUT_ON_STACK(state)              \
+    do                                   \
+    {                                    \
+        if (++stkend + 1 > stk.size())   \
+            DO_REALLOCATION(stkend + 1); \
+        stk[stkend] = state;             \
+        MARK_STATE(state);               \
     } while (0)
 
-#define ADD_STATE(state)                         \
-    do                                           \
-    {                                            \
-        if (++numstates + 1 > stk.size()) \
-            DO_REALLOCATION(numstates + 1);                   \
-        t[numstates] = state;                    \
-        hashval += state;                        \
+#define ADD_STATE(state)                    \
+    do                                      \
+    {                                       \
+        if (++numstates + 1 > stk.size())   \
+            DO_REALLOCATION(numstates + 1); \
+        t[numstates] = state;               \
+        hashval += state;                   \
     } while (0)
 
-#define STACK_STATE(state)                                      \
-    do                                                          \
-    {                                                           \
-        PUT_ON_STACK(state);                                    \
-        CHECK_ACCEPT(state);                                    \
+#define STACK_STATE(state)                                           \
+    do                                                               \
+    {                                                                \
+        PUT_ON_STACK(state);                                         \
+        CHECK_ACCEPT(state);                                         \
         if (nfaccnum != NIL || nfas[state].transchar != SYM_EPSILON) \
-            ADD_STATE(state);                                   \
+            ADD_STATE(state);                                        \
     } while (0)
 
     nacc = stkend = hashval = 0;

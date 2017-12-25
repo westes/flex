@@ -196,7 +196,8 @@ int flex_main(int argc, char *argv[])
                 header_file += processed_file;
 
                 header_file.after().addLine();
-                header_file.after().addLine("#line 4000 \"M4_YY_OUTFILE_NAME\"\n");
+                if (gen_line_dirs)
+                    header_file.after().addLine("#line 4000 \"M4_YY_OUTFILE_NAME\"\n");
                 header_file.after().addLine("#undef " + String(prefix) + "IN_HEADER\n");
                 header_file.after().addLine("#endif /* " + String(prefix) + "HEADER_H */\n");
                 header_file.after().addLine("m4_undefine( [[M4_YY_IN_HEADER]])m4_dnl\n");
