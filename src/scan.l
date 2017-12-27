@@ -74,13 +74,13 @@ extern const char *escaped_qstart, *escaped_qend;
 
 #define RETURNCHAR \
 	yylval = (unsigned char) yytext[0]; \
-	return CHAR;
+	return FLEX_TOK_CHAR;
 
 #define RETURNNAME \
 	if(yyleng < MAXLINE) \
          { \
 	strncpy( nmstr, yytext, sizeof(nmstr) ); \
-	return NAME; \
+	return FLEX_TOK_NAME; \
 	 } \
 	else \
 	 do { \
@@ -174,8 +174,8 @@ M4QEND      "]""]"
 	^{WS}		START_CODEBLOCK(true);
 	^"/*"		add_action("/*[""["); yy_push_state( COMMENT );
 	^#{OPTWS}line{WS}	yy_push_state( LINEDIR );
-	^"%s"{NAME}?	return SCDECL;
-	^"%x"{NAME}?	return XSCDECL;
+	^"%s"{NAME}?	return FLEX_TOK_SCDECL;
+	^"%x"{NAME}?	return FLEX_TOK_XSCDECL;
 	^"%{".*{NL}	START_CODEBLOCK(false);
     ^"%top"[[:blank:]]*"{"[[:blank:]]*{NL}    {
                 brace_start_line = linenum;
@@ -195,13 +195,13 @@ M4QEND      "]""]"
 			mark_defs1();
 			line_directive_out(NULL, 1);
 			BEGIN(SECT2PROLOG);
-			return SECTEND;
+			return FLEX_TOK_SECTEND;
 			}
 
 	^"%pointer".*{NL}	yytext_is_array = false; ++linenum;
 	^"%array".*{NL}		yytext_is_array = true; ++linenum;
 
-	^"%option"	BEGIN(OPTION); return TOK_OPTION;
+	^"%option"	BEGIN(OPTION); return FLEX_TOK_OPTION;
 
 	^"%"{LEXOPT}{OPTWS}[[:digit:]]*{OPTWS}{NL}	++linenum; /* ignore */
 	^"%"{LEXOPT}{WS}.*{NL}	++linenum;	/* ignore */
@@ -451,12 +451,12 @@ M4QEND      "]""]"
     yyget_lloc      ACTION_M4_IFDEF("M4""_YY_NO_GET_LLOC", ! option_sense);
     yyset_lloc      ACTION_M4_IFDEF("M4""_YY_NO_SET_LLOC", ! option_sense);
 
-	extra-type	return TOK_EXTRA_TYPE;
-	outfile		return TOK_OUTFILE;
-	prefix		return TOK_PREFIX;
-	yyclass		return TOK_YYCLASS;
-	header(-file)?      return TOK_HEADER_FILE;
-	tables-file         return TOK_TABLES_FILE;
+	extra-type	    return FLEX_TOK_EXTRA_TYPE;
+	outfile		    return FLEX_TOK_OUTFILE;
+	prefix		    return FLEX_TOK_PREFIX;
+	yyclass		    return FLEX_TOK_YYCLASS;
+	header(-file)?  return FLEX_TOK_HEADER_FILE;
+	tables-file     return FLEX_TOK_TABLES_FILE;
 	tables-verify   {
                     tablesverify = option_sense;
                     if(!tablesext && option_sense)
@@ -475,7 +475,7 @@ M4QEND      "]""]"
 			   FLEX_EXIT(EXIT_FAILURE);
 			 }
 			nmstr[strlen( nmstr ) - 1] = '\0';
-			return NAME;
+			return FLEX_TOK_NAME;
 			}
 
 	(([a-mo-z]|n[a-np-z])[[:alpha:]\-+]*)|.	{
@@ -538,9 +538,9 @@ M4QEND      "]""]"
 	"{"/[[:digit:]]	{
 			BEGIN(NUM);
 			if ( lex_compat || posix_compat )
-				return BEGIN_REPEAT_POSIX;
+				return FLEX_TOK_BEGIN_REPEAT_POSIX;
 			else
-				return BEGIN_REPEAT_FLEX;
+				return FLEX_TOK_BEGIN_REPEAT_FLEX;
 			}
 	"$"/([[:blank:]]|{NL})	return '$';
 
@@ -629,7 +629,7 @@ M4QEND      "]""]"
 			}
 
 	^{OPTWS}"<<EOF>>"	|
-	"<<EOF>>"	return EOF_OP;
+	"<<EOF>>"	return FLEX_TOK_EOF_OP;
 
 	^"%%".*		{
 			sectnum = 3;
@@ -667,7 +667,7 @@ M4QEND      "]""]"
 
 				yylval = cclval;
 				++cclreuse;
-				return PREVCCL;
+				return FLEX_TOK_PREVCCL;
 				}
 			else
 				{
@@ -685,8 +685,8 @@ M4QEND      "]""]"
 				return '[';
 				}
 			}
-    "{-}"       return CCL_OP_DIFF;
-    "{+}"       return CCL_OP_UNION;
+    "{-}"       return FLEX_TOK_CCL_OP_DIFF;
+    "{+}"       return FLEX_TOK_CCL_OP_UNION;
 
 
     /* Check for :space: at the end of the rule so we don't
@@ -780,7 +780,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
                 }
 
 	[/|*+?.(){}]	return (unsigned char) yytext[0];
-	.		RETURNCHAR;
+	.		       RETURNCHAR;
 }
 
 
@@ -843,52 +843,52 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 }
 
 <FIRSTCCL,CCL>{
-	"[:alnum:]"	BEGIN(CCL); return CCE_ALNUM;
-	"[:alpha:]"	BEGIN(CCL); return CCE_ALPHA;
-	"[:blank:]"	BEGIN(CCL); return CCE_BLANK;
-	"[:cntrl:]"	BEGIN(CCL); return CCE_CNTRL;
-	"[:digit:]"	BEGIN(CCL); return CCE_DIGIT;
-	"[:graph:]"	BEGIN(CCL); return CCE_GRAPH;
-	"[:lower:]"	BEGIN(CCL); return CCE_LOWER;
-	"[:print:]"	BEGIN(CCL); return CCE_PRINT;
-	"[:punct:]"	BEGIN(CCL); return CCE_PUNCT;
-	"[:space:]"	BEGIN(CCL); return CCE_SPACE;
-	"[:upper:]"	BEGIN(CCL); return CCE_UPPER;
-	"[:xdigit:]"	BEGIN(CCL); return CCE_XDIGIT;
+	"[:alnum:]"	BEGIN(CCL); return FLEX_TOK_CCE_ALNUM;
+	"[:alpha:]"	BEGIN(CCL); return FLEX_TOK_CCE_ALPHA;
+	"[:blank:]"	BEGIN(CCL); return FLEX_TOK_CCE_BLANK;
+	"[:cntrl:]"	BEGIN(CCL); return FLEX_TOK_CCE_CNTRL;
+	"[:digit:]"	BEGIN(CCL); return FLEX_TOK_CCE_DIGIT;
+	"[:graph:]"	BEGIN(CCL); return FLEX_TOK_CCE_GRAPH;
+	"[:lower:]"	BEGIN(CCL); return FLEX_TOK_CCE_LOWER;
+	"[:print:]"	BEGIN(CCL); return FLEX_TOK_CCE_PRINT;
+	"[:punct:]"	BEGIN(CCL); return FLEX_TOK_CCE_PUNCT;
+	"[:space:]"	BEGIN(CCL); return FLEX_TOK_CCE_SPACE;
+	"[:upper:]"	BEGIN(CCL); return FLEX_TOK_CCE_UPPER;
+	"[:xdigit:]"	BEGIN(CCL); return FLEX_TOK_CCE_XDIGIT;
 
-	"[:^alnum:]"	BEGIN(CCL); return CCE_NEG_ALNUM;
-	"[:^alpha:]"	BEGIN(CCL); return CCE_NEG_ALPHA;
-	"[:^blank:]"	BEGIN(CCL); return CCE_NEG_BLANK;
-	"[:^cntrl:]"	BEGIN(CCL); return CCE_NEG_CNTRL;
-	"[:^digit:]"	BEGIN(CCL); return CCE_NEG_DIGIT;
-	"[:^graph:]"	BEGIN(CCL); return CCE_NEG_GRAPH;
-	"[:^lower:]"	BEGIN(CCL); return CCE_NEG_LOWER;
-	"[:^print:]"	BEGIN(CCL); return CCE_NEG_PRINT;
-	"[:^punct:]"	BEGIN(CCL); return CCE_NEG_PUNCT;
-	"[:^space:]"	BEGIN(CCL); return CCE_NEG_SPACE;
-	"[:^upper:]"	BEGIN(CCL); return CCE_NEG_UPPER;
-	"[:^xdigit:]"	BEGIN(CCL); return CCE_NEG_XDIGIT;
+	"[:^alnum:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_ALNUM;
+	"[:^alpha:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_ALPHA;
+	"[:^blank:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_BLANK;
+	"[:^cntrl:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_CNTRL;
+	"[:^digit:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_DIGIT;
+	"[:^graph:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_GRAPH;
+	"[:^lower:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_LOWER;
+	"[:^print:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_PRINT;
+	"[:^punct:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_PUNCT;
+	"[:^space:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_SPACE;
+	"[:^upper:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_UPPER;
+	"[:^xdigit:]"	BEGIN(CCL); return FLEX_TOK_CCE_NEG_XDIGIT;
 	{CCL_EXPR}	{
 			format_synerr(
 				_( "bad character class expression: %s" ),
 					yytext );
-			BEGIN(CCL); return CCE_ALNUM;
+			BEGIN(CCL); return FLEX_TOK_CCE_ALNUM;
 			}
 }
 
 <NUM>{
 	[[:digit:]]+	{
 			yylval = myctoi( yytext );
-			return NUMBER;
+			return FLEX_TOK_NUMBER;
 			}
 
 	","		return ',';
 	"}"		{
 			BEGIN(SECT2);
 			if ( lex_compat || posix_compat )
-				return END_REPEAT_POSIX;
+				return FLEX_TOK_END_REPEAT_POSIX;
 			else
-				return END_REPEAT_FLEX;
+				return FLEX_TOK_END_REPEAT_FLEX;
 			}
 
 	.		{
@@ -991,7 +991,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			if ( YY_START == FIRSTCCL )
 				BEGIN(CCL);
 
-			return CHAR;
+			return FLEX_TOK_CHAR;
 			}
 
 <SECT3>{

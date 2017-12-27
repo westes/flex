@@ -56,7 +56,7 @@ int     yylex (void)
 		if (sectnum == 1) {
 			synerr (_("premature EOF"));
 			sectnum = 2;
-			toktype = SECTEND;
+			toktype = FLEX_TOK_SECTEND;
 		}
 
 		else
@@ -101,15 +101,15 @@ int     yylex (void)
 
 			break;
 
-		case SCDECL:
+		case FLEX_TOK_SCDECL:
 			fputs ("%s", stderr);
 			break;
 
-		case XSCDECL:
+		case FLEX_TOK_XSCDECL:
 			fputs ("%x", stderr);
 			break;
 
-		case SECTEND:
+		case FLEX_TOK_SECTEND:
 			fputs ("%%\n", stderr);
 
 			/* We set beglin to be true so we'll start
@@ -121,11 +121,11 @@ int     yylex (void)
 
 			break;
 
-		case NAME:
+		case FLEX_TOK_NAME:
 			fprintf (stderr, "'%s'", nmstr);
 			break;
 
-		case CHAR:
+		case FLEX_TOK_CHAR:
 			switch (yylval) {
 			case '<':
 			case '>':
@@ -163,36 +163,36 @@ int     yylex (void)
 
 			break;
 
-		case NUMBER:
+		case FLEX_TOK_NUMBER:
 			fprintf (stderr, "%d", yylval);
 			break;
 
-		case PREVCCL:
+		case FLEX_TOK_PREVCCL:
 			fprintf (stderr, "[%d]", yylval);
 			break;
 
-		case EOF_OP:
+		case FLEX_TOK_EOF_OP:
 			fprintf (stderr, "<<EOF>>");
 			break;
 
-		case TOK_OPTION:
+		case FLEX_TOK_OPTION:
 			fprintf (stderr, "%s ", yytext);
 			break;
 
-		case TOK_OUTFILE:
-		case TOK_PREFIX:
-		case CCE_ALNUM:
-		case CCE_ALPHA:
-		case CCE_BLANK:
-		case CCE_CNTRL:
-		case CCE_DIGIT:
-		case CCE_GRAPH:
-		case CCE_LOWER:
-		case CCE_PRINT:
-		case CCE_PUNCT:
-		case CCE_SPACE:
-		case CCE_UPPER:
-		case CCE_XDIGIT:
+		case FLEX_TOK_OUTFILE:
+		case FLEX_TOK_PREFIX:
+		case FLEX_TOK_CCE_ALNUM:
+		case FLEX_TOK_CCE_ALPHA:
+		case FLEX_TOK_CCE_BLANK:
+		case FLEX_TOK_CCE_CNTRL:
+		case FLEX_TOK_CCE_DIGIT:
+		case FLEX_TOK_CCE_GRAPH:
+		case FLEX_TOK_CCE_LOWER:
+		case FLEX_TOK_CCE_PRINT:
+		case FLEX_TOK_CCE_PUNCT:
+		case FLEX_TOK_CCE_SPACE:
+		case FLEX_TOK_CCE_UPPER:
+		case FLEX_TOK_CCE_XDIGIT:
 			fprintf (stderr, "%s", yytext);
 			break;
 

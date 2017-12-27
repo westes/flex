@@ -1,8 +1,11 @@
 /* parse.y - parser for flex input */
 
+%require "3.0"
+%define api.token.prefix {FLEX_TOK_}
+
 %token CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
-%token TOK_OPTION TOK_OUTFILE TOK_PREFIX TOK_YYCLASS TOK_HEADER_FILE TOK_EXTRA_TYPE
-%token TOK_TABLES_FILE
+%token OPTION OUTFILE PREFIX YYCLASS HEADER_FILE EXTRA_TYPE
+%token TABLES_FILE
 
 %token CCE_ALNUM CCE_ALPHA CCE_BLANK CCE_CNTRL CCE_DIGIT CCE_GRAPH
 %token CCE_LOWER CCE_PRINT CCE_PUNCT CCE_SPACE CCE_UPPER CCE_XDIGIT
@@ -184,29 +187,29 @@ namelist1	:  namelist1 NAME
 			{ synerr( _("bad start condition list") ); }
 		;
 
-options		:  TOK_OPTION optionlist
+options		:  OPTION optionlist
 		;
 
 optionlist	:  optionlist option
 		|
 		;
 
-option		:  TOK_OUTFILE '=' NAME
+option		:  OUTFILE '=' NAME
 			{
 			outfilename = xstrdup(nmstr);
 			did_outfilename = 1;
 			}
-		|  TOK_EXTRA_TYPE '=' NAME
+		|  EXTRA_TYPE '=' NAME
 			{ extra_type = xstrdup(nmstr); }
-		|  TOK_PREFIX '=' NAME
+		|  PREFIX '=' NAME
 			{ prefix = xstrdup(nmstr);
                           if (strchr(prefix, '[') || strchr(prefix, ']'))
                               flexerror(_("Prefix must not contain [ or ]")); }
-		|  TOK_YYCLASS '=' NAME
+		|  YYCLASS '=' NAME
 			{ yyclass = xstrdup(nmstr); }
-		|  TOK_HEADER_FILE '=' NAME
+		|  HEADER_FILE '=' NAME
 			{ headerfilename = xstrdup(nmstr); }
-	    |  TOK_TABLES_FILE '=' NAME
+	    |  TABLES_FILE '=' NAME
             { tablesext = true; tablesfilename = xstrdup(nmstr); }
 		;
 
