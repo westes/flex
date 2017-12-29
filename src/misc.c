@@ -776,8 +776,9 @@ void skelout (void)
 					outn ((char *) (yydmap_buf.elts));
 			}
             else if (cmd_match (CMD_DEFINE_YYTABLES)) {
-                out_str("#define YYTABLES_NAME \"%s\"\n",
-                        tablesname?tablesname:"yytables");
+                if ( tablesext )
+                    out_str( "#define YYTABLES_NAME \"%s\"\n",
+                           tablesname ? tablesname : "yytables" );
             }
 			else if (cmd_match (CMD_IF_CPP_ONLY)) {
 				/* only for C++ */
