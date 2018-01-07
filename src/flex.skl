@@ -2465,7 +2465,7 @@ m4_ifdef( [[M4_YY_NO_TOP_STATE]],,
 %endif
 {
     M4_YY_DECL_GUTS_VAR();
-	return YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr) - 1];
+	return yy_start_stack_ptr > 0 ? YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr) - 1] : YY_START;
 }
 ]])
 
