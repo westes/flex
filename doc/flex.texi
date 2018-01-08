@@ -1978,15 +1978,23 @@ as though you had used
 @deftypefun void yy_pop_state ()
 pops the top of the stack and switches to it via
 @code{BEGIN}.
+The program execution aborts, if there is no state on the stack.
 @end deftypefun
 
 @deftypefun int yy_top_state ()
-returns the top of the stack without altering the stack's contents.
+returns the top of the stack without altering the stack's contents
+if a top state on the stack exists or the current state via
+@code{YY_START}
+otherwise.
 @end deftypefun
 
 @cindex memory, for start condition stacks
 The start condition stack grows dynamically and so has no built-in size
 limitation.  If memory is exhausted, program execution aborts.
+The stack is not automatically reset.  The function
+@code{yylex_destroy}
+should be called to reset and destroy the state stack which then frees
+other resources used by the scanner.
 
 To use start condition stacks, your scanner must include a @code{%option
 stack} directive (@pxref{Scanner Options}).
