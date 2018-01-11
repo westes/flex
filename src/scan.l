@@ -1078,7 +1078,7 @@ void set_input_file( char *file )
 		yyin = fopen( infilename, "r" );
 
 		if ( yyin == NULL )
-			lerr( _( "can't open %s" ), file );
+			lerr( _( "can't open %s: %s" ), file, strerror(errno));
 		}
 
 	else
