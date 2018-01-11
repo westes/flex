@@ -21,6 +21,9 @@ flex NEWS
 
 *** A crash during building on NetBSD has been fixed.
 
+*** Flex is now automatically built by travis-ci. That should increase
+    the visibility of bugs and help prevent regressions.
+
 ** documentation
 
 *** a new Ukrainian translation has been submitted from the Translation Project.
