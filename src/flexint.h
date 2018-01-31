@@ -30,6 +30,7 @@ typedef unsigned short int flex_uint16_t;
 typedef unsigned int flex_uint32_t;
 
 /* Limits of integral types. */
+#include <stdint.h>
 #ifndef INT8_MIN
 #define INT8_MIN               (-128)
 #endif
