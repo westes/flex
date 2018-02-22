@@ -16,7 +16,8 @@ printf '%s *gettext-0.19.8.1.tar.lz\n' \
 tar xf gettext-0.19.8.1.tar.lz
 cd gettext-0.19.8.1
 # Don't flood Travis CI build log with dependency packages unless error occurs.
-./configure --quiet --prefix="$HOME" ||
+# libacl is not used in this Travis build system.
+./configure --quiet --prefix="$HOME" --disable-acl ||
     { s=$? && cat config.log && (exit $s); }
 make -s V=0 >/dev/null 2>&1 || make -s V=1
 make -s install >make_install.log 2>&1 ||
