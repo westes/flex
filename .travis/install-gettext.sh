@@ -15,6 +15,10 @@ printf '%s *gettext-0.19.8.1.tar.lz\n' \
 
 tar xf gettext-0.19.8.1.tar.lz
 cd gettext-0.19.8.1
-./configure --prefix=$HOME
-make
-make install
+# Don't flood Travis CI build log with dependency packages unless error occurs.
+./configure --quiet --prefix="$HOME" ||
+    { s=$? && cat config.log && (exit $s); }
+make -s V=0 >/dev/null 2>&1 || make -s V=1
+make -s install >make_install.log 2>&1 ||
+    { s=$? && cat make_install.log && (exit $s); }
+rm make_install.log || :
