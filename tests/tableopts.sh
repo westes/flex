@@ -38,7 +38,7 @@ for kind in opt ser ver ; do
 tableopts_${kind}_${threading}_${bare_opt}_${kind}_SOURCES = tableopts.l4
 
 ${testname}\$(EXEEXT): tableopts_${kind}_${threading}-${bare_opt}.\$(OBJEXT)
-	\$(AM_V_CCLD)\$(LINK) -o \$@ \$<
+	\$(AM_V_CCLD)\$(LINK) \$<
 
 EOF
         done
