@@ -158,22 +158,19 @@ AC_FUNC_REALLOC
 AS_IF([test "$cross_compiling" = yes],
    AC_MSG_WARN([result $ac_cv_func_realloc_0_nonnull guessed because of cross compilation]))
 
-AC_CHECK_FUNCS([dup2 dnl
-memset dnl
-regcomp dnl
-strcasecmp dnl
-strchr dnl
-strdup dnl
-strtol dnl
-], [], [AC_MSG_ERROR(required library function not found on your system)])
+dnl Autoheader (<= 2.69) bug: "dnl" comments in a quoted argument of
+dnl AC_CHECK_FUNCS will expand wierdly in config.h.in.
+dnl (https://lists.gnu.org/archive/html/bug-autoconf/2018-02/msg00005.html)
 
-# Optional library functions
-AC_CHECK_FUNCS([dnl
-pow dnl           Used only by "examples/manual/expr"
-setlocale dnl     Needed only if NLS is enabled
-reallocarr dnl    NetBSD function. Use reallocarray if not available.
-reallocarray dnl  OpenBSD function. We have replacement if not available.
-])
+AC_CHECK_FUNCS([dup2 memset regcomp strcasecmp strchr strdup strtol], [],
+  [AC_MSG_ERROR(required library function not found on your system)])
+
+# Optional library functions:
+# pow - Used only by "examples/manual/expr".
+# setlocale - Needed only if NLS is enabled.
+# reallocarr - NetBSD function. Use reallocarray if not available.
+# reallocarray - OpenBSD function. We have replacement if not available.
+AC_CHECK_FUNCS([pow setlocale reallocarr reallocarray])
 
 AC_CONFIG_FILES(
 Makefile
