@@ -261,7 +261,7 @@ M4QEND      "]""]"
 	\n		yy_pop_state();
 	[[:digit:]]+	linenum = myctoi( yytext );
 
-	\"[^"\n]*\"	{
+	"\""[^""\n]*"\""	{
 			free(infilename);
 			infilename = xstrdup(yytext + 1);
 			infilename[strlen( infilename ) - 1] = '\0';
@@ -464,7 +464,7 @@ M4QEND      "]""]"
                     }
 
 
-	\"[^"\n]*\"	{
+	"\""[^""\n]*"\""	{
 			if(yyleng-1 < MAXLINE)
         		 {
 			strncpy( nmstr, yytext + 1, sizeof(nmstr) );
@@ -534,7 +534,7 @@ M4QEND      "]""]"
                         return '<';
                     }
 	^{OPTWS}"^"	return '^';
-	\"		BEGIN(QUOTE); return '"';
+	"\""		BEGIN(QUOTE); return '"';
 	"{"/[[:digit:]]	{
 			BEGIN(NUM);
 			if ( lex_compat || posix_compat )
@@ -800,8 +800,8 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 
 <QUOTE>{
-	[^"\n]		RETURNCHAR;
-	\"		BEGIN(SECT2); return '"';
+	[^""\n]		RETURNCHAR;
+	"\""		BEGIN(SECT2); return '"';
 
 	{NL}		{
 			synerr( _( "missing quote" ) );
@@ -941,11 +941,11 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 <ACTION>{
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
-	[^[:alpha:]_{}\"'/\n\[\]]+	ACTION_ECHO;
+	[^[:alpha:]_{}""''/\n\[\]]+	ACTION_ECHO;
         {NAME}		ACTION_ECHO;
-        "'"([^\'\\\n]|\\.)"'" ACTION_ECHO; /* character constant */
+        "'"([^''\\\n]|\\.)"'" ACTION_ECHO; /* character constant */
         "'"             ACTION_ECHO; BEGIN(CHARACTER_CONSTANT);
-	\"		ACTION_ECHO; BEGIN(ACTION_STRING);
+	"\""		ACTION_ECHO; BEGIN(ACTION_STRING);
 	{NL} {
                 ++linenum;
                 ACTION_ECHO;
@@ -961,12 +961,12 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 }
 
 <ACTION_STRING>{
-	[^\[\]\"\\\n]+	ACTION_ECHO;
-	\"		ACTION_ECHO; BEGIN(ACTION);
+	[^\[\]""\\\n]+	ACTION_ECHO;
+	"\""		ACTION_ECHO; BEGIN(ACTION);
 }
 <CHARACTER_CONSTANT>{
-	[^\[\]\'\\\n]+  ACTION_ECHO;
-        \'              ACTION_ECHO; BEGIN(ACTION);
+	[^\[\]''\\\n]+  ACTION_ECHO;
+        "'"             ACTION_ECHO; BEGIN(ACTION);
 }
 <ACTION_STRING,CHARACTER_CONSTANT>{
         (\\\n)*         ACTION_ECHO;
