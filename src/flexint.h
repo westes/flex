@@ -3,10 +3,6 @@
 #ifndef FLEXINT_H
 #define FLEXINT_H
 
-/* C99 systems have <inttypes.h>. Non-C99 systems may or may not. */
-
-#if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-
 /* C++ systems might need __STDC_LIMIT_MACROS defined before including
  * <stdint.h>, if you want the limit (max/min) macros for int types.
  */
@@ -14,20 +10,10 @@
 #define __STDC_LIMIT_MACROS 1
 #endif
 
-#include <inttypes.h>
-typedef int8_t flex_int8_t;
-typedef uint8_t flex_uint8_t;
-typedef int16_t flex_int16_t;
-typedef uint16_t flex_uint16_t;
-typedef int32_t flex_int32_t;
-typedef uint32_t flex_uint32_t;
-#else
-typedef signed char flex_int8_t;
-typedef short int flex_int16_t;
-typedef int flex_int32_t;
-typedef unsigned char flex_uint8_t; 
-typedef unsigned short int flex_uint16_t;
-typedef unsigned int flex_uint32_t;
+/* "flexint_shared.h" will be included also in skeleton. It will include
+ * <inttypes.h> (if available) and define flex's integral types.
+ */
+#include "flexint_shared.h"
 
 /* Limits of integral types. */
 #ifndef INT8_MIN
@@ -64,7 +50,5 @@ typedef unsigned int flex_uint32_t;
 #ifndef SIZE_MAX
 #define SIZE_MAX               (~(size_t)0)
 #endif
-
-#endif /* ! C99 */
 
 #endif /* ! FLEXINT_H */

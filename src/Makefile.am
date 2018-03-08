@@ -58,6 +58,7 @@ COMMON_SOURCES = \
 	filter.c \
 	flexdef.h \
 	flexint.h \
+	flexint_shared.h \
 	gen.c \
 	main.c \
 	misc.c \
@@ -95,7 +96,7 @@ CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
 
 MAINTAINERCLEANFILES = skel.c
 
-skel.c: flex.skl mkskel.sh flexint.h tables_shared.h tables_shared.c
+skel.c: flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir) $(m4) $(VERSION) > $@.tmp
 	mv $@.tmp $@
 

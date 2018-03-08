@@ -248,10 +248,6 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 %endif
 /* end standard C headers. */
 
-%if-c-or-c++
-m4preproc_include(`flexint.h')
-%endif
-
 /* begin standard C++ headers. */
 %if-c++-only
 #include <iostream>
@@ -260,6 +256,10 @@ m4preproc_include(`flexint.h')
 #include <cstdio>
 #include <cstring>
 /* end standard C++ headers. */
+%endif
+
+%if-c-or-c++
+m4preproc_include(`flexint_shared.h')
 %endif
 
 /* TODO: this is always defined, so inline it */
