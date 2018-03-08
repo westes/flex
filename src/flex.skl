@@ -220,11 +220,21 @@ m4_ifdef( [[M4_YY_TABLES_EXTERNAL]],
 %if-c-only
 m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 [[m4_ifdef( [[M4_YY_NEVER_INTERACTIVE]], ,
-[[#ifndef _POSIX_C_SOURCE
-#define _POSIX_C_SOURCE 1 /* for fileno() */
-#ifndef _POSIX_SOURCE
-#define _POSIX_SOURCE 1
+[[/* Feature test macros. Flex uses functions that require a minimum set of
+ * macros defined. As defining some macros may hide function declarations that
+ * user code might use, be conservative and respect user's definitions as much
+ * as possible. In glibc, feature test macros may not be all set up until one
+ * of the libc header (that includes <features.h>) is included. This creates
+ * a circular dependency when we check the macros. <assert.h> is the safest
+ * header we can include and does not declare too many functions we don't need.
+ */
+#if !defined(__GNU_LIBRARY__) && defined(__STDC__)
+#include <assert.h>
 #endif
+#if !(defined(_POSIX_C_SOURCE) || defined(_XOPEN_SOURCE) || \
+    defined(_POSIX_SOURCE))
+# define _POSIX_C_SOURCE 1 /* Required for fileno() */
+# define _POSIX_SOURCE 1
 #endif]])]])
 #include <stdio.h>
 #include <string.h>
