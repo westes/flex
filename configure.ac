@@ -149,8 +149,21 @@ AC_TYPE_SIZE_T
 
 AC_FUNC_ALLOCA
 AC_FUNC_FORK
+
 dnl Autoconf bug: AC_FUNC_MALLOC and AC_FUNC_REALLOC might not warn of cross
-dnl compilation. Workaround this.
+dnl compilation and cannot give a good guess on them.
+AS_IF([test "$cross_compiling" = yes],
+  [AS_IF([test "x$ac_cv_func_malloc_0_nonnull" = x],
+    [AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+[[/* malloc(0) returning a non-null pointer were introduced in glibc 1.06.2 */
+/* <assert.h> would include <features.h>, which defines __GLIBC__. */
+#include <assert.h>
+#if !defined(__GLIBC__) || __GLIBC__ < 2
+error: Not glibc 2
+#endif
+]]
+    )], [ac_cv_func_malloc_0_nonnull=yes])])
+ac_cv_func_realloc_0_nonnull="$ac_cv_func_malloc_0_nonnull"])
 AC_FUNC_MALLOC
 AS_IF([test "$cross_compiling" = yes],
    AC_MSG_WARN([result $ac_cv_func_malloc_0_nonnull guessed because of cross compilation]))
