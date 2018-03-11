@@ -35,8 +35,12 @@
 #ifndef FLEXDEF_H
 #define FLEXDEF_H 1
 
-#ifdef HAVE_CONFIG_H
+#ifndef USE_CONFIG_FOR_BUILD
+# ifdef HAVE_CONFIG_H
 #include <config.h>
+# endif
+#else
+#include <config_for_build.h>
 #endif
 
 #include <stdio.h>
@@ -68,7 +72,19 @@
 #include <sys/stat.h>
 /* Required: wait() in <sys/wait.h> */
 #include <sys/wait.h>
+#ifdef HAVE_STDBOOL_H
 #include <stdbool.h>
+#else
+# ifndef __cplusplus
+#  ifdef HAVE__BOOL
+#   define bool _Bool
+#  else
+#   define bool int
+#  endif
+# endif
+# define false 0
+# define true 1
+#endif
 #include <stdarg.h>
 /* Required: regcomp(), regexec() and regerror() in <regex.h> */
 #include <regex.h>

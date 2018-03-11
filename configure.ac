@@ -149,8 +149,21 @@ AC_TYPE_SIZE_T
 
 AC_FUNC_ALLOCA
 AC_FUNC_FORK
+
 dnl Autoconf bug: AC_FUNC_MALLOC and AC_FUNC_REALLOC might not warn of cross
-dnl compilation. Workaround this.
+dnl compilation and cannot give a good guess on them.
+AS_IF([test "$cross_compiling" = yes],
+  [AS_IF([test "x$ac_cv_func_malloc_0_nonnull" = x],
+    [AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+[[/* malloc(0) returning a non-null pointer were introduced in glibc 1.06.2 */
+/* <assert.h> would include <features.h>, which defines __GLIBC__. */
+#include <assert.h>
+#if !defined(__GLIBC__) || __GLIBC__ < 2
+error: Not glibc 2
+#endif
+]]
+    )], [ac_cv_func_malloc_0_nonnull=yes])])
+ac_cv_func_realloc_0_nonnull="$ac_cv_func_malloc_0_nonnull"])
 AC_FUNC_MALLOC
 AS_IF([test "$cross_compiling" = yes],
    AC_MSG_WARN([result $ac_cv_func_malloc_0_nonnull guessed because of cross compilation]))
@@ -172,6 +185,51 @@ AC_CHECK_FUNCS([dup2 memset regcomp strcasecmp strchr strdup strtol], [],
 # reallocarray - OpenBSD function. We have replacement if not available.
 AC_CHECK_FUNCS([pow setlocale reallocarr reallocarray])
 
+AS_IF([test "$cross_compiling" = yes],
+  [AC_CONFIG_FILES([src/config_for_build.h])])
+
+# Enable $CC_FOR_BUILD for the build-time flex program ("build-flex"). We do
+# this by replacing $(CC) token and others in the Makefile generation, because
+# Automake can't do that for us.
+
+# BusyBox sed 1.21 bug breaks our ":joiner" loop.
+# (https://git.busybox.net/busybox/commit/?id=b0e9b72915a87121aabf21d4e382e16e0a9a5175)
+# Although this ":joiner" is not necessary for sedding the Makefile Automake
+# generated, it allows the script to work with Makefiles edited by hand.
+[sed_joiner=':joiner; /^.*\\$/ { N; b joiner; }' sed_joiner_2='']
+AS_IF([printf 'a\\\nb\nab' | sed "$sed_joiner"'; /b/ s/a//' |
+  grep a >/dev/null],
+  [AC_MSG_WARN([sed multi-line matching behavior wrong; will use workaround])
+  sed_joiner=':joiner; /^.*\\$/ { N; s/\\\n/@BSNL@/; b joiner; }'
+  sed_joiner_2='s/@BSNL@/\\\n/g'],
+  [:])
+
+AC_CONFIG_FILES([src/Makefile], [[
+sed "$sed_joiner"'
+s/build-flex\$(EXEEXT)/build-flex$(BUILD_EXEEXT)/g
+s|\(build-[^ \$\./][^ \$\./]*\)\.\$(OBJEXT)|\1.$(BUILD_OBJEXT)|g
+/^ *build_flex_LINK *=/ {
+  s/\$(CCLD)/$(CC_FOR_BUILD)/g
+  s/\$(CFLAGS)/$(CFLAGS_FOR_BUILD)/g
+  s/\$(LDFLAGS)/$(LDFLAGS_FOR_BUILD)/g
+}
+/\$(build_flex_CPPFLAGS)/ {
+  s/\$(CPP)/$(CPP_FOR_BUILD)/g
+  s/\$(CC)/$(CC_FOR_BUILD)/g
+  s/\$(CPPFLAGS)/$(CPPFLAGS_FOR_BUILD)/g
+  s/\$(CFLAGS)/$(CFLAGS_FOR_BUILD)/g
+}
+/\$(build_flex_CFLAGS)/ {
+  s/\$(CC)/$(CC_FOR_BUILD)/g
+  s/\$(CCLD)/$(CC_FOR_BUILD)/g
+  s/\$(CPPFLAGS)/$(CPPFLAGS_FOR_BUILD)/g
+  s/\$(CFLAGS)/$(CFLAGS_FOR_BUILD)/g
+  s/\$(LDFLAGS)/$(LDFLAGS_FOR_BUILD)/g
+}
+'"$sed_joiner_2"'
+' src/Makefile >"$tmp"/Makefile.tmp && mv -f "$tmp"/Makefile.tmp src/Makefile
+]], [sed_joiner='${sed_joiner}' sed_joiner_2='${sed_joiner_2}'])
+
 AC_CONFIG_FILES(
 Makefile
 doc/Makefile
@@ -180,7 +238,6 @@ examples/fastwc/Makefile
 examples/manual/Makefile
 po/Makefile.in
 src/libfl.pc
-src/Makefile
 tools/Makefile
 tests/Makefile
 )

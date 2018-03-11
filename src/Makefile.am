@@ -1,14 +1,10 @@
 AM_YFLAGS = -d
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
+AM_CFLAGS = $(WARNINGFLAGS)
 LIBS = @LIBS@
 pkgconfigdir = @pkgconfigdir@
 
 m4 = @M4@
-
-bin_PROGRAMS = flex
-if ENABLE_BOOTSTRAP
-noinst_PROGRAMS = stage1flex
-endif
 
 if ENABLE_LIBFL
 lib_LTLIBRARIES = libfl.la
@@ -19,36 +15,40 @@ libfl_la_SOURCES = \
 	libyywrap.c
 libfl_la_LDFLAGS = -version-info @SHARED_VERSION_INFO@
 
+bin_PROGRAMS = flex
+
+EXTRA_PROGRAMS = build-flex stage1flex
+
+# All object file names and build rules for this build-time flex program will
+# be transformed in a late config.status stage in order to enable the build
+# system's native toolchain. The build-*.$(OBJEXT) filenames,
+# $(build_flex_CPPFLAGS), and $(build_flex_CFLAGS) are all keywords to the
+# transforming (sed) script. See configure.ac for details.
+build_flex_SHORTNAME = build
+build_flex_CPPFLAGS = $(AM_CPPFLAGS) -DUSE_CONFIG_FOR_BUILD
+# Suppress the warning flags when compiling and linking the build-time flex.
+build_flex_CFLAGS =
+# Default $(LDADD) would include $(LIBOBJS). Not applicable to build-time flex.
+build_flex_LDADD =
+
+build_flex_SOURCES = \
+	../lib/malloc.c \
+	../lib/realloc.c \
+	scan.l \
+	$(COMMON_SOURCES)
+
 stage1flex_SOURCES = \
 	scan.l \
 	$(COMMON_SOURCES)
 
-if CROSS
-stage1flex_LDADD =
-stage1flex_SOURCES += \
-		      ../lib/malloc.c \
-		      ../lib/realloc.c
-stage1flex_LINK = $(LIBTOOL) --tag=CC --mode=link $(CC_FOR_BUILD) \
-		  $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@
-
-$(stage1flex_OBJECTS): CC=$(CC_FOR_BUILD)
-$(stage1flex_OBJECTS): CFLAGS=$(CFLAGS_FOR_BUILD)
-$(stage1flex_OBJECTS): CPP=$(CPP_FOR_BUILD)
-$(stage1flex_OBJECTS): CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
-$(stage1flex_OBJECTS): LDFLAGS=$(LDFLAGS_FOR_BUILD)
-else
-stage1flex_LDADD = $(LDADD)
-stage1flex_LINK = $(LINK)
-stage1flex_CFLAGS = $(AM_CFLAGS)
-endif
-
 flex_SOURCES = \
 	$(COMMON_SOURCES)
 
-nodist_flex_SOURCES = \
-	stage1scan.c
-
-flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
+if ENABLE_BOOTSTRAP
+nodist_flex_SOURCES = stage1scan.c
+else
+flex_SOURCES += scan.l
+endif
 
 COMMON_SOURCES = \
 	buf.c \
@@ -92,7 +92,9 @@ EXTRA_DIST = \
 	mkskel.sh \
 	gettext.h
 
-CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
+MOSTLYCLEANFILES = stage1scan.c
+
+CLEANFILES = build-flex$(BUILD_EXEEXT) stage1flex$(EXEEXT)
 
 MAINTAINERCLEANFILES = skel.c
 
@@ -100,30 +102,38 @@ skel.c: flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir) $(m4) $(VERSION) > $@.tmp
 	mv $@.tmp $@
 
-if ENABLE_BOOTSTRAP
-stage1scan.c: scan.l stage1flex$(EXEEXT)
-	./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $(srcdir)/scan.l
+# Ensure the input and output file names are fixed so that the generated
+# results are comparable.
+if CROSS
+stage1scan.c: scan.l build-flex$(BUILD_EXEEXT)
+	( cd $(srcdir) && \
+	  $(abs_builddir)/build-flex$(BUILD_EXEEXT) $(AM_LFLAGS) -o scan.c -t \
+	  $(LFLAGS) scan.l ) >$@
 else
-stage1scan.c: scan.c
-	sed 's|^\(#line .*\)"'`printf %s $< | sed 's|[][\\\\.*]|\\\\&|g'`'"|\1"$@"|g' $< > $@
+stage1scan.c: scan.l stage1flex$(EXEEXT)
+	( cd $(srcdir) && \
+	  $(abs_builddir)/stage1flex$(EXEEXT) $(AM_LFLAGS) -o scan.c -t \
+	  $(LFLAGS) scan.l ) >$@
 endif
 
 dist-hook: scan.l flex$(EXEEXT)
 	chmod u+w $(distdir)/scan.c && \
-	./flex$(EXEEXT) -o scan.c $< && \
+	( cd $(srcdir) && $(abs_builddir)/flex$(EXEEXT) -o scan.c -t \
+	  scan.l ) >scan.c && \
 	mv scan.c $(distdir)
 
 # make needs to be told to make parse.h so that parallelized runs will
 # not fail.
 
-stage1flex-main.$(OBJEXT): parse.h
-flex-main.$(OBJEXT): parse.h
+build-main.$(BUILD_OBJEXT): parse.h
+main.$(OBJEXT): parse.h
 
-stage1flex-yylex.$(OBJEXT): parse.h
-flex-yylex.$(OBJEXT): parse.h
+build-yylex.$(BUILD_OBJEXT): parse.h
+yylex.$(OBJEXT): parse.h
 
-stage1flex-scan.$(OBJEXT): parse.h
-flex-stage1scan.$(OBJEXT): parse.h
+build-scan.$(BUILD_OBJEXT): parse.h
+stage1scan.$(OBJEXT): parse.h
+scan.$(OBJEXT): parse.h
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #
