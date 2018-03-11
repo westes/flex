@@ -68,7 +68,19 @@
 #include <sys/stat.h>
 /* Required: wait() in <sys/wait.h> */
 #include <sys/wait.h>
+#ifdef HAVE_STDBOOL_H
 #include <stdbool.h>
+#else
+# ifndef __cplusplus
+#  ifdef HAVE__BOOL
+#   define bool _Bool
+#  else
+#   define bool int
+#  endif
+# endif
+# define false 0
+# define true 1
+#endif
 #include <stdarg.h>
 /* Required: regcomp(), regexec() and regerror() in <regex.h> */
 #include <regex.h>
