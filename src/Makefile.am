@@ -94,7 +94,9 @@ EXTRA_DIST = \
 	mkskel.sh \
 	gettext.h
 
-CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
+MOSTLYCLEANFILES = stage1scan.c
+
+CLEANFILES = stage1flex$(EXEEXT)
 
 MAINTAINERCLEANFILES = skel.c
 
