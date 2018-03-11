@@ -46,8 +46,11 @@ endif
 flex_SOURCES = \
 	$(COMMON_SOURCES)
 
-nodist_flex_SOURCES = \
-	stage1scan.c
+if ENABLE_BOOTSTRAP
+nodist_flex_SOURCES = stage1scan.c
+else
+flex_SOURCES += scan.l
+endif
 
 COMMON_SOURCES = \
 	buf.c \
@@ -99,17 +102,17 @@ skel.c: flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir) $(m4) $(VERSION) > $@.tmp
 	mv $@.tmp $@
 
-if ENABLE_BOOTSTRAP
+# Ensure the input and output file names are fixed so that the generated
+# results are comparable.
 stage1scan.c: scan.l stage1flex$(EXEEXT)
-	./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $(srcdir)/scan.l
-else
-stage1scan.c: scan.c
-	sed 's|^\(#line .*\)"'`printf %s $< | sed 's|[][\\\\.*]|\\\\&|g'`'"|\1"$@"|g' $< > $@
-endif
+	( cd $(srcdir) && \
+	  $(abs_builddir)/stage1flex$(EXEEXT) $(AM_LFLAGS) -o scan.c -t \
+	  $(LFLAGS) scan.l ) >$@
 
 dist-hook: scan.l flex$(EXEEXT)
 	chmod u+w $(distdir)/scan.c && \
-	./flex$(EXEEXT) -o scan.c $< && \
+	( cd $(srcdir) && $(abs_builddir)/flex$(EXEEXT) -o scan.c -t \
+	  scan.l ) >scan.c && \
 	mv scan.c $(distdir)
 
 # make needs to be told to make parse.h so that parallelized runs will
@@ -123,6 +126,7 @@ yylex.$(OBJEXT): parse.h
 
 stage1flex-scan.$(OBJEXT): parse.h
 stage1scan.$(OBJEXT): parse.h
+scan.$(OBJEXT): parse.h
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #
