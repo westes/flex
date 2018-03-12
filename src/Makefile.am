@@ -109,7 +109,7 @@ stage1scan.c: scan.c
 endif
 
 dist-hook: scan.l flex$(EXEEXT)
-	chmod u+w $(distdir)/scan.c && \
+	chmod u+w $(distdir) && \
 	./flex$(EXEEXT) -o scan.c $< && \
 	mv scan.c $(distdir)
 

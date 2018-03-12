@@ -265,6 +265,7 @@ CLEANFILES = \
 	$(tableopts_tables)
 
 dist-hook:
+	chmod u+w $(distdir) && \
 	for file in $(CLEANFILES) ; do \
 	rm -f $(distdir)/$$file \
 	; done
