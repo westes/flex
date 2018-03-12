@@ -98,7 +98,7 @@ MAINTAINERCLEANFILES = skel.c
 
 skel.c: flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir) $(m4) $(VERSION) > $@.tmp
-	mv $@.tmp $@
+	mv -f $@.tmp $@
 
 if ENABLE_BOOTSTRAP
 stage1scan.c: scan.l stage1flex$(EXEEXT)
@@ -111,7 +111,7 @@ endif
 dist-hook: scan.l flex$(EXEEXT)
 	chmod u+w $(distdir) && \
 	./flex$(EXEEXT) -o scan.c $< && \
-	mv scan.c $(distdir)
+	mv -f scan.c $(distdir)
 
 # make needs to be told to make parse.h so that parallelized runs will
 # not fail.
