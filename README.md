@@ -19,9 +19,10 @@ There are several mailing lists available as well:
 * flex-devel@lists.sourceforge.net - where you can discuss development
   of flex itself
 
-Find information on subscribing to the mailing lists at:
-
-http://sourceforge.net/mail/?group_id=97492
+Find information on subscribing to the mailing lists or search in the
+archive at: https://sourceforge.net/p/flex/mailman/
+Note: Posting is only allowed from addresses that are subscribed to
+the lists.
 
 The flex distribution contains the following files which may be of
 interest:
