@@ -49,3 +49,8 @@ if ! test -f ChangeLog; then
 fi
 "$LIBTOOLIZE" --install --force
 autoreconf --install --force
+
+# add executable right for auxiliary scripts
+if test -f po/update_linguas.sh; then
+   chmod gu+x po/update_linguas.sh
+fi
