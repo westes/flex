@@ -77,7 +77,9 @@ GNU-style configure script to be able to work.
 From this point on, building flex follows the usual routine:
 
 ```bash
-configure && make && make install
+mkdir build
+cd build
+../configure && make && make install
 ```
 
 ---
