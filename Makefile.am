@@ -39,7 +39,8 @@ dist_doc_DATA = \
 
 EXTRA_DIST = \
 	.indent.pro \
-	autogen.sh
+	autogen.sh \
+	po/update_linguas.sh
 
 SUBDIRS = \
 	src \
