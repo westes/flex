@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/westes/flex.svg?branch=master)](https://travis-ci.org/westes/flex)
+
 This is flex, the fast lexical analyzer generator.
 
 flex is a tool for generating scanners: programs which recognize
