@@ -79,6 +79,8 @@ static int addsym (char sym[], char *str_def, int int_def, hash_table table, int
 
 	while (sym_entry) {
 		if (!strcmp (sym, sym_entry->name)) {	/* entry already exists */
+            free(sym);
+            free(str_def);
 			return -1;
 		}
 
