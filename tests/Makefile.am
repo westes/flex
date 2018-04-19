@@ -93,6 +93,12 @@ simple_tests = \
 	string_nr \
 	string_r \
 	top \
+	top1 \
+	top2 \
+	top3 \
+	top4 \
+	top5 \
+	top6 \
 	yyextra
 
 reject_tests = \
@@ -180,6 +186,12 @@ rescan_r_direct_SOURCES = rescan_r.direct.l
 string_nr_SOURCES = string_nr.l
 string_r_SOURCES = string_r.l
 top_SOURCES = top.l top_main.c
+top1_SOURCES = top1.l
+top2_SOURCES = top2.l
+top3_SOURCES = top3.l
+top4_SOURCES = top4.l
+top5_SOURCES = top5.l
+top6_SOURCES = top6.l
 nodist_top_SOURCES = top.h
 yyextra_SOURCES = yyextra.l
 
@@ -260,6 +272,12 @@ CLEANFILES = \
 	string_r.c \
 	top.c \
 	top.h  \
+	top1.c \
+	top2.c \
+	top3.c \
+	top4.c \
+	top5.c \
+	top6.c \
 	yyextra.c \
 	$(tableopts_c) \
 	$(tableopts_tables)

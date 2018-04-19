@@ -123,6 +123,13 @@ extern const char *escaped_qstart, *escaped_qend;
     if (!indented_code) line_directive_out(NULL, 0);\
 } while (0)
 
+#define LINENUM_UPDATE do {         \
+    int yy1 = 0;                    \
+    while(yy1 < yyleng)             \
+        if( yytext[yy1++] == '\n' ) \
+            linenum++;              \
+} while (0)
+
 %}
 
 %option caseless nodefault noreject stack noyy_top_state
@@ -159,6 +166,12 @@ LEXOPT		[aceknopr]
 
 M4QSTART    "[""["
 M4QEND      "]""]"
+
+ /* c-comment, potentially multiline */
+C_COMMENT	      [/][*]+([^*]|([*][^/]))*[*]+[/]
+
+ /* string literals, potentially multiline */
+STRING_LITERAL   \"(\\\"|\\{NL}|[^"\r\n])*\"
 
 %%
 	static int bracelevel, didadef, indented_code;
@@ -285,9 +298,17 @@ M4QEND      "]""]"
 }
 
 <CODEBLOCK_MATCH_BRACE>{
+    "'}'"      |
+    "'{'"      |
+    [^{}\r\n]  |
+    "//".*     buf_strnappend(&top_buf, yytext, yyleng);
+
+    {STRING_LITERAL}  |
+    {C_COMMENT}     LINENUM_UPDATE; buf_strnappend(&top_buf, yytext, yyleng);
+
     "}"     {
                 if( --brace_depth == 0){
-                    /* TODO: Matched. */
+                    buf_strnappend(&top_buf, "\n", 1);
                     yy_pop_state();
                 }else
                     buf_strnappend(&top_buf, yytext, yyleng);
@@ -305,9 +326,6 @@ M4QEND      "]""]"
 
     {M4QSTART}  buf_strnappend(&top_buf, escaped_qstart, (int) strlen(escaped_qstart));
     {M4QEND}    buf_strnappend(&top_buf, escaped_qend, (int) strlen(escaped_qend));
-    ([^{}\r\n\[\]]+)|[^{}\r\n]  {
-       buf_strnappend(&top_buf, yytext, yyleng);
-    }
 
     <<EOF>>     {
                 linenum = brace_start_line;
