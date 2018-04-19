@@ -4142,7 +4142,7 @@ Here are the things you need to do or know to use the reentrant C API of
  %option reentrant (--reentrant) must be specified.
 
 Notice that @code{%option reentrant} is specified in the above example
-(@pxref{Reentrant Example}. Had this option not been specified,
+(@pxref{Reentrant Example}). Had this option not been specified,
 @code{flex} would have happily generated a non-reentrant scanner without
 complaining. You may explicitly specify @code{%option noreentrant}, if
 you do @emph{not} want a reentrant scanner, although it is not
