@@ -4396,7 +4396,7 @@ the scanner:
         in = fopen( filename, "r" );
         stat( filename, &buf );
 
-        yylex_init_extra( buf, &scanner );
+        yylex_init_extra( &buf, &scanner );
         yyset_in( in, scanner );
         yylex( scanner );
         yylex_destroy( scanner );
