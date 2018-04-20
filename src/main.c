@@ -1137,12 +1137,10 @@ void flexinit (int argc, char **argv)
             break;
 
 		case OPT_MAIN:
-			buf_strdefine (&userdef_buf, "YY_MAIN", "1");
 			do_main = true;
 			break;
 
 		case OPT_NO_MAIN:
-			buf_strdefine (&userdef_buf, "YY_MAIN", "0");
 			do_main = false;
 			break;
 
