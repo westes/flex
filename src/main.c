@@ -54,6 +54,7 @@ int     interactive, lex_compat, posix_compat, do_yylineno,
 int     fullspd, gen_line_dirs, performance_report, backing_up_report;
 int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
 	csize;
+int     do_main;
 int     reentrant, bison_bridge_lval, bison_bridge_lloc;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
@@ -215,6 +216,13 @@ void check_options (void)
 {
 	int     i;
     const char * m4 = NULL;
+
+	if ( do_main )
+	{
+		/* Override yywrap */
+		do_yywrap = false;
+		buf_m4_define( &m4defs_buf, "M4_YY_MAIN", NULL);
+	}
 
 	if (lex_compat) {
 		if (C_plus_plus)
@@ -959,6 +967,7 @@ void flexinit (int argc, char **argv)
 	yymore_really_used = reject_really_used = unspecified;
 	interactive = csize = unspecified;
 	do_yywrap = gen_line_dirs = usemecs = useecs = true;
+	do_main = false;
 	reentrant = bison_bridge_lval = bison_bridge_lloc = false;
 	performance_report = 0;
 	did_outfilename = 0;
@@ -1129,11 +1138,12 @@ void flexinit (int argc, char **argv)
 
 		case OPT_MAIN:
 			buf_strdefine (&userdef_buf, "YY_MAIN", "1");
-			do_yywrap = false;
+			do_main = true;
 			break;
 
 		case OPT_NO_MAIN:
 			buf_strdefine (&userdef_buf, "YY_MAIN", "0");
+			do_main = false;
 			break;
 
 		case OPT_NO_LINE:

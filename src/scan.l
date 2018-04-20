@@ -393,12 +393,7 @@ M4QEND      "]""]"
 	lex-compat	lex_compat = option_sense;
 	posix-compat	posix_compat = option_sense;
 	line		gen_line_dirs = option_sense;
-	main		{
-			ACTION_M4_IFDEF( "M4""_YY_MAIN", option_sense);
-            /* Override yywrap */
-            if( option_sense == true )
-                do_yywrap = false;
-			}
+	main		do_main = option_sense;
 	meta-ecs	usemecs = option_sense;
 	never-interactive	{
 			ACTION_M4_IFDEF( "M4""_YY_NEVER_INTERACTIVE", option_sense );

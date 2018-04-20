@@ -383,6 +383,7 @@ extern int trace_hex;
  * outfilename - name of output file
  * headerfilename - name of the .h file to generate
  * did_outfilename - whether outfilename was explicitly set
+ * do_main - create a default main function
  * prefix - the prefix used for externally visible names ("yy" by default)
  * yyclass - yyFlexLexer subclass to use for YY_DECL
  * do_stdinit - whether to initialize yyin/yyout to stdin/stdout
@@ -409,6 +410,7 @@ extern char *infilename, *outfilename, *headerfilename;
 extern int did_outfilename;
 extern char *prefix, *yyclass, *extra_type;
 extern int do_stdinit, use_stdout;
+extern int do_main;
 extern char **input_files;
 extern int num_input_files;
 extern char *program_name;
