@@ -3412,9 +3412,9 @@ int main ()
 
 %if-reentrant
     yyscan_t lexer;
-    yylex_init(&lexer);
+    yylex_init( &lexer );
     yylex( lexer );
-    yylex_destroy( lexer);
+    yylex_destroy( lexer );
 
 %endif
 %if-not-reentrant
