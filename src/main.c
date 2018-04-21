@@ -839,6 +839,9 @@ void flexend (int exit_status)
 		if (strcmp (prefix, "yy"))
 			fprintf (stderr, " -P%s", prefix);
 
+		if (do_main)
+			fputs(" --main", stderr);
+
 		putc ('\n', stderr);
 
 		fprintf (stderr, _("  %d/%d NFA states\n"),
