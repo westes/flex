@@ -56,7 +56,7 @@ int error = 0;
         yyterminate();
     }
     testpush_buffer_state( yy_create_buffer( yyin, YY_BUF_SIZE ));
-    BEGIN(0);
+    BEGIN(INITIAL);
     }
 .|\n  {
     fprintf(stderr,"Invalid input \"%s\".\n", yytext);
