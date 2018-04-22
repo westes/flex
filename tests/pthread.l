@@ -64,11 +64,11 @@ static int process_text(char* s, yyscan_t  scanner);
 <INITIAL>[[:digit:]]+ { BEGIN(STATE_1); process_text(yytext,yyscanner); return NUMBER; }
 <INITIAL>[[:alpha:]]+ { BEGIN(STATE_2); process_text(yytext,yyscanner); return WORD; }
 
-<STATE_1>[[:alpha:]]+ { BEGIN(0); process_text(yytext,yyscanner); return WORD; }
-<STATE_1>[[:digit:]]+ { BEGIN(0); process_text(yytext,yyscanner); return NUMBER; }
+<STATE_1>[[:alpha:]]+ { BEGIN(INITIAL); process_text(yytext,yyscanner); return WORD; }
+<STATE_1>[[:digit:]]+ { BEGIN(INITIAL); process_text(yytext,yyscanner); return NUMBER; }
 
-<STATE_2>[[:alpha:]]+ { BEGIN(0); process_text(yytext,yyscanner); return WORD; }
-<STATE_2>[[:digit:]]+ { BEGIN(0); process_text(yytext,yyscanner); return NUMBER; }
+<STATE_2>[[:alpha:]]+ { BEGIN(INITIAL); process_text(yytext,yyscanner); return WORD; }
+<STATE_2>[[:digit:]]+ { BEGIN(INITIAL); process_text(yytext,yyscanner); return NUMBER; }
 
 <INITIAL,STATE_1,STATE_2>" "|\t|\r|\n { process_text(yytext,yyscanner); }
 <INITIAL,STATE_1,STATE_2>[^[:alnum:][:space:]\t\r\n] {
