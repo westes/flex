@@ -123,6 +123,17 @@ extern const char *escaped_qstart, *escaped_qend;
     if (!indented_code) line_directive_out(NULL, 0);\
 } while (0)
 
+/* define option flag and throw warning if redefined */
+#define OPTION_DEF_TEST(_do, _op)  do {                     \
+        if ( _do == option_unspecified )                    \
+            _do = _op;                                      \
+        else if ( _do != _op )                              \
+            format_warn(_("%%option '%s' redefined and "    \
+                "toggled to '%s'")                          \
+                , yytext                                    \
+                , (_do = _op) ? _("true") : _("false") );   \
+    } while(0)
+
 %}
 
 %option caseless nodefault noreject stack noyy_top_state
@@ -393,7 +404,7 @@ M4QEND      "]""]"
 	lex-compat	lex_compat = option_sense;
 	posix-compat	posix_compat = option_sense;
 	line		gen_line_dirs = option_sense;
-	main		do_main = option_sense;
+	main		OPTION_DEF_TEST(do_main, option_sense);
 	meta-ecs	usemecs = option_sense;
 	never-interactive	{
 			ACTION_M4_IFDEF( "M4""_YY_NEVER_INTERACTIVE", option_sense );

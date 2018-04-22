@@ -54,7 +54,7 @@ int     interactive, lex_compat, posix_compat, do_yylineno,
 int     fullspd, gen_line_dirs, performance_report, backing_up_report;
 int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
 	csize;
-int     do_main;
+enum option_e do_main;
 int     reentrant, bison_bridge_lval, bison_bridge_lloc;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
@@ -217,7 +217,7 @@ void check_options (void)
 	int     i;
     const char * m4 = NULL;
 
-	if ( do_main )
+	if ( do_main == option_true )
 	{
 		/* Override yywrap */
 		do_yywrap = false;
@@ -839,7 +839,7 @@ void flexend (int exit_status)
 		if (strcmp (prefix, "yy"))
 			fprintf (stderr, " -P%s", prefix);
 
-		if (do_main)
+		if ( do_main == option_true )
 			fputs(" --main", stderr);
 
 		putc ('\n', stderr);
@@ -970,7 +970,7 @@ void flexinit (int argc, char **argv)
 	yymore_really_used = reject_really_used = unspecified;
 	interactive = csize = unspecified;
 	do_yywrap = gen_line_dirs = usemecs = useecs = true;
-	do_main = false;
+	do_main = option_unspecified;
 	reentrant = bison_bridge_lval = bison_bridge_lloc = false;
 	performance_report = 0;
 	did_outfilename = 0;
@@ -1140,11 +1140,11 @@ void flexinit (int argc, char **argv)
             break;
 
 		case OPT_MAIN:
-			do_main = true;
+			do_main = option_true;
 			break;
 
 		case OPT_NO_MAIN:
-			do_main = false;
+			do_main = option_false;
 			break;
 
 		case OPT_NO_LINE:
