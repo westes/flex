@@ -1,4 +1,4 @@
-%option 8bit noyywrap
+%option 8bit noyywrap noinput nounput
 %%
 .|\n	{ ECHO;
    //' "
