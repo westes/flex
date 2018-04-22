@@ -65,7 +65,7 @@ int error = 0;
     testlex(scanner);
     testlex_destroy(scanner);
 
-    BEGIN(0);
+    BEGIN(INITIAL);
     }
 .|\n  {
     fprintf(stderr,"Invalid input \"%s\".\n", yytext);
