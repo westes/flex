@@ -969,7 +969,11 @@ extern void line_pinpoint(const char *, int);
 /* Report a formatted syntax error. */
 extern void format_synerr(const char *, const char *);
 extern void synerr(const char *);	/* report a syntax error */
-extern void format_warn(const char *, const char *);
+extern void format_warn(const char *fmt, ...)
+#if defined(__GNUC__) && __GNUC__ >= 3
+    __attribute__((__format__(__printf__, 1, 2)))
+#endif
+;
 extern void lwarn(const char *);	/* report a warning */
 extern void yyerror(const char *);	/* report a parse error */
 extern int yyparse(void);		/* the YACC parser */

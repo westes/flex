@@ -1013,13 +1013,17 @@ void synerr( const char *str )
 
 /* format_warn - write out formatted warning */
 
-void format_warn( const char *msg, const char arg[] )
-	{
+void format_warn( const char *fmt, ...)
+{
 	char warn_msg[MAXLINE];
+	va_list ap;
 
-	snprintf( warn_msg, sizeof(warn_msg), msg, arg );
+	va_start(ap,fmt);
+	vsnprintf( warn_msg, sizeof(warn_msg), fmt, ap );
+	va_end(ap);
+
 	lwarn( warn_msg );
-	}
+}
 
 
 /* lwarn - report a warning, unless -w was given */
