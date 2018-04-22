@@ -24,7 +24,7 @@
 
 %}
 
-%option 8bit prefix="S2_"
+%option c++ 8bit prefix="S2_"
 %option nounput nomain
 %option warn stack noyy_top_state
 
