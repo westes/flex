@@ -33,7 +33,7 @@ static char* STRDUP(char* s1);
 
 %option 8bit prefix="test"
 %option reentrant bison-bridge bison-locations yylineno
-%option header="bison_yylloc_scanner.h"
+%option header-file="bison_yylloc_scanner.h"
 %option nomain nounput noyy_top_state noyywrap nodefault noinput warn
 
 
