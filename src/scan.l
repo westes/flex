@@ -123,6 +123,14 @@ extern const char *escaped_qstart, *escaped_qend;
     if (!indented_code) line_directive_out(NULL, 0);\
 } while (0)
 
+/* macro mimiques yylineno treatment */
+#define LINENUM_UPDATE do {				\
+    int _yy1;							\
+    for(_yy1=0; _yy1 < yyleng; _yy1++)	\
+        if( yytext[_yy1] == '\n' )		\
+            linenum++;					\
+} while (0)
+
 %}
 
 %option caseless nodefault noreject stack noyy_top_state
@@ -159,6 +167,9 @@ LEXOPT		[aceknopr]
 
 M4QSTART    "[""["
 M4QEND      "]""]"
+
+ /* c-comment, potentially multiline */
+C_COMMENT	[/][*]+([^*]|([*][^/]))*[*]+[/]
 
 %%
 	static int bracelevel, didadef, indented_code;
@@ -274,8 +285,9 @@ M4QEND      "]""]"
 }
 
 <CODEBLOCK>{
+	{C_COMMENT}	  LINENUM_UPDATE;  add_action(M4QEND); ACTION_ECHO; add_action(M4QSTART);
 	^"%}".*{NL}	++linenum; END_CODEBLOCK;
-	[^\n%\[\]]*         ACTION_ECHO;
+	[^\n%\[\]/]+   ACTION_ECHO;
         .		ACTION_ECHO;
 	{NL}		{
 			++linenum;

@@ -72,6 +72,9 @@ simple_tests = \
 	c_cxx_nr \
 	c_cxx_r \
 	ccl \
+	c-comment-section1-option \
+	comment_with_code_block_closing_tags1 \
+	comment_with_code_block_closing_tags2 \
 	cxx_basic \
 	cxx_multiple_scanners \
 	cxx_restart \
@@ -142,6 +145,9 @@ endif
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
 ccl_SOURCES = ccl.l
+c_comment_section1_option_SOURCES =	c-comment-section1-option.l
+comment_with_code_block_closing_tags1_SOURCES =	comment_with_code_block_closing_tags1.l
+comment_with_code_block_closing_tags2_SOURCES =	comment_with_code_block_closing_tags2.l
 cxx_basic_SOURCES = cxx_basic.ll
 cxx_restart_SOURCES = cxx_restart.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
@@ -213,6 +219,9 @@ CLEANFILES = \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
 	ccl.c \
+	c-comment-section1-option.s \
+	comment_with_code_block_closing_tags1.c \
+	comment_with_code_block_closing_tags2.c \
 	cxx_basic.cc \
 	cxx_multiple_scanners_1.cc \
 	cxx_multiple_scanners_2.cc \
@@ -283,6 +292,7 @@ EXTRA_DIST = \
 	c_cxx_nr.txt \
 	c_cxx_r.txt \
 	ccl.txt \
+	c-comment-section1-option.txt \
 	cxx_basic.txt \
 	cxx_multiple_scanners.txt \
 	cxx_restart.txt \

@@ -27,6 +27,7 @@ c_cxx_r
 c_cxx_r.cc
 ccl
 ccl.c
+comment_with_code_block_closing_tags[12].c
 cxx_basic
 cxx_basic.cc
 cxx_multiple_scanners
