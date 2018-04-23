@@ -29,7 +29,7 @@
 
 %}
 
-%option header="multiple_scanners_nr_1.h"
+%option header-file="multiple_scanners_nr_1.h"
 %option 8bit prefix="S1_"
 %option nounput nomain noyywrap noinput
 %option warn stack noyy_top_state
