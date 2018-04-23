@@ -103,3 +103,4 @@ tableopts_*.c
 *.opt
 *.ser
 *.ver
+*.exe
