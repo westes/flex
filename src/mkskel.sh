@@ -32,6 +32,10 @@ VERSION=$4
 case $VERSION in
    *[!0-9.]*) echo 'Invalid version number' >&2; exit 1;;
 esac
+
+# '\r' in sed is not portable (e.g. to BSD sed)
+cr=`printf '\015'`
+
 IFS=.
 # we do want word splitting, so we won't put double quotes around it (see IFS above)
 # shellcheck disable=2086
@@ -46,4 +50,5 @@ sed '/^%#/d
 s/m4_/m4preproc_/g
 s/a4_/4_/g
 s/[\\"]/\\&/g
-s/[^\r]*/  "&",/'
+s/'"$cr"'$//
+s/.*/  "&",/'
