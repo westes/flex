@@ -97,7 +97,7 @@ string_r
 string_r.c
 top
 top.[ch]
-top[1-6].c
+top[1-7].c
 yyextra
 yyextra.c
 tableopts_*.c

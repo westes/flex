@@ -569,6 +569,9 @@ pairings of @samp{%@{} and @samp{%@}}, where the closing @samp{%@}}
 is not required to be unindented or on a separate code line, while
 @code{%top%@{} must not be indented.
 
+Alternatively, the @code{%top} block can be closed by an unindented
+@samp{%@}}.
+
 @node Rules Section, User Code Section, Definitions Section, Format
 @section Format of the Rules Section
 

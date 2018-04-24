@@ -99,6 +99,7 @@ simple_tests = \
 	top4 \
 	top5 \
 	top6 \
+	top7 \
 	yyextra
 
 reject_tests = \
@@ -192,6 +193,7 @@ top3_SOURCES = top3.l
 top4_SOURCES = top4.l
 top5_SOURCES = top5.l
 top6_SOURCES = top6.l
+top7_SOURCES = top7.l
 nodist_top_SOURCES = top.h
 yyextra_SOURCES = yyextra.l
 
@@ -278,6 +280,7 @@ CLEANFILES = \
 	top4.c \
 	top5.c \
 	top6.c \
+	top7.c \
 	yyextra.c \
 	$(tableopts_c) \
 	$(tableopts_tables)

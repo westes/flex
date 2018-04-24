@@ -137,7 +137,7 @@ extern const char *escaped_qstart, *escaped_qend;
 
 %x SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
 %x FIRSTCCL CCL ACTION RECOVER COMMENT ACTION_STRING PERCENT_BRACE_ACTION
-%x OPTION LINEDIR CODEBLOCK_MATCH_BRACE
+%x OPTION LINEDIR CODEBLOCK_TOP
 %x GROUP_WITH_PARAMS
 %x GROUP_MINUS_PARAMS
 %x EXTENDED_COMMENT
@@ -195,7 +195,7 @@ STRING_LITERAL   \"(\\\"|\\{NL}|[^"\r\n])*\"
                 ++linenum;
                 buf_linedir( &top_buf, infilename?infilename:"<stdin>", linenum);
                 brace_depth = 1;
-                yy_push_state(CODEBLOCK_MATCH_BRACE);
+                yy_push_state(CODEBLOCK_TOP);
             }
 
     ^"%top".*   synerr( _("malformed '%top' directive") );
@@ -297,7 +297,7 @@ STRING_LITERAL   \"(\\\"|\\{NL}|[^"\r\n])*\"
 			}
 }
 
-<CODEBLOCK_MATCH_BRACE>{
+<CODEBLOCK_TOP>{
     "'}'"      |
     "'{'"      |
     [^{}\r\n]  |
@@ -305,6 +305,8 @@ STRING_LITERAL   \"(\\\"|\\{NL}|[^"\r\n])*\"
 
     {STRING_LITERAL}  |
     {C_COMMENT}     LINENUM_UPDATE; buf_strnappend(&top_buf, yytext, yyleng);
+
+    ^"%}"      buf_strnappend(&top_buf, "\n", 1); yy_pop_state();
 
     "}"     {
                 if( --brace_depth == 0){
