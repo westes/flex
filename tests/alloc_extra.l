@@ -50,7 +50,7 @@ static void check_extra ( yyscan_t  scanner );
 %option warn
 %option extra-type="struct Check *"
 %option reentrant
-%option noyyalloc
+%option noyyalloc noyycalloc
 
 
 %%
@@ -97,6 +97,11 @@ void *testalloc(size_t size, yyscan_t scanner)
     check_extra(scanner);
 
     return malloc(size);
+}
+
+void* yycalloc(size_t n, size_t bytes, yyscan_t yyscanner)
+{
+	return yyalloc( n * bytes, yyscanner );
 }
 
 /* Save char into junk array at next position. */

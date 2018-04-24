@@ -42,7 +42,7 @@
 %option 8bit prefix="test"
 %option nounput nomain noyywrap noinput noyy_top_state
 %option warn stack nodefault
-%option noyyalloc noyyrealloc noyyfree
+%option noyyalloc noyycalloc noyyrealloc noyyfree
 
 %x parens
 
@@ -112,6 +112,11 @@ void * yyalloc(yy_size_t n)
     printf("yyflex_alloc(%8ld) total=%8ld return=%#10lx\n",(long)n,(long)total_mem,(long)p);
     dump_mem(stdout);
     return p;
+}
+
+void* yycalloc(size_t n, size_t bytes)
+{
+	return yyalloc( n * bytes );
 }
 
 void * yyrealloc(void* p, yy_size_t n)

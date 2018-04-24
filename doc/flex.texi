@@ -4358,7 +4358,7 @@ from within the scanner itself. They are defined as follows:
 
 In addition, an extra form of @code{yylex_init} is provided,
 @code{yylex_init_extra}. This function is provided so that the yyextra value can
-be accessed from within the very first yyalloc, used to allocate
+be accessed from within the very first yycalloc, used to allocate
 the scanner itself.
 
 By default, @code{YY_EXTRA_TYPE} is defined as type @code{void *}.  You

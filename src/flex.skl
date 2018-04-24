@@ -2013,7 +2013,7 @@ static void yy_load_buffer_state  (M4_YY_DEF_ONLY_ARG)
 	YY_BUFFER_STATE b;
     m4_dnl M4_YY_DECL_GUTS_VAR();
 
-	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
+	b = (YY_BUFFER_STATE) yycalloc( 1, sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 
@@ -2251,14 +2251,11 @@ void yyFlexLexer::yyensure_buffer_stack(void)
 		 * immediate realloc on the next call.
          */
       num_to_alloc = 1; /* After all that talk, this was set to 1 anyways... */
-		YY_G(yy_buffer_stack) = (struct yy_buffer_state**)yyalloc
-								(num_to_alloc * sizeof(struct yy_buffer_state*)
+		YY_G(yy_buffer_stack) = (struct yy_buffer_state**)yycalloc
+								(num_to_alloc, sizeof(struct yy_buffer_state*)
 								M4_YY_CALL_LAST_ARG);
 		if ( ! YY_G(yy_buffer_stack) )
 			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
-
-
-		memset(YY_G(yy_buffer_stack), 0, num_to_alloc * sizeof(struct yy_buffer_state*));
 
 		YY_G(yy_buffer_stack_max) = num_to_alloc;
 		YY_G(yy_buffer_stack_top) = 0;
@@ -2308,18 +2305,14 @@ YY_BUFFER_STATE yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 		/* They forgot to leave room for the EOB's. */
 		return NULL;
 
-	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
+	b = (YY_BUFFER_STATE) yycalloc(1, sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
 
 	b->yy_buf_size = (int) (size - 2);	/* "- 2" to take care of EOB's */
 	b->yy_buf_pos = b->yy_ch_buf = base;
-	b->yy_is_our_buffer = 0;
-	b->yy_input_file = NULL;
 	b->yy_n_chars = b->yy_buf_size;
-	b->yy_is_interactive = 0;
 	b->yy_at_bol = 1;
-	b->yy_fill_buffer = 0;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
 	yy_switch_to_buffer( b M4_YY_CALL_LAST_ARG );
@@ -2769,15 +2762,17 @@ int yylex_init(yyscan_t* ptr_yy_globals)
         return 1;
     }
 
-    *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), NULL );
+    *ptr_yy_globals = (yyscan_t) yycalloc ( 1, sizeof( struct yyguts_t ), NULL );
 
     if (*ptr_yy_globals == NULL){
         errno = ENOMEM;
         return 1;
     }
 
-    /* By setting to 0xAA, we expose bugs in yy_init_globals. Leave at 0x00 for releases. */
-    memset(*ptr_yy_globals,0x00,sizeof(struct yyguts_t));
+    #if 0
+    /* Debug mode - By setting to 0xAA, we expose bugs in yy_init_globals. */
+    memset(*ptr_yy_globals,0xAA,sizeof(struct yyguts_t));
+    #endif
 
     return yy_init_globals ( *ptr_yy_globals );
 }
@@ -2801,16 +2796,17 @@ int yylex_init_extra( YY_EXTRA_TYPE yy_user_defined, yyscan_t* ptr_yy_globals )
         return 1;
     }
 
-    *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), &dummy_yyguts );
+    *ptr_yy_globals = (yyscan_t) yycalloc ( 1, sizeof( struct yyguts_t ), &dummy_yyguts );
 
     if (*ptr_yy_globals == NULL){
         errno = ENOMEM;
         return 1;
     }
 
-    /* By setting to 0xAA, we expose bugs in
-    yy_init_globals. Leave at 0x00 for releases. */
-    memset(*ptr_yy_globals,0x00,sizeof(struct yyguts_t));
+    #if 0
+    /* Debug mode - By setting to 0xAA, we expose bugs in yy_init_globals. */
+    memset(*ptr_yy_globals,0xAA,sizeof(struct yyguts_t));
+    #endif
 
     yyset_extra (yy_user_defined, *ptr_yy_globals);
 
