@@ -484,7 +484,11 @@ void check_options (void)
 
     /* Dump the %top code. */
     if( top_buf.elts)
+    {
+        if( ddebug )
+            out(" /* top code section(s) */\n\n");
         outn((char*) top_buf.elts);
+    }
 
     /* Dump the m4 definitions. */
     buf_print_strings(&m4defs_buf, stdout);
