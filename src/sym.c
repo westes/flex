@@ -40,7 +40,7 @@
  */
 
 struct hash_entry {
-	struct hash_entry *prev, *next;
+	struct hash_entry *next;
 	char   *name;
 	char   *str_val;
 	int     int_val;
@@ -75,7 +75,6 @@ static int addsym (const char *sym, const char *str_def, int int_def, hash_table
 	size_t hash_val = hashfunct (sym, table_size);
 	struct hash_entry *sym_entry = table[hash_val];
 	struct hash_entry *new_entry;
-	struct hash_entry *successor;
 
 	while (sym_entry) {
 		if (!strcmp (sym, sym_entry->name)) {	/* entry already exists */
@@ -91,14 +90,7 @@ static int addsym (const char *sym, const char *str_def, int int_def, hash_table
 	if (new_entry == NULL)
 		flexfatal (_("symbol table memory allocation failed"));
 
-	if ((successor = table[hash_val]) != 0) {
-		new_entry->next = successor;
-		successor->prev = new_entry;
-	}
-	else
-		new_entry->next = NULL;
-
-	new_entry->prev = NULL;
+	new_entry->next = table[hash_val];
 	new_entry->name = xstrdup(sym);
 	if (str_def == NULL) {
 		new_entry->str_val = NULL;
@@ -141,7 +133,7 @@ int     ccllookup (char ccltxt[])
 static struct hash_entry *findsym (const char *sym, hash_table table, size_t table_size)
 {
 	static struct hash_entry empty_entry = {
-		NULL, NULL, NULL, NULL, 0,
+		NULL, NULL, NULL, 0,
 	};
 	struct hash_entry *sym_entry =
 
