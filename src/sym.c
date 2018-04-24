@@ -59,7 +59,7 @@ static struct hash_entry *ccltab[CCL_HASH_SIZE];
 
 /* declare functions that have forward references */
 
-static int addsym(char[], char *, int, hash_table, int);
+static int addsym(const char *, const char *, int, hash_table, int);
 static struct hash_entry *findsym (const char *sym, hash_table table,
 				   int table_size);
 static int hashfunct(const char *, int);
@@ -70,7 +70,7 @@ static int hashfunct(const char *, int);
  * -1 is returned if the symbol already exists, and the change not made.
  */
 
-static int addsym (char sym[], char *str_def, int int_def, hash_table table, int table_size)
+static int addsym (const char *sym, const char *str_def, int int_def, hash_table table, int table_size)
 {
 	int    hash_val = hashfunct (sym, table_size);
 	struct hash_entry *sym_entry = table[hash_val];
@@ -99,8 +99,12 @@ static int addsym (char sym[], char *str_def, int int_def, hash_table table, int
 		new_entry->next = NULL;
 
 	new_entry->prev = NULL;
-	new_entry->name = sym;
-	new_entry->str_val = str_def;
+	new_entry->name = xstrdup(sym);
+	if (str_def == NULL) {
+		new_entry->str_val = NULL;
+	} else {
+		new_entry->str_val = xstrdup(str_def);
+	}
 	new_entry->int_val = int_def;
 
 	table[hash_val] = new_entry;
@@ -117,8 +121,7 @@ void    cclinstal (char ccltxt[], int cclnum)
 	 * called unless the symbol is new.
 	 */
 
-	(void) addsym (xstrdup(ccltxt),
-		       (char *) 0, cclnum, ccltab, CCL_HASH_SIZE);
+	(void) addsym(ccltxt, NULL, cclnum, ccltab, CCL_HASH_SIZE);
 }
 
 
@@ -176,11 +179,9 @@ static int hashfunct (const char *str, int hash_size)
 
 void    ndinstal (const char *name, char definition[])
 {
-
-	if (addsym (xstrdup(name),
-		    xstrdup(definition), 0,
-		    ndtbl, NAME_TABLE_HASH_SIZE))
-			synerr (_("name defined twice"));
+	if (addsym(name, definition, 0, ndtbl, NAME_TABLE_HASH_SIZE)) {
+		synerr (_("name defined twice"));
+	}
 }
 
 
@@ -223,13 +224,11 @@ void    scinstal (const char *str, int xcluflg)
 	if (++lastsc >= current_max_scs)
 		scextend ();
 
-	scname[lastsc] = xstrdup(str);
-
-	if (addsym(scname[lastsc], NULL, lastsc,
-		    sctbl, START_COND_HASH_SIZE))
-			format_pinpoint_message (_
-						 ("start condition %s declared twice"),
-str);
+	if (addsym(str, NULL, lastsc, sctbl, START_COND_HASH_SIZE)) {
+		format_pinpoint_message (
+			_("start condition %s declared twice"), str);
+	}
+	scname[lastsc] = sctbl[hashfunct(str, START_COND_HASH_SIZE)]->name;
 
 	scset[lastsc] = mkstate (SYM_EPSILON);
 	scbol[lastsc] = mkstate (SYM_EPSILON);
