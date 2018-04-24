@@ -52,9 +52,9 @@ typedef struct hash_entry **hash_table;
 #define START_COND_HASH_SIZE 101
 #define CCL_HASH_SIZE 101
 
-static struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
-static struct hash_entry *sctbl[START_COND_HASH_SIZE];
-static struct hash_entry *ccltab[CCL_HASH_SIZE];
+static struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE] = {NULL};
+static struct hash_entry *sctbl[START_COND_HASH_SIZE] = {NULL};
+static struct hash_entry *ccltab[CCL_HASH_SIZE] = {NULL};
 
 
 /* declare functions that have forward references */
