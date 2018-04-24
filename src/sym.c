@@ -59,10 +59,10 @@ static struct hash_entry *ccltab[CCL_HASH_SIZE] = {NULL};
 
 /* declare functions that have forward references */
 
-static int addsym(const char *, const char *, int, hash_table, int);
+static int addsym(const char *, const char *, int, hash_table, size_t);
 static struct hash_entry *findsym (const char *sym, hash_table table,
-				   int table_size);
-static int hashfunct(const char *, int);
+				   size_t table_size);
+static size_t hashfunct(const char *, size_t);
 
 
 /* addsym - add symbol and definitions to symbol table
@@ -70,9 +70,9 @@ static int hashfunct(const char *, int);
  * -1 is returned if the symbol already exists, and the change not made.
  */
 
-static int addsym (const char *sym, const char *str_def, int int_def, hash_table table, int table_size)
+static int addsym (const char *sym, const char *str_def, int int_def, hash_table table, size_t table_size)
 {
-	int    hash_val = hashfunct (sym, table_size);
+	size_t hash_val = hashfunct (sym, table_size);
 	struct hash_entry *sym_entry = table[hash_val];
 	struct hash_entry *new_entry;
 	struct hash_entry *successor;
@@ -138,7 +138,7 @@ int     ccllookup (char ccltxt[])
 
 /* findsym - find symbol in symbol table */
 
-static struct hash_entry *findsym (const char *sym, hash_table table, int table_size)
+static struct hash_entry *findsym (const char *sym, hash_table table, size_t table_size)
 {
 	static struct hash_entry empty_entry = {
 		NULL, NULL, NULL, NULL, 0,
@@ -158,15 +158,15 @@ static struct hash_entry *findsym (const char *sym, hash_table table, int table_
 
 /* hashfunct - compute the hash value for "str" and hash size "hash_size" */
 
-static int hashfunct (const char *str, int hash_size)
+static size_t hashfunct (const char *str, size_t hash_size)
 {
-	int hashval;
-	int locstr;
+	size_t hashval;
+	size_t locstr;
 
 	hashval = 0;
 	locstr = 0;
 
-	while (str[locstr]) {
+	while (str[locstr] != '\0') {
 		hashval = (hashval << 1) + (unsigned char) str[locstr++];
 		hashval %= hash_size;
 	}
