@@ -84,7 +84,7 @@ int     numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs,
 int     tecbck[CSIZE + 1];
 int     lastsc, *scset, *scbol, *scxclu, *sceof;
 int     current_max_scs;
-char  **scname;
+const char **scname;
 int     current_max_dfa_size, current_max_xpairs;
 int     current_max_template_xpairs, current_max_dfas;
 int     lastdfa, *nxt, *chk, *tnxt;
