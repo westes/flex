@@ -29,7 +29,6 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "config.h"
 
 /* Insanely small read buffer. This pretty much guarantees at least one realloc. */
 #ifdef YY_BUF_SIZE
@@ -171,8 +170,8 @@ main (void)
 
     yyin = stdin;
     yyout = stdout;
-    testlex();
-    testlex_destroy();
+    yylex();
+    yylex_destroy();
     free(ptrs);
 
     if ( nptrs > 0 || total_mem > 0){
