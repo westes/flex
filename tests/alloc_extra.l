@@ -30,8 +30,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "config.h"
-
 
 /* We'll store the entire input in this buffer, growing as necessary. */
 struct Check {
@@ -71,25 +69,25 @@ main (void)
     check.bar = NULL;
     check.qux = 'z';
  
-    testlex_init_extra(&check, &scanner);
-    testset_in(stdin, scanner);
-    testset_out(stdout, scanner);
+    yylex_init_extra(&check, &scanner);
+    yyset_in(stdin, scanner);
+    yyset_out(stdout, scanner);
 
-    /* Test to confirm that testalloc was called from
-     * testlex_init_extra with the testextra argument.
+    /* Test to confirm that yyalloc was called from
+     * yylex_init_extra with the yyextra argument.
      */
     check_extra(scanner);
 
-    testlex(scanner);
+    yylex(scanner);
 
-    testlex_destroy(scanner);
+    yylex_destroy(scanner);
     return 0;
 }
 
-void *testalloc(size_t size, yyscan_t scanner)
+void *yyalloc(size_t size, yyscan_t scanner)
 {
     struct Check *check;
-    check = testget_extra(scanner);
+    check = yyget_extra(scanner);
 
     if (!check->bar)
         check->bar = "Hello World";
@@ -108,7 +106,7 @@ void* yycalloc(size_t n, size_t bytes, yyscan_t yyscanner)
 static void check_extra(yyscan_t  scanner)
 {
     struct Check *check;
-    check = testget_extra(scanner);
+    check = yyget_extra(scanner);
 
     if (check->foo != 'a') {
         fprintf(stderr, "foo is not 'a'\n");
