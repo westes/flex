@@ -29,7 +29,6 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "config.h"
 
 /* Insanely small read buffer. This pretty much guarantees at least one realloc. */
 #ifdef YY_BUF_SIZE
@@ -85,7 +84,7 @@ static void dump_mem(FILE* fp){
     fprintf(fp,"}\n");
 }
 
-void * testalloc(yy_size_t n , void* yyscanner)
+void * yyalloc(yy_size_t n , yyscan_t yyscanner)
 {
     (void)yyscanner;
 
@@ -121,7 +120,7 @@ void* yycalloc(size_t n, size_t bytes, yyscan_t yyscanner)
 	return yyalloc( n * bytes, yyscanner );
 }
 
-void * testrealloc(void* p, yy_size_t n , void* yyscanner)
+void * yyrealloc(void* p, yy_size_t n, yyscan_t yyscanner)
 {
     (void)yyscanner;
 
@@ -144,7 +143,7 @@ void * testrealloc(void* p, yy_size_t n , void* yyscanner)
     exit(1);
 }
 
-void testfree(void* p , void* yyscanner)
+void yyfree(void* p , yyscan_t yyscanner)
 {
     (void)yyscanner;
 
@@ -176,11 +175,11 @@ main (void)
     ptrs  = calloc(1, sizeof(struct memsz));
     nptrs = 0;
 
-    testlex_init(&scanner);
-    testset_in(stdin,scanner);
-    testset_out(stdout,scanner);
-    testlex(scanner);
-    testlex_destroy(scanner);
+    yylex_init(&scanner);
+    yyset_in(stdin,scanner);
+    yyset_out(stdout,scanner);
+    yylex(scanner);
+    yylex_destroy(scanner);
     free(ptrs);
 
     if ( nptrs > 0 || total_mem > 0){
