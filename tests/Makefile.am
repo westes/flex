@@ -84,6 +84,7 @@ simple_tests = \
 	mem_r \
 	multiple_scanners_nr \
 	multiple_scanners_r \
+	option1 \
 	posix \
 	posixly_correct \
 	prefix_nr \
@@ -167,6 +168,7 @@ multiple_scanners_r_SOURCES = multiple_scanners_r_main.c multiple_scanners_r_1.l
 nodist_multiple_scanners_r_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
 posix_SOURCES = posix.l
 posixly_correct_SOURCES = posixly_correct.l
+option1_SOURCES = option1.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
 pthread_pthread_SOURCES = pthread.l
