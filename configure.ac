@@ -56,6 +56,24 @@ AC_PROG_LN_S
 AC_PROG_AWK
 AC_PROG_INSTALL
 
+#
+# check for func and var __attribute__(()) variations
+#
+AX_GCC_FUNC_ATTRIBUTE([alloc_size])
+AX_GCC_FUNC_ATTRIBUTE([always_inline])
+AX_GCC_FUNC_ATTRIBUTE([deprecated])
+AX_GCC_FUNC_ATTRIBUTE([format])
+AX_GCC_FUNC_ATTRIBUTE([format_arg])
+AX_GCC_FUNC_ATTRIBUTE([gnu_inline])
+AX_GCC_FUNC_ATTRIBUTE([malloc])
+AX_GCC_FUNC_ATTRIBUTE([nonnull])
+AX_GCC_FUNC_ATTRIBUTE([noreturn])
+AX_GCC_FUNC_ATTRIBUTE([unused])
+
+AX_GCC_VAR_ATTRIBUTE([deprecated])
+AX_GCC_VAR_ATTRIBUTE([unused])
+
+
 pkgconfigdir=${libdir}/pkgconfig
 AC_SUBST(pkgconfigdir)
 
