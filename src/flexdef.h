@@ -914,7 +914,7 @@ extern int intcmp(const void *, const void *);
 extern void check_char(int c);
 
 /* Replace upper-case letter to lower-case. */
-extern unsigned char clower(int);
+extern unsigned char clower(int) FLEX_ATTRIBUTE_FUNC_UNUSED;
 
 /* strdup() that fails fatally on allocation failures. */
 extern char *xstrdup(const char *);
@@ -989,7 +989,8 @@ extern void out_dec(const char *, int);
 extern void out_dec2(const char *, int, int);
 extern void out_hex(const char *, unsigned int);
 extern void out_str(const char *, const char *);
-extern void out_str3(const char *, const char *, const char *, const char *);
+extern void out_str3(const char *, const char *, const char *, const char *)
+    FLEX_ATTRIBUTE_FUNC_UNUSED;
 extern void out_str_dec(const char *, const char *, int);
 extern void outc(int);
 extern void outn(const char *);
