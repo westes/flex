@@ -97,7 +97,8 @@ extern  "C" {
  *   usage    - Text to be prepended to option list. May be NULL.
  * Return:  Always returns 0 (zero).
  */
-	int scanopt_usage (scanopt_t * scanner, FILE * fp, const char *usage);
+	int scanopt_usage (scanopt_t * scanner, FILE * fp, const char *usage)
+	FLEX_ATTRIBUTE_FUNC_UNUSED;
 #endif
 
 /* Scans command-line options in argv[].
