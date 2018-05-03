@@ -948,18 +948,10 @@ extern void flexfatal(const char *);
 #endif /* ! HAVE_DECL___func__ */
 
 /* Report an error message formatted  */
-extern void lerr(const char *, ...)
-#if defined(__GNUC__) && __GNUC__ >= 3
-    __attribute__((__format__(__printf__, 1, 2)))
-#endif
-;
+extern void lerr(const char *, ...) FLEX_ATTRIBUTE_FUNC_FORMAT_PRINTF(1,2);
 
 /* Like lerr, but also exit after displaying message. */
-extern void lerr_fatal(const char *, ...)
-#if defined(__GNUC__) && __GNUC__ >= 3
-    __attribute__((__format__(__printf__, 1, 2)))
-#endif
-;
+extern void lerr_fatal(const char *, ...) FLEX_ATTRIBUTE_FUNC_FORMAT_PRINTF(1,2);
 
 /* Spit out a "#line" statement. */
 extern void line_directive_out(FILE *, int);
