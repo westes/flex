@@ -97,6 +97,111 @@
 #define DEFAULT_CSIZE 128
 #endif
 
+/*
+    GCC attribute related macros
+*/
+
+ /* function attributes */
+
+#ifndef FLEX_ATTRIBUTE_FUNC_ALLOC_SIZE
+#ifdef HAVE_FUNC_ATTRIBUTE_ALLOC_SIZE
+#define FLEX_ATTRIBUTE_FUNC_ALLOC_SIZE(i_arg)    __attribute__((alloc_size(i_arg)))
+#else
+#define FLEX_ATTRIBUTE_FUNC_ALLOC_SIZE(i_arg)
+#endif
+#endif
+
+#ifndef FLEX_ATTRIBUTE_FUNC_ALWAYS_INLINE
+#ifdef HAVE_FUNC_ATTRIBUTE_ALWAYS_INLINE
+#define FLEX_ATTRIBUTE_FUNC_ALWAYS_INLINE       __attribute__((always_inline))
+#else
+#define FLEX_ATTRIBUTE_FUNC_ALWAYS_INLINE
+#endif
+#endif
+
+#ifndef FLEX_ATTRIBUTE_FUNC_DEPRECATED
+#ifdef HAVE_FUNC_ATTRIBUTE_DEPRECATED
+#define FLEX_ATTRIBUTE_FUNC_DEPRECATED(msg)     __attribute__((deprecated((msg))))
+#else
+#define FLEX_ATTRIBUTE_FUNC_DEPRECATED(msg)
+#endif
+#endif
+
+#ifndef FLEX_ATTRIBUTE_FUNC_FORMAT_PRINTF
+#ifdef HAVE_FUNC_ATTRIBUTE_FORMAT
+#define FLEX_ATTRIBUTE_FUNC_FORMAT_PRINTF(i_fmt,i_dots)    \
+                    __attribute__((format(printf, i_fmt, i_dots)))
+#else
+#define FLEX_ATTRIBUTE_FUNC_FORMAT_PRINTF(i_fmt,i_dots)
+#endif
+#endif
+
+#ifndef FLEX_ATTRIBUTE_FUNC_FORMAT_ARG
+#ifdef HAVE_FUNC_ATTRIBUTE_FORMAT_ARG
+#define FLEX_ATTRIBUTE_FUNC_FORMAT_ARG(i_fmt)      __attribute__((format_arg(i_fmt)))
+#else
+#define FLEX_ATTRIBUTE_FUNC_FORMAT_ARG(i_fmt)
+#endif
+#endif
+
+#ifndef FLEX_ATTRIBUTE_FUNC_GNU_INLINE
+#ifdef HAVE_FUNC_ATTRIBUTE_GNU_INLINE
+#define FLEX_ATTRIBUTE_FUNC_GNU_INLINE      __attribute__((gnu_inline))
+#else
+#define FLEX_ATTRIBUTE_FUNC_GNU_INLINE
+#endif
+#endif
+
+#ifndef FLEX_ATTRIBUTE_FUNC_MALLOC
+#ifdef HAVE_FUNC_ATTRIBUTE_MALLOC
+#define FLEX_ATTRIBUTE_FUNC_MALLOC          __attribute__((malloc))
+#else
+#define FLEX_ATTRIBUTE_FUNC_MALLOC
+#endif
+#endif
+
+#ifndef FLEX_ATTRIBUTE_FUNC_NONNULL
+#ifdef HAVE_FUNC_ATTRIBUTE_NONNULL
+#define FLEX_ATTRIBUTE_FUNC_NONNULL(i_arg) __attribute__((nonnull(i_arg)))
+#else
+#define FLEX_ATTRIBUTE_FUNC_NONNULL(i_arg)
+#endif
+#endif
+
+#ifndef FLEX_ATTRIBUTE_FUNC_NORETURN
+#ifdef HAVE_FUNC_ATTRIBUTE_NORETURN
+#define FLEX_ATTRIBUTE_FUNC_NORETURN        __attribute__((noreturn))
+#else
+#define FLEX_ATTRIBUTE_FUNC_NORETURN
+#endif
+#endif
+
+#ifndef FLEX_ATTRIBUTE_FUNC_UNUSED
+#ifdef HAVE_FUNC_ATTRIBUTE_UNUSED
+#define FLEX_ATTRIBUTE_FUNC_UNUSED          __attribute__((unused))
+#else
+#define FLEX_ATTRIBUTE_FUNC_UNUSED
+#endif
+#endif
+
+ /* variable attributes */
+#ifndef FLEX_ATTRIBUTE_VAR_DEPRECATED
+#ifdef HAVE_VAR_ATTRIBUTE_DEPRECATED
+#define FLEX_ATTRIBUTE_VAR_DEPRECATED       __attribute__((deprecated))
+#else
+#define FLEX_ATTRIBUTE_VAR_DEPRECATED
+#endif
+#endif
+
+#ifndef FLEX_ATTRIBUTE_VAR_UNUSED
+#ifdef HAVE_VAR_ATTRIBUTE_UNUSED
+#define FLEX_ATTRIBUTE_VAR_UNUSED           __attribute__((unused))
+#else
+#define FLEX_ATTRIBUTE_VAR_UNUSED
+#endif
+#endif
+
+
 /* Maximum line length we'll have to deal with. */
 #define MAXLINE 2048
 
