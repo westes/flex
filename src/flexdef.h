@@ -737,8 +737,16 @@ extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 extern int num_backing_up, bol_needed;
 
-void   *allocate_array(int, size_t);
-void   *reallocate_array(void *, int, size_t);
+void   *allocate_array(int, size_t)
+FLEX_ATTRIBUTE_FUNC_MALLOC
+FLEX_ATTRIBUTE_FUNC_ALLOC_SIZE(1)
+FLEX_ATTRIBUTE_FUNC_ALLOC_SIZE(2);
+
+void   *reallocate_array(void *, int, size_t)
+FLEX_ATTRIBUTE_FUNC_MALLOC
+FLEX_ATTRIBUTE_FUNC_NONNULL(1)
+FLEX_ATTRIBUTE_FUNC_ALLOC_SIZE(2)
+FLEX_ATTRIBUTE_FUNC_ALLOC_SIZE(3);
 
 #define allocate_integer_array(size) \
 	allocate_array(size, sizeof(int))
