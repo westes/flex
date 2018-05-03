@@ -1008,8 +1008,11 @@ extern void skelout(void);
 extern void transition_struct_out(int, int);
 
 /* Only needed when using certain broken versions of bison to build parse.c. */
-extern void *yy_flex_xmalloc(int);
-
+extern void *yy_flex_xmalloc(int)
+FLEX_ATTRIBUTE_FUNC_MALLOC
+FLEX_ATTRIBUTE_FUNC_ALLOC_SIZE(1)
+FLEX_ATTRIBUTE_FUNC_DEPRECATED("Deprecated since flex 2.6.4. To be obsoleted in flex 3.0.0")
+;
 
 /* from file nfa.c */
 
