@@ -38,8 +38,11 @@ dist_doc_DATA = \
 	README.md
 
 EXTRA_DIST = \
-	.indent.pro \
-	autogen.sh
+	.indent.pro
+
+dist_noinst_SCRIPTS = \
+	autogen.sh \
+	po/update_linguas.sh
 
 SUBDIRS = \
 	src \
