@@ -2478,7 +2478,13 @@ static void yynoreturn yy_fatal_error YYFARGS1(const char*, msg)
 {
 	M4_YY_DECL_GUTS_VAR();
 	M4_YY_NOOP_GUTS_VAR();
+m4_ifdef( [[M4_YY_USE_LINENO]],
+[[
+	fprintf( stderr, "fatal error in line %d: %s\n", yylineno, msg );
+]],
+[[
 	fprintf( stderr, "%s\n", msg );
+]])
 	exit( YY_EXIT_FAILURE );
 }
 %endif
