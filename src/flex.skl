@@ -1416,6 +1416,9 @@ do_action:	/* This label is used only to access EOF actions. */
 				yy_cp = YY_G(yy_c_buf_p);
 				yy_bp = YY_G(yytext_ptr) + YY_MORE_ADJ;
 				goto yy_find_action;
+
+			default:
+				break;
 			}
 		break;
 		}
