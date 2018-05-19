@@ -840,7 +840,9 @@ void transition_struct_out (int element_v, int element_n)
 	}
 }
 
-
+#if FLEX_CHECK_VERSION(3,0,0)
+#warning Remove function 'yy_flex_xmalloc' obsoleted from version 3.0.0 onwards.
+#else
 /* The following is only needed when building flex's parser using certain
  * broken versions of bison.
  *
@@ -857,7 +859,7 @@ void   *yy_flex_xmalloc (int size)
 
 	return result;
 }
-
+#endif
 
 /* Remove all '\n' and '\r' characters, if any, from the end of str.
  * str can be any null-terminated string, or NULL.

@@ -1020,11 +1020,15 @@ extern void skelout(void);
 /* Output a yy_trans_info structure. */
 extern void transition_struct_out(int, int);
 
+#if FLEX_CHECK_VERSION(3,0,0)
+#warning Remove function 'yy_flex_xmalloc' obsoleted from version 3.0.0 onwards.
+#else
 /* Only needed when using certain broken versions of bison to build parse.c. */
 extern void *yy_flex_xmalloc(int)
 FLEX_ATTRIBUTE_FUNC_MALLOC
 FLEX_ATTRIBUTE_FUNC_ALLOC_SIZE(1)
-FLEX_ATTRIBUTE_FUNC_DEPRECATED("Deprecated since flex 2.6.4. To be obsoleted in flex 3.0.0")
+FLEX_ATTRIBUTE_FUNC_DEPRECATED("Deprecated since flex 2.6.4. To be obsoleted in flex 3.0.0.")
+#endif
 ;
 
 /* from file nfa.c */
