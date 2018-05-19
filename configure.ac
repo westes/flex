@@ -24,8 +24,7 @@
 
 # autoconf requirements and initialization
 m4_define( [FLEX_VERSION], [2.6.4] )
-
-AC_INIT([the fast lexical analyser generator],[2.6.4],[flex-help@lists.sourceforge.net],[flex])
+AC_INIT([the fast lexical analyser generator],[FLEX_VERSION],[flex-help@lists.sourceforge.net],[flex])
 AC_PREREQ([2.60])
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
