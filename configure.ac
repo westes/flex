@@ -23,6 +23,7 @@
 # PURPOSE.
 
 # autoconf requirements and initialization
+m4_define( [FLEX_VERSION], [2.6.4] )
 
 AC_INIT([the fast lexical analyser generator],[2.6.4],[flex-help@lists.sourceforge.net],[flex])
 AC_PREREQ([2.60])
@@ -36,6 +37,20 @@ AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_MACRO_DIR([m4])
 SHARED_VERSION_INFO="2:0:0"
 AC_SUBST(SHARED_VERSION_INFO)
+
+#
+# split package version string (major.minor.subminor) into components
+#
+m4_define([RX_FLEX_VERSION],[^\([0-9]+\)\.\([0-9]+\)\.\([0-9]+\)])
+AC_DEFINE_UNQUOTED( [FLEX_VERSION_MAJOR],
+	[m4_bregexp( FLEX_VERSION, m4_defn([RX_FLEX_VERSION]), [\1])],
+	[major of flex version] )
+AC_DEFINE_UNQUOTED( [FLEX_VERSION_MINOR],
+	[m4_bregexp( FLEX_VERSION, m4_defn([RX_FLEX_VERSION]), [\2])],
+	[minor of flex version] )
+AC_DEFINE_UNQUOTED( [FLEX_VERSION_SUBMINOR],
+	[m4_bregexp( FLEX_VERSION, m4_defn([RX_FLEX_VERSION]), [\3])],
+	[subminor of flex version] )
 
 # checks for programs
 
