@@ -39,6 +39,19 @@
 #include <config.h>
 #endif
 
+
+/*  check if the current version is greater than or equal to major.minor.subminor */
+#if defined FLEX_VERSION_MAJOR && \
+	defined FLEX_VERSION_MINOR && \
+	defined FLEX_VERSION_SUBMINOR
+#define FLEX_CHECK_VERSION(major,minor,subminor) \
+	(FLEX_VERSION_MAJOR > (major) || \
+	(FLEX_VERSION_MAJOR == (major) && FLEX_VERSION_MINOR > (minor)) || \
+	(FLEX_VERSION_MAJOR == (major) && FLEX_VERSION_MINOR == (minor) && FLEX_VERSION_SUBMINOR >= (subminor)))
+#else
+#error Define FLEX_VERSION_MAJOR, FLEX_VERSION_MINOR and FLEX_VERSION_SUBMINOR (usually in config.h)
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
