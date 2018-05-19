@@ -22,8 +22,15 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
+#
+# flex version read from '.prev-version' and format checked
+#
+m4_define( [FLEX_VERSION], [m4_esyscmd_s([cat .prev-version])])
+m4_define( [RX_FLEX_VERSION], [^\([0-9]+\)\.\([0-9]+\)\.\([0-9]+\)$])
+m4_bmatch( FLEX_VERSION, m4_defn([RX_FLEX_VERSION]), [],
+          [m4_fatal( [Illegal flex version read from file '.prev-version'.] , [2])])
+
 # autoconf requirements and initialization
-m4_define( [FLEX_VERSION], [2.6.4] )
 AC_INIT([the fast lexical analyser generator],[FLEX_VERSION],[flex-help@lists.sourceforge.net],[flex])
 AC_PREREQ([2.60])
 AC_CONFIG_SRCDIR([src/scan.l])
@@ -40,7 +47,6 @@ AC_SUBST(SHARED_VERSION_INFO)
 #
 # split package version string (major.minor.subminor) into components
 #
-m4_define([RX_FLEX_VERSION],[^\([0-9]+\)\.\([0-9]+\)\.\([0-9]+\)])
 AC_DEFINE_UNQUOTED( [FLEX_VERSION_MAJOR],
 	[m4_bregexp( FLEX_VERSION, m4_defn([RX_FLEX_VERSION]), [\1])],
 	[major of flex version] )
