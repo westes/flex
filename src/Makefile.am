@@ -95,7 +95,9 @@ EXTRA_DIST = \
 	gettext.h \
 	chkskel.sh
 
-CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
+MOSTLYCLEANFILES = stage1scan.c
+
+CLEANFILES = stage1flex$(EXEEXT)
 
 BUILT_SOURCES = \
 	cpp-flex.h \
