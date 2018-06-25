@@ -715,7 +715,16 @@ void genftbl (void)
 
 void gen_next_compressed_state (char *char_map)
 {
-	indent_put2s ("YY_CHAR yy_c = %s;", char_map);
+	/* Formerly YY_CHAR, changed to int because table can now have up to
+	 * 0x101 entries, since we no longer generate a separate NUL table
+	 *
+	 * Note: on x86-64 architecture with gcc -O2, we save an instruction
+	 * in the main loop, since the character can now be zero-extended in
+	 * the process of retrieving it from the input stream or the yy_ec[]
+	 * or yy_meta[] arrays, whereas previously it was zero-extended by a
+	 * register-to-register move just prior to the yy_chk[] table lookup
+	 */
+	indent_put2s ("int yy_c = %s;", char_map);
 
 	/* Save the backing-up info \before/ computing the next state
 	 * because we always compute one more state than needed - we
