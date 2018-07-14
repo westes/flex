@@ -3,6 +3,7 @@
 *.o
 config.h
 config.h.in
+config_for_build.h
 flex
 libfl.pc
 parse.c

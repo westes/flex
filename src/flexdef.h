@@ -35,8 +35,12 @@
 #ifndef FLEXDEF_H
 #define FLEXDEF_H 1
 
-#ifdef HAVE_CONFIG_H
+#ifndef USE_CONFIG_FOR_BUILD
+# ifdef HAVE_CONFIG_H
 #include <config.h>
+# endif
+#else
+#include <config_for_build.h>
 #endif
 
 #include <stdio.h>
