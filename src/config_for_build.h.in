@@ -1,0 +1,81 @@
+/* config_for_build - minimal config header for bootstrapping flex */
+
+/*  This file is part of flex. */
+
+/*  Redistribution and use in source and binary forms, with or without */
+/*  modification, are permitted provided that the following conditions */
+/*  are met: */
+
+/*  1. Redistributions of source code must retain the above copyright */
+/*     notice, this list of conditions and the following disclaimer. */
+/*  2. Redistributions in binary form must reproduce the above copyright */
+/*     notice, this list of conditions and the following disclaimer in the */
+/*     documentation and/or other materials provided with the distribution. */
+
+/*  Neither the name of the University nor the names of its contributors */
+/*  may be used to endorse or promote products derived from this software */
+/*  without specific prior written permission. */
+
+/*  THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR */
+/*  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED */
+/*  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR */
+/*  PURPOSE. */
+
+/* The "config_for_build.h.in" file is intended to be processed by "configure"
+ * in order to produce working PACKAGE, VERSION and M4 definitions.
+ * Add "config_for_build.h.in" to AC_CONFIG_FILES. Do not add it to
+ * AC_CONFIG_HEADERS as it would break our intentional #undef's and mess up
+ * with the #define statements.
+ */
+#define PACKAGE "@PACKAGE@"
+#define VERSION "@VERSION@"
+#define M4 "@M4@"
+
+#undef ENABLE_NLS
+/* Flex includes <locale.h> only if NLS is enabled, but we undef it anyway. */
+#undef HAVE_LOCALE_H
+
+#undef HAVE_NETINET_IN_H
+#ifdef __has_include
+# if __has_include(<netinet/in.h>)
+#  define HAVE_NETINET_IN_H 1
+# endif
+#endif
+
+#undef HAVE_REALLOCARRAY
+#undef HAVE_REALLOCARR
+
+/* Always use malloc/realloc wrappers. */
+#undef malloc
+#define malloc rpl_malloc
+#undef realloc
+#define realloc rpl_realloc
+
+/* The Bison-generated parser in flex code controls the use of alloca() through
+ * its own macro (YYSTACK_USE_ALLOCA) and not defines from Autoconf.
+ * alloca() is not used in other parts of flex code.
+ */
+#undef HAVE_ALLOCA_H
+#undef HAVE_ALLOCA
+#undef C_ALLOCA
+
+/* HAVE_INTTYPES_H is defined by Autoconf but not used in flex code. Flex has
+ * flexint.h that provides fallback definitions.
+ */
+/*
+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
+# undef HAVE_INTTYPES_H
+#endif
+*/
+
+#undef HAVE_STDBOOL_H
+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
+# undef HAVE__BOOL
+#endif
+
+/* Standard C89 stuff which "configure" provides fallback #define's for. */
+#ifndef __STDC__
+# undef HAVE_LIMITS_H
+# define const /* const */
+# define size_t unsigned int
+#endif
