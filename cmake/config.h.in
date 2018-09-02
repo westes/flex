@@ -205,7 +205,7 @@
 #cmakedefine HAVE__BOOL
 
 /* Define to the m4 executable name. */
-#cmakedefine M4 "@M4@"
+#define M4 "@M4_PATH@"
 
 /* Name of package */
 #cmakedefine PACKAGE "@PACKAGE@"

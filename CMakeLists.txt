@@ -4,31 +4,82 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake")
 
 project(flex LANGUAGES C)
 
+# Create config.h
 include(make_config_h)
 
+# Build options
 option(ENABLE_NLS "Enable NLS" FALSE)
 option(ENABLE_C_ALLOCA "Enable alloca.c" FALSE)
 
-# GNU M4 macro processor
-# where vs which
-if(NOT M4)
-  set(M4 "/usr/bin/m4")
+# Locate M4 path if not set
+if(NOT M4_PATH)
+  if(UNIX OR APPLE)
+    set(SEARCH_CMD which)
+  elseif(MINGW OR CYGWIN OR WIN32)
+    set(SEARCH_CMD where)
+  endif()
+
+  execute_process(
+    COMMAND ${SEARCH_CMD} m4
+    OUTPUT_VARIABLE M4_PATH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
 endif()
+MESSAGE(STATUS "Using M4: ${M4_PATH}")
 
-file(GLOB sources src/*.c)
-include_directories(src)
-
+# compiler specifics
 if (CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   add_definitions(-D_GNU_SOURCE)
 elseif (CMAKE_C_COMPILER_ID MATCHES "MSVC")
   add_definitions(-D_CONSOLE -D_MBCS -D_CRT_SECURE_NO_WARNINGS)
-  list(REMOVE_ITEM sources ${CMAKE_CURRENT_SOURCE_DIR}/src/libmain.c)
-  list(REMOVE_ITEM sources ${CMAKE_CURRENT_SOURCE_DIR}/src/libyywrap.c)
 endif()
 
-find_package(Threads REQUIRED)
-if (CMAKE_USE_PTHREADS_INIT)
-  add_definitions(-DHAVE_PTHREAD)
-endif (CMAKE_USE_PTHREADS_INIT)
+# generate parse.c
+include(FindBISON)
+bison_target(parse src/parse.y ${CMAKE_BINARY_DIR}/gen/parse.c)
 
-add_executable(flex ${sources})
+# generate scan.c
+include(FindFLEX)
+FLEX_TARGET(scan src/scan.l ${CMAKE_BINARY_DIR}/gen/scan.c)
+
+# generate skel.c
+string(REPLACE ";" "" STRIPPED_VERSION "${VERSION}")
+include(FindUnixCommands)
+if(BASH)
+add_custom_command(
+  OUTPUT ${CMAKE_BINARY_DIR}/gen/skel.c
+  COMMAND ${BASH} -c "${CMAKE_SOURCE_DIR}/src/mkskel.sh ${CMAKE_SOURCE_DIR}/src ${M4_PATH} ${STRIPPED_VERSION}>skel.c"
+  DEPENDS ${CMAKE_SOURCE_DIR}/src/mkskel.sh
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/gen
+  COMMENT "[m4][flex.skl] Creating skel.c"
+)
+# TODO make this step target generic via CMake script
+endif()
+
+set(GENERATED_SOURCES
+  ${BISON_parse_OUTPUT_SOURCE} ${FLEX_scan_OUTPUTS}
+  ${CMAKE_BINARY_DIR}/gen/skel.c
+)
+
+# inlcude files
+include_directories(src)
+include_directories(${CMAKE_BINARY_DIR}/gen)
+
+# source files
+set(sources
+  src/buf.c src/ccl.c src/dfa.c src/ecs.c
+  src/scanflags.c src/filter.c src/flexdef.h
+  src/gen.c src/misc.c src/nfa.c
+  src/options.c src/options.h src/regex.c
+  src/scanopt.c src/scanopt.h src/sym.c
+  src/tables.c src/tables.h 
+  src/tables_shared.c src/tables_shared.h
+  src/tblcmp.c src/yylex.c
+)
+
+# command line
+add_executable(flex ${sources} src/main.c ${GENERATED_SOURCES})
+install(TARGETS flex DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+ if(UNIX AND NOT ANDROID)
+    target_link_libraries(flex -lm ${CMAKE_THREAD_LIBS_INIT})
+endif()

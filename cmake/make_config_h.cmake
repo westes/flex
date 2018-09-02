@@ -15,23 +15,15 @@ check_include_files(string.h HAVE_STRING_H)
 
 if(HAVE_DLFCN_H AND HAVE_STDINT_H AND HAVE_STDDEF_H AND HAVE_INITTYPES_H AND
    HAVE_STDLIB_H AND HAVE_STRINGS_H AND HAVE_STRING_H )
-	check_prototype_exists(memchr string.h memchrExists)
-	if(memchrExists)
-    check_prototype_exists(free stdlib.h freeExists)
-		if(freeExists)
-			message(STATUS "ANSI C header files - found")
-      set(STDC_HEADERS 1 CACHE INTERNAL "System has ANSI C header files")
-			#set(HAVE_STRINGS_H 1)
-			#set(HAVE_STRING_H 1)
-			#set(HAVE_STDLIB_H 1)
-			#set(HAVE_STDDEF_H 1)
-			#set(HAVE_STDINT_H 1)
-			#set(HAVE_INTTYPES_H 1)
-			#set(HAVE_DLFCN_H 1)
-		endif(freeExists)
-	endif(memchrExists)
+    check_function_exists(memchr string.h memchrExists)
+    if(memchrExists)
+      check_function_exists(free freeExists)
+      if(freeExists)
+        message(STATUS "ANSI C header files - found")
+        set(STDC_HEADERS 1 CACHE INTERNAL "System has ANSI C header files")
+      endif(freeExists)
+    endif(memchrExists)
 endif()
-
 
 
 check_function_exists(alloca HAVE_ALLOCA)
@@ -82,11 +74,15 @@ check_function_exists(only HAVE_ONLY)
 check_function_exists(OpenBSD HAVE_OPENBSD)
 check_function_exists(pow HAVE_POW)
 check_include_files(pthread.h HAVE_PTHREAD)
+find_package(Threads REQUIRED)
+if (CMAKE_USE_PTHREADS_INIT)
+  add_definitions(-DHAVE_PTHREAD)
+endif (CMAKE_USE_PTHREADS_INIT)
 check_function_exists(realloc HAVE_REALLOC)
 check_function_exists(reallocarray HAVE_REALLOCARRAY)
 check_function_exists(regcomp HAVE_REGCOMP)
 check_include_files(regex.h HAVE_REGEX_H)
-if(NOT HAVE_REGX_H)
+if(NOT HAVE_REGEX_H)
   #add_definitions(-D_LIBC)
   configure_file(${CMAKE_SOURCE_DIR}/cmake/regex.h ${CMAKE_SOURCE_DIR}/src/regex.h COPYONLY)
   #configure_file(${CMAKE_SOURCE_DIR}/cmake/regex.c ${CMAKE_SOURCE_DIR}/src/regex.c COPYONLY)
@@ -123,10 +119,6 @@ if(HAVE__BOOL_SIZE)
 else()
   set(HAVE__BOOL 0)
 endif()
-
-
-# Define to the m4 executable name.
-set(M4 "/usr/bin/m4")
 
 
 # Parse package info from configure.ac
@@ -230,5 +222,5 @@ if(NOT HOST_IS_BIG_ENDIAN)
 endif()
 
 
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/config.h.in ${CMAKE_SOURCE_DIR}/src/config.h @ONLY)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/config.h.in ${CMAKE_BINARY_DIR}/gen/config.h @ONLY)
 add_definitions(-DHAVE_CONFIG_H)
