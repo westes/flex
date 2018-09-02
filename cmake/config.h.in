@@ -1,0 +1,264 @@
+/* src/config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
+   systems. This function is required for `alloca.c' support on those systems.
+   */
+#cmakedefine CRAY_STACKSEG_END
+
+/* Define to 1 if using `alloca.c'. */
+#cmakedefine C_ALLOCA
+
+/* Define to 1 if translation of program messages to the user's native
+   language is requested. */
+#cmakedefine ENABLE_NLS @ENABLE_NLS@
+
+/* Define to 1 if you have `alloca', as a function or macro. */
+#cmakedefine HAVE_ALLOCA
+
+/* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
+   */
+#cmakedefine HAVE_ALLOCA_H
+
+/* Define to 1 if you have the `available.' function. */
+#cmakedefine HAVE_AVAILABLE_
+
+/* Define to 1 if you have the `by' function. */
+#cmakedefine HAVE_BY
+
+/* Define to 1 if you have the MacOS X function CFLocaleCopyCurrent in the
+   CoreFoundation framework. */
+#cmakedefine HAVE_CFLOCALECOPYCURRENT
+
+/* Define to 1 if you have the MacOS X function CFPreferencesCopyAppValue in
+   the CoreFoundation framework. */
+#cmakedefine HAVE_CFPREFERENCESCOPYAPPVALUE
+
+/* Define if the GNU dcgettext() function is already present or preinstalled.
+   */
+#cmakedefine HAVE_DCGETTEXT
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#cmakedefine HAVE_DLFCN_H
+
+/* Define to 1 if you have the `dnl' function. */
+#cmakedefine HAVE_DNL
+
+/* Define to 1 if you have the `dup2' function. */
+#cmakedefine HAVE_DUP2
+
+/* Define to 1 if you have the `enabled' function. */
+#cmakedefine HAVE_ENABLED
+
+/* Define to 1 if you have the `fork' function. */
+#cmakedefine HAVE_FORK
+
+/* Define to 1 if you have the `function.' function. */
+#cmakedefine HAVE_FUNCTION_
+
+/* Define if the GNU gettext() function is already present or preinstalled. */
+#cmakedefine HAVE_GETTEXT
+
+/* Define to 1 if you have the `have' function. */
+#cmakedefine HAVE_HAVE
+
+/* Define if you have the iconv() function and it works. */
+#cmakedefine HAVE_ICONV
+
+/* Define to 1 if you have the `if' function. */
+#cmakedefine HAVE_IF
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#cmakedefine HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `is' function. */
+#cmakedefine HAVE_IS
+
+/* Define to 1 if you have the <libintl.h> header file. */
+#cmakedefine HAVE_LIBINTL_H
+
+/* Define to 1 if you have the `m' library (-lm). */
+#cmakedefine HAVE_LIBM
+
+/* Define to 1 if you have the <limits.h> header file. */
+#cmakedefine HAVE_LIMITS_H
+
+/* Define to 1 if you have the <locale.h> header file. */
+#cmakedefine HAVE_LOCALE_H
+
+/* Define to 1 if your system has a GNU libc compatible `malloc' function, and
+   to 0 otherwise. */
+#cmakedefine HAVE_MALLOC
+
+/* Define to 1 if you have the <malloc.h> header file. */
+#cmakedefine HAVE_MALLOC_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#cmakedefine HAVE_MEMORY_H
+
+/* Define to 1 if you have the `memset' function. */
+#cmakedefine HAVE_MEMSET
+
+/* Define to 1 if you have the `Needed' function. */
+#cmakedefine HAVE_NEEDED
+
+/* Define to 1 if you have the <netinet/in.h> header file. */
+#cmakedefine HAVE_NETINET_IN_H
+
+/* Define to 1 if you have the `NLS' function. */
+#cmakedefine HAVE_NLS
+
+/* Define to 1 if you have the `not' function. */
+#cmakedefine HAVE_NOT
+
+/* Define to 1 if you have the `only' function. */
+#cmakedefine HAVE_ONLY
+
+/* Define to 1 if you have the `OpenBSD' function. */
+#cmakedefine HAVE_OPENBSD
+
+/* Define to 1 if you have the `pow' function. */
+#cmakedefine HAVE_POW
+
+/* Define to 1 if you have the <pthread.h> header file. */
+#cmakedefine HAVE_PTHREAD_H
+
+/* Define to 1 if your system has a GNU libc compatible `realloc' function,
+   and to 0 otherwise. */
+#cmakedefine HAVE_REALLOC
+
+/* Define to 1 if you have the `reallocarray' function. */
+#cmakedefine HAVE_REALLOCARRAY
+
+/* Define to 1 if you have the `regcomp' function. */
+#cmakedefine HAVE_REGCOMP
+
+/* Define to 1 if you have the <regex.h> header file. */
+#cmakedefine HAVE_REGEX_H
+
+/* Define to 1 if you have the `replacement' function. */
+#cmakedefine HAVE_REPLACEMENT
+
+/* Define to 1 if you have the `setlocale' function. */
+#cmakedefine HAVE_SETLOCALE
+
+/* Define to 1 if stdbool.h conforms to C99. */
+#cmakedefine HAVE_STDBOOL_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#cmakedefine HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#cmakedefine HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strcasecmp' function. */
+#cmakedefine HAVE_STRCASECMP
+
+/* Define to 1 if you have the `_stricmp' function. */
+#cmakedefine HAVE__STRICMP
+
+/* Define to 1 if you have the `strchr' function. */
+#cmakedefine HAVE_STRCHR
+
+/* Define to 1 if you have the `strdup' function. */
+#cmakedefine HAVE_STRDUP
+
+/* Define to 1 if you have the <strings.h> header file. */
+#cmakedefine HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#cmakedefine HAVE_STRING_H
+
+/* Define to 1 if you have the `strtol' function. */
+#cmakedefine HAVE_STRTOL
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#cmakedefine HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#cmakedefine HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <sys/wait.h> header file. */
+#cmakedefine HAVE_SYS_WAIT_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#cmakedefine HAVE_UNISTD_H
+
+/* Define to 1 if you have the `Used' function. */
+#cmakedefine HAVE_USED
+
+/* Define to 1 if you have the `vfork' function. */
+#cmakedefine HAVE_VFORK
+
+/* Define to 1 if you have the <vfork.h> header file. */
+#cmakedefine HAVE_VFORK_H
+
+/* Define to 1 if you have the `We' function. */
+#cmakedefine HAVE_WE
+
+/* Define to 1 if `fork' works. */
+#cmakedefine HAVE_WORKING_FORK
+
+/* Define to 1 if `vfork' works. */
+#cmakedefine HAVE_WORKING_VFORK
+
+/* Define to 1 if the system has the type `_Bool'. */
+#cmakedefine HAVE__BOOL
+
+/* Define to the m4 executable name. */
+#cmakedefine M4 "@M4@"
+
+/* Name of package */
+#cmakedefine PACKAGE "@PACKAGE@"
+
+/* Define to the address where bug reports for this package should be sent. */
+#cmakedefine PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
+
+/* Define to the full name of this package. */
+#cmakedefine PACKAGE_NAME "@PACKAGE_NAME@"
+
+/* Define to the full name and version of this package. */
+#cmakedefine PACKAGE_STRING "@PACKAGE_STRING@"
+
+/* Define to the one symbol short name of this package. */
+#cmakedefine PACKAGE_TARNAME "@PACKAGE_TARNAME@"
+
+/* Define to the home page for this package. */
+#cmakedefine PACKAGE_URL "@PACKAGE_URL@"
+
+/* Define to the version of this package. */
+#cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
+
+/* If using the C implementation of alloca, define if you know the
+   direction of stack growth for your system; otherwise it will be
+   automatically deduced at runtime.
+	STACK_DIRECTION > 0 => grows toward higher addresses
+	STACK_DIRECTION < 0 => grows toward lower addresses
+	STACK_DIRECTION = 0 => direction of growth unknown */
+#cmakedefine STACK_DIRECTION @STACK_DIRECTION@
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+#cmakedefine VERSION @VERSION@
+
+/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
+   `char[]'. */
+#cmakedefine YYTEXT_POINTER
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#cmakedefine const
+
+/* Define to rpl_malloc if the replacement function should be used. */
+#cmakedefine malloc
+
+/* Define to `int' if <sys/types.h> does not define. */
+#cmakedefine pid_t @pid_t@
+
+/* Define to rpl_realloc if the replacement function should be used. */
+#cmakedefine realloc
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#cmakedefine size_t @size_t@
+
+/* Define as `fork' if `vfork' does not work. */
+#cmakedefine vfork
