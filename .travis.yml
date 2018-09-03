@@ -6,19 +6,6 @@ matrix:
 
           os: linux
           dist: trusty
-          addons:
-            apt:
-              sources:
-              - ubuntu-toolchain-r-test
-              packages:
-              - autoconf
-              - bison
-              - gcc-6
-              - help2man
-              - lzip
-              - texinfo
-              - texlive
-
           compiler: gcc
           script: ./autogen.sh && ./configure && make && make check && make distcheck
           before_script: 
@@ -35,7 +22,7 @@ matrix:
               - cmake ..
           script:  make
 
-        - env: test="x64 5.0 (CMake clang)"
+        - env: test="x64 (CMake clang)"
           os: linux
           dist: trusty
           compiler: clang
@@ -44,7 +31,7 @@ matrix:
               - cmake ..
           script:  make
 
-        - env: test="x64 5.0 (CMake clang - Ninja) Debug"
+        - env: test="x64 (CMake clang - Ninja) Debug"
           os: linux
           dist: trusty
           compiler: clang
@@ -52,6 +39,17 @@ matrix:
               - mkdir clang_ninja_dbg && cd clang_ninja_dbg
               - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Debug
           script:  ninja
+
+        - env: test="x64 (CMake clang - Ninja) Install / Uninstall"
+          os: linux
+          dist: trusty
+          compiler: clang
+          before_script:
+              - mkdir clang_ninja && cd clang_ninja
+              - cmake .. -GNinja -DCMAKE_INSTALL_PREFIX=./out
+          script:
+              - ninja install
+              - ninja uninstall
 
 addons:
 

@@ -145,10 +145,11 @@ string(REGEX REPLACE "^([0-9]+)\\.([0-9]+)\\.([0-9]+).*$" "\\3"
   flex_VERSION_PATCH "${flex_VERSION_STRING}")
 
 # Package version
-set(flex_VERSION "${flex_VERSION_MAJOR}.${flex_VERSION_MINOR}.${flex_VERSION_PATCH}")
+set(flex_VERSION ${flex_VERSION_MAJOR}.${flex_VERSION_MINOR}.${flex_VERSION_PATCH})
 
 # Name of package
 set(PACKAGE "flex")
+MESSAGE(STATUS "PACKAGE=${PACKAGE}")
 
 # Define to the address where bug reports for this package should be sent.
 set(PACKAGE_BUGREPORT ${flex_BUGREPORT_STRING})
@@ -169,6 +170,7 @@ set(PACKAGE_URL "")
 
 # Define to the version of this package.
 set(PACKAGE_VERSION ${flex_VERSION})
+set(PROJECT_VERSION ${flex_VERSION})
 MESSAGE(STATUS "PACKAGE_VERSION=${PACKAGE_VERSION}")
 
 # If using the C implementation of alloca, define if you know the

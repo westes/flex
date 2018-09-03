@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake")
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Relase)
+endif()
+
 project(flex LANGUAGES C)
 
 # Create config.h
@@ -58,7 +62,8 @@ add_custom_command(
 endif()
 
 set(GENERATED_SOURCES
-  ${BISON_parse_OUTPUT_SOURCE} ${FLEX_scan_OUTPUTS}
+  ${BISON_parse_OUTPUT_SOURCE}
+  ${FLEX_scan_OUTPUTS}
   ${CMAKE_BINARY_DIR}/gen/skel.c
 )
 
@@ -84,7 +89,33 @@ endif()
 
 # command line
 add_executable(flex ${sources} src/main.c ${GENERATED_SOURCES})
-install(TARGETS flex DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
- if(UNIX AND NOT ANDROID)
-    target_link_libraries(flex -lm ${CMAKE_THREAD_LIBS_INIT})
+add_library(fl SHARED ${sources} ${GENERATED_SOURCES})
+if(UNIX AND NOT ANDROID)
+  target_link_libraries(flex -lm ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(fl -lm ${CMAKE_THREAD_LIBS_INIT})
 endif()
+
+# Installation
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+install(TARGETS flex DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS fl DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+# pkgconfig
+configure_file(${CMAKE_SOURCE_DIR}/cmake/libfl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libfl.pc @ONLY)
+#file(MAKE_DIRECTORY ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libfl.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+
+# CMake
+configure_package_config_file(cmake/FlexConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/FlexConfigVersion.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/flex/cmake)
+
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/FlexConfigVersion.cmake
+    VERSION ${PACKAGE_VERSION} COMPATIBILITY ExactVersion)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FlexConfigVersion.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/flex/cmake )
+
+# uninstall
+add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_SOURCE_DIR}/cmake/make_uninstall.cmake")
