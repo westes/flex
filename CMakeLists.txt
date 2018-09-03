@@ -91,8 +91,9 @@ endif()
 add_executable(flex ${sources} src/main.c ${GENERATED_SOURCES})
 add_library(fl SHARED ${sources} ${GENERATED_SOURCES})
 if(UNIX AND NOT ANDROID)
-  target_link_libraries(flex -lm ${CMAKE_THREAD_LIBS_INIT})
-  target_link_libraries(fl -lm ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(flex -lm)
+  target_link_libraries(fl -lm)
+  set(PKGCONFIG_LIBS "-lm -lc")
 endif()
 
 # Installation
@@ -104,7 +105,6 @@ install(TARGETS fl DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 # pkgconfig
 configure_file(${CMAKE_SOURCE_DIR}/cmake/libfl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libfl.pc @ONLY)
-#file(MAKE_DIRECTORY ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libfl.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # CMake
