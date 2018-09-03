@@ -249,7 +249,7 @@
 #cmakedefine const
 
 /* Define to rpl_malloc if the replacement function should be used. */
-#cmakedefine malloc
+#cmakedefine malloc @malloc@
 
 /* Define to `int' if <sys/types.h> does not define. */
 #cmakedefine pid_t @pid_t@

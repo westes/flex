@@ -190,7 +190,9 @@ set(VERSION "\"${flex_VERSION_MAJOR}.${flex_VERSION_MINOR}.${flex_VERSION_PATCH}
 #cmakedefine const
 
 # Define to rpl_malloc if the replacement function should be used.
-#cmakedefine malloc
+if(ENABLE_MEM_SHIM)
+  set(malloc rpl_malloc)
+endif()
 
 # Define to `int' if <sys/types.h> does not define.
 check_type_size(pid_t PID_T_TYPE_SIZE)

@@ -10,6 +10,7 @@ include(make_config_h)
 # Build options
 option(ENABLE_NLS "Enable NLS" FALSE)
 option(ENABLE_C_ALLOCA "Enable alloca.c" FALSE)
+option(ENABLE_MEM_SHIM "Replacement malloc, realloc" FALSE)
 
 # Locate M4 path if not set
 if(NOT M4_PATH)
@@ -76,6 +77,10 @@ set(sources
   src/tables_shared.c src/tables_shared.h
   src/tblcmp.c src/yylex.c
 )
+
+if(ENABLE_MEM_SHIM)
+  list(APPEND sources lib/malloc.c lib/realloc.c)
+endif()
 
 # command line
 add_executable(flex ${sources} src/main.c ${GENERATED_SOURCES})
