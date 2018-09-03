@@ -1,24 +1,73 @@
 language: c
 
-compiler:
-  - gcc
+matrix:
+    include:
+        - env: test="Original"
+
+          os: linux
+          dist: trusty
+          addons:
+            apt:
+              sources:
+              - ubuntu-toolchain-r-test
+              packages:
+              - autoconf
+              - bison
+              - gcc-6
+              - help2man
+              - lzip
+              - texinfo
+              - texlive
+
+          compiler: gcc
+          script: ./autogen.sh && ./configure && make && make check && make distcheck
+          before_script: 
+            - ./.travis/install-gettext.sh
+            - ./.travis/install-automake.sh
+            - export PATH=$HOME/bin:$PATH
+
+        - env: test="x64 4.8.4 (CMake gcc)"
+          os: linux
+          dist: trusty
+          compiler: gcc
+          before_script:
+              - mkdir gcc_rel && cd gcc_rel
+              - cmake ..
+          script:  make
+
+        - env: test="x64 5.0 (CMake clang)"
+          os: linux
+          dist: trusty
+          compiler: clang
+          before_script:
+              - mkdir clang_rel && cd clang_rel
+              - cmake ..
+          script:  make
+
+        - env: test="x64 5.0 (CMake clang - Ninja) Debug"
+          os: linux
+          dist: trusty
+          compiler: clang
+          before_script:
+              - mkdir clang_ninja_dbg && cd clang_ninja_dbg
+              - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Debug
+          script:  ninja
 
 addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - autoconf
-    - bison
-    - gcc-6
-    - help2man
-    - lzip
-    - texinfo
-    - texlive
 
-before_script:
-    - ./.travis/install-gettext.sh
-    - ./.travis/install-automake.sh
-    - export PATH=$HOME/bin:$PATH
-
-script: ./autogen.sh && ./configure && make && make check && make distcheck
+    apt:
+        packages:
+            - autoconf
+            - bison
+            - gcc-6
+            - help2man
+            - lzip
+            - texinfo
+            - texlive
+            - automake
+            - libtool
+            - m4
+            - cmake
+            - ninja-build
+        sources:
+            - ubuntu-toolchain-r-test
