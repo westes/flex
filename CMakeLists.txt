@@ -13,6 +13,9 @@ include(make_config_h)
 
 # Build options
 option(ENABLE_NLS "Enable NLS" FALSE)
+if(ENABLE_NLS)
+  add_definitions(-DENABLE_NLS -DYYENABLE_NLS)
+endif()
 option(ENABLE_C_ALLOCA "Enable alloca.c" FALSE)
 option(ENABLE_MEM_SHIM "Replacement malloc, realloc" FALSE)
 
@@ -104,7 +107,10 @@ install(TARGETS flex DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(TARGETS fl DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 # pkgconfig
-configure_file(${CMAKE_SOURCE_DIR}/cmake/libfl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libfl.pc @ONLY)
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix "\${prefix}")
+set(libdir "\${exec_prefix}/lib")
+configure_file(${CMAKE_SOURCE_DIR}/src/libfl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libfl.pc @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libfl.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # CMake
