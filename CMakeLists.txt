@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake")
 
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Relase)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: DEBUG, RELEASE, or MINSIZEREL." FORCE)
+    message(STATUS "No build type specified, defaulting to Release.")
 endif()
 
 project(flex LANGUAGES C)
