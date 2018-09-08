@@ -1060,7 +1060,7 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 	}
 	if ((yyscanner->yyNChars + numberToMove) > yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyInputBufSize) {
 		/* Extend the array by 50%, plus the number we really need. */
-		int newSize = yyscanner->yyNChars + numberToMove + (yyscanner->yyNChars >> 1);
+		int newSize = yyscanner->yyNChars + numberToMove + (yyscanner->yyNChars >> 1) + 2;
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf = (char *) yyrealloc(
 			(void *) yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf, (size_t) newSize, yyscanner);
 		if (yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf == NULL) {
