@@ -36,8 +36,8 @@ TESTNAME=$1
 INPUT_NAME=${INPUT_NAME:-$INPUT_DIRECTORY/`basename "${TESTNAME%.exe}"`.txt}
 
 if [ $DO_COMPARISON = 1 ] ; then
-    TEST_OUTPUT=`$TESTNAME < $INPUT_NAME`
-    REF_OUTPUT=`$TESTNAME 1 < $INPUT_NAME`
+    TEST_OUTPUT=`$TESTNAME < $INPUT_NAME | tr -d "\r"`
+    REF_OUTPUT=`$TESTNAME 1 < $INPUT_NAME | tr -d "\r"`
     test "$TEST_OUTPUT" -eq "$REF_OUTPUT"
     exit $?
 fi
