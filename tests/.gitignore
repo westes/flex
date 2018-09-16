@@ -1,6 +1,8 @@
 *.log
 *.trs
 *.o
+*.obj
+*.exe
 *.tables
 alloc_extra
 alloc_extra.c
