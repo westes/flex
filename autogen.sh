@@ -40,6 +40,12 @@ if test "$?" -ne 0; then
    fi
 fi
 
+# generated automake sources
+if ! test -f tests/tableopts.am; then
+   echo Generating tests/tableopts.am...
+   tests/tableopts.sh > tests/tableopts.am
+fi
+
 #if we pretend to have a ChangeLog, then automake is less
 #worried. (Don't worry, we *do* have a ChangeLog, we just need the
 #Makefile first.)
