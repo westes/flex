@@ -11,3 +11,8 @@ parse.h
 scan.c
 stage1scan.[cl]
 stage1flex
+
+# for MSWindows
+
+*.obj
+*.exe
