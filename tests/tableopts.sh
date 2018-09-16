@@ -33,6 +33,7 @@ for kind in opt ser ver ; do
                     tableopts_tables="${tableopts_tables} ${testname}.tables"
                 fi
             fi
+            TABLEOPTS_TESTS="${TABLEOPTS_TESTS}"'$(EXEEXT)'
 
             cat << EOF
 tableopts_${kind}_${threading}_${bare_opt}_${kind}_SOURCES = tableopts.l4

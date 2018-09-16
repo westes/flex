@@ -61,65 +61,65 @@ AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
 
 simple_tests = \
-	alloc_extra \
-	array_nr \
-	array_r \
-	basic_nr \
-	basic_r \
-	bison_nr \
-	bison_yylloc \
-	bison_yylval \
-	c_cxx_nr \
-	c_cxx_r \
-	ccl \
-	cxx_basic \
-	cxx_multiple_scanners \
-	cxx_restart \
-	debug_nr \
-	debug_r \
-	extended \
-	header_nr \
-	header_r \
-	mem_nr \
-	mem_r \
-	multiple_scanners_nr \
-	multiple_scanners_r \
-	posix \
-	posixly_correct \
-	prefix_nr \
-	prefix_r \
-	quote_in_comment \
-	quotes \
-	string_nr \
-	string_r \
-	top \
-	yyextra
+	alloc_extra$(EXEEXT) \
+	array_nr$(EXEEXT) \
+	array_r$(EXEEXT) \
+	basic_nr$(EXEEXT) \
+	basic_r$(EXEEXT) \
+	bison_nr$(EXEEXT) \
+	bison_yylloc$(EXEEXT) \
+	bison_yylval$(EXEEXT) \
+	c_cxx_nr$(EXEEXT) \
+	c_cxx_r$(EXEEXT) \
+	ccl$(EXEEXT) \
+	cxx_basic$(EXEEXT) \
+	cxx_multiple_scanners$(EXEEXT) \
+	cxx_restart$(EXEEXT) \
+	debug_nr$(EXEEXT) \
+	debug_r$(EXEEXT) \
+	extended$(EXEEXT) \
+	header_nr$(EXEEXT) \
+	header_r$(EXEEXT) \
+	mem_nr$(EXEEXT) \
+	mem_r$(EXEEXT) \
+	multiple_scanners_nr$(EXEEXT) \
+	multiple_scanners_r$(EXEEXT) \
+	posix$(EXEEXT) \
+	posixly_correct$(EXEEXT) \
+	prefix_nr$(EXEEXT) \
+	prefix_r$(EXEEXT) \
+	quote_in_comment$(EXEEXT) \
+	quotes$(EXEEXT) \
+	string_nr$(EXEEXT) \
+	string_r$(EXEEXT) \
+	top$(EXEEXT) \
+	yyextra$(EXEEXT)
 
 reject_tests = \
-	reject_nr.reject \
-	reject_r.reject
+	reject_nr.reject$(EXEEXT) \
+	reject_r.reject$(EXEEXT)
 
 TABLE_TESTS = \
-	reject_ver.table \
-	reject_ser.table
+	reject_ver.table$(EXEEXT) \
+	reject_ser.table$(EXEEXT)
 
 DIRECT_TESTS = \
-	include_by_buffer.direct \
-	include_by_push.direct \
-	include_by_reentrant.direct \
-	rescan_nr.direct \
-	rescan_r.direct
+	include_by_buffer.direct$(EXEEXT) \
+	include_by_push.direct$(EXEEXT) \
+	include_by_reentrant.direct$(EXEEXT) \
+	rescan_nr.direct$(EXEEXT) \
+	rescan_r.direct$(EXEEXT)
 
 I3_TESTS = \
-	cxx_yywrap.i3
+	cxx_yywrap.i3$(EXEEXT)
 
 PTHREAD_TESTS = \
-	pthread.pthread
+	pthread.pthread$(EXEEXT)
 
 ONE_TESTS = \
-	lineno_nr.one \
-	lineno_r.one \
-	lineno_trailing.one
+	lineno_nr.one$(EXEEXT) \
+	lineno_r.one$(EXEEXT) \
+	lineno_trailing.one$(EXEEXT)
 
 quote_in_comment_SOURCES = quote_in_comment.l
 alloc_extra_SOURCES = alloc_extra.l
@@ -504,5 +504,5 @@ tableopts_ver_nr%.ver$(EXEEXT): tableopts_ver_nr%.$(OBJEXT)
 tableopts_ver_r%.c: tableopts.l4 $(FLEX)
 	$(AM_V_LEX)$(FLEX) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) -R --tables-file="tableopts_ver_r$*.ver.tables" --tables-verify $(subst _F,F,$*)  -o $@ $<
 
-tableopts_ver_r%.$(OBJEXT):  tableopts_ver_r%.c  
+tableopts_ver_r%.$(OBJEXT): tableopts_ver_r%.c  
 	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT -c -o $@ $<
