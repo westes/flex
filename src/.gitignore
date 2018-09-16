@@ -1,6 +1,8 @@
 *.la
 *.lo
 *.o
+*.obj
+*.exe
 config.h
 config.h.in
 flex
