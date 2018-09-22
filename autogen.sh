@@ -34,8 +34,8 @@ if test "$?" -ne 0; then
    LIBTOOLIZE=glibtoolize
    $LIBTOOLIZE --version 2>/dev/null
    if test "$?" -ne 0; then
-      echo "error: libtoolize not working, re-run with LIBTOOLIZE=/path/to/libtoolize"
-      echo "       LIBTOOLIZE is currently \"$LIBTOOLIZE_ORIG\""
+      echo "error: libtoolize not working, re-run with LIBTOOLIZE=/path/to/libtoolize">&2
+      echo "       LIBTOOLIZE is currently \"$LIBTOOLIZE_ORIG\"">&2
       exit 1
    fi
 fi
@@ -47,5 +47,5 @@ fi
 if ! test -f ChangeLog; then
    touch ChangeLog
 fi
-"$LIBTOOLIZE" --install --force
+$LIBTOOLIZE --install --force
 autoreconf --install --force
