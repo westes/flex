@@ -2780,7 +2780,7 @@ When this option is used, however, then no such call is made.
 
 
 @opindex ---never-interactive
-@item --never-interactive, @code{--never-interactive}
+@item --never-interactive, @code{%option never-interactive}
 instructs flex to generate a scanner which never considers its input
 interactive.  This is the opposite of @code{always-interactive}.
 
