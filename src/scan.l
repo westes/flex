@@ -43,44 +43,56 @@ extern bool tablesverify, tablesext;
 extern int trlcontxt; /* Set in  parse.y for each rule. */
 extern const char *escaped_qstart, *escaped_qend;
 
+
+static bool write_to_buf;
 #define M4QSTART "[""["
 #define M4QEND "]""]"
 
 #define ESCAPED_QSTART "[" M4QEND M4QSTART "[" M4QEND M4QSTART
 #define ESCAPED_QEND M4QEND "]" M4QSTART M4QEND "]" M4QSTART
 
-#define ACTION_ECHO do add_action(yytext); while(0)
-#define ACTION_IFDEF(def, should_define) \
-	do if (should_define) action_define(def, 1); while (0)
+#define ACTION_ECHO                                                            \
+  do                                                                           \
+    if (strlen(yytext) != yyleng)                                              \
+      synerr(_("NUL character in input file"));                                \
+    else if (write_to_buf)                                                     \
+      buf_strnappend(&top_buf, yytext, yyleng);                                \
+    else                                                                       \
+      add_action(yytext);                                                      \
+  while (0)
 
+#define ACTION_IFDEF(def, should_define)                                       \
+  do                                                                           \
+    if (should_define)                                                         \
+      action_define(def, 1);                                                   \
+  while (0)
 
 #define ACTION_M4_IFDEF(def, should_define) \
     do \
         if (should_define) \
-            buf_m4_define(&m4defs_buf, def, NULL);\
+      buf_m4_define(&m4defs_buf, def, NULL);                                   \
         else \
-            buf_m4_undefine(&m4defs_buf, def);\
-     while(0)
+      buf_m4_undefine(&m4defs_buf, def);                                       \
+  while (0)
 
-#define YY_DECL \
-	int flexscan(void)
+#define YY_DECL int flexscan(void)
 
-#define RETURNCHAR do { \
-	yylval = (unsigned char) yytext[0]; \
+#define RETURNCHAR                                                             \
+  do {                                                                         \
+    yylval = (unsigned char)yytext[0];                                         \
 	return CHAR; \
-} while (1)
+  } while (1)
 
 #define RETURNNAME \
-	do if(yyleng < MAXLINE) \
-         { \
-	strncpy( nmstr, yytext, sizeof(nmstr) ); \
+  do                                                                           \
+    if (yyleng < MAXLINE) {                                                    \
+      strncpy(nmstr, yytext, sizeof(nmstr));                                   \
 	return NAME; \
-	 } \
-	else \
-	 { \
+    } else {                                                                   \
 	   synerr(_("Input line too long\n")); \
 	   FLEX_EXIT(EXIT_FAILURE);  \
-	 } while (0)
+    }                                                                          \
+  while (0)
 
 #define PUT_BACK_STRING(str, start) \
 	do {				\
@@ -90,28 +102,41 @@ extern const char *escaped_qstart, *escaped_qend;
 	    unput((_str)[--i]);		\
 	} while (0)
 
-#define CHECK_REJECT(str) do reject = !!all_upper(str); while (0)
+#define CHECK_REJECT(str)                                                      \
+  do                                                                           \
+    reject = !!all_upper(str);                                                 \
+  while (0)
 
-#define CHECK_YYMORE(str) do yymore_used = !!all_lower(str); while (0)
+#define CHECK_YYMORE(str)                                                      \
+  do                                                                           \
+    yymore_used = !!all_lower(str);                                            \
+  while (0)
 
-#define YY_USER_INIT do posix_compat = !!getenv("POSIXLY_CORRECT"); while(0)
+#define YY_USER_INIT                                                           \
+  do                                                                           \
+    posix_compat = !!getenv("POSIXLY_CORRECT");                                \
+  while (0)
 
-#define START_CODEBLOCK(x) do { \
-    /* Emit the needed line directive... */\
+#define START_CODEBLOCK(x)                                                     \
+  do {                                                                         \
+    /* Emit the needed line directive... */                                    \
     if (indented_code == false) { \
         linenum++; \
         line_directive_out(NULL, 1); \
     } \
     add_action(M4QSTART); \
     yy_push_state(CODEBLOCK); \
-    if ((indented_code = x)) ACTION_ECHO; \
-} while(0)
+    if ((indented_code = x))                                                   \
+      ACTION_ECHO;                                                             \
+  } while (0)
 
-#define END_CODEBLOCK do { \
-    yy_pop_state();\
+#define END_CODEBLOCK                                                          \
+  do {                                                                         \
+    yy_pop_state();                                                            \
     add_action(M4QEND); \
-    if (!indented_code) line_directive_out(NULL, 0);\
-} while (0)
+    if (!indented_code)                                                        \
+      line_directive_out(NULL, 0);                                             \
+  } while (0)
 
 %}
 
@@ -175,6 +200,7 @@ M4QEND      "]""]"
                 ++linenum;
                 buf_linedir( &top_buf, infilename?infilename:"<stdin>", linenum);
                 brace_depth = 1;
+                write_to_buf = true;
                 yy_push_state(CODEBLOCK_MATCH_BRACE);
             }
 
@@ -223,24 +249,18 @@ M4QEND      "]""]"
 }
 
 
-<COMMENT,CODE_COMMENT>{ /* */
+<COMMENT,CODE_COMMENT> { /* */
         [^\[\]\*\n]*  ACTION_ECHO;
         .           ACTION_ECHO;
-
-	{NL}	    ++linenum; ACTION_ECHO;
-}
-<COMMENT>{
-	"*/"	    add_action("*/]""]"); yy_pop_state();
-}
-<CODE_COMMENT>{
         "*"{INVALID_ESCAPED_NEWLINE}+"/" {
           synerr(_("Escaped newline in comment end sequence\n"));
 	}
-
-        "*/"        ACTION_ECHO; yy_pop_state();
+        {NL}        ++linenum; ACTION_ECHO;
 }
+<COMMENT> "*/"           add_action("*/]""]"); yy_pop_state();
+<CODE_COMMENT> "*/"      ACTION_ECHO; yy_pop_state();
 
-<COMMENT_DISCARD>{
+<COMMENT_DISCARD> {
         /* This is the same as COMMENT, but is discarded rather than output. */
 	"*/"		yy_pop_state();
     "*"         ;
@@ -288,9 +308,10 @@ M4QEND      "]""]"
 			}
 }
 
-<CODEBLOCK_MATCH_BRACE>{
+<CODEBLOCK_MATCH_BRACE> {
     "}"     {
                 if( --brace_depth == 0){
+                    write_to_buf = false;
                     /* TODO: Matched. */
                     yy_pop_state();
                 }else
@@ -307,11 +328,9 @@ M4QEND      "]""]"
                 buf_strnappend(&top_buf, yytext, yyleng);
             }
 
+
     {M4QSTART}  buf_strnappend(&top_buf, escaped_qstart, (int) strlen(escaped_qstart));
     {M4QEND}    buf_strnappend(&top_buf, escaped_qend, (int) strlen(escaped_qend));
-    ([^{}\r\n\[\]]+)|[^{}\r\n]  {
-       buf_strnappend(&top_buf, yytext, yyleng);
-    }
 
     <<EOF>>     {
                 linenum = brace_start_line;
@@ -908,14 +927,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			return '}';
 			}
 }
-<CODEBLOCK,ACTION,PERCENT_BRACE_ACTION>{
-	"/"{INVALID_ESCAPED_NEWLINE}+"*" {
-          synerr(_("Invalid escaped newline in comment-open-sequence"));
-	  ACTION_ECHO;
-	  yy_push_state(CODE_COMMENT);
-        }
-	"/*"		ACTION_ECHO; yy_push_state(CODE_COMMENT);
-
+<CODEBLOCK,ACTION,PERCENT_BRACE_ACTION> {
 	"reject" {
             ACTION_ECHO;
             CHECK_REJECT(yytext);
@@ -924,6 +936,16 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
             ACTION_ECHO;
             CHECK_YYMORE(yytext);
         }
+}
+
+<CODEBLOCK,ACTION,PERCENT_BRACE_ACTION,CODEBLOCK_MATCH_BRACE> {
+        "/"{INVALID_ESCAPED_NEWLINE}+"*" {
+          synerr(_("Invalid escaped newline in comment-open-sequence"));
+          ACTION_ECHO;
+          yy_push_state(CODE_COMMENT);
+        }
+        "/*"            ACTION_ECHO; yy_push_state(CODE_COMMENT);
+
 	[^[:alpha:]_{}""''/\n\[\]]+	ACTION_ECHO;
         {NAME}		ACTION_ECHO;
         "'"([^''\\\n]|\\.)"'" ACTION_ECHO; /* character constant */
