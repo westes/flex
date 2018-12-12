@@ -655,6 +655,34 @@ ruleD   ECHO;
 @end verbatim
 @end example
 
+Flex rejects comments that include an @code{*}, followed by either @code{\} or
+@code{??/}, a newline (optionally preceded by whitespace), and finally an
+@code{/} (at the start of the next line).  In C, this is ends a comment, as the
+characters between @code{*} and @code{/} are considered to be an escaped
+newline, and escaped newlines are removed before comments are processed.
+
+Therefore, the following comments are invalid:
+
+@example
+@verbatim
+%{
+/* code block *\
+/
+*/
+%}
+
+/* Definitions Section *??/    
+/
+
+%%
+    /* Rules Section *\   
+/
+ruleD   ECHO;
+}
+%%
+@end verbatim
+@end example
+
 @node Patterns, Matching, Format, Top
 @chapter Patterns
 
@@ -1207,7 +1235,7 @@ Actions can include arbitrary C code, including @code{return} statements
 to return a value to whatever routine called @code{yylex()}.  Each time
 @code{yylex()} is called it continues processing tokens from where it
 last left off until it either reaches the end of the file or executes a
-return.
+return.  Flex does impose some minor restrictions on this code.  Specifically:
 
 @cindex yytext, modification of
 Actions are free to modify @code{yytext} except for lengthening it
@@ -4535,6 +4563,32 @@ following exceptions:
 
 @itemize
 @item
+Flex rejects block comments that contain C escaped newlines in their start
+and/or end sequences.  Earlier versions of Flex would be confused by them, and
+most syntax highlighters are confused too.
+
+@item
+Flex rejects code that contains trigraphs, if trigraph expansion could affect
+the meaning of the code.  Flex does not know whether your C or C++ compiler
+processes trigraphs, so it cannot scan your code properly.  Trigraphs are
+virtually never used, so this problem should be rare.
+
+@item
+Flex understands C++11 raw string literals.  Since Flex does not know if you
+will compile your C code as C++, Flex may reject valid C input in rare cases.
+These cases can be fixed by ensuring that a double-quoted string is separated
+by whitespace from any adjacent identifiers.
+
+@item
+Flex understands line comments, as specified by C++ and C99.  If your
+code has line comments, but your C compiler does not process them, you will get
+an error from the C compiler.
+
+@item
+Flex rejects line comments that contain an escaped newline.  This is mostly a
+source of bugs, and is hardly ever intentional.
+
+@item
 The undocumented @code{lex} scanner internal variable @code{yylineno} is
 not supported unless @samp{-l} or @code{%option yylineno} is used.
 
@@ -4698,8 +4752,11 @@ respectively. If the version of @code{flex} being used is a beta
 version, then the symbol @code{FLEX_BETA} is defined.
 
 @item
-The symbols @samp{[[} and @samp{]]} in the code sections of the input
-may conflict with the m4 delimiters. @xref{M4 Dependency}.
+In past versions of Flex, the symbols @samp{[[} and @samp{]]} in the code
+sections of the input could conflict with the M4 delimiters.
+@xref{M4 Dependency}.  This is now fixed, and you can use @samp{[[} and
+@samp{]]} freely in your code.  If you get any errors from M4 (such as
+@code{end of file in string}), please report them as bugs.
 
 
 @end itemize
@@ -8389,25 +8446,8 @@ future revisions of flex. It is not part of the public API of flex. Do not depen
 must be installed wherever flex is installed.
 @code{flex} invokes @samp{m4}, found by searching the directories in the
 @code{PATH} environment variable. Any code you place in section 1 or in the
-actions will be sent through m4. Please follow these rules to protect your
-code from unwanted @code{m4} processing.
-
-@itemize
-
-@item Do not use symbols that begin with, @samp{m4_}, such as, @samp{m4_define},
-or @samp{m4_include}, since those are reserved for @code{m4} macro names. If for 
-some reason you need m4_ as a prefix, use a preprocessor #define to get your
-symbol past m4 unmangled.
-
-@item Do not use the strings @samp{[[} or @samp{]]} anywhere in your code. The
-former is not valid in C, except within comments and strings, but the latter is valid in
-code such as @code{x[y[z]]}. The solution is simple. To get the literal string 
-@code{"]]"}, use @code{"]""]"}. To get the array notation @code{x[y[z]]},
-use @code{x[y[z] ]}. Flex will attempt to detect these sequences in user code, and
-escape them. However, it's best to avoid this complexity where possible, by
-removing such sequences from your code.
-
-@end itemize
+actions will be sent through m4.  Flex quotes the code that you have written,
+and escapes it as needed, so this does not impose any restrictions on your code.
 
 @code{m4} is only required at the time you run @code{flex}. The generated
 scanner is ordinary C or C++, and does @emph{not} require @code{m4}.
