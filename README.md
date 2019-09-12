@@ -6,7 +6,7 @@ flex is a tool for generating scanners: programs which recognize
 lexical patterns in text.
 
 The flex codebase is kept in
-[Git on GitHub.](https://github.com/westes/flex)
+[Git on GitHub.](https://github.com/westes/flex) Source releases of flex with some intermediate files already built can be found on [the github releases page.](https://github.com/westes/flex/releases)
 
 Use GitHub's [issues](https://github.com/westes/flex/issues) and
 [pull request](https://github.com/westes/flex) features to file bugs
