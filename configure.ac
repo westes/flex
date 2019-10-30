@@ -119,7 +119,7 @@ AC_PATH_PROG([INDENT], indent, [\${top_srcdir}/build-aux/missing indent])
 
 # checks for headers
 
-AC_CHECK_HEADERS([regex.h strings.h sys/stat.h sys/wait.h unistd.h], [],
+AC_CHECK_HEADERS([regex.h strings.h sys/wait.h unistd.h], [],
   [AC_MSG_ERROR(required header not found on your system)])
 
 AC_CHECK_HEADERS([inttypes.h libintl.h limits.h locale.h malloc.h netinet/in.h])

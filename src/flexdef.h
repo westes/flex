@@ -64,8 +64,6 @@
 #ifdef HAVE_SYS_PARAMS_H
 #include <sys/params.h>
 #endif
-/* Required: stat() in <sys/stat.h> */
-#include <sys/stat.h>
 /* Required: wait() in <sys/wait.h> */
 #include <sys/wait.h>
 #include <stdbool.h>

@@ -293,43 +293,7 @@ void initialize_output_filters(void)
 
 	output_chain = filter_create_int(NULL, filter_tee_header, env.headerfilename);
 	if ( !(m4 = getenv("M4"))) {
-		char *slash;
 		m4 = M4;
-		if ((slash = strrchr(M4, '/')) != NULL) {
-			m4 = slash+1;
-			/* break up $PATH */
-			const char *path = getenv("PATH");
-			if (!path) {
-				m4 = M4;
-			} else {
-				int m4_length = strlen(m4);
-				do {
-					size_t length = strlen(path);
-					struct stat sbuf;
-
-					const char *endOfDir = strchr(path, ':');
-					if (!endOfDir)
-						endOfDir = path+length;
-
-					{
-						char *m4_path = calloc(endOfDir-path + 1 + m4_length + 1, 1);
-
-						memcpy(m4_path, path, endOfDir-path);
-						m4_path[endOfDir-path] = '/';
-						memcpy(m4_path + (endOfDir-path) + 1, m4, m4_length + 1);
-						if (stat(m4_path, &sbuf) == 0 &&
-						    (S_ISREG(sbuf.st_mode)) && sbuf.st_mode & S_IXUSR) {
-							m4 = m4_path;
-							break;
-						}
-						free(m4_path);
-					}
-					path = endOfDir+1;
-				} while (path[0]);
-				if (!path[0])
-					m4 = M4;
-			}
-		}
 	}
 	filter_create_ext(output_chain, m4, "-P", 0);
 	filter_create_int(output_chain, filter_fix_linedirs, NULL);
