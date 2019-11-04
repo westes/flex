@@ -2831,7 +2831,7 @@ void yyFlexLexer::yyrestart( std::istream& input_file )
 	        	yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG);
 	}
 
-	yy_init_buffer( yy_current_buffer(), input_file M4_YY_CALL_LAST_ARG);
+	yy_init_buffer( YY_CURRENT_BUFFER_LVALUE, input_file M4_YY_CALL_LAST_ARG);
 	yy_load_buffer_state( M4_YY_CALL_ONLY_ARG );
 }
 
