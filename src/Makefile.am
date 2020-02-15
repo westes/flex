@@ -8,6 +8,9 @@ m4 = @M4@
 bin_PROGRAMS = flex
 if ENABLE_BOOTSTRAP
 noinst_PROGRAMS = stage1flex
+if !CROSS
+noinst_DATA = compare
+endif
 endif
 
 if ENABLE_LIBFL
@@ -95,7 +98,7 @@ EXTRA_DIST = \
 	mkskel.sh \
 	gettext.h
 
-MOSTLYCLEANFILES = stage1scan.c
+MOSTLYCLEANFILES = stage1scan.c stage2scan.c compare
 
 CLEANFILES = stage1flex$(EXEEXT)
 
@@ -112,6 +115,22 @@ stage1scan.c: scan.l stage1flex$(EXEEXT)
 	( cd $(srcdir) && $(abs_builddir)/stage1flex$(EXEEXT) \
 	  $(AM_LFLAGS) -o scan.c -t $(LFLAGS) scan.l ) >$@ || \
 	{ s=$$?; rm -f $@; exit $$s; }
+
+stage2scan.c: scan.l flex$(EXEEXT) stage1scan.c
+	( cd $(srcdir) && $(abs_builddir)/flex$(EXEEXT) \
+	  $(AM_LFLAGS) -o scan.c -t $(LFLAGS) scan.l ) >$@
+
+compare: stage1scan.c
+	@rm -f stage2scan.c; \
+	$(MAKE) $(AM_MAKEFLAGS) stage2scan.c; \
+	echo Comparing stage1scan.c and stage2scan.c; \
+	cmp stage1scan.c stage2scan.c || { \
+	  s=$$?; \
+	  echo "Bootstrap comparison failure!"; \
+	  exit $$s; \
+	}; \
+	echo Comparison successful.; \
+	echo success >compare
 
 dist-hook: scan.l flex$(EXEEXT)
 	chmod u+w $(distdir) && \
