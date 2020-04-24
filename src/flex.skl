@@ -1225,11 +1225,11 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 
 m4_ifdef( [[M4_YY_USES_REJECT]],
 [[
-        /* Create the reject buffer large enough to save one state per allowed character. */
-        if ( ! YY_G(yy_state_buf) )
-            YY_G(yy_state_buf) = (yy_state_type *)yyalloc(YY_STATE_BUF_SIZE  M4_YY_CALL_LAST_ARG);
-            if ( ! YY_G(yy_state_buf) )
-                YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
+		/* Create the reject buffer large enough to save one state per allowed character. */
+		if ( ! YY_G(yy_state_buf) )
+			YY_G(yy_state_buf) = (yy_state_type *)yyalloc(YY_STATE_BUF_SIZE  M4_YY_CALL_LAST_ARG);
+		if ( ! YY_G(yy_state_buf) )
+			YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
 ]])
 
 		if ( ! YY_G(yy_start) )
@@ -1758,7 +1758,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 %% [17.0] code to find the next state, and perhaps do backing up, goes here
 
 	M4_YY_NOOP_GUTS_VAR();
-	return yy_is_jam ? 0 : yy_current_state;
+return yy_is_jam ? 0 : yy_current_state;
 }
 
 
