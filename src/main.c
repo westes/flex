@@ -464,7 +464,7 @@ void check_options (void)
 	    struct Buf tmpbuf;
 	    buf_init(&tmpbuf, sizeof(char));
 	    for (i = 1; i <= lastsc; i++) {
-		 char *str, *fmt = "#define %s %d\n";
+		 char *str, *fmt = backend->int_define_fmt;
 		 size_t strsz;
 
 		 strsz = strlen(fmt) + strlen(scname[i]) + (size_t)(1 + ceil (log10(i))) + 2;
@@ -1092,24 +1092,16 @@ void flexinit (int argc, char **argv)
 			{
 				/* arg is "symbol" or "symbol=definition". */
 				char   *def;
+				char buf2[4096];
 
 				for (def = arg;
-				     *def != '\0' && *def != '='; ++def) ;
+				     *def != '\0' && *def != '='; ++def)
+				    continue;
+				if (*def == '\0')
+				    def = "1";
 
-				buf_strappend (&userdef_buf, "#define ");
-				if (*def == '\0') {
-					buf_strappend (&userdef_buf, arg);
-					buf_strappend (&userdef_buf,
-						       " 1\n");
-				}
-				else {
-					buf_strnappend (&userdef_buf, arg,
-							(int) (def - arg));
-					buf_strappend (&userdef_buf, " ");
-					buf_strappend (&userdef_buf,
-						       def + 1);
-					buf_strappend (&userdef_buf, "\n");
-				}
+				snprintf(buf2, sizeof(buf2), backend->string_define_fmt, arg, def);
+				buf_strappend (&userdef_buf, buf2);
 			}
 			break;
 
@@ -1119,7 +1111,7 @@ void flexinit (int argc, char **argv)
 
 		case OPT_STACK:
 			//buf_strdefine (&userdef_buf, "YY_STACK_USED", "1");
-            buf_m4_define( &m4defs_buf, "M4_YY_STACK_USED",0);
+			buf_m4_define( &m4defs_buf, "M4_YY_STACK_USED",0);
 			break;
 
 		case OPT_STDINIT:

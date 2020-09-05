@@ -401,4 +401,6 @@ struct flex_backend_t cpp_backend = {
 	.skel = cpp_skel,
 	.epilog = cpp_epilog,
 	.trace_fmt = "#line %d \"%s\"\n",
+	.int_define_fmt = "#define %s %d\n",
+	.string_define_fmt = "#define %s %s\n",
 };

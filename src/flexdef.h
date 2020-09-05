@@ -311,6 +311,8 @@ struct flex_backend_t {
 	const char **skel;		// Skeleton for generated code
 	void (*epilog)(void);		// Write epilog code for the skeleton
 	char *trace_fmt;		// Trace message format
+	char *int_define_fmt;		// Format for integer constant definitions
+	char *string_define_fmt;	// Format for string constant definitions
 };
 
 /* Declarations for global variables. */
