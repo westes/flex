@@ -337,7 +337,7 @@ static bool is_blank_line (const char *str)
  */
 int filter_fix_linedirs (struct filter *chain)
 {
-	char   buf[512];
+	char   buf[4096];
 	const size_t readsz = sizeof buf;
 	int     lineno = 1;
 	bool    in_gen = true;	/* in generated code */
