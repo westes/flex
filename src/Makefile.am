@@ -53,6 +53,7 @@ flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
 COMMON_SOURCES = \
 	buf.c \
 	ccl.c \
+	cpp_backend.c \
 	cpp_skel.h \
 	dfa.c \
 	ecs.c \
