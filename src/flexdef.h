@@ -313,10 +313,11 @@ struct flex_backend_t {
 	char *trace_fmt;			// Trace message format
 	char *int_define_fmt;			// Format for integer constant definitions
 	char *string_define_fmt;		// Format for string constant definitions
-	const char *(*get_int16_decl)(void);
-	const char *(*get_int32_decl)(void);
-	const char *(*get_state_decl)(void);
-	const char *(*get_yy_char_decl)(void);
+	const char *(*get_int16_decl)(void);	// Format for declating array initializer of int16s
+	const char *(*get_int32_decl)(void);	// Format for declating array initializer of int32s
+	const char *(*get_state_decl)(void);	// Format for declating array initializer of state values
+	const char *(*get_yy_char_decl)(void);	// Format for declating array initializer of input chars
+	const void (*mkeoltbl)(void);		// Make end-of-line table
 };
 
 extern bool gentables;

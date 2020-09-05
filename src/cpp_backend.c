@@ -418,7 +418,13 @@ static const char *cpp_get_yy_char_decl (void)
 		: "static const YY_CHAR * %s = 0;\n";
 }
 
-
+static void cpp_mkeoltbl()
+// Make end-of-line-table - only used when yylinemo tracking is on
+{
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(%s)},\n",
+		    "flex_int32_t");
+}
 
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
@@ -438,4 +444,5 @@ struct flex_backend_t cpp_backend = {
 	.get_int32_decl = cpp_get_int32_decl,
 	.get_state_decl = cpp_get_state_decl,
 	.get_yy_char_decl = cpp_get_yy_char_decl,
+	.mkeoltbl = cpp_mkeoltbl,
 };

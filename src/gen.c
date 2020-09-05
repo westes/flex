@@ -87,9 +87,7 @@ static struct yytbl_data *mkeoltbl (void)
 	for (i = 1; i <= num_rules; i++)
 		tdata[i] = rule_has_nl[i] ? 1 : 0;
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(%s)},\n",
-		    "flex_int32_t");
+	backend->mkeoltbl();
 	return tbl;
 }
 
