@@ -7697,6 +7697,7 @@ to declare local variables.
 @end example
 
 @c TODO: Evaluate this faq.
+@c Note that the file is now named cpp-flex.skl
 @node unnamed-faq-87
 @unnumberedsec unnamed-faq-87
 @example
