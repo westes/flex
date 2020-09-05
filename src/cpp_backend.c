@@ -486,6 +486,25 @@ static void cpp_mkssltbl (void)
 		    "struct yy_trans_info*");
 }
 
+static void cpp_gen_yy_trans(size_t sz)
+// Table of verify for transition and offset to next state. (sic)
+{
+	if (gentables)
+		out_dec ("static const struct yy_trans_info yy_transition[%d] =\n    {\n", sz);
+	else
+		outn ("static const struct yy_trans_info *yy_transition = 0;");
+}
+
+static void cpp_start_state_list(size_t sz)
+// Start initializer for table of pointers to start state
+{
+	/* Table of pointers to start states. */
+	if (gentables)
+		out_dec ("static const struct yy_trans_info *yy_start_state_list[%d] =\n", sz);
+	else
+		outn ("static const struct yy_trans_info **yy_start_state_list =0;");
+}
+
 
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
@@ -501,6 +520,7 @@ struct flex_backend_t cpp_backend = {
 	.trace_fmt = "#line %d \"%s\"\n",
 	.int_define_fmt = "#define %s %d\n",
 	.string_define_fmt = "#define %s %s\n",
+	.table_opener = "    {",
 	.table_closer = "    };\n",
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,
@@ -512,4 +532,6 @@ struct flex_backend_t cpp_backend = {
 	.gen_bu_action = cpp_gen_bu_action,
 	.mkctbl = cpp_mkctbl,
 	.mkssltbl = cpp_mkssltbl,
+	.gen_yy_trans = cpp_gen_yy_trans,
+	.start_state_list = cpp_start_state_list,
 };

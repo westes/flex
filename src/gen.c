@@ -276,10 +276,7 @@ void genctbl (void)
 	int     end_of_buffer_action = num_rules + 1;
 
 	/* Table of verify for transition and offset to next state. */
-	if (gentables)
-		out_dec ("static const struct yy_trans_info yy_transition[%d] =\n    {\n", tblend + numecs + 1);
-	else
-		outn ("static const struct yy_trans_info *yy_transition = 0;");
+	backend->gen_yy_trans(tblend + numecs + 1);
 
 	/* We want the transition to be represented as the offset to the
 	 * next state, not the actual state number, which is what it currently
@@ -349,14 +346,10 @@ void genctbl (void)
 	if (gentables)
 		outn (backend->table_closer);
 
-	/* Table of pointers to start states. */
-	if (gentables)
-		out_dec ("static const struct yy_trans_info *yy_start_state_list[%d] =\n", lastsc * 2 + 1);
-	else
-		outn ("static const struct yy_trans_info **yy_start_state_list =0;");
+	backend->start_state_list(lastsc * 2 + 1);
 
 	if (gentables) {
-		outn ("    {");
+		outn (backend->table_opener);
 
 		for (i = 0; i <= lastsc * 2; ++i)
 			out_dec ("    &yy_transition[%d],\n", base[i]);

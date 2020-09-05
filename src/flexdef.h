@@ -313,6 +313,7 @@ struct flex_backend_t {
 	char *trace_fmt;			// Trace message format
 	char *int_define_fmt;			// Format for integer constant definitions
 	char *string_define_fmt;		// Format for string constant definitions
+	char *table_opener;			// Open an array uinitializer with this
 	char *table_closer;			// Close an array uinitializer with this
 	const char *(*get_int16_decl)(void);	// Format for declating array initializer of int16s
 	const char *(*get_int32_decl)(void);	// Format for declating array initializer of int32s
@@ -324,6 +325,8 @@ struct flex_backend_t {
 	const void (*gen_bu_action)(void);	// Generate the code to perform the backing up
 	const void (*mkctbl)(size_t);		// Make full-speed compressed table
 	const void (*mkssltbl)(void);		// Make start_state_list table
+	const void (*gen_yy_trans)(size_t);	// Table of verify for transition and offset to next state. (sic)
+	const void (*start_state_list)(size_t);	// Start initializer for table of pointers to start state
 };
 
 extern bool gentables;
