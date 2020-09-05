@@ -44,6 +44,7 @@ static char flex_version[] = FLEX_VERSION;
 
 void flexinit(int, char **);
 void readin(void);
+void cpp_prolog(void);
 void set_up_initial_allocations(void);
 
 
@@ -168,6 +169,8 @@ int flex_main (int argc, char *argv[])
 	flexinit (argc, argv);
 
 	readin ();
+
+	cpp_prolog ();
 
 	skelout ();
 	/* %% [1.5] DFA */
@@ -1481,10 +1484,6 @@ void flexinit (int argc, char **argv)
 
 void readin (void)
 {
-	static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
-	static char yy_nostdinit[] =
-		"FILE *yyin = NULL, *yyout = NULL;";
-
 	line_directive_out(NULL, 1);
 
 	if (yyparse ()) {
@@ -1594,10 +1593,45 @@ void readin (void)
 				   ("variable trailing context rules cannot be used with -f or -F"));
 	}
 
+	if (useecs)
+		numecs = cre8ecs (nextecm, ecgroup, csize);
+	else
+		numecs = csize;
+
+	/* Now map the equivalence class for NUL to its expected place. */
+	ecgroup[0] = ecgroup[csize];
+	NUL_ec = ABS (ecgroup[0]);
+
+	if (useecs)
+		ccl2ecl ();
+}
+
+/* cpp_prolog - make rules prolog pecific to cpp-using languages.
+ *
+ * If you don't ship this, you will effectively be assuming that your
+ * parsers are always reentrant, always allow reject, always have a
+ * yywrap() method, have a debug member in the wrapper class, and are
+ * interactive.  This eliminates most of the boilerplate in the C/C++
+ * scanner prolog.  It means such parsers will be a bit larger and
+ * slower than C/C++ ones, but since we're not runing on 1987's
+ * hardware we officially do not care.
+ *
+ * A detail to beware of: If you're not issuing this prologue, you
+ * may want to issue your own definition of YY_CHAR. It's a typedef
+ * to an unsigned octet in C/C++, but if your target language has a
+ * Unicode code-point type like Go's 'rune' is may be appropriate.
+ */
+
+void cpp_prolog (void)
+{
+	static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
+	static char yy_nostdinit[] =
+		"FILE *yyin = NULL, *yyout = NULL;";
+
 	if (reject){
         out_m4_define( "M4_YY_USES_REJECT", NULL);
 		//outn ("\n#define YY_USES_REJECT");
-    }
+	}
 
 	if (!do_yywrap) {
 		if (!C_plus_plus) {
@@ -1718,18 +1752,6 @@ void readin (void)
 			flexerror (_
 				   ("%option yyclass only meaningful for C++ scanners"));
 	}
-
-	if (useecs)
-		numecs = cre8ecs (nextecm, ecgroup, csize);
-	else
-		numecs = csize;
-
-	/* Now map the equivalence class for NUL to its expected place. */
-	ecgroup[0] = ecgroup[csize];
-	NUL_ec = ABS (ecgroup[0]);
-
-	if (useecs)
-		ccl2ecl ();
 }
 
 
