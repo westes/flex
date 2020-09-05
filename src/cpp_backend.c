@@ -389,6 +389,15 @@ static void cpp_epilog (void)
 #endif
 }
 
+static void cpp_assign(char *left, char *right)
+{
+    do_indent ();
+    out(left);
+    out(" = ");
+    out(right);
+    outn(";");
+}
+
 static const char *cpp_get_int16_decl (void)
 {
 	return (gentables)
@@ -531,6 +540,8 @@ struct flex_backend_t cpp_backend = {
 	.close_block = "}",
 	.table_opener = "    {",
 	.table_closer = "    };\n",
+	.assign = cpp_assign,
+	.forever = "for ( ; ; ) /* until we find what rule we matched */",
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,
 	.get_state_decl = cpp_get_state_decl,

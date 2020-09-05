@@ -429,15 +429,20 @@ void genecs (void)
 
 void gen_find_action (void)
 {
+	/* This function relies on some assumotions that arebn't i  the method table.
+	 * 1. Target language uses [] for indexing
+	 * 2. Target language uses . to reach structure members
+	 */
+
 	if (fullspd)
-		indent_puts ("yy_act = yy_current_state[-1].yy_nxt;");
+		backend->assign("yy_act", "yy_current_state[-1].yy_nxt");
 
 	else if (fulltbl)
-		indent_puts ("yy_act = yy_accept[yy_current_state];");
+		backend->assign("yy_act", "yy_accept[yy_current_state]");
 
 	else if (reject) {
-		indent_puts ("yy_current_state = *--YY_G(yy_state_ptr);");
-		indent_puts ("YY_G(yy_lp) = yy_accept[yy_current_state];");
+		backend->assign("yy_current_state", "*--YY_G(yy_state_ptr)");	// C-ISM
+		backend->assign("YY_G(yy_lp)", "yy_accept[yy_current_state]");	// C-ISM
 
 		if (!variable_trailing_context_rules)
 			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
@@ -446,8 +451,7 @@ void gen_find_action (void)
 		if (!variable_trailing_context_rules)
 			outn ("]])\n");
 
-		indent_puts
-			("for ( ; ; ) /* until we find what rule we matched */");
+		indent_puts(backend->forever);
 
 		++indent_level;
 
@@ -523,7 +527,7 @@ void gen_find_action (void)
 			 */
 			++indent_level;
 			indent_puts (backend->open_block);
-			indent_puts ("YY_G(yy_full_match) = yy_cp;");
+			backend->assign("YY_G(yy_full_match)", "yy_cp");
 			indent_puts ("break;");
 			indent_puts (backend->close_block);
 			--indent_level;
@@ -532,7 +536,7 @@ void gen_find_action (void)
 		indent_puts (backend->close_block);
 		--indent_level;
 
-		indent_puts ("--yy_cp;");
+		indent_puts ("--yy_cp;");	// C-ISM
 
 		/* We could consolidate the following two lines with those at
 		 * the beginning, but at the cost of complaints that we're
@@ -547,7 +551,7 @@ void gen_find_action (void)
 	}
 
 	else {			/* compressed */
-		indent_puts ("yy_act = yy_accept[yy_current_state];");
+		backend->assign("yy_act", "yy_accept[yy_current_state]");
 
 		if (interactive && !reject) {
 			/* Do the guaranteed-needed backing up to figure out
@@ -556,12 +560,9 @@ void gen_find_action (void)
 			indent_puts ("if ( yy_act == 0 )");
 			++indent_level;
 			indent_puts ("{ /* have to back up */");
-			indent_puts
-				("yy_cp = YY_G(yy_last_accepting_cpos);");
-			indent_puts
-				("yy_current_state = YY_G(yy_last_accepting_state);");
-			indent_puts
-				("yy_act = yy_accept[yy_current_state];");
+			backend->assign("yy_cp", "YY_G(yy_last_accepting_cpos)");
+			backend->assign("yy_current_state", "YY_G(yy_last_accepting_state)");
+			backend->assign("yy_act", "yy_accept[yy_current_state]");
 			indent_puts (backend->close_block);
 			--indent_level;
 		}

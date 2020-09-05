@@ -317,6 +317,8 @@ struct flex_backend_t {
 	char *close_block;			// Close statement block
 	char *table_opener;			// Open an array uinitializer with this
 	char *table_closer;			// Close an array uinitializer with this
+	void (*assign)(char *, char *);		// Assignment
+	const char *forever;			// Do forever syntax
 	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
 	const char *(*get_int32_decl)(void);	// Format for declaring array initializer of int32s
 	const char *(*get_state_decl)(void);	// Format for declaring array initializer of state values
