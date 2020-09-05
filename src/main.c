@@ -1899,4 +1899,5 @@ static void cpp_wrap (void)
 struct flex_backend_t cpp_backend = {
 	.prolog = cpp_prolog,
 	.wrap = cpp_wrap,
+	.line_fmt = "#line %d \"%s\"\n",
 };

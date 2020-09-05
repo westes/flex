@@ -343,7 +343,6 @@ void line_directive_out (FILE *output_file, int do_infile)
 {
 	char    directive[MAXLINE], filename[MAXLINE];
 	char   *s1, *s2, *s3;
-	static const char line_fmt[] = "#line %d \"%s\"\n";
 
 	if (!gen_line_dirs)
 		return;
@@ -367,9 +366,9 @@ void line_directive_out (FILE *output_file, int do_infile)
 	*s2 = '\0';
 
 	if (do_infile)
-		snprintf (directive, sizeof(directive), line_fmt, linenum, filename);
+		snprintf (directive, sizeof(directive), backend->line_fmt, linenum, filename);
 	else {
-		snprintf (directive, sizeof(directive), line_fmt, 0, filename);
+		snprintf (directive, sizeof(directive), backend->line_fmt, 0, filename);
 	}
 
 	/* If output_file is nil then we should put the directive in
