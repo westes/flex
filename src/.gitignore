@@ -8,6 +8,6 @@ libfl.pc
 parse.c
 parse.h
 scan.c
-skel.c
+cpp-skel.h
 stage1scan.[cl]
 stage1flex

@@ -2,12 +2,13 @@
 %# This file is processed in several stages.
 %# Here are the stages, as best as I can describe:
 %#
-%#   1. flex.skl is processed through GNU m4 during the
+%#   1. This is processed through GNU m4 during the
 %#      pre-compilation stage of flex. Only macros starting
 %#      with `m4preproc_' are processed, and quoting is normal.
 %#
-%#   2. The preprocessed skeleton is translated into a C array, saved
-%#      as "skel.c" and compiled into the flex binary. The %# comment
+%#   2. The preprocessed skeleton is translated into a comma-separated
+%#      list of doublequoted strings which is stuffed into a language-
+%#      specific method block compiled into the flex binary. The %# comment
 %#      lines are removed.
 %#
 %#   3. At runtime, the skeleton is generated and filtered (again)

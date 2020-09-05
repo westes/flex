@@ -1896,7 +1896,13 @@ static void cpp_wrap (void)
 #endif
 }
 
+const char *cpp_skel[] = {
+#include "cpp-skel.h"
+    0,
+};
+
 struct flex_backend_t cpp_backend = {
+	.skel = cpp_skel,
 	.prolog = cpp_prolog,
 	.wrap = cpp_wrap,
 	.line_fmt = "#line %d \"%s\"\n",

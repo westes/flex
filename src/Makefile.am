@@ -53,6 +53,7 @@ flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
 COMMON_SOURCES = \
 	buf.c \
 	ccl.c \
+	cpp_skel.h \
 	dfa.c \
 	ecs.c \
 	filter.c \
@@ -70,7 +71,6 @@ COMMON_SOURCES = \
 	scanflags.c \
 	scanopt.c \
 	scanopt.h \
-	skel.c \
 	sym.c \
 	tables.c \
 	tables.h \
@@ -88,16 +88,16 @@ include_HEADERS = \
 	FlexLexer.h
 
 EXTRA_DIST = \
-	flex.skl \
+	cpp-flex.skl \
 	mkskel.sh \
 	gettext.h
 
 CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
 
-MAINTAINERCLEANFILES = skel.c
+MAINTAINERCLEANFILES = c9pp-skel.h
 
-skel.c: flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
-	$(SHELL) $(srcdir)/mkskel.sh $(srcdir) $(m4) $(VERSION) > $@.tmp
+cpp-skel.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
+	$(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(m4) $(VERSION) > $@.tmp
 	mv -f $@.tmp $@
 
 if ENABLE_BOOTSTRAP

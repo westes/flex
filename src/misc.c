@@ -701,11 +701,11 @@ void skelout (void)
 
 
 	/* Loop pulling lines either from the skelfile, if we're using
-	 * one, or from the skel[] array.
+	 * one, or from the selected back end's skel[] array.
 	 */
 	while (skelfile ?
 	       (fgets (buf, MAXLINE, skelfile) != NULL) :
-	       ((buf = (char *) skel[skel_ind++]) != 0)) {
+	       ((buf = (char *) backend->skel[skel_ind++]) != 0)) {
 
 		if (skelfile)
 			chomp (buf);
