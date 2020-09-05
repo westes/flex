@@ -50,35 +50,6 @@ static int indent_level = 0;	/* each level is 8 spaces */
  * 0 elements of its arrays, too.)
  */
 
-static const char *get_int16_decl (void)
-{
-	return (gentables)
-		? "static const flex_int16_t %s[%d] =\n    {   0,\n"
-		: "static const flex_int16_t * %s = 0;\n";
-}
-
-
-static const char *get_int32_decl (void)
-{
-	return (gentables)
-		? "static const flex_int32_t %s[%d] =\n    {   0,\n"
-		: "static const flex_int32_t * %s = 0;\n";
-}
-
-static const char *get_state_decl (void)
-{
-	return (gentables)
-		? "static const yy_state_type %s[%d] =\n    {   0,\n"
-		: "static const yy_state_type * %s = 0;\n";
-}
-
-static const char *get_yy_char_decl (void)
-{
-	return (gentables)
-		? "static const YY_CHAR %s[%d] =\n    {   0,\n"
-		: "static const YY_CHAR * %s = 0;\n";
-}
-
 /* Indent to the current level. */
 
 void do_indent (void)
@@ -129,7 +100,7 @@ static void geneoltbl (void)
 
 	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
 	outn ("/* Table of booleans, true if rule could match eol. */");
-	out_str_dec (get_int32_decl (), "yy_rule_can_match_eol",
+	out_str_dec (backend->get_int32_decl (), "yy_rule_can_match_eol",
 		     num_rules + 1);
 
 	if (gentables) {
@@ -467,7 +438,7 @@ void genecs (void)
 	int ch, row;
 	int     numrows;
 
-	out_str_dec (get_yy_char_decl (), "yy_ec", csize);
+	out_str_dec (backend->get_yy_char_decl (), "yy_ec", csize);
 
 	for (ch = 1; ch < csize; ++ch) {
 		ecgroup[ch] = ABS (ecgroup[ch]);
@@ -685,7 +656,7 @@ void genftbl (void)
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
 
-	out_str_dec (long_align ? get_int32_decl () : get_int16_decl (),
+	out_str_dec (long_align ? backend->get_int32_decl () : backend->get_int16_decl (),
 		     "yy_accept", lastdfa + 1);
 
 	dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
@@ -1087,8 +1058,8 @@ void gentabs (void)
 		dfaacc[end_of_buffer_state].dfaacc_set =
 			EOB_accepting_list;
 
-		out_str_dec (long_align ? get_int32_decl () :
-			     get_int16_decl (), "yy_acclist", MAX (numas,
+		out_str_dec (long_align ? backend->get_int32_decl () :
+			     backend->get_int16_decl (), "yy_acclist", MAX (numas,
 								   1) + 1);
         
         buf_prints (&yydmap_buf,
@@ -1197,7 +1168,7 @@ void gentabs (void)
 		 */
 		++k;
 
-	out_str_dec (long_align ? get_int32_decl () : get_int16_decl (),
+	out_str_dec (long_align ? backend->get_int32_decl () : backend->get_int16_decl (),
 		     "yy_accept", k);
 
 	buf_prints (&yydmap_buf,
@@ -1272,7 +1243,7 @@ void gentabs (void)
 			fputs (_("\n\nMeta-Equivalence Classes:\n"),
 			       stderr);
 
-		out_str_dec (get_yy_char_decl (), "yy_meta", numecs + 1);
+		out_str_dec (backend->get_yy_char_decl (), "yy_meta", numecs + 1);
 		buf_prints (&yydmap_buf,
 			    "\t{YYTD_ID_META, (void**)&yy_meta, sizeof(%s)},\n",
 			    "YY_CHAR");
@@ -1301,7 +1272,7 @@ void gentabs (void)
 
 	/* Begin generating yy_base */
 	out_str_dec ((tblend >= INT16_MAX || long_align) ?
-		     get_int32_decl () : get_int16_decl (),
+		     backend->get_int32_decl () : backend->get_int16_decl (),
 		     "yy_base", total_states + 1);
 
 	buf_prints (&yydmap_buf,
@@ -1358,7 +1329,7 @@ void gentabs (void)
 
 	/* Begin generating yy_def */
 	out_str_dec ((total_states >= INT16_MAX || long_align) ?
-		     get_int32_decl () : get_int16_decl (),
+		     backend->get_int32_decl () : backend->get_int16_decl (),
 		     "yy_def", total_states + 1);
 
 	buf_prints (&yydmap_buf,
@@ -1390,7 +1361,7 @@ void gentabs (void)
 
 	/* Begin generating yy_nxt */
 	out_str_dec ((total_states >= INT16_MAX || long_align) ?
-		     get_int32_decl () : get_int16_decl (), "yy_nxt",
+		     backend->get_int32_decl () : backend->get_int16_decl (), "yy_nxt",
 		     tblend + 1);
 
 	buf_prints (&yydmap_buf,
@@ -1427,7 +1398,7 @@ void gentabs (void)
 
 	/* Begin generating yy_chk */
 	out_str_dec ((total_states >= INT16_MAX || long_align) ?
-		     get_int32_decl () : get_int16_decl (), "yy_chk",
+		     backend->get_int32_decl () : backend->get_int16_decl (), "yy_chk",
 		     tblend + 1);
 
 	buf_prints (&yydmap_buf,
@@ -1685,7 +1656,7 @@ void make_tables (void)
 		flex_int32_t *yynultrans_data = 0;
 
 		/* Begin generating yy_NUL_trans */
-		out_str_dec (get_state_decl (), "yy_NUL_trans",
+		out_str_dec (backend->get_state_decl (), "yy_NUL_trans",
 			     lastdfa + 1);
 		buf_prints (&yydmap_buf,
 			    "\t{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(%s)},\n",
@@ -1737,8 +1708,8 @@ void make_tables (void)
 	}
 
 	if (ddebug) {		/* Spit out table mapping rules to line numbers. */
-		out_str_dec (long_align ? get_int32_decl () :
-			     get_int16_decl (), "yy_rule_linenum",
+		out_str_dec (long_align ? backend->get_int32_decl () :
+			     backend->get_int16_decl (), "yy_rule_linenum",
 			     num_rules);
 		for (i = 1; i < num_rules; ++i)
 			mkdata (rule_linenum[i]);

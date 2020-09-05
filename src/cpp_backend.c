@@ -389,6 +389,37 @@ static void cpp_epilog (void)
 #endif
 }
 
+static const char *cpp_get_int16_decl (void)
+{
+	return (gentables)
+		? "static const flex_int16_t %s[%d] =\n    {   0,\n"
+		: "static const flex_int16_t * %s = 0;\n";
+}
+
+
+static const char *cpp_get_int32_decl (void)
+{
+	return (gentables)
+		? "static const flex_int32_t %s[%d] =\n    {   0,\n"
+		: "static const flex_int32_t * %s = 0;\n";
+}
+
+static const char *cpp_get_state_decl (void)
+{
+	return (gentables)
+		? "static const yy_state_type %s[%d] =\n    {   0,\n"
+		: "static const yy_state_type * %s = 0;\n";
+}
+
+static const char *cpp_get_yy_char_decl (void)
+{
+	return (gentables)
+		? "static const YY_CHAR %s[%d] =\n    {   0,\n"
+		: "static const YY_CHAR * %s = 0;\n";
+}
+
+
+
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
     0,
@@ -403,4 +434,8 @@ struct flex_backend_t cpp_backend = {
 	.trace_fmt = "#line %d \"%s\"\n",
 	.int_define_fmt = "#define %s %d\n",
 	.string_define_fmt = "#define %s %s\n",
+	.get_int16_decl = cpp_get_int16_decl,
+	.get_int32_decl = cpp_get_int32_decl,
+	.get_state_decl = cpp_get_state_decl,
+	.get_yy_char_decl = cpp_get_yy_char_decl,
 };
