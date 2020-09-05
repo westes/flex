@@ -459,43 +459,46 @@ void check_options (void)
 	buf_strdefine (&userdef_buf, "YY_INT_ALIGNED",
 		       long_align ? "long int" : "short int");
 
-    /* Define the start condition macros. */
-    {
-        struct Buf tmpbuf;
-        buf_init(&tmpbuf, sizeof(char));
-        for (i = 1; i <= lastsc; i++) {
-             char *str, *fmt = "#define %s %d\n";
-             size_t strsz;
+	/* Define the start condition macros. */
+	{
+	    struct Buf tmpbuf;
+	    buf_init(&tmpbuf, sizeof(char));
+	    for (i = 1; i <= lastsc; i++) {
+		 char *str, *fmt = "#define %s %d\n";
+		 size_t strsz;
 
-             strsz = strlen(fmt) + strlen(scname[i]) + (size_t)(1 + ceil (log10(i))) + 2;
-             str = malloc(strsz);
-             if (!str)
-               flexfatal(_("allocation of macro definition failed"));
-             snprintf(str, strsz, fmt,      scname[i], i - 1);
-             buf_strappend(&tmpbuf, str);
-             free(str);
-        }
-        buf_m4_define(&m4defs_buf, "M4_YY_SC_DEFS", tmpbuf.elts);
-        buf_destroy(&tmpbuf);
-    }
+		 strsz = strlen(fmt) + strlen(scname[i]) + (size_t)(1 + ceil (log10(i))) + 2;
+		 str = malloc(strsz);
+		 if (!str)
+		   flexfatal(_("allocation of macro definition failed"));
+		 snprintf(str, strsz, fmt,      scname[i], i - 1);
+		 buf_strappend(&tmpbuf, str);
+		 free(str);
+	    }
+	    buf_m4_define(&m4defs_buf, "M4_YY_SC_DEFS", tmpbuf.elts);
+	    buf_destroy(&tmpbuf);
+	}
 
-    /* This is where we begin writing to the file. */
+	/* This is where we begin writing to the file. */
 
-    /* Dump the %top code. */
-    if( top_buf.elts)
-        outn((char*) top_buf.elts);
+	/* Dump the %top code. */
+	if( top_buf.elts)
+	    outn((char*) top_buf.elts);
 
-    /* Dump the m4 definitions. */
-    buf_print_strings(&m4defs_buf, stdout);
-    m4defs_buf.nelts = 0; /* memory leak here. */
+	/* Dump the m4 definitions. */
+	buf_print_strings(&m4defs_buf, stdout);
+	m4defs_buf.nelts = 0; /* memory leak here. */
 
-    /* Place a bogus line directive, it will be fixed in the filter. */
-    if (gen_line_dirs)
-        outn("#line 0 \"M4_YY_OUTFILE_NAME\"\n");
+	/* Place a bogus line directive, it will be fixed in the filter. */
+	if (gen_line_dirs && backend->trace_fmt) {
+		char buf2[4096];
+		snprintf(buf2, sizeof(buf2), backend->trace_fmt, 0, "M4_YY_OUTFILE_NAME");
+		outn(buf2);
+	}
 
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)
-		outn ((char *) (userdef_buf.elts));
+	    outn ((char *) (userdef_buf.elts));
 
 	skelout ();
 	/* %% [1.0] */
