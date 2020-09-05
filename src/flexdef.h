@@ -308,6 +308,7 @@
 struct flex_backend_t {
 	void (*prolog)(void);
 	void (*wrap)(void);
+	char *line_fmt;
 };
 
 /* Declarations for global variables. */
