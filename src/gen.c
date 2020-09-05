@@ -40,7 +40,7 @@
 void	genecs(void);
 
 
-static int indent_level = 0;	/* each level is 8 spaces */
+int indent_level = 0;	/* each level is 8 spaces */
 
 #define set_indent(indent_val) indent_level = indent_val
 
@@ -112,28 +112,18 @@ static void geneoltbl (void)
 }
 
 
-/* Generate the code to keep backing-up information. */
+/* Conditionally generate the code to keep backing-up information. */
 
 void gen_backing_up (void)
 {
 	if (reject || num_backing_up == 0)
 		return;
 
-	if (fullspd)
-		indent_puts ("if ( yy_current_state[-1].yy_nxt )");
-	else
-		indent_puts ("if ( yy_accept[yy_current_state] )");
-
-	++indent_level;
-	indent_puts ("{");
-	indent_puts ("YY_G(yy_last_accepting_state) = yy_current_state;");
-	indent_puts ("YY_G(yy_last_accepting_cpos) = yy_cp;");
-	indent_puts ("}");
-	--indent_level;
+	backend->gen_backing_up();
 }
 
 
-/* Generate the code to perform the backing up. */
+/* Conditionally generate the code to perform the backing up. */
 
 void gen_bu_action (void)
 {
@@ -142,21 +132,7 @@ void gen_bu_action (void)
 
 	set_indent (3);
 
-	indent_puts ("case 0: /* must back up */");
-	indent_puts ("/* undo the effects of YY_DO_BEFORE_ACTION */");
-	indent_puts ("*yy_cp = YY_G(yy_hold_char);");
-
-	if (fullspd || fulltbl)
-		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos) + 1;");
-	else
-		/* Backing-up info for compressed tables is taken \after/
-		 * yy_cp has been incremented for the next state.
-		 */
-		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos);");
-
-	indent_puts ("yy_current_state = YY_G(yy_last_accepting_state);");
-	indent_puts ("goto yy_find_action;");
-	outc ('\n');
+	backend->gen_bu_action();
 
 	set_indent (0);
 }

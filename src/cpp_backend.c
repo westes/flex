@@ -427,12 +427,47 @@ static void cpp_mkeoltbl()
 }
 
 static void cpp_geneoltbl(size_t sz)
-// generate end-of-line-transitions - only used when yylinemo tracking is on
+// Generate end-of-line-transitions - only used when yylineno tracking is on
 {
 	outn ("/* Table of booleans, true if rule could match eol. */");
 	out_str_dec (backend->get_int32_decl (), "yy_rule_can_match_eol", sz);
 }
 
+static void cpp_gen_backing_up (void)
+// Generate code to keep backup information.
+{
+	if (fullspd)
+		indent_puts ("if ( yy_current_state[-1].yy_nxt )");
+	else
+		indent_puts ("if ( yy_accept[yy_current_state] )");
+
+	++indent_level;
+	indent_puts ("{");
+	indent_puts ("YY_G(yy_last_accepting_state) = yy_current_state;");
+	indent_puts ("YY_G(yy_last_accepting_cpos) = yy_cp;");
+	indent_puts ("}");
+	--indent_level;
+}
+
+static void cpp_gen_bu_action (void)
+// Generate the code to perform the backing up.
+{
+	indent_puts ("case 0: /* must back up */");
+	indent_puts ("/* undo the effects of YY_DO_BEFORE_ACTION */");
+	indent_puts ("*yy_cp = YY_G(yy_hold_char);");
+
+	if (fullspd || fulltbl)
+		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos) + 1;");
+	else
+		/* Backing-up info for compressed tables is taken \after/
+		 * yy_cp has been incremented for the next state.
+		 */
+		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos);");
+
+	indent_puts ("yy_current_state = YY_G(yy_last_accepting_state);");
+	indent_puts ("goto yy_find_action;");
+	outc ('\n');
+}
 
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
@@ -455,4 +490,6 @@ struct flex_backend_t cpp_backend = {
 	.get_yy_char_decl = cpp_get_yy_char_decl,
 	.mkeoltbl = cpp_mkeoltbl,
 	.geneoltbl = cpp_geneoltbl,
+	.gen_backing_up = cpp_gen_backing_up,
+	.gen_bu_action = cpp_gen_bu_action,
 };
