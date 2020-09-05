@@ -2825,7 +2825,7 @@ int yylex_init_extra( YY_EXTRA_TYPE yy_user_defined, yyscan_t* ptr_yy_globals )
 }
 
 %endif if-c-only
-%# Actually, that ended an if-rentrant section
+%# Actually, that ended an if-reentrant section
 
 %if-c-only
 static int yy_init_globals (M4_YY_DEF_ONLY_ARG)
