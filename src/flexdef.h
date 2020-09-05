@@ -303,6 +303,12 @@
  */
 #define MAX_SHORT 32700
 
+/* Method table describing a language-specific back end */
+
+struct flex_backend_t {
+	void (*prolog)(void);
+	void (*wrap)(void);
+};
 
 /* Declarations for global variables. */
 
@@ -368,6 +374,8 @@ extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
 extern int yymore_really_used, reject_really_used;
 extern int trace_hex;
+
+extern struct flex_backend_t *backend;
 
 /* Variables used in the flex input routines:
  * datapos - characters on current output line
