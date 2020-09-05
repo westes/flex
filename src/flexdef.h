@@ -321,7 +321,9 @@ struct flex_backend_t {
 	const void (*mkeoltbl)(void);		// Make end-of-line table
 	const void (*geneoltbl)(size_t);	// Generate end-of-line transitions
 	const void (*gen_backing_up)(void);	// Generate code to keep backup information
-	const void (*gen_bu_action)(void);	// Generate the code to perform the backing up.
+	const void (*gen_bu_action)(void);	// Generate the code to perform the backing up
+	const void (*mkctbl)(size_t);		// Make full-speed compressed table
+	const void (*mkssltbl)(void);		// Make start_state_list table
 };
 
 extern bool gentables;

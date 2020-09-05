@@ -151,10 +151,7 @@ static struct yytbl_data *mkctbl (void)
 	flex_int32_t *tdata = 0, curr = 0;
 	int     end_of_buffer_action = num_rules + 1;
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_TRANSITION, (void**)&yy_transition, sizeof(%s)},\n",
-		    ((tblend + numecs + 1) >= INT16_MAX
-		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+	backend->mkctbl(tblend + numecs + 1);
 
 	tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYTD_ID_TRANSITION);
@@ -264,9 +261,7 @@ static struct yytbl_data *mkssltbl (void)
 	for (i = 0; i <= lastsc * 2; ++i)
 		tdata[i] = base[i];
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(%s)},\n",
-		    "struct yy_trans_info*");
+	backend->mkssltbl();
 
 	return tbl;
 }
@@ -352,7 +347,7 @@ void genctbl (void)
 	transition_struct_out (chk[tblend + 2], nxt[tblend + 2]);
 
 	if (gentables)
-		outn ("    };\n");
+		outn (backend->table_closer);
 
 	/* Table of pointers to start states. */
 	if (gentables)

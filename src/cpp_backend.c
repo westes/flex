@@ -469,6 +469,24 @@ static void cpp_gen_bu_action (void)
 	outc ('\n');
 }
 
+static void cpp_mkctbl (size_t sz)
+// Make full-speed compressed transition table
+{
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_TRANSITION, (void**)&yy_transition, sizeof(%s)},\n",
+		    (sz >= INT16_MAX
+		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+}
+
+static void cpp_mkssltbl (void)
+// Make start_state_list table
+{
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(%s)},\n",
+		    "struct yy_trans_info*");
+}
+
+
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
     0,
@@ -492,4 +510,6 @@ struct flex_backend_t cpp_backend = {
 	.geneoltbl = cpp_geneoltbl,
 	.gen_backing_up = cpp_gen_backing_up,
 	.gen_bu_action = cpp_gen_bu_action,
+	.mkctbl = cpp_mkctbl,
+	.mkssltbl = cpp_mkssltbl,
 };
