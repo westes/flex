@@ -322,15 +322,8 @@ void check_options (void)
 		FILE   *prev_stdout;
 
 		if (!did_outfilename) {
-			char   *suffix;
-
-			if (C_plus_plus)
-				suffix = "cc";
-			else
-				suffix = "c";
-
 			snprintf (outfile_path, sizeof(outfile_path), outfile_template,
-				 prefix, suffix);
+				  prefix, backend->suffix());
 
 			outfilename = outfile_path;
 		}

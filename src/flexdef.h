@@ -306,6 +306,7 @@
 /* Method table describing a language-specific back end */
 
 struct flex_backend_t {
+	const char *(*suffix)(void);
 	const char **skel;
 	void (*prolog)(void);
 	void (*wrap)(void);

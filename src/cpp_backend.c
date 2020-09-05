@@ -37,6 +37,18 @@
 
 /* Code specific to the C/C++ back end starts here */
 
+static const char *cpp_suffix (void)
+{
+	char   *suffix;
+
+	if (C_plus_plus)
+	    suffix = "cc";
+	else
+	    suffix = "c";
+
+	return suffix;
+}
+
 /* cpp_prolog - make rules prolog pecific to cpp-using languages.
  *
  * If you don't ship this, you will effectively be assuming that your
@@ -383,6 +395,7 @@ const char *cpp_skel[] = {
 
 /* This backend is only accessed through this method table */
 struct flex_backend_t cpp_backend = {
+    .suffix = cpp_suffix,
 	.skel = cpp_skel,
 	.prolog = cpp_prolog,
 	.wrap = cpp_wrap,
