@@ -97,9 +97,7 @@ static void geneoltbl (void)
 	int     i;
 
 	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
-	outn ("/* Table of booleans, true if rule could match eol. */");
-	out_str_dec (backend->get_int32_decl (), "yy_rule_can_match_eol",
-		     num_rules + 1);
+	backend->geneoltbl(num_rules + 1);
 
 	if (gentables) {
 		for (i = 1; i <= num_rules; i++) {
@@ -108,7 +106,7 @@ static void geneoltbl (void)
 			if ((i % 20) == 19)
 				out ("\n    ");
 		}
-		out ("    };\n");
+		out (backend->table_closer);
 	}
 	outn ("]])");
 }

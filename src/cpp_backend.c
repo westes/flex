@@ -426,6 +426,14 @@ static void cpp_mkeoltbl()
 		    "flex_int32_t");
 }
 
+static void cpp_geneoltbl(size_t sz)
+// generate end-of-line-transitions - only used when yylinemo tracking is on
+{
+	outn ("/* Table of booleans, true if rule could match eol. */");
+	out_str_dec (backend->get_int32_decl (), "yy_rule_can_match_eol", sz);
+}
+
+
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
     0,
@@ -440,9 +448,11 @@ struct flex_backend_t cpp_backend = {
 	.trace_fmt = "#line %d \"%s\"\n",
 	.int_define_fmt = "#define %s %d\n",
 	.string_define_fmt = "#define %s %s\n",
+	.table_closer = "    };\n",
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,
 	.get_state_decl = cpp_get_state_decl,
 	.get_yy_char_decl = cpp_get_yy_char_decl,
 	.mkeoltbl = cpp_mkeoltbl,
+	.geneoltbl = cpp_geneoltbl,
 };
