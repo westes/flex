@@ -341,7 +341,7 @@ void lerr_fatal (const char *msg, ...)
 
 void line_directive_out (FILE *output_file, int do_infile)
 {
-	char    directive[MAXLINE], filename[MAXLINE];
+	char    directive[MAXLINE*2], filename[MAXLINE];
 	char   *s1, *s2, *s3;
 
 	if (!gen_line_dirs)
