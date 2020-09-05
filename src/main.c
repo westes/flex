@@ -44,10 +44,9 @@ static char flex_version[] = FLEX_VERSION;
 
 void flexinit(int, char **);
 void readin(void);
-void cpp_prolog(void);
-void cpp_wrap(void);
 void set_up_initial_allocations(void);
 
+extern struct flex_backend_t cpp_backend;
 
 /* these globals are all defined and commented in flexdef.h */
 int     printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
@@ -108,6 +107,8 @@ int     num_input_files;
 jmp_buf flex_main_jmp_buf;
 bool   *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
+
+struct flex_backend_t *backend;
 
 bool    tablesext, tablesverify, gentables;
 char   *tablesfilename=0,*tablesname=0;
@@ -171,7 +172,7 @@ int flex_main (int argc, char *argv[])
 
 	readin ();
 
-	cpp_prolog ();
+	backend->prolog ();
 
 	skelout ();
 	/* %% [1.5] DFA */
@@ -530,7 +531,7 @@ void flexend (int exit_status)
 				skelname);
 	}
 
-	cpp_wrap();
+	backend->wrap();
 
 	if (exit_status != 0 && outfile_created) {
 		if (ferror (stdout))
@@ -1292,6 +1293,8 @@ void flexinit (int argc, char **argv)
 	lastprot = 1;
 
 	set_up_initial_allocations ();
+
+	backend = &cpp_backend;
 }
 
 
@@ -1570,7 +1573,7 @@ void usage (void)
  * Unicode code-point type like Go's 'rune' is may be appropriate.
  */
 
-void cpp_prolog (void)
+static void cpp_prolog (void)
 {
 	static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
 	static char yy_nostdinit[] =
@@ -1702,7 +1705,7 @@ void cpp_prolog (void)
 	}
 }
 
-void cpp_wrap (void)
+static void cpp_wrap (void)
 {
 #if 0
 	fprintf (header_out,
@@ -1892,3 +1895,8 @@ void cpp_wrap (void)
 	fclose (header_out);
 #endif
 }
+
+struct flex_backend_t cpp_backend = {
+	.prolog = cpp_prolog,
+	.wrap = cpp_wrap,
+};
