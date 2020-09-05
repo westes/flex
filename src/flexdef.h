@@ -313,6 +313,8 @@ struct flex_backend_t {
 	char *trace_fmt;			// Trace message format
 	char *int_define_fmt;			// Format for integer constant definitions
 	char *string_define_fmt;		// Format for string constant definitions
+	char *open_block;			// Open statement block
+	char *close_block;			// Close statement block
 	char *table_opener;			// Open an array uinitializer with this
 	char *table_closer;			// Close an array uinitializer with this
 	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
