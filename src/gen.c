@@ -352,7 +352,7 @@ void genctbl (void)
 		outn (backend->table_opener);
 
 		for (i = 0; i <= lastsc * 2; ++i)
-			out_dec ("    &yy_transition[%d],\n", base[i]);
+			out_dec (backend->state_entry_fmt, base[i]);
 
 		dataend ();
 	}
@@ -384,9 +384,7 @@ static struct yytbl_data *mkecstbl (void)
 		tdata[i] = ecgroup[i];
 	}
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_EC, (void**)&yy_ec, sizeof(%s)},\n",
-		    "YY_CHAR");
+	backend->mkecstbl();
 
 	return tbl;
 }

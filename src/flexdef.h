@@ -315,10 +315,10 @@ struct flex_backend_t {
 	char *string_define_fmt;		// Format for string constant definitions
 	char *table_opener;			// Open an array uinitializer with this
 	char *table_closer;			// Close an array uinitializer with this
-	const char *(*get_int16_decl)(void);	// Format for declating array initializer of int16s
-	const char *(*get_int32_decl)(void);	// Format for declating array initializer of int32s
-	const char *(*get_state_decl)(void);	// Format for declating array initializer of state values
-	const char *(*get_yy_char_decl)(void);	// Format for declating array initializer of input chars
+	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
+	const char *(*get_int32_decl)(void);	// Format for declaring array initializer of int32s
+	const char *(*get_state_decl)(void);	// Format for declaring array initializer of state values
+	const char *(*get_yy_char_decl)(void);	// Format for declaring array initializer of input chars
 	const void (*mkeoltbl)(void);		// Make end-of-line table
 	const void (*geneoltbl)(size_t);	// Generate end-of-line transitions
 	const void (*gen_backing_up)(void);	// Generate code to keep backup information
@@ -326,7 +326,9 @@ struct flex_backend_t {
 	const void (*mkctbl)(size_t);		// Make full-speed compressed table
 	const void (*mkssltbl)(void);		// Make start_state_list table
 	const void (*gen_yy_trans)(size_t);	// Table of verify for transition and offset to next state. (sic)
-	const void (*start_state_list)(size_t);	// Start initializer for table of pointers to start state
+	const void (*start_state_list)(size_t);	// Start initializer for table of pointers to start states
+	const char *state_entry_fmt;		// Format of starte table entry
+	const void (*mkecstbl)(void);		// Make equivalence-class tables
 };
 
 extern bool gentables;

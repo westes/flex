@@ -505,6 +505,13 @@ static void cpp_start_state_list(size_t sz)
 		outn ("static const struct yy_trans_info **yy_start_state_list =0;");
 }
 
+static void cpp_mkecstbl(void)
+// Make equivalence-class tables
+{
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_EC, (void**)&yy_ec, sizeof(%s)},\n",
+		    "YY_CHAR");
+}
 
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
@@ -534,4 +541,6 @@ struct flex_backend_t cpp_backend = {
 	.mkssltbl = cpp_mkssltbl,
 	.gen_yy_trans = cpp_gen_yy_trans,
 	.start_state_list = cpp_start_state_list,
+	.state_entry_fmt = "    &yy_transition[%d],\n",
+	.mkecstbl = cpp_mkecstbl,
 };
