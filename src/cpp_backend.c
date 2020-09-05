@@ -49,20 +49,21 @@ static const char *cpp_suffix (void)
 	return suffix;
 }
 
-/* cpp_prolog - make rules prolog pecific to cpp-using languages.
+/* cpp_prolog - make rules prolog specific to cpp-using languages.
  *
  * If you don't ship this, you will effectively be assuming that your
  * parsers are always reentrant, always allow reject, always have a
  * yywrap() method, have a debug member in the wrapper class, and are
  * interactive.  This eliminates most of the boilerplate in the C/C++
  * scanner prolog.  It means such parsers will be a bit larger and
- * slower than C/C++ ones, but since we're not runing on 1987's
+ * slower than C/C++ ones, but since we're not running on 1987's
  * hardware we officially do not care.
  *
- * A detail to beware of: If you're not issuing this prologue, you
- * may want to issue your own definition of YY_CHAR. It's a typedef
- * to an unsigned octet in C/C++, but if your target language has a
- * Unicode code-point type like Go's 'rune' is may be appropriate.
+ * A detail to beware of: If you're not issuing this prologue, you may
+ * want to write your own definition of YY_CHAR in your skel
+ * file. It's a typedef to an unsigned octet in C/C++, but if your
+ * target language has a Unicode code-point type like Go's 'rune' is
+ * may be appropriate.
  */
 
 static void cpp_prolog (void)
@@ -127,7 +128,7 @@ static void cpp_prolog (void)
 
 		else {
 			if(!reentrant)
-                outn (yy_nostdinit);
+				outn (yy_nostdinit);
 		}
 		OUT_END_CODE ();
 	}
@@ -197,7 +198,7 @@ static void cpp_prolog (void)
 	}
 }
 
-static void cpp_wrap (void)
+static void cpp_epilog (void)
 {
 #if 0
 	fprintf (header_out,
@@ -395,9 +396,9 @@ const char *cpp_skel[] = {
 
 /* This backend is only accessed through this method table */
 struct flex_backend_t cpp_backend = {
-    .suffix = cpp_suffix,
-	.skel = cpp_skel,
+	.suffix = cpp_suffix,
 	.prolog = cpp_prolog,
-	.wrap = cpp_wrap,
-	.line_fmt = "#line %d \"%s\"\n",
+	.skel = cpp_skel,
+	.epilog = cpp_epilog,
+	.trace_fmt = "#line %d \"%s\"\n",
 };

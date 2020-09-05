@@ -150,29 +150,30 @@ int flex_main (int argc, char *argv[])
 	 * exit(n);
 	 */
 	exit_status = setjmp (flex_main_jmp_buf);
-	if (exit_status){
-        if (stdout && !_stdout_closed && !ferror(stdout)){
-            fflush(stdout);
-            fclose(stdout);
-        }
-        while (wait(&child_status) > 0){
-            if (!WIFEXITED (child_status)
-                || WEXITSTATUS (child_status) != 0){
-                /* report an error of a child
-                 */
-                if( exit_status <= 1 )
-                    exit_status = 2;
+	if (exit_status) {
+		if (stdout && !_stdout_closed && !ferror(stdout)){
+		    fflush(stdout);
+		    fclose(stdout);
+		}
+		while (wait(&child_status) > 0){
+		    if (!WIFEXITED (child_status)
+			|| WEXITSTATUS (child_status) != 0){
+			/* report an error of a child
+			 */
+			if( exit_status <= 1 )
+			    exit_status = 2;
 
-            }
-        }
-        return exit_status - 1;
-    }
+		    }
+		}
+		return exit_status - 1;
+	}
 
 	flexinit (argc, argv);
 
 	readin ();
 
-	backend->prolog ();
+	if (backend->prolog)
+		backend->prolog ();
 
 	skelout ();
 	/* %% [1.5] DFA */
@@ -524,7 +525,8 @@ void flexend (int exit_status)
 				skelname);
 	}
 
-	backend->wrap();
+	if (backend->epilog)
+		backend->epilog();
 
 	if (exit_status != 0 && outfile_created) {
 		if (ferror (stdout))

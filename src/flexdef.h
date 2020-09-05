@@ -306,11 +306,11 @@
 /* Method table describing a language-specific back end */
 
 struct flex_backend_t {
-	const char *(*suffix)(void);
-	const char **skel;
-	void (*prolog)(void);
-	void (*wrap)(void);
-	char *line_fmt;
+	const char *(*suffix)(void);	// Generarte suffix for lexer source code
+	void (*prolog)(void);		// Write prolog code for the skeleton
+	const char **skel;		// Skeleton for generated code
+	void (*epilog)(void);		// Write epilog code for the skeleton
+	char *trace_fmt;		// Trace message format
 };
 
 /* Declarations for global variables. */
