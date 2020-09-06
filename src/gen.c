@@ -478,10 +478,10 @@ void gen_find_action (void)
 			outn ("]])\n");
 
 		do_indent ();
-		out(backend->forever);
-		out(" ");
-		backend->linecomment("loop until we find what rule we matched");
+		outn(backend->forever);
 		++indent_level;
+		do_indent();
+		backend->linecomment("loop until we find what rule we matched");
 
 		backend->cond("YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1]");
 		++indent_level;
@@ -494,8 +494,8 @@ void gen_find_action (void)
 			backend->cond("yy_act == YY_G(yy_looking_for_trail_begin)");
 			++indent_level;
 			backend->assign("YY_G(yy_looking_for_trail_begin)", "0");
-			indent_puts ("yy_act &= ~YY_TRAILING_HEAD_MASK;");
-			indent_puts ("break;");
+			backend->statement("yy_act &= ~YY_TRAILING_HEAD_MASK");
+			backend->statement("break");
 			indent_puts (backend->close_block);
 			--indent_level;
 
@@ -525,7 +525,7 @@ void gen_find_action (void)
 			indent_puts (backend->open_block);
 			backend->assign("YY_G(yy_full_match)", "yy_cp");
 			backend->assign("YY_G(yy_full_state)", "YY_G(yy_state_ptr)");
-			backend->assign("YY_G(yy_full_lp)", "YY_G(yy_lp);");
+			backend->assign("YY_G(yy_full_lp)", "YY_G(yy_lp)");
 			backend->statement("break");
 			indent_puts (backend->close_block);
 			--indent_level;
@@ -555,8 +555,8 @@ void gen_find_action (void)
 		 * the beginning, but at the cost of complaints that we're
 		 * branching inside a loop.
 		 */
-		indent_puts ("yy_current_state = *--YY_G(yy_state_ptr);");
-		indent_puts ("YY_G(yy_lp) = yy_accept[yy_current_state];");
+		backend->statement("yy_current_state = *--YY_G(yy_state_ptr)");
+		backend->assign("YY_G(yy_lp)", "yy_accept[yy_current_state]");
 
 		indent_puts (backend->close_block);
 
@@ -570,9 +570,9 @@ void gen_find_action (void)
 			/* Do the guaranteed-needed backing up to figure out
 			 * the match.
 			 */
-			indent_puts ("if ( yy_act == 0 )");
+			backend->cond("yy_act == 0");
 			++indent_level;
-			indent_puts ("{ /* have to back up */");
+			backend->linecomment("have to back up");
 			backend->assign("yy_cp", "YY_G(yy_last_accepting_cpos)");
 			backend->assign("yy_current_state", "YY_G(yy_last_accepting_state)");
 			backend->assign("yy_act", "yy_accept[yy_current_state]");
