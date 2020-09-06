@@ -429,12 +429,23 @@ void genecs (void)
 
 void gen_find_action (void)
 {
-	/* This function relies on some assumptions that arebn't i  the method table.
-	 * 1. Target language uses [] for indexing
-	 * 2. Target language uses . to reach structure members
-	 * 3. YY_G() expands to a location that is assignable
-	 * 4, Label syntax is C-like - identifier followed by colon
-	 * 5. && is infix logical and (FIXNE)
+	/* This function relies on some assumptions that aren't in the method table.
+	 * 1. Target language uses [] for indexing.
+	 * 2. Target language uses . to reach structure members.
+	 * 3. YY_G() expands to a location that is assignable.
+	 * 4, Label syntax is C-like - identifier followed by colon.
+	 * 5. The following C infix operators have their usual
+	 *    meanings: && || == < & | ~ &= |= in cond() argyments and
+	 *    second arguments of assign(), and your back end must
+	 *    translate them itself.
+	 * 6. All conditionals and loops are attached to a block
+	 *    with begin and end delimiters, not just a bare statement.
+	 *
+	 * Assumptions about operator precedenve are *not* made;
+	 * all code with multiple operators is fully parenthesized.
+	 *
+	 * You should *not* add superfluous outer parentheses to
+	 * expressions; your back end should supply required ones
 	 */
 
 	if (fullspd)
@@ -461,21 +472,15 @@ void gen_find_action (void)
 		out(backend->forever);
 		out(" ");
 		backend->linecomment("loop until we find what rule we matched");
-
 		++indent_level;
 
-		indent_puts
-			("if ( YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1] )");
+		backend->cond("YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1]");
 		++indent_level;
-		indent_puts (backend->open_block);
-		indent_puts ("yy_act = yy_acclist[YY_G(yy_lp)];");
+		backend->assign("yy_act", "yy_acclist[YY_G(yy_lp)]");
 
 		if (variable_trailing_context_rules) {
-			indent_puts
-				("if ( yy_act & YY_TRAILING_HEAD_MASK ||");
-			indent_puts ("     YY_G(yy_looking_for_trail_begin) )");
+			backend->cond("(yy_act & YY_TRAILING_HEAD_MASK) || YY_G(yy_looking_for_trail_begin)");
 			++indent_level;
-			indent_puts (backend->open_block);
 
 			indent_puts
 				("if ( yy_act == YY_G(yy_looking_for_trail_begin) )");
