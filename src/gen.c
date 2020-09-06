@@ -434,6 +434,7 @@ void gen_find_action (void)
 	 * 2. Target language uses . to reach structure members
 	 * 3. YY_G() expands to a location that is assignable
 	 * 4, Label syntax is C-like - identifier followed by colon
+	 * 5. && is infix logical and (FIXNE)
 	 */
 
 	if (fullspd)
@@ -480,7 +481,7 @@ void gen_find_action (void)
 				("if ( yy_act == YY_G(yy_looking_for_trail_begin) )");
 			++indent_level;
 			indent_puts (backend->open_block);
-			indent_puts ("YY_G(yy_looking_for_trail_begin) = 0;");
+			backend->assign("YY_G(yy_looking_for_trail_begin)", "0");
 			indent_puts ("yy_act &= ~YY_TRAILING_HEAD_MASK;");
 			indent_puts ("break;");
 			indent_puts (backend->close_block);
@@ -502,11 +503,9 @@ void gen_find_action (void)
 				/* Remember matched text in case we back up
 				 * due to REJECT.
 				 */
-				indent_puts
-					("YY_G(yy_full_match) = yy_cp;");
-				indent_puts
-					("YY_G(yy_full_state) = YY_G(yy_state_ptr);");
-				indent_puts ("YY_G(yy_full_lp) = YY_G(yy_lp);");
+				backend->assign("YY_G(yy_full_match)", "yy_cp");
+				backend->assign("YY_G(yy_full_state)", "YY_G(yy_state_ptr)");
+				backend->assign("YY_G(yy_full_lp)", "YY_G(yy_lp)");
 			}
 
 			indent_puts (backend->close_block);
@@ -515,10 +514,9 @@ void gen_find_action (void)
 			indent_puts ("else");
 			++indent_level;
 			indent_puts (backend->open_block);
-			indent_puts ("YY_G(yy_full_match) = yy_cp;");
-			indent_puts
-				("YY_G(yy_full_state) = YY_G(yy_state_ptr);");
-			indent_puts ("YY_G(yy_full_lp) = YY_G(yy_lp);");
+			backend->assign("YY_G(yy_full_match)", "yy_cp");
+			backend->assign("YY_G(yy_full_state)", "YY_G(yy_state_ptr)");
+			backend->assign("YY_G(yy_full_lp)", "YY_G(yy_lp);");
 			indent_puts ("break;");
 			indent_puts (backend->close_block);
 			--indent_level;
@@ -542,7 +540,7 @@ void gen_find_action (void)
 		indent_puts (backend->close_block);
 		--indent_level;
 
-		indent_puts ("--yy_cp;");	// C-ISM
+		backend->decrement("yy_cp");
 
 		/* We could consolidate the following two lines with those at
 		 * the beginning, but at the cost of complaints that we're

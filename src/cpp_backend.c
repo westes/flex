@@ -395,6 +395,7 @@ static void cpp_linecomment(char *text)
     out(text);
     outn(" */");
 }
+
 static void cpp_assign(char *left, char *right)
 {
     do_indent ();
@@ -402,6 +403,14 @@ static void cpp_assign(char *left, char *right)
     out(" = ");
     out(right);
     outn(";");
+}
+
+static void cpp_cond(char *guard)
+{
+    do_indent ();
+    out("if (");
+    out(guard);
+    outn(" ) {");
 }
 
 static void cpp_decrement(char *varname)
@@ -556,6 +565,7 @@ struct flex_backend_t cpp_backend = {
 	.table_closer = "    };\n",
 	.linecomment = cpp_linecomment,
 	.assign = cpp_assign,
+	.cond = cpp_cond,
 	.decrement = cpp_decrement,
 	.forever = "for ( ; ; ) {",
 	.get_int16_decl = cpp_get_int16_decl,
