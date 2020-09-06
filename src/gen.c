@@ -429,9 +429,10 @@ void genecs (void)
 
 void gen_find_action (void)
 {
-	/* This function relies on some assumotions that arebn't i  the method table.
+	/* This function relies on some assumptions that arebn't i  the method table.
 	 * 1. Target language uses [] for indexing
 	 * 2. Target language uses . to reach structure members
+	 * 3. YY_G() expands to a location that is assignable
 	 */
 
 	if (fullspd)
@@ -441,8 +442,9 @@ void gen_find_action (void)
 		backend->assign("yy_act", "yy_accept[yy_current_state]");
 
 	else if (reject) {
-		backend->assign("yy_current_state", "*--YY_G(yy_state_ptr)");	// C-ISM
-		backend->assign("YY_G(yy_lp)", "yy_accept[yy_current_state]");	// C-ISM
+		backend->decrement("YY_G(yy_state_ptr)");
+		backend->assign("yy_current_state", "*YY_G(yy_state_ptr)");
+		backend->assign("YY_G(yy_lp)", "yy_accept[yy_current_state]");
 
 		if (!variable_trailing_context_rules)
 			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");

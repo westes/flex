@@ -398,6 +398,14 @@ static void cpp_assign(char *left, char *right)
     outn(";");
 }
 
+static void cpp_decrement(char *varname)
+{
+    do_indent ();
+    out("--");
+    out(varname);
+    outn(";");
+}
+
 static const char *cpp_get_int16_decl (void)
 {
 	return (gentables)
@@ -541,6 +549,7 @@ struct flex_backend_t cpp_backend = {
 	.table_opener = "    {",
 	.table_closer = "    };\n",
 	.assign = cpp_assign,
+	.decrement = cpp_decrement,
 	.forever = "for ( ; ; ) /* until we find what rule we matched */",
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,
