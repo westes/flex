@@ -431,7 +431,7 @@ void gen_find_action (void)
 {
 	/* This function relies on some assumptions that aren't in the method table.
 	 * 1. Target language uses [] for indexing.
-	 * 2. Target language uses . to reach structure members.
+	 * 2. Target language uses . to reach structure members. (But not ->.)
 	 * 3. YY_G() expands to a location that is assignable.
 	 * 4, Label syntax is C-like - identifier followed by colon.
 	 * 5. The following C infix operators have their usual
@@ -440,6 +440,10 @@ void gen_find_action (void)
 	 *    translate them itself.
 	 * 6. All conditionals and loops are attached to a block
 	 *    with begin and end delimiters, not just a bare statement.
+	 * 7. Postincrement and post-decrement statements are allowed;
+	 *    preincrement and predecrement are not.  Neither may be used
+	 *    in expressions
+	 * 8. "break" and  goto are legal atatements.
 	 *
 	 * Assumptions about operator precedenve are *not* made;
 	 * all code with multiple operators is fully parenthesized.
@@ -448,7 +452,7 @@ void gen_find_action (void)
 	 * expressions; your back end should supply required ones.
 	 *
 	 * The generate code also does not assume that numeric value
-	 * is, as in C, a valid boolean expression evaluatung to tre
+	 * is, as in C, a valid boolean expression evaluatung to the
 	 * if not zero.  Boolean tests on numneric values must have
 	 * an explicit "== 0" or "!= 0:,
 	 */
@@ -1032,7 +1036,7 @@ void gentabs (void)
 		out_str_dec (long_align ? backend->get_int32_decl () :
 			     backend->get_int16_decl (), "yy_acclist", MAX (numas,
 								   1) + 1);
-        
+
         buf_prints (&yydmap_buf,
                 "\t{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(%s)},\n",
                 long_align ? "flex_int32_t" : "flex_int16_t");
@@ -1040,7 +1044,7 @@ void gentabs (void)
         yyacclist_tbl = calloc(1,sizeof(struct yytbl_data));
         yytbl_data_init (yyacclist_tbl, YYTD_ID_ACCLIST);
         yyacclist_tbl->td_lolen  = (flex_uint32_t) (MAX(numas,1) + 1);
-        yyacclist_tbl->td_data = yyacclist_data = 
+        yyacclist_tbl->td_data = yyacclist_data =
             calloc(yyacclist_tbl->td_lolen, sizeof (flex_int32_t));
         yyacclist_curr = 1;
 
