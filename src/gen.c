@@ -435,7 +435,7 @@ void gen_find_action (void)
 	 * 3. YY_G() expands to a location that is assignable.
 	 * 4, Label syntax is C-like - identifier followed by colon.
 	 * 5. The following C infix operators have their usual
-	 *    meanings: && || == < & | ~ &= |= in cond() argyments and
+	 *    meanings: && || == != < & | ~ &= |= in cond() argyments and
 	 *    second arguments of assign(), and your back end must
 	 *    translate them itself.
 	 * 6. All conditionals and loops are attached to a block
@@ -445,7 +445,12 @@ void gen_find_action (void)
 	 * all code with multiple operators is fully parenthesized.
 	 *
 	 * You should *not* add superfluous outer parentheses to
-	 * expressions; your back end should supply required ones
+	 * expressions; your back end should supply required ones.
+	 *
+	 * The generate code also does not assume that numeric value
+	 * is, as in C, a valid boolean expression evaluatung to tre
+	 * if not zero.  Boolean tests on numneric values must have
+	 * an explicit "== 0" or "!= 0:,
 	 */
 
 	if (fullspd)
@@ -479,7 +484,7 @@ void gen_find_action (void)
 		backend->assign("yy_act", "yy_acclist[YY_G(yy_lp)]");
 
 		if (variable_trailing_context_rules) {
-			backend->cond("(yy_act & YY_TRAILING_HEAD_MASK) || YY_G(yy_looking_for_trail_begin)");
+			backend->cond("(yy_act & YY_TRAILING_HEAD_MASK) != 0 || YY_G(yy_looking_for_trail_begin)");
 			++indent_level;
 
 			backend->cond("yy_act == YY_G(yy_looking_for_trail_begin)");
