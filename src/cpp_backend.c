@@ -413,11 +413,10 @@ static void cpp_cond(char *guard)
     outn(" ) {");
 }
 
-static void cpp_decrement(char *varname)
+static void cpp_statement(char *text)
 {
     do_indent ();
-    out("--");
-    out(varname);
+    out(text);
     outn(";");
 }
 
@@ -566,7 +565,7 @@ struct flex_backend_t cpp_backend = {
 	.linecomment = cpp_linecomment,
 	.assign = cpp_assign,
 	.cond = cpp_cond,
-	.decrement = cpp_decrement,
+	.statement = cpp_statement,
 	.forever = "for ( ; ; ) {",
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,

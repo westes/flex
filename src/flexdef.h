@@ -319,7 +319,7 @@ struct flex_backend_t {
 	char *table_closer;			// Close an array uinitializer with this
 	void (*linecomment)(char *);		// Generate a properly wrapped commant line
 	void (*assign)(char *, char *);		// Assignment
-	void (*decrement)(char *);		// Generatre a decrement statement
+	void (*statement)(char *);		// Generate a statement
         void (*cond)(char *);			// Start a conditiobkl block
 	const char *forever;			// Do forever syntax
 	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s

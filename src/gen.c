@@ -443,7 +443,7 @@ void gen_find_action (void)
 	 * 7. Postincrement and post-decrement statements are allowed;
 	 *    preincrement and predecrement are not.  Neither may be used
 	 *    in expressions
-	 * 8. "break" and  goto are legal atatements.
+	 * 8. "break" and  "goto" are legal atatements.
 	 *
 	 * Assumptions about operator precedenve are *not* made;
 	 * all code with multiple operators is fully parenthesized.
@@ -452,7 +452,7 @@ void gen_find_action (void)
 	 * expressions; your back end should supply required ones.
 	 *
 	 * The generate code also does not assume that numeric value
-	 * is, as in C, a valid boolean expression evaluatung to the
+	 * is, as in C, a valid boolean expression evaluating to the
 	 * if not zero.  Boolean tests on numneric values must have
 	 * an explicit "== 0" or "!= 0:,
 	 */
@@ -464,7 +464,7 @@ void gen_find_action (void)
 		backend->assign("yy_act", "yy_accept[yy_current_state]");
 
 	else if (reject) {
-		backend->decrement("YY_G(yy_state_ptr)");
+		backend->statement("YY_G(yy_state_ptr)--");
 		backend->assign("yy_current_state", "*YY_G(yy_state_ptr)");
 		backend->assign("YY_G(yy_lp)", "yy_accept[yy_current_state]");
 
@@ -502,14 +502,11 @@ void gen_find_action (void)
 			indent_puts (backend->close_block);
 			--indent_level;
 
-			indent_puts
-				("else if ( yy_act & YY_TRAILING_MASK )");
+			indent_puts("else if ( ( yy_act & YY_TRAILING_MASK) != 0 )");
 			++indent_level;
 			indent_puts (backend->open_block);
-			indent_puts
-				("YY_G(yy_looking_for_trail_begin) = yy_act & ~YY_TRAILING_MASK;");
-			indent_puts
-				("YY_G(yy_looking_for_trail_begin) |= YY_TRAILING_HEAD_MASK;");
+			backend->assign("YY_G(yy_looking_for_trail_begin)", "yy_act & ~YY_TRAILING_MASK");
+			backend->statement("YY_G(yy_looking_for_trail_begin) |= YY_TRAILING_HEAD_MASK");
 
 			if (real_reject) {
 				/* Remember matched text in case we back up
@@ -529,12 +526,12 @@ void gen_find_action (void)
 			backend->assign("YY_G(yy_full_match)", "yy_cp");
 			backend->assign("YY_G(yy_full_state)", "YY_G(yy_state_ptr)");
 			backend->assign("YY_G(yy_full_lp)", "YY_G(yy_lp);");
-			indent_puts ("break;");
+			backend->statement("break");
 			indent_puts (backend->close_block);
 			--indent_level;
 
-			indent_puts ("++YY_G(yy_lp);");
-			indent_puts ("goto find_rule;");
+			backend->statement("YY_G(yy_lp)++");
+			backend->statement("goto find_rule");
 		}
 
 		else {
@@ -544,7 +541,7 @@ void gen_find_action (void)
 			++indent_level;
 			indent_puts (backend->open_block);
 			backend->assign("YY_G(yy_full_match)", "yy_cp");
-			indent_puts ("break;");
+			backend->statement("break");
 			indent_puts (backend->close_block);
 			--indent_level;
 		}
@@ -552,7 +549,7 @@ void gen_find_action (void)
 		indent_puts (backend->close_block);
 		--indent_level;
 
-		backend->decrement("yy_cp");
+		backend->statement("yy_cp--");
 
 		/* We could consolidate the following two lines with those at
 		 * the beginning, but at the cost of complaints that we're
