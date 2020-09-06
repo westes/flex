@@ -482,10 +482,8 @@ void gen_find_action (void)
 			backend->cond("(yy_act & YY_TRAILING_HEAD_MASK) || YY_G(yy_looking_for_trail_begin)");
 			++indent_level;
 
-			indent_puts
-				("if ( yy_act == YY_G(yy_looking_for_trail_begin) )");
+			backend->cond("yy_act == YY_G(yy_looking_for_trail_begin)");
 			++indent_level;
-			indent_puts (backend->open_block);
 			backend->assign("YY_G(yy_looking_for_trail_begin)", "0");
 			indent_puts ("yy_act &= ~YY_TRAILING_HEAD_MASK;");
 			indent_puts ("break;");
