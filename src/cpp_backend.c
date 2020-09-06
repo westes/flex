@@ -389,6 +389,12 @@ static void cpp_epilog (void)
 #endif
 }
 
+static void cpp_linecomment(char *text)
+{
+    out("/* ");
+    out(text);
+    outn(" */");
+}
 static void cpp_assign(char *left, char *right)
 {
     do_indent ();
@@ -548,9 +554,10 @@ struct flex_backend_t cpp_backend = {
 	.close_block = "}",
 	.table_opener = "    {",
 	.table_closer = "    };\n",
+	.linecomment = cpp_linecomment,
 	.assign = cpp_assign,
 	.decrement = cpp_decrement,
-	.forever = "for ( ; ; ) /* until we find what rule we matched */",
+	.forever = "for ( ; ; ) {",
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,
 	.get_state_decl = cpp_get_state_decl,

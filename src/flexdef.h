@@ -306,7 +306,7 @@
 /* Method table describing a language-specific back end */
 
 struct flex_backend_t {
-	const char *(*suffix)(void);		// Generarte suffix for lexer source code
+	const char *(*suffix)(void);		// Generate suffix for lexer source code
 	void (*prolog)(void);			// Write prolog code for the skeleton
 	const char **skel;			// Skeleton for generated code
 	void (*epilog)(void);			// Write epilog code for the skeleton
@@ -317,6 +317,7 @@ struct flex_backend_t {
 	char *close_block;			// Close statement block
 	char *table_opener;			// Open an array uinitializer with this
 	char *table_closer;			// Close an array uinitializer with this
+	void (*linecomment)(char *);		// Generate a properly wrapped commant line
 	void (*assign)(char *, char *);		// Assignment
 	void (*decrement)(char *);		// Generatre a decrement statement
 	const char *forever;			// Do forever syntax

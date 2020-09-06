@@ -433,6 +433,7 @@ void gen_find_action (void)
 	 * 1. Target language uses [] for indexing
 	 * 2. Target language uses . to reach structure members
 	 * 3. YY_G() expands to a location that is assignable
+	 * 4, Label syntax is C-like - identifier followed by colon
 	 */
 
 	if (fullspd)
@@ -448,16 +449,19 @@ void gen_find_action (void)
 
 		if (!variable_trailing_context_rules)
 			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
-		if(reject_really_used)
-			outn ("find_rule: /* we branch to this label when backing up */");
+		if(reject_really_used) {
+			out ("find_rule: ");
+			backend->linecomment("we branch to this label when backing up");
+		}
 		if (!variable_trailing_context_rules)
 			outn ("]])\n");
 
-		indent_puts(backend->forever);
+		do_indent ();
+		out(backend->forever);
+		out(" ");
+		backend->linecomment("loop until we find what rule we matched");
 
 		++indent_level;
-
-		indent_puts (backend->open_block);
 
 		indent_puts
 			("if ( YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1] )");
