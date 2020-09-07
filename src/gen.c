@@ -655,9 +655,7 @@ void genftbl (void)
 
 void gen_next_compressed_state (char *char_map)
 {
-	char buf[4096];
-	snprintf(buf, sizeof(buf), "YY_CHAR yy_c = %s", char_map);
-	backend->statement(buf);
+	backend->statement("YY_CHAR yy_c = %s", char_map);
 
 	/* Save the backing-up info \before/ computing the next state
 	 * because we always compute one more state than needed - we
@@ -679,8 +677,7 @@ void gen_next_compressed_state (char *char_map)
 		 */
 
 		/* lastdfa + 2 is the beginning of the templates */
-		snprintf(buf, sizeof(buf), "yy_current_state >= %d", lastdfa + 2);
-		backend->cond(buf);
+		backend->cond("yy_current_state >= %d", lastdfa + 2);
 		++indent_level;
 		backend->assign("yy_c", "yy_meta[yy_c]");
 		--indent_level;
@@ -724,16 +721,15 @@ void gen_next_match (void)
 			outc ('\n');
 		}
 
-		indent_puts ("++yy_cp;");
+		backend->statement("yy_cp++");
 
 		if (num_backing_up > 0)
-
 			indent_puts (backend->close_block);
 
 		--indent_level;
 
 		outc ('\n');
-		indent_puts ("yy_current_state = -yy_current_state;");
+		backend->assign("yy_current_state", "-yy_current_state");
 	}
 
 	else if (fullspd) {

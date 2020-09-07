@@ -32,6 +32,9 @@
 /*  PURPOSE. */
 
 
+#include <stdio.h>
+#include <stdarg.h>
+
 #include "flexdef.h"
 #include "version.h"
 
@@ -405,34 +408,68 @@ static void cpp_assign(char *left, char *right)
     outn(";");
 }
 
-static void cpp_cond(char *guard)
+static void cpp_cond(const char *fmt, ...)
 {
     do_indent ();
+    char buf[4096];
+    va_list ap;
+
+    buf[0] = '\0';
+    va_start(ap, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, ap);
+    va_end(ap);
+
     out("if (");
-    out(guard);
+    out(buf);
     outn(" ) {");
 }
 
-static void cpp_elsecond(char *guard)
+static void cpp_elsecond(const char *fmt, ...)
 {
+    do_indent ();
+    char buf[4096];
+    va_list ap;
+
+    buf[0] = '\0';
+    va_start(ap, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, ap);
+    va_end(ap);
+
     do_indent ();
     out("else if (");
-    out(guard);
+    out(buf);
     outn(" ) {");
 }
 
-static void cpp_when(char *guard)
+
+static void cpp_when(const char *fmt, ...)
 {
+    char buf[4096];
+    va_list ap;
+
+    buf[0] = '\0';
+    va_start(ap, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, ap);
+    va_end(ap);
+
     do_indent ();
     out("while (");
-    out(guard);
+    out(buf);
     outn(" ) {");
 }
 
-static void cpp_statement(char *text)
+static void cpp_statement(const char *fmt, ...)
 {
+    char buf[4096];
+    va_list ap;
+
+    buf[0] = '\0';
+    va_start(ap, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, ap);
+    va_end(ap);
+
     do_indent ();
-    out(text);
+    out(buf);
     outn(";");
 }
 

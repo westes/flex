@@ -320,10 +320,10 @@ struct flex_backend_t {
 	char *table_closer;			// Close an array uinitializer with this
 	void (*linecomment)(char *);		// Generate a properly wrapped commant line
 	void (*assign)(char *, char *);		// Assignment
-	void (*statement)(char *);		// Generate a statement
-        void (*cond)(char *);			// Start an if conditiobl block
-        void (*elsecond)(char *);		// Start a else-if conditiobl block
-        void (*when)(char *);			// Start a while conditiobl block
+	void (*statement)(const char *, ...);	// Generate a statement
+	void (*cond)(const char *, ...);	// Start an if conditiobl block
+	void (*elsecond)(const char *, ...);	// Start a else-if conditiobl block
+	void (*when)(const char *, ...);	// Start a while conditiobl block
 	const char *forever;			// Do forever syntax
 	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
 	const char *(*get_int32_decl)(void);	// Format for declaring array initializer of int32s
