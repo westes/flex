@@ -655,7 +655,7 @@ void genftbl (void)
 
 void gen_next_compressed_state (char *char_map)
 {
-	backend->statement("YY_CHAR yy_c = %s", char_map);
+	backend->declare("yy_c", "YY_CHAR", char_map);
 
 	/* Save the backing-up info \before/ computing the next state
 	 * because we always compute one more state than needed - we
@@ -768,8 +768,7 @@ void gen_next_match (void)
 
 		gen_next_state (false);
 
-		indent_puts ("++yy_cp;");
-
+		backend->statement("yy_cp++");
 
 		indent_puts (backend->close_block);
 		--indent_level;
@@ -786,10 +785,8 @@ void gen_next_match (void)
 			/* Do the guaranteed-needed backing up to figure out
 			 * the match.
 			 */
-			indent_puts
-				("yy_cp = YY_G(yy_last_accepting_cpos);");
-			indent_puts
-				("yy_current_state = YY_G(yy_last_accepting_state);");
+		    backend->assign("yy_cp", "YY_G(yy_last_accepting_cpos)");
+		    backend->assign("yy_current_state", "YY_G(yy_last_accepting_state);");
 		}
 	}
 }

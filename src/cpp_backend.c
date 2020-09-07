@@ -393,22 +393,39 @@ static void cpp_epilog (void)
 }
 
 static void cpp_linecomment(char *text)
+// wrap text in target language's comment syntax
 {
     out("/* ");
     out(text);
     outn(" */");
 }
 
-static void cpp_assign(char *left, char *right)
+static void cpp_declare(char *name, char *type, char *initval)
+// emit a declaration in the target language
 {
     do_indent ();
-    out(left);
+    out(type);
+    out(" ");
+    out(name);
+    if (initval != NULL) {
+	out(" = ");
+	out(initval);
+    }
+    outn(";");
+}
+
+static void cpp_assign(char *target, char *value)
+// emit an assignment in the target language
+{
+    do_indent ();
+    out(target);
     out(" = ");
-    out(right);
+    out(value);
     outn(";");
 }
 
 static void cpp_cond(const char *fmt, ...)
+// emit a conditional guard in the target language
 {
     do_indent ();
     char buf[4096];
@@ -425,6 +442,7 @@ static void cpp_cond(const char *fmt, ...)
 }
 
 static void cpp_elsecond(const char *fmt, ...)
+// emit a continued conditional guard in the target language
 {
     do_indent ();
     char buf[4096];
@@ -443,6 +461,7 @@ static void cpp_elsecond(const char *fmt, ...)
 
 
 static void cpp_when(const char *fmt, ...)
+// emit a while statement in the trailing languuge
 {
     char buf[4096];
     va_list ap;
@@ -459,6 +478,7 @@ static void cpp_when(const char *fmt, ...)
 }
 
 static void cpp_statement(const char *fmt, ...)
+// emit a statement in the target language
 {
     char buf[4096];
     va_list ap;
@@ -625,6 +645,7 @@ struct flex_backend_t cpp_backend = {
 	.table_opener = "    {",
 	.table_closer = "    };\n",
 	.linecomment = cpp_linecomment,
+	.declare = cpp_declare,
 	.assign = cpp_assign,
 	.cond = cpp_cond,
 	.elsecond = cpp_elsecond,
