@@ -320,7 +320,8 @@ struct flex_backend_t {
 	void (*linecomment)(char *);		// Generate a properly wrapped commant line
 	void (*assign)(char *, char *);		// Assignment
 	void (*statement)(char *);		// Generate a statement
-        void (*cond)(char *);			// Start a conditiobkl block
+        void (*cond)(char *);			// Start am if conditiobl block
+        void (*elsecond)(char *);		// Start a else-if conditiobl block
 	const char *forever;			// Do forever syntax
 	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
 	const char *(*get_int32_decl)(void);	// Format for declaring array initializer of int32s

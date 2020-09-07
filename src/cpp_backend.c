@@ -413,6 +413,14 @@ static void cpp_cond(char *guard)
     outn(" ) {");
 }
 
+static void cpp_elsecond(char *guard)
+{
+    do_indent ();
+    out("else if (");
+    out(guard);
+    outn(" ) {");
+}
+
 static void cpp_statement(char *text)
 {
     do_indent ();
@@ -565,6 +573,7 @@ struct flex_backend_t cpp_backend = {
 	.linecomment = cpp_linecomment,
 	.assign = cpp_assign,
 	.cond = cpp_cond,
+	.elsecond = cpp_elsecond,
 	.statement = cpp_statement,
 	.forever = "for ( ; ; ) {",
 	.get_int16_decl = cpp_get_int16_decl,
