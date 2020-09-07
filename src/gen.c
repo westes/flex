@@ -613,9 +613,7 @@ struct yytbl_data *mkftbl (void)
 				 i, anum);
 	}
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
-		    long_align ? "flex_int32_t" : "flex_int16_t");
+	backend->mkftbl();
 	return tbl;
 }
 

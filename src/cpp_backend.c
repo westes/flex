@@ -552,6 +552,15 @@ static void cpp_mkecstbl(void)
 		    "YY_CHAR");
 }
 
+static void cpp_mkftbl(void)
+// Make fulll table
+{
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
+		    long_align ? "flex_int32_t" : "flex_int16_t");
+}
+
+
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
     0,
@@ -590,4 +599,5 @@ struct flex_backend_t cpp_backend = {
 	.start_state_list = cpp_start_state_list,
 	.state_entry_fmt = "    &yy_transition[%d],\n",
 	.mkecstbl = cpp_mkecstbl,
+	.mkftbl = cpp_mkftbl,
 };

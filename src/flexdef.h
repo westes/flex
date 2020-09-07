@@ -335,6 +335,7 @@ struct flex_backend_t {
 	const void (*mkssltbl)(void);		// Make start_state_list table
 	const void (*gen_yy_trans)(size_t);	// Table of verify for transition and offset to next state. (sic)
 	const void (*start_state_list)(size_t);	// Start initializer for table of pointers to start states
+	const void (*mkftbl)();			// Make full table
 	const char *state_entry_fmt;		// Format of starte table entry
 	const void (*mkecstbl)(void);		// Make equivalence-class tables
 };
