@@ -311,6 +311,7 @@ struct flex_backend_t {
 	const char **skel;			// Skeleton for generated code
 	void (*epilog)(void);			// Write epilog code for the skeleton
 	char *trace_fmt;			// Trace message format
+	// Language syntax generation
 	char *int_define_fmt;			// Format for integer constant definitions
 	char *string_define_fmt;		// Format for string constant definitions
 	char *open_block;			// Open statement block
@@ -320,13 +321,15 @@ struct flex_backend_t {
 	void (*linecomment)(char *);		// Generate a properly wrapped commant line
 	void (*assign)(char *, char *);		// Assignment
 	void (*statement)(char *);		// Generate a statement
-        void (*cond)(char *);			// Start am if conditiobl block
+        void (*cond)(char *);			// Start an if conditiobl block
         void (*elsecond)(char *);		// Start a else-if conditiobl block
+        void (*when)(char *);			// Start a while conditiobl block
 	const char *forever;			// Do forever syntax
 	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
 	const char *(*get_int32_decl)(void);	// Format for declaring array initializer of int32s
 	const char *(*get_state_decl)(void);	// Format for declaring array initializer of state values
 	const char *(*get_yy_char_decl)(void);	// Format for declaring array initializer of input chars
+	// Flex table generation
 	const void (*mkeoltbl)(void);		// Make end-of-line table
 	const void (*geneoltbl)(size_t);	// Generate end-of-line transitions
 	const void (*gen_backing_up)(void);	// Generate code to keep backup information

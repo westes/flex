@@ -655,7 +655,9 @@ void genftbl (void)
 
 void gen_next_compressed_state (char *char_map)
 {
-	indent_put2s ("YY_CHAR yy_c = %s;", char_map);
+	char buf[4096];
+	snprintf(buf, sizeof(buf), "YY_CHAR yy_c = %s", char_map);
+	backend->statement(buf);
 
 	/* Save the backing-up info \before/ computing the next state
 	 * because we always compute one more state than needed - we
@@ -663,11 +665,9 @@ void gen_next_compressed_state (char *char_map)
 	 */
 	gen_backing_up ();
 
-	indent_puts
-		("while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )");
+	backend->when("yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state");
 	++indent_level;
-	indent_puts (backend->open_block);
-	indent_puts ("yy_current_state = (int) yy_def[yy_current_state];");
+	backend->assign("yy_current_state", "(int) yy_def[yy_current_state]");
 
 	if (usemecs) {
 		/* We've arrange it so that templates are never chained
@@ -677,21 +677,19 @@ void gen_next_compressed_state (char *char_map)
 		 * about erroneously looking up the meta-equivalence
 		 * class twice
 		 */
-		do_indent ();
 
 		/* lastdfa + 2 is the beginning of the templates */
-		out_dec ("if ( yy_current_state >= %d )\n", lastdfa + 2);
-
+		snprintf(buf, sizeof(buf), "yy_current_state >= %d", lastdfa + 2);
+		backend->cond(buf);
 		++indent_level;
-		indent_puts ("yy_c = yy_meta[yy_c];");
+		backend->assign("yy_c", "yy_meta[yy_c]");
 		--indent_level;
+		indent_puts (backend->close_block);
 	}
 
 	indent_puts (backend->close_block);
 	--indent_level;
-
-	indent_puts
-		("yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];");
+	backend->assign("yy_current_state", "yy_nxt[yy_base[yy_current_state] + yy_c]");
 }
 
 

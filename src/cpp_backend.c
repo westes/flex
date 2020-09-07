@@ -421,6 +421,14 @@ static void cpp_elsecond(char *guard)
     outn(" ) {");
 }
 
+static void cpp_when(char *guard)
+{
+    do_indent ();
+    out("while (");
+    out(guard);
+    outn(" ) {");
+}
+
 static void cpp_statement(char *text)
 {
     do_indent ();
@@ -584,6 +592,7 @@ struct flex_backend_t cpp_backend = {
 	.cond = cpp_cond,
 	.elsecond = cpp_elsecond,
 	.statement = cpp_statement,
+	.when = cpp_when,
 	.forever = "for ( ; ; ) {",
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,
