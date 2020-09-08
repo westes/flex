@@ -462,13 +462,18 @@ void gen_find_action (void)
 	 * an explicit "== 0" or "!= 0:,
 	 */
 
-	if (fullspd)
+	if (fullspd) {
+		do_indent (); backend->linecomment("generated code for fullspd option begins");
 		backend->assign("yy_act", "yy_current_state[-1].yy_nxt");
-
-	else if (fulltbl)
+		do_indent (); backend->linecomment("generated code for fullspd option ends");
+	}
+	else if (fulltbl) {
+		do_indent (); backend->linecomment("generated code for fulltbl option begins");
 		backend->assign("yy_act", "yy_accept[yy_current_state]");
-
+		do_indent (); backend->linecomment("generated code for fulltbl option ends");
+	}
 	else if (reject) {
+		do_indent (); backend->linecomment("generated code for reject option begins");
 		backend->statement("YY_G(yy_state_ptr)--");
 		backend->assign("yy_current_state", "*YY_G(yy_state_ptr)");	// POINTER
 		backend->assign("YY_G(yy_lp)", "yy_accept[yy_current_state]");
@@ -565,24 +570,13 @@ void gen_find_action (void)
 		indent_puts (backend->close_block);
 
 		--indent_level;
+		do_indent (); backend->linecomment("generated code for reject option ends");
 	}
 
 	else {			/* compressed */
-		backend->assign("yy_act", "yy_accept[yy_current_state]");
-
-		if (interactive && !reject) {
-			/* Do the guaranteed-needed backing up to figure out
-			 * the match.
-			 */
-			backend->cond("yy_act == 0");
-			++indent_level;
-			backend->linecomment("have to back up");
-			backend->assign("yy_cp", "YY_G(yy_last_accepting_cpos)");
-			backend->assign("yy_current_state", "YY_G(yy_last_accepting_state)");
-			backend->assign("yy_act", "yy_accept[yy_current_state]");
-			indent_puts (backend->close_block);
-			--indent_level;
-		}
+		do_indent (); backend->linecomment("generated code for compressed option begins");
+		outn("M4_COMPRESSED_FIND_ACTION");
+		do_indent (); backend->linecomment("generated code for compressed option ends");
 	}
 }
 

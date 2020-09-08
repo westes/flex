@@ -102,7 +102,7 @@ m4_ifelse(M4_YY_PREFIX,yy,,
 m4_ifdef( [[M4_YY_IN_HEADER]], , [[m4_define([[M4_YY_NOT_IN_HEADER]], [[]])]])
 m4_ifdef( [[M4_YY_REENTRANT]], , [[m4_define([[M4_YY_NOT_REENTRANT]], [[]])]])
 
-%# This is the m4 way to say "(stack_used || is_reentrant)
+%# This is the m4 way to say "(stack_used || is_reentrant)"
 m4_ifdef( [[M4_YY_STACK_USED]], [[m4_define([[M4_YY_HAS_START_STACK_VARS]])]])
 m4_ifdef( [[M4_YY_REENTRANT]],  [[m4_define([[M4_YY_HAS_START_STACK_VARS]])]])
 
@@ -1182,6 +1182,16 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 %% [6.0] YY_RULE_SETUP definition goes here
+]])
+
+%# Code nippets used in various cases of code generation in the main scanner.
+
+m4_define( [[M4_COMPRESSED_FIND_ACTION]],  [[yy_act = yy_accept[yy_current_state];
+		if (yy_act == 0 ) { /* have to back up */
+		    yy_cp = YY_G(yy_last_accepting_cpos);
+			yy_current_state = YY_G(yy_last_accepting_state);
+			yy_act = yy_accept[yy_current_state];
+			}
 ]])
 
 %not-for-header
