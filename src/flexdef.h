@@ -320,7 +320,7 @@ struct flex_backend_t {
 	char *table_closer;			// Close an array uinitializer with this
 	void (*linecomment)(char *);		// Generate a properly wrapped commant line
 	void (*declare)(char *, char *, char *);// Declaration
-	void (*assign)(char *, char *);		// Assignment
+	void (*assign)(const char *, const char *, ...);	// Assignment
 	void (*statement)(const char *, ...);	// Generate a statement
 	void (*cond)(const char *, ...);	// Start an if conditiobl block
 	void (*elsecond)(const char *, ...);	// Start a else-if conditiobl block

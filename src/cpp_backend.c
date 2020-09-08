@@ -414,20 +414,9 @@ static void cpp_declare(char *name, char *type, char *initval)
     outn(";");
 }
 
-static void cpp_assign(char *target, char *value)
+static void cpp_assign(const char *target, const char *fmt, ...)
 // emit an assignment in the target language
 {
-    do_indent ();
-    out(target);
-    out(" = ");
-    out(value);
-    outn(";");
-}
-
-static void cpp_cond(const char *fmt, ...)
-// emit a conditional guard in the target language
-{
-    do_indent ();
     char buf[4096];
     va_list ap;
 
@@ -436,6 +425,25 @@ static void cpp_cond(const char *fmt, ...)
     vsnprintf(buf, sizeof(buf), fmt, ap);
     va_end(ap);
 
+    do_indent ();
+    out(target);
+    out(" = ");
+    out(buf);
+    outn(";");
+}
+
+static void cpp_cond(const char *fmt, ...)
+// emit a conditional guard in the target language
+{
+    char buf[4096];
+    va_list ap;
+
+    buf[0] = '\0';
+    va_start(ap, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, ap);
+    va_end(ap);
+
+    do_indent ();
     out("if (");
     out(buf);
     outn(" ) {");

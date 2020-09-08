@@ -443,9 +443,14 @@ void gen_find_action (void)
 	 * 7. Postincrement and post-decrement statements are allowed;
 	 *    preincrement and predecrement are not.  Neither may be used
 	 *    in expressions
-	 * 8. "break" and  "goto" are legal atatements.
+	 * 8. "else", "break" and  "goto" are legal atatements.
+	 * 9. Pointer types exist abd are defeferenced with prefix "*".
+	 *    Eventually this assumption needs to be removed if we're
+	 *    going to target anything other than C/C++/GO.  Uses of
+	 *    pointers that will be need yo be fixed up are marked
+	 *    with a comment containing "POINTER".
 	 *
-	 * Assumptions about operator precedenve are *not* made;
+	 * Assumptions about operator precedence are *not* made;
 	 * all code with multiple operators is fully parenthesized.
 	 *
 	 * You should *not* add superfluous outer parentheses to
@@ -465,7 +470,7 @@ void gen_find_action (void)
 
 	else if (reject) {
 		backend->statement("YY_G(yy_state_ptr)--");
-		backend->assign("yy_current_state", "*YY_G(yy_state_ptr)");
+		backend->assign("yy_current_state", "*YY_G(yy_state_ptr)");	// POINTER
 		backend->assign("YY_G(yy_lp)", "yy_accept[yy_current_state]");
 
 		if (!variable_trailing_context_rules)
@@ -554,7 +559,7 @@ void gen_find_action (void)
 		 * the beginning, but at the cost of complaints that we're
 		 * branching inside a loop.
 		 */
-		backend->statement("yy_current_state = *--YY_G(yy_state_ptr)");
+		backend->assign("yy_current_state", "*--YY_G(yy_state_ptr)");	// POINTER
 		backend->assign("YY_G(yy_lp)", "yy_accept[yy_current_state]");
 
 		indent_puts (backend->close_block);
@@ -858,7 +863,7 @@ void gen_next_state (int worry_about_NULs)
 		gen_backing_up ();
 
 	if (reject)
-		indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");
+		indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");	// POINTER
 }
 
 
@@ -1700,7 +1705,7 @@ void make_tables (void)
 
 		outn ("#define REJECT \\");
 		outn ("{ \\");
-		outn ("*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \\");
+		outn ("*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \\");	// POINTER
 		outn ("yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \\");
 
 		if (variable_trailing_context_rules) {
