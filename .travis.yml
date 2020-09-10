@@ -2,7 +2,9 @@ language: c
 
 compiler:
   - gcc
-
+arch:
+  - ppc64le
+  - amd64
 addons:
   apt:
     sources:
