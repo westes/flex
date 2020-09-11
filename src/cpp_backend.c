@@ -75,11 +75,6 @@ static void cpp_prolog (void)
 	static char yy_nostdinit[] =
 		"FILE *yyin = NULL, *yyout = NULL;";
 
-	if (reject){
-        out_m4_define( "M4_YY_USES_REJECT", NULL);
-		//outn ("\n#define YY_USES_REJECT");
-	}
-
 	if (!do_yywrap) {
 		if (!C_plus_plus) {
 			 if (reentrant)

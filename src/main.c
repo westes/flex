@@ -1411,6 +1411,9 @@ void readin (void)
 
 	if (useecs)
 		ccl2ecl ();
+
+	if (reject)
+		out_m4_define( "M4_YY_USES_REJECT", NULL);
 }
 
 /* set_up_initial_allocations - allocate memory for internal tables */
