@@ -456,8 +456,7 @@ void check_options (void)
 		buf_m4_define (&m4defs_buf, "M4_YY_USE_LINENO", NULL);
 
 	/* Create the alignment type. */
-	buf_strdefine (&userdef_buf, "YY_INT_ALIGNED",
-		       long_align ? "long int" : "short int");
+	buf_strdefine (&userdef_buf, "YY_INT_ALIGNED", backend->yy_int_aligned());
 
 	/* Define the start condition macros. */
 	{
