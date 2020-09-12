@@ -1418,6 +1418,8 @@ void readin (void)
 	if (useecs)
 		ccl2ecl ();
 
+	if (reject_really_used)
+		out_m4_define( "M4_REJECT_REALLY_USED", NULL);
 	if (reject)
 		out_m4_define( "M4_YY_USES_REJECT", NULL);
 }
