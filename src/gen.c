@@ -473,12 +473,7 @@ void gen_find_action (void)
 	}
 	else if (reject) {
 		do_indent (); backend->linecomment("generated code for reject option begins");
-		backend->statement("YY_G(yy_state_ptr)--");
-		backend->assign("yy_current_state", "*YY_G(yy_state_ptr)");	// POINTER
-		backend->assign("YY_G(yy_lp)", "yy_accept[yy_current_state]");
-
 		outn("M4_REJECT_FIND_ACTION");
-
 		do_indent (); backend->linecomment("generated code for reject option ends");
 	}
 

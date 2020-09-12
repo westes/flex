@@ -1187,6 +1187,9 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 %# Code snippets used in various cases of code generation in the main scanner.
 
 m4_define([[M4_REJECT_FIND_ACTION]], [[
+	YY_G(yy_state_ptr)--;
+	yy_current_state = *YY_G(yy_state_ptr);
+	YY_G(yy_lp) = yy_accept[yy_current_state];
 m4_ifdef([[M4_REJECT_REALLY_USED]], [[find_rule: /* we branch to this label when backing up */]])
 	for ( ; ; ) {	/* loop until we find out what rule we matched */
 		  if (YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1]) {
