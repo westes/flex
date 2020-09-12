@@ -443,7 +443,6 @@ void gen_find_action (void)
 	 * 7. Postincrement and post-decrement statements are allowed;
 	 *    preincrement and predecrement are not.  Neither may be used
 	 *    in expressions
-	 * 8. "else", "break" and  "goto" are legal atatements.
 	 * 9. Pointer types exist abd are defeferenced with prefix "*".
 	 *    Eventually this assumption needs to be removed if we're
 	 *    going to target anything other than C/C++/GO.  Uses of
@@ -487,80 +486,7 @@ void gen_find_action (void)
 		if (!variable_trailing_context_rules)
 			outn ("]])\n");
 
-		do_indent ();
-		outn(backend->forever);
-		++indent_level;
-		do_indent();
-		backend->linecomment("loop until we find what rule we matched");
-
-		backend->cond("YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1]");
-		++indent_level;
-		backend->assign("yy_act", "yy_acclist[YY_G(yy_lp)]");
-
-		if (variable_trailing_context_rules) {
-			backend->cond("(yy_act & YY_TRAILING_HEAD_MASK) != 0 || YY_G(yy_looking_for_trail_begin)");
-			++indent_level;
-
-			backend->cond("yy_act == YY_G(yy_looking_for_trail_begin)");
-			++indent_level;
-			backend->assign("YY_G(yy_looking_for_trail_begin)", "0");
-			backend->statement("yy_act &= ~YY_TRAILING_HEAD_MASK");
-			backend->statement("break");
-			indent_puts (backend->close_block);
-			--indent_level;
-
-			indent_puts (backend->close_block);
-			--indent_level;
-
-			backend->elsecond("( yy_act & YY_TRAILING_MASK) != 0");
-			++indent_level;
-			backend->assign("YY_G(yy_looking_for_trail_begin)", "yy_act & ~YY_TRAILING_MASK");
-			backend->statement("YY_G(yy_looking_for_trail_begin) |= YY_TRAILING_HEAD_MASK");
-
-			outn("M4_REJECT_FIND_ACTION");
-
-			indent_puts (backend->close_block);
-			--indent_level;
-
-			indent_puts ("else");
-			++indent_level;
-			indent_puts (backend->open_block);
-			backend->assign("YY_G(yy_full_match)", "yy_cp");
-			backend->assign("YY_G(yy_full_state)", "YY_G(yy_state_ptr)");
-			backend->assign("YY_G(yy_full_lp)", "YY_G(yy_lp)");
-			backend->statement("break");
-			indent_puts (backend->close_block);
-			--indent_level;
-
-			backend->statement("YY_G(yy_lp)++");
-			backend->statement("goto find_rule");
-		}
-
-		else {
-			/* Remember matched text in case we back up due to
-			 * trailing context plus REJECT.
-			 */
-			++indent_level;
-			indent_puts (backend->open_block);
-			backend->assign("YY_G(yy_full_match)", "yy_cp");
-			backend->statement("break");
-			indent_puts (backend->close_block);
-			--indent_level;
-		}
-
-		indent_puts (backend->close_block);
-		--indent_level;
-
-		backend->statement("yy_cp--");
-
-		/* We could consolidate the following two lines with those at
-		 * the beginning, but at the cost of complaints that we're
-		 * branching inside a loop.
-		 */
-		backend->assign("yy_current_state", "*--YY_G(yy_state_ptr)");	// POINTER
-		backend->assign("YY_G(yy_lp)", "yy_accept[yy_current_state]");
-
-		indent_puts (backend->close_block);
+		outn("M4_REJECT_FIND_ACTION");
 
 		--indent_level;
 		do_indent (); backend->linecomment("generated code for reject option ends");

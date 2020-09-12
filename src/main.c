@@ -1387,8 +1387,12 @@ void readin (void)
 		out_m4_define( "M4_REAL_REJECT", NULL);
 	}
 
-	if (variable_trailing_context_rules)
+	if (variable_trailing_context_rules) {
+		out_m4_define( "M4_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
 		reject = true;
+	} else {
+		out_m4_define( "M4_NO_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
+	}
 
 	if ((fulltbl || fullspd) && reject) {
 		if (real_reject)
