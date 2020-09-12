@@ -1252,6 +1252,28 @@ m4_define( [[M4_COMPRESSED_FIND_ACTION]],  [[yy_act = yy_accept[yy_current_state
 			}
 ]])
 
+ m4_define([[M4_GEN_NEXT_COMPRESSED_STATE]], [[
+	while ((yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state)) {
+		yy_current_state = (int) yy_def[yy_current_state];
+
+m4_ifdef([[M4_USEMECS]], [[
+		/* We've arranged it so that templates are never chained
+		 * to one another.  This means we can afford to make a
+		 * very simple test to see if we need to convert to
+		 * yy_c's meta-equivalence class without worrying
+		 * about erroneously looking up the meta-equivalence
+		 * class twice
+		 */
+
+		/* lastdfa + 2 is the beginning of the templates */
+		if (yy_current_state >= $1) {
+			yy_c = yy_meta[yy_c];
+		}
+]])
+	}
+	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
+]])
+
 %not-for-header
 /** The main scanner function which does all the work.
  */

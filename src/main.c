@@ -1422,6 +1422,8 @@ void readin (void)
 		out_m4_define( "M4_REJECT_REALLY_USED", NULL);
 	if (reject)
 		out_m4_define( "M4_YY_USES_REJECT", NULL);
+	if (usemecs)
+		out_m4_define( "M4_USEMECS", NULL);
 }
 
 /* set_up_initial_allocations - allocate memory for internal tables */

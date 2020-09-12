@@ -566,30 +566,7 @@ void gen_next_compressed_state (char *char_map)
 	 */
 	gen_backing_up ();
 
-	backend->when("yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state");
-	++indent_level;
-	backend->assign("yy_current_state", "(int) yy_def[yy_current_state]");
-
-	if (usemecs) {
-		/* We've arrange it so that templates are never chained
-		 * to one another.  This means we can afford to make a
-		 * very simple test to see if we need to convert to
-		 * yy_c's meta-equivalence class without worrying
-		 * about erroneously looking up the meta-equivalence
-		 * class twice
-		 */
-
-		/* lastdfa + 2 is the beginning of the templates */
-		backend->cond("yy_current_state >= %d", lastdfa + 2);
-		++indent_level;
-		backend->assign("yy_c", "yy_meta[yy_c]");
-		--indent_level;
-		indent_puts (backend->close_block);
-	}
-
-	indent_puts (backend->close_block);
-	--indent_level;
-	backend->assign("yy_current_state", "yy_nxt[yy_base[yy_current_state] + yy_c]");
+	out_dec("M4_GEN_NEXT_COMPRESSED_STATE(%d)", lastdfa+2);
 }
 
 
