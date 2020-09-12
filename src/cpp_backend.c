@@ -530,6 +530,28 @@ static const char *cpp_get_yy_char_decl (void)
 		: "static const YY_CHAR * %s = 0;\n";
 }
 
+static void cpp_ntod(size_t num_full_table_rows)
+// Generate nxt table for ntod
+{
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
+		    long_align ? "flex_int32_t" : "flex_int16_t");
+
+	/* Unless -Ca, declare it "short" because it's a real
+	 * long-shot that that won't be large enough.
+	 */
+	if (gentables)
+		out_str_dec
+			("static const %s yy_nxt[][%d] =\n    {\n",
+			 long_align ? "flex_int32_t" : "flex_int16_t",
+			 num_full_table_rows);
+	else {
+		out_dec ("#undef YY_NXT_LOLEN\n#define YY_NXT_LOLEN (%d)\n", num_full_table_rows);
+		out_str ("static const %s *yy_nxt =0;\n",
+			 long_align ? "flex_int32_t" : "flex_int16_t");
+	}
+}
+
 static void cpp_mkeoltbl()
 // Make end-of-line-table - only used when yylinemo tracking is on
 {
@@ -626,13 +648,12 @@ static void cpp_mkecstbl(void)
 }
 
 static void cpp_mkftbl(void)
-// Make fulll table
+// Make full table
 {
 	buf_prints (&yydmap_buf,
 		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
 		    long_align ? "flex_int32_t" : "flex_int16_t");
 }
-
 
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
@@ -665,6 +686,7 @@ struct flex_backend_t cpp_backend = {
 	.get_int32_decl = cpp_get_int32_decl,
 	.get_state_decl = cpp_get_state_decl,
 	.get_yy_char_decl = cpp_get_yy_char_decl,
+	.ntod = cpp_ntod,
 	.mkeoltbl = cpp_mkeoltbl,
 	.geneoltbl = cpp_geneoltbl,
 	.gen_backing_up = cpp_gen_backing_up,

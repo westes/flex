@@ -332,6 +332,7 @@ struct flex_backend_t {
 	const char *(*get_state_decl)(void);	// Format for declaring array initializer of state values
 	const char *(*get_yy_char_decl)(void);	// Format for declaring array initializer of input chars
 	// Flex table generation
+	const void (*ntod)(size_t);		// Generate nxt table for ntod
 	const void (*mkeoltbl)(void);		// Make end-of-line table
 	const void (*geneoltbl)(size_t);	// Generate end-of-line transitions
 	const void (*gen_backing_up)(void);	// Generate code to keep backup information
