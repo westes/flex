@@ -326,6 +326,7 @@ struct flex_backend_t {
 	void (*cond)(const char *, ...);	// Start an if conditiobl block
 	void (*elsecond)(const char *, ...);	// Start a else-if conditiobl block
 	void (*when)(const char *, ...);	// Start a while conditiobl block
+	const char *forever;			// Do forever syntax
 	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
 	const char *(*get_int32_decl)(void);	// Format for declaring array initializer of int32s
 	const char *(*get_state_decl)(void);	// Format for declaring array initializer of state values
