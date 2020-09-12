@@ -660,7 +660,6 @@ struct flex_backend_t cpp_backend = {
 	.elsecond = cpp_elsecond,
 	.statement = cpp_statement,
 	.when = cpp_when,
-	.forever = "for ( ; ; ) {",
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,
 	.get_state_decl = cpp_get_state_decl,
