@@ -613,6 +613,8 @@ void gen_next_match (void)
 	}
 
 	else if (fullspd) {
+		backend->linecomment("generated code begins");
+		++indent_level;
 		indent_puts (backend->open_block);
 		indent_puts
 			("const struct yy_trans_info *yy_trans_info;\n");
@@ -624,20 +626,19 @@ void gen_next_match (void)
 		indent_put2s ("      yy_c = %s )", char_map_2);
 
 		++indent_level;
-
-		if (num_backing_up > 0)
-			indent_puts (backend->open_block);
+		indent_puts (backend->open_block);
 
 		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
 
 		if (num_backing_up > 0) {
-			outc ('\n');
 			gen_backing_up ();
-			indent_puts (backend->close_block);
 		}
+		--indent_level;
+		indent_puts (backend->close_block);
 
 		--indent_level;
 		indent_puts (backend->close_block);
+		backend->linecomment("generated code begins");
 	}
 
 	else {			/* compressed */
