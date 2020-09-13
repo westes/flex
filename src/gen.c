@@ -1118,10 +1118,7 @@ void gentabs (void)
 		     backend->get_int32_decl () : backend->get_int16_decl (),
 		     "yy_def", total_states + 1);
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_DEF, (void**)&yy_def, sizeof(%s)},\n",
-		    (total_states >= INT16_MAX
-		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+	backend->gentabs_yy_def(total_states);
 
 	yydef_tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (yydef_tbl, YYTD_ID_DEF);
@@ -1150,10 +1147,7 @@ void gentabs (void)
 		     backend->get_int32_decl () : backend->get_int16_decl (), "yy_nxt",
 		     tblend + 1);
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
-		    (total_states >= INT16_MAX
-		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+	backend->gentabs_yy_nxt(total_states);
 
 	yynxt_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yynxt_tbl, YYTD_ID_NXT);
@@ -1187,11 +1181,8 @@ void gentabs (void)
 		     backend->get_int32_decl () : backend->get_int16_decl (), "yy_chk",
 		     tblend + 1);
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_CHK, (void**)&yy_chk, sizeof(%s)},\n",
-		    (total_states >= INT16_MAX
-		     || long_align) ? "flex_int32_t" : "flex_int16_t");
-
+	backend->gentabs_yy_chk(total_states);
+	
 	yychk_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yychk_tbl, YYTD_ID_CHK);
 	yychk_tbl->td_lolen = (flex_uint32_t) (tblend + 1);

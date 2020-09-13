@@ -688,6 +688,32 @@ static void cpp_gentabs_yy_base(void)
 		     || long_align) ? "flex_int32_t" : "flex_int16_t");
 }
 
+static void cpp_gentabs_yy_def(size_t total_states)
+// Generate yy_def initializer
+{
+    buf_prints (&yydmap_buf,
+		"\t{YYTD_ID_DEF, (void**)&yy_def, sizeof(%s)},\n",
+		(total_states >= INT16_MAX
+		 || long_align) ? "flex_int32_t" : "flex_int16_t");
+}
+
+static void cpp_gentabs_yy_nxt(size_t total_states)
+// Generate yy_nxt initializer
+{
+    buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
+		    (total_states >= INT16_MAX
+		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+}
+
+static void cpp_gentabs_yy_chk(size_t total_states)
+// Generate yy_chk initializer
+{
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_CHK, (void**)&yy_chk, sizeof(%s)},\n",
+		    (total_states >= INT16_MAX
+		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+}
 
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
@@ -736,4 +762,7 @@ struct flex_backend_t cpp_backend = {
 	.gentabs_accept = cpp_gentabs_accept,
 	.gentabs_yy_meta = cpp_gentabs_yy_meta,
 	.gentabs_yy_base = cpp_gentabs_yy_base,
+	.gentabs_yy_def = cpp_gentabs_yy_def,
+	.gentabs_yy_nxt = cpp_gentabs_yy_nxt,
+	.gentabs_yy_chk = cpp_gentabs_yy_chk,
 };
