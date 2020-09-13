@@ -32,7 +32,7 @@ results of these generators are used to fill in some parts of the
 language-specifoc skeleton file amd conditionalize other.
 
 Read the definition of struct backend_t in src/flexdefs.h, and
-attached comments, to get a feel for the metods.  Don't worry
+attached comments, to get a feel for the methods.  Don't worry
 about understandng table generator names at first.
 
 To write support for a langusge, you'll want to do the following
@@ -43,7 +43,7 @@ steps:
    foo_backend.c and foo-flex.skl.
 
 2. Add foo_backend.c to COMMON_SOURCES in src.Makefile.am.  Add the
-   name of you skeleton file to EXTRA_DIST.
+   name of your skeleton file to EXTRA_DIST.
 
 3. Add a production to src/Makefile.am parallel to the one that
    priduces cpp-skel.h.  Your objecting is to make s string list

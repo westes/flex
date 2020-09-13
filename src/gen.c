@@ -606,7 +606,7 @@ void gen_next_match (void)
 
 		--indent_level;
 		indent_puts (backend->close_block);
-		backend->linecomment("generated code begins");
+		backend->linecomment("generated code ends");
 	}
 
 	else {			/* compressed */
