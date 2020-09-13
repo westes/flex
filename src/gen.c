@@ -1295,8 +1295,8 @@ void make_tables (void)
 
 	/* This is where we REALLY begin generating the tables. */
 
-	out_dec ("#define YY_NUM_RULES %d\n", num_rules);
-	out_dec ("#define YY_END_OF_BUFFER %d\n", num_rules + 1);
+	fprintf (stdout, backend->int_define_fmt, "YY_NUM_RULES", num_rules);
+	fprintf (stdout, backend->int_define_fmt, "YY_END_OF_BUFFER", num_rules + 1);
 
 	if (fullspd) {
 		/* Need to define the transet type as a size large
