@@ -562,18 +562,14 @@ void gen_next_match (void)
 				 char_map);
 
 		++indent_level;
-
+		indent_puts (backend->open_block);
 		if (num_backing_up > 0) {
-			indent_puts (backend->open_block);
 			gen_backing_up ();
 			outc ('\n');
 		}
 
 		backend->statement("yy_cp++");
-
-		if (num_backing_up > 0)
-			indent_puts (backend->close_block);
-
+		indent_puts (backend->close_block);
 		--indent_level;
 
 		outc ('\n');
@@ -610,25 +606,23 @@ void gen_next_match (void)
 	}
 
 	else {			/* compressed */
-		indent_puts ("do");
-
-		++indent_level;
-		indent_puts (backend->open_block);
+		indent_puts(backend->forever);
 
 		gen_next_state (false);
 
 		backend->statement("yy_cp++");
 
-		indent_puts (backend->close_block);
+		if (interactive)
+			backend->cond("yy_base[yy_current_state] == %d", jambase);
+		else
+			backend->cond("yy_current_state == %d", jamstate);
+
+		backend->statement("break");
+		indent_puts (backend->close_block);	// close while
 		--indent_level;
 
-		do_indent ();
-
-		if (interactive)
-			out_dec ("while ( yy_base[yy_current_state] != %d );\n", jambase);
-		else
-			out_dec ("while ( yy_current_state != %d );\n",
-				 jamstate);
+		indent_puts (backend->close_block);	// close forever
+		--indent_level;
 
 		if (!reject && !interactive) {
 			/* Do the guaranteed-needed backing up to figure out
