@@ -87,7 +87,7 @@ other than C.
 3. YY_G() expands to a location that is assignable.
 
 4. The following C infix operators have their usual
-   meanings: && || == != < & | ~ &= |= in cond() arguments and
+   meanings: && || == != < & | ~ += &= |= in cond() arguments and
    second arguments of assign(), and your back end must
    translate them itself.
 

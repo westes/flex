@@ -1252,7 +1252,7 @@ m4_define( [[M4_COMPRESSED_FIND_ACTION]],  [[yy_act = yy_accept[yy_current_state
 			}
 ]])
 
- m4_define([[M4_GEN_NEXT_COMPRESSED_STATE]], [[
+m4_define([[M4_GEN_NEXT_COMPRESSED_STATE]], [[
 	while ((yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state)) {
 		yy_current_state = (int) yy_def[yy_current_state];
 
@@ -1274,6 +1274,15 @@ m4_ifdef([[M4_USEMECS]], [[
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 ]])
 
+m4_define([[M4_GEN_START_STATE_STORE]], [[
+			/* Set up for storing up states. */
+			m4_ifdef( [[M4_YY_USES_REJECT]], [[
+			YY_G(yy_state_ptr) = YY_G(yy_state_buf);
+			*YY_G(yy_state_ptr)++ = yy_current_state;
+			]])
+]])
+
+ 
 %not-for-header
 /** The main scanner function which does all the work.
  */

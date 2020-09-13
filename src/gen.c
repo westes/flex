@@ -809,13 +809,7 @@ void gen_start_state (void)
 			backend->statement("yy_current_state += YY_AT_BOL()");
 
 		if (reject) {
-			/* Set up for storing up states. */
-			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
-			indent_puts
-				("YY_G(yy_state_ptr) = YY_G(yy_state_buf);");
-			indent_puts
-				("*YY_G(yy_state_ptr)++ = yy_current_state;");
-			outn ("]])");
+			indent_puts("M4_GEN_START_STATE_STORE");
 		}
 	}
 }
