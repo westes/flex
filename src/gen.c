@@ -68,6 +68,18 @@ void do_indent (void)
 }
 
 
+void open_block(void)
+{
+    ++indent_level;
+    indent_puts(backend->open_block);
+}   
+
+void close_block(void)
+{
+    --indent_level;
+    indent_puts(backend->close_block);
+}   
+
 /** Make the table for possible eol matches.
  *  @return the newly allocated rule_can_match_eol table
  */
@@ -522,37 +534,26 @@ void gen_next_match (void)
 		"yy_ec[YY_SC_TO_UI(*yy_cp)] " : "YY_SC_TO_UI(*yy_cp)";
 
 	char   *char_map_2 = useecs ?
-		"yy_ec[YY_SC_TO_UI(*++yy_cp)] " : "YY_SC_TO_UI(*++yy_cp)";
+	    "yy_ec[YY_SC_TO_UI(*++yy_cp)] " : "YY_SC_TO_UI(*++yy_cp)";	// POINTER
 
 	if (fulltbl) {
 		if (gentables)
-			indent_put2s
-				("while ( (yy_current_state = yy_nxt[yy_current_state][ %s ]) > 0 )",
-				 char_map);
+			backend->when("(yy_current_state = yy_nxt[yy_current_state][ %s ]) > 0", char_map);
 		else
-			indent_put2s
-				("while ( (yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN +  %s ]) > 0 )",
-				 char_map);
+			backend->when("(yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %s ]) > 0", char_map);
 
-		++indent_level;
-		indent_puts (backend->open_block);
 		if (num_backing_up > 0) {
 			gen_backing_up ();
-			outc ('\n');
 		}
 
 		backend->statement("yy_cp++");
-		indent_puts (backend->close_block);
-		--indent_level;
-
-		outc ('\n');
+		close_block();
 		backend->assign("yy_current_state", "-yy_current_state");
 	}
 
 	else if (fullspd) {
 		backend->linecomment("generated code begins");
-		++indent_level;
-		indent_puts (backend->open_block);
+		open_block();
 		indent_puts
 			("const struct yy_trans_info *yy_trans_info;\n");
 		indent_puts ("YY_CHAR yy_c;\n");
@@ -562,19 +563,16 @@ void gen_next_match (void)
 		indent_puts ("yy_verify == yy_c;");
 		indent_put2s ("      yy_c = %s )", char_map_2);
 
-		++indent_level;
-		indent_puts (backend->open_block);
+		open_block();
 
-		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
+		backend->statement("yy_current_state += yy_trans_info->yy_nxt");
 
 		if (num_backing_up > 0) {
 			gen_backing_up ();
 		}
-		--indent_level;
-		indent_puts (backend->close_block);
+		close_block();
+		close_block();
 
-		--indent_level;
-		indent_puts (backend->close_block);
 		backend->linecomment("generated code ends");
 	}
 
@@ -591,18 +589,16 @@ void gen_next_match (void)
 			backend->cond("yy_current_state == %d", jamstate);
 
 		backend->statement("break");
-		indent_puts (backend->close_block);	// close while
-		--indent_level;
+		close_block();	// close while
 
-		indent_puts (backend->close_block);	// close forever
-		--indent_level;
+		close_block();	// close forever
 
 		if (!reject && !interactive) {
 			/* Do the guaranteed-needed backing up to figure out
 			 * the match.
 			 */
-		    backend->assign("yy_cp", "YY_G(yy_last_accepting_cpos)");
-		    backend->assign("yy_current_state", "YY_G(yy_last_accepting_state);");
+			backend->assign("yy_cp", "YY_G(yy_last_accepting_cpos)");
+			backend->assign("yy_current_state", "YY_G(yy_last_accepting_state)");
 		}
 	}
 }
@@ -636,38 +632,31 @@ void gen_next_state (int worry_about_NULs)
 			gen_backing_up ();
 
 		indent_puts ("if ( *yy_cp )");
-		++indent_level;
-		indent_puts (backend->open_block);
+		open_block();
 	}
 
 	if (fulltbl) {
 		if (gentables)
-			indent_put2s
-				("yy_current_state = yy_nxt[yy_current_state][%s];",
+			backend->assign("yy_current_state", "yy_nxt[yy_current_state][%s]",
 				 char_map);
 		else
-			indent_put2s
-				("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %s];",
+			backend->assign("yy_current_state", "yy_nxt[yy_current_state*YY_NXT_LOLEN + %s];",
 				 char_map);
 	}
-
 	else if (fullspd)
-		indent_put2s
-			("yy_current_state += yy_current_state[%s].yy_nxt;",
-			 char_map);
+		backend->statement("yy_current_state += yy_current_state[%s].yy_nxt", char_map);
 
 	else
 		gen_next_compressed_state (char_map);
 
 	if (worry_about_NULs && nultrans) {
 
-		indent_puts (backend->close_block);
+		close_block();
 		--indent_level;
 		indent_puts ("else");
-		++indent_level;
-		indent_puts
-			("yy_current_state = yy_NUL_trans[yy_current_state];");
-		--indent_level;
+		open_block();
+		backend->assign("yy_current_state", "yy_NUL_trans[yy_current_state]");
+		close_block();
 	}
 
 	if (fullspd || fulltbl)
@@ -754,11 +743,9 @@ void gen_NUL_trans (void)
 	if (need_backing_up && (fullspd || fulltbl)) {
 		outc ('\n');
 		indent_puts ("if ( ! yy_is_jam )");
-		++indent_level;
-		indent_puts (backend->open_block);
+		open_block();
 		gen_backing_up ();
-		indent_puts (backend->close_block);
-		--indent_level;
+		close_block();
 	}
 }
 
@@ -1282,8 +1269,7 @@ void make_tables (void)
 
 		set_indent (0);
 		indent_puts ("struct yy_trans_info");
-		++indent_level;
-		indent_puts (backend->open_block);
+		open_block();
 
 		/* We require that yy_verify and yy_nxt must be of the same size int. */
 		indent_put2s ("%s yy_verify;", trans_offset_type);
@@ -1310,8 +1296,7 @@ void make_tables (void)
 			("/* This struct is not used in this scanner,");
 		indent_puts ("   but its presence is necessary. */");
 		indent_puts ("struct yy_trans_info");
-		++indent_level;
-		indent_puts (backend->open_block);
+		open_block();
 		indent_puts ("flex_int32_t yy_verify;");
 		indent_puts ("flex_int32_t yy_nxt;");
 		indent_puts ("};");
@@ -1390,13 +1375,13 @@ void make_tables (void)
 	}
 
 	/* Definitions for backing up.  We don't need them if REJECT
-	 * is being used because then we use an alternative backin-up
+	 * is being used because then we use an alternative backing-up
 	 * technique instead.
 	 */
 	if (num_backing_up > 0 && !reject) {
 		if (!C_plus_plus && !reentrant) {
 			indent_puts
-				("static yy_state_type yy_last_accepting_state;");
+				("static yy_state_type yy_last_accepting_state;\n");
 			indent_puts
 				("static char *yy_last_accepting_cpos;\n");
 		}
@@ -1408,11 +1393,7 @@ void make_tables (void)
 		/* Begin generating yy_NUL_trans */
 		out_str_dec (backend->get_state_decl (), "yy_NUL_trans",
 			     lastdfa + 1);
-		buf_prints (&yydmap_buf,
-			    "\t{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(%s)},\n",
-			    (fullspd) ? "struct yy_trans_info*" :
-			    "flex_int32_t");
-
+		backend->nultrans(fullspd);
 		yynultrans_tbl = calloc(1, sizeof (struct yytbl_data));
 		yytbl_data_init (yynultrans_tbl, YYTD_ID_NUL_TRANS);
 		if (fullspd)
@@ -1541,8 +1522,7 @@ void make_tables (void)
 			indent_puts
 				("YY_G(yy_more_offset) = YY_G(yy_prev_more_offset); \\");
 			indent_puts ("yyleng -= YY_G(yy_more_offset); \\");
-			indent_puts (backend->close_block);
-			--indent_level;
+			close_block();
 		}
 		else {
 			indent_puts
@@ -1657,13 +1637,11 @@ void make_tables (void)
 	if (yymore_used && !yytext_is_array) {
 		indent_puts ("YY_G(yy_more_len) = 0;");
 		indent_puts ("if ( YY_G(yy_more_flag) )");
-		++indent_level;
-		indent_puts (backend->open_block);
+		open_block();
 		indent_puts
 			("YY_G(yy_more_len) = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr));");
 		indent_puts ("YY_G(yy_more_flag) = 0;");
-		indent_puts (backend->close_block);
-		--indent_level;
+		close_block();
 	}
 
 	skelout ();		/* %% [9.0] - break point in skel */
@@ -1681,8 +1659,7 @@ void make_tables (void)
 	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
 	indent_puts
 		("if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )");
-	++indent_level;
-	indent_puts (backend->open_block);
+	open_block();
 	indent_puts ("int yyl;");
 	do_indent ();
 	out_str ("for ( yyl = %s; yyl < yyleng; ++yyl )\n",
@@ -1693,8 +1670,7 @@ void make_tables (void)
 	++indent_level;
 	indent_puts ("M4_YY_INCR_LINENO();");
 	--indent_level;
-	--indent_level;
-	indent_puts (backend->close_block);
+       	close_block();
 	--indent_level;
 	outn ("]])");
 
@@ -1772,8 +1748,7 @@ void make_tables (void)
 
 		--indent_level;
 
-		indent_puts (backend->close_block);
-		--indent_level;
+		close_block();
 	}
 
 	/* Copy actions to output file. */

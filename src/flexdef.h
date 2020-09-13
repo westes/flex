@@ -317,8 +317,8 @@ struct flex_backend_t {
 	char *string_define_fmt;		// Format for string constant definitions
 	char *open_block;			// Open statement block
 	char *close_block;			// Close statement block
-	char *table_opener;			// Open an array uinitializer with this
-	char *table_closer;			// Close an array uinitializer with this
+	char *table_opener;			// Open an array initializer with this
+	char *table_closer;			// Close an array initializer with this
 	void (*linecomment)(char *);		// Generate a properly wrapped commant line
 	void (*declare)(char *, char *, char *);// Declaration
 	void (*assign)(const char *, const char *, ...);	// Assignment
@@ -351,6 +351,7 @@ struct flex_backend_t {
 	void (*gentabs_yy_def)(size_t);		// Generate yy_def initializer
 	void (*gentabs_yy_nxt)(size_t);		// Generate yy_nxt initializer
 	void (*gentabs_yy_chk)(size_t);		// Generate yy_chk initializer
+	void (*nultrans)(int);			// Generate nulltrans initializer
 };
 
 extern bool gentables;

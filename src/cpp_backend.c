@@ -709,10 +709,19 @@ static void cpp_gentabs_yy_nxt(size_t total_states)
 static void cpp_gentabs_yy_chk(size_t total_states)
 // Generate yy_chk initializer
 {
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_CHK, (void**)&yy_chk, sizeof(%s)},\n",
-		    (total_states >= INT16_MAX
-		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+    buf_prints (&yydmap_buf,
+		"\t{YYTD_ID_CHK, (void**)&yy_chk, sizeof(%s)},\n",
+		(total_states >= INT16_MAX
+		 || long_align) ? "flex_int32_t" : "flex_int16_t");
+}
+
+static void cpp_nultrans(int fullspd)
+// Generate nulltrands initializer 
+{
+    buf_prints (&yydmap_buf,
+		"\t{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(%s)},\n",
+		(fullspd) ? "struct yy_trans_info*" :
+		"flex_int32_t");
 }
 
 const char *cpp_skel[] = {
@@ -765,4 +774,5 @@ struct flex_backend_t cpp_backend = {
 	.gentabs_yy_def = cpp_gentabs_yy_def,
 	.gentabs_yy_nxt = cpp_gentabs_yy_nxt,
 	.gentabs_yy_chk = cpp_gentabs_yy_chk,
+	.nultrans = cpp_nultrans,
 };
