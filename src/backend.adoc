@@ -76,7 +76,9 @@ A couple of hints about step 5:
 = Assumptions
 
 Various statement() and assignment method calls rely on assumptions
-that aren't in the method table.
+that aren't in the method table.  Be carefull about these, as
+violating them could cause indious bugs when targeting languages
+other than C.
 
 1. Target language uses [] for indexing.
 
@@ -85,32 +87,37 @@ that aren't in the method table.
 3. YY_G() expands to a location that is assignable.
 
 4. The following C infix operators have their usual
-    meanings: && || == != < & | ~ &= |= in cond() arguments and
-    second arguments of assign(), and your back end must
-    translate them itself.
+   meanings: && || == != < & | ~ &= |= in cond() arguments and
+   second arguments of assign(), and your back end must
+   translate them itself.
 
-5. All conditionals and loops are attached to a block
-   with begin and end delimiters, not just a bare statement.
+5. All conditionals and loops are attached to a block with begin- and
+   end-scope delimiters, not just a bare statement.
 
 6. Postincrement and post-decrement statements are allowed;
    preincrement and predecrement are not.  Neither may be used
-   in expressions
+   in expressions, only as starements.
 
-7. Pointer types exist abd are defeferenced with prefix "*".
+7. Pointer types exist and are dereferenced with prefix "*".
    Eventually this assumption needs to be removed if we're
    going to target anything other than C/C++/GO.  Uses of
-   pointers that will be need yo be fixed up are marked
+   pointers that will be need to be fixed up are marked
    with a comment containing "POINTER" in gen.c.
 
- Assumptions about operator precedence are *not* made;
- all code with multiple operators is fully parenthesized.
+8. "break" is a statement that work as expected in an
+   Algol-like language.
 
- You should *not* add superfluous outer parentheses to
- expressions; your back end should supply required ones.
+Assumptions about operator precedence within relationals and
+arithmetics are *not* made.  Relationals are assumed to have lower
+precedence than arithnetics.  All code where there might be ammbiguity
+must be fully parenthesized.
 
- The generate code also does not assume that numeric value
- is, as in C, a valid boolean expression evaluating to the
- if not zero.  Boolean tests on numneric values must have
- an explicit "== 0" or "!= 0:,
+You should *not* add superfluous outer parentheses to
+expressions; your back end should supply required ones.
+
+The generate code also does not assume that numeric value
+is, as in C, a valid boolean expression evaluating to the
+if not zero.  Boolean tests on numneric values must have
+an explicit "== 0" or "!= 0".
 
 
