@@ -425,33 +425,6 @@ void genecs (void)
 }
 
 
-/* Generate the code to find the action number. */
-
-void gen_find_action (void)
-{
-	if (fullspd) {
-		do_indent (); backend->linecomment("generated code for fullspd option begins");
-		backend->assign("yy_act", "yy_current_state[-1].yy_nxt");
-		do_indent (); backend->linecomment("generated code for fullspd option ends");
-	}
-	else if (fulltbl) {
-		do_indent (); backend->linecomment("generated code for fulltbl option begins");
-		backend->assign("yy_act", "yy_accept[yy_current_state]");
-		do_indent (); backend->linecomment("generated code for fulltbl option ends");
-	}
-	else if (reject) {
-		do_indent (); backend->linecomment("generated code for reject option begins");
-		outn("M4_REJECT_FIND_ACTION");
-		do_indent (); backend->linecomment("generated code for reject option ends");
-	}
-
-	else {			/* compressed */
-		do_indent (); backend->linecomment("generated code for compressed option begins");
-		outn("M4_COMPRESSED_FIND_ACTION");
-		do_indent (); backend->linecomment("generated code for compressed option ends");
-	}
-}
-
 /* mkftbl - make the full table and return the struct .
  * you should call mkecstbl() after this.
  */
@@ -1702,10 +1675,9 @@ void make_tables (void)
 	gen_next_match ();
 
 	skelout ();		/* %% [10.0] - break point in skel */
-	set_indent (2);
-	gen_find_action ();
 
 	skelout ();		/* %% [11.0] - break point in skel */
+	set_indent (2);
 	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
 	indent_puts
 		("if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )");

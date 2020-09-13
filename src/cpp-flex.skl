@@ -1186,72 +1186,6 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 %# Code snippets used in various cases of code generation in the main scanner.
 
-m4_define([[M4_REJECT_FIND_ACTION]], [[
-	YY_G(yy_state_ptr)--;
-	yy_current_state = *YY_G(yy_state_ptr);
-	YY_G(yy_lp) = yy_accept[yy_current_state];
-m4_ifdef([[M4_REJECT_REALLY_USED]], [[find_rule: /* we branch to this label when backing up */]])
-	for ( ; ; ) {	/* loop until we find out what rule we matched */
-		  if (YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1]) {
-		  	yy_act = yy_acclist[YY_G(yy_lp)];
-m4_ifdef([[M4_VARIABLE_TRAILING_CONTEXT_RULES]], [[
-			if ((yy_act & YY_TRAILING_HEAD_MASK) != 0 || YY_G(yy_looking_for_trail_begin)) {
-				if (yy_act == YY_G(yy_looking_for_trail_begin)) {
-					YY_G(yy_looking_for_trail_begin) = 0;
-					yy_act &= ~YY_TRAILING_HEAD_MASK;
-					break;
-				}
-			}
-			else if (( yy_act & YY_TRAILING_MASK) != 0) { 
-				YY_G(yy_looking_for_trail_begin) = yy_act & ~YY_TRAILING_MASK;
-				YY_G(yy_looking_for_trail_begin) |= YY_TRAILING_HEAD_MASK;
-m4_ifdef([[M4_REAL_REJECT]], [[
-				/* Remember matched text in case we back up
-				 * due to REJECT.
-				 */
-				YY_G(yy_full_match) = yy_cp;
-				YY_G(yy_full_state) = YY_G(yy_state_ptr);
-				YY_G(yy_full_lp) = YY_G(yy_lp);
-]])
-			}
-			else
-			{
-				YY_G(yy_full_match) = yy_cp;
-				YY_G(yy_full_state) = YY_G(yy_state_ptr);
-				YY_G(yy_full_lp) = YY_G(yy_lp);
-				break;
-			}
-			YY_G(yy_lp)++;
-			goto find_rule;
-]])
-m4_ifdef([[M4_NO_VARIABLE_TRAILING_CONTEXT_RULES]], [[
-				/* Remember matched text in case we back up due to
-				 * trailing context plus REJECT.
-				 */
-				YY_G(yy_full_match) = yy_cp;
-				break;
-]])
-		}
-
-		yy_cp--;
-
-		/* We could consolidate the following two lines with those at
-		 * the beginning, but at the cost of complaints that we're
-		 * branching inside a loop.
-		 */
-		yy_current_state = *--YY_G(yy_state_ptr);
-		YY_G(yy_lp) = yy_accept[yy_current_state];
-	}
-]])
- 
-m4_define( [[M4_COMPRESSED_FIND_ACTION]],  [[yy_act = yy_accept[yy_current_state];
-		if (yy_act == 0 ) { /* have to back up */
-		    yy_cp = YY_G(yy_last_accepting_cpos);
-			yy_current_state = YY_G(yy_last_accepting_state);
-			yy_act = yy_accept[yy_current_state];
-			}
-]])
-
 m4_define([[M4_GEN_NEXT_COMPRESSED_STATE]], [[
 	while ((yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state)) {
 		yy_current_state = (int) yy_def[yy_current_state];
@@ -1380,6 +1314,72 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 
 yy_find_action:
 %% [10.0] code to find the action number goes here
+m4_ifdef([[M4_MODE_FULLSPD]], [[yy_act = yy_current_state[-1].yy_nxt;]])
+m4_ifdef([[M4_MODE_FULLTBL]], [[yy_act = yy_accept[yy_current_state];]])
+m4_ifdef([[M4_MODE_REJECT]], [[
+	YY_G(yy_state_ptr)--;
+	yy_current_state = *YY_G(yy_state_ptr);
+	YY_G(yy_lp) = yy_accept[yy_current_state];
+m4_ifdef([[M4_REJECT_REALLY_USED]], [[find_rule: /* we branch to this label when backing up */]])
+	for ( ; ; ) {	/* loop until we find out what rule we matched */
+		  if (YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1]) {
+		  	yy_act = yy_acclist[YY_G(yy_lp)];
+m4_ifdef([[M4_VARIABLE_TRAILING_CONTEXT_RULES]], [[
+			if ((yy_act & YY_TRAILING_HEAD_MASK) != 0 || YY_G(yy_looking_for_trail_begin)) {
+				if (yy_act == YY_G(yy_looking_for_trail_begin)) {
+					YY_G(yy_looking_for_trail_begin) = 0;
+					yy_act &= ~YY_TRAILING_HEAD_MASK;
+					break;
+				}
+			}
+			else if (( yy_act & YY_TRAILING_MASK) != 0) { 
+				YY_G(yy_looking_for_trail_begin) = yy_act & ~YY_TRAILING_MASK;
+				YY_G(yy_looking_for_trail_begin) |= YY_TRAILING_HEAD_MASK;
+m4_ifdef([[M4_REAL_REJECT]], [[
+				/* Remember matched text in case we back up
+				 * due to REJECT.
+				 */
+				YY_G(yy_full_match) = yy_cp;
+				YY_G(yy_full_state) = YY_G(yy_state_ptr);
+				YY_G(yy_full_lp) = YY_G(yy_lp);
+]])
+			}
+			else
+			{
+				YY_G(yy_full_match) = yy_cp;
+				YY_G(yy_full_state) = YY_G(yy_state_ptr);
+				YY_G(yy_full_lp) = YY_G(yy_lp);
+				break;
+			}
+			YY_G(yy_lp)++;
+			goto find_rule;
+]])
+m4_ifdef([[M4_NO_VARIABLE_TRAILING_CONTEXT_RULES]], [[
+				/* Remember matched text in case we back up due to
+				 * trailing context plus REJECT.
+				 */
+				YY_G(yy_full_match) = yy_cp;
+				break;
+]])
+		}
+
+		yy_cp--;
+
+		/* We could consolidate the following two lines with those at
+		 * the beginning, but at the cost of complaints that we're
+		 * branching inside a loop.
+		 */
+		yy_current_state = *--YY_G(yy_state_ptr);
+		YY_G(yy_lp) = yy_accept[yy_current_state];
+	}
+]])
+m4_ifdef([[M4_MODE_COMPRESSED]], [[yy_act = yy_accept[yy_current_state];
+		if (yy_act == 0 ) { /* have to back up */
+		    yy_cp = YY_G(yy_last_accepting_cpos);
+			yy_current_state = YY_G(yy_last_accepting_state);
+			yy_act = yy_accept[yy_current_state];
+			}
+]])
 
 		YY_DO_BEFORE_ACTION;
 

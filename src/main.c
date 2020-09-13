@@ -1424,6 +1424,16 @@ void readin (void)
 		out_m4_define( "M4_YY_USES_REJECT", NULL);
 	if (usemecs)
 		out_m4_define( "M4_USEMECS", NULL);
+
+	// mode switches for find-action code
+	if (fullspd)
+		out_m4_define( "M4_MODE_FULLSPD", NULL);
+	else if (fulltbl)
+	    out_m4_define( "M4_MODE_FULLTBL", NULL);
+	else if (reject)
+	    out_m4_define( "M4_MODE_REJECT", NULL);
+	else
+	    out_m4_define( "M4_MODE_COMPRESSED", NULL);
 }
 
 /* set_up_initial_allocations - allocate memory for internal tables */
