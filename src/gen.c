@@ -796,8 +796,7 @@ void gen_start_state (void)
 {
 	if (fullspd) {
 		if (bol_needed) {
-			indent_puts
-				("yy_current_state = yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()];");
+			backend->assign("yy_current_state", "yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()]");
 		}
 		else
 			indent_puts
