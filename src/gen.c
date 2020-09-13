@@ -429,38 +429,6 @@ void genecs (void)
 
 void gen_find_action (void)
 {
-	/* This function relies on some assumptions that aren't in the method table.
-	 * 1. Target language uses [] for indexing.
-	 * 2. Target language uses . to reach structure members. (But not ->.)
-	 * 3. YY_G() expands to a location that is assignable.
-	 * 4, Label syntax is C-like - identifier followed by colon.
-	 * 5. The following C infix operators have their usual
-	 *    meanings: && || == != < & | ~ &= |= in cond() argyments and
-	 *    second arguments of assign(), and your back end must
-	 *    translate them itself.
-	 * 6. All conditionals and loops are attached to a block
-	 *    with begin and end delimiters, not just a bare statement.
-	 * 7. Postincrement and post-decrement statements are allowed;
-	 *    preincrement and predecrement are not.  Neither may be used
-	 *    in expressions
-	 * 9. Pointer types exist abd are defeferenced with prefix "*".
-	 *    Eventually this assumption needs to be removed if we're
-	 *    going to target anything other than C/C++/GO.  Uses of
-	 *    pointers that will be need yo be fixed up are marked
-	 *    with a comment containing "POINTER".
-	 *
-	 * Assumptions about operator precedence are *not* made;
-	 * all code with multiple operators is fully parenthesized.
-	 *
-	 * You should *not* add superfluous outer parentheses to
-	 * expressions; your back end should supply required ones.
-	 *
-	 * The generate code also does not assume that numeric value
-	 * is, as in C, a valid boolean expression evaluating to the
-	 * if not zero.  Boolean tests on numneric values must have
-	 * an explicit "== 0" or "!= 0:,
-	 */
-
 	if (fullspd) {
 		do_indent (); backend->linecomment("generated code for fullspd option begins");
 		backend->assign("yy_act", "yy_current_state[-1].yy_nxt");
