@@ -642,18 +642,52 @@ static void cpp_start_state_list(size_t sz)
 static void cpp_mkecstbl(void)
 // Make equivalence-class tables
 {
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_EC, (void**)&yy_ec, sizeof(%s)},\n",
-		    "YY_CHAR");
+    buf_prints (&yydmap_buf,
+		"\t{YYTD_ID_EC, (void**)&yy_ec, sizeof(%s)},\n",
+		"YY_CHAR");
 }
 
 static void cpp_mkftbl(void)
 // Make full table
 {
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
-		    long_align ? "flex_int32_t" : "flex_int16_t");
+    buf_prints (&yydmap_buf,
+		"\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
+		long_align ? "flex_int32_t" : "flex_int16_t");
 }
+
+static void cpp_gentabs_acclist(void)
+// Generate accept list initializer
+{
+    buf_prints (&yydmap_buf,
+		"\t{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(%s)},\n",
+		long_align ? "flex_int32_t" : "flex_int16_t");
+}
+
+static void cpp_gentabs_accept(void)
+// Generate accept table initializer
+{
+    buf_prints (&yydmap_buf,
+		"\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
+		long_align ? "flex_int32_t" : "flex_int16_t");
+}
+
+static void cpp_gentabs_yy_meta(void)
+// Generate yy_meta table initializer
+{
+    buf_prints (&yydmap_buf,
+		"\t{YYTD_ID_META, (void**)&yy_meta, sizeof(%s)},\n",
+		"YY_CHAR");
+}
+
+static void cpp_gentabs_yy_base(void)
+// Generate yy_meta base initializer
+{
+    buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_BASE, (void**)&yy_base, sizeof(%s)},\n",
+		    (tblend >= INT16_MAX
+		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+}
+
 
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
@@ -698,4 +732,8 @@ struct flex_backend_t cpp_backend = {
 	.state_entry_fmt = "    &yy_transition[%d],\n",
 	.mkecstbl = cpp_mkecstbl,
 	.mkftbl = cpp_mkftbl,
+	.gentabs_acclist = cpp_gentabs_acclist,
+	.gentabs_accept = cpp_gentabs_accept,
+	.gentabs_yy_meta = cpp_gentabs_yy_meta,
+	.gentabs_yy_base = cpp_gentabs_yy_base,
 };

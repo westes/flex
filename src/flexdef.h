@@ -344,6 +344,10 @@ struct flex_backend_t {
 	const void (*mkftbl)();			// Make full table
 	const char *state_entry_fmt;		// Format of starte table entry
 	const void (*mkecstbl)(void);		// Make equivalence-class tables
+	const void (*gentabs_acclist)(void);	// Generate accept list initializer
+	const void (*gentabs_accept)(void);	// Generate accept table initializer
+	const void (*gentabs_yy_meta)(void);	// Generate yy_meta table initializer
+	const void (*gentabs_yy_base)(void);	// Generate yy_base table initializer
 };
 
 extern bool gentables;
