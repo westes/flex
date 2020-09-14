@@ -542,9 +542,7 @@ void gen_next_match (void)
 		else
 			backend->when("(yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %s ]) > 0", char_map);
 
-		if (num_backing_up > 0) {
-			gen_backing_up ();
-		}
+		gen_backing_up ();
 
 		backend->statement("yy_cp++");
 		close_block();
@@ -567,9 +565,7 @@ void gen_next_match (void)
 
 		backend->statement("yy_current_state += yy_trans_info->yy_nxt");
 
-		if (num_backing_up > 0) {
-			gen_backing_up ();
-		}
+		gen_backing_up ();
 		close_block();
 		close_block();
 
