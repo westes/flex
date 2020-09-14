@@ -128,9 +128,6 @@ static void geneoltbl (void)
 
 void gen_backing_up (void)
 {
-	if (num_backing_up == 0)
-		return;
-
 	outn("M4_GEN_BACKING_UP");
 }
 
@@ -139,7 +136,7 @@ void gen_backing_up (void)
 
 void gen_bu_action (void)
 {
-	if (reject || num_backing_up == 0)
+	if (reject)
 		return;
 
 	set_indent (3);
@@ -670,7 +667,7 @@ void gen_NUL_trans (void)
 	/* Only generate a definition for "yy_cp" if we'll generate code
 	 * that uses it.  Otherwise lint and the like complain.
 	 */
-	int     need_backing_up = (num_backing_up > 0 && !reject);
+	int     need_backing_up = !reject;
 
 	if (need_backing_up && (!nultrans || fullspd || fulltbl))
 		/* We're going to need yy_cp lying around for the call
@@ -791,7 +788,6 @@ void gentabs (void)
 	 * In order to recover the previous state, we effectively need
 	 * to keep backing-up information.
 	 */
-	++num_backing_up;
 
 	if (reject) {
 		/* Write out accepting list and pointer list.
@@ -1374,7 +1370,7 @@ void make_tables (void)
 	 * is being used because then we use an alternative backing-up
 	 * technique instead.
 	 */
-	if (num_backing_up > 0 && !reject) {
+	if (!reject) {
 		if (!C_plus_plus && !reentrant) {
 			indent_puts
 				("static yy_state_type yy_last_accepting_state;\n");
