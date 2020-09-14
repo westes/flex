@@ -523,26 +523,7 @@ void gen_next_match (void)
 	}
 
 	else if (fullspd) {
-		backend->linecomment("generated code begins");
-		open_block();
-		indent_puts
-			("const struct yy_trans_info *yy_trans_info;\n");
-		indent_puts ("YY_CHAR yy_c;\n");
-		indent_put2s ("for ( yy_c = %s;", char_map);
-		indent_puts
-			("      (yy_trans_info = &yy_current_state[yy_c])->");
-		indent_puts ("yy_verify == yy_c;");
-		indent_put2s ("      yy_c = %s )", char_map_2);
-
-		open_block();
-
-		backend->statement("yy_current_state += yy_trans_info->yy_nxt");
-
-		outn("M4_GEN_BACKING_UP");
-		close_block();
-		close_block();
-
-		backend->linecomment("generated code ends");
+		out_str3 ("M4_GEN_NEXT_MATCH_FULLSPD(%s, %s)", char_map, char_map_2, "");
 	}
 
 	else {			/* compressed */

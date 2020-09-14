@@ -1241,6 +1241,22 @@ m4_define([[M4_GEN_START_STATE_STORE]], [[
 ]])
 
 
+m4_define([[M4_GEN_NEXT_MATCH_FULLSPD]], [[
+		{
+			const struct yy_trans_info *yy_trans_info;
+			YY_CHAR yy_c;
+
+			for ( yy_c = $1;
+			      (yy_trans_info = &yy_current_state[yy_c])->yy_verify == yy_c;
+			      yy_c = $2 )
+			{
+				yy_current_state += yy_trans_info->yy_nxt;
+
+				M4_GEN_BACKING_UP
+			}
+		}
+]])
+
 %not-for-header
 /** The main scanner function which does all the work.
  */
