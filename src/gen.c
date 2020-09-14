@@ -534,9 +534,9 @@ void gen_next_match (void)
 		backend->statement("yy_cp++");
 
 		if (interactive)
-			backend->cond("yy_base[yy_current_state] == %d", jambase);
+			backend->cond("yy_base[yy_current_state] == YY_JAMBASE");
 		else
-			backend->cond("yy_current_state == %d", jamstate);
+			backend->cond("yy_current_state == YY_JAMSTATE");
 
 		backend->statement("break");
 		close_block();	// close while
@@ -1205,6 +1205,9 @@ void make_tables (void)
 
 	fprintf (stdout, backend->int_define_fmt, "YY_NUM_RULES", num_rules);
 	fprintf (stdout, backend->int_define_fmt, "YY_END_OF_BUFFER", num_rules + 1);
+
+	fprintf (stdout, backend->int_define_fmt, "YY_JAMBASE", jambase);
+	fprintf (stdout, backend->int_define_fmt, "YY_JAMSTATE", jamstate);
 
 	if (fullspd) {
 		/* Need to define the transet type as a size large
