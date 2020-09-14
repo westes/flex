@@ -1384,14 +1384,10 @@ void readin (void)
 
 	if (reject) {
 		real_reject = true;
-		out_m4_define( "M4_REAL_REJECT", NULL);
 	}
 
 	if (variable_trailing_context_rules) {
-		out_m4_define( "M4_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
 		reject = true;
-	} else {
-		out_m4_define( "M4_NO_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
 	}
 
 	if ((fulltbl || fullspd) && reject) {
@@ -1418,10 +1414,30 @@ void readin (void)
 	if (useecs)
 		ccl2ecl ();
 
+	// Set up macro conditionalization after all
+	// dependent flags have been computed. These
+	// are used to conditionalize code in the lex
+	// skeleton that histprically used to be generated
+	// by C code in flex itself; by shoving all this
+	// stuff out to the skeleton file we make it easier
+	// to retarget the code generation.
+
+	// mode switches for next-action code
+	if (variable_trailing_context_rules) {
+		out_m4_define( "M4_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
+	} else {
+		out_m4_define( "M4_NO_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
+	}
+	if (real_reject)
+		out_m4_define( "M4_REAL_REJECT", NULL);
 	if (reject_really_used)
 		out_m4_define( "M4_REJECT_REALLY_USED", NULL);
 	if (reject)
 		out_m4_define( "M4_YY_USES_REJECT", NULL);
+	else
+		out_m4_define( "M4_NO_YY_USES_REJECT", NULL);
+
+	// mode switches for computing next compressed state
 	if (usemecs)
 		out_m4_define( "M4_USEMECS", NULL);
 
@@ -1435,7 +1451,7 @@ void readin (void)
 	else
 	    out_m4_define( "M4_MODE_COMPRESSED", NULL);
 
-	// mode switches ffor backup generation
+	// mode switches for backup generation
 	if (!fullspd)
 		out_m4_define( "M4_NOT_MODE_FULLSPD", NULL);
 }
