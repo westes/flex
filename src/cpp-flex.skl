@@ -1187,7 +1187,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 %# Code snippets used in various cases of code generation in the main scanner.
 
 m4_define([[M4_GEN_BACKING_UP]], [[
-	/* Conditionally generate the code to keep backing-up information. */
+	/* Generate the code to keep backing-up information. */
 m4_ifdef([[M4_NO_YY_USES_REJECT]], [[
 		int cond;
 m4_ifdef([[M4_MODE_FULLSPD]], [[
@@ -1204,6 +1204,13 @@ m4_ifdef([[M4_NOT_MODE_FULLSPD]], [[
 ]])
 
 m4_define([[M4_GEN_NEXT_COMPRESSED_STATE]], [[
+	YY_CHAR yy_c = $1;
+	/* Save the backing-up info \before/ computing the next state
+	 * because we always compute one more state than needed - we
+	 * always proceed until we reach a jam state
+	 */
+	M4_GEN_BACKING_UP
+
 	while ((yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state)) {
 		yy_current_state = (int) yy_def[yy_current_state];
 
@@ -1217,7 +1224,7 @@ m4_ifdef([[M4_USEMECS]], [[
 		 */
 
 		/* lastdfa + 2 is the beginning of the templates */
-		if (yy_current_state >= $1) {
+		if (yy_current_state >= $2) {
 			yy_c = yy_meta[yy_c];
 		}
 ]])

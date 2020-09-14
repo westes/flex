@@ -496,22 +496,6 @@ void genftbl (void)
 }
 
 
-/* Generate the code to find the next compressed-table state. */
-
-void gen_next_compressed_state (char *char_map)
-{
-	backend->declare("yy_c", "YY_CHAR", char_map);
-
-	/* Save the backing-up info \before/ computing the next state
-	 * because we always compute one more state than needed - we
-	 * always proceed until we reach a jam state
-	 */
-	outn("M4_GEN_BACKING_UP");
-
-	out_dec("M4_GEN_NEXT_COMPRESSED_STATE(%d)", lastdfa+2);
-}
-
-
 /* Generate the code to find the next match. */
 
 void gen_next_match (void)
@@ -632,7 +616,7 @@ void gen_next_state (int worry_about_NULs)
 		backend->statement("yy_current_state += yy_current_state[%s].yy_nxt", char_map);
 
 	else
-		gen_next_compressed_state (char_map);
+		out_str_dec("M4_GEN_NEXT_COMPRESSED_STATE(%s,%d)", char_map, lastdfa+2);
 
 	if (worry_about_NULs && nultrans) {
 
@@ -702,7 +686,7 @@ void gen_NUL_trans (void)
 		char    NUL_ec_str[20];
 
 		snprintf (NUL_ec_str, sizeof(NUL_ec_str), "%d", NUL_ec);
-		gen_next_compressed_state (NUL_ec_str);
+		out_str_dec("M4_GEN_NEXT_COMPRESSED_STATE(%s,%d)", NUL_ec_str, lastdfa+2);
 
 		do_indent ();
 		out_dec ("yy_is_jam = (yy_current_state == %d);\n",
