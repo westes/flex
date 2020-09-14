@@ -566,7 +566,7 @@ void gen_next_state (int worry_about_NULs)
 					"(*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : %d)",
 					NUL_ec);
 		else
-            snprintf (char_map, sizeof(char_map),
+			snprintf (char_map, sizeof(char_map),
 					"(*yy_cp ? YY_SC_TO_UI(*yy_cp) : %d)",
 					NUL_ec);
 	}
@@ -620,13 +620,12 @@ void gen_next_state (int worry_about_NULs)
 /* Generate the code to make a NUL transition. */
 
 void gen_NUL_trans (void)
-{				/* NOTE - changes in here should be reflected in gen_next_match() */
+{
+	/* NOTE - changes in here should be reflected in gen_next_match() */
 	/* Only generate a definition for "yy_cp" if we'll generate code
 	 * that uses it.  Otherwise lint and the like complain.
 	 */
-	int     need_backing_up = !reject;
-
-	if (need_backing_up && (!nultrans || fullspd || fulltbl))
+	if (!reject && (!nultrans || fullspd || fulltbl))
 		/* We're going to need yy_cp lying around for the call
 		 * below to gen_backing_up().
 		 */
@@ -690,7 +689,7 @@ void gen_NUL_trans (void)
 	 * compressed tables have *already* done such backing up, so
 	 * we needn't bother with it again.
 	 */
-	if (need_backing_up && (fullspd || fulltbl)) {
+	if (!reject && (fullspd || fulltbl)) {
 		outc ('\n');
 		indent_puts ("if ( ! yy_is_jam )");
 		open_block();
