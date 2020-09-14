@@ -128,7 +128,7 @@ static void geneoltbl (void)
 
 void gen_backing_up (void)
 {
-	if (reject || num_backing_up == 0)
+	if (num_backing_up == 0)
 		return;
 
 	outn("M4_GEN_BACKING_UP");

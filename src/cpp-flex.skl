@@ -1187,6 +1187,8 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 %# Code snippets used in various cases of code generation in the main scanner.
 
 m4_define([[M4_GEN_BACKING_UP]], [[
+	/* Conditionally generate the code to keep backing-up information. */
+m4_ifdef([[M4_NO_YY_USES_REJECT]], [[
 		int cond;
 m4_ifdef([[M4_MODE_FULLSPD]], [[
 		cond = yy_current_state[-1].yy_nxt;
@@ -1198,6 +1200,7 @@ m4_ifdef([[M4_NOT_MODE_FULLSPD]], [[
 			YY_G(yy_last_accepting_state) = yy_current_state;
 			YY_G(yy_last_accepting_cpos) = yy_cp;
 		}
+]])
 ]])
 
 m4_define([[M4_GEN_NEXT_COMPRESSED_STATE]], [[
