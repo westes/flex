@@ -131,7 +131,7 @@ void gen_backing_up (void)
 	if (reject || num_backing_up == 0)
 		return;
 
-	backend->gen_backing_up();
+	outn("M4_GEN_BACKING_UP");
 }
 
 

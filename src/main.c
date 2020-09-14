@@ -1434,6 +1434,10 @@ void readin (void)
 	    out_m4_define( "M4_MODE_REJECT", NULL);
 	else
 	    out_m4_define( "M4_MODE_COMPRESSED", NULL);
+
+	// mode switches ffor backup generation
+	if (!fullspd)
+		out_m4_define( "M4_NOT_MODE_FULLSPD", NULL);
 }
 
 /* set_up_initial_allocations - allocate memory for internal tables */

@@ -567,22 +567,6 @@ static void cpp_geneoltbl(size_t sz)
 	out_str_dec (backend->get_int32_decl (), "yy_rule_can_match_eol", sz);
 }
 
-static void cpp_gen_backing_up (void)
-// Generate code to keep backup information.
-{
-	if (fullspd)
-		indent_puts ("if ( yy_current_state[-1].yy_nxt )");
-	else
-		indent_puts ("if ( yy_accept[yy_current_state] )");
-
-	++indent_level;
-	indent_puts ("{");
-	indent_puts ("YY_G(yy_last_accepting_state) = yy_current_state;");
-	indent_puts ("YY_G(yy_last_accepting_cpos) = yy_cp;");
-	indent_puts ("}");
-	--indent_level;
-}
-
 static void cpp_gen_bu_action (void)
 // Generate the code to perform the backing up.
 {
@@ -758,7 +742,6 @@ struct flex_backend_t cpp_backend = {
 	.ntod = cpp_ntod,
 	.mkeoltbl = cpp_mkeoltbl,
 	.geneoltbl = cpp_geneoltbl,
-	.gen_backing_up = cpp_gen_backing_up,
 	.gen_bu_action = cpp_gen_bu_action,
 	.mkctbl = cpp_mkctbl,
 	.mkssltbl = cpp_mkssltbl,
