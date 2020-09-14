@@ -124,14 +124,6 @@ static void geneoltbl (void)
 }
 
 
-/* Conditionally generate the code to keep backing-up information. */
-
-void gen_backing_up (void)
-{
-	outn("M4_GEN_BACKING_UP");
-}
-
-
 /* Conditionally generate the code to perform the backing up. */
 
 void gen_bu_action (void)
@@ -514,7 +506,7 @@ void gen_next_compressed_state (char *char_map)
 	 * because we always compute one more state than needed - we
 	 * always proceed until we reach a jam state
 	 */
-	gen_backing_up ();
+	outn("M4_GEN_BACKING_UP");
 
 	out_dec("M4_GEN_NEXT_COMPRESSED_STATE(%d)", lastdfa+2);
 }
@@ -539,7 +531,7 @@ void gen_next_match (void)
 		else
 			backend->when("(yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %s ]) > 0", char_map);
 
-		gen_backing_up ();
+		outn("M4_GEN_BACKING_UP");
 
 		backend->statement("yy_cp++");
 		close_block();
@@ -562,7 +554,7 @@ void gen_next_match (void)
 
 		backend->statement("yy_current_state += yy_trans_info->yy_nxt");
 
-		gen_backing_up ();
+		outn("M4_GEN_BACKING_UP");
 		close_block();
 		close_block();
 
@@ -622,7 +614,7 @@ void gen_next_state (int worry_about_NULs)
 	if (worry_about_NULs && nultrans) {
 		if (!fulltbl && !fullspd)
 			/* Compressed tables back up *before* they match. */
-			gen_backing_up ();
+			outn("M4_GEN_BACKING_UP");
 
 		indent_puts ("if ( *yy_cp )");
 		open_block();
@@ -653,7 +645,7 @@ void gen_next_state (int worry_about_NULs)
 	}
 
 	if (fullspd || fulltbl)
-		gen_backing_up ();
+		outn("M4_GEN_BACKING_UP");
 
 	if (reject)
 		indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");	// POINTER
@@ -737,7 +729,7 @@ void gen_NUL_trans (void)
 		outc ('\n');
 		indent_puts ("if ( ! yy_is_jam )");
 		open_block();
-		gen_backing_up ();
+		outn("M4_GEN_BACKING_UP");
 		close_block();
 	}
 }
