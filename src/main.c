@@ -1451,9 +1451,13 @@ void readin (void)
 	else
 	    out_m4_define( "M4_MODE_COMPRESSED", NULL);
 
-	// mode switches for backup generation
+	// mode switches for backup generation and gen_start_state
 	if (!fullspd)
 		out_m4_define( "M4_NOT_MODE_FULLSPD", NULL);
+	if (bol_needed)
+		out_m4_define( "M4_BOL_NEEDED", NULL);
+	else
+		out_m4_define( "M4_NOT_BOL_NEEDED", NULL);
 }
 
 /* set_up_initial_allocations - allocate memory for internal tables */
