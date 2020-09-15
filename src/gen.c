@@ -628,16 +628,14 @@ void gen_NUL_trans (void)
 	else if (fulltbl) {
 		do_indent ();
 		if (gentables)
-			out_dec ("yy_current_state = yy_nxt[yy_current_state][%d];\n", NUL_ec);
+			outn ("yy_current_state = yy_nxt[yy_current_state][YY_NUL_EC];");
 		else
-			out_dec ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %d];\n", NUL_ec);
+			outn ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + YY_NUL_EC];");
 		indent_puts ("yy_is_jam = (yy_current_state <= 0);");
 	}
 
 	else if (fullspd) {
-		do_indent ();
-		out_dec ("int yy_c = %d;\n", NUL_ec);
-
+		indent_puts ("int yy_c = YY_NUL_EC;");
 		indent_puts
 			("const struct yy_trans_info *yy_trans_info;\n");
 		indent_puts
@@ -651,8 +649,7 @@ void gen_NUL_trans (void)
 	else {
 		char    NUL_ec_str[20];
 
-		snprintf (NUL_ec_str, sizeof(NUL_ec_str), "%d", NUL_ec);
-		out_str("M4_GEN_NEXT_COMPRESSED_STATE(%s)", NUL_ec_str);
+		out ("M4_GEN_NEXT_COMPRESSED_STATE(YY_NUL_EC)");
 
 		indent_puts ("yy_is_jam = (yy_current_state == YY_JAMSTATE);");
 
@@ -1166,6 +1163,8 @@ void make_tables (void)
 
 	fprintf (stdout, backend->int_define_fmt, "YY_JAMBASE", jambase);
 	fprintf (stdout, backend->int_define_fmt, "YY_JAMSTATE", jamstate);
+
+	fprintf (stdout, backend->int_define_fmt, "YY_NUL_EC", NUL_ec);
 
 	if (fullspd) {
 		/* Need to define the transet type as a size large
