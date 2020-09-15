@@ -124,20 +124,6 @@ static void geneoltbl (void)
 }
 
 
-/* Conditionally generate the code to perform the backing up. */
-
-void gen_bu_action (void)
-{
-	if (reject)
-		return;
-
-	set_indent (3);
-
-	backend->gen_bu_action();
-
-	set_indent (0);
-}
-
 /** mkctbl - make full speed compressed transition table
  * This is an array of structs; each struct a pair of integers.
  * You should call mkssltbl() immediately after this.
@@ -1678,8 +1664,17 @@ void make_tables (void)
 
 	/* Copy actions to output file. */
 	skelout ();		/* %% [13.0] - break point in skel */
+
+	/* Conditionally generate the code to perform the backing up. */
 	++indent_level;
-	gen_bu_action ();
+	if (!reject) {
+		set_indent (3);
+
+		backend->gen_bu_action();
+
+		set_indent (0);
+	}
+
 	out (&action_array[action_offset]);
 
 	line_directive_out (stdout, 0);

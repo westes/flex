@@ -564,7 +564,7 @@ static void cpp_geneoltbl(size_t sz)
 // Generate end-of-line-transitions - only used when yylineno tracking is on
 {
 	outn ("/* Table of booleans, true if rule could match eol. */");
-	out_str_dec (backend->get_int32_decl (), "yy_rule_can_match_eol", sz);
+	out_str_dec (cpp_get_int32_decl (), "yy_rule_can_match_eol", sz);
 }
 
 static void cpp_gen_bu_action (void)
