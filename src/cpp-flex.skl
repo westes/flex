@@ -2064,7 +2064,7 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
 %% [19.0] update BOL and yylineno
 
 m4_ifdef([[M4_BOL_NEEDED]], [[
-	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\\n');
+	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
 m4_ifdef([[M4_MODE_YYLINENO]], [[
 	if ( YY_CURRENT_BUFFER_LVALUE->yy_at_bol )
 		M4_YY_INCR_LINENO();
@@ -2072,9 +2072,9 @@ m4_ifdef([[M4_MODE_YYLINENO]], [[
 ]])
 m4_ifdef([[M4_NOT_BOL_NEEDED]], [[
 m4_ifdef([[M4_MODE_YYLINENO]], [[
-	 if ( c == '\\n' ) {
+	if ( c == '\n' ) {
 		M4_YY_INCR_LINENO();
-	 }
+	}
 ]])
 ]])
 
