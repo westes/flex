@@ -1670,7 +1670,7 @@ void make_tables (void)
 	if (!reject) {
 		set_indent (3);
 
-		backend->gen_bu_action();
+		outn("M4_GEN_BU_ACTION");
 
 		set_indent (0);
 	}

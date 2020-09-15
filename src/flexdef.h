@@ -335,7 +335,6 @@ struct flex_backend_t {
 	void (*ntod)(size_t);			// Generate nxt table for ntod
 	void (*mkeoltbl)(void);			// Make end-of-line table
 	void (*geneoltbl)(size_t);		// Generate end-of-line transitions
-	void (*gen_bu_action)(void);		// Generate the code to perform the backing up
 	void (*mkctbl)(size_t);			// Make full-speed compressed table
 	void (*mkssltbl)(void);			// Make start_state_list table
 	void (*gen_yy_trans)(size_t);		// Table of verify for transition and offset to next state. (sic)

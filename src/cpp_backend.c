@@ -567,26 +567,6 @@ static void cpp_geneoltbl(size_t sz)
 	out_str_dec (cpp_get_int32_decl (), "yy_rule_can_match_eol", sz);
 }
 
-static void cpp_gen_bu_action (void)
-// Generate the code to perform the backing up.
-{
-	indent_puts ("case 0: /* must back up */");
-	indent_puts ("/* undo the effects of YY_DO_BEFORE_ACTION */");
-	indent_puts ("*yy_cp = YY_G(yy_hold_char);");
-
-	if (fullspd || fulltbl)
-		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos) + 1;");
-	else
-		/* Backing-up info for compressed tables is taken \after/
-		 * yy_cp has been incremented for the next state.
-		 */
-		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos);");
-
-	indent_puts ("yy_current_state = YY_G(yy_last_accepting_state);");
-	indent_puts ("goto yy_find_action;");
-	outc ('\n');
-}
-
 static void cpp_mkctbl (size_t sz)
 // Make full-speed compressed transition table
 {
@@ -742,7 +722,6 @@ struct flex_backend_t cpp_backend = {
 	.ntod = cpp_ntod,
 	.mkeoltbl = cpp_mkeoltbl,
 	.geneoltbl = cpp_geneoltbl,
-	.gen_bu_action = cpp_gen_bu_action,
 	.mkctbl = cpp_mkctbl,
 	.mkssltbl = cpp_mkssltbl,
 	.gen_yy_trans = cpp_gen_yy_trans,

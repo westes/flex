@@ -1265,6 +1265,23 @@ m4_define([[M4_GEN_NEXT_MATCH_FULLSPD]], [[
 		}
 ]])
 
+
+m4_define([[M4_GEN_BU_ACTION]], [[
+	case 0: /* must back up */
+	/* undo the effects of YY_DO_BEFORE_ACTION */
+	*yy_cp = YY_G(yy_hold_char);
+
+	/* /\* Backing-up info for compressed tables is taken \after/ */
+	/*  * yy_cp has been incremented for the next state. */
+	/*  *\/ */
+	yy_cp = YY_G(yy_last_accepting_cpos);
+        m4_ifdef([[M4_MODE_FULLSPD]], [[yy_cp++;]])
+        m4_ifdef([[M4_MODE_FULLTBL]], [[yy_cp++;]])
+
+	yy_current_state = YY_G(yy_last_accepting_state);
+	goto yy_find_action;
+]])
+
 %not-for-header
 /** The main scanner function which does all the work.
  */
