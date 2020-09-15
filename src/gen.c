@@ -583,7 +583,7 @@ void gen_next_state (int worry_about_NULs)
 		backend->statement("yy_current_state += yy_current_state[%s].yy_nxt", char_map);
 
 	else
-		out_str_dec("M4_GEN_NEXT_COMPRESSED_STATE(%s,%d)", char_map, lastdfa+2);
+		out_str ("M4_GEN_NEXT_COMPRESSED_STATE(%s)", char_map);
 
 	if (worry_about_NULs && nultrans) {
 
@@ -652,11 +652,9 @@ void gen_NUL_trans (void)
 		char    NUL_ec_str[20];
 
 		snprintf (NUL_ec_str, sizeof(NUL_ec_str), "%d", NUL_ec);
-		out_str_dec("M4_GEN_NEXT_COMPRESSED_STATE(%s,%d)", NUL_ec_str, lastdfa+2);
+		out_str("M4_GEN_NEXT_COMPRESSED_STATE(%s)", NUL_ec_str);
 
-		do_indent ();
-		out_dec ("yy_is_jam = (yy_current_state == %d);\n",
-			 jamstate);
+		indent_puts ("yy_is_jam = (yy_current_state == YY_JAMSTATE);");
 
 		if (reject) {
 			/* Only stack this state if it's a transition we

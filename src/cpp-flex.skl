@@ -1223,8 +1223,8 @@ m4_ifdef([[M4_USEMECS]], [[
 		 * class twice
 		 */
 
-		/* lastdfa + 2 is the beginning of the templates */
-		if (yy_current_state >= $2) {
+		/* lastdfa + 2 == YY_JAMSTATE + 1 is the beginning of the templates */
+		if (yy_current_state >= YY_JAMSTATE + 1) {
 			yy_c = yy_meta[yy_c];
 		}
 ]])
