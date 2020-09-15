@@ -647,8 +647,6 @@ void gen_NUL_trans (void)
 	}
 
 	else {
-		char    NUL_ec_str[20];
-
 		out ("M4_GEN_NEXT_COMPRESSED_STATE(YY_NUL_EC)");
 
 		indent_puts ("yy_is_jam = (yy_current_state == YY_JAMSTATE);");
@@ -1723,7 +1721,6 @@ void make_tables (void)
 
 
 	/* Generate code for yy_get_previous_state(). */
-	set_indent (1);
 	skelout ();		/* %% [15.0] - break point in skel */
 
 	outn("M4_GEN_START_STATE");
