@@ -806,7 +806,7 @@ extern void gen_next_compressed_state(char *);
 extern void gen_next_match(void);
 
 /* Generate the code to find the next state. */
-extern void gen_next_state(int);
+extern void gen_next_state(void);
 
 /* Generate the code to make a NUL transition. */
 extern void gen_NUL_trans(void);

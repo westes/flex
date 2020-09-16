@@ -509,7 +509,10 @@ void gen_next_match (void)
 	else {			/* compressed */
 		indent_puts(backend->forever);
 
-		gen_next_state (false);
+		out ("M4_GEN_NEXT_COMPRESSED_STATE(M4_EC(YY_SC_TO_UI(*yy_cp)))");
+
+		if (reject)
+			indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");	// POINTER
 
 		backend->statement("yy_cp++");
 
@@ -534,13 +537,13 @@ void gen_next_match (void)
 }
 
 
-/* Generate the code to find the next state. */
+/* Generate the code to find the next state.  Only used when we're worried about NULs */
 
-void gen_next_state (int worry_about_NULs)
+void gen_next_state ()
 {				/* NOTE - changes in here should be reflected in gen_next_match() */
 	char    char_map[256];
 
-	if (worry_about_NULs && !nultrans) {
+	if (!nultrans) {
 		snprintf (char_map, sizeof(char_map),
 					"(*yy_cp ? M4_EC(YY_SC_TO_UI(*yy_cp)) : %d)",
 					NUL_ec);
@@ -549,7 +552,7 @@ void gen_next_state (int worry_about_NULs)
 	else
 	    strcpy (char_map, "M4_EC(YY_SC_TO_UI(*yy_cp))");
 
-	if (worry_about_NULs && nultrans) {
+	if (nultrans) {
 		if (!fulltbl && !fullspd)
 			/* Compressed tables back up *before* they match. */
 			outn("M4_GEN_BACKING_UP");
@@ -572,7 +575,7 @@ void gen_next_state (int worry_about_NULs)
 	else
 		out_str ("M4_GEN_NEXT_COMPRESSED_STATE(%s)", char_map);
 
-	if (worry_about_NULs && nultrans) {
+	if (nultrans) {
 
 		close_block();
 		--indent_level;
@@ -1639,7 +1642,7 @@ void make_tables (void)
 
 	set_indent (2);
 	skelout ();		/* %% [16.0] - break point in skel */
-	gen_next_state (true);
+	gen_next_state ();
 
 	set_indent (1);
 	skelout ();		/* %% [17.0] - break point in skel */
