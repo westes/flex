@@ -1462,6 +1462,9 @@ void readin (void)
 	// yylineno
 	if (do_yylineno)
 		out_m4_define( "M4_MODE_YYLINENO", NULL);
+
+	if (ddebug)
+		out_m4_define( "M4_MODE_DEBUG", NULL);
 }
 
 /* set_up_initial_allocations - allocate memory for internal tables */

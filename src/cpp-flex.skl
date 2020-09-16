@@ -1454,6 +1454,51 @@ do_action:	/* This label is used only to access EOF actions. */
 
 %% [12.0] debug code goes here
 
+m4_ifdef([[M4_MODE_DEBUG]], [[
+		if ( yy_flex_debug ) {
+			if ( yy_act == 0 ) {
+%if-c++-only
+				std::cerr << "--scanner backing up\n";
+%endif
+%if-c-only
+				fprintf( stderr, "--scanner backing up\n" );
+%endif
+			} else if ( yy_act < YY_NUM_RULES ) {
+%if-c++-only
+				std::cerr << "--accepting rule at line " << yy_rule_linenum[yy_act] <<
+					"(\"" << yytext << "\")\n";
+%endif
+%if-c-only
+				fprintf( stderr, "--accepting rule at line %ld (\"%s\")\n",
+					 (long)yy_rule_linenum[yy_act], yytext );
+%endif
+			} else if ( yy_act == YY_NUM_RULES ) {
+%if-c++-only
+				std::cerr << "--accepting default rule (\"" << yytext << "\")\n";
+%endif
+%if-c-only
+				fprintf( stderr, "--accepting default rule (\"%s\")\n",
+					 yytext );
+%endif
+			} else if ( yy_act == YY_NUM_RULES + 1 ) {
+
+%if-c++-only
+				std::cerr << "--(end of buffer or a NUL)\n";
+%endif
+%if-c-only
+				fprintf( stderr, "--(end of buffer or a NUL)\n" );
+%endif
+			} else {
+%if-c++-only
+				std::cerr << "--EOF (start condition " << YY_START << ")\n";
+%endif
+%if-c-only
+				fprintf( stderr, "--EOF (start condition %d)\n", YY_START );
+%endif
+			}
+		}
+]])
+
 		switch ( yy_act )
 	{ /* beginning of action switch */
 %% [13.0] actions go here
