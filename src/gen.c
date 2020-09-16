@@ -540,18 +540,16 @@ void gen_next_match (void)
 /* Generate the code to find the next state.  Only used when we're worried about NULs */
 
 void gen_next_state ()
-{				/* NOTE - changes in here should be reflected in gen_next_match() */
-	char    char_map[256];
+{
+	/* NOTE - changes in here should be reflected in gen_next_match() */
+	char    *char_map;
 
 	if (!nultrans) {
-		snprintf (char_map, sizeof(char_map),
-					"(*yy_cp ? M4_EC(YY_SC_TO_UI(*yy_cp)) : %d)",
-					NUL_ec);
+		char_map = "(*yy_cp ? M4_EC(YY_SC_TO_UI(*yy_cp)) : YY_NUL_EC)";
+	} else {
+	    	char_map = "M4_EC(YY_SC_TO_UI(*yy_cp))";
 	}
-
-	else
-	    strcpy (char_map, "M4_EC(YY_SC_TO_UI(*yy_cp))");
-
+	
 	if (nultrans) {
 		if (!fulltbl && !fullspd)
 			/* Compressed tables back up *before* they match. */
