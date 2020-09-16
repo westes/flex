@@ -489,15 +489,11 @@ void gen_next_match (void)
 	/* NOTE - changes in here should be reflected in gen_next_state() and
 	 * gen_NUL_trans().
 	 */
-	char   *char_map = "M4_EC(YY_SC_TO_UI(*yy_cp))";
-
-	char   *char_map_2 = "M4_EC(YY_SC_TO_UI(*++yy_cp))";	// POINTER
-
 	if (fulltbl) {
 		if (gentables)
-			backend->when("(yy_current_state = yy_nxt[yy_current_state][ %s ]) > 0", char_map);
+			backend->when("(yy_current_state = yy_nxt[yy_current_state][ M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0");
 		else
-			backend->when("(yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %s ]) > 0", char_map);
+			backend->when("(yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0");
 
 		outn("M4_GEN_BACKING_UP");
 
@@ -507,7 +503,7 @@ void gen_next_match (void)
 	}
 
 	else if (fullspd) {
-		out_str3 ("M4_GEN_NEXT_MATCH_FULLSPD(%s, %s)", char_map, char_map_2, "");
+		out ("M4_GEN_NEXT_MATCH_FULLSPD(M4_EC(YY_SC_TO_UI(*yy_cp)), M4_EC(YY_SC_TO_UI(*++yy_cp)))");
 	}
 
 	else {			/* compressed */
