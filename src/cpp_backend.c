@@ -680,8 +680,11 @@ static void cpp_gentabs_yy_chk(size_t total_states)
 }
 
 static void cpp_nultrans(int fullspd)
-// Generate nulltrands initializer 
+// Generate nulltrans initializer
 {
+    // Making this a backend method may be overzealous.
+    // How many other languages have to sprcial-case NUL
+    // because it's a string terminator?
     buf_prints (&yydmap_buf,
 		"\t{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(%s)},\n",
 		(fullspd) ? "struct yy_trans_info*" :

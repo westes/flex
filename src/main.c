@@ -1463,6 +1463,12 @@ void readin (void)
 	if (do_yylineno)
 		out_m4_define( "M4_MODE_YYLINENO", NULL);
 
+	// Equivalance classes
+	if (useecs)
+		out_m4_define( "M4_MODE_USEECS", NULL);
+	else
+		out_m4_define( "M4_NOT_MODE_USEECS", NULL);
+
 	if (ddebug)
 		out_m4_define( "M4_MODE_DEBUG", NULL);
 }

@@ -489,11 +489,9 @@ void gen_next_match (void)
 	/* NOTE - changes in here should be reflected in gen_next_state() and
 	 * gen_NUL_trans().
 	 */
-	char   *char_map = useecs ?
-		"yy_ec[YY_SC_TO_UI(*yy_cp)] " : "YY_SC_TO_UI(*yy_cp)";
+	char   *char_map = "M4_EC(YY_SC_TO_UI(*yy_cp))";
 
-	char   *char_map_2 = useecs ?
-	    "yy_ec[YY_SC_TO_UI(*++yy_cp)] " : "YY_SC_TO_UI(*++yy_cp)";	// POINTER
+	char   *char_map_2 = "M4_EC(YY_SC_TO_UI(*++yy_cp))";	// POINTER
 
 	if (fulltbl) {
 		if (gentables)
@@ -547,20 +545,13 @@ void gen_next_state (int worry_about_NULs)
 	char    char_map[256];
 
 	if (worry_about_NULs && !nultrans) {
-		if (useecs)
-			snprintf (char_map, sizeof(char_map),
-					"(*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : %d)",
-					NUL_ec);
-		else
-			snprintf (char_map, sizeof(char_map),
-					"(*yy_cp ? YY_SC_TO_UI(*yy_cp) : %d)",
+		snprintf (char_map, sizeof(char_map),
+					"(*yy_cp ? M4_EC(YY_SC_TO_UI(*yy_cp)) : %d)",
 					NUL_ec);
 	}
 
 	else
-		strcpy (char_map, useecs ?
-			"yy_ec[YY_SC_TO_UI(*yy_cp)] " :
-			"YY_SC_TO_UI(*yy_cp)");
+	    strcpy (char_map, "M4_EC(YY_SC_TO_UI(*yy_cp))");
 
 	if (worry_about_NULs && nultrans) {
 		if (!fulltbl && !fullspd)

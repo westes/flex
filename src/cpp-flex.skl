@@ -1282,6 +1282,10 @@ m4_define([[M4_GEN_BU_ACTION]], [[
 	goto yy_find_action;
 ]])
 
+%# Conditional indirection through an equivalence map
+m4_ifdef([[M4_MODE_USEECS]], m4_define([[M4_EC]], [[*(yy_ec+$1)]]))
+m4_ifdef([[M4_NOT_MODE_USEECS]], [[m4_define([[M4_EC]], [[$1]])]])
+
 %not-for-header
 /** The main scanner function which does all the work.
  */
