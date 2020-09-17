@@ -1489,8 +1489,6 @@ void make_tables (void)
 	/* Note, don't use any indentation. */
 	outn ("yy_match:");
 
-	outn ("M4_GEN_NEXT_MATCH");
-
 	skelout ();		/* %% [10.0] - break point in skel */
 
 	skelout ();		/* %% [11.0] - break point in skel */
