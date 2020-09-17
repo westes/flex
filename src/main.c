@@ -1469,6 +1469,19 @@ void readin (void)
 	else
 		out_m4_define( "M4_NOT_MODE_USEECS", NULL);
 
+	// mode switches for getting next action
+	if (gentables)
+		out_m4_define( "M4_MODE_GENTABLES", NULL);
+	else
+		out_m4_define( "M4_NO_MODE_GENTABLES", NULL);
+	if (interactive)
+		out_m4_define( "M4_MODE_INTERACTIVE", NULL);
+	else
+		out_m4_define( "M4_NO_MODE_INTERACTIVE", NULL);
+	if (!(fullspd || fulltbl))
+		out_m4_define( "M4_NOT_FULLSPD_OR_FULLTBL", NULL);
+
+	
 	if (ddebug)
 		out_m4_define( "M4_MODE_DEBUG", NULL);
 }

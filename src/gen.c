@@ -481,62 +481,6 @@ void genftbl (void)
 	 */
 }
 
-
-/* Generate the code to find the next match. */
-
-void gen_next_match (void)
-{
-	/* NOTE - changes in here should be reflected in gen_next_state() and
-	 * gen_NUL_trans().
-	 */
-	if (fulltbl) {
-		if (gentables)
-			backend->when("(yy_current_state = yy_nxt[yy_current_state][ M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0");
-		else
-			backend->when("(yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0");
-
-		outn("M4_GEN_BACKING_UP");
-
-		backend->statement("yy_cp++");
-		close_block();
-		backend->assign("yy_current_state", "-yy_current_state");
-	}
-
-	else if (fullspd) {
-		out ("M4_GEN_NEXT_MATCH_FULLSPD(M4_EC(YY_SC_TO_UI(*yy_cp)), M4_EC(YY_SC_TO_UI(*++yy_cp)))");
-	}
-
-	else {			/* compressed */
-		indent_puts(backend->forever);
-
-		out ("M4_GEN_NEXT_COMPRESSED_STATE(M4_EC(YY_SC_TO_UI(*yy_cp)))");
-
-		if (reject)
-			indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");	// POINTER
-
-		backend->statement("yy_cp++");
-
-		if (interactive)
-			backend->cond("yy_base[yy_current_state] == YY_JAMBASE");
-		else
-			backend->cond("yy_current_state == YY_JAMSTATE");
-
-		backend->statement("break");
-		close_block();	// close while
-
-		close_block();	// close forever
-
-		if (!reject && !interactive) {
-			/* Do the guaranteed-needed backing up to figure out
-			 * the match.
-			 */
-			backend->assign("yy_cp", "YY_G(yy_last_accepting_cpos)");
-			backend->assign("yy_current_state", "YY_G(yy_last_accepting_state)");
-		}
-	}
-}
-
-
 /* Generate the code to find the next state.  Only used when we're worried about NULs */
 
 void gen_next_state ()
@@ -1544,7 +1488,8 @@ void make_tables (void)
 
 	/* Note, don't use any indentation. */
 	outn ("yy_match:");
-	gen_next_match ();
+
+	outn ("M4_GEN_NEXT_MATCH");
 
 	skelout ();		/* %% [10.0] - break point in skel */
 

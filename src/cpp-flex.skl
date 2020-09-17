@@ -1265,6 +1265,52 @@ m4_define([[M4_GEN_NEXT_MATCH_FULLSPD]], [[
 		}
 ]])
 
+m4_define([[M4_GEN_NEXT_MATCH]], [[
+	/* Generate the code to find the next match. */
+	/* NOTE - changes in here should be reflected in gen_next_state() and
+	 * gen_NUL_trans().
+	 */
+m4_ifdef([[M4_MODE_FULLTBL]], [[
+m4_ifdef([[M4_MODE_GENTABLES]], [[
+		while ((yy_current_state = yy_nxt[yy_current_state][ M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0) {
+]])
+m4_ifdef([[M4_NO_MODE_GENTABLES]], [[
+		while ((yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0) {
+]])
+M4_GEN_BACKING_UP
+
+			yy_cp++;
+		}
+		yy_current_state = -yy_current_state;
+]])
+m4_ifdef([[M4_MODE_FULLSPD]], [[
+		M4_GEN_NEXT_MATCH_FULLSPD(M4_EC(YY_SC_TO_UI(*yy_cp)), M4_EC(YY_SC_TO_UI(*++yy_cp)))
+]])
+m4_ifdef([[M4_NOT_FULLSPD_OR_FULLTBL]], [[
+	for (;;) {
+		M4_GEN_NEXT_COMPRESSED_STATE(M4_EC(YY_SC_TO_UI(*yy_cp)))
+
+		m4_ifdef([[M4_YY_USES_REJECT]], [[*YY_G(yy_state_ptr)++ = yy_current_state;]])
+		yy_cp++;
+
+		m4_ifdef([[M4_MODE_INTERACTIVE]], [[if (yy_base[yy_current_state] == YY_JAMBASE) {]])
+		m4_ifdef([[M4_NO_MODE_INTERACTIVE]], [[if (yy_current_state == YY_JAMSTATE) {]])
+			break;
+		}	// close while
+
+	}	// close forever
+
+m4_ifdef([[M4_NO_YY_USES_REJECT]], [[
+m4_ifdef([[M4_NO_MODE_INTERACTIVE]], [[
+	/* Do the guaranteed-needed backing up to figure out
+	 * the match.
+	 */
+	yy_cp = YY_G(yy_last_accepting_cpos);
+	yy_current_state = YY_G(yy_last_accepting_state);
+]])
+]])
+]])
+]])
 
 m4_define([[M4_GEN_BU_ACTION]], [[
 	case 0: /* must back up */
