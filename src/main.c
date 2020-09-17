@@ -1480,6 +1480,8 @@ void readin (void)
 		out_m4_define( "M4_NO_MODE_INTERACTIVE", NULL);
 	if (!(fullspd || fulltbl))
 		out_m4_define( "M4_NOT_FULLSPD_OR_FULLTBL", NULL);
+	if (reject || interactive)
+		out_m4_define( "M4_REJECT_OR_INTERACTIVE", NULL);
 
 	
 	if (ddebug)

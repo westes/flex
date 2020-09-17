@@ -1551,30 +1551,6 @@ void make_tables (void)
 	 * finds that it should JAM on the NUL.
 	 */
 	skelout ();		/* %% [14.0] - break point in skel */
-	set_indent (4);
-
-	if (fullspd || fulltbl)
-		indent_puts ("yy_cp = YY_G(yy_c_buf_p);");
-
-	else {			/* compressed table */
-		if (!reject && !interactive) {
-			/* Do the guaranteed-needed backing up to figure
-			 * out the match.
-			 */
-			indent_puts
-				("yy_cp = YY_G(yy_last_accepting_cpos);");
-			indent_puts
-				("yy_current_state = YY_G(yy_last_accepting_state);");
-		}
-
-		else
-			/* Still need to initialize yy_cp, though
-			 * yy_current_state was set up by
-			 * yy_get_previous_state().
-			 */
-			indent_puts ("yy_cp = YY_G(yy_c_buf_p);");
-	}
-
 
 	/* Generate code for yy_get_previous_state(). */
 	skelout ();		/* %% [15.0] - break point in skel */

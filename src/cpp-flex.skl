@@ -1620,6 +1620,27 @@ m4_ifdef([[M4_MODE_DEBUG]], [[
 			else
 				{
 %% [14.0] code to do back-up for compressed tables and set up yy_cp goes here
+
+				m4_ifdef([[M4_MODE_FULLSPD]], [[yy_cp = YY_G(yy_c_buf_p);]])
+				m4_ifdef([[M4_MODE_FULLTBL]], [[yy_cp = YY_G(yy_c_buf_p);]])
+m4_ifdef([[M4_NOT_FULLSPD_OR_FULLTBL]], [[
+m4_ifdef([[M4_NO_YY_USES_REJECT]], [[
+m4_ifdef([[M4_NOT_MODE_INTERACTIVE]], [[
+				/* Do the guaranteed-needed backing up to figure
+				 * out the match.
+				 */
+				yy_cp = YY_G(yy_last_accepting_cpos);
+				yy_current_state = YY_G(yy_last_accepting_state);
+]])
+]])
+m4_ifdef([[M4_REJECT_OR_INTERACTIVE]], [[
+				/* Still need to initialize yy_cp, though
+				 * yy_current_state was set up by
+				 * yy_get_previous_state().
+				 */
+				yy_cp = YY_G(yy_c_buf_p);
+]])
+]])
 				goto yy_find_action;
 				}
 			}
