@@ -1517,14 +1517,7 @@ void make_tables (void)
 	skelout ();		/* %% [13.0] - break point in skel */
 
 	/* Conditionally generate the code to perform the backing up. */
-	++indent_level;
-	if (!reject) {
-		set_indent (3);
-
-		outn("M4_GEN_BU_ACTION");
-
-		set_indent (0);
-	}
+	outn("m4_ifdef([[M4_NO_YY_USES_REJECT]], [[M4_GEN_BU_ACTION]])");
 
 	out (&action_array[action_offset]);
 
