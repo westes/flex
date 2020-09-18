@@ -36,7 +36,6 @@
 #include <stdarg.h>
 
 #include "flexdef.h"
-#include "version.h"
 
 /* Code specific to the C/C++ back end starts here */
 
@@ -392,115 +391,6 @@ static const char *cpp_yy_int_aligned(void)
 	return long_align ? "long int" : "short int";
 }
 
-static void cpp_linecomment(char *text)
-// wrap text in target language's comment syntax
-{
-    out("/* ");
-    out(text);
-    outn(" */");
-}
-
-static void cpp_declare(char *name, char *type, char *initval)
-// emit a declaration in the target language
-{
-    do_indent ();
-    out(type);
-    out(" ");
-    out(name);
-    if (initval != NULL) {
-	out(" = ");
-	out(initval);
-    }
-    outn(";");
-}
-
-static void cpp_assign(const char *target, const char *fmt, ...)
-// emit an assignment in the target language
-{
-    char buf[4096];
-    va_list ap;
-
-    buf[0] = '\0';
-    va_start(ap, fmt);
-    vsnprintf(buf, sizeof(buf), fmt, ap);
-    va_end(ap);
-
-    do_indent ();
-    out(target);
-    out(" = ");
-    out(buf);
-    outn(";");
-}
-
-static void cpp_cond(const char *fmt, ...)
-// emit a conditional guard in the target language
-{
-    char buf[4096];
-    va_list ap;
-
-    buf[0] = '\0';
-    va_start(ap, fmt);
-    vsnprintf(buf, sizeof(buf), fmt, ap);
-    va_end(ap);
-
-    do_indent ();
-    out("if (");
-    out(buf);
-    outn(" ) {");
-}
-
-static void cpp_elsecond(const char *fmt, ...)
-// emit a continued conditional guard in the target language
-{
-    do_indent ();
-    char buf[4096];
-    va_list ap;
-
-    buf[0] = '\0';
-    va_start(ap, fmt);
-    vsnprintf(buf, sizeof(buf), fmt, ap);
-    va_end(ap);
-
-    do_indent ();
-    out("else if (");
-    out(buf);
-    outn(" ) {");
-}
-
-
-static void cpp_when(const char *fmt, ...)
-// emit a while statement in the trailing languuge
-{
-    char buf[4096];
-    va_list ap;
-
-    buf[0] = '\0';
-    va_start(ap, fmt);
-    vsnprintf(buf, sizeof(buf), fmt, ap);
-    va_end(ap);
-
-    do_indent ();
-    out("while (");
-    out(buf);
-    outn(" ) {");
-}
-
-static void cpp_statement(const char *fmt, ...)
-// emit a statement in the target language
-{
-    char buf[4096];
-    va_list ap;
-
-    buf[0] = '\0';
-    va_start(ap, fmt);
-    vsnprintf(buf, sizeof(buf), fmt, ap);
-    va_end(ap);
-
-    do_indent ();
-    out(buf);
-    outn(";");
-}
-
 static const char *cpp_get_int16_decl (void)
 {
 	return (gentables)
@@ -710,14 +600,6 @@ struct flex_backend_t cpp_backend = {
 	.close_block = "}",
 	.table_opener = "    {",
 	.table_closer = "    };\n",
-	.linecomment = cpp_linecomment,
-	.declare = cpp_declare,
-	.assign = cpp_assign,
-	.cond = cpp_cond,
-	.elsecond = cpp_elsecond,
-	.statement = cpp_statement,
-	.when = cpp_when,
-	.forever = "for ( ; ; ) {",
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,
 	.get_state_decl = cpp_get_state_decl,
