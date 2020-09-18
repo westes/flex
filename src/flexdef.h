@@ -332,7 +332,7 @@ struct flex_backend_t {
 	void (*gen_yy_trans)(size_t);		// Table of verify for transition and offset to next state. (sic)
 	void (*start_state_list)(size_t);	// Start initializer for table of pointers to start states
 	void (*mkftbl)();			// Make full table
-	const char *state_entry_fmt;		// Format of starte table entry
+	const char *state_entry_fmt;		// Format of state table entry
 	void (*mkecstbl)(void);			// Make equivalence-class tables
 	void (*gentabs_acclist)(void);		// Generate accept list initializer
 	void (*gentabs_accept)(void);		// Generate accept table initializer
@@ -342,6 +342,7 @@ struct flex_backend_t {
 	void (*gentabs_yy_nxt)(size_t);		// Generate yy_nxt initializer
 	void (*gentabs_yy_chk)(size_t);		// Generate yy_chk initializer
 	void (*nultrans)(int);			// Generate nulltrans initializer
+	char *caseprefix;			// Prefix of an arm in the language's case construct
 };
 
 extern bool gentables;

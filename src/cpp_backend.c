@@ -622,4 +622,5 @@ struct flex_backend_t cpp_backend = {
 	.gentabs_yy_nxt = cpp_gentabs_yy_nxt,
 	.gentabs_yy_chk = cpp_gentabs_yy_chk,
 	.nultrans = cpp_nultrans,
+	.caseprefix = "case ",
 };
