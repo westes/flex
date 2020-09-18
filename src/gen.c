@@ -481,7 +481,7 @@ void genftbl (void)
 	 */
 }
 
-/* Generate the code to find the next state.  Only used when we're worried about NULs */
+/* Generate the code to find the next state. */
 
 void gen_next_state ()
 {
@@ -527,8 +527,8 @@ void gen_next_state ()
 		close_block();
 	}
 
-	if (fullspd || fulltbl)
-		outn("M4_GEN_BACKING_UP");
+	outn("m4_ifdef([[M4_MODE_FULLTBL]], [[M4_GEN_BACKING_UP]])");
+	outn("m4_ifdef([[M4_MODE_FULLSPD]], [[M4_GEN_BACKING_UP]])");
 
 	if (reject)
 		indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");	// POINTER
