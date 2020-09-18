@@ -527,11 +527,9 @@ void gen_next_state ()
 		close_block();
 	}
 
-	if (fullspd || fulltbl)
-		outn("M4_GEN_BACKING_UP");
-
-	if (reject)
-		indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");	// POINTER
+	indent_puts ("m4_ifdef([[M4_MODE_FULLSPD]], [[M4_GEN_BACKING_UP]])");
+	indent_puts ("m4_ifdef([[M4_MODE_FULLTBL]], [[M4_GEN_BACKING_UP]])");
+	indent_puts ("m4_ifdef([[M4_YY_USES_REJECT]], [[*YY_G(yy_state_ptr)++ = yy_current_state;]])");	// POINTER
 }
 
 
@@ -1516,16 +1514,6 @@ void make_tables (void)
 	/* Copy actions to output file. */
 	skelout ();		/* %% [13.0] - break point in skel */
 
-	/* Conditionally generate the code to perform the backing up. */
-	++indent_level;
-	if (!reject) {
-		set_indent (3);
-
-		outn("M4_GEN_BU_ACTION");
-
-		set_indent (0);
-	}
-
 	out (&action_array[action_offset]);
 
 	line_directive_out (stdout, 0);
@@ -1539,9 +1527,7 @@ void make_tables (void)
 		}
 
 	if (did_eof_rule) {
-		++indent_level;
 		indent_puts ("yyterminate();");
-		--indent_level;
 	}
 
 
@@ -1554,8 +1540,6 @@ void make_tables (void)
 
 	/* Generate code for yy_get_previous_state(). */
 	skelout ();		/* %% [15.0] - break point in skel */
-
-	outn("M4_GEN_START_STATE");
 
 	set_indent (2);
 	skelout ();		/* %% [16.0] - break point in skel */

@@ -1550,6 +1550,8 @@ m4_ifdef([[M4_MODE_DEBUG]], [[
 		switch ( yy_act )
 	{ /* beginning of action switch */
 %% [13.0] actions go here
+	/* Conditionally generate the code to perform the backing up. */
+	m4_ifdef([[M4_NO_YY_USES_REJECT]], [[M4_GEN_BU_ACTION]])
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2010,6 +2012,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
     M4_YY_DECL_GUTS_VAR();
 
 %% [15.0] code to get the start state into yy_current_state goes here
+	M4_GEN_START_STATE
 
 	for ( yy_cp = YY_G(yytext_ptr) + YY_MORE_ADJ; yy_cp < YY_G(yy_c_buf_p); ++yy_cp )
 		{
