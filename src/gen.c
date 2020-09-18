@@ -1285,47 +1285,45 @@ void make_tables (void)
 		dataend ();
 	}
 
-	if (reject) {
-		outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
-		/* Declare state buffer variables. */
-		if (!C_plus_plus && !reentrant) {
-			outn ("static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;");
-			outn ("static char *yy_full_match;");
-			outn ("static int yy_lp;");
-		}
-
-		if (variable_trailing_context_rules) {
-			if (!C_plus_plus && !reentrant) {
-				outn ("static int yy_looking_for_trail_begin = 0;");
-				outn ("static int yy_full_lp;");
-				outn ("static int *yy_full_state;");
-			}
-
-			out_hex ("#define YY_TRAILING_MASK 0x%x\n",
-				 (unsigned int) YY_TRAILING_MASK);
-			out_hex ("#define YY_TRAILING_HEAD_MASK 0x%x\n",
-				 (unsigned int) YY_TRAILING_HEAD_MASK);
-		}
-
-		outn ("#define REJECT \\");
-		outn ("{ \\");
-		outn ("*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \\");	// POINTER
-		outn ("yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \\");
-
-		if (variable_trailing_context_rules) {
-			outn ("YY_G(yy_lp) = YY_G(yy_full_lp); /* restore orig. accepting pos. */ \\");
-			outn ("YY_G(yy_state_ptr) = YY_G(yy_full_state); /* restore orig. state */ \\");
-			outn ("yy_current_state = *YY_G(yy_state_ptr); /* restore curr. state */ \\");
-		}
-
-		outn ("++YY_G(yy_lp); \\");
-		outn ("goto find_rule; \\");
-
-		outn (backend->close_block);
-		outn ("]])\n");
+	outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
+	/* Declare state buffer variables. */
+	if (!C_plus_plus && !reentrant) {
+		outn ("static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;");
+		outn ("static char *yy_full_match;");
+		outn ("static int yy_lp;");
 	}
 
-	else {
+	if (variable_trailing_context_rules) {
+		if (!C_plus_plus && !reentrant) {
+			outn ("static int yy_looking_for_trail_begin = 0;");
+			outn ("static int yy_full_lp;");
+			outn ("static int *yy_full_state;");
+		}
+
+		out_hex ("#define YY_TRAILING_MASK 0x%x\n",
+			 (unsigned int) YY_TRAILING_MASK);
+		out_hex ("#define YY_TRAILING_HEAD_MASK 0x%x\n",
+			 (unsigned int) YY_TRAILING_HEAD_MASK);
+	}
+
+	outn ("#define REJECT \\");
+	outn ("{ \\");
+	outn ("*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \\");	// POINTER
+	outn ("yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \\");
+
+	if (variable_trailing_context_rules) {
+		outn ("YY_G(yy_lp) = YY_G(yy_full_lp); /* restore orig. accepting pos. */ \\");
+		outn ("YY_G(yy_state_ptr) = YY_G(yy_full_state); /* restore orig. state */ \\");
+		outn ("yy_current_state = *YY_G(yy_state_ptr); /* restore curr. state */ \\");
+	}
+
+	outn ("++YY_G(yy_lp); \\");
+	outn ("goto find_rule; \\");
+
+	outn (backend->close_block);
+	outn ("]])\n");
+
+	if (!reject) {
 		outn ("/* The intent behind this definition is that it'll catch");
 		outn (" * any uses of REJECT which flex missed.");
 		outn (" */");
