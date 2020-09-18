@@ -505,14 +505,14 @@ void gen_next_state ()
 
 	if (fulltbl) {
 		if (gentables)
-			backend->assign("yy_current_state", "yy_nxt[yy_current_state][%s]",
+			out_str ("yy_current_state = yy_nxt[yy_current_state][%s];\n",
 				 char_map);
 		else
-			backend->assign("yy_current_state", "yy_nxt[yy_current_state*YY_NXT_LOLEN + %s];",
+			out_str ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %s];\n",
 				 char_map);
 	}
 	else if (fullspd)
-		backend->statement("yy_current_state += yy_current_state[%s].yy_nxt", char_map);
+		out_str ("yy_current_state += yy_current_state[%s].yy_nxt;\n", char_map);
 
 	else
 		out_str ("M4_GEN_NEXT_COMPRESSED_STATE(%s)", char_map);
@@ -523,7 +523,7 @@ void gen_next_state ()
 		--indent_level;
 		indent_puts ("else");
 		open_block();
-		backend->assign("yy_current_state", "yy_NUL_trans[yy_current_state]");
+		indent_puts ("yy_current_state = yy_NUL_trans[yy_current_state];");
 		close_block();
 	}
 
