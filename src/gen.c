@@ -1555,14 +1555,14 @@ void make_tables (void)
 	/* Generate code for yy_get_previous_state(). */
 	skelout ();		/* %% [15.0] - break point in skel */
 
-	outn("M4_GEN_START_STATE");
+	skelout ();		/* %% [16.0] - break point in skel */
 
 	set_indent (2);
-	skelout ();		/* %% [16.0] - break point in skel */
 	gen_next_state ();
 
-	set_indent (1);
 	skelout ();		/* %% [17.0] - break point in skel */
+
+	set_indent (1);
 	gen_NUL_trans ();
 
 	skelout ();		/* %% [18.0] - break point in skel */
