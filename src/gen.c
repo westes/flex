@@ -1482,19 +1482,9 @@ void make_tables (void)
 		--indent_level;
 	}
 
-
-	/* Generate code for handling NUL's, if needed. */
-
-	/* First, deal with backing up and setting up yy_cp if the scanner
-	 * finds that it should JAM on the NUL.
-	 */
 	skelout ();		/* %% [14.0] - break point in skel */
-
-	/* Generate code for yy_get_previous_state(). */
 	skelout ();		/* %% [15.0] - break point in skel */
-
 	skelout ();		/* %% [16.0] - break point in skel */
-
 	skelout ();		/* %% [17.0] - break point in skel */
 
 	set_indent (1);

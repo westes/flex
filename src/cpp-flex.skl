@@ -1551,6 +1551,11 @@ m4_ifdef([[M4_MODE_DEBUG]], [[
 	{ /* beginning of action switch */
 %% [13.0] actions go here
 
+	/* Generate code for handling NUL's, if needed. */
+
+	/* First, deal with backing up and setting up yy_cp if the scanner
+	 * finds that it should JAM on the NUL.
+	 */
 	case YY_END_OF_BUFFER:
 		{
 		/* Amount of text matched not including the EOB char. */
@@ -1620,6 +1625,7 @@ m4_ifdef([[M4_MODE_DEBUG]], [[
 			else
 				{
 %% [14.0] code to do back-up for compressed tables and set up yy_cp goes here
+				/* Generate code for yy_get_previous_state(). */
 
 				m4_ifdef([[M4_MODE_FULLSPD]], [[yy_cp = YY_G(yy_c_buf_p);]])
 				m4_ifdef([[M4_MODE_FULLTBL]], [[yy_cp = YY_G(yy_c_buf_p);]])
