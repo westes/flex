@@ -1417,29 +1417,29 @@ void readin (void)
 	// Set up macro conditionalization after all
 	// dependent flags have been computed. These
 	// are used to conditionalize code in the lex
-	// skeleton that histprically used to be generated
+	// skeleton that historically used to be generated
 	// by C code in flex itself; by shoving all this
 	// stuff out to the skeleton file we make it easier
 	// to retarget the code generation.
 
 	// mode switches for next-action code
 	if (variable_trailing_context_rules) {
-		out_m4_define( "M4_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
+		out_m4_define( "M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
 	} else {
-		out_m4_define( "M4_NO_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
+		out_m4_define( "M4_MODE_NO_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
 	}
 	if (real_reject)
-		out_m4_define( "M4_REAL_REJECT", NULL);
+		out_m4_define( "M4_MODE_REAL_REJECT", NULL);
 	if (reject_really_used)
-		out_m4_define( "M4_REJECT_REALLY_USED", NULL);
+		out_m4_define( "M4_MODE_REJECT_REALLY_USED", NULL);
 	if (reject)
-		out_m4_define( "M4_YY_USES_REJECT", NULL);
+		out_m4_define( "M4_MODE_USES_REJECT", NULL);
 	else
-		out_m4_define( "M4_NO_YY_USES_REJECT", NULL);
+		out_m4_define( "M4_MODE_NO_USES_REJECT", NULL);
 
 	// mode switches for computing next compressed state
 	if (usemecs)
-		out_m4_define( "M4_USEMECS", NULL);
+		out_m4_define( "M4_MODE_USEMECS", NULL);
 
 	// mode switches for find-action code
 	if (fullspd)
@@ -1453,11 +1453,11 @@ void readin (void)
 
 	// mode switches for backup generation and gen_start_state
 	if (!fullspd)
-		out_m4_define( "M4_NOT_MODE_FULLSPD", NULL);
+		out_m4_define( "M4_MODE_NO_FULLSPD", NULL);
 	if (bol_needed)
-		out_m4_define( "M4_BOL_NEEDED", NULL);
+		out_m4_define( "M4_MODE_BOL_NEEDED", NULL);
 	else
-		out_m4_define( "M4_NOT_BOL_NEEDED", NULL);
+		out_m4_define( "M4_MODE_NO_BOL_NEEDED", NULL);
 
 	// yylineno
 	if (do_yylineno)
@@ -1473,24 +1473,29 @@ void readin (void)
 	if (gentables)
 		out_m4_define( "M4_MODE_GENTABLES", NULL);
 	else
-		out_m4_define( "M4_NO_MODE_GENTABLES", NULL);
+		out_m4_define( "M4_MODE_NO_GENTABLES", NULL);
 	if (interactive)
 		out_m4_define( "M4_MODE_INTERACTIVE", NULL);
 	else
-		out_m4_define( "M4_NO_MODE_INTERACTIVE", NULL);
+		out_m4_define( "M4_MODE_NO_INTERACTIVE", NULL);
 	if (!(fullspd || fulltbl))
-		out_m4_define( "M4_NOT_FULLSPD_OR_FULLTBL", NULL);
+		out_m4_define( "M4_MODE_NO_FULLSPD_OR_FULLTBL", NULL);
 	if (reject || interactive)
-		out_m4_define( "M4_REJECT_OR_INTERACTIVE", NULL);
+		out_m4_define( "M4_MODE_REJECT_OR_INTERACTIVE", NULL);
 
 	// nultrans
 	if (nultrans)
 		out_m4_define( "M4_MODE_NULTRANS", NULL);
 	else
-		out_m4_define( "M4_NO_MODE_NULTRANS", NULL);
+		out_m4_define( "M4_MODE_NO_NULTRANS", NULL);
 
 	if (ddebug)
 		out_m4_define( "M4_MODE_DEBUG", NULL);
+
+	// This weird conditional pacifies lint
+	if (!reject && (!nultrans || fullspd || fulltbl))
+		out_m4_define( "M4_MODE_NEED_YY_CP", NULL);
+
 }
 
 /* set_up_initial_allocations - allocate memory for internal tables */

@@ -749,7 +749,7 @@ struct yyguts_t
     int yylineno_r;
     int yy_flex_debug_r;
 
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
     yy_state_type *yy_state_buf;
     yy_state_type *yy_state_ptr;
@@ -1188,12 +1188,12 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 m4_define([[M4_GEN_BACKING_UP]], [[
 	/* Generate the code to keep backing-up information. */
-m4_ifdef([[M4_NO_YY_USES_REJECT]], [[
+m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
 		int cond;
 m4_ifdef([[M4_MODE_FULLSPD]], [[
 		cond = yy_current_state[-1].yy_nxt;
 ]])
-m4_ifdef([[M4_NOT_MODE_FULLSPD]], [[
+m4_ifdef([[M4_MODE_NO_FULLSPD]], [[
 		cond = yy_accept[yy_current_state];
 ]])
 		if (cond) {
@@ -1214,7 +1214,7 @@ m4_define([[M4_GEN_NEXT_COMPRESSED_STATE]], [[
 	while ((yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state)) {
 		yy_current_state = (int) yy_def[yy_current_state];
 
-m4_ifdef([[M4_USEMECS]], [[
+m4_ifdef([[M4_MODE_USEMECS]], [[
 		/* We've arranged it so that templates are never chained
 		 * to one another.  This means we can afford to make a
 		 * very simple test to see if we need to convert to
@@ -1235,14 +1235,14 @@ m4_ifdef([[M4_USEMECS]], [[
 m4_define([[M4_GEN_START_STATE]], [[
 	/* Generate the code to find the start state. */
 m4_ifdef([[M4_MODE_FULLSPD]], [[
-m4_ifdef([[M4_BOL_NEEDED]], [[yy_current_state", "yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()];]])
-m4_ifdef([[M4_NOT_BOL_NEEDED]], [[yy_current_state = yy_start_state_list[YY_G(yy_start)];]])
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state", "yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()];]])
+m4_ifdef([[M4_MODE_NO_BOL_NEEDED]], [[yy_current_state = yy_start_state_list[YY_G(yy_start)];]])
 		 ]])
-m4_ifdef([[M4_NOT_MODE_FULLSPD]], [[
+m4_ifdef([[M4_MODE_NO_FULLSPD]], [[
 			yy_current_state = YY_G(yy_start);
-m4_ifdef([[M4_BOL_NEEDED]], [[yy_current_state += YY_AT_BOL();]])
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state += YY_AT_BOL();]])
 			/* Set up for storing up states. */
-			m4_ifdef( [[M4_YY_USES_REJECT]], [[
+			m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 			YY_G(yy_state_ptr) = YY_G(yy_state_buf);
 			*YY_G(yy_state_ptr)++ = yy_current_state;
 			]])
@@ -1325,7 +1325,7 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 		YY_USER_INIT;
 #endif
 
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 		/* Create the reject buffer large enough to save one state per allowed character. */
 		if ( ! YY_G(yy_state_buf) )
@@ -1388,7 +1388,7 @@ m4_ifdef([[M4_MODE_FULLTBL]], [[
 m4_ifdef([[M4_MODE_GENTABLES]], [[
 		while ((yy_current_state = yy_nxt[yy_current_state][ M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0) {
 ]])
-m4_ifdef([[M4_NO_MODE_GENTABLES]], [[
+m4_ifdef([[M4_MODE_NO_GENTABLES]], [[
 		while ((yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0) {
 ]])
 M4_GEN_BACKING_UP
@@ -1400,22 +1400,22 @@ M4_GEN_BACKING_UP
 m4_ifdef([[M4_MODE_FULLSPD]], [[
 		M4_GEN_NEXT_MATCH_FULLSPD(M4_EC(YY_SC_TO_UI(*yy_cp)), M4_EC(YY_SC_TO_UI(*++yy_cp)))
 ]])
-m4_ifdef([[M4_NOT_FULLSPD_OR_FULLTBL]], [[
+m4_ifdef([[M4_MODE_NO_FULLSPD_OR_FULLTBL]], [[
 	for (;;) {
 		M4_GEN_NEXT_COMPRESSED_STATE(M4_EC(YY_SC_TO_UI(*yy_cp)))
 
-		m4_ifdef([[M4_YY_USES_REJECT]], [[*YY_G(yy_state_ptr)++ = yy_current_state;]])
+		m4_ifdef([[M4_MODE_USES_REJECT]], [[*YY_G(yy_state_ptr)++ = yy_current_state;]])
 		yy_cp++;
 
 		m4_ifdef([[M4_MODE_INTERACTIVE]], [[if (yy_base[yy_current_state] == YY_JAMBASE) {]])
-		m4_ifdef([[M4_NO_MODE_INTERACTIVE]], [[if (yy_current_state == YY_JAMSTATE) {]])
+		m4_ifdef([[M4_MODE_NO_INTERACTIVE]], [[if (yy_current_state == YY_JAMSTATE) {]])
 			break;
 		}	// close while
 
 	}	// close forever
 
-m4_ifdef([[M4_NO_YY_USES_REJECT]], [[
-m4_ifdef([[M4_NO_MODE_INTERACTIVE]], [[
+m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
+m4_ifdef([[M4_MODE_NO_INTERACTIVE]], [[
 	/* Do the guaranteed-needed backing up to figure out
 	 * the match.
 	 */
@@ -1433,11 +1433,11 @@ m4_ifdef([[M4_MODE_REJECT]], [[
 	YY_G(yy_state_ptr)--;
 	yy_current_state = *YY_G(yy_state_ptr);
 	YY_G(yy_lp) = yy_accept[yy_current_state];
-m4_ifdef([[M4_REJECT_REALLY_USED]], [[find_rule: /* we branch to this label when backing up */]])
+m4_ifdef([[M4_MODE_REJECT_REALLY_USED]], [[find_rule: /* we branch to this label when backing up */]])
 	for ( ; ; ) {	/* loop until we find out what rule we matched */
 		  if (YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1]) {
 		  	yy_act = yy_acclist[YY_G(yy_lp)];
-m4_ifdef([[M4_VARIABLE_TRAILING_CONTEXT_RULES]], [[
+m4_ifdef([[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 			if ((yy_act & YY_TRAILING_HEAD_MASK) != 0 || YY_G(yy_looking_for_trail_begin)) {
 				if (yy_act == YY_G(yy_looking_for_trail_begin)) {
 					YY_G(yy_looking_for_trail_begin) = 0;
@@ -1448,7 +1448,7 @@ m4_ifdef([[M4_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 			else if (( yy_act & YY_TRAILING_MASK) != 0) { 
 				YY_G(yy_looking_for_trail_begin) = yy_act & ~YY_TRAILING_MASK;
 				YY_G(yy_looking_for_trail_begin) |= YY_TRAILING_HEAD_MASK;
-m4_ifdef([[M4_REAL_REJECT]], [[
+m4_ifdef([[M4_MODE_REAL_REJECT]], [[
 				/* Remember matched text in case we back up
 				 * due to REJECT.
 				 */
@@ -1467,7 +1467,7 @@ m4_ifdef([[M4_REAL_REJECT]], [[
 			YY_G(yy_lp)++;
 			goto find_rule;
 ]])
-m4_ifdef([[M4_NO_VARIABLE_TRAILING_CONTEXT_RULES]], [[
+m4_ifdef([[M4_MODE_NO_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 				/* Remember matched text in case we back up due to
 				 * trailing context plus REJECT.
 				 */
@@ -1629,8 +1629,8 @@ m4_ifdef([[M4_MODE_DEBUG]], [[
 
 				m4_ifdef([[M4_MODE_FULLSPD]], [[yy_cp = YY_G(yy_c_buf_p);]])
 				m4_ifdef([[M4_MODE_FULLTBL]], [[yy_cp = YY_G(yy_c_buf_p);]])
-m4_ifdef([[M4_NOT_FULLSPD_OR_FULLTBL]], [[
-m4_ifdef([[M4_NO_YY_USES_REJECT]], [[
+m4_ifdef([[M4_MODE_NO_FULLSPD_OR_FULLTBL]], [[
+m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
 m4_ifdef([[M4_NOT_MODE_INTERACTIVE]], [[
 				/* Do the guaranteed-needed backing up to figure
 				 * out the match.
@@ -1639,7 +1639,7 @@ m4_ifdef([[M4_NOT_MODE_INTERACTIVE]], [[
 				yy_current_state = YY_G(yy_last_accepting_state);
 ]])
 ]])
-m4_ifdef([[M4_REJECT_OR_INTERACTIVE]], [[
+m4_ifdef([[M4_MODE_REJECT_OR_INTERACTIVE]], [[
 				/* Still need to initialize yy_cp, though
 				 * yy_current_state was set up by
 				 * yy_get_previous_state().
@@ -1761,7 +1761,7 @@ void yyFlexLexer::ctor_common()
 	yy_buffer_stack_max = 0;
 
 
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 	yy_state_buf = new yy_state_type[YY_STATE_BUF_SIZE];
 ]],
@@ -1910,7 +1910,7 @@ int yyFlexLexer::yy_get_next_buffer()
 
 		while ( num_to_read <= 0 )
 			{ /* Not enough room in the buffer - grow it. */
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 			YY_FATAL_ERROR(
 "input buffer overflow, can't enlarge buffer because scanner uses REJECT" );
@@ -2021,22 +2021,22 @@ M4_GEN_START_STATE
 		{
 %% [16.0] code to find the next state goes here
 		/* Generate the code to find the next state. */
-		m4_ifdef([[M4_NO_MODE_NULTRANS]], [[m4_define([[CHAR_MAP_3]], [[(*yy_cp ? M4_EC(YY_SC_TO_UI(*yy_cp)) : YY_NUL_EC)]])]])
+		m4_ifdef([[M4_MODE_NO_NULTRANS]], [[m4_define([[CHAR_MAP_3]], [[(*yy_cp ? M4_EC(YY_SC_TO_UI(*yy_cp)) : YY_NUL_EC)]])]])
 		m4_ifdef([[M4_MODE_NULTRANS]], [[m4_define([[CHAR_MAP_3]], [[M4_EC(YY_SC_TO_UI(*yy_cp))]])]])
 
 		m4_ifdef([[M4_MODE_NULTRANS]], [[
 			/* Compressed tables back up *before* they match. */
-			m4_ifdef([[M4_NOT_FULLSPD_OR_FULLTBL]], [[M4_GEN_BACKING_UP]])
+			m4_ifdef([[M4_MODE_NO_FULLSPD_OR_FULLTBL]], [[M4_GEN_BACKING_UP]])
 			if ( *yy_cp ) {
 		]])
 
 		m4_ifdef([[M4_MODE_FULLTBL]], [[
 			m4_ifdef([[M4_MODE_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state][CHAR_MAP_3];]])
-			m4_ifdef([[M4_NO_MODE_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + CHAR_MAP_3];]])
+			m4_ifdef([[M4_MODE_NO_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + CHAR_MAP_3];]])
 		]])
 
 		m4_ifdef([[M4_MODE_FULLSPD]], [[yy_current_state += yy_current_state[CHAR_MAP_3].yy_nxt;]])
-		m4_ifdef([[M4_NOT_FULLSPD_OR_FULLTBL]], [[M4_GEN_NEXT_COMPRESSED_STATE(CHAR_MAP_3)]])
+		m4_ifdef([[M4_MODE_NO_FULLSPD_OR_FULLTBL]], [[M4_GEN_NEXT_COMPRESSED_STATE(CHAR_MAP_3)]])
 
 		m4_ifdef([[M4_MODE_NULTRANS]], [[
 			} else {
@@ -2046,7 +2046,7 @@ M4_GEN_START_STATE
 
 		m4_ifdef([[M4_MODE_FULLTBL]], [[M4_GEN_BACKING_UP]])
 		m4_ifdef([[M4_MODE_FULLSPD]], [[M4_GEN_BACKING_UP]])
-		m4_ifdef([[M4_YY_USES_REJECT]], [[*YY_G(yy_state_ptr)++ = yy_current_state;]])
+		m4_ifdef([[M4_MODE_USES_REJECT]], [[*YY_G(yy_state_ptr)++ = yy_current_state;]])
 		}
 
 	return yy_current_state;
@@ -2210,14 +2210,14 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
 
 %% [19.0] update BOL and yylineno
 
-m4_ifdef([[M4_BOL_NEEDED]], [[
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
 m4_ifdef([[M4_MODE_YYLINENO]], [[
 	if ( YY_CURRENT_BUFFER_LVALUE->yy_at_bol )
 		M4_YY_INCR_LINENO();
 ]])
 ]])
-m4_ifdef([[M4_NOT_BOL_NEEDED]], [[
+m4_ifdef([[M4_MODE_NO_BOL_NEEDED]], [[
 m4_ifdef([[M4_MODE_YYLINENO]], [[
 	if ( c == '\n' ) {
 		M4_YY_INCR_LINENO();
@@ -3184,7 +3184,7 @@ m4_ifdef( [[M4_YY_HAS_START_STACK_VARS]],
     YY_G(yy_start_stack) =  NULL;
 ]])
 
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
     YY_G(yy_state_buf) = 0;
     YY_G(yy_state_ptr) = 0;
@@ -3240,7 +3240,7 @@ m4_ifdef( [[M4_YY_HAS_START_STACK_VARS]],
         YY_G(yy_start_stack) = NULL;
 ]])
 
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
     yyfree ( YY_G(yy_state_buf) M4_YY_CALL_LAST_ARG);
     YY_G(yy_state_buf)  = NULL;

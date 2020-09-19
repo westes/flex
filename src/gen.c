@@ -486,15 +486,12 @@ void genftbl (void)
 
 void gen_NUL_trans (void)
 {
-	/* NOTE - changes in here should be reflected in gen_next_match() */
 	/* Only generate a definition for "yy_cp" if we'll generate code
 	 * that uses it.  Otherwise lint and the like complain.
+	 * We're going to need yy_cp lying around for the call
+	 * below to gen_backing_up().
 	 */
-	if (!reject && (!nultrans || fullspd || fulltbl))
-		/* We're going to need yy_cp lying around for the call
-		 * below to gen_backing_up().
-		 */
-		indent_puts ("char *yy_cp = YY_G(yy_c_buf_p);");
+	indent_puts ("m4_ifdef([[M4_MODE_NEED_YY_CP]], [[char *yy_cp = YY_G(yy_c_buf_p);]])");
 
 	outc ('\n');
 
@@ -1232,7 +1229,7 @@ void make_tables (void)
 		dataend ();
 	}
 
-	outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
+	outn ("m4_ifdef( [[M4_MODE_USES_REJECT]],\n[[");
 	/* Declare state buffer variables. */
 	if (!C_plus_plus && !reentrant) {
 		outn ("static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;");
@@ -1462,7 +1459,7 @@ void make_tables (void)
 	skelout ();		/* %% [13.0] - break point in skel */
 
 	/* Conditionally generate the code to perform the backing up. */
-	outn("m4_ifdef([[M4_NO_YY_USES_REJECT]], [[M4_GEN_BU_ACTION]])");
+	outn("m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[M4_GEN_BU_ACTION]])");
 
 	out (&action_array[action_offset]);
 
