@@ -481,59 +481,6 @@ void genftbl (void)
 	 */
 }
 
-/* Generate the code to find the next state. */
-
-void gen_next_state ()
-{
-	/* NOTE - changes in here should be reflected in gen_next_match() */
-	char    *char_map;
-
-	if (!nultrans) {
-		char_map = "(*yy_cp ? M4_EC(YY_SC_TO_UI(*yy_cp)) : YY_NUL_EC)";
-	} else {
-	    	char_map = "M4_EC(YY_SC_TO_UI(*yy_cp))";
-	}
-	
-	if (nultrans) {
-		if (!fulltbl && !fullspd)
-			/* Compressed tables back up *before* they match. */
-			outn("M4_GEN_BACKING_UP");
-
-		indent_puts ("if ( *yy_cp )");
-		open_block();
-	}
-
-	if (fulltbl) {
-		if (gentables)
-			out_str ("yy_current_state = yy_nxt[yy_current_state][%s];\n",
-				 char_map);
-		else
-			out_str ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %s];\n",
-				 char_map);
-	}
-	else if (fullspd)
-		out_str ("yy_current_state += yy_current_state[%s].yy_nxt;\n", char_map);
-
-	else
-		out_str ("M4_GEN_NEXT_COMPRESSED_STATE(%s)", char_map);
-
-	if (nultrans) {
-
-		close_block();
-		--indent_level;
-		indent_puts ("else");
-		open_block();
-		indent_puts ("yy_current_state = yy_NUL_trans[yy_current_state];");
-		close_block();
-	}
-
-	outn("m4_ifdef([[M4_MODE_FULLTBL]], [[M4_GEN_BACKING_UP]])");
-	outn("m4_ifdef([[M4_MODE_FULLSPD]], [[M4_GEN_BACKING_UP]])");
-
-	if (reject)
-		indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");	// POINTER
-}
-
 
 /* Generate the code to make a NUL transition. */
 
@@ -1547,9 +1494,6 @@ void make_tables (void)
 	skelout ();		/* %% [15.0] - break point in skel */
 
 	skelout ();		/* %% [16.0] - break point in skel */
-
-	set_indent (2);
-	gen_next_state ();
 
 	skelout ();		/* %% [17.0] - break point in skel */
 

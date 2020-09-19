@@ -2014,6 +2014,33 @@ M4_GEN_START_STATE
 	for ( yy_cp = YY_G(yytext_ptr) + YY_MORE_ADJ; yy_cp < YY_G(yy_c_buf_p); ++yy_cp )
 		{
 %% [16.0] code to find the next state goes here
+		/* Generate the code to find the next state. */
+		m4_ifdef([[M4_NO_MODE_NULTRANS]], [[m4_define([[CHAR_MAP_3]], [[(*yy_cp ? M4_EC(YY_SC_TO_UI(*yy_cp)) : YY_NUL_EC)]])]])
+		m4_ifdef([[M4_MODE_NULTRANS]], [[m4_define([[CHAR_MAP_3]], [[M4_EC(YY_SC_TO_UI(*yy_cp))]])]])
+
+		m4_ifdef([[M4_MODE_NULTRANS]], [[
+			/* Compressed tables back up *before* they match. */
+			m4_ifdef([[M4_NOT_FULLSPD_OR_FULLTBL]], [[M4_GEN_BACKING_UP]])
+			if ( *yy_cp ) {
+		]])
+
+		m4_ifdef([[M4_MODE_FULLTBL]], [[
+			m4_ifdef([[M4_MODE_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state][CHAR_MAP_3];]])
+			m4_ifdef([[M4_NO_MODE_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + CHAR_MAP_3];]])
+		]])
+
+		m4_ifdef([[M4_MODE_FULLSPD]], [[yy_current_state += yy_current_state[CHAR_MAP_3].yy_nxt;]])
+		m4_ifdef([[M4_NOT_FULLSPD_OR_FULLTBL]], [[M4_GEN_NEXT_COMPRESSED_STATE(CHAR_MAP_3)]])
+
+		m4_ifdef([[M4_MODE_NULTRANS]], [[
+			} else {
+				yy_current_state = yy_NUL_trans[yy_current_state];
+			}
+		]])
+
+		m4_ifdef([[M4_MODE_FULLTBL]], [[M4_GEN_BACKING_UP]])
+		m4_ifdef([[M4_MODE_FULLSPD]], [[M4_GEN_BACKING_UP]])
+		m4_ifdef([[M4_YY_USES_REJECT]], [[*YY_G(yy_state_ptr)++ = yy_current_state;]])
 		}
 
 	return yy_current_state;

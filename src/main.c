@@ -1483,7 +1483,12 @@ void readin (void)
 	if (reject || interactive)
 		out_m4_define( "M4_REJECT_OR_INTERACTIVE", NULL);
 
-	
+	// nultrans
+	if (nultrans)
+		out_m4_define( "M4_MODE_NULTRANS", NULL);
+	else
+		out_m4_define( "M4_NO_MODE_NULTRANS", NULL);
+
 	if (ddebug)
 		out_m4_define( "M4_MODE_DEBUG", NULL);
 }
