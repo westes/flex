@@ -482,68 +482,6 @@ void genftbl (void)
 }
 
 
-/* Generate the code to make a NUL transition. */
-
-void gen_NUL_trans (void)
-{
-	if (nultrans) {
-		indent_puts
-			("yy_current_state = yy_NUL_trans[yy_current_state];");
-		indent_puts ("yy_is_jam = (yy_current_state == 0);");
-	}
-
-	else if (fulltbl) {
-		do_indent ();
-		if (gentables)
-			outn ("yy_current_state = yy_nxt[yy_current_state][YY_NUL_EC];");
-		else
-			outn ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + YY_NUL_EC];");
-		indent_puts ("yy_is_jam = (yy_current_state <= 0);");
-	}
-
-	else if (fullspd) {
-		indent_puts ("int yy_c = YY_NUL_EC;");
-		indent_puts
-			("const struct yy_trans_info *yy_trans_info;\n");
-		indent_puts
-			("yy_trans_info = &yy_current_state[(unsigned int) yy_c];");
-		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
-
-		indent_puts
-			("yy_is_jam = (yy_trans_info->yy_verify != yy_c);");
-	}
-
-	else {
-		out ("M4_GEN_NEXT_COMPRESSED_STATE(YY_NUL_EC)");
-
-		indent_puts ("yy_is_jam = (yy_current_state == YY_JAMSTATE);");
-
-		if (reject) {
-			/* Only stack this state if it's a transition we
-			 * actually make.  If we stack it on a jam, then
-			 * the state stack and yy_c_buf_p get out of sync.
-			 */
-			indent_puts ("if ( ! yy_is_jam )");
-			++indent_level;
-			indent_puts
-				("*YY_G(yy_state_ptr)++ = yy_current_state;");
-			--indent_level;
-		}
-	}
-
-	/* If we've entered an accepting state, back up; note that
-	 * compressed tables have *already* done such backing up, so
-	 * we needn't bother with it again.
-	 */
-	if (!reject && (fullspd || fulltbl)) {
-		outc ('\n');
-		indent_puts ("if ( ! yy_is_jam )");
-		open_block();
-		outn("M4_GEN_BACKING_UP");
-		close_block();
-	}
-}
-
 /* gentabs - generate data statements for the transition tables */
 
 void gentabs (void)
@@ -1458,7 +1396,64 @@ void make_tables (void)
 	skelout ();		/* %% [17.0] - break point in skel */
 
 	set_indent (1);
-	gen_NUL_trans ();
+	/* Generate the code to make a NUL transition. */
+
+	if (nultrans) {
+		indent_puts
+			("yy_current_state = yy_NUL_trans[yy_current_state];");
+		indent_puts ("yy_is_jam = (yy_current_state == 0);");
+	}
+
+	else if (fulltbl) {
+		do_indent ();
+		if (gentables)
+			outn ("yy_current_state = yy_nxt[yy_current_state][YY_NUL_EC];");
+		else
+			outn ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + YY_NUL_EC];");
+		indent_puts ("yy_is_jam = (yy_current_state <= 0);");
+	}
+
+	else if (fullspd) {
+		indent_puts ("int yy_c = YY_NUL_EC;");
+		indent_puts
+			("const struct yy_trans_info *yy_trans_info;\n");
+		indent_puts
+			("yy_trans_info = &yy_current_state[(unsigned int) yy_c];");
+		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
+
+		indent_puts
+			("yy_is_jam = (yy_trans_info->yy_verify != yy_c);");
+	}
+
+	else {
+		out ("M4_GEN_NEXT_COMPRESSED_STATE(YY_NUL_EC)");
+
+		indent_puts ("yy_is_jam = (yy_current_state == YY_JAMSTATE);");
+
+		if (reject) {
+			/* Only stack this state if it's a transition we
+			 * actually make.  If we stack it on a jam, then
+			 * the state stack and yy_c_buf_p get out of sync.
+			 */
+			indent_puts ("if ( ! yy_is_jam )");
+			++indent_level;
+			indent_puts
+				("*YY_G(yy_state_ptr)++ = yy_current_state;");
+			--indent_level;
+		}
+	}
+
+	/* If we've entered an accepting state, back up; note that
+	 * compressed tables have *already* done such backing up, so
+	 * we needn't bother with it again.
+	 */
+	if (!reject && (fullspd || fulltbl)) {
+		outc ('\n');
+		indent_puts ("if ( ! yy_is_jam )");
+		open_block();
+		outn("M4_GEN_BACKING_UP");
+		close_block();
+	}
 
 	skelout ();		/* %% [18.0] - break point in skel */
 	skelout ();		/* %% [19.0] - break point in skel */
