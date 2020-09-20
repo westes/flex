@@ -1443,18 +1443,6 @@ void make_tables (void)
 		}
 	}
 
-	/* If we've entered an accepting state, back up; note that
-	 * compressed tables have *already* done such backing up, so
-	 * we needn't bother with it again.
-	 */
-	if (!reject && (fullspd || fulltbl)) {
-		outc ('\n');
-		indent_puts ("if ( ! yy_is_jam )");
-		open_block();
-		outn("M4_GEN_BACKING_UP");
-		close_block();
-	}
-
 	skelout ();		/* %% [18.0] - break point in skel */
 	skelout ();		/* %% [19.0] - break point in skel */
 	skelout ();
