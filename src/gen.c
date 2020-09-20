@@ -486,15 +486,6 @@ void genftbl (void)
 
 void gen_NUL_trans (void)
 {
-	/* Only generate a definition for "yy_cp" if we'll generate code
-	 * that uses it.  Otherwise lint and the like complain.
-	 * We're going to need yy_cp lying around for the call
-	 * below to gen_backing_up().
-	 */
-	indent_puts ("m4_ifdef([[M4_MODE_NEED_YY_CP]], [[char *yy_cp = YY_G(yy_c_buf_p);]])");
-
-	outc ('\n');
-
 	if (nultrans) {
 		indent_puts
 			("yy_current_state = yy_NUL_trans[yy_current_state];");

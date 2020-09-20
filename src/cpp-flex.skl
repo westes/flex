@@ -2067,6 +2067,12 @@ M4_GEN_START_STATE
 {
 	int yy_is_jam;
     M4_YY_DECL_GUTS_VAR(); /* This var may be unused depending upon options. */
+	/* Only generate a definition for "yy_cp" if we'll generate code
+	 * that uses it.  Otherwise lint and the like complain.
+	 * We're going to need yy_cp lying around for the call
+	 * below to gen_backing_up().
+	 */
+	m4_ifdef([[M4_MODE_NEED_YY_CP]], [[char *yy_cp = YY_G(yy_c_buf_p);]])
 %% [17.0] code to find the next state, and perhaps do backing up, goes here
 
 	M4_YY_NOOP_GUTS_VAR();
