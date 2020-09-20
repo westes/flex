@@ -2130,7 +2130,17 @@ m4_ifdef( [[M4_YY_NO_UNPUT]],,
 
 	*--yy_cp = (char) c;
 
-%% [18.0] update yylineno here
+%% [18.0] breakpoint in skel
+	/* If we've entered an accepting state, back up; note that
+	 * compressed tables have *already* done such backing up, so
+	 * we needn't bother with it again.
+	 */
+	m4_ifdef([[M4_MODE_NULTRANS_WRAP]], [[
+		if ( ! yy_is_jam ) {
+			M4_GEN_BACKING_UP
+		}
+	]])
+
 m4_ifdef( [[M4_YY_USE_LINENO]],
 [[
     if ( c == '\n' ){

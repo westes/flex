@@ -1496,6 +1496,8 @@ void readin (void)
 	if (!reject && (!nultrans || fullspd || fulltbl))
 		out_m4_define( "M4_MODE_NEED_YY_CP", NULL);
 
+	if (!reject && (fullspd || fulltbl))
+		out_m4_define( "M4_MODE_NULTRANS_WRAP", NULL);
 }
 
 /* set_up_initial_allocations - allocate memory for internal tables */
