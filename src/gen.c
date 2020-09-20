@@ -1417,11 +1417,6 @@ void make_tables (void)
 
 	skelout ();		/* %% [9.0] - break point in skel */
 
-	outn("M4_GEN_START_STATE");
-
-	/* Note, don't use any indentation. */
-	outn ("yy_match:");
-
 	skelout ();		/* %% [10.0] - break point in skel */
 
 	skelout ();		/* %% [11.0] - break point in skel */

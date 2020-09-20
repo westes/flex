@@ -1380,6 +1380,10 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 
 %% [9.0] code to set up and find next match goes here
 
+M4_GEN_START_STATE
+
+yy_match:
+
 	/* Generate the code to find the next match. */
 	/* NOTE - changes in here should be reflected in gen_next_state() and
 	 * gen_NUL_trans().
