@@ -334,13 +334,15 @@ pthread_pthread_LDADD = @LIBPTHREAD@
 
 # specify how to process .l files in order to test the flex built by make all
 
+TESTOPTS = -L
+
 FLEX = $(top_builddir)/src/flex
 
 .l.c: $(FLEX)
-	$(AM_V_LEX)$(FLEX) -o $@ $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -o $@ $<
 
 .ll.cc: $(FLEX)
-	$(AM_V_LEX)$(FLEX) -+ -o $@ $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -+ -o $@ $<
 
 bison_nr_main.$(OBJEXT): bison_nr_parser.h bison_nr_scanner.h
 bison_nr_scanner.$(OBJEXT): bison_nr_parser.h
@@ -367,7 +369,7 @@ bison_yylval_scanner.h: bison_yylval_scanner.c
 # so we explicitly sayhow, using the .lll suffix for the lex input file
 
 .lll.cc: $(FLEX)
-	$(AM_V_LEX)$(FLEX) -o $@ $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -o $@ $<
 
 header_nr_main.$(OBJEXT): header_nr_scanner.h
 
@@ -402,16 +404,16 @@ multiple_scanners_r_2.h: multiple_scanners_r_2.c
 	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
 posixly_correct.c: posixly_correct.l $(FLEX)
-	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) -o $@ $<
+	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) $(TESTOPTS) -o $@ $<
 
 reject_nr.reject.c: reject.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) --unsafe-no-m4-sect3-escape -o $@ $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -o $@ $<
 
 reject_nr.reject$(EXEEXT): reject_nr.reject.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) $^
 
 reject_r.reject.c: reject.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) --unsafe-no-m4-sect3-escape --reentrant -o $@ $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape --reentrant -o $@ $<
 
 reject_r.reject.$(OBJEXT): reject_r.reject.c
 	$(AM_V_CC)$(COMPILE) -DTEST_IS_REENTRANT -c -o $@ $<
@@ -420,7 +422,7 @@ reject_r.reject$(EXEEXT): reject_r.reject.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) $^
 
 reject_ver.table.c: reject.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) --unsafe-no-m4-sect3-escape -o $@ --tables-verify --tables-file=$(basename $@).tables $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -o $@ --tables-verify --tables-file=$(basename $@).tables $<
 
 reject_ver.table.$(OBJEXT): reject_ver.table.c
 	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<
@@ -429,7 +431,7 @@ reject_ver.table$(EXEEXT): reject_ver.table.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) $^
 
 reject_ser.table.c: reject.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) -o $@ --unsafe-no-m4-sect3-escape --tables-file=$(basename $@).tables $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -o $@ --unsafe-no-m4-sect3-escape --tables-file=$(basename $@).tables $<
 
 reject_ser.table.$(OBJEXT): reject_ser.table.c
 	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<
@@ -463,13 +465,13 @@ OPT_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_OPT_LOG_FLAGS = -d $(srcdir) -i $(srcdir)/tableopts.txt -r
 
 tableopts_opt_nr%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) $(*:_F=F) -o $@ $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) $(*:_F=F) -o $@ $<
 
 tableopts_opt_nr%.$(OBJEXT): tableopts_opt_nr%.c 
 	$(AM_V_CC)$(COMPILE) -c -o $@ $<
 
 tableopts_opt_r%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) --reentrant $(subst _F,F,$*)  -o $@ $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) --reentrant $(subst _F,F,$*)  -o $@ $<
 
 tableopts_opt_r%.$(OBJEXT):  tableopts_opt_r%.c 
 	$(AM_V_CC)$(COMPILE) -DTEST_IS_REENTRANT -c -o $@ $<
@@ -478,13 +480,13 @@ SER_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_SER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r -t
 
 tableopts_ser_nr%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ser_nr$*.ser.tables"  $(subst _F,F,$*) -o $@ $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ser_nr$*.ser.tables"  $(subst _F,F,$*) -o $@ $<
 
 tableopts_ser_nr%.$(OBJEXT): tableopts_ser_nr%.c 
 	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<
 
 tableopts_ser_r%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) -R --tables-file="tableopts_ser_r$*.ser.tables" $(subst _F,F,$*)  -o $@ $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) -R --tables-file="tableopts_ser_r$*.ser.tables" $(subst _F,F,$*)  -o $@ $<
 
 tableopts_ser_r%.$(OBJEXT):  tableopts_ser_r%.c
 	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT -c -o $@ $<
@@ -493,7 +495,7 @@ VER_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_VER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r -t
 
 tableopts_ver_nr%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ver_nr$*.ver.tables" --tables-verify $(subst _F,F,$*) -o $@ $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ver_nr$*.ver.tables" --tables-verify $(subst _F,F,$*) -o $@ $<
 
 tableopts_ver_nr%.$(OBJEXT): tableopts_ver_nr%.c 
 	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<
@@ -502,7 +504,7 @@ tableopts_ver_nr%.ver$(EXEEXT): tableopts_ver_nr%.$(OBJEXT)
 	$(AM_V_CCLD)$(LINK) -o $@ $^
 
 tableopts_ver_r%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) -R --tables-file="tableopts_ver_r$*.ver.tables" --tables-verify $(subst _F,F,$*)  -o $@ $<
+	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) -R --tables-file="tableopts_ver_r$*.ver.tables" --tables-verify $(subst _F,F,$*)  -o $@ $<
 
 tableopts_ver_r%.$(OBJEXT):  tableopts_ver_r%.c  
 	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT -c -o $@ $<
