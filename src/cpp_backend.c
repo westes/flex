@@ -33,7 +33,6 @@
 
 
 #include "flexdef.h"
-#include "version.h"
 
 /* Code specific to the C/C++ back end starts here */
 
@@ -49,20 +48,21 @@ static const char *cpp_suffix (void)
 	return suffix;
 }
 
-/* cpp_prolog - make rules prolog pecific to cpp-using languages.
+/* cpp_prolog - make rules prolog specific to cpp-using languages.
  *
  * If you don't ship this, you will effectively be assuming that your
  * parsers are always reentrant, always allow reject, always have a
  * yywrap() method, have a debug member in the wrapper class, and are
  * interactive.  This eliminates most of the boilerplate in the C/C++
  * scanner prolog.  It means such parsers will be a bit larger and
- * slower than C/C++ ones, but since we're not runing on 1987's
+ * slower than C/C++ ones, but since we're not running on 1987's
  * hardware we officially do not care.
  *
- * A detail to beware of: If you're not issuing this prologue, you
- * may want to issue your own definition of YY_CHAR. It's a typedef
- * to an unsigned octet in C/C++, but if your target language has a
- * Unicode code-point type like Go's 'rune' is may be appropriate.
+ * A detail to beware of: If you're not issuing this prologue, you may
+ * want to write your own definition of YY_CHAR in your skel
+ * file. It's a typedef to an unsigned octet in C/C++, but if your
+ * target language has a Unicode code-point type like Go's 'rune' is
+ * may be appropriate.
  */
 
 static void cpp_prolog (void)
@@ -70,11 +70,6 @@ static void cpp_prolog (void)
 	static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
 	static char yy_nostdinit[] =
 		"FILE *yyin = NULL, *yyout = NULL;";
-
-	if (reject){
-        out_m4_define( "M4_MODE_USES_REJECT", NULL);
-		//outn ("\n#define YY_USES_REJECT");
-	}
 
 	if (!do_yywrap) {
 		if (!C_plus_plus) {
@@ -127,7 +122,7 @@ static void cpp_prolog (void)
 
 		else {
 			if(!reentrant)
-                outn (yy_nostdinit);
+				outn (yy_nostdinit);
 		}
 		OUT_END_CODE ();
 	}
@@ -388,11 +383,6 @@ static void cpp_epilog (void)
 #endif
 }
 
-const char *cpp_skel[] = {
-#include "cpp-skel.h"
-    0,
-};
-
 static const char *cpp_yy_int_aligned(void)
 {
 	return long_align ? "long int" : "short int";
@@ -587,6 +577,11 @@ static void cpp_nultrans(int fullspd)
 		(fullspd) ? "struct yy_trans_info*" :
 		"flex_int32_t");
 }
+
+const char *cpp_skel[] = {
+#include "cpp-skel.h"
+    0,
+};
 
 /* This backend is only accessed through this method table */
 struct flex_backend_t cpp_backend = {
