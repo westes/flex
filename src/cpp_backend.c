@@ -37,6 +37,18 @@
 
 /* Code specific to the C/C++ back end starts here */
 
+static const char *cpp_suffix (void)
+{
+	char   *suffix;
+
+	if (C_plus_plus)
+	    suffix = "cc";
+	else
+	    suffix = "c";
+
+	return suffix;
+}
+
 /* cpp_prolog - make rules prolog pecific to cpp-using languages.
  *
  * If you don't ship this, you will effectively be assuming that your
@@ -578,11 +590,14 @@ static void cpp_nultrans(int fullspd)
 
 /* This backend is only accessed through this method table */
 struct flex_backend_t cpp_backend = {
-	.skel = cpp_skel,
+	.suffix = cpp_suffix,
 	.prolog = cpp_prolog,
+	.skel = cpp_skel,
 	.epilog = cpp_epilog,
 	.yy_int_aligned = cpp_yy_int_aligned,
 	.trace_fmt = "#line %d \"%s\"\n",
+	.int_define_fmt = "#define %s %d\n",
+	.string_define_fmt = "#define %s %s\n",
 	.table_opener = "    {",
 	.table_closer = "    };\n",
 	.get_int16_decl = cpp_get_int16_decl,
@@ -607,4 +622,5 @@ struct flex_backend_t cpp_backend = {
 	.gentabs_yy_nxt = cpp_gentabs_yy_nxt,
 	.gentabs_yy_chk = cpp_gentabs_yy_chk,
 	.nultrans = cpp_nultrans,
+	.caseprefix = "case ",
 };

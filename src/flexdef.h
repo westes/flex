@@ -306,11 +306,15 @@
 /* Method table describing a language-specific back end */
 
 struct flex_backend_t {
-	const char **skel;
+	const char *(*suffix)(void);		// Generate suffix for lexer source code
 	void (*prolog)(void);
+	const char **skel;
 	void (*epilog)(void);
 	const char *(*yy_int_aligned)(void);	// Generate aligned type for this back end
-	char *trace_fmt;
+	char *trace_fmt;			// Trace message format
+	// Language syntax generation
+	char *int_define_fmt;			// Format for integer constant definitions
+	char *string_define_fmt;		// Format for string constant definitions
 	char *table_opener;			// Open an array initializer with this
 	char *table_closer;			// Close an array initializer with this
 	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
@@ -336,6 +340,7 @@ struct flex_backend_t {
 	void (*gentabs_yy_nxt)(size_t);		// Generate yy_nxt initializer
 	void (*gentabs_yy_chk)(size_t);		// Generate yy_chk initializer
 	void (*nultrans)(int);			// Generate nulltrans initializer
+	char *caseprefix;			// Prefix of an arm in the language's case construct
 };
 
 extern bool gentables;

@@ -1997,7 +1997,7 @@ void make_tables (void)
 	for (i = 1; i <= lastsc; ++i)
 		if (!sceof[i]) {
 			do_indent ();
-			out_str ("case YY_STATE_EOF(%s):\n", scname[i]);
+			out_str3 ("%sYY_STATE_EOF(%s):\n", backend->caseprefix, scname[i], "");
 			did_eof_rule = true;
 		}
 
