@@ -172,7 +172,8 @@ int flex_main (int argc, char *argv[])
 
 	readin ();
 
-	backend->prolog ();
+	if (backend->prolog)
+		backend->prolog ();
 
 	skelout ();
 	/* %% [1.5] DFA */
@@ -530,7 +531,8 @@ void flexend (int exit_status)
 				skelname);
 	}
 
-	backend->wrap();
+	if (backend->epilog)
+		backend->epilog();
 
 	if (exit_status != 0 && outfile_created) {
 		if (ferror (stdout))

@@ -365,11 +365,12 @@ void line_directive_out (FILE *output_file, int do_infile)
 
 	*s2 = '\0';
 
-	if (do_infile)
-		snprintf (directive, sizeof(directive), backend->line_fmt, linenum, filename);
-	else {
-		snprintf (directive, sizeof(directive), backend->line_fmt, 0, filename);
-	}
+	if (backend->trace_fmt)
+		if (do_infile)
+			snprintf (directive, sizeof(directive), backend->trace_fmt, linenum, filename);
+		else {
+			snprintf (directive, sizeof(directive), backend->trace_fmt, 0, filename);
+		}
 
 	/* If output_file is nil then we should put the directive in
 	 * the accumulated actions.

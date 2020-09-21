@@ -185,7 +185,7 @@ static void cpp_prolog (void)
 	}
 }
 
-static void cpp_wrap (void)
+static void cpp_epilog (void)
 {
 #if 0
 	fprintf (header_out,
@@ -580,9 +580,9 @@ static void cpp_nultrans(int fullspd)
 struct flex_backend_t cpp_backend = {
 	.skel = cpp_skel,
 	.prolog = cpp_prolog,
-	.wrap = cpp_wrap,
+	.epilog = cpp_epilog,
 	.yy_int_aligned = cpp_yy_int_aligned,
-	.line_fmt = "#line %d \"%s\"\n",
+	.trace_fmt = "#line %d \"%s\"\n",
 	.table_opener = "    {",
 	.table_closer = "    };\n",
 	.get_int16_decl = cpp_get_int16_decl,

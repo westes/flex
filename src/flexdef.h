@@ -308,9 +308,9 @@
 struct flex_backend_t {
 	const char **skel;
 	void (*prolog)(void);
-	void (*wrap)(void);
+	void (*epilog)(void);
 	const char *(*yy_int_aligned)(void);	// Generate aligned type for this back end
-	char *line_fmt;
+	char *trace_fmt;
 	char *table_opener;			// Open an array initializer with this
 	char *table_closer;			// Close an array initializer with this
 	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
