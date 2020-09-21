@@ -309,8 +309,36 @@ struct flex_backend_t {
 	const char **skel;
 	void (*prolog)(void);
 	void (*wrap)(void);
+	const char *(*yy_int_aligned)(void);	// Generate aligned type for this back end
 	char *line_fmt;
+	char *table_opener;			// Open an array initializer with this
+	char *table_closer;			// Close an array initializer with this
+	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
+	const char *(*get_int32_decl)(void);	// Format for declaring array initializer of int32s
+	const char *(*get_state_decl)(void);	// Format for declaring array initializer of state values
+	const char *(*get_yy_char_decl)(void);	// Format for declaring array initializer of input chars
+	// Flex table generation
+	void (*ntod)(size_t);			// Generate nxt table for ntod
+	void (*mkeoltbl)(void);			// Make end-of-line table
+	void (*geneoltbl)(size_t);		// Generate end-of-line transitions
+	void (*mkctbl)(size_t);			// Make full-speed compressed table
+	void (*mkssltbl)(void);			// Make start_state_list table
+	void (*gen_yy_trans)(size_t);		// Table of verify for transition and offset to next state. (sic)
+	void (*start_state_list)(size_t);	// Start initializer for table of pointers to start states
+	void (*mkftbl)();			// Make full table
+	const char *state_entry_fmt;		// Format of state table entry
+	void (*mkecstbl)(void);			// Make equivalence-class tables
+	void (*gentabs_acclist)(void);		// Generate accept list initializer
+	void (*gentabs_accept)(void);		// Generate accept table initializer
+	void (*gentabs_yy_meta)(void);		// Generate yy_meta table initializer
+	void (*gentabs_yy_base)(void);		// Generate yy_base table initializer
+	void (*gentabs_yy_def)(size_t);		// Generate yy_def initializer
+	void (*gentabs_yy_nxt)(size_t);		// Generate yy_nxt initializer
+	void (*gentabs_yy_chk)(size_t);		// Generate yy_chk initializer
+	void (*nultrans)(int);			// Generate nulltrans initializer
 };
+
+extern bool gentables;
 
 /* Declarations for global variables. */
 

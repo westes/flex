@@ -517,27 +517,10 @@ void ntod (void)
 					    sizeof (flex_int32_t));
 		yynxt_curr = 0;
 
-		buf_prints (&yydmap_buf,
-			    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
-			    long_align ? "flex_int32_t" : "flex_int16_t");
-
-		/* Unless -Ca, declare it "short" because it's a real
-		 * long-shot that that won't be large enough.
-		 */
-		if (gentables)
-			out_str_dec
-				("static const %s yy_nxt[][%d] =\n    {\n",
-				 long_align ? "flex_int32_t" : "flex_int16_t",
-				 num_full_table_rows);
-		else {
-			out_dec ("#undef YY_NXT_LOLEN\n#define YY_NXT_LOLEN (%d)\n", num_full_table_rows);
-			out_str ("static const %s *yy_nxt =0;\n",
-				 long_align ? "flex_int32_t" : "flex_int16_t");
-		}
-
+		backend->ntod(num_full_table_rows);
 
 		if (gentables)
-			outn ("    {");
+			outn (backend->table_opener);
 
 		/* Generate 0 entries for state #0. */
 		for (i = 0; i < num_full_table_rows; ++i) {
@@ -547,7 +530,7 @@ void ntod (void)
 
 		dataflush ();
 		if (gentables)
-			outn ("    },\n");
+			out ("    },\n\n");
 	}
 
 	/* Create the first states. */
