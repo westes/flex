@@ -464,7 +464,7 @@ void gen_find_action (void)
 		indent_puts ("YY_G(yy_lp) = yy_accept[yy_current_state];");
 
 		if (!variable_trailing_context_rules)
-			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
+			outn ("m4_ifdef( [[M4_MODE_USES_REJECT]],\n[[");
 		if(reject_really_used)
 			outn ("find_rule: /* we branch to this label when backing up */");
 		if (!variable_trailing_context_rules)
@@ -989,7 +989,7 @@ void gen_start_state (void)
 
 		if (reject) {
 			/* Set up for storing up states. */
-			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
+			outn ("m4_ifdef( [[M4_MODE_USES_REJECT]],\n[[");
 			indent_puts
 				("YY_G(yy_state_ptr) = YY_G(yy_state_buf);");
 			indent_puts
@@ -1675,7 +1675,7 @@ void make_tables (void)
 	}
 
 	if (reject) {
-		outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
+		outn ("m4_ifdef( [[M4_MODE_USES_REJECT]],\n[[");
 		/* Declare state buffer variables. */
 		if (!C_plus_plus && !reentrant) {
 			outn ("static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;");

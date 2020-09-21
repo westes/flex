@@ -72,7 +72,7 @@ static void cpp_prolog (void)
 		"FILE *yyin = NULL, *yyout = NULL;";
 
 	if (reject){
-        out_m4_define( "M4_YY_USES_REJECT", NULL);
+        out_m4_define( "M4_MODE_USES_REJECT", NULL);
 		//outn ("\n#define YY_USES_REJECT");
 	}
 

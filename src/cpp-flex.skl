@@ -102,7 +102,7 @@ m4_ifelse(M4_YY_PREFIX,yy,,
 m4_ifdef( [[M4_YY_IN_HEADER]], , [[m4_define([[M4_YY_NOT_IN_HEADER]], [[]])]])
 m4_ifdef( [[M4_YY_REENTRANT]], , [[m4_define([[M4_YY_NOT_REENTRANT]], [[]])]])
 
-%# This is the m4 way to say "(stack_used || is_reentrant)
+%# This is the m4 way to say "(stack_used || is_reentrant)"
 m4_ifdef( [[M4_YY_STACK_USED]], [[m4_define([[M4_YY_HAS_START_STACK_VARS]])]])
 m4_ifdef( [[M4_YY_REENTRANT]],  [[m4_define([[M4_YY_HAS_START_STACK_VARS]])]])
 
@@ -749,7 +749,7 @@ struct yyguts_t
     int yylineno_r;
     int yy_flex_debug_r;
 
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
     yy_state_type *yy_state_buf;
     yy_state_type *yy_state_ptr;
@@ -1224,7 +1224,7 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 		YY_USER_INIT;
 #endif
 
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 		/* Create the reject buffer large enough to save one state per allowed character. */
 		if ( ! YY_G(yy_state_buf) )
@@ -1477,7 +1477,7 @@ void yyFlexLexer::ctor_common()
 	yy_buffer_stack_max = 0;
 
 
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 	yy_state_buf = new yy_state_type[YY_STATE_BUF_SIZE];
 ]],
@@ -1626,7 +1626,7 @@ int yyFlexLexer::yy_get_next_buffer()
 
 		while ( num_to_read <= 0 )
 			{ /* Not enough room in the buffer - grow it. */
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 			YY_FATAL_ERROR(
 "input buffer overflow, can't enlarge buffer because scanner uses REJECT" );
@@ -2858,7 +2858,7 @@ m4_ifdef( [[M4_YY_HAS_START_STACK_VARS]],
     YY_G(yy_start_stack) =  NULL;
 ]])
 
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
     YY_G(yy_state_buf) = 0;
     YY_G(yy_state_ptr) = 0;
@@ -2914,7 +2914,7 @@ m4_ifdef( [[M4_YY_HAS_START_STACK_VARS]],
         YY_G(yy_start_stack) = NULL;
 ]])
 
-m4_ifdef( [[M4_YY_USES_REJECT]],
+m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
     yyfree ( YY_G(yy_state_buf) M4_YY_CALL_LAST_ARG);
     YY_G(yy_state_buf)  = NULL;
