@@ -823,39 +823,6 @@ void gen_NUL_trans (void)
 }
 
 
-/* Generate the code to find the start state. */
-
-void gen_start_state (void)
-{
-	if (fullspd) {
-		if (bol_needed) {
-			indent_puts
-				("yy_current_state = yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()];");
-		}
-		else
-			indent_puts
-				("yy_current_state = yy_start_state_list[YY_G(yy_start)];");
-	}
-
-	else {
-		indent_puts ("yy_current_state = YY_G(yy_start);");
-
-		if (bol_needed)
-			indent_puts ("yy_current_state += YY_AT_BOL();");
-
-		if (reject) {
-			/* Set up for storing up states. */
-			outn ("m4_ifdef( [[M4_MODE_USES_REJECT]],\n[[");
-			indent_puts
-				("YY_G(yy_state_ptr) = YY_G(yy_state_buf);");
-			indent_puts
-				("*YY_G(yy_state_ptr)++ = yy_current_state;");
-			outn ("]])");
-		}
-	}
-}
-
-
 /* gentabs - generate data statements for the transition tables */
 
 void gentabs (void)
@@ -1732,7 +1699,7 @@ void make_tables (void)
 
 	skelout ();		/* %% [9.0] - break point in skel */
 
-	gen_start_state ();
+	outn ("M4_GEN_START_STATE");
 
 	/* Note, don't use any indentation. */
 	outn ("yy_match:");
@@ -1898,7 +1865,7 @@ void make_tables (void)
 	set_indent (1);
 	skelout ();		/* %% [15.0] - break point in skel */
 
-	gen_start_state ();
+	outn ("M4_GEN_START_STATE");
 
 	set_indent (2);
 	skelout ();		/* %% [16.0] - break point in skel */

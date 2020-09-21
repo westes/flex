@@ -801,9 +801,6 @@ extern void gen_next_state(int);
 /* Generate the code to make a NUL transition. */
 extern void gen_NUL_trans(void);
 
-/* Generate the code to find the start state. */
-extern void gen_start_state(void);
-
 /* Generate data statements for the transition tables. */
 extern void gentabs(void);
 

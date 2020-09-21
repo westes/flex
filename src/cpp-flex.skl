@@ -1184,6 +1184,25 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 %% [6.0] YY_RULE_SETUP definition goes here
 ]])
 
+%# Code snippets used in various cases of code generation in the main scanner.
+
+m4_define([[M4_GEN_START_STATE]], [[
+	/* Generate the code to find the start state. */
+m4_ifdef([[M4_MODE_FULLSPD]], [[
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state", "yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()];]])
+m4_ifdef([[M4_MODE_NO_BOL_NEEDED]], [[yy_current_state = yy_start_state_list[YY_G(yy_start)];]])
+]])
+m4_ifdef([[M4_MODE_NO_FULLSPD]], [[
+			yy_current_state = YY_G(yy_start);
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state += YY_AT_BOL();]])
+			/* Set up for storing up states. */
+			m4_ifdef( [[M4_MODE_USES_REJECT]], [[
+			YY_G(yy_state_ptr) = YY_G(yy_state_buf);
+			*YY_G(yy_state_ptr)++ = yy_current_state;
+]])
+]])
+]])
+
 %not-for-header
 /** The main scanner function which does all the work.
  */
