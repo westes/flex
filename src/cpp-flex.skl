@@ -1182,6 +1182,11 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 %% [6.0] YY_RULE_SETUP definition goes here
+#define YY_RULE_SETUP \
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( yyleng > 0 ) \
+		YY_CURRENT_BUFFER_LVALUE->yy_at_bol = \
+				(yytext[yyleng - 1] == '\n'); \
+]])	YY_USER_ACTION
 ]])
 
 %# Code snippets used in various cases of code generation in the main scanner.
@@ -2028,6 +2033,20 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
 	YY_G(yy_hold_char) = *++YY_G(yy_c_buf_p);
 
 %% [19.0] update BOL and yylineno
+
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
+	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
+m4_ifdef([[M4_MODE_YYLINENO]], [[
+	if ( YY_CURRENT_BUFFER_LVALUE->yy_at_bol )
+		M4_YY_INCR_LINENO();
+]])
+]])
+m4_ifdef([[M4_MODE_NO_BOL_NEEDED]], [[
+m4_ifdef([[M4_MODE_YYLINENO]], [[
+	if ( c == '\n' )
+		M4_YY_INCR_LINENO();
+]])
+]])
 
 	return c;
 }

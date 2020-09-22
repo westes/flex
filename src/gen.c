@@ -1657,19 +1657,6 @@ void make_tables (void)
 	}
 
 	skelout ();		/* %% [6.0] - break point in skel */
-
-	indent_puts ("#define YY_RULE_SETUP \\");
-	++indent_level;
-	if (bol_needed) {
-		indent_puts ("if ( yyleng > 0 ) \\");
-		++indent_level;
-		indent_puts ("YY_CURRENT_BUFFER_LVALUE->yy_at_bol = \\");
-		indent_puts ("\t\t(yytext[yyleng - 1] == '\\n'); \\");
-		--indent_level;
-	}
-	indent_puts ("YY_USER_ACTION");
-	--indent_level;
-
 	skelout ();		/* %% [7.0] - break point in skel */
 
 	/* Copy prolog to output file. */
@@ -1797,26 +1784,6 @@ void make_tables (void)
 
 	skelout ();		/* %% [18.0] - break point in skel */
 	skelout ();		/* %% [19.0] - break point in skel */
-	/* Update BOL and yylineno inside of input(). */
-	if (bol_needed) {
-		indent_puts
-			("YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\\n');");
-		if (do_yylineno) {
-			indent_puts
-				("if ( YY_CURRENT_BUFFER_LVALUE->yy_at_bol )");
-			++indent_level;
-			indent_puts ("M4_YY_INCR_LINENO();");
-			--indent_level;
-		}
-	}
-
-	else if (do_yylineno) {
-		indent_puts ("if ( c == '\\n' )");
-		++indent_level;
-		indent_puts ("M4_YY_INCR_LINENO();");
-		--indent_level;
-	}
-
 	skelout ();
 
 	/* Copy remainder of input to output. */
