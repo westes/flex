@@ -316,7 +316,8 @@ struct flex_backend_t {
 	char *int_define_fmt;			// Format for integer constant definitions
 	char *string_define_fmt;		// Format for string constant definitions
 	char *table_opener;			// Open an array initializer with this
-	char *table_closer;			// Close an array initializer with this
+	char *table_continuation;		// Open an array initializer with this
+	char *table_closer;			// How to continue a two-level initializer
 	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
 	const char *(*get_int32_decl)(void);	// Format for declaring array initializer of int32s
 	const char *(*get_state_decl)(void);	// Format for declaring array initializer of state values
@@ -341,6 +342,8 @@ struct flex_backend_t {
 	void (*gentabs_yy_chk)(size_t);		// Generate yy_chk initializer
 	void (*nultrans)(int);			// Generate nulltrans initializer
 	char *caseprefix;			// Prefix of an arm in the language's case construct
+	char *fallthrough;			// Finish a case arm with this to fall through
+	char *endcase;				// What to ship after all EOF-state case arms
 };
 
 extern bool gentables;

@@ -530,7 +530,7 @@ void ntod (void)
 
 		dataflush ();
 		if (gentables)
-			out ("    },\n\n");
+			outn (backend->table_continuation);
 	}
 
 	/* Create the first states. */
@@ -711,7 +711,7 @@ void ntod (void)
 
 			dataflush ();
 			if (gentables)
-				outn ("    },\n");
+				out (backend->table_continuation);
 		}
 
 		else if (fullspd)

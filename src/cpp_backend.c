@@ -594,6 +594,7 @@ struct flex_backend_t cpp_backend = {
 	.int_define_fmt = "#define %s %d\n",
 	.string_define_fmt = "#define %s %s\n",
 	.table_opener = "    {",
+	.table_continuation = "    },\n",
 	.table_closer = "    };\n",
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,
@@ -618,4 +619,6 @@ struct flex_backend_t cpp_backend = {
 	.gentabs_yy_chk = cpp_gentabs_yy_chk,
 	.nultrans = cpp_nultrans,
 	.caseprefix = "case ",
+	.fallthrough = NULL,
+	.endcase = "yyterminate();"
 };

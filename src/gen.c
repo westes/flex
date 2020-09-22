@@ -1385,12 +1385,15 @@ void make_tables (void)
 		if (!sceof[i]) {
 			do_indent ();
 			out_str3 ("%sYY_STATE_EOF(%s):\n", backend->caseprefix, scname[i], "");
+			if (backend->fallthrough != NULL) {
+				indent_puts(backend->fallthrough);
+			}
 			did_eof_rule = true;
 		}
 
 	if (did_eof_rule) {
 		++indent_level;
-		indent_puts ("yyterminate();");
+		indent_puts (backend->endcase);
 		--indent_level;
 	}
 
