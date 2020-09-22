@@ -260,7 +260,7 @@ void dataend (void)
 			dataflush ();
 
 		/* add terminator for initialization; { for vi */
-		outn ("    } ;\n");
+		outn (backend->table_closer);
 	}
 	dataline = 0;
 	datapos = 0;
