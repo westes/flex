@@ -1209,6 +1209,35 @@ m4_ifdef([[M4_MODE_NO_FULLSPD]], [[
 ]])
 ]])
 
+m4_define([[M4_GEN_NEXT_COMPRESSED_STATE]], [[
+	YY_CHAR yy_c = $1;
+	/* Save the backing-up info \before/ computing the next state
+	 * because we always compute one more state than needed - we
+	 * always proceed until we reach a jam state
+	 */
+	M4_GEN_BACKING_UP
+
+	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
+		{
+		yy_current_state = (int) yy_def[yy_current_state];
+
+m4_ifdef([[M4_MODE_USEMECS]], [[
+		/* We've arranged it so that templates are never chained
+		 * to one another.  This means we can afford to make a
+		 * very simple test to see if we need to convert to
+		 * yy_c's meta-equivalence class without worrying
+		 * about erroneously looking up the meta-equivalence
+		 * class twice
+		 */
+
+		/* lastdfa + 2 == YY_JAMSTATE + 1 is the beginning of the templates */
+		if (yy_current_state >= YY_JAMSTATE + 1)
+			yy_c = yy_meta[yy_c];
+]])
+		}
+	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
+]])
+
 m4_define([[M4_GEN_START_STATE]], [[
 	/* Generate the code to find the start state. */
 m4_ifdef([[M4_MODE_FULLSPD]], [[
@@ -1225,6 +1254,26 @@ m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state += YY_AT_BOL();]])
 ]])
 ]])
 ]])
+
+m4_define([[M4_GEN_NEXT_MATCH_FULLSPD]], [[
+		{
+			const struct yy_trans_info *yy_trans_info;
+			YY_CHAR yy_c;
+
+			for ( yy_c = $1;
+			      (yy_trans_info = &yy_current_state[yy_c])->yy_verify == yy_c;
+			      yy_c = $2 )
+			{
+				yy_current_state += yy_trans_info->yy_nxt;
+
+				M4_GEN_BACKING_UP
+			}
+		}
+]])
+
+%# Conditional indirection through an equivalence map
+m4_ifdef([[M4_MODE_USEECS]], m4_define([[M4_EC]], [[*(yy_ec+$1)]]))
+m4_ifdef([[M4_NOT_MODE_USEECS]], [[m4_define([[M4_EC]], [[$1]])]])
 
 %not-for-header
 /** The main scanner function which does all the work.
@@ -1320,6 +1369,46 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 		yy_bp = yy_cp;
 
 %% [9.0] code to set up and find next match goes here
+
+		/* Generate the code to find the next match. */
+m4_ifdef([[M4_MODE_FULLTBL]], [[
+m4_ifdef([[M4_MODE_GENTABLES]], [[
+		while ((yy_current_state = yy_nxt[yy_current_state][ M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0) {
+]])
+m4_ifdef([[M4_MODE_NO_GENTABLES]], [[
+		while ((yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0)
+			{
+]])
+M4_GEN_BACKING_UP
+			yy_cp++;
+			}
+		yy_current_state = -yy_current_state;
+]])
+m4_ifdef([[M4_MODE_FULLSPD]], [[
+		M4_GEN_NEXT_MATCH_FULLSPD(M4_EC(YY_SC_TO_UI(*yy_cp)), M4_EC(YY_SC_TO_UI(*++yy_cp)))
+]])
+m4_ifdef([[M4_MODE_NO_FULLSPD_OR_FULLTBL]], [[
+		do
+			{
+			M4_GEN_NEXT_COMPRESSED_STATE(M4_EC(YY_SC_TO_UI(*yy_cp)))
+
+			m4_ifdef([[M4_MODE_USES_REJECT]], [[*YY_G(yy_state_ptr)++ = yy_current_state;]])
+			++yy_cp;
+
+			}
+		m4_ifdef([[M4_MODE_INTERACTIVE]], [[while ( yy_base[yy_current_state] != YY_JAMBASE );]])
+		m4_ifdef([[M4_MODE_NO_INTERACTIVE]], [[while ( yy_current_state != YY_JAMSTATE );]])
+
+m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
+m4_ifdef([[M4_MODE_NO_INTERACTIVE]], [[
+	/* Do the guaranteed-needed backing up to figure out
+	 * the match.
+	 */
+	yy_cp = YY_G(yy_last_accepting_cpos);
+	yy_current_state = YY_G(yy_last_accepting_state);
+]])
+]])
+]])
 
 yy_find_action:
 %% [10.0] code to find the action number goes here
