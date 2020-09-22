@@ -670,6 +670,34 @@ static void yynoreturn yy_fatal_error ( const char* msg M4_YY_PROTO_LAST_ARG );
 
 %endif
 
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]], [[
+struct yy_trans_info
+	{
+	/* We require that yy_verify and yy_nxt must be of the same size int. */
+m4_ifdef([[M4_MODE_REAL_FULLSPD]], [[
+	YY_OFFSET_TYPE yy_verify;
+
+	/* In cases where its sister yy_verify *is* a "yes, there is
+	 * a transition", yy_nxt is the offset (in records) to the
+	 * next state.  In most cases where there is no transition,
+	 * the value of yy_nxt is irrelevant.  If yy_nxt is the -1th
+	 * record of a state, though, then yy_nxt is the action number
+	 * for that state.
+	 */
+	 YY_OFFSET_TYPE yy_nxt;
+]])
+m4_ifdef([[M4_MODE_NO_REAL_FULLSPD]], [[
+	/* We generate a bogus 'struct yy_trans_info' data type
+	 * so we can guarantee that it is always declared in the skel.
+	 * This is so we can compile "sizeof(struct yy_trans_info)"
+	 * in any scanner.
+	 */
+	flex_int32_t yy_verify;
+	flex_int32_t yy_nxt;
+]])
+	};
+]])
+
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Done after the current pattern has been matched and before the

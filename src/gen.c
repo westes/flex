@@ -896,6 +896,18 @@ void make_tables (void)
 	int did_eof_rule = false;
 	struct yytbl_data *yynultrans_tbl = NULL;
 
+	out_dec ("#define YY_NUM_RULES %d\n", num_rules);
+	out_dec ("#define YY_END_OF_BUFFER %d\n", num_rules + 1);
+
+	fprintf (stdout, backend->int_define_fmt, "YY_JAMBASE", jambase);
+	fprintf (stdout, backend->int_define_fmt, "YY_JAMSTATE", jamstate);
+
+	fprintf (stdout, backend->int_define_fmt, "YY_NUL_EC", NUL_ec);
+
+	/* Need to define the transet type as a size large
+	 * enough to hold the biggest offset.
+	 */
+	fprintf (stdout, backend->string_define_fmt, "YY_OFFSET_TYPE", backend->trans_offset_type(tblend + numecs + 1));
 
 	skelout ();		/* %% [2.0] - break point in skel */
 
@@ -945,63 +957,7 @@ void make_tables (void)
 
 	skelout ();		/* %% [4.0] - break point in skel */
 
-
 	/* This is where we REALLY begin generating the tables. */
-
-	out_dec ("#define YY_NUM_RULES %d\n", num_rules);
-	out_dec ("#define YY_END_OF_BUFFER %d\n", num_rules + 1);
-
-	fprintf (stdout, backend->int_define_fmt, "YY_JAMBASE", jambase);
-	fprintf (stdout, backend->int_define_fmt, "YY_JAMSTATE", jamstate);
-
-	fprintf (stdout, backend->int_define_fmt, "YY_NUL_EC", NUL_ec);
-
-	if (fullspd) {
-		/* Need to define the transet type as a size large
-		 * enough to hold the biggest offset.
-		 */
-		int     total_table_size = tblend + numecs + 1;
-		char   *trans_offset_type =
-			(total_table_size >= INT16_MAX || long_align) ?
-			"flex_int32_t" : "flex_int16_t";
-
-		set_indent (0);
-		indent_puts ("struct yy_trans_info");
-		++indent_level;
-		indent_puts ("{");
-
-		/* We require that yy_verify and yy_nxt must be of the same size int. */
-		indent_put2s ("%s yy_verify;", trans_offset_type);
-
-		/* In cases where its sister yy_verify *is* a "yes, there is
-		 * a transition", yy_nxt is the offset (in records) to the
-		 * next state.  In most cases where there is no transition,
-		 * the value of yy_nxt is irrelevant.  If yy_nxt is the -1th
-		 * record of a state, though, then yy_nxt is the action number
-		 * for that state.
-		 */
-
-		indent_put2s ("%s yy_nxt;", trans_offset_type);
-		indent_puts ("};");
-		--indent_level;
-	}
-	else {
-		/* We generate a bogus 'struct yy_trans_info' data type
-		 * so we can guarantee that it is always declared in the skel.
-		 * This is so we can compile "sizeof(struct yy_trans_info)"
-		 * in any scanner.
-		 */
-		indent_puts
-			("/* This struct is not used in this scanner,");
-		indent_puts ("   but its presence is necessary. */");
-		indent_puts ("struct yy_trans_info");
-		++indent_level;
-		indent_puts ("{");
-		indent_puts ("flex_int32_t yy_verify;");
-		indent_puts ("flex_int32_t yy_nxt;");
-		indent_puts ("};");
-		--indent_level;
-	}
 
 	if (fullspd) {
 		genctbl ();

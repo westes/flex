@@ -1420,6 +1420,12 @@ void readin (void)
 	// stuff out to the skeleton file we make it easier
 	// to retarget the code generation.
 
+	// mode switches for yy_trans_info specification
+	if (fullspd)
+		out_m4_define( "M4_MODE_REAL_FULLSPD", NULL);
+	else
+		out_m4_define( "M4_MODE_NO_REAL_FULLSPD", NULL);
+
 	// mode switches for next-action code
 	if (variable_trailing_context_rules) {
 		out_m4_define( "M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES", NULL);

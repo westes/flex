@@ -341,6 +341,7 @@ struct flex_backend_t {
 	void (*gentabs_yy_nxt)(size_t);		// Generate yy_nxt initializer
 	void (*gentabs_yy_chk)(size_t);		// Generate yy_chk initializer
 	void (*nultrans)(int);			// Generate nulltrans initializer
+	const char *(*trans_offset_type)(int);	// Compute an efficient type for transition tables
 	char *caseprefix;			// Prefix of an arm in the language's case construct
 	char *fallthrough;			// Finish a case arm with this to fall through
 	char *endcase;				// What to ship after all EOF-state case arms

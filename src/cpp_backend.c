@@ -578,6 +578,12 @@ static void cpp_nultrans(int fullspd)
 		"flex_int32_t");
 }
 
+static const char *cpp_trans_offset_type(int total_table_size)
+{
+	return (total_table_size >= INT16_MAX || long_align) ?
+			"flex_int32_t" : "flex_int16_t";
+}
+
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
     0,
@@ -618,6 +624,7 @@ struct flex_backend_t cpp_backend = {
 	.gentabs_yy_nxt = cpp_gentabs_yy_nxt,
 	.gentabs_yy_chk = cpp_gentabs_yy_chk,
 	.nultrans = cpp_nultrans,
+	.trans_offset_type = cpp_trans_offset_type,
 	.caseprefix = "case ",
 	.fallthrough = NULL,
 	.endcase = "yyterminate();"
