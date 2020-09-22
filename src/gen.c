@@ -513,72 +513,6 @@ void gen_next_compressed_state (char *char_map)
 }
 
 
-/* Generate the code to find the next state. */
-
-void gen_next_state (int worry_about_NULs)
-{				/* NOTE - changes in here should be reflected in gen_next_match() */
-	char    *char_map;
-
-	if (worry_about_NULs && !nultrans) {
-		if (useecs)
-			char_map = "(*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : YY_NUL_EC)";
-		else
-            		char_map = "(*yy_cp ? YY_SC_TO_UI(*yy_cp) : YY_NUL_EC)";
-	}
-
-	else
-		char_map = useecs ?
-			"yy_ec[YY_SC_TO_UI(*yy_cp)] " :
-			"YY_SC_TO_UI(*yy_cp)";
-
-	if (worry_about_NULs && nultrans) {
-		if (!fulltbl && !fullspd)
-			/* Compressed tables back up *before* they match. */
-			outn ("M4_GEN_BACKING_UP");
-
-		indent_puts ("if ( *yy_cp )");
-		++indent_level;
-		indent_puts ("{");
-	}
-
-	if (fulltbl) {
-		if (gentables)
-			indent_put2s
-				("yy_current_state = yy_nxt[yy_current_state][%s];",
-				 char_map);
-		else
-			indent_put2s
-				("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %s];",
-				 char_map);
-	}
-
-	else if (fullspd)
-		indent_put2s
-			("yy_current_state += yy_current_state[%s].yy_nxt;",
-			 char_map);
-
-	else
-		gen_next_compressed_state (char_map);
-
-	if (worry_about_NULs && nultrans) {
-
-		indent_puts ("}");
-		--indent_level;
-		indent_puts ("else");
-		++indent_level;
-		indent_puts
-			("yy_current_state = yy_NUL_trans[yy_current_state];");
-		--indent_level;
-	}
-
-	if (fullspd || fulltbl)
-		outn ("M4_GEN_BACKING_UP");
-
-	if (reject)
-		indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");
-}
-
-
 /* Generate the code to make a NUL transition. */
 
 void gen_NUL_trans (void)
@@ -1624,12 +1558,8 @@ void make_tables (void)
 
 
 	/* Generate code for yy_get_previous_state(). */
-	set_indent (1);
 	skelout ();		/* %% [15.0] - break point in skel */
-
-	set_indent (2);
 	skelout ();		/* %% [16.0] - break point in skel */
-	gen_next_state (true);
 
 	set_indent (1);
 	skelout ();		/* %% [17.0] - break point in skel */
