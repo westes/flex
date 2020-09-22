@@ -112,27 +112,6 @@ static void geneoltbl (void)
 }
 
 
-/* Generate the code to keep backing-up information. */
-
-void gen_backing_up (void)
-{
-	if (reject || num_backing_up == 0)
-		return;
-
-	if (fullspd)
-		indent_puts ("if ( yy_current_state[-1].yy_nxt )");
-	else
-		indent_puts ("if ( yy_accept[yy_current_state] )");
-
-	++indent_level;
-	indent_puts ("{");
-	indent_puts ("YY_G(yy_last_accepting_state) = yy_current_state;");
-	indent_puts ("YY_G(yy_last_accepting_cpos) = yy_cp;");
-	indent_puts ("}");
-	--indent_level;
-}
-
-
 /* Generate the code to perform the backing up. */
 
 void gen_bu_action (void)
@@ -528,7 +507,7 @@ void gen_next_compressed_state (char *char_map)
 	 * because we always compute one more state than needed - we
 	 * always proceed until we reach a jam state
 	 */
-	gen_backing_up ();
+	outn ("M4_GEN_BACKING_UP");
 
 	indent_puts
 		("while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )");
@@ -589,14 +568,14 @@ void gen_next_match (void)
 
 		if (num_backing_up > 0) {
 			indent_puts ("{");
-			gen_backing_up ();
+			outn ("M4_GEN_BACKING_UP");
 			outc ('\n');
 		}
 
 		indent_puts ("++yy_cp;");
 
 		if (num_backing_up > 0)
-
+			outn ("M4_GEN_BACKING_UP");
 			indent_puts ("}");
 
 		--indent_level;
@@ -625,7 +604,7 @@ void gen_next_match (void)
 
 		if (num_backing_up > 0) {
 			outc ('\n');
-			gen_backing_up ();
+			outn ("M4_GEN_BACKING_UP");
 			indent_puts ("}");
 		}
 
@@ -686,7 +665,7 @@ void gen_next_state (int worry_about_NULs)
 	if (worry_about_NULs && nultrans) {
 		if (!fulltbl && !fullspd)
 			/* Compressed tables back up *before* they match. */
-			gen_backing_up ();
+			outn ("M4_GEN_BACKING_UP");
 
 		indent_puts ("if ( *yy_cp )");
 		++indent_level;
@@ -724,7 +703,7 @@ void gen_next_state (int worry_about_NULs)
 	}
 
 	if (fullspd || fulltbl)
-		gen_backing_up ();
+		outn ("M4_GEN_BACKING_UP");
 
 	if (reject)
 		indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");
@@ -807,7 +786,7 @@ void gen_NUL_trans (void)
 		indent_puts ("if ( ! yy_is_jam )");
 		++indent_level;
 		indent_puts ("{");
-		gen_backing_up ();
+		outn ("M4_GEN_BACKING_UP");
 		indent_puts ("}");
 		--indent_level;
 	}
@@ -1403,6 +1382,18 @@ void make_tables (void)
 	}
 	else
 		gentabs ();
+
+	// Only at this point do we know if the automaton has backups.
+	// Some m4 conditionals require this information.
+
+	if (num_backing_up > 0)
+		out_m4_define( "M4_MODE_HAS_BACKING_UP", NULL);
+
+	// These are used for NUL transitions
+	if ((num_backing_up > 0 && !reject) && (!nultrans || fullspd || fulltbl))
+		out_m4_define( "M4_MODE_NEED_YY_CP", NULL);
+	if ((num_backing_up > 0 && !reject) && (fullspd || fulltbl))
+		out_m4_define( "M4_MODE_NULTRANS_WRAP", NULL);
 
 	if (do_yylineno) {
 

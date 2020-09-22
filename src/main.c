@@ -1490,12 +1490,8 @@ void readin (void)
 	if (ddebug)
 		out_m4_define( "M4_MODE_DEBUG", NULL);
 
-	// This weird conditional pacifies lint
-	if (!reject && (!nultrans || fullspd || fulltbl))
-		out_m4_define( "M4_MODE_NEED_YY_CP", NULL);
-
-	if (!reject && (fullspd || fulltbl))
-		out_m4_define( "M4_MODE_NULTRANS_WRAP", NULL);
+	// A few additional mode switches cannot be computed
+	// until we know whether the automaton has backing-up actions.
 }
 
 /* set_up_initial_allocations - allocate memory for internal tables */

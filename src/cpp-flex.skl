@@ -1191,6 +1191,24 @@ m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( yyleng > 0 ) \
 
 %# Code snippets used in various cases of code generation in the main scanner.
 
+m4_define([[M4_GEN_BACKING_UP]], [[
+m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
+m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
+		/* Generate code to keep backing-up information. */
+m4_ifdef([[M4_MODE_FULLSPD]], [[
+		if ( yy_current_state[-1].yy_nxt )
+]])
+m4_ifdef([[M4_MODE_NO_FULLSPD]], [[
+		if ( yy_accept[yy_current_state] )
+]])
+			{
+			YY_G(yy_last_accepting_state) = yy_current_state;
+			YY_G(yy_last_accepting_cpos) = yy_cp;
+			}
+]])
+]])
+]])
+
 m4_define([[M4_GEN_START_STATE]], [[
 	/* Generate the code to find the start state. */
 m4_ifdef([[M4_MODE_FULLSPD]], [[

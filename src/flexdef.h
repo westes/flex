@@ -775,9 +775,6 @@ extern void mkechar(int, int[], int[]);
 
 extern void do_indent(void);	/* indent to the current level */
 
-/* Generate the code to keep backing-up information. */
-extern void gen_backing_up(void);
-
 /* Generate the code to perform the backing up. */
 extern void gen_bu_action(void);
 
