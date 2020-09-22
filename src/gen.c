@@ -112,34 +112,6 @@ static void geneoltbl (void)
 }
 
 
-/* Generate the code to perform the backing up. */
-
-void gen_bu_action (void)
-{
-	if (reject || num_backing_up == 0)
-		return;
-
-	set_indent (3);
-
-	indent_puts ("case 0: /* must back up */");
-	indent_puts ("/* undo the effects of YY_DO_BEFORE_ACTION */");
-	indent_puts ("*yy_cp = YY_G(yy_hold_char);");
-
-	if (fullspd || fulltbl)
-		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos) + 1;");
-	else
-		/* Backing-up info for compressed tables is taken \after/
-		 * yy_cp has been incremented for the next state.
-		 */
-		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos);");
-
-	indent_puts ("yy_current_state = YY_G(yy_last_accepting_state);");
-	indent_puts ("goto yy_find_action;");
-	outc ('\n');
-
-	set_indent (0);
-}
-
 /** mkctbl - make full speed compressed transition table
  * This is an array of structs; each struct a pair of integers.
  * You should call mkssltbl() immediately after this.
@@ -1570,8 +1542,6 @@ void make_tables (void)
 
 	skelout ();		/* %% [9.0] - break point in skel */
 
-	outn ("M4_GEN_START_STATE");
-
 	/* Note, don't use any indentation. */
 	outn ("yy_match:");
 
@@ -1603,13 +1573,12 @@ void make_tables (void)
 
 	/* Copy actions to output file. */
 	skelout ();		/* %% [13.0] - break point in skel */
-	++indent_level;
-	gen_bu_action ();
 	out (&action_array[action_offset]);
 
 	line_directive_out (stdout, 0);
 
 	/* generate cases for any missing EOF rules */
+	set_indent(0);
 	for (i = 1; i <= lastsc; ++i)
 		if (!sceof[i]) {
 			do_indent ();
@@ -1622,7 +1591,6 @@ void make_tables (void)
 		indent_puts ("yyterminate();");
 		--indent_level;
 	}
-
 
 	/* Generate code for handling NUL's, if needed. */
 
@@ -1658,8 +1626,6 @@ void make_tables (void)
 	/* Generate code for yy_get_previous_state(). */
 	set_indent (1);
 	skelout ();		/* %% [15.0] - break point in skel */
-
-	outn ("M4_GEN_START_STATE");
 
 	set_indent (2);
 	skelout ();		/* %% [16.0] - break point in skel */

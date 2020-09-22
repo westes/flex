@@ -775,9 +775,6 @@ extern void mkechar(int, int[], int[]);
 
 extern void do_indent(void);	/* indent to the current level */
 
-/* Generate the code to perform the backing up. */
-extern void gen_bu_action(void);
-
 /* Generate full speed compressed transition table. */
 extern void genctbl(void);
 

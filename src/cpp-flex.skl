@@ -1368,6 +1368,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 		 */
 		yy_bp = yy_cp;
 
+M4_GEN_START_STATE
 %% [9.0] code to set up and find next match goes here
 
 		/* Generate the code to find the next match. */
@@ -1534,6 +1535,23 @@ m4_ifdef([[M4_MODE_DEBUG]], [[
 
 		switch ( yy_act )
 	{ /* beginning of action switch */
+m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
+m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
+	case 0: /* must back up */
+		/* undo the effects of YY_DO_BEFORE_ACTION */
+		*yy_cp = YY_G(yy_hold_char);
+
+		/* /\* Backing-up info for compressed tables is taken \after/ */
+		/*  * yy_cp has been incremented for the next state. */
+		/*  *\/ */
+		yy_cp = YY_G(yy_last_accepting_cpos);
+		m4_ifdef([[M4_MODE_FULLSPD]], [[yy_cp++;]])
+		m4_ifdef([[M4_MODE_FULLTBL]], [[yy_cp++;]])
+
+		yy_current_state = YY_G(yy_last_accepting_state);
+		goto yy_find_action;
+]])
+]])
 %% [13.0] actions go here
 
 	case YY_END_OF_BUFFER:
@@ -1973,6 +1991,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 	char *yy_cp;
     M4_YY_DECL_GUTS_VAR();
 
+M4_GEN_START_STATE
 %% [15.0] code to get the start state into yy_current_state goes here
 
 	for ( yy_cp = YY_G(yytext_ptr) + YY_MORE_ADJ; yy_cp < YY_G(yy_c_buf_p); ++yy_cp )
