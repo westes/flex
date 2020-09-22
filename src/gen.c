@@ -1215,7 +1215,7 @@ void make_tables (void)
 	}
 
 	/* Definitions for backing up.  We don't need them if REJECT
-	 * is being used because then we use an alternative backin-up
+	 * is being used because then we use an alternative backing-up
 	 * technique instead.
 	 */
 	if (num_backing_up > 0 && !reject) {
@@ -1475,14 +1475,10 @@ void make_tables (void)
 	}
 
 	skelout ();		/* %% [9.0] - break point in skel */
-
-	/* Note, don't use any indentation. */
-	outn ("yy_match:");
-
 	skelout ();		/* %% [10.0] - break point in skel */
-	set_indent (2);
-
 	skelout ();		/* %% [11.0] - break point in skel */
+
+	set_indent (2);
 	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
 	indent_puts
 		("if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )");
@@ -1532,32 +1528,6 @@ void make_tables (void)
 	 * finds that it should JAM on the NUL.
 	 */
 	skelout ();		/* %% [14.0] - break point in skel */
-	set_indent (4);
-
-	if (fullspd || fulltbl)
-		indent_puts ("yy_cp = YY_G(yy_c_buf_p);");
-
-	else {			/* compressed table */
-		if (!reject && !interactive) {
-			/* Do the guaranteed-needed backing up to figure
-			 * out the match.
-			 */
-			indent_puts
-				("yy_cp = YY_G(yy_last_accepting_cpos);");
-			indent_puts
-				("yy_current_state = YY_G(yy_last_accepting_state);");
-		}
-
-		else
-			/* Still need to initialize yy_cp, though
-			 * yy_current_state was set up by
-			 * yy_get_previous_state().
-			 */
-			indent_puts ("yy_cp = YY_G(yy_c_buf_p);");
-	}
-
-
-	/* Generate code for yy_get_previous_state(). */
 	skelout ();		/* %% [15.0] - break point in skel */
 	skelout ();		/* %% [16.0] - break point in skel */
 

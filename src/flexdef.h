@@ -778,10 +778,8 @@ extern void do_indent(void);	/* indent to the current level */
 /* Generate full speed compressed transition table. */
 extern void genctbl(void);
 
-/* Generate the code to find the action number. */
-extern void gen_find_action(void);
-
-extern void genftbl(void);	/* generate full transition table */
+/* generate full transition table */
+extern void genftbl(void);
 
 /* Generate the code to find the next compressed-table state. */
 extern void gen_next_compressed_state(char *);
