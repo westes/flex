@@ -647,13 +647,10 @@ void gen_next_match (void)
 		indent_puts ("}");
 		--indent_level;
 
-		do_indent ();
-
 		if (interactive)
-			out_dec ("while ( yy_base[yy_current_state] != %d );\n", jambase);
+			indent_puts ("while ( yy_base[yy_current_state] != YY_JAMBASE );");
 		else
-			out_dec ("while ( yy_current_state != %d );\n",
-				 jamstate);
+			indent_puts ("while ( yy_current_state != YY_JAMSTATE );");
 
 		if (!reject && !interactive) {
 			/* Do the guaranteed-needed backing up to figure out
@@ -672,23 +669,19 @@ void gen_next_match (void)
 
 void gen_next_state (int worry_about_NULs)
 {				/* NOTE - changes in here should be reflected in gen_next_match() */
-	char    char_map[256];
+	char    *char_map;
 
 	if (worry_about_NULs && !nultrans) {
 		if (useecs)
-			snprintf (char_map, sizeof(char_map),
-					"(*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : %d)",
-					NUL_ec);
+			char_map = "(*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : YY_NUL_EC)";
 		else
-            snprintf (char_map, sizeof(char_map),
-					"(*yy_cp ? YY_SC_TO_UI(*yy_cp) : %d)",
-					NUL_ec);
+            		char_map = "(*yy_cp ? YY_SC_TO_UI(*yy_cp) : YY_NUL_EC)";
 	}
 
 	else
-		strcpy (char_map, useecs ?
+		char_map = useecs ?
 			"yy_ec[YY_SC_TO_UI(*yy_cp)] " :
-			"YY_SC_TO_UI(*yy_cp)");
+			"YY_SC_TO_UI(*yy_cp)";
 
 	if (worry_about_NULs && nultrans) {
 		if (!fulltbl && !fullspd)
@@ -764,15 +757,15 @@ void gen_NUL_trans (void)
 	else if (fulltbl) {
 		do_indent ();
 		if (gentables)
-			out_dec ("yy_current_state = yy_nxt[yy_current_state][%d];\n", NUL_ec);
+			outn ("yy_current_state = yy_nxt[yy_current_state][YY_NUL_EC];");
 		else
-			out_dec ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %d];\n", NUL_ec);
+			outn ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + YY_NUL_EC];");
 		indent_puts ("yy_is_jam = (yy_current_state <= 0);");
 	}
 
 	else if (fullspd) {
 		do_indent ();
-		out_dec ("int yy_c = %d;\n", NUL_ec);
+		outn ("int yy_c = YY_NUL_EC;");
 
 		indent_puts
 			("const struct yy_trans_info *yy_trans_info;\n");
@@ -790,9 +783,7 @@ void gen_NUL_trans (void)
 		snprintf (NUL_ec_str, sizeof(NUL_ec_str), "%d", NUL_ec);
 		gen_next_compressed_state (NUL_ec_str);
 
-		do_indent ();
-		out_dec ("yy_is_jam = (yy_current_state == %d);\n",
-			 jamstate);
+		indent_puts ("yy_is_jam = (yy_current_state == YY_JAMSTATE);");
 
 		if (reject) {
 			/* Only stack this state if it's a transition we
@@ -1306,6 +1297,11 @@ void make_tables (void)
 	out_dec ("#define YY_NUM_RULES %d\n", num_rules);
 	out_dec ("#define YY_END_OF_BUFFER %d\n", num_rules + 1);
 
+	fprintf (stdout, backend->int_define_fmt, "YY_JAMBASE", jambase);
+	fprintf (stdout, backend->int_define_fmt, "YY_JAMSTATE", jamstate);
+
+	fprintf (stdout, backend->int_define_fmt, "YY_NUL_EC", NUL_ec);
+
 	if (fullspd) {
 		/* Need to define the transet type as a size large
 		 * enough to hold the biggest offset.
@@ -1742,8 +1738,7 @@ void make_tables (void)
 			     "fprintf( stderr, \"--scanner backing up\\n\" );");
 		--indent_level;
 
-		do_indent ();
-		out_dec ("else if ( yy_act < %d )\n", num_rules);
+		indent_puts ("else if ( yy_act < YY_NUM_RULES )");
 		++indent_level;
 
 		if (C_plus_plus) {
