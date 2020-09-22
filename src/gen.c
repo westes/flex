@@ -468,134 +468,6 @@ void genftbl (void)
 	 */
 }
 
-
-/* Generate the code to find the next compressed-table state. */
-
-void gen_next_compressed_state (char *char_map)
-{
-	indent_put2s ("YY_CHAR yy_c = %s;", char_map);
-
-	/* Save the backing-up info \before/ computing the next state
-	 * because we always compute one more state than needed - we
-	 * always proceed until we reach a jam state
-	 */
-	outn ("M4_GEN_BACKING_UP");
-
-	indent_puts
-		("while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )");
-	++indent_level;
-	indent_puts ("{");
-	indent_puts ("yy_current_state = (int) yy_def[yy_current_state];");
-
-	if (usemecs) {
-		/* We've arrange it so that templates are never chained
-		 * to one another.  This means we can afford to make a
-		 * very simple test to see if we need to convert to
-		 * yy_c's meta-equivalence class without worrying
-		 * about erroneously looking up the meta-equivalence
-		 * class twice
-		 */
-		do_indent ();
-
-		/* lastdfa + 2 is the beginning of the templates */
-		out_dec ("if ( yy_current_state >= %d )\n", lastdfa + 2);
-
-		++indent_level;
-		indent_puts ("yy_c = yy_meta[yy_c];");
-		--indent_level;
-	}
-
-	indent_puts ("}");
-	--indent_level;
-
-	indent_puts
-		("yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];");
-}
-
-
-/* Generate the code to make a NUL transition. */
-
-void gen_NUL_trans (void)
-{				/* NOTE - changes in here should be reflected in gen_next_match() */
-	/* Only generate a definition for "yy_cp" if we'll generate code
-	 * that uses it.  Otherwise lint and the like complain.
-	 */
-	int     need_backing_up = (num_backing_up > 0 && !reject);
-
-	if (need_backing_up && (!nultrans || fullspd || fulltbl))
-		/* We're going to need yy_cp lying around for the call
-		 * below to gen_backing_up().
-		 */
-		indent_puts ("char *yy_cp = YY_G(yy_c_buf_p);");
-
-	outc ('\n');
-
-	if (nultrans) {
-		indent_puts
-			("yy_current_state = yy_NUL_trans[yy_current_state];");
-		indent_puts ("yy_is_jam = (yy_current_state == 0);");
-	}
-
-	else if (fulltbl) {
-		do_indent ();
-		if (gentables)
-			outn ("yy_current_state = yy_nxt[yy_current_state][YY_NUL_EC];");
-		else
-			outn ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + YY_NUL_EC];");
-		indent_puts ("yy_is_jam = (yy_current_state <= 0);");
-	}
-
-	else if (fullspd) {
-		do_indent ();
-		outn ("int yy_c = YY_NUL_EC;");
-
-		indent_puts
-			("const struct yy_trans_info *yy_trans_info;\n");
-		indent_puts
-			("yy_trans_info = &yy_current_state[(unsigned int) yy_c];");
-		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
-
-		indent_puts
-			("yy_is_jam = (yy_trans_info->yy_verify != yy_c);");
-	}
-
-	else {
-		char    NUL_ec_str[20];
-
-		snprintf (NUL_ec_str, sizeof(NUL_ec_str), "%d", NUL_ec);
-		gen_next_compressed_state (NUL_ec_str);
-
-		indent_puts ("yy_is_jam = (yy_current_state == YY_JAMSTATE);");
-
-		if (reject) {
-			/* Only stack this state if it's a transition we
-			 * actually make.  If we stack it on a jam, then
-			 * the state stack and yy_c_buf_p get out of sync.
-			 */
-			indent_puts ("if ( ! yy_is_jam )");
-			++indent_level;
-			indent_puts
-				("*YY_G(yy_state_ptr)++ = yy_current_state;");
-			--indent_level;
-		}
-	}
-
-	/* If we've entered an accepting state, back up; note that
-	 * compressed tables have *already* done such backing up, so
-	 * we needn't bother with it again.
-	 */
-	if (need_backing_up && (fullspd || fulltbl)) {
-		outc ('\n');
-		indent_puts ("if ( ! yy_is_jam )");
-		++indent_level;
-		indent_puts ("{");
-		outn ("M4_GEN_BACKING_UP");
-		indent_puts ("}");
-		--indent_level;
-	}
-}
-
-
 /* gentabs - generate data statements for the transition tables */
 
 void gentabs (void)
@@ -1533,7 +1405,84 @@ void make_tables (void)
 
 	set_indent (1);
 	skelout ();		/* %% [17.0] - break point in skel */
-	gen_NUL_trans ();
+
+	/* Generate the code to make a NUL transition. */
+
+	/* Only generate a definition for "yy_cp" if we'll generate code
+	 * that uses it.  Otherwise lint and the like complain.
+	 */
+	int     need_backing_up = (num_backing_up > 0 && !reject);
+
+	if (need_backing_up && (!nultrans || fullspd || fulltbl))
+		/* We're going to need yy_cp lying around for the call
+		 * below to gen_backing_up().
+		 */
+		indent_puts ("char *yy_cp = YY_G(yy_c_buf_p);");
+
+	outc ('\n');
+
+	if (nultrans) {
+		indent_puts
+			("yy_current_state = yy_NUL_trans[yy_current_state];");
+		indent_puts ("yy_is_jam = (yy_current_state == 0);");
+	}
+
+	else if (fulltbl) {
+		do_indent ();
+		if (gentables)
+			outn ("yy_current_state = yy_nxt[yy_current_state][YY_NUL_EC];");
+		else
+			outn ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + YY_NUL_EC];");
+		indent_puts ("yy_is_jam = (yy_current_state <= 0);");
+	}
+
+	else if (fullspd) {
+		do_indent ();
+		outn ("int yy_c = YY_NUL_EC;");
+
+		indent_puts
+			("const struct yy_trans_info *yy_trans_info;\n");
+		indent_puts
+			("yy_trans_info = &yy_current_state[(unsigned int) yy_c];");
+		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
+
+		indent_puts
+			("yy_is_jam = (yy_trans_info->yy_verify != yy_c);");
+	}
+
+	else {
+		char    NUL_ec_str[20];
+
+		out ("M4_GEN_NEXT_COMPRESSED_STATE(YY_NUL_EC)");
+
+		indent_puts ("yy_is_jam = (yy_current_state == YY_JAMSTATE);");
+
+		if (reject) {
+			/* Only stack this state if it's a transition we
+			 * actually make.  If we stack it on a jam, then
+			 * the state stack and yy_c_buf_p get out of sync.
+			 */
+			indent_puts ("if ( ! yy_is_jam )");
+			++indent_level;
+			indent_puts
+				("*YY_G(yy_state_ptr)++ = yy_current_state;");
+			--indent_level;
+		}
+	}
+
+	/* If we've entered an accepting state, back up; note that
+	 * compressed tables have *already* done such backing up, so
+	 * we needn't bother with it again.
+	 */
+	if (need_backing_up && (fullspd || fulltbl)) {
+		outc ('\n');
+		indent_puts ("if ( ! yy_is_jam )");
+		++indent_level;
+		indent_puts ("{");
+		outn ("M4_GEN_BACKING_UP");
+		indent_puts ("}");
+		--indent_level;
+	}
 
 	skelout ();		/* %% [18.0] - break point in skel */
 	skelout ();		/* %% [19.0] - break point in skel */

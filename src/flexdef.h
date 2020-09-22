@@ -781,12 +781,6 @@ extern void genctbl(void);
 /* generate full transition table */
 extern void genftbl(void);
 
-/* Generate the code to find the next compressed-table state. */
-extern void gen_next_compressed_state(char *);
-
-/* Generate the code to make a NUL transition. */
-extern void gen_NUL_trans(void);
-
 /* Generate data statements for the transition tables. */
 extern void gentabs(void);
 
