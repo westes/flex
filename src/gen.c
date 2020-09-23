@@ -901,6 +901,16 @@ void make_tables (void)
 	// itself; by shoving all this stuff out to the skeleton file
 	// we make it easier to retarget the code generation.
 
+	// mode switches for YY_DO_BEFORE_ACTION code generation
+	if (yytext_is_array)
+		out_m4_define( "M4_MODE_YYTEXT_IS_ARRAY", NULL);
+	else
+		out_m4_define( "M4_MODE_NO_YYTEXT_IS_ARRAY", NULL);
+	if (yymore_used)
+		out_m4_define( "M4_MODE_YYMORE_USED", NULL);
+	else
+		out_m4_define( "M4_MODE_NO_YYMORE_USED", NULL);
+
 	// mode switches for yy_trans_info specification
 	if (fullspd)
 		out_m4_define( "M4_MODE_REAL_FULLSPD", NULL);
@@ -997,55 +1007,12 @@ void make_tables (void)
 	fprintf (stdout, backend->string_define_fmt, "YY_OFFSET_TYPE", backend->trans_offset_type(tblend + numecs + 1));
 
 	skelout ();		/* %% [2.0] - break point in skel */
-
-	/* First, take care of YY_DO_BEFORE_ACTION depending on yymore
-	 * being used.
-	 */
-	set_indent (1);
-
-	if (yymore_used && !yytext_is_array) {
-		indent_puts ("YY_G(yytext_ptr) -= YY_G(yy_more_len); \\");
-		indent_puts
-			("yyleng = (int) (yy_cp - YY_G(yytext_ptr)); \\");
-	}
-
-	else
-		indent_puts ("yyleng = (int) (yy_cp - yy_bp); \\");
-
-	/* Now also deal with copying yytext_ptr to yytext if needed. */
 	skelout ();		/* %% [3.0] - break point in skel */
-	if (yytext_is_array) {
-		if (yymore_used)
-			indent_puts
-				("if ( yyleng + YY_G(yy_more_offset) >= YYLMAX ) \\");
-		else
-			indent_puts ("if ( yyleng >= YYLMAX ) \\");
-
-		++indent_level;
-		indent_puts
-			("YY_FATAL_ERROR( \"token too large, exceeds YYLMAX\" ); \\");
-		--indent_level;
-
-		if (yymore_used) {
-			indent_puts
-				("yy_flex_strncpy( &yytext[YY_G(yy_more_offset)], YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG); \\");
-			indent_puts ("yyleng += YY_G(yy_more_offset); \\");
-			indent_puts
-				("YY_G(yy_prev_more_offset) = YY_G(yy_more_offset); \\");
-			indent_puts ("YY_G(yy_more_offset) = 0; \\");
-		}
-		else {
-			indent_puts
-				("yy_flex_strncpy( yytext, YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG); \\");
-		}
-	}
-
-	set_indent (0);
-
 	skelout ();		/* %% [4.0] - break point in skel */
 
 	/* This is where we REALLY begin generating the tables. */
 
+	set_indent (0);
 	if (fullspd) {
 		genctbl ();
 		if (tablesext) {
@@ -1129,19 +1096,6 @@ void make_tables (void)
 		}
 	}
 
-	/* Definitions for backing up.  We don't need them if REJECT
-	 * is being used because then we use an alternative backing-up
-	 * technique instead.
-	 */
-	if (num_backing_up > 0 && !reject) {
-		if (!C_plus_plus && !reentrant) {
-			indent_puts
-				("static yy_state_type yy_last_accepting_state;");
-			indent_puts
-				("static char *yy_last_accepting_cpos;\n");
-		}
-	}
-
 	if (nultrans) {
 		flex_int32_t *yynultrans_data = 0;
 
@@ -1160,6 +1114,7 @@ void make_tables (void)
 
 		for (i = 1; i <= lastdfa; ++i) {
 			if (fullspd) {
+				// FIXME: dubious - pretty C-specific
 				out_dec ("    &yy_transition[%d],\n",
 					 base[i]);
 				yynultrans_data[i] = base[i];
@@ -1187,12 +1142,6 @@ void make_tables (void)
 		/* End generating yy_NUL_trans */
 	}
 
-	if (!C_plus_plus && !reentrant) {
-		indent_puts ("extern int yy_flex_debug;");
-		indent_put2s ("int yy_flex_debug = %s;\n",
-			      ddebug ? "1" : "0");
-	}
-
 	if (ddebug) {		/* Spit out table mapping rules to line numbers. */
 		out_str_dec (long_align ? backend->get_int32_decl () :
 			     backend->get_int16_decl (), "yy_rule_linenum",
@@ -1200,6 +1149,27 @@ void make_tables (void)
 		for (i = 1; i < num_rules; ++i)
 			mkdata (rule_linenum[i]);
 		dataend ();
+	}
+
+	// Remaining language dependencies begin here
+	
+	/* Definitions for backing up.  We don't need them if REJECT
+	 * is being used because then we use an alternative backing-up
+	 * technique instead.
+	 */
+	if (num_backing_up > 0 && !reject) {
+		if (!C_plus_plus && !reentrant) {
+			indent_puts
+				("static yy_state_type yy_last_accepting_state;");
+			indent_puts
+				("static char *yy_last_accepting_cpos;\n");
+		}
+	}
+
+	if (!C_plus_plus && !reentrant) {
+		indent_puts ("extern int yy_flex_debug;");
+		indent_put2s ("int yy_flex_debug = %s;\n",
+			      ddebug ? "1" : "0");
 	}
 
 	if (reject) {

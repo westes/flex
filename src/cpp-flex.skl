@@ -705,11 +705,27 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
  */
 #define YY_DO_BEFORE_ACTION \
 	YY_G(yytext_ptr) = yy_bp; \
-%% [2.0] code to fiddle yytext and yyleng for yymore() goes here \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[YY_G(yytext_ptr) -= YY_G(yy_more_len);
+	yyleng = (int) (yy_cp - YY_G(yytext_ptr));]])]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyleng = (int) (yy_cp - yy_bp);]]) \
+	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyleng = (int) (yy_cp - yy_bp);]]) \
 	YY_G(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
-%% [3.0] code to copy yytext_ptr to yytext[] goes here, if %array \
+m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if ( yyleng + YY_G(yy_more_offset) >= YYLMAX ) \
+		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if ( yyleng >= YYLMAX ) \
+		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yy_flex_strncpy( &yytext[YY_G(yy_more_offset)], YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyleng += YY_G(yy_more_offset);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[YY_G(yy_prev_more_offset) = YY_G(yy_more_offset);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[YY_G(yy_more_offset) = 0;]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yy_flex_strncpy( yytext, YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG);]]) \
+]]) \
 	YY_G(yy_c_buf_p) = yy_cp;
+
+%% [2.0] code to fiddle yytext and yyleng for yymore() goes here \
+%% [3.0] code to copy yytext_ptr to yytext[] goes here, if %array \
 %% [4.0] data tables for the DFA and the user's section 1 definitions go here
 ]])
 
