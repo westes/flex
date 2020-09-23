@@ -993,6 +993,10 @@ void make_tables (void)
 	if (ddebug)
 		out_m4_define( "M4_MODE_DEBUG", NULL);
 
+	// FIXME: This probaby should be done in pure m4 
+	out_m4_define("M4_YYL_BASE", yymore_used ? (yytext_is_array ? "YY_G(yy_prev_more_offset)" :
+						    "YY_G(yy_more_len)") : "0");
+	
 	out_dec ("#define YY_NUM_RULES %d\n", num_rules);
 	out_dec ("#define YY_END_OF_BUFFER %d\n", num_rules + 1);
 
@@ -1300,28 +1304,6 @@ void make_tables (void)
 	skelout ();		/* %% [9.0] - break point in skel */
 	skelout ();		/* %% [10.0] - break point in skel */
 	skelout ();		/* %% [11.0] - break point in skel */
-
-	set_indent (2);
-	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
-	indent_puts
-		("if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )");
-	++indent_level;
-	indent_puts ("{");
-	indent_puts ("int yyl;");
-	do_indent ();
-	out_str ("for ( yyl = %s; yyl < yyleng; ++yyl )\n",
-		 yymore_used ? (yytext_is_array ? "YY_G(yy_prev_more_offset)" :
-				"YY_G(yy_more_len)") : "0");
-	++indent_level;
-	indent_puts ("if ( yytext[yyl] == '\\n' )");
-	++indent_level;
-	indent_puts ("M4_YY_INCR_LINENO();");
-	--indent_level;
-	--indent_level;
-	indent_puts ("}");
-	--indent_level;
-	outn ("]])");
-
 	skelout ();		/* %% [12.0] - break point in skel */
 
 	/* Copy actions to output file. */

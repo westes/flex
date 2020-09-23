@@ -1582,6 +1582,18 @@ m4_ifdef([[M4_MODE_COMPRESSED]], [[		yy_act = yy_accept[yy_current_state];
 
 		YY_DO_BEFORE_ACTION;
 
+m4_ifdef( [[M4_YY_USE_LINENO]],[[
+m4_ifdef( [[M4_MODE_YYMORE_USED]],[[
+]])
+	if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+	{
+	int yyl;
+	for ( yyl = M4_YYL_BASE; yyl < yyleng; ++yyl )
+		if ( yytext[yyl] == '\n' )
+			M4_YY_INCR_LINENO();
+	}
+]])
+
 %% [11.0] code for yylineno update goes here
 
 do_action:	/* This label is used only to access EOF actions. */
