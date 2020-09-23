@@ -1445,6 +1445,16 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
+m4_ifdef( [[M4_MODE_YYMORE_USED]], [[
+m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
+		YY_G(yy_more_len) = 0;
+		if ( YY_G(yy_more_flag) )
+			{
+			YY_G(yy_more_len) = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr));
+			YY_G(yy_more_flag) = 0;
+			}
+]])
+]])
 %% [8.0] yymore()-related code goes here
 		yy_cp = YY_G(yy_c_buf_p);
 

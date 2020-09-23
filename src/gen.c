@@ -1297,21 +1297,6 @@ void make_tables (void)
 	line_directive_out (stdout, 0);
 
 	skelout ();		/* %% [8.0] - break point in skel */
-
-	set_indent (2);
-
-	if (yymore_used && !yytext_is_array) {
-		indent_puts ("YY_G(yy_more_len) = 0;");
-		indent_puts ("if ( YY_G(yy_more_flag) )");
-		++indent_level;
-		indent_puts ("{");
-		indent_puts
-			("YY_G(yy_more_len) = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr));");
-		indent_puts ("YY_G(yy_more_flag) = 0;");
-		indent_puts ("}");
-		--indent_level;
-	}
-
 	skelout ();		/* %% [9.0] - break point in skel */
 	skelout ();		/* %% [10.0] - break point in skel */
 	skelout ();		/* %% [11.0] - break point in skel */
