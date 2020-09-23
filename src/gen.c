@@ -907,6 +907,12 @@ void make_tables (void)
 	else
 		out_m4_define( "M4_MODE_NO_REAL_FULLSPD", NULL);
 
+	// niode switches for YYINPUT code generation
+	if (use_read)
+		out_m4_define( "M4_MODE_CPP_USE_READ", NULL);
+	else
+		out_m4_define( "M4_MODE_NO_CPP_USE_READ", NULL);
+
 	// mode switches for next-action code
 	if (variable_trailing_context_rules) {
 		out_m4_define( "M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
@@ -1312,53 +1318,6 @@ void make_tables (void)
 	line_directive_out (stdout, 0);
 
 	skelout ();		/* %% [5.0] - break point in skel */
-
-	if (!C_plus_plus) {
-		if (use_read) {
-			outn ("\terrno=0; \\");
-			outn ("\twhile ( (result = (int) read( fileno(yyin), buf, (yy_size_t) max_size )) < 0 ) \\");
-			outn ("\t{ \\");
-			outn ("\t\tif( errno != EINTR) \\");
-			outn ("\t\t{ \\");
-			outn ("\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\");
-			outn ("\t\t\tbreak; \\");
-			outn ("\t\t} \\");
-			outn ("\t\terrno=0; \\");
-			outn ("\t\tclearerr(yyin); \\");
-			outn ("\t}\\");
-		}
-
-		else {
-			outn ("\tif ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \\");
-			outn ("\t\t{ \\");
-			outn ("\t\tint c = '*'; \\");
-			outn ("\t\tint n; \\");
-			outn ("\t\tfor ( n = 0; n < max_size && \\");
-			outn ("\t\t\t     (c = getc( yyin )) != EOF && c != '\\n'; ++n ) \\");
-			outn ("\t\t\tbuf[n] = (char) c; \\");
-			outn ("\t\tif ( c == '\\n' ) \\");
-			outn ("\t\t\tbuf[n++] = (char) c; \\");
-			outn ("\t\tif ( c == EOF && ferror( yyin ) ) \\");
-			outn ("\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\");
-			outn ("\t\tresult = n; \\");
-			outn ("\t\t} \\");
-			outn ("\telse \\");
-			outn ("\t\t{ \\");
-			outn ("\t\terrno=0; \\");
-			outn ("\t\twhile ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) \\");
-			outn ("\t\t\t{ \\");
-			outn ("\t\t\tif( errno != EINTR) \\");
-			outn ("\t\t\t\t{ \\");
-			outn ("\t\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\");
-			outn ("\t\t\t\tbreak; \\");
-			outn ("\t\t\t\t} \\");
-			outn ("\t\t\terrno=0; \\");
-			outn ("\t\t\tclearerr(yyin); \\");
-			outn ("\t\t\t} \\");
-			outn ("\t\t}\\");
-		}
-	}
-
 	skelout ();		/* %% [6.0] - break point in skel */
 	skelout ();		/* %% [7.0] - break point in skel */
 

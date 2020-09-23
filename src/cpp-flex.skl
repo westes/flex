@@ -1071,6 +1071,50 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
  */
 #ifndef YY_INPUT
 #define YY_INPUT(buf,result,max_size) \
+%if-c-only \
+m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[ \
+	errno=0; \
+	while ( (result = (int) read( fileno(yyin), buf, (yy_size_t) max_size )) < 0 ) \
+	{ \
+		if( errno != EINTR) \
+		{ \
+			YY_FATAL_ERROR( "input in flex scanner failed" ); \
+			break; \
+		} \
+		errno=0; \
+		clearerr(yyin); \
+	}\
+]]) \
+m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[ \
+	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \
+		{ \
+		int c = '*'; \
+		int n; \
+		for ( n = 0; n < max_size && \
+			     (c = getc( yyin )) != EOF && c != '\n'; ++n ) \
+			buf[n] = (char) c; \
+		if ( c == '\n' ) \
+			buf[n++] = (char) c; \
+		if ( c == EOF && ferror( yyin ) ) \
+			YY_FATAL_ERROR( "input in flex scanner failed" ); \
+		result = n; \
+		} \
+	else \
+		{ \
+		errno=0; \
+		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) \
+			{ \
+			if( errno != EINTR) \
+				{ \
+				YY_FATAL_ERROR( "input in flex scanner failed" ); \
+				break; \
+				} \
+			errno=0; \
+			clearerr(yyin); \
+			} \
+		}\
+]]) \
+%endif \
 %% [5.0] fread()/read() definition of YY_INPUT goes here unless we're doing C++ \
 \
 %if-c++-only C++ definition \
