@@ -1109,7 +1109,9 @@ void make_tables (void)
 		backend->nultrans(fullspd);
 		yynultrans_tbl = calloc(1, sizeof (struct yytbl_data));
 		yytbl_data_init (yynultrans_tbl, YYTD_ID_NUL_TRANS);
-		if (fullspd)
+		// Performance kludge for C. Gives a small improvement
+		// in table loading time.
+		if (fullspd && backend->c_like)
 			yynultrans_tbl->td_flags |= YYTD_PTRANS;
 		yynultrans_tbl->td_lolen = (flex_uint32_t) (lastdfa + 1);
 		yynultrans_tbl->td_data = yynultrans_data =
@@ -1117,13 +1119,14 @@ void make_tables (void)
 					    sizeof (flex_int32_t));
 
 		for (i = 1; i <= lastdfa; ++i) {
-			if (fullspd) {
-				// FIXME: dubious - pretty C-specific
+		    if ((yynultrans_tbl->td_flags & YYTD_PTRANS) != 0) {
+				// Only works in very C-like languages  
 				out_dec ("    &yy_transition[%d],\n",
 					 base[i]);
 				yynultrans_data[i] = base[i];
 			}
 			else {
+				// This will work anywhere
 				mkdata (nultrans[i]);
 				yynultrans_data[i] = nultrans[i];
 			}

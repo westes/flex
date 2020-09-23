@@ -627,5 +627,6 @@ struct flex_backend_t cpp_backend = {
 	.trans_offset_type = cpp_trans_offset_type,
 	.caseprefix = "case ",
 	.fallthrough = NULL,
-	.endcase = "yyterminate();"
+	.endcase = "yyterminate();",
+	.c_like = 1,
 };

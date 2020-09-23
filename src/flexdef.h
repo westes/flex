@@ -345,6 +345,7 @@ struct flex_backend_t {
 	char *caseprefix;			// Prefix of an arm in the language's case construct
 	char *fallthrough;			// Finish a case arm with this to fall through
 	char *endcase;				// What to ship after all EOF-state case arms
+	int c_like;				// Will &yy_transition[%d]," produce a pointer table entry?
 };
 
 extern bool gentables;
