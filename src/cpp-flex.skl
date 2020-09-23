@@ -2142,7 +2142,6 @@ m4_ifdef( [[M4_YY_NO_UNPUT]],,
 
 	*--yy_cp = (char) c;
 
-%% [18.0] update yylineno here
 m4_ifdef( [[M4_YY_USE_LINENO]],
 [[
     if ( c == '\n' ){
@@ -2234,8 +2233,6 @@ m4_ifdef( [[M4_YY_USE_LINENO]],
 	c = *(unsigned char *) YY_G(yy_c_buf_p);	/* cast for 8-bit char's */
 	*YY_G(yy_c_buf_p) = '\0';	/* preserve yytext */
 	YY_G(yy_hold_char) = *++YY_G(yy_c_buf_p);
-
-%% [19.0] update BOL and yylineno
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
