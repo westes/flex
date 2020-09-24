@@ -724,6 +724,14 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 ]]) \
 	YY_G(yy_c_buf_p) = yy_cp;
 
+%if-not-reentrant
+m4_ifdef( [[M4_MODE_C_ONLY]],
+[[
+extern int yy_flex_debug;
+int yy_flex_debug = m4_ifdef([[M4_MODE_DEBUG]],[[1]])m4_ifdef([[M4_MODE_NO_DEBUG]],[[1]]);
+]])
+%endif
+
 %% [2.0] code to fiddle yytext and yyleng for yymore() goes here \
 %% [3.0] code to copy yytext_ptr to yytext[] goes here, if %array \
 %% [4.0] data tables for the DFA and the user's section 1 definitions go here

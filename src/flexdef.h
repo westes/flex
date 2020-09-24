@@ -350,6 +350,8 @@ struct flex_backend_t {
 
 extern bool gentables;
 
+extern struct flex_backend_t cpp_backend;
+
 /* Declarations for global variables. */
 
 

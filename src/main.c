@@ -46,8 +46,6 @@ void flexinit(int, char **);
 void readin(void);
 void set_up_initial_allocations(void);
 
-extern struct flex_backend_t cpp_backend;
-
 /* these globals are all defined and commented in flexdef.h */
 int     printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int     interactive, lex_compat, posix_compat, do_yylineno,

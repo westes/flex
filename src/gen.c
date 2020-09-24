@@ -992,11 +992,22 @@ void make_tables (void)
 
 	if (ddebug)
 		out_m4_define( "M4_MODE_DEBUG", NULL);
+	else
+		out_m4_define( "M4_MODE_NO_DEBUG", NULL);
+
+	// Kluge to get around the fact that the %if-not-reentrant and
+	// %if-c-only gates can;t be combined by nesting one inside the
+	// other.
+	if (backend == &cpp_backend && !C_plus_plus)
+		out_m4_define( "M4_MODE_C_ONLY", NULL);
 
 	// FIXME: This probaby should be done in pure m4 
 	out_m4_define("M4_YYL_BASE", yymore_used ? (yytext_is_array ? "YY_G(yy_prev_more_offset)" :
 						    "YY_G(yy_more_len)") : "0");
 	
+	// There are a couple more modes we can't compute until after
+	// tables have been generated.
+
 	out_dec ("#define YY_NUM_RULES %d\n", num_rules);
 	out_dec ("#define YY_END_OF_BUFFER %d\n", num_rules + 1);
 
@@ -1171,12 +1182,6 @@ void make_tables (void)
 			indent_puts
 				("static char *yy_last_accepting_cpos;\n");
 		}
-	}
-
-	if (!C_plus_plus && !reentrant) {
-		indent_puts ("extern int yy_flex_debug;");
-		indent_put2s ("int yy_flex_debug = %s;\n",
-			      ddebug ? "1" : "0");
 	}
 
 	if (reject) {
