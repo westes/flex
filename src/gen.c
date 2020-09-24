@@ -106,7 +106,7 @@ static void geneoltbl (void)
 			if ((i % 20) == 19)
 				out ("\n    ");
 		}
-		out ("    };\n");
+		outn (backend->table_closer);
 	}
 	outn ("]])");
 }

@@ -82,8 +82,13 @@ require fixes outside a back end.
    there is an explicit fallthrough keyword that enables this,
    as in Go.
 
+3. The item separator in data initializers is a comma.
+
 By putting a yyterminate() call in the fallthrough member
 and a null pointer in the endcase member, you could handle
-languages like Pascal
+languages like Pascal.
+
+// end
+
 
 

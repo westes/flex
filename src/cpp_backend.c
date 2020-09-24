@@ -607,6 +607,7 @@ struct flex_backend_t cpp_backend = {
 	.table_opener = "    {",
 	.table_continuation = "    },\n",
 	.table_closer = "    };\n",
+	.dyad = " {%4d,%4d },",
 	.comment = cpp_comment,
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,

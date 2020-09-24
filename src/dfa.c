@@ -683,10 +683,8 @@ void ntod (void)
 						     yynxt_tbl->td_hilen *
 						     yynxt_tbl->td_lolen *
 						     sizeof (flex_int32_t));
-
-
 			if (gentables)
-				outn ("    {");
+				outn (backend->table_opener);
 
 			/* Supply array's 0-element. */
 			if (ds == end_of_buffer_state) {

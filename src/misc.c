@@ -827,7 +827,7 @@ void transition_struct_out (int element_v, int element_n)
 	if (!gentables)
 		return;
 
-	out_dec2 (" {%4d,%4d },", element_v, element_n);
+	out_dec2 (backend->dyad, element_v, element_n);
 
 	datapos += TRANS_STRUCT_PRINT_LENGTH;
 
