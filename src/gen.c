@@ -887,6 +887,12 @@ void indent_puts (const char *str)
 }
 
 
+static void visible_define (const char *symname)
+{
+	out_m4_define(symname, NULL);
+	backend->comment(symname);
+}
+
 /* make_tables - generate transition tables and finishes generating output file
  */
 
@@ -901,108 +907,113 @@ void make_tables (void)
 	// itself; by shoving all this stuff out to the skeleton file
 	// we make it easier to retarget the code generation.
 
+	backend->comment("m4 controls begin");
+
 	// mode switches for YY_DO_BEFORE_ACTION code generation
 	if (yytext_is_array)
-		out_m4_define( "M4_MODE_YYTEXT_IS_ARRAY", NULL);
+		visible_define ( "M4_MODE_YYTEXT_IS_ARRAY");
 	else
-		out_m4_define( "M4_MODE_NO_YYTEXT_IS_ARRAY", NULL);
+		visible_define ( "M4_MODE_NO_YYTEXT_IS_ARRAY");
 	if (yymore_used)
-		out_m4_define( "M4_MODE_YYMORE_USED", NULL);
+		visible_define ( "M4_MODE_YYMORE_USED");
 	else
-		out_m4_define( "M4_MODE_NO_YYMORE_USED", NULL);
+		visible_define ( "M4_MODE_NO_YYMORE_USED");
 
 	// mode switches for yy_trans_info specification
 	if (fullspd)
-		out_m4_define( "M4_MODE_REAL_FULLSPD", NULL);
+		visible_define ( "M4_MODE_REAL_FULLSPD");
 	else
-		out_m4_define( "M4_MODE_NO_REAL_FULLSPD", NULL);
+		visible_define ( "M4_MODE_NO_REAL_FULLSPD");
 
 	// niode switches for YYINPUT code generation
 	if (use_read)
-		out_m4_define( "M4_MODE_CPP_USE_READ", NULL);
+		visible_define ( "M4_MODE_CPP_USE_READ");
 	else
-		out_m4_define( "M4_MODE_NO_CPP_USE_READ", NULL);
+		visible_define ( "M4_MODE_NO_CPP_USE_READ");
 
 	// mode switches for next-action code
 	if (variable_trailing_context_rules) {
-		out_m4_define( "M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
+		visible_define ( "M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES");
 	} else {
-		out_m4_define( "M4_MODE_NO_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
+		visible_define ( "M4_MODE_NO_VARIABLE_TRAILING_CONTEXT_RULES");
 	}
 	if (real_reject)
-		out_m4_define( "M4_MODE_REAL_REJECT", NULL);
+		visible_define ( "M4_MODE_REAL_REJECT");
 	if (reject_really_used)
-		out_m4_define( "M4_MODE_REJECT_REALLY_USED", NULL);
+		visible_define ( "M4_MODE_REJECT_REALLY_USED");
 	if (reject)
-		out_m4_define( "M4_MODE_USES_REJECT", NULL);
+		visible_define ( "M4_MODE_USES_REJECT");
 	else
-		out_m4_define( "M4_MODE_NO_USES_REJECT", NULL);
+		visible_define ( "M4_MODE_NO_USES_REJECT");
 
 	// mode switches for computing next compressed state
 	if (usemecs)
-		out_m4_define( "M4_MODE_USEMECS", NULL);
+		visible_define ( "M4_MODE_USEMECS");
 
 	// mode switches for find-action code
 	if (fullspd)
-		out_m4_define( "M4_MODE_FULLSPD", NULL);
+		visible_define ( "M4_MODE_FULLSPD");
 	else if (fulltbl)
-	    out_m4_define( "M4_MODE_FULLTBL", NULL);
+	    visible_define ( "M4_MODE_FULLTBL");
 	else if (reject)
-	    out_m4_define( "M4_MODE_REJECT", NULL);
+	    visible_define ( "M4_MODE_REJECT");
 	else
-	    out_m4_define( "M4_MODE_COMPRESSED", NULL);
+	    visible_define ( "M4_MODE_COMPRESSED");
 
 	// mode switches for backup generation and gen_start_state
 	if (!fullspd)
-		out_m4_define( "M4_MODE_NO_FULLSPD", NULL);
+		visible_define ( "M4_MODE_NO_FULLSPD");
 	if (bol_needed)
-		out_m4_define( "M4_MODE_BOL_NEEDED", NULL);
+		visible_define ( "M4_MODE_BOL_NEEDED");
 	else
-		out_m4_define( "M4_MODE_NO_BOL_NEEDED", NULL);
+		visible_define ( "M4_MODE_NO_BOL_NEEDED");
 
 	// yylineno
 	if (do_yylineno)
-		out_m4_define( "M4_MODE_YYLINENO", NULL);
+		visible_define ( "M4_MODE_YYLINENO");
 
-	// Equivalance classes
+	// Equivelance classes
 	if (useecs)
-		out_m4_define( "M4_MODE_USEECS", NULL);
+		visible_define ( "M4_MODE_USEECS");
 	else
-		out_m4_define( "M4_NOT_MODE_USEECS", NULL);
+		visible_define ( "M4_NOT_MODE_USEECS");
 
 	// mode switches for getting next action
 	if (gentables)
-		out_m4_define( "M4_MODE_GENTABLES", NULL);
+		visible_define ( "M4_MODE_GENTABLES");
 	else
-		out_m4_define( "M4_MODE_NO_GENTABLES", NULL);
+		visible_define ( "M4_MODE_NO_GENTABLES");
 	if (interactive)
-		out_m4_define( "M4_MODE_INTERACTIVE", NULL);
+		visible_define ( "M4_MODE_INTERACTIVE");
 	else
-		out_m4_define( "M4_MODE_NO_INTERACTIVE", NULL);
+		visible_define ( "M4_MODE_NO_INTERACTIVE");
 	if (!(fullspd || fulltbl))
-		out_m4_define( "M4_MODE_NO_FULLSPD_OR_FULLTBL", NULL);
+		visible_define ( "M4_MODE_NO_FULLSPD_OR_FULLTBL");
 	if (reject || interactive)
-		out_m4_define( "M4_MODE_REJECT_OR_INTERACTIVE", NULL);
+		visible_define ( "M4_MODE_REJECT_OR_INTERACTIVE");
 
 	// nultrans
 	if (nultrans)
-		out_m4_define( "M4_MODE_NULTRANS", NULL);
+		visible_define ( "M4_MODE_NULTRANS");
 	else
-		out_m4_define( "M4_MODE_NO_NULTRANS", NULL);
+		visible_define ( "M4_MODE_NO_NULTRANS");
 
 	if (ddebug)
-		out_m4_define( "M4_MODE_DEBUG", NULL);
+		visible_define ( "M4_MODE_DEBUG");
 	else
-		out_m4_define( "M4_MODE_NO_DEBUG", NULL);
+		visible_define ( "M4_MODE_NO_DEBUG");
 
 	// Kluge to get around the fact that the %if-not-reentrant and
 	// %if-c-only gates can;t be combined by nesting one inside the
 	// other.
 	if (backend == &cpp_backend && !C_plus_plus)
-		out_m4_define( "M4_MODE_C_ONLY", NULL);
+		visible_define ( "M4_MODE_C_ONLY");
+
+	backend->comment("m4 controls end");
+	out ("\n");
 
 	// FIXME: This probaby should be done in pure m4 
-	out_m4_define("M4_YYL_BASE", yymore_used ? (yytext_is_array ? "YY_G(yy_prev_more_offset)" :
+	out_m4_define ("M4_YYL_BASE", yymore_used ? (yytext_is_array ? "YY_G(yy_prev_more_offset)" :
 						    "YY_G(yy_more_len)") : "0");
 	
 	// There are a couple more modes we can't compute until after
@@ -1086,14 +1097,19 @@ void make_tables (void)
 	// Only at this point do we know if the automaton has backups.
 	// Some m4 conditionals require this information.
 
+	backend->comment("m4 controls begin");
+
 	if (num_backing_up > 0)
-		out_m4_define( "M4_MODE_HAS_BACKING_UP", NULL);
+		visible_define ( "M4_MODE_HAS_BACKING_UP");
 
 	// These are used for NUL transitions
 	if ((num_backing_up > 0 && !reject) && (!nultrans || fullspd || fulltbl))
-		out_m4_define( "M4_MODE_NEED_YY_CP", NULL);
+		visible_define ( "M4_MODE_NEED_YY_CP");
 	if ((num_backing_up > 0 && !reject) && (fullspd || fulltbl))
-		out_m4_define( "M4_MODE_NULTRANS_WRAP", NULL);
+		visible_define ( "M4_MODE_NULTRANS_WRAP");
+
+	backend->comment("m4 controls end");
+	out ("\n");
 
 	if (do_yylineno) {
 

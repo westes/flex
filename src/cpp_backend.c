@@ -388,6 +388,11 @@ static const char *cpp_yy_int_aligned(void)
 	return long_align ? "long int" : "short int";
 }
 
+static void cpp_comment(const char *txt)
+{
+	out_str("/* [[%s]] */\n", txt);
+}
+
 static const char *cpp_get_int16_decl (void)
 {
 	return (gentables)
@@ -602,6 +607,7 @@ struct flex_backend_t cpp_backend = {
 	.table_opener = "    {",
 	.table_continuation = "    },\n",
 	.table_closer = "    };\n",
+	.comment = cpp_comment,
 	.get_int16_decl = cpp_get_int16_decl,
 	.get_int32_decl = cpp_get_int32_decl,
 	.get_state_decl = cpp_get_state_decl,

@@ -318,6 +318,7 @@ struct flex_backend_t {
 	char *table_opener;			// Open an array initializer with this
 	char *table_continuation;		// Open an array initializer with this
 	char *table_closer;			// How to continue a two-level initializer
+	void (*comment)(const char *);		// Wrap a comment line
 	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
 	const char *(*get_int32_decl)(void);	// Format for declaring array initializer of int32s
 	const char *(*get_state_decl)(void);	// Format for declaring array initializer of state values
