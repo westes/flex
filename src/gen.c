@@ -940,7 +940,7 @@ void make_tables (void)
 	if (real_reject)
 		visible_define ( "M4_MODE_REAL_REJECT");
 	if (reject_really_used)
-		visible_define ( "M4_MODE_REJECT_REALLY_USED");
+		visible_define ( "M4_MODE_FIND_ACTION_REJECT_REALLY_USED");
 	if (reject)
 		visible_define ( "M4_MODE_USES_REJECT");
 	else
@@ -954,11 +954,11 @@ void make_tables (void)
 	if (fullspd)
 		visible_define ( "M4_MODE_FULLSPD");
 	else if (fulltbl)
-	    visible_define ( "M4_MODE_FULLTBL");
+	    visible_define ( "M4_MODE_FIND_ACTION_FULLTBL");
 	else if (reject)
-	    visible_define ( "M4_MODE_REJECT");
+	    visible_define ( "M4_MODE_FIND_ACTION_REJECT");
 	else
-	    visible_define ( "M4_MODE_COMPRESSED");
+	    visible_define ( "M4_MODE_FIND_ACTION_COMPRESSED");
 
 	// mode switches for backup generation and gen_start_state
 	if (!fullspd)
@@ -990,14 +990,23 @@ void make_tables (void)
 	if (!(fullspd || fulltbl))
 		visible_define ( "M4_MODE_NO_FULLSPD_OR_FULLTBL");
 	if (reject || interactive)
-		visible_define ( "M4_MODE_REJECT_OR_INTERACTIVE");
+		visible_define ( "M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE");
 
 	// nultrans
 	if (nultrans)
 		visible_define ( "M4_MODE_NULTRANS");
-	else
+	else {
 		visible_define ( "M4_MODE_NO_NULTRANS");
-
+		if (fulltbl)
+		    visible_define ( "M4_MODE_NULTRANS_FULLTBL");
+		else
+		    visible_define ( "M4_MODE_NO_NULTRANS_FULLTBL");
+		if (fullspd)
+		    visible_define ( "M4_MODE_NULTRANS_FULLSPD");
+		else
+		    visible_define ( "M4_MODE_NO_NULTRANS_FULLSPD");
+	}
+	
 	if (ddebug)
 		visible_define ( "M4_MODE_DEBUG");
 	else
@@ -1186,6 +1195,7 @@ void make_tables (void)
 	}
 
 	// Remaining language dependencies begin here
+	outn("// C-GENERATED BEGINS");
 	
 	/* Definitions for backing up.  We don't need them if REJECT
 	 * is being used because then we use an alternative backing-up
@@ -1310,6 +1320,7 @@ void make_tables (void)
                 outn ("char *yytext;");
 		}
 	}
+	outn("// C-GENERATED ENDS");
 
 	out (&action_array[defs1_offset]);
 
@@ -1353,85 +1364,6 @@ void make_tables (void)
 		indent_puts (backend->endcase);
 		--indent_level;
 	}
-
-	/* Generate code for handling NUL's, if needed. */
-
-	/* First, deal with backing up and setting up yy_cp if the scanner
-	 * finds that it should JAM on the NUL.
-	 */
-	skelout ();		/* %% [14.0] - break point in skel */
-	skelout ();		/* %% [15.0] - break point in skel */
-	skelout ();		/* %% [16.0] - break point in skel */
-	skelout ();		/* %% [17.0] - break point in skel */
-
-	/* Generate the code to make a NUL transition. */
-
-	/* Only generate a definition for "yy_cp" if we'll generate code
-	 * that uses it.  Otherwise lint and the like complain.
-	 */
-	indent_puts ("m4_ifdef([[M4_MODE_NEED_YY_CP]], [[	char *yy_cp = YY_G(yy_c_buf_p);]])");
-
-	outc ('\n');
-
-	set_indent (1);
-	if (nultrans) {
-		indent_puts
-			("yy_current_state = yy_NUL_trans[yy_current_state];");
-		indent_puts ("yy_is_jam = (yy_current_state == 0);");
-	}
-
-	else if (fulltbl) {
-		do_indent ();
-		outn ("m4_ifdef([[M4_MODE_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state][YY_NUL_EC];]])");
-		outn ("m4_ifdef([[M4_MODE_NO_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + YY_NUL_EC];]])");
-		indent_puts ("yy_is_jam = (yy_current_state <= 0);");
-	}
-
-	else if (fullspd) {
-		do_indent ();
-		outn ("int yy_c = YY_NUL_EC;");
-
-		indent_puts
-			("const struct yy_trans_info *yy_trans_info;\n");
-		indent_puts
-			("yy_trans_info = &yy_current_state[(unsigned int) yy_c];");
-		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
-
-		indent_puts
-			("yy_is_jam = (yy_trans_info->yy_verify != yy_c);");
-	}
-
-	else {
-		out ("M4_GEN_NEXT_COMPRESSED_STATE(YY_NUL_EC)");
-
-		indent_puts ("yy_is_jam = (yy_current_state == YY_JAMSTATE);");
-
-		indent_puts ("m4_ifdef([[M4_MODE_USES_REJECT]], [[");
-		/* Only stack this state if it's a transition we
-		 * actually make.  If we stack it on a jam, then
-		 * the state stack and yy_c_buf_p get out of sync.
-		 */
-		indent_puts ("if ( ! yy_is_jam )");
-		++indent_level;
-		indent_puts
-	           ("*YY_G(yy_state_ptr)++ = yy_current_state;");
-		--indent_level;
-		indent_puts ("]])");
-	}
-
-	/* If we've entered an accepting state, back up; note that
-	 * compressed tables have *already* done such backing up, so
-	 * we needn't bother with it again.
-	 */
-	indent_puts ("m4_ifdef([[M4_MODE_NULTRANS_WRAP]], [[");
-		outc ('\n');
-		indent_puts ("if ( ! yy_is_jam )");
-		++indent_level;
-		indent_puts ("{");
-		outn ("M4_GEN_BACKING_UP");
-		indent_puts ("}");
-		--indent_level;
-	indent_puts("]])");
 
 	skelout ();
 

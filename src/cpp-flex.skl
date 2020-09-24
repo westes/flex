@@ -651,7 +651,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 ]])
 
-%% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
+%% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. definitions & init go here
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
@@ -1480,7 +1480,7 @@ yy_match:
 
 %% [9.0] code to set up and find next match goes here
 		/* Generate the code to find the next match. */
-m4_ifdef([[M4_MODE_FULLTBL]], [[
+m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[
 m4_ifdef([[M4_MODE_GENTABLES]], [[
 		while ((yy_current_state = yy_nxt[yy_current_state][ M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0) {
 ]])
@@ -1522,11 +1522,11 @@ m4_ifdef([[M4_MODE_NO_INTERACTIVE]], [[
 yy_find_action:
 %% [10.0] code to find the action number goes here
 	m4_ifdef([[M4_MODE_FULLSPD]], [[yy_act = yy_current_state[-1].yy_nxt;]])
-	m4_ifdef([[M4_MODE_FULLTBL]], [[yy_act = yy_accept[yy_current_state];]])
-m4_ifdef([[M4_MODE_REJECT]], [[
+	m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yy_act = yy_accept[yy_current_state];]])
+m4_ifdef([[M4_MODE_FIND_ACTION_REJECT]], [[
 	yy_current_state = *--YY_G(yy_state_ptr);
 	YY_G(yy_lp) = yy_accept[yy_current_state];
-m4_ifdef([[M4_MODE_REJECT_REALLY_USED]], [[find_rule: /* we branch to this label when backing up */]])
+m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_REALLY_USED]], [[find_rule: /* we branch to this label when backing up */]])
 	for ( ; ; ) {	/* loop until we find out what rule we matched */
 		  if (YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1]) {
 		  	yy_act = yy_acclist[YY_G(yy_lp)];
@@ -1579,7 +1579,7 @@ m4_ifdef([[M4_MODE_NO_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 		YY_G(yy_lp) = yy_accept[yy_current_state];
 	}
 ]])
-m4_ifdef([[M4_MODE_COMPRESSED]], [[		yy_act = yy_accept[yy_current_state];
+m4_ifdef([[M4_MODE_FIND_ACTION_COMPRESSED]], [[		yy_act = yy_accept[yy_current_state];
 		if ( yy_act == 0 )
 			{ /* have to back up */
 			yy_cp = YY_G(yy_last_accepting_cpos);
@@ -1666,7 +1666,7 @@ m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 		/*  *\/ */
 		yy_cp = YY_G(yy_last_accepting_cpos);
 		m4_ifdef([[M4_MODE_FULLSPD]], [[yy_cp++;]])
-		m4_ifdef([[M4_MODE_FULLTBL]], [[yy_cp++;]])
+		m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yy_cp++;]])
 
 		yy_current_state = YY_G(yy_last_accepting_state);
 		goto yy_find_action;
@@ -1742,9 +1742,9 @@ m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 
 			else
 				{
-%% [14.0] code to do back-up for compressed tables and set up yy_cp goes here
+%# Disguised case statement on table modes
 				m4_ifdef([[M4_MODE_FULLSPD]], [[yy_cp = YY_G(yy_c_buf_p);]])
-				m4_ifdef([[M4_MODE_FULLTBL]], [[yy_cp = YY_G(yy_c_buf_p);]])
+				m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yy_cp = YY_G(yy_c_buf_p);]])
 m4_ifdef([[M4_MODE_NO_FULLSPD_OR_FULLTBL]], [[
 m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
 m4_ifdef([[M4_NOT_MODE_INTERACTIVE]], [[
@@ -1755,7 +1755,8 @@ m4_ifdef([[M4_NOT_MODE_INTERACTIVE]], [[
 				yy_current_state = YY_G(yy_last_accepting_state);
 ]])
 ]])
-m4_ifdef([[M4_MODE_REJECT_OR_INTERACTIVE]], [[
+%# Disguised case statement on table modes ends
+m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 				/* Still need to initialize yy_cp, though
 				 * yy_current_state was set up by
 				 * yy_get_previous_state().
@@ -2132,11 +2133,8 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
     M4_YY_DECL_GUTS_VAR();
 
 M4_GEN_START_STATE
-%% [15.0] code to get the start state into yy_current_state goes here
-
 	for ( yy_cp = YY_G(yytext_ptr) + YY_MORE_ADJ; yy_cp < YY_G(yy_c_buf_p); ++yy_cp )
 		{
-%% [16.0] code to find the next state goes here
 		/* Generate the code to find the next state. */
 		m4_ifdef([[M4_MODE_NO_NULTRANS]], [[m4_define([[CHAR_MAP_3]], [[(*yy_cp ? M4_EC(YY_SC_TO_UI(*yy_cp)) : YY_NUL_EC)]])]])
 		m4_ifdef([[M4_MODE_NULTRANS]], [[m4_define([[CHAR_MAP_3]], [[M4_EC(YY_SC_TO_UI(*yy_cp))]])]])
@@ -2147,7 +2145,7 @@ M4_GEN_START_STATE
 			if ( *yy_cp ) {
 		]])
 
-		m4_ifdef([[M4_MODE_FULLTBL]], [[
+		m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[
 			m4_ifdef([[M4_MODE_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state][CHAR_MAP_3];]])
 			m4_ifdef([[M4_MODE_NO_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + CHAR_MAP_3];]])
 		]])
@@ -2161,7 +2159,7 @@ M4_GEN_START_STATE
 			}
 		]])
 
-		m4_ifdef([[M4_MODE_FULLTBL]], [[M4_GEN_BACKING_UP]])
+		m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[M4_GEN_BACKING_UP]])
 		m4_ifdef([[M4_MODE_FULLSPD]], [[M4_GEN_BACKING_UP]])
 		m4_ifdef([[M4_MODE_USES_REJECT]], [[*YY_G(yy_state_ptr)++ = yy_current_state;]])
 		}
@@ -2184,7 +2182,69 @@ M4_GEN_START_STATE
 {
 	int yy_is_jam;
     M4_YY_DECL_GUTS_VAR(); /* This var may be unused depending upon options. */
-%% [17.0] code to find the next state, and perhaps do backing up, goes here
+	/* Generate code for handling NUL's, if needed. */
+
+	/* First, deal with backing up and setting up yy_cp if the scanner
+	 * finds that it should JAM on the NUL.
+	 *
+	 * Only generate a definition for "yy_cp" if we'll generate code
+	 * that uses it.  Otherwise lint and the like complain.
+	 */
+	m4_ifdef([[M4_MODE_NEED_YY_CP]], [[char *yy_cp = YY_G(yy_c_buf_p);]])
+
+%# Note that this statement block and the following three are
+%# not executed serially but are an if-then-else cascade
+%# for different table modes.
+	m4_ifdef([[M4_MODE_NULTRANS]], [[
+	yy_current_state = yy_NUL_trans[yy_current_state];
+       	yy_is_jam = (yy_current_state == 0);
+	]])
+
+	m4_ifdef([[M4_MODE_NO_NULTRANS]], [[
+        m4_ifdef([[M4_MODE_NULTRANS_FULLTBL]], [[
+	m4_ifdef([[M4_MODE_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state][YY_NUL_EC];]])
+	m4_ifdef([[M4_MODE_NO_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + YY_NUL_EC];]])
+	yy_is_jam = (yy_current_state <= 0);
+	]])
+
+        m4_ifdef([[M4_MODE_NO_NULTRANS_FULLTBL]], [[
+        m4_ifdef([[M4_MODE_NULTRANS_FULLSPD]], [[
+		int yy_c = YY_NUL_EC;
+
+		const struct yy_trans_info *yy_trans_info;
+
+		yy_trans_info = &yy_current_state[(unsigned int) yy_c];
+		yy_current_state += yy_trans_info->yy_nxt;
+		yy_is_jam = (yy_trans_info->yy_verify != yy_c);
+	]])
+
+        m4_ifdef([[M4_MODE_NO_NULTRANS_FULLSPD]], [[
+	M4_GEN_NEXT_COMPRESSED_STATE(YY_NUL_EC)
+	yy_is_jam = (yy_current_state == YY_JAMSTATE);
+	m4_ifdef([[M4_MODE_USES_REJECT]], [[
+		/* Only stack this state if it's a transition we
+		 * actually make.  If we stack it on a jam, then
+		 * the state stack and yy_c_buf_p get out of sync.
+		 */
+		if ( ! yy_is_jam )
+			*YY_G(yy_state_ptr)++ = yy_current_state;
+		]])
+	]])
+	]])
+	]])
+%# End of if-else cascade
+
+	/* If we've entered an accepting state, back up; note that
+	 * compressed tables have *already* done such backing up, so
+	 * we needn't bother with it again.
+	 */
+	m4_ifdef([[M4_MODE_NULTRANS_WRAP]], [[
+
+		if ( ! yy_is_jam )
+			{
+			M4_GEN_BACKING_UP
+		}
+	]])
 
 	M4_YY_NOOP_GUTS_VAR();
 return yy_is_jam ? 0 : yy_current_state;
