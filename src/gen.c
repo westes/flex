@@ -39,35 +39,6 @@
 
 void	genecs(void);
 
-
-static int indent_level = 0;	/* each level is 8 spaces */
-
-#define set_indent(indent_val) indent_level = indent_val
-
-/* Almost everything is done in terms of arrays starting at 1, so provide
- * a null entry for the zero element of all C arrays.  (The exception
- * to this is that the fast table representation generally uses the
- * 0 elements of its arrays, too.)
- */
-
-/* Indent to the current level. */
-
-void do_indent (void)
-{
-	int i = indent_level * 8;
-
-	while (i >= 8) {
-		outc ('\t');
-		i -= 8;
-	}
-
-	while (i > 0) {
-		outc (' ');
-		--i;
-	}
-}
-
-
 /** Make the table for possible eol matches.
  *  @return the newly allocated rule_can_match_eol table
  */
@@ -864,29 +835,6 @@ void gentabs (void)
 }
 
 
-/* Write out a formatted string (with a secondary string argument) at the
- * current indentation level, adding a final newline.
- */
-
-void indent_put2s (const char *fmt, const char *arg)
-{
-	do_indent ();
-	out_str (fmt, arg);
-	outn ("");
-}
-
-
-/* Write out a string at the current indentation level, adding a final
- * newline.
- */
-
-void indent_puts (const char *str)
-{
-	do_indent ();
-	outn (str);
-}
-
-
 static void visible_define (const char *symname)
 {
 	out_m4_define(symname, NULL);
@@ -1047,7 +995,6 @@ void make_tables (void)
 
 	/* This is where we REALLY begin generating the tables. */
 
-	set_indent (0);
 	if (fullspd) {
 		genctbl ();
 		if (tablesext) {
@@ -1222,21 +1169,21 @@ void make_tables (void)
 	line_directive_out (stdout, 0);
 
 	/* generate cases for any missing EOF rules */
-	set_indent(0);
 	for (i = 1; i <= lastsc; ++i)
 		if (!sceof[i]) {
-			do_indent ();
+			outc ('\t');
 			out_str3 ("%sYY_STATE_EOF(%s):\n", backend->caseprefix, scname[i], "");
 			if (backend->fallthrough != NULL) {
-				indent_puts(backend->fallthrough);
+				outc ('\t');
+				outn (backend->fallthrough);
 			}
 			did_eof_rule = true;
 		}
 
 	if (did_eof_rule) {
-		++indent_level;
-		indent_puts (backend->endcase);
-		--indent_level;
+		outc ('\t');
+		outc ('\t');
+		outn (backend->endcase);
 	}
 
 	skelout ();
