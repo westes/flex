@@ -1043,7 +1043,7 @@ void make_tables (void)
 
 	skelout ();		/* %% [2.0] - break point in skel */
 	skelout ();		/* %% [3.0] - break point in skel */
-	skelout ();		/* %% [4.0] - break point in skel */
+	skelout ();		/* %% [4.0] - tables get dumped here */
 
 	/* This is where we REALLY begin generating the tables. */
 
@@ -1194,133 +1194,7 @@ void make_tables (void)
 		dataend ();
 	}
 
-	// Remaining language dependencies begin here
-	outn("// C-GENERATED BEGINS");
-	
-	/* Definitions for backing up.  We don't need them if REJECT
-	 * is being used because then we use an alternative backing-up
-	 * technique instead.
-	 */
-	if (num_backing_up > 0 && !reject) {
-		if (!C_plus_plus && !reentrant) {
-			indent_puts
-				("static yy_state_type yy_last_accepting_state;");
-			indent_puts
-				("static char *yy_last_accepting_cpos;\n");
-		}
-	}
-
-	if (reject) {
-		outn ("m4_ifdef( [[M4_MODE_USES_REJECT]],\n[[");
-		/* Declare state buffer variables. */
-		if (!C_plus_plus && !reentrant) {
-			outn ("static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;");
-			outn ("static char *yy_full_match;");
-			outn ("static int yy_lp;");
-		}
-
-		if (variable_trailing_context_rules) {
-			if (!C_plus_plus && !reentrant) {
-				outn ("static int yy_looking_for_trail_begin = 0;");
-				outn ("static int yy_full_lp;");
-				outn ("static int *yy_full_state;");
-			}
-
-			out_hex ("#define YY_TRAILING_MASK 0x%x\n",
-				 (unsigned int) YY_TRAILING_MASK);
-			out_hex ("#define YY_TRAILING_HEAD_MASK 0x%x\n",
-				 (unsigned int) YY_TRAILING_HEAD_MASK);
-		}
-
-		outn ("#define REJECT \\");
-		outn ("{ \\");
-		outn ("*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \\");
-		outn ("yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \\");
-
-		if (variable_trailing_context_rules) {
-			outn ("YY_G(yy_lp) = YY_G(yy_full_lp); /* restore orig. accepting pos. */ \\");
-			outn ("YY_G(yy_state_ptr) = YY_G(yy_full_state); /* restore orig. state */ \\");
-			outn ("yy_current_state = *YY_G(yy_state_ptr); /* restore curr. state */ \\");
-		}
-
-		outn ("++YY_G(yy_lp); \\");
-		outn ("goto find_rule; \\");
-
-		outn ("}");
-		outn ("]])\n");
-	}
-
-	else {
-		outn ("/* The intent behind this definition is that it'll catch");
-		outn (" * any uses of REJECT which flex missed.");
-		outn (" */");
-		outn ("#define REJECT reject_used_but_not_detected");
-	}
-
-	if (yymore_used) {
-		if (!C_plus_plus) {
-			if (yytext_is_array) {
-				if (!reentrant){
-    				indent_puts ("static int yy_more_offset = 0;");
-                    indent_puts ("static int yy_prev_more_offset = 0;");
-                }
-			}
-			else if (!reentrant) {
-				indent_puts
-					("static int yy_more_flag = 0;");
-				indent_puts
-					("static int yy_more_len = 0;");
-			}
-		}
-
-		if (yytext_is_array) {
-			indent_puts
-				("#define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( yytext M4_YY_CALL_LAST_ARG))");
-			indent_puts ("#define YY_NEED_STRLEN");
-			indent_puts ("#define YY_MORE_ADJ 0");
-			indent_puts
-				("#define YY_RESTORE_YY_MORE_OFFSET \\");
-			++indent_level;
-			indent_puts ("{ \\");
-			indent_puts
-				("YY_G(yy_more_offset) = YY_G(yy_prev_more_offset); \\");
-			indent_puts ("yyleng -= YY_G(yy_more_offset); \\");
-			indent_puts ("}");
-			--indent_level;
-		}
-		else {
-			indent_puts
-				("#define yymore() (YY_G(yy_more_flag) = 1)");
-			indent_puts
-				("#define YY_MORE_ADJ YY_G(yy_more_len)");
-			indent_puts ("#define YY_RESTORE_YY_MORE_OFFSET");
-		}
-	}
-
-	else {
-		indent_puts
-			("#define yymore() yymore_used_but_not_detected");
-		indent_puts ("#define YY_MORE_ADJ 0");
-		indent_puts ("#define YY_RESTORE_YY_MORE_OFFSET");
-	}
-
-	if (!C_plus_plus) {
-		if (yytext_is_array) {
-			outn ("#ifndef YYLMAX");
-			outn ("#define YYLMAX 8192");
-			outn ("#endif\n");
-			if (!reentrant){
-                outn ("char yytext[YYLMAX];");
-                outn ("char *yytext_ptr;");
-            }
-		}
-
-		else {
-			if(! reentrant)
-                outn ("char *yytext;");
-		}
-	}
-	outn("// C-GENERATED ENDS");
+	skelout ();		/* %% [4.1] - mode-dependent static declarations get dumped here */
 
 	out (&action_array[defs1_offset]);
 

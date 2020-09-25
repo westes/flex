@@ -737,6 +737,119 @@ int yy_flex_debug = m4_ifdef([[M4_MODE_DEBUG]],[[1]])m4_ifdef([[M4_MODE_NO_DEBUG
 %% [4.0] data tables for the DFA and the user's section 1 definitions go here
 ]])
 
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
+[[
+m4_ifdef( [[M4_MODE_C_ONLY]], [[
+m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
+m4_ifdef( [[M4_YY_NOT_REENTRANT]], [[
+/* Definitions for backing up.  We don't need them if REJECT
+ * is being used because then we use an alternative backing-up
+ * technique instead.
+ */
+static yy_state_type yy_last_accepting_state;
+static char *yy_last_accepting_cpos;
+
+]])
+]])
+]])
+
+m4_ifdef( [[M4_MODE_USES_REJECT]],[[
+m4_ifdef( [[M4_YY_NOT_REENTRANT]], [[
+m4_ifdef( [[M4_MODE_C_ONLY]], [[
+/* Declare state buffer variables. */
+static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;
+static char *yy_full_match;
+static int yy_lp;
+m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
+static int yy_looking_for_trail_begin = 0;
+static int yy_full_lp;
+static int *yy_full_state;
+%# These must match the values in the file flexdef.h
+%# of the flex source code, otherwise havoc will ensue.
+#define YY_TRAILING_MASK 0x2000
+#define YY_TRAILING_HEAD_MASK 0x4000
+]])
+]])
+]])
+#define REJECT \
+{ \
+*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \
+yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \
+m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[ \
+YY_G(yy_lp) = YY_G(yy_full_lp); /* restore orig. accepting pos. */ \
+YY_G(yy_state_ptr) = YY_G(yy_full_state); /* restore orig. state */ \
+yy_current_state = *YY_G(yy_state_ptr); /* restore curr. state */ \
+]]) \
+++YY_G(yy_lp); \
+goto find_rule; \
+}
+]])
+m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
+/* The intent behind this definition is that it'll catch
+ * any uses of REJECT which flex missed.
+ */
+#define REJECT reject_used_but_not_detected
+]])
+
+m4_ifdef([[M4_MODE_YYMORE_USED]], [[
+m4_ifdef( [[M4_MODE_C_ONLY]], [[
+m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
+m4_ifdef( [[M4_YY_NOT_REENTRANT]], [[
+static int yy_more_offset = 0;
+static int yy_prev_more_offset = 0;
+]])
+]])
+m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
+m4_ifdef( [[M4_YY_NOT_REENTRANT]], [[
+static int yy_more_flag = 0;
+static int yy_more_len = 0;
+]])
+]])
+]])
+m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
+#define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( yytext M4_YY_CALL_LAST_ARG))
+#define YY_NEED_STRLEN
+#define YY_MORE_ADJ 0
+#define YY_RESTORE_YY_MORE_OFFSET \
+{ \
+YY_G(yy_more_offset) = YY_G(yy_prev_more_offset); \
+yyleng -= YY_G(yy_more_offset); \
+}
+]])
+m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
+#define yymore() (YY_G(yy_more_flag) = 1)
+#define YY_MORE_ADJ YY_G(yy_more_len)
+#define YY_RESTORE_YY_MORE_OFFSET
+]])
+]])
+
+m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[
+#define yymore() yymore_used_but_not_detected
+#define YY_MORE_ADJ 0
+#define YY_RESTORE_YY_MORE_OFFSET
+]])
+
+m4_ifdef( [[M4_MODE_C_ONLY]], [[
+m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
+#ifndef YYLMAX
+#define YYLMAX 8192
+#endif
+
+m4_ifdef( [[M4_YY_NOT_REENTRANT]], [[
+char yytext[YYLMAX];
+char *yytext_ptr;
+]])
+]])
+m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
+m4_ifdef( [[M4_YY_NOT_REENTRANT]], [[
+char *yytext;
+]])
+]])
+]])
+
+%% [4.1] static declarations conditional on mode switches go here
+]])
+
 m4_ifdef( [[M4_YY_IN_HEADER]], [[#ifdef YY_HEADER_EXPORT_START_CONDITIONS]])
 M4_YY_SC_DEFS
 m4_ifdef( [[M4_YY_IN_HEADER]], [[#endif]])
