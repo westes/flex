@@ -920,7 +920,7 @@ void make_tables (void)
 	if (do_yylineno)
 		visible_define ( "M4_MODE_YYLINENO");
 
-	// Equivelance classes
+	// Equivalence classes
 	if (useecs)
 		visible_define ( "M4_MODE_USEECS");
 	else
@@ -957,11 +957,9 @@ void make_tables (void)
 	
 	if (ddebug)
 		visible_define ( "M4_MODE_DEBUG");
-	else
-		visible_define ( "M4_MODE_NO_DEBUG");
 
 	// Kluge to get around the fact that the %if-not-reentrant and
-	// %if-c-only gates can;t be combined by nesting one inside the
+	// %if-c-only gates can't be combined by nesting one inside the
 	// other.
 	if (backend == &cpp_backend && !C_plus_plus)
 		visible_define ( "M4_MODE_C_ONLY");
@@ -969,10 +967,6 @@ void make_tables (void)
 	backend->comment("m4 controls end");
 	out ("\n");
 
-	// FIXME: This probaby should be done in pure m4 
-	out_m4_define ("M4_YYL_BASE", yymore_used ? (yytext_is_array ? "YY_G(yy_prev_more_offset)" :
-						    "YY_G(yy_more_len)") : "0");
-	
 	// There are a couple more modes we can't compute until after
 	// tables have been generated.
 
@@ -989,9 +983,7 @@ void make_tables (void)
 	 */
 	fprintf (stdout, backend->string_define_fmt, "YY_OFFSET_TYPE", backend->trans_offset_type(tblend + numecs + 1));
 
-	skelout ();		/* %% [2.0] - break point in skel */
-	skelout ();		/* %% [3.0] - break point in skel */
-	skelout ();		/* %% [4.0] - tables get dumped here */
+	skelout ();		/* %% [2.0] - tables get dumped here */
 
 	/* This is where we REALLY begin generating the tables. */
 
@@ -1141,29 +1133,22 @@ void make_tables (void)
 		dataend ();
 	}
 
-	skelout ();		/* %% [4.1] - mode-dependent static declarations get dumped here */
+	skelout ();		/* %% [3.0] - mode-dependent static declarations get dumped here */
 
 	out (&action_array[defs1_offset]);
 
 	line_directive_out (stdout, 0);
 
-	skelout ();		/* %% [5.0] - break point in skel */
-	skelout ();		/* %% [6.0] - break point in skel */
-	skelout ();		/* %% [7.0] - break point in skel */
+	skelout ();		/* %% [4.0] - various random yylex internals get dumped here */
 
 	/* Copy prolog to output file. */
 	out (&action_array[prolog_offset]);
 
 	line_directive_out (stdout, 0);
 
-	skelout ();		/* %% [8.0] - break point in skel */
-	skelout ();		/* %% [9.0] - break point in skel */
-	skelout ();		/* %% [10.0] - break point in skel */
-	skelout ();		/* %% [11.0] - break point in skel */
-	skelout ();		/* %% [12.0] - break point in skel */
+	skelout ();		/* %% [5.0] - main loop of matching-emngine code gets dumped here */
 
 	/* Copy actions to output file. */
-	skelout ();		/* %% [13.0] - break point in skel */
 	out (&action_array[action_offset]);
 
 	line_directive_out (stdout, 0);

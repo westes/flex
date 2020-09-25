@@ -728,13 +728,11 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 m4_ifdef( [[M4_MODE_C_ONLY]],
 [[
 extern int yy_flex_debug;
-int yy_flex_debug = m4_ifdef([[M4_MODE_DEBUG]],[[1]])m4_ifdef([[M4_MODE_NO_DEBUG]],[[1]]);
+int yy_flex_debug = m4_ifdef([[M4_MODE_DEBUG]],[[1]],[[0]]);
 ]])
 %endif
 
-%% [2.0] code to fiddle yytext and yyleng for yymore() goes here \
-%% [3.0] code to copy yytext_ptr to yytext[] goes here, if %array \
-%% [4.0] data tables for the DFA and the user's section 1 definitions go here
+%% [2.0] data tables for the DFA are inserted here
 ]])
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
@@ -847,7 +845,7 @@ char *yytext;
 ]])
 ]])
 
-%% [4.1] static declarations conditional on mode switches go here
+%% [3.0] static declarations conditional on mode switches go here
 ]])
 
 m4_ifdef( [[M4_YY_IN_HEADER]], [[#ifdef YY_HEADER_EXPORT_START_CONDITIONS]])
@@ -1252,7 +1250,6 @@ m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[ \
 		}\
 ]]) \
 %endif \
-%% [5.0] fread()/read() definition of YY_INPUT goes here unless we're doing C++ \
 \
 %if-c++-only C++ definition \
 	if ( (int)(result = LexerInput( (char *) buf, max_size )) < 0 ) \
@@ -1390,7 +1387,6 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
-%% [6.0] YY_RULE_SETUP definition goes here
 #define YY_RULE_SETUP \
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( yyleng > 0 ) \
 		YY_CURRENT_BUFFER_LVALUE->yy_at_bol = \
@@ -1562,7 +1558,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 		}
 
 	{
-%% [7.0] user's declarations go here
+%% [4.0] user's declarations go here
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1576,7 +1572,6 @@ m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
 			}
 ]])
 ]])
-%% [8.0] yymore()-related code goes here
 		yy_cp = YY_G(yy_c_buf_p);
 
 		/* Support of yytext. */
@@ -1591,7 +1586,6 @@ M4_GEN_START_STATE
 
 yy_match:
 
-%% [9.0] code to set up and find next match goes here
 		/* Generate the code to find the next match. */
 m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[
 m4_ifdef([[M4_MODE_GENTABLES]], [[
@@ -1633,7 +1627,7 @@ m4_ifdef([[M4_MODE_NO_INTERACTIVE]], [[
 ]])
 
 yy_find_action:
-%% [10.0] code to find the action number goes here
+	/* code to find the action number goes here */
 	m4_ifdef([[M4_MODE_FULLSPD]], [[yy_act = yy_current_state[-1].yy_nxt;]])
 	m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yy_act = yy_accept[yy_current_state];]])
 m4_ifdef([[M4_MODE_FIND_ACTION_REJECT]], [[
@@ -1704,8 +1698,9 @@ m4_ifdef([[M4_MODE_FIND_ACTION_COMPRESSED]], [[		yy_act = yy_accept[yy_current_s
 		YY_DO_BEFORE_ACTION;
 
 m4_ifdef( [[M4_YY_USE_LINENO]],[[
-m4_ifdef( [[M4_MODE_YYMORE_USED]],[[
-]])
+m4_define([[M4_YYL_BASE]], [[m4_ifdef([[M4_MODE_YYMORE_USED]],
+			    [[m4_ifdef([[M4_MODE_YYTECT_IS_ARRAY]],
+				       [["YY_G(yy_prev_more_offset)"]], [["YY_G(yy_more_len)"]])]], [[0]])]])
 	if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
 	{
 	int yyl;
@@ -1715,11 +1710,7 @@ m4_ifdef( [[M4_MODE_YYMORE_USED]],[[
 	}
 ]])
 
-%% [11.0] code for yylineno update goes here
-
 do_action:	/* This label is used only to access EOF actions. */
-
-%% [12.0] debug code goes here
 
 m4_ifdef([[M4_MODE_DEBUG]], [[
 		if ( yy_flex_debug ) {
@@ -1785,7 +1776,7 @@ m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 		goto yy_find_action;
 ]])
 ]])
-%% [13.0] actions go here
+%% [5.0] user actions get inserted here
 
 	case YY_END_OF_BUFFER:
 		{
