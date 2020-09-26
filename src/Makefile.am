@@ -91,8 +91,7 @@ include_HEADERS = \
 EXTRA_DIST = \
 	cpp-flex.skl \
 	mkskel.sh \
-	gettext.h \
-	backend.adoc
+	gettext.h
 
 CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
 

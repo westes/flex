@@ -192,7 +192,7 @@ FAQ
 * How can I build a two-pass scanner?::  
 * How do I match any string not matched in the preceding rules?::  
 * I am trying to port code from AT&T lex that uses yysptr and yysbuf.::  
-* Is there a way to make flex treat NULL like a regular character?::  
+* Is there a way to make flex treat NUL like a regular character?::  
 * Whenever flex can not match the input it says "flex scanner jammed".::  
 * Why doesn't flex have non-greedy operators like perl does?::  
 * Memory leak - 16386 bytes allocated by malloc.::  
@@ -269,6 +269,7 @@ Appendices
 * Bison Bridge::                
 * M4 Dependency::               
 * Common Patterns::               
+* Adding More Target Languages
 
 Indices
 
@@ -734,7 +735,7 @@ if X is @samp{a}, @samp{b}, @samp{f}, @samp{n}, @samp{r}, @samp{t}, or
 @samp{v}, then the ANSI-C interpretation of @samp{\x}.  Otherwise, a
 literal @samp{X} (used to escape operators such as @samp{*})
 
-@cindex NULL character in patterns, syntax of
+@cindex NUL character in patterns, syntax of
 @item \0
 a NUL character (ASCII code 0)
 
@@ -5148,10 +5149,10 @@ the version of flex that was used to create the serialized tables.
 
 @item th_name[]
 Contains the name of this table set. The default is @samp{yytables},
-and is prefixed accordingly, e.g., @samp{footables}. Must be NULL-terminated.
+and is prefixed accordingly, e.g., @samp{footables}. Must be NUL-terminated.
 
 @item th_pad64[]
-Zero or more NULL bytes, padding the entire header to the next 64-bit boundary
+Zero or more NUL bytes, padding the entire header to the next 64-bit boundary
 as calculated from the beginning of the header.
 @end table
 
@@ -5239,7 +5240,7 @@ The table data. This array may be a one- or two-dimensional array, of type
 @code{td_flags}, @code{td_hilen}, and @code{td_lolen} fields.
 
 @item td_pad64[]
-Zero or more NULL bytes, padding the entire table to the next 64-bit boundary as
+Zero or more NUL bytes, padding the entire table to the next 64-bit boundary as
 calculated from the beginning of this table.
 @end table
 
@@ -5447,7 +5448,7 @@ publish them here.
 * How can I build a two-pass scanner?::  
 * How do I match any string not matched in the preceding rules?::  
 * I am trying to port code from AT&T lex that uses yysptr and yysbuf.::  
-* Is there a way to make flex treat NULL like a regular character?::  
+* Is there a way to make flex treat NUL like a regular character?::  
 * Whenever flex can not match the input it says "flex scanner jammed".::  
 * Why doesn't flex have non-greedy operators like perl does?::  
 * Memory leak - 16386 bytes allocated by malloc.::  
@@ -6060,8 +6061,8 @@ what they're doing, and then replace @code{input()} with an appropriate definiti
 @code{YY_INPUT}.  You shouldn't need to (and must not) replace
 @code{flex}'s @code{unput()} function.
 
-@node Is there a way to make flex treat NULL like a regular character?
-@unnumberedsec Is there a way to make flex treat NULL like a regular character?
+@node Is there a way to make flex treat NUL like a regular character?
+@unnumberedsec Is there a way to make flex treat NUL like a regular character?
 
 Yes, @samp{\0} and @samp{\x00} should both do the trick.  Perhaps you have an ancient
 version of @code{flex}.  The latest release is version @value{VERSION}.
@@ -8167,6 +8168,7 @@ See @ref{Top, , , bison, the GNU Bison Manual}.
 * Bison Bridge::                
 * M4 Dependency::               
 * Common Patterns::               
+* Retargeting Flex::
 @end menu
 
 @node Makefiles and Flex, Bison Bridge, Appendices, Appendices
@@ -8413,7 +8415,7 @@ removing such sequences from your code.
 @code{m4} is only required at the time you run @code{flex}. The generated
 scanner is ordinary C or C++, and does @emph{not} require @code{m4}.
 
-@node Common Patterns, ,M4 Dependency, Appendices
+@node Common Patterns,Retargeting Flex,M4 Dependency, Appendices
 @section Common Patterns
 @cindex patterns, common
 
@@ -8560,6 +8562,113 @@ to appear in a URI, including spaces and control characters.  See
 
 @end table
 
+
+@node Retargeting Flex, ,Common Patterns, Appendices
+@section Retargeting Flex
+@cindex retargeting
+@cindex language independence
+
+This appendix describes how to add support for a new target language
+to Flex.
+
+The flex code has been factored to isolate knowledge of the specifics
+of each target language from the logic for building the lexer state
+tables.
+
+The only assumption that is absolutely baked into all of Flex is that
+the bodies of initializers for arrays of integers consist of decimal
+numeric literals separated by commas (and optional whitespace).
+
+Otherwise, knowledge of each target langage's syntax lives in two
+places: (1) a table of language-specific syntax-generator methods,
+and (2) A language-specific skeleton file.
+
+For example: The methods for the C and C++ back end live in a source
+file named @file{cpp_backend.c} (so named because both languages use the C
+preprocessor), and in a skeleton file named @file{cpp-flex.skl}.
+
+All the code that accesses language-specific code generators goes
+through a global pointer named "backend" to a method table.  The
+results of these generators are used to fill in some parts of the
+language-specific skeleton file and conditionalize others.
+
+Read the definition of struct backend_t in @file{src/flexdefs.h}, and
+attached comments, to get a feel for the methods.  Don't worry
+about understandng table generator names at first.
+
+To write support for a language, you'll want to do the following
+steps:
+
+@enumerate
+@item
+Clone one of the existing back-end/skeleton pairs.  If the language
+you are supporting is named @var{foo}, you should create files named
+@file{foo_backend.c} and @file{foo-flex.skl}.
+
+@item
+Add @file{foo_backend.c} to COMMON_SOURCES in @file{src/Makefile.am}.  Add the
+name of your skeleton file to EXTRA_DIST.
+
+@item
+Add a production to @file{src/Makefile.am} parallel to the one that
+produces @file{cpp-skel.h}.  Your objective is to make a string list
+initializer from your skeleton file that can be linked with flex and
+is pointed at by the skel nember of your language back end.
+
+@item
+Add some logic to @file{main.c} that enables the new back end with a
+new command-line option.  Following this step you should be
+able to run Flex on a specification and get code out in the
+language of whatever back end you cloned.
+
+@item
+The interesting part: mutate your new back end and skeleton so they
+produce code in your desired target langage.
+
+@item
+Add a test suite for your back end.  You should be able to clone
+one of the existing sets of test loads to get good coverage.  Note
+that is highly unlikely your back end will be accepted into the
+flex distribution without a test suite.
+@end enumerate
+
+Syntactically C-like languages such as Go, Rust, and Java should be easy
+targets.  Almost anything generally descended from Algol shouldn't be
+much more difficult; this certainly includes the whole
+Pascal/Modula/Oberon family.
+
+A hint about the interesting part:
+
+@itemize
+@item
+Don't bother supporting non-reentrant parser generation.
+The interface of original Lex with all those globals hanging out
+needs to be supported in C for backwards compatibility, but
+there is no need to carry it forward.
+@end itemize
+
+The following assumptions in the code might trip you up and
+require fixes outside a back end.
+
+@enumerate
+@item
+The item separator in data initializers is a comma.
+
+@item
+The language has a case-arm syntax that looks like
+a (possibly empty) prefix, followed by a value
+expression, followed by a colon.
+
+@item
+Either case arms can be stacked as in C; that is, there is
+an implicit fallthrough if the case arm has no code. Or,
+there is an explicit fallthrough keyword that enables this,
+as in Go.
+@end enumerate
+
+By putting a @code{yyterminate()} call in the fallthrough member
+and a null pointer in the endcase member, you could handle
+languages like Pascal.
 
 @node Indices,  , Appendices, Top
 @unnumbered Indices
