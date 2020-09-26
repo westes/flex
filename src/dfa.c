@@ -452,30 +452,12 @@ void ntod (void)
 
 	/* Note that the test for ecgroup[0] == numecs below accomplishes
 	 * both (1) and (2) above
+	 *
+	 * New way: we will only use NUL table for fulltbl, because the
+	 * scanner will use an integer instead of YY_CHAR as noted above
 	 */
-	if (!fullspd && ecgroup[0] == numecs) {
-		/* NUL is alone in its equivalence class, which is the
-		 * last one.
-		 */
-		int     use_NUL_table = (numecs == csize);
-
-		if (fulltbl && !use_NUL_table) {
-			/* We still may want to use the table if numecs
-			 * is a power of 2.
-			 */
-			if (numecs <= csize && is_power_of_2(numecs)) {
-				use_NUL_table = true;
-			}
-		}
-
-		if (use_NUL_table)
-			nultrans =
-				allocate_integer_array (current_max_dfas);
-
-		/* From now on, nultrans != nil indicates that we're
-		 * saving null transitions for later, separate encoding.
-		 */
-	}
+	if (fulltbl && ecgroup[0] == numecs && is_power_of_2(numecs))
+		nultrans = allocate_integer_array (current_max_dfas);
 
 
 	if (fullspd) {
