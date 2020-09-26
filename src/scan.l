@@ -43,85 +43,120 @@ extern bool tablesverify, tablesext;
 extern int trlcontxt; /* Set in  parse.y for each rule. */
 extern const char *escaped_qstart, *escaped_qend;
 
+static bool write_to_buf;
 #define M4QSTART "[""["
 #define M4QEND "]""]"
 
 #define ESCAPED_QSTART "[" M4QEND M4QSTART "[" M4QEND M4QSTART
 #define ESCAPED_QEND M4QEND "]" M4QSTART M4QEND "]" M4QSTART
 
-#define ACTION_ECHO add_action( yytext )
-#define ACTION_IFDEF(def, should_define) \
-	{ \
-	if ( should_define ) \
-		action_define( def, 1 ); \
-	}
+#define ACTION_ECHO                                                            \
+  do {                                                                         \
+    size_t i = 0, j = (yyleng);                                                \
+    const char *buf = (yytext);                                                \
+    for (i = 0; i < j; ++i) {                                                  \
+      if ('\0' == buf[i]) {                                                    \
+        synerr(_("Fatal error: NUL character in input file"));                 \
+        /* M4 has undefined behavior if it gets a NUL character */             \
+        /* Also, add_action() assumes NUL termination.          */             \
+        FLEX_EXIT(EXIT_FAILURE);                                               \
+      } else if ('\n' == buf[i]) {                                             \
+        ++linenum;                                                             \
+      }                                                                        \
+    }                                                                          \
+    if (write_to_buf)                                                          \
+      buf_strnappend(&top_buf, buf, j);                                        \
+    else                                                                       \
+      add_action(buf);                                                         \
+  } while (0)
 
-#define ACTION_ECHO_QSTART add_action (ESCAPED_QSTART)
-#define ACTION_ECHO_QEND   add_action (ESCAPED_QEND)
+#define ACTION_IFDEF(def, should_define)                                      \
+  do                                                                          \
+    if (should_define)                                                        \
+      action_define(def, 1);                                                  \
+  while (0)
 
 #define ACTION_M4_IFDEF(def, should_define) \
-    do{ \
-        if ( should_define ) \
-            buf_m4_define( &m4defs_buf, def, NULL);\
+    do \
+        if (should_define) \
+      buf_m4_define(&m4defs_buf, def, NULL);                                  \
         else \
-            buf_m4_undefine( &m4defs_buf, def);\
-    } while(0)
+      buf_m4_undefine(&m4defs_buf, def);                                      \
+  while (0)
 
-#define MARK_END_OF_PROLOG mark_prolog();
+/* Compare two buffers for equality */
+static bool flex_mem_equal(void *ptr1, size_t size1, void *ptr2, size_t size2) {
+  if (size1 != size2)
+    return false;
+  if (!size1)
+    return true;
+  assert(ptr1);
+  assert(ptr2);
+  return !memcmp(ptr1, ptr2, size1);
+}
 
-#define YY_DECL \
-	int flexscan(void)
+#define YY_DECL int flexscan(void)
 
-#define RETURNCHAR \
-	yylval = (unsigned char) yytext[0]; \
-	return CHAR;
+#define RETURNCHAR                                                            \
+  do {                                                                        \
+    yylval = (unsigned char)yytext[0];                                        \
+	return CHAR; \
+  } while (1)
 
 #define RETURNNAME \
-	if(yyleng < MAXLINE) \
-         { \
-	strncpy( nmstr, yytext, sizeof(nmstr) ); \
+  do                                                                           \
+    if (yyleng < MAXLINE) {                                                    \
+      strncpy(nmstr, yytext, sizeof(nmstr));                                   \
 	return NAME; \
-	 } \
-	else \
-	 do { \
+    } else {                                                                   \
 	   synerr(_("Input line too long\n")); \
 	   FLEX_EXIT(EXIT_FAILURE);  \
-	 } while (0)
+    }                                                                          \
+  while (0)
 
 #define PUT_BACK_STRING(str, start) \
-	{ size_t i = strlen( str );	\
-	  while ( i > start )		\
-	    unput((str)[--i]);		\
-	}
+	do {				\
+	  const char *_str = str;	\
+	  size_t i = strlen(_str);	\
+	  while (i > start)		\
+	    unput((_str)[--i]);		\
+	} while (0)
 
-#define CHECK_REJECT(str) \
-	if ( all_upper( str ) ) \
-		reject = true;
+#define CHECK_REJECT(str)                                                      \
+  do                                                                           \
+    reject = !!all_upper(str);                                                 \
+  while (0)
 
-#define CHECK_YYMORE(str) \
-	if ( all_lower( str ) ) \
-		yymore_used = true;
+#define CHECK_YYMORE(str)                                                      \
+  do                                                                           \
+    yymore_used = !!all_lower(str);                                            \
+  while (0)
 
-#define YY_USER_INIT \
-	if ( getenv("POSIXLY_CORRECT") ) \
-		posix_compat = true;
+#define YY_USER_INIT                                                           \
+  do                                                                           \
+    posix_compat = !!getenv("POSIXLY_CORRECT");                                \
+  while (0)
 
-#define START_CODEBLOCK(x) do { \
-    /* Emit the needed line directive... */\
+#define START_CODEBLOCK(x)                                                     \
+  do {                                                                         \
+    /* Emit the needed line directive... */                                    \
     if (indented_code == false) { \
         linenum++; \
         line_directive_out(NULL, 1); \
     } \
     add_action(M4QSTART); \
     yy_push_state(CODEBLOCK); \
-    if ((indented_code = x)) ACTION_ECHO; \
-} while(0)
+    if ((indented_code = x))                                                   \
+      ACTION_ECHO;                                                             \
+  } while (0)
 
-#define END_CODEBLOCK do { \
-    yy_pop_state();\
+#define END_CODEBLOCK                                                          \
+  do {                                                                         \
+    yy_pop_state();                                                            \
     add_action(M4QEND); \
-    if (!indented_code) line_directive_out(NULL, 0);\
-} while (0)
+    if (!indented_code)                                                        \
+      line_directive_out(NULL, 0);                                             \
+  } while (0)
 
 %}
 
@@ -137,17 +172,29 @@ extern const char *escaped_qstart, *escaped_qend;
 %x COMMENT_DISCARD CODE_COMMENT
 %x SECT3_NOESCAPE
 %x CHARACTER_CONSTANT
+%x LINE_COMMENT
+%x RAW_STRING
 
-WS		[[:blank:]]+
-OPTWS		[[:blank:]]*
-NOT_WS		[^[:blank:]\r\n]
 
-NL		\r?\n
+WS		([[:blank:]]+)
+OPTWS		([[:blank:]]*)
+NOT_WS		([^[:blank:]\r\n])
+
+NL		(\r?\n)
+
+INVALID_ESCAPED_NEWLINE (("\\"|"??/")[\ \t\v\f]*(\r|\n|\r\n))
 
 NAME		([[:alpha:]_][[:alnum:]_-]*)
-NOT_NAME	[^[:alpha:]_*\n]+
+NOT_NAME	([^[:alpha:]_*\n]+)
+IDENT_START_CHAR ([A-Za-z_\x80-\xBF\xC2-\xF4])
+IDENT_CONT_CHAR  ([A-Za-z0-9_\x80-\xBF\xC2-\xF4])
+GENERAL_NAME_START ({IDENT_START_CHAR}{INVALID_ESCAPED_NEWLINE}*)
+GENERAL_NAME_CONT ({IDENT_CONT_CHAR}{INVALID_ESCAPED_NEWLINE}*)
+GENERAL_NAME    ({GENERAL_NAME_START}{GENERAL_NAME_CONT}*)
+RAW_STRING_START ("R"{INVALID_ESCAPED_NEWLINE}*'"'{INVALID_ESCAPED_NEWLINE}*{GENERAL_NAME}'(')
+RAW_STRING_END   (")"{IDENT_START_CHAR}{IDENT_CONT_CHAR}*'"')
 
-SCNAME		{NAME}
+SCNAME		({NAME})
 
 ESCSEQ		(\\([^\n]|[0-7]{1,3}|x[[:xdigit:]]{1,2}))
 
@@ -155,10 +202,10 @@ FIRST_CCL_CHAR	([^\\\n]|{ESCSEQ})
 CCL_CHAR	([^\\\n\]]|{ESCSEQ})
 CCL_EXPR	("[:"^?[[:alpha:]]+":]")
 
-LEXOPT		[aceknopr]
+LEXOPT		([aceknopr])
 
-M4QSTART    "[""["
-M4QEND      "]""]"
+M4QSTART    ("[""[")
+M4QEND      ("]""]")
 
 %%
 	static int bracelevel, didadef, indented_code;
@@ -170,7 +217,7 @@ M4QEND      "]""]"
 	char nmdef[MAXLINE];
 
 
-<INITIAL>{
+<INITIAL> {
 	^{WS}		START_CODEBLOCK(true);
 	^"/*"		add_action("/*[""["); yy_push_state( COMMENT );
 	^#{OPTWS}line{WS}	yy_push_state( LINEDIR );
@@ -182,6 +229,7 @@ M4QEND      "]""]"
                 ++linenum;
                 buf_linedir( &top_buf, infilename?infilename:"<stdin>", linenum);
                 brace_depth = 1;
+                write_to_buf = true;
                 yy_push_state(CODEBLOCK_MATCH_BRACE);
             }
 
@@ -226,24 +274,24 @@ M4QEND      "]""]"
 
 	{SCNAME}	RETURNNAME;
 	^{OPTWS}{NL}	++linenum; /* allows blank lines in section 1 */
-	{OPTWS}{NL}	ACTION_ECHO; ++linenum; /* maybe end of comment line */
+	{OPTWS}{NL}	ACTION_ECHO; /* maybe end of comment line */
 }
 
 
-<COMMENT,CODE_COMMENT>{ /* */
-        [^\[\]\*\n]*  ACTION_ECHO;
-        .           ACTION_ECHO;
+<COMMENT>"*/"      add_action("*/" M4QEND); yy_pop_state();
+<CODE_COMMENT>"*/" add_action("*/"); yy_pop_state();
 
-	{NL}	    ++linenum; ACTION_ECHO;
-}
-<COMMENT>{
-	"*/"	    add_action("*/]""]"); yy_pop_state();
-}
-<CODE_COMMENT>{
-        "*/"        ACTION_ECHO; yy_pop_state();
+<COMMENT,CODE_COMMENT> {
+  ([^\[\]\*]|"["[^\[]|"]"[^]])+ ACTION_ECHO;
+  "*"{INVALID_ESCAPED_NEWLINE}+"/" {
+    synerr(_("Escaped newline in comment end sequence\n"));
+    ACTION_ECHO;
+    if (COMMENT == YYSTATE)
+      add_action(M4QEND);
+  }
 }
 
-<COMMENT_DISCARD>{
+<COMMENT_DISCARD> {
         /* This is the same as COMMENT, but is discarded rather than output. */
 	"*/"		yy_pop_state();
     "*"         ;
@@ -268,25 +316,32 @@ M4QEND      "]""]"
 			}
 	.		/* ignore spurious characters */
 }
-<ACTION,CODEBLOCK,ACTION_STRING,PERCENT_BRACE_ACTION,CHARACTER_CONSTANT,COMMENT,CODE_COMMENT>{
-   {M4QSTART}   ACTION_ECHO_QSTART;
-   {M4QEND}     ACTION_ECHO_QEND;
+<ACTION,CODEBLOCK,ACTION_STRING,PERCENT_BRACE_ACTION,CHARACTER_CONSTANT,COMMENT,CODE_COMMENT,LINE_COMMENT>{ /* */
+  ({M4QSTART})   add_action(ESCAPED_QSTART);
+  ({M4QEND})     add_action(ESCAPED_QEND);
 }
 
-<CODEBLOCK>{
+<ACTION,CHARACTER_CONSTANT,ACTION_STRING,PERCENT_BRACE_ACTION>{ /* */
+  (\\)?"??"[=/\'()!<>-] {
+    synerr(_("Trigraphs are not allowed in code processed by Flex."));
+    ACTION_ECHO;
+  }
+}
+
+<CODEBLOCK>{ /* */
 	^"%}".*{NL}	++linenum; END_CODEBLOCK;
 	[^\n%\[\]]*         ACTION_ECHO;
         .		ACTION_ECHO;
 	{NL}		{
-			++linenum;
 			ACTION_ECHO;
 			if ( indented_code ) END_CODEBLOCK;
 			}
 }
 
-<CODEBLOCK_MATCH_BRACE>{
+<CODEBLOCK_MATCH_BRACE> {
     "}"     {
                 if( --brace_depth == 0){
+                    write_to_buf = false;
                     /* TODO: Matched. */
                     yy_pop_state();
                 }else
@@ -303,11 +358,9 @@ M4QEND      "]""]"
                 buf_strnappend(&top_buf, yytext, yyleng);
             }
 
+
     {M4QSTART}  buf_strnappend(&top_buf, escaped_qstart, (int) strlen(escaped_qstart));
     {M4QEND}    buf_strnappend(&top_buf, escaped_qend, (int) strlen(escaped_qend));
-    ([^{}\r\n\[\]]+)|[^{}\r\n]  {
-       buf_strnappend(&top_buf, yytext, yyleng);
-    }
 
     <<EOF>>     {
                 linenum = brace_start_line;
@@ -507,9 +560,7 @@ M4QEND      "]""]"
         }
     }
 
-	.		ACTION_ECHO;
-	{NL}	++linenum; ACTION_ECHO;
-
+	(.|\n)		ACTION_ECHO;
 	<<EOF>>		{
 			mark_prolog();
 			sectnum = 0;
@@ -755,7 +806,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
                     if (lex_compat || posix_compat){
                         /* Push back the "?#" and treat it like a normal parens. */
                         yyless(1);
-                        sf_push(); 
+                        sf_push();
                         return '(';
                     }
                     else
@@ -826,12 +877,14 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 }
 
 <FIRSTCCL>{
+        /* Yes, Flex uses trailing context. */
 	"^"/[^-\]\n]	BEGIN(CCL); return '^';
 	"^"/("-"|"]")	return '^';
 	.		BEGIN(CCL); RETURNCHAR;
 }
 
 <CCL>{
+        /* and here too. */
 	-/[^\]\n]	return '-';
 	[^\]\n]		RETURNCHAR;
 	"]"		BEGIN(SECT2); return ']';
@@ -904,23 +957,78 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			return '}';
 			}
 }
-
-
-<PERCENT_BRACE_ACTION>{
-	{OPTWS}"%}".*		bracelevel = 0;
-
-	<ACTION>"/*"		ACTION_ECHO; yy_push_state( CODE_COMMENT );
-
-	<CODEBLOCK,ACTION>{
-		"reject" {
+<CODEBLOCK,ACTION,PERCENT_BRACE_ACTION> {
+	"reject" {
             ACTION_ECHO;
             CHECK_REJECT(yytext);
         }
-		"yymore" {
+	"yymore" {
             ACTION_ECHO;
             CHECK_YYMORE(yytext);
         }
-	}
+}
+
+<CODEBLOCK,ACTION,PERCENT_BRACE_ACTION,CODEBLOCK_MATCH_BRACE> {
+        "/"{INVALID_ESCAPED_NEWLINE}+"*" {
+          synerr(_("Invalid escaped newline in comment-open-sequence"));
+          ACTION_ECHO;
+          yy_push_state(CODE_COMMENT);
+        }
+        "/*"            ACTION_ECHO; yy_push_state(CODE_COMMENT);
+
+	[^[:alpha:]_{}""''/\n\[\]]+	ACTION_ECHO;
+        {NAME}		ACTION_ECHO;
+        "'"([^''\\\n]|\\.)"'" ACTION_ECHO; /* character constant */
+        "'"             ACTION_ECHO; yy_push_state(CHARACTER_CONSTANT);
+	"\""		ACTION_ECHO; yy_push_state(ACTION_STRING);
+	"/"{INVALID_ESCAPED_NEWLINE}+"/" {
+          synerr(_("line comment has an escaped newline"));
+	  ACTION_ECHO;
+	  yy_push_state(LINE_COMMENT);
+        }
+        "//"            ACTION_ECHO; yy_push_state(LINE_COMMENT);
+        {INVALID_ESCAPED_NEWLINE} ACTION_ECHO;
+        {RAW_STRING_START} {
+        if (memchr(yytext, '\n', yyleng)) {
+            /* We do not handle this case.  It is doable, just awkward.
+             * Also, it should never happen in real code. */
+            synerr(_("Fatal error: Escaped newline in raw string start"));
+            FLEX_EXIT(EXIT_FAILURE);
+        }
+        assert(!raw_string_buffer && "Memory leak!");
+        assert(yyleng >= 3);
+        if ((raw_string_buffer_size = yyleng - 3)) {
+           raw_string_buffer = malloc(raw_string_buffer_size);
+           if (!raw_string_buffer)
+              abort();
+           memcpy(raw_string_buffer, yytext + 2, raw_string_buffer_size);
+        }
+        ACTION_ECHO;
+        yy_state_push(RAW_STRING);
+    }
+}
+
+<RAW_STRING> {
+   {RAW_STRING_END} {
+      ACTION_ECHO;
+      assert(yyleng >= 2);
+      if (flex_mem_equal(yytext + 1, yyleng - 2, raw_string_buffer,
+                         raw_string_buffer_size)) {
+          /* free(NULL) is harmless */
+          free(raw_string_buffer);
+          raw_string_buffer = NULL;
+          raw_string_buffer_size = 0;
+          yy_pop_state();
+      }
+   }
+   (.|\n)+ {
+      ACTION_ECHO;
+   }
+}
+
+<PERCENT_BRACE_ACTION> {
+	{OPTWS}"%}".*		bracelevel = 0;
+
 
     .       ACTION_ECHO;
 	{NL}	{
@@ -936,16 +1044,24 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
     }
 }
 
+<LINE_COMMENT>{
+        {INVALID_ESCAPED_NEWLINE} {
+          synerr(_("Invalid escaped newline in line comment"));
+	  ACTION_ECHO;
+	  ++linenum;
+        }
+	{NL} {
+          linenum++;
+          ACTION_ECHO;
+          yy_pop_state();
+        }
+        . ACTION_ECHO;
+}
 
 	/* Reject and YYmore() are checked for above, in PERCENT_BRACE_ACTION */
 <ACTION>{
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
-	[^[:alpha:]_{}""''/\n\[\]]+	ACTION_ECHO;
-        {NAME}		ACTION_ECHO;
-        "'"([^''\\\n]|\\.)"'" ACTION_ECHO; /* character constant */
-        "'"             ACTION_ECHO; BEGIN(CHARACTER_CONSTANT);
-	"\""		ACTION_ECHO; BEGIN(ACTION_STRING);
 	{NL} {
                 ++linenum;
                 ACTION_ECHO;
@@ -962,20 +1078,36 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 <ACTION_STRING>{
 	[^\[\]""\\\n]+	ACTION_ECHO;
-	"\""		ACTION_ECHO; BEGIN(ACTION);
+	"\""		ACTION_ECHO; yy_pop_state();
 }
 <CHARACTER_CONSTANT>{
 	[^\[\]''\\\n]+  ACTION_ECHO;
-        "'"             ACTION_ECHO; BEGIN(ACTION);
-}
-<ACTION_STRING,CHARACTER_CONSTANT>{
-        (\\\n)*         ACTION_ECHO;
-	\\(\\\n)*.	ACTION_ECHO;
-	{NL}	++linenum; ACTION_ECHO; if (bracelevel <= 0) { BEGIN(SECT2); } else { BEGIN(ACTION); }
-        .	ACTION_ECHO;
+        "'"             ACTION_ECHO; yy_pop_state();
 }
 
-<COMMENT,CODE_COMMENT,COMMENT_DISCARD,ACTION,ACTION_STRING,CHARACTER_CONSTANT><<EOF>>	{
+<ACTION_STRING,CHARACTER_CONSTANT>{
+        /* Must come before the rules regarding invalid escaped newlines,
+         * since those can match the same strings. */
+        (\\\n)+         ACTION_ECHO;
+        \\(\\\n)+.      ACTION_ECHO;
+        \\.             ACTION_ECHO;
+        .               ACTION_ECHO;
+
+        /* We check for invalid escaped newlines, since most Flex
+         * implementations (including old versions of Flex) don't handle them
+         * properly. */
+        ({INVALID_ESCAPED_NEWLINE}+|\\{INVALID_ESCAPED_NEWLINE}+.) {
+          synerr(_("Invalid escaped newline in action string"));
+	  ACTION_ECHO;
+        }
+
+        {NL} {
+          synerr(_("Newline in character constant or string literal"));
+	  ACTION_ECHO;
+        }
+}
+
+<COMMENT,CODE_COMMENT,COMMENT_DISCARD,ACTION,ACTION_STRING,CHARACTER_CONSTANT,RAW_STRING><<EOF>>	{
 			synerr( _( "EOF encountered inside an action" ) );
 			yyterminate();
 			}
@@ -995,6 +1127,8 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			}
 
 <SECT3>{
+    /* We do very little processing in section 3.  TODO: do the same validation
+     * we do elsewhere. */
     {M4QSTART}   fputs(escaped_qstart, yyout);
     {M4QEND}     fputs(escaped_qend, yyout);
     [^\[\]]*     ECHO;
@@ -1004,12 +1138,14 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
         yyterminate();
     }
 }
+
 <SECT3_NOESCAPE>{
+    /* This mode is used ONLY by the test suite. */
     {M4QSTART}  fprintf(yyout, "[""[%s]""]", escaped_qstart);
     {M4QEND}    fprintf(yyout, "[""[%s]""]", escaped_qend);
     [^][]*      ECHO;
     [][]        ECHO;
-    <<EOF>>		{
+    <<EOF>>     {
        sectnum = 0;
        yyterminate();
     }
