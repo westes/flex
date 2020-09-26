@@ -93,7 +93,8 @@ simple_tests = \
 	string_nr \
 	string_r \
 	top \
-	yyextra
+	yyextra \
+	yyset_interactive
 
 reject_tests = \
 	reject_nr.reject \
@@ -182,6 +183,7 @@ string_r_SOURCES = string_r.l
 top_SOURCES = top.l top_main.c
 nodist_top_SOURCES = top.h
 yyextra_SOURCES = yyextra.l
+yyset_interactive_SOURCES = yyset_interactive.l
 
 # Normally, automake would distribute files built by flex. Since the
 # point of the test suite is to test the files that flex builds, and
