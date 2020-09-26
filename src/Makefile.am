@@ -8,6 +8,9 @@ m4 = @M4@
 bin_PROGRAMS = flex
 if ENABLE_BOOTSTRAP
 noinst_PROGRAMS = stage1flex
+if !CROSS
+noinst_DATA = compare
+endif
 endif
 
 if ENABLE_LIBFL
@@ -45,8 +48,11 @@ endif
 flex_SOURCES = \
 	$(COMMON_SOURCES)
 
-nodist_flex_SOURCES = \
-	stage1scan.c
+if ENABLE_BOOTSTRAP
+nodist_flex_SOURCES = stage1scan.c
+else
+flex_SOURCES += scan.l
+endif
 
 flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
 
@@ -92,7 +98,9 @@ EXTRA_DIST = \
 	mkskel.sh \
 	gettext.h
 
-CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
+MOSTLYCLEANFILES = stage1scan.c stage2scan.c compare
+
+CLEANFILES = stage1flex$(EXEEXT)
 
 MAINTAINERCLEANFILES = skel.c
 
@@ -100,17 +108,34 @@ skel.c: flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir) $(m4) $(VERSION) > $@.tmp
 	mv -f $@.tmp $@
 
-if ENABLE_BOOTSTRAP
+# The input and output file names are fixed for deterministic scanner
+# generation. If scan.l is not patched locally by builders, stage1scan.c
+# should be bit-identical to scan.c (pre-generated on flex release).
 stage1scan.c: scan.l stage1flex$(EXEEXT)
-	./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $(srcdir)/scan.l
-else
-stage1scan.c: scan.c
-	sed 's|^\(#line .*\)"'`printf %s $< | sed 's|[][\\\\.*]|\\\\&|g'`'"|\1"$@"|g' $< > $@
-endif
+	( cd $(srcdir) && $(abs_builddir)/stage1flex$(EXEEXT) \
+	  $(AM_LFLAGS) -o scan.c -t $(LFLAGS) scan.l ) >$@ || \
+	{ s=$$?; rm -f $@; exit $$s; }
+
+stage2scan.c: scan.l flex$(EXEEXT) stage1scan.c
+	( cd $(srcdir) && $(abs_builddir)/flex$(EXEEXT) \
+	  $(AM_LFLAGS) -o scan.c -t $(LFLAGS) scan.l ) >$@
+
+compare: stage1scan.c
+	@rm -f stage2scan.c; \
+	$(MAKE) $(AM_MAKEFLAGS) stage2scan.c; \
+	echo Comparing stage1scan.c and stage2scan.c; \
+	cmp stage1scan.c stage2scan.c || { \
+	  s=$$?; \
+	  echo "Bootstrap comparison failure!"; \
+	  exit $$s; \
+	}; \
+	echo Comparison successful.; \
+	echo success >compare
 
 dist-hook: scan.l flex$(EXEEXT)
 	chmod u+w $(distdir) && \
-	./flex$(EXEEXT) -o scan.c $< && \
+	( cd $(srcdir) && $(abs_builddir)/flex$(EXEEXT) \
+	  -o scan.c -t scan.l ) >scan.c && \
 	mv -f scan.c $(distdir)
 
 # make needs to be told to make parse.h so that parallelized runs will
@@ -124,6 +149,7 @@ flex-yylex.$(OBJEXT): parse.h
 
 stage1flex-scan.$(OBJEXT): parse.h
 flex-stage1scan.$(OBJEXT): parse.h
+flex-scan.$(OBJEXT): parse.h
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #

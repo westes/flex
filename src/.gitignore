@@ -3,11 +3,13 @@
 *.o
 config.h
 config.h.in
+compare
 flex
 libfl.pc
 parse.c
 parse.h
 scan.c
 skel.c
-stage1scan.[cl]
+stage1scan.c
 stage1flex
+stage2scan.c
