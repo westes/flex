@@ -55,6 +55,7 @@ AM_PROG_CC_C_O
 AC_PROG_LN_S
 AC_PROG_AWK
 AC_PROG_INSTALL
+AC_PROG_SED
 
 pkgconfigdir=${libdir}/pkgconfig
 AC_SUBST(pkgconfigdir)
@@ -116,6 +117,11 @@ AC_PATH_PROG([INDENT], indent, [\${top_srcdir}/build-aux/missing indent])
     [AC_MSG_RESULT(no)
      AC_MSG_WARN($INDENT does not appear to be GNU indent; 'make indent' may not function properly)
     ])
+AS_IF([$SED --version 2>/dev/null | head -n 1 | grep "GNU sed" >/dev/null],
+  [AC_MSG_RESULT(yes)],
+  [AC_MSG_RESULT(no)
+   AC_MSG_WARN($SED does not appear to be GNU sed; 'mkskel.sh' will not function properly)
+  ])
 
 # checks for headers
 
