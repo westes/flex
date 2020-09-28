@@ -822,7 +822,7 @@ extern void flexerror(const char *);
 extern void flexfatal(const char *);
 
 /* Report a fatal error with a pinpoint, and terminate */
-#if HAVE_DECL___FUNC__
+#ifdef HAVE_DECL___FUNC__
 #define flex_die(msg) \
     do{ \
         fprintf (stderr,\

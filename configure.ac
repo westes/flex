@@ -172,6 +172,8 @@ AC_CHECK_FUNCS([dup2 memset regcomp strcasecmp strchr strdup strtol], [],
 # reallocarray - OpenBSD function. We have replacement if not available.
 AC_CHECK_FUNCS([pow setlocale reallocarr reallocarray])
 
+AC_CHECK_DECLS(__func__)
+
 AC_CONFIG_FILES(
 Makefile
 doc/Makefile
