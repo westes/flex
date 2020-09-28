@@ -320,37 +320,35 @@ struct flex_backend_t {
 	char *table_closer;			// How to continue a two-level initializer
 	char *dyad;				// How to format and int[2] initializer 
 	void (*comment)(const char *);		// Wrap a comment line
-	const char *(*get_int16_decl)(void);	// Format for declaring array initializer of int16s
-	const char *(*get_int32_decl)(void);	// Format for declaring array initializer of int32s
-	const char *(*get_state_decl)(void);	// Format for declaring array initializer of state values
-	const char *(*get_yy_char_decl)(void);	// Format for declaring array initializer of input chars
 	// Flex table generation
-	void (*ntod)(size_t);			// Generate nxt table for ntod
-	void (*mkeoltbl)(void);			// Make end-of-line table
-	void (*geneoltbl)(size_t);		// Generate end-of-line transitions
-	void (*mkctbl)(size_t);			// Make full-speed compressed table
-	void (*mkssltbl)(void);			// Make start_state_list table
-	void (*gen_yy_trans)(size_t);		// Table of verify for transition and offset to next state. (sic)
-	void (*start_state_list)(size_t);	// Start initializer for table of pointers to start states
-	void (*mkftbl)();			// Make full table
+	void (*ntod)(size_t);			// Generate nxt table initializer start (fulltbl mode)
+	size_t (*geneoltbl)(size_t);		// Generate end-of-line transition table initializer start
+	void (*mkctbl)(size_t);			// Make full-speed compressed table initializer start
+	void (*mkssltbl)(void);			// Make start_state_list table initializer start
+	size_t (*gen_yy_trans)(size_t);		// Table of verify for transition and offset to next state. (sic)
+	size_t (*start_state_list)(size_t);	// Start initializer for table of pointers to start states
+	void (*mkftbl)();			// Make full table serialization entry
+	size_t (*genftbl)(size_t);		// Make full table initializer start
 	const char *state_entry_fmt;		// Format of state table entry
-	void (*mkecstbl)(void);			// Make equivalence-class tables
-	void (*gentabs_acclist)(void);		// Generate accept list initializer
-	void (*gentabs_accept)(void);		// Generate accept table initializer
-	void (*gentabs_yy_meta)(void);		// Generate yy_meta table initializer
-	void (*gentabs_yy_base)(void);		// Generate yy_base table initializer
-	void (*gentabs_yy_def)(size_t);		// Generate yy_def initializer
-	void (*gentabs_yy_nxt)(size_t);		// Generate yy_nxt initializer
-	void (*gentabs_yy_chk)(size_t);		// Generate yy_chk initializer
-	void (*nultrans)(int);			// Generate nulltrans initializer
+	void (*mkecstbl)(void);			// Make equivalence-class table initializer start
+	size_t (*gentabs_acclist)(size_t);	// Generate accept list initializer start
+	size_t (*gentabs_accept)(size_t);	// Generate accept table initializer start
+	size_t (*gentabs_yy_meta)(size_t);	// Generate yy_meta table initializer start
+	size_t (*gentabs_yy_base)(size_t);	// Generate yy_base table initializer start
+	size_t (*gentabs_yy_def)(size_t);	// Generate yy_def initializer start
+	size_t (*gentabs_yy_nxt)(size_t);	// Generate yy_nxt initializer start
+	size_t (*gentabs_yy_chk)(size_t);	// Generate yy_chk initializer start
+	size_t (*genecs)(size_t);		// Generates tart of equivalence-class-table initializer
+	size_t (*nultrans)(int, size_t);	// Generate nulltrans initializer
 	const char *(*trans_offset_type)(int);	// Compute an efficient type for transition tables
+	size_t (*debug_header)(size_t);		// Start initializer for rule-to-line mappings
 	char *caseprefix;			// Prefix of an arm in the language's case construct
 	char *fallthrough;			// Finish a case arm with this to fall through
 	char *endcase;				// What to ship after all EOF-state case arms
 	int c_like;				// Will &yy_transition[%d]," produce a pointer table entry?
 };
 
-extern bool gentables;
+extern size_t footprint;
 
 extern struct flex_backend_t cpp_backend;
 
@@ -759,7 +757,7 @@ extern int *epsclosure(int *, int *, int[], int *, int *);
 /* Increase the maximum number of dfas. */
 extern void increase_max_dfas(void);
 
-extern void ntod(void);	/* convert a ndfa to a dfa */
+extern size_t ntod(void);	/* convert a ndfa to a dfa */
 
 /* Converts a set of ndfa states into a dfa state. */
 extern int snstods(int[], int, int[], int, int, int *);

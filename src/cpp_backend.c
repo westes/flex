@@ -33,8 +33,47 @@
 
 
 #include "flexdef.h"
+#include "tables.h"
 
-/* Code specific to the C/C++ back end starts here */
+/* These typedefs are only used for computing footprint sizes,
+ * You need to make sure they match reality in the skeleton file to 
+ * get accurate numbers, but they don't otherwise matter.
+ */
+typedef char YY_CHAR;
+struct yy_trans_info {int32_t yy_verify; int32_t yy_nxt;};
+
+/* Helper fubctions */
+
+static const char *cpp_get_int16_decl (void)
+{
+	return (gentables)
+		? "static const flex_int16_t %s[%d] =\n    {   0,\n"
+		: "static const flex_int16_t * %s = 0;\n";
+}
+
+
+static const char *cpp_get_int32_decl (void)
+{
+	return (gentables)
+		? "static const flex_int32_t %s[%d] =\n    {   0,\n"
+		: "static const flex_int32_t * %s = 0;\n";
+}
+
+static const char *cpp_get_state_decl (void)
+{
+	return (gentables)
+		? "static const yy_state_type %s[%d] =\n    {   0,\n"
+		: "static const yy_state_type * %s = 0;\n";
+}
+
+static const char *cpp_get_yy_char_decl (void)
+{
+	return (gentables)
+		? "static const YY_CHAR %s[%d] =\n    {   0,\n"
+		: "static const YY_CHAR * %s = 0;\n";
+}
+
+/* Methods */
 
 static const char *cpp_suffix (void)
 {
@@ -96,6 +135,9 @@ static void cpp_prolog (void)
 	}
 
 	else {
+
+
+
 		OUT_BEGIN_CODE ();
 		/* In reentrant scanner, stdinit is handled in flex.skl. */
 		if (do_stdinit) {
@@ -393,35 +435,6 @@ static void cpp_comment(const char *txt)
 	out_str("/* [[%s]] */\n", txt);
 }
 
-static const char *cpp_get_int16_decl (void)
-{
-	return (gentables)
-		? "static const flex_int16_t %s[%d] =\n    {   0,\n"
-		: "static const flex_int16_t * %s = 0;\n";
-}
-
-
-static const char *cpp_get_int32_decl (void)
-{
-	return (gentables)
-		? "static const flex_int32_t %s[%d] =\n    {   0,\n"
-		: "static const flex_int32_t * %s = 0;\n";
-}
-
-static const char *cpp_get_state_decl (void)
-{
-	return (gentables)
-		? "static const yy_state_type %s[%d] =\n    {   0,\n"
-		: "static const yy_state_type * %s = 0;\n";
-}
-
-static const char *cpp_get_yy_char_decl (void)
-{
-	return (gentables)
-		? "static const YY_CHAR %s[%d] =\n    {   0,\n"
-		: "static const YY_CHAR * %s = 0;\n";
-}
-
 static void cpp_ntod(size_t num_full_table_rows)
 // Generate nxt table for ntod
 {
@@ -442,21 +455,21 @@ static void cpp_ntod(size_t num_full_table_rows)
 		out_str ("static const %s *yy_nxt =0;\n",
 			 long_align ? "flex_int32_t" : "flex_int16_t");
 	}
+	/* It would be no good trying to return an allocation size here,
+	 * as it's not known before table generation is finished.
+	 */
 }
 
-static void cpp_mkeoltbl()
-// Make end-of-line-table - only used when yylinemo tracking is on
-{
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(%s)},\n",
-		    "flex_int32_t");
-}
-
-static void cpp_geneoltbl(size_t sz)
+static size_t cpp_geneoltbl(size_t sz)
 // Generate end-of-line-transitions - only used when yylineno tracking is on
 {
 	outn ("/* Table of booleans, true if rule could match eol. */");
+	if (tablesext)
+		buf_prints (&yydmap_buf,
+			    "\t{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(%s)},\n",
+			    "flex_int32_t");
 	out_str_dec (cpp_get_int32_decl (), "yy_rule_can_match_eol", sz);
+	return sizeof(int32_t) * sz;
 }
 
 static void cpp_mkctbl (size_t sz)
@@ -476,16 +489,17 @@ static void cpp_mkssltbl (void)
 		    "struct yy_trans_info*");
 }
 
-static void cpp_gen_yy_trans(size_t sz)
+static size_t cpp_gen_yy_trans(size_t sz)
 // Table of verify for transition and offset to next state. (sic)
 {
 	if (gentables)
 		out_dec ("static const struct yy_trans_info yy_transition[%d] =\n    {\n", sz);
 	else
 		outn ("static const struct yy_trans_info *yy_transition = 0;");
+	return sz * sizeof(struct yy_trans_info);
 }
 
-static void cpp_start_state_list(size_t sz)
+static size_t cpp_start_state_list(size_t sz)
 // Start initializer for table of pointers to start state
 {
 	/* Table of pointers to start states. */
@@ -493,94 +507,145 @@ static void cpp_start_state_list(size_t sz)
 		out_dec ("static const struct yy_trans_info *yy_start_state_list[%d] =\n", sz);
 	else
 		outn ("static const struct yy_trans_info **yy_start_state_list =0;");
+	return sz * sizeof(struct yy_trans_info *);
 }
 
 static void cpp_mkecstbl(void)
 // Make equivalence-class tables
 {
-    buf_prints (&yydmap_buf,
-		"\t{YYTD_ID_EC, (void**)&yy_ec, sizeof(%s)},\n",
-		"YY_CHAR");
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_EC, (void**)&yy_ec, sizeof(%s)},\n",
+		    "YY_CHAR");
 }
 
 static void cpp_mkftbl(void)
 // Make full table
 {
-    buf_prints (&yydmap_buf,
-		"\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
-		long_align ? "flex_int32_t" : "flex_int16_t");
+	// FIXME: why are there two places this is emitted, here and in cpp_gentabs_accept()?
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
+		    long_align ? "flex_int32_t" : "flex_int16_t");
 }
 
-static void cpp_gentabs_acclist(void)
+static size_t cpp_genftbl(size_t sz)
+{
+	out_str_dec (long_align ? cpp_get_int32_decl () : cpp_get_int16_decl (),
+		     "yy_accept", sz);
+	return sz * (long_align ? sizeof(int32_t) : sizeof(int16_t));
+}
+
+
+static size_t cpp_gentabs_acclist(size_t sz)
 // Generate accept list initializer
 {
-    buf_prints (&yydmap_buf,
-		"\t{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(%s)},\n",
-		long_align ? "flex_int32_t" : "flex_int16_t");
+	out_str_dec (long_align ? cpp_get_int32_decl () :
+		     cpp_get_int16_decl (), "yy_acclist", sz);
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(%s)},\n",
+		    long_align ? "flex_int32_t" : "flex_int16_t");
+	return sz * (long_align ? sizeof(int32_t) : sizeof(int16_t));
 }
 
-static void cpp_gentabs_accept(void)
+static size_t cpp_gentabs_accept(size_t sz)
 // Generate accept table initializer
 {
-    buf_prints (&yydmap_buf,
-		"\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
-		long_align ? "flex_int32_t" : "flex_int16_t");
+	out_str_dec (long_align ? cpp_get_int32_decl () : cpp_get_int16_decl (),
+		     "yy_accept", sz);
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
+		    long_align ? "flex_int32_t" : "flex_int16_t");
+	return sz * (long_align ? sizeof(int32_t) : sizeof(int16_t));
 }
 
-static void cpp_gentabs_yy_meta(void)
+static size_t cpp_gentabs_yy_meta(size_t sz)
 // Generate yy_meta table initializer
 {
-    buf_prints (&yydmap_buf,
-		"\t{YYTD_ID_META, (void**)&yy_meta, sizeof(%s)},\n",
-		"YY_CHAR");
+	out_str_dec (cpp_get_yy_char_decl (), "yy_meta", sz);
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_META, (void**)&yy_meta, sizeof(%s)},\n",
+		    "YY_CHAR");
+	return sz * sizeof(YY_CHAR);
 }
 
-static void cpp_gentabs_yy_base(void)
+static size_t cpp_gentabs_yy_base(size_t sz)
 // Generate yy_meta base initializer
 {
-    buf_prints (&yydmap_buf,
+	out_str_dec ((tblend >= INT16_MAX || long_align) ?
+		     cpp_get_int32_decl () : cpp_get_int16_decl (),
+		     "yy_base", sz);
+	buf_prints (&yydmap_buf,
 		    "\t{YYTD_ID_BASE, (void**)&yy_base, sizeof(%s)},\n",
-		    (tblend >= INT16_MAX
+		    (sz >= INT16_MAX
 		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+	return sz * ((sz >= INT16_MAX || long_align) ? sizeof(int32_t) : sizeof(int16_t)); 
 }
 
-static void cpp_gentabs_yy_def(size_t total_states)
+static size_t cpp_gentabs_yy_def(size_t sz)
 // Generate yy_def initializer
 {
-    buf_prints (&yydmap_buf,
-		"\t{YYTD_ID_DEF, (void**)&yy_def, sizeof(%s)},\n",
-		(total_states >= INT16_MAX
-		 || long_align) ? "flex_int32_t" : "flex_int16_t");
+	out_str_dec ((sz >= INT16_MAX || long_align) ?
+		     cpp_get_int32_decl () : cpp_get_int16_decl (),
+		     "yy_def", sz);
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_DEF, (void**)&yy_def, sizeof(%s)},\n",
+		    (sz >= INT16_MAX
+		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+	return sz * ((sz >= INT16_MAX || long_align) ? sizeof(int32_t) : sizeof(int16_t));
 }
 
-static void cpp_gentabs_yy_nxt(size_t total_states)
+static size_t cpp_gentabs_yy_nxt(size_t tblafter)
 // Generate yy_nxt initializer
 {
-    buf_prints (&yydmap_buf,
+	/* Begin generating yy_nxt */
+	out_str_dec ((tblafter >= INT16_MAX || long_align) ?
+		     cpp_get_int32_decl () : cpp_get_int16_decl (), "yy_nxt",
+		     tblafter);
+	buf_prints (&yydmap_buf,
 		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
-		    (total_states >= INT16_MAX
+		    (tblafter >= INT16_MAX
 		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+	return tblafter * ((tblafter >= INT16_MAX || long_align) ? sizeof(int32_t) : sizeof(int16_t));
 }
 
-static void cpp_gentabs_yy_chk(size_t total_states)
+static size_t cpp_gentabs_yy_chk(size_t tblafter)
 // Generate yy_chk initializer
 {
-    buf_prints (&yydmap_buf,
-		"\t{YYTD_ID_CHK, (void**)&yy_chk, sizeof(%s)},\n",
-		(total_states >= INT16_MAX
-		 || long_align) ? "flex_int32_t" : "flex_int16_t");
+	out_str_dec ((tblafter >= INT16_MAX || long_align) ?
+		     cpp_get_int32_decl () : cpp_get_int16_decl (), "yy_chk",
+		     tblafter);
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_CHK, (void**)&yy_chk, sizeof(%s)},\n",
+		    (tblafter >= INT16_MAX
+		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+	return tblafter * ((tblafter >= INT16_MAX || long_align) ? sizeof(int32_t) : sizeof(int16_t));
 }
 
-static void cpp_nultrans(int fullspd)
+static size_t cpp_nultrans(int fullspd, size_t afterdfa)
 // Generate nulltrans initializer
 {
-    // Making this a backend method may be overzealous.
-    // How many other languages have to sprcial-case NUL
-    // because it's a string terminator?
-    buf_prints (&yydmap_buf,
-		"\t{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(%s)},\n",
-		(fullspd) ? "struct yy_trans_info*" :
-		"flex_int32_t");
+	// Making this a backend method may be overzealous.
+	// How many other languages have to sprcial-case NUL
+	// because it's a string terminator?
+	out_str_dec (cpp_get_state_decl (), "yy_NUL_trans", afterdfa);
+	buf_prints (&yydmap_buf,
+		    "\t{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(%s)},\n",
+		    (fullspd) ? "struct yy_trans_info*" : "flex_int32_t");
+	return afterdfa * (fullspd ? sizeof(struct yy_trans_info *) : sizeof(int32_t));
+}
+
+static size_t cpp_debug_header(size_t sz)
+{
+	out_str_dec (long_align ? cpp_get_int32_decl () :
+		     cpp_get_int16_decl (), "yy_rule_linenum",
+		     sz);
+	return sz * (long_align ? sizeof(int32_t) : sizeof(int16_t));
+}
+
+
+static size_t cpp_genecs(size_t size)
+{
+	out_str_dec (cpp_get_yy_char_decl (), "yy_ec", csize);
+	return sizeof(YY_CHAR) * size; 
 }
 
 static const char *cpp_trans_offset_type(int total_table_size)
@@ -609,12 +674,7 @@ struct flex_backend_t cpp_backend = {
 	.table_closer = "    };\n",
 	.dyad = " {%4d,%4d },",
 	.comment = cpp_comment,
-	.get_int16_decl = cpp_get_int16_decl,
-	.get_int32_decl = cpp_get_int32_decl,
-	.get_state_decl = cpp_get_state_decl,
-	.get_yy_char_decl = cpp_get_yy_char_decl,
 	.ntod = cpp_ntod,
-	.mkeoltbl = cpp_mkeoltbl,
 	.geneoltbl = cpp_geneoltbl,
 	.mkctbl = cpp_mkctbl,
 	.mkssltbl = cpp_mkssltbl,
@@ -623,6 +683,7 @@ struct flex_backend_t cpp_backend = {
 	.state_entry_fmt = "    &yy_transition[%d],\n",
 	.mkecstbl = cpp_mkecstbl,
 	.mkftbl = cpp_mkftbl,
+	.genftbl = cpp_genftbl,
 	.gentabs_acclist = cpp_gentabs_acclist,
 	.gentabs_accept = cpp_gentabs_accept,
 	.gentabs_yy_meta = cpp_gentabs_yy_meta,
@@ -630,8 +691,10 @@ struct flex_backend_t cpp_backend = {
 	.gentabs_yy_def = cpp_gentabs_yy_def,
 	.gentabs_yy_nxt = cpp_gentabs_yy_nxt,
 	.gentabs_yy_chk = cpp_gentabs_yy_chk,
+	.genecs = cpp_genecs,
 	.nultrans = cpp_nultrans,
 	.trans_offset_type = cpp_trans_offset_type,
+	.debug_header = cpp_debug_header,
 	.caseprefix = "case ",
 	.fallthrough = NULL,
 	.endcase = "yyterminate();",

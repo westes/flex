@@ -34,7 +34,6 @@
 #include "flexdef.h"
 #include "tables.h"
 
-
 /* declare functions that have forward references */
 
 void	genecs(void);
@@ -58,7 +57,6 @@ static struct yytbl_data *mkeoltbl (void)
 	for (i = 1; i <= num_rules; i++)
 		tdata[i] = rule_has_nl[i] ? 1 : 0;
 
-	backend->mkeoltbl();
 	return tbl;
 }
 
@@ -68,7 +66,7 @@ static void geneoltbl (void)
 	int     i;
 
 	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
-	backend->geneoltbl(num_rules + 1);
+	footprint += backend->geneoltbl(num_rules + 1);
 
 	if (gentables) {
 		for (i = 1; i <= num_rules; i++) {
@@ -222,7 +220,7 @@ void genctbl (void)
 	int     end_of_buffer_action = num_rules + 1;
 
 	/* Table of verify for transition and offset to next state. */
-	backend->gen_yy_trans(tblend + numecs + 1);
+	footprint += backend->gen_yy_trans(tblend + numecs + 1);
 
 	/* We want the transition to be represented as the offset to the
 	 * next state, not the actual state number, which is what it currently
@@ -292,7 +290,7 @@ void genctbl (void)
 	if (gentables)
 		outn (backend->table_closer);
 
-	backend->start_state_list(lastsc * 2 + 1);
+	footprint += backend->start_state_list(lastsc * 2 + 1);
 
 	if (gentables) {
 		outn (backend->table_opener);
@@ -342,7 +340,7 @@ void genecs (void)
 	int ch, row;
 	int     numrows;
 
-	out_str_dec (backend->get_yy_char_decl (), "yy_ec", csize);
+	footprint += backend->genecs(csize);
 
 	for (ch = 1; ch < csize; ++ch) {
 		ecgroup[ch] = ABS (ecgroup[ch]);
@@ -414,9 +412,7 @@ void genftbl (void)
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
 
-	out_str_dec (long_align ? backend->get_int32_decl () : backend->get_int16_decl (),
-		     "yy_accept", lastdfa + 1);
-
+	footprint += backend->genftbl(lastdfa+1);
 	dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
 
 	for (i = 1; i <= lastdfa; ++i) {
@@ -477,11 +473,7 @@ void gentabs (void)
 		dfaacc[end_of_buffer_state].dfaacc_set =
 		    EOB_accepting_list;
 
-		out_str_dec (long_align ? backend->get_int32_decl () :
-			     backend->get_int16_decl (), "yy_acclist", MAX (numas,
-									    1) + 1);
-
-		backend->gentabs_acclist();
+		footprint += backend->gentabs_acclist(MAX (numas, 1) + 1);
 		
 		yyacclist_tbl = calloc(1,sizeof(struct yytbl_data));
 		yytbl_data_init (yyacclist_tbl, YYTD_ID_ACCLIST);
@@ -585,10 +577,7 @@ void gentabs (void)
 		 */
 		++k;
 
-	out_str_dec (long_align ? backend->get_int32_decl () : backend->get_int16_decl (),
-		     "yy_accept", k);
-
-	backend->gentabs_accept();
+	footprint += backend->gentabs_accept(k);
 	
 	yyacc_tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (yyacc_tbl, YYTD_ID_ACCEPT);
@@ -658,8 +647,7 @@ void gentabs (void)
 			fputs (_("\n\nMeta-Equivalence Classes:\n"),
 			       stderr);
 
-		out_str_dec (backend->get_yy_char_decl (), "yy_meta", numecs + 1);
-		backend->gentabs_yy_meta();
+		footprint += backend->gentabs_yy_meta(numecs + 1);
 		
 		for (i = 1; i <= numecs; ++i) {
 			if (trace)
@@ -684,11 +672,7 @@ void gentabs (void)
 	total_states = lastdfa + numtemps;
 
 	/* Begin generating yy_base */
-	out_str_dec ((tblend >= INT16_MAX || long_align) ?
-		     backend->get_int32_decl () : backend->get_int16_decl (),
-		     "yy_base", total_states + 1);
-
-	backend->gentabs_yy_base();
+	footprint += backend->gentabs_yy_base(total_states + 1);
 	yybase_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yybase_tbl, YYTD_ID_BASE);
 	yybase_tbl->td_lolen = (flex_uint32_t) (total_states + 1);
@@ -738,15 +722,11 @@ void gentabs (void)
 
 
 	/* Begin generating yy_def */
-	out_str_dec ((total_states >= INT16_MAX || long_align) ?
-		     backend->get_int32_decl () : backend->get_int16_decl (),
-		     "yy_def", total_states + 1);
-
-	backend->gentabs_yy_def(total_states);
+	footprint += backend->gentabs_yy_def(total_states +1);
 
 	yydef_tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (yydef_tbl, YYTD_ID_DEF);
-	yydef_tbl->td_lolen = (flex_uint32_t) (total_states + 1);
+	yydef_tbl->td_lolen = (flex_uint32_t)(total_states + 1);
 	yydef_tbl->td_data = yydef_data =
 	    calloc(yydef_tbl->td_lolen, sizeof (flex_int32_t));
 
@@ -766,12 +746,7 @@ void gentabs (void)
 	/* End generating yy_def */
 
 
-	/* Begin generating yy_nxt */
-	out_str_dec ((total_states >= INT16_MAX || long_align) ?
-		     backend->get_int32_decl () : backend->get_int16_decl (), "yy_nxt",
-		     tblend + 1);
-
-	backend->gentabs_yy_nxt(total_states);
+	footprint += backend->gentabs_yy_nxt(tblend + 1);
 
 	yynxt_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yynxt_tbl, YYTD_ID_NXT);
@@ -801,11 +776,7 @@ void gentabs (void)
 	/* End generating yy_nxt */
 
 	/* Begin generating yy_chk */
-	out_str_dec ((total_states >= INT16_MAX || long_align) ?
-		     backend->get_int32_decl () : backend->get_int16_decl (), "yy_chk",
-		     tblend + 1);
-
-	backend->gentabs_yy_chk(total_states);
+	footprint += backend->gentabs_yy_chk(tblend + 1);
 	
 	yychk_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yychk_tbl, YYTD_ID_CHK);
@@ -1079,9 +1050,7 @@ void make_tables (void)
 		flex_int32_t *yynultrans_data = 0;
 
 		/* Begin generating yy_NUL_trans */
-		out_str_dec (backend->get_state_decl (), "yy_NUL_trans",
-			     lastdfa + 1);
-		backend->nultrans(fullspd);
+		footprint += backend->nultrans(fullspd, lastdfa + 1);
 		yynultrans_tbl = calloc(1, sizeof (struct yytbl_data));
 		yytbl_data_init (yynultrans_tbl, YYTD_ID_NUL_TRANS);
 		// Performance kludge for C. Gives a small improvement
@@ -1125,9 +1094,10 @@ void make_tables (void)
 	}
 
 	if (ddebug) {		/* Spit out table mapping rules to line numbers. */
-		out_str_dec (long_align ? backend->get_int32_decl () :
-			     backend->get_int16_decl (), "yy_rule_linenum",
-			     num_rules);
+		/* Policy choice: this returns the table size
+		 * but we don't include it in the table metering.
+		 */
+		backend->debug_header(num_rules);
 		for (i = 1; i < num_rules; ++i)
 			mkdata (rule_linenum[i]);
 		dataend ();

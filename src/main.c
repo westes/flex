@@ -111,6 +111,7 @@ struct flex_backend_t *backend;
 bool    tablesext, tablesverify, gentables;
 char   *tablesfilename=0,*tablesname=0;
 struct yytbl_writer tableswr;
+size_t footprint;
 
 /* Make sure program_name is initialized so we don't crash if writing
  * out an error message before getting the program name from argv[0].
@@ -175,7 +176,7 @@ int flex_main (int argc, char *argv[])
 
 	skelout ();
 	/* %% [1.5] DFA */
-	ntod ();
+	footprint += ntod ();
 
 	for (i = 1; i <= num_rules; ++i)
 		if (!rule_useful[i] && i != default_rule)

@@ -366,9 +366,12 @@ void increase_max_dfas (void)
  *
  * Creates the dfa corresponding to the ndfa we've constructed.  The
  * dfa starts out in state #1.
+ *
+ * Return the amound of space, in byyes, allocated for the bxt table.
+ * In some modes this can be zero.
  */
 
-void ntod (void)
+size_t ntod (void)
 {
 	int    *accset, ds, nacc, newds;
 	int     sym, hashval, numstates, dsize;
@@ -771,6 +774,8 @@ void ntod (void)
 
 	free(accset);
 	free(nset);
+
+	return (yynxt_tbl != NULL) ? (yynxt_tbl->td_hilen * sizeof(int32_t)) : 0;
 }
 
 
