@@ -196,6 +196,7 @@ AC_CHECK_FUNCS([dup2 memset regcomp strcasecmp strchr strdup strtol], [],
 # reallocarr - NetBSD function. Use reallocarray if not available.
 # reallocarray - OpenBSD function. We have replacement if not available.
 AC_CHECK_FUNCS([pow setlocale reallocarr reallocarray])
+AC_CHECK_DECLS(__func__)
 
 AS_IF([test "$cross_compiling" = yes],
   [AC_CONFIG_FILES([src/config_for_build.h])])
