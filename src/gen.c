@@ -205,8 +205,6 @@ static struct yytbl_data *mkssltbl (void)
 	for (i = 0; i <= lastsc * 2; ++i)
 		tdata[i] = base[i];
 
-	backend->mkssltbl();
-
 	return tbl;
 }
 
@@ -327,8 +325,6 @@ static struct yytbl_data *mkecstbl (void)
 		ecgroup[i] = ABS (ecgroup[i]);
 		tdata[i] = ecgroup[i];
 	}
-
-	backend->mkecstbl();
 
 	return tbl;
 }

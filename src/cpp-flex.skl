@@ -1302,6 +1302,9 @@ struct yytbl_dmap {
 
 /** A {0,0,0}-terminated list of structs, forming the map */
 static struct yytbl_dmap yydmap[] = {
+m4_ifdef([[M4_MODE_FULLSPD]], [[	{YYTD_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(struct yy_trans_info*)},]])
+m4_ifdef([[M4_YY_USE_LINENO]], [[	{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(flex_int32_t)},]])
+m4_ifdef([[M4_MODE_USEECS]], [[	{YYTD_ID_EC, (void**)&yy_ec, sizeof(YY_CHAR)},]])
 %tables-yydmap generated elements
     {0,0,0}
 };

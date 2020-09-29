@@ -474,10 +474,6 @@ static size_t cpp_geneoltbl(size_t sz)
 // Generate end-of-line-transitions - only used when yylineno tracking is on
 {
 	outn ("/* Table of booleans, true if rule could match eol. */");
-	if (tablesext)
-		buf_prints (&yydmap_buf,
-			    "\t{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(%s)},\n",
-			    "flex_int32_t");
 	out_str_dec (cpp_get_int32_decl (), "yy_rule_can_match_eol", sz);
 	return sizeof(int32_t) * sz;
 }
@@ -489,14 +485,6 @@ static void cpp_mkctbl (size_t sz)
 		    "\t{YYTD_ID_TRANSITION, (void**)&yy_transition, sizeof(%s)},\n",
 		    (sz >= INT16_MAX
 		     || long_align) ? "flex_int32_t" : "flex_int16_t");
-}
-
-static void cpp_mkssltbl (void)
-// Make start_state_list table
-{
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(%s)},\n",
-		    "struct yy_trans_info*");
 }
 
 static size_t cpp_gen_yy_trans(size_t sz)
@@ -518,14 +506,6 @@ static size_t cpp_start_state_list(size_t sz)
 	else
 		outn ("static const struct yy_trans_info **yy_start_state_list =0;");
 	return sz * sizeof(struct yy_trans_info *);
-}
-
-static void cpp_mkecstbl(void)
-// Make equivalence-class tables
-{
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_EC, (void**)&yy_ec, sizeof(%s)},\n",
-		    "YY_CHAR");
 }
 
 static void cpp_mkftbl(void)
@@ -687,11 +667,9 @@ struct flex_backend_t cpp_backend = {
 	.ntod = cpp_ntod,
 	.geneoltbl = cpp_geneoltbl,
 	.mkctbl = cpp_mkctbl,
-	.mkssltbl = cpp_mkssltbl,
 	.gen_yy_trans = cpp_gen_yy_trans,
 	.start_state_list = cpp_start_state_list,
 	.state_entry_fmt = "    &yy_transition[%d],\n",
-	.mkecstbl = cpp_mkecstbl,
 	.mkftbl = cpp_mkftbl,
 	.genftbl = cpp_genftbl,
 	.gentabs_acclist = cpp_gentabs_acclist,
