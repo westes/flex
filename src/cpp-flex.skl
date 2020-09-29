@@ -3842,7 +3842,8 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 	return 0;
 }
 
-%define-yytables   The name for this specific scanner's tables.
+/* The name for this specific scanner's tables. */
+#define YYTABLES_NAME "m4_ifdef([[M4_MODE_PREFIX]], M4_MODE_PREFIX, [[yy]])tables"
 
 /* Find the key and load the DFA tables from the given stream.  */
 static int yytbl_fload YYFARGS2(FILE *, fp, const char *, key) {

@@ -35,7 +35,6 @@
 
 #define CMD_IF_TABLES_SER    "%if-tables-serialization"
 #define CMD_TABLES_YYDMAP    "%tables-yydmap"
-#define CMD_DEFINE_YYTABLES  "%define-yytables"
 #define CMD_IF_CPP_ONLY      "%if-c++-only"
 #define CMD_IF_C_ONLY        "%if-c-only"
 #define CMD_IF_C_OR_CPP      "%if-c-or-c++"
@@ -102,7 +101,7 @@ void action_define (const char *defname, int value)
 		return;
 	}
 
-	snprintf (buf, sizeof(buf), "#define %s %d\n", defname, value);
+	snprintf (buf, sizeof(buf), backend->int_define_fmt, defname, value);
 	add_action (buf);
 
 	/* track #defines so we can undef them when we're done. */
@@ -694,11 +693,11 @@ void skelout (void)
 	char   *buf = buf_storage;
 	bool   do_copy = true;
 
-    /* "reset" the state by clearing the buffer and pushing a '1' */
-    if(sko_len > 0)
-        sko_peek(&do_copy);
-    sko_len = 0;
-    sko_push(do_copy=true);
+	/* "reset" the state by clearing the buffer and pushing a '1' */
+	if(sko_len > 0)
+		sko_peek(&do_copy);
+	sko_len = 0;
+	sko_push(do_copy=true);
 
 
 	/* Loop pulling lines either from the skelfile, if we're using
@@ -715,84 +714,87 @@ void skelout (void)
 		if (buf[0] == '%') {	/* control line */
 			/* print the control line as a comment. */
 			if (ddebug && buf[1] != '#') {
-				if (buf[strlen (buf) - 1] == '\\')
-					out_str ("/* %s */\\\n", buf);
-				else
-					out_str ("/* %s */\n", buf);
+				bool escaped = buf[strlen (buf) - 1] == '\\';
+				if (escaped) {
+					backend->comment(buf);
+					out ("\\\n");
+				} else {
+					backend->comment(buf);
+					outc ('\n');
+				}
 			}
 
 			/* We've been accused of using cryptic markers in the skel.
 			 * So we'll use emacs-style-hyphenated-commands.
-             * We might consider a hash if this if-else-if-else
-             * chain gets too large.
+			 * We might consider a hash if this if-else-if-else
+			 * chain gets too large.
 			 */
 #define cmd_match(s) (strncmp(buf,(s),strlen(s))==0)
 
-		if (buf[1] == '#') {
-                	/* %# indicates comment line to be ignored */
-            	} 
-		else if (buf[1] == '%') {
+			if (buf[1] == '#') {
+				/* %# indicates comment line to be ignored */
+			} 
+			else if (buf[1] == '%') {
 				/* %% is a break point for skelout() */
 				return;
 			}
-            else if (cmd_match (CMD_PUSH)){
-                sko_push(do_copy);
-                if(ddebug){
-                    out_str("/*(state = (%s) */",do_copy?"true":"false");
-                }
-                out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
-            }
-            else if (cmd_match (CMD_POP)){
-                sko_pop(&do_copy);
-                if(ddebug){
-                    out_str("/*(state = (%s) */",do_copy?"true":"false");
-                }
-                out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
-            }
-            else if (cmd_match (CMD_IF_REENTRANT)){
-                sko_push(do_copy);
-                do_copy = reentrant && do_copy;
-            }
-            else if (cmd_match (CMD_IF_NOT_REENTRANT)){
-                sko_push(do_copy);
-                do_copy = !reentrant && do_copy;
-            }
-            else if (cmd_match(CMD_IF_BISON_BRIDGE)){
-                sko_push(do_copy);
-                do_copy = bison_bridge_lval && do_copy;
-            }
-            else if (cmd_match(CMD_IF_NOT_BISON_BRIDGE)){
-                sko_push(do_copy);
-                do_copy = !bison_bridge_lval && do_copy;
-            }
-            else if (cmd_match (CMD_ENDIF)){
-                sko_pop(&do_copy);
-            }
+			else if (cmd_match (CMD_PUSH)){
+				sko_push(do_copy);
+				if(ddebug){
+					char buf2[MAXLINE];
+					snprintf(buf2, sizeof(buf2), "(state = (%s)\n",do_copy?"true":"false");
+					backend->comment(buf2);
+				}
+				out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
+			}
+			else if (cmd_match (CMD_POP)){
+				sko_pop(&do_copy);
+				if(ddebug){
+					char buf2[MAXLINE];
+					snprintf(buf2, sizeof(buf2), "(state = (%s)\n",do_copy?"true":"false");
+					backend->comment(buf2);
+				}
+				out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
+			}
+			else if (cmd_match (CMD_IF_REENTRANT)){
+				sko_push(do_copy);
+				do_copy = reentrant && do_copy;
+			}
+			else if (cmd_match (CMD_IF_NOT_REENTRANT)){
+				sko_push(do_copy);
+				do_copy = !reentrant && do_copy;
+			}
+			else if (cmd_match(CMD_IF_BISON_BRIDGE)){
+				sko_push(do_copy);
+				do_copy = bison_bridge_lval && do_copy;
+			}
+			else if (cmd_match(CMD_IF_NOT_BISON_BRIDGE)){
+				sko_push(do_copy);
+				do_copy = !bison_bridge_lval && do_copy;
+			}
+			else if (cmd_match (CMD_ENDIF)){
+				sko_pop(&do_copy);
+			}
 			else if (cmd_match (CMD_IF_TABLES_SER)) {
-                do_copy = do_copy && tablesext;
+				do_copy = do_copy && tablesext;
 			}
 			else if (cmd_match (CMD_TABLES_YYDMAP)) {
 				if (tablesext && yydmap_buf.elts)
 					outn ((char *) (yydmap_buf.elts));
 			}
-            else if (cmd_match (CMD_DEFINE_YYTABLES)) {
-                if ( tablesext )
-                    out_str( "#define YYTABLES_NAME \"%s\"\n",
-                           tablesname ? tablesname : "yytables" );
-            }
 			else if (cmd_match (CMD_IF_CPP_ONLY)) {
 				/* only for C++ */
-                sko_push(do_copy);
+				sko_push(do_copy);
 				do_copy = C_plus_plus;
 			}
 			else if (cmd_match (CMD_IF_C_ONLY)) {
 				/* %- only for C */
-                sko_push(do_copy);
+				sko_push(do_copy);
 				do_copy = !C_plus_plus;
 			}
 			else if (cmd_match (CMD_IF_C_OR_CPP)) {
 				/* %* for C and C++ */
-                sko_push(do_copy);
+				sko_push(do_copy);
 				do_copy = true;
 			}
 			else if (cmd_match (CMD_NOT_FOR_HEADER)) {
@@ -809,7 +811,7 @@ void skelout (void)
 		}
 
 		else if (do_copy) 
-            outn (buf);
+			outn (buf);
 	}			/* end while */
 }
 

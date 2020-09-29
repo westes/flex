@@ -432,7 +432,17 @@ static const char *cpp_yy_int_aligned(void)
 
 static void cpp_comment(const char *txt)
 {
-	out_str("/* [[%s]] */\n", txt);
+	char buf[MAXLINE];
+	bool eol;
+
+	strncpy(buf, txt, MAXLINE-1);
+	eol = buf[strlen(buf)-1] == '\n';
+
+	if (eol)
+		buf[strlen(buf)-1] = '\0';
+	out_str("/* [[%s]] */", buf);
+	if (eol)
+		outc ('\n');
 }
 
 static void cpp_ntod(size_t num_full_table_rows)

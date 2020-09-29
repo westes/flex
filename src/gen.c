@@ -810,6 +810,7 @@ static void visible_define (const char *symname)
 {
 	out_m4_define(symname, NULL);
 	backend->comment(symname);
+	outc ('\n');
 }
 
 /* make_tables - generate transition tables and finishes generating output file
@@ -826,7 +827,7 @@ void make_tables (void)
 	// itself; by shoving all this stuff out to the skeleton file
 	// we make it easier to retarget the code generation.
 
-	backend->comment("m4 controls begin");
+	backend->comment("m4 controls begin\n");
 
 	// mode switches for YY_DO_BEFORE_ACTION code generation
 	if (yytext_is_array)
@@ -935,7 +936,12 @@ void make_tables (void)
 	if (backend == &cpp_backend && !C_plus_plus)
 		visible_define ( "M4_MODE_C_ONLY");
 
-	backend->comment("m4 controls end");
+	if (tablesext)
+		visible_define ( "M4_MODE_TABLESEXT");
+	if (prefix != NULL)
+	    out_m4_define ( "M4_MODE_PREFIX", prefix);	// FIXME: should be visible
+
+	backend->comment("m4 controls end\n");
 	out ("\n");
 
 	// There are a couple more modes we can't compute until after
@@ -1016,7 +1022,7 @@ void make_tables (void)
 	// Only at this point do we know if the automaton has backups.
 	// Some m4 conditionals require this information.
 
-	backend->comment("m4 controls begin");
+	backend->comment("m4 controls begin\n");
 
 	if (num_backing_up > 0)
 		visible_define ( "M4_MODE_HAS_BACKING_UP");
@@ -1027,7 +1033,7 @@ void make_tables (void)
 	if ((num_backing_up > 0 && !reject) && (fullspd || fulltbl))
 		visible_define ( "M4_MODE_NULTRANS_WRAP");
 
-	backend->comment("m4 controls end");
+	backend->comment("m4 controls end\n");
 	out ("\n");
 
 	if (do_yylineno) {
