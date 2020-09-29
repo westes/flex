@@ -473,7 +473,6 @@ static void cpp_ntod(size_t num_full_table_rows)
 static size_t cpp_geneoltbl(size_t sz)
 // Generate end-of-line-transitions - only used when yylineno tracking is on
 {
-	outn ("/* Table of booleans, true if rule could match eol. */");
 	out_str_dec (cpp_get_int32_decl (), "yy_rule_can_match_eol", sz);
 	return sizeof(int32_t) * sz;
 }

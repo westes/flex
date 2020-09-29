@@ -780,6 +780,9 @@ extern void mkechar(int, int[], int[]);
 
 extern void do_indent(void);	/* indent to the current level */
 
+/* Set a conmditional amd make it visible in generated code */
+extern void visible_define (const char *symname);
+
 /* Generate full speed compressed transition table. */
 extern void genctbl(void);
 

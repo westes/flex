@@ -736,6 +736,8 @@ void skelout (void)
 			} 
 			else if (buf[1] == '%') {
 				/* %% is a break point for skelout() */
+				backend->comment(buf);
+				outc ('\n');
 				return;
 			}
 			else if (cmd_match (CMD_PUSH)){

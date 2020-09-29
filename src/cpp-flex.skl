@@ -1470,10 +1470,6 @@ m4_define([[M4_GEN_NEXT_MATCH_FULLSPD]], [[
 		}
 ]])
 
-%# Conditional indirection through an equivalence map
-m4_ifdef([[M4_MODE_USEECS]], m4_define([[M4_EC]], [[*(yy_ec+$1)]]))
-m4_ifdef([[M4_NOT_MODE_USEECS]], [[m4_define([[M4_EC]], [[$1]])]])
-
 %not-for-header
 /** The main scanner function which does all the work.
  */
@@ -1579,8 +1575,12 @@ M4_GEN_START_STATE
 
 	yy_match:
 			/* Generate the code to find the next match. */
-m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[
-m4_ifdef([[M4_MODE_GENTABLES]], [[
+%# Conditional indirection through an equivalence map
+m4_ifdef([[M4_MODE_USEECS]], m4_define([[M4_EC]], [[*(yy_ec+$1)]]))
+m4_ifdef([[M4_NOT_MODE_USEECS]], [[m4_define([[M4_EC]], [[$1]])]])
+
+m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[m4_dnl
+m4_ifdef([[M4_MODE_GENTABLES]], [[m4_dnl
 			while ((yy_current_state = yy_nxt[yy_current_state][ M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0) {
 ]])
 m4_ifdef([[M4_MODE_NO_GENTABLES]], [[
