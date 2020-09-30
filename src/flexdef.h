@@ -310,7 +310,6 @@ struct flex_backend_t {
 	void (*prolog)(void);
 	const char **skel;
 	void (*epilog)(void);
-	const char *(*yy_int_aligned)(void);	// Generate aligned type for this back end
 	char *trace_fmt;			// Trace message format
 	// Language syntax generation
 	char *int_define_fmt;			// Format for integer constant definitions

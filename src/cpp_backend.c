@@ -425,11 +425,6 @@ static void cpp_epilog (void)
 #endif
 }
 
-static const char *cpp_yy_int_aligned(void)
-{
-	return long_align ? "long int" : "short int";
-}
-
 static void cpp_comment(const char *txt)
 {
 	char buf[MAXLINE];
@@ -654,7 +649,6 @@ struct flex_backend_t cpp_backend = {
 	.prolog = cpp_prolog,
 	.skel = cpp_skel,
 	.epilog = cpp_epilog,
-	.yy_int_aligned = cpp_yy_int_aligned,
 	.trace_fmt = "#line %d \"%s\"\n",
 	.int_define_fmt = "#define %s %d\n",
 	.string_define_fmt = "#define %s %s\n",

@@ -815,6 +815,7 @@ void visible_define (const char *symname)
 
 void make_tables (void)
 {
+	char buf[128];
 	int i;
 	int did_eof_rule = false;
 	struct yytbl_data *yynultrans_tbl = NULL;
@@ -915,6 +916,10 @@ void make_tables (void)
 	else
 		gentabs ();
 
+	snprintf(buf, sizeof(buf), "footprint: %ld bytes\n", footprint);
+	backend->comment(buf);
+	outc ('\n');
+	
 	// Only at this point do we know if the automaton has backups.
 	// Some m4 conditionals require this information.
 

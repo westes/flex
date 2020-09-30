@@ -1254,9 +1254,6 @@ void readin (void)
 	if (did_outfilename)
 		line_directive_out (stdout, 0);
 
-	/* Create the alignment type. */
-	buf_strdefine (&userdef_buf, "YY_INT_ALIGNED", backend->yy_int_aligned());
-
 	/* Define the start condition macros. */
 	{
 		struct Buf tmpbuf;
