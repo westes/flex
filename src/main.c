@@ -171,12 +171,6 @@ int flex_main (int argc, char *argv[])
 
 	readin ();
 
-	if (backend->prolog) {
-		backend->comment("prolog begins\n");
-		backend->prolog ();
-		backend->comment("prolog ends\n");
-	}
-
 	skelout ();
 	/* %% [1.5] DFA */
 	footprint += ntod ();
@@ -404,6 +398,9 @@ void flexend (int exit_status)
 
 	if (++called_before)
 		FLEX_EXIT (exit_status);
+
+	if (yyclass && !C_plus_plus)
+		flexerror (_("%option yyclass only meaningful for C++ scanners"));
 
 	if (skelfile != NULL) {
 		if (ferror (skelfile))
@@ -1239,7 +1236,8 @@ void readin (void)
 		buf_m4_define (&m4defs_buf, "M4_YY_REENTRANT", NULL);
 		if (yytext_is_array)
 			buf_m4_define (&m4defs_buf, "M4_YY_TEXT_IS_ARRAY", NULL);
-	}
+	} else
+		buf_m4_define (&m4defs_buf, "M4_YY_NOT_REENTRANT", NULL);
 
 	if ( bison_bridge_lval)
 		buf_m4_define (&m4defs_buf, "M4_YY_BISON_LVAL", NULL);
@@ -1416,6 +1414,11 @@ void readin (void)
 
 	backend->comment("m4 controls begin\n");
 
+	if (do_stdinit)
+		visible_define ( "M4_MODE_DO_STDINIT");
+	else
+		visible_define ( "M4_MODE_NO_DO_STDINIT");
+
 	// mode switches for YY_DO_BEFORE_ACTION code generation
 	if (yytext_is_array)
 		visible_define ( "M4_MODE_YYTEXT_IS_ARRAY");
@@ -1498,8 +1501,24 @@ void readin (void)
 	if (reject || interactive)
 		visible_define ( "M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE");
 
+	if (yyclass != NULL) {
+		visible_define ( "M4_MODE_YYCLASS");
+		out_m4_define("M4_YY_CLASS_NAME", yyclass);
+	}
+
 	if (ddebug)
 		visible_define ( "M4_MODE_DEBUG");
+
+	if (lex_compat)
+		visible_define ( "M4_LEX_COMPAT");
+
+	if (do_yywrap)
+		visible_define ( "M4_MODE_YYWRAP");
+	else
+		visible_define ( "M4_MODE_NO_YYWRAP");
+
+	if (interactive)
+		visible_define ( "M4_MODE_INTERACTIVE");
 
 	// Kluge to get around the fact that the %if-not-reentrant and
 	// %if-c-only gates can't be combined by nesting one inside the

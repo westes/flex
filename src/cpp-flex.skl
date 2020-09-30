@@ -654,6 +654,113 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 %% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. definitions & init go here
 
+m4_ifdef( [[M4_MODE_NO_YYWRAP]], [[
+%if-c-only
+m4_ifdef([[M4_YY_REENTRANT]], [[
+#define M4_YY_PREFIX[[wrap]](yyscanner) (/*CONSTCOND*/1)
+]])
+m4_ifdef([[M4_YY_NOT_REENTRANT]], [[
+#define M4_YY_PREFIX[[wrap]]() (/*CONSTCOND*/1)
+]])m4_dnl
+%endif
+#define YY_SKIP_YYWRAP
+]])
+m4_ifdef( [[M4_MODE_DEBUG]], [[
+#define FLEX_DEBUG
+]])
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]], [[m4_dnl
+typedef flex_uint8_t YY_CHAR;
+]])m4_dnl
+%if-c-only
+m4_define([[M4_TMP_STDINIT]], [[FILE *yyin = stdin, *yyout = stdout;]])
+m4_define([[M4_TMP_NO_STDINIT]], [[FILE *yyin = NULL, *yyout = NULL;]])
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]], [[
+m4_ifdef( [[M4_MODE_DO_STDINIT]], [[m4_dnl
+m4_ifdef([[M4_YY_REENTRANT]], [[
+#ifdef VMS
+#ifdef __VMS_POSIX
+#define YY_STDINIT
+#endif
+#else
+#define YY_STDINIT
+#endif
+]])
+#ifdef VMS");
+#ifndef __VMS_POSIX
+M4_TMP_NO_STDINIT
+#else
+M4_TMP_STDINIT
+#endif
+#else
+M4_TMP_STDINIT
+#endif
+]])
+m4_ifdef( [[M4_MODE_NO_DO_STDINIT]], [[
+m4_ifdef([[M4_YY_NOT_REENTRANT]], [[
+M4_TMP_NO_STDINIT
+]])
+]])
+]])
+m4_undefine([[M4_TMP_STDINIT]])
+m4_undefine([[M4_TMP_NO_STDINIT]])
+%endif
+%if-c++-only
+#define yytext_ptr yytext
+m4_ifdef( [[M4_MODE_INTERACTIVE]], [[#define YY_INTERACTIVE]])
+%endif
+m4_ifdef( [[M4_YY_NOT_IN_HEADER]], [[m4_dnl
+m4_ifdef( [[M4_MODE_FULLSPD]], [[m4_dnl
+typedef const struct yy_trans_info *yy_state_type;
+]], [[
+%if-c-only
+typedef int yy_state_type;
+%endif
+]])
+]])
+m4_ifdef([[M4_MODE_LEX_COMPAT]], [[#define YY_FLEX_LEX_COMPAT]])
+%if-c-only
+m4_ifdef([[M4_YY_NOT_REENTRANT]], [[
+extern int yylineno;
+m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl
+int yylineno = 1;
+]])
+]])
+%endif
+%if-c++-only
+
+#include <FlexLexer.h>
+m4_ifdef([[M4_MODE_NO_YYWRAP]], [[
+int yyFlexLexer::yywrap() { return 1;}
+]])
+m4_ifdef([[M4_MODE_YYCLASS]], [[
+int yyFlexLexer::yylex()
+	{
+	LexerError( "yyFlexLexer::yylex invoked but %option yyclass used" );
+	return 0;
+	}
+
+#define YY_DECL int M4_YY_CLASS_NAME::yylex()
+]])
+%endif
+%if-c-only
+/* Watch out: yytext_ptr is a variable when yytext is an array,
+ * but it's a macro when yytext is a pointer.
+ */
+m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
+m4_ifdef([[M4_YY_NOT_REENTRANT]], [[extern char yytext[];]])
+]])
+m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
+m4_ifdef([[M4_YY_REENTRANT]], [[#define yytext_ptr yytext_r]],[[
+extern char *yytext;
+
+#ifdef yytext_ptr
+#undef yytext_ptr
+#endif
+#define yytext_ptr yytext
+]])
+]])
+%endif
+
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 %% [1.5] DFA

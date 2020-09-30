@@ -307,7 +307,6 @@
 
 struct flex_backend_t {
 	const char *(*suffix)(void);		// Generate suffix for lexer source code
-	void (*prolog)(void);
 	const char **skel;
 	void (*epilog)(void);
 	char *trace_fmt;			// Trace message format
