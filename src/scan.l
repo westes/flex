@@ -634,7 +634,6 @@ M4QEND      "]""]"
 	^"%%".*		{
 			sectnum = 3;
 			BEGIN(no_section3_escape ? SECT3_NOESCAPE : SECT3);
-			outn("/* Begin user sect3 */");
 			yyterminate(); /* to stop the parser */
 
 			}

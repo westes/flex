@@ -389,120 +389,6 @@ void check_options (void)
 		filter_truncate(output_chain, preproc_level);
 		filter_apply_chain(output_chain);
 	}
-	yyout = stdout;
-
-
-	/* always generate the tablesverify flag. */
-	buf_m4_define (&m4defs_buf, "M4_YY_TABLES_VERIFY", tablesverify ? "1" : "0");
-	if (tablesext)
-		gentables = false;
-
-	if (tablesverify)
-		/* force generation of C tables. */
-		gentables = true;
-
-
-	if (tablesext) {
-		FILE   *tablesout;
-		struct yytbl_hdr hdr;
-		char   *pname = 0;
-		size_t  nbytes = 0;
-
-		buf_m4_define (&m4defs_buf, "M4_YY_TABLES_EXTERNAL", NULL);
-
-		if (!tablesfilename) {
-			nbytes = strlen (prefix) + strlen (tablesfile_template) + 2;
-			tablesfilename = pname = calloc(nbytes, 1);
-			snprintf (pname, nbytes, tablesfile_template, prefix);
-		}
-
-		if ((tablesout = fopen (tablesfilename, "w")) == NULL)
-			lerr (_("could not create %s"), tablesfilename);
-		free(pname);
-		tablesfilename = 0;
-
-		yytbl_writer_init (&tableswr, tablesout);
-
-		nbytes = strlen (prefix) + strlen ("tables") + 2;
-		tablesname = calloc(nbytes, 1);
-		snprintf (tablesname, nbytes, "%stables", prefix);
-		yytbl_hdr_init (&hdr, flex_version, tablesname);
-
-		if (yytbl_hdr_fwrite (&tableswr, &hdr) <= 0)
-			flexerror (_("could not write tables header"));
-	}
-
-	if (skelname && (skelfile = fopen (skelname, "r")) == NULL)
-		lerr (_("can't open skeleton file %s"), skelname);
-
-	if (reentrant) {
-		buf_m4_define (&m4defs_buf, "M4_YY_REENTRANT", NULL);
-		if (yytext_is_array)
-			buf_m4_define (&m4defs_buf, "M4_YY_TEXT_IS_ARRAY", NULL);
-	}
-
-	if ( bison_bridge_lval)
-		buf_m4_define (&m4defs_buf, "M4_YY_BISON_LVAL", NULL);
-
-	if ( bison_bridge_lloc)
-		buf_m4_define (&m4defs_buf, "<M4_YY_BISON_LLOC>", NULL);
-
-	if (strchr(prefix, '[') || strchr(prefix, ']'))
-		flexerror(_("Prefix cannot include '[' or ']'"));
-	buf_m4_define(&m4defs_buf, "M4_YY_PREFIX", prefix);
-
-	if (did_outfilename)
-		line_directive_out (stdout, 0);
-
-	if (do_yylineno)
-		buf_m4_define (&m4defs_buf, "M4_YY_USE_LINENO", NULL);
-
-	/* Create the alignment type. */
-	buf_strdefine (&userdef_buf, "YY_INT_ALIGNED", backend->yy_int_aligned());
-
-	/* Define the start condition macros. */
-	{
-		struct Buf tmpbuf;
-		buf_init(&tmpbuf, sizeof(char));
-		for (i = 1; i <= lastsc; i++) {
-			char *str, *fmt = backend->int_define_fmt;
-			size_t strsz;
-
-			strsz = strlen(fmt) + strlen(scname[i]) + (size_t)(1 + ceil (log10(i))) + 2;
-			str = malloc(strsz);
-			if (!str)
-				flexfatal(_("allocation of macro definition failed"));
-			snprintf(str, strsz, fmt,      scname[i], i - 1);
-			buf_strappend(&tmpbuf, str);
-			free(str);
-		}
-		buf_m4_define(&m4defs_buf, "M4_YY_SC_DEFS", tmpbuf.elts);
-		buf_destroy(&tmpbuf);
-	}
-
-	/* This is where we begin writing to the file. */
-
-	/* Dump the %top code. */
-	if( top_buf.elts)
-		outn((char*) top_buf.elts);
-
-	/* Dump the m4 definitions. */
-	buf_print_strings(&m4defs_buf, stdout);
-	m4defs_buf.nelts = 0; /* memory leak here. */
-
-	/* Place a bogus line directive, it will be fixed in the filter. */
-	if (gen_line_dirs && backend->trace_fmt) {
-		char buf2[4096];
-		snprintf(buf2, sizeof(buf2), backend->trace_fmt, 0, "M4_YY_OUTFILE_NAME");
-		outn(buf2);
-	}
-
-	/* Dump the user defined preproc directives. */
-	if (userdef_buf.elts)
-		outn ((char *) (userdef_buf.elts));
-
-	skelout ();
-	/* %% [1.0] */
 }
 
 /* flexend - terminate flex
@@ -1303,6 +1189,118 @@ void readin (void)
 	if (syntaxerror)
 		flexend (1);
 
+	yyout = stdout;
+
+
+	/* always generate the tablesverify flag. */
+	buf_m4_define (&m4defs_buf, "M4_YY_TABLES_VERIFY", tablesverify ? "1" : "0");
+	if (tablesext)
+		gentables = false;
+
+	if (tablesverify)
+		/* force generation of C tables. */
+		gentables = true;
+
+
+	if (tablesext) {
+		FILE   *tablesout;
+		struct yytbl_hdr hdr;
+		char   *pname = 0;
+		size_t  nbytes = 0;
+
+		buf_m4_define (&m4defs_buf, "M4_YY_TABLES_EXTERNAL", NULL);
+
+		if (!tablesfilename) {
+			nbytes = strlen (prefix) + strlen (tablesfile_template) + 2;
+			tablesfilename = pname = calloc(nbytes, 1);
+			snprintf (pname, nbytes, tablesfile_template, prefix);
+		}
+
+		if ((tablesout = fopen (tablesfilename, "w")) == NULL)
+			lerr (_("could not create %s"), tablesfilename);
+		free(pname);
+		tablesfilename = 0;
+
+		yytbl_writer_init (&tableswr, tablesout);
+
+		nbytes = strlen (prefix) + strlen ("tables") + 2;
+		tablesname = calloc(nbytes, 1);
+		snprintf (tablesname, nbytes, "%stables", prefix);
+		yytbl_hdr_init (&hdr, flex_version, tablesname);
+
+		if (yytbl_hdr_fwrite (&tableswr, &hdr) <= 0)
+			flexerror (_("could not write tables header"));
+	}
+
+	if (skelname && (skelfile = fopen (skelname, "r")) == NULL)
+		lerr (_("can't open skeleton file %s"), skelname);
+
+	if (reentrant) {
+		buf_m4_define (&m4defs_buf, "M4_YY_REENTRANT", NULL);
+		if (yytext_is_array)
+			buf_m4_define (&m4defs_buf, "M4_YY_TEXT_IS_ARRAY", NULL);
+	}
+
+	if ( bison_bridge_lval)
+		buf_m4_define (&m4defs_buf, "M4_YY_BISON_LVAL", NULL);
+
+	if ( bison_bridge_lloc)
+		buf_m4_define (&m4defs_buf, "<M4_YY_BISON_LLOC>", NULL);
+
+	if (strchr(prefix, '[') || strchr(prefix, ']'))
+		flexerror(_("Prefix cannot include '[' or ']'"));
+	buf_m4_define(&m4defs_buf, "M4_YY_PREFIX", prefix);
+
+	if (did_outfilename)
+		line_directive_out (stdout, 0);
+
+	/* Create the alignment type. */
+	buf_strdefine (&userdef_buf, "YY_INT_ALIGNED", backend->yy_int_aligned());
+
+	/* Define the start condition macros. */
+	{
+		struct Buf tmpbuf;
+		int i;
+		buf_init(&tmpbuf, sizeof(char));
+		for (i = 1; i <= lastsc; i++) {
+			char *str, *fmt = backend->int_define_fmt;
+			size_t strsz;
+
+			strsz = strlen(fmt) + strlen(scname[i]) + (size_t)(1 + ceil (log10(i))) + 2;
+			str = malloc(strsz);
+			if (!str)
+				flexfatal(_("allocation of macro definition failed"));
+			snprintf(str, strsz, fmt,      scname[i], i - 1);
+			buf_strappend(&tmpbuf, str);
+			free(str);
+		}
+		buf_m4_define(&m4defs_buf, "M4_YY_SC_DEFS", tmpbuf.elts);
+		buf_destroy(&tmpbuf);
+	}
+
+	/* This is where we begin writing to the file. */
+
+	backend->comment("A lexical scanner generated by flex\n");
+
+	/* Dump the %top code. */
+	if( top_buf.elts)
+		outn((char*) top_buf.elts);
+
+	/* Dump the m4 definitions. */
+	buf_print_strings(&m4defs_buf, stdout);
+	m4defs_buf.nelts = 0; /* memory leak here. */
+
+	/* Place a bogus line directive, it will be fixed in the filter. */
+	if (gen_line_dirs && backend->trace_fmt) {
+		char buf2[4096];
+		snprintf(buf2, sizeof(buf2), backend->trace_fmt, 0, "M4_YY_OUTFILE_NAME");
+		outn(buf2);
+	}
+
+	/* Dump the user defined preproc directives. */
+	if (userdef_buf.elts)
+		outn ((char *) (userdef_buf.elts));
+
 	/* If the user explicitly requested posix compatibility by specifing the
 	 * posix-compat option, then we check for conflicting options. However, if
 	 * the POSIXLY_CORRECT variable is set, then we quietly make flex as
@@ -1519,6 +1517,11 @@ void readin (void)
 	
 	backend->comment("m4 controls end\n");
 	out ("\n");
+
+	skelout ();
+	/* %% [1.0] */
+
+	backend->comment("Begin user sect3\n");
 }
 
 /* set_up_initial_allocations - allocate memory for internal tables */
