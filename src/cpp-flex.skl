@@ -1683,7 +1683,7 @@ M4_GEN_START_STATE
 			/* Generate the code to find the next match. */
 %# Conditional indirection through an equivalence map
 m4_ifdef([[M4_MODE_USEECS]], m4_define([[M4_EC]], [[*(yy_ec+$1)]]))
-m4_ifdef([[M4_NOT_MODE_USEECS]], [[m4_define([[M4_EC]], [[$1]])]])
+m4_ifdef([[M4_MODE_NO_USEECS]], [[m4_define([[M4_EC]], [[$1]])]])
 
 m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[m4_dnl
 m4_ifdef([[M4_MODE_GENTABLES]], [[m4_dnl

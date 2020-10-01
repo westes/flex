@@ -146,18 +146,6 @@ struct Buf *buf_strappend (struct Buf *buf, const char *str)
 	return buf_strnappend (buf, str, (int) strlen (str));
 }
 
-/* appends "#define str def\n" */
-struct Buf *buf_strdefine (struct Buf *buf, const char *str, const char *def)
-{
-	buf_strappend (buf, "#define ");
-	buf_strappend (buf, " ");
-	buf_strappend (buf, str);
-	buf_strappend (buf, " ");
-	buf_strappend (buf, def);
-	buf_strappend (buf, "\n");
-	return buf;
-}
-
 /** Pushes "m4_define( [[def]], [[val]])m4_dnl" to end of buffer.
  * @param buf A buffer as a list of strings.
  * @param def The m4 symbol to define.

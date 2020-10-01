@@ -88,7 +88,7 @@ static void sko_pop(bool* dc)
         flex_die("popped too many times in skeleton.");
 }
 
-/* Append "#define defname value\n" to the running buffer. */
+/* Append a constant declaration to the running buffer. */
 void action_define (const char *defname, int value)
 {
 	char    buf[MAXLINE];
@@ -104,7 +104,9 @@ void action_define (const char *defname, int value)
 	snprintf (buf, sizeof(buf), backend->int_define_fmt, defname, value);
 	add_action (buf);
 
-	/* track #defines so we can undef them when we're done. */
+	/* track definitions so we can naybe undef them when we're done;
+	 * this is only ever likely to work with the cpp back end.
+	 */
 	cpy = xstrdup(defname);
 	buf_append (&defs_buf, &cpy, 1);
 }

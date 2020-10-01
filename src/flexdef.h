@@ -384,6 +384,8 @@ extern struct flex_backend_t cpp_backend;
  *   yytext as a array instead of a character pointer.  Nice and inefficient.
  * do_yywrap - do yywrap() processing on EOF.  If false, EOF treated as
  *   "no more files".
+ * do_main - generate a trivial main part to make the lexer standalone.
+ *   Note that 0 is unset, 1 corresponds to --no-main, and 2 to --main.
  * csize - size of character set for the scanner we're generating;
  *   128 for 7-bit chars and 256 for 8-bit
  * yymore_used - if true, yymore() is used in input rules
@@ -406,7 +408,7 @@ extern int useecs, fulltbl, usemecs, fullspd;
 extern int gen_line_dirs, performance_report, backing_up_report;
 extern int reentrant, bison_bridge_lval, bison_bridge_lloc;
 extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
-extern int csize;
+extern int csize, do_main;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
 extern int yymore_really_used, reject_really_used;
@@ -778,7 +780,10 @@ extern void mkechar(int, int[], int[]);
 extern void do_indent(void);	/* indent to the current level */
 
 /* Set a conmditional amd make it visible in generated code */
-extern void visible_define (const char *symname);
+extern void visible_define (const char *);
+
+/* And again, with an explicit value part. */
+extern void visible_define_str (const char *, const char *);
 
 /* Generate full speed compressed transition table. */
 extern void genctbl(void);
@@ -1071,7 +1076,6 @@ extern struct Buf *buf_append(struct Buf * buf, const void *ptr, int n_elem);
 extern struct Buf *buf_concat(struct Buf* dest, const struct Buf* src);
 extern struct Buf *buf_strappend(struct Buf *, const char *str);
 extern struct Buf *buf_strnappend(struct Buf *, const char *str, int nchars);
-extern struct Buf *buf_strdefine(struct Buf * buf, const char *str, const char *def);
 extern struct Buf *buf_prints(struct Buf *buf, const char *fmt, const char* s);
 extern struct Buf *buf_m4_define(struct Buf *buf, const char* def, const char* val);
 extern struct Buf *buf_m4_undefine(struct Buf *buf, const char* def);

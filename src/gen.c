@@ -810,6 +810,15 @@ void visible_define (const char *symname)
 	outc ('\n');
 }
 
+void visible_define_str (const char *symname, const char *val)
+{
+	char buf[128];
+	out_m4_define(symname, val);
+	snprintf(buf, sizeof(buf), "%s = %s", symname, val);
+	backend->comment(buf);
+	outc ('\n');
+}
+
 /* make_tables - generate transition tables and finishes generating output file
  */
 

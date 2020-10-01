@@ -51,7 +51,7 @@ int     printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int     interactive, lex_compat, posix_compat, do_yylineno,
 	useecs, fulltbl, usemecs;
 int     fullspd, gen_line_dirs, performance_report, backing_up_report;
-int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
+int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap, do_main,
 	csize;
 int     reentrant, bison_bridge_lval, bison_bridge_lloc;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
@@ -311,9 +311,6 @@ void check_options (void)
 			nextecm[i] = BAD_SUBSCRIPT;	/* to catch errors */
 		}
 	}
-
-	if (extra_type)
-		buf_m4_define( &m4defs_buf, "M4_EXTRA_TYPE_DEFS", extra_type);
 
 	if (!use_stdout) {
 		FILE   *prev_stdout;
@@ -826,12 +823,12 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_MAIN:
-			buf_strdefine (&userdef_buf, "YY_MAIN", "1");
 			do_yywrap = false;
+			do_main = 2;
 			break;
 
 		    case OPT_NO_MAIN:
-			buf_strdefine (&userdef_buf, "YY_MAIN", "0");
+			do_main = 1;
 			break;
 
 		    case OPT_NO_LINE:
@@ -884,7 +881,6 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_NO_UNISTD_H:
-			//buf_strdefine (&userdef_buf, "YY_NO_UNISTD_H", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_UNISTD_H",0);
 			break;
 
@@ -991,7 +987,6 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_STACK:
-			//buf_strdefine (&userdef_buf, "YY_STACK_USED", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_STACK_USED",0);
 			break;
 
@@ -1040,95 +1035,72 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_NO_YY_PUSH_STATE:
-			//buf_strdefine (&userdef_buf, "YY_NO_PUSH_STATE", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_PUSH_STATE",0);
 			break;
 		    case OPT_NO_YY_POP_STATE:
-			//buf_strdefine (&userdef_buf, "YY_NO_POP_STATE", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_POP_STATE",0);
 			break;
 		    case OPT_NO_YY_TOP_STATE:
-			//buf_strdefine (&userdef_buf, "YY_NO_TOP_STATE", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_TOP_STATE",0);
 			break;
 		    case OPT_NO_UNPUT:
-			//buf_strdefine (&userdef_buf, "YY_NO_UNPUT", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_UNPUT",0);
 			break;
 		    case OPT_NO_YY_SCAN_BUFFER:
-			//buf_strdefine (&userdef_buf, "YY_NO_SCAN_BUFFER", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_SCAN_BUFFER",0);
 			break;
 		    case OPT_NO_YY_SCAN_BYTES:
-			//buf_strdefine (&userdef_buf, "YY_NO_SCAN_BYTES", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_SCAN_BYTES",0);
 			break;
 		    case OPT_NO_YY_SCAN_STRING:
-			//buf_strdefine (&userdef_buf, "YY_NO_SCAN_STRING", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_SCAN_STRING",0);
 			break;
 		    case OPT_NO_YYGET_EXTRA:
-			//buf_strdefine (&userdef_buf, "YY_NO_GET_EXTRA", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_EXTRA",0);
 			break;
 		    case OPT_NO_YYSET_EXTRA:
-			//buf_strdefine (&userdef_buf, "YY_NO_SET_EXTRA", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_EXTRA",0);
 			break;
 		    case OPT_NO_YYGET_LENG:
-			//buf_strdefine (&userdef_buf, "YY_NO_GET_LENG", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LENG",0);
 			break;
 		    case OPT_NO_YYGET_TEXT:
-			//buf_strdefine (&userdef_buf, "YY_NO_GET_TEXT", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_TEXT",0);
 			break;
 		    case OPT_NO_YYGET_LINENO:
-			//buf_strdefine (&userdef_buf, "YY_NO_GET_LINENO", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LINENO",0);
 			break;
 		    case OPT_NO_YYSET_LINENO:
-			//buf_strdefine (&userdef_buf, "YY_NO_SET_LINENO", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LINENO",0);
 			break;
 		    case OPT_NO_YYGET_COLUMN:
-			//buf_strdefine (&userdef_buf, "YY_NO_GET_COLUMN", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_COLUMN",0);
 			break;
 		    case OPT_NO_YYSET_COLUMN:
-			//buf_strdefine (&userdef_buf, "YY_NO_SET_COLUMN", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_COLUMN",0);
 			break;
 		    case OPT_NO_YYGET_IN:
-			//buf_strdefine (&userdef_buf, "YY_NO_GET_IN", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_IN",0);
 			break;
 		    case OPT_NO_YYSET_IN:
-			//buf_strdefine (&userdef_buf, "YY_NO_SET_IN", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_IN",0);
 			break;
 		    case OPT_NO_YYGET_OUT:
-			//buf_strdefine (&userdef_buf, "YY_NO_GET_OUT", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_OUT",0);
 			break;
 		    case OPT_NO_YYSET_OUT:
-			//buf_strdefine (&userdef_buf, "YY_NO_SET_OUT", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_OUT",0);
 			break;
 		    case OPT_NO_YYGET_LVAL:
-			//buf_strdefine (&userdef_buf, "YY_NO_GET_LVAL", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LVAL",0);
 			break;
 		    case OPT_NO_YYSET_LVAL:
-			//buf_strdefine (&userdef_buf, "YY_NO_SET_LVAL", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LVAL",0);
 			break;
 		    case OPT_NO_YYGET_LLOC:
-			//buf_strdefine (&userdef_buf, "YY_NO_GET_LLOC", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LLOC",0);
 			break;
 		    case OPT_NO_YYSET_LLOC:
-			//buf_strdefine (&userdef_buf, "YY_NO_SET_LLOC", "1");
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LLOC",0);
 			break;
 		    case OPT_HEX:
@@ -1186,8 +1158,6 @@ void readin (void)
 	yyout = stdout;
 
 
-	/* always generate the tablesverify flag. */
-	buf_m4_define (&m4defs_buf, "M4_YY_TABLES_VERIFY", tablesverify ? "1" : "0");
 	if (tablesext)
 		gentables = false;
 
@@ -1228,13 +1198,6 @@ void readin (void)
 
 	if (skelname && (skelfile = fopen (skelname, "r")) == NULL)
 		lerr (_("can't open skeleton file %s"), skelname);
-
-	if (reentrant) {
-		buf_m4_define (&m4defs_buf, "M4_YY_REENTRANT", NULL);
-		if (yytext_is_array)
-			buf_m4_define (&m4defs_buf, "M4_YY_TEXT_IS_ARRAY", NULL);
-	} else
-		buf_m4_define (&m4defs_buf, "M4_YY_NOT_REENTRANT", NULL);
 
 	if ( bison_bridge_lval)
 		buf_m4_define (&m4defs_buf, "M4_YY_BISON_LVAL", NULL);
@@ -1411,6 +1374,24 @@ void readin (void)
 
 	backend->comment("m4 controls begin\n");
 
+	if (extra_type != NULL)
+		visible_define_str ("M4_EXTRA_TYPE_DEFS", extra_type);
+
+	/* always generate the tablesverify flag. */
+	visible_define_str ("M4_YY_TABLES_VERIFY", tablesverify ? "1" : "0");
+
+	if (reentrant) {
+		visible_define ("M4_YY_REENTRANT");
+		if (yytext_is_array)
+			visible_define ("M4_YY_TEXT_IS_ARRAY");
+	} else
+		visible_define ("M4_YY_NOT_REENTRANT");
+
+	if (do_main == 2)
+		visible_define_str ( "YY_MAIN", "1");
+	else if (do_main == 1)
+		visible_define_str ( "YY_MAIN", "0");
+
 	if (do_stdinit)
 		visible_define ( "M4_MODE_DO_STDINIT");
 	else
@@ -1482,7 +1463,7 @@ void readin (void)
 	if (useecs)
 		visible_define ( "M4_MODE_USEECS");
 	else
-		visible_define ( "M4_NOT_MODE_USEECS");
+		visible_define ( "M4_MODE_NO_USEECS");
 
 	// mode switches for getting next action
 	if (gentables)
@@ -1507,7 +1488,7 @@ void readin (void)
 		visible_define ( "M4_MODE_DEBUG");
 
 	if (lex_compat)
-		visible_define ( "M4_LEX_COMPAT");
+		visible_define ( "M4_MODE_LEX_COMPAT");
 
 	if (do_yywrap)
 		visible_define ( "M4_MODE_YYWRAP");
@@ -1526,7 +1507,7 @@ void readin (void)
 	if (tablesext)
 		visible_define ( "M4_MODE_TABLESEXT");
 	if (prefix != NULL)
-	    out_m4_define ( "M4_MODE_PREFIX", prefix);	// FIXME: should be visible
+	    visible_define_str ( "M4_MODE_PREFIX", prefix);
 	
 	backend->comment("m4 controls end\n");
 	out ("\n");
