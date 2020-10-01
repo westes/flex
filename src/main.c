@@ -412,9 +412,6 @@ void flexend (int exit_status)
 				skelname);
 	}
 
-	if (backend->epilog)
-		backend->epilog();
-
 	if (exit_status != 0 && outfile_created) {
 		if (ferror (stdout))
 			lerr (_("error writing output file %s"),

@@ -308,7 +308,6 @@
 struct flex_backend_t {
 	const char *(*suffix)(void);		// Generate suffix for lexer source code
 	const char **skel;
-	void (*epilog)(void);
 	char *trace_fmt;			// Trace message format
 	// Language syntax generation
 	char *int_define_fmt;			// Format for integer constant definitions
