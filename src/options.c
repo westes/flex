@@ -33,7 +33,7 @@
 
 #include "options.h"
 
-/* Be sure to synchronize these options with those defined in "options.h",
+/* Be sure to synchronize these options with those defined in "ctrl.h",
  * the giant switch() statement in "main.c", and the %option processing in
  * "scan.l".
  */

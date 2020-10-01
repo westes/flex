@@ -87,7 +87,7 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 #define CCL_EXPR(func) \
 	do{ \
 	int c; \
-	for ( c = 0; c < csize; ++c ) \
+	for ( c = 0; c < ctrl.csize; ++c ) \
 		if ( isascii(c) && func(c) ) \
 			ccladd( currccl, c ); \
 	}while(0)
@@ -96,7 +96,7 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 #define CCL_NEG_EXPR(func) \
 	do{ \
 	int c; \
-	for ( c = 0; c < csize; ++c ) \
+	for ( c = 0; c < ctrl.csize; ++c ) \
 		if ( !func(c) ) \
 			ccladd( currccl, c ); \
 	}while(0)
@@ -134,7 +134,7 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 			for ( i = 1; i <= lastsc; ++i )
 				scset[i] = mkbranch( scset[i], def_rule );
 
-			if ( spprdflt )
+			if ( ctrl.spprdflt )
 				add_action(
 				"YY_FATAL_ERROR( \"flex scanner jammed\" )" );
 			else
@@ -193,17 +193,17 @@ optionlist	:  optionlist option
 
 option		:  TOK_OUTFILE '=' NAME
 			{
-			outfilename = xstrdup(nmstr);
-			did_outfilename = 1;
+			env.outfilename = xstrdup(nmstr);
+			env.did_outfilename = 1;
 			}
 		|  TOK_EXTRA_TYPE '=' NAME
 			{ extra_type = xstrdup(nmstr); }
 		|  TOK_PREFIX '=' NAME
-			{ prefix = xstrdup(nmstr);
-                          if (strchr(prefix, '[') || strchr(prefix, ']'))
+			{ ctrl.prefix = xstrdup(nmstr);
+                          if (strchr(ctrl.prefix, '[') || strchr(ctrl.prefix, ']'))
                               flexerror(_("Prefix must not contain [ or ]")); }
 		|  TOK_YYCLASS '=' NAME
-			{ yyclass = xstrdup(nmstr); }
+			{ ctrl.yyclass = xstrdup(nmstr); }
 		|  TOK_HEADER_FILE '=' NAME
 			{ headerfilename = xstrdup(nmstr); }
 	    |  TOK_TABLES_FILE '=' NAME
@@ -260,7 +260,7 @@ flexrule	:  '^' rule
 				{
 				bol_needed = true;
 
-				if ( performance_report > 1 )
+				if ( env.performance_hint > 1 )
 					pinpoint_message(
 			"'^' operator results in sub-optimal performance" );
 				}
@@ -409,7 +409,7 @@ rule		:  re2 re
 
 				}
 
-			if ( lex_compat || (varlength && headcnt == 0) )
+			if ( ctrl.lex_compat || (varlength && headcnt == 0) )
 				{ /* variable trailing context rule */
 				/* Mark the first part of the rule as the
 				 * accepting "head" part of a trailing
@@ -461,7 +461,7 @@ rule		:  re2 re
 				varlength = true;
 				}
 
-			if ( lex_compat || varlength )
+			if ( ctrl.lex_compat || varlength )
 				{
 				/* Again, see the comment in the rule for
 				 * "re2 re" above.
@@ -484,7 +484,7 @@ rule		:  re2 re
 
 			if ( trlcontxt )
 				{
-				if ( lex_compat || (varlength && headcnt == 0) )
+				if ( ctrl.lex_compat || (varlength && headcnt == 0) )
 					/* Both head and trail are
 					 * variable-length.
 					 */
@@ -698,19 +698,19 @@ singleton	:  singleton '*'
                     ccladd( ccldot, '\n' );
                     cclnegate( ccldot );
 
-                    if ( useecs )
+                    if ( ctrl.useecs )
                         mkeccl( ccltbl + cclmap[ccldot],
                             ccllen[ccldot], nextecm,
-                            ecgroup, csize, csize );
+                            ecgroup, ctrl.csize, ctrl.csize );
 
 				/* Create the (?s:'.') character class. */
                     cclany = cclinit();
                     cclnegate( cclany );
 
-                    if ( useecs )
+                    if ( ctrl.useecs )
                         mkeccl( ccltbl + cclmap[cclany],
                             ccllen[cclany], nextecm,
-                            ecgroup, csize, csize );
+                            ecgroup, ctrl.csize, ctrl.csize );
 
 				madeany = true;
 				}
@@ -729,9 +729,9 @@ singleton	:  singleton '*'
 				 */
 				qsort( ccltbl + cclmap[$1], (size_t) ccllen[$1], sizeof (*ccltbl), cclcmp );
 
-			if ( useecs )
+			if ( ctrl.useecs )
 				mkeccl( ccltbl + cclmap[$1], ccllen[$1],
-					nextecm, ecgroup, csize, csize );
+					nextecm, ecgroup, ctrl.csize, ctrl.csize);
 
 			++rulelen;
 
@@ -1056,7 +1056,7 @@ void line_warning( const char *str, int line )
 	{
 	char warning[MAXLINE];
 
-	if ( ! nowarn )
+	if ( ! env.nowarn )
 		{
 		snprintf( warning, sizeof(warning), "warning, %s", str );
 		line_pinpoint( warning, line );

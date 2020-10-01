@@ -228,7 +228,7 @@ void    finish_rule (int mach, int variable_trail_rule, int headcnt, int trailcn
 	if (variable_trail_rule) {
 		rule_type[num_rules] = RULE_VARIABLE;
 
-		if (performance_report > 0)
+		if (env.performance_hint > 0)
 			fprintf (stderr,
 				 _
 				 ("Variable trailing context rule at line %d\n"),
@@ -646,9 +646,9 @@ current_mns);
 	else {
 		check_char (sym);
 
-		if (useecs)
+		if (ctrl.useecs)
 			/* Map NUL's to csize. */
-			mkechar (sym ? sym : csize, nextecm, ecgroup);
+			mkechar (sym ? sym : ctrl.csize, nextecm, ecgroup);
 	}
 
 	return lastnfa;

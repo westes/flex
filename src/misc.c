@@ -209,7 +209,7 @@ void check_char (int c)
 		lerr (_("bad character '%s' detected in check_char()"),
 			readable_form (c));
 
-	if (c >= csize)
+	if (c >= ctrl.csize)
 		lerr (_
 			("scanner requires -8 flag to use the character %s"),
 			readable_form (c));
@@ -345,7 +345,7 @@ void line_directive_out (FILE *output_file, int do_infile)
 	char    directive[MAXLINE*2], filename[MAXLINE];
 	char   *s1, *s2, *s3;
 
-	if (!gen_line_dirs)
+	if (!ctrl.gen_line_dirs)
 		return;
 
 	s1 = do_infile ? infilename : "M4_YY_OUTFILE_NAME";
@@ -638,7 +638,7 @@ char   *readable_form (int c)
 		case '\v':
 			return "\\v";
 		default:
-			if(trace_hex)
+			if(env.trace_hex)
 				snprintf (rform, sizeof(rform), "\\x%.2x", (unsigned int) c);
 			else
 				snprintf (rform, sizeof(rform), "\\%.3o", (unsigned int) c);
@@ -705,17 +705,17 @@ void skelout (void)
 	/* Loop pulling lines either from the skelfile, if we're using
 	 * one, or from the selected back end's skel[] array.
 	 */
-	while (skelfile ?
-	       (fgets (buf, MAXLINE, skelfile) != NULL) :
+	while (env.skelfile != NULL ?
+	       (fgets (buf, MAXLINE, env.skelfile) != NULL) :
 	       ((buf = (char *) backend->skel[skel_ind++]) != 0)) {
 
-		if (skelfile)
+		if (env.skelfile != NULL)
 			chomp (buf);
 
 		/* copy from skel array */
 		if (buf[0] == '%') {	/* control line */
 			/* print the control line as a comment. */
-			if (ddebug && buf[1] != '#') {
+			if (ctrl.ddebug && buf[1] != '#') {
 				bool escaped = buf[strlen (buf) - 1] == '\\';
 				if (escaped) {
 					backend->comment(buf);
@@ -744,7 +744,7 @@ void skelout (void)
 			}
 			else if (cmd_match (CMD_PUSH)){
 				sko_push(do_copy);
-				if(ddebug){
+				if(ctrl.ddebug){
 					char buf2[MAXLINE];
 					snprintf(buf2, sizeof(buf2), "(state = (%s)\n",do_copy?"true":"false");
 					backend->comment(buf2);
@@ -753,7 +753,7 @@ void skelout (void)
 			}
 			else if (cmd_match (CMD_POP)){
 				sko_pop(&do_copy);
-				if(ddebug){
+				if(ctrl.ddebug){
 					char buf2[MAXLINE];
 					snprintf(buf2, sizeof(buf2), "(state = (%s)\n",do_copy?"true":"false");
 					backend->comment(buf2);
@@ -762,19 +762,19 @@ void skelout (void)
 			}
 			else if (cmd_match (CMD_IF_REENTRANT)){
 				sko_push(do_copy);
-				do_copy = reentrant && do_copy;
+				do_copy = ctrl.reentrant && do_copy;
 			}
 			else if (cmd_match (CMD_IF_NOT_REENTRANT)){
 				sko_push(do_copy);
-				do_copy = !reentrant && do_copy;
+				do_copy = !ctrl.reentrant && do_copy;
 			}
 			else if (cmd_match(CMD_IF_BISON_BRIDGE)){
 				sko_push(do_copy);
-				do_copy = bison_bridge_lval && do_copy;
+				do_copy = ctrl.bison_bridge_lval && do_copy;
 			}
 			else if (cmd_match(CMD_IF_NOT_BISON_BRIDGE)){
 				sko_push(do_copy);
-				do_copy = !bison_bridge_lval && do_copy;
+				do_copy = !ctrl.bison_bridge_lval && do_copy;
 			}
 			else if (cmd_match (CMD_ENDIF)){
 				sko_pop(&do_copy);
@@ -789,12 +789,12 @@ void skelout (void)
 			else if (cmd_match (CMD_IF_CPP_ONLY)) {
 				/* only for C++ */
 				sko_push(do_copy);
-				do_copy = C_plus_plus;
+				do_copy = ctrl.C_plus_plus;
 			}
 			else if (cmd_match (CMD_IF_C_ONLY)) {
 				/* %- only for C */
 				sko_push(do_copy);
-				do_copy = !C_plus_plus;
+				do_copy = !ctrl.C_plus_plus;
 			}
 			else if (cmd_match (CMD_IF_C_OR_CPP)) {
 				/* %* for C and C++ */

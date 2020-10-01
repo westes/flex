@@ -54,19 +54,19 @@ void check_for_backing_up (int ds, int state[])
 	if ((reject && !dfaacc[ds].dfaacc_set) || (!reject && !dfaacc[ds].dfaacc_state)) {	/* state is non-accepting */
 		++num_backing_up;
 
-		if (backing_up_report) {
-			fprintf (backing_up_file,
+		if (env.backing_up_report) {
+			fprintf (ctrl.backing_up_file,
 				 _("State #%d is non-accepting -\n"), ds);
 
 			/* identify the state */
-			dump_associated_rules (backing_up_file, ds);
+			dump_associated_rules (ctrl.backing_up_file, ds);
 
 			/* Now identify it further using the out- and
 			 * jam-transitions.
 			 */
-			dump_transitions (backing_up_file, state);
+			dump_transitions (ctrl.backing_up_file, state);
 
-			putc ('\n', backing_up_file);
+			putc ('\n', ctrl.backing_up_file);
 		}
 	}
 }
@@ -185,7 +185,7 @@ void dump_transitions (FILE *file, int state[])
 	int i, ec;
 	int out_char_set[CSIZE];
 
-	for (i = 0; i < csize; ++i) {
+	for (i = 0; i < ctrl.csize; ++i) {
 		ec = ABS (ecgroup[i]);
 		out_char_set[i] = state[ec];
 	}
@@ -195,7 +195,7 @@ void dump_transitions (FILE *file, int state[])
 	list_character_set (file, out_char_set);
 
 	/* now invert the members of the set to get the jam transitions */
-	for (i = 0; i < csize; ++i)
+	for (i = 0; i < ctrl.csize; ++i)
 		out_char_set[i] = !out_char_set[i];
 
 	fprintf (file, _("\n jam-transitions: EOF "));
@@ -409,7 +409,7 @@ size_t ntod (void)
 	 */
 	todo_head = todo_next = 0;
 
-	for (i = 0; i <= csize; ++i) {
+	for (i = 0; i <= ctrl.csize; ++i) {
 		duplist[i] = NIL;
 		symlist[i] = false;
 	}
@@ -417,7 +417,7 @@ size_t ntod (void)
 	for (i = 0; i <= num_rules; ++i)
 		accset[i] = NIL;
 
-	if (trace) {
+	if (env.trace) {
 		dumpnfa (scset[1]);
 		fputs (_("\n\nDFA Dump:\n\n"), stderr);
 	}
@@ -456,17 +456,17 @@ size_t ntod (void)
 	/* Note that the test for ecgroup[0] == numecs below accomplishes
 	 * both (1) and (2) above
 	 */
-	if (!fullspd && ecgroup[0] == numecs) {
+	if (!ctrl.fullspd && ecgroup[0] == numecs) {
 		/* NUL is alone in its equivalence class, which is the
 		 * last one.
 		 */
-		int     use_NUL_table = (numecs == csize);
+		int     use_NUL_table = (numecs == ctrl.csize);
 
-		if (fulltbl && !use_NUL_table) {
+		if (ctrl.fulltbl && !use_NUL_table) {
 			/* We still may want to use the table if numecs
 			 * is a power of 2.
 			 */
-			if (numecs <= csize && is_power_of_2(numecs)) {
+			if (numecs <= ctrl.csize && is_power_of_2(numecs)) {
 				use_NUL_table = true;
 			}
 		}
@@ -481,7 +481,7 @@ size_t ntod (void)
 	}
 
 
-	if (fullspd) {
+	if (ctrl.fullspd) {
 		for (i = 0; i <= numecs; ++i)
 			state[i] = 0;
 
@@ -489,7 +489,7 @@ size_t ntod (void)
 		dfaacc[0].dfaacc_state = 0;
 	}
 
-	else if (fulltbl) {
+	else if (ctrl.fulltbl) {
 		if (nultrans)
 			/* We won't be including NUL's transitions in the
 			 * table, so build it for entries from 0 .. numecs - 1.
@@ -567,7 +567,7 @@ size_t ntod (void)
 		}
 	}
 
-	if (!fullspd) {
+	if (!ctrl.fullspd) {
 		if (!snstods (nset, 0, accset, 0, 0, &end_of_buffer_state))
 			flexfatal (_
 				   ("could not create unique end-of-buffer state"));
@@ -590,7 +590,7 @@ size_t ntod (void)
 		dset = dss[ds];
 		dsize = dfasiz[ds];
 
-		if (trace)
+		if (env.trace)
 			fprintf (stderr, _("state # %d:\n"), ds);
 
 		sympartition (dset, dsize, symlist, duplist);
@@ -627,7 +627,7 @@ size_t ntod (void)
 
 					state[sym] = newds;
 
-					if (trace)
+					if (env.trace)
 						fprintf (stderr,
 							 "\t%d\t%d\n", sym,
 							 newds);
@@ -645,7 +645,7 @@ size_t ntod (void)
 					targ = state[duplist[sym]];
 					state[sym] = targ;
 
-					if (trace)
+					if (env.trace)
 						fprintf (stderr,
 							 "\t%d\t%d\n", sym,
 							 targ);
@@ -677,7 +677,7 @@ size_t ntod (void)
 			state[NUL_ec] = 0;	/* remove transition */
 		}
 
-		if (fulltbl) {
+		if (ctrl.fulltbl) {
 
 			/* Each time we hit here, it's another td_hilen, so we realloc. */
 			yynxt_tbl->td_hilen++;
@@ -715,7 +715,7 @@ size_t ntod (void)
 				out (backend->table_continuation);
 		}
 
-		else if (fullspd)
+		else if (ctrl.fullspd)
 			place_state (state, ds, totaltrans);
 
 		else if (ds == end_of_buffer_state)
@@ -743,7 +743,7 @@ size_t ntod (void)
 		}
 	}
 
-	if (fulltbl) {
+	if (ctrl.fulltbl) {
 		dataend ();
 		if (tablesext) {
 			yytbl_data_compress (yynxt_tbl);
@@ -757,7 +757,7 @@ size_t ntod (void)
 		}
 	}
 
-	else if (!fullspd) {
+	else if (!ctrl.fullspd) {
 		cmptmps ();	/* create compressed template entries */
 
 		/* Create tables for all the states with only one
@@ -1009,7 +1009,7 @@ void sympartition (int ds[], int numstates, int symlist[], int duplist[])
 		tch = transchar[ns];
 
 		if (tch != SYM_EPSILON) {
-			if (tch < -lastccl || tch >= csize) {
+			if (tch < -lastccl || tch >= ctrl.csize) {
 				flexfatal (_
 					   ("bad transition character detected in sympartition()"));
 			}

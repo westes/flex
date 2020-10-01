@@ -76,7 +76,7 @@ extern  "C" {
 
 /* Initializes scanner and checks option list for errors.
  * Parameters:
- *   options - Array of options.
+ *   options - Array of ctrl.
  *   argc    - Same as passed to main().
  *   argv    - Same as passed to main(). First element is skipped.
  *   flags   - Control behavior.
@@ -110,7 +110,7 @@ extern  "C" {
  *              If return is zero, then optindex is the NEXT valid option index.
  *
  * Return:  > 0 on success. Return value is from optspec_t->rval.
- *         == 0 if at end of options.
+ *         == 0 if at end of ctrl.
  *          < 0 on error (return value is an error code).
  *
  */

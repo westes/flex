@@ -263,9 +263,9 @@ int filter_tee_header (struct filter *chain)
 	    fputs ("m4_define([[M4_YY_NOOP]])[[]]m4_dnl\n", to_h);
 		fputs ("m4_define( [[M4_YY_IN_HEADER]],[[]])m4_dnl\n",
 		       to_h);
-		fprintf (to_h, "#ifndef %sHEADER_H\n", prefix);
-		fprintf (to_h, "#define %sHEADER_H 1\n", prefix);
-		fprintf (to_h, "#define %sIN_HEADER 1\n\n", prefix);
+		fprintf (to_h, "#ifndef %sHEADER_H\n", ctrl.prefix);
+		fprintf (to_h, "#define %sHEADER_H 1\n", ctrl.prefix);
+		fprintf (to_h, "#define %sIN_HEADER 1\n\n", ctrl.prefix);
 		fprintf (to_h,
 			 "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
 			 headerfilename ? headerfilename : "<stdout>");
@@ -278,7 +278,7 @@ int filter_tee_header (struct filter *chain)
 	fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_c);
 	fputs ("m4_define([[M4_YY_NOOP]])[[]]m4_dnl\n", to_c);
 	fprintf (to_c, "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
-		 outfilename ? outfilename : "<stdout>");
+		 env.outfilename != NULL ? env.outfilename : "<stdout>");
 
 	while (fgets (buf, sizeof buf, stdin)) {
 		fputs (buf, to_c);
@@ -290,11 +290,11 @@ int filter_tee_header (struct filter *chain)
 		fprintf (to_h, "\n");
 
 		/* write a fake line number. It will get fixed by the linedir filter. */
-		if (gen_line_dirs)
+		if (ctrl.gen_line_dirs)
 			fprintf (to_h, "#line 4000 \"M4_YY_OUTFILE_NAME\"\n");
 
-		fprintf (to_h, "#undef %sIN_HEADER\n", prefix);
-		fprintf (to_h, "#endif /* %sHEADER_H */\n", prefix);
+		fprintf (to_h, "#undef %sIN_HEADER\n", ctrl.prefix);
+		fprintf (to_h, "#endif /* %sHEADER_H */\n", ctrl.prefix);
 		fputs ("m4_undefine( [[M4_YY_IN_HEADER]])m4_dnl\n", to_h);
 
 		fflush (to_h);
@@ -310,11 +310,11 @@ int filter_tee_header (struct filter *chain)
 	fflush (to_c);
 	if (ferror (to_c))
 		lerr (_("error writing output file %s"),
-			outfilename ? outfilename : "<stdout>");
+			env.outfilename != NULL ? env.outfilename : "<stdout>");
 
 	else if (fclose (to_c))
 		lerr (_("error closing output file %s"),
-			outfilename ? outfilename : "<stdout>");
+			env.outfilename != NULL ? env.outfilename : "<stdout>");
 
 	while (wait (0) > 0) ;
 
@@ -360,7 +360,7 @@ int filter_fix_linedirs (struct filter *chain)
 			fname = regmatch_dup (&m[2], buf);
 
 			if (strcmp (fname,
-				outfilename ? outfilename : "<stdout>")
+				env.outfilename != NULL ? env.outfilename : "<stdout>")
 					== 0
 			 || strcmp (fname,
 			 	headerfilename ? headerfilename : "<stdout>")
@@ -418,11 +418,11 @@ int filter_fix_linedirs (struct filter *chain)
 	fflush (stdout);
 	if (ferror (stdout))
 		lerr (_("error writing output file %s"),
-			outfilename ? outfilename : "<stdout>");
+			env.outfilename != NULL ? env.outfilename : "<stdout>");
 
 	else if (fclose (stdout))
 		lerr (_("error closing output file %s"),
-			outfilename ? outfilename : "<stdout>");
+			env.outfilename != NULL ? env.outfilename : "<stdout>");
 
 	return 0;
 }

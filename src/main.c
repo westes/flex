@@ -47,26 +47,17 @@ void readin(void);
 void set_up_initial_allocations(void);
 
 /* these globals are all defined and commented in flexdef.h */
-int     printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
-int     interactive, lex_compat, posix_compat, do_yylineno,
-	useecs, fulltbl, usemecs;
-int     fullspd, gen_line_dirs, performance_report, backing_up_report;
-int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap, do_main,
-	csize;
-int     reentrant, bison_bridge_lval, bison_bridge_lloc;
+int     syntaxerror, eofseen, yytext_is_array;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
-int     trace_hex = 0;
 int     datapos, dataline, linenum;
 FILE   *skelfile = NULL;
 int     skel_ind = 0;
 char   *action_array;
 int     action_size, defs1_offset, prolog_offset, action_offset,
 	action_index;
-char   *infilename = NULL, *outfilename = NULL, *headerfilename = NULL;
-int     did_outfilename;
-char   *prefix, *yyclass, *extra_type = NULL;
-int     do_stdinit, use_stdout;
+char   *infilename = NULL, *headerfilename = NULL;
+char   *extra_type = NULL;
 int     onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int     onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
 int     maximum_mns, current_mns, current_max_rules;
@@ -98,7 +89,6 @@ char    nmstr[MAXLINE];
 int     sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int     tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 int     num_backing_up, bol_needed;
-FILE   *backing_up_file;
 int     end_of_buffer_state;
 char  **input_files;
 int     num_input_files;
@@ -112,6 +102,9 @@ bool    tablesext, tablesverify, gentables;
 char   *tablesfilename=0,*tablesname=0;
 struct yytbl_writer tableswr;
 size_t footprint;
+
+struct ctrl_bundle_t ctrl;
+struct env_bundle_t env;
 
 /* Make sure program_name is initialized so we don't crash if writing
  * out an error message before getting the program name from argv[0].
@@ -127,7 +120,6 @@ extern FILE* yyout;
 
 static char outfile_path[MAXLINE];
 static int outfile_created = 0;
-static char *skelname = NULL;
 static int _stdout_closed = 0; /* flag to prevent double-fclose() on stdout. */
 const char *escaped_qstart = "]]M4_YY_NOOP[M4_YY_NOOP[M4_YY_NOOP[[";
 const char *escaped_qend   = "]]M4_YY_NOOP]M4_YY_NOOP]M4_YY_NOOP[[";
@@ -180,7 +172,7 @@ int flex_main (int argc, char *argv[])
 			line_warning (_("rule cannot be matched"),
 				      rule_linenum[i]);
 
-	if (spprdflt && !reject && rule_useful[default_rule])
+	if (ctrl.spprdflt && !reject && rule_useful[default_rule])
 		line_warning (_
 			      ("-s option given but default rule can be matched"),
 			      rule_linenum[default_rule]);
@@ -218,114 +210,114 @@ void check_options (void)
 	int     i;
 	const char * m4 = NULL;
 
-	if (lex_compat) {
-		if (C_plus_plus)
+	if (ctrl.lex_compat) {
+		if (ctrl.C_plus_plus)
 			flexerror (_("Can't use -+ with -l option"));
 
-		if (fulltbl || fullspd)
+		if (ctrl.fulltbl || ctrl.fullspd)
 			flexerror (_("Can't use -f or -F with -l option"));
 
-		if (reentrant || bison_bridge_lval)
+		if (ctrl.reentrant || ctrl.bison_bridge_lval)
 			flexerror (_
-				   ("Can't use --reentrant or --bison-bridge with -l option"));
+				   ("Can't use --ctrl.reentrant or --bison-bridge with -l option"));
 
 		yytext_is_array = true;
-		do_yylineno = true;
-		use_read = false;
+		ctrl.do_yylineno = true;
+		ctrl.use_read = false;
 	}
 
 
 #if 0
 	/* This makes no sense whatsoever. I'm removing it. */
-	if (do_yylineno)
+	if (ctrl.do_yylineno)
 		/* This should really be "maintain_backup_tables = true" */
 		reject_really_used = true;
 #endif
 
-	if (csize == unspecified) {
-		if ((fulltbl || fullspd) && !useecs)
-			csize = DEFAULT_CSIZE;
+	if (ctrl.csize == trit_unspecified) {
+		if ((ctrl.fulltbl || ctrl.fullspd) && !ctrl.useecs)
+			ctrl.csize = DEFAULT_CSIZE;
 		else
-			csize = CSIZE;
+			ctrl.csize = CSIZE;
 	}
 
-	if (interactive == unspecified) {
-		if (fulltbl || fullspd)
-			interactive = false;
+	if (ctrl.interactive == trit_unspecified) {
+		if (ctrl.fulltbl || ctrl.fullspd)
+			ctrl.interactive = trit_false;
 		else
-			interactive = true;
+			ctrl.interactive = trit_true;
 	}
 
-	if (fulltbl || fullspd) {
-		if (usemecs)
+	if (ctrl.fulltbl || ctrl.fullspd) {
+		if (ctrl.usemecs)
 			flexerror (_
 				   ("-Cf/-CF and -Cm don't make sense together"));
 
-		if (interactive)
+		if (ctrl.interactive != trit_false)
 			flexerror (_("-Cf/-CF and -I are incompatible"));
 
-		if (lex_compat)
+		if (ctrl.lex_compat)
 			flexerror (_
 				   ("-Cf/-CF are incompatible with lex-compatibility mode"));
 
 
-		if (fulltbl && fullspd)
+		if (ctrl.fulltbl && ctrl.fullspd)
 			flexerror (_
 				   ("-Cf and -CF are mutually exclusive"));
 	}
 
-	if (C_plus_plus && fullspd)
+	if (ctrl.C_plus_plus && ctrl.fullspd)
 		flexerror (_("Can't use -+ with -CF option"));
 
-	if (C_plus_plus && yytext_is_array) {
+	if (ctrl.C_plus_plus && yytext_is_array) {
 		lwarn (_("%array incompatible with -+ option"));
 		yytext_is_array = false;
 	}
 
-	if (C_plus_plus && (reentrant))
+	if (ctrl.C_plus_plus && (ctrl.reentrant))
 		flexerror (_("Options -+ and --reentrant are mutually exclusive."));
 
-	if (C_plus_plus && bison_bridge_lval)
+	if (ctrl.C_plus_plus && ctrl.bison_bridge_lval)
 		flexerror (_("bison bridge not supported for the C++ scanner."));
 
 
-	if (useecs) {		/* Set up doubly-linked equivalence classes. */
+	if (ctrl.useecs) {		/* Set up doubly-linked equivalence classes. */
 
-		/* We loop all the way up to csize, since ecgroup[csize] is
+		/* We loop all the way up to ctrl.csize, since ecgroup[ctrl.csize] is
 		 * the position used for NUL characters.
 		 */
 		ecgroup[1] = NIL;
 
-		for (i = 2; i <= csize; ++i) {
+		for (i = 2; i <= ctrl.csize; ++i) {
 			ecgroup[i] = i - 1;
 			nextecm[i - 1] = i;
 		}
 
-		nextecm[csize] = NIL;
+		nextecm[ctrl.csize] = NIL;
 	}
 
 	else {
 		/* Put everything in its own equivalence class. */
-		for (i = 1; i <= csize; ++i) {
+		for (i = 1; i <= ctrl.csize; ++i) {
 			ecgroup[i] = i;
 			nextecm[i] = BAD_SUBSCRIPT;	/* to catch errors */
 		}
 	}
 
-	if (!use_stdout) {
+	if (!env.use_stdout) {
 		FILE   *prev_stdout;
 
-		if (!did_outfilename) {
+		if (!env.did_outfilename) {
 			snprintf (outfile_path, sizeof(outfile_path), outfile_template,
-				  prefix, backend->suffix());
+				  ctrl.prefix, backend->suffix());
 
-			outfilename = outfile_path;
+			env.outfilename = outfile_path;
 		}
 
-		prev_stdout = freopen (outfilename, "w+", stdout);
+		prev_stdout = freopen (env.outfilename, "w+", stdout);
 
 		if (prev_stdout == NULL)
-			lerr (_("could not create %s"), outfilename);
+			lerr (_("could not create %s"), env.outfilename);
 
 		outfile_created = 1;
 	}
@@ -396,135 +388,135 @@ void flexend (int exit_status)
 	if (++called_before)
 		FLEX_EXIT (exit_status);
 
-	if (yyclass && !C_plus_plus)
+	if (ctrl.yyclass != NULL && !ctrl.C_plus_plus)
 		flexerror (_("%option yyclass only meaningful for C++ scanners"));
 
 	if (skelfile != NULL) {
 		if (ferror (skelfile))
 			lerr (_("input error reading skeleton file %s"),
-				skelname);
+				env.skelname);
 
 		else if (fclose (skelfile))
 			lerr (_("error closing skeleton file %s"),
-				skelname);
+				env.skelname);
 	}
 
 	if (exit_status != 0 && outfile_created) {
 		if (ferror (stdout))
 			lerr (_("error writing output file %s"),
-				outfilename);
+				env.outfilename);
 
 		else if ((_stdout_closed = 1) && fclose (stdout))
 			lerr (_("error closing output file %s"),
-				outfilename);
+				env.outfilename);
 
-		else if (unlink (outfilename))
+		else if (unlink (env.outfilename))
 			lerr (_("error deleting output file %s"),
-				outfilename);
+				env.outfilename);
 	}
 
 
-	if (backing_up_report && backing_up_file) {
+	if (env.backing_up_report && ctrl.backing_up_file) {
 		if (num_backing_up == 0)
-			fprintf (backing_up_file, _("No backing up.\n"));
-		else if (fullspd || fulltbl)
-			fprintf (backing_up_file,
+			fprintf (ctrl.backing_up_file, _("No backing up.\n"));
+		else if (ctrl.fullspd || ctrl.fulltbl)
+			fprintf (ctrl.backing_up_file,
 				 _
 				 ("%d backing up (non-accepting) states.\n"),
 				 num_backing_up);
 		else
-			fprintf (backing_up_file,
+			fprintf (ctrl.backing_up_file,
 				 _("Compressed tables always back up.\n"));
 
-		if (ferror (backing_up_file))
+		if (ferror (ctrl.backing_up_file))
 			lerr (_("error writing backup file %s"),
 				backing_name);
 
-		else if (fclose (backing_up_file))
+		else if (fclose (ctrl.backing_up_file))
 			lerr (_("error closing backup file %s"),
 				backing_name);
 	}
 
-	if (printstats) {
+	if (env.printstats) {
 		fprintf (stderr, _("%s version %s usage statistics:\n"),
 			 program_name, flex_version);
 
 		fprintf (stderr, _("  scanner options: -"));
 
-		if (C_plus_plus)
+		if (ctrl.C_plus_plus)
 			putc ('+', stderr);
-		if (backing_up_report)
+		if (env.backing_up_report)
 			putc ('b', stderr);
-		if (ddebug)
+		if (ctrl.ddebug)
 			putc ('d', stderr);
 		if (sf_case_ins())
 			putc ('i', stderr);
-		if (lex_compat)
+		if (ctrl.lex_compat)
 			putc ('l', stderr);
-		if (posix_compat)
+		if (ctrl.posix_compat)
 			putc ('X', stderr);
-		if (performance_report > 0)
+		if (env.performance_hint > 0)
 			putc ('p', stderr);
-		if (performance_report > 1)
+		if (env.performance_hint > 1)
 			putc ('p', stderr);
-		if (spprdflt)
+		if (ctrl.spprdflt)
 			putc ('s', stderr);
-		if (reentrant)
+		if (ctrl.reentrant)
 			fputs ("--reentrant", stderr);
-        if (bison_bridge_lval)
+        if (ctrl.bison_bridge_lval)
             fputs ("--bison-bridge", stderr);
-        if (bison_bridge_lloc)
+        if (ctrl.bison_bridge_lloc)
             fputs ("--bison-locations", stderr);
-		if (use_stdout)
+		if (env.use_stdout)
 			putc ('t', stderr);
-		if (printstats)
+		if (env.printstats)
 			putc ('v', stderr);	/* always true! */
-		if (nowarn)
+		if (env.nowarn)
 			putc ('w', stderr);
-		if (interactive == false)
+		if (ctrl.interactive == trit_false)
 			putc ('B', stderr);
-		if (interactive == true)
+		if (ctrl.interactive == trit_true)
 			putc ('I', stderr);
-		if (!gen_line_dirs)
+		if (!ctrl.gen_line_dirs)
 			putc ('L', stderr);
-		if (trace)
+		if (env.trace)
 			putc ('T', stderr);
 
-		if (csize == unspecified)
-			/* We encountered an error fairly early on, so csize
+		if (ctrl.csize == trit_unspecified)
+			/* We encountered an error fairly early on, so ctrl.csize
 			 * never got specified.  Define it now, to prevent
 			 * bogus table sizes being written out below.
 			 */
-			csize = 256;
+			ctrl.csize = 256;
 
-		if (csize == 128)
+		if (ctrl.csize == 128)
 			putc ('7', stderr);
 		else
 			putc ('8', stderr);
 
 		fprintf (stderr, " -C");
 
-		if (long_align)
+		if (ctrl.long_align)
 			putc ('a', stderr);
-		if (fulltbl)
+		if (ctrl.fulltbl)
 			putc ('f', stderr);
-		if (fullspd)
+		if (ctrl.fullspd)
 			putc ('F', stderr);
-		if (useecs)
+		if (ctrl.useecs)
 			putc ('e', stderr);
-		if (usemecs)
+		if (ctrl.usemecs)
 			putc ('m', stderr);
-		if (use_read)
+		if (ctrl.use_read)
 			putc ('r', stderr);
 
-		if (did_outfilename)
-			fprintf (stderr, " -o%s", outfilename);
+		if (env.did_outfilename)
+			fprintf (stderr, " -o%s", env.outfilename);
 
-		if (skelname)
-			fprintf (stderr, " -S%s", skelname);
+		if (env.skelname != NULL)
+			fprintf (stderr, " -S%s", env.skelname);
 
-		if (strcmp (prefix, "yy"))
-			fprintf (stderr, " -P%s", prefix);
+		if (strcmp (ctrl.prefix, "yy"))
+			fprintf (stderr, " -P%s", ctrl.prefix);
 
 		putc ('\n', stderr);
 
@@ -538,7 +530,7 @@ void flexend (int exit_status)
 
 		if (num_backing_up == 0)
 			fprintf (stderr, _("  No backing up\n"));
-		else if (fullspd || fulltbl)
+		else if (ctrl.fullspd || ctrl.fulltbl)
 			fprintf (stderr,
 				 _
 				 ("  %d backing-up (non-accepting) states\n"),
@@ -575,7 +567,7 @@ void flexend (int exit_status)
 			 _("  %d/%d unique/duplicate transitions\n"),
 			 numuniq, numdup);
 
-		if (fulltbl) {
+		if (ctrl.fulltbl) {
 			tblsiz = lastdfa * numecs;
 			fprintf (stderr, _("  %d table entries\n"),
 				 tblsiz);
@@ -606,20 +598,20 @@ void flexend (int exit_status)
 				 numtemps, tmpuses);
 		}
 
-		if (useecs) {
-			tblsiz = tblsiz + csize;
+		if (ctrl.useecs) {
+			tblsiz = tblsiz + ctrl.csize;
 			fprintf (stderr,
 				 _
 				 ("  %d/%d equivalence classes created\n"),
-				 numecs, csize);
+				 numecs, ctrl.csize);
 		}
 
-		if (usemecs) {
+		if (ctrl.usemecs) {
 			tblsiz = tblsiz + numecs;
 			fprintf (stderr,
 				 _
 				 ("  %d/%d meta-equivalence classes created\n"),
-				 nummecs, csize);
+				 nummecs, ctrl.csize);
 		}
 
 		fprintf (stderr,
@@ -644,22 +636,17 @@ void flexinit (int argc, char **argv)
 	char   *arg;
 	scanopt_t sopt;
 
-	printstats = syntaxerror = trace = spprdflt = false;
-	lex_compat = posix_compat = C_plus_plus = backing_up_report =
-	    ddebug = fulltbl = false;
-	fullspd = long_align = nowarn = yymore_used = continued_action =
-	    false;
-	do_yylineno = yytext_is_array = in_rule = reject = do_stdinit =
-	    false;
-	yymore_really_used = reject_really_used = unspecified;
-	interactive = csize = unspecified;
-	do_yywrap = gen_line_dirs = usemecs = useecs = true;
-	reentrant = bison_bridge_lval = bison_bridge_lloc = false;
-	performance_report = 0;
-	did_outfilename = 0;
-	prefix = "yy";
-	yyclass = 0;
-	use_read = use_stdout = false;
+	memset(&ctrl, '\0', sizeof(ctrl));
+	syntaxerror = false;
+	yymore_used = continued_action = false;
+	yytext_is_array = in_rule = reject = false;
+	yymore_really_used = reject_really_used = trit_unspecified;
+	ctrl.do_main = trit_unspecified;
+	ctrl.interactive = ctrl.csize = trit_unspecified;
+	ctrl.do_yywrap = ctrl.gen_line_dirs = ctrl.usemecs = ctrl.useecs = true;
+	ctrl.reentrant = ctrl.bison_bridge_lval = ctrl.bison_bridge_lloc = false;
+	env.performance_hint = 0;
+	ctrl.prefix = "yy";
 	tablesext = tablesverify = false;
 	gentables = true;
 	tablesfilename = tablesname = NULL;
@@ -695,7 +682,7 @@ void flexinit (int argc, char **argv)
 
 	if (program_name != NULL &&
 	    program_name[strlen (program_name) - 1] == '+')
-		C_plus_plus = true;
+		ctrl.C_plus_plus = true;
 
 	/* read flags */
 	sopt = scanopt_init (flexopts, argc, argv, 0);
@@ -719,19 +706,19 @@ void flexinit (int argc, char **argv)
 
 		switch ((enum flexopt_flag_t) rv) {
 		    case OPT_CPLUSPLUS:
-			C_plus_plus = true;
+			ctrl.C_plus_plus = true;
 			break;
 
 		    case OPT_BATCH:
-			interactive = false;
+			ctrl.interactive = trit_false;
 			break;
 
 		    case OPT_BACKUP:
-			backing_up_report = true;
+			env.backing_up_report = trit_true;
 			break;
 
 		    case OPT_BACKUP_FILE:
-			backing_up_report = true;
+			env.backing_up_report = true;
                         backing_name = arg;
 			break;
 
@@ -740,36 +727,36 @@ void flexinit (int argc, char **argv)
 
 		    case OPT_COMPRESSION:
 			if (!sawcmpflag) {
-				useecs = false;
-				usemecs = false;
-				fulltbl = false;
+				ctrl.useecs = false;
+				ctrl.usemecs = false;
+				ctrl.fulltbl = false;
 				sawcmpflag = true;
 			}
 
 			for (i = 0; arg && arg[i] != '\0'; i++)
 				switch (arg[i]) {
 				    case 'a':
-					long_align = true;
+					ctrl.long_align = true;
 					break;
 
 				    case 'e':
-					useecs = true;
+					ctrl.useecs = true;
 					break;
 
 				    case 'F':
-					fullspd = true;
+					ctrl.fullspd = true;
 					break;
 
 				    case 'f':
-					fulltbl = true;
+					ctrl.fulltbl = true;
 					break;
 
 				    case 'm':
-					usemecs = true;
+					ctrl.usemecs = true;
 					break;
 
 				    case 'r':
-					use_read = true;
+					ctrl.use_read = true;
 					break;
 
 				    default:
@@ -781,21 +768,21 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_DEBUG:
-			ddebug = true;
+			ctrl.ddebug = true;
 			break;
 
 		    case OPT_NO_DEBUG:
-			ddebug = false;
+			ctrl.ddebug = false;
 			break;
 
 		    case OPT_FULL:
-			useecs = usemecs = false;
-			use_read = fulltbl = true;
+			ctrl.useecs = ctrl.usemecs = false;
+			ctrl.use_read = ctrl.fulltbl = true;
 			break;
 
 		    case OPT_FAST:
-			useecs = usemecs = false;
-			use_read = fullspd = true;
+			ctrl.useecs = ctrl.usemecs = false;
+			ctrl.use_read = ctrl.fullspd = true;
 			break;
 
 		    case OPT_HELP:
@@ -803,7 +790,7 @@ void flexinit (int argc, char **argv)
 			FLEX_EXIT (0);
 
 		    case OPT_INTERACTIVE:
-			interactive = true;
+			ctrl.interactive = true;
 			break;
 
 		    case OPT_CASE_INSENSITIVE:
@@ -811,11 +798,11 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_LEX_COMPAT:
-			lex_compat = true;
+			ctrl.lex_compat = true;
 			break;
 
 		    case OPT_POSIX_COMPAT:
-			posix_compat = true;
+			ctrl.posix_compat = true;
 			break;
 
 		    case OPT_PREPROC_LEVEL:
@@ -823,61 +810,61 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_MAIN:
-			do_yywrap = false;
-			do_main = 2;
+			ctrl.do_yywrap = false;
+			ctrl.do_main = trit_true;
 			break;
 
 		    case OPT_NO_MAIN:
-			do_main = 1;
+			ctrl.do_main = trit_false;
 			break;
 
 		    case OPT_NO_LINE:
-			gen_line_dirs = false;
+			ctrl.gen_line_dirs = false;
 			break;
 
 		    case OPT_OUTFILE:
-			outfilename = arg;
-			did_outfilename = 1;
+			env.outfilename = arg;
+			env.did_outfilename = 1;
 			break;
 
 		    case OPT_PREFIX:
-			prefix = arg;
+			ctrl.prefix = arg;
 			break;
 
 		    case OPT_PERF_REPORT:
-			++performance_report;
+			++env.performance_hint;
 			break;
 
 		    case OPT_BISON_BRIDGE:
-			bison_bridge_lval = true;
+			ctrl.bison_bridge_lval = true;
 			break;
 
 		    case OPT_BISON_BRIDGE_LOCATIONS:
-			bison_bridge_lval = bison_bridge_lloc = true;
+			ctrl.bison_bridge_lval = ctrl.bison_bridge_lloc = true;
 			break;
 
 		    case OPT_REENTRANT:
-			reentrant = true;
+			ctrl.reentrant = true;
 			break;
 
 		    case OPT_NO_REENTRANT:
-			reentrant = false;
+			ctrl.reentrant = false;
 			break;
 
 		    case OPT_SKEL:
-			skelname = arg;
+			env.skelname = arg;
 			break;
 
 		    case OPT_DEFAULT:
-			spprdflt = false;
+			ctrl.spprdflt = false;
 			break;
 
 		    case OPT_NO_DEFAULT:
-			spprdflt = true;
+			ctrl.spprdflt = true;
 			break;
 
 		    case OPT_STDOUT:
-			use_stdout = true;
+			env.use_stdout = true;
 			break;
 
 		    case OPT_NO_UNISTD_H:
@@ -894,39 +881,39 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_TRACE:
-			trace = true;
+			env.trace = true;
 			break;
 
 		    case OPT_VERBOSE:
-			printstats = true;
+			env.printstats = true;
 			break;
 
 		    case OPT_VERSION:
-			printf ("%s %s\n", (C_plus_plus ? "flex++" : "flex"), flex_version);
+			printf ("%s %s\n", (ctrl.C_plus_plus ? "flex++" : "flex"), flex_version);
 			FLEX_EXIT (0);
 
 		    case OPT_WARN:
-			nowarn = false;
+			env.nowarn = false;
 			break;
 
 		    case OPT_NO_WARN:
-			nowarn = true;
+			env.nowarn = true;
 			break;
 
 		    case OPT_7BIT:
-			csize = 128;
+			ctrl.csize = 128;
 			break;
 
 		    case OPT_8BIT:
-			csize = CSIZE;
+			ctrl.csize = CSIZE;
 			break;
 
 		    case OPT_ALIGN:
-			long_align = true;
+			ctrl.long_align = true;
 			break;
 
 		    case OPT_NO_ALIGN:
-			long_align = false;
+			ctrl.long_align = false;
 			break;
 
 		    case OPT_ALWAYS_INTERACTIVE:
@@ -946,11 +933,11 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_ECS:
-			useecs = true;
+			ctrl.useecs = true;
 			break;
 
 		    case OPT_NO_ECS:
-			useecs = false;
+			ctrl.useecs = false;
 			break;
 
 		    case OPT_HEADER_FILE:
@@ -958,11 +945,11 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_META_ECS:
-			usemecs = true;
+			ctrl.usemecs = true;
 			break;
 
 		    case OPT_NO_META_ECS:
-			usemecs = false;
+			ctrl.usemecs = false;
 			break;
 
 		    case OPT_PREPROCDEFINE:
@@ -983,7 +970,7 @@ void flexinit (int argc, char **argv)
 		    break;
 
 		    case OPT_READ:
-			use_read = true;
+			ctrl.use_read = true;
 			break;
 
 		    case OPT_STACK:
@@ -991,31 +978,31 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_STDINIT:
-			do_stdinit = true;
+			ctrl.do_stdinit = true;
 			break;
 
 		    case OPT_NO_STDINIT:
-			do_stdinit = false;
+			ctrl.do_stdinit = false;
 			break;
 
 		    case OPT_YYCLASS:
-			yyclass = arg;
+			ctrl.yyclass = arg;
 			break;
 
 		    case OPT_YYLINENO:
-			do_yylineno = true;
+			ctrl.do_yylineno = true;
 			break;
 
 		    case OPT_NO_YYLINENO:
-			do_yylineno = false;
+			ctrl.do_yylineno = false;
 			break;
 
 		    case OPT_YYWRAP:
-			do_yywrap = true;
+			ctrl.do_yywrap = true;
 			break;
 
 		    case OPT_NO_YYWRAP:
-			do_yywrap = false;
+			ctrl.do_yywrap = false;
 			break;
 
 		    case OPT_YYMORE:
@@ -1104,7 +1091,7 @@ void flexinit (int argc, char **argv)
 			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LLOC",0);
 			break;
 		    case OPT_HEX:
-			trace_hex = 1;
+			env.trace_hex = true;
                         break;
 		    case OPT_NO_SECT3_ESCAPE:
                         no_section3_escape = true;
@@ -1175,9 +1162,9 @@ void readin (void)
 		buf_m4_define (&m4defs_buf, "M4_YY_TABLES_EXTERNAL", NULL);
 
 		if (!tablesfilename) {
-			nbytes = strlen (prefix) + strlen (tablesfile_template) + 2;
+			nbytes = strlen (ctrl.prefix) + strlen (tablesfile_template) + 2;
 			tablesfilename = pname = calloc(nbytes, 1);
-			snprintf (pname, nbytes, tablesfile_template, prefix);
+			snprintf (pname, nbytes, tablesfile_template, ctrl.prefix);
 		}
 
 		if ((tablesout = fopen (tablesfilename, "w")) == NULL)
@@ -1187,29 +1174,29 @@ void readin (void)
 
 		yytbl_writer_init (&tableswr, tablesout);
 
-		nbytes = strlen (prefix) + strlen ("tables") + 2;
+		nbytes = strlen (ctrl.prefix) + strlen ("tables") + 2;
 		tablesname = calloc(nbytes, 1);
-		snprintf (tablesname, nbytes, "%stables", prefix);
+		snprintf (tablesname, nbytes, "%stables", ctrl.prefix);
 		yytbl_hdr_init (&hdr, flex_version, tablesname);
 
 		if (yytbl_hdr_fwrite (&tableswr, &hdr) <= 0)
 			flexerror (_("could not write tables header"));
 	}
 
-	if (skelname && (skelfile = fopen (skelname, "r")) == NULL)
-		lerr (_("can't open skeleton file %s"), skelname);
+	if (env.skelname && (skelfile = fopen (env.skelname, "r")) == NULL)
+		lerr (_("can't open skeleton file %s"), env.skelname);
 
-	if ( bison_bridge_lval)
+	if ( ctrl.bison_bridge_lval)
 		buf_m4_define (&m4defs_buf, "M4_YY_BISON_LVAL", NULL);
 
-	if ( bison_bridge_lloc)
+	if ( ctrl.bison_bridge_lloc)
 		buf_m4_define (&m4defs_buf, "<M4_YY_BISON_LLOC>", NULL);
 
-	if (strchr(prefix, '[') || strchr(prefix, ']'))
+	if (strchr(ctrl.prefix, '[') || strchr(ctrl.prefix, ']'))
 		flexerror(_("Prefix cannot include '[' or ']'"));
-	buf_m4_define(&m4defs_buf, "M4_YY_PREFIX", prefix);
+	buf_m4_define(&m4defs_buf, "M4_YY_PREFIX", ctrl.prefix);
 
-	if (did_outfilename)
+	if (env.did_outfilename)
 		line_directive_out (stdout, 0);
 
 	/* Define the start condition macros. */
@@ -1246,7 +1233,7 @@ void readin (void)
 	m4defs_buf.nelts = 0; /* memory leak here. */
 
 	/* Place a bogus line directive, it will be fixed in the filter. */
-	if (gen_line_dirs && backend->trace_fmt) {
+	if (ctrl.gen_line_dirs && backend->trace_fmt) {
 		char buf2[4096];
 		snprintf(buf2, sizeof(buf2), backend->trace_fmt, 0, "M4_YY_OUTFILE_NAME");
 		outn(buf2);
@@ -1257,7 +1244,7 @@ void readin (void)
 		outn ((char *) (userdef_buf.elts));
 
 	/* If the user explicitly requested posix compatibility by specifing the
-	 * posix-compat option, then we check for conflicting options. However, if
+	 * posix-compat option, then we check for conflicting ctrl. However, if
 	 * the POSIXLY_CORRECT variable is set, then we quietly make flex as
 	 * posix-compatible as possible.  This is the recommended behavior
 	 * according to the GNU Coding Standards.
@@ -1265,28 +1252,28 @@ void readin (void)
 	 * Note: The posix option was added to flex to provide the posix behavior
 	 * of the repeat operator in regular expressions, e.g., `ab{3}'
 	 */
-	if (posix_compat) {
+	if (ctrl.posix_compat) {
 		/* TODO: This is where we try to make flex behave according to
-		 * posiz, AND check for conflicting options. How far should we go
+		 * posiz, AND check for conflicting ctrl. How far should we go
 		 * with this? Should we disable all the neat-o flex features?
 		 */
 		/* Update: Estes says no, since other flex features don't violate posix. */
 	}
 
 	if (getenv ("POSIXLY_CORRECT")) {
-		posix_compat = true;
+		ctrl.posix_compat = true;
 	}
 
-	if (backing_up_report) {
-		backing_up_file = fopen (backing_name, "w");
-		if (backing_up_file == NULL)
+	if (env.backing_up_report) {
+		ctrl.backing_up_file = fopen (backing_name, "w");
+		if (ctrl.backing_up_file == NULL)
 			lerr (_
 				("could not create backing-up info file %s"),
 				backing_name);
 	}
 
 	else
-		backing_up_file = NULL;
+		ctrl.backing_up_file = NULL;
 
 	if (yymore_really_used == true)
 		yymore_used = true;
@@ -1298,8 +1285,8 @@ void readin (void)
 	else if (reject_really_used == false)
 		reject = false;
 
-	if (performance_report > 0) {
-		if (lex_compat) {
+	if (env.performance_hint > 0) {
+		if (ctrl.lex_compat) {
 			fprintf (stderr,
 				 _
 				 ("-l AT&T lex compatibility option entails a large performance penalty\n"));
@@ -1308,14 +1295,14 @@ void readin (void)
 				 (" and may be the actual source of other reported performance penalties\n"));
 		}
 
-		else if (do_yylineno) {
+		else if (ctrl.do_yylineno) {
 			fprintf (stderr,
 				 _
 				 ("%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"));
 		}
 
-		if (performance_report > 1) {
-			if (interactive)
+		if (env.performance_hint > 1) {
+			if (ctrl.interactive == trit_true)
 				fprintf (stderr,
 					 _
 					 ("-I (interactive) entails a minor performance penalty\n"));
@@ -1343,11 +1330,11 @@ void readin (void)
 	if (variable_trailing_context_rules)
 		reject = true;
 
-	if ((fulltbl || fullspd) && reject) {
+	if ((ctrl.fulltbl || ctrl.fullspd) && reject) {
 		if (real_reject)
 			flexerror (_
 				   ("REJECT cannot be used with -f or -F"));
-		else if (do_yylineno)
+		else if (ctrl.do_yylineno)
 			flexerror (_
 				   ("%option yylineno cannot be used with REJECT"));
 		else
@@ -1355,16 +1342,16 @@ void readin (void)
 				   ("variable trailing context rules cannot be used with -f or -F"));
 	}
 
-	if (useecs)
-		numecs = cre8ecs (nextecm, ecgroup, csize);
+	if (ctrl.useecs)
+		numecs = cre8ecs (nextecm, ecgroup, ctrl.csize);
 	else
-		numecs = csize;
+		numecs = ctrl.csize;
 
 	/* Now map the equivalence class for NUL to its expected place. */
-	ecgroup[0] = ecgroup[csize];
+	ecgroup[0] = ecgroup[ctrl.csize];
 	NUL_ec = ABS (ecgroup[0]);
 
-	if (useecs)
+	if (ctrl.useecs)
 		ccl2ecl ();
 
 	// These are used to conditionalize code in the lex skeleton
@@ -1380,19 +1367,19 @@ void readin (void)
 	/* always generate the tablesverify flag. */
 	visible_define_str ("M4_YY_TABLES_VERIFY", tablesverify ? "1" : "0");
 
-	if (reentrant) {
+	if (ctrl.reentrant) {
 		visible_define ("M4_YY_REENTRANT");
 		if (yytext_is_array)
 			visible_define ("M4_YY_TEXT_IS_ARRAY");
 	} else
 		visible_define ("M4_YY_NOT_REENTRANT");
 
-	if (do_main == 2)
+	if (ctrl.do_main == trit_true)
 		visible_define_str ( "YY_MAIN", "1");
-	else if (do_main == 1)
+	else if (ctrl.do_main == trit_false)
 		visible_define_str ( "YY_MAIN", "0");
 
-	if (do_stdinit)
+	if (ctrl.do_stdinit)
 		visible_define ( "M4_MODE_DO_STDINIT");
 	else
 		visible_define ( "M4_MODE_NO_DO_STDINIT");
@@ -1407,13 +1394,13 @@ void readin (void)
 	else
 		visible_define ( "M4_MODE_NO_YYMORE_USED");
 
-	if (fullspd)
+	if (ctrl.fullspd)
 		visible_define ( "M4_MODE_REAL_FULLSPD");
 	else
 		visible_define ( "M4_MODE_NO_REAL_FULLSPD");
 
 	// niode switches for YYINPUT code generation
-	if (use_read)
+	if (ctrl.use_read)
 		visible_define ( "M4_MODE_CPP_USE_READ");
 	else
 		visible_define ( "M4_MODE_NO_CPP_USE_READ");
@@ -1434,13 +1421,13 @@ void readin (void)
 		visible_define ( "M4_MODE_NO_USES_REJECT");
 
 	// mode switches for computing next compressed state
-	if (usemecs)
+	if (ctrl.usemecs)
 		visible_define ( "M4_MODE_USEMECS");
 
 	// mode switches for find-action code
-	if (fullspd)
+	if (ctrl.fullspd)
 		visible_define ( "M4_MODE_FULLSPD");
-	else if (fulltbl)
+	else if (ctrl.fulltbl)
 	    visible_define ( "M4_MODE_FIND_ACTION_FULLTBL");
 	else if (reject)
 	    visible_define ( "M4_MODE_FIND_ACTION_REJECT");
@@ -1448,7 +1435,7 @@ void readin (void)
 	    visible_define ( "M4_MODE_FIND_ACTION_COMPRESSED");
 
 	// mode switches for backup generation and gen_start_state
-	if (!fullspd)
+	if (!ctrl.fullspd)
 		visible_define ( "M4_MODE_NO_FULLSPD");
 	if (bol_needed)
 		visible_define ( "M4_MODE_BOL_NEEDED");
@@ -1456,11 +1443,11 @@ void readin (void)
 		visible_define ( "M4_MODE_NO_BOL_NEEDED");
 
 	// yylineno
-	if (do_yylineno)
+	if (ctrl.do_yylineno)
 		visible_define ( "M4_MODE_YYLINENO");
 
 	// Equivalence classes
-	if (useecs)
+	if (ctrl.useecs)
 		visible_define ( "M4_MODE_USEECS");
 	else
 		visible_define ( "M4_MODE_NO_USEECS");
@@ -1470,44 +1457,44 @@ void readin (void)
 		visible_define ( "M4_MODE_GENTABLES");
 	else
 		visible_define ( "M4_MODE_NO_GENTABLES");
-	if (interactive)
+	if (ctrl.interactive == trit_true)
 		visible_define ( "M4_MODE_INTERACTIVE");
 	else
 		visible_define ( "M4_MODE_NO_INTERACTIVE");
-	if (!(fullspd || fulltbl))
+	if (!(ctrl.fullspd || ctrl.fulltbl))
 		visible_define ( "M4_MODE_NO_FULLSPD_OR_FULLTBL");
-	if (reject || interactive)
+	if (reject || ctrl.interactive == trit_true)
 		visible_define ( "M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE");
 
-	if (yyclass != NULL) {
+	if (ctrl.yyclass != NULL) {
 		visible_define ( "M4_MODE_YYCLASS");
-		out_m4_define("M4_YY_CLASS_NAME", yyclass);
+		out_m4_define("M4_YY_CLASS_NAME", ctrl.yyclass);
 	}
 
-	if (ddebug)
+	if (ctrl.ddebug)
 		visible_define ( "M4_MODE_DEBUG");
 
-	if (lex_compat)
-		visible_define ( "M4_MODE_LEX_COMPAT");
+	if (ctrl.lex_compat)
+		visible_define ( "M4_MODE_OPTIONS.LEX_COMPAT");
 
-	if (do_yywrap)
+	if (ctrl.do_yywrap)
 		visible_define ( "M4_MODE_YYWRAP");
 	else
 		visible_define ( "M4_MODE_NO_YYWRAP");
 
-	if (interactive)
+	if (ctrl.interactive == trit_true)
 		visible_define ( "M4_MODE_INTERACTIVE");
 
 	// Kluge to get around the fact that the %if-not-reentrant and
 	// %if-c-only gates can't be combined by nesting one inside the
 	// other.
-	if (backend == &cpp_backend && !C_plus_plus)
+	if (backend == &cpp_backend && !ctrl.C_plus_plus)
 		visible_define ( "M4_MODE_C_ONLY");
 
 	if (tablesext)
 		visible_define ( "M4_MODE_TABLESEXT");
-	if (prefix != NULL)
-	    visible_define_str ( "M4_MODE_PREFIX", prefix);
+	if (ctrl.prefix != NULL)
+	    visible_define_str ( "M4_MODE_PREFIX", ctrl.prefix);
 	
 	backend->comment("m4 controls end\n");
 	out ("\n");
@@ -1522,7 +1509,7 @@ void readin (void)
 
 void set_up_initial_allocations (void)
 {
-	maximum_mns = (long_align ? MAXIMUM_MNS_LONG : MAXIMUM_MNS);
+	maximum_mns = (ctrl.long_align ? MAXIMUM_MNS_LONG : MAXIMUM_MNS);
 	current_mns = INITIAL_MNS;
 	firstst = allocate_integer_array (current_mns);
 	lastst = allocate_integer_array (current_mns);
@@ -1582,10 +1569,10 @@ void usage (void)
 {
 	FILE   *f = stdout;
 
-	if (!did_outfilename) {
+	if (!env.did_outfilename) {
 		snprintf (outfile_path, sizeof(outfile_path), outfile_template,
-			 prefix, C_plus_plus ? "cc" : "c");
-		outfilename = outfile_path;
+			 ctrl.prefix, ctrl.C_plus_plus ? "cc" : "c");
+		env.outfilename = outfile_path;
 	}
 
 	fprintf (f, _("Usage: %s [OPTIONS] [FILE]...\n"), program_name);
@@ -1607,7 +1594,7 @@ void usage (void)
 		  "  -b, --backup            write backing-up information to %s\n"
 		  "  -p, --perf-report       write performance report to stderr\n"
 		  "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
-		  "  -T, --trace             %s should run in trace mode\n"
+		  "  -T, --env.trace             %s should run in env.trace mode\n"
 		  "  -w, --nowarn            do not generate warnings\n"
 		  "  -v, --verbose           write summary of scanner statistics to stdout\n"
 		  "      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
@@ -1633,8 +1620,8 @@ void usage (void)
 		  "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
 		  "  -L,  --noline            suppress #line directives in scanner\n"
 		  "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
-		  "  -R,  --reentrant         generate a reentrant C scanner\n"
-		  "       --bison-bridge      scanner for bison pure parser.\n"
+		  "  -R,  --reentrant         generate a reentrant scanner\n"
+		  "       --bison-bridge      scanner for Bison pure parser.\n"
 		  "       --bison-locations   include yylloc support.\n"
 		  "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
 		  "       --nounistd          do not include <unistd.h>\n"

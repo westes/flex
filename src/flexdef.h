@@ -113,8 +113,6 @@
 /* Whether an integer is a power of two */
 #define is_power_of_2(n) ((n) > 0 && ((n) & ((n) - 1)) == 0)
 
-#define unspecified -1
-
 /* Special chk[] values marking the slots taking by end-of-buffer and action
  * numbers.
  */
@@ -345,50 +343,83 @@ struct flex_backend_t {
 
 extern size_t footprint;
 
+typedef enum trit_t {
+	trit_unspecified = -1,
+	trit_false = 0,
+	trit_true = 1,
+} trit;
+
 extern struct flex_backend_t cpp_backend;
+
+/* Control variables.  These are in a struct to avoid having to replicate definitions
+ * twice for each option, instead a single struct can be declared and externed.
+ * If it;s in this structure, it has a corresponding m4 symbol.
+ */
+struct ctrl_bundle_t {
+	FILE *backing_up_file;	// file to summarize backing-up states to 
+	bool bison_bridge_lval;	// (--bison-bridge), bison pure calling convention. 
+	bool bison_bridge_lloc;	// (--bison-locations), bison yylloc. 
+	bool C_plus_plus;	// (-+ flag) generate a C++ scanner class 
+	int csize;		// size of character set for the scanner 
+				// 128 for 7-bit chars and 256 for 8-bit 
+	bool ddebug;		// (-d) make a "debug" scanner 
+	trit do_main;		// generate main part to make lexer standalone.
+	bool do_stdinit;	// whether to initialize yyin/yyout to stdin/stdout
+	bool do_yylineno;	// if true, generate code to maintain yylineno 
+	bool do_yywrap;		// do yywrap() processing on EOF. 
+				// If false, EOF treated as "no more files" 
+	bool fullspd;		// (-F flag) use Jacobson method of table representation 
+	bool fulltbl;		// (-Cf flag) don't compress the DFA state table 
+ 	bool gen_line_dirs;	// (no -L flag) generate #line directives 
+	trit interactive;	// (-I) generate an interactive scanner 
+	bool lex_compat;	// (-l), maximize compatibility with AT&T lex 
+	bool long_align;	// (-Ca flag), favor long-word alignment for speed 
+	bool posix_compat;	// (-X) maximize compatibility with POSIX lex 
+	char *prefix;		// prefix for externally visible names, default "yy" 
+	bool reentrant;		// if true (-R), generate a reentrant C scanner 
+	bool spprdflt;		// (-s) suppress the default rule
+	bool useecs;		// (-Ce flag) use equivalence classes 
+	bool usemecs;		// (-Cm flag), use meta-equivalence classes 
+	bool use_read;		// (-f, -F, or -Cr) use read() for scanner input 
+       				// otherwise, use fread(). 
+	char *yyclass;		// yyFlexLexer subclass to use for YY_DECL 
+};
+
+/* Environment variables.  These control the lexer operation, but do
+ * not have corresponding m4 symbols and do not affect the behavior of
+ * the generated parser.
+ */
+struct env_bundle_t {
+	bool backing_up_report;	// (-b flag), generate "lex.backup" file 
+				// listing backing-up states
+	bool did_outfilename;	// whether outfilename was explicitly set
+	bool nowarn;		// (-w) do not generate warnings 
+	int performance_hint;	// if > 0 (i.e., -p flag), generate a report 
+				// relating to scanner performance; 
+				// if > 1 (-p -p), report 
+ 				// on minor performance problems, too.
+	char *outfilename;	// output file name
+	bool printstats;	// (-v) dump statistics
+	char *skelname;		// name of skeleton for code generation
+	FILE *skelfile;		// the skeleton file'd descriptor
+	bool trace;		// (-T) env.trace processing 
+	bool trace_hex; 	// use hex in trace/debug outputs not octal
+	bool use_stdout;	// the -t flag
+};
+
+extern struct ctrl_bundle_t ctrl;
+extern struct env_bundle_t env;
 
 /* Declarations for global variables. */
 
 
 /* Variables for flags:
- * printstats - if true (-v), dump statistics
  * syntaxerror - true if a syntax error has been found
  * eofseen - true if we've seen an eof in the input file
- * ddebug - if true (-d), make a "debug" scanner
- * trace - if true (-T), trace processing
- * nowarn - if true (-w), do not generate warnings
- * spprdflt - if true (-s), suppress the default rule
- * interactive - if true (-I), generate an interactive scanner
- * lex_compat - if true (-l), maximize compatibility with AT&T lex
- * posix_compat - if true (-X), maximize compatibility with POSIX lex
- * do_yylineno - if true, generate code to maintain yylineno
- * useecs - if true (-Ce flag), use equivalence classes
- * fulltbl - if true (-Cf flag), don't compress the DFA state table
- * usemecs - if true (-Cm flag), use meta-equivalence classes
- * fullspd - if true (-F flag), use Jacobson method of table representation
- * gen_line_dirs - if true (i.e., no -L flag), generate #line directives
- * performance_report - if > 0 (i.e., -p flag), generate a report relating
- *   to scanner performance; if > 1 (-p -p), report on minor performance
- *   problems, too
- * backing_up_report - if true (i.e., -b flag), generate "lex.backup" file
- *   listing backing-up states
- * C_plus_plus - if true (i.e., -+ flag), generate a C++ scanner class;
- *   otherwise, a standard C scanner
- * reentrant - if true (-R), generate a reentrant C scanner.
- * bison_bridge_lval - if true (--bison-bridge), bison pure calling convention.
- * bison_bridge_lloc - if true (--bison-locations), bison yylloc.
- * long_align - if true (-Ca flag), favor long-word alignment.
- * use_read - if true (-f, -F, or -Cr) then use read() for scanner input;
- *   otherwise, use fread().
  * yytext_is_array - if true (i.e., %array directive), then declare
  *   yytext as a array instead of a character pointer.  Nice and inefficient.
- * do_yywrap - do yywrap() processing on EOF.  If false, EOF treated as
- *   "no more files".
- * do_main - generate a trivial main part to make the lexer standalone.
  *   Note that 0 is unset, 1 corresponds to --no-main, and 2 to --main.
- * csize - size of character set for the scanner we're generating;
- *   128 for 7-bit chars and 256 for 8-bit
- * yymore_used - if true, yymore() is used in input rules
+ya * yymore_used - if true, yymore() is used in input rules
  * reject - if true, generate back-up tables for REJECT macro
  * real_reject - if true, scanner really uses REJECT (as opposed to just
  *   having "reject" set for variable trailing context)
@@ -398,21 +429,12 @@ extern struct flex_backend_t cpp_backend;
  * yymore_really_used - whether to treat yymore() as really used, regardless
  *   of what we think based on references to it in the user's actions.
  * reject_really_used - same for REJECT
- * trace_hex - use hexadecimal numbers in trace/debug outputs instead of octals
- */
+  */
 
-extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
-	spprdflt;
-extern int interactive, lex_compat, posix_compat, do_yylineno;
-extern int useecs, fulltbl, usemecs, fullspd;
-extern int gen_line_dirs, performance_report, backing_up_report;
-extern int reentrant, bison_bridge_lval, bison_bridge_lloc;
-extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
-extern int csize, do_main;
+extern int syntaxerror, eofseen;
+extern int yytext_is_array;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
-
 extern int yymore_really_used, reject_really_used;
-extern int trace_hex;
 
 extern struct flex_backend_t *backend;
 
@@ -421,19 +443,12 @@ extern struct flex_backend_t *backend;
  * dataline - number of contiguous lines of data in current data
  * 	statement.  Used to generate readable -f output
  * linenum - current input line number
- * skelfile - the skeleton file
  * skel - compiled-in skeleton array
  * skel_ind - index into "skel" array, if skelfile is nil
  * yyin - input file
- * backing_up_file - file to summarize backing-up states to
  * infilename - name of input file
  * outfilename - name of output file
  * headerfilename - name of the .h file to generate
- * did_outfilename - whether outfilename was explicitly set
- * prefix - the prefix used for externally visible names ("yy" by default)
- * yyclass - yyFlexLexer subclass to use for YY_DECL
- * do_stdinit - whether to initialize yyin/yyout to stdin/stdout
- * use_stdout - the -t flag
  * input_files - array holding names of input files
  * num_input_files - size of input_files array
  * program_name - name with which program was invoked
@@ -449,13 +464,9 @@ extern struct flex_backend_t *backend;
  */
 
 extern int datapos, dataline, linenum;
-extern FILE *skelfile, *backing_up_file;
-extern const char *skel[];
 extern int skel_ind;
-extern char *infilename, *outfilename, *headerfilename;
-extern int did_outfilename;
-extern char *prefix, *yyclass, *extra_type;
-extern int do_stdinit, use_stdout;
+extern char *infilename, *headerfilename;
+extern char *extra_type;
 extern char **input_files;
 extern int num_input_files;
 extern char *program_name;

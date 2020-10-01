@@ -300,7 +300,7 @@ void genctbl (void)
 		dataend ();
 	}
 
-	if (useecs)
+	if (ctrl.useecs)
 		genecs ();
 }
 
@@ -317,12 +317,12 @@ static struct yytbl_data *mkecstbl (void)
 	yytbl_data_init (tbl, YYTD_ID_EC);
 	tbl->td_flags |= YYTD_DATA32;
 	tbl->td_hilen = 0;
-	tbl->td_lolen = (flex_uint32_t) csize;
+	tbl->td_lolen = (flex_uint32_t) ctrl.csize;
 
 	tbl->td_data = tdata =
 		calloc(tbl->td_lolen, sizeof (flex_int32_t));
 
-	for (i = 1; i < csize; ++i) {
+	for (i = 1; i < ctrl.csize; ++i) {
 		ecgroup[i] = ABS (ecgroup[i]);
 		tdata[i] = ecgroup[i];
 	}
@@ -337,23 +337,23 @@ void genecs (void)
 	int ch, row;
 	int     numrows;
 
-	footprint += backend->genecs(csize);
+	footprint += backend->genecs(ctrl.csize);
 
-	for (ch = 1; ch < csize; ++ch) {
+	for (ch = 1; ch < ctrl.csize; ++ch) {
 		ecgroup[ch] = ABS (ecgroup[ch]);
 		mkdata (ecgroup[ch]);
 	}
 
 	dataend ();
 
-	if (trace) {
+	if (env.trace) {
 		fputs (_("\n\nEquivalence Classes:\n\n"), stderr);
 
 		/* Print in 8 columns */
-		numrows = csize / 8;
+		numrows = ctrl.csize / 8;
 
 		for (row = 0; row < numrows; ++row) {
-			for (ch = row; ch < csize; ch += numrows) {
+			for (ch = row; ch < ctrl.csize; ch += numrows) {
 				fprintf (stderr, "%4s = %-2d",
 					 readable_form (ch), ecgroup[ch]);
 
@@ -392,7 +392,7 @@ struct yytbl_data *mkftbl (void)
 
 		tdata[i] = anum;
 
-		if (trace && anum)
+		if (env.trace && anum)
 			fprintf (stderr, _("state # %d accepts: [%d]\n"),
 				 i, anum);
 	}
@@ -417,14 +417,14 @@ void genftbl (void)
 
 		mkdata (anum);
 
-		if (trace && anum)
+		if (env.trace && anum)
 			fprintf (stderr, _("state # %d accepts: [%d]\n"),
 				 i, anum);
 	}
 
 	dataend ();
 
-	if (useecs)
+	if (ctrl.useecs)
 		genecs ();
 
 	/* Don't have to dump the actual full table entries - they were
@@ -488,7 +488,7 @@ void gentabs (void)
 				accset = dfaacc[i].dfaacc_set;
 				nacc = accsiz[i];
 
-				if (trace)
+				if (env.trace)
 					fprintf (stderr,
 						 _("state # %d accepts: "),
 						 i);
@@ -515,7 +515,7 @@ void gentabs (void)
 					mkdata (accnum);
 					yyacclist_data[yyacclist_curr++] = accnum;
 
-					if (trace) {
+					if (env.trace) {
 						fprintf (stderr, "[%d]",
 							 accset[k]);
 
@@ -587,7 +587,7 @@ void gentabs (void)
 		mkdata (acc_array[i]);
 		yyacc_data[yyacc_curr++] = acc_array[i];
 
-		if (!reject && trace && acc_array[i])
+		if (!reject && env.trace && acc_array[i])
 			fprintf (stderr, _("state # %d accepts: [%d]\n"),
 				 i, acc_array[i]);
 	}
@@ -612,7 +612,7 @@ void gentabs (void)
 	yyacc_tbl = NULL;
 	/* End generating yy_accept */
 
-	if (useecs) {
+	if (ctrl.useecs) {
 
 		genecs ();
 		if (tablesext) {
@@ -627,7 +627,7 @@ void gentabs (void)
 		}
 	}
 
-	if (usemecs) {
+	if (ctrl.usemecs) {
 		/* Begin generating yy_meta */
 		/* Write out meta-equivalence classes (used to index
 		 * templates with).
@@ -640,14 +640,14 @@ void gentabs (void)
 		    calloc(yymeta_tbl->td_lolen,
 			   sizeof (flex_int32_t));
 
-		if (trace)
+		if (env.trace)
 			fputs (_("\n\nMeta-Equivalence Classes:\n"),
 			       stderr);
 
 		footprint += backend->gentabs_yy_meta(numecs + 1);
 		
 		for (i = 1; i <= numecs; ++i) {
-			if (trace)
+			if (env.trace)
 				fprintf (stderr, "%d = %d\n",
 					 i, ABS (tecbck[i]));
 
@@ -837,11 +837,11 @@ void make_tables (void)
 		visible_define ( "M4_MODE_NULTRANS");
 	else {
 		visible_define ( "M4_MODE_NO_NULTRANS");
-		if (fulltbl)
+		if (ctrl.fulltbl)
 		    visible_define ( "M4_MODE_NULTRANS_FULLTBL");
 		else
 		    visible_define ( "M4_MODE_NO_NULTRANS_FULLTBL");
-		if (fullspd)
+		if (ctrl.fullspd)
 		    visible_define ( "M4_MODE_NULTRANS_FULLSPD");
 		else
 		    visible_define ( "M4_MODE_NO_NULTRANS_FULLSPD");
@@ -870,7 +870,7 @@ void make_tables (void)
 
 	/* This is where we REALLY begin generating the tables. */
 
-	if (fullspd) {
+	if (ctrl.fullspd) {
 		genctbl ();
 		if (tablesext) {
 			struct yytbl_data *tbl;
@@ -888,7 +888,7 @@ void make_tables (void)
 			yytbl_data_destroy (tbl);
 			tbl = 0;
 
-			if (useecs) {
+			if (ctrl.useecs) {
 				tbl = mkecstbl ();
 				yytbl_data_compress (tbl);
 				if (yytbl_data_fwrite (&tableswr, tbl) < 0)
@@ -899,7 +899,7 @@ void make_tables (void)
 			}
 		}
 	}
-	else if (fulltbl) {
+	else if (ctrl.fulltbl) {
 		genftbl ();
 		if (tablesext) {
 			struct yytbl_data *tbl;
@@ -911,7 +911,7 @@ void make_tables (void)
 			yytbl_data_destroy (tbl);
 			tbl = 0;
 
-			if (useecs) {
+			if (ctrl.useecs) {
 				tbl = mkecstbl ();
 				yytbl_data_compress (tbl);
 				if (yytbl_data_fwrite (&tableswr, tbl) < 0)
@@ -938,15 +938,15 @@ void make_tables (void)
 		visible_define ( "M4_MODE_HAS_BACKING_UP");
 
 	// These are used for NUL transitions
-	if ((num_backing_up > 0 && !reject) && (!nultrans || fullspd || fulltbl))
+	if ((num_backing_up > 0 && !reject) && (!nultrans || ctrl.fullspd || ctrl.fulltbl))
 		visible_define ( "M4_MODE_NEED_YY_CP");
-	if ((num_backing_up > 0 && !reject) && (fullspd || fulltbl))
+	if ((num_backing_up > 0 && !reject) && (ctrl.fullspd || ctrl.fulltbl))
 		visible_define ( "M4_MODE_NULTRANS_WRAP");
 
 	backend->comment("m4 controls end\n");
 	out ("\n");
 
-	if (do_yylineno) {
+	if (ctrl.do_yylineno) {
 
 		geneoltbl ();
 
@@ -966,12 +966,12 @@ void make_tables (void)
 		flex_int32_t *yynultrans_data = 0;
 
 		/* Begin generating yy_NUL_trans */
-		footprint += backend->nultrans(fullspd, lastdfa + 1);
+		footprint += backend->nultrans(ctrl.fullspd, lastdfa + 1);
 		yynultrans_tbl = calloc(1, sizeof (struct yytbl_data));
 		yytbl_data_init (yynultrans_tbl, YYTD_ID_NUL_TRANS);
 		// Performance kludge for C. Gives a small improvement
 		// in table loading time.
-		if (fullspd && backend->c_like)
+		if (ctrl.fullspd && backend->c_like)
 			yynultrans_tbl->td_flags |= YYTD_PTRANS;
 		yynultrans_tbl->td_lolen = (flex_uint32_t) (lastdfa + 1);
 		yynultrans_tbl->td_data = yynultrans_data =
@@ -1009,7 +1009,7 @@ void make_tables (void)
 		/* End generating yy_NUL_trans */
 	}
 
-	if (ddebug) {		/* Spit out table mapping rules to line numbers. */
+	if (ctrl.ddebug) {		/* Spit out table mapping rules to line numbers. */
 		/* Policy choice: this returns the table size
 		 * but we don't include it in the table metering.
 		 */
