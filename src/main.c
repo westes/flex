@@ -47,7 +47,7 @@ void readin(void);
 void set_up_initial_allocations(void);
 
 /* these globals are all defined and commented in flexdef.h */
-int     syntaxerror, eofseen, yytext_is_array;
+int     syntaxerror, eofseen;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
 int     datapos, dataline, linenum;
@@ -221,7 +221,7 @@ void check_options (void)
 			flexerror (_
 				   ("Can't use --ctrl.reentrant or --bison-bridge with -l option"));
 
-		yytext_is_array = true;
+		ctrl.yytext_is_array = true;
 		ctrl.do_yylineno = true;
 		ctrl.use_read = false;
 	}
@@ -269,9 +269,9 @@ void check_options (void)
 	if (ctrl.C_plus_plus && ctrl.fullspd)
 		flexerror (_("Can't use -+ with -CF option"));
 
-	if (ctrl.C_plus_plus && yytext_is_array) {
+	if (ctrl.C_plus_plus && ctrl.yytext_is_array) {
 		lwarn (_("%array incompatible with -+ option"));
-		yytext_is_array = false;
+		ctrl.yytext_is_array = false;
 	}
 
 	if (ctrl.C_plus_plus && (ctrl.reentrant))
@@ -639,7 +639,7 @@ void flexinit (int argc, char **argv)
 	memset(&ctrl, '\0', sizeof(ctrl));
 	syntaxerror = false;
 	yymore_used = continued_action = false;
-	yytext_is_array = in_rule = reject = false;
+	in_rule = reject = false;
 	yymore_really_used = reject_really_used = trit_unspecified;
 	ctrl.do_main = trit_unspecified;
 	ctrl.interactive = ctrl.csize = trit_unspecified;
@@ -925,11 +925,11 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_ARRAY:
-			yytext_is_array = true;
+			ctrl.yytext_is_array = true;
 			break;
 
 		    case OPT_POINTER:
-			yytext_is_array = false;
+			ctrl.yytext_is_array = false;
 			break;
 
 		    case OPT_ECS:
@@ -1369,7 +1369,7 @@ void readin (void)
 
 	if (ctrl.reentrant) {
 		visible_define ("M4_YY_REENTRANT");
-		if (yytext_is_array)
+		if (ctrl.yytext_is_array)
 			visible_define ("M4_YY_TEXT_IS_ARRAY");
 	} else
 		visible_define ("M4_YY_NOT_REENTRANT");
@@ -1385,7 +1385,7 @@ void readin (void)
 		visible_define ( "M4_MODE_NO_DO_STDINIT");
 
 	// mode switches for YY_DO_BEFORE_ACTION code generation
-	if (yytext_is_array)
+	if (ctrl.yytext_is_array)
 		visible_define ( "M4_MODE_YYTEXT_IS_ARRAY");
 	else
 		visible_define ( "M4_MODE_NO_YYTEXT_IS_ARRAY");

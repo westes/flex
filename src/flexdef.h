@@ -383,6 +383,9 @@ struct ctrl_bundle_t {
 	bool use_read;		// (-f, -F, or -Cr) use read() for scanner input 
        				// otherwise, use fread(). 
 	char *yyclass;		// yyFlexLexer subclass to use for YY_DECL 
+	bool yytext_is_array;	// if true (i.e., %array directive), then declare
+				//  yytext as a array instead of a character pointer.
+				// Nice and inefficient.
 };
 
 /* Environment variables.  These control the lexer operation, but do
@@ -416,10 +419,7 @@ extern struct env_bundle_t env;
 /* Variables for flags:
  * syntaxerror - true if a syntax error has been found
  * eofseen - true if we've seen an eof in the input file
- * yytext_is_array - if true (i.e., %array directive), then declare
- *   yytext as a array instead of a character pointer.  Nice and inefficient.
- *   Note that 0 is unset, 1 corresponds to --no-main, and 2 to --main.
-ya * yymore_used - if true, yymore() is used in input rules
+ * yymore_used - if true, yymore() is used in input rules
  * reject - if true, generate back-up tables for REJECT macro
  * real_reject - if true, scanner really uses REJECT (as opposed to just
  *   having "reject" set for variable trailing context)
@@ -432,7 +432,6 @@ ya * yymore_used - if true, yymore() is used in input rules
   */
 
 extern int syntaxerror, eofseen;
-extern int yytext_is_array;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
 extern int yymore_really_used, reject_really_used;
 

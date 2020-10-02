@@ -198,8 +198,8 @@ M4QEND      "]""]"
 			return SECTEND;
 			}
 
-	^"%pointer".*{NL}	yytext_is_array = false; ++linenum;
-	^"%array".*{NL}		yytext_is_array = true; ++linenum;
+	^"%pointer".*{NL}	ctrl.yytext_is_array = false; ++linenum;
+	^"%array".*{NL}		ctrl.yytext_is_array = true; ++linenum;
 
 	^"%option"	BEGIN(OPTION); return TOK_OPTION;
 
@@ -367,7 +367,7 @@ M4QEND      "]""]"
 			ACTION_M4_IFDEF( "M4""_YY_ALWAYS_INTERACTIVE", option_sense );
 			ctrl.interactive = (trit)option_sense;
 			}
-	array		yytext_is_array = option_sense;
+	array		ctrl.yytext_is_array = option_sense;
 	backup		env.backing_up_report = option_sense;
 	batch		ctrl.interactive = (trit)!option_sense;
 	bison-bridge     ctrl.bison_bridge_lval = option_sense;
@@ -405,7 +405,7 @@ M4QEND      "]""]"
             		ctrl.interactive = (trit)!option_sense;
 			}
 	perf-report	env.performance_hint += option_sense ? 1 : -1;
-	pointer		yytext_is_array = ! option_sense;
+	pointer		ctrl.yytext_is_array = ! option_sense;
 	read		ctrl.use_read = option_sense;
 	reentrant	ctrl.reentrant = option_sense;
 	reject		reject_really_used = option_sense;
