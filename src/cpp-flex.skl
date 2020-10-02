@@ -65,31 +65,31 @@ m4_changequote([[, ]])
 %not-for-header
 %if-c-only
 %if-not-reentrant
-m4_ifelse(M4_YY_PREFIX,yy,,
-#define yy_create_buffer M4_YY_PREFIX[[_create_buffer]]
-#define yy_delete_buffer M4_YY_PREFIX[[_delete_buffer]]
-#define yy_scan_buffer M4_YY_PREFIX[[_scan_buffer]]
-#define yy_scan_string M4_YY_PREFIX[[_scan_string]]
-#define yy_scan_bytes M4_YY_PREFIX[[_scan_bytes]]
-#define yy_init_buffer M4_YY_PREFIX[[_init_buffer]]
-#define yy_flush_buffer M4_YY_PREFIX[[_flush_buffer]]
-#define yy_load_buffer_state M4_YY_PREFIX[[_load_buffer_state]]
-#define yy_switch_to_buffer M4_YY_PREFIX[[_switch_to_buffer]]
-#define yypush_buffer_state M4_YY_PREFIX[[push_buffer_state]]
-#define yypop_buffer_state M4_YY_PREFIX[[pop_buffer_state]]
-#define yyensure_buffer_stack M4_YY_PREFIX[[ensure_buffer_stack]]
-#define yy_flex_debug M4_YY_PREFIX[[_flex_debug]]
-#define yyin M4_YY_PREFIX[[in]]
-#define yyleng M4_YY_PREFIX[[leng]]
-#define yylex M4_YY_PREFIX[[lex]]
-#define yylineno M4_YY_PREFIX[[lineno]]
-#define yyout M4_YY_PREFIX[[out]]
-#define yyrestart M4_YY_PREFIX[[restart]]
-#define yytext M4_YY_PREFIX[[text]]
-#define yywrap M4_YY_PREFIX[[wrap]]
-#define yyalloc M4_YY_PREFIX[[alloc]]
-#define yyrealloc M4_YY_PREFIX[[realloc]]
-#define yyfree M4_YY_PREFIX[[free]]
+m4_ifelse(M4_MODE_PREFIX,yy,,
+#define yy_create_buffer M4_MODE_PREFIX[[_create_buffer]]
+#define yy_delete_buffer M4_MODE_PREFIX[[_delete_buffer]]
+#define yy_scan_buffer M4_MODE_PREFIX[[_scan_buffer]]
+#define yy_scan_string M4_MODE_PREFIX[[_scan_string]]
+#define yy_scan_bytes M4_MODE_PREFIX[[_scan_bytes]]
+#define yy_init_buffer M4_MODE_PREFIX[[_init_buffer]]
+#define yy_flush_buffer M4_MODE_PREFIX[[_flush_buffer]]
+#define yy_load_buffer_state M4_MODE_PREFIX[[_load_buffer_state]]
+#define yy_switch_to_buffer M4_MODE_PREFIX[[_switch_to_buffer]]
+#define yypush_buffer_state M4_MODE_PREFIX[[push_buffer_state]]
+#define yypop_buffer_state M4_MODE_PREFIX[[pop_buffer_state]]
+#define yyensure_buffer_stack M4_MODE_PREFIX[[ensure_buffer_stack]]
+#define yy_flex_debug M4_MODE_PREFIX[[_flex_debug]]
+#define yyin M4_MODE_PREFIX[[in]]
+#define yyleng M4_MODE_PREFIX[[leng]]
+#define yylex M4_MODE_PREFIX[[lex]]
+#define yylineno M4_MODE_PREFIX[[lineno]]
+#define yyout M4_MODE_PREFIX[[out]]
+#define yyrestart M4_MODE_PREFIX[[restart]]
+#define yytext M4_MODE_PREFIX[[text]]
+#define yywrap M4_MODE_PREFIX[[wrap]]
+#define yyalloc M4_MODE_PREFIX[[alloc]]
+#define yyrealloc M4_MODE_PREFIX[[realloc]]
+#define yyfree M4_MODE_PREFIX[[free]]
 )
 %endif
 %endif
@@ -116,16 +116,16 @@ m4_ifdef( [[M4_YY_REENTRANT]],  [[m4_define([[M4_YY_HAS_START_STACK_VARS]])]])
 %# the argument lists to each C function.
 
 
-m4_ifdef( [[M4_YY_PREFIX]],, [[m4_define([[M4_YY_PREFIX]], [[yy]])]])
+m4_ifdef( [[M4_MODE_PREFIX]],, [[m4_define([[M4_MODE_PREFIX]], [[yy]])]])
 
 m4preproc_define(`M4_GEN_PREFIX',``
 [[#ifdef yy$1
-#define ]]M4_YY_PREFIX[[$1_ALREADY_DEFINED
+#define ]]M4_MODE_PREFIX[[$1_ALREADY_DEFINED
 #else
-#define yy$1 ]]M4_YY_PREFIX[[$1
+#define yy$1 ]]M4_MODE_PREFIX[[$1
 #endif]]
 'm4preproc_divert(1)`
-[[#ifndef ]]M4_YY_PREFIX[[$1_ALREADY_DEFINED
+[[#ifndef ]]M4_MODE_PREFIX[[$1_ALREADY_DEFINED
 #undef yy$1
 #endif]]'m4preproc_divert(0)')
 
@@ -136,11 +136,11 @@ m4preproc_define(`M4_GEN_PREFIX',``
      * We will address this in a future release of flex, or omit the C++ scanner
      * altogether.
      */
-    #define yyFlexLexer M4_YY_PREFIX[[FlexLexer]]
+    #define yyFlexLexer M4_MODE_PREFIX[[FlexLexer]]
 %endif
 
 %if-c-only
-m4_ifelse(M4_YY_PREFIX,yy,,
+m4_ifelse(M4_MODE_PREFIX,yy,,
     M4_GEN_PREFIX(`_create_buffer')
     M4_GEN_PREFIX(`_delete_buffer')
     M4_GEN_PREFIX(`_scan_buffer')
@@ -192,14 +192,14 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 ]])
 
 
-m4_ifelse(M4_YY_PREFIX,yy,,
+m4_ifelse(M4_MODE_PREFIX,yy,,
     M4_GEN_PREFIX(`alloc')
     M4_GEN_PREFIX(`realloc')
     M4_GEN_PREFIX(`free')
 )
 
 %if-c-only
-m4_ifelse(M4_YY_PREFIX,yy,,
+m4_ifelse(M4_MODE_PREFIX,yy,,
 m4_ifdef( [[M4_YY_NOT_REENTRANT]],
 [[
     M4_GEN_PREFIX(`text')
@@ -213,7 +213,7 @@ m4_ifdef( [[M4_YY_NOT_REENTRANT]],
 %endif
 
 
-m4_ifdef( [[M4_YY_TABLES_EXTERNAL]],
+m4_ifdef( [[M4_MODE_TABLESEXT]],
 [[
     M4_GEN_PREFIX(`tables_fload')
     M4_GEN_PREFIX(`tables_destroy')
@@ -657,10 +657,10 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 m4_ifdef( [[M4_MODE_NO_YYWRAP]], [[
 %if-c-only
 m4_ifdef([[M4_YY_REENTRANT]], [[
-#define M4_YY_PREFIX[[wrap]](yyscanner) (/*CONSTCOND*/1)
+#define M4_MODE_PREFIX[[wrap]](yyscanner) (/*CONSTCOND*/1)
 ]])
 m4_ifdef([[M4_YY_NOT_REENTRANT]], [[
-#define M4_YY_PREFIX[[wrap]]() (/*CONSTCOND*/1)
+#define M4_MODE_PREFIX[[wrap]]() (/*CONSTCOND*/1)
 ]])m4_dnl
 %endif
 #define YY_SKIP_YYWRAP
@@ -1030,7 +1030,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	int yy_full_lp;
 	int *yy_full_state;
 ]])
-m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]], [[
+m4_ifdef( [[M4_MODE_REENTRANT_TEXT_IS_ARRAY]], [[
 	char yytext_r[YYLMAX];
 	char *yytext_ptr;
 	int yy_more_offset;
@@ -3498,7 +3498,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 	YY_G(yy_lp) = 0;
 ]])
 
-m4_ifdef( [[M4_YY_TEXT_IS_ARRAY]],
+m4_ifdef( [[M4_MODE_REENTRANT_TEXT_IS_ARRAY]],
 [[
 	YY_G(yytext_ptr) = 0;
 	YY_G(yy_more_offset) = 0;
