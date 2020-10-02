@@ -1219,6 +1219,8 @@ static void yy_flex_strncpy ( char *, const char *, int M4_YY_PROTO_LAST_ARG);
 static int yy_flex_strlen ( const char * M4_YY_PROTO_LAST_ARG);
 #endif
 
+m4_ifdef([[M4_MODE_NO_INPUT]], [[#define YY_NO_INPUT 1]])
+
 #ifndef YY_NO_INPUT
 %if-c-only Standard (non-C++) definition
 %not-for-header

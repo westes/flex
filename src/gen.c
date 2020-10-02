@@ -65,7 +65,7 @@ static void geneoltbl (void)
 {
 	int     i;
 
-	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
+	outn ("m4_ifdef( [[M4_MODE_YYLINENO]],[[");
 	backend->comment ("Table of booleans, true if rule could match eol.\n");
 	footprint += backend->geneoltbl(num_rules + 1);
 

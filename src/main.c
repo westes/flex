@@ -868,7 +868,7 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_NO_UNISTD_H:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_UNISTD_H",0);
+			ctrl.no_unistd = true;
 			break;
 
 		    case OPT_TABLES_FILE:
@@ -917,11 +917,11 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_ALWAYS_INTERACTIVE:
-			buf_m4_define (&m4defs_buf, "M4_YY_ALWAYS_INTERACTIVE", 0);
+			ctrl.always_interactive = true;
 			break;
 
 		    case OPT_NEVER_INTERACTIVE:
-			buf_m4_define( &m4defs_buf, "M4_YY_NEVER_INTERACTIVE", 0);
+			ctrl.never_interactive = true;
 			break;
 
 		    case OPT_ARRAY:
@@ -974,7 +974,7 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_STACK:
-			buf_m4_define( &m4defs_buf, "M4_YY_STACK_USED",0);
+			ctrl.stack_used = true;
 			break;
 
 		    case OPT_STDINIT:
@@ -1496,7 +1496,10 @@ void readin (void)
 		visible_define ( "M4_MODE_TABLESEXT");
 	if (ctrl.prefix != NULL)
 	    visible_define_str ( "M4_MODE_PREFIX", ctrl.prefix);
-	
+
+	if (ctrl.no_input)
+		visible_define("M4_MODE_NO_INPUT");
+
 	if (ctrl.no_yy_push_state)
 		visible_define("M4_YY_NO_PUSH_STATE");
 	if (ctrl.no_yy_pop_state)
@@ -1553,6 +1556,16 @@ void readin (void)
 		visible_define("M4_YY_NO_GET_DEBUG");
 	if (ctrl.no_set_debug)
 		visible_define("M4_YY_NO_SET_DEBUG");
+
+	if (ctrl.no_unistd)
+		visible_define("M4_YY_NO_UNISTD_H");
+
+	if (ctrl.always_interactive)
+		visible_define("M4_YY_ALWAYS_INTERACTIVE");
+	if (ctrl.never_interactive)
+		visible_define("M4_YY_NEVER_INTERACTIVE");
+	if (ctrl.stack_used)
+		visible_define("M4_YY_STACK_USED");
 
 	backend->comment("m4 controls end\n");
 	out ("\n");

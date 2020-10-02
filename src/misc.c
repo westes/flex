@@ -88,29 +88,6 @@ static void sko_pop(bool* dc)
         flex_die("popped too many times in skeleton.");
 }
 
-/* Append a constant declaration to the running buffer. */
-void action_define (const char *defname, int value)
-{
-	char    buf[MAXLINE];
-	char   *cpy;
-
-	if ((int) strlen (defname) > MAXLINE / 2) {
-		format_pinpoint_message (_
-					 ("name \"%s\" ridiculously long"),
-					 defname);
-		return;
-	}
-
-	snprintf (buf, sizeof(buf), backend->int_define_fmt, defname, value);
-	add_action (buf);
-
-	/* track definitions so we can naybe undef them when we're done;
-	 * this is only ever likely to work with the cpp back end.
-	 */
-	cpy = xstrdup(defname);
-	buf_append (&defs_buf, &cpy, 1);
-}
-
 /* Append "new_text" to the running buffer. */
 void add_action (const char *new_text)
 {

@@ -356,6 +356,7 @@ extern struct flex_backend_t cpp_backend;
  * If it;s in this structure, it has a corresponding m4 symbol.
  */
 struct ctrl_bundle_t {
+	bool always_interactive;// always use cheacter-by-character input
 	FILE *backing_up_file;	// file to summarize backing-up states to 
 	bool bison_bridge_lval;	// (--bison-bridge), bison pure calling convention. 
 	bool bison_bridge_lloc;	// (--bison-locations), bison yylloc. 
@@ -371,18 +372,22 @@ struct ctrl_bundle_t {
 	bool fullspd;		// (-F flag) use Jacobson method of table representation 
 	bool fulltbl;		// (-Cf flag) don't compress the DFA state table 
  	bool gen_line_dirs;	// (no -L flag) generate #line directives 
-	trit interactive;	// (-I) generate an interactive scanner 
+	trit interactive;	// (-I) generate an interactive scanner
+	bool never_interactive;	// always use buffered input, don't check for tty/
 	bool lex_compat;	// (-l), maximize compatibility with AT&T lex 
 	bool long_align;	// (-Ca flag), favor long-word alignment for speed 
+	bool no_input;		// Suppress use of imnput()
+	bool no_unistd;		// suppress inclusion of unistd.h
 	bool posix_compat;	// (-X) maximize compatibility with POSIX lex 
 	char *prefix;		// prefix for externally visible names, default "yy" 
 	bool reentrant;		// if true (-R), generate a reentrant C scanner 
+	bool stack_used;	// Enable use of start-condition stacks
 	bool spprdflt;		// (-s) suppress the default rule
 	bool useecs;		// (-Ce flag) use equivalence classes 
 	bool usemecs;		// (-Cm flag), use meta-equivalence classes 
 	bool use_read;		// (-f, -F, or -Cr) use read() for scanner input 
        				// otherwise, use fread(). 
-	char *yyclass;		// yyFlexLexer subclass to use for YY_DECL 
+	char *yyclass;		// yyFlexLexer subclass to use for YY_DECL
 	bool yytext_is_array;	// if true (i.e., %array directive), then declare
 				// yytext as array instead of a character pointer.
 				// Nice and inefficient.
@@ -850,9 +855,6 @@ extern void usage(void);
 
 
 /* from file misc.c */
-
-/* Add a #define to the action file. */
-extern void action_define(const char *defname, int value);
 
 /* Add the given text to the stored actions. */
 extern void add_action(const char *new_text);

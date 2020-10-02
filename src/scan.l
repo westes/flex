@@ -50,22 +50,8 @@ extern const char *escaped_qstart, *escaped_qend;
 #define ESCAPED_QEND M4QEND "]" M4QSTART M4QEND "]" M4QSTART
 
 #define ACTION_ECHO add_action( yytext )
-#define ACTION_IFDEF(def, should_define) \
-	{ \
-	if ( should_define ) \
-		action_define( def, 1 ); \
-	}
-
 #define ACTION_ECHO_QSTART add_action (ESCAPED_QSTART)
 #define ACTION_ECHO_QEND   add_action (ESCAPED_QEND)
-
-#define ACTION_M4_IFDEF(def, should_define) \
-    do{ \
-        if ( should_define ) \
-            buf_m4_define( &m4defs_buf, def, NULL);\
-        else \
-            buf_m4_undefine( &m4defs_buf, def);\
-    } while(0)
 
 #define MARK_END_OF_PROLOG mark_prolog();
 
@@ -364,7 +350,7 @@ M4QEND      "]""]"
 
 	align		ctrl.long_align = option_sense;
 	always-interactive	{
-			ACTION_M4_IFDEF( "M4""_YY_ALWAYS_INTERACTIVE", option_sense );
+			ctrl.always_interactive = option_sense;
 			ctrl.interactive = (trit)option_sense;
 			}
 	array		ctrl.yytext_is_array = option_sense;
@@ -388,7 +374,7 @@ M4QEND      "]""]"
 			ctrl.useecs = ctrl.usemecs = false;
 			ctrl.use_read = ctrl.fulltbl = true;
 			}
-	input		ACTION_IFDEF("YY_NO_INPUT", ! option_sense);
+	input		ctrl.no_input = ! option_sense;
 	interactive	ctrl.interactive = (trit)option_sense;
 	lex-compat	ctrl.posix_compat = option_sense;
 	posix-compat	ctrl.posix_compat = option_sense;
@@ -401,7 +387,7 @@ M4QEND      "]""]"
 			}
 	meta-ecs	ctrl.usemecs = option_sense;
 	never-interactive	{
-			ACTION_M4_IFDEF( "M4""_YY_NEVER_INTERACTIVE", option_sense );
+			ctrl.never_interactive = option_sense;
             		ctrl.interactive = (trit)!option_sense;
 			}
 	perf-report	env.performance_hint += option_sense ? 1 : -1;
@@ -409,14 +395,14 @@ M4QEND      "]""]"
 	read		ctrl.use_read = option_sense;
 	reentrant	ctrl.reentrant = option_sense;
 	reject		reject_really_used = option_sense;
-	stack		ACTION_M4_IFDEF( "M4""_YY_STACK_USED", option_sense );
+	stack		ctrl.stack_used = option_sense;
 	stdinit		ctrl.do_stdinit = option_sense;
 	stdout		env.use_stdout = option_sense;
-	unistd		ACTION_IFDEF("YY_NO_UNISTD_H", ! option_sense);
+	unistd		ctrl.no_unistd = ! option_sense;
 	unput		ctrl.no_unput = ! option_sense;
 	verbose		env.printstats = option_sense;
 	warn		env.nowarn = ! option_sense;
-	yylineno	ctrl.do_yylineno = option_sense; ACTION_M4_IFDEF("M4""_YY_USE_LINENO", option_sense);
+	yylineno	ctrl.do_yylineno = option_sense;
 	yymore		yymore_really_used = option_sense;
 	yywrap		ctrl.do_yywrap = option_sense;
 
