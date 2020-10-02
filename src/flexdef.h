@@ -384,7 +384,7 @@ struct ctrl_bundle_t {
        				// otherwise, use fread(). 
 	char *yyclass;		// yyFlexLexer subclass to use for YY_DECL 
 	bool yytext_is_array;	// if true (i.e., %array directive), then declare
-				//  yytext as a array instead of a character pointer.
+				// yytext as array instead of a character pointer.
 				// Nice and inefficient.
 };
 
@@ -396,6 +396,7 @@ struct env_bundle_t {
 	bool backing_up_report;	// (-b flag), generate "lex.backup" file 
 				// listing backing-up states
 	bool did_outfilename;	// whether outfilename was explicitly set
+	char *headerfilename;	// name of the .h file to generate
 	bool nowarn;		// (-w) do not generate warnings 
 	int performance_hint;	// if > 0 (i.e., -p flag), generate a report 
 				// relating to scanner performance; 
@@ -447,7 +448,6 @@ extern struct flex_backend_t *backend;
  * yyin - input file
  * infilename - name of input file
  * outfilename - name of output file
- * headerfilename - name of the .h file to generate
  * input_files - array holding names of input files
  * num_input_files - size of input_files array
  * program_name - name with which program was invoked
@@ -464,7 +464,7 @@ extern struct flex_backend_t *backend;
 
 extern int datapos, dataline, linenum;
 extern int skel_ind;
-extern char *infilename, *headerfilename;
+extern char *infilename;
 extern char *extra_type;
 extern char **input_files;
 extern int num_input_files;

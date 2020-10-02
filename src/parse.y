@@ -205,7 +205,7 @@ option		:  TOK_OUTFILE '=' NAME
 		|  TOK_YYCLASS '=' NAME
 			{ ctrl.yyclass = xstrdup(nmstr); }
 		|  TOK_HEADER_FILE '=' NAME
-			{ headerfilename = xstrdup(nmstr); }
+			{ env.headerfilename = xstrdup(nmstr); }
 	    |  TOK_TABLES_FILE '=' NAME
             { tablesext = true; tablesfilename = xstrdup(nmstr); }
 		;

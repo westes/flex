@@ -268,7 +268,7 @@ int filter_tee_header (struct filter *chain)
 		fprintf (to_h, "#define %sIN_HEADER 1\n\n", ctrl.prefix);
 		fprintf (to_h,
 			 "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
-			 headerfilename ? headerfilename : "<stdout>");
+			 env.headerfilename != NULL ? env.headerfilename : "<stdout>");
 
 	}
 
@@ -363,7 +363,7 @@ int filter_fix_linedirs (struct filter *chain)
 				env.outfilename != NULL ? env.outfilename : "<stdout>")
 					== 0
 			 || strcmp (fname,
-			 	headerfilename ? headerfilename : "<stdout>")
+			 	env.headerfilename != NULL ? env.headerfilename : "<stdout>")
 					== 0) {
 
 				char    *s1, *s2;

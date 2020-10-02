@@ -56,7 +56,7 @@ int     skel_ind = 0;
 char   *action_array;
 int     action_size, defs1_offset, prolog_offset, action_offset,
 	action_index;
-char   *infilename = NULL, *headerfilename = NULL;
+char   *infilename = NULL;
 char   *extra_type = NULL;
 int     onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int     onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
@@ -324,7 +324,7 @@ void check_options (void)
 
 
 	/* Setup the filter chain. */
-	output_chain = filter_create_int(NULL, filter_tee_header, headerfilename);
+	output_chain = filter_create_int(NULL, filter_tee_header, env.headerfilename);
 	if ( !(m4 = getenv("M4"))) {
 		char *slash;
 		m4 = M4;
@@ -941,7 +941,7 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_HEADER_FILE:
-			headerfilename = arg;
+			env.headerfilename = arg;
 			break;
 
 		    case OPT_META_ECS:
@@ -1571,7 +1571,7 @@ void usage (void)
 
 	if (!env.did_outfilename) {
 		snprintf (outfile_path, sizeof(outfile_path), outfile_template,
-			 ctrl.prefix, ctrl.C_plus_plus ? "cc" : "c");
+			  ctrl.prefix, backend->suffix());
 		env.outfilename = outfile_path;
 	}
 
