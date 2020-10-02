@@ -394,7 +394,7 @@ M4QEND      "]""]"
 	posix-compat	ctrl.posix_compat = option_sense;
 	line		ctrl.gen_line_dirs = option_sense;
 	main		{
-			ACTION_M4_IFDEF( "M4""_YY_MAIN", option_sense);
+			ctrl.do_main = option_sense;
 			/* Override yywrap */
 			if( option_sense == true )
                 		ctrl.do_yywrap = false;
@@ -413,43 +413,43 @@ M4QEND      "]""]"
 	stdinit		ctrl.do_stdinit = option_sense;
 	stdout		env.use_stdout = option_sense;
 	unistd		ACTION_IFDEF("YY_NO_UNISTD_H", ! option_sense);
-	unput		ACTION_M4_IFDEF("M4""_YY_NO_UNPUT", ! option_sense);
+	unput		ctrl.no_unput = ! option_sense;
 	verbose		env.printstats = option_sense;
 	warn		env.nowarn = ! option_sense;
 	yylineno	ctrl.do_yylineno = option_sense; ACTION_M4_IFDEF("M4""_YY_USE_LINENO", option_sense);
 	yymore		yymore_really_used = option_sense;
 	yywrap		ctrl.do_yywrap = option_sense;
 
-	yy_push_state	ACTION_M4_IFDEF("M4""_YY_NO_PUSH_STATE", ! option_sense);
-	yy_pop_state	ACTION_M4_IFDEF("M4""_YY_NO_POP_STATE", ! option_sense);
-	yy_top_state	ACTION_M4_IFDEF("M4""_YY_NO_TOP_STATE", ! option_sense);
+	yy_push_state	ctrl.no_yy_push_state = ! option_sense;
+	yy_pop_state	ctrl.no_yy_pop_state = ! option_sense;
+	yy_top_state	ctrl.no_yy_top_state = ! option_sense;
 
-	yy_scan_buffer	ACTION_M4_IFDEF("M4""_YY_NO_SCAN_BUFFER", ! option_sense);
-	yy_scan_bytes	ACTION_M4_IFDEF("M4""_YY_NO_SCAN_BYTES", ! option_sense);
-	yy_scan_string	ACTION_M4_IFDEF("M4""_YY_NO_SCAN_STRING", ! option_sense);
+	yy_scan_buffer	ctrl.no_yy_scan_buffer = ! option_sense;
+	yy_scan_bytes	ctrl.no_yy_scan_bytes = ! option_sense;
+	yy_scan_string	ctrl.no_yy_scan_string = ! option_sense;
 
-	yyalloc         ACTION_M4_IFDEF("M4""_YY_NO_FLEX_ALLOC", ! option_sense);
-	yyrealloc       ACTION_M4_IFDEF("M4""_YY_NO_FLEX_REALLOC", ! option_sense);
-	yyfree          ACTION_M4_IFDEF("M4""_YY_NO_FLEX_FREE", ! option_sense);
+	yyalloc         ctrl.no_flex_alloc = ! option_sense;
+	yyrealloc       ctrl.no_flex_realloc = ! option_sense;
+	yyfree          ctrl.no_flex_free = ! option_sense;
 
-	yyget_debug     ACTION_M4_IFDEF("M4""_YY_NO_GET_DEBUG", ! option_sense);
-	yyset_debug     ACTION_M4_IFDEF("M4""_YY_NO_SET_DEBUG", ! option_sense);
-	yyget_extra     ACTION_M4_IFDEF("M4""_YY_NO_GET_EXTRA", ! option_sense);
-	yyset_extra     ACTION_M4_IFDEF("M4""_YY_NO_SET_EXTRA", ! option_sense);
-	yyget_leng      ACTION_M4_IFDEF("M4""_YY_NO_GET_LENG", ! option_sense);
-	yyget_text      ACTION_M4_IFDEF("M4""_YY_NO_GET_TEXT", ! option_sense);
-	yyget_column    ACTION_M4_IFDEF("M4""_YY_NO_GET_COLUMN", ! option_sense);
-	yyset_column    ACTION_M4_IFDEF("M4""_YY_NO_SET_COLUMN", ! option_sense);
-	yyget_lineno    ACTION_M4_IFDEF("M4""_YY_NO_GET_LINENO", ! option_sense);
-	yyset_lineno    ACTION_M4_IFDEF("M4""_YY_NO_SET_LINENO", ! option_sense);
-	yyget_in        ACTION_M4_IFDEF("M4""_YY_NO_GET_IN", ! option_sense);
-	yyset_in        ACTION_M4_IFDEF("M4""_YY_NO_SET_IN", ! option_sense);
-	yyget_out       ACTION_M4_IFDEF("M4""_YY_NO_GET_OUT", ! option_sense);
-	yyset_out       ACTION_M4_IFDEF("M4""_YY_NO_SET_OUT", ! option_sense);
-	yyget_lval      ACTION_M4_IFDEF("M4""_YY_NO_GET_LVAL", ! option_sense);
-	yyset_lval      ACTION_M4_IFDEF("M4""_YY_NO_SET_LVAL", ! option_sense);
-	yyget_lloc      ACTION_M4_IFDEF("M4""_YY_NO_GET_LLOC", ! option_sense);
-	yyset_lloc      ACTION_M4_IFDEF("M4""_YY_NO_SET_LLOC", ! option_sense);
+	yyget_debug     ctrl.no_get_debug = ! option_sense;
+	yyset_debug     ctrl.no_set_debug = ! option_sense;
+	yyget_extra     ctrl.no_yyget_extra = ! option_sense;
+	yyset_extra     ctrl.no_yyset_extra = ! option_sense;
+	yyget_leng      ctrl.no_yyget_leng = ! option_sense;
+	yyget_text      ctrl.no_yyget_text = ! option_sense;
+	yyget_column    ctrl.no_yyget_column = ! option_sense;
+	yyset_column    ctrl.no_yyset_column = ! option_sense;
+	yyget_lineno    ctrl.no_yyget_lineno = ! option_sense;
+	yyset_lineno    ctrl.no_yyset_lineno = ! option_sense;
+	yyget_in        ctrl.no_yyget_in = ! option_sense;
+	yyset_in        ctrl.no_yyset_in = ! option_sense;
+	yyget_out       ctrl.no_yyget_out = ! option_sense;
+	yyset_out       ctrl.no_yyset_out = ! option_sense;
+	yyget_lval      ctrl.no_yyget_lval = ! option_sense;
+	yyset_lval      ctrl.no_yyset_lval = ! option_sense;
+	yyget_lloc      ctrl.no_yyget_lloc = ! option_sense;
+	yyset_lloc      ctrl.no_yyset_lloc = ! option_sense;
 
 	extra-type	return TOK_EXTRA_TYPE;
 	outfile		return TOK_OUTFILE;

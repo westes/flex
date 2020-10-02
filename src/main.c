@@ -1022,74 +1022,75 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_NO_YY_PUSH_STATE:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_PUSH_STATE",0);
+			ctrl.no_yy_push_state = true;
 			break;
 		    case OPT_NO_YY_POP_STATE:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_POP_STATE",0);
+			ctrl.no_yy_pop_state = true;
 			break;
 		    case OPT_NO_YY_TOP_STATE:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_TOP_STATE",0);
+			ctrl.no_yy_top_state = true;
 			break;
 		    case OPT_NO_UNPUT:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_UNPUT",0);
+			ctrl.no_unput = true;
 			break;
 		    case OPT_NO_YY_SCAN_BUFFER:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_SCAN_BUFFER",0);
+			ctrl.no_yy_scan_buffer = true;
 			break;
 		    case OPT_NO_YY_SCAN_BYTES:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_SCAN_BYTES",0);
+			ctrl.no_yy_scan_bytes = true;
 			break;
 		    case OPT_NO_YY_SCAN_STRING:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_SCAN_STRING",0);
+			ctrl.no_yy_scan_string = true;
 			break;
 		    case OPT_NO_YYGET_EXTRA:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_EXTRA",0);
+			ctrl.no_yyget_extra = true;
 			break;
 		    case OPT_NO_YYSET_EXTRA:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_EXTRA",0);
+			ctrl.no_yyset_extra = true;
 			break;
 		    case OPT_NO_YYGET_LENG:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LENG",0);
+			ctrl.no_yyget_leng = true;
 			break;
 		    case OPT_NO_YYGET_TEXT:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_TEXT",0);
+			ctrl.no_yyget_text = true;
 			break;
 		    case OPT_NO_YYGET_LINENO:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LINENO",0);
+			ctrl.no_yyget_lineno = true;
 			break;
 		    case OPT_NO_YYSET_LINENO:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LINENO",0);
+			ctrl.no_yyset_lineno = true;
 			break;
 		    case OPT_NO_YYGET_COLUMN:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_COLUMN",0);
+			ctrl.no_yyget_column = true;
 			break;
 		    case OPT_NO_YYSET_COLUMN:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_COLUMN",0);
+			ctrl.no_yyset_column = true;
 			break;
 		    case OPT_NO_YYGET_IN:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_IN",0);
+			ctrl.no_yyget_in = true;
 			break;
 		    case OPT_NO_YYSET_IN:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_IN",0);
+			ctrl.no_yyset_in = true;
 			break;
 		    case OPT_NO_YYGET_OUT:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_OUT",0);
+			ctrl.no_yyget_out = true;
 			break;
 		    case OPT_NO_YYSET_OUT:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_OUT",0);
+			ctrl.no_yyset_out = true;
 			break;
 		    case OPT_NO_YYGET_LVAL:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LVAL",0);
+			ctrl.no_yyget_lval = true;
 			break;
 		    case OPT_NO_YYSET_LVAL:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LVAL",0);
+			ctrl.no_yyset_lval = true;
 			break;
 		    case OPT_NO_YYGET_LLOC:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_GET_LLOC",0);
+			ctrl.no_yyget_lloc = true;
 			break;
 		    case OPT_NO_YYSET_LLOC:
-			buf_m4_define( &m4defs_buf, "M4_YY_NO_SET_LLOC",0);
+			ctrl.no_yyset_lloc = true;
 			break;
+
 		    case OPT_HEX:
 			env.trace_hex = true;
                         break;
@@ -1496,6 +1497,63 @@ void readin (void)
 	if (ctrl.prefix != NULL)
 	    visible_define_str ( "M4_MODE_PREFIX", ctrl.prefix);
 	
+	if (ctrl.no_yy_push_state)
+		visible_define("M4_YY_NO_PUSH_STATE");
+	if (ctrl.no_yy_pop_state)
+		visible_define("M4_YY_NO_POP_STATE");
+	if (ctrl.no_yy_top_state)
+		visible_define("M4_YY_NO_TOP_STATE");
+	if (ctrl.no_unput)
+		visible_define("M4_YY_NO_UNPUT");
+	if (ctrl.no_yy_scan_buffer)
+		visible_define("M4_YY_NO_SCAN_BUFFER");
+	if (ctrl.no_yy_scan_bytes)
+		visible_define("M4_YY_NO_SCAN_BYTES");
+	if (ctrl.no_yy_scan_string)
+		visible_define("M4_YY_NO_SCAN_STRING");
+	if (ctrl.no_yyget_extra)
+		visible_define("M4_YY_NO_GET_EXTRA");
+	if (ctrl.no_yyset_extra)
+		visible_define("M4_YY_NO_SET_EXTRA");
+	if (ctrl.no_yyget_leng)
+		visible_define("M4_YY_NO_GET_LENG");
+	if (ctrl.no_yyget_text)
+		visible_define("M4_YY_NO_GET_TEXT");
+	if (ctrl.no_yyget_lineno)
+		visible_define("M4_YY_NO_GET_LINENO");
+	if (ctrl.no_yyset_lineno)
+		visible_define("M4_YY_NO_SET_LINENO");
+	if (ctrl.no_yyget_column)
+		visible_define("M4_YY_NO_GET_COLUMN");
+	if (ctrl.no_yyset_column)
+		visible_define("M4_YY_NO_SET_COLUMN");
+	if (ctrl.no_yyget_in)
+		visible_define("M4_YY_NO_GET_IN");
+	if (ctrl.no_yyset_in)
+		visible_define("M4_YY_NO_SET_IN");
+	if (ctrl.no_yyget_out)
+		visible_define("M4_YY_NO_GET_OUT");
+	if (ctrl.no_yyset_out)
+		visible_define("M4_YY_NO_SET_OUT");
+	if (ctrl.no_yyget_lval)
+		visible_define("M4_YY_NO_GET_LVAL");
+	if (ctrl.no_yyset_lval)
+		visible_define("M4_YY_NO_SET_LVAL");
+	if (ctrl.no_yyget_lloc)
+		visible_define("M4_YY_NO_GET_LLOC");
+	if (ctrl.no_yyset_lloc)
+		visible_define("M4_YY_NO_SET_LLOC");
+	if (ctrl.no_flex_alloc)
+		visible_define("M4_YY_NO_FLEX_ALLOC");
+	if (ctrl.no_flex_realloc)
+		visible_define("M4_YY_NO_FLEX_REALLOC");
+	if (ctrl.no_flex_free)
+		visible_define("M4_YY_NO_FLEX_FREE");
+	if (ctrl.no_get_debug)
+		visible_define("M4_YY_NO_GET_DEBUG");
+	if (ctrl.no_set_debug)
+		visible_define("M4_YY_NO_SET_DEBUG");
+
 	backend->comment("m4 controls end\n");
 	out ("\n");
 

@@ -386,6 +386,35 @@ struct ctrl_bundle_t {
 	bool yytext_is_array;	// if true (i.e., %array directive), then declare
 				// yytext as array instead of a character pointer.
 				// Nice and inefficient.
+	// flags corresponding to the huge mass of --no-yy options
+	bool no_yy_push_state;
+	bool no_yy_pop_state;
+	bool no_yy_top_state;
+	bool no_unput;
+	bool no_yy_scan_buffer;
+	bool no_yy_scan_bytes;
+	bool no_yy_scan_string;
+	bool no_yyget_extra;
+	bool no_yyset_extra;
+	bool no_yyget_leng;
+	bool no_yyget_text;
+	bool no_yyget_lineno;
+	bool no_yyset_lineno;
+	bool no_yyget_column;
+	bool no_yyset_column;
+	bool no_yyget_in;
+	bool no_yyset_in;
+	bool no_yyget_out;
+	bool no_yyset_out;
+	bool no_yyget_lval;
+	bool no_yyset_lval;
+	bool no_yyget_lloc;
+	bool no_yyset_lloc;
+	bool no_flex_alloc;
+	bool no_flex_realloc;
+	bool no_flex_free;
+	bool no_get_debug;
+	bool no_set_debug;
 };
 
 /* Environment variables.  These control the lexer operation, but do
