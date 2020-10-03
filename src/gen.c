@@ -819,53 +819,14 @@ void visible_define_str (const char *symname, const char *val)
 	outc ('\n');
 }
 
-/* make_tables - generate transition tables and finishes generating output file
+/* make_tables - generate transition tables
  */
 
 void make_tables (void)
 {
 	char buf[128];
 	int i;
-	int did_eof_rule = false;
 	struct yytbl_data *yynultrans_tbl = NULL;
-
-	backend->comment("START of m4 controls\n");
-
-	// mode switches for yy_trans_info specification
-	// nultrans
-	if (nultrans)
-		visible_define ( "M4_MODE_NULTRANS");
-	else {
-		visible_define ( "M4_MODE_NO_NULTRANS");
-		if (ctrl.fulltbl)
-		    visible_define ( "M4_MODE_NULTRANS_FULLTBL");
-		else
-		    visible_define ( "M4_MODE_NO_NULTRANS_FULLTBL");
-		if (ctrl.fullspd)
-		    visible_define ( "M4_MODE_NULTRANS_FULLSPD");
-		else
-		    visible_define ( "M4_MODE_NO_NULTRANS_FULLSPD");
-	}
-	
-	backend->comment("END of m4 controls\n");
-	out ("\n");
-
-	// There are a couple more modes we can't compute until after
-	// tables have been generated.
-
-	backend->comment("START of Flex-generated definitions\n");
-	out_str_dec ("M4_HOOK_CONST_DEFINE(%s, %d)", "YY_NUM_RULES", num_rules);
-	out_str_dec ("M4_HOOK_CONST_DEFINE(%s, %d)", "YY_END_OF_BUFFER", num_rules + 1);
-	out_str_dec ("M4_HOOK_CONST_DEFINE(%s, %d)", "YY_JAMBASE", jambase);
-	out_str_dec ("M4_HOOK_CONST_DEFINE(%s, %d)", "YY_JAMSTATE", jamstate);
-	out_str_dec ("M4_HOOK_CONST_DEFINE(%s, %d)", "YY_NUL_EC", NUL_ec);
-	/* Need to define the transet type as a size large
-	 * enough to hold the biggest offset.
-	 */
-	out_str3 ("M4_HOOK_CONST_DEFINE(%s, %s)", "YY_OFFSET_TYPE", backend->trans_offset_type(tblend + numecs + 1), "");
-	backend->comment("END of Flex-generated definitions\n");
-
-	skelout ();		/* %% [2.0] - tables get dumped here */
 
 	/* This is where we REALLY begin generating the tables. */
 
@@ -1016,55 +977,5 @@ void make_tables (void)
 		for (i = 1; i < num_rules; ++i)
 			mkdata (rule_linenum[i]);
 		dataend ();
-	}
-
-	skelout ();		/* %% [3.0] - mode-dependent static declarations get dumped here */
-
-	out (&action_array[defs1_offset]);
-
-	line_directive_out (stdout, 0);
-
-	skelout ();		/* %% [4.0] - various random yylex internals get dumped here */
-
-	/* Copy prolog to output file. */
-	out (&action_array[prolog_offset]);
-
-	line_directive_out (stdout, 0);
-
-	skelout ();		/* %% [5.0] - main loop of matching-emngine code gets dumped here */
-
-	/* Copy actions to output file. */
-	out (&action_array[action_offset]);
-
-	line_directive_out (stdout, 0);
-
-	/* generate cases for any missing EOF rules */
-	for (i = 1; i <= lastsc; ++i)
-		if (!sceof[i]) {
-			out_str ("M4_HOOK_EOF_STATE_CASE_ARM(%s)", scname[i]);
-			outc('\n');
-			out ("M4_HOOK_EOF_STATE_CASE_FALLTHROUGH");
-			outc('\n');
-			did_eof_rule = true;
-		}
-
-	if (did_eof_rule) {
-		out ("M4_HOOK_EOF_STATE_CASE_TERMINATE");
-	}
-
-	skelout ();
-
-	/* Copy remainder of input to output. */
-
-	line_directive_out (stdout, 1);
-
-	if (sectnum == 3) {
-		OUT_BEGIN_CODE ();
-                if (!no_section3_escape)
-                   fputs("[[", stdout);
-		(void) flexscan ();	/* copy remainder of input to output */
-                if (!no_section3_escape)
-                   fputs("]]", stdout);
-		OUT_END_CODE ();
 	}
 }
