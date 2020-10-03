@@ -956,7 +956,7 @@ void flexinit (int argc, char **argv)
 			    if (*def == '\0')
 				    def = "1";
 
-			    snprintf(buf2, sizeof(buf2), backend->string_define_fmt, arg, def);
+			    snprintf(buf2, sizeof(buf2), "M4_HOOK_CONST_DEFINE(%s, %s)", arg, def);
 			    buf_strappend (&userdef_buf, buf2);
 		    }
 		    break;
@@ -1192,11 +1192,7 @@ void readin (void)
 		outn((char*) top_buf.elts);
 
 	/* Place a bogus line directive, it will be fixed in the filter. */
-	if (ctrl.gen_line_dirs && backend->trace_fmt) {
-		char buf2[4096];
-		snprintf(buf2, sizeof(buf2), backend->trace_fmt, 0, "M4_YY_OUTFILE_NAME");
-		outn(buf2);
-	}
+	line_directive_out(0, false);
 
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)
@@ -1321,7 +1317,7 @@ void readin (void)
 	// itself; by shoving all this stuff out to the skeleton file
 	// we make it easier to retarget the code generation.
 
-	backend->comment("m4 controls begin\n");
+	backend->comment("START of m4 controls\n");
 
 	/* Define the start condition macros. */
 	{
@@ -1329,14 +1325,14 @@ void readin (void)
 		int i;
 		buf_init(&tmpbuf, sizeof(char));
 		for (i = 1; i <= lastsc; i++) {
-			char *str, *fmt = backend->int_define_fmt;
+			char *str, *fmt = "M4_HOOK_CONST_DEFINE(%s, %d)";
 			size_t strsz;
 
 			strsz = strlen(fmt) + strlen(scname[i]) + (size_t)(1 + ceil (log10(i))) + 2;
 			str = malloc(strsz);
 			if (!str)
 				flexfatal(_("allocation of macro definition failed"));
-			snprintf(str, strsz, fmt,      scname[i], i - 1);
+			snprintf(str, strsz, fmt, scname[i], i - 1);
 			buf_strappend(&tmpbuf, str);
 			free(str);
 		}
@@ -1556,7 +1552,7 @@ void readin (void)
 	if (ctrl.stack_used)
 		visible_define("M4_YY_STACK_USED");
 
-	backend->comment("m4 controls end\n");
+	backend->comment("END of m4 controls\n");
 	out ("\n");
 
 	skelout ();

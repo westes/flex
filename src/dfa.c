@@ -523,7 +523,7 @@ size_t ntod (void)
 		backend->ntod(num_full_table_rows);
 
 		if (gentables)
-			outn (backend->table_opener);
+			outn ("M4_HOOK_TABLE_OPENER");
 
 		/* Generate 0 entries for state #0. */
 		for (i = 0; i < num_full_table_rows; ++i) {
@@ -533,7 +533,7 @@ size_t ntod (void)
 
 		dataflush ();
 		if (gentables)
-			outn (backend->table_continuation);
+			outn ("M4_HOOK_TABLE_CONTINUE");
 	}
 
 	/* Create the first states. */
@@ -687,7 +687,7 @@ size_t ntod (void)
 						     yynxt_tbl->td_lolen *
 						     sizeof (flex_int32_t));
 			if (gentables)
-				outn (backend->table_opener);
+				outn ("M4_HOOK_TABLE_OPENER");
 
 			/* Supply array's 0-element. */
 			if (ds == end_of_buffer_state) {
@@ -712,7 +712,7 @@ size_t ntod (void)
 
 			dataflush ();
 			if (gentables)
-				out (backend->table_continuation);
+				outn ("M4_HOOK_TABLE_CONTINUE");
 		}
 
 		else if (ctrl.fullspd)

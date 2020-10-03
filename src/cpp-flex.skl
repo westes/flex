@@ -62,6 +62,33 @@ m4_changequote([[, ]])
 %#   edit the skeleton.
 %#
 
+%# Macro hooks used by Flex start here
+
+%# If this is not defined, no trace lines will be generated.
+m4_define([[M4_HOOK_TRACE_LINE_FORMAT]], [[#line $1 "$2"
+]])
+
+m4_define([[M4_HOOK_TABLE_OPENER]], [[	{]])
+m4_define([[M4_HOOK_TABLE_CONTINUE]], [[	},
+]])
+m4_define([[M4_HOOK_TABLE_CLOSER]], [[	};
+]])
+
+m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]], [[	&yy_transition[$1],
+]])
+
+m4_define([[M4_HOOK_EOF_STATE_CASE_ARM]], [[	case YY_STATE_EOF($1):]])
+m4_define([[M4_HOOK_EOF_STATE_CASE_FALLTHROUGH]], [[		/* FALLTHROUGH */]])
+m4_define([[M4_HOOK_EOF_STATE_CASE_TERMINATE]], [[		yyterminate();
+]])
+
+m4_define([[M4_HOOK_CONST_DEFINE]], [[#define $1 $2
+]])
+
+m4_define([[M4_HOOK_STATE_DYAD]], [[ {$1, $2},]])
+
+%# Macro hooks used by lex end here
+
 %not-for-header
 %if-c-only
 %if-not-reentrant

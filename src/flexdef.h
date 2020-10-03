@@ -306,14 +306,7 @@
 struct flex_backend_t {
 	const char *(*suffix)(void);		// Generate suffix for lexer source code
 	const char **skel;
-	char *trace_fmt;			// Trace message format
 	// Language syntax generation
-	char *int_define_fmt;			// Format for integer constant definitions
-	char *string_define_fmt;		// Format for string constant definitions
-	char *table_opener;			// Open an array initializer with this
-	char *table_continuation;		// Open an array initializer with this
-	char *table_closer;			// How to continue a two-level initializer
-	char *dyad;				// How to format and int[2] initializer 
 	void (*comment)(const char *);		// Wrap a comment line
 	// Flex table generation
 	void (*ntod)(size_t);			// Generate nxt table initializer start (fulltbl mode)
@@ -323,7 +316,6 @@ struct flex_backend_t {
 	size_t (*start_state_list)(size_t);	// Start initializer for table of pointers to start states
 	void (*mkftbl)();			// Make full table serialization entry
 	size_t (*genftbl)(size_t);		// Make full table initializer start
-	const char *state_entry_fmt;		// Format of state table entry
 	size_t (*gentabs_acclist)(size_t);	// Generate accept list initializer start
 	size_t (*gentabs_accept)(size_t);	// Generate accept table initializer start
 	size_t (*gentabs_yy_meta)(size_t);	// Generate yy_meta table initializer start
@@ -335,10 +327,7 @@ struct flex_backend_t {
 	size_t (*nultrans)(int, size_t);	// Generate nulltrans initializer
 	const char *(*trans_offset_type)(int);	// Compute an efficient type for transition tables
 	size_t (*debug_header)(size_t);		// Start initializer for rule-to-line mappings
-	char *caseprefix;			// Prefix of an arm in the language's case construct
-	char *fallthrough;			// Finish a case arm with this to fall through
-	char *endcase;				// What to ship after all EOF-state case arms
-	int c_like;				// Will &yy_transition[%d]," produce a pointer table entry?
+	bool c_like;				// Will &yy_transition[%d]," produce a pointer table entry?
 };
 
 extern size_t footprint;

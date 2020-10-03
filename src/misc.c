@@ -238,7 +238,7 @@ void dataend (void)
 			dataflush ();
 
 		/* add terminator for initialization; { for vi */
-		outn (backend->table_closer);
+		outn ("M4_HOOK_TABLE_CLOSER");
 	}
 	dataline = 0;
 	datapos = 0;
@@ -319,6 +319,7 @@ void lerr_fatal (const char *msg, ...)
 
 void line_directive_out (FILE *output_file, int do_infile)
 {
+	char	*trace_fmt = "m4_ifdef([[M4_HOOK_TRACE_LINE_FORMAT]], [[M4_HOOK_TRACE_LINE_FORMAT([[%d]], [[%s]])]])";
 	char    directive[MAXLINE*2], filename[MAXLINE];
 	char   *s1, *s2, *s3;
 
@@ -328,7 +329,7 @@ void line_directive_out (FILE *output_file, int do_infile)
 	s1 = do_infile ? infilename : "M4_YY_OUTFILE_NAME";
 
 	if (do_infile && !s1)
-        s1 = "<stdin>";
+		s1 = "<stdin>";
     
 	s2 = filename;
 	s3 = &filename[sizeof (filename) - 2];
@@ -343,12 +344,11 @@ void line_directive_out (FILE *output_file, int do_infile)
 
 	*s2 = '\0';
 
-	if (backend->trace_fmt)
-		if (do_infile)
-			snprintf (directive, sizeof(directive), backend->trace_fmt, linenum, filename);
-		else {
-			snprintf (directive, sizeof(directive), backend->trace_fmt, 0, filename);
-		}
+	if (do_infile)
+		snprintf (directive, sizeof(directive), trace_fmt, linenum, filename);
+	else {
+		snprintf (directive, sizeof(directive), trace_fmt, 0, filename);
+	}
 
 	/* If output_file is nil then we should put the directive in
 	 * the accumulated actions.
@@ -810,7 +810,8 @@ void transition_struct_out (int element_v, int element_n)
 	if (!gentables)
 		return;
 
-	out_dec2 (backend->dyad, element_v, element_n);
+	out_dec2 ("M4_HOOK_STATE_DYAD([[%4d]],[[%4d]])", element_v, element_n);
+	outc ('\n');
 
 	datapos += TRANS_STRUCT_PRINT_LENGTH;
 

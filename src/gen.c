@@ -76,7 +76,7 @@ static void geneoltbl (void)
 			if ((i % 20) == 19)
 				out ("\n    ");
 		}
-		outn (backend->table_closer);
+		outn ("M4_HOOK_TABLE_CLOSER");
 	}
 	outn ("]])");
 }
@@ -287,15 +287,15 @@ void genctbl (void)
 	transition_struct_out (chk[tblend + 2], nxt[tblend + 2]);
 
 	if (gentables)
-		outn (backend->table_closer);
+		outn ("M4_HOOK_TABLE_CLOSER");
 
 	footprint += backend->start_state_list(lastsc * 2 + 1);
 
 	if (gentables) {
-		outn (backend->table_opener);
+		outn ("M4_HOOK_TABLE_OPENER");
 
 		for (i = 0; i <= lastsc * 2; ++i)
-			out_dec (backend->state_entry_fmt, base[i]);
+			out_dec ("M4_HOOK_STATE_ENTRY_FORMAT(%d)", base[i]);
 
 		dataend ();
 	}
@@ -829,7 +829,7 @@ void make_tables (void)
 	int did_eof_rule = false;
 	struct yytbl_data *yynultrans_tbl = NULL;
 
-	backend->comment("m4 controls begin\n");
+	backend->comment("START of m4 controls\n");
 
 	// mode switches for yy_trans_info specification
 	// nultrans
@@ -847,24 +847,23 @@ void make_tables (void)
 		    visible_define ( "M4_MODE_NO_NULTRANS_FULLSPD");
 	}
 	
-	backend->comment("m4 controls end\n");
+	backend->comment("END of m4 controls\n");
 	out ("\n");
 
 	// There are a couple more modes we can't compute until after
 	// tables have been generated.
 
-	out_dec ("#define YY_NUM_RULES %d\n", num_rules);
-	out_dec ("#define YY_END_OF_BUFFER %d\n", num_rules + 1);
-
-	fprintf (stdout, backend->int_define_fmt, "YY_JAMBASE", jambase);
-	fprintf (stdout, backend->int_define_fmt, "YY_JAMSTATE", jamstate);
-
-	fprintf (stdout, backend->int_define_fmt, "YY_NUL_EC", NUL_ec);
-
+	backend->comment("START of Flex-generated definitions\n");
+	out_str_dec ("M4_HOOK_CONST_DEFINE(%s, %d)", "YY_NUM_RULES", num_rules);
+	out_str_dec ("M4_HOOK_CONST_DEFINE(%s, %d)", "YY_END_OF_BUFFER", num_rules + 1);
+	out_str_dec ("M4_HOOK_CONST_DEFINE(%s, %d)", "YY_JAMBASE", jambase);
+	out_str_dec ("M4_HOOK_CONST_DEFINE(%s, %d)", "YY_JAMSTATE", jamstate);
+	out_str_dec ("M4_HOOK_CONST_DEFINE(%s, %d)", "YY_NUL_EC", NUL_ec);
 	/* Need to define the transet type as a size large
 	 * enough to hold the biggest offset.
 	 */
-	fprintf (stdout, backend->string_define_fmt, "YY_OFFSET_TYPE", backend->trans_offset_type(tblend + numecs + 1));
+	out_str3 ("M4_HOOK_CONST_DEFINE(%s, %s)", "YY_OFFSET_TYPE", backend->trans_offset_type(tblend + numecs + 1), "");
+	backend->comment("END of Flex-generated definitions\n");
 
 	skelout ();		/* %% [2.0] - tables get dumped here */
 
@@ -1042,19 +1041,15 @@ void make_tables (void)
 	/* generate cases for any missing EOF rules */
 	for (i = 1; i <= lastsc; ++i)
 		if (!sceof[i]) {
-			outc ('\t');
-			out_str3 ("%sYY_STATE_EOF(%s):\n", backend->caseprefix, scname[i], "");
-			if (backend->fallthrough != NULL) {
-				outc ('\t');
-				outn (backend->fallthrough);
-			}
+			out_str ("M4_HOOK_EOF_STATE_CASE_ARM(%s)", scname[i]);
+			outc('\n');
+			out ("M4_HOOK_EOF_STATE_CASE_FALLTHROUGH");
+			outc('\n');
 			did_eof_rule = true;
 		}
 
 	if (did_eof_rule) {
-		outc ('\t');
-		outc ('\t');
-		outn (backend->endcase);
+		out ("M4_HOOK_EOF_STATE_CASE_TERMINATE");
 	}
 
 	skelout ();

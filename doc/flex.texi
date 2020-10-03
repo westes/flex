@@ -8596,6 +8596,11 @@ Read the definition of struct backend_t in @file{src/flexdefs.h}, and
 attached comments, to get a feel for the methods.  Don't worry
 about understandng table generator names at first.
 
+You'll also need to look at the @code{M4_HOOK_*} macros near the top
+of the skeleton file.  Rather than emit literal language syntax, as
+often as possible Flex ships calls to these which are expected to be
+expanded within the skeleton.
+
 To write support for a language, you'll want to do the following
 steps:
 
@@ -8655,19 +8660,15 @@ require fixes outside a back end.
 The item separator in data initializers is a comma.
 
 @item
-The language has a case-arm syntax that looks like
-a (possibly empty) prefix, followed by a value
-expression, followed by a colon.
-
-@item
 Either case arms can be stacked as in C; that is, there is
 an implicit fallthrough if the case arm has no code. Or,
 there is an explicit fallthrough keyword that enables this,
 as in Go.
 @end enumerate
 
-By putting a @code{yyterminate()} call in the fallthrough member
-and a null pointer in the endcase member, you could handle
+By putting a @code{yyterminate()} call in the expansion of
+@code{M4_HOOK_EOF_STATE_CASE_FALLTHROUGH} and defining an empty
+@code{M4_HOOK_EOF_STATE_CASE_TERMINATE} macro, you could handle
 languages like Pascal.
 
 @node Indices,  , Appendices, Top
