@@ -65,7 +65,7 @@ COMMON_SOURCES = \
 	main.c \
 	misc.c \
 	nfa.c \
-	ctrl.c \
+	options.c \
 	options.h \
 	parse.y \
 	regex.c \
