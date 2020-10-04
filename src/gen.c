@@ -34,9 +34,36 @@
 #include "flexdef.h"
 #include "tables.h"
 
+/* These typedefs are only used for computing footprint sizes,
+ * You need to make sure they match reality in the skeleton file to
+ * get accurate numbers, but they don't otherwise matter.
+ */
+typedef char YY_CHAR;
+struct yy_trans_info {int32_t yy_verify; int32_t yy_nxt;};
+
 /* declare functions that have forward references */
 
 void	genecs(void);
+
+struct packtype_t {
+	char *name;
+	size_t width;
+};
+
+
+static struct packtype_t *optimize_pack(size_t sz)
+{
+	/* FIXME: There's a 32-bit assumption lurking here */
+	static struct packtype_t out;
+	if (sz == 0) {
+		out.name  = ctrl.long_align ? "flex_int32_t" : "flex_int16_t";
+		out.width = ctrl.long_align ? 32 : 16;
+	} else {
+		out.name = (ctrl.long_align || sz <= INT16_MAX) ? "flex_int32_t" : "flex_ini16_t";
+		out.width = (ctrl.long_align || sz <= INT16_MAX) ? 32 : 16;
+	}
+	return &out;
+}
 
 /** Make the table for possible eol matches.
  *  @return the newly allocated rule_can_match_eol table
@@ -65,9 +92,12 @@ static void geneoltbl (void)
 {
 	int     i;
 
+	/* FIXME: this table could be typically be packed into int16 */
 	outn ("m4_ifdef( [[M4_MODE_YYLINENO]],[[");
-	backend->comment ("Table of booleans, true if rule could match eol.\n");
-	footprint += backend->geneoltbl(num_rules + 1);
+	outn ("m4_define([[M4_HOOK_EOLTABLE_TYPE]], [[flex_int32_t]])");
+	out_dec ("m4_define([[M4_HOOK_EOLTABLE_SIZE]], [[%d]])", num_rules + 1);
+	outn ("m4_define([[M4_HOOK_EOLTABLE_BODY]], [[m4_dnl");
+	footprint += sizeof(int32_t) * (num_rules + 1);
 
 	if (gentables) {
 		for (i = 1; i <= num_rules; i++) {
@@ -76,8 +106,8 @@ static void geneoltbl (void)
 			if ((i % 20) == 19)
 				out ("\n    ");
 		}
-		outn ("M4_HOOK_TABLE_CLOSER");
 	}
+	outn ("]])");
 	outn ("]])");
 }
 
@@ -172,7 +202,6 @@ static struct yytbl_data *mkctbl (void)
 			tdata[curr++] = base[nxt[i]] - (i - chk[i]);
 		}
 	}
-
 
 	/* Here's the final, end-of-buffer state. */
 	tdata[curr++] = chk[tblend + 1];
@@ -297,7 +326,7 @@ void genctbl (void)
 		for (i = 0; i <= lastsc * 2; ++i)
 			out_dec ("M4_HOOK_STATE_ENTRY_FORMAT(%d)", base[i]);
 
-		dataend ();
+		dataend ("M4_HOOK_TABLE_CLOSER");
 	}
 
 	if (ctrl.useecs)
@@ -337,14 +366,17 @@ void genecs (void)
 	int ch, row;
 	int     numrows;
 
-	footprint += backend->genecs(ctrl.csize);
+	out_dec ("m4_define([[M4_HOOK_ECSTABLE_SIZE]], [[%d]])", ctrl.csize);
+	outn ("m4_define([[M4_HOOK_ECSTABLE_BODY]], [[m4_dnl");
 
 	for (ch = 1; ch < ctrl.csize; ++ch) {
 		ecgroup[ch] = ABS (ecgroup[ch]);
 		mkdata (ecgroup[ch]);
 	}
 
-	dataend ();
+	dataend (NULL);
+	outn("]])");
+	footprint += sizeof(YY_CHAR) * ctrl.csize;
 
 	if (env.trace) {
 		fputs (_("\n\nEquivalence Classes:\n\n"), stderr);
@@ -408,9 +440,13 @@ void genftbl (void)
 {
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
+	struct packtype_t *ptype = optimize_pack(0);
 
-	footprint += backend->genftbl(lastdfa+1);
 	dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
+
+	out_str ("m4_define([[M4_HOOK_FULLTABLE_TYPE]], [[%s]])", ptype->name);
+	out_dec ("m4_define([[M4_HOOK_FULLTABLE_SIZE]], [[%d]])", lastdfa + 1);
+	outn ("m4_define([[M4_HOOK_FULLTABLE_BODY]], [[m4_dnl");
 
 	for (i = 1; i <= lastdfa; ++i) {
 		int anum = dfaacc[i].dfaacc_state;
@@ -422,7 +458,9 @@ void genftbl (void)
 				 i, anum);
 	}
 
-	dataend ();
+	dataend (NULL);
+	outn("]])");
+	footprint += (lastdfa + 1) * ptype->width;
 
 	if (ctrl.useecs)
 		genecs ();
@@ -533,7 +571,7 @@ void gentabs (void)
 		/* add accepting number for the "jam" state */
 		acc_array[i] = j;
 
-		dataend ();
+		dataend ("M4_HOOK_TABLE_CLOSER");
 		if (tablesext) {
 			yytbl_data_compress (yyacclist_tbl);
 			if (yytbl_data_fwrite (&tableswr, yyacclist_tbl) < 0)
@@ -602,7 +640,7 @@ void gentabs (void)
 		yyacc_data[yyacc_curr++] = acc_array[i];
 	}
 
-	dataend ();
+	dataend ("M4_HOOK_TABLE_CLOSER");
 	if (tablesext) {
 		yytbl_data_compress (yyacc_tbl);
 		if (yytbl_data_fwrite (&tableswr, yyacc_tbl) < 0)
@@ -655,7 +693,7 @@ void gentabs (void)
 			yymecs_data[i] = ABS (tecbck[i]);
 		}
 
-		dataend ();
+		dataend ("M4_HOOK_TABLE_CLOSER");
 		if (tablesext) {
 			yytbl_data_compress (yymeta_tbl);
 			if (yytbl_data_fwrite (&tableswr, yymeta_tbl) < 0)
@@ -707,7 +745,7 @@ void gentabs (void)
 		def[i] = jamstate;
 	}
 
-	dataend ();
+	dataend ("M4_HOOK_TABLE_CLOSER");
 	if (tablesext) {
 		yytbl_data_compress (yybase_tbl);
 		if (yytbl_data_fwrite (&tableswr, yybase_tbl) < 0)
@@ -732,7 +770,7 @@ void gentabs (void)
 		yydef_data[i] = def[i];
 	}
 
-	dataend ();
+	dataend ("M4_HOOK_TABLE_CLOSER");
 	if (tablesext) {
 		yytbl_data_compress (yydef_tbl);
 		if (yytbl_data_fwrite (&tableswr, yydef_tbl) < 0)
@@ -762,7 +800,7 @@ void gentabs (void)
 		yynxt_data[i] = nxt[i];
 	}
 
-	dataend ();
+	dataend ("M4_HOOK_TABLE_CLOSER");
 	if (tablesext) {
 		yytbl_data_compress (yynxt_tbl);
 		if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)
@@ -789,7 +827,7 @@ void gentabs (void)
 		yychk_data[i] = chk[i];
 	}
 
-	dataend ();
+	dataend ("M4_HOOK_TABLE_CLOSER");
 	if (tablesext) {
 		yytbl_data_compress (yychk_tbl);
 		if (yytbl_data_fwrite (&tableswr, yychk_tbl) < 0)
@@ -952,7 +990,7 @@ void make_tables (void)
 			}
 		}
 
-		dataend ();
+		dataend ("M4_HOOK_TABLE_CLOSER");
 		if (tablesext) {
 			yytbl_data_compress (yynultrans_tbl);
 			if (yytbl_data_fwrite (&tableswr, yynultrans_tbl) <
@@ -970,12 +1008,18 @@ void make_tables (void)
 	}
 
 	if (ctrl.ddebug) {		/* Spit out table mapping rules to line numbers. */
-		/* Policy choice: this returns the table size
-		 * but we don't include it in the table metering.
+		/* Policy choice: we don't include this space
+		 * in the table metering.
 		 */
-		backend->debug_header(num_rules);
+		struct packtype_t *ptype = optimize_pack(0);
+
+		out_str ("m4_define([[M4_HOOK_DEBUGTABLE_TYPE]], [[%s]])", ptype->name);
+		out_dec ("m4_define([[M4_HOOK_DEBUGTABLE_SIZE]], [[%d]])", num_rules);
+		outn ("m4_define([[M4_HOOK_DEBUGTABLE_BODY]], [[m4_dnl");
+
 		for (i = 1; i < num_rules; ++i)
 			mkdata (rule_linenum[i]);
-		dataend ();
+		dataend (NULL);
+		outn("]])");
 	}
 }

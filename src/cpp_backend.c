@@ -38,6 +38,7 @@
 /* These typedefs are only used for computing footprint sizes,
  * You need to make sure they match reality in the skeleton file to 
  * get accurate numbers, but they don't otherwise matter.
+ * FIXME" This shiould go away when tFkex ships only macros.
  */
 typedef char YY_CHAR;
 struct yy_trans_info {int32_t yy_verify; int32_t yy_nxt;};
@@ -127,13 +128,6 @@ static void cpp_ntod(size_t num_full_table_rows)
 	 */
 }
 
-static size_t cpp_geneoltbl(size_t sz)
-// Generate end-of-line-transitions - only used when yylineno tracking is on
-{
-	out_str_dec (cpp_get_int32_decl (), "yy_rule_can_match_eol", sz);
-	return sizeof(int32_t) * sz;
-}
-
 static void cpp_mkctbl (size_t sz)
 // Make full-speed compressed transition table
 {
@@ -172,14 +166,6 @@ static void cpp_mkftbl(void)
 		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
 		    ctrl.long_align ? "flex_int32_t" : "flex_int16_t");
 }
-
-static size_t cpp_genftbl(size_t sz)
-{
-	out_str_dec (ctrl.long_align ? cpp_get_int32_decl () : cpp_get_int16_decl (),
-		     "yy_accept", sz);
-	return sz * (ctrl.long_align ? sizeof(int32_t) : sizeof(int16_t));
-}
-
 
 static size_t cpp_gentabs_acclist(size_t sz)
 // Generate accept list initializer
@@ -270,28 +256,13 @@ static size_t cpp_nultrans(int fullspd, size_t afterdfa)
 // Generate nulltrans initializer
 {
 	// Making this a backend method may be overzealous.
-	// How many other languages have to sprcial-case NUL
+	// How many other languages have to special-case NUL
 	// because it's a string terminator?
 	out_str_dec (cpp_get_state_decl (), "yy_NUL_trans", afterdfa);
 	buf_prints (&yydmap_buf,
 		    "\t{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(%s)},\n",
 		    (fullspd) ? "struct yy_trans_info*" : "flex_int32_t");
 	return afterdfa * (fullspd ? sizeof(struct yy_trans_info *) : sizeof(int32_t));
-}
-
-static size_t cpp_debug_header(size_t sz)
-{
-	out_str_dec (ctrl.long_align ? cpp_get_int32_decl () :
-		     cpp_get_int16_decl (), "yy_rule_linenum",
-		     sz);
-	return sz * (ctrl.long_align ? sizeof(int32_t) : sizeof(int16_t));
-}
-
-
-static size_t cpp_genecs(size_t size)
-{
-	out_str_dec (cpp_get_yy_char_decl (), "yy_ec", ctrl.csize);
-	return sizeof(YY_CHAR) * size; 
 }
 
 static const char *cpp_trans_offset_type(int total_table_size)
@@ -311,12 +282,10 @@ struct flex_backend_t cpp_backend = {
 	.skel = cpp_skel,
 	.comment = cpp_comment,
 	.ntod = cpp_ntod,
-	.geneoltbl = cpp_geneoltbl,
 	.mkctbl = cpp_mkctbl,
 	.gen_yy_trans = cpp_gen_yy_trans,
 	.start_state_list = cpp_start_state_list,
 	.mkftbl = cpp_mkftbl,
-	.genftbl = cpp_genftbl,
 	.gentabs_acclist = cpp_gentabs_acclist,
 	.gentabs_accept = cpp_gentabs_accept,
 	.gentabs_yy_meta = cpp_gentabs_yy_meta,
@@ -324,9 +293,7 @@ struct flex_backend_t cpp_backend = {
 	.gentabs_yy_def = cpp_gentabs_yy_def,
 	.gentabs_yy_nxt = cpp_gentabs_yy_nxt,
 	.gentabs_yy_chk = cpp_gentabs_yy_chk,
-	.genecs = cpp_genecs,
 	.nultrans = cpp_nultrans,
 	.trans_offset_type = cpp_trans_offset_type,
-	.debug_header = cpp_debug_header,
 	.c_like = true,
 };

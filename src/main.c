@@ -164,11 +164,7 @@ int flex_main (int argc, char *argv[])
 
 	readin ();
 
-	skelout ();		/* %% [1.0] */
-
-	backend->comment("Begin user sect3\n");
-
-	skelout ();		/* %% [1.5] DFA */
+	skelout ();		/* %% [1.0] DFA */
 	footprint += ntod ();
 
 	for (i = 1; i <= num_rules; ++i)
@@ -1473,6 +1469,11 @@ void readin (void)
 		visible_define ( "M4_MODE_REAL_FULLSPD");
 	else
 		visible_define ( "M4_MODE_NO_REAL_FULLSPD");
+
+	if (ctrl.fulltbl)
+		visible_define ( "M4_MODE_REAL_FULLTBL");
+	else
+		visible_define ( "M4_MODE_NO_REAL_FULLTBL");
 
 	// niode switches for YYINPUT code generation
 	if (ctrl.use_read)

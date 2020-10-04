@@ -310,7 +310,6 @@ struct flex_backend_t {
 	void (*comment)(const char *);		// Wrap a comment line
 	// Flex table generation
 	void (*ntod)(size_t);			// Generate nxt table initializer start (fulltbl mode)
-	size_t (*geneoltbl)(size_t);		// Generate end-of-line transition table initializer start
 	void (*mkctbl)(size_t);			// Make full-speed compressed table initializer start
 	size_t (*gen_yy_trans)(size_t);		// Table of verify for transition and offset to next state. (sic)
 	size_t (*start_state_list)(size_t);	// Start initializer for table of pointers to start states
@@ -323,10 +322,8 @@ struct flex_backend_t {
 	size_t (*gentabs_yy_def)(size_t);	// Generate yy_def initializer start
 	size_t (*gentabs_yy_nxt)(size_t);	// Generate yy_nxt initializer start
 	size_t (*gentabs_yy_chk)(size_t);	// Generate yy_chk initializer start
-	size_t (*genecs)(size_t);		// Generates tart of equivalence-class-table initializer
 	size_t (*nultrans)(int, size_t);	// Generate nulltrans initializer
 	const char *(*trans_offset_type)(int);	// Compute an efficient type for transition tables
-	size_t (*debug_header)(size_t);		// Start initializer for rule-to-line mappings
 	bool c_like;				// Will &yy_transition[%d]," produce a pointer table entry?
 };
 
@@ -870,7 +867,7 @@ extern char *xstrdup(const char *);
 extern int cclcmp(const void *, const void *);
 
 /* Finish up a block of data declarations. */
-extern void dataend(void);
+extern void dataend(const char *);
 
 /* Flush generated data statements. */
 extern void dataflush(void);

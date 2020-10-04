@@ -679,7 +679,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 ]])
 
-%% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. definitions & init go here
+/* Begin user sect3 */
 
 m4_ifdef( [[M4_MODE_NO_YYWRAP]], [[
 %if-c-only
@@ -868,6 +868,47 @@ int yy_flex_debug = m4_ifdef([[M4_MODE_DEBUG]],[[1]],[[0]]);
 %endif
 
 %% [2.0] data tables for the DFA are inserted here
+m4_ifdef( [[M4_MODE_YYLINENO]],[[m4_dnl
+/* Table of booleans, true if rule could match eol. */
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const M4_HOOK_EOLTABLE_TYPE yy_rule_can_match_eol[M4_HOOK_EOLTABLE_SIZE] =
+    { 0,
+M4_HOOK_EOLTABLE_BODY[[]]};
+]], [[
+static const M4_HOOK_EOLTABLE_TYPE * yy_rule_can_match_eol = 0;
+]])
+]])
+
+m4_ifdef( [[M4_MODE_REAL_FULLTBL]],[[m4_dnl
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const M4_HOOK_FULLTABLE_TYPE yy_accept[M4_HOOK_FULLTABLE_SIZE] =
+    { 0,
+M4_HOOK_FULLTABLE_BODY[[]]};
+]], [[
+static const M4_HOOK_FULLTABLE_TYPE * yy_accept = 0;
+]])
+]])
+
+m4_ifdef( [[M4_MODE_USEECS]],[[m4_dnl
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const YY_CHAR yy_ec[M4_HOOK_ECSTABLE_SIZE] =
+    { 0,
+M4_HOOK_ECSTABLE_BODY[[]]};
+]], [[
+static const YY_CHAR * yy_ec = 0;
+]])
+]])
+ 
+m4_ifdef( [[M4_MODE_DEBUG]],[[m4_dnl
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const M4_HOOK_DEBUGTABLE_TYPE yy_rule_linenum[M4_HOOK_DEBUGTABLE_SIZE] =
+    { 0,
+M4_HOOK_DEBUGTABLE_BODY[[]]};
+]], [[
+static const M4_HOOK_DEBUGTABLE_TYPE * yy_rule_linenum = 0;
+]])
+]])
+
 ]])
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],

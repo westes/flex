@@ -744,7 +744,7 @@ size_t ntod (void)
 	}
 
 	if (ctrl.fulltbl) {
-		dataend ();
+		dataend ("M4_HOOK_TABLE_CLOSER");
 		if (tablesext) {
 			yytbl_data_compress (yynxt_tbl);
 			if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)

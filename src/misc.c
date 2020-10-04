@@ -229,7 +229,7 @@ int cclcmp (const void *a, const void *b)
 
 /* dataend - finish up a block of data declarations */
 
-void dataend (void)
+void dataend (const char *endit)
 {
 	/* short circuit any output */
 	if (gentables) {
@@ -238,7 +238,8 @@ void dataend (void)
 			dataflush ();
 
 		/* add terminator for initialization; { for vi */
-		outn ("M4_HOOK_TABLE_CLOSER");
+		if (endit)
+		    outn (endit);
 	}
 	dataline = 0;
 	datapos = 0;
