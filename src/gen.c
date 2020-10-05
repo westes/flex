@@ -844,7 +844,7 @@ void gentabs (void)
 void visible_define (const char *symname)
 {
 	out_m4_define(symname, NULL);
-	backend->comment(symname);
+	comment(symname);
 	outc ('\n');
 }
 
@@ -853,7 +853,7 @@ void visible_define_str (const char *symname, const char *val)
 	char buf[128];
 	out_m4_define(symname, val);
 	snprintf(buf, sizeof(buf), "%s = %s", symname, val);
-	backend->comment(buf);
+	comment(buf);
 	outc ('\n');
 }
 
@@ -924,13 +924,13 @@ void make_tables (void)
 		gentabs ();
 
 	snprintf(buf, sizeof(buf), "footprint: %ld bytes\n", footprint);
-	backend->comment(buf);
+	comment(buf);
 	outc ('\n');
 	
 	// Only at this point do we know if the automaton has backups.
 	// Some m4 conditionals require this information.
 
-	backend->comment("m4 controls begin\n");
+	comment("m4 controls begin\n");
 
 	if (num_backing_up > 0)
 		visible_define ( "M4_MODE_HAS_BACKING_UP");
@@ -941,7 +941,7 @@ void make_tables (void)
 	if ((num_backing_up > 0 && !reject) && (ctrl.fullspd || ctrl.fulltbl))
 		visible_define ( "M4_MODE_NULTRANS_WRAP");
 
-	backend->comment("m4 controls end\n");
+	comment("m4 controls end\n");
 	out ("\n");
 
 	if (ctrl.do_yylineno) {

@@ -306,8 +306,6 @@
 struct flex_backend_t {
 	const char *(*suffix)(void);		// Generate suffix for lexer source code
 	const char **skel;
-	// Language syntax generation
-	void (*comment)(const char *);		// Wrap a comment line
 	// Flex table generation
 	void (*ntod)(size_t);			// Generate nxt table initializer start (fulltbl mode)
 	void (*mkctbl)(size_t);			// Make full-speed compressed table initializer start
@@ -953,7 +951,7 @@ extern void out_m4_define(const char* def, const char* val);
 extern char *readable_form(int);
 
 /* Write out one section of the skeleton file. */
-extern void skelout(void);
+extern void skelout(bool);
 
 /* Output a yy_trans_info structure. */
 extern void transition_struct_out(int, int);
@@ -1029,6 +1027,8 @@ extern void lwarn(const char *);	/* report a warning */
 extern void yyerror(const char *);	/* report a parse error */
 extern int yyparse(void);		/* the YACC parser */
 
+/* Ship a comment to the generated output */
+extern void comment(const char *);
 
 /* from file scan.l */
 

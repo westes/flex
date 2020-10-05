@@ -667,7 +667,7 @@ void   *reallocate_array (void *array, int size, size_t element_size)
  *    Copies skelfile or skel array to stdout until a line beginning with
  *    "%%" or EOF is found.
  */
-void skelout (void)
+void skelout (bool announce)
 {
 	char    buf_storage[MAXLINE];
 	char   *buf = buf_storage;
@@ -696,10 +696,10 @@ void skelout (void)
 			if (ctrl.ddebug && buf[1] != '#') {
 				bool escaped = buf[strlen (buf) - 1] == '\\';
 				if (escaped) {
-					backend->comment(buf);
+					comment(buf);
 					out ("\\\n");
 				} else {
-					backend->comment(buf);
+					comment(buf);
 					outc ('\n');
 				}
 			}
@@ -716,8 +716,10 @@ void skelout (void)
 			} 
 			else if (buf[1] == '%') {
 				/* %% is a break point for skelout() */
-				backend->comment(buf);
-				outc ('\n');
+				if (announce) {
+					comment(buf);
+					outc ('\n');
+				}
 				return;
 			}
 			else if (cmd_match (CMD_PUSH)){
@@ -725,7 +727,7 @@ void skelout (void)
 				if(ctrl.ddebug){
 					char buf2[MAXLINE];
 					snprintf(buf2, sizeof(buf2), "(state = (%s)\n",do_copy?"true":"false");
-					backend->comment(buf2);
+					comment(buf2);
 				}
 				out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
 			}
@@ -734,7 +736,7 @@ void skelout (void)
 				if(ctrl.ddebug){
 					char buf2[MAXLINE];
 					snprintf(buf2, sizeof(buf2), "(state = (%s)\n",do_copy?"true":"false");
-					backend->comment(buf2);
+					comment(buf2);
 				}
 				out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
 			}
@@ -865,3 +867,19 @@ char   *chomp (char *str)
 		*p-- = 0;
 	return str;
 }
+
+void comment(const char *txt)
+{
+	char buf[MAXLINE];
+	bool eol;
+
+	strncpy(buf, txt, MAXLINE-1);
+	eol = buf[strlen(buf)-1] == '\n';
+
+	if (eol)
+		buf[strlen(buf)-1] = '\0';
+	out_str("M4_HOOK_COMMENT_OPEN [[%s]] M4_HOOK_COMMENT_CLOSE", buf);
+	if (eol)
+		outc ('\n');
+}
+

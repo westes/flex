@@ -88,21 +88,6 @@ static const char *cpp_suffix (void)
 	return suffix;
 }
 
-static void cpp_comment(const char *txt)
-{
-	char buf[MAXLINE];
-	bool eol;
-
-	strncpy(buf, txt, MAXLINE-1);
-	eol = buf[strlen(buf)-1] == '\n';
-
-	if (eol)
-		buf[strlen(buf)-1] = '\0';
-	out_str("/* [[%s]] */", buf);
-	if (eol)
-		outc ('\n');
-}
-
 static void cpp_ntod(size_t num_full_table_rows)
 // Generate nxt table for ntod
 {
@@ -280,7 +265,6 @@ const char *cpp_skel[] = {
 struct flex_backend_t cpp_backend = {
 	.suffix = cpp_suffix,
 	.skel = cpp_skel,
-	.comment = cpp_comment,
 	.ntod = cpp_ntod,
 	.mkctbl = cpp_mkctbl,
 	.gen_yy_trans = cpp_gen_yy_trans,

@@ -64,6 +64,9 @@ m4_changequote([[, ]])
 
 %# Macro hooks used by Flex start here
 
+m4_define([[M4_HOOK_COMMENT_OPEN]], [[/*]])
+m4_define([[M4_HOOK_COMMENT_CLOSE]], [[*/]])
+
 %# If this is not defined, no trace lines will be generated.
 m4_define([[M4_HOOK_TRACE_LINE_FORMAT]], [[#line $1 "$2"
 ]])
@@ -87,7 +90,7 @@ m4_define([[M4_HOOK_CONST_DEFINE]], [[#define $1 $2
 
 m4_define([[M4_HOOK_STATE_DYAD]], [[ {$1, $2},]])
 
-%# Macro hooks used by lex end here
+%% [0.0] Make hook macros available to Flex
 
 %not-for-header
 %if-c-only
