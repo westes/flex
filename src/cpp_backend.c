@@ -35,12 +35,11 @@
 #include "flexdef.h"
 #include "tables.h"
 
-/* These typedefs are only used for computing footprint sizes,
+/* This typedef is only used for computing footprint sizes,
  * You need to make sure they match reality in the skeleton file to 
  * get accurate numbers, but they don't otherwise matter.
- * FIXME: This shiould go away when tFkex ships only macros.
+ * FIXME: This should go away when Flex ships only macros.
  */
-typedef char YY_CHAR;
 struct yy_trans_info {int32_t yy_verify; int32_t yy_nxt;};
 
 /* Helper functions */
@@ -65,13 +64,6 @@ static const char *cpp_get_state_decl (void)
 	return (gentables)
 		? "static const yy_state_type %s[%d] =\n    {   0,\n"
 		: "static const yy_state_type * %s = 0;\n";
-}
-
-static const char *cpp_get_yy_char_decl (void)
-{
-	return (gentables)
-		? "static const YY_CHAR %s[%d] =\n    {   0,\n"
-		: "static const YY_CHAR * %s = 0;\n";
 }
 
 /* Methods */
@@ -122,27 +114,6 @@ static void cpp_mkctbl (size_t sz)
 		     || ctrl.long_align) ? "flex_int32_t" : "flex_int16_t");
 }
 
-static size_t cpp_gen_yy_trans(size_t sz)
-// Table of verify for transition and offset to next state. (sic)
-{
-	if (gentables)
-		out_dec ("static const struct yy_trans_info yy_transition[%d] =\n    {\n", sz);
-	else
-		outn ("static const struct yy_trans_info *yy_transition = 0;");
-	return sz * sizeof(struct yy_trans_info);
-}
-
-static size_t cpp_start_state_list(size_t sz)
-// Start initializer for table of pointers to start state
-{
-	/* Table of pointers to start states. */
-	if (gentables)
-		out_dec ("static const struct yy_trans_info *yy_start_state_list[%d] =\n", sz);
-	else
-		outn ("static const struct yy_trans_info **yy_start_state_list =0;");
-	return sz * sizeof(struct yy_trans_info *);
-}
-
 static void cpp_mkftbl(void)
 // Make full table
 {
@@ -172,16 +143,6 @@ static size_t cpp_gentabs_accept(size_t sz)
 		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
 		    ctrl.long_align ? "flex_int32_t" : "flex_int16_t");
 	return sz * (ctrl.long_align ? sizeof(int32_t) : sizeof(int16_t));
-}
-
-static size_t cpp_gentabs_yy_meta(size_t sz)
-// Generate yy_meta table initializer
-{
-	out_str_dec (cpp_get_yy_char_decl (), "yy_meta", sz);
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_META, (void**)&yy_meta, sizeof(%s)},\n",
-		    "YY_CHAR");
-	return sz * sizeof(YY_CHAR);
 }
 
 static size_t cpp_gentabs_yy_base(size_t sz)
@@ -267,12 +228,9 @@ struct flex_backend_t cpp_backend = {
 	.skel = cpp_skel,
 	.ntod = cpp_ntod,
 	.mkctbl = cpp_mkctbl,
-	.gen_yy_trans = cpp_gen_yy_trans,
-	.start_state_list = cpp_start_state_list,
 	.mkftbl = cpp_mkftbl,
 	.gentabs_acclist = cpp_gentabs_acclist,
 	.gentabs_accept = cpp_gentabs_accept,
-	.gentabs_yy_meta = cpp_gentabs_yy_meta,
 	.gentabs_yy_base = cpp_gentabs_yy_base,
 	.gentabs_yy_def = cpp_gentabs_yy_def,
 	.gentabs_yy_nxt = cpp_gentabs_yy_nxt,

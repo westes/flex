@@ -309,13 +309,10 @@ struct flex_backend_t {
 	// Flex table generation
 	void (*ntod)(size_t);			// Generate nxt table initializer start (fulltbl mode)
 	void (*mkctbl)(size_t);			// Make full-speed compressed table initializer start
-	size_t (*gen_yy_trans)(size_t);		// Table of verify for transition and offset to next state. (sic)
-	size_t (*start_state_list)(size_t);	// Start initializer for table of pointers to start states
 	void (*mkftbl)();			// Make full table serialization entry
 	size_t (*genftbl)(size_t);		// Make full table initializer start
 	size_t (*gentabs_acclist)(size_t);	// Generate accept list initializer start
 	size_t (*gentabs_accept)(size_t);	// Generate accept table initializer start
-	size_t (*gentabs_yy_meta)(size_t);	// Generate yy_meta table initializer start
 	size_t (*gentabs_yy_base)(size_t);	// Generate yy_base table initializer start
 	size_t (*gentabs_yy_def)(size_t);	// Generate yy_def initializer start
 	size_t (*gentabs_yy_nxt)(size_t);	// Generate yy_nxt initializer start

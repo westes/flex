@@ -248,7 +248,8 @@ void genctbl (void)
 	int     end_of_buffer_action = num_rules + 1;
 
 	/* Table of verify for transition and offset to next state. */
-	footprint += backend->gen_yy_trans(tblend + numecs + 1);
+	out_dec ("m4_define([[M4_HOOK_TRANSTABLE_SIZE]], [[%d]])", tblend + numecs + 1);
+	outn ("m4_define([[M4_HOOK_TRANSTABLE_BODY]], [[m4_dnl");
 
 	/* We want the transition to be represented as the offset to the
 	 * next state, not the actual state number, which is what it currently
@@ -315,18 +316,19 @@ void genctbl (void)
 	transition_struct_out (chk[tblend + 1], nxt[tblend + 1]);
 	transition_struct_out (chk[tblend + 2], nxt[tblend + 2]);
 
-	if (gentables)
-		outn ("M4_HOOK_TABLE_CLOSER");
+	outn ("]])");
+	footprint += sizeof(struct yy_trans_info) * (tblend + numecs + 1);
 
-	footprint += backend->start_state_list(lastsc * 2 + 1);
+	out_dec ("m4_define([[M4_HOOK_STARTTABLE_SIZE]], [[%d]])", lastsc * 2 + 1);
 
 	if (gentables) {
-		outn ("M4_HOOK_TABLE_OPENER");
-
+		outn ("m4_define([[M4_HOOK_STARTTABLE_BODY]], [[m4_dnl");
 		for (i = 0; i <= lastsc * 2; ++i)
 			out_dec ("M4_HOOK_STATE_ENTRY_FORMAT(%d)", base[i]);
 
-		dataend ("M4_HOOK_TABLE_CLOSER");
+		dataend (NULL);
+		outn("]])");
+		footprint +=  sizeof(struct yy_trans_info *) * (lastsc * 2 + 1);
 	}
 
 	if (ctrl.useecs)
@@ -681,8 +683,8 @@ void gentabs (void)
 		if (env.trace)
 			fputs (_("\n\nMeta-Equivalence Classes:\n"),
 			       stderr);
-
-		footprint += backend->gentabs_yy_meta(numecs + 1);
+		out_dec ("m4_define([[M4_HOOK_MECSTABLE_SIZE]], [[%d]])", numecs+1);
+		outn ("m4_define([[M4_HOOK_MECSTABLE_BODY]], [[");
 		
 		for (i = 1; i <= numecs; ++i) {
 			if (env.trace)
@@ -693,7 +695,9 @@ void gentabs (void)
 			yymecs_data[i] = ABS (tecbck[i]);
 		}
 
-		dataend ("M4_HOOK_TABLE_CLOSER");
+		dataend (NULL);
+		outn ("]])");
+		footprint += sizeof(YY_CHAR) * (numecs + 1);
 		if (tablesext) {
 			yytbl_data_compress (yymeta_tbl);
 			if (yytbl_data_fwrite (&tableswr, yymeta_tbl) < 0)
