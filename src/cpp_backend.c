@@ -38,12 +38,12 @@
 /* These typedefs are only used for computing footprint sizes,
  * You need to make sure they match reality in the skeleton file to 
  * get accurate numbers, but they don't otherwise matter.
- * FIXME" This shiould go away when tFkex ships only macros.
+ * FIXME: This shiould go away when tFkex ships only macros.
  */
 typedef char YY_CHAR;
 struct yy_trans_info {int32_t yy_verify; int32_t yy_nxt;};
 
-/* Helper fubctions */
+/* Helper functions */
 
 static const char *cpp_get_int16_decl (void)
 {

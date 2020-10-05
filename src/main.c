@@ -257,10 +257,10 @@ int flex_main (int argc, char *argv[])
 
 	if (sectnum == 3) {
 		OUT_BEGIN_CODE ();
-                if (!no_section3_escape)
+                if (!ctrl.no_section3_escape)
                    fputs("[[", stdout);
 		(void) flexscan ();	/* copy remainder of input to output */
-                if (!no_section3_escape)
+                if (!ctrl.no_section3_escape)
                    fputs("]]", stdout);
 		OUT_END_CODE ();
 	}
@@ -1172,7 +1172,7 @@ void flexinit (int argc, char **argv)
 			env.trace_hex = true;
                         break;
 		    case OPT_NO_SECT3_ESCAPE:
-                        no_section3_escape = true;
+                        ctrl.no_section3_escape = true;
                         break;
 		}		/* switch */
 	}			/* while scanopt() */

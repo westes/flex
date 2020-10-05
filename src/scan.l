@@ -164,9 +164,13 @@ M4QEND      "]""]"
 	^"%x"{NAME}?	return XSCDECL;
 	^"%{".*{NL}	START_CODEBLOCK(false);
     ^"%top"[[:blank:]]*"{"[[:blank:]]*{NL}    {
+		char trampoline[512];
                 brace_start_line = linenum;
                 ++linenum;
-                buf_linedir( &top_buf, infilename?infilename:"<stdin>", linenum);
+		snprintf(trampoline, sizeof(trampoline),
+			 "M4_HOOK_TRACE_LINE_FORMAT(%d, [[%s]])",
+			 linenum, infilename?infilename:"<stdin>");
+                buf_strappend(&top_buf, trampoline);
                 brace_depth = 1;
                 yy_push_state(CODEBLOCK_MATCH_BRACE);
             }
@@ -619,7 +623,7 @@ M4QEND      "]""]"
 
 	^"%%".*		{
 			sectnum = 3;
-			BEGIN(no_section3_escape ? SECT3_NOESCAPE : SECT3);
+			BEGIN(ctrl.no_section3_escape ? SECT3_NOESCAPE : SECT3);
 			yyterminate(); /* to stop the parser */
 
 			}
