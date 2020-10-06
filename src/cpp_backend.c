@@ -47,7 +47,7 @@ struct yy_trans_info {int32_t yy_verify; int32_t yy_nxt;};
 static const char *cpp_get_int16_decl (void)
 {
 	return (gentables)
-		? "static const flex_int16_t %s[%d] =\n    {   0,\n"
+		? "static const flex_int16_t %s[%d] = {   0,\n"
 		: "static const flex_int16_t * %s = 0;\n";
 }
 
@@ -55,14 +55,14 @@ static const char *cpp_get_int16_decl (void)
 static const char *cpp_get_int32_decl (void)
 {
 	return (gentables)
-		? "static const flex_int32_t %s[%d] =\n    {   0,\n"
+		? "static const flex_int32_t %s[%d] = {   0,\n"
 		: "static const flex_int32_t * %s = 0;\n";
 }
 
 static const char *cpp_get_state_decl (void)
 {
 	return (gentables)
-		? "static const yy_state_type %s[%d] =\n    {   0,\n"
+		? "static const yy_state_type %s[%d] = {   0,\n"
 		: "static const yy_state_type * %s = 0;\n";
 }
 

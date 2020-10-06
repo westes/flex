@@ -684,8 +684,8 @@ void gentabs (void)
 			fputs (_("\n\nMeta-Equivalence Classes:\n"),
 			       stderr);
 		out_dec ("m4_define([[M4_HOOK_MECSTABLE_SIZE]], [[%d]])", numecs+1);
-		outn ("m4_define([[M4_HOOK_MECSTABLE_BODY]], [[");
-		
+		outn ("m4_define([[M4_HOOK_MECSTABLE_BODY]], [[m4_dnl");
+ 	
 		for (i = 1; i <= numecs; ++i) {
 			if (env.trace)
 				fprintf (stderr, "%d = %d\n",

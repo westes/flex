@@ -217,13 +217,13 @@ char *xstrdup(const char *s)
 
 int cclcmp (const void *a, const void *b)
 {
-  if (!*(const unsigned char *) a)
-	return 1;
-  else
-	if (!*(const unsigned char *) b)
-	  return - 1;
+	if (!*(const unsigned char *) a)
+		return 1;
 	else
-	  return *(const unsigned char *) a - *(const unsigned char *) b;
+		if (!*(const unsigned char *) b)
+			return - 1;
+		else
+			return *(const unsigned char *) a - *(const unsigned char *) b;
 }
 
 
@@ -254,7 +254,8 @@ void dataflush (void)
 	if (!gentables)
 		return;
 
-	outc ('\n');
+	if (datapos > 0)
+		outc ('\n');
 
 	if (++dataline >= NUMDATALINES) {
 		/* Put out a blank line so that the table is grouped into
@@ -432,7 +433,7 @@ void mkdata (int value)
 
 	if (datapos == 0)
 		/* Indent. */
-		out ("    ");
+		out ("     ");
 	else
 		outc (',');
 
