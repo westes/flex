@@ -45,13 +45,7 @@ struct yy_trans_info {int32_t yy_verify; int32_t yy_nxt;};
 
 void	genecs(void);
 
-struct packtype_t {
-	char *name;
-	size_t width;
-};
-
-
-static struct packtype_t *optimize_pack(size_t sz)
+struct packtype_t *optimize_pack(size_t sz)
 {
 	/* FIXME: There's a 32-bit assumption lurking here */
 	static struct packtype_t out;
@@ -59,8 +53,8 @@ static struct packtype_t *optimize_pack(size_t sz)
 		out.name  = ctrl.long_align ? "flex_int32_t" : "flex_int16_t";
 		out.width = ctrl.long_align ? 32 : 16;
 	} else {
-		out.name = (ctrl.long_align || sz <= INT16_MAX) ? "flex_int32_t" : "flex_ini16_t";
-		out.width = (ctrl.long_align || sz <= INT16_MAX) ? 32 : 16;
+		out.name = (ctrl.long_align || sz >= INT16_MAX) ? "flex_int32_t" : "flex_int16_t";
+		out.width = (ctrl.long_align || sz >= INT16_MAX) ? 32 : 16;
 	}
 	return &out;
 }
@@ -126,7 +120,8 @@ static struct yytbl_data *mkctbl (void)
 	flex_int32_t *tdata = 0, curr = 0;
 	int     end_of_buffer_action = num_rules + 1;
 
-	backend->mkctbl(tblend + numecs + 1);
+	struct packtype_t *ptype = optimize_pack(tblend + numecs + 1);
+	out_str ("m4_define([[M4_HOOK_MKCTBL_TYPE]], [[%s]])", ptype->name);
 
 	tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYTD_ID_TRANSITION);
@@ -431,7 +426,6 @@ struct yytbl_data *mkftbl (void)
 				 i, anum);
 	}
 
-	backend->mkftbl();
 	return tbl;
 }
 
@@ -442,6 +436,7 @@ void genftbl (void)
 {
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
+	/* FIXME: Could make this smaller by passing the table size to pack_optimize(). */
 	struct packtype_t *ptype = optimize_pack(0);
 
 	dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
@@ -906,6 +901,8 @@ void make_tables (void)
 		if (tablesext) {
 			struct yytbl_data *tbl;
 
+			struct packtype_t *ptype = optimize_pack(0);
+			out_str ("m4_define([[M4_HOOK_MKFTBL_TYPE]], [[%s]])", ptype->name);
 			tbl = mkftbl ();
 			yytbl_data_compress (tbl);
 			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
@@ -1014,6 +1011,7 @@ void make_tables (void)
 	if (ctrl.ddebug) {		/* Spit out table mapping rules to line numbers. */
 		/* Policy choice: we don't include this space
 		 * in the table metering.
+		 * FIXME: Could make this smaller by passing the table size to optimize_pack().
 		 */
 		struct packtype_t *ptype = optimize_pack(0);
 

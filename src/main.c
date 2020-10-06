@@ -207,7 +207,7 @@ int flex_main (int argc, char *argv[])
 	/* Need to define the transet type as a size large
 	 * enough to hold the biggest offset.
 	 */
-	out_str3 ("M4_HOOK_CONST_DEFINE(%s, %s)", "YY_OFFSET_TYPE", backend->trans_offset_type(tblend + numecs + 1), "");
+	out_str3 ("M4_HOOK_CONST_DEFINE(%s, %s)", "YY_OFFSET_TYPE", optimize_pack(tblend + numecs + 1)->name, "");
 	comment("END of Flex-generated definitions\n");
 
 	skelout (true);		/* %% [2.0] - tables get dumped here */

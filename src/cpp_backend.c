@@ -83,119 +83,101 @@ static const char *cpp_suffix (void)
 static void cpp_ntod(size_t num_full_table_rows)
 // Generate nxt table for ntod
 {
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
-		    ctrl.long_align ? "flex_int32_t" : "flex_int16_t");
+	struct packtype_t *ptype = optimize_pack(0);
+	out_str ("m4_define([[M4_HOOK_NXT_TYPE]], [[%s]])", ptype->name);
+	buf_strappend (&yydmap_buf,
+		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(M4_HOOK_NXT_TYPE)},\n");
 
 	/* Unless -Ca, declare it "short" because it's a real
 	 * long-shot that that won't be large enough.
 	 */
 	if (gentables)
-		out_str_dec
-			("static const %s yy_nxt[][%d] =\n    {\n",
-			 ctrl.long_align ? "flex_int32_t" : "flex_int16_t",
-			 num_full_table_rows);
+		out_dec
+		    ("static const M4_HOOK_NXT_TYPE yy_nxt[][%d] =\n    {\n", num_full_table_rows);
 	else {
 		out_dec ("#undef YY_NXT_LOLEN\n#define YY_NXT_LOLEN (%d)\n", num_full_table_rows);
-		out_str ("static const %s *yy_nxt =0;\n",
-			 ctrl.long_align ? "flex_int32_t" : "flex_int16_t");
+		out ("static const M4_HOOK_NXT_TYPE *yy_nxt =0;\n");
 	}
 	/* It would be no good trying to return an allocation size here,
 	 * as it's not known before table generation is finished.
 	 */
 }
 
-static void cpp_mkctbl (size_t sz)
-// Make full-speed compressed transition table
-{
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_TRANSITION, (void**)&yy_transition, sizeof(%s)},\n",
-		    (sz >= INT16_MAX
-		     || ctrl.long_align) ? "flex_int32_t" : "flex_int16_t");
-}
-
-static void cpp_mkftbl(void)
-// Make full table
-{
-	// FIXME: why are there two places this is emitted, here and in cpp_gentabs_accept()?
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
-		    ctrl.long_align ? "flex_int32_t" : "flex_int16_t");
-}
-
 static size_t cpp_gentabs_acclist(size_t sz)
 // Generate accept list initializer
 {
+	struct packtype_t *ptype = optimize_pack(0);
+	out_str ("m4_define([[M4_HOOK_ACCLIST_TYPE]], [[%s]])", ptype->name);
 	out_str_dec (ctrl.long_align ? cpp_get_int32_decl () :
 		     cpp_get_int16_decl (), "yy_acclist", sz);
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(%s)},\n",
-		    ctrl.long_align ? "flex_int32_t" : "flex_int16_t");
-	return sz * (ctrl.long_align ? sizeof(int32_t) : sizeof(int16_t));
+	buf_strappend (&yydmap_buf,
+		    "\t{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(M4_HOOK_ACCLIST_TYPE)},\n");
+	return sz * ptype->width;
 }
 
 static size_t cpp_gentabs_accept(size_t sz)
 // Generate accept table initializer
 {
+	/* FIXME: Could pack tighter by passing the size limit to optimize_pack()_ */
+	struct packtype_t *ptype = optimize_pack(0);
+	out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
 	out_str_dec (ctrl.long_align ? cpp_get_int32_decl () : cpp_get_int16_decl (),
 		     "yy_accept", sz);
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
-		    ctrl.long_align ? "flex_int32_t" : "flex_int16_t");
-	return sz * (ctrl.long_align ? sizeof(int32_t) : sizeof(int16_t));
+	buf_strappend (&yydmap_buf,
+		       "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(M4_HOOK_ACCEPT_TYPE)},\n");
+	return sz * ptype->width;
 }
 
 static size_t cpp_gentabs_yy_base(size_t sz)
 // Generate yy_meta base initializer
 {
-	out_str_dec ((tblend >= INT16_MAX || ctrl.long_align) ?
+	struct packtype_t *ptype = optimize_pack(sz);
+	out_str ("m4_define([[M4_HOOK_BASE_TYPE]], [[%s]])", ptype->name);
+	out_str_dec ((sz >= INT16_MAX || ctrl.long_align) ?
 		     cpp_get_int32_decl () : cpp_get_int16_decl (),
 		     "yy_base", sz);
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_BASE, (void**)&yy_base, sizeof(%s)},\n",
-		    (sz >= INT16_MAX
-		     || ctrl.long_align) ? "flex_int32_t" : "flex_int16_t");
-	return sz * ((sz >= INT16_MAX || ctrl.long_align) ? sizeof(int32_t) : sizeof(int16_t)); 
+	buf_strappend (&yydmap_buf,
+		    "\t{YYTD_ID_BASE, (void**)&yy_base, sizeof(M4_HOOK_BASE_TYPE)},\n");
+	return sz * ptype->width;
 }
 
 static size_t cpp_gentabs_yy_def(size_t sz)
 // Generate yy_def initializer
 {
+	struct packtype_t *ptype = optimize_pack(sz);
+	out_str ("m4_define([[M4_HOOK_DEF_BASE_TYPE]], [[%s]])", ptype->name);
 	out_str_dec ((sz >= INT16_MAX || ctrl.long_align) ?
 		     cpp_get_int32_decl () : cpp_get_int16_decl (),
 		     "yy_def", sz);
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_DEF, (void**)&yy_def, sizeof(%s)},\n",
-		    (sz >= INT16_MAX
-		     || ctrl.long_align) ? "flex_int32_t" : "flex_int16_t");
-	return sz * ((sz >= INT16_MAX || ctrl.long_align) ? sizeof(int32_t) : sizeof(int16_t));
+	buf_strappend (&yydmap_buf,
+		    "\t{YYTD_ID_DEF, (void**)&yy_def, sizeof(M4_HOOK_DEF_BASE_TYPE)},\n");
+	return sz * ptype->width;
 }
 
 static size_t cpp_gentabs_yy_nxt(size_t tblafter)
 // Generate yy_nxt initializer
 {
-	/* Begin generating yy_nxt */
+	struct packtype_t *ptype = optimize_pack(tblafter);
+	out_str ("m4_define([[M4_HOOK_NXT_BASE_TYPE]], [[%s]])", ptype->name);
 	out_str_dec ((tblafter >= INT16_MAX || ctrl.long_align) ?
 		     cpp_get_int32_decl () : cpp_get_int16_decl (), "yy_nxt",
 		     tblafter);
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
-		    (tblafter >= INT16_MAX
-		     || ctrl.long_align) ? "flex_int32_t" : "flex_int16_t");
-	return tblafter * ((tblafter >= INT16_MAX || ctrl.long_align) ? sizeof(int32_t) : sizeof(int16_t));
+	buf_strappend (&yydmap_buf,
+		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(M4_HOOK_NXT_BASE_TYPE)},\n");
+	return tblafter * ptype->width;
 }
 
 static size_t cpp_gentabs_yy_chk(size_t tblafter)
 // Generate yy_chk initializer
 {
+	struct packtype_t *ptype = optimize_pack(tblafter);
+	out_str ("m4_define([[M4_HOOK_IDCHK_BASE_TYPE]], [[%s]])", ptype->name);
 	out_str_dec ((tblafter >= INT16_MAX || ctrl.long_align) ?
 		     cpp_get_int32_decl () : cpp_get_int16_decl (), "yy_chk",
 		     tblafter);
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_CHK, (void**)&yy_chk, sizeof(%s)},\n",
-		    (tblafter >= INT16_MAX
-		     || ctrl.long_align) ? "flex_int32_t" : "flex_int16_t");
-	return tblafter * ((tblafter >= INT16_MAX || ctrl.long_align) ? sizeof(int32_t) : sizeof(int16_t));
+	buf_strappend (&yydmap_buf,
+		    "\t{YYTD_ID_CHK, (void**)&yy_chk, sizeof(M4_HOOK_IDCHK_BASE_TYPE)},\n");
+	return tblafter * ptype->width;
 }
 
 static size_t cpp_nultrans(int fullspd, size_t afterdfa)
@@ -211,12 +193,6 @@ static size_t cpp_nultrans(int fullspd, size_t afterdfa)
 	return afterdfa * (fullspd ? sizeof(struct yy_trans_info *) : sizeof(int32_t));
 }
 
-static const char *cpp_trans_offset_type(int total_table_size)
-{
-	return (total_table_size >= INT16_MAX || ctrl.long_align) ?
-			"flex_int32_t" : "flex_int16_t";
-}
-
 const char *cpp_skel[] = {
 #include "cpp-skel.h"
     0,
@@ -227,8 +203,6 @@ struct flex_backend_t cpp_backend = {
 	.suffix = cpp_suffix,
 	.skel = cpp_skel,
 	.ntod = cpp_ntod,
-	.mkctbl = cpp_mkctbl,
-	.mkftbl = cpp_mkftbl,
 	.gentabs_acclist = cpp_gentabs_acclist,
 	.gentabs_accept = cpp_gentabs_accept,
 	.gentabs_yy_base = cpp_gentabs_yy_base,
@@ -236,6 +210,5 @@ struct flex_backend_t cpp_backend = {
 	.gentabs_yy_nxt = cpp_gentabs_yy_nxt,
 	.gentabs_yy_chk = cpp_gentabs_yy_chk,
 	.nultrans = cpp_nultrans,
-	.trans_offset_type = cpp_trans_offset_type,
 	.c_like = true,
 };
