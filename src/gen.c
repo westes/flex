@@ -91,7 +91,6 @@ static void geneoltbl (void)
 	outn ("m4_define([[M4_HOOK_EOLTABLE_TYPE]], [[flex_int32_t]])");
 	out_dec ("m4_define([[M4_HOOK_EOLTABLE_SIZE]], [[%d]])", num_rules + 1);
 	outn ("m4_define([[M4_HOOK_EOLTABLE_BODY]], [[m4_dnl");
-	footprint += sizeof(int32_t) * (num_rules + 1);
 
 	if (gentables) {
 		for (i = 1; i <= num_rules; i++) {
@@ -101,6 +100,7 @@ static void geneoltbl (void)
 				out ("\n    ");
 		}
 	}
+	footprint += sizeof(int32_t) * (num_rules + 1);
 	outn ("]])");
 	outn ("]])");
 }
@@ -441,9 +441,10 @@ void genftbl (void)
 
 	dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
 
-	out_str ("m4_define([[M4_HOOK_FULLTABLE_TYPE]], [[%s]])", ptype->name);
-	out_dec ("m4_define([[M4_HOOK_FULLTABLE_SIZE]], [[%d]])", lastdfa + 1);
-	outn ("m4_define([[M4_HOOK_FULLTABLE_BODY]], [[m4_dnl");
+	outn ("m4_define([[M4_HOOK_NEED_ACCEPT]], 1)");
+	out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
+	out_dec ("m4_define([[M4_HOOK_ACCEPT_SIZE]], [[%d]])", lastdfa + 1);
+	outn ("m4_define([[M4_HOOK_ACCEPT_BODY]], [[m4_dnl");
 
 	for (i = 1; i <= lastdfa; ++i) {
 		int anum = dfaacc[i].dfaacc_state;
@@ -471,13 +472,14 @@ void genftbl (void)
 
 void gentabs (void)
 {
-	int     i, j, k, *accset, nacc, *acc_array, total_states;
+	int     sz, i, j, k, *accset, nacc, *acc_array, total_states;
 	int     end_of_buffer_action = num_rules + 1;
 	struct yytbl_data *yyacc_tbl = 0, *yymeta_tbl = 0, *yybase_tbl = 0,
 	    *yydef_tbl = 0, *yynxt_tbl = 0, *yychk_tbl = 0, *yyacclist_tbl=0;
 	flex_int32_t *yyacc_data = 0, *yybase_data = 0, *yydef_data = 0,
 	    *yynxt_data = 0, *yychk_data = 0, *yyacclist_data=0;
 	flex_int32_t yybase_curr = 0, yyacclist_curr=0,yyacc_curr=0;
+	struct packtype_t *ptype;
 
 	acc_array = allocate_integer_array (current_max_dfas);
 	nummt = 0;
@@ -505,8 +507,13 @@ void gentabs (void)
 		dfaacc[end_of_buffer_state].dfaacc_set =
 		    EOB_accepting_list;
 
-		footprint += backend->gentabs_acclist(MAX (numas, 1) + 1);
-		
+		sz = MAX (numas, 1) + 1;
+		/* FIXME: could improve memory usage by passing sz in */
+		ptype = optimize_pack(0);
+		out_str ("m4_define([[M4_HOOK_ACCLIST_TYPE]], [[%s]])", ptype->name);
+		out_dec ("m4_define([[M4_HOOK_ACCLIST_SIZE]], [[%d]])", sz);
+		outn ("m4_define([[M4_HOOK_ACCLIST_BODY]], [[m4_dnl");
+
 		yyacclist_tbl = calloc(1,sizeof(struct yytbl_data));
 		yytbl_data_init (yyacclist_tbl, YYTD_ID_ACCLIST);
 		yyacclist_tbl->td_lolen  = (flex_uint32_t) (MAX(numas,1) + 1);
@@ -568,7 +575,9 @@ void gentabs (void)
 		/* add accepting number for the "jam" state */
 		acc_array[i] = j;
 
-		dataend ("M4_HOOK_TABLE_CLOSER");
+		dataend (NULL);
+		outn("]])");
+		footprint += sz * ptype->width;
 		if (tablesext) {
 			yytbl_data_compress (yyacclist_tbl);
 			if (yytbl_data_fwrite (&tableswr, yyacclist_tbl) < 0)
@@ -599,7 +608,7 @@ void gentabs (void)
 	/* "lastdfa + 2" is the size of "yy_accept"; includes room for C arrays
 	 * beginning at 0 and for "jam" state.
 	 */
-	k = lastdfa + 2;
+	sz = lastdfa + 2;
 
 	if (reject)
 		/* We put a "cap" on the table associating lists of accepting
@@ -607,13 +616,19 @@ void gentabs (void)
 		 * where the end of an accepting list is by looking at where
 		 * the list for the next state starts.
 		 */
-		++k;
+		++sz;
 
-	footprint += backend->gentabs_accept(k);
-	
+	/* FIXME: Could pack tighter by passing the size limit to optimize_pack() */
+	/* But note that this table is alternately defined if ctrl.fulltbl */
+	ptype = optimize_pack(0);
+	outn ("m4_define([[M4_HOOK_NEED_ACCEPT]], 1)");
+	out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
+	out_dec ("m4_define([[M4_HOOK_ACCEPT_SIZE]], [[%d]])", sz);
+	outn ("m4_define([[M4_HOOK_ACCEPT_BODY]], [[m4_dnl");
+
 	yyacc_tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (yyacc_tbl, YYTD_ID_ACCEPT);
-	yyacc_tbl->td_lolen = (flex_uint32_t) k;
+	yyacc_tbl->td_lolen = (flex_uint32_t) sz;
 	yyacc_tbl->td_data = yyacc_data =
 	    calloc(yyacc_tbl->td_lolen, sizeof (flex_int32_t));
 	yyacc_curr=1;
@@ -637,7 +652,10 @@ void gentabs (void)
 		yyacc_data[yyacc_curr++] = acc_array[i];
 	}
 
-	dataend ("M4_HOOK_TABLE_CLOSER");
+	dataend (NULL);
+	outn ("]])");
+	footprint += sz * ptype->width;
+
 	if (tablesext) {
 		yytbl_data_compress (yyacc_tbl);
 		if (yytbl_data_fwrite (&tableswr, yyacc_tbl) < 0)
@@ -706,7 +724,12 @@ void gentabs (void)
 	total_states = lastdfa + numtemps;
 
 	/* Begin generating yy_base */
-	footprint += backend->gentabs_yy_base(total_states + 1);
+	sz = total_states + 1;
+	ptype = optimize_pack(sz);
+	out_str ("m4_define([[M4_HOOK_BASE_TYPE]], [[%s]])", ptype->name);
+	out_dec ("m4_define([[M4_HOOK_BASE_SIZE]], [[%d]])", sz);
+	outn ("m4_define([[M4_HOOK_BASE_BODY]], [[m4_dnl");
+
 	yybase_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yybase_tbl, YYTD_ID_BASE);
 	yybase_tbl->td_lolen = (flex_uint32_t) (total_states + 1);
@@ -744,7 +767,10 @@ void gentabs (void)
 		def[i] = jamstate;
 	}
 
-	dataend ("M4_HOOK_TABLE_CLOSER");
+	dataend (NULL);
+	outn ("]])");
+	footprint += sz * ptype->width;
+
 	if (tablesext) {
 		yytbl_data_compress (yybase_tbl);
 		if (yytbl_data_fwrite (&tableswr, yybase_tbl) < 0)
@@ -756,7 +782,10 @@ void gentabs (void)
 
 
 	/* Begin generating yy_def */
-	footprint += backend->gentabs_yy_def(total_states +1);
+	ptype = optimize_pack(total_states + 1);
+	out_str ("m4_define([[M4_HOOK_DEF_TYPE]], [[%s]])", ptype->name);
+	out_dec ("m4_define([[M4_HOOK_DEF_SIZE]], [[%d]])", total_states + 1);
+	outn ("m4_define([[M4_HOOK_DEF_BODY]], [[m4_dnl");
 
 	yydef_tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (yydef_tbl, YYTD_ID_DEF);
@@ -769,7 +798,10 @@ void gentabs (void)
 		yydef_data[i] = def[i];
 	}
 
-	dataend ("M4_HOOK_TABLE_CLOSER");
+	dataend (NULL);
+	outn ("]])");
+	footprint += (total_states + 1) * ptype->width;
+
 	if (tablesext) {
 		yytbl_data_compress (yydef_tbl);
 		if (yytbl_data_fwrite (&tableswr, yydef_tbl) < 0)
@@ -780,7 +812,13 @@ void gentabs (void)
 	/* End generating yy_def */
 
 
-	footprint += backend->gentabs_yy_nxt(tblend + 1);
+	ptype = optimize_pack(tblend + 1);
+	/* Note: Osed wheen !ctrl.fulltbl && !ctrl.fullspd).
+	 * (Alternately defined wjen ctrl.fullspd
+	 */
+	out_str ("m4_define([[M4_HOOK_YYNXT_TYPE]], [[%s]])", ptype->name);
+	out_dec ("m4_define([[M4_HOOK_YYNXT_SIZE]], [[%d]])", tblend + 1);
+	outn ("m4_define([[M4_HOOK_YYNXT_BODY]], [[m4_dnl");
 
 	yynxt_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yynxt_tbl, YYTD_ID_NXT);
@@ -799,7 +837,10 @@ void gentabs (void)
 		yynxt_data[i] = nxt[i];
 	}
 
-	dataend ("M4_HOOK_TABLE_CLOSER");
+	dataend (NULL);
+	outn("]])");
+	footprint += ptype->width * (tblend + 1);
+
 	if (tablesext) {
 		yytbl_data_compress (yynxt_tbl);
 		if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)
@@ -810,7 +851,10 @@ void gentabs (void)
 	/* End generating yy_nxt */
 
 	/* Begin generating yy_chk */
-	footprint += backend->gentabs_yy_chk(tblend + 1);
+	ptype = optimize_pack(tblend + 1);
+	out_str ("m4_define([[M4_HOOK_CHK_TYPE]], [[%s]])", ptype->name);
+	out_dec ("m4_define([[M4_HOOK_CHK_SIZE]], [[%d]])", tblend + 1);
+	outn ("m4_define([[M4_HOOK_CHK_BODY]], [[m4_dnl");
 	
 	yychk_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yychk_tbl, YYTD_ID_CHK);
@@ -826,7 +870,10 @@ void gentabs (void)
 		yychk_data[i] = chk[i];
 	}
 
-	dataend ("M4_HOOK_TABLE_CLOSER");
+	dataend (NULL);
+	outn ("]])");
+	footprint += ptype->width * (tblend + 1);
+
 	if (tablesext) {
 		yytbl_data_compress (yychk_tbl);
 		if (yytbl_data_fwrite (&tableswr, yychk_tbl) < 0)
@@ -902,7 +949,7 @@ void make_tables (void)
 			struct yytbl_data *tbl;
 
 			struct packtype_t *ptype = optimize_pack(0);
-			// Alternately defined if 
+			/* Alternately defined if !ctrl.ffullspd && !ctrl.fulltbl */
 			out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
 			tbl = mkftbl ();
 			yytbl_data_compress (tbl);
@@ -966,7 +1013,10 @@ void make_tables (void)
 		flex_int32_t *yynultrans_data = 0;
 
 		/* Begin generating yy_NUL_trans */
-		footprint += backend->nultrans(ctrl.fullspd, lastdfa + 1);
+		out_str ("m4_define([[M4_HOOK_NULTRANS_TYPE]], [[%s]])", (ctrl.fullspd) ? "struct yy_trans_info*" : "flex_int32_t");
+		out_dec ("m4_define([[M4_HOOK_NULTRANS_SIZE]], [[%d]])", lastdfa + 1);
+		outn ("m4_define([[M4_HOOK_NULTRANS_BODY]], [[m4_dnl");
+
 		yynultrans_tbl = calloc(1, sizeof (struct yytbl_data));
 		yytbl_data_init (yynultrans_tbl, YYTD_ID_NUL_TRANS);
 		// Performance kludge for C. Gives a small improvement
@@ -975,11 +1025,11 @@ void make_tables (void)
 			yynultrans_tbl->td_flags |= YYTD_PTRANS;
 		yynultrans_tbl->td_lolen = (flex_uint32_t) (lastdfa + 1);
 		yynultrans_tbl->td_data = yynultrans_data =
-			calloc(yynultrans_tbl->td_lolen,
-					    sizeof (flex_int32_t));
+		    calloc(yynultrans_tbl->td_lolen,
+			   sizeof (flex_int32_t));
 
 		for (i = 1; i <= lastdfa; ++i) {
-		    if ((yynultrans_tbl->td_flags & YYTD_PTRANS) != 0) {
+			if ((yynultrans_tbl->td_flags & YYTD_PTRANS) != 0) {
 				// Only works in very C-like languages  
 				out_dec ("    &yy_transition[%d],\n",
 					 base[i]);
@@ -992,7 +1042,9 @@ void make_tables (void)
 			}
 		}
 
-		dataend ("M4_HOOK_TABLE_CLOSER");
+		dataend (NULL);
+		outn("]])");
+		footprint += (lastdfa + 1) * (ctrl.fullspd ? sizeof(struct yy_trans_info *) : sizeof(int32_t));
 		if (tablesext) {
 			yytbl_data_compress (yynultrans_tbl);
 			if (yytbl_data_fwrite (&tableswr, yynultrans_tbl) <
@@ -1004,7 +1056,7 @@ void make_tables (void)
 		if (yynultrans_tbl != NULL) {
 			yytbl_data_destroy (yynultrans_tbl);
 			yynultrans_tbl = NULL;
-        }
+		}
 
 		/* End generating yy_NUL_trans */
 	}

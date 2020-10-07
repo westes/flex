@@ -515,12 +515,16 @@ size_t ntod (void)
 		yynxt_tbl->td_hilen = 1;
 		yynxt_tbl->td_lolen = (flex_uint32_t) num_full_table_rows;
 		yynxt_tbl->td_data = yynxt_data =
-			calloc(yynxt_tbl->td_lolen *
-					    yynxt_tbl->td_hilen,
-					    sizeof (flex_int32_t));
+		    calloc(yynxt_tbl->td_lolen *
+			   yynxt_tbl->td_hilen,
+			   sizeof (flex_int32_t));
 		yynxt_curr = 0;
 
-		backend->ntod(num_full_table_rows);
+		struct packtype_t *ptype = optimize_pack(0);
+		/* Note: Used when ctrl.fulltbl is on. Alternately defined elsewhere */
+		out_str ("m4_define([[M4_HOOK_NXT_TYPE]], [[%s]])", ptype->name);
+		out_dec ("m4_define([[M4_HOOK_NXT_ROWS]], [[%d]])", num_full_table_rows);
+		outn ("m4_define([[M4_HOOK_NXT_BODY]], [[m4_dnl");
 
 		if (gentables)
 			outn ("M4_HOOK_TABLE_OPENER");
@@ -745,6 +749,7 @@ size_t ntod (void)
 
 	if (ctrl.fulltbl) {
 		dataend ("M4_HOOK_TABLE_CLOSER");
+		outn("/* body */]])");
 		if (tablesext) {
 			yytbl_data_compress (yynxt_tbl);
 			if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)
@@ -771,6 +776,7 @@ size_t ntod (void)
 
 		mkdeftbl ();
 	}
+
 
 	free(accset);
 	free(nset);

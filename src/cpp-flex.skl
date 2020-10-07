@@ -869,6 +869,19 @@ int yy_flex_debug = m4_ifdef([[M4_MODE_DEBUG]],[[1]],[[0]]);
 %endif
 
 %% [2.0] data tables for the DFA are inserted here
+m4_ifdef( [[M4_HOOK_NXT_ROWS]],[[m4_dnl
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const M4_HOOK_NXT_TYPE yy_nxt[][M4_HOOK_NXT_ROWS] =
+    {
+M4_HOOK_NXT_BODY
+]], [[
+#undef YY_NXT_LOLEN
+#define YY_NXT_LOLEN ([[]]M4_HOOK_NXT_ROWS[[]])
+static const M4_HOOK_NXT_TYPE *yy_nxt =0;
+]])
+
+]])
+
 m4_ifdef( [[M4_MODE_YYLINENO]],[[m4_dnl
 /* Table of booleans, true if rule could match eol. */
 m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
@@ -881,13 +894,13 @@ static const M4_HOOK_EOLTABLE_TYPE * yy_rule_can_match_eol = 0;
 
 ]])
 
-m4_ifdef( [[M4_MODE_REAL_FULLTBL]],[[m4_dnl
+m4_ifdef( [[M4_HOOK_NEED_ACCEPT]],[[m4_dnl
 m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
-static const M4_HOOK_FULLTABLE_TYPE yy_accept[M4_HOOK_FULLTABLE_SIZE] = { 0,
-M4_HOOK_FULLTABLE_BODY[[]]m4_dnl
+static const M4_HOOK_ACCEPT_TYPE yy_accept[M4_HOOK_ACCEPT_SIZE] = { 0,
+M4_HOOK_ACCEPT_BODY[[]]m4_dnl
 };
 ]], [[
-static const M4_HOOK_FULLTABLE_TYPE * yy_accept = 0;
+static const M4_HOOK_ACCEPT_TYPE * yy_accept = 0;
 ]])
 
 ]])
@@ -904,18 +917,6 @@ static const YY_CHAR * yy_ec = 0;
 
 ]])
  
-m4_ifdef( [[M4_MODE_DEBUG]],[[m4_dnl
-/* Rule to line-number mapping */
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
-static const M4_HOOK_DEBUGTABLE_TYPE yy_rule_linenum[M4_HOOK_DEBUGTABLE_SIZE] = { 0,
-M4_HOOK_DEBUGTABLE_BODY[[]]m4_dnl
-};
-]], [[
-static const M4_HOOK_DEBUGTABLE_TYPE * yy_rule_linenum = 0;
-]])
-
-]])
-
 m4_ifdef( [[M4_MODE_USEMECS]],[[m4_dnl
 /* Character meta-equivalence-class mappings */
 m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
@@ -948,6 +949,84 @@ M4_HOOK_STARTTABLE_BODY[[]]m4_dnl
 };
 ]], [[
 static const struct yy_trans_info **yy_start_state_list =0;
+]])
+
+]])
+
+m4_ifdef( [[M4_HOOK_ACCLIST_TYPE]],[[m4_dnl
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const M4_HOOK_ACCLIST_TYPE yy_acclist[M4_HOOK_ACCLIST_SIZE] = { 0,
+M4_HOOK_ACCLIST_BODY[[]]m4_dnl
+};
+]], [[
+static const M4_HOOK_ACCLIST_TYPE * yy_acclist = 0;
+]])
+
+]])
+
+m4_ifdef( [[M4_HOOK_BASE_TYPE]],[[m4_dnl
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const M4_HOOK_BASE_TYPE yy_base[M4_HOOK_BASE_SIZE] = { 0,
+M4_HOOK_BASE_BODY[[]]m4_dnl
+};
+]], [[
+static const M4_HOOK_BASE_TYPE * yy_base = 0;
+]])
+
+]])
+
+m4_ifdef( [[M4_HOOK_DEF_TYPE]],[[m4_dnl
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const M4_HOOK_DEF_TYPE yy_def[M4_HOOK_DEF_SIZE] = { 0,
+M4_HOOK_DEF_BODY[[]]m4_dnl
+};
+]], [[
+static const M4_HOOK_DEF_TYPE * yy_def = 0;
+]])
+
+]])
+
+m4_ifdef( [[M4_HOOK_YYNXT_TYPE]],[[m4_dnl
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const M4_HOOK_YYNXT_TYPE yy_nxt[M4_HOOK_YYNXT_SIZE] = { 0,
+M4_HOOK_YYNXT_BODY[[]]m4_dnl
+};
+]], [[
+static const M4_HOOK_YYNXT_TYPE * yy_nxt = 0;
+]])
+
+]])
+
+m4_ifdef( [[M4_HOOK_CHK_TYPE]],[[m4_dnl
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const M4_HOOK_CHK_TYPE yy_chk[M4_HOOK_CHK_SIZE] = { 0,
+M4_HOOK_CHK_BODY[[]]m4_dnl
+};
+]], [[
+static const M4_HOOK_CHK_TYPE * yy_chk = 0;
+]])
+
+]])
+
+m4_ifdef( [[M4_HOOK_NULTRANS_SIZE]],[[m4_dnl
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const yy_state_type yy_NUL_trans[M4_HOOK_NULTRANS_SIZE] = { 0,
+M4_HOOK_NULTRANS_BODY[[]]m4_dnl
+};
+]], [[
+static const yy_state_type * yy_NUL_trans = 0;
+]])
+
+]])
+
+m4_ifdef( [[M4_MODE_DEBUG]],[[m4_dnl
+/* Rule to line-number mapping */
+m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
+static const M4_HOOK_DEBUGTABLE_TYPE yy_rule_linenum[M4_HOOK_DEBUGTABLE_SIZE] = { 0,
+M4_HOOK_DEBUGTABLE_BODY[[]]m4_dnl
+};
+]], [[
+static const M4_HOOK_DEBUGTABLE_TYPE * yy_rule_linenum = 0;
 ]])
 
 ]])
@@ -1522,6 +1601,7 @@ struct yytbl_dmap {
 /** A {0,0,0}-terminated list of structs, forming the map */
 static struct yytbl_dmap yydmap[] = {
 m4_ifdef([[M4_HOOK_NXT_TYPE]], [[	{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(M4_HOOK_NXT_TYPE)},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_YYNXT_TYPE]], [[	{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(M4_HOOK_YYNXT_TYPE)},]],[[m4_dnl]])
 m4_ifdef([[M4_MODE_FULLSPD]], [[	{YYTD_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(struct yy_trans_info*)},]],[[m4_dnl]])
 m4_ifdef([[M4_MODE_YYLINENO]], [[	{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(M4_HOOK_EOLTABLE_TYPE)},]],[[m4_dnl]])
 m4_ifdef([[M4_MODE_USEECS]],  [[	{YYTD_ID_EC, (void**)&yy_ec, sizeof(YY_CHAR)},]],[[m4_dnl]])
@@ -1532,7 +1612,7 @@ m4_ifdef([[M4_HOOK_MKFTBL_TYPE]], [[	{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof
 m4_ifdef([[M4_HOOK_ACCEPT_TYPE]], [[	{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(M4_HOOK_ACCEPT_TYPE)},]],[[m4_dnl]])
 m4_ifdef([[M4_HOOK_BASE_TYPE]], [[	{YYTD_ID_BASE, (void**)&yy_base, sizeof(M4_HOOK_BASE_TYPE)},]],[[m4_dnl]])
 m4_ifdef([[M4_HOOK_DEF_TYPE]], [[	{YYTD_ID_DEF, (void**)&yy_def, sizeof(M4_HOOK_DEF_TYPE)},]],[[m4_dnl]])
-m4_ifdef([[M4_HOOK_IDCHK_TYPE]], [[	{YYTD_ID_CHK, (void**)&yy_chk, sizeof(M4_HOOK_IDCHK_TYPE)},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_CHK_TYPE]], [[	{YYTD_ID_CHK, (void**)&yy_chk, sizeof(M4_HOOK_CHK_TYPE)},]],[[m4_dnl]])
 m4_ifdef([[M4_HOOK_NULTRANS_TYPE]], [[	{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(M4_HOOK_NULTRANS_TYPE)},]],[[m4_dnl]])
     {0,0,0}
 };

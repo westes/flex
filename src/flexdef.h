@@ -306,15 +306,6 @@
 struct flex_backend_t {
 	const char *(*suffix)(void);		// Generate suffix for lexer source code
 	const char **skel;
-	void (*ntod)(size_t);			// Generate nxt table initializer start (fulltbl mode)
-	size_t (*genftbl)(size_t);		// Make full table initializer start
-	size_t (*gentabs_acclist)(size_t);	// Generate accept list initializer start
-	size_t (*gentabs_accept)(size_t);	// Generate accept table initializer start
-	size_t (*gentabs_yy_base)(size_t);	// Generate yy_base table initializer start
-	size_t (*gentabs_yy_def)(size_t);	// Generate yy_def initializer start
-	size_t (*gentabs_yy_nxt)(size_t);	// Generate yy_nxt initializer start
-	size_t (*gentabs_yy_chk)(size_t);	// Generate yy_chk initializer start
-	size_t (*nultrans)(int, size_t);	// Generate nulltrans initializer
 	bool c_like;				// Will &yy_transition[%d]," produce a pointer table entry?
 };
 
