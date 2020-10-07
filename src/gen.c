@@ -50,10 +50,10 @@ struct packtype_t *optimize_pack(size_t sz)
 	/* FIXME: There's a 32-bit assumption lurking here */
 	static struct packtype_t out;
 	if (sz == 0) {
-		out.name  = ctrl.long_align ? "flex_int32_t" : "flex_int16_t";
+		out.name  = ctrl.long_align ? "M4_HOOK_INT32" : "M4_HOOK_INT16";
 		out.width = ctrl.long_align ? 32 : 16;
 	} else {
-		out.name = (ctrl.long_align || sz >= INT16_MAX) ? "flex_int32_t" : "flex_int16_t";
+		out.name = (ctrl.long_align || sz >= INT16_MAX) ? "M4_HOOK_INT32" : "M4_HOOK_INT16";
 		out.width = (ctrl.long_align || sz >= INT16_MAX) ? 32 : 16;
 	}
 	return &out;
@@ -1013,7 +1013,7 @@ void make_tables (void)
 		flex_int32_t *yynultrans_data = 0;
 
 		/* Begin generating yy_NUL_trans */
-		out_str ("m4_define([[M4_HOOK_NULTRANS_TYPE]], [[%s]])", (ctrl.fullspd) ? "struct yy_trans_info*" : "flex_int32_t");
+		out_str ("m4_define([[M4_HOOK_NULTRANS_TYPE]], [[%s]])", (ctrl.fullspd) ? "struct yy_trans_info*" : "M4_HOOK_INT32");
 		out_dec ("m4_define([[M4_HOOK_NULTRANS_SIZE]], [[%d]])", lastdfa + 1);
 		outn ("m4_define([[M4_HOOK_NULTRANS_BODY]], [[m4_dnl");
 
