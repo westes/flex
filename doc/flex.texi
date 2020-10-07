@@ -8571,35 +8571,57 @@ to appear in a URI, including spaces and control characters.  See
 This appendix describes how to add support for a new target language
 to Flex.
 
-The flex code has been factored to isolate knowledge of the specifics
-of each target language from the logic for building the lexer state
-tables.
+The Flex code has been factored to isolate knowledge of the specifics
+of each target language from the logic for building the lexer
+state/transition tables. Code in the target language is generated via
+m4 expansion of macros in a skeleton.  All knowledge of the target
+language is isolated in that skeleton; with only one exception,
+everything Flex contributes to the output stream is m4 macro definions
+that are expanded by m4 after they are introduced.
 
-The only assumption that is absolutely baked into all of Flex is that
-the bodies of initializers for arrays of integers consist of decimal
-numeric literals separated by commas (and optional whitespace).
+The only assumption that is absolutely baked into the macro
+definitions Flex ships is that the bodies of initializers for arrays
+of integers consist of decimal numeric literals separated by commas
+(and optional whitespace).
 
-Otherwise, knowledge of each target langage's syntax lives in two
-places: (1) a table of language-specific syntax-generator methods,
-and (2) A language-specific skeleton file.
+Otherwise, knowledge of each target langage's syntax lives in a
+language-specific skeleton file that is digested into a data structure
+inside Flex when Flex is compiled.  The skeleton files are part of the
+Flex source distribution; they are not required by the Flex
+executable.
+
+A few poeces of language-specific information that cannot conveniently
+be represented in a skeleton file are supplied by a per-language
+method table in the C code.  All the Flex code that accesses
+language-specific information goes through a global pointer named
+"backend" to a method table. One method is a function to
+generate an appropriate suffix for output files.
 
 For example: The methods for the C and C++ back end live in a source
 file named @file{cpp_backend.c} (so named because both languages use the C
-preprocessor), and in a skeleton file named @file{cpp-flex.skl}.
+preprocessor), and in a skeleton file named @file{cpp-flex.skl} which
+is digested into a member of the method table when Flex is built.
 
-All the code that accesses language-specific code generators goes
-through a global pointer named "backend" to a method table.  The
-results of these generators are used to fill in some parts of the
-language-specific skeleton file and conditionalize others.
+To get started on writing a new back end, read the definition of
+struct backend_t in @file{src/flexdefs.h}, and attached comments
+first.  Then read a skeleton file.
 
-Read the definition of struct backend_t in @file{src/flexdefs.h}, and
-attached comments, to get a feel for the methods.  Don't worry
-about understandng table generator names at first.
+You'll want to start by studying the @code{M4_HOOK_*} macros near the
+top of the skeleton file.  Rather than emit literal language syntax,
+Flex ships calls to these macros which are expected to be expanded
+within the skeleton.  The other things it ships which appear in the
+output code are mostly bodies for table initializers, with associated
+macros for typenames and table dimensions.  The names of all such
+macros have the prefix ``M4_HOOK_''; you can study them in the Flex
+code by grepping for that prefix.
 
-You'll also need to look at the @code{M4_HOOK_*} macros near the top
-of the skeleton file.  Rather than emit literal language syntax, as
-often as possible Flex ships calls to these which are expected to be
-expanded within the skeleton.
+Flex ships another fairly large set of macros that are guard
+conditions for conditional macroexpanion. The values of these symbols
+don't directly appear in the output, but they control the shape of the
+generated code. The names of such macros have the prefixes
+``M4_MODE_'' or ``M4_YY_''; you can study them in the Flex code by
+grepping for these prefixes.  Many of these symbols correspond to Flex
+command-line options.
 
 To write support for a language, you'll want to do the following
 steps:
@@ -8622,7 +8644,7 @@ is pointed at by the skel nember of your language back end.
 
 @item
 Add some logic to @file{main.c} that enables the new back end with a
-new command-line option.  Following this step you should be
+new Flex option.  Following this step you should be
 able to run Flex on a specification and get code out in the
 language of whatever back end you cloned.
 
@@ -8642,7 +8664,7 @@ targets.  Almost anything generally descended from Algol shouldn't be
 much more difficult; this certainly includes the whole
 Pascal/Modula/Oberon family.
 
-A hint about the interesting part:
+Two notes about the interesting part:
 
 @itemize
 @item
@@ -8652,12 +8674,22 @@ needs to be supported in C for backwards compatibility, but
 there is no need to carry it forward.
 @end itemize
 
+@itemize
+@item
+The ``one exception'' to target-syntax independence hinted at earlier
+is some C code spliced into the skeleton when table serialization is
+enabled. This option is thus available only with the C back end; you
+need not bother supporting it in yours.
+@end itemize
+
 The following assumptions in the code might trip you up and
 require fixes outside a back end.
 
 @enumerate
 @item
-The item separator in data initializers is a comma.
+As previously noted, the item separator in data initializers is a
+comma. Flex does not assume that a trailing comma after the last
+initializer element is legal, though it is legal in C/C++.
 
 @item
 Either case arms can be stacked as in C; that is, there is
