@@ -35,13 +35,6 @@
 #include "flexdef.h"
 #include "tables.h"
 
-/* This typedef is only used for computing footprint sizes,
- * You need to make sure they match reality in the skeleton file to 
- * get accurate numbers, but they don't otherwise matter.
- * FIXME: This should go away when Flex ships only macros.
- */
-struct yy_trans_info {int32_t yy_verify; int32_t yy_nxt;};
-
 /* Helper functions */
 
 static const char *cpp_get_int16_decl (void)
@@ -84,9 +77,8 @@ static void cpp_ntod(size_t num_full_table_rows)
 // Generate nxt table for ntod
 {
 	struct packtype_t *ptype = optimize_pack(0);
+	/* Note: Used when ctrl.fulltbl is on. Alternately defined elsewhere */
 	out_str ("m4_define([[M4_HOOK_NXT_TYPE]], [[%s]])", ptype->name);
-	buf_strappend (&yydmap_buf,
-		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(M4_HOOK_NXT_TYPE)},\n");
 
 	/* Unless -Ca, declare it "short" because it's a real
 	 * long-shot that that won't be large enough.
@@ -110,21 +102,18 @@ static size_t cpp_gentabs_acclist(size_t sz)
 	out_str ("m4_define([[M4_HOOK_ACCLIST_TYPE]], [[%s]])", ptype->name);
 	out_str_dec (ctrl.long_align ? cpp_get_int32_decl () :
 		     cpp_get_int16_decl (), "yy_acclist", sz);
-	buf_strappend (&yydmap_buf,
-		    "\t{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(M4_HOOK_ACCLIST_TYPE)},\n");
 	return sz * ptype->width;
 }
 
 static size_t cpp_gentabs_accept(size_t sz)
 // Generate accept table initializer
 {
-	/* FIXME: Could pack tighter by passing the size limit to optimize_pack()_ */
+	/* FIXME: Could pack tighter by passing the size limit to optimize_pack() */
+	/* But note that this is alternately defined if ctrl.fulltbl */
 	struct packtype_t *ptype = optimize_pack(0);
 	out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
 	out_str_dec (ctrl.long_align ? cpp_get_int32_decl () : cpp_get_int16_decl (),
 		     "yy_accept", sz);
-	buf_strappend (&yydmap_buf,
-		       "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(M4_HOOK_ACCEPT_TYPE)},\n");
 	return sz * ptype->width;
 }
 
@@ -136,8 +125,6 @@ static size_t cpp_gentabs_yy_base(size_t sz)
 	out_str_dec ((sz >= INT16_MAX || ctrl.long_align) ?
 		     cpp_get_int32_decl () : cpp_get_int16_decl (),
 		     "yy_base", sz);
-	buf_strappend (&yydmap_buf,
-		    "\t{YYTD_ID_BASE, (void**)&yy_base, sizeof(M4_HOOK_BASE_TYPE)},\n");
 	return sz * ptype->width;
 }
 
@@ -145,12 +132,10 @@ static size_t cpp_gentabs_yy_def(size_t sz)
 // Generate yy_def initializer
 {
 	struct packtype_t *ptype = optimize_pack(sz);
-	out_str ("m4_define([[M4_HOOK_DEF_BASE_TYPE]], [[%s]])", ptype->name);
+	out_str ("m4_define([[M4_HOOK_DEF_TYPE]], [[%s]])", ptype->name);
 	out_str_dec ((sz >= INT16_MAX || ctrl.long_align) ?
 		     cpp_get_int32_decl () : cpp_get_int16_decl (),
 		     "yy_def", sz);
-	buf_strappend (&yydmap_buf,
-		    "\t{YYTD_ID_DEF, (void**)&yy_def, sizeof(M4_HOOK_DEF_BASE_TYPE)},\n");
 	return sz * ptype->width;
 }
 
@@ -158,12 +143,13 @@ static size_t cpp_gentabs_yy_nxt(size_t tblafter)
 // Generate yy_nxt initializer
 {
 	struct packtype_t *ptype = optimize_pack(tblafter);
-	out_str ("m4_define([[M4_HOOK_NXT_BASE_TYPE]], [[%s]])", ptype->name);
+	/* Note: Osed wheen !ctrl.fulltbl && !ctrl.fullspd).
+	 * (Alternately defined wjen ctrl.fullspd
+	 */
+	out_str ("m4_define([[M4_HOOK_NXT_TYPE]], [[%s]])", ptype->name);
 	out_str_dec ((tblafter >= INT16_MAX || ctrl.long_align) ?
 		     cpp_get_int32_decl () : cpp_get_int16_decl (), "yy_nxt",
 		     tblafter);
-	buf_strappend (&yydmap_buf,
-		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(M4_HOOK_NXT_BASE_TYPE)},\n");
 	return tblafter * ptype->width;
 }
 
@@ -171,25 +157,18 @@ static size_t cpp_gentabs_yy_chk(size_t tblafter)
 // Generate yy_chk initializer
 {
 	struct packtype_t *ptype = optimize_pack(tblafter);
-	out_str ("m4_define([[M4_HOOK_IDCHK_BASE_TYPE]], [[%s]])", ptype->name);
+	out_str ("m4_define([[M4_HOOK_IDCHK_TYPE]], [[%s]])", ptype->name);
 	out_str_dec ((tblafter >= INT16_MAX || ctrl.long_align) ?
 		     cpp_get_int32_decl () : cpp_get_int16_decl (), "yy_chk",
 		     tblafter);
-	buf_strappend (&yydmap_buf,
-		    "\t{YYTD_ID_CHK, (void**)&yy_chk, sizeof(M4_HOOK_IDCHK_BASE_TYPE)},\n");
 	return tblafter * ptype->width;
 }
 
 static size_t cpp_nultrans(int fullspd, size_t afterdfa)
 // Generate nulltrans initializer
 {
-	// Making this a backend method may be overzealous.
-	// How many other languages have to special-case NUL
-	// because it's a string terminator?
+	out_str ("m4_define([[M4_HOOK_NULTRANS_TYPE]], [[%s]])", (fullspd) ? "struct yy_trans_info*" : "flex_int32_t");
 	out_str_dec (cpp_get_state_decl (), "yy_NUL_trans", afterdfa);
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(%s)},\n",
-		    (fullspd) ? "struct yy_trans_info*" : "flex_int32_t");
 	return afterdfa * (fullspd ? sizeof(struct yy_trans_info *) : sizeof(int32_t));
 }
 

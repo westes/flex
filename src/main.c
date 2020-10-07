@@ -746,7 +746,6 @@ void flexinit (int argc, char **argv)
 
 	/* Initialize any buffers. */
 	buf_init (&userdef_buf, sizeof (char));	/* one long string */
-	buf_init (&yydmap_buf, sizeof (char));	/* one long string */
 	buf_init (&top_buf, sizeof (char));	    /* one long string */
 
 	sf_init ();

@@ -47,7 +47,6 @@
 
 /* global buffers. */
 struct Buf userdef_buf;		/**< for user #definitions triggered by cmd-line. */
-struct Buf yydmap_buf;		/**< string buffer to hold yydmap elements */
 struct Buf top_buf;             /**< contains %top code. String buffer. */
 
 /* Append a "%s" formatted string to a string buffer */

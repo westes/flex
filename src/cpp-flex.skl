@@ -1521,13 +1521,19 @@ struct yytbl_dmap {
 
 /** A {0,0,0}-terminated list of structs, forming the map */
 static struct yytbl_dmap yydmap[] = {
-m4_ifdef([[M4_MODE_FULLSPD]], [[	{YYTD_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(struct yy_trans_info*)},]])
-m4_ifdef([[M4_MODE_YYLINENO]], [[	{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(M4_HOOK_EOLTABLE_TYPE)},]])
-m4_ifdef([[M4_MODE_USEECS]], [[	{YYTD_ID_EC, (void**)&yy_ec, sizeof(YY_CHAR)},]])
-m4_ifdef([[M4_MODE_USEMECS]], [[	{YYTD_ID_META, (void**)&yy_meta, sizeof(YY_CHAR)},]])
-m4_ifdef([[M4_HOOK_MKCTBL_TYPE]], [[	{YYTD_ID_TRANSITION, (void**)&yy_transition, sizeof(M4_HOOK_MKCTBL_TYPE)},]])
-m4_ifdef([[M4_HOOK_MKFTBL_TYPE]], [[	{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(M4_HOOK_MKFTBL_TYPE)},]])
-%tables-yydmap generated elements
+m4_ifdef([[M4_HOOK_NXT_TYPE]], [[	{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(M4_HOOK_NXT_TYPE)},]],[[m4_dnl]])
+m4_ifdef([[M4_MODE_FULLSPD]], [[	{YYTD_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(struct yy_trans_info*)},]],[[m4_dnl]])
+m4_ifdef([[M4_MODE_YYLINENO]], [[	{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(M4_HOOK_EOLTABLE_TYPE)},]],[[m4_dnl]])
+m4_ifdef([[M4_MODE_USEECS]],  [[	{YYTD_ID_EC, (void**)&yy_ec, sizeof(YY_CHAR)},]],[[m4_dnl]])
+m4_ifdef([[M4_MODE_USEMECS]], [[	{YYTD_ID_META, (void**)&yy_meta, sizeof(YY_CHAR)},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_ACCLIST_TYPE]], [[	{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(M4_HOOK_ACCLIST_TYPE)},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_MKCTBL_TYPE]], [[	{YYTD_ID_TRANSITION, (void**)&yy_transition, sizeof(M4_HOOK_MKCTBL_TYPE)},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_MKFTBL_TYPE]], [[	{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(M4_HOOK_MKFTBL_TYPE)},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_ACCEPT_TYPE]], [[	{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(M4_HOOK_ACCEPT_TYPE)},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_BASE_TYPE]], [[	{YYTD_ID_BASE, (void**)&yy_base, sizeof(M4_HOOK_BASE_TYPE)},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_DEF_TYPE]], [[	{YYTD_ID_DEF, (void**)&yy_def, sizeof(M4_HOOK_DEF_TYPE)},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_IDCHK_TYPE]], [[	{YYTD_ID_CHK, (void**)&yy_chk, sizeof(M4_HOOK_IDCHK_TYPE)},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_NULTRANS_TYPE]], [[	{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(M4_HOOK_NULTRANS_TYPE)},]],[[m4_dnl]])
     {0,0,0}
 };
 

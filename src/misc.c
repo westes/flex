@@ -34,7 +34,6 @@
 #include "tables.h"
 
 #define CMD_IF_TABLES_SER    "%if-tables-serialization"
-#define CMD_TABLES_YYDMAP    "%tables-yydmap"
 #define CMD_IF_CPP_ONLY      "%if-c++-only"
 #define CMD_IF_C_ONLY        "%if-c-only"
 #define CMD_IF_C_OR_CPP      "%if-c-or-c++"
@@ -762,10 +761,6 @@ void skelout (bool announce)
 			}
 			else if (cmd_match (CMD_IF_TABLES_SER)) {
 				do_copy = do_copy && tablesext;
-			}
-			else if (cmd_match (CMD_TABLES_YYDMAP)) {
-				if (tablesext && yydmap_buf.elts)
-					outn ((char *) (yydmap_buf.elts));
 			}
 			else if (cmd_match (CMD_IF_CPP_ONLY)) {
 				/* only for C++ */

@@ -902,7 +902,8 @@ void make_tables (void)
 			struct yytbl_data *tbl;
 
 			struct packtype_t *ptype = optimize_pack(0);
-			out_str ("m4_define([[M4_HOOK_MKFTBL_TYPE]], [[%s]])", ptype->name);
+			// Alternately defined if 
+			out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
 			tbl = mkftbl ();
 			yytbl_data_compress (tbl);
 			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
