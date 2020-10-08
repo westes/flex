@@ -85,10 +85,10 @@ static struct yytbl_data *mkeoltbl (void)
 static void geneoltbl (void)
 {
 	int     i;
+	struct packtype_t *ptype = optimize_pack(num_rules);
 
-	/* FIXME: this table could be typically be packed into int16 */
 	outn ("m4_ifdef( [[M4_MODE_YYLINENO]],[[");
-	outn ("m4_define([[M4_HOOK_EOLTABLE_TYPE]], [[flex_int32_t]])");
+	out_str ("m4_define([[M4_HOOK_EOLTABLE_TYPE]], [[%s]])\n", ptype->name);
 	out_dec ("m4_define([[M4_HOOK_EOLTABLE_SIZE]], [[%d]])", num_rules + 1);
 	outn ("m4_define([[M4_HOOK_EOLTABLE_BODY]], [[m4_dnl");
 
@@ -100,7 +100,7 @@ static void geneoltbl (void)
 				out ("\n    ");
 		}
 	}
-	footprint += sizeof(int32_t) * (num_rules + 1);
+	footprint += num_rules * ptype->width;
 	outn ("]])");
 	outn ("]])");
 }
@@ -436,8 +436,7 @@ void genftbl (void)
 {
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
-	/* FIXME: Could make this smaller by passing the table size to pack_optimize(). */
-	struct packtype_t *ptype = optimize_pack(0);
+	struct packtype_t *ptype = optimize_pack(num_rules + 1);
 
 	dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
 
@@ -508,8 +507,7 @@ void gentabs (void)
 		    EOB_accepting_list;
 
 		sz = MAX (numas, 1) + 1;
-		/* FIXME: could improve memory usage by passing sz in */
-		ptype = optimize_pack(0);
+		ptype = optimize_pack(sz);
 		out_str ("m4_define([[M4_HOOK_ACCLIST_TYPE]], [[%s]])", ptype->name);
 		out_dec ("m4_define([[M4_HOOK_ACCLIST_SIZE]], [[%d]])", sz);
 		outn ("m4_define([[M4_HOOK_ACCLIST_BODY]], [[m4_dnl");
@@ -618,9 +616,8 @@ void gentabs (void)
 		 */
 		++sz;
 
-	/* FIXME: Could pack tighter by passing the size limit to optimize_pack() */
-	/* But note that this table is alternately defined if ctrl.fulltbl */
-	ptype = optimize_pack(0);
+	/* Note that this table is alternately defined if ctrl.fulltbl */
+	ptype = optimize_pack(sz);
 	outn ("m4_define([[M4_HOOK_NEED_ACCEPT]], 1)");
 	out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
 	out_dec ("m4_define([[M4_HOOK_ACCEPT_SIZE]], [[%d]])", sz);
@@ -948,11 +945,12 @@ void make_tables (void)
 		if (tablesext) {
 			struct yytbl_data *tbl;
 
-			struct packtype_t *ptype = optimize_pack(0);
 			/* Alternately defined if !ctrl.ffullspd && !ctrl.fulltbl */
-			out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
+			struct packtype_t *ptype;
 			tbl = mkftbl ();
 			yytbl_data_compress (tbl);
+			ptype = optimize_pack(tbl->td_lolen);
+			out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
 			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
 				flexerror (_("Could not write ftbl"));
 			yytbl_data_destroy (tbl);
@@ -1064,10 +1062,8 @@ void make_tables (void)
 	if (ctrl.ddebug) {		/* Spit out table mapping rules to line numbers. */
 		/* Policy choice: we don't include this space
 		 * in the table metering.
-		 * FIXME: Could make this smaller by passing the table size to optimize_pack().
 		 */
-		struct packtype_t *ptype = optimize_pack(0);
-
+		struct packtype_t *ptype = optimize_pack(num_rules);
 		out_str ("m4_define([[M4_HOOK_DEBUGTABLE_TYPE]], [[%s]])", ptype->name);
 		out_dec ("m4_define([[M4_HOOK_DEBUGTABLE_SIZE]], [[%d]])", num_rules);
 		outn ("m4_define([[M4_HOOK_DEBUGTABLE_BODY]], [[m4_dnl");
