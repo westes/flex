@@ -296,11 +296,6 @@
  */
 #define BAD_SUBSCRIPT -32767
 
-/* Absolute value of largest number that can be stored in a short, with a
- * bit of slop thrown in for general paranoia.
- */
-#define MAX_SHORT 32700
-
 /* Method table describing a language-specific back end */
 
 struct flex_backend_t {

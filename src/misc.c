@@ -39,8 +39,6 @@
 #define CMD_IF_C_OR_CPP      "%if-c-or-c++"
 #define CMD_NOT_FOR_HEADER   "%not-for-header"
 #define CMD_OK_FOR_HEADER    "%ok-for-header"
-#define CMD_PUSH             "%push"
-#define CMD_POP              "%pop"
 #define CMD_IF_REENTRANT     "%if-reentrant"
 #define CMD_IF_NOT_REENTRANT "%if-not-reentrant"
 #define CMD_IF_BISON_BRIDGE  "%if-bison-bridge"
@@ -721,24 +719,6 @@ void skelout (bool announce)
 					outc ('\n');
 				}
 				return;
-			}
-			else if (cmd_match (CMD_PUSH)){
-				sko_push(do_copy);
-				if(ctrl.ddebug){
-					char buf2[MAXLINE];
-					snprintf(buf2, sizeof(buf2), "(state = (%s)\n",do_copy?"true":"false");
-					comment(buf2);
-				}
-				out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
-			}
-			else if (cmd_match (CMD_POP)){
-				sko_pop(&do_copy);
-				if(ctrl.ddebug){
-					char buf2[MAXLINE];
-					snprintf(buf2, sizeof(buf2), "(state = (%s)\n",do_copy?"true":"false");
-					comment(buf2);
-				}
-				out_str("%s\n", buf[strlen (buf) - 1] =='\\' ? "\\" : "");
 			}
 			else if (cmd_match (CMD_IF_REENTRANT)){
 				sko_push(do_copy);
