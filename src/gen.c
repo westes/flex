@@ -1021,7 +1021,7 @@ void make_tables (void)
 		yytbl_data_init (yynultrans_tbl, YYTD_ID_NUL_TRANS);
 		// Performance kludge for C. Gives a small improvement
 		// in table loading time.
-		if (ctrl.fullspd && backend->c_like)
+		if (ctrl.fullspd && boneseeker("m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]]"))
 			yynultrans_tbl->td_flags |= YYTD_PTRANS;
 		yynultrans_tbl->td_lolen = (flex_uint32_t) (lastdfa + 1);
 		yynultrans_tbl->td_data = yynultrans_data =

@@ -306,7 +306,6 @@
 struct flex_backend_t {
 	const char *(*suffix)(void);		// Generate suffix for lexer source code
 	const char **skel;
-	bool c_like;				// Will &yy_transition[%d]," produce a pointer table entry?
 };
 
 extern size_t footprint;
@@ -862,6 +861,9 @@ extern void dataend(const char *);
 
 /* Flush generated data statements. */
 extern void dataflush(void);
+
+/* Do we have a state-entry0format macro? */
+extern bool boneseeker(const char *);
 
 /* Report an error message and terminate. */
 extern void flexerror(const char *);

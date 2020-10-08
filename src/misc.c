@@ -879,3 +879,20 @@ void comment(const char *txt)
 		outc ('\n');
 }
 
+/* Search for a string in the skeleton prolog, where macros are defined.
+ */
+bool boneseeker(const char *bone)
+{
+	int i;
+
+	for (i = 0; i < sizeof(backend->skel)/sizeof(backend->skel[0]); i++) {
+		const char *line = backend->skel[i];
+		if (strstr(line, bone) != NULL)
+			return true;
+		else if (strncmp(line, "%%", 2) == 0)
+			break;
+	}
+	return false;
+}
+
+

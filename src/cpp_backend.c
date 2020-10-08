@@ -56,5 +56,4 @@ const char *cpp_skel[] = {
 struct flex_backend_t cpp_backend = {
 	.suffix = cpp_suffix,
 	.skel = cpp_skel,
-	.c_like = true,
 };
