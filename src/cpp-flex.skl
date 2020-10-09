@@ -1039,7 +1039,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 m4_ifdef( [[M4_MODE_C_ONLY]], [[
 m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
 m4_ifdef( [[M4_YY_NOT_REENTRANT]], [[
-/* Definitions for backing up.  We don't need them if REJECT
+/* Definitions for backing up.  We don't need them if yyreject()
  * is being used because then we use an alternative backing-up
  * technique instead.
  */
@@ -1068,7 +1068,7 @@ static int *yy_full_state;
 ]])
 ]])
 ]])
-#define REJECT \
+#define yyreject()				\
 { \
 *yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \
 yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \
@@ -1080,11 +1080,13 @@ yy_current_state = *YY_G(yy_state_ptr); /* restore curr. state */ \
 ++YY_G(yy_lp); \
 goto find_rule; \
 }
+#define REJECT	yyreject()
 ]])
 m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
 /* The intent behind this definition is that it'll catch
- * any uses of REJECT which flex missed.
+ * any uses of yyreject() which flex missed.
  */
+#define yyreject() reject_used_but_not_detected
 #define REJECT reject_used_but_not_detected
 ]])
 
@@ -2404,7 +2406,7 @@ int yyFlexLexer::yy_get_next_buffer()
 m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 			YY_FATAL_ERROR(
-"input buffer overflow, can't enlarge buffer because scanner uses REJECT" );
+"input buffer overflow, can't enlarge buffer because scanner uses yyreject()" );
 ]],
 [[
 			/* just a shorter name for the current buffer */

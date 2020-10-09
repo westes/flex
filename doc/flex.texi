@@ -170,7 +170,7 @@ FAQ
 * How can I have multiple input sources feed into the same scanner at the same time?::  
 * Can I build nested parsers that work with the same input file?::  
 * How can I match text only at the end of a file?::  
-* How can I make REJECT cascade across start condition boundaries?::  
+* How can I make yyreject() cascade across start condition boundaries?::  
 * Why cant I use fast or full tables with interactive mode?::  
 * How much faster is -F or -f than -C?::  
 * If I have a simple grammar cant I just parse it with flex?::  
@@ -1236,8 +1236,8 @@ copies yytext to the scanner's output.
 followed by the name of a start condition places the scanner in the
 corresponding start condition (see below).
 
-@item  REJECT
-@cindex REJECT
+@item  yyreject()
+@cindex yyreject()
 directs the scanner to proceed on to the ``second best'' rule which
 matched the input (or a prefix of the input).  The rule is chosen as
 described above in @ref{Matching}, and @code{yytext} and @code{yyleng}
@@ -1252,19 +1252,19 @@ whenever @samp{frob} is seen:
             int word_count = 0;
     %%
 
-    frob        special(); REJECT;
+    frob        special(); yyreject();
     [^ \t\n]+   ++word_count;
 @end verbatim
 @end example
 
-Without the @code{REJECT}, any occurrences of @samp{frob} in the input
+Without the @code{yyreject()}, any occurrences of @samp{frob} in the input
 would not be counted as words, since the scanner normally executes only
-one action per token.  Multiple uses of @code{REJECT} are allowed, each
+one action per token.  Multiple uses of @code{yyreject()} are allowed, each
 one finding the next best choice to the currently active rule.  For
 example, when the following scanner scans the token @samp{abcd}, it will
 write @samp{abcdabcaba} to the output:
 
-@cindex REJECT, calling multiple times
+@cindex yyreject(), calling multiple times
 @cindex |, use of
 @example
 @verbatim
@@ -1272,7 +1272,7 @@ write @samp{abcdabcaba} to the output:
     a        |
     ab       |
     abc      |
-    abcd     ECHO; REJECT;
+    abcd     ECHO; yyreject();
     .|\n     /* eat up any unmatched character */
 @end verbatim
 @end example
@@ -1280,13 +1280,13 @@ write @samp{abcdabcaba} to the output:
 The first three rules share the fourth's action since they use the
 special @samp{|} action.
 
-@code{REJECT} is a particularly expensive feature in terms of scanner
+@code{yyreject()} is a particularly expensive feature in terms of scanner
 performance; if it is used in @emph{any} of the scanner's actions it
 will slow down @emph{all} of the scanner's matching.  Furthermore,
-@code{REJECT} cannot be used with the @samp{-Cf} or @samp{-CF} options
+@code{yyreject()} cannot be used with the @samp{-Cf} or @samp{-CF} options
 (@pxref{Scanner Options}).
 
-Note also that unlike the other special actions, @code{REJECT} is a
+Note also that unlike the other special actions, @code{yyreject()} is a
 @emph{branch}.  Code immediately following it in the action will
 @emph{not} be executed.
 
@@ -2533,7 +2533,7 @@ The names are the same as their long-option equivalents (but without the
 leading @samp{--} ).
 
 @code{flex} scans your rule actions to determine whether you use the
-@code{REJECT} or @code{yymore()} features.  The @code{REJECT} and
+@code{yyreject()} or @code{yymore()} features.  The @code{yyreject()} and
 @code{yymore} options are available to override its decision as to
 whether you use the options, either by setting them (e.g., @code{%option
 reject)} to indicate the feature is indeed used, or unsetting them to
@@ -3285,7 +3285,7 @@ cause a serious loss of performance in the resulting scanner.  If you
 give the flag twice, you will also get comments regarding features that
 lead to minor performance losses.
 
-Note that the use of @code{REJECT}, and
+Note that the use of @code{yyreject()}, and
 variable trailing context (@pxref{Limitations}) entails a substantial
 performance penalty; use of @code{yymore()}, the @samp{^} operator, and
 the @samp{--interactive} flag entail minor performance penalties.
@@ -3386,12 +3386,12 @@ rules.  Aside from the effects on scanner speed of the table compression
 @samp{-C} options outlined above, there are a number of options/actions
 which degrade performance.  These are, from most expensive to least:
 
-@cindex REJECT, performance costs
+@cindex yyreject(), performance costs
 @cindex yylineno, performance costs
 @cindex trailing context, performance costs
 @example
 @verbatim
-    REJECT
+    yyreject()
     arbitrary trailing context
 
     pattern sets that require backing up
@@ -3412,7 +3412,7 @@ call that potentially does quite a bit of work, while @code{yyless()} is
 a quite-cheap macro. So if you are just putting back some excess text
 you scanned, use @code{yyless()}.
 
-@code{REJECT} should be avoided at all costs when performance is
+@code{yyreject()} should be avoided at all costs when performance is
 important.  It is a particularly expensive option.
 
 There is one case when @code{%option yylineno} can be expensive. That is when
@@ -3547,7 +3547,7 @@ Leaving just one means you gain nothing.
 
 @emph{Variable} trailing context (where both the leading and trailing
 parts do not have a fixed length) entails almost the same performance
-loss as @code{REJECT} (i.e., substantial).  So when possible a rule
+loss as @code{yyreject()} (i.e., substantial).  So when possible a rule
 like:
 
 @cindex trailing context, variable length
@@ -4177,7 +4177,7 @@ always named @code{yyscanner}.  As you may have guessed,
 @code{yyscanner} is a pointer to an opaque data structure encapsulating
 the current state of the scanner.  For a list of function declarations,
 see @ref{Reentrant Functions}. Note that preprocessor macros, such as
-@code{BEGIN}, @code{ECHO}, and @code{REJECT}, do not take this
+@code{BEGIN}, @code{ECHO}, and @code{yyreject()}, do not take this
 additional argument.
 
 @node Global Replacement, Init and Destroy Functions, Extra Reentrant Argument, Reentrant Detail
@@ -4818,7 +4818,7 @@ you must @code{#define YY_BUF_SIZE} to whatever number of bytes you want. We don
 to change this in the near future, but we reserve the right to do so if we ever add a more robust memory management
 API. 
 
-@item 64kb for the REJECT state. This will only be allocated if you use REJECT.
+@item 64kb for the yyreject() state. This will only be allocated if you use yyreject().
 The size is  large enough to hold the same number of states as characters in the input buffer. If you override the size of the
 input buffer (via @code{YY_BUF_SIZE}), then you automatically override the size of this buffer as well.
 
@@ -5267,7 +5267,7 @@ matched because it comes after an identifier ``catch-all'' rule:
 @end verbatim
 @end example
 
-Using @code{REJECT} in a scanner suppresses this warning.
+Using @code{yyreject()} in a scanner suppresses this warning.
 
 @item
 @samp{warning, -s option given but default rule can be matched} means
@@ -5279,7 +5279,7 @@ not intended.
 @item
 @code{reject_used_but_not_detected undefined} or
 @code{yymore_used_but_not_detected undefined}. These errors can occur
-at compile time.  They indicate that the scanner uses @code{REJECT} or
+at compile time.  They indicate that the scanner uses @code{yyreject()} or
 @code{yymore()} but that @code{flex} failed to notice the fact, meaning
 that @code{flex} scanned the first two sections looking for occurrences
 of these actions and failed to find any, but somehow you snuck some in
@@ -5316,9 +5316,9 @@ present it does not.
 
 @item
 @samp{input buffer overflow, can't enlarge buffer because scanner uses
-REJECT}.  the scanner was working on matching an extremely large token
+yyreject()}.  the scanner was working on matching an extremely large token
 and needed to expand the input buffer.  This doesn't work with scanners
-that use @code{REJECT}.
+that use @code{yyreject()}.
 
 @item
 @samp{fatal flex scanner internal error--end of buffer missed}. This can
@@ -5377,8 +5377,8 @@ with @code{flex} rules and expect it to work.  Call @code{input()}
 instead.  The total table entries listed by the @samp{-v} flag excludes
 the number of table entries needed to determine what rule has been
 matched.  The number of entries is equal to the number of DFA states if
-the scanner does not use @code{REJECT}, and somewhat greater than the
-number of states if it does.  @code{REJECT} cannot be used with the
+the scanner does not use @code{yyreject()}, and somewhat greater than the
+number of states if it does.  @code{yyreject()} cannot be used with the
 @samp{-f} or @samp{-F} options.
 
 The @code{flex} internal algorithms need documentation.
@@ -5426,7 +5426,7 @@ publish them here.
 * How can I have multiple input sources feed into the same scanner at the same time?::  
 * Can I build nested parsers that work with the same input file?::  
 * How can I match text only at the end of a file?::  
-* How can I make REJECT cascade across start condition boundaries?::  
+* How can I make yyreject() cascade across start condition boundaries?::  
 * Why cant I use fast or full tables with interactive mode?::  
 * How much faster is -F or -f than -C?::  
 * If I have a simple grammar cant I just parse it with flex?::  
@@ -5709,8 +5709,8 @@ real @code{EOF} next time it's called).  Then you could write:
 @end verbatim
 @end example
 
-@node  How can I make REJECT cascade across start condition boundaries?
-@unnumberedsec How can I make REJECT cascade across start condition boundaries?
+@node  How can I make yyreject() cascade across start condition boundaries?
+@unnumberedsec How can I make yyreject() cascade across start condition boundaries?
 
 You can do this as follows.  Suppose you have a start condition @samp{A}, and
 after exhausting all of the possible matches in @samp{<A>}, you want to try
@@ -5720,13 +5720,13 @@ matches in @samp{<INITIAL>}.  Then you could use the following:
 @verbatim
 %x A
 %%
-<A>rule_that_is_long    ...; REJECT;
-<A>rule                 ...; REJECT; /* shorter rule */
+<A>rule_that_is_long    ...; yyreject();
+<A>rule                 ...; yyreject(); /* shorter rule */
 <A>etc.
 ...
 <A>.|\n  {
 /* Shortest and last rule in <A>, so
-* cascaded REJECTs will eventually
+* cascaded yyreject()s will eventually
 * wind up matching this rule.  We want
 * to now switch to the initial state
 * and try matching from there instead.
@@ -8169,6 +8169,7 @@ See @ref{Top, , , bison, the GNU Bison Manual}.
 * M4 Dependency::               
 * Common Patterns::               
 * Retargeting Flex::
+* Deprecated Interfaces::
 @end menu
 
 @node Makefiles and Flex, Bison Bridge, Appendices, Appendices
@@ -8563,7 +8564,7 @@ to appear in a URI, including spaces and control characters.  See
 @end table
 
 
-@node Retargeting Flex, ,Common Patterns, Appendices
+@node Retargeting Flex, Deprecated Interfaces, Common Patterns, Appendices
 @section Retargeting Flex
 @cindex retargeting
 @cindex language independence
@@ -8702,6 +8703,32 @@ By putting a @code{yyterminate()} call in the expansion of
 @code{M4_HOOK_EOF_STATE_CASE_FALLTHROUGH} and defining an empty
 @code{M4_HOOK_EOF_STATE_CASE_TERMINATE} macro, you could handle
 languages like Pascal.
+
+@node Deprecated Interfaces, , Retargeting Flex,Appendices
+@section Deprecated interfaces, , Retargeting Flex
+@cindex interfaces, deprecated
+
+Long-time users of Flex and its predecessor, Lex, may notice that the
+examples in this manual look a little different than they used to.
+They have changed because of the support for targeting languages
+other than C/C++.
+
+All the old interfaces are still in place for legacy C code to use.
+But some are now deprecated and should not be used in new code. Doing
+so will hinder forward portability someday.
+
+These changes are necessary because the documented Flex interface can
+no longer rely on controlling scanner generation by defining
+preprocessor macros.  Most languages other than C/C++ don't have text
+macros, and none of those that do emulate C #define.
+
+A list of deprecated interfaces and their replacements follows.
+
+@itemize
+@item
+REJECT: Replaced by yyreject()
+@end itemize
+
 
 @node Indices,  , Appendices, Top
 @unnumbered Indices
