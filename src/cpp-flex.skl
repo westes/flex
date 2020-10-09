@@ -407,6 +407,8 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
  * but we do it the disgusting crufty way forced on us by the ()-less
  * definition of BEGIN.
  */
+#define yybegin(s) YY_G(yy_start) = 1 + 2 * (s)
+/* Legacy interface */
 #define BEGIN YY_G(yy_start) = 1 + 2 *
 /* Translate the current start state into a value that can be later handed
  * to BEGIN to return to the state.  The YYSTATE alias is for lex

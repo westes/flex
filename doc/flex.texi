@@ -1231,8 +1231,8 @@ action:
 @cindex ECHO
 copies yytext to the scanner's output.
 
-@item  BEGIN
-@cindex BEGIN
+@item  yybegin()
+@cindex yybegin()
 followed by the name of a start condition places the scanner in the
 corresponding start condition (see below).
 
@@ -1345,7 +1345,7 @@ following will write out @samp{foobarbar}:
 
 An argument of 0 to @code{yyless()} will cause the entire current input
 string to be scanned again.  Unless you've changed how the scanner will
-subsequently process its input (using @code{BEGIN}, for example), this
+subsequently process its input (using @code{yybegin()}, for example), this
 will result in an endless loop.
 
 Note that @code{yyless()} is a macro and can only be used in the flex
@@ -1628,8 +1628,8 @@ Start conditions are declared in the definitions (first) section of the
 input using unindented lines beginning with either @samp{%s} or
 @samp{%x} followed by a list of names.  The former declares
 @dfn{inclusive} start conditions, the latter @dfn{exclusive} start
-conditions.  A start condition is activated using the @code{BEGIN}
-action.  Until the next @code{BEGIN} action is executed, rules with the
+conditions.  A start condition is activated using the @code{yybegin()}
+action.  Until the next @code{yybegin()} action is executed, rules with the
 given start condition will be active and rules with other start
 conditions will be inactive.  If the start condition is inclusive, then
 rules with no start conditions at all will also be active.  If it is
@@ -1707,21 +1707,20 @@ in start conditions.  It is equivalent to:
 @end verbatim
 @end example
 
-@cindex BEGIN, explanation
-@findex BEGIN
+@cindex yybegin(), explanation
+@findex yybegin()
 @vindex INITIAL
-@code{BEGIN(0)} returns to the original state where only the rules with
+@code{yybegin(0)} returns to the original state where only the rules with
 no start conditions are active.  This state can also be referred to as
-the start-condition @code{INITIAL}, so @code{BEGIN(INITIAL)} is
-equivalent to @code{BEGIN(0)}.  (The parentheses around the start
-condition name are not required but are considered good style.)
+the start-condition @code{INITIAL}, so @code{yybegin(INITIAL)} is
+equivalent to @code{yybegin(0)}.
 
-@code{BEGIN} actions can also be given as indented code at the beginning
+@code{yybegin()} actions can also be given as indented code at the beginning
 of the rules section.  For example, the following will cause the scanner
 to enter the @code{SPECIAL} start condition whenever @code{yylex()} is
 called and the global variable @code{enter_special} is true:
 
-@cindex start conditions, using BEGIN
+@cindex start conditions, using yybegin()
 @example
 @verbatim
             int enter_special;
@@ -1729,7 +1728,7 @@ called and the global variable @code{enter_special} is true:
     %x SPECIAL
     %%
             if ( enter_special )
-                BEGIN(SPECIAL);
+                yybegin(SPECIAL);
 
     <SPECIAL>blahblahblah
     ...more rules follow...
@@ -1752,7 +1751,7 @@ treat it as a single token, the floating-point number @samp{123.456}:
     %s expect
 
     %%
-    expect-floats        BEGIN(expect);
+    expect-floats        yybegin(expect);
 
     <expect>[0-9]+.[0-9]+      {
                 printf( "found a float, = %f\n",
@@ -1764,7 +1763,7 @@ treat it as a single token, the floating-point number @samp{123.456}:
                  * before we'll recognize any more
                  * numbers
                  */
-                BEGIN(INITIAL);
+                yybegin(INITIAL);
                 }
 
     [0-9]+      {
@@ -1787,12 +1786,12 @@ maintaining a count of the current input line.
     %%
             int line_num = 1;
 
-    "/*"         BEGIN(comment);
+    "/*"         yybegin(comment);
 
     <comment>[^*\n]*        /* eat anything that's not a '*' */
     <comment>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
     <comment>\n             ++line_num;
-    <comment>"*"+"/"        BEGIN(INITIAL);
+    <comment>"*"+"/"        yybegin(INITIAL);
 @end verbatim
 @end example
 
@@ -1816,20 +1815,20 @@ following fashion:
 
     "/*"         {
                  comment_caller = INITIAL;
-                 BEGIN(comment);
+                 yybegin(comment);
                  }
 
     ...
 
     <foo>"/*"    {
                  comment_caller = foo;
-                 BEGIN(comment);
+                 yybegin(comment);
                  }
 
     <comment>[^*\n]*        /* eat anything that's not a '*' */
     <comment>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
     <comment>\n             ++line_num;
-    <comment>"*"+"/"        BEGIN(comment_caller);
+    <comment>"*"+"/"        yybegin(comment_caller);
 @end verbatim
 @end example
 
@@ -1870,10 +1869,10 @@ not including checking for a string that's too long):
             char *string_buf_ptr;
 
 
-    \"      string_buf_ptr = string_buf; BEGIN(str);
+    \"      string_buf_ptr = string_buf; yybegin(str);
 
     <str>\"        { /* saw closing quote - all done */
-            BEGIN(INITIAL);
+            yybegin(INITIAL);
             *string_buf_ptr = '\0';
             /* return string constant token type and
              * value to parser
@@ -1972,13 +1971,13 @@ pushes the current start condition onto the top of the start condition
 stack and switches to
 @code{new_state}
 as though you had used
-@code{BEGIN new_state}
+@code{yybegin(new_state)}
 (recall that start condition names are also integers).
 @end deftypefun
 
 @deftypefun void yy_pop_state ()
 pops the top of the stack and switches to it via
-@code{BEGIN}.
+@code{yybegin()}.
 The program execution aborts, if there is no state on the stack.
 @end deftypefun
 
@@ -2117,7 +2116,7 @@ maintains the stack internally.
      */
     %x incl
     %%
-    include             BEGIN(incl);
+    include             yybegin(incl);
 
     [a-z]+              ECHO;
     [^a-z\n]*\n?        ECHO;
@@ -2131,7 +2130,7 @@ maintains the stack internally.
 
 			yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
 
-            BEGIN(INITIAL);
+            yybegin(INITIAL);
             }
 
     <<EOF>> {
@@ -2163,7 +2162,7 @@ manages its own input buffer stack manually (instead of letting flex do it).
     %}
 
     %%
-    include             BEGIN(incl);
+    include             yybegin(incl);
 
     [a-z]+              ECHO;
     [^a-z\n]*\n?        ECHO;
@@ -2187,7 +2186,7 @@ manages its own input buffer stack manually (instead of letting flex do it).
             yy_switch_to_buffer(
                 yy_create_buffer( yyin, YY_BUF_SIZE ) );
 
-            BEGIN(INITIAL);
+            yybegin(INITIAL);
             }
 
     <<EOF>> {
@@ -2450,7 +2449,7 @@ returns a @code{YY_BUFFER_STATE} handle to the current buffer.
 @vindex YY_START
 @item  YY_START
 returns an integer value corresponding to the current start condition.
-You can subsequently use this value with @code{BEGIN} to return to that
+You can subsequently use this value with @code{yybegin()} to return to that
 start condition.
 @end table
 
@@ -3596,12 +3595,12 @@ additional work of setting up the scanning environment (e.g.,
     %%
             int line_num = 1;
 
-    "/*"         BEGIN(comment);
+    "/*"         yybegin(comment);
 
     <comment>[^*\n]*
     <comment>"*"+[^*/\n]*
     <comment>\n             ++line_num;
-    <comment>"*"+"/"        BEGIN(INITIAL);
+    <comment>"*"+"/"        yybegin(INITIAL);
 @end verbatim
 @end example
 
@@ -3613,13 +3612,13 @@ This could be sped up by writing it as:
     %%
             int line_num = 1;
 
-    "/*"         BEGIN(comment);
+    "/*"         yybegin(comment);
 
     <comment>[^*\n]*
     <comment>[^*\n]*\n      ++line_num;
     <comment>"*"+[^*/\n]*
     <comment>"*"+[^*/\n]*\n ++line_num;
-    <comment>"*"+"/"        BEGIN(INITIAL);
+    <comment>"*"+"/"        yybegin(INITIAL);
 @end verbatim
 @end example
 
@@ -4177,7 +4176,7 @@ always named @code{yyscanner}.  As you may have guessed,
 @code{yyscanner} is a pointer to an opaque data structure encapsulating
 the current state of the scanner.  For a list of function declarations,
 see @ref{Reentrant Functions}. Note that preprocessor macros, such as
-@code{BEGIN}, @code{ECHO}, and @code{yyreject()}, do not take this
+@code{yyebegin()}, @code{ECHO}, and @code{yyreject()}, do not take this
 additional argument.
 
 @node Global Replacement, Init and Destroy Functions, Extra Reentrant Argument, Reentrant Detail
@@ -5603,7 +5602,7 @@ rule to match more text, then put back the extra:
 
 @example
 @verbatim
-data_.*        yyless( 5 ); BEGIN BLOCKIDSTATE;
+data_.*        yyless( 5 ); yybegin(BLOCKIDSTATE);
 @end verbatim
 @end example
 
@@ -5732,7 +5731,7 @@ matches in @samp{<INITIAL>}.  Then you could use the following:
 * and try matching from there instead.
 */
 yyless(0);    /* put back matched text */
-BEGIN(INITIAL);
+yybegin(INITIAL);
 }
 @end verbatim
 @end example
@@ -5809,10 +5808,10 @@ Here is one way which allows you to track line information:
 @example
 @verbatim
 <INITIAL>{
-"/*"              BEGIN(IN_COMMENT);
+"/*"              yybegin(IN_COMMENT);
 }
 <IN_COMMENT>{
-"*/"      BEGIN(INITIAL);
+"*/"      yybegin(INITIAL);
 [^*\n]+   // eat comment in chunks
 "*"       // eat the lone star
 \n        yylineno++;
@@ -6101,7 +6100,7 @@ Better is to either introduce a separate parser, or to split the scanner
 into multiple scanners using (exclusive) start conditions.
 
 You might have
-a separate start state once you've seen the @samp{BEGIN}. In that state, you
+a separate start state once you've seen the @samp{yybegin()}. In that state, you
 might then have a regex that will match @samp{END} (to kick you out of the
 state), and perhaps @samp{(.|\n)} to get a single character within the chunk ...
 
@@ -6206,9 +6205,9 @@ In the example below, we want to skip over characters until we see the phrase
 /* INCORRECT SCANNER */
 %x SKIP
 %%
-<INITIAL>startskip   BEGIN(SKIP);
+<INITIAL>startskip   yybegin(SKIP);
 ...
-<SKIP>"endskip"       BEGIN(INITIAL);
+<SKIP>"endskip"       yybegin(INITIAL);
 <SKIP>.*             ;
 @end verbatim
 @end example
@@ -6218,7 +6217,7 @@ The simplest (but slow) fix is:
 
 @example
 @verbatim
-<SKIP>"endskip"      BEGIN(INITIAL);
+<SKIP>"endskip"      yybegin(INITIAL);
 <SKIP>.              ;
 @end verbatim
 @end example
@@ -6228,7 +6227,7 @@ making it match "endskip" plus something else.  So for example:
 
 @example
 @verbatim
-<SKIP>"endskip"     BEGIN(INITIAL);
+<SKIP>"endskip"     yybegin(INITIAL);
 <SKIP>[^e]+         ;
 <SKIP>.		        ;/* so you eat up e's, too */
 @end verbatim
@@ -6306,11 +6305,11 @@ of the '|' operator automatically makes the pattern variable length, so in
 this case '[Ff]oot' is preferred to '(F|f)oot'.
 
 > 4. I changed a rule that looked like this:
->    <snext8>{and}{bb}/{ROMAN}[^A-Za-z] { BEGIN...
+>    <snext8>{and}{bb}/{ROMAN}[^A-Za-z] { yybegin...
 >
 >    to the next 2 rules:
 >    <snext8>{and}{bb}/{ROMAN}[A-Za-z] { ECHO;}
->    <snext8>{and}{bb}/{ROMAN}         { BEGIN...
+>    <snext8>{and}{bb}/{ROMAN}         { yybegin...
 >
 >    Again, I understand the using [^...] will cause a great performance loss
 
@@ -7090,7 +7089,7 @@ From: Vern Paxson <vern>
 > The problem is that when I do this (using %option c++) start
 > conditions seem to not apply.
 
-The BEGIN macro modifies the yy_start variable.  For C scanners, this
+The yybegin() macro modifies the yy_start variable.  For C scanners, this
 is a static with scope visible through the whole file.  For C++ scanners,
 it's a member variable, so it only has visible scope within a member
 function.  Your lexbegin() routine is not a member function when you
@@ -7168,7 +7167,7 @@ From: Vern Paxson <vern>
 
 One way to do this is to have the parser call a stub routine that's
 included in the scanner's .l file, and consequently that has access ot
-BEGIN.  The only ugliness is that the parser can't pass in the state
+yybegin().  The only ugliness is that the parser can't pass in the state
 it wants, because those aren't visible - but if you don't have many
 such states, then using a different set of names doesn't seem like
 to much of a burden.
@@ -8512,10 +8511,10 @@ more efficient when used with automatic line number processing. @xref{option-yyl
 
 @verbatim
 <INITIAL>{
-    "/*"      BEGIN(COMMENT);
+    "/*"      yybegin(COMMENT);
 }
 <COMMENT>{
-    "*/"      BEGIN(0);
+    "*/"      yybegin(0);
     [^*\n]+   ;
     "*"[^/]   ;
     \n        ;
@@ -8720,15 +8719,21 @@ so will hinder forward portability someday.
 These changes are necessary because the documented Flex interface can
 no longer rely on controlling scanner generation by defining
 preprocessor macros.  Most languages other than C/C++ don't have text
-macros, and none of those that do emulate C #define.
+macros, and none of those that do emulate C #define.  Thus, interface
+calls need to be functions, at least syntactically (though many are
+still implemented as macros for C/C++).
 
 A list of deprecated interfaces and their replacements follows.
+Again, all are still available in the default C back end, but not
+in any other.
 
 @itemize
 @item
+BEGIN: Replaced by yybegin()
+
+@item
 REJECT: Replaced by yyreject()
 @end itemize
-
 
 @node Indices,  , Appendices, Top
 @unnumbered Indices

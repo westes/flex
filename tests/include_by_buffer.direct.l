@@ -47,7 +47,7 @@ int include_stack_ptr = 0;
 %%
 
 <INITIAL>{
-^"#include"[[:blank:]]+"<"  { BEGIN(GET_FILENAME); }
+^"#include"[[:blank:]]+"<"  { yybegin(GET_FILENAME); }
 .|\n      { ECHO; }
 }
 
@@ -62,7 +62,7 @@ int include_stack_ptr = 0;
         yyterminate();
     }
     yy_switch_to_buffer( yy_create_buffer( yyin, YY_BUF_SIZE ));
-    BEGIN(0);
+    yybegin(0);
     }
 .|\n  {
     fprintf(stderr,"Invalid input \"%s\".\n", yytext);
