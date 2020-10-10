@@ -1280,12 +1280,20 @@ void readin (void)
 	/* Place a bogus line directive, it will be fixed in the filter. */
 	line_directive_out(0, false);
 
+	/* User may want to set the scanner prototype */
+	if (ctrl.yydecl != NULL) {
+		char *cp;
+		for (cp = ctrl.yydecl; isspace(*cp); cp++)
+			continue;
+		out_str ("M4_HOOK_SET_YY_DECL(%s)\n", cp);
+	}
+
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)
 		outn ((char *) (userdef_buf.elts));
 
 	/* If the user explicitly requested posix compatibility by specifing the
-	 * posix-compat option, then we check for conflicting ctrl. However, if
+	 * posix-compat option, then we check for conflicting options. However, if
 	 * the POSIXLY_CORRECT variable is set, then we quietly make flex as
 	 * posix-compatible as possible.  This is the recommended behavior
 	 * according to the GNU Coding Standards.
@@ -1295,7 +1303,7 @@ void readin (void)
 	 */
 	if (ctrl.posix_compat) {
 		/* TODO: This is where we try to make flex behave according to
-		 * posiz, AND check for conflicting ctrl. How far should we go
+		 * POSIX, *and* check for conflicting ctrl. How far should we go
 		 * with this? Should we disable all the neat-o flex features?
 		 */
 		/* Update: Estes says no, since other flex features don't violate posix. */

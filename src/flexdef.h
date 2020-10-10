@@ -351,6 +351,7 @@ struct ctrl_bundle_t {
 	bool use_read;		// (-f, -F, or -Cr) use read() for scanner input 
        				// otherwise, use fread(). 
 	char *yyclass;		// yyFlexLexer subclass to use for YY_DECL
+	char *yydecl;		// user-specfied prototype for yylex.
 	bool yytext_is_array;	// if true (i.e., %array directive), then declare
 				// yytext as array instead of a character pointer.
 				// Nice and inefficient.

@@ -89,6 +89,8 @@ m4_define([[M4_HOOK_EOF_STATE_CASE_TERMINATE]], [[		yyterminate();
 m4_define([[M4_HOOK_CONST_DEFINE]], [[#define $1 $2
 ]])
 
+m4_define([[M4_HOOK_SET_YY_DECL]], [[#define YY_DECL $1]])
+
 %% [0.0] Make hook macros available to Flex
 
 %not-for-header

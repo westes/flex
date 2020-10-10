@@ -259,7 +259,6 @@ FAQ
 * unnamed-faq-99::              
 * unnamed-faq-100::             
 * unnamed-faq-101::             
-* What is the difference between YYLEX_PARAM and YY_DECL?::
 * Why do I get "conflicting types for yylex" error?::
 * How do I access the values set in a Flex action from within a Bison action?::
 
@@ -1474,22 +1473,21 @@ default, @code{yylex()} is declared as follows:
 @end verbatim
 @end example
 
-@cindex yylex(), overriding
+@cindex yylex(), overriding, %yydecl
 (If your environment supports function prototypes, then it will be
-@code{int yylex( void )}.)  This definition may be changed by defining
-the @code{YY_DECL} macro.  For example, you could use:
+@code{int yylex( void )}.)  This definition may be changed with the
+the @code{%yydecl} directive.  For example, you could put this in
+among your directives:
 
 @cindex yylex, overriding the prototype of
 @example
 @verbatim
-    #define YY_DECL float lexscan( a, b ) float a, b;
+%yydecl float lexscan(float a, float b)
 @end verbatim
 @end example
 
 to give the scanning routine the name @code{lexscan}, returning a float,
-and taking two floats as arguments.  Note that if you give arguments to
-the scanning routine using a K&R-style/non-prototyped function
-declaration, you must terminate the definition with a semi-colon (;).
+and taking two floats as arguments.
 
 @code{flex} generates @samp{C99} function definitions by
 default. Flex used to have the ability to generate obsolete, er,
@@ -4734,7 +4732,7 @@ YY_AT_BOL()
 @item
 <*>
 @item
-YY_DECL
+%yydecl
 @item
 YY_START
 @item
@@ -5514,7 +5512,6 @@ publish them here.
 * unnamed-faq-99::              
 * unnamed-faq-100::             
 * unnamed-faq-101::             
-* What is the difference between YYLEX_PARAM and YY_DECL?::
 * Why do I get "conflicting types for yylex" error?::
 * How do I access the values set in a Flex action from within a Bison action?::
 @end menu
@@ -6766,6 +6763,9 @@ for sure won't be for many months to come).
 @c TODO: Evaluate this faq.
 @node ERASEME55
 @unnumberedsec ERASEME55
+(Note: The @code{YY_DECL} macro is deprecated. Use the @code{%yydecl}
+option instead.)
+
 @example
 @verbatim
 To: Colin Paul Adams <colin@colina.demon.co.uk>
@@ -8131,27 +8131,12 @@ then the problem is that the last rule needs to be "{whitespace}" !
 @end verbatim
 @end example
 
-@node What is the difference between YYLEX_PARAM and YY_DECL?
-@unnumberedsec What is the difference between YYLEX_PARAM and YY_DECL?
-
-YYLEX_PARAM is not a flex symbol. It is for Bison. It tells Bison to pass extra
-params when it calls yylex() from the parser.
-
-YY_DECL is the Flex declaration of yylex. The default is similar to this:
-
-@example
-@verbatim
-#define int yy_lex ()
-@end verbatim
-@end example
-
-
 @node Why do I get "conflicting types for yylex" error?
 @unnumberedsec Why do I get "conflicting types for yylex" error?
 
 This is a compiler error regarding a generated Bison parser, not a Flex scanner.
 It means you need a prototype of yylex() in the top of the Bison file.
-Be sure the prototype matches YY_DECL.
+Be sure the prototype matches what you declarted with @code{%yydecl}.
 
 @node How do I access the values set in a Flex action from within a Bison action?
 @unnumberedsec How do I access the values set in a Flex action from within a Bison action?
@@ -8719,9 +8704,10 @@ so will hinder forward portability someday.
 These changes are necessary because the documented Flex interface can
 no longer rely on controlling scanner generation by defining
 preprocessor macros.  Most languages other than C/C++ don't have text
-macros, and none of those that do emulate C #define.  Thus, interface
-calls need to be functions, at least syntactically (though many are
-still implemented as macros for C/C++).
+macros, and none of those that do emulate C #define closely enough to
+preserve the behavior dependent on it.  Thus interface calls in
+multi-language Flex need to be functions, at least syntactically
+(though many are still implemented as macros for C/C++).
 
 A list of deprecated interfaces and their replacements follows.
 Again, all are still available in the default C/C++ back end, but not
@@ -8736,6 +8722,9 @@ ECHO: Replaced by yyecho()
 
 @item
 REJECT: Replaced by yyreject()
+
+@item
+YY_DECL: Replaced by the %yydecl directive.
 @end itemize
 
 @node Indices,  , Appendices, Top

@@ -194,6 +194,7 @@ M4QEND      "]""]"
 
 	^"%pointer".*{NL}	ctrl.yytext_is_array = false; ++linenum;
 	^"%array".*{NL}		ctrl.yytext_is_array = true; ++linenum;
+	^"%yydecl".*		ctrl.yydecl = xstrdup(yytext+7);
 
 	^"%option"	BEGIN(OPTION); return TOK_OPTION;
 
