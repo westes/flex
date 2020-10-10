@@ -48,7 +48,7 @@ int include_stack_ptr = 0;
 
 <INITIAL>{
 ^"#include"[[:blank:]]+"<"  { yybegin(GET_FILENAME); }
-.|\n      { ECHO; }
+.|\n      { yyecho(); }
 }
 
 <GET_FILENAME>{

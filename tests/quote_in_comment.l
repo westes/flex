@@ -1,6 +1,6 @@
 %option 8bit noyywrap
 %%
-.|\n	{ ECHO;
+.|\n	{ yyecho();
    //' "
   }
 %%

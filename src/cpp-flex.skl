@@ -1481,17 +1481,19 @@ m4_define( [[M4_YY_NO_TOP_STATE]])
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Copy whatever the last rule matched to the standard output. */
-#ifndef ECHO
+#ifndef yyecho
 %if-c-only Standard (non-C++) definition
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
-#define ECHO do { if (fwrite( yytext, (size_t) yyleng, 1, yyout )) {} } while (0)
+#define yyecho() do { if (fwrite( yytext, (size_t) yyleng, 1, yyout )) {} } while (0)
 %endif
 %if-c++-only C++ definition
-#define ECHO LexerOutput( yytext, yyleng )
+#define yyecho() LexerOutput( yytext, yyleng )
 %endif
 #endif
+/* Legacy interface */
+#define ECHO yyecho()
 ]])
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],

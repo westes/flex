@@ -44,7 +44,7 @@ int error = 0;
 
 <INITIAL>{
 ^"#include"[[:blank:]]+"<"  { yybegin(GET_FILENAME); }
-.|\n      { ECHO; }
+.|\n      { yyecho(); }
 }
 
 <GET_FILENAME>{

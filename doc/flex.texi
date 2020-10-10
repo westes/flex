@@ -644,8 +644,8 @@ All the comments in the following example are valid:
 ruleA   /* after regex */ { /* code block */ } /* after code block */
         /* Rules Section (indented) */
 <STATE_X>{
-ruleC   ECHO;
-ruleD   ECHO;
+ruleC   yyecho();
+ruleD   yyecho();
 %{
 /* code block */
 %}
@@ -1227,8 +1227,8 @@ There are a number of special directives which can be included within an
 action:
 
 @table @code
-@item  ECHO
-@cindex ECHO
+@item  yyecho()
+@cindex yyecho()
 copies yytext to the scanner's output.
 
 @item  yybegin()
@@ -1272,7 +1272,7 @@ write @samp{abcdabcaba} to the output:
     a        |
     ab       |
     abc      |
-    abcd     ECHO; yyreject();
+    abcd     yyecho(); yyreject();
     .|\n     /* eat up any unmatched character */
 @end verbatim
 @end example
@@ -1303,8 +1303,8 @@ the output:
 @example
 @verbatim
     %%
-    mega-    ECHO; yymore();
-    kludge   ECHO;
+    mega-    yyecho(); yymore();
+    kludge   yyecho();
 @end verbatim
 @end example
 
@@ -1313,7 +1313,7 @@ is matched, but the previous @samp{mega-} is still hanging around at the
 beginning of
 @code{yytext}
 so the
-@code{ECHO}
+@code{yyecho()}
 for the @samp{kludge} rule will actually write @samp{mega-kludge}.
 @end table
 
@@ -1338,8 +1338,8 @@ following will write out @samp{foobarbar}:
 @example
 @verbatim
     %%
-    foobar    ECHO; yyless(3);
-    [a-z]+    ECHO;
+    foobar    yyecho(); yyless(3);
+    [a-z]+    yyecho();
 @end verbatim
 @end example
 
@@ -1584,10 +1584,10 @@ obtain the default version of the routine, which always returns 1.
 For scanning from in-memory buffers (e.g., scanning strings), see
 @ref{Scanning Strings}. @xref{Multiple Input Buffers}.
 
-@cindex ECHO, and yyout
+@cindex yyecho(), and yyout
 @cindex yyout
 @cindex stdout, as default for yyout
-The scanner writes its @code{ECHO} output to the @file{yyout} global
+The scanner writes its @code{yyecho()} output to the @file{yyout} global
 (default, @file{stdout}), which may be redefined by the user simply by
 assigning it to some other @code{FILE} pointer.
 
@@ -1697,13 +1697,13 @@ have been written:
 @end verbatim
 @end example
 
-The default rule (to @code{ECHO} any unmatched character) remains active
+The default rule (to @code{yyecho()} any unmatched character) remains active
 in start conditions.  It is equivalent to:
 
 @cindex start conditions, behavior of default rule
 @example
 @verbatim
-    <*>.|\n     ECHO;
+    <*>.|\n     yyecho();
 @end verbatim
 @end example
 
@@ -2118,8 +2118,8 @@ maintains the stack internally.
     %%
     include             yybegin(incl);
 
-    [a-z]+              ECHO;
-    [^a-z\n]*\n?        ECHO;
+    [a-z]+              yyecho();
+    [^a-z\n]*\n?        yyecho();
 
     <incl>[ \t]*      /* eat the whitespace */
     <incl>[^ \t\n]+   { /* got the include file name */
@@ -2164,8 +2164,8 @@ manages its own input buffer stack manually (instead of letting flex do it).
     %%
     include             yybegin(incl);
 
-    [a-z]+              ECHO;
-    [^a-z\n]*\n?        ECHO;
+    [a-z]+              yyecho();
+    [^a-z\n]*\n?        yyecho();
 
     <incl>[ \t]*      /* eat the whitespace */
     <incl>[^ \t\n]+   { /* got the include file name */
@@ -2439,7 +2439,7 @@ scanning the same input file.
 
 @vindex yyout
 @item  FILE *yyout
-is the file to which @code{ECHO} actions are done.  It can be reassigned
+is the file to which @code{yyecho()} actions are done.  It can be reassigned
 by the user.
 
 @vindex YY_CURRENT_BUFFER
@@ -4176,7 +4176,7 @@ always named @code{yyscanner}.  As you may have guessed,
 @code{yyscanner} is a pointer to an opaque data structure encapsulating
 the current state of the scanner.  For a list of function declarations,
 see @ref{Reentrant Functions}. Note that preprocessor macros, such as
-@code{yyebegin()}, @code{ECHO}, and @code{yyreject()}, do not take this
+@code{yyebegin()}, @code{yyecho()}, and @code{yyreject()}, do not take this
 additional argument.
 
 @node Global Replacement, Init and Destroy Functions, Extra Reentrant Argument, Reentrant Detail
@@ -4598,7 +4598,7 @@ reentrant, so if using C++ is an option for you, you should use
 them instead.  @xref{Cxx}, and @ref{Reentrant}  for details.
 
 @item
-@code{output()} is not supported.  Output from the @b{ECHO} macro is
+@code{output()} is not supported.  Output from the @b{yyecho()} macro is
 done to the file-pointer @code{yyout} (default @file{stdout)}.
 
 @item
@@ -6308,7 +6308,7 @@ this case '[Ff]oot' is preferred to '(F|f)oot'.
 >    <snext8>{and}{bb}/{ROMAN}[^A-Za-z] { yybegin...
 >
 >    to the next 2 rules:
->    <snext8>{and}{bb}/{ROMAN}[A-Za-z] { ECHO;}
+>    <snext8>{and}{bb}/{ROMAN}[A-Za-z] { yyecho();}
 >    <snext8>{and}{bb}/{ROMAN}         { yybegin...
 >
 >    Again, I understand the using [^...] will cause a great performance loss
@@ -8724,12 +8724,15 @@ calls need to be functions, at least syntactically (though many are
 still implemented as macros for C/C++).
 
 A list of deprecated interfaces and their replacements follows.
-Again, all are still available in the default C back end, but not
+Again, all are still available in the default C/C++ back end, but not
 in any other.
 
 @itemize
 @item
 BEGIN: Replaced by yybegin()
+
+@item
+ECHO: Replaced by yyecho()
 
 @item
 REJECT: Replaced by yyreject()
