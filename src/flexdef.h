@@ -352,6 +352,7 @@ struct ctrl_bundle_t {
        				// otherwise, use fread(). 
 	char *yyclass;		// yyFlexLexer subclass to use for YY_DECL
 	char *yydecl;		// user-specfied prototype for yylex.
+	int yylmax;		// Maximum buffer length if %array
 	bool yytext_is_array;	// if true (i.e., %array directive), then declare
 				// yytext as array instead of a character pointer.
 				// Nice and inefficient.
@@ -669,6 +670,7 @@ extern unsigned char *ccltbl;
 
 /* Variables for miscellaneous information:
  * nmstr - last NAME scanned by the scanner
+ * nmval - last numeric scanned by the scanner
  * sectnum - section number currently being parsed
  * nummt - number of empty nxt/chk table entries
  * hshcol - number of hash collisions detected by snstods
@@ -688,7 +690,7 @@ extern unsigned char *ccltbl;
  */
 
 extern char nmstr[MAXLINE];
-extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
+extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs, nmval;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 extern int num_backing_up, bol_needed;
 

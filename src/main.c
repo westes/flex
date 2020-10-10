@@ -86,7 +86,7 @@ int     lastccl, *cclmap, *ccllen, *cclng, cclreuse;
 int     current_maxccls, current_max_ccl_tbl_size;
 unsigned char   *ccltbl;
 char    nmstr[MAXLINE];
-int     sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
+int     sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs, nmval;
 int     tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 int     num_backing_up, bol_needed;
 int     end_of_buffer_state;
@@ -1288,6 +1288,10 @@ void readin (void)
 		out_str ("M4_HOOK_SET_YY_DECL(%s)\n", cp);
 	}
 
+	if (ctrl.yylmax != 0) {
+		out_dec ("M4_HOOK_SET_YYLMAX(%d)\n", ctrl.yylmax);
+	}
+	
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)
 		outn ((char *) (userdef_buf.elts));

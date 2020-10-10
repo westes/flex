@@ -1,0 +1,14 @@
+#! /bin/sh
+# Test %yylmax option of flex in any cpp-based back end
+
+trap 'rm /tmp/td$$' EXIT HUP INT QUIT TERM 
+cat >/tmp/td$$ <<EOF
+%option yylmax=333
+%%
+%%
+EOF
+
+( ../src/flex -t /tmp/td$$  | grep "#define YYLMAX 333" >/dev/null ) || (echo "%yylmax test failed." >&2; exit 1)
+
+
+

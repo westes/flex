@@ -1137,16 +1137,16 @@ for @code{%array}.
 
 The @code{%array} declaration defines @code{yytext} to be an array of
 @code{YYLMAX} characters, which defaults to a fairly large value.  You
-can change the size by simply #define'ing @code{YYLMAX} to a different
-value in the first section of your @code{flex} input.  As mentioned
-above, with @code{%pointer} yytext grows dynamically to accommodate
-large tokens.  While this means your @code{%pointer} scanner can
-accommodate very large tokens (such as matching entire blocks of
-comments), bear in mind that each time the scanner must resize
-@code{yytext} it also must rescan the entire token from the beginning,
-so matching such tokens can prove slow.  @code{yytext} presently does
-@emph{not} dynamically grow if a call to @code{unput()} results in too
-much text being pushed back; instead, a run-time error results.
+can change the size to a different value with @code{%option yylmax
+= NNN}.  As mentioned above, with @code{%pointer} yytext grows
+dynamically to accommodate large tokens.  While this means your
+@code{%pointer} scanner can accommodate very large tokens (such as
+matching entire blocks of comments), bear in mind that each time the
+scanner must resize @code{yytext} it also must rescan the entire token
+from the beginning, so matching such tokens can prove slow.
+@code{yytext} presently does @emph{not} dynamically grow if a call to
+@code{unput()} results in too much text being pushed back; instead, a
+run-time error results.
 
 @cindex %array, with C++
 Also note that you cannot use @code{%array} with C++ scanner classes
@@ -2398,11 +2398,11 @@ lengthened (you cannot append characters to the end).
 
 @cindex yytext, default array size
 @cindex array, default size for yytext
-@vindex YYLMAX
+@vindex yylmax
 If the special directive @code{%array} appears in the first section of
 the scanner description, then @code{yytext} is instead declared
-@code{char yytext[YYLMAX]}, where @code{YYLMAX} is a macro definition
-that you can redefine in the first section if you don't like the default
+to be an array of YYLMAX characters, where @code{YYLMAX} is a parameter
+that you can redefine with a @code{%yylmax} option if you don't like the default
 value (generally 8KB).  Using @code{%array} results in somewhat slower
 scanners, but the value of @code{yytext} becomes immune to calls to
 @code{unput()}, which potentially destroy its value when @code{yytext} is
@@ -5292,9 +5292,8 @@ its rules.  This error can also occur due to internal problems.
 @item
 @samp{token too large, exceeds YYLMAX}. your scanner uses @code{%array}
 and one of its rules matched a string longer than the @code{YYLMAX}
-constant (8K bytes by default).  You can increase the value by
-#define'ing @code{YYLMAX} in the definitions section of your @code{flex}
-input.
+constant (8K bytes by default).  You can increase the value with the
+@code{%yylmax} option.
 
 @item
 @samp{scanner requires -8 flag to use the character 'x'}. Your scanner
@@ -8721,10 +8720,13 @@ BEGIN: Replaced by yybegin()
 ECHO: Replaced by yyecho()
 
 @item
-REJECT: Replaced by yyreject()
+#define REJECT: Replaced by yyreject()
 
 @item
-YY_DECL: Replaced by the %yydecl directive.
+#define YY_DECL: Replaced by the %yydecl directive.
+
+@item
+#define YYLMAX: Replaced by the %yylmax option.
 @end itemize
 
 @node Indices,  , Appendices, Top

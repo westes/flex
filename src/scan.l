@@ -351,6 +351,7 @@ M4QEND      "]""]"
 	{WS}		option_sense = true;
 
 	"="		return '=';
+	[[:digit:]]+	{nmval = atoi(yytext); return TOK_NUMERIC;}
 
 	no		option_sense = ! option_sense;
 
@@ -450,6 +451,7 @@ M4QEND      "]""]"
 	outfile		return TOK_OUTFILE;
 	prefix		return TOK_PREFIX;
 	yyclass		return TOK_YYCLASS;
+	yylmax		return TOK_YYLMAX;
 	header(-file)?      return TOK_HEADER_FILE;
 	tables-file         return TOK_TABLES_FILE;
 	tables-verify   {
