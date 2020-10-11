@@ -420,6 +420,8 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
  * to BEGIN to return to the state.  The YYSTATE alias is for lex
  * compatibility.
  */
+#define yystart() ((YY_G(yy_start) - 1) / 2)
+/* Legacy interfaces */
 #define YY_START ((YY_G(yy_start) - 1) / 2)
 #define YYSTATE YY_START
 /* Action number for EOF rule of a given start state. */

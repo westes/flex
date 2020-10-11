@@ -1862,20 +1862,20 @@ following fashion:
 @end verbatim
 @end example
 
-@cindex YY_START, example
+@cindex yystart(), example
 Furthermore, you can access the current start condition using the
-integer-valued @code{YY_START} macro.  For example, the above
+integer-valued @code{yystart()} macro.  For example, the above
 assignments to @code{comment_caller} could instead be written
 
-@cindex getting current start state with YY_START
+@cindex getting current start state with yystart()
 @example
 @verbatim
-    comment_caller = YY_START;
+    comment_caller = yystart();
 @end verbatim
 @end example
 
-@vindex YY_START
-Flex provides @code{YYSTATE} as an alias for @code{YY_START} (since that
+@vindex yystart()
+Flex provides @code{YYSTATE} as an alias for @code{yystart()} (since that
 is what's used by AT&T @code{lex}).
 
 For historical reasons, start conditions do not have their own
@@ -2014,7 +2014,7 @@ The program execution aborts, if there is no state on the stack.
 @deftypefun int yy_top_state ()
 returns the top of the stack without altering the stack's contents
 if a top state on the stack exists or the current state via
-@code{YY_START}
+@code{yystart()}
 otherwise.
 @end deftypefun
 
@@ -2484,8 +2484,8 @@ by the user.
 @item  YY_CURRENT_BUFFER
 returns a @code{YY_BUFFER_STATE} handle to the current buffer.
 
-@vindex YY_START
-@item  YY_START
+@vindex yystart()
+@item  yystart()
 returns an integer value corresponding to the current start condition.
 You can subsequently use this value with @code{yybegin()} to return to that
 start condition.
@@ -4794,7 +4794,7 @@ YY_AT_BOL()
 @item
 %yydecl
 @item
-YY_START
+yystart()
 @item
 YY_USER_ACTION
 @item
@@ -8797,6 +8797,9 @@ ECHO: Replaced by yyecho()
 
 @item
 #define YY_INPUT: Replaced by the @code{noyyread} option.
+
+@item
+YYSTART: Replaced by yystart()
 @end itemize
 
 @node Indices,  , Appendices, Top
