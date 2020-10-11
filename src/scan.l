@@ -415,6 +415,7 @@ M4QEND      "]""]"
 	yylineno	ctrl.do_yylineno = option_sense;
 	yymore		yymore_really_used = option_sense;
 	yywrap		ctrl.do_yywrap = option_sense;
+	yyread		ctrl.noyyread = !option_sense;
 
 	yy_push_state	ctrl.no_yy_push_state = ! option_sense;
 	yy_pop_state	ctrl.no_yy_pop_state = ! option_sense;

@@ -1537,6 +1537,8 @@ void yyFlexLexer::LexerError( const char* msg ) {
 /* Legacy interface */
 #ifndef YY_INPUT
 #define YY_INPUT(buf,result,max_size) do {result = yyread(buf, max_size M4_YY_CALL_LAST_ARG);} while (0)
+
+m4_ifdef( [[M4_MODE_USER_YYREAD]], , [[
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
  * is returned in "result".
  */
@@ -1600,6 +1602,7 @@ m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
 	 return result;
 }
 #endif
+]])
 ]])
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],

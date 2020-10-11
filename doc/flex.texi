@@ -1164,11 +1164,10 @@ Also note that you cannot use @code{%array} with C++ scanner classes
 
 In target langages with automatic memory allocation and arrays none of
 this applies; you can expect @code{yytext} to dynamically resize
-itself, calls to the @code{unput()}will not destroy the present
+itself, calls to the @code{unput()} will not destroy the present
 contents of @code{yytext}, and you will never get a run-time error
-from calls to the @code{unput()} function destroys the present
-contents of @code{yytext} except in the extremely unlikely case that
-your scanner cannot allocate more memory.
+from calls to the @code{unput()} function except in the extremely
+unlikely case that your scanner cannot allocate more memory.
 
 @node Actions, Generated Scanner, Matching, Top
 @chapter Actions
@@ -1460,7 +1459,7 @@ avoid a name clash with the @code{C++} stream by the name of
 @cindex YY_FLUSH_BUFFER
 @code{YY_FLUSH_BUFFER;} flushes the scanner's internal buffer so that
 the next time the scanner attempts to match a token, it will first
-refill the buffer using @code{YY_INPUT()} (@pxref{Generated Scanner}).
+refill the buffer using @code{yyread()} (@pxref{Generated Scanner}).
 This action is a special case of the more general
 @code{yy_flush_buffer;} function, described below (@pxref{Multiple
 Input Buffers})
@@ -1553,7 +1552,7 @@ better to use @code{YY_FLUSH_BUFFER} (@pxref{Actions}).  Note that
 @code{INITIAL} (@pxref{Start Conditions}).
 
 In C, an input stream is a a @code{FILE *} pointer. This pointer 
-can be NULL, if you've set up @code{YY_INPUT} to scan from a source other
+can be NULL, if you've set up a @code{%yyread()} hook to scan from a source other
 than @code{yyin}.
 
 @cindex RETURN, within actions
@@ -1561,46 +1560,41 @@ If @code{yylex()} stops scanning due to executing a @code{return}
 statement in one of the actions, the scanner may then be called again
 and it will resume scanning where it left off.
 
-@cindex YY_INPUT
+@cindex yyread
 By default (and for purposes of efficiency), C/C++ scanners use
 block-reads rather than simple @code{getc()} calls to read characters
 from @file{yyin}.  The nature of how it gets its input can be controlled
-by defining the @code{YY_INPUT} macro.  The calling sequence for
-@code{YY_INPUT()} is @code{YY_INPUT(buf,result,max_size)}.  Its action
+by redefining the @code{yyread} function used to fill the scanner buffer.  The calling sequence for
+@code{yyread()} is @code{yyread(buf,max_size)}.  Its action
 is to place up to @code{max_size} characters in the character array
-@code{buf} and return in the integer variable @code{result} either the
+@code{buf} and return either the
 number of characters read or the constant @code{YY_NULL} (0 on Unix
-systems) to indicate @samp{EOF}.  The default @code{YY_INPUT} reads from
+systems) to indicate @samp{EOF}.  The default @code{yyread()} reads from
 the global file-pointer @file{yyin}.
 
-@cindex YY_INPUT, overriding
-Here is a sample definition of @code{YY_INPUT} (in the definitions
+@cindex yyread(), overriding
+#cindex %noyyread
+Here is a sample redefinition of @code{yyread()} (in the definitions
 section of the input file):
 
 @example
 @verbatim
-    %{
-    #define YY_INPUT(buf,result,max_size) \
-        { \
-        int c = getchar(); \
-        result = (c == EOF) ? YY_NULL : (buf[0] = c, 1); \
-        }
-    %}
+int yyread(char *buf, size_t max_size) {
+    int c = getchar();
+    return (c == EOF) ? YY_NULL : (buf[0] = c, 1);
+}
 @end verbatim
 @end example
 
 This definition will change the input processing to occur one character
 at a time.
 
-YY_INPUT is not available in target languages other than C/C++.  It
-dates from a time in the 1970s when efficiency optimizations were a
-far more pressing problem than they are today, and is probably extinct
-in the wild.  If lack of it poses a problem for a port you are doing,
-file an issue report with the Flex mauntainers and we will attempt to
-assist you.
+When Flex sees the @code{%noyyread} option, it omits the default
+definition from the boilerplate in the rest of the parser.  Your
+@code{yyread()} function then replaces it.
 
 @cindex yywrap()
-When the scanner receives an end-of-file indication from YY_INPUT, it
+When the scanner receives an end-of-file indication from @code{yyread()}, it
 then checks the @code{yywrap()} function.  If @code{yywrap()} returns
 false (zero), then it is assumed that the function has gone ahead and
 set up @file{yyin} to point to another input file, and scanning
@@ -2042,8 +2036,8 @@ stack} directive (@pxref{Scanner Options}).
 Some scanners (such as those which support ``include'' files) require
 reading from several input streams.  As @code{flex} scanners do a large
 amount of buffering, one cannot control where the next input will be
-read from by simply writing a @code{YY_INPUT()} which is sensitive to
-the scanning context.  @code{YY_INPUT()} is only called when the scanner
+read from by simply writing a @code{yyread()} which is sensitive to
+the scanning context.  @code{yyread()} is only called when the scanner
 reaches the end of its buffer, which may be a long time after scanning a
 statement such as an @code{include} statement which requires switching
 the input source.
@@ -2076,7 +2070,7 @@ safely initialize @code{YY_BUFFER_STATE} variables to @code{((YY_BUFFER_STATE)
 correctly declare input buffers in source files other than that of your
 scanner.  Note that the @code{FILE} pointer in the call to
 @code{yy_create_buffer} is only used as the value of @file{yyin} seen by
-@code{YY_INPUT}.  If you redefine @code{YY_INPUT()} so it no longer uses
+@code{yyread()}.  If you redefine @code{yyread()} so it no longer uses
 @file{yyin}, then you can safely pass a NULL @code{FILE} pointer to
 @code{yy_create_buffer}.  You select a particular buffer to scan from
 using:
@@ -2129,7 +2123,7 @@ becomes the new current state.
 This function discards the buffer's contents,
 so the next time the scanner attempts to match a token from the
 buffer, it will first fill the buffer anew using
-@code{YY_INPUT()}.
+@code{yyread()}.
 
 @deftypefun YY_BUFFER_STATE yy_new_buffer ( FILE *file, int size )
 @end deftypefun
@@ -3200,7 +3194,7 @@ or @samp{-CF}.  Using @samp{-Cr} can cause strange behavior if, for
 example, you read from @file{yyin} using @code{stdio} prior to calling
 the scanner (because the scanner will miss whatever text your previous
 reads left in the @code{stdio} input buffer).  @samp{-Cr} has no effect
-if you define @code{YY_INPUT()} (@pxref{Generated Scanner}).  It may
+if you define @code{yyread()} (@pxref{Generated Scanner}).  It may
 be a no-op or enable different optimizations in back ends other than
 the default C/C++ one.
 @end table
@@ -5723,7 +5717,7 @@ your scanner is free of backtracking (verified using @code{flex}'s @samp{-b} fla
 AND you run your scanner interactively (@samp{-I} option; default unless using special table
 compression options),
 @item
-AND you feed it one character at a time by redefining @code{YY_INPUT} to do so,
+AND you feed it one character at a time by redefining @code{yyread()} to do so,
 @end itemize
 
 then every time it matches a token, it will have exhausted its input
@@ -5739,8 +5733,8 @@ piecemeal; @code{select()} could inform you that the beginning of a token is
 available, you call @code{yylex()} to get it, but it winds up blocking waiting
 for the later characters in the token.
 
-Here's another way:  Move your input multiplexing inside of @code{YY_INPUT}.  That
-is, whenever @code{YY_INPUT} is called, it @code{select()}'s to see where input is
+Here's another way:  Move your input multiplexing inside of @code{yyread()}.  That
+is, whenever @code{yyread()} is called, it @code{select()}'s to see where input is
 available.  If input is available for the scanner, it reads and returns the
 next byte.  If input is available from another source, it calls whatever
 function is responsible for reading from that source.  (If no input is
@@ -5756,7 +5750,7 @@ that @code{flex} block-buffers the input it reads from @code{yyin}.  This means 
 ``outermost'' @code{yylex()}, when called, will automatically slurp up the first 8K
 of input available on yyin, and subsequent calls to other @code{yylex()}'s won't
 see that input.  You might be tempted to work around this problem by
-redefining @code{YY_INPUT} to only return a small amount of text, but it turns out
+redefining @code{yyread()} to only return a small amount of text, but it turns out
 that that approach is quite difficult.  Instead, the best solution is to
 combine all of your scanners into one large scanner, using a different
 exclusive start condition for each.
@@ -5767,7 +5761,7 @@ exclusive start condition for each.
 There is no way to write a rule which is ``match this text, but only if
 it comes at the end of the file''.  You can fake it, though, if you happen
 to have a character lying around that you don't allow in your input.
-Then you redefine @code{YY_INPUT} to call your own routine which, if it sees
+Then you redefine @code{yyread()} to call your own routine which, if it sees
 an @samp{EOF}, returns the magic character first (and remembers to return a
 real @code{EOF} next time it's called).  Then you could write:
 
@@ -6126,7 +6120,7 @@ Those are internal variables pointing into the AT&T scanner's input buffer.  I
 imagine they're being manipulated in user versions of the @code{input()} and @code{unput()}
 functions.  If so, what you need to do is analyze those functions to figure out
 what they're doing, and then replace @code{input()} with an appropriate definition of
-@code{YY_INPUT}.  You shouldn't need to (and must not) replace
+@code{yyread()}.  You shouldn't need to (and must not) replace
 @code{flex}'s @code{unput()} function.
 
 @node Is there a way to make flex treat NUL like a regular character?
@@ -6219,7 +6213,7 @@ situation. It is possible that some other globals may need resetting as well.
 
 While this is the right idea, it has two problems.  The first is that
 it's possible that @code{flex} will request less than @code{YY_READ_BUF_SIZE} during
-an invocation of @code{YY_INPUT} (or that your input source will return less
+an invocation of @code{yyread()} (or that your input source will return less
 even though @code{YY_READ_BUF_SIZE} bytes were requested).  The second problem
 is that when refilling its internal buffer, @code{flex} keeps some characters
 from the previous buffer (because usually it's in the middle of a match,
@@ -8800,6 +8794,9 @@ ECHO: Replaced by yyecho()
 
 @item
 #define YYLMAX: Replaced by the %yylmax option.
+
+@item
+#define YY_INPUT: Replaced by the @code{noyyread} option.
 @end itemize
 
 @node Indices,  , Appendices, Top

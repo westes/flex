@@ -356,6 +356,7 @@ struct ctrl_bundle_t {
 	bool yytext_is_array;	// if true (i.e., %array directive), then declare
 				// yytext as array instead of a character pointer.
 				// Nice and inefficient.
+	bool noyyread;		// User supplied a yyread function, don't generate default
 	// flags corresponding to the huge mass of --no-yy options
 	bool no_yy_push_state;
 	bool no_yy_pop_state;

@@ -1571,6 +1571,9 @@ void readin (void)
 	if (ctrl.interactive == trit_true)
 		visible_define ( "M4_MODE_INTERACTIVE");
 
+	if (ctrl.noyyread)
+		visible_define("M4_MODE_USER_YYREAD");
+
 	// Kluge to get around the fact that the %if-not-reentrant and
 	// %if-c-only gates can't be combined by nesting one inside the
 	// other.
