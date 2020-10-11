@@ -124,6 +124,7 @@ m4_ifelse(M4_MODE_PREFIX,yy,,
 #define yyalloc M4_MODE_PREFIX[[alloc]]
 #define yyrealloc M4_MODE_PREFIX[[realloc]]
 #define yyfree M4_MODE_PREFIX[[free]]
+#define yyread M4_MODE_PREFIX[[read]]
 )
 %endif
 %endif
@@ -1503,61 +1504,101 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
+#ifndef YY_EXIT_FAILURE
+#define YY_EXIT_FAILURE 2
+#endif
+
+%if-c-only
+static void yynoreturn yy_fatal_error YYFARGS1(const char*, msg) {
+	M4_YY_DECL_GUTS_VAR();
+	M4_YY_NOOP_GUTS_VAR();
+	fprintf( stderr, "%s\n", msg );
+	exit( YY_EXIT_FAILURE );
+}
+%endif
+%if-c++-only
+void yyFlexLexer::LexerError( const char* msg ) {
+	M4_YY_DECL_GUTS_VAR();
+	std::cerr << msg << std::endl;
+	exit( YY_EXIT_FAILURE );
+}
+%endif
+
+/* Report a fatal error. */
+#ifndef YY_FATAL_ERROR
+%if-c-only
+#define YY_FATAL_ERROR(msg) yy_fatal_error( msg M4_YY_CALL_LAST_ARG)
+%endif
+%if-c++-only
+#define YY_FATAL_ERROR(msg) LexerError( msg )
+%endif
+#endif
+
+/* Legacy interface */
+#ifndef YY_INPUT
+#define YY_INPUT(buf,result,max_size) do {result = yyread(buf, max_size M4_YY_CALL_LAST_ARG);} while (0)
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
  * is returned in "result".
  */
-#ifndef YY_INPUT
-#define YY_INPUT(buf,result,max_size) \
-%if-c-only \
-m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[ \
-	errno=0; \
-	while ( (result = (int) read( fileno(yyin), buf, (yy_size_t) max_size )) < 0 ) \
-	{ \
-		if( errno != EINTR) \
-		{ \
-			YY_FATAL_ERROR( "input in flex scanner failed" ); \
-			break; \
-		} \
-		errno=0; \
-		clearerr(yyin); \
-	}\
-]]) \
-m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[ \
-	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \
-		{ \
-		int c = '*'; \
-		int n; \
-		for ( n = 0; n < max_size && \
-			     (c = getc( yyin )) != EOF && c != '\n'; ++n ) \
-			buf[n] = (char) c; \
-		if ( c == '\n' ) \
-			buf[n++] = (char) c; \
-		if ( c == EOF && ferror( yyin ) ) \
-			YY_FATAL_ERROR( "input in flex scanner failed" ); \
-		result = n; \
-		} \
-	else \
-		{ \
-		errno=0; \
-		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) \
-			{ \
-			if( errno != EINTR) \
-				{ \
-				YY_FATAL_ERROR( "input in flex scanner failed" ); \
-				break; \
-				} \
-			errno=0; \
-			clearerr(yyin); \
-			} \
-		}\
-]]) \
-%endif \
-\
-%if-c++-only C++ definition \
-	if ( (int)(result = LexerInput( (char *) buf, max_size )) < 0 ) \
-		YY_FATAL_ERROR( "input in flex scanner failed" );
+%if-c++-only
+int yyFlexLexer::yyread(char *buf, size_t max_size) {
+%endif
+%if-c-only
+static int yyread(char *buf, size_t max_size M4_YY_PROTO_LAST_ARG) {
+%endif
+	int result;
+	M4_YY_DECL_GUTS_VAR();
+%if-c-only
+m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
+	errno=0;
+	while ( (result = (int) read( fileno(yyin), buf, (yy_size_t) max_size )) < 0 )
+	{
+		if( errno != EINTR)
+		{
+			YY_FATAL_ERROR( "input in flex scanner failed" );
+			break;
+		}
+		errno=0;
+		clearerr(yyin);
+	}
+]])
+m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
+	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive )
+		{
+		int c = '*';
+		int n;
+		for ( n = 0; n < max_size &&
+			     (c = getc( yyin )) != EOF && c != '\n'; ++n )
+			buf[n] = (char) c;
+		if ( c == '\n' )
+			buf[n++] = (char) c;
+		if ( c == EOF && ferror( yyin ) )
+			YY_FATAL_ERROR( "input in flex scanner failed" );
+		result = n;
+		}
+	else
+		{
+		errno=0;
+		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin))
+			{
+			if( errno != EINTR)
+				{
+				YY_FATAL_ERROR( "input in flex scanner failed" );
+				break;
+				}
+			errno=0;
+			clearerr(yyin);
+			}
+		}
+]])
 %endif
 
+%if-c++-only C++ definition
+	if ( (int)(result = LexerInput( (char *) buf, max_size )) < 0 )
+		YY_FATAL_ERROR( "input in flex scanner failed" );
+%endif
+	 return result;
+}
 #endif
 ]])
 
@@ -1576,19 +1617,6 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #ifndef YY_START_STACK_INCR
 #define YY_START_STACK_INCR 25
 #endif
-
-m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
-[[
-/* Report a fatal error. */
-#ifndef YY_FATAL_ERROR
-%if-c-only
-#define YY_FATAL_ERROR(msg) yy_fatal_error( msg M4_YY_CALL_LAST_ARG)
-%endif
-%if-c++-only
-#define YY_FATAL_ERROR(msg) LexerError( msg )
-%endif
-#endif
-]])
 
 %if-tables-serialization structures and prototypes
 m4preproc_include(`tables_shared.h')
@@ -3337,26 +3365,6 @@ int yyFlexLexer::yy_top_state()
 	return YY_G(yy_start_stack_ptr) > 0 ? YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr) - 1] : YY_START;
 }
 ]])
-
-#ifndef YY_EXIT_FAILURE
-#define YY_EXIT_FAILURE 2
-#endif
-
-%if-c-only
-static void yynoreturn yy_fatal_error YYFARGS1(const char*, msg) {
-	M4_YY_DECL_GUTS_VAR();
-	M4_YY_NOOP_GUTS_VAR();
-	fprintf( stderr, "%s\n", msg );
-	exit( YY_EXIT_FAILURE );
-}
-%endif
-%if-c++-only
-void yyFlexLexer::LexerError( const char* msg ) {
-	M4_YY_DECL_GUTS_VAR();
-	std::cerr << msg << std::endl;
-	exit( YY_EXIT_FAILURE );
-}
-%endif
 
 /* Redefine yyless() so it works in section 3 code. */
 
