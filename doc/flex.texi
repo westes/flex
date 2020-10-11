@@ -4,7 +4,7 @@
 @include version.texi
 @settitle Lexical Analysis With Flex, for Flex @value{VERSION}
 @set authors Vern Paxson, Will Estes and John Millaway
-@c  "Macro Hooks" index
+@c  "User Hooks" index
 @defindex hk
 @c  "Options" index
 @defindex op
@@ -273,7 +273,7 @@ Appendices
 Indices
 
 * Concept Index::               
-* Index of Functions and Macros::  
+* Index of Functions::  
 * Index of Variables::          
 * Index of Data Types::         
 * Index of Hooks::              
@@ -551,8 +551,8 @@ A @code{%top} block is similar to a @samp{%@{} ... @samp{%@}} block, except
 that the code in a @code{%top} block is relocated to the @emph{top} of the
 generated file, before any flex definitions @footnote{Actually,
 @code{yyIN_HEADER} is defined before the @samp{%top} block.}. 
-The @code{%top} block is useful when you want certain preprocessor macros to be
-defined or certain files to be included before the generated code.
+The @code{%top} block is useful when you want definitions to be
+evaluated or certain files to be included before the generated code.
 The single characters, @samp{@{}  and @samp{@}} are used to delimit the
 @code{%top} block, as show in the example below:
 
@@ -1238,9 +1238,9 @@ in any way.
 Actions are free to modify @code{yyleng} except they should not do so if
 the action also includes use of @code{yymore()} (see below).
 
-@cindex preprocessor macros, for use in actions
-There are a number of special directives which can be included within an
-action:
+@cindex rule hooks, for use in actions
+There are a number of special hooks which can be included within an
+action.
 
 @table @code
 @item  yyecho()
@@ -1364,9 +1364,6 @@ string to be scanned again.  Unless you've changed how the scanner will
 subsequently process its input (using @code{yybegin()}, for example), this
 will result in an endless loop.
 
-Note that @code{yyless()} is a macro and can only be used in the flex
-input file, not from other source files.
-
 @cindex unput()
 @cindex pushing back characters with unput
 @code{unput(c)} puts the character @code{c} back onto the input stream.
@@ -1473,10 +1470,10 @@ action.  It terminates the scanner and returns a 0 to the scanner's
 caller, indicating ``all done''.  By default, @code{yyterminate()} is
 also called when an end-of-file is encountered.  It may be redefined.
 
-When the target language is C, @code{yyterminate()} is a macro.
-Redefining it using the C preprocessor in your definitions section
+When the target language is C/C++, @code{yyterminate()} is a macro.
+Redefining it using the C/C++ preprocessor in your definitions section
 is allowed, but not recommended as doing this makes code more
-difficult to port out of C.  In other target languages you can define
+difficult to port out of C/C++.  In other target languages you can define
 @code{yyterminate()} as a function; Flex will notice this and not
 generate a default into the scanner.
 
@@ -1486,7 +1483,7 @@ generate a default into the scanner.
 @cindex yylex(), in generated scanner
 The output of @code{flex} is a file wity the sem name @file{lex.yy}, which contains
 the scanning routine @code{yylex()}, a number of tables used by it for
-matching tokens, and a number of auxiliary routines and macros.  By
+matching tokens, and a number of auxiliary routines.  By
 default in C, @code{yylex()} is declared as follows:
 
 @example
@@ -1864,7 +1861,7 @@ following fashion:
 
 @cindex yystart(), example
 Furthermore, you can access the current start condition using the
-integer-valued @code{yystart()} macro.  For example, the above
+integer-valued @code{yystart()} rule hook. For example, the above
 assignments to @code{comment_caller} could instead be written
 
 @cindex getting current start state with yystart()
@@ -1874,16 +1871,10 @@ assignments to @code{comment_caller} could instead be written
 @end verbatim
 @end example
 
-@vindex yystart()
-Flex provides @code{YYSTATE} as an alias for @code{yystart()} (since that
-is what's used by AT&T @code{lex}).
-
 For historical reasons, start conditions do not have their own
 name-space within the generated scanner. The start condition names are
 unmodified in the generated scanner and generated header.
 @xref{option-header}. @xref{option-prefix}.
-
-
 
 Finally, here's an example of how to match C-style quoted strings using
 exclusive start conditions, including expanded escape sequences (but
@@ -2132,9 +2123,10 @@ is an alias for @code{yy_create_buffer()},
 provided for compatibility with the C++ use of @code{new} and
 @code{delete} for creating and destroying dynamic objects.
 
-@cindex YY_CURRENT_BUFFER, and multiple buffers Finally, the macro
-@code{YY_CURRENT_BUFFER} macro returns a @code{YY_BUFFER_STATE} handle to the
-current buffer. It should not be used as an lvalue.
+@cindex YY_CURRENT_BUFFER, and multiple buffers
+Finally, the macro @code{YY_CURRENT_BUFFER} macro returns a
+@code{YY_BUFFER_STATE} handle to the current buffer. It should not be
+used as an lvalue.
 
 @cindex EOF, example using multiple input buffers
 Here are two examples of using these features for writing a scanner
@@ -2401,15 +2393,16 @@ the buffer that is (or is not) to be considered interactive.
 
 @cindex BOL, setting it
 @findex yy_set_bol
-The macro @code{yy_set_bol(at_bol)} can be used to control whether the
+The rule hook @code{yy_set_bol(at_bol)} can be used to control whether the
 current buffer's scanning context for the next token match is done as
 though at the beginning of a line.  A non-zero macro argument makes
 rules anchored with @samp{^} active, while a zero argument makes
 @samp{^} rules inactive.
 
 @cindex BOL, checking the BOL flag
-@findex YY_AT_BOL
-The macro @code{YY_AT_BOL()} returns true if the next token scanned from
+@cindex rule hook
+@findex yy_at_bol
+The rule hook @code{yy_at_bol()} returns true if the next token scanned from
 the current buffer will have @samp{^} rules active, false otherwise.
 
 @cindex actions, redefining YY_BREAK
@@ -2459,7 +2452,9 @@ holds the length of the current token.
 
 @vindex yyin
 @item  FILE *yyin
-is the file which by default @code{flex} reads from.  It may be
+is the file which by default @code{flex} reads from.
+In target languages other than C/C++, expect it to have
+whatever tyoe is associated with I/O streams. It may be
 redefined but doing so only makes sense before scanning begins or after
 an EOF has been encountered.  Changing it in the midst of scanning will
 have unexpected results since @code{flex} buffers its input; use
@@ -2469,7 +2464,9 @@ file and then call the scanner again to continue scanning.
 
 @findex yyrestart
 @item  void yyrestart( FILE *new_file )
-may be called to point @file{yyin} at the new input file.  The
+may be called to point @file{yyin} at the new input file.
+In target languages other than C/C++, expect the argument to have
+whatever tyoe is associated with I/O streams. The
 switch-over to the new file is immediate (any previously buffered-up
 input is lost).  Note that calling @code{yyrestart()} with @file{yyin}
 as an argument thus throws away the current input buffer and continues
@@ -2479,6 +2476,8 @@ scanning the same input file.
 @item  FILE *yyout
 is the output stream to which @code{yyecho()} actions are done.  It can be reassigned
 by the user.
+In target languages other than C/C++, expect it to have
+whatever tyoe is associated with I/O streams.
 
 @vindex YY_CURRENT_BUFFER
 @item  YY_CURRENT_BUFFER
@@ -2614,7 +2613,7 @@ you use @code{%option stack)}.
 @item --header-file=FILE, @code{%option header-file="FILE"}
 instructs flex to write a C header to @file{FILE}. This file contains
 function prototypes, extern variables, and types used by the scanner.
-Only the external API is exported by the header file. Many macros that
+Only the external API is exported by the header file. Many rule hooks that
 are usable from within scanner actions are not exported to the header
 file. This is due to namespace problems and the goal of a clean
 external API.
@@ -2625,6 +2624,7 @@ is substituted with the appropriate prefix.
 The @samp{--header-file} option is not compatible with the @samp{--c++} option,
 since the C++ scanner provides its own header in @file{yyFlexLexer.h}.
 
+This option will generally be a no-op under other target languages.
 
 
 @anchor{option-outfile}
@@ -3454,8 +3454,8 @@ which degrade performance.  These are, from most expensive to least:
 
 with the first two all being quite expensive and the last two being
 quite cheap.  Note also that @code{unput()} is implemented as a routine
-call that potentially does quite a bit of work, while @code{yyless()} is
-a quite-cheap macro. So if you are just putting back some excess text
+call that potentially does quite a bit of work, while @code{yyless()}
+isvery inexpensive. So if you are just putting back some excess text
 you scanned, use @code{yyless()}.
 
 @code{yyreject()} should be avoided at all costs when performance is
@@ -4205,7 +4205,7 @@ All scanners made with other back ends are reentrant.
 
 @cindex reentrant, calling functions
 @vindex yyscanner (reentrant only)
-All functions take one additional argument: @code{yyscanner}.
+All functions other than rule hooks take one additional argument: @code{yyscanner}.
 
 Notice that the calls to @code{yy_push_state} and @code{yy_pop_state}
 both have an argument, @code{yyscanner} , that is not present in a
@@ -4227,9 +4227,12 @@ typedef'd to @code{void *}) and it is
 always named @code{yyscanner}.  As you may have guessed,
 @code{yyscanner} is a pointer to an opaque data structure encapsulating
 the current state of the scanner.  For a list of function declarations,
-see @ref{Reentrant Functions}. Note that preprocessor macros, such as
-@code{yybegin()}, @code{yyecho()}, and @code{yyreject()}, do not take this
+see @ref{Reentrant Functions}. Note that rule hooks, such as
+@code{yybegin()}, @code{yyecho()}, @code{yyreject()}, and @code{yystart()}, do not take this
 additional argument.
+
+Rule hooks don't need to take a scanner context argument because,
+under the hood, the context is supplied by the call location.
 
 The type name @code{yscan_t} follows C conventions.  It mmay differ in
 other target languages.
@@ -4483,7 +4486,7 @@ directly. In particular, you should never attempt to free it
 (use @code{yylex_destroy()} instead.)
 
 @node Reentrant Functions,  , Reentrant Detail, Reentrant
-@section Functions and Macros Available in Reentrant C Scanners
+@section Functions Available in Reentrant Scanners
 
 The following Functions are available in a reentrant scanner:
 
@@ -4787,7 +4790,7 @@ yy_set_interactive()
 @item
 yy_set_bol()
 @item
-YY_AT_BOL()
+yy_at_bol()
    <<EOF>>
 @item
 <*>
@@ -7659,7 +7662,7 @@ I agree that this is counter-intuitive for yyless(), given its
 functional description (it's less so for unput(), depending on whether
 you're unput()'ing new text or scanned text).  But I don't plan to
 change it any time soon, as it's a pain to do so.  Consequently,
-you do indeed need to use yy_set_bol() and YY_AT_BOL() to tweak
+you do indeed need to use yy_set_bol() and yy_at_bol() to tweak
 your scanner into the behavior you desire.
 
 Sorry for the less-than-completely-satisfactory answer.
@@ -8787,7 +8790,7 @@ BEGIN: Replaced by yybegin()
 ECHO: Replaced by yyecho()
 
 @item
-#define REJECT: Replaced by yyreject()
+REJECT: Replaced by yyreject()
 
 @item
 #define YY_DECL: Replaced by the %yydecl directive.
@@ -8800,34 +8803,40 @@ ECHO: Replaced by yyecho()
 
 @item
 YYSTART: Replaced by yystart()
+
+@item
+YY_AT_BOL: Replaced by yy_at_bol()
 @end itemize
+
+Flex also provides @code{YYSTATE} as an alias for @code{yystart()}
+(since that is what's used by AT&T @code{lex}).
 
 @node Indices,  , Appendices, Top
 @unnumbered Indices
 
 @menu
 * Concept Index::               
-* Index of Functions and Macros::  
+* Index of Functions::  
 * Index of Variables::          
 * Index of Data Types::         
 * Index of Hooks::              
 * Index of Scanner Options::    
 @end menu
 
-@node Concept Index, Index of Functions and Macros, Indices, Indices
+@node Concept Index, Index of Functions, Indices, Indices
 @unnumberedsec Concept Index
 
 @printindex cp
 
-@node Index of Functions and Macros, Index of Variables, Concept Index, Indices
-@unnumberedsec Index of Functions and Macros
+@node Index of Functions, Index of Variables, Concept Index, Indices
+@unnumberedsec Index of Functions
 
 This is an index of functions and preprocessor macros that look like functions.
 For macros that expand to variables or constants, see @ref{Index of Variables}.
 
 @printindex fn
 
-@node Index of Variables, Index of Data Types, Index of Functions and Macros, Indices
+@node Index of Variables, Index of Data Types, Index of Functions, Indices
 @unnumberedsec Index of Variables
 
 This is an index of variables, constants, and preprocessor macros
