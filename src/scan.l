@@ -384,7 +384,8 @@ M4QEND      "]""]"
 			ctrl.useecs = ctrl.usemecs = false;
 			ctrl.use_read = ctrl.fulltbl = true;
 			}
-	input		ctrl.no_input = ! option_sense;
+	input		ctrl.no_yyinput = ! option_sense;
+	yyinput		ctrl.no_yyinput = ! option_sense;
 	interactive	ctrl.interactive = (trit)option_sense;
 	lex-compat	ctrl.posix_compat = option_sense;
 	posix-compat	ctrl.posix_compat = option_sense;
@@ -659,7 +660,7 @@ M4QEND      "]""]"
                    */
                 &&  (cclval = ccllookup( nmstr )) != 0 )
 				{
-				if ( input() != ']' )
+				if ( yyinput() != ']' )
 					synerr( _( "bad character class" ) );
 
 				yylval = cclval;

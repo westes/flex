@@ -1409,8 +1409,8 @@ elsewhere, or build your scanner using @code{%array} instead
 Finally, note that you cannot put back @samp{EOF} to attempt to mark the
 input stream with an end-of-file.
 
-@cindex input()
-@code{input()} reads the next character from the input stream.  For
+@cindex yyinput()
+@code{yyinput()} reads the next character from the input stream.  For
 example, the following is one way to eat up C comments:
 
 @cindex comments, discarding
@@ -1423,13 +1423,13 @@ example, the following is one way to eat up C comments:
 
                 for ( ; ; )
                     {
-                    while ( (c = input()) != '*' &&
+                    while ( (c = yyinput()) != '*' &&
                             c != EOF )
                         ;    /* eat up text of comment */
 
                     if ( c == '*' )
                         {
-                        while ( (c = input()) == '*' )
+                        while ( (c = yyinput()) == '*' )
                             ;
                         if ( c == '/' )
                             break;    /* found the end */
@@ -1444,13 +1444,6 @@ example, the following is one way to eat up C comments:
                 }
 @end verbatim
 @end example
-
-@cindex input(), and C++
-@cindex yyinput()
-(Note that if the scanner is compiled using @code{C++}, then
-@code{input()} is instead referred to as @b{yyinput()}, in order to
-avoid a name clash with the @code{C++} stream by the name of
-@code{input}.)
 
 @cindex flushing the internal buffer
 @cindex YY_FLUSH_BUFFER
@@ -4607,7 +4600,8 @@ a per-scanner (single global variable) basis.
 @code{yylineno} is not part of the POSIX specification.
 
 @item
-The @code{input()} routine is not redefinable, though it may be called
+The @code{input()} routine (which has become @code{yyinput()} in modern
+Flex) is not redefinable, though it may be called
 to read characters following whatever has been matched by a rule.  If
 @code{input()} encounters an end-of-file the normal @code{yywrap()}
 processing is done.  A ``real'' end-of-file is returned by
@@ -5439,7 +5433,7 @@ other characters.  Dynamic resizing of the input buffer is slow, as it
 entails rescanning all the text matched so far by the current (generally
 huge) token.  Due to both buffering of input and read-ahead, you cannot
 intermix calls to @file{<stdio.h>} routines, such as, @b{getchar()},
-with @code{flex} rules and expect it to work.  Call @code{input()}
+with @code{flex} rules and expect it to work.  Call @code{yyinput()}
 instead.  The total table entries listed by the @samp{-v} flag excludes
 the number of table entries needed to determine what rule has been
 matched.  The number of entries is equal to the number of DFA states if
@@ -6235,7 +6229,7 @@ example,
 @end example
 
 (You need to be careful to update your bookkeeping if you use @code{yymore(}),
-@code{yyless()}, @code{unput()}, or @code{input()}.)
+@code{yyless()}, @code{unput()}, or @code{yyinput()}.)
 
 @node How do I use my own I/O classes in a C++ scanner?
 @section How do I use my own I/O classes in a C++ scanner?
@@ -8806,6 +8800,10 @@ YYSTART: Replaced by yystart()
 
 @item
 YY_AT_BOL: Replaced by yy_at_bol()
+
+@item
+input(): Replaced by yyinput(). This function was already yyinput()
+in the C++ back end.
 @end itemize
 
 Flex also provides @code{YYSTATE} as an alias for @code{yystart()}

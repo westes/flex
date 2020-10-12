@@ -1585,8 +1585,8 @@ void readin (void)
 	if (ctrl.prefix != NULL)
 	    visible_define_str ( "M4_MODE_PREFIX", ctrl.prefix);
 
-	if (ctrl.no_input)
-		visible_define("M4_MODE_NO_INPUT");
+	if (ctrl.no_yyinput)
+		visible_define("M4_MODE_NO_YYINPUT");
 
 	if (ctrl.no_yy_push_state)
 		visible_define("M4_YY_NO_PUSH_STATE");
@@ -1789,4 +1789,3 @@ void usage (void)
 		 backing_name, "flex", outfile_path, "flex");
 
 }
-

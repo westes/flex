@@ -1424,18 +1424,17 @@ static void yy_flex_strncpy ( char *, const char *, int M4_YY_PROTO_LAST_ARG);
 static int yy_flex_strlen ( const char * M4_YY_PROTO_LAST_ARG);
 #endif
 
-m4_ifdef([[M4_MODE_NO_INPUT]], [[#define YY_NO_INPUT 1]])
+m4_ifdef([[M4_MODE_NO_YYINPUT]], [[#define YY_NO_YYINPUT 1]])
 
-#ifndef YY_NO_INPUT
-%if-c-only Standard (non-C++) definition
+#ifndef YY_NO_YYINPUT
+//%if-c-only Standard (non-C++) definition
 %not-for-header
-#ifdef __cplusplus
 static int yyinput ( M4_YY_PROTO_ONLY_ARG );
-#else
-static int input ( M4_YY_PROTO_ONLY_ARG );
+#ifndef __cplusplus
+#define input yyinput
 #endif
 %ok-for-header
-%endif
+//%endif
 #endif
 
 
@@ -2720,13 +2719,8 @@ m4_ifdef( [[M4_MODE_YYLINENO]],
 #endif
 
 %if-c-only
-#ifndef YY_NO_INPUT
-#ifdef __cplusplus
-static int yyinput (M4_YY_DEF_ONLY_ARG)
-#else
-static int input  (M4_YY_DEF_ONLY_ARG)
-#endif
-
+#ifndef YY_NO_YYINPUT
+int yyinput (M4_YY_DEF_ONLY_ARG)
 %endif
 %if-c++-only
 int yyFlexLexer::yyinput()
@@ -2774,11 +2768,7 @@ int yyFlexLexer::yyinput()
 				if ( ! YY_G(yy_did_buffer_switch_on_eof) ) {
 					YY_NEW_FILE;
 				}
-#ifdef __cplusplus
 				return yyinput(M4_YY_CALL_ONLY_ARG);
-#else
-				return input(M4_YY_CALL_ONLY_ARG);
-#endif
 
 			case EOB_ACT_CONTINUE_SCAN:
 				YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + offset;
@@ -2810,7 +2800,7 @@ m4_ifdef([[M4_MODE_YYLINENO]], [[
 	return c;
 }
 %if-c-only
-#endif	/* ifndef YY_NO_INPUT */
+#endif	/* ifndef YY_NO_YYINPUT */
 %endif
 
 /** Immediately switch to a different input stream.

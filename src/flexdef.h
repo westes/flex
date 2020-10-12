@@ -338,7 +338,7 @@ struct ctrl_bundle_t {
 	bool never_interactive;	// always use buffered input, don't check for tty.
 	bool lex_compat;	// (-l), maximize compatibility with AT&T lex 
 	bool long_align;	// (-Ca flag), favor long-word alignment for speed 
-	bool no_input;		// Suppress use of imnput()
+	bool no_yyinput;	// suppress use of yyinput()
 	bool no_unistd;		// suppress inclusion of unistd.h
 	bool posix_compat;	// (-X) maximize compatibility with POSIX lex 
 	char *prefix;		// prefix for externally visible names, default "yy" 
