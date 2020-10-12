@@ -737,6 +737,8 @@ void flexinit (int argc, char **argv)
 	tablesfilename = tablesname = NULL;
 
 	sawcmpflag = false;
+	
+	backend = &cpp_backend;
 
 	/* Initialize dynamic array for holding the rule actions. */
 	action_size = 2048;	/* default size of action array in bytes */
@@ -1200,8 +1202,6 @@ void flexinit (int argc, char **argv)
 	lastprot = 1;
 
 	set_up_initial_allocations ();
-
-	backend = &cpp_backend;
 }
 
 
