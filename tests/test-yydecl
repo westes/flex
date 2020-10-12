@@ -3,7 +3,7 @@
 
 trap 'rm /tmp/td$$' EXIT HUP INT QUIT TERM 
 cat >/tmp/td$$ <<EOF
-%yydecl int foobar(void)
+%option yydecl=int foobar(void)"
 %%
 %%
 EOF

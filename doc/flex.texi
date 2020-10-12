@@ -1534,14 +1534,14 @@ default in C, @code{yylex()} is declared as follows:
 @end verbatim
 @end example
 
-@cindex yylex(), overriding, %yydecl
-This definition may be changed with the the @code{%yydecl} directive.
+@cindex yylex(), overriding, yydecl
+This definition may be changed with the the @code{yydecl} option.
 For example, you could put this in among your directives:
 
 @cindex yylex, overriding the prototype of
 @example
 @verbatim
-%yydecl float lexscan(float a, float b)
+%p[tion yydecl="float lexscan(float a, float b)"
 @end verbatim
 @end example
 
@@ -4328,8 +4328,8 @@ after @code{yylex}, respectively.
 @end verbatim
 @end example
 
-In these declarations, @code(YY_EXTRA_TYPE} is a placeholder for the type
-specifier in the scanner's @code{yyextra} directive.
+In these declarations, @code{YY_EXTRA_TYPE} is a placeholder for the type
+specifier in the scanner's @code{extra-type} option.
 
 (The scanner type and type declaration syntax will be different in target
 languages other thab C/C++.)
@@ -4467,8 +4467,8 @@ from within the scanner itself. They are defined as follows:
 @end verbatim
 @end example
 
-In these declarations, @code{YY_EXTRA_TYPE} is as before a placeolder for the type
-specifier in the scanner's @code{yyextra} directive.
+In these declarations, @code{YY_EXTRA_TYPE} is as before a placeholder for the type
+specifier in the scanner's @code{extra-type} option.
 
 In addition, an extra form of @code{yylex_init} is provided,
 @code{yylex_init_extra}. This function is provided so that the yyextra value can
@@ -8252,7 +8252,7 @@ then the problem is that the last rule needs to be "{whitespace}" !
 
 This is a compiler error regarding a generated Bison parser, not a Flex scanner.
 It means you need a prototype of yylex() in the top of the Bison file.
-Be sure the prototype matches what you declarted with @code{%yydecl}.
+Be sure the prototype matches what you declared with @code{%option yydecl}.
 
 @node How do I access the values set in a Flex action from within a Bison action?
 @unnumberedsec How do I access the values set in a Flex action from within a Bison action?
@@ -8840,7 +8840,7 @@ ECHO: Replaced by yyecho()
 REJECT: Replaced by yyreject()
 
 @item
-#define YY_DECL: Replaced by the %yydecl directive.
+#define YY_DECL: Replaced by the yydecl option.
 
 @item
 #define YYLMAX: Replaced by the %yylmax option.

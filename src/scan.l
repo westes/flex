@@ -194,7 +194,6 @@ M4QEND      "]""]"
 
 	^"%pointer".*{NL}	ctrl.yytext_is_array = false; ++linenum;
 	^"%array".*{NL}		ctrl.yytext_is_array = true; ++linenum;
-	^"%yydecl".*		ctrl.yydecl = xstrdup(yytext+7);
 
 	^"%option"	BEGIN(OPTION); return TOK_OPTION;
 
@@ -455,6 +454,7 @@ M4QEND      "]""]"
 	prefix		return TOK_PREFIX;
 	yyclass		return TOK_YYCLASS;
 	yylmax		return TOK_YYLMAX;
+	yydecl		return TOK_YYDECL;
 	header(-file)?      return TOK_HEADER_FILE;
 	tables-file         return TOK_TABLES_FILE;
 	tables-verify   {
