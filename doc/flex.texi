@@ -4328,7 +4328,10 @@ after @code{yylex}, respectively.
 @end verbatim
 @end example
 
-(The type name and declaration syntax will be different in target
+In these declarations, @code(YY_EXTRA_TYPE} is a placeholder for the type
+specifier in the scanner's @code{yyextra} directive.
+
+(The scanner type and type declaration syntax will be different in target
 languages other thab C/C++.)
 
 The function @code{yylex_init} must be called before calling any other
@@ -4463,6 +4466,9 @@ from within the scanner itself. They are defined as follows:
     void           yyset_extra ( YY_EXTRA_TYPE arbitrary_data , yyscan_t scanner);
 @end verbatim
 @end example
+
+In these declarations, @code{YY_EXTRA_TYPE} is as before a placeolder for the type
+specifier in the scanner's @code{yyextra} directive.
 
 In addition, an extra form of @code{yylex_init} is provided,
 @code{yylex_init_extra}. This function is provided so that the yyextra value can
@@ -5022,10 +5028,10 @@ custom allocator through @code{yyextra}.
 /* Suppress the default implementations. */
 %option noyyalloc noyyrealloc noyyfree
 %option reentrant
+%option extra-type="struct allocator*"
 
 /* Initialize the allocator. */
 %{
-#define YY_EXTRA_TYPE  struct allocator*
 #define YY_USER_INIT  yyextra = allocator_create();
 %}
 
@@ -8854,6 +8860,9 @@ in the C++ back end.
 
 @item:
 yunput(): Replaced by yyunput().
+
+@item
+#define YY_EXTRA_TYPE: Replaced by the @code{extra-type} option.
 @end itemize
 
 Flex also provides @code{YYSTATE} as an alias for @code{yystart()}

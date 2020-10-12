@@ -40,7 +40,6 @@ struct Buffer {
     int  grow_len;
     char * data;
 };
-#define YY_EXTRA_TYPE struct Buffer *
 
 /* Save char into junk array at next position. */
 static void append_char (char c,  yyscan_t  scanner );
@@ -51,7 +50,7 @@ static void append_char (char c,  yyscan_t  scanner );
 %option nounput nomain noyywrap nodefault noyyinput
 %option warn
 %option reentrant
-
+%option extra-type="struct Buffer *"
 
 %%
 
