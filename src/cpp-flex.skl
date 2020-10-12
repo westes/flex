@@ -518,7 +518,9 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 		} \
 	while ( 0 )
-#define unput(c) yyunput( c, YY_G(yytext_ptr) M4_YY_CALL_LAST_ARG )
+#define yyunput(c) yyunput_r( c, YY_G(yytext_ptr) M4_YY_CALL_LAST_ARG )
+/* Legacy interface */
+#define unput(c) yyunput_r( c, YY_G(yytext_ptr) M4_YY_CALL_LAST_ARG )
 ]])
 
 #ifndef YY_STRUCT_YY_BUFFER_STATE
@@ -1407,10 +1409,10 @@ extern int yywrap ( M4_YY_PROTO_ONLY_ARG );
 #endif
 
 %not-for-header
-#ifndef YY_NO_UNPUT
-    m4_ifdef( [[M4_YY_NO_UNPUT]],,
+#ifndef YY_NO_YYUNPUT
+    m4_ifdef( [[M4_YY_NO_YYUNPUT]],,
     [[
-    static void yyunput ( int c, char *buf_ptr  M4_YY_PROTO_LAST_ARG);
+    static void yyunput_r ( int c, char *buf_ptr  M4_YY_PROTO_LAST_ARG);
     ]])
 #endif
 %ok-for-header
@@ -2660,14 +2662,14 @@ m4_ifdef([[M4_MODE_NULTRANS_WRAP]], [[
 }
 
 
-#ifndef YY_NO_UNPUT
+#ifndef YY_NO_YYUNPUT
 %if-c-only
-m4_ifdef( [[M4_YY_NO_UNPUT]],,
+m4_ifdef( [[M4_YY_NO_YYUNPUT]],,
 [[
-static void yyunput YYFARGS2( int,c, char *,yy_bp)
+static void yyunput_r YYFARGS2( int,c, char *,yy_bp)
 %endif
 %if-c++-only
-void yyFlexLexer::yyunput( int c, char* yy_bp)
+void yyFlexLexer::yyunput_r( int c, char* yy_bp)
 %endif
 {
 	char *yy_cp;

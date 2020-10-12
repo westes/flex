@@ -150,7 +150,7 @@ protected:
   virtual void LexerOutput( const char* buf, int size );
   virtual void LexerError( const char* msg );
 			
-  void yyunput( int c, char* buf_ptr );
+  void yyunput_r( int c, char* buf_ptr );
   int yyinput();
 
   void yy_load_buffer_state();

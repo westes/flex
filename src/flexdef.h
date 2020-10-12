@@ -361,7 +361,7 @@ struct ctrl_bundle_t {
 	bool no_yy_push_state;
 	bool no_yy_pop_state;
 	bool no_yy_top_state;
-	bool no_unput;
+	bool no_yyunput;
 	bool no_yy_scan_buffer;
 	bool no_yy_scan_bytes;
 	bool no_yy_scan_string;

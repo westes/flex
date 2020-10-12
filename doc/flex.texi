@@ -205,7 +205,7 @@ FAQ
 * Can I fake multi-byte character support?::              
 * deleteme01::              
 * Can you discuss some flex internals?::              
-* unput() messes up yy_at_bol::              
+* yyunput() messes up yy_at_bol::
 * The | operator is not doing what I want::              
 * Why can't flex understand this variable trailing context pattern?::              
 * The ^ operator isn't working::              
@@ -1124,14 +1124,14 @@ in which case @code{yytext} will be an array.  The advantage of using
 @code{%pointer} is substantially faster scanning and no buffer overflow
 when matching very large tokens (unless you run out of dynamic memory).
 The disadvantage is that you are restricted in how your actions can
-modify @code{yytext} (@pxref{Actions}), and calls to the @code{unput()}
+modify @code{yytext} (@pxref{Actions}), and calls to the @code{yyunput()}
 function destroys the present contents of @code{yytext}, which can be a
 considerable porting headache when moving between different @code{lex}
 versions.
 
 @cindex %array, advantages of
 The advantage of @code{%array} is that you can then modify @code{yytext}
-to your heart's content, and calls to @code{unput()} do not destroy
+to your heart's content, and calls to @code{yyunput()} do not destroy
 @code{yytext} (@pxref{Actions}).  Furthermore, existing @code{lex}
 programs sometimes access @code{yytext} externally using declarations of
 the form:
@@ -1155,7 +1155,7 @@ matching entire blocks of comments), bear in mind that each time the
 scanner must resize @code{yytext} it also must rescan the entire token
 from the beginning, so matching such tokens can prove slow.
 @code{yytext} presently does @emph{not} dynamically grow if a call to
-@code{unput()} results in too much text being pushed back; instead, a
+@code{yyunput()} results in too much text being pushed back; instead, a
 run-time error results.
 
 @cindex %array, with C++
@@ -1164,9 +1164,9 @@ Also note that you cannot use @code{%array} with C++ scanner classes
 
 In target langages with automatic memory allocation and arrays none of
 this applies; you can expect @code{yytext} to dynamically resize
-itself, calls to the @code{unput()} will not destroy the present
+itself, calls to the @code{yyunput()} will not destroy the present
 contents of @code{yytext}, and you will never get a run-time error
-from calls to the @code{unput()} function except in the extremely
+from calls to the @code{yyunput()} function except in the extremely
 unlikely case that your scanner cannot allocate more memory.
 
 @node Actions, Generated Scanner, Matching, Top
@@ -1364,43 +1364,43 @@ string to be scanned again.  Unless you've changed how the scanner will
 subsequently process its input (using @code{yybegin()}, for example), this
 will result in an endless loop.
 
-@cindex unput()
-@cindex pushing back characters with unput
-@code{unput(c)} puts the character @code{c} back onto the input stream.
+@cindex yyunput()
+@cindex pushing back characters with yyunput
+@code{yyunput(c)} puts the character @code{c} back onto the input stream.
 It will be the next character scanned.  The following action will take
 the current token and cause it to be rescanned enclosed in parentheses.
 
-@cindex unput(), pushing back characters
-@cindex pushing back characters with unput()
+@cindex yyunput(), pushing back characters
+@cindex pushing back characters with yyunput()
 @example
 @verbatim
     {
     int i;
-    /* Copy yytext because unput() trashes yytext */
+    /* Copy yytext because yyunput() trashes yytext */
     char *yycopy = strdup( yytext );
-    unput( ')' );
+    yyunput( ')' );
     for ( i = yyleng - 1; i >= 0; --i )
-        unput( yycopy[i] );
-    unput( '(' );
+        yyunput( yycopy[i] );
+    yyunput( '(' );
     free( yycopy );
     }
 @end verbatim
 @end example
 
-Note that since each @code{unput()} puts the given character back at the
+Note that since each @code{yyunput()} puts the given character back at the
 @emph{beginning} of the input stream, pushing back strings must be done
 back-to-front.
 
-@cindex %pointer, and unput()
-@cindex unput(), and %pointer
-An important potential problem when using @code{unput()} in C (and,
+@cindex %pointer, and yyunput()
+@cindex yyunput(), and %pointer
+An important potential problem when using @code{yyunput()} in C (and,
 generally, in target languages with C-like manual memory management) is
 that if you
-are using @code{%pointer} (the default), a call to @code{unput()}
+are using @code{%pointer} (the default), a call to @code{yyunput()}
 @emph{destroys} the contents of @code{yytext}, starting with its
 rightmost character and devouring one character to the left with each
 call.  If you need the value of @code{yytext} preserved after a call to
-@code{unput()} (as in the above example), you must either first copy it
+@code{yyunput()} (as in the above example), you must either first copy it
 elsewhere, or build your scanner using @code{%array} instead
 (@pxref{Matching}).
 
@@ -2431,7 +2431,7 @@ to be an array of YYLMAX characters, where @code{YYLMAX} is a parameter
 that you can redefine with a @code{%yylmax} option if you don't like the default
 value (generally 8KB).  Using @code{%array} results in somewhat slower
 scanners, but the value of @code{yytext} becomes immune to calls to
-@code{unput()}, which potentially destroy its value when @code{yytext} is
+@code{yyunput()}, which potentially destroy its value when @code{yytext} is
 a character pointer.  The opposite of @code{%array} is @code{%pointer},
 which is the default.
 
@@ -2576,12 +2576,12 @@ indicate it actually is not used (e.g., @code{%option noyymore)}.
 
 A number of options are available for lint purists who want to suppress
 the appearance of unneeded routines in the generated scanner.  Each of
-the following, if unset (e.g., @code{%option nounput}), results in the
+the following, if unset (e.g., @code{%option noyyunput}), results in the
 corresponding routine not appearing in the generated scanner:
 
 @example
 @verbatim
-    input, unput
+    input, yyunput
     yy_push_state, yy_pop_state, yy_top_state
     yy_scan_buffer, yy_scan_bytes, yy_scan_string
 
@@ -3446,9 +3446,9 @@ which degrade performance.  These are, from most expensive to least:
 @end example
 
 with the first two all being quite expensive and the last two being
-quite cheap.  Note also that @code{unput()} is implemented as a routine
+quite cheap.  Note also that @code{yyunput()} is implemented as a routine
 call that potentially does quite a bit of work, while @code{yyless()}
-isvery inexpensive. So if you are just putting back some excess text
+is very inexpensive. So if you are just putting back some excess text
 you scanned, use @code{yyless()}.
 
 @code{yyreject()} should be avoided at all costs when performance is
@@ -3967,7 +3967,7 @@ Here is an example of a simple C++ scanner:
                     if((c = yyinput()) == '/')
                         break;
                     else
-                        unput(c);
+                        yyunput(c);
                     }
                 }
             }
@@ -4576,7 +4576,7 @@ implementations do not share any code, though), with some extensions and
 incompatibilities, both of which are of concern to those who wish to
 write scanners acceptable to both implementations.  @code{flex} is fully
 compliant with the POSIX @code{lex} specification, except that when
-using @code{%pointer} (the default), a call to @code{unput()} destroys
+using @code{%pointer} (the default), a call to @code{yyunput()} destroys
 the contents of @code{yytext}, which is counter to the POSIX
 specification.  In this section we discuss all of the known areas of
 incompatibility between @code{flex}, AT&T @code{lex}, and the POSIX
@@ -4617,7 +4617,7 @@ specify any way of controlling the scanner's input other than by making
 an initial assignment to @file{yyin}.
 
 @item
-The @code{unput()} routine is not redefinable.  This restriction is in
+The @code{yyunput()} routine is not redefinable.  This restriction is in
 accordance with POSIX.
 
 @item
@@ -4717,7 +4717,7 @@ The @code{lex} @code{%r} (generate a Ratfor scanner) option is not
 supported.  It is not part of the POSIX specification.
 
 @item
-After a call to @code{unput()}, @emph{yytext} is undefined until the
+After a call to @code{yyunput()}, @emph{yytext} is undefined until the
 next token is matched, unless the scanner was built using @code{%array}.
 This is not the case with @code{lex} or the POSIX specification.  The
 @samp{-l} option does away with this incompatibility.
@@ -5368,7 +5368,7 @@ See the discussion of the @samp{-7} flag, @ref{Scanner Options}, for
 details.
 
 @item
-@samp{flex scanner push-back overflow}. you used @code{unput()} to push
+@samp{flex scanner push-back overflow}. you used @code{yyunput()} to push
 back so much text that the scanner's buffer could not hold both the
 pushed-back text and the current token in @code{yytext}.  Ideally the
 scanner should dynamically resize the buffer in this case, but at
@@ -5426,7 +5426,7 @@ in @emph{fixed} trailing context being turned into the more expensive
 @end verbatim
 @end example
 
-Use of @code{unput()} invalidates yytext and yyleng, unless the
+Use of @code{yyunput()} invalidates yytext and yyleng, unless the
 @code{%array} directive or the @samp{-l} option has been used.
 Pattern-matching of @code{NUL}s is substantially slower than matching
 other characters.  Dynamic resizing of the input buffer is slow, as it
@@ -5521,7 +5521,7 @@ publish them here.
 * Can I fake multi-byte character support?::              
 * deleteme01::              
 * Can you discuss some flex internals?::              
-* unput() messes up yy_at_bol::              
+* yyunput() messes up yy_at_bol::
 * The | operator is not doing what I want::              
 * Why can't flex understand this variable trailing context pattern?::              
 * The ^ operator isn't working::              
@@ -6114,11 +6114,11 @@ one to match.
 @unnumberedsec I am trying to port code from AT&T lex that uses yysptr and yysbuf.
 
 Those are internal variables pointing into the AT&T scanner's input buffer.  I
-imagine they're being manipulated in user versions of the @code{input()} and @code{unput()}
+imagine they're being manipulated in user versions of the @code{input()} and @code{yyunput()}
 functions.  If so, what you need to do is analyze those functions to figure out
 what they're doing, and then replace @code{input()} with an appropriate definition of
 @code{yyread()}.  You shouldn't need to (and must not) replace
-@code{flex}'s @code{unput()} function.
+@code{flex}'s @code{yyunput()} function.
 
 @node Is there a way to make flex treat NUL like a regular character?
 @unnumberedsec Is there a way to make flex treat NUL like a regular character?
@@ -6229,7 +6229,7 @@ example,
 @end example
 
 (You need to be careful to update your bookkeeping if you use @code{yymore(}),
-@code{yyless()}, @code{unput()}, or @code{yyinput()}.)
+@code{yyless()}, @code{yyunput()}, or @code{yyinput()}.)
 
 @node How do I use my own I/O classes in a C++ scanner?
 @section How do I use my own I/O classes in a C++ scanner?
@@ -6562,8 +6562,8 @@ See above.
 @end example
 
 @c TODO: Evaluate this faq.
-@node unput() messes up yy_at_bol
-@unnumberedsec unput() messes up yy_at_bol
+@node yyunput() messes up yy_at_bol
+@unnumberedsec yyunput() messes up yy_at_bol
 @example
 @verbatim
 To: Xinying Li <xli@npac.syr.edu>
@@ -6572,7 +6572,7 @@ In-reply-to: Your message of Wed, 13 Nov 1996 17:28:38 PST.
 Date: Wed, 13 Nov 1996 19:51:54 PST
 From: Vern Paxson <vern>
 
-> "unput()" them to input flow, question occurs. If I do this after I scan
+> "yyunput()" them to input flow, question occurs. If I do this after I scan
 > a carriage, the variable "YY_CURRENT_BUFFER->yy_at_bol" is changed. That
 > means the carriage flag has gone.
 
@@ -8804,6 +8804,9 @@ YY_AT_BOL: Replaced by yy_at_bol()
 @item
 input(): Replaced by yyinput(). This function was already yyinput()
 in the C++ back end.
+
+@item:
+yunput(): Replaced by yyunput().
 @end itemize
 
 Flex also provides @code{YYSTATE} as an alias for @code{yystart()}

@@ -231,7 +231,9 @@ optspec_t flexopts[] = {
 	{"--yywrap", OPT_YYWRAP, 0}
 	,
 
-	{"--nounput", OPT_NO_UNPUT, 0}
+	{"--nounput", OPT_NO_YYUNPUT, 0}
+	,
+	{"--noyyunput", OPT_NO_YYUNPUT, 0}
 	,
 	{"--noyy_push_state", OPT_NO_YY_PUSH_STATE, 0}
 	,

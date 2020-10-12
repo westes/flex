@@ -1106,8 +1106,8 @@ void flexinit (int argc, char **argv)
 		    case OPT_NO_YY_TOP_STATE:
 			ctrl.no_yy_top_state = true;
 			break;
-		    case OPT_NO_UNPUT:
-			ctrl.no_unput = true;
+		    case OPT_NO_YYUNPUT:
+			ctrl.no_yyunput = true;
 			break;
 		    case OPT_NO_YY_SCAN_BUFFER:
 			ctrl.no_yy_scan_buffer = true;
@@ -1594,8 +1594,8 @@ void readin (void)
 		visible_define("M4_YY_NO_POP_STATE");
 	if (ctrl.no_yy_top_state)
 		visible_define("M4_YY_NO_TOP_STATE");
-	if (ctrl.no_unput)
-		visible_define("M4_YY_NO_UNPUT");
+	if (ctrl.no_yyunput)
+		visible_define("M4_YY_NO_YYUNPUT");
 	if (ctrl.no_yy_scan_buffer)
 		visible_define("M4_YY_NO_SCAN_BUFFER");
 	if (ctrl.no_yy_scan_bytes)
