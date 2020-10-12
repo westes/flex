@@ -357,6 +357,9 @@ struct ctrl_bundle_t {
 				// yytext as array instead of a character pointer.
 				// Nice and inefficient.
 	bool noyyread;		// User supplied a yyread function, don't generate default
+	char *userinit;		// Code fragment to be inserted before scanning
+	char *preaction;	// Code fragment to be inserted before each action
+	char *postaction;	// Code fragment to be inserted after each action
 	// flags corresponding to the huge mass of --no-yy options
 	bool no_yy_push_state;
 	bool no_yy_pop_state;

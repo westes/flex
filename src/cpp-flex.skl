@@ -93,6 +93,12 @@ m4_define([[M4_HOOK_SET_YY_DECL]], [[#define YY_DECL $1
 ]])
 m4_define([[M4_HOOK_SET_YYLMAX]], [[#define YYLMAX $1
 ]])
+m4_define([[M4_HOOK_SET_USERINIT]], [[#define YY_USER_INIT $1
+]])
+m4_define([[M4_HOOK_SET_PREACTION]], [[#define YY_USER_ACTION $1
+]])
+m4_define([[M4_HOOK_SET_POSTACTION]], [[#define YY_BREAK $1
+]])
 
 %% [0.0] Make hook macros available to Flex
 

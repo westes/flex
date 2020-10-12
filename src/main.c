@@ -1282,10 +1282,17 @@ void readin (void)
 
 	/* User may want to set the scanner prototype */
 	if (ctrl.yydecl != NULL) {
-		char *cp;
-		for (cp = ctrl.yydecl; isspace(*cp); cp++)
-			continue;
-		out_str ("M4_HOOK_SET_YY_DECL(%s)\n", cp);
+		out_str ("M4_HOOK_SET_YY_DECL(%s)\n", ctrl.yydecl);
+	}
+
+	if (ctrl.userinit != NULL) {
+		out_str ("M4_HOOK_SET_USERINIT(%s)\n", ctrl.userinit);
+	}
+	if (ctrl.preaction != NULL) {
+		out_str ("M4_HOOK_SET_PREACTION(%s)\n", ctrl.preaction);
+	}
+	if (ctrl.postaction != NULL) {
+		out_str ("M4_HOOK_SET_POSTACTION(%s)\n", ctrl.postaction);
 	}
 
 	if (ctrl.yylmax != 0) {

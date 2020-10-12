@@ -455,6 +455,9 @@ M4QEND      "]""]"
 	yyclass		return TOK_YYCLASS;
 	yylmax		return TOK_YYLMAX;
 	yydecl		return TOK_YYDECL;
+	pre-action	return TOK_PREACTION;
+	post-action	return TOK_POSTACTION;
+	user-init	return TOK_USERINIT;
 	header(-file)?      return TOK_HEADER_FILE;
 	tables-file         return TOK_TABLES_FILE;
 	tables-verify   {

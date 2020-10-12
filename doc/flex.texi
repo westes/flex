@@ -92,7 +92,7 @@ This manual was written by @value{authors}.
 * Start Conditions::            
 * Multiple Input Buffers::      
 * EOF::                         
-* Misc Macros::                 
+* Misc Controls::
 * User Values::                 
 * Yacc::                        
 * Scanner Options::             
@@ -2316,7 +2316,7 @@ is an integral type to which you can cast an integer expression
 reflecting the size of the buffer.
 @end deftp
 
-@node EOF, Misc Macros, Multiple Input Buffers, Top
+@node EOF, Misc Controls, Multiple Input Buffers, Top
 @chapter End-of-File Rules
 
 @cindex EOF, explanation
@@ -2327,13 +2327,6 @@ no further files to process).  The action must finish
 by doing one of the following things:
 
 @itemize
-@item
-@findex YY_NEW_FILE  (now obsolete)
-assigning @file{yyin} to a new input file (in previous versions of
-@code{flex}, after doing the assignment you had to call the special
-action @code{YY_NEW_FILE}.  This is no longer necessary.)  It is
-still supported in the C/C++ back end only.
-
 @item
 executing a @code{return} statement;
 
@@ -2381,22 +2374,22 @@ example:
 @end verbatim
 @end example
 
-@node Misc Macros, User Values, EOF, Top
-@chapter Miscellaneous Macros
+@node Misc Controls, User Values, EOF, Top
+@chapter Miscellaneous Controls
 
-@hkindex YY_USER_ACTION
-The macro @code{YY_USER_ACTION} can be defined to provide an action
+@hkindex %option pre-action
+This option can be set to provide an code fragment
 which is always executed prior to the matched rule's action.  For
-example, it could be #define'd to call a routine to convert yytext to
-lower-case.  When @code{YY_USER_ACTION} is invoked, the variable
+example, it could be set to call a routine to convert @code{yytext} to
+lower-case.  When the code fragment is invoked, the variable
 @code{yy_act} gives the number of the matched rule (rules are numbered
 starting with 1).  Suppose you want to profile how often each of your
 rules is matched.  The following would do the trick:
 
-@cindex YY_USER_ACTION to track each time a rule is matched
+@cindex pre-action to track each time a rule is matched
 @example
 @verbatim
-    #define YY_USER_ACTION ++ctr[yy_act]
+    %option pre-action="++ctr[yy_act]"
 @end verbatim
 @end example
 
@@ -2412,8 +2405,8 @@ declaration for @code{ctr} is:
 @end verbatim
 @end example
 
-@hkindex YY_USER_INIT
-The macro @code{YY_USER_INIT} may be defined to provide an action which
+@hkindex %option user-init
+This option may be defined to provide an action which
 is always executed before the first scan (and before the scanner's
 internal initializations are done).  For example, it could be used to
 call a routine to read in a data table or open a logging file.
@@ -2445,19 +2438,22 @@ rules anchored with @samp{^} active, while a zero argument makes
 The rule hook @code{yy_at_bol()} returns true if the next token scanned from
 the current buffer will have @samp{^} rules active, false otherwise.
 
-@cindex actions, redefining YY_BREAK
-@hkindex YY_BREAK
+@hkindex %option post-action
 In the generated scanner, the actions are all gathered in one large
-switch statement and separated using @code{YY_BREAK}, which may be
-redefined.  By default, it is simply a @code{break}, to separate each
-rule's action from the following rule's.  Redefining @code{YY_BREAK}
-allows, for example, C++ users to #define YY_BREAK to do nothing (while
-being very careful that every rule ends with a @code{break} or a
-@code{return}!) to avoid suffering from unreachable statement warnings
-where because a rule's action ends with @code{return}, the
-@code{YY_BREAK} is inaccessible.
+switch statement and separated using a postt-action fragment, which
+may be redefined.  By default, in C it is simply a @code{break}, to
+separate each rule's action from the following rule's. Other target
+languages may have different defaults for this action, often an empty
+string.  If a target language has no case statement this option will
+probably be ineffective.
 
-@node User Values, Yacc, Misc Macros, Top
+Setting a post-action allows, for example, C++ users to suppress the
+trailing break (while being very careful that every rule ends with a
+@code{break} or a @code{return}!) to avoid suffering from unreachable
+statement warnings where because a rule's action ends with
+@code{return}, the @code{YY_BREAK} is inaccessible.
+
+@node User Values, Yacc, Misc Controls, Top
 @chapter Values Available To the User
 
 This chapter summarizes the various values available to the user in the
@@ -4461,7 +4457,7 @@ from within the scanner itself. They are defined as follows:
 @findex yyset_extra
 @example
 @verbatim
-    #define YY_EXTRA_TYPE  void*
+    option extra-type="void *"
     YY_EXTRA_TYPE  yyget_extra ( yyscan_t scanner );
     void           yyset_extra ( YY_EXTRA_TYPE arbitrary_data , yyscan_t scanner);
 @end verbatim
@@ -4796,7 +4792,7 @@ The special table-size declarations such as @code{%a} supported by
 @code{lex} are not required by @code{flex} scanners..  @code{flex}
 ignores them.
 @item
-The name @code{FLEX_SCANNER} is @code{#define}'d so scanners may be
+In the C/C++ back end name @code{FLEX_SCANNER} is @code{#define}'d so scanners may be
 written for use with either @code{flex} or @code{lex}.  Scanners also
 include @code{YY_FLEX_MAJOR_VERSION},  @code{YY_FLEX_MINOR_VERSION}
 and @code{YY_FLEX_SUBMINOR_VERSION}
@@ -4900,9 +4896,9 @@ override the default behavior.
 @node The Default Memory Management, Overriding The Default Memory Management, Memory Management, Memory Management
 @section The Default Memory Management
 
-This section applies only to target languages wuth manual memory
+This section applies only to target languages with manual memory
 allocation, including the default C/C++ back end.  If your target
-language has garbage collection you can igore it.
+language has garbage collection you can ignore it.
 
 A Flex-generated scanner
 allocates dynamic memory during initialization, and once in a while from
@@ -5031,10 +5027,7 @@ custom allocator through @code{yyextra}.
 %option extra-type="struct allocator*"
 
 /* Initialize the allocator. */
-%{
-#define YY_USER_INIT  yyextra = allocator_create();
-%}
-
+%option user-init="yyextra = allocator_create();"
 %%
 .|\n   ;
 %%
@@ -6277,7 +6270,7 @@ example,
 
 @example
 @verbatim
-#define YY_USER_ACTION num_chars += yyleng;
+%option pre-action="num_chars += yyleng;"
 @end verbatim
 @end example
 
@@ -8863,10 +8856,27 @@ yunput(): Replaced by yyunput().
 
 @item
 #define YY_EXTRA_TYPE: Replaced by the @code{extra-type} option.
-@end itemize
 
-Flex also provides @code{YYSTATE} as an alias for @code{yystart()}
+@item
+#define YY_USER_INIT: Replaced by the @code{user-init} option.
+
+@item
+#define YY_USER_ACTION replaced by @code{pre-action} option.
+
+@item
+#define YY_BREAK replaced by @code{post-action} option.
+
+@item
+YYSTATE: is accepted as an alias for @code{yystart()}
 (since that is what's used by AT&T @code{lex}).
+
+@item
+YY_NEW_FILE: In previous versions of @code{flex}, ehen assigning
+@file{yyin} to a new input file, after doing the assignment you had to
+call the special action @code{YY_NEW_FILE}.  This is no longer
+necessary.
+
+@end itemize
 
 @node Indices,  , Appendices, Top
 @unnumbered Indices
