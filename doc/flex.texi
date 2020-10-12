@@ -352,35 +352,82 @@ beginning of the rules.
 
 Here's another simple example:
 
-@cindex counting characters and lines
+@cindex counting characters and lines; reentrant
 @example
 @verbatim
+    %{
             int num_lines = 0, num_chars = 0;
-
+    %}
+    %option reentrant
     %%
     \n      ++num_lines; ++num_chars;
     .       ++num_chars;
 
     %%
 
-    int main()
-            {
-            yylex();
+    int main() {
+            yyscan_t scanner;
+
+            yylex_init ( &scanner );
+            yylex ( scanner );
+            yylex_destroy ( scanner );
+
             printf( "# of lines = %d, # of chars = %d\n",
                     num_lines, num_chars );
-            }
+    }
 @end verbatim
 @end example
 
-This scanner counts the number of characters and the number of lines in
-its input. It produces no output other than the final report on the
-character and line counts.  The first line declares two globals,
+If you have looked at older versions of the Flex nanual, you might
+have seen a version of the above example that looked more like this:
+
+@cindex counting characters and lines; non-reentrant
+@example
+@verbatim
+            int num_lines = 0, num_chars = 0;
+    %%
+    \n      ++num_lines; ++num_chars;
+    .       ++num_chars;
+
+    %%
+
+    int main() {
+            yylex();
+            printf( "# of lines = %d, # of chars = %d\n",
+                    num_lines, num_chars );
+    }
+@end verbatim
+@end example
+
+Both versions count the number of characters and the number of lines in
+its input. Both produces no output other than the final report on the
+character and line counts.  The first code line declares two globals,
 @code{num_lines} and @code{num_chars}, which are accessible both inside
 @code{yylex()} and in the @code{main()} routine declared after the
 second @samp{%%}.  There are two rules, one which matches a newline
 (@samp{\n}) and increments both the line count and the character count,
 and one which matches any character other than a newline (indicated by
 the @samp{.} regular expression).
+
+The difference between these two variants is that the first uses
+Flex's @emph{reentrant} interface, which bundles the scanner state
+into a yyscan_t structure; the second uses the @emph{non-reentrant}
+interface, in which the scanner's state is exposed through global
+variables.
+
+The non-reentrant interface is a relic from the early 1970s when Lex,
+the ancestor of Flex, was designed. Modern programming practice frowns
+on hidden global variables; thus when Flex generates a scanner in any
+language other than the original C/C++ non-reentrancy is not even an
+option.
+
+This, it's a good idea to get used to using the reentrant interface
+from the beginning of your Flex prgramming. This is so even though the
+reentrant example above is a rather poor one; it avoids exposing the
+scanner state in globals but creates globals of its own. There is a
+mechanism for including user-defined fields in the scanner structure
+which will be explained in detail at @xref{Extra Data}. For now,
+consider this:
 
 A somewhat more complicated example:
 
