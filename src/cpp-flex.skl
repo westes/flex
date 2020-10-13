@@ -25,7 +25,7 @@
 %# prescriptive about whitespace and braces is more than usually
 %# important. So please set your C style to K&R, aka 1TBS with
 %# tabs when editing this file. Braces around single-statement
-%# if/while/fo/do/switch/break bodies are mandatory. 
+%# if/while/for/do/switch/break bodies are mandatory. 
 %#
 
 %#  Macros for preproc stage.
@@ -497,16 +497,20 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
     #define  YY_LESS_LINENO(n) \
             do { \
                 int yyl;\
-                for ( yyl = n; yyl < yyleng; ++yyl )\
-                    if ( yytext[yyl] == '\n' )\
-                        --yylineno;\
+                for ( yyl = n; yyl < yyleng; ++yyl ) { \
+			if ( yytext[yyl] == '\n' ) { \
+                        	--yylineno;\
+			} \
+		} \
             }while(0)
     #define YY_LINENO_REWIND_TO(dst) \
             do {\
                 const char *p;\
-                for ( p = yy_cp-1; p >= (dst); --p)\
-                    if ( *p == '\n' )\
-                        --yylineno;\
+                for ( p = yy_cp-1; p >= (dst); --p) { \
+			if ( *p == '\n' ) { \
+                		--yylineno;\
+			} \
+		} \
             }while(0)
     ]],
     [[
@@ -683,24 +687,23 @@ void yyfree ( void * M4_YY_PROTO_LAST_ARG );
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define yy_new_buffer yy_create_buffer
-#define yy_set_interactive(is_interactive) \
-	{ \
-	if ( yy_current_buffer() == NULL ){ \
-        yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG); \
+#define yy_set_interactive(is_interactive) { \
+	if ( yy_current_buffer() == NULL ) { \
+		yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG);	\
 		YY_CURRENT_BUFFER_LVALUE =    \
-            yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG); \
+			yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG); \
 	} \
 	YY_CURRENT_BUFFER_LVALUE->yy_is_interactive = is_interactive; \
-	}
+}
 #define yy_set_bol(at_bol) \
 	{ \
-	if ( yy_current_buffer() == NULL ){\
-        yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG); \
+	if ( yy_current_buffer() == NULL ) { \
+		yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG);	\
 		YY_CURRENT_BUFFER_LVALUE =    \
             yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG); \
 	} \
 	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = at_bol; \
-	}
+}
 #define yy_at_bol() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 /* Legacy interface */
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
@@ -1569,10 +1572,8 @@ static int yyread(char *buf, size_t max_size M4_YY_PROTO_LAST_ARG) {
 %if-c-only
 m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
 	errno=0;
-	while ( (result = (int) read( fileno(yyin), buf, (yy_size_t) max_size )) < 0 )
-	{
-		if( errno != EINTR)
-		{
+	while ( (result = (int) read( fileno(yyin), buf, (yy_size_t) max_size )) < 0 ) {
+		if( errno != EINTR) {
 			YY_FATAL_ERROR( "input in flex scanner failed" );
 			break;
 		}
@@ -1581,39 +1582,38 @@ m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
 	}
 ]])
 m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
-	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive )
-		{
+	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) {
 		int c = '*';
 		int n;
 		for ( n = 0; n < max_size &&
-			     (c = getc( yyin )) != EOF && c != '\n'; ++n )
+			      (c = getc( yyin )) != EOF && c != '\n'; ++n ) {
 			buf[n] = (char) c;
-		if ( c == '\n' )
-			buf[n++] = (char) c;
-		if ( c == EOF && ferror( yyin ) )
-			YY_FATAL_ERROR( "input in flex scanner failed" );
-		result = n;
 		}
-	else
-		{
+		if ( c == '\n' ) {
+			buf[n++] = (char) c;
+		}
+		if ( c == EOF && ferror( yyin ) ) {
+			YY_FATAL_ERROR( "input in flex scanner failed" );
+		}
+		result = n;
+	} else {
 		errno=0;
-		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin))
-			{
-			if( errno != EINTR)
-				{
+		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) {
+			if( errno != EINTR) {
 				YY_FATAL_ERROR( "input in flex scanner failed" );
 				break;
-				}
+			}
 			errno=0;
 			clearerr(yyin);
-			}
 		}
+	}
 ]])
 %endif
 
 %if-c++-only C++ definition
-	if ( (int)(result = LexerInput( (char *) buf, max_size )) < 0 )
+	if ( (int)(result = LexerInput( (char *) buf, max_size )) < 0 ) {
 		YY_FATAL_ERROR( "input in flex scanner failed" );
+	}
 %endif
 	 return result;
 }
@@ -1749,9 +1749,9 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define YY_RULE_SETUP \
-m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( yyleng > 0 ) \
-		YY_CURRENT_BUFFER_LVALUE->yy_at_bol = \
-				(yytext[yyleng - 1] == '\n'); \
+	m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( yyleng > 0 ) {  \
+	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (yytext[yyleng - 1] == '\n'); \
+	} \
 ]])	YY_USER_ACTION
 ]])
 
@@ -1762,15 +1762,14 @@ m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
 m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 		/* Generate code to keep backing-up information. */
 m4_ifdef([[M4_MODE_FULLSPD]], [[
-		if ( yy_current_state[-1].yy_nxt )
+		 if ( yy_current_state[-1].yy_nxt ) {
 ]])
 m4_ifdef([[M4_MODE_NO_FULLSPD]], [[
-		if ( yy_accept[yy_current_state] )
+		if ( yy_accept[yy_current_state] ) {
 ]])
-			{
 			YY_G(yy_last_accepting_state) = yy_current_state;
 			YY_G(yy_last_accepting_cpos) = yy_cp;
-			}
+		}
 ]])
 ]])
 ]])
@@ -1783,8 +1782,7 @@ m4_define([[M4_GEN_NEXT_COMPRESSED_STATE]], [[
 	 */
 	M4_GEN_BACKING_UP
 
-	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
-		{
+	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state ) {
 		yy_current_state = (int) yy_def[yy_current_state];
 
 m4_ifdef([[M4_MODE_USEMECS]], [[
@@ -1797,10 +1795,11 @@ m4_ifdef([[M4_MODE_USEMECS]], [[
 		 */
 
 		/* lastdfa + 2 == YY_JAMSTATE + 1 is the beginning of the templates */
-		if (yy_current_state >= YY_JAMSTATE + 1)
+		if (yy_current_state >= YY_JAMSTATE + 1) {
 			yy_c = yy_meta[yy_c];
-]])
 		}
+]])
+	}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 ]])
 
@@ -2932,7 +2931,7 @@ yybuffer yyFlexLexer::yy_create_buffer( std::istream& file, int size )
 	M4_YY_DECL_GUTS_VAR();
 
 	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
-	if ( ! b ) {
+	if (  b == NULL ) {
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 	}
 	b->yy_buf_size = size;
@@ -2941,7 +2940,7 @@ yybuffer yyFlexLexer::yy_create_buffer( std::istream& file, int size )
 	 * we need to put in 2 end-of-buffer characters.
 	 */
 	b->yy_ch_buf = (char *) yyalloc( (yy_size_t) (b->yy_buf_size + 2) M4_YY_CALL_LAST_ARG );
-	if ( ! b->yy_ch_buf ) {
+	if ( b->yy_ch_buf == NULL ) {
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 	}
 	b->yy_is_our_buffer = 1;
@@ -2977,7 +2976,7 @@ void yyFlexLexer::yy_delete_buffer( yybuffer b )
 {
 	M4_YY_DECL_GUTS_VAR();
 
-	if ( ! b ) {
+	if ( b == NULL ) {
 		return;
 	}
 	if ( b == yy_current_buffer() ) {	/* Not sure if we should pop here. */
@@ -3018,7 +3017,7 @@ void yyFlexLexer::yy_init_buffer( yybuffer b, std::istream& file )
 	 * called from yyrestart() or through yy_get_next_buffer.
 	 * In that case, we don't want to reset the lineno or column.
 	 */
-	if (b != yy_current_buffer()){
+	if (b != yy_current_buffer()) {
 		b->yy_bs_lineno = 1;
 		b->yy_bs_column = 0;
 	}
@@ -3056,7 +3055,7 @@ void yyFlexLexer::yy_flush_buffer( yybuffer b )
 %endif
 {
 	M4_YY_DECL_GUTS_VAR();
-	if ( ! b ) {
+	if ( b == NULL ) {
 		return;
 	}
 	b->yy_n_chars = 0;
@@ -3140,7 +3139,7 @@ void yyFlexLexer::yypop_buffer_state (void)
 	if (YY_G(yy_buffer_stack_top) > 0) {
 		--YY_G(yy_buffer_stack_top);
 	}
-	if (yy_current_buffer()) {
+	if (yy_current_buffer() != NULL) {
 		yy_load_buffer_state( M4_YY_CALL_ONLY_ARG );
 		YY_G(yy_did_buffer_switch_on_eof) = 1;
 	}
@@ -3162,7 +3161,7 @@ void yyFlexLexer::yyensure_buffer_stack(void)
 	yy_size_t num_to_alloc;
 	M4_YY_DECL_GUTS_VAR();
 
-	if (!YY_G(yy_buffer_stack)) {
+	if (YY_G(yy_buffer_stack) == NULL) {
 		/* First allocation is just for 2 elements, since we don't know if this
 		 * scanner will even need a stack. We use 2 instead of 1 to avoid an
 		 * immediate realloc on the next call.
@@ -3171,7 +3170,7 @@ void yyFlexLexer::yyensure_buffer_stack(void)
 		YY_G(yy_buffer_stack) = (struct yy_buffer_state**)yyalloc
 								(num_to_alloc * sizeof(struct yy_buffer_state*)
 								M4_YY_CALL_LAST_ARG);
-		if ( ! YY_G(yy_buffer_stack) ) {
+		if ( YY_G(yy_buffer_stack == NULL) ) {
 			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
 		}
 
@@ -3191,7 +3190,7 @@ void yyFlexLexer::yyensure_buffer_stack(void)
 								(YY_G(yy_buffer_stack),
 								num_to_alloc * sizeof(struct yy_buffer_state*)
 								M4_YY_CALL_LAST_ARG);
-		if ( ! YY_G(yy_buffer_stack) ) {
+		if (YY_G(yy_buffer_stack) == NULL) {
 			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
 		}
 		/* zero only the new slots.*/
@@ -3225,7 +3224,7 @@ yybuffer yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 		return NULL;
 	}
 	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
-	if ( ! b ) {
+	if ( b == NULL ) {
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
 	}
 	b->yy_buf_size = (int) (size - 2);	/* "- 2" to take care of EOB's */
@@ -3287,7 +3286,7 @@ yybuffer yy_scan_bytes  YYFARGS2( const char *,yybytes, int ,_yybytes_len) {
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = (yy_size_t) (_yybytes_len + 2);
 	buf = (char *) yyalloc( n M4_YY_CALL_LAST_ARG );
-	if ( ! buf ) {
+	if ( buf == 0 ) {
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
 	}
 	for ( i = 0; i < _yybytes_len; ++i ) {
@@ -3296,7 +3295,7 @@ yybuffer yy_scan_bytes  YYFARGS2( const char *,yybytes, int ,_yybytes_len) {
 	buf[_yybytes_len] = buf[_yybytes_len+1] = YY_END_OF_BUFFER_CHAR;
 
 	b = yy_scan_buffer( buf, n M4_YY_CALL_LAST_ARG);
-	if ( ! b ) {
+	if ( b == NULL ) {
 		YY_FATAL_ERROR( "bad buffer in yy_scan_bytes()" );
 	}
 	/* It's okay to grow etc. this buffer, and we should throw it
@@ -3419,8 +3418,9 @@ int yyget_lineno  (M4_YY_DEF_ONLY_ARG) {
 
 	m4_ifdef( [[M4_YY_REENTRANT]],
 	[[
-	    if (yy_current_buffer() == NULL)
-		return 0;
+		if (yy_current_buffer() == NULL) {
+			return 0;
+		}
 	]])
 	return yylineno;
 }
@@ -3667,14 +3667,14 @@ int yylex_init_extra( YY_EXTRA_TYPE yy_user_defined, yyscan_t* ptr_yy_globals ) 
 
 	yyset_extra (yy_user_defined, &dummy_yyguts);
 
-	if (ptr_yy_globals == NULL){
+	if (ptr_yy_globals == NULL) {
 		errno = EINVAL;
 		return 1;
 	}
 
 	*ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), &dummy_yyguts );
 
-	if (*ptr_yy_globals == NULL){
+	if (*ptr_yy_globals == NULL) {
 		errno = ENOMEM;
 		return 1;
 	}
@@ -3871,7 +3871,7 @@ m4preproc_include(`tables_shared.c')
 
 static int yytbl_read8 (void *v, struct yytbl_reader * rd) {
 	errno = 0;
-	if (fread (v, sizeof (flex_uint8_t), 1, rd->fp) != 1){
+	if (fread (v, sizeof (flex_uint8_t), 1, rd->fp) != 1) {
 	    errno = EIO;
 	    return -1;
 	}
@@ -3881,7 +3881,7 @@ static int yytbl_read8 (void *v, struct yytbl_reader * rd) {
 
 static int yytbl_read16 (void *v, struct yytbl_reader * rd) {
 	errno = 0;
-	if (fread (v, sizeof (flex_uint16_t), 1, rd->fp) != 1){
+	if (fread (v, sizeof (flex_uint16_t), 1, rd->fp) != 1) {
 	    errno = EIO;
 	    return -1;
 	}
@@ -3892,7 +3892,7 @@ static int yytbl_read16 (void *v, struct yytbl_reader * rd) {
 
 static int yytbl_read32 (void *v, struct yytbl_reader * rd) {
 	errno = 0;
-	if (fread (v, sizeof (flex_uint32_t), 1, rd->fp) != 1){
+	if (fread (v, sizeof (flex_uint32_t), 1, rd->fp) != 1) {
 	    errno = EIO;
 	    return -1;
 	}
@@ -4198,7 +4198,7 @@ static int yytbl_fload YYFARGS2(FILE *, fp, const char *, key) {
 	/* Keep trying until we find the right set of tables or end of file. */
 	while (!feof(rd.fp)) {
 		rd.bread = 0;
-		if (yytbl_hdr_read (&th, &rd M4_YY_CALL_LAST_ARG) != 0){
+		if (yytbl_hdr_read (&th, &rd M4_YY_CALL_LAST_ARG) != 0) {
 			rv = -1;
 			goto return_rv;
 		}
