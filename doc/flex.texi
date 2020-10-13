@@ -387,8 +387,8 @@ on hidden global variables; thus when Flex generates a scanner in any
 language other than the original C/C++ non-reentrancy is not even an
 option.
 
-This, it's a good idea to get used to using the reentrant interface
-from the beginning of your Flex programming. This is so even though the
+It's a good idea to get used to using the reentrant interface from the
+beginning of your Flex programming. This is so even though the
 reentrant example above is a rather poor one; it avoids exposing the
 scanner state in globals but creates globals of its own. There is a
 mechanism for including user-defined fields in the scanner structure
@@ -640,9 +640,10 @@ The presence of this section is optional; if it is missing, the second
 @cindex comments, syntax of
 Flex supports C-style comments, that is, anything between @samp{/*} and
 @samp{*/} is
-considered a comment. Whenever flex encounters a comment, it copies the
-entire comment verbatim to the generated source code. Comments may
-appear just about anywhere, but with the following exceptions:
+considered a comment in the parts of the file Flex
+interprets. Whenever flex encounters a comment, it copies the entire
+comment verbatim to the generated source code. Comments may appear
+just about anywhere, but with the following exceptions:
 
 @itemize
 @cindex comments, in rules section
@@ -666,7 +667,7 @@ All the comments in the following example are valid:
 @example
 @verbatim
 %{
-/* code block */
+/* C code block - other target languages might have different comment syntax */
 %}
 
 /* Definitions Section */
@@ -674,20 +675,22 @@ All the comments in the following example are valid:
 
 %%
     /* Rules Section */
-ruleA   /* after regex */ { /* code block */ } /* after code block */
+ruleA   /* after regex */ { /* C code block */ } /* after code block */
         /* Rules Section (indented) */
 <STATE_X>{
 ruleC   yyecho();
 ruleD   yyecho();
 %{
-/* code block */
+/* C code block */
 %}
 }
 %%
-/* User Code Section */
-
+/* User C Code Section */
 @end verbatim
 @end example
+
+If the target language is something other than C/C++, you will need to use
+its normal comment syntax in actions and code blocks.
 
 @node Patterns, Matching, Format, Top
 @chapter Patterns
@@ -1538,7 +1541,7 @@ only, leaving K&R-style functions to the historians.
 
 In other languages, @code{yylex()} will be generated as a reentrant
 function with a scanner context argument added.  This can be enabled
-in C as well, and specifying your C scanners to be rrentrant is
+in C as well, and specifying your C scanners to be reentrant is
 recommended for portability.
 
 @cindex stdin, default for yyin
@@ -1557,11 +1560,11 @@ scanning continues from that file), or @code{yyrestart()} is called.
 @code{yyrestart()} takes one argument, an inoput stream, and
 initializes @file{yyin} for scanning from that
 stream.  Essentially there is no difference between just assigning
-@file{yyin} to a new input file or using @code{yyrestart()} to do so;
+@file{yyin} to a new input stream or using @code{yyrestart()} to do so;
 the latter is available for compatibility with previous versions of
 @code{flex}, and because it can be used to switch input files in the
 middle of scanning.  It can also be used to throw away the current input
-buffer, by calling it with an argument of @file{yyin}; but it would be
+buffer, by calling it with an argument of @code{yyin}; but it would be
 better to use @code{yy_flush_current_buffer()} (@pxref{Actions}).  Note that
 @code{yyrestart()} does @emph{not} reset the start condition to
 @code{INITIAL} (@pxref{Start Conditions}).
@@ -1576,7 +1579,7 @@ statement in one of the actions, the scanner may then be called again
 and it will resume scanning where it left off.
 
 @cindex yyread
-By default (and for purposes of efficiency), C/C++ scanners use
+By default (and for purposes of efficiency), scanners use
 block-reads rather than simple @code{getc()} calls to read characters
 from @file{yyin}.  The nature of how it gets its input can be controlled
 by redefining the @code{yyread} function used to fill the scanner buffer.  The calling sequence for
@@ -1632,9 +1635,9 @@ For scanning from in-memory buffers (e.g., scanning strings), see
 @cindex yyecho(), and yyout
 @cindex yyout
 @cindex stdout, as default for yyout
-The scanner writes its @code{yyecho()} output to the @file{yyout} global
+The scanner writes its @code{yyecho()} output to the @code{yyout} global
 (default, @file{stdout}), which may be redefined by the user simply by
-assigning it to some other @code{FILE} pointer.
+assigning it to some other sream - in C/C++, a @code{FILE} pointer.
 
 @node Start Conditions, Multiple Input Buffers, Generated Scanner, Top
 @chapter Start Conditions
@@ -2263,8 +2266,10 @@ input buffer for scanning the string, and return a corresponding
 new buffer using @code{yy_switch_to_buffer()}, so the next call to
 @code{yylex()} will start scanning the string.
 
-@deftypefun yybuffer yy_scan_string ( const char *str )
-scans a NUL-terminated string.
+@deftypefun yybuffer yy_scan_string ( char *str )
+scans a string.  This declaration is correct for C/C++, in which
+strings are simply character seqences terminated by a NUL.  In target
+languages with a native strbg type, the prototype will change.
 @end deftypefun
 
 @deftypefun yybuffer yy_scan_bytes ( const char *bytes, int len )
@@ -4204,16 +4209,13 @@ Here are the things you need to do or know to use the reentrant C API of
 @node Specify Reentrant, Extra Reentrant Argument, Reentrant Detail, Reentrant Detail
 @subsection Declaring a Scanner As Reentrant
 
-When using the default C/C++ back end %option reentrant (--reentrant) must be specified.
-
 Notice that @code{%option reentrant} is specified in the above example
-(@pxref{Reentrant Example}. Had this option not been specified,
-@code{flex} would have happily generated a non-reentrant scanner without
-complaining. You may explicitly specify @code{%option noreentrant}, if
-you do @emph{not} want a reentrant scanner, although it is not
-necessary. The default is to generate a non-reentrant scanner.
-
-All scanners made with other back ends are reentrant.
+(@pxref{Reentrant Example}. Had this option not been specified with
+the default C/C++ back end, @code{flex} would have happily generated a
+non-reentrant scanner without complaining. You may explicitly specify
+@code{%option noreentrant}, if you do @emph{not} want a reentrant
+scanner, although it is not necessary - and not effective in any other
+target language.
 
 @node Extra Reentrant Argument, Global Replacement, Specify Reentrant, Reentrant Detail
 @subsection The Extra Argument
@@ -4236,13 +4238,16 @@ non-reentrant scanner.  Here are the declarations of
 
 Notice that the argument @code{yyscanner} appears in the declaration of
 both functions.  In fact, all @code{flex} functions in a reentrant
-scanner have this additional argument.  It is always the last argument
+scanner have this additional argument, except fot rule hooks which
+get it supplied implicitly.
+
+It is always the last argument
 in the argument list, it is always of type @code{yyscan_t} (which is
 typedef'd to @code{void *}) and it is
 always named @code{yyscanner}.  As you may have guessed,
 @code{yyscanner} is a pointer to an opaque data structure encapsulating
 the current state of the scanner.  For a list of function declarations,
-see @ref{Reentrant Functions}. Note that rule hooks, such as
+see @ref{Reentrant Functions}. Rule hooks, such as
 @code{yybegin()}, @code{yyecho()}, @code{yyreject()}, and @code{yystart()}, do not take this
 additional argument.
 
@@ -4307,7 +4312,7 @@ In these declarations, @code{YY_EXTRA_TYPE} is a placeholder for the type
 specifier in the scanner's @code{extra-type} option.
 
 (The scanner type and type declaration syntax will be different in target
-languages other thab C/C++.)
+languages other than C/C++.)
 
 The function @code{yylex_init} must be called before calling any other
 function. The argument to @code{yylex_init} is the address of an
@@ -4431,7 +4436,7 @@ from outside the scanner, and through the shortcut macro
 @code{yyextra}
 from within the scanner itself. They are defined as follows:
 
-@tindex YY_EXTRA_TYPE (reentrant only)
+@tindex %option extra-type (reentrant only)
 @findex yyget_extra
 @findex yyset_extra
 @example
@@ -4450,9 +4455,11 @@ In addition, an extra form of @code{yylex_init} is provided,
 be accessed from within the very first yyalloc, used to allocate
 the scanner itself.
 
-By default, @code{YY_EXTRA_TYPE} is defined as type @code{void *}.  You
-may redefine this type using @code{%option extra-type="your_type"} in 
-the scanner:
+In the deault C/C__ back end, the extra firld in your scanner state
+structure is defined as type @code{void *}; in ither target languages
+no such field night ne genetated at all.  You may redefine or crrate
+this extra field using @code{%option extra-type="your_type"} in the
+scanner:
 
 @cindex YY_EXTRA_TYPE, defining your own type
 @example
@@ -4877,7 +4884,7 @@ override the default behavior.
 
 This section applies only to target languages with manual memory
 allocation, including the default C/C++ back end.  If your target
-language has garbage collection you can ignore it.
+language has garbage collection you can safely ignore it.
 
 A Flex-generated scanner
 allocates dynamic memory during initialization, and once in a while from
@@ -4942,6 +4949,8 @@ you call yylex_init(). It is destroyed when the user calls yylex_destroy().
 
 @node Overriding The Default Memory Management, A Note About yytext And Memory, The Default Memory Management, Memory Management
 @section Overriding The Default Memory Management
+
+Afain, this section applies onlt to languages with manual memory management.
 
 @cindex yyalloc, overriding
 @cindex yyrealloc, overriding
@@ -5033,6 +5042,8 @@ void yyfree (void * ptr, void * yyscanner) {
 
 @cindex yytext, memory considerations
 
+This section applies only to target languages with manual memory management.
+
 When flex finds a match, @code{yytext} points to the first character of the
 match in the input buffer. The string itself is part of the input buffer, and
 is @emph{NOT} allocated separately. The value of yytext will be overwritten the next
@@ -5067,7 +5078,7 @@ but none of them at the same time.
 The serialization feature allows the tables to be loaded at runtime, before
 scanning begins. The tables may be discarded when scanning is finished.
 
-Note: This feature is available only when using the C/C++ back end.
+Note: This feature is available only when using the default C/C++ back end.
 
 @menu
 * Creating Serialized Tables::  
@@ -8663,7 +8674,7 @@ inside Flex when Flex is compiled.  The skeleton files are part of the
 Flex source distribution; they are not required by the Flex
 executable.
 
-A few poeces of language-specific information that cannot conveniently
+A few pieces of language-specific information that cannot conveniently
 be represented in a skeleton file are supplied by a per-language
 method table in the C code.  All the Flex code that accesses
 language-specific information goes through a global pointer named
