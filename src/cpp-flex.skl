@@ -460,6 +460,8 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 #ifndef YY_TYPEDEF_YY_BUFFER_STATE
 #define YY_TYPEDEF_YY_BUFFER_STATE
+typedef struct yy_buffer_state *yybuffer;
+/* Legacy interface */
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
@@ -606,7 +608,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 /* Stack of input buffers. */
 static size_t yy_buffer_stack_top = 0; /**< index of top of stack. */
 static size_t yy_buffer_stack_max = 0; /**< capacity of stack. */
-static YY_BUFFER_STATE * yy_buffer_stack = NULL; /**< Stack as an array. */
+static yybuffer * yy_buffer_stack = NULL; /**< Stack as an array. */
 %endif
 %ok-for-header
 %endif
@@ -619,9 +621,11 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
  *
  * Returns the top of the stack, or NULL.
  */
-#define YY_CURRENT_BUFFER ( YY_G(yy_buffer_stack) \
+#define yy_current_buffer() ( YY_G(yy_buffer_stack)			\
                           ? YY_G(yy_buffer_stack)[YY_G(yy_buffer_stack_top)] \
                           : NULL)
+/* Legacy interface */
+#define YY_CURRENT_BUFFER yy_current_buffer()
 /* Same as previous macro, but useful when we know that the buffer stack is not
  * NULL or when we need an lvalue. For internal use only.
  */
@@ -650,24 +654,25 @@ static int yy_did_buffer_switch_on_eof;
 %endif
 
 void yyrestart ( FILE *input_file M4_YY_PROTO_LAST_ARG );
-void yy_switch_to_buffer ( YY_BUFFER_STATE new_buffer M4_YY_PROTO_LAST_ARG );
-YY_BUFFER_STATE yy_create_buffer ( FILE *file, int size M4_YY_PROTO_LAST_ARG );
-void yy_delete_buffer ( YY_BUFFER_STATE b M4_YY_PROTO_LAST_ARG );
-void yy_flush_buffer ( YY_BUFFER_STATE b M4_YY_PROTO_LAST_ARG );
-void yypush_buffer_state ( YY_BUFFER_STATE new_buffer M4_YY_PROTO_LAST_ARG );
+void yy_switch_to_buffer ( yybuffer new_buffer M4_YY_PROTO_LAST_ARG );
+yybuffer yy_create_buffer ( FILE *file, int size M4_YY_PROTO_LAST_ARG );
+void yy_delete_buffer ( yybuffer b M4_YY_PROTO_LAST_ARG );
+void yy_flush_buffer ( yybuffer b M4_YY_PROTO_LAST_ARG );
+void yypush_buffer_state ( yybuffer new_buffer M4_YY_PROTO_LAST_ARG );
 void yypop_buffer_state ( M4_YY_PROTO_ONLY_ARG );
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 static void yyensure_buffer_stack ( M4_YY_PROTO_ONLY_ARG );
 static void yy_load_buffer_state ( M4_YY_PROTO_ONLY_ARG );
-static void yy_init_buffer ( YY_BUFFER_STATE b, FILE *file M4_YY_PROTO_LAST_ARG );
-#define YY_FLUSH_BUFFER yy_flush_buffer( YY_CURRENT_BUFFER M4_YY_CALL_LAST_ARG)
+static void yy_init_buffer ( yybuffer b, FILE *file M4_YY_PROTO_LAST_ARG );
+#define yy_flush_current_buffer() yy_flush_buffer( yy_current_buffer() M4_YY_CALL_LAST_ARG)
+#define YY_FLUSH_BUFFER yy_flush_current_buffer()
 ]])
 
-YY_BUFFER_STATE yy_scan_buffer ( char *base, yy_size_t size M4_YY_PROTO_LAST_ARG );
-YY_BUFFER_STATE yy_scan_string ( const char *yy_str M4_YY_PROTO_LAST_ARG );
-YY_BUFFER_STATE yy_scan_bytes ( const char *bytes, int len M4_YY_PROTO_LAST_ARG );
+yybuffer yy_scan_buffer ( char *base, yy_size_t size M4_YY_PROTO_LAST_ARG );
+yybuffer yy_scan_string ( const char *yy_str M4_YY_PROTO_LAST_ARG );
+yybuffer yy_scan_bytes ( const char *bytes, int len M4_YY_PROTO_LAST_ARG );
 
 %endif
 
@@ -680,7 +685,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define yy_new_buffer yy_create_buffer
 #define yy_set_interactive(is_interactive) \
 	{ \
-	if ( ! YY_CURRENT_BUFFER ){ \
+	if ( yy_current_buffer() == NULL ){ \
         yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG); \
 		YY_CURRENT_BUFFER_LVALUE =    \
             yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG); \
@@ -689,7 +694,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 	}
 #define yy_set_bol(at_bol) \
 	{ \
-	if ( ! YY_CURRENT_BUFFER ){\
+	if ( yy_current_buffer() == NULL ){\
         yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG); \
 		YY_CURRENT_BUFFER_LVALUE =    \
             yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG); \
@@ -1214,7 +1219,7 @@ struct yyguts_t {
 	FILE *yyin_r, *yyout_r;
 	size_t yy_buffer_stack_top; /**< index of top of stack. */
 	size_t yy_buffer_stack_max; /**< capacity of stack. */
-	YY_BUFFER_STATE * yy_buffer_stack; /**< Stack as an array. */
+	yybuffer * yy_buffer_stack; /**< Stack as an array. */
 	char yy_hold_char;
 	int yy_n_chars;
 	int yyleng_r;
@@ -1900,7 +1905,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 			yyout.rdbuf(std::cout.rdbuf());
 %endif
 		}
-		if ( ! YY_CURRENT_BUFFER ) {
+		if ( yy_current_buffer() == NULL ) {
 			yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG);
 			YY_CURRENT_BUFFER_LVALUE =
 				yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG);
@@ -2141,7 +2146,7 @@ m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 					 * possible that this happened because the user
 					 * just pointed yyin at a new source and called
 					 * yylex().  If so, then we have to assure
-					 * consistency between YY_CURRENT_BUFFER and our
+					 * consistency between yy_current_buffer() and our
 					 * globals.  Here is the right place to do so, because
 					 * this is the first action (other than possibly a
 					 * back-up) that will match for the new input source.
@@ -2329,7 +2334,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 yyFlexLexer::~yyFlexLexer() {
 	delete [] yy_state_buf;
 	yyfree( yy_start_stack M4_YY_CALL_LAST_ARG );
-	yy_delete_buffer( YY_CURRENT_BUFFER M4_YY_CALL_LAST_ARG);
+	yy_delete_buffer( yy_current_buffer() M4_YY_CALL_LAST_ARG);
 	yyfree( yy_buffer_stack M4_YY_CALL_LAST_ARG );
 }
 
@@ -2461,7 +2466,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 ]],
 [[
 			/* just a shorter name for the current buffer */
-			YY_BUFFER_STATE b = YY_CURRENT_BUFFER_LVALUE;
+			yybuffer b = YY_CURRENT_BUFFER_LVALUE;
 
 			int yy_c_buf_p_offset =
 				(int) (YY_G(yy_c_buf_p) - b->yy_ch_buf);
@@ -2825,13 +2830,13 @@ void yyFlexLexer::yyrestart( std::istream& input_file )
 {
 	M4_YY_DECL_GUTS_VAR();
 
-	if ( ! YY_CURRENT_BUFFER ) {
+	if ( yy_current_buffer() == NULL ) {
 		yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG);
 		YY_CURRENT_BUFFER_LVALUE =
 	        	yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG);
 	}
 
-	yy_init_buffer( YY_CURRENT_BUFFER, input_file M4_YY_CALL_LAST_ARG);
+	yy_init_buffer( yy_current_buffer(), input_file M4_YY_CALL_LAST_ARG);
 	yy_load_buffer_state( M4_YY_CALL_ONLY_ARG );
 }
 
@@ -2855,10 +2860,10 @@ void yyFlexLexer::yyrestart( std::istream* input_file )
  * M4_YY_DOC_PARAM
  */
 %if-c-only
-void yy_switch_to_buffer  YYFARGS1( YY_BUFFER_STATE ,new_buffer)
+void yy_switch_to_buffer  YYFARGS1( yybuffer ,new_buffer)
 %endif
 %if-c++-only
-void yyFlexLexer::yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
+void yyFlexLexer::yy_switch_to_buffer( yybuffer new_buffer )
 %endif
 {
 	M4_YY_DECL_GUTS_VAR();
@@ -2869,10 +2874,10 @@ void yyFlexLexer::yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
 	 *		yypush_buffer_state(new_buffer);
 	 */
 	yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG);
-	if ( YY_CURRENT_BUFFER == new_buffer ) {
+	if ( yy_current_buffer() == new_buffer ) {
 		return;
 	}
-	if ( YY_CURRENT_BUFFER ) {
+	if ( yy_current_buffer() ) {
 		/* Flush out information for old buffer. */
 		*YY_G(yy_c_buf_p) = YY_G(yy_hold_char);
 		YY_CURRENT_BUFFER_LVALUE->yy_buf_pos = YY_G(yy_c_buf_p);
@@ -2917,16 +2922,16 @@ void yyFlexLexer::yy_load_buffer_state()
  * @return the allocated buffer state.
  */
 %if-c-only
-YY_BUFFER_STATE yy_create_buffer  YYFARGS2( FILE *,file, int ,size)
+yybuffer yy_create_buffer  YYFARGS2( FILE *,file, int ,size)
 %endif
 %if-c++-only
-YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( std::istream& file, int size )
+yybuffer yyFlexLexer::yy_create_buffer( std::istream& file, int size )
 %endif
 {
-	YY_BUFFER_STATE b;
+	yybuffer b;
 	M4_YY_DECL_GUTS_VAR();
 
-	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
+	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
 	if ( ! b ) {
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 	}
@@ -2953,7 +2958,7 @@ YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( std::istream& file, int size )
  * M4_YY_DOC_PARAM
  * @return the allocated buffer state.
  */
-YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( std::istream* file, int size )
+yybuffer yyFlexLexer::yy_create_buffer( std::istream* file, int size )
 {
 	return yy_create_buffer( *file, size );
 }
@@ -2964,10 +2969,10 @@ YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( std::istream* file, int size )
  * M4_YY_DOC_PARAM
  */
 %if-c-only
-void yy_delete_buffer YYFARGS1( YY_BUFFER_STATE ,b)
+void yy_delete_buffer YYFARGS1( yybuffer ,b)
 %endif
 %if-c++-only
-void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
+void yyFlexLexer::yy_delete_buffer( yybuffer b )
 %endif
 {
 	M4_YY_DECL_GUTS_VAR();
@@ -2975,8 +2980,8 @@ void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
 	if ( ! b ) {
 		return;
 	}
-	if ( b == YY_CURRENT_BUFFER ) {	/* Not sure if we should pop here. */
-		YY_CURRENT_BUFFER_LVALUE = (YY_BUFFER_STATE) 0;
+	if ( b == yy_current_buffer() ) {	/* Not sure if we should pop here. */
+		YY_CURRENT_BUFFER_LVALUE = (yybuffer) 0;
 	}
 	if ( b->yy_is_our_buffer ) {
 		yyfree( (void *) b->yy_ch_buf M4_YY_CALL_LAST_ARG );
@@ -2990,10 +2995,10 @@ void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
  * such as during a yyrestart() or at EOF.
  */
 %if-c-only
-static void yy_init_buffer  YYFARGS2( YY_BUFFER_STATE ,b, FILE *,file)
+static void yy_init_buffer  YYFARGS2( yybuffer ,b, FILE *,file)
 %endif
 %if-c++-only
-void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, std::istream& file )
+void yyFlexLexer::yy_init_buffer( yybuffer b, std::istream& file )
 %endif
 {
 	int oerrno = errno;
@@ -3013,7 +3018,7 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, std::istream& file )
 	 * called from yyrestart() or through yy_get_next_buffer.
 	 * In that case, we don't want to reset the lineno or column.
 	 */
-	if (b != YY_CURRENT_BUFFER){
+	if (b != yy_current_buffer()){
 		b->yy_bs_lineno = 1;
 		b->yy_bs_column = 0;
 	}
@@ -3040,14 +3045,14 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]],
 }
 
 /** Discard all buffered characters. On the next scan, YY_INPUT will be called.
- * @param b the buffer state to be flushed, usually @c YY_CURRENT_BUFFER.
+ * @param b the buffer state to be flushed, usually @c yy_current_buffer().
  * M4_YY_DOC_PARAM
  */
 %if-c-only
-void yy_flush_buffer YYFARGS1( YY_BUFFER_STATE ,b)
+void yy_flush_buffer YYFARGS1( yybuffer ,b)
 %endif
 %if-c++-only
-void yyFlexLexer::yy_flush_buffer( YY_BUFFER_STATE b )
+void yyFlexLexer::yy_flush_buffer( yybuffer b )
 %endif
 {
 	M4_YY_DECL_GUTS_VAR();
@@ -3068,7 +3073,7 @@ void yyFlexLexer::yy_flush_buffer( YY_BUFFER_STATE b )
 	b->yy_at_bol = 1;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
-	if ( b == YY_CURRENT_BUFFER ) {
+	if ( b == yy_current_buffer() ) {
 		yy_load_buffer_state( M4_YY_CALL_ONLY_ARG );
 	}
 }
@@ -3081,10 +3086,10 @@ void yyFlexLexer::yy_flush_buffer( YY_BUFFER_STATE b )
  *  M4_YY_DOC_PARAM
  */
 %if-c-only
-void yypush_buffer_state YYFARGS1(YY_BUFFER_STATE,new_buffer)
+void yypush_buffer_state YYFARGS1(yybuffer,new_buffer)
 %endif
 %if-c++-only
-void yyFlexLexer::yypush_buffer_state (YY_BUFFER_STATE new_buffer)
+void yyFlexLexer::yypush_buffer_state (yybuffer new_buffer)
 %endif
 {
 	M4_YY_DECL_GUTS_VAR();
@@ -3094,7 +3099,7 @@ void yyFlexLexer::yypush_buffer_state (YY_BUFFER_STATE new_buffer)
 	yyensure_buffer_stack(M4_YY_CALL_ONLY_ARG);
 
 	/* This block is copied from yy_switch_to_buffer. */
-	if ( YY_CURRENT_BUFFER ) {
+	if ( yy_current_buffer() != NULL ) {
 		/* Flush out information for old buffer. */
 		*YY_G(yy_c_buf_p) = YY_G(yy_hold_char);
 		YY_CURRENT_BUFFER_LVALUE->yy_buf_pos = YY_G(yy_c_buf_p);
@@ -3102,7 +3107,7 @@ void yyFlexLexer::yypush_buffer_state (YY_BUFFER_STATE new_buffer)
 	}
 
 	/* Only push if top exists. Otherwise, replace top. */
-	if (YY_CURRENT_BUFFER) {
+	if (yy_current_buffer()) {
 		YY_G(yy_buffer_stack_top)++;
 	}
 	YY_CURRENT_BUFFER_LVALUE = new_buffer;
@@ -3127,15 +3132,15 @@ void yyFlexLexer::yypop_buffer_state (void)
 %endif
 {
 	M4_YY_DECL_GUTS_VAR();
-	if (!YY_CURRENT_BUFFER) {
+	if (yy_current_buffer() == NULL) {
 		return;
 	}
-	yy_delete_buffer(YY_CURRENT_BUFFER M4_YY_CALL_LAST_ARG);
+	yy_delete_buffer(yy_current_buffer() M4_YY_CALL_LAST_ARG);
 	YY_CURRENT_BUFFER_LVALUE = NULL;
 	if (YY_G(yy_buffer_stack_top) > 0) {
 		--YY_G(yy_buffer_stack_top);
 	}
-	if (YY_CURRENT_BUFFER) {
+	if (yy_current_buffer()) {
 		yy_load_buffer_state( M4_YY_CALL_ONLY_ARG );
 		YY_G(yy_did_buffer_switch_on_eof) = 1;
 	}
@@ -3208,9 +3213,9 @@ m4_ifdef( [[M4_YY_NO_SCAN_BUFFER]],,
  * M4_YY_DOC_PARAM
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
+yybuffer yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 {
-	YY_BUFFER_STATE b;
+	yybuffer b;
 	m4_dnl M4_YY_DECL_GUTS_VAR();
 
 	if ( size < 2 ||
@@ -3219,7 +3224,7 @@ YY_BUFFER_STATE yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 		/* They forgot to leave room for the EOB's. */
 		return NULL;
 	}
-	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
+	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
 	if ( ! b ) {
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
 	}
@@ -3252,7 +3257,7 @@ m4_ifdef( [[M4_YY_NO_SCAN_STRING]],,
  * @note If you want to scan bytes that may contain NUL values, then use
  *       yy_scan_bytes() instead.
  */
-YY_BUFFER_STATE yy_scan_string YYFARGS1( const char *, yystr)
+yybuffer yy_scan_string YYFARGS1( const char *, yystr)
 {
 	m4_dnl M4_YY_DECL_GUTS_VAR();
 
@@ -3272,8 +3277,8 @@ m4_ifdef( [[M4_YY_NO_SCAN_BYTES]],,
  * M4_YY_DOC_PARAM
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( const char *,yybytes, int ,_yybytes_len) {
-	YY_BUFFER_STATE b;
+yybuffer yy_scan_bytes  YYFARGS2( const char *,yybytes, int ,_yybytes_len) {
+	yybuffer b;
 	char *buf;
 	yy_size_t n;
 	int i;
@@ -3414,7 +3419,7 @@ int yyget_lineno  (M4_YY_DEF_ONLY_ARG) {
 
 	m4_ifdef( [[M4_YY_REENTRANT]],
 	[[
-	    if (! YY_CURRENT_BUFFER)
+	    if (yy_current_buffer() == NULL)
 		return 0;
 	]])
 	return yylineno;
@@ -3432,7 +3437,7 @@ int yyget_column  (M4_YY_DEF_ONLY_ARG) {
 	M4_YY_DECL_GUTS_VAR();
 
 m4_ifdef( [[M4_YY_REENTRANT]], [[
-	if (! YY_CURRENT_BUFFER) {
+	if (yy_current_buffer() == NULL) {
 		return 0;
 	}
 ]])
@@ -3511,7 +3516,7 @@ void yyset_lineno YYFARGS1( int ,_line_number) {
 	m4_ifdef( [[M4_YY_REENTRANT]],
 	[[
 	    /* lineno is only valid if an input buffer exists. */
-		if (! YY_CURRENT_BUFFER ) {
+		if (yy_current_buffer() == NULL ) {
 			YY_FATAL_ERROR( "yyset_lineno called with no buffer" );
 		}
 	]])
@@ -3532,7 +3537,7 @@ void yyset_column YYFARGS1( int , _column_no) {
 
 m4_ifdef( [[M4_YY_REENTRANT]], [[
 	/* column is only valid if an input buffer exists. */
-	if (! YY_CURRENT_BUFFER ) {
+	if (yy_current_buffer() == NULL ) {
 	       YY_FATAL_ERROR( "yyset_column called with no buffer" );
 	}
 ]])
@@ -3753,8 +3758,8 @@ int yylex_destroy  (M4_YY_DEF_ONLY_ARG) {
 	M4_YY_DECL_GUTS_VAR();
 
 	/* Pop the buffer stack, destroying each element. */
-	while(YY_CURRENT_BUFFER) {
-		yy_delete_buffer( YY_CURRENT_BUFFER M4_YY_CALL_LAST_ARG );
+	while(yy_current_buffer()) {
+		yy_delete_buffer( yy_current_buffer() M4_YY_CALL_LAST_ARG );
 		YY_CURRENT_BUFFER_LVALUE = NULL;
 		yypop_buffer_state(M4_YY_CALL_ONLY_ARG);
 	}

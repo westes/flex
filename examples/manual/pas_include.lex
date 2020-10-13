@@ -33,7 +33,7 @@ int             include_count = -1;
              exit( 1 );
           }
 
-          include_stack[++include_count] = YY_CURRENT_BUFFER;
+          include_stack[++include_count] = yy_current_buffer();
 
           yyin = fopen( yytext, "r" );
           if ( ! yyin ){

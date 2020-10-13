@@ -1471,12 +1471,12 @@ example, the following is one way to eat up C comments:
 @end example
 
 @cindex flushing the internal buffer
-@cindex YY_FLUSH_BUFFER
-@code{YY_FLUSH_BUFFER;} flushes the scanner's internal buffer so that
+@cindex yy_flush_current_buffer()
+@code{yy_flush_current_buffer()} flushes the scanner's internal buffer so that
 the next time the scanner attempts to match a token, it will first
 refill the buffer using @code{yyread()} (@pxref{Generated Scanner}).
 This action is a special case of the more general
-@code{yy_flush_buffer;} function, described below (@pxref{Multiple
+@code{yy_flush_buffer()} function, described below (@pxref{Multiple
 Input Buffers})
 
 @cindex yyterminate()
@@ -1562,7 +1562,7 @@ the latter is available for compatibility with previous versions of
 @code{flex}, and because it can be used to switch input files in the
 middle of scanning.  It can also be used to throw away the current input
 buffer, by calling it with an argument of @file{yyin}; but it would be
-better to use @code{YY_FLUSH_BUFFER} (@pxref{Actions}).  Note that
+better to use @code{yy_flush_current_buffer()} (@pxref{Actions}).  Note that
 @code{yyrestart()} does @emph{not} reset the start condition to
 @code{INITIAL} (@pxref{Start Conditions}).
 
@@ -2056,13 +2056,13 @@ for creating and switching between multiple input buffers.  An input
 buffer is created by using:
 
 @cindex memory, allocating input buffers
-@deftypefun YY_BUFFER_STATE yy_create_buffer ( FILE *file, int size )
+@deftypefun yybuffer yy_create_buffer ( FILE *file, int size )
 @end deftypefun
 
 which takes a @code{FILE} pointer and a size and creates a buffer
 associated with the given file and large enough to hold @code{size}
 characters (when in doubt, use @code{YY_BUF_SIZE} for the size).  It
-returns a @code{YY_BUFFER_STATE} handle, which may then be passed to
+returns a @code{yybuffer} handle, which may then be passed to
 other routines (see below).
 
 In target languages other than C/C++, this prototype will look
@@ -2071,11 +2071,11 @@ not have ``struct'' as part of its name.  The input-stream type won't
 be @code{FILE *}.  But expect the same semamntics wxpressed in native
 tytypes.
 
-@tindex YY_BUFFER_STATE
-The @code{YY_BUFFER_STATE} type is a
-pointer to an opaque @code{struct yy_buffer_state} structure, so you may
-safely initialize @code{YY_BUFFER_STATE} variables to @code{((YY_BUFFER_STATE)
-0)} if you wish, and also refer to the opaque structure in order to
+@tindex yybuffer
+The @code{yybuffer} type is a
+reference to an opaque buffer state structure, so you may
+safely initialize @code{yybuffer} variables to @code{((yybuffer)
+NULL)} if you wish, and also refer to the opaque structure in order to
 correctly declare input buffers in source files other than that of your
 scanner.  Note that the @code{FILE} pointer in the call to
 @code{yy_create_buffer} is only used as the value of @file{yyin} seen by
@@ -2084,7 +2084,7 @@ scanner.  Note that the @code{FILE} pointer in the call to
 @code{yy_create_buffer}.  You select a particular buffer to scan from
 using:
 
-@deftypefun void yy_switch_to_buffer ( YY_BUFFER_STATE new_buffer )
+@deftypefun void yy_switch_to_buffer ( yybuffer new_buffer )
 @end deftypefun
 
 The above function switches the scanner's input buffer so subsequent tokens
@@ -2097,7 +2097,7 @@ instead of this function. Note also that switching input sources via either
 start condition.
 
 @cindex memory, deleting input buffers
-@deftypefun void yy_delete_buffer ( YY_BUFFER_STATE buffer )
+@deftypefun void yy_delete_buffer ( yybuffer buffer )
 @end deftypefun
 
 is used to reclaim the storage associated with a buffer.  (@code{buffer}
@@ -2106,7 +2106,7 @@ the current contents of a buffer using:
 
 @cindex pushing an input buffer
 @cindex stack, input buffer push
-@deftypefun void yypush_buffer_state ( YY_BUFFER_STATE buffer )
+@deftypefun void yypush_buffer_state ( yybuffer buffer )
 @end deftypefun
 
 This function pushes the new buffer state onto an internal stack. The pushed
@@ -2126,7 +2126,7 @@ becomes the new current state.
 
 @cindex clearing an input buffer
 @cindex flushing an input buffer
-@deftypefun void yy_flush_buffer ( YY_BUFFER_STATE buffer )
+@deftypefun void yy_flush_buffer ( yybuffer buffer )
 @end deftypefun
 
 This function discards the buffer's contents,
@@ -2134,17 +2134,18 @@ so the next time the scanner attempts to match a token from the
 buffer, it will first fill the buffer anew using
 @code{yyread()}.
 
-@deftypefun YY_BUFFER_STATE yy_new_buffer ( FILE *file, int size )
+@deftypefun yybuffer yy_new_buffer ( FILE *file, int size )
 @end deftypefun
 
 is an alias for @code{yy_create_buffer()},
 provided for compatibility with the C++ use of @code{new} and
 @code{delete} for creating and destroying dynamic objects.
 
-@cindex YY_CURRENT_BUFFER, and multiple buffers
-Finally, the macro @code{YY_CURRENT_BUFFER} macro returns a
-@code{YY_BUFFER_STATE} handle to the current buffer. It should not be
-used as an lvalue.
+@cindex yy_current_buffer(), and multiple buffers
+Finally, @code{yy_current_buffer()} returns a
+@code{yybuffer} handle to the current buffer. It should not be
+used as an lvalue, because it can return NULL to indicate no buffer is
+current.
 
 @cindex EOF, example using multiple input buffers
 Here are two examples of using these features for writing a scanner
@@ -2183,7 +2184,7 @@ maintains the stack internally.
     <<EOF>> {
 			yypop_buffer_state();
 
-            if ( !YY_CURRENT_BUFFER )
+            if ( !yy_current_buffer() )
                 {
                 yyterminate();
                 }
@@ -2204,7 +2205,7 @@ manages its own input buffer stack manually (instead of letting flex do it).
 
     %{
     #define MAX_INCLUDE_DEPTH 10
-    YY_BUFFER_STATE include_stack[MAX_INCLUDE_DEPTH];
+    yybuffer include_stack[MAX_INCLUDE_DEPTH];
     int include_stack_ptr = 0;
     %}
 
@@ -2223,7 +2224,7 @@ manages its own input buffer stack manually (instead of letting flex do it).
                 }
 
             include_stack[include_stack_ptr++] =
-                YY_CURRENT_BUFFER;
+                yy_current_buffer();
 
             yyin = fopen( yytext, "r" );
 
@@ -2244,7 +2245,7 @@ manages its own input buffer stack manually (instead of letting flex do it).
 
             else
                 {
-                yy_delete_buffer( YY_CURRENT_BUFFER );
+                yy_delete_buffer( yy_current_buffer() );
                 yy_switch_to_buffer(
                      include_stack[include_stack_ptr] );
                 }
@@ -2257,16 +2258,16 @@ manages its own input buffer stack manually (instead of letting flex do it).
 The following routines are available for setting up input buffers for
 scanning in-memory strings instead of files.  All of them create a new
 input buffer for scanning the string, and return a corresponding
-@code{YY_BUFFER_STATE} handle (which you should delete with
+@code{yybuffer} handle (which you should delete with
 @code{yy_delete_buffer()} when done with it).  They also switch to the
 new buffer using @code{yy_switch_to_buffer()}, so the next call to
 @code{yylex()} will start scanning the string.
 
-@deftypefun YY_BUFFER_STATE yy_scan_string ( const char *str )
+@deftypefun yybuffer yy_scan_string ( const char *str )
 scans a NUL-terminated string.
 @end deftypefun
 
-@deftypefun YY_BUFFER_STATE yy_scan_bytes ( const char *bytes, int len )
+@deftypefun yybuffer yy_scan_bytes ( const char *bytes, int len )
 scans @code{len} bytes (including possibly @code{NUL}s) starting at location
 @code{bytes}.
 @end deftypefun
@@ -2277,7 +2278,7 @@ the contents of the buffer it is scanning.)  You can avoid the copy by
 using:
 
 @vindex YY_END_OF_BUFFER_CHAR
-@deftypefun YY_BUFFER_STATE yy_scan_buffer (char *base, yy_size_t size)
+@deftypefun yybuffer yy_scan_buffer (char *base, yy_size_t size)
 which scans in place the buffer starting at @code{base}, consisting of
 @code{size} bytes, the last two bytes of which @emph{must} be
 @code{YY_END_OF_BUFFER_CHAR} (ASCII NUL).  These last two bytes are not
@@ -2429,7 +2430,7 @@ Setting a post-action allows, for example, C++ users to suppress the
 trailing break (while being very careful that every rule ends with a
 @code{break} or a @code{return}!) to avoid suffering from unreachable
 statement warnings where because a rule's action ends with
-@code{return}, the @code{YY_BREAK} is inaccessible.
+@code{return}, the break is inaccessible.
 
 @node User Values, Yacc, Misc Controls, Top
 @chapter Values Available To the User
@@ -2493,9 +2494,9 @@ by the user.
 In target languages other than C/C++, expect it to have
 whatever tyoe is associated with I/O streams.
 
-@vindex YY_CURRENT_BUFFER
-@item  YY_CURRENT_BUFFER
-returns a @code{YY_BUFFER_STATE} handle to the current buffer.
+@vindex yy_current_buffer()
+@item  yy_current_buffer()
+returns a @code{yybuffer} handle to the current buffer.
 
 @vindex yystart()
 @item  yystart()
@@ -3860,7 +3861,7 @@ returns the current setting of the debugging flag.
 Also provided are member functions equivalent to
 @code{yy_switch_to_buffer()}, @code{yy_create_buffer()} (though the
 first argument is an @code{istream&} object reference and not a
-@code{FILE*)}, @code{yy_flush_buffer()}, @code{yy_delete_buffer()}, and
+@code{FILE*)}, @code{yy_flush_current_buffer()}, @code{yy_delete_buffer()}, and
 @code{yyrestart()} (again, the first argument is a @code{istream&}
 object reference).
 
@@ -4105,7 +4106,7 @@ another instance of itself.
     %%
     "eval(".+")"  {
                       yyscan_t scanner;
-                      YY_BUFFER_STATE buf;
+                      yybuffer buf;
 
                       yylex_init( &scanner );
                       yytext[yyleng-1] = ' ';
@@ -4917,8 +4918,8 @@ specified.  You will rarely need to tune this buffer. The ideal size for this
 stack is the maximum depth expected.  The memory for this stack is
 automatically destroyed when you call yylex_destroy(). @xref{option-stack}.
 
-@item 40 bytes for each YY_BUFFER_STATE.
-Flex allocates memory for each YY_BUFFER_STATE. The buffer state itself
+@item 40 bytes for each yybuffer.
+Flex allocates memory for each yybuffer. The buffer state itself
 is about 40 bytes, plus an additional large character buffer (described above.)
 The initial buffer state is created during initialization, and with each call
 to yy_create_buffer(). You can't tune the size of this, but you can tune the
@@ -6075,7 +6076,7 @@ However, you can do this using multiple input buffers.
 %%
 macro/[a-z]+	{
 /* Saw the macro "macro" followed by extra stuff. */
-main_buffer = YY_CURRENT_BUFFER;
+main_buffer = yy_current_buffer();
 expansion_buffer = yy_scan_string(expand(yytext));
 yy_switch_to_buffer(expansion_buffer);
 }
@@ -6212,7 +6213,7 @@ you might try this:
 @example
 @verbatim
 /* For non-reentrant C scanner only. */
-yy_delete_buffer(YY_CURRENT_BUFFER);
+yy_delete_buffer(yy_current_buffer());
 yy_init = 1;
 @end verbatim
 @end example
@@ -6228,7 +6229,7 @@ situation. It is possible that some other globals may need resetting as well.
 >   We thought that it would be possible to have this number through the
 >   evaluation of the following expression:
 >
->   seek_position = (no_buffers)*YY_READ_BUF_SIZE + yy_c_buf_p - YY_CURRENT_BUFFER->yy_ch_buf
+>   seek_position = (no_buffers)*YY_READ_BUF_SIZE + yy_c_buf_p - yy_current_buffer()->yy_ch_buf
 @end verbatim
 @end example
 
@@ -6239,7 +6240,7 @@ even though @code{YY_READ_BUF_SIZE} bytes were requested).  The second problem
 is that when refilling its internal buffer, @code{flex} keeps some characters
 from the previous buffer (because usually it's in the middle of a match,
 and needs those characters to construct @code{yytext} for the match once it's
-done).  Because of this, @code{yy_c_buf_p - YY_CURRENT_BUFFER->yy_ch_buf} won't
+done).  Because of this, @code{yy_c_buf_p - yy_current_buffer()->yy_ch_buf} won't
 be exactly the number of characters already read from the current buffer.
 
 An alternative solution is to count the number of characters you've matched
@@ -6597,7 +6598,7 @@ Date: Wed, 13 Nov 1996 19:51:54 PST
 From: Vern Paxson <vern>
 
 > "yyunput()" them to input flow, question occurs. If I do this after I scan
-> a carriage, the variable "YY_CURRENT_BUFFER->yy_at_bol" is changed. That
+> a carriage, the variable "yy_current_buffer()->yy_at_bol" is changed. That
 > means the carriage flag has gone.
 
 You can control this by calling yy_set_bol().  It's described in the manual.
@@ -7026,7 +7027,7 @@ In-reply-to: Your message of Mon, 08 Dec 1997 15:54:15 PST.
 Date: Mon, 15 Dec 1997 13:21:35 PST
 From: Vern Paxson <vern>
 
->         stdin_handle = YY_CURRENT_BUFFER;
+>         stdin_handle = yy_current_buffer();
 >         ifstream fin( "aFile" );
 >         yy_switch_to_buffer( yy_create_buffer( fin, YY_BUF_SIZE ) );
 >
@@ -8849,6 +8850,15 @@ YYSTATE: is accepted as an alias for @code{yystart()}
 (since that is what's used by AT&T @code{lex}).
 
 @item
+YY_FLUSH_BUFFER: replaced by yy_flush_current_buffer().
+
+@item
+YY_CURRENT_BUFFER: replaced by yy_current_buffer().
+
+@item
+YY_BUFFER_STATE: replaced by yybuffer.
+
+@item
 YY_NEW_FILE: In previous versions of @code{flex}, ehen assigning
 @file{yyin} to a new input file, after doing the assignment you had to
 call the special action @code{YY_NEW_FILE}.  This is no longer
@@ -8915,5 +8925,16 @@ to specific locations in the generated scanner, and may be used to insert arbitr
 @c     normal 'f
 @c endf
 @c nnoremap <F5>  1G/@node\s\+unnamed-faq-\d\+<cr>mfww"wy5ezt:call Faq2()<cr>
+
+@c Remaining problem points for the multilangage interface
+@c YY_NUM_RULES
+@c YY_FLEX_MAJOR_VERSION
+@c YY_FLEX_MINOR_VERSION
+@c YY_FLEX_SUBMINOR_VERSION
+@c YY_NULL
+@c YY_END_OF_BUFFER_CHAR
+@c YY_BUF_SIZE
+@c YYLMAX
+
 
 @bye
