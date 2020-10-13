@@ -3,9 +3,6 @@
 #include <string.h>
 #include "y.tab.h"                 /* this comes from bison        */
 
-#define TRUE  1
-#define FALSE 0
-
 #define copy_and_return(token_type) { strcpy(yylval.name,yytext); \
                                       return(token_type); }
 

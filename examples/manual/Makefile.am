@@ -30,6 +30,7 @@ EXTRA_DIST = \
 	eof_test01.txt \
 	eof_test02.txt \
 	eof_test03.txt \
+	example_er.lex \
 	example_r.lex \
 	example_nr.lex \
 	expr.lex \

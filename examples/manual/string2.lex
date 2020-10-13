@@ -30,17 +30,17 @@ oct [0-7]{1,3}
 \"                 { 
                      buffer      = malloc(1); 
                      buffer_size = 1; strcpy(buffer,"");
-                     BEGIN(STRING);
+                     yybegin(STRING);
                    }
 <STRING>\n         {
                       yyerror("Unterminated string");       
                       free(buffer);
-                      BEGIN(INITIAL);
+                      yybegin(INITIAL);
                    }
 <STRING><<EOF>>    {
                       yyerror("EOF in string");       
                       free(buffer);
-                      BEGIN(INITIAL);
+                      yybegin(INITIAL);
                    }
 <STRING>[^\\\n"]   {
                      buffer = realloc(buffer,buffer_size+yyleng+1);
@@ -87,7 +87,7 @@ oct [0-7]{1,3}
 <STRING>\"         {
                      printf("string = \"%s\"",buffer); 
                      free(buffer);
-                     BEGIN(INITIAL);
+                     yybegin(INITIAL);
                    }
 %%
 

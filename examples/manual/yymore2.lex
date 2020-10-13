@@ -16,11 +16,11 @@ void yyerror(char *message)
 %x STRING
 
 %%
-\"   BEGIN(STRING);
+\"   yybegin(STRING);
 
 <STRING>[^\\\n"]*  yymore();
-<STRING><<EOF>>    yyerror("EOF in string.");       BEGIN(INITIAL);
-<STRING>\n         yyerror("Unterminated string."); BEGIN(INITIAL);
+<STRING><<EOF>>    yyerror("EOF in string.");       yybegin(INITIAL);
+<STRING>\n         yyerror("Unterminated string."); yybegin(INITIAL);
 <STRING>\\\n      {
                      bcopy(yytext,yytext+2,yyleng-2);
                      yytext += 2; yyleng -= 2;
@@ -28,6 +28,6 @@ void yyerror(char *message)
                   }
 <STRING>\"        {
                      yyleng -= 1; yytext[yyleng] = '\0';
-                     printf("string = \"%s\"",yytext); BEGIN(INITIAL);
+                     printf("string = \"%s\"",yytext); yybegin(INITIAL);
                   }
 %%

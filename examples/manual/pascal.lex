@@ -31,17 +31,17 @@ bad_string        \'([^'\n]|\'\')+
 
 %%
 
-"{"                  BEGIN(COMMENT1);
+"{"                  yybegin(COMMENT1);
 <COMMENT1>[^}\n]+
 <COMMENT1>\n            ++line_number;
 <COMMENT1><<EOF>>    yyerror("EOF in comment");
-<COMMENT1>"}"        BEGIN(INITIAL);
+<COMMENT1>"}"        yybegin(INITIAL);
 
-"(*"                 BEGIN(COMMENT2);
+"(*"                 yybegin(COMMENT2);
 <COMMENT2>[^)*\n]+
 <COMMENT2>\n            ++line_number;
 <COMMENT2><<EOF>>    yyerror("EOF in comment");
-<COMMENT2>"*)"       BEGIN(INITIAL);
+<COMMENT2>"*)"       yybegin(INITIAL);
 <COMMENT2>[*)]
 
  /* note that FILE and BEGIN are already 

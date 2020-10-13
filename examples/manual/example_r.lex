@@ -1,7 +1,8 @@
+/* basic example - flawed reentrant version with global */
 %{
         int num_lines = 0, num_chars = 0;
 %}
-%option reentrant
+%option reentrant noyywrap
 %%
 \n      ++num_lines; ++num_chars;
 .       ++num_chars;

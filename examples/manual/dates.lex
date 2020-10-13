@@ -54,13 +54,13 @@ day_ext     (st|nd|rd|th)?
   /* the default is month-day-year */
 
 <LONG>{day_of_the_week}    strcpy(dow,yytext); 
-<LONG>{month}              strcpy(month,yytext); BEGIN(DAY);
+<LONG>{month}              strcpy(month,yytext); yybegin(DAY);
 
   /* handle the form: day-month-year */
 
-<LONG>{nday}{day_ext}      strcpy(day,yytext);   BEGIN(DAY_FIRST);
-<DAY_FIRST>{month}         strcpy(month,yytext); BEGIN(LONG);
-<DAY>{nday}{day_ext}       strcpy(day,yytext);   BEGIN(LONG);  
+<LONG>{nday}{day_ext}      strcpy(day,yytext);   yybegin(DAY_FIRST);
+<DAY_FIRST>{month}         strcpy(month,yytext); yybegin(LONG);
+<DAY>{nday}{day_ext}       strcpy(day,yytext);   yybegin(LONG);  
 
 <LONG>{nyear}{year_ext}  {
                            printf("Long:\n");
@@ -75,15 +75,15 @@ day_ext     (st|nd|rd|th)?
 
   /* handle dates of the form: day-month-year */
 
-<SHORT>{nday}              strcpy(day,yytext);  BEGIN(YEAR_LAST);
-<YEAR_LAST>{nmonth}        strcpy(month,yytext);BEGIN(YLMONTH);
-<YLMONTH>{nyear}           strcpy(year,yytext); BEGIN(SHORT);
+<SHORT>{nday}              strcpy(day,yytext);  yybegin(YEAR_LAST);
+<YEAR_LAST>{nmonth}        strcpy(month,yytext);yybegin(YLMONTH);
+<YLMONTH>{nyear}           strcpy(year,yytext); yybegin(SHORT);
 
   /* handle dates of the form: year-month-day */
 
-<SHORT>{nyear}             strcpy(year,yytext); BEGIN(YEAR_FIRST);
-<YEAR_FIRST>{nmonth}       strcpy(month,yytext);BEGIN(YFMONTH);
-<YFMONTH>{nday}            strcpy(day,yytext);  BEGIN(SHORT);
+<SHORT>{nyear}             strcpy(year,yytext); yybegin(YEAR_FIRST);
+<YEAR_FIRST>{nmonth}       strcpy(month,yytext);yybegin(YFMONTH);
+<YFMONTH>{nday}            strcpy(day,yytext);  yybegin(SHORT);
 
 
 <SHORT>\n                {
@@ -96,8 +96,8 @@ day_ext     (st|nd|rd|th)?
                            strcpy(month,"");
                          }
 
-long\n                      BEGIN(LONG);
-short\n                     BEGIN(SHORT);
+long\n                      yybegin(LONG);
+short\n                     yybegin(SHORT);
 
 {skip}*
 \n

@@ -1,5 +1,5 @@
 /* 
- * string1.lex: Handling strings by using input()
+ * string1.lex: Handling strings by using yyinput()
  */
 
 %{
@@ -27,13 +27,13 @@ void yyerror(char *message)
 
      buffer   = malloc(ALLOC_SIZE);
      max_size = ALLOC_SIZE;
-     inch     = input();
+     inch     = yyinput();
      count    = 0;
      while(inch != EOF && inch != '"' && inch != '\n'){
         if(inch == '\\'){
-          inch = input();
+          inch = yyinput();
           switch(inch){
-          case '\n': inch = input(); break;
+          case '\n': inch = yyinput(); break;
           case 'b' : inch = '\b';    break;
           case 't' : inch = '\t';    break;
           case 'n' : inch = '\n';    break;
@@ -41,10 +41,10 @@ void yyerror(char *message)
           case 'f' : inch = '\f';    break;
           case 'r' : inch = '\r';    break;
           case 'X' :
-          case 'x' : inch = input();
+          case 'x' : inch = yyinput();
                      if(isxdigit(inch)){
                        temp = hextoint(toupper(inch));
-                       inch = input();
+                       inch = yyinput();
                        if(isxdigit(inch)){
                          temp = (temp << 4) + hextoint(toupper(inch));
                        } else {
@@ -59,14 +59,14 @@ void yyerror(char *message)
           default:
              if(isodigit(inch)){
                 temp = inch - '0';
-                inch = input();
+                inch = yyinput();
                 if(isodigit(inch)){
                   temp = (temp << 3) + (inch - '0');
                 } else {
                   unput(inch);
                   goto done;
                 }
-                inch = input();
+                inch = yyinput();
                 if(isodigit(inch)){
                   temp = (temp << 3) + (inch - '0');
                 } else {
@@ -82,7 +82,7 @@ void yyerror(char *message)
            buffer = realloc(buffer,max_size + ALLOC_SIZE);
            max_size += ALLOC_SIZE;
         }           
-        inch = input();
+        inch = yyinput();
      }
      if(inch == EOF || inch == '\n'){
        yyerror("Unterminated string.");

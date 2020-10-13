@@ -1,6 +1,4 @@
 %{
-#define YY_USER_INIT open_input_file()
-
 extern FILE *yyin;
 
 void open_input_file(void)
@@ -27,4 +25,5 @@ void open_input_file(void)
 }
 
 %}
+%option user-init = "open_input_file();"
 %%

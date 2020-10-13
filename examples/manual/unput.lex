@@ -1,6 +1,6 @@
 /*
  * unput.l : An example of what *not*
- *           to do with unput().
+ *           to do with yyunput().
  */
 
 
@@ -24,7 +24,7 @@ void putback_yytext(void)
     strcpy(buffer,yytext);
     printf("Got: %s\n",yytext);
     for(i=0; i<l; i++){
-       unput(buffer[i]);
+       yyunput(buffer[i]);
     }
 }
 

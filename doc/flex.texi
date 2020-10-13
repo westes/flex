@@ -354,28 +354,7 @@ Here's another simple example:
 
 @cindex counting characters and lines; reentrant
 @example
-@verbatim
-    %{
-            int num_lines = 0, num_chars = 0;
-    %}
-    %option reentrant
-    %%
-    \n      ++num_lines; ++num_chars;
-    .       ++num_chars;
-
-    %%
-
-    int main() {
-            yyscan_t scanner;
-
-            yylex_init ( &scanner );
-            yylex ( scanner );
-            yylex_destroy ( scanner );
-
-            printf( "# of lines = %d, # of chars = %d\n",
-                    num_lines, num_chars );
-    }
-@end verbatim
+@verbatiminclude ../examples/manual/example_r.lex
 @end example
 
 If you have looked at older versions of the Flex nanual, you might
@@ -383,20 +362,7 @@ have seen a version of the above example that looked more like this:
 
 @cindex counting characters and lines; non-reentrant
 @example
-@verbatim
-            int num_lines = 0, num_chars = 0;
-    %%
-    \n      ++num_lines; ++num_chars;
-    .       ++num_chars;
-
-    %%
-
-    int main() {
-            yylex();
-            printf( "# of lines = %d, # of chars = %d\n",
-                    num_lines, num_chars );
-    }
-@end verbatim
+@verbatiminclude ../examples/manual/example_nr.lex
 @end example
 
 Both versions count the number of characters and the number of lines in
@@ -422,12 +388,23 @@ language other than the original C/C++ non-reentrancy is not even an
 option.
 
 This, it's a good idea to get used to using the reentrant interface
-from the beginning of your Flex prgramming. This is so even though the
+from the beginning of your Flex programming. This is so even though the
 reentrant example above is a rather poor one; it avoids exposing the
 scanner state in globals but creates globals of its own. There is a
 mechanism for including user-defined fields in the scanner structure
 which will be explained in detail at @xref{Extra Data}. For now,
 consider this:
+
+@example
+@verbatiminclude ../examples/manual/example_er.lex
+@end example
+
+While it requires a bit more ceremony, several instances of this
+scanner can be run concurrently without stepping on each others'
+storage.
+
+(The @code{%option noyywrap} in these examples is helpful in
+making them run standalone, but does not change the behavior of the scsnner.)
 
 A somewhat more complicated example:
 
@@ -596,7 +573,8 @@ themselves.
 
 A @code{%top} block is similar to a @samp{%@{} ... @samp{%@}} block, except
 that the code in a @code{%top} block is relocated to the @emph{top} of the
-generated file, before any flex definitions @footnote{Actually,
+generated file, before any flex definitions @footnote{Actually, in the
+C/C++ back end,
 @code{yyIN_HEADER} is defined before the @samp{%top} block.}. 
 The @code{%top} block is useful when you want definitions to be
 evaluated or certain files to be included before the generated code.
@@ -1642,7 +1620,7 @@ condition remains unchanged; it does @emph{not} revert to
 
 @cindex yywrap, default for
 @cindex noyywrap, %option
-@cindex %option noyywrapp
+@cindex %option noyywrap
 If you do not supply your own version of @code{yywrap()}, then you must
 either use @code{%option noyywrap} (in which case the scanner behaves as
 though @code{yywrap()} returned 1), or you must link with @samp{-lfl} to
