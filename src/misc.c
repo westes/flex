@@ -33,58 +33,6 @@
 #include "flexdef.h"
 #include "tables.h"
 
-#define CMD_IF_TABLES_SER    "%if-tables-serialization"
-#define CMD_IF_CPP_ONLY      "%if-c++-only"
-#define CMD_IF_C_ONLY        "%if-c-only"
-#define CMD_IF_C_OR_CPP      "%if-c-or-c++"
-#define CMD_NOT_FOR_HEADER   "%not-for-header"
-#define CMD_OK_FOR_HEADER    "%ok-for-header"
-#define CMD_IF_REENTRANT     "%if-reentrant"
-#define CMD_IF_NOT_REENTRANT "%if-not-reentrant"
-#define CMD_IF_BISON_BRIDGE  "%if-bison-bridge"
-#define CMD_IF_NOT_BISON_BRIDGE  "%if-not-bison-bridge"
-#define CMD_ENDIF            "%endif"
-
-/* we allow the skeleton to push and pop. */
-struct sko_state {
-    bool dc; /**< do_copy */
-};
-static struct sko_state *sko_stack=0;
-static int sko_len=0,sko_sz=0;
-static void sko_push(bool dc)
-{
-    if(!sko_stack){
-        sko_sz = 1;
-        sko_stack = malloc(sizeof(struct sko_state) * (size_t) sko_sz);
-        if (!sko_stack)
-            flexfatal(_("allocation of sko_stack failed"));
-        sko_len = 0;
-    }
-    if(sko_len >= sko_sz){
-        sko_sz *= 2;
-        sko_stack = realloc(sko_stack,
-			sizeof(struct sko_state) * (size_t) sko_sz);
-    }
-    
-    /* initialize to zero and push */
-    sko_stack[sko_len].dc = dc;
-    sko_len++;
-}
-static void sko_peek(bool *dc)
-{
-    if(sko_len <= 0)
-        flex_die("peek attempt when sko stack is empty");
-    if(dc)
-        *dc = sko_stack[sko_len-1].dc;
-}
-static void sko_pop(bool* dc)
-{
-    sko_peek(dc);
-    sko_len--;
-    if(sko_len < 0)
-        flex_die("popped too many times in skeleton.");
-}
-
 /* Append "new_text" to the running buffer. */
 void add_action (const char *new_text)
 {
@@ -671,13 +619,6 @@ void skelout (bool announce)
 	char   *buf = buf_storage;
 	bool   do_copy = true;
 
-	/* "reset" the state by clearing the buffer and pushing a '1' */
-	if(sko_len > 0)
-		sko_peek(&do_copy);
-	sko_len = 0;
-	sko_push(do_copy=true);
-
-
 	/* Loop pulling lines either from the skelfile, if we're using
 	 * one, or from the selected back end's skel[] array.
 	 */
@@ -719,51 +660,6 @@ void skelout (bool announce)
 					outc ('\n');
 				}
 				return;
-			}
-			else if (cmd_match (CMD_IF_REENTRANT)){
-				sko_push(do_copy);
-				do_copy = ctrl.reentrant && do_copy;
-			}
-			else if (cmd_match (CMD_IF_NOT_REENTRANT)){
-				sko_push(do_copy);
-				do_copy = !ctrl.reentrant && do_copy;
-			}
-			else if (cmd_match(CMD_IF_BISON_BRIDGE)){
-				sko_push(do_copy);
-				do_copy = ctrl.bison_bridge_lval && do_copy;
-			}
-			else if (cmd_match(CMD_IF_NOT_BISON_BRIDGE)){
-				sko_push(do_copy);
-				do_copy = !ctrl.bison_bridge_lval && do_copy;
-			}
-			else if (cmd_match (CMD_ENDIF)){
-				sko_pop(&do_copy);
-			}
-			else if (cmd_match (CMD_IF_TABLES_SER)) {
-				do_copy = do_copy && tablesext;
-			}
-			else if (cmd_match (CMD_IF_CPP_ONLY)) {
-				/* only for C++ */
-				sko_push(do_copy);
-				do_copy = ctrl.C_plus_plus;
-			}
-			else if (cmd_match (CMD_IF_C_ONLY)) {
-				/* %- only for C */
-				sko_push(do_copy);
-				do_copy = !ctrl.C_plus_plus;
-			}
-			else if (cmd_match (CMD_IF_C_OR_CPP)) {
-				/* %* for C and C++ */
-				sko_push(do_copy);
-				do_copy = true;
-			}
-			else if (cmd_match (CMD_NOT_FOR_HEADER)) {
-				/* %c begin linkage-only (non-header) code. */
-				OUT_BEGIN_CODE ();
-			}
-			else if (cmd_match (CMD_OK_FOR_HEADER)) {
-				/* %e end linkage-only code. */
-				OUT_END_CODE ();
 			}
 			else {
 				flexfatal (_("bad line in skeleton file"));
