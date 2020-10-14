@@ -385,15 +385,16 @@ The non-reentrant interface is a relic from the early 1970s when Lex,
 the ancestor of Flex, was designed. Modern programming practice frowns
 on hidden global variables; thus when Flex generates a scanner in any
 language other than the original C/C++ non-reentrancy is not even an
-option.
+option.  Most likely it will make you some kind of scanner class
+that you instantiate, with methods and fields rather than exposed globals.
 
-It's a good idea to get used to using the reentrant interface from the
-beginning of your Flex programming. This is so even though the
-reentrant example above is a rather poor one; it avoids exposing the
-scanner state in globals but creates globals of its own. There is a
-mechanism for including user-defined fields in the scanner structure
-which will be explained in detail at @xref{Extra Data}. For now,
-consider this:
+Thus it's a good idea to get used to not relying on the exposed
+globals of the original interface from the beginning of your Flex
+programming. This is so even though the reentrant example above is a
+rather poor one; it avoids exposing the scanner state in globals but
+creates globals of its own. There is a mechanism for including
+user-defined fields in the scanner structure which will be explained
+in detail at @xref{Extra Data}. For now, consider this:
 
 @example
 @verbatiminclude ../examples/manual/example_er.lex
@@ -411,54 +412,53 @@ A somewhat more complicated example:
 @cindex Pascal-like language
 @example
 @verbatim
-    /* scanner for a toy Pascal-like language */
+/* scanner for a toy Pascal-like language */
 
-    %{
-    /* need this for the call to atof() below */
-    #include <math.h>
-    %}
+%{
+/* need this for the call to atof() below */
+#include <math.h>
+%}
 
-    DIGIT    [0-9]
-    ID       [a-z][a-z0-9]*
+DIGIT    [0-9]
+ID       [a-z][a-z0-9]*
 
-    %%
+%%
 
-    {DIGIT}+    {
-                printf( "An integer: %s (%d)\n", yytext,
-                        atoi( yytext ) );
-                }
+{DIGIT}+    {
+            printf( "An integer: %s (%d)\n", yytext,
+                    atoi( yytext ) );
+            }
 
-    {DIGIT}+"."{DIGIT}*        {
-                printf( "A float: %s (%g)\n", yytext,
-                        atof( yytext ) );
-                }
+{DIGIT}+"."{DIGIT}*        {
+            printf( "A float: %s (%g)\n", yytext,
+                    atof( yytext ) );
+            }
 
-    if|then|begin|end|procedure|function        {
-                printf( "A keyword: %s\n", yytext );
-                }
+if|then|begin|end|procedure|function        {
+            printf( "A keyword: %s\n", yytext );
+            }
 
-    {ID}        printf( "An identifier: %s\n", yytext );
+{ID}        printf( "An identifier: %s\n", yytext );
 
-    "+"|"-"|"*"|"/"   printf( "An operator: %s\n", yytext );
+"+"|"-"|"*"|"/"   printf( "An operator: %s\n", yytext );
 
-    "{"[^{}\n]*"}"     /* eat up one-line comments */
+"{"[^{}\n]*"}"     /* eat up one-line comments */
 
-    [ \t\n]+          /* eat up whitespace */
+[ \t\n]+          /* eat up whitespace */
 
-    .           printf( "Unrecognized character: %s\n", yytext );
+.           printf( "Unrecognized character: %s\n", yytext );
 
-    %%
+%%
 
-    int main( int argc, char **argv )
-        {
-        ++argv, --argc;  /* skip over program name */
-        if ( argc > 0 )
-                yyin = fopen( argv[0], "r" );
-        else
-                yyin = stdin;
-
-        yylex();
-        }
+int main( int argc, char **argv ) {
+    ++argv, --argc;  /* skip over program name */
+    if ( argc > 0 ) {
+            yyin = fopen( argv[0], "r" );
+    } else {
+            yyin = stdin;
+    }
+    yylex();
+}
 @end verbatim
 @end example
 
@@ -621,8 +621,10 @@ meaning is not well-defined and it may well cause compile-time errors
 Posix}, for other such features).
 
 Any @emph{indented} text or text enclosed in @samp{%@{} and @samp{%@}}
-is copied verbatim to the output (with the %@{ and %@} symbols removed).
-The %@{ and %@} symbols must appear unindented on lines by themselves.
+is copied verbatim to the output (with the %@{ and %@} symbols
+removed).  The %@{ and %@} symbols must appear unindented on lines by
+themselves.  Because whiteoace is easy to mangle wuthout noticing,
+it's good style to use the explicit %@{ and %@} delimiters.
 
 @node User Code Section, Comments in the Input, Rules Section, Format
 @section Format of the User Code Section
@@ -690,7 +692,10 @@ ruleD   yyecho();
 @end example
 
 If the target language is something other than C/C++, you will need to use
-its normal comment syntax in actions and code blocks.
+its normal comment syntax in actions and code blocks.  Note that the
+optional @{ and @} delimiters around actions a Flex dyntax, not C
+syntax; you will be able to use those even if, e,g., your target
+language is Pascal-like and delimus blocs with begin/end.
 
 @node Patterns, Matching, Format, Top
 @chapter Patterns
@@ -1293,11 +1298,13 @@ whenever @samp{frob} is seen:
 
 @example
 @verbatim
-            int word_count = 0;
-    %%
+%{
+        int word_count = 0;
+%}
+%%
 
-    frob        special(); yyreject();
-    [^ \t\n]+   ++word_count;
+frob        special(); yyreject();
+[^ \t\n]+   ++word_count;
 @end verbatim
 @end example
 
@@ -1312,12 +1319,12 @@ write @samp{abcdabcaba} to the output:
 @cindex |, use of
 @example
 @verbatim
-    %%
-    a        |
-    ab       |
-    abc      |
-    abcd     yyecho(); yyreject();
-    .|\n     /* eat up any unmatched character */
+%%
+a        |
+ab       |
+abc      |
+abcd     yyecho(); yyreject();
+.|\n     /* eat up any unmatched character */
 @end verbatim
 @end example
 
@@ -1346,9 +1353,9 @@ the output:
 @cindex yymore() to append token to previous token
 @example
 @verbatim
-    %%
-    mega-    yyecho(); yymore();
-    kludge   yyecho();
+%%
+mega-    yyecho(); yymore();
+kludge   yyecho();
 @end verbatim
 @end example
 
@@ -1381,9 +1388,9 @@ following will write out @samp{foobarbar}:
 @cindex pushing back characters with yyless
 @example
 @verbatim
-    %%
-    foobar    yyecho(); yyless(3);
-    [a-z]+    yyecho();
+%%
+foobar    yyecho(); yyless(3);
+[a-z]+    yyecho();
 @end verbatim
 @end example
 
@@ -1402,7 +1409,7 @@ the current token and cause it to be rescanned enclosed in parentheses.
 @cindex pushing back characters with yyunput()
 @example
 @verbatim
-    {
+{
     int i;
     /* Copy yytext because yyunput() trashes yytext */
     char *yycopy = strdup( yytext );
@@ -1411,7 +1418,7 @@ the current token and cause it to be rescanned enclosed in parentheses.
         yyunput( yycopy[i] );
     yyunput( '(' );
     free( yycopy );
-    }
+}
 @end verbatim
 @end example
 
@@ -1445,31 +1452,27 @@ example, the following is one way to eat up C comments:
 @cindex discarding C comments
 @example
 @verbatim
-    %%
-    "/*"        {
-                int c;
+%%
+"/*"    {
+            int c;
 
-                for ( ; ; )
-                    {
-                    while ( (c = yyinput()) != '*' &&
-                            c != EOF )
-                        ;    /* eat up text of comment */
+            for ( ; ; ) {
+                while ( (c = yyinput()) != '*' && c != EOF )
+                    ;    /* eat up text of comment */
 
-                    if ( c == '*' )
-                        {
-                        while ( (c = yyinput()) == '*' )
-                            ;
-                        if ( c == '/' )
-                            break;    /* found the end */
-                        }
-
-                    if ( c == EOF )
-                        {
-                        error( "EOF in comment" );
-                        break;
-                        }
-                    }
+                if ( c == '*' ) {
+                    while ( (c = yyinput()) == '*' )
+                        ;
+                    if ( c == '/' )
+                        break;    /* found the end */
                 }
+
+                if ( c == EOF ) {
+                    error( "EOF in comment" );
+                    break;
+                }
+            }
+        }
 @end verbatim
 @end example
 
@@ -1650,9 +1653,9 @@ example,
 
 @example
 @verbatim
-    <STRING>[^"]*        { /* eat up the string body ... */
-                ...
-                }
+<STRING>[^"]*        { /* eat up the string body ... */
+            ...
+            }
 @end verbatim
 @end example
 
@@ -1662,9 +1665,9 @@ condition, and
 @cindex start conditions, multiple
 @example
 @verbatim
-    <INITIAL,STRING,QUOTE>\.        { /* handle an escape ... */
-                ...
-                }
+<INITIAL,STRING,QUOTE>\.        { /* handle an escape ... */
+            ...
+            }
 @end verbatim
 @end example
 
@@ -1696,12 +1699,12 @@ connection between the two.  The set of rules:
 @cindex start conditions, inclusive
 @example
 @verbatim
-    %s example
-    %%
+%s example
+%%
 
-    <example>foo   do_something();
+<example>foo   do_something();
 
-    bar            something_else();
+bar            something_else();
 @end verbatim
 @end example
 
@@ -1710,12 +1713,12 @@ is equivalent to
 @cindex start conditions, exclusive
 @example
 @verbatim
-    %x example
-    %%
+%x example
+%%
 
-    <example>foo   do_something();
+<example>foo   do_something();
 
-    <INITIAL,example>bar    something_else();
+<INITIAL,example>bar    something_else();
 @end verbatim
 @end example
 
@@ -1736,12 +1739,12 @@ have been written:
 @cindex start conditions, use of wildcard condition (<*>)
 @example
 @verbatim
-    %x example
-    %%
+%x example
+%%
 
-    <example>foo   do_something();
+<example>foo   do_something();
 
-    <*>bar    something_else();
+<*>bar    something_else();
 @end verbatim
 @end example
 
@@ -1751,7 +1754,7 @@ in start conditions.  It is equivalent to:
 @cindex start conditions, behavior of default rule
 @example
 @verbatim
-    <*>.|\n     yyecho();
+<*>.|\n     yyecho();
 @end verbatim
 @end example
 
@@ -1771,15 +1774,15 @@ called and the global variable @code{enter_special} is true:
 @cindex start conditions, using yybegin()
 @example
 @verbatim
-            int enter_special;
+        int enter_special;
 
-    %x SPECIAL
-    %%
-            if ( enter_special )
-                yybegin(SPECIAL);
+%x SPECIAL
+%%
+        if ( enter_special )
+            yybegin(SPECIAL);
 
-    <SPECIAL>blahblahblah
-    ...more rules follow...
+<SPECIAL>blahblahblah
+...more rules follow...
 @end verbatim
 @end example
 
@@ -1793,33 +1796,33 @@ treat it as a single token, the floating-point number @samp{123.456}:
 @cindex start conditions, for different interpretations of same input
 @example
 @verbatim
-    %{
-    #include <math.h>
-    %}
-    %s expect
+%{
+#include <math.h>
+%}
+%s expect
 
-    %%
-    expect-floats        yybegin(expect);
+%%
+expect-floats        yybegin(expect);
 
-    <expect>[0-9]+.[0-9]+      {
-                printf( "found a float, = %f\n",
-                        atof( yytext ) );
-                }
-    <expect>\n           {
-                /* that's the end of the line, so
-                 * we need another "expect-number"
-                 * before we'll recognize any more
-                 * numbers
-                 */
-                yybegin(INITIAL);
-                }
+<expect>[0-9]+.[0-9]+      {
+            printf( "found a float, = %f\n",
+                    atof( yytext ) );
+            }
+<expect>\n           {
+            /* that's the end of the line, so
+             * we need another "expect-number"
+             * before we'll recognize any more
+             * numbers
+             */
+            yybegin(INITIAL);
+            }
 
-    [0-9]+      {
-                printf( "found an integer, = %d\n",
-                        atoi( yytext ) );
-                }
+[0-9]+      {
+            printf( "found an integer, = %d\n",
+                    atoi( yytext ) );
+            }
 
-    "."         printf( "found a dot\n" );
+"."         printf( "found a dot\n" );
 @end verbatim
 @end example
 
@@ -1830,16 +1833,16 @@ maintaining a count of the current input line.
 @cindex recognizing C comments
 @example
 @verbatim
-    %x comment
-    %%
-            int line_num = 1;
+%x comment
+%%
+        int line_num = 1;
 
-    "/*"         yybegin(comment);
+"/*"         yybegin(comment);
 
-    <comment>[^*\n]*        /* eat anything that's not a '*' */
-    <comment>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
-    <comment>\n             ++line_num;
-    <comment>"*"+"/"        yybegin(INITIAL);
+<comment>[^*\n]*        /* eat anything that's not a '*' */
+<comment>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
+<comment>\n             ++line_num;
+<comment>"*"+"/"        yybegin(INITIAL);
 @end verbatim
 @end example
 
@@ -1856,27 +1859,27 @@ following fashion:
 @cindex using integer values of start condition names
 @example
 @verbatim
-    %x comment foo
-    %%
-            int line_num = 1;
-            int comment_caller;
+%x comment foo
+%%
+        int line_num = 1;
+        int comment_caller;
 
-    "/*"         {
-                 comment_caller = INITIAL;
-                 yybegin(comment);
-                 }
+"/*"         {
+             comment_caller = INITIAL;
+             yybegin(comment);
+             }
 
-    ...
+...
 
-    <foo>"/*"    {
-                 comment_caller = foo;
-                 yybegin(comment);
-                 }
+<foo>"/*"    {
+             comment_caller = foo;
+             yybegin(comment);
+             }
 
-    <comment>[^*\n]*        /* eat anything that's not a '*' */
-    <comment>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
-    <comment>\n             ++line_num;
-    <comment>"*"+"/"        yybegin(comment_caller);
+<comment>[^*\n]*        /* eat anything that's not a '*' */
+<comment>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
+<comment>\n             ++line_num;
+<comment>"*"+"/"        yybegin(comment_caller);
 @end verbatim
 @end example
 
@@ -1904,60 +1907,60 @@ not including checking for a string that's too long):
 @cindex matching C-style double-quoted strings
 @example
 @verbatim
-    %x str
+%x str
 
-    %%
-            char string_buf[MAX_STR_CONST];
-            char *string_buf_ptr;
+%%
+        char string_buf[MAX_STR_CONST];
+        char *string_buf_ptr;
 
 
-    \"      string_buf_ptr = string_buf; yybegin(str);
+\"      string_buf_ptr = string_buf; yybegin(str);
 
-    <str>\"        { /* saw closing quote - all done */
-            yybegin(INITIAL);
-            *string_buf_ptr = '\0';
-            /* return string constant token type and
-             * value to parser
-             */
-            }
+<str>\"        { /* saw closing quote - all done */
+        yybegin(INITIAL);
+        *string_buf_ptr = '\0';
+        /* return string constant token type and
+         * value to parser
+         */
+        }
 
-    <str>\n        {
-            /* error - unterminated string constant */
-            /* generate error message */
-            }
+<str>\n        {
+        /* error - unterminated string constant */
+        /* generate error message */
+        }
 
-    <str>\\[0-7]{1,3} {
-            /* octal escape sequence */
-            int result;
+<str>\\[0-7]{1,3} {
+        /* octal escape sequence */
+        int result;
 
-            (void) sscanf( yytext + 1, "%o", &result );
+        (void) sscanf( yytext + 1, "%o", &result );
 
-            if ( result > 0xff )
-                    /* error, constant is out-of-bounds */
+        if ( result > 0xff )
+                /* error, constant is out-of-bounds */
 
-            *string_buf_ptr++ = result;
-            }
+        *string_buf_ptr++ = result;
+        }
 
-    <str>\\[0-9]+ {
-            /* generate error - bad escape sequence; something
-             * like '\48' or '\0777777'
-             */
-            }
+<str>\\[0-9]+ {
+        /* generate error - bad escape sequence; something
+         * like '\48' or '\0777777'
+         */
+        }
 
-    <str>\\n  *string_buf_ptr++ = '\n';
-    <str>\\t  *string_buf_ptr++ = '\t';
-    <str>\\r  *string_buf_ptr++ = '\r';
-    <str>\\b  *string_buf_ptr++ = '\b';
-    <str>\\f  *string_buf_ptr++ = '\f';
+<str>\\n  *string_buf_ptr++ = '\n';
+<str>\\t  *string_buf_ptr++ = '\t';
+<str>\\r  *string_buf_ptr++ = '\r';
+<str>\\b  *string_buf_ptr++ = '\b';
+<str>\\f  *string_buf_ptr++ = '\f';
 
-    <str>\\(.|\n)  *string_buf_ptr++ = yytext[1];
+<str>\\(.|\n)  *string_buf_ptr++ = yytext[1];
 
-    <str>[^\\\n\"]+        {
-            char *yptr = yytext;
+<str>[^\\\n\"]+        {
+        char *yptr = yytext;
 
-            while ( *yptr )
-                    *string_buf_ptr++ = *yptr++;
-            }
+        while ( *yptr )
+                *string_buf_ptr++ = *yptr++;
+        }
 @end verbatim
 @end example
 
@@ -1969,7 +1972,7 @@ condition @dfn{scope}.  A start condition scope is begun with:
 
 @example
 @verbatim
-    <SCs>{
+<SCs>{
 @end verbatim
 @end example
 
@@ -1981,12 +1984,12 @@ start condition scope, every rule automatically has the prefix
 @cindex extended scope of start conditions
 @example
 @verbatim
-    <ESC>{
-        "\\n"   return '\n';
-        "\\r"   return '\r';
-        "\\f"   return '\f';
-        "\\0"   return '\0';
-    }
+<ESC>{
+    "\\n"   return '\n';
+    "\\r"   return '\r';
+    "\\f"   return '\f';
+    "\\0"   return '\0';
+}
 @end verbatim
 @end example
 
@@ -1994,10 +1997,10 @@ is equivalent to:
 
 @example
 @verbatim
-    <ESC>"\\n"  return '\n';
-    <ESC>"\\r"  return '\r';
-    <ESC>"\\f"  return '\f';
-    <ESC>"\\0"  return '\0';
+<ESC>"\\n"  return '\n';
+<ESC>"\\r"  return '\r';
+<ESC>"\\f"  return '\f';
+<ESC>"\\0"  return '\0';
 @end verbatim
 @end example
 
@@ -2069,10 +2072,8 @@ returns a @code{yybuffer} handle, which may then be passed to
 other routines (see below).
 
 In target languages other than C/C++, this prototype will look
-different.  The buffer-state object may be named differently, and will
-not have ``struct'' as part of its name.  The input-stream type won't
-be @code{FILE *}.  But expect the same semamntics wxpressed in native
-tytypes.
+different.  The input-stream type won't be @code{FILE *}.  But expect
+the same semamntics wxpressed in native tytypes.
 
 @tindex yybuffer
 The @code{yybuffer} type is a
@@ -2162,36 +2163,35 @@ maintains the stack internally.
 @cindex handling include files with multiple input buffers
 @example
 @verbatim
-    /* the "incl" state is used for picking up the name
-     * of an include file
-     */
-    %x incl
-    %%
-    include             yybegin(incl);
+/* the "incl" state is used for picking up the name
+ * of an include file
+ */
+%x incl
+%%
+include             yybegin(incl);
 
-    [a-z]+              yyecho();
-    [^a-z\n]*\n?        yyecho();
+[a-z]+              yyecho();
+[^a-z\n]*\n?        yyecho();
 
-    <incl>[ \t]*      /* eat the whitespace */
-    <incl>[^ \t\n]+   { /* got the include file name */
-            yyin = fopen( yytext, "r" );
+<incl>[ \t]*      /* eat the whitespace */
+<incl>[^ \t\n]+   { /* got the include file name */
+        yyin = fopen( yytext, "r" );
 
-            if ( ! yyin )
-                error( ... );
+        if ( ! yyin )
+            error( ... );
 
-			yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
+        yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
 
-            yybegin(INITIAL);
-            }
+        yybegin(INITIAL);
+}
 
-    <<EOF>> {
-			yypop_buffer_state();
+<<EOF>> {
+    yypop_buffer_state();
 
-            if ( !yy_current_buffer() )
-                {
-                yyterminate();
-                }
-            }
+    if ( !yy_current_buffer() ) {
+            yyterminate();
+    }
+}
 @end verbatim
 @end example
 
@@ -2201,58 +2201,53 @@ manages its own input buffer stack manually (instead of letting flex do it).
 @cindex handling include files with multiple input buffers
 @example
 @verbatim
-    /* the "incl" state is used for picking up the name
-     * of an include file
-     */
-    %x incl
+/* the "incl" state is used for picking up the name
+ * of an include file
+ */
+%x incl
 
-    %{
-    #define MAX_INCLUDE_DEPTH 10
-    yybuffer include_stack[MAX_INCLUDE_DEPTH];
-    int include_stack_ptr = 0;
-    %}
+%{
+#define MAX_INCLUDE_DEPTH 10
+yybuffer include_stack[MAX_INCLUDE_DEPTH];
+int include_stack_ptr = 0;
+%}
 
-    %%
-    include             yybegin(incl);
+%%
+include             yybegin(incl);
 
-    [a-z]+              yyecho();
-    [^a-z\n]*\n?        yyecho();
+[a-z]+              yyecho();
+[^a-z\n]*\n?        yyecho();
 
-    <incl>[ \t]*      /* eat the whitespace */
-    <incl>[^ \t\n]+   { /* got the include file name */
-            if ( include_stack_ptr >= MAX_INCLUDE_DEPTH )
-                {
-                fprintf( stderr, "Includes nested too deeply" );
-                exit( 1 );
-                }
+<incl>[ \t]*      /* eat the whitespace */
+<incl>[^ \t\n]+   { /* got the include file name */
+        if ( include_stack_ptr >= MAX_INCLUDE_DEPTH ) {
+            fprintf( stderr, "Includes nested too deeply" );
+            exit( 1 );
+        }
 
-            include_stack[include_stack_ptr++] =
-                yy_current_buffer();
+        include_stack[include_stack_ptr++] =
+            yy_current_buffer();
 
-            yyin = fopen( yytext, "r" );
+        yyin = fopen( yytext, "r" );
 
-            if ( ! yyin )
-                error( ... );
+        if ( ! yyin )
+            error( ... );
 
+        yy_switch_to_buffer(
+            yy_create_buffer( yyin, YY_BUF_SIZE ) );
+
+        yybegin(INITIAL);
+}
+
+<<EOF>> {
+        if ( --include_stack_ptr == 0 ) {
+            yyterminate();
+        } else {
+            yy_delete_buffer( yy_current_buffer() );
             yy_switch_to_buffer(
-                yy_create_buffer( yyin, YY_BUF_SIZE ) );
-
-            yybegin(INITIAL);
-            }
-
-    <<EOF>> {
-            if ( --include_stack_ptr == 0 )
-                {
-                yyterminate();
-                }
-
-            else
-                {
-                yy_delete_buffer( yy_current_buffer() );
-                yy_switch_to_buffer(
-                     include_stack[include_stack_ptr] );
-                }
-            }
+                 include_stack[include_stack_ptr] );
+        }
+}
 @end verbatim
 @end example
 
@@ -2531,13 +2526,13 @@ is @code{TOK_NUMBER}, part of the scanner might look like:
 @cindex yacc interface
 @example
 @verbatim
-    %{
-    #include "y.tab.h"
-    %}
+%{
+#include "y.tab.h"
+%}
 
-    %%
+%%
 
-    [0-9]+        yylval = atoi( yytext ); return TOK_NUMBER;
+[0-9]+        yylval = atoi( yytext ); return TOK_NUMBER;
 @end verbatim
 @end example
 
@@ -2609,14 +2604,14 @@ corresponding routine not appearing in the generated scanner:
 
 @example
 @verbatim
-    input, yyunput
-    yy_push_state, yy_pop_state, yy_top_state
-    yy_scan_buffer, yy_scan_bytes, yy_scan_string
+input, yyunput
+yy_push_state, yy_pop_state, yy_top_state
+yy_scan_buffer, yy_scan_bytes, yy_scan_string
 
-    yyget_extra, yyset_extra, yyget_leng, yyget_text,
-    yyget_lineno, yyset_lineno, yyget_in, yyset_in,
-    yyget_out, yyset_out, yyget_lval, yyset_lval,
-    yyget_lloc, yyset_lloc, yyget_debug, yyset_debug
+yyget_extra, yyset_extra, yyget_leng, yyget_text,
+yyget_lineno, yyset_lineno, yyget_in, yyset_in,
+yyget_out, yyset_out, yyget_lval, yyset_lval,
+yyget_lloc, yyset_lloc, yyget_debug, yyset_debug
 @end verbatim
 @end example
 
@@ -3572,16 +3567,16 @@ The way to remove the backing up is to add ``error'' rules:
 @cindex backing up, eliminating by adding error rules
 @example
 @verbatim
-    %%
-    foo         return TOK_KEYWORD;
-    foobar      return TOK_KEYWORD;
+%%
+foo         return TOK_KEYWORD;
+foobar      return TOK_KEYWORD;
 
-    fooba       |
-    foob        |
-    fo          {
-                /* false alarm, not really a keyword */
-                return TOK_ID;
-                }
+fooba       |
+foob        |
+fo          {
+            /* false alarm, not really a keyword */
+            return TOK_ID;
+            }
 @end verbatim
 @end example
 
@@ -3591,11 +3586,11 @@ Eliminating backing up among a list of keywords can also be done using a
 @cindex backing up, eliminating with catch-all rule
 @example
 @verbatim
-    %%
-    foo         return TOK_KEYWORD;
-    foobar      return TOK_KEYWORD;
+%%
+foo         return TOK_KEYWORD;
+foobar      return TOK_KEYWORD;
 
-    [a-z]+      return TOK_ID;
+[a-z]+      return TOK_ID;
 @end verbatim
 @end example
 
@@ -3620,8 +3615,8 @@ like:
 @cindex trailing context, variable length
 @example
 @verbatim
-    %%
-    mouse|rat/(cat|dog)   run();
+%%
+mouse|rat/(cat|dog)   run();
 @end verbatim
 @end example
 
@@ -3629,9 +3624,9 @@ is better written:
 
 @example
 @verbatim
-    %%
-    mouse/cat|dog         run();
-    rat/cat|dog           run();
+%%
+mouse/cat|dog         run();
+rat/cat|dog           run();
 @end verbatim
 @end example
 
@@ -3639,9 +3634,9 @@ or as
 
 @example
 @verbatim
-    %%
-    mouse|rat/cat         run();
-    mouse|rat/dog         run();
+%%
+mouse|rat/cat         run();
+mouse|rat/dog         run();
 @end verbatim
 @end example
 
@@ -3659,16 +3654,16 @@ additional work of setting up the scanning environment (e.g.,
 @cindex performance optimization, matching longer tokens
 @example
 @verbatim
-    %x comment
-    %%
-            int line_num = 1;
+%x comment
+%%
+        int line_num = 1;
 
-    "/*"         yybegin(comment);
+"/*"         yybegin(comment);
 
-    <comment>[^*\n]*
-    <comment>"*"+[^*/\n]*
-    <comment>\n             ++line_num;
-    <comment>"*"+"/"        yybegin(INITIAL);
+<comment>[^*\n]*
+<comment>"*"+[^*/\n]*
+<comment>\n             ++line_num;
+<comment>"*"+"/"        yybegin(INITIAL);
 @end verbatim
 @end example
 
@@ -3676,17 +3671,17 @@ This could be sped up by writing it as:
 
 @example
 @verbatim
-    %x comment
-    %%
-            int line_num = 1;
+%x comment
+%%
+        int line_num = 1;
 
-    "/*"         yybegin(comment);
+"/*"         yybegin(comment);
 
-    <comment>[^*\n]*
-    <comment>[^*\n]*\n      ++line_num;
-    <comment>"*"+[^*/\n]*
-    <comment>"*"+[^*/\n]*\n ++line_num;
-    <comment>"*"+"/"        yybegin(INITIAL);
+<comment>[^*\n]*
+<comment>[^*\n]*\n      ++line_num;
+<comment>"*"+[^*/\n]*
+<comment>"*"+[^*/\n]*\n ++line_num;
+<comment>"*"+"/"        yybegin(INITIAL);
 @end verbatim
 @end example
 
@@ -3708,15 +3703,15 @@ keywords.  A natural first approach is:
 @cindex performance optimization, recognizing keywords
 @example
 @verbatim
-    %%
-    asm      |
-    auto     |
-    break    |
-    ... etc ...
-    volatile |
-    while    /* it's a keyword */
+%%
+asm      |
+auto     |
+break    |
+... etc ...
+volatile |
+while    /* it's a keyword */
 
-    .|\n     /* it's not a keyword */
+.|\n     /* it's not a keyword */
 @end verbatim
 @end example
 
@@ -3724,16 +3719,16 @@ To eliminate the back-tracking, introduce a catch-all rule:
 
 @example
 @verbatim
-    %%
-    asm      |
-    auto     |
-    break    |
-    ... etc ...
-    volatile |
-    while    /* it's a keyword */
+%%
+asm      |
+auto     |
+break    |
+... etc ...
+volatile |
+while    /* it's a keyword */
 
-    [a-z]+   |
-    .|\n     /* it's not a keyword */
+[a-z]+   |
+.|\n     /* it's not a keyword */
 @end verbatim
 @end example
 
@@ -3743,16 +3738,16 @@ recognition of newlines with that of the other tokens:
 
 @example
 @verbatim
-    %%
-    asm\n    |
-    auto\n   |
-    break\n  |
-    ... etc ...
-    volatile\n |
-    while\n  /* it's a keyword */
+%%
+asm\n    |
+auto\n   |
+break\n  |
+... etc ...
+volatile\n |
+while\n  /* it's a keyword */
 
-    [a-z]+\n |
-    .|\n     /* it's not a keyword */
+[a-z]+\n |
+.|\n     /* it's not a keyword */
 @end verbatim
 @end example
 
@@ -3774,17 +3769,17 @@ one which doesn't include a newline:
 
 @example
 @verbatim
-    %%
-    asm\n    |
-    auto\n   |
-    break\n  |
-    ... etc ...
-    volatile\n |
-    while\n  /* it's a keyword */
+%%
+asm\n    |
+auto\n   |
+break\n  |
+... etc ...
+volatile\n |
+while\n  /* it's a keyword */
 
-    [a-z]+\n |
-    [a-z]+   |
-    .|\n     /* it's not a keyword */
+[a-z]+\n |
+[a-z]+   |
+.|\n     /* it's not a keyword */
 @end verbatim
 @end example
 
@@ -3957,69 +3952,69 @@ Here is an example of a simple C++ scanner:
 @cindex C++ scanners, use of
 @example
 @verbatim
-     // An example of using the flex C++ scanner class.
+ // An example of using the flex C++ scanner class.
 
-    %{
-    #include <iostream>
-    using namespace std;
-    int mylineno = 0;
-    %}
+%{
+#include <iostream>
+using namespace std;
+int mylineno = 0;
+%}
 
-    %option noyywrap c++
+%option noyywrap c++
 
-    string  \"[^\n"]+\"
+string  \"[^\n"]+\"
 
-    ws      [ \t]+
+ws      [ \t]+
 
-    alpha   [A-Za-z]
-    dig     [0-9]
-    name    ({alpha}|{dig}|\$)({alpha}|{dig}|[_.\-/$])*
-    num1    [-+]?{dig}+\.?([eE][-+]?{dig}+)?
-    num2    [-+]?{dig}*\.{dig}+([eE][-+]?{dig}+)?
-    number  {num1}|{num2}
+alpha   [A-Za-z]
+dig     [0-9]
+name    ({alpha}|{dig}|\$)({alpha}|{dig}|[_.\-/$])*
+num1    [-+]?{dig}+\.?([eE][-+]?{dig}+)?
+num2    [-+]?{dig}*\.{dig}+([eE][-+]?{dig}+)?
+number  {num1}|{num2}
 
-    %%
+%%
 
-    {ws}    /* skip blanks and tabs */
+{ws}    /* skip blanks and tabs */
 
-    "/*"    {
-            int c;
+"/*"    {
+        int c;
 
-            while((c = yyinput()) != 0)
+        while((c = yyinput()) != 0)
+            {
+            if(c == '\n')
+                ++mylineno;
+
+            else if(c == '*')
                 {
-                if(c == '\n')
-                    ++mylineno;
-
-                else if(c == '*')
-                    {
-                    if((c = yyinput()) == '/')
-                        break;
-                    else
-                        yyunput(c);
-                    }
+                if((c = yyinput()) == '/')
+                    break;
+                else
+                    yyunput(c);
                 }
             }
+        }
 
-    {number}  cout << "number " << YYText() << '\n';
+{number}  cout << "number " << YYText() << '\n';
 
-    \n        mylineno++;
+\n        mylineno++;
 
-    {name}    cout << "name " << YYText() << '\n';
+{name}    cout << "name " << YYText() << '\n';
 
-    {string}  cout << "string " << YYText() << '\n';
+{string}  cout << "string " << YYText() << '\n';
 
-    %%
+%%
 
-	// This include is required if main() is an another source file.
-	//#include <FlexLexer.h>
+    // This include is required if main() is an another source file.
+    //#include <FlexLexer.h>
 
-    int main( int /* argc */, char** /* argv */ )
-    {
-        FlexLexer* lexer = new yyFlexLexer;
-        while(lexer->yylex() != 0)
-            ;
-        return 0;
-    }
+int main( int /* argc */, char** /* argv */ )
+{
+    FlexLexer* lexer = new yyFlexLexer;
+    while(lexer->yylex() != 0)
+        ;
+    return 0;
+}
 @end verbatim
 @end example
 
@@ -4080,18 +4075,18 @@ the token level (i.e., instead of at the character level):
 @cindex reentrant scanners, multiple interleaved scanners
 @example
 @verbatim
-    /* Example of maintaining more than one active scanner. */
+/* Example of maintaining more than one active scanner. */
 
-    do {
-        int tok1, tok2;
+do {
+    int tok1, tok2;
 
-        tok1 = yylex( scanner_1 );
-        tok2 = yylex( scanner_2 );
+    tok1 = yylex( scanner_1 );
+    tok2 = yylex( scanner_2 );
 
-        if( tok1 != tok2 )
-            printf("Files are different.");
+    if( tok1 != tok2 )
+        printf("Files are different.");
 
-   } while ( tok1 && tok2 );
+} while ( tok1 && tok2 );
 @end verbatim
 @end example
 
@@ -4105,26 +4100,26 @@ another instance of itself.
 @cindex reentrant scanners, recursive invocation
 @example
 @verbatim
-    /* Example of recursive invocation. */
+/* Example of recursive invocation. */
 
-    %option reentrant
+%option reentrant
 
-    %%
-    "eval(".+")"  {
-                      yyscan_t scanner;
-                      yybuffer buf;
+%%
+"eval(".+")"  {
+                  yyscan_t scanner;
+                  yybuffer buf;
 
-                      yylex_init( &scanner );
-                      yytext[yyleng-1] = ' ';
+                  yylex_init( &scanner );
+                  yytext[yyleng-1] = ' ';
 
-                      buf = yy_scan_string( yytext + 5, scanner );
-                      yylex( scanner );
+                  buf = yy_scan_string( yytext + 5, scanner );
+                  yylex( scanner );
 
-                      yy_delete_buffer(buf,scanner);
-                      yylex_destroy( scanner );
-                 }
-    ...
-    %%
+                  yy_delete_buffer(buf,scanner);
+                  yylex_destroy( scanner );
+             }
+...
+%%
 @end verbatim
 @end example
 
@@ -4167,30 +4162,30 @@ First, an example of a reentrant scanner:
 @cindex reentrant, example of
 @example
 @verbatim
-    /* This scanner prints "//" comments. */
+/* This scanner prints "//" comments. */
 
-    %option reentrant stack noyywrap
-    %x COMMENT
+%option reentrant stack noyywrap
+%x COMMENT
 
-    %%
+%%
 
-    "//"                 yy_push_state( COMMENT, yyscanner);
-    .|\n
+"//"                 yy_push_state( COMMENT, yyscanner);
+.|\n
 
-    <COMMENT>\n          yy_pop_state( yyscanner );
-    <COMMENT>[^\n]+      fprintf( yyout, "%s\n", yytext);
+<COMMENT>\n          yy_pop_state( yyscanner );
+<COMMENT>[^\n]+      fprintf( yyout, "%s\n", yytext);
 
-    %%
+%%
 
-    int main ( int argc, char * argv[] )
-    {
-        yyscan_t scanner;
+int main ( int argc, char * argv[] )
+{
+    yyscan_t scanner;
 
-        yylex_init ( &scanner );
-        yylex ( scanner );
-        yylex_destroy ( scanner );
+    yylex_init ( &scanner );
+    yylex ( scanner );
+    yylex_destroy ( scanner );
     return 0;
-   }
+}
 @end verbatim
 @end example
 
@@ -4265,9 +4260,12 @@ other target languages.
 @subsection Global Variables Replaced By Macros
 
 @cindex reentrant, accessing flex variables
-All global variables in traditional flex have been replaced by macro equivalents.
+In the C/C++ back end global variables in traditional flex have been
+replaced by macro equivalents.  Be aware that this will not be true in target
+languages without macros, so rekying on this backward-compatibility
+hack will hinder forward portability.
 
-Note that in the above example, @code{yyout} and @code{yytext} are
+Accordingly, in the above example, @code{yyout} and @code{yytext} are
 not plain variables. These are macros that will expand to their equivalent lvalue.
 All of the familiar @code{flex} globals have been replaced by their macro
 equivalents. In particular, @code{yytext}, @code{yyleng}, @code{yylineno},
@@ -4474,34 +4472,34 @@ scanner:
 @cindex YY_EXTRA_TYPE, defining your own type
 @example
 @verbatim
-    /* An example of overriding YY_EXTRA_TYPE. */
-    %{
-    #include <sys/stat.h>
-    #include <unistd.h>
-    %}
-    %option reentrant
-    %option extra-type="struct stat *"
-    %%
+/* An example of overriding YY_EXTRA_TYPE. */
+%{
+#include <sys/stat.h>
+#include <unistd.h>
+%}
+%option reentrant
+%option extra-type="struct stat *"
+%%
 
-    __filesize__     printf( "%ld", yyextra->st_size  );
-    __lastmod__      printf( "%ld", yyextra->st_mtime );
-    %%
-    void scan_file( char* filename )
-    {
-        yyscan_t scanner;
-        struct stat buf;
-        FILE *in;
+__filesize__     printf( "%ld", yyextra->st_size  );
+__lastmod__      printf( "%ld", yyextra->st_mtime );
+%%
+void scan_file( char* filename )
+{
+    yyscan_t scanner;
+    struct stat buf;
+    FILE *in;
 
-        in = fopen( filename, "r" );
-        stat( filename, &buf );
+    in = fopen( filename, "r" );
+    stat( filename, &buf );
 
-        yylex_init_extra( buf, &scanner );
-        yyset_in( in, scanner );
-        yylex( scanner );
-        yylex_destroy( scanner );
+    yylex_init_extra( buf, &scanner );
+    yyset_in( in, scanner );
+    yylex( scanner );
+    yylex_destroy( scanner );
 
-        fclose( in );
-   }
+    fclose( in );
+}
 @end verbatim
 @end example
 
@@ -6035,20 +6033,22 @@ Just call @code{yyrestart(newfile)}. Be sure to reset the start state if you wan
 @node  How do I execute code only during initialization (only before the first scan)?
 @unnumberedsec How do I execute code only during initialization (only before the first scan)?
 
-You can specify an initial action by defining the macro @code{YY_USER_INIT} (though
-note that @code{yyout} may not be available at the time this macro is executed).  Or you
-can add to the beginning of your rules section:
+You can specify an initial action with @code{%option user-init}
+(though note that @code{yyout} may not be available at the time this
+option is interpreted).  Or you can add to the beginning of your rules
+section:
 
 @example
 @verbatim
 %%
-    /* Must be indented! */
-    static int did_init = 0;
+%{
+    static bool did_init = false;
 
-    if ( ! did_init ){
-do_my_init();
-        did_init = 1;
+    if ( ! did_init ) {
+        do_my_init();
+        did_init = true;
     }
+%}
 @end verbatim
 @end example
 
@@ -6060,9 +6060,8 @@ You can specify an action for the @code{<<EOF>>} rule.
 @node  Where else can I find help?
 @unnumberedsec Where else can I find help?
 
-You can find the flex homepage on the web at
-@uref{http://flex.sourceforge.net/}. See that page for details about flex
-mailing lists as well.
+You can find the flex repository and issue tracker at
+@uref{https://github.com/westes/flex}.
 
 @node  Can I include comments in the "rules" section of the file?
 @unnumberedsec Can I include comments in the "rules" section of the file?
@@ -6098,25 +6097,24 @@ However, you can do this using multiple input buffers.
 @example
 @verbatim
 %%
-macro/[a-z]+	{
+macro/[a-z]+   {
 /* Saw the macro "macro" followed by extra stuff. */
 main_buffer = yy_current_buffer();
 expansion_buffer = yy_scan_string(expand(yytext));
 yy_switch_to_buffer(expansion_buffer);
 }
 
-<<EOF>>	{
-if ( expansion_buffer )
-{
-// We were doing an expansion, return to where
-// we were.
-yy_switch_to_buffer(main_buffer);
-yy_delete_buffer(expansion_buffer);
-expansion_buffer = 0;
-}
-else
-yyterminate();
-}
+<<EOF>> {
+                if ( expansion_buffer ) {
+                // We were doing an expansion, return to where
+                // we were.
+                yy_switch_to_buffer(main_buffer);
+                yy_delete_buffer(expansion_buffer);
+                expansion_buffer = 0;
+                } else {
+                        yyterminate();
+                }
+        }
 @end verbatim
 @end example
 
@@ -6187,7 +6185,7 @@ e.g.,
 %%
 [[a bunch of rules here]]
 
-.	printf("bad input character '%s' at line %d\n", yytext, yylineno);
+.       printf("bad input character '%s' at line %d\n", yytext, yylineno);
 @end verbatim
 @end example
 
@@ -6338,7 +6336,7 @@ making it match "endskip" plus something else.  So for example:
 @verbatim
 <SKIP>"endskip"     yybegin(INITIAL);
 <SKIP>[^e]+         ;
-<SKIP>.		        ;/* so you eat up e's, too */
+<SKIP>.                 ;/* so you eat up e's, too */
 @end verbatim
 @end example
 
@@ -6431,7 +6429,7 @@ regardless of how complex they are.
 See the "Performance Considerations" section of the man page, and also
 the example in MISC/fastwc/.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6474,7 +6472,7 @@ Yes.  I've appended instructions on how.  Before you make this change,
 though, you should think about whether there are ways to fundamentally
 simplify your scanner - those are certainly preferable!
 
-		Vern
+                Vern
 
 To increase the 32K limit (on a machine with 32 bit integers), you increase
 the magnitude of the following in flexdef.h:
@@ -6512,10 +6510,10 @@ so it won't happen any time soon.  In the interim, the best I can suggest
 (unless you want to try fixing it yourself) is to write your rules in
 terms of pairs of bytes, using definitions in the first section:
 
-	X	\xfe\xc2
-	...
-	%%
-	foo{X}bar	found_foo_fe_c2_bar();
+        X       \xfe\xc2
+        ...
+        %%
+        foo{X}bar       found_foo_fe_c2_bar();
 
 etc.  Definitely a pain - sorry about that.
 
@@ -6523,7 +6521,7 @@ By the way, the email address you used for me is ancient, indicating you
 have a very old version of flex.  You can get the most recent, 2.5.4, from
 ftp.ee.lbl.gov.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6550,7 +6548,7 @@ Fixing flex to handle wider characters is on the long-term to-do list.
 But since flex is a strictly spare-time project these days, this probably
 won't happen for quite a while, unless someone else does it first.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6606,7 +6604,7 @@ way to compress the tables.
 
 See above.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6637,7 +6635,7 @@ No, there's no way to put back an end-of-file.
 The latest release is 2.5.4, by the way.  It fixes some bugs in 2.5.2 and
 2.5.3.  You can get it from ftp.ee.lbl.gov.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6661,13 +6659,13 @@ any blanks around it.  If you instead want the special '|' *action* (which
 from your scanner appears to be the case), which is a way of giving two
 different rules the same action:
 
-	foo	|
-	bar	matched_foo_or_bar();
+        foo     |
+        bar     matched_foo_or_bar();
 
 then '|' *must* be separated from the first rule by whitespace and *must*
 be followed by a new line.  You *cannot* write it as:
 
-	foo | bar	matched_foo_or_bar();
+        foo | bar       matched_foo_or_bar();
 
 even though you might think you could because yacc supports this syntax.
 The reason for this unfortunately incompatibility is historical, but it's
@@ -6678,7 +6676,7 @@ from your use of '|' later confusing flex.
 
 Let me know if you still have problems.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6704,7 +6702,7 @@ parentheses.  Note that you must also be building the scanner with the -l
 option for AT&T lex compatibility.  Without this option, flex automatically
 encloses the definitions in parentheses.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6728,20 +6726,20 @@ From: Vern Paxson <vern>
 I can't get this problem to reproduce - it works fine for me.  Note
 though that if what you have is slightly different:
 
-	COMMENT	^\*.*
-	%%
-	{COMMENT}	{ }
+        COMMENT ^\*.*
+        %%
+        {COMMENT}       { }
 
 then it won't work, because flex pushes back macro definitions enclosed
 in ()'s, so the rule becomes
 
-	(^\*.*)		{ }
+        (^\*.*)         { }
 
 and now that the '^' operator is not at the immediate beginning of the
 line, it's interpreted as just a regular character.  You can avoid this
 behavior by using the "-l" lex-compatibility flag, or "%option lex-compat".
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6772,7 +6770,7 @@ it should be a problem.  Lex's matching is clearly wrong, and I'd hope
 that usually the intent remains the same as expressed with the pattern,
 so flex's matching will be correct.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6813,7 +6811,7 @@ use flex.
 
 The latest release is 2.5.4, by the way, available from ftp.ee.lbl.gov.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6839,7 +6837,7 @@ even compile ...)  You need instead:
 and that should work fine - there's no restriction on what can go inside
 of ()'s except for the trailing context operator, '/'.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6868,7 +6866,7 @@ have been on the to-do list for a while.  As flex is a purely spare-time
 project for me, no guarantees when this will be added (in particular, it
 for sure won't be for many months to come).
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6901,7 +6899,7 @@ What you need to do is derive a subclass from yyFlexLexer that provides
 the above yylex() method, squirrels away lvalp and parm into member
 variables, and then invokes yyFlexLexer::yylex() to do the regular scanning.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6929,7 +6927,7 @@ even considers the possibility of matching "/*".
 
 Example:
 
-	'([^']*|{ESCAPE_SEQUENCE})'
+        '([^']*|{ESCAPE_SEQUENCE})'
 
 will match all the text between the ''s (inclusive).  So the lexer
 considers this as a token beginning at the first ', and doesn't even
@@ -6938,7 +6936,7 @@ attempt to match other tokens inside it.
 I thinnk this subtlety is not worth putting in the manual, as I suspect
 it would confuse more people than it would enlighten.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -6960,9 +6958,9 @@ From: Vern Paxson <vern>
 
 What version of flex are you using?  If I feed this to 2.5.4, it complains:
 
-	"bug.l", line 5: EOF encountered inside an action
-	"bug.l", line 5: unrecognized rule
-	"bug.l", line 5: fatal parse error
+        "bug.l", line 5: EOF encountered inside an action
+        "bug.l", line 5: unrecognized rule
+        "bug.l", line 5: fatal parse error
 
 Not the world's greatest error message, but it manages to flag the problem.
 
@@ -6971,7 +6969,7 @@ an action on a separate line, since it's ambiguous with an indented rule.)
 
 You can get 2.5.4 from ftp.ee.lbl.gov.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7020,9 +7018,9 @@ From: Vern Paxson <vern>
 > I took a quick look into the flex-sources and altered some #defines in
 > flexdefs.h:
 >
-> 	#define INITIAL_MNS 64000
-> 	#define MNS_INCREMENT 1024000
-> 	#define MAXIMUM_MNS 64000
+>       #define INITIAL_MNS 64000
+>       #define MNS_INCREMENT 1024000
+>       #define MAXIMUM_MNS 64000
 
 The things to fix are to add a couple of zeroes to:
 
@@ -7033,8 +7031,8 @@ The things to fix are to add a couple of zeroes to:
 
 and, if you get complaints about too many rules, make the following change too:
 
-	#define YY_TRAILING_MASK 0x200000
-	#define YY_TRAILING_HEAD_MASK 0x400000
+        #define YY_TRAILING_MASK 0x200000
+        #define YY_TRAILING_HEAD_MASK 0x400000
 
 - Vern
 @end verbatim
@@ -7069,7 +7067,7 @@ You need to pass &fin, to turn it into an ifstream* instead of an ifstream.
 Then its type will be compatible with the expected istream*, because ifstream
 is derived from istream.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7099,7 +7097,7 @@ No, yyrestart() doesn't imply a rewind, even though its name might sound
 like it does.  It tells the scanner to flush its internal buffers and
 start reading from the given file at its present location.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7126,7 +7124,7 @@ This is a known problem with Solaris C++ (and/or Solaris yacc).  I believe
 the fix is to explicitly insert some 'extern "C"' statements for the
 corresponding routines/symbols.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7157,7 +7155,7 @@ an example in the man page of how this can lead to different matching.
 Flex's behavior complies with the POSIX standard (or at least with the
 last POSIX draft I saw).
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7183,7 +7181,7 @@ yytext as "extern char yytext[]" (which is what lex uses) instead of
 "extern char *yytext" (which is what flex uses).  If it's not that, then
 I'm afraid I don't know what the problem might be.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7211,7 +7209,7 @@ a declaration of yy_start in order to get your scanner to compile when
 using C++; instead, the correct fix is to make lexbegin() a member
 function (by deriving from yyFlexLexer).
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7234,7 +7232,7 @@ YY_USER_ACTION to count the number of characters matched.
 
 The latest flex release, by the way, is 2.5.4, available from ftp.ee.lbl.gov.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7258,7 +7256,7 @@ you are in the file, by counting the number of characters scanned
 for each token (available in yyleng).  It may prove convenient to
 do this by redefining YY_USER_ACTION, as described in the manual.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7288,7 +7286,7 @@ While generating a .h file like you suggests is certainly cleaner,
 flex development has come to a virtual stand-still :-(, so a workaround
 like the above is much more pragmatic than waiting for a new feature.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7312,19 +7310,19 @@ name that is also a variable name, or something like that; flex spits
 out #define's for each start condition name, mapping them to a number,
 so you can wind up with:
 
-	%x foo
-	%%
-		...
-	%%
-	void bar()
-		{
-		int foo = 3;
-		}
+        %x foo
+        %%
+                ...
+        %%
+        void bar()
+                {
+                int foo = 3;
+                }
 
 and the penultimate will turn into "int 1 = 3" after C preprocessing,
 since flex will put "#define foo 1" in the generated scanner.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7351,7 +7349,7 @@ on that and translate it into an RE.
 
 Sorry for the less-than-happy news ...
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7380,7 +7378,7 @@ that the text will often include NUL's.
 
 So that's the first thing to look for.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7401,7 +7399,7 @@ First, to go fast, you want to match as much text as possible, which
 your scanners don't in the case that what they're scanning is *not*
 a <RN> tag.  So you want a rule like:
 
-	[^<]+
+        [^<]+
 
 Second, C++ scanners are particularly slow if they're interactive,
 which they are by default.  Using -B speeds it up by a factor of 3-4
@@ -7411,15 +7409,15 @@ Third, C++ scanners that use the istream interface are slow, because
 of how poorly implemented istream's are.  I built two versions of
 the following scanner:
 
-	%%
-	.*\n
-	.*
-	%%
+        %%
+        .*\n
+        .*
+        %%
 
 and the C version inhales a 2.5MB file on my workstation in 0.8 seconds.
 The C++ istream version, using -B, takes 3.8 seconds.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7441,7 +7439,7 @@ From: Vern Paxson <vern>
 There shouldn't be, all it ever does with the date is ask the system
 for it and then print it out.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7465,7 +7463,7 @@ you use fgets instead (which you should anyway, to protect against buffer
 overflows), then the final \n will be preserved in the string, and you can
 scan that in order to find the end of the string.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7498,7 +7496,7 @@ From: Vern Paxson <vern>
 
 Derive your own subclass and make mylineno a member variable of it.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7546,7 +7544,7 @@ you have to see what problems they missed.
 No, definitely not.  It's meant to be for those situations where you
 absolutely must squeeze every last cycle out of your scanner.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7578,7 +7576,7 @@ correct state and reading at the right point in the input file.
 I don't - but it seems like a reasonable project to undertake (unlike
 numerous other flex tweaks :-).
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7588,11 +7586,11 @@ numerous other flex tweaks :-).
 @example
 @verbatim
 Received: from 131.173.17.11 (131.173.17.11 [131.173.17.11])
-	by ee.lbl.gov (8.9.1/8.9.1) with ESMTP id AAA03838
-	for <vern@ee.lbl.gov>; Thu, 20 Aug 1998 00:47:57 -0700 (PDT)
+        by ee.lbl.gov (8.9.1/8.9.1) with ESMTP id AAA03838
+        for <vern@ee.lbl.gov>; Thu, 20 Aug 1998 00:47:57 -0700 (PDT)
 Received: from hal.cl-ki.uni-osnabrueck.de (hal.cl-ki.Uni-Osnabrueck.DE [131.173.141.2])
-	by deimos.rz.uni-osnabrueck.de (8.8.7/8.8.8) with ESMTP id JAA34694
-	for <vern@ee.lbl.gov>; Thu, 20 Aug 1998 09:47:55 +0200
+        by deimos.rz.uni-osnabrueck.de (8.8.7/8.8.8) with ESMTP id JAA34694
+        for <vern@ee.lbl.gov>; Thu, 20 Aug 1998 09:47:55 +0200
 Received: (from georg@localhost) by hal.cl-ki.uni-osnabrueck.de (8.6.12/8.6.12) id JAA34834 for vern@ee.lbl.gov; Thu, 20 Aug 1998 09:47:54 +0200
 From: Georg Rehm <georg@hal.cl-ki.uni-osnabrueck.de>
 Message-Id: <199808200747.JAA34834@hal.cl-ki.uni-osnabrueck.de>
@@ -7631,7 +7629,7 @@ appeared when flexing the code.
 Do you have an idea what's going on here?
 
 Greetings from Germany,
-	Georg
+        Georg
 --
 Georg Rehm                                     georg@cl-ki.uni-osnabrueck.de
 Institute for Semantic Information Processing, University of Osnabrueck, FRG
@@ -7661,7 +7659,7 @@ The fix is to either rethink how come you're using such a big macro and
 perhaps there's another/better way to do it; or to rebuild flex's own
 scan.c with a larger value for
 
-	#define YY_BUF_SIZE 16384
+        #define YY_BUF_SIZE 16384
 
 - Vern
 @end verbatim
@@ -7710,7 +7708,7 @@ your scanner into the behavior you desire.
 
 Sorry for the less-than-completely-satisfactory answer.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7737,7 +7735,7 @@ up with that token rather than reading a fresh one.  If you're using
 yacc, then the special "error" production can sometimes be used to
 consume tokens in an attempt to get the parser into a consistent state.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7767,11 +7765,11 @@ Simple, no.
 One approach might be to return a magic character on EWOULDBLOCK and
 have a rule
 
-	.*<magic-character>	// put back .*, eat magic character
+        .*<magic-character>     // put back .*, eat magic character
 
 This is off the top of my head, not sure it'll work.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7800,11 +7798,11 @@ You can't indent your rules like this - that's where the errors are coming
 from.  Flex copies indented text to the output file, it's how you do things
 like
 
-	int num_lines_seen = 0;
+        int num_lines_seen = 0;
 
 to declare local variables.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7826,7 +7824,7 @@ From: Vern Paxson <vern>
 It's large to optimize performance when scanning large files.  You can
 safely make it a lot lower if needed.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7854,7 +7852,7 @@ ams */
 
 recompile everything, and it should all work.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7890,7 +7888,7 @@ Single-rule is nice but will always have the problem of either setting
 restrictions on comments (like not allowing multi-line comments) and/or
 running the risk of consuming the entire input stream, as noted above.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -7900,8 +7898,8 @@ running the risk of consuming the entire input stream, as noted above.
 @example
 @verbatim
 Received: from mc-qout4.whowhere.com (mc-qout4.whowhere.com [209.185.123.18])
-	by ee.lbl.gov (8.9.3/8.9.3) with SMTP id IAA05100
-	for <vern@ee.lbl.gov>; Tue, 15 Jun 1999 08:56:06 -0700 (PDT)
+        by ee.lbl.gov (8.9.3/8.9.3) with SMTP id IAA05100
+        for <vern@ee.lbl.gov>; Tue, 15 Jun 1999 08:56:06 -0700 (PDT)
 Received: from Unknown/Local ([?.?.?.?]) by my-deja.com; Tue Jun 15 08:55:43 1999
 To: vern@ee.lbl.gov
 Date: Tue, 15 Jun 1999 08:55:43 -0700
@@ -7979,7 +7977,7 @@ From: Vern Paxson <vern>
 
 Derive your own subclass from yyFlexLexer.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -8004,7 +8002,7 @@ You need to use the parser to build a parse tree (= abstract syntax trwee),
 and when that's all done you recursively evaluate the tree, binding variables
 to values at that time.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -8041,7 +8039,7 @@ Also note that for speed, you'll want to add a ".*" rule at the end,
 otherwise rules that don't match any of the patterns will be matched
 very slowly, a character at a time.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -8083,7 +8081,7 @@ initscan.c to scan.c in order to build flex.  Try fetching a fresh
 distribution from ftp.ee.lbl.gov.  (Or you can first try removing
 ".bootstrap" and doing a make again.)
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -8104,14 +8102,14 @@ From: Vern Paxson <vern>
 
 Try:
 
-	cp initscan.c scan.c
-	touch scan.c
-	make scan.o
+        cp initscan.c scan.c
+        touch scan.c
+        make scan.o
 
 If this last tries to first build scan.c from scan.l using ./flex, then
 your "make" is broken, in which case compile scan.c to scan.o by hand.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -8132,7 +8130,7 @@ The parser relies on calling yylex(), but you're instead using the C++ scanning
 class, so you need to supply a yylex() "glue" function that calls an instance
 scanner of the scanner (e.g., "scanner->yylex()").
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -8156,7 +8154,7 @@ assuming knowledge of the AT&T lex's internal variables.
 
 For flex, you can probably do the equivalent using a switch on YYSTATE.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -8185,7 +8183,7 @@ Again, for flex, no.
 
 See the file "COPYING" in the flex distribution for the legalese.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -8208,7 +8206,7 @@ From: Vern Paxson <vern>
 You can't do this - flex is *not* a parser like yacc (which does indeed
 allow recursion), it is a scanner that's confined to regular expressions.
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -8239,7 +8237,7 @@ If this is exactly your program:
 
 then the problem is that the last rule needs to be "{whitespace}" !
 
-		Vern
+                Vern
 @end verbatim
 @end example
 
@@ -8892,7 +8890,7 @@ YY_CURRENT_BUFFER: replaced by yy_current_buffer().
 YY_BUFFER_STATE: replaced by yybuffer.
 
 @item
-YY_NEW_FILE: In previous versions of @code{flex}, ehen assigning
+YY_NEW_FILE: In previous versions of @code{flex}, when assigning
 @file{yyin} to a new input file, after doing the assignment you had to
 call the special action @code{YY_NEW_FILE}.  This is no longer
 necessary.
