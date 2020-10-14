@@ -1697,7 +1697,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 
 	if ((YY_G(yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
-		int new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1);
+		int new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1) + 2;
 		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) yyrealloc(
 			(void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, (yy_size_t) new_size M4_YY_CALL_LAST_ARG );
 		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
