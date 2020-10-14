@@ -1581,11 +1581,13 @@ void readin (void)
 	if (ctrl.noyyread)
 		visible_define("M4_MODE_USER_YYREAD");
 
-	// Kluge to get around the fact that the %if-not-reentrant and
-	// %if-c-only gates can't be combined by nesting one inside the
-	// other.
-	if (backend == &cpp_backend && !ctrl.C_plus_plus)
-		visible_define ( "M4_MODE_C_ONLY");
+	if (backend == &cpp_backend) {
+		if (ctrl.C_plus_plus) {
+			visible_define ( "M4_MODE_CXX_ONLY");
+		} else {
+			visible_define ( "M4_MODE_C_ONLY");
+		}
+	}
 
 	if (tablesext)
 		visible_define ( "M4_MODE_TABLESEXT");
