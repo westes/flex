@@ -8845,10 +8845,10 @@ ECHO: Replaced by yyecho()
 REJECT: Replaced by yyreject()
 
 @item
-#define YY_DECL: Replaced by the yydecl option.
+#define YY_DECL: Replaced by the @code{yydecl} option.
 
 @item
-#define YYLMAX: Replaced by the %yylmax option.
+#define YYLMAX: Replaced by the @code{yylmax} option.
 
 @item
 #define YY_INPUT: Replaced by the @code{noyyread} option.
@@ -8864,7 +8864,7 @@ input(): Replaced by yyinput(). This function was already yyinput()
 in the C++ back end.
 
 @item:
-yunput(): Replaced by yyunput().
+unput(): Replaced by yyunput().
 
 @item
 #define YY_EXTRA_TYPE: Replaced by the @code{extra-type} option.
