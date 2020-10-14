@@ -633,23 +633,9 @@ void skelout (bool announce)
 		if (buf[0] == '%') {	/* control line */
 			/* print the control line as a comment. */
 			if (ctrl.ddebug && buf[1] != '#') {
-				bool escaped = buf[strlen (buf) - 1] == '\\';
-				if (escaped) {
-					comment(buf);
-					out ("\\\n");
-				} else {
-					comment(buf);
-					outc ('\n');
-				}
+			    comment(buf);
+			    outc ('\n');
 			}
-
-			/* We've been accused of using cryptic markers in the skel.
-			 * So we'll use emacs-style-hyphenated-commands.
-			 * We might consider a hash if this if-else-if-else
-			 * chain gets too large.
-			 */
-#define cmd_match(s) (strncmp(buf,(s),strlen(s))==0)
-
 			if (buf[1] == '#') {
 				/* %# indicates comment line to be ignored */
 			} 
