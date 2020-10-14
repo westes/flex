@@ -410,7 +410,7 @@ M4QEND      "]""]"
 	stdout		env.use_stdout = option_sense;
 	unistd		ctrl.no_unistd = ! option_sense;
 	unput		ctrl.no_yyunput = ! option_sense;
-	yyinput		ctrl.no_yyunput = ! option_sense;
+	yyunput		ctrl.no_yyunput = ! option_sense;
 	verbose		env.printstats = option_sense;
 	warn		env.nowarn = ! option_sense;
 	yylineno	ctrl.do_yylineno = option_sense;
