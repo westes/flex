@@ -2378,9 +2378,10 @@ rules is matched.  The following would do the trick:
 @end example
 
 @vindex YY_NUM_RULES
-where @code{ctr} is an array to hold the counts for the different rules.
-Note that the macro @code{YY_NUM_RULES} gives the total number of rules
-(including the default rule), even if you use @samp{-s)}, so a correct
+where @code{ctr} is an array to hold the counts for the different
+rules.  Note that the public constant @code{YY_NUM_RULES} (a macro in
+the default C/C++ back end) gives the total number of rules (including
+the default rule), even if you use @samp{-s)}, so a correct
 declaration for @code{ctr} is:
 
 @example
@@ -2396,14 +2397,14 @@ internal initializations are done).  For example, it could be used to
 call a routine to read in a data table or open a logging file.
 
 @findex yy_set_interactive
-The macro @code{yy_set_interactive(is_interactive)} can be used to
+The entry point @code{yy_set_interactive(is_interactive)} can be used to
 control whether the current buffer is considered @dfn{interactive}.  An
 interactive buffer is processed more slowly, but must be used when the
 scanner's input source is indeed interactive to avoid problems due to
 waiting to fill buffers (see the discussion of the @samp{-I} flag in
-@ref{Scanner Options}).  A non-zero value in the macro invocation marks
+@ref{Scanner Options}).  Passing a boolean true (in C/C++, non-zero) value marks
 the buffer as interactive, a zero value as non-interactive.  Note that
-use of this macro overrides @code{%option always-interactive} or
+use of this entry point overrides @code{%option always-interactive} or
 @code{%option never-interactive} (@pxref{Scanner Options}).
 @code{yy_set_interactive()} must be invoked prior to beginning to scan
 the buffer that is (or is not) to be considered interactive.
@@ -2412,7 +2413,7 @@ the buffer that is (or is not) to be considered interactive.
 @findex yy_set_bol
 The rule hook @code{yy_set_bol(at_bol)} can be used to control whether the
 current buffer's scanning context for the next token match is done as
-though at the beginning of a line.  A non-zero macro argument makes
+though at the beginning of a line.  A non-zero argument makes
 rules anchored with @samp{^} active, while a zero argument makes
 @samp{^} rules inactive.
 
@@ -2906,7 +2907,7 @@ is performed in @code{yylex_init} at runtime.
 directs @code{flex} to generate a scanner
 that maintains the number of the current line read from its input in the
 global variable @code{yylineno}.  This option is implied by @code{%option
-lex-compat}.  In a reentrant C scanner, the macro @code{yylineno} is
+lex-compat}.  In a reentrant C scanner, @code{yylineno} is
 accessible regardless of the value of @code{%option yylineno}, however, its
 value is not modified by @code{flex} unless @code{%option yylineno} is enabled.
 
@@ -4141,12 +4142,15 @@ scanners. Here is a quick overview of the API:
 All functions take one additional argument: @code{yyscanner}
 
 @item
-All global variables are replaced by their macro equivalents.
-(We tell you this because it may be important to you during debugging.)
+In C/C++, all global variables are replaced by their macro equivalents.
+(We tell you this because it may be important to you during
+debugging.) This is a historical-compatibilty hack; other back ends
+probably will not emulate it.
 
 @item
-@code{yylex_init} and @code{yylex_destroy} must be called before and
-after @code{yylex}, respectively.
+In the default C/C++ @code{yylex_init} and @code{yylex_destroy} must
+be called before and after @code{yylex}, respectively. Other back ebds
+may or may not require this.
 
 @item
 Accessor methods (get/set functions) provide access to common
@@ -4193,7 +4197,7 @@ First, an example of a reentrant scanner:
 @node Reentrant Detail, Reentrant Functions, Reentrant Example, Reentrant
 @section The Reentrant API in Detail
 
-Here are the things you need to do or know to use the reentrant C API of
+Here are the things you need to do or know to use the reentrant API of
 @code{flex}.
 
 @menu
@@ -4270,7 +4274,8 @@ equivalents. In particular, @code{yytext}, @code{yyleng}, @code{yylineno},
 @code{yyin}, @code{yyout}, @code{yyextra}, @code{yylval}, and @code{yylloc}
 are macros. You may safely use these macros in actions as if they were plain
 variables. We only tell you this so you don't expect to link to these variables
-externally. Currently, each macro expands to a member of an internal struct, e.g.,
+externally. Currently, each macro expands to a member of an internal
+struct, e.g., in C/C++:
 
 @example
 @verbatim
@@ -4296,8 +4301,10 @@ to accomplish this. (See below).
 @findex yylex_init
 @findex yylex_destroy
 
-@code{yylex_init} and @code{yylex_destroy} must be called before and
-after @code{yylex}, respectively.
+In the default C/C++ back end @code{yylex_init} and
+@code{yylex_destroy} must be called before and after @code{yylex},
+respectively.  This may not be true in other target langages,
+especially those with automatic memory management.
 
 @example
 @verbatim
@@ -4334,8 +4341,9 @@ takes one argument, which is the value returned (via an argument) by
 @code{yylex_init}.  Otherwise, it behaves the same as the non-reentrant
 version of @code{yylex}.
 
-Both @code{yylex_init} and @code{yylex_init_extra} returns 0 (zero) on success,
-or non-zero on failure, in which case errno is set to one of the following values:
+Both @code{yylex_init} and @code{yylex_init_extra} returns 0 (zero) on
+success, or non-zero on failure. On error, in the C/C++ back end in
+which case errno is set to one of the following values:
 
 @itemize
 @item ENOMEM
@@ -4344,6 +4352,8 @@ Memory allocation error. @xref{memory-management}.
 Invalid argument.
 @end itemize
 
+Othert target langages may use different means of passing back an
+error indication.
 
 The function @code{yylex_destroy} should be
 called to free resources used by the scanner. After @code{yylex_destroy}
@@ -4500,7 +4510,7 @@ scanner:
 @subsection About yyscan_t
 
 @tindex yyscan_t (reentrant only)
-@code{yyscan_t} is defined as:
+On C/C++, @code{yyscan_t} is defined as:
 
 @example
 @verbatim
@@ -5462,15 +5472,18 @@ in @emph{fixed} trailing context being turned into the more expensive
 @end verbatim
 @end example
 
-Use of @code{yyunput()} invalidates yytext and yyleng, unless the
+Some caveats are specific ro the In the C/C++ back end: Use of
+@code{yyunput()} invalidates yytext and yyleng, unless the
 @code{%array} directive or the @samp{-l} option has been used.
 Pattern-matching of @code{NUL}s is substantially slower than matching
 other characters.  Dynamic resizing of the input buffer is slow, as it
-entails rescanning all the text matched so far by the current (generally
-huge) token.  Due to both buffering of input and read-ahead, you cannot
-intermix calls to @file{<stdio.h>} routines, such as, @b{getchar()},
-with @code{flex} rules and expect it to work.  Call @code{yyinput()}
-instead.  The total table entries listed by the @samp{-v} flag excludes
+entails rescanning all the text matched so far by the current
+(generally huge) token.  Due to both buffering of input and
+read-ahead, you cannot intermix calls to @file{<stdio.h>} routines,
+such as, @b{getchar()}, with @code{flex} rules and expect it to work.
+Call @code{yyinput()} instead.
+
+The total table entries listed by the @samp{-v} flag excludes
 the number of table entries needed to determine what rule has been
 matched.  The number of entries is equal to the number of DFA states if
 the scanner does not use @code{yyreject()}, and somewhat greater than the
@@ -8748,7 +8761,7 @@ targets.  Almost anything generally descended from Algol shouldn't be
 much more difficult; this certainly includes the whole
 Pascal/Modula/Oberon family.
 
-Two notes about the interesting part:
+Some notes about the interesting part:
 
 @itemize
 @item
@@ -8764,6 +8777,15 @@ The ``one exception'' to target-syntax independence hinted at earlier
 is some C code spliced into the skeleton when table serialization is
 enabled. This option is thus available only with the C back end; you
 need not bother supporting it in yours.
+
+@item
+If your target language has an object system, you probably want your
+back end to generate a class named by default FlexLexer (as the
+C++ back end does) with all of the controls and query functions as
+methods. As in C++, @code{%option yyclass} should modify the
+class name.  If your target language has a moduke system, the
+-P option (which in C/C++ sets a common prefix on exposed entry
+points) can be pressed into service to set the module name.
 @end itemize
 
 The following assumptions in the code might trip you up and
