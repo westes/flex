@@ -1778,8 +1778,17 @@ m4_ifdef([[M4_MODE_NO_FULLSPD]], [[
 ]])
 ]])
 
+%# yy_c was formerly YY_CHAR, changed to int because table can now
+%# have up to 0x101 entries, since we no longer generate a separate
+%# NUL table.
+%#
+%# Note: on x86-64 architecture with gcc -O2, we save an instruction
+%# in the main loop, since the character can now be zero-extended in
+%# the process of retrieving it from the input stream or the yy_ec[]
+%# or yy_meta[] arrays, whereas previously it was zero-extended by a
+%# register-to-register move just prior to the yy_chk[] table lookup
 m4_define([[M4_GEN_NEXT_COMPRESSED_STATE]], [[
-	YY_CHAR yy_c = $1;
+	int yy_c = $1;
 	/* Save the backing-up info \before/ computing the next state
 	 * because we always compute one more state than needed - we
 	 * always proceed until we reach a jam state
