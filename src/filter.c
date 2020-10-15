@@ -345,16 +345,17 @@ int filter_fix_linedirs (struct filter *chain)
 	bool    in_gen = true;	/* in generated code */
 	bool    last_was_blank = false;
 
-	if (!chain)
+	if (!chain || backend->linedir_re == NULL)
 		return 0;
 
 	while (fgets (buf, (int) readsz, stdin)) {
 
 		regmatch_t m[10];
 
-		/* Check for #line directive. */
-		if (buf[0] == '#'
-			&& regexec (&regex_linedir, buf, 3, m, 0) == 0) {
+		/* Check for directive. Note wired-in assumption:
+		 * field reference 1 is line number, 2 is filename.
+		 */
+		if (regexec (&regex_linedir, buf, 3, m, 0) == 0) {
 
 			char   *fname;
 

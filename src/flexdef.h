@@ -299,8 +299,9 @@
 /* Method table describing a language-specific back end */
 
 struct flex_backend_t {
-	const char *(*suffix)(void);		// Generate suffix for lexer source code
-	const char **skel;
+	const char *(*suffix)(void);	// Generate suffix for lexer source code
+	const char **skel;		// Digested skeleton file
+	const char *linedir_re;		// RE to recognize trace lines. May be NULL.
 };
 
 extern size_t footprint;

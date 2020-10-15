@@ -24,8 +24,6 @@
 #include "flexdef.h"
 
 
-static const char* REGEXP_LINEDIR = "^#line ([[:digit:]]+) \"(.*)\"";
-
 regex_t regex_linedir; /**< matches line directives */
 
 
@@ -34,7 +32,8 @@ regex_t regex_linedir; /**< matches line directives */
  */
 bool flex_init_regex(void)
 {
-    flex_regcomp(&regex_linedir, REGEXP_LINEDIR, REG_EXTENDED);
+    if (backend->linedir_re != NULL)
+    	flex_regcomp(&regex_linedir, backend->linedir_re, REG_EXTENDED);
     return true;
 }
 
@@ -100,7 +99,7 @@ char   *regmatch_cpy (regmatch_t * m, char *dest, const char *src)
 	}
 
 	snprintf (dest, (size_t) regmatch_len(m), "%s", src + m->rm_so);
-    return dest;
+	return dest;
 }
 
 /** Get the length in characters of the match.
