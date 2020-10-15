@@ -100,7 +100,7 @@ extern const char *escaped_qstart, *escaped_qend;
     /* Emit the needed line directive... */\
     if (indented_code == false) { \
         linenum++; \
-        line_directive_out(NULL, 1); \
+        line_directive_out(NULL, infilename, linenum);	\
     } \
     add_action(M4QSTART); \
     yy_push_state(CODEBLOCK); \
@@ -110,7 +110,7 @@ extern const char *escaped_qstart, *escaped_qend;
 #define END_CODEBLOCK do { \
     yy_pop_state();\
     add_action(M4QEND); \
-    if (!indented_code) line_directive_out(NULL, 0);\
+    if (!indented_code) line_directive_out(NULL, NULL, linenum);	\
 } while (0)
 
 %}
@@ -187,7 +187,7 @@ M4QEND      "]""]"
 			sectnum = 2;
 			bracelevel = 0;
 			mark_defs1();
-			line_directive_out(NULL, 1);
+			line_directive_out(NULL, infilename, linenum);
 			BEGIN(SECT2PROLOG);
 			return SECTEND;
 			}

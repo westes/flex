@@ -909,7 +909,7 @@ extern void lerr_fatal(const char *, ...)
 ;
 
 /* Spit out a "#line" statement. */
-extern void line_directive_out(FILE *, int);
+extern void line_directive_out(FILE *, char *, int);
 
 /* Mark the current position in the action array as the end of the section 1
  * user defs.

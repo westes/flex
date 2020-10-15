@@ -262,9 +262,8 @@ void lerr_fatal (const char *msg, ...)
 }
 
 
-/* line_directive_out - spit out a "#line" statement */
-
-void line_directive_out (FILE *output_file, int do_infile)
+/* line_directive_out - spit out a "#line" statement or equivalent */
+void line_directive_out (FILE *output_file, char *path, int linenum)
 {
 	char	*trace_fmt = "m4_ifdef([[M4_HOOK_TRACE_LINE_FORMAT]], [[M4_HOOK_TRACE_LINE_FORMAT([[%d]], [[%s]])]])";
 	char    directive[MAXLINE*2], filename[MAXLINE];
@@ -273,9 +272,9 @@ void line_directive_out (FILE *output_file, int do_infile)
 	if (!ctrl.gen_line_dirs)
 		return;
 
-	s1 = do_infile ? infilename : "M4_YY_OUTFILE_NAME";
+	s1 = (path != NULL) ? path : "M4_YY_OUTFILE_NAME";
 
-	if (do_infile && !s1)
+	if ((path != NULL) && !s1)
 		s1 = "<stdin>";
     
 	s2 = filename;
@@ -291,7 +290,7 @@ void line_directive_out (FILE *output_file, int do_infile)
 
 	*s2 = '\0';
 
-	if (do_infile)
+	if (path != NULL)
 		snprintf (directive, sizeof(directive), trace_fmt, linenum, filename);
 	else {
 		snprintf (directive, sizeof(directive), trace_fmt, 0, filename);

@@ -286,7 +286,7 @@ void    finish_rule (int mach, int variable_trail_rule, int headcnt, int trailcn
 	if (!continued_action)
 		add_action ("YY_RULE_SETUP\n");
 
-	line_directive_out(NULL, 1);
+	line_directive_out(NULL, infilename, linenum);
         add_action("[[");
 }
 

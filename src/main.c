@@ -219,21 +219,21 @@ int flex_main (int argc, char *argv[])
 
 	out (&action_array[defs1_offset]);
 
-	line_directive_out (stdout, 0);
+	line_directive_out (stdout, NULL, linenum);
 
 	skelout (true);		/* %% [4.0] - various random yylex internals get dumped here */
 
 	/* Copy prolog to output file. */
 	out (&action_array[prolog_offset]);
 
-	line_directive_out (stdout, 0);
+	line_directive_out (stdout, NULL, linenum);
 
 	skelout (true);		/* %% [5.0] - main loop of matching-engine code gets dumped here */
 
 	/* Copy actions to output file. */
 	out (&action_array[action_offset]);
 
-	line_directive_out (stdout, 0);
+	line_directive_out (stdout, NULL, linenum);
 
 	/* generate cases for any missing EOF rules */
 	for (i = 1; i <= lastsc; ++i)
@@ -253,7 +253,7 @@ int flex_main (int argc, char *argv[])
 
 	/* Copy remainder of input to output. */
 
-	line_directive_out (stdout, 1);
+	line_directive_out (stdout, infilename, linenum);
 
 	if (sectnum == 3) {
 		OUT_BEGIN_CODE ();
@@ -1209,7 +1209,7 @@ void flexinit (int argc, char **argv)
 
 void readin (void)
 {
-	line_directive_out(NULL, 1);
+	line_directive_out(NULL, infilename, linenum);
 
 	if (yyparse ()) {
 		pinpoint_message (_("fatal parse error"));
@@ -1265,7 +1265,7 @@ void readin (void)
 		flexerror(_("Prefix cannot include '[' or ']'"));
 
 	if (env.did_outfilename)
-		line_directive_out (stdout, 0);
+		line_directive_out (stdout, NULL, linenum);
 
 	/* This is where we begin writing to the file. */
 
@@ -1278,7 +1278,7 @@ void readin (void)
 		outn((char*) top_buf.elts);
 
 	/* Place a bogus line directive, it will be fixed in the filter. */
-	line_directive_out(0, false);
+	line_directive_out(NULL, NULL, 0);
 
 	/* User may want to set the scanner prototype */
 	if (ctrl.yydecl != NULL) {

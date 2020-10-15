@@ -291,7 +291,7 @@ int filter_tee_header (struct filter *chain)
 
 		/* write a fake line number. It will get fixed by the linedir filter. */
 		if (ctrl.gen_line_dirs)
-			fprintf (to_h, "m4_ifdef([[M4_HOOK_TRACE_LINE_FORMAT]], [[M4_HOOK_TRACE_LINE_FORMAT([[4000]], [[M4_YY_OUTFILE_NAME]])]])");
+			line_directive_out (to_h, NULL, 4000);
 
 		if (backend == &cpp_backend) {
 			fprintf (to_h, "#undef %sIN_HEADER\n", ctrl.prefix);

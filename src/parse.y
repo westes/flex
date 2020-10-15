@@ -989,7 +989,7 @@ void build_eof_action(void)
 			}
 		}
 
-	line_directive_out(NULL, 1);
+	line_directive_out(NULL, infilename, linenum);
         add_action("[[");
 
 	/* This isn't a normal rule after all - don't count it as
