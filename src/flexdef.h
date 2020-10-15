@@ -296,27 +296,15 @@
  */
 #define BAD_SUBSCRIPT -32767
 
-/* Method table describing a language-specific back end */
-
-struct flex_backend_t {
-	const char *(*suffix)(void);	// Generate suffix for lexer source code
-	const char **skel;		// Digested skeleton file
-	const char *linedir_re;		// RE to recognize trace lines. May be NULL.
-};
-
-extern size_t footprint;
-
 typedef enum trit_t {
 	trit_unspecified = -1,
 	trit_false = 0,
 	trit_true = 1,
 } trit;
 
-extern struct flex_backend_t cpp_backend;
-
 /* Control variables.  These are in a struct to avoid having to replicate definitions
  * twice for each option, instead a single struct can be declared and externed.
- * If it;s in this structure, it has a corresponding m4 symbol.
+ * If it's in this structure, it has a corresponding m4 symbol.
  */
 struct ctrl_bundle_t {
 	bool always_interactive;// always use cheacter-by-character input
@@ -390,6 +378,8 @@ struct ctrl_bundle_t {
 	bool no_flex_free;
 	bool no_get_debug;
 	bool no_set_debug;
+	// Properties read from the skeleton
+	const char *traceline_re;	// Regular expression for recognizing tracelines */
 };
 
 /* Environment variables.  These control the lexer operation, but do
@@ -445,8 +435,6 @@ extern struct env_bundle_t env;
 extern int syntaxerror, eofseen;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
 extern int yymore_really_used, reject_really_used;
-
-extern struct flex_backend_t *backend;
 
 /* Variables used in the flex input routines:
  * datapos - characters on current output line
@@ -527,6 +515,7 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
  * rule_has_nl - true if rule could possibly match a newline
  * ccl_has_nl - true if current ccl could match a newline
  * nlch - default eol char
+ * footprint - total size of tables, in bytes.
  */
 
 extern int maximum_mns, current_mns, current_max_rules;
@@ -536,6 +525,8 @@ extern int *accptnum, *assoc_rule, *state_type;
 extern int *rule_type, *rule_linenum, *rule_useful;
 extern bool *rule_has_nl, *ccl_has_nl;
 extern int nlch;
+extern size_t footprint;
+
 
 /* Different types of states; values are useful as masks, as well, for
  * routines like check_trailing_context().
@@ -865,9 +856,6 @@ extern void dataend(const char *);
 /* Flush generated data statements. */
 extern void dataflush(void);
 
-/* Do we have a state-entry0format macro? */
-extern bool boneseeker(const char *);
-
 /* Report an error message and terminate. */
 extern void flexerror(const char *);
 
@@ -947,9 +935,6 @@ extern void out_m4_define(const char* def, const char* val);
  * 8-bit.
  */
 extern char *readable_form(int);
-
-/* Write out one section of the skeleton file. */
-extern void skelout(bool);
 
 /* Output a yy_trans_info structure. */
 extern void transition_struct_out(int, int);
@@ -1036,6 +1021,22 @@ extern int flexscan(void);
 /* Open the given file (if NULL, stdin) for scanning. */
 extern void set_input_file(char *);
 
+/* from file skeletons.c */
+
+/* return the correct file suffix for the selrcted back end */
+const char *suffix (void);
+
+/* Mine a text-valued property out of the skeleton file */
+extern const char *skel_property(const char *);
+
+/* Is the default back end selected?*/
+extern bool is_default_backend(void);
+
+/* Do we have a line natching the specified prefix? ? */
+extern bool boneseeker(const char *);
+
+/* Write out one section of the skeleton file. */
+extern void skelout(bool);
 
 /* from file sym.c */
 

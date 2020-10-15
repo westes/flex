@@ -32,9 +32,10 @@ regex_t regex_linedir; /**< matches line directives */
  */
 bool flex_init_regex(void)
 {
-    if (backend->linedir_re != NULL)
-    	flex_regcomp(&regex_linedir, backend->linedir_re, REG_EXTENDED);
-    return true;
+	ctrl.traceline_re = skel_property("M4_PROPERTY_TRACE_LINE_REGEXP");
+	if (ctrl.traceline_re != NULL)
+		flex_regcomp(&regex_linedir, ctrl.traceline_re, REG_EXTENDED);
+	return true;
 }
 
 /** Compiles a regular expression or dies trying.
@@ -44,7 +45,7 @@ bool flex_init_regex(void)
  */
 void flex_regcomp(regex_t *preg, const char *regex, int cflags)
 {
-    int err;
+	int err;
 
 	memset (preg, 0, sizeof (regex_t));
 

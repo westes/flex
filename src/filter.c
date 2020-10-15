@@ -261,12 +261,7 @@ int filter_tee_header (struct filter *chain)
 		fputs ("m4_changequote`'m4_dnl\n", to_h);
 		fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_h);
 		fputs ("m4_define([[M4_YY_NOOP]])[[]]m4_dnl\n", to_h);
-		fputs ("m4_define( [[M4_YY_IN_HEADER]],[[]])m4_dnl\n", to_h);
-		if (backend == &cpp_backend) {
-			fprintf (to_h, "#ifndef %sHEADER_H\n", ctrl.prefix);
-			fprintf (to_h, "#define %sHEADER_H 1\n", ctrl.prefix);
-			fprintf (to_h, "#define %sIN_HEADER 1\n\n", ctrl.prefix);
-		}
+		fputs ("m4_define([[M4_YY_IN_HEADER]],[[]])m4_dnl\n", to_h);
 		fprintf (to_h,
 			 "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
 			 env.headerfilename != NULL ? env.headerfilename : "<stdout>");
@@ -292,13 +287,6 @@ int filter_tee_header (struct filter *chain)
 		/* write a fake line number. It will get fixed by the linedir filter. */
 		if (ctrl.gen_line_dirs)
 			line_directive_out (to_h, NULL, 4000);
-
-		if (backend == &cpp_backend) {
-			fprintf (to_h, "#undef %sIN_HEADER\n", ctrl.prefix);
-			fprintf (to_h, "#endif /* %sHEADER_H */\n", ctrl.prefix);
-		}
-		fputs ("m4_undefine( [[M4_YY_IN_HEADER]])m4_dnl\n", to_h);
-
 		fflush (to_h);
 		if (ferror (to_h))
 			lerr (_("error writing output file %s"),
@@ -340,12 +328,17 @@ static bool is_blank_line (const char *str)
 int filter_fix_linedirs (struct filter *chain)
 {
 	char   buf[4096];
+	const char *traceline_template, *cp;
 	const size_t readsz = sizeof buf;
 	int     lineno = 1;
 	bool    in_gen = true;	/* in generated code */
 	bool    last_was_blank = false;
 
-	if (!chain || backend->linedir_re == NULL)
+	if (!chain || ctrl.traceline_re == NULL)
+		return 0;
+
+	traceline_template = skel_property("M4_PROPERTY_TRACE_LINE_TEMPLATE");
+	if (traceline_template == NULL)
 		return 0;
 
 	while (fgets (buf, (int) readsz, stdin)) {
@@ -390,8 +383,9 @@ int filter_fix_linedirs (struct filter *chain)
 
 				/* Adjust the line directives. */
 				in_gen = true;
-				snprintf (buf, readsz, "#line %d \"%s\"\n",
+				snprintf (buf, readsz, traceline_template,
 					  lineno + 1, filename);
+				strncat(buf, "\n", sizeof(buf)-1);
 			}
 			else {
 				/* it's a #line directive for code we didn't write */

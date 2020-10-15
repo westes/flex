@@ -96,8 +96,6 @@ jmp_buf flex_main_jmp_buf;
 bool   *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
 
-struct flex_backend_t *backend;
-
 bool    tablesext, tablesverify, gentables;
 char   *tablesfilename=0,*tablesname=0;
 struct yytbl_writer tableswr;
@@ -394,7 +392,7 @@ void check_options (void)
 
 		if (!env.did_outfilename) {
 			snprintf (outfile_path, sizeof(outfile_path), outfile_template,
-				  ctrl.prefix, backend->suffix());
+				  ctrl.prefix, suffix());
 
 			env.outfilename = outfile_path;
 		}
@@ -738,8 +736,6 @@ void flexinit (int argc, char **argv)
 
 	sawcmpflag = false;
 	
-	backend = &cpp_backend;
-
 	/* Initialize dynamic array for holding the rule actions. */
 	action_size = 2048;	/* default size of action array in bytes */
 	action_array = allocate_character_array (action_size);
@@ -1581,7 +1577,7 @@ void readin (void)
 	if (ctrl.noyyread)
 		visible_define("M4_MODE_USER_YYREAD");
 
-	if (backend == &cpp_backend) {
+	if (is_default_backend()) {
 		if (ctrl.C_plus_plus) {
 			visible_define ( "M4_MODE_CXX_ONLY");
 		} else {
@@ -1734,7 +1730,7 @@ void usage (void)
 
 	if (!env.did_outfilename) {
 		snprintf (outfile_path, sizeof(outfile_path), outfile_template,
-			  ctrl.prefix, backend->suffix());
+			  ctrl.prefix, suffix());
 		env.outfilename = outfile_path;
 	}
 

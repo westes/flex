@@ -61,7 +61,7 @@ m4_define([[M4_HOOK_COMMENT_CLOSE]], [[*/]])
 %# If this is not defined, no trace lines will be generated.
 m4_define([[M4_HOOK_TRACE_LINE_FORMAT]], [[#line $1 "$2"
 ]])
-
+m4_define([[M4_PROPERTY_TRACE_LINE_TEMPLATE]], [[#line %d "%s"]])
 m4_define([[M4_HOOK_TABLE_OPENER]], [[{]])
 m4_define([[M4_HOOK_TABLE_CONTINUE]], [[},]])
 m4_define([[M4_HOOK_TABLE_CLOSER]], [[};]])
@@ -88,8 +88,17 @@ m4_define([[M4_HOOK_SET_PREACTION]], [[#define YY_USER_ACTION $1
 m4_define([[M4_HOOK_SET_POSTACTION]], [[#define YY_BREAK $1
 ]])
 
+%# Not used in the skeleton - meant to be read by the Flex code
+m4_define([[M4_PROPERTY_TRACE_LINE_REGEXP]], [[^#line ([0-9]+) "(.*)"]])
+
 %% [0.0] Make hook macros available to Flex
 
+m4_ifdef( [[M4_YY_IN_HEADER]], [[m4_dnl
+#ifndef M4_MODE_PREFIX[[HEADER_H]]
+#define M4_MODE_PREFIX[[HEADER_H]]
+#define M4_MODE_PREFIX[[IN_HEADER]] 1
+
+]])				
 m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 m4_ifdef([[M4_YY_NOT_REENTRANT]], [[
@@ -123,7 +132,6 @@ m4_ifelse(M4_MODE_PREFIX,yy,,
 ]])
 ]])
 ]])
-
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION FLEX_MAJOR_VERSION
 #define YY_FLEX_MINOR_VERSION FLEX_MINOR_VERSION
@@ -4288,6 +4296,9 @@ m4_ifdef( [[M4_YY_IN_HEADER]],
 #undef YY_DECL
 #endif
 m4preproc_undivert(1)
+#undef M4_MODE_PREFIX[[IN_HEADER]]
+#endif /* M4_MODE_PREFIX[[HEADER_H]] */
+m4_undefine([[M4_YY_IN_HEADER]])m4_dnl
 ]])
 
 %# Local Variables:
