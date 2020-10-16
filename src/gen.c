@@ -810,8 +810,8 @@ void gentabs (void)
 
 
 	ptype = optimize_pack(tblend + 1);
-	/* Note: Osed wheen !ctrl.fulltbl && !ctrl.fullspd).
-	 * (Alternately defined wjen ctrl.fullspd
+	/* Note: Used when !ctrl.fulltbl && !ctrl.fullspd).
+	 * (Alternately defined when ctrl.fullspd)
 	 */
 	out_str ("m4_define([[M4_HOOK_YYNXT_TYPE]], [[%s]])", ptype->name);
 	out_dec ("m4_define([[M4_HOOK_YYNXT_SIZE]], [[%d]])", tblend + 1);

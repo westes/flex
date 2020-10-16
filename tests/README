@@ -9,8 +9,8 @@ this directory and its contents.
 * STRUCTURE OF THE TEST SUITE
 
 The testsuite consists of a large number of tests. Usually the test is
-simply that a sanner consumes all the token fed to it firom a text
-(.txt) file in a maxhing grammer, not allowing stray characters to
+simply that a scanner consumes all the tokens fed to it from a text
+(.txt) file in a maching grammar, not allowing stray characters to
 echo through to stdout.  This is how we avoid meeding explicit check files.
 
 Each test is centered around a scanner known to work with the most
@@ -65,23 +65,22 @@ automake test suite harness.
 
 * NAMING CONVENTIONS
 
-A test with a _nr suffix exercises a non-reentrant xanner built
+A test with an _nr suffix exercises a non-reentrant scanner built
 with the default cpp back end.
 
-uA test with a _r suffix exercises a reentrant xanner built
+uA test with an _r suffix exercises a reentrant scanner built
 with the default cpp back end.
 
 A test with a c99 suffix exercises the c99 back end. All C99
-acanners are re-entrant.
+scanners are re-entrant.
 
-A tesrt with a _cpp suffix exercises the default cpp back end on a
-specification where the reentra=t/non-reentrant distinction is
+A test with a _cpp suffix exercises the default cpp back end on a
+specification where the reentrant/non-reentrant distinction is
 not interesting.
 
 Most tests occur in groups with a common stem in the names, like
 alloc_extra_ or ccl_.  These are exercising the same token grammar
-under different back ends.  As mre target languages are added these
+under different back ends.  As new target languages are added these
 groups of patallel tests will grow. Tests that are not part of one of
 these series are usually of features supported on the default cpp
 back end only.
-

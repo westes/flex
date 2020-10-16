@@ -25,7 +25,7 @@
 %# prescriptive about whitespace and braces is more than usually
 %# important. So please set your C style to K&R, aka 1TBS with
 %# tabs when editing this file. Braces around single-statement
-%# if/while/for/do/switch/break bodies are mandatory. 
+%# if/while/for/do/switch/break bodies are mandatory.
 %#
 
 %#  Macros for preproc stage.
@@ -2127,9 +2127,8 @@ m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 				/* undo the effects of YY_DO_BEFORE_ACTION */
 				*yy_cp = YY_G(yy_hold_char);
 
-				/* /\* Backing-up info for compressed tables is taken \after/ */
-				/*  * yy_cp has been incremented for the next state. */
-				/*  *\/ */
+				/* Backing-up info for compressed tables is taken \after/ */
+				/* yy_cp has been incremented for the next state. */
 				yy_cp = YY_G(yy_last_accepting_cpos);
 				m4_ifdef([[M4_MODE_FULLSPD]], [[yy_cp++;]])
 				m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yy_cp++;]])

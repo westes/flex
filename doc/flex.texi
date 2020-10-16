@@ -623,7 +623,7 @@ Posix}, for other such features).
 Any @emph{indented} text or text enclosed in @samp{%@{} and @samp{%@}}
 is copied verbatim to the output (with the %@{ and %@} symbols
 removed).  The %@{ and %@} symbols must appear unindented on lines by
-themselves.  Because whiteoace is easy to mangle wuthout noticing,
+themselves.  Because whitespace is easy to mangle without noticing,
 it's good style to use the explicit %@{ and %@} delimiters.
 
 @node User Code Section, Comments in the Input, Rules Section, Format
@@ -693,9 +693,9 @@ ruleD   yyecho();
 
 If the target language is something other than C/C++, you will need to use
 its normal comment syntax in actions and code blocks.  Note that the
-optional @{ and @} delimiters around actions a Flex dyntax, not C
+optional @{ and @} delimiters around actions a Flex syntax, not C
 syntax; you will be able to use those even if, e,g., your target
-language is Pascal-like and delimus blocs with begin/end.
+language is Pascal-like and delimits blocs with begin/end.
 
 @node Patterns, Matching, Format, Top
 @chapter Patterns
@@ -1195,8 +1195,8 @@ run-time error results.
 Also note that you cannot use @code{%array} with C++ scanner classes
 (@pxref{Cxx}).
 
-In target langages with automatic memory allocation and arrays none of
-this applies; you can expect @code{yytext} to dynamically resize
+In target langages with automatic memory allocation and arrays, none
+of this applies; you can expect @code{yytext} to dynamically resize
 itself, calls to the @code{yyunput()} will not destroy the present
 contents of @code{yytext}, and you will never get a run-time error
 from calls to the @code{yyunput()} function except in the extremely
@@ -1505,9 +1505,9 @@ generate a default into the scanner.
 @chapter The Generated Scanner
 
 @cindex yylex(), in generated scanner
-The output of @code{flex} is a file wity the sem name @file{lex.yy}, which contains
-the scanning routine @code{yylex()}, a number of tables used by it for
-matching tokens, and a number of auxiliary routines.  By
+The output of @code{flex} is a file with the name @file{lex.yy}, which
+contains the scanning routine @code{yylex()}, a number of tables used
+by it for matching tokens, and a number of auxiliary routines.  By
 default in C, @code{yylex()} is declared as follows:
 
 @example
@@ -1525,7 +1525,7 @@ For example, you could put this in among your directives:
 @cindex yylex, overriding the prototype of
 @example
 @verbatim
-%p[tion yydecl="float lexscan(float a, float b)"
+%option yydecl="float lexscan(float a, float b)"
 @end verbatim
 @end example
 
@@ -1558,23 +1558,23 @@ one of its actions executes a @code{return} statement.
 @cindex end-of-file, and yyrestart()
 @cindex yyrestart()
 If the scanner reaches an end-of-file, subsequent calls are undefined
-unless either @file{yyin} is pointed at a new input file (in which case
-scanning continues from that file), or @code{yyrestart()} is called.
-@code{yyrestart()} takes one argument, an inoput stream, and
-initializes @file{yyin} for scanning from that
-stream.  Essentially there is no difference between just assigning
-@file{yyin} to a new input stream or using @code{yyrestart()} to do so;
-the latter is available for compatibility with previous versions of
-@code{flex}, and because it can be used to switch input files in the
-middle of scanning.  It can also be used to throw away the current input
-buffer, by calling it with an argument of @code{yyin}; but it would be
-better to use @code{yy_flush_current_buffer()} (@pxref{Actions}).  Note that
+unless either @file{yyin} is pointed at a new input file (in which
+case scanning continues from that file), or @code{yyrestart()} is
+called.  @code{yyrestart()} takes one argument, an input stream, and
+initializes @file{yyin} for scanning from that stream.  Essentially
+there is no difference between just assigning @file{yyin} to a new
+input stream or using @code{yyrestart()} to do so; the latter is
+available for compatibility with previous versions of @code{flex}, and
+because it can be used to switch input files in the middle of
+scanning.  It can also be used to throw away the current input buffer,
+by calling it with an argument of @code{yyin}; but it would be better
+to use @code{yy_flush_current_buffer()} (@pxref{Actions}).  Note that
 @code{yyrestart()} does @emph{not} reset the start condition to
 @code{INITIAL} (@pxref{Start Conditions}).
 
-In C, an input stream is a a @code{FILE *} pointer. This pointer 
-can be NULL, if you've set up a @code{%yyread()} hook to scan from a source other
-than @code{yyin}.
+In C, an input stream is a a @code{FILE *} pointer. This pointer can
+be NULL, if you've set up a @code{%yyread()} hook to scan from a
+source other than @code{yyin}.
 
 @cindex RETURN, within actions
 If @code{yylex()} stops scanning due to executing a @code{return}
@@ -2072,8 +2072,9 @@ returns a @code{yybuffer} handle, which may then be passed to
 other routines (see below).
 
 In target languages other than C/C++, this prototype will look
-different.  The input-stream type won't be @code{FILE *}.  But expect
-the same semamntics wxpressed in native tytypes.
+different.  The input-stream type won't be @code{FILE *}, but you can
+expect the same semantics expressed using the target language's native
+types.
 
 @tindex yybuffer
 The @code{yybuffer} type is a
@@ -2263,13 +2264,16 @@ new buffer using @code{yy_switch_to_buffer()}, so the next call to
 
 @deftypefun yybuffer yy_scan_string ( char *str )
 scans a string.  This declaration is correct for C/C++, in which
-strings are simply character seqences terminated by a NUL.  In target
-languages with a native strbg type, the prototype will change.
+strings are simply character sequences terminated by a NUL.  It is
+expected that each target language will use the most appropriate
+native string type instead.
 @end deftypefun
 
 @deftypefun yybuffer yy_scan_bytes ( const char *bytes, int len )
-scans @code{len} bytes (including possibly @code{NUL}s) starting at location
-@code{bytes}.
+scans @code{len} bytes (including possibly @code{NUL}s) starting at
+location @code{bytes}. It is expected that each target language will
+use the most appropriate native type instead of char*, such as a
+reference to a byte array or slice.
 @end deftypefun
 
 Note that both of these functions create and scan a @emph{copy} of the
@@ -2281,14 +2285,17 @@ using:
 @deftypefun yybuffer yy_scan_buffer (char *base, yy_size_t size)
 which scans in place the buffer starting at @code{base}, consisting of
 @code{size} bytes, the last two bytes of which @emph{must} be
-@code{YY_END_OF_BUFFER_CHAR} (ASCII NUL).  These last two bytes are not
-scanned; thus, scanning consists of @code{base[0]} through
-@code{base[size-2]}, inclusive.
+@code{YY_END_OF_BUFFER_CHAR} (ASCII NUL).  These last two bytes are
+not scanned; thus, scanning consists of @code{base[0]} through
+@code{base[size-2]}, inclusive. It is expected that each target
+language will use the most appropriate native type instead of char*,
+such as an owned byte array.
 @end deftypefun
 
-If you fail to set up @code{base} in this manner (i.e., forget the final
-two @code{YY_END_OF_BUFFER_CHAR} bytes), then @code{yy_scan_buffer()}
-returns a NULL pointer instead of creating a new input buffer.
+If you fail to set up @code{base} in this manner (i.e., forget the
+final two @code{YY_END_OF_BUFFER_CHAR} bytes), then
+@code{yy_scan_buffer()} returns a NULL pointer (and/or an error)
+instead of creating a new input buffer.
 
 @deftp  {Data type} yy_size_t
 is an integral type to which you can cast an integer expression
@@ -2420,7 +2427,7 @@ the current buffer will have @samp{^} rules active, false otherwise.
 
 @hkindex %option post-action
 In the generated scanner, the actions are all gathered in one large
-switch statement and separated using a postt-action fragment, which
+switch statement and separated using a post-action fragment, which
 may be redefined.  By default, in C it is simply a @code{break}, to
 separate each rule's action from the following rule's. Other target
 languages may have different defaults for this action, often an empty
@@ -2537,9 +2544,9 @@ is @code{TOK_NUMBER}, part of the scanner might look like:
 @end example
 
 Bison is also retargetable to langages other than C.  Outside the
-C/C++ back end, it is likely that your Bison module will simply
-moduke-level constants that will be make visible to your scanner by
-linkage.
+C/C++ back end, it is likely that your Bison module will simply export
+module-level constants that will be made visible to your scanner by
+linkage or by explicit import statements.
 
 @node Scanner Options, Performance, Yacc, Top
 @chapter Scanner Options
@@ -2702,13 +2709,14 @@ the serialized tables match the in-code tables, instead of loading them.
 @opindex emit
 @item -e, --emit, @code{%option emit}
 instructs @code{flex} to generate code using a specific back end other
-than the default.  The default is called ``cpp',' generates C or C++,
-supports all legacy interfaces, and generates either non-reentrant or
-re-entrant scanners.  There is presently one alternate back end, C99;
-it drops a lot of legacy interfaces and generates only re-entrant
-scanners in modern C.  The C99 back end is intended to be a launch
-polnt for as yet nonexistent back ends generating distinct other
-languges such as Go, Rust, Java, or Python.
+than the default.  The default is called ``cpp',' generates C or C++
+code, supports all legacy interfaces, and generates either
+non-reentrant or re-entrant scanners.  There is presently one
+alternate back end, C99; it drops a lot of legacy interfaces,
+generates only re-entrant scanners, and outputs modern C.  The C99
+back end is intended to be a launching point for as yet unwritten back
+ends generating scanners in other languages such as Go, Rust, Java,
+Python, etc.
 
 @anchor{option-case-insensitive}
 @opindex -i
@@ -4157,7 +4165,7 @@ probably will not emulate it.
 
 @item
 In the default C/C++ @code{yylex_init} and @code{yylex_destroy} must
-be called before and after @code{yylex}, respectively. Other back ebds
+be called before and after @code{yylex}, respectively. Other back ends
 may or may not require this.
 
 @item
@@ -4250,7 +4258,7 @@ non-reentrant scanner.  Here are the declarations of
 
 Notice that the argument @code{yyscanner} appears in the declaration of
 both functions.  In fact, all @code{flex} functions in a reentrant
-scanner have this additional argument, except fot rule hooks which
+scanner have this additional argument, except for rule hooks which
 get it supplied implicitly.
 
 It is always the last argument
@@ -4266,7 +4274,7 @@ additional argument.
 Rule hooks don't need to take a scanner context argument because,
 under the hood, the context is supplied by the call location.
 
-The type name @code{yscan_t} follows C conventions.  It mmay differ in
+The type name @code{yscan_t} follows C conventions.  It may differ in
 other target languages.
 
 @node Global Replacement, Init and Destroy Functions, Extra Reentrant Argument, Reentrant Detail
@@ -4275,7 +4283,7 @@ other target languages.
 @cindex reentrant, accessing flex variables
 In the C/C++ back end global variables in traditional flex have been
 replaced by macro equivalents.  Be aware that this will not be true in target
-languages without macros, so rekying on this backward-compatibility
+languages without macros, so relying on this backward-compatibility
 hack will hinder forward portability.
 
 Accordingly, in the above example, @code{yyout} and @code{yytext} are
@@ -4352,9 +4360,10 @@ takes one argument, which is the value returned (via an argument) by
 @code{yylex_init}.  Otherwise, it behaves the same as the non-reentrant
 version of @code{yylex}.
 
-Both @code{yylex_init} and @code{yylex_init_extra} returns 0 (zero) on
-success, or non-zero on failure. On error, in the C/C++ back end in
-which case errno is set to one of the following values:
+With the C/C++ back end, both @code{yylex_init} and
+@code{yylex_init_extra} return 0 (zero) on success or non-zero on
+failure. @code{errno} is also set to one of the following values on
+failure:
 
 @itemize
 @item ENOMEM
@@ -4363,7 +4372,7 @@ Memory allocation error. @xref{memory-management}.
 Invalid argument.
 @end itemize
 
-Othert target langages may use different means of passing back an
+Other target languages may use different means of passing back an
 error indication.
 
 The function @code{yylex_destroy} should be
@@ -4476,11 +4485,11 @@ In addition, an extra form of @code{yylex_init} is provided,
 be accessed from within the very first yyalloc, used to allocate
 the scanner itself.
 
-In the deault C/C__ back end, the extra firld in your scanner state
-structure is defined as type @code{void *}; in ither target languages
-no such field night ne genetated at all.  You may redefine or crrate
-this extra field using @code{%option extra-type="your_type"} in the
-scanner:
+In the default C/C++ back end, the extra field in your scanner state
+structure is defined as type @code{void *}; in other target languages
+it might be a generic type, or no such field might be genetated at
+all.  In back ends which support this extra field, you may redefine
+the type using @code{%option extra-type="your_type"} in the scanner:
 
 @cindex YY_EXTRA_TYPE, defining your own type
 @example
@@ -4521,7 +4530,7 @@ void scan_file( char* filename )
 @subsection About yyscan_t
 
 @tindex yyscan_t (reentrant only)
-On C/C++, @code{yyscan_t} is defined as:
+In C/C++, @code{yyscan_t} is defined as:
 
 @example
 @verbatim
@@ -4916,7 +4925,7 @@ buffer. As of version 2.5.9 Flex will clean up all memory when you call @code{yy
 
 Flex allocates dynamic memory for four purposes, listed below @footnote{The
 quantities given here are approximate, and may vary due to host architecture,
-compiler configuration, or due to future enhancements to flex.} 
+compiler configuration, or due to future enhancements to flex.}
 
 @table @asis
 
@@ -4971,7 +4980,7 @@ you call yylex_init(). It is destroyed when the user calls yylex_destroy().
 @node Overriding The Default Memory Management, A Note About yytext And Memory, The Default Memory Management, Memory Management
 @section Overriding The Default Memory Management
 
-Afain, this section applies onlt to languages with manual memory management.
+Again, this section applies only to languages with manual memory management.
 
 @cindex yyalloc, overriding
 @cindex yyrealloc, overriding
@@ -5483,15 +5492,15 @@ in @emph{fixed} trailing context being turned into the more expensive
 @end verbatim
 @end example
 
-Some caveats are specific ro the In the C/C++ back end: Use of
+Some caveats are specific to the C/C++ back end: Use of
 @code{yyunput()} invalidates yytext and yyleng, unless the
 @code{%array} directive or the @samp{-l} option has been used.
 Pattern-matching of @code{NUL}s is substantially slower than matching
 other characters.  Dynamic resizing of the input buffer is slow, as it
 entails rescanning all the text matched so far by the current
 (generally huge) token.  Due to both buffering of input and
-read-ahead, you cannot intermix calls to @file{<stdio.h>} routines,
-such as, @b{getchar()}, with @code{flex} rules and expect it to work.
+read-ahead, you cannot intermix calls to @file{<stdio.h>} routines
+(such as @b{getchar()}) with @code{flex} rules and expect it to work.
 Call @code{yyinput()} instead.
 
 The total table entries listed by the @samp{-v} flag excludes
@@ -8721,12 +8730,12 @@ generation; they're for Flex to read and key on.
 
 Following those are the @code{M4_HOOK_*} macros. Rather than emit
 literal language syntax, Flex ships calls to these macros which are
-expected to be expanded within the skeleton.  The other things it
-ships which appear in the output code are mostly bodies for table
-initializers, with associated macros for typenames and table
-dimensions.  The names of all such macros have the prefix
-``M4_HOOK_''; you can study them in the Flex code by grepping for that
-prefix.
+expected to be expanded to to the correct language syntax within the
+skeleton.  The other things flex ships which appear in the output code
+are mostly bodies for table initializers, with associated macros for
+typenames and table dimensions.  The names of all such macros have the
+prefix ``M4_HOOK_''; you can study them in the Flex code by grepping
+for that prefix.
 
 Flex ships another fairly large set of macros that are guard
 conditions for conditional macroexpanion. The values of these symbols
@@ -8799,7 +8808,7 @@ If your target language has an object system, you probably want your
 back end to generate a class named by default FlexLexer (as the
 C++ back end does) with all of the controls and query functions as
 methods. As in C++, @code{%option yyclass} should modify the
-class name.  If your target language has a moduke system, the
+class name.  If your target language has a module system, the
 -P option (which in C/C++ sets a common prefix on exposed entry
 points) can be pressed into service to set the module name.
 @end itemize

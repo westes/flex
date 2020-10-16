@@ -367,7 +367,7 @@ void increase_max_dfas (void)
  * Creates the dfa corresponding to the ndfa we've constructed.  The
  * dfa starts out in state #1.
  *
- * Return the amound of space, in byyes, allocated for the bxt table.
+ * Return the amount of space, in bytes, allocated for the next table.
  * In some modes this can be zero.
  */
 

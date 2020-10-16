@@ -1223,9 +1223,9 @@ void readin (void)
 	if (syntaxerror)
 		flexend (1);
 
-	/* On --emit, -e, or %option emit, change backends 
-	 * This is where backed properties are collected,
-	 * Which means they can't be set from a cudtom skelfile.
+	/* On --emit, -e, or %option emit, change backends
+	 * This is where backend properties are collected,
+	 * which means they can't be set from a custom skelfile.
 	 */
 	backend_by_name(ctrl.emit);
 

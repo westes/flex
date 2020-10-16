@@ -50,9 +50,9 @@ struct _aux {
 
 
 struct _scanopt_t {
-	const optspec_t *options;	/* List of ctrl. */
-	struct _aux *aux;	/* 'Auxiliary data about options. */
-	int     optc;		/* Number of ctrl. */
+	const optspec_t *options;	/* List of options. */
+	struct _aux *aux;	/* Auxiliary data about options. */
+	int     optc;		/* Number of options. */
 	int     argc;		/* Number of args. */
 	char  **argv;		/* Array of strings. */
 	int     index;		/* Used as: argv[index][subscript]. */
@@ -345,8 +345,8 @@ int     scanopt_usage (scanopt_t *scanner, FILE *fp, const char *usage)
 	fprintf((fp), "%*s", (n), "")
 
 	/* Second pass (same as above loop), this time we print. */
-	/* Sloppy hack: We iterate twice. The first time we print short and long ctrl.
-	   The second time we print those lines that have ONLY long ctrl. */
+	/* Sloppy hack: We iterate twice. The first time we print short and long options.
+	   The second time we print those lines that have ONLY long options. */
 	while (print_run++ < 2) {
 		for (ue = byr_val; ue; ue = ue->next) {
 			usg_elem *ap;
