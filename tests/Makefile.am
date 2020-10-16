@@ -83,6 +83,7 @@ simple_tests = \
 	debug_r \
 	debug_c99 \
 	extended_cpp \
+	extended_c99 \
 	header_nr \
 	header_r \
 	mem_nr \
@@ -159,6 +160,7 @@ debug_nr_SOURCES = debug_nr.l
 debug_r_SOURCES = debug_r.l
 debug_c99_SOURCES = debug_c99.l
 extended_cpp_SOURCES = extended_cpp.l
+extended_c99_SOURCES = extended_c99.l
 header_nr_SOURCES = header_nr_scanner.l header_nr_main.c
 nodist_header_nr_SOURCES = header_nr_scanner.h
 header_r_SOURCES = header_r_scanner.l header_r_main.c
@@ -235,6 +237,7 @@ CLEANFILES = \
 	debug_r.c \
 	debug_c99.c \
 	extended_cpp.c \
+	extended_c99.c \
 	header_nr_scanner.c \
 	header_nr_scanner.h \
 	header_r_scanner.c \
@@ -307,6 +310,7 @@ EXTRA_DIST = \
 	debug_r.txt \
 	debug_c99.txt \
 	extended_cpp.txt \
+	extended_c99.txt \
 	header_nr.txt \
 	header_r.txt \
 	include_by_buffer.direct.txt \

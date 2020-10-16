@@ -51,6 +51,8 @@ debug_c99
 debug_c99.c
 extended_cpp
 extended_cpp.c
+extended_c99
+extended_c99.c
 header_nr
 header_nr_scanner.[ch]
 header_r
