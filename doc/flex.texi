@@ -2696,6 +2696,20 @@ the serialized tables match the in-code tables, instead of loading them.
 @section Options Affecting Scanner Behavior
 
 @table @samp
+@anchor{option-emit}
+@opindex -e
+@opindex ---emit
+@opindex emit
+@item -e, --emit, @code{%option emit}
+instructs @code{flex} to generate code using a specific back end other
+than the default.  The default is called ``cpp',' generates C or C++,
+supports all legacy interfaces, and generates either non-reentrant or
+re-entrant scanners.  There is presently one alternate back end, C99;
+it drops a lot of legacy interfaces and generates only re-entrant
+scanners in modern C.  The C99 back end is intended to be a launch
+polnt for as yet nonexistent back ends generating distinct other
+languges such as Go, Rust, Java, or Python.
+
 @anchor{option-case-insensitive}
 @opindex -i
 @opindex ---case-insensitive
@@ -2706,7 +2720,6 @@ case of letters given in the @code{flex} input patterns will be ignored,
 and tokens in the input will be matched regardless of case.  The matched
 text given in @code{yytext} will have the preserved case (i.e., it will
 not be folded).  For tricky behavior, see @ref{case and character ranges}.
-
 
 
 @anchor{option-lex-compat}
