@@ -49,8 +49,8 @@ debug_r
 debug_r.c
 debug_c99
 debug_c99.c
-extended
-extended.c
+extended_cpp
+extended_cpp.c
 header_nr
 header_nr_scanner.[ch]
 header_r
