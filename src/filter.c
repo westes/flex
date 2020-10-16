@@ -259,7 +259,7 @@ int filter_tee_header (struct filter *chain)
 		fputs (check_4_gnu_m4, to_h);
 		fputs ("m4_changecom`'m4_dnl\n", to_h);
 		fputs ("m4_changequote`'m4_dnl\n", to_h);
-		fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_h);
+	fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_h);
 		fputs ("m4_define([[M4_YY_NOOP]])[[]]m4_dnl\n", to_h);
 		fputs ("m4_define([[M4_YY_IN_HEADER]],[[]])m4_dnl\n", to_h);
 		fprintf (to_h,
@@ -334,11 +334,7 @@ int filter_fix_linedirs (struct filter *chain)
 	bool    in_gen = true;	/* in generated code */
 	bool    last_was_blank = false;
 
-	if (!chain || ctrl.traceline_re == NULL)
-		return 0;
-
-	traceline_template = skel_property("M4_PROPERTY_TRACE_LINE_TEMPLATE");
-	if (traceline_template == NULL)
+	if (!chain)
 		return 0;
 
 	while (fgets (buf, (int) readsz, stdin)) {
@@ -348,7 +344,9 @@ int filter_fix_linedirs (struct filter *chain)
 		/* Check for directive. Note wired-in assumption:
 		 * field reference 1 is line number, 2 is filename.
 		 */
-		if (regexec (&regex_linedir, buf, 3, m, 0) == 0) {
+		if (ctrl.traceline_re != NULL &&
+		    ctrl.traceline_template != NULL &&
+		    regexec (&regex_linedir, buf, 3, m, 0) == 0) {
 
 			char   *fname;
 

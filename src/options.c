@@ -100,7 +100,11 @@ optspec_t flexopts[] = {
 	{"-n", OPT_DONOTHING, 0}
 	,			/* For POSIX lex compatibility. */
 	{"--ecs", OPT_ECS, 0}
-	,			/* Construct equivalence classes. */
+	,
+	{"--emit=LANG", OPT_EMIT, 0}
+	,			/* select language to emit */
+	{"-e LANG", OPT_EMIT, 0}
+	,
 	{"--noecs", OPT_NO_ECS, 0}
 	,
 	{"-F", OPT_FAST, 0}

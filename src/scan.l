@@ -449,6 +449,7 @@ M4QEND      "]""]"
 	yyget_lloc      ctrl.no_yyget_lloc = ! option_sense;
 	yyset_lloc      ctrl.no_yyset_lloc = ! option_sense;
 
+	emit		return TOK_EMIT;
 	extra-type	return TOK_EXTRA_TYPE;
 	outfile		return TOK_OUTFILE;
 	prefix		return TOK_PREFIX;

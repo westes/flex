@@ -50,33 +50,32 @@ m4_changequote([[, ]])
 %# This is to aid those who edit the skeleton.
 %#
 
-%# Macro hooks used by Flex start here
+%# Properties not used in the skeleton - meant to be read by the Flex code
+m4_define([[M4_PROPERTY_BACKEND_NAME]], [[C/C++]])
+%#m4_define([[M4_PROPERTY_SOURCE_SUFFIX]], [[]])
+m4_define([[M4_PROPERTY_TRACE_LINE_REGEXP]], [[^#line ([0-9]+) "(.*)"]])
+m4_define([[M4_PROPERTY_TRACE_LINE_TEMPLATE]], [[#line %d "%s"]])
 
+%# Macro hooks used by Flex code generators start here
 m4_define([[M4_HOOK_INT32]], [[flex_int32_t]])
 m4_define([[M4_HOOK_INT16]], [[flex_int16_t]])
-
 m4_define([[M4_HOOK_COMMENT_OPEN]], [[/*]])
 m4_define([[M4_HOOK_COMMENT_CLOSE]], [[*/]])
-
 %# If this is not defined, no trace lines will be generated.
 m4_define([[M4_HOOK_TRACE_LINE_FORMAT]], [[#line $1 "$2"
 ]])
-m4_define([[M4_PROPERTY_TRACE_LINE_TEMPLATE]], [[#line %d "%s"]])
 m4_define([[M4_HOOK_TABLE_OPENER]], [[{]])
 m4_define([[M4_HOOK_TABLE_CONTINUE]], [[},]])
 m4_define([[M4_HOOK_TABLE_CLOSER]], [[};]])
-
+m4_define([[M4_HOOK_RELATIVIZE]], [[$1]])
 m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]], [[	&yy_transition[$1],
 ]])
-
 m4_define([[M4_HOOK_EOF_STATE_CASE_ARM]], [[	case YY_STATE_EOF($1):]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_FALLTHROUGH]], [[		/* FALLTHROUGH */]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_TERMINATE]], [[		yyterminate();
 ]])
-
 m4_define([[M4_HOOK_CONST_DEFINE]], [[#define $1 $2
 ]])
-
 m4_define([[M4_HOOK_SET_YY_DECL]], [[#define YY_DECL $1
 ]])
 m4_define([[M4_HOOK_SET_YYLMAX]], [[#define YYLMAX $1
@@ -87,9 +86,6 @@ m4_define([[M4_HOOK_SET_PREACTION]], [[#define YY_USER_ACTION $1
 ]])
 m4_define([[M4_HOOK_SET_POSTACTION]], [[#define YY_BREAK $1
 ]])
-
-%# Not used in the skeleton - meant to be read by the Flex code
-m4_define([[M4_PROPERTY_TRACE_LINE_REGEXP]], [[^#line ([0-9]+) "(.*)"]])
 
 %% [0.0] Make hook macros available to Flex
 

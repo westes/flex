@@ -8701,14 +8701,19 @@ To get started on writing a new back end, read the definition of
 struct backend_t in @file{src/flexdefs.h}, and attached comments
 first.  Then read a skeleton file.
 
-You'll want to start by studying the @code{M4_HOOK_*} macros near the
-top of the skeleton file.  Rather than emit literal language syntax,
-Flex ships calls to these macros which are expected to be expanded
-within the skeleton.  The other things it ships which appear in the
-output code are mostly bodies for table initializers, with associated
-macros for typenames and table dimensions.  The names of all such
-macros have the prefix ``M4_HOOK_''; you can study them in the Flex
-code by grepping for that prefix.
+You'll want to start by studying the @code{M4_PROPERTY_*} macros near the
+top of the skeleton file. They declare properties of the back end like
+its name and normal source-code suffix. These aren't used for code
+generation; they're for Flex to read and key on.
+
+Following those are the @code{M4_HOOK_*} macros. Rather than emit
+literal language syntax, Flex ships calls to these macros which are
+expected to be expanded within the skeleton.  The other things it
+ships which appear in the output code are mostly bodies for table
+initializers, with associated macros for typenames and table
+dimensions.  The names of all such macros have the prefix
+``M4_HOOK_''; you can study them in the Flex code by grepping for that
+prefix.
 
 Flex ships another fairly large set of macros that are guard
 conditions for conditional macroexpanion. The values of these symbols

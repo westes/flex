@@ -30,11 +30,10 @@ regex_t regex_linedir; /**< matches line directives */
 /** Initialize the regular expressions.
  * @return true upon success.
  */
-bool flex_init_regex(void)
+bool flex_init_regex(const char *traceline_re)
 {
-	ctrl.traceline_re = skel_property("M4_PROPERTY_TRACE_LINE_REGEXP");
-	if (ctrl.traceline_re != NULL)
-		flex_regcomp(&regex_linedir, ctrl.traceline_re, REG_EXTENDED);
+	if (traceline_re != NULL)
+		flex_regcomp(&regex_linedir, traceline_re, REG_EXTENDED);
 	return true;
 }
 

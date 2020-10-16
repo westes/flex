@@ -42,6 +42,11 @@ const char *cpp_skel[] = {
     0,
 };
 
+//const char *go_skel[] = {
+//#include "go-skel.h"
+//    0,
+//};
+
 /* END digested skeletons */
 
 /* Method table describing a language-specific back end.
@@ -53,36 +58,24 @@ struct flex_backend_t {
 	const char **skel;		// Digested skeleton file
 };
 
-static struct flex_backend_t cpp_backend = {
-	.skel = cpp_skel,
+static struct flex_backend_t backends[] = {
+    {.skel=cpp_skel},
+    //{.skel=go_skel},
+    {NULL}
 };
 
-static struct flex_backend_t *	backend = &cpp_backend;
+static struct flex_backend_t *backend = &backends[0];
 
 /* Functions for querying skeleton properties. */
 
 bool is_default_backend(void)
 {
-    return backend == &cpp_backend;
-}
-
-const char *suffix (void)
-{
-	char   *suffix;
-
-	if (ctrl.C_plus_plus)
-	    suffix = "cc";
-	else
-	    suffix = "c";
-
-	/* Someday this will search the selected skeketon for a suffix */
-	
-	return suffix;
+    return backend == &backends[0];
 }
 
 /* Search for a string in the skeleton prolog, where macros are defined.
  */
-bool boneseeker(const char *bone)
+static bool boneseeker(const char *bone)
 {
 	int i;
 
@@ -94,6 +87,39 @@ bool boneseeker(const char *bone)
 			break;
 	}
 	return false;
+}
+
+void backend_by_name(const char *name)
+{
+	if (name != NULL) {
+		for (backend = &backends[0]; backend->skel != NULL; backend++) {
+			if (strcasecmp(skel_property("M4_PROPERTY_BACKEND_NAME"), name) == 0)
+				goto backend_ok;
+		}
+		flexerror(_("no such back end"));
+	}
+  backend_ok:
+	ctrl.backend_name = xstrdup(skel_property("M4_PROPERTY_BACKEND_NAME"));
+	ctrl.traceline_re = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_REGEXP"));
+	ctrl.traceline_template = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_TEMPLATE"));
+	ctrl.have_state_entry_format = boneseeker("m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]]");
+	flex_init_regex(ctrl.traceline_re);
+}
+
+const char *suffix (void)
+{
+	const char   *suffix;
+
+	if (is_default_backend()) {
+		if (ctrl.C_plus_plus)
+			suffix = "cc";
+		else
+			suffix = "c";
+	} else {
+		suffix = skel_property("M4_PROPERTY_SOURCE_SUFFIX");
+	}
+	
+	return suffix;
 }
 
 /* Search for a m4 define of the property key, retrieve the value.  The

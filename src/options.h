@@ -57,6 +57,7 @@ enum flexopt_flag_t {
 	OPT_DEFAULT,
 	OPT_DONOTHING,
 	OPT_ECS,
+	OPT_EMIT,
 	OPT_FAST,
 	OPT_FULL,
 	OPT_HEADER_FILE,

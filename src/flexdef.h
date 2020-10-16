@@ -349,7 +349,8 @@ struct ctrl_bundle_t {
 	char *userinit;		// Code fragment to be inserted before scanning
 	char *preaction;	// Code fragment to be inserted before each action
 	char *postaction;	// Code fragment to be inserted after each action
-	// flags corresponding to the huge mass of --no-yy options
+	char *emit;		// Specify target language to emit.
+ 	// flags corresponding to the huge mass of --no-yy options
 	bool no_yy_push_state;
 	bool no_yy_pop_state;
 	bool no_yy_top_state;
@@ -379,7 +380,10 @@ struct ctrl_bundle_t {
 	bool no_get_debug;
 	bool no_set_debug;
 	// Properties read from the skeleton
+	const char *backend_name;	// What the back end tells you its name is
 	const char *traceline_re;	// Regular expression for recognizing tracelines */
+	const char *traceline_template;	// templare for emitting trace lines */
+	bool have_state_entry_format;	// Do we know how to make a state entry address?
 };
 
 /* Environment variables.  These control the lexer operation, but do
@@ -1032,8 +1036,8 @@ extern const char *skel_property(const char *);
 /* Is the default back end selected?*/
 extern bool is_default_backend(void);
 
-/* Do we have a line natching the specified prefix? ? */
-extern bool boneseeker(const char *);
+/* Select a backend by name */
+extern void backend_by_name(const char *);
 
 /* Write out one section of the skeleton file. */
 extern void skelout(bool);
@@ -1175,7 +1179,7 @@ extern int filter_fix_linedirs(struct filter *chain);
  */
 
 extern regex_t regex_linedir;
-bool flex_init_regex(void);
+bool flex_init_regex(const char *);
 void flex_regcomp(regex_t *preg, const char *regex, int cflags);
 char   *regmatch_dup (regmatch_t * m, const char *src);
 char   *regmatch_cpy (regmatch_t * m, char *dest, const char *src);
