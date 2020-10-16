@@ -51,7 +51,7 @@ struct _aux {
 
 struct _scanopt_t {
 	const optspec_t *options;	/* List of ctrl. */
-	struct _aux *aux;	/* Auxiliary data about ctrl. */
+	struct _aux *aux;	/* 'Auxiliary data about options. */
 	int     optc;		/* Number of ctrl. */
 	int     argc;		/* Number of args. */
 	char  **argv;		/* Array of strings. */
