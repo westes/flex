@@ -9,5 +9,6 @@ parse.c
 parse.h
 scan.c
 cpp-skel.h
+c99-skel.h
 stage1scan.[cl]
 stage1flex

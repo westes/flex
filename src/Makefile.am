@@ -54,7 +54,8 @@ COMMON_SOURCES = \
 	buf.c \
 	ccl.c \
 	skeletons.c \
-	cpp_skel.h \
+	cpp-skel.h \
+	c99-skel.h \
 	dfa.c \
 	ecs.c \
 	filter.c \
@@ -90,6 +91,7 @@ include_HEADERS = \
 
 EXTRA_DIST = \
 	cpp-flex.skl \
+	c99-flex.skl \
 	mkskel.sh \
 	gettext.h
 
@@ -99,6 +101,10 @@ MAINTAINERCLEANFILES = c9pp-skel.h
 
 cpp-skel.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(m4) $(VERSION) > $@.tmp
+	mv -f $@.tmp $@
+
+c99-skel.h: c99-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
+	$(SHELL) $(srcdir)/mkskel.sh c99 $(srcdir) $(m4) $(VERSION) > $@.tmp
 	mv -f $@.tmp $@
 
 if ENABLE_BOOTSTRAP

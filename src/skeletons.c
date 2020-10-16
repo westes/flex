@@ -42,10 +42,10 @@ const char *cpp_skel[] = {
     0,
 };
 
-//const char *go_skel[] = {
-//#include "go-skel.h"
-//    0,
-//};
+const char *c99_skel[] = {
+#include "c99-skel.h"
+    0,
+};
 
 /* END digested skeletons */
 
@@ -60,7 +60,7 @@ struct flex_backend_t {
 
 static struct flex_backend_t backends[] = {
     {.skel=cpp_skel},
-    //{.skel=go_skel},
+    {.skel=c99_skel},
     {NULL}
 };
 
