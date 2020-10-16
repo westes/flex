@@ -12,6 +12,8 @@ basic_nr
 basic_nr.c
 basic_r
 basic_r.c
+basic_c99
+basic_c99.c
 bison_nr
 bison_nr_scanner.[ch]
 bison_nr_parser.[ch]

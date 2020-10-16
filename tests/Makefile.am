@@ -66,6 +66,7 @@ simple_tests = \
 	array_r \
 	basic_nr \
 	basic_r \
+	basic_c99 \
 	bison_nr \
 	bison_yylloc \
 	bison_yylval \
@@ -127,6 +128,7 @@ array_nr_SOURCES = array_nr.l
 array_r_SOURCES = array_r.l
 basic_nr_SOURCES = basic_nr.l
 basic_r_SOURCES = basic_r.l
+basic_c99_SOURCES = basic_c99.l
 if HAVE_BISON
 bison_nr_SOURCES = bison_nr_scanner.l bison_nr_parser.y bison_nr_main.c
 nodist_bison_nr_SOURCES = bison_nr_parser.h bison_nr_scanner.h
@@ -198,6 +200,7 @@ CLEANFILES = \
 	array_r.c \
 	basic_nr.c \
 	basic_r.c \
+	basic_c99.c \
 	bison_nr_parser.c \
 	bison_nr_parser.h \
 	bison_nr_scanner.c \
