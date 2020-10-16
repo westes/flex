@@ -8,14 +8,19 @@ this directory and its contents.
 
 * STRUCTURE OF THE TEST SUITE
 
-The testsuite consists of several tests. Each test is centered around
-a scanner known to work with the most recent version of flex. In
-general, after you modify your copy of the flex distribution, you
-should re-run the test suite. Some of the tests may require certain
-tools to be available (e.g., bison, diff). If any test returns an
-error or generates an error message, then your modifications *may*
-have broken a feature of flex. At a minimum, you'll want to
-investigate the failure and determine if it's truly significant.
+The testsuite consists of a large number of tests. Usually the test is
+simply that a sanner consumes all the token fed to it firom a text
+(.txt) file in a maxhing grammer, not allowing stray characters to
+echo through to stdout.  This is how we avoid meeding explicit check files.
+
+Each test is centered around a scanner known to work with the most
+recent version of flex. In general, after you modify your copy of the
+flex distribution, you should re-run the test suite. Some of the tests
+may require certain tools to be available (e.g., bison, diff). If any
+test returns an error or generates an error message, then your
+modifications *may* have broken a feature of flex. At a minimum,
+you'll want to investigate the failure and determine if it's truly
+significant.
 
 * HOW TO RUN THE TEST SUITE
 
@@ -39,7 +44,8 @@ To build and execute a single test:
    variables to group similar tests together. This also helps with
    handling the automake test suite requirements. Hopefully your test
    can be listed in SIMPLE_TESTS. You'll need to add the appropriate
-   automake _SOURCES variable as well. If you're unsure, then consult
+   automake _SOURCES variable as well, and .gitignore lines for the
+   binary and generated code. If you're unsure, then consult
    the automake manual, paying attention to the parallel test harness
    section.
 
@@ -56,3 +62,26 @@ automake test suite harness.
 ** Once your work is done, submit a patch via the flex development
    mailing list, the github pull request mechanism or some other
    suitable means.
+
+* NAMING CONVENTIONS
+
+A test with a _nr suffix exercises a non-reentrant xanner built
+with the default cpp back end.
+
+uA test with a _r suffix exercises a reentrant xanner built
+with the default cpp back end.
+
+A test with a c99 suffix exercises the c99 back end. All C99
+acanners are re-entrant.
+
+A tesrt with a _cpp suffix exercises the default cpp back end on a
+specification where the reentra=t/non-reentrant distinction is
+not interesting.
+
+Most tests occur in groups with a common stem in the names, like
+alloc_extra_ or ccl_.  These are exercising the same token grammar
+under different back ends.  As mre target languages are added these
+groups of patallel tests will grow. Tests that are not part of one of
+these series are usually of features supported on the default cpp
+back end only.
+
