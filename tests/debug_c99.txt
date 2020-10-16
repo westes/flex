@@ -1,0 +1,2 @@
+Any input will do for this test.
+We are only testing if it actually runs in debug mode.

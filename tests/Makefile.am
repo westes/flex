@@ -61,9 +61,11 @@ AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
 
 simple_tests = \
-	alloc_extra \
+	alloc_extra_cpp \
+	alloc_extra_c99 \
 	array_nr \
 	array_r \
+	array_c99 \
 	basic_nr \
 	basic_r \
 	basic_c99 \
@@ -72,12 +74,14 @@ simple_tests = \
 	bison_yylval \
 	c_cxx_nr \
 	c_cxx_r \
-	ccl \
+	ccl_cpp \
+	ccl_c99 \
 	cxx_basic \
 	cxx_multiple_scanners \
 	cxx_restart \
 	debug_nr \
 	debug_r \
+	debug_c99 \
 	extended \
 	header_nr \
 	header_r \
@@ -123,9 +127,11 @@ ONE_TESTS = \
 	lineno_trailing.one
 
 quote_in_comment_SOURCES = quote_in_comment.l
-alloc_extra_SOURCES = alloc_extra.l
+alloc_extra_cpp_SOURCES = alloc_extra_cpp.l
+alloc_extra_c99_SOURCES = alloc_extra_c99.l
 array_nr_SOURCES = array_nr.l
 array_r_SOURCES = array_r.l
+array_c99_SOURCES = array_c99.l
 basic_nr_SOURCES = basic_nr.l
 basic_r_SOURCES = basic_r.l
 basic_c99_SOURCES = basic_c99.l
@@ -143,13 +149,15 @@ bison_yylval_SOURCES = no_bison_stub.c
 endif
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
-ccl_SOURCES = ccl.l
+ccl_cpp_SOURCES = ccl_cpp.l
+ccl_c99_SOURCES = ccl_c99.l
 cxx_basic_SOURCES = cxx_basic.ll
 cxx_restart_SOURCES = cxx_restart.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
 cxx_yywrap_i3_SOURCES = cxx_yywrap.ll
 debug_nr_SOURCES = debug_nr.l
 debug_r_SOURCES = debug_r.l
+debug_c99_SOURCES = debug_c99.l
 extended_SOURCES = extended.l
 header_nr_SOURCES = header_nr_scanner.l header_nr_main.c
 nodist_header_nr_SOURCES = header_nr_scanner.h
@@ -195,9 +203,11 @@ yyextra_SOURCES = yyextra.l
 # it.
 
 CLEANFILES = \
-	alloc_extra.c \
+	alloc_extra_cpp.c \
+	alloc_extra_c99.c \
 	array_nr.c \
 	array_r.c \
+	array_c99.c \
 	basic_nr.c \
 	basic_r.c \
 	basic_c99.c \
@@ -215,7 +225,7 @@ CLEANFILES = \
 	bison_yylval_scanner.h \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
-	ccl.c \
+	ccl_cpp.c \
 	cxx_basic.cc \
 	cxx_multiple_scanners_1.cc \
 	cxx_multiple_scanners_2.cc \
@@ -223,6 +233,7 @@ CLEANFILES = \
 	cxx_yywrap.cc \
 	debug_nr.c \
 	debug_r.c \
+	debug_c99.c \
 	extended.c \
 	header_nr_scanner.c \
 	header_nr_scanner.h \
@@ -275,9 +286,11 @@ dist-hook:
 
 EXTRA_DIST = \
 	README \
-	alloc_extra.txt \
+	alloc_extra_cpp.txt \
+	alloc_extra_c99.txt \
 	array_nr.txt \
 	array_r.txt \
+	array_c99.txt \
 	basic_nr.txt \
 	basic_r.txt \
 	bison_nr.txt \
@@ -285,13 +298,14 @@ EXTRA_DIST = \
 	bison_yylval.txt \
 	c_cxx_nr.txt \
 	c_cxx_r.txt \
-	ccl.txt \
+	ccl_cpp.txt \
 	cxx_basic.txt \
 	cxx_multiple_scanners.txt \
 	cxx_restart.txt \
 	cxx_yywrap.txt \
 	debug_nr.txt \
 	debug_r.txt \
+	debug_c99.txt \
 	extended.txt \
 	header_nr.txt \
 	header_r.txt \
