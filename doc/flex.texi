@@ -8786,6 +8786,14 @@ targets.  Almost anything generally descended from Algol shouldn't be
 much more difficult; this certainly includes the whole
 Pascal/Modula/Oberon family.
 
+The C99 back end can be used for production, but it is really intended
+as a launch point to be cloned by people writing support for
+additional languages.  Accordingly, it omits support for some features
+that can't be practically ported out of C in order to lower the
+complexity of what needs to be translated to a new target language.
+These features are: the Bison bridge, header generation, and loadable
+tables.
+
 Some notes about the interesting part:
 
 @itemize

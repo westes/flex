@@ -1,20 +1,20 @@
 /*
  * This file is part of flex.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the University nor the names of its contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -22,33 +22,59 @@
  */
 
 %{
-/* Build "scanner.c". 
-   The scanner is not important. 
-   This test is backend-independent; what it's really testing
-  is Flex's ability to accumulate and ship preamble code sections.
-*/
+/* The goal of this test is to verify that we are getting the counter-intuitive
+ * posix behavior of the repeat operator `{}'.
+ *
+ *  ab{3} -  In traditional flex, this matches "abbb".
+ *           In posix, this matches "ababab".
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include "config.h"
 
-#ifndef DEFINE_ME
-#error "DEFINE_ME undefined!"
-#endif
+#define NUM_TESTS 1
+char * tests[NUM_TESTS] =  { "ababab"};
+int main(void);
+
+int tests_ok[NUM_TESTS] =  { 0 };
+
 %}
 
-%top{
-#define DEFINE_ME 1
-}
-
-%option reentrant
-%option 8bit header="top.h" prefix="test"
+%option emit="c99"
+%option 8bit prefix="test"
 %option nounput nomain noyywrap noinput
-%option warn
+%option warn posix-compat
 
 
 %%
 
-.|\n              { }
+ab{3}    tests_ok[0] = 1; return 0;
+.|\n     return 0;
 
 %%
 
+
+int main (void)
+{
+    YY_BUFFER_STATE state;
+    int i;
+
+    yyin = stdin;
+    yyout = stdout;
+
+    /* Run the tests */
+    for (i=0; i < NUM_TESTS; i++){
+        printf("Testing: test_scan_string(%s): ", tests[i]);
+        state = test_scan_string(tests[i]);
+        testlex();
+        yy_delete_buffer(state);
+        printf("... %s\n", tests_ok[i] ? "OK" : "FAILED");
+    }
+
+    for (i=0; i < NUM_TESTS; i++)
+        if (!tests_ok[i])
+            exit(1);
+
+    printf("TEST RETURNING OK.\n");
+    return 0;
+}

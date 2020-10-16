@@ -8,10 +8,11 @@ this directory and its contents.
 
 * STRUCTURE OF THE TEST SUITE
 
-The testsuite consists of a large number of tests. Usually the test is
-simply that a scanner consumes all the tokens fed to it from a text
-(.txt) file in a maching grammar, not allowing stray characters to
-echo through to stdout.  This is how we avoid meeding explicit check files.
+The testsuite consists of a large number of tests. In a "simple test",
+the check is simply that a scanner consumes all the tokens fed to it
+from a text (.txt) file in a maching grammar, not allowing stray
+characters to echo through to stdout.  This is how we avoid meeding
+explicit check files.
 
 Each test is centered around a scanner known to work with the most
 recent version of flex. In general, after you modify your copy of the
@@ -84,3 +85,13 @@ under different back ends.  As new target languages are added these
 groups of patallel tests will grow. Tests that are not part of one of
 these series are usually of features supported on the default cpp
 back end only.
+
+WHY SOME TESTS ARE MISSING
+
+The "top" test is backend-independent; what it's really testing
+is Flex's ability to accumulate and ship preamble code sections.
+
+The C99 is missing tests for the Bison bridge, header generation, and
+loadable tables because it omits those features in order to be a simpler
+starting point for wring new back ends.
+

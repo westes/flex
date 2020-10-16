@@ -88,18 +88,25 @@ simple_tests = \
 	header_r \
 	mem_nr \
 	mem_r \
+	mem_c99 \
 	multiple_scanners_nr \
 	multiple_scanners_r \
-	posix \
-	posixly_correct \
+	posix_cpp \
+	posix_c99 \
+	posixly_correct_cpp \
+	posixly_correct_c99 \
 	prefix_nr \
 	prefix_r \
-	quote_in_comment \
-	quotes \
+	prefix_c99 \
+	quote_in_comment_cpp \
+	quote_in_comment_c99 \
+	quotes_cpp \
+	quotes_c99 \
 	string_nr \
-	string_r \
+	string_c99 \
 	top \
-	yyextra
+	yyextra_cpp \
+	yyextra_c99
 
 reject_tests = \
 	reject_nr.reject \
@@ -127,7 +134,8 @@ ONE_TESTS = \
 	lineno_r.one \
 	lineno_trailing.one
 
-quote_in_comment_SOURCES = quote_in_comment.l
+quote_in_comment_cpp_SOURCES = quote_in_comment_cpp.l
+quote_in_comment_c99_SOURCES = quote_in_comment_c99.l
 alloc_extra_cpp_SOURCES = alloc_extra_cpp.l
 alloc_extra_c99_SOURCES = alloc_extra_c99.l
 array_nr_SOURCES = array_nr.l
@@ -173,16 +181,21 @@ lineno_r_one_SOURCES = lineno_r.l
 lineno_trailing_one_SOURCES = lineno_trailing.l
 mem_nr_SOURCES = mem_nr.l
 mem_r_SOURCES = mem_r.l
+mem_c99_SOURCES = mem_c99.l
 multiple_scanners_nr_SOURCES = multiple_scanners_nr_main.c multiple_scanners_nr_1.l multiple_scanners_nr_2.l
 nodist_multiple_scanners_nr_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
 multiple_scanners_r_SOURCES = multiple_scanners_r_main.c multiple_scanners_r_1.l multiple_scanners_r_2.l
 nodist_multiple_scanners_r_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
-posix_SOURCES = posix.l
-posixly_correct_SOURCES = posixly_correct.l
+posix_cpp_SOURCES = posix_cpp.l
+posix_c99_SOURCES = posix_c99.l
+posixly_correct_cpp__SOURCES = posixly_correct_cp.l
+posixly_correct_c99_SOURCES = posixly_correct_c99.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
+prefix_c99_SOURCES = prefix_c99.l
 pthread_pthread_SOURCES = pthread.l
-quotes_SOURCES = quotes.l
+quotes_cpp_SOURCES = quotes_cpp.l
+quotes_c99_SOURCES = quotes_c99.l
 reject_nr_reject_SOURCES = reject.l4
 reject_r_reject_SOURCES = reject.l4
 reject_ver_table_SOURCES = reject.l4
@@ -191,9 +204,11 @@ rescan_nr_direct_SOURCES = rescan_nr.direct.l
 rescan_r_direct_SOURCES = rescan_r.direct.l
 string_nr_SOURCES = string_nr.l
 string_r_SOURCES = string_r.l
+string_c99_SOURCES = string_c99.l
 top_SOURCES = top.l top_main.c
 nodist_top_SOURCES = top.h
-yyextra_SOURCES = yyextra.l
+yyextra_cpp_SOURCES = yyextra_cpp.l
+yyextra_c99_SOURCES = yyextra_c99.l
 
 # Normally, automake would distribute files built by flex. Since the
 # point of the test suite is to test the files that flex builds, and
@@ -250,6 +265,7 @@ CLEANFILES = \
 	lineno_trailing.c \
 	mem_nr.c \
 	mem_r.c \
+	mem_c99.c \
 	multiple_scanners_nr_1.c \
 	multiple_scanners_nr_1.h \
 	multiple_scanners_nr_2.c \
@@ -258,13 +274,17 @@ CLEANFILES = \
 	multiple_scanners_r_1.h \
 	multiple_scanners_r_2.c \
 	multiple_scanners_r_2.h \
-	posix.c \
-	posixly_correct.c \
+	posix_cpp.c \
+	posix_c99.c \
+	posixly_correct_cpp.c \
+	posixly_correct_c99.c \
 	prefix_nr.c \
 	prefix_r.c \
+	prefix_c99.c \
 	pthread.c \
-	quote_in_comment.c \
-	quotes.c \
+	quote_in_comment_cpp.c \
+	quote_in_comment_c99.c \
+	quotes_cpp.c \
 	reject_nr.reject.c \
 	reject_r.reject.c \
 	reject_ser.table.c \
@@ -275,9 +295,11 @@ CLEANFILES = \
 	rescan_r.direct.c \
 	string_nr.c \
 	string_r.c \
+	string_c99.c \
 	top.c \
 	top.h  \
-	yyextra.c \
+	yyextra_cpp.c \
+	yyextra_c99.c \
 	$(tableopts_c) \
 	$(tableopts_tables)
 
@@ -327,8 +349,10 @@ EXTRA_DIST = \
 	lineno_trailing.one.txt \
 	mem_nr.txt \
 	mem_r.txt \
+	mem_c99.txt \
 	prefix_nr.txt \
 	prefix_r.txt \
+	prefix_c99.txt \
 	pthread_1.txt \
 	pthread_2.txt \
 	pthread_3.txt \
@@ -337,8 +361,10 @@ EXTRA_DIST = \
 	reject.txt \
 	rescan_nr.direct.txt \
 	rescan_r.direct.txt \
-	quote_in_comment.txt \
-	quotes.txt \
+	quote_in_comment_cpp.txt \
+	quote_in_comment_c99.txt \
+	quotes_cpp.txt \
+	quotes_c99.txt \
 	top.txt \
 	yyextra.txt \
 	tableopts.txt
@@ -424,7 +450,10 @@ multiple_scanners_r_2.h: multiple_scanners_r_2.c
 	@if test ! -f $@; then rm -f $<; else :; fi
 	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
-posixly_correct.c: posixly_correct.l $(FLEX)
+posixly_correct_cpp.c: posixly_correct_cpp.l $(FLEX)
+	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) $(TESTOPTS) -o $@ $<
+
+posixly_correct_c99.c: posixly_correct_c99.l $(FLEX)
 	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) $(TESTOPTS) -o $@ $<
 
 reject_nr.reject.c: reject.l4 $(FLEX)
