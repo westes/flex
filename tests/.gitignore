@@ -67,6 +67,8 @@ lineno_nr.one
 lineno_nr.c
 lineno_r.one
 lineno_r.c
+lineno_c99.one
+lineno_c99.c
 lineno_trailing.one
 lineno_trailing.c
 mem_nr

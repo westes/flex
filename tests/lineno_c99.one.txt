@@ -1,0 +1,19 @@
+These words
+are separated
+by newlines
+and sometimes
+    spaces  
+too.
+The next three lines are numbers with only intervening newlines
+01123
+581321
+34
+And now for some blank lines....
+
+
+Finally, we directly modify yylineno, but then change it back afterwards
+(see scanner.l):
+
+yylineno++
+
+yylineno--

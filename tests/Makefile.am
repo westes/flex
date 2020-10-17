@@ -133,6 +133,7 @@ PTHREAD_TESTS = \
 ONE_TESTS = \
 	lineno_nr.one \
 	lineno_r.one \
+	lineno_c99.one \
 	lineno_trailing.one
 
 quote_in_comment_cpp_SOURCES = quote_in_comment_cpp.l
@@ -179,6 +180,7 @@ include_by_push_direct_SOURCES = include_by_push.direct.l
 include_by_reentrant_direct_SOURCES = include_by_reentrant.direct.l
 lineno_nr_one_SOURCES = lineno_nr.l
 lineno_r_one_SOURCES = lineno_r.l
+lineno_r_one_SOURCES = lineno_c99.l
 lineno_trailing_one_SOURCES = lineno_trailing.l
 mem_nr_SOURCES = mem_nr.l
 mem_r_SOURCES = mem_r.l
@@ -263,6 +265,7 @@ CLEANFILES = \
 	include_by_reentrant.direct.c \
 	lineno_nr.c \
 	lineno_r.c \
+	lineno_c99.c \
 	lineno_trailing.c \
 	mem_nr.c \
 	mem_r.c \
@@ -347,6 +350,7 @@ EXTRA_DIST = \
 	include_by_reentrant.direct_3.txt \
 	lineno_nr.one.txt \
 	lineno_r.one.txt \
+	lineno_c99.one.txt \
 	lineno_trailing.one.txt \
 	mem_nr.txt \
 	mem_r.txt \
