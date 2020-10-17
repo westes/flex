@@ -315,28 +315,21 @@ dist-hook:
 
 EXTRA_DIST = \
 	README \
-	alloc_extra_cpp.txt \
-	alloc_extra_c99.txt \
-	array_nr.txt \
-	array_r.txt \
-	array_c99.txt \
-	basic_nr.txt \
-	basic_r.txt \
+	alloc_extra.txt \
+	array.txt \
+	basic.txt \
 	bison_nr.txt \
 	bison_yylloc.txt \
 	bison_yylval.txt \
 	c_cxx_nr.txt \
 	c_cxx_r.txt \
-	ccl_cpp.txt \
+	ccl.txt \
 	cxx_basic.txt \
 	cxx_multiple_scanners.txt \
 	cxx_restart.txt \
 	cxx_yywrap.txt \
-	debug_nr.txt \
-	debug_r.txt \
-	debug_c99.txt \
-	extended_cpp.txt \
-	extended_c99.txt \
+	debug.txt \
+	extended.txt \
 	header_nr.txt \
 	header_r.txt \
 	include_by_buffer.direct.txt \
@@ -352,12 +345,8 @@ EXTRA_DIST = \
 	lineno_r.one.txt \
 	lineno_c99.one.txt \
 	lineno_trailing.one.txt \
-	mem_nr.txt \
-	mem_r.txt \
-	mem_c99.txt \
-	prefix_nr.txt \
-	prefix_r.txt \
-	prefix_c99.txt \
+	mem.txt \
+	prefix.txt \
 	pthread_1.txt \
 	pthread_2.txt \
 	pthread_3.txt \
@@ -366,10 +355,8 @@ EXTRA_DIST = \
 	reject.txt \
 	rescan_nr.direct.txt \
 	rescan_r.direct.txt \
-	quote_in_comment_cpp.txt \
-	quote_in_comment_c99.txt \
-	quotes_cpp.txt \
-	quotes_c99.txt \
+	quote_in_comment.txt \
+	quotes.txt \
 	top.txt \
 	yyextra.txt \
 	tableopts.txt

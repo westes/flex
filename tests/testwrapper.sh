@@ -33,7 +33,15 @@ done
 shift $(($OPTIND-1))
 TESTNAME=$1
 
+# There may be a specific input file for this test
 INPUT_NAME=${INPUT_NAME:-$INPUT_DIRECTORY/`basename "${TESTNAME%.exe}"`.txt}
+
+# If it doesn't exist, try stripping out a backend suffix.
+# There might be a generic input for all tests with this stem.
+# For this purpose we consider _r and _nr to be back ends.
+if [ ! -f ${INPUT_NAME} ] ; then
+	INPUT_NAME=`echo ${INPUT_NAME} | sed -e 's/_[a-z0-9]*.txt$/.txt/'`
+fi
 
 if [ $DO_COMPARISON = 1 ] ; then
     TEST_OUTPUT=`$TESTNAME < $INPUT_NAME`
