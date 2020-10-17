@@ -1,4 +1,4 @@
-\input texinfo.tex @c -*-texinfo-*-
+input texinfo.tex @c -*-texinfo-*-
 @c %**start of header
 @setfilename flex.info
 @include version.texi
@@ -8740,7 +8740,10 @@ intended to be cloned and used as a launch pont for new back ends.
 
 This file you are looking at is processed through GNU m4 during the
 pre-compilation stage of Flex. At this time only macros starting with
-`m4preproc_' are processed, and quoting is normal.  The main purpose of
+`m4preproc_' are processed, and quoting is normal (that is, the quote
+opener is a back-tick (ASCII 96) and the quote closer is a tick or
+single quote (ASCII 39) @footnote{See chapter 3.2 of the m4 mamual,
+``Quoting input to m4'', for more information.}.  The main purpose of
 this expansion phase is to set Flex version symbols.
 
 At Flex compilation time, the preprocessed skeleton is translated into a comma-separated
@@ -8749,9 +8752,9 @@ specific method block compiled into the flex binary.
 
 At scanner generation time, , the skeleton is generated and filtered
 (again) through m4. Macros beginning with `m4_' will be processed.
-The quoting is "[[" and "]]" so we don't interfere with user code.
+The quoting is ``[[`` and ``]]'' so we don't interfere with user code.
 
-A line beginning with ``%# `` is comment. Thesev comments are omitted
+A line beginning with ``%#'' is a comment. These comments are omitted
 from the generated scanner.
 
 A line beginning with ``%%'' us stop-point, where code is inserted by
