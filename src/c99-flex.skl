@@ -1,20 +1,4 @@
 %# -*-C-*- vi: set ft=c:
-%# This file is processed in several stages.
-%# Here are the stages, as best as I can describe:
-%#
-%#   1. This is processed through GNU m4 during the
-%#      pre-compilation stage of flex. Only macros starting
-%#      with `m4preproc_' are processed, and quoting is normal.
-%#
-%#   2. The preprocessed skeleton is translated into a comma-separated
-%#      list of doublequoted strings which is stuffed into a language-
-%#      specific method block compiled into the flex binary. The %# comment
-%#      lines are removed.
-%#
-%#   3. At runtime, the skeleton is generated and filtered (again)
-%#      through m4. Macros beginning with `m4_' will be processed.
-%#      The quoting is "[[" and "]]" so we don't interfere with
-%#      user code.
 %#
 %# All generated macros for the m4 stage contain the text "m4" or "M4"
 %# in them. This is to distinguish them from CPP macros.
@@ -35,20 +19,6 @@ m4preproc_changecom
 m4_changecom
 m4_changequote
 m4_changequote([[, ]])
-
-%#
-%# Lines in this skeleton starting with a "%" character are "control lines"
-%# and affect the generation of the scanner. The possible control codes are
-%# listed and processed in misc.c.
-%#
-%#   %#  -  A comment. The current line is omitted from the generated scanner.
-%#   %%  -  A stop-point, where code is inserted by flex.
-%#          Each stop-point is numbered here and also in the code generator.
-%#          (See gen.c, etc. for details.)
-%#
-%# Stop points will be inserted into the generated scanner as a comment.
-%# This is to aid those who edit the skeleton.
-%#
 
 %# Properties not used in the skeleton - meant to be read by the Flex code
 m4_define([[M4_PROPERTY_BACKEND_NAME]], [[C99]])

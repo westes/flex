@@ -8688,6 +8688,16 @@ to appear in a URI, including spaces and control characters.  See
 This appendix describes how to add support for a new target language
 to Flex.
 
+@menu
+* Overview::
+* Getting Started::
+* Development Steps::
+* Translation Guidelines::
+@end menu
+
+@node Overview, , , Retargeting Flex
+@subsection Overview
+
 The Flex code has been factored to isolate knowledge of the specifics
 of each target language from the logic for building the lexer
 state/transition tables. Code in the target language is generated via
@@ -8719,9 +8729,35 @@ file named @file{cpp_backend.c} (so named because both languages use the C
 preprocessor), and in a skeleton file named @file{cpp-flex.skl} which
 is digested into a member of the method table when Flex is built.
 
-To get started on writing a new back end, read the definition of
-struct backend_t in @file{src/flexdefs.h}, and attached comments
-first.  Then read a skeleton file.
+@node Getting Started, Development Steps, Overview, Retargeting Flex
+@subsection Getting Started
+
+To get started on writing a new back end, browse
+@code{src/skeletons,c} to get some idea of how skeleton files are
+queried, then read a skeleton file.  If no sketon exists of a language
+that is closer to your target, the C99 back end is specifically
+intended to be cloned and used as a launch pont for new back ends.
+
+This file you are looking at is processed through GNU m4 during the
+pre-compilation stage of Flex. At this time only macros starting with
+`m4preproc_' are processed, and quoting is normal.  The main purpose of
+this expansion phase is to set Flex version symbols.
+
+At Flex compilation time, the preprocessed skeleton is translated into a comma-separated
+list of doublequoted strings which is stuffed into a language-
+specific method block compiled into the flex binary.
+
+At scanner generation time, , the skeleton is generated and filtered
+(again) through m4. Macros beginning with `m4_' will be processed.
+The quoting is "[[" and "]]" so we don't interfere with user code.
+
+A line beginning with ``%# `` is comment. Thesev comments are omitted
+from the generated scanner.
+
+A line beginning with ``%%'' us stop-point, where code is inserted by
+Flex.  Each stop-point is numbered here and also in the code
+generator.  Stop points will be inserted into the generated scanner as
+a comment.  This is to aid those who edit skeletons.
 
 You'll want to start by studying the @code{M4_PROPERTY_*} macros near the
 top of the skeleton file. They declare properties of the back end like
@@ -8745,30 +8781,30 @@ generated code. The names of such macros have the prefixes
 grepping for these prefixes.  Many of these symbols correspond to Flex
 command-line options.
 
+@node Development Steps, Translation Guidelines, Getting Started, Retargeting Flex
+@subsection Development Steps
+
 To write support for a language, you'll want to do the following
 steps:
 
 @enumerate
 @item
-Clone one of the existing back-end/skeleton pairs.  If the language
-you are supporting is named @var{foo}, you should create files named
-@file{foo_backend.c} and @file{foo-flex.skl}.
+Clone one of the existing skeletons.  If the language you are
+supporting is named @var{foo}, you should create a file named
+@file{foo-flex.skl}.
 
 @item
-Add @file{foo_backend.c} to COMMON_SOURCES in @file{src/Makefile.am}.  Add the
-name of your skeleton file to EXTRA_DIST.
+Modify @code{skeleton.c} to ass the digested form of your skeleton
+to the @code{backends} list.
+
+@item
+Add the name of your skeleton file to EXTRA_DIST.
 
 @item
 Add a production to @file{src/Makefile.am} parallel to the one that
 produces @file{cpp-skel.h}.  Your objective is to make a string list
 initializer from your skeleton file that can be linked with flex and
 is pointed at by the skel nember of your language back end.
-
-@item
-Add some logic to @file{main.c} that enables the new back end with a
-new Flex option.  Following this step you should be
-able to run Flex on a specification and get code out in the
-language of whatever back end you cloned.
 
 @item
 The interesting part: mutate your new back end and skeleton so they
@@ -8794,7 +8830,8 @@ complexity of what needs to be translated to a new target language.
 These features are: the Bison bridge, header generation, and loadable
 tables.
 
-Some notes about the interesting part:
+@node Translation Guidelines, , Development Steps, Retargeting Flex
+@subsection Translation Guidelines
 
 @itemize
 @item
