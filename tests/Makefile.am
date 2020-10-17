@@ -103,6 +103,7 @@ simple_tests = \
 	quotes_cpp \
 	quotes_c99 \
 	string_nr \
+	string_r \
 	string_c99 \
 	top \
 	yyextra_cpp \
@@ -188,7 +189,7 @@ multiple_scanners_r_SOURCES = multiple_scanners_r_main.c multiple_scanners_r_1.l
 nodist_multiple_scanners_r_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
 posix_cpp_SOURCES = posix_cpp.l
 posix_c99_SOURCES = posix_c99.l
-posixly_correct_cpp__SOURCES = posixly_correct_cp.l
+posixly_correct_cpp_SOURCES = posixly_correct_cpp.l
 posixly_correct_c99_SOURCES = posixly_correct_c99.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
