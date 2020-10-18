@@ -98,8 +98,8 @@ simple_tests = \
 	prefix_nr \
 	prefix_r \
 	prefix_c99 \
-	quote_in_comment_cpp \
-	quote_in_comment_c99 \
+	quoteincomment_cpp \
+	quoteincomment_c99 \
 	quotes_cpp \
 	quotes_c99 \
 	string_nr \
@@ -136,8 +136,8 @@ ONE_TESTS = \
 	lineno_c99.one \
 	lineno_trailing.one
 
-quote_in_comment_cpp_SOURCES = quote_in_comment_cpp.l
-quote_in_comment_c99_SOURCES = quote_in_comment_c99.l
+quoteincomment_cpp_SOURCES = quoteincomment_cpp.l
+quoteincomment_c99_SOURCES = quoteincomment_c99.l
 alloc_extra_cpp_SOURCES = alloc_extra_cpp.l
 alloc_extra_c99_SOURCES = alloc_extra_c99.l
 array_nr_SOURCES = array_nr.l
@@ -225,6 +225,7 @@ yyextra_c99_SOURCES = yyextra_c99.l
 CLEANFILES = \
 	alloc_extra_cpp.c \
 	alloc_extra_c99.c \
+	array_nr.l \
 	array_nr.c \
 	array_r.c \
 	array_c99.c \
@@ -286,8 +287,8 @@ CLEANFILES = \
 	prefix_r.c \
 	prefix_c99.c \
 	pthread.c \
-	quote_in_comment_cpp.c \
-	quote_in_comment_c99.c \
+	quoteincomment_cpp.c \
+	quoteincomment_c99.c \
 	quotes_cpp.c \
 	reject_nr.reject.c \
 	reject_r.reject.c \
@@ -355,7 +356,7 @@ EXTRA_DIST = \
 	reject.txt \
 	rescan_nr.direct.txt \
 	rescan_r.direct.txt \
-	quote_in_comment.txt \
+	quoteincomment.txt \
 	quotes.txt \
 	top.txt \
 	yyextra.txt \
@@ -550,3 +551,8 @@ tableopts_ver_r%.c: tableopts.l4 $(FLEX)
 
 tableopts_ver_r%.$(OBJEXT):  tableopts_ver_r%.c  
 	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT -c -o $@ $<
+
+# Rules for tests generated from rulesets start here
+
+array_nr.l: array.rules testmaker.m4
+	$(SHELL) testmaker.sh array_nr.l

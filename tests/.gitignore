@@ -6,6 +6,7 @@ alloc_extra_cpp
 alloc_extra_cpp.c
 alloc_extra_c99
 alloc_extra_c99.c
+array_nr.l
 array_nr
 array_nr.c
 array_r
@@ -109,10 +110,10 @@ rescan_nr.direct
 rescan_nr.direct.c
 rescan_r.direct
 rescan_r.direct.c
-quote_in_comment_cpp
-quote_in_comment_cpp.c
-quote_in_comment_c99
-quote_in_comment_c99.c
+quoteincomment_cpp
+quoteincomment_cpp.c
+quoteincomment_c99
+quoteincomment_c99.c
 quotes_cpp
 quotes_cpp.c
 quotes_c99
