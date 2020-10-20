@@ -52,6 +52,14 @@ AM_ONE_LOG_FLAGS = -1 -d $(srcdir)
 AM_YFLAGS = -d -p test
 AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 
+# A full cross-matrix of all back ends (nr, r, c99) and all tess that
+# could potentially apply to them would push the time cost of "make check"
+# uncomfortably highm and the problem will worsen as more back ends are added.
+# This list tries to explout orthogonalities in the C skeleton file to test
+# smaller set (hopeflly)  spand the behavior space prett well. Akas, new
+# langyage back ends won;'t have that slaclk to exploit, The test set for the
+# c99 back end should be a model for these.
+
 check_PROGRAMS = $(simple_tests) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
 
 generated = \
@@ -196,8 +204,6 @@ quotes_cpp_SOURCES = quotes_cpp.l
 quotes_c99_SOURCES = quotes_c99.l
 reject_nr_SOURCES = reject_nr.l
 reject_r_SOURCES = reject_r.l
-reject_ver_table_SOURCES = reject_ver.table.l
-reject_ser_table_SOURCES = reject_ser.table.l
 rescan_nr_direct_SOURCES = rescan_nr.direct.l
 rescan_r_direct_SOURCES = rescan_r.direct.l
 string_nr_SOURCES = string_nr.l
@@ -229,7 +235,7 @@ dist-hook:
 	rm -f $(distdir)/$$file \
 	; done
 
-EXTRA_DIST = README *.txt
+EXTRA_DIST = README *.txt testmaker.m4
 
 dist_noinst_SCRIPTS = \
 	tableopts.sh
@@ -237,7 +243,8 @@ dist_noinst_SCRIPTS = \
 dist_check_SCRIPTS = \
 	options.cn \
 	testwrapper-direct.sh \
-	testwrapper.sh
+	testwrapper.sh \
+	testmaker.sh
 
 pthread_pthread_LDADD = @LIBPTHREAD@
 
