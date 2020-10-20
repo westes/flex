@@ -34,9 +34,6 @@ TEST_EXTENSIONS = .reject .table .direct .cn .i3 .pthread .one .opt .ser .ver
 LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
 
-TABLE_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
-AM_TABLE_LOG_FLAGS = -d $(builddir) -i $(srcdir)/reject.txt -t
-
 DIRECT_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper-direct.sh
 AM_DIRECT_LOG_FLAGS = -b $(abs_builddir) -s $(srcdir)
 
@@ -55,7 +52,7 @@ AM_ONE_LOG_FLAGS = -1 -d $(srcdir)
 AM_YFLAGS = -d -p test
 AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 
-check_PROGRAMS = $(simple_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
+check_PROGRAMS = $(simple_tests) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
 
 generated = \
 	array_nr \
@@ -70,7 +67,9 @@ generated = \
 	quoteincomment_c99 \
 	reject_nr \
 	reject_r \
-	reject_c99
+	reject_c99 \
+	reject_ver \
+	reject_ser
 
 simple_tests = \
 	${generated} \
@@ -112,9 +111,6 @@ simple_tests = \
 	yyextra_cpp \
 	yyextra_c99
 
-TABLE_TESTS = \
-	reject_ver.table \
-	reject_ser.table
 
 DIRECT_TESTS = \
 	include_by_buffer.direct \
@@ -200,8 +196,8 @@ quotes_cpp_SOURCES = quotes_cpp.l
 quotes_c99_SOURCES = quotes_c99.l
 reject_nr_SOURCES = reject_nr.l
 reject_r_SOURCES = reject_r.l
-reject_ver_table_SOURCES = reject.l4
-reject_ser_table_SOURCES = reject.l4
+reject_ver_table_SOURCES = reject_ver.table.l
+reject_ser_table_SOURCES = reject_ser.table.l
 rescan_nr_direct_SOURCES = rescan_nr.direct.l
 rescan_r_direct_SOURCES = rescan_r.direct.l
 string_nr_SOURCES = string_nr.l
@@ -322,24 +318,6 @@ posixly_correct_cpp.c: posixly_correct_cpp.l $(FLEX)
 posixly_correct_c99.c: posixly_correct_c99.l $(FLEX)
 	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) $(TESTOPTS) -o $@ $<
 
-reject_ver.table.c: reject.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -o $@ --tables-verify --tables-file=$(basename $@).tables $<
-
-reject_ver.table.$(OBJEXT): reject_ver.table.c
-	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<
-
-reject_ver.table$(EXEEXT): reject_ver.table.$(OBJEXT)
-	$(AM_V_CCLD)$(LINK) $^
-
-reject_ser.table.c: reject.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -o $@ --unsafe-no-m4-sect3-escape --tables-file=$(basename $@).tables $<
-
-reject_ser.table.$(OBJEXT): reject_ser.table.c
-	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<
-
-reject_ser.table$(EXEEXT): reject_ser.table.$(OBJEXT)
-	$(AM_V_CCLD)$(LINK) $^
-
 top_main.$(OBJEXT): top.h
 top.h: top.c
 
@@ -448,5 +426,11 @@ reject_r.l: reject.rules testmaker.m4 testmaker.sh
 	$(SHELL) testmaker.sh $@
 
 reject_c99.l: reject.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+reject_ver.l: reject.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+reject_ser.l: reject.rules testmaker.m4 testmaker.sh
 	$(SHELL) testmaker.sh $@
 
