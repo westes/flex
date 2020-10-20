@@ -33,3 +33,4 @@ M4_TEST_OPTIONS`'dnl
 .|\n           ;
 
 %%
+M4_TEST_POSTAMBLE

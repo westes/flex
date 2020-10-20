@@ -34,9 +34,6 @@ TEST_EXTENSIONS = .reject .table .direct .cn .i3 .pthread .one .opt .ser .ver
 LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
 
-REJECT_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
-AM_REJECT_LOG_FLAGS = -d $(srcdir) -i $(srcdir)/reject.txt -r
-
 TABLE_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_TABLE_LOG_FLAGS = -d $(builddir) -i $(srcdir)/reject.txt -t
 
@@ -58,7 +55,7 @@ AM_ONE_LOG_FLAGS = -1 -d $(srcdir)
 AM_YFLAGS = -d -p test
 AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 
-check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
+check_PROGRAMS = $(simple_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
 
 generated = \
 	array_nr \
@@ -70,7 +67,10 @@ generated = \
 	extended_cpp \
 	extended_c99 \
 	quoteincomment_cpp \
-	quoteincomment_c99
+	quoteincomment_c99 \
+	reject_nr \
+	reject_r \
+	reject_c99
 
 simple_tests = \
 	${generated} \
@@ -112,10 +112,6 @@ simple_tests = \
 	yyextra_cpp \
 	yyextra_c99
 
-reject_tests = \
-	reject_nr.reject \
-	reject_r.reject
-
 TABLE_TESTS = \
 	reject_ver.table \
 	reject_ser.table
@@ -139,8 +135,6 @@ ONE_TESTS = \
 	lineno_c99.one \
 	lineno_trailing.one
 
-quoteincomment_cpp_SOURCES = quoteincomment_cpp.l
-quoteincomment_c99_SOURCES = quoteincomment_c99.l
 alloc_extra_cpp_SOURCES = alloc_extra_cpp.l
 alloc_extra_c99_SOURCES = alloc_extra_c99.l
 array_nr_SOURCES = array_nr.l
@@ -200,10 +194,12 @@ prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
 prefix_c99_SOURCES = prefix_c99.l
 pthread_pthread_SOURCES = pthread.l
+quoteincomment_cpp_SOURCES = quoteincomment_cpp.l
+quoteincomment_c99_SOURCES = quoteincomment_c99.l
 quotes_cpp_SOURCES = quotes_cpp.l
 quotes_c99_SOURCES = quotes_c99.l
-reject_nr_reject_SOURCES = reject.l4
-reject_r_reject_SOURCES = reject.l4
+reject_nr_SOURCES = reject_nr.l
+reject_r_SOURCES = reject_r.l
 reject_ver_table_SOURCES = reject.l4
 reject_ser_table_SOURCES = reject.l4
 rescan_nr_direct_SOURCES = rescan_nr.direct.l
@@ -326,21 +322,6 @@ posixly_correct_cpp.c: posixly_correct_cpp.l $(FLEX)
 posixly_correct_c99.c: posixly_correct_c99.l $(FLEX)
 	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) $(TESTOPTS) -o $@ $<
 
-reject_nr.reject.c: reject.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -o $@ $<
-
-reject_nr.reject$(EXEEXT): reject_nr.reject.$(OBJEXT)
-	$(AM_V_CCLD)$(LINK) $^
-
-reject_r.reject.c: reject.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape --reentrant -o $@ $<
-
-reject_r.reject.$(OBJEXT): reject_r.reject.c
-	$(AM_V_CC)$(COMPILE) -DTEST_IS_REENTRANT -c -o $@ $<
-
-reject_r.reject$(EXEEXT): reject_r.reject.$(OBJEXT)
-	$(AM_V_CCLD)$(LINK) $^
-
 reject_ver.table.c: reject.l4 $(FLEX)
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -o $@ --tables-verify --tables-file=$(basename $@).tables $<
 
@@ -459,3 +440,13 @@ quoteincomment_cpp.l: quoteincomment.rules testmaker.m4 testmaker.sh
 
 quoteincomment_c99.l: quoteincomment.rules testmaker.m4 testmaker.sh
 	$(SHELL) testmaker.sh $@
+
+reject_nr.l: reject.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+reject_r.l: reject.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+reject_c99.l: reject.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
