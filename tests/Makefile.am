@@ -223,90 +223,10 @@ yyextra_c99_SOURCES = yyextra_c99.l
 # it.
 
 CLEANFILES = \
-	alloc_extra_cpp.c \
-	alloc_extra_c99.c \
-	array_nr.l \
-	array_nr.c \
-	array_r.c \
-	array_c99.c \
-	basic_nr.c \
-	basic_r.c \
-	basic_c99.c \
-	bison_nr_parser.c \
-	bison_nr_parser.h \
-	bison_nr_scanner.c \
-	bison_nr_scanner.h \
-	bison_yylloc_parser.c \
-	bison_yylloc_parser.h \
-	bison_yylloc_scanner.c \
-	bison_yylloc_scanner.h \
-	bison_yylval_parser.c \
-	bison_yylval_parser.h \
-	bison_yylval_scanner.c \
-	bison_yylval_scanner.h \
-	c_cxx_nr.cc \
-	c_cxx_r.cc \
-	ccl_cpp.c \
-	cxx_basic.cc \
-	cxx_multiple_scanners_1.cc \
-	cxx_multiple_scanners_2.cc \
-	cxx_restart.cc \
-	cxx_yywrap.cc \
-	debug_nr.c \
-	debug_r.c \
-	debug_c99.c \
-	extended_cpp.c \
-	extended_c99.c \
-	header_nr_scanner.c \
-	header_nr_scanner.h \
-	header_r_scanner.c \
-	header_r_scanner.h \
-	include_by_buffer.direct.c \
-	include_by_push.direct.c \
-	include_by_reentrant.direct.c \
-	lineno_nr.c \
-	lineno_r.c \
-	lineno_c99.c \
-	lineno_trailing.c \
-	mem_nr.c \
-	mem_r.c \
-	mem_c99.c \
-	multiple_scanners_nr_1.c \
-	multiple_scanners_nr_1.h \
-	multiple_scanners_nr_2.c \
-	multiple_scanners_nr_2.h \
-	multiple_scanners_r_1.c \
-	multiple_scanners_r_1.h \
-	multiple_scanners_r_2.c \
-	multiple_scanners_r_2.h \
-	posix_cpp.c \
-	posix_c99.c \
-	posixly_correct_cpp.c \
-	posixly_correct_c99.c \
-	prefix_nr.c \
-	prefix_r.c \
-	prefix_c99.c \
-	pthread.c \
-	quoteincomment_cpp.c \
-	quoteincomment_c99.c \
-	quotes_cpp.c \
-	reject_nr.reject.c \
-	reject_r.reject.c \
-	reject_ser.table.c \
-	reject_ser.table.tables \
-	reject_ver.table.c \
-	reject_ver.table.tables \
-	rescan_nr.direct.c \
-	rescan_r.direct.c \
-	string_nr.c \
-	string_r.c \
-	string_c99.c \
-	top.c \
-	top.h  \
-	yyextra_cpp.c \
-	yyextra_c99.c \
-	$(tableopts_c) \
-	$(tableopts_tables)
+	*.h *.tables \
+	$(subst no_bison_stub.c, , $(shell ls *.c | grep -v "_main.c")) \
+	$(shell ls *.cc | grep -v "_main.cc") \
+	array_nr.l
 
 dist-hook:
 	chmod u+w $(distdir) && \
@@ -314,53 +234,7 @@ dist-hook:
 	rm -f $(distdir)/$$file \
 	; done
 
-EXTRA_DIST = \
-	README \
-	alloc_extra.txt \
-	array.txt \
-	basic.txt \
-	bison_nr.txt \
-	bison_yylloc.txt \
-	bison_yylval.txt \
-	c_cxx_nr.txt \
-	c_cxx_r.txt \
-	ccl.txt \
-	cxx_basic.txt \
-	cxx_multiple_scanners.txt \
-	cxx_restart.txt \
-	cxx_yywrap.txt \
-	debug.txt \
-	extended.txt \
-	header_nr.txt \
-	header_r.txt \
-	include_by_buffer.direct.txt \
-	include_by_buffer.direct_2.txt \
-	include_by_buffer.direct_3.txt \
-	include_by_push.direct.txt \
-	include_by_push.direct_2.txt \
-	include_by_push.direct_3.txt \
-	include_by_reentrant.direct.txt \
-	include_by_reentrant.direct_2.txt \
-	include_by_reentrant.direct_3.txt \
-	lineno_nr.one.txt \
-	lineno_r.one.txt \
-	lineno_c99.one.txt \
-	lineno_trailing.one.txt \
-	mem.txt \
-	prefix.txt \
-	pthread_1.txt \
-	pthread_2.txt \
-	pthread_3.txt \
-	pthread_4.txt \
-	pthread_5.txt \
-	reject.txt \
-	rescan_nr.direct.txt \
-	rescan_r.direct.txt \
-	quoteincomment.txt \
-	quotes.txt \
-	top.txt \
-	yyextra.txt \
-	tableopts.txt
+EXTRA_DIST = README *.txt
 
 dist_noinst_SCRIPTS = \
 	tableopts.sh
@@ -501,8 +375,6 @@ tableopts_opt_tests :=  $(foreach opt,$(tableopts), tableopts_opt_nr$(opt) table
 tableopts_sertests :=  $(foreach opt,$(tableopts), tableopts_ser_nr$(opt) tableopts_ser_r$(opt))
 tableopts_vertests :=  $(foreach opt,$(tableopts), tableopts_ver_nr$(opt) tableopts_ver_r$(opt))
 tableopts_tests  := $(tableopts_opttests) $(tableopts_vertests) $(tableopts_sertests)
-
-tableopts_c := $(addsuffix .c,$(tableopts_tests))
 
 OPT_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_OPT_LOG_FLAGS = -d $(srcdir) -i $(srcdir)/tableopts.txt -r
