@@ -60,15 +60,22 @@ AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 
 check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
 
-simple_tests = \
-	alloc_extra_cpp \
-	alloc_extra_c99 \
+generated = \
 	array_nr \
 	array_r \
 	array_c99 \
 	basic_nr \
 	basic_r \
 	basic_c99 \
+	extended_cpp \
+	extended_c99 \
+	quoteincomment_cpp \
+	quoteincomment_c99
+
+simple_tests = \
+	${generated} \
+	alloc_extra_cpp \
+	alloc_extra_c99 \
 	bison_nr \
 	bison_yylloc \
 	bison_yylval \
@@ -82,8 +89,6 @@ simple_tests = \
 	debug_nr \
 	debug_r \
 	debug_c99 \
-	extended_cpp \
-	extended_c99 \
 	header_nr \
 	header_r \
 	mem_nr \
@@ -98,8 +103,6 @@ simple_tests = \
 	prefix_nr \
 	prefix_r \
 	prefix_c99 \
-	quoteincomment_cpp \
-	quoteincomment_c99 \
 	quotes_cpp \
 	quotes_c99 \
 	string_nr \
@@ -223,10 +226,10 @@ yyextra_c99_SOURCES = yyextra_c99.l
 # it.
 
 CLEANFILES = \
-	*.h *.tables \
 	$(subst no_bison_stub.c, , $(shell ls *.c | grep -v "_main.c")) \
 	$(shell ls *.cc | grep -v "_main.cc") \
-	array_nr.l
+	$(patsubst %, %.l, ${generated}) \
+	*.h *.tables
 
 dist-hook:
 	chmod u+w $(distdir) && \
@@ -425,6 +428,34 @@ tableopts_ver_r%.$(OBJEXT):  tableopts_ver_r%.c
 	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT -c -o $@ $<
 
 # Rules for tests generated from rulesets start here
+# FIXME: These should be generated
 
-array_nr.l: array.rules testmaker.m4
-	$(SHELL) testmaker.sh array_nr.l
+array_nr.l: array.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+array_r.l: array.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+array_c99.l: array.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+basic_nr.l: basic.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+basic_r.l: basic.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+basic_c99.l: basic.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+extended_cpp.l: extended.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+extended_c99.l: extended.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+quoteincomment_cpp.l: quoteincomment.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
+
+quoteincomment_c99.l: quoteincomment.rules testmaker.m4 testmaker.sh
+	$(SHELL) testmaker.sh $@
