@@ -89,5 +89,8 @@ install-exec-hook:
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) -f flex$(EXEEXT) flex++$(EXEEXT)
 
+lint:
+	shellcheck -f gcc tests/*.sh src/*.sh *.sh
+
 .PHONY: libfl install-libfl uninstall-libfl clean-libfl \
-	ChangeLog indent
+	ChangeLog indent lint

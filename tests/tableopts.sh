@@ -19,7 +19,7 @@ for kind in opt ser ver ; do
         for opt in -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem ; do
             bare_opt=${opt#-}
             # The filenames must work on case-insensitive filesystems.
-            bare_opt=`echo ${bare_opt}| sed 's/F$/_F/'`
+            bare_opt=$(echo ${bare_opt}| sed 's/F$/_F/')
 
             testname=tableopts_${kind}_${threading}-${bare_opt}.${kind}
             if [ "${TABLEOPTS_TESTS}" = "" ] ;then
@@ -45,6 +45,6 @@ EOF
     done
 done
 
-echo TABLEOPTS_TESTS = ${TABLEOPTS_TESTS}
+echo TABLEOPTS_TESTS = "${TABLEOPTS_TESTS}"
 echo
-echo tableopts_tables = ${tableopts_tables}
+echo tableopts_tables = "${tableopts_tables}"

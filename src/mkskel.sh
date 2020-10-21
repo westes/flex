@@ -33,7 +33,9 @@ case $VERSION in
    *[!0-9.]*) echo 'Invalid version number' >&2; exit 1;;
 esac
 IFS=.
-set $VERSION
+# we do want word splitting, so we won't put double quotes around it (see IFS above)
+# shellcheck disable=2086
+set -- $VERSION
 sed 's/4_/a4_/g
 s/m4preproc_/m4_/g
 ' "$srcdir/${lang}-flex.skl" |

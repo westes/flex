@@ -22,33 +22,45 @@ while getopts :d:i:rt1 OPTION ; do
             else
                 INPUT_NAME="$INPUT_NAME $OPTARG"
             fi
-            INPUT_COUNT=$(($INPUT_COUNT+1))
+            INPUT_COUNT=$((INPUT_COUNT+1))
             ;;
         r) USE_REDIRECT=1 ;;
         t) USE_TABLES=1 ;;
         1) DO_COMPARISON=1 ;;
+        *) echo "Usage: ${0} [-d INPUT_DIRECTORY] [-i INPUT_NAME] [-r] [-t] [-1] TESTNAME"
+           exit 1
+           ;;
     esac
 done
 
-shift $(($OPTIND-1))
+shift $((OPTIND-1))
 TESTNAME=$1
 
 # There may be a specific input file for this test
-INPUT_NAME=${INPUT_NAME:-$INPUT_DIRECTORY/`basename "${TESTNAME%.exe}"`.txt}
+INPUT_NAME=${INPUT_NAME:-$INPUT_DIRECTORY/$(basename "${TESTNAME%.exe}").txt}
 
 # If it doesn't exist, try stripping out a backend suffix.
 # There might be a generic input for all tests with this stem.
 # For this purpose we consider _r and _nr to be back ends.
-if [ ! -f ${INPUT_NAME} ] ; then
-	INPUT_NAME=`echo ${INPUT_NAME} | sed -e 's/_[a-z0-9]*.txt$/.txt/'`
-fi
+inputs=$INPUT_NAME
+INPUT_NAME=
+for input in $inputs; do
+    if [ ! -f "${input}" ] ; then
+	input=$(echo "${input}" | sed -e 's/_[a-z0-9]*.txt$/.txt/')
+    fi
+    if [ "${INPUT_NAME}" = "" ] ; then
+        INPUT_NAME="${input}"
+    else
+        INPUT_NAME="${INPUT_NAME} ${input}"
+    fi
+done
 
 # We may want to compare the input fed to the test binary to its output.
-# Equality means success, because it means ao character leaked past a
+# Equality means success, because it means no character leaked past a
 # token match to echo.
 if [ $DO_COMPARISON = 1 ] ; then
-    TEST_OUTPUT=`$TESTNAME < $INPUT_NAME`
-    REF_OUTPUT=`$TESTNAME 1 < $INPUT_NAME`
+    TEST_OUTPUT=$($TESTNAME < "$INPUT_NAME")
+    REF_OUTPUT=$($TESTNAME 1 < "$INPUT_NAME")
     test "$TEST_OUTPUT" -eq "$REF_OUTPUT"
     exit $?
 fi
@@ -58,15 +70,17 @@ case ${TESTNAME} in
 esac
 
 if [ $INPUT_COUNT -gt 1 ] ; then
-    $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} ${INPUT_NAME}
+    # INPUT_NAME has multiple filenames, so we do want word expansion
+    # shellcheck disable=SC2086
+    $TESTNAME ${USE_TABLES:+"${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables"} ${INPUT_NAME}
     exit $?
 fi
 
-if [ -f ${INPUT_NAME} ] ; then
+if [ -f "${INPUT_NAME}" ] ; then
     if [ $USE_REDIRECT = 1 ] ; then
-        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} < $INPUT_NAME
+        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} < "$INPUT_NAME"
     else
-        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} $INPUT_NAME
+        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} "$INPUT_NAME"
     fi
 else
     $TESTNAME
