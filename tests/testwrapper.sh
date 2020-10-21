@@ -13,7 +13,7 @@ INPUT_COUNT=0
 USE_REDIRECT=0
 DO_COMPARISON=0
 
-while getopts :d:i:rt1 OPTION ; do
+while getopts :d:i:r1 OPTION ; do
     case $OPTION in
         d) INPUT_DIRECTORY=$OPTARG ;;
         i)
@@ -25,7 +25,6 @@ while getopts :d:i:rt1 OPTION ; do
             INPUT_COUNT=$((INPUT_COUNT+1))
             ;;
         r) USE_REDIRECT=1 ;;
-        t) USE_TABLES=1 ;;
         1) DO_COMPARISON=1 ;;
         *) echo "Usage: ${0} [-d INPUT_DIRECTORY] [-i INPUT_NAME] [-r] [-t] [-1] TESTNAME"
            exit 1
@@ -65,8 +64,12 @@ if [ $DO_COMPARISON = 1 ] ; then
     exit $?
 fi
 
+# Detect if the test wants a table argument.  If it does, the test maker will have generated
+# a tables=-file option do that the a table file named afte the test was created when the
+# scanner was built. Thus we can assume that it will be looking for the table data at
+# the matching path we're about to generate.
 case ${TESTNAME} in
-    *ver|*ser) USE_TABLES=1 ;;
+    *ver|*ser|*_ver_*|*_ser_*) USE_TABLES=1 ;;
 esac
 
 if [ $INPUT_COUNT -gt 1 ] ; then

@@ -361,7 +361,7 @@ tableopts_opt_r%.$(OBJEXT):  tableopts_opt_r%.c
 	$(AM_V_CC)$(COMPILE) -DTEST_IS_REENTRANT -c -o $@ $<
 
 SER_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
-AM_SER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r -t
+AM_SER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r
 
 tableopts_ser_nr%.c: tableopts.l4 $(FLEX)
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ser_nr$*.ser.tables"  $(subst _F,F,$*) -o $@ $<
@@ -376,7 +376,7 @@ tableopts_ser_r%.$(OBJEXT):  tableopts_ser_r%.c
 	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT -c -o $@ $<
 
 VER_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
-AM_VER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r -t
+AM_VER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r
 
 tableopts_ver_nr%.c: tableopts.l4 $(FLEX)
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ver_nr$*.ver.tables" --tables-verify $(subst _F,F,$*) -o $@ $<
