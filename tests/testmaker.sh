@@ -10,7 +10,7 @@
 # down as tableopts_{tag}_{backend}_{compression}_{tag}.
 # The backend field can be nr, r, c99 and will eventually have more values.
 # The compression options are the flags that woulld nprmally be passed to
-# Flex; the possibilities are Ca Ce Cf C_F Cm Cem Cae Caef Cae_F Cam Caem.
+# Flex; the possibilities are Ca Ce Cf CxF Cm Cem Cae Caef CaexF Cam Caem.
 #
 if [ "$1" = -d ] ; then
     shift
@@ -52,6 +52,17 @@ for part in "$@"; do
         c99) backend=r; options="${options} reentrant emit=\"c99\"" ;;
         ser) serialization=yes ;;
         ver) serialization=yes; options="${options} tables-verify" ;;
+	Ca) options="${options} align" ;;
+	Ce) options="${options} ecs" ;;
+	Cf) options="${options} full" ;;
+	CxF) options="${options} fast" ;;
+	Cm) options="${options} meta-ecs";;
+	Cem) options="${options} ecs meta-ecs" ;;
+	Cae) options="${options} align ecs" ;;
+	Caef) options="${options} align ecs full" ;;
+	CaexF) options="${options} algin ecs fast" ;;
+	Cam) options="${options} align meta-ecs" ;;
+	Caem) options="${options} align ecs meta-ecs" ;;
     esac
 done
 verification=
