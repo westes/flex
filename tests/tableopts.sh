@@ -19,7 +19,7 @@ for kind in opt ser ver ; do
         for opt in -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem ; do
             bare_opt=${opt#-}
             # The filenames must work on case-insensitive filesystems.
-            bare_opt=$(echo ${bare_opt}| sed 's/F$/_F/')
+            bare_opt=$(echo ${bare_opt}| sed 's/F$/xF/')
 
             testname=tableopts_${kind}_${threading}-${bare_opt}.${kind}
             if [ "${TABLEOPTS_TESTS}" = "" ] ;then
@@ -48,3 +48,12 @@ done
 echo TABLEOPTS_TESTS = "${TABLEOPTS_TESTS}"
 echo
 echo tableopts_tables = "${tableopts_tables}"
+# User can pass in a list of tesrs for which ti geneate build productions
+printf "\n# Begin simple test rules\n\n"
+for test in $*; do
+    stem=`echo ${test} | sed s/_.*//`
+    echo "${test}_SOURCES = ${test}.l"
+    echo "${test}.l: \$(srcdir)/${stem}.rules \$(srcdir)/testmaker.sh \$(srcdir)/testmaker.m4"
+    printf '\t$(SHELL) $(srcdir)/testmaker.sh $@\n\n'
+done
+printf "# End simple test rules\n"

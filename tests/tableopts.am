@@ -331,3 +331,67 @@ tableopts_ver_r-Caem.ver$(EXEEXT): tableopts_ver_r-Caem.$(OBJEXT)
 TABLEOPTS_TESTS = tableopts_opt_nr-Ca.opt tableopts_opt_nr-Ce.opt tableopts_opt_nr-Cf.opt tableopts_opt_nr-CxF.opt tableopts_opt_nr-Cm.opt tableopts_opt_nr-Cem.opt tableopts_opt_nr-Cae.opt tableopts_opt_nr-Caef.opt tableopts_opt_nr-CaexF.opt tableopts_opt_nr-Cam.opt tableopts_opt_nr-Caem.opt tableopts_opt_r-Ca.opt tableopts_opt_r-Ce.opt tableopts_opt_r-Cf.opt tableopts_opt_r-CxF.opt tableopts_opt_r-Cm.opt tableopts_opt_r-Cem.opt tableopts_opt_r-Cae.opt tableopts_opt_r-Caef.opt tableopts_opt_r-CaexF.opt tableopts_opt_r-Cam.opt tableopts_opt_r-Caem.opt tableopts_ser_nr-Ca.ser tableopts_ser_nr-Ce.ser tableopts_ser_nr-Cf.ser tableopts_ser_nr-CxF.ser tableopts_ser_nr-Cm.ser tableopts_ser_nr-Cem.ser tableopts_ser_nr-Cae.ser tableopts_ser_nr-Caef.ser tableopts_ser_nr-CaexF.ser tableopts_ser_nr-Cam.ser tableopts_ser_nr-Caem.ser tableopts_ser_r-Ca.ser tableopts_ser_r-Ce.ser tableopts_ser_r-Cf.ser tableopts_ser_r-CxF.ser tableopts_ser_r-Cm.ser tableopts_ser_r-Cem.ser tableopts_ser_r-Cae.ser tableopts_ser_r-Caef.ser tableopts_ser_r-CaexF.ser tableopts_ser_r-Cam.ser tableopts_ser_r-Caem.ser tableopts_ver_nr-Ca.ver tableopts_ver_nr-Ce.ver tableopts_ver_nr-Cf.ver tableopts_ver_nr-CxF.ver tableopts_ver_nr-Cm.ver tableopts_ver_nr-Cem.ver tableopts_ver_nr-Cae.ver tableopts_ver_nr-Caef.ver tableopts_ver_nr-CaexF.ver tableopts_ver_nr-Cam.ver tableopts_ver_nr-Caem.ver tableopts_ver_r-Ca.ver tableopts_ver_r-Ce.ver tableopts_ver_r-Cf.ver tableopts_ver_r-CxF.ver tableopts_ver_r-Cm.ver tableopts_ver_r-Cem.ver tableopts_ver_r-Cae.ver tableopts_ver_r-Caef.ver tableopts_ver_r-CaexF.ver tableopts_ver_r-Cam.ver tableopts_ver_r-Caem.ver
 
 tableopts_tables =  tableopts_ser_nr-Ca.ser.tables tableopts_ser_nr-Ce.ser.tables tableopts_ser_nr-Cf.ser.tables tableopts_ser_nr-CxF.ser.tables tableopts_ser_nr-Cm.ser.tables tableopts_ser_nr-Cem.ser.tables tableopts_ser_nr-Cae.ser.tables tableopts_ser_nr-Caef.ser.tables tableopts_ser_nr-CaexF.ser.tables tableopts_ser_nr-Cam.ser.tables tableopts_ser_nr-Caem.ser.tables tableopts_ser_r-Ca.ser.tables tableopts_ser_r-Ce.ser.tables tableopts_ser_r-Cf.ser.tables tableopts_ser_r-CxF.ser.tables tableopts_ser_r-Cm.ser.tables tableopts_ser_r-Cem.ser.tables tableopts_ser_r-Cae.ser.tables tableopts_ser_r-Caef.ser.tables tableopts_ser_r-CaexF.ser.tables tableopts_ser_r-Cam.ser.tables tableopts_ser_r-Caem.ser.tables tableopts_ver_nr-Ca.ver.tables tableopts_ver_nr-Ce.ver.tables tableopts_ver_nr-Cf.ver.tables tableopts_ver_nr-CxF.ver.tables tableopts_ver_nr-Cm.ver.tables tableopts_ver_nr-Cem.ver.tables tableopts_ver_nr-Cae.ver.tables tableopts_ver_nr-Caef.ver.tables tableopts_ver_nr-CaexF.ver.tables tableopts_ver_nr-Cam.ver.tables tableopts_ver_nr-Caem.ver.tables tableopts_ver_r-Ca.ver.tables tableopts_ver_r-Ce.ver.tables tableopts_ver_r-Cf.ver.tables tableopts_ver_r-CxF.ver.tables tableopts_ver_r-Cm.ver.tables tableopts_ver_r-Cem.ver.tables tableopts_ver_r-Cae.ver.tables tableopts_ver_r-Caef.ver.tables tableopts_ver_r-CaexF.ver.tables tableopts_ver_r-Cam.ver.tables tableopts_ver_r-Caem.ver.tables
+
+# Begin simple test rules
+
+array_nr_SOURCES = array_nr.l
+array_nr.l: $(srcdir)/array.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+array_r_SOURCES = array_r.l
+array_r.l: $(srcdir)/array.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+array_c99_SOURCES = array_c99.l
+array_c99.l: $(srcdir)/array.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+basic_nr_SOURCES = basic_nr.l
+basic_nr.l: $(srcdir)/basic.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+basic_r_SOURCES = basic_r.l
+basic_r.l: $(srcdir)/basic.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+basic_c99_SOURCES = basic_c99.l
+basic_c99.l: $(srcdir)/basic.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+extended_cpp_SOURCES = extended_cpp.l
+extended_cpp.l: $(srcdir)/extended.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+extended_c99_SOURCES = extended_c99.l
+extended_c99.l: $(srcdir)/extended.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+quoteincomment_cpp_SOURCES = quoteincomment_cpp.l
+quoteincomment_cpp.l: $(srcdir)/quoteincomment.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+quoteincomment_c99_SOURCES = quoteincomment_c99.l
+quoteincomment_c99.l: $(srcdir)/quoteincomment.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+reject_nr_SOURCES = reject_nr.l
+reject_nr.l: $(srcdir)/reject.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+reject_r_SOURCES = reject_r.l
+reject_r.l: $(srcdir)/reject.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+reject_c99_SOURCES = reject_c99.l
+reject_c99.l: $(srcdir)/reject.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+reject_ver_SOURCES = reject_ver.l
+reject_ver.l: $(srcdir)/reject.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+reject_ser_SOURCES = reject_ser.l
+reject_ser.l: $(srcdir)/reject.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+# End simple test rules
