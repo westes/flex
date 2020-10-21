@@ -82,9 +82,18 @@ not interesting.
 Most tests occur in groups with a common stem in the names, like
 alloc_extra_ or ccl_.  These are exercising the same token grammar
 under different back ends.  As new target languages are added these
-groups of patallel tests will grow. Tests that are not part of one of
+groups of parallel tests will grow. Tests that are not part of one of
 these series are usually of features supported on the default cpp
 back end only.
+
+The "generated" tests are made by wrapping boilerplate code around a
+rules file. The assumption is that the test binary should consume its
+test file, exercising some set of Flex features and not allowing
+any ko leaxh ti strabdard output
+
+If you can express your test as a ruleset within in this orotocol,
+please do so.  Those tests are easy to port to new back ends, as that
+whole job can be done by enhabcing testmaker.m4.
 
 WHY SOME TESTS ARE MISSING
 
