@@ -386,7 +386,7 @@ M4QEND      "]""]"
 	input		ctrl.no_yyinput = ! option_sense;
 	yyinput		ctrl.no_yyinput = ! option_sense;
 	interactive	ctrl.interactive = (trit)option_sense;
-	lex-compat	ctrl.posix_compat = option_sense;
+	lex-compat	ctrl.lex_compat = option_sense;
 	posix-compat	ctrl.posix_compat = option_sense;
 	line		ctrl.gen_line_dirs = option_sense;
 	main		{
@@ -541,7 +541,7 @@ M4QEND      "]""]"
 	"\""		BEGIN(QUOTE); return '"';
 	"{"/[[:digit:]]	{
 			BEGIN(NUM);
-			if ( ctrl.posix_compat || ctrl.posix_compat )
+			if ( ctrl.lex_compat || ctrl.posix_compat )
 				return BEGIN_REPEAT_POSIX;
 			else
 				return BEGIN_REPEAT_FLEX;
@@ -725,7 +725,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
                 if (end_is_ws)
                     unput(end_ch);
 
-				if ( ctrl.posix_compat || nmdefptr[0] == '^' ||
+				if ( ctrl.lex_compat || nmdefptr[0] == '^' ||
 				     (len > 0 && nmdefptr[len - 1] == '$')
                      || (end_is_ws && trlcontxt && !sf_skip_ws()))
 					{ /* don't use ()'s after all */
@@ -755,7 +755,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
                 }
 
     "(?#"       {
-                    if (ctrl.posix_compat || ctrl.posix_compat){
+                    if (ctrl.lex_compat || ctrl.posix_compat){
                         /* Push back the "?#" and treat it like a normal parens. */
                         yyless(1);
                         sf_push(); 
@@ -766,7 +766,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
                 }
     "(?"        {
                     sf_push();
-                    if (ctrl.posix_compat || ctrl.posix_compat)
+                    if (ctrl.lex_compat || ctrl.posix_compat)
                         /* Push back the "?" and treat it like a normal parens. */
                         yyless(1);
                     else
@@ -888,7 +888,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 	","		return ',';
 	"}"		{
 			BEGIN(SECT2);
-			if ( ctrl.posix_compat || ctrl.posix_compat )
+			if ( ctrl.lex_compat || ctrl.posix_compat )
 				return END_REPEAT_POSIX;
 			else
 				return END_REPEAT_FLEX;
