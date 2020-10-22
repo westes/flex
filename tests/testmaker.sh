@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# testmaker.sh - asssemble tests from backend-ndependent rulesets and
+# testmaker.sh - asssemble tests from backend-independent rulesets and
 # backend-dependent boilerplate.
 #
 # The single argument is a testfile name to be generated.
@@ -40,14 +40,14 @@ stem=$1
 options=""
 backend=nr
 for part in "$@"; do
-    # This is the only pace in this dcript that you need to modify
+    # This is the only pace in this script that you need to modify
     # to add a new back end - just add a line on the pattern of
     # the c99 one. Of course testmaker.m4 will require the
     # right boilerplate code for this to work.
     #
     # Yes, cpp is an alias for nr.
     case ${part} in
-        cpp|nr) backend=nr; ;;
+        nr) backend=nr; ;;
         r) backend=r; options="${options} reentrant";;
         c99) backend=r; options="${options} reentrant emit=\"c99\"" ;;
         ser) serialization=yes ;;

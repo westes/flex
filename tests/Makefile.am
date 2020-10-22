@@ -52,14 +52,6 @@ AM_ONE_LOG_FLAGS = -1 -d $(srcdir)
 AM_YFLAGS = -d -p test
 AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 
-# A full cross-matrix of all back ends (nr, r, c99) and all tests that
-# could potentially apply to them would push the time cost of "make check"
-# uncomfortably high, and the problem will worsen as more back ends are added.
-# This list tries to explout orthogonalities in the C skeleton file to test
-# smaller set that (hopeflly) spans the behavior space pretty well. Alas, new
-# language back ends won't have that slack to exploit. The test set for the
-# c99 back end should be a model for these.
-
 check_PROGRAMS = $(simple_tests) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
 
 generated = \
@@ -69,9 +61,9 @@ generated = \
 	basic_nr \
 	basic_r \
 	basic_c99 \
-	extended_cpp \
+	extended_nr \
 	extended_c99 \
-	quoteincomment_cpp \
+	quoteincomment_nr \
 	quoteincomment_c99 \
 	reject_nr \
 	reject_r \
@@ -81,14 +73,14 @@ generated = \
 
 simple_tests = \
 	${generated} \
-	alloc_extra_cpp \
+	alloc_extra_nr \
 	alloc_extra_c99 \
 	bison_nr \
 	bison_yylloc \
 	bison_yylval \
 	c_cxx_nr \
 	c_cxx_r \
-	ccl_cpp \
+	ccl_nr \
 	ccl_c99 \
 	cxx_basic \
 	cxx_multiple_scanners \
@@ -103,20 +95,20 @@ simple_tests = \
 	mem_c99 \
 	multiple_scanners_nr \
 	multiple_scanners_r \
-	posix_cpp \
+	posix_nr \
 	posix_c99 \
-	posixly_correct_cpp \
+	posixly_correct_nr \
 	posixly_correct_c99 \
 	prefix_nr \
 	prefix_r \
 	prefix_c99 \
-	quotes_cpp \
+	quotes_nr \
 	quotes_c99 \
 	string_nr \
 	string_r \
 	string_c99 \
 	top \
-	yyextra_cpp \
+	yyextra_nr \
 	yyextra_c99
 
 
@@ -139,7 +131,7 @@ ONE_TESTS = \
 	lineno_c99.one \
 	lineno_trailing.one
 
-alloc_extra_cpp_SOURCES = alloc_extra_cpp.l
+alloc_extra_nr_SOURCES = alloc_extra_nr.l
 alloc_extra_c99_SOURCES = alloc_extra_c99.l
 if HAVE_BISON
 bison_nr_SOURCES = bison_nr_scanner.l bison_nr_parser.y bison_nr_main.c
@@ -155,7 +147,7 @@ bison_yylval_SOURCES = no_bison_stub.c
 endif
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
-ccl_cpp_SOURCES = ccl_cpp.l
+ccl_nr_SOURCES = ccl_nr.l
 ccl_c99_SOURCES = ccl_c99.l
 cxx_basic_SOURCES = cxx_basic.ll
 cxx_restart_SOURCES = cxx_restart.ll
@@ -182,15 +174,15 @@ multiple_scanners_nr_SOURCES = multiple_scanners_nr_main.c multiple_scanners_nr_
 nodist_multiple_scanners_nr_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
 multiple_scanners_r_SOURCES = multiple_scanners_r_main.c multiple_scanners_r_1.l multiple_scanners_r_2.l
 nodist_multiple_scanners_r_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
-posix_cpp_SOURCES = posix_cpp.l
+posix_nr_SOURCES = posix_nr.l
 posix_c99_SOURCES = posix_c99.l
-posixly_correct_cpp_SOURCES = posixly_correct_cpp.l
+posixly_correct_nr_SOURCES = posixly_correct_nr.l
 posixly_correct_c99_SOURCES = posixly_correct_c99.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
 prefix_c99_SOURCES = prefix_c99.l
 pthread_pthread_SOURCES = pthread.l
-quotes_cpp_SOURCES = quotes_cpp.l
+quotes_nr_SOURCES = quotes_nr.l
 quotes_c99_SOURCES = quotes_c99.l
 rescan_nr_direct_SOURCES = rescan_nr.direct.l
 rescan_r_direct_SOURCES = rescan_r.direct.l
@@ -199,7 +191,7 @@ string_r_SOURCES = string_r.l
 string_c99_SOURCES = string_c99.l
 top_SOURCES = top.l top_main.c
 nodist_top_SOURCES = top.h
-yyextra_cpp_SOURCES = yyextra_cpp.l
+yyextra_nr_SOURCES = yyextra_nr.l
 yyextra_c99_SOURCES = yyextra_c99.l
 
 # Normally, automake would distribute files built by flex. Since the
@@ -308,7 +300,7 @@ multiple_scanners_r_2.h: multiple_scanners_r_2.c
 	@if test ! -f $@; then rm -f $<; else :; fi
 	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
-posixly_correct_cpp.c: posixly_correct_cpp.l $(FLEX)
+posixly_correct_nr.c: posixly_correct_nr.l $(FLEX)
 	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) $(TESTOPTS) -o $@ $<
 
 posixly_correct_c99.c: posixly_correct_c99.l $(FLEX)

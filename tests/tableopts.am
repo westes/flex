@@ -424,16 +424,16 @@ basic_c99_SOURCES = basic_c99.l
 basic_c99.l: $(srcdir)/basic.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
 	$(SHELL) $(srcdir)/testmaker.sh $@
 
-extended_cpp_SOURCES = extended_cpp.l
-extended_cpp.l: $(srcdir)/extended.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+extended_nr_SOURCES = extended_nr.l
+extended_nr.l: $(srcdir)/extended.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
 	$(SHELL) $(srcdir)/testmaker.sh $@
 
 extended_c99_SOURCES = extended_c99.l
 extended_c99.l: $(srcdir)/extended.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
 	$(SHELL) $(srcdir)/testmaker.sh $@
 
-quoteincomment_cpp_SOURCES = quoteincomment_cpp.l
-quoteincomment_cpp.l: $(srcdir)/quoteincomment.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+quoteincomment_nr_SOURCES = quoteincomment_nr.l
+quoteincomment_nr.l: $(srcdir)/quoteincomment.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
 	$(SHELL) $(srcdir)/testmaker.sh $@
 
 quoteincomment_c99_SOURCES = quoteincomment_c99.l
