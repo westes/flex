@@ -191,11 +191,73 @@ yyextra_c99_SOURCES = yyextra_c99.l
 # it.
 
 CLEANFILES = \
-	$(subst no_bison_stub.c, , $(shell ls *.c | grep -v "_main.c")) \
-	$(shell ls *.cc | grep -v "_main.cc")
-	${RULEST_TESTS} \
-	$(patsubst %, %.l, ${RULESET_TESTS}) \
-	*.h *.tables
+	alloc_extra_nr.c \
+	alloc_extra_c99.c \
+	bison_nr_parser.c \
+	bison_nr_parser.h \
+	bison_nr_scanner.c \
+	bison_nr_scanner.h \
+	bison_yylloc_parser.c \
+	bison_yylloc_parser.h \
+	bison_yylloc_scanner.c \
+	bison_yylloc_scanner.h \
+	bison_yylval_parser.c \
+	bison_yylval_parser.h \
+	bison_yylval_scanner.c \
+	bison_yylval_scanner.h \
+	c_cxx_nr.cc \
+	c_cxx_r.cc \
+	ccl_nr.c \
+	ccl_c99.c \
+	cxx_basic.cc \
+	cxx_multiple_scanners_1.cc \
+	cxx_multiple_scanners_2.cc \
+	cxx_restart.cc \
+	cxx_yywrap.cc \
+	debug_nr.c \
+	debug_r.c \
+	debug_c99.c \
+	header_nr_scanner.c \
+	header_nr_scanner.h \
+	header_r_scanner.c \
+	header_r_scanner.h \
+	include_by_buffer.direct.c \
+	include_by_push.direct.c \
+	include_by_reentrant.direct.c \
+	lineno_nr.c \
+	lineno_r.c \
+	lineno_c99.c \
+	lineno_trailing.c \
+	mem_nr.c \
+	mem_r.c \
+	mem_99.c \
+	multiple_scanners_nr_1.c \
+	multiple_scanners_nr_1.h \
+	multiple_scanners_nr_2.c \
+	multiple_scanners_nr_2.h \
+	multiple_scanners_r_1.c \
+	multiple_scanners_r_1.h \
+	multiple_scanners_r_2.c \
+	multiple_scanners_r_2.h \
+	posixly_correct_nr.c \
+	posixly_correct_c99.c \
+	prefix_nr.c \
+	prefix_r.c \
+	prefix_c99.c \
+	pthread.c \
+	quotes_nr.c \
+	quotes_c99.c \
+	rescan_nr.direct.c \
+	rescan_r.direct.c \
+	string_nr.c \
+	string_r.c \
+	string_c99.c \
+	string_c99.c \
+	top.c \
+	top.h  \
+	yyextra_nr.c \
+	yyextra_c99.c \
+	$(RULESET_REMOVABLES)
 
 dist-hook:
 	chmod u+w $(distdir) && \
@@ -203,7 +265,58 @@ dist-hook:
 	rm -f $(distdir)/$$file \
 	; done
 
-EXTRA_DIST = README *.txt testmaker.m4
+EXTRA_DIST = \
+	README \
+	testmaker.m4 \
+	alloc_extra.txt \
+	array_nr.txt \
+	array_r.txt \
+	basic_nr.txt \
+	basic_r.txt \
+	bison_nr.txt \
+	bison_yylloc.txt \
+	bison_yylval.txt \
+	c_cxx_nr.txt \
+	c_cxx_r.txt \
+	ccl.txt \
+	cxx_basic.txt \
+	cxx_multiple_scanners.txt \
+	cxx_restart.txt \
+	cxx_yywrap.txt \
+	debug_nr.txt \
+	debug_r.txt \
+	extended.txt \
+	header_nr.txt \
+	header_r.txt \
+	include_by_buffer.direct.txt \
+	include_by_buffer.direct_2.txt \
+	include_by_buffer.direct_3.txt \
+	include_by_push.direct.txt \
+	include_by_push.direct_2.txt \
+	include_by_push.direct_3.txt \
+	include_by_reentrant.direct.txt \
+	include_by_reentrant.direct_2.txt \
+	include_by_reentrant.direct_3.txt \
+	lineno_nr.one.txt \
+	lineno_r.one.txt \
+	lineno_trailing.one.txt \
+	mem_nr.txt \
+	mem_r.txt \
+	prefix_nr.txt \
+	prefix_r.txt \
+	pthread_1.txt \
+	pthread_2.txt \
+	pthread_3.txt \
+	pthread_4.txt \
+	pthread_5.txt \
+	reject.txt \
+	rescan_nr.direct.txt \
+	rescan_r.direct.txt \
+	quote_in_comment.txt \
+	quotes.txt \
+	top.txt \
+	yyextra.txt \
+	tableopts.txt
 
 dist_noinst_SCRIPTS = \
 	ruleset.sh

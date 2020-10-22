@@ -10,6 +10,7 @@
 set -eu
 
 RULESET_TESTS=""
+RULESET_REMOVABLES=""
 
 printf "\n# Begin generated test rules\n\n"
 
@@ -22,6 +23,7 @@ for backend in $* ; do
 	# shellcheck disable=2016
 	printf '\t$(SHELL) $(srcdir)/testmaker.sh $@\n\n'
         RULESET_TESTS="${RULESET_TESTS} ${testname}"
+        RULESET_REMOVABLES="${RULESET_REMOVABLES} ${testname} ${testname}.c ${testname}.l"
     done
     for kind in opt ser ver ; do
         for opt in -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem ; do
@@ -30,6 +32,7 @@ for backend in $* ; do
             bare_opt=$(echo ${bare_opt}| sed 's/F$/xF/')
             testname=tableopts_${kind}_${backend}-${bare_opt}.${kind}
             RULESET_TESTS="${RULESET_TESTS} ${testname}"
+            RULESET_REMOVABLES="${RULESET_REMOVABLES} ${testname} ${testname}.c ${testname}.l ${testname}.tables"
             cat << EOF
 tableopts_${kind}_${backend}_${bare_opt}_${kind}_SOURCES = ${testname}.l
 ${testname}.l: \$(srcdir)/tableopts.rules \$(srcdir)/testmaker.sh \$(srcdir)/testmaker.m4
@@ -43,6 +46,7 @@ done
 printf "# End generated test rules\n"
 
 echo RULESET_TESTS = "${RULESET_TESTS}"
+echo RULESET_REMOVABLES = "${RULESET_REMOVABLES}"
 echo
 
 
