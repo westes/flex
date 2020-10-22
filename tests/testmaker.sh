@@ -6,7 +6,7 @@
 # The single argument is a testfile name to be generated.
 # With the -d option, dump to stdourather than crating the file.
 #
-# To add a new back end named "fpp", append "|foo" to the
+# To add a new back end named "foo", append "|foo" to the
 # string literal below.
 backends="c99"
 

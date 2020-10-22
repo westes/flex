@@ -86,10 +86,8 @@ SPORADIC_TESTS = \
 	mem_c99 \
 	multiple_scanners_nr \
 	multiple_scanners_r \
-	posix_nr \
-	posix_c99 \
-	posixly_correct_nr \
-	posixly_correct_c99 \
+	posixlycorrect_nr \
+	posixlycorrect_c99 \
 	prefix_nr \
 	prefix_r \
 	prefix_c99 \
@@ -165,10 +163,8 @@ multiple_scanners_nr_SOURCES = multiple_scanners_nr_main.c multiple_scanners_nr_
 nodist_multiple_scanners_nr_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
 multiple_scanners_r_SOURCES = multiple_scanners_r_main.c multiple_scanners_r_1.l multiple_scanners_r_2.l
 nodist_multiple_scanners_r_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
-posix_nr_SOURCES = posix_nr.l
-posix_c99_SOURCES = posix_c99.l
-posixly_correct_nr_SOURCES = posixly_correct_nr.l
-posixly_correct_c99_SOURCES = posixly_correct_c99.l
+posixlycorrect_nr_SOURCES = posixlycorrect_nr.l
+posixlycorrect_c99_SOURCES = posixlycorrect_c99.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
 prefix_c99_SOURCES = prefix_c99.l
@@ -291,10 +287,10 @@ multiple_scanners_r_2.h: multiple_scanners_r_2.c
 	@if test ! -f $@; then rm -f $<; else :; fi
 	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
-posixly_correct_nr.c: posixly_correct_nr.l $(FLEX)
+posixlycorrect_nr.c: posixlycorrect_nr.l $(FLEX)
 	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) $(TESTOPTS) -o $@ $<
 
-posixly_correct_c99.c: posixly_correct_c99.l $(FLEX)
+posixlycorrect_c99.c: posixlycorrect_c99.l $(FLEX)
 	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) $(TESTOPTS) -o $@ $<
 
 top_main.$(OBJEXT): top.h

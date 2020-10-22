@@ -13,6 +13,10 @@ extended_nr_SOURCES = extended_nr.l
 extended_nr.l: $(srcdir)/extended.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
 	$(SHELL) $(srcdir)/testmaker.sh $@
 
+posix_nr_SOURCES = posix_nr.l
+posix_nr.l: $(srcdir)/posix.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
 quoteincomment_nr_SOURCES = quoteincomment_nr.l
 quoteincomment_nr.l: $(srcdir)/quoteincomment.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
 	$(SHELL) $(srcdir)/testmaker.sh $@
@@ -167,6 +171,10 @@ basic_r.l: $(srcdir)/basic.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
 
 extended_r_SOURCES = extended_r.l
 extended_r.l: $(srcdir)/extended.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+posix_r_SOURCES = posix_r.l
+posix_r.l: $(srcdir)/posix.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
 	$(SHELL) $(srcdir)/testmaker.sh $@
 
 quoteincomment_r_SOURCES = quoteincomment_r.l
@@ -325,6 +333,10 @@ extended_c99_SOURCES = extended_c99.l
 extended_c99.l: $(srcdir)/extended.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
 	$(SHELL) $(srcdir)/testmaker.sh $@
 
+posix_c99_SOURCES = posix_c99.l
+posix_c99.l: $(srcdir)/posix.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
 quoteincomment_c99_SOURCES = quoteincomment_c99.l
 quoteincomment_c99.l: $(srcdir)/quoteincomment.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
 	$(SHELL) $(srcdir)/testmaker.sh $@
@@ -470,5 +482,5 @@ tableopts_ver_c99-Caem.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $
 	$(SHELL) $(srcdir)/testmaker.sh $@
 
 # End generated test rules
-RULESET_TESTS =  array_nr basic_nr extended_nr quoteincomment_nr reject_nr tableopts_nr tableopts_opt_nr-Ca.opt tableopts_opt_nr-Ce.opt tableopts_opt_nr-Cf.opt tableopts_opt_nr-CxF.opt tableopts_opt_nr-Cm.opt tableopts_opt_nr-Cem.opt tableopts_opt_nr-Cae.opt tableopts_opt_nr-Caef.opt tableopts_opt_nr-CaexF.opt tableopts_opt_nr-Cam.opt tableopts_opt_nr-Caem.opt tableopts_ser_nr-Ca.ser tableopts_ser_nr-Ce.ser tableopts_ser_nr-Cf.ser tableopts_ser_nr-CxF.ser tableopts_ser_nr-Cm.ser tableopts_ser_nr-Cem.ser tableopts_ser_nr-Cae.ser tableopts_ser_nr-Caef.ser tableopts_ser_nr-CaexF.ser tableopts_ser_nr-Cam.ser tableopts_ser_nr-Caem.ser tableopts_ver_nr-Ca.ver tableopts_ver_nr-Ce.ver tableopts_ver_nr-Cf.ver tableopts_ver_nr-CxF.ver tableopts_ver_nr-Cm.ver tableopts_ver_nr-Cem.ver tableopts_ver_nr-Cae.ver tableopts_ver_nr-Caef.ver tableopts_ver_nr-CaexF.ver tableopts_ver_nr-Cam.ver tableopts_ver_nr-Caem.ver array_r basic_r extended_r quoteincomment_r reject_r tableopts_r tableopts_opt_r-Ca.opt tableopts_opt_r-Ce.opt tableopts_opt_r-Cf.opt tableopts_opt_r-CxF.opt tableopts_opt_r-Cm.opt tableopts_opt_r-Cem.opt tableopts_opt_r-Cae.opt tableopts_opt_r-Caef.opt tableopts_opt_r-CaexF.opt tableopts_opt_r-Cam.opt tableopts_opt_r-Caem.opt tableopts_ser_r-Ca.ser tableopts_ser_r-Ce.ser tableopts_ser_r-Cf.ser tableopts_ser_r-CxF.ser tableopts_ser_r-Cm.ser tableopts_ser_r-Cem.ser tableopts_ser_r-Cae.ser tableopts_ser_r-Caef.ser tableopts_ser_r-CaexF.ser tableopts_ser_r-Cam.ser tableopts_ser_r-Caem.ser tableopts_ver_r-Ca.ver tableopts_ver_r-Ce.ver tableopts_ver_r-Cf.ver tableopts_ver_r-CxF.ver tableopts_ver_r-Cm.ver tableopts_ver_r-Cem.ver tableopts_ver_r-Cae.ver tableopts_ver_r-Caef.ver tableopts_ver_r-CaexF.ver tableopts_ver_r-Cam.ver tableopts_ver_r-Caem.ver array_c99 basic_c99 extended_c99 quoteincomment_c99 reject_c99 tableopts_c99 tableopts_opt_c99-Ca.opt tableopts_opt_c99-Ce.opt tableopts_opt_c99-Cf.opt tableopts_opt_c99-CxF.opt tableopts_opt_c99-Cm.opt tableopts_opt_c99-Cem.opt tableopts_opt_c99-Cae.opt tableopts_opt_c99-Caef.opt tableopts_opt_c99-CaexF.opt tableopts_opt_c99-Cam.opt tableopts_opt_c99-Caem.opt tableopts_ser_c99-Ca.ser tableopts_ser_c99-Ce.ser tableopts_ser_c99-Cf.ser tableopts_ser_c99-CxF.ser tableopts_ser_c99-Cm.ser tableopts_ser_c99-Cem.ser tableopts_ser_c99-Cae.ser tableopts_ser_c99-Caef.ser tableopts_ser_c99-CaexF.ser tableopts_ser_c99-Cam.ser tableopts_ser_c99-Caem.ser tableopts_ver_c99-Ca.ver tableopts_ver_c99-Ce.ver tableopts_ver_c99-Cf.ver tableopts_ver_c99-CxF.ver tableopts_ver_c99-Cm.ver tableopts_ver_c99-Cem.ver tableopts_ver_c99-Cae.ver tableopts_ver_c99-Caef.ver tableopts_ver_c99-CaexF.ver tableopts_ver_c99-Cam.ver tableopts_ver_c99-Caem.ver
+RULESET_TESTS =  array_nr basic_nr extended_nr posix_nr quoteincomment_nr reject_nr tableopts_nr tableopts_opt_nr-Ca.opt tableopts_opt_nr-Ce.opt tableopts_opt_nr-Cf.opt tableopts_opt_nr-CxF.opt tableopts_opt_nr-Cm.opt tableopts_opt_nr-Cem.opt tableopts_opt_nr-Cae.opt tableopts_opt_nr-Caef.opt tableopts_opt_nr-CaexF.opt tableopts_opt_nr-Cam.opt tableopts_opt_nr-Caem.opt tableopts_ser_nr-Ca.ser tableopts_ser_nr-Ce.ser tableopts_ser_nr-Cf.ser tableopts_ser_nr-CxF.ser tableopts_ser_nr-Cm.ser tableopts_ser_nr-Cem.ser tableopts_ser_nr-Cae.ser tableopts_ser_nr-Caef.ser tableopts_ser_nr-CaexF.ser tableopts_ser_nr-Cam.ser tableopts_ser_nr-Caem.ser tableopts_ver_nr-Ca.ver tableopts_ver_nr-Ce.ver tableopts_ver_nr-Cf.ver tableopts_ver_nr-CxF.ver tableopts_ver_nr-Cm.ver tableopts_ver_nr-Cem.ver tableopts_ver_nr-Cae.ver tableopts_ver_nr-Caef.ver tableopts_ver_nr-CaexF.ver tableopts_ver_nr-Cam.ver tableopts_ver_nr-Caem.ver array_r basic_r extended_r posix_r quoteincomment_r reject_r tableopts_r tableopts_opt_r-Ca.opt tableopts_opt_r-Ce.opt tableopts_opt_r-Cf.opt tableopts_opt_r-CxF.opt tableopts_opt_r-Cm.opt tableopts_opt_r-Cem.opt tableopts_opt_r-Cae.opt tableopts_opt_r-Caef.opt tableopts_opt_r-CaexF.opt tableopts_opt_r-Cam.opt tableopts_opt_r-Caem.opt tableopts_ser_r-Ca.ser tableopts_ser_r-Ce.ser tableopts_ser_r-Cf.ser tableopts_ser_r-CxF.ser tableopts_ser_r-Cm.ser tableopts_ser_r-Cem.ser tableopts_ser_r-Cae.ser tableopts_ser_r-Caef.ser tableopts_ser_r-CaexF.ser tableopts_ser_r-Cam.ser tableopts_ser_r-Caem.ser tableopts_ver_r-Ca.ver tableopts_ver_r-Ce.ver tableopts_ver_r-Cf.ver tableopts_ver_r-CxF.ver tableopts_ver_r-Cm.ver tableopts_ver_r-Cem.ver tableopts_ver_r-Cae.ver tableopts_ver_r-Caef.ver tableopts_ver_r-CaexF.ver tableopts_ver_r-Cam.ver tableopts_ver_r-Caem.ver array_c99 basic_c99 extended_c99 posix_c99 quoteincomment_c99 reject_c99 tableopts_c99 tableopts_opt_c99-Ca.opt tableopts_opt_c99-Ce.opt tableopts_opt_c99-Cf.opt tableopts_opt_c99-CxF.opt tableopts_opt_c99-Cm.opt tableopts_opt_c99-Cem.opt tableopts_opt_c99-Cae.opt tableopts_opt_c99-Caef.opt tableopts_opt_c99-CaexF.opt tableopts_opt_c99-Cam.opt tableopts_opt_c99-Caem.opt tableopts_ser_c99-Ca.ser tableopts_ser_c99-Ce.ser tableopts_ser_c99-Cf.ser tableopts_ser_c99-CxF.ser tableopts_ser_c99-Cm.ser tableopts_ser_c99-Cem.ser tableopts_ser_c99-Cae.ser tableopts_ser_c99-Caef.ser tableopts_ser_c99-CaexF.ser tableopts_ser_c99-Cam.ser tableopts_ser_c99-Caem.ser tableopts_ver_c99-Ca.ver tableopts_ver_c99-Ce.ver tableopts_ver_c99-Cf.ver tableopts_ver_c99-CxF.ver tableopts_ver_c99-Cm.ver tableopts_ver_c99-Cem.ver tableopts_ver_c99-Cae.ver tableopts_ver_c99-Caef.ver tableopts_ver_c99-CaexF.ver tableopts_ver_c99-Cam.ver tableopts_ver_c99-Caem.ver
 
