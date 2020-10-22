@@ -35,10 +35,9 @@ for kind in opt ser ver ; do
             fi
 
             cat << EOF
-tableopts_${kind}_${threading}_${bare_opt}_${kind}_SOURCES = tableopts.l4
-
-${testname}\$(EXEEXT): tableopts_${kind}_${threading}-${bare_opt}.\$(OBJEXT)
-	\$(AM_V_CCLD)\$(LINK) \$<
+tableopts_${kind}_${threading}_${bare_opt}_${kind}_SOURCES = ${testname}.l
+${testname}.l: \$(srcdir)/tableopts.rules \$(srcdir)/testmaker.sh \$(srcdir)/testmaker.m4
+	\$(SHELL) \$(srcdir)/testmaker.sh \$@
 
 EOF
         done

@@ -52,12 +52,12 @@ AM_ONE_LOG_FLAGS = -1 -d $(srcdir)
 AM_YFLAGS = -d -p test
 AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 
-# A full cross-matrix of all back ends (nr, r, c99) and all tess that
+# A full cross-matrix of all back ends (nr, r, c99) and all tests that
 # could potentially apply to them would push the time cost of "make check"
-# uncomfortably highm and the problem will worsen as more back ends are added.
+# uncomfortably high, and the problem will worsen as more back ends are added.
 # This list tries to explout orthogonalities in the C skeleton file to test
-# smaller set (hopeflly)  spand the behavior space prett well. Akas, new
-# langyage back ends won;'t have that slaclk to exploit, The test set for the
+# smaller set that (hopeflly) spans the behavior space pretty well. Alas, new
+# language back ends won't have that slack to exploit. The test set for the
 # c99 back end should be a model for these.
 
 check_PROGRAMS = $(simple_tests) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS) $(TABLEOPTS_TESTS)
@@ -215,6 +215,7 @@ CLEANFILES = \
 	$(subst no_bison_stub.c, , $(shell ls *.c | grep -v "_main.c")) \
 	$(shell ls *.cc | grep -v "_main.cc") \
 	$(patsubst %, %.l, ${generated}) \
+	tableopts*.l \
 	*.h *.tables
 
 dist-hook:
@@ -336,49 +337,10 @@ tableopts_tests  := $(tableopts_opttests) $(tableopts_vertests) $(tableopts_sert
 OPT_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_OPT_LOG_FLAGS = -d $(srcdir) -i $(srcdir)/tableopts.txt -r
 
-tableopts_opt_nr%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) $(*:xF=F) -o $@ $<
-
-tableopts_opt_nr%.$(OBJEXT): tableopts_opt_nr%.c 
-	$(AM_V_CC)$(COMPILE) -c -o $@ $<
-
-tableopts_opt_r%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) --reentrant $(subst xF,F,$*)  -o $@ $<
-
-tableopts_opt_r%.$(OBJEXT):  tableopts_opt_r%.c 
-	$(AM_V_CC)$(COMPILE) -DTEST_IS_REENTRANT -c -o $@ $<
-
 SER_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_SER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r
 
-tableopts_ser_nr%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ser_nr$*.ser.tables"  $(subst xF,F,$*) -o $@ $<
-
-tableopts_ser_nr%.$(OBJEXT): tableopts_ser_nr%.c 
-	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<
-
-tableopts_ser_r%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) -R --tables-file="tableopts_ser_r$*.ser.tables" $(subst xF,F,$*)  -o $@ $<
-
-tableopts_ser_r%.$(OBJEXT):  tableopts_ser_r%.c
-	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT -c -o $@ $<
-
 VER_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_VER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r
-
-tableopts_ver_nr%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) --tables-file="tableopts_ver_nr$*.ver.tables" --tables-verify $(subst xF,F,$*) -o $@ $<
-
-tableopts_ver_nr%.$(OBJEXT): tableopts_ver_nr%.c 
-	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -c -o $@ $<
-
-tableopts_ver_nr%.ver$(EXEEXT): tableopts_ver_nr%.$(OBJEXT)
-	$(AM_V_CCLD)$(LINK) -o $@ $^
-
-tableopts_ver_r%.c: tableopts.l4 $(FLEX)
-	$(AM_V_LEX)$(FLEX) $(TESTOPTS) --unsafe-no-m4-sect3-escape -P $(subst -,_,$(basename $(*F))) -R --tables-file="tableopts_ver_r$*.ver.tables" --tables-verify $(subst xF,F,$*)  -o $@ $<
-
-tableopts_ver_r%.$(OBJEXT):  tableopts_ver_r%.c  
-	$(AM_V_CC)$(COMPILE) -DTEST_HAS_TABLES_EXTERNAL -DTEST_IS_REENTRANT -c -o $@ $<
 
 

@@ -142,6 +142,7 @@ string_r
 string_r.c
 string_c99
 string_c99.c
+tableopts*.l
 top
 top.[ch]
 yyextra_cpp
