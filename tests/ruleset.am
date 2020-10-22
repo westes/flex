@@ -1,0 +1,474 @@
+
+# Begin generated test rules
+
+array_nr_SOURCES = array_nr.l
+array_nr.l: $(srcdir)/array.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+basic_nr_SOURCES = basic_nr.l
+basic_nr.l: $(srcdir)/basic.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+extended_nr_SOURCES = extended_nr.l
+extended_nr.l: $(srcdir)/extended.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+quoteincomment_nr_SOURCES = quoteincomment_nr.l
+quoteincomment_nr.l: $(srcdir)/quoteincomment.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+reject_nr_SOURCES = reject_nr.l
+reject_nr.l: $(srcdir)/reject.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_nr_SOURCES = tableopts_nr.l
+tableopts_nr.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_nr_Ca_opt_SOURCES = tableopts_opt_nr-Ca.opt.l
+tableopts_opt_nr-Ca.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_nr_Ce_opt_SOURCES = tableopts_opt_nr-Ce.opt.l
+tableopts_opt_nr-Ce.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_nr_Cf_opt_SOURCES = tableopts_opt_nr-Cf.opt.l
+tableopts_opt_nr-Cf.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_nr_CxF_opt_SOURCES = tableopts_opt_nr-CxF.opt.l
+tableopts_opt_nr-CxF.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_nr_Cm_opt_SOURCES = tableopts_opt_nr-Cm.opt.l
+tableopts_opt_nr-Cm.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_nr_Cem_opt_SOURCES = tableopts_opt_nr-Cem.opt.l
+tableopts_opt_nr-Cem.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_nr_Cae_opt_SOURCES = tableopts_opt_nr-Cae.opt.l
+tableopts_opt_nr-Cae.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_nr_Caef_opt_SOURCES = tableopts_opt_nr-Caef.opt.l
+tableopts_opt_nr-Caef.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_nr_CaexF_opt_SOURCES = tableopts_opt_nr-CaexF.opt.l
+tableopts_opt_nr-CaexF.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_nr_Cam_opt_SOURCES = tableopts_opt_nr-Cam.opt.l
+tableopts_opt_nr-Cam.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_nr_Caem_opt_SOURCES = tableopts_opt_nr-Caem.opt.l
+tableopts_opt_nr-Caem.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_nr_Ca_ser_SOURCES = tableopts_ser_nr-Ca.ser.l
+tableopts_ser_nr-Ca.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_nr_Ce_ser_SOURCES = tableopts_ser_nr-Ce.ser.l
+tableopts_ser_nr-Ce.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_nr_Cf_ser_SOURCES = tableopts_ser_nr-Cf.ser.l
+tableopts_ser_nr-Cf.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_nr_CxF_ser_SOURCES = tableopts_ser_nr-CxF.ser.l
+tableopts_ser_nr-CxF.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_nr_Cm_ser_SOURCES = tableopts_ser_nr-Cm.ser.l
+tableopts_ser_nr-Cm.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_nr_Cem_ser_SOURCES = tableopts_ser_nr-Cem.ser.l
+tableopts_ser_nr-Cem.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_nr_Cae_ser_SOURCES = tableopts_ser_nr-Cae.ser.l
+tableopts_ser_nr-Cae.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_nr_Caef_ser_SOURCES = tableopts_ser_nr-Caef.ser.l
+tableopts_ser_nr-Caef.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_nr_CaexF_ser_SOURCES = tableopts_ser_nr-CaexF.ser.l
+tableopts_ser_nr-CaexF.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_nr_Cam_ser_SOURCES = tableopts_ser_nr-Cam.ser.l
+tableopts_ser_nr-Cam.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_nr_Caem_ser_SOURCES = tableopts_ser_nr-Caem.ser.l
+tableopts_ser_nr-Caem.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_nr_Ca_ver_SOURCES = tableopts_ver_nr-Ca.ver.l
+tableopts_ver_nr-Ca.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_nr_Ce_ver_SOURCES = tableopts_ver_nr-Ce.ver.l
+tableopts_ver_nr-Ce.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_nr_Cf_ver_SOURCES = tableopts_ver_nr-Cf.ver.l
+tableopts_ver_nr-Cf.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_nr_CxF_ver_SOURCES = tableopts_ver_nr-CxF.ver.l
+tableopts_ver_nr-CxF.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_nr_Cm_ver_SOURCES = tableopts_ver_nr-Cm.ver.l
+tableopts_ver_nr-Cm.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_nr_Cem_ver_SOURCES = tableopts_ver_nr-Cem.ver.l
+tableopts_ver_nr-Cem.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_nr_Cae_ver_SOURCES = tableopts_ver_nr-Cae.ver.l
+tableopts_ver_nr-Cae.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_nr_Caef_ver_SOURCES = tableopts_ver_nr-Caef.ver.l
+tableopts_ver_nr-Caef.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_nr_CaexF_ver_SOURCES = tableopts_ver_nr-CaexF.ver.l
+tableopts_ver_nr-CaexF.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_nr_Cam_ver_SOURCES = tableopts_ver_nr-Cam.ver.l
+tableopts_ver_nr-Cam.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_nr_Caem_ver_SOURCES = tableopts_ver_nr-Caem.ver.l
+tableopts_ver_nr-Caem.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+array_r_SOURCES = array_r.l
+array_r.l: $(srcdir)/array.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+basic_r_SOURCES = basic_r.l
+basic_r.l: $(srcdir)/basic.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+extended_r_SOURCES = extended_r.l
+extended_r.l: $(srcdir)/extended.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+quoteincomment_r_SOURCES = quoteincomment_r.l
+quoteincomment_r.l: $(srcdir)/quoteincomment.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+reject_r_SOURCES = reject_r.l
+reject_r.l: $(srcdir)/reject.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_r_SOURCES = tableopts_r.l
+tableopts_r.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_r_Ca_opt_SOURCES = tableopts_opt_r-Ca.opt.l
+tableopts_opt_r-Ca.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_r_Ce_opt_SOURCES = tableopts_opt_r-Ce.opt.l
+tableopts_opt_r-Ce.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_r_Cf_opt_SOURCES = tableopts_opt_r-Cf.opt.l
+tableopts_opt_r-Cf.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_r_CxF_opt_SOURCES = tableopts_opt_r-CxF.opt.l
+tableopts_opt_r-CxF.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_r_Cm_opt_SOURCES = tableopts_opt_r-Cm.opt.l
+tableopts_opt_r-Cm.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_r_Cem_opt_SOURCES = tableopts_opt_r-Cem.opt.l
+tableopts_opt_r-Cem.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_r_Cae_opt_SOURCES = tableopts_opt_r-Cae.opt.l
+tableopts_opt_r-Cae.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_r_Caef_opt_SOURCES = tableopts_opt_r-Caef.opt.l
+tableopts_opt_r-Caef.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_r_CaexF_opt_SOURCES = tableopts_opt_r-CaexF.opt.l
+tableopts_opt_r-CaexF.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_r_Cam_opt_SOURCES = tableopts_opt_r-Cam.opt.l
+tableopts_opt_r-Cam.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_r_Caem_opt_SOURCES = tableopts_opt_r-Caem.opt.l
+tableopts_opt_r-Caem.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_r_Ca_ser_SOURCES = tableopts_ser_r-Ca.ser.l
+tableopts_ser_r-Ca.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_r_Ce_ser_SOURCES = tableopts_ser_r-Ce.ser.l
+tableopts_ser_r-Ce.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_r_Cf_ser_SOURCES = tableopts_ser_r-Cf.ser.l
+tableopts_ser_r-Cf.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_r_CxF_ser_SOURCES = tableopts_ser_r-CxF.ser.l
+tableopts_ser_r-CxF.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_r_Cm_ser_SOURCES = tableopts_ser_r-Cm.ser.l
+tableopts_ser_r-Cm.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_r_Cem_ser_SOURCES = tableopts_ser_r-Cem.ser.l
+tableopts_ser_r-Cem.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_r_Cae_ser_SOURCES = tableopts_ser_r-Cae.ser.l
+tableopts_ser_r-Cae.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_r_Caef_ser_SOURCES = tableopts_ser_r-Caef.ser.l
+tableopts_ser_r-Caef.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_r_CaexF_ser_SOURCES = tableopts_ser_r-CaexF.ser.l
+tableopts_ser_r-CaexF.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_r_Cam_ser_SOURCES = tableopts_ser_r-Cam.ser.l
+tableopts_ser_r-Cam.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_r_Caem_ser_SOURCES = tableopts_ser_r-Caem.ser.l
+tableopts_ser_r-Caem.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_r_Ca_ver_SOURCES = tableopts_ver_r-Ca.ver.l
+tableopts_ver_r-Ca.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_r_Ce_ver_SOURCES = tableopts_ver_r-Ce.ver.l
+tableopts_ver_r-Ce.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_r_Cf_ver_SOURCES = tableopts_ver_r-Cf.ver.l
+tableopts_ver_r-Cf.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_r_CxF_ver_SOURCES = tableopts_ver_r-CxF.ver.l
+tableopts_ver_r-CxF.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_r_Cm_ver_SOURCES = tableopts_ver_r-Cm.ver.l
+tableopts_ver_r-Cm.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_r_Cem_ver_SOURCES = tableopts_ver_r-Cem.ver.l
+tableopts_ver_r-Cem.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_r_Cae_ver_SOURCES = tableopts_ver_r-Cae.ver.l
+tableopts_ver_r-Cae.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_r_Caef_ver_SOURCES = tableopts_ver_r-Caef.ver.l
+tableopts_ver_r-Caef.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_r_CaexF_ver_SOURCES = tableopts_ver_r-CaexF.ver.l
+tableopts_ver_r-CaexF.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_r_Cam_ver_SOURCES = tableopts_ver_r-Cam.ver.l
+tableopts_ver_r-Cam.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_r_Caem_ver_SOURCES = tableopts_ver_r-Caem.ver.l
+tableopts_ver_r-Caem.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+array_c99_SOURCES = array_c99.l
+array_c99.l: $(srcdir)/array.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+basic_c99_SOURCES = basic_c99.l
+basic_c99.l: $(srcdir)/basic.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+extended_c99_SOURCES = extended_c99.l
+extended_c99.l: $(srcdir)/extended.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+quoteincomment_c99_SOURCES = quoteincomment_c99.l
+quoteincomment_c99.l: $(srcdir)/quoteincomment.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+reject_c99_SOURCES = reject_c99.l
+reject_c99.l: $(srcdir)/reject.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_c99_SOURCES = tableopts_c99.l
+tableopts_c99.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_c99_Ca_opt_SOURCES = tableopts_opt_c99-Ca.opt.l
+tableopts_opt_c99-Ca.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_c99_Ce_opt_SOURCES = tableopts_opt_c99-Ce.opt.l
+tableopts_opt_c99-Ce.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_c99_Cf_opt_SOURCES = tableopts_opt_c99-Cf.opt.l
+tableopts_opt_c99-Cf.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_c99_CxF_opt_SOURCES = tableopts_opt_c99-CxF.opt.l
+tableopts_opt_c99-CxF.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_c99_Cm_opt_SOURCES = tableopts_opt_c99-Cm.opt.l
+tableopts_opt_c99-Cm.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_c99_Cem_opt_SOURCES = tableopts_opt_c99-Cem.opt.l
+tableopts_opt_c99-Cem.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_c99_Cae_opt_SOURCES = tableopts_opt_c99-Cae.opt.l
+tableopts_opt_c99-Cae.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_c99_Caef_opt_SOURCES = tableopts_opt_c99-Caef.opt.l
+tableopts_opt_c99-Caef.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_c99_CaexF_opt_SOURCES = tableopts_opt_c99-CaexF.opt.l
+tableopts_opt_c99-CaexF.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_c99_Cam_opt_SOURCES = tableopts_opt_c99-Cam.opt.l
+tableopts_opt_c99-Cam.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_opt_c99_Caem_opt_SOURCES = tableopts_opt_c99-Caem.opt.l
+tableopts_opt_c99-Caem.opt.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_c99_Ca_ser_SOURCES = tableopts_ser_c99-Ca.ser.l
+tableopts_ser_c99-Ca.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_c99_Ce_ser_SOURCES = tableopts_ser_c99-Ce.ser.l
+tableopts_ser_c99-Ce.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_c99_Cf_ser_SOURCES = tableopts_ser_c99-Cf.ser.l
+tableopts_ser_c99-Cf.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_c99_CxF_ser_SOURCES = tableopts_ser_c99-CxF.ser.l
+tableopts_ser_c99-CxF.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_c99_Cm_ser_SOURCES = tableopts_ser_c99-Cm.ser.l
+tableopts_ser_c99-Cm.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_c99_Cem_ser_SOURCES = tableopts_ser_c99-Cem.ser.l
+tableopts_ser_c99-Cem.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_c99_Cae_ser_SOURCES = tableopts_ser_c99-Cae.ser.l
+tableopts_ser_c99-Cae.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_c99_Caef_ser_SOURCES = tableopts_ser_c99-Caef.ser.l
+tableopts_ser_c99-Caef.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_c99_CaexF_ser_SOURCES = tableopts_ser_c99-CaexF.ser.l
+tableopts_ser_c99-CaexF.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_c99_Cam_ser_SOURCES = tableopts_ser_c99-Cam.ser.l
+tableopts_ser_c99-Cam.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ser_c99_Caem_ser_SOURCES = tableopts_ser_c99-Caem.ser.l
+tableopts_ser_c99-Caem.ser.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_c99_Ca_ver_SOURCES = tableopts_ver_c99-Ca.ver.l
+tableopts_ver_c99-Ca.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_c99_Ce_ver_SOURCES = tableopts_ver_c99-Ce.ver.l
+tableopts_ver_c99-Ce.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_c99_Cf_ver_SOURCES = tableopts_ver_c99-Cf.ver.l
+tableopts_ver_c99-Cf.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_c99_CxF_ver_SOURCES = tableopts_ver_c99-CxF.ver.l
+tableopts_ver_c99-CxF.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_c99_Cm_ver_SOURCES = tableopts_ver_c99-Cm.ver.l
+tableopts_ver_c99-Cm.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_c99_Cem_ver_SOURCES = tableopts_ver_c99-Cem.ver.l
+tableopts_ver_c99-Cem.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_c99_Cae_ver_SOURCES = tableopts_ver_c99-Cae.ver.l
+tableopts_ver_c99-Cae.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_c99_Caef_ver_SOURCES = tableopts_ver_c99-Caef.ver.l
+tableopts_ver_c99-Caef.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_c99_CaexF_ver_SOURCES = tableopts_ver_c99-CaexF.ver.l
+tableopts_ver_c99-CaexF.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_c99_Cam_ver_SOURCES = tableopts_ver_c99-Cam.ver.l
+tableopts_ver_c99-Cam.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+tableopts_ver_c99_Caem_ver_SOURCES = tableopts_ver_c99-Caem.ver.l
+tableopts_ver_c99-Caem.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $(srcdir)/testmaker.m4
+	$(SHELL) $(srcdir)/testmaker.sh $@
+
+# End generated test rules
+RULESET_TESTS =  array_nr basic_nr extended_nr quoteincomment_nr reject_nr tableopts_nr tableopts_opt_nr-Ca.opt tableopts_opt_nr-Ce.opt tableopts_opt_nr-Cf.opt tableopts_opt_nr-CxF.opt tableopts_opt_nr-Cm.opt tableopts_opt_nr-Cem.opt tableopts_opt_nr-Cae.opt tableopts_opt_nr-Caef.opt tableopts_opt_nr-CaexF.opt tableopts_opt_nr-Cam.opt tableopts_opt_nr-Caem.opt tableopts_ser_nr-Ca.ser tableopts_ser_nr-Ce.ser tableopts_ser_nr-Cf.ser tableopts_ser_nr-CxF.ser tableopts_ser_nr-Cm.ser tableopts_ser_nr-Cem.ser tableopts_ser_nr-Cae.ser tableopts_ser_nr-Caef.ser tableopts_ser_nr-CaexF.ser tableopts_ser_nr-Cam.ser tableopts_ser_nr-Caem.ser tableopts_ver_nr-Ca.ver tableopts_ver_nr-Ce.ver tableopts_ver_nr-Cf.ver tableopts_ver_nr-CxF.ver tableopts_ver_nr-Cm.ver tableopts_ver_nr-Cem.ver tableopts_ver_nr-Cae.ver tableopts_ver_nr-Caef.ver tableopts_ver_nr-CaexF.ver tableopts_ver_nr-Cam.ver tableopts_ver_nr-Caem.ver array_r basic_r extended_r quoteincomment_r reject_r tableopts_r tableopts_opt_r-Ca.opt tableopts_opt_r-Ce.opt tableopts_opt_r-Cf.opt tableopts_opt_r-CxF.opt tableopts_opt_r-Cm.opt tableopts_opt_r-Cem.opt tableopts_opt_r-Cae.opt tableopts_opt_r-Caef.opt tableopts_opt_r-CaexF.opt tableopts_opt_r-Cam.opt tableopts_opt_r-Caem.opt tableopts_ser_r-Ca.ser tableopts_ser_r-Ce.ser tableopts_ser_r-Cf.ser tableopts_ser_r-CxF.ser tableopts_ser_r-Cm.ser tableopts_ser_r-Cem.ser tableopts_ser_r-Cae.ser tableopts_ser_r-Caef.ser tableopts_ser_r-CaexF.ser tableopts_ser_r-Cam.ser tableopts_ser_r-Caem.ser tableopts_ver_r-Ca.ver tableopts_ver_r-Ce.ver tableopts_ver_r-Cf.ver tableopts_ver_r-CxF.ver tableopts_ver_r-Cm.ver tableopts_ver_r-Cem.ver tableopts_ver_r-Cae.ver tableopts_ver_r-Caef.ver tableopts_ver_r-CaexF.ver tableopts_ver_r-Cam.ver tableopts_ver_r-Caem.ver array_c99 basic_c99 extended_c99 quoteincomment_c99 reject_c99 tableopts_c99 tableopts_opt_c99-Ca.opt tableopts_opt_c99-Ce.opt tableopts_opt_c99-Cf.opt tableopts_opt_c99-CxF.opt tableopts_opt_c99-Cm.opt tableopts_opt_c99-Cem.opt tableopts_opt_c99-Cae.opt tableopts_opt_c99-Caef.opt tableopts_opt_c99-CaexF.opt tableopts_opt_c99-Cam.opt tableopts_opt_c99-Caem.opt tableopts_ser_c99-Ca.ser tableopts_ser_c99-Ce.ser tableopts_ser_c99-Cf.ser tableopts_ser_c99-CxF.ser tableopts_ser_c99-Cm.ser tableopts_ser_c99-Cem.ser tableopts_ser_c99-Cae.ser tableopts_ser_c99-Caef.ser tableopts_ser_c99-CaexF.ser tableopts_ser_c99-Cam.ser tableopts_ser_c99-Caem.ser tableopts_ver_c99-Ca.ver tableopts_ver_c99-Ce.ver tableopts_ver_c99-Cf.ver tableopts_ver_c99-CxF.ver tableopts_ver_c99-Cm.ver tableopts_ver_c99-Cem.ver tableopts_ver_c99-Cae.ver tableopts_ver_c99-Caef.ver tableopts_ver_c99-CaexF.ver tableopts_ver_c99-Cam.ver tableopts_ver_c99-Caem.ver
+

@@ -6,12 +6,10 @@
 # The single argument is a testfile name to be generated.
 # With the -d option, dump to stdourather than crating the file.
 #
-# A typical table test load name: tableopts_opt_nr_Ca_opt, this breaks
-# down as tableopts_{tag}_{backend}_{compression}_{tag}.
-# The backend field can be nr, r, c99 and will eventually have more values.
-# The compression options are the flags that woulld nprmally be passed to
-# Flex; the possibilities are Ca Ce Cf CxF Cm Cem Cae Caef CaexF Cam Caem.
-#
+# To add a new back end named "fpp", append "|foo" to the
+# string literal below.
+backends="c99"
+
 if [ "$1" = -d ] ; then
     shift
     outdev=/dev/stdout
@@ -40,27 +38,21 @@ stem=$1
 options=""
 backend=nr
 for part in "$@"; do
-    # This is the only pace in this script that you need to modify
-    # to add a new back end - just add a line on the pattern of
-    # the c99 one. Of course testmaker.m4 will require the
-    # right boilerplate code for this to work.
-    #
-    # Yes, cpp is an alias for nr.
     case ${part} in
         nr) backend=nr; ;;
         r) backend=r; options="${options} reentrant";;
-        c99) backend=r; options="${options} reentrant emit=\"c99\"" ;;
+        ${backends}) backend=r; options="${options} reentrant emit=\"${part}\"" ;;
         ser) serialization=yes ;;
         ver) serialization=yes; options="${options} tables-verify" ;;
 	Ca) options="${options} align" ;;
 	Ce) options="${options} ecs" ;;
 	Cf) options="${options} full" ;;
-	CxF) options="${options} fast" ;;
+	CxF|Cxf) options="${options} fast" ;;
 	Cm) options="${options} meta-ecs";;
 	Cem) options="${options} ecs meta-ecs" ;;
 	Cae) options="${options} align ecs" ;;
 	Caef) options="${options} align ecs full" ;;
-	CaexF) options="${options} algin ecs fast" ;;
+	CaexF|Caexf) options="${options} algin ecs fast" ;;
 	Cam) options="${options} align meta-ecs" ;;
 	Caem) options="${options} align ecs meta-ecs" ;;
     esac
