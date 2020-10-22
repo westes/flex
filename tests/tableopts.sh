@@ -15,7 +15,7 @@ TABLEOPTS_TESTS=""
 tableopts_tables=""
 
 for kind in opt ser ver ; do
-    for threading in nr r ; do
+    for threading in nr r c99 ; do
         for opt in -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem ; do
             bare_opt=${opt#-}
             # The filenames must work on case-insensitive filesystems.
