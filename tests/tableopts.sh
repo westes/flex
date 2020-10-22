@@ -49,10 +49,12 @@ echo
 echo tableopts_tables = "${tableopts_tables}"
 # User can pass in a list of tesrs for which ti geneate build productions
 printf "\n# Begin simple test rules\n\n"
-for test in $*; do
-    stem=`echo ${test} | sed s/_.*//`
+for test in "$@"; do
+    stem=$(echo "${test}" | sed s/_.*//)
     echo "${test}_SOURCES = ${test}.l"
     echo "${test}.l: \$(srcdir)/${stem}.rules \$(srcdir)/testmaker.sh \$(srcdir)/testmaker.m4"
+    # we're deliberately single-quoting this because we _don't_ want those variables to be expanded yet
+    # shellcheck disable=2016
     printf '\t$(SHELL) $(srcdir)/testmaker.sh $@\n\n'
 done
 printf "# End simple test rules\n"
