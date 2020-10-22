@@ -91,8 +91,7 @@ SPORADIC_TESTS = \
 	prefix_nr \
 	prefix_r \
 	prefix_c99 \
-	quotes_nr \
-	quotes_c99 \
+	quotes \
 	string_nr \
 	string_r \
 	string_c99 \
@@ -169,8 +168,7 @@ prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
 prefix_c99_SOURCES = prefix_c99.l
 pthread_pthread_SOURCES = pthread.l
-quotes_nr_SOURCES = quotes_nr.l
-quotes_c99_SOURCES = quotes_c99.l
+quotes_SOURCES = quotes.l
 rescan_nr_direct_SOURCES = rescan_nr.direct.l
 rescan_r_direct_SOURCES = rescan_r.direct.l
 string_nr_SOURCES = string_nr.l

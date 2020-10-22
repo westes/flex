@@ -87,10 +87,8 @@ pthread.pthread
 pthread.c
 quoteincomment_*
 quoteincomment.rules
-quotes_nr
-quotes_nr.c
-quotes_c99
-quotes_c99.c
+quotes
+quotes.c
 reject*
 !reject.rules
 rescan_nr.direct

@@ -8817,7 +8817,9 @@ produce code in your desired target langage.
 Add a test suite for your back end.  You should be able to clone
 one of the existing sets of test loads to get good coverage.  Note
 that is highly unlikely your back end will be accepted into the
-flex distribution without a test suite.
+flex distribution without a test suite.  Fortunately, adapting
+the existing tests should not be difficult.  There is some guisdance
+in the @file{tests/README} file of the source distrbution.
 @end enumerate
 
 Syntactically C-like languages such as Go, Rust, and Java should be easy

@@ -8,12 +8,6 @@ this directory and its contents.
 
 * STRUCTURE OF THE TEST SUITE
 
-The testsuite consists of a large number of tests. In a "simple test",
-the check is simply that a scanner consumes all the tokens fed to it
-from a text (.txt) file in a maching grammar, not allowing stray
-characters to echo through to stdout.  This is how we avoid meeding
-explicit check files.
-
 Each test is centered around a scanner known to work with the most
 recent version of flex. In general, after you modify your copy of the
 flex distribution, you should re-run the test suite. Some of the tests
@@ -39,6 +33,11 @@ To build and execute a single test:
   test run that you're working on.
 
 * HOW TO ADD A NEW TEST TO THE TEST SUITE
+
+** If possible, just write a *.rules file.  Exit with status 1 to
+   indicate failure, e.g. with a "." production if nothing
+   prior properly consumed every input token.  The test machinery
+   will expand a rules file into tests for all back ends.
 
 ** List your test in the TESTS variable in Makefile.am in this
    directory. Note that due to the large number of tests, we use
@@ -69,15 +68,11 @@ automake test suite harness.
 A test with an _nr suffix exercises a non-reentrant scanner built
 with the default cpp back end.
 
-uA test with an _r suffix exercises a reentrant scanner built
+A test with an _r suffix exercises a reentrant scanner built
 with the default cpp back end.
 
 A test with a c99 suffix exercises the c99 back end. All C99
 scanners are re-entrant.
-
-A test with a _cpp suffix exercises the default cpp back end on a
-specification where the reentrant/non-reentrant distinction is
-not interesting.
 
 Most tests occur in groups with a common stem in the names, like
 alloc_extra_ or ccl_.  These are exercising the same token grammar
@@ -88,8 +83,8 @@ back end only.
 
 The "generated" tests are made by wrapping boilerplate code around a
 rules file. The assumption is that the test binary should consume its
-test file, exercising some set of Flex features and not allowing
-any ko leaxh ti strabdard output
+test file, exercising some set of Flex features and not returning
+a nonzero status.
 
 If you can express your test as a ruleset within in this orotocol,
 please do so.  Those tests are easy to port to new back ends, as that
@@ -99,6 +94,9 @@ WHY SOME TESTS ARE MISSING
 
 The "top" test is backend-independent; what it's really testing
 is Flex's ability to accumulate and ship preamble code sections.
+
+The "quotes" test is also backend-indepedent; it's testing that
+m4 expansion doesn't leak through the genertated scanner.
 
 The C99 is missing tests for the Bison bridge, header generation, and
 loadable tables because it omits those features in order to be a simpler
