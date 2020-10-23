@@ -32,7 +32,7 @@
 %option emit="c99"
 %option 8bit prefix="test"
 %option nounput nomain noyywrap noinput
-%option warn debug reentrant
+%option warn debug
 
 %%
 .+   { }

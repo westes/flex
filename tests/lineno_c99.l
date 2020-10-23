@@ -36,7 +36,7 @@
 
 %option emit="c99"
 %option 8bit prefix="test"
-%option nounput nomain noyywrap noinput yylineno reentrant
+%option nounput nomain noyywrap noinput yylineno
 %option warn
 
 WORD [[:alpha:]]+

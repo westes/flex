@@ -1471,8 +1471,7 @@ void readin (void)
 		visible_define ("M4_YY_REENTRANT");
 		if (ctrl.yytext_is_array)
 			visible_define ("M4_MODE_REENTRANT_TEXT_IS_ARRAY");
-	} else
-		visible_define ("M4_YY_NOT_REENTRANT");
+	}
 
 	if (ctrl.do_main == trit_true)
 		visible_define_str ( "YY_MAIN", "1");

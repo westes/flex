@@ -30,7 +30,6 @@
 
 %}
 %option emit="c99"
-%option reentrant
 %option 8bit prefix="FOO"
 %option nounput nomain noyywrap noinput
 %option warn

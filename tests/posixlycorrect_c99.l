@@ -34,17 +34,14 @@
 
 #define NUM_TESTS 1
 char * tests[NUM_TESTS] =  { "ababab"};
-int main(void);
-
 int tests_ok[NUM_TESTS] =  { 0 };
 
 %}
 
 %option emit="c99"
-%option 8bit prefix="test"
+%option 8bit
 %option nounput nomain noyywrap noinput
 %option warn
-
 
 %%
 
@@ -53,28 +50,29 @@ ab{3}    tests_ok[0] = 1; return 0;
 
 %%
 
-
-int main (void)
+int main (int argc, char **argv)
 {
-    YY_BUFFER_STATE state;
+    yyscan_t  lexer;
     int i;
+    YY_BUFFER_STATE state;
 
-    yyin = stdin;
-    yyout = stdout;
+    yylex_init( &lexer );
+    yyset_out ( stdout,lexer);
+    yyset_in  ( stdin, lexer);
 
     /* Run the tests */
     for (i=0; i < NUM_TESTS; i++){
         printf("Testing: test_scan_string(%s): ", tests[i]);
-        state = test_scan_string(tests[i]);
-        testlex();
-        yy_delete_buffer(state);
+        state = yy_scan_string(tests[i], lexer);
+        yylex(lexer);
+        yy_delete_buffer(state, lexer);
         printf("... %s\n", tests_ok[i] ? "OK" : "FAILED");
     }
-
     for (i=0; i < NUM_TESTS; i++)
         if (!tests_ok[i])
             exit(1);
 
+    yylex_destroy( lexer );
     printf("TEST RETURNING OK.\n");
     return 0;
 }

@@ -42,7 +42,7 @@
 %option emit="c99"
 %option 8bit prefix="test"
 %option nounput nomain noyywrap noinput noyy_top_state
-%option warn stack nodefault reentrant
+%option warn stack nodefault
 %option noyyalloc noyyrealloc noyyfree
 
 %x parens

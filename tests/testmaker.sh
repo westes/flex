@@ -41,7 +41,7 @@ for part in "$@"; do
     case ${part} in
         nr) backend=nr; ;;
         r) backend=r; options="${options} reentrant";;
-        ${backends}) backend=r; options="${options} reentrant emit=\"${part}\"" ;;
+        ${backends}) backend=r; options="${options} emit=\"${part}\"" ;;
         ser) serialization=yes ;;
         ver) serialization=yes; options="${options} tables-verify" ;;
 	Ca) options="${options} align" ;;

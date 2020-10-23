@@ -60,6 +60,11 @@ m4_define([[M4_HOOK_SET_POSTACTION]], [[#define YY_BREAK $1
 
 %% [0.0] Make hook macros available to Flex
 
+/* Temporary until the non-reentrant code is stripped out */
+m4_define([[M4_YY_REENTRANT]], [[]])
+m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[m4_define([[M4_MODE_REENTRANT_TEXT_IS_ARRAY]])]])
+m4_undefine([[M4_YY_NOT_REENTRANT]])
+
 m4_ifdef( [[M4_YY_IN_HEADER]], [[m4_dnl
 #ifndef M4_MODE_PREFIX[[HEADER_H]]
 #define M4_MODE_PREFIX[[HEADER_H]]
