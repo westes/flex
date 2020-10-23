@@ -16,6 +16,8 @@ dnl the emit option required to srt the back end.
 dnl
 dnl M4_TEST_COMPRESSION = compression option.
 dnl
+dnl M4_TEST_ECHO = echo the token buffer and continue.
+dnl
 dnl M4_TEST_FAILMESSAGE = a line of code required to issue dnl a
 dnl failure notification to standard error and exit with a failure status.
 dnl
@@ -39,6 +41,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 #include <stdio.h>
 %}
 ')dnl close preamble
+define(`M4_TEST_ECHO', `yyecho();')
 define(`M4_TEST_FAILMESSAGE', `dnl
 fprintf(stderr,"Invalid line.\n"); exit(-1);
 ')dnl close failmessage
@@ -77,6 +80,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 #include <stdio.h>
 %}
 ')dnl close preamble
+define(`M4_TEST_ECHO', `yyecho();')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"Invalid line.\n"); exit(-1);')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
@@ -123,6 +127,7 @@ import (
 %}
 %option emit="go"
 ')dnl close preamble
+define(`M4_TEST_ECHO', `yyecho()')
 define(`M4_TEST_FAILMESSAGE', `log.Fatal("Invalid line"); os.Exit(-1);')
 define(`M4_TEST_POSTAMBLE', `dnl
 func main(void) {

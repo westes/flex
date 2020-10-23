@@ -23,10 +23,8 @@ c_cxx_nr
 c_cxx_nr.cc
 c_cxx_r
 c_cxx_r.cc
-ccl_nr
-ccl_nr.c
-ccl_c99
-ccl_c99.c
+ccl_*
+ccl.rules
 cxx_basic
 cxx_basic.cc
 cxx_multiple_scanners

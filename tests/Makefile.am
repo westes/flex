@@ -71,8 +71,6 @@ SPORADIC_TESTS = \
 	bison_yylval \
 	c_cxx_nr \
 	c_cxx_r \
-	ccl_nr \
-	ccl_c99 \
 	cxx_basic \
 	cxx_multiple_scanners \
 	cxx_restart \
@@ -135,8 +133,6 @@ bison_yylval_SOURCES = no_bison_stub.c
 endif
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
-ccl_nr_SOURCES = ccl_nr.l
-ccl_c99_SOURCES = ccl_c99.l
 cxx_basic_SOURCES = cxx_basic.ll
 cxx_restart_SOURCES = cxx_restart.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
@@ -205,8 +201,8 @@ CLEANFILES = \
 	bison_yylval_scanner.h \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
-	ccl_nr.c \
-	ccl_c99.c \
+	ccl_* \
+	!ccl.rules \
 	cxx_basic.cc \
 	cxx_multiple_scanners_1.cc \
 	cxx_multiple_scanners_2.cc \

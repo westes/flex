@@ -1,0 +1,76 @@
+/*
+ * This file is part of flex.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * Neither the name of the University nor the names of its contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ */
+/*
+ * Test character-class matching
+ */
+
+M4_TEST_PREAMBLE`'dnl
+
+M4_TEST_OPTIONS`'dnl
+%option 8bit
+%option nounput nomain noyywrap noinput
+%option warn
+%%
+
+^"^alpha:"[[:^alpha:]]+@alpha@\n                          {M4_TEST_ECHO}
+^"^digit:"[[:^digit:]]+@digit@\n                          {M4_TEST_ECHO}
+^"^alnum:"[[:^alnum:]]+@alnum@\n                          {M4_TEST_ECHO}
+^"^upper:"[[:^upper:]]+@upper@\n                          {M4_TEST_ECHO}
+^"^lower:"[[:^lower:]]+@lower@\n                          {M4_TEST_ECHO}
+^"^space:"[[:^space:]]+@space@\n                          {M4_TEST_ECHO}
+^"^blank:"[[:^blank:]]+@blank@\n                          {M4_TEST_ECHO}
+^"^punct:"[[:^punct:]]+@punct@\n                          {M4_TEST_ECHO}
+^"^cntrl:"[[:^cntrl:]]+@cntrl@\n                          {M4_TEST_ECHO}
+^"^xdigit:"[[:^xdigit:]]+@xdigit@\n                       {M4_TEST_ECHO}
+
+^"a-d:"[[:alpha:]]{-}[[:digit:]]+@a-d@\n                  {M4_TEST_ECHO}
+^"l-xyz:"([[:lower:]]{-}[xyz])+@l-xyz@\n                  {M4_TEST_ECHO}
+^"abcd-bc:"([abcd]{-}[bc])+@abcd-bc@\n                    {M4_TEST_ECHO}
+^"abcde-b-c:"([abcde]{-}[b]{-}[c])+@abcde-b-c@\n          {M4_TEST_ECHO}
+^"^XY-^XYZ:"([^XY]{-}[^XYZ])+@^XY-^XYZ@\n                 {M4_TEST_ECHO}
+
+^"a+d:"([[:alpha:]]{+}[[:digit:]])+"@a+d@"\n              {M4_TEST_ECHO}
+^"a-u+Q:"([[:alpha:]]{-}[[:upper:]]{+}[Q])+"@a-u+Q@"\n    {M4_TEST_ECHO}
+
+^"ia:"(?i:a)+@ia@\n                                       {M4_TEST_ECHO}
+^"iabc:"(?i:abc)+@iabc@\n                                 {M4_TEST_ECHO}
+^"ia-c:"(?i:[a-c]+)@ia-c@\n                               {M4_TEST_ECHO}
+
+    /* We don't want this one to match. */
+^"check-a:"(?i:(?-i:A))@\n                                {M4_TEST_FAILMESSAGE}
+^"check-a:"(?i:(?-i:(?i:A)))@\n                           {M4_TEST_ECHO}
+
+    /* We don't want this one to match. */
+^"dot-all-1:"(?-s:XXX.*)@dot-all-1@\n                     {M4_TEST_FAILMESSAGE} 
+^"dot-all-1:"(?s:XXX.*)@dot-all-1@\n                      {M4_TEST_ECHO}
+
+^"x1:"(?x:   a | b  )+@x1@\n                              {M4_TEST_ECHO}
+^"x2:"(?x:   a |
+        (?# Comment )
+    b
+    )+@x2@\n                                              {M4_TEST_ECHO}
+
+
+.|\n                                                      {M4_TEST_FAILMESSAGE}
+%%
+M4_TEST_POSTAMBLE`'dnl
