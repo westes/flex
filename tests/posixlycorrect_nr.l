@@ -1,3 +1,4 @@
+
 /*
  * This file is part of flex.
  *
@@ -15,65 +16,42 @@
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * THIS SOFTWARE IS PROVIDED `AS IS' AND WITHOUT ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
  */
 
-%{
 /* The goal of this test is to verify that we are getting the counter-intuitive
- * posix behavior of the repeat operator `{}'.
+ * posix behavior of the repeat operator {}.
  *
  *  ab{3} -  In traditional flex, this matches "abbb".
  *           In posix, this matches "ababab".
+ * The input file should contain just the second string.
  */
-#include <stdio.h>
-#include <stdlib.h>
+%{
 #include "config.h"
-
-#define NUM_TESTS 1
-char * tests[NUM_TESTS] =  { "ababab"};
-int main(void);
-
-int tests_ok[NUM_TESTS] =  { 0 };
-
+#include <stdio.h>
 %}
 
-%option 8bit prefix="test"
 %option nounput nomain noyywrap noinput
 %option warn
 
-
 %%
 
-ab{3}    tests_ok[0] = 1; return 0;
-.|\n     return 0;
+ab{3}   { } 
+\n	{ }	 
+.	{fprintf(stderr,"Invalid line.\n"); exit(-1);
+}
 
 %%
-
-
-int main (void)
+int main (int argc, char **argv)
 {
-    YY_BUFFER_STATE state;
-    int i;
-
     yyin = stdin;
     yyout = stdout;
-
-    /* Run the tests */
-    for (i=0; i < NUM_TESTS; i++){
-        printf("Testing: test_scan_string(%s): ", tests[i]);
-        state = test_scan_string(tests[i]);
-        testlex();
-        yy_delete_buffer(state);
-        printf("... %s\n", tests_ok[i] ? "OK" : "FAILED");
+    while( yylex() )
+    {
     }
-
-    for (i=0; i < NUM_TESTS; i++)
-        if (!tests_ok[i])
-            exit(1);
-
     printf("TEST RETURNING OK.\n");
     return 0;
 }

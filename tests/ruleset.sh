@@ -43,6 +43,15 @@ EOF
     done
 done
 
+for backend in $* ; do
+    case $backend in
+	nr|r|c99) ext="c" ;;
+	*) ext=${backend} ;;
+    esac
+    printf "posixlycorrect_${backend}.${ext}: posixlycorrect_${backend}.l \$(FLEX)\n"
+    printf "\t\$(AM_V_LEX)POSIXLY_CORRECT=1 \$(FLEX) \$(TESTOPTS) -o \$@ \$<\n"
+done
+
 printf "# End generated test rules\n"
 
 echo RULESET_TESTS = "${RULESET_TESTS}"

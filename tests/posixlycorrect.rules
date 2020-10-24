@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of flex.
  *
@@ -17,25 +15,22 @@
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED `AS IS' AND WITHOUT ANY EXPRESS OR
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
  */
 
 /* The goal of this test is to verify that we are getting the counter-intuitive
- * posix behavior of the repeat operator {}.
+ * posix behavior of the repeat operator `{}'.
  *
  *  ab{3} -  In traditional flex, this matches "abbb".
  *           In posix, this matches "ababab".
  * The input file should contain just the second string.
  */
-%{
-#include "config.h"
-#include <stdio.h>
-%}
+M4_TEST_PREAMBLE`'dnl
 
-%option emit="c99"
+M4_TEST_OPTIONS`'dnl
 %option nounput nomain noyywrap noinput
 %option warn
 
@@ -43,19 +38,7 @@
 
 ab{3}   { } 
 \n	{ }	 
-.	{fprintf(stderr,"Invalid line.\n"); exit(-1);}
+.	{M4_TEST_FAILMESSAGE}
 
 %%
-int main (int argc, char **argv)
-{
-    yyscan_t  lexer;
-    yylex_init( &lexer );
-    yyset_out ( stdout,lexer);
-    yyset_in  ( stdin, lexer);
-    while( yylex(lexer) )
-    {
-    }
-    yylex_destroy( lexer );
-    printf("TEST RETURNING OK.\n");
-    return 0;
-}
+M4_TEST_POSTAMBLE`'dnl

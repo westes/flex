@@ -71,10 +71,8 @@ multiple_scanners_r
 multiple_scanners_r_[12].[ch]
 posix_*
 !posix.rules
-posixlycorrect_nr
-posixlycorrect_nr.c
-posixlycorrect_c99
-posixlycorrect_c99.c
+posixlycorrect_*
+!posixlycorrect.rules
 prefix_nr
 prefix_nr.c
 prefix_r
