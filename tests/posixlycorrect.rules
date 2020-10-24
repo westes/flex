@@ -21,8 +21,12 @@
  * PURPOSE.
  */
 
-/* The goal of this test is to verify that we are getting the counter-intuitive
- * posix behavior of the repeat operator `{}'.
+/*
+ * The goal of this test is to verify that we are getting the
+ * counter-intuitive POSIX behavior of the repeat operator `{}' when
+ * posix_compat is off but POSIXLY_CORRECT=1 is set in the
+ * environment. Note: This depends on the test framework to actually
+ * set that variable!  When it does not, Flex will match abbb
  *
  *  ab{3} -  In traditional flex, this matches "abbb".
  *           In posix, this matches "ababab".
