@@ -26,7 +26,8 @@ c_cxx_nr.cc
 c_cxx_r
 c_cxx_r.cc
 ccl_*
-ccl.rules
+!ccl.rules
+!ccl.txt
 cxx_basic
 cxx_basic.cc
 cxx_multiple_scanners
@@ -44,6 +45,9 @@ debug_c99.c
 extended_*
 !extended.rules
 !extended.txt
+flexname_*
+!flexname.rules
+!flexname.txt
 header_nr
 header_nr_scanner.[ch]
 header_r
@@ -54,6 +58,9 @@ include_by_push.direct
 include_by_push.direct.c
 include_by_reentrant.direct
 include_by_reentrant.direct.c
+lexcompat_*
+!lexcompat.rules
+!lexcompat.txt
 lineno_nr.one
 lineno_nr.c
 lineno_r.one

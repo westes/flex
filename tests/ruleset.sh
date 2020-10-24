@@ -14,16 +14,24 @@ RULESET_REMOVABLES=""
 
 printf "\n# Begin generated test rules\n\n"
 
+compatible() {
+    mybackend=$1
+    myruleset=$2
+    [ ${mybackend} = "nr" ] || [ ${myruleset} != "lexcompat.rules" ]
+}
+
 for backend in $* ; do
     for ruleset in *.rules; do
-	testname=${ruleset%.*}_${backend}
-	echo "${testname}_SOURCES = ${testname}.l"
-	echo "${testname}.l: \$(srcdir)/${ruleset} \$(srcdir)/testmaker.sh \$(srcdir)/testmaker.m4"
-	# we're deliberately single-quoting this because we _don't_ want those variables to be expanded yet
-	# shellcheck disable=2016
-	printf '\t$(SHELL) $(srcdir)/testmaker.sh $@\n\n'
-        RULESET_TESTS="${RULESET_TESTS} ${testname}"
-        RULESET_REMOVABLES="${RULESET_REMOVABLES} ${testname} ${testname}.c ${testname}.l"
+	if compatible ${backend} ${ruleset} ; then
+	    testname=${ruleset%.*}_${backend}
+	    echo "${testname}_SOURCES = ${testname}.l"
+	    echo "${testname}.l: \$(srcdir)/${ruleset} \$(srcdir)/testmaker.sh \$(srcdir)/testmaker.m4"
+	    # we're deliberately single-quoting this because we _don't_ want those variables to be expanded yet
+	    # shellcheck disable=2016
+	    printf '\t$(SHELL) $(srcdir)/testmaker.sh $@\n\n'
+	    RULESET_TESTS="${RULESET_TESTS} ${testname}"
+	    RULESET_REMOVABLES="${RULESET_REMOVABLES} ${testname} ${testname}.c ${testname}.l"
+	fi
     done
     for kind in opt ser ver ; do
         for opt in -Ca -Ce -Cf -CF -Cm -Cem -Cae -Caef -CaeF -Cam -Caem ; do
