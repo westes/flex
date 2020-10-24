@@ -19,19 +19,11 @@
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
  */
-
-M4_TEST_PREAMBLE`'dnl
-
-M4_TEST_OPTIONS`'dnl
 %option 8bit
 %option nounput nomain noyywrap noinput
 %option warn array
-
-
 %%
 
 .|\n    { }
 
-
 %%
-M4_TEST_POSTAMBLE`'dnl

@@ -29,9 +29,6 @@
  *           In posix, this matches "ababab".
  * The input file should contain just the first string.
  */
-M4_TEST_PREAMBLE`'dnl
-
-M4_TEST_OPTIONS`'dnl
 %option nounput nomain noyywrap noinput
 %option warn
 
@@ -42,4 +39,3 @@ ab{3}   { }
 .	{M4_TEST_FAILMESSAGE}
 
 %%
-M4_TEST_POSTAMBLE`'dnl

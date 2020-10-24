@@ -1,4 +1,8 @@
 
+%{
+#include "config.h"
+#include <stdio.h>
+%}
 /*
  * This file is part of flex.
  *
@@ -33,11 +37,6 @@
  *           In posix, this matches "ababab".
  * The input file should contain just the second string.
  */
-%{
-#include "config.h"
-#include <stdio.h>
-%}
-
 %option nounput nomain noyywrap noinput
 %option warn
 

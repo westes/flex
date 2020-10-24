@@ -41,7 +41,7 @@ for part in "$@"; do
     case ${part} in
         nr) backend=nr; ;;
         r) backend=r; options="${options} reentrant";;
-        ${backends}) backend=r; options="${options} emit=\"${part}\"" ;;
+        ${backends}) backend=${part}; options="${options} emit=\"${part}\"" ;;
         ser) serialization=yes ;;
         ver) serialization=yes; options="${options} tables-verify" ;;
 	Ca) options="${options} align" ;;
@@ -57,7 +57,8 @@ for part in "$@"; do
 	Caem) options="${options} align ecs meta-ecs" ;;
     esac
 done
-verification=
+# Special case: C99 back end uses same boilerplate as reentrant C.
+case ${backend} in c99) backend=r ;; esac
 
 m4def() {
     define="${1}"
@@ -80,7 +81,11 @@ m4def() {
     else
         m4def M4_TEST_OPTIONS "%%option${options}\n"
     fi
-    cat testmaker.m4 "${stem}.rules"
+    cat testmaker.m4
+    echo "M4_TEST_PREAMBLE\`'dnl"
+    echo "M4_TEST_OPTIONS\`'dnl"
+    cat "${stem}.rules"
+    echo "M4_TEST_POSTAMBLE\`'dnl"
 ) | m4 >"${outdev}"
 
 # end

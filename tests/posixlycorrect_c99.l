@@ -1,5 +1,10 @@
 
 
+%{
+#include "config.h"
+#include <stdio.h>
+%}
+%option emit="c99"
 /*
  * This file is part of flex.
  *
@@ -34,12 +39,6 @@
  *           In posix, this matches "ababab".
  * The input file should contain just the second string.
  */
-%{
-#include "config.h"
-#include <stdio.h>
-%}
-
-%option emit="c99"
 %option nounput nomain noyywrap noinput
 %option warn
 

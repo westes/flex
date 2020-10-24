@@ -20,12 +20,8 @@
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
  */
-The simple grammar used as a test ofb table-compression options
+ /* The simple grammar used as a test of table-compression options */
 
-
-M4_TEST_PREAMBLE`'dnl
-
-M4_TEST_OPTIONS`'dnl
 %option 8bit
 %option nounput nomain noyywrap noinput
 %option warn yylineno
@@ -36,4 +32,3 @@ foo|bar         ;
 [[:blank:]]+    ;
 .|\n            ;
 %%
-M4_TEST_POSTAMBLE
