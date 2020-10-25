@@ -503,11 +503,6 @@ void out_str (const char *fmt, const char str[])
 	fprintf (stdout,fmt, str);
 }
 
-void out_str3 (const char *fmt, const char s1[], const char s2[], const char s3[])
-{
-	fprintf (stdout,fmt, s1, s2, s3);
-}
-
 void out_str_dec (const char *fmt, const char str[], int n)
 {
 	fprintf (stdout,fmt, str, n);

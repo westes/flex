@@ -205,7 +205,7 @@ int flex_main (int argc, char *argv[])
 	/* Need to define the transet type as a size large
 	 * enough to hold the biggest offset.
 	 */
-	out_str3 ("M4_HOOK_CONST_DEFINE(%s, %s)", "YY_OFFSET_TYPE", optimize_pack(tblend + numecs + 1)->name, "");
+	out_str ("M4_HOOK_SET_OFFSET_TYPE(%s)", optimize_pack(tblend + numecs + 1)->name);
 	comment("END of Flex-generated definitions\n");
 
 	skelout (true);		/* %% [2.0] - tables get dumped here */
@@ -1307,7 +1307,7 @@ void readin (void)
 	}
 
 	if (ctrl.yylmax != 0) {
-		out_dec ("M4_HOOK_SET_YYLMAX(%d)\n", ctrl.yylmax);
+		out_dec ("M4_CONST_DEFINE(YYLMAX, %d)\n", ctrl.yylmax);
 	}
 	
 	/* Dump the user defined preproc directives. */
