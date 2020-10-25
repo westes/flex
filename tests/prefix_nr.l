@@ -47,8 +47,8 @@
         FOO_init_buffer((YY_BUFFER_STATE)0,(FILE*)0);
         FOO_load_buffer_state();
         FOO_scan_buffer((char*)0,(yy_size_t)0);
-        FOO_scan_bytes((yyconst char*)0, 0);
-        FOO_scan_string((yyconst char*)0);
+        FOO_scan_bytes((const char*)0, 0);
+        FOO_scan_string((const char*)0);
         FOO_switch_to_buffer((YY_BUFFER_STATE)0);
         yyin   = (FILE*)0;
         yyout  = (FILE*)0;
