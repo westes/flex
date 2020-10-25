@@ -291,8 +291,8 @@ typedef size_t yy_size_t;
 	do \
 		{ \
 		/* Undo effects of setting up yytext. */ \
-        int yyless_macro_arg = (n); \
-        YY_LESS_LINENO(yyless_macro_arg);\
+		int yyless_macro_arg = (n); \
+		YY_LESS_LINENO(yyless_macro_arg);\
 		*yy_cp = yyg->yy_hold_char; \
 		YY_RESTORE_YY_MORE_OFFSET \
 		yyg->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
@@ -1007,9 +1007,6 @@ m4_define( [[M4_YY_NO_TOP_STATE]])
 #ifndef YY_EXIT_FAILURE
 #define YY_EXIT_FAILURE 2
 #endif
-
-/* Legacy interface */
-#define ECHO yyecho()
 
 static void yynoreturn yy_fatal_error(const char* msg, yyscan_t yyscanner) {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;

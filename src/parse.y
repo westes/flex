@@ -139,7 +139,7 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 				add_action(
 				"YY_FATAL_ERROR( \"flex scanner jammed\" )" );
 			else
-				add_action( "ECHO" );
+				add_action( "yyecho()" );
 
 			add_action( ";\n\tYY_BREAK]]\n" );
 			}
