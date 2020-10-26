@@ -191,10 +191,7 @@ m4preproc_include(`flexint_shared.h')
 #define YY_SC_TO_UI(c) ((YY_CHAR) (c))
 
 /* An opaque pointer. */
-#ifndef YY_TYPEDEF_YY_SCANNER_T
-#define YY_TYPEDEF_YY_SCANNER_T
 typedef void* yyscan_t;
-#endif
 
 /* For convenience, these vars (plus the bison vars far below)
    are macros in the reentrant scanner. */
@@ -243,15 +240,9 @@ m4_define( [[M4_YY_INCR_LINENO]],
  */
 #define YY_STATE_BUF_SIZE   ((YY_BUF_SIZE + 2) * sizeof(yy_state_type))
 
-#ifndef YY_TYPEDEF_YY_BUFFER_STATE
-#define YY_TYPEDEF_YY_BUFFER_STATE
 typedef struct yy_buffer_state *yybuffer;
-#endif
 
-#ifndef YY_TYPEDEF_YY_SIZE_T
-#define YY_TYPEDEF_YY_SIZE_T
 typedef size_t yy_size_t;
-#endif
 
 #define EOB_ACT_CONTINUE_SCAN 0
 #define EOB_ACT_END_OF_FILE 1
@@ -303,8 +294,6 @@ typedef size_t yy_size_t;
 	while ( 0 )
 #define yyunput(c) yyunput_r( c, yyg->yytext_ptr, yyscanner )
 
-#ifndef YY_STRUCT_YY_BUFFER_STATE
-#define YY_STRUCT_YY_BUFFER_STATE
 struct yy_buffer_state
 	{
 	FILE *yy_input_file;
@@ -363,7 +352,6 @@ struct yy_buffer_state
 	 */
 #define YY_BUFFER_EOF_PENDING 2
 	};
-#endif /* !YY_STRUCT_YY_BUFFER_STATE */
 
 /* We provide macros for accessing buffer states in case in the
  * future we want to put the buffer states in a more general
@@ -1012,8 +1000,6 @@ static void yynoreturn yy_fatal_error(const char* msg, yyscan_t yyscanner) {
 #define YY_FATAL_ERROR(msg) yy_fatal_error( msg, yyscanner)
 #endif
 
-/* Legacy interface */
-#ifndef YY_INPUT
 #define YY_INPUT(buf,result,max_size) do {result = yyread(buf, max_size, yyscanner);} while (0)
 
 m4_ifdef( [[M4_MODE_USER_YYREAD]],, [[
@@ -1063,7 +1049,6 @@ m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
 ]])
 	 return result;
 }
-#endif
 ]])
 
 /* No semi-colon after return; correct usage is to write "yyterminate();" -
