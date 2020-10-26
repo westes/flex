@@ -40,10 +40,17 @@ m4_define([[M4_HOOK_TABLE_CLOSER]], [[};]])
 m4_define([[M4_HOOK_RELATIVIZE]], [[$1]])
 m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]], [[	&yy_transition[$1],
 ]])
+m4_define([[M4_HOOK_NORMAL_STATE_CASE_ARM]], [[	case $1:]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_ARM]], [[	case YY_STATE_EOF($1):]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_FALLTHROUGH]], [[		/* FALLTHROUGH */]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_TERMINATE]], [[		yyterminate();
 ]])
+m4_define([[M4_HOOK_TAKE_YYTEXT]], [[YY_DO_BEFORE_ACTION; /* set up yytext */]])
+m4_define([[M4_HOOK_RELEASE_YYTEXT]], [[*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */]])
+m4_define([[M4_HOOK_CHAR_REWIND]], [[YY_G(yy_c_buf_p) = yy_cp -= $1;]])
+m4_define([[M4_HOOK_LINE_REWIND]], [[YY_LINENO_REWIND_TO(yy_cp - $1);]])
+m4_define([[M4_HOOK_CHAR_FORWARD]], [[YY_G(yy_c_buf_p) = yy_cp = yy_bp + $1;]])
+m4_define([[M4_HOOK_LINE_FORWARD]], [[YY_LINENO_REWIND_TO(yy_bp + $1);]])
 m4_define([[M4_HOOK_CONST_DEFINE_BYTE]], [[#define $1 $2
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_STATE]], [[#define $1 $2
@@ -59,6 +66,8 @@ m4_define([[M4_HOOK_SET_OFFSET_TYPE]], [[#define YY_OFFSET_TYPE $1
 m4_define([[M4_HOOK_SET_YY_DECL]], [[#define YY_DECL $1
 ]])
 m4_define([[M4_HOOK_SET_USERINIT]], [[#define YY_USER_INIT $1
+]])
+m4_define([[M4_HOOK_SET_RULE_SETUP]], [[YY_RULE_SETUP
 ]])
 m4_define([[M4_HOOK_SET_PREACTION]], [[#define YY_USER_ACTION $1
 ]])

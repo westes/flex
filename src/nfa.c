@@ -216,10 +216,10 @@ void    finish_rule (int mach, int variable_trail_rule, int headcnt, int trailcn
 	if (pcont_act && rule_has_nl[num_rules - 1])
 		rule_has_nl[num_rules] = true;
 
-	snprintf (action_text, sizeof(action_text), "case %d:\n", num_rules);
+	snprintf (action_text, sizeof(action_text), "M4_HOOK_NORMAL_STATE_CASE_ARM(%d)\n", num_rules);
 	add_action (action_text);
 	if (rule_has_nl[num_rules]) {
-		snprintf (action_text, sizeof(action_text), "/* rule %d can match eol */\n",
+		snprintf (action_text, sizeof(action_text), "M4_HOOK_COMMENT_OPEN rule %d can match eol M4_HOOK_COMMENT_CLOSE\n",
 			 num_rules);
 		add_action (action_text);
 	}
@@ -244,47 +244,43 @@ void    finish_rule (int mach, int variable_trail_rule, int headcnt, int trailcn
 			/* Do trailing context magic to not match the trailing
 			 * characters.
 			 */
-			char   *scanner_cp = "YY_G(yy_c_buf_p) = yy_cp";
-			char   *scanner_bp = "yy_bp";
-
-			add_action
-				("*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */\n");
+			add_action ("M4_HOOK_RELEASE_YYTEXT\n");
 
 			if (headcnt > 0) {
 				if (rule_has_nl[num_rules]) {
 					snprintf (action_text, sizeof(action_text),
-						"YY_LINENO_REWIND_TO(%s + %d);\n", scanner_bp, headcnt);
+						"M4_HOOK_LINE_FORWARD(%d)\n", headcnt);
 					add_action (action_text);
 				}
-				snprintf (action_text, sizeof(action_text), "%s = %s + %d;\n",
-					 scanner_cp, scanner_bp, headcnt);
+				snprintf (action_text, sizeof(action_text), "M4_HOOK_CHAR_FORWARD(%d)\n",
+					 headcnt);
 				add_action (action_text);
 			}
 
 			else {
 				if (rule_has_nl[num_rules]) {
 					snprintf (action_text, sizeof(action_text),
-						 "YY_LINENO_REWIND_TO(yy_cp - %d);\n", trailcnt);
+						 "M4_HOOK_LINE_REWIND(%d)\n", trailcnt);
 					add_action (action_text);
 				}
 
-				snprintf (action_text, sizeof(action_text), "%s -= %d;\n",
-					 scanner_cp, trailcnt);
+				snprintf (action_text, sizeof(action_text), "M4_HOOK_CHAR_REWIND(%d)\n",
+					 trailcnt);
 				add_action (action_text);
 			}
 
 			add_action
-				("YY_DO_BEFORE_ACTION; /* set up yytext again */\n");
+				("M4_HOOK_TAKE_YYTEXT\n");
 		}
 	}
 
 	/* Okay, in the action code at this point yytext and yyleng have
 	 * their proper final values for this rule, so here's the point
 	 * to do any user action.  But don't do it for continued actions,
-	 * as that'll result in multiple YY_RULE_SETUP's.
+	 * as that'll result in multiple rule-setup calls.
 	 */
 	if (!continued_action)
-		add_action ("YY_RULE_SETUP\n");
+		add_action ("M4_HOOK_SET_RULE_SETUP\n");
 
 	line_directive_out(NULL, infilename, linenum);
         add_action("[[");
