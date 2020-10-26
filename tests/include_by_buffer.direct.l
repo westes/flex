@@ -41,7 +41,7 @@ int error = 0;
 %{
 
 #define MAX_INCLUDE_DEPTH 10
-YY_BUFFER_STATE include_stack[MAX_INCLUDE_DEPTH];
+yybuffer include_stack[MAX_INCLUDE_DEPTH];
 int include_stack_ptr = 0;
 %}
 %%
@@ -55,7 +55,7 @@ int include_stack_ptr = 0;
 [[:alnum:]_.-]+>  {
      /* recurse */
     yytext[yyleng-1]='\0';
-    include_stack[include_stack_ptr++] = YY_CURRENT_BUFFER;
+    include_stack[include_stack_ptr++] = yy_current_buffer();
     if((yyin=fopen(yytext,"r"))==NULL) {
         fprintf(stderr,"*** Error: Could not open include file \"%s\".\n",yytext);
         error = 1;
@@ -77,7 +77,7 @@ int include_stack_ptr = 0;
        }
        else {
             fclose(yyin);
-           yy_delete_buffer( YY_CURRENT_BUFFER );
+           yy_delete_buffer( yy_current_buffer() );
            yy_switch_to_buffer( include_stack[include_stack_ptr] );
        }
    }

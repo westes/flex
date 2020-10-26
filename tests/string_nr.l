@@ -63,8 +63,7 @@ main (void)
 {
     char * buf;
     size_t len;
-    YY_BUFFER_STATE state;
-
+    yybuffer state;
 
     /* Scan a good string. */
     printf("Testing: test_scan_string(%s): ",INPUT_STRING_1); fflush(stdout);

@@ -68,7 +68,7 @@ int error = 0;
 <<EOF>> {
            fclose(yyin);
            testpop_buffer_state();
-           if(!YY_CURRENT_BUFFER)
+           if(!yy_current_buffer())
                yyterminate();
         }
 

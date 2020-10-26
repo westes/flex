@@ -31,7 +31,7 @@ main ( int argc, char** argv )
     (void)argv;
 
     int S1_ok=1, S2_ok=1;
-    YY_BUFFER_STATE buff1, buff2;
+    yybuffer buff1, buff2;
     yyscan_t scan1, scan2;
     
     S1_lex_init(&scan1);

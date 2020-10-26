@@ -233,7 +233,7 @@ CLEANFILES = \
 	prefix_r.c \
 	prefix_c99.c \
 	pthread.c \
-	quotes_nr.c \
+	quotes.c \
 	quotes_c99.c \
 	rescan_nr.direct.c \
 	rescan_r.direct.c \

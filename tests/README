@@ -39,8 +39,8 @@ To build and execute a single test:
    prior properly consumed every input token.  The test machinery
    will expand a rules file into tests for all back ends.
 
-** List your test in the TESTS variable in Makefile.am in this
-   directory. Note that due to the large number of tests, we use
+** Otherwise, list your test in the TESTS variable in Makefile.am in
+   this directory. Note that due to the large number of tests, we use
    variables to group similar tests together. This also helps with
    handling the automake test suite requirements. Hopefully your test
    can be listed in SIMPLE_TESTS. You'll need to add the appropriate
@@ -90,7 +90,7 @@ If you can express your test as a ruleset within in this orotocol,
 please do so.  Those tests are easy to port to new back ends, as that
 whole job can be done by enhabcing testmaker.m4.
 
-WHY SOME TESTS ARE MISSING
+* WHY SOME TESTS ARE MISSING
 
 The "top" test is backend-independent; what it's really testing
 is Flex's ability to accumulate and ship preamble code sections.

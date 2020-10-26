@@ -31,7 +31,7 @@ main ( int argc, char** argv )
     (void)argv;
 
     int S1_ok=1, S2_ok=1;
-    YY_BUFFER_STATE buff1, buff2;
+    yybuffer buff1, buff2;
     S1_out = S2_out = stdout;
     buff1 = S1__scan_string("foo on bar off");
     buff2 = S2__scan_string("on blah blah off foo on bar off");

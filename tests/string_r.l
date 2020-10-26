@@ -63,7 +63,7 @@ main (void)
 {
     char * buf;
     size_t len;
-    YY_BUFFER_STATE state;
+    yybuffer state;
     yyscan_t  scanner=NULL;
 
 
