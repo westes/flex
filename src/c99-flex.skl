@@ -173,6 +173,7 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 m4preproc_include(`flexint_shared.h')
 
@@ -272,7 +273,7 @@ struct yy_buffer_state
 	 * If so, '^' rules will be active on the next match, otherwise
 	 * not.
 	 */
-	int yy_at_bol;
+	bool yy_at_bol_flag;
 
 	int yy_bs_lineno; /**< The line count. */
 	int yy_bs_column; /**< The column count. */
@@ -586,9 +587,9 @@ struct yyguts_t {
 	int yy_n_chars;
 	int yyleng_r;
 	char *yy_c_buf_p;
-	int yy_init;
+	bool yy_init;
 	int yy_start;
-	int yy_did_buffer_switch_on_eof;
+	bool yy_did_buffer_switch_on_eof;
 	int yy_start_stack_ptr;
 	int yy_start_stack_depth;
 	int *yy_start_stack;
@@ -617,7 +618,7 @@ m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
 	int yy_prev_more_offset;
 ]], [[
 	char *yytext_r;
-	int yy_more_flag;
+	bool yy_more_flag;
 	int yy_more_len;
 ]])
 m4_ifdef( [[M4_YY_BISON_LVAL]], [[
@@ -923,7 +924,7 @@ extern int yylex M4_YY_LEX_PROTO;
 
 #define YY_RULE_SETUP \
 	m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( yyg->yyleng_r > 0 ) {  \
-	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol = (yyg->yytext_r[yyg->yyleng_r - 1] == '\n'); \
+	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol_flag = (yyg->yytext_r[yyg->yyleng_r - 1] == '\n'); \
 	} \
 ]])	YY_USER_ACTION
 
@@ -1008,11 +1009,9 @@ m4_ifdef( [[M4_MODE_YYLINENO]], [[
 #define yy_current_buffer() ( yyg->yy_buffer_stack			\
                           ? yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] \
                           : NULL)
-#define YY_CURRENT_BUFFER yy_current_buffer()
 
 #define yy_flush_current_buffer() yy_flush_buffer( yy_current_buffer(), yyscanner)
 
-#define yy_new_buffer yy_create_buffer
 #define yy_set_interactive(is_interactive) { \
 	if ( yy_current_buffer() == NULL ) { \
 		yyensure_buffer_stack (yyscanner);	\
@@ -1028,9 +1027,9 @@ m4_ifdef( [[M4_MODE_YYLINENO]], [[
 		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] =    \
             yy_create_buffer( yyg->yyin_r, YY_BUF_SIZE, yyscanner); \
 	} \
-	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol = at_bol; \
+	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol_flag = at_bol; \
 }
-#define yy_at_bol() (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol)
+#define yy_at_bol() (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol_flag)
 
 /* Done after the current pattern has been matched and before the
  * corresponding action - sets up yytext.
@@ -1076,7 +1075,6 @@ m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
  * any uses of yyreject() which flex missed.
  */
 #define yyreject() reject_used_but_not_detected
-#define REJECT reject_used_but_not_detected
 ]])
 
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
@@ -1091,7 +1089,7 @@ yyg->yyleng_r -= yyg->yy_more_offset; \
 }
 ]])
 m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
-#define yymore() (yyg->yy_more_flag = 1)
+#define yymore() (yyg->yy_more_flag = true)
 #define YY_MORE_ADJ yyg->yy_more_len
 #define YY_RESTORE_YY_MORE_OFFSET
 ]])
@@ -1106,7 +1104,7 @@ m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[
 /* This used to be an fputs(), but since the string might contain NULs,
  * we now use fwrite().
  */
-#define yyecho() do { if (fwrite( yyg->yytext_r, (size_t) yyg->yyleng_r, 1, yyg->yyout_r )) {} } while (0)
+#define yyecho() fwrite(yyg->yytext_r, (size_t) yyg->yyleng_r, 1, yyg->yyout_r)
 
 /* END access macros for use in actions */
 
@@ -1219,7 +1217,7 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 ]])
 
 	if ( !yyg->yy_init ) {
-		yyg->yy_init = 1;
+		yyg->yy_init = true;
 
 #ifdef YY_USER_INIT
 		YY_USER_INIT;
@@ -1228,21 +1226,21 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 		/* Create the reject buffer large enough to save one state per allowed character. */
-		if ( ! yyg->yy_state_buf ) {
+		if ( yyg->yy_state_buf  == NULL ) {
 			yyg->yy_state_buf = (yy_state_type *)yyalloc(YY_STATE_BUF_SIZE, yyscanner);
 		}
-		if ( ! yyg->yy_state_buf ) {
+		if ( yyg->yy_state_buf == NULL) {
 			YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
 		}
 ]])
 
-		if ( ! yyg->yy_start ) {
+		if ( yyg->yy_start == 0 ) {
 			yyg->yy_start = 1;	/* first start state */
 		}
-		if ( ! yyg->yyin_r ) {
+		if ( yyg->yyin_r == NULL ) {
 			yyg->yyin_r = stdin;
 		}
-		if ( ! yyg->yyout_r ) {
+		if ( yyg->yyout_r == NULL ) {
 			yyg->yyout_r = stdout;
 		}
 		if ( yy_current_buffer() == NULL ) {
@@ -1264,7 +1262,7 @@ m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
 			yyg->yy_more_len = 0;
 			if ( yyg->yy_more_flag ) {
 				yyg->yy_more_len = (int) (yyg->yy_c_buf_p - yyg->yytext_ptr);
-				yyg->yy_more_flag = 0;
+				yyg->yy_more_flag = false;
 			}
 ]])
 ]])
@@ -1528,7 +1526,7 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 				} else {	/* not a NUL */
 					switch ( yy_get_next_buffer( yyscanner ) ) {
 					case EOB_ACT_END_OF_FILE:
-						yyg->yy_did_buffer_switch_on_eof = 0;
+						yyg->yy_did_buffer_switch_on_eof = false;
 
 						if ( yywrap( yyscanner ) ) {
 							/* Note: because we've taken care in
@@ -1659,7 +1657,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 				/* Can't grow it, we don't own it. */
 				b->yy_ch_buf = NULL;
 			}
-			if ( ! b->yy_ch_buf ) {
+			if ( b->yy_ch_buf == NULL ) {
 				YY_FATAL_ERROR(
 				"fatal error - scanner input buffer overflow" );
 			}
@@ -1697,7 +1695,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 		int new_size = yyg->yy_n_chars + number_to_move + (yyg->yy_n_chars >> 1);
 		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf = (char *) yyrealloc(
 			(void *) yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf, (yy_size_t) new_size, yyscanner );
-		if ( ! yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf ) {
+		if ( yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf == NULL ) {
 			YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
 		}
 		/* "- 2" to take care of EOB's */
@@ -1938,7 +1936,7 @@ int yyinput (yyscan_t yyscanner)
 	yyg->yy_hold_char = *++yyg->yy_c_buf_p;
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
-	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol = (c == '\n');
+	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol_flag = (c == '\n');
 m4_ifdef([[M4_MODE_YYLINENO]], [[
 	if ( yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol ) {
 		M4_YY_INCR_LINENO();
@@ -2007,7 +2005,7 @@ void yy_switch_to_buffer(yybuffer new_buffer, yyscan_t yyscanner)
 	 * is looked at is after yywrap() is called, so it's safe
 	 * to go ahead and always set it.
 	 */
-	yyg->yy_did_buffer_switch_on_eof = 1;
+	yyg->yy_did_buffer_switch_on_eof = true;
 }
 
 
@@ -2132,7 +2130,7 @@ void yy_flush_buffer(yybuffer b, yyscan_t yyscanner)
 
 	b->yy_buf_pos = &b->yy_ch_buf[0];
 
-	b->yy_at_bol = 1;
+	b->yy_at_bol_flag = true;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
 	if ( b == yy_current_buffer() ) {
@@ -2170,7 +2168,7 @@ void yypush_buffer_state(yybuffer new_buffer, yyscan_t yyscanner)
 
 	/* copied from yy_switch_to_buffer. */
 	yy_load_buffer_state( yyscanner );
-	yyg->yy_did_buffer_switch_on_eof = 1;
+	yyg->yy_did_buffer_switch_on_eof = true;
 }
 
 
@@ -2191,7 +2189,7 @@ void yypop_buffer_state (yyscan_t yyscanner)
 	}
 	if (yy_current_buffer() != NULL) {
 		yy_load_buffer_state( yyscanner );
-		yyg->yy_did_buffer_switch_on_eof = 1;
+		yyg->yy_did_buffer_switch_on_eof = true;
 	}
 }
 
@@ -2270,7 +2268,7 @@ yybuffer yy_scan_buffer(char * base, yy_size_t  size, yyscan_t yyscanner)
 	b->yy_input_file = NULL;
 	b->yy_n_chars = b->yy_buf_size;
 	b->yy_is_interactive = 0;
-	b->yy_at_bol = 1;
+	b->yy_at_bol_flag = true;
 	b->yy_fill_buffer = 0;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
@@ -2350,14 +2348,14 @@ static void yy_push_state(int _new_state, yyscan_t yyscanner)
 		yyg->yy_start_stack_depth += YY_START_STACK_INCR;
 		new_size = (yy_size_t) yyg->yy_start_stack_depth * sizeof( int );
 
-		if ( ! yyg->yy_start_stack ) {
+		if ( yyg->yy_start_stack == NULL ) {
 			yyg->yy_start_stack = (int *) yyalloc( new_size, yyscanner );
 
 		} else {
 			yyg->yy_start_stack = (int *) yyrealloc(
 					(void *) yyg->yy_start_stack, new_size, yyscanner );
 		}
-		if ( ! yyg->yy_start_stack ) {
+		if ( yyg->yy_start_stack == NULL ) {
 			YY_FATAL_ERROR( "out of memory expanding start-condition stack" );
 		}
 	}
@@ -2681,7 +2679,7 @@ static int yy_init_globals (yyscan_t yyscanner) {
 	yyg->yy_buffer_stack_top = 0;
 	yyg->yy_buffer_stack_max = 0;
 	yyg->yy_c_buf_p = NULL;
-	yyg->yy_init = 0;
+	yyg->yy_init = false;
 	yyg->yy_start = 0;
 	yyg->yy_start_stack_ptr = 0;
 	yyg->yy_start_stack_depth = 0;
