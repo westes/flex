@@ -42,7 +42,15 @@ m4_define([[M4_HOOK_EOF_STATE_CASE_ARM]], [[	case YY_STATE_EOF($1):]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_FALLTHROUGH]], [[		/* FALLTHROUGH */]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_TERMINATE]], [[		yyterminate();
 ]])
-m4_define([[M4_HOOK_CONST_DEFINE]], [[const int $1 = $2;
+m4_define([[M4_HOOK_CONST_DEFINE_BYTE]], [[const char $1 = $2;
+]])
+m4_define([[M4_HOOK_CONST_DEFINE_STATE]], [[const yy_state_type $1 = $2;
+]])
+m4_define([[M4_HOOK_CONST_DEFINE_UINT]], [[const uint $1 = $2;
+]])
+m4_define([[M4_HOOK_CONST_DEFINE_BOOL]], [[const bool $1 = $2;
+]])
+m4_define([[M4_HOOK_CONST_DEFINE_UNKNOWN]], [[#define $1 $2
 ]])
 m4_define([[M4_HOOK_SET_YY_DECL]], [[#define YY_DECL $1
 ]])
