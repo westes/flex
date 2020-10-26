@@ -246,8 +246,6 @@ m4_define( [[M4_YY_INCR_LINENO]],
 #ifndef YY_TYPEDEF_YY_BUFFER_STATE
 #define YY_TYPEDEF_YY_BUFFER_STATE
 typedef struct yy_buffer_state *yybuffer;
-/* Legacy interface */
-typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
 #ifndef YY_TYPEDEF_YY_SIZE_T
@@ -304,8 +302,6 @@ typedef size_t yy_size_t;
 		} \
 	while ( 0 )
 #define yyunput(c) yyunput_r( c, yyg->yytext_ptr, yyscanner )
-/* Legacy interface */
-#define unput(c) yyunput_r( c, yyg->yytext_ptr, yyscanner )
 
 #ifndef YY_STRUCT_YY_BUFFER_STATE
 #define YY_STRUCT_YY_BUFFER_STATE
@@ -382,8 +378,6 @@ struct yy_buffer_state
 /* Same as previous macro, but useful when we know that the buffer stack is not
  * NULL or when we need an lvalue. For internal use only.
  */
-/* Legacy interface */
-#define YY_CURRENT_BUFFER_LVALUE yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]
 
 void yyrestart ( FILE *input_file, yyscan_t yyscanner );
 void yy_switch_to_buffer ( yybuffer new_buffer, yyscan_t yyscanner );
@@ -397,8 +391,6 @@ static void yyensure_buffer_stack ( yyscan_t yyscanner );
 static void yy_load_buffer_state ( yyscan_t yyscanner );
 static void yy_init_buffer ( yybuffer b, FILE *file, yyscan_t yyscanner );
 #define yy_flush_current_buffer() yy_flush_buffer( yy_current_buffer(), yyscanner)
-/* Legacy interface */
-#define YY_FLUSH_BUFFER yy_flush_current_buffer()
 
 yybuffer yy_scan_buffer ( char *base, yy_size_t size, yyscan_t yyscanner );
 yybuffer yy_scan_string ( const char *yy_str, yyscan_t yyscanner );
@@ -427,8 +419,6 @@ void yyfree ( void *, yyscan_t yyscanner );
 	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol = at_bol; \
 }
 #define yy_at_bol() (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol)
-/* Legacy interface */
-#define YY_AT_BOL() (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol)
 
 /* Begin user sect3 */
 
@@ -967,8 +957,6 @@ static int yy_flex_strlen ( const char *, yyscan_t yyscanner);
 
 #ifndef YY_NO_YYINPUT
 static int yyinput ( yyscan_t yyscanner );
-// Legacy interface
-#define input yyinput
 #endif
 
 
