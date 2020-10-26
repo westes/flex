@@ -8757,7 +8757,7 @@ The quoting is ``[[`` and ``]]'' so we don't interfere with user code.
 A line beginning with ``%#'' is a comment. These comments are omitted
 from the generated scanner.
 
-A line beginning with ``%%'' us stop-point, where code is inserted by
+A line beginning with ``%%'' is a stop-point, where code is inserted by
 Flex.  Each stop-point is numbered here and also in the code
 generator.  Stop points will be inserted into the generated scanner as
 a comment.  This is to aid those who edit skeletons.
@@ -8971,6 +8971,9 @@ YY_NEW_FILE: In previous versions of @code{flex}, when assigning
 @file{yyin} to a new input file, after doing the assignment you had to
 call the special action @code{YY_NEW_FILE}.  This is no longer
 necessary.
+
+@item
+FLEX_SCANNER: Not neaningful outside of the C back end, and not defined.
 
 @end itemize
 

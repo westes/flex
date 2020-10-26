@@ -1,7 +1,15 @@
 %# -*-C-*- vi: set ft=c:
 %#
-%# All generated macros for the m4 stage contain the text "m4" or "M4"
-%# in them. This is to distinguish them from CPP macros.
+%# This is the C99 front end.  While it can be used as a production
+%# skeleton for generating C tokenizers it is actually intended
+%# as a porting base that can be cloned and translated into non-C
+%# languages.  Accordingly it cuts use of the C preprocessor to
+%# the bare minimum needed to keep it working in C.
+%#
+%# Note that using m4 rather than C for macro definitions means they
+%# will be recognized and expended in user actions but not
+%# in user code sections. Anything you need to be visible there
+%# needs to be declared as a function.
 %#
 %# The m4 macros complicate reading this code enough that being
 %# prescriptive about whitespace and braces is more than usually
@@ -168,9 +176,6 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 
 m4preproc_include(`flexint_shared.h')
 
-/* TODO: this is always defined, so inline it */
-#define yyconst const
-
 #if defined(__GNUC__) && __GNUC__ >= 3
 #define yynoreturn __attribute__((__noreturn__))
 #else
@@ -209,25 +214,16 @@ m4_define( [[M4_YY_INCR_LINENO]],
     }while(0)
 ]])
 
-/* Enter a start condition.  This macro really ought to take a parameter,
- * but we do it the disgusting crufty way forced on us by the ()-less
- * definition of BEGIN.
- */
+/* Enter a start condition. */
 #define yybegin(s) yyg->yy_start = 1 + 2 * (s)
-/* Legacy interface */
-#define BEGIN yyg->yy_start = 1 + 2 *
 /* Translate the current start state into a value that can be later handed
  * to BEGIN to return to the state.  The YYSTATE alias is for lex
  * compatibility.
  */
 #define yystart() ((yyg->yy_start - 1) / 2)
-/* Legacy interfaces */
-#define YY_START ((yyg->yy_start - 1) / 2)
-#define YYSTATE YY_START
 /* Action number for EOF rule of a given start state. */
 #define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
 /* Special action meaning "start processing a new file". */
-#define YY_NEW_FILE yyrestart( yyin, yyscanner )
 #define YY_END_OF_BUFFER_CHAR 0
 
 /* Size of default input buffer. */
@@ -1457,7 +1453,7 @@ m4_ifdef([[M4_MODE_DEBUG]], [[
      				} else if ( yy_act == YY_NUM_RULES + 1 ) {
 					fprintf( stderr, "--(end of buffer or a NUL)\n" );
 				} else {
-					fprintf( stderr, "--EOF (start condition %d)\n", YY_START );
+					fprintf( stderr, "--EOF (start condition %d)\n", yystart() );
 				}
 			}
 ]])
@@ -1579,11 +1575,11 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 							 */
 							yyg->yy_c_buf_p = yyg->yytext_ptr + YY_MORE_ADJ;
 
-							yy_act = YY_STATE_EOF(YY_START);
+							yy_act = YY_STATE_EOF(yystart());
 							goto do_action;
 						} else {
 							if ( ! yyg->yy_did_buffer_switch_on_eof ) {
-								YY_NEW_FILE;
+								yyrestart( yyin, yyscanner );
 							}
 						}
 						break;
@@ -1959,7 +1955,7 @@ int yyinput (yyscan_t yyscanner)
 					return 0;
 				}
 				if ( ! yyg->yy_did_buffer_switch_on_eof ) {
-					YY_NEW_FILE;
+					yyrestart( yyin, yyscanner );
 				}
 				return yyinput(yyscanner);
 
@@ -2398,9 +2394,9 @@ static void yy_push_state(int _new_state, yyscan_t yyscanner)
 			YY_FATAL_ERROR( "out of memory expanding start-condition stack" );
 		}
 	}
-	yyg->yy_start_stack[yyg->yy_start_stack_ptr++] = YY_START;
+	yyg->yy_start_stack[yyg->yy_start_stack_ptr++] = yystart();
 
-	BEGIN(_new_state);
+	yybegin(_new_state);
 }
 ]])
 
@@ -2413,7 +2409,7 @@ static void yy_pop_state  (yyscan_t yyscanner)
 	if ( --yyg->yy_start_stack_ptr < 0 ) {
 		YY_FATAL_ERROR( "start-condition stack underflow" );
 	}
-	BEGIN(yyg->yy_start_stack[yyg->yy_start_stack_ptr]);
+	yybegin(yyg->yy_start_stack[yyg->yy_start_stack_ptr]);
 }
 ]])
 
@@ -2423,7 +2419,7 @@ m4_ifdef( [[M4_YY_NO_TOP_STATE]],,
 static int yy_top_state  (yyscan_t yyscanner)
 {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	return yyg->yy_start_stack_ptr > 0 ? yyg->yy_start_stack[yyg->yy_start_stack_ptr - 1] : YY_START;
+	return yyg->yy_start_stack_ptr > 0 ? yyg->yy_start_stack[yyg->yy_start_stack_ptr - 1] : yystart();
 }
 ]])
 

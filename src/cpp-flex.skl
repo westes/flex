@@ -2089,10 +2089,10 @@ m4_ifdef([[M4_MODE_C_ONLY]], [[
 ]])
 				} else {
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
-					std::cerr << "--EOF (start condition " << YY_START << ")\n";
+					std::cerr << "--EOF (start condition " << yystart() << ")\n";
 ]])
 m4_ifdef([[M4_MODE_C_ONLY]], [[
-					fprintf( stderr, "--EOF (start condition %d)\n", YY_START );
+					fprintf( stderr, "--EOF (start condition %d)\n", yystart() );
 ]])
 				}
 			}
@@ -2220,7 +2220,7 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 							 */
 							YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + YY_MORE_ADJ;
 
-							yy_act = YY_STATE_EOF(YY_START);
+							yy_act = YY_STATE_EOF(yystart());
 							goto do_action;
 						} else {
 							if ( ! YY_G(yy_did_buffer_switch_on_eof) ) {
@@ -3311,9 +3311,9 @@ void yyFlexLexer::yy_push_state( int _new_state )
 			YY_FATAL_ERROR( "out of memory expanding start-condition stack" );
 		}
 	}
-	YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr)++] = YY_START;
+	YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr)++] = yystart();
 
-	BEGIN(_new_state);
+	yybegin(_new_state);
 }
 ]])
 
@@ -3331,7 +3331,7 @@ void yyFlexLexer::yy_pop_state()
 	if ( --YY_G(yy_start_stack_ptr) < 0 ) {
 		YY_FATAL_ERROR( "start-condition stack underflow" );
 	}
-	BEGIN(YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr)]);
+	yybegin(YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr)]);
 }
 ]])
 
@@ -3346,7 +3346,7 @@ int yyFlexLexer::yy_top_state()
 ]])
 {
 	M4_YY_DECL_GUTS_VAR();
-	return YY_G(yy_start_stack_ptr) > 0 ? YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr) - 1] : YY_START;
+	return YY_G(yy_start_stack_ptr) > 0 ? YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr) - 1] : yystart();
 }
 ]])
 
