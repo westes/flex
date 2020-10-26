@@ -149,7 +149,7 @@ m4_ifelse(M4_MODE_PREFIX,yy,,
     M4_GEN_PREFIX(`free')
 )
 
-/* First, we deal with  platform-specific or compiler-specific issues. */
+/* START platform-specific and compiler-specific definitions. */
 
 m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 [[m4_ifdef( [[M4_YY_NEVER_INTERACTIVE]], ,
@@ -181,6 +181,37 @@ m4preproc_include(`flexint_shared.h')
 #else
 #define yynoreturn
 #endif
+
+/* Amount of stuff to slurp up with each read. */
+#ifndef YY_READ_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k */
+#define YY_READ_BUF_SIZE 16384
+#else
+#define YY_READ_BUF_SIZE 8192
+#endif /* __ia64__ */
+#endif
+
+/* Size of default input buffer. */
+#ifndef YY_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k.
+ * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
+ * Ditto for the __ia64__ case accordingly.
+ */
+#define YY_BUF_SIZE 32768
+#else
+#define YY_BUF_SIZE 16384
+#endif /* __ia64__ */
+#endif
+
+/*
+ * Anywhere other than C this won't be a thing,
+ * because strings will have an assiciated length field.
+ */
+#define YY_END_OF_BUFFER_CHAR 0
+
+/* END platform-specific and compiler-specific definitions. */
 
 /* Returned upon end-of-file. */
 #define YY_NULL 0
@@ -220,21 +251,6 @@ m4_define( [[M4_YY_INCR_LINENO]],
 #define yystart() ((yyg->yy_start - 1) / 2)
 /* Action number for EOF rule of a given start state. */
 #define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
-/* Special action meaning "start processing a new file". */
-#define YY_END_OF_BUFFER_CHAR 0
-
-/* Size of default input buffer. */
-#ifndef YY_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k.
- * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
- * Ditto for the __ia64__ case accordingly.
- */
-#define YY_BUF_SIZE 32768
-#else
-#define YY_BUF_SIZE 16384
-#endif /* __ia64__ */
-#endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
  */
@@ -259,8 +275,8 @@ typedef size_t yy_size_t;
     #define  YY_LESS_LINENO(n) \
             do { \
                 int yyl;\
-                for ( yyl = n; yyl < yyleng; ++yyl ) { \
-			if ( yytext[yyl] == '\n' ) { \
+                for ( yyl = n; yyl < yyg->yyleng_r; ++yyl ) { \
+			if ( yyg->yytext_r[yyl] == '\n' ) { \
                         	--yylineno;\
 			} \
 		} \
@@ -393,7 +409,7 @@ void yyfree ( void *, yyscan_t yyscanner );
 	if ( yy_current_buffer() == NULL ) { \
 		yyensure_buffer_stack (yyscanner);	\
 		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] =    \
-			yy_create_buffer( yyin, YY_BUF_SIZE, yyscanner); \
+			yy_create_buffer( yyg->yyin_r, YY_BUF_SIZE, yyscanner); \
 	} \
 	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_is_interactive = is_interactive; \
 }
@@ -402,7 +418,7 @@ void yyfree ( void *, yyscan_t yyscanner );
 	if ( yy_current_buffer() == NULL ) { \
 		yyensure_buffer_stack (yyscanner);	\
 		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] =    \
-            yy_create_buffer( yyin, YY_BUF_SIZE, yyscanner); \
+            yy_create_buffer( yyg->yyin_r, YY_BUF_SIZE, yyscanner); \
 	} \
 	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol = at_bol; \
 }
@@ -418,21 +434,7 @@ m4_ifdef( [[M4_MODE_DEBUG]], [[
 #define FLEX_DEBUG
 ]])
 typedef flex_uint8_t YY_CHAR;
-m4_define([[M4_TMP_STDINIT]], [[FILE *yyin = stdin, *yyout = stdout;]])
-m4_define([[M4_TMP_NO_STDINIT]], [[FILE *yyin = NULL, *yyout = NULL;]])
-m4_ifdef( [[M4_MODE_DO_STDINIT]], [[m4_dnl
-#ifdef VMS");
-#ifndef __VMS_POSIX
-M4_TMP_NO_STDINIT
-#else
-M4_TMP_STDINIT
-#endif
-#else
-M4_TMP_STDINIT
-#endif
-]])
-m4_undefine([[M4_TMP_STDINIT]])
-m4_undefine([[M4_TMP_NO_STDINIT]])
+
 m4_ifdef( [[M4_MODE_FULLSPD]], [[m4_dnl
 typedef const struct yy_trans_info *yy_state_type;
 ]], [[
@@ -447,7 +449,7 @@ m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
 #define yytext_ptr yytext_r
 ]])
 
-%% [1.5] DFA
+%% [1.0] DFA
 
 static yy_state_type yy_get_previous_state ( yyscan_t yyscanner );
 static yy_state_type yy_try_NUL_trans ( yy_state_type current_state , yyscan_t yyscanner);
@@ -485,21 +487,21 @@ m4_ifdef([[M4_MODE_NO_REAL_FULLSPD]], [[
 #define YY_DO_BEFORE_ACTION \
 	yyg->yytext_ptr = yy_bp; \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyg->yytext_ptr -= yyg->yy_more_len;
-	yyleng = (int) (yy_cp - yyg->yytext_ptr);]])]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyleng = (int) (yy_cp - yy_bp);]]) \
-	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyleng = (int) (yy_cp - yy_bp);]]) \
+	yyg->yyleng_r = (int) (yy_cp - yyg->yytext_ptr);]])]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyg->yyleng_r = (int) (yy_cp - yy_bp);]]) \
+	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyg->yyleng_r = (int) (yy_cp - yy_bp);]]) \
 	yyg->yy_hold_char = *yy_cp; \
 	*yy_cp = '\0'; \
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if ( yyleng + yyg->yy_more_offset >= YYLMAX ) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if ( yyg->yyleng_r + yyg->yy_more_offset >= YYLMAX ) \
 		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if ( yyleng >= YYLMAX ) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if ( yyg->yyleng_r >= YYLMAX ) \
 		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yy_flex_strncpy( &yytext[yyg->yy_more_offset], yyg->yytext_ptr, yyleng + 1, yyscanner);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyleng += yyg->yy_more_offset;]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yy_flex_strncpy( &yyg->yytext_r[yyg->yy_more_offset], yyg->yytext_ptr, yyg->yyleng_r + 1, yyscanner);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yyleng_r += yyg->yy_more_offset;]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yy_prev_more_offset = yyg->yy_more_offset;]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yy_more_offset = 0;]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yy_flex_strncpy( yytext, yyg->yytext_ptr, yyleng + 1, yyscanner);]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yy_flex_strncpy( yyg->yytext_r, yyg->yytext_ptr, yyg->yyleng_r + 1, yyscanner);]]) \
 ]]) \
 	yyg->yy_c_buf_p = yy_cp;
 
@@ -691,13 +693,13 @@ m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
 
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
-#define yymore() (yyg->yy_more_offset = yy_flex_strlen( yytext, yyscanner))
+#define yymore() (yyg->yy_more_offset = yy_flex_strlen( yyg->yytext_r, yyscanner))
 #define YY_NEED_STRLEN
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET \
 { \
 yyg->yy_more_offset = yyg->yy_prev_more_offset; \
-yyleng -= yyg->yy_more_offset; \
+yyg->yyleng_r -= yyg->yy_more_offset; \
 }
 ]])
 m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
@@ -969,20 +971,10 @@ m4_define( [[M4_YY_NO_POP_STATE]])
 m4_define( [[M4_YY_NO_TOP_STATE]])
 ]])
 
-/* Amount of stuff to slurp up with each read. */
-#ifndef YY_READ_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k */
-#define YY_READ_BUF_SIZE 16384
-#else
-#define YY_READ_BUF_SIZE 8192
-#endif /* __ia64__ */
-#endif
-
 /* This used to be an fputs(), but since the string might contain NULs,
  * we now use fwrite().
  */
-#define yyecho() do { if (fwrite( yytext, (size_t) yyleng, 1, yyout )) {} } while (0)
+#define yyecho() do { if (fwrite( yyg->yytext_r, (size_t) yyg->yyleng_r, 1, yyg->yyout_r )) {} } while (0)
 
 #ifndef YY_EXIT_FAILURE
 #define YY_EXIT_FAILURE 2
@@ -1011,13 +1003,13 @@ static int yyread(char *buf, size_t max_size, yyscan_t yyscanner) {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
 	errno=0;
-	while ( (result = (int) read( fileno(yyin), buf, (yy_size_t) max_size )) < 0 ) {
+	while ( (result = (int) read( fileno(yyg->yyin_r), buf, (yy_size_t) max_size )) < 0 ) {
 		if( errno != EINTR) {
 			YY_FATAL_ERROR( "input in flex scanner failed" );
 			break;
 		}
 		errno=0;
-		clearerr(yyin);
+		clearerr(yyg->yyin_r);
 	}
 ]])
 m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
@@ -1025,25 +1017,25 @@ m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
 		int c = '*';
 		int n;
 		for ( n = 0; n < max_size &&
-			      (c = getc( yyin )) != EOF && c != '\n'; ++n ) {
+			      (c = getc( yyg->yyin_r )) != EOF && c != '\n'; ++n ) {
 			buf[n] = (char) c;
 		}
 		if ( c == '\n' ) {
 			buf[n++] = (char) c;
 		}
-		if ( c == EOF && ferror( yyin ) ) {
+		if ( c == EOF && ferror( yyg->yyin_r ) ) {
 			YY_FATAL_ERROR( "input in flex scanner failed" );
 		}
 		result = n;
 	} else {
 		errno=0;
-		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) {
+		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyg->yyin_r)) == 0 && ferror(yyg->yyin_r)) {
 			if( errno != EINTR) {
 				YY_FATAL_ERROR( "input in flex scanner failed" );
 				break;
 			}
 			errno=0;
-			clearerr(yyin);
+			clearerr(yyg->yyin_r);
 		}
 	}
 ]])
@@ -1111,8 +1103,8 @@ extern int yylex M4_YY_LEX_PROTO;
 #endif
 
 #define YY_RULE_SETUP \
-	m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( yyleng > 0 ) {  \
-	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol = (yytext[yyleng - 1] == '\n'); \
+	m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( yyg->yyleng_r > 0 ) {  \
+	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol = (yyg->yytext_r[yyg->yyleng_r - 1] == '\n'); \
 	} \
 ]])	YY_USER_ACTION
 
@@ -1245,16 +1237,16 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 		if ( ! yyg->yy_start ) {
 			yyg->yy_start = 1;	/* first start state */
 		}
-		if ( ! yyin ) {
-			yyin = stdin;
+		if ( ! yyg->yyin_r ) {
+			yyg->yyin_r = stdin;
 		}
-		if ( ! yyout ) {
-			yyout = stdout;
+		if ( ! yyg->yyout_r ) {
+			yyg->yyout_r = stdout;
 		}
 		if ( yy_current_buffer() == NULL ) {
 			yyensure_buffer_stack (yyscanner);
 			yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] =
-				yy_create_buffer( yyin, YY_BUF_SIZE, yyscanner);
+				yy_create_buffer( yyg->yyin_r, YY_BUF_SIZE, yyscanner);
 		}
 
 		yy_load_buffer_state( yyscanner );
@@ -1402,8 +1394,8 @@ m4_define([[M4_YYL_BASE]], [[m4_ifdef([[M4_MODE_YYMORE_USED]],
 				       [["yyg->yy_prev_more_offset"]], [["yyg->yy_more_len"]])]], [[0]])]])
 			if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] ) {
 				int yyl;
-				for ( yyl = M4_YYL_BASE; yyl < yyleng; ++yyl ) {
-					if ( yytext[yyl] == '\n' ) {
+				for ( yyl = M4_YYL_BASE; yyl < yyg->yyleng_r; ++yyl ) {
+					if ( yyg->yytext_r[yyl] == '\n' ) {
 						M4_YY_INCR_LINENO();
 
 					}
@@ -1419,10 +1411,10 @@ m4_ifdef([[M4_MODE_DEBUG]], [[
 					fprintf( stderr, "--scanner backing up\n" );
 				} else if ( yy_act < YY_NUM_RULES ) {
 					fprintf( stderr, "--accepting rule at line %ld (\"%s\")\n",
-						(long)yy_rule_linenum[yy_act], yytext );
+						(long)yy_rule_linenum[yy_act], yyg->yytext_r );
 				} else if ( yy_act == YY_NUM_RULES ) {
 					fprintf( stderr, "--accepting default rule (\"%s\")\n",
-						 yytext );
+						 yyg->yytext_r );
      				} else if ( yy_act == YY_NUM_RULES + 1 ) {
 					fprintf( stderr, "--(end of buffer or a NUL)\n" );
 				} else {
@@ -1470,7 +1462,7 @@ m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 					 * back-up) that will match for the new input source.
 					 */
 					yyg->yy_n_chars = yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_n_chars;
-					yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_input_file = yyin;
+					yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_input_file = yyg->yyin_r;
 					yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_buffer_status = YY_BUFFER_NORMAL;
 				}
 
@@ -1552,7 +1544,7 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 							goto do_action;
 						} else {
 							if ( ! yyg->yy_did_buffer_switch_on_eof ) {
-								yyrestart( yyin, yyscanner );
+								yyrestart( yyg->yyin_r, yyscanner );
 							}
 						}
 						break;
@@ -1689,7 +1681,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 	if ( yyg->yy_n_chars == 0 ) {
 		if ( number_to_move == YY_MORE_ADJ ) {
 			ret_val = EOB_ACT_END_OF_FILE;
-			yyrestart( yyin, yyscanner);
+			yyrestart( yyg->yyin_r, yyscanner);
 		} else {
 			ret_val = EOB_ACT_LAST_MATCH;
 			yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_buffer_status =
@@ -1919,7 +1911,7 @@ int yyinput (yyscan_t yyscanner)
 				 */
 
 				/* Reset buffer status. */
-				yyrestart( yyin, yyscanner);
+				yyrestart( yyg->yyin_r, yyscanner);
 
 				/*FALLTHROUGH*/
 
@@ -1928,7 +1920,7 @@ int yyinput (yyscan_t yyscanner)
 					return 0;
 				}
 				if ( ! yyg->yy_did_buffer_switch_on_eof ) {
-					yyrestart( yyin, yyscanner );
+					yyrestart( yyg->yyin_r, yyscanner );
 				}
 				return yyinput(yyscanner);
 
@@ -1974,7 +1966,7 @@ void yyrestart(FILE * input_file, yyscan_t yyscanner)
 	if ( yy_current_buffer() == NULL ) {
 		yyensure_buffer_stack (yyscanner);
 		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] =
-	        	yy_create_buffer( yyin, YY_BUF_SIZE, yyscanner);
+	        	yy_create_buffer( yyg->yyin_r, YY_BUF_SIZE, yyscanner);
 	}
 
 	yy_init_buffer( yy_current_buffer(), input_file, yyscanner);
@@ -2022,7 +2014,7 @@ static void yy_load_buffer_state  (yyscan_t yyscanner)
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 	yyg->yy_n_chars = yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_n_chars;
 	yyg->yytext_ptr = yyg->yy_c_buf_p = yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_buf_pos;
-	yyin = yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_input_file;
+	yyg->yyin_r = yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_input_file;
 	yyg->yy_hold_char = *yyg->yy_c_buf_p;
 }
 
@@ -2404,11 +2396,11 @@ static int yy_top_state  (yyscan_t yyscanner)
 		/* Undo effects of setting up yytext. */ \
 		int yyless_macro_arg = (n); \
 		YY_LESS_LINENO(yyless_macro_arg);\
-			yytext[yyleng] = yyg->yy_hold_char; \
-			yyg->yy_c_buf_p = yytext + yyless_macro_arg; \
+			yyg->yytext_r[yyg->yyleng_r] = yyg->yy_hold_char; \
+			yyg->yy_c_buf_p = yyg->yytext_r + yyless_macro_arg; \
 			yyg->yy_hold_char = *yyg->yy_c_buf_p; \
 			*yyg->yy_c_buf_p = '\0'; \
-			yyleng = yyless_macro_arg; \
+			yyg->yyleng_r = yyless_macro_arg; \
 	} while ( 0 )
 
 /* Accessor  methods (get/set functions) to struct members. */
@@ -2460,7 +2452,7 @@ m4_ifdef( [[M4_YY_NO_GET_IN]],,
  */
 FILE *yyget_in  (yyscan_t yyscanner) {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	return yyin;
+	return yyg->yyin_r;
 }
 ]])
 
@@ -2471,7 +2463,7 @@ m4_ifdef( [[M4_YY_NO_GET_OUT]],,
  */
 FILE *yyget_out  (yyscan_t yyscanner) {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	return yyout;
+	return yyg->yyout_r;
 }
 ]])
 
@@ -2482,7 +2474,7 @@ m4_ifdef( [[M4_YY_NO_GET_LENG]],,
  */
 int yyget_leng  (yyscan_t yyscanner) {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	return yyleng;
+	return yyg->yyleng_r;
 }
 ]])
 
@@ -2493,7 +2485,7 @@ m4_ifdef( [[M4_YY_NO_GET_TEXT]],,
 [[
 char *yyget_text  (yyscan_t yyscanner) {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	return yytext;
+	return yyg->yytext_r;
 }
 ]])
 
@@ -2553,7 +2545,7 @@ m4_ifdef( [[M4_YY_NO_SET_IN]],,
  */
 void yyset_in(FILE * _in_str, yyscan_t yyscanner) {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	yyin = _in_str ;
+	yyg->yyin_r = _in_str ;
 }
 ]])
 
@@ -2561,7 +2553,7 @@ m4_ifdef( [[M4_YY_NO_SET_OUT]],,
 [[
 void yyset_out( FILE * _out_str, yyscan_t yyscanner) {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	yyout = _out_str ;
+	yyg->yyout_r = _out_str ;
 }
 ]])
 
@@ -2710,11 +2702,11 @@ m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]],
 
 /* Defined in main.c */
 #ifdef YY_STDINIT
-	yyin = stdin;
-	yyout = stdout;
+	yyg->yyin_r = stdin;
+	yyg->yyout_r = stdout;
 #else
-	yyin = NULL;
-	yyout = NULL;
+	yyg->yyin_r = NULL;
+	yyg->yyout_r = NULL;
 #endif
 
 	/* For future reference: Set errno on error, since we are called by
