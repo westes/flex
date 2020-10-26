@@ -8695,7 +8695,7 @@ to Flex.
 * Translation Guidelines::
 @end menu
 
-@node Overview, , , Retargeting Flex
+@node Overview, Getting Started, , Retargeting Flex
 @subsection Overview
 
 The Flex code has been factored to isolate knowledge of the specifics
