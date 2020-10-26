@@ -928,6 +928,31 @@ extern int yylex M4_YY_LEX_PROTO;
 	} \
 ]])	YY_USER_ACTION
 
+/* Done after the current pattern has been matched and before the
+ * corresponding action - sets up yytext.
+ */
+ void yy_do_before_action(struct yyguts_t *yyg, char *yy_cp, char *yy_bp) {
+	yyg->yytext_ptr = yy_bp; \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyg->yytext_ptr -= yyg->yy_more_len;
+	yyg->yyleng_r = (int) (yy_cp - yyg->yytext_ptr);]])]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyg->yyleng_r = (int) (yy_cp - yy_bp);]]) \
+	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyg->yyleng_r = (int) (yy_cp - yy_bp);]]) \
+	yyg->yy_hold_char = *yy_cp; \
+	*yy_cp = '\0'; \
+m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if ( yyg->yyleng_r + yyg->yy_more_offset >= YYLMAX ) \
+					 yy_fatal_error( "token too large, exceeds YYLMAX", (yyacan_t)yyg );]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if ( yyg->yyleng_r >= YYLMAX ) \
+					 yy_fatal_error( "token too large, exceeds YYLMAX", (yyscan_t)yyg);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yy_flex_strncpy( &yyg->yytext_r[yyg->yy_more_offset], yyg->yytext_ptr, yyg->yyleng_r + 1, yyscanner);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yyleng_r += yyg->yy_more_offset;]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yy_prev_more_offset = yyg->yy_more_offset;]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yy_more_offset = 0;]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yy_flex_strncpy( yyg->yytext_r, yyg->yytext_ptr, yyg->yyleng_r + 1, (yyscan_t)yyg);]]) \
+]]) \
+	yyg->yy_c_buf_p = yy_cp;
+}
+
 /* START access macros for use in actions */
 
 #define yyin yyg->yyin_r
@@ -995,7 +1020,7 @@ m4_ifdef( [[M4_MODE_YYLINENO]], [[
 		*yy_cp = yyg->yy_hold_char; \
 		YY_RESTORE_YY_MORE_OFFSET \
 		yyg->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
-		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
+		yy_do_before_action(yyg, yy_cp, yy_bp); /* set up yytext again */ \
 		} \
 	while ( 0 )
 #define yyunput(c) yyunput_r( c, yyg->yytext_ptr, yyscanner )
@@ -1030,30 +1055,6 @@ m4_ifdef( [[M4_MODE_YYLINENO]], [[
 	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol_flag = at_bol; \
 }
 #define yy_at_bol() (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol_flag)
-
-/* Done after the current pattern has been matched and before the
- * corresponding action - sets up yytext.
- */
-#define YY_DO_BEFORE_ACTION \
-	yyg->yytext_ptr = yy_bp; \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyg->yytext_ptr -= yyg->yy_more_len;
-	yyg->yyleng_r = (int) (yy_cp - yyg->yytext_ptr);]])]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyg->yyleng_r = (int) (yy_cp - yy_bp);]]) \
-	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyg->yyleng_r = (int) (yy_cp - yy_bp);]]) \
-	yyg->yy_hold_char = *yy_cp; \
-	*yy_cp = '\0'; \
-m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if ( yyg->yyleng_r + yyg->yy_more_offset >= YYLMAX ) \
-		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if ( yyg->yyleng_r >= YYLMAX ) \
-		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yy_flex_strncpy( &yyg->yytext_r[yyg->yy_more_offset], yyg->yytext_ptr, yyg->yyleng_r + 1, yyscanner);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yyleng_r += yyg->yy_more_offset;]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yy_prev_more_offset = yyg->yy_more_offset;]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yy_more_offset = 0;]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yy_flex_strncpy( yyg->yytext_r, yyg->yytext_ptr, yyg->yyleng_r + 1, yyscanner);]]) \
-]]) \
-	yyg->yy_c_buf_p = yy_cp;
 
 m4_ifdef( [[M4_MODE_USES_REJECT]],[[
 #define yyreject()				\
@@ -1386,7 +1387,7 @@ m4_ifdef([[M4_MODE_FIND_ACTION_COMPRESSED]], [[		yy_act = yy_accept[yy_current_s
 			}
 ]])
 
-			YY_DO_BEFORE_ACTION;
+	 		yy_do_before_action(yyg, yy_cp, yy_bp);
 
 m4_ifdef( [[M4_MODE_YYLINENO]],[[
 m4_define([[M4_YYL_BASE]], [[m4_ifdef([[M4_MODE_YYMORE_USED]],
@@ -1427,7 +1428,7 @@ m4_ifdef([[M4_MODE_DEBUG]], [[
 m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
 m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 			case 0: /* must back up */
-				/* undo the effects of YY_DO_BEFORE_ACTION */
+				/* undo the effects of yy_do_before_action() */
 				*yy_cp = yyg->yy_hold_char;
 
 				/* Backing-up info for compressed tables is taken \after/ */
@@ -1447,7 +1448,7 @@ m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 				/* Amount of text matched not including the EOB char. */
 				int yy_amount_of_matched_text = (int) (yy_cp - yyg->yytext_ptr) - 1;
 
-				/* Undo the effects of YY_DO_BEFORE_ACTION. */
+				/* Undo the effects of yy_do_before_action(). */
 				*yy_cp = yyg->yy_hold_char;
 				YY_RESTORE_YY_MORE_OFFSET
 
