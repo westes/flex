@@ -224,31 +224,6 @@ m4preproc_include(`flexint_shared.h')
 /* An opaque pointer. */
 typedef void* yyscan_t;
 
-/* For convenience, these vars (plus the bison vars far below)
-   are macros in the reentrant scanner. */
-#define yyin yyg->yyin_r
-#define yyout yyg->yyout_r
-#define yyextra yyg->yyextra_r
-#define yyleng yyg->yyleng_r
-#define yytext yyg->yytext_r
-#define yylineno (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_bs_lineno)
-#define yycolumn (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_bs_column)
-#define yy_flex_debug yyg->yy_flex_debug_r
-
-m4_define( [[M4_YY_INCR_LINENO]],
-[[
-    do{ yylineno++;
-        yycolumn=0;
-    }while(0)
-]])
-
-/* Enter a start condition. */
-#define yybegin(s) yyg->yy_start = 1 + 2 * (s)
-/* Translate the current start state into a value that can be later handed
- * to BEGIN to return to the state.  The YYSTATE alias is for lex
- * compatibility.
- */
-#define yystart() ((yyg->yy_start - 1) / 2)
 /* Action number for EOF rule of a given start state. */
 #define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
 
@@ -263,52 +238,6 @@ typedef size_t yy_size_t;
 #define EOB_ACT_CONTINUE_SCAN 0
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
-    m4_ifdef( [[M4_MODE_YYLINENO]],
-    [[
-    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
-     *       access to the local variable yy_act. Since yyless() is a macro, it would break
-     *       existing scanners that call yyless() from OUTSIDE yylex.
-     *       One obvious solution it to make yy_act a global. I tried that, and saw
-     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
-     *       normally declared as a register variable-- so it is not worth it.
-     */
-    #define  YY_LESS_LINENO(n) \
-            do { \
-                int yyl;\
-                for ( yyl = n; yyl < yyg->yyleng_r; ++yyl ) { \
-			if ( yyg->yytext_r[yyl] == '\n' ) { \
-                        	--yylineno;\
-			} \
-		} \
-            }while(0)
-    #define YY_LINENO_REWIND_TO(dst) \
-            do {\
-                const char *p;\
-                for ( p = yy_cp-1; p >= (dst); --p) { \
-			if ( *p == '\n' ) { \
-                		--yylineno;\
-			} \
-		} \
-            }while(0)
-    ]],
-    [[
-    #define YY_LESS_LINENO(n)
-    #define YY_LINENO_REWIND_TO(ptr)
-    ]])
-/* Return all but the first "n" matched characters back to the input stream. */
-#define yyless(n) \
-	do \
-		{ \
-		/* Undo effects of setting up yytext. */ \
-		int yyless_macro_arg = (n); \
-		YY_LESS_LINENO(yyless_macro_arg);\
-		*yy_cp = yyg->yy_hold_char; \
-		YY_RESTORE_YY_MORE_OFFSET \
-		yyg->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
-		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
-		} \
-	while ( 0 )
-#define yyunput(c) yyunput_r( c, yyg->yytext_ptr, yyscanner )
 
 struct yy_buffer_state
 	{
@@ -369,20 +298,6 @@ struct yy_buffer_state
 #define YY_BUFFER_EOF_PENDING 2
 	};
 
-/* We provide macros for accessing buffer states in case in the
- * future we want to put the buffer states in a more general
- * "scanner state".
- *
- * Returns the top of the stack, or NULL.
- */
-#define yy_current_buffer() ( yyg->yy_buffer_stack			\
-                          ? yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] \
-                          : NULL)
-#define YY_CURRENT_BUFFER yy_current_buffer()
-/* Same as previous macro, but useful when we know that the buffer stack is not
- * NULL or when we need an lvalue. For internal use only.
- */
-
 void yyrestart ( FILE *input_file, yyscan_t yyscanner );
 void yy_switch_to_buffer ( yybuffer new_buffer, yyscan_t yyscanner );
 yybuffer yy_create_buffer ( FILE *file, int size, yyscan_t yyscanner );
@@ -394,7 +309,6 @@ void yypop_buffer_state ( yyscan_t yyscanner );
 static void yyensure_buffer_stack ( yyscan_t yyscanner );
 static void yy_load_buffer_state ( yyscan_t yyscanner );
 static void yy_init_buffer ( yybuffer b, FILE *file, yyscan_t yyscanner );
-#define yy_flush_current_buffer() yy_flush_buffer( yy_current_buffer(), yyscanner)
 
 yybuffer yy_scan_buffer ( char *base, yy_size_t size, yyscan_t yyscanner );
 yybuffer yy_scan_string ( const char *yy_str, yyscan_t yyscanner );
@@ -403,26 +317,6 @@ yybuffer yy_scan_bytes ( const char *bytes, int len, yyscan_t yyscanner );
 void *yyalloc ( yy_size_t, yyscan_t yyscanner );
 void *yyrealloc ( void *, yy_size_t, yyscan_t yyscanner );
 void yyfree ( void *, yyscan_t yyscanner );
-
-#define yy_new_buffer yy_create_buffer
-#define yy_set_interactive(is_interactive) { \
-	if ( yy_current_buffer() == NULL ) { \
-		yyensure_buffer_stack (yyscanner);	\
-		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] =    \
-			yy_create_buffer( yyg->yyin_r, YY_BUF_SIZE, yyscanner); \
-	} \
-	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_is_interactive = is_interactive; \
-}
-#define yy_set_bol(at_bol) \
-	{ \
-	if ( yy_current_buffer() == NULL ) { \
-		yyensure_buffer_stack (yyscanner);	\
-		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] =    \
-            yy_create_buffer( yyg->yyin_r, YY_BUF_SIZE, yyscanner); \
-	} \
-	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol = at_bol; \
-}
-#define yy_at_bol() (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol)
 
 /* Begin user sect3 */
 
@@ -481,32 +375,9 @@ m4_ifdef([[M4_MODE_NO_REAL_FULLSPD]], [[
 ]])
 };
 
-/* Done after the current pattern has been matched and before the
- * corresponding action - sets up yytext.
- */
-#define YY_DO_BEFORE_ACTION \
-	yyg->yytext_ptr = yy_bp; \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyg->yytext_ptr -= yyg->yy_more_len;
-	yyg->yyleng_r = (int) (yy_cp - yyg->yytext_ptr);]])]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyg->yyleng_r = (int) (yy_cp - yy_bp);]]) \
-	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyg->yyleng_r = (int) (yy_cp - yy_bp);]]) \
-	yyg->yy_hold_char = *yy_cp; \
-	*yy_cp = '\0'; \
-m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if ( yyg->yyleng_r + yyg->yy_more_offset >= YYLMAX ) \
-		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if ( yyg->yyleng_r >= YYLMAX ) \
-		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yy_flex_strncpy( &yyg->yytext_r[yyg->yy_more_offset], yyg->yytext_ptr, yyg->yyleng_r + 1, yyscanner);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yyleng_r += yyg->yy_more_offset;]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yy_prev_more_offset = yyg->yy_more_offset;]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yy_more_offset = 0;]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yy_flex_strncpy( yyg->yytext_r, yyg->yytext_ptr, yyg->yyleng_r + 1, yyscanner);]]) \
-]]) \
-	yyg->yy_c_buf_p = yy_cp;
-
 %% [2.0] data tables for the DFA are inserted here
-m4_ifdef( [[M4_HOOK_NXT_ROWS]],[[m4_dnl
+
+ m4_ifdef( [[M4_HOOK_NXT_ROWS]],[[m4_dnl
 m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const M4_HOOK_NXT_TYPE yy_nxt[][M4_HOOK_NXT_ROWS] =
     {
@@ -666,53 +537,6 @@ M4_HOOK_DEBUGTABLE_BODY[[]]m4_dnl
 static const M4_HOOK_DEBUGTABLE_TYPE * yy_rule_linenum = 0;
 ]])
 
-]])
-
-m4_ifdef( [[M4_MODE_USES_REJECT]],[[
-#define yyreject()				\
-{ \
-*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */ \
-yy_cp = yyg->yy_full_match; /* restore poss. backed-over text */ \
-m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[ \
-yyg->yy_lp = yyg->yy_full_lp; /* restore orig. accepting pos. */ \
-yyg->yy_state_ptr = yyg->yy_full_state; /* restore orig. state */ \
-yy_current_state = *yyg->yy_state_ptr; /* restore curr. state */ \
-]]) \
-++yyg->yy_lp; \
-goto find_rule; \
-}
-#define REJECT	yyreject()
-]])
-m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
-/* The intent behind this definition is that it'll catch
- * any uses of yyreject() which flex missed.
- */
-#define yyreject() reject_used_but_not_detected
-#define REJECT reject_used_but_not_detected
-]])
-
-m4_ifdef([[M4_MODE_YYMORE_USED]], [[
-m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
-#define yymore() (yyg->yy_more_offset = yy_flex_strlen( yyg->yytext_r, yyscanner))
-#define YY_NEED_STRLEN
-#define YY_MORE_ADJ 0
-#define YY_RESTORE_YY_MORE_OFFSET \
-{ \
-yyg->yy_more_offset = yyg->yy_prev_more_offset; \
-yyg->yyleng_r -= yyg->yy_more_offset; \
-}
-]])
-m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
-#define yymore() (yyg->yy_more_flag = 1)
-#define YY_MORE_ADJ yyg->yy_more_len
-#define YY_RESTORE_YY_MORE_OFFSET
-]])
-]])
-
-m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[
-#define yymore() yymore_used_but_not_detected
-#define YY_MORE_ADJ 0
-#define YY_RESTORE_YY_MORE_OFFSET
 ]])
 
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
@@ -971,11 +795,6 @@ m4_define( [[M4_YY_NO_POP_STATE]])
 m4_define( [[M4_YY_NO_TOP_STATE]])
 ]])
 
-/* This used to be an fputs(), but since the string might contain NULs,
- * we now use fwrite().
- */
-#define yyecho() do { if (fwrite( yyg->yytext_r, (size_t) yyg->yyleng_r, 1, yyg->yyout_r )) {} } while (0)
-
 #ifndef YY_EXIT_FAILURE
 #define YY_EXIT_FAILURE 2
 #endif
@@ -1107,6 +926,189 @@ extern int yylex M4_YY_LEX_PROTO;
 	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol = (yyg->yytext_r[yyg->yyleng_r - 1] == '\n'); \
 	} \
 ]])	YY_USER_ACTION
+
+/* START access macros for use in actions */
+
+#define yyin yyg->yyin_r
+#define yyout yyg->yyout_r
+#define yyextra yyg->yyextra_r
+#define yyleng yyg->yyleng_r
+#define yytext yyg->yytext_r
+#define yylineno (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_bs_lineno)
+#define yycolumn (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_bs_column)
+#define yy_flex_debug yyg->yy_flex_debug_r
+
+m4_define( [[M4_YY_INCR_LINENO]],
+[[
+    do{ yylineno++;
+        yycolumn=0;
+    }while(0)
+]])
+
+/* Enter a start condition. */
+#define yybegin(s) yyg->yy_start = 1 + 2 * (s)
+/* Translate the current start state into a value that can be later handed
+ * to BEGIN to return to the state.  The YYSTATE alias is for lex
+ * compatibility.
+ */
+#define yystart() ((yyg->yy_start - 1) / 2)
+
+m4_ifdef( [[M4_MODE_YYLINENO]], [[
+/* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
+ *       access to the local variable yy_act. Since yyless() is a macro, it would break
+ *       existing scanners that call yyless() from OUTSIDE yylex.
+ *       One obvious solution it to make yy_act a global. I tried that, and saw
+ *       a 5% performance hit in a non-yylineno scanner, because yy_act is
+ *       normally declared as a register variable-- so it is not worth it.
+ */
+#define  YY_LESS_LINENO(n) \
+	do { \
+	    int yyl;\
+	    for ( yyl = n; yyl < yyg->yyleng_r; ++yyl ) { \
+		    if ( yyg->yytext_r[yyl] == '\n' ) { \
+			    --yylineno;\
+		    } \
+	    } \
+	}while(0)
+#define YY_LINENO_REWIND_TO(dst) \
+	do {\
+	    const char *p;\
+	    for ( p = yy_cp-1; p >= (dst); --p) { \
+		    if ( *p == '\n' ) { \
+			    --yylineno;\
+		    } \
+	    } \
+	}while(0)
+]],
+[[
+#define YY_LESS_LINENO(n)
+#define YY_LINENO_REWIND_TO(ptr)
+]])
+/* Return all but the first "n" matched characters back to the input stream. */
+#define yyless(n) \
+	do \
+		{ \
+		/* Undo effects of setting up yytext. */ \
+		int yyless_macro_arg = (n); \
+		YY_LESS_LINENO(yyless_macro_arg);\
+		*yy_cp = yyg->yy_hold_char; \
+		YY_RESTORE_YY_MORE_OFFSET \
+		yyg->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
+		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
+		} \
+	while ( 0 )
+#define yyunput(c) yyunput_r( c, yyg->yytext_ptr, yyscanner )
+
+/* We provide macros for accessing buffer states in case in the
+ * future we want to put the buffer states in a more general
+ * "scanner state".
+ *
+ * Returns the top of the stack, or NULL.
+ */
+#define yy_current_buffer() ( yyg->yy_buffer_stack			\
+                          ? yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] \
+                          : NULL)
+#define YY_CURRENT_BUFFER yy_current_buffer()
+
+#define yy_flush_current_buffer() yy_flush_buffer( yy_current_buffer(), yyscanner)
+
+#define yy_new_buffer yy_create_buffer
+#define yy_set_interactive(is_interactive) { \
+	if ( yy_current_buffer() == NULL ) { \
+		yyensure_buffer_stack (yyscanner);	\
+		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] =    \
+			yy_create_buffer( yyg->yyin_r, YY_BUF_SIZE, yyscanner); \
+	} \
+	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_is_interactive = is_interactive; \
+}
+#define yy_set_bol(at_bol) \
+	{ \
+	if ( yy_current_buffer() == NULL ) { \
+		yyensure_buffer_stack (yyscanner);	\
+		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] =    \
+            yy_create_buffer( yyg->yyin_r, YY_BUF_SIZE, yyscanner); \
+	} \
+	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol = at_bol; \
+}
+#define yy_at_bol() (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol)
+
+/* Done after the current pattern has been matched and before the
+ * corresponding action - sets up yytext.
+ */
+#define YY_DO_BEFORE_ACTION \
+	yyg->yytext_ptr = yy_bp; \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyg->yytext_ptr -= yyg->yy_more_len;
+	yyg->yyleng_r = (int) (yy_cp - yyg->yytext_ptr);]])]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyg->yyleng_r = (int) (yy_cp - yy_bp);]]) \
+	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyg->yyleng_r = (int) (yy_cp - yy_bp);]]) \
+	yyg->yy_hold_char = *yy_cp; \
+	*yy_cp = '\0'; \
+m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if ( yyg->yyleng_r + yyg->yy_more_offset >= YYLMAX ) \
+		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if ( yyg->yyleng_r >= YYLMAX ) \
+		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yy_flex_strncpy( &yyg->yytext_r[yyg->yy_more_offset], yyg->yytext_ptr, yyg->yyleng_r + 1, yyscanner);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yyleng_r += yyg->yy_more_offset;]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yy_prev_more_offset = yyg->yy_more_offset;]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyg->yy_more_offset = 0;]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yy_flex_strncpy( yyg->yytext_r, yyg->yytext_ptr, yyg->yyleng_r + 1, yyscanner);]]) \
+]]) \
+	yyg->yy_c_buf_p = yy_cp;
+
+m4_ifdef( [[M4_MODE_USES_REJECT]],[[
+#define yyreject()				\
+{ \
+*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */ \
+yy_cp = yyg->yy_full_match; /* restore poss. backed-over text */ \
+m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[ \
+yyg->yy_lp = yyg->yy_full_lp; /* restore orig. accepting pos. */ \
+yyg->yy_state_ptr = yyg->yy_full_state; /* restore orig. state */ \
+yy_current_state = *yyg->yy_state_ptr; /* restore curr. state */ \
+]]) \
+++yyg->yy_lp; \
+goto find_rule; \
+}
+#define REJECT	yyreject()
+]])
+m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
+/* The intent behind this definition is that it'll catch
+ * any uses of yyreject() which flex missed.
+ */
+#define yyreject() reject_used_but_not_detected
+#define REJECT reject_used_but_not_detected
+]])
+
+m4_ifdef([[M4_MODE_YYMORE_USED]], [[
+m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
+#define yymore() (yyg->yy_more_offset = yy_flex_strlen( yyg->yytext_r, yyscanner))
+#define YY_NEED_STRLEN
+#define YY_MORE_ADJ 0
+#define YY_RESTORE_YY_MORE_OFFSET \
+{ \
+yyg->yy_more_offset = yyg->yy_prev_more_offset; \
+yyg->yyleng_r -= yyg->yy_more_offset; \
+}
+]])
+m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
+#define yymore() (yyg->yy_more_flag = 1)
+#define YY_MORE_ADJ yyg->yy_more_len
+#define YY_RESTORE_YY_MORE_OFFSET
+]])
+]])
+
+m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[
+#define yymore() yymore_used_but_not_detected
+#define YY_MORE_ADJ 0
+#define YY_RESTORE_YY_MORE_OFFSET
+]])
+
+/* This used to be an fputs(), but since the string might contain NULs,
+ * we now use fwrite().
+ */
+#define yyecho() do { if (fwrite( yyg->yytext_r, (size_t) yyg->yyleng_r, 1, yyg->yyout_r )) {} } while (0)
+
+/* END access macros for use in actions */
 
 %# Code snippets used in various cases of code generation in the main scanner.
 
