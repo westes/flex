@@ -245,6 +245,8 @@ CLEANFILES = \
 	top.h  \
 	yyextra_nr.c \
 	yyextra_c99.c \
+	yyunput_* \
+	!yyunput.rules \
 	$(RULESET_REMOVABLES)
 
 dist-hook:
@@ -302,9 +304,10 @@ EXTRA_DIST = \
 	rescan_r.direct.txt \
 	quote_in_comment.txt \
 	quotes.txt \
+	tableopts.txt \
 	top.txt \
 	yyextra.txt \
-	tableopts.txt
+	yyunput.txt
 
 dist_noinst_SCRIPTS = \
 	ruleset.sh

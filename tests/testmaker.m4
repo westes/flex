@@ -42,9 +42,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 %}
 ')dnl close preamble
 define(`M4_TEST_ECHO', `yyecho();')
-define(`M4_TEST_FAILMESSAGE', `dnl
-fprintf(stderr,"Invalid line.\n"); exit(-1);
-')dnl close failmessage
+define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED.\n"); exit(1);')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
 {
@@ -81,7 +79,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 %}
 ')dnl close preamble
 define(`M4_TEST_ECHO', `yyecho();')
-define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"Invalid line.\n"); exit(-1);')
+define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED.\n"); exit(1);')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
 {
@@ -128,7 +126,7 @@ import (
 %option emit="go"
 ')dnl close preamble
 define(`M4_TEST_ECHO', `yyecho()')
-define(`M4_TEST_FAILMESSAGE', `log.Fatal("Invalid line"); os.Exit(-1);')
+define(`M4_TEST_FAILMESSAGE', `log.Fatal("TEST FAILMESSAGE"); os.Exit(1);')
 define(`M4_TEST_POSTAMBLE', `dnl
 func main(void) {
 	lexer := new(FlexLexer)

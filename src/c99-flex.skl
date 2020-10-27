@@ -767,7 +767,7 @@ extern int yywrap ( yyscan_t yyscanner );
 
 #ifndef YY_NO_YYUNPUT
 m4_ifdef( [[M4_YY_NO_YYUNPUT]],,[[
-static void yyunput_r ( int c, char *buf_ptr , yyscan_t yyscanner);
+static void yyunput_r ( int c, yyscan_t yyscanner);
 ]])
 #endif
 
@@ -1032,7 +1032,7 @@ m4_ifdef( [[M4_MODE_YYLINENO]], [[
 		yy_do_before_action(yyg, yy_cp, yy_bp); /* set up yytext again */ \
 		} \
 	while ( 0 )
-#define yyunput(c) yyunput_r( c, yyg->yytext_ptr, yyscanner )
+#define yyunput(c) yyunput_r( c, yyscanner )
 
 /* We provide macros for accessing buffer states in case in the
  * future we want to put the buffer states in a more general
@@ -1841,7 +1841,7 @@ m4_ifdef([[M4_MODE_NULTRANS_WRAP]], [[
 }
 
 m4_ifdef( [[M4_YY_NO_YYUNPUT]],, [[
-static void yyunput_r( int c, char *yy_bp, yyscan_t yyscanner)
+static void yyunput_r( int c, yyscan_t yyscanner)
 {
 	char *yy_cp;
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
@@ -1864,7 +1864,7 @@ static void yyunput_r( int c, char *yy_bp, yyscan_t yyscanner)
 			*--dest = *--source;
 		}
 		yy_cp += (int) (dest - source);
-		yy_bp += (int) (dest - source);
+		yyg->yytext_ptr += (int) (dest - source);
 		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_n_chars =
 			yyg->yy_n_chars = (int) yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_buf_size;
 
@@ -1878,11 +1878,10 @@ static void yyunput_r( int c, char *yy_bp, yyscan_t yyscanner)
 m4_ifdef( [[M4_MODE_YYLINENO]],
 [[
 	if ( c == '\n' ){
-	--yylineno;
+		--yylineno;
 	}
 ]])
 
-	yyg->yytext_ptr = yy_bp;
 	yyg->yy_hold_char = *yy_cp;
 	yyg->yy_c_buf_p = yy_cp;
 }

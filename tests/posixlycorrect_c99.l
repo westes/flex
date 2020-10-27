@@ -46,7 +46,7 @@
 
 ab{3}   { } 
 \n	{ }	 
-.	{fprintf(stderr,"Invalid line.\n"); exit(-1);}
+.	{fprintf(stderr,"TEST FAILED.\n"); exit(1);}
 
 %%
 int main (int argc, char **argv)
