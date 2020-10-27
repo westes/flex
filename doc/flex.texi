@@ -8975,6 +8975,10 @@ necessary.
 @item
 FLEX_SCANNER: Not neaningful outside of the C back end, and not defined.
 
+@item
+YY_FLEX_SUBMINOR_VERSION: Its behavior an't be replivated without the
+C preprocessor. Test for YY_FLEX_SUBMINOR_VERSION instead.
+
 @end itemize
 
 @node Indices,  , Appendices, Top

@@ -7,7 +7,7 @@
 %# the bare minimum needed to keep it working in C.
 %#
 %# Note that using m4 rather than C for macro definitions means they
-%# will be recognized and expended in user actions but not
+%# willnot  be recognized and expended in user actions nor
 %# in user code sections. Anything you need to be visible there
 %# needs to be declared as a function.
 %#
@@ -82,10 +82,9 @@ m4_define([[M4_HOOK_SET_POSTACTION]], [[#define YY_BREAK $1
 
 %% [0.0] Make hook macros available to Flex
 
-#define FLEX_SCANNER
-#define YY_FLEX_MAJOR_VERSION FLEX_MAJOR_VERSION
-#define YY_FLEX_MINOR_VERSION FLEX_MINOR_VERSION
-#define YY_FLEX_SUBMINOR_VERSION FLEX_SUBMINOR_VERSION
+m4_define([[YY_FLEX_MAJOR_VERSION]], [[FLEX_MAJOR_VERSION]])
+m4_define([[YY_FLEX_MINOR_VERSION]], [[FLEX_MINOR_VERSION]])
+m4_define([[YY_FLEX_SUBMINOR_VERSION]], [[FLEX_SUBMINOR_VERSION]])
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
