@@ -82,16 +82,17 @@ m4_define([[M4_HOOK_SET_POSTACTION]], [[#define YY_BREAK $1
 
 %% [0.0] Make hook macros available to Flex
 
-m4_define([[YY_FLEX_MAJOR_VERSION]], [[FLEX_MAJOR_VERSION]])
-m4_define([[YY_FLEX_MINOR_VERSION]], [[FLEX_MINOR_VERSION]])
-m4_define([[YY_FLEX_SUBMINOR_VERSION]], [[FLEX_SUBMINOR_VERSION]])
-#if YY_FLEX_SUBMINOR_VERSION > 0
-#define FLEX_BETA
-#endif
+const int YY_FLEX_MAJOR_VERSION = FLEX_MAJOR_VERSION;
+const int YY_FLEX_MINOR_VERSION = FLEX_MINOR_VERSION;
+const int YY_FLEX_SUBMINOR_VERSION = FLEX_SUBMINOR_VERSION;
 
-%# Prefixes.
+%# STARTS prefix machinery
+%#
 %# The complexity here is necessary so that m4 preserves
 %# the argument lists to each C function.
+%#
+%# If your target language has OO you can generare a class definition,
+%# use option yyclass to pass in the class name, and drop prefix support.
 	
 m4_ifdef( [[M4_MODE_PREFIX]],, [[m4_define([[M4_MODE_PREFIX]], [[yy]])]])
 
@@ -156,6 +157,8 @@ m4_ifelse(M4_MODE_PREFIX,yy,,
     M4_GEN_PREFIX(`realloc')
     M4_GEN_PREFIX(`free')
 )
+
+%# ENDS prefix machinery
 
 /* START platform-specific and compiler-specific definitions. */
 
@@ -244,12 +247,25 @@ typedef struct yy_buffer_state *yybuffer;
 
 typedef size_t yy_size_t;
 
-#define EOB_ACT_CONTINUE_SCAN 0
-#define EOB_ACT_END_OF_FILE 1
-#define EOB_ACT_LAST_MATCH 2
+%# These are not part of the exported interface and cab safewky be renamed
+const int EOB_ACT_CONTINUE_SCAN = 0;
+const int EOB_ACT_END_OF_FILE = 1;
+const int EOB_ACT_LAST_MATCH = 2;
+const int YY_BUFFER_NEW = 0;
+const int YY_BUFFER_NORMAL = 1;
+	/* When an EOF's been seen but there's still some text to process
+	 * then we mark the buffer as YY_EOF_PENDING, to indicate that we
+	 * shouldn't try reading from the input source any more.  We might
+	 * still have a bunch of tokens to match, though, because of
+	 * possible backing-up.
+	 *
+	 * When we actually see the EOF, we change the status to "new"
+	 * (via yyrestart()), so that the user can continue scanning by
+	 * just pointing yyin at a new input file.
+	 */
+const int YY_BUFFER_EOF_PENDING = 2;
 
-struct yy_buffer_state
-	{
+struct yy_buffer_state {
 	FILE *yy_input_file;
 	char *yy_ch_buf;		/* input buffer */
 	char *yy_buf_pos;		/* current position in input buffer */
@@ -289,23 +305,10 @@ struct yy_buffer_state
 	/* Whether to try to fill the input buffer when we reach the
 	 * end of it.
 	 */
-	int yy_fill_buffer;
+	bool yy_fill_buffer;
 
 	int yy_buffer_status;
-#define YY_BUFFER_NEW 0
-#define YY_BUFFER_NORMAL 1
-	/* When an EOF's been seen but there's still some text to process
-	 * then we mark the buffer as YY_EOF_PENDING, to indicate that we
-	 * shouldn't try reading from the input source any more.  We might
-	 * still have a bunch of tokens to match, though, because of
-	 * possible backing-up.
-	 *
-	 * When we actually see the EOF, we change the status to "new"
-	 * (via yyrestart()), so that the user can continue scanning by
-	 * just pointing yyin at a new input file.
-	 */
-#define YY_BUFFER_EOF_PENDING 2
-	};
+};
 
 void yyrestart ( FILE *input_file, yyscan_t yyscanner );
 void yy_switch_to_buffer ( yybuffer new_buffer, yyscan_t yyscanner );
@@ -386,7 +389,7 @@ m4_ifdef([[M4_MODE_NO_REAL_FULLSPD]], [[
 
 %% [2.0] data tables for the DFA are inserted here
 
- m4_ifdef( [[M4_HOOK_NXT_ROWS]],[[m4_dnl
+m4_ifdef( [[M4_HOOK_NXT_ROWS]],[[m4_dnl
 m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const M4_HOOK_NXT_TYPE yy_nxt[][M4_HOOK_NXT_ROWS] =
     {
@@ -937,9 +940,11 @@ extern int yylex M4_YY_LEX_PROTO;
 ]])	YY_USER_ACTION
 
 /* Done after the current pattern has been matched and before the
- * corresponding action - sets up yytext.
+ * corresponding action - sets up yytext.  yy_cp and yy_bp are the
+ * end abd start pointers for the input buffer segment that is
+ * claimed as yytext.
  */
- void yy_do_before_action(struct yyguts_t *yyg, char *yy_cp, char *yy_bp) {
+void yy_do_before_action(struct yyguts_t *yyg, char *yy_cp, char *yy_bp) {
 	yyg->yytext_ptr = yy_bp; \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyg->yytext_ptr -= yyg->yy_more_len;
 	yyg->yyleng_r = (int) (yy_cp - yyg->yytext_ptr);]])]]) \
@@ -1605,7 +1610,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	if ( yyg->yy_c_buf_p > &yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf[yyg->yy_n_chars + 1] ) {
 		YY_FATAL_ERROR( "fatal flex scanner internal error--end of buffer missed" );
 	}
-	if ( yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_fill_buffer == 0 ) {
+	if ( !yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_fill_buffer ) {
 		/* Don't try to fill the buffer, so this is an EOF. */
 		if ( yyg->yy_c_buf_p - yyg->yytext_ptr - YY_MORE_ADJ == 1 ) {
 			/* We matched a single character, the EOB, so
@@ -2090,7 +2095,7 @@ static void yy_init_buffer(yybuffer  b, FILE * file, yyscan_t yyscanner)
 	yy_flush_buffer( b, yyscanner);
 
 	b->yy_input_file = file;
-	b->yy_fill_buffer = 1;
+	b->yy_fill_buffer = true;
 
 	/* If b is the current buffer, then yy_init_buffer was _probably_
 	 * called from yyrestart() or through yy_get_next_buffer.
@@ -2277,7 +2282,7 @@ yybuffer yy_scan_buffer(char * base, yy_size_t  size, yyscan_t yyscanner)
 	b->yy_n_chars = b->yy_buf_size;
 	b->yy_is_interactive = 0;
 	b->yy_at_bol_flag = true;
-	b->yy_fill_buffer = 0;
+	b->yy_fill_buffer = false;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
 	yy_switch_to_buffer( b, yyscanner );
@@ -2399,17 +2404,16 @@ static int yy_top_state  (yyscan_t yyscanner)
 /* Redefine yyless() so it works in section 3 code. */
 
 #undef yyless
-#define yyless(n) \
-	do { \
-		/* Undo effects of setting up yytext. */ \
-		int yyless_macro_arg = (n); \
-		YY_LESS_LINENO(yyless_macro_arg);\
-			yyg->yytext_r[yyg->yyleng_r] = yyg->yy_hold_char; \
-			yyg->yy_c_buf_p = yyg->yytext_r + yyless_macro_arg; \
-			yyg->yy_hold_char = *yyg->yy_c_buf_p; \
-			*yyg->yy_c_buf_p = '\0'; \
-			yyg->yyleng_r = yyless_macro_arg; \
-	} while ( 0 )
+void yyless(int n, yyscan_t yyscanner) {
+	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+	/* Undo effects of setting up yytext. */
+	YY_LESS_LINENO(n);
+	yyg->yytext_r[yyg->yyleng_r] = yyg->yy_hold_char;
+	yyg->yy_c_buf_p = yyg->yytext_r + n;
+	yyg->yy_hold_char = *yyg->yy_c_buf_p;
+	*yyg->yy_c_buf_p = '\0';
+	yyg->yyleng_r = n;
+}
 
 /* Accessor  methods (get/set functions) to struct members. */
 
