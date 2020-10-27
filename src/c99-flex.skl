@@ -31,6 +31,7 @@ m4_define([[M4_PROPERTY_BACKEND_NAME]], [[C99]])
 m4_define([[M4_PROPERTY_SOURCE_SUFFIX]], [[.c]])
 m4_define([[M4_PROPERTY_TRACE_LINE_REGEXP]], [[^#line ([0-9]+) "(.*)"]])
 m4_define([[M4_PROPERTY_TRACE_LINE_TEMPLATE]], [[#line %d "%s"]])
+m4_define([[M4_PROPERTY_CONTEXT_ARG]], [[yyscanner]])
 
 %# Macro hooks used by Flex code generators start here
 m4_define([[M4_HOOK_INT32]], [[flex_int32_t]])
@@ -321,6 +322,7 @@ void yypop_buffer_state ( yyscan_t yyscanner );
 static void yyensure_buffer_stack ( yyscan_t yyscanner );
 static void yy_load_buffer_state ( yyscan_t yyscanner );
 static void yy_init_buffer ( yybuffer b, FILE *file, yyscan_t yyscanner );
+static void yybumpline ( yyscan_t yyscanner );
 
 yybuffer yy_scan_buffer ( char *base, yy_size_t size, yyscan_t yyscanner );
 yybuffer yy_scan_string ( const char *yy_str, yyscan_t yyscanner );
@@ -759,18 +761,166 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 ]])
 ]])
 
+/* START special functions
+ *
+ * Flex's scanner knows these are special and inserts the yyscanner argument
+ * at the end of the argument list.  TODO: support OO languages with a
+ * property that causes it to be prepended with a dot instead.
+ */
+
+/* Enter a start condition. */
+void yybegin(int s, yyscan_t yyscanner) {
+	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+	yyg->yy_start = 1 + 2 * (s);
+}
+
+/* Translate the current start state into a value that can be later handed
+ * to yybegin() to return to the state.
+ */
+int yystart(yyscan_t yyscanner) {
+	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+	return ((yyg->yy_start - 1) / 2);
+}
+
+/* This used to be an fputs(), but since the string might contain NULs,
+ * we now use fwrite().
+ */
+void yyecho(yyscan_t yyscanner) {
+	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+	fwrite(yyg->yytext_r, (size_t) yyg->yyleng_r, 1, yyg->yyout_r);
+}
+
+m4_ifdef( [[M4_YY_NO_YYUNPUT]],, [[
+void yyunput( int c, yyscan_t yyscanner)
+{
+	char *yy_cp;
+	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+
+	yy_cp = yyg->yy_c_buf_p;
+
+	/* undo effects of setting up yytext */
+	*yy_cp = yyg->yy_hold_char;
+
+	if ( yy_cp < yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf + 2 ) {
+		/* need to shift things up to make room */
+		/* +2 for EOB chars. */
+		int number_to_move = yyg->yy_n_chars + 2;
+		char *dest = &yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf[
+					yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_buf_size + 2];
+		char *source =
+				&yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf[number_to_move];
+
+		while ( source > yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf ) {
+			*--dest = *--source;
+		}
+		yy_cp += (int) (dest - source);
+		yyg->yytext_ptr += (int) (dest - source);
+		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_n_chars =
+			yyg->yy_n_chars = (int) yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_buf_size;
+
+		if ( yy_cp < yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf + 2 ) {
+			yy_fatal_error( "flex scanner push-back overflow", yyscanner);
+		}
+	}
+
+	*--yy_cp = (char) c;
+
+m4_ifdef( [[M4_MODE_YYLINENO]],
+[[
+	if ( c == '\n' ){
+		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_bs_lineno--;
+	}
+]])
+
+	yyg->yy_hold_char = *yy_cp;
+	yyg->yy_c_buf_p = yy_cp;
+}
+]])
+
+int yyinput (yyscan_t yyscanner)
+{
+	int c;
+	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+
+	*yyg->yy_c_buf_p = yyg->yy_hold_char;
+
+	if ( *yyg->yy_c_buf_p == YY_END_OF_BUFFER_CHAR ) {
+		/* yy_c_buf_p now points to the character we want to return.
+		 * If this occurs *before* the EOB characters, then it's a
+		 * valid NUL; if not, then we've hit the end of the buffer.
+		 */
+		if ( yyg->yy_c_buf_p < &yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf[yyg->yy_n_chars] ) {
+			/* This was really a NUL. */
+			*yyg->yy_c_buf_p = '\0';
+		} else {
+			/* need more input */
+			int offset = (int) (yyg->yy_c_buf_p - yyg->yytext_ptr);
+			++yyg->yy_c_buf_p;
+
+			switch ( yy_get_next_buffer( yyscanner ) ) {
+			case EOB_ACT_LAST_MATCH:
+				/* This happens because yy_g_n_b()
+				 * sees that we've accumulated a
+				 * token and flags that we need to
+				 * try matching the token before
+				 * proceeding.  But for input(),
+				 * there's no matching to consider.
+				 * So convert the EOB_ACT_LAST_MATCH
+				 * to EOB_ACT_END_OF_FILE.
+				 */
+
+				/* Reset buffer status. */
+				yyrestart( yyg->yyin_r, yyscanner);
+
+				/*FALLTHROUGH*/
+
+			case EOB_ACT_END_OF_FILE:
+				if ( yywrap( yyscanner ) ) {
+					return 0;
+				}
+				if ( ! yyg->yy_did_buffer_switch_on_eof ) {
+					yyrestart( yyg->yyin_r, yyscanner );
+				}
+				return yyinput(yyscanner);
+
+			case EOB_ACT_CONTINUE_SCAN:
+				yyg->yy_c_buf_p = yyg->yytext_ptr + offset;
+				break;
+			}
+		}
+	}
+
+	c = *(unsigned char *) yyg->yy_c_buf_p;	/* cast for 8-bit char's */
+	*yyg->yy_c_buf_p = '\0';	/* preserve yytext */
+	yyg->yy_hold_char = *++yyg->yy_c_buf_p;
+
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
+	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol_flag = (c == '\n');
+m4_ifdef([[M4_MODE_YYLINENO]], [[
+	if ( yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol ) {
+		yybumpline( yyscanner );
+	}
+]])
+]])
+m4_ifdef([[M4_MODE_NO_BOL_NEEDED]], [[
+m4_ifdef([[M4_MODE_YYLINENO]], [[
+	if ( c == '\n' ) {
+		yybumpline( yyscanner );
+	}
+	]])
+]])
+
+	return c;
+}
+
+/* ENDS special functions
+
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
  */
 
 #ifndef YY_SKIP_YYWRAP
 extern int yywrap ( yyscan_t yyscanner );
-#endif
-
-#ifndef YY_NO_YYUNPUT
-m4_ifdef( [[M4_YY_NO_YYUNPUT]],,[[
-static void yyunput_r ( int c, yyscan_t yyscanner);
-]])
 #endif
 
 #ifndef yytext_ptr
@@ -780,11 +930,6 @@ static void yy_flex_strncpy ( char *, const char *, int, yyscan_t yyscanner);
 #ifdef YY_NEED_STRLEN
 static int yy_flex_strlen ( const char *, yyscan_t yyscanner);
 #endif
-
-#ifndef YY_NO_YYINPUT
-static int yyinput ( yyscan_t yyscanner );
-#endif
-
 
 m4_ifdef( [[M4_YY_STACK_USED]],
 [[
@@ -811,14 +956,15 @@ m4_define( [[M4_YY_NO_TOP_STATE]])
 #define YY_EXIT_FAILURE 2
 #endif
 
+m4_ifdef( [[M4_MODE_YY_NO_FATAL_ERROR]],, [[
 static void yynoreturn yy_fatal_error(const char* msg, yyscan_t yyscanner) {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 	(void)yyg; /* forestall unused-argument warning */
 	fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
 }
+]])
 
-/* Report a fatal error. */
 #ifndef YY_FATAL_ERROR
 #define YY_FATAL_ERROR(msg) yy_fatal_error( msg, yyscanner)
 #endif
@@ -836,7 +982,7 @@ m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
 	errno=0;
 	while ( (result = (int) read( fileno(yyg->yyin_r), buf, (yy_size_t) max_size )) < 0 ) {
 		if( errno != EINTR) {
-			YY_FATAL_ERROR( "input in flex scanner failed" );
+			yy_fatal_error( "input in flex scanner failed", yyscanner);
 			break;
 		}
 		errno=0;
@@ -855,14 +1001,14 @@ m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
 			buf[n++] = (char) c;
 		}
 		if ( c == EOF && ferror( yyg->yyin_r ) ) {
-			YY_FATAL_ERROR( "input in flex scanner failed" );
+			yy_fatal_error( "input in flex scanner failed", yyscanner);
 		}
 		result = n;
 	} else {
 		errno=0;
 		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyg->yyin_r)) == 0 && ferror(yyg->yyin_r)) {
 			if( errno != EINTR) {
-				YY_FATAL_ERROR( "input in flex scanner failed" );
+				yy_fatal_error( "input in flex scanner failed", yyscanner);
 				break;
 			}
 			errno=0;
@@ -977,20 +1123,11 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 #define yycolumn (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_bs_column)
 #define yy_flex_debug yyg->yy_flex_debug_r
 
-m4_define( [[M4_YY_INCR_LINENO]],
-[[
-    do{ yylineno++;
+static void yybumpline( yyscan_t yyscanner) {
+	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+	yylineno++;
         yycolumn=0;
-    }while(0)
-]])
-
-/* Enter a start condition. */
-#define yybegin(s) yyg->yy_start = 1 + 2 * (s)
-/* Translate the current start state into a value that can be later handed
- * to BEGIN to return to the state.  The YYSTATE alias is for lex
- * compatibility.
- */
-#define yystart() ((yyg->yy_start - 1) / 2)
+}
 
 m4_ifdef( [[M4_MODE_YYLINENO]], [[
 /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
@@ -1036,7 +1173,6 @@ m4_ifdef( [[M4_MODE_YYLINENO]], [[
 		yy_do_before_action(yyg, yy_cp, yy_bp); /* set up yytext again */ \
 		} \
 	while ( 0 )
-#define yyunput(c) yyunput_r( c, yyscanner )
 
 /* We provide macros for accessing buffer states in case in the
  * future we want to put the buffer states in a more general
@@ -1070,6 +1206,7 @@ m4_ifdef( [[M4_MODE_YYLINENO]], [[
 #define yy_at_bol() (yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol_flag)
 
 m4_ifdef( [[M4_MODE_USES_REJECT]],[[
+%# Can't be given the context-arg treatment due to the goto.
 #define yyreject()				\
 { \
 *yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */ \
@@ -1082,7 +1219,6 @@ yy_current_state = *yyg->yy_state_ptr; /* restore curr. state */ \
 ++yyg->yy_lp; \
 goto find_rule; \
 }
-#define REJECT	yyreject()
 ]])
 m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
 /* The intent behind this definition is that it'll catch
@@ -1114,11 +1250,6 @@ m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 ]])
-
-/* This used to be an fputs(), but since the string might contain NULs,
- * we now use fwrite().
- */
-#define yyecho() fwrite(yyg->yytext_r, (size_t) yyg->yyleng_r, 1, yyg->yyout_r)
 
 /* END access macros for use in actions */
 
@@ -1244,7 +1375,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 			yyg->yy_state_buf = (yy_state_type *)yyalloc(YY_STATE_BUF_SIZE, yyscanner);
 		}
 		if ( yyg->yy_state_buf == NULL) {
-			YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
+			yy_fatal_error( "out of dynamic memory in yylex()", yyscanner);
 		}
 ]])
 
@@ -1410,7 +1541,7 @@ m4_define([[M4_YYL_BASE]], [[m4_ifdef([[M4_MODE_YYMORE_USED]],
 				int yyl;
 				for ( yyl = M4_YYL_BASE; yyl < yyg->yyleng_r; ++yyl ) {
 					if ( yyg->yytext_r[yyl] == '\n' ) {
-						M4_YY_INCR_LINENO();
+						yybumpline( yyscanner );
 
 					}
 				}
@@ -1432,7 +1563,7 @@ m4_ifdef([[M4_MODE_DEBUG]], [[
      				} else if ( yy_act == YY_NUM_RULES + 1 ) {
 					fprintf( stderr, "--(end of buffer or a NUL)\n" );
 				} else {
-					fprintf( stderr, "--EOF (start condition %d)\n", yystart() );
+					fprintf( stderr, "--EOF (start condition %d)\n", yystart(yyscanner) );
 				}
 			}
 ]])
@@ -1554,7 +1685,7 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 							 */
 							yyg->yy_c_buf_p = yyg->yytext_ptr + YY_MORE_ADJ;
 
-							yy_act = YY_STATE_EOF(yystart());
+							yy_act = YY_STATE_EOF(yystart(yyscanner));
 							goto do_action;
 						} else {
 							if ( ! yyg->yy_did_buffer_switch_on_eof ) {
@@ -1586,7 +1717,7 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 				break;
 			} /* case YY_END_OF_BUFFER */
 			default:
-				YY_FATAL_ERROR("fatal flex scanner internal error--no action found" );
+			    yy_fatal_error("fatal flex scanner internal error--no action found", yyscanner);
 			} /* end of action switch */
 		} /* end of scanning one token */
 	} /* end of user's declarations */
@@ -1608,7 +1739,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	int ret_val;
 
 	if ( yyg->yy_c_buf_p > &yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf[yyg->yy_n_chars + 1] ) {
-		YY_FATAL_ERROR( "fatal flex scanner internal error--end of buffer missed" );
+		yy_fatal_error( "fatal flex scanner internal error--end of buffer missed", yyscanner);
 	}
 	if ( !yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_fill_buffer ) {
 		/* Don't try to fill the buffer, so this is an EOF. */
@@ -1645,8 +1776,8 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 		while ( num_to_read <= 0 ) { /* Not enough room in the buffer - grow it. */
 m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
-			YY_FATAL_ERROR(
-"input buffer overflow, can't enlarge buffer because scanner uses yyreject()" );
+			yy_fatal_error(
+				"input buffer overflow, can't enlarge buffer because scanner uses yyreject()", yyscanner );
 ]],
 [[
 			/* just a shorter name for the current buffer */
@@ -1672,8 +1803,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 				b->yy_ch_buf = NULL;
 			}
 			if ( b->yy_ch_buf == NULL ) {
-				YY_FATAL_ERROR(
-				"fatal error - scanner input buffer overflow" );
+				yy_fatal_error("fatal error - scanner input buffer overflow", yyscanner);
 			}
 			yyg->yy_c_buf_p = &b->yy_ch_buf[yy_c_buf_p_offset];
 
@@ -1710,7 +1840,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf = (char *) yyrealloc(
 			(void *) yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf, (yy_size_t) new_size, yyscanner );
 		if ( yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf == NULL ) {
-			YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
+			yy_fatal_error( "out of dynamic memory in yy_get_next_buffer()", yyscanner);
 		}
 		/* "- 2" to take care of EOB's */
 		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_buf_size = (int) (new_size - 2);
@@ -1844,129 +1974,6 @@ m4_ifdef([[M4_MODE_NULTRANS_WRAP]], [[
 	return yy_is_jam ? 0 : yy_current_state;
 }
 
-m4_ifdef( [[M4_YY_NO_YYUNPUT]],, [[
-static void yyunput_r( int c, yyscan_t yyscanner)
-{
-	char *yy_cp;
-	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-
-	yy_cp = yyg->yy_c_buf_p;
-
-	/* undo effects of setting up yytext */
-	*yy_cp = yyg->yy_hold_char;
-
-	if ( yy_cp < yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf + 2 ) {
-		/* need to shift things up to make room */
-		/* +2 for EOB chars. */
-		int number_to_move = yyg->yy_n_chars + 2;
-		char *dest = &yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf[
-					yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_buf_size + 2];
-		char *source =
-				&yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf[number_to_move];
-
-		while ( source > yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf ) {
-			*--dest = *--source;
-		}
-		yy_cp += (int) (dest - source);
-		yyg->yytext_ptr += (int) (dest - source);
-		yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_n_chars =
-			yyg->yy_n_chars = (int) yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_buf_size;
-
-		if ( yy_cp < yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf + 2 ) {
-			YY_FATAL_ERROR( "flex scanner push-back overflow" );
-		}
-	}
-
-	*--yy_cp = (char) c;
-
-m4_ifdef( [[M4_MODE_YYLINENO]],
-[[
-	if ( c == '\n' ){
-		--yylineno;
-	}
-]])
-
-	yyg->yy_hold_char = *yy_cp;
-	yyg->yy_c_buf_p = yy_cp;
-}
-]])
-
-int yyinput (yyscan_t yyscanner)
-{
-	int c;
-	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-
-	*yyg->yy_c_buf_p = yyg->yy_hold_char;
-
-	if ( *yyg->yy_c_buf_p == YY_END_OF_BUFFER_CHAR ) {
-		/* yy_c_buf_p now points to the character we want to return.
-		 * If this occurs *before* the EOB characters, then it's a
-		 * valid NUL; if not, then we've hit the end of the buffer.
-		 */
-		if ( yyg->yy_c_buf_p < &yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_ch_buf[yyg->yy_n_chars] ) {
-			/* This was really a NUL. */
-			*yyg->yy_c_buf_p = '\0';
-		} else {
-			/* need more input */
-			int offset = (int) (yyg->yy_c_buf_p - yyg->yytext_ptr);
-			++yyg->yy_c_buf_p;
-
-			switch ( yy_get_next_buffer( yyscanner ) ) {
-			case EOB_ACT_LAST_MATCH:
-				/* This happens because yy_g_n_b()
-				 * sees that we've accumulated a
-				 * token and flags that we need to
-				 * try matching the token before
-				 * proceeding.  But for input(),
-				 * there's no matching to consider.
-				 * So convert the EOB_ACT_LAST_MATCH
-				 * to EOB_ACT_END_OF_FILE.
-				 */
-
-				/* Reset buffer status. */
-				yyrestart( yyg->yyin_r, yyscanner);
-
-				/*FALLTHROUGH*/
-
-			case EOB_ACT_END_OF_FILE:
-				if ( yywrap( yyscanner ) ) {
-					return 0;
-				}
-				if ( ! yyg->yy_did_buffer_switch_on_eof ) {
-					yyrestart( yyg->yyin_r, yyscanner );
-				}
-				return yyinput(yyscanner);
-
-			case EOB_ACT_CONTINUE_SCAN:
-				yyg->yy_c_buf_p = yyg->yytext_ptr + offset;
-				break;
-			}
-		}
-	}
-
-	c = *(unsigned char *) yyg->yy_c_buf_p;	/* cast for 8-bit char's */
-	*yyg->yy_c_buf_p = '\0';	/* preserve yytext */
-	yyg->yy_hold_char = *++yyg->yy_c_buf_p;
-
-m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
-	yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol_flag = (c == '\n');
-m4_ifdef([[M4_MODE_YYLINENO]], [[
-	if ( yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]->yy_at_bol ) {
-		M4_YY_INCR_LINENO();
-	}
-]])
-]])
-m4_ifdef([[M4_MODE_NO_BOL_NEEDED]], [[
-m4_ifdef([[M4_MODE_YYLINENO]], [[
-	if ( c == '\n' ) {
-		M4_YY_INCR_LINENO();
-	}
-	]])
-]])
-
-	return c;
-}
-
 /** Immediately switch to a different input stream.
  * @param input_file A readable stream.
  * @param yyscanner The scanner object.
@@ -2044,7 +2051,7 @@ yybuffer yy_create_buffer(FILE * file, int  size, yyscan_t yyscanner)
 
 	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ), yyscanner );
 	if (  b == NULL ) {
-		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
+		yy_fatal_error( "out of dynamic memory in yy_create_buffer()", yyscanner );
 	}
 	b->yy_buf_size = size;
 
@@ -2053,7 +2060,7 @@ yybuffer yy_create_buffer(FILE * file, int  size, yyscan_t yyscanner)
 	 */
 	b->yy_ch_buf = (char *) yyalloc( (yy_size_t) (b->yy_buf_size + 2), yyscanner );
 	if ( b->yy_ch_buf == NULL ) {
-		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
+		yy_fatal_error( "out of dynamic memory in yy_create_buffer()", yyscanner );
 	}
 	b->yy_is_our_buffer = 1;
 
@@ -2224,7 +2231,7 @@ static void yyensure_buffer_stack (yyscan_t yyscanner)
 		yyg->yy_buffer_stack = (struct yy_buffer_state**)yyalloc
 			(num_to_alloc * sizeof(struct yy_buffer_state*), yyscanner);
 		if ( yyg->yy_buffer_stack == NULL ) {
-			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
+			yy_fatal_error( "out of dynamic memory in yyensure_buffer_stack()", yyscanner );
 		}
 
 		memset(yyg->yy_buffer_stack, 0, num_to_alloc * sizeof(struct yy_buffer_state*));
@@ -2244,7 +2251,7 @@ static void yyensure_buffer_stack (yyscan_t yyscanner)
 								 num_to_alloc * sizeof(struct yy_buffer_state*),
 								yyscanner);
 		if (yyg->yy_buffer_stack == NULL) {
-			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
+			yy_fatal_error( "out of dynamic memory in yyensure_buffer_stack()", yyscanner );
 		}
 		/* zero only the new slots.*/
 		memset(yyg->yy_buffer_stack + yyg->yy_buffer_stack_max, 0, grow_size * sizeof(struct yy_buffer_state*));
@@ -2273,7 +2280,7 @@ yybuffer yy_scan_buffer(char * base, yy_size_t  size, yyscan_t yyscanner)
 	}
 	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ), yyscanner );
 	if ( b == NULL ) {
-		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
+		yy_fatal_error( "out of dynamic memory in yy_scan_buffer()", yyscanner );
 	}
 	b->yy_buf_size = (int) (size - 2);	/* "- 2" to take care of EOB's */
 	b->yy_buf_pos = b->yy_ch_buf = base;
@@ -2329,7 +2336,7 @@ yybuffer yy_scan_bytes(const char * yybytes, int  _yybytes_len, yyscan_t yyscann
 	n = (yy_size_t) (_yybytes_len + 2);
 	buf = (char *) yyalloc( n, yyscanner );
 	if ( buf == 0 ) {
-		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
+		yy_fatal_error( "out of dynamic memory in yy_scan_bytes()", yyscanner );
 	}
 	for ( i = 0; i < _yybytes_len; ++i ) {
 		buf[i] = yybytes[i];
@@ -2338,7 +2345,7 @@ yybuffer yy_scan_bytes(const char * yybytes, int  _yybytes_len, yyscan_t yyscann
 
 	b = yy_scan_buffer( buf, n, yyscanner);
 	if ( b == NULL ) {
-		YY_FATAL_ERROR( "bad buffer in yy_scan_bytes()" );
+		yy_fatal_error( "bad buffer in yy_scan_bytes()", yyscanner );
 	}
 	/* It's okay to grow etc. this buffer, and we should throw it
 	 * away when we're done.
@@ -2369,12 +2376,12 @@ static void yy_push_state(int _new_state, yyscan_t yyscanner)
 					(void *) yyg->yy_start_stack, new_size, yyscanner );
 		}
 		if ( yyg->yy_start_stack == NULL ) {
-			YY_FATAL_ERROR( "out of memory expanding start-condition stack" );
+			yy_fatal_error( "out of memory expanding start-condition stack", yyscanner);
 		}
 	}
-	yyg->yy_start_stack[yyg->yy_start_stack_ptr++] = yystart();
+	yyg->yy_start_stack[yyg->yy_start_stack_ptr++] = yystart(yyscanner);
 
-	yybegin(_new_state);
+	yybegin(_new_state, yyscanner);
 }
 ]])
 
@@ -2385,9 +2392,9 @@ static void yy_pop_state  (yyscan_t yyscanner)
 {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 	if ( --yyg->yy_start_stack_ptr < 0 ) {
-		YY_FATAL_ERROR( "start-condition stack underflow" );
+		yy_fatal_error( "start-condition stack underflow", yyscanner );
 	}
-	yybegin(yyg->yy_start_stack[yyg->yy_start_stack_ptr]);
+	yybegin(yyg->yy_start_stack[yyg->yy_start_stack_ptr], yyscanner);
 }
 ]])
 
@@ -2397,7 +2404,7 @@ m4_ifdef( [[M4_YY_NO_TOP_STATE]],,
 static int yy_top_state  (yyscan_t yyscanner)
 {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	return yyg->yy_start_stack_ptr > 0 ? yyg->yy_start_stack[yyg->yy_start_stack_ptr - 1] : yystart();
+	return yyg->yy_start_stack_ptr > 0 ? yyg->yy_start_stack[yyg->yy_start_stack_ptr - 1] : yystart(yyscanner);
 }
 ]])
 
@@ -2524,7 +2531,7 @@ void yyset_lineno(int _line_number, yyscan_t yyscanner) {
 
 	/* lineno is only valid if an input buffer exists. */
 	if (yy_current_buffer() == NULL ) {
-		YY_FATAL_ERROR( "yyset_lineno called with no buffer" );
+		yy_fatal_error( "yyset_lineno called with no buffer", yyscanner );
 	}
 	yylineno = _line_number;
 }
@@ -2541,7 +2548,7 @@ void yyset_column(int _column_no, yyscan_t yyscanner) {
 
 	/* column is only valid if an input buffer exists. */
 	if (yy_current_buffer() == NULL ) {
-	       YY_FATAL_ERROR( "yyset_column called with no buffer" );
+		yy_fatal_error( "yyset_column called with no buffer", yyscanner );
 	}
 	yycolumn = _column_no;
 }

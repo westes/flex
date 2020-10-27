@@ -139,7 +139,7 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 				add_action(
 				"YY_FATAL_ERROR( \"flex scanner jammed\" )" );
 			else
-				add_action( "yyecho()" );
+			    context_call("yyecho()");
 
 			add_action( ";\n\tYY_BREAK]]\n" );
 			}
@@ -216,7 +216,7 @@ option		:  TOK_OUTFILE '=' NAME
 		|  TOK_POSTACTION '=' NAME
 			{ ctrl.postaction = xstrdup(nmstr); }
 		|  TOK_EMIT '=' NAME
-			{ ctrl.emit = xstrdup(nmstr); }
+		{ ctrl.emit = xstrdup(nmstr); backend_by_name(ctrl.emit); }
 		|  TOK_USERINIT '=' NAME
 			{ ctrl.userinit = xstrdup(nmstr); }
 		|  TOK_TABLES_FILE '=' NAME

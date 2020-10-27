@@ -1223,9 +1223,11 @@ void readin (void)
 	if (syntaxerror)
 		flexend (1);
 
-	/* On --emit, -e, or %option emit, change backends
-	 * This is where backend properties are collected,
-	 * which means they can't be set from a custom skelfile.
+	/* On --emit, -e, or change backends This is where backend
+	 * properties are collected, which means they can't be set
+	 * from a custom skelfile.  Note: might have been called sooner
+	 * when %option emit was evaluated; this catches command-line
+	 * optiins and the default case.
 	 */
 	backend_by_name(ctrl.emit);
 
@@ -1608,6 +1610,8 @@ void readin (void)
 	if (ctrl.no_yyinput)
 		visible_define("M4_MODE_NO_YYINPUT");
 
+	if (ctrl.no_yy_fatal_error)
+		visible_define("M4_YY_NO_FATAL_ERROR");
 	if (ctrl.no_yy_push_state)
 		visible_define("M4_YY_NO_PUSH_STATE");
 	if (ctrl.no_yy_pop_state)

@@ -351,6 +351,7 @@ struct ctrl_bundle_t {
 	char *postaction;	// Code fragment to be inserted after each action
 	char *emit;		// Specify target language to emit.
  	// flags corresponding to the huge mass of --no-yy options
+	bool no_yy_fatal_error;
 	bool no_yy_push_state;
 	bool no_yy_pop_state;
 	bool no_yy_top_state;
@@ -1059,6 +1060,8 @@ extern void scinstal(const char *, int);	/* make a start condition */
 /* Lookup the number associated with a start condition. */
 extern int sclookup(const char *);
 
+/* Supply context argument for a function if required */
+extern void context_call(char *);
 
 /* from file tblcmp.c */
 

@@ -150,6 +150,11 @@ LEXOPT		[aceknopr]
 M4QSTART    "[""["
 M4QEND      "]""]"
 
+FUNARGS     [^)]*
+
+%{
+void context_call(char *);
+%}
 %%
 	static int bracelevel, didadef, indented_code;
 	static int doing_rule_action = false;
@@ -417,6 +422,8 @@ M4QEND      "]""]"
 	yymore		yymore_really_used = option_sense;
 	yywrap		ctrl.do_yywrap = option_sense;
 	yyread		ctrl.noyyread = !option_sense;
+
+	yy_fatal_error	ctrl.no_yy_fatal_error = !option_sense;
 
 	yy_push_state	ctrl.no_yy_push_state = ! option_sense;
 	yy_pop_state	ctrl.no_yy_pop_state = ! option_sense;
@@ -948,6 +955,9 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 <ACTION>{
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
+	yyecho\(\)|yyinput\(\)|yystart\({FUNARGS}\)|yybegin\({FUNARGS}\)|yyunput\({FUNARGS}\) {
+			context_call(yytext);
+	}
 	[^[:alpha:]_{}""''/\n\[\]]+	ACTION_ECHO;
         {NAME}		ACTION_ECHO;
         "'"([^''\\\n]|\\.)"'" ACTION_ECHO; /* character constant */
@@ -1060,3 +1070,25 @@ void set_input_file( char *file )
 
 	linenum = 1;
 	}
+
+void context_call(char *txt) {
+	const char *context_arg = skel_property("M4_PROPERTY_CONTEXT_ARG");
+
+	/* if there's no such property, simply pass through */
+	if (context_arg == NULL) {
+		add_action(txt);
+	} else {
+		char buf[BUFSIZ];
+
+		/* otherwise, supply the context string as a final argument */
+		assert(txt[strlen(txt)-1] == ')');
+		strncpy(buf, txt, sizeof(buf));
+		buf[strlen(buf)-1] = '\0';	/* remove trailing ) */
+		add_action(buf);
+		if (txt[strlen(buf)-1] != '(') {
+			add_action(", ");
+		}
+		add_action(context_arg);
+		add_action(")");
+	}
+}

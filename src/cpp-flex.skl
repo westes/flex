@@ -1510,6 +1510,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define YY_EXIT_FAILURE 2
 #endif
 
+m4_ifdef([[M4_MODE_YY_NO_FATAL_ERROR]],,[[
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 static void yynoreturn yy_fatal_error YYFARGS1(const char*, msg) {
 	M4_YY_DECL_GUTS_VAR();
@@ -1524,6 +1525,7 @@ void yyFlexLexer::LexerError( const char* msg ) {
 	std::cerr << msg << std::endl;
 	exit( YY_EXIT_FAILURE );
 }
+]])
 ]])
 
 /* Report a fatal error. */

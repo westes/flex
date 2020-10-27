@@ -123,7 +123,8 @@ yyextra_nr
 yyextra_nr.c
 yyextra_c99
 yyextra_c99.c
-tableopts_*.c
+yyunput_*
+!yyunput.rules
 *.opt
 *.ser
 *.ver

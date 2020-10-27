@@ -8966,6 +8966,11 @@ YY_CURRENT_BUFFER: replaced by yy_current_buffer().
 @item
 YY_BUFFER_STATE: replaced by yybuffer.
 
+@item YY_FATAL_ERROR: replaced by yy_fatal_error().
+To supply your own handler, simply use @code{%option noyy_fatal_error}
+so the default handler is not generated, then write your own handler
+with the same prototype.
+
 @item
 YY_NEW_FILE: In previous versions of @code{flex}, when assigning
 @file{yyin} to a new input file, after doing the assignment you had to
