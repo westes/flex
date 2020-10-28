@@ -1464,7 +1464,7 @@ void readin (void)
 		visible_define("<M4_YY_BISON_LLOC>");
 
 	if (extra_type != NULL)
-		visible_define_str ("M4_EXTRA_TYPE_DEFS", extra_type);
+		visible_define_str ("M4_MODE_EXTRA_TYPE", extra_type);
 
 	/* always generate the tablesverify flag. */
 	visible_define_str ("M4_YY_TABLES_VERIFY", tablesverify ? "1" : "0");

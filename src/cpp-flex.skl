@@ -1530,7 +1530,7 @@ void yyFlexLexer::LexerError( const char* msg ) {
 ]])
 ]])
 
-/* Report a fatal error. */
+/* Report a fatal error. Legacy interface. */
 #ifndef YY_FATAL_ERROR
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 #define YY_FATAL_ERROR(msg) yypanic( msg M4_YY_CALL_LAST_ARG)

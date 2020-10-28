@@ -580,21 +580,10 @@ m4_ifdef( [[M4_YY_NO_UNISTD_H]],,
 #endif
 ]])
 
-m4_ifdef( [[M4_EXTRA_TYPE_DEFS]],
-[[
-#define YY_EXTRA_TYPE M4_EXTRA_TYPE_DEFS
-]],
-[[
-#ifndef YY_EXTRA_TYPE
-#define YY_EXTRA_TYPE void *
-#endif
-]]
-)
-
 /* Holds the entire state of the reentrant scanner. */
 struct yyguts_t {
 	/* User-defined. Not touched by flex. */
-	YY_EXTRA_TYPE yyextra_r;
+	m4_ifdef([[M4_MODE_EXTRA_TYPE]], [[M4_MODE_EXTRA_TYPE yyextra_r;]])
 
 	/* The rest are the same as the globals declared in the non-reentrant scanner. */
 	FILE *yyin_r, *yyout_r;
@@ -664,7 +653,9 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 
 int yylex_init (yyscan_t* scanner);
 
-int yylex_init_extra ( YY_EXTRA_TYPE user_defined, yyscan_t* scanner);
+m4_ifdef([[M4_MODE_EXTRA_TYPE]], [[m4_dnl
+int yylex_init_extra ( M4_MODE_EXTRA_TYPE user_defined, yyscan_t* scanner);
+]])
 
 /* Accessor methods to globals.
    These are made visible to non-reentrant scanners for convenience. */
@@ -684,14 +675,16 @@ m4_ifdef( [[M4_YY_NO_SET_DEBUG]],,
 void yyset_debug ( int debug_flag, yyscan_t yyscanner );
 ]])
 
+m4_ifdef([[M4_MODE_EXTRA_TYPE]], [[m4_dnl
 m4_ifdef( [[M4_YY_NO_GET_EXTRA]],,
 [[
-YY_EXTRA_TYPE yyget_extra ( yyscan_t yyscanner );
+M4_MODE_EXTRA_TYPE yyget_extra ( yyscan_t yyscanner );
 ]])
 
 m4_ifdef( [[M4_YY_NO_SET_EXTRA]],,
 [[
-void yyset_extra ( YY_EXTRA_TYPE user_defined, yyscan_t yyscanner );
+void yyset_extra ( M4_MODE_EXTRA_TYPE user_defined, yyscan_t yyscanner );
+]])
 ]])
 
 m4_ifdef( [[M4_YY_NO_GET_IN]],,
@@ -2374,13 +2367,15 @@ void yyless(int n, yyscan_t yyscanner) {
 
 /* Accessor  methods (get/set functions) to struct members. */
 
-m4_ifdef( [[M4_YY_NO_GET_EXTRA]],, [[
+m4_ifdef([[M4_MODE_EXTRA_TYPE]], [[m4_dnl
+m4_ifdef([[M4_YY_NO_GET_EXTRA]],, [[m4_dnl
 /** Get the user-defined data for this scanner.
  * @param yyscanner The scanner object.
  */
-YY_EXTRA_TYPE yyget_extra  (yyscan_t yyscanner) {
-	return yyextra;
+M4_MODE_EXTRA_TYPE yyget_extra  (yyscan_t yyscanner) {
+	return yyscanner->yyextra_r;
 }
+]])
 ]])
 
 m4_ifdef( [[M4_YY_NO_GET_LINENO]],,
@@ -2451,15 +2446,17 @@ char *yyget_text  (yyscan_t yyscanner) {
 }
 ]])
 
+m4_ifdef([[M4_MODE_EXTRA_TYPE]], [[m4_dnl
 m4_ifdef( [[M4_YY_NO_SET_EXTRA]],,
 [[
 /** Set the user-defined data. This data is never touched by the scanner.
  * @param user_defined The data to be associated with this scanner.
  * @param yyscanner The scanner object.
  */
-void yyset_extra(YY_EXTRA_TYPE user_defined, yyscan_t yyscanner) {
-	yyextra = user_defined ;
+void yyset_extra(M4_MODE_EXTRA_TYPE user_defined, yyscan_t yyscanner) {
+	yyscanner->yyextra_r = user_defined ;
 }
+]])
 ]])
 
 m4_ifdef( [[M4_YY_NO_SET_LINENO]],,
@@ -2588,6 +2585,7 @@ int yylex_init(yyscan_t* ptr_yy_globals) {
 	return yy_init_globals ( *ptr_yy_globals );
 }
 
+m4_ifdef([[M4_MODE_EXTRA_TYPE]], [[m4_dnl
 /* yylex_init_extra has the same functionality as yylex_init, but follows the
  * convention of taking the scanner as the last argument. Note however, that
  * this is a *pointer* to a scanner, as it will be allocated by this call (and
@@ -2595,7 +2593,7 @@ int yylex_init(yyscan_t* ptr_yy_globals) {
  * The user defined value in the first argument will be available to yyalloc in
  * the yyextra field.
  */
-int yylex_init_extra( YY_EXTRA_TYPE yy_user_defined, yyscan_t* ptr_yy_globals ) {
+int yylex_init_extra( M4_MODE_EXTRA_TYPE yy_user_defined, yyscan_t* ptr_yy_globals ) {
 	struct yyguts_t dummy_yyguts;
 
 	yyset_extra (yy_user_defined, &dummy_yyguts);
@@ -2620,6 +2618,7 @@ int yylex_init_extra( YY_EXTRA_TYPE yy_user_defined, yyscan_t* ptr_yy_globals ) 
 
 	return yy_init_globals ( *ptr_yy_globals );
 }
+]])
 
 static int yy_init_globals (yyscan_t yyscanner) {
 	/*
