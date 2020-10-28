@@ -227,12 +227,12 @@ m4preproc_include(`flexint_shared.h')
 /* END platform-specific and compiler-specific definitions. */
 
 /* Returned upon end-of-file. */
-#define YY_NULL 0
+const int YY_NULL = 0;
 
 /* Promotes a possibly negative, possibly signed char to an
  *   integer in range [0..255] for use as an array index.
  */
-#define YY_SC_TO_UI(c) ((YY_CHAR) (c))
+m4_define([[YY_SC_TO_UI]], [[((YY_CHAR)($1))]])
 
 /* An opaque pointer. */
 typedef void* yyscan_t;
