@@ -365,7 +365,7 @@ m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
 static yy_state_type yy_get_previous_state ( yyscan_t yyscanner );
 static yy_state_type yy_try_NUL_trans ( yy_state_type current_state , yyscan_t yyscanner);
 static int yy_get_next_buffer ( yyscan_t yyscanner );
-static void yynoreturn yy_fatal_error ( const char* msg, yyscan_t yyscanner );
+static void yynoreturn yypanic ( const char* msg, yyscan_t yyscanner );
 
 struct yy_trans_info {
 	/* We require that yy_verify and yy_nxt must be of the same size int. */
@@ -818,7 +818,7 @@ void yyunput( int c, yyscan_t yyscanner)
 			yyscanner->yy_n_chars = (int) yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size;
 
 		if ( yy_cp < yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf + 2 ) {
-			yy_fatal_error( "flex scanner push-back overflow", yyscanner);
+			yypanic( "flex scanner push-back overflow", yyscanner);
 		}
 	}
 
@@ -945,7 +945,7 @@ m4_define( [[M4_YY_NO_TOP_STATE]])
 const int YY_EXIT_FAILURE = 2;
 
 m4_ifdef( [[M4_MODE_YY_NO_FATAL_ERROR]],, [[
-static void yynoreturn yy_fatal_error(const char* msg, yyscan_t yyscanner) {
+static void yynoreturn yypanic(const char* msg, yyscan_t yyscanner) {
 	(void)yyscanner; /* forestall unused-argument warning */
 	fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
@@ -953,7 +953,7 @@ static void yynoreturn yy_fatal_error(const char* msg, yyscan_t yyscanner) {
 ]])
 
 #ifndef YY_FATAL_ERROR
-#define YY_FATAL_ERROR(msg) yy_fatal_error( msg, yyscanner)
+#define YY_FATAL_ERROR(msg) yypanic( msg, yyscanner)
 #endif
 
 m4_ifdef( [[M4_MODE_USER_YYREAD]],, [[
@@ -966,7 +966,7 @@ m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
 	errno=0;
 	while ( (result = (int) read( fileno(yyscanner->yyin_r), buf, (yy_size_t) max_size )) < 0 ) {
 		if( errno != EINTR) {
-			yy_fatal_error( "input in flex scanner failed", yyscanner);
+			yypanic( "input in flex scanner failed", yyscanner);
 			break;
 		}
 		errno=0;
@@ -985,14 +985,14 @@ m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
 			buf[n++] = (char) c;
 		}
 		if ( c == EOF && ferror( yyscanner->yyin_r ) ) {
-			yy_fatal_error( "input in flex scanner failed", yyscanner);
+			yypanic( "input in flex scanner failed", yyscanner);
 		}
 		result = n;
 	} else {
 		errno=0;
 		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyscanner->yyin_r)) == 0 && ferror(yyscanner->yyin_r)) {
 			if( errno != EINTR) {
-				yy_fatal_error( "input in flex scanner failed", yyscanner);
+				yypanic( "input in flex scanner failed", yyscanner);
 				break;
 			}
 			errno=0;
@@ -1082,9 +1082,9 @@ void yy_do_before_action(yyscan_t yyscanner, char *yy_cp, char *yy_bp) {
 	*yy_cp = '\0'; \
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if ( yyscanner->yyleng_r + yyscanner->yy_more_offset >= YYLMAX ) \
-					 yy_fatal_error( "token too large, exceeds YYLMAX", yyscanner);]]) \
+					 yypanic( "token too large, exceeds YYLMAX", yyscanner);]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if ( yyscanner->yyleng_r >= YYLMAX ) \
-					 yy_fatal_error( "token too large, exceeds YYLMAX", yyscanner);]]) \
+					 yypanic( "token too large, exceeds YYLMAX", yyscanner);]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[strncpy( &yyscanner->yytext_r[yyscanner->yy_more_offset], yyscanner->yytext_ptr, yyscanner->yyleng_r + 1);]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yyleng_r += yyscanner->yy_more_offset;]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yy_prev_more_offset = yyscanner->yy_more_offset;]]) \
@@ -1354,7 +1354,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 			yyscanner->yy_state_buf = (yy_state_type *)yyalloc(YY_STATE_BUF_SIZE, yyscanner);
 		}
 		if ( yyscanner->yy_state_buf == NULL) {
-			yy_fatal_error( "out of dynamic memory in yylex()", yyscanner);
+			yypanic( "out of dynamic memory in yylex()", yyscanner);
 		}
 ]])
 
@@ -1696,7 +1696,7 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 				break;
 			} /* case YY_END_OF_BUFFER */
 			default:
-			    yy_fatal_error("fatal flex scanner internal error--no action found", yyscanner);
+			    yypanic("fatal flex scanner internal error--no action found", yyscanner);
 			} /* end of action switch */
 		} /* end of scanning one token */
 	} /* end of user's declarations */
@@ -1717,7 +1717,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	int ret_val;
 
 	if ( yyscanner->yy_c_buf_p > &yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars + 1] ) {
-		yy_fatal_error( "fatal flex scanner internal error--end of buffer missed", yyscanner);
+		yypanic( "fatal flex scanner internal error--end of buffer missed", yyscanner);
 	}
 	if ( !yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_fill_buffer ) {
 		/* Don't try to fill the buffer, so this is an EOF. */
@@ -1754,7 +1754,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 		while ( num_to_read <= 0 ) { /* Not enough room in the buffer - grow it. */
 m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
-			yy_fatal_error(
+			yypanic(
 				"input buffer overflow, can't enlarge buffer because scanner uses yyreject()", yyscanner );
 ]],
 [[
@@ -1781,7 +1781,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 				b->yy_ch_buf = NULL;
 			}
 			if ( b->yy_ch_buf == NULL ) {
-				yy_fatal_error("fatal error - scanner input buffer overflow", yyscanner);
+				yypanic("fatal error - scanner input buffer overflow", yyscanner);
 			}
 			yyscanner->yy_c_buf_p = &b->yy_ch_buf[yy_c_buf_p_offset];
 
@@ -1817,7 +1817,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf = (char *) yyrealloc(
 			(void *) yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf, (yy_size_t) new_size, yyscanner );
 		if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf == NULL ) {
-			yy_fatal_error( "out of dynamic memory in yy_get_next_buffer()", yyscanner);
+			yypanic( "out of dynamic memory in yy_get_next_buffer()", yyscanner);
 		}
 		/* "- 2" to take care of EOB's */
 		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size = (int) (new_size - 2);
@@ -2022,7 +2022,7 @@ yybuffer yy_create_buffer(FILE * file, int  size, yyscan_t yyscanner)
 
 	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ), yyscanner );
 	if (  b == NULL ) {
-		yy_fatal_error( "out of dynamic memory in yy_create_buffer()", yyscanner );
+		yypanic( "out of dynamic memory in yy_create_buffer()", yyscanner );
 	}
 	b->yy_buf_size = size;
 
@@ -2031,7 +2031,7 @@ yybuffer yy_create_buffer(FILE * file, int  size, yyscan_t yyscanner)
 	 */
 	b->yy_ch_buf = (char *) yyalloc( (yy_size_t) (b->yy_buf_size + 2), yyscanner );
 	if ( b->yy_ch_buf == NULL ) {
-		yy_fatal_error( "out of dynamic memory in yy_create_buffer()", yyscanner );
+		yypanic( "out of dynamic memory in yy_create_buffer()", yyscanner );
 	}
 	b->yy_is_our_buffer = 1;
 
@@ -2196,7 +2196,7 @@ static void yyensure_buffer_stack (yyscan_t yyscanner)
 		yyscanner->yy_buffer_stack = (struct yy_buffer_state**)yyalloc
 			(num_to_alloc * sizeof(struct yy_buffer_state*), yyscanner);
 		if ( yyscanner->yy_buffer_stack == NULL ) {
-			yy_fatal_error( "out of dynamic memory in yyensure_buffer_stack()", yyscanner );
+			yypanic( "out of dynamic memory in yyensure_buffer_stack()", yyscanner );
 		}
 
 		memset(yyscanner->yy_buffer_stack, 0, num_to_alloc * sizeof(struct yy_buffer_state*));
@@ -2216,7 +2216,7 @@ static void yyensure_buffer_stack (yyscan_t yyscanner)
 								 num_to_alloc * sizeof(struct yy_buffer_state*),
 								yyscanner);
 		if (yyscanner->yy_buffer_stack == NULL) {
-			yy_fatal_error( "out of dynamic memory in yyensure_buffer_stack()", yyscanner );
+			yypanic( "out of dynamic memory in yyensure_buffer_stack()", yyscanner );
 		}
 		/* zero only the new slots.*/
 		memset(yyscanner->yy_buffer_stack + yyscanner->yy_buffer_stack_max, 0, grow_size * sizeof(struct yy_buffer_state*));
@@ -2244,7 +2244,7 @@ yybuffer yy_scan_buffer(char * base, yy_size_t  size, yyscan_t yyscanner)
 	}
 	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ), yyscanner );
 	if ( b == NULL ) {
-		yy_fatal_error( "out of dynamic memory in yy_scan_buffer()", yyscanner );
+		yypanic( "out of dynamic memory in yy_scan_buffer()", yyscanner );
 	}
 	b->yy_buf_size = (int) (size - 2);	/* "- 2" to take care of EOB's */
 	b->yy_buf_pos = b->yy_ch_buf = base;
@@ -2297,7 +2297,7 @@ yybuffer yy_scan_bytes(const char * yybytes, int  _yybytes_len, yyscan_t yyscann
 	n = (yy_size_t) (_yybytes_len + 2);
 	buf = (char *) yyalloc( n, yyscanner );
 	if ( buf == 0 ) {
-		yy_fatal_error( "out of dynamic memory in yy_scan_bytes()", yyscanner );
+		yypanic( "out of dynamic memory in yy_scan_bytes()", yyscanner );
 	}
 	for ( i = 0; i < _yybytes_len; ++i ) {
 		buf[i] = yybytes[i];
@@ -2306,7 +2306,7 @@ yybuffer yy_scan_bytes(const char * yybytes, int  _yybytes_len, yyscan_t yyscann
 
 	b = yy_scan_buffer( buf, n, yyscanner);
 	if ( b == NULL ) {
-		yy_fatal_error( "bad buffer in yy_scan_bytes()", yyscanner );
+		yypanic( "bad buffer in yy_scan_bytes()", yyscanner );
 	}
 	/* It's okay to grow etc. this buffer, and we should throw it
 	 * away when we're done.
@@ -2336,7 +2336,7 @@ static void yy_push_state(int _new_state, yyscan_t yyscanner)
 					(void *) yyscanner->yy_start_stack, new_size, yyscanner );
 		}
 		if ( yyscanner->yy_start_stack == NULL ) {
-			yy_fatal_error( "out of memory expanding start-condition stack", yyscanner);
+			yypanic( "out of memory expanding start-condition stack", yyscanner);
 		}
 	}
 	yyscanner->yy_start_stack[yyscanner->yy_start_stack_ptr++] = yystart(yyscanner);
@@ -2351,7 +2351,7 @@ m4_ifdef( [[M4_YY_NO_POP_STATE]],,
 static void yy_pop_state  (yyscan_t yyscanner)
 {
 	if ( --yyscanner->yy_start_stack_ptr < 0 ) {
-		yy_fatal_error( "start-condition stack underflow", yyscanner );
+		yypanic( "start-condition stack underflow", yyscanner );
 	}
 	yybegin(yyscanner->yy_start_stack[yyscanner->yy_start_stack_ptr], yyscanner);
 }
@@ -2479,7 +2479,7 @@ void yyset_lineno(int _line_number, yyscan_t yyscanner) {
 
 	/* lineno is only valid if an input buffer exists. */
 	if (yy_current_buffer() == NULL ) {
-		yy_fatal_error( "yyset_lineno called with no buffer", yyscanner );
+		yypanic( "yyset_lineno called with no buffer", yyscanner );
 	}
 	yylineno = _line_number;
 }
@@ -2495,7 +2495,7 @@ void yyset_column(int _column_no, yyscan_t yyscanner) {
 
 	/* column is only valid if an input buffer exists. */
 	if (yy_current_buffer() == NULL ) {
-		yy_fatal_error( "yyset_column called with no buffer", yyscanner );
+		yypanic( "yyset_column called with no buffer", yyscanner );
 	}
 	yycolumn = _column_no;
 }

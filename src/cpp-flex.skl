@@ -810,7 +810,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 static yy_state_type yy_get_previous_state ( M4_YY_PROTO_ONLY_ARG );
 static yy_state_type yy_try_NUL_trans ( yy_state_type current_state  M4_YY_PROTO_LAST_ARG);
 static int yy_get_next_buffer ( M4_YY_PROTO_ONLY_ARG );
-static void yynoreturn yy_fatal_error ( const char* msg M4_YY_PROTO_LAST_ARG );
+static void yynoreturn yypanic ( const char* msg M4_YY_PROTO_LAST_ARG );
 ]])
 
 ]])
@@ -1512,7 +1512,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 m4_ifdef([[M4_MODE_YY_NO_FATAL_ERROR]],,[[
 m4_ifdef([[M4_MODE_C_ONLY]], [[
-static void yynoreturn yy_fatal_error YYFARGS1(const char*, msg) {
+static void yynoreturn yypanic YYFARGS1(const char*, msg) {
 	M4_YY_DECL_GUTS_VAR();
 	M4_YY_NOOP_GUTS_VAR();
 	fprintf( stderr, "%s\n", msg );
@@ -1531,7 +1531,7 @@ void yyFlexLexer::LexerError( const char* msg ) {
 /* Report a fatal error. */
 #ifndef YY_FATAL_ERROR
 m4_ifdef([[M4_MODE_C_ONLY]], [[
-#define YY_FATAL_ERROR(msg) yy_fatal_error( msg M4_YY_CALL_LAST_ARG)
+#define YY_FATAL_ERROR(msg) yypanic( msg M4_YY_CALL_LAST_ARG)
 ]])
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 #define YY_FATAL_ERROR(msg) LexerError( msg )

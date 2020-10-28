@@ -8966,8 +8966,8 @@ YY_CURRENT_BUFFER: replaced by yy_current_buffer().
 @item
 YY_BUFFER_STATE: replaced by yybuffer.
 
-@item YY_FATAL_ERROR: replaced by yy_fatal_error().
-To supply your own handler, simply use @code{%option noyy_fatal_error}
+@item YY_FATAL_ERROR: replaced by yypanic().
+To supply your own handler, simply use @code{%option noyypanic}
 so the default handler is not generated, then write your own handler
 with the same prototype.
 

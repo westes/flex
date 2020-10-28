@@ -423,7 +423,7 @@ void context_call(char *);
 	yywrap		ctrl.do_yywrap = option_sense;
 	yyread		ctrl.noyyread = !option_sense;
 
-	yy_fatal_error	ctrl.no_yy_fatal_error = !option_sense;
+	yypanic	ctrl.no_yypanic = !option_sense;
 
 	yy_push_state	ctrl.no_yy_push_state = ! option_sense;
 	yy_pop_state	ctrl.no_yy_pop_state = ! option_sense;
@@ -955,7 +955,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 <ACTION>{
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
-	yyecho\(\)|yyinput\(\)|yystart\({FUNARGS}\)|yybegin\({FUNARGS}\)|yyunput\({FUNARGS}\) {
+	yyecho\(\)|yyinput\(\)|yystart\({FUNARGS}\)|yybegin\({FUNARGS}\)|yyunput\({FUNARGS}\)|yypanic\({FUNARGS}\) {
 			context_call(yytext);
 	}
 	[^[:alpha:]_{}""''/\n\[\]]+	ACTION_ECHO;

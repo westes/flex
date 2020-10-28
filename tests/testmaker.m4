@@ -53,10 +53,10 @@ ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl
     yyout = stdout;
 ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl
     if((fp  = fopen(argv[1],"rb"))== NULL)
-        YY_FATAL_ERROR("could not open tables file for reading");
+        yypanic("could not open tables file for reading");
 
     if(yytables_fload(fp) < 0)
-        YY_FATAL_ERROR("yytables_fload returned < 0");
+        yypanic("yytables_fload returned < 0");
     ifdef(`M4_TEST_TABLE_VERIFICATION', `exit(0);')
 ')dnl table_serialization
     while( yylex() )
@@ -92,10 +92,10 @@ ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl
     yyset_in  ( stdin, lexer);
 ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl
     if((fp  = fopen(argv[1],"rb"))== NULL)
-        yy_fatal_error("could not open tables file for reading", lexer);
+        yypanic("could not open tables file for reading", lexer);
 
     if(yytables_fload(fp, yyscanner) < 0)
-        yy_fatal_error("yytables_fload returned < 0", lexer);
+        yypanic("yytables_fload returned < 0", lexer);
     ifdef(`M4_TEST_TABLE_VERIFICATION', `exit(0);')
 ')dnl table_serialization
     while( yylex(lexer) )
