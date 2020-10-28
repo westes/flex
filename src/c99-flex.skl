@@ -339,8 +339,8 @@ void yyfree ( void *, yyscan_t yyscanner );
 
 m4_ifdef( [[M4_MODE_NO_YYWRAP]], [[
 #define M4_MODE_PREFIX[[wrap]](yyscanner) (/*CONSTCOND*/1)
-#define YY_SKIP_YYWRAP
 ]])
+
 m4_ifdef( [[M4_MODE_DEBUG]], [[
 #define FLEX_DEBUG
 ]])
@@ -917,17 +917,9 @@ m4_ifdef([[M4_MODE_YYLINENO]], [[
  * section 1.
  */
 
-#ifndef YY_SKIP_YYWRAP
+m4_ifdef( [[M4_MODE_NO_YYWRAP]],, [[
 extern int yywrap ( yyscan_t yyscanner );
-#endif
-
-#ifndef yytext_ptr
-static void yy_flex_strncpy ( char *, const char *, int, yyscan_t yyscanner);
-#endif
-
-#ifdef YY_NEED_STRLEN
-static int yy_flex_strlen ( const char *, yyscan_t yyscanner);
-#endif
+]])
 
 m4_ifdef( [[M4_YY_STACK_USED]],
 [[
@@ -950,9 +942,7 @@ m4_define( [[M4_YY_NO_POP_STATE]])
 m4_define( [[M4_YY_NO_TOP_STATE]])
 ]])
 
-#ifndef YY_EXIT_FAILURE
-#define YY_EXIT_FAILURE 2
-#endif
+const int YY_EXIT_FAILURE = 2;
 
 m4_ifdef( [[M4_MODE_YY_NO_FATAL_ERROR]],, [[
 static void yynoreturn yy_fatal_error(const char* msg, yyscan_t yyscanner) {
@@ -965,8 +955,6 @@ static void yynoreturn yy_fatal_error(const char* msg, yyscan_t yyscanner) {
 #ifndef YY_FATAL_ERROR
 #define YY_FATAL_ERROR(msg) yy_fatal_error( msg, yyscanner)
 #endif
-
-#define YY_INPUT(buf,result,max_size) do {result = yyread(buf, max_size, yyscanner);} while (0)
 
 m4_ifdef( [[M4_MODE_USER_YYREAD]],, [[
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
@@ -1025,9 +1013,7 @@ m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
 #endif
 
 /* Number of entries by which start-condition stack grows. */
-#ifndef YY_START_STACK_INCR
-#define YY_START_STACK_INCR 25
-#endif
+const int YY_START_STACK_INCR = 25;
 
 /* Default declaration of generated scanner - a define so the user can
  * easily add parameters.
@@ -1099,11 +1085,11 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 					 yy_fatal_error( "token too large, exceeds YYLMAX", yyscanner);]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if ( yyscanner->yyleng_r >= YYLMAX ) \
 					 yy_fatal_error( "token too large, exceeds YYLMAX", yyscanner);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yy_flex_strncpy( &yyscanner->yytext_r[yyscanner->yy_more_offset], yyscanner->yytext_ptr, yyscanner->yyleng_r + 1, yyscanner);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[strncpy( &yyscanner->yytext_r[yyscanner->yy_more_offset], yyscanner->yytext_ptr, yyscanner->yyleng_r + 1);]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yyleng_r += yyscanner->yy_more_offset;]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yy_prev_more_offset = yyscanner->yy_more_offset;]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yy_more_offset = 0;]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yy_flex_strncpy( yyscanner->yytext_r, yyscanner->yytext_ptr, yyscanner->yyleng_r + 1, yyscanner);]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[strncpy( yyscanner->yytext_r, yyscanner->yytext_ptr, yyscanner->yyleng_r + 1);]]) \
 ]]) \
 	yyscanner->yy_c_buf_p = yy_cp;
 }
@@ -1224,8 +1210,7 @@ m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
 
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
-#define yymore() (yyscanner->yy_more_offset = yy_flex_strlen( yyscanner->yytext_r, yyscanner))
-#define YY_NEED_STRLEN
+#define yymore() (yyscanner->yy_more_offset = strlen(yyscanner->yytext_r))
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET \
 { \
@@ -1809,8 +1794,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 			num_to_read = YY_READ_BUF_SIZE;
 		}
 		/* Read in more data. */
-		YY_INPUT( (&yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[number_to_move]),
-			yyscanner->yy_n_chars, num_to_read );
+		yyscanner->yy_n_chars = yyread(&yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[number_to_move], num_to_read, yyscanner);
 
 		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars = yyscanner->yy_n_chars;
 	}
@@ -2114,7 +2098,7 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]],
 	errno = oerrno;
 }
 
-/** Discard all buffered characters. On the next scan, YY_INPUT will be called.
+/** Discard all buffered characters. On the next scan, yyread() will be called.
  * @param b the buffer state to be flushed, usually @c yy_current_buffer().
  * @param yyscanner The scanner object.
  */
@@ -2673,14 +2657,8 @@ m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]],
 	yyscanner->yy_prev_more_offset = 0;
 ]])
 
-/* Defined in main.c */
-#ifdef YY_STDINIT
-	yyscanner->yyin_r = stdin;
-	yyscanner->yyout_r = stdout;
-#else
 	yyscanner->yyin_r = NULL;
 	yyscanner->yyout_r = NULL;
-#endif
 
 	/* For future reference: Set errno on error, since we are called by
 	 * yylex_init()
@@ -2721,28 +2699,6 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 	yyscanner = NULL;
 	return 0;
 }
-
-#ifndef yytext_ptr
-static void yy_flex_strncpy(char *s1, const char *s2, int n, yyscan_t yyscanner) {
-	(void)yyscanner; /* forestall unused-argument warning */
-
-	int i;
-	for ( i = 0; i < n; ++i ) {
-		s1[i] = s2[i];
-	}
-}
-#endif
-
-#ifdef YY_NEED_STRLEN
-static int yy_flex_strlen(const char *s, yyscan_t yyscanner)
-{
-	int n;
-	for ( n = 0; s[n]; ++n )
-		;
-
-	return n;
-}
-#endif
 
 m4_ifdef( [[M4_YY_NO_FLEX_ALLOC]],,
 [[
