@@ -942,7 +942,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 		ACTION_ECHO;
 		if (bracelevel <= 0 || (doing_codeblock && indented_code)) {
             if ( doing_rule_action )
-                add_action( "\tYY_BREAK]""]\n" );
+                add_action( "\t]""]M4_HOOK_STATE_CASE_BREAK\n" );
 
             doing_rule_action = doing_codeblock = false;
             BEGIN(SECT2);
@@ -968,7 +968,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
                 ACTION_ECHO;
                 if (bracelevel <= 0) {
                    if ( doing_rule_action )
-                      add_action( "\tYY_BREAK]""]\n" );
+                      add_action( "\t]""]M4_HOOK_STATE_CASE_BREAK\n" );
 
                    doing_rule_action = false;
                    BEGIN(SECT2);

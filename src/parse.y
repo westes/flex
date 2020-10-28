@@ -141,7 +141,7 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 			else
 			    context_call("yyecho()");
 
-			add_action( ";\n\tYY_BREAK]]\n" );
+			add_action( ";\n\t]]M4_HOOK_STATE_CASE_BREAK\n" );
 			}
 		;
 

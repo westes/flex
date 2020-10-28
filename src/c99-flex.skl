@@ -78,8 +78,8 @@ m4_define([[M4_HOOK_SET_RULE_SETUP]], [[YY_RULE_SETUP
 ]])
 m4_define([[M4_HOOK_SET_PREACTION]], [[#define YY_USER_ACTION $1
 ]])
-m4_define([[M4_HOOK_SET_POSTACTION]], [[#define YY_BREAK $1
-]])
+m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[/*LINTED*/break;]])
+m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[$1]])]])
 
 %% [0.0] Make hook macros available to Flex
 
@@ -1054,11 +1054,6 @@ extern int yylex M4_YY_LEX_PROTO;
  */
 #ifndef YY_USER_ACTION
 #define YY_USER_ACTION
-#endif
-
-/* Code executed at the end of each rule. */
-#ifndef YY_BREAK
-#define YY_BREAK /*LINTED*/break;
 #endif
 
 #define YY_RULE_SETUP \
