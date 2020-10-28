@@ -66,10 +66,8 @@ m4_define([[M4_HOOK_CONST_DEFINE_UINT]], [[const uint $1 = $2;
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_BOOL]], [[const bool $1 = $2;
 ]])
-m4_define([[M4_HOOK_CONST_DEFINE_UNKNOWN]], [[m4_define($1, [[$2]])
-]])
-m4_define([[M4_HOOK_SET_YY_DECL]], [[#define YY_DECL $1
-]])
+m4_define([[M4_HOOK_CONST_DEFINE_UNKNOWN]], [[m4_define($1, [[$2]])]])
+m4_define([[M4_HOOK_SET_YY_DECL]], [[m4_define([[YY_DECL]], [[$1]])]])
 m4_define([[M4_HOOK_SET_OFFSET_TYPE]], [[#define YY_OFFSET_TYPE $1
 ]])
 m4_define([[M4_HOOK_SET_USERINIT]], [[#define YY_USER_INIT $1
@@ -1009,8 +1007,7 @@ const int YY_START_STACK_INCR = 25;
 /* Default declaration of generated scanner - a define so the user can
  * easily add parameters.
  */
-#ifndef YY_DECL
-#define YY_DECL_IS_OURS 1
+m4_ifdef([[YY_DECL]],, [[m4_dnl
 m4_define( [[M4_YY_LEX_PROTO]], [[(yyscan_t yyscanner)]])
 m4_define( [[M4_YY_LEX_DECLARATION]], [[(yyscan_t yyscanner)]])
 
@@ -1037,8 +1034,8 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 
 extern int yylex M4_YY_LEX_PROTO;
 
-#define YY_DECL int yylex M4_YY_LEX_DECLARATION
-#endif /* !YY_DECL */
+m4_define([[YY_DECL]], [[int yylex M4_YY_LEX_DECLARATION]])
+]])
 
 /* Code executed at the beginning of each rule, after yytext and yyleng
  * have been set up.

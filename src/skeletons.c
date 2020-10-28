@@ -92,6 +92,16 @@ static bool boneseeker(const char *bone)
 void backend_by_name(const char *name)
 {
 	if (name != NULL) {
+		if (strcmp(name, "nr") == 0) {
+			backend = &backends[0];
+			ctrl.reentrant = false;
+			goto backend_ok;
+		}
+		if (strcmp(name, "r") == 0) {
+			backend = &backends[0];
+			ctrl.reentrant = true;
+			goto backend_ok;
+		}
 		for (backend = &backends[0]; backend->skel != NULL; backend++) {
 			if (strcasecmp(skel_property("M4_PROPERTY_BACKEND_NAME"), name) == 0)
 				goto backend_ok;

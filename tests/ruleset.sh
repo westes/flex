@@ -1,8 +1,8 @@
 #!/bin/sh
-# Generate rules to make .l for testing files from rulesets.  Also set up SOURCES
+# Generate make productions for testing files from rulesets.  Also set up SOURCES
 # variables for link time.  Pass it a list of back-end suffixes.
 #
-# This script exists automake isn't able to handle the pattern rules that
+# This script exists because automake isn't able to handle the pattern rules that
 # would be natural to use. Output is written to standard output for
 # inclusion in a Makefile.am, typically by redirecting the output and
 # then an automake include directive.
@@ -51,6 +51,8 @@ EOF
     done
 done
 
+# posixlycorrect is a special case becaae we need to set POSIXLY_CORRECT
+# in Flex's environment while these .l files are bein processed.
 for backend in $* ; do
     case $backend in
 	nr|r|c99) ext="c" ;;
@@ -58,8 +60,18 @@ for backend in $* ; do
     esac
     printf "posixlycorrect_${backend}.${ext}: posixlycorrect_${backend}.l \$(FLEX)\n"
     printf "\t\$(AM_V_LEX)POSIXLY_CORRECT=1 \$(FLEX) \$(TESTOPTS) -o \$@ \$<\n"
+    echo ""
+
+    echo "test-yydecl-${backend}.sh\$(EXEEXT): test-yydecl-gen"
+    printf "\t\$(SHELL) test-yydecl-gen ${backend} >test-yydecl-${backend}.sh\$(EXEEXT)\n"
+    printf "\tchmod a+x test-yydecl-${backend}.sh\$(EXEEXT)\n"
+    echo ""
+
+    RULESET_TESTS="${RULESET_TESTS} test-yydecl-${backend}.sh\$(EXEEXT)"
+    RULESET_REMOVABLES="${RULESET_TESTS} test-yydecl-${backend}.sh\$(EXEEXT)"
 done
 
+echo ""
 printf "# End generated test rules\n"
 
 echo RULESET_TESTS = "${RULESET_TESTS}"
