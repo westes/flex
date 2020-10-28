@@ -68,14 +68,13 @@ m4_define([[M4_HOOK_CONST_DEFINE_BOOL]], [[const bool $1 = $2;
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_UNKNOWN]], [[m4_define($1, [[$2]])]])
 m4_define([[M4_HOOK_SET_YY_DECL]], [[m4_define([[YY_DECL]], [[$1]])]])
-m4_define([[M4_HOOK_SET_OFFSET_TYPE]], [[#define YY_OFFSET_TYPE $1
+m4_define([[M4_HOOK_SET_OFFSET_TYPE]], [[m4_define([[YY_OFFSET_TYPE]], [[$1]])]])
+m4_define([[M4_HOOK_SET_USERINIT]], [[m4_define([[YY_USER_INIT]], [[$1]])]])
+m4_define([[M4_HOOK_SET_RULE_SETUP]], [[m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
+	rule_check_bol(yyscanner);
+]])	YY_USER_ACTION
 ]])
-m4_define([[M4_HOOK_SET_USERINIT]], [[#define YY_USER_INIT $1
-]])
-m4_define([[M4_HOOK_SET_RULE_SETUP]], [[YY_RULE_SETUP
-]])
-m4_define([[M4_HOOK_SET_PREACTION]], [[#define YY_USER_ACTION $1
-]])
+m4_define([[M4_HOOK_SET_PREACTION]], [[m4_defiine([[YY_USER_ACTION]], [[$1]])]])
 m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[/*LINTED*/break;]])
 m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[$1]])]])
 m4_define([[M4_HOOK_FATAL_ERROR]], [[yypanic($1, yyscanner);]])
@@ -1044,11 +1043,13 @@ m4_define([[YY_DECL]], [[int yylex M4_YY_LEX_DECLARATION]])
 #define YY_USER_ACTION
 #endif
 
-#define YY_RULE_SETUP \
-	m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( yyscanner->yyleng_r > 0 ) {  \
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_at_bol_flag = (yyscanner->yytext_r[yyscanner->yyleng_r - 1] == '\n'); \
-	} \
-]])	YY_USER_ACTION
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
+static void rule_check_bol(yyscan_t yyscanner) {
+	if ( yyscanner->yyleng_r > 0 ) {		\
+		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_at_bol_flag = (yyscanner->yytext_r[yyscanner->yyleng_r - 1] == '\n');
+	}
+}
+]])
 
 /* Done after the current pattern has been matched and before the
  * corresponding action - sets up yytext.  yy_cp and yy_bp are the
@@ -1326,9 +1327,7 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 	if ( !yyscanner->yy_init ) {
 		yyscanner->yy_init = true;
 
-#ifdef YY_USER_INIT
-		YY_USER_INIT;
-#endif
+		m4_ifdef([[YY_USER_INIT]], [[YY_USER_INIT]])
 
 m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[

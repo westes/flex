@@ -53,7 +53,11 @@
         FOO_switch_to_buffer( (yybuffer)0, yyscanner);
         FOOrestart( (FILE*)0, (yyscan_t )0);
 
-        FOOget_extra( (yyscan_t )0 );
+	/* Commented out because the C99 back end is more
+	 * careful about not compiling in things it doesn't
+	 * need.
+	 */
+        //FOOget_extra( (yyscan_t )0 );
         FOOget_in( (yyscan_t )0 );
         FOOget_leng( (yyscan_t )0 );
         FOOget_out( (yyscan_t )0 );
@@ -61,7 +65,7 @@
         FOOlex( (yyscan_t )0 );
         FOOlex_destroy( (yyscan_t )0 );
         FOOlex_init( (yyscan_t *)0 );
-        FOOset_extra( (void *)0, (yyscan_t )0 );
+        //FOOset_extra( (void *)0, (yyscan_t )0 );
         FOOset_in( (FILE*)0, (yyscan_t )0 );
         FOOset_out( (FILE*)0, (yyscan_t )0 );
     }
