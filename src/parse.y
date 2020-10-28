@@ -135,13 +135,16 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 			for ( i = 1; i <= lastsc; ++i )
 				scset[i] = mkbranch( scset[i], def_rule );
 
+			add_action("]]");
+
 			if ( ctrl.spprdflt )
 				add_action(
-				"YY_FATAL_ERROR( \"flex scanner jammed\" )" );
-			else
-			    context_call("yyecho()");
+				"M4_HOOK_FATAL_ERROR(\"flex scanner jammed\")");
+			else {
+			    add_action("M4_HOOK_ECHO");
+			}
 
-			add_action( ";\n\t]]M4_HOOK_STATE_CASE_BREAK\n" );
+			add_action( "\n\tM4_HOOK_STATE_CASE_BREAK\n" );
 			}
 		;
 

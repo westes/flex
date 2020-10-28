@@ -80,6 +80,8 @@ m4_define([[M4_HOOK_SET_PREACTION]], [[#define YY_USER_ACTION $1
 ]])
 m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[/*LINTED*/break;]])
 m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[$1]])]])
+m4_define([[M4_HOOK_FATAL_ERROR]], [[yypanic($1, yyscanner);]])
+m4_define([[M4_HOOK_ECHO]], [[yyecho(yyscanner);]])
 
 %% [0.0] Make hook macros available to Flex
 
@@ -944,17 +946,13 @@ m4_define( [[M4_YY_NO_TOP_STATE]])
 
 const int YY_EXIT_FAILURE = 2;
 
-m4_ifdef( [[M4_MODE_YY_NO_FATAL_ERROR]],, [[
+m4_ifdef( [[M4_MODE_YY_NO_YYPANIC]],, [[
 static void yynoreturn yypanic(const char* msg, yyscan_t yyscanner) {
 	(void)yyscanner; /* forestall unused-argument warning */
 	fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
 }
 ]])
-
-#ifndef YY_FATAL_ERROR
-#define YY_FATAL_ERROR(msg) yypanic( msg, yyscanner)
-#endif
 
 m4_ifdef( [[M4_MODE_USER_YYREAD]],, [[
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,

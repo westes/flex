@@ -73,6 +73,8 @@ m4_define([[M4_HOOK_SET_PREACTION]], [[#define YY_USER_ACTION $1
 ]])
 m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[/*LINTED*/break;]])
 m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[$1]])]])
+m4_define([[M4_HOOK_FATAL_ERROR]], [[yypanic($1 M4_YY_CALL_LAST_ARG);]])
+m4_define([[M4_HOOK_ECHO]], [[yyecho();]])
 
 %% [0.0] Make hook macros available to Flex
 
@@ -1510,7 +1512,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define YY_EXIT_FAILURE 2
 #endif
 
-m4_ifdef([[M4_MODE_YY_NO_FATAL_ERROR]],,[[
+m4_ifdef([[M4_MODE_YY_NO_YYPANIC]],,[[
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 static void yynoreturn yypanic YYFARGS1(const char*, msg) {
 	M4_YY_DECL_GUTS_VAR();

@@ -1611,7 +1611,7 @@ void readin (void)
 		visible_define("M4_MODE_NO_YYINPUT");
 
 	if (ctrl.no_yypanic)
-		visible_define("M4_YY_NO_FATAL_ERROR");
+		visible_define("M4_YY_NO_YYPANIC");
 	if (ctrl.no_yy_push_state)
 		visible_define("M4_YY_NO_PUSH_STATE");
 	if (ctrl.no_yy_pop_state)
