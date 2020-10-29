@@ -195,15 +195,6 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 #define yynoreturn
 #endif
 
-#ifndef YY_READ_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k */
-#define YY_READ_BUF_SIZE 16384
-#else
-#define YY_READ_BUF_SIZE 8192
-#endif /* __ia64__ */
-#endif
-
 /*
  * Anywhere other than C this won't be a thing,
  * because strings will have an assiciated length field.
@@ -211,6 +202,14 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 const int YY_END_OF_BUFFER_CHAR = 0;
 
 /* ENDS platform-specific and compiler-specific definitions. */
+
+/*
+ * Amount of stuff to slurp up with each read.
+ * We assume the stdio library has already 
+ * chosen a fit size foe whatever platform 
+ * we're running on.
+ */
+#define YY_READ_BUF_SIZE BUFSIZ
 
 /* Size of default input buffer. We want to be able to fit two
  * OS-level reads, but efficiency gains as the buffer size 
