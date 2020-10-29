@@ -34,8 +34,8 @@ m4_define([[M4_PROPERTY_TRACE_LINE_TEMPLATE]], [[#line %d "%s"]])
 m4_define([[M4_PROPERTY_CONTEXT_ARG]], [[yyscanner]])
 
 %# Macro hooks used by Flex code generators start here
-m4_define([[M4_HOOK_INT32]], [[flex_int32_t]])
-m4_define([[M4_HOOK_INT16]], [[flex_int16_t]])
+m4_define([[M4_HOOK_INT32]], [[int32_t]])
+m4_define([[M4_HOOK_INT16]], [[int16_t]])
 m4_define([[M4_HOOK_COMMENT_OPEN]], [[/*]])
 m4_define([[M4_HOOK_COMMENT_CLOSE]], [[*/]])
 %# If this is not defined, no trace lines will be generated.
@@ -185,8 +185,7 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 #include <errno.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
-m4preproc_include(`flexint_shared.h')
+#include <stdint.h>
 
 #if defined(__GNUC__) && __GNUC__ >= 3
 #define yynoreturn __attribute__((__noreturn__))
@@ -343,7 +342,7 @@ m4_ifdef( [[M4_MODE_NO_YYWRAP]], [[
 m4_ifdef( [[M4_MODE_DEBUG]], [[
 #define FLEX_DEBUG
 ]])
-typedef flex_uint8_t YY_CHAR;
+typedef uint8_t YY_CHAR;
 
 m4_ifdef( [[M4_MODE_FULLSPD]], [[m4_dnl
 typedef const struct yy_trans_info *yy_state_type;
@@ -386,8 +385,8 @@ m4_ifdef([[M4_MODE_NO_REAL_FULLSPD]], [[
 	 * This is so we can compile "sizeof(struct yy_trans_info)"
 	 * in any scanner.
 	 */
-	flex_int32_t yy_verify;
-	flex_int32_t yy_nxt;
+	int32_t yy_verify;
+	int32_t yy_nxt;
 ]])
 };
 
