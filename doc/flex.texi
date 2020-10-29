@@ -3127,12 +3127,17 @@ scanner, which simply calls @code{yylex()}.  This option implies
 suppresses inclusion of the non-ANSI header file @file{unistd.h}. This option
 is meant to target environments in which @file{unistd.h} does not exist. Be aware
 that certain options may cause flex to generate code that relies on functions
-normally found in @file{unistd.h}, (e.g. @code{isatty()}, @code{read()}.)
+normally found in @file{unistd.h}, (e.g. @code{isatty()}.)
 If you wish to use these functions, you will have to inform your compiler where
 to find them.
+
+This option is obsolete, as after Flex was originally written
+@file{unistd.h} became part of the Single Unix Specification and is
+consequently everywhere; thuas there is no reason to use this option
+on modern systems.  It is included so as not to break compatibility
+with old build scripts, and will have no effect on backends other than
+the default C one.
 @xref{option-always-interactive}. @xref{option-read}.
-
-
 
 @anchor{option-yyclass}
 @opindex ---yyclass
