@@ -8986,6 +8986,10 @@ necessary.
 FLEX_SCANNER: Not neaningful outside of the C back end, and not defined.
 
 @item
+FLEX_DEBUG: Outside the default C back end, this is a constant of type
+bool rather rthan a preprocessor symbol.
+
+@item
 YY_FLEX_SUBMINOR_VERSION: Its behavior an't be replivated without the
 C preprocessor. Test for YY_FLEX_SUBMINOR_VERSION instead.
 

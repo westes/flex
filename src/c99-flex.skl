@@ -160,7 +160,7 @@ m4_ifelse(M4_MODE_PREFIX,yy,,
 
 %# ENDS prefix machinery
 
-/* START platform-specific and compiler-specific definitions. */
+/* STARTS platform-specific and compiler-specific definitions. */
 
 m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 [[m4_ifdef( [[M4_YY_NEVER_INTERACTIVE]], ,
@@ -180,13 +180,14 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 # define _POSIX_C_SOURCE 1 /* Required for fileno() */
 # define _POSIX_SOURCE 1
 #endif]])]])
+
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <unistd.h>
+#include <unistd.h>	/* requred for isatty() */
 
 #if defined(__GNUC__) && __GNUC__ >= 3
 #define yynoreturn __attribute__((__noreturn__))
@@ -194,7 +195,6 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 #define yynoreturn
 #endif
 
-/* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
 #ifdef __ia64__
 /* On IA-64, the buffer size is 16k, not 8k */
@@ -204,26 +204,19 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 #endif /* __ia64__ */
 #endif
 
-/* Size of default input buffer. */
-#ifndef YY_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k.
- * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
- * Ditto for the __ia64__ case accordingly.
- */
-#define YY_BUF_SIZE 32768
-#else
-#define YY_BUF_SIZE 16384
-#endif /* __ia64__ */
-#endif
-
 /*
  * Anywhere other than C this won't be a thing,
  * because strings will have an assiciated length field.
  */
 const int YY_END_OF_BUFFER_CHAR = 0;
 
-/* END platform-specific and compiler-specific definitions. */
+/* ENDS platform-specific and compiler-specific definitions. */
+
+/* Size of default input buffer. We want to be able to fit two
+ * OS-level reads, but efficiency gains as the buffer size 
+ * increases fall off after that
+ */
+const int YY_BUF_SIZE = 2 * YY_READ_BUF_SIZE;
 
 /* Returned upon end-of-file. */
 const int YY_NULL = 0;
@@ -240,7 +233,7 @@ m4_define([[YY_SC_TO_UI]], [[((YY_CHAR)($1))]])
 typedef struct yyguts_t *yyscan_t;
 
 /* Action number for EOF rule of a given start state. */
-#define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
+m4_define([[YY_STATE_EOF]], [[YY_END_OF_BUFFER + $1 + 1]])
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
  */
@@ -337,12 +330,13 @@ void yyfree ( void *, yyscan_t yyscanner );
 /* Begin user sect3 */
 
 m4_ifdef( [[M4_MODE_NO_YYWRAP]], [[
-#define M4_MODE_PREFIX[[wrap]](yyscanner) (/*CONSTCOND*/1)
+int M4_MODE_PREFIX[[wrap]](yyscan_t yyscanner) {
+	return /*CONSTCOND*/1;
+}
 ]])
 
-m4_ifdef( [[M4_MODE_DEBUG]], [[
-#define FLEX_DEBUG
-]])
+const bool FLEX_DEBUG = m4_ifdef([[M4_MODE_DEBUG]], [[true]], [[false]]);
+
 typedef uint8_t YY_CHAR;
 
 m4_ifdef( [[M4_MODE_FULLSPD]], [[m4_dnl
@@ -350,7 +344,6 @@ typedef const struct yy_trans_info *yy_state_type;
 ]], [[
 typedef int yy_state_type;
 ]])
-m4_ifdef([[M4_MODE_LEX_COMPAT]], [[#define YY_FLEX_LEX_COMPAT]])
 
 /* Watch out: yytext_ptr is a variable when yytext is an array,
  * but it's a macro when yytext is a pointer.
@@ -399,8 +392,7 @@ static const M4_HOOK_NXT_TYPE yy_nxt[][M4_HOOK_NXT_ROWS] =
     {
 M4_HOOK_NXT_BODY
 ]], [[
-#undef YY_NXT_LOLEN
-#define YY_NXT_LOLEN ([[]]M4_HOOK_NXT_ROWS[[]])
+m4_ifdef([[YY_NXT_LOLEN]], [[(M4_HOOK_NXT_ROWS)]])
 static const M4_HOOK_NXT_TYPE *yy_nxt =0;
 ]])
 
