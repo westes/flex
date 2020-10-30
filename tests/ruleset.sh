@@ -67,8 +67,8 @@ for backend in $* ; do
     printf "\tchmod a+x test-yydecl-${backend}.sh\$(EXEEXT)\n"
     echo ""
 
-    RULESET_TESTS="${RULESET_TESTS} test-yydecl-${backend}.sh\$(EXEEXT)"
-    RULESET_REMOVABLES="${RULESET_TESTS} test-yydecl-${backend}.sh\$(EXEEXT)"
+    RULESET_TESTS="${RULESET_TESTS} test-yydecl-${backend}.sh"
+    RULESET_REMOVABLES="${RULESET_TESTS} test-yydecl-${backend}.sh"
 done
 
 echo ""
