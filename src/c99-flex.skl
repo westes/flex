@@ -80,6 +80,19 @@ m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], 
 m4_define([[M4_HOOK_FATAL_ERROR]], [[yypanic($1, yyscanner);]])
 m4_define([[M4_HOOK_ECHO]], [[yyecho(yyscanner);]])
 
+%# This needs to be a macro hook rather than a procedure because of the goto at the end
+m4_define([[M4_HOOK_YYREJECT]], [[
+	*yy_cp = yyscanner->yy_hold_char; /* undo effects of setting up yytext */
+	yy_cp = yyscanner->yy_full_match; /* restore poss. backed-over text */
+m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
+	yyscanner->yy_lp = yyscanner->yy_full_lp; /* restore orig. accepting pos. */
+	yyscanner->yy_state_ptr = yyscanner->yy_full_state; /* restore orig. state */
+	yy_current_state = *yyscanner->yy_state_ptr; /* restore curr. state */
+]])
+	++yyscanner->yy_lp;
+	goto find_rule;
+]])
+
 %% [0.0] Make hook macros available to Flex
 
 const int YY_FLEX_MAJOR_VERSION = FLEX_MAJOR_VERSION;
@@ -1142,28 +1155,6 @@ m4_ifdef( [[M4_MODE_YYLINENO]], [[
 	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_at_bol_flag = at_bol; \
 }
 #define yy_at_bol() (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_at_bol_flag)
-
-m4_ifdef( [[M4_MODE_USES_REJECT]],[[
-%# Can't be given the context-arg treatment due to the goto.
-#define yyreject()				\
-{ \
-*yy_cp = yyscanner->yy_hold_char; /* undo effects of setting up yytext */ \
-yy_cp = yyscanner->yy_full_match; /* restore poss. backed-over text */ \
-m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[ \
-yyscanner->yy_lp = yyscanner->yy_full_lp; /* restore orig. accepting pos. */ \
-yyscanner->yy_state_ptr = yyscanner->yy_full_state; /* restore orig. state */ \
-yy_current_state = *yyscanner->yy_state_ptr; /* restore curr. state */ \
-]]) \
-++yyscanner->yy_lp; \
-goto find_rule; \
-}
-]])
-m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
-/* The intent behind this definition is that it'll catch
- * any uses of yyreject() which flex missed.
- */
-#define yyreject() reject_used_but_not_detected
-]])
 
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
