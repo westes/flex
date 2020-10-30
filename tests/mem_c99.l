@@ -39,7 +39,7 @@
 
 %}
 
-%option emit="c99"
+%option emit="c99" bufsize=8
 %option 8bit prefix="test"
 %option nounput nomain noyywrap noinput noyy_top_state
 %option warn stack nodefault

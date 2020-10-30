@@ -900,6 +900,16 @@ void visible_define_str (const char *symname, const char *val)
 	outc ('\n');
 }
 
+void visible_define_int (const char *symname, const int val)
+{
+	char nbuf[24], buf[128];
+	snprintf(nbuf, sizeof(nbuf), "%d", val);
+	out_m4_define(symname, nbuf);
+	snprintf(buf, sizeof(buf), "%s = %d", symname, val);
+	comment(buf);
+	outc ('\n');
+}
+
 /* make_tables - generate transition tables
  */
 

@@ -197,7 +197,7 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 
 /*
  * Anywhere other than C this won't be a thing,
- * because strings will have an assiciated length field.
+ * because strings will have an associated length field.
  */
 const int YY_END_OF_BUFFER_CHAR = 0;
 
@@ -215,7 +215,7 @@ const int YY_END_OF_BUFFER_CHAR = 0;
  * OS-level reads, but efficiency gains as the buffer size 
  * increases fall off after that
  */
-const int YY_BUF_SIZE = 2 * YY_READ_BUF_SIZE;
+const int YY_BUF_SIZE =  m4_ifdef([[M4_MODE_YY_BUFSIZE]], [[M4_MODE_YY_BUFSIZE]], [[2 * YY_READ_BUF_SIZE]]);
 
 /* Returned upon end-of-file. */
 const int YY_NULL = 0;

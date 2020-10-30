@@ -373,7 +373,7 @@ void context_call(char *);
 	bison-bridge     ctrl.bison_bridge_lval = option_sense;
 	bison-locations  { if((ctrl.bison_bridge_lloc = option_sense))
                             ctrl.bison_bridge_lval = true;
-                     }
+			}
 	"c++"		ctrl.C_plus_plus = option_sense;
 	caseful|case-sensitive		sf_set_case_ins(!option_sense);
 	caseless|case-insensitive	sf_set_case_ins(option_sense);
@@ -456,6 +456,7 @@ void context_call(char *);
 	yyget_lloc      ctrl.no_yyget_lloc = ! option_sense;
 	yyset_lloc      ctrl.no_yyset_lloc = ! option_sense;
 
+	bufsize		return TOK_BUFSIZE;
 	emit		return TOK_EMIT;
 	extra-type	return TOK_EXTRA_TYPE;
 	outfile		return TOK_OUTFILE;

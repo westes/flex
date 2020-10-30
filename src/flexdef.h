@@ -310,7 +310,8 @@ struct ctrl_bundle_t {
 	bool always_interactive;// always use cheacter-by-character input
 	FILE *backing_up_file;	// file to summarize backing-up states to 
 	bool bison_bridge_lval;	// (--bison-bridge), bison pure calling convention. 
-	bool bison_bridge_lloc;	// (--bison-locations), bison yylloc. 
+	bool bison_bridge_lloc;	// (--bison-locations), bison yylloc.
+	size_t bufsize;		// input buffer size
 	bool C_plus_plus;	// (-+ flag) generate a C++ scanner class 
 	int csize;		// size of character set for the scanner 
 				// 128 for 7-bit chars and 256 for 8-bit 
@@ -800,6 +801,9 @@ extern void visible_define (const char *);
 
 /* And again, with an explicit value part. */
 extern void visible_define_str (const char *, const char *);
+
+/* This time the value part is an int */
+extern void visible_define_int (const char *, const int);
 
 /* Generate full speed compressed transition table. */
 extern void genctbl(void);

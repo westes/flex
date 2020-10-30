@@ -1610,6 +1610,9 @@ void readin (void)
 	if (ctrl.no_yyinput)
 		visible_define("M4_MODE_NO_YYINPUT");
 
+	if (ctrl.bufsize != 0)
+	    visible_define_int("M4_MODE_YY_BUFSIZE", ctrl.bufsize);
+
 	if (ctrl.no_yypanic)
 		visible_define("M4_YY_NO_YYPANIC");
 	if (ctrl.no_yy_push_state)

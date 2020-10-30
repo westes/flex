@@ -1476,7 +1476,7 @@ m4_define( [[M4_YY_NO_TOP_STATE]])
  * increases fall off after that
  */
 #ifndef YY_BUF_SIZE
-#define YY_BUF_SIZE	(2 * YY_READ_BUF_SIZE)
+#define YY_BUF_SIZE	(m4_ifdef([[M4_MODE_YY_BUFSIZE]], [[M4_MODE_YY_BUFSIZE]], [[2 * YY_READ_BUF_SIZE]]))
 #endif
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],

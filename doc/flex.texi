@@ -2646,8 +2646,8 @@ is substituted with the appropriate prefix.
 
 The @samp{--header-file} option is not compatible with the @samp{--c++} option,
 since the C++ scanner provides its own header in @file{yyFlexLexer.h}.
-
-This option will generally be a no-op under other target languages.
+This option will generally be a no-op under target languages other
+than C.
 
 
 @anchor{option-outfile}
@@ -3434,6 +3434,14 @@ those that are on by default.
 warn about certain things. In particular, if the default rule can be
 matched but no default rule has been given, the flex will warn you.
 We recommend using this option always.
+
+@anchor{option-bufsize}
+@opindex bufsize
+@item @code{%option bufsize}
+Forces the input buffer size, which is normally set to a good default
+for your platform based on what the standard buffered-IO library in
+your traget language does.  This option is mainly intended for stress-testing
+memory allocation in generated scanners; you probably shouldn't set it. 
 
 @end table
 
@@ -8992,6 +9000,9 @@ bool rather rthan a preprocessor symbol.
 @item
 YY_FLEX_SUBMINOR_VERSION: Its behavior an't be replivated without the
 C preprocessor. Test for YY_FLEX_SUBMINOR_VERSION instead.
+
+@item
+YY_BUF_SIZE: replaced by @code{%option bufsize}.
 
 @end itemize
 
