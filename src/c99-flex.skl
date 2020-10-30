@@ -55,9 +55,9 @@ m4_define([[M4_HOOK_EOF_STATE_CASE_TERMINATE]], [[		yyterminate();
 m4_define([[M4_HOOK_TAKE_YYTEXT]], [[yy_do_before_action(yyscanner, cp, bp); /* set up yytext */]])
 m4_define([[M4_HOOK_RELEASE_YYTEXT]], [[*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */]])
 m4_define([[M4_HOOK_CHAR_REWIND]], [[YY_G(yy_c_buf_p) = yy_cp -= $1;]])
-m4_define([[M4_HOOK_LINE_REWIND]], [[YY_LINENO_REWIND_TO(yy_cp - $1);]])
+m4_define([[M4_HOOK_LINE_REWIND]], [[yy_lineno_rewind_to(yy_cp, yy_cp - $1, yyscanner);]])
 m4_define([[M4_HOOK_CHAR_FORWARD]], [[YY_G(yy_c_buf_p) = yy_cp = yy_bp + $1;]])
-m4_define([[M4_HOOK_LINE_FORWARD]], [[YY_LINENO_REWIND_TO(yy_bp + $1);]])
+m4_define([[M4_HOOK_LINE_FORWARD]], [[yy_lineno_rewind_to(yy_cp, yy_bp + $1, yyscanner);]])
 m4_define([[M4_HOOK_CONST_DEFINE_BYTE]], [[const char $1 = $2;
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_STATE]], [[const yy_state_type $1 = $2;
@@ -222,7 +222,7 @@ const int YY_END_OF_BUFFER_CHAR = 0;
  * chosen a fit size foe whatever platform 
  * we're running on.
  */
-#define YY_READ_BUF_SIZE BUFSIZ
+const int YY_READ_BUF_SIZE = BUFSIZ;
 
 /* Size of default input buffer. We want to be able to fit two
  * OS-level reads, but efficiency gains as the buffer size 
@@ -556,13 +556,6 @@ M4_HOOK_DEBUGTABLE_BODY[[]]m4_dnl
 ]], [[
 static const M4_HOOK_DEBUGTABLE_TYPE * yy_rule_linenum = 0;
 ]])
-
-]])
-
-m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
-#ifndef YYLMAX
-#define YYLMAX 8192
-#endif
 
 ]])
 
@@ -1064,6 +1057,28 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 	yyscanner->yy_c_buf_p = yy_cp;
 }
 
+m4_ifdef( [[M4_MODE_YYLINENO]], [[
+/* FIXME: gate on yy_rule_can_match_eol, this is no longer a macro
+ * and we can get at yy_act */
+static void yy_less_lineno(int n, yyscan_t yyscanner) {
+	int yyl;
+	for ( yyl = n; yyl < yyscanner->yyleng_r; ++yyl ) {
+		if ( yyscanner->yytext_r[yyl] == '\n' ) {
+			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_bs_lineno--;
+		}
+	}
+}
+
+static void yy_lineno_rewind_to(char *yy_cp, char *dst, yyscan_t yyscanner)  {
+	const char *p;
+	for ( p = yy_cp-1; p >= dst; --p) {
+		if ( *p == '\n' ) {
+			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_bs_lineno--;
+		}
+	}
+}
+]])
+
 /* START access macros for use in actions */
 
 #define yyin yyscanner->yyin_r
@@ -1080,44 +1095,13 @@ static void yybumpline( yyscan_t yyscanner) {
         yycolumn=0;
 }
 
-m4_ifdef( [[M4_MODE_YYLINENO]], [[
-/* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
- *       access to the local variable yy_act. Since yyless() is a macro, it would break
- *       existing scanners that call yyless() from OUTSIDE yylex.
- *       One obvious solution it to make yy_act a global. I tried that, and saw
- *       a 5% performance hit in a non-yylineno scanner, because yy_act is
- *       normally declared as a register variable-- so it is not worth it.
- */
-#define  YY_LESS_LINENO(n) \
-	do { \
-	    int yyl;\
-	    for ( yyl = n; yyl < yyscanner->yyleng_r; ++yyl ) { \
-		    if ( yyscanner->yytext_r[yyl] == '\n' ) { \
-			    --yylineno;\
-		    } \
-	    } \
-	}while(0)
-#define YY_LINENO_REWIND_TO(dst) \
-	do {\
-	    const char *p;\
-	    for ( p = yy_cp-1; p >= (dst); --p) { \
-		    if ( *p == '\n' ) { \
-			    --yylineno;\
-		    } \
-	    } \
-	}while(0)
-]],
-[[
-#define YY_LESS_LINENO(n)
-#define YY_LINENO_REWIND_TO(ptr)
-]])
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
 	do \
 		{ \
 		/* Undo effects of setting up yytext. */ \
 		int yyless_macro_arg = (n); \
-		YY_LESS_LINENO(yyless_macro_arg);\
+		m4_ifdef([[M4_MODE_YYLINENO]], [[yy_less_lineno(yyless_macro_arg, yyscanner);]]) \
 		*yy_cp = yyscanner->yy_hold_char; \
 		YY_RESTORE_YY_MORE_OFFSET \
 		yyscanner->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
@@ -2317,7 +2301,7 @@ static int yy_top_state  (yyscan_t yyscanner)
 #undef yyless
 void yyless(int n, yyscan_t yyscanner) {
 	/* Undo effects of setting up yytext. */
-	YY_LESS_LINENO(n);
+	m4_ifdef([[M4_MODE_YYLINENO]], [[yy_less_lineno(n, yyscanner);]])
 	yyscanner->yytext_r[yyscanner->yyleng_r] = yyscanner->yy_hold_char;
 	yyscanner->yy_c_buf_p = yyscanner->yytext_r + n;
 	yyscanner->yy_hold_char = *yyscanner->yy_c_buf_p;

@@ -1127,10 +1127,6 @@ m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[
 
 m4_ifdef( [[M4_MODE_C_ONLY]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
-#ifndef YYLMAX
-#define YYLMAX 8192
-#endif
-
 m4_ifdef( [[M4_YY_NOT_REENTRANT]], [[
 char yytext[YYLMAX];
 char *yytext_ptr;

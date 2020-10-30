@@ -729,12 +729,15 @@ void flexinit (int argc, char **argv)
 	yymore_used = continued_action = false;
 	in_rule = reject = false;
 	yymore_really_used = reject_really_used = trit_unspecified;
+
 	ctrl.do_main = trit_unspecified;
 	ctrl.interactive = ctrl.csize = trit_unspecified;
 	ctrl.do_yywrap = ctrl.gen_line_dirs = ctrl.usemecs = ctrl.useecs = true;
 	ctrl.reentrant = ctrl.bison_bridge_lval = ctrl.bison_bridge_lloc = false;
 	env.performance_hint = 0;
 	ctrl.prefix = "yy";
+	ctrl.yylmax = BUFSIZ;
+
 	tablesext = tablesverify = false;
 	gentables = true;
 	tablesfilename = tablesname = NULL;
@@ -1308,9 +1311,11 @@ void readin (void)
 		out_str ("M4_HOOK_SET_POSTACTION(%s)\n", ctrl.postaction);
 	}
 
-	if (ctrl.yylmax != 0) {
-		out_dec ("M4_HOOK_CONST_DEFINE_UINT(YYLMAX, %d)\n", ctrl.yylmax);
-	}
+	/* This has to be a stright textual substitution rather
+	 * than a constant declaration because in C a const is
+	 * not const enough to be a static array bound.
+	 */
+	out_dec ("m4_define([[YYLMAX]], [[%d]])\n", ctrl.yylmax);
 
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)
