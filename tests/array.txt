@@ -1,2 +1,0 @@
-0000 foo 1111 foo 0000 bar
-0000 foo 1111 foo 0000 bar

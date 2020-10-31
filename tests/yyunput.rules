@@ -31,4 +31,4 @@ foo             {yyunput('k');}
 kick    	;
 \n              ;
 .		{M4_TEST_FAILMESSAGE}
-%%
+###

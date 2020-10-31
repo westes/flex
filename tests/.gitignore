@@ -8,10 +8,8 @@ alloc_extra_c99
 alloc_extra_c99.c
 array_*
 !array.rules
-!array.txt
 basic_*
 !basic.rules
-!basic.txt
 bison_nr
 bison_nr_scanner.[ch]
 bison_nr_parser.[ch]
@@ -27,7 +25,6 @@ c_cxx_r
 c_cxx_r.cc
 ccl_*
 !ccl.rules
-!ccl.txt
 cxx_basic
 cxx_basic.cc
 cxx_multiple_scanners
@@ -44,10 +41,8 @@ debug_c99
 debug_c99.c
 extended_*
 !extended.rules
-!extended.txt
 flexname_*
 !flexname.rules
-!flexname.txt
 header_nr
 header_nr_scanner.[ch]
 header_r
@@ -81,10 +76,8 @@ multiple_scanners_r
 multiple_scanners_r_[12].[ch]
 posix_*
 !posix.rules
-!posix.txt
 posixlycorrect_*
 !posixlycorrect.rules
-!posixlycorrect.txt
 prefix_nr
 prefix_nr.c
 prefix_r
@@ -98,12 +91,10 @@ pthread.pthread
 pthread.c
 quoteincomment_*
 !quoteincomment.rules
-!quoteincomment.txt
 quotes
 quotes.c
 reject*
 !reject.rules
-!reject.txt
 rescan_nr.direct
 rescan_nr.direct.c
 rescan_r.direct
@@ -116,7 +107,6 @@ string_c99
 string_c99.c
 tableopts*
 !tableopts.rules
-!tableopts.txt
 top
 top.[ch]
 yyextra_nr
@@ -125,6 +115,7 @@ yyextra_c99
 yyextra_c99.c
 yyunput_*
 !yyunput.rules
+test-yydecl-*
 *.opt
 *.ser
 *.ver

@@ -33,4 +33,7 @@
 .              {M4_TEST_REJECT M4_TEST_FAILMESSAGE}
 .|\n           ;
 
-%%
+###
+0000 foo 1111 foo 0000 bar
+0000 foo 1111 foo 0000 bar
+

@@ -22,7 +22,8 @@
  */
 %option 8bit noyywrap
 %%
-.|\n	{ yyecho();
+.|\n	{ M4_TEST_ECHO
    //' "
   }
-%%
+###
+test

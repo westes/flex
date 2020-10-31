@@ -34,4 +34,5 @@ NAME    [A-Z][A-Z0-9]*
 foo{NAME}?      {M4_TEST_FAILMESSAGE}
 \n		{M4_TEST_ECHO}
 .		{M4_TEST_ECHO}
-%%
+###
+foo

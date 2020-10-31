@@ -38,4 +38,5 @@ ab{3}   { }
 \n	{ }	 
 .	{M4_TEST_FAILMESSAGE}
 
-%%
+###
+abbb

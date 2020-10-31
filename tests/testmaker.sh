@@ -84,8 +84,14 @@ m4def() {
     cat testmaker.m4
     echo "M4_TEST_PREAMBLE\`'dnl"
     echo "M4_TEST_OPTIONS\`'dnl"
-    cat "${stem}.rules"
+    sed <"${stem}.rules" -e "/###/Q0"
+    echo "%%"
     echo "M4_TEST_POSTAMBLE\`'dnl"
 ) | m4 >"${outdev}"
+
+if [ "${outdev}" != /dev/stdout ] && [ ! -f "${stem}.txt" ]
+then
+    sed <"${stem}.rules" -e "1,/###/d" >"${stem}.txt"
+fi
 
 # end
