@@ -80,9 +80,11 @@ m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], 
 m4_define([[M4_HOOK_FATAL_ERROR]], [[yypanic($1, yyscanner);]])
 m4_define([[M4_HOOK_ECHO]], [[yyecho(yyscanner);]])
 
+m4_define([[yyterminate]], m4_ifdef([[M4_MODE_YYTERMINATE]], [[M4_MODE_YYTERMINATE /* $1 */]], [[return YY_NULL /* $1 */]]))
+
 %# This needs to be a macro hook rather than a procedure because of the goto at the end
-m4_define([[M4_HOOK_YYREJECT]], [[
-	*yy_cp = yyscanner->yy_hold_char; /* undo effects of setting up yytext */
+m4_define([[yyreject()]], [[
+	*yy_cp = yyscanner->yy_hold_char; /* undo effects of setting up yytext $1 */
 	yy_cp = yyscanner->yy_full_match; /* restore poss. backed-over text */
 m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 	yyscanner->yy_lp = yyscanner->yy_full_lp; /* restore orig. accepting pos. */
@@ -361,7 +363,7 @@ typedef int yy_state_type;
  * but it's a macro when yytext is a pointer.
  */
 m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
-#define yytext_ptr yytext_r
+m4_define([[yytext_ptr]], [[yytext_r]])
 ]])
 
 %% [1.0] DFA
@@ -977,14 +979,6 @@ m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
 	 return result;
 }
 ]])
-
-/* No semi-colon after return; correct usage is to write "yyterminate();" -
- * we don't want an extra ';' after the "return" because that will cause
- * some compilers to complain about unreachable statements.
- */
-#ifndef yyterminate
-#define yyterminate() return YY_NULL
-#endif
 
 /* Number of entries by which start-condition stack grows. */
 const int YY_START_STACK_INCR = 25;

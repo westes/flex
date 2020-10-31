@@ -76,6 +76,8 @@ m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], 
 m4_define([[M4_HOOK_FATAL_ERROR]], [[yypanic($1 M4_YY_CALL_LAST_ARG);]])
 m4_define([[M4_HOOK_ECHO]], [[yyecho();]])
 
+m4_ifdef([[M4_MODE_YYTERMINATE]], [[m4_define([[yyterminate]], [[M4_MODE_YYTERMINATE]])]])
+
 %% [0.0] Make hook macros available to Flex
 
 m4_ifdef( [[M4_YY_IN_HEADER]], [[m4_dnl
@@ -1598,6 +1600,7 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 ]])
 ]])
 
+m4_ifdef( [[M4_MODE_YYTERMINATE]], , [[
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* No semi-colon after return; correct usage is to write "yyterminate();" -
@@ -1607,6 +1610,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #ifndef yyterminate
 #define yyterminate() return YY_NULL
 #endif
+]])
 ]])
 
 /* Number of entries by which start-condition stack grows. */

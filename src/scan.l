@@ -311,7 +311,7 @@ void context_call(char *);
     <<EOF>>     {
                 linenum = brace_start_line;
                 synerr(_("Unmatched '{'"));
-                yyterminate();
+                return YY_NULL;
                 }
 }
 
@@ -423,7 +423,7 @@ void context_call(char *);
 	yywrap		ctrl.do_yywrap = option_sense;
 	yyread		ctrl.noyyread = !option_sense;
 
-	yypanic	ctrl.no_yypanic = !option_sense;
+	yypanic		ctrl.no_yypanic = !option_sense;
 
 	yy_push_state	ctrl.no_yy_push_state = ! option_sense;
 	yy_pop_state	ctrl.no_yy_pop_state = ! option_sense;
@@ -464,6 +464,7 @@ void context_call(char *);
 	yyclass		return TOK_YYCLASS;
 	yylmax		return TOK_YYLMAX;
 	yydecl		return TOK_YYDECL;
+	yyterminate	return TOK_YYTERMINATE;
 	pre-action	return TOK_PREACTION;
 	post-action	return TOK_POSTACTION;
 	user-init	return TOK_USERINIT;
@@ -525,7 +526,7 @@ void context_call(char *);
 	<<EOF>>		{
 			mark_prolog();
 			sectnum = 0;
-			yyterminate(); /* to stop the parser */
+			return YY_NULL; /* to stop the parser */
 			}
 }
 
@@ -952,15 +953,17 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 }
 
 
-	/* Reject and YYmore() are checked for above, in PERCENT_BRACE_ACTION */
+	/* yyreject and yymore() are checked for above, in PERCENT_BRACE_ACTION */
 <ACTION>{
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
 	yyecho\(\)|yyinput\(\)|yystart\({FUNARGS}\)|yybegin\({FUNARGS}\)|yyunput\({FUNARGS}\)|yypanic\({FUNARGS}\) {
 			context_call(yytext);
 	}
-	yyreject\(\) {
-			add_action("]]M4_HOOK_YYREJECT[[");
+	yyreject\(\)|yyterminate\(\)|yyless\({FUNARGS}\) {
+			add_action("]""]");
+			add_action(yytext);
+			add_action("[""[");
 	}
 	[^[:alpha:]_{}""''/\n\[\]]+	ACTION_ECHO;
         {NAME}		ACTION_ECHO;

@@ -3,7 +3,7 @@
 %token CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
 %token TOK_OPTION TOK_OUTFILE TOK_PREFIX TOK_YYCLASS TOK_HEADER_FILE TOK_EXTRA_TYPE
 %token TOK_TABLES_FILE TOK_YYLMAX TOK_NUMERIC TOK_YYDECL TOK_PREACTION TOK_POSTACTION
-%token TOK_USERINIT TOK_EMIT TOK_BUFSIZE
+%token TOK_USERINIT TOK_EMIT TOK_BUFSIZE TOK_YYTERMINATE
 
 %token CCE_ALNUM CCE_ALPHA CCE_BLANK CCE_CNTRL CCE_DIGIT CCE_GRAPH
 %token CCE_LOWER CCE_PRINT CCE_PUNCT CCE_SPACE CCE_UPPER CCE_XDIGIT
@@ -224,6 +224,8 @@ option		:  TOK_OUTFILE '=' NAME
 			{ ctrl.emit = xstrdup(nmstr); backend_by_name(ctrl.emit); }
 		|  TOK_USERINIT '=' NAME
 			{ ctrl.userinit = xstrdup(nmstr); }
+		|  TOK_YYTERMINATE '=' NAME
+			{ ctrl.yyterminate = xstrdup(nmstr); }
 		|  TOK_TABLES_FILE '=' NAME
         		{ tablesext = true; tablesfilename = xstrdup(nmstr); }
 		;

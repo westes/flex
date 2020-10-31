@@ -1497,9 +1497,8 @@ also called when an end-of-file is encountered.  It may be redefined.
 When the target language is C/C++, @code{yyterminate()} is a macro.
 Redefining it using the C/C++ preprocessor in your definitions section
 is allowed, but not recommended as doing this makes code more
-difficult to port out of C/C++.  In other target languages you can define
-@code{yyterminate()} as a function; Flex will notice this and not
-generate a default into the scanner.
+difficult to port out of C/C++.  In other target languages you can 
+swt whatt yyterminate() explants to wih @code{%opyion yyterminate}.
 
 @node Generated Scanner, Start Conditions, Actions, Top
 @chapter The Generated Scanner
@@ -3119,6 +3118,13 @@ scanner, which simply calls @code{yylex()}.  This option implies
 @code{noyywrap} (see below).
 
 
+@anchor{option-yyterminate}
+@opindex yyterminate
+@hkindex yyterminate
+@item @code{%option yyterminate}
+This is a sting-valuued option with which you can specify an expansion
+of the yyterminate() hook. whuch normally vaauses the generated
+scanner to return 0 as an end-of-infit indication.
 
 @anchor{option-nounistd}
 @opindex ---nounistd
@@ -9003,6 +9009,11 @@ C preprocessor. Test for YY_FLEX_SUBMINOR_VERSION instead.
 
 @item
 YY_BUF_SIZE: replaced by @code{%option bufsize}.
+
+@item:
+yyterminate(): Backends that don't use the C preprocessor cannot
+support redefinining this hook with #define.  Instead, set it with
+the @code{yyterminate} option. 
 
 @end itemize
 

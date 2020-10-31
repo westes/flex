@@ -351,8 +351,9 @@ struct ctrl_bundle_t {
 	char *preaction;	// Code fragment to be inserted before each action
 	char *postaction;	// Code fragment to be inserted after each action
 	char *emit;		// Specify target language to emit.
+	char *yyterminate;	// Set a non-default termination hook.
+	bool no_yypanic;	// if true, no not generate default yypanic function
  	// flags corresponding to the huge mass of --no-yy options
-	bool no_yypanic;
 	bool no_yy_push_state;
 	bool no_yy_pop_state;
 	bool no_yy_top_state;
