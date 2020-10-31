@@ -20,13 +20,17 @@
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
  */
+/*
+ * Test yyreject() by seeing if we jump out of the main rule below
+ * rather than reaching the abort.
+ */
 
 %option 8bit
 %option nounput nomain noyywrap noinput
 %option warn reject
 %%
 
-.              {M4_TEST_ECHO}
+.              {M4_TEST_REJECT M4_TEST_FAILMESSAGE}
 .|\n           ;
 
 %%

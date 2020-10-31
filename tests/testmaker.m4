@@ -9,14 +9,18 @@ dnl separate back ends - non-reentrant and reentrant C through
 dnl the default cpp skeleton. The c99 backend is treated here
 dnl as re-eentrant C, but may have a different skeleton file.
 dnl
-dnl The purpose of this file is to properly set three macros:
+dnl The purpose of this file is to properly set these macros:
 dnl
 dnl M4_TEST_PREAMBLE = the contyents of s top secton, if required, and
 dnl the emit option required to srt the back end.
 dnl
 dnl M4_TEST_COMPRESSION = compression option.
 dnl
-dnl M4_TEST_ECHO = echo the token buffer and continue.
+dnl M4_TEST_ECHO = echo the token buffer and continue, may add
+dnl a statement terminator if target language requires it.
+dnl
+dnl M4_TEST_REJECT = echo the token buffer and continue, may add
+dnl a statement terminator if target language requires it.
 dnl
 dnl M4_TEST_FAILMESSAGE = a line of code required to issue dnl a
 dnl failure notification to standard error and exit with a failure status.
@@ -42,6 +46,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 %}
 ')dnl close preamble
 define(`M4_TEST_ECHO', `yyecho();')
+define(`M4_TEST_REJECT', `yyreject();')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED.\n"); exit(1);')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
@@ -79,6 +84,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 %}
 ')dnl close preamble
 define(`M4_TEST_ECHO', `yyecho();')
+define(`M4_TEST_REJECT', `yyreject();')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED.\n"); exit(1);')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
@@ -126,6 +132,7 @@ import (
 %option emit="go"
 ')dnl close preamble
 define(`M4_TEST_ECHO', `yyecho()')
+define(`M4_TEST_REJECT', `yyreject()')
 define(`M4_TEST_FAILMESSAGE', `log.Fatal("TEST FAILMESSAGE"); os.Exit(1);')
 define(`M4_TEST_POSTAMBLE', `dnl
 func main(void) {
