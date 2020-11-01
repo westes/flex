@@ -139,7 +139,7 @@ func main(void) {
 	fmt.Printf("TEST RETURNING OK.\n")
 	os.Exit(0)
 }
-')dnl clpse postamble
+')dnl close postamble
 ')dnl close go
 dnl
 dnl Additional backends go here
