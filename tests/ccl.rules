@@ -29,43 +29,43 @@
 %option warn
 %%
 
-^"^alpha:"[[:^alpha:]]+@alpha@\n                          {M4_TEST_ECHO}
-^"^digit:"[[:^digit:]]+@digit@\n                          {M4_TEST_ECHO}
-^"^alnum:"[[:^alnum:]]+@alnum@\n                          {M4_TEST_ECHO}
-^"^upper:"[[:^upper:]]+@upper@\n                          {M4_TEST_ECHO}
-^"^lower:"[[:^lower:]]+@lower@\n                          {M4_TEST_ECHO}
-^"^space:"[[:^space:]]+@space@\n                          {M4_TEST_ECHO}
-^"^blank:"[[:^blank:]]+@blank@\n                          {M4_TEST_ECHO}
-^"^punct:"[[:^punct:]]+@punct@\n                          {M4_TEST_ECHO}
-^"^cntrl:"[[:^cntrl:]]+@cntrl@\n                          {M4_TEST_ECHO}
-^"^xdigit:"[[:^xdigit:]]+@xdigit@\n                       {M4_TEST_ECHO}
+^"^alpha:"[[:^alpha:]]+@alpha@\n                          {M4_TEST_DO(yyecho())}
+^"^digit:"[[:^digit:]]+@digit@\n                          {M4_TEST_DO(yyecho())}
+^"^alnum:"[[:^alnum:]]+@alnum@\n                          {M4_TEST_DO(yyecho())}
+^"^upper:"[[:^upper:]]+@upper@\n                          {M4_TEST_DO(yyecho())}
+^"^lower:"[[:^lower:]]+@lower@\n                          {M4_TEST_DO(yyecho())}
+^"^space:"[[:^space:]]+@space@\n                          {M4_TEST_DO(yyecho())}
+^"^blank:"[[:^blank:]]+@blank@\n                          {M4_TEST_DO(yyecho())}
+^"^punct:"[[:^punct:]]+@punct@\n                          {M4_TEST_DO(yyecho())}
+^"^cntrl:"[[:^cntrl:]]+@cntrl@\n                          {M4_TEST_DO(yyecho())}
+^"^xdigit:"[[:^xdigit:]]+@xdigit@\n                       {M4_TEST_DO(yyecho())}
 
-^"a-d:"[[:alpha:]]{-}[[:digit:]]+@a-d@\n                  {M4_TEST_ECHO}
-^"l-xyz:"([[:lower:]]{-}[xyz])+@l-xyz@\n                  {M4_TEST_ECHO}
-^"abcd-bc:"([abcd]{-}[bc])+@abcd-bc@\n                    {M4_TEST_ECHO}
-^"abcde-b-c:"([abcde]{-}[b]{-}[c])+@abcde-b-c@\n          {M4_TEST_ECHO}
-^"^XY-^XYZ:"([^XY]{-}[^XYZ])+@^XY-^XYZ@\n                 {M4_TEST_ECHO}
+^"a-d:"[[:alpha:]]{-}[[:digit:]]+@a-d@\n                  {M4_TEST_DO(yyecho())}
+^"l-xyz:"([[:lower:]]{-}[xyz])+@l-xyz@\n                  {M4_TEST_DO(yyecho())}
+^"abcd-bc:"([abcd]{-}[bc])+@abcd-bc@\n                    {M4_TEST_DO(yyecho())}
+^"abcde-b-c:"([abcde]{-}[b]{-}[c])+@abcde-b-c@\n          {M4_TEST_DO(yyecho())}
+^"^XY-^XYZ:"([^XY]{-}[^XYZ])+@^XY-^XYZ@\n                 {M4_TEST_DO(yyecho())}
 
-^"a+d:"([[:alpha:]]{+}[[:digit:]])+"@a+d@"\n              {M4_TEST_ECHO}
-^"a-u+Q:"([[:alpha:]]{-}[[:upper:]]{+}[Q])+"@a-u+Q@"\n    {M4_TEST_ECHO}
+^"a+d:"([[:alpha:]]{+}[[:digit:]])+"@a+d@"\n              {M4_TEST_DO(yyecho())}
+^"a-u+Q:"([[:alpha:]]{-}[[:upper:]]{+}[Q])+"@a-u+Q@"\n    {M4_TEST_DO(yyecho())}
 
-^"ia:"(?i:a)+@ia@\n                                       {M4_TEST_ECHO}
-^"iabc:"(?i:abc)+@iabc@\n                                 {M4_TEST_ECHO}
-^"ia-c:"(?i:[a-c]+)@ia-c@\n                               {M4_TEST_ECHO}
+^"ia:"(?i:a)+@ia@\n                                       {M4_TEST_DO(yyecho())}
+^"iabc:"(?i:abc)+@iabc@\n                                 {M4_TEST_DO(yyecho())}
+^"ia-c:"(?i:[a-c]+)@ia-c@\n                               {M4_TEST_DO(yyecho())}
 
     /* We don't want this one to match. */
 ^"check-a:"(?i:(?-i:A))@\n                                {M4_TEST_FAILMESSAGE}
-^"check-a:"(?i:(?-i:(?i:A)))@\n                           {M4_TEST_ECHO}
+^"check-a:"(?i:(?-i:(?i:A)))@\n                           {M4_TEST_DO(yyecho())}
 
     /* We don't want this one to match. */
 ^"dot-all-1:"(?-s:XXX.*)@dot-all-1@\n                     {M4_TEST_FAILMESSAGE} 
-^"dot-all-1:"(?s:XXX.*)@dot-all-1@\n                      {M4_TEST_ECHO}
+^"dot-all-1:"(?s:XXX.*)@dot-all-1@\n                      {M4_TEST_DO(yyecho())}
 
-^"x1:"(?x:   a | b  )+@x1@\n                              {M4_TEST_ECHO}
+^"x1:"(?x:   a | b  )+@x1@\n                              {M4_TEST_DO(yyecho())}
 ^"x2:"(?x:   a |
         (?# Comment )
     b
-    )+@x2@\n                                              {M4_TEST_ECHO}
+    )+@x2@\n                                              {M4_TEST_DO(yyecho())}
 
 
 .|\n                                                      {M4_TEST_FAILMESSAGE}

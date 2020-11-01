@@ -30,7 +30,7 @@
 %option warn reject
 %%
 
-.              {M4_TEST_REJECT M4_TEST_FAILMESSAGE}
+.              {M4_TEST_DO(yyreject()) M4_TEST_FAILMESSAGE}
 .|\n           ;
 
 ###

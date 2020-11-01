@@ -31,8 +31,8 @@
 
 NAME	[A-Z][A-Z0-9]*
 %%
-foo{NAME}?      {M4_TEST_ECHO}
-\n		{M4_TEST_ECHO}
+foo{NAME}?      {M4_TEST_DO(yyecho())}
+\n		{M4_TEST_DO(yyecho())}
 .		{M4_TEST_FAILMESSAGE}
 ###
 foo

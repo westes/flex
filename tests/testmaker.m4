@@ -16,11 +16,8 @@ dnl the emit option required to srt the back end.
 dnl
 dnl M4_TEST_COMPRESSION = compression option.
 dnl
-dnl M4_TEST_ECHO = echo the token buffer and continue, may add
-dnl a statement terminator if target language requires it.
-dnl
-dnl M4_TEST_REJECT = echo the token buffer and continue, may add
-dnl a statement terminator if target language requires it.
+dnl M4_TEST_DO = Add a statement terminator if target language
+dnl requires it.
 dnl
 dnl M4_TEST_FAILMESSAGE = a line of code required to issue dnl a
 dnl failure notification to standard error and exit with a failure status.
@@ -46,8 +43,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 #include <stdio.h>
 %}
 ')dnl close preamble
-define(`M4_TEST_ECHO', `yyecho();')
-define(`M4_TEST_REJECT', `yyreject();')
+define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED.\n"); exit(1);')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
@@ -84,8 +80,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 #include <stdio.h>
 %}
 ')dnl close preamble
-define(`M4_TEST_ECHO', `yyecho();')
-define(`M4_TEST_REJECT', `yyreject();')
+define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED.\n"); exit(1);')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
@@ -132,8 +127,7 @@ import (
 %}
 %option emit="go"
 ')dnl close preamble
-define(`M4_TEST_ECHO', `yyecho()')
-define(`M4_TEST_REJECT', `yyreject()')
+define(`M4_TEST_DO', `$1')
 define(`M4_TEST_FAILMESSAGE', `log.Fatal("TEST FAILMESSAGE"); os.Exit(1);')
 define(`M4_TEST_POSTAMBLE', `dnl
 func main(void) {
