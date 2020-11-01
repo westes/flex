@@ -43,7 +43,7 @@ for part in "$@"; do
         r) backend=r; options="${options} reentrant";;
         ${backends}) backend=${part}; options="${options} emit=\"${part}\"" ;;
         ser) serialization=yes ;;
-        ver) serialization=yes; options="${options} tables-verify" ;;
+        ver) serialization=yes; verification=yes; options="${options} tables-verify" ;;
 	Ca) options="${options} align" ;;
 	Ce) options="${options} ecs" ;;
 	Cf) options="${options} full" ;;

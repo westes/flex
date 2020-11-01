@@ -548,22 +548,22 @@ tableopts_ver_c99-Caem.ver.l: $(srcdir)/tableopts.rules $(srcdir)/testmaker.sh $
 posixlycorrect_nr.c: posixlycorrect_nr.l $(FLEX)
 	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) $(TESTOPTS) -o $@ $<
 
-test-yydecl-nr.sh$(EXEEXT): test-yydecl-gen
-	$(SHELL) test-yydecl-gen nr >test-yydecl-nr.sh$(EXEEXT)
+test-yydecl-nr.sh$(EXEEXT): test-yydecl-gen.sh
+	$(SHELL) test-yydecl-gen.sh nr >test-yydecl-nr.sh$(EXEEXT)
 	chmod a+x test-yydecl-nr.sh$(EXEEXT)
 
 posixlycorrect_r.c: posixlycorrect_r.l $(FLEX)
 	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) $(TESTOPTS) -o $@ $<
 
-test-yydecl-r.sh$(EXEEXT): test-yydecl-gen
-	$(SHELL) test-yydecl-gen r >test-yydecl-r.sh$(EXEEXT)
+test-yydecl-r.sh$(EXEEXT): test-yydecl-gen.sh
+	$(SHELL) test-yydecl-gen.sh r >test-yydecl-r.sh$(EXEEXT)
 	chmod a+x test-yydecl-r.sh$(EXEEXT)
 
 posixlycorrect_c99.c: posixlycorrect_c99.l $(FLEX)
 	$(AM_V_LEX)POSIXLY_CORRECT=1 $(FLEX) $(TESTOPTS) -o $@ $<
 
-test-yydecl-c99.sh$(EXEEXT): test-yydecl-gen
-	$(SHELL) test-yydecl-gen c99 >test-yydecl-c99.sh$(EXEEXT)
+test-yydecl-c99.sh$(EXEEXT): test-yydecl-gen.sh
+	$(SHELL) test-yydecl-gen.sh c99 >test-yydecl-c99.sh$(EXEEXT)
 	chmod a+x test-yydecl-c99.sh$(EXEEXT)
 
 

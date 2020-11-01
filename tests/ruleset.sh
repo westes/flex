@@ -17,13 +17,13 @@ printf "\n# Begin generated test rules\n\n"
 compatible() {
     mybackend=$1
     myruleset=$2
-    [ ${mybackend} = "nr" ] || [ ${myruleset} != "lexcompat.rules" ]
+    [ "${mybackend}" = "nr" ] || [ "${myruleset}" != "lexcompat.rules" ]
 }
 
-for backend in $* ; do
+for backend in "$@" ; do
     for ruleset in *.rules; do
-	if compatible ${backend} ${ruleset} ; then
-	    testname=${ruleset%.*}_${backend}
+	if compatible "${backend}" "${ruleset}" ; then
+	    testname="${ruleset%.*}_${backend}"
 	    echo "${testname}_SOURCES = ${testname}.l"
 	    echo "${testname}.l: \$(srcdir)/${ruleset} \$(srcdir)/testmaker.sh \$(srcdir)/testmaker.m4"
 	    # we're deliberately single-quoting this because we _don't_ want those variables to be expanded yet
@@ -53,17 +53,20 @@ done
 
 # posixlycorrect is a special case becaae we need to set POSIXLY_CORRECT
 # in Flex's environment while these .l files are bein processed.
-for backend in $* ; do
+for backend in "$@" ; do
     case $backend in
 	nr|r|c99) ext="c" ;;
 	*) ext=${backend} ;;
     esac
+    # shellcheck disable=SC2059
     printf "posixlycorrect_${backend}.${ext}: posixlycorrect_${backend}.l \$(FLEX)\n"
     printf "\t\$(AM_V_LEX)POSIXLY_CORRECT=1 \$(FLEX) \$(TESTOPTS) -o \$@ \$<\n"
     echo ""
 
-    echo "test-yydecl-${backend}.sh\$(EXEEXT): test-yydecl-gen"
-    printf "\t\$(SHELL) test-yydecl-gen ${backend} >test-yydecl-${backend}.sh\$(EXEEXT)\n"
+    echo "test-yydecl-${backend}.sh\$(EXEEXT): test-yydecl-gen.sh"
+    # shellcheck disable=SC2059
+    printf "\t\$(SHELL) test-yydecl-gen.sh ${backend} >test-yydecl-${backend}.sh\$(EXEEXT)\n"
+    # shellcheck disable=SC2059
     printf "\tchmod a+x test-yydecl-${backend}.sh\$(EXEEXT)\n"
     echo ""
 
