@@ -36,6 +36,7 @@ dnl
 dnl These macros are to be expanded by files with a .rules extension
 dnl that contain pure flex rulesets and no backend-specific code.
 dnl
+changecom
 define(`M4_TEST_FAILMESSAGE', `INVALID BACK END')dnl
 dnl
 ifelse(M4_TEST_BACKEND, `nr', `dnl

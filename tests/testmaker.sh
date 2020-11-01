@@ -13,8 +13,10 @@ backends="c99"
 if [ "$1" = -d ] ; then
     shift
     outdev=/dev/stdout
+    filter=cat
 else
     outdev="$1"
+    filter=m4
 fi
 
 testfile=$1
@@ -87,7 +89,7 @@ m4def() {
     sed <"${stem}.rules" -e "/###/Q0"
     echo "%%"
     echo "M4_TEST_POSTAMBLE\`'dnl"
-) | m4 >"${outdev}"
+) | "${filter}" >"${outdev}"
 
 if [ "${outdev}" != /dev/stdout ] && [ ! -f "${stem}.txt" ]
 then

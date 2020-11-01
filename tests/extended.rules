@@ -21,30 +21,29 @@
  * PURPOSE.
  */
 /* Output should match the input. */
-/* FIXME: Assumes ";" is a legal statememt terminator */
 
 %option 8bit nounput nomain noyywrap noinput warn
 %%
 
-abc(?# Single Line Comment )def    yyecho();
+abc(?# Single Line Comment )def    {M4_TEST_ECHO}
 ghi(?#
     multi-line
     comment
-    )jkl                           yyecho();
+    )jkl                           {M4_TEST_ECHO}
 
 mno(?#
     multi-line //
     comment with ##
     ~~!@#$ %^&*(@-_+=\|,.<>/ ?: ;
     punctuation
-    )pqr                           yyecho();
-(?# Start of a rule.)stu           yyecho();
-vwxyz(?#End of a rule.)            yyecho();
+    )pqr                           {M4_TEST_ECHO}
+(?# Start of a rule.)stu           {M4_TEST_ECHO}
+vwxyz(?#End of a rule.)            {M4_TEST_ECHO}
 A(?x: B
     /* comment */
-    C D)                           yyecho();
+    C D)                           {M4_TEST_ECHO}
 
-\n                                 yyecho();
+\n                                 {M4_TEST_ECHO}
 ###
 abcdefghijklmnopqrstuvwxyz
 ABCD
