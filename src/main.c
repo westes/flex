@@ -48,6 +48,7 @@ void set_up_initial_allocations(void);
 
 
 /* these globals are all defined and commented in flexdef.h */
+int     enumsc, enumscstr;
 int     printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
 int     interactive, lex_compat, posix_compat, do_yylineno,
 	useecs, fulltbl, usemecs;
@@ -461,7 +462,7 @@ void check_options (void)
 		       long_align ? "long int" : "short int");
 
     /* Define the start condition macros. */
-    {
+        if(!enumsc){
         struct Buf tmpbuf;
         buf_init(&tmpbuf, sizeof(char));
         for (i = 1; i <= lastsc; i++) {
@@ -479,6 +480,28 @@ void check_options (void)
         buf_m4_define(&m4defs_buf, "M4_YY_SC_DEFS", tmpbuf.elts);
         buf_destroy(&tmpbuf);
     }
+        else /* enumsc=1 */
+        { struct Buf tmpbuf;
+          buf_init(&tmpbuf, sizeof(char));
+
+          buf_strappend(&tmpbuf, "typedef enum {");
+          for (i = 1; i <= lastsc; i++)
+          { buf_strappend(&tmpbuf, scname[i]);
+            buf_strappend(&tmpbuf, ","); 
+          }
+          buf_strappend(&tmpbuf, "} sc_e;"); 
+          if(enumscstr)
+          { buf_strappend(&tmpbuf, "char *sc_name[]={");
+            for (i = 1; i <= lastsc; i++)
+            { buf_strappend(&tmpbuf, "\"");
+              buf_strappend(&tmpbuf, scname[i]);
+              buf_strappend(&tmpbuf, "\",");
+            }
+            buf_strappend(&tmpbuf, "};");
+          }
+          buf_m4_define(&m4defs_buf, "M4_YY_SC_DEFS", tmpbuf.elts);
+          buf_destroy(&tmpbuf);
+        }
 
     /* This is where we begin writing to the file. */
 
