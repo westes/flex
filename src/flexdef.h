@@ -354,6 +354,8 @@
  *   of what we think based on references to it in the user's actions.
  * reject_really_used - same for REJECT
  * trace_hex - use hexadecimal numbers in trace/debug outputs instead of octals
+ * enumsc - Use enum for start cond (instead of define)
+ * enumstr - generate the enumsc string table for easier debug printout.
  */
 
 extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
@@ -368,6 +370,7 @@ extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
 extern int yymore_really_used, reject_really_used;
 extern int trace_hex;
+extern int enumsc, enumscstr;
 
 /* Variables used in the flex input routines:
  * datapos - characters on current output line

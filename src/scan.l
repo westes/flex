@@ -380,6 +380,8 @@ M4QEND      "]""]"
 	debug		ddebug = option_sense;
 	default		spprdflt = ! option_sense;
 	ecs		useecs = option_sense;
+        enumsc          enumsc = option_sense;
+        enumscstr       enumscstr = enumsc = option_sense;
 	fast		{
 			useecs = usemecs = false;
 			use_read = fullspd = true;
