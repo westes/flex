@@ -82,6 +82,19 @@ m4_define([[M4_HOOK_ECHO]], [[yyecho(yyscanner);]])
 
 m4_define([[yyterminate]], m4_ifdef([[M4_MODE_YYTERMINATE]], [[M4_MODE_YYTERMINATE /* $1 */]], [[return YY_NULL /* $1 */]]))
 
+/* Return all but the first "n" matched characters back to the input stream. */
+m4_define([[yyless]], [[
+	do {
+		/* Undo effects of setting up yytext. */
+		int yyless_macro_arg = ($1);
+		m4_ifdef([[M4_MODE_YYLINENO]], [[yy_less_lineno(yyless_macro_arg, yyscanner);]])
+		*yy_cp = yyscanner->yy_hold_char;
+		YY_RESTORE_YY_MORE_OFFSET
+		yyscanner->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ;
+		yy_do_before_action(yyscanner, yy_cp, yy_bp); /* set up yytext again */
+	} while ( 0 )
+]])
+
 %% [0.0] Make hook macros available to Flex
 
 const int YY_FLEX_MAJOR_VERSION = FLEX_MAJOR_VERSION;
@@ -1075,20 +1088,6 @@ static void yybumpline( yyscan_t yyscanner) {
 	yylineno++;
         yycolumn=0;
 }
-
-/* Return all but the first "n" matched characters back to the input stream. */
-#define yyless(n) \
-	do \
-		{ \
-		/* Undo effects of setting up yytext. */ \
-		int yyless_macro_arg = (n); \
-		m4_ifdef([[M4_MODE_YYLINENO]], [[yy_less_lineno(yyless_macro_arg, yyscanner);]]) \
-		*yy_cp = yyscanner->yy_hold_char; \
-		YY_RESTORE_YY_MORE_OFFSET \
-		yyscanner->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
-		yy_do_before_action(yyscanner, yy_cp, yy_bp); /* set up yytext again */ \
-		} \
-	while ( 0 )
 
 /* We provide macros for accessing buffer states in case in the
  * future we want to put the buffer states in a more general
@@ -2299,9 +2298,10 @@ static int yy_top_state  (yyscan_t yyscanner)
 }
 ]])
 
+m4_undefine([[yyless]])
+
 /* Redefine yyless() so it works in section 3 code. */
 
-#undef yyless
 void yyless(int n, yyscan_t yyscanner) {
 	/* Undo effects of setting up yytext. */
 	m4_ifdef([[M4_MODE_YYLINENO]], [[yy_less_lineno(n, yyscanner);]])
