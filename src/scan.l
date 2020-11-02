@@ -960,7 +960,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 	yyecho\(\)|yyinput\(\)|yystart\({FUNARGS}\)|yybegin\({FUNARGS}\)|yyunput\({FUNARGS}\)|yypanic\({FUNARGS}\) {
 			context_call(yytext);
 	}
-	yyterminate\(\)|yyless\({FUNARGS}\) {
+	yyterminate\(\)|yyreject\(\)|yyless\({FUNARGS}\) {
 			add_action("]""]");
 			add_action(yytext);
 			add_action("[""[");
