@@ -330,7 +330,7 @@ struct yy_buffer_state {
 	 * If so, '^' rules will be active on the next match, otherwise
 	 * not.
 	 */
-	bool yy_at_bol_flag;
+	bool yyatbol_flag;
 
 	int yy_bs_lineno; /**< The line count. */
 	int yy_bs_column; /**< The column count. */
@@ -896,9 +896,9 @@ int yyinput (yyscan_t yyscanner)
 	yyscanner->yy_hold_char = *++yyscanner->yy_c_buf_p;
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_at_bol_flag = (c == '\n');
+	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = (c == '\n');
 m4_ifdef([[M4_MODE_YYLINENO]], [[
-	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_at_bol ) {
+	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag ) {
 		yybumpline( yyscanner );
 	}
 ]])
@@ -1042,7 +1042,7 @@ m4_define([[YY_DECL]], [[int yylex M4_YY_LEX_DECLARATION]])
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 static void rule_check_bol(yyscan_t yyscanner) {
 	if ( yyscanner->yyleng_r > 0 ) {		\
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_at_bol_flag = (yyscanner->yytext_r[yyscanner->yyleng_r - 1] == '\n');
+		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = (yyscanner->yytext_r[yyscanner->yyleng_r - 1] == '\n');
 	}
 }
 ]])
@@ -1132,16 +1132,6 @@ static void yybumpline( yyscan_t yyscanner) {
 	} \
 	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_is_interactive = is_interactive; \
 }
-#define yy_set_bol(at_bol) \
-	{ \
-	if ( yy_current_buffer() == NULL ) { \
-		yyensure_buffer_stack (yyscanner);	\
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] =    \
-            yy_create_buffer( yyscanner->yyin_r, YY_BUF_SIZE, yyscanner); \
-	} \
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_at_bol_flag = at_bol; \
-}
-#define yy_at_bol() (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_at_bol_flag)
 
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
@@ -1167,6 +1157,19 @@ m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[
 ]])
 
 /* END access macros for use in actions */
+
+void yysetbol(bool at_bol, yyscan_t yyscanner) {
+	if ( yy_current_buffer() == NULL ) {
+		yyensure_buffer_stack (yyscanner);
+		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] =
+        		yy_create_buffer( yyscanner->yyin_r, YY_BUF_SIZE, yyscanner);
+	}
+	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = at_bol;
+}
+
+bool yyatbol(yyscan_t yyscanner) {
+	return (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag);
+}
 
 %# Code snippets used in various cases of code generation in the main scanner.
 
@@ -1228,12 +1231,12 @@ m4_ifdef([[M4_MODE_USEMECS]], [[
 m4_define([[M4_GEN_START_STATE]], [[
 	/* Generate the code to find the start state. */
 m4_ifdef([[M4_MODE_FULLSPD]], [[
-m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state", "yy_start_state_list[yyscanner->yy_start + yy_at_bol()];]])
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state", "yy_start_state_list[yyscanner->yy_start + yyatbol()];]])
 m4_ifdef([[M4_MODE_NO_BOL_NEEDED]], [[yy_current_state = yy_start_state_list[yyscanner->yy_start];]])
 ]])
 m4_ifdef([[M4_MODE_NO_FULLSPD]], [[
 			yy_current_state = yyscanner->yy_start;
-m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state += yy_at_bol();]])
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state += yyatbol(yyscanner);]])
 			/* Set up for storing up states. */
 			m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 			yyscanner->yy_state_ptr = yyscanner->yy_state_buf;
@@ -2051,7 +2054,7 @@ void yy_flush_buffer(yybuffer b, yyscan_t yyscanner)
 
 	b->yy_buf_pos = &b->yy_ch_buf[0];
 
-	b->yy_at_bol_flag = true;
+	b->yyatbol_flag = true;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
 	if ( b == yy_current_buffer() ) {
@@ -2185,7 +2188,7 @@ yybuffer yy_scan_buffer(char * base, yy_size_t  size, yyscan_t yyscanner)
 	b->yy_input_file = NULL;
 	b->yy_n_chars = b->yy_buf_size;
 	b->yy_is_interactive = 0;
-	b->yy_at_bol_flag = true;
+	b->yyatbol_flag = true;
 	b->yy_fill_buffer = false;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 

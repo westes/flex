@@ -205,7 +205,7 @@ FAQ
 * Can I fake multi-byte character support?::              
 * deleteme01::              
 * Can you discuss some flex internals?::              
-* yyunput() messes up yy_at_bol::
+* yyunput() messes up yyatbol::
 * The | operator is not doing what I want::              
 * Why can't flex understand this variable trailing context pattern?::              
 * The ^ operator isn't working::              
@@ -2411,8 +2411,8 @@ use of this entry point overrides @code{%option always-interactive} or
 the buffer that is (or is not) to be considered interactive.
 
 @cindex BOL, setting it
-@findex yy_set_bol
-The rule hook @code{yy_set_bol(at_bol)} can be used to control whether the
+@findex yysetbol
+The rule hook @code{yysetbol(at_bol)} can be used to control whether the
 current buffer's scanning context for the next token match is done as
 though at the beginning of a line.  A non-zero argument makes
 rules anchored with @samp{^} active, while a zero argument makes
@@ -2420,8 +2420,8 @@ rules anchored with @samp{^} active, while a zero argument makes
 
 @cindex BOL, checking the BOL flag
 @cindex rule hook
-@findex yy_at_bol
-The rule hook @code{yy_at_bol()} returns true if the next token scanned from
+@findex yyatbol
+The rule hook @code{yyatbol()} returns true if the next token scanned from
 the current buffer will have @samp{^} rules active, false otherwise.
 
 @hkindex %option post-action
@@ -4877,9 +4877,9 @@ yyterminate()
 @item
 yy_set_interactive()
 @item
-yy_set_bol()
+yysetbol()
 @item
-yy_at_bol()
+yyatbol()
    <<EOF>>
 @item
 <*>
@@ -5622,7 +5622,7 @@ publish them here.
 * Can I fake multi-byte character support?::              
 * deleteme01::              
 * Can you discuss some flex internals?::              
-* yyunput() messes up yy_at_bol::
+* yyunput() messes up yyatbol::
 * The | operator is not doing what I want::              
 * Why can't flex understand this variable trailing context pattern?::              
 * The ^ operator isn't working::              
@@ -6663,8 +6663,8 @@ See above.
 @end example
 
 @c TODO: Evaluate this faq.
-@node yyunput() messes up yy_at_bol
-@unnumberedsec yyunput() messes up yy_at_bol
+@node yyunput() messes up yyatbol
+@unnumberedsec yyunput() messes up yyatbol
 @example
 @verbatim
 To: Xinying Li <xli@npac.syr.edu>
@@ -6674,10 +6674,10 @@ Date: Wed, 13 Nov 1996 19:51:54 PST
 From: Vern Paxson <vern>
 
 > "yyunput()" them to input flow, question occurs. If I do this after I scan
-> a carriage, the variable "yy_current_buffer()->yy_at_bol" is changed. That
+> a carriage, the variable "yy_current_buffer()->yyatbol" is changed. That
 > means the carriage flag has gone.
 
-You can control this by calling yy_set_bol().  It's described in the manual.
+You can control this by calling yysetbol().  It's described in the manual.
 
 >      And if in pre-reading it goes to the end of file, is anything done
 > to control the end of curren buffer and end of file?
@@ -7757,7 +7757,7 @@ I agree that this is counter-intuitive for yyless(), given its
 functional description (it's less so for unput(), depending on whether
 you're unput()'ing new text or scanned text).  But I don't plan to
 change it any time soon, as it's a pain to do so.  Consequently,
-you do indeed need to use yy_set_bol() and yy_at_bol() to tweak
+you do indeed need to use yysetbol() and yyatbol() to tweak
 your scanner into the behavior you desire.
 
 Sorry for the less-than-completely-satisfactory answer.
@@ -8961,10 +8961,13 @@ REJECT: Replaced by yyreject()
 #define YY_INPUT: Replaced by the @code{noyyread} option.
 
 @item
-YYSTART: Replaced by yystart()
+YYSTART: Replaced by yystart().
 
 @item
-YY_AT_BOL: Replaced by yy_at_bol()
+YY_AT_BOL(): Replaced by yyatbol().
+
+@item
+yy_set_bol(): Replaced by yysetbol()
 
 @item
 input(): Replaced by yyinput(). This function was already yyinput()
@@ -9029,6 +9032,13 @@ support redefinining this hook with #define.  Instead, set it with
 the @code{yyterminate} option. 
 
 @end itemize
+
+Where entry point names have been downcased and had underscores
+removed, it's because some languages in the expected target set for
+Flex - notably Go and Python - have validator/linter tools that would
+complain about uppercase or underscores or both.  It would obviously be best
+if the parts of the public API that have to change to conform to
+local conventions are small and not commonly used.
 
 @node Indices,  , Appendices, Top
 @unnumbered Indices
