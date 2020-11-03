@@ -1498,7 +1498,7 @@ When the target language is C/C++, @code{yyterminate()} is a macro.
 Redefining it using the C/C++ preprocessor in your definitions section
 is allowed, but not recommended as doing this makes code more
 difficult to port out of C/C++.  In other target languages you can 
-swt whatt yyterminate() explants to wih @code{%opyion yyterminate}.
+swt what yyterminate() expands to with @code{%option yyterminate}.
 
 @node Generated Scanner, Start Conditions, Actions, Top
 @chapter The Generated Scanner
@@ -2476,12 +2476,12 @@ holds the length of the current token.
 @item  FILE *yyin
 is the file which by default @code{flex} reads from.
 In target languages other than C/C++, expect it to have
-whatever tyoe is associated with I/O streams. It may be
+whatever natine type is associated with I/O streams. It may be
 redefined but doing so only makes sense before scanning begins or after
 an EOF has been encountered.  Changing it in the midst of scanning will
 have unexpected results since @code{flex} buffers its input; use
 @code{yyrestart()} instead.  Once scanning terminates because an
-end-of-file has been seen, you can assign @file{yyin} at the new input
+end-of-file has been seen, you can assign @file{yyin} to be the new input
 file and then call the scanner again to continue scanning.
 
 @findex yyrestart
@@ -3132,9 +3132,9 @@ scanner, which simply calls @code{yylex()}.  This option implies
 @opindex yyterminate
 @hkindex yyterminate
 @item @code{%option yyterminate}
-This is a sting-valuued option with which you can specify an expansion
-of the yyterminate() hook. whuch normally vaauses the generated
-scanner to return 0 as an end-of-infit indication.
+This is a string-valuued option with which you can specify an expansion
+of the yyterminate() hook. whuch normally causes the generated
+scanner to return 0 as an end-of-input indication.
 
 @anchor{option-nounistd}
 @opindex ---nounistd
@@ -4844,7 +4844,8 @@ and @code{YY_FLEX_SUBMINOR_VERSION}
 indicating which version of @code{flex} generated the scanner. For
 example, for the 2.5.22 release, these defines would be 2,  5 and 22
 respectively. If the version of @code{flex} being used is a beta
-version, then the symbol @code{FLEX_BETA} is defined.
+version, then the symbol @code{FLEX_BETA} is defined (on the default C
+back end only).
 
 @item
 The symbols @samp{[[} and @samp{]]} in the code sections of the input
@@ -4887,9 +4888,9 @@ yy_at_bol()
 @item
 yystart()
 @item
-YY_USER_ACTION
+%option pre-action
 @item
-YY_USER_INIT
+%option user-init
 @item
 #line directives
 @item
@@ -4922,7 +4923,8 @@ is (rather surprisingly) truncated to
 @end example
 
 @code{flex} does not truncate the action.  Actions that are not enclosed
-in braces are simply terminated at the end of the line.
+in braces are simply terminated at the end of the line.  It is good
+style to use the explicit braces, though.
 
 @node Memory Management, Serialized Tables, Lex and Posix, Top
 @chapter Memory Management
@@ -4930,7 +4932,8 @@ in braces are simply terminated at the end of the line.
 @cindex memory management
 @anchor{memory-management}
 This chapter describes how flex handles dynamic memory, and how you can
-override the default behavior.
+override the default behavior.  You can safely skip it if your target
+language has automatic memory management.
 
 @menu
 * The Default Memory Management::  
@@ -9014,7 +9017,7 @@ FLEX_DEBUG: Outside the default C back end, this is a constant of type
 bool rather rthan a preprocessor symbol.
 
 @item
-YY_FLEX_SUBMINOR_VERSION: Its behavior an't be replivated without the
+FLEX_BETA: Its behavior can't be replicated without the
 C preprocessor. Test for YY_FLEX_SUBMINOR_VERSION instead.
 
 @item
