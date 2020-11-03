@@ -333,7 +333,8 @@ struct ctrl_bundle_t {
 	bool posix_compat;	// (-X) maximize compatibility with POSIX lex 
 	char *prefix;		// prefix for externally visible names, default "yy" 
 	trit reject_really_used;// Force generation of support code for reject operation
-	bool reentrant;		// if true (-R), generate a reentrant C scanner 
+	bool reentrant;		// if true (-R), generate a reentrant C scanner
+	bool rewrite;		// Appl;y magic rewre rles to special fumctions 
 	bool stack_used;	// Enable use of start-condition stacks
 	bool no_section3_escape;// True if the undocumented option --unsafe-no-m4-sect3-escape was passed
 	bool spprdflt;		// (-s) suppress the default rule

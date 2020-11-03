@@ -109,6 +109,7 @@ void backend_by_name(const char *name)
 		flexerror(_("no such back end"));
 	}
   backend_ok:
+	ctrl.rewrite = !is_default_backend();
 	ctrl.backend_name = xstrdup(skel_property("M4_PROPERTY_BACKEND_NAME"));
 	ctrl.traceline_re = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_REGEXP"));
 	ctrl.traceline_template = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_TEMPLATE"));

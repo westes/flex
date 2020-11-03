@@ -410,6 +410,7 @@ void context_call(char *);
 	read		ctrl.use_read = option_sense;
 	reentrant	ctrl.reentrant = option_sense;
 	reject		ctrl.reject_really_used = option_sense;
+	rewrite		ctrl.rewrite = option_sense;
 	stack		ctrl.stack_used = option_sense;
 	stdinit		ctrl.do_stdinit = option_sense;
 	stdout		env.use_stdout = option_sense;
@@ -958,14 +959,17 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
 	yyecho\(\)|yyinput\(\)|yystart\({FUNARGS}\)|yybegin\({FUNARGS}\)|yyunput\({FUNARGS}\)|yypanic\({FUNARGS}\) {
-			context_call(yytext);
+			if (ctrl.rewrite)
+				context_call(yytext);
+			else
+				ACTION_ECHO;
 	}
 	yyterminate\(\)|yyreject\(\)|yyless\({FUNARGS}\) {
 			add_action("]""]");
 			add_action(yytext);
 			add_action("[""[");
 	}
-	[^[:alpha:]_{}""''/\n\[\]]+	ACTION_ECHO;
+	[^[:Alpha:]_{}""''/\n\[\]]+	ACTION_ECHO;
         {NAME}		ACTION_ECHO;
         "'"([^''\\\n]|\\.)"'" ACTION_ECHO; /* character constant */
         "'"             ACTION_ECHO; BEGIN(CHARACTER_CONSTANT);

@@ -735,6 +735,7 @@ void flexinit (int argc, char **argv)
 	ctrl.reentrant = ctrl.bison_bridge_lval = ctrl.bison_bridge_lloc = false;
 	env.performance_hint = 0;
 	ctrl.prefix = "yy";
+	ctrl.rewrite = false;
 	ctrl.yylmax = BUFSIZ;
 
 	tablesext = tablesverify = false;

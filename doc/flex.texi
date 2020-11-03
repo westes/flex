@@ -2708,7 +2708,7 @@ the serialized tables match the in-code tables, instead of loading them.
 @opindex emit
 @item -e, --emit, @code{%option emit}
 instructs @code{flex} to generate code using a specific back end other
-than the default.  The default is called ``cpp',' generates C or C++
+than the default.  The default is called ``cpp'', generates C or C++
 code, supports all legacy interfaces, and generates either
 non-reentrant or re-entrant scanners.  There is presently one
 alternate back end, C99; it drops a lot of legacy interfaces,
@@ -2716,6 +2716,16 @@ generates only re-entrant scanners, and outputs modern C.  The C99
 back end is intended to be a launching point for as yet unwritten back
 ends generating scanners in other languages such as Go, Rust, Java,
 Python, etc.
+
+@anchor{option-rewrite}
+@item @code{%option rewrite}
+Back ends other than the default C generator can't assume they have
+the C preprocessor available.  Therefore, Flex recognizes the
+following function calls - yyecho(), yyinput(), yystart(), yybegin(),
+yyunput(), yypanic() and rewreites them adding a yyscanner final
+aergument as though they were C macros. This optiion is set to false
+whrn you select or default to the C back end, and to true otherwise.
+You can turn it off (or on) expliciltly after your emit option.
 
 @anchor{option-case-insensitive}
 @opindex -i
