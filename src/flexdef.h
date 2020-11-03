@@ -332,6 +332,7 @@ struct ctrl_bundle_t {
 	bool no_unistd;		// suppress inclusion of unistd.h
 	bool posix_compat;	// (-X) maximize compatibility with POSIX lex 
 	char *prefix;		// prefix for externally visible names, default "yy" 
+	trit reject_really_used;// Force generation of support code for reject operation
 	bool reentrant;		// if true (-R), generate a reentrant C scanner 
 	bool stack_used;	// Enable use of start-condition stacks
 	bool no_section3_escape;// True if the undocumented option --unsafe-no-m4-sect3-escape was passed
@@ -343,6 +344,7 @@ struct ctrl_bundle_t {
 	char *yyclass;		// yyFlexLexer subclass to use for YY_DECL
 	char *yydecl;		// user-specfied prototype for yylex.
 	int yylmax;		// Maximum buffer length if %array
+	trit yymore_really_used;// Force geberation of support code for yymore
 	bool yytext_is_array;	// if true (i.e., %array directive), then declare
 				// yytext as array instead of a character pointer.
 				// Nice and inefficient.
@@ -441,7 +443,6 @@ extern struct env_bundle_t env;
 
 extern int syntaxerror, eofseen;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
-extern int yymore_really_used, reject_really_used;
 
 /* Variables used in the flex input routines:
  * datapos - characters on current output line

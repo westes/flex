@@ -409,7 +409,7 @@ void context_call(char *);
 	pointer		ctrl.yytext_is_array = ! option_sense;
 	read		ctrl.use_read = option_sense;
 	reentrant	ctrl.reentrant = option_sense;
-	reject		reject_really_used = option_sense;
+	reject		ctrl.reject_really_used = option_sense;
 	stack		ctrl.stack_used = option_sense;
 	stdinit		ctrl.do_stdinit = option_sense;
 	stdout		env.use_stdout = option_sense;
@@ -419,7 +419,7 @@ void context_call(char *);
 	verbose		env.printstats = option_sense;
 	warn		env.nowarn = ! option_sense;
 	yylineno	ctrl.do_yylineno = option_sense;
-	yymore		yymore_really_used = option_sense;
+	yymore		ctrl.yymore_really_used = option_sense;
 	yywrap		ctrl.do_yywrap = option_sense;
 	yyread		ctrl.noyyread = !option_sense;
 

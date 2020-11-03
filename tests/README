@@ -37,7 +37,8 @@ To build and execute a single test:
 ** If possible, just write a *.rules file.  Exit with status 1 to
    indicate failure, e.g. with a "." production if nothing
    prior properly consumed every input token.  The test machinery
-   will expand a rules file into tests for all back ends.
+   will expand a rules file into tests for all back ends.  Note that
+   text following ### at the end of the ruleset will be used as input.
 
 ** Otherwise, list your test in the TESTS variable in Makefile.am in
    this directory. Note that due to the large number of tests, we use
@@ -52,8 +53,8 @@ To build and execute a single test:
 ** On success, your test should return zero.
 
 ** On error, your test should return 1 (one) and print a message to
-stderr, which will have been redirected to the log file created by the
-automake test suite harness.
+   stderr, which will have been redirected to the log file created by the
+   automake test suite harness.
 
 ** If your test is skipped (e.g., because bison was not found), then
    the test should return 77 (seventy-seven). This is the exit status that
@@ -75,16 +76,16 @@ A test with a c99 suffix exercises the c99 back end. All C99
 scanners are re-entrant.
 
 Most tests occur in groups with a common stem in the names, like
-alloc_extra_ or ccl_.  These are exercising the same token grammar
+alloc_extra_ or debug_.  These are exercising the same token grammar
 under different back ends.  As new target languages are added these
 groups of parallel tests will grow. Tests that are not part of one of
 these series are usually of features supported on the default cpp
 back end only.
 
 The "generated" tests are made by wrapping boilerplate code around a
-rules file. The assumption is that the test binary should consume its
-test file, exercising some set of Flex features and not returning
-a nonzero status.
+rules file. The assumption is that the test binary should consume the
+data following ### in the rules file, exercising some set of Flex
+features and not returning a nonzero status.
 
 If you can express your test as a ruleset within in this orotocol,
 please do so.  Those tests are easy to port to new back ends, as that
@@ -98,7 +99,7 @@ is Flex's ability to accumulate and ship preamble code sections.
 The "quotes" test is also backend-indepedent; it's testing that
 m4 expansion doesn't leak through the genertated scanner.
 
-The C99 is missing tests for the Bison bridge, header generation, and
-loadable tables because it omits those features in order to be a simpler
-starting point for wring new back ends.
+The C99 baxk end is missing tests for the Bison bridge, header
+generation, and loadable tables because it omits those features in
+order to be a simpler starting point for wring new back ends.
 

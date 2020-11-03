@@ -111,6 +111,8 @@ yyextra_nr
 yyextra_nr.c
 yyextra_c99
 yyextra_c99.c
+yyless*
+!yyless.rules
 yyunput*
 !yyunput.rules
 test-yydecl-*

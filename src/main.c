@@ -49,7 +49,6 @@ void set_up_initial_allocations(void);
 /* these globals are all defined and commented in flexdef.h */
 int     syntaxerror, eofseen;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
-int     yymore_really_used, reject_really_used;
 int     datapos, dataline, linenum;
 FILE   *skelfile = NULL;
 int     skel_ind = 0;
@@ -370,7 +369,7 @@ void check_options (void)
 	/* This makes no sense whatsoever. I'm removing it. */
 	if (ctrl.do_yylineno)
 		/* This should really be "maintain_backup_tables = true" */
-		reject_really_used = true;
+		ctrl.reject_really_used = true;
 #endif
 
 	if (ctrl.csize == trit_unspecified) {
@@ -728,7 +727,7 @@ void flexinit (int argc, char **argv)
 	syntaxerror = false;
 	yymore_used = continued_action = false;
 	in_rule = reject = false;
-	yymore_really_used = reject_really_used = trit_unspecified;
+	ctrl.yymore_really_used = ctrl.reject_really_used = trit_unspecified;
 
 	ctrl.do_main = trit_unspecified;
 	ctrl.interactive = ctrl.csize = trit_unspecified;
@@ -1089,19 +1088,19 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_YYMORE:
-			yymore_really_used = true;
+			ctrl.yymore_really_used = true;
 			break;
 
 		    case OPT_NO_YYMORE:
-			yymore_really_used = false;
+			ctrl.yymore_really_used = false;
 			break;
 
 		    case OPT_REJECT:
-			reject_really_used = true;
+			ctrl.reject_really_used = true;
 			break;
 
 		    case OPT_NO_REJECT:
-			reject_really_used = false;
+			ctrl.reject_really_used = false;
 			break;
 
 		    case OPT_NO_YY_PUSH_STATE:
@@ -1353,14 +1352,14 @@ void readin (void)
 	else
 		ctrl.backing_up_file = NULL;
 
-	if (yymore_really_used == true)
+	if (ctrl.yymore_really_used == true)
 		yymore_used = true;
-	else if (yymore_really_used == false)
+	else if (ctrl.yymore_really_used == false)
 		yymore_used = false;
 
-	if (reject_really_used == true)
+	if (ctrl.reject_really_used == true)
 		reject = true;
-	else if (reject_really_used == false)
+	else if (ctrl.reject_really_used == false)
 		reject = false;
 
 	if (env.performance_hint > 0) {
@@ -1524,7 +1523,7 @@ void readin (void)
 	}
 	if (real_reject)
 		visible_define ( "M4_MODE_REAL_REJECT");
-	if (reject_really_used)
+	if (ctrl.reject_really_used)
 		visible_define ( "M4_MODE_FIND_ACTION_REJECT_REALLY_USED");
 	if (reject)
 		visible_define ( "M4_MODE_USES_REJECT");
