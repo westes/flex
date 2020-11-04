@@ -97,7 +97,8 @@ EXTRA_DIST = \
 
 CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
 
-MAINTAINERCLEANFILES = cpp-skel.h c99-skel.h
+clean-local:
+	rm -f *-skel.h
 
 cpp-skel.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(m4) $(VERSION) > $@.tmp

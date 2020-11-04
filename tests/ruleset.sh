@@ -71,7 +71,7 @@ for backend in "$@" ; do
     echo ""
 
     RULESET_TESTS="${RULESET_TESTS} test-yydecl-${backend}.sh"
-    RULESET_REMOVABLES="${RULESET_TESTS} test-yydecl-${backend}.sh"
+    RULESET_REMOVABLES="${RULESET_REMOVABLES} test-yydecl-${backend}.sh"
 done
 
 echo ""
