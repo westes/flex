@@ -53,10 +53,10 @@ m4_define([[M4_HOOK_EOF_STATE_CASE_FALLTHROUGH]], [[		/* FALLTHROUGH */]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_TERMINATE]], [[		yyterminate();
 ]])
 m4_define([[M4_HOOK_TAKE_YYTEXT]], [[yy_do_before_action(yyscanner, cp, bp); /* set up yytext */]])
-m4_define([[M4_HOOK_RELEASE_YYTEXT]], [[*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */]])
-m4_define([[M4_HOOK_CHAR_REWIND]], [[YY_G(yy_c_buf_p) = yy_cp -= $1;]])
+m4_define([[M4_HOOK_RELEASE_YYTEXT]], [[*yy_cp = yyscanner->yy_hold_char; /* undo effects of setting up yytext */]])
+m4_define([[M4_HOOK_CHAR_REWIND]], [[yyscanner->yy_c_buf_p = yy_cp -= $1;]])
 m4_define([[M4_HOOK_LINE_REWIND]], [[yy_lineno_rewind_to(yy_cp, yy_cp - $1, yyscanner);]])
-m4_define([[M4_HOOK_CHAR_FORWARD]], [[YY_G(yy_c_buf_p) = yy_cp = yy_bp + $1;]])
+m4_define([[M4_HOOK_CHAR_FORWARD]], [[yyscanner->yy_c_buf_p = yy_cp = yy_bp + $1;]])
 m4_define([[M4_HOOK_LINE_FORWARD]], [[yy_lineno_rewind_to(yy_cp, yy_bp + $1, yyscanner);]])
 m4_define([[M4_HOOK_CONST_DEFINE_BYTE]], [[const char $1 = $2;
 ]])
@@ -74,7 +74,7 @@ m4_define([[M4_HOOK_SET_RULE_SETUP]], [[m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 	rule_check_bol(yyscanner);
 ]])	m4_ifdef([[YY_USER_ACTION]], YY_USER_ACTION)
 ]])
-m4_define([[M4_HOOK_SET_PREACTION]], [[m4_defiine([[YY_USER_ACTION]], [[$1]])]])
+m4_define([[M4_HOOK_SET_PREACTION]], [[m4_define([[YY_USER_ACTION]], [[$1]])]])
 m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[/*LINTED*/break;]])
 m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[$1]])]])
 m4_define([[M4_HOOK_FATAL_ERROR]], [[yypanic($1, yyscanner);]])
@@ -93,6 +93,20 @@ m4_define([[yyless]], [[
 		yyscanner->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ;
 		yy_do_before_action(yyscanner, yy_cp, yy_bp); /* set up yytext again */
 	} while ( 0 )
+]])
+
+%# Can't be a function given the context-arg treatment due to the goto.
+m4_define([[M4_HOOK_REJECT]], [[{
+				*yy_cp = yyscanner->yy_hold_char; /* undo effects of setting up yytext */
+				yy_cp = yyscanner->yy_full_match; /* restore poss. backed-over text */
+m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
+				yyscanner->yy_lp = yyscanner->yy_full_lp; /* restore orig. accepting pos. */
+				yyscanner->yy_state_ptr = yyscanner->yy_full_state; /* restore orig. state */
+				yy_current_state = *yyscanner->yy_state_ptr; /* restore curr. state */
+]])
+				++yyscanner->yy_lp;
+				goto find_rule;
+}
 ]])
 
 %% [0.0] Make hook macros available to Flex
@@ -1110,28 +1124,6 @@ static void yybumpline( yyscan_t yyscanner) {
 	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_is_interactive = is_interactive; \
 }
 
-m4_ifdef( [[M4_MODE_USES_REJECT]],[[
-%# Can't be given the context-arg treatment due to the goto.
-#define yyreject()				\
-{ \
-*yy_cp = yyscanner->yy_hold_char; /* undo effects of setting up yytext */ \
-yy_cp = yyscanner->yy_full_match; /* restore poss. backed-over text */ \
-m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[ \
-yyscanner->yy_lp = yyscanner->yy_full_lp; /* restore orig. accepting pos. */ \
-yyscanner->yy_state_ptr = yyscanner->yy_full_state; /* restore orig. state */ \
-yy_current_state = *yyscanner->yy_state_ptr; /* restore curr. state */ \
-]]) \
-++yyscanner->yy_lp; \
-goto find_rule; \
-}
-]])
-m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
-/* The intent behind this definition is that it'll catch
- * any uses of yyreject() which flex missed.
- */
-#define yyreject() reject_used_but_not_detected
-]])
-
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
 #define yymore() (yyscanner->yy_more_offset = strlen(yyscanner->yytext_r))
@@ -1690,7 +1682,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 			yypanic(
-				"input buffer overflow, can't enlarge buffer because scanner uses yyreject()", yyscanner );
+				"input buffer overflow, can't enlarge buffer because scanner uses reject", yyscanner );
 ]],
 [[
 			/* just a shorter name for the current buffer */

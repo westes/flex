@@ -78,6 +78,8 @@ m4_define([[M4_HOOK_ECHO]], [[yyecho();]])
 
 m4_ifdef([[M4_MODE_YYTERMINATE]], [[m4_define([[yyterminate]], [[M4_MODE_YYTERMINATE]])]])
 
+m4_define([[M4_HOOK_REJECT]], [[yyreject()]])
+
 %% [0.0] Make hook macros available to Flex
 
 m4_ifdef( [[M4_YY_IN_HEADER]], [[m4_dnl

@@ -154,6 +154,7 @@ FUNARGS     [^)]*
 
 %{
 void context_call(char *);
+#undef yyreject
 %}
 %%
 	static int bracelevel, didadef, indented_code;
@@ -930,7 +931,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
             CHECK_REJECT(yytext);
         }
 		"yyreject()" {
-            ACTION_ECHO;
+	    add_action("]""]M4_HOOK_REJECT[""[");
             CHECK_YYREJECT(yytext);
         }
 		"yymore" {
