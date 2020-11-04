@@ -82,7 +82,7 @@ m4_define([[M4_HOOK_ECHO]], [[yyecho(yyscanner);]])
 
 m4_define([[yyterminate]], m4_ifdef([[M4_MODE_YYTERMINATE]], [[M4_MODE_YYTERMINATE /* $1 */]], [[return YY_NULL /* $1 */]]))
 
-%# Return all but the first "n" matched characters back to the input stream.
+/* Return all but the first "n" matched characters back to the input stream. */
 m4_define([[yyless]], [[
 	do {
 		/* Undo effects of setting up yytext. */
@@ -93,29 +93,6 @@ m4_define([[yyless]], [[
 		yyscanner->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ;
 		yy_do_before_action(yyscanner, yy_cp, yy_bp); /* set up yytext again */
 	} while ( 0 )
-]])
-
-m4_ifdef([[M4_MODE_USES_REJECT]],[[
-%# Can't be given the context-arg treatment due to the goto.
-m4_define([[yyreject]], [[
-{
-*yy_cp = yyscanner->yy_hold_char; /* undo effects of setting up yytext $1 */
-yy_cp = yyscanner->yy_full_match; /* restore poss. backed-over text */
-m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
-yyscanner->yy_lp = yyscanner->yy_full_lp; /* restore orig. accepting pos. */
-yyscanner->yy_state_ptr = yyscanner->yy_full_state; /* restore orig. state */
-yy_current_state = *yyscanner->yy_state_ptr; /* restore curr. state */
-]])
-++yyscanner->yy_lp;
-goto find_rule;
-}
-]])
-]])
-m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
-/* The intent behind this definition is that it'll catch
- * any uses of yyreject() which flex missed.
- */
-m4_define([[yyreject()]], [[reject_used_but_not_detected]])
 ]])
 
 %% [0.0] Make hook macros available to Flex
@@ -1132,6 +1109,28 @@ static void yybumpline( yyscan_t yyscanner) {
 	} \
 	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_is_interactive = is_interactive; \
 }
+
+m4_ifdef( [[M4_MODE_USES_REJECT]],[[
+%# Can't be given the context-arg treatment due to the goto.
+#define yyreject()				\
+{ \
+*yy_cp = yyscanner->yy_hold_char; /* undo effects of setting up yytext */ \
+yy_cp = yyscanner->yy_full_match; /* restore poss. backed-over text */ \
+m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[ \
+yyscanner->yy_lp = yyscanner->yy_full_lp; /* restore orig. accepting pos. */ \
+yyscanner->yy_state_ptr = yyscanner->yy_full_state; /* restore orig. state */ \
+yy_current_state = *yyscanner->yy_state_ptr; /* restore curr. state */ \
+]]) \
+++yyscanner->yy_lp; \
+goto find_rule; \
+}
+]])
+m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
+/* The intent behind this definition is that it'll catch
+ * any uses of yyreject() which flex missed.
+ */
+#define yyreject() reject_used_but_not_detected
+]])
 
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[

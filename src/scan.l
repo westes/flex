@@ -964,7 +964,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			else
 				ACTION_ECHO;
 	}
-	yyterminate\(\)|yyreject\(\)|yyless\({FUNARGS}\) {
+	yyterminate\(\)|yyless\({FUNARGS}\) {
 			add_action("]""]");
 			add_action(yytext);
 			add_action("[""[");
