@@ -1124,30 +1124,29 @@ static void yybumpline( yyscan_t yyscanner) {
 	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_is_interactive = is_interactive; \
 }
 
+/* END access macros for use in actions */
+
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
-#define yymore() (yyscanner->yy_more_offset = strlen(yyscanner->yytext_r))
-#define YY_MORE_ADJ 0
-#define YY_RESTORE_YY_MORE_OFFSET \
-{ \
-yyscanner->yy_more_offset = yyscanner->yy_prev_more_offset; \
-yyscanner->yyleng_r -= yyscanner->yy_more_offset; \
+void yymore(yyscan_t yyscanner) {yyscanner->yy_more_offset = strlen(yyscanner->yytext_r);}
+m4_define([[YY_MORE_ADJ]],  [[0]])
+m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[{
+yyscanner->yy_more_offset = yyscanner->yy_prev_more_offset;
+yyscanner->yyleng_r -= yyscanner->yy_more_offset;
 }
 ]])
+]])
 m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
-#define yymore() (yyscanner->yy_more_flag = true)
-#define YY_MORE_ADJ yyscanner->yy_more_len
-#define YY_RESTORE_YY_MORE_OFFSET
+void yymore(yyscan_t yyscanner) {yyscanner->yy_more_flag = true;}
+m4_define([[YY_MORE_ADJ]],  [[yyscanner->yy_more_len]])
+m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[]])
 ]])
 ]])
 
 m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[
-#define yymore() yymore_used_but_not_detected
-#define YY_MORE_ADJ 0
-#define YY_RESTORE_YY_MORE_OFFSET
+m4_define([[YY_MORE_ADJ]],  [[0]])
+m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[]])
 ]])
-
-/* END access macros for use in actions */
 
 void yysetbol(bool at_bol, yyscan_t yyscanner) {
 	if ( yy_current_buffer() == NULL ) {

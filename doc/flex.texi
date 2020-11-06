@@ -2721,11 +2721,12 @@ Python, etc.
 @item @code{%option rewrite}
 Back ends other than the default C generator can't assume they have
 the C preprocessor available.  Therefore, Flex recognizes the
-following function calls - yyecho(), yyinput(), yystart(), yybegin(),
-yyunput(), yypanic() and rewreites them adding a yyscanner final
-aergument as though they were C macros. This optiion is set to false
-whrn you select or default to the C back end, and to true otherwise.
-You can turn it off (or on) expliciltly after your emit option.
+following function calls - yyecho(), yyless(), yymore(), yyinput(),
+yystart(), yybegin(), yyunput(), yypanic() - and rewreites them adding a
+yyscanner final argument as though they were C macros. This optiion
+is set to false whrn you select or default to the C back end, and to
+true otherwise.  You can turn it off (or on) explicitly after your
+emit option.
 
 @anchor{option-case-insensitive}
 @opindex -i

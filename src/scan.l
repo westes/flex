@@ -88,10 +88,6 @@ extern const char *escaped_qstart, *escaped_qend;
 	if ( all_lower( str ) ) \
 		reject = true;
 
-#define CHECK_YYMORE(str) \
-	if ( all_lower( str ) ) \
-		yymore_used = true;
-
 #define YY_USER_INIT \
 	if ( getenv("POSIXLY_CORRECT") ) \
 		ctrl.posix_compat = true;
@@ -927,16 +923,19 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 
 	<CODEBLOCK,ACTION>{
 		"reject" {
-            ACTION_ECHO;
-            CHECK_REJECT(yytext);
+			ACTION_ECHO;
+			CHECK_REJECT(yytext);
         }
 		"yyreject()" {
-	    add_action("]""]M4_HOOK_REJECT[""[");
-            CHECK_YYREJECT(yytext);
+			add_action("]""]M4_HOOK_REJECT[""[");
+			CHECK_YYREJECT(yytext);
         }
-		"yymore" {
-            ACTION_ECHO;
-            CHECK_YYMORE(yytext);
+		"yymore()" {
+			yymore_used = true;
+			if (ctrl.rewrite)
+				context_call(yytext);
+			else
+				ACTION_ECHO;
         }
 	}
 
