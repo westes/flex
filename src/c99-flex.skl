@@ -1045,7 +1045,7 @@ static void rule_check_bol(yyscan_t yyscanner) {
  */
 void yy_do_before_action(yyscan_t yyscanner, char *yy_cp, char *yy_bp) {
 	yyscanner->yytext_ptr = yy_bp; \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyscanner->yytext_ptr -= yyscanner->yy_more_len;
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyscanner->yytext_ptr -= yyscanner->yy_more_len; \
 	yyscanner->yyleng_r = (int) (yy_cp - yyscanner->yytext_ptr);]])]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyscanner->yyleng_r = (int) (yy_cp - yy_bp);]]) \
 	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyscanner->yyleng_r = (int) (yy_cp - yy_bp);]]) \

@@ -852,7 +852,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
  */
 #define YY_DO_BEFORE_ACTION \
 	YY_G(yytext_ptr) = yy_bp; \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[YY_G(yytext_ptr) -= YY_G(yy_more_len);
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[YY_G(yytext_ptr) -= YY_G(yy_more_len); \
 	yyleng = (int) (yy_cp - YY_G(yytext_ptr));]])]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyleng = (int) (yy_cp - yy_bp);]]) \
 	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyleng = (int) (yy_cp - yy_bp);]]) \
