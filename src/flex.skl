@@ -2897,8 +2897,6 @@ int yylex_destroy  (M4_YY_DEF_ONLY_ARG)
 
     /* Pop the buffer stack, destroying each element. */
 	while(YY_CURRENT_BUFFER){
-		yy_delete_buffer( YY_CURRENT_BUFFER M4_YY_CALL_LAST_ARG );
-		YY_CURRENT_BUFFER_LVALUE = NULL;
 		yypop_buffer_state(M4_YY_CALL_ONLY_ARG);
 	}
 
