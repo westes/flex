@@ -603,7 +603,7 @@ struct yyguts_t {
 	char* yy_last_accepting_cpos;
 
 	int yylineno_r;
-	int yy_flex_debug_r;
+	int yyflexdebug_r;
 
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	yy_state_type *yy_state_buf;
@@ -1096,7 +1096,7 @@ static void yy_lineno_rewind_to(char *yy_cp, char *dst, yyscan_t yyscanner)  {
 #define yytext yyscanner->yytext_r
 #define yylineno (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_bs_lineno)
 #define yycolumn (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_bs_column)
-#define yy_flex_debug yyscanner->yy_flex_debug_r
+#define yyflexdebug yyscanner->yyflexdebug_r
 
 static void yybumpline( yyscan_t yyscanner) {
 	yylineno++;
@@ -1456,7 +1456,7 @@ m4_define([[M4_YYL_BASE]], [[m4_ifdef([[M4_MODE_YYMORE_USED]],
 		do_action:	/* This label is used only to access EOF actions. */
 
 m4_ifdef([[M4_MODE_DEBUG]], [[
-			if ( yy_flex_debug ) {
+			if ( yyflexdebug ) {
 				if ( yy_act == 0 ) {
 					fprintf( stderr, "--scanner backing up\n" );
 				} else if ( yy_act < YY_NUM_RULES ) {
@@ -2456,14 +2456,14 @@ void yyset_out( FILE * _out_str, yyscan_t yyscanner) {
 m4_ifdef( [[M4_YY_NO_GET_DEBUG]],,
 [[
 int yyget_debug  (yyscan_t yyscanner) {
-	return yy_flex_debug;
+	return yyflexdebug;
 }
 ]])
 
 m4_ifdef( [[M4_YY_NO_SET_DEBUG]],,
 [[
 void yyset_debug(int _bdebug, yyscan_t yyscanner) {
-	yy_flex_debug = _bdebug ;
+	yyflexdebug = _bdebug ;
 }
 ]])
 

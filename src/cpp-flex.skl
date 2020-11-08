@@ -104,7 +104,7 @@ m4_ifelse(M4_MODE_PREFIX,yy,,
 #define yypush_buffer_state M4_MODE_PREFIX[[push_buffer_state]]
 #define yypop_buffer_state M4_MODE_PREFIX[[pop_buffer_state]]
 #define yyensure_buffer_stack M4_MODE_PREFIX[[ensure_buffer_stack]]
-#define yy_flex_debug M4_MODE_PREFIX[[_flex_debug]]
+#define yyflexdebug M4_MODE_PREFIX[[flexdebug]]
 #define yyin M4_MODE_PREFIX[[in]]
 #define yyleng M4_MODE_PREFIX[[leng]]
 #define yylex M4_MODE_PREFIX[[lex]]
@@ -232,7 +232,7 @@ m4_ifdef( [[M4_YY_NOT_REENTRANT]],
     M4_GEN_PREFIX(`leng')
     M4_GEN_PREFIX(`in')
     M4_GEN_PREFIX(`out')
-    M4_GEN_PREFIX(`_flex_debug')
+    M4_GEN_PREFIX(`flexdebug')
     M4_GEN_PREFIX(`lineno')
 ]])
 )
@@ -354,7 +354,7 @@ m4_define( [[M4_YY_DOC_PARAM]], [[@param yyscanner The scanner object.]])
 #define yytext YY_G(yytext_r)
 #define yylineno (YY_CURRENT_BUFFER_LVALUE->yy_bs_lineno)
 #define yycolumn (YY_CURRENT_BUFFER_LVALUE->yy_bs_column)
-#define yy_flex_debug YY_G(yy_flex_debug_r)
+#define yyflexdebug YY_G(yyflexdebug_r)
 
 m4_define( [[M4_YY_INCR_LINENO]],
 [[
@@ -874,8 +874,12 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 m4_ifdef([[M4_YY_NOT_REENTRANT]], [[
 m4_ifdef( [[M4_MODE_C_ONLY]],
 [[
-extern int yy_flex_debug;
-int yy_flex_debug = m4_ifdef([[M4_MODE_DEBUG]],[[1]],[[0]]);
+extern int yyflexdebug;
+int yyflexdebug = m4_ifdef([[M4_MODE_DEBUG]],[[1]],[[0]]);
+/* Legacy interface */
+#ifndef yy_flex_debug
+#define yy_flex_debug yyflexdebug
+#endif
 ]])
 ]])
 
@@ -1216,7 +1220,7 @@ struct yyguts_t {
 	char* yy_last_accepting_cpos;
 
 	int yylineno_r;
-	int yy_flex_debug_r;
+	int yyflexdebug_r;
 
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	yy_state_type *yy_state_buf;
@@ -2063,7 +2067,7 @@ m4_define([[M4_YYL_BASE]], [[m4_ifdef([[M4_MODE_YYMORE_USED]],
 		do_action:	/* This label is used only to access EOF actions. */
 
 m4_ifdef([[M4_MODE_DEBUG]], [[
-			if ( yy_flex_debug ) {
+			if ( yyflexdebug ) {
 				if ( yy_act == 0 ) {
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 					std::cerr << "--scanner backing up\n";
@@ -2296,7 +2300,7 @@ void yyFlexLexer::ctor_common() {
 	yy_c_buf_p = 0;
 	yy_init = 0;
 	yy_start = 0;
-	yy_flex_debug = 0;
+	yyflexdebug = 0;
 	yylineno = 1;	// this will only get updated if %option yylineno
 
 	yy_did_buffer_switch_on_eof = 0;
@@ -3558,7 +3562,7 @@ m4_ifdef( [[M4_YY_NO_GET_DEBUG]],,
 [[
 int yyget_debug  (M4_YY_DEF_ONLY_ARG) {
 	M4_YY_DECL_GUTS_VAR();
-	return yy_flex_debug;
+	return yyflexdebug;
 }
 ]])
 
@@ -3566,7 +3570,7 @@ m4_ifdef( [[M4_YY_NO_SET_DEBUG]],,
 [[
 void yyset_debug YYFARGS1( int ,_bdebug) {
 	M4_YY_DECL_GUTS_VAR();
-	yy_flex_debug = _bdebug ;
+	yyflexdebug = _bdebug ;
 }
 ]])
 ]])
