@@ -1690,6 +1690,11 @@ void readin (void)
 	if (ctrl.stack_used)
 		visible_define("M4_YY_STACK_USED");
 
+	if (ctrl.rewrite)
+		visible_define ( "M4_MODE_REWRITE");
+	else
+		visible_define ( "M4_MODE_NO_REWRITE");
+
 	comment("END of m4 controls\n");
 	out ("\n");
 }
