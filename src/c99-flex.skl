@@ -323,8 +323,8 @@ struct yy_buffer_state {
 	 */
 	bool yyatbol_flag;
 
-	int yy_bs_lineno; /**< The line count. */
-	int yy_bs_column; /**< The column count. */
+	int bs_yylineno; /**< The line count. */
+	int bs_yycolumn; /**< The column count. */
 
 	/* Whether to try to fill the input buffer when we reach the
 	 * end of it.
@@ -821,7 +821,7 @@ void yyunput( int c, yyscan_t yyscanner)
 m4_ifdef( [[M4_MODE_YYLINENO]],
 [[
 	if ( c == '\n' ){
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_bs_lineno--;
+		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno--;
 	}
 ]])
 
@@ -1072,7 +1072,7 @@ static void yy_less_lineno(int n, yyscan_t yyscanner) {
 	int yyl;
 	for ( yyl = n; yyl < yyscanner->yyleng_r; ++yyl ) {
 		if ( yyscanner->yytext_r[yyl] == '\n' ) {
-			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_bs_lineno--;
+			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno--;
 		}
 	}
 }
@@ -1081,7 +1081,7 @@ static void yy_lineno_rewind_to(char *yy_cp, char *dst, yyscan_t yyscanner)  {
 	const char *p;
 	for ( p = yy_cp-1; p >= dst; --p) {
 		if ( *p == '\n' ) {
-			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_bs_lineno--;
+			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno--;
 		}
 	}
 }
@@ -1109,8 +1109,8 @@ void yy_set_interactive(bool is_interactive, yyscan_t yyscanner) {
 
 
 static void yybumpline( yyscan_t yyscanner) {
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_bs_lineno++;
-        yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_bs_column=0;
+	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno++;
+        yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yycolumn=0;
 }
 
 /* START access macros for use in actions */
@@ -1120,8 +1120,8 @@ static void yybumpline( yyscan_t yyscanner) {
 #define yyextra yyscanner->yyextra_r
 #define yyleng yyscanner->yyleng_r
 #define yytext yyscanner->yytext_r
-#define yylineno (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_bs_lineno)
-#define yycolumn (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_bs_column)
+#define yylineno (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno)
+#define yycolumn (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yycolumn)
 #define yyflexdebug yyscanner->yyflexdebug_r
 
 /* END access macros for use in actions */
@@ -2004,8 +2004,8 @@ static void yy_init_buffer(yybuffer  b, FILE * file, yyscan_t yyscanner)
 	 * In that case, we don't want to reset the lineno or column.
 	 */
 	if (b != yy_current_buffer(yyscanner)) {
-		b->yy_bs_lineno = 1;
-		b->yy_bs_column = 0;
+		b->bs_yylineno = 1;
+		b->bs_yycolumn = 0;
 	}
 
 m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]],
