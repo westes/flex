@@ -9041,6 +9041,15 @@ complain about uppercase or underscores or both.  It would obviously be best
 if the parts of the public API that have to change to conform to
 local conventions are small and not commonly used.
 
+This is also why the functions @code{yy_current_buffer()},
+@code{yy_flush_current_buffer()}, and @code{yy_set_interactive()}
+do not have rewrite rules (see @xref{option-rewrite}); simply
+removing the underscores would have produced names that are
+unncomfortably long and hard on the eyeballs.  We leave
+it to the API binding for each individual target language to
+choose whether they should be left as is, camel-cased, or
+otherwise adapted to local conventions.
+
 @node Indices,  , Appendices, Top
 @unnumbered Indices
 
