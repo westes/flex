@@ -970,13 +970,13 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			add_action(yytext);
 			add_action("[""[");
 	}
-	yyin|yyout|yyextra|yyleng|yytext|yyflexdebug {
+	(yyin|yyout|yyextra|yyleng|yytext|yyflexdebug)/[^[:alnum:]_] {
 			if (ctrl.rewrite)
 				context_member(yytext, "M4_PROPERTY_CONTEXT_FORMAT");
 			else
 				ACTION_ECHO;
 	}
-	yylineno|yycolumn {
+	(yylineno|yycolumn)/[^[:alnum:]_] {
 			if (ctrl.rewrite)
 				context_member(yytext, "M4_PROPERTY_BUFFERSTACK_CONTEXT_FORMAT");
 			else
