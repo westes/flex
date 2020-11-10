@@ -50,8 +50,8 @@ DIGIT [[:digit:]]
        - directly modifying yylineno.
     */
 
-"yylineno++"          yylineno++;
-"yylineno--"          yylineno--;
+"yylineno--"          --yylineno;
+"yylineno++"          ++yylineno;
 [[:blank:]]+
 {WORD}
 {DIGIT}+(\n{DIGIT}+)*

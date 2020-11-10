@@ -32,6 +32,8 @@ m4_define([[M4_PROPERTY_SOURCE_SUFFIX]], [[.c]])
 m4_define([[M4_PROPERTY_TRACE_LINE_REGEXP]], [[^#line ([0-9]+) "(.*)"]])
 m4_define([[M4_PROPERTY_TRACE_LINE_TEMPLATE]], [[#line %d "%s"]])
 m4_define([[M4_PROPERTY_CONTEXT_ARG]], [[yyscanner]])
+m4_define([[M4_PROPERTY_CONTEXT_FORMAT]], [[yyscanner->%s_r]])
+m4_define([[M4_PROPERTY_BUFFERSTACK_CONTEXT_FORMAT]], [[yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_%s]])
 
 %# Macro hooks used by Flex code generators start here
 m4_define([[M4_HOOK_INT32]], [[int32_t]])
@@ -1113,19 +1115,6 @@ static void yybumpline( yyscan_t yyscanner) {
         yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yycolumn=0;
 }
 
-/* START access macros for use in actions */
-
-#define yyin yyscanner->yyin_r
-#define yyout yyscanner->yyout_r
-#define yyextra yyscanner->yyextra_r
-#define yyleng yyscanner->yyleng_r
-#define yytext yyscanner->yytext_r
-#define yylineno (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno)
-#define yycolumn (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yycolumn)
-#define yyflexdebug yyscanner->yyflexdebug_r
-
-/* END access macros for use in actions */
-
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
 void yymore(yyscan_t yyscanner) {yyscanner->yy_more_offset = strlen(yyscanner->yytext_r);}
@@ -1456,7 +1445,7 @@ m4_define([[M4_YYL_BASE]], [[m4_ifdef([[M4_MODE_YYMORE_USED]],
 		do_action:	/* This label is used only to access EOF actions. */
 
 m4_ifdef([[M4_MODE_DEBUG]], [[
-			if ( yyflexdebug ) {
+			if ( yyscanner->yyflexdebug_r ) {
 				if ( yy_act == 0 ) {
 					fprintf( stderr, "--scanner backing up\n" );
 				} else if ( yy_act < YY_NUM_RULES ) {
@@ -2325,11 +2314,12 @@ m4_ifdef( [[M4_YY_NO_GET_LINENO]],,
  * @param yyscanner The scanner object.
  */
 int yyget_lineno  (yyscan_t yyscanner) {
+	yybuffer cb = yy_current_buffer(yyscanner);
 
-	if (yy_current_buffer(yyscanner) == NULL) {
+	if (cb == NULL) {
 		return 0;
 	}
-	return yylineno;
+	return cb->bs_yylineno;
 }
 ]])
 
@@ -2339,11 +2329,12 @@ m4_ifdef( [[M4_YY_NO_GET_COLUMN]],,
  * @param yyscanner The scanner object.
  */
 int yyget_column  (yyscan_t yyscanner) {
+	yybuffer cb = yy_current_buffer(yyscanner);
 
-	if (yy_current_buffer(yyscanner) == NULL) {
+	if (cb == NULL) {
 		return 0;
 	}
-	return yycolumn;
+	return cb->bs_yycolumn;
 }
 ]])
 
@@ -2407,12 +2398,13 @@ m4_ifdef( [[M4_YY_NO_SET_LINENO]],,
  * @param yyscanner The scanner object.
  */
 void yyset_lineno(int _line_number, yyscan_t yyscanner) {
+	yybuffer cb = yy_current_buffer(yyscanner);
 
 	/* lineno is only valid if an input buffer exists. */
-	if (yy_current_buffer(yyscanner) == NULL ) {
+	if (cb == NULL ) {
 		yypanic( "yyset_lineno called with no buffer", yyscanner );
 	}
-	yylineno = _line_number;
+	cb->bs_yylineno = _line_number;
 }
 ]])
 
@@ -2423,12 +2415,13 @@ m4_ifdef( [[M4_YY_NO_SET_COLUMN]],,
  * @param yyscanner The scanner object.
  */
 void yyset_column(int _column_no, yyscan_t yyscanner) {
+	yybuffer cb = yy_current_buffer(yyscanner);
 
 	/* column is only valid if an input buffer exists. */
-	if (yy_current_buffer(yyscanner) == NULL ) {
+	if (cb == NULL ) {
 		yypanic( "yyset_column called with no buffer", yyscanner );
 	}
-	yycolumn = _column_no;
+	cb->bs_yycolumn = _column_no;
 }
 ]])
 
@@ -2456,14 +2449,14 @@ void yyset_out( FILE * _out_str, yyscan_t yyscanner) {
 m4_ifdef( [[M4_YY_NO_GET_DEBUG]],,
 [[
 int yyget_debug  (yyscan_t yyscanner) {
-	return yyflexdebug;
+	return yyscanner->yyflexdebug_r;
 }
 ]])
 
 m4_ifdef( [[M4_YY_NO_SET_DEBUG]],,
 [[
 void yyset_debug(int _bdebug, yyscan_t yyscanner) {
-	yyflexdebug = _bdebug ;
+	yyscanner->yyflexdebug_r = _bdebug ;
 }
 ]])
 

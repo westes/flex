@@ -150,6 +150,7 @@ FUNARGS     [^)]*
 
 %{
 void context_call(char *);
+void context_member(char *, const char *);
 #undef yyreject
 %}
 %%
@@ -969,6 +970,18 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			add_action(yytext);
 			add_action("[""[");
 	}
+	yyin|yyout|yyextra|yyleng|yytext|yyflexdebug {
+			if (ctrl.rewrite)
+				context_member(yytext, "M4_PROPERTY_CONTEXT_FORMAT");
+			else
+				ACTION_ECHO;
+	}
+	yylineno|yycolumn {
+			if (ctrl.rewrite)
+				context_member(yytext, "M4_PROPERTY_BUFFERSTACK_CONTEXT_FORMAT");
+			else
+				ACTION_ECHO;
+	}
 	[^[:Alpha:]_{}""''/\n\[\]]+	ACTION_ECHO;
         {NAME}		ACTION_ECHO;
         "'"([^''\\\n]|\\.)"'" ACTION_ECHO; /* character constant */
@@ -1101,5 +1114,18 @@ void context_call(char *txt) {
 		}
 		add_action(context_arg);
 		add_action(")");
+	}
+}
+
+void context_member(char *txt, const char *prop) {
+	const char *context_format = skel_property(prop);
+
+	/* if there's no such property, simply pass through */
+	if (context_format == NULL) {
+		add_action(txt);
+	} else {
+		char buf[128];
+		snprintf(buf, sizeof(buf), context_format, txt);
+		add_action(buf);
 	}
 }
