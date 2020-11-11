@@ -107,6 +107,8 @@ tableopts*
 !tableopts.rules
 top
 top.[ch]
+trailing*
+!trailing.rules
 yyextra_nr
 yyextra_nr.c
 yyextra_c99

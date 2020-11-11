@@ -1228,11 +1228,12 @@ m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	char *yy_full_match;
 	int yy_lp;
 
-	/* These are only needed for trailing context rules,
-	 * but there's no conditional variable for that yet. */
+m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[dnl
+	/* These are only needed for trailing context rules */
 	int yy_looking_for_trail_begin;
 	int yy_full_lp;
 	int *yy_full_state;
+]])
 ]])
 m4_ifdef( [[M4_MODE_REENTRANT_TEXT_IS_ARRAY]], [[
 	char yytext_r[YYLMAX];
