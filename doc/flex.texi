@@ -1,4 +1,4 @@
-busuinput texinfo.tex @c -*-texinfo-*-
+\input texinfo.tex @c -*-texinfo-*-
 @c %**start of header
 @setfilename flex.info
 @include version.texi
