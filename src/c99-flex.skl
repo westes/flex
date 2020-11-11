@@ -405,7 +405,7 @@ static const M4_HOOK_NXT_TYPE yy_nxt[][M4_HOOK_NXT_ROWS] =
     {
 M4_HOOK_NXT_BODY
 ]], [[
-m4_ifdef([[YY_NXT_LOLEN]], [[(M4_HOOK_NXT_ROWS)]])
+m4_define([[YY_NXT_LOLEN]], [[(M4_HOOK_NXT_ROWS)]])
 static const M4_HOOK_NXT_TYPE *yy_nxt =0;
 ]])
 
@@ -693,7 +693,7 @@ void yy_flush_current_buffer(yyscan_t yyscanner) {
 
 const int YY_EXIT_FAILURE = 2;
 
-m4_ifdef( [[M4_MODE_YY_NO_YYPANIC]],, [[
+m4_ifdef( [[M4_M4_YY_NO_YYPANIC]],, [[
 /* This gfunction has a magic rewrite rule */
 static void yynoreturn yypanic(const char* msg, yyscan_t yyscanner) {
 	(void)yyscanner; /* forestall unused-argument warning */
