@@ -46,7 +46,7 @@ static void check_extra ( yyscan_t  scanner );
 %}
 
 %option emit="c99"
-%option 8bit  prefix="test"
+%option 8bit
 %option nounput nomain noyywrap nodefault noinput
 %option warn
 %option extra-type="struct Check *"
@@ -71,25 +71,26 @@ main (void)
     check.bar = NULL;
     check.qux = 'z';
  
-    testlex_init_extra(&check, &scanner);
-    testset_in(stdin, scanner);
-    testset_out(stdout, scanner);
+    yylex_init_extra(&check, &scanner);
+    yyset_in(stdin, scanner);
+    yyset_out(stdout, scanner);
 
     /* Test to confirm that testalloc was called from
      * testlex_init_extra with the testextra argument.
      */
     check_extra(scanner);
 
-    testlex(scanner);
+    yylex(scanner);
 
-    testlex_destroy(scanner);
+    yylex_destroy(scanner);
     return 0;
 }
 
-void *testalloc(size_t size, yyscan_t scanner)
+/* Replaces the stock yyalloc */
+void *yyalloc(size_t size, yyscan_t scanner)
 {
     struct Check *check;
-    check = testget_extra(scanner);
+    check = yyget_extra(scanner);
 
     if (!check->bar)
         check->bar = "Hello World";
@@ -103,7 +104,7 @@ void *testalloc(size_t size, yyscan_t scanner)
 static void check_extra(yyscan_t  scanner)
 {
     struct Check *check;
-    check = testget_extra(scanner);
+    check = yyget_extra(scanner);
 
     if (check->foo != 'a') {
         fprintf(stderr, "foo is not 'a'\n");
