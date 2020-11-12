@@ -622,18 +622,16 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]], [[
 ]])
 }; /* end struct yyguts_t */
 
-static int yy_init_globals ( yyscan_t yyscanner );
-
 m4_ifdef( [[M4_YY_BISON_LVAL]],
 [[
 /* This must go here because YYSTYPE and YYLTYPE are included
  * from bison output in section 1.*/
-#    define yylval yyscanner->yylval_r
+m4_define([[yylval]], [[yyscanner->yylval_r]])
 ]])
 
 m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 [[
-#    define yylloc yyscanner->yylloc_r
+m4_define([[yylloc]], [[yyscanner->yylloc_r]])
 ]])
 
 int yylex_init (yyscan_t* scanner);
@@ -2383,6 +2381,44 @@ void yyless(int n, yyscan_t yyscanner) {
 	yyscanner->yyleng_r = n;
 }
 
+static int yy_init_globals (yyscan_t yyscanner) {
+	/*
+	 * This function is called from yylex_destroy(), so don't allocate here.
+	 */
+	yyscanner->yy_buffer_stack = NULL;
+	yyscanner->yy_buffer_stack_top = 0;
+	yyscanner->yy_buffer_stack_max = 0;
+	yyscanner->yy_c_buf_p = NULL;
+	yyscanner->yy_init = false;
+	yyscanner->yy_start = 0;
+	yyscanner->yy_start_stack_ptr = 0;
+	yyscanner->yy_start_stack_depth = 0;
+	yyscanner->yy_start_stack =  NULL;
+
+m4_ifdef( [[M4_MODE_USES_REJECT]],
+[[
+	yyscanner->yy_state_buf = 0;
+	yyscanner->yy_state_ptr = 0;
+	yyscanner->yy_full_match = 0;
+	yyscanner->yy_lp = 0;
+]])
+
+m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]],
+[[
+	yyscanner->yytext_ptr = 0;
+	yyscanner->yy_more_offset = 0;
+	yyscanner->yy_prev_more_offset = 0;
+]])
+
+	yyscanner->yyin_r = NULL;
+	yyscanner->yyout_r = NULL;
+
+	/* For future reference: Set errno on error, since we are called by
+	 * yylex_init()
+	 */
+	return 0;
+}
+
 /* User-visible API */
 
 /* yylex_init is special because it creates the scanner itself, so it is
@@ -2442,44 +2478,6 @@ int yylex_init_extra( M4_MODE_EXTRA_TYPE yy_user_defined, yyscan_t* ptr_yy_globa
 	return yy_init_globals ( *ptr_yy_globals );
 }
 ]])
-
-static int yy_init_globals (yyscan_t yyscanner) {
-	/*
-	 * This function is called from yylex_destroy(), so don't allocate here.
-	 */
-	yyscanner->yy_buffer_stack = NULL;
-	yyscanner->yy_buffer_stack_top = 0;
-	yyscanner->yy_buffer_stack_max = 0;
-	yyscanner->yy_c_buf_p = NULL;
-	yyscanner->yy_init = false;
-	yyscanner->yy_start = 0;
-	yyscanner->yy_start_stack_ptr = 0;
-	yyscanner->yy_start_stack_depth = 0;
-	yyscanner->yy_start_stack =  NULL;
-
-m4_ifdef( [[M4_MODE_USES_REJECT]],
-[[
-	yyscanner->yy_state_buf = 0;
-	yyscanner->yy_state_ptr = 0;
-	yyscanner->yy_full_match = 0;
-	yyscanner->yy_lp = 0;
-]])
-
-m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]],
-[[
-	yyscanner->yytext_ptr = 0;
-	yyscanner->yy_more_offset = 0;
-	yyscanner->yy_prev_more_offset = 0;
-]])
-
-	yyscanner->yyin_r = NULL;
-	yyscanner->yyout_r = NULL;
-
-	/* For future reference: Set errno on error, since we are called by
-	 * yylex_init()
-	 */
-	return 0;
-}
 
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
 int yylex_destroy  (yyscan_t yyscanner) {
