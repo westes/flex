@@ -261,21 +261,17 @@ EXTRA_DIST = \
 	alloc_extra.txt \
 	array_nr.txt \
 	array_r.txt \
-	basic_nr.txt \
-	basic_r.txt \
 	bison_nr.txt \
 	bison_yylloc.txt \
 	bison_yylval.txt \
 	c_cxx_nr.txt \
 	c_cxx_r.txt \
-	ccl.txt \
 	cxx_basic.txt \
 	cxx_multiple_scanners.txt \
 	cxx_restart.txt \
 	cxx_yywrap.txt \
 	debug_nr.txt \
 	debug_r.txt \
-	extended.txt \
 	header_nr.txt \
 	header_r.txt \
 	include_by_buffer.direct.txt \
@@ -299,15 +295,12 @@ EXTRA_DIST = \
 	pthread_3.txt \
 	pthread_4.txt \
 	pthread_5.txt \
-	reject.txt \
 	rescan_nr.direct.txt \
 	rescan_r.direct.txt \
-	quote_in_comment.txt \
 	quotes.txt \
 	tableopts.txt \
 	top.txt \
-	yyextra.txt \
-	yyunput.txt
+	yyextra.txt
 
 dist_noinst_SCRIPTS = \
 	ruleset.sh
