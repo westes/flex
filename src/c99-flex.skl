@@ -7,9 +7,10 @@
 %# the bare minimum needed to keep it working in C.
 %#
 %# Note that using m4 rather than C for macro definitions means they
-%# willnot  be recognized and expended in user actions nor
+%# will not automatically be recognized and expended in user actions nor
 %# in user code sections. Anything you need to be visible there
-%# needs to be declared as a function.
+%# needs to be declared as a function or have a rewrite rule
+%# that dequotes the macro.
 %#
 %# The m4 macros complicate reading this code enough that being
 %# prescriptive about whitespace and braces is more than usually
