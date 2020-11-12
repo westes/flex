@@ -99,7 +99,7 @@ is Flex's ability to accumulate and ship preamble code sections.
 The "quotes" test is also backend-indepedent; it's testing that
 m4 expansion doesn't leak through the genertated scanner.
 
-The C99 baxk end is missing tests for the Bison bridge, header
+The C99 backend is missing tests for the Bison bridge, header
 generation, and loadable tables because it omits those features in
 order to be a simpler starting point for wring new back ends.
 
