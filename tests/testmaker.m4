@@ -7,7 +7,7 @@ dnl M4_TEST_BACKEND must be set to a recognized back end name.
 dnl For purposes of this file, "nr" and "r" are treated as
 dnl separate back ends - non-reentrant and reentrant C through
 dnl the default cpp skeleton. The c99 backend is treated here
-dnl as re-eentrant C, but may have a different skeleton file.
+dnl as re-entrant C, but may have a different skeleton file.
 dnl
 dnl The purpose of this file is to properly set these macros:
 dnl
@@ -116,7 +116,7 @@ ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl
 ')dnl close r
 dnl
 dnl A hypothetical example
-ifelse(M4_TEST_BACKEND, `go', `dnl
+ifelse(M4_TEST_BACKEND, `hypothetical-go', `dnl
 define(`M4_TEST_PREAMBLE', `dnl
 %top{
 package main

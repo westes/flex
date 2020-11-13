@@ -38,21 +38,21 @@
 /* START digested skeletons */
 
 const char *cpp_skel[] = {
-#include "cpp-skel.h"
+#include "cpp-flex.h"
     0,
 };
 
 const char *c99_skel[] = {
-#include "c99-skel.h"
+#include "c99-flex.h"
     0,
 };
 
 /* END digested skeletons */
 
 /* Method table describing a language-specific back end.
- * Even if this never gets a member other than the skell
- * array, it prevents us from geting lost in a maze of
- * twity array referebce levels, all different.
+ * Even if this never gets a member other than the skel
+ * array, it prevents us from getting lost in a maze of
+ * twisty array reference levels, all different.
  */
 struct flex_backend_t {
 	const char **skel;		// Digested skeleton file

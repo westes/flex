@@ -17,7 +17,10 @@ printf "\n# Begin generated test rules\n\n"
 compatible() {
     mybackend=$1
     myruleset=$2
-    [ "${mybackend}" = "nr" ] || [ "${myruleset}" != "lexcompat.rules" ]
+    # Some options are both a pain to test outside the default back end and really don't need to be
+    # tested in more than one back end anyway.  An option is in this category if it doesn't affect
+    # any conditionals in the code generation, just the way the Flex scanner generates its NDFSA tables.
+    [ "${mybackend}" = "nr" ] || [ "${myruleset}" != "lexcompat.rules" -a "${myruleset}" != "posixlycorrect.rules" ]
 }
 
 for backend in "$@" ; do
@@ -52,7 +55,7 @@ EOF
 done
 
 # posixlycorrect is a special case becaae we need to set POSIXLY_CORRECT
-# in Flex's environment while these .l files are bein processed.
+# in Flex's environment while these .l files are being processed.
 for backend in "$@" ; do
     case $backend in
 	nr|r|c99) ext="c" ;;

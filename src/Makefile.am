@@ -53,9 +53,6 @@ flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
 COMMON_SOURCES = \
 	buf.c \
 	ccl.c \
-	skeletons.c \
-	cpp-skel.h \
-	c99-skel.h \
 	dfa.c \
 	ecs.c \
 	filter.c \
@@ -73,6 +70,7 @@ COMMON_SOURCES = \
 	scanflags.c \
 	scanopt.c \
 	scanopt.h \
+	skeletons.c \
 	sym.c \
 	tables.c \
 	tables.h \
@@ -90,21 +88,20 @@ include_HEADERS = \
 	FlexLexer.h
 
 EXTRA_DIST = \
-	cpp-flex.skl \
-	c99-flex.skl \
+	*-flex.skl \
 	mkskel.sh \
 	gettext.h
 
 CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
 
 clean-local:
-	rm -f *-skel.h
+	rm -f *-flex.h
 
-cpp-skel.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
+cpp-flex.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(m4) $(VERSION) > $@.tmp
 	mv -f $@.tmp $@
 
-c99-skel.h: c99-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
+c99-flex.h: c99-flex.skl mkskel.sh
 	$(SHELL) $(srcdir)/mkskel.sh c99 $(srcdir) $(m4) $(VERSION) > $@.tmp
 	mv -f $@.tmp $@
 
@@ -121,17 +118,19 @@ dist-hook: scan.l flex$(EXEEXT)
 	./flex$(EXEEXT) -o scan.c $< && \
 	mv -f scan.c $(distdir)
 
-# make needs to be told to make parse.h so that parallelized runs will
+# make needs to be told to make inclusions so that parallelized runs will
 # not fail.
 
-stage1flex-main.$(OBJEXT): parse.h
-flex-main.$(OBJEXT): parse.h
+SKELINCLUDES := $(subst skl,h,$(wildcard *.skl))
 
-stage1flex-yylex.$(OBJEXT): parse.h
-flex-yylex.$(OBJEXT): parse.h
+stage1flex-main.$(OBJEXT): parse.h $(SKELINCLUDES)
+flex-main.$(OBJEXT): parse.h $(SKELINCLUDES)
 
-stage1flex-scan.$(OBJEXT): parse.h
-flex-stage1scan.$(OBJEXT): parse.h
+stage1flex-yylex.$(OBJEXT): parse.h $(SKELINCLUDES)
+flex-yylex.$(OBJEXT): parse.h $(SKELINCLUDES)
+
+stage1flex-scan.$(OBJEXT): parse.h $(SKELINCLUDES)
+flex-stage1scan.$(OBJEXT): parse.h $(SKELINCLUDES)
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #
