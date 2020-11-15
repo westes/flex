@@ -2180,7 +2180,7 @@ m4_ifdef([[M4_MODE_FIND_ACTION_COMPRESSED]], [[		yy_act = yy_accept[yy_current_s
 
 m4_ifdef( [[M4_MODE_YYLINENO]],[[
 m4_define([[M4_YYL_BASE]], [[m4_ifdef([[M4_MODE_YYMORE_USED]],
-			    [[m4_ifdef([[M4_MODE_YYTECT_IS_ARRAY]],
+			    [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]],
 				       [["yyscanner->yy_prev_more_offset"]], [["yyscanner->yy_more_len"]])]], [[0]])]])
 			if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] ) {
 				int yyl;

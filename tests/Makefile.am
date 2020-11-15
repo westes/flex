@@ -214,9 +214,6 @@ CLEANFILES = \
 	include_by_buffer.direct.c \
 	include_by_push.direct.c \
 	include_by_reentrant.direct.c \
-	lineno_nr.c \
-	lineno_r.c \
-	lineno_c99.c \
 	lineno_trailing.c \
 	mem_nr.c \
 	mem_r.c \

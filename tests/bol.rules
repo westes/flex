@@ -20,16 +20,16 @@
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
  */
- /*
-  * Test yymore with default pointer buffer.  What should happen is:
-  * 1. "foo" is matched by the first rule but not consumed.
-  * 2. "bar" is matched, but the token length is 6 rather than 3.
-  * We use a ^ to force the extra code for BOL checking.
-  */
 
-%option nounput noyywrap noyylineno warn noinput
+/* Test BOL matching,
+ * If the ^ operator does not constrain pattern patching, these rules
+ * will false-match on after :bar: the line of input and fail.
+ */
+
+%option nounput noyywrap noyylineno warn nodefault noinput
 %%
-foo	{M4_TEST_DO(yymore())}
-bar	{M4_TEST_ASSERT(yyleng == 6)}
+^foo  {M4_TEST_FAILMESSAGE}
+.|\n  {}
+
 ###
-^foobar
+barfoo
