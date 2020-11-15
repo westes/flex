@@ -565,6 +565,12 @@ static const M4_HOOK_DEBUGTABLE_TYPE * yy_rule_linenum = 0;
 
 M4_YY_SC_DEFS
 
+m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[m4_dnl
+%# These must match the values in the file flexdef.h
+%# of the flex source code, otherwise havoc will ensue.
+const int YY_TRAILING_MASK = 0x2000;
+const int YY_TRAILING_HEAD_MASK = 0x4000;
+]])
 /* Holds the entire state of the reentrant scanner. */
 struct yyguts_t {
 	/* User-defined. Not touched by flex. */
@@ -597,7 +603,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	char *yy_full_match;
 	int yy_lp;
 
-m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[dnl
+m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[m4_dnl
 	/* These are only needed for trailing context rules */
 	int yy_looking_for_trail_begin;
 	int yy_full_lp;

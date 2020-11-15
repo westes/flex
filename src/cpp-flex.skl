@@ -1064,6 +1064,12 @@ static char *yy_last_accepting_cpos;
 ]])
 ]])
 
+m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[m4_dnl
+%# These must match the values in the file flexdef.h
+%# of the flex source code, otherwise havoc will ensue.
+#define YY_TRAILING_MASK 0x2000
+#define YY_TRAILING_HEAD_MASK 0x4000
+]])
 m4_ifdef( [[M4_MODE_USES_REJECT]],[[
 m4_ifdef( [[M4_YY_NOT_REENTRANT]], [[
 m4_ifdef( [[M4_MODE_C_ONLY]], [[
@@ -1075,10 +1081,6 @@ m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 static int yy_looking_for_trail_begin = 0;
 static int yy_full_lp;
 static int *yy_full_state;
-%# These must match the values in the file flexdef.h
-%# of the flex source code, otherwise havoc will ensue.
-#define YY_TRAILING_MASK 0x2000
-#define YY_TRAILING_HEAD_MASK 0x4000
 ]])
 ]])
 ]])
@@ -1228,7 +1230,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	char *yy_full_match;
 	int yy_lp;
 
-m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[dnl
+m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[m4_dnl
 	/* These are only needed for trailing context rules */
 	int yy_looking_for_trail_begin;
 	int yy_full_lp;

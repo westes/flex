@@ -21,21 +21,9 @@
  * PURPOSE.
  */
 
-%{
-/* A template scanner file to build "scanner.c".
-   Run as:
-          test-lineno-trailing    # report flex's yylineno
-          test-lineno-trailing 1  # report count_newlines(stdin)
-*/
-
 /* The goal here is to test the yylineno in the context of trailing-contexts.
  * Using rules that have newlines in look-ahead.
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include "config.h"
-
-%}
 
 %option 8bit
 %option nounput nomain noyywrap noinput yylineno
@@ -49,39 +37,21 @@ WORD [[:alpha:]]+
 "Var_prefix_and_trailing:"{WORD}":"/(\n{WORD})* {}
 \n                     {}
 .                      {}
-<<EOF>>  { printf("%d\n", yylineno);
-           yyterminate();
-         }
+<<EOF>>  {M4_TEST_ASSERT(yylineno==16) M4_TEST_DO(yyterminate())}
 
-%%
+###
+We are testing rules with trailing contexts containing newlines (see scanner.l):
 
-/* returns number of '\n' characters in input, plus one.
-   This is what flex does, essentially. */
-   
-static int
-count_newlines (FILE* in)
-{
-    int n=1,c;
-    while ((c=fgetc(in)) != EOF)
-        if( c == '\n')
-            n++;
-    return n;
-}
+Fixed_trailing:
+test
 
-int main ( int, char**);
+Var_trailing:word
+test
 
-int
-main ( int argc,  char **argv )
-{
-    (void)argv;
+Var_prefix_and_trailing:word:
+more
+text
+comes
+here
 
-    if( argc > 1 )
-        printf("%d\n", count_newlines(stdin));
 
-    else{
-        yyin = stdin;
-        yyout = stdout;
-        yylex();
-    }
-    return 0;
-}

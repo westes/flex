@@ -70,6 +70,8 @@ lineno_c99
 lineno_go
 lineno.txt
 !lineno.rules
+linenotrailing*
+!linenotrailing.rules
 mem_nr
 mem_nr.c
 mem_r
