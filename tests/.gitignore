@@ -57,11 +57,6 @@ include_by_reentrant.direct
 include_by_reentrant.direct.c
 lexcompat*
 !lexcompat.rules
-lineno_nr.one
-lineno_r.one
-lineno_c99.one
-lineno_trailing.one
-lineno_trailing.c
 lineno*.c
 lineno*.l
 lineno_nr

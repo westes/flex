@@ -13,7 +13,7 @@ INPUT_COUNT=0
 USE_REDIRECT=0
 DO_COMPARISON=0
 
-while getopts :d:i:r1 OPTION ; do
+while getopts :d:i:r OPTION ; do
     case $OPTION in
         d) INPUT_DIRECTORY=$OPTARG ;;
         i)
@@ -25,8 +25,7 @@ while getopts :d:i:r1 OPTION ; do
             INPUT_COUNT=$((INPUT_COUNT+1))
             ;;
         r) USE_REDIRECT=1 ;;
-        1) DO_COMPARISON=1 ;;
-        *) echo "Usage: ${0} [-d INPUT_DIRECTORY] [-i INPUT_NAME] [-r] [-t] [-1] TESTNAME"
+        *) echo "Usage: ${0} [-d INPUT_DIRECTORY] [-i INPUT_NAME] [-r] [-t] TESTNAME"
            exit 1
            ;;
     esac
@@ -53,16 +52,6 @@ for input in $inputs; do
         INPUT_NAME="${INPUT_NAME} ${input}"
     fi
 done
-
-# We may want to compare the input fed to the test binary to its output.
-# Equality means success, because it means no character leaked past a
-# token match to echo.
-if [ $DO_COMPARISON = 1 ] ; then
-    TEST_OUTPUT=$($TESTNAME < "$INPUT_NAME")
-    REF_OUTPUT=$($TESTNAME 1 < "$INPUT_NAME")
-    test "$TEST_OUTPUT" -eq "$REF_OUTPUT"
-    exit $?
-fi
 
 # Detect if the test wants a table argument.  If it does, the test maker will have generated
 # a tables=-file option do that the a table file named afte the test was created when the

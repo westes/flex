@@ -29,7 +29,7 @@ TESTS = $(check_PROGRAMS) options.cn
 # automake knows how to distinguish between the various kinds of tests
 # we have.
 
-TEST_EXTENSIONS = .direct .cn .i3 .pthread .one .opt .ser .ver
+TEST_EXTENSIONS = .direct .cn .i3 .pthread .opt .ser .ver
 
 LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
@@ -46,9 +46,6 @@ AM_I3_LOG_FLAGS = -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt -i $(s
 PTHREAD_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_PTHREAD_LOG_FLAGS = -i $(srcdir)/pthread_1.txt -i $(srcdir)/pthread_2.txt -i $(srcdir)/pthread_3.txt -i $(srcdir)/pthread_4.txt -i $(srcdir)/pthread_5.txt
 
-ONE_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
-AM_ONE_LOG_FLAGS = -1 -d $(srcdir)
-
 OPT_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_OPT_LOG_FLAGS = -d $(srcdir) -i $(srcdir)/tableopts.txt -r
 
@@ -61,7 +58,7 @@ AM_VER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r
 AM_YFLAGS = -d -p test
 AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 
-check_PROGRAMS = $(RULESET_TESTS) $(SPORADIC_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS) $(ONE_TESTS)
+check_PROGRAMS = $(RULESET_TESTS) $(SPORADIC_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS)
 
 SPORADIC_TESTS = \
 	alloc_extra_nr \
@@ -109,12 +106,6 @@ I3_TESTS = \
 PTHREAD_TESTS = \
 	pthread.pthread
 
-ONE_TESTS = \
-	lineno_nr.one \
-	lineno_r.one \
-	lineno_c99.one \
-	lineno_trailing.one
-
 alloc_extra_nr_SOURCES = alloc_extra_nr.l
 alloc_extra_c99_SOURCES = alloc_extra_c99.l
 if HAVE_BISON
@@ -145,7 +136,6 @@ nodist_header_r_SOURCES = header_r_scanner.h
 include_by_buffer_direct_SOURCES = include_by_buffer.direct.l
 include_by_push_direct_SOURCES = include_by_push.direct.l
 include_by_reentrant_direct_SOURCES = include_by_reentrant.direct.l
-lineno_trailing_one_SOURCES = lineno_trailing.l
 mem_nr_SOURCES = mem_nr.l
 mem_r_SOURCES = mem_r.l
 mem_c99_SOURCES = mem_c99.l
@@ -211,7 +201,6 @@ CLEANFILES = \
 	include_by_buffer.direct.c \
 	include_by_push.direct.c \
 	include_by_reentrant.direct.c \
-	lineno_trailing.c \
 	mem_nr.c \
 	mem_r.c \
 	mem_c99.c \
