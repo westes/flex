@@ -31,7 +31,7 @@
   */
 
 %array
-%option nounput noyywrap noyylineno warn noinput
+%option nounput noyywrap yylineno warn noinput
 %%
 ^foo	{yymore();}
 bar	{if (!(yyleng == 6)) {fprintf(stderr,"ASSERT FAILED.\n"); exit(1);}}
