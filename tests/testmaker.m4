@@ -44,8 +44,8 @@ define(`M4_TEST_PREAMBLE', `dnl
 %}
 ')dnl close preamble
 define(`M4_TEST_DO', `$1;')
-define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED.\n"); exit(1);')
-define(`M4_TEST_ASSERT', `if (!($1)) {fprintf(stderr,"ASSERT FAILED.\n"); exit(1);}')
+define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
+define(`M4_TEST_ASSERT', `if (!($1)) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
 {
@@ -82,8 +82,8 @@ define(`M4_TEST_PREAMBLE', `dnl
 %}
 ')dnl close preamble
 define(`M4_TEST_DO', `$1;')
-define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED.\n"); exit(1);')
-define(`M4_TEST_ASSERT', `if (!$1) {fprintf(stderr,"ASSERT FAILED.\n"); exit(1);}')
+define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
+define(`M4_TEST_ASSERT', `if (!$1) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
 {
@@ -130,8 +130,8 @@ import (
 %option emit="go"
 ')dnl close preamble
 define(`M4_TEST_DO', `$1')
-define(`M4_TEST_FAILMESSAGE', `log.Fatal("TEST FAILMESSAGE"); os.Exit(1);')
-define(`M4_TEST_ASSERT', `if !$1 {Fprintf(os.Stderr,"ASSERT FAILED.\n"); os.Exit(1);}')
+define(`M4_TEST_FAILMESSAGE', `fmt.Fprintf(os.Stderr, "TEST FAILMESSAGE: %d:\"%s\"\n", yylineno, yytext); os.Exit(1);')
+define(`M4_TEST_ASSERT', `if !$1 {fmt.Fprintf(os.Stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); os.Exit(1);}')
 define(`M4_TEST_POSTAMBLE', `dnl
 func main(void) {
 	lexer := new(FlexLexer)
