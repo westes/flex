@@ -641,12 +641,6 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 m4_define([[yylloc]], [[yyscanner->yylloc_r]])
 ]])
 
-int yylex_init (yyscan_t* scanner);
-
-m4_ifdef([[M4_MODE_EXTRA_TYPE]], [[m4_dnl
-int yylex_init_extra ( M4_MODE_EXTRA_TYPE user_defined, yyscan_t* scanner);
-]])
-
 /* Helpers for special functions, also part of public API */
 
 /* Returns the top of the stack, or NULL. */
