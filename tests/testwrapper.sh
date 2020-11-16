@@ -13,7 +13,7 @@ INPUT_COUNT=0
 USE_REDIRECT=0
 DO_COMPARISON=0
 
-while getopts :d:i:r OPTION ; do
+while getopts d:i:r OPTION ; do
     case $OPTION in
         d) INPUT_DIRECTORY=$OPTARG ;;
         i)
@@ -25,7 +25,7 @@ while getopts :d:i:r OPTION ; do
             INPUT_COUNT=$((INPUT_COUNT+1))
             ;;
         r) USE_REDIRECT=1 ;;
-        *) echo "Usage: ${0} [-d INPUT_DIRECTORY] [-i INPUT_NAME] [-r] [-t] TESTNAME"
+        *) echo "Usage: ${0} [-d INPUT_DIRECTORY] [-i INPUT_NAME] [-r] TESTNAME"
            exit 1
            ;;
     esac
@@ -68,6 +68,7 @@ if [ $INPUT_COUNT -gt 1 ] ; then
     exit $?
 fi
 
+# Set up input redirection as required
 if [ -f "${INPUT_NAME}" ] ; then
     if [ $USE_REDIRECT = 1 ] ; then
         $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} < "$INPUT_NAME"
