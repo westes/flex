@@ -35,12 +35,8 @@ cxx_restart
 cxx_restart.cc
 cxx_yywrap.i3
 cxx_yywrap.cc
-debug_nr
-debug_nr.c
-debug_r
-debug_r.c
-debug_c99
-debug_c99.c
+debug*
+!debug.rules
 extended*
 !extended.rules
 fixedtrailing*

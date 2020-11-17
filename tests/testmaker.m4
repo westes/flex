@@ -30,11 +30,15 @@ dnl
 dnl M4_TEST_TABLE_VERIFICATION = define this to exercise table
 dnl verification and exit.
 dnl
+dnl M4_TEST_INITHOOK = define this in a rules file to splice code into
+dnl the test main as a compilation test.
+dnl
 dnl These macros are to be expanded by files with a .rules extension
 dnl that contain pure flex rulesets and no backend-specific code.
 dnl
 changecom
 define(`M4_TEST_FAILMESSAGE', `INVALID BACK END')dnl
+define(`M4_TEST_INITHOOK', `')dnl
 dnl
 ifelse(M4_TEST_BACKEND, `nr', `dnl
 define(`M4_TEST_PREAMBLE', `dnl
@@ -46,6 +50,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
 define(`M4_TEST_ASSERT', `if (!($1)) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
+m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `flex_debug = 1;')') 
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
 {
@@ -61,8 +66,9 @@ ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl
     if(yytables_fload(fp) < 0)
         yypanic("yytables_fload returned < 0");
     ifdef(`M4_TEST_TABLE_VERIFICATION', `exit(0);')
+    M4_TEST_INITHOOK
 ')dnl table_serialization
-    while( yylex() )
+    while( yylex() != YY_NULL )
     {
     }
 ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl
@@ -84,6 +90,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
 define(`M4_TEST_ASSERT', `if (!$1) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
+m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `yyset_debug (yyget_debug(lexer), lexer);')') 
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
 {
@@ -102,7 +109,8 @@ ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl
         yypanic("yytables_fload returned < 0", lexer);
     ifdef(`M4_TEST_TABLE_VERIFICATION', `exit(0);')
 ')dnl table_serialization
-    while( yylex(lexer) )
+    M4_TEST_INITHOOK
+    while( yylex(lexer) != YY_NULL )
     {
     }
 ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl
@@ -127,17 +135,19 @@ import (
     "os"
 )
 %}
-%option emit="go"
+%option emit="hypothetical-go"
 ')dnl close preamble
 define(`M4_TEST_DO', `$1')
 define(`M4_TEST_FAILMESSAGE', `fmt.Fprintf(os.Stderr, "TEST FAILMESSAGE: %d:\"%s\"\n", yylineno, yytext); os.Exit(1);')
 define(`M4_TEST_ASSERT', `if !$1 {fmt.Fprintf(os.Stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); os.Exit(1);}')
+m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `lexer.yysetDebug(lexer.yygetDebug())')') 
 define(`M4_TEST_POSTAMBLE', `dnl
 func main(void) {
 	lexer := new(FlexLexer)
 	lexer.yysetOut(os.Stdout)
 	lexer.yysetIn(os.Stdin)
-	for lexer.yylex() != EOF {
+	M4_TEST_INITHOOK
+	for lexer.yylex() != YY_NULL {
 	}
 	fmt.Printf("TEST RETURNING OK.\n")
 	os.Exit(0)

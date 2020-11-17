@@ -71,9 +71,6 @@ SPORADIC_TESTS = \
 	cxx_basic \
 	cxx_multiple_scanners \
 	cxx_restart \
-	debug_nr \
-	debug_r \
-	debug_c99 \
 	header_nr \
 	header_r \
 	mem_nr \
@@ -126,9 +123,6 @@ cxx_basic_SOURCES = cxx_basic.ll
 cxx_restart_SOURCES = cxx_restart.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
 cxx_yywrap_i3_SOURCES = cxx_yywrap.ll
-debug_nr_SOURCES = debug_nr.l
-debug_r_SOURCES = debug_r.l
-debug_c99_SOURCES = debug_c99.l
 header_nr_SOURCES = header_nr_scanner.l header_nr_main.c
 nodist_header_nr_SOURCES = header_nr_scanner.h
 header_r_SOURCES = header_r_scanner.l header_r_main.c
@@ -191,9 +185,6 @@ CLEANFILES = \
 	cxx_multiple_scanners_2.cc \
 	cxx_restart.cc \
 	cxx_yywrap.cc \
-	debug_nr.c \
-	debug_r.c \
-	debug_c99.c \
 	header_nr_scanner.c \
 	header_nr_scanner.h \
 	header_r_scanner.c \
@@ -253,8 +244,6 @@ EXTRA_DIST = \
 	cxx_multiple_scanners.txt \
 	cxx_restart.txt \
 	cxx_yywrap.txt \
-	debug_nr.txt \
-	debug_r.txt \
 	header_nr.txt \
 	header_r.txt \
 	include_by_buffer.direct.txt \

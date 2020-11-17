@@ -20,41 +20,15 @@
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
  */
+define(`M4_TEST_ENABLEDEBUG', `')
 
-%{
-/* A template scanner file to build "scanner.c". */
-#include <stdio.h>
-#include <stdlib.h>
-#include "config.h"
-
-%}
-
-%option emit="c99"
-%option 8bit prefix="test"
+%option 8bit
 %option nounput nomain noyywrap noinput
 %option warn debug
 
 %%
 .+   { }
 \n   { }
-%%
-
-int main(void);
-
-int main (void)
-{
-    yyscan_t  lexer;
-    testlex_init( &lexer );
-    testset_out ( stdout,lexer);
-    testset_in  ( stdin, lexer);
-    
-    /* Just see if the next line compiles. */
-    testset_debug (testget_debug(lexer), lexer);
-    
-    while( testlex(lexer) )
-    {
-    }
-    testlex_destroy( lexer );
-    printf("TEST RETURNING OK.\n");
-    return 0;
-}
+###
+Any input will do for this test.
+We are only testing if it actually runs in debug mode.
