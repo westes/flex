@@ -99,6 +99,8 @@ top
 top.[ch]
 yyextra
 yyextra.c
+yyinput
+yyinput.c
 tableopts_*.c
 *.opt
 *.ser
