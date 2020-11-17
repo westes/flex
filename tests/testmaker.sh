@@ -1,14 +1,14 @@
 #!/bin/sh
 #
 # testmaker.sh - asssemble tests from backend-independent rulesets and
-# backend-dependent boilerplate.
+# backend-dependent boilerplate.  Generates both a Flex source file
+# and an input text for it.
 #
 # The single argument is a testfile name to be generated.
 # With the -d option, dump to stdourather than crating the file.
 #
 # To add a new back end named "foo", append "|foo" to the
-# string literal below.
-backends="c99"
+# third case arm marked "# Add new back ends on this line".
 
 if [ "$1" = -d ] ; then
     shift
@@ -43,7 +43,7 @@ for part in "$@"; do
     case ${part} in
         nr) backend=nr; ;;
         r) backend=r; options="${options} reentrant";;
-        ${backends}) backend=${part}; options="${options} emit=\"${part}\"" ;;
+        c99) backend=${part}; options="${options} emit=\"${part}\"" ;;	# Add new back ends on this line
         ser) serialization=yes ;;
         ver) serialization=yes; verification=yes; options="${options} tables-verify" ;;
 	Ca) options="${options} align" ;;
