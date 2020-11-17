@@ -47,6 +47,11 @@ const char *c99_skel[] = {
     0,
 };
 
+const char *go_skel[] = {
+#include "go-flex.h"
+    0,
+};
+
 /* END digested skeletons */
 
 /* Method table describing a language-specific back end.
@@ -61,6 +66,7 @@ struct flex_backend_t {
 static struct flex_backend_t backends[] = {
     {.skel=cpp_skel},
     {.skel=c99_skel},
+    {.skel=go_skel},
     {NULL}
 };
 

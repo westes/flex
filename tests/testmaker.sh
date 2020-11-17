@@ -43,7 +43,7 @@ for part in "$@"; do
     case ${part} in
         nr) backend=nr; ;;
         r) backend=r; options="${options} reentrant";;
-        c99) backend=${part}; options="${options} emit=\"${part}\"" ;;	# Add new back ends on this line
+        c99|go) backend=${part}; options="${options} emit=\"${part}\"" ;;	# Add new back ends on this line
         ser) serialization=yes ;;
         ver) serialization=yes; verification=yes; options="${options} tables-verify" ;;
 	Ca) options="${options} align" ;;

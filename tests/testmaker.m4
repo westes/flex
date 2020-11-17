@@ -123,6 +123,38 @@ ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl
 ')dnl close postamble
 ')dnl close r
 dnl
+dnl This is a fake Go wrapper that will only work as long as the "go"
+dnl back end is actually generating C.
+ifelse(M4_TEST_BACKEND, `go', `dnl
+define(`M4_TEST_PREAMBLE', `dnl
+%{
+#include "config.h"
+#include <stdio.h>
+%}
+%option emit="go"
+')dnl close preamble
+define(`M4_TEST_DO', `$1;')
+define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
+define(`M4_TEST_ASSERT', `if (!$1) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
+m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `yyset_debug (yyget_debug(lexer), lexer);')') 
+define(`M4_TEST_POSTAMBLE', `dnl
+int main (int argc, char **argv)
+{
+    yyscan_t  lexer;
+    yylex_init( &lexer );
+    yyset_out ( stdout,lexer);
+    yyset_in  ( stdin, lexer);
+    M4_TEST_INITHOOK
+    while( yylex(lexer) != YY_NULL )
+    {
+    }
+    yylex_destroy( lexer );
+    printf("TEST RETURNING OK.\n");
+    return 0;
+}
+')dnl close postamble
+')dnl close fake-go
+dnl
 dnl A hypothetical example
 ifelse(M4_TEST_BACKEND, `hypothetical-go', `dnl
 define(`M4_TEST_PREAMBLE', `dnl

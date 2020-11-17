@@ -105,6 +105,10 @@ c99-flex.h: c99-flex.skl mkskel.sh
 	$(SHELL) $(srcdir)/mkskel.sh c99 $(srcdir) $(m4) $(VERSION) > $@.tmp
 	mv -f $@.tmp $@
 
+go-flex.h: go-flex.skl mkskel.sh
+	$(SHELL) $(srcdir)/mkskel.sh go $(srcdir) $(m4) $(VERSION) > $@.tmp
+	mv -f $@.tmp $@
+
 if ENABLE_BOOTSTRAP
 stage1scan.c: scan.l stage1flex$(EXEEXT)
 	./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $(srcdir)/scan.l
