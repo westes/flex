@@ -33,7 +33,7 @@ for backend in "$@" ; do
 	    # shellcheck disable=2016
 	    printf '\t$(SHELL) $(srcdir)/testmaker.sh $@\n\n'
 	    RULESET_TESTS="${RULESET_TESTS} ${testname}"
-	    RULESET_REMOVABLES="${RULESET_REMOVABLES} ${testname} ${testname}.c ${testname}.l ${testname}.txt"
+	    RULESET_REMOVABLES="${RULESET_REMOVABLES} ${testname} ${testname}.c ${testname}.l ${ruleset%.*}.txt"
 	fi
     done
     for kind in opt ser ver ; do
