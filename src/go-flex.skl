@@ -4,6 +4,10 @@
 %# a .go extension but generating C code. Its purpose is to verify build and test be
 %# before actually trying to generate Go.
 %#
+%# Differences from C:
+%#
+%# 1. The prefix property doesn't set a prefix for function and variable names.
+%#    Instead it sets the Go package name.
 
 %#  Macros for preproc stage.
 m4preproc_changecom
@@ -21,6 +25,7 @@ m4_define([[M4_PROPERTY_TRACE_LINE_TEMPLATE]], [[#line %d "%s"]])
 m4_define([[M4_PROPERTY_CONTEXT_ARG]], [[yyscanner]])
 m4_define([[M4_PROPERTY_CONTEXT_FORMAT]], [[yyscanner->%s_r]])
 m4_define([[M4_PROPERTY_BUFFERSTACK_CONTEXT_FORMAT]], [[yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_%s]])
+m4_define([[M4_PROPERTY_PREFIX]], [main]])
 
 %# Macro hooks used by Flex code generators start here
 m4_define([[M4_HOOK_INT32]], [[int32_t]])
@@ -71,7 +76,7 @@ m4_define([[M4_HOOK_ECHO]], [[yyecho(yyscanner);]])
 
 m4_define([[yyterminate]], m4_ifdef([[M4_MODE_YYTERMINATE]], [[M4_MODE_YYTERMINATE /* $1 */]], [[return YY_NULL /* $1 */]]))
 
-/* Return all but the first "n" matched characters back to the input stream. */
+%# Return all but the first "n" matched characters back to the input stream.
 m4_define([[yyless]], [[
 	do {
 		/* Undo effects of setting up yytext. */
@@ -100,83 +105,11 @@ m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 
 %% [0.0] Make hook macros available to Flex
 
+// package M4_MODE_PREFIX
+
 const int YY_FLEX_MAJOR_VERSION = FLEX_MAJOR_VERSION;
 const int YY_FLEX_MINOR_VERSION = FLEX_MINOR_VERSION;
 const int YY_FLEX_SUBMINOR_VERSION = FLEX_SUBMINOR_VERSION;
-
-%# STARTS prefix machinery
-%#
-%# The complexity here is necessary so that m4 preserves
-%# the argument lists to each C function.
-%#
-%# If your target language has OO you can generare a class definition,
-%# use option yyclass to pass in the class name, and drop prefix support.
-	
-m4_ifdef( [[M4_MODE_PREFIX]],, [[m4_define([[M4_MODE_PREFIX]], [[yy]])]])
-
-m4preproc_define(`M4_GEN_PREFIX',``
-[[#ifdef yy$1
-#define ]]M4_MODE_PREFIX[[$1_ALREADY_DEFINED
-#else
-#define yy$1 ]]M4_MODE_PREFIX[[$1
-#endif]]
-'')
-
-m4_ifelse(M4_MODE_PREFIX,yy,,
-    M4_GEN_PREFIX(`_create_buffer')
-    M4_GEN_PREFIX(`_delete_buffer')
-    M4_GEN_PREFIX(`_scan_buffer')
-    M4_GEN_PREFIX(`_scan_string')
-    M4_GEN_PREFIX(`_scan_bytes')
-    M4_GEN_PREFIX(`_init_buffer')
-    M4_GEN_PREFIX(`_flush_buffer')
-    M4_GEN_PREFIX(`_load_buffer_state')
-    M4_GEN_PREFIX(`_switch_to_buffer')
-    M4_GEN_PREFIX(`push_buffer_state')
-    M4_GEN_PREFIX(`pop_buffer_state')
-    M4_GEN_PREFIX(`ensure_buffer_stack')
-    M4_GEN_PREFIX(`lex')
-    M4_GEN_PREFIX(`restart')
-    M4_GEN_PREFIX(`lex_init')
-    M4_GEN_PREFIX(`lex_init_extra')
-    M4_GEN_PREFIX(`lex_destroy')
-    M4_GEN_PREFIX(`get_debug')
-    M4_GEN_PREFIX(`set_debug')
-    M4_GEN_PREFIX(`get_extra')
-    M4_GEN_PREFIX(`set_extra')
-    M4_GEN_PREFIX(`get_in')
-    M4_GEN_PREFIX(`set_in')
-    M4_GEN_PREFIX(`get_out')
-    M4_GEN_PREFIX(`set_out')
-    M4_GEN_PREFIX(`get_leng')
-    M4_GEN_PREFIX(`get_text')
-    M4_GEN_PREFIX(`get_lineno')
-    M4_GEN_PREFIX(`set_lineno')
-    M4_GEN_PREFIX(`get_column')
-    M4_GEN_PREFIX(`set_column')
-    M4_GEN_PREFIX(`wrap')
-)
-
-m4_ifdef( [[M4_YY_BISON_LVAL]],
-[[
-    M4_GEN_PREFIX(`get_lval')
-    M4_GEN_PREFIX(`set_lval')
-]])
-
-m4_ifdef( [[<M4_YY_BISON_LLOC>]],
-[[
-    M4_GEN_PREFIX(`get_lloc')
-    M4_GEN_PREFIX(`set_lloc')
-]])
-
-
-m4_ifelse(M4_MODE_PREFIX,yy,,
-    M4_GEN_PREFIX(`alloc')
-    M4_GEN_PREFIX(`realloc')
-    M4_GEN_PREFIX(`free')
-)
-
-%# ENDS prefix machinery
 
 /* STARTS platform-specific and compiler-specific definitions. */
 
@@ -333,7 +266,7 @@ void yyfree ( void *, yyscan_t yyscanner );
 /* Begin user sect3 */
 
 m4_ifdef( [[M4_MODE_NO_YYWRAP]], [[
-int M4_MODE_PREFIX[[wrap]](yyscan_t yyscanner) {
+int yywrap(yyscan_t yyscanner) {
 	return /*CONSTCOND*/1;
 }
 ]])

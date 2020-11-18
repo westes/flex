@@ -85,7 +85,7 @@ m4_define([[M4_HOOK_ECHO]], [[yyecho(yyscanner);]])
 
 m4_define([[yyterminate]], m4_ifdef([[M4_MODE_YYTERMINATE]], [[M4_MODE_YYTERMINATE /* $1 */]], [[return YY_NULL /* $1 */]]))
 
-/* Return all but the first "n" matched characters back to the input stream. */
+%# Return all but the first "n" matched characters back to the input stream.
 m4_define([[yyless]], [[
 	do {
 		/* Undo effects of setting up yytext. */
@@ -123,9 +123,11 @@ const int YY_FLEX_SUBMINOR_VERSION = FLEX_SUBMINOR_VERSION;
 %# The complexity here is necessary so that m4 preserves
 %# the argument lists to each C function.
 %#
-%# If your target language has OO you can generare a class definition,
+%# If your target language has OO you can generate a class definition,
 %# use option yyclass to pass in the class name, and drop prefix support.
-	
+%# In languages like Go with a coincept of package names the prefix option
+%# should be used for setting that.
+
 m4_ifdef( [[M4_MODE_PREFIX]],, [[m4_define([[M4_MODE_PREFIX]], [[yy]])]])
 
 m4preproc_define(`M4_GEN_PREFIX',``

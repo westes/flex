@@ -97,6 +97,7 @@ static bool boneseeker(const char *bone)
 
 void backend_by_name(const char *name)
 {
+	char *prefix_property;
 	if (name != NULL) {
 		if (strcmp(name, "nr") == 0) {
 			backend = &backends[0];
@@ -120,6 +121,9 @@ void backend_by_name(const char *name)
 	ctrl.traceline_re = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_REGEXP"));
 	ctrl.traceline_template = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_TEMPLATE"));
 	ctrl.have_state_entry_format = boneseeker("m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]]");
+	prefix_property = skel_property("M4_PROPERTY_PREFIX");
+	if (prefix_property != NULL)
+		ctrl.prefix = xstrdup(prefix_property);
 	flex_init_regex(ctrl.traceline_re);
 }
 
