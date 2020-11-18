@@ -24,7 +24,7 @@ m4_define([[M4_PROPERTY_TRACE_LINE_REGEXP]], [[^#line ([0-9]+) "(.*)"]])
 m4_define([[M4_PROPERTY_TRACE_LINE_TEMPLATE]], [[#line %d "%s"]])
 m4_define([[M4_PROPERTY_CONTEXT_ARG]], [[yyscanner]])
 m4_define([[M4_PROPERTY_CONTEXT_FORMAT]], [[yyscanner->%s_r]])
-m4_define([[M4_PROPERTY_BUFFERSTACK_CONTEXT_FORMAT]], [[yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_%s]])
+m4_define([[M4_PROPERTY_BUFFERSTACK_CONTEXT_FORMAT]], [[yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->bs_%s]])
 m4_define([[M4_PROPERTY_PREFIX]], [main]])
 
 %# Macro hooks used by Flex code generators start here
@@ -39,22 +39,22 @@ m4_define([[M4_HOOK_TABLE_OPENER]], [[{]])
 m4_define([[M4_HOOK_TABLE_CONTINUE]], [[},]])
 m4_define([[M4_HOOK_TABLE_CLOSER]], [[};]])
 m4_define([[M4_HOOK_RELATIVIZE]], [[$1]])
-m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]], [[	&yy_transition[$1],
+m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]], [[	&yyTransition[$1],
 ]])
 m4_define([[M4_HOOK_NORMAL_STATE_CASE_ARM]], [[	case $1:]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_ARM]], [[	case YY_STATE_EOF($1):]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_FALLTHROUGH]], [[		/* FALLTHROUGH */]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_TERMINATE]], [[		yyterminate();
 ]])
-m4_define([[M4_HOOK_TAKE_YYTEXT]], [[yy_do_before_action(yyscanner, yy_cp, yy_bp); /* set up yytext */]])
-m4_define([[M4_HOOK_RELEASE_YYTEXT]], [[*yy_cp = yyscanner->yy_hold_char; /* undo effects of setting up yytext */]])
-m4_define([[M4_HOOK_CHAR_REWIND]], [[yyscanner->yy_c_buf_p = yy_cp -= $1;]])
-m4_define([[M4_HOOK_LINE_REWIND]], [[yy_lineno_rewind_to(yy_cp, yy_cp - $1, yyscanner);]])
-m4_define([[M4_HOOK_CHAR_FORWARD]], [[yyscanner->yy_c_buf_p = yy_cp = yy_bp + $1;]])
-m4_define([[M4_HOOK_LINE_FORWARD]], [[yy_lineno_rewind_to(yy_cp, yy_bp + $1, yyscanner);]])
+m4_define([[M4_HOOK_TAKE_YYTEXT]], [[yyDoBeforeAction(yyscanner, yyCp, yyBp); /* set up yytext */]])
+m4_define([[M4_HOOK_RELEASE_YYTEXT]], [[*yyCp = yyscanner->yyHoldChar; /* undo effects of setting up yytext */]])
+m4_define([[M4_HOOK_CHAR_REWIND]], [[yyscanner->yyCBufP = yyCp -= $1;]])
+m4_define([[M4_HOOK_LINE_REWIND]], [[yyLinenoRewindTo(yyCp, yyCp - $1, yyscanner);]])
+m4_define([[M4_HOOK_CHAR_FORWARD]], [[yyscanner->yyCBufP = yyCp = yyBp + $1;]])
+m4_define([[M4_HOOK_LINE_FORWARD]], [[yyLinenoRewindTo(yyCp, yyBp + $1, yyscanner);]])
 m4_define([[M4_HOOK_CONST_DEFINE_BYTE]], [[const char $1 = $2;
 ]])
-m4_define([[M4_HOOK_CONST_DEFINE_STATE]], [[const yy_state_type $1 = $2;
+m4_define([[M4_HOOK_CONST_DEFINE_STATE]], [[const yyStateType $1 = $2;
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_UINT]], [[const uint $1 = $2;
 ]])
@@ -80,23 +80,23 @@ m4_define([[yyterminate]], m4_ifdef([[M4_MODE_YYTERMINATE]], [[M4_MODE_YYTERMINA
 m4_define([[yyless]], [[
 	do {
 		/* Undo effects of setting up yytext. */
-		int yyless_macro_arg = ($1);
-		m4_ifdef([[M4_MODE_YYLINENO]], [[yy_less_lineno(yyless_macro_arg, yyscanner);]])
-		*yy_cp = yyscanner->yy_hold_char;
+		int yylessMacroArg = ($1);
+		m4_ifdef([[M4_MODE_YYLINENO]], [[yyLessLineno(yylessMacroArg, yyscanner);]])
+		*yyCp = yyscanner->yyHoldChar;
 		YY_RESTORE_YY_MORE_OFFSET
-		yyscanner->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ;
-		yy_do_before_action(yyscanner, yy_cp, yy_bp); /* set up yytext again */
+		yyscanner->yyCBufP = yyCp = yyBp + yylessMacroArg - YY_MORE_ADJ;
+		yyDoBeforeAction(yyscanner, yyCp, yyBp); /* set up yytext again */
 	} while ( 0 )
 ]])
 
 %# Can't be a function given the context-arg treatment due to the goto.
 m4_define([[M4_HOOK_REJECT]], [[{
-				*yy_cp = yyscanner->yy_hold_char; /* undo effects of setting up yytext */
-				yy_cp = yyscanner->yy_full_match; /* restore poss. backed-over text */
+				*yyCp = yyscanner->yyHoldChar; /* undo effects of setting up yytext */
+				yyCp = yyscanner->yyFullMatch; /* restore poss. backed-over text */
 m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
-				yyscanner->yy_lp = yyscanner->yy_full_lp; /* restore orig. accepting pos. */
+				yyscanner->yy_lp = yyscanner->yyFullLp; /* restore orig. accepting pos. */
 				yyscanner->yy_state_ptr = yyscanner->yy_full_state; /* restore orig. state */
-				yy_current_state = *yyscanner->yy_state_ptr; /* restore curr. state */
+				yyCurrentState = *yyscanner->yy_state_ptr; /* restore curr. state */
 ]])
 				++yyscanner->yy_lp;
 				goto find_rule;
@@ -187,7 +187,7 @@ m4_define([[YY_STATE_EOF]], [[YY_END_OF_BUFFER + $1 + 1]])
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
  */
-m4_define([[YY_STATE_BUF_SIZE]], [[((YY_BUF_SIZE + 2) * sizeof(yy_state_type))]])
+m4_define([[YY_STATE_BUF_SIZE]], [[((YY_BUF_SIZE + 2) * sizeof(yyStateType))]])
 
 typedef struct yy_buffer_state *yybuffer;
 
@@ -224,7 +224,7 @@ struct yy_buffer_state {
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	int yy_n_chars;
+	int yyNChars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -276,9 +276,9 @@ const bool FLEX_DEBUG = m4_ifdef([[M4_MODE_DEBUG]], [[true]], [[false]]);
 typedef uint8_t YY_CHAR;
 
 m4_ifdef( [[M4_MODE_FULLSPD]], [[m4_dnl
-typedef const struct yy_trans_info *yy_state_type;
+typedef const struct yy_trans_info *yyStateType;
 ]], [[
-typedef int yy_state_type;
+typedef int yyStateType;
 ]])
 
 /* Watch out: yytext_ptr is a variable when yytext is an array,
@@ -292,7 +292,7 @@ m4_define([[yytext_ptr]], [[yytext_r]])
 
 static int yy_get_next_buffer ( yyscan_t yyscanner );
 
-struct yy_trans_info {
+struct yyTransInfo {
 	/* We require that yy_verify and yy_nxt must be of the same size int. */
 m4_ifdef([[M4_MODE_REAL_FULLSPD]], [[
 	YY_OFFSET_TYPE yy_verify;
@@ -307,9 +307,9 @@ m4_ifdef([[M4_MODE_REAL_FULLSPD]], [[
 	 YY_OFFSET_TYPE yy_nxt;
 ]])
 m4_ifdef([[M4_MODE_NO_REAL_FULLSPD]], [[
-	/* We generate a bogus 'struct yy_trans_info' data type
+	/* We generate a bogus 'struct yyTransInfo' data type
 	 * so we can guarantee that it is always declared in the skel.
-	 * This is so we can compile "sizeof(struct yy_trans_info)"
+	 * This is so we can compile "sizeof(struct yyTransInfo)"
 	 * in any scanner.
 	 */
 	int32_t yy_verify;
@@ -381,11 +381,11 @@ static const YY_CHAR * yy_meta = 0;
 m4_ifdef( [[M4_HOOK_TRANSTABLE_SIZE]],[[m4_dnl
 /* The transition table */
 m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
-static const struct yy_trans_info yy_transition[M4_HOOK_TRANSTABLE_SIZE] = {
+static const struct yyTransInfo yyTransition[M4_HOOK_TRANSTABLE_SIZE] = {
 M4_HOOK_TRANSTABLE_BODY[[]]m4_dnl
 };
 ]], [[
-static const struct yy_trans_info *yy_transition = 0;
+static const struct yyTransInfo *yyTransition = 0;
 ]])
 
 ]])
@@ -393,11 +393,11 @@ static const struct yy_trans_info *yy_transition = 0;
 m4_ifdef( [[M4_HOOK_STARTTABLE_SIZE]],[[m4_dnl
 /* Table of pointers to start states. */
 m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
-static const struct yy_trans_info *yy_start_state_list[M4_HOOK_STARTTABLE_SIZE] = {
+static const struct yyTransInfo *yy_start_state_list[M4_HOOK_STARTTABLE_SIZE] = {
 M4_HOOK_STARTTABLE_BODY[[]]m4_dnl
 };
 ]], [[
-static const struct yy_trans_info **yy_start_state_list =0;
+static const struct yyTransInfo **yy_start_state_list =0;
 ]])
 
 ]])
@@ -459,11 +459,11 @@ static const M4_HOOK_CHK_TYPE * yy_chk = 0;
 
 m4_ifdef( [[M4_HOOK_NULTRANS_SIZE]],[[m4_dnl
 m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
-static const yy_state_type yy_NUL_trans[M4_HOOK_NULTRANS_SIZE] = { 0,
+static const yyStateType yy_NUL_trans[M4_HOOK_NULTRANS_SIZE] = { 0,
 M4_HOOK_NULTRANS_BODY[[]]m4_dnl
 };
 ]], [[
-static const yy_state_type * yy_NUL_trans = 0;
+static const yyStateType * yy_NUL_trans = 0;
 ]])
 
 ]])
@@ -497,35 +497,35 @@ struct yyguts_t {
 
 	/* The rest are the same as the globals declared in the non-reentrant scanner. */
 	FILE *yyin_r, *yyout_r;
-	size_t yy_buffer_stack_top; /**< index of top of stack. */
-	size_t yy_buffer_stack_max; /**< capacity of stack. */
-	yybuffer * yy_buffer_stack; /**< Stack as an array. */
-	char yy_hold_char;
-	int yy_n_chars;
+	size_t yyBufferStackTop; /**< index of top of stack. */
+	size_t yyBufferStackMax; /**< capacity of stack. */
+	yybuffer * yyBufferStack; /**< Stack as an array. */
+	char yyHoldChar;
+	int yyNChars;
 	int yyleng_r;
-	char *yy_c_buf_p;
+	char *yyCBufP;
 	bool yy_init;
-	int yy_start;
-	bool yy_did_buffer_switch_on_eof;
-	int yy_start_stack_ptr;
-	int yy_start_stack_depth;
-	int *yy_start_stack;
-	yy_state_type yy_last_accepting_state;
+	int yyStart;
+	bool yyDidBufferSwitchOnEof;
+	int yyStartStackPtr;
+	int yyStartStackDepth;
+	int *yyStartStack;
+	yyStateType yy_last_accepting_state;
 	char* yy_last_accepting_cpos;
 
 	int yylineno_r;
 	int yyflexdebug_r;
 
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
-	yy_state_type *yy_state_buf;
-	yy_state_type *yy_state_ptr;
-	char *yy_full_match;
+	yyStateType *yyStateBuf;
+	yyStateType *yy_state_ptr;
+	char *yyFullMatch;
 	int yy_lp;
 
 m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[m4_dnl
 	/* These are only needed for trailing context rules */
 	int yy_looking_for_trail_begin;
-	int yy_full_lp;
+	int yyFullLp;
 	int *yy_full_state;
 ]])
 ]])
@@ -564,17 +564,17 @@ m4_define([[yylloc]], [[yyscanner->yylloc_r]])
 
 /* Returns the top of the stack, or NULL. */
 yybuffer yy_current_buffer(yyscan_t yyscanner) {
-	  return ( yyscanner->yy_buffer_stack					\
-		   ? yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] \
+	  return ( yyscanner->yyBufferStack					\
+		   ? yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] \
 		   : NULL);
 }
 
 static void yy_load_buffer_state  (yyscan_t yyscanner)
 {
-	yyscanner->yy_n_chars = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars;
-	yyscanner->yytext_ptr = yyscanner->yy_c_buf_p = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_pos;
-	yyscanner->yyin_r = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_input_file;
-	yyscanner->yy_hold_char = *yyscanner->yy_c_buf_p;
+	yyscanner->yyNChars = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars;
+	yyscanner->yytext_ptr = yyscanner->yyCBufP = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buf_pos;
+	yyscanner->yyin_r = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_input_file;
+	yyscanner->yyHoldChar = *yyscanner->yyCBufP;
 }
 
 /** Discard all buffered characters. On the next scan, yyread() will be called.
@@ -586,7 +586,7 @@ void yy_flush_buffer(yybuffer b, yyscan_t yyscanner)
 	if ( b == NULL ) {
 		return;
 	}
-	b->yy_n_chars = 0;
+	b->yyNChars = 0;
 
 	/* We always need two end-of-buffer characters.  The first causes
 	 * a transition to the end-of-buffer state.  The second causes
@@ -627,40 +627,40 @@ static void yyensure_buffer_stack (yyscan_t yyscanner)
 {
 	yy_size_t num_to_alloc;
 
-	if (yyscanner->yy_buffer_stack == NULL) {
+	if (yyscanner->yyBufferStack == NULL) {
 		/* First allocation is just for 2 elements, since we don't know if this
 		 * scanner will even need a stack. We use 2 instead of 1 to avoid an
 		 * immediate realloc on the next call.
 		 */
 		num_to_alloc = 1; /* After all that talk, this was set to 1 anyways... */
-		yyscanner->yy_buffer_stack = (struct yy_buffer_state**)yyalloc
+		yyscanner->yyBufferStack = (struct yy_buffer_state**)yyalloc
 			(num_to_alloc * sizeof(struct yy_buffer_state*), yyscanner);
-		if ( yyscanner->yy_buffer_stack == NULL ) {
+		if ( yyscanner->yyBufferStack == NULL ) {
 			yypanic( "out of dynamic memory in yyensure_buffer_stack()", yyscanner );
 		}
 
-		memset(yyscanner->yy_buffer_stack, 0, num_to_alloc * sizeof(struct yy_buffer_state*));
+		memset(yyscanner->yyBufferStack, 0, num_to_alloc * sizeof(struct yy_buffer_state*));
 
-		yyscanner->yy_buffer_stack_max = num_to_alloc;
-		yyscanner->yy_buffer_stack_top = 0;
+		yyscanner->yyBufferStackMax = num_to_alloc;
+		yyscanner->yyBufferStackTop = 0;
 		return;
 	}
 
-	if (yyscanner->yy_buffer_stack_top >= (yyscanner->yy_buffer_stack_max) - 1) {
+	if (yyscanner->yyBufferStackTop >= (yyscanner->yyBufferStackMax) - 1) {
 		/* Increase the buffer to prepare for a possible push. */
 		yy_size_t grow_size = 8 /* arbitrary grow size */;
 
-		num_to_alloc = yyscanner->yy_buffer_stack_max + grow_size;
-		yyscanner->yy_buffer_stack = (struct yy_buffer_state**)yyrealloc
-								(yyscanner->yy_buffer_stack,
+		num_to_alloc = yyscanner->yyBufferStackMax + grow_size;
+		yyscanner->yyBufferStack = (struct yy_buffer_state**)yyrealloc
+								(yyscanner->yyBufferStack,
 								 num_to_alloc * sizeof(struct yy_buffer_state*),
 								yyscanner);
-		if (yyscanner->yy_buffer_stack == NULL) {
+		if (yyscanner->yyBufferStack == NULL) {
 			yypanic( "out of dynamic memory in yyensure_buffer_stack()", yyscanner );
 		}
 		/* zero only the new slots.*/
-		memset(yyscanner->yy_buffer_stack + yyscanner->yy_buffer_stack_max, 0, grow_size * sizeof(struct yy_buffer_state*));
-		yyscanner->yy_buffer_stack_max = num_to_alloc;
+		memset(yyscanner->yyBufferStack + yyscanner->yyBufferStackMax, 0, grow_size * sizeof(struct yy_buffer_state*));
+		yyscanner->yyBufferStackMax = num_to_alloc;
 	}
 }
 
@@ -743,7 +743,7 @@ void yy_delete_buffer(yybuffer b, yyscan_t yyscanner)
 		return;
 	}
 	if ( b == yy_current_buffer(yyscanner) ) {	/* Not sure if we should pop here. */
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] = (yybuffer) 0;
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] = (yybuffer) 0;
 	}
 	if ( b->yy_is_our_buffer ) {
 		yyfree( (void *) b->yy_ch_buf, yyscanner );
@@ -768,20 +768,20 @@ void yypush_buffer_state(yybuffer new_buffer, yyscan_t yyscanner)
 	/* This block is copied from yy_switch_to_buffer. */
 	if ( yy_current_buffer(yyscanner) != NULL ) {
 		/* Flush out information for old buffer. */
-		*yyscanner->yy_c_buf_p = yyscanner->yy_hold_char;
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_pos = yyscanner->yy_c_buf_p;
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars = yyscanner->yy_n_chars;
+		*yyscanner->yyCBufP = yyscanner->yyHoldChar;
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buf_pos = yyscanner->yyCBufP;
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars = yyscanner->yyNChars;
 	}
 
 	/* Only push if top exists. Otherwise, replace top. */
 	if (yy_current_buffer(yyscanner)) {
-		yyscanner->yy_buffer_stack_top++;
+		yyscanner->yyBufferStackTop++;
 	}
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] = new_buffer;
+	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] = new_buffer;
 
 	/* copied from yy_switch_to_buffer. */
 	yy_load_buffer_state( yyscanner );
-	yyscanner->yy_did_buffer_switch_on_eof = true;
+	yyscanner->yyDidBufferSwitchOnEof = true;
 }
 
 
@@ -795,13 +795,13 @@ void yypop_buffer_state (yyscan_t yyscanner)
 		return;
 	}
 	yy_delete_buffer(yy_current_buffer(yyscanner), yyscanner);
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] = NULL;
-	if (yyscanner->yy_buffer_stack_top > 0) {
-		--yyscanner->yy_buffer_stack_top;
+	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] = NULL;
+	if (yyscanner->yyBufferStackTop > 0) {
+		--yyscanner->yyBufferStackTop;
 	}
 	if (yy_current_buffer(yyscanner) != NULL) {
 		yy_load_buffer_state( yyscanner );
-		yyscanner->yy_did_buffer_switch_on_eof = true;
+		yyscanner->yyDidBufferSwitchOnEof = true;
 	}
 }
 
@@ -816,7 +816,7 @@ void yyrestart(FILE * input_file, yyscan_t yyscanner)
 
 	if ( yy_current_buffer(yyscanner) == NULL ) {
 		yyensure_buffer_stack (yyscanner);
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] =
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
 			yy_create_buffer( yyscanner->yyin_r, YY_BUF_SIZE, yyscanner);
 	}
 
@@ -825,8 +825,8 @@ void yyrestart(FILE * input_file, yyscan_t yyscanner)
 }
 
 static void yybumpline( yyscan_t yyscanner) {
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno++;
-        yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yycolumn=0;
+	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->bs_yylineno++;
+        yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->bs_yycolumn=0;
 }
 
 /* START special functions
@@ -838,14 +838,14 @@ static void yybumpline( yyscan_t yyscanner) {
 
 /* Enter a start condition. */
 void yybegin(int s, yyscan_t yyscanner) {
-	yyscanner->yy_start = 1 + 2 * (s);
+	yyscanner->yyStart = 1 + 2 * (s);
 }
 
 /* Translate the current start state into a value that can be later handed
  * to yybegin() to return to the state.
  */
 int yystart(yyscan_t yyscanner) {
-	return ((yyscanner->yy_start - 1) / 2);
+	return ((yyscanner->yyStart - 1) / 2);
 }
 
 /* This used to be an fputs(), but since the string might contain NULs,
@@ -858,46 +858,46 @@ void yyecho(yyscan_t yyscanner) {
 m4_ifdef( [[M4_YY_NO_YYUNPUT]],, [[
 void yyunput( int c, yyscan_t yyscanner)
 {
-	char *yy_cp;
+	char *yyCp;
 
-	yy_cp = yyscanner->yy_c_buf_p;
+	yyCp = yyscanner->yyCBufP;
 
 	/* undo effects of setting up yytext */
-	*yy_cp = yyscanner->yy_hold_char;
+	*yyCp = yyscanner->yyHoldChar;
 
-	if ( yy_cp < yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf + 2 ) {
+	if ( yyCp < yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf + 2 ) {
 		/* need to shift things up to make room */
 		/* +2 for EOB chars. */
-		int number_to_move = yyscanner->yy_n_chars + 2;
-		char *dest = &yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[
-					yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size + 2];
+		int number_to_move = yyscanner->yyNChars + 2;
+		char *dest = &yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf[
+					yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buf_size + 2];
 		char *source =
-				&yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[number_to_move];
+				&yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf[number_to_move];
 
-		while ( source > yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf ) {
+		while ( source > yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf ) {
 			*--dest = *--source;
 		}
-		yy_cp += (int) (dest - source);
+		yyCp += (int) (dest - source);
 		yyscanner->yytext_ptr += (int) (dest - source);
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars =
-			yyscanner->yy_n_chars = (int) yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size;
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars =
+			yyscanner->yyNChars = (int) yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buf_size;
 
-		if ( yy_cp < yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf + 2 ) {
+		if ( yyCp < yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf + 2 ) {
 			yypanic( "flex scanner push-back overflow", yyscanner);
 		}
 	}
 
-	*--yy_cp = (char) c;
+	*--yyCp = (char) c;
 
 m4_ifdef( [[M4_MODE_YYLINENO]],
 [[
 	if ( c == '\n' ){
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno--;
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->bs_yylineno--;
 	}
 ]])
 
-	yyscanner->yy_hold_char = *yy_cp;
-	yyscanner->yy_c_buf_p = yy_cp;
+	yyscanner->yyHoldChar = *yyCp;
+	yyscanner->yyCBufP = yyCp;
 }
 ]])
 
@@ -905,20 +905,20 @@ int yyinput (yyscan_t yyscanner)
 {
 	int c;
 
-	*yyscanner->yy_c_buf_p = yyscanner->yy_hold_char;
+	*yyscanner->yyCBufP = yyscanner->yyHoldChar;
 
-	if ( *yyscanner->yy_c_buf_p == YY_END_OF_BUFFER_CHAR ) {
-		/* yy_c_buf_p now points to the character we want to return.
+	if ( *yyscanner->yyCBufP == YY_END_OF_BUFFER_CHAR ) {
+		/* yyCBufP now points to the character we want to return.
 		 * If this occurs *before* the EOB characters, then it's a
 		 * valid NUL; if not, then we've hit the end of the buffer.
 		 */
-		if ( yyscanner->yy_c_buf_p < &yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars] ) {
+		if ( yyscanner->yyCBufP < &yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf[yyscanner->yyNChars] ) {
 			/* This was really a NUL. */
-			*yyscanner->yy_c_buf_p = '\0';
+			*yyscanner->yyCBufP = '\0';
 		} else {
 			/* need more input */
-			int offset = (int) (yyscanner->yy_c_buf_p - yyscanner->yytext_ptr);
-			++yyscanner->yy_c_buf_p;
+			int offset = (int) (yyscanner->yyCBufP - yyscanner->yytext_ptr);
+			++yyscanner->yyCBufP;
 
 			switch ( yy_get_next_buffer( yyscanner ) ) {
 			case EOB_ACT_LAST_MATCH:
@@ -941,26 +941,26 @@ int yyinput (yyscan_t yyscanner)
 				if ( yywrap( yyscanner ) ) {
 					return 0;
 				}
-				if ( ! yyscanner->yy_did_buffer_switch_on_eof ) {
+				if ( ! yyscanner->yyDidBufferSwitchOnEof ) {
 					yyrestart( yyscanner->yyin_r, yyscanner );
 				}
 				return yyinput(yyscanner);
 
 			case EOB_ACT_CONTINUE_SCAN:
-				yyscanner->yy_c_buf_p = yyscanner->yytext_ptr + offset;
+				yyscanner->yyCBufP = yyscanner->yytext_ptr + offset;
 				break;
 			}
 		}
 	}
 
-	c = *(unsigned char *) yyscanner->yy_c_buf_p;	/* cast for 8-bit char's */
-	*yyscanner->yy_c_buf_p = '\0';	/* preserve yytext */
-	yyscanner->yy_hold_char = *++yyscanner->yy_c_buf_p;
+	c = *(unsigned char *) yyscanner->yyCBufP;	/* cast for 8-bit char's */
+	*yyscanner->yyCBufP = '\0';	/* preserve yytext */
+	yyscanner->yyHoldChar = *++yyscanner->yyCBufP;
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = (c == '\n');
+	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbol_flag = (c == '\n');
 m4_ifdef([[M4_MODE_YYLINENO]], [[
-	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag ) {
+	if ( yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbol_flag ) {
 		yybumpline( yyscanner );
 	}
 ]])
@@ -1025,7 +1025,7 @@ m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
 	}
 ]])
 m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
-	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_is_interactive ) {
+	if ( yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_is_interactive ) {
 		int c = '*';
 		int n;
 		for ( n = 0; n < max_size &&
@@ -1296,24 +1296,24 @@ m4_define([[YY_DECL]], [[int yylex M4_YY_LEX_DECLARATION]])
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 static void rule_check_bol(yyscan_t yyscanner) {
 	if ( yyscanner->yyleng_r > 0 ) {		\
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = (yyscanner->yytext_r[yyscanner->yyleng_r - 1] == '\n');
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbol_flag = (yyscanner->yytext_r[yyscanner->yyleng_r - 1] == '\n');
 	}
 }
 ]])
 
 /* Done after the current pattern has been matched and before the
- * corresponding action - sets up yytext.  yy_cp and yy_bp are the
+ * corresponding action - sets up yytext.  yyCp and yyBp are the
  * end abd start pointers for the input buffer segment that is
  * claimed as yytext.
  */
-void yy_do_before_action(yyscan_t yyscanner, char *yy_cp, char *yy_bp) {
-	yyscanner->yytext_ptr = yy_bp; \
+void yyDoBeforeAction(yyscan_t yyscanner, char *yyCp, char *yyBp) {
+	yyscanner->yytext_ptr = yyBp; \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyscanner->yytext_ptr -= yyscanner->yy_more_len; \
-	yyscanner->yyleng_r = (int) (yy_cp - yyscanner->yytext_ptr);]])]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyscanner->yyleng_r = (int) (yy_cp - yy_bp);]]) \
-	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyscanner->yyleng_r = (int) (yy_cp - yy_bp);]]) \
-	yyscanner->yy_hold_char = *yy_cp; \
-	*yy_cp = '\0'; \
+	yyscanner->yyleng_r = (int) (yyCp - yyscanner->yytext_ptr);]])]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyscanner->yyleng_r = (int) (yyCp - yyBp);]]) \
+	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyscanner->yyleng_r = (int) (yyCp - yyBp);]]) \
+	yyscanner->yyHoldChar = *yyCp; \
+	*yyCp = '\0'; \
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if ( yyscanner->yyleng_r + yyscanner->yy_more_offset >= YYLMAX ) \
 					 yypanic( "token too large, exceeds YYLMAX", yyscanner);]]) \
@@ -1325,26 +1325,26 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yy_more_offset = 0;]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[strncpy( yyscanner->yytext_r, yyscanner->yytext_ptr, yyscanner->yyleng_r + 1);]]) \
 ]]) \
-	yyscanner->yy_c_buf_p = yy_cp;
+	yyscanner->yyCBufP = yyCp;
 }
 
 m4_ifdef( [[M4_MODE_YYLINENO]], [[
 /* FIXME: gate on yy_rule_can_match_eol, this is no longer a macro
  * and we can get at yy_act */
-static void yy_less_lineno(int n, yyscan_t yyscanner) {
+static void yyLessLineno(int n, yyscan_t yyscanner) {
 	int yyl;
 	for ( yyl = n; yyl < yyscanner->yyleng_r; ++yyl ) {
 		if ( yyscanner->yytext_r[yyl] == '\n' ) {
-			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno--;
+			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->bs_yylineno--;
 		}
 	}
 }
 
-static void yy_lineno_rewind_to(char *yy_cp, char *dst, yyscan_t yyscanner)  {
+static void yyLinenoRewindTo(char *yyCp, char *dst, yyscan_t yyscanner)  {
 	const char *p;
-	for ( p = yy_cp-1; p >= dst; --p) {
+	for ( p = yyCp-1; p >= dst; --p) {
 		if ( *p == '\n' ) {
-			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno--;
+			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->bs_yylineno--;
 		}
 	}
 }
@@ -1353,10 +1353,10 @@ static void yy_lineno_rewind_to(char *yy_cp, char *dst, yyscan_t yyscanner)  {
 void yy_set_interactive(bool is_interactive, yyscan_t yyscanner) {
 	if ( yy_current_buffer(yyscanner) == NULL ) {
 		yyensure_buffer_stack (yyscanner);
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] =
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
 			yy_create_buffer( yyscanner->yyin_r, YY_BUF_SIZE, yyscanner);
 	}
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_is_interactive = is_interactive;
+	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_is_interactive = is_interactive;
 }
 
 
@@ -1385,14 +1385,14 @@ m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[]])
 void yysetbol(bool at_bol, yyscan_t yyscanner) {
 	if ( yy_current_buffer(yyscanner) == NULL ) {
 		yyensure_buffer_stack (yyscanner);
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] =
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
         		yy_create_buffer( yyscanner->yyin_r, YY_BUF_SIZE, yyscanner);
 	}
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = at_bol;
+	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbol_flag = at_bol;
 }
 
 bool yyatbol(yyscan_t yyscanner) {
-	return (yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag);
+	return (yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbol_flag);
 }
 
 /** Switch to a different input buffer.
@@ -1413,12 +1413,12 @@ void yy_switch_to_buffer(yybuffer new_buffer, yyscan_t yyscanner)
 	}
 	if ( yy_current_buffer(yyscanner) ) {
 		/* Flush out information for old buffer. */
-		*yyscanner->yy_c_buf_p = yyscanner->yy_hold_char;
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_pos = yyscanner->yy_c_buf_p;
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars = yyscanner->yy_n_chars;
+		*yyscanner->yyCBufP = yyscanner->yyHoldChar;
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buf_pos = yyscanner->yyCBufP;
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars = yyscanner->yyNChars;
 	}
 
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] = new_buffer;
+	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] = new_buffer;
 	yy_load_buffer_state( yyscanner );
 
 	/* We don't actually know whether we did this switch during
@@ -1426,7 +1426,7 @@ void yy_switch_to_buffer(yybuffer new_buffer, yyscan_t yyscanner)
 	 * is looked at is after yywrap() is called, so it's safe
 	 * to go ahead and always set it.
 	 */
-	yyscanner->yy_did_buffer_switch_on_eof = true;
+	yyscanner->yyDidBufferSwitchOnEof = true;
 }
 
 
@@ -1456,7 +1456,7 @@ yybuffer yy_scan_buffer(char * base, yy_size_t  size, yyscan_t yyscanner)
 	b->yy_buf_pos = b->yy_ch_buf = base;
 	b->yy_is_our_buffer = false;
 	b->yy_input_file = NULL;
-	b->yy_n_chars = b->yy_buf_size;
+	b->yyNChars = b->yy_buf_size;
 	b->yy_is_interactive = false;
 	b->yyatbol_flag = true;
 	b->yy_fill_buffer = false;
@@ -1532,17 +1532,17 @@ yybuffer yy_scan_string(const char * yystr, yyscan_t yyscanner)
  */
 static int yy_get_next_buffer (yyscan_t yyscanner)
 {
-	char *dest = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf;
+	char *dest = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf;
 	char *source = yyscanner->yytext_ptr;
 	int number_to_move, i;
 	int ret_val;
 
-	if ( yyscanner->yy_c_buf_p > &yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars + 1] ) {
+	if ( yyscanner->yyCBufP > &yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf[yyscanner->yyNChars + 1] ) {
 		yypanic( "fatal flex scanner internal error--end of buffer missed", yyscanner);
 	}
-	if ( !yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_fill_buffer ) {
+	if ( !yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_fill_buffer ) {
 		/* Don't try to fill the buffer, so this is an EOF. */
-		if ( yyscanner->yy_c_buf_p - yyscanner->yytext_ptr - YY_MORE_ADJ == 1 ) {
+		if ( yyscanner->yyCBufP - yyscanner->yytext_ptr - YY_MORE_ADJ == 1 ) {
 			/* We matched a single character, the EOB, so
 			 * treat this as a final EOF.
 			 */
@@ -1558,19 +1558,19 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	/* Try to read more data. */
 
 	/* First move last chars to start of buffer. */
-	number_to_move = (int) (yyscanner->yy_c_buf_p - yyscanner->yytext_ptr - 1);
+	number_to_move = (int) (yyscanner->yyCBufP - yyscanner->yytext_ptr - 1);
 
 	for ( i = 0; i < number_to_move; ++i ) {
 		*(dest++) = *(source++);
 	}
-	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buffer_status == YY_BUFFER_EOF_PENDING ) {
+	if ( yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buffer_status == YY_BUFFER_EOF_PENDING ) {
 		/* don't do the read, it's not guaranteed to return an EOF,
 		 * just force an EOF
 		 */
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars = yyscanner->yy_n_chars = 0;
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars = yyscanner->yyNChars = 0;
 	} else {
 		int num_to_read =
-			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size - number_to_move - 1;
+			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 ) { /* Not enough room in the buffer - grow it. */
 m4_ifdef( [[M4_MODE_USES_REJECT]],
@@ -1580,10 +1580,10 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 ]],
 [[
 			/* just a shorter name for the current buffer */
-			yybuffer b = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top];
+			yybuffer b = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop];
 
-			int yy_c_buf_p_offset =
-				(int) (yyscanner->yy_c_buf_p - b->yy_ch_buf);
+			int yyCBufP_offset =
+				(int) (yyscanner->yyCBufP - b->yy_ch_buf);
 
 			if ( b->yy_is_our_buffer ) {
 				int new_size = b->yy_buf_size * 2;
@@ -1604,9 +1604,9 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 			if ( b->yy_ch_buf == NULL ) {
 				yypanic("fatal error - scanner input buffer overflow", yyscanner);
 			}
-			yyscanner->yy_c_buf_p = &b->yy_ch_buf[yy_c_buf_p_offset];
+			yyscanner->yyCBufP = &b->yy_ch_buf[yyCBufP_offset];
 
-			num_to_read = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size -
+			num_to_read = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buf_size -
 						number_to_move - 1;
 ]])
 		}
@@ -1615,40 +1615,40 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 			num_to_read = YY_READ_BUF_SIZE;
 		}
 		/* Read in more data. */
-		yyscanner->yy_n_chars = yyread(&yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[number_to_move], num_to_read, yyscanner);
+		yyscanner->yyNChars = yyread(&yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf[number_to_move], num_to_read, yyscanner);
 
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars = yyscanner->yy_n_chars;
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars = yyscanner->yyNChars;
 	}
 
-	if ( yyscanner->yy_n_chars == 0 ) {
+	if ( yyscanner->yyNChars == 0 ) {
 		if ( number_to_move == YY_MORE_ADJ ) {
 			ret_val = EOB_ACT_END_OF_FILE;
 			yyrestart( yyscanner->yyin_r, yyscanner);
 		} else {
 			ret_val = EOB_ACT_LAST_MATCH;
-			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buffer_status =
+			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buffer_status =
 				YY_BUFFER_EOF_PENDING;
 		}
 	} else {
 		ret_val = EOB_ACT_CONTINUE_SCAN;
 	}
-	if ((yyscanner->yy_n_chars + number_to_move) > yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size) {
+	if ((yyscanner->yyNChars + number_to_move) > yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
-		int new_size = yyscanner->yy_n_chars + number_to_move + (yyscanner->yy_n_chars >> 1);
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf = (char *) yyrealloc(
-			(void *) yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf, (yy_size_t) new_size, yyscanner );
-		if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf == NULL ) {
+		int new_size = yyscanner->yyNChars + number_to_move + (yyscanner->yyNChars >> 1);
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf = (char *) yyrealloc(
+			(void *) yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf, (yy_size_t) new_size, yyscanner );
+		if ( yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf == NULL ) {
 			yypanic( "out of dynamic memory in yy_get_next_buffer()", yyscanner);
 		}
 		/* "- 2" to take care of EOB's */
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size = (int) (new_size - 2);
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buf_size = (int) (new_size - 2);
 	}
 
-	yyscanner->yy_n_chars += number_to_move;
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars] = YY_END_OF_BUFFER_CHAR;
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
+	yyscanner->yyNChars += number_to_move;
+	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf[yyscanner->yyNChars] = YY_END_OF_BUFFER_CHAR;
+	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf[yyscanner->yyNChars + 1] = YY_END_OF_BUFFER_CHAR;
 
-	yyscanner->yytext_ptr = &yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[0];
+	yyscanner->yytext_ptr = &yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf[0];
 
 	return ret_val;
 }
@@ -1657,24 +1657,24 @@ m4_ifdef( [[M4_YY_NO_PUSH_STATE]],,
 [[
 static void yy_push_state(int _new_state, yyscan_t yyscanner)
 {
-	if ( yyscanner->yy_start_stack_ptr >= yyscanner->yy_start_stack_depth ) {
+	if ( yyscanner->yyStartStackPtr >= yyscanner->yyStartStackDepth ) {
 		yy_size_t new_size;
 
-		yyscanner->yy_start_stack_depth += YY_START_STACK_INCR;
-		new_size = (yy_size_t) yyscanner->yy_start_stack_depth * sizeof( int );
+		yyscanner->yyStartStackDepth += YY_START_STACK_INCR;
+		new_size = (yy_size_t) yyscanner->yyStartStackDepth * sizeof( int );
 
-		if ( yyscanner->yy_start_stack == NULL ) {
-			yyscanner->yy_start_stack = (int *) yyalloc( new_size, yyscanner );
+		if ( yyscanner->yyStartStack == NULL ) {
+			yyscanner->yyStartStack = (int *) yyalloc( new_size, yyscanner );
 
 		} else {
-			yyscanner->yy_start_stack = (int *) yyrealloc(
-					(void *) yyscanner->yy_start_stack, new_size, yyscanner );
+			yyscanner->yyStartStack = (int *) yyrealloc(
+					(void *) yyscanner->yyStartStack, new_size, yyscanner );
 		}
-		if ( yyscanner->yy_start_stack == NULL ) {
+		if ( yyscanner->yyStartStack == NULL ) {
 			yypanic( "out of memory expanding start-condition stack", yyscanner);
 		}
 	}
-	yyscanner->yy_start_stack[yyscanner->yy_start_stack_ptr++] = yystart(yyscanner);
+	yyscanner->yyStartStack[yyscanner->yyStartStackPtr++] = yystart(yyscanner);
 
 	yybegin(_new_state, yyscanner);
 }
@@ -1685,10 +1685,10 @@ m4_ifdef( [[M4_YY_NO_POP_STATE]],,
 [[
 static void yy_pop_state  (yyscan_t yyscanner)
 {
-	if ( --yyscanner->yy_start_stack_ptr < 0 ) {
+	if ( --yyscanner->yyStartStackPtr < 0 ) {
 		yypanic( "start-condition stack underflow", yyscanner );
 	}
-	yybegin(yyscanner->yy_start_stack[yyscanner->yy_start_stack_ptr], yyscanner);
+	yybegin(yyscanner->yyStartStack[yyscanner->yyStartStackPtr], yyscanner);
 }
 ]])
 
@@ -1697,7 +1697,7 @@ m4_ifdef( [[M4_YY_NO_TOP_STATE]],,
 [[
 static int yy_top_state  (yyscan_t yyscanner)
 {
-	return yyscanner->yy_start_stack_ptr > 0 ? yyscanner->yy_start_stack[yyscanner->yy_start_stack_ptr - 1] : yystart(yyscanner);
+	return yyscanner->yyStartStackPtr > 0 ? yyscanner->yyStartStack[yyscanner->yyStartStackPtr - 1] : yystart(yyscanner);
 }
 ]])
 
@@ -1708,13 +1708,13 @@ m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
 m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 		/* Generate code to keep backing-up information. */
 m4_ifdef([[M4_MODE_FULLSPD]], [[
-		 if ( yy_current_state[-1].yy_nxt ) {
+		 if ( yyCurrentState[-1].yy_nxt ) {
 ]])
 m4_ifdef([[M4_MODE_NO_FULLSPD]], [[
-		if ( yy_accept[yy_current_state] ) {
+		if ( yy_accept[yyCurrentState] ) {
 ]])
-			yyscanner->yy_last_accepting_state = yy_current_state;
-			yyscanner->yy_last_accepting_cpos = yy_cp;
+			yyscanner->yy_last_accepting_state = yyCurrentState;
+			yyscanner->yy_last_accepting_cpos = yyCp;
 		}
 ]])
 ]])
@@ -1737,8 +1737,8 @@ m4_define([[M4_GEN_NEXT_COMPRESSED_STATE]], [[
 	 */
 	M4_GEN_BACKING_UP
 
-	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state ) {
-		yy_current_state = (int) yy_def[yy_current_state];
+	while ( yy_chk[yy_base[yyCurrentState] + yy_c] != yyCurrentState ) {
+		yyCurrentState = (int) yy_def[yyCurrentState];
 
 m4_ifdef([[M4_MODE_USEMECS]], [[
 		/* We've arranged it so that templates are never chained
@@ -1750,41 +1750,41 @@ m4_ifdef([[M4_MODE_USEMECS]], [[
 		 */
 
 		/* lastdfa + 2 == YY_JAMSTATE + 1 is the beginning of the templates */
-		if (yy_current_state >= YY_JAMSTATE + 1) {
+		if (yyCurrentState >= YY_JAMSTATE + 1) {
 			yy_c = yy_meta[yy_c];
 		}
 ]])
 	}
-	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
+	yyCurrentState = yy_nxt[yy_base[yyCurrentState] + yy_c];
 ]])
 
 m4_define([[M4_GEN_START_STATE]], [[
 	/* Generate the code to find the start state. */
 m4_ifdef([[M4_MODE_FULLSPD]], [[
-m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state = yy_start_state_list[yyscanner->yy_start + yyatbol()];]])
-m4_ifdef([[M4_MODE_NO_BOL_NEEDED]], [[yy_current_state = yy_start_state_list[yyscanner->yy_start];]])
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yyCurrentState = yy_start_state_list[yyscanner->yyStart + yyatbol()];]])
+m4_ifdef([[M4_MODE_NO_BOL_NEEDED]], [[yyCurrentState = yy_start_state_list[yyscanner->yyStart];]])
 ]])
 m4_ifdef([[M4_MODE_NO_FULLSPD]], [[
-			yy_current_state = yyscanner->yy_start;
-m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state += yyatbol(yyscanner);]])
+			yyCurrentState = yyscanner->yyStart;
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yyCurrentState += yyatbol(yyscanner);]])
 			/* Set up for storing up states. */
 			m4_ifdef( [[M4_MODE_USES_REJECT]], [[
-			yyscanner->yy_state_ptr = yyscanner->yy_state_buf;
-			*yyscanner->yy_state_ptr++ = yy_current_state;
+			yyscanner->yy_state_ptr = yyscanner->yyStateBuf;
+			*yyscanner->yy_state_ptr++ = yyCurrentState;
 ]])
 ]])
 ]])
 
 m4_define([[M4_GEN_NEXT_MATCH_FULLSPD]], [[
 		{
-			const struct yy_trans_info *yy_trans_info;
+			const struct yyTransInfo *yyTransInfo;
 			YY_CHAR yy_c;
 
 			for ( yy_c = $1;
-			      (yy_trans_info = &yy_current_state[yy_c])->yy_verify == yy_c;
+			      (yyTransInfo = &yyCurrentState[yy_c])->yy_verify == yy_c;
 			      yy_c = $2 )
 			{
-				yy_current_state += yy_trans_info->yy_nxt;
+				yyCurrentState += yyTransInfo->yy_nxt;
 
 				M4_GEN_BACKING_UP
 			}
@@ -1799,44 +1799,44 @@ m4_define([[M4_GEN_NEXT_MATCH_FULLSPD]], [[
 m4_ifdef([[M4_MODE_USEECS]], m4_define([[M4_EC]], [[*(yy_ec+$1)]]))
 m4_ifdef([[M4_MODE_NO_USEECS]], [[m4_define([[M4_EC]], [[$1]])]])
 
-/* yy_get_previous_state - get the state just before the EOB char was reached */
+/* yyGetPreviousState - get the state just before the EOB char was reached */
 
-static yy_state_type yy_get_previous_state (yyscan_t yyscanner) {
-	yy_state_type yy_current_state;
-	char *yy_cp;
+static yyStateType yyGetPreviousState (yyscan_t yyscanner) {
+	yyStateType yyCurrentState;
+	char *yyCp;
 
 	M4_GEN_START_STATE
-	for ( yy_cp = yyscanner->yytext_ptr + YY_MORE_ADJ; yy_cp < yyscanner->yy_c_buf_p; ++yy_cp ) {
+	for ( yyCp = yyscanner->yytext_ptr + YY_MORE_ADJ; yyCp < yyscanner->yyCBufP; ++yyCp ) {
 		/* Generate the code to find the next state. */
-		m4_ifdef([[M4_MODE_NO_NULTRANS]], [[m4_define([[CHAR_MAP_3]], [[(*yy_cp ? M4_EC(YY_SC_TO_UI(*yy_cp)) : YY_NUL_EC)]])]])
-		m4_ifdef([[M4_MODE_NULTRANS]], [[m4_define([[CHAR_MAP_3]], [[M4_EC(YY_SC_TO_UI(*yy_cp))]])]])
+		m4_ifdef([[M4_MODE_NO_NULTRANS]], [[m4_define([[CHAR_MAP_3]], [[(*yyCp ? M4_EC(YY_SC_TO_UI(*yyCp)) : YY_NUL_EC)]])]])
+		m4_ifdef([[M4_MODE_NULTRANS]], [[m4_define([[CHAR_MAP_3]], [[M4_EC(YY_SC_TO_UI(*yyCp))]])]])
 
 		m4_ifdef([[M4_MODE_NULTRANS]], [[
 			/* Compressed tables back up *before* they match. */
 			m4_ifdef([[M4_MODE_NO_FULLSPD_OR_FULLTBL]], [[M4_GEN_BACKING_UP]])
-			if ( *yy_cp ) {
+			if ( *yyCp ) {
 		]])
 
 		m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[
-			m4_ifdef([[M4_MODE_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state][CHAR_MAP_3];]])
-			m4_ifdef([[M4_MODE_NO_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + CHAR_MAP_3];]])
+			m4_ifdef([[M4_MODE_GENTABLES]], [[yyCurrentState = yy_nxt[yyCurrentState][CHAR_MAP_3];]])
+			m4_ifdef([[M4_MODE_NO_GENTABLES]], [[yyCurrentState = yy_nxt[yyCurrentState*YY_NXT_LOLEN + CHAR_MAP_3];]])
 		]])
 
-		m4_ifdef([[M4_MODE_FULLSPD]], [[yy_current_state += yy_current_state[CHAR_MAP_3].yy_nxt;]])
+		m4_ifdef([[M4_MODE_FULLSPD]], [[yyCurrentState += yyCurrentState[CHAR_MAP_3].yy_nxt;]])
 		m4_ifdef([[M4_MODE_NO_FULLSPD_OR_FULLTBL]], [[M4_GEN_NEXT_COMPRESSED_STATE(CHAR_MAP_3)]])
 
 m4_ifdef([[M4_MODE_NULTRANS]], [[
 		} else {
-			yy_current_state = yy_NUL_trans[yy_current_state];
+			yyCurrentState = yy_NUL_trans[yyCurrentState];
 		}
 ]])
 
 		m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[M4_GEN_BACKING_UP]])
 		m4_ifdef([[M4_MODE_FULLSPD]], [[M4_GEN_BACKING_UP]])
-		m4_ifdef([[M4_MODE_USES_REJECT]], [[*yyscanner->yy_state_ptr++ = yy_current_state;]])
+		m4_ifdef([[M4_MODE_USES_REJECT]], [[*yyscanner->yy_state_ptr++ = yyCurrentState;]])
 	}
 
-	return yy_current_state;
+	return yyCurrentState;
 }
 
 /* yy_try_NUL_trans - try to make a transition on the NUL character
@@ -1844,55 +1844,55 @@ m4_ifdef([[M4_MODE_NULTRANS]], [[
  * synopsis
  *	next_state = yy_try_NUL_trans( current_state );
  */
-static yy_state_type yy_try_NUL_trans(yy_state_type yy_current_state, yyscan_t yyscanner)
+static yyStateType yy_try_NUL_trans(yyStateType yyCurrentState, yyscan_t yyscanner)
 {
-	bool yy_is_jam;
+	bool yyIsJam;
 	/* Generate code for handling NUL's, if needed. */
 
-	/* First, deal with backing up and setting up yy_cp if the scanner
+	/* First, deal with backing up and setting up yyCp if the scanner
 	 * finds that it should JAM on the NUL.
 	 *
-	 * Only generate a definition for "yy_cp" if we'll generate code
+	 * Only generate a definition for "yyCp" if we'll generate code
 	 * that uses it.  Otherwise lint and the like complain.
 	 */
-	m4_ifdef([[M4_MODE_NEED_YY_CP]], [[char *yy_cp = yyscanner->yy_c_buf_p;]])
+	m4_ifdef([[M4_MODE_NEED_YY_CP]], [[char *yyCp = yyscanner->yyCBufP;]])
 
 %# Note that this statement block and the following three are
 %# not executed serially but are an if-then-else cascade
 %# for different table modes.
 m4_ifdef([[M4_MODE_NULTRANS]], [[
-	yy_current_state = yy_NUL_trans[yy_current_state];
-       	yy_is_jam = (yy_current_state == 0);
+	yyCurrentState = yy_NUL_trans[yyCurrentState];
+       	yyIsJam = (yyCurrentState == 0);
 ]])
 
 m4_ifdef([[M4_MODE_NO_NULTRANS]], [[
 m4_ifdef([[M4_MODE_NULTRANS_FULLTBL]], [[
-m4_ifdef([[M4_MODE_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state][YY_NUL_EC];]])
-m4_ifdef([[M4_MODE_NO_GENTABLES]], [[yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + YY_NUL_EC];]])
-	yy_is_jam = (yy_current_state <= 0);
+m4_ifdef([[M4_MODE_GENTABLES]], [[yyCurrentState = yy_nxt[yyCurrentState][YY_NUL_EC];]])
+m4_ifdef([[M4_MODE_NO_GENTABLES]], [[yyCurrentState = yy_nxt[yyCurrentState*YY_NXT_LOLEN + YY_NUL_EC];]])
+	yyIsJam = (yyCurrentState <= 0);
 ]])
 
 m4_ifdef([[M4_MODE_NO_NULTRANS_FULLTBL]], [[
 m4_ifdef([[M4_MODE_NULTRANS_FULLSPD]], [[
 	int yy_c = YY_NUL_EC;
 
-	const struct yy_trans_info *yy_trans_info;
+	const struct yyTransInfo *yyTransInfo;
 
-	yy_trans_info = &yy_current_state[(unsigned int) yy_c];
-	yy_current_state += yy_trans_info->yy_nxt;
-	yy_is_jam = (yy_trans_info->yy_verify != yy_c);
+	yyTransInfo = &yyCurrentState[(unsigned int) yy_c];
+	yyCurrentState += yyTransInfo->yy_nxt;
+	yyIsJam = (yyTransInfo->yy_verify != yy_c);
 ]])
 
 m4_ifdef([[M4_MODE_NO_NULTRANS_FULLSPD]], [[
 M4_GEN_NEXT_COMPRESSED_STATE(YY_NUL_EC)
-yy_is_jam = (yy_current_state == YY_JAMSTATE);
+yyIsJam = (yyCurrentState == YY_JAMSTATE);
 m4_ifdef([[M4_MODE_USES_REJECT]], [[
 	/* Only stack this state if it's a transition we
 	 * actually make.  If we stack it on a jam, then
-	 * the state stack and yy_c_buf_p get out of sync.
+	 * the state stack and yyCBufP get out of sync.
 	 */
-	if ( ! yy_is_jam ) {
-		*yyscanner->yy_state_ptr++ = yy_current_state;
+	if ( ! yyIsJam ) {
+		*yyscanner->yy_state_ptr++ = yyCurrentState;
 	}
 	]])
 ]])
@@ -1905,20 +1905,20 @@ m4_ifdef([[M4_MODE_NULTRANS_WRAP]], [[
 	 * compressed tables have *already* done such backing up, so
 	 * we needn't bother with it again.
 	 */
-	if ( ! yy_is_jam ) {
+	if ( ! yyIsJam ) {
 		M4_GEN_BACKING_UP
 	}
 ]])
 
 	(void)yyscanner; /* forestall unused-argument warning */
-	return yy_is_jam ? 0 : yy_current_state;
+	return yyIsJam ? 0 : yyCurrentState;
 }
 
 /** The main scanner function which does all the work.
  */
 YY_DECL {
-	yy_state_type yy_current_state;
-	char *yy_cp, *yy_bp;
+	yyStateType yyCurrentState;
+	char *yyCp, *yyBp;
 	int yy_act;
 
 m4_ifdef( [[M4_YY_BISON_LVAL]],
@@ -1939,16 +1939,16 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 		/* Create the reject buffer large enough to save one state per allowed character. */
-		if ( yyscanner->yy_state_buf  == NULL ) {
-			yyscanner->yy_state_buf = (yy_state_type *)yyalloc(YY_STATE_BUF_SIZE, yyscanner);
+		if ( yyscanner->yyStateBuf  == NULL ) {
+			yyscanner->yyStateBuf = (yyStateType *)yyalloc(YY_STATE_BUF_SIZE, yyscanner);
 		}
-		if ( yyscanner->yy_state_buf == NULL) {
+		if ( yyscanner->yyStateBuf == NULL) {
 			yypanic( "out of dynamic memory in yylex()", yyscanner);
 		}
 ]])
 
-		if ( yyscanner->yy_start == 0 ) {
-			yyscanner->yy_start = 1;	/* first start state */
+		if ( yyscanner->yyStart == 0 ) {
+			yyscanner->yyStart = 1;	/* first start state */
 		}
 		if ( yyscanner->yyin_r == NULL ) {
 			yyscanner->yyin_r = stdin;
@@ -1958,7 +1958,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 		}
 		if ( yy_current_buffer(yyscanner) == NULL ) {
 			yyensure_buffer_stack (yyscanner);
-			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] =
+			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
 				yy_create_buffer( yyscanner->yyin_r, YY_BUF_SIZE, yyscanner);
 		}
 
@@ -1974,20 +1974,20 @@ m4_ifdef( [[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
 			yyscanner->yy_more_len = 0;
 			if ( yyscanner->yy_more_flag ) {
-				yyscanner->yy_more_len = (int) (yyscanner->yy_c_buf_p - yyscanner->yytext_ptr);
+				yyscanner->yy_more_len = (int) (yyscanner->yyCBufP - yyscanner->yytext_ptr);
 				yyscanner->yy_more_flag = false;
 			}
 ]])
 ]])
-			yy_cp = yyscanner->yy_c_buf_p;
+			yyCp = yyscanner->yyCBufP;
 
 			/* Support of yytext. */
-			*yy_cp = yyscanner->yy_hold_char;
+			*yyCp = yyscanner->yyHoldChar;
 
-			/* yy_bp points to the position in yy_ch_buf of the start of
+			/* yyBp points to the position in yy_ch_buf of the start of
 			 * the current run.
 			 */
-			yy_bp = yy_cp;
+			yyBp = yyCp;
 
 M4_GEN_START_STATE
 
@@ -1995,51 +1995,51 @@ M4_GEN_START_STATE
 			/* Generate the code to find the next match. */
 m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[m4_dnl
 m4_ifdef([[M4_MODE_GENTABLES]], [[m4_dnl
-			while ((yy_current_state = yy_nxt[yy_current_state][ M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0) {
+			while ((yyCurrentState = yy_nxt[yyCurrentState][ M4_EC(YY_SC_TO_UI(*yyCp)) ]) > 0) {
 ]])
 m4_ifdef([[M4_MODE_NO_GENTABLES]], [[
-			while ((yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + M4_EC(YY_SC_TO_UI(*yy_cp)) ]) > 0) {
+			while ((yyCurrentState = yy_nxt[yyCurrentState*YY_NXT_LOLEN + M4_EC(YY_SC_TO_UI(*yyCp)) ]) > 0) {
 ]])
 M4_GEN_BACKING_UP
-				yy_cp++;
+				yyCp++;
 			}
-			yy_current_state = -yy_current_state;
+			yyCurrentState = -yyCurrentState;
 ]])
 m4_ifdef([[M4_MODE_FULLSPD]], [[
-			M4_GEN_NEXT_MATCH_FULLSPD(M4_EC(YY_SC_TO_UI(*yy_cp)), M4_EC(YY_SC_TO_UI(*++yy_cp)))
+			M4_GEN_NEXT_MATCH_FULLSPD(M4_EC(YY_SC_TO_UI(*yyCp)), M4_EC(YY_SC_TO_UI(*++yyCp)))
 ]])
 m4_ifdef([[M4_MODE_NO_FULLSPD_OR_FULLTBL]], [[
 			do {
-				M4_GEN_NEXT_COMPRESSED_STATE(M4_EC(YY_SC_TO_UI(*yy_cp)))
+				M4_GEN_NEXT_COMPRESSED_STATE(M4_EC(YY_SC_TO_UI(*yyCp)))
 
-				m4_ifdef([[M4_MODE_USES_REJECT]], [[*yyscanner->yy_state_ptr++ = yy_current_state;]])
-				++yy_cp;
+				m4_ifdef([[M4_MODE_USES_REJECT]], [[*yyscanner->yy_state_ptr++ = yyCurrentState;]])
+				++yyCp;
 
 			}
-			m4_ifdef([[M4_MODE_INTERACTIVE]], [[while ( yy_base[yy_current_state] != YY_JAMBASE );]])
-			m4_ifdef([[M4_MODE_NO_INTERACTIVE]], [[while ( yy_current_state != YY_JAMSTATE );]])
+			m4_ifdef([[M4_MODE_INTERACTIVE]], [[while ( yy_base[yyCurrentState] != YY_JAMBASE );]])
+			m4_ifdef([[M4_MODE_NO_INTERACTIVE]], [[while ( yyCurrentState != YY_JAMSTATE );]])
 
 m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
 m4_ifdef([[M4_MODE_NO_INTERACTIVE]], [[
 			/* Do the guaranteed-needed backing up to figure out
 			 * the match.
 			 */
-			yy_cp = yyscanner->yy_last_accepting_cpos;
-			yy_current_state = yyscanner->yy_last_accepting_state;
+			yyCp = yyscanner->yy_last_accepting_cpos;
+			yyCurrentState = yyscanner->yy_last_accepting_state;
 ]])
 ]])
 ]])
 
 	yy_find_action:
 			/* code to find the action number goes here */
-			m4_ifdef([[M4_MODE_FULLSPD]], [[yy_act = yy_current_state[-1].yy_nxt;]])
-			m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yy_act = yy_accept[yy_current_state];]])
+			m4_ifdef([[M4_MODE_FULLSPD]], [[yy_act = yyCurrentState[-1].yy_nxt;]])
+			m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yy_act = yy_accept[yyCurrentState];]])
 m4_ifdef([[M4_MODE_FIND_ACTION_REJECT]], [[
-			yy_current_state = *--yyscanner->yy_state_ptr;
-			yyscanner->yy_lp = yy_accept[yy_current_state];
+			yyCurrentState = *--yyscanner->yy_state_ptr;
+			yyscanner->yy_lp = yy_accept[yyCurrentState];
 m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_REALLY_USED]], [[find_rule: /* we branch to this label when backing up */]])
 			for ( ; ; ) {	/* loop until we find out what rule we matched */
-				if (yyscanner->yy_lp && yyscanner->yy_lp < yy_accept[yy_current_state + 1]) {
+				if (yyscanner->yy_lp && yyscanner->yy_lp < yy_accept[yyCurrentState + 1]) {
 					yy_act = yy_acclist[yyscanner->yy_lp];
 m4_ifdef([[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 					if ((yy_act & YY_TRAILING_HEAD_MASK) != 0 || yyscanner->yy_looking_for_trail_begin) {
@@ -2055,14 +2055,14 @@ m4_ifdef([[M4_MODE_REAL_REJECT]], [[
 						/* Remember matched text in case we back up
 						 * due to REJECT.
 						 */
-						yyscanner->yy_full_match = yy_cp;
+						yyscanner->yyFullMatch = yyCp;
 						yyscanner->yy_full_state = yyscanner->yy_state_ptr;
-						yyscanner->yy_full_lp = yyscanner->yy_lp;
+						yyscanner->yyFullLp = yyscanner->yy_lp;
 ]])
 					} else {
-						yyscanner->yy_full_match = yy_cp;
+						yyscanner->yyFullMatch = yyCp;
 						yyscanner->yy_full_state = yyscanner->yy_state_ptr;
-						yyscanner->yy_full_lp = yyscanner->yy_lp;
+						yyscanner->yyFullLp = yyscanner->yy_lp;
 						break;
 					}
 					++yyscanner->yy_lp;
@@ -2072,30 +2072,30 @@ m4_ifdef([[M4_MODE_NO_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 					/* Remember matched text in case we back up due to
 					 * trailing context plus REJECT.
 					 */
-					yyscanner->yy_full_match = yy_cp;
+					yyscanner->yyFullMatch = yyCp;
 					break;
 ]])
 				}
 
-				--yy_cp;
+				--yyCp;
 
 				/* We could consolidate the following two lines with those at
 				 * the beginning, but at the cost of complaints that we're
 				 * branching inside a loop.
 				 */
-				yy_current_state = *--yyscanner->yy_state_ptr;
-				yyscanner->yy_lp = yy_accept[yy_current_state];
+				yyCurrentState = *--yyscanner->yy_state_ptr;
+				yyscanner->yy_lp = yy_accept[yyCurrentState];
 			} /* close for */
 ]])
-m4_ifdef([[M4_MODE_FIND_ACTION_COMPRESSED]], [[		yy_act = yy_accept[yy_current_state];
+m4_ifdef([[M4_MODE_FIND_ACTION_COMPRESSED]], [[		yy_act = yy_accept[yyCurrentState];
 			if ( yy_act == 0 ) { /* have to back up */
-				yy_cp = yyscanner->yy_last_accepting_cpos;
-				yy_current_state = yyscanner->yy_last_accepting_state;
-				yy_act = yy_accept[yy_current_state];
+				yyCp = yyscanner->yy_last_accepting_cpos;
+				yyCurrentState = yyscanner->yy_last_accepting_state;
+				yy_act = yy_accept[yyCurrentState];
 			}
 ]])
 
-			yy_do_before_action(yyscanner, yy_cp, yy_bp);
+			yyDoBeforeAction(yyscanner, yyCp, yyBp);
 
 m4_ifdef( [[M4_MODE_YYLINENO]],[[
 m4_define([[M4_YYL_BASE]], [[m4_ifdef([[M4_MODE_YYMORE_USED]],
@@ -2136,16 +2136,16 @@ m4_ifdef([[M4_MODE_DEBUG]], [[
 m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
 m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 			case 0: /* must back up */
-				/* undo the effects of yy_do_before_action() */
-				*yy_cp = yyscanner->yy_hold_char;
+				/* undo the effects of yyDoBeforeAction() */
+				*yyCp = yyscanner->yyHoldChar;
 
 				/* Backing-up info for compressed tables is taken \after/ */
-				/* yy_cp has been incremented for the next state. */
-				yy_cp = yyscanner->yy_last_accepting_cpos;
-				m4_ifdef([[M4_MODE_FULLSPD]], [[yy_cp++;]])
-				m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yy_cp++;]])
+				/* yyCp has been incremented for the next state. */
+				yyCp = yyscanner->yy_last_accepting_cpos;
+				m4_ifdef([[M4_MODE_FULLSPD]], [[yyCp++;]])
+				m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yyCp++;]])
 
-				yy_current_state = yyscanner->yy_last_accepting_state;
+				yyCurrentState = yyscanner->yy_last_accepting_state;
 				goto yy_find_action;
 ]])
 ]])
@@ -2154,13 +2154,13 @@ m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 			case YY_END_OF_BUFFER:
 			{
 				/* Amount of text matched not including the EOB char. */
-				int yy_amount_of_matched_text = (int) (yy_cp - yyscanner->yytext_ptr) - 1;
+				int yy_amount_of_matched_text = (int) (yyCp - yyscanner->yytext_ptr) - 1;
 
-				/* Undo the effects of yy_do_before_action(). */
-				*yy_cp = yyscanner->yy_hold_char;
+				/* Undo the effects of yyDoBeforeAction(). */
+				*yyCp = yyscanner->yyHoldChar;
 				YY_RESTORE_YY_MORE_OFFSET
 
-				if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buffer_status == YY_BUFFER_NEW ) {
+				if ( yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buffer_status == YY_BUFFER_NEW ) {
 					/* We're scanning a new file or input source.  It's
 					 * possible that this happened because the user
 					 * just pointed yyin at a new source and called
@@ -2170,64 +2170,64 @@ m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 					 * this is the first action (other than possibly a
 					 * back-up) that will match for the new input source.
 					 */
-					yyscanner->yy_n_chars = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars;
-					yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_input_file = yyscanner->yyin_r;
-					yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buffer_status = YY_BUFFER_NORMAL;
+					yyscanner->yyNChars = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars;
+					yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_input_file = yyscanner->yyin_r;
+					yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_buffer_status = YY_BUFFER_NORMAL;
 				}
 
-				/* Note that here we test for yy_c_buf_p "<=" to the position
-				 * of the first EOB in the buffer, since yy_c_buf_p will
+				/* Note that here we test for yyCBufP "<=" to the position
+				 * of the first EOB in the buffer, since yyCBufP will
 				 * already have been incremented past the NUL character
 				 * (since all states make transitions on EOB to the
 				 * end-of-buffer state).  Contrast this with the test
 				 * in input().
 				 */
-				if ( yyscanner->yy_c_buf_p <= &yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars] ) { /* This was really a NUL. */
-					yy_state_type yy_next_state;
+				if ( yyscanner->yyCBufP <= &yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf[yyscanner->yyNChars] ) { /* This was really a NUL. */
+					yyStateType yy_next_state;
 
-					yyscanner->yy_c_buf_p = yyscanner->yytext_ptr + yy_amount_of_matched_text;
+					yyscanner->yyCBufP = yyscanner->yytext_ptr + yy_amount_of_matched_text;
 
-					yy_current_state = yy_get_previous_state( yyscanner );
+					yyCurrentState = yyGetPreviousState( yyscanner );
 
 					/* Okay, we're now positioned to make the NUL
 					 * transition.  We couldn't have
-					 * yy_get_previous_state() go ahead and do it
+					 * yyGetPreviousState() go ahead and do it
 					 * for us because it doesn't know how to deal
 					 * with the possibility of jamming (and we don't
 					 * want to build jamming into it because then it
 					 * will run more slowly).
 					 */
 
-					yy_next_state = yy_try_NUL_trans( yy_current_state, yyscanner);
+					yy_next_state = yy_try_NUL_trans( yyCurrentState, yyscanner);
 
-					yy_bp = yyscanner->yytext_ptr + YY_MORE_ADJ;
+					yyBp = yyscanner->yytext_ptr + YY_MORE_ADJ;
 
 					if ( yy_next_state ) {
 						/* Consume the NUL. */
-						yy_cp = ++yyscanner->yy_c_buf_p;
-						yy_current_state = yy_next_state;
+						yyCp = ++yyscanner->yyCBufP;
+						yyCurrentState = yy_next_state;
 						goto yy_match;
 					} else {
 %# Disguised case statement on table modes
-						m4_ifdef([[M4_MODE_FULLSPD]], [[yy_cp = yyscanner->yy_c_buf_p;]])
-						m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yy_cp = yyscanner->yy_c_buf_p;]])
+						m4_ifdef([[M4_MODE_FULLSPD]], [[yyCp = yyscanner->yyCBufP;]])
+						m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yyCp = yyscanner->yyCBufP;]])
 m4_ifdef([[M4_MODE_NO_FULLSPD_OR_FULLTBL]], [[
 m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
 m4_ifdef([[M4_NOT_MODE_INTERACTIVE]], [[
 						/* Do the guaranteed-needed backing up to figure
 						 * out the match.
 						 */
-						yy_cp = yyscanner->yy_last_accepting_cpos;
-						yy_current_state = yyscanner->yy_last_accepting_state;
+						yyCp = yyscanner->yy_last_accepting_cpos;
+						yyCurrentState = yyscanner->yy_last_accepting_state;
 ]])
 ]])
 %# Disguised case statement on table modes ends
 m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
-						/* Still need to initialize yy_cp, though
-						 * yy_current_state was set up by
-						 * yy_get_previous_state().
+						/* Still need to initialize yyCp, though
+						 * yyCurrentState was set up by
+						 * yyGetPreviousState().
 						 */
-						yy_cp = yyscanner->yy_c_buf_p;
+						yyCp = yyscanner->yyCBufP;
 ]])
 ]])
 						goto yy_find_action;
@@ -2235,46 +2235,46 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 				} else {	/* not a NUL */
 					switch ( yy_get_next_buffer( yyscanner ) ) {
 					case EOB_ACT_END_OF_FILE:
-						yyscanner->yy_did_buffer_switch_on_eof = false;
+						yyscanner->yyDidBufferSwitchOnEof = false;
 
 						if ( yywrap( yyscanner ) ) {
 							/* Note: because we've taken care in
 							 * yy_get_next_buffer() to have set up
 							 * yytext, we can now set up
-							 * yy_c_buf_p so that if some total
+							 * yyCBufP so that if some total
 							 * hoser (like flex itself) wants to
 							 * call the scanner after we return the
 							 * YY_NULL, it'll still work - another
 							 * YY_NULL will get returned.
 							 */
-							yyscanner->yy_c_buf_p = yyscanner->yytext_ptr + YY_MORE_ADJ;
+							yyscanner->yyCBufP = yyscanner->yytext_ptr + YY_MORE_ADJ;
 
 							yy_act = YY_STATE_EOF(yystart(yyscanner));
 							goto do_action;
 						} else {
-							if ( ! yyscanner->yy_did_buffer_switch_on_eof ) {
+							if ( ! yyscanner->yyDidBufferSwitchOnEof ) {
 								yyrestart( yyscanner->yyin_r, yyscanner );
 							}
 						}
 						break;
 					case EOB_ACT_CONTINUE_SCAN:
-						yyscanner->yy_c_buf_p =
+						yyscanner->yyCBufP =
 							yyscanner->yytext_ptr + yy_amount_of_matched_text;
 
-						yy_current_state = yy_get_previous_state( yyscanner );
+						yyCurrentState = yyGetPreviousState( yyscanner );
 
-						yy_cp = yyscanner->yy_c_buf_p;
-						yy_bp = yyscanner->yytext_ptr + YY_MORE_ADJ;
+						yyCp = yyscanner->yyCBufP;
+						yyBp = yyscanner->yytext_ptr + YY_MORE_ADJ;
 						goto yy_match;
 
 					case EOB_ACT_LAST_MATCH:
-						yyscanner->yy_c_buf_p =
-						&yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars];
+						yyscanner->yyCBufP =
+						&yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yy_ch_buf[yyscanner->yyNChars];
 
-						yy_current_state = yy_get_previous_state( yyscanner );
+						yyCurrentState = yyGetPreviousState( yyscanner );
 
-						yy_cp = yyscanner->yy_c_buf_p;
-						yy_bp = yyscanner->yytext_ptr + YY_MORE_ADJ;
+						yyCp = yyscanner->yyCBufP;
+						yyBp = yyscanner->yytext_ptr + YY_MORE_ADJ;
 						goto yy_find_action;
 					} /* end EOB inner switch */
 				} /* end if */
@@ -2293,11 +2293,11 @@ m4_undefine([[yyless]])
 
 void yyless(int n, yyscan_t yyscanner) {
 	/* Undo effects of setting up yytext. */
-	m4_ifdef([[M4_MODE_YYLINENO]], [[yy_less_lineno(n, yyscanner);]])
-	yyscanner->yytext_r[yyscanner->yyleng_r] = yyscanner->yy_hold_char;
-	yyscanner->yy_c_buf_p = yyscanner->yytext_r + n;
-	yyscanner->yy_hold_char = *yyscanner->yy_c_buf_p;
-	*yyscanner->yy_c_buf_p = '\0';
+	m4_ifdef([[M4_MODE_YYLINENO]], [[yyLessLineno(n, yyscanner);]])
+	yyscanner->yytext_r[yyscanner->yyleng_r] = yyscanner->yyHoldChar;
+	yyscanner->yyCBufP = yyscanner->yytext_r + n;
+	yyscanner->yyHoldChar = *yyscanner->yyCBufP;
+	*yyscanner->yyCBufP = '\0';
 	yyscanner->yyleng_r = n;
 }
 
@@ -2305,21 +2305,21 @@ static int yy_init_globals (yyscan_t yyscanner) {
 	/*
 	 * This function is called from yylex_destroy(), so don't allocate here.
 	 */
-	yyscanner->yy_buffer_stack = NULL;
-	yyscanner->yy_buffer_stack_top = 0;
-	yyscanner->yy_buffer_stack_max = 0;
-	yyscanner->yy_c_buf_p = NULL;
+	yyscanner->yyBufferStack = NULL;
+	yyscanner->yyBufferStackTop = 0;
+	yyscanner->yyBufferStackMax = 0;
+	yyscanner->yyCBufP = NULL;
 	yyscanner->yy_init = false;
-	yyscanner->yy_start = 0;
-	yyscanner->yy_start_stack_ptr = 0;
-	yyscanner->yy_start_stack_depth = 0;
-	yyscanner->yy_start_stack =  NULL;
+	yyscanner->yyStart = 0;
+	yyscanner->yyStartStackPtr = 0;
+	yyscanner->yyStartStackDepth = 0;
+	yyscanner->yyStartStack =  NULL;
 
 m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
-	yyscanner->yy_state_buf = 0;
+	yyscanner->yyStateBuf = 0;
 	yyscanner->yy_state_ptr = 0;
-	yyscanner->yy_full_match = 0;
+	yyscanner->yyFullMatch = 0;
 	yyscanner->yy_lp = 0;
 ]])
 
@@ -2405,22 +2405,22 @@ int yylex_destroy  (yyscan_t yyscanner) {
 	/* Pop the buffer stack, destroying each element. */
 	while(yy_current_buffer(yyscanner)) {
 		yy_delete_buffer( yy_current_buffer(yyscanner), yyscanner );
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] = NULL;
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] = NULL;
 		yypop_buffer_state(yyscanner);
 	}
 
 	/* Destroy the stack itself. */
-	yyfree(yyscanner->yy_buffer_stack, yyscanner);
-	yyscanner->yy_buffer_stack = NULL;
+	yyfree(yyscanner->yyBufferStack, yyscanner);
+	yyscanner->yyBufferStack = NULL;
 
 	/* Destroy the start condition stack. */
-        yyfree( yyscanner->yy_start_stack, yyscanner );
-        yyscanner->yy_start_stack = NULL;
+        yyfree( yyscanner->yyStartStack, yyscanner );
+        yyscanner->yyStartStack = NULL;
 
 m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
-	yyfree ( yyscanner->yy_state_buf, yyscanner);
-	yyscanner->yy_state_buf  = NULL;
+	yyfree ( yyscanner->yyStateBuf, yyscanner);
+	yyscanner->yyStateBuf  = NULL;
 ]])
 
 	/* Reset the globals. This is important in a non-reentrant scanner so the next time

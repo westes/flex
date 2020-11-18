@@ -97,7 +97,7 @@ static bool boneseeker(const char *bone)
 
 void backend_by_name(const char *name)
 {
-	char *prefix_property;
+	const char *prefix_property;
 	if (name != NULL) {
 		if (strcmp(name, "nr") == 0) {
 			backend = &backends[0];
