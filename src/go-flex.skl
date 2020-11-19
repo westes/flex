@@ -782,7 +782,7 @@ void yyecho(yyscan_t yyscanner) {
 }
 
 m4_ifdef([[M4_YY_NO_YYUNPUT]],, [[
-void yyunput(int c, yyscan_t yyscanner)
+void yyunput(char c, yyscan_t yyscanner)
 {
 	char *yyCp;
 
@@ -812,7 +812,7 @@ void yyunput(int c, yyscan_t yyscanner)
 		}
 	}
 
-	*--yyCp = (char) c;
+	*--yyCp = c;
 
 m4_ifdef([[M4_MODE_YYLINENO]],
 [[

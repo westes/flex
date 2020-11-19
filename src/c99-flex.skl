@@ -623,7 +623,7 @@ void yy_flush_current_buffer(yyscan_t yyscanner) {
 const int YY_EXIT_FAILURE = 2;
 
 m4_ifdef( [[M4_YY_NO_YYPANIC]],, [[
-/* This gfunction has a magic rewrite rule */
+/* This function has a magic rewrite rule */
 static void yynoreturn yypanic(const char* msg, yyscan_t yyscanner) {
 	(void)yyscanner; /* forestall unused-argument warning */
 	fprintf( stderr, "%s\n", msg );
@@ -867,7 +867,7 @@ void yyecho(yyscan_t yyscanner) {
 }
 
 m4_ifdef( [[M4_YY_NO_YYUNPUT]],, [[
-void yyunput( int c, yyscan_t yyscanner)
+void yyunput(char c, yyscan_t yyscanner)
 {
 	char *yy_cp;
 
@@ -898,7 +898,7 @@ void yyunput( int c, yyscan_t yyscanner)
 		}
 	}
 
-	*--yy_cp = (char) c;
+	*--yy_cp = c;
 
 m4_ifdef( [[M4_MODE_YYLINENO]],
 [[
