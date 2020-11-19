@@ -320,164 +320,92 @@ m4_ifdef([[M4_MODE_NO_REAL_FULLSPD]], [[
 %% [2.0] data tables for the DFA are inserted here
 
 m4_ifdef( [[M4_HOOK_NXT_ROWS]],[[m4_dnl
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
-static const M4_HOOK_NXT_TYPE yy_nxt[][M4_HOOK_NXT_ROWS] =
-    {
+static const M4_HOOK_NXT_TYPE yy_nxt[][M4_HOOK_NXT_ROWS] = {
 M4_HOOK_NXT_BODY
-]], [[
-m4_define([[YY_NXT_LOLEN]], [[(M4_HOOK_NXT_ROWS)]])
-static const M4_HOOK_NXT_TYPE *yy_nxt =0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_MODE_YYLINENO]],[[m4_dnl
 /* Table of booleans, true if rule could match eol. */
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const M4_HOOK_EOLTABLE_TYPE yy_rule_can_match_eol[M4_HOOK_EOLTABLE_SIZE] = { 0,
 M4_HOOK_EOLTABLE_BODY[[]]m4_dnl
 };
-]], [[
-static const M4_HOOK_EOLTABLE_TYPE * yy_rule_can_match_eol = 0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_HOOK_NEED_ACCEPT]],[[m4_dnl
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const M4_HOOK_ACCEPT_TYPE yy_accept[M4_HOOK_ACCEPT_SIZE] = { 0,
 M4_HOOK_ACCEPT_BODY[[]]m4_dnl
 };
-]], [[
-static const M4_HOOK_ACCEPT_TYPE * yy_accept = 0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_MODE_USEECS]],[[m4_dnl
 /* Character equivalence-class mapping */
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const YY_CHAR yy_ec[M4_HOOK_ECSTABLE_SIZE] = { 0,
 M4_HOOK_ECSTABLE_BODY[[]]m4_dnl
 };
-]], [[
-static const YY_CHAR * yy_ec = 0;
-]])
-
 ]])
  
 m4_ifdef( [[M4_MODE_USEMECS]],[[m4_dnl
 /* Character meta-equivalence-class mappings */
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const YY_CHAR yy_meta[M4_HOOK_MECSTABLE_SIZE] = { 0,
 M4_HOOK_MECSTABLE_BODY[[]]m4_dnl
 };
-]], [[
-static const YY_CHAR * yy_meta = 0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_HOOK_TRANSTABLE_SIZE]],[[m4_dnl
 /* The transition table */
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const struct yyTransInfo yyTransition[M4_HOOK_TRANSTABLE_SIZE] = {
 M4_HOOK_TRANSTABLE_BODY[[]]m4_dnl
 };
-]], [[
-static const struct yyTransInfo *yyTransition = 0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_HOOK_STARTTABLE_SIZE]],[[m4_dnl
 /* Table of pointers to start states. */
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const struct yyTransInfo *yy_start_state_list[M4_HOOK_STARTTABLE_SIZE] = {
 M4_HOOK_STARTTABLE_BODY[[]]m4_dnl
 };
-]], [[
-static const struct yyTransInfo **yy_start_state_list =0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_HOOK_ACCLIST_TYPE]],[[m4_dnl
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const M4_HOOK_ACCLIST_TYPE yy_acclist[M4_HOOK_ACCLIST_SIZE] = { 0,
 M4_HOOK_ACCLIST_BODY[[]]m4_dnl
 };
-]], [[
-static const M4_HOOK_ACCLIST_TYPE * yy_acclist = 0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_HOOK_BASE_TYPE]],[[m4_dnl
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const M4_HOOK_BASE_TYPE yy_base[M4_HOOK_BASE_SIZE] = { 0,
 M4_HOOK_BASE_BODY[[]]m4_dnl
 };
-]], [[
-static const M4_HOOK_BASE_TYPE * yy_base = 0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_HOOK_DEF_TYPE]],[[m4_dnl
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const M4_HOOK_DEF_TYPE yy_def[M4_HOOK_DEF_SIZE] = { 0,
 M4_HOOK_DEF_BODY[[]]m4_dnl
 };
-]], [[
-static const M4_HOOK_DEF_TYPE * yy_def = 0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_HOOK_YYNXT_TYPE]],[[m4_dnl
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const M4_HOOK_YYNXT_TYPE yy_nxt[M4_HOOK_YYNXT_SIZE] = { 0,
 M4_HOOK_YYNXT_BODY[[]]m4_dnl
 };
-]], [[
-static const M4_HOOK_YYNXT_TYPE * yy_nxt = 0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_HOOK_CHK_TYPE]],[[m4_dnl
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const M4_HOOK_CHK_TYPE yy_chk[M4_HOOK_CHK_SIZE] = { 0,
 M4_HOOK_CHK_BODY[[]]m4_dnl
 };
-]], [[
-static const M4_HOOK_CHK_TYPE * yy_chk = 0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_HOOK_NULTRANS_SIZE]],[[m4_dnl
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const yyStateType yy_NUL_trans[M4_HOOK_NULTRANS_SIZE] = { 0,
 M4_HOOK_NULTRANS_BODY[[]]m4_dnl
 };
-]], [[
-static const yyStateType * yy_NUL_trans = 0;
-]])
-
 ]])
 
 m4_ifdef( [[M4_MODE_DEBUG]],[[m4_dnl
 /* Rule to line-number mapping */
-m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
 static const M4_HOOK_DEBUGTABLE_TYPE yy_rule_linenum[M4_HOOK_DEBUGTABLE_SIZE] = { 0,
 M4_HOOK_DEBUGTABLE_BODY[[]]m4_dnl
 };
-]], [[
-static const M4_HOOK_DEBUGTABLE_TYPE * yy_rule_linenum = 0;
-]])
-
 ]])
 
 %% [3.0] static declarations conditional on mode switches go here
