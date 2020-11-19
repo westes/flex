@@ -373,8 +373,6 @@ m4_define([[yytext_ptr]], [[yytext_r]])
 
 %% [1.0] DFA
 
-static int yy_get_next_buffer ( yyscan_t yyscanner );
-
 struct yy_trans_info {
 	/* We require that yy_verify and yy_nxt must be of the same size int. */
 m4_ifdef([[M4_MODE_REAL_FULLSPD]], [[
@@ -912,6 +910,208 @@ m4_ifdef( [[M4_MODE_YYLINENO]],
 }
 ]])
 
+%# yymore has a magic rewute rule. It's declared here, rather than with the other
+%# magic functions, so yy_get_next_buffer() won't need a forward declaration.
+m4_ifdef([[M4_MODE_YYMORE_USED]], [[
+m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
+void yymore(yyscan_t yyscanner) {yyscanner->yy_more_offset = strlen(yyscanner->yytext_r);}
+m4_define([[YY_MORE_ADJ]],  [[0]])
+m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[{
+yyscanner->yy_more_offset = yyscanner->yy_prev_more_offset;
+yyscanner->yyleng_r -= yyscanner->yy_more_offset;
+}
+]])
+]])
+m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
+void yymore(yyscan_t yyscanner) {yyscanner->yy_more_flag = true;}
+m4_define([[YY_MORE_ADJ]],  [[yyscanner->yy_more_len]])
+m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[]])
+]])
+]])
+
+m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[
+m4_define([[YY_MORE_ADJ]],  [[0]])
+m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[]])
+]])
+
+m4_ifdef( [[M4_MODE_USER_YYREAD]],, [[
+/* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
+ * is returned in "result".
+ */
+static int yyread(char *buf, size_t max_size, yyscan_t yyscanner) {
+	int result;
+m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
+	errno=0;
+	while ( (result = (int) read( fileno(yyscanner->yyin_r), buf, (yy_size_t) max_size )) < 0 ) {
+		if( errno != EINTR) {
+			yypanic( "input in flex scanner failed", yyscanner);
+			break;
+		}
+		errno=0;
+		clearerr(yyscanner->yyin_r);
+	}
+]])
+m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
+	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_is_interactive ) {
+		int c = '*';
+		int n;
+		for ( n = 0; n < max_size &&
+			      (c = getc( yyscanner->yyin_r )) != EOF && c != '\n'; ++n ) {
+			buf[n] = (char) c;
+		}
+		if ( c == '\n' ) {
+			buf[n++] = (char) c;
+		}
+		if ( c == EOF && ferror( yyscanner->yyin_r ) ) {
+			yypanic( "input in flex scanner failed", yyscanner);
+		}
+		result = n;
+	} else {
+		errno=0;
+		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyscanner->yyin_r)) == 0 && ferror(yyscanner->yyin_r)) {
+			if( errno != EINTR) {
+				yypanic( "input in flex scanner failed", yyscanner);
+				break;
+			}
+			errno=0;
+			clearerr(yyscanner->yyin_r);
+		}
+	}
+]])
+	 return result;
+}
+]])
+
+/* yy_get_next_buffer - try to read in a new buffer
+ *
+ * Returns a code representing an action:
+ *	EOB_ACT_LAST_MATCH -
+ *	EOB_ACT_CONTINUE_SCAN - continue scanning from current position
+ *	EOB_ACT_END_OF_FILE - end of file
+ */
+static int yy_get_next_buffer (yyscan_t yyscanner)
+{
+	char *dest = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf;
+	char *source = yyscanner->yytext_ptr;
+	int number_to_move, i;
+	int ret_val;
+
+	if ( yyscanner->yy_c_buf_p > &yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars + 1] ) {
+		yypanic( "fatal flex scanner internal error--end of buffer missed", yyscanner);
+	}
+	if ( !yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_fill_buffer ) {
+		/* Don't try to fill the buffer, so this is an EOF. */
+		if ( yyscanner->yy_c_buf_p - yyscanner->yytext_ptr - YY_MORE_ADJ == 1 ) {
+			/* We matched a single character, the EOB, so
+			 * treat this as a final EOF.
+			 */
+			return EOB_ACT_END_OF_FILE;
+		} else {
+			/* We matched some text prior to the EOB, first
+			 * process it.
+			 */
+			return EOB_ACT_LAST_MATCH;
+		}
+	}
+
+	/* Try to read more data. */
+
+	/* First move last chars to start of buffer. */
+	number_to_move = (int) (yyscanner->yy_c_buf_p - yyscanner->yytext_ptr - 1);
+
+	for ( i = 0; i < number_to_move; ++i ) {
+		*(dest++) = *(source++);
+	}
+	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buffer_status == YY_BUFFER_EOF_PENDING ) {
+		/* don't do the read, it's not guaranteed to return an EOF,
+		 * just force an EOF
+		 */
+		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars = yyscanner->yy_n_chars = 0;
+	} else {
+		int num_to_read =
+			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size - number_to_move - 1;
+
+		while ( num_to_read <= 0 ) { /* Not enough room in the buffer - grow it. */
+m4_ifdef( [[M4_MODE_USES_REJECT]],
+[[
+			yypanic(
+				"input buffer overflow, can't enlarge buffer because scanner uses reject", yyscanner );
+]],
+[[
+			/* just a shorter name for the current buffer */
+			yybuffer b = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top];
+
+			int yy_c_buf_p_offset =
+				(int) (yyscanner->yy_c_buf_p - b->yy_ch_buf);
+
+			if ( b->yy_is_our_buffer ) {
+				int new_size = b->yy_buf_size * 2;
+
+				if ( new_size <= 0 ) {
+					b->yy_buf_size += b->yy_buf_size / 8;
+				} else {
+					b->yy_buf_size *= 2;
+				}
+				b->yy_ch_buf = (char *)
+					/* Include room in for 2 EOB chars. */
+					yyrealloc( (void *) b->yy_ch_buf,
+							 (yy_size_t) (b->yy_buf_size + 2), yyscanner );
+			} else {
+				/* Can't grow it, we don't own it. */
+				b->yy_ch_buf = NULL;
+			}
+			if ( b->yy_ch_buf == NULL ) {
+				yypanic("fatal error - scanner input buffer overflow", yyscanner);
+			}
+			yyscanner->yy_c_buf_p = &b->yy_ch_buf[yy_c_buf_p_offset];
+
+			num_to_read = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size -
+						number_to_move - 1;
+]])
+		}
+
+		if ( num_to_read > YY_READ_BUF_SIZE ) {
+			num_to_read = YY_READ_BUF_SIZE;
+		}
+		/* Read in more data. */
+		yyscanner->yy_n_chars = yyread(&yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[number_to_move], num_to_read, yyscanner);
+
+		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars = yyscanner->yy_n_chars;
+	}
+
+	if ( yyscanner->yy_n_chars == 0 ) {
+		if ( number_to_move == YY_MORE_ADJ ) {
+			ret_val = EOB_ACT_END_OF_FILE;
+			yyrestart( yyscanner->yyin_r, yyscanner);
+		} else {
+			ret_val = EOB_ACT_LAST_MATCH;
+			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buffer_status =
+				YY_BUFFER_EOF_PENDING;
+		}
+	} else {
+		ret_val = EOB_ACT_CONTINUE_SCAN;
+	}
+	if ((yyscanner->yy_n_chars + number_to_move) > yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size) {
+		/* Extend the array by 50%, plus the number we really need. */
+		int new_size = yyscanner->yy_n_chars + number_to_move + (yyscanner->yy_n_chars >> 1);
+		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf = (char *) yyrealloc(
+			(void *) yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf, (yy_size_t) new_size, yyscanner );
+		if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf == NULL ) {
+			yypanic( "out of dynamic memory in yy_get_next_buffer()", yyscanner);
+		}
+		/* "- 2" to take care of EOB's */
+		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size = (int) (new_size - 2);
+	}
+
+	yyscanner->yy_n_chars += number_to_move;
+	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars] = YY_END_OF_BUFFER_CHAR;
+	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
+
+	yyscanner->yytext_ptr = &yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[0];
+
+	return ret_val;
+}
+
 int yyinput (yyscan_t yyscanner)
 {
 	int c;
@@ -1016,54 +1216,6 @@ m4_ifdef( [[M4_YY_STACK_USED]],
 m4_define( [[M4_YY_NO_PUSH_STATE]])
 m4_define( [[M4_YY_NO_POP_STATE]])
 m4_define( [[M4_YY_NO_TOP_STATE]])
-]])
-
-m4_ifdef( [[M4_MODE_USER_YYREAD]],, [[
-/* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
- * is returned in "result".
- */
-static int yyread(char *buf, size_t max_size, yyscan_t yyscanner) {
-	int result;
-m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
-	errno=0;
-	while ( (result = (int) read( fileno(yyscanner->yyin_r), buf, (yy_size_t) max_size )) < 0 ) {
-		if( errno != EINTR) {
-			yypanic( "input in flex scanner failed", yyscanner);
-			break;
-		}
-		errno=0;
-		clearerr(yyscanner->yyin_r);
-	}
-]])
-m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
-	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_is_interactive ) {
-		int c = '*';
-		int n;
-		for ( n = 0; n < max_size &&
-			      (c = getc( yyscanner->yyin_r )) != EOF && c != '\n'; ++n ) {
-			buf[n] = (char) c;
-		}
-		if ( c == '\n' ) {
-			buf[n++] = (char) c;
-		}
-		if ( c == EOF && ferror( yyscanner->yyin_r ) ) {
-			yypanic( "input in flex scanner failed", yyscanner);
-		}
-		result = n;
-	} else {
-		errno=0;
-		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyscanner->yyin_r)) == 0 && ferror(yyscanner->yyin_r)) {
-			if( errno != EINTR) {
-				yypanic( "input in flex scanner failed", yyscanner);
-				break;
-			}
-			errno=0;
-			clearerr(yyscanner->yyin_r);
-		}
-	}
-]])
-	 return result;
-}
 ]])
 
 /* STARTS Accessor methods to globals.
@@ -1371,28 +1523,6 @@ void yy_set_interactive(bool is_interactive, yyscan_t yyscanner) {
 }
 
 
-m4_ifdef([[M4_MODE_YYMORE_USED]], [[
-m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
-void yymore(yyscan_t yyscanner) {yyscanner->yy_more_offset = strlen(yyscanner->yytext_r);}
-m4_define([[YY_MORE_ADJ]],  [[0]])
-m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[{
-yyscanner->yy_more_offset = yyscanner->yy_prev_more_offset;
-yyscanner->yyleng_r -= yyscanner->yy_more_offset;
-}
-]])
-]])
-m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
-void yymore(yyscan_t yyscanner) {yyscanner->yy_more_flag = true;}
-m4_define([[YY_MORE_ADJ]],  [[yyscanner->yy_more_len]])
-m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[]])
-]])
-]])
-
-m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[
-m4_define([[YY_MORE_ADJ]],  [[0]])
-m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[]])
-]])
-
 void yysetbol(bool at_bol, yyscan_t yyscanner) {
 	if ( yy_current_buffer(yyscanner) == NULL ) {
 		yyensure_buffer_stack (yyscanner);
@@ -1533,136 +1663,6 @@ yybuffer yy_scan_string(const char * yystr, yyscan_t yyscanner)
 	return yy_scan_bytes( yystr, (int) strlen(yystr), yyscanner);
 }
 ]])
-
-/* yy_get_next_buffer - try to read in a new buffer
- *
- * Returns a code representing an action:
- *	EOB_ACT_LAST_MATCH -
- *	EOB_ACT_CONTINUE_SCAN - continue scanning from current position
- *	EOB_ACT_END_OF_FILE - end of file
- */
-static int yy_get_next_buffer (yyscan_t yyscanner)
-{
-	char *dest = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf;
-	char *source = yyscanner->yytext_ptr;
-	int number_to_move, i;
-	int ret_val;
-
-	if ( yyscanner->yy_c_buf_p > &yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars + 1] ) {
-		yypanic( "fatal flex scanner internal error--end of buffer missed", yyscanner);
-	}
-	if ( !yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_fill_buffer ) {
-		/* Don't try to fill the buffer, so this is an EOF. */
-		if ( yyscanner->yy_c_buf_p - yyscanner->yytext_ptr - YY_MORE_ADJ == 1 ) {
-			/* We matched a single character, the EOB, so
-			 * treat this as a final EOF.
-			 */
-			return EOB_ACT_END_OF_FILE;
-		} else {
-			/* We matched some text prior to the EOB, first
-			 * process it.
-			 */
-			return EOB_ACT_LAST_MATCH;
-		}
-	}
-
-	/* Try to read more data. */
-
-	/* First move last chars to start of buffer. */
-	number_to_move = (int) (yyscanner->yy_c_buf_p - yyscanner->yytext_ptr - 1);
-
-	for ( i = 0; i < number_to_move; ++i ) {
-		*(dest++) = *(source++);
-	}
-	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buffer_status == YY_BUFFER_EOF_PENDING ) {
-		/* don't do the read, it's not guaranteed to return an EOF,
-		 * just force an EOF
-		 */
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars = yyscanner->yy_n_chars = 0;
-	} else {
-		int num_to_read =
-			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size - number_to_move - 1;
-
-		while ( num_to_read <= 0 ) { /* Not enough room in the buffer - grow it. */
-m4_ifdef( [[M4_MODE_USES_REJECT]],
-[[
-			yypanic(
-				"input buffer overflow, can't enlarge buffer because scanner uses reject", yyscanner );
-]],
-[[
-			/* just a shorter name for the current buffer */
-			yybuffer b = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top];
-
-			int yy_c_buf_p_offset =
-				(int) (yyscanner->yy_c_buf_p - b->yy_ch_buf);
-
-			if ( b->yy_is_our_buffer ) {
-				int new_size = b->yy_buf_size * 2;
-
-				if ( new_size <= 0 ) {
-					b->yy_buf_size += b->yy_buf_size / 8;
-				} else {
-					b->yy_buf_size *= 2;
-				}
-				b->yy_ch_buf = (char *)
-					/* Include room in for 2 EOB chars. */
-					yyrealloc( (void *) b->yy_ch_buf,
-							 (yy_size_t) (b->yy_buf_size + 2), yyscanner );
-			} else {
-				/* Can't grow it, we don't own it. */
-				b->yy_ch_buf = NULL;
-			}
-			if ( b->yy_ch_buf == NULL ) {
-				yypanic("fatal error - scanner input buffer overflow", yyscanner);
-			}
-			yyscanner->yy_c_buf_p = &b->yy_ch_buf[yy_c_buf_p_offset];
-
-			num_to_read = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size -
-						number_to_move - 1;
-]])
-		}
-
-		if ( num_to_read > YY_READ_BUF_SIZE ) {
-			num_to_read = YY_READ_BUF_SIZE;
-		}
-		/* Read in more data. */
-		yyscanner->yy_n_chars = yyread(&yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[number_to_move], num_to_read, yyscanner);
-
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars = yyscanner->yy_n_chars;
-	}
-
-	if ( yyscanner->yy_n_chars == 0 ) {
-		if ( number_to_move == YY_MORE_ADJ ) {
-			ret_val = EOB_ACT_END_OF_FILE;
-			yyrestart( yyscanner->yyin_r, yyscanner);
-		} else {
-			ret_val = EOB_ACT_LAST_MATCH;
-			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buffer_status =
-				YY_BUFFER_EOF_PENDING;
-		}
-	} else {
-		ret_val = EOB_ACT_CONTINUE_SCAN;
-	}
-	if ((yyscanner->yy_n_chars + number_to_move) > yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size) {
-		/* Extend the array by 50%, plus the number we really need. */
-		int new_size = yyscanner->yy_n_chars + number_to_move + (yyscanner->yy_n_chars >> 1);
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf = (char *) yyrealloc(
-			(void *) yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf, (yy_size_t) new_size, yyscanner );
-		if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf == NULL ) {
-			yypanic( "out of dynamic memory in yy_get_next_buffer()", yyscanner);
-		}
-		/* "- 2" to take care of EOB's */
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size = (int) (new_size - 2);
-	}
-
-	yyscanner->yy_n_chars += number_to_move;
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars] = YY_END_OF_BUFFER_CHAR;
-	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[yyscanner->yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
-
-	yyscanner->yytext_ptr = &yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf[0];
-
-	return ret_val;
-}
 
 m4_ifdef( [[M4_YY_NO_PUSH_STATE]],,
 [[
