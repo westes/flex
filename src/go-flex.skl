@@ -320,7 +320,7 @@ m4_ifdef([[M4_MODE_NO_REAL_FULLSPD]], [[
 %% [2.0] data tables for the DFA are inserted here
 
 m4_ifdef( [[M4_HOOK_NXT_ROWS]],[[m4_dnl
-static const M4_HOOK_NXT_TYPE yy_nxt[][M4_HOOK_NXT_ROWS] = {
+static const M4_HOOK_NXT_TYPE yy_nxt[][M4_HOOK_NXT_ROWS] =
 M4_HOOK_NXT_BODY
 ]])
 

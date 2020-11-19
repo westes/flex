@@ -506,7 +506,7 @@ size_t ntod (void)
 		out_str ("m4_define([[M4_HOOK_NXT_TYPE]], [[%s]])", ptype->name);
 		out_dec ("m4_define([[M4_HOOK_NXT_ROWS]], [[%d]])", num_full_table_rows);
 		outn ("m4_define([[M4_HOOK_NXT_BODY]], [[m4_dnl");
-
+		outn ("M4_HOOK_TABLE_OPENER");
 		if (gentables)
 			outn ("M4_HOOK_TABLE_OPENER");
 
