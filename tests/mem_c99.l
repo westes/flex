@@ -37,10 +37,13 @@
 #endif
 #define YY_BUF_SIZE 8
 
+void * yyalloc(yy_size_t, yyscan_t);
+void *yyrealloc ( void *, yy_size_t, yyscan_t yyscanner );
+void yyfree ( void *, yyscan_t yyscanner );
 %}
 
 %option emit="c99" bufsize=8
-%option 8bit prefix="test"
+%option 8bit
 %option nounput nomain noyywrap noinput noyy_top_state
 %option warn stack nodefault
 %option noyyalloc noyyrealloc noyyfree
@@ -86,7 +89,7 @@ static void dump_mem(FILE* fp){
     fprintf(fp,"}\n");
 }
 
-void * testalloc(yy_size_t n , yyscan_t yyscanner)
+void * yyalloc(yy_size_t n , yyscan_t yyscanner)
 {
     (void)yyscanner;
 
@@ -117,7 +120,7 @@ void * testalloc(yy_size_t n , yyscan_t yyscanner)
     return p;
 }
 
-void * testrealloc(void* p, yy_size_t n , yyscan_t yyscanner)
+void * yyrealloc(void* p, yy_size_t n , yyscan_t yyscanner)
 {
     (void)yyscanner;
 
@@ -140,7 +143,7 @@ void * testrealloc(void* p, yy_size_t n , yyscan_t yyscanner)
     exit(1);
 }
 
-void testfree(void* p , yyscan_t yyscanner)
+void yyfree(void* p , yyscan_t yyscanner)
 {
     (void)yyscanner;
 
@@ -172,11 +175,11 @@ main (void)
     ptrs  = calloc(1, sizeof(struct memsz));
     nptrs = 0;
 
-    testlex_init(&scanner);
-    testset_in(stdin,scanner);
-    testset_out(stdout,scanner);
-    testlex(scanner);
-    testlex_destroy(scanner);
+    yylex_init(&scanner);
+    yyset_in(stdin,scanner);
+    yyset_out(stdout,scanner);
+    yylex(scanner);
+    yylex_destroy(scanner);
     free(ptrs);
 
     if ( nptrs > 0 || total_mem > 0){

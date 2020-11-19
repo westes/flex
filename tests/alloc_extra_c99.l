@@ -40,6 +40,8 @@ struct Check {
     char qux;
 };
 
+void *yyalloc(size_t, yyscan_t);
+
 /* Save char into junk array at next position. */
 static void check_extra ( yyscan_t  scanner );
 

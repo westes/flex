@@ -339,14 +339,36 @@ struct yy_buffer_state {
 	int yy_buffer_status;
 };
 
-/* These forwards can simply deleted when poerting to a target language
- * with two-pass name resoltion.
- */
-void *yyalloc ( yy_size_t, yyscan_t yyscanner );
-void *yyrealloc ( void *, yy_size_t, yyscan_t yyscanner );
-void yyfree ( void *, yyscan_t yyscanner );
+m4_ifdef( [[M4_YY_NO_FLEX_ALLOC]],,
+[[
+void *yyalloc(yy_size_t size, yyscan_t yyscanner) {
+	(void)yyscanner; /* forestall unused-argument warning */
+	return malloc(size);
+}
+]])
 
-/* Begin user sect3 */
+m4_ifdef( [[M4_YY_NO_FLEX_REALLOC]],,
+[[
+void *yyrealloc(void * ptr, yy_size_t size, yyscan_t yyscanner) {
+	(void)yyscanner; /* forestall unused-argument warning */
+	return realloc(ptr, size);
+}
+]])
+
+m4_ifdef( [[M4_YY_NO_FLEX_FREE]],,
+[[
+void yyfree(void * ptr, yyscan_t yyscanner) {
+	(void)yyscanner; /* forestall unused-argument warning */
+	/* The cast to (char *) in the following accommodates both
+	 * implementations that use char* generic pointers, and those
+	 * that use void* generic pointers.  It works with the latter
+	 * because both ANSI C and C++ allow castless assignment from
+	 * any pointer type to void*, and deal with argument conversions
+	 * as though doing an assignment.
+	 */
+	free( (char *) ptr );
+}
+]])
 
 m4_ifdef( [[M4_MODE_NO_YYWRAP]], [[
 int M4_MODE_PREFIX[[wrap]](yyscan_t yyscanner) {
@@ -2443,37 +2465,6 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 	yyscanner = NULL;
 	return 0;
 }
-
-m4_ifdef( [[M4_YY_NO_FLEX_ALLOC]],,
-[[
-void *yyalloc(yy_size_t size, yyscan_t yyscanner) {
-	(void)yyscanner; /* forestall unused-argument warning */
-	return malloc(size);
-}
-]])
-
-m4_ifdef( [[M4_YY_NO_FLEX_REALLOC]],,
-[[
-void *yyrealloc(void * ptr, yy_size_t size, yyscan_t yyscanner) {
-	(void)yyscanner; /* forestall unused-argument warning */
-	return realloc(ptr, size);
-}
-]])
-
-m4_ifdef( [[M4_YY_NO_FLEX_FREE]],,
-[[
-void yyfree(void * ptr, yyscan_t yyscanner) {
-	(void)yyscanner; /* forestall unused-argument warning */
-	/* The cast to (char *) in the following accommodates both
-	 * implementations that use char* generic pointers, and those
-	 * that use void* generic pointers.  It works with the latter
-	 * because both ANSI C and C++ allow castless assignment from
-	 * any pointer type to void*, and deal with argument conversions
-	 * as though doing an assignment.
-	 */
-	free( (char *) ptr );
-}
-]])
 
 m4_ifdef([[M4_YY_MAIN]], [[
 int main () {
