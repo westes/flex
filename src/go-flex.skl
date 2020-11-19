@@ -99,7 +99,7 @@ m4_ifdef([[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 				yyCurrentState = *yyscanner->yyStatePtr; /* restore curr. state */
 ]])
 				++yyscanner->yyLp;
-				goto find_rule;
+				goto findRuleLabel;
 }
 ]])
 
@@ -416,17 +416,25 @@ const int YY_TRAILING_HEAD_MASK = 0x4000;
 ]])
 /* Holds the entire state of the reentrant scanner. */
 struct yyguts_t {
+	/* Public interface */
+	FILE *yyin_r, *yyout_r;
+	int yyleng_r;
+	int yylineno_r;
+	int yyflexdebug_r;
+m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
+	char yytext_r[YYLMAX];
+]], [[
+	char *yytext_r;
+]])
+
 	/* User-defined. Not touched by flex. */
 	m4_ifdef([[M4_MODE_EXTRA_TYPE]], [[M4_MODE_EXTRA_TYPE yyextra_r;]])
 
-	/* The rest are the same as the globals declared in the non-reentrant scanner. */
-	FILE *yyin_r, *yyout_r;
 	size_t yyBufferStackTop; /**< index of top of stack. */
 	size_t yyBufferStackMax; /**< capacity of stack. */
 	yybuffer * yyBufferStack; /**< Stack as an array. */
 	char yyHoldChar;
 	int yyNChars;
-	int yyleng_r;
 	char *yyCBufP;
 	bool yyInit;
 	int yyStart;
@@ -437,15 +445,11 @@ struct yyguts_t {
 	yyStateType yyLastAcceptingState;
 	char* yyLastAcceptingCharPos;
 
-	int yylineno_r;
-	int yyflexdebug_r;
-
 m4_ifdef([[M4_MODE_USES_REJECT]], [[
 	yyStateType *yyStateBuf;
 	yyStateType *yyStatePtr;
 	char *yyFullMatch;
 	int yyLp;
-
 m4_ifdef([[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[m4_dnl
 	/* These are only needed for trailing context rules */
 	int yyLookingForTrailBegin;
@@ -454,35 +458,14 @@ m4_ifdef([[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[m4_dnl
 ]])
 ]])
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
-	char yytext_r[YYLMAX];
 	char *yytext_ptr;
 	int yyMoreOffset;
 	int yyPrevMoreOffset;
 ]], [[
-	char *yytext_r;
 	bool yyMoreFlag;
 	int yyMoreLen;
 ]])
-m4_ifdef([[M4_YY_BISON_LVAL]], [[
-	YYSTYPE * yylval_r;
-]])
-
-m4_ifdef([[<M4_YY_BISON_LLOC>]], [[
-	YYLTYPE * yylloc_r;
-]])
 }; /* end struct yyguts_t */
-
-m4_ifdef([[M4_YY_BISON_LVAL]],
-[[
-/* This must go here because YYSTYPE and YYLTYPE are included
- * from bison output in section 1.*/
-m4_define([[yylval]], [[yyscanner->yylval_r]])
-]])
-
-m4_ifdef([[<M4_YY_BISON_LLOC>]],
-[[
-m4_define([[yylloc]], [[yyscanner->yylloc_r]])
-]])
 
 /* Helpers for special functions, also part of public API */
 
@@ -1298,40 +1281,6 @@ void yyset_debug(int bdebug, yyscan_t yyscanner) {
 }
 ]])
 
-m4_ifdef([[M4_YY_BISON_LVAL]], [[
-m4_ifdef([[M4_YY_NO_GET_LVAL]],,
-[[
-YYSTYPE *yyget_lval(yyscan_t yyscanner) {
-	return yylval;
-}
-]])
-
-m4_ifdef([[M4_YY_NO_SET_LVAL]],,
-[[
-void yyset_lval(YYSTYPE *yylval_param, yyscan_t yyscanner) {
-	yylval = yylval_param;
-}
-]])
-
-m4_ifdef([[<M4_YY_BISON_LLOC>]],
-[[
-m4_ifdef([[M4_YY_NO_GET_LLOC]],,
-[[
-YYLTYPE *yyget_lloc  (yyscan_t yyscanner) {
-	return yylloc;
-}
-]])
-
-m4_ifdef([[M4_YY_NO_SET_LLOC]],,
-[[
-void yyset_lloc(YYLTYPE *yylloc_param, yyscan_t yyscanner) {
-	yylloc = yylloc_param;
-}
-]])
-]])
-
-]])
-
 /* ENDS public accessor functions */
 
 /* Number of entries by which start-condition stack grows. */
@@ -1343,30 +1292,6 @@ const int YY_START_STACK_INCR = 25;
 m4_ifdef([[YY_DECL]],, [[m4_dnl
 m4_define([[M4_YY_LEX_PROTO]], [[(yyscan_t yyscanner)]])
 m4_define([[M4_YY_LEX_DECLARATION]], [[(yyscan_t yyscanner)]])
-
-m4_ifdef([[M4_YY_BISON_LVAL]],
-[[
-    m4_dnl  The bison pure parser is used. Redefine yylex to
-    m4_dnl  accept the lval parameter.
-
-    m4_define([[M4_YY_LEX_PROTO]], [[\]]
-               [[(YYSTYPE * yylval_param, yyscan_t yyscanner)]])
-    m4_define([[M4_YY_LEX_DECLARATION]], [[\]]
-					   [[(YYSTYPE * yylval_param, yyscan_t yyscanner)]])
-]])
-
-m4_ifdef([[<M4_YY_BISON_LLOC>]],
-[[
-    m4_dnl  Locations are used. yylex should also accept the ylloc parameter.
-
-    m4_define([[M4_YY_LEX_PROTO]], [[\]]
-               [[(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, yyscan_t yyscanner)]])
-    m4_define([[M4_YY_LEX_DECLARATION]], [[\]]
-					   [[(YYSTYPE *yylval_param, YYLTYPE *yylloc_param, yyscan_t yyscanner)]])
-]])
-
-extern int yylex M4_YY_LEX_PROTO;
-
 m4_define([[YY_DECL]], [[int yylex M4_YY_LEX_DECLARATION]])
 ]])
 
@@ -1962,7 +1887,7 @@ m4_ifdef([[M4_MODE_NO_INTERACTIVE]], [[
 m4_ifdef([[M4_MODE_FIND_ACTION_REJECT]], [[
 			yyCurrentState = *--yyscanner->yyStatePtr;
 			yyscanner->yyLp = yyAccept[yyCurrentState];
-m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_REALLY_USED]], [[find_rule: /* we branch to this label when backing up */]])
+m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_REALLY_USED]], [[findRuleLabel: /* we branch to this label when backing up */]])
 			for (; ;) {	/* loop until we find out what rule we matched */
 				if (yyscanner->yyLp && yyscanner->yyLp < yyAccept[yyCurrentState + 1]) {
 					yyAct = yyAcclist[yyscanner->yyLp];
@@ -1991,7 +1916,7 @@ m4_ifdef([[M4_MODE_REAL_REJECT]], [[
 						break;
 					}
 					++yyscanner->yyLp;
-				goto find_rule;
+				goto findRuleLabel;
 ]])
 m4_ifdef([[M4_MODE_NO_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 					/* Remember matched text in case we back up due to
@@ -2340,8 +2265,8 @@ int yylex_destroy (yyscan_t yyscanner) {
 
 m4_ifdef([[M4_MODE_USES_REJECT]],
 [[
-	yyfree (yyscanner->yyStateBuf, yyscanner);
-	yyscanner->yyStateBuf  = NULL;
+	yyfree(yyscanner->yyStateBuf, yyscanner);
+	yyscanner->yyStateBuf = NULL;
 ]])
 
 	/* Reset the globals. This is important in a non-reentrant scanner so the next time
