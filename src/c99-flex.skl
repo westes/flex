@@ -276,7 +276,7 @@ typedef struct yy_buffer_state *yybuffer;
 
 typedef size_t yy_size_t;
 
-%# These are not part of the exported interface and cab safewky be renamed
+%# These are not part of the exported interface and can safewly be renamed
 const int EOB_ACT_CONTINUE_SCAN = 0;
 const int EOB_ACT_END_OF_FILE = 1;
 const int EOB_ACT_LAST_MATCH = 2;
