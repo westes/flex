@@ -47,7 +47,7 @@
         FOO_flush_buffer( (yybuffer)0, yyscanner);
         FOO_init_buffer( (yybuffer)0, (FILE*)0, yyscanner);
         FOO_load_buffer_state( yyscanner);
-        FOO_scan_buffer( (char*)0, (yy_size_t)0, yyscanner);
+        FOO_scan_buffer( (char*)0, (size_t)0, yyscanner);
         FOO_scan_bytes( (const char*)0, 0, yyscanner);
         FOO_scan_string( (const char*)0, yyscanner);
         FOO_switch_to_buffer( (yybuffer)0, yyscanner);
@@ -63,7 +63,7 @@
         FOOget_out( (yyscan_t )0 );
         FOOget_text( (yyscan_t )0 );
         FOOlex( (yyscan_t )0 );
-        FOOlex_destroy( (yyscan_t )0 );
+        //FOOlex_destroy( (yyscan_t )0 );
         FOOlex_init( (yyscan_t *)0 );
         //FOOset_extra( (void *)0, (yyscan_t )0 );
         FOOset_in( (FILE*)0, (yyscan_t )0 );

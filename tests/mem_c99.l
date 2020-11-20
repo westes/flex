@@ -37,8 +37,8 @@
 #endif
 #define YY_BUF_SIZE 8
 
-void * yyalloc(yy_size_t, yyscan_t);
-void *yyrealloc ( void *, yy_size_t, yyscan_t yyscanner );
+void * yyalloc(size_t, yyscan_t);
+void *yyrealloc ( void *, size_t, yyscan_t yyscanner );
 void yyfree ( void *, yyscan_t yyscanner );
 %}
 
@@ -89,7 +89,7 @@ static void dump_mem(FILE* fp){
     fprintf(fp,"}\n");
 }
 
-void * yyalloc(yy_size_t n , yyscan_t yyscanner)
+void * yyalloc(size_t n , yyscan_t yyscanner)
 {
     (void)yyscanner;
 
@@ -120,7 +120,7 @@ void * yyalloc(yy_size_t n , yyscan_t yyscanner)
     return p;
 }
 
-void * yyrealloc(void* p, yy_size_t n , yyscan_t yyscanner)
+void * yyrealloc(void* p, size_t n , yyscan_t yyscanner)
 {
     (void)yyscanner;
 

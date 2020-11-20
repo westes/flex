@@ -189,109 +189,6 @@ m4_define([[YY_STATE_EOF]], [[YY_END_OF_BUFFER + $1 + 1]])
  */
 m4_define([[YY_STATE_BUF_SIZE]], [[((YY_BUF_SIZE + 2) * sizeof(yyStateType))]])
 
-typedef struct yy_buffer_state *yybuffer;
-
-%# These are not part of the exported interface and can safely be renamed
-const int EOB_ACT_CONTINUE_SCAN = 0;
-const int EOB_ACT_END_OF_FILE = 1;
-const int EOB_ACT_LAST_MATCH = 2;
-const int YY_BUFFER_NEW = 0;
-const int YY_BUFFER_NORMAL = 1;
-	/* When an EOF's been seen but there's still some text to process
-	 * then we mark the buffer as YY_EOF_PENDING, to indicate that we
-	 * shouldn't try reading from the input source any more.  We might
-	 * still have a bunch of tokens to match, though, because of
-	 * possible backing-up.
-	 *
-	 * When we actually see the EOF, we change the status to "new"
-	 * (via yyrestart()), so that the user can continue scanning by
-	 * just pointing yyin at a new input file.
-	 */
-const int YY_BUFFER_EOF_PENDING = 2;
-
-struct yy_buffer_state {
-	FILE *yyInputFile;
-	char *yyChBuf;		/* input buffer */
-	char *yyBufPos;		/* current position in input buffer */
-
-	/* Size of input buffer in bytes, not including room for EOB
-	 * characters.
-	 */
-	int yyInputBufSize;
-
-	/* Number of characters read into yyChBuf, not including EOB
-	 * characters.
-	 */
-	int yyNChars;
-
-	/* Whether we "own" the buffer - i.e., we know we created it,
-	 * and can realloc() it to grow it, and should free() it to
-	 * delete it.
-	 */
-	bool yyIsOurBuffer;
-
-	/* Whether this is an "interactive" input source; if so, and
-	 * if we're using stdio for input, then we want to use char-by-char
-	 * rather than a buffered read, to make sure we stop fetching input after
-	 * each newline.
-	 */
-	bool yyIsInteractive;
-
-	/* Whether we're considered to be at the beginning of a line.
-	 * If so, '^' rules will be active on the next match, otherwise
-	 * not.
-	 */
-	bool yyatbolFlag;
-
-	int bs_yylineno; /**< The line count. */
-	int bs_yycolumn; /**< The column count. */
-
-	/* Whether to try to fill the input buffer when we reach the
-	 * end of it.
-	 */
-	bool yyFillBuffer;
-
-	int yyBufferStatus;
-};
-
-
-m4_ifdef([[M4_YY_NO_FLEX_ALLOC]],,
-[[
-void *yyalloc(size_t size, yyscan_t yyscanner) {
-	(void)yyscanner; /* forestall unused-argument warning */
-	return malloc(size);
-}
-]])
-
-m4_ifdef([[M4_YY_NO_FLEX_REALLOC]],,
-[[
-void *yyrealloc(void *ptr, size_t size, yyscan_t yyscanner) {
-	(void)yyscanner; /* forestall unused-argument warning */
-	return realloc(ptr, size);
-}
-]])
-
-m4_ifdef([[M4_YY_NO_FLEX_FREE]],,
-[[
-void yyfree(void * ptr, yyscan_t yyscanner) {
-	(void)yyscanner; /* forestall unused-argument warning */
-	/* The cast to (char *) in the following accommodates both
-	 * implementations that use char* generic pointers, and those
-	 * that use void* generic pointers.  It works with the latter
-	 * because both ANSI C and C++ allow castless assignment from
-	 * any pointer type to void*, and deal with argument conversions
-	 * as though doing an assignment.
-	 */
-	free((char *) ptr);
-}
-]])
-
-m4_ifdef([[M4_MODE_NO_YYWRAP]], [[
-int yywrap(yyscan_t yyscanner) {
-	return /*CONSTCOND*/1;
-}
-]])
-
 const bool FLEX_DEBUG = m4_ifdef([[M4_MODE_DEBUG]], [[true]], [[false]]);
 
 typedef uint8_t YY_CHAR;
@@ -300,13 +197,6 @@ m4_ifdef([[M4_MODE_FULLSPD]], [[m4_dnl
 typedef const struct yy_trans_info *yyStateType;
 ]], [[
 typedef int yyStateType;
-]])
-
-/* Watch out: yytext_ptr is a variable when yytext is an array,
- * but it's a macro when yytext is a pointer.
- */
-m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
-m4_define([[yytext_ptr]], [[yytext_r]])
 ]])
 
 %% [1.0] DFA
@@ -336,7 +226,7 @@ m4_ifdef([[M4_MODE_NO_REAL_FULLSPD]], [[
 ]])
 };
 
-%% [2.0] data tables for the DFA are inserted here
+%% [2.0] payload macros for the for the DFA data tables are inserted here
 
 m4_ifdef([[M4_HOOK_NXT_ROWS]],[[m4_dnl
 static const M4_HOOK_NXT_TYPE yyNxt[][M4_HOOK_NXT_ROWS] =
@@ -431,6 +321,78 @@ M4_HOOK_DEBUGTABLE_BODY[[]]m4_dnl
 
 M4_YY_SC_DEFS
 
+typedef struct yy_buffer_state *yybuffer;
+
+%# These are not part of the exported interface and can safely be renamed
+const int EOB_ACT_CONTINUE_SCAN = 0;
+const int EOB_ACT_END_OF_FILE = 1;
+const int EOB_ACT_LAST_MATCH = 2;
+const int YY_BUFFER_NEW = 0;
+const int YY_BUFFER_NORMAL = 1;
+	/* When an EOF's been seen but there's still some text to process
+	 * then we mark the buffer as YY_EOF_PENDING, to indicate that we
+	 * shouldn't try reading from the input source any more.  We might
+	 * still have a bunch of tokens to match, though, because of
+	 * possible backing-up.
+	 *
+	 * When we actually see the EOF, we change the status to "new"
+	 * (via yyrestart()), so that the user can continue scanning by
+	 * just pointing yyin at a new input file.
+	 */
+const int YY_BUFFER_EOF_PENDING = 2;
+
+struct yy_buffer_state {
+	FILE *yyInputFile;
+	char *yyChBuf;		/* input buffer */
+	char *yyBufPos;		/* current position in input buffer */
+
+	/* Size of input buffer in bytes, not including room for EOB
+	 * characters.
+	 */
+	int yyInputBufSize;
+
+	/* Number of characters read into yyChBuf, not including EOB
+	 * characters.
+	 */
+	int yyNChars;
+
+	/* Whether we "own" the buffer - i.e., we know we created it,
+	 * and can realloc() it to grow it, and should free() it to
+	 * delete it.
+	 */
+	bool yyIsOurBuffer;
+
+	/* Whether this is an "interactive" input source; if so, and
+	 * if we're using stdio for input, then we want to use char-by-char
+	 * rather than a buffered read, to make sure we stop fetching input after
+	 * each newline.
+	 */
+	bool yyIsInteractive;
+
+	/* Whether we're considered to be at the beginning of a line.
+	 * If so, '^' rules will be active on the next match, otherwise
+	 * not.
+	 */
+	bool yyatbolFlag;
+
+	int bs_yylineno; /**< The line count. */
+	int bs_yycolumn; /**< The column count. */
+
+	/* Whether to try to fill the input buffer when we reach the
+	 * end of it.
+	 */
+	bool yyFillBuffer;
+
+	int yyBufferStatus;
+};
+
+/* Watch out: yytext_ptr is a variable when yytext is an array,
+ * but it's a macro when yytext is a pointer.
+ */
+m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
+m4_define([[yytext_ptr]], [[yytext_r]])
+]])
+
 m4_ifdef([[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[m4_dnl
 %# These must match the values in the file flexdef.h
 %# of the flex source code, otherwise havoc will ensue.
@@ -489,6 +451,43 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 	int yyMoreLen;
 ]])
 } FlexLexer; /* end struct yyguts_t */
+
+m4_ifdef([[M4_YY_NO_FLEX_ALLOC]],,
+[[
+void *yyalloc(size_t size, yyscan_t yyscanner) {
+	(void)yyscanner; /* forestall unused-argument warning */
+	return malloc(size);
+}
+]])
+
+m4_ifdef([[M4_YY_NO_FLEX_REALLOC]],,
+[[
+void *yyrealloc(void *ptr, size_t size, yyscan_t yyscanner) {
+	(void)yyscanner; /* forestall unused-argument warning */
+	return realloc(ptr, size);
+}
+]])
+
+m4_ifdef([[M4_YY_NO_FLEX_FREE]],,
+[[
+void yyfree(void * ptr, yyscan_t yyscanner) {
+	(void)yyscanner; /* forestall unused-argument warning */
+	/* The cast to (char *) in the following accommodates both
+	 * implementations that use char* generic pointers, and those
+	 * that use void* generic pointers.  It works with the latter
+	 * because both ANSI C and C++ allow castless assignment from
+	 * any pointer type to void*, and deal with argument conversions
+	 * as though doing an assignment.
+	 */
+	free((char *) ptr);
+}
+]])
+
+m4_ifdef([[M4_MODE_NO_YYWRAP]], [[
+int yywrap(yyscan_t yyscanner) {
+	return /*CONSTCOND*/1;
+}
+]])
 
 /* Helpers for special functions, also part of public API */
 
