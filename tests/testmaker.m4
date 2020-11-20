@@ -140,7 +140,7 @@ m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `yyset_debug (yyget_
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
 {
-    yyscan_t  lexer;
+    FlexLexer *lexer;
     yylex_init( &lexer );
     yyset_out ( stdout,lexer);
     yyset_in  ( stdin, lexer);

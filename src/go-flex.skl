@@ -8,7 +8,15 @@
 %#
 %# 1. The prefix property doesn't set a prefix for function and variable names.
 %#    Instead it sets the Go package name.
-
+%#
+%# 2. The (normally hidden) type of the yyguts_t structure becomes FlexLexer,
+%#    as in the pre-existing C++ support.  The obfuscation of this type by
+%#    a void* i s removed.
+%#
+%# 3. Becauser of where expansion of magic names like yytext is done, the _r suffix
+%#    on some public member names is not required to keep them from being clobbered
+%#    and has been removed.
+	
 %#  Macros for preproc stage.
 m4preproc_changecom
 
@@ -23,7 +31,7 @@ m4_define([[M4_PROPERTY_SOURCE_SUFFIX]], [[go]])
 m4_define([[M4_PROPERTY_TRACE_LINE_REGEXP]], [[^#line ([0-9]+) "(.*)"]])
 m4_define([[M4_PROPERTY_TRACE_LINE_TEMPLATE]], [[#line %d "%s"]])
 m4_define([[M4_PROPERTY_CONTEXT_ARG]], [[yyscanner]])
-m4_define([[M4_PROPERTY_CONTEXT_FORMAT]], [[yyscanner->%s_r]])
+m4_define([[M4_PROPERTY_CONTEXT_FORMAT]], [[yyscanner->%s]])
 m4_define([[M4_PROPERTY_BUFFERSTACK_CONTEXT_FORMAT]], [[yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->bs_%s]])
 m4_define([[M4_PROPERTY_PREFIX]], [main]])
 
@@ -175,12 +183,6 @@ const int YY_NULL = 0;
  * integer in range [0..255] for use as an array index.
  */
 m4_define([[YY_SC_TO_UI]], [[((YY_CHAR)($1))]])
-
-/* In the ancestal C back end this was a void pointer, meant to be
- * opaque pointer.  That indirection has been removed here as it
- * wouldn't easily port to other langages.
- */
-typedef struct yyguts_t *yyscan_t;
 
 /* Action number for EOF rule of a given start state. */
 m4_define([[YY_STATE_EOF]], [[YY_END_OF_BUFFER + $1 + 1]])
@@ -390,7 +392,7 @@ struct yy_buffer_state {
  * but it's a macro when yytext is a pointer.
  */
 m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
-m4_define([[yytext_ptr]], [[yytext_r]])
+m4_define([[yytext_ptr]], [[yytext]])
 ]])
 
 m4_ifdef([[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[m4_dnl
@@ -402,18 +404,18 @@ const int YY_TRAILING_HEAD_MASK = 0x4000;
 /* Holds the entire state of the reentrant scanner. */
 typedef struct yyguts_t {
 	/* Public interface */
-	FILE *yyin_r, *yyout_r;
-	int yyleng_r;
-	int yylineno_r;
-	int yyflexdebug_r;
+	FILE *yyin, *yyout;
+	int yyleng;
+	int yylineno;
+	int yyflexdebug;
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
-	char yytext_r[YYLMAX];
+	char yytext[YYLMAX];
 ]], [[
-	char *yytext_r;
+	char *yytext;
 ]])
 
 	/* User-defined. Not touched by flex. */
-	m4_ifdef([[M4_MODE_EXTRA_TYPE]], [[M4_MODE_EXTRA_TYPE yyextra_r;]])
+	m4_ifdef([[M4_MODE_EXTRA_TYPE]], [[M4_MODE_EXTRA_TYPE yyextra;]])
 
 	size_t yyBufferStackTop; /**< index of top of stack. */
 	size_t yyBufferStackMax; /**< capacity of stack. */
@@ -454,7 +456,7 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 
 m4_ifdef([[M4_YY_NO_FLEX_ALLOC]],,
 [[
-void *yyalloc(size_t size, yyscan_t yyscanner) {
+void *yyalloc(size_t size, FlexLexer *yyscanner) {
 	(void)yyscanner; /* forestall unused-argument warning */
 	return malloc(size);
 }
@@ -462,7 +464,7 @@ void *yyalloc(size_t size, yyscan_t yyscanner) {
 
 m4_ifdef([[M4_YY_NO_FLEX_REALLOC]],,
 [[
-void *yyrealloc(void *ptr, size_t size, yyscan_t yyscanner) {
+void *yyrealloc(void *ptr, size_t size, FlexLexer *yyscanner) {
 	(void)yyscanner; /* forestall unused-argument warning */
 	return realloc(ptr, size);
 }
@@ -470,7 +472,7 @@ void *yyrealloc(void *ptr, size_t size, yyscan_t yyscanner) {
 
 m4_ifdef([[M4_YY_NO_FLEX_FREE]],,
 [[
-void yyfree(void * ptr, yyscan_t yyscanner) {
+void yyfree(void * ptr, FlexLexer *yyscanner) {
 	(void)yyscanner; /* forestall unused-argument warning */
 	/* The cast to (char *) in the following accommodates both
 	 * implementations that use char* generic pointers, and those
@@ -484,7 +486,7 @@ void yyfree(void * ptr, yyscan_t yyscanner) {
 ]])
 
 m4_ifdef([[M4_MODE_NO_YYWRAP]], [[
-int yywrap(yyscan_t yyscanner) {
+int yywrap(FlexLexer *yyscanner) {
 	return /*CONSTCOND*/1;
 }
 ]])
@@ -502,7 +504,7 @@ static void yy_load_buffer_state  (FlexLexer *yyscanner)
 {
 	yyscanner->yyNChars = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars;
 	yyscanner->yytext_ptr = yyscanner->yyCBufP = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyBufPos;
-	yyscanner->yyin_r = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyInputFile;
+	yyscanner->yyin = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyInputFile;
 	yyscanner->yyHoldChar = *yyscanner->yyCBufP;
 }
 
@@ -746,7 +748,7 @@ void yyrestart(FILE * input_file, FlexLexer *yyscanner)
 	if (yy_current_buffer(yyscanner) == NULL) {
 		yyensure_buffer_stack (yyscanner);
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
-			yy_create_buffer(yyscanner->yyin_r, YY_BUF_SIZE, yyscanner);
+			yy_create_buffer(yyscanner->yyin, YY_BUF_SIZE, yyscanner);
 	}
 
 	yy_init_buffer(yy_current_buffer(yyscanner), input_file, yyscanner);
@@ -781,7 +783,7 @@ int yystart(FlexLexer *yyscanner) {
  * we now use fwrite().
  */
 void yyecho(FlexLexer *yyscanner) {
-	fwrite(yyscanner->yytext_r, (size_t) yyscanner->yyleng_r, 1, yyscanner->yyout_r);
+	fwrite(yyscanner->yytext, (size_t) yyscanner->yyleng, 1, yyscanner->yyout);
 }
 
 m4_ifdef([[M4_YY_NO_YYUNPUT]],, [[
@@ -837,13 +839,13 @@ static int yyread(char *buf, size_t maxSize, FlexLexer *yyscanner) {
 	int result;
 m4_ifdef([[M4_MODE_CPP_USE_READ]], [[
 	errno=0;
-	while ((result = (int) read(fileno(yyscanner->yyin_r), buf, (size_t) maxSize)) < 0) {
+	while ((result = (int) read(fileno(yyscanner->yyin), buf, (size_t) maxSize)) < 0) {
 		if(errno != EINTR) {
 			yypanic("input in flex scanner failed", yyscanner);
 			break;
 		}
 		errno=0;
-		clearerr(yyscanner->yyin_r);
+		clearerr(yyscanner->yyin);
 	}
 ]])
 m4_ifdef([[M4_MODE_NO_CPP_USE_READ]], [[
@@ -851,25 +853,25 @@ m4_ifdef([[M4_MODE_NO_CPP_USE_READ]], [[
 		int c = '*';
 		int n;
 		for (n = 0; n < maxSize &&
-			      (c = getc(yyscanner->yyin_r)) != EOF && c != '\n'; ++n) {
+			      (c = getc(yyscanner->yyin)) != EOF && c != '\n'; ++n) {
 			buf[n] = (char) c;
 		}
 		if (c == '\n') {
 			buf[n++] = (char) c;
 		}
-		if (c == EOF && ferror(yyscanner->yyin_r)) {
+		if (c == EOF && ferror(yyscanner->yyin)) {
 			yypanic("input in flex scanner failed", yyscanner);
 		}
 		result = n;
 	} else {
 		errno=0;
-		while ((result = (int) fread(buf, 1, (size_t) maxSize, yyscanner->yyin_r)) == 0 && ferror(yyscanner->yyin_r)) {
+		while ((result = (int) fread(buf, 1, (size_t) maxSize, yyscanner->yyin)) == 0 && ferror(yyscanner->yyin)) {
 			if(errno != EINTR) {
 				yypanic("input in flex scanner failed", yyscanner);
 				break;
 			}
 			errno=0;
-			clearerr(yyscanner->yyin_r);
+			clearerr(yyscanner->yyin);
 		}
 	}
 ]])
@@ -881,11 +883,11 @@ m4_ifdef([[M4_MODE_NO_CPP_USE_READ]], [[
 %# magic functions, so yy_get_next_buffer() won't need a forward declaration.
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
-void yymore(FlexLexer *yyscanner) {yyscanner->yyMoreOffset = strlen(yyscanner->yytext_r);}
+void yymore(FlexLexer *yyscanner) {yyscanner->yyMoreOffset = strlen(yyscanner->yytext);}
 m4_define([[YY_MORE_ADJ]],  [[0]])
 m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[{
 yyscanner->yyMoreOffset = yyscanner->yyPrevMoreOffset;
-yyscanner->yyleng_r -= yyscanner->yyMoreOffset;
+yyscanner->yyleng -= yyscanner->yyMoreOffset;
 }
 ]])
 ]])
@@ -947,10 +949,10 @@ static int yy_get_next_buffer (FlexLexer *yyscanner)
 		 */
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars = yyscanner->yyNChars = 0;
 	} else {
-		int num_to_read =
+		int numToRead =
 			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyInputBufSize - numberToMove - 1;
 
-		while (num_to_read <= 0) { /* Not enough room in the buffer - grow it. */
+		while (numToRead <= 0) { /* Not enough room in the buffer - grow it. */
 m4_ifdef([[M4_MODE_USES_REJECT]],
 [[
 			yypanic(
@@ -984,16 +986,16 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 			}
 			yyscanner->yyCBufP = &b->yyChBuf[yyCBufP_offset];
 
-			num_to_read = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyInputBufSize -
+			numToRead = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyInputBufSize -
 						numberToMove - 1;
 ]])
 		}
 
-		if (num_to_read > YY_READ_BUF_SIZE) {
-			num_to_read = YY_READ_BUF_SIZE;
+		if (numToRead > YY_READ_BUF_SIZE) {
+			numToRead = YY_READ_BUF_SIZE;
 		}
 		/* Read in more data. */
-		yyscanner->yyNChars = yyread(&yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf[numberToMove], num_to_read, yyscanner);
+		yyscanner->yyNChars = yyread(&yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf[numberToMove], numToRead, yyscanner);
 
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars = yyscanner->yyNChars;
 	}
@@ -1001,7 +1003,7 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 	if (yyscanner->yyNChars == 0) {
 		if (numberToMove == YY_MORE_ADJ) {
 			retVal = EOB_ACT_END_OF_FILE;
-			yyrestart(yyscanner->yyin_r, yyscanner);
+			yyrestart(yyscanner->yyin, yyscanner);
 		} else {
 			retVal = EOB_ACT_LAST_MATCH;
 			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyBufferStatus =
@@ -1063,7 +1065,7 @@ int yyinput(FlexLexer *yyscanner)
 				 */
 
 				/* Reset buffer status. */
-				yyrestart(yyscanner->yyin_r, yyscanner);
+				yyrestart(yyscanner->yyin, yyscanner);
 
 				/*FALLTHROUGH*/
 
@@ -1072,7 +1074,7 @@ int yyinput(FlexLexer *yyscanner)
 					return 0;
 				}
 				if (! yyscanner->yyDidBufferSwitchOnEof) {
-					yyrestart(yyscanner->yyin_r, yyscanner);
+					yyrestart(yyscanner->yyin, yyscanner);
 				}
 				return yyinput(yyscanner);
 
@@ -1146,7 +1148,7 @@ m4_ifdef([[M4_YY_NO_GET_EXTRA]],, [[m4_dnl
  * @param yyscanner The scanner object.
  */
 M4_MODE_EXTRA_TYPE yyget_extra(FlexLexer *yyscanner) {
-	return yyscanner->yyextra_r;
+	return yyscanner->yyextra;
 }
 ]])
 ]])
@@ -1187,7 +1189,7 @@ m4_ifdef([[M4_YY_NO_GET_IN]],,
  * @param yyscanner The scanner object.
  */
 FILE *yyget_in  (FlexLexer *yyscanner) {
-	return yyscanner->yyin_r;
+	return yyscanner->yyin;
 }
 ]])
 
@@ -1197,7 +1199,7 @@ m4_ifdef([[M4_YY_NO_GET_OUT]],,
  * @param yyscanner The scanner object.
  */
 FILE *yyget_out  (FlexLexer *yyscanner) {
-	return yyscanner->yyout_r;
+	return yyscanner->yyout;
 }
 ]])
 
@@ -1207,7 +1209,7 @@ m4_ifdef([[M4_YY_NO_GET_LENG]],,
  * @param yyscanner The scanner object.
  */
 int yyget_leng  (FlexLexer *yyscanner) {
-	return yyscanner->yyleng_r;
+	return yyscanner->yyleng;
 }
 ]])
 
@@ -1217,7 +1219,7 @@ int yyget_leng  (FlexLexer *yyscanner) {
 m4_ifdef([[M4_YY_NO_GET_TEXT]],,
 [[
 char *yyget_text  (FlexLexer *yyscanner) {
-	return yyscanner->yytext_r;
+	return yyscanner->yytext;
 }
 ]])
 
@@ -1229,7 +1231,7 @@ m4_ifdef([[M4_YY_NO_SET_EXTRA]],,
  * @param yyscanner The scanner object.
  */
 void yyset_extra(M4_MODE_EXTRA_TYPE userDefined, FlexLexer *yyscanner) {
-	yyscanner->yyextra_r = userDefined;
+	yyscanner->yyextra = userDefined;
 }
 ]])
 ]])
@@ -1277,14 +1279,14 @@ m4_ifdef([[M4_YY_NO_SET_IN]],,
  * @see yy_switch_to_buffer
  */
 void yyset_in(FILE *inStream, FlexLexer *yyscanner) {
-	yyscanner->yyin_r = inStream ;
+	yyscanner->yyin = inStream ;
 }
 ]])
 
 m4_ifdef([[M4_YY_NO_SET_OUT]],,
 [[
 void yyset_out(FILE *outStream, FlexLexer *yyscanner) {
-	yyscanner->yyout_r = outStream ;
+	yyscanner->yyout = outStream ;
 }
 ]])
 
@@ -1292,14 +1294,14 @@ void yyset_out(FILE *outStream, FlexLexer *yyscanner) {
 m4_ifdef([[M4_YY_NO_GET_DEBUG]],,
 [[
 int yyget_debug(FlexLexer *yyscanner) {
-	return yyscanner->yyflexdebug_r;
+	return yyscanner->yyflexdebug;
 }
 ]])
 
 m4_ifdef([[M4_YY_NO_SET_DEBUG]],,
 [[
 void yyset_debug(int bdebug, FlexLexer *yyscanner) {
-	yyscanner->yyflexdebug_r = bdebug ;
+	yyscanner->yyflexdebug = bdebug ;
 }
 ]])
 
@@ -1319,8 +1321,8 @@ m4_define([[YY_DECL]], [[int yylex M4_YY_LEX_DECLARATION]])
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 static void rule_check_bol(FlexLexer *yyscanner) {
-	if (yyscanner->yyleng_r > 0) {		\
-		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbolFlag = (yyscanner->yytext_r[yyscanner->yyleng_r - 1] == '\n');
+	if (yyscanner->yyleng > 0) {		\
+		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbolFlag = (yyscanner->yytext[yyscanner->yyleng - 1] == '\n');
 	}
 }
 ]])
@@ -1333,21 +1335,21 @@ static void rule_check_bol(FlexLexer *yyscanner) {
 void yyDoBeforeAction(FlexLexer *yyscanner, char *yyCp, char *yyBp) {
 	yyscanner->yytext_ptr = yyBp; \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyscanner->yytext_ptr -= yyscanner->yyMoreLen; \
-	yyscanner->yyleng_r = (int) (yyCp - yyscanner->yytext_ptr);]])]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyscanner->yyleng_r = (int) (yyCp - yyBp);]]) \
-	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyscanner->yyleng_r = (int) (yyCp - yyBp);]]) \
+	yyscanner->yyleng = (int) (yyCp - yyscanner->yytext_ptr);]])]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyscanner->yyleng = (int) (yyCp - yyBp);]]) \
+	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyscanner->yyleng = (int) (yyCp - yyBp);]]) \
 	yyscanner->yyHoldChar = *yyCp; \
 	*yyCp = '\0'; \
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if (yyscanner->yyleng_r + yyscanner->yyMoreOffset >= YYLMAX) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if (yyscanner->yyleng + yyscanner->yyMoreOffset >= YYLMAX) \
 					 yypanic("token too large, exceeds YYLMAX", yyscanner);]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if (yyscanner->yyleng_r >= YYLMAX) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if (yyscanner->yyleng >= YYLMAX) \
 					 yypanic("token too large, exceeds YYLMAX", yyscanner);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[strncpy(&yyscanner->yytext_r[yyscanner->yyMoreOffset], yyscanner->yytext_ptr, yyscanner->yyleng_r + 1);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yyleng_r += yyscanner->yyMoreOffset;]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[strncpy(&yyscanner->yytext[yyscanner->yyMoreOffset], yyscanner->yytext_ptr, yyscanner->yyleng + 1);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yyleng += yyscanner->yyMoreOffset;]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yyPrevMoreOffset = yyscanner->yyMoreOffset;]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yyMoreOffset = 0;]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[strncpy(yyscanner->yytext_r, yyscanner->yytext_ptr, yyscanner->yyleng_r + 1);]]) \
+	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[strncpy(yyscanner->yytext, yyscanner->yytext_ptr, yyscanner->yyleng + 1);]]) \
 ]]) \
 	yyscanner->yyCBufP = yyCp;
 }
@@ -1357,8 +1359,8 @@ m4_ifdef([[M4_MODE_YYLINENO]], [[
  * and we can get at yyAct */
 static void yyLessLineno(int n, FlexLexer *yyscanner) {
 	int yyl;
-	for (yyl = n; yyl < yyscanner->yyleng_r; ++yyl) {
-		if (yyscanner->yytext_r[yyl] == '\n') {
+	for (yyl = n; yyl < yyscanner->yyleng; ++yyl) {
+		if (yyscanner->yytext[yyl] == '\n') {
 			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->bs_yylineno--;
 		}
 	}
@@ -1378,7 +1380,7 @@ void yy_set_interactive(bool is_interactive, FlexLexer *yyscanner) {
 	if (yy_current_buffer(yyscanner) == NULL) {
 		yyensure_buffer_stack (yyscanner);
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
-			yy_create_buffer(yyscanner->yyin_r, YY_BUF_SIZE, yyscanner);
+			yy_create_buffer(yyscanner->yyin, YY_BUF_SIZE, yyscanner);
 	}
 	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyIsInteractive = is_interactive;
 }
@@ -1388,7 +1390,7 @@ void yysetbol(bool atBOL, FlexLexer *yyscanner) {
 	if (yy_current_buffer(yyscanner) == NULL) {
 		yyensure_buffer_stack (yyscanner);
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
-        		yy_create_buffer(yyscanner->yyin_r, YY_BUF_SIZE, yyscanner);
+        		yy_create_buffer(yyscanner->yyin, YY_BUF_SIZE, yyscanner);
 	}
 	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbolFlag = atBOL;
 }
@@ -1822,16 +1824,16 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 		if (yyscanner->yyStart == 0) {
 			yyscanner->yyStart = 1;	/* first start state */
 		}
-		if (yyscanner->yyin_r == NULL) {
-			yyscanner->yyin_r = stdin;
+		if (yyscanner->yyin == NULL) {
+			yyscanner->yyin = stdin;
 		}
-		if (yyscanner->yyout_r == NULL) {
-			yyscanner->yyout_r = stdout;
+		if (yyscanner->yyout == NULL) {
+			yyscanner->yyout = stdout;
 		}
 		if (yy_current_buffer(yyscanner) == NULL) {
 			yyensure_buffer_stack (yyscanner);
 			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
-				yy_create_buffer(yyscanner->yyin_r, YY_BUF_SIZE, yyscanner);
+				yy_create_buffer(yyscanner->yyin, YY_BUF_SIZE, yyscanner);
 		}
 
 		yy_load_buffer_state(yyscanner);
@@ -1975,8 +1977,8 @@ m4_define([[M4_YYL_BASE]], [[m4_ifdef([[M4_MODE_YYMORE_USED]],
 				       [[yyscanner->yyPrevMoreOffset]], [[yyscanner->yyMoreLen]])]], [[0]])]])
 			if (yyAct != YY_END_OF_BUFFER && yyRuleCanMatchEOL[yyAct]) {
 				int yyl;
-				for (yyl = M4_YYL_BASE; yyl < yyscanner->yyleng_r; ++yyl) {
-					if (yyscanner->yytext_r[yyl] == '\n') {
+				for (yyl = M4_YYL_BASE; yyl < yyscanner->yyleng; ++yyl) {
+					if (yyscanner->yytext[yyl] == '\n') {
 						yybumpline(yyscanner);
 
 					}
@@ -1987,15 +1989,15 @@ m4_define([[M4_YYL_BASE]], [[m4_ifdef([[M4_MODE_YYMORE_USED]],
 		doActionLabel:	/* This label is used only to access EOF actions. */
 
 m4_ifdef([[M4_MODE_DEBUG]], [[
-			if (yyscanner->yyflexdebug_r) {
+			if (yyscanner->yyflexdebug) {
 				if (yyAct == 0) {
 					fprintf(stderr, "--scanner backing up\n");
 				} else if (yyAct < YY_NUM_RULES) {
 					fprintf(stderr, "--accepting rule at line %ld (\"%s\")\n",
-						(long)yy_rule_linenum[yyAct], yyscanner->yytext_r);
+						(long)yy_rule_linenum[yyAct], yyscanner->yytext);
 				} else if (yyAct == YY_NUM_RULES) {
 					fprintf(stderr, "--accepting default rule (\"%s\")\n",
-						 yyscanner->yytext_r);
+						 yyscanner->yytext);
      				} else if (yyAct == YY_NUM_RULES + 1) {
 					fprintf(stderr, "--(end of buffer or a NUL)\n");
 				} else {
@@ -2043,7 +2045,7 @@ m4_ifdef([[M4_MODE_HAS_BACKING_UP]], [[
 					 * back-up) that will match for the new input source.
 					 */
 					yyscanner->yyNChars = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars;
-					yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyInputFile = yyscanner->yyin_r;
+					yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyInputFile = yyscanner->yyin;
 					yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyBufferStatus = YY_BUFFER_NORMAL;
 				}
 
@@ -2125,7 +2127,7 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 							goto doActionLabel;
 						} else {
 							if (! yyscanner->yyDidBufferSwitchOnEof) {
-								yyrestart(yyscanner->yyin_r, yyscanner);
+								yyrestart(yyscanner->yyin, yyscanner);
 							}
 						}
 						break;
@@ -2165,11 +2167,11 @@ m4_undefine([[yyless]])
 void yyless(int n, FlexLexer *yyscanner) {
 	/* Undo effects of setting up yytext. */
 	m4_ifdef([[M4_MODE_YYLINENO]], [[yyLessLineno(n, yyscanner);]])
-	yyscanner->yytext_r[yyscanner->yyleng_r] = yyscanner->yyHoldChar;
-	yyscanner->yyCBufP = yyscanner->yytext_r + n;
+	yyscanner->yytext[yyscanner->yyleng] = yyscanner->yyHoldChar;
+	yyscanner->yyCBufP = yyscanner->yytext + n;
 	yyscanner->yyHoldChar = *yyscanner->yyCBufP;
 	*yyscanner->yyCBufP = '\0';
-	yyscanner->yyleng_r = n;
+	yyscanner->yyleng = n;
 }
 
 static int yy_init_globals (FlexLexer *yyscanner) {
@@ -2191,7 +2193,7 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 	yyscanner->yyStateBuf = NULL;
 	yyscanner->yyStatePtr = NULL;
 	yyscanner->yyFullMatch = NULL;
-	yyscanner->yyLp = NULL;
+	yyscanner->yyLp = 0;
 ]])
 
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]],
@@ -2201,8 +2203,8 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]],
 	yyscanner->yyPrevMoreOffset = 0;
 ]])
 
-	yyscanner->yyin_r = NULL;
-	yyscanner->yyout_r = NULL;
+	yyscanner->yyin = NULL;
+	yyscanner->yyout = NULL;
 
 	return 0;
 }
@@ -2213,13 +2215,13 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]],
  * the ONLY reentrant function that doesn't take the scanner as the last argument.
  * That's why we explicitly handle the declaration, instead of using our macros.
  */
-int yylex_init(yyscan_t *globalsPtr) {
+int yylex_init(FlexLexer **globalsPtr) {
 	if (globalsPtr == NULL) {
 		errno = EINVAL;
 		return 1;
 	}
 
-	*globalsPtr = (yyscan_t) yyalloc (sizeof(FlexLexer), NULL);
+	*globalsPtr = (FlexLexer *) yyalloc (sizeof(FlexLexer), NULL);
 
 	if (*globalsPtr == NULL) {
 		errno = ENOMEM;
@@ -2240,7 +2242,7 @@ m4_ifdef([[M4_MODE_EXTRA_TYPE]], [[m4_dnl
  * The user defined value in the first argument will be available to yyalloc in
  * the yyextra field.
  */
-int yylex_init_extra(M4_MODE_EXTRA_TYPE yyUserDefined, yyscan_t *globalsPtr) {
+int yylex_init_extra(M4_MODE_EXTRA_TYPE yyUserDefined, FlexLexer **globalsPtr) {
 	FlexLexer dummyYyguts;
 
 	yyset_extra(yyUserDefined, &dummy_yyguts);
@@ -2250,7 +2252,7 @@ int yylex_init_extra(M4_MODE_EXTRA_TYPE yyUserDefined, yyscan_t *globalsPtr) {
 		return 1;
 	}
 
-	*globalsPtr = (yyscan_t) yyalloc(sizeof(FlexLexer), &dummyYyguts);
+	*globalsPtr = (FlexLexer *) yyalloc(sizeof(FlexLexer), &dummyYyguts);
 
 	if (*globalsPtr == NULL) {
 		errno = ENOMEM;
@@ -2303,7 +2305,7 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 
 m4_ifdef([[M4_YY_MAIN]], [[
 int main () {
-	yyscan_t lexer;
+	FlexLexer *lexer;
 	yylex_init(&lexer);
 	yylex(lexer);
 	yylex_destroy(lexer);
