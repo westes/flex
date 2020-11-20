@@ -1055,7 +1055,7 @@ void lwarn( const char *str )
 
 void format_pinpoint_message( const char *msg, const char arg[] )
 	{
-	char errmsg[MAXLINE];
+	char errmsg[MAXLINE*2];
 
 	snprintf( errmsg, sizeof(errmsg), msg, arg );
 	pinpoint_message( errmsg );
@@ -1074,7 +1074,7 @@ void pinpoint_message( const char *str )
 
 void line_warning( const char *str, int line )
 	{
-	char warning[MAXLINE];
+	char warning[MAXLINE*2];
 
 	if ( ! env.nowarn )
 		{
