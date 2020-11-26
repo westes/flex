@@ -325,12 +325,17 @@ M4_YY_SC_DEFS
 
 typedef struct yy_buffer_state *yybuffer;
 
-%# These are not part of the exported interface and can safely be renamed
-const int EOB_ACT_CONTINUE_SCAN = 0;
-const int EOB_ACT_END_OF_FILE = 1;
-const int EOB_ACT_LAST_MATCH = 2;
-const int YY_BUFFER_NEW = 0;
-const int YY_BUFFER_NORMAL = 1;
+%# These are not part of the exported interface and can safely be renamed.
+/* These must be #defines, not const variables, because they're used as case
+ * arm values. GCC will allow case arm expressions to include references to
+ * const variables, but this is not standard-conformant and other compilers
+ * may not.
+ */
+#define EOB_ACT_CONTINUE_SCAN	0
+#define EOB_ACT_END_OF_FILE	1
+#define EOB_ACT_LAST_MATCH	2
+#define YY_BUFFER_NEW		0
+#define YY_BUFFER_NORMAL	1
 	/* When an EOF's been seen but there's still some text to process
 	 * then we mark the buffer as YY_EOF_PENDING, to indicate that we
 	 * shouldn't try reading from the input source any more.  We might
@@ -341,7 +346,7 @@ const int YY_BUFFER_NORMAL = 1;
 	 * (via yyrestart()), so that the user can continue scanning by
 	 * just pointing yyin at a new input file.
 	 */
-const int YY_BUFFER_EOF_PENDING = 2;
+#define YY_BUFFER_EOF_PENDING	2
 
 struct yy_buffer_state {
 	FILE *yyInputFile;
