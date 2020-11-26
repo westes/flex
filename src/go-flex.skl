@@ -62,7 +62,7 @@ m4_define([[M4_HOOK_CHAR_FORWARD]], [[yyscanner->yyCBufP = yyCp = yyBp + $1;]])
 m4_define([[M4_HOOK_LINE_FORWARD]], [[yyLinenoRewindTo(yyCp, yyBp + $1, yyscanner);]])
 m4_define([[M4_HOOK_CONST_DEFINE_BYTE]], [[const char $1 = $2;
 ]])
-m4_define([[M4_HOOK_CONST_DEFINE_STATE]], [[const yyStateType $1 = $2;
+m4_define([[M4_HOOK_CONST_DEFINE_STATE]], [[#define $1 $2
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_UINT]], [[const uint $1 = $2;
 ]])
