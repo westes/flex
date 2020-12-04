@@ -13,10 +13,17 @@
 %#    as in the pre-existing C++ support.  The obfuscation of this type by
 %#    a void* i s removed.
 %#
-%# 3. Becauser of where expansion of magic names like yytext is done, the _r suffix
+%# 3. Because of where expansion of magic names like yytext is done, the _r suffix
 %#    on some public member names is not required to keep them from being clobbered
 %#    and has been removed.
-	
+%#
+%# 4. The following names change:
+%#
+%#    YY_END_OF_BUFFER_CHAR -> flexBufferSentinel
+%#    YY_READ_BUF_SIZE -> flexReadBufferSize
+%#    YY_BUF_SIZE -> flexInputBufferSize
+%#    YY_NUL -> flexEOF
+
 %#  Macros for preproc stage.
 m4preproc_changecom
 
@@ -82,7 +89,7 @@ m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], 
 m4_define([[M4_HOOK_FATAL_ERROR]], [[yypanic($1, yyscanner);]])
 m4_define([[M4_HOOK_ECHO]], [[yyecho(yyscanner);]])
 
-m4_define([[yyterminate]], m4_ifdef([[M4_MODE_YYTERMINATE]], [[M4_MODE_YYTERMINATE /* $1 */]], [[return YY_NULL /* $1 */]]))
+m4_define([[yyterminate]], m4_ifdef([[M4_MODE_YYTERMINATE]], [[M4_MODE_YYTERMINATE /* $1 */]], [[return flexEOF /* $1 */]]))
 
 %# Return all but the first "n" matched characters back to the input stream.
 m4_define([[yyless]], [[
@@ -158,7 +165,7 @@ m4_ifdef([[M4_YY_ALWAYS_INTERACTIVE]], ,
  * Anywhere other than C this won't be a thing,
  * because strings will have an associated length field.
  */
-const int YY_END_OF_BUFFER_CHAR = 0;
+const int flexBufferSentinel = 0;
 
 /* ENDS platform-specific and compiler-specific definitions. */
 
@@ -168,16 +175,16 @@ const int YY_END_OF_BUFFER_CHAR = 0;
  * chosen a fit size foe whatever platform 
  * we're running on.
  */
-const int YY_READ_BUF_SIZE = BUFSIZ;
+const int flexReadBufferSize = BUFSIZ;
 
 /* Size of default input buffer. We want to be able to fit two
  * OS-level reads, but efficiency gains as the buffer size 
  * increases fall off after that
  */
-const int YY_BUF_SIZE =  m4_ifdef([[M4_MODE_YY_BUFSIZE]], [[M4_MODE_YY_BUFSIZE]], [[2 * YY_READ_BUF_SIZE]]);
+const int flexInputBufferSize =  m4_ifdef([[M4_MODE_YY_BUFSIZE]], [[M4_MODE_YY_BUFSIZE]], [[2 * flexReadBufferSize]]);
 
 /* Returned upon end-of-file. */
-const int YY_NULL = 0;
+const int flexEOF = 0;
 
 /* Promotes a possibly negative, possibly signed char to an
  * integer in range [0..255] for use as an array index.
@@ -189,7 +196,7 @@ m4_define([[YY_STATE_EOF]], [[YY_END_OF_BUFFER + $1 + 1]])
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
  */
-m4_define([[YY_STATE_BUF_SIZE]], [[((YY_BUF_SIZE + 2) * sizeof(yyStateType))]])
+m4_define([[YY_STATE_BUF_SIZE]], [[((flexInputBufferSize + 2) * sizeof(yyStateType))]])
 
 const bool FLEX_DEBUG = m4_ifdef([[M4_MODE_DEBUG]], [[true]], [[false]]);
 
@@ -528,8 +535,8 @@ void yy_flush_buffer(yybuffer b, FlexLexer *yyscanner)
 	 * a transition to the end-of-buffer state.  The second causes
 	 * a jam in that state.
 	 */
-	b->yyChBuf[0] = YY_END_OF_BUFFER_CHAR;
-	b->yyChBuf[1] = YY_END_OF_BUFFER_CHAR;
+	b->yyChBuf[0] = flexBufferSentinel;
+	b->yyChBuf[1] = flexBufferSentinel;
 
 	b->yyBufPos = &b->yyChBuf[0];
 
@@ -640,7 +647,7 @@ m4_ifdef([[M4_YY_ALWAYS_INTERACTIVE]],
 
 /** Allocate and initialize an input buffer state.
  * @param file A readable stream.
- * @param size The character buffer size in bytes. When in doubt, use @c YY_BUF_SIZE.
+ * @param size The character buffer size in bytes. When in doubt, use @c flexInputBufferSize.
  * @param yyscanner The scanner object.
  * @return the allocated buffer state.
  */
@@ -753,7 +760,7 @@ void yyrestart(FILE * input_file, FlexLexer *yyscanner)
 	if (yy_current_buffer(yyscanner) == NULL) {
 		yyensure_buffer_stack (yyscanner);
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
-			yy_create_buffer(yyscanner->yyin, YY_BUF_SIZE, yyscanner);
+			yy_create_buffer(yyscanner->yyin, flexInputBufferSize, yyscanner);
 	}
 
 	yy_init_buffer(yy_current_buffer(yyscanner), input_file, yyscanner);
@@ -837,7 +844,7 @@ m4_ifdef([[M4_MODE_YYLINENO]],
 ]])
 
 m4_ifdef([[M4_MODE_USER_YYREAD]],, [[
-/* Gets input and stuffs it into "buf".  Number of characters read, or YY_NULL,
+/* Gets input and stuffs it into "buf".  Number of characters read, or flexEOF,
  * is returned in "result".
  */
 static int yyread(char *buf, size_t maxSize, FlexLexer *yyscanner) {
@@ -996,8 +1003,8 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 ]])
 		}
 
-		if (numToRead > YY_READ_BUF_SIZE) {
-			numToRead = YY_READ_BUF_SIZE;
+		if (numToRead > flexReadBufferSize) {
+			numToRead = flexReadBufferSize;
 		}
 		/* Read in more data. */
 		yyscanner->yyNChars = yyread(&yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf[numberToMove], numToRead, yyscanner);
@@ -1030,8 +1037,8 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 	}
 
 	yyscanner->yyNChars += numberToMove;
-	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf[yyscanner->yyNChars] = YY_END_OF_BUFFER_CHAR;
-	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf[yyscanner->yyNChars + 1] = YY_END_OF_BUFFER_CHAR;
+	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf[yyscanner->yyNChars] = flexBufferSentinel;
+	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf[yyscanner->yyNChars + 1] = flexBufferSentinel;
 
 	yyscanner->yytext_ptr = &yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf[0];
 
@@ -1044,7 +1051,7 @@ int yyinput(FlexLexer *yyscanner)
 
 	*yyscanner->yyCBufP = yyscanner->yyHoldChar;
 
-	if (*yyscanner->yyCBufP == YY_END_OF_BUFFER_CHAR) {
+	if (*yyscanner->yyCBufP == flexBufferSentinel) {
 		/* yyCBufP now points to the character we want to return.
 		 * If this occurs *before* the EOB characters, then it's a
 		 * valid NUL; if not, then we've hit the end of the buffer.
@@ -1385,7 +1392,7 @@ void yy_set_interactive(bool is_interactive, FlexLexer *yyscanner) {
 	if (yy_current_buffer(yyscanner) == NULL) {
 		yyensure_buffer_stack (yyscanner);
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
-			yy_create_buffer(yyscanner->yyin, YY_BUF_SIZE, yyscanner);
+			yy_create_buffer(yyscanner->yyin, flexInputBufferSize, yyscanner);
 	}
 	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyIsInteractive = is_interactive;
 }
@@ -1395,7 +1402,7 @@ void yysetbol(bool atBOL, FlexLexer *yyscanner) {
 	if (yy_current_buffer(yyscanner) == NULL) {
 		yyensure_buffer_stack (yyscanner);
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
-        		yy_create_buffer(yyscanner->yyin, YY_BUF_SIZE, yyscanner);
+        		yy_create_buffer(yyscanner->yyin, flexInputBufferSize, yyscanner);
 	}
 	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbolFlag = atBOL;
 }
@@ -1452,8 +1459,8 @@ yybuffer yy_scan_buffer(char *base, size_t size, FlexLexer *yyscanner)
 	yybuffer b;
 
 	if (size < 2 ||
-	     base[size-2] != YY_END_OF_BUFFER_CHAR ||
-	     base[size-1] != YY_END_OF_BUFFER_CHAR) {
+	     base[size-2] != flexBufferSentinel ||
+	     base[size-1] != flexBufferSentinel) {
 		/* They forgot to leave room for the EOB's. */
 		return NULL;
 	}
@@ -1501,7 +1508,7 @@ yybuffer yy_scan_bytes(const char * yybytes, int  _yybytes_len, FlexLexer *yysca
 	for (i = 0; i < _yybytes_len; ++i) {
 		buf[i] = yybytes[i];
 	}
-	buf[_yybytes_len] = buf[_yybytes_len+1] = YY_END_OF_BUFFER_CHAR;
+	buf[_yybytes_len] = buf[_yybytes_len+1] = flexBufferSentinel;
 
 	b = yy_scan_buffer(buf, n, yyscanner);
 	if (b == NULL) {
@@ -1838,7 +1845,7 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 		if (yy_current_buffer(yyscanner) == NULL) {
 			yyensure_buffer_stack (yyscanner);
 			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
-				yy_create_buffer(yyscanner->yyin, YY_BUF_SIZE, yyscanner);
+				yy_create_buffer(yyscanner->yyin, flexInputBufferSize, yyscanner);
 		}
 
 		yy_load_buffer_state(yyscanner);
@@ -2123,8 +2130,8 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 							 * yyCBufP so that if some total
 							 * hoser (like flex itself) wants to
 							 * call the scanner after we return the
-							 * YY_NULL, it'll still work - another
-							 * YY_NULL will get returned.
+							 * flexEOF, it'll still work - another
+							 * flexEOF will get returned.
 							 */
 							yyscanner->yyCBufP = yyscanner->yytext_ptr + YY_MORE_ADJ;
 

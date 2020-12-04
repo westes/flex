@@ -22,6 +22,10 @@ dnl
 dnl M4_TEST_FAILMESSAGE = a line of code required to issue dnl a
 dnl failure notification to standard error and exit with a failure status.
 dnl
+dnl M4_TEST_INCREMENT = increment the argument variable.
+dnl
+dnl M4_TEST_DECREMENT = decrement the argument variable.
+dnl
 dnl M4_TEST_POSTAMBLE = the test main.
 dnl
 dnl M4_TEST_TABLE_SERIALIZATION = define this to exercise table
@@ -151,7 +155,7 @@ int main (int argc, char **argv)
     yyset_out ( stdout,lexer);
     yyset_in  ( stdin, lexer);
     M4_TEST_INITHOOK
-    while( yylex(lexer) != YY_NULL )
+    while( yylex(lexer) != flexEOF )
     {
     }
     yylex_destroy( lexer );
@@ -187,7 +191,7 @@ func main(void) {
 	lexer.yysetOut(os.Stdout)
 	lexer.yysetIn(os.Stdin)
 	M4_TEST_INITHOOK
-	for lexer.yylex() != YY_NULL {
+	for lexer.yylex() != flexEOF {
 	}
 	fmt.Printf("TEST RETURNING OK.\n")
 	os.Exit(0)
