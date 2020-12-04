@@ -51,6 +51,8 @@ define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
 define(`M4_TEST_ASSERT', `if (!($1)) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
 m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `flex_debug = 1;')') 
+define(`M4_TEST_INCREMENT', `++$1')
+define(`M4_TEST_DECREMENT', `--$1')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
 {
@@ -91,6 +93,8 @@ define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
 define(`M4_TEST_ASSERT', `if (!$1) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
 m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `yyset_debug (yyget_debug(lexer), lexer);')') 
+define(`M4_TEST_INCREMENT', `++$1')
+define(`M4_TEST_DECREMENT', `--$1')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
 {
@@ -137,6 +141,8 @@ define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
 define(`M4_TEST_ASSERT', `if (!$1) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
 m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `yyset_debug (yyget_debug(lexer), lexer);')') 
+define(`M4_TEST_INCREMENT', `++$1')
+define(`M4_TEST_DECREMENT', `--$1')
 define(`M4_TEST_POSTAMBLE', `dnl
 int main (int argc, char **argv)
 {
@@ -173,6 +179,8 @@ define(`M4_TEST_DO', `$1')
 define(`M4_TEST_FAILMESSAGE', `fmt.Fprintf(os.Stderr, "TEST FAILMESSAGE: %d:\"%s\"\n", yylineno, yytext); os.Exit(1);')
 define(`M4_TEST_ASSERT', `if !$1 {fmt.Fprintf(os.Stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); os.Exit(1);}')
 m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `lexer.yysetDebug(lexer.yygetDebug())')') 
+define(`M4_TEST_INCREMENT', `++$1')
+define(`M4_TEST_DECREMENT', `--$1')
 define(`M4_TEST_POSTAMBLE', `dnl
 func main(void) {
 	lexer := new(FlexLexer)

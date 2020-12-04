@@ -40,8 +40,8 @@ WORD [[:alpha:]]+
 DIGIT [[:digit:]]
 
 %%
-"yylineno++"          ++yylineno;
-"yylineno--"          --yylineno;
+"yylineno++"          M4_TEST_INCREMENT(yylineno);
+"yylineno--"          M4_TEST_DECREMENT(yylineno);
 [[:blank:]]+
 {WORD}
 {DIGIT}+(\n{DIGIT}+)*
