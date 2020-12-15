@@ -89,11 +89,6 @@ void do_indent (void)
 		outc ('\t');
 		i -= 8;
 	}
-
-	while (i > 0) {
-		outc (' ');
-		--i;
-	}
 }
 
 
