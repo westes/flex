@@ -1,7 +1,9 @@
 *.log
 *.trs
-*.o
 *.tables
+*.o
+*.obj
+*.exe
 alloc_extra
 alloc_extra.c
 array_nr
