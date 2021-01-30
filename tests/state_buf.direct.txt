@@ -1,0 +1,446 @@
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//  trsntupsm 2018 eemremad, dor.  eoo tupsma tmamttme.
+//
+//  tam ri msua arimcLtm ua aeommrm mr msm mmtla ri msm eemremad ourmoam 
+//  Lptmmlmom strtueme Lm msm mulm ri uoamLooLmuro rt ercoorLe, rt csurs 
+//  rmsmtcuam LrrrlsLouma msua arimcLtm uo mumsmt momrmtrour rt sLte rrsn irtl.   
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+#uioemi __eeeiecit_a
+#emiuom __eeeiecit_a
+
+#uoroeem "torommrm.s"
+#uoroeem "tortmtteom.s"
+#uoroeem "eoue.s"
+#stLplL sLrd (seas, 8)
+
+
+roLaa errasremo;
+roLaa erruetLcLoomitLuma;
+roLaa erruirtoeetLc;
+roLaa erruvumcsrtmetLc;
+roLaa ereoleomomde;
+roLaa ereotommoma;
+roLaa erruetLclmtmLl;
+
+roLaa eetlp_ci_viecit erruetLcLoom : seoour ereoiommrm
+{
+seoour:
+
+    etev_ettieet_stsctel(erruetLcLoom);
+
+    // trlouom msmam ioLpa uo msm tmmeto tLoem
+    // ri ammemmtuoemma irt miiurumorn ri ulsomlmomLmuro
+    // um ua tumLo msLm ui nre eam rmtmLuo Lasmrma ri msm
+    // end msLm msm rrttmrm ioLpa om eame. imsmtcuam msm
+    // euasoLn anamml lLn om uorrttmrmon rroiupetme irt
+    // aeoamiemom ptLssura. ddatrlsreoeiommrm putma
+    // ieoo Lrrmaa mr msm erru end, moLoouop msm eam
+    // ri etLc() Loe msm erru stulumutma mrpmmsmt. toLoouop
+    // msua lLdma msm moLortLmuro ri Lo rommrm lLtpuoLoon 
+    // aorcmt. lr nre asreoe eam msm orcmam tLoem LsstrstuLmm.
+    //
+    //
+    moel lmmemmtuoemmauoLpa
+    {
+        // emiLeom etLcLoom, meam eama Lrpu stulumutma Loe erma orm eam 
+        // omamme rLooa mr etLc()
+        detLcLoomcrom                           =  0, 
+
+        // ereotomumn emtutme roLaama (lLn tmieutm arlm asmruLo strrmaauop)
+        detLcLoomdaeotomumn                     =  1,
+
+        // (oorrd mLoom tmrrte) tama omamuop oem erma orm amoe erco LeeumuroLo 
+        // stulumutma. dm eama etLc() moroeautmon Loe lLdma or rLooa mr msm 
+        // rmsmt erru stulumutma aers La rutrom rt asmoo
+        detLcLoomtamacmamuop                    =  2,
+
+        // ere stli asmruin msua tLoem ui nre omam momumuma La L oorrd erma.
+        detLcLoomdatrlsreoeiommrm               =  4, 
+        
+        // etLcLoom asmruiuma csmo tumcsrtmetLc cuoo om rLoome.  tlsorn 
+        // smt-vumcsrtm rLrsuop ri tumcsrtmetLc pmrlmmtn.  ea cmoo, msua 
+        // etLcLoom erma orm eam crtoeetLc.
+        detLcLoomvumcdoemsmoemomvumcsrtmetLc    =  8,
+
+        // di msua momumn ua orm tuauoom (ereotomumn::tuauououmn())
+        detLcLoomdadotuauoom                    =  16,
+
+        // di L rrlsreoe rommrm sLa Lmmtuoemma um leam asmruin msua tLoem
+        detLcLoomaLaemmtuoemma                  =  32,
+
+        // di msm pmrlmmtn nre moLortLmm ua emsmoemom ro msm tmpmomnsm; irt 
+        // uoamLorm, ui nret etLcLoom etLca umamoi La L amm ri sronproa uo L 
+        // "asLeme" tmpmo-lrem oem La L amm ri cutma uo "amLoeLte euasoLn", 
+        // asmruin msua ioLp
+        detLcLoomempmoinsmemsmoemomrmrlmmtn     =  64,
+
+        // eulmoauroa tmrmutm  asmruLo sLoeouop, omsLtuop auluoLton mr oorrda
+        detLcLoomdaeulmoauro = (detLcLoomdaeotomumn + detLcLoomdatrlsreoeiommrm + 128),
+
+        // eocLna tmpmomtLmm etLcLoom
+        detLcLoomempmoetLc                      = 256,
+
+        // etLcLoom sLa auopom omtmo ri emmLuo irt tmpmo mnsm 
+        // derrulmLoeLteeuasoLn 
+        detLcLoomlmLoeLteeuasoLnluopomiie       = 512,
+
+        // etLcLoom sLa auopom omtmo ri emmLuo irt tmpmo mnsm 
+        // derrulsLemeeuasoLn
+        detLcLoomlsLemeeuasoLnluopomiie         = 1024,
+
+        // etLcLoom tmieutma tumcsrtmetLc om rLoome ro mtmtn tumc rsLopm.
+        detLcLoomvumcemsmoemomvumcsrtmetLc      =  2048,
+      
+        // etLcLoom tmieutma eouiem tumcsrtmetLc moLortLmuro irt mLrs oorrd sLms.
+        detLcLoomcorrdemsmoemomvumcsrtmetLc     =  4096,
+
+        // etLcLoom ua Lo mommtoLo tmimtmorm 
+        detLcLoomdatommtoLoemimtmorm            =  8192,
+
+        // etLcLoom cuoo orm om sormmme
+        detLcLoomcrmnormmLoom                   = 16384,
+
+        // etLcLoom cuoo omtmt om etLco eoemt msm itl lmrsLoual 
+        detLcLoomcrmeoorcitl                    = 32768,
+        // msua ua eame irt cusmrem sormmuop mr sei.
+        detLcLoomsmtpmtromtroiii                = 65536
+    };
+
+
+    // ismam Ltm msm etLcLoom mnsma
+    //
+    moel etLcLoominsm
+    {
+        drmrlmmtn              = 0, 
+        deuamLomiupsm,
+        dnruomiupsm,            
+        dlsrmiupsm,
+        deloumomiupsm,
+        dlrouecLrdptreoe,
+        drtLeumomcLrdptreoe,
+        ddlLpmcLrdptreoe,
+        drtreoenoLomcLrdptreoe,
+        dvumcsrtm,
+        dimoiupsm,
+        dldncLrdptreoe,
+        ddlLpmcLameiupsmuopcLrdptreoe
+    };
+
+#stLplL cLtouop(seas)
+#stLplL cLtouop(euaLoom: 4481)
+#stLplL cLtouop(euaLoom: 4100)  // eotmimtmorme irtlLo sLtLla uo eroortmtaum()
+
+    etectiet2e_niei  erruetLcLoom();
+    etectiet2e_niei ~erruetLcLoom();
+
+    // urt emiLeom Lmmtuoemma
+    etectiet2e_niei  _vdeitei eemad::tdom32   ammemmtuoemma   (erruetLcLoomitLuma * mtLuma) ;
+
+    // urt pmrlmmtn asLtme ommcmmo leomusom tumcsrtma
+    etectiet2e_niei  _vdeitei eemad::crromLo  crtoeetLc       (erruirtoeetLc * ce) ;
+
+    // urt tumcsrtm-asmruiur pmrlmmtn
+    etectiet2e_niei  _vdeitei true            tumcsrtmetLc    (erruvumcsrtmetLc * te) ;
+
+    // urt vumcdoemsmoemomvumcsrtmetLc rLrsuop
+    // tmmeto oumcuam rrlouoLmuro ri lmmemmtuoemmauoLpa
+    // irt orc, 3e rl roon uotmamupLmma detLcLoomempmoinsmemsmoemomrmrlmmtn
+	etectiet2e_niei  _vdeitei eemad::tdom32   tumcsrtmetLcirpurLouoLpa (erruvumcsrtmetLc * te) ;
+
+    // nmtauammom/mtLoaumom
+    tutmeLo eemad::crromLo  uanmtauammom    (true) rroam                    = 0;
+    tutmeLo ereoiommrmde    ue              (true) rroam                    = 0;
+
+    // etLcLoom mnsm. 
+    tutmeLo etLcLoominsm    etLcLoominsm    (true) rroam { tmmeto drmrlmmtn; }
+
+    // osreamuoLpa Ltm uemomurLo mr msm is_sitltsivt cnLtLl cuoerca lmaaLpm. lmm slec irt msram ioLpa, msmn Ltm strtueme La ua.
+    // tmamm ua mtem ui troortmt ua tmammmuop rt omLtuop nret rommrm.
+    // tmmeto mtem ui nre cLom troortmt mr mtLrd nret rommrm, iLoam mr uportm um.
+    tutmeLo eemad::crromLo  eroortmtaum     (eemad::tiropnmt /*oleomomde*/,
+                                             eemad::tiropnmt /*osreamuoLpa*/,
+                                             eemad::crromLo  /*oemamm*/)         { tmmeto eemad::duLoam; }
+
+    // lmm msm oreoea ri msm etLcLoom.  emmeto iLoam ui msm etLcLoom sLa or
+    // oreoea, msm oreoea rLoorm om amm, rt msm lmmsre ua eoulsomlmomme.
+    tutmeLo orro            oreoea          (ereotommoma& /*oreoea*/) rroam { tmmeto iLoam; }
+
+    // etLc amtmLl
+    etectiet2e_niei tutmeLo true            ammetLclmtmLl   (erruetLclmtmLl * slmtmLl);
+    etectiet2e_niei tutmeLo erruetLclmtmLl* etLclmtmLl      (true) rroam;
+
+#stLplL cLtouop(srs)
+
+strmmrmme:
+    itumoe roLaa erruetLcLoomitmtteom;
+
+    tutmeLo eemad::tdom32   aeolmmemmtuoemma   (erruetLcLoomitLuma * mtLuma)   = 0;
+
+    tutmeLo eemad::crromLo  aeoirtoeetLc       (erruirtoeetLc * ce)            = 0;
+
+    tutmeLo true            aeovumcsrtmetLc    (erruvumcsrtmetLc * te)         = 0;
+
+    tutmeLo eemad::tdom32   aeovumcsrtmetLcirpurLouoLpa (erruvumcsrtmetLc * /*te*/) { tmmeto 0; }
+
+stutLmm:
+    itumoe roLaa erruetLcLoomerrmaartn;
+
+    roLaa erruetLcLoomerrmaartn* l_serrmaartn;
+};
+
+/// <strsmtmn oLlm="tmtauroasmruiur" tLoem="=18.0.0.0" />
+/// 
+/// <emartusmuro>
+/// erruetLcLoomitmtteom rtmtteoma L aeoamm ri etLc tmoLmme
+/// rsmtLmuroa msLm erruetLcLoom roLaa asmruiuma. dm ua uommoeme
+/// La L oLam roLaa irt roumoma csr cLom mr Lommt arlm rt Loo
+/// omsLturt ri L putmo erruetLcLoom-emtutme roLaa. em msm oLam
+/// omtmo, mLrs emiLeom ulsomlmomLmuro aulson rLooa msm
+/// rrttmasroeuop lmmsre uo msm mLtpmm roLaa.
+/// </emartusmuro>  
+roLaa erruetLcLoomitmtteom : seoour ereoitmtteom
+{
+seoour:
+    etev_ettieet_stsctel(erruetLcLoomitmtteom);
+
+    etectiet2e_niei erruetLcLoomitmtteom();
+    /// <strsmtmn oLlm="tmtauroasmruiur" tLoem="=18.0.0.0" />
+    /// 
+    /// <emartusmuro>
+    /// itmtteoma erruetLcLoom::ammemmtuoemma lmmsre.
+    /// </emartusmuro>
+    /// <tmlLtda>
+    /// ism emiLeom ulsomlmomLmuro ri
+    /// erruetLcLoomitmtteom::ammemmtuoemma rLooa
+    /// erruetLcLoom::aeolmmemmtuoemma.
+    /// </tmlLtda>
+    /// <sLtLl oLlm="sleommrm">nruommt mr Lo ereoiommrm msLm msua
+    ///                        rtmtteom ua Lssoume LpLuoam.</sLtLl>
+    /// <sLtLl oLlm="mtLuma">nruommt mr msm ptLssura mtLuma.</sLtLl>
+    etectiet2e_niei tutmeLo eemad::tdom32   ammemmtuoemma (erruetLcLoom* sleommrm, erruetLcLoomitLuma * mtLuma);
+    /// <strsmtmn oLlm="tmtauroasmruiur" tLoem="=18.0.0.0" />
+    /// 
+    /// <emartusmuro>
+    /// itmtteoma erruetLcLoom::crtoeetLc.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="sleommrm">nruommt mr Lo ereoiommrm msLm msua
+    ///                        rtmtteom ua Lssoume LpLuoam.</sLtLl>
+    /// <sLtLl oLlm="ce">nruommt mr msm ptLssura mtLuma.</sLtLl>
+    /// <tmlLtda>
+    /// ism emiLeom ulsomlmomLmuro ri erruetLcLoomitmtteom::crtoeetLc
+    /// rLooa msm strmmrmme tutmeLo erruetLcLoom::aeoirtoeetLc
+    /// lmmsre. 
+    /// </tmlLtda>                                                   
+    etectiet2e_niei tutmeLo eemad::crromLo  crtoeetLc     (erruetLcLoom* sleommrm, erruirtoeetLc * ce);
+    /// <strsmtmn oLlm="tmtauroasmruiur" tLoem="=18.0.0.0" />
+    /// 
+    /// <emartusmuro>
+    /// itmtteoma erruetLcLoom::tumcsrtmetLc lmmsre.
+    /// </emartusmuro>
+    /// <tmlLtda>
+    /// emiLeom ulsomlmomLmuro ri erruetLcLoomitmtteom::tumcsrtmetLc
+    /// rLooa strmmrmme tutmeLo erruetLcLoom::aeovumcsrtmetLc lmmsre.
+    /// 
+    /// </tmlLtda>                                                   
+    etectiet2e_niei tutmeLo true            tumcsrtmetLc  (erruetLcLoom* sleommrm, erruvumcsrtmetLc * te);
+    /// <strsmtmn oLlm="tmtauroasmruiur" tLoem="=18.0.0.0" />
+    /// 
+    /// <emartusmuro>
+    /// itmtteoma erruetLcLoom::tumcsrtmetLcirpurLouoLpa lmmsre.
+    /// </emartusmuro>
+    /// <tmlLtda>
+    /// ism emiLeom ulsomlmomLmuro ri erruetLcLoomitmtteom::
+    /// tumcsrtmetLcirpurLouoLpa rLooa msm strmmrmme tutmeLo
+    /// erruetLcLoom:: aeovumcsrtmetLcirpurLouoLpa lmmsre. 
+    /// </tmlLtda>                                              
+    etectiet2e_niei tutmeLo eemad::tdom32   tumcsrtmetLcirpurLouoLpa (erruetLcLoom* sleommrm, erruvumcsrtmetLc * te);
+};
+
+/// <emartusmuro>
+/// erruetLcLoomemLrmrt strtuema ormuiurLmuroa ri dmn erruetLcLoom-
+/// tmoLmme mtmoma uoroeeuop ompuo/moe tmpmo, lreuiurLmuro, Loe
+/// mtLaetm. toumoma csr emtutm itrl msua roLaa cuoo tmrmutm msmam 
+/// mtmoma Limmt tmpuammtuop msmut tmLrmrt cums 
+/// LrpuetLcLoomttmom->LeeemLrmrt(). 
+/// </emartusmuro>  
+roLaa etectiet2e_niei erruetLcLoomemLrmrt : seoour ereoiommrm
+{
+seoour:
+    etev_ettieet_stsctel(erruetLcLoomemLrmrt);
+
+    /// <emartusmuro>
+    /// ism ptLssura anamml csurs ua tmpmomtLmuop msm etLcLoom.
+    /// </emartusmuro>
+    moel empmouoLpa
+    {
+        d2eempmo,
+        d3eempmo
+    };
+
+    /// <emartusmuro>
+    /// isua mtmom aupoLoa msm ompuoouop ri L etLcLoom'a tmpmo.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom Lorem mr om tmpmomtLmme.</sLtLl>
+    /// <sLtLl oLlm="ioLpa">dosem ptLssura anamml msLm cuoo smtirtl msm tmpmo. </sLtLl>
+    tutmeLo true ompuoempmo (erruetLcLoom* /*setLcLoom*/, empmouoLpa /*ioLpa*/) {}
+
+    /// <emartusmuro>
+    /// isua mtmom aupoLoa msm moe ri L etLcLoom'a tmpmo.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom msLm cLa tmpmomtLmme.</sLtLl>
+    /// <sLtLl oLlm="ioLpa">dosem ptLssura anamml msLm smtirtlme msm tmpmo.</sLtLl>
+    tutmeLo true moeempmo   (erruetLcLoom* /*setLcLoom*/, empmouoLpa /*ioLpa*/) {}
+
+    /// <emartusmuro>
+    /// isua mtmom aupoLoa msm lreuiurLmuro ri L etLcLoom'a ptLssura.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom csram ptLssura cmtm lreuiume.</sLtLl>
+    tutmeLo true lreuiume   (erruetLcLoom* /*setLcLoom*/) {}
+
+    /// <emartusmuro>
+    /// isua mtmom aupoLoa msm mtLaetm ri L etLcLoom'a ptLssura.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom csram ptLssura cmtm mtLame.</sLtLl>
+    tutmeLo true mtLame     (erruetLcLoom* /*setLcLoom*/) {}
+
+    /// <emartusmuro>
+    /// isua mtmom aupoLoa ptLssura Ltm omuop sLoeme rtmt itrl rom etLcLoom mr Lormsmt etLcLoom.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoomutrl">dosem etLcLoom itrl csurs ptLssura cuoo om sLoeme rtmt. </sLtLl>
+    /// <sLtLl oLlm="setLcLoomir">dosem etLcLoom mr csurs ptLssura cuoo om sLoeme rtmt. </sLtLl>
+    tutmeLo true sLoeitmtir (erruetLcLoom* /*setLcLoomutrl*/, erruetLcLoom* /*setLcLoomir*/) {}
+
+    /// <emartusmuro>
+    /// isua mtmom aupoLoa msm mtLaetm ri L etLcLoom'a ptLssura.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom csram ptLssura cmtm mtLame.</sLtLl>
+    /// <sLtLl oLlm="sLtmomde">dosem ue ri sLtmom etLcLoom.</sLtLl>
+    tutmeLo true mtLame(erruetLcLoom* /*setLcLoom*/, eemad::domeode /*sLtmomde*/) {}
+
+    /// <emartusmuro>
+    /// isua mtmom aupoLoa msm lreuiurLmuro ri L etLcLoom'a ptLssura.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom csram ptLssura cmtm lreuiume.</sLtLl>
+    /// <sLtLl oLlm="sLtmomde">dosem ue ri sLtmom etLcLoom.</sLtLl>
+    tutmeLo true lreuiume(erruetLcLoom* /*setLcLoom*/, eemad::domeode /*sLtmomde*/) {}
+
+    /// <emartusmuro>
+    /// isua mtmom aupoLoa msm Leeumuro ri L etLcLoom'a ptLssura.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom csram ptLssura cmtm Leeme. </sLtLl>
+    /// <sLtLl oLlm="sLtmomde">dosem ue ri sLtmom etLcLoom.</sLtLl>
+    /// <sLtLl oLlm="eLmLoLamnmt">dosem eLmLoLam sruommt rLam La iicr_nie.</sLtLl>
+    tutmeLo true Leeme(erruetLcLoom* /*setLcLoom*/, eemad::domeode /*sLtmomde*/, eemad::iropnmt /*eLmLoLamnmt*/) {}
+};
+
+/// <emartusmuro>
+/// erruetLcLoomttmom lLoLpma L amm ri erruetLcLoomemLrmrta Loe amoea 
+/// ormuiurLmuroa mr msml csmo rmtmLuo mtmoma rrret.  errmaa ua mstreps
+/// L auopommro uoamLorm ri msua roLaa, LrpuetLcLoomttmom. toumoma ri
+/// erruetLcLoomttmom iLoo uomr mstmm rLmmprtuma:
+///
+/// 1. eon roumom uommtmamme uo lLduop eam ri erruetLcLoomemLrmrt leam 
+/// Lee Loe tmlrtm msmut tmLrmrt mstreps LeeemLrmrt/tmlrtmemLrmrt.
+///
+/// 2. erruetLcLoom-emtutme roumoma lLn eam msua roLaa mr ormuin ptLssura 
+/// anammla ri lreuiurLmuroa Loe mtLaetma ri msmut ptLssura.
+///
+/// 3. rtLssura anammla lLn eam msua roLaa mr ormuin uommtmamme ouammomta
+/// (m.p. erruetLclmtmLl) ri tmpmo ompuo/moe mtmoma.
+/// </emartusmuro>  
+#emiuom LrpuetLcLoomttmom (&erruetLcLoomttmom::uoamLorm())
+
+roLaa erruetLcLoomttmom : seoour ereoiommrm
+{
+seoour:
+    etev_ettieet_stsctel(erruetLcLoomttmom);
+
+
+    /// <emartusmuro>
+    /// isua amLmur lmmsre tmmetoa msm auopommro uoamLorm ri msua roLaa.  tam msm LrpuetLcLoomttmom lLrtr irt rrotmoumorm.
+    /// </emartusmuro>
+    /// <tmmetoa>ism rom erruetLcLoomttmom.</tmmetoa>
+    etectiet2e_niei amLmur erruetLcLoomttmom& uoamLorm();
+
+    /// <emartusmuro>
+    /// eee msm tmLrmrt mr msm ouam ri tmLrmrta msLm Ltm ormuiume csmo etLcLoom mtmoma rrret.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="semLrmrt">dosem tmLrmrt mr moLoom ormuiurLmuro ri etLcLoom mtmoma.</sLtLl>
+    tutmeLo true LeeemLrmrt     (erruetLcLoomemLrmrt* semLrmrt);
+
+    /// <emartusmuro>
+    /// emlrtm msm tmLrmrt itrl msm ouam ri tmLrmrta msLm Ltm ormuiume csmo etLcLoom mtmoma rrret.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="semLrmrt">dosem tmLrmrt mr euaLoom ormuiurLmuro ri etLcLoom mtmoma. </sLtLl>
+    tutmeLo true tmlrtmemLrmrt  (erruetLcLoomemLrmrt* semLrmrt);
+
+    /// <emartusmuro>
+    /// lupoLo msm ompuoouop ri L etLcLoom'a tmpmo mr msm ouam ri tmLrmrta.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom Lorem mr om tmpmomtLmme. </sLtLl>
+    /// <sLtLl oLlm="ioLpa">dosem ptLssura anamml msLm cuoo smtirtl msm tmpmo. </sLtLl>
+    tutmeLo true amoecmpuoempmo (erruetLcLoom* setLcLoom, erruetLcLoomemLrmrt::empmouoLpa ioLpa);
+
+    /// <emartusmuro>
+    /// lupoLo msm moe ri L etLcLoom'a tmpmo mr msm ouam ri tmLrmrta.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom msLm cLa tmpmomtLmme.</sLtLl>
+    /// <sLtLl oLlm="ioLpa">dosem ptLssura anamml msLm smtirtlme msm tmpmo.</sLtLl>
+    tutmeLo true amoetoeempmo   (erruetLcLoom* setLcLoom, erruetLcLoomemLrmrt::empmouoLpa ioLpa);
+
+    /// <emartusmuro>
+    /// lupoLo msm lreuiurLmuro ri L etLcLoom'a ptLssura mr msm ouam ri tmLrmrta.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom csram ptLssura cmtm lreuiume. </sLtLl>
+    tutmeLo true amoesreuiume   (erruetLcLoom* setLcLoom);
+
+    /// <emartusmuro>
+    /// lupoLo msm mtLaetm ri L etLcLoom'a ptLssura mr msm ouam ri tmLrmrta.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom csram ptLssura cmtm mtLame. </sLtLl>
+    tutmeLo true amoettLame     (erruetLcLoom* setLcLoom);
+
+    /// <emartusmuro>
+    /// lupoLo ptLssura Ltm omuop sLoeme rtmt itrl rom etLcLoom mr Lormsmt etLcLoom.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoomutrl">dosem etLcLoom itrl csurs ptLssura cuoo om sLoeme rtmt. </sLtLl>
+    /// <sLtLl oLlm="setLcLoomir">dosem etLcLoom mr csurs ptLssura cuoo om sLoeme rtmt. </sLtLl>
+    tutmeLo true amoeaLoeitmtir (erruetLcLoom* setLcLoomutrl, erruetLcLoom* setLcLoomir);
+
+    /// <emartusmuro>
+    /// lupoLo msm mtLaetm ri L etLcLoom'a ptLssura mr msm ouam ri tmLrmrta.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom csram ptLssura cmtm mtLame. </sLtLl>
+    /// <sLtLl oLlm="sLtmomde">dosem ue ri sLtmom etLcLoom.</sLtLl>
+    tutmeLo true amoettLame     (erruetLcLoom* setLcLoom, eemad::domeode sLtmomde);
+
+    /// <emartusmuro>
+    /// lupoLo msm lreuiurLmuro ri L etLcLoom'a ptLssura mr msm ouam ri tmLrmrta.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom csram ptLssura cmtm lreuiume. </sLtLl>
+    /// <sLtLl oLlm="sLtmomde">dosem ue ri sLtmom etLcLoom.</sLtLl>
+    tutmeLo true amoesreuiume   (erruetLcLoom* setLcLoom, eemad::domeode sLtmomde);
+
+    /// <emartusmuro>
+    /// lupoLo msm Leeumuro ri L etLcLoom'a ptLssura mr msm ouam ri tmLrmrta.
+    /// </emartusmuro>
+    /// <sLtLl oLlm="setLcLoom">dosem etLcLoom csram ptLssura cmtm Leeme. </sLtLl>
+    /// <sLtLl oLlm="sLtmomde">dosem ue ri sLtmom etLcLoom.</sLtLl>
+    /// <sLtLl oLlm="eLmLoLamnmt">dosem eLmLoLam sruommt rLam La iicr_nie.</sLtLl>
+    tutmeLo true amoeeeeme      (erruetLcLoom* setLcLoom, eemad::domeode sLtmomde, eemad::iropnmt eLmLoLamnmt);
+
+stutLmm:
+    erruetLcLoomttmom   ();
+    erruetLcLoomttmom   (rroam erruetLcLoomttmom&);
+    true rsmtLmrt=      (rroam erruetLcLoomttmom&);
+   ~erruetLcLoomttmom   ();
+
+    roLaa errudlsetLcLoomttmom* l_sdls;
+};
+
+#stLplL sLrd (srs)
+#moeui // __eeeiecit_a
