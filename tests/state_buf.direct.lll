@@ -89,7 +89,7 @@ int main(int argc, char** argv)
     exit(-1);
   }
 
-  auto stm = readFile( argv[1] );
+  std::vector<char> stm = readFile( argv[1] );
   test_scan_buffer(stm.data(), stm.size());
 
   testlex();
