@@ -59,7 +59,7 @@ FPD "("{BBC}*")"
 
 %%
 
-std::vector<char> readFile(const std::string& filename)
+std::vector<char> readFile(const char* filename)
 {
   std::vector<char> contents;
   std::ifstream     in(filename, std::ios::in | std::ios::binary);
