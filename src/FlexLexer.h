@@ -202,6 +202,7 @@ protected:
 
   yy_state_type* yy_state_buf;
   yy_state_type* yy_state_ptr;
+  size_t yy_state_buf_max;
 
   char* yy_full_match;
   int* yy_full_state;
