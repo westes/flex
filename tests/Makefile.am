@@ -361,7 +361,7 @@ top.h: top.c
 
 # Build rules for non-C back ends
 
-.l.go: $(FLEX)
+.l.go:
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -o $@ $<
 
 # This is a temporary fake rule for use while the Go back end still
