@@ -153,14 +153,14 @@ void gen_backing_up (void)
 		return;
 
 	if (fullspd)
-		indent_puts ("if ( yy_current_state[-1].yy_nxt )");
+		indent_puts ("if ( YY_G(yy_current_state)[-1].yy_nxt )");
 	else
-		indent_puts ("if ( yy_accept[yy_current_state] )");
+		indent_puts ("if ( yy_accept[YY_G(yy_current_state)] )");
 
 	++indent_level;
 	indent_puts ("{");
-	indent_puts ("YY_G(yy_last_accepting_state) = yy_current_state;");
-	indent_puts ("YY_G(yy_last_accepting_cpos) = yy_cp;");
+	indent_puts ("YY_G(yy_last_accepting_state) = YY_G(yy_current_state);");
+	indent_puts ("YY_G(yy_last_accepting_cpos) = YY_G(yy_cp);");
 	indent_puts ("}");
 	--indent_level;
 }
@@ -177,17 +177,17 @@ void gen_bu_action (void)
 
 	indent_puts ("case 0: /* must back up */");
 	indent_puts ("/* undo the effects of YY_DO_BEFORE_ACTION */");
-	indent_puts ("*yy_cp = YY_G(yy_hold_char);");
+	indent_puts ("*YY_G(yy_cp) = YY_G(yy_hold_char);");
 
 	if (fullspd || fulltbl)
-		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos) + 1;");
+		indent_puts ("YY_G(yy_cp) = YY_G(yy_last_accepting_cpos) + 1;");
 	else
 		/* Backing-up info for compressed tables is taken \after/
 		 * yy_cp has been incremented for the next state.
 		 */
-		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos);");
+		indent_puts ("YY_G(yy_cp) = YY_G(yy_last_accepting_cpos);");
 
-	indent_puts ("yy_current_state = YY_G(yy_last_accepting_state);");
+	indent_puts ("YY_G(yy_current_state) = YY_G(yy_last_accepting_state);");
 	indent_puts ("goto yy_find_action;");
 	outc ('\n');
 
@@ -501,14 +501,14 @@ void genecs (void)
 void gen_find_action (void)
 {
 	if (fullspd)
-		indent_puts ("yy_act = yy_current_state[-1].yy_nxt;");
+		indent_puts ("yy_act = YY_G(yy_current_state)[-1].yy_nxt;");
 
 	else if (fulltbl)
-		indent_puts ("yy_act = yy_accept[yy_current_state];");
+		indent_puts ("yy_act = yy_accept[YY_G(yy_current_state)];");
 
 	else if (reject) {
-		indent_puts ("yy_current_state = *--YY_G(yy_state_ptr);");
-		indent_puts ("YY_G(yy_lp) = yy_accept[yy_current_state];");
+		indent_puts ("YY_G(yy_current_state) = *--YY_G(yy_state_ptr);");
+		indent_puts ("YY_G(yy_lp) = yy_accept[YY_G(yy_current_state)];");
 
 		if (!variable_trailing_context_rules)
 			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
@@ -525,7 +525,7 @@ void gen_find_action (void)
 		indent_puts ("{");
 
 		indent_puts
-			("if ( YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1] )");
+			("if ( YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[YY_G(yy_current_state) + 1] )");
 		++indent_level;
 		indent_puts ("{");
 		indent_puts ("yy_act = yy_acclist[YY_G(yy_lp)];");
@@ -564,7 +564,7 @@ void gen_find_action (void)
 				 * due to REJECT.
 				 */
 				indent_puts
-					("YY_G(yy_full_match) = yy_cp;");
+					("YY_G(yy_full_match) = YY_G(yy_cp);");
 				indent_puts
 					("YY_G(yy_full_state) = YY_G(yy_state_ptr);");
 				indent_puts ("YY_G(yy_full_lp) = YY_G(yy_lp);");
@@ -576,7 +576,7 @@ void gen_find_action (void)
 			indent_puts ("else");
 			++indent_level;
 			indent_puts ("{");
-			indent_puts ("YY_G(yy_full_match) = yy_cp;");
+			indent_puts ("YY_G(yy_full_match) = YY_G(yy_cp);");
 			indent_puts
 				("YY_G(yy_full_state) = YY_G(yy_state_ptr);");
 			indent_puts ("YY_G(yy_full_lp) = YY_G(yy_lp);");
@@ -594,7 +594,7 @@ void gen_find_action (void)
 			 */
 			++indent_level;
 			indent_puts ("{");
-			indent_puts ("YY_G(yy_full_match) = yy_cp;");
+			indent_puts ("YY_G(yy_full_match) = YY_G(yy_cp);");
 			indent_puts ("break;");
 			indent_puts ("}");
 			--indent_level;
@@ -603,14 +603,14 @@ void gen_find_action (void)
 		indent_puts ("}");
 		--indent_level;
 
-		indent_puts ("--yy_cp;");
+		indent_puts ("--YY_G(yy_cp);");
 
 		/* We could consolidate the following two lines with those at
 		 * the beginning, but at the cost of complaints that we're
 		 * branching inside a loop.
 		 */
-		indent_puts ("yy_current_state = *--YY_G(yy_state_ptr);");
-		indent_puts ("YY_G(yy_lp) = yy_accept[yy_current_state];");
+		indent_puts ("YY_G(yy_current_state) = *--YY_G(yy_state_ptr);");
+		indent_puts ("YY_G(yy_lp) = yy_accept[YY_G(yy_current_state)];");
 
 		indent_puts ("}");
 
@@ -618,7 +618,7 @@ void gen_find_action (void)
 	}
 
 	else {			/* compressed */
-		indent_puts ("yy_act = yy_accept[yy_current_state];");
+		indent_puts ("yy_act = yy_accept[YY_G(yy_current_state)];");
 
 		if (interactive && !reject) {
 			/* Do the guaranteed-needed backing up to figure out
@@ -628,11 +628,11 @@ void gen_find_action (void)
 			++indent_level;
 			indent_puts ("{ /* have to back up */");
 			indent_puts
-				("yy_cp = YY_G(yy_last_accepting_cpos);");
+				("YY_G(yy_cp) = YY_G(yy_last_accepting_cpos);");
 			indent_puts
-				("yy_current_state = YY_G(yy_last_accepting_state);");
+				("YY_G(yy_current_state) = YY_G(yy_last_accepting_state);");
 			indent_puts
-				("yy_act = yy_accept[yy_current_state];");
+				("yy_act = yy_accept[YY_G(yy_current_state)];");
 			indent_puts ("}");
 			--indent_level;
 		}
@@ -724,10 +724,10 @@ void gen_next_compressed_state (char *char_map)
 	gen_backing_up ();
 
 	indent_puts
-		("while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )");
+		("while ( yy_chk[yy_base[YY_G(yy_current_state)] + yy_c] != YY_G(yy_current_state) )");
 	++indent_level;
 	indent_puts ("{");
-	indent_puts ("yy_current_state = (int) yy_def[yy_current_state];");
+	indent_puts ("YY_G(yy_current_state) = (int) yy_def[YY_G(yy_current_state)];");
 
 	if (usemecs) {
 		/* We've arrange it so that templates are never chained
@@ -740,7 +740,7 @@ void gen_next_compressed_state (char *char_map)
 		do_indent ();
 
 		/* lastdfa + 2 is the beginning of the templates */
-		out_dec ("if ( yy_current_state >= %d )\n", lastdfa + 2);
+		out_dec ("if ( YY_G(yy_current_state) >= %d )\n", lastdfa + 2);
 
 		++indent_level;
 		indent_puts ("yy_c = yy_meta[yy_c];");
@@ -751,7 +751,7 @@ void gen_next_compressed_state (char *char_map)
 	--indent_level;
 
 	indent_puts
-		("yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];");
+		("YY_G(yy_current_state) = yy_nxt[yy_base[YY_G(yy_current_state)] + yy_c];");
 }
 
 
@@ -763,19 +763,19 @@ void gen_next_match (void)
 	 * gen_NUL_trans().
 	 */
 	char   *char_map = useecs ?
-		"yy_ec[YY_SC_TO_UI(*yy_cp)] " : "YY_SC_TO_UI(*yy_cp)";
+		"yy_ec[YY_SC_TO_UI(*YY_G(yy_cp))] " : "YY_SC_TO_UI(*YY_G(yy_cp))";
 
 	char   *char_map_2 = useecs ?
-		"yy_ec[YY_SC_TO_UI(*++yy_cp)] " : "YY_SC_TO_UI(*++yy_cp)";
+		"yy_ec[YY_SC_TO_UI(*++YY_G(yy_cp))] " : "YY_SC_TO_UI(*++YY_G(yy_cp))";
 
 	if (fulltbl) {
 		if (gentables)
 			indent_put2s
-				("while ( (yy_current_state = yy_nxt[yy_current_state][ %s ]) > 0 )",
+				("while ( (YY_G(yy_current_state) = yy_nxt[YY_G(yy_current_state)][ %s ]) > 0 )",
 				 char_map);
 		else
 			indent_put2s
-				("while ( (yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN +  %s ]) > 0 )",
+				("while ( (YY_G(yy_current_state) = yy_nxt[YY_G(yy_current_state)*YY_NXT_LOLEN +  %s ]) > 0 )",
 				 char_map);
 
 		++indent_level;
@@ -786,7 +786,7 @@ void gen_next_match (void)
 			outc ('\n');
 		}
 
-		indent_puts ("++yy_cp;");
+		indent_puts ("++YY_G(yy_cp);");
 
 		if (num_backing_up > 0)
 
@@ -795,7 +795,7 @@ void gen_next_match (void)
 		--indent_level;
 
 		outc ('\n');
-		indent_puts ("yy_current_state = -yy_current_state;");
+		indent_puts ("YY_G(yy_current_state) = -YY_G(yy_current_state);");
 	}
 
 	else if (fullspd) {
@@ -805,7 +805,7 @@ void gen_next_match (void)
 		indent_puts ("YY_CHAR yy_c;\n");
 		indent_put2s ("for ( yy_c = %s;", char_map);
 		indent_puts
-			("      (yy_trans_info = &yy_current_state[yy_c])->");
+			("      (yy_trans_info = &YY_G(yy_current_state)[yy_c])->");
 		indent_puts ("yy_verify == yy_c;");
 		indent_put2s ("      yy_c = %s )", char_map_2);
 
@@ -814,7 +814,7 @@ void gen_next_match (void)
 		if (num_backing_up > 0)
 			indent_puts ("{");
 
-		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
+		indent_puts ("YY_G(yy_current_state) += yy_trans_info->yy_nxt;");
 
 		if (num_backing_up > 0) {
 			outc ('\n');
@@ -834,7 +834,7 @@ void gen_next_match (void)
 
 		gen_next_state (false);
 
-		indent_puts ("++yy_cp;");
+		indent_puts ("++YY_G(yy_cp);");
 
 
 		indent_puts ("}");
@@ -843,9 +843,9 @@ void gen_next_match (void)
 		do_indent ();
 
 		if (interactive)
-			out_dec ("while ( yy_base[yy_current_state] != %d );\n", jambase);
+			out_dec ("while ( yy_base[YY_G(yy_current_state)] != %d );\n", jambase);
 		else
-			out_dec ("while ( yy_current_state != %d );\n",
+			out_dec ("while ( YY_G(yy_current_state) != %d );\n",
 				 jamstate);
 
 		if (!reject && !interactive) {
@@ -853,9 +853,9 @@ void gen_next_match (void)
 			 * the match.
 			 */
 			indent_puts
-				("yy_cp = YY_G(yy_last_accepting_cpos);");
+				("YY_G(yy_cp) = YY_G(yy_last_accepting_cpos);");
 			indent_puts
-				("yy_current_state = YY_G(yy_last_accepting_state);");
+				("YY_G(yy_current_state) = YY_G(yy_last_accepting_state);");
 		}
 	}
 }
@@ -870,25 +870,25 @@ void gen_next_state (int worry_about_NULs)
 	if (worry_about_NULs && !nultrans) {
 		if (useecs)
 			snprintf (char_map, sizeof(char_map),
-					"(*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : %d)",
+					"(*YY_G(yy_cp) ? yy_ec[YY_SC_TO_UI(*YY_G(yy_cp))] : %d)",
 					NUL_ec);
 		else
             snprintf (char_map, sizeof(char_map),
-					"(*yy_cp ? YY_SC_TO_UI(*yy_cp) : %d)",
+					"(*YY_G(yy_cp) ? YY_SC_TO_UI(*YY_G(yy_cp)) : %d)",
 					NUL_ec);
 	}
 
 	else
 		strcpy (char_map, useecs ?
-			"yy_ec[YY_SC_TO_UI(*yy_cp)] " :
-			"YY_SC_TO_UI(*yy_cp)");
+			"yy_ec[YY_SC_TO_UI(*YY_G(yy_cp))] " :
+			"YY_SC_TO_UI(*YY_G(yy_cp))");
 
 	if (worry_about_NULs && nultrans) {
 		if (!fulltbl && !fullspd)
 			/* Compressed tables back up *before* they match. */
 			gen_backing_up ();
 
-		indent_puts ("if ( *yy_cp )");
+		indent_puts ("if ( *YY_G(yy_cp) )");
 		++indent_level;
 		indent_puts ("{");
 	}
@@ -896,17 +896,17 @@ void gen_next_state (int worry_about_NULs)
 	if (fulltbl) {
 		if (gentables)
 			indent_put2s
-				("yy_current_state = yy_nxt[yy_current_state][%s];",
+				("YY_G(yy_current_state) = yy_nxt[YY_G(yy_current_state)][%s];",
 				 char_map);
 		else
 			indent_put2s
-				("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %s];",
+				("YY_G(yy_current_state) = yy_nxt[YY_G(yy_current_state)*YY_NXT_LOLEN + %s];",
 				 char_map);
 	}
 
 	else if (fullspd)
 		indent_put2s
-			("yy_current_state += yy_current_state[%s].yy_nxt;",
+			("YY_G(yy_current_state) += YY_G(yy_current_state)[%s].yy_nxt;",
 			 char_map);
 
 	else
@@ -919,7 +919,7 @@ void gen_next_state (int worry_about_NULs)
 		indent_puts ("else");
 		++indent_level;
 		indent_puts
-			("yy_current_state = yy_NUL_trans[yy_current_state];");
+			("YY_G(yy_current_state) = yy_NUL_trans[YY_G(yy_current_state)];");
 		--indent_level;
 	}
 
@@ -927,7 +927,7 @@ void gen_next_state (int worry_about_NULs)
 		gen_backing_up ();
 
 	if (reject)
-		indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");
+		indent_puts ("*YY_G(yy_state_ptr)++ = YY_G(yy_current_state);");
 }
 
 
@@ -944,23 +944,23 @@ void gen_NUL_trans (void)
 		/* We're going to need yy_cp lying around for the call
 		 * below to gen_backing_up().
 		 */
-		indent_puts ("char *yy_cp = YY_G(yy_c_buf_p);");
+		indent_puts ("YY_G(yy_cp) = YY_G(yy_c_buf_p);");
 
 	outc ('\n');
 
 	if (nultrans) {
 		indent_puts
-			("yy_current_state = yy_NUL_trans[yy_current_state];");
-		indent_puts ("yy_is_jam = (yy_current_state == 0);");
+			("YY_G(yy_current_state) = yy_NUL_trans[YY_G(yy_current_state)];");
+		indent_puts ("yy_is_jam = (YY_G(yy_current_state) == 0);");
 	}
 
 	else if (fulltbl) {
 		do_indent ();
 		if (gentables)
-			out_dec ("yy_current_state = yy_nxt[yy_current_state][%d];\n", NUL_ec);
+			out_dec ("YY_G(yy_current_state) = yy_nxt[YY_G(yy_current_state)][%d];\n", NUL_ec);
 		else
-			out_dec ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %d];\n", NUL_ec);
-		indent_puts ("yy_is_jam = (yy_current_state <= 0);");
+			out_dec ("YY_G(yy_current_state) = yy_nxt[YY_G(yy_current_state)*YY_NXT_LOLEN + %d];\n", NUL_ec);
+		indent_puts ("yy_is_jam = (YY_G(yy_current_state) <= 0);");
 	}
 
 	else if (fullspd) {
@@ -970,8 +970,8 @@ void gen_NUL_trans (void)
 		indent_puts
 			("const struct yy_trans_info *yy_trans_info;\n");
 		indent_puts
-			("yy_trans_info = &yy_current_state[(unsigned int) yy_c];");
-		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
+			("yy_trans_info = &YY_G(yy_current_state)[(unsigned int) yy_c];");
+		indent_puts ("YY_G(yy_current_state) += yy_trans_info->yy_nxt;");
 
 		indent_puts
 			("yy_is_jam = (yy_trans_info->yy_verify != yy_c);");
@@ -984,7 +984,7 @@ void gen_NUL_trans (void)
 		gen_next_compressed_state (NUL_ec_str);
 
 		do_indent ();
-		out_dec ("yy_is_jam = (yy_current_state == %d);\n",
+		out_dec ("yy_is_jam = (YY_G(yy_current_state) == %d);\n",
 			 jamstate);
 
 		if (reject) {
@@ -995,7 +995,7 @@ void gen_NUL_trans (void)
 			indent_puts ("if ( ! yy_is_jam )");
 			++indent_level;
 			indent_puts
-				("*YY_G(yy_state_ptr)++ = yy_current_state;");
+				("*YY_G(yy_state_ptr)++ = YY_G(yy_current_state);");
 			--indent_level;
 		}
 	}
@@ -1023,18 +1023,18 @@ void gen_start_state (void)
 	if (fullspd) {
 		if (bol_needed) {
 			indent_puts
-				("yy_current_state = yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()];");
+				("YY_G(yy_current_state) = yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()];");
 		}
 		else
 			indent_puts
-				("yy_current_state = yy_start_state_list[YY_G(yy_start)];");
+				("YY_G(yy_current_state) = yy_start_state_list[YY_G(yy_start)];");
 	}
 
 	else {
-		indent_puts ("yy_current_state = YY_G(yy_start);");
+		indent_puts ("YY_G(yy_current_state) = YY_G(yy_start);");
 
 		if (bol_needed)
-			indent_puts ("yy_current_state += YY_AT_BOL();");
+			indent_puts ("YY_G(yy_current_state) += YY_AT_BOL();");
 
 		if (reject) {
 			/* Set up for storing up states. */
@@ -1042,7 +1042,7 @@ void gen_start_state (void)
 			indent_puts
 				("YY_G(yy_state_ptr) = YY_G(yy_state_buf);");
 			indent_puts
-				("*YY_G(yy_state_ptr)++ = yy_current_state;");
+				("*YY_G(yy_state_ptr)++ = YY_G(yy_current_state);");
 			outn ("]])");
 		}
 	}
@@ -1506,11 +1506,11 @@ void make_tables (void)
 	if (yymore_used && !yytext_is_array) {
 		indent_puts ("YY_G(yytext_ptr) -= YY_G(yy_more_len); \\");
 		indent_puts
-			("yyleng = (int) (yy_cp - YY_G(yytext_ptr)); \\");
+			("yyleng = (int) (YY_G(yy_cp) - YY_G(yytext_ptr)); \\");
 	}
 
 	else
-		indent_puts ("yyleng = (int) (yy_cp - yy_bp); \\");
+		indent_puts ("yyleng = (int) (YY_G(yy_cp) - YY_G(yy_bp)); \\");
 
 	/* Now also deal with copying yytext_ptr to yytext if needed. */
 	skelout ();		/* %% [3.0] - break point in skel */
@@ -1769,13 +1769,13 @@ void make_tables (void)
 
 		outn ("#define REJECT \\");
 		outn ("{ \\");
-		outn ("*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \\");
-		outn ("yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \\");
+		outn ("*YY_G(yy_cp) = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \\");
+		outn ("YY_G(yy_cp) = YY_G(yy_full_match); /* restore poss. backed-over text */ \\");
 
 		if (variable_trailing_context_rules) {
 			outn ("YY_G(yy_lp) = YY_G(yy_full_lp); /* restore orig. accepting pos. */ \\");
 			outn ("YY_G(yy_state_ptr) = YY_G(yy_full_state); /* restore orig. state */ \\");
-			outn ("yy_current_state = *YY_G(yy_state_ptr); /* restore curr. state */ \\");
+			outn ("YY_G(yy_current_state) = *YY_G(yy_state_ptr); /* restore curr. state */ \\");
 		}
 
 		outn ("++YY_G(yy_lp); \\");
@@ -2088,7 +2088,7 @@ void make_tables (void)
 	set_indent (4);
 
 	if (fullspd || fulltbl)
-		indent_puts ("yy_cp = YY_G(yy_c_buf_p);");
+		indent_puts ("YY_G(yy_cp) = YY_G(yy_c_buf_p);");
 
 	else {			/* compressed table */
 		if (!reject && !interactive) {
@@ -2096,9 +2096,9 @@ void make_tables (void)
 			 * out the match.
 			 */
 			indent_puts
-				("yy_cp = YY_G(yy_last_accepting_cpos);");
+				("YY_G(yy_cp) = YY_G(yy_last_accepting_cpos);");
 			indent_puts
-				("yy_current_state = YY_G(yy_last_accepting_state);");
+				("YY_G(yy_current_state) = YY_G(yy_last_accepting_state);");
 		}
 
 		else
@@ -2106,7 +2106,7 @@ void make_tables (void)
 			 * yy_current_state was set up by
 			 * yy_get_previous_state().
 			 */
-			indent_puts ("yy_cp = YY_G(yy_c_buf_p);");
+			indent_puts ("YY_G(yy_cp) = YY_G(yy_c_buf_p);");
 	}
 
 
