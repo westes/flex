@@ -226,6 +226,8 @@ optspec_t flexopts[] = {
 	,
 	{"--noyymore", OPT_NO_YYMORE, 0}
 	,
+	{"--yystall=VALUE", OPT_YYSTALL, 0}
+	,
 	{"--noyywrap", OPT_NO_YYWRAP, 0}
 	,
 	{"--yywrap", OPT_YYWRAP, 0}

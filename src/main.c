@@ -67,6 +67,7 @@ int     action_size, defs1_offset, prolog_offset, action_offset,
 char   *infilename = NULL, *outfilename = NULL, *headerfilename = NULL;
 int     did_outfilename;
 char   *prefix, *yyclass, *extra_type = NULL;
+char   *yystall = NULL;
 int     do_stdinit, use_stdout;
 int     onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int     onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
@@ -964,6 +965,7 @@ void flexinit (int argc, char **argv)
 	did_outfilename = 0;
 	prefix = "yy";
 	yyclass = 0;
+	yystall = NULL;
 	use_read = use_stdout = false;
 	tablesext = tablesverify = false;
 	gentables = true;
@@ -1317,6 +1319,10 @@ void flexinit (int argc, char **argv)
 			yyclass = arg;
 			break;
 
+		case OPT_YYSTALL:
+			yystall = arg;
+			break;
+
 		case OPT_YYLINENO:
 			do_yylineno = true;
 			break;
@@ -1449,6 +1455,12 @@ void flexinit (int argc, char **argv)
                         break;
 		}		/* switch */
 	}			/* while scanopt() */
+
+//	if(do_yywrap){
+//		buf_m4_define( &m4defs_buf, "M4_YY_NO_YYWRAP",NULL);
+//	}
+	fprintf(stderr, ">>> do_yywrap = %d\n", do_yywrap);
+	buf_m4_define( &m4defs_buf, "M4_YY_NO_YYWRAP",do_yywrap?"1":NULL);
 
 	scanopt_destroy (sopt);
 
@@ -1612,6 +1624,9 @@ void readin (void)
 	if (ddebug)
 		outn ("\n#define FLEX_DEBUG");
 
+	if(yystall)
+		out_str ("\n#define YY_STALLED %s\n", yystall);		// XYZ
+
 	OUT_BEGIN_CODE ();
 	outn ("typedef flex_uint8_t YY_CHAR;");
 	OUT_END_CODE ();
@@ -1675,9 +1690,10 @@ void readin (void)
 	if (C_plus_plus) {
 		outn ("\n#include <FlexLexer.h>");
 
- 		if (!do_yywrap) {
-			outn("\nint yyFlexLexer::yywrap() { return 1; }");
-		}
+//		if(do_yywrap){
+//			buf_m4_define( &m4defs_buf, "M4_YY_NO_YYWRAP",NULL);
+//		}
+//		fprintf(stderr, ">>> do_yywrap = %d\n", do_yywrap);
 
 		if (yyclass) {
 			outn ("int yyFlexLexer::yylex()");
@@ -1831,6 +1847,7 @@ void usage (void)
 		  "  -S, --skel=FILE         specify skeleton file\n"
 		  "  -t, --stdout            write scanner on stdout instead of %s\n"
 		  "      --yyclass=NAME      name of C++ class\n"
+		  "      --yystall=VALUE     value to return when the push lexer is stalled\n"
 		  "      --header-file=FILE   create a C header file in addition to the scanner\n"
 		  "      --tables-file[=FILE] write tables to FILE\n"
 		  "      --backup-file=FILE  write backing-up information to FILE\n" "\n"

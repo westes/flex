@@ -434,9 +434,9 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define EOB_ACT_CONTINUE_SCAN 0
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
-#if defined(YY_STALLED)
+/*#if defined(YY_STALLED)*/
 #define EOB_ACT_STALLED 3
-#endif /* defined(YY_STALLED) */
+/*#endif*/ /* defined(YY_STALLED) */
     m4_ifdef( [[M4_YY_USE_LINENO]],
     [[
     /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
@@ -624,6 +624,7 @@ static void yy_init_buffer ( YY_BUFFER_STATE b, FILE *file M4_YY_PROTO_LAST_ARG 
 YY_BUFFER_STATE yy_scan_buffer ( char *base, yy_size_t size M4_YY_PROTO_LAST_ARG );
 YY_BUFFER_STATE yy_scan_string ( const char *yy_str M4_YY_PROTO_LAST_ARG );
 YY_BUFFER_STATE yy_scan_bytes ( const char *bytes, int len M4_YY_PROTO_LAST_ARG );
+YY_BUFFER_STATE yy_append_bytes ( const char *bytes, int len M4_YY_PROTO_LAST_ARG );
 
 %endif
 
@@ -1446,7 +1447,7 @@ do_action:	/* This label is used only to access EOF actions. */
 				YY_G(yy_c_buf_p) =
 					YY_G(yytext_ptr) + yy_amount_of_matched_text;
 
-				YY_G(yy_current_state) = yy_get_previous_state( yyscanner );
+				YY_G(yy_current_state) = yy_get_previous_state( M4_YY_CALL_ONLY_ARG );
 
 				YY_G(yy_cp) = YY_G(yy_c_buf_p);
 				YY_G(yy_bp) = YY_G(yytext_ptr) + YY_MORE_ADJ;
@@ -1454,8 +1455,8 @@ do_action:	/* This label is used only to access EOF actions. */
 				
 				printf("yytext_ptr='%s'\n", YY_G(yytext_ptr));
 				YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
-				printf("yy_ch_buf[%d]=\n", b->yy_buf_size, b->yy_ch_buf);
-/*				dump_buffer(b->yy_ch_buf, b->yy_buf_size);*/
+/*				printf("yy_ch_buf[%d]=\n", b->yy_buf_size);
+				dump_buffer(b->yy_ch_buf, b->yy_buf_size);*/
 				
 				printf("yy_current_state=%d\n", YY_G(yy_current_state));
 
@@ -1476,6 +1477,11 @@ do_action:	/* This label is used only to access EOF actions. */
 
 %if-c++-only
 %not-for-header
+m4_ifdef( [[M4_YY_NO_YYWRAP]],,
+[[
+int yyFlexLexer::yywrap() { return 1; }
+]])
+
 /* The contents of this function are C++ specific, so the YY_G macro is not used.
  * This constructor simply maintains backward compatibility.
  * DEPRECATED
@@ -2457,20 +2463,32 @@ m4_ifdef( [[M4_YY_NO_APPEND_BYTES]],,
 [[
 %if-c-only
 YY_BUFFER_STATE yy_append_bytes  YYFARGS2( const char *,yybytes, int ,_yybytes_len)
+%endif
+%if-c++-only
+    YY_BUFFER_STATE yyFlexLexer::yy_append_bytes( const char * yybytes, int _yybytes_len )
+%endif
 {
     M4_YY_DECL_GUTS_VAR();
 	YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
 	char *buf;
-	yy_size_t n;
-	int i;
+	int bNeedSwitchBuffer = 0;
 
 	if(!b){
-/*		return yy_scan_bytes(yybytes, _yybytes_len M4_YY_CALL_LAST_ARG);		*/
-		b = yy_scan_bytes( yybytes, _yybytes_len M4_YY_CALL_LAST_ARG);
+		b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
+		if ( ! b )
+			YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
+
+		b->yy_buf_size = 0;
+		b->yy_buf_pos = b->yy_ch_buf = NULL;
+		b->yy_is_our_buffer = 1;
+		b->yy_input_file = NULL;
+		b->yy_n_chars = 0;
+		b->yy_is_interactive = 0;
+		b->yy_at_bol = 1;
 		b->yy_fill_buffer = 2;
-		printf("Leaving yy_append_bytes buf@%p:%d:%d\n", b->yy_ch_buf, b->yy_buf_size, b->yy_n_chars);
-/*		dump_buffer(b->yy_ch_buf, b->yy_n_chars+2);*/
-		return b;
+		b->yy_buffer_status = YY_BUFFER_NEW;
+
+		bNeedSwitchBuffer = 1;
 	}else{
 		printf("Entering yy_append_bytes buf@%p:%d:%d\n", b->yy_ch_buf, b->yy_buf_size, b->yy_n_chars);
 /*		dump_buffer(b->yy_ch_buf, b->yy_n_chars+2);*/
@@ -2523,12 +2541,16 @@ YY_BUFFER_STATE yy_append_bytes  YYFARGS2( const char *,yybytes, int ,_yybytes_l
 	b->yy_n_chars += _yybytes_len;
 	b->yy_ch_buf[b->yy_n_chars] = b->yy_ch_buf[b->yy_n_chars+1] = YY_END_OF_BUFFER_CHAR;
 
+	if(bNeedSwitchBuffer){
+		b->yy_buf_pos = b->yy_ch_buf;
+		yy_switch_to_buffer( b M4_YY_CALL_LAST_ARG );
+	}
+
 	printf("Leaving yy_append_bytes buf@%p:%d:%d\n", b->yy_ch_buf, b->yy_buf_size, b->yy_n_chars);
 /*	dump_buffer(b->yy_ch_buf, b->yy_n_chars+2);*/
 
 	return b;
 }
-%endif
 ]])
 
 

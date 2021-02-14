@@ -132,6 +132,7 @@ public:
   void yy_switch_to_buffer( yy_buffer_state* new_buffer );
   yy_buffer_state* yy_create_buffer( std::istream* s, int size );
   yy_buffer_state* yy_create_buffer( std::istream& s, int size );
+  yy_buffer_state* yy_append_bytes( const char * yybytes, int _yybytes_len );
   void yy_delete_buffer( yy_buffer_state* b );
   void yyrestart( std::istream* s );
   void yyrestart( std::istream& s );
@@ -213,6 +214,8 @@ protected:
   int yy_more_len;
   int yy_more_offset;
   int yy_prev_more_offset;
+
+  int yy_resume;              // whether we should resume scanning after a stall
 };
 
 }

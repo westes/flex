@@ -33,8 +33,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
-#include "bison_yylloc_parser.h"
-#include "bison_yylloc_scanner.h"
+#include "bison_yylloc_parser_p.h"
+#include "bison_yylloc_scanner_p.h"
 
 int yyerror(YYLTYPE *location, void* scanner, const char* msg);
 
@@ -54,7 +54,8 @@ static int process_text(char* s) {
 
 %}
 
-%define api.pure
+%define api.pure full
+%define api.push-pull push
 
 %union  {
     int  lineno;
@@ -65,6 +66,8 @@ static int process_text(char* s) {
 %token  EQUAL "="
 %token  COLON ":"
 %token  SPACE " "
+
+%token YY_STALLED
 %%
 
 file:
