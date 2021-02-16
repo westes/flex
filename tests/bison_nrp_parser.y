@@ -21,24 +21,23 @@
  * PURPOSE.
  */
 
-%parse-param { void* scanner }
-%lex-param { void* scanner }
-
 /* 
    How to compile:
-   bison --defines --output-file="bison_yylloc_parser.c" --name-prefix="test" parser.y
+   bison --defines --output-file="parser.c" --name-prefix="test" parser.y
  */
 %{
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
-#include "bison_yylloc_parser.h"
-#include "bison_yylloc_scanner.h"
-
-int yyerror(YYLTYPE *location, void* scanner, const char* msg);
+#include "bison_nrp_parser.h"
+#include "bison_nrp_scanner.h"
 
 #define YYERROR_VERBOSE 1
+/* #define YYPARSE_PARAM scanner */
+/* #define YYLEX_PARAM   scanner */
+
+int yyerror(YYLTYPE *location, const char* msg);
 
 
 /* A dummy function. A check against seg-faults in yylval->str. */
@@ -54,7 +53,8 @@ static int process_text(char* s) {
 
 %}
 
-%define api.pure
+%define api.pure full
+%define api.push-pull push
 
 %union  {
     int  lineno;
@@ -65,6 +65,8 @@ static int process_text(char* s) {
 %token  EQUAL "="
 %token  COLON ":"
 %token  SPACE " "
+
+%token YY_STALLED
 %%
 
 file:
@@ -78,9 +80,9 @@ line:
         process_text($4);
         process_text($6);
         /* Check lineno. */
-        if( $1 != @1.first_line || $1 != testget_lineno(scanner))
+        if( $1 != @1.first_line || $1 != testget_lineno())
         {
-            yyerror(0, 0, "Parse failed: Line numbers do not match.");
+            yyerror(NULL, "Parse failed: Line numbers do not match.");
             YYABORT;
         }
 
@@ -91,9 +93,8 @@ line:
 
 %%
 
-int yyerror(YYLTYPE *location, void* scanner, const char* msg) {
+int yyerror(YYLTYPE *location, const char* msg) {
     (void)location;
-    (void)scanner;
     fprintf(stderr,"%s\n",msg);
     return 0;
 }

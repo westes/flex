@@ -385,6 +385,7 @@ extern int trace_hex;
  * did_outfilename - whether outfilename was explicitly set
  * prefix - the prefix used for externally visible names ("yy" by default)
  * yyclass - yyFlexLexer subclass to use for YY_DECL
+ * yystall - value to return when push lexer is stalled
  * do_stdinit - whether to initialize yyin/yyout to stdin/stdout
  * use_stdout - the -t flag
  * input_files - array holding names of input files
@@ -408,6 +409,7 @@ extern int skel_ind;
 extern char *infilename, *outfilename, *headerfilename;
 extern int did_outfilename;
 extern char *prefix, *yyclass, *extra_type;
+extern char *yystall;
 extern int do_stdinit, use_stdout;
 extern char **input_files;
 extern int num_input_files;

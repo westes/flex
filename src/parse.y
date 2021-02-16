@@ -1,7 +1,7 @@
 /* parse.y - parser for flex input */
 
 %token CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
-%token TOK_OPTION TOK_OUTFILE TOK_PREFIX TOK_YYCLASS TOK_HEADER_FILE TOK_EXTRA_TYPE
+%token TOK_OPTION TOK_OUTFILE TOK_PREFIX TOK_YYCLASS TOK_YYSTALL TOK_HEADER_FILE TOK_EXTRA_TYPE
 %token TOK_TABLES_FILE
 
 %token CCE_ALNUM CCE_ALPHA CCE_BLANK CCE_CNTRL CCE_DIGIT CCE_GRAPH
@@ -204,6 +204,8 @@ option		:  TOK_OUTFILE '=' NAME
                               flexerror(_("Prefix must not contain [ or ]")); }
 		|  TOK_YYCLASS '=' NAME
 			{ yyclass = xstrdup(nmstr); }
+		|  TOK_YYSTALL '=' NAME
+			{ yystall = xstrdup(nmstr); }
 		|  TOK_HEADER_FILE '=' NAME
 			{ headerfilename = xstrdup(nmstr); }
 	    |  TOK_TABLES_FILE '=' NAME

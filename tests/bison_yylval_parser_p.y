@@ -21,25 +21,23 @@
  * PURPOSE.
  */
 
+/* Accepts html-like input.
+   How to compile:
+   bison --defines --output-file="parser.c" --name-prefix="test" parser.y
+ */
 %parse-param { void* scanner }
 %lex-param { void* scanner }
-
-/* 
-   How to compile:
-   bison --defines --output-file="bison_yylloc_parser.c" --name-prefix="test" parser.y
- */
 %{
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
-#include "bison_yylloc_parser.h"
-#include "bison_yylloc_scanner.h"
-
-int yyerror(YYLTYPE *location, void* scanner, const char* msg);
+#include "bison_yylval_parser_p.h"
+#include "bison_yylval_scanner_p.h"
 
 #define YYERROR_VERBOSE 1
 
+int yyerror(void* scanner, const char* msg);
 
 /* A dummy function. A check against seg-faults in yylval->str. */
 static int process_text(char* s) {
@@ -54,47 +52,36 @@ static int process_text(char* s) {
 
 %}
 
-%define api.pure
+%define api.pure full
+%define api.push-pull push
 
 %union  {
-    int  lineno;
+    long unused;
     char * str;
 }
-%token <str> IDENT
-%token <lineno> LINENO
-%token  EQUAL "="
-%token  COLON ":"
-%token  SPACE " "
+
+%token <str> TAGNAME TEXT
+%token  LT 
+%token  GT
+%token  LTSLASH "</"
+
+%token YY_STALLED
+
 %%
 
-file:
-     line
-  |  file line
+html:
+    TEXT { process_text($1); free($1);}
+  | starttag html endtag
+  | html TEXT { process_text($2); free($2);}
+  | html starttag html endtag  
   ;
 
-line:
-    LINENO COLON SPACE IDENT EQUAL IDENT
-    {
-        process_text($4);
-        process_text($6);
-        /* Check lineno. */
-        if( $1 != @1.first_line || $1 != testget_lineno(scanner))
-        {
-            yyerror(0, 0, "Parse failed: Line numbers do not match.");
-            YYABORT;
-        }
-
-        /* Recreate the line to stdout. */
-        printf ( "%04d: %s=%s\n", @1.first_line, $4, $6);
-    }
-    ;
-
+starttag:  LT      TAGNAME GT { process_text($2); free($2);} ;
+endtag:    LTSLASH TAGNAME GT { process_text($2);free($2);} ;
 %%
 
-int yyerror(YYLTYPE *location, void* scanner, const char* msg) {
-    (void)location;
+int yyerror(void* scanner, const char* msg) {
     (void)scanner;
     fprintf(stderr,"%s\n",msg);
     return 0;
 }
-

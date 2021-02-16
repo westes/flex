@@ -62,18 +62,26 @@ check_PROGRAMS = $(simple_tests) $(reject_tests) $(TABLE_TESTS) $(DIRECT_TESTS) 
 
 simple_tests = \
 	alloc_extra \
+	alloc_extra_p \
 	array_nr \
+	array_nrp \
 	array_r \
+	array_rp \
 	basic_nr \
 	basic_r \
+	basic_rp \
 	bison_nr \
+	bison_nrp \
 	bison_yylloc \
+	bison_yylloc_p \
 	bison_yylval \
+	bison_yylval_p \
 	c_cxx_nr \
 	c_cxx_r \
 	ccl \
 	cxx_basic \
 	cxx_multiple_scanners \
+	cxx_multiple_scanners_p \
 	cxx_restart \
 	debug_nr \
 	debug_r \
@@ -123,21 +131,34 @@ ONE_TESTS = \
 
 quote_in_comment_SOURCES = quote_in_comment.l
 alloc_extra_SOURCES = alloc_extra.l
+alloc_extra_p_SOURCES = alloc_extra_p.l
 array_nr_SOURCES = array_nr.l
+array_nrp_SOURCES = array_nrp.l
 array_r_SOURCES = array_r.l
+array_rp_SOURCES = array_rp.l
 basic_nr_SOURCES = basic_nr.l
 basic_r_SOURCES = basic_r.l
+basic_rp_SOURCES = basic_rp.l
 if HAVE_BISON
 bison_nr_SOURCES = bison_nr_scanner.l bison_nr_parser.y bison_nr_main.c
 nodist_bison_nr_SOURCES = bison_nr_parser.h bison_nr_scanner.h
+bison_nrp_SOURCES = bison_nrp_scanner.l bison_nrp_parser.y bison_nrp_main.c
+nodist_bison_nrp_SOURCES = bison_nrp_parser.h bison_nrp_scanner.h
 bison_yylloc_SOURCES = bison_yylloc_scanner.l bison_yylloc_parser.y bison_yylloc_main.c
 nodist_bison_yylloc_SOURCES = bison_yylloc_parser.h bison_yylloc_scanner.h
+bison_yylloc_p_SOURCES = bison_yylloc_scanner_p.l bison_yylloc_parser_p.y bison_yylloc_main_p.c
+nodist_bison_yylloc_p_SOURCES = bison_yylloc_parser_p.h bison_yylloc_scanner_p.h
 bison_yylval_SOURCES = bison_yylval_scanner.l bison_yylval_parser.y bison_yylval_main.c
 nodist_bison_yylval_SOURCES = bison_yylval_parser.h bison_yylval_scanner.h
+bison_yylval_p_SOURCES = bison_yylval_scanner_p.l bison_yylval_parser_p.y bison_yylval_main_p.c
+nodist_bison_p_yylval_SOURCES = bison_yylval_parser_p.h bison_yylval_scanner_p.h
 else
 bison_nr_SOURCES = no_bison_stub.c
+bison_nrp_SOURCES = no_bison_stub.c
 bison_yylloc_SOURCES = no_bison_stub.c
+bison_yylloc_p_SOURCES = no_bison_stub.c
 bison_yylval_SOURCES = no_bison_stub.c
+bison_yylval_p_SOURCES = no_bison_stub.c
 endif
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
@@ -145,6 +166,7 @@ ccl_SOURCES = ccl.l
 cxx_basic_SOURCES = cxx_basic.ll
 cxx_restart_SOURCES = cxx_restart.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
+cxx_multiple_scanners_p_SOURCES = cxx_multiple_scanners_1_p.ll cxx_multiple_scanners_2_p.ll cxx_multiple_scanners_main_p.cc
 cxx_yywrap_i3_SOURCES = cxx_yywrap.ll
 debug_nr_SOURCES = debug_nr.l
 debug_r_SOURCES = debug_r.l
@@ -194,28 +216,48 @@ yyextra_SOURCES = yyextra.l
 
 CLEANFILES = \
 	alloc_extra.c \
+	alloc_extra_p.c \
 	array_nr.c \
+	array_nrp.c \
 	array_r.c \
+	array_rp.c \
 	basic_nr.c \
 	basic_r.c \
+	basic_rp.c \
 	bison_nr_parser.c \
 	bison_nr_parser.h \
 	bison_nr_scanner.c \
 	bison_nr_scanner.h \
+	bison_nrp_parser.c \
+	bison_nrp_parser.h \
+	bison_nrp_scanner.c \
+	bison_nrp_scanner.h \
 	bison_yylloc_parser.c \
 	bison_yylloc_parser.h \
 	bison_yylloc_scanner.c \
 	bison_yylloc_scanner.h \
+	bison_yylloc_parser_p.c \
+	bison_yylloc_parser_p.h \
+	bison_yylloc_scanner_p.c \
+	bison_yylloc_scanner_p.h \
 	bison_yylval_parser.c \
 	bison_yylval_parser.h \
 	bison_yylval_scanner.c \
 	bison_yylval_scanner.h \
+	bison_yylval_parser_p.c \
+	bison_yylval_parser_p.h \
+	bison_yylval_scanner_p.c \
+	bison_yylval_scanner_p.h \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
 	ccl.c \
 	cxx_basic.cc \
 	cxx_multiple_scanners_1.cc \
 	cxx_multiple_scanners_2.cc \
+	cxx_multiple_scanners_1_p.cc \
+	cxx_multiple_scanners_1_p.h \
+	cxx_multiple_scanners_2_p.cc \
+	cxx_multiple_scanners_2_p.h \
 	cxx_restart.cc \
 	cxx_yywrap.cc \
 	debug_nr.c \
@@ -273,18 +315,26 @@ dist-hook:
 EXTRA_DIST = \
 	README \
 	alloc_extra.txt \
+	alloc_extra_p.txt \
 	array_nr.txt \
+	array_nrp.txt \
 	array_r.txt \
+	array_rp.txt \
 	basic_nr.txt \
 	basic_r.txt \
+	basic_rp.txt \
 	bison_nr.txt \
+	bison_nrp.txt \
 	bison_yylloc.txt \
+	bison_yylloc_p.txt \
 	bison_yylval.txt \
+	bison_yylval_p.txt \
 	c_cxx_nr.txt \
 	c_cxx_r.txt \
 	ccl.txt \
 	cxx_basic.txt \
 	cxx_multiple_scanners.txt \
+	cxx_multiple_scanners_p.txt \
 	cxx_restart.txt \
 	cxx_yywrap.txt \
 	debug_nr.txt \
@@ -349,6 +399,13 @@ bison_nr_scanner.h: bison_nr_scanner.c
 	@if test ! -f $@; then rm -f $<; else :; fi
 	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
+bison_nrp_main.$(OBJEXT): bison_nrp_parser.h bison_nrp_scanner.h
+bison_nrp_scanner.$(OBJEXT): bison_nrp_parser.h
+
+bison_nrp_scanner.h: bison_nrp_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
+
 bison_yylloc_main.$(OBJEXT): bison_yylloc_parser.h bison_yylloc_scanner.h
 bison_yylloc_scanner.$(OBJEXT): bison_yylloc_parser.h
 
@@ -356,10 +413,24 @@ bison_yylloc_scanner.h: bison_yylloc_scanner.c
 	@if test ! -f $@; then rm -f $<; else :; fi
 	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 
+bison_yylloc_main_p.$(OBJEXT): bison_yylloc_parser_p.h bison_yylloc_scanner_p.h
+bison_yylloc_scanner_p.$(OBJEXT): bison_yylloc_parser_p.h
+
+bison_yylloc_scanner_p.h: bison_yylloc_scanner_p.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
+
 bison_yylval_main.$(OBJEXT): bison_yylval_parser.h bison_yylval_scanner.h
 bison_yylval_scanner.$(OBJEXT): bison_yylval_parser.h
 
 bison_yylval_scanner.h: bison_yylval_scanner.c
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
+
+bison_yylval_main_p.$(OBJEXT): bison_yylval_parser_p.h bison_yylval_scanner_p.h
+bison_yylval_scanner_p.$(OBJEXT): bison_yylval_parser_p.h
+
+bison_yylval_scanner_p.h: bison_yylval_scanner_p.c
 	@if test ! -f $@; then rm -f $<; else :; fi
 	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
 

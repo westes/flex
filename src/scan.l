@@ -396,8 +396,10 @@ M4QEND      "]""]"
 	main		{
 			ACTION_M4_IFDEF( "M4""_YY_MAIN", option_sense);
             /* Override yywrap */
-            if( option_sense == true )
+            if( option_sense == true ){
                 do_yywrap = false;
+                ACTION_M4_IFDEF("M4""_YY_NO_YYWRAP", NULL);
+            }
 			}
 	meta-ecs	usemecs = option_sense;
 	never-interactive	{
@@ -418,7 +420,7 @@ M4QEND      "]""]"
 	warn		nowarn = ! option_sense;
 	yylineno	do_yylineno = option_sense; ACTION_M4_IFDEF("M4""_YY_USE_LINENO", option_sense);
 	yymore		yymore_really_used = option_sense;
-	yywrap      do_yywrap = option_sense;
+	yywrap		{do_yywrap = option_sense; ACTION_M4_IFDEF("M4""_YY_NO_YYWRAP", option_sense);}
 
 	yy_push_state	ACTION_M4_IFDEF("M4""_YY_NO_PUSH_STATE", ! option_sense);
 	yy_pop_state	ACTION_M4_IFDEF("M4""_YY_NO_POP_STATE", ! option_sense);
@@ -455,6 +457,7 @@ M4QEND      "]""]"
 	outfile		return TOK_OUTFILE;
 	prefix		return TOK_PREFIX;
 	yyclass		return TOK_YYCLASS;
+	yystall		return TOK_YYSTALL;
 	header(-file)?      return TOK_HEADER_FILE;
 	tables-file         return TOK_TABLES_FILE;
 	tables-verify   {
