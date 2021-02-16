@@ -27,11 +27,12 @@
 #include <stdlib.h>
 #include "config.h"
 /*#include "parser.h" */
+
 %}
 
 %option 8bit prefix="test"
 %option nounput nomain noyywrap noinput
-%option warn array reentrant yystall="0xBADF00D"
+%option warn array yystall="0xBADF00D"
 
 
 %%
@@ -41,24 +42,19 @@
 
 %%
 
-int main(void);
+int main (void);
 
 int
 main (void)
 {
-    yyscan_t lexer;
-    
-    yylex_init(&lexer);
-    yyset_out(stdout, lexer);
+    yyout = stdout;
 
     while(!feof(stdin)){
         char car = fgetc(stdin);
-        yy_append_bytes(&car, 1, lexer);
-        yylex( lexer );
+        yy_append_bytes(&car, 1);
+        yylex( );
     }
 
-    yylex_destroy( lexer);
     printf("TEST RETURNING OK.\n");
-
     return 0;
 }

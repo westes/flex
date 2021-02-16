@@ -21,44 +21,43 @@
  * PURPOSE.
  */
 
-%{
-/* A template scanner file to build "scanner.c". */
-#include <stdio.h>
-#include <stdlib.h>
-#include "config.h"
-/*#include "parser.h" */
-%}
-
-%option 8bit prefix="test"
-%option nounput nomain noyywrap noinput
-%option warn array reentrant yystall="0xBADF00D"
+#include "bison_nrp_parser.h"
+#include "bison_nrp_scanner.h"
 
 
-%%
-
-.|\n    { }
-
-
-%%
-
-int main(void);
-
-int
-main (void)
+int main ( int argc, char** argv )
 {
-    yyscan_t lexer;
-    
-    yylex_init(&lexer);
-    yyset_out(stdout, lexer);
+    YYSTYPE pushed_value;
+    YYLTYPE pushed_location;
+    testpstate * ps;
+
+    (void)argc;
+    (void)argv;
+
+    /*yydebug =1;*/
+    ps = testpstate_new();
 
     while(!feof(stdin)){
         char car = fgetc(stdin);
-        yy_append_bytes(&car, 1, lexer);
-        yylex( lexer );
+        test_append_bytes(&car, 1);
+        int statusYacc;
+        do{
+            statusYacc = 0;
+            int statusLex = testlex(&pushed_value, &pushed_location);
+            if(!statusLex){break;}
+            if(statusLex == YY_STALLED){
+                printf("Not invoking parser because we are STALLED\n");
+            }else{
+                statusYacc = testpush_parse(ps, statusLex, &pushed_value, &pushed_location);
+                printf("[%d:%d]", statusLex, statusYacc);
+            }
+        }while(statusYacc==YYPUSH_MORE);
     }
 
-    yylex_destroy( lexer);
-    printf("TEST RETURNING OK.\n");
 
     return 0;
 }
+
+
+
+/* vim:set tabstop=8 softtabstop=4 shiftwidth=4: */

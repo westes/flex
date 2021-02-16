@@ -595,6 +595,7 @@ int yyleng;
 
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = NULL;
+static int yy_resume = 0;	/**< resume after YY_STALLED */
 static int yy_init = 0;		/* whether we need to initialize */
 static int yy_start = 0;	/* start state number */
 

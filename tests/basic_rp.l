@@ -21,44 +21,51 @@
  * PURPOSE.
  */
 
+/* A reentrant scanner.
+   This file will not compile under flex version <= 2.5.4.
+   Sample Input:
+       # this is a comment
+       foo = true
+       bar = "string value"
+       integer = 43
+*/
 %{
-/* A template scanner file to build "scanner.c". */
-#include <stdio.h>
-#include <stdlib.h>
 #include "config.h"
-/*#include "parser.h" */
 %}
 
-%option 8bit prefix="test"
-%option nounput nomain noyywrap noinput
-%option warn array reentrant yystall="0xBADF00D"
+%option prefix="test"
+%option nounput noyywrap noyylineno warn nodefault noinput
+%option reentrant yystall="0xBADF00D"
 
-
+IDENT [[:alnum:]_-]
+WS    [[:blank:]]
 %%
 
-.|\n    { }
-
+^{IDENT}+{WS}*={WS}*(true|false){WS}*\r?\n    { return 100;}
+^{IDENT}+{WS}*={WS}*\"[^\"\n\r]*\"{WS}*\r?\n  { return 101;}
+^{IDENT}+{WS}*={WS}*[[:digit:]]+{WS}*\r?\n    { return 102;}
+^{WS}*#.*\r?\n     { }
+^{WS}*\r?\n        { }
+.|\n  { fprintf(stderr,"Invalid line.\n"); exit(-1);}
 
 %%
 
 int main(void);
 
-int
-main (void)
+int main (void)
 {
-    yyscan_t lexer;
-    
-    yylex_init(&lexer);
-    yyset_out(stdout, lexer);
+    yyscan_t  lexer;
+    testlex_init( &lexer );
+    testset_out ( stdout,lexer);
 
     while(!feof(stdin)){
         char car = fgetc(stdin);
-        yy_append_bytes(&car, 1, lexer);
-        yylex( lexer );
+        test_append_bytes(&car, 1, lexer);
+        testlex( lexer );
     }
 
-    yylex_destroy( lexer);
+    testlex_destroy( lexer );
     printf("TEST RETURNING OK.\n");
-
     return 0;
 }
+

@@ -36,7 +36,6 @@ int main ( int argc, char** argv )
 
     /*yydebug =1;*/
     testlex_init ( &scanner );
-    testset_in(stdin,scanner);
     ps = testpstate_new();
 
     while(!feof(stdin)){
