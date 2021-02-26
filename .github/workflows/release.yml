@@ -1,10 +1,8 @@
 name: Release
 
 on:
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  release:
+    types: [created]
 
 
 jobs:
@@ -14,49 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: apt
-        run: sudo apt-get install gcc-6 autoconf bison gettext autopoint help2man lzip texinfo texlive
-      - name: autogen
-        run: ./autogen.sh
-      - name: configure
-        run: ./configure
-      - name: make
-        run: make
-      - name: make check
-        run: make check
-      - name: make distcheck
-        run: make distcheck
-      - name: Get artifact names
+      - name: info
         run: |
-          echo "ARTIFACT_GZ=$(echo flex-*.tar.gz)" >> $GITHUB_ENV
-          echo "ARTIFACT_LZ=$(echo flex-*.tar.lz)" >> $GITHUB_ENV
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-      - name: Upload Release tar.gz
-        id: upload-release-asset-gz 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./${{ env.ARTIFACT_GZ }}
-          asset_name: ${{ env.ARTIFACT_GZ }}
-          asset_content_type: application/gzip
-      - name: Upload Release tar.lz
-        id: upload-release-asset-lz
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./${{ env.ARTIFACT_LZ }}
-          asset_name: ${{ env.ARTIFACT_LZ }}
-          asset_content_type: application/lzip
+          cat $GITHUB_EVENT_PATH
