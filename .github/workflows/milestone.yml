@@ -1,0 +1,85 @@
+name: Milestone
+
+on:
+  milestone:
+    types: [closed]
+
+
+jobs:
+  milestone:
+    name: Close out Milestone
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Ruby Gems
+        run: |
+          sudo gem install octokit json
+      - name: Generate NEWS
+        run: |
+          echo "TAG_NAME=$(ruby $GITHUB_WORKSPACE/.github/workflows/milestone_close.rb)" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit and Push
+        run: |
+          mv $GITHUB_WORKSPACE/NEWS.new $GITHUB_WORKSPACE/NEWS
+          git add $GITHUB_WORKSPACE/NEWS
+          git commit -m "chore(release): Update NEWS"
+          git push
+      - name: Create Tag
+        run: |
+          git tag -a $TAG_NAME -m "chore(release): Prepare tag for release $TAGNAME"
+
+  release:
+    needs: milestone
+    name: Make release
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: apt
+        run: sudo apt-get install gcc-6 autoconf bison gettext autopoint help2man lzip texinfo texlive
+      - name: autogen
+        run: ./autogen.sh
+      - name: configure
+        run: ./configure
+      - name: make
+        run: make
+      - name: make check
+        run: make check
+      - name: make distcheck
+        run: make distcheck
+      - name: Get artifact names
+        run: |
+          echo "ARTIFACT_GZ=$(echo flex-*.tar.gz)" >> $GITHUB_ENV
+          echo "ARTIFACT_LZ=$(echo flex-*.tar.lz)" >> $GITHUB_ENV
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload Release tar.gz
+        id: upload-release-asset-gz 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./${{ env.ARTIFACT_GZ }}
+          asset_name: ${{ env.ARTIFACT_GZ }}
+          asset_content_type: application/gzip
+      - name: Upload Release tar.lz
+        id: upload-release-asset-lz
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./${{ env.ARTIFACT_LZ }}
+          asset_name: ${{ env.ARTIFACT_LZ }}
+          asset_content_type: application/lzip
