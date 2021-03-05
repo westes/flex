@@ -9,6 +9,8 @@ jobs:
   milestone:
     name: Close out Milestone
     runs-on: ubuntu-18.04
+    outputs:
+      tagname: ${{ steps.news.outputs.tagname }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -16,29 +18,42 @@ jobs:
         run: |
           sudo gem install octokit json
       - name: Generate NEWS
+        id: news
         run: |
-          echo "TAG_NAME=$(ruby $GITHUB_WORKSPACE/.github/workflows/milestone_close.rb)" >> $GITHUB_ENV
+          echo "::set-output name=tagname::$(ruby $GITHUB_WORKSPACE/.github/workflows/milestone_close.rb)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Commit and Push
         run: |
           mv $GITHUB_WORKSPACE/NEWS.new $GITHUB_WORKSPACE/NEWS
           git add $GITHUB_WORKSPACE/NEWS
+          git config --global user.email "runner@github.com"
+          git config --global user.name "GitHub Actions Runner"
           git commit -m "chore(release): Update NEWS"
           git push
       - name: Create Tag
         run: |
-          git tag -a $TAG_NAME -m "chore(release): Prepare tag for release $TAGNAME"
+          git tag -a ${{steps.news.outputs.tagname}} -m "chore(release): Prepare tag for release ${{steps.news.outputs.tagname}}"
+          git push origin ${{steps.news.outputs.tagname}}
 
   release:
     needs: milestone
     name: Make release
     runs-on: ubuntu-18.04
+    outputs:
+      version: ${{ steps.version.output.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: apt
         run: sudo apt-get install gcc-6 autoconf bison gettext autopoint help2man lzip texinfo texlive
+      - name: Change version number
+        id: version
+        run: |
+          ver=${{ needs.milestone.outputs.tagname }}
+          ver=${ver#v}
+          ver=${ver%-*}
+          echo "::set-output name=version::$ver"
       - name: autogen
         run: ./autogen.sh
       - name: configure
@@ -51,16 +66,17 @@ jobs:
         run: make distcheck
       - name: Get artifact names
         run: |
-          echo "ARTIFACT_GZ=$(echo flex-*.tar.gz)" >> $GITHUB_ENV
-          echo "ARTIFACT_LZ=$(echo flex-*.tar.lz)" >> $GITHUB_ENV
+          ver=${{ steps.version.outputs.version }}
+          echo "ARTIFACT_GZ=$(echo flex-$ver.tar.gz)" >> $GITHUB_ENV
+          echo "ARTIFACT_LZ=$(echo flex-$ver.tar.lz)" >> $GITHUB_ENV
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ needs.milestone.outputs.tagname }}
+          release_name: Release ${{ needs.milestone.outputs.tagname }}
           draft: false
           prerelease: false
       - name: Upload Release tar.gz
