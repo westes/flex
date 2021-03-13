@@ -110,6 +110,7 @@ endif
 
 dist-hook: scan.l flex$(EXEEXT)
 	chmod u+w $(distdir) && \
+	chmod u+w $(distdir)/scan.c && \
 	./flex$(EXEEXT) -o scan.c $< && \
 	mv -f scan.c $(distdir)
 
