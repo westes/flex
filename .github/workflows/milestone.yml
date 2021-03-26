@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-18.04
     outputs:
       tagname: ${{ steps.news.outputs.tagname }}
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,6 +24,15 @@ jobs:
           echo "::set-output name=tagname::$(ruby $GITHUB_WORKSPACE/.github/workflows/milestone_close.rb)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Change version number
+        id: version
+        env:
+          tagname: ${{ steps.news.outputs.tagname }}
+        run: |
+          ver=$tagname
+          ver=${ver#v}
+          ver=${ver%-*}
+          echo "::set-output name=version::$ver"
       - name: Commit and Push
         run: |
           mv $GITHUB_WORKSPACE/NEWS.new $GITHUB_WORKSPACE/NEWS
@@ -32,28 +42,21 @@ jobs:
           git commit -m "chore(release): Update NEWS"
           git push
       - name: Create Tag
+        env:
+          tagname: ${{ steps.news.outputs.tagname }}
         run: |
-          git tag -a ${{steps.news.outputs.tagname}} -m "chore(release): Prepare tag for release ${{steps.news.outputs.tagname}}"
-          git push origin ${{steps.news.outputs.tagname}}
+          git tag -a $tagname -m "chore(release): Prepare tag for release $tagname"
+          git push origin $tagname
 
   release:
     needs: milestone
     name: Make release
     runs-on: ubuntu-18.04
-    outputs:
-      version: ${{ steps.version.output.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: apt
         run: sudo apt-get install gcc-6 autoconf bison gettext autopoint help2man lzip texinfo texlive
-      - name: Change version number
-        id: version
-        run: |
-          ver=${{ needs.milestone.outputs.tagname }}
-          ver=${ver#v}
-          ver=${ver%-*}
-          echo "::set-output name=version::$ver"
       - name: autogen
         run: ./autogen.sh
       - name: configure
@@ -64,11 +67,53 @@ jobs:
         run: make check
       - name: make distcheck
         run: make distcheck
-      - name: Get artifact names
+      - name: Make Git archives
+        env:
+          ver: ${{ needs.milestone.outputs.version }}
+          tagname: ${{ needs.milestone.outputs.tagname }}
         run: |
-          ver=${{ steps.version.outputs.version }}
+          git archive -o $tagname.tar.gz --prefix=flex-$ver/ $tagname
+          TZ=America/Los_Angeles git archive -o $tagname.zip --prefix=flex-$ver/ $tagname
+      - name: Prepare GPG
+        id: gpg
+        env: 
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+          gpghome: .ghgpg
+        run: |
+          echo "::set-output name=gpghome::$gpghome"
+          mkdir -m 700 $gpghome
+          export GNUPGHOME=$gpghome
+          gpg --version
+          echo "$GPG_SIGNING_KEY" | gpg --batch --import
+      - name: Sign tarballs
+        env: 
+          GPG_SIGNING_PASSWD: ${{ secrets.GPG_SIGNING_PASSWD }}
+          ver: ${{ needs.milestone.outputs.version }}
+          tagname: ${{ needs.milestone.outputs.tagname }}
+          gpghome: ${{ steps.gpg.outputs.gpghome }}
+        run: |
+          export GNUPGHOME=$gpghome
+          echo "$GPG_SIGNING_PASSWD" | gpg --pinentry-mode loopback --passphrase-fd 0 --armor --detach-sign $tagname.tar.gz
+          echo "$GPG_SIGNING_PASSWD" | gpg --pinentry-mode loopback --passphrase-fd 0 --armor --detach-sign $tagname.zip
+          echo "$GPG_SIGNING_PASSWD" | gpg --pinentry-mode loopback --passphrase-fd 0 --armor --detach-sign flex-$ver.tar.gz
+          echo "$GPG_SIGNING_PASSWD" | gpg --pinentry-mode loopback --passphrase-fd 0 --armor --detach-sign flex-$ver.tar.lz
+      - name: Clean up GPG
+        env:
+          gpghome: ${{ steps.gpg.outputs.gpghome }}
+        run: |
+          export GNUPGHOME=$gpghome
+          rm -rf $gpghome
+      - name: Get artifact names
+        env:
+          ver: ${{ needs.milestone.outputs.version }}
+          tagname: ${{ needs.milestone.outputs.tagname }}
+        run: |
+          echo "SOURCE_GZ_ASC=$(echo$tagname.tar.gz.asc)" >> $GITHUB_ENV
+          echo "SOURCE_ZIP_ASC=$(echo $tagname.zip.asc)" >> $GITHUB_ENV
           echo "ARTIFACT_GZ=$(echo flex-$ver.tar.gz)" >> $GITHUB_ENV
           echo "ARTIFACT_LZ=$(echo flex-$ver.tar.lz)" >> $GITHUB_ENV
+          echo "ARTIFACT_GZ_ASC=$(echo flex-$ver.tar.gz.asc)" >> $GITHUB_ENV
+          echo "ARTIFACT_LZ_ASC=$(echo flex-$ver.tar.lz.asc)" >> $GITHUB_ENV
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -89,6 +134,16 @@ jobs:
           asset_path: ./${{ env.ARTIFACT_GZ }}
           asset_name: ${{ env.ARTIFACT_GZ }}
           asset_content_type: application/gzip
+      - name: Upload Release tar.gz.asc
+        id: upload-release-asset-gz-asc
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./${{ env.ARTIFACT_GZ_ASC }}
+          asset_name: ${{ env.ARTIFACT_GZ_ASC }}
+          asset_content_type: text/plain
       - name: Upload Release tar.lz
         id: upload-release-asset-lz
         uses: actions/upload-release-asset@v1
@@ -99,3 +154,33 @@ jobs:
           asset_path: ./${{ env.ARTIFACT_LZ }}
           asset_name: ${{ env.ARTIFACT_LZ }}
           asset_content_type: application/lzip
+      - name: Upload Release tar.lz.asc
+        id: upload-release-asset-lz-asc
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./${{ env.ARTIFACT_LZ_ASC }}
+          asset_name: ${{ env.ARTIFACT_LZ_ASC }}
+          asset_content_type: text/plain
+      - name: Upload Source tar.gz.asc
+        id: upload-release-source-tar-gz-asc
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./${{ env.SOURCE_GZ_ASC }}
+          asset_name: ${{ env.SOURCE_GZ_ASC }}
+          asset_content_type: text/plain
+      - name: Upload Source zip.asc
+        id: upload-release-source-zip-asc
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./${{ env.SOURCE_ZIP_ASC }}
+          asset_name: ${{ env.SOURCE_ZIP_ASC }}
+          asset_content_type: text/plain
