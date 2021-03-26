@@ -33,13 +33,16 @@ jobs:
           ver=${ver#v}
           ver=${ver%-*}
           echo "::set-output name=version::$ver"
+          sed "s/^\(AC_INIT.*generator\],\)\(.*\)\(,\[flex-help.*\)$/\1[$ver]\3/" $GITHUB_WORKSPACE/configure.ac >> $GITHUB_WORKSPACE/configure.ac.new
+          mv $GITHUB_WORKSPACE/configure.ac.new $GITHUB_WORKSPACE/configure.ac
       - name: Commit and Push
         run: |
           mv $GITHUB_WORKSPACE/NEWS.new $GITHUB_WORKSPACE/NEWS
           git add $GITHUB_WORKSPACE/NEWS
+          git add $GITHUB_WORKSPACE/configure.ac
           git config --global user.email "runner@github.com"
           git config --global user.name "GitHub Actions Runner"
-          git commit -m "chore(release): Update NEWS"
+          git commit -m "chore(release): Update Version Number and NEWS"
           git push
       - name: Create Tag
         env:
@@ -55,6 +58,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Fast-forward to Milestone Tag
+        env:
+          ver: ${{ needs.milestone.outputs.version }}
+          tagname: ${{ needs.milestone.outputs.tagname }}
+        run: |
+          git fetch
+          git checkout $tagname
       - name: apt
         run: sudo apt-get install gcc-6 autoconf bison gettext autopoint help2man lzip texinfo texlive
       - name: autogen
@@ -108,7 +118,7 @@ jobs:
           ver: ${{ needs.milestone.outputs.version }}
           tagname: ${{ needs.milestone.outputs.tagname }}
         run: |
-          echo "SOURCE_GZ_ASC=$(echo$tagname.tar.gz.asc)" >> $GITHUB_ENV
+          echo "SOURCE_GZ_ASC=$(echo $tagname.tar.gz.asc)" >> $GITHUB_ENV
           echo "SOURCE_ZIP_ASC=$(echo $tagname.zip.asc)" >> $GITHUB_ENV
           echo "ARTIFACT_GZ=$(echo flex-$ver.tar.gz)" >> $GITHUB_ENV
           echo "ARTIFACT_LZ=$(echo flex-$ver.tar.lz)" >> $GITHUB_ENV
