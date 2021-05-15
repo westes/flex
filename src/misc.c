@@ -140,24 +140,7 @@ void add_action (const char *new_text)
 
 void   *allocate_array (int size, size_t element_size)
 {
-	void *new_array;
-#if HAVE_REALLOCARR
-	new_array = NULL;
-	if (reallocarr(&new_array, (size_t) size, element_size))
-		flexfatal (_("memory allocation failed in allocate_array()"));
-#else
-# if HAVE_REALLOCARRAY
-	new_array = reallocarray(NULL, (size_t) size, element_size);
-# else
-	/* Do manual overflow detection */
-	size_t num_bytes = (size_t) size * element_size;
-	new_array = (size && SIZE_MAX / (size_t) size < element_size) ? NULL :
-		malloc(num_bytes);
-# endif
-	if (!new_array)
-		flexfatal (_("memory allocation failed in allocate_array()"));
-#endif
-	return new_array;
+	return reallocate_array(NULL, size, element_size);
 }
 
 
@@ -271,9 +254,7 @@ void dataend (void)
 
 void dataflush (void)
 {
-	/* short circuit any output */
-	if (!gentables)
-		return;
+	assert(gentables);
 
 	outc ('\n');
 
@@ -664,8 +645,13 @@ void   *reallocate_array (void *array, int size, size_t element_size)
 	void *new_array;
 #if HAVE_REALLOCARR
 	new_array = array;
-	if (reallocarr(&new_array, (size_t) size, element_size))
-		flexfatal (_("attempt to increase array size failed"));
+	if (reallocarr(&new_array, (size_t) size, element_size)) {
+		flexfatal ((array) ?
+			_("attempt to increase array size failed") :
+			/* Function name is allocate_array() because of
+			 * compatibility (for translations): */
+			_("memory allocation failed in allocate_array()"));
+	}
 #else
 # if HAVE_REALLOCARRAY
 	new_array = reallocarray(array, (size_t) size, element_size);
@@ -675,8 +661,13 @@ void   *reallocate_array (void *array, int size, size_t element_size)
 	new_array = (size && SIZE_MAX / (size_t) size < element_size) ? NULL :
 		realloc(array, num_bytes);
 # endif
-	if (!new_array)
-		flexfatal (_("attempt to increase array size failed"));
+	if (!new_array) {
+		flexfatal ((array) ?
+			_("attempt to increase array size failed") :
+			/* Function name is allocate_array() because of
+			 * compatibility (for translations): */
+			_("memory allocation failed in allocate_array()"));
+	}
 #endif
 	return new_array;
 }

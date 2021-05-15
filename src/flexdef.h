@@ -356,13 +356,15 @@
  * trace_hex - use hexadecimal numbers in trace/debug outputs instead of octals
  */
 
-extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
+extern bool printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
 	spprdflt;
-extern int interactive, lex_compat, posix_compat, do_yylineno;
-extern int useecs, fulltbl, usemecs, fullspd;
-extern int gen_line_dirs, performance_report, backing_up_report;
-extern int reentrant, bison_bridge_lval, bison_bridge_lloc;
-extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
+extern int interactive;
+extern bool lex_compat, posix_compat, do_yylineno;
+extern bool useecs, fulltbl, usemecs, fullspd, gen_line_dirs;
+extern int performance_report;
+extern bool backing_up_report;
+extern bool reentrant, bison_bridge_lval, bison_bridge_lloc;
+extern bool C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
 extern int csize;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
@@ -406,9 +408,9 @@ extern FILE *skelfile, *backing_up_file;
 extern const char *skel[];
 extern int skel_ind;
 extern char *infilename, *outfilename, *headerfilename;
-extern int did_outfilename;
+extern bool did_outfilename;
 extern char *prefix, *yyclass, *extra_type;
-extern int do_stdinit, use_stdout;
+extern bool do_stdinit, use_stdout;
 extern char **input_files;
 extern int num_input_files;
 extern char *program_name;
@@ -467,8 +469,10 @@ extern int maximum_mns, current_mns, current_max_rules;
 extern int num_rules, num_eof_rules, default_rule, lastnfa;
 extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 extern int *accptnum, *assoc_rule, *state_type;
-extern int *rule_type, *rule_linenum, *rule_useful;
-extern bool *rule_has_nl, *ccl_has_nl;
+extern int *rule_type, *rule_linenum;
+/* rule_useful[], rule_has_nl[] and ccl_has_nl[] are meant to be bool
+ * arrays, but allocated as char arrays for size. */
+extern char *rule_useful, *rule_has_nl, *ccl_has_nl;
 extern int nlch;
 
 /* Different types of states; values are useful as masks, as well, for
@@ -488,7 +492,7 @@ extern int current_state_type;
 /* True if the input rules include a rule with both variable-length head
  * and trailing context, false otherwise.
  */
-extern int variable_trailing_context_rules;
+extern bool variable_trailing_context_rules;
 
 
 /* Variables for protos:
@@ -542,7 +546,10 @@ extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
  * scname - start condition name
  */
 
-extern int lastsc, *scset, *scbol, *scxclu, *sceof;
+extern int lastsc, *scset, *scbol;
+/* scxclu[] and sceof[] are meant to be bool arrays, but allocated as
+ * char arrays for size. */
+extern char *scxclu, *sceof;
 extern int current_max_scs;
 extern char **scname;
 
@@ -641,29 +648,17 @@ void   *reallocate_array(void *, int, size_t);
 #define reallocate_integer_array(array,size) \
 	reallocate_array((void *) array, size, sizeof(int))
 
-#define allocate_bool_array(size) \
-	allocate_array(size, sizeof(bool))
-
-#define reallocate_bool_array(array,size) \
-	reallocate_array((void *) array, size, sizeof(bool))
-
 #define allocate_int_ptr_array(size) \
 	allocate_array(size, sizeof(int *))
 
 #define allocate_char_ptr_array(size) \
 	allocate_array(size, sizeof(char *))
 
-#define allocate_dfaacc_union(size) \
-	allocate_array(size, sizeof(union dfaacc_union))
-
 #define reallocate_int_ptr_array(array,size) \
 	reallocate_array((void *) array, size, sizeof(int *))
 
 #define reallocate_char_ptr_array(array,size) \
 	reallocate_array((void *) array, size, sizeof(char *))
-
-#define reallocate_dfaacc_union(array, size) \
-	reallocate_array((void *) array, size, sizeof(union dfaacc_union))
 
 #define allocate_character_array(size) \
 	allocate_array( size, sizeof(char))
@@ -695,22 +690,10 @@ extern void list_character_set(FILE *, int[]);
 
 /* from file dfa.c */
 
-/* Check a DFA state for backing up. */
-extern void check_for_backing_up(int, int[]);
-
-/* Check to see if NFA state set constitutes "dangerous" trailing context. */
-extern void check_trailing_context(int *, int, int *, int);
-
-/* Construct the epsilon closure of a set of ndfa states. */
-extern int *epsclosure(int *, int *, int[], int *, int *);
-
 /* Increase the maximum number of dfas. */
 extern void increase_max_dfas(void);
 
 extern void ntod(void);	/* convert a ndfa to a dfa */
-
-/* Converts a set of ndfa states into a dfa state. */
-extern int snstods(int[], int, int[], int, int, int *);
 
 
 /* from file ecs.c */
@@ -729,46 +712,6 @@ extern void mkechar(int, int[], int[]);
 
 
 /* from file gen.c */
-
-extern void do_indent(void);	/* indent to the current level */
-
-/* Generate the code to keep backing-up information. */
-extern void gen_backing_up(void);
-
-/* Generate the code to perform the backing up. */
-extern void gen_bu_action(void);
-
-/* Generate full speed compressed transition table. */
-extern void genctbl(void);
-
-/* Generate the code to find the action number. */
-extern void gen_find_action(void);
-
-extern void genftbl(void);	/* generate full transition table */
-
-/* Generate the code to find the next compressed-table state. */
-extern void gen_next_compressed_state(char *);
-
-/* Generate the code to find the next match. */
-extern void gen_next_match(void);
-
-/* Generate the code to find the next state. */
-extern void gen_next_state(int);
-
-/* Generate the code to make a NUL transition. */
-extern void gen_NUL_trans(void);
-
-/* Generate the code to find the start state. */
-extern void gen_start_state(void);
-
-/* Generate data statements for the transition tables. */
-extern void gentabs(void);
-
-/* Write out a formatted string at the current indentation level. */
-extern void indent_put2s(const char *, const char *);
-
-/* Write out a string + newline at the current indentation level. */
-extern void indent_puts(const char *);
 
 extern void make_tables(void);	/* generate transition tables */
 
@@ -917,7 +860,7 @@ extern int copysingl(int, int);
 extern void dumpnfa(int);
 
 /* Finish up the processing for a rule. */
-extern void finish_rule(int, int, int, int, int);
+extern void finish_rule(int, bool, int, int, int);
 
 /* Connect two machines together. */
 extern int link_machines(int, int);
@@ -995,7 +938,7 @@ extern char *ndlookup(const char *);	/* lookup a name definition */
 
 /* Increase maximum number of SC's. */
 extern void scextend(void);
-extern void scinstal(const char *, int);	/* make a start condition */
+extern void scinstal(const char *, bool);	/* make a start condition */
 
 /* Lookup the number associated with a start condition. */
 extern int sclookup(const char *);

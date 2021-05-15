@@ -37,8 +37,10 @@
 
 /* declare functions that have forward references */
 
-void	genecs(void);
-
+static void genecs(void);
+static void gen_next_state(int);
+static void indent_put2s(const char *, const char *);
+static void indent_puts(const char *);
 
 static int indent_level = 0;	/* each level is 8 spaces */
 
@@ -81,7 +83,7 @@ static const char *get_yy_char_decl (void)
 
 /* Indent to the current level. */
 
-void do_indent (void)
+static void do_indent(void)
 {
 	int i = indent_level * 8;
 
@@ -147,7 +149,7 @@ static void geneoltbl (void)
 
 /* Generate the code to keep backing-up information. */
 
-void gen_backing_up (void)
+static void gen_backing_up(void)
 {
 	if (reject || num_backing_up == 0)
 		return;
@@ -168,7 +170,7 @@ void gen_backing_up (void)
 
 /* Generate the code to perform the backing up. */
 
-void gen_bu_action (void)
+static void gen_bu_action(void)
 {
 	if (reject || num_backing_up == 0)
 		return;
@@ -332,7 +334,7 @@ static struct yytbl_data *mkssltbl (void)
 
 /* genctbl - generates full speed compressed transition table */
 
-void genctbl (void)
+static void genctbl(void)
 {
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
@@ -462,7 +464,7 @@ static struct yytbl_data *mkecstbl (void)
 
 /* Generate equivalence-class tables. */
 
-void genecs (void)
+static void genecs(void)
 {
 	int ch, row;
 	int     numrows;
@@ -498,7 +500,7 @@ void genecs (void)
 
 /* Generate the code to find the action number. */
 
-void gen_find_action (void)
+static void gen_find_action(void)
 {
 	if (fullspd)
 		indent_puts ("yy_act = yy_current_state[-1].yy_nxt;");
@@ -643,7 +645,7 @@ void gen_find_action (void)
  * you should call mkecstbl() after this.
  */
 
-struct yytbl_data *mkftbl (void)
+static struct yytbl_data *mkftbl(void)
 {
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
@@ -680,7 +682,7 @@ struct yytbl_data *mkftbl (void)
 
 /* genftbl - generate full transition table */
 
-void genftbl (void)
+static void genftbl(void)
 {
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
@@ -713,7 +715,7 @@ void genftbl (void)
 
 /* Generate the code to find the next compressed-table state. */
 
-void gen_next_compressed_state (char *char_map)
+static void gen_next_compressed_state(char *char_map)
 {
 	indent_put2s ("YY_CHAR yy_c = %s;", char_map);
 
@@ -757,7 +759,7 @@ void gen_next_compressed_state (char *char_map)
 
 /* Generate the code to find the next match. */
 
-void gen_next_match (void)
+static void gen_next_match(void)
 {
 	/* NOTE - changes in here should be reflected in gen_next_state() and
 	 * gen_NUL_trans().
@@ -863,7 +865,7 @@ void gen_next_match (void)
 
 /* Generate the code to find the next state. */
 
-void gen_next_state (int worry_about_NULs)
+static void gen_next_state(int worry_about_NULs)
 {				/* NOTE - changes in here should be reflected in gen_next_match() */
 	char    char_map[256];
 
@@ -933,7 +935,7 @@ void gen_next_state (int worry_about_NULs)
 
 /* Generate the code to make a NUL transition. */
 
-void gen_NUL_trans (void)
+static void gen_NUL_trans(void)
 {				/* NOTE - changes in here should be reflected in gen_next_match() */
 	/* Only generate a definition for "yy_cp" if we'll generate code
 	 * that uses it.  Otherwise lint and the like complain.
@@ -1018,7 +1020,7 @@ void gen_NUL_trans (void)
 
 /* Generate the code to find the start state. */
 
-void gen_start_state (void)
+static void gen_start_state(void)
 {
 	if (fullspd) {
 		if (bol_needed) {
@@ -1051,7 +1053,7 @@ void gen_start_state (void)
 
 /* gentabs - generate data statements for the transition tables */
 
-void gentabs (void)
+static void gentabs(void)
 {
 	int     i, j, k, *accset, nacc, *acc_array, total_states;
 	int     end_of_buffer_action = num_rules + 1;
@@ -1467,7 +1469,7 @@ void gentabs (void)
  * current indentation level, adding a final newline.
  */
 
-void indent_put2s (const char *fmt, const char *arg)
+static void indent_put2s(const char *fmt, const char *arg)
 {
 	do_indent ();
 	out_str (fmt, arg);
@@ -1479,7 +1481,7 @@ void indent_put2s (const char *fmt, const char *arg)
  * newline.
  */
 
-void indent_puts (const char *str)
+static void indent_puts(const char *str)
 {
 	do_indent ();
 	outn (str);

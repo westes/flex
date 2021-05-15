@@ -40,7 +40,7 @@
 
 #include "parse.h"
 extern bool tablesverify, tablesext;
-extern int trlcontxt; /* Set in  parse.y for each rule. */
+extern bool trlcontxt; /* Set in parse.y for each rule. */
 extern const char *escaped_qstart, *escaped_qend;
 
 #define M4QSTART "[""["
@@ -162,10 +162,10 @@ M4QEND      "]""]"
 
 %%
 	static int bracelevel, didadef, indented_code;
-	static int doing_rule_action = false;
-	static int option_sense;
+	static bool doing_rule_action = false;
+	static bool option_sense;
 
-	int doing_codeblock = false;
+	static bool doing_codeblock = false;
 	int brace_depth=0, brace_start_line=0;
 	char nmdef[MAXLINE];
 
@@ -173,7 +173,9 @@ M4QEND      "]""]"
 <INITIAL>{
 	^{WS}		START_CODEBLOCK(true);
 	^"/*"		add_action("/*[""["); yy_push_state( COMMENT );
-	^#{OPTWS}line{WS}	yy_push_state( LINEDIR );
+	^#|"%:"|\?\?={OPTWS}line{WS}	{
+				yy_push_state( LINEDIR );
+			}
 	^"%s"{NAME}?	return SCDECL;
 	^"%x"{NAME}?	return XSCDECL;
 	^"%{".*{NL}	START_CODEBLOCK(false);
@@ -396,7 +398,7 @@ M4QEND      "]""]"
 	main		{
 			ACTION_M4_IFDEF( "M4""_YY_MAIN", option_sense);
             /* Override yywrap */
-            if( option_sense == true )
+            if (option_sense)
                 do_yywrap = false;
 			}
 	meta-ecs	usemecs = option_sense;
@@ -459,7 +461,7 @@ M4QEND      "]""]"
 	tables-file         return TOK_TABLES_FILE;
 	tables-verify   {
                     tablesverify = option_sense;
-                    if(!tablesext && option_sense)
+                    if (!tablesext && option_sense)
                         tablesext = true;
                     }
 

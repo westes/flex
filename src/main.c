@@ -48,13 +48,15 @@ void set_up_initial_allocations(void);
 
 
 /* these globals are all defined and commented in flexdef.h */
-int     printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
-int     interactive, lex_compat, posix_compat, do_yylineno,
-	useecs, fulltbl, usemecs;
-int     fullspd, gen_line_dirs, performance_report, backing_up_report;
-int     C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap,
-	csize;
-int     reentrant, bison_bridge_lval, bison_bridge_lloc;
+bool    printstats, syntaxerror, eofseen, ddebug, trace, nowarn, spprdflt;
+int     interactive;
+bool    lex_compat, posix_compat, do_yylineno;
+bool    useecs, fulltbl, usemecs, fullspd, gen_line_dirs;
+int     performance_report;
+bool    backing_up_report;
+bool    C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
+int     csize;
+bool    reentrant, bison_bridge_lval, bison_bridge_lloc;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     yymore_really_used, reject_really_used;
 int     trace_hex = 0;
@@ -65,24 +67,27 @@ char   *action_array;
 int     action_size, defs1_offset, prolog_offset, action_offset,
 	action_index;
 char   *infilename = NULL, *outfilename = NULL, *headerfilename = NULL;
-int     did_outfilename;
+bool    did_outfilename;
 char   *prefix, *yyclass, *extra_type = NULL;
-int     do_stdinit, use_stdout;
+bool    do_stdinit, use_stdout;
 int     onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int     onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
 int     maximum_mns, current_mns, current_max_rules;
 int     num_rules, num_eof_rules, default_rule, lastnfa;
 int    *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 int    *accptnum, *assoc_rule, *state_type;
-int    *rule_type, *rule_linenum, *rule_useful;
+int    *rule_type, *rule_linenum;
 int     current_state_type;
-int     variable_trailing_context_rules;
+bool    variable_trailing_context_rules;
 int     numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int     protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int     numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs,
 	tecfwd[CSIZE + 1];
 int     tecbck[CSIZE + 1];
-int     lastsc, *scset, *scbol, *scxclu, *sceof;
+int     lastsc, *scset, *scbol;
+/* scxclu[] and sceof[] are meant to be bool arrays, but allocated as
+ * char arrays for size. */
+char   *scxclu, *sceof;
 int     current_max_scs;
 char  **scname;
 int     current_max_dfa_size, current_max_xpairs;
@@ -104,7 +109,9 @@ int     end_of_buffer_state;
 char  **input_files;
 int     num_input_files;
 jmp_buf flex_main_jmp_buf;
-bool   *rule_has_nl, *ccl_has_nl;
+/* rule_useful[], rule_has_nl[] and ccl_has_nl[] are meant to be bool
+ * arrays, but allocated as char arrays for size. */
+char   *rule_useful, *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
 
 bool    tablesext, tablesverify, gentables;
@@ -961,7 +968,7 @@ void flexinit (int argc, char **argv)
 	do_yywrap = gen_line_dirs = usemecs = useecs = true;
 	reentrant = bison_bridge_lval = bison_bridge_lloc = false;
 	performance_report = 0;
-	did_outfilename = 0;
+	did_outfilename = false;
 	prefix = "yy";
 	yyclass = 0;
 	use_read = use_stdout = false;
@@ -1142,7 +1149,7 @@ void flexinit (int argc, char **argv)
 
 		case OPT_OUTFILE:
 			outfilename = arg;
-			did_outfilename = 1;
+			did_outfilename = true;
 			break;
 
 		case OPT_PREFIX:
@@ -1461,7 +1468,8 @@ void flexinit (int argc, char **argv)
 	numas = numsnpairs = tmpuses = 0;
 	numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst =
 		0;
-	numuniq = numdup = hshsave = eofseen = datapos = dataline = 0;
+	numuniq = numdup = hshsave = datapos = dataline = 0;
+	eofseen = false;
 	num_backing_up = onesp = numprots = 0;
 	variable_trailing_context_rules = bol_needed = false;
 
@@ -1752,21 +1760,21 @@ void set_up_initial_allocations (void)
 	current_max_rules = INITIAL_MAX_RULES;
 	rule_type = allocate_integer_array (current_max_rules);
 	rule_linenum = allocate_integer_array (current_max_rules);
-	rule_useful = allocate_integer_array (current_max_rules);
-	rule_has_nl = allocate_bool_array (current_max_rules);
+	rule_useful = allocate_array(current_max_rules, sizeof(char));
+	rule_has_nl = allocate_array(current_max_rules, sizeof(char));
 
 	current_max_scs = INITIAL_MAX_SCS;
 	scset = allocate_integer_array (current_max_scs);
 	scbol = allocate_integer_array (current_max_scs);
-	scxclu = allocate_integer_array (current_max_scs);
-	sceof = allocate_integer_array (current_max_scs);
+	scxclu = allocate_array(current_max_scs, sizeof(char));
+	sceof = allocate_array(current_max_scs, sizeof(char));
 	scname = allocate_char_ptr_array (current_max_scs);
 
 	current_maxccls = INITIAL_MAX_CCLS;
 	cclmap = allocate_integer_array (current_maxccls);
 	ccllen = allocate_integer_array (current_maxccls);
 	cclng = allocate_integer_array (current_maxccls);
-	ccl_has_nl = allocate_bool_array (current_maxccls);
+	ccl_has_nl = allocate_array(current_maxccls, sizeof(char));
 
 	current_max_ccl_tbl_size = INITIAL_MAX_CCL_TBL_SIZE;
 	ccltbl = allocate_Character_array (current_max_ccl_tbl_size);
@@ -1787,7 +1795,8 @@ void set_up_initial_allocations (void)
 	accsiz = allocate_integer_array (current_max_dfas);
 	dhash = allocate_integer_array (current_max_dfas);
 	dss = allocate_int_ptr_array (current_max_dfas);
-	dfaacc = allocate_dfaacc_union (current_max_dfas);
+	dfaacc = allocate_array(current_max_dfas,
+		sizeof(union dfaacc_union));
 
 	nultrans = NULL;
 }

@@ -67,7 +67,9 @@
 #include "tables.h"
 
 int pat, scnum, eps, headcnt, trailcnt, lastchar, i, rulelen;
-int trlcontxt, xcluflg, currccl, cclsorted, varlength, variable_trail_rule;
+static int currccl;
+bool trlcontxt;
+static bool xcluflg, cclsorted, varlength, variable_trail_rule;
 
 int *scon_stk;
 int scon_stk_ptr;
@@ -194,7 +196,7 @@ optionlist	:  optionlist option
 option		:  TOK_OUTFILE '=' NAME
 			{
 			outfilename = xstrdup(nmstr);
-			did_outfilename = 1;
+			did_outfilename = true;
 			}
 		|  TOK_EXTRA_TYPE '=' NAME
 			{ extra_type = xstrdup(nmstr); }
