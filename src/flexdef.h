@@ -544,7 +544,7 @@ extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
 
 extern int lastsc, *scset, *scbol, *scxclu, *sceof;
 extern int current_max_scs;
-extern char **scname;
+extern const char **scname;
 
 
 /* Variables for dfa machine data:
