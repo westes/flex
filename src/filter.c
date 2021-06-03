@@ -160,13 +160,13 @@ bool filter_apply_chain (struct filter * chain)
          * to sync the stream. This is a Hail Mary situation. It seems to work.
          */
 		close (pipes[1]);
-clearerr(stdin);
+		clearerr(stdin);
 		if (dup2 (pipes[0], fileno (stdin)) == -1)
 			flexfatal (_("dup2(pipes[0],0)"));
 		close (pipes[0]);
-        fseek (stdin, 0, SEEK_CUR);
-        ungetc(' ', stdin); /* still an evil hack, but one that works better */
-        (void)fgetc(stdin); /* on NetBSD than the fseek attempt does */
+		fseek (stdin, 0, SEEK_CUR);
+		ungetc(' ', stdin); /* still an evil hack, but one that works better */
+		(void)fgetc(stdin); /* on NetBSD than the fseek attempt does */
 
 		/* run as a filter, either internally or by exec */
 		if (chain->filter_func) {
@@ -179,8 +179,8 @@ clearerr(stdin);
 		else {
 			execvp (chain->argv[0],
 				(char **const) (chain->argv));
-            lerr_fatal ( _("exec of %s failed"),
-                    chain->argv[0]);
+			lerr_fatal ( _("exec of %s failed"),
+				     chain->argv[0]);
 		}
 
 		FLEX_EXIT (1);
@@ -191,7 +191,7 @@ clearerr(stdin);
 	if (dup2 (pipes[1], fileno (stdout)) == -1)
 		flexfatal (_("dup2(pipes[1],1)"));
 	close (pipes[1]);
-    fseek (stdout, 0, SEEK_CUR);
+	fseek (stdout, 0, SEEK_CUR);
 
 	return true;
 }
@@ -256,29 +256,24 @@ int filter_tee_header (struct filter *chain)
 	 */
 
 	if (write_header) {
-        fputs (check_4_gnu_m4, to_h);
+		fputs (check_4_gnu_m4, to_h);
 		fputs ("m4_changecom`'m4_dnl\n", to_h);
 		fputs ("m4_changequote`'m4_dnl\n", to_h);
-		fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_h);
-	    fputs ("m4_define([[M4_YY_NOOP]])[[]]m4_dnl\n", to_h);
-		fputs ("m4_define( [[M4_YY_IN_HEADER]],[[]])m4_dnl\n",
-		       to_h);
-		fprintf (to_h, "#ifndef %sHEADER_H\n", prefix);
-		fprintf (to_h, "#define %sHEADER_H 1\n", prefix);
-		fprintf (to_h, "#define %sIN_HEADER 1\n\n", prefix);
+	fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_h);
+		fputs ("m4_define([[M4_YY_NOOP]])[[]]m4_dnl\n", to_h);
+		fputs ("m4_define([[M4_YY_IN_HEADER]],[[]])m4_dnl\n", to_h);
 		fprintf (to_h,
 			 "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
-			 headerfilename ? headerfilename : "<stdout>");
-
+			 env.headerfilename != NULL ? env.headerfilename : "<stdout>");
 	}
 
-    fputs (check_4_gnu_m4, to_c);
+	fputs (check_4_gnu_m4, to_c);
 	fputs ("m4_changecom`'m4_dnl\n", to_c);
 	fputs ("m4_changequote`'m4_dnl\n", to_c);
 	fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_c);
 	fputs ("m4_define([[M4_YY_NOOP]])[[]]m4_dnl\n", to_c);
 	fprintf (to_c, "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
-		 outfilename ? outfilename : "<stdout>");
+		 env.outfilename != NULL ? env.outfilename : "<stdout>");
 
 	while (fgets (buf, sizeof buf, stdin)) {
 		fputs (buf, to_c);
@@ -290,13 +285,8 @@ int filter_tee_header (struct filter *chain)
 		fprintf (to_h, "\n");
 
 		/* write a fake line number. It will get fixed by the linedir filter. */
-		if (gen_line_dirs)
-			fprintf (to_h, "#line 4000 \"M4_YY_OUTFILE_NAME\"\n");
-
-		fprintf (to_h, "#undef %sIN_HEADER\n", prefix);
-		fprintf (to_h, "#endif /* %sHEADER_H */\n", prefix);
-		fputs ("m4_undefine( [[M4_YY_IN_HEADER]])m4_dnl\n", to_h);
-
+		if (ctrl.gen_line_dirs)
+			line_directive_out (to_h, NULL, 4000);
 		fflush (to_h);
 		if (ferror (to_h))
 			lerr (_("error writing output file %s"),
@@ -310,11 +300,11 @@ int filter_tee_header (struct filter *chain)
 	fflush (to_c);
 	if (ferror (to_c))
 		lerr (_("error writing output file %s"),
-			outfilename ? outfilename : "<stdout>");
+			env.outfilename != NULL ? env.outfilename : "<stdout>");
 
 	else if (fclose (to_c))
 		lerr (_("error closing output file %s"),
-			outfilename ? outfilename : "<stdout>");
+			env.outfilename != NULL ? env.outfilename : "<stdout>");
 
 	while (wait (0) > 0) ;
 
@@ -338,6 +328,7 @@ static bool is_blank_line (const char *str)
 int filter_fix_linedirs (struct filter *chain)
 {
 	char   buf[4096];
+	const char *traceline_template, *cp;
 	const size_t readsz = sizeof buf;
 	int     lineno = 1;
 	bool    in_gen = true;	/* in generated code */
@@ -350,9 +341,12 @@ int filter_fix_linedirs (struct filter *chain)
 
 		regmatch_t m[10];
 
-		/* Check for #line directive. */
-		if (buf[0] == '#'
-			&& regexec (&regex_linedir, buf, 3, m, 0) == 0) {
+		/* Check for directive. Note wired-in assumption:
+		 * field reference 1 is line number, 2 is filename.
+		 */
+		if (ctrl.traceline_re != NULL &&
+		    ctrl.traceline_template != NULL &&
+		    regexec (&regex_linedir, buf, 3, m, 0) == 0) {
 
 			char   *fname;
 
@@ -360,10 +354,10 @@ int filter_fix_linedirs (struct filter *chain)
 			fname = regmatch_dup (&m[2], buf);
 
 			if (strcmp (fname,
-				outfilename ? outfilename : "<stdout>")
+				env.outfilename != NULL ? env.outfilename : "<stdout>")
 					== 0
 			 || strcmp (fname,
-			 	headerfilename ? headerfilename : "<stdout>")
+			 	env.headerfilename != NULL ? env.headerfilename : "<stdout>")
 					== 0) {
 
 				char    *s1, *s2;
@@ -387,8 +381,9 @@ int filter_fix_linedirs (struct filter *chain)
 
 				/* Adjust the line directives. */
 				in_gen = true;
-				snprintf (buf, readsz, "#line %d \"%s\"\n",
+				snprintf (buf, readsz, traceline_template,
 					  lineno + 1, filename);
+				strncat(buf, "\n", sizeof(buf)-1);
 			}
 			else {
 				/* it's a #line directive for code we didn't write */
@@ -418,11 +413,11 @@ int filter_fix_linedirs (struct filter *chain)
 	fflush (stdout);
 	if (ferror (stdout))
 		lerr (_("error writing output file %s"),
-			outfilename ? outfilename : "<stdout>");
+			env.outfilename != NULL ? env.outfilename : "<stdout>");
 
 	else if (fclose (stdout))
 		lerr (_("error closing output file %s"),
-			outfilename ? outfilename : "<stdout>");
+			env.outfilename != NULL ? env.outfilename : "<stdout>");
 
 	return 0;
 }

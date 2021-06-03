@@ -95,14 +95,14 @@ public:
 
   int lineno() const          { return yylineno; }
 
-  int debug() const           { return yy_flex_debug; }
-  void set_debug( int flag )  { yy_flex_debug = flag; }
+  int debug() const           { return yyflexdebug; }
+  void set_debug( int flag )  { yyflexdebug = flag; }
 
 protected:
   char* yytext;
   int yyleng;
   int yylineno;       // only maintained if you use %option yylineno
-  int yy_flex_debug;  // only has effect with -d or "%option debug"
+  int yyflexdebug;    // only has effect with -d or "%option debug"
 };
 
 }
@@ -139,6 +139,7 @@ public:
   void yypush_buffer_state( yy_buffer_state* new_buffer );
   void yypop_buffer_state();
 
+  virtual int yyread(char *buf, size_t);
   virtual int yylex();
   virtual void switch_streams( std::istream& new_in, std::ostream& new_out );
   virtual void switch_streams( std::istream* new_in = 0, std::ostream* new_out = 0 );
@@ -148,8 +149,8 @@ protected:
   virtual int LexerInput( char* buf, int max_size );
   virtual void LexerOutput( const char* buf, int size );
   virtual void LexerError( const char* msg );
-
-  void yyunput( int c, char* buf_ptr );
+			
+  void yyunput_r( int c, char* buf_ptr );
   int yyinput();
 
   void yy_load_buffer_state();

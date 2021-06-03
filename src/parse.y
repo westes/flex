@@ -2,7 +2,8 @@
 
 %token CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
 %token TOK_OPTION TOK_OUTFILE TOK_PREFIX TOK_YYCLASS TOK_HEADER_FILE TOK_EXTRA_TYPE
-%token TOK_TABLES_FILE
+%token TOK_TABLES_FILE TOK_YYLMAX TOK_NUMERIC TOK_YYDECL TOK_PREACTION TOK_POSTACTION
+%token TOK_USERINIT TOK_EMIT TOK_BUFSIZE TOK_YYTERMINATE
 
 %token CCE_ALNUM CCE_ALPHA CCE_BLANK CCE_CNTRL CCE_DIGIT CCE_GRAPH
 %token CCE_LOWER CCE_PRINT CCE_PUNCT CCE_SPACE CCE_UPPER CCE_XDIGIT
@@ -87,7 +88,7 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 #define CCL_EXPR(func) \
 	do{ \
 	int c; \
-	for ( c = 0; c < csize; ++c ) \
+	for ( c = 0; c < ctrl.csize; ++c ) \
 		if ( isascii(c) && func(c) ) \
 			ccladd( currccl, c ); \
 	}while(0)
@@ -96,7 +97,7 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 #define CCL_NEG_EXPR(func) \
 	do{ \
 	int c; \
-	for ( c = 0; c < csize; ++c ) \
+	for ( c = 0; c < ctrl.csize; ++c ) \
 		if ( !func(c) ) \
 			ccladd( currccl, c ); \
 	}while(0)
@@ -134,13 +135,16 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 			for ( i = 1; i <= lastsc; ++i )
 				scset[i] = mkbranch( scset[i], def_rule );
 
-			if ( spprdflt )
-				add_action(
-				"YY_FATAL_ERROR( \"flex scanner jammed\" )" );
-			else
-				add_action( "ECHO" );
+			add_action("]]");
 
-			add_action( ";\n\tYY_BREAK]]\n" );
+			if ( ctrl.spprdflt )
+				add_action(
+				"M4_HOOK_FATAL_ERROR(\"flex scanner jammed\")");
+			else {
+			    add_action("M4_HOOK_ECHO");
+			}
+
+			add_action( "\n\tM4_HOOK_STATE_CASE_BREAK\n" );
 			}
 		;
 
@@ -193,21 +197,37 @@ optionlist	:  optionlist option
 
 option		:  TOK_OUTFILE '=' NAME
 			{
-			outfilename = xstrdup(nmstr);
-			did_outfilename = 1;
+			env.outfilename = xstrdup(nmstr);
+			env.did_outfilename = 1;
 			}
 		|  TOK_EXTRA_TYPE '=' NAME
 			{ extra_type = xstrdup(nmstr); }
 		|  TOK_PREFIX '=' NAME
-			{ prefix = xstrdup(nmstr);
-                          if (strchr(prefix, '[') || strchr(prefix, ']'))
+			{ ctrl.prefix = xstrdup(nmstr);
+                          if (strchr(ctrl.prefix, '[') || strchr(ctrl.prefix, ']'))
                               flexerror(_("Prefix must not contain [ or ]")); }
 		|  TOK_YYCLASS '=' NAME
-			{ yyclass = xstrdup(nmstr); }
+			{ ctrl.yyclass = xstrdup(nmstr); }
 		|  TOK_HEADER_FILE '=' NAME
-			{ headerfilename = xstrdup(nmstr); }
-	    |  TOK_TABLES_FILE '=' NAME
-            { tablesext = true; tablesfilename = xstrdup(nmstr); }
+			{ env.headerfilename = xstrdup(nmstr); }
+		|  TOK_YYLMAX '=' TOK_NUMERIC
+			{ ctrl.yylmax = nmval; }
+		|  TOK_YYDECL '=' NAME
+			{ ctrl.yydecl = xstrdup(nmstr); }
+		|  TOK_PREACTION '=' NAME
+			{ ctrl.preaction = xstrdup(nmstr); }
+		|  TOK_POSTACTION '=' NAME
+			{ ctrl.postaction = xstrdup(nmstr); }
+		|  TOK_BUFSIZE '=' TOK_NUMERIC
+			{ ctrl.bufsize = nmval; }
+		|  TOK_EMIT '=' NAME
+			{ ctrl.emit = xstrdup(nmstr); backend_by_name(ctrl.emit); }
+		|  TOK_USERINIT '=' NAME
+			{ ctrl.userinit = xstrdup(nmstr); }
+		|  TOK_YYTERMINATE '=' NAME
+			{ ctrl.yyterminate = xstrdup(nmstr); }
+		|  TOK_TABLES_FILE '=' NAME
+        		{ tablesext = true; tablesfilename = xstrdup(nmstr); }
 		;
 
 sect2		:  sect2 scon initforrule flexrule '\n'
@@ -260,7 +280,7 @@ flexrule	:  '^' rule
 				{
 				bol_needed = true;
 
-				if ( performance_report > 1 )
+				if ( env.performance_hint > 1 )
 					pinpoint_message(
 			"'^' operator results in sub-optimal performance" );
 				}
@@ -409,7 +429,7 @@ rule		:  re2 re
 
 				}
 
-			if ( lex_compat || (varlength && headcnt == 0) )
+			if ( ctrl.lex_compat || (varlength && headcnt == 0) )
 				{ /* variable trailing context rule */
 				/* Mark the first part of the rule as the
 				 * accepting "head" part of a trailing
@@ -461,7 +481,7 @@ rule		:  re2 re
 				varlength = true;
 				}
 
-			if ( lex_compat || varlength )
+			if ( ctrl.lex_compat || varlength )
 				{
 				/* Again, see the comment in the rule for
 				 * "re2 re" above.
@@ -484,7 +504,7 @@ rule		:  re2 re
 
 			if ( trlcontxt )
 				{
-				if ( lex_compat || (varlength && headcnt == 0) )
+				if ( ctrl.lex_compat || (varlength && headcnt == 0) )
 					/* Both head and trail are
 					 * variable-length.
 					 */
@@ -698,19 +718,19 @@ singleton	:  singleton '*'
                     ccladd( ccldot, '\n' );
                     cclnegate( ccldot );
 
-                    if ( useecs )
+                    if ( ctrl.useecs )
                         mkeccl( ccltbl + cclmap[ccldot],
                             ccllen[ccldot], nextecm,
-                            ecgroup, csize, csize );
+                            ecgroup, ctrl.csize, ctrl.csize );
 
 				/* Create the (?s:'.') character class. */
                     cclany = cclinit();
                     cclnegate( cclany );
 
-                    if ( useecs )
+                    if ( ctrl.useecs )
                         mkeccl( ccltbl + cclmap[cclany],
                             ccllen[cclany], nextecm,
-                            ecgroup, csize, csize );
+                            ecgroup, ctrl.csize, ctrl.csize );
 
 				madeany = true;
 				}
@@ -729,9 +749,9 @@ singleton	:  singleton '*'
 				 */
 				qsort( ccltbl + cclmap[$1], (size_t) ccllen[$1], sizeof (*ccltbl), cclcmp );
 
-			if ( useecs )
+			if ( ctrl.useecs )
 				mkeccl( ccltbl + cclmap[$1], ccllen[$1],
-					nextecm, ecgroup, csize, csize );
+					nextecm, ecgroup, ctrl.csize, ctrl.csize);
 
 			++rulelen;
 
@@ -978,7 +998,7 @@ void build_eof_action(void)
 			}
 		}
 
-	line_directive_out(NULL, 1);
+	line_directive_out(NULL, infilename, linenum);
         add_action("[[");
 
 	/* This isn't a normal rule after all - don't count it as
@@ -1035,7 +1055,7 @@ void lwarn( const char *str )
 
 void format_pinpoint_message( const char *msg, const char arg[] )
 	{
-	char errmsg[MAXLINE];
+	char errmsg[MAXLINE*2];
 
 	snprintf( errmsg, sizeof(errmsg), msg, arg );
 	pinpoint_message( errmsg );
@@ -1054,9 +1074,9 @@ void pinpoint_message( const char *str )
 
 void line_warning( const char *str, int line )
 	{
-	char warning[MAXLINE];
+	char warning[MAXLINE*2];
 
-	if ( ! nowarn )
+	if ( ! env.nowarn )
 		{
 		snprintf( warning, sizeof(warning), "warning, %s", str );
 		line_pinpoint( warning, line );

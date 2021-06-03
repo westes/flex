@@ -16,7 +16,7 @@ char upper_replace[1024];
 
 "yy"   printf("%s",lower_replace); 
 "YY"   printf("%s",upper_replace);
-,      ECHO;
+,      yyecho();
 
 %%
 

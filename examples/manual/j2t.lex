@@ -158,7 +158,7 @@ void write_block_header(char *type)
                         printf("\n\n@table @b\n");
                       }
 
-"Examples:"[^\.]+     ECHO;
+"Examples:"[^\.]+     yyecho();
 
 "*"[^*\n]+"*"         { /* @emph{}(emphasized) text */
                         yytext[yyleng-1] = '\0';
@@ -205,12 +205,12 @@ void write_block_header(char *type)
                         yyless(loop+1);
                         statep++;
                         states[statep] = EXAMPLE2;
-                        BEGIN(EXAMPLE2);
+                        yybegin(EXAMPLE2);
                       }
 <EXAMPLE,EXAMPLE2>^\n  {
                       printf("@end example\n\n");
                       statep--; 
-                      BEGIN(states[statep]);
+                      yybegin(states[statep]);
                     }
 
  /*
@@ -231,7 +231,7 @@ void write_block_header(char *type)
                       yyless(loop);
                       statep++;
                       states[statep] = ENUM;
-                      BEGIN(ENUM);
+                      yybegin(ENUM);
                     }
 
 <ENUM>"@"           printf("@@");
@@ -239,7 +239,7 @@ void write_block_header(char *type)
                     printf(":\n\n@example\n");
                     statep++;
                     states[statep] = EXAMPLE;
-                    BEGIN(EXAMPLE); 
+                    yybegin(EXAMPLE); 
                   }
 
 
@@ -250,7 +250,7 @@ void write_block_header(char *type)
 <ENUM>\n\n\n[ \t]+[^0-9] {
                     printf("\n\n@end enumerate\n\n");
                     statep--;
-                    BEGIN(states[statep]);
+                    yybegin(states[statep]);
                   }
  
  /* 
@@ -265,7 +265,7 @@ void write_block_header(char *type)
                     yyless(2);
                     statep++;
                     states[statep] = LITEM2;
-                    BEGIN(LITEM2);
+                    yybegin(LITEM2);
                   }
 <LITEM2>^":".+":" {
                     (void)check_and_convert(&yytext[1]);
@@ -275,9 +275,9 @@ void write_block_header(char *type)
  
 <LITEM2>\n\n\n+[^:\n] {
                     printf("\n\n@end itemize\n\n");
-                    ECHO;
+                    yyecho();
                     statep--;
-                    BEGIN(states[statep]);
+                    yybegin(states[statep]);
                   }
  
  /*
@@ -300,7 +300,7 @@ void write_block_header(char *type)
                     yyless(loop);
                     statep++;
                     states[statep] = LITEM;
-                    BEGIN(LITEM);
+                    yybegin(LITEM);
                   }
 <LITEM>^.+":"     {
                     (void)check_and_convert(yytext);
@@ -318,7 +318,7 @@ void write_block_header(char *type)
                     printf("@end itemize\n\n");
                     printf("%s",&buffer[loop+1]);
                     statep--;
-                    BEGIN(states[statep]);
+                    yybegin(states[statep]);
                   }
  
  /*
@@ -338,27 +338,27 @@ void write_block_header(char *type)
                     yyless((len-loop)+2);
                     statep++;
                     states[statep] = BITEM;
-                    BEGIN(BITEM);
+                    yybegin(BITEM);
                   }
 
 <BITEM>^" "*"*"   {
                     printf("@item");
                     statep++;
                     states[statep] = BITEM_ITEM;
-                    BEGIN(BITEM_ITEM);
+                    yybegin(BITEM_ITEM);
                   }
 <BITEM>"@"          printf("@@");
 <BITEM>^\n        { 
                     printf("@end itemize\n\n");
                     statep--;
-                    BEGIN(states[statep]);
+                    yybegin(states[statep]);
                   } 
 <BITEM_ITEM>[^\:]* {
                      printf(" @b{%s}\n\n",check_and_convert(yytext));
                    }
 <BITEM_ITEM>":"   { 
                     statep--; 
-                    BEGIN(states[statep]);
+                    yybegin(states[statep]);
                   }
 
  /* 
@@ -369,13 +369,13 @@ void write_block_header(char *type)
                     (void)check_and_convert(&yytext[1]); 
                     statep++;
                     states[statep] = HEADING;
-                    BEGIN(HEADING); 
+                    yybegin(HEADING); 
                   }
 <HEADING>:[^\n]   {
                     printf("@item @b{%s}\n",buffer); 
                     write_underline(strlen(buffer),6,'~');
                     statep--; 
-                    BEGIN(states[statep]);
+                    yybegin(states[statep]);
                   }
 <HEADING>:\n"*"*  { 
                     if(need_closing == TRUE){
@@ -385,7 +385,7 @@ void write_block_header(char *type)
                     printf("@chapter %s\n",buffer); 
                     write_underline(strlen(buffer),9,'*');
                     statep--; 
-                    BEGIN(states[statep]);
+                    yybegin(states[statep]);
                   }
 <HEADING>:\n"="*  { 
                     if(need_closing == TRUE){
@@ -395,7 +395,7 @@ void write_block_header(char *type)
                     printf("@section %s\n",buffer); 
                     write_underline(strlen(buffer),9,'=');
                     statep--; 
-                    BEGIN(states[statep]);
+                    yybegin(states[statep]);
                   }
 <HEADING>"@"        printf("@@");
 <HEADING>:\n"-"*  { 
@@ -406,7 +406,7 @@ void write_block_header(char *type)
                     printf("@subsection %s\n",buffer); 
                     write_underline(strlen(buffer),12,'-');
                     statep--; 
-                    BEGIN(states[statep]);
+                    yybegin(states[statep]);
                   }
 
  /*
@@ -417,10 +417,10 @@ void write_block_header(char *type)
                     printf("@example\n");
                     statep++;
                     states[statep] = EXAMPLE;
-                    BEGIN(EXAMPLE); 
+                    yybegin(EXAMPLE); 
                   }
 <EXAMPLE>^"     "
-.                 ECHO;
+.                 yyecho();
 
 %%
 

@@ -18,9 +18,22 @@ ALLOCA   =
 # DO NOT CHANGE ANYTHING FROM HERE ON !!!!!!!!! 
 #
 ############################################################
+PATH := /usr/local/bin:${PATH}
 
 all: expr front myname eof wc replace user_act string1\
      string2 yymore numbers dates cat
+
+example_r: example_r.lex
+	$(LEX)  example_r.lex
+	$(CC)   lex.yy.c -o example_r
+
+example_nr: example_nr.lex
+	$(LEX)  example_nr.lex
+	$(CC)   lex.yy.c -o example_nr
+
+example_er: example_er.lex
+	$(LEX)  example_er.lex
+	$(CC)   lex.yy.c -o example_er
 
 expr:   expr.y expr.lex
 	$(YACC) expr.y

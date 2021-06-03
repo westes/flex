@@ -43,8 +43,8 @@ int error = 0;
 %%
 
 <INITIAL>{
-^"#include"[[:blank:]]+"<"  { BEGIN(GET_FILENAME); }
-.|\n      { ECHO; }
+^"#include"[[:blank:]]+"<"  { yybegin(GET_FILENAME); }
+.|\n      { yyecho(); }
 }
 
 <GET_FILENAME>{
@@ -65,7 +65,7 @@ int error = 0;
     testlex(scanner);
     testlex_destroy(scanner);
 
-    BEGIN(0);
+    yybegin(0);
     }
 .|\n  {
     fprintf(stderr,"Invalid input \"%s\".\n", yytext);

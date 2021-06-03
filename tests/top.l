@@ -24,7 +24,8 @@
 %{
 /* Build "scanner.c". 
    The scanner is not important. 
-   This test is really about compilation. See "main.c".
+   This test is backend-independent; what it's really testing
+  is Flex's ability to accumulate and ship preamble code sections.
 */
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,0 +1,9 @@
+Things to be worked on:
+
+* Tests for %option user-init, %option pre-action, %option post-action.
+
+* integrate examples directory into tests so that normal testing
+  proves the examples are up to date.
+
+* Do away with any need for -lfl by generating a default yywrap
+  if the user doesn't specify one.

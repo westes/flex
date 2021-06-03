@@ -16,14 +16,14 @@ void yyerror(char *message)
 %x STRING
 
 %%
-\"   BEGIN(STRING);
+\"   yybegin(STRING);
 
 <STRING>[^\\\n"]*  yymore();
-<STRING><<EOF>>    yyerror("EOF in string.");       BEGIN(INITIAL);
-<STRING>\n         yyerror("Unterminated string."); BEGIN(INITIAL);
+<STRING><<EOF>>    yyerror("EOF in string.");       yybegin(INITIAL);
+<STRING>\n         yyerror("Unterminated string."); yybegin(INITIAL);
 <STRING>\\\n       yymore();
 <STRING>\"        {
                      yytext[yyleng-1] = '\0';
-                     printf("string = \"%s\"",yytext); BEGIN(INITIAL);
+                     printf("string = \"%s\"",yytext); yybegin(INITIAL);
                   }
 %%

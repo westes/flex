@@ -54,19 +54,19 @@ void check_for_backing_up (int ds, int state[])
 	if ((reject && !dfaacc[ds].dfaacc_set) || (!reject && !dfaacc[ds].dfaacc_state)) {	/* state is non-accepting */
 		++num_backing_up;
 
-		if (backing_up_report) {
-			fprintf (backing_up_file,
+		if (env.backing_up_report) {
+			fprintf (ctrl.backing_up_file,
 				 _("State #%d is non-accepting -\n"), ds);
 
 			/* identify the state */
-			dump_associated_rules (backing_up_file, ds);
+			dump_associated_rules (ctrl.backing_up_file, ds);
 
 			/* Now identify it further using the out- and
 			 * jam-transitions.
 			 */
-			dump_transitions (backing_up_file, state);
+			dump_transitions (ctrl.backing_up_file, state);
 
-			putc ('\n', backing_up_file);
+			putc ('\n', ctrl.backing_up_file);
 		}
 	}
 }
@@ -185,7 +185,7 @@ void dump_transitions (FILE *file, int state[])
 	int i, ec;
 	int out_char_set[CSIZE];
 
-	for (i = 0; i < csize; ++i) {
+	for (i = 0; i < ctrl.csize; ++i) {
 		ec = ABS (ecgroup[i]);
 		out_char_set[i] = state[ec];
 	}
@@ -195,7 +195,7 @@ void dump_transitions (FILE *file, int state[])
 	list_character_set (file, out_char_set);
 
 	/* now invert the members of the set to get the jam transitions */
-	for (i = 0; i < csize; ++i)
+	for (i = 0; i < ctrl.csize; ++i)
 		out_char_set[i] = !out_char_set[i];
 
 	fprintf (file, _("\n jam-transitions: EOF "));
@@ -366,9 +366,12 @@ void increase_max_dfas (void)
  *
  * Creates the dfa corresponding to the ndfa we've constructed.  The
  * dfa starts out in state #1.
+ *
+ * Return the amount of space, in bytes, allocated for the next table.
+ * In some modes this can be zero.
  */
 
-void ntod (void)
+size_t ntod (void)
 {
 	int    *accset, ds, nacc, newds;
 	int     sym, hashval, numstates, dsize;
@@ -406,7 +409,7 @@ void ntod (void)
 	 */
 	todo_head = todo_next = 0;
 
-	for (i = 0; i <= csize; ++i) {
+	for (i = 0; i <= ctrl.csize; ++i) {
 		duplist[i] = NIL;
 		symlist[i] = false;
 	}
@@ -414,7 +417,7 @@ void ntod (void)
 	for (i = 0; i <= num_rules; ++i)
 		accset[i] = NIL;
 
-	if (trace) {
+	if (env.trace) {
 		dumpnfa (scset[1]);
 		fputs (_("\n\nDFA Dump:\n\n"), stderr);
 	}
@@ -452,33 +455,14 @@ void ntod (void)
 
 	/* Note that the test for ecgroup[0] == numecs below accomplishes
 	 * both (1) and (2) above
+	 *
+	 * New way: we will only use NUL table for fulltbl, because the
+	 * scanner will use an integer instead of YY_CHAR as noted above
 	 */
-	if (!fullspd && ecgroup[0] == numecs) {
-		/* NUL is alone in its equivalence class, which is the
-		 * last one.
-		 */
-		int     use_NUL_table = (numecs == csize);
+	if (ctrl.fulltbl && ecgroup[0] == numecs && is_power_of_2(numecs))
+		nultrans = allocate_integer_array (current_max_dfas);
 
-		if (fulltbl && !use_NUL_table) {
-			/* We still may want to use the table if numecs
-			 * is a power of 2.
-			 */
-			if (numecs <= csize && is_power_of_2(numecs)) {
-				use_NUL_table = true;
-			}
-		}
-
-		if (use_NUL_table)
-			nultrans =
-				allocate_integer_array (current_max_dfas);
-
-		/* From now on, nultrans != nil indicates that we're
-		 * saving null transitions for later, separate encoding.
-		 */
-	}
-
-
-	if (fullspd) {
+	if (ctrl.fullspd) {
 		for (i = 0; i <= numecs; ++i)
 			state[i] = 0;
 
@@ -486,7 +470,7 @@ void ntod (void)
 		dfaacc[0].dfaacc_state = 0;
 	}
 
-	else if (fulltbl) {
+	else if (ctrl.fulltbl) {
 		if (nultrans)
 			/* We won't be including NUL's transitions in the
 			 * table, so build it for entries from 0 .. numecs - 1.
@@ -512,32 +496,19 @@ void ntod (void)
 		yynxt_tbl->td_hilen = 1;
 		yynxt_tbl->td_lolen = (flex_uint32_t) num_full_table_rows;
 		yynxt_tbl->td_data = yynxt_data =
-			calloc(yynxt_tbl->td_lolen *
-					    yynxt_tbl->td_hilen,
-					    sizeof (flex_int32_t));
+		    calloc(yynxt_tbl->td_lolen *
+			   yynxt_tbl->td_hilen,
+			   sizeof (flex_int32_t));
 		yynxt_curr = 0;
 
-		buf_prints (&yydmap_buf,
-			    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
-			    long_align ? "flex_int32_t" : "flex_int16_t");
-
-		/* Unless -Ca, declare it "short" because it's a real
-		 * long-shot that that won't be large enough.
-		 */
+		struct packtype_t *ptype = optimize_pack(0);
+		/* Note: Used when ctrl.fulltbl is on. Alternately defined elsewhere */
+		out_str ("m4_define([[M4_HOOK_NXT_TYPE]], [[%s]])", ptype->name);
+		out_dec ("m4_define([[M4_HOOK_NXT_ROWS]], [[%d]])", num_full_table_rows);
+		outn ("m4_define([[M4_HOOK_NXT_BODY]], [[m4_dnl");
+		outn ("M4_HOOK_TABLE_OPENER");
 		if (gentables)
-			out_str_dec
-				("static const %s yy_nxt[][%d] =\n    {\n",
-				 long_align ? "flex_int32_t" : "flex_int16_t",
-				 num_full_table_rows);
-		else {
-			out_dec ("#undef YY_NXT_LOLEN\n#define YY_NXT_LOLEN (%d)\n", num_full_table_rows);
-			out_str ("static const %s *yy_nxt =0;\n",
-				 long_align ? "flex_int32_t" : "flex_int16_t");
-		}
-
-
-		if (gentables)
-			outn ("    {");
+			outn ("M4_HOOK_TABLE_OPENER");
 
 		/* Generate 0 entries for state #0. */
 		for (i = 0; i < num_full_table_rows; ++i) {
@@ -547,7 +518,7 @@ void ntod (void)
 
 		dataflush ();
 		if (gentables)
-			outn ("    },\n");
+			outn ("M4_HOOK_TABLE_CONTINUE");
 	}
 
 	/* Create the first states. */
@@ -581,7 +552,7 @@ void ntod (void)
 		}
 	}
 
-	if (!fullspd) {
+	if (!ctrl.fullspd) {
 		if (!snstods (nset, 0, accset, 0, 0, &end_of_buffer_state))
 			flexfatal (_
 				   ("could not create unique end-of-buffer state"));
@@ -604,7 +575,7 @@ void ntod (void)
 		dset = dss[ds];
 		dsize = dfasiz[ds];
 
-		if (trace)
+		if (env.trace)
 			fprintf (stderr, _("state # %d:\n"), ds);
 
 		sympartition (dset, dsize, symlist, duplist);
@@ -641,7 +612,7 @@ void ntod (void)
 
 					state[sym] = newds;
 
-					if (trace)
+					if (env.trace)
 						fprintf (stderr,
 							 "\t%d\t%d\n", sym,
 							 newds);
@@ -659,7 +630,7 @@ void ntod (void)
 					targ = state[duplist[sym]];
 					state[sym] = targ;
 
-					if (trace)
+					if (env.trace)
 						fprintf (stderr,
 							 "\t%d\t%d\n", sym,
 							 targ);
@@ -691,7 +662,7 @@ void ntod (void)
 			state[NUL_ec] = 0;	/* remove transition */
 		}
 
-		if (fulltbl) {
+		if (ctrl.fulltbl) {
 
 			/* Each time we hit here, it's another td_hilen, so we realloc. */
 			yynxt_tbl->td_hilen++;
@@ -700,10 +671,8 @@ void ntod (void)
 						     yynxt_tbl->td_hilen *
 						     yynxt_tbl->td_lolen *
 						     sizeof (flex_int32_t));
-
-
 			if (gentables)
-				outn ("    {");
+				outn ("M4_HOOK_TABLE_OPENER");
 
 			/* Supply array's 0-element. */
 			if (ds == end_of_buffer_state) {
@@ -728,10 +697,10 @@ void ntod (void)
 
 			dataflush ();
 			if (gentables)
-				outn ("    },\n");
+				outn ("M4_HOOK_TABLE_CONTINUE");
 		}
 
-		else if (fullspd)
+		else if (ctrl.fullspd)
 			place_state (state, ds, totaltrans);
 
 		else if (ds == end_of_buffer_state)
@@ -759,8 +728,9 @@ void ntod (void)
 		}
 	}
 
-	if (fulltbl) {
-		dataend ();
+	if (ctrl.fulltbl) {
+		dataend ("M4_HOOK_TABLE_CLOSER");
+		outn("/* body */]])");
 		if (tablesext) {
 			yytbl_data_compress (yynxt_tbl);
 			if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)
@@ -773,7 +743,7 @@ void ntod (void)
 		}
 	}
 
-	else if (!fullspd) {
+	else if (!ctrl.fullspd) {
 		cmptmps ();	/* create compressed template entries */
 
 		/* Create tables for all the states with only one
@@ -788,8 +758,11 @@ void ntod (void)
 		mkdeftbl ();
 	}
 
+
 	free(accset);
 	free(nset);
+
+	return (yynxt_tbl != NULL) ? (yynxt_tbl->td_hilen * sizeof(int32_t)) : 0;
 }
 
 
@@ -1023,7 +996,7 @@ void sympartition (int ds[], int numstates, int symlist[], int duplist[])
 		tch = transchar[ns];
 
 		if (tch != SYM_EPSILON) {
-			if (tch < -lastccl || tch >= csize) {
+			if (tch < -lastccl || tch >= ctrl.csize) {
 				flexfatal (_
 					   ("bad transition character detected in sympartition()"));
 			}

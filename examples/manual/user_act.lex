@@ -4,14 +4,13 @@
 
 void user_action(void);
 
-#define YY_USER_ACTION user_action();
-
 %}
 
+%option pre-action = "user_action();"
 %%
 
-.*         ECHO;
-\n         ECHO;
+.*         yyecho();
+\n         yyecho();
 
 %%
 

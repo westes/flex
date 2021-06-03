@@ -113,8 +113,6 @@
 /* Whether an integer is a power of two */
 #define is_power_of_2(n) ((n) > 0 && ((n) & ((n) - 1)) == 0)
 
-#define unspecified -1
-
 /* Special chk[] values marking the slots taking by end-of-buffer and action
  * numbers.
  */
@@ -298,51 +296,140 @@
  */
 #define BAD_SUBSCRIPT -32767
 
-/* Absolute value of largest number that can be stored in a short, with a
- * bit of slop thrown in for general paranoia.
- */
-#define MAX_SHORT 32700
+typedef enum trit_t {
+	trit_unspecified = -1,
+	trit_false = 0,
+	trit_true = 1,
+} trit;
 
+/* Control variables.  These are in a struct to avoid having to replicate definitions
+ * twice for each option, instead a single struct can be declared and externed.
+ * If it's in this structure, it has a corresponding m4 symbol.
+ */
+struct ctrl_bundle_t {
+	bool always_interactive;// always use cheacter-by-character input
+	FILE *backing_up_file;	// file to summarize backing-up states to 
+	bool bison_bridge_lval;	// (--bison-bridge), bison pure calling convention. 
+	bool bison_bridge_lloc;	// (--bison-locations), bison yylloc.
+	size_t bufsize;		// input buffer size
+	bool C_plus_plus;	// (-+ flag) generate a C++ scanner class 
+	int csize;		// size of character set for the scanner 
+				// 128 for 7-bit chars and 256 for 8-bit 
+	bool ddebug;		// (-d) make a "debug" scanner 
+	trit do_main;		// generate main part to make lexer standalone.
+	bool do_stdinit;	// whether to initialize yyin/yyout to stdin/stdout
+	bool do_yylineno;	// if true, generate code to maintain yylineno 
+	bool do_yywrap;		// do yywrap() processing on EOF. 
+				// If false, EOF treated as "no more files" 
+	bool fullspd;		// (-F flag) use Jacobson method of table representation 
+	bool fulltbl;		// (-Cf flag) don't compress the DFA state table 
+ 	bool gen_line_dirs;	// (no -L flag) generate #line directives 
+	trit interactive;	// (-I) generate an interactive scanner
+	bool never_interactive;	// always use buffered input, don't check for tty.
+	bool lex_compat;	// (-l), maximize compatibility with AT&T lex 
+	bool long_align;	// (-Ca flag), favor long-word alignment for speed 
+	bool no_yyinput;	// suppress use of yyinput()
+	bool no_unistd;		// suppress inclusion of unistd.h
+	bool posix_compat;	// (-X) maximize compatibility with POSIX lex 
+	char *prefix;		// prefix for externally visible names, default "yy" 
+	trit reject_really_used;// Force generation of support code for reject operation
+	bool reentrant;		// if true (-R), generate a reentrant C scanner
+	bool rewrite;		// Appl;y magic rewre rles to special fumctions 
+	bool stack_used;	// Enable use of start-condition stacks
+	bool no_section3_escape;// True if the undocumented option --unsafe-no-m4-sect3-escape was passed
+	bool spprdflt;		// (-s) suppress the default rule
+	bool useecs;		// (-Ce flag) use equivalence classes 
+	bool usemecs;		// (-Cm flag), use meta-equivalence classes 
+	bool use_read;		// (-f, -F, or -Cr) use read() for scanner input 
+       				// otherwise, use fread(). 
+	char *yyclass;		// yyFlexLexer subclass to use for YY_DECL
+	char *yydecl;		// user-specfied prototype for yylex.
+	int yylmax;		// Maximum buffer length if %array
+	trit yymore_really_used;// Force geberation of support code for yymore
+	bool yytext_is_array;	// if true (i.e., %array directive), then declare
+				// yytext as array instead of a character pointer.
+				// Nice and inefficient.
+	bool noyyread;		// User supplied a yyread function, don't generate default
+	char *userinit;		// Code fragment to be inserted before scanning
+	char *preaction;	// Code fragment to be inserted before each action
+	char *postaction;	// Code fragment to be inserted after each action
+	char *emit;		// Specify target language to emit.
+	char *yyterminate;	// Set a non-default termination hook.
+	bool no_yypanic;	// if true, no not generate default yypanic function
+ 	// flags corresponding to the huge mass of --no-yy options
+	bool no_yy_push_state;
+	bool no_yy_pop_state;
+	bool no_yy_top_state;
+	bool no_yyunput;
+	bool no_yy_scan_buffer;
+	bool no_yy_scan_bytes;
+	bool no_yy_scan_string;
+	bool no_yyget_extra;
+	bool no_yyset_extra;
+	bool no_yyget_leng;
+	bool no_yyget_text;
+	bool no_yyget_lineno;
+	bool no_yyset_lineno;
+	bool no_yyget_column;
+	bool no_yyset_column;
+	bool no_yyget_in;
+	bool no_yyset_in;
+	bool no_yyget_out;
+	bool no_yyset_out;
+	bool no_yyget_lval;
+	bool no_yyset_lval;
+	bool no_yyget_lloc;
+	bool no_yyset_lloc;
+	bool no_flex_alloc;
+	bool no_flex_realloc;
+	bool no_flex_free;
+	bool no_get_debug;
+	bool no_set_debug;
+	// Properties read from the skeleton
+	const char *backend_name;	// What the back end tells you its name is
+	const char *traceline_re;	// Regular expression for recognizing tracelines */
+	const char *traceline_template;	// templare for emitting trace lines */
+	bool have_state_entry_format;	// Do we know how to make a state entry address?
+};
+
+/* Environment variables.  These control the lexer operation, but do
+ * not have corresponding m4 symbols and do not affect the behavior of
+ * the generated parser.
+ */
+struct env_bundle_t {
+	bool backing_up_report;	// (-b flag), generate "lex.backup" file 
+				// listing backing-up states
+	bool did_outfilename;	// whether outfilename was explicitly set
+	char *headerfilename;	// name of the .h file to generate
+	bool nowarn;		// (-w) do not generate warnings 
+	int performance_hint;	// if > 0 (i.e., -p flag), generate a report 
+				// relating to scanner performance; 
+				// if > 1 (-p -p), report 
+ 				// on minor performance problems, too.
+	char *outfilename;	// output file name
+	bool printstats;	// (-v) dump statistics
+	char *skelname;		// name of skeleton for code generation
+	FILE *skelfile;		// the skeleton file'd descriptor
+	bool trace;		// (-T) env.trace processing 
+	bool trace_hex; 	// use hex in trace/debug outputs not octal
+	bool use_stdout;	// the -t flag
+};
+
+/* Name and byte-width information on a type for code-generation purposes. */
+struct packtype_t {
+	char *name;
+	size_t width;
+};
+
+extern struct ctrl_bundle_t ctrl;
+extern struct env_bundle_t env;
 
 /* Declarations for global variables. */
 
 
 /* Variables for flags:
- * printstats - if true (-v), dump statistics
  * syntaxerror - true if a syntax error has been found
  * eofseen - true if we've seen an eof in the input file
- * ddebug - if true (-d), make a "debug" scanner
- * trace - if true (-T), trace processing
- * nowarn - if true (-w), do not generate warnings
- * spprdflt - if true (-s), suppress the default rule
- * interactive - if true (-I), generate an interactive scanner
- * lex_compat - if true (-l), maximize compatibility with AT&T lex
- * posix_compat - if true (-X), maximize compatibility with POSIX lex
- * do_yylineno - if true, generate code to maintain yylineno
- * useecs - if true (-Ce flag), use equivalence classes
- * fulltbl - if true (-Cf flag), don't compress the DFA state table
- * usemecs - if true (-Cm flag), use meta-equivalence classes
- * fullspd - if true (-F flag), use Jacobson method of table representation
- * gen_line_dirs - if true (i.e., no -L flag), generate #line directives
- * performance_report - if > 0 (i.e., -p flag), generate a report relating
- *   to scanner performance; if > 1 (-p -p), report on minor performance
- *   problems, too
- * backing_up_report - if true (i.e., -b flag), generate "lex.backup" file
- *   listing backing-up states
- * C_plus_plus - if true (i.e., -+ flag), generate a C++ scanner class;
- *   otherwise, a standard C scanner
- * reentrant - if true (-R), generate a reentrant C scanner.
- * bison_bridge_lval - if true (--bison-bridge), bison pure calling convention.
- * bison_bridge_lloc - if true (--bison-locations), bison yylloc.
- * long_align - if true (-Ca flag), favor long-word alignment.
- * use_read - if true (-f, -F, or -Cr) then use read() for scanner input;
- *   otherwise, use fread().
- * yytext_is_array - if true (i.e., %array directive), then declare
- *   yytext as a array instead of a character pointer.  Nice and inefficient.
- * do_yywrap - do yywrap() processing on EOF.  If false, EOF treated as
- *   "no more files".
- * csize - size of character set for the scanner we're generating;
- *   128 for 7-bit chars and 256 for 8-bit
  * yymore_used - if true, yymore() is used in input rules
  * reject - if true, generate back-up tables for REJECT macro
  * real_reject - if true, scanner really uses REJECT (as opposed to just
@@ -353,40 +440,20 @@
  * yymore_really_used - whether to treat yymore() as really used, regardless
  *   of what we think based on references to it in the user's actions.
  * reject_really_used - same for REJECT
- * trace_hex - use hexadecimal numbers in trace/debug outputs instead of octals
- */
+  */
 
-extern int printstats, syntaxerror, eofseen, ddebug, trace, nowarn,
-	spprdflt;
-extern int interactive, lex_compat, posix_compat, do_yylineno;
-extern int useecs, fulltbl, usemecs, fullspd;
-extern int gen_line_dirs, performance_report, backing_up_report;
-extern int reentrant, bison_bridge_lval, bison_bridge_lloc;
-extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
-extern int csize;
+extern int syntaxerror, eofseen;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
-
-extern int yymore_really_used, reject_really_used;
-extern int trace_hex;
 
 /* Variables used in the flex input routines:
  * datapos - characters on current output line
  * dataline - number of contiguous lines of data in current data
  * 	statement.  Used to generate readable -f output
  * linenum - current input line number
- * skelfile - the skeleton file
- * skel - compiled-in skeleton array
  * skel_ind - index into "skel" array, if skelfile is nil
  * yyin - input file
- * backing_up_file - file to summarize backing-up states to
  * infilename - name of input file
  * outfilename - name of output file
- * headerfilename - name of the .h file to generate
- * did_outfilename - whether outfilename was explicitly set
- * prefix - the prefix used for externally visible names ("yy" by default)
- * yyclass - yyFlexLexer subclass to use for YY_DECL
- * do_stdinit - whether to initialize yyin/yyout to stdin/stdout
- * use_stdout - the -t flag
  * input_files - array holding names of input files
  * num_input_files - size of input_files array
  * program_name - name with which program was invoked
@@ -402,13 +469,9 @@ extern int trace_hex;
  */
 
 extern int datapos, dataline, linenum;
-extern FILE *skelfile, *backing_up_file;
-extern const char *skel[];
 extern int skel_ind;
-extern char *infilename, *outfilename, *headerfilename;
-extern int did_outfilename;
-extern char *prefix, *yyclass, *extra_type;
-extern int do_stdinit, use_stdout;
+extern char *infilename;
+extern char *extra_type;
 extern char **input_files;
 extern int num_input_files;
 extern char *program_name;
@@ -461,6 +524,7 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
  * rule_has_nl - true if rule could possibly match a newline
  * ccl_has_nl - true if current ccl could match a newline
  * nlch - default eol char
+ * footprint - total size of tables, in bytes.
  */
 
 extern int maximum_mns, current_mns, current_max_rules;
@@ -470,6 +534,8 @@ extern int *accptnum, *assoc_rule, *state_type;
 extern int *rule_type, *rule_linenum, *rule_useful;
 extern bool *rule_has_nl, *ccl_has_nl;
 extern int nlch;
+extern size_t footprint;
+
 
 /* Different types of states; values are useful as masks, as well, for
  * routines like check_trailing_context().
@@ -609,6 +675,7 @@ extern unsigned char *ccltbl;
 
 /* Variables for miscellaneous information:
  * nmstr - last NAME scanned by the scanner
+ * nmval - last numeric scanned by the scanner
  * sectnum - section number currently being parsed
  * nummt - number of empty nxt/chk table entries
  * hshcol - number of hash collisions detected by snstods
@@ -628,7 +695,7 @@ extern unsigned char *ccltbl;
  */
 
 extern char nmstr[MAXLINE];
-extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
+extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs, nmval;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 extern int num_backing_up, bol_needed;
 
@@ -707,7 +774,7 @@ extern int *epsclosure(int *, int *, int[], int *, int *);
 /* Increase the maximum number of dfas. */
 extern void increase_max_dfas(void);
 
-extern void ntod(void);	/* convert a ndfa to a dfa */
+extern size_t ntod(void);	/* convert a ndfa to a dfa */
 
 /* Converts a set of ndfa states into a dfa state. */
 extern int snstods(int[], int, int[], int, int, int *);
@@ -732,34 +799,20 @@ extern void mkechar(int, int[], int[]);
 
 extern void do_indent(void);	/* indent to the current level */
 
-/* Generate the code to keep backing-up information. */
-extern void gen_backing_up(void);
+/* Set a conditional amd make it visible in generated code */
+extern void visible_define (const char *);
 
-/* Generate the code to perform the backing up. */
-extern void gen_bu_action(void);
+/* And again, with an explicit value part. */
+extern void visible_define_str (const char *, const char *);
+
+/* This time the value part is an int */
+extern void visible_define_int (const char *, const int);
 
 /* Generate full speed compressed transition table. */
 extern void genctbl(void);
 
-/* Generate the code to find the action number. */
-extern void gen_find_action(void);
-
-extern void genftbl(void);	/* generate full transition table */
-
-/* Generate the code to find the next compressed-table state. */
-extern void gen_next_compressed_state(char *);
-
-/* Generate the code to find the next match. */
-extern void gen_next_match(void);
-
-/* Generate the code to find the next state. */
-extern void gen_next_state(int);
-
-/* Generate the code to make a NUL transition. */
-extern void gen_NUL_trans(void);
-
-/* Generate the code to find the start state. */
-extern void gen_start_state(void);
+/* generate full transition table */
+extern void genftbl(void);
 
 /* Generate data statements for the transition tables. */
 extern void gentabs(void);
@@ -770,8 +823,11 @@ extern void indent_put2s(const char *, const char *);
 /* Write out a string + newline at the current indentation level. */
 extern void indent_puts(const char *);
 
-extern void make_tables(void);	/* generate transition tables */
+/* generate transition tables */
+extern void make_tables(void);
 
+/* Select a type for optimal packing */
+struct packtype_t *optimize_pack(size_t);
 
 /* from file main.c */
 
@@ -781,9 +837,6 @@ extern void usage(void);
 
 
 /* from file misc.c */
-
-/* Add a #define to the action file. */
-extern void action_define(const char *defname, int value);
 
 /* Add the given text to the stored actions. */
 extern void add_action(const char *new_text);
@@ -810,7 +863,7 @@ extern char *xstrdup(const char *);
 extern int cclcmp(const void *, const void *);
 
 /* Finish up a block of data declarations. */
-extern void dataend(void);
+extern void dataend(const char *);
 
 /* Flush generated data statements. */
 extern void dataflush(void);
@@ -857,7 +910,7 @@ extern void lerr_fatal(const char *, ...)
 ;
 
 /* Spit out a "#line" statement. */
-extern void line_directive_out(FILE *, int);
+extern void line_directive_out(FILE *, char *, int);
 
 /* Mark the current position in the action array as the end of the section 1
  * user defs.
@@ -884,7 +937,6 @@ extern void out_dec(const char *, int);
 extern void out_dec2(const char *, int, int);
 extern void out_hex(const char *, unsigned int);
 extern void out_str(const char *, const char *);
-extern void out_str3(const char *, const char *, const char *, const char *);
 extern void out_str_dec(const char *, const char *, int);
 extern void outc(int);
 extern void outn(const char *);
@@ -894,9 +946,6 @@ extern void out_m4_define(const char* def, const char* val);
  * 8-bit.
  */
 extern char *readable_form(int);
-
-/* Write out one section of the skeleton file. */
-extern void skelout(void);
 
 /* Output a yy_trans_info structure. */
 extern void transition_struct_out(int, int);
@@ -972,6 +1021,8 @@ extern void lwarn(const char *);	/* report a warning */
 extern void yyerror(const char *);	/* report a parse error */
 extern int yyparse(void);		/* the YACC parser */
 
+/* Ship a comment to the generated output */
+extern void comment(const char *);
 
 /* from file scan.l */
 
@@ -981,6 +1032,22 @@ extern int flexscan(void);
 /* Open the given file (if NULL, stdin) for scanning. */
 extern void set_input_file(char *);
 
+/* from file skeletons.c */
+
+/* return the correct file suffix for the selrcted back end */
+const char *suffix (void);
+
+/* Mine a text-valued property out of the skeleton file */
+extern const char *skel_property(const char *);
+
+/* Is the default back end selected?*/
+extern bool is_default_backend(void);
+
+/* Select a backend by name */
+extern void backend_by_name(const char *);
+
+/* Write out one section of the skeleton file. */
+extern void skelout(bool);
 
 /* from file sym.c */
 
@@ -1000,6 +1067,8 @@ extern void scinstal(const char *, int);	/* make a start condition */
 /* Lookup the number associated with a start condition. */
 extern int sclookup(const char *);
 
+/* Supply context argument for a function if required */
+extern void context_call(char *);
 
 /* from file tblcmp.c */
 
@@ -1043,22 +1112,12 @@ struct Buf {
 extern void buf_init(struct Buf * buf, size_t elem_size);
 extern void buf_destroy(struct Buf * buf);
 extern struct Buf *buf_append(struct Buf * buf, const void *ptr, int n_elem);
-extern struct Buf *buf_concat(struct Buf* dest, const struct Buf* src);
 extern struct Buf *buf_strappend(struct Buf *, const char *str);
 extern struct Buf *buf_strnappend(struct Buf *, const char *str, int nchars);
-extern struct Buf *buf_strdefine(struct Buf * buf, const char *str, const char *def);
 extern struct Buf *buf_prints(struct Buf *buf, const char *fmt, const char* s);
-extern struct Buf *buf_m4_define(struct Buf *buf, const char* def, const char* val);
-extern struct Buf *buf_m4_undefine(struct Buf *buf, const char* def);
-extern struct Buf *buf_print_strings(struct Buf * buf, FILE* out);
-extern struct Buf *buf_linedir(struct Buf *buf, const char* filename, int lineno);
 
 extern struct Buf userdef_buf; /* a string buffer for #define's generated by user-options on cmd line. */
-extern struct Buf defs_buf;    /* a char* buffer to save #define'd some symbols generated by flex. */
-extern struct Buf yydmap_buf;  /* a string buffer to hold yydmap elements */
-extern struct Buf m4defs_buf;  /* Holds m4 definitions. */
 extern struct Buf top_buf;     /* contains %top code. String buffer. */
-extern bool no_section3_escape; /* True if the undocumented option --unsafe-no-m4-sect3-escape was passed */
 
 /* For blocking out code from the header file. */
 #define OUT_BEGIN_CODE() outn("m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl")
@@ -1129,7 +1188,7 @@ extern int filter_fix_linedirs(struct filter *chain);
  */
 
 extern regex_t regex_linedir;
-bool flex_init_regex(void);
+bool flex_init_regex(const char *);
 void flex_regcomp(regex_t *preg, const char *regex, int cflags);
 char   *regmatch_dup (regmatch_t * m, const char *src);
 char   *regmatch_cpy (regmatch_t * m, char *dest, const char *src);

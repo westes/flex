@@ -1,0 +1,71 @@
+/*
+ * This file is part of flex.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 
+ * Neither the name of the University nor the names of its contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ */
+
+/* The goal here is to test the yylineno processing by:
+ *      - providing some rules than CAN match newlines and
+ *        other rules that can NOT match newlines,
+ *      - matching several newlines in one rule,
+ *      - directly modifying yylineno.
+ * FIXME: Exposes a bug, probably in the Flex scanner.
+ * If "--yylineno" in the action is "yylineno--", the pattern
+ * is not recognized and the magic rewrite rule for yylineo
+ * does not fire.  Only an issue for non-default back ends that
+ * do magic rewrites rather than rtelying on the C preprocessor.
+ */
+%option 8bit
+%option nounput nomain noyywrap noinput yylineno
+%option warn
+
+WORD [[:alpha:]]+
+DIGIT [[:digit:]]
+
+%%
+"yylineno++"          M4_TEST_INCREMENT(yylineno);
+"yylineno--"          M4_TEST_DECREMENT(yylineno);
+[[:blank:]]+
+{WORD}
+{DIGIT}+(\n{DIGIT}+)*
+\n
+.
+<<EOF>>  {M4_TEST_ASSERT(yylineno == 20) M4_TEST_DO(yyterminate())}
+
+###
+These words
+are separated
+by newlines
+and sometimes
+    spaces  
+too.
+The next three lines are numbers with only intervening newlines
+01123
+581321
+34
+And now for some blank lines....
+
+
+Finally, we directly modify yylineno, but then change it back afterwards
+(see scanner.l):
+
+yylineno++
+
+yylineno--

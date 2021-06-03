@@ -1,0 +1,99 @@
+/*
+ * This file is part of flex.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * Neither the name of the University nor the names of its contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ */
+/*
+ * Test character-class matching
+ */
+
+%option 8bit
+%option nounput nomain noyywrap noinput
+%option warn
+%%
+
+^"^alpha:"[[:^alpha:]]+@alpha@\n                          {M4_TEST_DO(yyecho())}
+^"^digit:"[[:^digit:]]+@digit@\n                          {M4_TEST_DO(yyecho())}
+^"^alnum:"[[:^alnum:]]+@alnum@\n                          {M4_TEST_DO(yyecho())}
+^"^upper:"[[:^upper:]]+@upper@\n                          {M4_TEST_DO(yyecho())}
+^"^lower:"[[:^lower:]]+@lower@\n                          {M4_TEST_DO(yyecho())}
+^"^space:"[[:^space:]]+@space@\n                          {M4_TEST_DO(yyecho())}
+^"^blank:"[[:^blank:]]+@blank@\n                          {M4_TEST_DO(yyecho())}
+^"^punct:"[[:^punct:]]+@punct@\n                          {M4_TEST_DO(yyecho())}
+^"^cntrl:"[[:^cntrl:]]+@cntrl@\n                          {M4_TEST_DO(yyecho())}
+^"^xdigit:"[[:^xdigit:]]+@xdigit@\n                       {M4_TEST_DO(yyecho())}
+
+^"a-d:"[[:alpha:]]{-}[[:digit:]]+@a-d@\n                  {M4_TEST_DO(yyecho())}
+^"l-xyz:"([[:lower:]]{-}[xyz])+@l-xyz@\n                  {M4_TEST_DO(yyecho())}
+^"abcd-bc:"([abcd]{-}[bc])+@abcd-bc@\n                    {M4_TEST_DO(yyecho())}
+^"abcde-b-c:"([abcde]{-}[b]{-}[c])+@abcde-b-c@\n          {M4_TEST_DO(yyecho())}
+^"^XY-^XYZ:"([^XY]{-}[^XYZ])+@^XY-^XYZ@\n                 {M4_TEST_DO(yyecho())}
+
+^"a+d:"([[:alpha:]]{+}[[:digit:]])+"@a+d@"\n              {M4_TEST_DO(yyecho())}
+^"a-u+Q:"([[:alpha:]]{-}[[:upper:]]{+}[Q])+"@a-u+Q@"\n    {M4_TEST_DO(yyecho())}
+
+^"ia:"(?i:a)+@ia@\n                                       {M4_TEST_DO(yyecho())}
+^"iabc:"(?i:abc)+@iabc@\n                                 {M4_TEST_DO(yyecho())}
+^"ia-c:"(?i:[a-c]+)@ia-c@\n                               {M4_TEST_DO(yyecho())}
+
+    /* We don't want this one to match. */
+^"check-a:"(?i:(?-i:A))@\n                                {M4_TEST_FAILMESSAGE}
+^"check-a:"(?i:(?-i:(?i:A)))@\n                           {M4_TEST_DO(yyecho())}
+
+    /* We don't want this one to match. */
+^"dot-all-1:"(?-s:XXX.*)@dot-all-1@\n                     {M4_TEST_FAILMESSAGE} 
+^"dot-all-1:"(?s:XXX.*)@dot-all-1@\n                      {M4_TEST_DO(yyecho())}
+
+^"x1:"(?x:   a | b  )+@x1@\n                              {M4_TEST_DO(yyecho())}
+^"x2:"(?x:   a |
+        (?# Comment )
+    b
+    )+@x2@\n                                              {M4_TEST_DO(yyecho())}
+
+
+.|\n                                                      {M4_TEST_FAILMESSAGE}
+###
+^alpha:0123456789 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@alpha@
+^digit:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@digit@
+^alnum:~!@#$%^&*(){}[]':;"<>,./?\+=_-`@alnum@
+^upper:abcdefghijklmnopqrstuvwxyz0123456789 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@upper@
+^lower:ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@lower@
+^space:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF~!@#$%^&*(){}[]':;"<>,./?\+=_-`@space@
+^blank:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF~!@#$%^&*(){}[]':;"<>,./?\+=_-`@blank@
+^punct:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF 	Z@punct@
+^cntrl:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF~!@#$%^&*(){}[]':;"<>,./?\+=_-`@cntrl@
+^xdigit:ghijklmnopqrstuvwxyzGHIJKLMNOPQRSTUVWXYZ 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@xdigit@
+a-d:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@a-d@
+l-xyz:abcdefghijklmnopqrstuvw@l-xyz@
+abcd-bc:aaaaddddaaaa@abcd-bc@
+abcde-b-c:aaaaddddeeee@abcde-b-c@
+^XY-^XYZ:ZZZZZZZZZZZ@^XY-^XYZ@
+a+d:abc0123xyz789@a+d@
+a-u+Q:abcQQQQxyz@a-u+Q@
+ia:AaAa@ia@
+iabc:ABCabcAbCaBc@iabc@
+ia-c:ABCabcAbCaBc@ia-c@
+check-a:a@
+dot-all-1:XXX junk
+              junk
+              junk
+            @dot-all-1@
+x1:abaabb@x1@
+x2:abaabb@x2@

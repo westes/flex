@@ -8,14 +8,14 @@ this directory and its contents.
 
 * STRUCTURE OF THE TEST SUITE
 
-The testsuite consists of several tests. Each test is centered around
-a scanner known to work with the most recent version of flex. In
-general, after you modify your copy of the flex distribution, you
-should re-run the test suite. Some of the tests may require certain
-tools to be available (e.g., bison, diff). If any test returns an
-error or generates an error message, then your modifications *may*
-have broken a feature of flex. At a minimum, you'll want to
-investigate the failure and determine if it's truly significant.
+Each test is centered around a scanner known to work with the most
+recent version of flex. In general, after you modify your copy of the
+flex distribution, you should re-run the test suite. Some of the tests
+may require certain tools to be available (e.g., bison, diff). If any
+test returns an error or generates an error message, then your
+modifications *may* have broken a feature of flex. At a minimum,
+you'll want to investigate the failure and determine if it's truly
+significant.
 
 * HOW TO RUN THE TEST SUITE
 
@@ -34,20 +34,27 @@ To build and execute a single test:
 
 * HOW TO ADD A NEW TEST TO THE TEST SUITE
 
-** List your test in the TESTS variable in Makefile.am in this
-   directory. Note that due to the large number of tests, we use
+** If possible, just write a *.rules file.  Exit with status 1 to
+   indicate failure, e.g. with a "." production if nothing
+   prior properly consumed every input token.  The test machinery
+   will expand a rules file into tests for all back ends.  Note that
+   text following ### at the end of the ruleset will be used as input.
+
+** Otherwise, list your test in the TESTS variable in Makefile.am in
+   this directory. Note that due to the large number of tests, we use
    variables to group similar tests together. This also helps with
    handling the automake test suite requirements. Hopefully your test
    can be listed in SIMPLE_TESTS. You'll need to add the appropriate
-   automake _SOURCES variable as well. If you're unsure, then consult
+   automake _SOURCES variable as well, and .gitignore lines for the
+   binary and generated code. If you're unsure, then consult
    the automake manual, paying attention to the parallel test harness
    section.
 
 ** On success, your test should return zero.
 
 ** On error, your test should return 1 (one) and print a message to
-stderr, which will have been redirected to the log file created by the
-automake test suite harness.
+   stderr, which will have been redirected to the log file created by the
+   automake test suite harness.
 
 ** If your test is skipped (e.g., because bison was not found), then
    the test should return 77 (seventy-seven). This is the exit status that
@@ -56,3 +63,43 @@ automake test suite harness.
 ** Once your work is done, submit a patch via the flex development
    mailing list, the github pull request mechanism or some other
    suitable means.
+
+* NAMING CONVENTIONS
+
+A test with an _nr suffix exercises a non-reentrant scanner built
+with the default cpp back end.
+
+A test with an _r suffix exercises a reentrant scanner built
+with the default cpp back end.
+
+A test with a c99 suffix exercises the c99 back end. All C99
+scanners are re-entrant.
+
+Most tests occur in groups with a common stem in the names, like
+alloc_extra_ or debug_.  These are exercising the same token grammar
+under different back ends.  As new target languages are added these
+groups of parallel tests will grow. Tests that are not part of one of
+these series are usually of features supported on the default cpp
+back end only.
+
+The "generated" tests are made by wrapping boilerplate code around a
+rules file. The assumption is that the test binary should consume the
+data following ### in the rules file, exercising some set of Flex
+features and not returning a nonzero status.
+
+If you can express your test as a ruleset within in this orotocol,
+please do so.  Those tests are easy to port to new back ends, as that
+whole job can be done by enhabcing testmaker.m4.
+
+* WHY SOME TESTS ARE MISSING
+
+The "top" test is backend-independent; what it's really testing
+is Flex's ability to accumulate and ship preamble code sections.
+
+The "quotes" test is also backend-indepedent; it's testing that
+m4 expansion doesn't leak through the genertated scanner.
+
+The C99 backend is missing tests for the Bison bridge, header
+generation, and loadable tables because it omits those features in
+order to be a simpler starting point for wring new back ends.
+

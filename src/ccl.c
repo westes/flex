@@ -101,7 +101,7 @@ static void    dump_cclp (FILE* file, int cclp)
 
 	putc ('[', file);
 
-	for (i = 0; i < csize; ++i) {
+	for (i = 0; i < ctrl.csize; ++i) {
 		if (ccl_contains(cclp, i)){
 			int start_char = i;
 
@@ -109,7 +109,7 @@ static void    dump_cclp (FILE* file, int cclp)
 
 			fputs (readable_form (i), file);
 
-			while (++i < csize && ccl_contains(cclp,i)) ;
+			while (++i < ctrl.csize && ccl_contains(cclp,i)) ;
 
 			if (i - 1 > start_char)
 				/* this was a run */
@@ -138,7 +138,7 @@ ccl_set_diff (int a, int b)
      * addding each char in a that is not in b.
      * (This could be O(n^2), but n is small and bounded.)
      */
-	for ( ch = 0; ch < csize; ++ch )
+	for ( ch = 0; ch < ctrl.csize; ++ch )
         if (ccl_contains (a, ch) && !ccl_contains(b, ch))
             ccladd (d, ch);
 
@@ -250,7 +250,7 @@ void    list_character_set (FILE *file, int cset[])
 
 	putc ('[', file);
 
-	for (i = 0; i < csize; ++i) {
+	for (i = 0; i < ctrl.csize; ++i) {
 		if (cset[i]) {
 			int start_char = i;
 
@@ -258,7 +258,7 @@ void    list_character_set (FILE *file, int cset[])
 
 			fputs (readable_form (i), file);
 
-			while (++i < csize && cset[i]) ;
+			while (++i < ctrl.csize && cset[i]) ;
 
 			if (i - 1 > start_char)
 				/* this was a run */

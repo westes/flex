@@ -33,7 +33,7 @@
 
 #include "options.h"
 
-/* Be sure to synchronize these options with those defined in "options.h",
+/* Be sure to synchronize these options with those defined in "ctrl.h",
  * the giant switch() statement in "main.c", and the %option processing in
  * "scan.l".
  */
@@ -100,7 +100,11 @@ optspec_t flexopts[] = {
 	{"-n", OPT_DONOTHING, 0}
 	,			/* For POSIX lex compatibility. */
 	{"--ecs", OPT_ECS, 0}
-	,			/* Construct equivalence classes. */
+	,
+	{"--emit=LANG", OPT_EMIT, 0}
+	,			/* select language to emit */
+	{"-e LANG", OPT_EMIT, 0}
+	,
 	{"--noecs", OPT_NO_ECS, 0}
 	,
 	{"-F", OPT_FAST, 0}
@@ -231,7 +235,9 @@ optspec_t flexopts[] = {
 	{"--yywrap", OPT_YYWRAP, 0}
 	,
 
-	{"--nounput", OPT_NO_UNPUT, 0}
+	{"--nounput", OPT_NO_YYUNPUT, 0}
+	,
+	{"--noyyunput", OPT_NO_YYUNPUT, 0}
 	,
 	{"--noyy_push_state", OPT_NO_YY_PUSH_STATE, 0}
 	,

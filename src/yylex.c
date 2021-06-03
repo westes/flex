@@ -63,7 +63,7 @@ int     yylex (void)
 			toktype = 0;
 	}
 
-	if (trace) {
+	if (env.trace) {
 		if (beglin) {
 			fprintf (stderr, "%d\t", num_rules + 1);
 			beglin = 0;
@@ -152,7 +152,7 @@ int     yylex (void)
 
 			default:
 				if (!isascii (yylval) || !isprint (yylval)) {
-					if(trace_hex)
+					if(env.trace_hex)
 						fprintf (stderr, "\\x%02x", (unsigned int) yylval);
 					else
 						fprintf (stderr, "\\%.3o", (unsigned int) yylval);

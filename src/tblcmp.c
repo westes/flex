@@ -228,7 +228,7 @@ void    cmptmps (void)
 
 	peakpairs = numtemps * numecs + tblend;
 
-	if (usemecs) {
+	if (ctrl.usemecs) {
 		/* Create equivalence classes based on data gathered on
 		 * template transitions.
 		 */
@@ -250,7 +250,7 @@ void    cmptmps (void)
 		for (j = 1; j <= numecs; ++j) {
 			trans = tnxt[numecs * i + j];
 
-			if (usemecs) {
+			if (ctrl.usemecs) {
 				/* The absolute value of tecbck is the
 				 * meta-equivalence class of a given
 				 * equivalence class, as set up by cre8ecs().
@@ -426,7 +426,7 @@ void    inittbl (void)
 	firstfree = tblend + 1;
 	numtemps = 0;
 
-	if (usemecs) {
+	if (ctrl.usemecs) {
 		/* Set up doubly-linked meta-equivalence classes; these
 		 * are sets of equivalence classes which all have identical
 		 * transitions out of TEMPLATES.
@@ -708,7 +708,7 @@ void    mktemplate (int state[], int statenum, int comstate)
 			tnxt[tmpbase + i] = comstate;
 		}
 
-	if (usemecs)
+	if (ctrl.usemecs)
 		mkeccl (transset, tsptr, tecfwd, tecbck, numecs, 0);
 
 	mkprot (tnxt + tmpbase, -numtemps, comstate);
