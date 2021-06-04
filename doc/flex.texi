@@ -354,7 +354,7 @@ Here's another simple example:
 
 @cindex counting characters and lines; reentrant
 @example
-@verbatiminclude ../examples/manual/example_r.lex
+@verbatiminclude example_r.lex
 @end example
 
 If you have looked at older versions of the Flex nanual, you might
@@ -362,7 +362,7 @@ have seen a version of the above example that looked more like this:
 
 @cindex counting characters and lines; non-reentrant
 @example
-@verbatiminclude ../examples/manual/example_nr.lex
+@verbatiminclude example_nr.lex
 @end example
 
 Both versions count the number of characters and the number of lines in
@@ -397,7 +397,7 @@ user-defined fields in the scanner structure which will be explained
 in detail at @xref{Extra Data}. For now, consider this:
 
 @example
-@verbatiminclude ../examples/manual/example_er.lex
+@verbatiminclude example_er.lex
 @end example
 
 While it requires a bit more ceremony, several instances of this

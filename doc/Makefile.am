@@ -1,6 +1,9 @@
 FLEX = $(top_builddir)/src/flex$(EXEEXT)
+TEXI2DVI = @TEXI2DVI@ -I $(srcdir)/../examples/manual/
+TEXI2PDF = @TEXI2PDF@ -I $(srcdir)/../examples/manual/
 
 info_TEXINFOS =	flex.texi
+AM_MAKEINFOFLAGS = -I $(srcdir)/../examples/manual/
 dist_man_MANS = flex.1
 MAINTAINERCLEANFILES = flex.1
 
