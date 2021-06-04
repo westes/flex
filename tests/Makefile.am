@@ -227,14 +227,13 @@ dist-hook:
 	chmod u+w $(distdir) && \
 	for file in $(CLEANFILES) ; do \
 	rm -f $(distdir)/$$file \
+	chmod u+w $(distdir)/$$file \
 	; done
 
 EXTRA_DIST = \
 	README \
 	testmaker.m4 \
 	alloc_extra.txt \
-	array_nr.txt \
-	array_r.txt \
 	bison_nr.txt \
 	bison_yylloc.txt \
 	bison_yylval.txt \
@@ -255,13 +254,8 @@ EXTRA_DIST = \
 	include_by_reentrant.direct.txt \
 	include_by_reentrant.direct_2.txt \
 	include_by_reentrant.direct_3.txt \
-	lineno_nr.one.txt \
-	lineno_r.one.txt \
-	lineno_trailing.one.txt \
-	mem_nr.txt \
-	mem_r.txt \
-	prefix_nr.txt \
-	prefix_r.txt \
+	mem.txt \
+	prefix.txt \
 	pthread_1.txt \
 	pthread_2.txt \
 	pthread_3.txt \
@@ -270,7 +264,6 @@ EXTRA_DIST = \
 	rescan_nr.direct.txt \
 	rescan_r.direct.txt \
 	quotes.txt \
-	tableopts.txt \
 	top.txt \
 	yyextra.txt
 
@@ -281,7 +274,8 @@ dist_check_SCRIPTS = \
 	options.cn \
 	testwrapper-direct.sh \
 	testwrapper.sh \
-	testmaker.sh
+	testmaker.sh \
+	test-yydecl-gen.sh
 
 pthread_pthread_LDADD = @LIBPTHREAD@
 

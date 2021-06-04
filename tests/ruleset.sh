@@ -66,6 +66,7 @@ for backend in "$@" ; do
     printf "\t\$(AM_V_LEX)POSIXLY_CORRECT=1 \$(FLEX) \$(TESTOPTS) -o \$@ \$<\n"
     echo ""
 
+    echo "test_yydecl_${backend}_sh_SOURCES ="
     echo "test-yydecl-${backend}.sh\$(EXEEXT): test-yydecl-gen.sh"
     # shellcheck disable=SC2059
     printf "\t\$(SHELL) test-yydecl-gen.sh ${backend} >test-yydecl-${backend}.sh\$(EXEEXT)\n"
@@ -73,8 +74,8 @@ for backend in "$@" ; do
     printf "\tchmod a+x test-yydecl-${backend}.sh\$(EXEEXT)\n"
     echo ""
 
-    RULESET_TESTS="${RULESET_TESTS} test-yydecl-${backend}.sh"
-    RULESET_REMOVABLES="${RULESET_REMOVABLES} test-yydecl-${backend}.sh"
+    RULESET_TESTS="${RULESET_TESTS} test-yydecl-${backend}.sh\$(EXEEXT)"
+    RULESET_REMOVABLES="${RULESET_REMOVABLES} test-yydecl-${backend}.sh\$(EXEEXT)"
 done
 
 echo ""
