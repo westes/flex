@@ -88,14 +88,22 @@ include_HEADERS = \
 	FlexLexer.h
 
 EXTRA_DIST = \
-	*-flex.skl \
+	c99-flex.skl \
+	cpp-flex.skl \
+	go-flex.skl \
 	mkskel.sh \
-	gettext.h
+	gettext.h \
+	chkskel.sh
 
 CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
 
+BUILT_SOURCES = \
+	cpp-flex.h \
+	c99-flex.h \
+	go-flex.h
+
 clean-local:
-	rm -f *-flex.h
+	rm -f $(BUILT_SOURCES)
 
 cpp-flex.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(m4) $(VERSION) > $@.tmp
