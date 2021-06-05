@@ -1,0 +1,27 @@
+^alpha:0123456789 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@alpha@
+^digit:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@digit@
+^alnum:~!@#$%^&*(){}[]':;"<>,./?\+=_-`@alnum@
+^upper:abcdefghijklmnopqrstuvwxyz0123456789 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@upper@
+^lower:ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@lower@
+^space:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF~!@#$%^&*(){}[]':;"<>,./?\+=_-`@space@
+^blank:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF~!@#$%^&*(){}[]':;"<>,./?\+=_-`@blank@
+^punct:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF 	Z@punct@
+^cntrl:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF~!@#$%^&*(){}[]':;"<>,./?\+=_-`@cntrl@
+^xdigit:ghijklmnopqrstuvwxyzGHIJKLMNOPQRSTUVWXYZ 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@xdigit@
+a-d:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@a-d@
+l-xyz:abcdefghijklmnopqrstuvw@l-xyz@
+abcd-bc:aaaaddddaaaa@abcd-bc@
+abcde-b-c:aaaaddddeeee@abcde-b-c@
+^XY-^XYZ:ZZZZZZZZZZZ@^XY-^XYZ@
+a+d:abc0123xyz789@a+d@
+a-u+Q:abcQQQQxyz@a-u+Q@
+ia:AaAa@ia@
+iabc:ABCabcAbCaBc@iabc@
+ia-c:ABCabcAbCaBc@ia-c@
+check-a:a@
+dot-all-1:XXX junk
+              junk
+              junk
+            @dot-all-1@
+x1:abaabb@x1@
+x2:abaabb@x2@
