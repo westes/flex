@@ -1,16 +1,32 @@
 #! /bin/sh
 # Generate test for the %yydecl option of flex on a specified back end
 backend="$1"
+FLEX="$2"
 
 cat <<EOF_OUTER
 #! /bin/sh
 # Test %yydecl option of flex on ${backend} backend.
+echo 'set -evx'
+set -evx
+
 trap 'rm /tmp/td\$\$' EXIT HUP INT QUIT TERM
 
 teeout=/dev/null
-if [ "\$1" = "-d" ]
-then
-    shift
+
+DEBUG=0
+
+while getopts d OPTION ; do
+    case \$OPTION in
+        d) DEBUG=1 ;;
+        *) echo "Usage: \${0} [-d]"
+           exit 1
+           ;;
+    esac
+done
+
+shift \$((OPTIND-1))
+
+if [ "\${DEBUG}" = "1" ] ; then
     teeout=/dev/stderr
 fi
 
@@ -19,7 +35,7 @@ cat >/tmp/td\$\$ <<EOF
 %%
 %%
 EOF
-if ../src/flex -t /tmp/td\$\$  | tee \${teeout} | grep "int foobar(void)" >/dev/null
+if "${FLEX}" -t /tmp/td\$\$  | tee \${teeout} | grep "int foobar(void)" >/dev/null
 then
      echo "%yydecl test on ${backend} SUCCEEDED"
      exit 0

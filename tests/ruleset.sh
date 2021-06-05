@@ -11,6 +11,19 @@ set -eu
 
 RULESET_TESTS=""
 RULESET_REMOVABLES=""
+TESTMAKEROPTS=""
+
+while getopts i:t OPTION ; do
+    case $OPTION in
+	    i) TESTMAKEROPTS="${TESTMAKEROPTS} -i ${OPTARG}" ;;
+		t) TESTMAKEROPTS="${TESTMAKEROPTS} -t" ;;
+        *) echo "Usage: ${0} [-d]"
+           exit 1
+           ;;
+    esac
+done
+
+shift $((OPTIND-1))
 
 printf "\n# Begin generated test rules\n\n"
 
@@ -31,9 +44,9 @@ for backend in "$@" ; do
 	    echo "${testname}.l: \$(srcdir)/${ruleset} \$(srcdir)/testmaker.sh \$(srcdir)/testmaker.m4"
 	    # we're deliberately single-quoting this because we _don't_ want those variables to be expanded yet
 	    # shellcheck disable=2016
-	    printf '\t$(SHELL) $(srcdir)/testmaker.sh $@\n\n'
+	    printf '\t$(SHELL) $(srcdir)/testmaker.sh -i $(srcdir) $@\n\n'
 	    RULESET_TESTS="${RULESET_TESTS} ${testname}"
-	    RULESET_REMOVABLES="${RULESET_REMOVABLES} ${testname} ${testname}.c ${testname}.l ${ruleset%.*}.txt"
+	    RULESET_REMOVABLES="${RULESET_REMOVABLES} ${testname} ${testname}.c ${testname}.l"
 	fi
     done
     for kind in opt ser ver ; do
@@ -47,7 +60,7 @@ for backend in "$@" ; do
             cat << EOF
 tableopts_${kind}_${backend}_${bare_opt}_${kind}_SOURCES = ${testname}.l
 ${testname}.l: \$(srcdir)/tableopts.rules \$(srcdir)/testmaker.sh \$(srcdir)/testmaker.m4
-	\$(SHELL) \$(srcdir)/testmaker.sh \$@
+	\$(SHELL) \$(srcdir)/testmaker.sh -i \$(srcdir) \$@
 
 EOF
         done
@@ -67,9 +80,9 @@ for backend in "$@" ; do
     echo ""
 
     echo "test_yydecl_${backend}_sh_SOURCES ="
-    echo "test-yydecl-${backend}.sh\$(EXEEXT): test-yydecl-gen.sh"
+    echo "test-yydecl-${backend}.sh\$(EXEEXT): \$(srcdir)/test-yydecl-gen.sh"
     # shellcheck disable=SC2059
-    printf "\t\$(SHELL) test-yydecl-gen.sh ${backend} >test-yydecl-${backend}.sh\$(EXEEXT)\n"
+    printf "\t\$(SHELL) \$(srcdir)/test-yydecl-gen.sh ${backend} \$(FLEX) >test-yydecl-${backend}.sh\$(EXEEXT)\n"
     # shellcheck disable=SC2059
     printf "\tchmod a+x test-yydecl-${backend}.sh\$(EXEEXT)\n"
     echo ""

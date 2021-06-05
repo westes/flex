@@ -9,17 +9,34 @@
 #
 # To add a new back end named "foo", append "|foo" to the
 # third case arm marked "# Add new back ends on this line".
+echo 'set -evx'
+set -evx
 
-if [ "$1" = -d ] ; then
-    shift
-    outdev=/dev/stdout
-    filter=cat
-else
-    outdev="$1"
-    filter=m4
-fi
+DEBUG=0
+SRCDIR="."
+TEXTFILES=0
 
+while getopts di:t OPTION ; do
+    case $OPTION in
+        d) DEBUG=1 ;;
+		i) SRCDIR="${OPTARG}" ;;
+		t) TEXTFILES=1 ;;
+        *) echo "Usage: ${0} [-d]"
+           exit 1
+           ;;
+    esac
+done
+
+shift $((OPTIND-1))
 testfile=$1
+
+if [ "${DEBUG}" = "0" ] ; then
+    outdev="${testfile}"
+	filter=m4
+else
+    outdev=/dev/stdout
+	filter=cat
+fi
 
 trap 'rm -f /tmp/testmaker$$' EXIT INT QUIT
 
@@ -39,6 +56,9 @@ set -- $(echo "${1}" | tr '_' ' ')
 stem=$1
 options=""
 backend=nr
+
+echo "stem: ${stem}"
+
 for part in "$@"; do
     case ${part} in
         nr) backend=nr; ;;
@@ -83,17 +103,20 @@ m4def() {
     else
         m4def M4_TEST_OPTIONS "%%option${options}\n"
     fi
-    cat testmaker.m4
+    cat "${SRCDIR}/testmaker.m4"
     echo "M4_TEST_PREAMBLE\`'dnl"
     echo "M4_TEST_OPTIONS\`'dnl"
-    sed <"${stem}.rules" -e "/###/Q0"
+    sed <"${SRCDIR}/${stem}.rules" -e "/###/Q0"
     echo "%%"
     echo "M4_TEST_POSTAMBLE\`'dnl"
 ) | "${filter}" >"${outdev}"
 
-if [ "${outdev}" != /dev/stdout ] && [ ! -f "${stem}.txt" ]
+if [ "${outdev}" != /dev/stdout ] && [ "${TEXTFILES}" = "1" ]
 then
-    sed <"${stem}.rules" -e "1,/###/d" >"${stem}.txt"
+    if [ ! -f "${stem}.txt" ] ; then 
+	    echo "Overwriting ${stem}.txt"
+    fi
+    sed <"${SRCDIR}/${stem}.rules" -e "1,/###/d" >"${SRCDIR}/${stem}.txt"
 fi
 
 # end

@@ -262,17 +262,39 @@ EXTRA_DIST = \
 	quotes.txt \
 	top.txt \
 	yyextra.txt \
+	array.txt \
+	basic.txt \
+	bol.txt \
+	ccl.txt \
+	debug.txt \
+	extended.txt \
+	fixedtrailing.txt \
+	flexname.txt \
+	lexcompat.txt \
+	lineno.txt \
+	posix.txt \
+	posixlycorrect.txt \
+	preposix.txt \
+	quoteincomment.txt \
+	reject.txt \
+	tableopts.txt \
+	vartrailing.txt \
+	yyless.txt \
+	yymore.txt \
+	yymorearray.txt \
+	yymorearraybol.txt \
+	yyunput.txt \
 	$(RULESETS)
 
 dist_noinst_SCRIPTS = \
-	ruleset.sh
+	ruleset.sh \
+	testmaker.sh \
+	test-yydecl-gen.sh
 
 dist_check_SCRIPTS = \
 	options.cn \
 	testwrapper-direct.sh \
-	testwrapper.sh \
-	testmaker.sh \
-	test-yydecl-gen.sh
+	testwrapper.sh
 
 pthread_pthread_LDADD = @LIBPTHREAD@
 
@@ -368,9 +390,9 @@ top.h: top.c
 
 RULESETS = \
 	$(srcdir)/array.rules \
-    $(srcdir)/basic.rules \
-    $(srcdir)/bol.rules \
-    $(srcdir)/ccl.rules \
+	$(srcdir)/basic.rules \
+	$(srcdir)/bol.rules \
+	$(srcdir)/ccl.rules \
 	$(srcdir)/debug.rules \
 	$(srcdir)/extended.rules \
 	$(srcdir)/fixedtrailing.rules \
