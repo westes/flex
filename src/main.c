@@ -168,9 +168,14 @@ int flex_main (int argc, char *argv[])
 	flexinit (argc, argv);
 
 	readin ();
+        
+        skelout (); /* %% [1.0] */
+        
+        if (did_outfilename)
+          line_directive_out (stdout, 0);
 
-	skelout ();
-	/* %% [1.5] DFA */
+	skelout (); 	/* %% [2.0] DFA */
+
 	ntod ();
 
 	for (i = 1; i <= num_rules; ++i)
@@ -435,7 +440,7 @@ void check_options (void)
 		lerr (_("can't open skeleton file %s"), skelname);
 
 	if (reentrant) {
-        buf_m4_define (&m4defs_buf, "M4_YY_REENTRANT", NULL);
+		buf_m4_define (&m4defs_buf, "M4_YY_REENTRANT", NULL);
 		if (yytext_is_array)
 			buf_m4_define (&m4defs_buf, "M4_YY_TEXT_IS_ARRAY", NULL);
 	}
@@ -444,28 +449,33 @@ void check_options (void)
 		buf_m4_define (&m4defs_buf, "M4_YY_BISON_LVAL", NULL);
 
 	if ( bison_bridge_lloc)
-        buf_m4_define (&m4defs_buf, "<M4_YY_BISON_LLOC>", NULL);
+		buf_m4_define (&m4defs_buf, "<M4_YY_BISON_LLOC>", NULL);
 
-    if (strchr(prefix, '[') || strchr(prefix, ']'))
-        flexerror(_("Prefix cannot include '[' or ']'"));
-    buf_m4_define(&m4defs_buf, "M4_YY_PREFIX", prefix);
+	if (strchr(prefix, '[') || strchr(prefix, ']'))
+		flexerror(_("Prefix cannot include '[' or ']'"));
+    
+	buf_m4_define(&m4defs_buf, "M4_YY_PREFIX", prefix);
 
-	if (did_outfilename)
-		line_directive_out (stdout, 0);
+	
 
 	if (do_yylineno)
 		buf_m4_define (&m4defs_buf, "M4_YY_USE_LINENO", NULL);
 
 	/* Create the alignment type. */
-	buf_strdefine (&userdef_buf, "YY_INT_ALIGNED",
-		       long_align ? "long int" : "short int");
+	if (long_align) {
+		buf_m4_define(&m4defs_buf, "M4_YY_LONG_ALIGNED", NULL);
+	}
 
     /* Define the start condition macros. */
     {
         struct Buf tmpbuf;
         buf_init(&tmpbuf, sizeof(char));
+        /* buf_m4_define() strongly protects its arguments from expansion.
+         * We specifically need to defeat that in this case.
+         */
+        buf_strappend(&tmpbuf, "]]");
         for (i = 1; i <= lastsc; i++) {
-             char *str, *fmt = "#define %s %d\n";
+             char *str, *fmt = "M4_YY_ALIAS( [[%s]], [[%d]] )\n";
              size_t strsz;
 
              strsz = strlen(fmt) + strlen(scname[i]) + (size_t)(1 + ceil (log10(i))) + 2;
@@ -476,30 +486,33 @@ void check_options (void)
              buf_strappend(&tmpbuf, str);
              free(str);
         }
+        /* Complete bypass of buf_m4_define quoting. */
+        buf_strappend(&tmpbuf, "[[");
         buf_m4_define(&m4defs_buf, "M4_YY_SC_DEFS", tmpbuf.elts);
         buf_destroy(&tmpbuf);
     }
 
-    /* This is where we begin writing to the file. */
+    /* Put the %top code into an M4 variable. */
+    if( top_buf.elts) {
+        buf_m4_define(&m4defs_buf, "M4_YY_TOP_BLOCK", top_buf.elts);
+        buf_destroy(&top_buf);
+		buf_init(&top_buf, sizeof(char));
+    }
 
-    /* Dump the %top code. */
-    if( top_buf.elts)
-        outn((char*) top_buf.elts);
+    /* Put the user defined preproc directives into an M4 variable. */
+    if (userdef_buf.elts) {
+        buf_m4_define(&m4defs_buf, "M4_YY_USERDEF", userdef_buf.elts);
+        buf_destroy(&userdef_buf);
+		buf_init(&userdef_buf, sizeof(char));
+    }
+
+    /* This is where we begin writing to the file. */
 
     /* Dump the m4 definitions. */
     buf_print_strings(&m4defs_buf, stdout);
-    m4defs_buf.nelts = 0; /* memory leak here. */
+    buf_destroy(&m4defs_buf);
+	buf_init(&m4defs_buf, sizeof(char *));
 
-    /* Place a bogus line directive, it will be fixed in the filter. */
-    if (gen_line_dirs)
-        outn("#line 0 \"M4_YY_OUTFILE_NAME\"\n");
-
-	/* Dump the user defined preproc directives. */
-	if (userdef_buf.elts)
-		outn ((char *) (userdef_buf.elts));
-
-	skelout ();
-	/* %% [1.0] */
 }
 
 /* flexend - terminate flex
@@ -1128,12 +1141,13 @@ void flexinit (int argc, char **argv)
             break;
 
 		case OPT_MAIN:
-			buf_strdefine (&userdef_buf, "YY_MAIN", "1");
+			/* buf_strdefine (&userdef_buf, "YY_MAIN", "1"); */
+            buf_m4_define( &m4defs_buf, "M4_YY_MAIN", NULL );
 			do_yywrap = false;
 			break;
 
 		case OPT_NO_MAIN:
-			buf_strdefine (&userdef_buf, "YY_MAIN", "0");
+			/* buf_strdefine (&userdef_buf, "YY_MAIN", "0"); */
 			break;
 
 		case OPT_NO_LINE:
@@ -1163,6 +1177,7 @@ void flexinit (int argc, char **argv)
 
 		case OPT_REENTRANT:
 			reentrant = true;
+            buf_m4_define( &m4defs_buf, "M4_YY_REENTRANT", NULL );
 			break;
 
 		case OPT_NO_REENTRANT:
@@ -1245,6 +1260,7 @@ void flexinit (int argc, char **argv)
 
 		case OPT_ARRAY:
 			yytext_is_array = true;
+            buf_m4_define( &m4defs_buf, "M4_YY_TEXT_IS_ARRAY", 0);
 			break;
 
 		case OPT_POINTER:
@@ -1315,6 +1331,7 @@ void flexinit (int argc, char **argv)
 
 		case OPT_YYCLASS:
 			yyclass = arg;
+            buf_m4_define( &m4defs_buf, "M4_YYCLASS", yyclass );
 			break;
 
 		case OPT_YYLINENO:
@@ -1527,8 +1544,10 @@ void readin (void)
 	else
 		backing_up_file = NULL;
 
-	if (yymore_really_used == true)
+	if (yymore_really_used == true) {
 		yymore_used = true;
+		out_m4_define( "M4_YY_MORE_USED", NULL);
+	}
 	else if (yymore_really_used == false)
 		yymore_used = false;
 
@@ -1536,7 +1555,7 @@ void readin (void)
 		reject = true;
 	else if (reject_really_used == false)
 		reject = false;
-
+              
 	if (performance_report > 0) {
 		if (lex_compat) {
 			fprintf (stderr,
@@ -1595,138 +1614,77 @@ void readin (void)
 	}
 
 	if (reject){
-        out_m4_define( "M4_YY_USES_REJECT", NULL);
+        out_m4_define( "M4_YY_USES_REJECT", NULL );
 		//outn ("\n#define YY_USES_REJECT");
-    }
+	}
 
 	if (!do_yywrap) {
-		if (!C_plus_plus) {
-			 if (reentrant)
-				out_str ("\n#define %swrap(yyscanner) (/*CONSTCOND*/1)\n", prefix);
-			 else
-				out_str ("\n#define %swrap() (/*CONSTCOND*/1)\n", prefix);
-		}
-		outn ("#define YY_SKIP_YYWRAP");
+        out_m4_define( "M4_YY_SKIP_YYWRAP", NULL );
 	}
 
 	if (ddebug)
-		outn ("\n#define FLEX_DEBUG");
-
-	OUT_BEGIN_CODE ();
-	outn ("typedef flex_uint8_t YY_CHAR;");
-	OUT_END_CODE ();
-
+        out_m4_define( "M4_FLEX_DEBUG", NULL );
+    
 	if (C_plus_plus) {
-		outn ("#define yytext_ptr yytext");
+        out_m4_define( "M4_YYTEXT_PTR", NULL );
 
-		if (interactive)
-			outn ("#define YY_INTERACTIVE");
+	    if (interactive)
+            out_m4_define( "M4_YY_INTERACTIVE", NULL );
 	}
-
 	else {
-		OUT_BEGIN_CODE ();
-		/* In reentrant scanner, stdinit is handled in flex.skl. */
-		if (do_stdinit) {
-			if (reentrant){
-                outn ("#ifdef VMS");
-                outn ("#ifdef __VMS_POSIX");
-                outn ("#define YY_STDINIT");
-                outn ("#endif");
-                outn ("#else");
-                outn ("#define YY_STDINIT");
-                outn ("#endif");
+	    if (do_stdinit) {
+                out_m4_define( "M4_DO_STDINIT", NULL );
             }
-
-			outn ("#ifdef VMS");
-			outn ("#ifndef __VMS_POSIX");
-			outn (yy_nostdinit);
-			outn ("#else");
-			outn (yy_stdinit);
-			outn ("#endif");
-			outn ("#else");
-			outn (yy_stdinit);
-			outn ("#endif");
-		}
-
-		else {
-			if(!reentrant)
-                outn (yy_nostdinit);
-		}
-		OUT_END_CODE ();
 	}
-
-	OUT_BEGIN_CODE ();
+    
 	if (fullspd)
-		outn ("typedef const struct yy_trans_info *yy_state_type;");
-	else if (!C_plus_plus)
-		outn ("typedef int yy_state_type;");
-	OUT_END_CODE ();
+        out_m4_define( "M4_YY_FULLSPD", NULL );
+      
+        if (fulltbl)
+        out_m4_define( "M4_YY_FULLTBL", NULL );
+      
+        if (gentables)
+        out_m4_define( "M4_YY_GENTABLES", NULL );
 
 	if (lex_compat)
-		outn ("#define YY_FLEX_LEX_COMPAT");
+        out_m4_define( "M4_LEX_COMPAT", NULL );
+      
+	if (do_yylineno)
+	out_m4_define( "M4_YY_LINENO", NULL );
 
-	if (!C_plus_plus && !reentrant) {
-		outn ("extern int yylineno;");
-		OUT_BEGIN_CODE ();
-		outn ("int yylineno = 1;");
-		OUT_END_CODE ();
-	}
-
-	if (C_plus_plus) {
-		outn ("\n#include <FlexLexer.h>");
-
- 		if (!do_yywrap) {
-			outn("\nint yyFlexLexer::yywrap() { return 1; }");
-		}
-
-		if (yyclass) {
-			outn ("int yyFlexLexer::yylex()");
-			outn ("\t{");
-			outn ("\tLexerError( \"yyFlexLexer::yylex invoked but %option yyclass used\" );");
-			outn ("\treturn 0;");
-			outn ("\t}");
-
-			out_str ("\n#define YY_DECL int %s::yylex()\n",
-				 yyclass);
-		}
-	}
-
-	else {
-
+	if (!C_plus_plus) {
 		/* Watch out: yytext_ptr is a variable when yytext is an array,
 		 * but it's a macro when yytext is a pointer.
 		 */
-		if (yytext_is_array) {
-			if (!reentrant)
-				outn ("extern char yytext[];\n");
-		}
-		else {
-			if (reentrant) {
-				outn ("#define yytext_ptr yytext_r");
-			}
-			else {
-				outn ("extern char *yytext;");
-
-				outn("#ifdef yytext_ptr");
-				outn("#undef yytext_ptr");
-				outn("#endif");
-				outn ("#define yytext_ptr yytext");
-			}
-		}
-
 		if (yyclass)
-			flexerror (_
-				   ("%option yyclass only meaningful for C++ scanners"));
+		    flexerror (_("%option yyclass only meaningful for C++ scanners"));
 	}
 
-	if (useecs)
+	if (useecs) {
 		numecs = cre8ecs (nextecm, ecgroup, csize);
+                out_m4_define( "M4_YY_USE_ECS", NULL );
+        }
 	else
 		numecs = csize;
 
 	/* Now map the equivalence class for NUL to its expected place. */
 	ecgroup[0] = ecgroup[csize];
 	NUL_ec = ABS (ecgroup[0]);
+        out_m4_define_dec( "M4_YY_NUL_EC", NUL_ec );
+        
+        if (fullspd) {
+          /* Need to define the transet type as a size large
+           * enough to hold the biggest offset.
+           */
+          int     total_table_size = tblend + numecs + 1;
+          char   *trans_offset_type = 
+              (total_table_size >= INT16_MAX || long_align) ? "32" : "16";
+
+          out_m4_define("M4_YY_TRANS_OFFSET_TYPE", trans_offset_type);
+        }
+        else {
+          out_m4_define("M4_YY_TRANS_OFFSET_TYPE", "32");
+        }
 
 	if (useecs)
 		ccl2ecl ();

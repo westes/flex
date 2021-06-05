@@ -71,13 +71,41 @@ struct Buf *buf_print_strings(struct Buf * buf, FILE* out)
 struct Buf *buf_prints (struct Buf *buf, const char *fmt, const char *s)
 {
 	char   *t;
-        size_t tsz;
+    size_t tsz;
 
 	tsz = strlen(fmt) + strlen(s) + 1;
 	t = malloc(tsz);
 	if (!t)
 	    flexfatal (_("Allocation of buffer to print string failed"));
 	snprintf (t, tsz, fmt, s);
+	buf = buf_strappend (buf, t);
+	free(t);
+	return buf;
+}
+
+/* Append a "%s %s ..." formatted string to a string buffer */
+struct Buf *buf_printns (struct Buf *buf, const char *fmt, const int count, ...)
+{
+	char   *t;
+    size_t tsz;
+	va_list ap;
+	const char* s;
+	
+	va_start(ap, count);
+	tsz = strlen(fmt);
+	for(int i=0; i<count; ++i) {
+	    s = va_arg(ap, const char*);
+		tsz += strlen(s);
+	}
+	va_end(ap);
+	tsz += 1;
+	t = malloc(tsz);
+	if (!t)
+	    flexfatal (_("Allocation of buffer to print string failed"));
+	
+	va_start(ap, count);
+	vsnprintf (t, tsz, fmt, ap);
+	va_end(ap);
 	buf = buf_strappend (buf, t);
 	free(t);
 	return buf;

@@ -39,63 +39,46 @@
 
 void	genecs(void);
 
-
-static int indent_level = 0;	/* each level is 8 spaces */
-
-#define set_indent(indent_val) indent_level = indent_val
-
 /* Almost everything is done in terms of arrays starting at 1, so provide
  * a null entry for the zero element of all C arrays.  (The exception
  * to this is that the fast table representation generally uses the
  * 0 elements of its arrays, too.)
  */
 
-static const char *get_int16_decl (void)
+static const char *get_int_decl (void)
 {
 	return (gentables)
-		? "static const flex_int16_t %s[%d] =\n    {   0,\n"
-		: "static const flex_int16_t * %s = 0;\n";
+		? "DEFINE_ARRAY( %s, %d )"
+		: "DEFINE_TABLE_EMPTY( %s )";
 }
-
 
 static const char *get_int32_decl (void)
 {
 	return (gentables)
-		? "static const flex_int32_t %s[%d] =\n    {   0,\n"
-		: "static const flex_int32_t * %s = 0;\n";
+               ? "DEFINE_LONG_ARRAY( %s, %d )"
+               : "DEFINE_LONG_TABLE_EMPTY( %s )";
 }
 
 static const char *get_state_decl (void)
 {
 	return (gentables)
-		? "static const yy_state_type %s[%d] =\n    {   0,\n"
-		: "static const yy_state_type * %s = 0;\n";
+               ? "DEFINE_STATE_ARRAY( %s, %d )"
+               : "DEFINE_STATE_TABLE_EMPTY( %s )";
+}
+
+static const char *get_typed_decl (void)
+{
+	return (gentables)
+	       ? "DEFINE_TYPE_ARRAY( %s, %s, %d )"
+	       : "DEFINE_TYPE_TABLE_EMPTY( %s, %s )";
 }
 
 static const char *get_yy_char_decl (void)
 {
 	return (gentables)
-		? "static const YY_CHAR %s[%d] =\n    {   0,\n"
-		: "static const YY_CHAR * %s = 0;\n";
+               ? "DEFINE_CHAR_ARRAY( %s, %d )"
+               : "DEFINE_CHAR_TABLE_EMPTY( %s )";
 }
-
-/* Indent to the current level. */
-
-void do_indent (void)
-{
-	int i = indent_level * 8;
-
-	while (i >= 8) {
-		outc ('\t');
-		i -= 8;
-	}
-
-	while (i > 0) {
-		outc (' ');
-		--i;
-	}
-}
-
 
 /** Make the table for possible eol matches.
  *  @return the newly allocated rule_can_match_eol table
@@ -116,9 +99,7 @@ static struct yytbl_data *mkeoltbl (void)
 	for (i = 1; i <= num_rules; i++)
 		tdata[i] = rule_has_nl[i] ? 1 : 0;
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(%s)},\n",
-		    "flex_int32_t");
+	buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_LONG(YYTD_ID_RULE_CAN_MATCH_EOL, yy_rule_can_match_eol)");
 	return tbl;
 }
 
@@ -134,65 +115,17 @@ static void geneoltbl (void)
 
 	if (gentables) {
 		for (i = 1; i <= num_rules; i++) {
-			out_dec ("%d, ", rule_has_nl[i] ? 1 : 0);
+			out_dec ("TABLE_DATA(%5d)[[]]COLUMN_SEPARATOR[[]]", rule_has_nl[i] ? 1 : 0);
 			/* format nicely, 20 numbers per line. */
 			if ((i % 20) == 19)
-				out ("\n    ");
+				out ("TABLE_BLOCK[[]]INDENT[[]]");
 		}
-		out ("    };\n");
+		dataend();
 	}
 	outn ("]])");
 }
 
 
-/* Generate the code to keep backing-up information. */
-
-void gen_backing_up (void)
-{
-	if (reject || num_backing_up == 0)
-		return;
-
-	if (fullspd)
-		indent_puts ("if ( yy_current_state[-1].yy_nxt )");
-	else
-		indent_puts ("if ( yy_accept[yy_current_state] )");
-
-	++indent_level;
-	indent_puts ("{");
-	indent_puts ("YY_G(yy_last_accepting_state) = yy_current_state;");
-	indent_puts ("YY_G(yy_last_accepting_cpos) = yy_cp;");
-	indent_puts ("}");
-	--indent_level;
-}
-
-
-/* Generate the code to perform the backing up. */
-
-void gen_bu_action (void)
-{
-	if (reject || num_backing_up == 0)
-		return;
-
-	set_indent (3);
-
-	indent_puts ("case 0: /* must back up */");
-	indent_puts ("/* undo the effects of YY_DO_BEFORE_ACTION */");
-	indent_puts ("*yy_cp = YY_G(yy_hold_char);");
-
-	if (fullspd || fulltbl)
-		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos) + 1;");
-	else
-		/* Backing-up info for compressed tables is taken \after/
-		 * yy_cp has been incremented for the next state.
-		 */
-		indent_puts ("yy_cp = YY_G(yy_last_accepting_cpos);");
-
-	indent_puts ("yy_current_state = YY_G(yy_last_accepting_state);");
-	indent_puts ("goto yy_find_action;");
-	outc ('\n');
-
-	set_indent (0);
-}
 
 /** mkctbl - make full speed compressed transition table
  * This is an array of structs; each struct a pair of integers.
@@ -208,10 +141,12 @@ static struct yytbl_data *mkctbl (void)
 	flex_int32_t *tdata = 0, curr = 0;
 	int     end_of_buffer_action = num_rules + 1;
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_TRANSITION, (void**)&yy_transition, sizeof(%s)},\n",
-		    ((tblend + numecs + 1) >= INT16_MAX
-		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+        if( (tblend + numecs + 1) >= INT16_MAX ) {
+		buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_LONG(YYTD_ID_TRANSITION, yy_transition)");
+        }
+        else {
+		buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY(YYTD_ID_TRANSITION, yy_transition)");
+        }
 
 	tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYTD_ID_TRANSITION);
@@ -321,9 +256,9 @@ static struct yytbl_data *mkssltbl (void)
 	for (i = 0; i <= lastsc * 2; ++i)
 		tdata[i] = base[i];
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(%s)},\n",
-		    "struct yy_trans_info*");
+	buf_strappend (&yydmap_buf, "INDENT[[]]" \
+                       "YYDMAP_ENTRY_TYPE(YYTD_ID_START_STATE_LIST," \
+                       "yy_start_state_list, M4_YY_TRANS_INFO_P_TYPE)");
 
 	return tbl;
 }
@@ -339,9 +274,10 @@ void genctbl (void)
 
 	/* Table of verify for transition and offset to next state. */
 	if (gentables)
-		out_dec ("static const struct yy_trans_info yy_transition[%d] =\n    {\n", tblend + numecs + 1);
+		out_str2_dec (get_typed_decl(), "M4_YY_TRANS_INFO_TYPE", "yy_transition", tblend + numecs + 1);
+              
 	else
-		outn ("static const struct yy_trans_info *yy_transition = 0;");
+		out_str2 (get_typed_decl(), "M4_YY_TRANS_INFO_P_TYPE", "yy_transition");
 
 	/* We want the transition to be represented as the offset to the
 	 * next state, not the actual state number, which is what it currently
@@ -408,20 +344,19 @@ void genctbl (void)
 	transition_struct_out (chk[tblend + 1], nxt[tblend + 1]);
 	transition_struct_out (chk[tblend + 2], nxt[tblend + 2]);
 
-	if (gentables)
-		outn ("    };\n");
+	dataend();
 
 	/* Table of pointers to start states. */
 	if (gentables)
-		out_dec ("static const struct yy_trans_info *yy_start_state_list[%d] =\n", lastsc * 2 + 1);
+		out_str2_dec (get_typed_decl(), "M4_YY_TRANS_INFO_P_TYPE", "yy_start_state_list", lastsc * 2 + 1);
 	else
-		outn ("static const struct yy_trans_info **yy_start_state_list =0;");
+		out_str2 (get_typed_decl(), "M4_YY_TRANS_INFO_PP_TYPE", "yy_start_state_list");
 
 	if (gentables) {
-		outn ("    {");
+		
 
 		for (i = 0; i <= lastsc * 2; ++i)
-			out_dec ("    &yy_transition[%d],\n", base[i]);
+			out_dec ("REFERENCE_TABLE_ENTRY(yy_transition, %d)[[]]COLUMN_SEPARATOR[[]]TABLE_BLOCK[[]]", base[i]);
 
 		dataend ();
 	}
@@ -453,9 +388,7 @@ static struct yytbl_data *mkecstbl (void)
 		tdata[i] = ecgroup[i];
 	}
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_EC, (void**)&yy_ec, sizeof(%s)},\n",
-		    "YY_CHAR");
+	buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_TYPE(YYTD_ID_EC, yy_ec, YY_CHAR)");
 
 	return tbl;
 }
@@ -496,149 +429,6 @@ void genecs (void)
 }
 
 
-/* Generate the code to find the action number. */
-
-void gen_find_action (void)
-{
-	if (fullspd)
-		indent_puts ("yy_act = yy_current_state[-1].yy_nxt;");
-
-	else if (fulltbl)
-		indent_puts ("yy_act = yy_accept[yy_current_state];");
-
-	else if (reject) {
-		indent_puts ("yy_current_state = *--YY_G(yy_state_ptr);");
-		indent_puts ("YY_G(yy_lp) = yy_accept[yy_current_state];");
-
-		if (!variable_trailing_context_rules)
-			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
-		if(reject_really_used)
-			outn ("find_rule: /* we branch to this label when backing up */");
-		if (!variable_trailing_context_rules)
-			outn ("]])\n");
-
-		indent_puts
-			("for ( ; ; ) /* until we find what rule we matched */");
-
-		++indent_level;
-
-		indent_puts ("{");
-
-		indent_puts
-			("if ( YY_G(yy_lp) && YY_G(yy_lp) < yy_accept[yy_current_state + 1] )");
-		++indent_level;
-		indent_puts ("{");
-		indent_puts ("yy_act = yy_acclist[YY_G(yy_lp)];");
-
-		if (variable_trailing_context_rules) {
-			indent_puts
-				("if ( yy_act & YY_TRAILING_HEAD_MASK ||");
-			indent_puts ("     YY_G(yy_looking_for_trail_begin) )");
-			++indent_level;
-			indent_puts ("{");
-
-			indent_puts
-				("if ( yy_act == YY_G(yy_looking_for_trail_begin) )");
-			++indent_level;
-			indent_puts ("{");
-			indent_puts ("YY_G(yy_looking_for_trail_begin) = 0;");
-			indent_puts ("yy_act &= ~YY_TRAILING_HEAD_MASK;");
-			indent_puts ("break;");
-			indent_puts ("}");
-			--indent_level;
-
-			indent_puts ("}");
-			--indent_level;
-
-			indent_puts
-				("else if ( yy_act & YY_TRAILING_MASK )");
-			++indent_level;
-			indent_puts ("{");
-			indent_puts
-				("YY_G(yy_looking_for_trail_begin) = yy_act & ~YY_TRAILING_MASK;");
-			indent_puts
-				("YY_G(yy_looking_for_trail_begin) |= YY_TRAILING_HEAD_MASK;");
-
-			if (real_reject) {
-				/* Remember matched text in case we back up
-				 * due to REJECT.
-				 */
-				indent_puts
-					("YY_G(yy_full_match) = yy_cp;");
-				indent_puts
-					("YY_G(yy_full_state) = YY_G(yy_state_ptr);");
-				indent_puts ("YY_G(yy_full_lp) = YY_G(yy_lp);");
-			}
-
-			indent_puts ("}");
-			--indent_level;
-
-			indent_puts ("else");
-			++indent_level;
-			indent_puts ("{");
-			indent_puts ("YY_G(yy_full_match) = yy_cp;");
-			indent_puts
-				("YY_G(yy_full_state) = YY_G(yy_state_ptr);");
-			indent_puts ("YY_G(yy_full_lp) = YY_G(yy_lp);");
-			indent_puts ("break;");
-			indent_puts ("}");
-			--indent_level;
-
-			indent_puts ("++YY_G(yy_lp);");
-			indent_puts ("goto find_rule;");
-		}
-
-		else {
-			/* Remember matched text in case we back up due to
-			 * trailing context plus REJECT.
-			 */
-			++indent_level;
-			indent_puts ("{");
-			indent_puts ("YY_G(yy_full_match) = yy_cp;");
-			indent_puts ("break;");
-			indent_puts ("}");
-			--indent_level;
-		}
-
-		indent_puts ("}");
-		--indent_level;
-
-		indent_puts ("--yy_cp;");
-
-		/* We could consolidate the following two lines with those at
-		 * the beginning, but at the cost of complaints that we're
-		 * branching inside a loop.
-		 */
-		indent_puts ("yy_current_state = *--YY_G(yy_state_ptr);");
-		indent_puts ("YY_G(yy_lp) = yy_accept[yy_current_state];");
-
-		indent_puts ("}");
-
-		--indent_level;
-	}
-
-	else {			/* compressed */
-		indent_puts ("yy_act = yy_accept[yy_current_state];");
-
-		if (interactive && !reject) {
-			/* Do the guaranteed-needed backing up to figure out
-			 * the match.
-			 */
-			indent_puts ("if ( yy_act == 0 )");
-			++indent_level;
-			indent_puts ("{ /* have to back up */");
-			indent_puts
-				("yy_cp = YY_G(yy_last_accepting_cpos);");
-			indent_puts
-				("yy_current_state = YY_G(yy_last_accepting_state);");
-			indent_puts
-				("yy_act = yy_accept[yy_current_state];");
-			indent_puts ("}");
-			--indent_level;
-		}
-	}
-}
-
 /* mkftbl - make the full table and return the struct .
  * you should call mkecstbl() after this.
  */
@@ -671,9 +461,8 @@ struct yytbl_data *mkftbl (void)
 				 i, anum);
 	}
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
-		    long_align ? "flex_int32_t" : "flex_int16_t");
+	buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY(YYTD_ID_ACCEPT, yy_accept)");
+
 	return tbl;
 }
 
@@ -685,8 +474,7 @@ void genftbl (void)
 	int i;
 	int     end_of_buffer_action = num_rules + 1;
 
-	out_str_dec (long_align ? get_int32_decl () : get_int16_decl (),
-		     "yy_accept", lastdfa + 1);
+	out_str_dec (get_int_decl (), "yy_accept", lastdfa + 1);
 
 	dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
 
@@ -709,345 +497,6 @@ void genftbl (void)
 	 * created on-the-fly.
 	 */
 }
-
-
-/* Generate the code to find the next compressed-table state. */
-
-void gen_next_compressed_state (char *char_map)
-{
-	indent_put2s ("YY_CHAR yy_c = %s;", char_map);
-
-	/* Save the backing-up info \before/ computing the next state
-	 * because we always compute one more state than needed - we
-	 * always proceed until we reach a jam state
-	 */
-	gen_backing_up ();
-
-	indent_puts
-		("while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )");
-	++indent_level;
-	indent_puts ("{");
-	indent_puts ("yy_current_state = (int) yy_def[yy_current_state];");
-
-	if (usemecs) {
-		/* We've arrange it so that templates are never chained
-		 * to one another.  This means we can afford to make a
-		 * very simple test to see if we need to convert to
-		 * yy_c's meta-equivalence class without worrying
-		 * about erroneously looking up the meta-equivalence
-		 * class twice
-		 */
-		do_indent ();
-
-		/* lastdfa + 2 is the beginning of the templates */
-		out_dec ("if ( yy_current_state >= %d )\n", lastdfa + 2);
-
-		++indent_level;
-		indent_puts ("yy_c = yy_meta[yy_c];");
-		--indent_level;
-	}
-
-	indent_puts ("}");
-	--indent_level;
-
-	indent_puts
-		("yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];");
-}
-
-
-/* Generate the code to find the next match. */
-
-void gen_next_match (void)
-{
-	/* NOTE - changes in here should be reflected in gen_next_state() and
-	 * gen_NUL_trans().
-	 */
-	char   *char_map = useecs ?
-		"yy_ec[YY_SC_TO_UI(*yy_cp)] " : "YY_SC_TO_UI(*yy_cp)";
-
-	char   *char_map_2 = useecs ?
-		"yy_ec[YY_SC_TO_UI(*++yy_cp)] " : "YY_SC_TO_UI(*++yy_cp)";
-
-	if (fulltbl) {
-		if (gentables)
-			indent_put2s
-				("while ( (yy_current_state = yy_nxt[yy_current_state][ %s ]) > 0 )",
-				 char_map);
-		else
-			indent_put2s
-				("while ( (yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN +  %s ]) > 0 )",
-				 char_map);
-
-		++indent_level;
-
-		if (num_backing_up > 0) {
-			indent_puts ("{");
-			gen_backing_up ();
-			outc ('\n');
-		}
-
-		indent_puts ("++yy_cp;");
-
-		if (num_backing_up > 0)
-
-			indent_puts ("}");
-
-		--indent_level;
-
-		outc ('\n');
-		indent_puts ("yy_current_state = -yy_current_state;");
-	}
-
-	else if (fullspd) {
-		indent_puts ("{");
-		indent_puts
-			("const struct yy_trans_info *yy_trans_info;\n");
-		indent_puts ("YY_CHAR yy_c;\n");
-		indent_put2s ("for ( yy_c = %s;", char_map);
-		indent_puts
-			("      (yy_trans_info = &yy_current_state[yy_c])->");
-		indent_puts ("yy_verify == yy_c;");
-		indent_put2s ("      yy_c = %s )", char_map_2);
-
-		++indent_level;
-
-		if (num_backing_up > 0)
-			indent_puts ("{");
-
-		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
-
-		if (num_backing_up > 0) {
-			outc ('\n');
-			gen_backing_up ();
-			indent_puts ("}");
-		}
-
-		--indent_level;
-		indent_puts ("}");
-	}
-
-	else {			/* compressed */
-		indent_puts ("do");
-
-		++indent_level;
-		indent_puts ("{");
-
-		gen_next_state (false);
-
-		indent_puts ("++yy_cp;");
-
-
-		indent_puts ("}");
-		--indent_level;
-
-		do_indent ();
-
-		if (interactive)
-			out_dec ("while ( yy_base[yy_current_state] != %d );\n", jambase);
-		else
-			out_dec ("while ( yy_current_state != %d );\n",
-				 jamstate);
-
-		if (!reject && !interactive) {
-			/* Do the guaranteed-needed backing up to figure out
-			 * the match.
-			 */
-			indent_puts
-				("yy_cp = YY_G(yy_last_accepting_cpos);");
-			indent_puts
-				("yy_current_state = YY_G(yy_last_accepting_state);");
-		}
-	}
-}
-
-
-/* Generate the code to find the next state. */
-
-void gen_next_state (int worry_about_NULs)
-{				/* NOTE - changes in here should be reflected in gen_next_match() */
-	char    char_map[256];
-
-	if (worry_about_NULs && !nultrans) {
-		if (useecs)
-			snprintf (char_map, sizeof(char_map),
-					"(*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : %d)",
-					NUL_ec);
-		else
-            snprintf (char_map, sizeof(char_map),
-					"(*yy_cp ? YY_SC_TO_UI(*yy_cp) : %d)",
-					NUL_ec);
-	}
-
-	else
-		strcpy (char_map, useecs ?
-			"yy_ec[YY_SC_TO_UI(*yy_cp)] " :
-			"YY_SC_TO_UI(*yy_cp)");
-
-	if (worry_about_NULs && nultrans) {
-		if (!fulltbl && !fullspd)
-			/* Compressed tables back up *before* they match. */
-			gen_backing_up ();
-
-		indent_puts ("if ( *yy_cp )");
-		++indent_level;
-		indent_puts ("{");
-	}
-
-	if (fulltbl) {
-		if (gentables)
-			indent_put2s
-				("yy_current_state = yy_nxt[yy_current_state][%s];",
-				 char_map);
-		else
-			indent_put2s
-				("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %s];",
-				 char_map);
-	}
-
-	else if (fullspd)
-		indent_put2s
-			("yy_current_state += yy_current_state[%s].yy_nxt;",
-			 char_map);
-
-	else
-		gen_next_compressed_state (char_map);
-
-	if (worry_about_NULs && nultrans) {
-
-		indent_puts ("}");
-		--indent_level;
-		indent_puts ("else");
-		++indent_level;
-		indent_puts
-			("yy_current_state = yy_NUL_trans[yy_current_state];");
-		--indent_level;
-	}
-
-	if (fullspd || fulltbl)
-		gen_backing_up ();
-
-	if (reject)
-		indent_puts ("*YY_G(yy_state_ptr)++ = yy_current_state;");
-}
-
-
-/* Generate the code to make a NUL transition. */
-
-void gen_NUL_trans (void)
-{				/* NOTE - changes in here should be reflected in gen_next_match() */
-	/* Only generate a definition for "yy_cp" if we'll generate code
-	 * that uses it.  Otherwise lint and the like complain.
-	 */
-	int     need_backing_up = (num_backing_up > 0 && !reject);
-
-	if (need_backing_up && (!nultrans || fullspd || fulltbl))
-		/* We're going to need yy_cp lying around for the call
-		 * below to gen_backing_up().
-		 */
-		indent_puts ("char *yy_cp = YY_G(yy_c_buf_p);");
-
-	outc ('\n');
-
-	if (nultrans) {
-		indent_puts
-			("yy_current_state = yy_NUL_trans[yy_current_state];");
-		indent_puts ("yy_is_jam = (yy_current_state == 0);");
-	}
-
-	else if (fulltbl) {
-		do_indent ();
-		if (gentables)
-			out_dec ("yy_current_state = yy_nxt[yy_current_state][%d];\n", NUL_ec);
-		else
-			out_dec ("yy_current_state = yy_nxt[yy_current_state*YY_NXT_LOLEN + %d];\n", NUL_ec);
-		indent_puts ("yy_is_jam = (yy_current_state <= 0);");
-	}
-
-	else if (fullspd) {
-		do_indent ();
-		out_dec ("int yy_c = %d;\n", NUL_ec);
-
-		indent_puts
-			("const struct yy_trans_info *yy_trans_info;\n");
-		indent_puts
-			("yy_trans_info = &yy_current_state[(unsigned int) yy_c];");
-		indent_puts ("yy_current_state += yy_trans_info->yy_nxt;");
-
-		indent_puts
-			("yy_is_jam = (yy_trans_info->yy_verify != yy_c);");
-	}
-
-	else {
-		char    NUL_ec_str[20];
-
-		snprintf (NUL_ec_str, sizeof(NUL_ec_str), "%d", NUL_ec);
-		gen_next_compressed_state (NUL_ec_str);
-
-		do_indent ();
-		out_dec ("yy_is_jam = (yy_current_state == %d);\n",
-			 jamstate);
-
-		if (reject) {
-			/* Only stack this state if it's a transition we
-			 * actually make.  If we stack it on a jam, then
-			 * the state stack and yy_c_buf_p get out of sync.
-			 */
-			indent_puts ("if ( ! yy_is_jam )");
-			++indent_level;
-			indent_puts
-				("*YY_G(yy_state_ptr)++ = yy_current_state;");
-			--indent_level;
-		}
-	}
-
-	/* If we've entered an accepting state, back up; note that
-	 * compressed tables have *already* done such backing up, so
-	 * we needn't bother with it again.
-	 */
-	if (need_backing_up && (fullspd || fulltbl)) {
-		outc ('\n');
-		indent_puts ("if ( ! yy_is_jam )");
-		++indent_level;
-		indent_puts ("{");
-		gen_backing_up ();
-		indent_puts ("}");
-		--indent_level;
-	}
-}
-
-
-/* Generate the code to find the start state. */
-
-void gen_start_state (void)
-{
-	if (fullspd) {
-		if (bol_needed) {
-			indent_puts
-				("yy_current_state = yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()];");
-		}
-		else
-			indent_puts
-				("yy_current_state = yy_start_state_list[YY_G(yy_start)];");
-	}
-
-	else {
-		indent_puts ("yy_current_state = YY_G(yy_start);");
-
-		if (bol_needed)
-			indent_puts ("yy_current_state += YY_AT_BOL();");
-
-		if (reject) {
-			/* Set up for storing up states. */
-			outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
-			indent_puts
-				("YY_G(yy_state_ptr) = YY_G(yy_state_buf);");
-			indent_puts
-				("*YY_G(yy_state_ptr)++ = yy_current_state;");
-			outn ("]])");
-		}
-	}
-}
-
 
 /* gentabs - generate data statements for the transition tables */
 
@@ -1087,13 +536,9 @@ void gentabs (void)
 		dfaacc[end_of_buffer_state].dfaacc_set =
 			EOB_accepting_list;
 
-		out_str_dec (long_align ? get_int32_decl () :
-			     get_int16_decl (), "yy_acclist", MAX (numas,
-								   1) + 1);
+		out_str_dec (get_int_decl(), "yy_acclist", MAX (numas, 1) + 1);
         
-        buf_prints (&yydmap_buf,
-                "\t{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(%s)},\n",
-                long_align ? "flex_int32_t" : "flex_int16_t");
+        buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY(YYTD_ID_ACCLIST, yy_acclist)");
 
         yyacclist_tbl = calloc(1,sizeof(struct yytbl_data));
         yytbl_data_init (yyacclist_tbl, YYTD_ID_ACCLIST);
@@ -1197,12 +642,9 @@ void gentabs (void)
 		 */
 		++k;
 
-	out_str_dec (long_align ? get_int32_decl () : get_int16_decl (),
-		     "yy_accept", k);
+	out_str_dec (get_int_decl (), "yy_accept", k);
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(%s)},\n",
-		    long_align ? "flex_int32_t" : "flex_int16_t");
+	buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY(YYTD_ID_ACCEPT, yy_accept)");
 
 	yyacc_tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (yyacc_tbl, YYTD_ID_ACCEPT);
@@ -1273,9 +715,7 @@ void gentabs (void)
 			       stderr);
 
 		out_str_dec (get_yy_char_decl (), "yy_meta", numecs + 1);
-		buf_prints (&yydmap_buf,
-			    "\t{YYTD_ID_META, (void**)&yy_meta, sizeof(%s)},\n",
-			    "YY_CHAR");
+		buf_strappend (&yydmap_buf,"INDENT[[]]YYDMAP_ENTRY_TYPE(YYTD_ID_META, yy_meta, YY_CHAR)");
 
 		for (i = 1; i <= numecs; ++i) {
 			if (trace)
@@ -1301,13 +741,15 @@ void gentabs (void)
 
 	/* Begin generating yy_base */
 	out_str_dec ((tblend >= INT16_MAX || long_align) ?
-		     get_int32_decl () : get_int16_decl (),
+		     get_int32_decl () : get_int_decl (),
 		     "yy_base", total_states + 1);
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_BASE, (void**)&yy_base, sizeof(%s)},\n",
-		    (tblend >= INT16_MAX
-		     || long_align) ? "flex_int32_t" : "flex_int16_t");
+	if( tblend >= INT16_MAX ) {
+		buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_TYPE(YYTD_ID_BASE, yy_base, flex_int32_t)");
+	}
+	else {
+		buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_TYPE(YYTD_ID_BASE, yy_base, YY_INT_ALIGNED)");
+	}
 	yybase_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yybase_tbl, YYTD_ID_BASE);
 	yybase_tbl->td_lolen = (flex_uint32_t) (total_states + 1);
@@ -1358,14 +800,15 @@ void gentabs (void)
 
 	/* Begin generating yy_def */
 	out_str_dec ((total_states >= INT16_MAX || long_align) ?
-		     get_int32_decl () : get_int16_decl (),
+		     get_int32_decl () : get_int_decl (),
 		     "yy_def", total_states + 1);
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_DEF, (void**)&yy_def, sizeof(%s)},\n",
-		    (total_states >= INT16_MAX
-		     || long_align) ? "flex_int32_t" : "flex_int16_t");
-
+	if( total_states >= INT16_MAX ) {
+          buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_TYPE(YYTD_ID_DEF, yy_def, flex_int32_t)");
+	}
+	else {
+          buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_TYPE(YYTD_ID_DEF, yy_def, YY_INT_ALIGNED)");
+	}
 	yydef_tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (yydef_tbl, YYTD_ID_DEF);
 	yydef_tbl->td_lolen = (flex_uint32_t) (total_states + 1);
@@ -1390,14 +833,15 @@ void gentabs (void)
 
 	/* Begin generating yy_nxt */
 	out_str_dec ((total_states >= INT16_MAX || long_align) ?
-		     get_int32_decl () : get_int16_decl (), "yy_nxt",
+		     get_int32_decl () : get_int_decl (), "yy_nxt",
 		     tblend + 1);
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(%s)},\n",
-		    (total_states >= INT16_MAX
-		     || long_align) ? "flex_int32_t" : "flex_int16_t");
-
+	if( total_states >= INT16_MAX ) {
+          buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_TYPE(YYTD_ID_NXT, yy_nxt, flex_int32_t)");
+	}
+	else {
+          buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_TYPE(YYTD_ID_NXT, yy_nxt, YY_INT_ALIGNED)");
+	}
 	yynxt_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yynxt_tbl, YYTD_ID_NXT);
 	yynxt_tbl->td_lolen = (flex_uint32_t) (tblend + 1);
@@ -1427,14 +871,15 @@ void gentabs (void)
 
 	/* Begin generating yy_chk */
 	out_str_dec ((total_states >= INT16_MAX || long_align) ?
-		     get_int32_decl () : get_int16_decl (), "yy_chk",
+		     get_int32_decl () : get_int_decl (), "yy_chk",
 		     tblend + 1);
 
-	buf_prints (&yydmap_buf,
-		    "\t{YYTD_ID_CHK, (void**)&yy_chk, sizeof(%s)},\n",
-		    (total_states >= INT16_MAX
-		     || long_align) ? "flex_int32_t" : "flex_int16_t");
-
+	if( total_states >= INT16_MAX ) {
+          buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_TYPE(YYTD_ID_CHK, yy_chk, flex_int32_t)");
+	}
+	else {
+          buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_TYPE(YYTD_ID_CHK, yy_chk, YY_INT_ALIGNED)");
+	}
 	yychk_tbl = calloc (1, sizeof (struct yytbl_data));
 	yytbl_data_init (yychk_tbl, YYTD_ID_CHK);
 	yychk_tbl->td_lolen = (flex_uint32_t) (tblend + 1);
@@ -1463,29 +908,6 @@ void gentabs (void)
 }
 
 
-/* Write out a formatted string (with a secondary string argument) at the
- * current indentation level, adding a final newline.
- */
-
-void indent_put2s (const char *fmt, const char *arg)
-{
-	do_indent ();
-	out_str (fmt, arg);
-	outn ("");
-}
-
-
-/* Write out a string at the current indentation level, adding a final
- * newline.
- */
-
-void indent_puts (const char *str)
-{
-	do_indent ();
-	outn (str);
-}
-
-
 /* make_tables - generate transition tables and finishes generating output file
  */
 
@@ -1495,108 +917,40 @@ void make_tables (void)
 	int did_eof_rule = false;
 	struct yytbl_data *yynultrans_tbl = NULL;
 
+	out_m4_define_dec("M4_YY_NUM_RULES", num_rules);
+	out_m4_define_dec("M4_YY_END_OF_BUFFER", num_rules + 1);
+        
+        if (interactive)
+          out_m4_define( "M4_YY_INTERACTIVE", NULL );
+        
+        if (!fullspd && !fulltbl) {
+          out_m4_define_dec( "M4_YY_JAMBASE", jambase );
+          out_m4_define_dec( "M4_YY_JAMSTATE", jamstate );
+        }
+        
+        if (nultrans) {
+          out_m4_define( "M4_YY_NULTRANS", NULL );
+        }
+        
+        if (usemecs) {
+          out_m4_define( "M4_YY_USE_MECS", NULL );
+          out_m4_define_dec( "M4_YY_LASTDFA", lastdfa );
+        }
+        
+        if(variable_trailing_context_rules) {
+          out_m4_define("M4_VARIABLE_TRAILING_CONTEXT_RULES", NULL);
+        }
+        out_m4_define_hex ("M4_YY_TRAILING_MASK", (unsigned int) YY_TRAILING_MASK);
+        out_m4_define_hex ("M4_YY_TRAILING_HEAD_MASK", (unsigned int) YY_TRAILING_HEAD_MASK);
+        
+        if (use_read) {
+          out_m4_define("M4_YY_USE_READ", NULL);
+        }
 
-	skelout ();		/* %% [2.0] - break point in skel */
-
-	/* First, take care of YY_DO_BEFORE_ACTION depending on yymore
-	 * being used.
-	 */
-	set_indent (1);
-
-	if (yymore_used && !yytext_is_array) {
-		indent_puts ("YY_G(yytext_ptr) -= YY_G(yy_more_len); \\");
-		indent_puts
-			("yyleng = (int) (yy_cp - YY_G(yytext_ptr)); \\");
-	}
-
-	else
-		indent_puts ("yyleng = (int) (yy_cp - yy_bp); \\");
-
-	/* Now also deal with copying yytext_ptr to yytext if needed. */
-	skelout ();		/* %% [3.0] - break point in skel */
-	if (yytext_is_array) {
-		if (yymore_used)
-			indent_puts
-				("if ( yyleng + YY_G(yy_more_offset) >= YYLMAX ) \\");
-		else
-			indent_puts ("if ( yyleng >= YYLMAX ) \\");
-
-		++indent_level;
-		indent_puts
-			("YY_FATAL_ERROR( \"token too large, exceeds YYLMAX\" ); \\");
-		--indent_level;
-
-		if (yymore_used) {
-			indent_puts
-				("yy_flex_strncpy( &yytext[YY_G(yy_more_offset)], YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG); \\");
-			indent_puts ("yyleng += YY_G(yy_more_offset); \\");
-			indent_puts
-				("YY_G(yy_prev_more_offset) = YY_G(yy_more_offset); \\");
-			indent_puts ("YY_G(yy_more_offset) = 0; \\");
-		}
-		else {
-			indent_puts
-				("yy_flex_strncpy( yytext, YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG); \\");
-		}
-	}
-
-	set_indent (0);
-
-	skelout ();		/* %% [4.0] - break point in skel */
-
-
-	/* This is where we REALLY begin generating the tables. */
-
-	out_dec ("#define YY_NUM_RULES %d\n", num_rules);
-	out_dec ("#define YY_END_OF_BUFFER %d\n", num_rules + 1);
-
-	if (fullspd) {
-		/* Need to define the transet type as a size large
-		 * enough to hold the biggest offset.
-		 */
-		int     total_table_size = tblend + numecs + 1;
-		char   *trans_offset_type =
-			(total_table_size >= INT16_MAX || long_align) ?
-			"flex_int32_t" : "flex_int16_t";
-
-		set_indent (0);
-		indent_puts ("struct yy_trans_info");
-		++indent_level;
-		indent_puts ("{");
-
-		/* We require that yy_verify and yy_nxt must be of the same size int. */
-		indent_put2s ("%s yy_verify;", trans_offset_type);
-
-		/* In cases where its sister yy_verify *is* a "yes, there is
-		 * a transition", yy_nxt is the offset (in records) to the
-		 * next state.  In most cases where there is no transition,
-		 * the value of yy_nxt is irrelevant.  If yy_nxt is the -1th
-		 * record of a state, though, then yy_nxt is the action number
-		 * for that state.
-		 */
-
-		indent_put2s ("%s yy_nxt;", trans_offset_type);
-		indent_puts ("};");
-		--indent_level;
-	}
-	else {
-		/* We generate a bogus 'struct yy_trans_info' data type
-		 * so we can guarantee that it is always declared in the skel.
-		 * This is so we can compile "sizeof(struct yy_trans_info)"
-		 * in any scanner.
-		 */
-		indent_puts
-			("/* This struct is not used in this scanner,");
-		indent_puts ("   but its presence is necessary. */");
-		indent_puts ("struct yy_trans_info");
-		++indent_level;
-		indent_puts ("{");
-		indent_puts ("flex_int32_t yy_verify;");
-		indent_puts ("flex_int32_t yy_nxt;");
-		indent_puts ("};");
-		--indent_level;
-	}
-
+        if (bol_needed) {
+          out_m4_define("M4_YY_BOL_NEEDED", NULL);
+        }
+    
 	if (fullspd) {
 		genctbl ();
 		if (tablesext) {
@@ -1649,9 +1003,15 @@ void make_tables (void)
 			}
 		}
 	}
-	else
+	else {
 		gentabs ();
-
+	}
+              
+        /* num_backing_up can be changed by gentabs() so we don't  no whether backing up is needed until here. */
+	if( num_backing_up > 0 ) {
+		out_m4_define("M4_YY_NEEDS_BACKING_UP", NULL);
+	}
+              
 	if (do_yylineno) {
 
 		geneoltbl ();
@@ -1668,29 +1028,20 @@ void make_tables (void)
 		}
 	}
 
-	/* Definitions for backing up.  We don't need them if REJECT
-	 * is being used because then we use an alternative backin-up
-	 * technique instead.
-	 */
-	if (num_backing_up > 0 && !reject) {
-		if (!C_plus_plus && !reentrant) {
-			indent_puts
-				("static yy_state_type yy_last_accepting_state;");
-			indent_puts
-				("static char *yy_last_accepting_cpos;\n");
-		}
-	}
+
 
 	if (nultrans) {
 		flex_int32_t *yynultrans_data = 0;
 
 		/* Begin generating yy_NUL_trans */
-		out_str_dec (get_state_decl (), "yy_NUL_trans",
-			     lastdfa + 1);
-		buf_prints (&yydmap_buf,
-			    "\t{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(%s)},\n",
-			    (fullspd) ? "struct yy_trans_info*" :
-			    "flex_int32_t");
+		out_str_dec (get_state_decl (), "yy_NUL_trans", lastdfa + 1);
+                
+		if(fullspd) {
+			buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_TYPE(YYTD_ID_NUL_TRANS, yy_NUL_trans, M4_YY_TRANS_INFO_P_TYPE)");
+		}
+		else {
+			buf_strappend (&yydmap_buf, "INDENT[[]]YYDMAP_ENTRY_LONG(YYTD_ID_NUL_TRANS, yy_NUL_trans)");
+		}
 
 		yynultrans_tbl = calloc(1, sizeof (struct yytbl_data));
 		yytbl_data_init (yynultrans_tbl, YYTD_ID_NUL_TRANS);
@@ -1703,7 +1054,7 @@ void make_tables (void)
 
 		for (i = 1; i <= lastdfa; ++i) {
 			if (fullspd) {
-				out_dec ("    &yy_transition[%d],\n",
+				out_dec ("INDENT[[]]REFERENCE_TABLE_ENTRY(yy_transition, %d)[[]]COLUMN_SEPARATOR[[]]TABLE_BLOCK[[]]",
 					 base[i]);
 				yynultrans_data[i] = base[i];
 			}
@@ -1725,433 +1076,52 @@ void make_tables (void)
 		if (yynultrans_tbl != NULL) {
 			yytbl_data_destroy (yynultrans_tbl);
 			yynultrans_tbl = NULL;
-        }
+		}
 
 		/* End generating yy_NUL_trans */
 	}
 
-	if (!C_plus_plus && !reentrant) {
-		indent_puts ("extern int yy_flex_debug;");
-		indent_put2s ("int yy_flex_debug = %s;\n",
-			      ddebug ? "1" : "0");
-	}
-
 	if (ddebug) {		/* Spit out table mapping rules to line numbers. */
-		out_str_dec (long_align ? get_int32_decl () :
-			     get_int16_decl (), "yy_rule_linenum",
-			     num_rules);
+		out_str_dec (get_int_decl (), "yy_rule_linenum", num_rules);
 		for (i = 1; i < num_rules; ++i)
 			mkdata (rule_linenum[i]);
 		dataend ();
 	}
 
-	if (reject) {
-		outn ("m4_ifdef( [[M4_YY_USES_REJECT]],\n[[");
-		/* Declare state buffer variables. */
-		if (!C_plus_plus && !reentrant) {
-			outn ("static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;");
-			outn ("static char *yy_full_match;");
-			outn ("static int yy_lp;");
-		}
-
-		if (variable_trailing_context_rules) {
-			if (!C_plus_plus && !reentrant) {
-				outn ("static int yy_looking_for_trail_begin = 0;");
-				outn ("static int yy_full_lp;");
-				outn ("static int *yy_full_state;");
-			}
-
-			out_hex ("#define YY_TRAILING_MASK 0x%x\n",
-				 (unsigned int) YY_TRAILING_MASK);
-			out_hex ("#define YY_TRAILING_HEAD_MASK 0x%x\n",
-				 (unsigned int) YY_TRAILING_HEAD_MASK);
-		}
-
-		outn ("#define REJECT \\");
-		outn ("{ \\");
-		outn ("*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \\");
-		outn ("yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \\");
-
-		if (variable_trailing_context_rules) {
-			outn ("YY_G(yy_lp) = YY_G(yy_full_lp); /* restore orig. accepting pos. */ \\");
-			outn ("YY_G(yy_state_ptr) = YY_G(yy_full_state); /* restore orig. state */ \\");
-			outn ("yy_current_state = *YY_G(yy_state_ptr); /* restore curr. state */ \\");
-		}
-
-		outn ("++YY_G(yy_lp); \\");
-		outn ("goto find_rule; \\");
-
-		outn ("}");
-		outn ("]])\n");
-	}
-
-	else {
-		outn ("/* The intent behind this definition is that it'll catch");
-		outn (" * any uses of REJECT which flex missed.");
-		outn (" */");
-		outn ("#define REJECT reject_used_but_not_detected");
-	}
-
-	if (yymore_used) {
-		if (!C_plus_plus) {
-			if (yytext_is_array) {
-				if (!reentrant){
-    				indent_puts ("static int yy_more_offset = 0;");
-                    indent_puts ("static int yy_prev_more_offset = 0;");
-                }
-			}
-			else if (!reentrant) {
-				indent_puts
-					("static int yy_more_flag = 0;");
-				indent_puts
-					("static int yy_more_len = 0;");
-			}
-		}
-
-		if (yytext_is_array) {
-			indent_puts
-				("#define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( yytext M4_YY_CALL_LAST_ARG))");
-			indent_puts ("#define YY_NEED_STRLEN");
-			indent_puts ("#define YY_MORE_ADJ 0");
-			indent_puts
-				("#define YY_RESTORE_YY_MORE_OFFSET \\");
-			++indent_level;
-			indent_puts ("{ \\");
-			indent_puts
-				("YY_G(yy_more_offset) = YY_G(yy_prev_more_offset); \\");
-			indent_puts ("yyleng -= YY_G(yy_more_offset); \\");
-			indent_puts ("}");
-			--indent_level;
-		}
-		else {
-			indent_puts
-				("#define yymore() (YY_G(yy_more_flag) = 1)");
-			indent_puts
-				("#define YY_MORE_ADJ YY_G(yy_more_len)");
-			indent_puts ("#define YY_RESTORE_YY_MORE_OFFSET");
-		}
-	}
-
-	else {
-		indent_puts
-			("#define yymore() yymore_used_but_not_detected");
-		indent_puts ("#define YY_MORE_ADJ 0");
-		indent_puts ("#define YY_RESTORE_YY_MORE_OFFSET");
-	}
-
-	if (!C_plus_plus) {
-		if (yytext_is_array) {
-			outn ("#ifndef YYLMAX");
-			outn ("#define YYLMAX 8192");
-			outn ("#endif\n");
-			if (!reentrant){
-                outn ("char yytext[YYLMAX];");
-                outn ("char *yytext_ptr;");
-            }
-		}
-
-		else {
-			if(! reentrant)
-                outn ("char *yytext;");
-		}
-	}
-
+    
+	/* Emit the user's section 1 definitions into the output file. */
+	skelout ();		/* %% [3.0] - break point in skel */
 	out (&action_array[defs1_offset]);
-
 	line_directive_out (stdout, 0);
-
-	skelout ();		/* %% [5.0] - break point in skel */
-
-	if (!C_plus_plus) {
-		if (use_read) {
-			outn ("\terrno=0; \\");
-			outn ("\twhile ( (result = (int) read( fileno(yyin), buf, (yy_size_t) max_size )) < 0 ) \\");
-			outn ("\t{ \\");
-			outn ("\t\tif( errno != EINTR) \\");
-			outn ("\t\t{ \\");
-			outn ("\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\");
-			outn ("\t\t\tbreak; \\");
-			outn ("\t\t} \\");
-			outn ("\t\terrno=0; \\");
-			outn ("\t\tclearerr(yyin); \\");
-			outn ("\t}\\");
-		}
-
-		else {
-			outn ("\tif ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \\");
-			outn ("\t\t{ \\");
-			outn ("\t\tint c = '*'; \\");
-			outn ("\t\tint n; \\");
-			outn ("\t\tfor ( n = 0; n < max_size && \\");
-			outn ("\t\t\t     (c = getc( yyin )) != EOF && c != '\\n'; ++n ) \\");
-			outn ("\t\t\tbuf[n] = (char) c; \\");
-			outn ("\t\tif ( c == '\\n' ) \\");
-			outn ("\t\t\tbuf[n++] = (char) c; \\");
-			outn ("\t\tif ( c == EOF && ferror( yyin ) ) \\");
-			outn ("\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\");
-			outn ("\t\tresult = n; \\");
-			outn ("\t\t} \\");
-			outn ("\telse \\");
-			outn ("\t\t{ \\");
-			outn ("\t\terrno=0; \\");
-			outn ("\t\twhile ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) \\");
-			outn ("\t\t\t{ \\");
-			outn ("\t\t\tif( errno != EINTR) \\");
-			outn ("\t\t\t\t{ \\");
-			outn ("\t\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\");
-			outn ("\t\t\t\tbreak; \\");
-			outn ("\t\t\t\t} \\");
-			outn ("\t\t\terrno=0; \\");
-			outn ("\t\t\tclearerr(yyin); \\");
-			outn ("\t\t\t} \\");
-			outn ("\t\t}\\");
-		}
-	}
-
-	skelout ();		/* %% [6.0] - break point in skel */
-
-	indent_puts ("#define YY_RULE_SETUP \\");
-	++indent_level;
-	if (bol_needed) {
-		indent_puts ("if ( yyleng > 0 ) \\");
-		++indent_level;
-		indent_puts ("YY_CURRENT_BUFFER_LVALUE->yy_at_bol = \\");
-		indent_puts ("\t\t(yytext[yyleng - 1] == '\\n'); \\");
-		--indent_level;
-	}
-	indent_puts ("YY_USER_ACTION");
-	--indent_level;
-
-	skelout ();		/* %% [7.0] - break point in skel */
-
-	/* Copy prolog to output file. */
+    
+	/* Emit the user's prolog into the output file. */
+	skelout ();		/* %% [4.0] - break point in skel */
 	out (&action_array[prolog_offset]);
-
 	line_directive_out (stdout, 0);
-
-	skelout ();		/* %% [8.0] - break point in skel */
-
-	set_indent (2);
-
-	if (yymore_used && !yytext_is_array) {
-		indent_puts ("YY_G(yy_more_len) = 0;");
-		indent_puts ("if ( YY_G(yy_more_flag) )");
-		++indent_level;
-		indent_puts ("{");
-		indent_puts
-			("YY_G(yy_more_len) = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr));");
-		indent_puts ("YY_G(yy_more_flag) = 0;");
-		indent_puts ("}");
-		--indent_level;
-	}
-
-	skelout ();		/* %% [9.0] - break point in skel */
-
-	gen_start_state ();
-
-	/* Note, don't use any indentation. */
-	outn ("yy_match:");
-	gen_next_match ();
-
-	skelout ();		/* %% [10.0] - break point in skel */
-	set_indent (2);
-	gen_find_action ();
-
-	skelout ();		/* %% [11.0] - break point in skel */
-	outn ("m4_ifdef( [[M4_YY_USE_LINENO]],[[");
-	indent_puts
-		("if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )");
-	++indent_level;
-	indent_puts ("{");
-	indent_puts ("int yyl;");
-	do_indent ();
-	out_str ("for ( yyl = %s; yyl < yyleng; ++yyl )\n",
-		 yymore_used ? (yytext_is_array ? "YY_G(yy_prev_more_offset)" :
-				"YY_G(yy_more_len)") : "0");
-	++indent_level;
-	indent_puts ("if ( yytext[yyl] == '\\n' )");
-	++indent_level;
-	indent_puts ("M4_YY_INCR_LINENO();");
-	--indent_level;
-	--indent_level;
-	indent_puts ("}");
-	--indent_level;
-	outn ("]])");
-
-	skelout ();		/* %% [12.0] - break point in skel */
-	if (ddebug) {
-		indent_puts ("if ( yy_flex_debug )");
-		++indent_level;
-
-		indent_puts ("{");
-		indent_puts ("if ( yy_act == 0 )");
-		++indent_level;
-		indent_puts (C_plus_plus ?
-			     "std::cerr << \"--scanner backing up\\n\";" :
-			     "fprintf( stderr, \"--scanner backing up\\n\" );");
-		--indent_level;
-
-		do_indent ();
-		out_dec ("else if ( yy_act < %d )\n", num_rules);
-		++indent_level;
-
-		if (C_plus_plus) {
-			indent_puts
-				("std::cerr << \"--accepting rule at line \" << yy_rule_linenum[yy_act] <<");
-			indent_puts
-				("         \"(\\\"\" << yytext << \"\\\")\\n\";");
-		}
-		else {
-			indent_puts
-				("fprintf( stderr, \"--accepting rule at line %ld (\\\"%s\\\")\\n\",");
-
-			indent_puts
-				("         (long)yy_rule_linenum[yy_act], yytext );");
-		}
-
-		--indent_level;
-
-		do_indent ();
-		out_dec ("else if ( yy_act == %d )\n", num_rules);
-		++indent_level;
-
-		if (C_plus_plus) {
-			indent_puts
-				("std::cerr << \"--accepting default rule (\\\"\" << yytext << \"\\\")\\n\";");
-		}
-		else {
-			indent_puts
-				("fprintf( stderr, \"--accepting default rule (\\\"%s\\\")\\n\",");
-			indent_puts ("         yytext );");
-		}
-
-		--indent_level;
-
-		do_indent ();
-		out_dec ("else if ( yy_act == %d )\n", num_rules + 1);
-		++indent_level;
-
-		indent_puts (C_plus_plus ?
-			     "std::cerr << \"--(end of buffer or a NUL)\\n\";" :
-			     "fprintf( stderr, \"--(end of buffer or a NUL)\\n\" );");
-
-		--indent_level;
-
-		do_indent ();
-		outn ("else");
-		++indent_level;
-
-		if (C_plus_plus) {
-			indent_puts
-				("std::cerr << \"--EOF (start condition \" << YY_START << \")\\n\";");
-		}
-		else {
-			indent_puts
-				("fprintf( stderr, \"--EOF (start condition %d)\\n\", YY_START );");
-		}
-
-		--indent_level;
-
-		indent_puts ("}");
-		--indent_level;
-	}
 
 	/* Copy actions to output file. */
-	skelout ();		/* %% [13.0] - break point in skel */
-	++indent_level;
-	gen_bu_action ();
+	skelout ();		/* %% [5.0] - break point in skel */
 	out (&action_array[action_offset]);
-
 	line_directive_out (stdout, 0);
 
+        
 	/* generate cases for any missing EOF rules */
 	for (i = 1; i <= lastsc; ++i)
 		if (!sceof[i]) {
-			do_indent ();
-			out_str ("case YY_STATE_EOF(%s):\n", scname[i]);
+			out_str ("EOF_RULE(%s)", scname[i]);
 			did_eof_rule = true;
 		}
 
 	if (did_eof_rule) {
-		++indent_level;
-		indent_puts ("yyterminate();");
-		--indent_level;
+                out_m4_define("M4_YY_DID_EOF_RULE", NULL);
 	}
 
 
-	/* Generate code for handling NUL's, if needed. */
-
-	/* First, deal with backing up and setting up yy_cp if the scanner
-	 * finds that it should JAM on the NUL.
-	 */
-	skelout ();		/* %% [14.0] - break point in skel */
-	set_indent (4);
-
-	if (fullspd || fulltbl)
-		indent_puts ("yy_cp = YY_G(yy_c_buf_p);");
-
-	else {			/* compressed table */
-		if (!reject && !interactive) {
-			/* Do the guaranteed-needed backing up to figure
-			 * out the match.
-			 */
-			indent_puts
-				("yy_cp = YY_G(yy_last_accepting_cpos);");
-			indent_puts
-				("yy_current_state = YY_G(yy_last_accepting_state);");
-		}
-
-		else
-			/* Still need to initialize yy_cp, though
-			 * yy_current_state was set up by
-			 * yy_get_previous_state().
-			 */
-			indent_puts ("yy_cp = YY_G(yy_c_buf_p);");
-	}
-
-
-	/* Generate code for yy_get_previous_state(). */
-	set_indent (1);
-	skelout ();		/* %% [15.0] - break point in skel */
-
-	gen_start_state ();
-
-	set_indent (2);
-	skelout ();		/* %% [16.0] - break point in skel */
-	gen_next_state (true);
-
-	set_indent (1);
-	skelout ();		/* %% [17.0] - break point in skel */
-	gen_NUL_trans ();
-
-	skelout ();		/* %% [18.0] - break point in skel */
-	skelout ();		/* %% [19.0] - break point in skel */
-	/* Update BOL and yylineno inside of input(). */
-	if (bol_needed) {
-		indent_puts
-			("YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\\n');");
-		if (do_yylineno) {
-			indent_puts
-				("if ( YY_CURRENT_BUFFER_LVALUE->yy_at_bol )");
-			++indent_level;
-			indent_puts ("M4_YY_INCR_LINENO();");
-			--indent_level;
-		}
-	}
-
-	else if (do_yylineno) {
-		indent_puts ("if ( c == '\\n' )");
-		++indent_level;
-		indent_puts ("M4_YY_INCR_LINENO();");
-		--indent_level;
-	}
-
-	skelout ();
-
-	/* Copy remainder of input to output. */
-
+	/* Copy remainder of skeleton to output. */
+	skelout (); /* %% [6.0] - break point in skel */
 	line_directive_out (stdout, 1);
 
+        /* Emit the user's section 3 into the output file. */
 	if (sectnum == 3) {
 		OUT_BEGIN_CODE ();
                 if (!no_section3_escape)
