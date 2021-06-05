@@ -6,7 +6,6 @@
 # would be natural to use. Output is written to standard output for
 # inclusion in a Makefile.am, typically by redirecting the output and
 # then an automake include directive.
-
 set -eu
 
 RULESET_TESTS=""

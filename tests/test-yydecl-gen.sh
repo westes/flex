@@ -6,7 +6,6 @@ FLEX="$2"
 cat <<EOF_OUTER
 #! /bin/sh
 # Test %yydecl option of flex on ${backend} backend.
-echo 'set -eu'
 set -eu
 
 trap 'rm /tmp/td\$\$' EXIT HUP INT QUIT TERM

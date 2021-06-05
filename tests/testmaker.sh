@@ -9,7 +9,6 @@
 #
 # To add a new back end named "foo", append "|foo" to the
 # third case arm marked "# Add new back ends on this line".
-echo 'set -eu'
 set -eu
 
 DEBUG=0
@@ -59,8 +58,6 @@ options=""
 backend=nr
 serialization=
 verification=
-
-echo "stem: ${stem}"
 
 for part in "$@"; do
     case ${part} in
@@ -117,7 +114,7 @@ m4def() {
 if [ "${outdev}" != /dev/stdout ] && [ "${TEXTFILES}" = "1" ]
 then
     if [ ! -f "${stem}.txt" ] ; then 
-	    echo "Overwriting ${stem}.txt"
+	    echo "Overwriting ${SRCDIR}/${stem}.txt"
     fi
     sed <"${SRCDIR}/${stem}.rules" -e "1,/###/d" >"${SRCDIR}/${stem}.txt"
 fi
