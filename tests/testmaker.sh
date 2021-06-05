@@ -9,8 +9,8 @@
 #
 # To add a new back end named "foo", append "|foo" to the
 # third case arm marked "# Add new back ends on this line".
-echo 'set -evx'
-set -evx
+echo 'set -eu'
+set -eu
 
 DEBUG=0
 SRCDIR="."
@@ -29,7 +29,8 @@ done
 
 shift $((OPTIND-1))
 testfile=$1
-
+outdev=
+filter=
 if [ "${DEBUG}" = "0" ] ; then
     outdev="${testfile}"
 	filter=m4
@@ -56,6 +57,8 @@ set -- $(echo "${1}" | tr '_' ' ')
 stem=$1
 options=""
 backend=nr
+serialization=
+verification=
 
 echo "stem: ${stem}"
 
@@ -84,7 +87,7 @@ case ${backend} in c99) backend=r ;; esac
 
 m4def() {
     define="${1}"
-    value="${2}"
+    value="${2:-}"
     # we'll be careful, I promise
     printf "define(\`%s', \`${value}')dnl\n" "${define}"
 }
