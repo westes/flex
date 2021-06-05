@@ -79,6 +79,7 @@ multiple_scanners_r
 multiple_scanners_r_[12].[ch]
 posix*
 !posix.rules
+!posix.txt
 posixlycorrect*
 !posixlycorrect.rules
 !posixlycorrect.txt
