@@ -25,19 +25,20 @@
 # and procede with the "normal" build procedures.
 
 # use LIBTOOLIZE, if set
-LIBTOOLIZE_ORIG="$LIBTOOLIZE";
-if test "x$LIBTOOLIZE" = "x"; then LIBTOOLIZE=libtoolize; fi
+if test "x$LIBTOOLIZE" = "x"; then
+   for ac_prog in libtoolize glibtoolize; do
+      if $ac_prog --version >/dev/null 2>&1; then
+         LIBTOOLIZE=$ac_prog
+         break
+      fi
+   done
+fi
 
 # test libtoolize
-$LIBTOOLIZE --version 2>/dev/null
-if test "$?" -ne 0; then
-   LIBTOOLIZE=glibtoolize
-   $LIBTOOLIZE --version 2>/dev/null
-   if test "$?" -ne 0; then
-      echo "error: libtoolize not working, re-run with LIBTOOLIZE=/path/to/libtoolize"
-      echo "       LIBTOOLIZE is currently \"$LIBTOOLIZE_ORIG\""
-      exit 1
-   fi
+if test "x$LIBTOOLIZE" = "x" || ! $LIBTOOLIZE --version >/dev/null; then
+   echo "error: libtoolize not working, re-run with LIBTOOLIZE=/path/to/libtoolize">&2
+   echo "       LIBTOOLIZE is currently \"$LIBTOOLIZE\"">&2
+   exit 1
 fi
 
 #if we pretend to have a ChangeLog, then automake is less
@@ -47,5 +48,5 @@ fi
 if ! test -f ChangeLog; then
    touch ChangeLog
 fi
-"$LIBTOOLIZE" --install --force
+$LIBTOOLIZE --install --force
 autoreconf --install --force
