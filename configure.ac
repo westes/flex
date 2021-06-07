@@ -55,8 +55,7 @@ AC_PROG_LN_S
 AC_PROG_AWK
 AC_PROG_INSTALL
 
-pkgconfigdir=${libdir}/pkgconfig
-AC_SUBST(pkgconfigdir)
+AC_SUBST([pkgconfigdir],['$(libdir)/pkgconfig'])
 
 # allow passing a variable `WARNINGFLAGS',
 #   either when invoking `configure', or when invoking `make'
