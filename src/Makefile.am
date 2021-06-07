@@ -3,7 +3,7 @@ AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
 LIBS = @LIBS@
 pkgconfigdir = @pkgconfigdir@
 
-m4 = @M4@
+M4 = @M4@
 
 bin_PROGRAMS = flex
 if ENABLE_BOOTSTRAP
@@ -106,26 +106,26 @@ clean-local:
 	rm -f $(BUILT_SOURCES)
 
 cpp-flex.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
-	$(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(m4) $(VERSION) > $@.tmp
-	$(SHELL) $(srcdir)/chkskel.sh $@.tmp
-	mv -f $@.tmp $@
+	$(AM_V_GEN) $(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(M4) $(VERSION) > $@.tmp && \
+		$(SHELL) $(srcdir)/chkskel.sh $@.tmp && \
+		mv -f $@.tmp $@
 
 c99-flex.h: c99-flex.skl mkskel.sh
-	$(SHELL) $(srcdir)/mkskel.sh c99 $(srcdir) $(m4) $(VERSION) > $@.tmp
-	$(SHELL) $(srcdir)/chkskel.sh $@.tmp
-	mv -f $@.tmp $@
+	$(AM_V_GEN) $(SHELL) $(srcdir)/mkskel.sh c99 $(srcdir) $(M4) $(VERSION) > $@.tmp && \
+		$(SHELL) $(srcdir)/chkskel.sh $@.tmp && \
+		mv -f $@.tmp $@
 
 go-flex.h: go-flex.skl mkskel.sh
-	$(SHELL) $(srcdir)/mkskel.sh go $(srcdir) $(m4) $(VERSION) > $@.tmp
-	$(SHELL) $(srcdir)/chkskel.sh $@.tmp
-	mv -f $@.tmp $@
+	$(AM_V_GEN) $(SHELL) $(srcdir)/mkskel.sh go $(srcdir) $(M4) $(VERSION) > $@.tmp && \
+		$(SHELL) $(srcdir)/chkskel.sh $@.tmp && \
+		mv -f $@.tmp $@
 
 if ENABLE_BOOTSTRAP
 stage1scan.c: scan.l stage1flex$(EXEEXT)
-	./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $(srcdir)/scan.l
+	$(AM_V_GEN) ./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $(srcdir)/scan.l
 else
 stage1scan.c: scan.c
-	sed 's|^\(#line .*\)"'`printf %s $< | sed 's|[][\\\\.*]|\\\\&|g'`'"|\1"$@"|g' $< > $@
+	$(AM_V_GEN) $(SED) 's|^\(#line .*\)"'`printf %s $< | $(SED) 's|[][\\\\.*]|\\\\&|g'`'"|\1"$@"|g' $< > $@
 endif
 
 dist-hook: scan.l flex$(EXEEXT)
