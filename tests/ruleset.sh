@@ -43,7 +43,7 @@ for backend in "$@" ; do
 	    echo "${testname}.l: \$(srcdir)/${ruleset} \$(srcdir)/testmaker.sh \$(srcdir)/testmaker.m4"
 	    # we're deliberately single-quoting this because we _don't_ want those variables to be expanded yet
 	    # shellcheck disable=2016
-	    printf '\t$(SHELL) $(srcdir)/testmaker.sh -i $(srcdir) $@\n\n'
+	    printf '\t$(AM_V_GEN) $(SHELL) $(srcdir)/testmaker.sh -m '\''$(M4)'\'' -i $(srcdir) $@\n\n'
 	    RULESET_TESTS="${RULESET_TESTS} ${testname}"
 	    RULESET_REMOVABLES="${RULESET_REMOVABLES} ${testname} ${testname}.c ${testname}.l"
 	fi
@@ -59,7 +59,7 @@ for backend in "$@" ; do
             cat << EOF
 tableopts_${kind}_${backend}_${bare_opt}_${kind}_SOURCES = ${testname}.l
 ${testname}.l: \$(srcdir)/tableopts.rules \$(srcdir)/testmaker.sh \$(srcdir)/testmaker.m4
-	\$(SHELL) \$(srcdir)/testmaker.sh -i \$(srcdir) \$@
+	\$(AM_V_GEN) \$(SHELL) \$(srcdir)/testmaker.sh -m '\$(M4)' -i \$(srcdir) \$@
 
 EOF
         done
@@ -81,7 +81,7 @@ for backend in "$@" ; do
     echo "test_yydecl_${backend}_sh_SOURCES ="
     echo "test-yydecl-${backend}.sh\$(EXEEXT): \$(srcdir)/test-yydecl-gen.sh"
     # shellcheck disable=SC2059
-    printf "\t\$(SHELL) \$(srcdir)/test-yydecl-gen.sh ${backend} \$(FLEX) >test-yydecl-${backend}.sh\$(EXEEXT)\n"
+    printf "\t\$(AM_V_GEN) \$(SHELL) \$(srcdir)/test-yydecl-gen.sh ${backend} \$(FLEX) >test-yydecl-${backend}.sh\$(EXEEXT) && \\\\\n"
     # shellcheck disable=SC2059
     printf "\tchmod a+x test-yydecl-${backend}.sh\$(EXEEXT)\n"
     echo ""
