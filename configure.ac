@@ -147,6 +147,9 @@ AC_TYPE_SIZE_T
 
 AC_FUNC_ALLOCA
 AC_FUNC_FORK
+AS_CASE(["$ac_cv_func_fork_works/$ac_cv_func_vfork_works"],['no/no'],
+  [AC_MSG_ERROR([flex does not compile on your system having no working `fork' and `vfork' as requirement])])
+
 dnl Autoconf bug: AC_FUNC_MALLOC and AC_FUNC_REALLOC might not warn of cross
 dnl compilation. Workaround this.
 AC_FUNC_MALLOC
