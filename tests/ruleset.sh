@@ -79,7 +79,7 @@ for backend in "$@" ; do
     echo ""
 
     echo "test_yydecl_${backend}_sh_SOURCES ="
-    echo "test-yydecl-${backend}.sh\$(EXEEXT): \$(srcdir)/test-yydecl-gen.sh"
+    echo "test-yydecl-${backend}.sh\$(EXEEXT): \$(srcdir)/test-yydecl-gen.sh \$(FLEX)"
     # shellcheck disable=SC2059
     printf "\t\$(AM_V_GEN) \$(SHELL) \$(srcdir)/test-yydecl-gen.sh ${backend} \$(FLEX) >test-yydecl-${backend}.sh\$(EXEEXT) && \\\\\n"
     # shellcheck disable=SC2059
