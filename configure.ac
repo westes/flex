@@ -25,13 +25,13 @@
 # autoconf requirements and initialization
 
 AC_INIT([the fast lexical analyser generator],[2.6.4],[flex-help@lists.sourceforge.net],[flex])
-AC_PREREQ([2.60])
+AC_PREREQ([2.69])
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_USE_SYSTEM_EXTENSIONS
 LT_INIT
 AM_INIT_AUTOMAKE([1.15 -Wno-portability foreign std-options dist-lzip parallel-tests subdir-objects])
-AC_CONFIG_HEADER([src/config.h])
+AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_MACRO_DIR([m4])
 SHARED_VERSION_INFO="2:0:0"
@@ -51,7 +51,6 @@ AM_PROG_LEX
 AC_PROG_CC
 AX_PROG_CC_FOR_BUILD
 AC_PROG_CXX
-AM_PROG_CC_C_O
 AC_PROG_LN_S
 AC_PROG_AWK
 AC_PROG_INSTALL
