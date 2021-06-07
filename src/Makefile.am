@@ -95,7 +95,7 @@ EXTRA_DIST = \
 	gettext.h \
 	chkskel.sh
 
-CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
+CLEANFILES = stage1scan.c stage1flex$(EXEEXT) $(BUILT_SOURCES)
 
 BUILT_SOURCES = $(SKELINCLUDES)
 
@@ -104,8 +104,6 @@ SKELINCLUDES = \
 	c99-flex.h \
 	go-flex.h
 
-clean-local:
-	rm -f $(BUILT_SOURCES)
 
 cpp-flex.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(AM_V_GEN) $(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(M4) $(VERSION) > $@.tmp && \
