@@ -34,8 +34,7 @@ AM_INIT_AUTOMAKE([1.15 -Wno-portability foreign std-options dist-lzip parallel-t
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_MACRO_DIR([m4])
-SHARED_VERSION_INFO="2:0:0"
-AC_SUBST(SHARED_VERSION_INFO)
+AC_SUBST([SHARED_VERSION_INFO],[2:0:0])
 
 # checks for programs
 
@@ -105,7 +104,7 @@ AC_CACHE_CHECK([for m4 that supports -P], [ac_cv_path_M4],
                 && ac_cv_path_M4=$ac_path_M4 ac_path_M4_found=:]],
               [AC_MSG_ERROR([could not find m4 that supports -P])])])
 AC_SUBST([M4], [$ac_cv_path_M4])
-AC_DEFINE_UNQUOTED([M4], ["$M4"], [Define to the m4 executable name.])
+AC_DEFINE_UNQUOTED([M4], ["$M4"], [Absolute path to the m4 executable.])
 
 AC_PATH_PROG([INDENT], indent, [\${top_srcdir}/build-aux/missing indent])
   AC_MSG_CHECKING(if $INDENT is GNU indent)
