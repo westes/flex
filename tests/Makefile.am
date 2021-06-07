@@ -161,19 +161,13 @@ yyextra_c99_SOURCES = yyextra_c99.l
 # automake doesn't know about the whacky ways in which we're abusing
 # it.
 
-CLEANFILES = \
+FLEX_BUILTSOURCES = \
 	alloc_extra_nr.c \
 	alloc_extra_c99.c \
-	bison_nr_parser.c \
-	bison_nr_parser.h \
 	bison_nr_scanner.c \
 	bison_nr_scanner.h \
-	bison_yylloc_parser.c \
-	bison_yylloc_parser.h \
 	bison_yylloc_scanner.c \
 	bison_yylloc_scanner.h \
-	bison_yylval_parser.c \
-	bison_yylval_parser.h \
 	bison_yylval_scanner.c \
 	bison_yylval_scanner.h \
 	c_cxx_nr.cc \
@@ -216,8 +210,17 @@ CLEANFILES = \
 	top.c \
 	top.h  \
 	yyextra_nr.c \
-	yyextra_c99.c \
-	$(RULESET_REMOVABLES)
+	yyextra_c99.c
+
+BISON_BUILTSOURCES = \
+	bison_nr_parser.c \
+	bison_nr_parser.h \
+	bison_yylloc_parser.c \
+	bison_yylloc_parser.h \
+	bison_yylval_parser.c \
+	bison_yylval_parser.h
+
+CLEANFILES = $(FLEX_BUILTSOURCES) $(BISON_BUILTSOURCES) $(RULESET_REMOVABLES)
 
 dist-hook:
 	chmod u+w $(distdir) && \
@@ -304,10 +307,12 @@ TESTOPTS = -L
 
 FLEX = $(top_builddir)/src/flex
 
-.l.c: $(FLEX)
+$(FLEX_BUILTSOURCES) : $(FLEX)
+
+.l.c:
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -o $@ $<
 
-.ll.cc: $(FLEX)
+.ll.cc:
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -+ -o $@ $<
 
 bison_nr_main.$(OBJEXT): bison_nr_parser.h bison_nr_scanner.h
@@ -334,7 +339,7 @@ bison_yylval_scanner.h: bison_yylval_scanner.c
 # automake does not support compiling flex scanners output in C as C++
 # so we explicitly sayhow, using the .lll suffix for the lex input file
 
-.lll.cc: $(FLEX)
+.lll.cc:
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -o $@ $<
 
 header_nr_main.$(OBJEXT): header_nr_scanner.h
