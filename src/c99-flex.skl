@@ -854,7 +854,7 @@ void yyrestart(FILE * input_file, yyscan_t yyscanner)
 			yy_create_buffer( yyscanner->yyin_r, YY_BUF_SIZE, yyscanner);
 	}
 
-	yy_init_buffer( yy_current_buffer(yyscanner), input_file, yyscanner);
+	yy_init_buffer( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top], input_file, yyscanner);
 	yy_load_buffer_state( yyscanner );
 }
 
