@@ -95,9 +95,14 @@ EXTRA_DIST = \
 	gettext.h \
 	chkskel.sh
 
-CLEANFILES = stage1scan.c stage1flex$(EXEEXT) $(BUILT_SOURCES)
+CLEANFILES = stage1scan.c scan.c $(BUILT_SOURCES)
 
-BUILT_SOURCES = $(SKELINCLUDES)
+BUILT_SOURCES = $(SKELINCLUDES) \
+    $(BISON_BUILTSOURCES)
+
+if HAVE_BISON
+BISON_BUILTSOURCES = parse.h parse.c
+endif
 
 SKELINCLUDES = \
 	cpp-flex.h \
@@ -132,18 +137,6 @@ dist-hook: scan.l flex$(EXEEXT)
 	chmod u+w $(distdir) && \
 	./flex$(EXEEXT) -o scan.c $< && \
 	mv -f scan.c $(distdir)
-
-# make needs to be told to make inclusions so that parallelized runs will
-# not fail.
-
-stage1flex-main.$(OBJEXT): parse.h $(SKELINCLUDES)
-flex-main.$(OBJEXT): parse.h $(SKELINCLUDES)
-
-stage1flex-yylex.$(OBJEXT): parse.h $(SKELINCLUDES)
-flex-yylex.$(OBJEXT): parse.h $(SKELINCLUDES)
-
-stage1flex-scan.$(OBJEXT): parse.h $(SKELINCLUDES)
-flex-stage1scan.$(OBJEXT): parse.h $(SKELINCLUDES)
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #
