@@ -756,7 +756,10 @@ void yypop_buffer_state (FlexLexer *yyscanner)
  */
 void yyrestart(FILE * input_file, FlexLexer *yyscanner)
 {
-
+	
+	size_t newSize = 0;
+	yyStateType *newStateBuf = 0;
+	
 	if (yy_current_buffer(yyscanner) == NULL) {
 		yyensure_buffer_stack (yyscanner);
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
@@ -765,6 +768,30 @@ void yyrestart(FILE * input_file, FlexLexer *yyscanner)
 
 	yy_init_buffer(yyscanner->yyBufferStack[yyscanner->yyBufferStackTop], input_file, yyscanner);
 	yy_load_buffer_state(yyscanner);
+	
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[        
+	/* Ensure the reject state buffer is large enough.
+	 */
+	if ( yyscanner->yyStateBufMax < (yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE) ) {
+		newSize = yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE;
+		newStateBuf = (yyStateType *)yyrealloc( yyscanner->yyStateBuf, (newSize * sizeof(yyStateType)), yyscanner );
+		
+		if ( newStateBuf == NULL ) {
+			yypanic( "out of dynamic memory in yylex()", yyscanner );
+		}
+		else {
+			yyscanner->yyStateBuf = newStateBuf;
+			yyscanner->yyStateBufMax = newSize;
+		}
+	}
+]] )
+
+	/* We don't actually know whether we did this switch during
+	 * EOF (yywrap()) processing, but the only time this flag
+	 * is looked at is after yywrap() is called, so it's safe
+	 * to go ahead and always set it.
+	 */
+	yyscanner->yyDidBufferSwitchOnEof = true;
 }
 
 static void yybumpline(FlexLexer *yyscanner) {
@@ -1826,7 +1853,19 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 [[
 		/* Create the reject buffer large enough to save one state per allowed character. */
 		if (yyscanner->yyStateBuf  == NULL) {
-			yyscanner->yyStateBuf = (yyStateType *)yyalloc(YY_STATE_BUF_SIZE, yyscanner);
+			if (yy_current_buffer(yyscanner) == NULL) {
+				yyscanner->yyStateBuf = (yyStateType *)yyalloc((YY_STATE_BUF_SIZE * sizeof(yyStateType)), yyscanner);
+			} 
+			else {
+				yyscanner->yyStateBuf = (yyStateType *)yyalloc((yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE) * sizeof(yyStateType), yyscanner);
+			}
+		}
+		
+		if ( ! yyscanner->yyStateBuf ) {
+			yypanic( "out of dynamic memory in yylex()", yyscanner );
+		}
+		else if ( yy_current_buffer(yyscanner) == NULL ) {
+			yyscanner->yyStateBufMax = YY_STATE_BUF_SIZE;
 		}
 		if (yyscanner->yyStateBuf == NULL) {
 			yypanic("out of dynamic memory in yylex()", yyscanner);

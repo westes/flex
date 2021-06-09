@@ -1074,6 +1074,7 @@ m4_ifdef( [[M4_YY_NOT_REENTRANT]], [[
 m4_ifdef( [[M4_MODE_C_ONLY]], [[
 /* Declare state buffer variables. */
 static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;
+static size_t yy_state_buf_max=0;
 static char *yy_full_match;
 static int yy_lp;
 m4_ifdef( [[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
@@ -2824,6 +2825,8 @@ void yyFlexLexer::yyrestart( std::istream& input_file )
 ]])
 {
 	M4_YY_DECL_GUTS_VAR();
+	size_t new_size = 0;
+	yy_state_type *new_state_buf = 0;
 
 	if ( yy_current_buffer() == NULL ) {
 		yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG);
@@ -2833,6 +2836,30 @@ void yyFlexLexer::yyrestart( std::istream& input_file )
 
 	yy_init_buffer( YY_CURRENT_BUFFER_LVALUE, input_file M4_YY_CALL_LAST_ARG);
 	yy_load_buffer_state( M4_YY_CALL_ONLY_ARG );
+	
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[        
+	/* Ensure the reject state buffer is large enough.
+	 */
+	if ( YY_G(yy_state_buf_max) < (yy_current_buffer()->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
+		new_size = yy_current_buffer()->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
+		new_state_buf = (yy_state_type*) yyrealloc( YY_G(yy_state_buf), (new_size * sizeof(yy_state_type)) M4_YY_CALL_LAST_ARG );
+		
+		if ( new_state_buf == NULL ) {
+			YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
+		}
+		else {
+			YY_G(yy_state_buf) = new_state_buf;
+			YY_G(yy_state_buf_max) = new_size;
+		}
+	}
+]] )
+
+	/* We don't actually know whether we did this switch during
+	 * EOF (yywrap()) processing, but the only time this flag
+	 * is looked at is after yywrap() is called, so it's safe
+	 * to go ahead and always set it.
+	 */
+	YY_G(yy_did_buffer_switch_on_eof) = 1;
 }
 
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
