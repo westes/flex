@@ -1,4 +1,5 @@
 AM_YFLAGS = -d
+AM_CFLAGS   = $(WARNINGFLAGS)
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
 LIBS = @LIBS@
 pkgconfigdir = @pkgconfigdir@
@@ -19,13 +20,12 @@ libfl_la_SOURCES = \
 	libyywrap.c
 libfl_la_LDFLAGS = -version-info @SHARED_VERSION_INFO@
 
-stage1flex_SOURCES = \
-	scan.l \
-	$(COMMON_SOURCES)
+stage1flex_SOURCES = scan.l
 
 if CROSS
 stage1flex_LDADD =
 stage1flex_SOURCES += \
+          $(COMMON_SOURCES) \
 		      ../lib/malloc.c \
 		      ../lib/realloc.c
 stage1flex_LINK = $(LIBTOOL) --tag=CC --mode=link $(CC_FOR_BUILD) \
@@ -37,18 +37,18 @@ $(stage1flex_OBJECTS): CPP=$(CPP_FOR_BUILD)
 $(stage1flex_OBJECTS): CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
 $(stage1flex_OBJECTS): LDFLAGS=$(LDFLAGS_FOR_BUILD)
 else
-stage1flex_LDADD = $(LDADD)
 stage1flex_LINK = $(LINK)
 stage1flex_CFLAGS = $(AM_CFLAGS)
+stage1flex_LDADD     = libflex.a $(LDADD)
 endif
 
-flex_SOURCES = \
-	$(COMMON_SOURCES)
+nodist_flex_SOURCES  = stage1scan.c
+flex_LDADD           = libflex.a $(LDADD)
+flex_CFLAGS          = $(AM_CFLAGS)
 
-nodist_flex_SOURCES = \
-	stage1scan.c
-
-flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
+noinst_LIBRARIES     = libflex.a
+libflex_a_SOURCES    = $(COMMON_SOURCES)
+libflex_a_CFLAGS     = $(AM_CFLAGS)
 
 COMMON_SOURCES = \
 	buf.c \
