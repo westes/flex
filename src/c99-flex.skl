@@ -847,6 +847,8 @@ void yypop_buffer_state (yyscan_t yyscanner)
  */
 void yyrestart(FILE * input_file, yyscan_t yyscanner)
 {
+	size_t new_size = 0;
+	yy_state_type *new_state_buf = 0;
 
 	if ( yy_current_buffer(yyscanner) == NULL ) {
 		yyensure_buffer_stack (yyscanner);
@@ -856,6 +858,30 @@ void yyrestart(FILE * input_file, yyscan_t yyscanner)
 
 	yy_init_buffer( yy_current_buffer(yyscanner), input_file, yyscanner);
 	yy_load_buffer_state( yyscanner );
+	
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[        
+	/* Ensure the reject state buffer is large enough.
+	 */
+	if ( yyscanner->yy_state_buf_max < (yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
+		new_size = yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
+		new_state_buf = (yy_state_type*) yyrealloc( yyscanner->yy_state_buf, (new_size * sizeof(yy_state_type)), yyscanner );
+		
+		if ( new_state_buf == NULL ) {
+			yypanic( "out of dynamic memory in yylex()", yyscanner );
+		}
+		else {
+			yyscanner->yy_state_buf = new_state_buf;
+			yyscanner->yy_state_buf_max = new_size;
+		}
+	}
+]] )
+
+	/* We don't actually know whether we did this switch during
+	 * EOF (yywrap()) processing, but the only time this flag
+	 * is looked at is after yywrap() is called, so it's safe
+	 * to go ahead and always set it.
+	 */
+	yyscanner->yy_did_buffer_switch_on_eof = true;
 }
 
 static void yybumpline( yyscan_t yyscanner) {
@@ -1976,10 +2002,22 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 		/* Create the reject buffer large enough to save one state per allowed character. */
 		if ( yyscanner->yy_state_buf  == NULL ) {
-			yyscanner->yy_state_buf = (yy_state_type *)yyalloc(YY_STATE_BUF_SIZE, yyscanner);
+			if( yy_current_buffer(yyscanner) == NULL ) {
+				yyscanner->yy_state_buf = (yy_state_type *)yyalloc((YY_STATE_BUF_SIZE * sizeof(yy_state_type)), yyscanner);
+			}
+			else {
+				yyscanner->yy_state_buf = (yy_state_type *)yyalloc(((yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) * sizeof(yy_state_type)), yyscanner);
+			}
 		}
-		if ( yyscanner->yy_state_buf == NULL) {
-			yypanic( "out of dynamic memory in yylex()", yyscanner);
+
+		if ( ! yyscanner->yy_state_buf ) {
+			yypanic( "out of dynamic memory in yylex()", yyscanner );
+		}
+		else if ( yy_current_buffer(yyscanner) == NULL ) {
+			yyscanner->yy_state_buf_max = YY_STATE_BUF_SIZE;
+		}
+		else {
+			yyscanner->yy_state_buf_max = (yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE);
 		}
 ]])
 
