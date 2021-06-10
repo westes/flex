@@ -268,9 +268,11 @@ typedef struct yyguts_t *yyscan_t;
 /* Action number for EOF rule of a given start state. */
 m4_define([[YY_STATE_EOF]], [[YY_END_OF_BUFFER + $1 + 1]])
 
-/* The state buf must be large enough to hold one state per character in the main buffer.
+/* The state buf must be large enough to hold one state per character in the main buffer,
+ * plus the start state, plus the two end-of-buffer byte states.
  */
-m4_define([[YY_STATE_BUF_SIZE]], [[((YY_BUF_SIZE + 2) * sizeof(yy_state_type))]])
+m4_define([[YY_STATE_BUF_EXTRA_SPACE]], [[3]])
+m4_define([[YY_STATE_BUF_SIZE]], [[(YY_BUF_SIZE + YY_STATE_BUF_EXTRA_SPACE)]])
 
 const bool FLEX_DEBUG = m4_ifdef([[M4_MODE_DEBUG]], [[true]], [[false]]);
 
@@ -516,6 +518,7 @@ struct yyguts_t {
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	yy_state_type *yy_state_buf;
 	yy_state_type *yy_state_ptr;
+	size_t yy_state_buf_max;
 	char *yy_full_match;
 	int yy_lp;
 
@@ -1593,7 +1596,9 @@ bool yyatbol(yyscan_t yyscanner) {
  */
 void yy_switch_to_buffer(yybuffer new_buffer, yyscan_t yyscanner)
 {
-
+	size_t new_size = 0;
+	yy_state_type *new_state_buf = 0;
+	
 	/* TODO. We should be able to replace this entire function body
 	 * with
 	 *		yypop_buffer_state();
@@ -1612,6 +1617,23 @@ void yy_switch_to_buffer(yybuffer new_buffer, yyscan_t yyscanner)
 
 	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] = new_buffer;
 	yy_load_buffer_state( yyscanner );
+
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
+	/* Ensure the reject state buffer is large enough.
+	 */
+	if ( yyscanner->yy_state_buf_max < (yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
+		new_size = yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
+		new_state_buf = (yy_state_type *)yyrealloc( yyscanner->yy_state_buf, (new_size * sizeof(yy_state_type)), yyscanner );
+		
+		if ( new_state_buf == NULL ) {
+			YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
+		}
+		else {
+			yyscanner->yy_state_buf = new_state_buf;
+			yyscanner->yy_state_buf_max = new_size;
+		}
+	}
+]] )
 
 	/* We don't actually know whether we did this switch during
 	 * EOF (yywrap()) processing, but the only time this flag
@@ -2010,7 +2032,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 			}
 		}
 
-		if ( ! yyscanner->yy_state_buf ) {
+		if ( yyscanner->yy_state_buf == NULL ) {
 			yypanic( "out of dynamic memory in yylex()", yyscanner );
 		}
 		else if ( yy_current_buffer(yyscanner) == NULL ) {
