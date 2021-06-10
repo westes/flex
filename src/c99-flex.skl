@@ -1626,7 +1626,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 		new_state_buf = (yy_state_type *)yyrealloc( yyscanner->yy_state_buf, (new_size * sizeof(yy_state_type)), yyscanner );
 		
 		if ( new_state_buf == NULL ) {
-			YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
+			yypanic( "out of dynamic memory in yylex()", yyscanner );
 		}
 		else {
 			yyscanner->yy_state_buf = new_state_buf;
