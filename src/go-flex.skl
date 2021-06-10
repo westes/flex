@@ -198,7 +198,7 @@ m4_define([[YY_STATE_EOF]], [[YY_END_OF_BUFFER + $1 + 1]])
  * plus the start state, plus the two end-of-buffer byte states.
  */
 m4_define([[YY_STATE_BUF_EXTRA_SPACE]], [[3]])
-m4_define([[YY_STATE_BUF_SIZE]], [[(YY_BUF_SIZE + YY_STATE_BUF_EXTRA_SPACE)]])
+m4_define([[YY_STATE_BUF_SIZE]], [[(flexInputBufferSize + YY_STATE_BUF_EXTRA_SPACE)]])
 
 const bool FLEX_DEBUG = m4_ifdef([[M4_MODE_DEBUG]], [[true]], [[false]]);
 
@@ -449,6 +449,7 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 m4_ifdef([[M4_MODE_USES_REJECT]], [[
 	yyStateType *yyStateBuf;
 	yyStateType *yyStatePtr;
+	size_t yyStateBufMax;
 	char *yyFullMatch;
 	int yyLp;
 m4_ifdef([[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[m4_dnl
@@ -1473,7 +1474,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	 */
 	if ( yyscanner->yyStateBufMax < (yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE) ) {
 		newSize = yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE;
-		newStateBuf = (yyStateType *)yyrealloc( yyscanner->yyStateBuf, (new_size * sizeof(yyStateType)), yyscanner );
+		newStateBuf = (yyStateType *)yyrealloc( yyscanner->yyStateBuf, (newSize * sizeof(yyStateType)), yyscanner );
 		
 		if ( newStateBuf == NULL ) {
 			yypanic( "out of dynamic memory in yylex()", yyscanner );
@@ -2264,6 +2265,7 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 [[
 	yyscanner->yyStateBuf = NULL;
 	yyscanner->yyStatePtr = NULL;
+	yyscanner->yyStateBufMax = 0;
 	yyscanner->yyFullMatch = NULL;
 	yyscanner->yyLp = 0;
 ]])

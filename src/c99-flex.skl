@@ -2415,6 +2415,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 	yyscanner->yy_state_buf = 0;
 	yyscanner->yy_state_ptr = 0;
+	yyscanner->yy_state_buf_max = 0;
 	yyscanner->yy_full_match = 0;
 	yyscanner->yy_lp = 0;
 ]])
