@@ -228,9 +228,9 @@ CLEANFILES = \
 dist-hook:
 	chmod u+w $(distdir) && \
 	for file in $(CLEANFILES) ; do \
-	rm -f $(distdir)/$$file \
-	chmod u+w $(distdir)/$$file \
-	; done
+	chmod u+w $(distdir)/$$file 2>/dev/null; \
+	rm -f $(distdir)/$$file; \
+	done
 
 EXTRA_DIST = \
 	README \
