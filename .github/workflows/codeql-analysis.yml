@@ -41,7 +41,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Apt
-      run: sudo apt-get install gcc-6 autoconf bison gettext autopoint help2man lzip texinfo texlive
+      run: sudo apt-get install gcc autoconf bison gettext autopoint help2man lzip texinfo texlive
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
