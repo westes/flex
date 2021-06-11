@@ -307,7 +307,7 @@ TESTOPTS = -L
 
 FLEX = $(top_builddir)/src/flex
 
-$(FLEX_BUILTSOURCES) : $(FLEX)
+$(FLEX_BUILTSOURCES) $(RULESET_BUILT_CSRCS): $(FLEX)
 
 .l.c:
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -o $@ $<
