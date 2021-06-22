@@ -2390,7 +2390,7 @@ int yyFlexLexer::LexerInput( char* buf, int max_size )
 	if ( yyin.bad() ) {
 		return -1;
 	} else {
-		return yyin.gcount();
+		return (int)yyin.gcount();
 	}
 #endif
 }
