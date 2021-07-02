@@ -1907,7 +1907,9 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 		
 m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
-		/* Create the reject buffer large enough to save one state per allowed character. */
+		/* Create the reject buffer large enough to save one state per allowed character.
+		 * If the reject buffer already exists, keep using it.
+		 */
 		if ( ! YY_G(yy_state_buf) ) {
 			YY_G(yy_state_buf) = (yy_state_type *)yyalloc( ((YY_CURRENT_BUFFER_LVALUE->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) * sizeof(yy_state_type))  M4_YY_CALL_LAST_ARG);
 			if ( ! YY_G(yy_state_buf) ) {
