@@ -1880,17 +1880,6 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
 		YY_USER_INIT;
 #endif
 
-m4_ifdef( [[M4_MODE_USES_REJECT]],
-[[
-		/* Create the reject buffer large enough to save one state per allowed character. */
-		if ( ! YY_G(yy_state_buf) ) {
-			YY_G(yy_state_buf) = (yy_state_type *)yyalloc(YY_STATE_BUF_SIZE  M4_YY_CALL_LAST_ARG);
-		}
-		if ( ! YY_G(yy_state_buf) ) {
-			YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
-		}
-]])
-
 		if ( ! YY_G(yy_start) ) {
 			YY_G(yy_start) = 1;	/* first start state */
 		}
@@ -1915,6 +1904,18 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 			YY_CURRENT_BUFFER_LVALUE =
 				yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG);
 		}
+		
+m4_ifdef( [[M4_MODE_USES_REJECT]],
+[[
+		/* Create the reject buffer large enough to save one state per allowed character. */
+		if ( ! YY_G(yy_state_buf) ) {
+			YY_G(yy_state_buf) = (yy_state_type *)yyalloc( ((YY_CURRENT_BUFFER_LVALUE->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) * sizeof(yy_state_type))  M4_YY_CALL_LAST_ARG);
+			if ( ! YY_G(yy_state_buf) ) {
+				YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
+			}
+			YY_G(yy_state_buf_max) = (YY_CURRENT_BUFFER_LVALUE->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE);
+		}
+]])
 
 		yy_load_buffer_state( M4_YY_CALL_ONLY_ARG );
 	}
