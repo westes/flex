@@ -194,9 +194,11 @@ m4_define([[YY_SC_TO_UI]], [[((YY_CHAR)($1))]])
 /* Action number for EOF rule of a given start state. */
 m4_define([[YY_STATE_EOF]], [[YY_END_OF_BUFFER + $1 + 1]])
 
-/* The state buf must be large enough to hold one state per character in the main buffer.
+/* The state buf must be large enough to hold one state per character in the main buffer,
+ * plus the start state, plus the two end-of-buffer byte states.
  */
-m4_define([[YY_STATE_BUF_SIZE]], [[((flexInputBufferSize + 2) * sizeof(yyStateType))]])
+m4_define([[YY_STATE_BUF_EXTRA_SPACE]], [[3]])
+m4_define([[YY_STATE_BUF_SIZE]], [[(flexInputBufferSize + YY_STATE_BUF_EXTRA_SPACE)]])
 
 const bool FLEX_DEBUG = m4_ifdef([[M4_MODE_DEBUG]], [[true]], [[false]]);
 
@@ -447,6 +449,7 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 m4_ifdef([[M4_MODE_USES_REJECT]], [[
 	yyStateType *yyStateBuf;
 	yyStateType *yyStatePtr;
+	size_t yyStateBufMax;
 	char *yyFullMatch;
 	int yyLp;
 m4_ifdef([[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[m4_dnl
@@ -756,7 +759,10 @@ void yypop_buffer_state (FlexLexer *yyscanner)
  */
 void yyrestart(FILE * input_file, FlexLexer *yyscanner)
 {
-
+	
+	size_t newSize = 0;
+	yyStateType *newStateBuf = 0;
+	
 	if (yy_current_buffer(yyscanner) == NULL) {
 		yyensure_buffer_stack (yyscanner);
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
@@ -765,6 +771,30 @@ void yyrestart(FILE * input_file, FlexLexer *yyscanner)
 
 	yy_init_buffer(yyscanner->yyBufferStack[yyscanner->yyBufferStackTop], input_file, yyscanner);
 	yy_load_buffer_state(yyscanner);
+	
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[        
+	/* Ensure the reject state buffer is large enough.
+	 */
+	if ( yyscanner->yyStateBufMax < (yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE) ) {
+		newSize = yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE;
+		newStateBuf = (yyStateType *)yyrealloc( yyscanner->yyStateBuf, (newSize * sizeof(yyStateType)), yyscanner );
+		
+		if ( newStateBuf == NULL ) {
+			yypanic( "out of dynamic memory in yylex()", yyscanner );
+		}
+		else {
+			yyscanner->yyStateBuf = newStateBuf;
+			yyscanner->yyStateBufMax = newSize;
+		}
+	}
+]] )
+
+	/* We don't actually know whether we did this switch during
+	 * EOF (yywrap()) processing, but the only time this flag
+	 * is looked at is after yywrap() is called, so it's safe
+	 * to go ahead and always set it.
+	 */
+	yyscanner->yyDidBufferSwitchOnEof = true;
 }
 
 static void yybumpline(FlexLexer *yyscanner) {
@@ -1417,6 +1447,8 @@ bool yyatbol(FlexLexer *yyscanner) {
  */
 void yy_switch_to_buffer(yybuffer newBuffer, FlexLexer *yyscanner)
 {
+	size_t newSize = 0;
+	yyStateType *newStateBuf = 0;
 
 	/* TODO. We should be able to replace this entire function body
 	 * with
@@ -1436,6 +1468,23 @@ void yy_switch_to_buffer(yybuffer newBuffer, FlexLexer *yyscanner)
 
 	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] = newBuffer;
 	yy_load_buffer_state(yyscanner);
+	
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
+	/* Ensure the reject state buffer is large enough.
+	 */
+	if ( yyscanner->yyStateBufMax < (yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE) ) {
+		newSize = yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE;
+		newStateBuf = (yyStateType *)yyrealloc( yyscanner->yyStateBuf, (newSize * sizeof(yyStateType)), yyscanner );
+		
+		if ( newStateBuf == NULL ) {
+			yypanic( "out of dynamic memory in yylex()", yyscanner );
+		}
+		else {
+			yyscanner->yyStateBuf = newStateBuf;
+			yyscanner->yyStateBufMax = newSize;
+		}
+	}
+]] )
 
 	/* We don't actually know whether we did this switch during
 	 * EOF (yywrap()) processing, but the only time this flag
@@ -1822,17 +1871,6 @@ m4_ifdef([[<M4_YY_BISON_LLOC>]],
 
 		m4_ifdef([[YY_USER_INIT]], [[YY_USER_INIT]])
 
-m4_ifdef([[M4_MODE_USES_REJECT]],
-[[
-		/* Create the reject buffer large enough to save one state per allowed character. */
-		if (yyscanner->yyStateBuf  == NULL) {
-			yyscanner->yyStateBuf = (yyStateType *)yyalloc(YY_STATE_BUF_SIZE, yyscanner);
-		}
-		if (yyscanner->yyStateBuf == NULL) {
-			yypanic("out of dynamic memory in yylex()", yyscanner);
-		}
-]])
-
 		if (yyscanner->yyStart == 0) {
 			yyscanner->yyStart = 1;	/* first start state */
 		}
@@ -1847,6 +1885,20 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
 				yy_create_buffer(yyscanner->yyin, flexInputBufferSize, yyscanner);
 		}
+
+m4_ifdef([[M4_MODE_USES_REJECT]],
+[[
+		/* Create the reject buffer large enough to save one state per allowed character.
+		 * If the reject buffer already exists, keep using it.
+		 */
+		if (yyscanner->yyStateBuf  == NULL) {
+			yyscanner->yyStateBuf = (yyStateType *)yyalloc((yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE) * sizeof(yyStateType), yyscanner);
+			if ( yyscanner->yyStateBuf == NULL ) {
+				yypanic( "out of dynamic memory in yylex()", yyscanner );
+			}
+			yyscanner->yyStateBufMax = (yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE);
+		}
+]])
 
 		yy_load_buffer_state(yyscanner);
 	}
@@ -2204,6 +2256,7 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 [[
 	yyscanner->yyStateBuf = NULL;
 	yyscanner->yyStatePtr = NULL;
+	yyscanner->yyStateBufMax = 0;
 	yyscanner->yyFullMatch = NULL;
 	yyscanner->yyLp = 0;
 ]])
