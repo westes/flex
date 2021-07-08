@@ -42,11 +42,16 @@ AC_SUBST(SHARED_VERSION_INFO)
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.19.7])
 AC_PROG_YACC
-AS_IF([test "$YACC" != 'bison -y'], [
-	YACC="\${top_srcdir}/build-aux/missing bison -y"
-	AC_MSG_NOTICE(no bison program found: only required for maintainers)
-	])
-AM_CONDITIONAL([HAVE_BISON], [test "$YACC" = 'bison -y'])
+  AC_MSG_CHECKING(whether $YACC is GNU Bison)
+  AS_IF([test -n "$YACC" && $YACC --version 2>&1 | $GREP "GNU Bison" >/dev/null],
+    [AC_MSG_RESULT(yes)
+  	use_gnu_bison=1],
+    [AC_MSG_RESULT(no)
+  	AC_MSG_WARN($YACC does not appear to be GNU Bison; required for maintainers)
+  	use_gnu_bison=0
+  	YACC="\${top_srcdir}/build-aux/missing bison"
+    ])
+AM_CONDITIONAL([HAVE_BISON], [test $use_gnu_bison -eq 1])
 AM_PROG_LEX
 AC_PROG_CC
 AX_PROG_CC_FOR_BUILD
@@ -109,12 +114,15 @@ AC_CACHE_CHECK([for m4 that supports -P], [ac_cv_path_M4],
 AC_SUBST([M4], [$ac_cv_path_M4])
 AC_DEFINE_UNQUOTED([M4], ["$M4"], [Define to the m4 executable name.])
 
-AC_PATH_PROG([INDENT], indent, [\${top_srcdir}/build-aux/missing indent])
-  AC_MSG_CHECKING(if $INDENT is GNU indent)
-  AS_IF([$INDENT --version 2>/dev/null | head -n 1 | grep "GNU indent" >/dev/null],
-    [AC_MSG_RESULT(yes)],
-    [AC_MSG_RESULT(no)
-     AC_MSG_WARN($INDENT does not appear to be GNU indent; 'make indent' may not function properly)
+AC_PATH_PROG([INDENT], indent)
+  AS_IF([test -n "$INDENT"], [
+    AC_MSG_CHECKING(whether $INDENT is GNU indent)
+    AS_IF([$INDENT --version 2>/dev/null | $GREP "GNU indent" >/dev/null],
+      [AC_MSG_RESULT(yes)],
+      [AC_MSG_RESULT(no)
+       AC_MSG_WARN($INDENT does not appear to be GNU indent; 'make indent' may not function properly)
+       INDENT="\${top_srcdir}/build-aux/missing indent"
+      ])
     ])
 
 # checks for headers
