@@ -12,30 +12,32 @@
 set -eu
 
 DEBUG=0
+M4='m4'
 SRCDIR="."
 TEXTFILES=0
 
-while getopts di:t OPTION ; do
+while getopts di:m:t OPTION ; do
     case $OPTION in
         d) DEBUG=1 ;;
 		i) SRCDIR="${OPTARG}" ;;
+        m) M4="${OPTARG}";;
 		t) TEXTFILES=1 ;;
-        *) echo "Usage: ${0} [-d]"
+        *) echo "Usage: ${0} [-d] [-t] [-i SRCDIR] [-m M4]"
            exit 1
            ;;
     esac
 done
 
 shift $((OPTIND-1))
-testfile=$1
+testfile="$1"
 outdev=
 filter=
 if [ "${DEBUG}" = "0" ] ; then
     outdev="${testfile}"
-	filter=m4
+	filter="${M4}"
 else
     outdev=/dev/stdout
-	filter=cat
+	filter='cat'
 fi
 
 trap 'rm -f /tmp/testmaker$$' EXIT INT QUIT
@@ -113,7 +115,7 @@ m4def() {
 
 if [ "${outdev}" != /dev/stdout ] && [ "${TEXTFILES}" = "1" ]
 then
-    if [ ! -f "${stem}.txt" ] ; then 
+    if [ ! -f "${stem}.txt" ] ; then
 	    echo "Overwriting ${SRCDIR}/${stem}.txt"
     fi
     sed <"${SRCDIR}/${stem}.rules" -e "1,/###/d" >"${SRCDIR}/${stem}.txt"

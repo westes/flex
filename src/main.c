@@ -191,7 +191,7 @@ int flex_main (int argc, char *argv[])
 		else
 		    visible_define ( "M4_MODE_NO_NULTRANS_FULLSPD");
 	}
-	
+
 	comment("END of m4 controls\n");
 	out ("\n");
 
@@ -707,7 +707,7 @@ void flexinit (int argc, char **argv)
 	tablesfilename = tablesname = NULL;
 
 	sawcmpflag = false;
-	
+
 	/* Initialize dynamic array for holding the rule actions. */
 	action_size = 2048;	/* default size of action array in bytes */
 	action_array = allocate_character_array (action_size);
@@ -1584,7 +1584,7 @@ void readin (void)
 
 	if (ctrl.yyterminate != NULL)
 	    visible_define_str("M4_MODE_YYTERMINATE", ctrl.yyterminate);
-	
+
 	if (ctrl.no_yypanic)
 		visible_define("M4_YY_NO_YYPANIC");
 	if (ctrl.no_yy_push_state)
@@ -1752,7 +1752,7 @@ void usage (void)
 		  "  -b, --backup            write backing-up information to %s\n"
 		  "  -p, --perf-report       write performance report to stderr\n"
 		  "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
-		  "  -T, --env.trace             %s should run in env.trace mode\n"
+		  "  -T, --trace             %s should run in trace mode\n"
 		  "  -w, --nowarn            do not generate warnings\n"
 		  "  -v, --verbose           write summary of scanner statistics to stdout\n"
 		  "      --hex               use hexadecimal numbers instead of octal in debug outputs\n"

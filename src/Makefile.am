@@ -1,9 +1,10 @@
 AM_YFLAGS = -d
+AM_CFLAGS   = $(WARNINGFLAGS)
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
 LIBS = @LIBS@
 pkgconfigdir = @pkgconfigdir@
 
-m4 = @M4@
+M4 = @M4@
 
 bin_PROGRAMS = flex
 if ENABLE_BOOTSTRAP
@@ -19,13 +20,12 @@ libfl_la_SOURCES = \
 	libyywrap.c
 libfl_la_LDFLAGS = -version-info @SHARED_VERSION_INFO@
 
-stage1flex_SOURCES = \
-	scan.l \
-	$(COMMON_SOURCES)
+stage1flex_SOURCES = scan.l
 
 if CROSS
 stage1flex_LDADD =
 stage1flex_SOURCES += \
+          $(COMMON_SOURCES) \
 		      ../lib/malloc.c \
 		      ../lib/realloc.c
 stage1flex_LINK = $(LIBTOOL) --tag=CC --mode=link $(CC_FOR_BUILD) \
@@ -37,18 +37,18 @@ $(stage1flex_OBJECTS): CPP=$(CPP_FOR_BUILD)
 $(stage1flex_OBJECTS): CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
 $(stage1flex_OBJECTS): LDFLAGS=$(LDFLAGS_FOR_BUILD)
 else
-stage1flex_LDADD = $(LDADD)
 stage1flex_LINK = $(LINK)
 stage1flex_CFLAGS = $(AM_CFLAGS)
+stage1flex_LDADD     = libflex.a $(LDADD)
 endif
 
-flex_SOURCES = \
-	$(COMMON_SOURCES)
+nodist_flex_SOURCES  = stage1scan.c
+flex_LDADD           = libflex.a $(LDADD)
+flex_CFLAGS          = $(AM_CFLAGS)
 
-nodist_flex_SOURCES = \
-	stage1scan.c
-
-flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
+noinst_LIBRARIES     = libflex.a
+libflex_a_SOURCES    = $(COMMON_SOURCES)
+libflex_a_CFLAGS     = $(AM_CFLAGS)
 
 COMMON_SOURCES = \
 	buf.c \
@@ -82,8 +82,6 @@ COMMON_SOURCES = \
 
 LDADD = $(LIBOBJS) @LIBINTL@
 
-$(LIBOBJS): $(LIBOBJDIR)$(am__dirstamp)
-
 include_HEADERS = \
 	FlexLexer.h
 
@@ -95,57 +93,48 @@ EXTRA_DIST = \
 	gettext.h \
 	chkskel.sh
 
-CLEANFILES = stage1scan.c stage1flex$(EXEEXT)
+CLEANFILES = stage1scan.c scan.c $(BUILT_SOURCES)
 
-BUILT_SOURCES = \
+BUILT_SOURCES = $(SKELINCLUDES) \
+    $(BISON_BUILTSOURCES)
+
+if HAVE_BISON
+BISON_BUILTSOURCES = parse.h parse.c
+endif
+
+SKELINCLUDES = \
 	cpp-flex.h \
 	c99-flex.h \
 	go-flex.h
 
-clean-local:
-	rm -f $(BUILT_SOURCES)
 
 cpp-flex.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
-	$(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(m4) $(VERSION) > $@.tmp
-	$(SHELL) $(srcdir)/chkskel.sh $@.tmp
-	mv -f $@.tmp $@
+	$(AM_V_GEN) $(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(M4) $(VERSION) > $@.tmp && \
+		$(SHELL) $(srcdir)/chkskel.sh $@.tmp && \
+		mv -f $@.tmp $@
 
 c99-flex.h: c99-flex.skl mkskel.sh
-	$(SHELL) $(srcdir)/mkskel.sh c99 $(srcdir) $(m4) $(VERSION) > $@.tmp
-	$(SHELL) $(srcdir)/chkskel.sh $@.tmp
-	mv -f $@.tmp $@
+	$(AM_V_GEN) $(SHELL) $(srcdir)/mkskel.sh c99 $(srcdir) $(M4) $(VERSION) > $@.tmp && \
+		$(SHELL) $(srcdir)/chkskel.sh $@.tmp && \
+		mv -f $@.tmp $@
 
 go-flex.h: go-flex.skl mkskel.sh
-	$(SHELL) $(srcdir)/mkskel.sh go $(srcdir) $(m4) $(VERSION) > $@.tmp
-	$(SHELL) $(srcdir)/chkskel.sh $@.tmp
-	mv -f $@.tmp $@
+	$(AM_V_GEN) $(SHELL) $(srcdir)/mkskel.sh go $(srcdir) $(M4) $(VERSION) > $@.tmp && \
+		$(SHELL) $(srcdir)/chkskel.sh $@.tmp && \
+		mv -f $@.tmp $@
 
 if ENABLE_BOOTSTRAP
 stage1scan.c: scan.l stage1flex$(EXEEXT)
-	./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $(srcdir)/scan.l
+	$(AM_V_GEN) ./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $(srcdir)/scan.l
 else
 stage1scan.c: scan.c
-	sed 's|^\(#line .*\)"'`printf %s $< | sed 's|[][\\\\.*]|\\\\&|g'`'"|\1"$@"|g' $< > $@
+	$(AM_V_GEN) $(SED) 's|^\(#line .*\)"'`printf %s $< | $(SED) 's|[][\\\\.*]|\\\\&|g'`'"|\1"$@"|g' $< > $@
 endif
 
 dist-hook: scan.l flex$(EXEEXT)
 	chmod u+w $(distdir) && \
 	./flex$(EXEEXT) -o scan.c $< && \
 	mv -f scan.c $(distdir)
-
-# make needs to be told to make inclusions so that parallelized runs will
-# not fail.
-
-SKELINCLUDES := $(subst skl,h,$(wildcard *.skl))
-
-stage1flex-main.$(OBJEXT): parse.h $(SKELINCLUDES)
-flex-main.$(OBJEXT): parse.h $(SKELINCLUDES)
-
-stage1flex-yylex.$(OBJEXT): parse.h $(SKELINCLUDES)
-flex-yylex.$(OBJEXT): parse.h $(SKELINCLUDES)
-
-stage1flex-scan.$(OBJEXT): parse.h $(SKELINCLUDES)
-flex-stage1scan.$(OBJEXT): parse.h $(SKELINCLUDES)
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #

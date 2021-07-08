@@ -25,17 +25,16 @@
 # autoconf requirements and initialization
 
 AC_INIT([the fast lexical analyser generator],[2.6.4],[flex-help@lists.sourceforge.net],[flex])
-AC_PREREQ([2.60])
+AC_PREREQ([2.69])
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_USE_SYSTEM_EXTENSIONS
 LT_INIT
-AM_INIT_AUTOMAKE([1.15 -Wno-portability foreign std-options dist-lzip parallel-tests subdir-objects])
-AC_CONFIG_HEADER([src/config.h])
+AM_INIT_AUTOMAKE([1.16 -Wno-portability foreign std-options dist-lzip parallel-tests subdir-objects])
+AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_MACRO_DIR([m4])
-SHARED_VERSION_INFO="2:0:0"
-AC_SUBST(SHARED_VERSION_INFO)
+AC_SUBST([SHARED_VERSION_INFO],[2:0:0])
 
 # checks for programs
 
@@ -51,13 +50,11 @@ AM_PROG_LEX
 AC_PROG_CC
 AX_PROG_CC_FOR_BUILD
 AC_PROG_CXX
-AM_PROG_CC_C_O
 AC_PROG_LN_S
 AC_PROG_AWK
 AC_PROG_INSTALL
 
-pkgconfigdir=${libdir}/pkgconfig
-AC_SUBST(pkgconfigdir)
+AC_SUBST([pkgconfigdir],['$(libdir)/pkgconfig'])
 
 # allow passing a variable `WARNINGFLAGS',
 #   either when invoking `configure', or when invoking `make'
@@ -67,7 +64,7 @@ AC_ARG_ENABLE([warnings],
   [AS_HELP_STRING([--enable-warnings],
                   [enable a bunch of compiler warning flags (defaults to GCC warning flags).])],
   [AS_IF([test "x$GCC" = xyes],
-    [ : ${WARNINGFLAGS="-Wall -Wextra -Wmissing-prototypes -Wstrict-prototypes -Wnested-externs -Wold-style-definition -Wredundant-decls -Wconversion -Wno-unused-but-set-variable"} ])])
+    [ : ${WARNINGFLAGS="-Wall -Wextra -pedantic -Wmissing-prototypes -Wstrict-prototypes -Wnested-externs -Wold-style-definition -Wredundant-decls -Wconversion"} ])])
 
 AC_SUBST([WARNINGFLAGS])
 
@@ -107,7 +104,7 @@ AC_CACHE_CHECK([for m4 that supports -P], [ac_cv_path_M4],
                 && ac_cv_path_M4=$ac_path_M4 ac_path_M4_found=:]],
               [AC_MSG_ERROR([could not find m4 that supports -P])])])
 AC_SUBST([M4], [$ac_cv_path_M4])
-AC_DEFINE_UNQUOTED([M4], ["$M4"], [Define to the m4 executable name.])
+AC_DEFINE_UNQUOTED([M4], ["$M4"], [Absolute path to the m4 executable.])
 
 AC_PATH_PROG([INDENT], indent, [\${top_srcdir}/build-aux/missing indent])
   AC_MSG_CHECKING(if $INDENT is GNU indent)
@@ -149,6 +146,9 @@ AC_TYPE_SIZE_T
 
 AC_FUNC_ALLOCA
 AC_FUNC_FORK
+AS_CASE(["$ac_cv_func_fork_works/$ac_cv_func_vfork_works"],['no/no'],
+  [AC_MSG_ERROR([flex does not compile on your system having no working `fork' and `vfork' as requirement])])
+
 dnl Autoconf bug: AC_FUNC_MALLOC and AC_FUNC_REALLOC might not warn of cross
 dnl compilation. Workaround this.
 AC_FUNC_MALLOC
