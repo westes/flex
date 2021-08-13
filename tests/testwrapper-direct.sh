@@ -4,6 +4,8 @@ set -euvx
 
 # testwrapper-direct.sh: run some specialized flex tests that care where
 # they're run from.
+BINARY_DIR="."
+SOURCE_DIR="."
 
 while getopts :b:s: OPTION ; do
     case $OPTION in
