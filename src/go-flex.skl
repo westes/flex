@@ -171,14 +171,14 @@ const int flexBufferSentinel = 0;
 
 /*
  * Amount of stuff to slurp up with each read.
- * We assume the stdio library has already 
- * chosen a fit size foe whatever platform 
+ * We assume the stdio library has already
+ * chosen a fit size foe whatever platform
  * we're running on.
  */
 const int flexReadBufferSize = BUFSIZ;
 
 /* Size of default input buffer. We want to be able to fit two
- * OS-level reads, but efficiency gains as the buffer size 
+ * OS-level reads, but efficiency gains as the buffer size
  * increases fall off after that
  */
 const int flexInputBufferSize =  m4_ifdef([[M4_MODE_YY_BUFSIZE]], [[M4_MODE_YY_BUFSIZE]], [[2 * flexReadBufferSize]]);
@@ -263,7 +263,7 @@ static const YY_CHAR yyEC[M4_HOOK_ECSTABLE_SIZE] = { 0,
 M4_HOOK_ECSTABLE_BODY[[]]m4_dnl
 };
 ]])
- 
+
 m4_ifdef([[M4_MODE_USEMECS]],[[m4_dnl
 /* Character meta-equivalence-class mappings */
 static const YY_CHAR yyMeta[M4_HOOK_MECSTABLE_SIZE] = { 0,
@@ -759,10 +759,10 @@ void yypop_buffer_state (FlexLexer *yyscanner)
  */
 void yyrestart(FILE * input_file, FlexLexer *yyscanner)
 {
-	
+
 	size_t newSize = 0;
 	yyStateType *newStateBuf = 0;
-	
+
 	if (yy_current_buffer(yyscanner) == NULL) {
 		yyensure_buffer_stack (yyscanner);
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] =
@@ -771,14 +771,14 @@ void yyrestart(FILE * input_file, FlexLexer *yyscanner)
 
 	yy_init_buffer(yyscanner->yyBufferStack[yyscanner->yyBufferStackTop], input_file, yyscanner);
 	yy_load_buffer_state(yyscanner);
-	
-m4_ifdef( [[M4_MODE_USES_REJECT]], [[        
+
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* Ensure the reject state buffer is large enough.
 	 */
 	if ( yyscanner->yyStateBufMax < (yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE) ) {
 		newSize = yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE;
 		newStateBuf = (yyStateType *)yyrealloc( yyscanner->yyStateBuf, (newSize * sizeof(yyStateType)), yyscanner );
-		
+
 		if ( newStateBuf == NULL ) {
 			yypanic( "out of dynamic memory in yylex()", yyscanner );
 		}
@@ -1468,14 +1468,14 @@ void yy_switch_to_buffer(yybuffer newBuffer, FlexLexer *yyscanner)
 
 	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] = newBuffer;
 	yy_load_buffer_state(yyscanner);
-	
+
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* Ensure the reject state buffer is large enough.
 	 */
 	if ( yyscanner->yyStateBufMax < (yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE) ) {
 		newSize = yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE;
 		newStateBuf = (yyStateType *)yyrealloc( yyscanner->yyStateBuf, (newSize * sizeof(yyStateType)), yyscanner );
-		
+
 		if ( newStateBuf == NULL ) {
 			yypanic( "out of dynamic memory in yylex()", yyscanner );
 		}
@@ -1986,7 +1986,7 @@ m4_ifdef([[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 							yyAct &= ~YY_TRAILING_HEAD_MASK;
 							break;
 						}
-					} else if ((yyAct & YY_TRAILING_MASK) != 0) { 
+					} else if ((yyAct & YY_TRAILING_MASK) != 0) {
 						yyscanner->yyLookingForTrailBegin = yyAct & ~YY_TRAILING_MASK;
 						yyscanner->yyLookingForTrailBegin |= YY_TRAILING_HEAD_MASK;
 m4_ifdef([[M4_MODE_REAL_REJECT]], [[

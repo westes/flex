@@ -87,7 +87,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]], [[m4_dnl
 #define M4_MODE_PREFIX[[HEADER_H]]
 #define M4_MODE_PREFIX[[IN_HEADER]] 1
 
-]])				
+]])
 m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 m4_ifdef([[M4_YY_NOT_REENTRANT]], [[
@@ -932,7 +932,7 @@ static const YY_CHAR * yy_ec = 0;
 ]])
 
 ]])
- 
+
 m4_ifdef( [[M4_MODE_USEMECS]],[[m4_dnl
 /* Character meta-equivalence-class mappings */
 m4_ifdef( [[M4_MODE_GENTABLES]],[[m4_dnl
@@ -1484,14 +1484,14 @@ m4_define( [[M4_YY_NO_TOP_STATE]])
 
 /*
  * Amount of stuff to slurp up with each read.
- * We assume the stdio library has already 
- * chosen a fit size foe whatever platform 
+ * We assume the stdio library has already
+ * chosen a fit size foe whatever platform
  * we're running on.
  */
 #define YY_READ_BUF_SIZE BUFSIZ
 
 /* Size of default input buffer. We want to be able to fit two
- * OS-level reads, but efficiency gains as the buffer size 
+ * OS-level reads, but efficiency gains as the buffer size
  * increases fall off after that
  */
 #ifndef YY_BUF_SIZE
@@ -1904,7 +1904,7 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 			YY_CURRENT_BUFFER_LVALUE =
 				yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG);
 		}
-		
+
 m4_ifdef( [[M4_MODE_USES_REJECT]],
 [[
 		/* Create the reject buffer large enough to save one state per allowed character.
@@ -2009,7 +2009,7 @@ m4_ifdef([[M4_MODE_VARIABLE_TRAILING_CONTEXT_RULES]], [[
 							yy_act &= ~YY_TRAILING_HEAD_MASK;
 							break;
 						}
-					} else if (( yy_act & YY_TRAILING_MASK) != 0) { 
+					} else if (( yy_act & YY_TRAILING_MASK) != 0) {
 						YY_G(yy_looking_for_trail_begin) = yy_act & ~YY_TRAILING_MASK;
 						YY_G(yy_looking_for_trail_begin) |= YY_TRAILING_HEAD_MASK;
 m4_ifdef([[M4_MODE_REAL_REJECT]], [[
@@ -2843,14 +2843,14 @@ void yyFlexLexer::yyrestart( std::istream& input_file )
 
 	yy_init_buffer( YY_CURRENT_BUFFER_LVALUE, input_file M4_YY_CALL_LAST_ARG);
 	yy_load_buffer_state( M4_YY_CALL_ONLY_ARG );
-	
-m4_ifdef( [[M4_MODE_USES_REJECT]], [[        
+
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* Ensure the reject state buffer is large enough.
 	 */
 	if ( YY_G(yy_state_buf_max) < (yy_current_buffer()->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
 		new_size = yy_current_buffer()->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
 		new_state_buf = (yy_state_type *)yyrealloc( YY_G(yy_state_buf), (new_size * sizeof(yy_state_type)) M4_YY_CALL_LAST_ARG );
-		
+
 		if ( new_state_buf == NULL ) {
 			YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
 		}
@@ -2917,14 +2917,14 @@ void yyFlexLexer::yy_switch_to_buffer( yybuffer new_buffer )
 
 	YY_CURRENT_BUFFER_LVALUE = new_buffer;
 	yy_load_buffer_state( M4_YY_CALL_ONLY_ARG );
-	
+
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* Ensure the reject state buffer is large enough.
 	 */
 	if ( YY_G(yy_state_buf_max) < (YY_CURRENT_BUFFER_LVALUE->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
 		new_size = YY_CURRENT_BUFFER_LVALUE->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
 		new_state_buf = (yy_state_type *)yyrealloc( YY_G(yy_state_buf), (new_size * sizeof(yy_state_type)) M4_YY_CALL_LAST_ARG );
-		
+
 		if ( new_state_buf == NULL ) {
 			YY_FATAL_ERROR( "out of dynamic memory in yylex()" );
 		}
