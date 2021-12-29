@@ -1140,6 +1140,12 @@ void flexinit (int argc, char **argv)
 		    case OPT_NO_YYSET_LLOC:
 			ctrl.no_yyset_lloc = true;
 			break;
+		    case OPT_NO_YYGET_DEBUG:
+			ctrl.no_get_debug = true;
+			break;
+		    case OPT_NO_YYSET_DEBUG:
+			ctrl.no_set_debug = true;
+			break;
 
 		    case OPT_HEX:
 			env.trace_hex = true;

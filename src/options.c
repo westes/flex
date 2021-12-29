@@ -287,6 +287,10 @@ optspec_t flexopts[] = {
 	,
 	{"--noyyset_lloc", OPT_NO_YYSET_LLOC, 0}
 	,
+	{"--noyyget_debug", OPT_NO_YYGET_DEBUG, 0}
+	,
+	{"--noyyset_debug", OPT_NO_YYSET_DEBUG, 0}
+	,
         {"--unsafe-no-m4-sect3-escape", OPT_NO_SECT3_ESCAPE, 0}
         ,
 	{0, 0, 0}		/* required final NULL entry. */
