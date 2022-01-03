@@ -1,56 +1,56 @@
 # Polish translation for flex.
-# Copyright (C) 2007, 2012 The Flex Project (msgids)
+# Copyright (C) 2007, 2012, 2021 The Flex Project (msgids)
 # This file is distributed under the same license as the flex package.
 #
-# Jakub Bogusz <qboosh@pld-linux.org>, 2003-2012.
+# Jakub Bogusz <qboosh@pld-linux.org>, 2003-2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: flex 2.5.36\n"
+"Project-Id-Version: flex 2.6.4\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-05-06 10:49-0400\n"
-"PO-Revision-Date: 2012-08-02 18:15+0200\n"
+"PO-Revision-Date: 2021-06-03 17:45+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 
 #: src/buf.c:79
 msgid "Allocation of buffer to print string failed"
-msgstr "Przydzielenie bufora do wypisania ³añcucha nie powiod³o siê"
+msgstr "Przydzielenie bufora do wypisania Å‚aÅ„cucha nie powiodÅ‚o siÄ™"
 
 #: src/buf.c:107
 msgid "Allocation of buffer for line directive failed"
-msgstr "Przydzielenie bufora dla dyrektywy linii nie powiod³o siê"
+msgstr "Przydzielenie bufora dla dyrektywy linii nie powiodÅ‚o siÄ™"
 
 #: src/buf.c:177
 msgid "Allocation of buffer for m4 def failed"
-msgstr "Przydzielenie bufora dla polecenia m4 def powiod³o siê"
+msgstr "Przydzielenie bufora dla polecenia m4 def powiodÅ‚o siÄ™"
 
 #: src/buf.c:198
 msgid "Allocation of buffer for m4 undef failed"
-msgstr "Przydzielenie bufora dla polecenia m4 undef powiod³o siê"
+msgstr "Przydzielenie bufora dla polecenia m4 undef powiodÅ‚o siÄ™"
 
 #: src/dfa.c:59
 #, c-format
 msgid "State #%d is non-accepting -\n"
-msgstr "Stan #%d jest nieakceptuj±cy -\n"
+msgstr "Stan #%d jest nieakceptujÄ…cy -\n"
 
 #: src/dfa.c:119
 msgid "dangerous trailing context"
-msgstr "niebezpieczny kontekst koñcowy"
+msgstr "niebezpieczny kontekst koÅ„cowy"
 
 #: src/dfa.c:159
 #, c-format
 msgid " associated rule line numbers:"
-msgstr " numery linii powi±zanych regu³:"
+msgstr " numery linii powiÄ…zanych reguÅ‚:"
 
 #: src/dfa.c:193
 #, c-format
 msgid " out-transitions: "
-msgstr " przej¶cia-wyj¶ciowe: "
+msgstr " przejÅ›cia-wyjÅ›ciowe: "
 
 #: src/dfa.c:201
 #, c-format
@@ -59,11 +59,11 @@ msgid ""
 " jam-transitions: EOF "
 msgstr ""
 "\n"
-" przej¶cia-zapêtlaj±ce: EOF "
+" przejÅ›cia-zapÄ™tlajÄ…ce: EOF "
 
 #: src/dfa.c:331
 msgid "consistency check failed in epsclosure()"
-msgstr "kontrola spójno¶ci nie powiod³a siê w epsclosure()"
+msgstr "kontrola spÃ³jnoÅ›ci nie powiodÅ‚a siÄ™ w epsclosure()"
 
 #: src/dfa.c:419
 msgid ""
@@ -79,7 +79,7 @@ msgstr ""
 
 #: src/dfa.c:587
 msgid "could not create unique end-of-buffer state"
-msgstr "nie mo¿na utworzyæ unikalnego stanu koñca bufora"
+msgstr "nie moÅ¼na utworzyÄ‡ unikalnego stanu koÅ„ca bufora"
 
 #: src/dfa.c:608
 #, c-format
@@ -88,11 +88,11 @@ msgstr "stan # %d:\n"
 
 #: src/dfa.c:768
 msgid "Could not write yynxt_tbl[][]"
-msgstr "Nie mo¿na zapisaæ yynxt_tbl[][]"
+msgstr "Nie moÅ¼na zapisaÄ‡ yynxt_tbl[][]"
 
 #: src/dfa.c:1028
 msgid "bad transition character detected in sympartition()"
-msgstr "wykryto b³êdny znak przej¶cia w sympartition()"
+msgstr "wykryto bÅ‚Ä™dny znak przejÅ›cia w sympartition()"
 
 #: src/gen.c:480
 msgid ""
@@ -103,7 +103,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Klasy równowa¿no¶ci:\n"
+"Klasy rÃ³wnowaÅ¼noÅ›ci:\n"
 "\n"
 
 #: src/gen.c:669 src/gen.c:698 src/gen.c:1218
@@ -118,15 +118,15 @@ msgstr "stan # %d akceptuje: "
 
 #: src/gen.c:1162
 msgid "Could not write yyacclist_tbl"
-msgstr "Nie mo¿na zapisaæ yyacclist_tbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ yyacclist_tbl"
 
 #: src/gen.c:1236
 msgid "Could not write yyacc_tbl"
-msgstr "Nie mo¿na zapisaæ yyacc_tbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ yyacc_tbl"
 
 #: src/gen.c:1251 src/gen.c:1623 src/gen.c:1646
 msgid "Could not write ecstbl"
-msgstr "Nie mo¿na zapisaæ ecstbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ ecstbl"
 
 #: src/gen.c:1271
 msgid ""
@@ -136,178 +136,178 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Klasy meta-równowa¿no¶ci:\n"
+"Klasy meta-rÃ³wnowaÅ¼noÅ›ci:\n"
 
 #: src/gen.c:1293
 msgid "Could not write yymeta_tbl"
-msgstr "Nie mo¿na zapisaæ yymeta_tbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ yymeta_tbl"
 
 #: src/gen.c:1352
 msgid "Could not write yybase_tbl"
-msgstr "Nie mo¿na zapisaæ yybase_tbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ yybase_tbl"
 
 #: src/gen.c:1384
 msgid "Could not write yydef_tbl"
-msgstr "Nie mo¿na zapisaæ yydef_tbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ yydef_tbl"
 
 #: src/gen.c:1422
 msgid "Could not write yynxt_tbl"
-msgstr "Nie mo¿na zapisaæ yynxt_tbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ yynxt_tbl"
 
 #: src/gen.c:1456
 msgid "Could not write yychk_tbl"
-msgstr "Nie mo¿na zapisaæ yychk_tbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ yychk_tbl"
 
 #: src/gen.c:1608 src/gen.c:1637
 msgid "Could not write ftbl"
-msgstr "Nie mo¿na zapisaæ ftbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ ftbl"
 
 #: src/gen.c:1614
 msgid "Could not write ssltbl"
-msgstr "Nie mo¿na zapisaæ ssltbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ ssltbl"
 
 #: src/gen.c:1665
 msgid "Could not write eoltbl"
-msgstr "Nie mo¿na zapisaæ eoltbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ eoltbl"
 
 #: src/gen.c:1722
 msgid "Could not write yynultrans_tbl"
-msgstr "Nie mo¿na zapisaæ yynultrans_tbl"
+msgstr "Nie moÅ¼na zapisaÄ‡ yynultrans_tbl"
 
 #: src/main.c:178
 msgid "rule cannot be matched"
-msgstr "nie mo¿na dopasowaæ regu³y"
+msgstr "nie moÅ¼na dopasowaÄ‡ reguÅ‚y"
 
 #: src/main.c:183
 msgid "-s option given but default rule can be matched"
-msgstr "podano opcjê -s, ale domy¶lna regu³a mo¿e byæ dopasowana"
+msgstr "podano opcjÄ™ -s, ale domyÅ›lna reguÅ‚a moÅ¼e byÄ‡ dopasowana"
 
 #: src/main.c:221
 msgid "Can't use -+ with -l option"
-msgstr "Nie mo¿na u¿yæ -+ z opcj± -l"
+msgstr "Nie moÅ¼na uÅ¼yÄ‡ -+ z opcjÄ… -l"
 
 #: src/main.c:224
 msgid "Can't use -f or -F with -l option"
-msgstr "Nie mo¿na u¿yæ -f ani -F z opcj± -l"
+msgstr "Nie moÅ¼na uÅ¼yÄ‡ -f ani -F z opcjÄ… -l"
 
 #: src/main.c:228
 msgid "Can't use --reentrant or --bison-bridge with -l option"
-msgstr "Nie mo¿na u¿yæ --reentrant ani --bison-bridge z opcj± -l"
+msgstr "Nie moÅ¼na uÅ¼yÄ‡ --reentrant ani --bison-bridge z opcjÄ… -l"
 
 #: src/main.c:260
 msgid "-Cf/-CF and -Cm don't make sense together"
-msgstr "-Cf/-CF i -Cm razem nie maj± sensu"
+msgstr "-Cf/-CF i -Cm razem nie majÄ… sensu"
 
 #: src/main.c:263
 msgid "-Cf/-CF and -I are incompatible"
-msgstr "-Cf/-CF i -I s± niekompatybilne"
+msgstr "-Cf/-CF i -I sÄ… niekompatybilne"
 
 #: src/main.c:267
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF s± niekompatybilne z trybem kompatybilno¶ci z leksem"
+msgstr "-Cf/-CF sÄ… niekompatybilne z trybem kompatybilnoÅ›ci z leksem"
 
 #: src/main.c:272
 msgid "-Cf and -CF are mutually exclusive"
-msgstr "-Cf i -CF wykluczaj± siê wzajemnie"
+msgstr "-Cf i -CF wykluczajÄ… siÄ™ wzajemnie"
 
 #: src/main.c:276
 msgid "Can't use -+ with -CF option"
-msgstr "Nie mo¿na u¿yæ -+ z opcj± -CF"
+msgstr "Nie moÅ¼na uÅ¼yÄ‡ -+ z opcjÄ… -CF"
 
 #: src/main.c:279
 #, c-format
 msgid "%array incompatible with -+ option"
-msgstr "%array jest niekompatybilne z opcj± -+"
+msgstr "%array jest niekompatybilne z opcjÄ… -+"
 
 #: src/main.c:284
 msgid "Options -+ and --reentrant are mutually exclusive."
-msgstr "Opcje -+ i --reentrant wykluczaj± siê wzajemnie."
+msgstr "Opcje -+ i --reentrant wykluczajÄ… siÄ™ wzajemnie."
 
 #: src/main.c:287
 msgid "bison bridge not supported for the C++ scanner."
-msgstr "pomost dla bisona nie jest obs³ugiwany dla skanera C++."
+msgstr "pomost dla bisona nie jest obsÅ‚ugiwany dla skanera C++."
 
 #: src/main.c:336 src/main.c:419
 #, c-format
 msgid "could not create %s"
-msgstr "nie mo¿na utworzyæ %s"
+msgstr "nie moÅ¼na utworzyÄ‡ %s"
 
 #: src/main.c:431
 msgid "could not write tables header"
-msgstr "nie mo¿na zapisaæ nag³ówka tablic"
+msgstr "nie moÅ¼na zapisaÄ‡ nagÅ‚Ã³wka tablic"
 
 #: src/main.c:435
 #, c-format
 msgid "can't open skeleton file %s"
-msgstr "nie mo¿na otworzyæ pliku szablonu %s"
+msgstr "nie moÅ¼na otworzyÄ‡ pliku szablonu %s"
 
 #: src/main.c:450
 msgid "Prefix cannot include '[' or ']'"
-msgstr ""
+msgstr "Prefiks nie moÅ¼e zawieraÄ‡ '[' ani ']'"
 
 #: src/main.c:474
 msgid "allocation of macro definition failed"
-msgstr "przydzielenie pamiêci dla definicji makra nie powiod³o siê"
+msgstr "przydzielenie pamiÄ™ci dla definicji makra nie powiodÅ‚o siÄ™"
 
 #: src/main.c:521
 #, c-format
 msgid "input error reading skeleton file %s"
-msgstr "b³±d wej¶cia podczas odczytu pliku szablonu %s"
+msgstr "bÅ‚Ä…d wejÅ›cia podczas odczytu pliku szablonu %s"
 
 #: src/main.c:525
 #, c-format
 msgid "error closing skeleton file %s"
-msgstr "b³±d podczas zamykania pliku szablonu %s"
+msgstr "bÅ‚Ä…d podczas zamykania pliku szablonu %s"
 
 #: src/main.c:709
 #, c-format
 msgid "error creating header file %s"
-msgstr "b³±d podczas tworzenia pliku nag³ówkowego %s"
+msgstr "bÅ‚Ä…d podczas tworzenia pliku nagÅ‚Ã³wkowego %s"
 
 #: src/main.c:717
 #, c-format
 msgid "error writing output file %s"
-msgstr "b³±d podczas zapisu pliku wyj¶ciowego %s"
+msgstr "bÅ‚Ä…d podczas zapisu pliku wyjÅ›ciowego %s"
 
 #: src/main.c:721
 #, c-format
 msgid "error closing output file %s"
-msgstr "b³±d podczas zamykania pliku wyj¶ciowego %s"
+msgstr "bÅ‚Ä…d podczas zamykania pliku wyjÅ›ciowego %s"
 
 #: src/main.c:725
 #, c-format
 msgid "error deleting output file %s"
-msgstr "b³±d podczas usuwania pliku wyj¶ciowego %s"
+msgstr "bÅ‚Ä…d podczas usuwania pliku wyjÅ›ciowego %s"
 
 #: src/main.c:732
 #, c-format
 msgid "No backing up.\n"
-msgstr "Bez zapamiêtywania.\n"
+msgstr "Bez zapamiÄ™tywania.\n"
 
 #: src/main.c:736
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
-msgstr "%d zapamiêtywanych stanów (nie akceptuj±cych).\n"
+msgstr "%d zapamiÄ™tywanych stanÃ³w (nie akceptujÄ…cych).\n"
 
 #: src/main.c:740
 #, c-format
 msgid "Compressed tables always back up.\n"
-msgstr "Skompresowane tablice zawsze zapamiêtuj±.\n"
+msgstr "Skompresowane tablice zawsze zapamiÄ™tujÄ….\n"
 
 #: src/main.c:743
 #, c-format
 msgid "error writing backup file %s"
-msgstr "b³±d podczas zapisu pliku raportu z zapamiêtywania %s"
+msgstr "bÅ‚Ä…d podczas zapisu pliku raportu z zapamiÄ™tywania %s"
 
 #: src/main.c:747
 #, c-format
 msgid "error closing backup file %s"
-msgstr "b³±d podczas zamykania pliku raportu z zapamiêtywania %s"
+msgstr "bÅ‚Ä…d podczas zamykania pliku raportu z zapamiÄ™tywania %s"
 
 #: src/main.c:752
 #, c-format
 msgid "%s version %s usage statistics:\n"
-msgstr "%s w wersji %s - statystyka u¿ycia:\n"
+msgstr "%s w wersji %s - statystyka uÅ¼ycia:\n"
 
 #: src/main.c:755
 #, c-format
@@ -317,113 +317,112 @@ msgstr "  opcje skanera: -"
 #: src/main.c:834
 #, c-format
 msgid "  %d/%d NFA states\n"
-msgstr "  %d/%d stanów NFA\n"
+msgstr "  %d/%d stanÃ³w NFA\n"
 
 #: src/main.c:836
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
-msgstr "  %d/%d stanów DFA (%d s³ów)\n"
+msgstr "  %d/%d stanÃ³w DFA (%d sÅ‚Ã³w)\n"
 
 #: src/main.c:838
 #, c-format
 msgid "  %d rules\n"
-msgstr "  %d regu³\n"
+msgstr "  %d reguÅ‚\n"
 
 #: src/main.c:843
 #, c-format
 msgid "  No backing up\n"
-msgstr "  Bez zapamiêtywania\n"
+msgstr "  Bez zapamiÄ™tywania\n"
 
 #: src/main.c:847
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
-msgstr "  %d zapamiêtywanych stanów (nie akceptuj±cych)\n"
+msgstr "  %d zapamiÄ™tywanych stanÃ³w (nie akceptujÄ…cych)\n"
 
 #: src/main.c:852
 #, c-format
 msgid "  Compressed tables always back-up\n"
-msgstr "  Skompresowane tablice zawsze zapamiêtuj±\n"
+msgstr "  Skompresowane tablice zawsze zapamiÄ™tujÄ…\n"
 
 #: src/main.c:856
 #, c-format
 msgid "  Beginning-of-line patterns used\n"
-msgstr "  U¿ytych wzorców pocz±tek-linii\n"
+msgstr "  UÅ¼ytych wzorcÃ³w poczÄ…tek-linii\n"
 
 #: src/main.c:858
 #, c-format
 msgid "  %d/%d start conditions\n"
-msgstr "  %d/%d warunków pocz±tkowych\n"
+msgstr "  %d/%d warunkÃ³w poczÄ…tkowych\n"
 
 #: src/main.c:862
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
-msgstr "  %d stanów epsilonowych, %d stanów podwójnie epsilonowych\n"
+msgstr "  %d stanÃ³w epsilonowych, %d stanÃ³w podwÃ³jnie epsilonowych\n"
 
 #: src/main.c:866
 #, c-format
 msgid "  no character classes\n"
-msgstr "  bez klas znaków\n"
+msgstr "  bez klas znakÃ³w\n"
 
 #: src/main.c:870
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-msgstr ""
-"  %d/%d klas znaków potrzebuje %d/%d s³ów pamiêci, %d ponownie u¿ytych\n"
+msgstr "  %d/%d klas znakÃ³w potrzebuje %d/%d sÅ‚Ã³w pamiÄ™ci, %d ponownie uÅ¼ytych\n"
 
 #: src/main.c:875
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
-msgstr "  %d utworzonych par stan/nastêpny-stan\n"
+msgstr "  %d utworzonych par stan/nastÄ™pny-stan\n"
 
 #: src/main.c:878
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
-msgstr "  %d/%d przej¶æ unikalny/duplikat\n"
+msgstr "  %d/%d przejÅ›Ä‡ unikalny/duplikat\n"
 
 #: src/main.c:883
 #, c-format
 msgid "  %d table entries\n"
-msgstr "  %d elementów tablicy\n"
+msgstr "  %d elementÃ³w tablicy\n"
 
 #: src/main.c:891
 #, c-format
 msgid "  %d/%d base-def entries created\n"
-msgstr "  %d/%d utworzonych elementów base-def\n"
+msgstr "  %d/%d utworzonych elementÃ³w base-def\n"
 
 #: src/main.c:895
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
-msgstr "  %d/%d (maksymalnie %d) utworzonych elementów nxt-chk\n"
+msgstr "  %d/%d (maksymalnie %d) utworzonych elementÃ³w nxt-chk\n"
 
 #: src/main.c:899
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
-msgstr "  %d/%d (maksymalnie %d) utworzonych szablonowych elementów nxt-chk\n"
+msgstr "  %d/%d (maksymalnie %d) utworzonych szablonowych elementÃ³w nxt-chk\n"
 
 #: src/main.c:903
 #, c-format
 msgid "  %d empty table entries\n"
-msgstr "  %d pustych elementów tablicy\n"
+msgstr "  %d pustych elementÃ³w tablicy\n"
 
 #: src/main.c:905
 #, c-format
 msgid "  %d protos created\n"
-msgstr "  %d utworzonych prototypów\n"
+msgstr "  %d utworzonych prototypÃ³w\n"
 
 #: src/main.c:908
 #, c-format
 msgid "  %d templates created, %d uses\n"
-msgstr "  %d utworzonych szablonów, %d u¿yæ\n"
+msgstr "  %d utworzonych szablonÃ³w, %d uÅ¼yÄ‡\n"
 
 #: src/main.c:916
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
-msgstr "  %d/%d utworzonych klas równowa¿no¶ci\n"
+msgstr "  %d/%d utworzonych klas rÃ³wnowaÅ¼noÅ›ci\n"
 
 #: src/main.c:924
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
-msgstr "  %d/%d utworzonych klas meta-równowa¿no¶ci\n"
+msgstr "  %d/%d utworzonych klas meta-rÃ³wnowaÅ¼noÅ›ci\n"
 
 #: src/main.c:930
 #, c-format
@@ -433,22 +432,22 @@ msgstr "  %d (%d zachowanych) kolizji haszy, %d jednakowych DFA\n"
 #: src/main.c:932
 #, c-format
 msgid "  %d sets of reallocations needed\n"
-msgstr "  %d potrzebnych zbiorów realokacji\n"
+msgstr "  %d potrzebnych zbiorÃ³w realokacji\n"
 
 #: src/main.c:934
 #, c-format
 msgid "  %d total table entries needed\n"
-msgstr "  %d potrzebnych ogó³em elementów tablicy\n"
+msgstr "  %d potrzebnych ogÃ³Å‚em elementÃ³w tablicy\n"
 
 #: src/main.c:1008
 #, c-format
 msgid "Internal error. flexopts are malformed.\n"
-msgstr "B³±d wewnêtrzny. ¬le sformu³owane flexopts.\n"
+msgstr "BÅ‚Ä…d wewnÄ™trzny. Å¹le sformuÅ‚owane flexopts.\n"
 
 #: src/main.c:1018
 #, c-format
 msgid "Try `%s --help' for more information.\n"
-msgstr "`%s --help' poda wiêcej informacji.\n"
+msgstr "`%s --help' poda wiÄ™cej informacji.\n"
 
 #: src/main.c:1075
 #, c-format
@@ -462,78 +461,73 @@ msgstr "%s %s\n"
 
 #: src/main.c:1476
 msgid "fatal parse error"
-msgstr "krytyczny b³±d analizy sk³adni"
+msgstr "krytyczny bÅ‚Ä…d analizy skÅ‚adni"
 
 #: src/main.c:1508
 #, c-format
 msgid "could not create backing-up info file %s"
-msgstr "nie mo¿na utworzyæ pliku informacji o zapamiêtywaniu %s"
+msgstr "nie moÅ¼na utworzyÄ‡ pliku informacji o zapamiÄ™tywaniu %s"
 
 #: src/main.c:1529
 #, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr "opcja -l zgodno¶ci z leksem AT&T powoduje du¿± stratê wydajno¶ci\n"
+msgstr "opcja -l zgodnoÅ›ci z leksem AT&T powoduje duÅ¼Ä… stratÄ™ wydajnoÅ›ci\n"
 
 #: src/main.c:1532
 #, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
-msgstr " i mo¿e byæ przyczyn± innych zg³aszanych strat wydajno¶ci\n"
+msgstr " i moÅ¼e byÄ‡ przyczynÄ… innych zgÅ‚aszanych strat wydajnoÅ›ci\n"
 
 #: src/main.c:1538
 #, c-format
-msgid ""
-"%%option yylineno entails a performance penalty ONLY on rules that can match "
-"newline characters\n"
-msgstr ""
-"%%option yylineno powoduje straty wydajno¶ci TYLKO dla regu³ dopasowuj±cych "
-"znak koñca linii\n"
+msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "%%option yylineno powoduje straty wydajnoÅ›ci TYLKO dla reguÅ‚ dopasowujÄ…cych znak koÅ„ca linii\n"
 
 #: src/main.c:1545
 #, c-format
 msgid "-I (interactive) entails a minor performance penalty\n"
-msgstr "-I (interaktywny) powoduje ma³± stratê wydajno¶ci\n"
+msgstr "-I (interaktywny) powoduje maÅ‚Ä… stratÄ™ wydajnoÅ›ci\n"
 
 #: src/main.c:1550
 #, c-format
 msgid "yymore() entails a minor performance penalty\n"
-msgstr "yymore() powoduje ma³± stratê wydajno¶ci\n"
+msgstr "yymore() powoduje maÅ‚Ä… stratÄ™ wydajnoÅ›ci\n"
 
 #: src/main.c:1556
 #, c-format
 msgid "REJECT entails a large performance penalty\n"
-msgstr "REJECT powoduje du¿± stratê wydajno¶ci\n"
+msgstr "REJECT powoduje duÅ¼Ä… stratÄ™ wydajnoÅ›ci\n"
 
 #: src/main.c:1561
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
-"Regu³y ze zmiennym koñcowym kontekstem powoduj± du¿± stratê wydajno¶ci\n"
+msgstr "ReguÅ‚y ze zmiennym koÅ„cowym kontekstem powodujÄ… duÅ¼Ä… stratÄ™ wydajnoÅ›ci\n"
 
 #: src/main.c:1573
 msgid "REJECT cannot be used with -f or -F"
-msgstr "REJECT nie mo¿e byæ u¿yte z -f ani -F"
+msgstr "REJECT nie moÅ¼e byÄ‡ uÅ¼yte z -f ani -F"
 
 #: src/main.c:1576
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
-msgstr "%option yylineno nie mo¿e byæ u¿yte z REJECT"
+msgstr "%option yylineno nie moÅ¼e byÄ‡ uÅ¼yte z REJECT"
 
 #: src/main.c:1579
 msgid "variable trailing context rules cannot be used with -f or -F"
-msgstr "regu³y ze zmiennym koñcowym kontekstem nie mog± byæ u¿yte z -f ani -F"
+msgstr "reguÅ‚y ze zmiennym koÅ„cowym kontekstem nie mogÄ… byÄ‡ uÅ¼yte z -f ani -F"
 
 #: src/main.c:1704
 #, c-format
 msgid "%option yyclass only meaningful for C++ scanners"
-msgstr "%option yyclass ma znaczenie tylko dla skanerów C++"
+msgstr "%option yyclass ma znaczenie tylko dla skanerÃ³w C++"
 
 #: src/main.c:1791
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
-msgstr "Sk³adnia: %s [OPCJE] [PLIK]...\n"
+msgstr "SkÅ‚adnia: %s [OPCJE] [PLIK]...\n"
 
 #: src/main.c:1794
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
 "\n"
@@ -556,16 +550,14 @@ msgid ""
 "  -T, --trace             %s should run in trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
-"      --hex               use hexadecimal numbers instead of octal in debug "
-"outputs\n"
+"      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 "\n"
 "Files:\n"
 "  -o, --outfile=FILE      specify output filename\n"
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the "
-"scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "\n"
 "Scanner behavior:\n"
@@ -597,119 +589,110 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
-"Generowanie programów wykonuj±cych na tek¶cie dopasowywanie wzorców.\n"
+"Generowanie programÃ³w wykonujÄ…cych na tekÅ›cie dopasowywanie wzorcÃ³w.\n"
 "\n"
-"Komprecja tablic:\n"
-"  -Ca, --align      u¿ycie wiêkszych tablic dla lepszego wyrównania pamiêci\n"
-"  -Ce, --ecs        konstruowanie klas równowa¿no¶ci\n"
-"  -Cf               nie kompresowanie tablic; u¿ycie reprezentacji -f\n"
-"  -CF               nie kompresowanie tablic; u¿ycie reprezentacji -F\n"
-"  -Cm, --meta-ecs   konstruowanie klas meta-równowa¿no¶ci\n"
-"  -Cr, --read       u¿ycie read() zamiast stdio dla wej¶cia skanera\n"
-"  -f, --full        wygenerowanie szybkiego, wielkiego skanera. To samo co -"
-"Cfr\n"
-"  -F, --fast        u¿ycie alternatywnej reprezentacji tablic. To samo co -"
-"CFr\n"
-"  -Cem              domy¶lne kompresowanie (to samo co --ecs --meta-ecs)\n"
+"Kompresja tablic:\n"
+"  -Ca, --align      uÅ¼ycie wiÄ™kszych tablic dla lepszego wyrÃ³wnania pamiÄ™ci\n"
+"  -Ce, --ecs        konstruowanie klas rÃ³wnowaÅ¼noÅ›ci\n"
+"  -Cf               nie kompresowanie tablic; uÅ¼ycie reprezentacji -f\n"
+"  -CF               nie kompresowanie tablic; uÅ¼ycie reprezentacji -F\n"
+"  -Cm, --meta-ecs   konstruowanie klas meta-rÃ³wnowaÅ¼noÅ›ci\n"
+"  -Cr, --read       uÅ¼ycie read() zamiast stdio dla wejÅ›cia skanera\n"
+"  -f, --full        wygenerowanie szybkiego, wielkiego skanera. To samo co -Cfr\n"
+"  -F, --fast        uÅ¼ycie alternatywnej reprezentacji tablic. To samo co -CFr\n"
+"  -Cem              domyÅ›lne kompresowanie (to samo co --ecs --meta-ecs)\n"
 "\n"
 "Diagnostyka:\n"
-"  -d, --debug             w³±czenie trybu diagnostycznego (debug) w "
-"skanerze\n"
-"  -b, --backup            zapisanie informacji o zapamiêtywaniu do %s\n"
-"  -p, --perf-report       wypisanie raportu o wydajno¶ci na stderr\n"
-"  -s, --nodefault         pominiêcie domy¶lnej regu³y ECHO dla "
-"niedopasowanego\n"
+"  -d, --debug             wÅ‚Ä…czenie trybu diagnostycznego (debug) w skanerze\n"
+"  -b, --backup            zapisanie informacji o zapamiÄ™tywaniu do %s\n"
+"  -p, --perf-report       wypisanie raportu o wydajnoÅ›ci na stderr\n"
+"  -s, --nodefault         pominiÄ™cie domyÅ›lnej reguÅ‚y ECHO dla niedopasowanego\n"
 "                            tekstu\n"
-"  -T, --trace             %s powinien dzia³aæ w trybie ¶ledzenia\n"
-"  -w, --nowarn            nie generowanie ostrze¿eñ\n"
-"  -v, --verbose           wypisanie podsumowania statystyk skanera na "
-"stdout\n"
+"  -T, --trace             %s powinien dziaÅ‚aÄ‡ w trybie Å›ledzenia\n"
+"  -w, --nowarn            nie generowanie ostrzeÅ¼eÅ„\n"
+"  -v, --verbose           wypisanie podsumowania statystyk skanera na stdout\n"
+"      --hex               liczby szesnastkowe zamiast Ã³semkowych w diagnostyce\n"
 "\n"
 "Pliki:\n"
-"  -o, --outfile=PLIK      podanie nazwy pliku wyj¶ciowego\n"
+"  -o, --outfile=PLIK      podanie nazwy pliku wyjÅ›ciowego\n"
 "  -S, --skel=PLIK         podanie pliku szablonu\n"
-"  -t, --stdout            zapis wyj¶cia skanera na stdout zamiast %s\n"
+"  -t, --stdout            zapis wyjÅ›cia skanera na stdout zamiast %s\n"
 "      --yyclass=NAZWA     nazwa klasy C++\n"
-"      --header-file=PLIK   utworzenie pliku nag³ówkowego C oprócz skanera\n"
+"      --header-file=PLIK   utworzenie pliku nagÅ‚Ã³wkowego C oprÃ³cz skanera\n"
 "      --tables-file[=PLIK] zapisanie tablic do PLIKU\n"
 "\n"
 "Zachowanie skanera:\n"
 "  -7, --7bit              wygenerowanie skanera 7-bitowego\n"
 "  -8, --8bit              wygenerowanie skanera 8-bitowego\n"
-"  -B, --batch             wygenerowanie skanera wsadowego (przeciwieñstwo -"
-"I)\n"
-"  -i, --case-insensitive  ignorowanie wielko¶ci liter we wzorcach\n"
-"  -l, --lex-compat        maksymalna kompatybilno¶æ z oryginalnym leksem\n"
-"  -X, --posix-compat      maksymalna kompatybilno¶æ z leksem POSIX\n"
-"  -I, --interactive       wygenerowanie skanera interaktywnego (przeciw. -"
-"B)\n"
-"      --yylineno          ¶ledzenie liczby linii w yylineno\n"
+"  -B, --batch             wygenerowanie skanera wsadowego (przeciwieÅ„stwo -I)\n"
+"  -i, --case-insensitive  ignorowanie wielkoÅ›ci liter we wzorcach\n"
+"  -l, --lex-compat        maksymalna kompatybilnoÅ›Ä‡ z oryginalnym leksem\n"
+"  -X, --posix-compat      maksymalna kompatybilnoÅ›Ä‡ z leksem POSIX\n"
+"  -I, --interactive       wygenerowanie skanera interaktywnego (przeciw. -B)\n"
+"      --yylineno          Å›ledzenie liczby linii w yylineno\n"
 "\n"
 "Generowany kod:\n"
 "  -+,  --c++               wygenerowanie klasy skanera w C++\n"
-"  -Dmakro[=defn]           #define makro defn  (domy¶lne defn to '1')\n"
-"  -L,  --noline            pominiêcie dyrektyw #line w skanerze\n"
-"  -P,  --prefix=£AÑCUCH    u¿ycie jako prefiksu £AÑCUCHA zamiast \"yy\"\n"
-"  -R,  --reentrant         wygenerowanie wielobie¿nego skanera w C\n"
+"  -Dmakro[=defn]           #define makro defn  (domyÅ›lne defn to '1')\n"
+"  -L,  --noline            pominiÄ™cie dyrektyw #line w skanerze\n"
+"  -P,  --prefix=ÅAÅƒCUCH    uÅ¼ycie jako prefiksu ÅAÅƒCUCHA zamiast \"yy\"\n"
+"  -R,  --reentrant         wygenerowanie wielobieÅ¼nego skanera w C\n"
 "       --bison-bridge      skaner dla czystego analizatora w bisonie\n"
-"       --bison-locations   dodanie obs³ugi yylloc\n"
+"       --bison-locations   dodanie obsÅ‚ugi yylloc\n"
 "       --stdinit           zainicjowanie yyin/yyout na stdin/stdout\n"
-"       --noansi-definitions definicje funkcji w starym stylu\n"
-"       --noansi-prototypes  puste listy parametrów w prototypach\n"
-"       --nounistd          nie do³±czanie <unistd.h>\n"
+"       --nounistd          nie doÅ‚Ä…czanie <unistd.h>\n"
 "       --noFUNKCJA         nie generowanie podanej FUNKCJI\n"
 "\n"
-"Ró¿ne:\n"
-"  -c                      nic nie robi±ca opcja POSIX\n"
-"  -n                      nic nie robi±ca opcja POSIX\n"
+"RÃ³Å¼ne:\n"
+"  -c                      nic nie robiÄ…ca opcja POSIX\n"
+"  -n                      nic nie robiÄ…ca opcja POSIX\n"
 "  -?\n"
-"  -h, --help              wy¶wietlenie tego pomocnego opisu\n"
+"  -h, --help              wyÅ›wietlenie tego pomocnego opisu\n"
 "  -V, --version           podanie wersji programu %s\n"
 
 #: src/misc.c:64
 msgid "allocation of sko_stack failed"
-msgstr "przydzielenie sko_stack nie powiod³o siê"
+msgstr "przydzielenie sko_stack nie powiodÅ‚o siÄ™"
 
 #: src/misc.c:100
 #, c-format
 msgid "name \"%s\" ridiculously long"
-msgstr "nazwa \"%s\" jest ¶miesznie d³uga"
+msgstr "nazwa \"%s\" jest Å›miesznie dÅ‚uga"
 
 #: src/misc.c:155
 msgid "memory allocation failed in allocate_array()"
-msgstr "nie uda³o siê przydzieliæ pamiêci w allocate_array()"
+msgstr "nie udaÅ‚o siÄ™ przydzieliÄ‡ pamiÄ™ci w allocate_array()"
 
 #: src/misc.c:205
 #, c-format
 msgid "bad character '%s' detected in check_char()"
-msgstr "b³êdny znak '%s' usuniêty w check_char()"
+msgstr "bÅ‚Ä™dny znak '%s' usuniÄ™ty w check_char()"
 
 #: src/misc.c:210
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
-msgstr "skaner wymaga flagi -8 aby u¿yæ znaku %s"
+msgstr "skaner wymaga flagi -8 aby uÅ¼yÄ‡ znaku %s"
 
 #: src/misc.c:229
-#, fuzzy
 msgid "memory allocation failure in xstrdup()"
-msgstr "nie uda³o siê przydzieliæ pamiêci w allocate_array()"
+msgstr "nie udaÅ‚o siÄ™ przydzieliÄ‡ pamiÄ™ci w xstrdup()"
 
 #: src/misc.c:303
 #, c-format
 msgid "%s: fatal internal error, %s\n"
-msgstr "%s: krytyczny b³±d wewnêtrzny: %s\n"
+msgstr "%s: krytyczny bÅ‚Ä…d wewnÄ™trzny: %s\n"
 
 #: src/misc.c:671
 msgid "attempt to increase array size failed"
-msgstr "próba zwiêkszenia rozmiaru tablicy nie powiod³a siê"
+msgstr "prÃ³ba zwiÄ™kszenia rozmiaru tablicy nie powiodÅ‚a siÄ™"
 
 #: src/misc.c:795
 msgid "bad line in skeleton file"
-msgstr "b³êdna linia w pliku szablonu"
+msgstr "bÅ‚Ä™dna linia w pliku szablonu"
 
 #: src/misc.c:845
 msgid "memory allocation failed in yy_flex_xmalloc()"
-msgstr "nie uda³o siê przydzieliæ pamiêci w yy_flex_xmalloc()"
+msgstr "nie udaÅ‚o siÄ™ przydzieliÄ‡ pamiÄ™ci w yy_flex_xmalloc()"
 
 #: src/nfa.c:100
 #, c-format
@@ -720,7 +703,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"********** pocz±tek zrzutu NFA ze stanem pocz±tkowym %d\n"
+"********** poczÄ…tek zrzutu NFA ze stanem poczÄ…tkowym %d\n"
 
 #: src/nfa.c:111
 #, c-format
@@ -739,85 +722,79 @@ msgstr "pusty automat w dupmachine()"
 #: src/nfa.c:234
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
-msgstr "Regu³a ze zmiennym koñcowym kontekstem w linii %d\n"
+msgstr "ReguÅ‚a ze zmiennym koÅ„cowym kontekstem w linii %d\n"
 
 #: src/nfa.c:357
 msgid "bad state type in mark_beginning_as_normal()"
-msgstr "b³êdny typ stanu w mark_beginning_as_normal()"
+msgstr "bÅ‚Ä™dny typ stanu w mark_beginning_as_normal()"
 
 #: src/nfa.c:595
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
-msgstr "regu³y wej¶ciowe s± zbyt skomplikowane (>= %d stanów NFA)"
+msgstr "reguÅ‚y wejÅ›ciowe sÄ… zbyt skomplikowane (>= %d stanÃ³w NFA)"
 
 #: src/nfa.c:673
 msgid "found too many transitions in mkxtion()"
-msgstr "znaleziono zbyt du¿o przej¶æ w mkxtion()"
+msgstr "znaleziono zbyt duÅ¼o przejÅ›Ä‡ w mkxtion()"
 
 #: src/nfa.c:699
 #, c-format
 msgid "too many rules (> %d)!"
-msgstr "zbyt du¿o regu³ (> %d)!"
+msgstr "zbyt duÅ¼o reguÅ‚ (> %d)!"
 
 #: src/parse.y:159
 msgid "unknown error processing section 1"
-msgstr "nieznany b³±d podczas przetwarzania sekcji 1"
+msgstr "nieznany bÅ‚Ä…d podczas przetwarzania sekcji 1"
 
 #: src/parse.y:184 src/parse.y:353
 msgid "bad start condition list"
-msgstr "b³êdna lista warunków pocz±tkowych"
+msgstr "bÅ‚Ä™dna lista warunkÃ³w poczÄ…tkowych"
 
 #: src/parse.y:204
 msgid "Prefix must not contain [ or ]"
-msgstr ""
+msgstr "Prefiks nie moÅ¼e zawieraÄ‡ [ ani ]"
 
 #: src/parse.y:317
 msgid "unrecognized rule"
-msgstr "nierozpoznana regu³a"
+msgstr "nierozpoznana reguÅ‚a"
 
 #: src/parse.y:436 src/parse.y:449 src/parse.y:518
 msgid "trailing context used twice"
-msgstr "koñcowy kontekst u¿yty dwukrotnie"
+msgstr "koÅ„cowy kontekst uÅ¼yty dwukrotnie"
 
 #: src/parse.y:554 src/parse.y:564 src/parse.y:637 src/parse.y:647
 msgid "bad iteration values"
-msgstr "b³êdne warto¶ci iteracji"
+msgstr "bÅ‚Ä™dne wartoÅ›ci iteracji"
 
 #: src/parse.y:582 src/parse.y:600 src/parse.y:665 src/parse.y:683
 msgid "iteration value must be positive"
-msgstr "warto¶æ iteracji musi byæ dodatnia"
+msgstr "wartoÅ›Ä‡ iteracji musi byÄ‡ dodatnia"
 
 #: src/parse.y:806 src/parse.y:816
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"przedzia³ znaków [%c-%c] jest niejednoznaczny w skanerze ignoruj±cym "
-"wielko¶æ liter"
+msgstr "przedziaÅ‚ znakÃ³w [%c-%c] jest niejednoznaczny w skanerze ignorujÄ…cym wielkoÅ›Ä‡ liter"
 
 #: src/parse.y:821
 msgid "negative range in character class"
-msgstr "ujemny przedzia³ w klasie znaków"
+msgstr "ujemny przedziaÅ‚ w klasie znakÃ³w"
 
 #: src/parse.y:918
 msgid "[:^lower:] is ambiguous in case insensitive scanner"
-msgstr ""
-"[:^lower:] jest niejednoznaczne w przypadku skanera ignoruj±cego wielko¶æ "
-"liter"
+msgstr "[:^lower:] jest niejednoznaczne w przypadku skanera ignorujÄ…cego wielkoÅ›Ä‡ liter"
 
 #: src/parse.y:924
 msgid "[:^upper:] ambiguous in case insensitive scanner"
-msgstr ""
-"[:^upper:] jest niejednoznaczne w przypadku skanera ignoruj±cego wielko¶æ "
-"liter"
+msgstr "[:^upper:] jest niejednoznaczne w przypadku skanera ignorujÄ…cego wielkoÅ›Ä‡ liter"
 
 #: src/scan.l:82 src/scan.l:644 src/scan.l:702
 msgid "Input line too long\n"
-msgstr "Linia wej¶ciowa zbyt d³uga\n"
+msgstr "Linia wejÅ›ciowa zbyt dÅ‚uga\n"
 
 #: src/scan.l:183
 #, c-format
 msgid "malformed '%top' directive"
-msgstr "¼le sformu³owana dyrektywa '%top'"
+msgstr "Åºle sformuÅ‚owana dyrektywa '%top'"
 
 #: src/scan.l:205
 #, no-c-format
@@ -826,7 +803,7 @@ msgstr "nierozpoznana dyrektywa '%'"
 
 #: src/scan.l:214
 msgid "Definition name too long\n"
-msgstr "Nazwa definizji zbyt d³uga\n"
+msgstr "Nazwa definizji zbyt dÅ‚uga\n"
 
 #: src/scan.l:309
 msgid "Unmatched '{'"
@@ -835,7 +812,7 @@ msgstr "Niesparowany '{'"
 #: src/scan.l:325
 #, c-format
 msgid "Definition value for {%s} too long\n"
-msgstr "Definicja warto¶ci dla {%s} zbyt d³uga\n"
+msgstr "Definicja wartoÅ›ci dla {%s} zbyt dÅ‚uga\n"
 
 #: src/scan.l:342
 msgid "incomplete name definition"
@@ -843,7 +820,7 @@ msgstr "niekompletna definicja nazwy"
 
 #: src/scan.l:467
 msgid "Option line too long\n"
-msgstr "Linia opcji zbyt d³uga\n"
+msgstr "Linia opcji zbyt dÅ‚uga\n"
 
 #: src/scan.l:475
 #, c-format
@@ -852,7 +829,7 @@ msgstr "nierozpoznane %%option: %s"
 
 #: src/scan.l:659 src/scan.l:832
 msgid "bad character class"
-msgstr "b³êdna klasa znaków"
+msgstr "bÅ‚Ä™dna klasa znakÃ³w"
 
 #: src/scan.l:709
 #, c-format
@@ -861,25 +838,25 @@ msgstr "niezdefiniowana definicja {%s}"
 
 #: src/scan.l:772
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "niesparowany nawias"
 
 #: src/scan.l:787
 #, c-format
 msgid "bad <start condition>: %s"
-msgstr "b³êdny <warunek pocz±tkowy>: %s"
+msgstr "bÅ‚Ä™dny <warunek poczÄ…tkowy>: %s"
 
 #: src/scan.l:800
 msgid "missing quote"
-msgstr "brak cudzys³owu"
+msgstr "brak cudzysÅ‚owu"
 
 #: src/scan.l:866
 #, c-format
 msgid "bad character class expression: %s"
-msgstr "b³êdne wyra¿enie klasy znaków: %s"
+msgstr "bÅ‚Ä™dne wyraÅ¼enie klasy znakÃ³w: %s"
 
 #: src/scan.l:888
 msgid "bad character inside {}'s"
-msgstr "b³êdny znak wewn±trz {}"
+msgstr "bÅ‚Ä™dny znak wewnÄ…trz {}"
 
 #: src/scan.l:894
 msgid "missing }"
@@ -887,26 +864,26 @@ msgstr "brak }"
 
 #: src/scan.l:972
 msgid "EOF encountered inside an action"
-msgstr "EOF napotkany wewn±trz akcji"
+msgstr "EOF napotkany wewnÄ…trz akcji"
 
 #: src/scan.l:977
 msgid "EOF encountered inside pattern"
-msgstr "EOF napotkany wewn±trz wzorca"
+msgstr "EOF napotkany wewnÄ…trz wzorca"
 
 #: src/scan.l:1010
 #, c-format
 msgid "bad character: %s"
-msgstr "b³êdny znak: %s"
+msgstr "bÅ‚Ä™dny znak: %s"
 
 #: src/scan.l:1038
 #, c-format
 msgid "can't open %s"
-msgstr "nie mo¿na otworzyæ %s"
+msgstr "nie moÅ¼na otworzyÄ‡ %s"
 
 #: src/scanopt.c:259
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
-msgstr "Sk³adnia: %s [OPCJE]...\n"
+msgstr "SkÅ‚adnia: %s [OPCJE]...\n"
 
 #: src/scanopt.c:524
 #, c-format
@@ -931,11 +908,11 @@ msgstr "Nierozpoznana opcja `%s'\n"
 #: src/scanopt.c:541
 #, c-format
 msgid "Unknown error=(%d)\n"
-msgstr "Nieznany b³±d=(%d)\n"
+msgstr "Nieznany bÅ‚Ä…d=(%d)\n"
 
 #: src/sym.c:92
 msgid "symbol table memory allocation failed"
-msgstr "nie uda³o siê przydzieliæ pamiêci dla tablicy symboli"
+msgstr "nie udaÅ‚o siÄ™ przydzieliÄ‡ pamiÄ™ci dla tablicy symboli"
 
 #: src/sym.c:183
 msgid "name defined twice"
@@ -944,7 +921,7 @@ msgstr "nazwa zdefiniowana dwukrotnie"
 #: src/sym.c:231
 #, c-format
 msgid "start condition %s declared twice"
-msgstr "warunek pocz±tkowy %s zadeklarowany dwukrotnie"
+msgstr "warunek poczÄ…tkowy %s zadeklarowany dwukrotnie"
 
 #: src/yylex.c:57
 msgid "premature EOF"
@@ -953,12 +930,9 @@ msgstr "przedwczesny EOF"
 #: src/yylex.c:200
 #, c-format
 msgid "End Marker\n"
-msgstr "Znacznik koñca\n"
+msgstr "Znacznik koÅ„ca\n"
 
 #: src/yylex.c:206
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
-msgstr "*Co¶ dziwnego* - tok: %d val: %d\n"
-
-#~ msgid "dynamic memory failure in copy_string()"
-#~ msgstr "niepowodzenie dynamicznej pamiêci w copy_string()"
+msgstr "*CoÅ› dziwnego* - tok: %d val: %d\n"
