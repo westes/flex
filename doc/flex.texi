@@ -887,7 +887,11 @@ an end-of-file when in start condition @code{s1} or @code{s2}
 
 Note that inside of a character class, all regular expression operators
 lose their special meaning except escape (@samp{\}) and the character class
-operators, @samp{-}, @samp{]]}, and, at the beginning of the class, @samp{^}.
+operators, @samp{-}, @samp{]}, and, at the beginning of the class, @samp{^}.
+Additionally, @samp{-} and @samp{]} lose their special meaning if they 
+immediately follow the @samp{[} or @samp{[^} that start the class. Finally, 
+@samp{-} loses its special meaning if it immediately precedes the @samp{]} 
+that ends the class.
 
 @cindex patterns, precedence of operators
 The regular expressions listed above are grouped according to
@@ -966,7 +970,7 @@ For example, the following character classes are all equivalent:
 @verbatim
     [[:alnum:]]
     [[:alpha:][:digit:]]
-    [[:alpha:][0-9]]
+    [[:alpha:]0-9]
     [a-zA-Z0-9]
 @end verbatim
 @end example
