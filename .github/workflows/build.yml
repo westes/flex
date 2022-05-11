@@ -2,7 +2,7 @@ name: Build and Test
 
 on:
   push:
-    branches: [ master, github-ci ]
+    branches: [ master ]
     tags-ignore:
     - 'v*'
   pull_request:
