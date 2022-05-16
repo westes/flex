@@ -235,6 +235,10 @@ optspec_t flexopts[] = {
 	{"--yywrap", OPT_YYWRAP, 0}
 	,
 
+	{"--noinput", OPT_NO_YYINPUT, 0}
+	,
+	{"--noyyinput", OPT_NO_YYINPUT, 0}
+	,
 	{"--nounput", OPT_NO_YYUNPUT, 0}
 	,
 	{"--noyyunput", OPT_NO_YYUNPUT, 0}
@@ -282,6 +286,10 @@ optspec_t flexopts[] = {
 	{"--noyyget_lloc", OPT_NO_YYGET_LLOC, 0}
 	,
 	{"--noyyset_lloc", OPT_NO_YYSET_LLOC, 0}
+	,
+	{"--noyyget_debug", OPT_NO_YYGET_DEBUG, 0}
+	,
+	{"--noyyset_debug", OPT_NO_YYSET_DEBUG, 0}
 	,
         {"--unsafe-no-m4-sect3-escape", OPT_NO_SECT3_ESCAPE, 0}
         ,

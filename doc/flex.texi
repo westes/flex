@@ -2614,7 +2614,7 @@ corresponding routine not appearing in the generated scanner:
 
 @example
 @verbatim
-input, yyunput
+yyinput, yyunput
 yy_push_state, yy_pop_state, yy_top_state
 yy_scan_buffer, yy_scan_bytes, yy_scan_string
 

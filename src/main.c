@@ -1077,6 +1077,9 @@ void flexinit (int argc, char **argv)
 		    case OPT_NO_YY_TOP_STATE:
 			ctrl.no_yy_top_state = true;
 			break;
+		    case OPT_NO_YYINPUT:
+			ctrl.no_yyinput = true;
+			break;
 		    case OPT_NO_YYUNPUT:
 			ctrl.no_yyunput = true;
 			break;
@@ -1136,6 +1139,12 @@ void flexinit (int argc, char **argv)
 			break;
 		    case OPT_NO_YYSET_LLOC:
 			ctrl.no_yyset_lloc = true;
+			break;
+		    case OPT_NO_YYGET_DEBUG:
+			ctrl.no_get_debug = true;
+			break;
+		    case OPT_NO_YYSET_DEBUG:
+			ctrl.no_set_debug = true;
 			break;
 
 		    case OPT_HEX:
