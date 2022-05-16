@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/westes/flex.svg?branch=master)](https://travis-ci.org/westes/flex)
+[![Build Status](https://github.com/westes/flex/actions/workflows/build.yml/badge.svg)](https://github.com/westes/flex/actions/workflows/build.yml)
+
 
 This is flex, the fast lexical analyzer generator.
 
