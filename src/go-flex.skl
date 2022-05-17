@@ -621,7 +621,11 @@ static void yy_init_buffer(yybuffer  b, FILE * file, FlexLexer *yyscanner)
 	yy_flush_buffer(b, yyscanner);
 
 	b->yyInputFile = file;
-	b->yyFillBuffer = true;
+	if (b->yyInputFile == NULL) {
+	  b->yyFillBuffer = false;
+	} else {
+	  b->yyFillBuffer = true;
+	}
 
 	/* If b is the current buffer, then yy_init_buffer was _probably_
 	 * called from yyrestart() or through yy_get_next_buffer.

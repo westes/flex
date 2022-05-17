@@ -3060,7 +3060,17 @@ m4_ifdef([[M4_MODE_C_ONLY]], [[
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 	b->yy_input_file = file.rdbuf();
 ]])
-	b->yy_fill_buffer = 1;
+
+    /* b->yy_input_file should never by NULL but we'll handle it cleanly
+	 * on the off chance.
+	 */
+	if (b->yy_input_file == NULL){
+	  b->yy_fill_buffer = 0;
+	} else {
+	  b->yy_fill_buffer = 1;
+	}
+
+
 
 	/* If b is the current buffer, then yy_init_buffer was _probably_
 	 * called from yyrestart() or through yy_get_next_buffer.
