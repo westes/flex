@@ -8,13 +8,13 @@ on:
 jobs:
   milestone:
     name: Close out Milestone
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     outputs:
       tagname: ${{ steps.news.outputs.tagname }}
       version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Ruby Gems
         run: |
           sudo gem install octokit json
@@ -54,10 +54,10 @@ jobs:
   release:
     needs: milestone
     name: Make release
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Fast-forward to Milestone Tag
         env:
           ver: ${{ needs.milestone.outputs.version }}
