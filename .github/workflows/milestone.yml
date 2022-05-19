@@ -33,8 +33,7 @@ jobs:
           ver=${ver#v}
           ver=${ver%-*}
           echo "::set-output name=version::$ver"
-          sed "s/^\(AC_INIT.*generator\],\)\(.*\)\(,\[flex-help.*\)$/\1[$ver]\3/" $GITHUB_WORKSPACE/configure.ac >> $GITHUB_WORKSPACE/configure.ac.new
-          mv $GITHUB_WORKSPACE/configure.ac.new $GITHUB_WORKSPACE/configure.ac
+          sed -i "s/^\(AC_INIT.*generator\],\)\(.*\)\(,\[flex-help.*\)$/\1[$ver]\3/" $GITHUB_WORKSPACE/configure.ac
       - name: Commit and Push
         run: |
           mv $GITHUB_WORKSPACE/NEWS.new $GITHUB_WORKSPACE/NEWS
