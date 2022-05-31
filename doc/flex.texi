@@ -3172,6 +3172,17 @@ also generates a @code{yyFlexLexer::yylex()} member function that emits
 a run-time error (by invoking @code{yyFlexLexer::LexerError())} if
 called.  @xref{Cxx}.
 
+@anchor{option-yymore}
+@opindex ---yymore
+@opindex yymore
+@item --yymore, @code{%option yymore}
+tells flex to generate a scanner with logic to append the next token to the
+currently matched text. This option is enabled automatically if flex detects
+the use of @code{yymore()} in the scanner rules. However, this option must be
+set explicitly if @code{yymore()} is used more indirectly to avoid a compile
+time error.
+@xref{Actions}. @xref{Diagnostics}.
+
 @end table
 
 @node Options for Scanner Speed and Size, Debugging Options, Code-Level And API Options, Scanner Options
