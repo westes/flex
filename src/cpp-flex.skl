@@ -2269,6 +2269,8 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 						yy_cp = YY_G(yy_c_buf_p);
 						yy_bp = YY_G(yytext_ptr) + YY_MORE_ADJ;
 						goto yy_find_action;
+					default:
+						YY_FATAL_ERROR("unexpected return value from yy_get_next_buffer()");
 					} /* end EOB inner switch */
 				} /* end if */
 				break;
@@ -2789,6 +2791,8 @@ int yyFlexLexer::yyinput()
 			case EOB_ACT_CONTINUE_SCAN:
 				YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + offset;
 				break;
+			default:
+				YY_FATAL_ERROR("unexpected return value from yy_get_next_buffer()");
 			}
 		}
 	}
