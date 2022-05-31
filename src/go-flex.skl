@@ -1127,6 +1127,8 @@ int yyinput(FlexLexer *yyscanner)
 			case EOB_ACT_CONTINUE_SCAN:
 				yyscanner->yyCBufP = yyscanner->yytext_ptr + offset;
 				break;
+			default:
+				yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);
 			}
 		}
 	}
@@ -2217,6 +2219,8 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 						yyCp = yyscanner->yyCBufP;
 						yyBp = yyscanner->yytext_ptr + YY_MORE_ADJ;
 						goto yyFindActionLabel;
+					default:
+						yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);
 					} /* end EOB inner switch */
 				} /* end if */
 				break;

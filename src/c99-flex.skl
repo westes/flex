@@ -1220,6 +1220,8 @@ int yyinput (yyscan_t yyscanner)
 			case EOB_ACT_CONTINUE_SCAN:
 				yyscanner->yy_c_buf_p = yyscanner->yytext_ptr + offset;
 				break;
+			default:
+				yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);
 			}
 		}
 	}
@@ -2371,6 +2373,8 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 						yy_cp = yyscanner->yy_c_buf_p;
 						yy_bp = yyscanner->yytext_ptr + YY_MORE_ADJ;
 						goto yy_find_action;
+					default:
+						yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);
 					} /* end EOB inner switch */
 				} /* end if */
 				break;
