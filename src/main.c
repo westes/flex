@@ -1185,6 +1185,8 @@ void flexinit (int argc, char **argv)
 	lastprot = 1;
 
 	set_up_initial_allocations ();
+	
+	init_backends();
 }
 
 

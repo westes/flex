@@ -34,13 +34,12 @@
 
 #include "flexdef.h"
 #include "tables.h"
+#include "skeletons.h"
+
 
 /* START digested skeletons */
 
-const char *cpp_skel[] = {
-#include "cpp-flex.h"
-    0,
-};
+#include "cpp-backend.h"
 
 const char *c99_skel[] = {
 #include "c99-flex.h"
@@ -54,23 +53,21 @@ const char *go_skel[] = {
 
 /* END digested skeletons */
 
-/* Method table describing a language-specific back end.
- * Even if this never gets a member other than the skel
- * array, it prevents us from getting lost in a maze of
- * twisty array reference levels, all different.
- */
-struct flex_backend_t {
-	const char **skel;		// Digested skeleton file
-};
+
 
 static struct flex_backend_t backends[] = {
-    {.skel=cpp_skel},
+    {NULL},
     {.skel=c99_skel},
     {.skel=go_skel},
     {NULL}
 };
 
 static struct flex_backend_t *backend = &backends[0];
+
+/* Initialize backends */
+void init_backends( void ) {
+	backends[0] = cpp_backend;
+}
 
 /* Functions for querying skeleton properties. */
 
