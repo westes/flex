@@ -1345,6 +1345,7 @@ Note also that unlike the other special actions, @code{yyreject()} is a
 @emph{branch}.  Code immediately following it in the action will
 @emph{not} be executed.
 
+@anchor{action-yymore}
 @item  yymore()
 @cindex yymore()
 tells the scanner that the next time it matches a rule, the
@@ -3171,6 +3172,17 @@ function @code{foo::yylex()} instead of @code{yyFlexLexer::yylex()}.  It
 also generates a @code{yyFlexLexer::yylex()} member function that emits
 a run-time error (by invoking @code{yyFlexLexer::LexerError())} if
 called.  @xref{Cxx}.
+
+@anchor{option-yymore}
+@opindex ---yymore
+@opindex yymore
+@item --yymore, @code{%option yymore}
+tells flex to generate a scanner with logic to append the next token to the
+currently matched text. This option is enabled automatically if flex detects
+the use of @code{yymore()} in the scanner rules. However, this option must be
+set explicitly if @code{yymore()} is used more indirectly to avoid a compile
+time error.
+@xref{action-yymore}. @xref{yymore_used_but_not_detected-undefined}.
 
 @end table
 
@@ -5442,6 +5454,7 @@ not intended.
 
 @item
 @code{reject_used_but_not_detected undefined} or
+@anchor{yymore_used_but_not_detected-undefined}
 @code{yymore_used_but_not_detected undefined}. These errors can occur
 at compile time.  They indicate that the scanner uses @code{yyreject()} or
 @code{yymore()} but that @code{flex} failed to notice the fact, meaning
