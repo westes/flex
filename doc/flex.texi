@@ -321,7 +321,7 @@ When your target language is C, the name of the generated scanner
 normally use for source-code files to the prefix @file{lex.yy}.
 
 The examples in this manual are in C, which is Flex's default target
-language and until release 4.6.2 its only one.
+language and until release 2.6.4 it is the only one.
 
 @node Simple Examples, Format, Introduction, Top
 @chapter Some Simple Examples
@@ -357,7 +357,7 @@ Here's another simple example:
 @verbatiminclude example_r.lex
 @end example
 
-If you have looked at older versions of the Flex nanual, you might
+If you have looked at older versions of the Flex manual, you might
 have seen a version of the above example that looked more like this:
 
 @cindex counting characters and lines; non-reentrant
