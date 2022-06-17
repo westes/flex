@@ -712,7 +712,11 @@ static void yy_init_buffer(yybuffer  b, FILE * file, yyscan_t yyscanner)
 	yy_flush_buffer( b, yyscanner);
 
 	b->yy_input_file = file;
-	b->yy_fill_buffer = true;
+	if (b->yy_input_file == NULL) {
+	  b->yy_fill_buffer = false;
+	} else {
+	  b->yy_fill_buffer = true;
+	}
 
 	/* If b is the current buffer, then yy_init_buffer was _probably_
 	 * called from yyrestart() or through yy_get_next_buffer.
