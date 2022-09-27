@@ -38,7 +38,8 @@ dist_doc_DATA = \
 	README.md
 
 EXTRA_DIST = \
-	.indent.pro
+	.indent.pro \
+	INSTALL
 
 dist_noinst_SCRIPTS = \
 	autogen.sh \
