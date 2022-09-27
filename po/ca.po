@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.37\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-05-06 10:49-0400\n"
+"POT-Creation-Date: 2022-09-27 14:18-0400\n"
 "PO-Revision-Date: 2012-12-04 17:36+0100\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -17,21 +17,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 
-#: src/buf.c:79
+#: src/buf.c:61
 msgid "Allocation of buffer to print string failed"
 msgstr "Ha fallat l'assignació d'un búfer per imprimir la cadena"
 
-#: src/buf.c:107
-msgid "Allocation of buffer for line directive failed"
-msgstr "Ha fallat l'assignació d'un buffer per a la directiva de línia"
-
-#: src/buf.c:177
-msgid "Allocation of buffer for m4 def failed"
-msgstr "Ha fallat l'assignació d'un búfer per la definició m4"
-
-#: src/buf.c:198
-msgid "Allocation of buffer for m4 undef failed"
-msgstr "Ha fallat l'assignació d'un búfer per la indefinició m4"
+#: src/ccl.c:80
+msgid "internal error: trying to add a char to a non-last ccl.\n"
+msgstr ""
 
 #: src/dfa.c:59
 #, c-format
@@ -65,7 +57,7 @@ msgstr ""
 msgid "consistency check failed in epsclosure()"
 msgstr "la comprovació de consistència ha fallat en epsclosure()"
 
-#: src/dfa.c:419
+#: src/dfa.c:422
 msgid ""
 "\n"
 "\n"
@@ -77,24 +69,24 @@ msgstr ""
 "Bolcat AFD:\n"
 "\n"
 
-#: src/dfa.c:587
+#: src/dfa.c:558
 msgid "could not create unique end-of-buffer state"
 msgstr "no s'ha pogut crear un estat únic de final-de-búfer"
 
-#: src/dfa.c:608
+#: src/dfa.c:579
 #, c-format
 msgid "state # %d:\n"
 msgstr "estat # %d:\n"
 
-#: src/dfa.c:768
+#: src/dfa.c:738
 msgid "Could not write yynxt_tbl[][]"
 msgstr "No s'ha pogut escriure yynxt_tbl[][]"
 
-#: src/dfa.c:1028
+#: src/dfa.c:1001
 msgid "bad transition character detected in sympartition()"
 msgstr "caràcter de transició incorrecte detectat en sympartition()"
 
-#: src/gen.c:480
+#: src/gen.c:379
 msgid ""
 "\n"
 "\n"
@@ -106,29 +98,29 @@ msgstr ""
 "Classes d'equivalència:\n"
 "\n"
 
-#: src/gen.c:669 src/gen.c:698 src/gen.c:1218
+#: src/gen.c:425 src/gen.c:454 src/gen.c:638
 #, c-format
 msgid "state # %d accepts: [%d]\n"
 msgstr "l'estat # %d accepta: [%d]\n"
 
-#: src/gen.c:1115
+#: src/gen.c:533
 #, c-format
 msgid "state # %d accepts: "
 msgstr "l'estat # %d accepta: "
 
-#: src/gen.c:1162
+#: src/gen.c:582
 msgid "Could not write yyacclist_tbl"
 msgstr "No s'ha pogut escriure yyacclist_tbl"
 
-#: src/gen.c:1236
+#: src/gen.c:659
 msgid "Could not write yyacc_tbl"
 msgstr "No s'ha pogut escriure yyacc_tbl"
 
-#: src/gen.c:1251 src/gen.c:1623 src/gen.c:1646
+#: src/gen.c:674 src/gen.c:947 src/gen.c:974
 msgid "Could not write ecstbl"
 msgstr "No s'ha pogut escriure ecstbl"
 
-#: src/gen.c:1271
+#: src/gen.c:694
 msgid ""
 "\n"
 "\n"
@@ -138,293 +130,277 @@ msgstr ""
 "\n"
 "Classes de metaequivalència:\n"
 
-#: src/gen.c:1293
+#: src/gen.c:714
 msgid "Could not write yymeta_tbl"
 msgstr "No s'ha pogut escriure yymeta_tbl"
 
-#: src/gen.c:1352
+#: src/gen.c:774
 msgid "Could not write yybase_tbl"
 msgstr "No s'ha pogut escriure yybase_tbl"
 
-#: src/gen.c:1384
+#: src/gen.c:805
 msgid "Could not write yydef_tbl"
 msgstr "No s'ha pogut escriure yydef_tbl"
 
-#: src/gen.c:1422
+#: src/gen.c:844
 msgid "Could not write yynxt_tbl"
 msgstr "No s'ha pogut escriure yynxt_tbl"
 
-#: src/gen.c:1456
+#: src/gen.c:877
 msgid "Could not write yychk_tbl"
 msgstr "No s'ha pogut escriure yychk_tbl"
 
-#: src/gen.c:1608 src/gen.c:1637
+#: src/gen.c:932 src/gen.c:965
 msgid "Could not write ftbl"
 msgstr "No s'ha pogut escriure ftbl"
 
-#: src/gen.c:1614
+#: src/gen.c:938
 msgid "Could not write ssltbl"
 msgstr "No s'ha pogut escriure ssltbl"
 
-#: src/gen.c:1665
+#: src/gen.c:1014
 msgid "Could not write eoltbl"
 msgstr "No s'ha pogut escriure eoltbl"
 
-#: src/gen.c:1722
+#: src/gen.c:1061
 msgid "Could not write yynultrans_tbl"
 msgstr "No s'ha pogut escriure yynultrans_tbl"
 
-#: src/main.c:178
+#: src/main.c:169
 msgid "rule cannot be matched"
 msgstr "no es pot satisfer la regla"
 
-#: src/main.c:183
+#: src/main.c:174
 msgid "-s option given but default rule can be matched"
 msgstr "S'ha especificat l'opció -s però es pot aplicar la regla per defecte"
 
-#: src/main.c:221
+#: src/main.c:317
 msgid "Can't use -+ with -l option"
 msgstr "No es pot fer servir -+ amb l'opció -l"
 
-#: src/main.c:224
+#: src/main.c:320
 msgid "Can't use -f or -F with -l option"
 msgstr "No es pot fer servir -f o -F amb l'opció -l"
 
-#: src/main.c:228
-msgid "Can't use --reentrant or --bison-bridge with -l option"
+#: src/main.c:324
+#, fuzzy
+msgid "Can't use --ctrl.reentrant or --bison-bridge with -l option"
 msgstr "No es pot fer servir --reentrant o --bison-bridge amb l'opció -l"
 
-#: src/main.c:260
+#: src/main.c:356
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "-Cf/-CF i -Cm no tenen sentit juntes"
 
-#: src/main.c:263
+#: src/main.c:359
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "-Cf/-CF i -I són incompatibles"
 
-#: src/main.c:267
+#: src/main.c:363
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr "-Cf/-CF són incompatibles amb el mode de compatibilitat amb lex"
 
-#: src/main.c:272
+#: src/main.c:368
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "-Cf i -CF són mútuament excloents"
 
-#: src/main.c:276
+#: src/main.c:372
 msgid "Can't use -+ with -CF option"
 msgstr "No es pot fer servir -+ amb l'opció -CF"
 
-#: src/main.c:279
+#: src/main.c:375
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "%array és incompatible amb l'opció -+"
 
-#: src/main.c:284
+#: src/main.c:380
 msgid "Options -+ and --reentrant are mutually exclusive."
 msgstr "Les opcions -+ i --reentrant són mútuament excloents"
 
-#: src/main.c:287
+#: src/main.c:383
 msgid "bison bridge not supported for the C++ scanner."
 msgstr "No es suporta «bison bridge» per a l'analitzador de C++"
 
-#: src/main.c:336 src/main.c:419
+#: src/main.c:422 src/main.c:1235
 #, c-format
 msgid "could not create %s"
 msgstr "no s'ha pogut crear %s"
 
-#: src/main.c:431
-msgid "could not write tables header"
-msgstr "no s'ha pogut crear la capçalera de les taules"
-
-#: src/main.c:435
+#: src/main.c:443
 #, c-format
-msgid "can't open skeleton file %s"
-msgstr "No es pot obrir el fitxer d'esquema %s"
+msgid "%option yyclass only meaningful for C++ scanners"
+msgstr "l'%opció yyclass només té sentit per a analitzadors de C++"
 
-#: src/main.c:450
-msgid "Prefix cannot include '[' or ']'"
-msgstr ""
-
-#: src/main.c:474
-msgid "allocation of macro definition failed"
-msgstr "Ha fallat l'assignació de la definició de la macro"
-
-#: src/main.c:521
+#: src/main.c:447
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "error d'entrada al llegir el fitxer d'esquema %s"
 
-#: src/main.c:525
+#: src/main.c:451
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "s'ha produït un error en tancar el fitxer d'esquema %s"
 
-#: src/main.c:709
-#, c-format
-msgid "error creating header file %s"
-msgstr "s'ha produït un error en crear el fitxer de capçalera %s"
-
-#: src/main.c:717
+#: src/main.c:457
 #, c-format
 msgid "error writing output file %s"
 msgstr "s'ha produït un error en escriure el fitxer d'eixida %s"
 
-#: src/main.c:721
+#: src/main.c:461
 #, c-format
 msgid "error closing output file %s"
 msgstr "s'ha produït un error en tancar el fitxer d'eixida %s"
 
-#: src/main.c:725
+#: src/main.c:465
 #, c-format
 msgid "error deleting output file %s"
 msgstr "s'ha produït un error en suprimir el fitxer d'eixida %s"
 
-#: src/main.c:732
+#: src/main.c:472
 #, c-format
 msgid "No backing up.\n"
 msgstr "No hi ha retrocés.\n"
 
-#: src/main.c:736
+#: src/main.c:476
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "%d estats de retrocés (no-acceptació).\n"
 
-#: src/main.c:740
+#: src/main.c:480
 #, c-format
 msgid "Compressed tables always back up.\n"
 msgstr "Les taules comprimides sempre impliquen un retard.\n"
 
-#: src/main.c:743
+#: src/main.c:483
 #, c-format
 msgid "error writing backup file %s"
 msgstr "s'ha produït un error en escriure el fitxer de còpia de seguretat %s"
 
-#: src/main.c:747
+#: src/main.c:487
 #, c-format
 msgid "error closing backup file %s"
 msgstr "s'ha produït un error en tancar el fitxer de còpia de seguretat %s"
 
-#: src/main.c:752
+#: src/main.c:492
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr "estadístiques d'ús de %s versió %s:\n"
 
-#: src/main.c:755
+#: src/main.c:495
 #, c-format
 msgid "  scanner options: -"
 msgstr "  opcions de l'analitzador: -"
 
 # NFA == Autómata finit no-determinista. jm
-#: src/main.c:834
+#: src/main.c:574
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d estats AFN\n"
 
 # DFA == Autómata finit deterministic. jm
-#: src/main.c:836
+#: src/main.c:576
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d estats AFD (%d paraules)\n"
 
-#: src/main.c:838
+#: src/main.c:578
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d regles\n"
 
-#: src/main.c:843
+#: src/main.c:583
 #, c-format
 msgid "  No backing up\n"
 msgstr "  Sense retrocés\n"
 
-#: src/main.c:847
+#: src/main.c:587
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr "  %d estats de retrocés (no-acceptació)\n"
 
 # Es refereix a còpia de seguretat, o retrocés? jm
-#: src/main.c:852
+#: src/main.c:592
 #, c-format
 msgid "  Compressed tables always back-up\n"
 msgstr "  Sempre es realitza còpia de seguretat de les taules comprimides\n"
 
-#: src/main.c:856
+#: src/main.c:596
 #, c-format
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  Utilitzats patrons de principi-de-línia\n"
 
-#: src/main.c:858
+#: src/main.c:598
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d condicions d'activació\n"
 
-#: src/main.c:862
+#: src/main.c:602
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr "  %d estats èpsilon, %d estats doble èpsilon\n"
 
-#: src/main.c:866
+#: src/main.c:606
 #, c-format
 msgid "  no character classes\n"
 msgstr "  sense classes de caràcter\n"
 
-#: src/main.c:870
+#: src/main.c:610
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
 msgstr ""
 "  les classes de caràcters %d/%d necessitaren %d/%d paraules de magatzement, "
 "%d reutilitzades\n"
 
-#: src/main.c:875
+#: src/main.c:615
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr "  %d parells estat/estat-següent creats\n"
 
-#: src/main.c:878
+#: src/main.c:618
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d transicions úniques/duplicades\n"
 
-#: src/main.c:883
+#: src/main.c:623
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d entrades de la taula\n"
 
-#: src/main.c:891
+#: src/main.c:631
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  %d/%d entrades base-def creades\n"
 
-#: src/main.c:895
+#: src/main.c:635
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  %d/%d (pic %d) entrades nxt-chk creades\n"
 
-#: src/main.c:899
+#: src/main.c:639
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr "  %d/%d (pic %d) entrades de plantilla nxt-chk creades\n"
 
-#: src/main.c:903
+#: src/main.c:643
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d entrades de la tabla buides\n"
 
-#: src/main.c:905
+#: src/main.c:645
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  %d prototips creats\n"
 
-#: src/main.c:908
+#: src/main.c:648
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  %d plantilles creades, %d usos\n"
 
-#: src/main.c:916
+#: src/main.c:656
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  %d/%d classes d'equivalència creades\n"
 
-#: src/main.c:924
+#: src/main.c:664
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  %d/%d classes de meta-equivalència creades\n"
@@ -433,65 +409,73 @@ msgstr "  %d/%d classes de meta-equivalència creades\n"
 # segons un company de treballa que estudia a la UOC, allí
 # les "hashtables" s'anomenen "taules de DISPERSIÓ". En aquest context
 # no sé que dir-te. ear
-#: src/main.c:930
+#: src/main.c:670
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr "  %d (%d desades) col·lisions d'ubicació («hash»), %d AFD iguals\n"
 
-#: src/main.c:932
+#: src/main.c:672
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr "  es necessiten %d conjunts de relocalització\n"
 
-#: src/main.c:934
+#: src/main.c:674
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  es necessiten %d entrades totals de la taula\n"
 
-#: src/main.c:1008
+#: src/main.c:735
 #, c-format
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Error intern. Els flexopts estan malformats.\n"
 
-#: src/main.c:1018
+#: src/main.c:745
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Proveu «%s --help» per a obtindre més informació.\n"
 
-#: src/main.c:1075
+#: src/main.c:807
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "opció de -C desconeguda «%c»"
 
-#: src/main.c:1204
-#, c-format
-msgid "%s %s\n"
-msgstr "%s %s\n"
-
 # Hmm. No se si açò està be. jm
-#: src/main.c:1476
+#: src/main.c:1195
 msgid "fatal parse error"
 msgstr "s'ha produït un error fatal d'anàlisi sintàctic"
 
-#: src/main.c:1508
+#: src/main.c:1247
+msgid "could not write tables header"
+msgstr "no s'ha pogut crear la capçalera de les taules"
+
+#: src/main.c:1251
+#, c-format
+msgid "can't open skeleton file %s"
+msgstr "No es pot obrir el fitxer d'esquema %s"
+
+#: src/main.c:1254
+msgid "Prefix cannot include '[' or ']'"
+msgstr ""
+
+#: src/main.c:1322
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr "no s'ha pogut crear un fitxer d'informació del retrocés %s"
 
-#: src/main.c:1529
+#: src/main.c:1343
 #, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
 msgstr ""
 "-l l'opció de compatibilitat amb AT&T lex implica una penalització del "
 "rendiment molt gran\n"
 
-#: src/main.c:1532
+#: src/main.c:1346
 #, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
 msgstr ""
 " i pot ser l'origen real d'altres penalitzacions del rendiment notificades\n"
 
-#: src/main.c:1538
+#: src/main.c:1352
 #, c-format
 msgid ""
 "%%option yylineno entails a performance penalty ONLY on rules that can match "
@@ -500,48 +484,47 @@ msgstr ""
 "l'%%opció yylineno implica una penalització del rendiment NOMÉS en regles "
 "que poden fer coincidir caràcters de nova línia\n"
 
-#: src/main.c:1545
+#: src/main.c:1359
 #, c-format
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "-I (interactiu) implica una xicoteta penalització del rendiment\n"
 
-#: src/main.c:1550
+#: src/main.c:1364
 #, c-format
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "yymore() implica una xicoteta penalització del rendiment\n"
 
-#: src/main.c:1556
+#: src/main.c:1370
 #, c-format
 msgid "REJECT entails a large performance penalty\n"
 msgstr "REJECT implica una penalització del rendiment molt gran\n"
 
-#: src/main.c:1561
+#: src/main.c:1375
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr ""
 "Les regles de context posterior variable implica una penalització del "
 "rendiment molt gran\n"
 
-#: src/main.c:1573
+#: src/main.c:1387
 msgid "REJECT cannot be used with -f or -F"
 msgstr "REJECT no es pot fer servir amb -f o -F"
 
-#: src/main.c:1576
+#: src/main.c:1390
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr "l'%opció yylineno no es pot fer servir amb REJECT"
 
-#: src/main.c:1579
+#: src/main.c:1393
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr ""
 "Les regles de context posterior variable no es poden utilitzar amb -f o -F"
 
-#: src/main.c:1704
-#, c-format
-msgid "%option yyclass only meaningful for C++ scanners"
-msgstr "l'%opció yyclass només té sentit per a analitzadors de C++"
+#: src/main.c:1428
+msgid "allocation of macro definition failed"
+msgstr "Ha fallat l'assignació de la definició de la macro"
 
-#: src/main.c:1791
+#: src/main.c:1745
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Forma d'ús: %s [OPCIONS] [FITXER]...\n"
@@ -550,7 +533,7 @@ msgstr "Forma d'ús: %s [OPCIONS] [FITXER]...\n"
 # molt això de text emparellat.
 # Encara que coincident tampoc no m'acaba de convéncer. ear
 # I que faig amb "reentrant" i "parser"? jm
-#: src/main.c:1794
+#: src/main.c:1748
 #, fuzzy, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -571,7 +554,7 @@ msgid ""
 "  -b, --backup            write backing-up information to %s\n"
 "  -p, --perf-report       write performance report to stderr\n"
 "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
-"  -T, --trace             %s should run in trace mode\n"
+"  -T, --env.trace             %s should run in env.trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
 "      --hex               use hexadecimal numbers instead of octal in debug "
@@ -585,6 +568,7 @@ msgid ""
 "      --header-file=FILE   create a C header file in addition to the "
 "scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
+"      --backup-file=FILE  write backing-up information to FILE\n"
 "\n"
 "Scanner behavior:\n"
 "  -7, --7bit              generate 7-bit scanner\n"
@@ -599,10 +583,11 @@ msgid ""
 "Generated code:\n"
 "  -+,  --c++               generate C++ scanner class\n"
 "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
+"  -e,  --emit=LANG         Specify target language\n"
 "  -L,  --noline            suppress #line directives in scanner\n"
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
-"  -R,  --reentrant         generate a reentrant C scanner\n"
-"       --bison-bridge      scanner for bison pure parser.\n"
+"  -R,  --reentrant         generate a reentrant scanner\n"
+"       --bison-bridge      scanner for Bison pure parser.\n"
 "       --bison-locations   include yylloc support.\n"
 "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
 "       --nounistd          do not include <unistd.h>\n"
@@ -687,48 +672,35 @@ msgstr ""
 "  -h, --help              mostra aquest missatge d'ajuda\n"
 "  -V, --version           informa de la versió de %s\n"
 
-#: src/misc.c:64
-msgid "allocation of sko_stack failed"
-msgstr "Ha fallat l'assignació de «sko_stack»"
-
-#: src/misc.c:100
-#, c-format
-msgid "name \"%s\" ridiculously long"
-msgstr "el nom «%s» és ridículament llarg"
-
-#: src/misc.c:155
+#: src/misc.c:70 src/misc.c:81
 msgid "memory allocation failed in allocate_array()"
 msgstr "ha fallat l'assignació de memòria en allocate_array()"
 
-#: src/misc.c:205
+#: src/misc.c:131
 #, c-format
 msgid "bad character '%s' detected in check_char()"
 msgstr "caràcter incorrecte «%s» detectat en check_char()"
 
-#: src/misc.c:210
+#: src/misc.c:136
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "l'analitzador requereix l'opció -8 per a fer servir el caràcter %s"
 
-#: src/misc.c:229
+#: src/misc.c:155
 #, fuzzy
 msgid "memory allocation failure in xstrdup()"
 msgstr "ha fallat l'assignació de memòria en allocate_array()"
 
-#: src/misc.c:303
+#: src/misc.c:231
 #, c-format
 msgid "%s: fatal internal error, %s\n"
 msgstr "%s: error intern fatal, %s\n"
 
-#: src/misc.c:671
+#: src/misc.c:587 src/misc.c:598
 msgid "attempt to increase array size failed"
 msgstr "ha fallat l'intent d'augmentar la mida de la matriu"
 
-#: src/misc.c:795
-msgid "bad line in skeleton file"
-msgstr "línia incorrecta en el fitxer d'esquema"
-
-#: src/misc.c:845
+#: src/misc.c:645
 msgid "memory allocation failed in yy_flex_xmalloc()"
 msgstr "ha fallat l'assignació de memòria en yy_flex_xmalloc()"
 
@@ -762,194 +734,194 @@ msgstr "màquina buida en dupmachine()"
 msgid "Variable trailing context rule at line %d\n"
 msgstr "Regla de context posterior variable en la línia %d\n"
 
-#: src/nfa.c:357
+#: src/nfa.c:353
 msgid "bad state type in mark_beginning_as_normal()"
 msgstr "tipus d'estat incorrecte en mark_beginning_as_normal()"
 
-#: src/nfa.c:595
+#: src/nfa.c:593
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "les regles d'entrada són massa complicades (>= %d estats AFN)"
 
-#: src/nfa.c:673
+#: src/nfa.c:671
 msgid "found too many transitions in mkxtion()"
 msgstr "s'han trobat massa transicions en mkxtion()"
 
-#: src/nfa.c:699
+#: src/nfa.c:697
 #, c-format
 msgid "too many rules (> %d)!"
 msgstr "massa regles (> %d)!"
 
-#: src/parse.y:159
+#: src/parse.y:163
 msgid "unknown error processing section 1"
 msgstr "s'ha produït un error desconegut en processar la secció 1"
 
-#: src/parse.y:184 src/parse.y:353
+#: src/parse.y:188 src/parse.y:373
 msgid "bad start condition list"
 msgstr "condició de començament incorrecta"
 
-#: src/parse.y:204
+#: src/parse.y:208
 msgid "Prefix must not contain [ or ]"
 msgstr ""
 
-#: src/parse.y:317
+#: src/parse.y:337
 msgid "unrecognized rule"
 msgstr "regla no reconeguda"
 
-#: src/parse.y:436 src/parse.y:449 src/parse.y:518
+#: src/parse.y:456 src/parse.y:469 src/parse.y:538
 msgid "trailing context used twice"
 msgstr "s'ha utilitzat el context posterior dos vegades"
 
-#: src/parse.y:554 src/parse.y:564 src/parse.y:637 src/parse.y:647
+#: src/parse.y:574 src/parse.y:584 src/parse.y:657 src/parse.y:667
 msgid "bad iteration values"
 msgstr "valors d'iteració incorrectes"
 
-#: src/parse.y:582 src/parse.y:600 src/parse.y:665 src/parse.y:683
+#: src/parse.y:602 src/parse.y:620 src/parse.y:685 src/parse.y:703
 msgid "iteration value must be positive"
 msgstr "el valor d'iteració ha de ser positiu"
 
-#: src/parse.y:806 src/parse.y:816
+#: src/parse.y:826 src/parse.y:836
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
 msgstr ""
 "el rang de caràcters [%c-%c] és ambigu en un analitzador insensible a les "
 "majúscules i minúscules"
 
-#: src/parse.y:821
+#: src/parse.y:841
 msgid "negative range in character class"
 msgstr "rang negatiu en classe de caràcter"
 
-#: src/parse.y:918
+#: src/parse.y:938
 msgid "[:^lower:] is ambiguous in case insensitive scanner"
 msgstr ""
 "[:^lower:] és ambigu en un analitzador insensible a les majúscules i "
 "minúscules"
 
-#: src/parse.y:924
+#: src/parse.y:944
 msgid "[:^upper:] ambiguous in case insensitive scanner"
 msgstr ""
 "[:^upper:] és ambigu en un analitzador insensible a les majúscules i "
 "minúscules"
 
-#: src/scan.l:82 src/scan.l:644 src/scan.l:702
+#: src/scan.l:73 src/scan.l:662 src/scan.l:720
 msgid "Input line too long\n"
 msgstr "La línia d'entrada és massa llarga\n"
 
-#: src/scan.l:183
+#: src/scan.l:185
 #, c-format
 msgid "malformed '%top' directive"
 msgstr "directiva «%top» malformada"
 
-#: src/scan.l:205
+#: src/scan.l:207
 #, no-c-format
 msgid "unrecognized '%' directive"
 msgstr "directiva «%» no reconeguda"
 
-#: src/scan.l:214
+#: src/scan.l:216
 msgid "Definition name too long\n"
 msgstr "El nom de la definició és massa llarg\n"
 
-#: src/scan.l:309
+#: src/scan.l:311
 msgid "Unmatched '{'"
 msgstr "«|» no emparellat"
 
-#: src/scan.l:325
+#: src/scan.l:327
 #, c-format
 msgid "Definition value for {%s} too long\n"
 msgstr "El valor de la definició de {%s} és massa llarg\n"
 
-#: src/scan.l:342
+#: src/scan.l:344
 msgid "incomplete name definition"
 msgstr "definició del nom incompleta"
 
-#: src/scan.l:467
+#: src/scan.l:486
 msgid "Option line too long\n"
 msgstr "La línia d'opcions és massa llarga\n"
 
-#: src/scan.l:475
+#: src/scan.l:494
 #, c-format
 msgid "unrecognized %%option: %s"
 msgstr "%%opció no reconeguda: %s"
 
-#: src/scan.l:659 src/scan.l:832
+#: src/scan.l:677 src/scan.l:850
 msgid "bad character class"
 msgstr "classe de caràcter incorrecta"
 
-#: src/scan.l:709
+#: src/scan.l:727
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "definició no definida {%s}"
 
-#: src/scan.l:772
+#: src/scan.l:790
 msgid "unbalanced parenthesis"
 msgstr ""
 
-#: src/scan.l:787
+#: src/scan.l:805
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "<condició d'activació> incorrecta: %s"
 
-#: src/scan.l:800
+#: src/scan.l:818
 msgid "missing quote"
 msgstr "manca una cometa"
 
-#: src/scan.l:866
+#: src/scan.l:884
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "expressió de la classe de caràcters incorrecta: %s"
 
-#: src/scan.l:888
+#: src/scan.l:906
 msgid "bad character inside {}'s"
 msgstr "caràcter incorrecte dins de {}"
 
-#: src/scan.l:894
+#: src/scan.l:912
 msgid "missing }"
 msgstr "manca una }"
 
-#: src/scan.l:972
+#: src/scan.l:1020
 msgid "EOF encountered inside an action"
 msgstr "s'ha trobat un EOF dins d'una acció"
 
-#: src/scan.l:977
+#: src/scan.l:1025
 msgid "EOF encountered inside pattern"
 msgstr "s'ha trobat un EOF dins d'un patró"
 
-#: src/scan.l:1010
+#: src/scan.l:1058
 #, c-format
 msgid "bad character: %s"
 msgstr "caràcter incorrecte: %s"
 
-#: src/scan.l:1038
+#: src/scan.l:1086
 #, c-format
 msgid "can't open %s"
 msgstr "no es pot obrir %s"
 
-#: src/scanopt.c:259
+#: src/scanopt.c:248
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
 msgstr "Forma d'ús: %s [OPCIONS]...\n"
 
-#: src/scanopt.c:524
+#: src/scanopt.c:484
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
 msgstr "l'opció «%s» no accepta arguments\n"
 
-#: src/scanopt.c:529
+#: src/scanopt.c:489
 #, c-format
 msgid "option `%s' requires an argument\n"
 msgstr "l'opció «%s» requereix un argument\n"
 
-#: src/scanopt.c:533
+#: src/scanopt.c:493
 #, c-format
 msgid "option `%s' is ambiguous\n"
 msgstr "l'opció «%s» és ambígua\n"
 
-#: src/scanopt.c:537
+#: src/scanopt.c:497
 #, c-format
 msgid "Unrecognized option `%s'\n"
 msgstr "Opció no reconeguda «%s»\n"
 
-#: src/scanopt.c:541
+#: src/scanopt.c:501
 #, c-format
 msgid "Unknown error=(%d)\n"
 msgstr "Error desconegut=(%d)\n"
@@ -981,8 +953,32 @@ msgstr "Marcador de fi\n"
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr "*Quelcom estrany* - terminal: %d val: %d\n"
 
+#~ msgid "Allocation of buffer for line directive failed"
+#~ msgstr "Ha fallat l'assignació d'un buffer per a la directiva de línia"
+
+#~ msgid "Allocation of buffer for m4 def failed"
+#~ msgstr "Ha fallat l'assignació d'un búfer per la definició m4"
+
+#~ msgid "Allocation of buffer for m4 undef failed"
+#~ msgstr "Ha fallat l'assignació d'un búfer per la indefinició m4"
+
+#~ msgid "error creating header file %s"
+#~ msgstr "s'ha produït un error en crear el fitxer de capçalera %s"
+
+#~ msgid "%s %s\n"
+#~ msgstr "%s %s\n"
+
+#~ msgid "allocation of sko_stack failed"
+#~ msgstr "Ha fallat l'assignació de «sko_stack»"
+
+#~ msgid "name \"%s\" ridiculously long"
+#~ msgstr "el nom «%s» és ridículament llarg"
+
 #~ msgid "dynamic memory failure in copy_string()"
 #~ msgstr "errada de la memòria dinàmica en copy_string()"
+
+#~ msgid "bad line in skeleton file"
+#~ msgstr "línia incorrecta en el fitxer d'esquema"
 
 #~ msgid "consistency check failed in symfollowset"
 #~ msgstr "Ha fallat la prova de consistència en symfollowset"
