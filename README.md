@@ -30,9 +30,9 @@ the lists.
 The flex distribution contains the following files which may be of
 interest:
 
-* README - This file.
+* README.md - This file.
 * NEWS - current version number and list of user-visible changes.
-* INSTALL - basic installation information.
+* INSTALL.md - basic installation information.
 * ABOUT-NLS - description of internationalization support in flex.
 * COPYING - flex's copyright and license.
 * doc/ - user documentation.

@@ -39,7 +39,7 @@ dist_doc_DATA = \
 
 EXTRA_DIST = \
 	.indent.pro \
-	INSTALL
+	INSTALL.md
 
 dist_noinst_SCRIPTS = \
 	autogen.sh \
