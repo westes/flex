@@ -15,8 +15,8 @@ repository or if GNU autotools seems like a jumble of tenuous
 incantationery to you, then make sure that you downloaded one of the
 release tar archives of flex. You can verify this by checking the
 filename of what you downloaded. If it is something like
-"flex-<version>.tar.<compressiontype>" then you have a release tar
-archive. If you have a filename like "flex.tar.gz" or "flex.zip", you
+`flex-<version>.tar.<compressiontype>` then you have a release tar
+archive. If you have a filename like `flex.tar.gz` or `flex.zip`, you
 have a copy of the git repository and you didn't download the thing
 you wanted to.
 
@@ -48,9 +48,9 @@ $ make install
 ```
 
 Note that you may want to make use of the DESTDIR argument on the
-"make install" command line or that you may want to have used the
-"--prefix" argument with configure (or mostly equivalently the
-"prefix" argument on the make command line).
+`make install` command line or that you may want to have used the
+`--prefix` argument with configure (or mostly equivalently the
+`prefix` argument on the make command line).
 
 ## Building from the git repository
 
@@ -97,6 +97,6 @@ $ ./autogen.sh
 After autogen.sh finishes successfully, building flex follows the same
 steps as building flex from a release archive.
 
-Note that, in addition to "make check", "make distcheck" builds a
+Note that, in addition to `make check`, `make distcheck` builds a
 release archive and builds and tests flex from inside a directory
 containing only known distributed files.
