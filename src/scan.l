@@ -673,7 +673,10 @@ void context_member(char *, const char *);
                    */
                 &&  (cclval = ccllookup( nmstr )) != 0 )
 				{
-				if ( yyinput() != ']' )
+				/* Intentionally using the old API rather than `yyinput`, so that
+				 * we can bootstrap using flex 2.6.4 and older.
+				 */
+				if ( input() != ']' )
 					synerr( _( "bad character class" ) );
 
 				yylval = cclval;
