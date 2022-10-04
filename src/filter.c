@@ -328,7 +328,7 @@ static bool is_blank_line (const char *str)
 int filter_fix_linedirs (struct filter *chain)
 {
 	char   buf[4096];
-	const char *traceline_template, *cp;
+	const char *cp;
 	const size_t readsz = sizeof buf;
 	int     lineno = 1;
 	bool    in_gen = true;	/* in generated code */
@@ -381,7 +381,7 @@ int filter_fix_linedirs (struct filter *chain)
 
 				/* Adjust the line directives. */
 				in_gen = true;
-				snprintf (buf, readsz, traceline_template,
+				snprintf (buf, readsz, ctrl.traceline_template,
 					  lineno + 1, filename);
 				strncat(buf, "\n", sizeof(buf)-1);
 			}
