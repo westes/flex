@@ -66,7 +66,7 @@ EOF
     done
 done
 
-# posixlycorrect is a special case becaae we need to set POSIXLY_CORRECT
+# posixlycorrect is a special case because we need to set POSIXLY_CORRECT
 # in Flex's environment while these .l files are being processed.
 for backend in "$@" ; do
     case $backend in

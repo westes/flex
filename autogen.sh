@@ -22,7 +22,7 @@
 #  PURPOSE.
 
 # If you see no configure script, then run ./autogen.sh to create it
-# and procede with the "normal" build procedures.
+# and proceed with the "normal" build procedures.
 
 # use LIBTOOLIZE, if set
 if test "x$LIBTOOLIZE" = "x"; then

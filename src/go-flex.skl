@@ -925,7 +925,7 @@ m4_ifdef([[M4_MODE_NO_CPP_USE_READ]], [[
 }
 ]])
 
-%# yymore has a magic rewute rule. It's declared here, rather than with the other
+%# yymore has a magic rewrite rule. It's declared here, rather than with the other
 %# magic functions, so yy_get_next_buffer() won't need a forward declaration.
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[

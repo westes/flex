@@ -149,7 +149,7 @@ void write_block_header(char *type)
                       */
 ^[^\n:]+\n[*]+\n      write_block_header(CHAPTER); 
 
-^"= "[A-Z]" ="\n"="*  { /* we create a seciton for each category */
+^"= "[A-Z]" ="\n"="*  { /* we create a section for each category */
                         if(need_closing == TRUE){
                           printf("@end table\n\n\n");
                         }
@@ -214,7 +214,7 @@ void write_block_header(char *type)
                     }
 
  /*
-  * repoduce @enumerate lists
+  * reproduce @enumerate lists
   */
 
 ":"\n+[ \t]*[0-9]+"."   {

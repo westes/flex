@@ -24,7 +24,7 @@
 /*
  * Test Lex incompatibility.  This is the compatibility exanmple from
  * the documentation; with !lex-compat it *should* match the string "foo".
- * For the complementery test, see lexcompat.rules.
+ * For the complementary test, see lexcompat.rules.
  */
 %option nounput nomain noyywrap noinput
 %option warn nolex-compat

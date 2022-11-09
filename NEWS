@@ -110,7 +110,7 @@ flex NEWS
     when those platforms are not present.
 
 *** When running "make check", you can now pas V=0 to silence more of
-    the build. This is useful when you're less connncerned about the
+    the build. This is useful when you're less concerned about the
     details of building and linking the test programs themselves.
 
 * Noteworthy changes in release 2.6.3 (2016-12-30) [stable]
@@ -158,7 +158,7 @@ flex NEWS
 
 ** flex internals
 
-*** a segfalt involving yyrestart(NULL) has been fixed
+*** a segfault involving yyrestart(NULL) has been fixed
 
 *** flex should now handle quoting when mixed with m4 processing correctly
 
@@ -245,7 +245,7 @@ flex NEWS
 
 *** Removed deprecated 'register' storage class specifier
 
-*** Changeed output formats from octal to hexadecimal
+*** Changed output formats from octal to hexadecimal
 
 *** check limits before using array index cclp; resolves sf-166
 
@@ -402,7 +402,7 @@ distribution
 * version 2.5.31 released 2003-4-1
 
 ** remove --enable-maintainer-mode configure option; none of the
-   Makefiles were using it and it can be unduely confusing
+   Makefiles were using it and it can be unduly confusing
 
 * version 2.5.30 released 2003-4-1
 
@@ -451,7 +451,7 @@ distribution
 
 ** new es translation from the translation project
 
-** slight tweeks to the flex_int*_t types
+** slight tweaks to the flex_int*_t types
 
 ** flex now warns about pattern ranges that might be ambiguous when
    generating a case-insensitive scanner
@@ -605,7 +605,7 @@ formatting the manual in postscript and pdf in the distributed
 
 ** the test suite now respects the usual CFLAGS, etc. variables
 
-** removed some warnings which some tests trigggered with the -s option
+** removed some warnings which some tests triggered with the -s option
 
 ** the flex-generated header file now tries to be smarter about
    conditionally including start conditions
