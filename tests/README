@@ -87,17 +87,17 @@ rules file. The assumption is that the test binary should consume the
 data following ### in the rules file, exercising some set of Flex
 features and not returning a nonzero status.
 
-If you can express your test as a ruleset within in this orotocol,
+If you can express your test as a ruleset within in this protocol,
 please do so.  Those tests are easy to port to new back ends, as that
-whole job can be done by enhabcing testmaker.m4.
+whole job can be done by enhancing testmaker.m4.
 
 * WHY SOME TESTS ARE MISSING
 
 The "top" test is backend-independent; what it's really testing
 is Flex's ability to accumulate and ship preamble code sections.
 
-The "quotes" test is also backend-indepedent; it's testing that
-m4 expansion doesn't leak through the genertated scanner.
+The "quotes" test is also backend-independent; it's testing that
+m4 expansion doesn't leak through the generated scanner.
 
 The C99 backend is missing tests for the Bison bridge, header
 generation, and loadable tables because it omits those features in

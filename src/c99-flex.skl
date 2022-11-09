@@ -221,7 +221,7 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <unistd.h>	/* requred for isatty() */
+#include <unistd.h>	/* required for isatty() */
 
 #if defined(__GNUC__) && __GNUC__ >= 3
 #define yynoreturn __attribute__((__noreturn__))
@@ -259,9 +259,9 @@ const int YY_NULL = 0;
  */
 m4_define([[YY_SC_TO_UI]], [[((YY_CHAR)($1))]])
 
-/* In the ancestal C back end this was a void pointer, meant to be
+/* In the ancestral C back end this was a void pointer, meant to be
  * opaque pointer.  That indirection has been removed here as it
- * wouldn't easily port to other langages.
+ * wouldn't easily port to other languages.
  */
 typedef struct yyguts_t *yyscan_t;
 
@@ -968,7 +968,7 @@ m4_ifdef( [[M4_MODE_YYLINENO]],
 }
 ]])
 
-%# yymore has a magic rewute rule. It's declared here, rather than with the other
+%# yymore has a magic rewrite rule. It's declared here, rather than with the other
 %# magic functions, so yy_get_next_buffer() won't need a forward declaration.
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
@@ -2056,7 +2056,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 		yy_load_buffer_state( yyscanner );
 	}
 
-	/* open scope of user declarationns */
+	/* open scope of user declarations */
 	{
 %% [4.0] user's declarations go here
 

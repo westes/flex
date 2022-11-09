@@ -1284,7 +1284,7 @@ void readin (void)
 		out_str ("M4_HOOK_SET_POSTACTION(%s)\n", ctrl.postaction);
 	}
 
-	/* This has to be a stright textual substitution rather
+	/* This has to be a straight textual substitution rather
 	 * than a constant declaration because in C a const is
 	 * not const enough to be a static array bound.
 	 */
@@ -1294,7 +1294,7 @@ void readin (void)
 	if (userdef_buf.elts)
 		outn ((char *) (userdef_buf.elts));
 
-	/* If the user explicitly requested posix compatibility by specifing the
+	/* If the user explicitly requested posix compatibility by specifying the
 	 * posix-compat option, then we check for conflicting options. However, if
 	 * the POSIXLY_CORRECT variable is set, then we quietly make flex as
 	 * posix-compatible as possible.  This is the recommended behavior

@@ -1199,7 +1199,7 @@ run-time error results.
 Also note that you cannot use @code{%array} with C++ scanner classes
 (@pxref{Cxx}).
 
-In target langages with automatic memory allocation and arrays, none
+In target languages with automatic memory allocation and arrays, none
 of this applies; you can expect @code{yytext} to dynamically resize
 itself, calls to the @code{yyunput()} will not destroy the present
 contents of @code{yytext}, and you will never get a run-time error
@@ -2481,7 +2481,7 @@ holds the length of the current token.
 @item  FILE *yyin
 is the file which by default @code{flex} reads from.
 In target languages other than C/C++, expect it to have
-whatever natine type is associated with I/O streams. It may be
+whatever native type is associated with I/O streams. It may be
 redefined but doing so only makes sense before scanning begins or after
 an EOF has been encountered.  Changing it in the midst of scanning will
 have unexpected results since @code{flex} buffers its input; use
@@ -2547,7 +2547,7 @@ is @code{TOK_NUMBER}, part of the scanner might look like:
 @end verbatim
 @end example
 
-Bison is also retargetable to langages other than C.  Outside the
+Bison is also retargetable to languages other than C.  Outside the
 C/C++ back end, it is likely that your Bison module will simply export
 module-level constants that will be made visible to your scanner by
 linkage or by explicit import statements.
@@ -2727,9 +2727,9 @@ Python, etc.
 Back ends other than the default C generator can't assume they have
 the C preprocessor available.  Therefore, Flex recognizes the
 following function calls - yyecho(), yyless(), yymore(), yyinput(),
-yystart(), yybegin(), yyunput(), yypanic() - and rewreites them adding a
+yystart(), yybegin(), yyunput(), yypanic() - and rewrites them adding a
 yyscanner final argument as though they were C macros. This optiion
-is set to false whrn you select or default to the C back end, and to
+is set to false when you select or default to the C back end, and to
 true otherwise.  You can turn it off (or on) explicitly after your
 emit option.
 
@@ -2755,7 +2755,7 @@ implementation.  Note that this does not mean @emph{full} compatibility.
 Use of this option costs a considerable amount of performance, and it
 cannot be used with the @samp{--c++}, @samp{--full}, @samp{--fast}, @samp{-Cf}, or
 @samp{-CF} options.  For details on the compatibilities it provides, see
-@ref{Lex and Posix}. It will usuually be a no-op on back ends other
+@ref{Lex and Posix}. It will usually be a no-op on back ends other
 than C/C++.
 This option also results in the name
 @code{YY_FLEX_LEX_COMPAT} being @code{#define}'d in the generated scanner.
@@ -3138,8 +3138,8 @@ scanner, which simply calls @code{yylex()}.  This option implies
 @opindex yyterminate
 @hkindex yyterminate
 @item @code{%option yyterminate}
-This is a string-valuued option with which you can specify an expansion
-of the yyterminate() hook. whuch normally causes the generated
+This is a string-valued option with which you can specify an expansion
+of the yyterminate() hook. which normally causes the generated
 scanner to return 0 as an end-of-input indication.
 
 @anchor{option-nounistd}
@@ -3155,7 +3155,7 @@ to find them.
 
 This option is obsolete, as after Flex was originally written
 @file{unistd.h} became part of the Single Unix Specification and is
-consequently everywhere; thuas there is no reason to use this option
+consequently everywhere; thus there is no reason to use this option
 on modern systems.  It is included so as not to break compatibility
 with old build scripts, and will have no effect on backends other than
 the default C one.
@@ -4368,7 +4368,7 @@ to accomplish this. (See below).
 
 In the default C/C++ back end @code{yylex_init} and
 @code{yylex_destroy} must be called before and after @code{yylex},
-respectively.  This may not be true in other target langages,
+respectively.  This may not be true in other target languages,
 especially those with automatic memory management.
 
 @example
@@ -4533,7 +4533,7 @@ the scanner itself.
 
 In the default C/C++ back end, the extra field in your scanner state
 structure is defined as type @code{void *}; in other target languages
-it might be a generic type, or no such field might be genetated at
+it might be a generic type, or no such field might be generated at
 all.  In back ends which support this extra field, you may redefine
 the type using @code{%option extra-type="your_type"} in the scanner:
 
@@ -8761,7 +8761,7 @@ definitions Flex ships is that the bodies of initializers for arrays
 of integers consist of decimal numeric literals separated by commas
 (and optional whitespace).
 
-Otherwise, knowledge of each target langage's syntax lives in a
+Otherwise, knowledge of each target language's syntax lives in a
 language-specific skeleton file that is digested into a data structure
 inside Flex when Flex is compiled.  The skeleton files are part of the
 Flex source distribution; they are not required by the Flex
@@ -8792,7 +8792,7 @@ This file you are looking at is processed through GNU m4 during the
 pre-compilation stage of Flex. At this time only macros starting with
 `m4preproc_' are processed, and quoting is normal (that is, the quote
 opener is a back-tick (ASCII 96) and the quote closer is a tick or
-single quote (ASCII 39) @footnote{See chapter 3.2 of the m4 mamual,
+single quote (ASCII 39) @footnote{See chapter 3.2 of the m4 manual,
 ``Quoting input to m4'', for more information.}.  The main purpose of
 this expansion phase is to set Flex version symbols.
 
@@ -8861,14 +8861,14 @@ is pointed at by the skel nember of your language back end.
 
 @item
 The interesting part: mutate your new back end and skeleton so they
-produce code in your desired target langage.
+produce code in your desired target language.
 
 @item
 Add a test suite for your back end.  You should be able to clone
 one of the existing sets of test loads to get good coverage.  Note
 that is highly unlikely your back end will be accepted into the
 flex distribution without a test suite.  Fortunately, adapting
-the existing tests should not be difficult.  There is some guisdance
+the existing tests should not be difficult.  There is some guidance
 in the @file{tests/README} file of the source distrbution.
 @end enumerate
 
@@ -9031,7 +9031,7 @@ call the special action @code{YY_NEW_FILE}.  This is no longer
 necessary.
 
 @item
-FLEX_SCANNER: Not neaningful outside of the C back end, and not defined.
+FLEX_SCANNER: Not meaningful outside of the C back end, and not defined.
 
 @item
 FLEX_DEBUG: Outside the default C back end, this is a constant of type
@@ -9046,7 +9046,7 @@ YY_BUF_SIZE: replaced by @code{%option bufsize}.
 
 @item:
 yyterminate(): Backends that don't use the C preprocessor cannot
-support redefinining this hook with #define.  Instead, set it with
+support redefining this hook with #define.  Instead, set it with
 the @code{yyterminate} option. 
 
 @end itemize
@@ -9062,7 +9062,7 @@ This is also why the functions @code{yy_current_buffer()},
 @code{yy_flush_current_buffer()}, and @code{yy_set_interactive()}
 do not have rewrite rules (see @xref{option-rewrite}); simply
 removing the underscores would have produced names that are
-unncomfortably long and hard on the eyeballs.  We leave
+uncomfortably long and hard on the eyeballs.  We leave
 it to the API binding for each individual target language to
 choose whether they should be left as is, camel-cased, or
 otherwise adapted to local conventions.
@@ -9127,7 +9127,7 @@ to specific locations in the generated scanner, and may be used to insert arbitr
 @c endf
 @c nnoremap <F5>  1G/@node\s\+unnamed-faq-\d\+<cr>mfww"wy5ezt:call Faq2()<cr>
 
-@c Remaining problem points for the multilangage interface
+@c Remaining problem points for the multilanguage interface
 @c YY_NUM_RULES
 @c YY_FLEX_MAJOR_VERSION
 @c YY_FLEX_MINOR_VERSION

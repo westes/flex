@@ -4186,7 +4186,7 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 				p = (struct yy_trans_info **) p + 1;
 			}
 			else {
-				/* t32 is a plain int. copy data, then incrememnt p. */
+				/* t32 is a plain int. copy data, then increment p. */
 				switch (dmap->dm_sz) {
 				case sizeof (flex_int32_t):
 					if(M4_YY_TABLES_VERIFY ) {

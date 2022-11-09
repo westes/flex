@@ -305,7 +305,7 @@ typedef enum trit_t {
  * If it's in this structure, it has a corresponding m4 symbol.
  */
 struct ctrl_bundle_t {
-	bool always_interactive;// always use cheacter-by-character input
+	bool always_interactive;// always use character-by-character input
 	FILE *backing_up_file;	// file to summarize backing-up states to 
 	bool bison_bridge_lval;	// (--bison-bridge), bison pure calling convention. 
 	bool bison_bridge_lloc;	// (--bison-locations), bison yylloc.
@@ -341,7 +341,7 @@ struct ctrl_bundle_t {
 	bool use_read;		// (-f, -F, or -Cr) use read() for scanner input 
        				// otherwise, use fread(). 
 	char *yyclass;		// yyFlexLexer subclass to use for YY_DECL
-	char *yydecl;		// user-specfied prototype for yylex.
+	char *yydecl;		// user-specified prototype for yylex.
 	int yylmax;		// Maximum buffer length if %array
 	trit yymore_really_used;// Force geberation of support code for yymore
 	bool yytext_is_array;	// if true (i.e., %array directive), then declare
@@ -918,7 +918,7 @@ extern void mark_defs1(void);
 /* Mark the current position in the action array as the end of the prolog. */
 extern void mark_prolog(void);
 
-/* Generate a data statment for a two-dimensional array. */
+/* Generate a data statement for a two-dimensional array. */
 extern void mk2data(int);
 
 extern void mkdata(int);	/* generate a data statement */
@@ -1032,7 +1032,7 @@ extern void set_input_file(char *);
 
 /* from file skeletons.c */
 
-/* return the correct file suffix for the selrcted back end */
+/* return the correct file suffix for the selected back end */
 const char *suffix (void);
 
 /* Mine a text-valued property out of the skeleton file */

@@ -153,7 +153,7 @@ m4_ifdef([[M4_YY_ALWAYS_INTERACTIVE]], ,
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <unistd.h>	/* requred for isatty() */
+#include <unistd.h>	/* required for isatty() */
 
 #if defined(__GNUC__) && __GNUC__ >= 3
 #define yynoreturn __attribute__((__noreturn__))
@@ -925,7 +925,7 @@ m4_ifdef([[M4_MODE_NO_CPP_USE_READ]], [[
 }
 ]])
 
-%# yymore has a magic rewute rule. It's declared here, rather than with the other
+%# yymore has a magic rewrite rule. It's declared here, rather than with the other
 %# magic functions, so yy_get_next_buffer() won't need a forward declaration.
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
