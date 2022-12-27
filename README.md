@@ -39,7 +39,7 @@ interest:
 * examples/ - containing examples of some possible flex scanners and a
               few other things. See the file examples/README for more
               details.
-* tests/ - regression tests. See TESTS/README for details.
+* tests/ - regression tests. See tests/README for details.
 * po/ - internationalization support files.
 
 ---
