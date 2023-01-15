@@ -24,13 +24,22 @@
 
 # autoconf requirements and initialization
 
+dnl We recommend builders to regenerate configure and auxiliary scripts with
+dnl exact versions of tools that generate flex release tarball, or latest
+dnl versions of tools for flex development. The minimum feature and version
+dnl requirements are provided for information only (no guarantee that the tools
+dnl will work and we may bump requirements with future code changes).
+dnl Uses AC_PATH_PROGS_FEATURE_CHECK. Requires autoconf-2.62 as minimum.
+AC_PREREQ([2.62])
 AC_INIT([the fast lexical analyser generator],[2.6.4],[flex-help@lists.sourceforge.net],[flex])
-AC_PREREQ([2.60])
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_USE_SYSTEM_EXTENSIONS
+dnl "LT_*" macros and "libtoolize --install" require libtool-2.2 as minimum.
+LT_PREREQ([2.2])
 LT_INIT
-AM_INIT_AUTOMAKE([1.15 -Wno-portability foreign std-options dist-lzip parallel-tests subdir-objects])
+dnl Uses dist-lzip. Requires automake-1.11.3 as minimum.
+AM_INIT_AUTOMAKE([1.11.3 -Wno-portability foreign std-options dist-lzip parallel-tests subdir-objects])
 AC_CONFIG_HEADER([src/config.h])
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_MACRO_DIR([m4])
@@ -40,7 +49,15 @@ AC_SUBST(SHARED_VERSION_INFO)
 # checks for programs
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.19.7])
+dnl Try to pull in latest gettext infrastructure ("po" and "m4") files.
+dnl Unfortunately autoreconf as of 2.69 doesn't recognize
+dnl AM[_]GNU[_]GETTEXT_REQUIRE_VERSION so we provide AM[_]GNU[_]GETTEXT_VERSION
+dnl as fallback. (autopoint will ignore latter if former is specified.)
+dnl
+dnl Bugs in gettext before 0.14 prevent building flex with it.
+dnl FLEX_GNU_GETTEXT_REAL_REQUIRE_VERSION=0.14
+AM_GNU_GETTEXT_REQUIRE_VERSION([0.19.6])
+AM_GNU_GETTEXT_VERSION([0.19.6])
 AC_PROG_YACC
 AS_IF([test "$YACC" != 'bison -y'], [
 	YACC="\${top_srcdir}/build-aux/missing bison -y"
