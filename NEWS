@@ -26,7 +26,7 @@ flex NEWS
 
 ** documentation
 
-*** new bg, pt, uk translations from the translation project
+*** new bg, eo, pt, uk translations from the translation project
 
 ** scanner
 
@@ -741,7 +741,7 @@ options, see accompanying documentation
 
 *** Updated the manual with the new reentrant API
 
-*** Two new options %option reentrant (-R) and 
+*** Two new options %option reentrant (-R) and
 %option reentrant-bison (-Rb)
 
 *** All globals optionally placed into struct yyglobals_t
@@ -771,7 +771,7 @@ But the inverse is still true
 
 ** Developer test suite added
 
-*** TESTS/ directory has been added. Users can 
+*** TESTS/ directory has been added. Users can
 'make test' in the TESTS directory to execute the test suite
 
 ** Support for bison variables yylval and yylloc added
