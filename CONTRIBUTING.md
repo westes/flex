@@ -85,16 +85,16 @@ A typical commit message might look like:
 The description should summarize the changes in a single, short sentence. The description should be imperative, like the descriptions of the types below.
 
 The primary types are:
-- fix: Fix a bug or incorrect behavior
-- feat: Add a new feature
-- docs: Update the package documentation
-- test: Change or add to the test suite
-- refactor: Simplify maintainability without affecting performance or behavior
-- perf: Improve performance of a feature
-- style: Correct a style mismatch (indentation, etc.)
 - build: Change the build system, including tracking external dependencies
 - ci: Change the CI/CD system
+- docs: Update the package documentation
+- feat: Add a new feature
+- fix: Fix a bug or incorrect behavior
+- perf: Improve performance of a feature
+- refactor: Simplify maintainability without affecting performance or behavior
 - revert: Revert a previous commit
+- style: Correct a style mismatch (indentation, etc.)
+- test: Change or add to the test suite
 
 The optional scope must appear in parentheses and must consist of a noun describing the section of the code base that was changed.
 
