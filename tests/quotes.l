@@ -32,6 +32,9 @@
 /* sect 1   [[[ 3 ]]]         TEST_XXX */
 /* sect 1  [[[[ 4 ]]]]        TEST_XXX */
 /* sect 1  ]] unmatched [[    TEST_XXX */
+/* sect 1  ]] 
+ *         multiline unmatched [[    TEST_XXX 
+ */
 
 %{
 /* A template scanner file to build "scanner.c". */
@@ -46,6 +49,9 @@
 /* sect 1 block  [[[ 3 ]]]      TEST_XXX */
 /* sect 1 block [[[[ 4 ]]]]     TEST_XXX */
 /* sect 1 block ]] unmatched [[ TEST_XXX */
+/* sect 1 block ]] 
+ *         multiline unmatched [[    TEST_XXX 
+ */
 
 static int a[1] = {0};
 static int b[1] = {0};
@@ -67,6 +73,10 @@ static int foo (int i){
   /* indented code  [[[ 3 ]]] */
   /* indented code [[[[ 4 ]]]] */
   /* indented code ]] unmatched [[ */
+  /* indented code ]] 
+   *         multiline unmatched [[ 
+   */
+
 %{
 // non-indented code    [ 1 ]
 // non-indented code   [[ 2 ]]
@@ -80,6 +90,23 @@ c       /* action comment  [[[ 3 ]]]        */ ;
 d       /* action comment [[[[ 4 ]]]]       */ ;
 e       /* action comment ]] unmatched [[   */ ;
 f       return 1+foo(a[b[c[0]]]);
+g       /* long action comment
+         *    [ 1 ]
+         *   [[ 2 ]]
+         *  [[[ 3 ]]]
+         * [[[[ 4 ]]]] 
+         * ]] 
+         * multiline unmatched [[ 
+         */ ;
+h       { } /* after action comment       [ 1 ]    */
+i       { } /* after action comment      [[ 2 ]]   */
+j       { } /* after action comment     [[[ 3 ]]]  */
+k       { } /* after action comment    [[[[ 4 ]]]] */
+l       { } /* after action comment ]] unmatched [[ */
+m       { } /* after action comment
+              * ]] 
+              * multiline unmatched [[ 
+              */ 
 .|\n    {
 
 #if 0
@@ -94,6 +121,9 @@ f       return 1+foo(a[b[c[0]]]);
             /* action block  [[[ 3 ]]]      TEST_XXX */
             /* action block [[[[ 4 ]]]]     TEST_XXX */
             /* action block ]] unmatched [[ TEST_XXX */
+            /* action block ]] 
+             *              multiline unmatched [[ 
+             *                              TEST_XXX */
             assert(!strcmp("[[ 2 ]]", "[""[ 2 ]""]"));
             assert(!strcmp("[[[ 3 ]]]", "[""[""[ 3 ]""]""]"));
             assert(!strcmp("[[[[ 4 ]]]]", "[""[""[""[ 4 ]""]""]""]"));
@@ -109,6 +139,8 @@ f       return 1+foo(a[b[c[0]]]);
 /* sect 3   [[[ 3 ]]]      TEST_XXX */
 /* sect 3  [[[[ 4 ]]]]     TEST_XXX */
 /* sect 3  ]] unmatched [[ TEST_XXX */
+/* sect 3  ]] 
+ *         multiline unmatched [[ TEST_XXX */
 static int bar (int i){
     return c[b[a[i]]]; /* sect 3 code TEST_XXX */
 }
