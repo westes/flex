@@ -224,8 +224,8 @@ void skelout (bool announce)
 		if (buf[0] == '%') {	/* control line */
 			/* print the control line as a comment. */
 			if (ctrl.ddebug && buf[1] != '#') {
-			    comment(buf);
-			    outc ('\n');
+			    backend->comment(backend, buf);
+				backend->newline(backend);
 			}
 			if (buf[1] == '#') {
 				/* %# indicates comment line to be ignored */
@@ -233,8 +233,8 @@ void skelout (bool announce)
 			else if (buf[1] == '%') {
 				/* %% is a break point for skelout() */
 				if (announce) {
-					comment(buf);
-					outc ('\n');
+					backend->comment(backend, buf);
+					backend->newline(backend);
 				}
 				return;
 			}
