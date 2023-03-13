@@ -64,6 +64,10 @@ static struct flex_backend_t backends[] = {
 
 static struct flex_backend_t *backend = &backends[0];
 
+const struct flex_backend_t *get_backend(void) {
+	return backend;
+}
+
 /* Initialize backends */
 void init_backends( void ) {
 	backends[0] = cpp_backend;

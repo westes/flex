@@ -32,6 +32,7 @@
 /*  PURPOSE. */
 #include "flexdef.h"
 #include "tables.h"
+#include "skeletons.h"
 
 /* Append "new_text" to the running buffer. */
 void add_action (const char *new_text)
@@ -246,45 +247,9 @@ void lerr_fatal (const char *msg, ...)
 /* line_directive_out - spit out a "#line" statement or equivalent */
 void line_directive_out (FILE *output_file, char *path, int linenum)
 {
-	char	*trace_fmt = "m4_ifdef([[M4_HOOK_TRACE_LINE_FORMAT]], [[M4_HOOK_TRACE_LINE_FORMAT([[%d]], [[%s]])]])";
-	char    directive[MAXLINE*2], filename[MAXLINE];
-	char   *s1, *s2, *s3;
+	const struct flex_backend_t *bend = get_backend();
 
-	if (!ctrl.gen_line_dirs)
-		return;
-
-	s1 = (path != NULL) ? path : "M4_YY_OUTFILE_NAME";
-
-	if ((path != NULL) && !s1)
-		s1 = "<stdin>";
-    
-	s2 = filename;
-	s3 = &filename[sizeof (filename) - 2];
-
-	while (s2 < s3 && *s1) {
-		if (*s1 == '\\' || *s1 == '"')
-			/* Escape the '\' or '"' */
-			*s2++ = '\\';
-
-		*s2++ = *s1++;
-	}
-
-	*s2 = '\0';
-
-	if (path != NULL)
-		snprintf (directive, sizeof(directive), trace_fmt, linenum, filename);
-	else {
-		snprintf (directive, sizeof(directive), trace_fmt, 0, filename);
-	}
-
-	/* If output_file is nil then we should put the directive in
-	 * the accumulated actions.
-	 */
-	if (output_file) {
-		fputs (directive, output_file);
-	}
-	else
-		add_action (directive);
+	bend->line_directive_out(bend, output_file, path, linenum);
 }
 
 
@@ -663,15 +628,16 @@ void comment(const char *txt)
 {
 	char buf[MAXLINE];
 	bool eol;
+	const struct flex_backend_t *bend = get_backend();
 
 	strncpy(buf, txt, MAXLINE-1);
 	eol = buf[strlen(buf)-1] == '\n';
 
 	if (eol)
 		buf[strlen(buf)-1] = '\0';
-	out_str("M4_HOOK_COMMENT_OPEN [[%s]] M4_HOOK_COMMENT_CLOSE", buf);
+		bend->comment(bend, buf);
 	if (eol)
-		outc ('\n');
+		bend->newline(bend);
 }
 
 

@@ -36,6 +36,7 @@
 #include "version.h"
 #include "options.h"
 #include "tables.h"
+#include "skeletons.h"
 #include "parse.h"
 
 static char flex_version[] = FLEX_VERSION;
