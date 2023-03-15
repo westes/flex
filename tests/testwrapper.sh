@@ -11,7 +11,6 @@ INPUT_DIRECTORY=""
 INPUT_NAME=""
 INPUT_COUNT=0
 USE_REDIRECT=0
-DO_COMPARISON=0
 
 while getopts d:i:r OPTION ; do
     case $OPTION in
