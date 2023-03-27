@@ -998,13 +998,13 @@ character range such as @samp{[a-z]} or @samp{[S-W]} where it is obvious that yo
 want case-folding to occur. Here are some examples with the @samp{-i} flag
 enabled:
 
-@multitable {@samp{[a-zA-Z]}} {ambiguous} {@samp{[A-Z\[\\\]_`a-t]}} {@samp{[@@A-Z\[\\\]_`abc]}}
+@multitable {@samp{[a-zA-Z]}} {ambiguous} {@samp{[A-Z\[\\\]^_`a-t]}} {@samp{[@@A-Z\[\\\]^_`abc]}}
 @item Range @tab Result @tab Literal Range @tab Alternate Range
 @item @samp{[a-t]} @tab ok @tab @samp{[a-tA-T]} @tab
 @item @samp{[A-T]} @tab ok @tab @samp{[a-tA-T]} @tab
-@item @samp{[A-t]} @tab ambiguous @tab @samp{[A-Z\[\\\]_`a-t]} @tab @samp{[a-tA-T]}
+@item @samp{[A-t]} @tab ambiguous @tab @samp{[A-Z\[\\\]^_`a-t]} @tab @samp{[a-tA-T]}
 @item @samp{[_-@{]} @tab ambiguous @tab @samp{[_`a-z@{]} @tab @samp{[_`a-zA-Z@{]}
-@item @samp{[@@-C]} @tab ambiguous @tab @samp{[@@ABC]} @tab @samp{[@@A-Z\[\\\]_`abc]}
+@item @samp{[@@-C]} @tab ambiguous @tab @samp{[@@ABC]} @tab @samp{[@@A-Z\[\\\]^_`abc]}
 @end multitable
 
 @cindex end of line, in negated character classes
