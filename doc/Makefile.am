@@ -1,4 +1,8 @@
+if CROSS
+FLEX = $(top_builddir)/src/stage1flex
+else
 FLEX = $(top_builddir)/src/flex$(EXEEXT)
+endif
 TEXI2DVI = @TEXI2DVI@ -I $(srcdir)/../examples/manual/
 TEXI2PDF = @TEXI2PDF@ -I $(srcdir)/../examples/manual/
 
