@@ -11,7 +11,7 @@ For example:
 
    make -f Makefile.examples expr
 
-If you ad an example to this directory, don't frget these steps:
+If you add an example to this directory, don't forget these steps:
 
 * Add it to the EXTRA_DIST list in Makefile.am
 
