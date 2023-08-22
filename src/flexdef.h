@@ -918,7 +918,7 @@ extern void mark_defs1(void);
 /* Mark the current position in the action array as the end of the prolog. */
 extern void mark_prolog(void);
 
-/* Generate a data statment for a two-dimensional array. */
+/* Generate a data statement for a two-dimensional array. */
 extern void mk2data(int);
 
 extern void mkdata(int);	/* generate a data statement */
