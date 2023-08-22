@@ -221,7 +221,7 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <unistd.h>	/* requred for isatty() */
+#include <unistd.h>	/* required for isatty() */
 
 #if defined(__GNUC__) && __GNUC__ >= 3
 #define yynoreturn __attribute__((__noreturn__))

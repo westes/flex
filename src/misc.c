@@ -474,7 +474,7 @@ unsigned char myesc (unsigned char array[])
 }
 
 
-/* out - various flavors of outputing a (possibly formatted) string for the
+/* out - various flavors of outputting a (possibly formatted) string for the
  *	 generated scanner, keeping track of the line count.
  */
 

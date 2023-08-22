@@ -135,7 +135,7 @@ ccl_set_diff (int a, int b)
     d = cclinit();
 
     /* In order to handle negation, we spin through all possible chars,
-     * addding each char in a that is not in b.
+     * adding each char in a that is not in b.
      * (This could be O(n^2), but n is small and bounded.)
      */
 	for ( ch = 0; ch < ctrl.csize; ++ch )
