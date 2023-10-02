@@ -18,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
     - name: apt
-      run: sudo apt-get install gcc autoconf bison gettext autopoint help2man lzip texinfo texlive
+      run: sudo apt-get update && apt-get install gcc autoconf bison gettext autopoint help2man lzip texinfo texlive
     - name: autogen
       run: ./autogen.sh
     - name: configure
