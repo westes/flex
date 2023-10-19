@@ -2685,6 +2685,7 @@ m4_ifdef([[M4_MODE_NULTRANS_WRAP]], [[
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[m4_undefine([[M4_YY_NO_YYUNPUT]])]])
 m4_ifdef( [[M4_YY_NO_YYUNPUT]], , [[
 m4_ifdef([[M4_MODE_C_ONLY]], [[
+#ifndef YY_NO_YYUNPUT
 static void yyunput_r YYFARGS2( int,c, char *,yy_bp)
 ]])
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
@@ -2734,6 +2735,9 @@ m4_ifdef( [[M4_MODE_YYLINENO]],
 	YY_G(yy_hold_char) = *yy_cp;
 	YY_G(yy_c_buf_p) = yy_cp;
 }
+m4_ifdef([[M4_MODE_C_ONLY]], [[
+#endif	/* ifndef YY_NO_YYINPUT */
+]])
 ]])
 
 m4_ifdef([[M4_MODE_C_ONLY]], [[
