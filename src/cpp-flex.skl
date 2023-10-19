@@ -2837,8 +2837,8 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 void yyFlexLexer::yyrestart( std::istream& input_file )
 ]])
 {
-m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	M4_YY_DECL_GUTS_VAR();
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	size_t new_size = 0;
 	yy_state_type *new_state_buf = 0;
 ]] )
@@ -2903,8 +2903,8 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 void yyFlexLexer::yy_switch_to_buffer( yybuffer new_buffer )
 ]])
 {
-m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	M4_YY_DECL_GUTS_VAR();
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	size_t new_size = 0;
 	yy_state_type *new_state_buf = 0;
 ]] )
