@@ -869,7 +869,7 @@ void yyrestart(FILE * input_file, yyscan_t yyscanner)
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* Ensure the reject state buffer is large enough.
 	 */
-	if ( yyscanner->yy_state_buf_max < (yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
+	if ( yyscanner->yy_state_buf_max < (size_t) (yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
 		new_size = yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
 		new_state_buf = (yy_state_type*) yyrealloc( yyscanner->yy_state_buf, (new_size * sizeof(yy_state_type)), yyscanner );
 
@@ -1012,7 +1012,7 @@ m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
 m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
 	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_is_interactive ) {
 		int c = '*';
-		int n;
+		size_t n;
 		for ( n = 0; n < max_size &&
 			      (c = getc( yyscanner->yyin_r )) != EOF && c != '\n'; ++n ) {
 			buf[n] = (char) c;
