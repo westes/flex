@@ -95,7 +95,7 @@ extern const char *escaped_qstart, *escaped_qend;
 #define START_CODEBLOCK(x) do { \
     /* Emit the needed line directive... */\
     if (indented_code == false) { \
-        linenum++; \
+        if (!x) linenum++; \
         line_directive_out(NULL, infilename, linenum);	\
     } \
     add_action(M4QSTART); \
