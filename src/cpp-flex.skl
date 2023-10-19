@@ -2983,7 +2983,6 @@ yybuffer yyFlexLexer::yy_create_buffer( std::istream& file, int size )
 ]])
 {
 	yybuffer b;
-	M4_YY_DECL_GUTS_VAR();
 
 	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
 	if (  b == NULL ) {
