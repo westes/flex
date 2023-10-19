@@ -1585,7 +1585,7 @@ m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
 m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
 	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) {
 		int c = '*';
-		int n;
+		yy_size_t n;
 		for ( n = 0; n < max_size &&
 			      (c = getc( yyin )) != EOF && c != '\n'; ++n ) {
 			buf[n] = (char) c;
@@ -2849,7 +2849,7 @@ void yyFlexLexer::yyrestart( std::istream& input_file )
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* Ensure the reject state buffer is large enough.
 	 */
-	if ( YY_G(yy_state_buf_max) < (yy_current_buffer()->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
+	if ( YY_G(yy_state_buf_max) < (yy_size_t) (yy_current_buffer()->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
 		new_size = yy_current_buffer()->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
 		new_state_buf = (yy_state_type *)yyrealloc( YY_G(yy_state_buf), (new_size * sizeof(yy_state_type)) M4_YY_CALL_LAST_ARG );
 
@@ -2923,7 +2923,7 @@ void yyFlexLexer::yy_switch_to_buffer( yybuffer new_buffer )
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* Ensure the reject state buffer is large enough.
 	 */
-	if ( YY_G(yy_state_buf_max) < (YY_CURRENT_BUFFER_LVALUE->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
+	if ( YY_G(yy_state_buf_max) < (yy_size_t) (YY_CURRENT_BUFFER_LVALUE->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
 		new_size = YY_CURRENT_BUFFER_LVALUE->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
 		new_state_buf = (yy_state_type *)yyrealloc( YY_G(yy_state_buf), (new_size * sizeof(yy_state_type)) M4_YY_CALL_LAST_ARG );
 
