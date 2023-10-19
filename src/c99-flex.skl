@@ -854,8 +854,10 @@ void yypop_buffer_state (yyscan_t yyscanner)
  */
 void yyrestart(FILE * input_file, yyscan_t yyscanner)
 {
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	size_t new_size = 0;
 	yy_state_type *new_state_buf = 0;
+]] )
 
 	if ( yy_current_buffer(yyscanner) == NULL ) {
 		yyensure_buffer_stack (yyscanner);
@@ -1600,8 +1602,10 @@ bool yyatbol(yyscan_t yyscanner) {
  */
 void yy_switch_to_buffer(yybuffer new_buffer, yyscan_t yyscanner)
 {
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	size_t new_size = 0;
 	yy_state_type *new_state_buf = 0;
+]] )
 
 	/* TODO. We should be able to replace this entire function body
 	 * with

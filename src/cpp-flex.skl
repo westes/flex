@@ -2833,9 +2833,11 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 void yyFlexLexer::yyrestart( std::istream& input_file )
 ]])
 {
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	M4_YY_DECL_GUTS_VAR();
 	size_t new_size = 0;
 	yy_state_type *new_state_buf = 0;
+]] )
 
 	if ( yy_current_buffer() == NULL ) {
 		yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG);
@@ -2897,9 +2899,11 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 void yyFlexLexer::yy_switch_to_buffer( yybuffer new_buffer )
 ]])
 {
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	M4_YY_DECL_GUTS_VAR();
 	size_t new_size = 0;
 	yy_state_type *new_state_buf = 0;
+]] )
 
 	/* TODO. We should be able to replace this entire function body
 	 * with
