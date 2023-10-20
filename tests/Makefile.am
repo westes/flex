@@ -73,6 +73,7 @@ SPORADIC_TESTS = \
 	cxx_restart \
 	header_nr \
 	header_r \
+	lineno_generated \
 	mem_nr \
 	mem_r \
 	mem_c99 \
@@ -133,6 +134,7 @@ nodist_header_r_SOURCES = header_r_scanner.h
 include_by_buffer_direct_SOURCES = include_by_buffer.direct.l
 include_by_push_direct_SOURCES = include_by_push.direct.l
 include_by_reentrant_direct_SOURCES = include_by_reentrant.direct.l
+lineno_generated_SOURCES = lineno_generated.l
 mem_nr_SOURCES = mem_nr.l
 mem_r_SOURCES = mem_r.l
 mem_c99_SOURCES = mem_c99.l
@@ -196,6 +198,7 @@ CLEANFILES = \
 	include_by_buffer.direct.c \
 	include_by_push.direct.c \
 	include_by_reentrant.direct.c \
+	lineno_generated.c \
 	mem_nr.c \
 	mem_r.c \
 	mem_c99.c \
@@ -320,6 +323,10 @@ FLEX = $(top_builddir)/src/flex
 
 .ll.cc: $(FLEX)
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -+ -o $@ $<
+
+#want line numbers, so override the default rule
+lineno_generated.c: lineno_generated.l
+	$(AM_V_LEX)$(FLEX) -o $@ $<
 
 bison_nr_main.$(OBJEXT): bison_nr_parser.h bison_nr_scanner.h
 bison_nr_scanner.$(OBJEXT): bison_nr_parser.h
