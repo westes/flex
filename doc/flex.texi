@@ -2649,7 +2649,7 @@ While in the header, the macro @code{yyIN_HEADER} is defined, where @samp{yy}
 is substituted with the appropriate prefix.
 
 The @samp{--header-file} option is not compatible with the @samp{--c++} option,
-since the C++ scanner provides its own header in @file{yyFlexLexer.h}.
+since the C++ scanner provides its own header in @file{FlexLexer.h}.
 This option will generally be a no-op under target languages other
 than C.
 
