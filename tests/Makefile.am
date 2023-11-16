@@ -201,6 +201,7 @@ CLEANFILES = \
 	include_by_push.direct.c \
 	include_by_reentrant.direct.c \
 	lineno_generated.c \
+	lineno_generated.l \
 	mem_nr.c \
 	mem_r.c \
 	mem_c99.c \
@@ -286,6 +287,7 @@ EXTRA_DIST = \
 	flexname.txt \
 	lexcompat.txt \
 	lineno.txt \
+	lineno_generated.l.in \
 	posix.txt \
 	posixlycorrect.txt \
 	preposix.txt \
