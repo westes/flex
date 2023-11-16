@@ -80,7 +80,7 @@ lexcompat*
 !lexcompat.rules
 !lexcompat.txt
 lineno*
-!lineno_generated.l
+!lineno_generated.l.in
 !lineno.rules
 !lineno.txt
 mem_nr
