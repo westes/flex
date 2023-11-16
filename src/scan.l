@@ -927,11 +927,11 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			ACTION_ECHO;
 			CHECK_REJECT(yytext);
         }
-		"yyreject()" {
+		"yyreject"{OPTWS}"("{OPTWS}")" {
 			add_action("]""]M4_HOOK_REJECT[""[");
 			CHECK_YYREJECT(yytext);
         }
-		"yymore()" {
+		"yymore"{OPTWS}"("{OPTWS}")" {
 			yymore_used = true;
 			if (ctrl.rewrite)
 				context_call(yytext);
