@@ -448,7 +448,7 @@ msgstr "无法打开骨架文件 %s"
 
 #: src/main.c:1254
 msgid "Prefix cannot include '[' or ']'"
-msgstr ""
+msgstr "前缀不应包含"["或"]"。"
 
 #: src/main.c:1322
 #, c-format
@@ -818,7 +818,7 @@ msgstr "未定义的定义 {%s}"
 
 #: src/scan.l:790
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "括号未匹配"
 
 #: src/scan.l:805
 #, c-format
