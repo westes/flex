@@ -1,14 +1,33 @@
+# Flex: the Fast Lexical Analyzer Generator
 [![Build Status](https://github.com/westes/flex/actions/workflows/build.yml/badge.svg)](https://github.com/westes/flex/actions/workflows/build.yml)
 
+flex is a tool for generating scanners: programs which recognize lexical patterns in text.
 
-This is flex, the fast lexical analyzer generator.
-
-flex is a tool for generating scanners: programs which recognize
-lexical patterns in text.
 
 The flex codebase is kept in
 [Git on GitHub.](https://github.com/westes/flex) Source releases of flex with some intermediate files already built can be found on [the github releases page.](https://github.com/westes/flex/releases)
 
+
+Find information on subscribing to the mailing lists or search in the
+archive at: https://sourceforge.net/p/flex/mailman/
+Note: Posting is only allowed from addresses that are subscribed to
+the lists.
+
+The flex distribution contains the following files which may be of
+interest:
+
+- [README.md](README.md) - This file.
+- [NEWS](NEWS) - Current version number and list of user-visible changes.
+- [INSTALL.md](INSTALL.md) - Basic installation information.
+- [ABOUT-NLS](ABOUT-NLS) - Description of internationalization support in flex.
+- [COPYING](COPYING) - flex's copyright and license.
+- [doc/](doc/) - User documentation.
+- [examples/](examples/) - Contains examples of some possible flex scanners and more. See the file examples/README for details.
+- [tests/](tests/) - Regression tests. See tests/README for details.
+- [po/](po/) - Internationalization support files.
+
+---
+## Cotributing and Communication Channels
 Use GitHub's [issues](https://github.com/westes/flex/issues) and
 [pull request](https://github.com/westes/flex) features to file bugs
 and submit patches.
@@ -21,29 +40,8 @@ There are several mailing lists available as well:
   using flex
 * flex-devel@lists.sourceforge.net - where you can discuss development
   of flex itself
-
-Find information on subscribing to the mailing lists or search in the
-archive at: https://sourceforge.net/p/flex/mailman/
-Note: Posting is only allowed from addresses that are subscribed to
-the lists.
-
-The flex distribution contains the following files which may be of
-interest:
-
-* README.md - This file.
-* NEWS - current version number and list of user-visible changes.
-* INSTALL.md - basic installation information.
-* ABOUT-NLS - description of internationalization support in flex.
-* COPYING - flex's copyright and license.
-* doc/ - user documentation.
-* examples/ - containing examples of some possible flex scanners and a
-              few other things. See the file examples/README for more
-              details.
-* tests/ - regression tests. See tests/README for details.
-* po/ - internationalization support files.
-
 ---
-
+## License
 This file is part of flex.
 
 This code is derived from software contributed to Berkeley by
