@@ -22,3 +22,4 @@ flex-*/
 libtool
 m4/
 stamp-*
+.vscode

@@ -54,30 +54,89 @@ const char *go_skel[] = {
 /* END digested skeletons */
 
 
+/* backends is an array of skeleton code-emitting backend structs.
+/* It uses the flex_backend_t enum so we don't have to care what order it's in.
+ */
+static struct flex_backend_t backends[FLEX_BACKEND_ID_MAX];
 
-static struct flex_backend_t backends[] = {
-    {NULL},
-    {.skel=c99_skel},
-    {.skel=go_skel},
-    {NULL}
-};
+/* backend_stack is an array-based stack of flex_backend_ids.                  
+/* It lets us keep track of which skeleton and emitter are in use and allows
+/* us to switch to another backend during runtime, for example to dump an 
+/* auxiliary table. 
+/* The need to switch backends should be uncommon, the stack is only as deep
+/* as the number of available backends. 
+/* backen_stack_head is declared static so it must be manipulated through
+/* the stack functions defined in this module.
+ */
+flex_backend_id_t backend_stack[FLEX_BACKEND_ID_MAX];
+static unsigned int backend_stack_head = 0;
 
-static struct flex_backend_t *backend = &backends[0];
+/* Push a flex_backend_id onto the backend stack. 
+/* Returns false when the stack is full, and true otherwise.
+ */
+bool push_backend(flex_backend_id_t bid){
+	++backend_stack_head;
+	if( backend_stack_head >= FLEX_BACKEND_ID_MAX ){
+		--backend_stack_head;
+		flexerror(_("backend stack depth exceeded"));
+		return false;
+	}
+	else {
+		backend_stack[backend_stack_head] = bid;
+	}
+	return true;
+}
+
+/* Pop a flex_backend_id off of the backend stack.
+/* Returns the FLEX_BACKEND_ID_MAX when the stack is empty, and the
+/* popped backend id otherwise. */
+flex_backend_id_t pop_backend(void) {
+	flex_backend_id_t ret = FLEX_BACKEND_ID_MAX;
+	if( backend_stack_head > 0 ) {
+		ret = backend_stack[backend_stack_head];
+		--backend_stack_head;
+		return ret;
+	}
+	else {
+		flexerror(_("attempt to pop empty backend stack"));
+		return ret;
+	}
+}
+
+/* Return the flex_backend_id on top of the backend stack.
+/* Returns the FLEX_BACKEND_ID_MAX when the stack is empty, and the
+/* top backend id otherwise. */
+flex_backend_id_t top_backend(void){
+	if( backend_stack_head > 0 ) {
+		return backend_stack[backend_stack_head];
+	}
+	else {
+		flexerror(_("attempt to read the top of empty backend stack"));
+		return FLEX_BACKEND_ID_MAX;
+	}
+}
+
+
+
 
 const struct flex_backend_t *get_backend(void) {
-	return backend;
+	return &backends[top_backend()];
 }
 
 /* Initialize backends */
 void init_backends( void ) {
-	backends[0] = cpp_backend;
+	backends[FLEX_BACKEND_CPP] = cpp_backend;
+	backends[FLEX_BACKEND_C99].skel=c99_skel;
+	backends[FLEX_BACKEND_GO].skel=go_skel;
+	backends[FLEX_BACKEND_ID_MAX] = {NULL};
 }
 
 /* Functions for querying skeleton properties. */
 
+/* TODO: What does this mean now? */
 bool is_default_backend(void)
 {
-    return backend == &backends[0];
+    return top_backend() == FLEX_BACKEND_CPP;
 }
 
 /* Search for a string in the skeleton prolog, where macros are defined.
