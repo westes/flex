@@ -35,7 +35,7 @@ interest:
 * INSTALL.md - basic installation information.
 * ABOUT-NLS - description of internationalization support in flex.
 * COPYING - flex's copyright and license.
-* doc/ - user documentation.
+* doc/ - user documentation (also available [online](https://westes.github.io/flex/manual/)).
 * examples/ - containing examples of some possible flex scanners and a
               few other things. See the file examples/README for more
               details.
