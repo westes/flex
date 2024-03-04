@@ -36,6 +36,11 @@
 #include "flexdef.h"
 #include "tables.h"
 
+#ifdef _MSC_VER
+#define htonl(n) _byteswap_ulong(n)
+#define htons(n) _byteswap_ushort(n)
+#endif
+
 /** Convert size_t to t_flag.
  *  @param n in {1,2,4}
  *  @return YYTD_DATA*. 
