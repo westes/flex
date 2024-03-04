@@ -160,7 +160,6 @@ int flex_main (int argc, char *argv[])
 	flexinit (argc, argv);
 
 	readin ();
-
 	skelout (true);		/* %% [1.0] DFA */
 	footprint += ntod ();
 

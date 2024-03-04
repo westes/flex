@@ -59,6 +59,12 @@ struct packtype_t *optimize_pack(size_t sz)
 	return &out;
 }
 
+/* Almost everything is done in terms of arrays starting at 1, so provide
+ * a null entry for the zero element of all C arrays.  (The exception
+ * to this is that the fast table representation generally uses the
+ * 0 elements of its arrays, too.)
+ */
+
 /** Make the table for possible eol matches.
  *  @return the newly allocated rule_can_match_eol table
  */
@@ -315,7 +321,6 @@ void genctbl (void)
 	footprint += sizeof(struct yy_trans_info) * (tblend + 2 + 1);
 
 	out_dec ("m4_define([[M4_HOOK_STARTTABLE_SIZE]], [[%d]])", lastsc * 2 + 1);
-
 	if (gentables) {
 		outn ("m4_define([[M4_HOOK_STARTTABLE_BODY]], [[m4_dnl");
 		for (i = 0; i <= lastsc * 2; ++i)
@@ -977,8 +982,9 @@ void make_tables (void)
 			}
 		}
 	}
-	else
+	else {
 		gentabs ();
+	}
 
 	snprintf(buf, sizeof(buf), "footprint: %ld bytes\n", footprint);
 	comment(buf);

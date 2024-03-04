@@ -184,7 +184,7 @@ void dataend (const char *endit)
 
 		/* add terminator for initialization; { for vi */
 		if (endit)
-		    outn (endit);
+			outn (endit);
 	}
 	dataline = 0;
 	datapos = 0;
@@ -351,7 +351,7 @@ void mk2data (int value)
 		out ("    ");
 
 	else
-		outc (',');
+	  outc (',');
 
 	++datapos;
 
@@ -377,10 +377,9 @@ void mkdata (int value)
 
 	if (datapos == 0)
 		/* Indent. */
-		out ("     ");
+		out ("    ");
 	else
 		outc (',');
-
 	++datapos;
 
 	out_dec ("%5d", value);

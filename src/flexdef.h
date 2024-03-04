@@ -464,6 +464,7 @@ extern int yymore_used, reject, real_reject, continued_action, in_rule;
  * action_offset - index where the non-prolog starts in action_array
  * action_index - index where the next action should go, with respect
  * 	to "action_array"
+ * always_interactive - if true, generate an interactive scanner
  */
 
 extern int datapos, dataline, linenum;

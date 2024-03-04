@@ -53,7 +53,7 @@ struct Buf top_buf;             /**< contains %top code. String buffer. */
 struct Buf *buf_prints (struct Buf *buf, const char *fmt, const char *s)
 {
 	char   *t;
-        size_t tsz;
+	size_t tsz;
 
 	tsz = strlen(fmt) + strlen(s) + 1;
 	t = malloc(tsz);
