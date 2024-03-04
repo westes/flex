@@ -120,14 +120,14 @@ static struct yytbl_data *mkctbl (void)
 	flex_int32_t *tdata = 0, curr = 0;
 	int     end_of_buffer_action = num_rules + 1;
 
-	struct packtype_t *ptype = optimize_pack(tblend + numecs + 1);
+	struct packtype_t *ptype = optimize_pack(tblend + 2 + 1);
 	out_str ("m4_define([[M4_HOOK_MKCTBL_TYPE]], [[%s]])", ptype->name);
 
 	tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYTD_ID_TRANSITION);
 	tbl->td_flags = YYTD_DATA32 | YYTD_STRUCT;
 	tbl->td_hilen = 0;
-	tbl->td_lolen = (flex_uint32_t) (tblend + numecs + 1);	/* number of structs */
+	tbl->td_lolen = (flex_uint32_t) (tblend + 2 + 1);	/* number of structs */
 
 	tbl->td_data = tdata =
 		calloc(tbl->td_lolen * 2, sizeof (flex_int32_t));
@@ -243,7 +243,7 @@ void genctbl (void)
 	int     end_of_buffer_action = num_rules + 1;
 
 	/* Table of verify for transition and offset to next state. */
-	out_dec ("m4_define([[M4_HOOK_TRANSTABLE_SIZE]], [[%d]])", tblend + numecs + 1);
+	out_dec ("m4_define([[M4_HOOK_TRANSTABLE_SIZE]], [[%d]])", tblend + 2 + 1);
 	outn ("m4_define([[M4_HOOK_TRANSTABLE_BODY]], [[m4_dnl");
 
 	/* We want the transition to be represented as the offset to the
@@ -312,7 +312,7 @@ void genctbl (void)
 	transition_struct_out (chk[tblend + 2], nxt[tblend + 2]);
 
 	outn ("]])");
-	footprint += sizeof(struct yy_trans_info) * (tblend + numecs + 1);
+	footprint += sizeof(struct yy_trans_info) * (tblend + 2 + 1);
 
 	out_dec ("m4_define([[M4_HOOK_STARTTABLE_SIZE]], [[%d]])", lastsc * 2 + 1);
 
@@ -981,6 +981,14 @@ void make_tables (void)
 		gentabs ();
 
 	snprintf(buf, sizeof(buf), "footprint: %ld bytes\n", footprint);
+	comment(buf);
+	snprintf(buf, sizeof(buf), "tblend: %d\n", tblend);
+	comment(buf);
+	snprintf(buf, sizeof(buf), "numecs: %d\n", numecs);
+	comment(buf);
+	snprintf(buf, sizeof(buf), "num_rules: %d\n", num_rules);
+	comment(buf);
+	snprintf(buf, sizeof(buf), "lastdfa: %d\n", lastdfa);
 	comment(buf);
 	outc ('\n');
 	
