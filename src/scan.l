@@ -673,14 +673,7 @@ void context_member(char *, const char *);
                    */
                 &&  (cclval = ccllookup( nmstr )) != 0 )
 				{
-                /*
-				if ( yyinput() != ']' )
-					synerr( _( "bad character class" ) );
-
-				yylval = cclval;
-				++cclreuse;
-				return PREVCCL;
-                */
+     				 /* Dead code removed */
 				}
 			else
 				{
