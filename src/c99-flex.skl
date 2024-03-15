@@ -65,7 +65,7 @@ m4_define([[M4_HOOK_CONST_DEFINE_BYTE]], [[const char $1 = $2;
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_STATE]], [[#define $1 $2
 ]])
-m4_define([[M4_HOOK_CONST_DEFINE_UINT]], [[const uint $1 = $2;
+m4_define([[M4_HOOK_CONST_DEFINE_UINT]], [[const unsigned int $1 = $2;
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_BOOL]], [[const bool $1 = $2;
 ]])
