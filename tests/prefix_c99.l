@@ -64,7 +64,7 @@
         FOOget_text( (yyscan_t )0 );
         FOOlex( (yyscan_t )0 );
         //FOOlex_destroy( (yyscan_t )0 );
-        FOOlex_init( (yyscan_t *)0 );
+        //FOOlex_init( (yyscan_t *)0 );
         //FOOset_extra( (void *)0, (yyscan_t )0 );
         FOOset_in( (FILE*)0, (yyscan_t )0 );
         FOOset_out( (FILE*)0, (yyscan_t )0 );
