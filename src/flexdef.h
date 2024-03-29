@@ -66,7 +66,18 @@
 #endif
 /* Required: wait() in <sys/wait.h> */
 #include <sys/wait.h>
+#ifdef HAVE_STDBOOL_H
 #include <stdbool.h>
+#elif !defined(__cplusplus) && (!defined(__STDC_VERSION__) || \
+      __STDC_VERSION__ < 202311L)
+# ifdef HAVE__BOOL
+#  define bool _Bool
+# else
+#  define bool int
+# endif
+# define false 0
+# define true 1
+#endif
 #include <stdarg.h>
 /* Required: regcomp(), regexec() and regerror() in <regex.h> */
 #include <regex.h>
