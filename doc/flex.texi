@@ -8512,10 +8512,10 @@ is compatible with @code{bison}.
     %option bison-bridge bison-locations
     %
 
-    [[:digit:]]+  { yylval->num = atoi(yytext);   return NUMBER;}
-    [[:alnum:]]+  { yylval->str = strdup(yytext); return STRING;}
-    "="|";"       { return yytext[0];}
-    .  {}
+    [[:digit:]]+  { yylval->num = atoi(yytext);   return NUMBER; }
+    [[:alnum:]]+  { yylval->str = strdup(yytext); return STRING; }
+    "="|";"       { return yytext[0]; }
+    .             { continue; }
     %
 @end verbatim
 @end example
@@ -8529,13 +8529,12 @@ As you can see, there really is no magic here. We just use
 @example
 @verbatim
     /* Parser to convert "C" assignments to lisp. */
-    %{
+    %require "3.0"
+
     /* Pass the argument to yyparse through to yylex. */
-    #define YYPARSE_PARAM scanner
-    #define YYLEX_PARAM   scanner
-    %}
+    %param {yyscan_t scanner}
     %locations
-    %pure_parser
+    %define api.pure full
     %union {
         int num;
         char* str;
@@ -8545,7 +8544,7 @@ As you can see, there really is no magic here. We just use
     %%
     assignment:
         STRING '=' NUMBER ';' {
-            printf( "(setf %s %d)", $1, $3 );
+            printf("(setf %s %d)", $1, $3);
        }
     ;
 @end verbatim
