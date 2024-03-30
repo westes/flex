@@ -23,6 +23,9 @@ stage1flex_SOURCES = \
 	scan.l \
 	$(COMMON_SOURCES)
 
+nodist_stage1flex_SOURCES = \
+	$(SKELINCLUDES)
+
 if CROSS
 stage1flex_LDADD =
 stage1flex_SOURCES += \
@@ -45,7 +48,8 @@ endif
 flex_SOURCES = \
 	$(COMMON_SOURCES)
 
-nodist_flex_SOURCES =
+nodist_flex_SOURCES = \
+	$(SKELINCLUDES)
 
 nodist_flex_SOURCES += stage1scan.c
 
@@ -101,13 +105,13 @@ MOSTLYCLEANFILES = \
 
 CLEANFILES = stage1flex$(EXEEXT)
 
-BUILT_SOURCES = \
+SKELINCLUDES = \
 	cpp-flex.h \
 	c99-flex.h \
 	go-flex.h
 
 clean-local:
-	rm -f $(BUILT_SOURCES)
+	rm -f $(SKELINCLUDES)
 
 cpp-flex.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(m4) $(VERSION) > $@.tmp
@@ -140,8 +144,6 @@ dist-hook: scan.l flex$(EXEEXT)
 
 # make needs to be told to make inclusions so that parallelized runs will
 # not fail.
-
-SKELINCLUDES := $(subst skl,h,$(wildcard *.skl))
 
 stage1flex-skeletons.$(OBJEXT): $(SKELINCLUDES)
 flex-skeletons.$(OBJEXT): $(SKELINCLUDES)
