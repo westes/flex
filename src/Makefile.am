@@ -101,6 +101,7 @@ EXTRA_DIST = \
 	chkskel.sh
 
 MOSTLYCLEANFILES = \
+	$(SKELINCLUDES) \
 	stage1scan.c
 
 CLEANFILES = stage1flex$(EXEEXT)
@@ -109,9 +110,6 @@ SKELINCLUDES = \
 	cpp-flex.h \
 	c99-flex.h \
 	go-flex.h
-
-clean-local:
-	rm -f $(SKELINCLUDES)
 
 cpp-flex.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(m4) $(VERSION) > $@.tmp
