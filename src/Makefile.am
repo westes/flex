@@ -51,7 +51,11 @@ flex_SOURCES = \
 nodist_flex_SOURCES = \
 	$(SKELINCLUDES)
 
+if ENABLE_BOOTSTRAP
 nodist_flex_SOURCES += stage1scan.c
+else
+flex_SOURCES += scan.l
+endif
 
 flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
 
@@ -126,18 +130,19 @@ go-flex.h: go-flex.skl mkskel.sh
 	$(SHELL) $(srcdir)/chkskel.sh $@.tmp
 	mv -f $@.tmp $@
 
-if ENABLE_BOOTSTRAP
+# The input and output file names are fixed for deterministic scanner
+# generation. If scan.l is not modified by builders, stage1scan.c should
+# be bit-identical to the scan.c pregenerated on release.
 stage1scan.c: scan.l stage1flex$(EXEEXT)
-	./stage1flex$(EXEEXT) $(AM_LFLAGS) $(LFLAGS) -o $@ $(srcdir)/scan.l
-else
-stage1scan.c: scan.c
-	sed 's|^\(#line .*\)"'`printf %s $< | sed 's|[][\\\\.*]|\\\\&|g'`'"|\1"$@"|g' $< > $@
-endif
+	( cd $(srcdir) && $(abs_builddir)/stage1flex$(EXEEXT) \
+	  $(AM_LFLAGS) $(LFLAGS) -o scan.c -t scan.l ) >$@ || \
+	{ s=$$?; rm -f $@; exit $$s; }
 
 dist-hook: scan.l flex$(EXEEXT)
 	chmod u+w $(distdir) && \
 	chmod u+w $(distdir)/scan.c && \
-	./flex$(EXEEXT) -o scan.c $< && \
+	( cd $(srcdir) && $(abs_builddir)/flex$(EXEEXT) \
+	  -o scan.c -t scan.l ) >scan.c && \
 	mv -f scan.c $(distdir)
 
 # make needs to be told to make inclusions so that parallelized runs will
@@ -154,6 +159,7 @@ flex-yylex.$(OBJEXT): parse.h
 
 stage1flex-scan.$(OBJEXT): parse.h
 flex-stage1scan.$(OBJEXT): parse.h
+flex-scan.$(OBJEXT): parse.h
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #
