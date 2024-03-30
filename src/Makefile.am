@@ -141,14 +141,17 @@ dist-hook: scan.l flex$(EXEEXT)
 
 SKELINCLUDES := $(subst skl,h,$(wildcard *.skl))
 
-stage1flex-main.$(OBJEXT): parse.h $(SKELINCLUDES)
-flex-main.$(OBJEXT): parse.h $(SKELINCLUDES)
+stage1flex-skeletons.$(OBJEXT): $(SKELINCLUDES)
+flex-skeletons.$(OBJEXT): $(SKELINCLUDES)
 
-stage1flex-yylex.$(OBJEXT): parse.h $(SKELINCLUDES)
-flex-yylex.$(OBJEXT): parse.h $(SKELINCLUDES)
+stage1flex-main.$(OBJEXT): parse.h
+flex-main.$(OBJEXT): parse.h
 
-stage1flex-scan.$(OBJEXT): parse.h $(SKELINCLUDES)
-flex-stage1scan.$(OBJEXT): parse.h $(SKELINCLUDES)
+stage1flex-yylex.$(OBJEXT): parse.h
+flex-yylex.$(OBJEXT): parse.h
+
+stage1flex-scan.$(OBJEXT): parse.h
+flex-stage1scan.$(OBJEXT): parse.h
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #
