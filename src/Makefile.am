@@ -45,8 +45,9 @@ endif
 flex_SOURCES = \
 	$(COMMON_SOURCES)
 
-nodist_flex_SOURCES = \
-	stage1scan.c
+nodist_flex_SOURCES =
+
+nodist_flex_SOURCES += stage1scan.c
 
 flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
 
@@ -95,7 +96,8 @@ EXTRA_DIST = \
 	gettext.h \
 	chkskel.sh
 
-MOSTLYCLEANFILES = stage1scan.c
+MOSTLYCLEANFILES = \
+	stage1scan.c
 
 CLEANFILES = stage1flex$(EXEEXT)
 
