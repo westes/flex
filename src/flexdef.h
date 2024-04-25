@@ -455,7 +455,7 @@ extern struct env_bundle_t env;
  * reject_really_used - same for REJECT
   */
 
-extern int syntaxerror, eofseen;
+extern bool syntaxerror, eofseen;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
 /* Variables used in the flex input routines:
@@ -568,7 +568,7 @@ extern int current_state_type;
 /* True if the input rules include a rule with both variable-length head
  * and trailing context, false otherwise.
  */
-extern int variable_trailing_context_rules;
+extern bool variable_trailing_context_rules;
 
 
 /* Variables for protos:
@@ -945,7 +945,7 @@ extern int copysingl(int, int);
 extern void dumpnfa(int);
 
 /* Finish up the processing for a rule. */
-extern void finish_rule(int, int, int, int, int);
+extern void finish_rule(int, bool, int, int, int);
 
 /* Connect two machines together. */
 extern int link_machines(int, int);

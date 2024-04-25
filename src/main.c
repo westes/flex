@@ -47,7 +47,7 @@ void readin(void);
 void set_up_initial_allocations(void);
 
 /* these globals are all defined and commented in flexdef.h */
-int     syntaxerror, eofseen;
+bool    syntaxerror, eofseen;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     datapos, dataline, linenum;
 FILE   *skelfile = NULL;
@@ -65,7 +65,7 @@ int    *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 int    *accptnum, *assoc_rule, *state_type;
 int    *rule_type, *rule_linenum, *rule_useful;
 int     current_state_type;
-int     variable_trailing_context_rules;
+bool    variable_trailing_context_rules;
 int     numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int     protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int     numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs,
@@ -1166,7 +1166,8 @@ void flexinit (int argc, char **argv)
 	numas = numsnpairs = tmpuses = 0;
 	numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst =
 	    0;
-	numuniq = numdup = hshsave = eofseen = datapos = dataline = 0;
+	numuniq = numdup = hshsave = datapos = dataline = 0;
+	eofseen = false;
 	num_backing_up = onesp = numprots = 0;
 	variable_trailing_context_rules = bol_needed = false;
 

@@ -191,7 +191,7 @@ int     dupmachine (int mach)
  * context has variable length.
  */
 
-void    finish_rule (int mach, int variable_trail_rule, int headcnt, int trailcnt,
+void    finish_rule (int mach, bool variable_trail_rule, int headcnt, int trailcnt,
 		     int pcont_act)
 {
 	char    action_text[MAXLINE];

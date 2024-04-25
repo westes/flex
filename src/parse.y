@@ -68,7 +68,9 @@
 #include "tables.h"
 
 int pat, scnum, eps, headcnt, trailcnt, lastchar, i, rulelen;
-int trlcontxt, xcluflg, currccl, cclsorted, varlength, variable_trail_rule;
+static int currccl;
+bool trlcontxt;
+static bool xcluflg, cclsorted, varlength, variable_trail_rule;
 
 int *scon_stk;
 int scon_stk_ptr;
