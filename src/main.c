@@ -1725,7 +1725,8 @@ void set_up_initial_allocations (void)
 	accsiz = allocate_integer_array (current_max_dfas);
 	dhash = allocate_integer_array (current_max_dfas);
 	dss = allocate_int_ptr_array (current_max_dfas);
-	dfaacc = allocate_dfaacc_union (current_max_dfas);
+	dfaacc = allocate_array(current_max_dfas,
+		sizeof(union dfaacc_union));
 
 	nultrans = NULL;
 }

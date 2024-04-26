@@ -354,7 +354,8 @@ void increase_max_dfas (void)
 	accsiz = reallocate_integer_array (accsiz, current_max_dfas);
 	dhash = reallocate_integer_array (dhash, current_max_dfas);
 	dss = reallocate_int_ptr_array (dss, current_max_dfas);
-	dfaacc = reallocate_dfaacc_union (dfaacc, current_max_dfas);
+	dfaacc = reallocate_array(dfaacc, current_max_dfas,
+		sizeof(union dfaacc_union));
 
 	if (nultrans)
 		nultrans =

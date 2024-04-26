@@ -734,17 +734,11 @@ void   *reallocate_array(void *, int, size_t);
 #define allocate_char_ptr_array(size) \
 	allocate_array(size, sizeof(char *))
 
-#define allocate_dfaacc_union(size) \
-	allocate_array(size, sizeof(union dfaacc_union))
-
 #define reallocate_int_ptr_array(array,size) \
 	reallocate_array((void *) array, size, sizeof(int *))
 
 #define reallocate_char_ptr_array(array,size) \
 	reallocate_array((void *) array, size, sizeof(char *))
-
-#define reallocate_dfaacc_union(array, size) \
-	reallocate_array((void *) array, size, sizeof(union dfaacc_union))
 
 #define allocate_character_array(size) \
 	allocate_array( size, sizeof(char))
