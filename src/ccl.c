@@ -202,9 +202,7 @@ int     cclinit (void)
 		ccllen =
 			reallocate_integer_array (ccllen, current_maxccls);
 		cclng = reallocate_integer_array (cclng, current_maxccls);
-		ccl_has_nl =
-			reallocate_bool_array (ccl_has_nl,
-					       current_maxccls);
+		ccl_has_nl = reallocate_array(ccl_has_nl, current_maxccls, sizeof(char));
 	}
 
 	if (lastccl == 1)

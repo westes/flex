@@ -198,8 +198,9 @@ void    scextend (void)
 
 	scset = reallocate_integer_array (scset, current_max_scs);
 	scbol = reallocate_integer_array (scbol, current_max_scs);
-	scxclu = reallocate_integer_array (scxclu, current_max_scs);
-	sceof = reallocate_integer_array (sceof, current_max_scs);
+	scxclu = reallocate_array(scxclu, current_max_scs,
+		sizeof(char));
+	sceof = reallocate_array(sceof, current_max_scs, sizeof(char));
 	scname = reallocate_char_ptr_array (scname, current_max_scs);
 }
 

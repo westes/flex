@@ -545,8 +545,10 @@ extern int maximum_mns, current_mns, current_max_rules;
 extern int num_rules, num_eof_rules, default_rule, lastnfa;
 extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 extern int *accptnum, *assoc_rule, *state_type;
-extern int *rule_type, *rule_linenum, *rule_useful;
-extern bool *rule_has_nl, *ccl_has_nl;
+extern int *rule_type, *rule_linenum;
+/* rule_useful[], rule_has_nl[] and ccl_has_nl[] are boolean arrays,
+ * but allocated as char arrays for size. */
+extern char *rule_useful, *rule_has_nl, *ccl_has_nl;
 extern int nlch;
 extern size_t footprint;
 
@@ -622,7 +624,10 @@ extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
  * scname - start condition name
  */
 
-extern int lastsc, *scset, *scbol, *scxclu, *sceof;
+extern int lastsc, *scset, *scbol;
+/* scxclu[] and sceof[] are boolean arrays, but allocated as char
+ * arrays for size. */
+extern char *scxclu, *sceof;
 extern int current_max_scs;
 extern const char **scname;
 
@@ -721,12 +726,6 @@ void   *reallocate_array(void *, int, size_t);
 
 #define reallocate_integer_array(array,size) \
 	reallocate_array((void *) array, size, sizeof(int))
-
-#define allocate_bool_array(size) \
-	allocate_array(size, sizeof(bool))
-
-#define reallocate_bool_array(array,size) \
-	reallocate_array((void *) array, size, sizeof(bool))
 
 #define allocate_int_ptr_array(size) \
 	allocate_array(size, sizeof(int *))

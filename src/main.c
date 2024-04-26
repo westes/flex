@@ -63,7 +63,7 @@ int     maximum_mns, current_mns, current_max_rules;
 int     num_rules, num_eof_rules, default_rule, lastnfa;
 int    *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 int    *accptnum, *assoc_rule, *state_type;
-int    *rule_type, *rule_linenum, *rule_useful;
+int    *rule_type, *rule_linenum;
 int     current_state_type;
 bool    variable_trailing_context_rules;
 int     numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
@@ -71,7 +71,10 @@ int     protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int     numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs,
 	tecfwd[CSIZE + 1];
 int     tecbck[CSIZE + 1];
-int     lastsc, *scset, *scbol, *scxclu, *sceof;
+int     lastsc, *scset, *scbol;
+/* scxclu[] and sceof[] are boolean arrays, but allocated as char
+ * arrays for size. */
+char   *scxclu, *sceof;
 int     current_max_scs;
 const char **scname;
 int     current_max_dfa_size, current_max_xpairs;
@@ -92,7 +95,9 @@ int     end_of_buffer_state;
 char  **input_files;
 int     num_input_files;
 jmp_buf flex_main_jmp_buf;
-bool   *rule_has_nl, *ccl_has_nl;
+/* rule_useful[], rule_has_nl[] and ccl_has_nl[] are boolean arrays,
+ * but allocated as char arrays for size. */
+char   *rule_useful, *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
 
 bool    tablesext, tablesverify, gentables;
@@ -1691,21 +1696,21 @@ void set_up_initial_allocations (void)
 	current_max_rules = INITIAL_MAX_RULES;
 	rule_type = allocate_integer_array (current_max_rules);
 	rule_linenum = allocate_integer_array (current_max_rules);
-	rule_useful = allocate_integer_array (current_max_rules);
-	rule_has_nl = allocate_bool_array (current_max_rules);
+	rule_useful = allocate_array(current_max_rules, sizeof(char));
+	rule_has_nl = allocate_array(current_max_rules, sizeof(char));
 
 	current_max_scs = INITIAL_MAX_SCS;
 	scset = allocate_integer_array (current_max_scs);
 	scbol = allocate_integer_array (current_max_scs);
-	scxclu = allocate_integer_array (current_max_scs);
-	sceof = allocate_integer_array (current_max_scs);
+	scxclu = allocate_array(current_max_scs, sizeof(char));
+	sceof = allocate_array(current_max_scs, sizeof(char));
 	scname = allocate_char_ptr_array (current_max_scs);
 
 	current_maxccls = INITIAL_MAX_CCLS;
 	cclmap = allocate_integer_array (current_maxccls);
 	ccllen = allocate_integer_array (current_maxccls);
 	cclng = allocate_integer_array (current_maxccls);
-	ccl_has_nl = allocate_bool_array (current_maxccls);
+	ccl_has_nl = allocate_array(current_maxccls, sizeof(char));
 
 	current_max_ccl_tbl_size = INITIAL_MAX_CCL_TBL_SIZE;
 	ccltbl = allocate_Character_array (current_max_ccl_tbl_size);
