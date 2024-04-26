@@ -1079,9 +1079,9 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	/* First move last chars to start of buffer. */
 	number_to_move = (int) (yyscanner->yy_c_buf_p - yyscanner->yytext_ptr - 1);
 
-	for ( i = 0; i < number_to_move; ++i ) {
-		*(dest++) = *(source++);
-	}
+	if (number_to_move > 0)
+		memmove(dest, source, number_to_move * sizeof(*source));
+
 	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buffer_status == YY_BUFFER_EOF_PENDING ) {
 		/* don't do the read, it's not guaranteed to return an EOF,
 		 * just force an EOF
