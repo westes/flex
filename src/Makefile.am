@@ -1,5 +1,6 @@
 AM_YFLAGS = -d
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
+AM_CFLAGS = $(WARNINGFLAGS)
 LIBS = @LIBS@
 pkgconfigdir = @pkgconfigdir@
 
@@ -59,8 +60,6 @@ nodist_flex_SOURCES += stage1scan.c
 else
 flex_SOURCES += scan.l
 endif
-
-flex_CFLAGS = $(AM_CFLAGS) $(WARNINGFLAGS)
 
 COMMON_SOURCES = \
 	buf.c \
@@ -172,17 +171,17 @@ dist-hook: scan.l flex$(EXEEXT)
 # not fail.
 
 stage1flex-skeletons.$(OBJEXT): $(SKELINCLUDES)
-flex-skeletons.$(OBJEXT): $(SKELINCLUDES)
+skeletons.$(OBJEXT): $(SKELINCLUDES)
 
 stage1flex-main.$(OBJEXT): parse.h
-flex-main.$(OBJEXT): parse.h
+main.$(OBJEXT): parse.h
 
 stage1flex-yylex.$(OBJEXT): parse.h
-flex-yylex.$(OBJEXT): parse.h
+yylex.$(OBJEXT): parse.h
 
 stage1flex-scan.$(OBJEXT): parse.h
-flex-stage1scan.$(OBJEXT): parse.h
-flex-scan.$(OBJEXT): parse.h
+stage1scan.$(OBJEXT): parse.h
+scan.$(OBJEXT): parse.h
 
 # Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
 #
