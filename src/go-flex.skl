@@ -2347,8 +2347,6 @@ int yylex_destroy(FlexLexer *yyscanner) {
 
 	/* Pop the buffer stack, destroying each element. */
 	while(yy_current_buffer(yyscanner)) {
-		yy_delete_buffer(yy_current_buffer(yyscanner), yyscanner);
-		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] = NULL;
 		yypop_buffer_state(yyscanner);
 	}
 
