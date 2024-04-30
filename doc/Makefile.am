@@ -14,7 +14,11 @@ MAINTAINERCLEANFILES = flex.1
 CLEANFILES = *.aux *.cp *.cps *.fn *.fns *.hk *.hks *.ky *.log \
 	*.op *.ops *.pg *.toc *.tp *.tps *.vr *.vrs
 
-flex.1: $(top_srcdir)/configure.ac $(top_srcdir)/src/cpp-flex.skl $(top_srcdir)/src/options.c $(top_srcdir)/src/options.h | $(FLEX)
+flex.1: $(top_srcdir)/configure.ac $(top_srcdir)/src/cpp-flex.skl $(top_srcdir)/src/options.c $(top_srcdir)/src/options.h
+	@( cd $(top_builddir)/src && \
+	  prog_name=`echo '$(FLEX)' | sed 's|^$(top_builddir)/src/||'` && \
+	  $(MAKE) $(AM_MAKEFLAGS) $$prog_name \
+	)
 	$(HELP2MAN) --name='$(PACKAGE_NAME)' --section=1 \
 	--source='The Flex Project' --manual='Programming' \
 	--output=$@ $(FLEX) \
