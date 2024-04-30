@@ -70,7 +70,7 @@
 int pat, scnum, eps, headcnt, trailcnt, lastchar, i, rulelen;
 static int currccl;
 bool trlcontxt;
-static bool xcluflg, cclsorted, varlength, variable_trail_rule;
+static bool sc_is_exclusive, cclsorted, varlength, variable_trail_rule;
 
 int *scon_stk;
 int scon_stk_ptr;
@@ -174,17 +174,17 @@ sect1end	:  SECTEND
 		;
 
 startconddecl	:  SCDECL
-			{ xcluflg = false; }
+			{ sc_is_exclusive = false; }
 
 		|  XSCDECL
-			{ xcluflg = true; }
+			{ sc_is_exclusive = true; }
 		;
 
 namelist1	:  namelist1 NAME
-			{ scinstal( nmstr, xcluflg ); }
+			{ scinstal( nmstr, sc_is_exclusive ); }
 
 		|  NAME
-			{ scinstal( nmstr, xcluflg ); }
+			{ scinstal( nmstr, sc_is_exclusive ); }
 
 		|  error
 			{ synerr( _("bad start condition list") ); }

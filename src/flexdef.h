@@ -1041,7 +1041,7 @@ extern char *ndlookup(const char *);	/* lookup a name definition */
 
 /* Increase maximum number of SC's. */
 extern void scextend(void);
-extern void scinstal(const char *, int);	/* make a start condition */
+extern void scinstal(const char *, bool);	/* make a start condition */
 
 /* Lookup the number associated with a start condition. */
 extern int sclookup(const char *);

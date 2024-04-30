@@ -204,13 +204,9 @@ void    scextend (void)
 }
 
 
-/* scinstal - make a start condition
- *
- * NOTE
- *    The start condition is "exclusive" if xcluflg is true.
- */
+/* scinstal - make a start condition */
 
-void    scinstal (const char *str, int xcluflg)
+void    scinstal (const char *str, bool sc_is_exclusive)
 {
 
 	if (++lastsc >= current_max_scs)
@@ -224,7 +220,7 @@ void    scinstal (const char *str, int xcluflg)
 
 	scset[lastsc] = mkstate (SYM_EPSILON);
 	scbol[lastsc] = mkstate (SYM_EPSILON);
-	scxclu[lastsc] = xcluflg;
+	scxclu[lastsc] = sc_is_exclusive ? 1 : 0;
 	sceof[lastsc] = false;
 }
 
