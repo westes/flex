@@ -435,7 +435,7 @@ RULESETS = \
 	$(srcdir)/yyunput.rules
 
 $(srcdir)/ruleset.am: $(srcdir)/ruleset.sh $(RULESETS)
-	$(SHELL) $(srcdir)/ruleset.sh nr r c99 go > $(srcdir)/ruleset.am
+	( cd $(srcdir) && $(SHELL) ruleset.sh nr r c99 go >ruleset.am )
 
 include $(srcdir)/ruleset.am
 
