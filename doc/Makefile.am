@@ -1,7 +1,7 @@
 if CROSS
-FLEX = $(top_builddir)/stage1flex
+FLEX_FOR_DOC = $(top_builddir)/stage1flex
 else
-FLEX = $(top_builddir)/flex$(EXEEXT)
+FLEX_FOR_DOC = $(top_builddir)/flex$(EXEEXT)
 endif
 
 TEXI2DVI = @TEXI2DVI@ -I $(srcdir)/../examples/manual/
@@ -38,10 +38,10 @@ CLEANFILES = \
 
 flex.1: $(top_srcdir)/configure.ac $(top_srcdir)/src/cpp-flex.skl $(top_srcdir)/src/options.c $(top_srcdir)/src/options.h
 	( cd $(top_builddir) && \
-	  prog_name=`echo '$(FLEX)' | sed 's|^$(top_builddir)/||'` && \
+	  prog_name=`echo '$(FLEX_FOR_DOC)' | sed 's|^$(top_builddir)/||'` && \
 	  $(MAKE) $(AM_MAKEFLAGS) $$prog_name \
 	)
-	$(INSTALL) -m 700 $(FLEX) flex$(EXEEXT)
+	$(INSTALL) -m 700 $(FLEX_FOR_DOC) flex$(EXEEXT)
 	$(HELP2MAN) \
 	--name='$(PACKAGE_NAME)' \
 	--section=1 \
