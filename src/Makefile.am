@@ -160,7 +160,9 @@ stage2compare: stage1scan.c
 	echo Comparison successful.; \
 	echo success >$@
 
-dist-hook: scan.l flex$(EXEEXT)
+dist-hook: dist-hook-src
+
+dist-hook-src: scan.l flex$(EXEEXT)
 	chmod u+w $(distdir) && \
 	chmod u+w $(distdir)/scan.c && \
 	( cd $(srcdir) && $(abs_builddir)/flex$(EXEEXT) \
@@ -228,4 +230,4 @@ indent: $(top_srcdir)/.indent.pro
 		echo $$f FAILED to indent; \
 	done;
 
-.PHONY: indent
+.PHONY: dist-hook-src indent
