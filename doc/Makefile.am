@@ -48,4 +48,4 @@ flex.1: $(top_srcdir)/configure.ac $(top_srcdir)/src/cpp-flex.skl $(top_srcdir)/
 	--source='The Flex Project' \
 	--manual='Programming' \
 	--output=$@ \
-	flex
+	./flex
