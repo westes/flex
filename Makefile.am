@@ -58,6 +58,8 @@ MOSTLYCLEANFILES =
 
 CLEANFILES =
 
+indentfiles =
+
 include src/local.mk
 
 # Convenience targets to build libfl only
@@ -86,6 +88,24 @@ ChangeLog: $(srcdir)/tools/git2cl
 		$(srcdir)/tools/git2cl > $@ \
 	; fi
 
+# Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
+#
+# Whole idea:
+#   1. Check for .indent.pro, otherwise indent will use unknown
+#      settings, or worse, the GNU defaults.)
+#   2. Check that this is GNU indent.
+#   3. Make sure to process only the NON-generated .c and .h files.
+#   4. Run indent twice per file. The first time is a test.
+#      Otherwise, indent overwrites your file even if it fails!
+
+indent: .indent.pro
+	for f in $(indentfiles); do \
+		echo indenting $$f; \
+		INDENT_PROFILE=.indent.pro $(INDENT) <$$f >/dev/null && \
+		INDENT_PROFILE=.indent.pro $(INDENT) $$f || \
+		echo $$f FAILED to indent; \
+	done;
+
 install-exec-hook:
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) -f flex$(EXEEXT) flex++$(EXEEXT)
@@ -94,4 +114,4 @@ lint:
 	shellcheck -f gcc tests/*.sh src/*.sh *.sh
 
 .PHONY: libfl install-libfl uninstall-libfl clean-libfl \
-	ChangeLog lint
+	ChangeLog indent lint

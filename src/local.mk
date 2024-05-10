@@ -185,16 +185,7 @@ src/stage1flex-scan.$(OBJEXT): src/parse.h
 src/stage1scan.$(OBJEXT): src/parse.h
 src/scan.$(OBJEXT): src/parse.h
 
-# Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
-#
-# Whole idea:
-#   1. Check for .indent.pro, otherwise indent will use unknown
-#      settings, or worse, the GNU defaults.)
-#   2. Check that this is GNU indent.
-#   3. Make sure to process only the NON-generated .c and .h files.
-#   4. Run indent twice per file. The first time is a test.
-#      Otherwise, indent overwrites your file even if it fails!
-indentfiles = \
+indentfiles += \
 	src/buf.c \
 	src/ccl.c \
 	src/dfa.c \
@@ -220,13 +211,4 @@ indentfiles = \
 	src/tables_shared.h \
 	src/tblcmp.c
 
-indent: $(top_srcdir)/.indent.pro
-	cd $(top_srcdir) && \
-	for f in $(indentfiles); do \
-		echo indenting $$f; \
-		INDENT_PROFILE=.indent.pro $(INDENT) <$$f >/dev/null && \
-		INDENT_PROFILE=.indent.pro $(INDENT) $$f || \
-		echo $$f FAILED to indent; \
-	done;
-
-.PHONY: dist-hook-src indent
+.PHONY: dist-hook-src
