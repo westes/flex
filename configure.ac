@@ -40,7 +40,7 @@ LT_PREREQ([2.2])
 LT_INIT
 dnl Uses dist-lzip. Requires automake-1.11.3 as minimum.
 AM_INIT_AUTOMAKE([1.11.3 -Wno-portability foreign std-options dist-lzip parallel-tests subdir-objects])
-AC_CONFIG_HEADER([src/config.h])
+AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_MACRO_DIR([m4])
 SHARED_VERSION_INFO="2:0:0"
@@ -69,6 +69,9 @@ AC_PROG_YACC
   	YACC="\${top_srcdir}/build-aux/missing bison"
     ])
 AM_CONDITIONAL([HAVE_BISON], [test $use_gnu_bison -eq 1])
+dnl AC_PROG_LEX requires an argument in autoconf 2.70, but we cannot
+dnl specify it through AM_PROG_LEX until automake 1.17.
+AC_PROG_LEX([noyywrap])
 AM_PROG_LEX
 AC_PROG_CC
 AX_PROG_CC_FOR_BUILD
