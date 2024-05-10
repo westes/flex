@@ -215,7 +215,6 @@ AS_IF([test "$cross_compiling" = yes],
 
 AC_CONFIG_FILES(
 Makefile
-doc/Makefile
 examples/Makefile
 examples/fastwc/Makefile
 examples/manual/Makefile
