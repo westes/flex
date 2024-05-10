@@ -217,7 +217,6 @@ AC_CONFIG_FILES(
 Makefile
 po/Makefile.in
 src/libfl.pc
-tools/Makefile
 tests/Makefile
 )
 

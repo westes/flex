@@ -49,8 +49,7 @@ dist_noinst_SCRIPTS = \
 SUBDIRS = \
 	. \
 	po \
-	tests \
-	tools
+	tests
 
 MOSTLYCLEANFILES =
 
@@ -61,6 +60,7 @@ indentfiles =
 include doc/local.mk
 include examples/local.mk
 include src/local.mk
+include tools/local.mk
 
 # Convenience targets to build libfl only
 # These are actually wrappers around automake- and libtool-generated targets
