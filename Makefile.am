@@ -48,7 +48,6 @@ dist_noinst_SCRIPTS = \
 
 SUBDIRS = \
 	. \
-	examples \
 	po \
 	tests \
 	tools
@@ -60,6 +59,7 @@ CLEANFILES =
 indentfiles =
 
 include doc/local.mk
+include examples/local.mk
 include src/local.mk
 
 # Convenience targets to build libfl only

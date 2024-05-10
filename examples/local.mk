@@ -19,40 +19,10 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
-EXTRA_DIST = \
-	ChangeLog \
-	Makefile.examples \
-	README \
-	cat.lex   \
-	dates.lex \
-	datetest.dat \
-	eof_rules.lex \
-	eof_test01.txt \
-	eof_test02.txt \
-	eof_test03.txt \
-	example_er.lex \
-	example_r.lex \
-	example_nr.lex \
-	expr.lex \
-	expr.y \
-	front.lex \
-	front.y \
-	j2t.lex \
-	myname.lex \
-	myname.txt \
-	myname2.lex \
-	numbers.lex \
-	pas_include.lex \
-	pascal.lex \
-	reject.lex \
-	replace.lex \
-	string1.lex \
-	string2.lex \
-	strtest.dat \
-	unput.lex \
-	user_act.lex \
-	userinit.lex \
-	wc.lex \
-	yymore.lex \
-	yymore2.lex \
-	yymoretest.dat
+EXTRA_DIST += \
+	examples/testxxLexer.l \
+	examples/debflex.awk \
+	examples/README
+
+include examples/fastwc/local.mk
+include examples/manual/local.mk
