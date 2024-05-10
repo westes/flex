@@ -28,6 +28,11 @@ Makefile.in
 Makefile
 
 # Built object files and support files
+/flex
+/flex.exe
+/libfl.la
+/stage1flex
+/stage1flex.exe
 *.lo
 *.o
 *.obj

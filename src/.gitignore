@@ -13,11 +13,6 @@
 
 # Built object files and support files
 /*-flex.h
-/flex
-/flex.exe
-/libfl.la
 /stage1scan.c
-/stage1flex
-/stage1flex.exe
 /stage2compare
 /stage2scan.c

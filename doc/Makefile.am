@@ -1,7 +1,7 @@
 if CROSS
-FLEX = $(top_builddir)/src/stage1flex
+FLEX = $(top_builddir)/stage1flex
 else
-FLEX = $(top_builddir)/src/flex$(EXEEXT)
+FLEX = $(top_builddir)/flex$(EXEEXT)
 endif
 
 TEXI2DVI = @TEXI2DVI@ -I $(srcdir)/../examples/manual/
@@ -37,8 +37,8 @@ CLEANFILES = \
 # usage string, but not file extensions.
 
 flex.1: $(top_srcdir)/configure.ac $(top_srcdir)/src/cpp-flex.skl $(top_srcdir)/src/options.c $(top_srcdir)/src/options.h
-	( cd $(top_builddir)/src && \
-	  prog_name=`echo '$(FLEX)' | sed 's|^$(top_builddir)/src/||'` && \
+	( cd $(top_builddir) && \
+	  prog_name=`echo '$(FLEX)' | sed 's|^$(top_builddir)/||'` && \
 	  $(MAKE) $(AM_MAKEFLAGS) $$prog_name \
 	)
 	$(INSTALL) -m 700 $(FLEX) flex$(EXEEXT)

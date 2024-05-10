@@ -47,33 +47,35 @@ dist_noinst_SCRIPTS = \
 	po/update_linguas.sh
 
 SUBDIRS = \
-	src \
+	. \
 	doc \
 	examples \
 	po \
 	tests \
 	tools
 
+MOSTLYCLEANFILES =
+
+CLEANFILES =
+
+include src/local.mk
+
 # Convenience targets to build libfl only
 # These are actually wrappers around automake- and libtool-generated targets
 
-libfl:
-	cd src && $(MAKE) $(AM_MAKEFLAGS) libfl.la libfl.pc
+libfl: libfl.la src/libfl.pc
 
 install-libfl:
-	cd src && \
 	$(MAKE) $(AM_MAKEFLAGS) lib_LTLIBRARIES=libfl.la \
-	pkgconfig_DATA=libfl.pc install-libLTLIBRARIES install-pkgconfigDATA
+	pkgconfig_DATA=src/libfl.pc install-libLTLIBRARIES install-pkgconfigDATA
 
 uninstall-libfl:
-	cd src && \
 	$(MAKE) $(AM_MAKEFLAGS) \
-	lib_LTLIBRARIES=libfl.la pkgconfig_DATA=libfl.pc \
+	lib_LTLIBRARIES=libfl.la pkgconfig_DATA=src/libfl.pc \
 	uninstall-libLTLIBRARIES uninstall-pkgconfigDATA
 
 # libfl.pc is cleaned via 'distclean' target
 clean-libfl:
-	cd src && \
 	$(MAKE) $(AM_MAKEFLAGS) lib_LTLIBRARIES=libfl.la clean-libLTLIBRARIES \
 	clean-libtool
 
@@ -84,9 +86,6 @@ ChangeLog: $(srcdir)/tools/git2cl
 		$(srcdir)/tools/git2cl > $@ \
 	; fi
 
-indent:
-	cd src && $(MAKE) $(AM_MAKEFLAGS) indent
-
 install-exec-hook:
 	cd $(DESTDIR)$(bindir) && \
 		$(LN_S) -f flex$(EXEEXT) flex++$(EXEEXT)
@@ -95,4 +94,4 @@ lint:
 	shellcheck -f gcc tests/*.sh src/*.sh *.sh
 
 .PHONY: libfl install-libfl uninstall-libfl clean-libfl \
-	ChangeLog indent lint
+	ChangeLog lint
