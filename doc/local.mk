@@ -1,7 +1,7 @@
 if CROSS
-FLEX_FOR_DOC = $(top_builddir)/stage1flex
+FLEX_FOR_DOC = stage1flex
 else
-FLEX_FOR_DOC = $(top_builddir)/flex$(EXEEXT)
+FLEX_FOR_DOC = flex$(EXEEXT)
 endif
 
 TEXI2DVI = @TEXI2DVI@ -I $(srcdir)/examples/manual/
@@ -36,11 +36,8 @@ CLEANFILES += \
 # page generation. 'help2man' strips directory prefix ("./") from the
 # usage string, but not file extensions.
 
-doc/flex.1: $(top_srcdir)/configure.ac $(top_srcdir)/src/cpp-flex.skl $(top_srcdir)/src/options.c $(top_srcdir)/src/options.h
-	( cd $(top_builddir) && \
-	  prog_name=`echo '$(FLEX_FOR_DOC)' | sed 's|^$(top_builddir)/||'` && \
-	  $(MAKE) $(AM_MAKEFLAGS) $$prog_name \
-	)
+doc/flex.1: $(srcdir)/configure.ac $(srcdir)/src/cpp-flex.skl $(srcdir)/src/options.c $(srcdir)/src/options.h
+	$(MAKE) $(AM_MAKEFLAGS) $(FLEX_FOR_DOC)
 	$(INSTALL) -m 700 $(FLEX_FOR_DOC) doc/flex$(EXEEXT)
 	$(HELP2MAN) \
 	--name='$(PACKAGE_NAME)' \
