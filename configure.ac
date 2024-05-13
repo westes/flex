@@ -127,6 +127,10 @@ AC_PATH_PROG([HELP2MAN], help2man, [\${top_srcdir}/build-aux/missing help2man])
     AC_MSG_WARN(help2man: program not found: building man page will not work)
   )
 
+AM_CONDITIONAL([AUTO_BUILD_MAN_PAGE],
+  [test "$HELP2MAN" != "\${top_srcdir}/build-aux/missing help2man" &&
+    { test "x$enable_bootstrap" = xyes || test "$cross_compiling" = no; }])
+
 AC_PATH_PROGS([TEXI2DVI], [gtexi2dvi texi2dvi], [\${top_srcdir}/build-aux/missing texi2dvi])
   AS_IF([test "$TEXI2DVI" = "\${top_srcdir}/build-aux/missing texi2dvi"],
     AC_MSG_WARN(texi2dvi: program not found: building pdf version of manual will not work)

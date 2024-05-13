@@ -31,6 +31,7 @@ Makefile
 /flex
 /flex.exe
 /libfl.la
+/stage1bin/
 /stage1flex
 /stage1flex.exe
 *.lo

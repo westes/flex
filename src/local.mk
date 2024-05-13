@@ -7,8 +7,9 @@ pkgconfigdir = @pkgconfigdir@
 m4 = @M4@
 
 bin_PROGRAMS = flex
+
+EXTRA_PROGRAMS = stage1flex
 if ENABLE_BOOTSTRAP
-noinst_PROGRAMS = stage1flex
 if !CROSS
 noinst_DATA = src/stage2compare
 endif
@@ -31,23 +32,69 @@ nodist_stage1flex_SOURCES = \
 	$(SKELINCLUDES)
 
 if CROSS
-stage1flex_LDADD =
+
 stage1flex_SOURCES += \
 	lib/malloc.c \
 	lib/realloc.c
-stage1flex_LINK = $(LIBTOOL) --tag=CC --mode=link $(CC_FOR_BUILD) \
-		  $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@
 
-$(stage1flex_OBJECTS): CC=$(CC_FOR_BUILD)
-$(stage1flex_OBJECTS): CFLAGS=$(CFLAGS_FOR_BUILD) -DUSE_CONFIG_FOR_BUILD
-$(stage1flex_OBJECTS): CPP=$(CPP_FOR_BUILD)
-$(stage1flex_OBJECTS): CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
-$(stage1flex_OBJECTS): LDFLAGS=$(LDFLAGS_FOR_BUILD)
+stage1flex_CPPFLAGS = -DUSE_CONFIG_FOR_BUILD $(AM_CPPFLAGS)
+
+# This also overrides AM_LIBTOOLFLAGS and AM_LDFLAGS
+stage1flex_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(LIBTOOLFLAGS) \
+	--mode=link $(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) \
+	$(LDFLAGS_FOR_BUILD) -o $@
+
+stage1flex_LDADD =
+
 else
+
+stage1flex_CPPFLAGS = $(AM_CPPFLAGS)
+
+stage1flex_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(LIBTOOLFLAGS) \
+	--mode=link $(CCLD) $(CFLAGS) $(LDFLAGS) -o $@
+
 stage1flex_LDADD = $(LDADD)
-stage1flex_LINK = $(LINK)
-stage1flex_CFLAGS = $(AM_CFLAGS)
+
 endif
+
+# Suppress build warnings when compiling and linking stage1flex.
+stage1flex_CFLAGS =
+
+# Override the 'stage1flex$(EXEEXT)' target automake would generate.
+# If the compiler is not $(CC_FOR_BUILD) when this target is invoked,
+# delete the object files that would be linked to 'stage1flex' to force
+# rebuild all of them.
+
+stage1flex$(EXEEXT): $(stage1flex_OBJECTS) $(stage1flex_DEPENDENCIES) $(EXTRA_stage1flex_DEPENDENCIES)
+	@rm -f stage1flex$(EXEEXT)
+	{ test 'x$(CC)' = 'x$(CC_FOR_BUILD)' && \
+	  test 'x$(CPP)' = 'x$(CPP_FOR_BUILD)'; } || \
+	  { rm -f src/stage1flex-*.$(OBJEXT) \
+	    src/$(DEPDIR)/stage1flex-*.Po || :; }
+	@{ test 'x$(CC)' = 'x$(CC_FOR_BUILD)' && test 'x$(CPP)' = 'x$(CPP_FOR_BUILD)'; } || { \
+	  echo 'error: stage1flex must be built with a native compiler' 1>&2; \
+	  exit 1; \
+	}
+	$(AM_V_CCLD)$(stage1flex_LINK) $(stage1flex_OBJECTS) $(stage1flex_LDADD) $(LIBS)
+
+# The 'stage1bin/flex$(BUILD_EXEEXT)' target is not managed by
+# automake. We use a different file name from the automake-managed
+# 'stage1flex$(EXEEXT)' target to avoid clashing.
+
+stage1bin/flex$(BUILD_EXEEXT):
+	@if test 'x$(EXEEXT)' != 'x$(BUILD_EXEEXT)'; then rm -f stage1flex$(EXEEXT); else :; fi
+	@if test 'x$(OBJEXT)' != 'x$(BUILD_OBJEXT)'; then rm -f src/stage1flex-*.$(OBJEXT); else :; fi
+	$(MAKE) $(AM_MAKEFLAGS) \
+	  CC='$(CC_FOR_BUILD)' \
+	  CPP='$(CPP_FOR_BUILD)' \
+	  CFLAGS='$(CFLAGS_FOR_BUILD)' \
+	  CPPFLAGS='$(CPPFLAGS_FOR_BUILD)' \
+	  LDFLAGS='$(LDFLAGS_FOR_BUILD)' \
+	  EXEEXT='$(BUILD_EXEEXT)' \
+	  OBJEXT='$(BUILD_OBJEXT)' \
+	  stage1flex$(BUILD_EXEEXT)
+	$(MKDIR_P) stage1bin
+	$(INSTALL) -m 700 stage1flex$(BUILD_EXEEXT) $@
 
 flex_SOURCES = \
 	$(COMMON_SOURCES)
@@ -108,11 +155,15 @@ EXTRA_DIST += \
 
 MOSTLYCLEANFILES += \
 	$(SKELINCLUDES) \
+	src/stage1flex-*.$(BUILD_OBJEXT) \
 	src/stage1scan.c \
 	src/stage2scan.c \
 	src/stage2compare
 
-CLEANFILES += stage1flex$(EXEEXT)
+CLEANFILES += \
+	stage1bin/flex$(BUILD_EXEEXT) \
+	stage1flex$(BUILD_EXEEXT) \
+	stage1flex$(EXEEXT)
 
 SKELINCLUDES = \
 	src/cpp-flex.h \
@@ -137,21 +188,20 @@ src/go-flex.h: src/go-flex.skl src/mkskel.sh
 # The input and output file names are fixed for deterministic scanner
 # generation. If scan.l is not modified by builders, stage1scan.c should
 # be bit-identical to the scan.c pregenerated on release.
-src/stage1scan.c: src/scan.l stage1flex$(EXEEXT)
-	( cd $(srcdir)/src && $(abs_builddir)/stage1flex$(EXEEXT) \
+src/stage1scan.c: src/scan.l stage1bin/flex$(BUILD_EXEEXT)
+	( cd $(srcdir)/src && $(abs_builddir)/stage1bin/flex$(BUILD_EXEEXT) \
 	  $(AM_LFLAGS) $(LFLAGS) -o scan.c -t scan.l ) >$@ || \
 	{ s=$$?; rm -f $@; exit $$s; }
 
 # Unlike stage1scan.c, we leave stage2scan.c intact when the generation
 # fails. This allow users to examine generation errors.
-src/stage2scan.c: src/scan.l flex$(EXEEXT) src/stage1scan.c
+src/stage2scan.c: src/scan.l flex$(EXEEXT)
 	( cd $(srcdir)/src && $(abs_builddir)/flex$(EXEEXT) \
 	  $(AM_LFLAGS) $(LFLAGS) -o scan.c -t scan.l ) >$@
 
-src/stage2compare: src/stage1scan.c
-	@rm -f src/stage2scan.c; \
-	$(MAKE) $(AM_MAKEFLAGS) src/stage2scan.c; \
-	echo Comparing stage1scan.c and stage2scan.c; \
+
+src/stage2compare: src/stage1scan.c src/stage2scan.c
+	@echo Comparing stage1scan.c and stage2scan.c; \
 	cmp src/stage1scan.c src/stage2scan.c || { \
 	  s=$$?; \
 	  echo "Bootstrap comparison failure!"; \
@@ -211,4 +261,4 @@ indentfiles += \
 	src/tables_shared.h \
 	src/tblcmp.c
 
-.PHONY: dist-hook-src
+.PHONY: dist-hook-src src/stage2scan.c
