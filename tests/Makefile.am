@@ -434,7 +434,7 @@ RULESETS = \
 	$(srcdir)/yymorearraybol.rules \
 	$(srcdir)/yyunput.rules
 
-$(srcdir)/ruleset.am: $(srcdir)/ruleset.sh $(RULESETS)
+$(srcdir)/ruleset.am: $(srcdir)/ruleset.sh
 	( cd $(srcdir) && $(SHELL) ruleset.sh nr r c99 go >ruleset.am )
 
 include $(srcdir)/ruleset.am
