@@ -39,7 +39,7 @@ jobs:
 
     steps:
     - name: Apt
-      run: sudo apt-get install gcc autoconf bison gettext autopoint help2man lzip texinfo texlive
+      run: sudo apt-get update && sudo apt-get install -y gcc autoconf automake libtool flex bison gettext autopoint help2man lzip texinfo texlive
     - name: Checkout repository
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
     
