@@ -68,7 +68,9 @@
 #include "tables.h"
 
 int pat, scnum, eps, headcnt, trailcnt, lastchar, i, rulelen;
-int trlcontxt, xcluflg, currccl, cclsorted, varlength, variable_trail_rule;
+static int currccl;
+bool trlcontxt;
+static bool sc_is_exclusive, cclsorted, varlength, variable_trail_rule;
 
 int *scon_stk;
 int scon_stk_ptr;
@@ -172,17 +174,17 @@ sect1end	:  SECTEND
 		;
 
 startconddecl	:  SCDECL
-			{ xcluflg = false; }
+			{ sc_is_exclusive = false; }
 
 		|  XSCDECL
-			{ xcluflg = true; }
+			{ sc_is_exclusive = true; }
 		;
 
 namelist1	:  namelist1 NAME
-			{ scinstal( nmstr, xcluflg ); }
+			{ scinstal( nmstr, sc_is_exclusive ); }
 
 		|  NAME
-			{ scinstal( nmstr, xcluflg ); }
+			{ scinstal( nmstr, sc_is_exclusive ); }
 
 		|  error
 			{ synerr( _("bad start condition list") ); }
@@ -992,7 +994,7 @@ void build_eof_action(void)
 			if (previous_continued_action /* && previous action was regular */)
 				add_action("YY_RULE_SETUP\n");
 
-			snprintf( action_text, sizeof(action_text), "case YY_STATE_EOF(%s):\n",
+			snprintf( action_text, sizeof(action_text), "M4_HOOK_EOF_STATE_CASE_ARM(%s)\n",
 				scname[scon_stk[i]] );
 			add_action( action_text );
 			}

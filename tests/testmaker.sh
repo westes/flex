@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# testmaker.sh - asssemble tests from backend-independent rulesets and
+# testmaker.sh - assemble tests from backend-independent rulesets and
 # backend-dependent boilerplate.  Generates both a Flex source file
 # and an input text for it.
 #

@@ -24,14 +24,23 @@
 
 # autoconf requirements and initialization
 
+dnl We recommend builders to regenerate configure and auxiliary scripts with
+dnl exact versions of tools that generate flex release tarball, or latest
+dnl versions of tools for flex development. The minimum feature and version
+dnl requirements are provided for information only (no guarantee that the tools
+dnl will work and we may bump requirements with future code changes).
+dnl Uses AC_PATH_PROGS_FEATURE_CHECK. Requires autoconf-2.62 as minimum.
+AC_PREREQ([2.62])
 AC_INIT([the fast lexical analyser generator],[2.6.4],[flex-help@lists.sourceforge.net],[flex])
-AC_PREREQ([2.60])
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_USE_SYSTEM_EXTENSIONS
+dnl "LT_*" macros and "libtoolize --install" require libtool-2.2 as minimum.
+LT_PREREQ([2.2])
 LT_INIT
-AM_INIT_AUTOMAKE([1.15 -Wno-portability foreign std-options dist-lzip parallel-tests subdir-objects])
-AC_CONFIG_HEADER([src/config.h])
+dnl Uses dist-lzip. Requires automake-1.11.3 as minimum.
+AM_INIT_AUTOMAKE([1.11.3 -Wno-portability foreign std-options dist-lzip parallel-tests subdir-objects])
+AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_MACRO_DIR([m4])
 SHARED_VERSION_INFO="2:0:0"
@@ -40,13 +49,29 @@ AC_SUBST(SHARED_VERSION_INFO)
 # checks for programs
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.19.7])
+dnl Try to pull in latest gettext infrastructure ("po" and "m4") files.
+dnl Unfortunately autoreconf as of 2.69 doesn't recognize
+dnl AM[_]GNU[_]GETTEXT_REQUIRE_VERSION so we provide AM[_]GNU[_]GETTEXT_VERSION
+dnl as fallback. (autopoint will ignore latter if former is specified.)
+dnl
+dnl Bugs in gettext before 0.14 prevent building flex with it.
+dnl FLEX_GNU_GETTEXT_REAL_REQUIRE_VERSION=0.14
+AM_GNU_GETTEXT_REQUIRE_VERSION([0.19.6])
+AM_GNU_GETTEXT_VERSION([0.19.6])
 AC_PROG_YACC
-AS_IF([test "$YACC" != 'bison -y'], [
-	YACC="\${top_srcdir}/build-aux/missing bison -y"
-	AC_MSG_NOTICE(no bison program found: only required for maintainers)
-	])
-AM_CONDITIONAL([HAVE_BISON], [test "$YACC" = 'bison -y'])
+  AC_MSG_CHECKING(whether $YACC is GNU Bison)
+  AS_IF([test -n "$YACC" && $YACC --version 2>&1 | $GREP "GNU Bison" >/dev/null],
+    [AC_MSG_RESULT(yes)
+  	use_gnu_bison=1],
+    [AC_MSG_RESULT(no)
+  	AC_MSG_WARN($YACC does not appear to be GNU Bison; required for maintainers)
+  	use_gnu_bison=0
+  	YACC="\${top_srcdir}/build-aux/missing bison"
+    ])
+AM_CONDITIONAL([HAVE_BISON], [test $use_gnu_bison -eq 1])
+dnl AC_PROG_LEX requires an argument in autoconf 2.70, but we cannot
+dnl specify it through AM_PROG_LEX until automake 1.17.
+AC_PROG_LEX([noyywrap])
 AM_PROG_LEX
 AC_PROG_CC
 AX_PROG_CC_FOR_BUILD
@@ -55,6 +80,15 @@ AM_PROG_CC_C_O
 AC_PROG_LN_S
 AC_PROG_AWK
 AC_PROG_INSTALL
+
+AS_IF([test "x${BUILD_OBJEXT-}" = x],
+  [AS_IF([test "$cross_compiling" = no],
+    [BUILD_EXEEXT="$EXEEXT"
+    BUILD_OBJEXT="$OBJEXT"],
+    [BUILD_EXEEXT="${ac_cv_build_exeext-}"
+    BUILD_OBJEXT="${ac_cv_build_objext-}"])])
+AS_IF([test "x${BUILD_OBJEXT-}" = x && test "x${enable_bootstrap-yes}" = xyes],
+  [AC_MSG_ERROR([BUILD_OBJEXT is invalid; please regenerate 'configure' with a newer ax_prog_cc_for_build.m4 (serial 22 or later) or configure with '--disable-bootstrap'])])
 
 pkgconfigdir=${libdir}/pkgconfig
 AC_SUBST(pkgconfigdir)
@@ -109,12 +143,15 @@ AC_CACHE_CHECK([for m4 that supports -P], [ac_cv_path_M4],
 AC_SUBST([M4], [$ac_cv_path_M4])
 AC_DEFINE_UNQUOTED([M4], ["$M4"], [Define to the m4 executable name.])
 
-AC_PATH_PROG([INDENT], indent, [\${top_srcdir}/build-aux/missing indent])
-  AC_MSG_CHECKING(if $INDENT is GNU indent)
-  AS_IF([$INDENT --version 2>/dev/null | head -n 1 | grep "GNU indent" >/dev/null],
-    [AC_MSG_RESULT(yes)],
-    [AC_MSG_RESULT(no)
-     AC_MSG_WARN($INDENT does not appear to be GNU indent; 'make indent' may not function properly)
+AC_PATH_PROG([INDENT], indent)
+  AS_IF([test -n "$INDENT"], [
+    AC_MSG_CHECKING(whether $INDENT is GNU indent)
+    AS_IF([$INDENT --version 2>/dev/null | $GREP "GNU indent" >/dev/null],
+      [AC_MSG_RESULT(yes)],
+      [AC_MSG_RESULT(no)
+       AC_MSG_WARN($INDENT does not appear to be GNU indent; 'make indent' may not function properly)
+       INDENT="\${top_srcdir}/build-aux/missing indent"
+      ])
     ])
 
 # checks for headers
@@ -171,6 +208,10 @@ AC_CHECK_FUNCS([dup2 memset regcomp strcasecmp strchr strdup strtol], [],
 # reallocarr - NetBSD function. Use reallocarray if not available.
 # reallocarray - OpenBSD function. We have replacement if not available.
 AC_CHECK_FUNCS([pow setlocale reallocarr reallocarray])
+AC_CHECK_DECLS(__func__)
+
+AS_IF([test "$cross_compiling" = yes],
+  [AC_CONFIG_FILES([src/config_for_build.h])])
 
 AC_CONFIG_FILES(
 Makefile

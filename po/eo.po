@@ -1,14 +1,14 @@
 # Esperanto translation
-# Copyright © 2008 The Flex Project (msgids)
+# Copyright © 2008, 2012, 2023 The Flex Project (msgids)
 # This file is distributed under the same license as the flex package.
-# Felipe Castro <fefcas@gmail.com>, 2012.
+# Felipe Castro <fefcas@gmail.com>, 2012, 2023.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: flex 2.5.37\n"
+"Project-Id-Version: flex 2.6.4\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-05-06 10:49-0400\n"
-"PO-Revision-Date: 2012-09-08 07:15-0300\n"
+"PO-Revision-Date: 2023-01-08 14:21-0300\n"
 "Last-Translator: Felipe Castro <fefcas@gmail.com>\n"
 "Language-Team: Esperanto <translation-team-eo@lists.sourceforge.net>\n"
 "Language: eo\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: src/buf.c:79
 msgid "Allocation of buffer to print string failed"
@@ -180,8 +181,7 @@ msgstr "regulo ne povas esti korespondata"
 
 #: src/main.c:183
 msgid "-s option given but default rule can be matched"
-msgstr ""
-"la modifilo -s estis indikata sed la apriora regulo povas esti korespondata"
+msgstr "la modifilo -s estis indikata sed la apriora regulo povas esti korespondata"
 
 #: src/main.c:221
 msgid "Can't use -+ with -l option"
@@ -244,7 +244,7 @@ msgstr "ne eblas malfermi la skeletan dosieron %s"
 
 #: src/main.c:450
 msgid "Prefix cannot include '[' or ']'"
-msgstr ""
+msgstr "Prefikso ne povas inkluzivi '[' aŭ ']'"
 
 #: src/main.c:474
 msgid "allocation of macro definition failed"
@@ -472,24 +472,17 @@ msgstr "ne eblis krei savkopiad-informan dosieron %s"
 #: src/main.c:1529
 #, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr ""
-"La modifilo -l AT&T de akordigo al lex alportas grandan malaltigon de "
-"rendimento\n"
+msgstr "La modifilo -l AT&T de akordigo al lex alportas grandan malaltigon de rendimento\n"
 
 #: src/main.c:1532
 #, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
-msgstr ""
-" kaj povas esti la vera fonto de aliaj raportitaj malaltigoj de rendimento\n"
+msgstr " kaj povas esti la vera fonto de aliaj raportitaj malaltigoj de rendimento\n"
 
 #: src/main.c:1538
 #, c-format
-msgid ""
-"%%option yylineno entails a performance penalty ONLY on rules that can match "
-"newline characters\n"
-msgstr ""
-"%%option yylineno alportas malaltigon de rendimento NUR kun reguloj kiuj "
-"povas akordiĝi kun novliniaj signoj\n"
+msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "%%option yylineno alportas malaltigon de rendimento NUR kun reguloj kiuj povas akordiĝi kun novliniaj signoj\n"
 
 #: src/main.c:1545
 #, c-format
@@ -535,7 +528,7 @@ msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Uzado: %s [MODIFILOJ] [DOSIERO]...\n"
 
 #: src/main.c:1794
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
 "\n"
@@ -558,16 +551,14 @@ msgid ""
 "  -T, --trace             %s should run in trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
-"      --hex               use hexadecimal numbers instead of octal in debug "
-"outputs\n"
+"      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 "\n"
 "Files:\n"
 "  -o, --outfile=FILE      specify output filename\n"
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the "
-"scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "\n"
 "Scanner behavior:\n"
@@ -602,8 +593,7 @@ msgstr ""
 "Generas programojn kiuj prilaboras modelo-kongruon en tekstoj.\n"
 "\n"
 "Tabela Densigo:\n"
-"  -Ca, --align      prilaboras pli grandajn tabelojn por pli bone organizi "
-"memoron\n"
+"  -Ca, --align      prilaboras pli grandajn tabelojn por pli bone organizi memoron\n"
 "  -Ce, --ecs        konstrui ekvivalento-klasojn\n"
 "  -Cf               ne densigi tabelojn; uzi reprezenton -f\n"
 "  -CF               ne densigi tabelojn; uzi reprezenton -F\n"
@@ -617,12 +607,11 @@ msgstr ""
 "  -d, --debug             ebligi rafinigan reĝimon en la skanilo\n"
 "  -b, --backup            skribi savkopian informon al %s\n"
 "  -p, --perf-report       skribi raporton pri rendimento al 'stderr'\n"
-"  -s, --nodefault         demeti aprioran regulon por EĤIGI nekongruan "
-"tekston\n"
+"  -s, --nodefault         demeti aprioran regulon por EĤIGI nekongruan tekston\n"
 "  -T, --trace             %s devos funkcii sub spura reĝimo\n"
 "  -w, --nowarn            ne generi avertojn\n"
-"  -v, --verbose           skribi resumon de la skanilaj statistikoj al "
-"'stdout'\n"
+"  -v, --verbose           skribi resumon de la skanilaj statistikoj al 'stdout'\n"
+"      --hex               uzi deksesumajn numerojn anstataŭ oktumaj en rafiniga eligo\n"
 "\n"
 "Dosieroj:\n"
 "  -o, --outfile=DOSIERO       indiki eligan dosiernomon\n"
@@ -644,16 +633,13 @@ msgstr ""
 "\n"
 "Generata kodumaĵo:\n"
 "  -+,  --c++               generi klason de skanilo C++\n"
-"  -Dmacro[=defn]           uzi #define por makroo defn  (apriora defn estas "
-"'1')\n"
+"  -Dmacro[=defn]           uzi #define por makroo defn  (apriora defn estas '1')\n"
 "  -L,  --noline            demeti instrukciojn  #line en la skanilo\n"
 "  -P,  --prefix=ĈENO       uzi ĈENOn kiel prefikson anstataŭ \"yy\"\n"
 "  -R,  --reentrant         generi reenigan skanilon C\n"
 "       --bison-bridge      skanilo por nur-bizon analizilo.\n"
 "       --bison-locations   inkluzivigi subtenon al yylloc.\n"
 "       --stdinit           ekigi yyin/yyout al stdin/stdout\n"
-"       --noansi-definitions malmodern-stilaj difinoj de funkcioj\n"
-"       --noansi-prototypes  malplena parametro-listo en prototipoj\n"
 "       --nounistd          ne inkluzivigi <unistd.h>\n"
 "       --noFUNKCIO         ne generi specifan FUNKCIOn\n"
 "\n"
@@ -688,9 +674,8 @@ msgid "scanner requires -8 flag to use the character %s"
 msgstr "la skanilo postulas la flagon -8 por uzi la signon %s"
 
 #: src/misc.c:229
-#, fuzzy
 msgid "memory allocation failure in xstrdup()"
-msgstr "rezervo de memoro fiaskis en allocate_array()"
+msgstr "rezervo de memoro malsukcesis en xstrdup()"
 
 #: src/misc.c:303
 #, c-format
@@ -759,7 +744,7 @@ msgstr "tro multe da reguoloj (> %d)!"
 
 #: src/parse.y:159
 msgid "unknown error processing section 1"
-msgstr "Nekonata erar-proceza sekcio 1"
+msgstr "nekonata erar-proceza sekcio 1"
 
 #: src/parse.y:184 src/parse.y:353
 msgid "bad start condition list"
@@ -767,7 +752,7 @@ msgstr "malĝusta komenc-kondiĉa listo"
 
 #: src/parse.y:204
 msgid "Prefix must not contain [ or ]"
-msgstr ""
+msgstr "Prefikso ne povas enhavi [ aŭ ]"
 
 #: src/parse.y:317
 msgid "unrecognized rule"
@@ -853,7 +838,7 @@ msgstr "nedifinita difino {%s}"
 
 #: src/scan.l:772
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "ne spegulita ronda krampo"
 
 #: src/scan.l:787
 #, c-format

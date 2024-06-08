@@ -40,7 +40,7 @@
  */
 
 struct hash_entry {
-	struct hash_entry *prev, *next;
+	struct hash_entry *next;
 	char   *name;
 	char   *str_val;
 	int     int_val;
@@ -52,17 +52,17 @@ typedef struct hash_entry **hash_table;
 #define START_COND_HASH_SIZE 101
 #define CCL_HASH_SIZE 101
 
-static struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
-static struct hash_entry *sctbl[START_COND_HASH_SIZE];
-static struct hash_entry *ccltab[CCL_HASH_SIZE];
+static struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE] = {NULL};
+static struct hash_entry *sctbl[START_COND_HASH_SIZE] = {NULL};
+static struct hash_entry *ccltab[CCL_HASH_SIZE] = {NULL};
 
 
 /* declare functions that have forward references */
 
-static int addsym(char[], char *, int, hash_table, int);
+static int addsym(const char *, const char *, int, hash_table, size_t);
 static struct hash_entry *findsym (const char *sym, hash_table table,
-				   int table_size);
-static int hashfunct(const char *, int);
+				   size_t table_size);
+static size_t hashfunct(const char *, size_t);
 
 
 /* addsym - add symbol and definitions to symbol table
@@ -70,12 +70,11 @@ static int hashfunct(const char *, int);
  * -1 is returned if the symbol already exists, and the change not made.
  */
 
-static int addsym (char sym[], char *str_def, int int_def, hash_table table, int table_size)
+static int addsym (const char *sym, const char *str_def, int int_def, hash_table table, size_t table_size)
 {
-	int    hash_val = hashfunct (sym, table_size);
+	size_t hash_val = hashfunct (sym, table_size);
 	struct hash_entry *sym_entry = table[hash_val];
 	struct hash_entry *new_entry;
-	struct hash_entry *successor;
 
 	while (sym_entry) {
 		if (!strcmp (sym, sym_entry->name)) {	/* entry already exists */
@@ -91,16 +90,13 @@ static int addsym (char sym[], char *str_def, int int_def, hash_table table, int
 	if (new_entry == NULL)
 		flexfatal (_("symbol table memory allocation failed"));
 
-	if ((successor = table[hash_val]) != 0) {
-		new_entry->next = successor;
-		successor->prev = new_entry;
+	new_entry->next = table[hash_val];
+	new_entry->name = xstrdup(sym);
+	if (str_def == NULL) {
+		new_entry->str_val = NULL;
+	} else {
+		new_entry->str_val = xstrdup(str_def);
 	}
-	else
-		new_entry->next = NULL;
-
-	new_entry->prev = NULL;
-	new_entry->name = sym;
-	new_entry->str_val = str_def;
 	new_entry->int_val = int_def;
 
 	table[hash_val] = new_entry;
@@ -117,8 +113,7 @@ void    cclinstal (char ccltxt[], int cclnum)
 	 * called unless the symbol is new.
 	 */
 
-	(void) addsym (xstrdup(ccltxt),
-		       (char *) 0, cclnum, ccltab, CCL_HASH_SIZE);
+	(void) addsym(ccltxt, NULL, cclnum, ccltab, CCL_HASH_SIZE);
 }
 
 
@@ -135,10 +130,10 @@ int     ccllookup (char ccltxt[])
 
 /* findsym - find symbol in symbol table */
 
-static struct hash_entry *findsym (const char *sym, hash_table table, int table_size)
+static struct hash_entry *findsym (const char *sym, hash_table table, size_t table_size)
 {
 	static struct hash_entry empty_entry = {
-		NULL, NULL, NULL, NULL, 0,
+		NULL, NULL, NULL, 0,
 	};
 	struct hash_entry *sym_entry =
 
@@ -155,15 +150,15 @@ static struct hash_entry *findsym (const char *sym, hash_table table, int table_
 
 /* hashfunct - compute the hash value for "str" and hash size "hash_size" */
 
-static int hashfunct (const char *str, int hash_size)
+static size_t hashfunct (const char *str, size_t hash_size)
 {
-	int hashval;
-	int locstr;
+	size_t hashval;
+	size_t locstr;
 
 	hashval = 0;
 	locstr = 0;
 
-	while (str[locstr]) {
+	while (str[locstr] != '\0') {
 		hashval = (hashval << 1) + (unsigned char) str[locstr++];
 		hashval %= hash_size;
 	}
@@ -176,11 +171,9 @@ static int hashfunct (const char *str, int hash_size)
 
 void    ndinstal (const char *name, char definition[])
 {
-
-	if (addsym (xstrdup(name),
-		    xstrdup(definition), 0,
-		    ndtbl, NAME_TABLE_HASH_SIZE))
-			synerr (_("name defined twice"));
+	if (addsym(name, definition, 0, ndtbl, NAME_TABLE_HASH_SIZE)) {
+		synerr (_("name defined twice"));
+	}
 }
 
 
@@ -205,35 +198,30 @@ void    scextend (void)
 
 	scset = reallocate_integer_array (scset, current_max_scs);
 	scbol = reallocate_integer_array (scbol, current_max_scs);
-	scxclu = reallocate_integer_array (scxclu, current_max_scs);
-	sceof = reallocate_integer_array (sceof, current_max_scs);
+	scxclu = reallocate_array(scxclu, current_max_scs,
+		sizeof(char));
+	sceof = reallocate_array(sceof, current_max_scs, sizeof(char));
 	scname = reallocate_char_ptr_array (scname, current_max_scs);
 }
 
 
-/* scinstal - make a start condition
- *
- * NOTE
- *    The start condition is "exclusive" if xcluflg is true.
- */
+/* scinstal - make a start condition */
 
-void    scinstal (const char *str, int xcluflg)
+void    scinstal (const char *str, bool sc_is_exclusive)
 {
 
 	if (++lastsc >= current_max_scs)
 		scextend ();
 
-	scname[lastsc] = xstrdup(str);
-
-	if (addsym(scname[lastsc], NULL, lastsc,
-		    sctbl, START_COND_HASH_SIZE))
-			format_pinpoint_message (_
-						 ("start condition %s declared twice"),
-str);
+	if (addsym(str, NULL, lastsc, sctbl, START_COND_HASH_SIZE)) {
+		format_pinpoint_message (
+			_("start condition %s declared twice"), str);
+	}
+	scname[lastsc] = sctbl[hashfunct(str, START_COND_HASH_SIZE)]->name;
 
 	scset[lastsc] = mkstate (SYM_EPSILON);
 	scbol[lastsc] = mkstate (SYM_EPSILON);
-	scxclu[lastsc] = xcluflg;
+	scxclu[lastsc] = sc_is_exclusive ? 1 : 0;
 	sceof[lastsc] = false;
 }
 

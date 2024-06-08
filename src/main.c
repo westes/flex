@@ -47,7 +47,7 @@ void readin(void);
 void set_up_initial_allocations(void);
 
 /* these globals are all defined and commented in flexdef.h */
-int     syntaxerror, eofseen;
+bool    syntaxerror, eofseen;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     datapos, dataline, linenum;
 FILE   *skelfile = NULL;
@@ -63,17 +63,20 @@ int     maximum_mns, current_mns, current_max_rules;
 int     num_rules, num_eof_rules, default_rule, lastnfa;
 int    *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
 int    *accptnum, *assoc_rule, *state_type;
-int    *rule_type, *rule_linenum, *rule_useful;
+int    *rule_type, *rule_linenum;
 int     current_state_type;
-int     variable_trailing_context_rules;
+bool    variable_trailing_context_rules;
 int     numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
 int     protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 int     numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs,
 	tecfwd[CSIZE + 1];
 int     tecbck[CSIZE + 1];
-int     lastsc, *scset, *scbol, *scxclu, *sceof;
+int     lastsc, *scset, *scbol;
+/* scxclu[] and sceof[] are boolean arrays, but allocated as char
+ * arrays for size. */
+char   *scxclu, *sceof;
 int     current_max_scs;
-char  **scname;
+const char **scname;
 int     current_max_dfa_size, current_max_xpairs;
 int     current_max_template_xpairs, current_max_dfas;
 int     lastdfa, *nxt, *chk, *tnxt;
@@ -92,7 +95,9 @@ int     end_of_buffer_state;
 char  **input_files;
 int     num_input_files;
 jmp_buf flex_main_jmp_buf;
-bool   *rule_has_nl, *ccl_has_nl;
+/* rule_useful[], rule_has_nl[] and ccl_has_nl[] are boolean arrays,
+ * but allocated as char arrays for size. */
+char   *rule_useful, *rule_has_nl, *ccl_has_nl;
 int     nlch = '\n';
 
 bool    tablesext, tablesverify, gentables;
@@ -160,7 +165,6 @@ int flex_main (int argc, char *argv[])
 	flexinit (argc, argv);
 
 	readin ();
-
 	skelout (true);		/* %% [1.0] DFA */
 	footprint += ntod ();
 
@@ -295,7 +299,7 @@ void initialize_output_filters(void)
 	if ( !(m4 = getenv("M4"))) {
 		m4 = M4;
 	}
-	filter_create_ext(output_chain, m4, "-P", 0);
+	filter_create_ext(output_chain, m4, "-P", (char *) 0);
 	filter_create_int(output_chain, filter_fix_linedirs, NULL);
 
 	/* For debugging, only run the requested number of filters. */
@@ -1167,7 +1171,8 @@ void flexinit (int argc, char **argv)
 	numas = numsnpairs = tmpuses = 0;
 	numecs = numeps = eps2 = num_reallocs = hshcol = dfaeql = totnst =
 	    0;
-	numuniq = numdup = hshsave = eofseen = datapos = dataline = 0;
+	numuniq = numdup = hshsave = datapos = dataline = 0;
+	eofseen = false;
 	num_backing_up = onesp = numprots = 0;
 	variable_trailing_context_rules = bol_needed = false;
 
@@ -1284,7 +1289,7 @@ void readin (void)
 		out_str ("M4_HOOK_SET_POSTACTION(%s)\n", ctrl.postaction);
 	}
 
-	/* This has to be a stright textual substitution rather
+	/* This has to be a straight textual substitution rather
 	 * than a constant declaration because in C a const is
 	 * not const enough to be a static array bound.
 	 */
@@ -1294,7 +1299,7 @@ void readin (void)
 	if (userdef_buf.elts)
 		outn ((char *) (userdef_buf.elts));
 
-	/* If the user explicitly requested posix compatibility by specifing the
+	/* If the user explicitly requested posix compatibility by specifying the
 	 * posix-compat option, then we check for conflicting options. However, if
 	 * the POSIXLY_CORRECT variable is set, then we quietly make flex as
 	 * posix-compatible as possible.  This is the recommended behavior
@@ -1691,21 +1696,21 @@ void set_up_initial_allocations (void)
 	current_max_rules = INITIAL_MAX_RULES;
 	rule_type = allocate_integer_array (current_max_rules);
 	rule_linenum = allocate_integer_array (current_max_rules);
-	rule_useful = allocate_integer_array (current_max_rules);
-	rule_has_nl = allocate_bool_array (current_max_rules);
+	rule_useful = allocate_array(current_max_rules, sizeof(char));
+	rule_has_nl = allocate_array(current_max_rules, sizeof(char));
 
 	current_max_scs = INITIAL_MAX_SCS;
 	scset = allocate_integer_array (current_max_scs);
 	scbol = allocate_integer_array (current_max_scs);
-	scxclu = allocate_integer_array (current_max_scs);
-	sceof = allocate_integer_array (current_max_scs);
+	scxclu = allocate_array(current_max_scs, sizeof(char));
+	sceof = allocate_array(current_max_scs, sizeof(char));
 	scname = allocate_char_ptr_array (current_max_scs);
 
 	current_maxccls = INITIAL_MAX_CCLS;
 	cclmap = allocate_integer_array (current_maxccls);
 	ccllen = allocate_integer_array (current_maxccls);
 	cclng = allocate_integer_array (current_maxccls);
-	ccl_has_nl = allocate_bool_array (current_maxccls);
+	ccl_has_nl = allocate_array(current_maxccls, sizeof(char));
 
 	current_max_ccl_tbl_size = INITIAL_MAX_CCL_TBL_SIZE;
 	ccltbl = allocate_Character_array (current_max_ccl_tbl_size);
@@ -1726,7 +1731,8 @@ void set_up_initial_allocations (void)
 	accsiz = allocate_integer_array (current_max_dfas);
 	dhash = allocate_integer_array (current_max_dfas);
 	dss = allocate_int_ptr_array (current_max_dfas);
-	dfaacc = allocate_dfaacc_union (current_max_dfas);
+	dfaacc = allocate_array(current_max_dfas,
+		sizeof(union dfaacc_union));
 
 	nultrans = NULL;
 }

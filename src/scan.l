@@ -40,7 +40,7 @@
 
 #include "parse.h"
 extern bool tablesverify, tablesext;
-extern int trlcontxt; /* Set in  parse.y for each rule. */
+extern bool trlcontxt; /* Set in parse.y for each rule. */
 extern const char *escaped_qstart, *escaped_qend;
 
 #define M4QSTART "[""["
@@ -95,7 +95,7 @@ extern const char *escaped_qstart, *escaped_qend;
 #define START_CODEBLOCK(x) do { \
     /* Emit the needed line directive... */\
     if (indented_code == false) { \
-        linenum++; \
+        if (!x) linenum++; \
         line_directive_out(NULL, infilename, linenum);	\
     } \
     add_action(M4QSTART); \
@@ -155,10 +155,10 @@ void context_member(char *, const char *);
 %}
 %%
 	static int bracelevel, didadef, indented_code;
-	static int doing_rule_action = false;
-	static int option_sense;
+	static bool doing_rule_action = false;
+	static bool option_sense;
 
-	int doing_codeblock = false;
+	static bool doing_codeblock = false;
 	int brace_depth=0, brace_start_line=0;
 	char nmdef[MAXLINE];
 
@@ -395,7 +395,7 @@ void context_member(char *, const char *);
 	main		{
 			ctrl.do_main = option_sense;
 			/* Override yywrap */
-			if( option_sense == true )
+			if (option_sense)
                 		ctrl.do_yywrap = false;
 			}
 	meta-ecs	ctrl.usemecs = option_sense;
@@ -471,7 +471,7 @@ void context_member(char *, const char *);
 	tables-file         return TOK_TABLES_FILE;
 	tables-verify   {
                     tablesverify = option_sense;
-                    if(!tablesext && option_sense)
+                    if (!tablesext && option_sense)
                         tablesext = true;
                     }
 
@@ -673,12 +673,7 @@ void context_member(char *, const char *);
                    */
                 &&  (cclval = ccllookup( nmstr )) != 0 )
 				{
-				if ( yyinput() != ']' )
-					synerr( _( "bad character class" ) );
-
-				yylval = cclval;
-				++cclreuse;
-				return PREVCCL;
+     				 /* Dead code removed */
 				}
 			else
 				{
@@ -927,11 +922,11 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 			ACTION_ECHO;
 			CHECK_REJECT(yytext);
         }
-		"yyreject()" {
+		"yyreject"{OPTWS}"("{OPTWS}")" {
 			add_action("]""]M4_HOOK_REJECT[""[");
 			CHECK_YYREJECT(yytext);
         }
-		"yymore()" {
+		"yymore"{OPTWS}"("{OPTWS}")" {
 			yymore_used = true;
 			if (ctrl.rewrite)
 				context_call(yytext);
@@ -1083,7 +1078,7 @@ void set_input_file( char *file )
 		yyin = fopen( infilename, "r" );
 
 		if ( yyin == NULL )
-			lerr( _( "can't open %s" ), file );
+			lerr( _( "can't open %s: %s" ), file, strerror(errno));
 		}
 
 	else

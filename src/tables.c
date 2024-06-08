@@ -160,12 +160,12 @@ int yytbl_hdr_fwrite (struct yytbl_writer *wr, const struct yytbl_hdr *th)
 
 	sz = (int) strlen (th->th_version) + 1;
 	if ((rv = yytbl_writen (wr, th->th_version, sz)) != sz)
-		flex_die (_("th_version writen failed"));
+		flex_die (_("th_version written failed"));
 	bwritten += rv;
 
 	sz = (int) strlen (th->th_name) + 1;
 	if ((rv = yytbl_writen (wr, th->th_name, sz)) != sz)
-		flex_die (_("th_name writen failed"));
+		flex_die (_("th_name written failed"));
 	bwritten += rv;
 
 	/* add padding */

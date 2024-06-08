@@ -65,7 +65,7 @@ m4_define([[M4_HOOK_CONST_DEFINE_BYTE]], [[const char $1 = $2;
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_STATE]], [[#define $1 $2
 ]])
-m4_define([[M4_HOOK_CONST_DEFINE_UINT]], [[const uint $1 = $2;
+m4_define([[M4_HOOK_CONST_DEFINE_UINT]], [[const unsigned int $1 = $2;
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_BOOL]], [[const bool $1 = $2;
 ]])
@@ -221,7 +221,7 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <unistd.h>	/* requred for isatty() */
+#include <unistd.h>	/* required for isatty() */
 
 #if defined(__GNUC__) && __GNUC__ >= 3
 #define yynoreturn __attribute__((__noreturn__))
@@ -259,9 +259,9 @@ const int YY_NULL = 0;
  */
 m4_define([[YY_SC_TO_UI]], [[((YY_CHAR)($1))]])
 
-/* In the ancestal C back end this was a void pointer, meant to be
+/* In the ancestral C back end this was a void pointer, meant to be
  * opaque pointer.  That indirection has been removed here as it
- * wouldn't easily port to other langages.
+ * wouldn't easily port to other languages.
  */
 typedef struct yyguts_t *yyscan_t;
 
@@ -712,7 +712,11 @@ static void yy_init_buffer(yybuffer  b, FILE * file, yyscan_t yyscanner)
 	yy_flush_buffer( b, yyscanner);
 
 	b->yy_input_file = file;
-	b->yy_fill_buffer = true;
+	if (b->yy_input_file == NULL) {
+	  b->yy_fill_buffer = false;
+	} else {
+	  b->yy_fill_buffer = true;
+	}
 
 	/* If b is the current buffer, then yy_init_buffer was _probably_
 	 * called from yyrestart() or through yy_get_next_buffer.
@@ -850,8 +854,10 @@ void yypop_buffer_state (yyscan_t yyscanner)
  */
 void yyrestart(FILE * input_file, yyscan_t yyscanner)
 {
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	size_t new_size = 0;
 	yy_state_type *new_state_buf = 0;
+]] )
 
 	if ( yy_current_buffer(yyscanner) == NULL ) {
 		yyensure_buffer_stack (yyscanner);
@@ -865,7 +871,7 @@ void yyrestart(FILE * input_file, yyscan_t yyscanner)
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* Ensure the reject state buffer is large enough.
 	 */
-	if ( yyscanner->yy_state_buf_max < (yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
+	if ( yyscanner->yy_state_buf_max < (size_t) (yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
 		new_size = yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
 		new_state_buf = (yy_state_type*) yyrealloc( yyscanner->yy_state_buf, (new_size * sizeof(yy_state_type)), yyscanner );
 
@@ -964,7 +970,7 @@ m4_ifdef( [[M4_MODE_YYLINENO]],
 }
 ]])
 
-%# yymore has a magic rewute rule. It's declared here, rather than with the other
+%# yymore has a magic rewrite rule. It's declared here, rather than with the other
 %# magic functions, so yy_get_next_buffer() won't need a forward declaration.
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
@@ -1008,7 +1014,7 @@ m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
 m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
 	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_is_interactive ) {
 		int c = '*';
-		int n;
+		size_t n;
 		for ( n = 0; n < max_size &&
 			      (c = getc( yyscanner->yyin_r )) != EOF && c != '\n'; ++n ) {
 			buf[n] = (char) c;
@@ -1073,9 +1079,9 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	/* First move last chars to start of buffer. */
 	number_to_move = (int) (yyscanner->yy_c_buf_p - yyscanner->yytext_ptr - 1);
 
-	for ( i = 0; i < number_to_move; ++i ) {
-		*(dest++) = *(source++);
-	}
+	if (number_to_move > 0)
+		memmove(dest, source, number_to_move * sizeof(*source));
+
 	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buffer_status == YY_BUFFER_EOF_PENDING ) {
 		/* don't do the read, it's not guaranteed to return an EOF,
 		 * just force an EOF
@@ -1147,7 +1153,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 	}
 	if ((yyscanner->yy_n_chars + number_to_move) > yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
-		int new_size = yyscanner->yy_n_chars + number_to_move + (yyscanner->yy_n_chars >> 1);
+		int new_size = yyscanner->yy_n_chars + number_to_move + (yyscanner->yy_n_chars >> 1) + 2;
 		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf = (char *) yyrealloc(
 			(void *) yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf, (size_t) new_size, yyscanner );
 		if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf == NULL ) {
@@ -1214,6 +1220,8 @@ int yyinput (yyscan_t yyscanner)
 			case EOB_ACT_CONTINUE_SCAN:
 				yyscanner->yy_c_buf_p = yyscanner->yytext_ptr + offset;
 				break;
+			default:
+				yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);
 			}
 		}
 	}
@@ -1596,8 +1604,10 @@ bool yyatbol(yyscan_t yyscanner) {
  */
 void yy_switch_to_buffer(yybuffer new_buffer, yyscan_t yyscanner)
 {
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	size_t new_size = 0;
 	yy_state_type *new_state_buf = 0;
+]] )
 
 	/* TODO. We should be able to replace this entire function body
 	 * with
@@ -2052,7 +2062,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 		yy_load_buffer_state( yyscanner );
 	}
 
-	/* open scope of user declarationns */
+	/* open scope of user declarations */
 	{
 %% [4.0] user's declarations go here
 
@@ -2363,6 +2373,8 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 						yy_cp = yyscanner->yy_c_buf_p;
 						yy_bp = yyscanner->yytext_ptr + YY_MORE_ADJ;
 						goto yy_find_action;
+					default:
+						yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);
 					} /* end EOB inner switch */
 				} /* end if */
 				break;
@@ -2492,8 +2504,6 @@ int yylex_destroy  (yyscan_t yyscanner) {
 
 	/* Pop the buffer stack, destroying each element. */
 	while(yy_current_buffer(yyscanner)) {
-		yy_delete_buffer( yy_current_buffer(yyscanner), yyscanner );
-		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top] = NULL;
 		yypop_buffer_state(yyscanner);
 	}
 

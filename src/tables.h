@@ -72,7 +72,6 @@ int     yytbl_hdr_fwrite (struct yytbl_writer *wr,
 			  const struct yytbl_hdr *th);
 int     yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td);
 void    yytbl_data_compress (struct yytbl_data *tbl);
-struct yytbl_data *mkftbl (void);
 
 
 #ifdef __cplusplus

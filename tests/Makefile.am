@@ -73,6 +73,7 @@ SPORADIC_TESTS = \
 	cxx_restart \
 	header_nr \
 	header_r \
+	lineno_generated \
 	mem_nr \
 	mem_r \
 	mem_c99 \
@@ -100,7 +101,8 @@ DIRECT_TESTS = \
 	state_buf_multiple.direct
 
 I3_TESTS = \
-	cxx_yywrap.i3
+	cxx_yywrap.i3 \
+	yywrap_r.i3
 
 PTHREAD_TESTS = \
 	pthread.pthread
@@ -132,6 +134,9 @@ nodist_header_r_SOURCES = header_r_scanner.h
 include_by_buffer_direct_SOURCES = include_by_buffer.direct.l
 include_by_push_direct_SOURCES = include_by_push.direct.l
 include_by_reentrant_direct_SOURCES = include_by_reentrant.direct.l
+lineno_generated_SOURCES = lineno_generated.l
+lineno_generated.l: lineno_generated.l.in
+	grep -n '@LINE@' $^ | sed -e 's%^\([0-9]\+\):.*%\1s/@LINE@/\1/%' | sed -f - $^ > $@.t && mv $@.t $@
 mem_nr_SOURCES = mem_nr.l
 mem_r_SOURCES = mem_r.l
 mem_c99_SOURCES = mem_c99.l
@@ -153,6 +158,7 @@ top_SOURCES = top.l top_main.c
 nodist_top_SOURCES = top.h
 yyextra_nr_SOURCES = yyextra_nr.l
 yyextra_c99_SOURCES = yyextra_c99.l
+yywrap_r_i3_SOURCES = yywrap_r.i3.l
 state_buf_direct_SOURCES = state_buf.direct.lll
 state_buf_multiple_direct_SOURCES = state_buf_multiple.direct.lll
 
@@ -194,6 +200,8 @@ CLEANFILES = \
 	include_by_buffer.direct.c \
 	include_by_push.direct.c \
 	include_by_reentrant.direct.c \
+	lineno_generated.c \
+	lineno_generated.l \
 	mem_nr.c \
 	mem_r.c \
 	mem_c99.c \
@@ -221,6 +229,7 @@ CLEANFILES = \
 	top.h  \
 	yyextra_nr.c \
 	yyextra_c99.c \
+	yywrap_r.i3.c \
 	state_buf.direct.cc \
 	state_buf_multiple.direct.cc \
 	$(RULESET_REMOVABLES)
@@ -278,6 +287,7 @@ EXTRA_DIST = \
 	flexname.txt \
 	lexcompat.txt \
 	lineno.txt \
+	lineno_generated.l.in \
 	posix.txt \
 	posixlycorrect.txt \
 	preposix.txt \
@@ -317,6 +327,10 @@ FLEX = $(top_builddir)/src/flex
 
 .ll.cc: $(FLEX)
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -+ -o $@ $<
+
+#want line numbers, so override the default rule
+lineno_generated.c: lineno_generated.l
+	$(AM_V_LEX)$(FLEX) -o $@ $<
 
 bison_nr_main.$(OBJEXT): bison_nr_parser.h bison_nr_scanner.h
 bison_nr_scanner.$(OBJEXT): bison_nr_parser.h
@@ -421,7 +435,7 @@ RULESETS = \
 	$(srcdir)/yyunput.rules
 
 $(srcdir)/ruleset.am: $(srcdir)/ruleset.sh $(RULESETS)
-	$(SHELL) $(srcdir)/ruleset.sh nr r c99 go > $(srcdir)/ruleset.am
+	( cd $(srcdir) && $(SHELL) ruleset.sh nr r c99 go >ruleset.am )
 
 include $(srcdir)/ruleset.am
 

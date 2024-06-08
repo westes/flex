@@ -34,10 +34,11 @@
 
 /* declare functions that have forward references */
 
-void	dump_associated_rules(FILE *, int);
-void	dump_transitions(FILE *, int[]);
-void	sympartition(int[], int, int[], int[]);
-int	symfollowset(int[], int, int, int[]);
+static void dump_associated_rules(FILE *, int);
+static void dump_transitions(FILE *, int[]);
+static int  snstods(int[], int, int[], int, int, int *);
+static void sympartition(int[], int, int[], int[]);
+static int  symfollowset(int[], int, int, int[]);
 
 
 /* check_for_backing_up - check a DFA state for backing up
@@ -49,7 +50,7 @@ int	symfollowset(int[], int, int, int[]);
  * indexed by equivalence class.
  */
 
-void check_for_backing_up (int ds, int state[])
+static void check_for_backing_up(int ds, int state[])
 {
 	if ((reject && !dfaacc[ds].dfaacc_set) || (!reject && !dfaacc[ds].dfaacc_state)) {	/* state is non-accepting */
 		++num_backing_up;
@@ -94,7 +95,7 @@ void check_for_backing_up (int ds, int state[])
  *    accset[1 .. nacc] is the list of accepting numbers for the DFA state.
  */
 
-void check_trailing_context (int *nfa_states, int num_states, int *accset, int nacc)
+static void check_trailing_context(int *nfa_states, int num_states, int *accset, int nacc)
 {
 	int i, j;
 
@@ -132,7 +133,7 @@ void check_trailing_context (int *nfa_states, int num_states, int *accset, int n
  * and writes a report to the given file.
  */
 
-void dump_associated_rules (FILE *file, int ds)
+static void dump_associated_rules(FILE *file, int ds)
 {
 	int i, j;
 	int num_associated_rules = 0;
@@ -180,7 +181,7 @@ void dump_associated_rules (FILE *file, int ds)
  * is done to the given file.
  */
 
-void dump_transitions (FILE *file, int state[])
+static void dump_transitions(FILE *file, int state[])
 {
 	int i, ec;
 	int out_char_set[CSIZE];
@@ -226,7 +227,7 @@ void dump_transitions (FILE *file, int state[])
  *  hashval is the hash value for the dfa corresponding to the state set.
  */
 
-int    *epsclosure (int *t, int *ns_addr, int accset[], int *nacc_addr, int *hv_addr)
+static int *epsclosure(int *t, int *ns_addr, int accset[], int *nacc_addr, int *hv_addr)
 {
 	int     stkpos, ns, tsp;
 	int     numstates = *ns_addr, nacc, hashval, transsym, nfaccnum;
@@ -353,7 +354,8 @@ void increase_max_dfas (void)
 	accsiz = reallocate_integer_array (accsiz, current_max_dfas);
 	dhash = reallocate_integer_array (dhash, current_max_dfas);
 	dss = reallocate_int_ptr_array (dss, current_max_dfas);
-	dfaacc = reallocate_dfaacc_union (dfaacc, current_max_dfas);
+	dfaacc = reallocate_array(dfaacc, current_max_dfas,
+		sizeof(union dfaacc_union));
 
 	if (nultrans)
 		nultrans =
@@ -516,9 +518,10 @@ size_t ntod (void)
 			yynxt_data[yynxt_curr++] = 0;
 		}
 
-		dataflush ();
-		if (gentables)
+		if (gentables) {
+			dataflush ();
 			outn ("M4_HOOK_TABLE_CONTINUE");
+		}
 	}
 
 	/* Create the first states. */
@@ -695,9 +698,10 @@ size_t ntod (void)
 					state[i] ? state[i] : -ds;
 			}
 
-			dataflush ();
-			if (gentables)
+			if (gentables) {
+				dataflush ();
 				outn ("M4_HOOK_TABLE_CONTINUE");
+			}
 		}
 
 		else if (ctrl.fullspd)
@@ -776,7 +780,7 @@ size_t ntod (void)
  * On return, the dfa state number is in newds.
  */
 
-int snstods (int sns[], int numstates, int accset[], int nacc, int hashval, int *newds_addr)
+static int snstods(int sns[], int numstates, int accset[], int nacc, int hashval, int *newds_addr)
 {
 	int didsort = 0;
 	int i, j;
@@ -897,7 +901,7 @@ int snstods (int sns[], int numstates, int accset[], int nacc, int hashval, int 
  *				int transsym, int nset[current_max_dfa_size] );
  */
 
-int symfollowset (int ds[], int dsize, int transsym, int nset[])
+static int symfollowset(int ds[], int dsize, int transsym, int nset[])
 {
 	int     ns, tsp, sym, i, j, lenccl, ch, numstates, ccllist;
 
@@ -974,7 +978,7 @@ int symfollowset (int ds[], int dsize, int transsym, int nset[])
  *			int symlist[numecs], int duplist[numecs] );
  */
 
-void sympartition (int ds[], int numstates, int symlist[], int duplist[])
+static void sympartition(int ds[], int numstates, int symlist[], int duplist[])
 {
 	int     tch, i, j, k, ns, dupfwd[CSIZE + 1], lenccl, cclp, ich;
 

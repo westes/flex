@@ -21,7 +21,7 @@
  * PURPOSE.
  */
  /*
-  * Test yyless.  What should haooen is:
+  * Test yyless.  What should happen is:
   * 1. "foobar" is matched by the first rule.
   * 2. "bar" is pushed back by yyless(3)
   * 3. "bar" is matched by the second rule

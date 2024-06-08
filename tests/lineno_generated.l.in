@@ -1,0 +1,73 @@
+/*
+ * This file is part of flex.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 
+ * Neither the name of the University nor the names of its contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ */
+
+%{
+/* Test generated line numbers. Be careful editing this file
+   as it's all about ensuring flex generates correct line
+   directives, so the @LINE@ markers must be on the same line as a
+   their corresponding __LINE__ macros.
+*/
+#include <stdio.h>
+#include "config.h"
+
+static int defs_percent_expect = @LINE@, defs_percent_got = __LINE__;
+static int error_count = 0;
+
+static void test_line (const char *desc, int expect, int got);
+
+%}
+
+    static int defs_indent_expect = @LINE@, defs_indent_got = __LINE__;
+
+%option nounput noyywrap noinput
+%option warn
+
+%%
+        test_line ("prolog indent", @LINE@, __LINE__);
+%{
+        test_line ("prolog percent", @LINE@, __LINE__);
+%}
+\n      { test_line ("rules braced", @LINE@, __LINE__); }
+.       test_line ("rules bare", @LINE@, __LINE__);
+
+%%
+
+static void
+test_line (const char *desc, int expect, int got)
+{
+    printf ("%s: expect: %d got: %d\n", desc, expect, got);
+	error_count += expect != got;
+}
+
+int
+main (void)
+{
+    yybuffer buffer = yy_scan_string ("a\na\n");
+    yylex ();
+    yy_delete_buffer (buffer);
+    test_line ("defs percent", defs_percent_expect, defs_percent_got);
+    test_line ("defs indent", defs_indent_expect, defs_indent_got);
+    test_line ("user code", @LINE@, __LINE__);
+
+    return error_count != 0;
+}

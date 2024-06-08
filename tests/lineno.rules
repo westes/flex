@@ -30,7 +30,7 @@
  * If "--yylineno" in the action is "yylineno--", the pattern
  * is not recognized and the magic rewrite rule for yylineo
  * does not fire.  Only an issue for non-default back ends that
- * do magic rewrites rather than rtelying on the C preprocessor.
+ * do magic rewrites rather than relying on the C preprocessor.
  */
 %option 8bit
 %option nounput nomain noyywrap noinput yylineno

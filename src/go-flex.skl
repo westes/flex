@@ -71,7 +71,7 @@ m4_define([[M4_HOOK_CONST_DEFINE_BYTE]], [[const char $1 = $2;
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_STATE]], [[#define $1 $2
 ]])
-m4_define([[M4_HOOK_CONST_DEFINE_UINT]], [[const uint $1 = $2;
+m4_define([[M4_HOOK_CONST_DEFINE_UINT]], [[const unsigned int $1 = $2;
 ]])
 m4_define([[M4_HOOK_CONST_DEFINE_BOOL]], [[const bool $1 = $2;
 ]])
@@ -153,7 +153,7 @@ m4_ifdef([[M4_YY_ALWAYS_INTERACTIVE]], ,
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <unistd.h>	/* requred for isatty() */
+#include <unistd.h>	/* required for isatty() */
 
 #if defined(__GNUC__) && __GNUC__ >= 3
 #define yynoreturn __attribute__((__noreturn__))
@@ -621,7 +621,11 @@ static void yy_init_buffer(yybuffer  b, FILE * file, FlexLexer *yyscanner)
 	yy_flush_buffer(b, yyscanner);
 
 	b->yyInputFile = file;
-	b->yyFillBuffer = true;
+	if (b->yyInputFile == NULL) {
+	  b->yyFillBuffer = false;
+	} else {
+	  b->yyFillBuffer = true;
+	}
 
 	/* If b is the current buffer, then yy_init_buffer was _probably_
 	 * called from yyrestart() or through yy_get_next_buffer.
@@ -921,7 +925,7 @@ m4_ifdef([[M4_MODE_NO_CPP_USE_READ]], [[
 }
 ]])
 
-%# yymore has a magic rewute rule. It's declared here, rather than with the other
+%# yymore has a magic rewrite rule. It's declared here, rather than with the other
 %# magic functions, so yy_get_next_buffer() won't need a forward declaration.
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
@@ -1056,7 +1060,7 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 	}
 	if ((yyscanner->yyNChars + numberToMove) > yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyInputBufSize) {
 		/* Extend the array by 50%, plus the number we really need. */
-		int newSize = yyscanner->yyNChars + numberToMove + (yyscanner->yyNChars >> 1);
+		int newSize = yyscanner->yyNChars + numberToMove + (yyscanner->yyNChars >> 1) + 2;
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf = (char *) yyrealloc(
 			(void *) yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf, (size_t) newSize, yyscanner);
 		if (yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf == NULL) {
@@ -1123,6 +1127,8 @@ int yyinput(FlexLexer *yyscanner)
 			case EOB_ACT_CONTINUE_SCAN:
 				yyscanner->yyCBufP = yyscanner->yytext_ptr + offset;
 				break;
+			default:
+				yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);
 			}
 		}
 	}
@@ -2213,6 +2219,8 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 						yyCp = yyscanner->yyCBufP;
 						yyBp = yyscanner->yytext_ptr + YY_MORE_ADJ;
 						goto yyFindActionLabel;
+					default:
+						yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);
 					} /* end EOB inner switch */
 				} /* end if */
 				break;
@@ -2339,8 +2347,6 @@ int yylex_destroy(FlexLexer *yyscanner) {
 
 	/* Pop the buffer stack, destroying each element. */
 	while(yy_current_buffer(yyscanner)) {
-		yy_delete_buffer(yy_current_buffer(yyscanner), yyscanner);
-		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop] = NULL;
 		yypop_buffer_state(yyscanner);
 	}
 

@@ -853,6 +853,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
  * corresponding action - sets up yytext.
  */
 #define YY_DO_BEFORE_ACTION \
+	do { \
 	YY_G(yytext_ptr) = yy_bp; \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[YY_G(yytext_ptr) -= YY_G(yy_more_len); \
 	yyleng = (int) (yy_cp - YY_G(yytext_ptr));]])]]) \
@@ -871,7 +872,8 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[YY_G(yy_more_offset) = 0;]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yy_flex_strncpy( yytext, YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG);]]) \
 ]]) \
-	YY_G(yy_c_buf_p) = yy_cp;
+	YY_G(yy_c_buf_p) = yy_cp; \
+	} while(0)
 
 m4_ifdef([[M4_YY_NOT_REENTRANT]], [[
 m4_ifdef( [[M4_MODE_C_ONLY]],
@@ -1583,7 +1585,7 @@ m4_ifdef( [[M4_MODE_CPP_USE_READ]], [[
 m4_ifdef( [[M4_MODE_NO_CPP_USE_READ]], [[
 	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) {
 		int c = '*';
-		int n;
+		yy_size_t n;
 		for ( n = 0; n < max_size &&
 			      (c = getc( yyin )) != EOF && c != '\n'; ++n ) {
 			buf[n] = (char) c;
@@ -2269,6 +2271,8 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 						yy_cp = YY_G(yy_c_buf_p);
 						yy_bp = YY_G(yytext_ptr) + YY_MORE_ADJ;
 						goto yy_find_action;
+					default:
+						YY_FATAL_ERROR("unexpected return value from yy_get_next_buffer()");
 					} /* end EOB inner switch */
 				} /* end if */
 				break;
@@ -2530,7 +2534,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 	}
 	if ((YY_G(yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
-		int new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1);
+		int new_size = YY_G(yy_n_chars) + number_to_move + (YY_G(yy_n_chars) >> 1) + 2;
 		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) yyrealloc(
 			(void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, (yy_size_t) new_size M4_YY_CALL_LAST_ARG );
 		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf ) {
@@ -2683,6 +2687,7 @@ m4_ifdef([[M4_MODE_NULTRANS_WRAP]], [[
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[m4_undefine([[M4_YY_NO_YYUNPUT]])]])
 m4_ifdef( [[M4_YY_NO_YYUNPUT]], , [[
 m4_ifdef([[M4_MODE_C_ONLY]], [[
+#ifndef YY_NO_YYUNPUT
 static void yyunput_r YYFARGS2( int,c, char *,yy_bp)
 ]])
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
@@ -2732,6 +2737,9 @@ m4_ifdef( [[M4_MODE_YYLINENO]],
 	YY_G(yy_hold_char) = *yy_cp;
 	YY_G(yy_c_buf_p) = yy_cp;
 }
+m4_ifdef([[M4_MODE_C_ONLY]], [[
+#endif	/* ifndef YY_NO_YYINPUT */
+]])
 ]])
 
 m4_ifdef([[M4_MODE_C_ONLY]], [[
@@ -2789,6 +2797,8 @@ int yyFlexLexer::yyinput()
 			case EOB_ACT_CONTINUE_SCAN:
 				YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + offset;
 				break;
+			default:
+				YY_FATAL_ERROR("unexpected return value from yy_get_next_buffer()");
 			}
 		}
 	}
@@ -2832,8 +2842,10 @@ void yyFlexLexer::yyrestart( std::istream& input_file )
 ]])
 {
 	M4_YY_DECL_GUTS_VAR();
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	size_t new_size = 0;
 	yy_state_type *new_state_buf = 0;
+]] )
 
 	if ( yy_current_buffer() == NULL ) {
 		yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG);
@@ -2847,7 +2859,7 @@ void yyFlexLexer::yyrestart( std::istream& input_file )
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* Ensure the reject state buffer is large enough.
 	 */
-	if ( YY_G(yy_state_buf_max) < (yy_current_buffer()->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
+	if ( YY_G(yy_state_buf_max) < (yy_size_t) (yy_current_buffer()->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
 		new_size = yy_current_buffer()->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
 		new_state_buf = (yy_state_type *)yyrealloc( YY_G(yy_state_buf), (new_size * sizeof(yy_state_type)) M4_YY_CALL_LAST_ARG );
 
@@ -2896,8 +2908,10 @@ void yyFlexLexer::yy_switch_to_buffer( yybuffer new_buffer )
 ]])
 {
 	M4_YY_DECL_GUTS_VAR();
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	size_t new_size = 0;
 	yy_state_type *new_state_buf = 0;
+]] )
 
 	/* TODO. We should be able to replace this entire function body
 	 * with
@@ -2921,7 +2935,7 @@ void yyFlexLexer::yy_switch_to_buffer( yybuffer new_buffer )
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* Ensure the reject state buffer is large enough.
 	 */
-	if ( YY_G(yy_state_buf_max) < (YY_CURRENT_BUFFER_LVALUE->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
+	if ( YY_G(yy_state_buf_max) < (yy_size_t) (YY_CURRENT_BUFFER_LVALUE->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
 		new_size = YY_CURRENT_BUFFER_LVALUE->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
 		new_state_buf = (yy_state_type *)yyrealloc( YY_G(yy_state_buf), (new_size * sizeof(yy_state_type)) M4_YY_CALL_LAST_ARG );
 
@@ -2977,7 +2991,6 @@ yybuffer yyFlexLexer::yy_create_buffer( std::istream& file, int size )
 ]])
 {
 	yybuffer b;
-	M4_YY_DECL_GUTS_VAR();
 
 	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
 	if (  b == NULL ) {
@@ -3060,7 +3073,17 @@ m4_ifdef([[M4_MODE_C_ONLY]], [[
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 	b->yy_input_file = file.rdbuf();
 ]])
-	b->yy_fill_buffer = 1;
+
+    /* b->yy_input_file should never by NULL but we'll handle it cleanly
+	 * on the off chance.
+	 */
+	if (b->yy_input_file == NULL){
+	  b->yy_fill_buffer = 0;
+	} else {
+	  b->yy_fill_buffer = 1;
+	}
+
+
 
 	/* If b is the current buffer, then yy_init_buffer was _probably_
 	 * called from yyrestart() or through yy_get_next_buffer.
@@ -3804,8 +3827,6 @@ int yylex_destroy  (M4_YY_DEF_ONLY_ARG) {
 
 	/* Pop the buffer stack, destroying each element. */
 	while(yy_current_buffer()) {
-		yy_delete_buffer( yy_current_buffer() M4_YY_CALL_LAST_ARG );
-		YY_CURRENT_BUFFER_LVALUE = NULL;
 		yypop_buffer_state(M4_YY_CALL_ONLY_ARG);
 	}
 
@@ -4176,7 +4197,7 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 				p = (struct yy_trans_info **) p + 1;
 			}
 			else {
-				/* t32 is a plain int. copy data, then incrememnt p. */
+				/* t32 is a plain int. copy data, then increment p. */
 				switch (dmap->dm_sz) {
 				case sizeof (flex_int32_t):
 					if(M4_YY_TABLES_VERIFY ) {

@@ -30,59 +30,17 @@ the lists.
 The flex distribution contains the following files which may be of
 interest:
 
-* README - This file.
+* README.md - This file.
 * NEWS - current version number and list of user-visible changes.
-* INSTALL - basic installation information.
+* INSTALL.md - basic installation information.
 * ABOUT-NLS - description of internationalization support in flex.
 * COPYING - flex's copyright and license.
 * doc/ - user documentation.
 * examples/ - containing examples of some possible flex scanners and a
               few other things. See the file examples/README for more
               details.
-* tests/ - regression tests. See TESTS/README for details.
+* tests/ - regression tests. See tests/README for details.
 * po/ - internationalization support files.
-
-You need the following tools to build flex from the maintainer's
-repository:
-
-* compiler suite - flex is built with gcc
-* bash, or a good Bourne-style shell
-* m4 - `m4 -P` needs to work; GNU m4 and a few others are suitable
-* GNU bison;  to generate parse.c from parse.y
-* autoconf; for handling the build system
-* automake; for Makefile generation
-* gettext; for i18n support
-* help2man; to generate the flex man page
-* tar, gzip, lzip, etc.; for packaging of the source distribution
-* GNU texinfo; to build and test the flex manual. Note that if you want
-  to build the dvi/ps/pdf versions of the documentation you will need
-  texi2dvi and related programs, along with a sufficiently powerful
-  implementation of TeX to process them. See your operating system
-  documentation for how to achieve this. The printable versions of the
-  manual are not built unless specifically requested, but the targets
-  are included by automake.
-* GNU indent; for indenting the flex source the way we want it done
-
-In cases where the versions of the above tools matter, the file
-configure.ac will specify the minimum required versions.
-
-Once you have all the necessary tools installed, life becomes
-simple. To prepare the flex tree for building, run the script:
-
-```bash
-./autogen.sh
-```
-
-in the top level of the flex source tree.
-
-This script calls the various tools needed to get flex ready for the
-GNU-style configure script to be able to work.
-
-From this point on, building flex follows the usual routine:
-
-```bash
-configure && make && make install
-```
 
 ---
 

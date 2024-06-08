@@ -929,7 +929,7 @@ Changes between 2.3 Patch #2 (02Aug90) and original 2.3 release:
 	  Reordered #ifdef maze in the scanner skeleton in the hope of
 	  getting the declarations right for cfront and g++, too.
 
-	- Note that this patch supercedes patch #1 for release 2.3,
+	- Note that this patch supersedes patch #1 for release 2.3,
 	  which was never announced but was available briefly for
 	  anonymous ftp.
 
@@ -987,7 +987,7 @@ Things which didn't used to be documented but now are:
 	- yy_switch_to_buffer() can be used in the yywrap() macro/routine.
 
 	- flex scanners do not use stdio for their input, and hence when
-	  writing an interactive scanner one must explictly call fflush()
+	  writing an interactive scanner one must explicitly call fflush()
 	  after writing out a prompt.
 
 	- flex scanner can be made reentrant (after a fashion) by using

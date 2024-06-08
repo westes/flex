@@ -63,24 +63,7 @@ void add_action (const char *new_text)
 
 void   *allocate_array (int size, size_t element_size)
 {
-	void *new_array;
-#if HAVE_REALLOCARR
-	new_array = NULL;
-	if (reallocarr(&new_array, (size_t) size, element_size))
-		flexfatal (_("memory allocation failed in allocate_array()"));
-#else
-# if HAVE_REALLOCARRAY
-	new_array = reallocarray(NULL, (size_t) size, element_size);
-# else
-	/* Do manual overflow detection */
-	size_t num_bytes = (size_t) size * element_size;
-	new_array = (size && SIZE_MAX / (size_t) size < element_size) ? NULL :
-		malloc(num_bytes);
-# endif
-	if (!new_array)
-		flexfatal (_("memory allocation failed in allocate_array()"));
-#endif
-	return new_array;
+	return reallocate_array(NULL, size, element_size);
 }
 
 
@@ -184,7 +167,7 @@ void dataend (const char *endit)
 
 		/* add terminator for initialization; { for vi */
 		if (endit)
-		    outn (endit);
+			outn (endit);
 	}
 	dataline = 0;
 	datapos = 0;
@@ -195,9 +178,7 @@ void dataend (const char *endit)
 
 void dataflush (void)
 {
-	/* short circuit any output */
-	if (!gentables)
-		return;
+	assert (gentables);
 
 	if (datapos > 0)
 		outc ('\n');
@@ -351,7 +332,7 @@ void mk2data (int value)
 		out ("    ");
 
 	else
-		outc (',');
+	  outc (',');
 
 	++datapos;
 
@@ -377,10 +358,9 @@ void mkdata (int value)
 
 	if (datapos == 0)
 		/* Indent. */
-		out ("     ");
+		out ("    ");
 	else
 		outc (',');
-
 	++datapos;
 
 	out_dec ("%5d", value);
@@ -474,7 +454,7 @@ unsigned char myesc (unsigned char array[])
 }
 
 
-/* out - various flavors of outputing a (possibly formatted) string for the
+/* out - various flavors of outputting a (possibly formatted) string for the
  *	 generated scanner, keeping track of the line count.
  */
 
@@ -581,12 +561,17 @@ char   *readable_form (int c)
 void   *reallocate_array (void *array, int size, size_t element_size)
 {
 	void *new_array;
-#if HAVE_REALLOCARR
+#ifdef HAVE_REALLOCARR
 	new_array = array;
-	if (reallocarr(&new_array, (size_t) size, element_size))
-		flexfatal (_("attempt to increase array size failed"));
+	if (reallocarr(&new_array, (size_t) size, element_size)) {
+		flexfatal ((array) ?
+			_("attempt to increase array size failed") :
+			/* Function name is allocate_array() because of
+			 * compatibility (for translations): */
+			_("memory allocation failed in allocate_array()"));
+	}
 #else
-# if HAVE_REALLOCARRAY
+# ifdef HAVE_REALLOCARRAY
 	new_array = reallocarray(array, (size_t) size, element_size);
 # else
 	/* Do manual overflow detection */
@@ -594,8 +579,13 @@ void   *reallocate_array (void *array, int size, size_t element_size)
 	new_array = (size && SIZE_MAX / (size_t) size < element_size) ? NULL :
 		realloc(array, num_bytes);
 # endif
-	if (!new_array)
-		flexfatal (_("attempt to increase array size failed"));
+	if (!new_array) {
+		flexfatal ((array) ?
+			_("attempt to increase array size failed") :
+			/* Function name is allocate_array() because of
+			 * compatibility (for translations): */
+			_("memory allocation failed in allocate_array()"));
+	}
 #endif
 	return new_array;
 }

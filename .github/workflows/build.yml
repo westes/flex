@@ -8,13 +8,15 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions: read-all
+
 jobs:
   build:
 
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
     - name: apt
       run: sudo apt-get install gcc autoconf bison gettext autopoint help2man lzip texinfo texlive
     - name: autogen

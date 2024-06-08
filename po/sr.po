@@ -1,38 +1,30 @@
 # Serbian translation for flex
 # Copyright (C) 2013 The Flex Project (msgids)
 # This file is distributed under the same license as the flex package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013–2022.
 msgid ""
 msgstr ""
-"Project-Id-Version: flex-2.5.37\n"
+"Project-Id-Version: flex-2.6.4\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-05-06 10:49-0400\n"
-"PO-Revision-Date: 2013-10-30 18:20+0200\n"
+"POT-Creation-Date: 2022-09-27 14:18-0400\n"
+"PO-Revision-Date: 2022-02-15 20:00+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 
-#: src/buf.c:79
+#: src/buf.c:61
 msgid "Allocation of buffer to print string failed"
 msgstr "Није успело додељивање међумеморије нисци исписивања"
 
-#: src/buf.c:107
-msgid "Allocation of buffer for line directive failed"
-msgstr "Није успело додељивање међумеморије за одредницу реда"
-
-#: src/buf.c:177
-msgid "Allocation of buffer for m4 def failed"
-msgstr "Није успело додељивање међумеморије за одредницу м4"
-
-#: src/buf.c:198
-msgid "Allocation of buffer for m4 undef failed"
-msgstr "Није успело додељивање међумеморије за поништавање одреднице м4"
+#: src/ccl.c:80
+msgid "internal error: trying to add a char to a non-last ccl.\n"
+msgstr ""
 
 #: src/dfa.c:59
 #, c-format
@@ -66,7 +58,7 @@ msgstr ""
 msgid "consistency check failed in epsclosure()"
 msgstr "провера доследности није успела у „epsclosure()“"
 
-#: src/dfa.c:419
+#: src/dfa.c:422
 msgid ""
 "\n"
 "\n"
@@ -78,24 +70,24 @@ msgstr ""
 "ДФА испис:\n"
 "\n"
 
-#: src/dfa.c:587
+#: src/dfa.c:558
 msgid "could not create unique end-of-buffer state"
 msgstr "не могу да направим јединствено стање краја међумеморије"
 
-#: src/dfa.c:608
+#: src/dfa.c:579
 #, c-format
 msgid "state # %d:\n"
 msgstr "стање # %d:\n"
 
-#: src/dfa.c:768
+#: src/dfa.c:738
 msgid "Could not write yynxt_tbl[][]"
 msgstr "Не могу да запишем „yynxt_tbl[][]“"
 
-#: src/dfa.c:1028
+#: src/dfa.c:1001
 msgid "bad transition character detected in sympartition()"
 msgstr "откривен је лош знак прелаза у „sympartition()“"
 
-#: src/gen.c:480
+#: src/gen.c:379
 msgid ""
 "\n"
 "\n"
@@ -107,29 +99,29 @@ msgstr ""
 "Разреди једнакости:\n"
 "\n"
 
-#: src/gen.c:669 src/gen.c:698 src/gen.c:1218
+#: src/gen.c:425 src/gen.c:454 src/gen.c:638
 #, c-format
 msgid "state # %d accepts: [%d]\n"
 msgstr "стање # %d прихвата: [%d]\n"
 
-#: src/gen.c:1115
+#: src/gen.c:533
 #, c-format
 msgid "state # %d accepts: "
 msgstr "стање # %d прихвата: "
 
-#: src/gen.c:1162
+#: src/gen.c:582
 msgid "Could not write yyacclist_tbl"
 msgstr "Не могу да запишем „yyacclist_tbl“"
 
-#: src/gen.c:1236
+#: src/gen.c:659
 msgid "Could not write yyacc_tbl"
 msgstr "Не могу да запишем „yyacc_tbl“"
 
-#: src/gen.c:1251 src/gen.c:1623 src/gen.c:1646
+#: src/gen.c:674 src/gen.c:947 src/gen.c:974
 msgid "Could not write ecstbl"
 msgstr "Не могу да запишем „ecstbl“"
 
-#: src/gen.c:1271
+#: src/gen.c:694
 msgid ""
 "\n"
 "\n"
@@ -139,349 +131,341 @@ msgstr ""
 "\n"
 "Разреди мета-једнакости:\n"
 
-#: src/gen.c:1293
+#: src/gen.c:714
 msgid "Could not write yymeta_tbl"
 msgstr "Не могу да запишем „yymeta_tbl“"
 
-#: src/gen.c:1352
+#: src/gen.c:774
 msgid "Could not write yybase_tbl"
 msgstr "Не могу да запишем „yybase_tbl“"
 
-#: src/gen.c:1384
+#: src/gen.c:805
 msgid "Could not write yydef_tbl"
 msgstr "Не могу да запишем „yydef_tbl“"
 
-#: src/gen.c:1422
+#: src/gen.c:844
 msgid "Could not write yynxt_tbl"
 msgstr "Не могу да запишем „yynxt_tbl“"
 
-#: src/gen.c:1456
+#: src/gen.c:877
 msgid "Could not write yychk_tbl"
 msgstr "Не могу да запишем „ychk_tbl“"
 
-#: src/gen.c:1608 src/gen.c:1637
+#: src/gen.c:932 src/gen.c:965
 msgid "Could not write ftbl"
 msgstr "Не могу да запишем „ftbl“"
 
-#: src/gen.c:1614
+#: src/gen.c:938
 msgid "Could not write ssltbl"
 msgstr "Не могу да запишем „ssltbl“"
 
-#: src/gen.c:1665
+#: src/gen.c:1014
 msgid "Could not write eoltbl"
 msgstr "Не могу да запишем „eoltbl“"
 
-#: src/gen.c:1722
+#: src/gen.c:1061
 msgid "Could not write yynultrans_tbl"
 msgstr "Не могу да запишем „yynultrans_tbl“"
 
-#: src/main.c:178
+#: src/main.c:169
 msgid "rule cannot be matched"
 msgstr "правило не може бити поклопљено"
 
-#: src/main.c:183
+#: src/main.c:174
 msgid "-s option given but default rule can be matched"
 msgstr "дата је опција „-s“ али основно правило може бити поклопљено"
 
-#: src/main.c:221
+#: src/main.c:317
 msgid "Can't use -+ with -l option"
 msgstr "Не могу да користим -+ са опцијом „-l“"
 
-#: src/main.c:224
+#: src/main.c:320
 msgid "Can't use -f or -F with -l option"
 msgstr "Не могу да користим „-f“ или „-F“ са опцијом „-l“"
 
-#: src/main.c:228
-msgid "Can't use --reentrant or --bison-bridge with -l option"
+#: src/main.c:324
+#, fuzzy
+msgid "Can't use --ctrl.reentrant or --bison-bridge with -l option"
 msgstr "Не могу да користим „--reentrant“ или „--bison-bridge“ са опцијом „-l“"
 
-#: src/main.c:260
+#: src/main.c:356
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr "„-Cf/-CF“ и „-Cm“ немају смисла заједно"
 
-#: src/main.c:263
+#: src/main.c:359
 msgid "-Cf/-CF and -I are incompatible"
 msgstr "„-Cf/-CF“ и „-I“ су несагласне"
 
-#: src/main.c:267
+#: src/main.c:363
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr "„-Cf/-CF“ су несагласни са режимом лекс-сагласности"
 
-#: src/main.c:272
+#: src/main.c:368
 msgid "-Cf and -CF are mutually exclusive"
 msgstr "„-Cf“ и „-CF“ се међусобно искључују"
 
-#: src/main.c:276
+#: src/main.c:372
 msgid "Can't use -+ with -CF option"
 msgstr "Не могу да користим -+ са опцијом „-CF“"
 
-#: src/main.c:279
+#: src/main.c:375
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr "%aниз није сагласан са опцијом -+"
 
-#: src/main.c:284
+#: src/main.c:380
 msgid "Options -+ and --reentrant are mutually exclusive."
 msgstr "Опције -+ и „--reentrant“ се међусобно искључују."
 
-#: src/main.c:287
+#: src/main.c:383
 msgid "bison bridge not supported for the C++ scanner."
 msgstr "бизонов мост није подржан за Ц++ скенер."
 
-#: src/main.c:336 src/main.c:419
+#: src/main.c:422 src/main.c:1235
 #, c-format
 msgid "could not create %s"
 msgstr "не могу да направим %s"
 
-#: src/main.c:431
-msgid "could not write tables header"
-msgstr "не могу да запшем бестаблично заглавље"
-
-#: src/main.c:435
+#: src/main.c:443
 #, c-format
-msgid "can't open skeleton file %s"
-msgstr "Не могу да отворим датотеку окоснице „%s“"
+msgid "%option yyclass only meaningful for C++ scanners"
+msgstr "%oпција „yyclass“ има смисла само за Ц++ скенере"
 
-#: src/main.c:450
-msgid "Prefix cannot include '[' or ']'"
-msgstr ""
-
-#: src/main.c:474
-msgid "allocation of macro definition failed"
-msgstr "није успело додељивање одреднице макроа"
-
-#: src/main.c:521
+#: src/main.c:447
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr "грешка улаза читања датотеке окоснице „%s“"
 
-#: src/main.c:525
+#: src/main.c:451
 #, c-format
 msgid "error closing skeleton file %s"
 msgstr "грешка затварања датотеке окоснице „%s“"
 
-#: src/main.c:709
-#, c-format
-msgid "error creating header file %s"
-msgstr "грешка стварања датотеке заглавља „%s“"
-
-#: src/main.c:717
+#: src/main.c:457
 #, c-format
 msgid "error writing output file %s"
 msgstr "грешка записивања излазне датотеке „%s“"
 
-#: src/main.c:721
+#: src/main.c:461
 #, c-format
 msgid "error closing output file %s"
 msgstr "грешка затварања излазне датотеке „%s“"
 
-#: src/main.c:725
+#: src/main.c:465
 #, c-format
 msgid "error deleting output file %s"
 msgstr "грешка брисања излазне датотеке „%s“"
 
-#: src/main.c:732
+#: src/main.c:472
 #, c-format
 msgid "No backing up.\n"
 msgstr "Не правим резерву.\n"
 
-#: src/main.c:736
+#: src/main.c:476
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr "%d стварам резерве (не-прихватам) стања.\n"
 
-#: src/main.c:740
+#: src/main.c:480
 #, c-format
 msgid "Compressed tables always back up.\n"
 msgstr "Сжете табеле увек стварају резерву.\n"
 
-#: src/main.c:743
+#: src/main.c:483
 #, c-format
 msgid "error writing backup file %s"
 msgstr "грешка записивања датотеке резерве „%s“"
 
-#: src/main.c:747
+#: src/main.c:487
 #, c-format
 msgid "error closing backup file %s"
 msgstr "грешка затварања датотеке резерве „%s“"
 
-#: src/main.c:752
+#: src/main.c:492
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr "Статистика коришћења %s издања%s:\n"
 
-#: src/main.c:755
+#: src/main.c:495
 #, c-format
 msgid "  scanner options: -"
 msgstr "  опције прегледача: -"
 
-#: src/main.c:834
+#: src/main.c:574
 #, c-format
 msgid "  %d/%d NFA states\n"
 msgstr "  %d/%d НФА стања\n"
 
-#: src/main.c:836
+#: src/main.c:576
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
 msgstr "  %d/%d ДФА стања (%d речи)\n"
 
-#: src/main.c:838
+#: src/main.c:578
 #, c-format
 msgid "  %d rules\n"
 msgstr "  %d правила\n"
 
-#: src/main.c:843
+#: src/main.c:583
 #, c-format
 msgid "  No backing up\n"
 msgstr "  Не правим резерву\n"
 
-#: src/main.c:847
+#: src/main.c:587
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr "  %d стварам резерве (не-прихватам) стања\n"
 
-#: src/main.c:852
+#: src/main.c:592
 #, c-format
 msgid "  Compressed tables always back-up\n"
 msgstr "  Сжете табеле увек стварају резерву\n"
 
-#: src/main.c:856
+#: src/main.c:596
 #, c-format
 msgid "  Beginning-of-line patterns used\n"
 msgstr "  Коришћени су шаблони почетка-реда\n"
 
-#: src/main.c:858
+#: src/main.c:598
 #, c-format
 msgid "  %d/%d start conditions\n"
 msgstr "  %d/%d услови покретања\n"
 
-#: src/main.c:862
+#: src/main.c:602
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr "  %d стања ипсилона, %d стања двоструког ипсилона\n"
 
-#: src/main.c:866
+#: src/main.c:606
 #, c-format
 msgid "  no character classes\n"
 msgstr "  нема разреда знака\n"
 
-#: src/main.c:870
+#: src/main.c:610
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
 msgstr ""
 "  %d/%d разредима знака беху потребне %d/%d речи складишта, %d поново "
 "коришћених\n"
 
-#: src/main.c:875
+#: src/main.c:615
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr "  %d пара стања/следећег_стања је направљено\n"
 
-#: src/main.c:878
+#: src/main.c:618
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr "  %d/%d јединствена/удвостручена прелаза\n"
 
-#: src/main.c:883
+#: src/main.c:623
 #, c-format
 msgid "  %d table entries\n"
 msgstr "  %d уноса табеле\n"
 
-#: src/main.c:891
+#: src/main.c:631
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr "  направљено је %d/%d уноса основне одреднице\n"
 
-#: src/main.c:895
+#: src/main.c:635
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr "  направљено је %d/%d (врх %d) „nxt-chk“ уноса\n"
 
-#: src/main.c:899
+#: src/main.c:639
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr "  направљено је %d/%d (врх %d)шаблона „nxt-chk“ уноса\n"
 
-#: src/main.c:903
+#: src/main.c:643
 #, c-format
 msgid "  %d empty table entries\n"
 msgstr "  %d празна уноса табеле\n"
 
-#: src/main.c:905
+#: src/main.c:645
 #, c-format
 msgid "  %d protos created\n"
 msgstr "  направљених узорака — %d\n"
 
-#: src/main.c:908
+#: src/main.c:648
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr "  направљених шаблона - %d, користим %d\n"
 
-#: src/main.c:916
+#: src/main.c:656
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr "  направљено је %d/%d разреда једнакости\n"
 
-#: src/main.c:924
+#: src/main.c:664
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr "  направљено је %d/%d разреда мета-једнакости\n"
 
-#: src/main.c:930
+#: src/main.c:670
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr "  %d (сачуваних %d) сукоба хеша, %d једнак ДФА-су\n"
 
-#: src/main.c:932
+#: src/main.c:672
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr "  потребна су %d скупа поновног додељивања\n"
 
-#: src/main.c:934
+#: src/main.c:674
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr "  потребна су укупно %d уноса табеле\n"
 
-#: src/main.c:1008
+#: src/main.c:735
 #, c-format
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "Унутрашња грешка. „flexopts“ је лоше обликован.\n"
 
-#: src/main.c:1018
+#: src/main.c:745
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Пробајте „%s --help“ за више података.\n"
 
-#: src/main.c:1075
+#: src/main.c:807
 #, c-format
 msgid "unknown -C option '%c'"
 msgstr "непозната опција -C „%c“"
 
-#: src/main.c:1204
-#, c-format
-msgid "%s %s\n"
-msgstr "%s %s\n"
-
-#: src/main.c:1476
+#: src/main.c:1195
 msgid "fatal parse error"
 msgstr "кобна грешка обраде"
 
-#: src/main.c:1508
+#: src/main.c:1247
+msgid "could not write tables header"
+msgstr "не могу да запшем бестаблично заглавље"
+
+#: src/main.c:1251
+#, c-format
+msgid "can't open skeleton file %s"
+msgstr "Не могу да отворим датотеку окоснице „%s“"
+
+#: src/main.c:1254
+msgid "Prefix cannot include '[' or ']'"
+msgstr "Префикс не може да укључи [ или ]"
+
+#: src/main.c:1322
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr "не могу да направим резерву датотеке података „%s“"
 
-#: src/main.c:1529
+#: src/main.c:1343
 #, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
 msgstr "-l опција сагласности АТ&Т лекса изазива велико смањење учинка\n"
 
-#: src/main.c:1532
+#: src/main.c:1346
 #, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
 msgstr " и може бити стваран извор других извешених ограничења учинка\n"
 
-#: src/main.c:1538
+#: src/main.c:1352
 #, c-format
 msgid ""
 "%%option yylineno entails a performance penalty ONLY on rules that can match "
@@ -490,51 +474,50 @@ msgstr ""
 "%%опција „yylineno“ изазива смањење учинка САМО на правилима која могу да "
 "поклопе знакове новог реда\n"
 
-#: src/main.c:1545
+#: src/main.c:1359
 #, c-format
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr "-I (међудејствено) изазива мање смањење учинка\n"
 
-#: src/main.c:1550
+#: src/main.c:1364
 #, c-format
 msgid "yymore() entails a minor performance penalty\n"
 msgstr "„yymore()“ изазива мање смањење учинка\n"
 
-#: src/main.c:1556
+#: src/main.c:1370
 #, c-format
 msgid "REJECT entails a large performance penalty\n"
 msgstr "„REJECT“ изазива веће смањење учинка\n"
 
-#: src/main.c:1561
+#: src/main.c:1375
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr "Променљива правила пратећег контекса изазивају веће смањење учинка\n"
 
-#: src/main.c:1573
+#: src/main.c:1387
 msgid "REJECT cannot be used with -f or -F"
 msgstr "„REJECT“ не може да се користи са „-f“ или „-F“"
 
-#: src/main.c:1576
+#: src/main.c:1390
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr "%oпција „yylineno“ не може да се користи са „REJECT“"
 
-#: src/main.c:1579
+#: src/main.c:1393
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr ""
 "променљива правила пратећег контекста не могу бити коришћена са „-f“ или „-F“"
 
-#: src/main.c:1704
-#, c-format
-msgid "%option yyclass only meaningful for C++ scanners"
-msgstr "%oпција „yyclass“ има смисла само за Ц++ скенере"
+#: src/main.c:1428
+msgid "allocation of macro definition failed"
+msgstr "није успело додељивање одреднице макроа"
 
-#: src/main.c:1791
+#: src/main.c:1745
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Употреба: %s [ОПЦИЈЕ] [ДАТОТЕКА]...\n"
 
-#: src/main.c:1794
+#: src/main.c:1748
 #, fuzzy, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -555,7 +538,7 @@ msgid ""
 "  -b, --backup            write backing-up information to %s\n"
 "  -p, --perf-report       write performance report to stderr\n"
 "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
-"  -T, --trace             %s should run in trace mode\n"
+"  -T, --env.trace             %s should run in env.trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
 "      --hex               use hexadecimal numbers instead of octal in debug "
@@ -569,6 +552,7 @@ msgid ""
 "      --header-file=FILE   create a C header file in addition to the "
 "scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
+"      --backup-file=FILE  write backing-up information to FILE\n"
 "\n"
 "Scanner behavior:\n"
 "  -7, --7bit              generate 7-bit scanner\n"
@@ -583,10 +567,11 @@ msgid ""
 "Generated code:\n"
 "  -+,  --c++               generate C++ scanner class\n"
 "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
+"  -e,  --emit=LANG         Specify target language\n"
 "  -L,  --noline            suppress #line directives in scanner\n"
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
-"  -R,  --reentrant         generate a reentrant C scanner\n"
-"       --bison-bridge      scanner for bison pure parser.\n"
+"  -R,  --reentrant         generate a reentrant scanner\n"
+"       --bison-bridge      scanner for Bison pure parser.\n"
 "       --bison-locations   include yylloc support.\n"
 "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
 "       --nounistd          do not include <unistd.h>\n"
@@ -628,6 +613,8 @@ msgstr ""
 "  -w, --nowarn                 не ствара упозорења\n"
 "  -v, --verbose                записује сажетак статистике скенера на "
 "стандардни излаз\n"
+"      --hex                    користи хексадецималне бројеве уместо "
+"окталних у излазима прочишћавања\n"
 "\n"
 "Датотеке:\n"
 "  -o, --outfile=ДАТОТЕКА       наводи излазни назив датотеке\n"
@@ -659,8 +646,6 @@ msgstr ""
 "       --bison-bridge          скенер за чисто бизонов обрађивач.\n"
 "       --bison-locations       укључујеподршку „yylloc“ support”\n"
 "       --stdinit               започиње „yyin/yyout“ на стндулаз/стндизлаз\n"
-"       --noansi-definitions    одреднице функције старог стила\n"
-"       --noansi-prototypes     празан списак параметарау узорцима\n"
 "       --nounistd              не укључује [unistd.h]\n"
 "       --noФУНКЦИЈА            не ствара нарочиту ФУНКЦИЈУ\n"
 "\n"
@@ -671,48 +656,34 @@ msgstr ""
 "  -h, --help                   исписује ову помоћ\n"
 "  -V, --version                извештава о издању %s-а\n"
 
-#: src/misc.c:64
-msgid "allocation of sko_stack failed"
-msgstr "није успело додељивање „sko_stack“-а"
-
-#: src/misc.c:100
-#, c-format
-msgid "name \"%s\" ridiculously long"
-msgstr "назив „%s“ је смешно дуг"
-
-#: src/misc.c:155
+#: src/misc.c:70 src/misc.c:81
 msgid "memory allocation failed in allocate_array()"
 msgstr "није успело додељивање меморије у „allocate_array()“"
 
-#: src/misc.c:205
+#: src/misc.c:131
 #, c-format
 msgid "bad character '%s' detected in check_char()"
 msgstr "лош знак „%s“ је откривен у „check_char()“"
 
-#: src/misc.c:210
+#: src/misc.c:136
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "скенер захтева -8 обележја да би користио знак „%s“"
 
-#: src/misc.c:229
-#, fuzzy
+#: src/misc.c:155
 msgid "memory allocation failure in xstrdup()"
-msgstr "није успело додељивање меморије у „allocate_array()“"
+msgstr "није успело додељивање меморије у „xstrdup()“"
 
-#: src/misc.c:303
+#: src/misc.c:231
 #, c-format
 msgid "%s: fatal internal error, %s\n"
 msgstr "%s: кобна унутрашња грешка, %s\n"
 
-#: src/misc.c:671
+#: src/misc.c:587 src/misc.c:598
 msgid "attempt to increase array size failed"
 msgstr "није успео покушај повећања величине низа"
 
-#: src/misc.c:795
-msgid "bad line in skeleton file"
-msgstr "лош ред у датотеци окоснице"
-
-#: src/misc.c:845
+#: src/misc.c:645
 msgid "memory allocation failed in yy_flex_xmalloc()"
 msgstr "није успело додељивање меморије у „yy_flex_xmalloc()“"
 
@@ -746,188 +717,188 @@ msgstr "празна машина у „dupmachine()“"
 msgid "Variable trailing context rule at line %d\n"
 msgstr "Променљиво правило пратећег контекста на %d. реду\n"
 
-#: src/nfa.c:357
+#: src/nfa.c:353
 msgid "bad state type in mark_beginning_as_normal()"
 msgstr "лоша врста стања у „mark_beginning_as_normal()“"
 
-#: src/nfa.c:595
+#: src/nfa.c:593
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "улазна правила су превише сложена (>= %d НФА стања)"
 
-#: src/nfa.c:673
+#: src/nfa.c:671
 msgid "found too many transitions in mkxtion()"
 msgstr "пронађох превише прелаза у „mkxtion()“"
 
-#: src/nfa.c:699
+#: src/nfa.c:697
 #, c-format
 msgid "too many rules (> %d)!"
 msgstr "превише правила (> %d)!"
 
-#: src/parse.y:159
+#: src/parse.y:163
 msgid "unknown error processing section 1"
 msgstr "непозната грешка обраде одељка 1"
 
-#: src/parse.y:184 src/parse.y:353
+#: src/parse.y:188 src/parse.y:373
 msgid "bad start condition list"
 msgstr "лош списак почетног услова"
 
-#: src/parse.y:204
+#: src/parse.y:208
 msgid "Prefix must not contain [ or ]"
-msgstr ""
+msgstr "Префикс не сме да садржи [ или ]"
 
-#: src/parse.y:317
+#: src/parse.y:337
 msgid "unrecognized rule"
 msgstr "непознато правило"
 
-#: src/parse.y:436 src/parse.y:449 src/parse.y:518
+#: src/parse.y:456 src/parse.y:469 src/parse.y:538
 msgid "trailing context used twice"
 msgstr "пратећи контекст је коришћен два пута"
 
-#: src/parse.y:554 src/parse.y:564 src/parse.y:637 src/parse.y:647
+#: src/parse.y:574 src/parse.y:584 src/parse.y:657 src/parse.y:667
 msgid "bad iteration values"
 msgstr "лоша вредност опетовања"
 
-#: src/parse.y:582 src/parse.y:600 src/parse.y:665 src/parse.y:683
+#: src/parse.y:602 src/parse.y:620 src/parse.y:685 src/parse.y:703
 msgid "iteration value must be positive"
 msgstr "вредност опетовања мора бити позитивна"
 
-#: src/parse.y:806 src/parse.y:816
+#: src/parse.y:826 src/parse.y:836
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
 msgstr "опсег знака [%c-%c] је нејасан у скенеру неосетљивом на величину слова"
 
-#: src/parse.y:821
+#: src/parse.y:841
 msgid "negative range in character class"
 msgstr "негативан опсег у разреду знака"
 
-#: src/parse.y:918
+#: src/parse.y:938
 msgid "[:^lower:] is ambiguous in case insensitive scanner"
 msgstr "[:^lower:] је нејасно у скенеру неосетљивом на величину слова"
 
-#: src/parse.y:924
+#: src/parse.y:944
 msgid "[:^upper:] ambiguous in case insensitive scanner"
 msgstr "[:^upper:] је нејасно у скенеру неосетљивом на величину слова"
 
-#: src/scan.l:82 src/scan.l:644 src/scan.l:702
+#: src/scan.l:73 src/scan.l:662 src/scan.l:720
 msgid "Input line too long\n"
 msgstr "Улазни ред је предуг\n"
 
-#: src/scan.l:183
+#: src/scan.l:185
 #, c-format
 msgid "malformed '%top' directive"
 msgstr "лоша одредница „%top“"
 
-#: src/scan.l:205
+#: src/scan.l:207
 #, no-c-format
 msgid "unrecognized '%' directive"
 msgstr "непозната "
 
-#: src/scan.l:214
+#: src/scan.l:216
 msgid "Definition name too long\n"
 msgstr "Назив одреднице је предуг\n"
 
-#: src/scan.l:309
+#: src/scan.l:311
 msgid "Unmatched '{'"
 msgstr "Неупарена „{“"
 
-#: src/scan.l:325
+#: src/scan.l:327
 #, c-format
 msgid "Definition value for {%s} too long\n"
 msgstr "Вредност одреднице за {%s} је предуга\n"
 
-#: src/scan.l:342
+#: src/scan.l:344
 msgid "incomplete name definition"
 msgstr "непотпуна одредница назива"
 
-#: src/scan.l:467
+#: src/scan.l:486
 msgid "Option line too long\n"
 msgstr "Ред опције је предуг\n"
 
-#: src/scan.l:475
+#: src/scan.l:494
 #, c-format
 msgid "unrecognized %%option: %s"
 msgstr "непозната %%опција: %s"
 
-#: src/scan.l:659 src/scan.l:832
+#: src/scan.l:677 src/scan.l:850
 msgid "bad character class"
 msgstr "лош разред знака"
 
-#: src/scan.l:709
+#: src/scan.l:727
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "неодређена одредница {%s}"
 
-#: src/scan.l:772
+#: src/scan.l:790
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "неуравнотежене заграде"
 
-#: src/scan.l:787
+#: src/scan.l:805
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "лош [почетни услов]: %s"
 
-#: src/scan.l:800
+#: src/scan.l:818
 msgid "missing quote"
 msgstr "недостају наводници"
 
-#: src/scan.l:866
+#: src/scan.l:884
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "лош израз разреда знака: %s"
 
-#: src/scan.l:888
+#: src/scan.l:906
 msgid "bad character inside {}'s"
 msgstr "лош знак унутар {}"
 
-#: src/scan.l:894
+#: src/scan.l:912
 msgid "missing }"
 msgstr "недостаје }"
 
-#: src/scan.l:972
+#: src/scan.l:1020
 msgid "EOF encountered inside an action"
 msgstr "наишао сам на крај датотеке унутар радње"
 
-#: src/scan.l:977
+#: src/scan.l:1025
 msgid "EOF encountered inside pattern"
 msgstr "наишао сам на крај датотеке унутар шаблона"
 
-#: src/scan.l:1010
+#: src/scan.l:1058
 #, c-format
 msgid "bad character: %s"
 msgstr "лош знак: %s"
 
-#: src/scan.l:1038
+#: src/scan.l:1086
 #, c-format
 msgid "can't open %s"
 msgstr "не могу да отворим „%s“"
 
-#: src/scanopt.c:259
+#: src/scanopt.c:248
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
 msgstr "Употреба: %s [ОПЦИЈЕ]...\n"
 
-#: src/scanopt.c:524
+#: src/scanopt.c:484
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
 msgstr "опција „%s“ не дозвољава аргумент\n"
 
-#: src/scanopt.c:529
+#: src/scanopt.c:489
 #, c-format
 msgid "option `%s' requires an argument\n"
 msgstr "опција „%s“ захтева аргумент\n"
 
-#: src/scanopt.c:533
+#: src/scanopt.c:493
 #, c-format
 msgid "option `%s' is ambiguous\n"
 msgstr "опција „%s“ је нејасна\n"
 
-#: src/scanopt.c:537
+#: src/scanopt.c:497
 #, c-format
 msgid "Unrecognized option `%s'\n"
 msgstr "Непозната опција „%s“\n"
 
-#: src/scanopt.c:541
+#: src/scanopt.c:501
 #, c-format
 msgid "Unknown error=(%d)\n"
 msgstr "Непозната грешка=(%d)\n"
@@ -958,6 +929,30 @@ msgstr "Завршни означавач\n"
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
 msgstr "*Нешто је чудно* — ток: %d вред: %d\n"
+
+#~ msgid "Allocation of buffer for line directive failed"
+#~ msgstr "Није успело додељивање међумеморије за одредницу реда"
+
+#~ msgid "Allocation of buffer for m4 def failed"
+#~ msgstr "Није успело додељивање међумеморије за одредницу м4"
+
+#~ msgid "Allocation of buffer for m4 undef failed"
+#~ msgstr "Није успело додељивање међумеморије за поништавање одреднице м4"
+
+#~ msgid "error creating header file %s"
+#~ msgstr "грешка стварања датотеке заглавља „%s“"
+
+#~ msgid "%s %s\n"
+#~ msgstr "%s %s\n"
+
+#~ msgid "allocation of sko_stack failed"
+#~ msgstr "није успело додељивање „sko_stack“-а"
+
+#~ msgid "name \"%s\" ridiculously long"
+#~ msgstr "назив „%s“ је смешно дуг"
+
+#~ msgid "bad line in skeleton file"
+#~ msgstr "лош ред у датотеци окоснице"
 
 #~ msgid "dynamic memory failure in copy_string()"
 #~ msgstr "неуспех динамичке меморије у „copy_string()“"

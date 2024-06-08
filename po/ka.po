@@ -1,31 +1,38 @@
-# Translation of flex to Croatian.
-# Copyright (C) 2012 The Flex Project (msgids)
-# This file is put in the public domain.
+# Georgian translation for flex.
+# Copyright (C) 2022 The Flex Project (msgids)
+# This file is distributed under the same license as the flex package.
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022.
 #
-# Tomislav Krznar <tomislav.krznar@gmail.com>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: flex 2.5.37\n"
+"Project-Id-Version: flex 2.6.4\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-27 14:18-0400\n"
-"PO-Revision-Date: 2012-10-05 16:48+0200\n"
-"Last-Translator: Tomislav Krznar <tomislav.krznar@gmail.com>\n"
-"Language-Team: Croatian <lokalizacija@linux.hr>\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-05-06 10:49-0400\n"
+"PO-Revision-Date: 2022-12-24 07:51+0100\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 1.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
 
-#: src/buf.c:61
+#: src/buf.c:79
 msgid "Allocation of buffer to print string failed"
 msgstr ""
 
-#: src/ccl.c:80
-msgid "internal error: trying to add a char to a non-last ccl.\n"
+#: src/buf.c:107
+msgid "Allocation of buffer for line directive failed"
+msgstr ""
+
+#: src/buf.c:177
+msgid "Allocation of buffer for m4 def failed"
+msgstr ""
+
+#: src/buf.c:198
+msgid "Allocation of buffer for m4 undef failed"
 msgstr ""
 
 #: src/dfa.c:59
@@ -45,7 +52,7 @@ msgstr ""
 #: src/dfa.c:193
 #, c-format
 msgid " out-transitions: "
-msgstr ""
+msgstr " out-გადასვლები: "
 
 #: src/dfa.c:201
 #, c-format
@@ -53,454 +60,474 @@ msgid ""
 "\n"
 " jam-transitions: EOF "
 msgstr ""
+"\n"
+" jam-გადასვლები: EOF "
 
 #: src/dfa.c:331
 msgid "consistency check failed in epsclosure()"
 msgstr ""
 
-#: src/dfa.c:422
+#: src/dfa.c:419
 msgid ""
 "\n"
 "\n"
 "DFA Dump:\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"DFA-ის დამპი:\n"
+"\n"
 
-#: src/dfa.c:558
+#: src/dfa.c:587
 msgid "could not create unique end-of-buffer state"
 msgstr ""
 
-#: src/dfa.c:579
+#: src/dfa.c:608
 #, c-format
 msgid "state # %d:\n"
-msgstr ""
+msgstr "მდგომარეობა # %d:\n"
 
-#: src/dfa.c:738
+#: src/dfa.c:768
 msgid "Could not write yynxt_tbl[][]"
 msgstr ""
 
-#: src/dfa.c:1001
+#: src/dfa.c:1028
 msgid "bad transition character detected in sympartition()"
 msgstr ""
 
-#: src/gen.c:379
+#: src/gen.c:480
 msgid ""
 "\n"
 "\n"
 "Equivalence Classes:\n"
 "\n"
 msgstr ""
+"\n"
+"ეკვივალენტობის კლასები:\n"
+"\n"
 
-#: src/gen.c:425 src/gen.c:454 src/gen.c:638
+#: src/gen.c:669 src/gen.c:698 src/gen.c:1218
 #, c-format
 msgid "state # %d accepts: [%d]\n"
 msgstr ""
 
-#: src/gen.c:533
+#: src/gen.c:1115
 #, c-format
 msgid "state # %d accepts: "
 msgstr ""
 
-#: src/gen.c:582
+#: src/gen.c:1162
 msgid "Could not write yyacclist_tbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: yyacclist_tbl"
 
-#: src/gen.c:659
+#: src/gen.c:1236
 msgid "Could not write yyacc_tbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: yyacc_tbl"
 
-#: src/gen.c:674 src/gen.c:947 src/gen.c:974
+#: src/gen.c:1251 src/gen.c:1623 src/gen.c:1646
 msgid "Could not write ecstbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: ecstbl"
 
-#: src/gen.c:694
+#: src/gen.c:1271
 msgid ""
 "\n"
 "\n"
 "Meta-Equivalence Classes:\n"
 msgstr ""
+"\n"
+"\n"
+"მეტა-ექვივალენტობის კლასები:\n"
 
-#: src/gen.c:714
+#: src/gen.c:1293
 msgid "Could not write yymeta_tbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: yymeta_tbl"
 
-#: src/gen.c:774
+#: src/gen.c:1352
 msgid "Could not write yybase_tbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: yybase_tbl"
 
-#: src/gen.c:805
+#: src/gen.c:1384
 msgid "Could not write yydef_tbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: yydef_tbl"
 
-#: src/gen.c:844
+#: src/gen.c:1422
 msgid "Could not write yynxt_tbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: yynxt_tbl"
 
-#: src/gen.c:877
+#: src/gen.c:1456
 msgid "Could not write yychk_tbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: yychk_tbl"
 
-#: src/gen.c:932 src/gen.c:965
+#: src/gen.c:1608 src/gen.c:1637
 msgid "Could not write ftbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: ftbl"
 
-#: src/gen.c:938
+#: src/gen.c:1614
 msgid "Could not write ssltbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: ssltbl"
 
-#: src/gen.c:1014
+#: src/gen.c:1665
 msgid "Could not write eoltbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: eoltbl"
 
-#: src/gen.c:1061
+#: src/gen.c:1722
 msgid "Could not write yynultrans_tbl"
-msgstr ""
+msgstr "ჩაწერის შეცდომა: yynultrans_tbl"
 
-#: src/main.c:169
+#: src/main.c:178
 msgid "rule cannot be matched"
 msgstr ""
 
-#: src/main.c:174
+#: src/main.c:183
 msgid "-s option given but default rule can be matched"
 msgstr ""
 
-#: src/main.c:317
+#: src/main.c:221
 msgid "Can't use -+ with -l option"
 msgstr ""
 
-#: src/main.c:320
+#: src/main.c:224
 msgid "Can't use -f or -F with -l option"
 msgstr ""
 
-#: src/main.c:324
-msgid "Can't use --ctrl.reentrant or --bison-bridge with -l option"
+#: src/main.c:228
+msgid "Can't use --reentrant or --bison-bridge with -l option"
 msgstr ""
 
-#: src/main.c:356
+#: src/main.c:260
 msgid "-Cf/-CF and -Cm don't make sense together"
 msgstr ""
 
-#: src/main.c:359
+#: src/main.c:263
 msgid "-Cf/-CF and -I are incompatible"
-msgstr ""
+msgstr "-Cf /-CF და - მე შეუთავსებელია"
 
-#: src/main.c:363
+#: src/main.c:267
 msgid "-Cf/-CF are incompatible with lex-compatibility mode"
 msgstr ""
 
-#: src/main.c:368
+#: src/main.c:272
 msgid "-Cf and -CF are mutually exclusive"
-msgstr ""
+msgstr "-Cf და -CF ურთიერთგამომრიცხავია"
 
-#: src/main.c:372
+#: src/main.c:276
 msgid "Can't use -+ with -CF option"
 msgstr ""
 
-#: src/main.c:375
+#: src/main.c:279
 #, c-format
 msgid "%array incompatible with -+ option"
 msgstr ""
 
-#: src/main.c:380
+#: src/main.c:284
 msgid "Options -+ and --reentrant are mutually exclusive."
 msgstr ""
 
-#: src/main.c:383
+#: src/main.c:287
 msgid "bison bridge not supported for the C++ scanner."
 msgstr ""
 
-#: src/main.c:422 src/main.c:1235
+#: src/main.c:336 src/main.c:419
 #, c-format
 msgid "could not create %s"
-msgstr ""
+msgstr "%s-ის შექმნის შეცდომა"
 
-#: src/main.c:443
+#: src/main.c:431
+msgid "could not write tables header"
+msgstr "ცხრილების თავსართის ჩაწერის შეცდომა"
+
+#: src/main.c:435
 #, c-format
-msgid "%option yyclass only meaningful for C++ scanners"
+msgid "can't open skeleton file %s"
+msgstr "ჩონჩხის ფაილის %s გახსნის შეცდომა"
+
+#: src/main.c:450
+msgid "Prefix cannot include '[' or ']'"
 msgstr ""
 
-#: src/main.c:447
+#: src/main.c:474
+msgid "allocation of macro definition failed"
+msgstr ""
+
+#: src/main.c:521
 #, c-format
 msgid "input error reading skeleton file %s"
 msgstr ""
 
-#: src/main.c:451
+#: src/main.c:525
 #, c-format
 msgid "error closing skeleton file %s"
-msgstr "greška pri zatvaranju datoteke predloška %s"
-
-#: src/main.c:457
-#, c-format
-msgid "error writing output file %s"
-msgstr "greška pri pisanju izlazne datoteke %s"
-
-#: src/main.c:461
-#, c-format
-msgid "error closing output file %s"
-msgstr "greška pri zatvaranju izlazne datoteke %s"
-
-#: src/main.c:465
-#, c-format
-msgid "error deleting output file %s"
-msgstr "greška pri uklanjanju izlazne datoteke %s"
-
-#: src/main.c:472
-#, c-format
-msgid "No backing up.\n"
 msgstr ""
 
-#: src/main.c:476
+#: src/main.c:709
+#, c-format
+msgid "error creating header file %s"
+msgstr ""
+
+#: src/main.c:717
+#, c-format
+msgid "error writing output file %s"
+msgstr ""
+
+#: src/main.c:721
+#, c-format
+msgid "error closing output file %s"
+msgstr ""
+
+#: src/main.c:725
+#, c-format
+msgid "error deleting output file %s"
+msgstr ""
+
+#: src/main.c:732
+#, c-format
+msgid "No backing up.\n"
+msgstr "მარქაფი გამორთულია.\n"
+
+#: src/main.c:736
 #, c-format
 msgid "%d backing up (non-accepting) states.\n"
 msgstr ""
 
-#: src/main.c:480
+#: src/main.c:740
 #, c-format
 msgid "Compressed tables always back up.\n"
 msgstr ""
 
-#: src/main.c:483
+#: src/main.c:743
 #, c-format
 msgid "error writing backup file %s"
 msgstr ""
 
-#: src/main.c:487
+#: src/main.c:747
 #, c-format
 msgid "error closing backup file %s"
 msgstr ""
 
-#: src/main.c:492
+#: src/main.c:752
 #, c-format
 msgid "%s version %s usage statistics:\n"
 msgstr ""
 
-#: src/main.c:495
+#: src/main.c:755
 #, c-format
 msgid "  scanner options: -"
-msgstr ""
+msgstr "  სკანერის პარამეტრების ჩვენება: -"
 
-#: src/main.c:574
+#: src/main.c:834
 #, c-format
 msgid "  %d/%d NFA states\n"
-msgstr ""
+msgstr "  %d/%d NFA მდგომარეობები\n"
 
-#: src/main.c:576
+#: src/main.c:836
 #, c-format
 msgid "  %d/%d DFA states (%d words)\n"
-msgstr ""
+msgstr "  %d/%d DFA მდგომარეობები (%d სიტყვა)\n"
 
-#: src/main.c:578
+#: src/main.c:838
 #, c-format
 msgid "  %d rules\n"
-msgstr ""
+msgstr "  %d წესი\n"
 
-#: src/main.c:583
+#: src/main.c:843
 #, c-format
 msgid "  No backing up\n"
-msgstr ""
+msgstr "  მარქაფის გარეშე\n"
 
-#: src/main.c:587
+#: src/main.c:847
 #, c-format
 msgid "  %d backing-up (non-accepting) states\n"
 msgstr ""
 
-#: src/main.c:592
+#: src/main.c:852
 #, c-format
 msgid "  Compressed tables always back-up\n"
 msgstr ""
 
-#: src/main.c:596
+#: src/main.c:856
 #, c-format
 msgid "  Beginning-of-line patterns used\n"
 msgstr ""
 
-#: src/main.c:598
+#: src/main.c:858
 #, c-format
 msgid "  %d/%d start conditions\n"
-msgstr ""
+msgstr "  %d/%d გაშვების პირობები\n"
 
-#: src/main.c:602
+#: src/main.c:862
 #, c-format
 msgid "  %d epsilon states, %d double epsilon states\n"
 msgstr ""
 
-#: src/main.c:606
+#: src/main.c:866
 #, c-format
 msgid "  no character classes\n"
-msgstr ""
+msgstr "  სიმბოლოს კლასების გარეშე\n"
 
-#: src/main.c:610
+#: src/main.c:870
 #, c-format
 msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
 msgstr ""
 
-#: src/main.c:615
+#: src/main.c:875
 #, c-format
 msgid "  %d state/nextstate pairs created\n"
 msgstr ""
 
-#: src/main.c:618
+#: src/main.c:878
 #, c-format
 msgid "  %d/%d unique/duplicate transitions\n"
 msgstr ""
 
-#: src/main.c:623
+#: src/main.c:883
 #, c-format
 msgid "  %d table entries\n"
-msgstr ""
+msgstr "  %d ცხრილის ჩანაწერი\n"
 
-#: src/main.c:631
+#: src/main.c:891
 #, c-format
 msgid "  %d/%d base-def entries created\n"
 msgstr ""
 
-#: src/main.c:635
+#: src/main.c:895
 #, c-format
 msgid "  %d/%d (peak %d) nxt-chk entries created\n"
 msgstr ""
 
-#: src/main.c:639
+#: src/main.c:899
 #, c-format
 msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
 msgstr ""
 
-#: src/main.c:643
+#: src/main.c:903
 #, c-format
 msgid "  %d empty table entries\n"
-msgstr ""
+msgstr "  %d ცხრილის ცარიელი ჩანაწერი\n"
 
-#: src/main.c:645
+#: src/main.c:905
 #, c-format
 msgid "  %d protos created\n"
-msgstr ""
+msgstr "  %d პროტოტიპი შექმნილია\n"
 
-#: src/main.c:648
+#: src/main.c:908
 #, c-format
 msgid "  %d templates created, %d uses\n"
 msgstr ""
 
-#: src/main.c:656
+#: src/main.c:916
 #, c-format
 msgid "  %d/%d equivalence classes created\n"
 msgstr ""
 
-#: src/main.c:664
+#: src/main.c:924
 #, c-format
 msgid "  %d/%d meta-equivalence classes created\n"
 msgstr ""
 
-#: src/main.c:670
+#: src/main.c:930
 #, c-format
 msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
 msgstr ""
 
-#: src/main.c:672
+#: src/main.c:932
 #, c-format
 msgid "  %d sets of reallocations needed\n"
 msgstr ""
 
-#: src/main.c:674
+#: src/main.c:934
 #, c-format
 msgid "  %d total table entries needed\n"
 msgstr ""
 
-#: src/main.c:735
+#: src/main.c:1008
 #, c-format
 msgid "Internal error. flexopts are malformed.\n"
-msgstr ""
+msgstr "შიდა შეცდომა. flexopts არასწორია.\n"
 
-#: src/main.c:745
+#: src/main.c:1018
 #, c-format
 msgid "Try `%s --help' for more information.\n"
-msgstr "Pokušajte „%s --help” za više informacija.\n"
+msgstr "მეტი ინფორმაციისთვის სცადეთ '%s --help'\n"
 
-#: src/main.c:807
+#: src/main.c:1075
 #, c-format
 msgid "unknown -C option '%c'"
-msgstr "nepoznata -C opcija „%c”"
+msgstr "უცნობი -C -ის პარამეტრი '%c'"
 
-#: src/main.c:1195
-msgid "fatal parse error"
-msgstr "fatalna greška analize"
-
-#: src/main.c:1247
-msgid "could not write tables header"
-msgstr ""
-
-#: src/main.c:1251
+#: src/main.c:1204
 #, c-format
-msgid "can't open skeleton file %s"
-msgstr ""
+msgid "%s %s\n"
+msgstr "%s %s\n"
 
-#: src/main.c:1254
-msgid "Prefix cannot include '[' or ']'"
-msgstr ""
+#: src/main.c:1476
+msgid "fatal parse error"
+msgstr "ფატალური შეცდომა დამუშავებისას"
 
-#: src/main.c:1322
+#: src/main.c:1508
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr ""
 
-#: src/main.c:1343
+#: src/main.c:1529
 #, c-format
 msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
 msgstr ""
 
-#: src/main.c:1346
+#: src/main.c:1532
 #, c-format
 msgid " and may be the actual source of other reported performance penalties\n"
 msgstr ""
 
-#: src/main.c:1352
+#: src/main.c:1538
 #, c-format
-msgid ""
-"%%option yylineno entails a performance penalty ONLY on rules that can match "
-"newline characters\n"
+msgid "%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"
 msgstr ""
 
-#: src/main.c:1359
+#: src/main.c:1545
 #, c-format
 msgid "-I (interactive) entails a minor performance penalty\n"
 msgstr ""
 
-#: src/main.c:1364
+#: src/main.c:1550
 #, c-format
 msgid "yymore() entails a minor performance penalty\n"
-msgstr ""
+msgstr "yymore() მცირე წარმადობის ხინჯს შეიცავს\n"
 
-#: src/main.c:1370
+#: src/main.c:1556
 #, c-format
 msgid "REJECT entails a large performance penalty\n"
-msgstr ""
+msgstr "REJECT წარმადობის დიდ ხინჯს შეიცავს\n"
 
-#: src/main.c:1375
+#: src/main.c:1561
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr ""
 
-#: src/main.c:1387
+#: src/main.c:1573
 msgid "REJECT cannot be used with -f or -F"
 msgstr ""
 
-#: src/main.c:1390
+#: src/main.c:1576
 #, c-format
 msgid "%option yylineno cannot be used with REJECT"
 msgstr ""
 
-#: src/main.c:1393
+#: src/main.c:1579
 msgid "variable trailing context rules cannot be used with -f or -F"
 msgstr ""
 
-#: src/main.c:1428
-msgid "allocation of macro definition failed"
+#: src/main.c:1704
+#, c-format
+msgid "%option yyclass only meaningful for C++ scanners"
 msgstr ""
 
-#: src/main.c:1745
+#: src/main.c:1791
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
-msgstr "Uporaba: %s [OPCIJE] [DATOTEKA]...\n"
+msgstr ""
 
-#: src/main.c:1748
+#: src/main.c:1794
 #, c-format
 msgid ""
 "Generates programs that perform pattern-matching on text.\n"
@@ -521,21 +548,18 @@ msgid ""
 "  -b, --backup            write backing-up information to %s\n"
 "  -p, --perf-report       write performance report to stderr\n"
 "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
-"  -T, --env.trace             %s should run in env.trace mode\n"
+"  -T, --trace             %s should run in trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
-"      --hex               use hexadecimal numbers instead of octal in debug "
-"outputs\n"
+"      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 "\n"
 "Files:\n"
 "  -o, --outfile=FILE      specify output filename\n"
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the "
-"scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
-"      --backup-file=FILE  write backing-up information to FILE\n"
 "\n"
 "Scanner behavior:\n"
 "  -7, --7bit              generate 7-bit scanner\n"
@@ -550,11 +574,10 @@ msgid ""
 "Generated code:\n"
 "  -+,  --c++               generate C++ scanner class\n"
 "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
-"  -e,  --emit=LANG         Specify target language\n"
 "  -L,  --noline            suppress #line directives in scanner\n"
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
-"  -R,  --reentrant         generate a reentrant scanner\n"
-"       --bison-bridge      scanner for Bison pure parser.\n"
+"  -R,  --reentrant         generate a reentrant C scanner\n"
+"       --bison-bridge      scanner for bison pure parser.\n"
 "       --bison-locations   include yylloc support.\n"
 "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
 "       --nounistd          do not include <unistd.h>\n"
@@ -568,35 +591,47 @@ msgid ""
 "  -V, --version           report %s version\n"
 msgstr ""
 
-#: src/misc.c:70 src/misc.c:81
+#: src/misc.c:64
+msgid "allocation of sko_stack failed"
+msgstr ""
+
+#: src/misc.c:100
+#, c-format
+msgid "name \"%s\" ridiculously long"
+msgstr ""
+
+#: src/misc.c:155
 msgid "memory allocation failed in allocate_array()"
 msgstr ""
 
-#: src/misc.c:131
+#: src/misc.c:205
 #, c-format
 msgid "bad character '%s' detected in check_char()"
 msgstr ""
 
-#: src/misc.c:136
+#: src/misc.c:210
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr ""
 
-#: src/misc.c:155
-#, fuzzy
+#: src/misc.c:229
 msgid "memory allocation failure in xstrdup()"
-msgstr "alokacija memorije za tablicu simbola nije uspjela"
+msgstr ""
 
-#: src/misc.c:231
+#: src/misc.c:303
 #, c-format
 msgid "%s: fatal internal error, %s\n"
 msgstr ""
 
-#: src/misc.c:587 src/misc.c:598
+#: src/misc.c:671
 msgid "attempt to increase array size failed"
 msgstr ""
 
-#: src/misc.c:645
+#: src/misc.c:795
+msgid "bad line in skeleton file"
+msgstr ""
+
+#: src/misc.c:845
 msgid "memory allocation failed in yy_flex_xmalloc()"
 msgstr ""
 
@@ -627,199 +662,199 @@ msgstr ""
 msgid "Variable trailing context rule at line %d\n"
 msgstr ""
 
-#: src/nfa.c:353
+#: src/nfa.c:357
 msgid "bad state type in mark_beginning_as_normal()"
 msgstr ""
 
-#: src/nfa.c:593
+#: src/nfa.c:595
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr ""
 
-#: src/nfa.c:671
+#: src/nfa.c:673
 msgid "found too many transitions in mkxtion()"
 msgstr ""
 
-#: src/nfa.c:697
+#: src/nfa.c:699
 #, c-format
 msgid "too many rules (> %d)!"
-msgstr "previše pravila (> %d)!"
+msgstr ""
 
-#: src/parse.y:163
+#: src/parse.y:159
 msgid "unknown error processing section 1"
 msgstr ""
 
-#: src/parse.y:188 src/parse.y:373
+#: src/parse.y:184 src/parse.y:353
 msgid "bad start condition list"
 msgstr ""
 
-#: src/parse.y:208
+#: src/parse.y:204
 msgid "Prefix must not contain [ or ]"
 msgstr ""
 
-#: src/parse.y:337
+#: src/parse.y:317
 msgid "unrecognized rule"
-msgstr "neprepoznato pravilo"
+msgstr ""
 
-#: src/parse.y:456 src/parse.y:469 src/parse.y:538
+#: src/parse.y:436 src/parse.y:449 src/parse.y:518
 msgid "trailing context used twice"
 msgstr ""
 
-#: src/parse.y:574 src/parse.y:584 src/parse.y:657 src/parse.y:667
+#: src/parse.y:554 src/parse.y:564 src/parse.y:637 src/parse.y:647
 msgid "bad iteration values"
-msgstr "neispravne vrijednosti iteracije"
+msgstr ""
 
-#: src/parse.y:602 src/parse.y:620 src/parse.y:685 src/parse.y:703
+#: src/parse.y:582 src/parse.y:600 src/parse.y:665 src/parse.y:683
 msgid "iteration value must be positive"
-msgstr "vrijednost iteracije mora biti pozitivna"
+msgstr ""
 
-#: src/parse.y:826 src/parse.y:836
+#: src/parse.y:806 src/parse.y:816
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
 msgstr ""
 
-#: src/parse.y:841
+#: src/parse.y:821
 msgid "negative range in character class"
 msgstr ""
 
-#: src/parse.y:938
+#: src/parse.y:918
 msgid "[:^lower:] is ambiguous in case insensitive scanner"
 msgstr ""
 
-#: src/parse.y:944
+#: src/parse.y:924
 msgid "[:^upper:] ambiguous in case insensitive scanner"
 msgstr ""
 
-#: src/scan.l:73 src/scan.l:662 src/scan.l:720
+#: src/scan.l:82 src/scan.l:644 src/scan.l:702
 msgid "Input line too long\n"
-msgstr "Ulazni redak je predugačak\n"
+msgstr ""
 
-#: src/scan.l:185
+#: src/scan.l:183
 #, c-format
 msgid "malformed '%top' directive"
 msgstr ""
 
-#: src/scan.l:207
+#: src/scan.l:205
 #, no-c-format
 msgid "unrecognized '%' directive"
 msgstr ""
 
-#: src/scan.l:216
+#: src/scan.l:214
 msgid "Definition name too long\n"
-msgstr "Ime definicije je predugačko\n"
+msgstr ""
 
-#: src/scan.l:311
+#: src/scan.l:309
 msgid "Unmatched '{'"
-msgstr "Neuparena „{”"
+msgstr ""
 
-#: src/scan.l:327
+#: src/scan.l:325
 #, c-format
 msgid "Definition value for {%s} too long\n"
 msgstr ""
 
-#: src/scan.l:344
+#: src/scan.l:342
 msgid "incomplete name definition"
-msgstr "nepotpuna definicija imena"
+msgstr ""
 
-#: src/scan.l:486
+#: src/scan.l:467
 msgid "Option line too long\n"
-msgstr "Redak opcija je predugačak\n"
+msgstr ""
 
-#: src/scan.l:494
+#: src/scan.l:475
 #, c-format
 msgid "unrecognized %%option: %s"
 msgstr ""
 
-#: src/scan.l:677 src/scan.l:850
+#: src/scan.l:659 src/scan.l:832
 msgid "bad character class"
-msgstr "neispravan razred znakova"
+msgstr ""
 
-#: src/scan.l:727
+#: src/scan.l:709
 #, c-format
 msgid "undefined definition {%s}"
-msgstr "nedefinirana definicija {%s}"
+msgstr ""
 
-#: src/scan.l:790
+#: src/scan.l:772
 msgid "unbalanced parenthesis"
 msgstr ""
 
-#: src/scan.l:805
+#: src/scan.l:787
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr ""
 
-#: src/scan.l:818
+#: src/scan.l:800
 msgid "missing quote"
-msgstr "nedostaje navodnik"
+msgstr ""
 
-#: src/scan.l:884
+#: src/scan.l:866
 #, c-format
 msgid "bad character class expression: %s"
 msgstr ""
 
-#: src/scan.l:906
+#: src/scan.l:888
 msgid "bad character inside {}'s"
-msgstr "neispravan znak unutar {}"
+msgstr ""
 
-#: src/scan.l:912
+#: src/scan.l:894
 msgid "missing }"
-msgstr "nedostaje }"
+msgstr ""
 
-#: src/scan.l:1020
+#: src/scan.l:972
 msgid "EOF encountered inside an action"
 msgstr ""
 
-#: src/scan.l:1025
+#: src/scan.l:977
 msgid "EOF encountered inside pattern"
 msgstr ""
 
-#: src/scan.l:1058
+#: src/scan.l:1010
 #, c-format
 msgid "bad character: %s"
-msgstr "neispravan znak: %s"
+msgstr ""
 
-#: src/scan.l:1086
+#: src/scan.l:1038
 #, c-format
 msgid "can't open %s"
-msgstr "ne mogu otvoriti %s"
+msgstr "'%s'-ის გახსნის შეცდომა"
 
-#: src/scanopt.c:248
+#: src/scanopt.c:259
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
-msgstr "Uporaba: %s [OPCIJE]...\n"
+msgstr ""
 
-#: src/scanopt.c:484
+#: src/scanopt.c:524
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
-msgstr "opcija „%s” ne dozvoljava argument\n"
+msgstr ""
 
-#: src/scanopt.c:489
+#: src/scanopt.c:529
 #, c-format
 msgid "option `%s' requires an argument\n"
-msgstr "opcija „%s” zahtijeva argument\n"
+msgstr ""
 
-#: src/scanopt.c:493
+#: src/scanopt.c:533
 #, c-format
 msgid "option `%s' is ambiguous\n"
-msgstr "opcija „%s” je višeznačna\n"
+msgstr ""
 
-#: src/scanopt.c:497
+#: src/scanopt.c:537
 #, c-format
 msgid "Unrecognized option `%s'\n"
-msgstr "Neprepoznata opcija „%s”\n"
+msgstr ""
 
-#: src/scanopt.c:501
+#: src/scanopt.c:541
 #, c-format
 msgid "Unknown error=(%d)\n"
-msgstr "Nepoznata greška=(%d)\n"
+msgstr ""
 
 #: src/sym.c:92
 msgid "symbol table memory allocation failed"
-msgstr "alokacija memorije za tablicu simbola nije uspjela"
+msgstr ""
 
 #: src/sym.c:183
 msgid "name defined twice"
-msgstr "ime je dvaput definirano"
+msgstr ""
 
 #: src/sym.c:231
 #, c-format
@@ -828,23 +863,14 @@ msgstr ""
 
 #: src/yylex.c:57
 msgid "premature EOF"
-msgstr "preuranjen EOF"
+msgstr ""
 
 #: src/yylex.c:200
 #, c-format
 msgid "End Marker\n"
-msgstr "Oznaka kraja\n"
+msgstr ""
 
 #: src/yylex.c:206
 #, c-format
 msgid "*Something Weird* - tok: %d val: %d\n"
-msgstr "*Nešto je čudno* - simbol: %d vrijednost: %d\n"
-
-#~ msgid "error creating header file %s"
-#~ msgstr "greška pri stvaranju datoteke zaglavlja %s"
-
-#~ msgid "%s %s\n"
-#~ msgstr "%s %s\n"
-
-#~ msgid "bad line in skeleton file"
-#~ msgstr "neispravan redak u datoteci predloška"
+msgstr ""

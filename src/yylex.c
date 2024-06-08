@@ -51,7 +51,7 @@ int     yylex (void)
 		toktype = flexscan ();
         }
 	if (toktype == EOF || toktype == 0) {
-		eofseen = 1;
+		eofseen = true;
 
 		if (sectnum == 1) {
 			synerr (_("premature EOF"));
