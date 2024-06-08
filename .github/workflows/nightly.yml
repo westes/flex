@@ -1,0 +1,87 @@
+name: Nightly
+
+on:
+  schedule:
+    - cron: '14 20 * * *'
+
+permissions: {}
+
+jobs:
+  nightly:
+    name: Run a Nightly Build and Save the Artifacts
+    runs-on: ubuntu-20.04
+    outputs:
+      tagname: ${{ steps.version.outputs.tagname }}
+      version: ${{ steps.version.outputs.version }}
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: apt
+        run: sudo apt-get update && sudo apt-get install -y gcc autoconf automake libtool flex bison gettext autopoint help2man lzip texinfo texlive
+      - uses: actions/checkout@v4
+      - name: Change version number
+        id: version
+        run: |
+          slug=$(git log -n 1 --pretty='format:%h-%as')
+          echo "::set-output name=tagname::$slug"
+          ver=$(sed -n "s/^\(AC_INIT.*generator\],\)\[\(.*\)\]\(,\[flex-help.*\)$/\2/p" $GITHUB_WORKSPACE/configure.ac)
+          ver=${ver#v}
+          ver=${ver%-*}
+          ver=$ver-$slug
+          echo "::set-output name=version::$ver"
+          sed -i "s/^\(AC_INIT.*generator\],\)\(.*\)\(,\[flex-help.*\)$/\1[$ver]\3/" $GITHUB_WORKSPACE/configure.ac
+      - name: Update CHANGE_LOG
+        run: |
+          ./tools/git2cl > $GITHUB_WORKSPACE/ChangeLog
+      - name: build
+        run: |
+          ./autogen.sh
+          ./configure
+          make
+          make check
+          make distcheck
+      - name: Make Git archives
+        env:
+          ver: ${{ steps.version.outputs.version }}
+          tagname: ${{ steps.version.outputs.tagname }}
+        run: |
+          git archive -o $tagname.tar.gz --prefix=flex-$ver/ HEAD
+          TZ=America/Los_Angeles git archive -o $tagname.zip --prefix=flex-$ver/ HEAD
+          echo "SOURCE_GZ="$(echo $ver.src.tar.gz)" >> $GITHUB_ENV
+          echo "SOURCE_ZIP="$(echo $ver.src.zip)" >> $GITHUB_ENV
+      - name: Get artifact names
+        env:
+          ver: ${{ steps.version.outputs.version }}
+          tagname: ${{ steps.version.outputs.tagname }}
+        run: |
+          echo "ARTIFACT_GZ=$(echo flex-$ver.tar.gz)" >> $GITHUB_ENV
+          echo "ARTIFACT_LZ=$(echo flex-$ver.tar.lz)" >> $GITHUB_ENV
+      - name: Upload Nightly tar.gz
+        id: upload-nightly-asset-gz 
+        uses: actions/upload-artifact@v4
+        with:
+          path: ${{ env.ARTIFACT_GZ }}
+          name: ${{ env.ARTIFACT_GZ }}
+          overwrite: true
+      - name: Upload Nightly tar.lz
+        id: upload-nightly-asset-lz
+        uses: actions/upload-artifact@v4
+        with:
+          path: ${{ env.ARTIFACT_LZ }}
+          name: ${{ env.ARTIFACT_LZ }}
+          overwrite: true
+      - name: Upload Nightly src.tar.gz
+        id: upload-nightly-src-gz
+        uses: actions/upload-artifact@v4
+        with:
+          path: ${{ env.SOURCE_GZ }}
+          name: ${{ env.SOURCE_GZ }}
+          overwrite: true
+      - name: Upload Nightly src.tar.zip
+        id: upload-nightly-src-zip
+        uses: actions/upload-artifact@v4
+        with:
+          path: ${{ env.SOURCE_ZIP }}
+          name: ${{ env.SOURCE_ZIP }}
+          overwrite: true
