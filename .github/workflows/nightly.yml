@@ -12,7 +12,6 @@ jobs:
     name: Run a Nightly Build and Save the Artifacts
     runs-on: ubuntu-20.04
     outputs:
-      tagname: ${{ steps.version.outputs.tagname }}
       version: ${{ steps.version.outputs.version }}
     permissions:
       actions: read
@@ -25,12 +24,11 @@ jobs:
         id: version
         run: |
           slug=$(git log -n 1 --pretty='format:%h-%as')
-          echo "::set-output name=tagname::$slug"
           ver=$(sed -n "s/^\(AC_INIT.*generator\],\)\[\(.*\)\]\(,\[flex-help.*\)$/\2/p" $GITHUB_WORKSPACE/configure.ac)
           ver=${ver#v}
           ver=${ver%-*}
           ver=$ver-$slug
-          echo "::set-output name=version::$ver"
+          echo "version=$ver" >> $GITHUB_OUTPUT
           sed -i "s/^\(AC_INIT.*generator\],\)\(.*\)\(,\[flex-help.*\)$/\1[$ver]\3/" $GITHUB_WORKSPACE/configure.ac
       - name: Update CHANGE_LOG
         run: |
@@ -45,16 +43,14 @@ jobs:
       - name: Make Git archives
         env:
           ver: ${{ steps.version.outputs.version }}
-          tagname: ${{ steps.version.outputs.tagname }}
         run: |
-          git archive -o $tagname.tar.gz --prefix=flex-$ver/ HEAD
-          TZ=America/Los_Angeles git archive -o $tagname.zip --prefix=flex-$ver/ HEAD
-          echo "SOURCE_GZ="$(echo $ver.src.tar.gz)" >> $GITHUB_ENV
-          echo "SOURCE_ZIP="$(echo $ver.src.zip)" >> $GITHUB_ENV
+          git archive -o $ver.src.tar.gz --prefix=flex-$ver/ HEAD
+          TZ=America/Los_Angeles git archive -o $ver.src.zip --prefix=flex-$ver/ HEAD
+          echo "SOURCE_GZ=$(echo $ver.src.tar.gz)" >> $GITHUB_ENV
+          echo "SOURCE_ZIP=$(echo $ver.src.zip)" >> $GITHUB_ENV
       - name: Get artifact names
         env:
           ver: ${{ steps.version.outputs.version }}
-          tagname: ${{ steps.version.outputs.tagname }}
         run: |
           echo "ARTIFACT_GZ=$(echo flex-$ver.tar.gz)" >> $GITHUB_ENV
           echo "ARTIFACT_LZ=$(echo flex-$ver.tar.lz)" >> $GITHUB_ENV
