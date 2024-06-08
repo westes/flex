@@ -1,0 +1,90 @@
+name: Nightly
+
+on:
+  schedule:
+    - cron: '04 00 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  nightly:
+    name: Run a Nightly Build and Save the Artifacts
+    runs-on: ubuntu-22.04
+    outputs:
+      update_needed: ${{ steps.update.outputs.needed }}
+      version_slug: ${{ steps.update.outputs.slug }}
+      version: ${{ steps.version.outputs.version }}
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Check time since last commit
+        id: update
+        run: |
+          slug=$(git log -n 1 --pretty='format:%h-%as')
+          echo "slug=$slug" >> $GITHUB_OUTPUT
+          authorDate=$(echo $slug | cut -d '-' -f 2-4)
+          update=1
+          [ $(( $(date +%s) - $(date --date=$authorDate +%s) )) -ge 172800 ] && echo "::notice title=No Changes::No changes within the last two days. Skipping nightly build." && update=0
+          echo "needed=$update" >> $GITHUB_OUTPUT
+      - name: Change version number
+        id: version
+        env:
+          slug: ${{ steps.update.outputs.slug }}
+          update_needed: ${{ steps.update.outputs.needed }}
+        if: ${{ env.update_needed == 1 }}
+        run: |
+          ver=$(sed -n "s/^\(AC_INIT.*generator\],\)\[\(.*\)\]\(,\[flex-help.*\)$/\2/p" $GITHUB_WORKSPACE/configure.ac)
+          ver=${ver#v}
+          ver=${ver%-*}
+          ver=$ver-$slug
+          echo "version=$ver" >> $GITHUB_OUTPUT
+          sed -i "s/^\(AC_INIT.*generator\],\)\(.*\)\(,\[flex-help.*\)$/\1[$ver]\3/" $GITHUB_WORKSPACE/configure.ac
+      - name: apt
+        env:
+          update_needed: ${{ steps.update.outputs.needed }}
+        if: ${{ env.update_needed == 1 }}
+        run: sudo apt-get update && sudo apt-get install -y gcc autoconf automake libtool gettext autopoint bison help2man lzip texinfo texlive
+      - name: Update CHANGE_LOG
+        env:
+          update_needed: ${{ steps.update.outputs.needed }}
+        if: ${{ env.update_needed == 1 }}
+        run: |
+          ./tools/git2cl > $GITHUB_WORKSPACE/ChangeLog
+      - name: build
+        env:
+          update_needed: ${{ steps.update.outputs.needed }}
+        if: ${{ env.update_needed == 1 }}
+        run: |
+          ./autogen.sh
+          ./configure
+          make
+          make distcheck
+      - name: Make Git archives
+        env:
+          ver: ${{ steps.version.outputs.version }}
+          update_needed: ${{ steps.update.outputs.needed }}
+        if: ${{ env.update_needed == 1 }}
+        run: |
+          git archive -o $ver.src.tar.gz --prefix=flex-$ver/ HEAD
+          TZ=America/Los_Angeles git archive -o $ver.src.zip --prefix=flex-$ver/ HEAD
+          echo "SOURCE_GZ=$(echo $ver.src.tar.gz)" >> $GITHUB_ENV
+          echo "SOURCE_ZIP=$(echo $ver.src.zip)" >> $GITHUB_ENV
+      - name: Get artifact names
+        env:
+          ver: ${{ steps.version.outputs.version }}
+          update_needed: ${{ steps.update.outputs.needed }}
+        if: ${{ env.update_needed == 1 }}
+        run: |
+          echo "ARTIFACT_GZ=$(echo flex-$ver.tar.gz)" >> $GITHUB_ENV
+          echo "ARTIFACT_LZ=$(echo flex-$ver.tar.lz)" >> $GITHUB_ENV
+      - name: Upload Artifacts to Nightlies Release
+        id: upload-nightly-artifacts
+        env:
+          update_needed: ${{ steps.update.outputs.needed }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ env.update_needed == 1 }}
+        run: |
+          gh release upload nightlies ${{ env.ARTIFACT_GZ }} ${{ env.ARTIFACT_LZ }} ${{ env.SOURCE_GZ }} ${{ env.SOURCE_ZIP }} --clobber
