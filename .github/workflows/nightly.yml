@@ -2,7 +2,7 @@ name: Nightly
 
 on:
   schedule:
-    - cron: '14 20 * * *'
+    - cron: '04 01 * * *'
 
 permissions: {}
 
