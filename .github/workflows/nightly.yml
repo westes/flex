@@ -17,7 +17,7 @@ jobs:
       version: ${{ steps.version.outputs.version }}
     permissions:
       actions: read
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Check time since last commit
@@ -80,43 +80,51 @@ jobs:
         run: |
           echo "ARTIFACT_GZ=$(echo flex-$ver.tar.gz)" >> $GITHUB_ENV
           echo "ARTIFACT_LZ=$(echo flex-$ver.tar.lz)" >> $GITHUB_ENV
-      - name: Upload Nightly tar.gz
-        id: upload-nightly-asset-gz 
+#       - name: Upload Nightly tar.gz
+#         id: upload-nightly-asset-gz 
+#         env:
+#           update_needed: ${{ steps.update.outputs.needed }}
+#         if: ${{ env.update_needed == 1 }}
+#         uses: actions/upload-artifact@v4
+#         with:
+#           path: ${{ env.ARTIFACT_GZ }}
+#           name: ${{ env.ARTIFACT_GZ }}
+#           overwrite: true
+#       - name: Upload Nightly tar.lz
+#         id: upload-nightly-asset-lz
+#         env:
+#           update_needed: ${{ steps.update.outputs.needed }}
+#         if: ${{ env.update_needed == 1 }}
+#         uses: actions/upload-artifact@v4
+#         with:
+#           path: ${{ env.ARTIFACT_LZ }}
+#           name: ${{ env.ARTIFACT_LZ }}
+#           overwrite: true
+#       - name: Upload Nightly src.tar.gz
+#         id: upload-nightly-src-gz
+#         env:
+#           update_needed: ${{ steps.update.outputs.needed }}
+#         if: ${{ env.update_needed == 1 }}
+#         uses: actions/upload-artifact@v4
+#         with:
+#           path: ${{ env.SOURCE_GZ }}
+#           name: ${{ env.SOURCE_GZ }}
+#           overwrite: true
+#       - name: Upload Nightly src.tar.zip
+#         id: upload-nightly-src-zip
+#         env:
+#           update_needed: ${{ steps.update.outputs.needed }}
+#         if: ${{ env.update_needed == 1 }}
+#         uses: actions/upload-artifact@v4
+#         with:
+#           path: ${{ env.SOURCE_ZIP }}
+#           name: ${{ env.SOURCE_ZIP }}
+#           overwrite: true
+      - name: Upload Artifacts to Nightlies Release
+        id: upload-nightly-artifacts
         env:
           update_needed: ${{ steps.update.outputs.needed }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ env.update_needed == 1 }}
-        uses: actions/upload-artifact@v4
-        with:
-          path: ${{ env.ARTIFACT_GZ }}
-          name: ${{ env.ARTIFACT_GZ }}
-          overwrite: true
-      - name: Upload Nightly tar.lz
-        id: upload-nightly-asset-lz
-        env:
-          update_needed: ${{ steps.update.outputs.needed }}
-        if: ${{ env.update_needed == 1 }}
-        uses: actions/upload-artifact@v4
-        with:
-          path: ${{ env.ARTIFACT_LZ }}
-          name: ${{ env.ARTIFACT_LZ }}
-          overwrite: true
-      - name: Upload Nightly src.tar.gz
-        id: upload-nightly-src-gz
-        env:
-          update_needed: ${{ steps.update.outputs.needed }}
-        if: ${{ env.update_needed == 1 }}
-        uses: actions/upload-artifact@v4
-        with:
-          path: ${{ env.SOURCE_GZ }}
-          name: ${{ env.SOURCE_GZ }}
-          overwrite: true
-      - name: Upload Nightly src.tar.zip
-        id: upload-nightly-src-zip
-        env:
-          update_needed: ${{ steps.update.outputs.needed }}
-        if: ${{ env.update_needed == 1 }}
-        uses: actions/upload-artifact@v4
-        with:
-          path: ${{ env.SOURCE_ZIP }}
-          name: ${{ env.SOURCE_ZIP }}
-          overwrite: true
+        run: |
+          gh release upload nightlies ${{ env.ARTIFACT_GZ }} ${{ env.ARTIFACT_LZ }} ${{ env.SOURCE_GZ }} ${{ env.SOURCE_ZIP }} --clobber
