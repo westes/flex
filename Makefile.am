@@ -47,33 +47,37 @@ dist_noinst_SCRIPTS = \
 	po/update_linguas.sh
 
 SUBDIRS = \
-	src \
-	doc \
-	examples \
+	. \
 	po \
-	tests \
-	tools
+	tests
+
+MOSTLYCLEANFILES =
+
+CLEANFILES =
+
+indentfiles =
+
+include doc/local.mk
+include examples/local.mk
+include src/local.mk
+include tools/local.mk
 
 # Convenience targets to build libfl only
 # These are actually wrappers around automake- and libtool-generated targets
 
-libfl:
-	cd src && $(MAKE) $(AM_MAKEFLAGS) libfl.la libfl.pc
+libfl: libfl.la src/libfl.pc
 
 install-libfl:
-	cd src && \
 	$(MAKE) $(AM_MAKEFLAGS) lib_LTLIBRARIES=libfl.la \
-	pkgconfig_DATA=libfl.pc install-libLTLIBRARIES install-pkgconfigDATA
+	pkgconfig_DATA=src/libfl.pc install-libLTLIBRARIES install-pkgconfigDATA
 
 uninstall-libfl:
-	cd src && \
 	$(MAKE) $(AM_MAKEFLAGS) \
-	lib_LTLIBRARIES=libfl.la pkgconfig_DATA=libfl.pc \
+	lib_LTLIBRARIES=libfl.la pkgconfig_DATA=src/libfl.pc \
 	uninstall-libLTLIBRARIES uninstall-pkgconfigDATA
 
 # libfl.pc is cleaned via 'distclean' target
 clean-libfl:
-	cd src && \
 	$(MAKE) $(AM_MAKEFLAGS) lib_LTLIBRARIES=libfl.la clean-libLTLIBRARIES \
 	clean-libtool
 
@@ -84,8 +88,23 @@ ChangeLog: $(srcdir)/tools/git2cl
 		$(srcdir)/tools/git2cl > $@ \
 	; fi
 
-indent:
-	cd src && $(MAKE) $(AM_MAKEFLAGS) indent
+# Run GNU indent on sources. Don't run this unless all the sources compile cleanly.
+#
+# Whole idea:
+#   1. Check for .indent.pro, otherwise indent will use unknown
+#      settings, or worse, the GNU defaults.)
+#   2. Check that this is GNU indent.
+#   3. Make sure to process only the NON-generated .c and .h files.
+#   4. Run indent twice per file. The first time is a test.
+#      Otherwise, indent overwrites your file even if it fails!
+
+indent: .indent.pro
+	for f in $(indentfiles); do \
+		echo indenting $$f; \
+		INDENT_PROFILE=.indent.pro $(INDENT) <$$f >/dev/null && \
+		INDENT_PROFILE=.indent.pro $(INDENT) $$f || \
+		echo $$f FAILED to indent; \
+	done;
 
 install-exec-hook:
 	cd $(DESTDIR)$(bindir) && \
