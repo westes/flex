@@ -147,16 +147,16 @@
  * that can be used.  This definition is currently not used.
  */
 #define FREE_EPSILON(state) \
-	(transchar[state] == SYM_EPSILON && \
-	 trans2[state] == NO_TRANSITION && \
-	 finalst[state] != state)
+	(gv->transchar[state] == SYM_EPSILON && \
+	 gv->trans2[state] == NO_TRANSITION && \
+	 gv->finalst[state] != state)
 
 /* Returns true if an nfa state has an epsilon out-transition character
  * and both slots are free
  */
 #define SUPER_FREE_EPSILON(state) \
-	(transchar[state] == SYM_EPSILON && \
-	 trans1[state] == NO_TRANSITION) \
+	(gv->transchar[state] == SYM_EPSILON && \
+	 gv->trans1[state] == NO_TRANSITION) \
 
 /* Maximum number of NFA states that can comprise a DFA state.  It's real
  * big because if there's a lot of rules, the initial state will have a
@@ -221,7 +221,7 @@
 /* Enough so that if it's subtracted from an NFA state number, the result
  * is guaranteed to be negative.
  */
-#define MARKER_DIFFERENCE (maximum_mns+2)
+#define MARKER_DIFFERENCE (gv->maximum_mns+2)
 
 /* Maximum number of nxt/chk pairs for non-templates. */
 #define INITIAL_MAX_XPAIRS 2000
@@ -434,8 +434,8 @@ struct packtype_t {
 	size_t width;
 };
 
-extern struct ctrl_bundle_t ctrl;
-extern struct env_bundle_t env;
+//extern struct ctrl_bundle_t ctrl;
+//extern struct env_bundle_t env;
 
 /* Declarations for global variables. */
 
@@ -455,8 +455,8 @@ extern struct env_bundle_t env;
  * reject_really_used - same for REJECT
   */
 
-extern bool syntaxerror, eofseen;
-extern int yymore_used, reject, real_reject, continued_action, in_rule;
+//extern bool syntaxerror, eofseen;
+//extern int yymore_used, reject, real_reject, continued_action, in_rule;
 
 /* Variables used in the flex input routines:
  * datapos - characters on current output line
@@ -482,17 +482,17 @@ extern int yymore_used, reject, real_reject, continued_action, in_rule;
  * always_interactive - if true, generate an interactive scanner
  */
 
-extern int datapos, dataline, linenum;
-extern int skel_ind;
-extern char *infilename;
-extern char *extra_type;
-extern char **input_files;
-extern int num_input_files;
-extern char *program_name;
+//extern int datapos, dataline, linenum;
+//extern int skel_ind;
+//extern char *infilename;
+//extern char *extra_type;
+//extern char **input_files;
+//extern int num_input_files;
+//extern char *program_name;
 
-extern char *action_array;
-extern int action_size;
-extern int defs1_offset, prolog_offset, action_offset, action_index;
+//extern char *action_array;
+//extern int action_size;
+//extern int defs1_offset, prolog_offset, action_offset, action_index;
 
 
 /* Variables for stack of states having only one out-transition:
@@ -503,8 +503,8 @@ extern int defs1_offset, prolog_offset, action_offset, action_index;
  * onesp - stack pointer
  */
 
-extern int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
-extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
+//extern int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
+//extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
 
 
 /* Variables for nfa machine data:
@@ -541,16 +541,16 @@ extern int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
  * footprint - total size of tables, in bytes.
  */
 
-extern int maximum_mns, current_mns, current_max_rules;
-extern int num_rules, num_eof_rules, default_rule, lastnfa;
-extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
-extern int *accptnum, *assoc_rule, *state_type;
-extern int *rule_type, *rule_linenum;
+//extern int maximum_mns, current_mns, current_max_rules;
+//extern int num_rules, num_eof_rules, default_rule, lastnfa;
+//extern int *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
+//extern int *accptnum, *assoc_rule, *state_type;
+//extern int *rule_type, *rule_linenum;
 /* rule_useful[], rule_has_nl[] and ccl_has_nl[] are boolean arrays,
  * but allocated as char arrays for size. */
-extern char *rule_useful, *rule_has_nl, *ccl_has_nl;
-extern int nlch;
-extern size_t footprint;
+//extern char *rule_useful, *rule_has_nl, *ccl_has_nl;
+//extern int nlch;
+//extern size_t footprint;
 
 
 /* Different types of states; values are useful as masks, as well, for
@@ -561,7 +561,7 @@ extern size_t footprint;
 
 /* Global holding current type of state we're making. */
 
-extern int current_state_type;
+//extern int current_state_type;
 
 /* Different types of rules. */
 #define RULE_NORMAL 0
@@ -570,7 +570,7 @@ extern int current_state_type;
 /* True if the input rules include a rule with both variable-length head
  * and trailing context, false otherwise.
  */
-extern bool variable_trailing_context_rules;
+//extern bool variable_trailing_context_rules;
 
 
 /* Variables for protos:
@@ -585,8 +585,8 @@ extern bool variable_trailing_context_rules;
  * protsave contains the entire state array for protos
  */
 
-extern int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
-extern int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
+//extern int numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
+//extern int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
 
 
 /* Variables for managing equivalence classes:
@@ -604,14 +604,14 @@ extern int protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
  * for the NUL character.  Later we'll move this information into
  * the 0th element.
  */
-extern int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs;
+//extern int numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs;
 
 /* Meta-equivalence classes are indexed starting at 1, so it's possible
  * that they will require positions from 1 .. CSIZE, i.e., CSIZE + 1
  * slots total (since the arrays are 0-based).  nextecm[] and ecgroup[]
  * don't require the extra position since they're indexed from 1 .. CSIZE - 1.
  */
-extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
+//extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
 
 
 /* Variables for start conditions:
@@ -624,12 +624,12 @@ extern int tecfwd[CSIZE + 1], tecbck[CSIZE + 1];
  * scname - start condition name
  */
 
-extern int lastsc, *scset, *scbol;
+//extern int lastsc, *scset, *scbol;
 /* scxclu[] and sceof[] are boolean arrays, but allocated as char
  * arrays for size. */
-extern char *scxclu, *sceof;
-extern int current_max_scs;
-extern const char **scname;
+//extern char *scxclu, *sceof;
+//extern int current_max_scs;
+//extern const char **scname;
 
 
 /* Variables for dfa machine data:
@@ -662,18 +662,18 @@ extern const char **scname;
  * end_of_buffer_state - end-of-buffer dfa state number
  */
 
-extern int current_max_dfa_size, current_max_xpairs;
-extern int current_max_template_xpairs, current_max_dfas;
-extern int lastdfa, *nxt, *chk, *tnxt;
-extern int *base, *def, *nultrans, NUL_ec, tblend, firstfree, **dss,
-	*dfasiz;
-extern union dfaacc_union {
-	int    *dfaacc_set;
-	int     dfaacc_state;
-}      *dfaacc;
-extern int *accsiz, *dhash, numas;
-extern int numsnpairs, jambase, jamstate;
-extern int end_of_buffer_state;
+//extern int current_max_dfa_size, current_max_xpairs;
+//extern int current_max_template_xpairs, current_max_dfas;
+//extern int lastdfa, *nxt, *chk, *tnxt;
+//extern int *base, *def, *nultrans, NUL_ec, tblend, firstfree, **dss,
+//	*dfasiz;
+//extern union dfaacc_union {
+//	int    *dfaacc_set;
+//	int     dfaacc_state;
+//};       *dfaacc;
+//extern int *accsiz, *dhash, numas;
+//extern int numsnpairs, jambase, jamstate;
+//extern int end_of_buffer_state;
 
 /* Variables for ccl information:
  * lastccl - ccl index of the last created ccl
@@ -687,9 +687,9 @@ extern int end_of_buffer_state;
  * ccltbl - holds the characters in each ccl - indexed by cclmap
  */
 
-extern int lastccl, *cclmap, *ccllen, *cclng, cclreuse;
-extern int current_maxccls, current_max_ccl_tbl_size;
-extern unsigned char *ccltbl;
+//extern int lastccl, *cclmap, *ccllen, *cclng, cclreuse;
+//extern int current_maxccls, current_max_ccl_tbl_size;
+//extern unsigned char *ccltbl;
 
 
 /* Variables for miscellaneous information:
@@ -713,10 +713,10 @@ extern unsigned char *ccltbl;
  * bol_needed - whether scanner needs beginning-of-line recognition
  */
 
-extern char nmstr[MAXLINE];
-extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs, nmval;
-extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
-extern int num_backing_up, bol_needed;
+//extern char nmstr[MAXLINE];
+//extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs, nmval;
+//extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
+//extern int num_backing_up, bol_needed;
 
 void   *allocate_array(int, size_t);
 void   *reallocate_array(void *, int, size_t);
@@ -858,7 +858,7 @@ extern void flexfatal(const char *);
     do{ \
         fprintf (stderr,\
                 _("%s: fatal internal error at %s:%d (%s): %s\n"),\
-                program_name, __FILE__, (int)__LINE__,\
+                gv->program_name, __FILE__, (int)__LINE__,\
                 __func__,msg);\
         FLEX_EXIT(1);\
     }while(0)
@@ -1094,17 +1094,17 @@ extern struct Buf *buf_strappend(struct Buf *, const char *str);
 extern struct Buf *buf_strnappend(struct Buf *, const char *str, int nchars);
 extern struct Buf *buf_prints(struct Buf *buf, const char *fmt, const char* s);
 
-extern struct Buf userdef_buf; /* a string buffer for #define's generated by user-options on cmd line. */
-extern struct Buf top_buf;     /* contains %top code. String buffer. */
+//extern struct Buf userdef_buf; /* a string buffer for #define's generated by user-options on cmd line. */
+//extern struct Buf top_buf;     /* contains %top code. String buffer. */
 
 /* For blocking out code from the header file. */
 #define OUT_BEGIN_CODE() outn("m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl")
 #define OUT_END_CODE()   outn("]])")
 
 /* For setjmp/longjmp (instead of calling exit(2)). Linkage in main.c */
-extern jmp_buf flex_main_jmp_buf;
+//extern jmp_buf flex_main_jmp_buf;
 
-#define FLEX_EXIT(status) longjmp(flex_main_jmp_buf,(status)+1)
+#define FLEX_EXIT(status) longjmp(gv->flex_main_jmp_buf,(status)+1)
 
 /* Removes all \n and \r chars from tail of str. returns str. */
 extern char *chomp (char *str);
@@ -1150,7 +1150,7 @@ struct filter {
 };
 
 /* output filter chain */
-extern struct filter * output_chain;
+//extern struct filter * output_chain;
 extern struct filter *filter_create_ext (struct filter * chain, const char *cmd, ...);
 struct filter *filter_create_int(struct filter *chain,
 				  int (*filter_func) (struct filter *),
@@ -1165,7 +1165,7 @@ extern int filter_fix_linedirs(struct filter *chain);
  * From "regex.c"
  */
 
-extern regex_t regex_linedir;
+//extern regex_t regex_linedir;
 bool flex_init_regex(const char *);
 void flex_regcomp(regex_t *preg, const char *regex, int cflags);
 char   *regmatch_dup (regmatch_t * m, const char *src);
@@ -1176,12 +1176,12 @@ bool regmatch_empty (regmatch_t * m);
 
 /* From "scanflags.h" */
 typedef unsigned int scanflags_t;
-extern scanflags_t* _sf_stk;
-extern size_t _sf_top_ix, _sf_max; /**< stack of scanner flags. */
+//extern scanflags_t* _sf_stk;
+//extern size_t _sf_top_ix, _sf_max; /**< stack of scanner flags. */
 #define _SF_CASE_INS   ((scanflags_t) 0x0001)
 #define _SF_DOT_ALL    ((scanflags_t) 0x0002)
 #define _SF_SKIP_WS    ((scanflags_t) 0x0004)
-#define sf_top()           (_sf_stk[_sf_top_ix])
+#define sf_top()           (gv->_sf_stk[gv->_sf_top_ix])
 #define sf_case_ins()      (sf_top() & _SF_CASE_INS)
 #define sf_dot_all()       (sf_top() & _SF_DOT_ALL)
 #define sf_skip_ws()       (sf_top() & _SF_SKIP_WS)
@@ -1192,5 +1192,172 @@ extern void sf_init(void);
 extern void sf_push(void);
 extern void sf_pop(void);
 
+//From sym.c
+/* Variables for symbol tables:
+ * sctbl - start-condition symbol table
+ * ndtbl - name-definition symbol table
+ * ccltab - character class text symbol table
+ */
+
+struct hash_entry {
+	struct hash_entry *next;
+	char   *name;
+	char   *str_val;
+	int     int_val;
+};
+
+typedef struct hash_entry **hash_table;
+
+#define NAME_TABLE_HASH_SIZE 101
+#define START_COND_HASH_SIZE 101
+#define CCL_HASH_SIZE 101
+
+#include "tables.h"
+typedef struct {
+    /* these globals are all defined and commented in flexdef.h */
+    bool    syntaxerror, eofseen;
+    int     yymore_used, reject, real_reject, continued_action, in_rule;
+    int     datapos, dataline, linenum;
+    FILE   *skelfile;
+    int     skel_ind;
+    char   *action_array;
+    int     action_size, defs1_offset, prolog_offset, action_offset,
+            action_index;
+    char   *infilename;
+    char   *extra_type;
+    int     onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
+    int     onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
+    int     maximum_mns, current_mns, current_max_rules;
+    int     num_rules, num_eof_rules, default_rule, lastnfa;
+    int    *firstst, *lastst, *finalst, *transchar, *trans1, *trans2;
+    int    *accptnum, *assoc_rule, *state_type;
+    int    *rule_type, *rule_linenum;
+    int     current_state_type;
+    bool    variable_trailing_context_rules;
+    int     numtemps, numprots, protprev[MSP], protnext[MSP], prottbl[MSP];
+    int     protcomst[MSP], firstprot, lastprot, protsave[PROT_SAVE_SIZE];
+    int     numecs, nextecm[CSIZE + 1], ecgroup[CSIZE + 1], nummecs,
+            tecfwd[CSIZE + 1];
+    int     tecbck[CSIZE + 1];
+    int     lastsc, *scset, *scbol;
+    /* scxclu[] and sceof[] are boolean arrays, but allocated as char
+     * arrays for size. */
+    char   *scxclu, *sceof;
+    int     current_max_scs;
+    const char **scname;
+    int     current_max_dfa_size, current_max_xpairs;
+    int     current_max_template_xpairs, current_max_dfas;
+    int     lastdfa, *nxt, *chk, *tnxt;
+    int    *base, *def, *nultrans, NUL_ec, tblend, firstfree, **dss, *dfasiz;
+    union dfaacc_union {
+        int    *dfaacc_set;
+        int     dfaacc_state;
+    } *dfaacc;
+    int    *accsiz, *dhash, numas;
+    int     numsnpairs, jambase, jamstate;
+    int     lastccl, *cclmap, *ccllen, *cclng, cclreuse;
+    int     current_maxccls, current_max_ccl_tbl_size;
+    unsigned char   *ccltbl;
+    char    nmstr[MAXLINE];
+    int     sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs, nmval;
+    int     tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
+    int     num_backing_up, bol_needed;
+    int     end_of_buffer_state;
+    char  **input_files;
+    int     num_input_files;
+    jmp_buf flex_main_jmp_buf;
+    /* rule_useful[], rule_has_nl[] and ccl_has_nl[] are boolean arrays,
+     * but allocated as char arrays for size. */
+    char   *rule_useful, *rule_has_nl, *ccl_has_nl;
+    int     nlch;
+
+    bool    tablesext, tablesverify, gentables;
+    char   *tablesfilename,*tablesname;
+    struct yytbl_writer tableswr;
+    size_t footprint;
+
+    struct ctrl_bundle_t ctrl;
+    struct env_bundle_t env;
+
+    /* Make sure program_name is initialized so we don't crash if writing
+     * out an error message before getting the program name from argv[0].
+     */
+    char   *program_name;
+
+    struct Buf userdef_buf; /* a string buffer for #define's generated by user-options on cmd line. */
+    struct Buf top_buf;     /* contains %top code. String buffer. */
+
+    struct filter * output_chain;
+
+    regex_t regex_linedir;
+
+    scanflags_t* _sf_stk;
+    size_t _sf_top_ix, _sf_max; /**< stack of scanner flags. */
+
+    /*static*/ struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
+    /*static*/ struct hash_entry *sctbl[START_COND_HASH_SIZE];
+    /*static*/ struct hash_entry *ccltab[CCL_HASH_SIZE];
+
+    //from scan.l
+    /*static*/ int bracelevel, didadef, indented_code;
+    /*static*/ bool doing_rule_action;
+    /*static*/ bool option_sense;
+
+    /*static*/ bool doing_codeblock;
+    int brace_depth, brace_start_line;
+    char nmdef[MAXLINE];
+
+    //from dfa.c
+    /*static*/ int did_stk_init, *stk;
+
+    //from ecs.c
+    /*static*/ unsigned char cclflags[CSIZE];	/* initialized to all '\0' */
+
+    //from sym.c
+    /*static*/ struct hash_entry empty_entry;
+
+    //from yylex.c
+    /*static*/ int beglin;
+
+    //from misc.c
+    /*static*/ char rform[20];
+
+    //from parse.y
+    int pat, scnum, eps, headcnt, trailcnt, lastchar, i_parse, rulelen;
+    /*static*/ int currccl;
+    bool trlcontxt;
+    /*static*/ bool sc_is_exclusive, cclsorted, varlength, variable_trail_rule;
+    int *scon_stk;
+    int scon_stk_ptr;
+
+    /*static*/ int madeany;  /* whether we've made the '.' character class */
+    /*static*/ int ccldot, cclany;
+    int previous_continued_action;	/* whether the previous rule's action was '|' */
+
+    //from skeletons.c
+    /*static*/ char sk_name[256], sk_value[256], *sk_np, *sk_vp;
+
+    //from gen.c
+    /*static*/ struct packtype_t pack_out;
+
+    //from main.c
+    /*static*/ int called_before;	/* prevent infinite recursion. */
+    /*static*/ const char *outfile_template; //[] = "lex.%s.%s";
+    /*static*/ const char *backing_name; // = "lex.backup";
+    /*static*/ const char *tablesfile_template; //[] = "lex.%s.tables";
+
+    /*static*/ char outfile_path[MAXLINE];
+    /*static*/ int outfile_created;
+    /*static*/ int _stdout_closed; /* flag to prevent double-fclose() on stdout. */
+    const char *escaped_qstart; // = "]]M4_YY_NOOP[M4_YY_NOOP[M4_YY_NOOP[[";
+    const char *escaped_qend; //   = "]]M4_YY_NOOP]M4_YY_NOOP]M4_YY_NOOP[[";
+
+    /* For debugging. The max number of filters to apply to skeleton. */
+    /*static*/ int preproc_level;
+
+} FlexState;
+
+extern FlexState *gv;
+void initFlexState(FlexState *fgv);
 
 #endif /* not defined FLEXDEF_H */

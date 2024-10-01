@@ -40,7 +40,7 @@ void    ccl2ecl (void)
 {
 	int     i, ich, newlen, cclp, ccls, cclmec;
 
-	for (i = 1; i <= lastccl; ++i) {
+	for (i = 1; i <= gv->lastccl; ++i) {
 		/* We loop through each character class, and for each character
 		 * in the class, add the character's equivalence class to the
 		 * new "character" class we are creating.  Thus when we are all
@@ -49,20 +49,20 @@ void    ccl2ecl (void)
 		 */
 
 		newlen = 0;
-		cclp = cclmap[i];
+		cclp = gv->cclmap[i];
 
-		for (ccls = 0; ccls < ccllen[i]; ++ccls) {
-			ich = ccltbl[cclp + ccls];
-			cclmec = ecgroup[ich];
+		for (ccls = 0; ccls < gv->ccllen[i]; ++ccls) {
+			ich = gv->ccltbl[cclp + ccls];
+			cclmec = gv->ecgroup[ich];
 
 			if (cclmec > 0) {
 				/* Note: range 1..256 is mapped to 1..255,0 */
-				ccltbl[cclp + newlen] = (unsigned char) cclmec;
+				gv->ccltbl[cclp + newlen] = (unsigned char) cclmec;
 				++newlen;
 			}
 		}
 
-		ccllen[i] = newlen;
+		gv->ccllen[i] = newlen;
 	}
 }
 
@@ -116,7 +116,7 @@ void    mkeccl (unsigned char ccls[], int lenccl, int fwd[], int bck[], int llsi
 {
 	int     cclp, oldec, newec;
 	int     cclm, i, j;
-	static unsigned char cclflags[CSIZE];	/* initialized to all '\0' */
+	//static unsigned char cclflags[CSIZE];	/* initialized to all '\0' */
 
 	/* Note that it doesn't matter whether or not the character class is
 	 * negated.  The same results will be obtained in either case.
@@ -147,7 +147,7 @@ void    mkeccl (unsigned char ccls[], int lenccl, int fwd[], int bck[], int llsi
 				if (ccl_char > i)
 					break;
 
-				if (ccl_char == i && !cclflags[j]) {
+				if (ccl_char == i && !gv->cclflags[j]) {
 					/* We found an old companion of cclm
 					 * in the ccl.  Link it into the new
 					 * equivalence class and flag it as
@@ -158,7 +158,7 @@ void    mkeccl (unsigned char ccls[], int lenccl, int fwd[], int bck[], int llsi
 					fwd[newec] = i;
 					newec = i;
 					/* Set flag so we don't reprocess. */
-					cclflags[j] = 1;
+					gv->cclflags[j] = 1;
 
 					/* Get next equivalence class member. */
 					/* continue 2 */
@@ -189,9 +189,9 @@ void    mkeccl (unsigned char ccls[], int lenccl, int fwd[], int bck[], int llsi
 
 		/* Find next ccl member to process. */
 
-		for (++cclp; cclp < lenccl && cclflags[cclp]; ++cclp) {
+		for (++cclp; cclp < lenccl && gv->cclflags[cclp]; ++cclp) {
 			/* Reset "doesn't need processing" flag. */
-			cclflags[cclp] = 0;
+			gv->cclflags[cclp] = 0;
 		}
 	}
 }

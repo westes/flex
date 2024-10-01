@@ -38,24 +38,24 @@ void add_action (const char *new_text)
 {
 	int     len = (int) strlen (new_text);
 
-	while (len + action_index >= action_size - 10 /* slop */ ) {
+	while (len + gv->action_index >= gv->action_size - 10 /* slop */ ) {
 
-		if (action_size > INT_MAX / 2)
+		if (gv->action_size > INT_MAX / 2)
 			/* Increase just a little, to try to avoid overflow
 			 * on 16-bit machines.
 			 */
-			action_size += action_size / 8;
+			gv->action_size += gv->action_size / 8;
 		else
-			action_size = action_size * 2;
+			gv->action_size = gv->action_size * 2;
 
-		action_array =
-			reallocate_character_array (action_array,
-						    action_size);
+		gv->action_array =
+			reallocate_character_array (gv->action_array,
+						    gv->action_size);
 	}
 
-	strcpy (&action_array[action_index], new_text);
+	strcpy (&gv->action_array[gv->action_index], new_text);
 
-	action_index += len;
+	gv->action_index += len;
 }
 
 
@@ -114,7 +114,7 @@ void check_char (int c)
 		lerr (_("bad character '%s' detected in check_char()"),
 			readable_form (c));
 
-	if (c >= ctrl.csize)
+	if (c >= gv->ctrl.csize)
 		lerr (_
 			("scanner requires -8 flag to use the character %s"),
 			readable_form (c));
@@ -160,17 +160,17 @@ int cclcmp (const void *a, const void *b)
 void dataend (const char *endit)
 {
 	/* short circuit any output */
-	if (gentables) {
+	if (gv->gentables) {
 
-		if (datapos > 0)
+		if (gv->datapos > 0)
 			dataflush ();
 
 		/* add terminator for initialization; { for vi */
 		if (endit)
 			outn (endit);
 	}
-	dataline = 0;
-	datapos = 0;
+	gv->dataline = 0;
+	gv->datapos = 0;
 }
 
 
@@ -180,19 +180,19 @@ void dataflush (void)
 {
 	assert (gentables);
 
-	if (datapos > 0)
+	if (gv->datapos > 0)
 		outc ('\n');
 
-	if (++dataline >= NUMDATALINES) {
+	if (++gv->dataline >= NUMDATALINES) {
 		/* Put out a blank line so that the table is grouped into
 		 * large blocks that enable the user to find elements easily.
 		 */
 		outc ('\n');
-		dataline = 0;
+		gv->dataline = 0;
 	}
 
 	/* Reset the number of characters written on the current line. */
-	datapos = 0;
+	gv->datapos = 0;
 }
 
 
@@ -200,7 +200,7 @@ void dataflush (void)
 
 void flexerror (const char *msg)
 {
-	fprintf (stderr, "%s: %s\n", program_name, msg);
+	fprintf (stderr, "%s: %s\n", gv->program_name, msg);
 	flexend (1);
 }
 
@@ -210,7 +210,7 @@ void flexerror (const char *msg)
 void flexfatal (const char *msg)
 {
 	fprintf (stderr, _("%s: fatal internal error, %s\n"),
-		 program_name, msg);
+		 gv->program_name, msg);
 	FLEX_EXIT (1);
 }
 
@@ -250,7 +250,7 @@ void line_directive_out (FILE *output_file, char *path, int linenum)
 	char    directive[MAXLINE*2], filename[MAXLINE];
 	char   *s1, *s2, *s3;
 
-	if (!ctrl.gen_line_dirs)
+	if (!gv->ctrl.gen_line_dirs)
 		return;
 
 	s1 = (path != NULL) ? path : "M4_YY_OUTFILE_NAME";
@@ -294,10 +294,10 @@ void line_directive_out (FILE *output_file, char *path, int linenum)
  */
 void mark_defs1 (void)
 {
-	defs1_offset = 0;
-	action_array[action_index++] = '\0';
-	action_offset = prolog_offset = action_index;
-	action_array[action_index] = '\0';
+	gv->defs1_offset = 0;
+	gv->action_array[gv->action_index++] = '\0';
+	gv->action_offset = gv->prolog_offset = gv->action_index;
+	gv->action_array[gv->action_index] = '\0';
 }
 
 
@@ -306,9 +306,9 @@ void mark_defs1 (void)
  */
 void mark_prolog (void)
 {
-	action_array[action_index++] = '\0';
-	action_offset = action_index;
-	action_array[action_index] = '\0';
+	gv->action_array[gv->action_index++] = '\0';
+	gv->action_offset = gv->action_index;
+	gv->action_array[gv->action_index] = '\0';
 }
 
 
@@ -319,22 +319,22 @@ void mark_prolog (void)
 void mk2data (int value)
 {
 	/* short circuit any output */
-	if (!gentables)
+	if (!gv->gentables)
 		return;
 
-	if (datapos >= NUMDATAITEMS) {
+	if (gv->datapos >= NUMDATAITEMS) {
 		outc (',');
 		dataflush ();
 	}
 
-	if (datapos == 0)
+	if (gv->datapos == 0)
 		/* Indent. */
 		out ("    ");
 
 	else
 	  outc (',');
 
-	++datapos;
+	++gv->datapos;
 
 	out_dec ("%5d", value);
 }
@@ -348,20 +348,20 @@ void mk2data (int value)
 void mkdata (int value)
 {
 	/* short circuit any output */
-	if (!gentables)
+	if (!gv->gentables)
 		return;
 
-	if (datapos >= NUMDATAITEMS) {
+	if (gv->datapos >= NUMDATAITEMS) {
 		outc (',');
 		dataflush ();
 	}
 
-	if (datapos == 0)
+	if (gv->datapos == 0)
 		/* Indent. */
 		out ("    ");
 	else
 		outc (',');
-	++datapos;
+	++gv->datapos;
 
 	out_dec ("%5d", value);
 }
@@ -517,7 +517,7 @@ void out_m4_define (const char* def, const char* val)
 
 char   *readable_form (int c)
 {
-	static char rform[20];
+	//static char rform[20];
 
 	if ((c >= 0 && c < 32) || c >= 127) {
 		switch (c) {
@@ -536,11 +536,11 @@ char   *readable_form (int c)
 		case '\v':
 			return "\\v";
 		default:
-			if(env.trace_hex)
-				snprintf (rform, sizeof(rform), "\\x%.2x", (unsigned int) c);
+			if(gv->env.trace_hex)
+				snprintf (gv->rform, sizeof(gv->rform), "\\x%.2x", (unsigned int) c);
 			else
-				snprintf (rform, sizeof(rform), "\\%.3o", (unsigned int) c);
-			return rform;
+				snprintf (gv->rform, sizeof(gv->rform), "\\%.3o", (unsigned int) c);
+			return gv->rform;
 		}
 	}
 
@@ -548,10 +548,10 @@ char   *readable_form (int c)
 		return "' '";
 
 	else {
-		rform[0] = (char) c;
-		rform[1] = '\0';
+		gv->rform[0] = (char) c;
+		gv->rform[1] = '\0';
 
-		return rform;
+		return gv->rform;
 	}
 }
 
@@ -601,21 +601,21 @@ void transition_struct_out (int element_v, int element_n)
 {
 
 	/* short circuit any output */
-	if (!gentables)
+	if (!gv->gentables)
 		return;
 
 	out_dec2 ("M4_HOOK_TABLE_OPENER[[%4d]],[[%4d]]M4_HOOK_TABLE_CONTINUE", element_v, element_n);
 	outc ('\n');
 
-	datapos += TRANS_STRUCT_PRINT_LENGTH;
+	gv->datapos += TRANS_STRUCT_PRINT_LENGTH;
 
-	if (datapos >= 79 - TRANS_STRUCT_PRINT_LENGTH) {
+	if (gv->datapos >= 79 - TRANS_STRUCT_PRINT_LENGTH) {
 		outc ('\n');
 
-		if (++dataline % 10 == 0)
+		if (++gv->dataline % 10 == 0)
 			outc ('\n');
 
-		datapos = 0;
+		gv->datapos = 0;
 	}
 }
 

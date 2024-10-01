@@ -39,23 +39,23 @@
 /* yylex - scan for a regular expression token */
 extern char *yytext;
 extern FILE *yyout;
-bool no_section3_escape = false;
+//bool no_section3_escape = false;
 int     yylex (void)
 {
 	int     toktype;
-	static int beglin = false;
+	//static int beglin = false;
 
-	if (eofseen) {
+	if (gv->eofseen) {
 		toktype = EOF;
         } else {
 		toktype = flexscan ();
         }
 	if (toktype == EOF || toktype == 0) {
-		eofseen = true;
+		gv->eofseen = true;
 
-		if (sectnum == 1) {
+		if (gv->sectnum == 1) {
 			synerr (_("premature EOF"));
-			sectnum = 2;
+			gv->sectnum = 2;
 			toktype = SECTEND;
 		}
 
@@ -63,10 +63,10 @@ int     yylex (void)
 			toktype = 0;
 	}
 
-	if (env.trace) {
-		if (beglin) {
-			fprintf (stderr, "%d\t", num_rules + 1);
-			beglin = 0;
+	if (gv->env.trace) {
+		if (gv->beglin) {
+			fprintf (stderr, "%d\t", gv->num_rules + 1);
+			gv->beglin = 0;
 		}
 
 		switch (toktype) {
@@ -96,8 +96,8 @@ int     yylex (void)
 		case '\n':
 			(void) putc ('\n', stderr);
 
-			if (sectnum == 2)
-				beglin = 1;
+			if (gv->sectnum == 2)
+				gv->beglin = 1;
 
 			break;
 
@@ -112,17 +112,17 @@ int     yylex (void)
 		case SECTEND:
 			fputs ("%%\n", stderr);
 
-			/* We set beglin to be true so we'll start
+			/* We set gv->beglin to be true so we'll start
 			 * writing out numbers as we echo rules.
 			 * flexscan() has already assigned sectnum.
 			 */
-			if (sectnum == 2)
-				beglin = 1;
+			if (gv->sectnum == 2)
+				gv->beglin = 1;
 
 			break;
 
 		case NAME:
-			fprintf (stderr, "'%s'", nmstr);
+			fprintf (stderr, "'%s'", gv->nmstr);
 			break;
 
 		case CHAR:
@@ -152,7 +152,7 @@ int     yylex (void)
 
 			default:
 				if (!isascii (yylval) || !isprint (yylval)) {
-					if(env.trace_hex)
+					if(gv->env.trace_hex)
 						fprintf (stderr, "\\x%02x", (unsigned int) yylval);
 					else
 						fprintf (stderr, "\\%.3o", (unsigned int) yylval);

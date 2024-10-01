@@ -24,7 +24,7 @@
 #include "flexdef.h"
 
 
-regex_t regex_linedir; /**< matches line directives */
+//regex_t regex_linedir; /**< matches line directives */
 
 
 /** Initialize the regular expressions.
@@ -33,7 +33,7 @@ regex_t regex_linedir; /**< matches line directives */
 bool flex_init_regex(const char *traceline_re)
 {
 	if (traceline_re != NULL)
-		flex_regcomp(&regex_linedir, traceline_re, REG_EXTENDED);
+		flex_regcomp(&gv->regex_linedir, traceline_re, REG_EXTENDED);
 	return true;
 }
 

@@ -38,7 +38,7 @@
  * ndtbl - name-definition symbol table
  * ccltab - character class text symbol table
  */
-
+/*
 struct hash_entry {
 	struct hash_entry *next;
 	char   *name;
@@ -55,7 +55,7 @@ typedef struct hash_entry **hash_table;
 static struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE] = {NULL};
 static struct hash_entry *sctbl[START_COND_HASH_SIZE] = {NULL};
 static struct hash_entry *ccltab[CCL_HASH_SIZE] = {NULL};
-
+*/
 
 /* declare functions that have forward references */
 
@@ -113,7 +113,7 @@ void    cclinstal (char ccltxt[], int cclnum)
 	 * called unless the symbol is new.
 	 */
 
-	(void) addsym(ccltxt, NULL, cclnum, ccltab, CCL_HASH_SIZE);
+	(void) addsym(ccltxt, NULL, cclnum, gv->ccltab, CCL_HASH_SIZE);
 }
 
 
@@ -124,7 +124,7 @@ void    cclinstal (char ccltxt[], int cclnum)
 
 int     ccllookup (char ccltxt[])
 {
-	return findsym (ccltxt, ccltab, CCL_HASH_SIZE)->int_val;
+	return findsym (ccltxt, gv->ccltab, CCL_HASH_SIZE)->int_val;
 }
 
 
@@ -132,9 +132,9 @@ int     ccllookup (char ccltxt[])
 
 static struct hash_entry *findsym (const char *sym, hash_table table, size_t table_size)
 {
-	static struct hash_entry empty_entry = {
-		NULL, NULL, NULL, 0,
-	};
+	//static struct hash_entry empty_entry = {
+	//	NULL, NULL, NULL, 0,
+	//};
 	struct hash_entry *sym_entry =
 
 		table[hashfunct (sym, table_size)];
@@ -145,7 +145,7 @@ static struct hash_entry *findsym (const char *sym, hash_table table, size_t tab
 		sym_entry = sym_entry->next;
 	}
 
-	return &empty_entry;
+	return &gv->empty_entry;
 }
 
 /* hashfunct - compute the hash value for "str" and hash size "hash_size" */
@@ -171,7 +171,7 @@ static size_t hashfunct (const char *str, size_t hash_size)
 
 void    ndinstal (const char *name, char definition[])
 {
-	if (addsym(name, definition, 0, ndtbl, NAME_TABLE_HASH_SIZE)) {
+	if (addsym(name, definition, 0, gv->ndtbl, NAME_TABLE_HASH_SIZE)) {
 		synerr (_("name defined twice"));
 	}
 }
@@ -184,7 +184,7 @@ void    ndinstal (const char *name, char definition[])
 
 char   *ndlookup (const char *nd)
 {
-	return findsym (nd, ndtbl, NAME_TABLE_HASH_SIZE)->str_val;
+	return findsym (nd, gv->ndtbl, NAME_TABLE_HASH_SIZE)->str_val;
 }
 
 
@@ -192,16 +192,16 @@ char   *ndlookup (const char *nd)
 
 void    scextend (void)
 {
-	current_max_scs += MAX_SCS_INCREMENT;
+	gv->current_max_scs += MAX_SCS_INCREMENT;
 
-	++num_reallocs;
+	++gv->num_reallocs;
 
-	scset = reallocate_integer_array (scset, current_max_scs);
-	scbol = reallocate_integer_array (scbol, current_max_scs);
-	scxclu = reallocate_array(scxclu, current_max_scs,
+	gv->scset = reallocate_integer_array (gv->scset, gv->current_max_scs);
+	gv->scbol = reallocate_integer_array (gv->scbol, gv->current_max_scs);
+	gv->scxclu = reallocate_array(gv->scxclu, gv->current_max_scs,
 		sizeof(char));
-	sceof = reallocate_array(sceof, current_max_scs, sizeof(char));
-	scname = reallocate_char_ptr_array (scname, current_max_scs);
+	gv->sceof = reallocate_array(gv->sceof, gv->current_max_scs, sizeof(char));
+	gv->scname = reallocate_char_ptr_array (gv->scname, gv->current_max_scs);
 }
 
 
@@ -210,19 +210,19 @@ void    scextend (void)
 void    scinstal (const char *str, bool sc_is_exclusive)
 {
 
-	if (++lastsc >= current_max_scs)
+	if (++gv->lastsc >= gv->current_max_scs)
 		scextend ();
 
-	if (addsym(str, NULL, lastsc, sctbl, START_COND_HASH_SIZE)) {
+	if (addsym(str, NULL, gv->lastsc, gv->sctbl, START_COND_HASH_SIZE)) {
 		format_pinpoint_message (
 			_("start condition %s declared twice"), str);
 	}
-	scname[lastsc] = sctbl[hashfunct(str, START_COND_HASH_SIZE)]->name;
+	gv->scname[gv->lastsc] = gv->sctbl[hashfunct(str, START_COND_HASH_SIZE)]->name;
 
-	scset[lastsc] = mkstate (SYM_EPSILON);
-	scbol[lastsc] = mkstate (SYM_EPSILON);
-	scxclu[lastsc] = sc_is_exclusive ? 1 : 0;
-	sceof[lastsc] = false;
+	gv->scset[gv->lastsc] = mkstate (SYM_EPSILON);
+	gv->scbol[gv->lastsc] = mkstate (SYM_EPSILON);
+	gv->scxclu[gv->lastsc] = sc_is_exclusive ? 1 : 0;
+	gv->sceof[gv->lastsc] = false;
 }
 
 
@@ -233,5 +233,5 @@ void    scinstal (const char *str, bool sc_is_exclusive)
 
 int     sclookup (const char *str)
 {
-	return findsym (str, sctbl, START_COND_HASH_SIZE)->int_val;
+	return findsym (str, gv->sctbl, START_COND_HASH_SIZE)->int_val;
 }

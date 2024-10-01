@@ -59,9 +59,9 @@ struct yytbl_writer {
  * tablesverify - true if tables-verify option specified
  * gentables - true if we should spit out the normal C tables
  */
-extern bool tablesext, tablesverify,gentables;
-extern char *tablesfilename, *tablesname;
-extern struct yytbl_writer tableswr;
+//extern bool tablesext, tablesverify,gentables;
+//extern char *tablesfilename, *tablesname;
+//extern struct yytbl_writer tableswr;
 
 int     yytbl_writer_init (struct yytbl_writer *, FILE *);
 int     yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,

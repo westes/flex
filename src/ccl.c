@@ -39,14 +39,14 @@ ccl_contains (const int cclp, const int ch)
 {
 	int     ind, len, i;
 
-	len = ccllen[cclp];
-	ind = cclmap[cclp];
+	len = gv->ccllen[cclp];
+	ind = gv->cclmap[cclp];
 
 	for (i = 0; i < len; ++i)
-		if (ccltbl[ind + i] == ch)
-			return !cclng[cclp];
+		if (gv->ccltbl[ind + i] == ch)
+			return !gv->cclng[cclp];
 
-    return cclng[cclp];
+    return gv->cclng[cclp];
 }
 
 
@@ -58,39 +58,39 @@ void ccladd (int cclp, int ch)
 
 	check_char (ch);
 
-	len = ccllen[cclp];
-	ind = cclmap[cclp];
+	len = gv->ccllen[cclp];
+	ind = gv->cclmap[cclp];
 
 	/* check to see if the character is already in the ccl */
 
 	for (i = 0; i < len; ++i)
-		if (ccltbl[ind + i] == ch)
+		if (gv->ccltbl[ind + i] == ch)
 			return;
 
 	/* mark newlines */
-	if (ch == nlch)
-		ccl_has_nl[cclp] = true;
+	if (ch == gv->nlch)
+		gv->ccl_has_nl[cclp] = true;
 
 	newpos = ind + len;
 
 	/* For a non-last cclp, expanding the set will overflow and overwrite a
 	 * char in the next cclp.
 	 * FIXME: Need another allocation scheme for ccl's. */
-	if (cclp != lastccl) {
+	if (cclp != gv->lastccl) {
 		flexfatal(_("internal error: trying to add a char to a non-last ccl.\n"));
 	}
 
-	if (newpos >= current_max_ccl_tbl_size) {
-		current_max_ccl_tbl_size += MAX_CCL_TBL_SIZE_INCREMENT;
+	if (newpos >= gv->current_max_ccl_tbl_size) {
+		gv->current_max_ccl_tbl_size += MAX_CCL_TBL_SIZE_INCREMENT;
 
-		++num_reallocs;
+		++gv->num_reallocs;
 
-		ccltbl = reallocate_Character_array (ccltbl,
-						     current_max_ccl_tbl_size);
+		gv->ccltbl = reallocate_Character_array (gv->ccltbl,
+						     gv->current_max_ccl_tbl_size);
 	}
 
-	ccllen[cclp] = len + 1;
-	ccltbl[newpos] = (unsigned char) ch;
+	gv->ccllen[cclp] = len + 1;
+	gv->ccltbl[newpos] = (unsigned char) ch;
 }
 
 /* dump_cclp - same thing as list_character_set, but for cclps.  */
@@ -101,7 +101,7 @@ static void    dump_cclp (FILE* file, int cclp)
 
 	putc ('[', file);
 
-	for (i = 0; i < ctrl.csize; ++i) {
+	for (i = 0; i < gv->ctrl.csize; ++i) {
 		if (ccl_contains(cclp, i)){
 			int start_char = i;
 
@@ -109,7 +109,7 @@ static void    dump_cclp (FILE* file, int cclp)
 
 			fputs (readable_form (i), file);
 
-			while (++i < ctrl.csize && ccl_contains(cclp,i)) ;
+			while (++i < gv->ctrl.csize && ccl_contains(cclp,i)) ;
 
 			if (i - 1 > start_char)
 				/* this was a run */
@@ -138,7 +138,7 @@ ccl_set_diff (int a, int b)
      * adding each char in a that is not in b.
      * (This could be O(n^2), but n is small and bounded.)
      */
-	for ( ch = 0; ch < ctrl.csize; ++ch )
+	for ( ch = 0; ch < gv->ctrl.csize; ++ch )
         if (ccl_contains (a, ch) && !ccl_contains(b, ch))
             ccladd (d, ch);
 
@@ -166,12 +166,12 @@ ccl_set_union (int a, int b)
     d = cclinit();
 
     /* Add all of a */
-    for (i = 0; i < ccllen[a]; ++i)
-		ccladd (d, ccltbl[cclmap[a] + i]);
+    for (i = 0; i < gv->ccllen[a]; ++i)
+		ccladd (d, gv->ccltbl[gv->cclmap[a] + i]);
 
     /* Add all of b */
-    for (i = 0; i < ccllen[b]; ++i)
-		ccladd (d, ccltbl[cclmap[b] + i]);
+    for (i = 0; i < gv->ccllen[b]; ++i)
+		ccladd (d, gv->ccltbl[gv->cclmap[b] + i]);
 
     /* debug */
     if (0){
@@ -192,22 +192,22 @@ ccl_set_union (int a, int b)
 
 int     cclinit (void)
 {
-	if (++lastccl >= current_maxccls) {
-		current_maxccls += MAX_CCLS_INCREMENT;
+	if (++gv->lastccl >= gv->current_maxccls) {
+		gv->current_maxccls += MAX_CCLS_INCREMENT;
 
-		++num_reallocs;
+		++gv->num_reallocs;
 
-		cclmap =
-			reallocate_integer_array (cclmap, current_maxccls);
-		ccllen =
-			reallocate_integer_array (ccllen, current_maxccls);
-		cclng = reallocate_integer_array (cclng, current_maxccls);
-		ccl_has_nl = reallocate_array(ccl_has_nl, current_maxccls, sizeof(char));
+		gv->cclmap =
+			reallocate_integer_array (gv->cclmap, gv->current_maxccls);
+		gv->ccllen =
+			reallocate_integer_array (gv->ccllen, gv->current_maxccls);
+		gv->cclng = reallocate_integer_array (gv->cclng, gv->current_maxccls);
+		gv->ccl_has_nl = reallocate_array(gv->ccl_has_nl, gv->current_maxccls, sizeof(char));
 	}
 
-	if (lastccl == 1)
+	if (gv->lastccl == 1)
 		/* we're making the first ccl */
-		cclmap[lastccl] = 0;
+		gv->cclmap[gv->lastccl] = 0;
 
 	else
 		/* The new pointer is just past the end of the last ccl.
@@ -215,14 +215,14 @@ int     cclinit (void)
 		 * ccl, adding the length of the ccl to the cclmap pointer
 		 * will produce a cursor to the first free space.
 		 */
-		cclmap[lastccl] =
-			cclmap[lastccl - 1] + ccllen[lastccl - 1];
+		gv->cclmap[gv->lastccl] =
+			gv->cclmap[gv->lastccl - 1] + gv->ccllen[gv->lastccl - 1];
 
-	ccllen[lastccl] = 0;
-	cclng[lastccl] = 0;	/* ccl's start out life un-negated */
-	ccl_has_nl[lastccl] = false;
+	gv->ccllen[gv->lastccl] = 0;
+	gv->cclng[gv->lastccl] = 0;	/* ccl's start out life un-negated */
+	gv->ccl_has_nl[gv->lastccl] = false;
 
-	return lastccl;
+	return gv->lastccl;
 }
 
 
@@ -230,8 +230,8 @@ int     cclinit (void)
 
 void    cclnegate (int cclp)
 {
-	cclng[cclp] = 1;
-	ccl_has_nl[cclp] = !ccl_has_nl[cclp];
+	gv->cclng[cclp] = 1;
+	gv->ccl_has_nl[cclp] = !gv->ccl_has_nl[cclp];
 }
 
 
@@ -248,7 +248,7 @@ void    list_character_set (FILE *file, int cset[])
 
 	putc ('[', file);
 
-	for (i = 0; i < ctrl.csize; ++i) {
+	for (i = 0; i < gv->ctrl.csize; ++i) {
 		if (cset[i]) {
 			int start_char = i;
 
@@ -256,7 +256,7 @@ void    list_character_set (FILE *file, int cset[])
 
 			fputs (readable_form (i), file);
 
-			while (++i < ctrl.csize && cset[i]) ;
+			while (++i < gv->ctrl.csize && cset[i]) ;
 
 			if (i - 1 > start_char)
 				/* this was a run */

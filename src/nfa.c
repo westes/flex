@@ -53,13 +53,13 @@ void    add_accept (int mach, int accepting_number)
 	 * too soon.
 	 */
 
-	if (transchar[finalst[mach]] == SYM_EPSILON)
-		accptnum[finalst[mach]] = accepting_number;
+	if (gv->transchar[gv->finalst[mach]] == SYM_EPSILON)
+		gv->accptnum[gv->finalst[mach]] = accepting_number;
 
 	else {
 		int     astate = mkstate (SYM_EPSILON);
 
-		accptnum[astate] = accepting_number;
+		gv->accptnum[astate] = accepting_number;
 		(void) link_machines (mach, astate);
 	}
 }
@@ -107,13 +107,13 @@ void    dumpnfa (int state1)
 	 */
 
 	/* for ( ns = firstst[state1]; ns <= lastst[state1]; ++ns ) */
-	for (ns = 1; ns <= lastnfa; ++ns) {
+	for (ns = 1; ns <= gv->lastnfa; ++ns) {
 		fprintf (stderr, _("state # %4d\t"), ns);
 
-		sym = transchar[ns];
-		tsp1 = trans1[ns];
-		tsp2 = trans2[ns];
-		anum = accptnum[ns];
+		sym = gv->transchar[ns];
+		tsp1 = gv->trans1[ns];
+		tsp2 = gv->trans2[ns];
+		anum = gv->accptnum[ns];
 
 		fprintf (stderr, "%3d:  %4d, %4d", sym, tsp1, tsp2);
 
@@ -148,21 +148,21 @@ int     dupmachine (int mach)
 {
 	int     i, init, state_offset;
 	int     state = 0;
-	int     last = lastst[mach];
+	int     last = gv->lastst[mach];
 
-	for (i = firstst[mach]; i <= last; ++i) {
-		state = mkstate (transchar[i]);
+	for (i = gv->firstst[mach]; i <= last; ++i) {
+		state = mkstate (gv->transchar[i]);
 
-		if (trans1[i] != NO_TRANSITION) {
-			mkxtion (finalst[state], trans1[i] + state - i);
+		if (gv->trans1[i] != NO_TRANSITION) {
+			mkxtion (gv->finalst[state], gv->trans1[i] + state - i);
 
-			if (transchar[i] == SYM_EPSILON &&
-			    trans2[i] != NO_TRANSITION)
-					mkxtion (finalst[state],
-						 trans2[i] + state - i);
+			if (gv->transchar[i] == SYM_EPSILON &&
+			    gv->trans2[i] != NO_TRANSITION)
+					mkxtion (gv->finalst[state],
+						 gv->trans2[i] + state - i);
 		}
 
-		accptnum[state] = accptnum[i];
+		gv->accptnum[state] = gv->accptnum[i];
 	}
 
 	if (state == 0)
@@ -171,9 +171,9 @@ int     dupmachine (int mach)
 	state_offset = state - i + 1;
 
 	init = mach + state_offset;
-	firstst[init] = firstst[mach] + state_offset;
-	finalst[init] = finalst[mach] + state_offset;
-	lastst[init] = lastst[mach] + state_offset;
+	gv->firstst[init] = gv->firstst[mach] + state_offset;
+	gv->finalst[init] = gv->finalst[mach] + state_offset;
+	gv->lastst[init] = gv->lastst[mach] + state_offset;
 
 	return init;
 }
@@ -196,49 +196,49 @@ void    finish_rule (int mach, bool variable_trail_rule, int headcnt, int trailc
 {
 	char    action_text[MAXLINE];
 
-	add_accept (mach, num_rules);
+	add_accept (mach, gv->num_rules);
 
 	/* We did this in new_rule(), but it often gets the wrong
 	 * number because we do it before we start parsing the current rule.
 	 */
-	rule_linenum[num_rules] = linenum;
+	gv->rule_linenum[gv->num_rules] = gv->linenum;
 
 	/* If this is a continued action, then the line-number has already
 	 * been updated, giving us the wrong number.
 	 */
-	if (continued_action)
-		--rule_linenum[num_rules];
+	if (gv->continued_action)
+		--gv->rule_linenum[gv->num_rules];
 
 
 	/* If the previous rule was continued action, then we inherit the
 	 * previous newline flag, possibly overriding the current one.
 	 */
-	if (pcont_act && rule_has_nl[num_rules - 1])
-		rule_has_nl[num_rules] = true;
+	if (pcont_act && gv->rule_has_nl[gv->num_rules - 1])
+		gv->rule_has_nl[gv->num_rules] = true;
 
-	snprintf (action_text, sizeof(action_text), "M4_HOOK_NORMAL_STATE_CASE_ARM(%d)\n", num_rules);
+	snprintf (action_text, sizeof(action_text), "M4_HOOK_NORMAL_STATE_CASE_ARM(%d)\n", gv->num_rules);
 	add_action (action_text);
-	if (rule_has_nl[num_rules]) {
+	if (gv->rule_has_nl[gv->num_rules]) {
 		snprintf (action_text, sizeof(action_text), "M4_HOOK_COMMENT_OPEN rule %d can match eol M4_HOOK_COMMENT_CLOSE\n",
-			 num_rules);
+			 gv->num_rules);
 		add_action (action_text);
 	}
 
 
 	if (variable_trail_rule) {
-		rule_type[num_rules] = RULE_VARIABLE;
+		gv->rule_type[gv->num_rules] = RULE_VARIABLE;
 
-		if (env.performance_hint > 0)
+		if (gv->env.performance_hint > 0)
 			fprintf (stderr,
 				 _
 				 ("Variable trailing context rule at line %d\n"),
-				 rule_linenum[num_rules]);
+				 gv->rule_linenum[gv->num_rules]);
 
-		variable_trailing_context_rules = true;
+		gv->variable_trailing_context_rules = true;
 	}
 
 	else {
-		rule_type[num_rules] = RULE_NORMAL;
+		gv->rule_type[gv->num_rules] = RULE_NORMAL;
 
 		if (headcnt > 0 || trailcnt > 0) {
 			/* Do trailing context magic to not match the trailing
@@ -247,7 +247,7 @@ void    finish_rule (int mach, bool variable_trail_rule, int headcnt, int trailc
 			add_action ("M4_HOOK_RELEASE_YYTEXT\n");
 
 			if (headcnt > 0) {
-				if (rule_has_nl[num_rules]) {
+				if (gv->rule_has_nl[gv->num_rules]) {
 					snprintf (action_text, sizeof(action_text),
 						"M4_HOOK_LINE_FORWARD(%d)\n", headcnt);
 					add_action (action_text);
@@ -258,7 +258,7 @@ void    finish_rule (int mach, bool variable_trail_rule, int headcnt, int trailc
 			}
 
 			else {
-				if (rule_has_nl[num_rules]) {
+				if (gv->rule_has_nl[gv->num_rules]) {
 					snprintf (action_text, sizeof(action_text),
 						 "M4_HOOK_LINE_REWIND(%d)\n", trailcnt);
 					add_action (action_text);
@@ -279,10 +279,10 @@ void    finish_rule (int mach, bool variable_trail_rule, int headcnt, int trailc
 	 * to do any user action.  But don't do it for continued actions,
 	 * as that'll result in multiple rule-setup calls.
 	 */
-	if (!continued_action)
+	if (!gv->continued_action)
 		add_action ("M4_HOOK_SET_RULE_SETUP\n");
 
-	line_directive_out(NULL, infilename, linenum);
+	line_directive_out(NULL, gv->infilename, gv->linenum);
         add_action("[[");
 }
 
@@ -312,10 +312,10 @@ int     link_machines (int first, int last)
 		return first;
 
 	else {
-		mkxtion (finalst[first], last);
-		finalst[first] = finalst[last];
-		lastst[first] = MAX (lastst[first], lastst[last]);
-		firstst[first] = MIN (firstst[first], firstst[last]);
+		mkxtion (gv->finalst[first], last);
+		gv->finalst[first] = gv->finalst[last];
+		gv->lastst[first] = MAX (gv->lastst[first], gv->lastst[last]);
+		gv->firstst[first] = MIN (gv->firstst[first], gv->firstst[last]);
 
 		return first;
 	}
@@ -331,20 +331,20 @@ int     link_machines (int first, int last)
 
 void    mark_beginning_as_normal (int mach)
 {
-	switch (state_type[mach]) {
+	switch (gv->state_type[mach]) {
 	case STATE_NORMAL:
 		/* Oh, we've already visited here. */
 		return;
 
 	case STATE_TRAILING_CONTEXT:
-		state_type[mach] = STATE_NORMAL;
+		gv->state_type[mach] = STATE_NORMAL;
 
-		if (transchar[mach] == SYM_EPSILON) {
-			if (trans1[mach] != NO_TRANSITION)
-				mark_beginning_as_normal (trans1[mach]);
+		if (gv->transchar[mach] == SYM_EPSILON) {
+			if (gv->trans1[mach] != NO_TRANSITION)
+				mark_beginning_as_normal (gv->trans1[mach]);
 
-			if (trans2[mach] != NO_TRANSITION)
-				mark_beginning_as_normal (trans2[mach]);
+			if (gv->trans2[mach] != NO_TRANSITION)
+				mark_beginning_as_normal (gv->trans2[mach]);
 		}
 		break;
 
@@ -421,7 +421,7 @@ int     mkopt (int mach)
 {
 	int     eps;
 
-	if (!SUPER_FREE_EPSILON (finalst[mach])) {
+	if (!SUPER_FREE_EPSILON (gv->finalst[mach])) {
 		eps = mkstate (SYM_EPSILON);
 		mach = link_machines (mach, eps);
 	}
@@ -433,7 +433,7 @@ int     mkopt (int mach)
 	eps = mkstate (SYM_EPSILON);
 	mach = link_machines (eps, mach);
 
-	mkxtion (mach, finalst[mach]);
+	mkxtion (mach, gv->finalst[mach]);
 
 	return mach;
 }
@@ -473,31 +473,31 @@ int     mkor (int first, int second)
 
 		mkxtion (first, second);
 
-		if (SUPER_FREE_EPSILON (finalst[first]) &&
-		    accptnum[finalst[first]] == NIL) {
-			orend = finalst[first];
-			mkxtion (finalst[second], orend);
+		if (SUPER_FREE_EPSILON (gv->finalst[first]) &&
+		    gv->accptnum[gv->finalst[first]] == NIL) {
+			orend = gv->finalst[first];
+			mkxtion (gv->finalst[second], orend);
 		}
 
-		else if (SUPER_FREE_EPSILON (finalst[second]) &&
-			 accptnum[finalst[second]] == NIL) {
-			orend = finalst[second];
-			mkxtion (finalst[first], orend);
+		else if (SUPER_FREE_EPSILON (gv->finalst[second]) &&
+			 gv->accptnum[gv->finalst[second]] == NIL) {
+			orend = gv->finalst[second];
+			mkxtion (gv->finalst[first], orend);
 		}
 
 		else {
 			eps = mkstate (SYM_EPSILON);
 
 			first = link_machines (first, eps);
-			orend = finalst[first];
+			orend = gv->finalst[first];
 
-			mkxtion (finalst[second], orend);
+			mkxtion (gv->finalst[second], orend);
 		}
 	}
 
-	firstst[first] = MIN(firstst[first], firstst[second]);
+	gv->firstst[first] = MIN(gv->firstst[first], gv->firstst[second]);
 
-	finalst[first] = orend;
+	gv->finalst[first] = orend;
 	return first;
 }
 
@@ -514,8 +514,8 @@ int     mkposcl (int state)
 {
 	int     eps;
 
-	if (SUPER_FREE_EPSILON (finalst[state])) {
-		mkxtion (finalst[state], state);
+	if (SUPER_FREE_EPSILON (gv->finalst[state])) {
+		mkxtion (gv->finalst[state], state);
 		return state;
 	}
 
@@ -587,38 +587,38 @@ int     mkrep (int mach, int lb, int ub)
 
 int     mkstate (int sym)
 {
-	if (++lastnfa >= current_mns) {
-		if ((current_mns += MNS_INCREMENT) >= maximum_mns)
+	if (++gv->lastnfa >= gv->current_mns) {
+		if ((gv->current_mns += MNS_INCREMENT) >= gv->maximum_mns)
 			lerr(_
 				("input rules are too complicated (>= %d NFA states)"),
-current_mns);
+gv->current_mns);
 
-		++num_reallocs;
+		++gv->num_reallocs;
 
-		firstst = reallocate_integer_array (firstst, current_mns);
-		lastst = reallocate_integer_array (lastst, current_mns);
-		finalst = reallocate_integer_array (finalst, current_mns);
-		transchar =
-			reallocate_integer_array (transchar, current_mns);
-		trans1 = reallocate_integer_array (trans1, current_mns);
-		trans2 = reallocate_integer_array (trans2, current_mns);
-		accptnum =
-			reallocate_integer_array (accptnum, current_mns);
-		assoc_rule =
-			reallocate_integer_array (assoc_rule, current_mns);
-		state_type =
-			reallocate_integer_array (state_type, current_mns);
+		gv->firstst = reallocate_integer_array (gv->firstst, gv->current_mns);
+		gv->lastst = reallocate_integer_array (gv->lastst, gv->current_mns);
+		gv->finalst = reallocate_integer_array (gv->finalst, gv->current_mns);
+		gv->transchar =
+			reallocate_integer_array (gv->transchar, gv->current_mns);
+		gv->trans1 = reallocate_integer_array (gv->trans1, gv->current_mns);
+		gv->trans2 = reallocate_integer_array (gv->trans2, gv->current_mns);
+		gv->accptnum =
+			reallocate_integer_array (gv->accptnum, gv->current_mns);
+		gv->assoc_rule =
+			reallocate_integer_array (gv->assoc_rule, gv->current_mns);
+		gv->state_type =
+			reallocate_integer_array (gv->state_type, gv->current_mns);
 	}
 
-	firstst[lastnfa] = lastnfa;
-	finalst[lastnfa] = lastnfa;
-	lastst[lastnfa] = lastnfa;
-	transchar[lastnfa] = sym;
-	trans1[lastnfa] = NO_TRANSITION;
-	trans2[lastnfa] = NO_TRANSITION;
-	accptnum[lastnfa] = NIL;
-	assoc_rule[lastnfa] = num_rules;
-	state_type[lastnfa] = current_state_type;
+	gv->firstst[gv->lastnfa] = gv->lastnfa;
+	gv->finalst[gv->lastnfa] = gv->lastnfa;
+	gv->lastst[gv->lastnfa] = gv->lastnfa;
+	gv->transchar[gv->lastnfa] = sym;
+	gv->trans1[gv->lastnfa] = NO_TRANSITION;
+	gv->trans2[gv->lastnfa] = NO_TRANSITION;
+	gv->accptnum[gv->lastnfa] = NIL;
+	gv->assoc_rule[gv->lastnfa] = gv->num_rules;
+	gv->state_type[gv->lastnfa] = gv->current_state_type;
 
 	/* Fix up equivalence classes base on this transition.  Note that any
 	 * character which has its own transition gets its own equivalence
@@ -637,17 +637,17 @@ current_mns);
 	}
 
 	else if (sym == SYM_EPSILON)
-		++numeps;
+		++gv->numeps;
 
 	else {
 		check_char (sym);
 
-		if (ctrl.useecs)
+		if (gv->ctrl.useecs)
 			/* Map NUL's to csize. */
-			mkechar (sym ? sym : ctrl.csize, nextecm, ecgroup);
+			mkechar (sym ? sym : gv->ctrl.csize, gv->nextecm, gv->ecgroup);
 	}
 
-	return lastnfa;
+	return gv->lastnfa;
 }
 
 
@@ -663,16 +663,16 @@ current_mns);
 
 void    mkxtion (int statefrom, int stateto)
 {
-	if (trans1[statefrom] == NO_TRANSITION)
-		trans1[statefrom] = stateto;
+	if (gv->trans1[statefrom] == NO_TRANSITION)
+		gv->trans1[statefrom] = stateto;
 
-	else if ((transchar[statefrom] != SYM_EPSILON) ||
-		 (trans2[statefrom] != NO_TRANSITION))
+	else if ((gv->transchar[statefrom] != SYM_EPSILON) ||
+		 (gv->trans2[statefrom] != NO_TRANSITION))
 		flexfatal (_("found too many transitions in mkxtion()"));
 
 	else {			/* second out-transition for an epsilon state */
-		++eps2;
-		trans2[statefrom] = stateto;
+		++gv->eps2;
+		gv->trans2[statefrom] = stateto;
 	}
 }
 
@@ -680,23 +680,23 @@ void    mkxtion (int statefrom, int stateto)
 
 void    new_rule (void)
 {
-	if (++num_rules >= current_max_rules) {
-		++num_reallocs;
-		current_max_rules += MAX_RULES_INCREMENT;
-		rule_type = reallocate_integer_array (rule_type,
-						      current_max_rules);
-		rule_linenum = reallocate_integer_array (rule_linenum,
-							 current_max_rules);
-		rule_useful = reallocate_array(rule_useful,
-					current_max_rules, sizeof(char));
-		rule_has_nl = reallocate_array(rule_has_nl,
-					current_max_rules, sizeof(char));
+	if (++gv->num_rules >= gv->current_max_rules) {
+		++gv->num_reallocs;
+		gv->current_max_rules += MAX_RULES_INCREMENT;
+		gv->rule_type = reallocate_integer_array (gv->rule_type,
+						      gv->current_max_rules);
+		gv->rule_linenum = reallocate_integer_array (gv->rule_linenum,
+							 gv->current_max_rules);
+		gv->rule_useful = reallocate_array(gv->rule_useful,
+					gv->current_max_rules, sizeof(char));
+		gv->rule_has_nl = reallocate_array(gv->rule_has_nl,
+					gv->current_max_rules, sizeof(char));
 	}
 
-	if (num_rules > MAX_RULE)
+	if (gv->num_rules > MAX_RULE)
 		lerr (_("too many rules (> %d)!"), MAX_RULE);
 
-	rule_linenum[num_rules] = linenum;
-	rule_useful[num_rules] = false;
-	rule_has_nl[num_rules] = false;
+	gv->rule_linenum[gv->num_rules] = gv->linenum;
+	gv->rule_useful[gv->num_rules] = false;
+	gv->rule_has_nl[gv->num_rules] = false;
 }

@@ -29,7 +29,7 @@ static const char * check_4_gnu_m4 =
 
 
 /** global chain. */
-struct filter *output_chain = NULL;
+//struct filter *output_chain = NULL;
 
 /* Allocate and initialize an external filter.
  * @param chain the current chain or NULL for new chain
@@ -264,7 +264,7 @@ int filter_tee_header (struct filter *chain)
 		fputs ("m4_define([[M4_YY_IN_HEADER]],[[]])m4_dnl\n", to_h);
 		fprintf (to_h,
 			 "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
-			 env.headerfilename != NULL ? env.headerfilename : "<stdout>");
+			 gv->env.headerfilename != NULL ? gv->env.headerfilename : "<stdout>");
 	}
 
 	fputs (check_4_gnu_m4, to_c);
@@ -273,7 +273,7 @@ int filter_tee_header (struct filter *chain)
 	fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_c);
 	fputs ("m4_define([[M4_YY_NOOP]])[[]]m4_dnl\n", to_c);
 	fprintf (to_c, "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
-		 env.outfilename != NULL ? env.outfilename : "<stdout>");
+		 gv->env.outfilename != NULL ? gv->env.outfilename : "<stdout>");
 
 	while (fgets (buf, sizeof buf, stdin)) {
 		fputs (buf, to_c);
@@ -285,7 +285,7 @@ int filter_tee_header (struct filter *chain)
 		fprintf (to_h, "\n");
 
 		/* write a fake line number. It will get fixed by the linedir filter. */
-		if (ctrl.gen_line_dirs)
+		if (gv->ctrl.gen_line_dirs)
 			line_directive_out (to_h, NULL, 4000);
 		fflush (to_h);
 		if (ferror (to_h))
@@ -300,11 +300,11 @@ int filter_tee_header (struct filter *chain)
 	fflush (to_c);
 	if (ferror (to_c))
 		lerr (_("error writing output file %s"),
-			env.outfilename != NULL ? env.outfilename : "<stdout>");
+			gv->env.outfilename != NULL ? gv->env.outfilename : "<stdout>");
 
 	else if (fclose (to_c))
 		lerr (_("error closing output file %s"),
-			env.outfilename != NULL ? env.outfilename : "<stdout>");
+			gv->env.outfilename != NULL ? gv->env.outfilename : "<stdout>");
 
 	while (wait (0) > 0) ;
 
@@ -344,9 +344,9 @@ int filter_fix_linedirs (struct filter *chain)
 		/* Check for directive. Note wired-in assumption:
 		 * field reference 1 is line number, 2 is filename.
 		 */
-		if (ctrl.traceline_re != NULL &&
-		    ctrl.traceline_template != NULL &&
-		    regexec (&regex_linedir, buf, 3, m, 0) == 0) {
+		if (gv->ctrl.traceline_re != NULL &&
+		    gv->ctrl.traceline_template != NULL &&
+		    regexec (&gv->regex_linedir, buf, 3, m, 0) == 0) {
 
 			char   *fname;
 
@@ -354,10 +354,10 @@ int filter_fix_linedirs (struct filter *chain)
 			fname = regmatch_dup (&m[2], buf);
 
 			if (strcmp (fname,
-				env.outfilename != NULL ? env.outfilename : "<stdout>")
+				gv->env.outfilename != NULL ? gv->env.outfilename : "<stdout>")
 					== 0
 			 || strcmp (fname,
-			 	env.headerfilename != NULL ? env.headerfilename : "<stdout>")
+			 	gv->env.headerfilename != NULL ? gv->env.headerfilename : "<stdout>")
 					== 0) {
 
 				char    *s1, *s2;
@@ -381,7 +381,7 @@ int filter_fix_linedirs (struct filter *chain)
 
 				/* Adjust the line directives. */
 				in_gen = true;
-				snprintf (buf, readsz, ctrl.traceline_template,
+				snprintf (buf, readsz, gv->ctrl.traceline_template,
 					  lineno + 1, filename);
 				strncat(buf, "\n", sizeof(buf)-1);
 			}
@@ -413,11 +413,11 @@ int filter_fix_linedirs (struct filter *chain)
 	fflush (stdout);
 	if (ferror (stdout))
 		lerr (_("error writing output file %s"),
-			env.outfilename != NULL ? env.outfilename : "<stdout>");
+			gv->env.outfilename != NULL ? gv->env.outfilename : "<stdout>");
 
 	else if (fclose (stdout))
 		lerr (_("error closing output file %s"),
-			env.outfilename != NULL ? env.outfilename : "<stdout>");
+			gv->env.outfilename != NULL ? gv->env.outfilename : "<stdout>");
 
 	return 0;
 }
