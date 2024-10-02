@@ -34,11 +34,11 @@
 
 /* declare functions that have forward references */
 
-static void dump_associated_rules(FILE *, int);
-static void dump_transitions(FILE *, int[]);
-static int  snstods(int[], int, int[], int, int, int *);
-static void sympartition(int[], int, int[], int[]);
-static int  symfollowset(int[], int, int, int[]);
+static void dump_associated_rules(FlexState* gv, FILE *, int);
+static void dump_transitions(FlexState* gv, FILE *, int[]);
+static int  snstods(FlexState* gv, int[], int, int[], int, int, int *);
+static void sympartition(FlexState* gv, int[], int, int[], int[]);
+static int  symfollowset(FlexState* gv, int[], int, int, int[]);
 
 
 /* check_for_backing_up - check a DFA state for backing up
@@ -50,7 +50,7 @@ static int  symfollowset(int[], int, int, int[]);
  * indexed by equivalence class.
  */
 
-static void check_for_backing_up(int ds, int state[])
+static void check_for_backing_up(FlexState* gv, int ds, int state[])
 {
 	if ((gv->reject && !gv->dfaacc[ds].dfaacc_set) || (!gv->reject && !gv->dfaacc[ds].dfaacc_state)) {	/* state is non-accepting */
 		++gv->num_backing_up;
@@ -60,12 +60,12 @@ static void check_for_backing_up(int ds, int state[])
 				 _("State #%d is non-accepting -\n"), ds);
 
 			/* identify the state */
-			dump_associated_rules (gv->ctrl.backing_up_file, ds);
+			dump_associated_rules (gv, gv->ctrl.backing_up_file, ds);
 
 			/* Now identify it further using the out- and
 			 * jam-transitions.
 			 */
-			dump_transitions (gv->ctrl.backing_up_file, state);
+			dump_transitions (gv, gv->ctrl.backing_up_file, state);
 
 			putc ('\n', gv->ctrl.backing_up_file);
 		}
@@ -95,7 +95,7 @@ static void check_for_backing_up(int ds, int state[])
  *    accset[1 .. nacc] is the list of accepting numbers for the DFA state.
  */
 
-static void check_trailing_context(int *nfa_states, int num_states, int *accset, int nacc)
+static void check_trailing_context(FlexState* gv, int *nfa_states, int num_states, int *accset, int nacc)
 {
 	int i, j;
 
@@ -116,7 +116,7 @@ static void check_trailing_context(int *nfa_states, int num_states, int *accset,
 			 */
 			for (j = 1; j <= nacc; ++j)
 				if (accset[j] & YY_TRAILING_HEAD_MASK) {
-					line_warning (_
+					line_warning (gv, _
 						      ("dangerous trailing context"),
 						      gv->rule_linenum[ar]);
 					return;
@@ -133,7 +133,7 @@ static void check_trailing_context(int *nfa_states, int num_states, int *accset,
  * and writes a report to the given file.
  */
 
-static void dump_associated_rules(FILE *file, int ds)
+static void dump_associated_rules(FlexState* gv, FILE *file, int ds)
 {
 	int i, j;
 	int num_associated_rules = 0;
@@ -181,7 +181,7 @@ static void dump_associated_rules(FILE *file, int ds)
  * is done to the given file.
  */
 
-static void dump_transitions(FILE *file, int state[])
+static void dump_transitions(FlexState* gv, FILE *file, int state[])
 {
 	int i, ec;
 	int out_char_set[CSIZE];
@@ -193,7 +193,7 @@ static void dump_transitions(FILE *file, int state[])
 
 	fprintf (file, _(" out-transitions: "));
 
-	list_character_set (file, out_char_set);
+	list_character_set (gv, file, out_char_set);
 
 	/* now invert the members of the set to get the jam transitions */
 	for (i = 0; i < gv->ctrl.csize; ++i)
@@ -201,7 +201,7 @@ static void dump_transitions(FILE *file, int state[])
 
 	fprintf (file, _("\n jam-transitions: EOF "));
 
-	list_character_set (file, out_char_set);
+	list_character_set (gv, file, out_char_set);
 
 	putc ('\n', file);
 }
@@ -227,7 +227,7 @@ static void dump_transitions(FILE *file, int state[])
  *  hashval is the hash value for the dfa corresponding to the state set.
  */
 
-static int *epsclosure(int *t, int *ns_addr, int accset[], int *nacc_addr, int *hv_addr)
+static int *epsclosure(FlexState* gv, int *t, int *ns_addr, int accset[], int *nacc_addr, int *hv_addr)
 {
 	int     stkpos, ns, tsp;
 	int     numstates = *ns_addr, nacc, hashval, transsym, nfaccnum;
@@ -328,7 +328,7 @@ ADD_STATE(state); \
 		if (IS_MARKED (gv->stk[stkpos]))
 			UNMARK_STATE (gv->stk[stkpos]);
 		else
-			flexfatal (_
+			flexfatal (gv, _
 				   ("consistency check failed in epsclosure()"));
 	}
 
@@ -342,7 +342,7 @@ ADD_STATE(state); \
 
 /* increase_max_dfas - increase the maximum number of DFAs */
 
-void increase_max_dfas (void)
+void increase_max_dfas (FlexState* gv)
 {
 	gv->current_max_dfas += MAX_DFAS_INCREMENT;
 
@@ -354,7 +354,7 @@ void increase_max_dfas (void)
 	gv->accsiz = reallocate_integer_array (gv->accsiz, gv->current_max_dfas);
 	gv->dhash = reallocate_integer_array (gv->dhash, gv->current_max_dfas);
 	gv->dss = reallocate_int_ptr_array (gv->dss, gv->current_max_dfas);
-	gv->dfaacc = reallocate_array(gv->dfaacc, gv->current_max_dfas,
+	gv->dfaacc = reallocate_array(gv, gv->dfaacc, gv->current_max_dfas,
 		sizeof(union dfaacc_union));
 
 	if (gv->nultrans)
@@ -373,7 +373,7 @@ void increase_max_dfas (void)
  * In some modes this can be zero.
  */
 
-size_t ntod (void)
+size_t ntod (FlexState* gv)
 {
 	int    *accset, ds, nacc, newds;
 	int     sym, hashval, numstates, dsize;
@@ -420,11 +420,11 @@ size_t ntod (void)
 		accset[i] = NIL;
 
 	if (gv->env.trace) {
-		dumpnfa (gv->scset[1]);
+		dumpnfa (gv, gv->scset[1]);
 		fputs (_("\n\nDFA Dump:\n\n"), stderr);
 	}
 
-	inittbl ();
+	inittbl (gv);
 
 	/* Check to see whether we should build a separate table for
 	 * transitions on NUL characters.  We don't do this for full-speed
@@ -468,7 +468,7 @@ size_t ntod (void)
 		for (i = 0; i <= gv->numecs; ++i)
 			state[i] = 0;
 
-		place_state (state, 0, 0);
+		place_state (gv, state, 0, 0);
 		gv->dfaacc[0].dfaacc_state = 0;
 	}
 
@@ -503,7 +503,7 @@ size_t ntod (void)
 			   sizeof (flex_int32_t));
 		yynxt_curr = 0;
 
-		struct packtype_t *ptype = optimize_pack(0);
+		struct packtype_t *ptype = optimize_pack(gv, 0);
 		/* Note: Used when ctrl.fulltbl is on. Alternately defined elsewhere */
 		out_str ("m4_define([[M4_HOOK_NXT_TYPE]], [[%s]])", ptype->name);
 		out_dec ("m4_define([[M4_HOOK_NXT_ROWS]], [[%d]])", num_full_table_rows);
@@ -514,12 +514,12 @@ size_t ntod (void)
 
 		/* Generate 0 entries for state #0. */
 		for (i = 0; i < num_full_table_rows; ++i) {
-			mk2data (0);
+			mk2data (gv, 0);
 			yynxt_data[yynxt_curr++] = 0;
 		}
 
 		if (gv->gentables) {
-			dataflush ();
+			dataflush (gv);
 			outn ("M4_HOOK_TABLE_CONTINUE");
 		}
 	}
@@ -539,25 +539,25 @@ size_t ntod (void)
 			nset[numstates] = gv->scset[(i / 2) + 1];
 		else
 			nset[numstates] =
-				mkbranch (gv->scbol[i / 2], gv->scset[i / 2]);
+				mkbranch (gv, gv->scbol[i / 2], gv->scset[i / 2]);
 
-		nset = epsclosure (nset, &numstates, accset, &nacc,
+		nset = epsclosure (gv, nset, &numstates, accset, &nacc,
 				   &hashval);
 
-		if (snstods (nset, numstates, accset, nacc, hashval, &ds)) {
+		if (snstods (gv, nset, numstates, accset, nacc, hashval, &ds)) {
 			gv->numas += nacc;
 			gv->totnst += numstates;
 			++todo_next;
 
 			if (gv->variable_trailing_context_rules && nacc > 0)
-				check_trailing_context (nset, numstates,
+				check_trailing_context (gv, nset, numstates,
 							accset, nacc);
 		}
 	}
 
 	if (!gv->ctrl.fullspd) {
-		if (!snstods (nset, 0, accset, 0, 0, &gv->end_of_buffer_state))
-			flexfatal (_
+		if (!snstods (gv, nset, 0, accset, 0, 0, &gv->end_of_buffer_state))
+			flexfatal (gv, _
 				   ("could not create unique end-of-buffer state"));
 
 		++gv->numas;
@@ -581,7 +581,7 @@ size_t ntod (void)
 		if (gv->env.trace)
 			fprintf (stderr, _("state # %d:\n"), ds);
 
-		sympartition (dset, dsize, symlist, duplist);
+		sympartition (gv, dset, dsize, symlist, duplist);
 
 		for (sym = 1; sym <= gv->numecs; ++sym) {
 			if (symlist[sym]) {
@@ -590,15 +590,15 @@ size_t ntod (void)
 				if (duplist[sym] == NIL) {
 					/* Symbol has unique out-transitions. */
 					numstates =
-						symfollowset (dset, dsize,
+						symfollowset (gv, dset, dsize,
 							      sym, nset);
-					nset = epsclosure (nset,
+					nset = epsclosure (gv, nset,
 							   &numstates,
 							   accset, &nacc,
 							   &hashval);
 
 					if (snstods
-					    (nset, numstates, accset, nacc,
+					    (gv, nset, numstates, accset, nacc,
 					     hashval, &newds)) {
 						gv->totnst = gv->totnst +
 							numstates;
@@ -607,7 +607,7 @@ size_t ntod (void)
 
 						if (gv->variable_trailing_context_rules && nacc > 0)
 							check_trailing_context
-								(nset,
+								(gv, nset,
 								 numstates,
 								 accset,
 								 nacc);
@@ -658,7 +658,7 @@ size_t ntod (void)
 		gv->numsnpairs += totaltrans;
 
 		if (ds > num_start_states)
-			check_for_backing_up (ds, state);
+			check_for_backing_up (gv, ds, state);
 
 		if (gv->nultrans) {
 			gv->nultrans[ds] = state[gv->NUL_ec];
@@ -679,12 +679,12 @@ size_t ntod (void)
 
 			/* Supply array's 0-element. */
 			if (ds == gv->end_of_buffer_state) {
-				mk2data (-gv->end_of_buffer_state);
+				mk2data (gv, -gv->end_of_buffer_state);
 				yynxt_data[yynxt_curr++] =
 					-gv->end_of_buffer_state;
 			}
 			else {
-				mk2data (gv->end_of_buffer_state);
+				mk2data (gv, gv->end_of_buffer_state);
 				yynxt_data[yynxt_curr++] =
 					gv->end_of_buffer_state;
 			}
@@ -693,25 +693,25 @@ size_t ntod (void)
 				/* Jams are marked by negative of state
 				 * number.
 				 */
-				mk2data (state[i] ? state[i] : -ds);
+				mk2data (gv, state[i] ? state[i] : -ds);
 				yynxt_data[yynxt_curr++] =
 					state[i] ? state[i] : -ds;
 			}
 
 			if (gv->gentables) {
-				dataflush ();
+				dataflush (gv);
 				outn ("M4_HOOK_TABLE_CONTINUE");
 			}
 		}
 
 		else if (gv->ctrl.fullspd)
-			place_state (state, ds, totaltrans);
+			place_state (gv, state, ds, totaltrans);
 
 		else if (ds == gv->end_of_buffer_state)
 			/* Special case this state to make sure it does what
 			 * it's supposed to, i.e., jam on end-of-buffer.
 			 */
-			stack1 (ds, 0, 0, JAMSTATE);
+			stack1 (gv, ds, 0, 0, JAMSTATE);
 
 		else {		/* normal, compressed state */
 
@@ -728,17 +728,17 @@ size_t ntod (void)
 					comstate = targstate[i];
 				}
 
-			bldtbl (state, ds, totaltrans, comstate, comfreq);
+			bldtbl (gv, state, ds, totaltrans, comstate, comfreq);
 		}
 	}
 
 	if (gv->ctrl.fulltbl) {
-		dataend ("M4_HOOK_TABLE_CLOSER");
+		dataend (gv, "M4_HOOK_TABLE_CLOSER");
 		outn("/* body */]])");
 		if (gv->tablesext) {
-			yytbl_data_compress (yynxt_tbl);
-			if (yytbl_data_fwrite (&gv->tableswr, yynxt_tbl) < 0)
-				flexerror (_
+			yytbl_data_compress (gv, yynxt_tbl);
+			if (yytbl_data_fwrite (gv, &gv->tableswr, yynxt_tbl) < 0)
+				flexerror (gv, _
 					   ("Could not write yynxt_tbl[][]"));
 		}
 		if (yynxt_tbl) {
@@ -748,18 +748,18 @@ size_t ntod (void)
 	}
 
 	else if (!gv->ctrl.fullspd) {
-		cmptmps ();	/* create compressed template entries */
+		cmptmps (gv);	/* create compressed template entries */
 
 		/* Create tables for all the states with only one
 		 * out-transition.
 		 */
 		while (gv->onesp > 0) {
-			mk1tbl (gv->onestate[gv->onesp], gv->onesym[gv->onesp],
+			mk1tbl (gv, gv->onestate[gv->onesp], gv->onesym[gv->onesp],
 				gv->onenext[gv->onesp], gv->onedef[gv->onesp]);
 			--gv->onesp;
 		}
 
-		mkdeftbl ();
+		mkdeftbl (gv);
 	}
 
 
@@ -780,7 +780,7 @@ size_t ntod (void)
  * On return, the dfa state number is in newds.
  */
 
-static int snstods(int sns[], int numstates, int accset[], int nacc, int hashval, int *newds_addr)
+static int snstods(FlexState* gv, int sns[], int numstates, int accset[], int nacc, int hashval, int *newds_addr)
 {
 	int didsort = 0;
 	int i, j;
@@ -819,7 +819,7 @@ static int snstods(int sns[], int numstates, int accset[], int nacc, int hashval
 	/* Make a new dfa. */
 
 	if (++gv->lastdfa >= gv->current_max_dfas)
-		increase_max_dfas ();
+		increase_max_dfas (gv);
 
 	newds = gv->lastdfa;
 
@@ -901,7 +901,7 @@ static int snstods(int sns[], int numstates, int accset[], int nacc, int hashval
  *				int transsym, int nset[current_max_dfa_size] );
  */
 
-static int symfollowset(int ds[], int dsize, int transsym, int nset[])
+static int symfollowset(FlexState* gv, int ds[], int dsize, int transsym, int nset[])
 {
 	int     ns, tsp, sym, i, j, lenccl, ch, numstates, ccllist;
 
@@ -978,7 +978,7 @@ static int symfollowset(int ds[], int dsize, int transsym, int nset[])
  *			int symlist[numecs], int duplist[numecs] );
  */
 
-static void sympartition(int ds[], int numstates, int symlist[], int duplist[])
+static void sympartition(FlexState* gv, int ds[], int numstates, int symlist[], int duplist[])
 {
 	int     tch, i, j, k, ns, dupfwd[CSIZE + 1], lenccl, cclp, ich;
 
@@ -1001,7 +1001,7 @@ static void sympartition(int ds[], int numstates, int symlist[], int duplist[])
 
 		if (tch != SYM_EPSILON) {
 			if (tch < -gv->lastccl || tch >= gv->ctrl.csize) {
-				flexfatal (_
+				flexfatal (gv, _
 					   ("bad transition character detected in sympartition()"));
 			}
 
@@ -1017,7 +1017,7 @@ static void sympartition(int ds[], int numstates, int symlist[], int duplist[])
 
 				lenccl = gv->ccllen[tch];
 				cclp = gv->cclmap[tch];
-				mkeccl (gv->ccltbl + cclp, lenccl, dupfwd,
+				mkeccl (gv, gv->ccltbl + cclp, lenccl, dupfwd,
 					duplist, gv->numecs, gv->NUL_ec);
 
 				if (gv->cclng[tch]) {

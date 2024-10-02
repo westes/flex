@@ -42,9 +42,9 @@ static const char flex_version[] = FLEX_VERSION;
 
 /* declare functions that have forward references */
 
-void flexinit(int, char **);
-void readin(void);
-void set_up_initial_allocations(void);
+void flexinit(FlexState* gv, int, char **);
+void readin(FlexState* gv);
+void set_up_initial_allocations(FlexState* gv);
 
 ///* these globals are all defined and commented in flexdef.h */
 //bool    syntaxerror, eofseen;
@@ -113,9 +113,11 @@ void set_up_initial_allocations(void);
 // */
 //char   *program_name = "flex";
 
-FlexState *gv;
-void initFlexState(FlexState *fgv)
+//FlexState *gv;
+FlexState* newFlexState(void)
 {
+    FlexState *fgv = malloc(sizeof(FlexState));
+    if(!fgv) return NULL;
     memset(fgv, 0, sizeof(*fgv));
     fgv->nlch = '\n';
     fgv->program_name = "flex";
@@ -126,6 +128,115 @@ void initFlexState(FlexState *fgv)
     fgv->backing_name = "lex.backup";
     fgv->tablesfile_template = "lex.%s.tables";
     fgv->preproc_level = 1000;
+    return fgv;
+}
+
+static void freeHashTable(struct hash_entry **tbl, int sz, int freeName)
+{
+    for(int i=0; i< sz; ++i)
+    {
+        struct hash_entry *sym_entry = tbl[i];
+        while(sym_entry)
+        {
+            struct hash_entry *tmp = sym_entry->next;
+            free(sym_entry->str_val);
+            if(freeName) free(sym_entry->name);
+            free(sym_entry);
+            sym_entry = tmp;
+        }
+    }
+}
+
+void closeFlexState(FlexState* gv)
+{
+    //from misc.c
+    free(gv->action_array);
+    
+    //from tblcmp.c
+    free(gv->tnxt);
+    free(gv->nxt);
+    free(gv->chk);
+    
+    //from nfa.c
+    free(gv->firstst);
+    free(gv->lastst);
+    free(gv->finalst);
+    free(gv->transchar);
+    free(gv->trans1);
+    free(gv->trans2);
+    free(gv->accptnum);
+    free(gv->assoc_rule);
+    free(gv->state_type);
+    free(gv->rule_type);
+    free(gv->rule_linenum);
+    free(gv->rule_useful);
+    free(gv->rule_has_nl);
+    
+    //from dfa.c
+    free(gv->base);
+    free(gv->def);
+    free(gv->dfasiz);
+    free(gv->accsiz);
+    free(gv->dhash);
+    for(int i=0; i <= gv->lastdfa; ++i )
+        free(gv->dss[i]);
+    free(gv->dss);
+    free(gv->dfaacc);
+    free(gv->nultrans);
+    free(gv->stk);
+    
+    //from ccl.c
+    free(gv->ccltbl);
+    free(gv->cclmap);
+    free(gv->ccllen);
+    free(gv->cclng);
+    free(gv->ccl_has_nl);
+    
+    //from sym.c
+    free(gv->scset);
+    free(gv->scbol);
+    free(gv->scxclu);
+    free(gv->sceof);
+    for(int i=0; i<= gv->lastsc; ++i){
+        free(gv->scname[i]);
+    }
+    free(gv->scname);
+    freeHashTable(gv->sctbl, START_COND_HASH_SIZE, 0);
+    freeHashTable(gv->ndtbl, NAME_TABLE_HASH_SIZE, 1);
+    freeHashTable(gv->ccltab, CCL_HASH_SIZE, 1);
+    
+    //from regex.c
+    regfree(&gv->regex_linedir);
+    
+    //from buf.c
+    free(gv->top_buf.elts);
+    
+    //from main.c
+    while(gv->output_chain)
+    {
+        struct filter *tmp = gv->output_chain->next;
+        free(gv->output_chain->argv);
+        free(gv->output_chain);
+        gv->output_chain = tmp;
+    }
+    
+    //from sleletons.c
+    free(gv->ctrl.backend_name);
+    free(gv->ctrl.traceline_re);
+    free(gv->ctrl.traceline_template);
+    
+    //from scan.l
+    free(gv->infilename);
+    if(gv->fp_infilename && gv->fp_infilename != stdin) fclose(gv->fp_infilename);
+
+    //from scanflags.c
+    free(gv->_sf_stk);
+    
+    //from parse.y
+    free(gv->scon_stk);
+    
+    
+    free(gv);
 }
 
 //static const char outfile_template[] = "lex.%s.%s";
@@ -133,7 +244,7 @@ void initFlexState(FlexState *fgv)
 //static const char tablesfile_template[] = "lex.%s.tables";
 
 /* From scan.l */
-extern FILE* yyout;
+//extern FILE* yyout;
 
 //static char outfile_path[MAXLINE];
 //static int outfile_created = 0;
@@ -148,12 +259,20 @@ int flex_main (int argc, char *argv[]);
 
 int flex_main (int argc, char *argv[])
 {
-	int     i, exit_status, child_status;
-	int	did_eof_rule = false;
-        FlexState fgv;
-        initFlexState(&fgv);
-        gv = &fgv;
+	int     i, exit_status, child_status, did_eof_rule, yylval;
+        FlexState *gv;
+        gv = newFlexState();
+        if(!gv) {
+		printf(" Failed to initialize the flex state.\n");
+                return -1;
+        }
 
+        exit_status = yylex_init (&gv->scanner);
+	if(exit_status) {
+		printf(" Failed to initialize the scanner: %d\n", exit_status);
+		//return exit_status;
+	}
+        else yyset_extra(gv, gv->scanner);
 	/* Set a longjmp target. Yes, I know it's a hack, but it gets worse: The
 	 * return value of setjmp, if non-zero, is the desired exit code PLUS ONE.
 	 * For example, if you want 'main' to return with code '2', then call
@@ -161,6 +280,7 @@ int flex_main (int argc, char *argv[])
 	 * specify a value of 0 to longjmp. FLEX_EXIT(n) should be used instead of
 	 * exit(n);
 	 */
+        did_eof_rule = false;
 	exit_status = setjmp (gv->flex_main_jmp_buf);
 	if (exit_status){
 		if (stdout && !gv->_stdout_closed && !ferror(stdout)){
@@ -177,22 +297,24 @@ int flex_main (int argc, char *argv[])
 
 			}
 		}
+                yylex_destroy (gv->scanner);
+                closeFlexState(gv);
 		return exit_status - 1;
 	}
 
-	flexinit (argc, argv);
+	flexinit (gv, argc, argv);
 
-	readin ();
-	skelout (true);		/* %% [1.0] DFA */
-	gv->footprint += ntod ();
+	readin (gv);
+	skelout (gv, true);		/* %% [1.0] DFA */
+	gv->footprint += ntod (gv);
 
 	for (i = 1; i <= gv->num_rules; ++i)
 		if (!gv->rule_useful[i] && i != gv->default_rule)
-			line_warning (_("rule cannot be matched"),
+			line_warning (gv, _("rule cannot be matched"),
 				      gv->rule_linenum[i]);
 
 	if (gv->ctrl.spprdflt && !gv->reject && gv->rule_useful[gv->default_rule])
-		line_warning (_
+		line_warning (gv, _
 			      ("-s option given but default rule can be matched"),
 			      gv->rule_linenum[gv->default_rule]);
 
@@ -226,33 +348,33 @@ int flex_main (int argc, char *argv[])
 	/* Need to define the transet type as a size large
 	 * enough to hold the biggest offset.
 	 */
-	out_str ("M4_HOOK_SET_OFFSET_TYPE(%s)", optimize_pack(gv->tblend + gv->numecs + 1)->name);
+	out_str ("M4_HOOK_SET_OFFSET_TYPE(%s)", optimize_pack(gv, gv->tblend + gv->numecs + 1)->name);
 	comment("END of Flex-generated definitions\n");
 
-	skelout (true);		/* %% [2.0] - tables get dumped here */
+	skelout (gv, true);		/* %% [2.0] - tables get dumped here */
 
 	/* Generate the C state transition tables from the DFA. */
-	make_tables ();
+	make_tables (gv);
 
-	skelout (true);		/* %% [3.0] - mode-dependent static declarations get dumped here */
+	skelout (gv, true);		/* %% [3.0] - mode-dependent static declarations get dumped here */
 
 	out (&gv->action_array[gv->defs1_offset]);
 
-	line_directive_out (stdout, NULL, gv->linenum);
+	line_directive_out (gv, stdout, NULL, gv->linenum);
 
-	skelout (true);		/* %% [4.0] - various random yylex internals get dumped here */
+	skelout (gv, true);		/* %% [4.0] - various random yylex internals get dumped here */
 
 	/* Copy prolog to output file. */
 	out (&gv->action_array[gv->prolog_offset]);
 
-	line_directive_out (stdout, NULL, gv->linenum);
+	line_directive_out (gv, stdout, NULL, gv->linenum);
 
-	skelout (true);		/* %% [5.0] - main loop of matching-engine code gets dumped here */
+	skelout (gv, true);		/* %% [5.0] - main loop of matching-engine code gets dumped here */
 
 	/* Copy actions to output file. */
 	out (&gv->action_array[gv->action_offset]);
 
-	line_directive_out (stdout, NULL, gv->linenum);
+	line_directive_out (gv, stdout, NULL, gv->linenum);
 
 	/* generate cases for any missing EOF rules */
 	for (i = 1; i <= gv->lastsc; ++i)
@@ -268,17 +390,17 @@ int flex_main (int argc, char *argv[])
 		out ("M4_HOOK_EOF_STATE_CASE_TERMINATE");
 	}
 
-	skelout (true);
+	skelout (gv, true);
 
 	/* Copy remainder of input to output. */
 
-	line_directive_out (stdout, gv->infilename, gv->linenum);
+	line_directive_out (gv, stdout, gv->infilename, gv->linenum);
 
 	if (gv->sectnum == 3) {
 		OUT_BEGIN_CODE ();
                 if (!gv->ctrl.no_section3_escape)
                    fputs("[[", stdout);
-		(void) flexscan ();	/* copy remainder of input to output */
+		(void) flexscan (&yylval, gv->scanner);	/* copy remainder of input to output */
                 if (!gv->ctrl.no_section3_escape)
                    fputs("]]", stdout);
 		OUT_END_CODE ();
@@ -287,7 +409,7 @@ int flex_main (int argc, char *argv[])
 	/* Note, flexend does not return.  It exits with its argument
 	 * as status.
 	 */
-	flexend (0);
+	flexend (gv, 0);
 
 	return 0;		/* keep compilers/lint happy */
 }
@@ -309,40 +431,41 @@ int main (int argc, char *argv[])
 
 /* Set up the output filter chain. */
 
-void initialize_output_filters(void)
+void initialize_output_filters(FlexState* gv)
 {
 	const char * m4 = NULL;
 
-	gv->output_chain = filter_create_int(NULL, filter_tee_header, gv->env.headerfilename);
+	gv->output_chain = filter_create_int(gv, NULL, filter_tee_header, gv->env.headerfilename);
 	if ( !(m4 = getenv("M4"))) {
 		m4 = M4;
 	}
-	filter_create_ext(gv->output_chain, m4, "-P", (char *) 0);
-	filter_create_int(gv->output_chain, filter_fix_linedirs, NULL);
+        printf("/*==Stack bug? ==*/\n");        
+	filter_create_ext(gv, gv->output_chain, m4, "-P");
+	filter_create_int(gv, gv->output_chain, filter_fix_linedirs, NULL);
 
 	/* For debugging, only run the requested number of filters. */
 	if (gv->preproc_level > 0) {
 		filter_truncate(gv->output_chain, gv->preproc_level);
-		filter_apply_chain(gv->output_chain);
+		filter_apply_chain(gv, gv->output_chain);
 	}
 }
 
 
 /* check_options - check user-specified options */
 
-void check_options (void)
+void check_options (FlexState* gv)
 {
 	int     i;
 
 	if (gv->ctrl.lex_compat) {
 		if (gv->ctrl.C_plus_plus)
-			flexerror (_("Can't use -+ with -l option"));
+			flexerror (gv, _("Can't use -+ with -l option"));
 
 		if (gv->ctrl.fulltbl || gv->ctrl.fullspd)
-			flexerror (_("Can't use -f or -F with -l option"));
+			flexerror (gv, _("Can't use -f or -F with -l option"));
 
 		if (gv->ctrl.reentrant || gv->ctrl.bison_bridge_lval)
-			flexerror (_
+			flexerror (gv, _
 				   ("Can't use --ctrl.reentrant or --bison-bridge with -l option"));
 
 		gv->ctrl.yytext_is_array = true;
@@ -374,35 +497,35 @@ void check_options (void)
 
 	if (gv->ctrl.fulltbl || gv->ctrl.fullspd) {
 		if (gv->ctrl.usemecs)
-			flexerror (_
+			flexerror (gv, _
 				   ("-Cf/-CF and -Cm don't make sense together"));
 
 		if (gv->ctrl.interactive != trit_false)
-			flexerror (_("-Cf/-CF and -I are incompatible"));
+			flexerror (gv, _("-Cf/-CF and -I are incompatible"));
 
 		if (gv->ctrl.lex_compat)
-			flexerror (_
+			flexerror (gv, _
 				   ("-Cf/-CF are incompatible with lex-compatibility mode"));
 
 
 		if (gv->ctrl.fulltbl && gv->ctrl.fullspd)
-			flexerror (_
+			flexerror (gv, _
 				   ("-Cf and -CF are mutually exclusive"));
 	}
 
 	if (gv->ctrl.C_plus_plus && gv->ctrl.fullspd)
-		flexerror (_("Can't use -+ with -CF option"));
+		flexerror (gv, _("Can't use -+ with -CF option"));
 
 	if (gv->ctrl.C_plus_plus && gv->ctrl.yytext_is_array) {
-		lwarn (_("%array incompatible with -+ option"));
+		lwarn (gv, _("%array incompatible with -+ option"));
 		gv->ctrl.yytext_is_array = false;
 	}
 
 	if (gv->ctrl.C_plus_plus && (gv->ctrl.reentrant))
-		flexerror (_("Options -+ and --reentrant are mutually exclusive."));
+		flexerror (gv, _("Options -+ and --reentrant are mutually exclusive."));
 
 	if (gv->ctrl.C_plus_plus && gv->ctrl.bison_bridge_lval)
-		flexerror (_("bison bridge not supported for the C++ scanner."));
+		flexerror (gv, _("bison bridge not supported for the C++ scanner."));
 
 
 	if (gv->ctrl.useecs) {		/* Set up doubly-linked equivalence classes. */
@@ -433,7 +556,7 @@ void check_options (void)
 
 		if (!gv->env.did_outfilename) {
 			snprintf (gv->outfile_path, sizeof(gv->outfile_path), gv->outfile_template,
-				  gv->ctrl.prefix, suffix());
+				  gv->ctrl.prefix, suffix(gv));
 
 			gv->env.outfilename = gv->outfile_path;
 		}
@@ -441,7 +564,7 @@ void check_options (void)
 		prev_stdout = freopen (gv->env.outfilename, "w+", stdout);
 
 		if (prev_stdout == NULL)
-			lerr (_("could not create %s"), gv->env.outfilename);
+			lerr (gv, _("could not create %s"), gv->env.outfilename);
 
 		gv->outfile_created = 1;
 	}
@@ -453,7 +576,7 @@ void check_options (void)
  *    This routine does not return.
  */
 
-void flexend (int exit_status)
+void flexend (FlexState* gv, int exit_status)
 {
 	//static int called_before = -1;	/* prevent infinite recursion. */
 	int     tblsiz;
@@ -462,29 +585,29 @@ void flexend (int exit_status)
 		FLEX_EXIT (exit_status);
 
 	if (gv->ctrl.yyclass != NULL && !gv->ctrl.C_plus_plus)
-		flexerror (_("%option yyclass only meaningful for C++ scanners"));
+		flexerror (gv, _("%option yyclass only meaningful for C++ scanners"));
 
 	if (gv->skelfile != NULL) {
 		if (ferror (gv->skelfile))
-			lerr (_("input error reading skeleton file %s"),
+			lerr (gv, _("input error reading skeleton file %s"),
 				gv->env.skelname);
 
 		else if (fclose (gv->skelfile))
-			lerr (_("error closing skeleton file %s"),
+			lerr (gv, _("error closing skeleton file %s"),
 				gv->env.skelname);
 	}
 
 	if (exit_status != 0 && gv->outfile_created) {
 		if (ferror (stdout))
-			lerr (_("error writing output file %s"),
+			lerr (gv, _("error writing output file %s"),
 				gv->env.outfilename);
 
 		else if ((gv->_stdout_closed = 1) && fclose (stdout))
-			lerr (_("error closing output file %s"),
+			lerr (gv, _("error closing output file %s"),
 				gv->env.outfilename);
 
 		else if (unlink (gv->env.outfilename))
-			lerr (_("error deleting output file %s"),
+			lerr (gv, _("error deleting output file %s"),
 				gv->env.outfilename);
 	}
 
@@ -502,11 +625,11 @@ void flexend (int exit_status)
 				 _("Compressed tables always back up.\n"));
 
 		if (ferror (gv->ctrl.backing_up_file))
-			lerr (_("error writing backup file %s"),
+			lerr (gv, _("error writing backup file %s"),
 				gv->backing_name);
 
 		else if (fclose (gv->ctrl.backing_up_file))
-			lerr (_("error closing backup file %s"),
+			lerr (gv, _("error closing backup file %s"),
 				gv->backing_name);
 	}
 
@@ -703,7 +826,7 @@ void flexend (int exit_status)
 
 /* flexinit - initialize flex */
 
-void flexinit (int argc, char **argv)
+void flexinit (FlexState* gv, int argc, char **argv)
 {
 	int     i, sawcmpflag, rv, optind;
 	char   *arg;
@@ -740,7 +863,7 @@ void flexinit (int argc, char **argv)
 	buf_init (&gv->userdef_buf, sizeof (char));	/* one long string */
 	buf_init (&gv->top_buf, sizeof (char));	    /* one long string */
 
-	sf_init ();
+	sf_init (gv);
 
 	/* Enable C++ if program name ends with '+'. */
 	gv->program_name = argv[0];
@@ -825,7 +948,7 @@ void flexinit (int argc, char **argv)
 					break;
 
 				    default:
-					lerr (_
+					lerr (gv, _
 					      ("unknown -C option '%c'"),
 					      arg[i]);
 					break;
@@ -851,7 +974,7 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_HELP:
-			usage ();
+			usage (gv);
 			FLEX_EXIT (0);
 
 		    case OPT_INTERACTIVE:
@@ -1034,7 +1157,7 @@ void flexinit (int argc, char **argv)
 				    def = "1";
 
 			    snprintf(buf2, sizeof(buf2), "M4_HOOK_CONST_DEFINE_UNKNOWN(%s, %s)", arg, def);
-			    buf_strappend (&gv->userdef_buf, buf2);
+			    buf_strappend (gv, &gv->userdef_buf, buf2);
 		    }
 		    break;
 
@@ -1182,7 +1305,7 @@ void flexinit (int argc, char **argv)
 
 	gv->num_input_files = argc - optind;
 	gv->input_files = argv + optind;
-	set_input_file (gv->num_input_files > 0 ? gv->input_files[0] : NULL);
+	set_input_file (gv->scanner, gv->num_input_files > 0 ? gv->input_files[0] : NULL);
 
 	gv->lastccl = gv->lastsc = gv->lastdfa = gv->lastnfa = 0;
 	gv->num_rules = gv->num_eof_rules = gv->default_rule = 0;
@@ -1202,25 +1325,25 @@ void flexinit (int argc, char **argv)
 	 */
 	gv->lastprot = 1;
 
-	set_up_initial_allocations ();
+	set_up_initial_allocations (gv);
 }
 
 
 /* readin - read in the rules section of the input file(s) */
 
-void readin (void)
+void readin (FlexState* gv)
 {
 	char buf[256];
 
-	line_directive_out(NULL, gv->infilename, gv->linenum);
+	line_directive_out(gv, NULL, gv->infilename, gv->linenum);
 
-	if (yyparse ()) {
-		pinpoint_message (_("fatal parse error"));
-		flexend (1);
+	if (yyparse (gv->scanner, gv)) {
+		pinpoint_message (gv, _("fatal parse error"));
+		flexend (gv, 1);
 	}
 
 	if (gv->syntaxerror)
-		flexend (1);
+		flexend (gv, 1);
 
 	/* On --emit, -e, or change backends This is where backend
 	 * properties are collected, which means they can't be set
@@ -1228,11 +1351,11 @@ void readin (void)
 	 * when %option emit was evaluated; this catches command-line
 	 * optiins and the default case.
 	 */
-	backend_by_name(gv->ctrl.emit);
+	backend_by_name(gv, gv->ctrl.emit);
 
-	initialize_output_filters();
+	initialize_output_filters(gv);
 
-	yyout = stdout;
+        yyset_out(stdout, gv->scanner);
 
 	if (gv->tablesext)
 		gv->gentables = false;
@@ -1255,7 +1378,7 @@ void readin (void)
 		}
 
 		if ((tablesout = fopen (gv->tablesfilename, "w")) == NULL)
-			lerr (_("could not create %s"), gv->tablesfilename);
+			lerr (gv, _("could not create %s"), gv->tablesfilename);
 		free(pname);
 		gv->tablesfilename = 0;
 
@@ -1264,24 +1387,24 @@ void readin (void)
 		nbytes = strlen (gv->ctrl.prefix) + strlen ("tables") + 2;
 		gv->tablesname = calloc(nbytes, 1);
 		snprintf (gv->tablesname, nbytes, "%stables", gv->ctrl.prefix);
-		yytbl_hdr_init (&hdr, flex_version, gv->tablesname);
+		yytbl_hdr_init (gv, &hdr, flex_version, gv->tablesname);
 
-		if (yytbl_hdr_fwrite (&gv->tableswr, &hdr) <= 0)
-			flexerror (_("could not write tables header"));
+		if (yytbl_hdr_fwrite (gv, &gv->tableswr, &hdr) <= 0)
+			flexerror (gv, _("could not write tables header"));
 	}
 
 	if (gv->env.skelname && (gv->skelfile = fopen (gv->env.skelname, "r")) == NULL)
-		lerr (_("can't open skeleton file %s"), gv->env.skelname);
+		lerr (gv, _("can't open skeleton file %s"), gv->env.skelname);
 
 	if (strchr(gv->ctrl.prefix, '[') || strchr(gv->ctrl.prefix, ']'))
-		flexerror(_("Prefix cannot include '[' or ']'"));
+		flexerror(gv, _("Prefix cannot include '[' or ']'"));
 
 	if (gv->env.did_outfilename)
-		line_directive_out (stdout, NULL, gv->linenum);
+		line_directive_out (gv, stdout, NULL, gv->linenum);
 
 	/* This is where we begin writing to the file. */
 
-	skelout(false);	/* [0.0] Make hook macros available, silently */
+	skelout(gv, false);	/* [0.0] Make hook macros available, silently */
 
 	comment("A lexical scanner generated by flex\n");
 
@@ -1290,7 +1413,7 @@ void readin (void)
 		outn((char*) gv->top_buf.elts);
 
 	/* Place a bogus line directive, it will be fixed in the filter. */
-	line_directive_out(NULL, NULL, 0);
+	line_directive_out(gv, NULL, NULL, 0);
 
 	/* User may want to set the scanner prototype */
 	if (gv->ctrl.yydecl != NULL) {
@@ -1341,7 +1464,7 @@ void readin (void)
 	if (gv->env.backing_up_report) {
 		gv->ctrl.backing_up_file = fopen (gv->backing_name, "w");
 		if (gv->ctrl.backing_up_file == NULL)
-			lerr (_
+			lerr (gv, _
 				("could not create backing-up info file %s"),
 				gv->backing_name);
 	}
@@ -1406,13 +1529,13 @@ void readin (void)
 
 	if ((gv->ctrl.fulltbl || gv->ctrl.fullspd) && gv->reject) {
 		if (gv->real_reject)
-			flexerror (_
+			flexerror (gv, _
 				   ("REJECT cannot be used with -f or -F"));
 		else if (gv->ctrl.do_yylineno)
-			flexerror (_
+			flexerror (gv, _
 				   ("%option yylineno cannot be used with REJECT"));
 		else
-			flexerror (_
+			flexerror (gv, _
 				   ("variable trailing context rules cannot be used with -f or -F"));
 	}
 
@@ -1426,7 +1549,7 @@ void readin (void)
 	gv->NUL_ec = ABS (gv->ecgroup[0]);
 
 	if (gv->ctrl.useecs)
-		ccl2ecl ();
+		ccl2ecl (gv);
 
 	// These are used to conditionalize code in the lex skeleton
 	// that historically used to be generated by C code in flex
@@ -1448,9 +1571,9 @@ void readin (void)
 			strsz = strlen(fmt) + strlen(gv->scname[i]) + (size_t)(1 + ceil (log10(i))) + 2;
 			str = malloc(strsz);
 			if (!str)
-				flexfatal(_("allocation of macro definition failed"));
+				flexfatal(gv, _("allocation of macro definition failed"));
 			snprintf(str, strsz, fmt, gv->scname[i], i - 1);
-			buf_strappend(&tmpbuf, str);
+			buf_strappend(gv, &tmpbuf, str);
 			free(str);
 		}
 		// FIXME: Not dumped visibly because we plan to do away with the indirection
@@ -1697,7 +1820,7 @@ void readin (void)
 
 /* set_up_initial_allocations - allocate memory for internal tables */
 
-void set_up_initial_allocations (void)
+void set_up_initial_allocations (FlexState* gv)
 {
 	gv->maximum_mns = (gv->ctrl.long_align ? MAXIMUM_MNS_LONG : MAXIMUM_MNS);
 	gv->current_mns = INITIAL_MNS;
@@ -1714,21 +1837,21 @@ void set_up_initial_allocations (void)
 	gv->current_max_rules = INITIAL_MAX_RULES;
 	gv->rule_type = allocate_integer_array (gv->current_max_rules);
 	gv->rule_linenum = allocate_integer_array (gv->current_max_rules);
-	gv->rule_useful = allocate_array(gv->current_max_rules, sizeof(char));
-	gv->rule_has_nl = allocate_array(gv->current_max_rules, sizeof(char));
+	gv->rule_useful = allocate_array(gv, gv->current_max_rules, sizeof(char));
+	gv->rule_has_nl = allocate_array(gv, gv->current_max_rules, sizeof(char));
 
 	gv->current_max_scs = INITIAL_MAX_SCS;
 	gv->scset = allocate_integer_array (gv->current_max_scs);
 	gv->scbol = allocate_integer_array (gv->current_max_scs);
-	gv->scxclu = allocate_array(gv->current_max_scs, sizeof(char));
-	gv->sceof = allocate_array(gv->current_max_scs, sizeof(char));
+	gv->scxclu = allocate_array(gv, gv->current_max_scs, sizeof(char));
+	gv->sceof = allocate_array(gv, gv->current_max_scs, sizeof(char));
 	gv->scname = allocate_char_ptr_array (gv->current_max_scs);
 
 	gv->current_maxccls = INITIAL_MAX_CCLS;
 	gv->cclmap = allocate_integer_array (gv->current_maxccls);
 	gv->ccllen = allocate_integer_array (gv->current_maxccls);
 	gv->cclng = allocate_integer_array (gv->current_maxccls);
-	gv->ccl_has_nl = allocate_array(gv->current_maxccls, sizeof(char));
+	gv->ccl_has_nl = allocate_array(gv, gv->current_maxccls, sizeof(char));
 
 	gv->current_max_ccl_tbl_size = INITIAL_MAX_CCL_TBL_SIZE;
 	gv->ccltbl = allocate_Character_array (gv->current_max_ccl_tbl_size);
@@ -1749,20 +1872,20 @@ void set_up_initial_allocations (void)
 	gv->accsiz = allocate_integer_array (gv->current_max_dfas);
 	gv->dhash = allocate_integer_array (gv->current_max_dfas);
 	gv->dss = allocate_int_ptr_array (gv->current_max_dfas);
-	gv->dfaacc = allocate_array(gv->current_max_dfas,
+	gv->dfaacc = allocate_array(gv, gv->current_max_dfas,
 		sizeof(union dfaacc_union));
 
 	gv->nultrans = NULL;
 }
 
 
-void usage (void)
+void usage (FlexState* gv)
 {
 	FILE   *f = stdout;
 
 	if (!gv->env.did_outfilename) {
 		snprintf (gv->outfile_path, sizeof(gv->outfile_path), gv->outfile_template,
-			  gv->ctrl.prefix, suffix());
+			  gv->ctrl.prefix, suffix(gv));
 		gv->env.outfilename = gv->outfile_path;
 	}
 

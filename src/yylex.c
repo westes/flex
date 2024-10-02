@@ -37,24 +37,23 @@
 
 
 /* yylex - scan for a regular expression token */
-extern char *yytext;
-extern FILE *yyout;
 //bool no_section3_escape = false;
-int     yylex (void)
+int     yylex (YYSTYPE * yylval_param, yyscan_t yyscanner)
 {
-	int     toktype;
+	int     toktype, yylval;
 	//static int beglin = false;
+        FlexState* gv = (FlexState*)yyget_extra ( yyscanner );
 
 	if (gv->eofseen) {
 		toktype = EOF;
         } else {
-		toktype = flexscan ();
+		toktype = flexscan (yylval_param, yyscanner);
         }
 	if (toktype == EOF || toktype == 0) {
 		gv->eofseen = true;
 
 		if (gv->sectnum == 1) {
-			synerr (_("premature EOF"));
+			synerr (gv, _("premature EOF"));
 			gv->sectnum = 2;
 			toktype = SECTEND;
 		}
@@ -62,7 +61,8 @@ int     yylex (void)
 		else
 			toktype = 0;
 	}
-
+        yylval = *yylval_param;
+        
 	if (gv->env.trace) {
 		if (gv->beglin) {
 			fprintf (stderr, "%d\t", gv->num_rules + 1);
@@ -176,7 +176,7 @@ int     yylex (void)
 			break;
 
 		case TOK_OPTION:
-			fprintf (stderr, "%s ", yytext);
+			fprintf (stderr, "%s ", yyget_text(yyscanner));
 			break;
 
 		case TOK_OUTFILE:
@@ -193,7 +193,7 @@ int     yylex (void)
 		case CCE_SPACE:
 		case CCE_UPPER:
 		case CCE_XDIGIT:
-			fprintf (stderr, "%s", yytext);
+			fprintf (stderr, "%s", yyget_text(yyscanner));
 			break;
 
 		case 0:

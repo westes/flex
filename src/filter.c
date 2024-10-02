@@ -38,7 +38,7 @@ static const char * check_4_gnu_m4 =
  *            not including argv[0].
  * @return newest filter in chain
  */
-struct filter *filter_create_ext (struct filter *chain, const char *cmd,
+struct filter *filter_create_ext (FlexState* gv, struct filter *chain, const char *cmd,
 				  ...)
 {
 	struct filter *f;
@@ -49,7 +49,7 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
 	/* allocate and initialize new filter */
 	f = calloc(sizeof(struct filter), 1);
 	if (!f)
-		flexerror(_("calloc failed (f) in filter_create_ext"));
+		flexerror(gv, _("calloc failed (f) in filter_create_ext"));
 	f->filter_func = NULL;
 	f->extra = NULL;
 	f->next = NULL;
@@ -67,7 +67,7 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
 	max_args = 8;
 	f->argv = malloc(sizeof(char *) * (size_t) (max_args + 1));
 	if (!f->argv)
-		flexerror(_("malloc failed (f->argv) in filter_create_ext"));
+		flexerror(gv, _("malloc failed (f->argv) in filter_create_ext"));
 	f->argv[f->argc++] = cmd;
 
 	va_start (ap, cmd);
@@ -92,8 +92,8 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
  * @param extra optional user-defined data to pass to the filter.
  * @return newest filter in chain
  */
-struct filter *filter_create_int (struct filter *chain,
-				  int (*filter_func) (struct filter *),
+struct filter *filter_create_int (FlexState* gv, struct filter *chain,
+				  int (*filter_func) (FlexState* gv, struct filter *),
 				  void *extra)
 {
 	struct filter *f;
@@ -101,7 +101,7 @@ struct filter *filter_create_int (struct filter *chain,
 	/* allocate and initialize new filter */
 	f = calloc(sizeof(struct filter), 1);
 	if (!f)
-		flexerror(_("calloc failed in filter_create_int"));
+		flexerror(gv, _("calloc failed in filter_create_int"));
 	f->next = NULL;
 	f->argc = 0;
 	f->argv = NULL;
@@ -123,7 +123,7 @@ struct filter *filter_create_int (struct filter *chain,
  *  @param chain The head of the chain.
  *  @return true on success.
  */
-bool filter_apply_chain (struct filter * chain)
+bool filter_apply_chain (FlexState* gv, struct filter * chain)
 {
 	int     pid, pipes[2];
 
@@ -133,7 +133,7 @@ bool filter_apply_chain (struct filter * chain)
 	 * to be children of the main flex process.
 	 */
 	if (chain)
-		filter_apply_chain (chain->next);
+		filter_apply_chain (gv, chain->next);
 	else
 		return true;
 
@@ -145,10 +145,10 @@ bool filter_apply_chain (struct filter * chain)
 
 
 	if (pipe (pipes) == -1)
-		flexerror (_("pipe failed"));
+		flexerror (gv, _("pipe failed"));
 
 	if ((pid = fork ()) == -1)
-		flexerror (_("fork failed"));
+		flexerror (gv, _("fork failed"));
 
 	if (pid == 0) {
 		/* child */
@@ -162,7 +162,7 @@ bool filter_apply_chain (struct filter * chain)
 		close (pipes[1]);
 		clearerr(stdin);
 		if (dup2 (pipes[0], fileno (stdin)) == -1)
-			flexfatal (_("dup2(pipes[0],0)"));
+			flexfatal (gv, _("dup2(pipes[0],0)"));
 		close (pipes[0]);
 		fseek (stdin, 0, SEEK_CUR);
 		ungetc(' ', stdin); /* still an evil hack, but one that works better */
@@ -172,14 +172,14 @@ bool filter_apply_chain (struct filter * chain)
 		if (chain->filter_func) {
 			int     r;
 
-			if ((r = chain->filter_func (chain)) == -1)
-				flexfatal (_("filter_func failed"));
+			if ((r = chain->filter_func (gv, chain)) == -1)
+				flexfatal (gv, _("filter_func failed"));
 			FLEX_EXIT (0);
 		}
 		else {
 			execvp (chain->argv[0],
 				(char **const) (chain->argv));
-			lerr_fatal ( _("exec of %s failed"),
+			lerr_fatal (gv, _("exec of %s failed"),
 				     chain->argv[0]);
 		}
 
@@ -189,7 +189,7 @@ bool filter_apply_chain (struct filter * chain)
 	/* Parent */
 	close (pipes[0]);
 	if (dup2 (pipes[1], fileno (stdout)) == -1)
-		flexfatal (_("dup2(pipes[1],1)"));
+		flexfatal (gv, _("dup2(pipes[1],1)"));
 	close (pipes[1]);
 	fseek (stdout, 0, SEEK_CUR);
 
@@ -222,7 +222,7 @@ int filter_truncate (struct filter *chain, int max_len)
  *  The header file name is in extra.
  *  @return 0 (zero) on success, and -1 on failure.
  */
-int filter_tee_header (struct filter *chain)
+int filter_tee_header (FlexState* gv, struct filter *chain)
 {
 	/* This function reads from stdin and writes to both the C file and the
 	 * header file at the same time.
@@ -241,14 +241,14 @@ int filter_tee_header (struct filter *chain)
 	 */
 
 	if ((to_cfd = dup (1)) == -1)
-		flexfatal (_("dup(1) failed"));
+		flexfatal (gv, _("dup(1) failed"));
 	to_c = fdopen (to_cfd, "w");
 
 	if (write_header) {
 		if (freopen ((char *) chain->extra, "w", stdout) == NULL)
-			flexfatal (_("freopen(headerfilename) failed"));
+			flexfatal (gv, _("freopen(headerfilename) failed"));
 
-		filter_apply_chain (chain->next);
+		filter_apply_chain (gv, chain->next);
 		to_h = stdout;
 	}
 
@@ -286,24 +286,24 @@ int filter_tee_header (struct filter *chain)
 
 		/* write a fake line number. It will get fixed by the linedir filter. */
 		if (gv->ctrl.gen_line_dirs)
-			line_directive_out (to_h, NULL, 4000);
+			line_directive_out (gv, to_h, NULL, 4000);
 		fflush (to_h);
 		if (ferror (to_h))
-			lerr (_("error writing output file %s"),
+			lerr (gv, _("error writing output file %s"),
 				(char *) chain->extra);
 
 		else if (fclose (to_h))
-			lerr (_("error closing output file %s"),
+			lerr (gv, _("error closing output file %s"),
 				(char *) chain->extra);
 	}
 
 	fflush (to_c);
 	if (ferror (to_c))
-		lerr (_("error writing output file %s"),
+		lerr (gv, _("error writing output file %s"),
 			gv->env.outfilename != NULL ? gv->env.outfilename : "<stdout>");
 
 	else if (fclose (to_c))
-		lerr (_("error closing output file %s"),
+		lerr (gv, _("error closing output file %s"),
 			gv->env.outfilename != NULL ? gv->env.outfilename : "<stdout>");
 
 	while (wait (0) > 0) ;
@@ -325,10 +325,10 @@ static bool is_blank_line (const char *str)
  * not user code. This also happens to be a good place to squeeze multiple
  * blank lines into a single blank line.
  */
-int filter_fix_linedirs (struct filter *chain)
+int filter_fix_linedirs (FlexState* gv, struct filter *chain)
 {
 	char   buf[4096];
-	const char *cp;
+	//const char *cp;
 	const size_t readsz = sizeof buf;
 	int     lineno = 1;
 	bool    in_gen = true;	/* in generated code */
@@ -351,7 +351,7 @@ int filter_fix_linedirs (struct filter *chain)
 			char   *fname;
 
 			/* extract the line number and filename */
-			fname = regmatch_dup (&m[2], buf);
+			fname = regmatch_dup (gv, &m[2], buf);
 
 			if (strcmp (fname,
 				gv->env.outfilename != NULL ? gv->env.outfilename : "<stdout>")
@@ -412,11 +412,11 @@ int filter_fix_linedirs (struct filter *chain)
 	}
 	fflush (stdout);
 	if (ferror (stdout))
-		lerr (_("error writing output file %s"),
+		lerr (gv, _("error writing output file %s"),
 			gv->env.outfilename != NULL ? gv->env.outfilename : "<stdout>");
 
 	else if (fclose (stdout))
-		lerr (_("error closing output file %s"),
+		lerr (gv, _("error closing output file %s"),
 			gv->env.outfilename != NULL ? gv->env.outfilename : "<stdout>");
 
 	return 0;

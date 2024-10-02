@@ -36,11 +36,11 @@
 
 /* declarations for functions that have forward references */
 
-void mkentry(int *, int, int, int, int);
-void mkprot(int[], int, int);
-void mktemplate(int[], int, int);
-void mv2front(int);
-int tbldiff(int[], int, int[]);
+void mkentry(FlexState* gv, int *, int, int, int, int);
+void mkprot(FlexState* gv, int[], int, int);
+void mktemplate(FlexState* gv, int[], int, int);
+void mv2front(FlexState* gv, int);
+int tbldiff(FlexState* gv, int[], int, int[]);
 
 
 /* bldtbl - build table entries for dfa state
@@ -78,7 +78,7 @@ int tbldiff(int[], int, int[]);
  * cost only one difference.
  */
 
-void    bldtbl (int state[], int statenum, int totaltrans, int comstate, int comfreq)
+void    bldtbl (FlexState* gv, int state[], int statenum, int totaltrans, int comstate, int comfreq)
 {
 	int     extptr, extrct[2][CSIZE + 1];
 	int     mindiff, minprot, i, d;
@@ -100,7 +100,7 @@ void    bldtbl (int state[], int statenum, int totaltrans, int comstate, int com
 	 */
 
 	if ((totaltrans * 100) < (gv->numecs * PROTO_SIZE_PERCENTAGE))
-		mkentry (state, gv->numecs, statenum, JAMSTATE, totaltrans);
+		mkentry (gv, state, gv->numecs, statenum, JAMSTATE, totaltrans);
 
 	else {
 		/* "checkcom" is true if we should only check "state" against
@@ -118,7 +118,7 @@ void    bldtbl (int state[], int statenum, int totaltrans, int comstate, int com
 			for (i = gv->firstprot; i != NIL; i = gv->protnext[i])
 				if (gv->protcomst[i] == comstate) {
 					minprot = i;
-					mindiff = tbldiff (state, minprot,
+					mindiff = tbldiff (gv, state, minprot,
 							   extrct[extptr]);
 					break;
 				}
@@ -135,7 +135,7 @@ void    bldtbl (int state[], int statenum, int totaltrans, int comstate, int com
 
 			if (gv->firstprot != NIL) {
 				minprot = gv->firstprot;
-				mindiff = tbldiff (state, minprot,
+				mindiff = tbldiff (gv, state, minprot,
 						   extrct[extptr]);
 			}
 		}
@@ -152,7 +152,7 @@ void    bldtbl (int state[], int statenum, int totaltrans, int comstate, int com
 			 * protos.
 			 */
 			for (i = minprot; i != NIL; i = gv->protnext[i]) {
-				d = tbldiff (state, i, extrct[1 - extptr]);
+				d = tbldiff (gv, state, i, extrct[1 - extptr]);
 				if (d < mindiff) {
 					extptr = 1 - extptr;
 					mindiff = d;
@@ -174,18 +174,18 @@ void    bldtbl (int state[], int statenum, int totaltrans, int comstate, int com
 
 			if (comfreq * 100 >=
 			    totaltrans * TEMPLATE_SAME_PERCENTAGE)
-					mktemplate (state, statenum,
+					mktemplate (gv, state, statenum,
 						    comstate);
 
 			else {
-				mkprot (state, statenum, comstate);
-				mkentry (state, gv->numecs, statenum,
+				mkprot (gv, state, statenum, comstate);
+				mkentry (gv, state, gv->numecs, statenum,
 					 JAMSTATE, totaltrans);
 			}
 		}
 
 		else {		/* use the proto */
-			mkentry (extrct[extptr], gv->numecs, statenum,
+			mkentry (gv, extrct[extptr], gv->numecs, statenum,
 				 gv->prottbl[minprot], mindiff);
 
 			/* If this state was sufficiently different from the
@@ -194,7 +194,7 @@ void    bldtbl (int state[], int statenum, int totaltrans, int comstate, int com
 
 			if (mindiff * 100 >=
 			    totaltrans * NEW_PROTO_DIFF_PERCENTAGE)
-					mkprot (state, statenum, comstate);
+					mkprot (gv, state, statenum, comstate);
 
 			/* Since mkprot added a new proto to the proto queue,
 			 * it's possible that "minprot" is no longer on the
@@ -206,7 +206,7 @@ void    bldtbl (int state[], int statenum, int totaltrans, int comstate, int com
 			 * following call will do nothing.
 			 */
 
-			mv2front (minprot);
+			mv2front (gv, minprot);
 		}
 	}
 }
@@ -220,7 +220,7 @@ void    bldtbl (int state[], int statenum, int totaltrans, int comstate, int com
  * classes.
  */
 
-void    cmptmps (void)
+void    cmptmps (FlexState* gv)
 {
 	int tmpstorage[CSIZE + 1];
 	int *tmp = tmpstorage, i, j;
@@ -239,7 +239,7 @@ void    cmptmps (void)
 		gv->nummecs = gv->numecs;
 
 	while (gv->lastdfa + gv->numtemps + 1 >= gv->current_max_dfas)
-		increase_max_dfas ();
+		increase_max_dfas (gv);
 
 	/* Loop through each template. */
 
@@ -279,7 +279,7 @@ void    cmptmps (void)
 		 */
 
 		/* Leave room for the jam-state after the last real state. */
-		mkentry (tmp, gv->nummecs, gv->lastdfa + i + 1, JAMSTATE,
+		mkentry (gv, tmp, gv->nummecs, gv->lastdfa + i + 1, JAMSTATE,
 			 totaltrans);
 	}
 }
@@ -288,7 +288,7 @@ void    cmptmps (void)
 
 /* expand_nxt_chk - expand the next check arrays */
 
-void    expand_nxt_chk (void)
+void    expand_nxt_chk (FlexState* gv)
 {
 	int old_max = gv->current_max_xpairs;
 
@@ -322,7 +322,7 @@ void    expand_nxt_chk (void)
  * and an action number will be added in [-1].
  */
 
-int     find_table_space (int *state, int numtrans)
+int     find_table_space (FlexState* gv, int *state, int numtrans)
 {
 	/* Firstfree is the position of the first possible occurrence of two
 	 * consecutive unused records in the chk and nxt arrays.
@@ -356,7 +356,7 @@ int     find_table_space (int *state, int numtrans)
 
 	while (1) {		/* loops until a space is found */
 		while (i + gv->numecs >= gv->current_max_xpairs)
-			expand_nxt_chk ();
+			expand_nxt_chk (gv);
 
 		/* Loops until space for end-of-buffer and action number
 		 * are found.
@@ -381,7 +381,7 @@ int     find_table_space (int *state, int numtrans)
 				++i;
 
 			while (i + gv->numecs >= gv->current_max_xpairs)
-				expand_nxt_chk ();
+				expand_nxt_chk (gv);
 		}
 
 		/* If we started search from the beginning, store the new
@@ -416,7 +416,7 @@ int     find_table_space (int *state, int numtrans)
  * Initializes "firstfree" to be one beyond the end of the table.  Initializes
  * all "chk" entries to be zero.
  */
-void    inittbl (void)
+void    inittbl (FlexState* gv)
 {
 	int i;
 
@@ -446,7 +446,7 @@ void    inittbl (void)
 
 /* mkdeftbl - make the default, "jam" table entries */
 
-void    mkdeftbl (void)
+void    mkdeftbl (FlexState* gv)
 {
 	int     i;
 
@@ -455,7 +455,7 @@ void    mkdeftbl (void)
 	++gv->tblend;		/* room for transition on end-of-buffer character */
 
 	while (gv->tblend + gv->numecs >= gv->current_max_xpairs)
-		expand_nxt_chk ();
+		expand_nxt_chk (gv);
 
 	/* Add in default end-of-buffer transition. */
 	gv->nxt[gv->tblend] = gv->end_of_buffer_state;
@@ -495,7 +495,7 @@ void    mkdeftbl (void)
  * state array.
  */
 
-void    mkentry (int *state, int numchars, int statenum, int deflink,
+void    mkentry (FlexState* gv, int *state, int numchars, int statenum, int deflink,
 		 int totaltrans)
 {
 	int minec, maxec, i, baseaddr;
@@ -521,7 +521,7 @@ void    mkentry (int *state, int numchars, int statenum, int deflink,
 		/* There's only one out-transition.  Save it for later to fill
 		 * in holes in the tables.
 		 */
-		stack1 (statenum, minec, state[minec], deflink);
+		stack1 (gv, statenum, minec, state[minec], deflink);
 		return;
 	}
 
@@ -553,7 +553,7 @@ void    mkentry (int *state, int numchars, int statenum, int deflink,
 		}
 
 		while (baseaddr + maxec - minec + 1 >= gv->current_max_xpairs)
-			expand_nxt_chk ();
+			expand_nxt_chk (gv);
 
 		for (i = minec; i <= maxec; ++i)
 			if (state[i] != SAME_TRANS &&
@@ -565,7 +565,7 @@ void    mkentry (int *state, int numchars, int statenum, int deflink,
 
 				while (baseaddr + maxec - minec + 1 >=
 				       gv->current_max_xpairs)
-						expand_nxt_chk ();
+						expand_nxt_chk (gv);
 
 				/* Reset the loop counter so we'll start all
 				 * over again next time it's incremented.
@@ -586,7 +586,7 @@ void    mkentry (int *state, int numchars, int statenum, int deflink,
 	tbllast = tblbase + maxec;
 
 	while (tbllast + 1 >= gv->current_max_xpairs)
-		expand_nxt_chk ();
+		expand_nxt_chk (gv);
 
 	gv->base[statenum] = tblbase;
 	gv->def[statenum] = deflink;
@@ -610,14 +610,14 @@ void    mkentry (int *state, int numchars, int statenum, int deflink,
  *            has only one out-transition
  */
 
-void    mk1tbl (int state, int sym, int onenxt, int onedef)
+void    mk1tbl (FlexState* gv, int state, int sym, int onenxt, int onedef)
 {
 	if (gv->firstfree < sym)
 		gv->firstfree = sym;
 
 	while (gv->chk[gv->firstfree] != 0)
 		if (++gv->firstfree >= gv->current_max_xpairs)
-			expand_nxt_chk ();
+			expand_nxt_chk (gv);
 
 	gv->base[state] = gv->firstfree - sym;
 	gv->def[state] = onedef;
@@ -628,14 +628,14 @@ void    mk1tbl (int state, int sym, int onenxt, int onedef)
 		gv->tblend = gv->firstfree++;
 
 		if (gv->firstfree >= gv->current_max_xpairs)
-			expand_nxt_chk ();
+			expand_nxt_chk (gv);
 	}
 }
 
 
 /* mkprot - create new proto entry */
 
-void    mkprot (int state[], int statenum, int comstate)
+void    mkprot (FlexState* gv, int state[], int statenum, int comstate)
 {
 	int     i, slot, tblbase;
 
@@ -672,7 +672,7 @@ void    mkprot (int state[], int statenum, int comstate)
  *              to it
  */
 
-void    mktemplate (int state[], int statenum, int comstate)
+void    mktemplate (FlexState* gv, int state[], int statenum, int comstate)
 {
 	int     i, numdiff, tmpbase, tmp[CSIZE + 1];
 	unsigned char    transset[CSIZE + 1];
@@ -709,22 +709,22 @@ void    mktemplate (int state[], int statenum, int comstate)
 		}
 
 	if (gv->ctrl.usemecs)
-		mkeccl (transset, tsptr, gv->tecfwd, gv->tecbck, gv->numecs, 0);
+		mkeccl (gv, transset, tsptr, gv->tecfwd, gv->tecbck, gv->numecs, 0);
 
-	mkprot (gv->tnxt + tmpbase, -gv->numtemps, comstate);
+	mkprot (gv, gv->tnxt + tmpbase, -gv->numtemps, comstate);
 
 	/* We rely on the fact that mkprot adds things to the beginning
 	 * of the proto queue.
 	 */
 
-	numdiff = tbldiff (state, gv->firstprot, tmp);
-	mkentry (tmp, gv->numecs, statenum, -gv->numtemps, numdiff);
+	numdiff = tbldiff (gv, state, gv->firstprot, tmp);
+	mkentry (gv, tmp, gv->numecs, statenum, -gv->numtemps, numdiff);
 }
 
 
 /* mv2front - move proto queue element to front of queue */
 
-void    mv2front (int qelm)
+void    mv2front (FlexState* gv, int qelm)
 {
 	if (gv->firstprot != qelm) {
 		if (qelm == gv->lastprot)
@@ -750,11 +750,11 @@ void    mv2front (int qelm)
  * Transnum is the number of out-transitions for the state.
  */
 
-void    place_state (int *state, int statenum, int transnum)
+void    place_state (FlexState* gv, int *state, int statenum, int transnum)
 {
 	int i;
 	int *state_ptr;
-	int position = find_table_space (state, transnum);
+	int position = find_table_space (gv, state, transnum);
 
 	/* "base" is the table of start positions. */
 	gv->base[statenum] = position;
@@ -792,10 +792,10 @@ void    place_state (int *state, int statenum, int transnum)
  * no room, we process the sucker right now.
  */
 
-void    stack1 (int statenum, int sym, int nextstate, int deflink)
+void    stack1 (FlexState* gv, int statenum, int sym, int nextstate, int deflink)
 {
 	if (gv->onesp >= ONE_STACK_SIZE - 1)
-		mk1tbl (statenum, sym, nextstate, deflink);
+		mk1tbl (gv, statenum, sym, nextstate, deflink);
 
 	else {
 		++gv->onesp;
@@ -821,7 +821,7 @@ void    stack1 (int statenum, int sym, int nextstate, int deflink)
  * number is "numecs" minus the number of "SAME_TRANS" entries in "ext".
  */
 
-int     tbldiff (int state[], int pr, int ext[])
+int     tbldiff (FlexState* gv, int state[], int pr, int ext[])
 {
 	int i, *sp = state, *ep = ext, *protp;
 	int numdiff = 0;

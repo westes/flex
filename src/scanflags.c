@@ -37,7 +37,7 @@
 //size_t _sf_top_ix=0, _sf_max=0;
 
 void
-sf_push (void)
+sf_push (FlexState* gv)
 {
     if (gv->_sf_top_ix + 1 >= gv->_sf_max) {
         gv->_sf_max += 32;
@@ -50,7 +50,7 @@ sf_push (void)
 }
 
 void
-sf_pop (void)
+sf_pop (FlexState* gv)
 {
     assert(gv->_sf_top_ix > 0);
     --gv->_sf_top_ix;
@@ -58,13 +58,13 @@ sf_pop (void)
 
 /* one-time initialization. Should be called before any sf_ functions. */
 void
-sf_init (void)
+sf_init (FlexState* gv)
 {
     assert(gv->_sf_stk == NULL);
     gv->_sf_max = 32;
     gv->_sf_stk = malloc(sizeof(scanflags_t) * gv->_sf_max);
     if (!gv->_sf_stk)
-        lerr_fatal(_("Unable to allocate %zu of stack"), sizeof(scanflags_t));
+        lerr_fatal(gv, _("Unable to allocate %zu of stack"), sizeof(scanflags_t));
     gv->_sf_stk[gv->_sf_top_ix] = 0;
 }
 

@@ -59,8 +59,8 @@ static struct hash_entry *ccltab[CCL_HASH_SIZE] = {NULL};
 
 /* declare functions that have forward references */
 
-static int addsym(const char *, const char *, int, hash_table, size_t);
-static struct hash_entry *findsym (const char *sym, hash_table table,
+static int addsym(FlexState* gv, const char *, const char *, int, hash_table, size_t);
+static struct hash_entry *findsym (FlexState* gv, const char *sym, hash_table table,
 				   size_t table_size);
 static size_t hashfunct(const char *, size_t);
 
@@ -70,7 +70,7 @@ static size_t hashfunct(const char *, size_t);
  * -1 is returned if the symbol already exists, and the change not made.
  */
 
-static int addsym (const char *sym, const char *str_def, int int_def, hash_table table, size_t table_size)
+static int addsym (FlexState* gv, const char *sym, const char *str_def, int int_def, hash_table table, size_t table_size)
 {
 	size_t hash_val = hashfunct (sym, table_size);
 	struct hash_entry *sym_entry = table[hash_val];
@@ -88,14 +88,14 @@ static int addsym (const char *sym, const char *str_def, int int_def, hash_table
 	new_entry = malloc(sizeof(struct hash_entry));
 
 	if (new_entry == NULL)
-		flexfatal (_("symbol table memory allocation failed"));
+		flexfatal (gv, _("symbol table memory allocation failed"));
 
 	new_entry->next = table[hash_val];
-	new_entry->name = xstrdup(sym);
+	new_entry->name = xstrdup(gv, sym);
 	if (str_def == NULL) {
 		new_entry->str_val = NULL;
 	} else {
-		new_entry->str_val = xstrdup(str_def);
+		new_entry->str_val = xstrdup(gv, str_def);
 	}
 	new_entry->int_val = int_def;
 
@@ -107,13 +107,13 @@ static int addsym (const char *sym, const char *str_def, int int_def, hash_table
 
 /* cclinstal - save the text of a character class */
 
-void    cclinstal (char ccltxt[], int cclnum)
+void    cclinstal (FlexState* gv, char ccltxt[], int cclnum)
 {
 	/* We don't bother checking the return status because we are not
 	 * called unless the symbol is new.
 	 */
 
-	(void) addsym(ccltxt, NULL, cclnum, gv->ccltab, CCL_HASH_SIZE);
+	(void) addsym(gv, ccltxt, NULL, cclnum, gv->ccltab, CCL_HASH_SIZE);
 }
 
 
@@ -122,15 +122,15 @@ void    cclinstal (char ccltxt[], int cclnum)
  * Returns 0 if there's no CCL associated with the text.
  */
 
-int     ccllookup (char ccltxt[])
+int     ccllookup (FlexState* gv, char ccltxt[])
 {
-	return findsym (ccltxt, gv->ccltab, CCL_HASH_SIZE)->int_val;
+	return findsym (gv, ccltxt, gv->ccltab, CCL_HASH_SIZE)->int_val;
 }
 
 
 /* findsym - find symbol in symbol table */
 
-static struct hash_entry *findsym (const char *sym, hash_table table, size_t table_size)
+static struct hash_entry *findsym (FlexState* gv, const char *sym, hash_table table, size_t table_size)
 {
 	//static struct hash_entry empty_entry = {
 	//	NULL, NULL, NULL, 0,
@@ -169,10 +169,10 @@ static size_t hashfunct (const char *str, size_t hash_size)
 
 /* ndinstal - install a name definition */
 
-void    ndinstal (const char *name, char definition[])
+void    ndinstal (FlexState* gv, const char *name, char definition[])
 {
-	if (addsym(name, definition, 0, gv->ndtbl, NAME_TABLE_HASH_SIZE)) {
-		synerr (_("name defined twice"));
+	if (addsym(gv, name, definition, 0, gv->ndtbl, NAME_TABLE_HASH_SIZE)) {
+		synerr (gv, _("name defined twice"));
 	}
 }
 
@@ -182,15 +182,15 @@ void    ndinstal (const char *name, char definition[])
  * Returns a nil pointer if the name definition does not exist.
  */
 
-char   *ndlookup (const char *nd)
+char   *ndlookup (FlexState* gv, const char *nd)
 {
-	return findsym (nd, gv->ndtbl, NAME_TABLE_HASH_SIZE)->str_val;
+	return findsym (gv, nd, gv->ndtbl, NAME_TABLE_HASH_SIZE)->str_val;
 }
 
 
 /* scextend - increase the maximum number of start conditions */
 
-void    scextend (void)
+void    scextend (FlexState* gv)
 {
 	gv->current_max_scs += MAX_SCS_INCREMENT;
 
@@ -198,29 +198,29 @@ void    scextend (void)
 
 	gv->scset = reallocate_integer_array (gv->scset, gv->current_max_scs);
 	gv->scbol = reallocate_integer_array (gv->scbol, gv->current_max_scs);
-	gv->scxclu = reallocate_array(gv->scxclu, gv->current_max_scs,
+	gv->scxclu = reallocate_array(gv, gv->scxclu, gv->current_max_scs,
 		sizeof(char));
-	gv->sceof = reallocate_array(gv->sceof, gv->current_max_scs, sizeof(char));
+	gv->sceof = reallocate_array(gv, gv->sceof, gv->current_max_scs, sizeof(char));
 	gv->scname = reallocate_char_ptr_array (gv->scname, gv->current_max_scs);
 }
 
 
 /* scinstal - make a start condition */
 
-void    scinstal (const char *str, bool sc_is_exclusive)
+void    scinstal (FlexState* gv, const char *str, bool sc_is_exclusive)
 {
 
 	if (++gv->lastsc >= gv->current_max_scs)
-		scextend ();
+		scextend (gv);
 
-	if (addsym(str, NULL, gv->lastsc, gv->sctbl, START_COND_HASH_SIZE)) {
-		format_pinpoint_message (
+	if (addsym(gv, str, NULL, gv->lastsc, gv->sctbl, START_COND_HASH_SIZE)) {
+		format_pinpoint_message (gv,
 			_("start condition %s declared twice"), str);
 	}
 	gv->scname[gv->lastsc] = gv->sctbl[hashfunct(str, START_COND_HASH_SIZE)]->name;
 
-	gv->scset[gv->lastsc] = mkstate (SYM_EPSILON);
-	gv->scbol[gv->lastsc] = mkstate (SYM_EPSILON);
+	gv->scset[gv->lastsc] = mkstate (gv, SYM_EPSILON);
+	gv->scbol[gv->lastsc] = mkstate (gv, SYM_EPSILON);
 	gv->scxclu[gv->lastsc] = sc_is_exclusive ? 1 : 0;
 	gv->sceof[gv->lastsc] = false;
 }
@@ -231,7 +231,7 @@ void    scinstal (const char *str, bool sc_is_exclusive)
  * Returns 0 if no such start condition.
  */
 
-int     sclookup (const char *str)
+int     sclookup (FlexState* gv, const char *str)
 {
-	return findsym (str, gv->sctbl, START_COND_HASH_SIZE)->int_val;
+	return findsym (gv, str, gv->sctbl, START_COND_HASH_SIZE)->int_val;
 }

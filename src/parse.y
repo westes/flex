@@ -1,5 +1,7 @@
 /* parse.y - parser for flex input */
-
+%pure-parser
+%lex-param {yyscan_t  yyscanner}
+%parse-param {yyscan_t yyscanner, FlexState* gv}
 %token CHAR NUMBER SECTEND SCDECL XSCDECL NAME PREVCCL EOF_OP
 %token TOK_OPTION TOK_OUTFILE TOK_PREFIX TOK_YYCLASS TOK_HEADER_FILE TOK_EXTRA_TYPE
 %token TOK_TABLES_FILE TOK_YYLMAX TOK_NUMERIC TOK_YYDECL TOK_PREACTION TOK_POSTACTION
@@ -83,7 +85,7 @@
 	do{ \
         char fw3_msg[MAXLINE];\
         snprintf( fw3_msg, MAXLINE,(fmt), (a1), (a2) );\
-        lwarn( fw3_msg );\
+        lwarn( gv, fw3_msg );\
 	}while(0)
 
 /* Expand a POSIX character class expression. */
@@ -92,7 +94,7 @@
 	int c; \
 	for ( c = 0; c < gv->ctrl.csize; ++c ) \
 		if ( isascii(c) && func(c) ) \
-			ccladd( gv->currccl, c ); \
+			ccladd( gv, gv->currccl, c ); \
 	}while(0)
 
 /* negated class */
@@ -101,7 +103,7 @@
 	int c; \
 	for ( c = 0; c < gv->ctrl.csize; ++c ) \
 		if ( !func(c) ) \
-			ccladd( gv->currccl, c ); \
+			ccladd( gv, gv->currccl, c ); \
 	}while(0)
 
 /* While POSIX defines isblank(), it's not ANSI C. */
@@ -122,31 +124,31 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 			{ /* add default rule */
 			int def_rule;
 
-			gv->pat = cclinit();
-			cclnegate( gv->pat );
+			gv->pat = cclinit(gv);
+			cclnegate( gv, gv->pat );
 
-			def_rule = mkstate( -gv->pat );
+			def_rule = mkstate( gv, -gv->pat );
 
 			/* Remember the number of the default rule so we
 			 * don't generate "can't match" warnings for it.
 			 */
 			gv->default_rule = gv->num_rules;
 
-			finish_rule( def_rule, false, 0, 0, 0);
+			finish_rule( gv, def_rule, false, 0, 0, 0);
 
 			for ( gv->i_parse = 1; gv->i_parse <= gv->lastsc; ++gv->i_parse )
-				gv->scset[gv->i_parse] = mkbranch( gv->scset[gv->i_parse], def_rule );
+				gv->scset[gv->i_parse] = mkbranch( gv, gv->scset[gv->i_parse], def_rule );
 
-			add_action("]]");
+			add_action(gv, "]]");
 
 			if ( gv->ctrl.spprdflt )
-				add_action(
+				add_action(gv,
 				"M4_HOOK_FATAL_ERROR(\"flex scanner jammed\")");
 			else {
-			    add_action("M4_HOOK_ECHO");
+			    add_action(gv, "M4_HOOK_ECHO");
 			}
 
-			add_action( "\n\tM4_HOOK_STATE_CASE_BREAK\n" );
+			add_action( gv, "\n\tM4_HOOK_STATE_CASE_BREAK\n" );
 			}
 		;
 
@@ -154,7 +156,7 @@ initlex		:
 			{ /* initialize for processing rules */
 
 			/* Create default DFA start condition. */
-			scinstal( "INITIAL", false );
+			scinstal( gv, "INITIAL", false );
 			}
 		;
 
@@ -162,12 +164,12 @@ sect1		:  sect1 startconddecl namelist1
 		|  sect1 options
 		|
 		|  error
-			{ synerr( _("unknown error processing section 1") ); }
+			{ synerr(gv, _("unknown error processing section 1") ); }
 		;
 
 sect1end	:  SECTEND
 			{
-			check_options();
+			check_options(gv);
 			gv->scon_stk = allocate_integer_array( gv->lastsc + 1 );
 			gv->scon_stk_ptr = 0;
 			}
@@ -181,13 +183,13 @@ startconddecl	:  SCDECL
 		;
 
 namelist1	:  namelist1 NAME
-			{ scinstal( gv->nmstr, gv->sc_is_exclusive ); }
+			{ scinstal( gv, gv->nmstr, gv->sc_is_exclusive ); }
 
 		|  NAME
-			{ scinstal( gv->nmstr, gv->sc_is_exclusive ); }
+			{ scinstal( gv, gv->nmstr, gv->sc_is_exclusive ); }
 
 		|  error
-			{ synerr( _("bad start condition list") ); }
+			{ synerr(gv, _("bad start condition list") ); }
 		;
 
 options		:  TOK_OPTION optionlist
@@ -199,37 +201,37 @@ optionlist	:  optionlist option
 
 option		:  TOK_OUTFILE '=' NAME
 			{
-			gv->env.outfilename = xstrdup(gv->nmstr);
+			gv->env.outfilename = xstrdup(gv, gv->nmstr);
 			gv->env.did_outfilename = 1;
 			}
 		|  TOK_EXTRA_TYPE '=' NAME
-			{ gv->extra_type = xstrdup(gv->nmstr); }
+			{ gv->extra_type = xstrdup(gv, gv->nmstr); }
 		|  TOK_PREFIX '=' NAME
-			{ gv->ctrl.prefix = xstrdup(gv->nmstr);
+			{ gv->ctrl.prefix = xstrdup(gv, gv->nmstr);
                           if (strchr(gv->ctrl.prefix, '[') || strchr(gv->ctrl.prefix, ']'))
-                              flexerror(_("Prefix must not contain [ or ]")); }
+                              flexerror(gv, _("Prefix must not contain [ or ]")); }
 		|  TOK_YYCLASS '=' NAME
-			{ gv->ctrl.yyclass = xstrdup(gv->nmstr); }
+			{ gv->ctrl.yyclass = xstrdup(gv, gv->nmstr); }
 		|  TOK_HEADER_FILE '=' NAME
-			{ gv->env.headerfilename = xstrdup(gv->nmstr); }
+			{ gv->env.headerfilename = xstrdup(gv, gv->nmstr); }
 		|  TOK_YYLMAX '=' TOK_NUMERIC
 			{ gv->ctrl.yylmax = gv->nmval; }
 		|  TOK_YYDECL '=' NAME
-			{ gv->ctrl.yydecl = xstrdup(gv->nmstr); }
+			{ gv->ctrl.yydecl = xstrdup(gv, gv->nmstr); }
 		|  TOK_PREACTION '=' NAME
-			{ gv->ctrl.preaction = xstrdup(gv->nmstr); }
+			{ gv->ctrl.preaction = xstrdup(gv, gv->nmstr); }
 		|  TOK_POSTACTION '=' NAME
-			{ gv->ctrl.postaction = xstrdup(gv->nmstr); }
+			{ gv->ctrl.postaction = xstrdup(gv, gv->nmstr); }
 		|  TOK_BUFSIZE '=' TOK_NUMERIC
 			{ gv->ctrl.bufsize = gv->nmval; }
 		|  TOK_EMIT '=' NAME
-			{ gv->ctrl.emit = xstrdup(gv->nmstr); backend_by_name(gv->ctrl.emit); }
+			{ gv->ctrl.emit = xstrdup(gv, gv->nmstr); backend_by_name(gv, gv->ctrl.emit); }
 		|  TOK_USERINIT '=' NAME
-			{ gv->ctrl.userinit = xstrdup(gv->nmstr); }
+			{ gv->ctrl.userinit = xstrdup(gv, gv->nmstr); }
 		|  TOK_YYTERMINATE '=' NAME
-			{ gv->ctrl.yyterminate = xstrdup(gv->nmstr); }
+			{ gv->ctrl.yyterminate = xstrdup(gv, gv->nmstr); }
 		|  TOK_TABLES_FILE '=' NAME
-        		{ gv->tablesext = true; gv->tablesfilename = xstrdup(gv->nmstr); }
+        		{ gv->tablesext = true; gv->tablesfilename = xstrdup(gv, gv->nmstr); }
 		;
 
 sect2		:  sect2 scon initforrule flexrule '\n'
@@ -248,21 +250,21 @@ initforrule	:
 			gv->previous_continued_action = gv->continued_action;
 			gv->in_rule = true;
 
-			new_rule();
+			new_rule(gv);
 			}
 		;
 
 flexrule	:  '^' rule
 			{
 			gv->pat = $2;
-			finish_rule( gv->pat, gv->variable_trail_rule,
+			finish_rule( gv, gv->pat, gv->variable_trail_rule,
 				gv->headcnt, gv->trailcnt , gv->previous_continued_action);
 
 			if ( gv->scon_stk_ptr > 0 )
 				{
 				for ( gv->i_parse = 1; gv->i_parse <= gv->scon_stk_ptr; ++gv->i_parse )
 					gv->scbol[gv->scon_stk[gv->i_parse]] =
-						mkbranch( gv->scbol[gv->scon_stk[gv->i_parse]],
+						mkbranch( gv, gv->scbol[gv->scon_stk[gv->i_parse]],
 								gv->pat );
 				}
 
@@ -274,7 +276,7 @@ flexrule	:  '^' rule
 
 				for ( gv->i_parse = 1; gv->i_parse <= gv->lastsc; ++gv->i_parse )
 					if ( ! gv->scxclu[gv->i_parse] )
-						gv->scbol[gv->i_parse] = mkbranch( gv->scbol[gv->i_parse],
+						gv->scbol[gv->i_parse] = mkbranch( gv, gv->scbol[gv->i_parse],
 									gv->pat );
 				}
 
@@ -283,7 +285,7 @@ flexrule	:  '^' rule
 				gv->bol_needed = true;
 
 				if ( gv->env.performance_hint > 1 )
-					pinpoint_message(
+					pinpoint_message(gv,
 			"'^' operator results in sub-optimal performance" );
 				}
 			}
@@ -291,14 +293,14 @@ flexrule	:  '^' rule
 		|  rule
 			{
 			gv->pat = $1;
-			finish_rule( gv->pat, gv->variable_trail_rule,
+			finish_rule( gv, gv->pat, gv->variable_trail_rule,
 				gv->headcnt, gv->trailcnt , gv->previous_continued_action);
 
 			if ( gv->scon_stk_ptr > 0 )
 				{
 				for ( gv->i_parse = 1; gv->i_parse <= gv->scon_stk_ptr; ++gv->i_parse )
 					gv->scset[gv->scon_stk[gv->i_parse]] =
-						mkbranch( gv->scset[gv->scon_stk[gv->i_parse]],
+						mkbranch( gv, gv->scset[gv->scon_stk[gv->i_parse]],
 								gv->pat );
 				}
 
@@ -307,7 +309,7 @@ flexrule	:  '^' rule
 				for ( gv->i_parse = 1; gv->i_parse <= gv->lastsc; ++gv->i_parse )
 					if ( ! gv->scxclu[gv->i_parse] )
 						gv->scset[gv->i_parse] =
-							mkbranch( gv->scset[gv->i_parse],
+							mkbranch( gv, gv->scset[gv->i_parse],
 								gv->pat );
 				}
 			}
@@ -315,7 +317,7 @@ flexrule	:  '^' rule
 		|  EOF_OP
 			{
 			if ( gv->scon_stk_ptr > 0 )
-				build_eof_action();
+				build_eof_action(gv);
 	
 			else
 				{
@@ -327,16 +329,16 @@ flexrule	:  '^' rule
 						gv->scon_stk[++gv->scon_stk_ptr] = gv->i_parse;
 
 				if ( gv->scon_stk_ptr == 0 )
-					lwarn(
+					lwarn(gv,
 			"all start conditions already have <<EOF>> rules" );
 
 				else
-					build_eof_action();
+					build_eof_action(gv);
 				}
 			}
 
 		|  error
-			{ synerr( _("unrecognized rule") ); }
+			{ synerr(gv, _("unrecognized rule") ); }
 		;
 
 scon_stk_ptr	:
@@ -372,13 +374,13 @@ namelist2	:  namelist2 ',' sconname
 		|  sconname
 
 		|  error
-			{ synerr( _("bad start condition list") ); }
+			{ synerr(gv, _("bad start condition list") ); }
 		;
 
 sconname	:  NAME
 			{
-			if ( (gv->scnum = sclookup( gv->nmstr )) == 0 )
-				format_pinpoint_message(
+			if ( (gv->scnum = sclookup( gv, gv->nmstr )) == 0 )
+				format_pinpoint_message(gv,
 					"undeclared start condition %s",
 					gv->nmstr );
 			else
@@ -386,7 +388,7 @@ sconname	:  NAME
 				for ( gv->i_parse = 1; gv->i_parse <= gv->scon_stk_ptr; ++gv->i_parse )
 					if ( gv->scon_stk[gv->i_parse] == gv->scnum )
 						{
-						format_warn(
+						format_warn(gv,
 							"<%s> specified twice",
 							gv->scname[gv->scnum] );
 						break;
@@ -405,10 +407,10 @@ rule		:  re2 re
 				 * will be marked as a trailing context
 				 * state.
 				 */
-				$2 = link_machines( $2,
-						mkstate( SYM_EPSILON ) );
+				$2 = link_machines( gv, $2,
+						mkstate( gv, SYM_EPSILON ) );
 
-			mark_beginning_as_normal( $2 );
+			mark_beginning_as_normal( gv, $2 );
 			gv->current_state_type = STATE_NORMAL;
 
 			if ( gv->previous_continued_action )
@@ -422,7 +424,7 @@ rule		:  re2 re
 				 * erroneously.
 				 */
 				if ( ! gv->varlength || gv->headcnt != 0 )
-					lwarn(
+					lwarn(gv,
 		"trailing context made variable due to preceding '|' action" );
 
 				/* Mark as variable. */
@@ -443,7 +445,7 @@ rule		:  re2 re
 				 * trail rule, and add_accept() can create
 				 * a new state ...
 				 */
-				add_accept( $1,
+				add_accept( gv, $1,
 					gv->num_rules | YY_TRAILING_HEAD_MASK );
 				gv->variable_trail_rule = true;
 				}
@@ -451,11 +453,11 @@ rule		:  re2 re
 			else
 				gv->trailcnt = gv->rulelen;
 
-			$$ = link_machines( $1, $2 );
+			$$ = link_machines( gv, $1, $2 );
 			}
 
 		|  re2 re '$'
-			{ synerr( _("trailing context used twice") ); }
+			{ synerr(gv, _("trailing context used twice") ); }
 
 		|  re '$'
 			{
@@ -468,8 +470,8 @@ rule		:  re2 re
 
 			if ( gv->trlcontxt )
 				{
-				synerr( _("trailing context used twice") );
-				$$ = mkstate( SYM_EPSILON );
+				synerr(gv, _("trailing context used twice") );
+				$$ = mkstate( gv, SYM_EPSILON );
 				}
 
 			else if ( gv->previous_continued_action )
@@ -477,7 +479,7 @@ rule		:  re2 re
 				/* See the comment in the rule for "re2 re"
 				 * above.
 				 */
-				lwarn(
+				lwarn(gv,
 		"trailing context made variable due to preceding '|' action" );
 
 				gv->varlength = true;
@@ -488,16 +490,16 @@ rule		:  re2 re
 				/* Again, see the comment in the rule for
 				 * "re2 re" above.
 				 */
-				add_accept( $1,
+				add_accept( gv, $1,
 					gv->num_rules | YY_TRAILING_HEAD_MASK );
 				gv->variable_trail_rule = true;
 				}
 
 			gv->trlcontxt = true;
 
-			gv->eps = mkstate( SYM_EPSILON );
-			$$ = link_machines( $1,
-				link_machines( gv->eps, mkstate( '\n' ) ) );
+			gv->eps = mkstate( gv, SYM_EPSILON );
+			$$ = link_machines( gv, $1,
+				link_machines( gv, gv->eps, mkstate( gv, '\n' ) ) );
 			}
 
 		|  re
@@ -521,7 +523,7 @@ rule		:  re2 re
 re		:  re '|' series
 			{
 			gv->varlength = true;
-			$$ = mkor( $1, $3 );
+			$$ = mkor( gv, $1, $3 );
 			}
 
 		|  series
@@ -537,7 +539,7 @@ re2		:  re '/'
 			 */
 
 			if ( gv->trlcontxt )
-				synerr( _("trailing context used twice") );
+				synerr(gv, _("trailing context used twice") );
 			else
 				gv->trlcontxt = true;
 
@@ -561,7 +563,7 @@ series		:  series singleton
 			/* This is where concatenation of adjacent patterns
 			 * gets done.
 			 */
-			$$ = link_machines( $1, $2 );
+			$$ = link_machines( gv, $1, $2 );
 			}
 
 		|  singleton
@@ -573,7 +575,7 @@ series		:  series singleton
 
 			if ( $3 > $5 || $3 < 0 )
 				{
-				synerr( _("bad iteration values") );
+				synerr(gv, _("bad iteration values") );
 				$$ = $1;
 				}
 			else
@@ -582,16 +584,16 @@ series		:  series singleton
 					{
 					if ( $5 <= 0 )
 						{
-						synerr(
+						synerr(gv,
 						_("bad iteration values") );
 						$$ = $1;
 						}
 					else
-						$$ = mkopt(
-							mkrep( $1, 1, $5 ) );
+						$$ = mkopt(gv,
+							mkrep( gv, $1, 1, $5 ) );
 					}
 				else
-					$$ = mkrep( $1, $3, $5 );
+					$$ = mkrep( gv, $1, $3, $5 );
 				}
 			}
 
@@ -601,12 +603,12 @@ series		:  series singleton
 
 			if ( $3 <= 0 )
 				{
-				synerr( _("iteration value must be positive") );
+				synerr(gv, _("iteration value must be positive") );
 				$$ = $1;
 				}
 
 			else
-				$$ = mkrep( $1, $3, INFINITE_REPEAT );
+				$$ = mkrep( gv, $1, $3, INFINITE_REPEAT );
 			}
 
 		|  series BEGIN_REPEAT_POSIX NUMBER END_REPEAT_POSIX
@@ -619,14 +621,14 @@ series		:  series singleton
 
 			if ( $3 <= 0 )
 				{
-				  synerr( _("iteration value must be positive")
+				  synerr(gv, _("iteration value must be positive")
 					  );
 				$$ = $1;
 				}
 
 			else
-				$$ = link_machines( $1,
-						copysingl( $1, $3 - 1 ) );
+				$$ = link_machines( gv, $1,
+						copysingl( gv, $1, $3 - 1 ) );
 			}
 
 		;
@@ -635,19 +637,19 @@ singleton	:  singleton '*'
 			{
 			gv->varlength = true;
 
-			$$ = mkclos( $1 );
+			$$ = mkclos( gv, $1 );
 			}
 
 		|  singleton '+'
 			{
 			gv->varlength = true;
-			$$ = mkposcl( $1 );
+			$$ = mkposcl( gv, $1 );
 			}
 
 		|  singleton '?'
 			{
 			gv->varlength = true;
-			$$ = mkopt( $1 );
+			$$ = mkopt( gv, $1 );
 			}
 
 		|  singleton BEGIN_REPEAT_FLEX NUMBER ',' NUMBER END_REPEAT_FLEX
@@ -656,7 +658,7 @@ singleton	:  singleton '*'
 
 			if ( $3 > $5 || $3 < 0 )
 				{
-				synerr( _("bad iteration values") );
+				synerr(gv, _("bad iteration values") );
 				$$ = $1;
 				}
 			else
@@ -665,16 +667,16 @@ singleton	:  singleton '*'
 					{
 					if ( $5 <= 0 )
 						{
-						synerr(
+						synerr(gv,
 						_("bad iteration values") );
 						$$ = $1;
 						}
 					else
-						$$ = mkopt(
-							mkrep( $1, 1, $5 ) );
+						$$ = mkopt(gv,
+							mkrep( gv, $1, 1, $5 ) );
 					}
 				else
-					$$ = mkrep( $1, $3, $5 );
+					$$ = mkrep( gv, $1, $3, $5 );
 				}
 			}
 
@@ -684,12 +686,12 @@ singleton	:  singleton '*'
 
 			if ( $3 <= 0 )
 				{
-				synerr( _("iteration value must be positive") );
+				synerr(gv, _("iteration value must be positive") );
 				$$ = $1;
 				}
 
 			else
-				$$ = mkrep( $1, $3, INFINITE_REPEAT );
+				$$ = mkrep( gv, $1, $3, INFINITE_REPEAT );
 			}
 
 		|  singleton BEGIN_REPEAT_FLEX NUMBER END_REPEAT_FLEX
@@ -702,13 +704,13 @@ singleton	:  singleton '*'
 
 			if ( $3 <= 0 )
 				{
-				synerr( _("iteration value must be positive") );
+				synerr(gv, _("iteration value must be positive") );
 				$$ = $1;
 				}
 
 			else
-				$$ = link_machines( $1,
-						copysingl( $1, $3 - 1 ) );
+				$$ = link_machines( gv, $1,
+						copysingl( gv, $1, $3 - 1 ) );
 			}
 
 		|  '.'
@@ -716,21 +718,21 @@ singleton	:  singleton '*'
 			if ( ! gv->madeany )
 				{
 				/* Create the '.' character class. */
-                    gv->ccldot = cclinit();
-                    ccladd( gv->ccldot, '\n' );
-                    cclnegate( gv->ccldot );
+                    gv->ccldot = cclinit(gv);
+                    ccladd( gv, gv->ccldot, '\n' );
+                    cclnegate( gv, gv->ccldot );
 
                     if ( gv->ctrl.useecs )
-                        mkeccl( gv->ccltbl + gv->cclmap[gv->ccldot],
+                        mkeccl( gv, gv->ccltbl + gv->cclmap[gv->ccldot],
                             gv->ccllen[gv->ccldot], gv->nextecm,
                             gv->ecgroup, gv->ctrl.csize, gv->ctrl.csize );
 
 				/* Create the (?s:'.') character class. */
-                    gv->cclany = cclinit();
-                    cclnegate( gv->cclany );
+                    gv->cclany = cclinit(gv);
+                    cclnegate( gv, gv->cclany );
 
                     if ( gv->ctrl.useecs )
-                        mkeccl( gv->ccltbl + gv->cclmap[gv->cclany],
+                        mkeccl( gv, gv->ccltbl + gv->cclmap[gv->cclany],
                             gv->ccllen[gv->cclany],gv-> nextecm,
                             gv->ecgroup, gv->ctrl.csize, gv->ctrl.csize );
 
@@ -740,9 +742,9 @@ singleton	:  singleton '*'
 			++gv->rulelen;
 
             if (sf_dot_all())
-                $$ = mkstate( -gv->cclany );
+                $$ = mkstate( gv, -gv->cclany );
             else
-                $$ = mkstate( -gv->ccldot );
+                $$ = mkstate( gv, -gv->ccldot );
 			}
 
 		|  fullccl
@@ -752,7 +754,7 @@ singleton	:  singleton '*'
 				qsort( gv->ccltbl + gv->cclmap[$1], (size_t) gv->ccllen[$1], sizeof (*gv->ccltbl), cclcmp );
 
 			if ( gv->ctrl.useecs )
-				mkeccl( gv->ccltbl + gv->cclmap[$1], gv->ccllen[$1],
+				mkeccl( gv, gv->ccltbl + gv->cclmap[$1], gv->ccllen[$1],
 					gv->nextecm, gv->ecgroup, gv->ctrl.csize, gv->ctrl.csize);
 
 			++gv->rulelen;
@@ -760,7 +762,7 @@ singleton	:  singleton '*'
 			if (gv->ccl_has_nl[$1])
 				gv->rule_has_nl[gv->num_rules] = true;
 
-			$$ = mkstate( -$1 );
+			$$ = mkstate( gv, -$1 );
 			}
 
 		|  PREVCCL
@@ -770,7 +772,7 @@ singleton	:  singleton '*'
 			if (gv->ccl_has_nl[$1])
 				gv->rule_has_nl[gv->num_rules] = true;
 
-			$$ = mkstate( -$1 );
+			$$ = mkstate( gv, -$1 );
 			}
 
 		|  '"' string '"'
@@ -788,14 +790,14 @@ singleton	:  singleton '*'
 
             if (sf_case_ins() && has_case($1))
                 /* create an alternation, as in (a|A) */
-                $$ = mkor (mkstate($1), mkstate(reverse_case($1)));
+                $$ = mkor (gv, mkstate(gv, $1), mkstate(gv, reverse_case($1)));
             else
-                $$ = mkstate( $1 );
+                $$ = mkstate( gv, $1 );
 			}
 		;
 fullccl:
-        fullccl CCL_OP_DIFF  braceccl  { $$ = ccl_set_diff  ($1, $3); }
-    |   fullccl CCL_OP_UNION braceccl  { $$ = ccl_set_union ($1, $3); }
+        fullccl CCL_OP_DIFF  braceccl  { $$ = ccl_set_diff  (gv, $1, $3); }
+    |   fullccl CCL_OP_UNION braceccl  { $$ = ccl_set_union (gv, $1, $3); }
     |   braceccl
     ;
 
@@ -805,7 +807,7 @@ braceccl:
 
 		|  '[' '^' ccl ']'
 			{
-			cclnegate( $3 );
+			cclnegate( gv, $3 );
 			$$ = $3;
 			}
 		;
@@ -840,12 +842,12 @@ ccl		:  ccl CHAR '-' CHAR
 			  }
 
 			if ( $2 > $4 )
-				synerr( _("negative range in character class") );
+				synerr(gv, _("negative range in character class") );
 
 			else
 				{
 				for ( gv->i_parse = $2; gv->i_parse <= $4; ++gv->i_parse )
-					ccladd( $1, gv->i_parse );
+					ccladd( gv, $1, gv->i_parse );
 
 				/* Keep track if this ccl is staying in
 				 * alphabetical order.
@@ -859,7 +861,7 @@ ccl		:  ccl CHAR '-' CHAR
                     $4 = reverse_case ($4);
                     
                     for ( gv->i_parse = $2; gv->i_parse <= $4; ++gv->i_parse )
-                        ccladd( $1, gv->i_parse );
+                        ccladd( gv, $1, gv->i_parse );
 
                     gv->cclsorted = gv->cclsorted && ($2 > gv->lastchar);
                     gv->lastchar = $4;
@@ -872,14 +874,14 @@ ccl		:  ccl CHAR '-' CHAR
 
 		|  ccl CHAR
 			{
-			ccladd( $1, $2 );
+			ccladd( gv, $1, $2 );
 			gv->cclsorted = gv->cclsorted && ($2 > gv->lastchar);
 			gv->lastchar = $2;
 
             /* Do it again for upper/lowercase */
             if (sf_case_ins() && has_case($2)){
                 $2 = reverse_case ($2);
-                ccladd ($1, $2);
+                ccladd (gv, $1, $2);
 
                 gv->cclsorted = gv->cclsorted && ($2 > gv->lastchar);
                 gv->lastchar = $2;
@@ -899,7 +901,7 @@ ccl		:  ccl CHAR '-' CHAR
 			{
 			gv->cclsorted = true;
 			gv->lastchar = 0;
-			gv->currccl = $$ = cclinit();
+			gv->currccl = $$ = cclinit(gv);
 			}
 		;
 
@@ -937,13 +939,13 @@ ccl_expr:
 		|  CCE_NEG_XDIGIT	{ CCL_NEG_EXPR(isxdigit); }
 		|  CCE_NEG_LOWER	{ 
 				if ( sf_case_ins() )
-					lwarn(_("[:^lower:] is ambiguous in case insensitive scanner"));
+					lwarn(gv, _("[:^lower:] is ambiguous in case insensitive scanner"));
 				else
 					CCL_NEG_EXPR(islower);
 				}
 		|  CCE_NEG_UPPER	{
 				if ( sf_case_ins() )
-					lwarn(_("[:^upper:] ambiguous in case insensitive scanner"));
+					lwarn(gv, _("[:^upper:] ambiguous in case insensitive scanner"));
 				else
 					CCL_NEG_EXPR(isupper);
 				}
@@ -957,15 +959,15 @@ string		:  string CHAR
 			++gv->rulelen;
 
             if (sf_case_ins() && has_case($2))
-                $$ = mkor (mkstate($2), mkstate(reverse_case($2)));
+                $$ = mkor (gv, mkstate(gv, $2), mkstate(gv, reverse_case($2)));
             else
-                $$ = mkstate ($2);
+                $$ = mkstate (gv, $2);
 
-			$$ = link_machines( $1, $$);
+			$$ = link_machines( gv, $1, $$);
 			}
 
 		|
-			{ $$ = mkstate( SYM_EPSILON ); }
+			{ $$ = mkstate( gv, SYM_EPSILON ); }
 		;
 
 %%
@@ -975,7 +977,7 @@ string		:  string CHAR
  *                    conditions
  */
 
-void build_eof_action(void)
+void build_eof_action(FlexState* gv)
 	{
 	int i;
 	char action_text[MAXLINE];
@@ -983,7 +985,7 @@ void build_eof_action(void)
 	for ( i = 1; i <= gv->scon_stk_ptr; ++i )
 		{
 		if ( gv->sceof[gv->scon_stk[i]] )
-			format_pinpoint_message(
+			format_pinpoint_message(gv,
 				"multiple <<EOF>> rules for start condition %s",
 				gv->scname[gv->scon_stk[i]] );
 
@@ -992,16 +994,16 @@ void build_eof_action(void)
 			gv->sceof[gv->scon_stk[i]] = true;
 
 			if (gv->previous_continued_action /* && previous action was regular */)
-				add_action("YY_RULE_SETUP\n");
+				add_action(gv, "YY_RULE_SETUP\n");
 
 			snprintf( action_text, sizeof(action_text), "M4_HOOK_EOF_STATE_CASE_ARM(%s)\n",
 				gv->scname[gv->scon_stk[i]] );
-			add_action( action_text );
+			add_action( gv, action_text );
 			}
 		}
 
-	line_directive_out(NULL, gv->infilename, gv->linenum);
-        add_action("[[");
+	line_directive_out(gv, NULL, gv->infilename, gv->linenum);
+        add_action(gv, "[[");
 
 	/* This isn't a normal rule after all - don't count it as
 	 * such, so we don't have any holes in the rule numbering
@@ -1015,80 +1017,80 @@ void build_eof_action(void)
 
 /* format_synerr - write out formatted syntax error */
 
-void format_synerr( const char *msg, const char arg[] )
+void format_synerr( FlexState* gv, const char *msg, const char arg[] )
 	{
 	char errmsg[MAXLINE];
 
 	(void) snprintf( errmsg, sizeof(errmsg), msg, arg );
-	synerr( errmsg );
+	synerr( gv, errmsg );
 	}
 
 
 /* synerr - report a syntax error */
 
-void synerr( const char *str )
+void synerr( FlexState* gv, const char *str )
 	{
 	gv->syntaxerror = true;
-	pinpoint_message( str );
+	pinpoint_message( gv, str );
 	}
 
 
 /* format_warn - write out formatted warning */
 
-void format_warn( const char *msg, const char arg[] )
+void format_warn( FlexState* gv, const char *msg, const char arg[] )
 	{
 	char warn_msg[MAXLINE];
 
 	snprintf( warn_msg, sizeof(warn_msg), msg, arg );
-	lwarn( warn_msg );
+	lwarn( gv, warn_msg );
 	}
 
 
 /* lwarn - report a warning, unless -w was given */
 
-void lwarn( const char *str )
+void lwarn( FlexState* gv, const char *str )
 	{
-	line_warning( str, gv->linenum );
+	line_warning( gv, str, gv->linenum );
 	}
 
 /* format_pinpoint_message - write out a message formatted with one string,
  *			     pinpointing its location
  */
 
-void format_pinpoint_message( const char *msg, const char arg[] )
+void format_pinpoint_message( FlexState* gv,  const char *msg, const char arg[] )
 	{
 	char errmsg[MAXLINE*2];
 
 	snprintf( errmsg, sizeof(errmsg), msg, arg );
-	pinpoint_message( errmsg );
+	pinpoint_message( gv, errmsg );
 	}
 
 
 /* pinpoint_message - write out a message, pinpointing its location */
 
-void pinpoint_message( const char *str )
+void pinpoint_message( FlexState* gv, const char *str )
 	{
-	line_pinpoint( str, gv->linenum );
+	line_pinpoint( gv, str, gv->linenum );
 	}
 
 
 /* line_warning - report a warning at a given line, unless -w was given */
 
-void line_warning( const char *str, int line )
+void line_warning( FlexState* gv, const char *str, int line )
 	{
 	char warning[MAXLINE*2];
 
 	if ( ! gv->env.nowarn )
 		{
 		snprintf( warning, sizeof(warning), "warning, %s", str );
-		line_pinpoint( warning, line );
+		line_pinpoint( gv, warning, line );
 		}
 	}
 
 
 /* line_pinpoint - write out a message, pinpointing it at the given line */
 
-void line_pinpoint( const char *str, int line )
+void line_pinpoint( FlexState* gv, const char *str, int line )
 	{
 	fprintf( stderr, "%s:%d: %s\n", gv->infilename, line, str );
 	}
@@ -1098,7 +1100,7 @@ void line_pinpoint( const char *str, int line )
  *	     currently, messages are ignore
  */
 
-void yyerror( const char *msg )
+void yyerror( yyscan_t yyscanner,  const char *msg )
 	{
-		(void)msg;
+		(void)yyscanner;(void)msg;
 	}

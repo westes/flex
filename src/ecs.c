@@ -36,7 +36,7 @@
 
 /* ccl2ecl - convert character classes to set of equivalence classes */
 
-void    ccl2ecl (void)
+void    ccl2ecl (FlexState* gv)
 {
 	int     i, ich, newlen, cclp, ccls, cclmec;
 
@@ -112,7 +112,7 @@ int     cre8ecs (int fwd[], int bck[], int num)
  * NUL_mapping is the value which NUL (0) should be mapped to.
  */
 
-void    mkeccl (unsigned char ccls[], int lenccl, int fwd[], int bck[], int llsiz, int NUL_mapping)
+void    mkeccl (FlexState* gv, unsigned char ccls[], int lenccl, int fwd[], int bck[], int llsiz, int NUL_mapping)
 {
 	int     cclp, oldec, newec;
 	int     cclm, i, j;

@@ -35,7 +35,7 @@
 
 /* return true if the chr is in the ccl. Takes negation into account. */
 static bool
-ccl_contains (const int cclp, const int ch)
+ccl_contains (FlexState* gv, const int cclp, const int ch)
 {
 	int     ind, len, i;
 
@@ -52,11 +52,11 @@ ccl_contains (const int cclp, const int ch)
 
 /* ccladd - add a single character to a ccl */
 
-void ccladd (int cclp, int ch)
+void ccladd (FlexState* gv, int cclp, int ch)
 {
 	int     ind, len, newpos, i;
 
-	check_char (ch);
+	check_char (gv, ch);
 
 	len = gv->ccllen[cclp];
 	ind = gv->cclmap[cclp];
@@ -77,7 +77,7 @@ void ccladd (int cclp, int ch)
 	 * char in the next cclp.
 	 * FIXME: Need another allocation scheme for ccl's. */
 	if (cclp != gv->lastccl) {
-		flexfatal(_("internal error: trying to add a char to a non-last ccl.\n"));
+		flexfatal(gv, _("internal error: trying to add a char to a non-last ccl.\n"));
 	}
 
 	if (newpos >= gv->current_max_ccl_tbl_size) {
@@ -95,26 +95,26 @@ void ccladd (int cclp, int ch)
 
 /* dump_cclp - same thing as list_character_set, but for cclps.  */
 
-static void    dump_cclp (FILE* file, int cclp)
+static void    dump_cclp (FlexState* gv, FILE* file, int cclp)
 {
 	int i;
 
 	putc ('[', file);
 
 	for (i = 0; i < gv->ctrl.csize; ++i) {
-		if (ccl_contains(cclp, i)){
+		if (ccl_contains(gv, cclp, i)){
 			int start_char = i;
 
 			putc (' ', file);
 
-			fputs (readable_form (i), file);
+			fputs (readable_form (gv, i), file);
 
-			while (++i < gv->ctrl.csize && ccl_contains(cclp,i)) ;
+			while (++i < gv->ctrl.csize && ccl_contains(gv, cclp, i)) ;
 
 			if (i - 1 > start_char)
 				/* this was a run */
 				fprintf (file, "-%s",
-					 readable_form (i - 1));
+					 readable_form (gv, i - 1));
 
 			putc (' ', file);
 		}
@@ -127,30 +127,30 @@ static void    dump_cclp (FILE* file, int cclp)
 
 /* ccl_set_diff - create a new ccl as the set difference of the two given ccls. */
 int
-ccl_set_diff (int a, int b)
+ccl_set_diff (FlexState* gv, int a, int b)
 {
     int  d, ch;
 
     /* create new class  */
-    d = cclinit();
+    d = cclinit(gv);
 
     /* In order to handle negation, we spin through all possible chars,
      * adding each char in a that is not in b.
      * (This could be O(n^2), but n is small and bounded.)
      */
 	for ( ch = 0; ch < gv->ctrl.csize; ++ch )
-        if (ccl_contains (a, ch) && !ccl_contains(b, ch))
-            ccladd (d, ch);
+        if (ccl_contains (gv, a, ch) && !ccl_contains(gv, b, ch))
+            ccladd (gv, d, ch);
 
     /* debug */
     if (0){
         fprintf(stderr, "ccl_set_diff (");
             fprintf(stderr, "\n    ");
-            dump_cclp (stderr, a);
+            dump_cclp (gv, stderr, a);
             fprintf(stderr, "\n    ");
-            dump_cclp (stderr, b);
+            dump_cclp (gv, stderr, b);
             fprintf(stderr, "\n    ");
-            dump_cclp (stderr, d);
+            dump_cclp (gv, stderr, d);
         fprintf(stderr, "\n)\n");
     }
     return d;
@@ -158,30 +158,30 @@ ccl_set_diff (int a, int b)
 
 /* ccl_set_union - create a new ccl as the set union of the two given ccls. */
 int
-ccl_set_union (int a, int b)
+ccl_set_union (FlexState* gv, int a, int b)
 {
     int  d, i;
 
     /* create new class  */
-    d = cclinit();
+    d = cclinit(gv);
 
     /* Add all of a */
     for (i = 0; i < gv->ccllen[a]; ++i)
-		ccladd (d, gv->ccltbl[gv->cclmap[a] + i]);
+		ccladd (gv, d, gv->ccltbl[gv->cclmap[a] + i]);
 
     /* Add all of b */
     for (i = 0; i < gv->ccllen[b]; ++i)
-		ccladd (d, gv->ccltbl[gv->cclmap[b] + i]);
+		ccladd (gv, d, gv->ccltbl[gv->cclmap[b] + i]);
 
     /* debug */
     if (0){
         fprintf(stderr, "ccl_set_union (%d + %d = %d", a, b, d);
             fprintf(stderr, "\n    ");
-            dump_cclp (stderr, a);
+            dump_cclp (gv, stderr, a);
             fprintf(stderr, "\n    ");
-            dump_cclp (stderr, b);
+            dump_cclp (gv, stderr, b);
             fprintf(stderr, "\n    ");
-            dump_cclp (stderr, d);
+            dump_cclp (gv, stderr, d);
         fprintf(stderr, "\n)\n");
     }
     return d;
@@ -190,7 +190,7 @@ ccl_set_union (int a, int b)
 
 /* cclinit - return an empty ccl */
 
-int     cclinit (void)
+int     cclinit (FlexState* gv)
 {
 	if (++gv->lastccl >= gv->current_maxccls) {
 		gv->current_maxccls += MAX_CCLS_INCREMENT;
@@ -202,7 +202,7 @@ int     cclinit (void)
 		gv->ccllen =
 			reallocate_integer_array (gv->ccllen, gv->current_maxccls);
 		gv->cclng = reallocate_integer_array (gv->cclng, gv->current_maxccls);
-		gv->ccl_has_nl = reallocate_array(gv->ccl_has_nl, gv->current_maxccls, sizeof(char));
+		gv->ccl_has_nl = reallocate_array(gv, gv->ccl_has_nl, gv->current_maxccls, sizeof(char));
 	}
 
 	if (gv->lastccl == 1)
@@ -228,7 +228,7 @@ int     cclinit (void)
 
 /* cclnegate - negate the given ccl */
 
-void    cclnegate (int cclp)
+void    cclnegate (FlexState* gv, int cclp)
 {
 	gv->cclng[cclp] = 1;
 	gv->ccl_has_nl[cclp] = !gv->ccl_has_nl[cclp];
@@ -242,7 +242,7 @@ void    cclnegate (int cclp)
  * has a non-zero value in the cset array.
  */
 
-void    list_character_set (FILE *file, int cset[])
+void    list_character_set (FlexState* gv, FILE *file, int cset[])
 {
 	int i;
 
@@ -254,14 +254,14 @@ void    list_character_set (FILE *file, int cset[])
 
 			putc (' ', file);
 
-			fputs (readable_form (i), file);
+			fputs (readable_form (gv, i), file);
 
 			while (++i < gv->ctrl.csize && cset[i]) ;
 
 			if (i - 1 > start_char)
 				/* this was a run */
 				fprintf (file, "-%s",
-					 readable_form (i - 1));
+					 readable_form (gv, i - 1));
 
 			putc (' ', file);
 		}

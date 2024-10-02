@@ -34,7 +34,7 @@
 #include "tables.h"
 
 /* Append "new_text" to the running buffer. */
-void add_action (const char *new_text)
+void add_action (FlexState* gv, const char *new_text)
 {
 	int     len = (int) strlen (new_text);
 
@@ -61,9 +61,11 @@ void add_action (const char *new_text)
 
 /* allocate_array - allocate memory for an integer array of the given size */
 
-void   *allocate_array (int size, size_t element_size)
+void   *allocate_array (FlexState* gv, int size, size_t element_size)
 {
-	return reallocate_array(NULL, size, element_size);
+        void *new_array = reallocate_array(gv, NULL, size, element_size);
+        memset(new_array, 0, size * element_size);
+	return new_array;
 }
 
 
@@ -108,16 +110,16 @@ int intcmp (const void *a, const void *b)
  *		and exits.
  */
 
-void check_char (int c)
+void check_char (FlexState* gv, int c)
 {
 	if (c >= CSIZE)
-		lerr (_("bad character '%s' detected in check_char()"),
-			readable_form (c));
+		lerr (gv, _("bad character '%s' detected in check_char()"),
+			readable_form (gv, c));
 
 	if (c >= gv->ctrl.csize)
-		lerr (_
+		lerr (gv, _
 			("scanner requires -8 flag to use the character %s"),
-			readable_form (c));
+			readable_form (gv, c));
 }
 
 
@@ -130,12 +132,12 @@ unsigned char clower (int c)
 }
 
 
-char *xstrdup(const char *s)
+char *xstrdup(FlexState* gv, const char *s)
 {
 	char *s2;
 
 	if ((s2 = strdup(s)) == NULL)
-		flexfatal (_("memory allocation failure in xstrdup()"));
+		flexfatal (gv, _("memory allocation failure in xstrdup()"));
 
 	return s2;
 }
@@ -157,13 +159,13 @@ int cclcmp (const void *a, const void *b)
 
 /* dataend - finish up a block of data declarations */
 
-void dataend (const char *endit)
+void dataend (FlexState* gv, const char *endit)
 {
 	/* short circuit any output */
 	if (gv->gentables) {
 
 		if (gv->datapos > 0)
-			dataflush ();
+			dataflush (gv);
 
 		/* add terminator for initialization; { for vi */
 		if (endit)
@@ -176,7 +178,7 @@ void dataend (const char *endit)
 
 /* dataflush - flush generated data statements */
 
-void dataflush (void)
+void dataflush (FlexState* gv)
 {
 	assert (gentables);
 
@@ -198,16 +200,16 @@ void dataflush (void)
 
 /* flexerror - report an error message and terminate */
 
-void flexerror (const char *msg)
+void flexerror (FlexState* gv, const char *msg)
 {
 	fprintf (stderr, "%s: %s\n", gv->program_name, msg);
-	flexend (1);
+	flexend (gv, 1);
 }
 
 
 /* flexfatal - report a fatal error message and terminate */
 
-void flexfatal (const char *msg)
+void flexfatal (FlexState* gv, const char *msg)
 {
 	fprintf (stderr, _("%s: fatal internal error, %s\n"),
 		 gv->program_name, msg);
@@ -217,7 +219,7 @@ void flexfatal (const char *msg)
 
 /* lerr - report an error message */
 
-void lerr (const char *msg, ...)
+void lerr (FlexState* gv, const char *msg, ...)
 {
 	char    errmsg[MAXLINE];
 	va_list args;
@@ -225,13 +227,13 @@ void lerr (const char *msg, ...)
 	va_start(args, msg);
 	vsnprintf (errmsg, sizeof(errmsg), msg, args);
 	va_end(args);
-	flexerror (errmsg);
+	flexerror (gv, errmsg);
 }
 
 
 /* lerr_fatal - as lerr, but call flexfatal */
 
-void lerr_fatal (const char *msg, ...)
+void lerr_fatal (FlexState* gv, const char *msg, ...)
 {
 	char    errmsg[MAXLINE];
 	va_list args;
@@ -239,12 +241,12 @@ void lerr_fatal (const char *msg, ...)
 
 	vsnprintf (errmsg, sizeof(errmsg), msg, args);
 	va_end(args);
-	flexfatal (errmsg);
+	flexfatal (gv, errmsg);
 }
 
 
 /* line_directive_out - spit out a "#line" statement or equivalent */
-void line_directive_out (FILE *output_file, char *path, int linenum)
+void line_directive_out (FlexState* gv, FILE *output_file, char *path, int linenum)
 {
 	char	*trace_fmt = "m4_ifdef([[M4_HOOK_TRACE_LINE_FORMAT]], [[M4_HOOK_TRACE_LINE_FORMAT([[%d]], [[%s]])]])";
 	char    directive[MAXLINE*2], filename[MAXLINE];
@@ -284,7 +286,7 @@ void line_directive_out (FILE *output_file, char *path, int linenum)
 		fputs (directive, output_file);
 	}
 	else
-		add_action (directive);
+		add_action (gv, directive);
 }
 
 
@@ -292,7 +294,7 @@ void line_directive_out (FILE *output_file, char *path, int linenum)
  *               representing where the user's section 1 definitions end
  *		 and the prolog begins
  */
-void mark_defs1 (void)
+void mark_defs1 (FlexState* gv)
 {
 	gv->defs1_offset = 0;
 	gv->action_array[gv->action_index++] = '\0';
@@ -304,7 +306,7 @@ void mark_defs1 (void)
 /* mark_prolog - mark the current position in the action array as
  *               representing the end of the action prolog
  */
-void mark_prolog (void)
+void mark_prolog (FlexState* gv)
 {
 	gv->action_array[gv->action_index++] = '\0';
 	gv->action_offset = gv->action_index;
@@ -316,7 +318,7 @@ void mark_prolog (void)
  *
  * Generates a data statement initializing the current 2-D array to "value".
  */
-void mk2data (int value)
+void mk2data (FlexState* gv, int value)
 {
 	/* short circuit any output */
 	if (!gv->gentables)
@@ -324,7 +326,7 @@ void mk2data (int value)
 
 	if (gv->datapos >= NUMDATAITEMS) {
 		outc (',');
-		dataflush ();
+		dataflush (gv);
 	}
 
 	if (gv->datapos == 0)
@@ -345,7 +347,7 @@ void mk2data (int value)
  * Generates a data statement initializing the current array element to
  * "value".
  */
-void mkdata (int value)
+void mkdata (FlexState* gv, int value)
 {
 	/* short circuit any output */
 	if (!gv->gentables)
@@ -353,7 +355,7 @@ void mkdata (int value)
 
 	if (gv->datapos >= NUMDATAITEMS) {
 		outc (',');
-		dataflush ();
+		dataflush (gv);
 	}
 
 	if (gv->datapos == 0)
@@ -515,7 +517,7 @@ void out_m4_define (const char* def, const char* val)
  * The returned string is in static storage.
  */
 
-char   *readable_form (int c)
+char   *readable_form (FlexState* gv, int c)
 {
 	//static char rform[20];
 
@@ -558,13 +560,13 @@ char   *readable_form (int c)
 
 /* reallocate_array - increase the size of a dynamic array */
 
-void   *reallocate_array (void *array, int size, size_t element_size)
+void   *reallocate_array (FlexState* gv, void *array, int size, size_t element_size)
 {
 	void *new_array;
 #ifdef HAVE_REALLOCARR
 	new_array = array;
 	if (reallocarr(&new_array, (size_t) size, element_size)) {
-		flexfatal ((array) ?
+		flexfatal (gv, (array) ?
 			_("attempt to increase array size failed") :
 			/* Function name is allocate_array() because of
 			 * compatibility (for translations): */
@@ -580,7 +582,7 @@ void   *reallocate_array (void *array, int size, size_t element_size)
 		realloc(array, num_bytes);
 # endif
 	if (!new_array) {
-		flexfatal ((array) ?
+		flexfatal (gv, (array) ?
 			_("attempt to increase array size failed") :
 			/* Function name is allocate_array() because of
 			 * compatibility (for translations): */
@@ -597,7 +599,7 @@ void   *reallocate_array (void *array, int size, size_t element_size)
  * element_n.  Formats the output with spaces and carriage returns.
  */
 
-void transition_struct_out (int element_v, int element_n)
+void transition_struct_out (FlexState* gv, int element_v, int element_n)
 {
 
 	/* short circuit any output */
@@ -625,13 +627,13 @@ void transition_struct_out (int element_v, int element_n)
  *
  * XXX: this is should go soon
  */
-void   *yy_flex_xmalloc (int size)
+void   *yy_flex_xmalloc (FlexState* gv, int size)
 {
 	void   *result;
 
 	result = malloc((size_t) size);
 	if (!result)
-		flexfatal (_
+		flexfatal (gv, _
 			   ("memory allocation failed in yy_flex_xmalloc()"));
 
 	return result;

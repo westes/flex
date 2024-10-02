@@ -309,6 +309,8 @@
  */
 #define BAD_SUBSCRIPT -32767
 
+typedef struct FlexState FlexState;
+
 typedef enum trit_t {
 	trit_unspecified = -1,
 	trit_false = 0,
@@ -718,38 +720,38 @@ struct packtype_t {
 //extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 //extern int num_backing_up, bol_needed;
 
-void   *allocate_array(int, size_t);
-void   *reallocate_array(void *, int, size_t);
+void   *allocate_array(FlexState* gv, int, size_t);
+void   *reallocate_array(FlexState* gv, void *, int, size_t);
 
 #define allocate_integer_array(size) \
-	allocate_array(size, sizeof(int))
+	allocate_array(gv, size, sizeof(int))
 
 #define reallocate_integer_array(array,size) \
-	reallocate_array((void *) array, size, sizeof(int))
+	reallocate_array(gv, (void *) array, size, sizeof(int))
 
 #define allocate_int_ptr_array(size) \
-	allocate_array(size, sizeof(int *))
+	allocate_array(gv, size, sizeof(int *))
 
 #define allocate_char_ptr_array(size) \
-	allocate_array(size, sizeof(char *))
+	allocate_array(gv, size, sizeof(char *))
 
 #define reallocate_int_ptr_array(array,size) \
-	reallocate_array((void *) array, size, sizeof(int *))
+	reallocate_array(gv, (void *) array, size, sizeof(int *))
 
 #define reallocate_char_ptr_array(array,size) \
-	reallocate_array((void *) array, size, sizeof(char *))
+	reallocate_array(gv, (void *) array, size, sizeof(char *))
 
 #define allocate_character_array(size) \
-	allocate_array( size, sizeof(char))
+	allocate_array(gv, size, sizeof(char))
 
 #define reallocate_character_array(array,size) \
-	reallocate_array((void *) array, size, sizeof(char))
+	reallocate_array(gv, (void *) array, size, sizeof(char))
 
 #define allocate_Character_array(size) \
-	allocate_array(size, sizeof(unsigned char))
+	allocate_array(gv, size, sizeof(unsigned char))
 
 #define reallocate_Character_array(array,size) \
-	reallocate_array((void *) array, size, sizeof(unsigned char))
+	reallocate_array(gv, (void *) array, size, sizeof(unsigned char))
 
 
 /* External functions that are cross-referenced among the flex source files. */
@@ -757,34 +759,34 @@ void   *reallocate_array(void *, int, size_t);
 
 /* from file ccl.c */
 
-extern void ccladd(int, int);	/* add a single character to a ccl */
-extern int cclinit(void);	/* make an empty ccl */
-extern void cclnegate(int);	/* negate a ccl */
-extern int ccl_set_diff (int a, int b); /* set difference of two ccls. */
-extern int ccl_set_union (int a, int b); /* set union of two ccls. */
+extern void ccladd(FlexState* gv, int, int);	/* add a single character to a ccl */
+extern int cclinit(FlexState* gv);	/* make an empty ccl */
+extern void cclnegate(FlexState* gv, int);	/* negate a ccl */
+extern int ccl_set_diff (FlexState* gv, int a, int b); /* set difference of two ccls. */
+extern int ccl_set_union (FlexState* gv, int a, int b); /* set union of two ccls. */
 
 /* List the members of a set of characters in CCL form. */
-extern void list_character_set(FILE *, int[]);
+extern void list_character_set(FlexState* gv, FILE *, int[]);
 
 
 /* from file dfa.c */
 
 /* Increase the maximum number of dfas. */
-extern void increase_max_dfas(void);
+extern void increase_max_dfas(FlexState* gv);
 
-extern size_t ntod(void);	/* convert a ndfa to a dfa */
+extern size_t ntod(FlexState* gv);	/* convert a ndfa to a dfa */
 
 
 /* from file ecs.c */
 
 /* Convert character classes to set of equivalence classes. */
-extern void ccl2ecl(void);
+extern void ccl2ecl(FlexState* gv);
 
 /* Associate equivalence class numbers with class members. */
 extern int cre8ecs(int[], int[], int);
 
 /* Update equivalence classes based on character class transitions. */
-extern void mkeccl(unsigned char[], int, int[], int[], int, int);
+extern void mkeccl(FlexState* gv, unsigned char[], int, int[], int[], int, int);
 
 /* Create equivalence class for single character. */
 extern void mkechar(int, int[], int[]);
@@ -802,22 +804,22 @@ extern void visible_define_str (const char *, const char *);
 extern void visible_define_int (const char *, const int);
 
 /* generate transition tables */
-extern void make_tables(void);
+extern void make_tables(FlexState* gv);
 
 /* Select a type for optimal packing */
-struct packtype_t *optimize_pack(size_t);
+struct packtype_t *optimize_pack(FlexState* gv, size_t);
 
 /* from file main.c */
 
-extern void check_options(void);
-extern void flexend(int);
-extern void usage(void);
+extern void check_options(FlexState* gv);
+extern void flexend(FlexState* gv, int);
+extern void usage(FlexState* gv);
 
 
 /* from file misc.c */
 
 /* Add the given text to the stored actions. */
-extern void add_action(const char *new_text);
+extern void add_action(FlexState* gv, const char *new_text);
 
 /* True if a string is all lower case. */
 extern int all_lower(char *);
@@ -829,28 +831,28 @@ extern int all_upper(char *);
 extern int intcmp(const void *, const void *);
 
 /* Check a character to make sure it's in the expected range. */
-extern void check_char(int c);
+extern void check_char(FlexState* gv, int c);
 
 /* Replace upper-case letter to lower-case. */
 extern unsigned char clower(int);
 
 /* strdup() that fails fatally on allocation failures. */
-extern char *xstrdup(const char *);
+extern char *xstrdup(FlexState* gv, const char *);
 
 /* Compare two characters for use by qsort with '\0' sorting last. */
 extern int cclcmp(const void *, const void *);
 
 /* Finish up a block of data declarations. */
-extern void dataend(const char *);
+extern void dataend(FlexState* gv, const char *);
 
 /* Flush generated data statements. */
-extern void dataflush(void);
+extern void dataflush(FlexState* gv);
 
 /* Report an error message and terminate. */
-extern void flexerror(const char *);
+extern void flexerror(FlexState* gv, const char *);
 
 /* Report a fatal error message and terminate. */
-extern void flexfatal(const char *);
+extern void flexfatal(FlexState* gv, const char *);
 
 /* Report a fatal error with a pinpoint, and terminate */
 #ifdef HAVE_DECL___FUNC__
@@ -874,34 +876,34 @@ extern void flexfatal(const char *);
 #endif /* ! HAVE_DECL___func__ */
 
 /* Report an error message formatted  */
-extern void lerr(const char *, ...)
+extern void lerr(FlexState* gv, const char *, ...)
 #if defined(__GNUC__) && __GNUC__ >= 3
-    __attribute__((__format__(__printf__, 1, 2)))
+    __attribute__((__format__(__printf__, 2, 3)))
 #endif
 ;
 
 /* Like lerr, but also exit after displaying message. */
-extern void lerr_fatal(const char *, ...)
+extern void lerr_fatal(FlexState* gv, const char *, ...)
 #if defined(__GNUC__) && __GNUC__ >= 3
-    __attribute__((__format__(__printf__, 1, 2)))
+    __attribute__((__format__(__printf__, 2, 3)))
 #endif
 ;
 
 /* Spit out a "#line" statement. */
-extern void line_directive_out(FILE *, char *, int);
+extern void line_directive_out(FlexState* gv, FILE *, char *, int);
 
 /* Mark the current position in the action array as the end of the section 1
  * user defs.
  */
-extern void mark_defs1(void);
+extern void mark_defs1(FlexState* gv);
 
 /* Mark the current position in the action array as the end of the prolog. */
-extern void mark_prolog(void);
+extern void mark_prolog(FlexState* gv);
 
 /* Generate a data statement for a two-dimensional array. */
-extern void mk2data(int);
+extern void mk2data(FlexState* gv, int);
 
-extern void mkdata(int);	/* generate a data statement */
+extern void mkdata(FlexState* gv, int);	/* generate a data statement */
 
 /* Return the integer represented by a string of digits. */
 extern int myctoi(const char *);
@@ -923,81 +925,93 @@ extern void out_m4_define(const char* def, const char* val);
 /* Return a printable version of the given character, which might be
  * 8-bit.
  */
-extern char *readable_form(int);
+extern char *readable_form(FlexState* gv, int);
 
 /* Output a yy_trans_info structure. */
-extern void transition_struct_out(int, int);
+extern void transition_struct_out(FlexState* gv, int, int);
 
 /* Only needed when using certain broken versions of bison to build parse.c. */
-extern void *yy_flex_xmalloc(int);
+extern void *yy_flex_xmalloc(FlexState* gv, int);
 
 
 /* from file nfa.c */
 
 /* Add an accepting state to a machine. */
-extern void add_accept(int, int);
+extern void add_accept(FlexState* gv, int, int);
 
 /* Make a given number of copies of a singleton machine. */
-extern int copysingl(int, int);
+extern int copysingl(FlexState* gv, int, int);
 
 /* Debugging routine to write out an nfa. */
-extern void dumpnfa(int);
+extern void dumpnfa(FlexState* gv, int);
 
 /* Finish up the processing for a rule. */
-extern void finish_rule(int, bool, int, int, int);
+extern void finish_rule(FlexState* gv, int, bool, int, int, int);
 
 /* Connect two machines together. */
-extern int link_machines(int, int);
+extern int link_machines(FlexState* gv, int, int);
 
 /* Mark each "beginning" state in a machine as being a "normal" (i.e.,
  * not trailing context associated) state.
  */
-extern void mark_beginning_as_normal(int);
+extern void mark_beginning_as_normal(FlexState* gv, int);
 
 /* Make a machine that branches to two machines. */
-extern int mkbranch(int, int);
+extern int mkbranch(FlexState* gv, int, int);
 
-extern int mkclos(int);	/* convert a machine into a closure */
-extern int mkopt(int);	/* make a machine optional */
+extern int mkclos(FlexState* gv, int);	/* convert a machine into a closure */
+extern int mkopt(FlexState* gv, int);	/* make a machine optional */
 
 /* Make a machine that matches either one of two machines. */
-extern int mkor(int, int);
+extern int mkor(FlexState* gv, int, int);
 
 /* Convert a machine into a positive closure. */
-extern int mkposcl(int);
+extern int mkposcl(FlexState* gv, int);
 
-extern int mkrep(int, int, int);	/* make a replicated machine */
+extern int mkrep(FlexState* gv, int, int, int);	/* make a replicated machine */
 
 /* Create a state with a transition on a given symbol. */
-extern int mkstate(int);
+extern int mkstate(FlexState* gv, int);
 
-extern void new_rule(void);	/* initialize for a new rule */
+extern void new_rule(FlexState* gv);	/* initialize for a new rule */
 
 
 /* from file parse.y */
 
 /* Build the "<<EOF>>" action for the active start conditions. */
-extern void build_eof_action(void);
+extern void build_eof_action(FlexState* gv);
 
 /* Write out a message formatted with one string, pinpointing its location. */
-extern void format_pinpoint_message(const char *, const char *);
+extern void format_pinpoint_message(FlexState* gv, const char *, const char *);
 
 /* Write out a message, pinpointing its location. */
-extern void pinpoint_message(const char *);
+extern void pinpoint_message(FlexState* gv, const char *);
 
 /* Write out a warning, pinpointing it at the given line. */
-extern void line_warning(const char *, int);
+extern void line_warning(FlexState* gv, const char *, int);
 
 /* Write out a message, pinpointing it at the given line. */
-extern void line_pinpoint(const char *, int);
+extern void line_pinpoint(FlexState* gv, const char *, int);
+
+/* from file yylex.c */
+
+typedef void* yyscan_t;
+typedef int YYSTYPE;
+extern int yylex_init(yyscan_t *yyscanner);
+extern int yylex_destroy  (yyscan_t yyscanner);
+extern void yyset_out (FILE *  _out_str , yyscan_t yyscanner);
+extern char *yyget_text  (yyscan_t yyscanner);
+extern int yylex(YYSTYPE * yylval_param, yyscan_t yyscanner);
+extern void yyset_extra (FlexState* gv , yyscan_t yyscanner);
+extern FlexState* yyget_extra  (yyscan_t yyscanner);
 
 /* Report a formatted syntax error. */
-extern void format_synerr(const char *, const char *);
-extern void synerr(const char *);	/* report a syntax error */
-extern void format_warn(const char *, const char *);
-extern void lwarn(const char *);	/* report a warning */
-extern void yyerror(const char *);	/* report a parse error */
-extern int yyparse(void);		/* the YACC parser */
+extern void format_synerr(FlexState* gv, const char *, const char *);
+extern void synerr(FlexState* gv, const char *);	/* report a syntax error */
+extern void format_warn(FlexState* gv, const char *, const char *);
+extern void lwarn(FlexState* gv, const char *);	/* report a warning */
+extern void yyerror(yyscan_t yyscanner, const char *);	/* report a parse error */
+extern int yyparse(yyscan_t yyscanner, FlexState* gv);		/* the YACC parser */
 
 /* Ship a comment to the generated output */
 extern void comment(const char *);
@@ -1005,79 +1019,75 @@ extern void comment(const char *);
 /* from file scan.l */
 
 /* The Flex-generated scanner for flex. */
-extern int flexscan(void);
+extern int flexscan(YYSTYPE * yylval_param, yyscan_t yyscanner);
 
 /* Open the given file (if NULL, stdin) for scanning. */
-extern void set_input_file(char *);
+extern void set_input_file(yyscan_t yyscanner, char *);
 
 /* from file skeletons.c */
 
 /* return the correct file suffix for the selected back end */
-const char *suffix (void);
+const char *suffix (FlexState* gv);
 
 /* Mine a text-valued property out of the skeleton file */
-extern const char *skel_property(const char *);
+extern const char *skel_property(FlexState* gv, const char *);
 
 /* Is the default back end selected?*/
 extern bool is_default_backend(void);
 
 /* Select a backend by name */
-extern void backend_by_name(const char *);
+extern void backend_by_name(FlexState* gv, const char *);
 
 /* Write out one section of the skeleton file. */
-extern void skelout(bool);
+extern void skelout(FlexState* gv, bool);
 
 /* from file sym.c */
 
 /* Save the text of a character class. */
-extern void cclinstal(char[], int);
+extern void cclinstal(FlexState* gv, char[], int);
 
 /* Lookup the number associated with character class. */
-extern int ccllookup(char[]);
+extern int ccllookup(FlexState* gv, char[]);
 
-extern void ndinstal(const char *, char[]);	/* install a name definition */
-extern char *ndlookup(const char *);	/* lookup a name definition */
+extern void ndinstal(FlexState* gv, const char *, char[]);	/* install a name definition */
+extern char *ndlookup(FlexState* gv, const char *);	/* lookup a name definition */
 
 /* Increase maximum number of SC's. */
-extern void scextend(void);
-extern void scinstal(const char *, bool);	/* make a start condition */
+extern void scextend(FlexState* gv);
+extern void scinstal(FlexState* gv, const char *, bool);	/* make a start condition */
 
 /* Lookup the number associated with a start condition. */
-extern int sclookup(const char *);
+extern int sclookup(FlexState* gv, const char *);
 
 /* Supply context argument for a function if required */
-extern void context_call(char *);
+extern void context_call(FlexState* gv, char *);
 
 /* from file tblcmp.c */
 
 /* Build table entries for dfa state. */
-extern void bldtbl(int[], int, int, int, int);
+extern void bldtbl(FlexState* gv, int[], int, int, int, int);
 
-extern void cmptmps(void);	/* compress template table entries */
-extern void expand_nxt_chk(void);	/* increase nxt/chk arrays */
+extern void cmptmps(FlexState* gv);	/* compress template table entries */
+extern void expand_nxt_chk(FlexState* gv);	/* increase nxt/chk arrays */
 
 /* Finds a space in the table for a state to be placed. */
-extern int find_table_space(int *, int);
-extern void inittbl(void);	/* initialize transition tables */
+extern int find_table_space(FlexState* gv, int *, int);
+extern void inittbl(FlexState* gv);	/* initialize transition tables */
 
 /* Make the default, "jam" table entries. */
-extern void mkdeftbl(void);
+extern void mkdeftbl(FlexState* gv);
 
 /* Create table entries for a state (or state fragment) which has
  * only one out-transition.
  */
-extern void mk1tbl(int, int, int, int);
+extern void mk1tbl(FlexState* gv, int, int, int, int);
 
 /* Place a state into full speed transition table. */
-extern void place_state(int *, int, int);
+extern void place_state(FlexState* gv, int *, int, int);
 
 /* Save states with only one out-transition to be processed later. */
-extern void stack1(int, int, int, int);
+extern void stack1(FlexState* gv, int, int, int, int);
 
-
-/* from file yylex.c */
-
-extern int yylex(void);
 
 /* A growable array. See buf.c. */
 struct Buf {
@@ -1089,13 +1099,10 @@ struct Buf {
 
 extern void buf_init(struct Buf * buf, size_t elem_size);
 extern void buf_destroy(struct Buf * buf);
-extern struct Buf *buf_append(struct Buf * buf, const void *ptr, int n_elem);
-extern struct Buf *buf_strappend(struct Buf *, const char *str);
-extern struct Buf *buf_strnappend(struct Buf *, const char *str, int nchars);
-extern struct Buf *buf_prints(struct Buf *buf, const char *fmt, const char* s);
-
-//extern struct Buf userdef_buf; /* a string buffer for #define's generated by user-options on cmd line. */
-//extern struct Buf top_buf;     /* contains %top code. String buffer. */
+extern struct Buf *buf_append(FlexState* gv, struct Buf * buf, const void *ptr, int n_elem);
+extern struct Buf *buf_strappend(FlexState* gv, struct Buf *, const char *str);
+extern struct Buf *buf_strnappend(FlexState* gv, struct Buf *, const char *str, int nchars);
+extern struct Buf *buf_prints(FlexState* gv, struct Buf *buf, const char *fmt, const char* s);
 
 /* For blocking out code from the header file. */
 #define OUT_BEGIN_CODE() outn("m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl")
@@ -1142,7 +1149,7 @@ bool range_covers_case (int c1, int c2);
  *  may be internal, as a function call.
  */
 struct filter {
-    int    (*filter_func)(struct filter*); /**< internal filter function */
+    int    (*filter_func)(FlexState* gv, struct filter*); /**< internal filter function */
     void * extra;         /**< extra data passed to filter_func */
 	int     argc;         /**< arg count */
 	const char ** argv;   /**< arg vector, \0-terminated */
@@ -1150,34 +1157,30 @@ struct filter {
 };
 
 /* output filter chain */
-//extern struct filter * output_chain;
-extern struct filter *filter_create_ext (struct filter * chain, const char *cmd, ...);
-struct filter *filter_create_int(struct filter *chain,
-				  int (*filter_func) (struct filter *),
+extern struct filter *filter_create_ext (FlexState* gv, struct filter * chain, const char *cmd, ...);
+struct filter *filter_create_int(FlexState* gv, struct filter *chain,
+				  int (*filter_func) (FlexState* gv, struct filter *),
                   void *extra);
-extern bool filter_apply_chain(struct filter * chain);
+extern bool filter_apply_chain(FlexState* gv, struct filter * chain);
 extern int filter_truncate(struct filter * chain, int max_len);
-extern int filter_tee_header(struct filter *chain);
-extern int filter_fix_linedirs(struct filter *chain);
+extern int filter_tee_header(FlexState* gv, struct filter *chain);
+extern int filter_fix_linedirs(FlexState* gv, struct filter *chain);
 
 
 /*
  * From "regex.c"
  */
 
-//extern regex_t regex_linedir;
-bool flex_init_regex(const char *);
-void flex_regcomp(regex_t *preg, const char *regex, int cflags);
-char   *regmatch_dup (regmatch_t * m, const char *src);
+bool flex_init_regex(FlexState* gv, const char *);
+void flex_regcomp(FlexState* gv, regex_t *preg, const char *regex, int cflags);
+char   *regmatch_dup (FlexState* gv, regmatch_t * m, const char *src);
 char   *regmatch_cpy (regmatch_t * m, char *dest, const char *src);
 int regmatch_len (regmatch_t * m);
-int regmatch_strtol (regmatch_t * m, const char *src, char **endptr, int base);
+int regmatch_strtol (FlexState* gv, regmatch_t * m, const char *src, char **endptr, int base);
 bool regmatch_empty (regmatch_t * m);
 
 /* From "scanflags.h" */
 typedef unsigned int scanflags_t;
-//extern scanflags_t* _sf_stk;
-//extern size_t _sf_top_ix, _sf_max; /**< stack of scanner flags. */
 #define _SF_CASE_INS   ((scanflags_t) 0x0001)
 #define _SF_DOT_ALL    ((scanflags_t) 0x0002)
 #define _SF_SKIP_WS    ((scanflags_t) 0x0004)
@@ -1188,9 +1191,9 @@ typedef unsigned int scanflags_t;
 #define sf_set_case_ins(X)      ((X) ? (sf_top() |= _SF_CASE_INS) : (sf_top() &= ~_SF_CASE_INS))
 #define sf_set_dot_all(X)       ((X) ? (sf_top() |= _SF_DOT_ALL)  : (sf_top() &= ~_SF_DOT_ALL))
 #define sf_set_skip_ws(X)       ((X) ? (sf_top() |= _SF_SKIP_WS)  : (sf_top() &= ~_SF_SKIP_WS))
-extern void sf_init(void);
-extern void sf_push(void);
-extern void sf_pop(void);
+extern void sf_init(FlexState* gv);
+extern void sf_push(FlexState* gv);
+extern void sf_pop(FlexState* gv);
 
 //From sym.c
 /* Variables for symbol tables:
@@ -1213,7 +1216,7 @@ typedef struct hash_entry **hash_table;
 #define CCL_HASH_SIZE 101
 
 #include "tables.h"
-typedef struct {
+typedef struct FlexState {
     /* these globals are all defined and commented in flexdef.h */
     bool    syntaxerror, eofseen;
     int     yymore_used, reject, real_reject, continued_action, in_rule;
@@ -1224,6 +1227,7 @@ typedef struct {
     int     action_size, defs1_offset, prolog_offset, action_offset,
             action_index;
     char   *infilename;
+    FILE   *fp_infilename;
     char   *extra_type;
     int     onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
     int     onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
@@ -1284,19 +1288,24 @@ typedef struct {
      */
     char   *program_name;
 
-    struct Buf userdef_buf; /* a string buffer for #define's generated by user-options on cmd line. */
-    struct Buf top_buf;     /* contains %top code. String buffer. */
-
-    struct filter * output_chain;
-
-    regex_t regex_linedir;
-
-    scanflags_t* _sf_stk;
-    size_t _sf_top_ix, _sf_max; /**< stack of scanner flags. */
-
     /*static*/ struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
     /*static*/ struct hash_entry *sctbl[START_COND_HASH_SIZE];
     /*static*/ struct hash_entry *ccltab[CCL_HASH_SIZE];
+
+    //from scanflags.c
+    scanflags_t* _sf_stk;
+    size_t _sf_top_ix, _sf_max; /**< stack of scanner flags. */
+
+    //from regex.c
+    regex_t regex_linedir;
+
+    //from filter.c
+    struct filter * output_chain;
+
+    //from buf.c
+    struct Buf userdef_buf; /* a string buffer for #define's generated by user-options on cmd line. */
+    struct Buf top_buf;     /* contains %top code. String buffer. */
+
 
     //from scan.l
     /*static*/ int bracelevel, didadef, indented_code;
@@ -1355,9 +1364,11 @@ typedef struct {
     /* For debugging. The max number of filters to apply to skeleton. */
     /*static*/ int preproc_level;
 
+    yyscan_t scanner;
+
 } FlexState;
 
-extern FlexState *gv;
+//extern FlexState *gv;
 void initFlexState(FlexState *fgv);
 
 #endif /* not defined FLEXDEF_H */

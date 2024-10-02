@@ -43,9 +43,9 @@ struct yy_trans_info {int32_t yy_verify; int32_t yy_nxt;};
 
 /* declare functions that have forward references */
 
-static void genecs(void);
+static void genecs(FlexState* gv);
 
-struct packtype_t *optimize_pack(size_t sz)
+struct packtype_t *optimize_pack(FlexState* gv, size_t sz)
 {
 	/* FIXME: There's a 32-bit assumption lurking here */
 	//static struct packtype_t out;
@@ -68,7 +68,7 @@ struct packtype_t *optimize_pack(size_t sz)
 /** Make the table for possible eol matches.
  *  @return the newly allocated rule_can_match_eol table
  */
-static struct yytbl_data *mkeoltbl (void)
+static struct yytbl_data *mkeoltbl (FlexState* gv)
 {
 	int     i;
 	flex_int8_t *tdata = 0;
@@ -88,10 +88,10 @@ static struct yytbl_data *mkeoltbl (void)
 }
 
 /* Generate the table for possible eol matches. */
-static void geneoltbl (void)
+static void geneoltbl (FlexState* gv)
 {
 	int     i;
-	struct packtype_t *ptype = optimize_pack(gv->num_rules);
+	struct packtype_t *ptype = optimize_pack(gv, gv->num_rules);
 
 	outn ("m4_ifdef( [[M4_MODE_YYLINENO]],[[");
 	out_str ("m4_define([[M4_HOOK_EOLTABLE_TYPE]], [[%s]])\n", ptype->name);
@@ -119,14 +119,14 @@ static void geneoltbl (void)
  * @return the newly allocated trans table
  */
 
-static struct yytbl_data *mkctbl (void)
+static struct yytbl_data *mkctbl (FlexState* gv)
 {
 	int i;
 	struct yytbl_data *tbl = 0;
 	flex_int32_t *tdata = 0, curr = 0;
 	int     end_of_buffer_action = gv->num_rules + 1;
 
-	struct packtype_t *ptype = optimize_pack(gv->tblend + 2 + 1);
+	struct packtype_t *ptype = optimize_pack(gv, gv->tblend + 2 + 1);
 	out_str ("m4_define([[M4_HOOK_MKCTBL_TYPE]], [[%s]])", ptype->name);
 
 	tbl = calloc(1, sizeof (struct yytbl_data));
@@ -157,10 +157,10 @@ static struct yytbl_data *mkctbl (void)
 	 */
 
 	while (gv->tblend + 2 >= gv->current_max_xpairs)
-		expand_nxt_chk ();
+		expand_nxt_chk (gv);
 
 	while (gv->lastdfa + 1 >= gv->current_max_dfas)
-		increase_max_dfas ();
+		increase_max_dfas (gv);
 
 	gv->base[gv->lastdfa + 1] = gv->tblend + 2;
 	gv->nxt[gv->tblend + 1] = end_of_buffer_action;
@@ -218,7 +218,7 @@ static struct yytbl_data *mkctbl (void)
 /** Make start_state_list table.
  *  @return the newly allocated start_state_list table
  */
-static struct yytbl_data *mkssltbl (void)
+static struct yytbl_data *mkssltbl (FlexState* gv)
 {
 	struct yytbl_data *tbl = 0;
 	flex_int32_t *tdata = 0;
@@ -243,7 +243,7 @@ static struct yytbl_data *mkssltbl (void)
 
 /* genctbl - generates full speed compressed transition table */
 
-static void genctbl(void)
+static void genctbl(FlexState* gv)
 {
 	int i;
 	int     end_of_buffer_action = gv->num_rules + 1;
@@ -271,10 +271,10 @@ static void genctbl(void)
 	 */
 
 	while (gv->tblend + 2 >= gv->current_max_xpairs)
-		expand_nxt_chk ();
+		expand_nxt_chk (gv);
 
 	while (gv->lastdfa + 1 >= gv->current_max_dfas)
-		increase_max_dfas ();
+		increase_max_dfas (gv);
 
 	gv->base[gv->lastdfa + 1] = gv->tblend + 2;
 	gv->nxt[gv->tblend + 1] = end_of_buffer_action;
@@ -298,24 +298,24 @@ static void genctbl(void)
 
 	for (i = 0; i <= gv->tblend; ++i) {
 		if (gv->chk[i] == EOB_POSITION)
-			transition_struct_out (0, gv->base[gv->lastdfa + 1] - i);
+			transition_struct_out (gv, 0, gv->base[gv->lastdfa + 1] - i);
 
 		else if (gv->chk[i] == ACTION_POSITION)
-			transition_struct_out (0, gv->nxt[i]);
+			transition_struct_out (gv, 0, gv->nxt[i]);
 
 		else if (gv->chk[i] > gv->numecs || gv->chk[i] == 0)
-			transition_struct_out (0, 0);	/* unused slot */
+			transition_struct_out (gv, 0, 0);	/* unused slot */
 
 		else		/* verify, transition */
-			transition_struct_out (gv->chk[i],
+			transition_struct_out (gv, gv->chk[i],
 					       gv->base[gv->nxt[i]] - (i -
 							       gv->chk[i]));
 	}
 
 
 	/* Here's the final, end-of-buffer state. */
-	transition_struct_out (gv->chk[gv->tblend + 1], gv->nxt[gv->tblend + 1]);
-	transition_struct_out (gv->chk[gv->tblend + 2], gv->nxt[gv->tblend + 2]);
+	transition_struct_out (gv, gv->chk[gv->tblend + 1], gv->nxt[gv->tblend + 1]);
+	transition_struct_out (gv, gv->chk[gv->tblend + 2], gv->nxt[gv->tblend + 2]);
 
 	outn ("]])");
 	gv->footprint += sizeof(struct yy_trans_info) * (gv->tblend + 2 + 1);
@@ -326,19 +326,19 @@ static void genctbl(void)
 		for (i = 0; i <= gv->lastsc * 2; ++i)
 			out_dec ("M4_HOOK_STATE_ENTRY_FORMAT(%d)", gv->base[i]);
 
-		dataend (NULL);
+		dataend (gv, NULL);
 		outn("]])");
 		gv->footprint +=  sizeof(struct yy_trans_info *) * (gv->lastsc * 2 + 1);
 	}
 
 	if (gv->ctrl.useecs)
-		genecs ();
+		genecs (gv);
 }
 
 
 /* mkecstbl - Make equivalence-class tables.  */
 
-static struct yytbl_data *mkecstbl (void)
+static struct yytbl_data *mkecstbl (FlexState* gv)
 {
 	int i;
 	struct yytbl_data *tbl = 0;
@@ -363,7 +363,7 @@ static struct yytbl_data *mkecstbl (void)
 
 /* Generate equivalence-class tables. */
 
-static void genecs(void)
+static void genecs(FlexState* gv)
 {
 	int ch, row;
 	int     numrows;
@@ -373,10 +373,10 @@ static void genecs(void)
 
 	for (ch = 1; ch < gv->ctrl.csize; ++ch) {
 		gv->ecgroup[ch] = ABS (gv->ecgroup[ch]);
-		mkdata (gv->ecgroup[ch]);
+		mkdata (gv, gv->ecgroup[ch]);
 	}
 
-	dataend (NULL);
+	dataend (gv, NULL);
 	outn("]])");
 	gv->footprint += sizeof(YY_CHAR) * gv->ctrl.csize;
 
@@ -389,7 +389,7 @@ static void genecs(void)
 		for (row = 0; row < numrows; ++row) {
 			for (ch = row; ch < gv->ctrl.csize; ch += numrows) {
 				fprintf (stderr, "%4s = %-2d",
-					 readable_form (ch), gv->ecgroup[ch]);
+					 readable_form (gv, ch), gv->ecgroup[ch]);
 
 				putc (' ', stderr);
 			}
@@ -403,7 +403,7 @@ static void genecs(void)
  * you should call mkecstbl() after this.
  */
 
-static struct yytbl_data *mkftbl(void)
+static struct yytbl_data *mkftbl(FlexState* gv)
 {
 	int i;
 	int     end_of_buffer_action = gv->num_rules + 1;
@@ -437,11 +437,11 @@ static struct yytbl_data *mkftbl(void)
 
 /* genftbl - generate full transition table */
 
-static void genftbl(void)
+static void genftbl(FlexState* gv)
 {
 	int i;
 	int     end_of_buffer_action = gv->num_rules + 1;
-	struct packtype_t *ptype = optimize_pack(gv->num_rules + 1);
+	struct packtype_t *ptype = optimize_pack(gv, gv->num_rules + 1);
 
 	gv->dfaacc[gv->end_of_buffer_state].dfaacc_state = end_of_buffer_action;
 
@@ -453,19 +453,19 @@ static void genftbl(void)
 	for (i = 1; i <= gv->lastdfa; ++i) {
 		int anum = gv->dfaacc[i].dfaacc_state;
 
-		mkdata (anum);
+		mkdata (gv, anum);
 
 		if (gv->env.trace && anum)
 			fprintf (stderr, _("state # %d accepts: [%d]\n"),
 				 i, anum);
 	}
 
-	dataend (NULL);
+	dataend (gv, NULL);
 	outn("]])");
 	gv->footprint += (gv->lastdfa + 1) * ptype->width;
 
 	if (gv->ctrl.useecs)
-		genecs ();
+		genecs (gv);
 
 	/* Don't have to dump the actual full table entries - they were
 	 * created on-the-fly.
@@ -474,7 +474,7 @@ static void genftbl(void)
 
 /* gentabs - generate data statements for the transition tables */
 
-static void gentabs(void)
+static void gentabs(FlexState* gv)
 {
 	int     sz, i, j, k, *accset, nacc, *acc_array, total_states;
 	int     end_of_buffer_action = gv->num_rules + 1;
@@ -512,7 +512,7 @@ static void gentabs(void)
 		    EOB_accepting_list;
 
 		sz = MAX (gv->numas, 1) + 1;
-		ptype = optimize_pack(sz);
+		ptype = optimize_pack(gv, sz);
 		out_str ("m4_define([[M4_HOOK_ACCLIST_TYPE]], [[%s]])", ptype->name);
 		out_dec ("m4_define([[M4_HOOK_ACCLIST_SIZE]], [[%d]])", sz);
 		outn ("m4_define([[M4_HOOK_ACCLIST_BODY]], [[m4_dnl");
@@ -557,7 +557,7 @@ static void gentabs(void)
 						accnum |= YY_TRAILING_MASK;
 					}
 
-					mkdata (accnum);
+					mkdata (gv, accnum);
 					yyacclist_data[yyacclist_curr++] = accnum;
 
 					if (gv->env.trace) {
@@ -578,13 +578,13 @@ static void gentabs(void)
 		/* add accepting number for the "jam" state */
 		acc_array[i] = j;
 
-		dataend (NULL);
+		dataend (gv, NULL);
 		outn("]])");
 		gv->footprint += sz * ptype->width;
 		if (gv->tablesext) {
-			yytbl_data_compress (yyacclist_tbl);
-			if (yytbl_data_fwrite (&gv->tableswr, yyacclist_tbl) < 0)
-				flexerror (_("Could not write yyacclist_tbl"));
+			yytbl_data_compress (gv, yyacclist_tbl);
+			if (yytbl_data_fwrite (gv, &gv->tableswr, yyacclist_tbl) < 0)
+				flexerror (gv, _("Could not write yyacclist_tbl"));
 			yytbl_data_destroy (yyacclist_tbl);
 			yyacclist_tbl = NULL;
 		}
@@ -622,7 +622,7 @@ static void gentabs(void)
 		++sz;
 
 	/* Note that this table is alternately defined if ctrl.fulltbl */
-	ptype = optimize_pack(sz);
+	ptype = optimize_pack(gv, sz);
 	outn ("m4_define([[M4_HOOK_NEED_ACCEPT]], 1)");
 	out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
 	out_dec ("m4_define([[M4_HOOK_ACCEPT_SIZE]], [[%d]])", sz);
@@ -636,7 +636,7 @@ static void gentabs(void)
 	yyacc_curr=1;
 
 	for (i = 1; i <= gv->lastdfa; ++i) {
-		mkdata (acc_array[i]);
+		mkdata (gv, acc_array[i]);
 		yyacc_data[yyacc_curr++] = acc_array[i];
 
 		if (!gv->reject && gv->env.trace && acc_array[i])
@@ -645,23 +645,23 @@ static void gentabs(void)
 	}
 
 	/* Add entry for "jam" state. */
-	mkdata (acc_array[i]);
+	mkdata (gv, acc_array[i]);
 	yyacc_data[yyacc_curr++] = acc_array[i];
 
 	if (gv->reject) {
 		/* Add "cap" for the list. */
-		mkdata (acc_array[i]);
+		mkdata (gv, acc_array[i]);
 		yyacc_data[yyacc_curr++] = acc_array[i];
 	}
 
-	dataend (NULL);
+	dataend (gv, NULL);
 	outn ("]])");
 	gv->footprint += sz * ptype->width;
 
 	if (gv->tablesext) {
-		yytbl_data_compress (yyacc_tbl);
-		if (yytbl_data_fwrite (&gv->tableswr, yyacc_tbl) < 0)
-			flexerror (_("Could not write yyacc_tbl"));
+		yytbl_data_compress (gv, yyacc_tbl);
+		if (yytbl_data_fwrite (gv, &gv->tableswr, yyacc_tbl) < 0)
+			flexerror (gv, _("Could not write yyacc_tbl"));
 	}
 	yytbl_data_destroy (yyacc_tbl);
 	yyacc_tbl = NULL;
@@ -669,14 +669,14 @@ static void gentabs(void)
 
 	if (gv->ctrl.useecs) {
 
-		genecs ();
+		genecs (gv);
 		if (gv->tablesext) {
 			struct yytbl_data *tbl;
 
-			tbl = mkecstbl ();
-			yytbl_data_compress (tbl);
-			if (yytbl_data_fwrite (&gv->tableswr, tbl) < 0)
-				flexerror (_("Could not write ecstbl"));
+			tbl = mkecstbl (gv);
+			yytbl_data_compress (gv, tbl);
+			if (yytbl_data_fwrite (gv, &gv->tableswr, tbl) < 0)
+				flexerror (gv, _("Could not write ecstbl"));
 			yytbl_data_destroy (tbl);
 			tbl = 0;
 		}
@@ -706,17 +706,17 @@ static void gentabs(void)
 				fprintf (stderr, "%d = %d\n",
 					 i, ABS (gv->tecbck[i]));
 
-			mkdata (ABS (gv->tecbck[i]));
+			mkdata (gv, ABS (gv->tecbck[i]));
 			yymecs_data[i] = ABS (gv->tecbck[i]);
 		}
 
-		dataend (NULL);
+		dataend (gv, NULL);
 		outn ("]])");
 		gv->footprint += sizeof(YY_CHAR) * (gv->numecs + 1);
 		if (gv->tablesext) {
-			yytbl_data_compress (yymeta_tbl);
-			if (yytbl_data_fwrite (&gv->tableswr, yymeta_tbl) < 0)
-				flexerror (_("Could not write yymeta_tbl"));
+			yytbl_data_compress (gv, yymeta_tbl);
+			if (yytbl_data_fwrite (gv, &gv->tableswr, yymeta_tbl) < 0)
+				flexerror (gv, _("Could not write yymeta_tbl"));
 		}
 		yytbl_data_destroy (yymeta_tbl);
 		yymeta_tbl = NULL;
@@ -727,7 +727,7 @@ static void gentabs(void)
 
 	/* Begin generating yy_base */
 	sz = total_states + 1;
-	ptype = optimize_pack(sz);
+	ptype = optimize_pack(gv, sz);
 	out_str ("m4_define([[M4_HOOK_BASE_TYPE]], [[%s]])", ptype->name);
 	out_dec ("m4_define([[M4_HOOK_BASE_SIZE]], [[%d]])", sz);
 	outn ("m4_define([[M4_HOOK_BASE_BODY]], [[m4_dnl");
@@ -755,28 +755,28 @@ static void gentabs(void)
 			gv->def[i] = gv->lastdfa - d + 1;
 		}
 
-		mkdata (gv->base[i]);
+		mkdata (gv, gv->base[i]);
 		yybase_data[yybase_curr++] = gv->base[i];
 	}
 
 	/* Generate jam state's base index. */
-	mkdata (gv->base[i]);
+	mkdata (gv, gv->base[i]);
 	yybase_data[yybase_curr++] = gv->base[i];
 
 	for (++i /* skip jam state */ ; i <= total_states; ++i) {
-		mkdata (gv->base[i]);
+		mkdata (gv, gv->base[i]);
 		yybase_data[yybase_curr++] = gv->base[i];
 		gv->def[i] = gv->jamstate;
 	}
 
-	dataend (NULL);
+	dataend (gv, NULL);
 	outn ("]])");
 	gv->footprint += sz * ptype->width;
 
 	if (gv->tablesext) {
-		yytbl_data_compress (yybase_tbl);
-		if (yytbl_data_fwrite (&gv->tableswr, yybase_tbl) < 0)
-			flexerror (_("Could not write yybase_tbl"));
+		yytbl_data_compress (gv, yybase_tbl);
+		if (yytbl_data_fwrite (gv, &gv->tableswr, yybase_tbl) < 0)
+			flexerror (gv, _("Could not write yybase_tbl"));
 	}
 	yytbl_data_destroy (yybase_tbl);
 	yybase_tbl = NULL;
@@ -784,7 +784,7 @@ static void gentabs(void)
 
 
 	/* Begin generating yy_def */
-	ptype = optimize_pack(total_states + 1);
+	ptype = optimize_pack(gv, total_states + 1);
 	out_str ("m4_define([[M4_HOOK_DEF_TYPE]], [[%s]])", ptype->name);
 	out_dec ("m4_define([[M4_HOOK_DEF_SIZE]], [[%d]])", total_states + 1);
 	outn ("m4_define([[M4_HOOK_DEF_BODY]], [[m4_dnl");
@@ -796,25 +796,25 @@ static void gentabs(void)
 	    calloc(yydef_tbl->td_lolen, sizeof (flex_int32_t));
 
 	for (i = 1; i <= total_states; ++i) {
-		mkdata (gv->def[i]);
+		mkdata (gv, gv->def[i]);
 		yydef_data[i] = gv->def[i];
 	}
 
-	dataend (NULL);
+	dataend (gv, NULL);
 	outn ("]])");
 	gv->footprint += (total_states + 1) * ptype->width;
 
 	if (gv->tablesext) {
-		yytbl_data_compress (yydef_tbl);
-		if (yytbl_data_fwrite (&gv->tableswr, yydef_tbl) < 0)
-			flexerror (_("Could not write yydef_tbl"));
+		yytbl_data_compress (gv, yydef_tbl);
+		if (yytbl_data_fwrite (gv, &gv->tableswr, yydef_tbl) < 0)
+			flexerror (gv, _("Could not write yydef_tbl"));
 	}
 	yytbl_data_destroy (yydef_tbl);
 	yydef_tbl = NULL;
 	/* End generating yy_def */
 
 
-	ptype = optimize_pack(gv->tblend + 1);
+	ptype = optimize_pack(gv, gv->tblend + 1);
 	/* Note: Used when !ctrl.fulltbl && !ctrl.fullspd).
 	 * (Alternately defined when ctrl.fullspd)
 	 */
@@ -835,25 +835,25 @@ static void gentabs(void)
 		if (gv->chk[i] == 0 || gv->nxt[i] == 0)
 			gv->nxt[i] = gv->jamstate;	/* new state is the JAM state */
 
-		mkdata (gv->nxt[i]);
+		mkdata (gv, gv->nxt[i]);
 		yynxt_data[i] = gv->nxt[i];
 	}
 
-	dataend (NULL);
+	dataend (gv, NULL);
 	outn("]])");
 	gv->footprint += ptype->width * (gv->tblend + 1);
 
 	if (gv->tablesext) {
-		yytbl_data_compress (yynxt_tbl);
-		if (yytbl_data_fwrite (&gv->tableswr, yynxt_tbl) < 0)
-			flexerror (_("Could not write yynxt_tbl"));
+		yytbl_data_compress (gv, yynxt_tbl);
+		if (yytbl_data_fwrite (gv, &gv->tableswr, yynxt_tbl) < 0)
+			flexerror (gv, _("Could not write yynxt_tbl"));
 	}
 	yytbl_data_destroy (yynxt_tbl);
 	yynxt_tbl = NULL;
 	/* End generating yy_nxt */
 
 	/* Begin generating yy_chk */
-	ptype = optimize_pack(gv->tblend + 1);
+	ptype = optimize_pack(gv, gv->tblend + 1);
 	out_str ("m4_define([[M4_HOOK_CHK_TYPE]], [[%s]])", ptype->name);
 	out_dec ("m4_define([[M4_HOOK_CHK_SIZE]], [[%d]])", gv->tblend + 1);
 	outn ("m4_define([[M4_HOOK_CHK_BODY]], [[m4_dnl");
@@ -868,18 +868,18 @@ static void gentabs(void)
 		if (gv->chk[i] == 0)
 			++gv->nummt;
 
-		mkdata (gv->chk[i]);
+		mkdata (gv, gv->chk[i]);
 		yychk_data[i] = gv->chk[i];
 	}
 
-	dataend (NULL);
+	dataend (gv, NULL);
 	outn ("]])");
 	gv->footprint += ptype->width * (gv->tblend + 1);
 
 	if (gv->tablesext) {
-		yytbl_data_compress (yychk_tbl);
-		if (yytbl_data_fwrite (&gv->tableswr, yychk_tbl) < 0)
-			flexerror (_("Could not write yychk_tbl"));
+		yytbl_data_compress (gv, yychk_tbl);
+		if (yytbl_data_fwrite (gv, &gv->tableswr, yychk_tbl) < 0)
+			flexerror (gv, _("Could not write yychk_tbl"));
 	}
 	yytbl_data_destroy (yychk_tbl);
 	yychk_tbl = NULL;
@@ -918,7 +918,7 @@ void visible_define_int (const char *symname, const int val)
 /* make_tables - generate transition tables
  */
 
-void make_tables (void)
+void make_tables (FlexState* gv)
 {
 	char buf[128];
 	int i;
@@ -927,28 +927,28 @@ void make_tables (void)
 	/* This is where we REALLY begin generating the tables. */
 
 	if (gv->ctrl.fullspd) {
-		genctbl ();
+		genctbl (gv);
 		if (gv->tablesext) {
 			struct yytbl_data *tbl;
 
-			tbl = mkctbl ();
-			yytbl_data_compress (tbl);
-			if (yytbl_data_fwrite (&gv->tableswr, tbl) < 0)
-				flexerror (_("Could not write ftbl"));
+			tbl = mkctbl (gv);
+			yytbl_data_compress (gv, tbl);
+			if (yytbl_data_fwrite (gv, &gv->tableswr, tbl) < 0)
+				flexerror (gv, _("Could not write ftbl"));
 			yytbl_data_destroy (tbl);
 
-			tbl = mkssltbl ();
-			yytbl_data_compress (tbl);
-			if (yytbl_data_fwrite (&gv->tableswr, tbl) < 0)
-				flexerror (_("Could not write ssltbl"));
+			tbl = mkssltbl (gv);
+			yytbl_data_compress (gv, tbl);
+			if (yytbl_data_fwrite (gv, &gv->tableswr, tbl) < 0)
+				flexerror (gv, _("Could not write ssltbl"));
 			yytbl_data_destroy (tbl);
 			tbl = 0;
 
 			if (gv->ctrl.useecs) {
-				tbl = mkecstbl ();
-				yytbl_data_compress (tbl);
-				if (yytbl_data_fwrite (&gv->tableswr, tbl) < 0)
-					flexerror (_
+				tbl = mkecstbl (gv);
+				yytbl_data_compress (gv, tbl);
+				if (yytbl_data_fwrite (gv, &gv->tableswr, tbl) < 0)
+					flexerror (gv, _
 						   ("Could not write ecstbl"));
 				yytbl_data_destroy (tbl);
 				tbl = 0;
@@ -956,26 +956,26 @@ void make_tables (void)
 		}
 	}
 	else if (gv->ctrl.fulltbl) {
-		genftbl ();
+		genftbl (gv);
 		if (gv->tablesext) {
 			struct yytbl_data *tbl;
 
 			/* Alternately defined if !gv->ctrl.ffullspd && !gv->ctrl.fulltbl */
 			struct packtype_t *ptype;
-			tbl = mkftbl ();
-			yytbl_data_compress (tbl);
-			ptype = optimize_pack(tbl->td_lolen);
+			tbl = mkftbl (gv);
+			yytbl_data_compress (gv, tbl);
+			ptype = optimize_pack(gv, tbl->td_lolen);
 			out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
-			if (yytbl_data_fwrite (&gv->tableswr, tbl) < 0)
-				flexerror (_("Could not write ftbl"));
+			if (yytbl_data_fwrite (gv, &gv->tableswr, tbl) < 0)
+				flexerror (gv, _("Could not write ftbl"));
 			yytbl_data_destroy (tbl);
 			tbl = 0;
 
 			if (gv->ctrl.useecs) {
-				tbl = mkecstbl ();
-				yytbl_data_compress (tbl);
-				if (yytbl_data_fwrite (&gv->tableswr, tbl) < 0)
-					flexerror (_
+				tbl = mkecstbl (gv);
+				yytbl_data_compress (gv, tbl);
+				if (yytbl_data_fwrite (gv, &gv->tableswr, tbl) < 0)
+					flexerror (gv, _
 						   ("Could not write ecstbl"));
 				yytbl_data_destroy (tbl);
 				tbl = 0;
@@ -983,7 +983,7 @@ void make_tables (void)
 		}
 	}
 	else {
-		gentabs ();
+		gentabs (gv);
 	}
 
 	snprintf(buf, sizeof(buf), "footprint: %ld bytes\n", gv->footprint);
@@ -1017,15 +1017,15 @@ void make_tables (void)
 
 	if (gv->ctrl.do_yylineno) {
 
-		geneoltbl ();
+		geneoltbl (gv);
 
 		if (gv->tablesext) {
 			struct yytbl_data *tbl;
 
-			tbl = mkeoltbl ();
-			yytbl_data_compress (tbl);
-			if (yytbl_data_fwrite (&gv->tableswr, tbl) < 0)
-				flexerror (_("Could not write eoltbl"));
+			tbl = mkeoltbl (gv);
+			yytbl_data_compress (gv, tbl);
+			if (yytbl_data_fwrite (gv, &gv->tableswr, tbl) < 0)
+				flexerror (gv, _("Could not write eoltbl"));
 			yytbl_data_destroy (tbl);
 			tbl = 0;
 		}
@@ -1059,19 +1059,19 @@ void make_tables (void)
 			}
 			else {
 				// This will work anywhere
-				mkdata (gv->nultrans[i]);
+				mkdata (gv, gv->nultrans[i]);
 				yynultrans_data[i] = gv->nultrans[i];
 			}
 		}
 
-		dataend (NULL);
+		dataend (gv, NULL);
 		outn("]])");
 		gv->footprint += (gv->lastdfa + 1) * (gv->ctrl.fullspd ? sizeof(struct yy_trans_info *) : sizeof(int32_t));
 		if (gv->tablesext) {
-			yytbl_data_compress (yynultrans_tbl);
-			if (yytbl_data_fwrite (&gv->tableswr, yynultrans_tbl) <
+			yytbl_data_compress (gv, yynultrans_tbl);
+			if (yytbl_data_fwrite (gv, &gv->tableswr, yynultrans_tbl) <
 			    0)
-				flexerror (_
+				flexerror (gv, _
 					   ("Could not write yynultrans_tbl"));
 		}
 
@@ -1087,14 +1087,14 @@ void make_tables (void)
 		/* Policy choice: we don't include this space
 		 * in the table metering.
 		 */
-		struct packtype_t *ptype = optimize_pack(gv->num_rules);
+		struct packtype_t *ptype = optimize_pack(gv, gv->num_rules);
 		out_str ("m4_define([[M4_HOOK_DEBUGTABLE_TYPE]], [[%s]])", ptype->name);
 		out_dec ("m4_define([[M4_HOOK_DEBUGTABLE_SIZE]], [[%d]])", gv->num_rules);
 		outn ("m4_define([[M4_HOOK_DEBUGTABLE_BODY]], [[m4_dnl");
 
 		for (i = 1; i < gv->num_rules; ++i)
-			mkdata (gv->rule_linenum[i]);
-		dataend (NULL);
+			mkdata (gv, gv->rule_linenum[i]);
+		dataend (gv, NULL);
 		outn("]])");
 	}
 }
