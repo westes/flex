@@ -1032,8 +1032,10 @@ const char *suffix (FlexState* gv);
 /* Mine a text-valued property out of the skeleton file */
 extern const char *skel_property(FlexState* gv, const char *);
 
+extern void init_default_backend(FlexState *gv);
+
 /* Is the default back end selected?*/
-extern bool is_default_backend(void);
+extern bool is_default_backend(FlexState* gv);
 
 /* Select a backend by name */
 extern void backend_by_name(FlexState* gv, const char *);
@@ -1215,6 +1217,15 @@ typedef struct hash_entry **hash_table;
 #define START_COND_HASH_SIZE 101
 #define CCL_HASH_SIZE 101
 
+/* Method table describing a language-specific back end.
+ * Even if this never gets a member other than the skel
+ * array, it prevents us from getting lost in a maze of
+ * twisty array reference levels, all different.
+ */
+struct flex_backend_t {
+	const char **skel;		// Digested skeleton file
+};
+
 #include "tables.h"
 typedef struct FlexState {
     /* these globals are all defined and commented in flexdef.h */
@@ -1365,6 +1376,9 @@ typedef struct FlexState {
     /*static*/ int preproc_level;
 
     yyscan_t scanner;
+
+    //from skeletons.c
+    /*static*/ struct flex_backend_t *backend;
 
 } FlexState;
 

@@ -128,6 +128,7 @@ FlexState* newFlexState(void)
     fgv->backing_name = "lex.backup";
     fgv->tablesfile_template = "lex.%s.tables";
     fgv->preproc_level = 1000;
+    init_default_backend(fgv);
     return fgv;
 }
 
@@ -1718,7 +1719,7 @@ void readin (FlexState* gv)
 	if (gv->ctrl.noyyread)
 		visible_define("M4_MODE_USER_YYREAD");
 
-	if (is_default_backend()) {
+	if (is_default_backend(gv)) {
 		if (gv->ctrl.C_plus_plus) {
 			visible_define ( "M4_MODE_CXX_ONLY");
 		} else {

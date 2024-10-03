@@ -54,14 +54,14 @@ const char *go_skel[] = {
 
 /* END digested skeletons */
 
-/* Method table describing a language-specific back end.
- * Even if this never gets a member other than the skel
- * array, it prevents us from getting lost in a maze of
- * twisty array reference levels, all different.
- */
-struct flex_backend_t {
-	const char **skel;		// Digested skeleton file
-};
+///* Method table describing a language-specific back end.
+// * Even if this never gets a member other than the skel
+// * array, it prevents us from getting lost in a maze of
+// * twisty array reference levels, all different.
+// */
+//struct flex_backend_t {
+//	const char **skel;		// Digested skeleton file
+//};
 
 static const struct flex_backend_t backends[] = {
     {.skel=cpp_skel},
@@ -70,23 +70,28 @@ static const struct flex_backend_t backends[] = {
     {NULL}
 };
 
-static const struct flex_backend_t *backend = &backends[0];
+//static struct flex_backend_t *backend = &backends[0];
+
+void init_default_backend(FlexState *gv)
+{
+    gv->backend = &backends[0];
+}
 
 /* Functions for querying skeleton properties. */
 
-bool is_default_backend(void)
+bool is_default_backend(FlexState* gv)
 {
-    return backend == &backends[0];
+    return gv->backend == &backends[0];
 }
 
 /* Search for a string in the skeleton prolog, where macros are defined.
  */
-static bool boneseeker(const char *bone)
+static bool boneseeker(FlexState* gv, const char *bone)
 {
 	int i;
 
-	for (i = 0; backend->skel[i] != NULL; i++) {
-		const char *line = backend->skel[i];
+	for (i = 0; gv->backend->skel[i] != NULL; i++) {
+		const char *line = gv->backend->skel[i];
 		if (strstr(line, bone) != NULL)
 			return true;
 		else if (strncmp(line, "%%", 2) == 0)
@@ -100,27 +105,27 @@ void backend_by_name(FlexState* gv, const char *name)
 	const char *prefix_property;
 	if (name != NULL) {
 		if (strcmp(name, "nr") == 0) {
-			backend = &backends[0];
+			gv->backend = &backends[0];
 			gv->ctrl.reentrant = false;
 			goto backend_ok;
 		}
 		if (strcmp(name, "r") == 0) {
-			backend = &backends[0];
+			gv->backend = &backends[0];
 			gv->ctrl.reentrant = true;
 			goto backend_ok;
 		}
-		for (backend = &backends[0]; backend->skel != NULL; backend++) {
+		for (gv->backend = &backends[0]; gv->backend->skel != NULL; gv->backend++) {
 			if (strcasecmp(skel_property(gv, "M4_PROPERTY_BACKEND_NAME"), name) == 0)
 				goto backend_ok;
 		}
 		flexerror(gv, _("no such back end"));
 	}
   backend_ok:
-	gv->ctrl.rewrite = !is_default_backend();
+	gv->ctrl.rewrite = !is_default_backend(gv);
 	gv->ctrl.backend_name = xstrdup(gv, skel_property(gv, "M4_PROPERTY_BACKEND_NAME"));
 	gv->ctrl.traceline_re = xstrdup(gv, skel_property(gv, "M4_PROPERTY_TRACE_LINE_REGEXP"));
 	gv->ctrl.traceline_template = xstrdup(gv, skel_property(gv, "M4_PROPERTY_TRACE_LINE_TEMPLATE"));
-	gv->ctrl.have_state_entry_format = boneseeker("m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]]");
+	gv->ctrl.have_state_entry_format = boneseeker(gv, "m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]]");
 	prefix_property = skel_property(gv, "M4_PROPERTY_PREFIX");
 	if (prefix_property != NULL)
 		gv->ctrl.prefix = xstrdup(gv, prefix_property);
@@ -131,7 +136,7 @@ const char *suffix (FlexState* gv)
 {
 	const char   *suffix;
 
-	if (is_default_backend()) {
+	if (is_default_backend(gv)) {
 		if (gv->ctrl.C_plus_plus)
 			suffix = "cc";
 		else
@@ -153,8 +158,8 @@ const char *skel_property(FlexState* gv, const char *propname)
 	//static char name[256], value[256], *np, *vp;;
 	const char *cp;
 
-	for (i = 0; backend->skel[i] != NULL; i++) {
-		const char *line = backend->skel[i];
+	for (i = 0; gv->backend->skel[i] != NULL; i++) {
+		const char *line = gv->backend->skel[i];
 		if (line[0] == '\0')
 			continue;
 		/* only scan before first skell breakpoint */
@@ -218,7 +223,7 @@ void skelout (FlexState* gv, bool announce)
 	 */
 	while (gv->env.skelfile != NULL ?
 	       (fgets (buf, MAXLINE, gv->env.skelfile) != NULL) :
-	       ((buf = (char *) backend->skel[gv->skel_ind++]) != 0)) {
+	       ((buf = (char *) gv->backend->skel[gv->skel_ind++]) != 0)) {
 
 		if (gv->env.skelfile != NULL)
 			chomp (buf);
