@@ -19,11 +19,11 @@
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE.
 
-EXTRA_DIST = \
-	testxxLexer.l \
-	debflex.awk \
-	README
-
-SUBDIRS = \
-	manual \
-	fastwc
+EXTRA_DIST += \
+	examples/fastwc/wc5.l \
+	examples/fastwc/wc4.l \
+	examples/fastwc/wc3.l \
+	examples/fastwc/wc2.l \
+	examples/fastwc/wc1.l \
+	examples/fastwc/mywc.c \
+	examples/fastwc/README
