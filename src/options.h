@@ -35,7 +35,7 @@
 #define OPTIONS_H
 #include "scanopt.h"
 
-extern optspec_t flexopts[];
+extern const optspec_t flexopts[];
 
 enum flexopt_flag_t {
 	/* Use positive integers only, since they are return codes for scanopt.

@@ -24,16 +24,16 @@
 #include "flexdef.h"
 
 
-regex_t regex_linedir; /**< matches line directives */
+//regex_t regex_linedir; /**< matches line directives */
 
 
 /** Initialize the regular expressions.
  * @return true upon success.
  */
-bool flex_init_regex(const char *traceline_re)
+bool flex_init_regex(FlexState* gv, const char *traceline_re)
 {
 	if (traceline_re != NULL)
-		flex_regcomp(&regex_linedir, traceline_re, REG_EXTENDED);
+		flex_regcomp(gv, &gv->regex_linedir, traceline_re, REG_EXTENDED);
 	return true;
 }
 
@@ -42,7 +42,7 @@ bool flex_init_regex(const char *traceline_re)
  * @param regex Same as for regcomp().
  * @param cflags Same as for regcomp().
  */
-void flex_regcomp(regex_t *preg, const char *regex, int cflags)
+void flex_regcomp(FlexState* gv, regex_t *preg, const char *regex, int cflags)
 {
 	int err;
 
@@ -55,11 +55,11 @@ void flex_regcomp(regex_t *preg, const char *regex, int cflags)
 
 		errbuf = malloc(errbuf_sz * sizeof(char));
 		if (!errbuf)
-			flexfatal(_("Unable to allocate buffer to report regcomp"));
+			flexfatal(gv, _("Unable to allocate buffer to report regcomp"));
 		n = snprintf(errbuf, errbuf_sz, "regcomp for \"%s\" failed: ", regex);
 		regerror(err, preg, errbuf+n, errbuf_sz-(size_t)n);
 
-		flexfatal (errbuf); /* never returns - no need to free(errbuf) */
+		flexfatal (gv, errbuf); /* never returns - no need to free(errbuf) */
 	}
 }
 
@@ -68,7 +68,7 @@ void flex_regcomp(regex_t *preg, const char *regex, int cflags)
  * @param src The source string that was passed to regexec().
  * @return The allocated string.
  */
-char   *regmatch_dup (regmatch_t * m, const char *src)
+char   *regmatch_dup (FlexState* gv, regmatch_t * m, const char *src)
 {
 	char   *str;
 	size_t  len;
@@ -78,7 +78,7 @@ char   *regmatch_dup (regmatch_t * m, const char *src)
 	len = (size_t) (m->rm_eo - m->rm_so);
 	str = malloc((len + 1) * sizeof(char));
 	if (!str)
-		flexfatal(_("Unable to allocate a copy of the match"));
+		flexfatal(gv, _("Unable to allocate a copy of the match"));
 	strncpy (str, src + m->rm_so, len);
 	str[len] = 0;
 	return str;
@@ -124,7 +124,7 @@ int regmatch_len (regmatch_t * m)
  * @param base   Same as the third argument to strtol().
  * @return The converted integer or error (Return value is the same as for strtol()).
  */
-int regmatch_strtol (regmatch_t * m, const char *src, char **endptr,
+int regmatch_strtol (FlexState* gv, regmatch_t * m, const char *src, char **endptr,
 		     int base)
 {
 	int     n = 0;
@@ -139,7 +139,7 @@ int regmatch_strtol (regmatch_t * m, const char *src, char **endptr,
 	if (regmatch_len (m) < bufsz)
 		s = regmatch_cpy (m, buf, src);
 	else
-		s = regmatch_dup (m, src);
+		s = regmatch_dup (gv, m, src);
 
 	n = (int) strtol (s, endptr, base);
 
