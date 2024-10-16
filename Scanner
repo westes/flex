@@ -1,0 +1,24 @@
+%{
+#include <stdio.h>
+#include <ctype.h>
+%}
+
+%%
+  // Recognize a valid decimal number
+  [+-]?[1-9][0-9]*        { printf("D\n"); }  // Non-zero decimal
+  0                       { printf("D\n"); }  // Single zero
+ 
+  // Recognize a valid octal number
+  0[1-7][0-7]*            { printf("O\n"); }  // Octal number starting with 0 and valid octal digits
+ 
+  // Recognize a valid hexadecimal number
+  0[xX][0-9a-fA-F]+       { printf("H\n"); }  // Hexadecimal starting with 0x or 0X
+ 
+  // Anything else is nonsense
+  .+                      { printf("N\n"); }  // Non-matching pattern, considered nonsense
+%%
+
+int main() {
+    yylex();  // Run the lexical scanner
+    return 0;
+}
