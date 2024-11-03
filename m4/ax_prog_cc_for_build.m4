@@ -32,9 +32,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 21
-# With patches not yet merged upstream
-# <https://savannah.gnu.org/patch/index.php?10452>
+#serial 26
 
 AU_ALIAS([AC_PROG_CC_FOR_BUILD], [AX_PROG_CC_FOR_BUILD])
 AC_DEFUN([AX_PROG_CC_FOR_BUILD], [dnl
@@ -163,7 +161,7 @@ ac_cv_c_compiler_gnu=$ac_cv_host_c_compiler_gnu
 ac_compiler_gnu=$ac_cv_host_c_compiler_gnu
 
 dnl restore global variables ac_ext, ac_cpp, ac_compile,
-dnl ac_link, ac_compiler_gnu (dependant on the current
+dnl ac_link, ac_compiler_gnu (dependent on the current
 dnl language after popping):
 AC_LANG_POP([C])
 
