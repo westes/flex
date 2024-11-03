@@ -88,7 +88,7 @@ AS_IF([test "x${BUILD_OBJEXT-}" = x],
     [BUILD_EXEEXT="${ac_cv_build_exeext-}"
     BUILD_OBJEXT="${ac_cv_build_objext-}"])])
 AS_IF([test "x${BUILD_OBJEXT-}" = x && test "x${enable_bootstrap-yes}" = xyes],
-  [AC_MSG_ERROR([BUILD_OBJEXT is invalid; please regenerate 'configure' with a newer ax_prog_cc_for_build.m4 (serial 22 or later) or configure with '--disable-bootstrap'])])
+  [AC_MSG_ERROR([BUILD_OBJEXT is invalid; please regenerate 'configure' with a newer ax_prog_cc_for_build.m4 (serial 23 or later) or configure with '--disable-bootstrap'])])
 
 pkgconfigdir=${libdir}/pkgconfig
 AC_SUBST(pkgconfigdir)
