@@ -54,39 +54,44 @@ const char *go_skel[] = {
 
 /* END digested skeletons */
 
-/* Method table describing a language-specific back end.
- * Even if this never gets a member other than the skel
- * array, it prevents us from getting lost in a maze of
- * twisty array reference levels, all different.
- */
-struct flex_backend_t {
-	const char **skel;		// Digested skeleton file
-};
+///* Method table describing a language-specific back end.
+// * Even if this never gets a member other than the skel
+// * array, it prevents us from getting lost in a maze of
+// * twisty array reference levels, all different.
+// */
+//struct flex_backend_t {
+//	const char **skel;		// Digested skeleton file
+//};
 
-static struct flex_backend_t backends[] = {
+static const struct flex_backend_t backends[] = {
     {.skel=cpp_skel},
     {.skel=c99_skel},
     {.skel=go_skel},
     {NULL}
 };
 
-static struct flex_backend_t *backend = &backends[0];
+//static struct flex_backend_t *backend = &backends[0];
+
+void init_default_backend(FlexState *gv)
+{
+    gv->backend = &backends[0];
+}
 
 /* Functions for querying skeleton properties. */
 
-bool is_default_backend(void)
+bool is_default_backend(FlexState* gv)
 {
-    return backend == &backends[0];
+    return gv->backend == &backends[0];
 }
 
 /* Search for a string in the skeleton prolog, where macros are defined.
  */
-static bool boneseeker(const char *bone)
+static bool boneseeker(FlexState* gv, const char *bone)
 {
 	int i;
 
-	for (i = 0; backend->skel[i] != NULL; i++) {
-		const char *line = backend->skel[i];
+	for (i = 0; gv->backend->skel[i] != NULL; i++) {
+		const char *line = gv->backend->skel[i];
 		if (strstr(line, bone) != NULL)
 			return true;
 		else if (strncmp(line, "%%", 2) == 0)
@@ -95,49 +100,49 @@ static bool boneseeker(const char *bone)
 	return false;
 }
 
-void backend_by_name(const char *name)
+void backend_by_name(FlexState* gv, const char *name)
 {
 	const char *prefix_property;
 	if (name != NULL) {
 		if (strcmp(name, "nr") == 0) {
-			backend = &backends[0];
-			ctrl.reentrant = false;
+			gv->backend = &backends[0];
+			gv->ctrl.reentrant = false;
 			goto backend_ok;
 		}
 		if (strcmp(name, "r") == 0) {
-			backend = &backends[0];
-			ctrl.reentrant = true;
+			gv->backend = &backends[0];
+			gv->ctrl.reentrant = true;
 			goto backend_ok;
 		}
-		for (backend = &backends[0]; backend->skel != NULL; backend++) {
-			if (strcasecmp(skel_property("M4_PROPERTY_BACKEND_NAME"), name) == 0)
+		for (gv->backend = &backends[0]; gv->backend->skel != NULL; gv->backend++) {
+			if (strcasecmp(skel_property(gv, "M4_PROPERTY_BACKEND_NAME"), name) == 0)
 				goto backend_ok;
 		}
-		flexerror(_("no such back end"));
+		flexerror(gv, _("no such back end"));
 	}
   backend_ok:
-	ctrl.rewrite = !is_default_backend();
-	ctrl.backend_name = xstrdup(skel_property("M4_PROPERTY_BACKEND_NAME"));
-	ctrl.traceline_re = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_REGEXP"));
-	ctrl.traceline_template = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_TEMPLATE"));
-	ctrl.have_state_entry_format = boneseeker("m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]]");
-	prefix_property = skel_property("M4_PROPERTY_PREFIX");
+	gv->ctrl.rewrite = !is_default_backend(gv);
+	gv->ctrl.backend_name = xstrdup(gv, skel_property(gv, "M4_PROPERTY_BACKEND_NAME"));
+	gv->ctrl.traceline_re = xstrdup(gv, skel_property(gv, "M4_PROPERTY_TRACE_LINE_REGEXP"));
+	gv->ctrl.traceline_template = xstrdup(gv, skel_property(gv, "M4_PROPERTY_TRACE_LINE_TEMPLATE"));
+	gv->ctrl.have_state_entry_format = boneseeker(gv, "m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]]");
+	prefix_property = skel_property(gv, "M4_PROPERTY_PREFIX");
 	if (prefix_property != NULL)
-		ctrl.prefix = xstrdup(prefix_property);
-	flex_init_regex(ctrl.traceline_re);
+		gv->ctrl.prefix = xstrdup(gv, prefix_property);
+	flex_init_regex(gv, gv->ctrl.traceline_re);
 }
 
-const char *suffix (void)
+const char *suffix (FlexState* gv)
 {
 	const char   *suffix;
 
-	if (is_default_backend()) {
-		if (ctrl.C_plus_plus)
+	if (is_default_backend(gv)) {
+		if (gv->ctrl.C_plus_plus)
 			suffix = "cc";
 		else
 			suffix = "c";
 	} else {
-		suffix = skel_property("M4_PROPERTY_SOURCE_SUFFIX");
+		suffix = skel_property(gv, "M4_PROPERTY_SOURCE_SUFFIX");
 	}
 	
 	return suffix;
@@ -147,14 +152,14 @@ const char *suffix (void)
  * definition must be single-line.  Don't call this a second time before
  * stashing away the previous return, we cheat with static buffers.
  */
-const char *skel_property(const char *propname)
+const char *skel_property(FlexState* gv, const char *propname)
 {
 	int i;
-	static char name[256], value[256], *np, *vp;;
+	//static char name[256], value[256], *np, *vp;;
 	const char *cp;
 
-	for (i = 0; backend->skel[i] != NULL; i++) {
-		const char *line = backend->skel[i];
+	for (i = 0; gv->backend->skel[i] != NULL; i++) {
+		const char *line = gv->backend->skel[i];
 		if (line[0] == '\0')
 			continue;
 		/* only scan before first skell breakpoint */
@@ -167,17 +172,17 @@ const char *skel_property(const char *propname)
 		for (cp = line + 10; isspace(*cp) || *cp == '['; *cp++)
 			continue;
 		/* copy up to following ] into the name buffer */
-		np = name;
-		while (*cp != ']' && *cp != '\0' && (np < name + sizeof(name)-1)) {
-			*np++ = *cp++;
+		gv->sk_np = gv->sk_name;
+		while (*cp != ']' && *cp != '\0' && (gv->sk_np < gv->sk_name + sizeof(gv->sk_name)-1)) {
+			*gv->sk_np++ = *cp++;
 		}
-		*np = '\0';
+		*gv->sk_np = '\0';
 		/* check for valid and matching name */
 		if (*cp == ']') {
-			if (strcmp(name, propname) != 0)
+			if (strcmp(gv->sk_name, propname) != 0)
 				continue; /* try next line */
 		} else {
-			flexerror(_("unterminated or too long property name"));
+			flexerror(gv, _("unterminated or too long property name"));
 			continue;
 		}
 		/* skip to the property value */
@@ -186,16 +191,16 @@ const char *skel_property(const char *propname)
 		while (*cp == '[')
 			cp++;
 		if (*cp == '\0')
-			flexerror(_("garbled property line"));
+			flexerror(gv, _("garbled property line"));
 		/* extract the value */
-		vp = value;
-		while (*cp != '\0' && vp < value + sizeof(value) - 1 && (cp[0] != ']' || cp[1] != ']'))
-			*vp++ = *cp++;
+		gv->sk_vp = gv->sk_value;
+		while (*cp != '\0' && gv->sk_vp < gv->sk_value + sizeof(gv->sk_value) - 1 && (cp[0] != ']' || cp[1] != ']'))
+			*gv->sk_vp++ = *cp++;
 		if (*cp == ']') {
-			*vp = '\0';
-			return value;
+			*gv->sk_vp = '\0';
+			return gv->sk_value;
 		} else {
-			flexerror(_("unterminated or too long property value"));
+			flexerror(gv, _("unterminated or too long property value"));
 		}
 	}
 	return NULL;
@@ -207,7 +212,7 @@ const char *skel_property(const char *propname)
  *    Copies skelfile or skel array to stdout until a line beginning with
  *    "%%" or EOF is found.
  */
-void skelout (bool announce)
+void skelout (FlexState* gv, bool announce)
 {
 	char    buf_storage[MAXLINE];
 	char   *buf = buf_storage;
@@ -216,17 +221,17 @@ void skelout (bool announce)
 	/* Loop pulling lines either from the skelfile, if we're using
 	 * one, or from the selected back end's skel[] array.
 	 */
-	while (env.skelfile != NULL ?
-	       (fgets (buf, MAXLINE, env.skelfile) != NULL) :
-	       ((buf = (char *) backend->skel[skel_ind++]) != 0)) {
+	while (gv->env.skelfile != NULL ?
+	       (fgets (buf, MAXLINE, gv->env.skelfile) != NULL) :
+	       ((buf = (char *) gv->backend->skel[gv->skel_ind++]) != 0)) {
 
-		if (env.skelfile != NULL)
+		if (gv->env.skelfile != NULL)
 			chomp (buf);
 
 		/* copy from skel array */
 		if (buf[0] == '%') {	/* control line */
 			/* print the control line as a comment. */
-			if (ctrl.ddebug && buf[1] != '#') {
+			if (gv->ctrl.ddebug && buf[1] != '#') {
 			    comment(buf);
 			    outc ('\n');
 			}
@@ -242,7 +247,7 @@ void skelout (bool announce)
 				return;
 			}
 			else {
-				flexfatal (_("bad line in skeleton file"));
+				flexfatal (gv, _("bad line in skeleton file"));
 			}
 		}
 
