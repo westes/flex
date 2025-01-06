@@ -723,6 +723,9 @@ void flexinit (int argc, char **argv)
 	buf_init (&userdef_buf, sizeof (char));	/* one long string */
 	buf_init (&top_buf, sizeof (char));	    /* one long string */
 
+	init_backends();
+	push_backend(FLEX_BACKEND_CPP);
+
 	sf_init ();
 
 	/* Enable C++ if program name ends with '+'. */
@@ -1186,8 +1189,6 @@ void flexinit (int argc, char **argv)
 	lastprot = 1;
 
 	set_up_initial_allocations ();
-	
-	init_backends();
 }
 
 
