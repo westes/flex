@@ -46,7 +46,7 @@ jobs:
         env:
           update_needed: ${{ steps.update.outputs.needed }}
         if: ${{ env.update_needed == 1 }}
-        run: sudo apt-get update && sudo apt-get install -y gcc autoconf automake libtool flex bison gettext autopoint help2man lzip texinfo texlive
+        run: sudo apt-get update && sudo apt-get install -y gcc autoconf automake libtool gettext autopoint help2man lzip texinfo texlive
       - name: Update CHANGE_LOG
         env:
           update_needed: ${{ steps.update.outputs.needed }}
