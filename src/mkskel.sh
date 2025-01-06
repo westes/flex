@@ -28,7 +28,7 @@ fi
 lang=$1
 srcdir=$2
 m4=$3
-VERSION=$4
+VERSION=$(echo $4 | cut -d '-' -f 1)
 case $VERSION in
    *[!0-9.]*) echo 'Invalid version number' >&2; exit 1;;
 esac
