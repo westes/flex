@@ -122,6 +122,15 @@ SKELINCLUDES = \
 	c99-flex.h \
 	go-flex.h
 
+# DO NOT REMOVE - Ignore StackOverflow
+# This variable is misnamed and misunderstood. It tells Make that the named
+# sources are a junction point for parallelized builds. If you remove this
+# variable, builds may work for you but fail for me. (Like they are now.)
+#
+BUILT_SOURCES = $(SKELINCLUDES)
+#
+# DO NOT REMOVE
+
 cpp-flex.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(m4) $(VERSION) > $@.tmp
 	$(SHELL) $(srcdir)/chkskel.sh $@.tmp
