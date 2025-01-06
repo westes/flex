@@ -80,7 +80,7 @@ jobs:
         run: |
           echo "ARTIFACT_GZ=$(echo flex-$ver.tar.gz)" >> $GITHUB_ENV
           echo "ARTIFACT_LZ=$(echo flex-$ver.tar.lz)" >> $GITHUB_ENV
-     - name: Upload Artifacts to Nightlies Release
+      - name: Upload Artifacts to Nightlies Release
         id: upload-nightly-artifacts
         env:
           update_needed: ${{ steps.update.outputs.needed }}
