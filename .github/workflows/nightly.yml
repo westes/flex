@@ -10,7 +10,7 @@ permissions: {}
 jobs:
   nightly:
     name: Run a Nightly Build and Save the Artifacts
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     outputs:
       update_needed: ${{ steps.update.outputs.needed }}
       version_slug: ${{ steps.update.outputs.slug }}
@@ -19,7 +19,7 @@ jobs:
       actions: read
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Check time since last commit
         id: update
         run: |
@@ -80,47 +80,7 @@ jobs:
         run: |
           echo "ARTIFACT_GZ=$(echo flex-$ver.tar.gz)" >> $GITHUB_ENV
           echo "ARTIFACT_LZ=$(echo flex-$ver.tar.lz)" >> $GITHUB_ENV
-#       - name: Upload Nightly tar.gz
-#         id: upload-nightly-asset-gz 
-#         env:
-#           update_needed: ${{ steps.update.outputs.needed }}
-#         if: ${{ env.update_needed == 1 }}
-#         uses: actions/upload-artifact@v4
-#         with:
-#           path: ${{ env.ARTIFACT_GZ }}
-#           name: ${{ env.ARTIFACT_GZ }}
-#           overwrite: true
-#       - name: Upload Nightly tar.lz
-#         id: upload-nightly-asset-lz
-#         env:
-#           update_needed: ${{ steps.update.outputs.needed }}
-#         if: ${{ env.update_needed == 1 }}
-#         uses: actions/upload-artifact@v4
-#         with:
-#           path: ${{ env.ARTIFACT_LZ }}
-#           name: ${{ env.ARTIFACT_LZ }}
-#           overwrite: true
-#       - name: Upload Nightly src.tar.gz
-#         id: upload-nightly-src-gz
-#         env:
-#           update_needed: ${{ steps.update.outputs.needed }}
-#         if: ${{ env.update_needed == 1 }}
-#         uses: actions/upload-artifact@v4
-#         with:
-#           path: ${{ env.SOURCE_GZ }}
-#           name: ${{ env.SOURCE_GZ }}
-#           overwrite: true
-#       - name: Upload Nightly src.tar.zip
-#         id: upload-nightly-src-zip
-#         env:
-#           update_needed: ${{ steps.update.outputs.needed }}
-#         if: ${{ env.update_needed == 1 }}
-#         uses: actions/upload-artifact@v4
-#         with:
-#           path: ${{ env.SOURCE_ZIP }}
-#           name: ${{ env.SOURCE_ZIP }}
-#           overwrite: true
-      - name: Upload Artifacts to Nightlies Release
+     - name: Upload Artifacts to Nightlies Release
         id: upload-nightly-artifacts
         env:
           update_needed: ${{ steps.update.outputs.needed }}
