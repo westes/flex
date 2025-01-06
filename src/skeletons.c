@@ -128,7 +128,7 @@ void init_backends( void ) {
 	backends[FLEX_BACKEND_CPP] = cpp_backend;
 	backends[FLEX_BACKEND_C99].skel=c99_skel;
 	backends[FLEX_BACKEND_GO].skel=go_skel;
-	backends[FLEX_BACKEND_ID_MAX] = {NULL};
+	backends[FLEX_BACKEND_ID_MAX] = (struct flex_backend_t){NULL};
 }
 
 /* Functions for querying skeleton properties. */
@@ -145,6 +145,8 @@ static bool boneseeker(const char *bone)
 {
 	int i;
 
+	const struct flex_backend_t *backend = get_backend();
+
 	for (i = 0; backend->skel[i] != NULL; i++) {
 		const char *line = backend->skel[i];
 		if (strstr(line, bone) != NULL)
@@ -158,24 +160,28 @@ static bool boneseeker(const char *bone)
 void backend_by_name(const char *name)
 {
 	const char *prefix_property;
+	flex_backend_id_t backend = FLEX_BACKEND_CPP, i = FLEX_BACKEND_CPP;
+
 	if (name != NULL) {
 		if (strcmp(name, "nr") == 0) {
-			backend = &backends[0];
+			backend = FLEX_BACKEND_CPP;
 			ctrl.reentrant = false;
 			goto backend_ok;
 		}
 		if (strcmp(name, "r") == 0) {
-			backend = &backends[0];
+			backend = FLEX_BACKEND_CPP;
 			ctrl.reentrant = true;
 			goto backend_ok;
 		}
-		for (backend = &backends[0]; backend->skel != NULL; backend++) {
+		for (i = 0; backends[i].skel != NULL && i < FLEX_BACKEND_ID_MAX; ++i) {
 			if (strcasecmp(skel_property("M4_PROPERTY_BACKEND_NAME"), name) == 0)
+				backend = i;
 				goto backend_ok;
 		}
 		flexerror(_("no such back end"));
 	}
   backend_ok:
+	push_backend(backend);
 	ctrl.rewrite = !is_default_backend();
 	ctrl.backend_name = xstrdup(skel_property("M4_PROPERTY_BACKEND_NAME"));
 	ctrl.traceline_re = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_REGEXP"));
@@ -212,6 +218,7 @@ const char *skel_property(const char *propname)
 	int i;
 	static char name[256], value[256], *np, *vp;;
 	const char *cp;
+	const struct flex_backend_t *backend = get_backend();
 
 	for (i = 0; backend->skel[i] != NULL; i++) {
 		const char *line = backend->skel[i];
@@ -272,6 +279,7 @@ void skelout (bool announce)
 	char    buf_storage[MAXLINE];
 	char   *buf = buf_storage;
 	bool   do_copy = true;
+	const struct flex_backend_t *backend = get_backend();
 
 	/* Loop pulling lines either from the skelfile, if we're using
 	 * one, or from the selected back end's skel[] array.

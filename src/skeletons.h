@@ -36,7 +36,7 @@
 #ifndef FLEX_SKELETONS_H
 #define FLEX_SKELETONS_H 1
 
-typedef enum flex_backend_id = {
+typedef enum flex_backend_id {
 	FLEX_BACKEND_CPP = 0,
 	FLEX_BACKEND_C99,
 	FLEX_BACKEND_GO,
