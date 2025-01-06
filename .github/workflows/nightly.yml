@@ -10,7 +10,7 @@ permissions: {}
 jobs:
   nightly:
     name: Run a Nightly Build and Save the Artifacts
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       update_needed: ${{ steps.update.outputs.needed }}
       version_slug: ${{ steps.update.outputs.slug }}
