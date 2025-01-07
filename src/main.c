@@ -1197,6 +1197,7 @@ void flexinit (int argc, char **argv)
 void readin (void)
 {
 	char buf[256];
+	flex_backend_id_t backend;
 
 	line_directive_out(NULL, infilename, linenum);
 
@@ -1214,7 +1215,10 @@ void readin (void)
 	 * when %option emit was evaluated; this catches command-line
 	 * optiins and the default case.
 	 */
-	backend_by_name(ctrl.emit);
+	backend = backend_by_name(ctrl.emit);
+	if ( backend != top_backend() )
+		/* only push a new backend if it's not already the top */
+		push_backend(backend);
 
 	initialize_output_filters();
 

@@ -68,7 +68,7 @@ static struct flex_backend_t backends[FLEX_BACKEND_ID_MAX];
 /* backen_stack_head is declared static so it must be manipulated through
 /* the stack functions defined in this module.
  */
-flex_backend_id_t backend_stack[FLEX_BACKEND_ID_MAX];
+flex_backend_id_t backend_stack[FLEX_BACKEND_ID_MAX+1];
 static unsigned int backend_stack_head = 0;
 
 /* Push a flex_backend_id onto the backend stack. 
@@ -82,7 +82,7 @@ bool push_backend(flex_backend_id_t bid){
 		return false;
 	}
 	else {
-		backend_stack[backend_stack_head] = bid;
+		backend_stack[backend_stack_head-1] = bid;
 	}
 	return true;
 }
@@ -93,7 +93,7 @@ bool push_backend(flex_backend_id_t bid){
 flex_backend_id_t pop_backend(void) {
 	flex_backend_id_t ret = FLEX_BACKEND_ID_MAX;
 	if( backend_stack_head > 0 ) {
-		ret = backend_stack[backend_stack_head];
+		ret = backend_stack[backend_stack_head-1];
 		--backend_stack_head;
 		return ret;
 	}
@@ -108,7 +108,7 @@ flex_backend_id_t pop_backend(void) {
 /* top backend id otherwise. */
 flex_backend_id_t top_backend(void){
 	if( backend_stack_head > 0 ) {
-		return backend_stack[backend_stack_head];
+		return backend_stack[backend_stack_head-1];
 	}
 	else {
 		flexerror(_("attempt to read the top of empty backend stack"));
@@ -157,7 +157,7 @@ static bool boneseeker(const char *bone)
 	return false;
 }
 
-void backend_by_name(const char *name)
+flex_backend_id_t backend_by_name(const char *name)
 {
 	const char *prefix_property;
 	flex_backend_id_t backend = FLEX_BACKEND_CPP, i = FLEX_BACKEND_CPP;
@@ -179,9 +179,9 @@ void backend_by_name(const char *name)
 				goto backend_ok;
 		}
 		flexerror(_("no such back end"));
+		return FLEX_BACKEND_ID_MAX;
 	}
   backend_ok:
-	push_backend(backend);
 	ctrl.rewrite = !is_default_backend();
 	ctrl.backend_name = xstrdup(skel_property("M4_PROPERTY_BACKEND_NAME"));
 	ctrl.traceline_re = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_REGEXP"));
@@ -191,6 +191,7 @@ void backend_by_name(const char *name)
 	if (prefix_property != NULL)
 		ctrl.prefix = xstrdup(prefix_property);
 	flex_init_regex(ctrl.traceline_re);
+	return backend;
 }
 
 const char *suffix (void)

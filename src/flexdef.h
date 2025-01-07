@@ -1012,6 +1012,15 @@ extern void set_input_file(char *);
 
 /* from file skeletons.c */
 
+typedef enum flex_backend_id {
+	FLEX_BACKEND_CPP = 0,
+	FLEX_BACKEND_C99,
+	FLEX_BACKEND_GO,
+	FLEX_BACKEND_ID_MAX /* Only add new backend names above this line.
+						/* FLEX_BACKEND_ID_MAX sets the size of the backend array
+						/* and backend stack. */
+} flex_backend_id_t;
+
 /* Initialize backends */
 extern void init_backends( void );
 
@@ -1019,7 +1028,7 @@ extern void init_backends( void );
 extern const char *suffix (void);
 
 /* Select a backend by name */
-extern void backend_by_name(const char *);
+extern flex_backend_id_t backend_by_name(const char *);
 
 /* Is the default back end selected?*/
 extern bool is_default_backend(void);

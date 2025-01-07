@@ -36,15 +36,6 @@
 #ifndef FLEX_SKELETONS_H
 #define FLEX_SKELETONS_H 1
 
-typedef enum flex_backend_id {
-	FLEX_BACKEND_CPP = 0,
-	FLEX_BACKEND_C99,
-	FLEX_BACKEND_GO,
-	FLEX_BACKEND_ID_MAX /* Only add new backend names above this line.
-						/* FLEX_BACKEND_ID_MAX sets the size of the backend array
-						/* and backend stack. */
-} flex_backend_id_t;
-
 bool push_backend(flex_backend_id_t);
 flex_backend_id_t pop_backend(void);
 flex_backend_id_t top_backend(void);
