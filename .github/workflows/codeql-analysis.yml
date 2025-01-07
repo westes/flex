@@ -29,7 +29,7 @@ jobs:
     #   - https://gh.io/supported-runners-and-hardware-resources
     #   - https://gh.io/using-larger-runners (GitHub.com only)
     # Consider using larger runners or machines with greater resources for possible analysis time improvements.
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-22.04' }}
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
     permissions:
       # required for all workflows
@@ -62,7 +62,7 @@ jobs:
 
     # Ensure autopoint is installed. CodeQL misses it sometimes.
     - name: apt
-      run: sudo apt-get update && sudo apt-get install -y gcc autoconf automake libtool flex bison gettext autopoint help2man lzip texinfo texlive
+      run: sudo apt-get update && sudo apt-get install -y gcc autoconf automake libtool gettext autopoint help2man lzip texinfo texlive
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
