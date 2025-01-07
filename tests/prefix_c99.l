@@ -33,6 +33,7 @@
 %option 8bit prefix="FOO"
 %option nounput nomain noyywrap noinput
 %option warn
+%option reentrant
 
 
 %%

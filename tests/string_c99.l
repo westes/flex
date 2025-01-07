@@ -36,6 +36,7 @@
 %option 8bit prefix="test"
 %option nounput nomain nodefault noyywrap noinput
 %option warn
+%option reentrant
 
 
 %%

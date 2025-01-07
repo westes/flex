@@ -44,6 +44,7 @@ void yyfree ( void *, yyscan_t yyscanner );
 
 %option emit="c99" bufsize=8
 %option 8bit
+%option reentrant
 %option nounput nomain noyywrap noinput noyy_top_state
 %option warn stack nodefault
 %option noyyalloc noyyrealloc noyyfree
