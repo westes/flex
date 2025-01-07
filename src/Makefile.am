@@ -124,10 +124,11 @@ SKELINCLUDES = \
 
 # DO NOT REMOVE - Ignore StackOverflow
 # This variable is misnamed and misunderstood. It tells Make that the named
-# sources are a junction point for parallelized builds. If you remove this
-# variable, builds may work for you but fail for me. (Like they are now.)
+# sources are synchronization points for parallel builds (e.g. -j8). 
+# If you remove or change this variable without testing large parallel builds,
+# make will fail randomly. Stop "fixing" this based on StackOverflow threads, please.
 #
-BUILT_SOURCES = $(SKELINCLUDES)
+BUILT_SOURCES = $(SKELINCLUDES) stage1scan.c stage2scan.c
 #
 # DO NOT REMOVE
 
