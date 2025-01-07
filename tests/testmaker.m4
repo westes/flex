@@ -92,6 +92,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 #include "config.h"
 #include <stdio.h>
 %}
+%option reentrant
 ')dnl close preamble
 define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
