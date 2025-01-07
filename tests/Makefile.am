@@ -61,7 +61,7 @@ AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
 check_PROGRAMS = $(RULESET_TESTS) $(SPORADIC_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS)
 
 SPORADIC_TESTS = \
-	alloc_extra_nr \
+	alloc_extra_r \
 	alloc_extra_c99 \
 	bison_nr \
 	bison_yylloc \
@@ -107,7 +107,7 @@ I3_TESTS = \
 PTHREAD_TESTS = \
 	pthread.pthread
 
-alloc_extra_nr_SOURCES = alloc_extra_nr.l
+alloc_extra_r_SOURCES = alloc_extra_r.l
 alloc_extra_c99_SOURCES = alloc_extra_c99.l
 if HAVE_BISON
 bison_nr_SOURCES = bison_nr_scanner.l bison_nr_parser.y bison_nr_main.c
@@ -172,7 +172,7 @@ state_buf_multiple_direct_SOURCES = state_buf_multiple.direct.lll
 # it.
 
 CLEANFILES = \
-	alloc_extra_nr.c \
+	alloc_extra_r.c \
 	alloc_extra_c99.c \
 	bison_nr_parser.c \
 	bison_nr_parser.h \
