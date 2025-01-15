@@ -228,4 +228,7 @@ indent: $(top_srcdir)/.indent.pro
 		echo $$f FAILED to indent; \
 	done;
 
-.PHONY: indent
+fix-parse: parse.c
+	sed -i -E -e 's/(yy[^,]+,[^,]+), gv\)/\1, yyscanner, gv)/' parse.c
+
+.PHONY: indent fix-parse

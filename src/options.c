@@ -40,7 +40,7 @@
 
 
 /* The command-line options, passed to scanopt_init() */
-optspec_t flexopts[] = {
+const optspec_t flexopts[] = {
 
 	{"-7", OPT_7BIT, 0}
 	,

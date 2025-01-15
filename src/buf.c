@@ -46,11 +46,11 @@
  */
 
 /* global buffers. */
-struct Buf userdef_buf;		/**< for user #definitions triggered by cmd-line. */
-struct Buf top_buf;             /**< contains %top code. String buffer. */
+//struct Buf userdef_buf;		/**< for user #definitions triggered by cmd-line. */
+//struct Buf top_buf;             /**< contains %top code. String buffer. */
 
 /* Append a "%s" formatted string to a string buffer */
-struct Buf *buf_prints (struct Buf *buf, const char *fmt, const char *s)
+struct Buf *buf_prints (FlexState* gv, struct Buf *buf, const char *fmt, const char *s)
 {
 	char   *t;
 	size_t tsz;
@@ -58,17 +58,17 @@ struct Buf *buf_prints (struct Buf *buf, const char *fmt, const char *s)
 	tsz = strlen(fmt) + strlen(s) + 1;
 	t = malloc(tsz);
 	if (!t)
-	    flexfatal (_("Allocation of buffer to print string failed"));
+	    flexfatal (gv, _("Allocation of buffer to print string failed"));
 	snprintf (t, tsz, fmt, s);
-	buf = buf_strappend (buf, t);
+	buf = buf_strappend (gv, buf, t);
 	free(t);
 	return buf;
 }
 
 /* Appends n characters in str to buf. */
-struct Buf *buf_strnappend (struct Buf *buf, const char *str, int n)
+struct Buf *buf_strnappend (FlexState* gv, struct Buf *buf, const char *str, int n)
 {
-	buf_append (buf, str, n + 1);
+	buf_append (gv, buf, str, n + 1);
 
 	/* "undo" the '\0' character that buf_append() already copied. */
 	buf->nelts--;
@@ -77,9 +77,9 @@ struct Buf *buf_strnappend (struct Buf *buf, const char *str, int n)
 }
 
 /* Appends characters in str to buf. */
-struct Buf *buf_strappend (struct Buf *buf, const char *str)
+struct Buf *buf_strappend (FlexState* gv, struct Buf *buf, const char *str)
 {
-	return buf_strnappend (buf, str, (int) strlen (str));
+	return buf_strnappend (gv, buf, str, (int) strlen (str));
 }
 
 /* create buf with 0 elements, each of size elem_size. */
@@ -107,7 +107,7 @@ void buf_destroy (struct Buf *buf)
  * We grow by mod(512) boundaries.
  */
 
-struct Buf *buf_append (struct Buf *buf, const void *ptr, int n_elem)
+struct Buf *buf_append (FlexState* gv, struct Buf *buf, const void *ptr, int n_elem)
 {
 	int     n_alloc = 0;
 
@@ -130,10 +130,10 @@ struct Buf *buf_append (struct Buf *buf, const void *ptr, int n_elem)
 
 		if (!buf->elts)
 			buf->elts =
-				allocate_array ((int) n_alloc, buf->elt_size);
+				allocate_array (gv, (int) n_alloc, buf->elt_size);
 		else
 			buf->elts =
-				reallocate_array (buf->elts, (int) n_alloc,
+				reallocate_array (gv, buf->elts, (int) n_alloc,
 						  buf->elt_size);
 
 		buf->nmax = n_alloc;
