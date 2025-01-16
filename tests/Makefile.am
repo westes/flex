@@ -320,7 +320,7 @@ pthread_pthread_LDADD = @LIBPTHREAD@
 
 TESTOPTS = -L
 
-FLEX = $(top_builddir)/src/flex
+FLEX = $(top_builddir)/flex
 
 .l.c: $(FLEX)
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -o $@ $<
