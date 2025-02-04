@@ -136,7 +136,7 @@ void init_backends( void ) {
 /* TODO: What does this mean now? */
 bool is_default_backend(void)
 {
-    return top_backend() == FLEX_BACKEND_CPP;
+    return top_backend() == FLEX_BACKEND_DEFAULT;
 }
 
 /* Search for a string in the skeleton prolog, where macros are defined.
@@ -160,7 +160,7 @@ static bool boneseeker(const char *bone)
 flex_backend_id_t backend_by_name(const char *name)
 {
 	const char *prefix_property;
-	flex_backend_id_t backend = FLEX_BACKEND_CPP, i = FLEX_BACKEND_CPP;
+	flex_backend_id_t backend = FLEX_BACKEND_DEFAULT, i = FLEX_BACKEND_DEFAULT;
 
 	if (name != NULL) {
 		if (strcmp(name, "nr") == 0) {

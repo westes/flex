@@ -1013,6 +1013,7 @@ extern void set_input_file(char *);
 /* from file skeletons.c */
 
 typedef enum flex_backend_id {
+	FLEX_BACKEND_DEFAULT = 0,
 	FLEX_BACKEND_CPP = 0,
 	FLEX_BACKEND_C99,
 	FLEX_BACKEND_GO,
