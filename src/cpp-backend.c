@@ -42,18 +42,22 @@ const char *cpp_skel[] = {
 0
 };
 
+/* For C and CXX, emit the typedef names from flexint_shared.h */
 const char * cpp_get_int32_type ( const struct flex_backend_t *b ) {
 	return "flex_int32_t";
 }
 
+/* For C and CXX, emit the typedef names from flexint_shared.h */
 static const char * cpp_get_int16_type ( const struct flex_backend_t *b ) {
 	return "flex_int16_t";
 }
 
+/* TODO: Indent? */
 static void cpp_open_block_comment ( const struct flex_backend_t *b ) {
 	fputs("/* ", stdout);
 }
 
+/* TODO: Indent? */
 static void cpp_close_block_comment ( const struct flex_backend_t *b ) {
 	fputs(" */", stdout);
 }
@@ -64,25 +68,30 @@ static void cpp_comment ( const struct flex_backend_t *b, const char *c ) {
 }
 
 static void cpp_record_separator ( const struct flex_backend_t *b ) {
+	/* Expected to ocurr at the end of a line, so I'm not indenting. */
 	fputs("},\n", stdout);
 }
 
 static void cpp_column_separator ( const struct flex_backend_t *b ){
+	/* Expected to ocurr at the end of a line, so don't indent. */
 	fputs(", ", stdout);
 }
 
 static void cpp_newline ( const struct flex_backend_t *b ) {
+	/* Expected to ocurr at the end of a line, so don't indent. */
 	fputs("\n", stdout);
 }
 
 static void cpp_increase_indent ( const struct flex_backend_t *b ) {
 	if ( b->indent_level < CPP_BACKEND_MAX_INDENT ) {
+		/* ++ will require more parens to clarify */
 		((struct flex_backend_t *)b)->indent_level += 1;
 	}
 }
 	
 static void cpp_decrease_indent ( const struct flex_backend_t *b ) {
 	if (b->indent_level > 0) {
+		/* -- will require more parens to clarify */
 		((struct flex_backend_t *)b)->indent_level -= 1;
 	}
 }
@@ -95,10 +104,19 @@ static void cpp_indent ( const struct flex_backend_t *b ) {
 	}
 }
 
+/* Return a format string appropriate for the skeleton language.
+   The format string will perform an equivalent function to the CPP line directive.
+   That is, it will tell target language compiler what .l source line the target source
+   corresponds to when the compiler generates warnings and errors.
+
+   This method does not provide the arguments to the format string. It just provides the string.
+*/
 static const char * cpp_get_trace_line_format ( const struct flex_backend_t *b ) {
 	return "#line %d \"%s\"\n";
 }
 
+
+/* Combine the format string from *_get_trace_line_format with its arguments. */
 static void cpp_line_directive_out ( const struct flex_backend_t * b, FILE *output_file, char *path, int linenum ) {
 	char   directive[MAXLINE*2], filename[MAXLINE];
 	char   *s1, *s2, *s3;
@@ -145,118 +163,154 @@ static void cpp_line_directive_out ( const struct flex_backend_t * b, FILE *outp
 	}
 }
 
+/* TODO: indent? */
 static void cpp_open_table ( const struct flex_backend_t *b ) {
 	fputs("{", stdout);
 }
 
 static void cpp_continue_table ( const struct flex_backend_t *b ) {
+	/* Expected to ocurr at the end of a line, so don't indent. */
 	fputs("},\n", stdout);
 }
 
+/* TODO: indent? */
 static void cpp_close_table ( const struct flex_backend_t *b ) {
 	fputs("};\n", stdout);
 }
 
+/* Intended to emit a macro call in C/CXX.
+   Can also emit a bare string.
+
+   TODO: Find a better name.
+ */
 static void cpp_relativize ( const struct flex_backend_t *b, const char *s ) {
 	fputs(s, stdout);
 }
 
+/* Format an entry from the transition table into the state table. */
 static void cpp_format_state_table_entry ( const struct flex_backend_t * b, int t ) {
 	b->indent(b);
 	fprintf(stdout, "&yy_transition[%d],\n", t);
 }
 
+/* Generate a case for the main state switch (in C/CXX). 
+   Other target languages may use another selection syntax. Basically, each arm matches
+   the character under examination, treated as a number.
+*/
 static void cpp_format_normal_state_case_arm ( const struct flex_backend_t *b, int c ) {
 	b->indent(b);
 	fprintf(stdout, "case %d:", c);
 }
 
+/* Generate the special case for EOF. */
 static void cpp_format_eof_state_case_arm ( const struct flex_backend_t *b, int c ) {
 	b->indent(b);
 	fprintf(stdout, "case YY_STATE_EOF(%d):", c);
 }
 
+/* Generate the special action FALLTHROUGH. */
 static void cpp_eof_state_case_fallthrough ( const struct flex_backend_t *b ) {
 	b->indent(b);
 	b->comment(b, "FALLTHROUGH");
 }
 
+/* Generate the special action terminate. */
 static void cpp_eof_state_case_terminate ( const struct flex_backend_t *b ) { 
 	b->indent(b);
 	fputs("yyterminate();\n", stdout);
 }
 
+/* Generate the action preamble. */
 static void cpp_take_yytext ( const struct flex_backend_t *b ) {
 	b->indent(b);
 	fputs("YY_DO_BEFORE_ACTION; /* set up yytext */", stdout);
 }
 
+/* Generate the action postamble. */
 static void cpp_release_yytext ( const struct flex_backend_t *b ) {
 	b->indent(b);
 	fputs( "*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */", stdout);
 }
 
+/* Generate the buffer rewind sub-action. */
 static void cpp_format_char_rewind ( const struct flex_backend_t *b, int c ) {
 	b->indent(b);
 	fprintf(stdout, "YY_G(yy_c_buf_p) = yy_cp -= %d;", c);
 }
 
+/* Generate the line rewind sub-action. */
 static void cpp_format_line_rewind ( const struct flex_backend_t *b, int l ) {
 	b->indent(b);
 	fprintf(stdout, "YY_LINENO_REWIND_TO(yy_cp - %d);", l);
 }
 
+/* Generate the buffer skip sub-action. */
 static void cpp_format_char_forward ( const struct flex_backend_t *b, int c ) {
 	b->indent(b);
 	fprintf(stdout, "YY_G(yy_c_buf_p) = yy_cp = yy_bp + %d;", c);
 }
 
+/* Generate the line skip sub-action. */
 static void cpp_format_line_forward ( const struct flex_backend_t *b, int l ) {
 	b->indent(b);
 	fprintf(stdout, "YY_LINENO_REWIND_TO(yy_bp + %d);", l);
 }
 
+/* Define a byte-width constant. */
 static void cpp_format_byte_const ( const struct flex_backend_t *b, const char *n, const int c ) {
 	fprintf(stdout, "#define %s %d\n", n, c);
 }
 
+/* Define a state constant. */
 static void cpp_format_state_const ( const struct flex_backend_t *b, const char *n, const int s ) {
 	fprintf(stdout, "#define %s %d\n", n, s);
 }
 
+/* Define a uint constant. */
 static void cpp_format_uint_const ( const struct flex_backend_t *b, const char *n, const unsigned int u ) {
 	fprintf(stdout, "#define %s %u\n", n, u);
 }
 
+/* Define a boolean constant. */
 static void cpp_format_bool_const ( const struct flex_backend_t *b, const char *n, const int t ){
 	fprintf(stdout, "#define %s %d\n", n, t);
 }
 
+/* Define a string constant. */
 static void cpp_format_const ( const struct flex_backend_t *b, const char *n, const char *v ) {
 	fprintf(stdout, "#define %s %s\n", n, v);
 }
 
+/* Define a constant used by the skeleton. */
 static void cpp_format_offset_type ( const struct flex_backend_t *b, const char *t ) {
 	b->format_const(b, "YY_OFFSET_TYPE", t);
 }
 
+/* Define a constant used by the skeleton. */
 static void cpp_format_yy_decl ( const struct flex_backend_t *b, const char *d ) {
 	b->format_const(b, "YY_DECL", d);
 }
 
+/* Define a constant used by the skeleton. */
 static void cpp_format_userinit ( const struct flex_backend_t *b, const char *d ) {
 	b->format_const(b, "YY_USER_INIT", d);
 }
 
+/* Inject the rule_setup macro call where needed. */
 static void cpp_format_rule_setup ( const struct flex_backend_t *b ) {
 	b->relativize(b, "YY_RULE_SETUP");
 	b->newline(b);
 }
 
+/* Define the user_action constant, if needed. */
 static void cpp_format_user_preaction ( const struct flex_backend_t *b, const char *d ) {
 	b->format_const(b, "YY_USER_ACTION", d);
 }
 
+/* End a state case arm, optionally inserting user postactions. 
+
+   TODO: Why can't this use YY_STATE_CASE_BREAK from format_user_postaction?
+*/
 static void cpp_format_state_case_break ( const struct flex_backend_t *b ) {
 	b->indent(b);
 	if (!ctrl.postaction) {
@@ -267,6 +321,7 @@ static void cpp_format_state_case_break ( const struct flex_backend_t *b ) {
 	}
 }
 
+/* Generate the definition of the STATE_CASE_BREAK end of action. */
 static void cpp_format_user_postaction ( const struct flex_backend_t *b, const char *d ) {
 	if (d != NULL) {
 		b->format_const(b, "YY_STATE_CASE_BREAK", d);
@@ -276,16 +331,19 @@ static void cpp_format_user_postaction ( const struct flex_backend_t *b, const c
 	}
 }
 
+/* Generate the fatal_error action. */
 static void cpp_format_fatal_error ( const struct flex_backend_t *b, const char *e ) {
 	b->indent(b);
 	fprintf(stdout, "yypanic(%s M4_YY_CALL_LAST_ARG);", e);
 }
 
+/* Generate the echo action. */
 static void cpp_echo ( const struct flex_backend_t *b ) {
 	b->indent(b);
 	fputs("yyecho();", stdout);
 }
 
+/* Generate the definition of the terminate special action. */
 static void cpp_format_yyterminate ( const struct flex_backend_t *b, const char *d ) {
 	if (d != NULL) {
 		b->format_const(b, "yyterminate", d);
@@ -295,11 +353,20 @@ static void cpp_format_yyterminate ( const struct flex_backend_t *b, const char 
 	}
 }
 
+/* Generate the reject special action. */
 static void cpp_format_yyreject ( const struct flex_backend_t *b ) {
 	b->indent(b);
 	fputs("yyreject()", stdout);
 }
 
+/* Construct the cpp_backend method table.
+   This follows the definition in skeletons.h. 
+   cpp-backends.h provides a handle to this structure with external linkage.
+   skeletons.c imports that handle to access these methods.
+   That module makes this implementation available to others as an opaque singleton.
+
+   Note that indentation level is managed indepentently for each backend.
+*/
 struct flex_backend_t cpp_backend = {
 	.skel = cpp_skel,
 	.indent_level = 0,
