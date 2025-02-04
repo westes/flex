@@ -315,8 +315,10 @@ void skelout (bool announce)
 			}
 		}
 
-		else if (do_copy) 
-			outn (buf);
+		else if (do_copy) {
+			backend->verbatim(backend, buf);
+			backend->newline(backend);
+		}
 	}			/* end while */
 }
 

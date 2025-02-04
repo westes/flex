@@ -160,6 +160,8 @@ int cclcmp (const void *a, const void *b)
 
 void dataend (const char *endit)
 {
+	const struct flex_backend_t *bend = get_backend();
+
 	/* short circuit any output */
 	if (gentables) {
 
@@ -168,7 +170,7 @@ void dataend (const char *endit)
 
 		/* add terminator for initialization; { for vi */
 		if (endit)
-			outn (endit);
+			bend->verbatim(bend, endit);
 	}
 	dataline = 0;
 	datapos = 0;
@@ -179,16 +181,19 @@ void dataend (const char *endit)
 
 void dataflush (void)
 {
-	assert (gentables);
+	const struct flex_backend_t *bend = get_backend();
 
+	if (!gentables)
+		return;
+	
 	if (datapos > 0)
-		outc ('\n');
+		bend->newline(bend);
 
 	if (++dataline >= NUMDATALINES) {
 		/* Put out a blank line so that the table is grouped into
 		 * large blocks that enable the user to find elements easily.
 		 */
-		outc ('\n');
+		bend->newline(bend);
 		dataline = 0;
 	}
 
@@ -283,25 +288,25 @@ void mark_prolog (void)
  */
 void mk2data (int value)
 {
+	const struct flex_backend_t *bend = get_backend();
+
 	/* short circuit any output */
 	if (!gentables)
 		return;
 
 	if (datapos >= NUMDATAITEMS) {
-		outc (',');
+		bend->column_separator(bend);
 		dataflush ();
 	}
 
 	if (datapos == 0)
-		/* Indent. */
-		out ("    ");
-
+		bend->indent(bend);
 	else
-	  outc (',');
+	  bend->column_separator(bend);
 
 	++datapos;
 
-	out_dec ("%5d", value);
+	bend->format_data_table_entry(bend, value);
 }
 
 
@@ -312,23 +317,25 @@ void mk2data (int value)
  */
 void mkdata (int value)
 {
+	const struct flex_backend_t *bend = get_backend();
+
 	/* short circuit any output */
 	if (!gentables)
 		return;
 
 	if (datapos >= NUMDATAITEMS) {
-		outc (',');
+		bend->column_separator(bend);
 		dataflush ();
 	}
 
 	if (datapos == 0)
-		/* Indent. */
-		out ("    ");
+		bend->indent(bend);
 	else
-		outc (',');
+	  bend->column_separator(bend);
+
 	++datapos;
 
-	out_dec ("%5d", value);
+	bend->format_data_table_entry(bend, value);
 }
 
 
@@ -422,12 +429,6 @@ unsigned char myesc (unsigned char array[])
 /* out - various flavors of outputting a (possibly formatted) string for the
  *	 generated scanner, keeping track of the line count.
  */
-
-void out (const char *str)
-{
-	fputs (str, stdout);
-}
-
 void out_dec (const char *fmt, int n)
 {
 	fprintf (stdout, fmt, n);
@@ -451,17 +452,6 @@ void out_str (const char *fmt, const char str[])
 void out_str_dec (const char *fmt, const char str[], int n)
 {
 	fprintf (stdout,fmt, str, n);
-}
-
-void outc (int c)
-{
-	fputc (c, stdout);
-}
-
-void outn (const char *str)
-{
-	fputs (str,stdout);
-    fputc('\n',stdout);
 }
 
 /** Print "m4_define( [[def]], [[val]])m4_dnl\n".
@@ -564,21 +554,22 @@ void   *reallocate_array (void *array, int size, size_t element_size)
 
 void transition_struct_out (int element_v, int element_n)
 {
+	const struct flex_backend_t *bend = get_backend();
 
 	/* short circuit any output */
 	if (!gentables)
 		return;
 
 	out_dec2 ("M4_HOOK_TABLE_OPENER[[%4d]],[[%4d]]M4_HOOK_TABLE_CONTINUE", element_v, element_n);
-	outc ('\n');
+	bend->newline(bend);
 
 	datapos += TRANS_STRUCT_PRINT_LENGTH;
 
 	if (datapos >= 79 - TRANS_STRUCT_PRINT_LENGTH) {
-		outc ('\n');
+		bend->newline(bend);
 
 		if (++dataline % 10 == 0)
-			outc ('\n');
+			bend->newline(bend);
 
 		datapos = 0;
 	}
@@ -622,22 +613,6 @@ char   *chomp (char *str)
 	while (p >= str && (*p == '\r' || *p == '\n'))
 		*p-- = 0;
 	return str;
-}
-
-void comment(const char *txt)
-{
-	char buf[MAXLINE];
-	bool eol;
-	const struct flex_backend_t *bend = get_backend();
-
-	strncpy(buf, txt, MAXLINE-1);
-	eol = buf[strlen(buf)-1] == '\n';
-
-	if (eol)
-		buf[strlen(buf)-1] = '\0';
-		bend->comment(bend, buf);
-	if (eol)
-		bend->newline(bend);
 }
 
 

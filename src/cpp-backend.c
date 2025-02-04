@@ -180,11 +180,15 @@ static void cpp_close_table ( const struct flex_backend_t *b ) {
 
 /* Intended to emit a macro call in C/CXX.
    Can also emit a bare string.
-
-   TODO: Find a better name.
  */
-static void cpp_relativize ( const struct flex_backend_t *b, const char *s ) {
+static void cpp_verbatim ( const struct flex_backend_t *b, const char *s ) {
 	fputs(s, stdout);
+}
+
+/* Format an entry into a data table. */
+static void cpp_format_data_table_entry ( const struct flex_backend_t * b, int t ) {
+	/* Expected to occur in a block format, so don't indent. */
+	fprintf(stdout, "%5d", t);
 }
 
 /* Format an entry from the transition table into the state table. */
@@ -199,16 +203,20 @@ static void cpp_format_state_table_entry ( const struct flex_backend_t * b, int 
 */
 static void cpp_format_normal_state_case_arm ( const struct flex_backend_t *b, int c ) {
 	b->indent(b);
-	fprintf(stdout, "case %d:", c);
+	fprintf(stdout, "case %d: ", c);
 }
 
-/* Generate the special case for EOF. */
-static void cpp_format_eof_state_case_arm ( const struct flex_backend_t *b, int c ) {
+/* Generate the special case arm for EOF. 
+   This lives in the body of yyinput and determines whether/when to switch to the next buffer.
+*/
+static void cpp_format_eof_state_case_arm ( const struct flex_backend_t *b, const char * const c ) {
 	b->indent(b);
-	fprintf(stdout, "case YY_STATE_EOF(%d):", c);
+	fprintf(stdout, "case YY_STATE_EOF(%s): ", c);
 }
 
-/* Generate the special action FALLTHROUGH. */
+/* Generate the special action FALLTHROUGH. 
+   This is just a comment in C/CXX, but a few languages require a keyword for fallthrough logic.
+*/
 static void cpp_eof_state_case_fallthrough ( const struct flex_backend_t *b ) {
 	b->indent(b);
 	b->comment(b, "FALLTHROUGH");
@@ -298,7 +306,7 @@ static void cpp_format_userinit ( const struct flex_backend_t *b, const char *d 
 
 /* Inject the rule_setup macro call where needed. */
 static void cpp_format_rule_setup ( const struct flex_backend_t *b ) {
-	b->relativize(b, "YY_RULE_SETUP");
+	b->verbatim(b, "YY_RULE_SETUP");
 	b->newline(b);
 }
 
@@ -386,7 +394,8 @@ struct flex_backend_t cpp_backend = {
 	.open_table = cpp_open_table,
 	.continue_table = cpp_continue_table,
 	.close_table = cpp_close_table,
-	.relativize = cpp_relativize,
+	.verbatim = cpp_verbatim,
+	.format_data_table_entry = cpp_format_data_table_entry,
 	.format_state_table_entry = cpp_format_state_table_entry,
 	.format_normal_state_case_arm = cpp_format_normal_state_case_arm,
 	.format_eof_state_case_arm = cpp_format_eof_state_case_arm,

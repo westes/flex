@@ -64,10 +64,11 @@ struct flex_backend_t {
 	void (*open_table) ( const struct flex_backend_t *b );
 	void (*continue_table) ( const struct flex_backend_t *b );
 	void (*close_table) ( const struct flex_backend_t *b );
-	void (*relativize) ( const struct flex_backend_t *b, const char *s );
+	void (*verbatim) ( const struct flex_backend_t *b, const char *s );
+	void (*format_data_table_entry) ( const struct flex_backend_t *b, int t );
 	void (*format_state_table_entry) ( const struct flex_backend_t *b, int t );
 	void (*format_normal_state_case_arm) ( const struct flex_backend_t *b, int c );
-	void (*format_eof_state_case_arm) ( const struct flex_backend_t *b, int c );
+	void (*format_eof_state_case_arm) ( const struct flex_backend_t *b, const char *const c );
 	void (*eof_state_case_fallthrough) ( const struct flex_backend_t *b );
 	void (*eof_state_case_terminate) ( const struct flex_backend_t *b );
 	void (*take_yytext) ( const struct flex_backend_t *b );
@@ -95,10 +96,6 @@ struct flex_backend_t {
 };
 
 const struct flex_backend_t *get_backend(void);
-
-/* For blocking out code from the header file. */
-// #define OUT_BEGIN_CODE() outn("m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl")
-// #define OUT_END_CODE()   outn("]])")
 
 
 #endif /* FLEX_SKELETONS_H */

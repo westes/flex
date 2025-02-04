@@ -910,14 +910,11 @@ extern int myctoi(const char *);
 extern unsigned char myesc(unsigned char[]);
 
 /* Output a (possibly-formatted) string to the generated scanner. */
-extern void out(const char *);
 extern void out_dec(const char *, int);
 extern void out_dec2(const char *, int, int);
 extern void out_hex(const char *, unsigned int);
 extern void out_str(const char *, const char *);
 extern void out_str_dec(const char *, const char *, int);
-extern void outc(int);
-extern void outn(const char *);
 extern void out_m4_define(const char* def, const char* val);
 
 /* Return a printable version of the given character, which might be
@@ -1039,10 +1036,6 @@ extern const char *skel_property(const char *);
 
 /* Write out one section of the skeleton file. */
 extern void skelout(bool);
-
-/* For blocking out code from the header file. */
-#define OUT_BEGIN_CODE() outn("m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl")
-#define OUT_END_CODE()   outn("]])")
 
 /* from file sym.c */
 

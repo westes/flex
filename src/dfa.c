@@ -31,6 +31,7 @@
 
 #include "flexdef.h"
 #include "tables.h"
+#include "skeletons.h"
 
 /* declare functions that have forward references */
 
@@ -383,6 +384,7 @@ size_t ntod (void)
 	int     symlist[CSIZE + 1];
 	int     num_start_states;
 	int     todo_head, todo_next;
+	const struct flex_backend_t *bend = get_backend();
 
 	struct yytbl_data *yynxt_tbl = 0;
 	flex_int32_t *yynxt_data = 0, yynxt_curr = 0;
@@ -507,10 +509,13 @@ size_t ntod (void)
 		/* Note: Used when ctrl.fulltbl is on. Alternately defined elsewhere */
 		out_str ("m4_define([[M4_HOOK_NXT_TYPE]], [[%s]])", ptype->name);
 		out_dec ("m4_define([[M4_HOOK_NXT_ROWS]], [[%d]])", num_full_table_rows);
-		outn ("m4_define([[M4_HOOK_NXT_BODY]], [[m4_dnl");
-		outn ("M4_HOOK_TABLE_OPENER");
+		bend->verbatim(bend, "m4_define([[M4_HOOK_NXT_BODY]], [[m4_dnl");
+		bend->newline(bend);
+		bend->verbatim(bend, "M4_HOOK_TABLE_OPENER");
+		bend->newline(bend);
 		if (gentables)
-			outn ("M4_HOOK_TABLE_OPENER");
+			bend->verbatim(bend, "M4_HOOK_TABLE_OPENER");
+			bend->newline(bend);
 
 		/* Generate 0 entries for state #0. */
 		for (i = 0; i < num_full_table_rows; ++i) {
@@ -520,7 +525,8 @@ size_t ntod (void)
 
 		if (gentables) {
 			dataflush ();
-			outn ("M4_HOOK_TABLE_CONTINUE");
+			bend->verbatim(bend, "M4_HOOK_TABLE_CONTINUE");
+			bend->newline(bend);
 		}
 	}
 
@@ -675,7 +681,8 @@ size_t ntod (void)
 						     yynxt_tbl->td_lolen *
 						     sizeof (flex_int32_t));
 			if (gentables)
-				outn ("M4_HOOK_TABLE_OPENER");
+				bend->verbatim(bend, "M4_HOOK_TABLE_OPENER");
+				bend->newline(bend);
 
 			/* Supply array's 0-element. */
 			if (ds == end_of_buffer_state) {
@@ -700,7 +707,8 @@ size_t ntod (void)
 
 			if (gentables) {
 				dataflush ();
-				outn ("M4_HOOK_TABLE_CONTINUE");
+				bend->verbatim(bend, "M4_HOOK_TABLE_CONTINUE");
+				bend->newline(bend);
 			}
 		}
 
@@ -734,7 +742,9 @@ size_t ntod (void)
 
 	if (ctrl.fulltbl) {
 		dataend ("M4_HOOK_TABLE_CLOSER");
-		outn("/* body */]])");
+		bend->comment(bend, "body");
+		bend->verbatim(bend, "]])");
+		bend->newline(bend);
 		if (tablesext) {
 			yytbl_data_compress (yynxt_tbl);
 			if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)
