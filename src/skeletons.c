@@ -42,12 +42,16 @@
 #include "cpp-backend.h"
 
 const char *c99_skel[] = {
+/* FIXME: Refactor like cpp-backend when c99 backend is ready.
 #include "c99-flex.h"
+*/
     0,
 };
 
 const char *go_skel[] = {
+/* FIXME: Refactor like cpp-backend when Go backend is ready.
 #include "go-flex.h"
+*/
     0,
 };
 
