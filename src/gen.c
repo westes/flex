@@ -133,9 +133,10 @@ static struct yytbl_data *mkctbl (void)
 	struct yytbl_data *tbl = 0;
 	flex_int32_t *tdata = 0, curr = 0;
 	int     end_of_buffer_action = num_rules + 1;
+	const struct flex_backend_t *backend = get_backend();
 
 	struct packtype_t *ptype = optimize_pack(tblend + 2 + 1);
-	out_str ("m4_define([[M4_HOOK_MKCTBL_TYPE]], [[%s]])", ptype->name);
+	backend->filter_define_vars(backend, "M4_HOOK_MKCTBL_TYPE", ptype->name);
 
 	tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYTD_ID_TRANSITION);
@@ -964,7 +965,7 @@ void make_tables (void)
 	char buf[128];
 	int i;
 	struct yytbl_data *yynultrans_tbl = NULL;
-	const struct flex_backend_t *bend = get_backend();
+	const struct flex_backend_t *backend = get_backend();
 
 	/* This is where we REALLY begin generating the tables. */
 
@@ -1007,7 +1008,7 @@ void make_tables (void)
 			tbl = mkftbl ();
 			yytbl_data_compress (tbl);
 			ptype = optimize_pack(tbl->td_lolen);
-			out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
+			backend->filter_define_vars(backend, "M4_HOOK_ACCEPT_TYPE", ptype->name);
 			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
 				flexerror (_("Could not write ftbl"));
 			yytbl_data_destroy (tbl);
@@ -1029,27 +1030,27 @@ void make_tables (void)
 	}
 
 	snprintf(buf, sizeof(buf), "footprint: %ld bytes", footprint);
-	bend->comment(bend, buf);
-	bend->newline(bend);
+	backend->comment(backend, buf);
+	backend->newline(backend);
 	snprintf(buf, sizeof(buf), "tblend: %d", tblend);
-	bend->comment(bend, buf);
-	bend->newline(bend);
+	backend->comment(backend, buf);
+	backend->newline(backend);
 	snprintf(buf, sizeof(buf), "numecs: %d", numecs);
-	bend->comment(bend, buf);
-	bend->newline(bend);
+	backend->comment(backend, buf);
+	backend->newline(backend);
 	snprintf(buf, sizeof(buf), "num_rules: %d", num_rules);
-	bend->comment(bend, buf);
-	bend->newline(bend);
+	backend->comment(backend, buf);
+	backend->newline(backend);
 	snprintf(buf, sizeof(buf), "lastdfa: %d", lastdfa);
-	bend->comment(bend, buf);
-	bend->newline(bend);
-	bend->newline(bend);
+	backend->comment(backend, buf);
+	backend->newline(backend);
+	backend->newline(backend);
 	
 	// Only at this point do we know if the automaton has backups.
 	// Some m4 conditionals require this information.
 
-	bend->comment(bend, "m4 controls begin");
-	bend->newline(bend);
+	backend->comment(backend, "m4 controls begin");
+	backend->newline(backend);
 
 	if (num_backing_up > 0)
 		visible_define ( "M4_MODE_HAS_BACKING_UP");
@@ -1060,8 +1061,8 @@ void make_tables (void)
 	if ((num_backing_up > 0 && !reject) && (ctrl.fullspd || ctrl.fulltbl))
 		visible_define ( "M4_MODE_NULTRANS_WRAP");
 
-	bend->comment(bend, "m4 controls end");
-	bend->newline(bend);
+	backend->comment(backend, "m4 controls end");
+	backend->newline(backend);
 
 	if (ctrl.do_yylineno) {
 
@@ -1083,10 +1084,10 @@ void make_tables (void)
 		flex_int32_t *yynultrans_data = 0;
 
 		/* Begin generating yy_NUL_trans */
-		bend->filter_define_vars(bend, "M4_HOOK_NULTRANS_TYPE", bend->get_state_type(bend));
-		bend->filter_define_vard(bend, "M4_HOOK_NULTRANS_SIZE", lastdfa + 1);
-		bend->filter_define_name(bend, "M4_HOOK_NULTRANS_BODY", true);
-		bend->newline(bend);
+		backend->filter_define_vars(backend, "M4_HOOK_NULTRANS_TYPE", backend->get_state_type(backend));
+		backend->filter_define_vard(backend, "M4_HOOK_NULTRANS_SIZE", lastdfa + 1);
+		backend->filter_define_name(backend, "M4_HOOK_NULTRANS_BODY", true);
+		backend->newline(backend);
 
 		yynultrans_tbl = calloc(1, sizeof (struct yytbl_data));
 		yytbl_data_init (yynultrans_tbl, YYTD_ID_NUL_TRANS);
@@ -1101,7 +1102,7 @@ void make_tables (void)
 
 		for (i = 1; i <= lastdfa; ++i) {
 			if ((yynultrans_tbl->td_flags & YYTD_PTRANS) != 0) {
-				bend->format_state_table_entry(bend, base[i]);
+				backend->format_state_table_entry(backend, base[i]);
 				yynultrans_data[i] = base[i];
 			}
 			else {
@@ -1112,8 +1113,8 @@ void make_tables (void)
 		}
 
 		dataend (false);
-		bend->filter_define_close(bend, NULL); /* End NULTRANS_BODY */
-		bend->newline(bend);
+		backend->filter_define_close(backend, NULL); /* End NULTRANS_BODY */
+		backend->newline(backend);
 		/* footprint is only used to print an estimated table size in a user-requested summary.
 		   There's a C assumtption in the calculation here, but it doesn't affect the scanner.
 		*/
@@ -1139,15 +1140,15 @@ void make_tables (void)
 		 * in the table metering.
 		 */
 		struct packtype_t *ptype = optimize_pack(num_rules);
-		bend->filter_define_vars(bend, "M4_HOOK_DEBUGTABLE_TYPE", ptype->name);
-		bend->filter_define_vard(bend, "M4_HOOK_DEBUGTABLE_SIZE", num_rules);
-		bend->filter_define_name(bend, "M4_HOOK_DEBUGTABLE_BODY", true);
-		bend->newline(bend);
+		backend->filter_define_vars(backend, "M4_HOOK_DEBUGTABLE_TYPE", ptype->name);
+		backend->filter_define_vard(backend, "M4_HOOK_DEBUGTABLE_SIZE", num_rules);
+		backend->filter_define_name(backend, "M4_HOOK_DEBUGTABLE_BODY", true);
+		backend->newline(backend);
 
 		for (i = 1; i < num_rules; ++i)
 			mkdata (rule_linenum[i]);
 		dataend (false);
-		bend->filter_define_close(bend, NULL); /* End DEBUGTABLE_BODY */
-		bend->newline(bend);
+		backend->filter_define_close(backend, NULL); /* End DEBUGTABLE_BODY */
+		backend->newline(backend);
 	}
 }

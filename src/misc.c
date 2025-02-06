@@ -427,15 +427,6 @@ unsigned char myesc (unsigned char array[])
 }
 
 
-/* out - various flavors of outputting a (possibly formatted) string for the
- *	 generated scanner, keeping track of the line count.
- */
-void out_str (const char *fmt, const char str[])
-{
-	fprintf (stdout,fmt, str);
-}
-
-
 /* readable_form - return the the human-readable form of a character
  *
  * The returned string is in static storage.

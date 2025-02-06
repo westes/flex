@@ -101,6 +101,7 @@ struct flex_backend_t {
 	void (*filter_define_close) (const struct flex_backend_t *b, const char *v);
 	void (*filter_define_vars) ( const struct flex_backend_t *b, const char *n, const char *v );
 	void (*filter_define_vard) ( const struct flex_backend_t *b, const char *n, const int v );
+	void (*filter_call_macro) ( const struct flex_backend_t *b, const char *n, const char *v );
 };
 
 const struct flex_backend_t *get_backend(void);

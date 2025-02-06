@@ -429,6 +429,25 @@ static void cpp_filter_define_vard ( const struct flex_backend_t *b, const char 
 	b->filter_define_close(b, NULL);
 }
 
+/* Format a macro replacement through the output filter system.
+   Filter macros are defined like variables. The syntax for defining a filter macro depends on the 
+   filter chain in use.
+   
+   This example assumes the M4 filter chain where: every variable is a macro; the tokens following
+   the name are substituted for the macro name; if the first token following the name is an OPAREN,
+   it is followed by a comma-delimited list of positional parameters that are themselves substituded
+   into the text after the next CPAREN in place of the tokens '$1', '$2', etc.
+   
+   Flex's own filter macros only use one positional argument, currently.
+*/
+static void cpp_filter_call_macro ( const struct flex_backend_t *b, const char *n, const char *v ) {
+	b->verbatim(b, n);
+	b->verbatim(b, "( ");
+	b->verbatim(b, v);
+	b->verbatim(b, " )");
+	b->newline(b);
+}
+
 /* Construct the cpp_backend method table.
    This follows the definition in skeletons.h. 
    cpp-backends.h provides a handle to this structure with external linkage.
@@ -490,6 +509,7 @@ struct flex_backend_t cpp_backend = {
 	.filter_define_name = cpp_filter_define_name,
 	.filter_define_close = cpp_filter_define_close,
 	.filter_define_vars = cpp_filter_define_vars,
-	.filter_define_vard = cpp_filter_define_vard
+	.filter_define_vard = cpp_filter_define_vard,
+	.filter_call_macro = cpp_filter_call_macro
 };
 
