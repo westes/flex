@@ -440,11 +440,6 @@ void out_dec2 (const char *fmt, int n1, int n2)
 	fprintf (stdout, fmt, n1, n2);
 }
 
-void out_hex (const char *fmt, unsigned int x)
-{
-	fprintf (stdout, fmt, x);
-}
-
 void out_str (const char *fmt, const char str[])
 {
 	fprintf (stdout,fmt, str);
