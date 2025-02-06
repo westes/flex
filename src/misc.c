@@ -430,11 +430,6 @@ unsigned char myesc (unsigned char array[])
 /* out - various flavors of outputting a (possibly formatted) string for the
  *	 generated scanner, keeping track of the line count.
  */
-void out_dec (const char *fmt, int n)
-{
-	fprintf (stdout, fmt, n);
-}
-
 void out_dec2 (const char *fmt, int n1, int n2)
 {
 	fprintf (stdout, fmt, n1, n2);

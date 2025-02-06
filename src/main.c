@@ -1315,7 +1315,7 @@ void readin (void)
 	 * than a constant declaration because in C a const is
 	 * not const enough to be a static array bound.
 	 */
-	out_dec ("m4_define([[YYLMAX]], [[%d]])\n", ctrl.yylmax);
+	bend->filter_define_vard(bend, "YYLMAX", ctrl.yylmax);
 
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)

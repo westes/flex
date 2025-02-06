@@ -104,7 +104,8 @@ static void geneoltbl (void)
 
 	if (gentables) {
 		for (i = 1; i <= num_rules; i++) {
-			out_dec ("%d, ", rule_has_nl[i] ? 1 : 0);
+			bend->format_data_table_entry(bend, rule_has_nl[i] ? 1 : 0);
+			bend->column_separator(bend);
 			/* format nicely, 20 numbers per line. */
 			if ((i % 20) == 19)
 				bend->newline(bend);
@@ -533,8 +534,8 @@ static void gentabs(void)
 
 		sz = MAX (numas, 1) + 1;
 		ptype = optimize_pack(sz);
-		out_str ("m4_define([[M4_HOOK_ACCLIST_TYPE]], [[%s]])", ptype->name);
-		out_dec ("m4_define([[M4_HOOK_ACCLIST_SIZE]], [[%d]])", sz);
+		bend->filter_define_vars(bend, "M4_HOOK_ACCLIST_TYPE", ptype->name);
+		bend->filter_define_vard(bend, "M4_HOOK_ACCLIST_SIZE", sz);
 		bend->filter_define_name(bend, "M4_HOOK_ACCLIST_BODY", true);
 		bend->newline(bend);
 
@@ -1100,9 +1101,7 @@ void make_tables (void)
 
 		for (i = 1; i <= lastdfa; ++i) {
 			if ((yynultrans_tbl->td_flags & YYTD_PTRANS) != 0) {
-				// Only works in very C-like languages  
-				out_dec ("    &yy_transition[%d],\n",
-					 base[i]);
+				bend->format_state_table_entry(bend, base[i]);
 				yynultrans_data[i] = base[i];
 			}
 			else {
