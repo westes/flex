@@ -384,7 +384,7 @@ size_t ntod (void)
 	int     symlist[CSIZE + 1];
 	int     num_start_states;
 	int     todo_head, todo_next;
-	const struct flex_backend_t *bend = get_backend();
+	const struct flex_backend_t *backend = get_backend();
 
 	struct yytbl_data *yynxt_tbl = 0;
 	flex_int32_t *yynxt_data = 0, yynxt_curr = 0;
@@ -507,15 +507,15 @@ size_t ntod (void)
 
 		struct packtype_t *ptype = optimize_pack(0);
 		/* Note: Used when ctrl.fulltbl is on. Alternately defined elsewhere */
-		bend->filter_define_vars(bend, "M4_HOOK_NXT_TYPE", ptype->name);
-		bend->filter_define_vard(bend, "M4_HOOK_NXT_ROWS", num_full_table_rows);
-		bend->filter_define_name(bend, "M4_HOOK_NXT_BODY", true);
-		bend->newline(bend);
-		bend->open_table(bend);
-		bend->newline(bend);
+		backend->filter_define_vars(backend, "M4_HOOK_NXT_TYPE", ptype->name);
+		backend->filter_define_vard(backend, "M4_HOOK_NXT_ROWS", num_full_table_rows);
+		backend->filter_define_name(backend, "M4_HOOK_NXT_BODY", true);
+		backend->newline(backend);
+		backend->open_table(backend);
+		backend->newline(backend);
 		if (gentables)
-			bend->open_table(bend);
-			bend->newline(bend);
+			backend->open_table(backend);
+			backend->newline(backend);
 
 		/* Generate 0 entries for state #0. */
 		for (i = 0; i < num_full_table_rows; ++i) {
@@ -525,8 +525,8 @@ size_t ntod (void)
 
 		if (gentables) {
 			dataflush ();
-			bend->continue_table(bend);
-			bend->newline(bend);
+			backend->continue_table(backend);
+			backend->newline(backend);
 		}
 	}
 
@@ -681,8 +681,8 @@ size_t ntod (void)
 						     yynxt_tbl->td_lolen *
 						     sizeof (flex_int32_t));
 			if (gentables)
-				bend->open_table(bend);
-				bend->newline(bend);
+				backend->open_table(backend);
+				backend->newline(backend);
 
 			/* Supply array's 0-element. */
 			if (ds == end_of_buffer_state) {
@@ -707,8 +707,8 @@ size_t ntod (void)
 
 			if (gentables) {
 				dataflush ();
-				bend->continue_table(bend);
-				bend->newline(bend);
+				backend->continue_table(backend);
+				backend->newline(backend);
 			}
 		}
 
@@ -742,9 +742,9 @@ size_t ntod (void)
 
 	if (ctrl.fulltbl) {
 		dataend (true);
-		bend->comment(bend, "body");
-		bend->filter_define_close(bend, NULL); /* End of NXT_BODY */
-		bend->newline(bend);
+		backend->comment(backend, "body");
+		backend->filter_define_close(backend, NULL); /* End of NXT_BODY */
+		backend->newline(backend);
 		if (tablesext) {
 			yytbl_data_compress (yynxt_tbl);
 			if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)
