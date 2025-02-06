@@ -41,12 +41,7 @@
 
 #include "cpp-backend.h"
 
-const char *c99_skel[] = {
-/* FIXME: Refactor like cpp-backend when c99 backend is ready.
-#include "c99-flex.h"
-*/
-    0,
-};
+#include "c99-backend.h"
 
 const char *go_skel[] = {
 /* FIXME: Refactor like cpp-backend when Go backend is ready.
@@ -130,12 +125,14 @@ const struct flex_backend_t *get_backend(void) {
 /* Initialize backends */
 void init_backends( void ) {
 	backends[FLEX_BACKEND_CPP] = cpp_backend;
-	backends[FLEX_BACKEND_C99].skel=c99_skel;
+	backends[FLEX_BACKEND_C99] = c99_backend;
 	backends[FLEX_BACKEND_GO].skel=go_skel;
 	backends[FLEX_BACKEND_ID_MAX] = (struct flex_backend_t){NULL};
 }
 
 /* Functions for querying skeleton properties. */
+const char *_skel_property(const flex_backend_id_t backend_id, const char *propname);
+static bool _boneseeker(const flex_backend_id_t backend_id, const char *bone);
 
 /* TODO: What does this mean now? */
 bool is_default_backend(void)
@@ -145,11 +142,15 @@ bool is_default_backend(void)
 
 /* Search for a string in the skeleton prolog, where macros are defined.
  */
-static bool boneseeker(const char *bone)
+static bool boneseeker(const char *bone) {
+	return _boneseeker(top_backend(), bone);
+}
+
+static bool _boneseeker(const flex_backend_id_t backend_id, const char *bone)
 {
 	int i;
 
-	const struct flex_backend_t *backend = get_backend();
+	const struct flex_backend_t *backend = &backends[backend_id];
 
 	for (i = 0; backend->skel[i] != NULL; i++) {
 		const char *line = backend->skel[i];
@@ -164,38 +165,39 @@ static bool boneseeker(const char *bone)
 flex_backend_id_t backend_by_name(const char *name)
 {
 	const char *prefix_property;
-	flex_backend_id_t backend = FLEX_BACKEND_DEFAULT, i = FLEX_BACKEND_DEFAULT;
+	flex_backend_id_t backend_id = FLEX_BACKEND_DEFAULT, i = FLEX_BACKEND_DEFAULT;
 
 	if (name != NULL) {
 		if (strcmp(name, "nr") == 0) {
-			backend = FLEX_BACKEND_CPP;
+			backend_id = FLEX_BACKEND_CPP;
 			ctrl.reentrant = false;
 			goto backend_ok;
 		}
 		if (strcmp(name, "r") == 0) {
-			backend = FLEX_BACKEND_CPP;
+			backend_id = FLEX_BACKEND_CPP;
 			ctrl.reentrant = true;
 			goto backend_ok;
 		}
 		for (i = 0; backends[i].skel != NULL && i < FLEX_BACKEND_ID_MAX; ++i) {
-			if (strcasecmp(skel_property("M4_PROPERTY_BACKEND_NAME"), name) == 0)
-				backend = i;
+			if (strcasecmp(_skel_property(i, "M4_PROPERTY_BACKEND_NAME"), name) == 0) {
+				backend_id = i;
 				goto backend_ok;
+			}
 		}
 		flexerror(_("no such back end"));
 		return FLEX_BACKEND_ID_MAX;
 	}
   backend_ok:
 	ctrl.rewrite = !is_default_backend();
-	ctrl.backend_name = xstrdup(skel_property("M4_PROPERTY_BACKEND_NAME"));
-	ctrl.traceline_re = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_REGEXP"));
-	ctrl.traceline_template = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_TEMPLATE"));
-	ctrl.have_state_entry_format = boneseeker("m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]]");
-	prefix_property = skel_property("M4_PROPERTY_PREFIX");
+	ctrl.backend_name = xstrdup(_skel_property(backend_id, "M4_PROPERTY_BACKEND_NAME"));
+	ctrl.traceline_re = xstrdup(_skel_property(backend_id, "M4_PROPERTY_TRACE_LINE_REGEXP"));
+	ctrl.traceline_template = xstrdup(_skel_property(backend_id, "M4_PROPERTY_TRACE_LINE_TEMPLATE"));
+	ctrl.have_state_entry_format = _boneseeker(backend_id, "m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]]");
+	prefix_property = _skel_property(backend_id, "M4_PROPERTY_PREFIX");
 	if (prefix_property != NULL)
 		ctrl.prefix = xstrdup(prefix_property);
 	flex_init_regex(ctrl.traceline_re);
-	return backend;
+	return backend_id;
 }
 
 const char *suffix (void)
@@ -218,12 +220,16 @@ const char *suffix (void)
  * definition must be single-line.  Don't call this a second time before
  * stashing away the previous return, we cheat with static buffers.
  */
-const char *skel_property(const char *propname)
+const char *skel_property(const char *propname){
+	return _skel_property(top_backend(), propname);
+}
+
+const char *_skel_property(const flex_backend_id_t backend_id, const char *propname)
 {
 	int i;
 	static char name[256], value[256], *np, *vp;;
 	const char *cp;
-	const struct flex_backend_t *backend = get_backend();
+	const struct flex_backend_t *backend = &backends[backend_id];
 
 	for (i = 0; backend->skel[i] != NULL; i++) {
 		const char *line = backend->skel[i];
