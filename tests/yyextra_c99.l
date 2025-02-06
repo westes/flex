@@ -50,7 +50,6 @@ static void append_char (char c,  yyscan_t  scanner );
 %option 8bit prefix="test"
 %option nounput nomain noyywrap nodefault noyyinput
 %option warn
-%option reentrant
 %option extra-type="struct Buffer *"
 
 %%

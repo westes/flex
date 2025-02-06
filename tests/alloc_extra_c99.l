@@ -51,7 +51,6 @@ static void check_extra ( yyscan_t  scanner );
 %option 8bit
 %option nounput nomain noyywrap nodefault noinput
 %option warn
-%option reentrant
 %option extra-type="struct Check *"
 %option noyyalloc
 
