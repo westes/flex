@@ -82,6 +82,7 @@ struct flex_backend_t {
 	void (*format_line_forward) ( const struct flex_backend_t *b, int l );
 	void (*format_byte_const) ( const struct flex_backend_t *b, const char *n, const int c );
 	void (*format_state_const) ( const struct flex_backend_t *b, const char *n, const int s );
+	void (*format_size_const) ( const struct flex_backend_t *b, const char *n, const int s );
 	void (*format_uint_const) ( const struct flex_backend_t *b, const char *n, const unsigned int u );
 	void (*format_bool_const) ( const struct flex_backend_t *b, const char *n, const int t );
 	void (*format_const) ( const struct flex_backend_t *b, const char *n, const char *v );

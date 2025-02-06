@@ -450,11 +450,6 @@ void out_str (const char *fmt, const char str[])
 	fprintf (stdout,fmt, str);
 }
 
-void out_str_dec (const char *fmt, const char str[], int n)
-{
-	fprintf (stdout,fmt, str, n);
-}
-
 
 /* readable_form - return the the human-readable form of a character
  *

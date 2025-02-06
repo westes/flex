@@ -287,6 +287,13 @@ static void cpp_format_state_const ( const struct flex_backend_t *b, const char 
 	fprintf(stdout, "#define %s %d\n", n, s);
 }
 
+/* Define a size constant. 
+   TODO: It would be better if s were unsigned, but Flex currently counts in signed ints.
+*/
+static void cpp_format_size_const ( const struct flex_backend_t *b, const char *n, const int s ) {
+	fprintf(stdout, "#define %s %d\n", n, s);
+}
+
 /* Define a uint constant. */
 static void cpp_format_uint_const ( const struct flex_backend_t *b, const char *n, const unsigned int u ) {
 	fprintf(stdout, "#define %s %u\n", n, u);
@@ -465,6 +472,7 @@ struct flex_backend_t cpp_backend = {
 	.format_line_forward = cpp_format_line_forward,
 	.format_byte_const = cpp_format_byte_const,
 	.format_state_const = cpp_format_state_const,
+	.format_size_const = cpp_format_size_const,
 	.format_uint_const = cpp_format_uint_const,
 	.format_bool_const = cpp_format_bool_const,
 	.format_const = cpp_format_const,

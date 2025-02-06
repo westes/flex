@@ -206,11 +206,11 @@ int flex_main (int argc, char *argv[])
 	bend->newline(bend);
 
 	bend->comment(bend, "START of Flex-generated definitions");
-	out_str_dec ("M4_HOOK_CONST_DEFINE_UINT(%s, %d)", "YY_NUM_RULES", num_rules);
-	out_str_dec ("M4_HOOK_CONST_DEFINE_STATE(%s, %d)", "YY_END_OF_BUFFER", num_rules + 1);
-	out_str_dec ("M4_HOOK_CONST_DEFINE_STATE(%s, %d)", "YY_JAMBASE", jambase);
-	out_str_dec ("M4_HOOK_CONST_DEFINE_STATE(%s, %d)", "YY_JAMSTATE", jamstate);
-	out_str_dec ("M4_HOOK_CONST_DEFINE_BYTE(%s, %d)", "YY_NUL_EC", NUL_ec);
+	bend->format_size_const(bend, "YY_NUM_RULES", num_rules);
+	bend->format_state_const(bend,  "YY_END_OF_BUFFER", num_rules + 1);
+	bend->format_state_const(bend,  "YY_JAMBASE", jambase);
+	bend->format_state_const(bend,  "YY_JAMSTATE", jamstate);
+	bend->format_byte_const(bend,  "YY_NUL_EC", NUL_ec);
 	/* Need to define the transet type as a size large
 	 * enough to hold the biggest offset.
 	 */
