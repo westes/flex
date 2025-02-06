@@ -64,6 +64,15 @@ static const char * cpp_get_state_type ( const struct flex_backend_t *b ) {
 	return (ctrl.fullspd) ? "struct yy_trans_info*" : b->get_int32_type(b);
 }
 
+static const char * cpp_get_packed_type (const struct flex_backend_t *b, struct packtype_t *p) {
+	switch(p->width) {
+		case 32: return b->get_int32_type(b);
+		case 16: return b->get_int16_type(b);
+		default: flexerror("unsupported packed data width requested\n");
+		         break;
+	}
+}
+
 /* TODO: Indent? */
 static void cpp_open_block_comment ( const struct flex_backend_t *b ) {
 	fputs("/* ", stdout);
@@ -462,6 +471,7 @@ struct flex_backend_t cpp_backend = {
 	.get_int32_type = cpp_get_int32_type,
 	.get_int16_type = cpp_get_int16_type,
 	.get_state_type = cpp_get_state_type,
+	.get_packed_type= cpp_get_packed_type,
 	.open_block_comment = cpp_open_block_comment,
 	.close_block_comment = cpp_close_block_comment,
 	.comment = cpp_comment,

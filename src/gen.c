@@ -97,7 +97,7 @@ static void geneoltbl (void)
 
 	backend->verbatim(backend, "m4_ifdef( [[M4_MODE_YYLINENO]],[[");
 	backend->newline(backend);
-	backend->filter_define_vars(backend, "M4_HOOK_EOLTABLE_TYPE", ptype->name);
+	backend->filter_define_vars(backend, "M4_HOOK_EOLTABLE_TYPE", backend->get_packed_type(backend, ptype));
 	backend->filter_define_vard(backend, "M4_HOOK_EOLTABLE_SIZE", num_rules + 1);
 	backend->filter_define_name(backend, "M4_HOOK_EOLTABLE_BODY", true);
 	backend->newline(backend);
@@ -136,7 +136,7 @@ static struct yytbl_data *mkctbl (void)
 	const struct flex_backend_t *backend = get_backend();
 
 	struct packtype_t *ptype = optimize_pack(tblend + 2 + 1);
-	backend->filter_define_vars(backend, "M4_HOOK_MKCTBL_TYPE", ptype->name);
+	backend->filter_define_vars(backend, "M4_HOOK_MKCTBL_TYPE", backend->get_packed_type(backend, ptype));
 
 	tbl = calloc(1, sizeof (struct yytbl_data));
 	yytbl_data_init (tbl, YYTD_ID_TRANSITION);
@@ -465,7 +465,7 @@ static void genftbl(void)
 
 	backend->filter_define_vard(backend, "M4_HOOK_NEED_ACCEPT", 1);
 	backend->newline(backend);
-	backend->filter_define_vars(backend, "M4_HOOK_ACCEPT_TYPE", ptype->name);
+	backend->filter_define_vars(backend, "M4_HOOK_ACCEPT_TYPE", backend->get_packed_type(backend, ptype));
 	backend->filter_define_vard(backend, "M4_HOOK_ACCEPT_SIZE", lastdfa + 1);
 	backend->filter_define_name(backend, "M4_HOOK_ACCEPT_BODY", true);
 	backend->newline(backend);
@@ -535,7 +535,7 @@ static void gentabs(void)
 
 		sz = MAX (numas, 1) + 1;
 		ptype = optimize_pack(sz);
-		backend->filter_define_vars(backend, "M4_HOOK_ACCLIST_TYPE", ptype->name);
+		backend->filter_define_vars(backend, "M4_HOOK_ACCLIST_TYPE", backend->get_packed_type(backend, ptype));
 		backend->filter_define_vard(backend, "M4_HOOK_ACCLIST_SIZE", sz);
 		backend->filter_define_name(backend, "M4_HOOK_ACCLIST_BODY", true);
 		backend->newline(backend);
@@ -649,7 +649,7 @@ static void gentabs(void)
 	ptype = optimize_pack(sz);
 	backend->filter_define_vard(backend, "M4_HOOK_NEED_ACCEPT", 1);
 	backend->newline(backend);
-	backend->filter_define_vars(backend, "M4_HOOK_ACCEPT_TYPE", ptype->name);
+	backend->filter_define_vars(backend, "M4_HOOK_ACCEPT_TYPE", backend->get_packed_type(backend, ptype));
 	backend->filter_define_vard(backend, "M4_HOOK_ACCEPT_SIZE", sz);
 	backend->filter_define_name(backend, "M4_HOOK_ACCEPT_BODY", true);
 	backend->newline(backend);
@@ -757,7 +757,7 @@ static void gentabs(void)
 	/* Begin generating yy_base */
 	sz = total_states + 1;
 	ptype = optimize_pack(sz);
-	backend->filter_define_vars(backend, "M4_HOOK_BASE_TYPE", ptype->name);
+	backend->filter_define_vars(backend, "M4_HOOK_BASE_TYPE", backend->get_packed_type(backend, ptype));
 	backend->filter_define_vard(backend, "M4_HOOK_BASE_SIZE", sz);
 	backend->filter_define_name(backend, "M4_HOOK_BASE_BODY", true);
 	backend->newline(backend);
@@ -816,7 +816,7 @@ static void gentabs(void)
 
 	/* Begin generating yy_def */
 	ptype = optimize_pack(total_states + 1);
-	backend->filter_define_vars(backend, "M4_HOOK_DEF_TYPE", ptype->name);
+	backend->filter_define_vars(backend, "M4_HOOK_DEF_TYPE", backend->get_packed_type(backend, ptype));
 	backend->filter_define_vard(backend, "M4_HOOK_DEF_SIZE", total_states + 1);
 	backend->filter_define_name(backend, "M4_HOOK_DEF_BODY", true);
 	backend->newline(backend);
@@ -851,7 +851,7 @@ static void gentabs(void)
 	/* Note: Used when !ctrl.fulltbl && !ctrl.fullspd).
 	 * (Alternately defined when ctrl.fullspd)
 	 */
-	backend->filter_define_vars(backend, "M4_HOOK_YYNXT_TYPE", ptype->name);
+	backend->filter_define_vars(backend, "M4_HOOK_YYNXT_TYPE", backend->get_packed_type(backend, ptype));
 	backend->filter_define_vard(backend, "M4_HOOK_YYNXT_SIZE", tblend + 1);
 	backend->filter_define_name(backend, "M4_HOOK_YYNXT_BODY", true);
 	backend->newline(backend);
@@ -889,7 +889,7 @@ static void gentabs(void)
 
 	/* Begin generating yy_chk */
 	ptype = optimize_pack(tblend + 1);
-	backend->filter_define_vars(backend, "M4_HOOK_CHK_TYPE", ptype->name);
+	backend->filter_define_vars(backend, "M4_HOOK_CHK_TYPE", backend->get_packed_type(backend, ptype));
 	backend->filter_define_vard(backend, "M4_HOOK_CHK_SIZE", tblend + 1);
 	backend->filter_define_name(backend, "M4_HOOK_CHK_BODY", true);
 	backend->newline(backend);
@@ -1008,7 +1008,7 @@ void make_tables (void)
 			tbl = mkftbl ();
 			yytbl_data_compress (tbl);
 			ptype = optimize_pack(tbl->td_lolen);
-			backend->filter_define_vars(backend, "M4_HOOK_ACCEPT_TYPE", ptype->name);
+			backend->filter_define_vars(backend, "M4_HOOK_ACCEPT_TYPE", backend->get_packed_type(backend, ptype));
 			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
 				flexerror (_("Could not write ftbl"));
 			yytbl_data_destroy (tbl);
@@ -1140,7 +1140,7 @@ void make_tables (void)
 		 * in the table metering.
 		 */
 		struct packtype_t *ptype = optimize_pack(num_rules);
-		backend->filter_define_vars(backend, "M4_HOOK_DEBUGTABLE_TYPE", ptype->name);
+		backend->filter_define_vars(backend, "M4_HOOK_DEBUGTABLE_TYPE", backend->get_packed_type(backend, ptype));
 		backend->filter_define_vard(backend, "M4_HOOK_DEBUGTABLE_SIZE", num_rules);
 		backend->filter_define_name(backend, "M4_HOOK_DEBUGTABLE_BODY", true);
 		backend->newline(backend);

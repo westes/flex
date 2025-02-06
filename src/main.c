@@ -214,7 +214,7 @@ int flex_main (int argc, char *argv[])
 	/* Need to define the transet type as a size large
 	 * enough to hold the biggest offset.
 	 */
-	backend->filter_call_macro(backend, "M4_HOOK_SET_OFFSET_TYPE", optimize_pack(tblend + numecs + 1)->name);
+	backend->filter_call_macro(backend, "M4_HOOK_SET_OFFSET_TYPE", backend->get_packed_type(backend, optimize_pack(tblend + numecs + 1)));
 	backend->comment(backend, "END of Flex-generated definitions");
 
 	skelout (true);		/* %% [2.0] - tables get dumped here */

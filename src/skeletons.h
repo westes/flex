@@ -53,6 +53,7 @@ struct flex_backend_t {
 	const char * (*get_int32_type) ( const struct flex_backend_t *b );
 	const char * (*get_int16_type) ( const struct flex_backend_t *b );
 	const char * (*get_state_type) ( const struct flex_backend_t *b );
+	const char * (*get_packed_type) (const struct flex_backend_t *b, struct packtype_t *p);
 	void (*open_block_comment) ( const struct flex_backend_t *b );
 	void (*close_block_comment) ( const struct flex_backend_t *b );
 	void (*comment) ( const struct flex_backend_t *b, const char *c );

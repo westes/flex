@@ -507,7 +507,7 @@ size_t ntod (void)
 
 		struct packtype_t *ptype = optimize_pack(0);
 		/* Note: Used when ctrl.fulltbl is on. Alternately defined elsewhere */
-		backend->filter_define_vars(backend, "M4_HOOK_NXT_TYPE", ptype->name);
+		backend->filter_define_vars(backend, "M4_HOOK_NXT_TYPE", backend->get_packed_type(backend, ptype));
 		backend->filter_define_vard(backend, "M4_HOOK_NXT_ROWS", num_full_table_rows);
 		backend->filter_define_name(backend, "M4_HOOK_NXT_BODY", true);
 		backend->newline(backend);
