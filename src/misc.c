@@ -160,7 +160,7 @@ int cclcmp (const void *a, const void *b)
 
 void dataend (const int endit)
 {
-	const struct flex_backend_t *bend = get_backend();
+	const struct flex_backend_t *backend = get_backend();
 
 	/* short circuit any output */
 	if (gentables) {
@@ -171,7 +171,7 @@ void dataend (const int endit)
 
 		/* Optionally, close the table. */
 		if (endit)
-			bend->close_table(bend);
+			backend->close_table(backend);
 	}
 	dataline = 0;
 	datapos = 0;
@@ -182,19 +182,19 @@ void dataend (const int endit)
 
 void dataflush (void)
 {
-	const struct flex_backend_t *bend = get_backend();
+	const struct flex_backend_t *backend = get_backend();
 
 	if (!gentables)
 		return;
 	
 	if (datapos > 0)
-		bend->newline(bend);
+		backend->newline(backend);
 
 	if (++dataline >= NUMDATALINES) {
 		/* Put out a blank line so that the table is grouped into
 		 * large blocks that enable the user to find elements easily.
 		 */
-		bend->newline(bend);
+		backend->newline(backend);
 		dataline = 0;
 	}
 
@@ -253,9 +253,9 @@ void lerr_fatal (const char *msg, ...)
 /* line_directive_out - spit out a "#line" statement or equivalent */
 void line_directive_out (FILE *output_file, char *path, int linenum)
 {
-	const struct flex_backend_t *bend = get_backend();
+	const struct flex_backend_t *backend = get_backend();
 
-	bend->line_directive_out(bend, output_file, path, linenum);
+	backend->line_directive_out(backend, output_file, path, linenum);
 }
 
 
@@ -289,25 +289,25 @@ void mark_prolog (void)
  */
 void mk2data (int value)
 {
-	const struct flex_backend_t *bend = get_backend();
+	const struct flex_backend_t *backend = get_backend();
 
 	/* short circuit any output */
 	if (!gentables)
 		return;
 
 	if (datapos >= NUMDATAITEMS) {
-		bend->column_separator(bend);
+		backend->column_separator(backend);
 		dataflush ();
 	}
 
 	if (datapos == 0)
-		bend->indent(bend);
+		backend->indent(backend);
 	else
-	  bend->column_separator(bend);
+	  backend->column_separator(backend);
 
 	++datapos;
 
-	bend->format_data_table_entry(bend, value);
+	backend->format_data_table_entry(backend, value);
 }
 
 
@@ -318,25 +318,25 @@ void mk2data (int value)
  */
 void mkdata (int value)
 {
-	const struct flex_backend_t *bend = get_backend();
+	const struct flex_backend_t *backend = get_backend();
 
 	/* short circuit any output */
 	if (!gentables)
 		return;
 
 	if (datapos >= NUMDATAITEMS) {
-		bend->column_separator(bend);
+		backend->column_separator(backend);
 		dataflush ();
 	}
 
 	if (datapos == 0)
-		bend->indent(bend);
+		backend->indent(backend);
 	else
-	  bend->column_separator(bend);
+	  backend->column_separator(backend);
 
 	++datapos;
 
-	bend->format_data_table_entry(bend, value);
+	backend->format_data_table_entry(backend, value);
 }
 
 
@@ -516,26 +516,26 @@ void   *reallocate_array (void *array, int size, size_t element_size)
 
 void transition_struct_out (int element_v, int element_n)
 {
-	const struct flex_backend_t *bend = get_backend();
+	const struct flex_backend_t *backend = get_backend();
 
 	/* short circuit any output */
 	if (!gentables)
 		return;
 
-	bend->open_table(bend);
-	bend->format_data_table_entry(bend, element_v);
-	bend->column_separator(bend);
-	bend->format_data_table_entry(bend, element_n);
-	bend->continue_table(bend);
-	bend->newline(bend);
+	backend->open_table(backend);
+	backend->format_data_table_entry(backend, element_v);
+	backend->column_separator(backend);
+	backend->format_data_table_entry(backend, element_n);
+	backend->continue_table(backend);
+	backend->newline(backend);
 
 	datapos += TRANS_STRUCT_PRINT_LENGTH;
 
 	if (datapos >= 79 - TRANS_STRUCT_PRINT_LENGTH) {
-		bend->newline(bend);
+		backend->newline(backend);
 
 		if (++dataline % 10 == 0)
-			bend->newline(bend);
+			backend->newline(backend);
 
 		datapos = 0;
 	}
