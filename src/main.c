@@ -1444,26 +1444,14 @@ void readin (void)
 	bend->newline(bend);
 
 	/* Define the start condition macros. */
-	/* FIXME: Refactor to use filter_define_name and format_state_const. */
 	{
-		struct Buf tmpbuf;
-		int i;
-		buf_init(&tmpbuf, sizeof(char));
-		for (i = 1; i <= lastsc; i++) {
-			char *str, *fmt = "M4_HOOK_CONST_DEFINE_STATE(%s, %d)";
-			size_t strsz;
-
-			strsz = strlen(fmt) + strlen(scname[i]) + (size_t)(1 + ceil (log10(i))) + 2;
-			str = malloc(strsz);
-			if (!str)
-				flexfatal(_("allocation of macro definition failed"));
-			snprintf(str, strsz, fmt, scname[i], i - 1);
-			buf_strappend(&tmpbuf, str);
-			free(str);
-		}
+		int i = 0;
 		// FIXME: Not dumped visibly because we plan to do away with the indirection
-		bend->filter_define_vars(bend, "M4_YY_SC_DEFS", (const char *)(tmpbuf.elts));
-		buf_destroy(&tmpbuf);
+		bend->filter_define_name(bend, "M4_YY_SC_DEFS", true);
+		for (i = 1; i <= lastsc; i++) {
+			bend->format_state_const(bend, scname[i], i-1);
+		}
+		bend->filter_define_close(bend, NULL); /* End YY_SC_DEFS */
 	}
 
 	if (ctrl.bison_bridge_lval)
