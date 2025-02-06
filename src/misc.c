@@ -430,11 +430,6 @@ unsigned char myesc (unsigned char array[])
 /* out - various flavors of outputting a (possibly formatted) string for the
  *	 generated scanner, keeping track of the line count.
  */
-void out_dec2 (const char *fmt, int n1, int n2)
-{
-	fprintf (stdout, fmt, n1, n2);
-}
-
 void out_str (const char *fmt, const char str[])
 {
 	fprintf (stdout,fmt, str);
@@ -536,7 +531,11 @@ void transition_struct_out (int element_v, int element_n)
 	if (!gentables)
 		return;
 
-	out_dec2 ("M4_HOOK_TABLE_OPENER[[%4d]],[[%4d]]M4_HOOK_TABLE_CONTINUE", element_v, element_n);
+	bend->open_table(bend);
+	bend->format_data_table_entry(bend, element_v);
+	bend->column_separator(bend);
+	bend->format_data_table_entry(bend, element_n);
+	bend->continue_table(bend);
 	bend->newline(bend);
 
 	datapos += TRANS_STRUCT_PRINT_LENGTH;

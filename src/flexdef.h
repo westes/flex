@@ -910,7 +910,6 @@ extern int myctoi(const char *);
 extern unsigned char myesc(unsigned char[]);
 
 /* Output a (possibly-formatted) string to the generated scanner. */
-extern void out_dec2(const char *, int, int);
 extern void out_str(const char *, const char *);
 
 /* Return a printable version of the given character, which might be
