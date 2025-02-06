@@ -97,9 +97,9 @@ static void geneoltbl (void)
 
 	bend->verbatim(bend, "m4_ifdef( [[M4_MODE_YYLINENO]],[[");
 	bend->newline(bend);
-	out_str ("m4_define([[M4_HOOK_EOLTABLE_TYPE]], [[%s]])\n", ptype->name);
-	out_dec ("m4_define([[M4_HOOK_EOLTABLE_SIZE]], [[%d]])", num_rules + 1);
-	bend->verbatim(bend, "m4_define([[M4_HOOK_EOLTABLE_BODY]], [[m4_dnl");
+	bend->filter_define_vars(bend, "M4_HOOK_EOLTABLE_TYPE", ptype->name);
+	bend->filter_define_vard(bend, "M4_HOOK_EOLTABLE_SIZE", num_rules + 1);
+	bend->filter_define_name(bend, "M4_HOOK_EOLTABLE_BODY", true);
 	bend->newline(bend);
 
 	if (gentables) {
@@ -112,9 +112,9 @@ static void geneoltbl (void)
 		}
 	}
 	footprint += num_rules * ptype->width;
-	bend->verbatim(bend, "]])");
+	bend->filter_define_close(bend, NULL); /* End EOLTABLE_BODY */
 	bend->newline(bend);
-	bend->verbatim(bend, "]])");
+	bend->verbatim(bend, "]])"); /* End m4_ifdef( [[M4_MODE_YYLINENO]]...*/
 	bend->newline(bend);
 }
 
@@ -257,8 +257,8 @@ static void genctbl(void)
 	const struct flex_backend_t *bend = get_backend();
 
 	/* Table of verify for transition and offset to next state. */
-	out_dec ("m4_define([[M4_HOOK_TRANSTABLE_SIZE]], [[%d]])", tblend + 2 + 1);
-	bend->verbatim(bend, "m4_define([[M4_HOOK_TRANSTABLE_BODY]], [[m4_dnl");
+	bend->filter_define_vard(bend, "M4_HOOK_TRANSTABLE_SIZE", tblend + 2 + 1);
+	bend->filter_define_name(bend, "M4_HOOK_TRANSTABLE_BODY", true);
 	bend->newline(bend);
 
 	/* We want the transition to be represented as the offset to the
@@ -326,19 +326,19 @@ static void genctbl(void)
 	transition_struct_out (chk[tblend + 1], nxt[tblend + 1]);
 	transition_struct_out (chk[tblend + 2], nxt[tblend + 2]);
 
-	bend->verbatim(bend, "]])");
+	bend->filter_define_close(bend, NULL); /* End TRANSTABLE_BODY */
 	bend->newline(bend);
 	footprint += sizeof(struct yy_trans_info) * (tblend + 2 + 1);
 
-	out_dec ("m4_define([[M4_HOOK_STARTTABLE_SIZE]], [[%d]])", lastsc * 2 + 1);
+	bend->filter_define_vard(bend, "M4_HOOK_STARTTABLE_SIZE", lastsc * 2 + 1);
 	if (gentables) {
-		bend->verbatim(bend, "m4_define([[M4_HOOK_STARTTABLE_BODY]], [[m4_dnl");
+		bend->filter_define_name(bend, "M4_HOOK_STARTTABLE_BODY", true);
 		bend->newline(bend);
 		for (i = 0; i <= lastsc * 2; ++i)
-			out_dec ("M4_HOOK_STATE_ENTRY_FORMAT(%d)", base[i]);
+			bend->format_state_table_entry(bend, base[i]);
 
-		dataend (NULL);
-		bend->verbatim(bend, "]])");
+		dataend (false);
+		bend->filter_define_close(bend, NULL); /* End STARTTABLE_BODY */
 		bend->newline(bend);
 		footprint +=  sizeof(struct yy_trans_info *) * (lastsc * 2 + 1);
 	}
@@ -381,8 +381,8 @@ static void genecs(void)
 	int     numrows;
 	const struct flex_backend_t *bend = get_backend();
 
-	out_dec ("m4_define([[M4_HOOK_ECSTABLE_SIZE]], [[%d]])", ctrl.csize);
-	bend->verbatim(bend, "m4_define([[M4_HOOK_ECSTABLE_BODY]], [[m4_dnl");
+	bend->filter_define_vard(bend, "M4_HOOK_ECSTABLE_SIZE", ctrl.csize);
+	bend->filter_define_name(bend, "M4_HOOK_ECSTABLE_BODY", true);
 	bend->newline(bend);
 
 	for (ch = 1; ch < ctrl.csize; ++ch) {
@@ -390,8 +390,8 @@ static void genecs(void)
 		mkdata (ecgroup[ch]);
 	}
 
-	dataend (NULL);
-	bend->verbatim(bend, "]])");
+	dataend (false);
+	bend->filter_define_close(bend, NULL); /* End ECSTABLE_BODY */
 	bend->newline(bend);
 	footprint += sizeof(YY_CHAR) * ctrl.csize;
 
@@ -461,11 +461,11 @@ static void genftbl(void)
 
 	dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
 
-	bend->verbatim(bend, "m4_define([[M4_HOOK_NEED_ACCEPT]], 1)");
+	bend->filter_define_vard(bend, "M4_HOOK_NEED_ACCEPT", 1);
 	bend->newline(bend);
-	out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
-	out_dec ("m4_define([[M4_HOOK_ACCEPT_SIZE]], [[%d]])", lastdfa + 1);
-	bend->verbatim(bend, "m4_define([[M4_HOOK_ACCEPT_BODY]], [[m4_dnl");
+	bend->filter_define_vars(bend, "M4_HOOK_ACCEPT_TYPE", ptype->name);
+	bend->filter_define_vard(bend, "M4_HOOK_ACCEPT_SIZE", lastdfa + 1);
+	bend->filter_define_name(bend, "M4_HOOK_ACCEPT_BODY", true);
 	bend->newline(bend);
 
 	for (i = 1; i <= lastdfa; ++i) {
@@ -478,8 +478,8 @@ static void genftbl(void)
 				 i, anum);
 	}
 
-	dataend (NULL);
-	bend->verbatim(bend, "]])");
+	dataend (false);
+	bend->filter_define_close(bend, NULL); /* End ACCEPT_BODY*/
 	bend->newline(bend);
 	footprint += (lastdfa + 1) * ptype->width;
 
@@ -535,7 +535,7 @@ static void gentabs(void)
 		ptype = optimize_pack(sz);
 		out_str ("m4_define([[M4_HOOK_ACCLIST_TYPE]], [[%s]])", ptype->name);
 		out_dec ("m4_define([[M4_HOOK_ACCLIST_SIZE]], [[%d]])", sz);
-		bend->verbatim(bend, "m4_define([[M4_HOOK_ACCLIST_BODY]], [[m4_dnl");
+		bend->filter_define_name(bend, "M4_HOOK_ACCLIST_BODY", true);
 		bend->newline(bend);
 
 		yyacclist_tbl = calloc(1,sizeof(struct yytbl_data));
@@ -599,8 +599,8 @@ static void gentabs(void)
 		/* add accepting number for the "jam" state */
 		acc_array[i] = j;
 
-		dataend (NULL);
-		bend->verbatim(bend, "]])");
+		dataend (false);
+		bend->filter_define_close(bend, NULL); /* End ACCLIST_BODY*/
 		bend->newline(bend);
 		footprint += sz * ptype->width;
 		if (tablesext) {
@@ -645,11 +645,11 @@ static void gentabs(void)
 
 	/* Note that this table is alternately defined if ctrl.fulltbl */
 	ptype = optimize_pack(sz);
-	bend->verbatim(bend, "m4_define([[M4_HOOK_NEED_ACCEPT]], 1)");
+	bend->filter_define_vard(bend, "M4_HOOK_NEED_ACCEPT", 1);
 	bend->newline(bend);
-	out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
-	out_dec ("m4_define([[M4_HOOK_ACCEPT_SIZE]], [[%d]])", sz);
-	bend->verbatim(bend, "m4_define([[M4_HOOK_ACCEPT_BODY]], [[m4_dnl");
+	bend->filter_define_vars(bend, "M4_HOOK_ACCEPT_TYPE", ptype->name);
+	bend->filter_define_vard(bend, "M4_HOOK_ACCEPT_SIZE", sz);
+	bend->filter_define_name(bend, "M4_HOOK_ACCEPT_BODY", true);
 	bend->newline(bend);
 
 	yyacc_tbl = calloc(1, sizeof (struct yytbl_data));
@@ -678,8 +678,8 @@ static void gentabs(void)
 		yyacc_data[yyacc_curr++] = acc_array[i];
 	}
 
-	dataend (NULL);
-	bend->verbatim(bend, "]])");
+	dataend (false);
+	bend->filter_define_close(bend, NULL); /* End ACCEPT_BODY*/
 	bend->newline(bend);
 	footprint += sz * ptype->width;
 
@@ -723,8 +723,8 @@ static void gentabs(void)
 		if (env.trace)
 			fputs (_("\n\nMeta-Equivalence Classes:\n"),
 			       stderr);
-		out_dec ("m4_define([[M4_HOOK_MECSTABLE_SIZE]], [[%d]])", numecs+1);
-		bend->verbatim(bend, "m4_define([[M4_HOOK_MECSTABLE_BODY]], [[m4_dnl");
+		bend->filter_define_vard(bend, "M4_HOOK_MECSTABLE_SIZE", numecs+1);
+		bend->filter_define_name(bend, "M4_HOOK_MECSTABLE_BODY", true);
 		bend->newline(bend);
  	
 		for (i = 1; i <= numecs; ++i) {
@@ -736,8 +736,8 @@ static void gentabs(void)
 			yymecs_data[i] = ABS (tecbck[i]);
 		}
 
-		dataend (NULL);
-		bend->verbatim(bend, "]])");
+		dataend (false);
+		bend->filter_define_close(bend, NULL); /* End MECSTABLE_BODY */
 		bend->newline(bend);
 		footprint += sizeof(YY_CHAR) * (numecs + 1);
 		if (tablesext) {
@@ -755,9 +755,9 @@ static void gentabs(void)
 	/* Begin generating yy_base */
 	sz = total_states + 1;
 	ptype = optimize_pack(sz);
-	out_str ("m4_define([[M4_HOOK_BASE_TYPE]], [[%s]])", ptype->name);
-	out_dec ("m4_define([[M4_HOOK_BASE_SIZE]], [[%d]])", sz);
-	bend->verbatim(bend, "m4_define([[M4_HOOK_BASE_BODY]], [[m4_dnl");
+	bend->filter_define_vars(bend, "M4_HOOK_BASE_TYPE", ptype->name);
+	bend->filter_define_vard(bend, "M4_HOOK_BASE_SIZE", sz);
+	bend->filter_define_name(bend, "M4_HOOK_BASE_BODY", true);
 	bend->newline(bend);
 
 	yybase_tbl = calloc (1, sizeof (struct yytbl_data));
@@ -797,8 +797,8 @@ static void gentabs(void)
 		def[i] = jamstate;
 	}
 
-	dataend (NULL);
-	bend->verbatim(bend, "]])");
+	dataend (false);
+	bend->filter_define_close(bend, NULL); /* End BASE_BODY */
 	bend->newline(bend);
 	footprint += sz * ptype->width;
 
@@ -814,9 +814,9 @@ static void gentabs(void)
 
 	/* Begin generating yy_def */
 	ptype = optimize_pack(total_states + 1);
-	out_str ("m4_define([[M4_HOOK_DEF_TYPE]], [[%s]])", ptype->name);
-	out_dec ("m4_define([[M4_HOOK_DEF_SIZE]], [[%d]])", total_states + 1);
-	bend->verbatim(bend, "m4_define([[M4_HOOK_DEF_BODY]], [[m4_dnl");
+	bend->filter_define_vars(bend, "M4_HOOK_DEF_TYPE", ptype->name);
+	bend->filter_define_vard(bend, "M4_HOOK_DEF_SIZE", total_states + 1);
+	bend->filter_define_name(bend, "M4_HOOK_DEF_BODY", true);
 	bend->newline(bend);
 
 	yydef_tbl = calloc(1, sizeof (struct yytbl_data));
@@ -830,8 +830,8 @@ static void gentabs(void)
 		yydef_data[i] = def[i];
 	}
 
-	dataend (NULL);
-	bend->verbatim(bend, "]])");
+	dataend (false);
+	bend->filter_define_close(bend, NULL); /* End DEF_BODY */
 	bend->newline(bend);
 	footprint += (total_states + 1) * ptype->width;
 
@@ -849,9 +849,9 @@ static void gentabs(void)
 	/* Note: Used when !ctrl.fulltbl && !ctrl.fullspd).
 	 * (Alternately defined when ctrl.fullspd)
 	 */
-	out_str ("m4_define([[M4_HOOK_YYNXT_TYPE]], [[%s]])", ptype->name);
-	out_dec ("m4_define([[M4_HOOK_YYNXT_SIZE]], [[%d]])", tblend + 1);
-	bend->verbatim(bend, "m4_define([[M4_HOOK_YYNXT_BODY]], [[m4_dnl");
+	bend->filter_define_vars(bend, "M4_HOOK_YYNXT_TYPE", ptype->name);
+	bend->filter_define_vard(bend, "M4_HOOK_YYNXT_SIZE", tblend + 1);
+	bend->filter_define_name(bend, "M4_HOOK_YYNXT_BODY", true);
 	bend->newline(bend);
 
 	yynxt_tbl = calloc (1, sizeof (struct yytbl_data));
@@ -871,8 +871,8 @@ static void gentabs(void)
 		yynxt_data[i] = nxt[i];
 	}
 
-	dataend (NULL);
-	bend->verbatim(bend, "]])");
+	dataend (false);
+	bend->filter_define_close(bend, NULL); /* End YYNXT_BODY */
 	bend->newline(bend);
 	footprint += ptype->width * (tblend + 1);
 
@@ -887,9 +887,9 @@ static void gentabs(void)
 
 	/* Begin generating yy_chk */
 	ptype = optimize_pack(tblend + 1);
-	out_str ("m4_define([[M4_HOOK_CHK_TYPE]], [[%s]])", ptype->name);
-	out_dec ("m4_define([[M4_HOOK_CHK_SIZE]], [[%d]])", tblend + 1);
-	bend->verbatim(bend, "m4_define([[M4_HOOK_CHK_BODY]], [[m4_dnl");
+	bend->filter_define_vars(bend, "M4_HOOK_CHK_TYPE", ptype->name);
+	bend->filter_define_vard(bend, "M4_HOOK_CHK_SIZE", tblend + 1);
+	bend->filter_define_name(bend, "M4_HOOK_CHK_BODY", true);
 	bend->newline(bend);
 	
 	yychk_tbl = calloc (1, sizeof (struct yytbl_data));
@@ -906,8 +906,8 @@ static void gentabs(void)
 		yychk_data[i] = chk[i];
 	}
 
-	dataend (NULL);
-	bend->verbatim(bend, "]])");
+	dataend (false);
+	bend->filter_define_close(bend, NULL); /* End CHK_BODY */
 	bend->newline(bend);
 	footprint += ptype->width * (tblend + 1);
 
@@ -928,7 +928,7 @@ void visible_define (const char *symname)
 {
 	const struct flex_backend_t *bend = get_backend();
 
-	out_m4_define(symname, NULL);
+	bend->filter_define_name(bend, symname, false);
 	bend->comment(bend, symname);
 	bend->newline(bend);
 }
@@ -938,7 +938,7 @@ void visible_define_str (const char *symname, const char *val)
 	char buf[128];
 	const struct flex_backend_t *bend = get_backend();
 
-	out_m4_define(symname, val);
+	bend->filter_define_vars(bend, symname, val);
 	snprintf(buf, sizeof(buf), "%s = %s", symname, val);
 	bend->comment(bend, buf);
 	bend->newline(bend);
@@ -946,11 +946,10 @@ void visible_define_str (const char *symname, const char *val)
 
 void visible_define_int (const char *symname, const int val)
 {
-	char nbuf[24], buf[128];
+	char buf[128];
 	const struct flex_backend_t *bend = get_backend();
 
-	snprintf(nbuf, sizeof(nbuf), "%d", val);
-	out_m4_define(symname, nbuf);
+	bend->filter_define_vard(bend, symname, val);
 	snprintf(buf, sizeof(buf), "%s = %d", symname, val);
 	bend->comment(bend, buf);
 	bend->newline(bend);
@@ -1083,9 +1082,9 @@ void make_tables (void)
 		flex_int32_t *yynultrans_data = 0;
 
 		/* Begin generating yy_NUL_trans */
-		out_str ("m4_define([[M4_HOOK_NULTRANS_TYPE]], [[%s]])", (ctrl.fullspd) ? "struct yy_trans_info*" : "M4_HOOK_INT32");
-		out_dec ("m4_define([[M4_HOOK_NULTRANS_SIZE]], [[%d]])", lastdfa + 1);
-		bend->verbatim(bend, "m4_define([[M4_HOOK_NULTRANS_BODY]], [[m4_dnl");
+		bend->filter_define_vars(bend, "M4_HOOK_NULTRANS_TYPE", bend->get_state_type(bend));
+		bend->filter_define_vard(bend, "M4_HOOK_NULTRANS_SIZE", lastdfa + 1);
+		bend->filter_define_name(bend, "M4_HOOK_NULTRANS_BODY", true);
 		bend->newline(bend);
 
 		yynultrans_tbl = calloc(1, sizeof (struct yytbl_data));
@@ -1113,9 +1112,12 @@ void make_tables (void)
 			}
 		}
 
-		dataend (NULL);
-		bend->verbatim(bend, "]])");
+		dataend (false);
+		bend->filter_define_close(bend, NULL); /* End NULTRANS_BODY */
 		bend->newline(bend);
+		/* footprint is only used to print an estimated table size in a user-requested summary.
+		   There's a C assumtption in the calculation here, but it doesn't affect the scanner.
+		*/
 		footprint += (lastdfa + 1) * (ctrl.fullspd ? sizeof(struct yy_trans_info *) : sizeof(int32_t));
 		if (tablesext) {
 			yytbl_data_compress (yynultrans_tbl);
@@ -1138,15 +1140,15 @@ void make_tables (void)
 		 * in the table metering.
 		 */
 		struct packtype_t *ptype = optimize_pack(num_rules);
-		out_str ("m4_define([[M4_HOOK_DEBUGTABLE_TYPE]], [[%s]])", ptype->name);
-		out_dec ("m4_define([[M4_HOOK_DEBUGTABLE_SIZE]], [[%d]])", num_rules);
-		bend->verbatim(bend, "m4_define([[M4_HOOK_DEBUGTABLE_BODY]], [[m4_dnl");
+		bend->filter_define_vars(bend, "M4_HOOK_DEBUGTABLE_TYPE", ptype->name);
+		bend->filter_define_vard(bend, "M4_HOOK_DEBUGTABLE_SIZE", num_rules);
+		bend->filter_define_name(bend, "M4_HOOK_DEBUGTABLE_BODY", true);
 		bend->newline(bend);
 
 		for (i = 1; i < num_rules; ++i)
 			mkdata (rule_linenum[i]);
-		dataend (NULL);
-		bend->verbatim(bend, "]])");
+		dataend (false);
+		bend->filter_define_close(bend, NULL); /* End DEBUGTABLE_BODY */
 		bend->newline(bend);
 	}
 }

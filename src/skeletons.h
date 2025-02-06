@@ -36,6 +36,8 @@
 #ifndef FLEX_SKELETONS_H
 #define FLEX_SKELETONS_H 1
 
+#include "flexdef.h"
+
 bool push_backend(flex_backend_id_t);
 flex_backend_id_t pop_backend(void);
 flex_backend_id_t top_backend(void);
@@ -50,6 +52,7 @@ struct flex_backend_t {
 	unsigned int indent_level;
 	const char * (*get_int32_type) ( const struct flex_backend_t *b );
 	const char * (*get_int16_type) ( const struct flex_backend_t *b );
+	const char * (*get_state_type) ( const struct flex_backend_t *b );
 	void (*open_block_comment) ( const struct flex_backend_t *b );
 	void (*close_block_comment) ( const struct flex_backend_t *b );
 	void (*comment) ( const struct flex_backend_t *b, const char *c );
@@ -93,6 +96,10 @@ struct flex_backend_t {
 	void (*echo) ( const struct flex_backend_t *b );
 	void (*format_yyterminate) ( const struct flex_backend_t *b, const char *d );
 	void (*format_yyreject) ( const struct flex_backend_t *b );
+	void (*filter_define_name) ( const struct flex_backend_t *b, const char *n, const int leave_open );
+	void (*filter_define_close) (const struct flex_backend_t *b, const char *v);
+	void (*filter_define_vars) ( const struct flex_backend_t *b, const char *n, const char *v );
+	void (*filter_define_vard) ( const struct flex_backend_t *b, const char *n, const int v );
 };
 
 const struct flex_backend_t *get_backend(void);

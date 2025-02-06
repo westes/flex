@@ -841,7 +841,7 @@ extern char *xstrdup(const char *);
 extern int cclcmp(const void *, const void *);
 
 /* Finish up a block of data declarations. */
-extern void dataend(const char *);
+extern void dataend(const int endit);
 
 /* Flush generated data statements. */
 extern void dataflush(void);

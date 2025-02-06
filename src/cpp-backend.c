@@ -52,6 +52,18 @@ static const char * cpp_get_int16_type ( const struct flex_backend_t *b ) {
 	return "flex_int16_t";
 }
 
+/* Emit the name of the datatype used in the NULTRANS table.
+   The datatype of the table depends on various option settings
+   and the skeleton in use.
+ */
+static const char * cpp_get_state_type ( const struct flex_backend_t *b ) {
+	/* cpp-flex.skl defines transition states as pointers to 
+	   struct yy_trans_info when the FULLSPD option is enabled. 
+	   Otherwise, it just uses the int32 type.
+	*/
+	return (ctrl.fullspd) ? "struct yy_trans_info*" : b->get_int32_type(b);
+}
+
 /* TODO: Indent? */
 static void cpp_open_block_comment ( const struct flex_backend_t *b ) {
 	fputs("/* ", stdout);
@@ -182,7 +194,8 @@ static void cpp_close_table ( const struct flex_backend_t *b ) {
    Can also emit a bare string.
  */
 static void cpp_verbatim ( const struct flex_backend_t *b, const char *s ) {
-	fputs(s, stdout);
+	if (s)
+		fputs(s, stdout);
 }
 
 /* Format an entry into a data table. */
@@ -367,6 +380,48 @@ static void cpp_format_yyreject ( const struct flex_backend_t *b ) {
 	fputs("yyreject()", stdout);
 }
 
+/* Define a symbol used by the output filter system. 
+   Optionally, leave the definition open to encompass a block of verbatim output.
+*/
+static void cpp_filter_define_name ( const struct flex_backend_t *b, const char *n, const int leave_open ) {
+	b->verbatim(b, "m4_define([[");
+	b->verbatim(b, n);
+	b->verbatim(b, "]], [[");
+	if (leave_open)
+		b->verbatim(b, "m4_dnl");
+	else
+		b->verbatim(b, "]])m4_dnl");
+	b->newline(b);
+}
+
+/* Close a filter symbol definition that was left open by a call to filter_define_name. 
+   Optionally, provide a final string of verbatim output to emit before closing the definition block.
+*/
+static void cpp_filter_define_close (const struct flex_backend_t *b, const char *v) {
+	b->verbatim(b, v);
+	b->verbatim(b, "]])m4_dnl");
+	b->newline(b);
+}
+
+/* Define a variable used by the output filter system. 
+   Provide a string value the filter will substitue for the variable when it is encountered
+   later in the output. 
+*/
+static void cpp_filter_define_vars ( const struct flex_backend_t *b, const char *n, const char *v ) {
+	b->filter_define_name(b, n, true);
+	b->filter_define_close(b, v);
+}
+
+/* Define a variable used by the output filter system. 
+   Provide a numeric value the filter will substitue for the variable when it is encountered
+   later in the output. 
+*/
+static void cpp_filter_define_vard ( const struct flex_backend_t *b, const char *n, const int v ) {
+	b->filter_define_name(b, n, true);
+	fprintf(stdout, "%d", v);
+	b->filter_define_close(b, NULL);
+}
+
 /* Construct the cpp_backend method table.
    This follows the definition in skeletons.h. 
    cpp-backends.h provides a handle to this structure with external linkage.
@@ -380,6 +435,7 @@ struct flex_backend_t cpp_backend = {
 	.indent_level = 0,
 	.get_int32_type = cpp_get_int32_type,
 	.get_int16_type = cpp_get_int16_type,
+	.get_state_type = cpp_get_state_type,
 	.open_block_comment = cpp_open_block_comment,
 	.close_block_comment = cpp_close_block_comment,
 	.comment = cpp_comment,
@@ -422,6 +478,10 @@ struct flex_backend_t cpp_backend = {
 	.format_fatal_error = cpp_format_fatal_error,
 	.echo = cpp_echo,
 	.format_yyterminate = cpp_format_yyterminate,
-	.format_yyreject = cpp_format_yyreject
+	.format_yyreject = cpp_format_yyreject,
+	.filter_define_name = cpp_filter_define_name,
+	.filter_define_close = cpp_filter_define_close,
+	.filter_define_vars = cpp_filter_define_vars,
+	.filter_define_vard = cpp_filter_define_vard
 };
 

@@ -158,19 +158,20 @@ int cclcmp (const void *a, const void *b)
 
 /* dataend - finish up a block of data declarations */
 
-void dataend (const char *endit)
+void dataend (const int endit)
 {
 	const struct flex_backend_t *bend = get_backend();
 
 	/* short circuit any output */
 	if (gentables) {
 
+		/* Pretty print the end of the current data line. */
 		if (datapos > 0)
 			dataflush ();
 
-		/* add terminator for initialization; { for vi */
+		/* Optionally, close the table. */
 		if (endit)
-			bend->verbatim(bend, endit);
+			bend->close_table(bend);
 	}
 	dataline = 0;
 	datapos = 0;
@@ -452,16 +453,6 @@ void out_str (const char *fmt, const char str[])
 void out_str_dec (const char *fmt, const char str[], int n)
 {
 	fprintf (stdout,fmt, str, n);
-}
-
-/** Print "m4_define( [[def]], [[val]])m4_dnl\n".
- * @param def The m4 symbol to define.
- * @param val The definition; may be NULL.
- */
-void out_m4_define (const char* def, const char* val)
-{
-    const char * fmt = "m4_define( [[%s]], [[%s]])m4_dnl\n";
-    fprintf(stdout, fmt, def, val?val:"");
 }
 
 

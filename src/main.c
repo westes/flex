@@ -1444,6 +1444,7 @@ void readin (void)
 	bend->newline(bend);
 
 	/* Define the start condition macros. */
+	/* FIXME: Refactor to use filter_define_name and format_state_const. */
 	{
 		struct Buf tmpbuf;
 		int i;
@@ -1461,7 +1462,7 @@ void readin (void)
 			free(str);
 		}
 		// FIXME: Not dumped visibly because we plan to do away with the indirection
-		out_m4_define("M4_YY_SC_DEFS", tmpbuf.elts);
+		bend->filter_define_vars(bend, "M4_YY_SC_DEFS", (const char *)(tmpbuf.elts));
 		buf_destroy(&tmpbuf);
 	}
 
@@ -1582,7 +1583,7 @@ void readin (void)
 
 	if (ctrl.yyclass != NULL) {
 		visible_define ( "M4_MODE_YYCLASS");
-		out_m4_define("M4_YY_CLASS_NAME", ctrl.yyclass);
+		bend->filter_define_vars(bend, "M4_YY_CLASS_NAME", ctrl.yyclass);
 	}
 
 	if (ctrl.ddebug)

@@ -507,14 +507,14 @@ size_t ntod (void)
 
 		struct packtype_t *ptype = optimize_pack(0);
 		/* Note: Used when ctrl.fulltbl is on. Alternately defined elsewhere */
-		out_str ("m4_define([[M4_HOOK_NXT_TYPE]], [[%s]])", ptype->name);
-		out_dec ("m4_define([[M4_HOOK_NXT_ROWS]], [[%d]])", num_full_table_rows);
-		bend->verbatim(bend, "m4_define([[M4_HOOK_NXT_BODY]], [[m4_dnl");
+		bend->filter_define_vars(bend, "M4_HOOK_NXT_TYPE", ptype->name);
+		bend->filter_define_vard(bend, "M4_HOOK_NXT_ROWS", num_full_table_rows);
+		bend->filter_define_name(bend, "M4_HOOK_NXT_BODY", true);
 		bend->newline(bend);
-		bend->verbatim(bend, "M4_HOOK_TABLE_OPENER");
+		bend->open_table(bend);
 		bend->newline(bend);
 		if (gentables)
-			bend->verbatim(bend, "M4_HOOK_TABLE_OPENER");
+			bend->open_table(bend);
 			bend->newline(bend);
 
 		/* Generate 0 entries for state #0. */
@@ -525,7 +525,7 @@ size_t ntod (void)
 
 		if (gentables) {
 			dataflush ();
-			bend->verbatim(bend, "M4_HOOK_TABLE_CONTINUE");
+			bend->continue_table(bend);
 			bend->newline(bend);
 		}
 	}
@@ -681,7 +681,7 @@ size_t ntod (void)
 						     yynxt_tbl->td_lolen *
 						     sizeof (flex_int32_t));
 			if (gentables)
-				bend->verbatim(bend, "M4_HOOK_TABLE_OPENER");
+				bend->open_table(bend);
 				bend->newline(bend);
 
 			/* Supply array's 0-element. */
@@ -707,7 +707,7 @@ size_t ntod (void)
 
 			if (gentables) {
 				dataflush ();
-				bend->verbatim(bend, "M4_HOOK_TABLE_CONTINUE");
+				bend->continue_table(bend);
 				bend->newline(bend);
 			}
 		}
@@ -741,9 +741,9 @@ size_t ntod (void)
 	}
 
 	if (ctrl.fulltbl) {
-		dataend ("M4_HOOK_TABLE_CLOSER");
+		dataend (true);
 		bend->comment(bend, "body");
-		bend->verbatim(bend, "]])");
+		bend->filter_define_close(bend, NULL); /* End of NXT_BODY */
 		bend->newline(bend);
 		if (tablesext) {
 			yytbl_data_compress (yynxt_tbl);
