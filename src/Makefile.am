@@ -66,6 +66,8 @@ COMMON_SOURCES = \
 	ccl.c \
 	cpp-backend.c \
 	cpp-backend.h \
+	c99-backend.c \
+	c99-backend.h \
 	dfa.c \
 	ecs.c \
 	filter.c \
