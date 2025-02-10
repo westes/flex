@@ -80,6 +80,7 @@ static int madeany = false;  /* whether we've made the '.' character class */
 static int ccldot, cclany;
 int previous_continued_action;	/* whether the previous rule's action was '|' */
 
+static flex_backend_id_t backend_id;
 static const struct flex_backend_t *backend = NULL;
 
 #define format_warn3(fmt, a1, a2) \
@@ -231,7 +232,13 @@ option		:  TOK_OUTFILE '=' NAME
 		|  TOK_BUFSIZE '=' TOK_NUMERIC
 			{ ctrl.bufsize = nmval; }
 		|  TOK_EMIT '=' NAME
-			{ ctrl.emit = xstrdup(nmstr); backend_by_name(ctrl.emit); }
+			{ ctrl.emit = xstrdup(nmstr); 
+			  backend_id = backend_by_name(ctrl.emit);
+			  if ( backend_id != top_backend() )
+			    /* only push a new backend if it's not already the top */
+			    push_backend(backend_id);
+				backend = get_backend();
+			}
 		|  TOK_USERINIT '=' NAME
 			{ ctrl.userinit = xstrdup(nmstr); }
 		|  TOK_YYTERMINATE '=' NAME
