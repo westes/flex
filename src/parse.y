@@ -234,10 +234,11 @@ option		:  TOK_OUTFILE '=' NAME
 		|  TOK_EMIT '=' NAME
 			{ ctrl.emit = xstrdup(nmstr); 
 			  backend_id = backend_by_name(ctrl.emit);
-			  if ( backend_id != top_backend() )
+			  if ( backend_id != top_backend() ) {
 			    /* only push a new backend if it's not already the top */
 			    push_backend(backend_id);
 				backend = get_backend();
+			  }
 			}
 		|  TOK_USERINIT '=' NAME
 			{ ctrl.userinit = xstrdup(nmstr); }
