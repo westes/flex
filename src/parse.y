@@ -147,13 +147,14 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 			add_action("]]");
 
 			if ( ctrl.spprdflt )
-				add_action(
-				"M4_HOOK_FATAL_ERROR(\"flex scanner jammed\")");
+				add_action( backend->get_fatal_error(backend, "\"flex scanner jammed\"") );
 			else {
 			    add_action( backend->get_echo(backend) );
 			}
 
-			add_action( "\n\tM4_HOOK_STATE_CASE_BREAK\n" );
+			add_action( "\n\t" );
+			add_action( backend->get_state_case_break(backend) );
+			add_action( "\n" );
 			}
 		;
 

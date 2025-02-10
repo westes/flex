@@ -85,7 +85,7 @@ static void cpp_close_block_comment ( const struct flex_backend_t *b ) {
 
 static const char * cpp_get_comment ( const struct flex_backend_t *b, const char *c ) {
 	static const char *format = "/* %s */";
-	static char directive[MAXLINE*2] = "\0";
+	static char directive[MAXLINE*2] = {0};
 
 	snprintf(directive, sizeof(directive), format, c);
 	return directive;
@@ -172,7 +172,7 @@ static void cpp_format_state_table_entry ( const struct flex_backend_t * b, int 
 */
 static const char * cpp_get_normal_state_case_arm ( const struct flex_backend_t *b, int c ) {
 	static const char *format = "case %d: ";
-	static char directive[MAXLINE*2] = "\0";
+	static char directive[MAXLINE*2] = {0};
 
 	snprintf (directive, sizeof(directive), format, c);
 	return directive;
@@ -183,7 +183,7 @@ static const char * cpp_get_normal_state_case_arm ( const struct flex_backend_t 
 */
 static const char * cpp_get_eof_state_case_arm ( const struct flex_backend_t *b, const char * const c ) {
 	static const char *format = "case YY_STATE_EOF(%s): ";
-	static char directive[MAXLINE*2] = "\0";
+	static char directive[MAXLINE*2] = {0};
 
 	snprintf (directive, sizeof(directive), format, c);
 	return directive;
@@ -225,7 +225,7 @@ static const char * cpp_get_release_yytext( const struct flex_backend_t *b ) {
 /* Generate the buffer rewind sub-action. */
 static const char * cpp_get_char_rewind( const struct flex_backend_t *b, int c ) {
 	static const char *format = "YY_G(yy_c_buf_p) = yy_cp -= %d;";
-	static char directive[MAXLINE*2] = "\0";
+	static char directive[MAXLINE*2] = {0};
 
 	snprintf (directive, sizeof(directive), format, c);
 	return directive;
@@ -234,7 +234,7 @@ static const char * cpp_get_char_rewind( const struct flex_backend_t *b, int c )
 /* Generate the line rewind sub-action. */
 static const char * cpp_get_line_rewind( const struct flex_backend_t *b, int l ) {
 	static const char *format = "YY_LINENO_REWIND_TO(yy_cp - %d);";
-	static char directive[MAXLINE*2] = "\0";
+	static char directive[MAXLINE*2] = {0};
 
 	snprintf (directive, sizeof(directive), format, l);
 	return directive;
@@ -243,7 +243,7 @@ static const char * cpp_get_line_rewind( const struct flex_backend_t *b, int l )
 /* Generate the buffer skip sub-action. */
 static const char * cpp_get_char_forward( const struct flex_backend_t *b, int c ) {
 	static const char *format = "YY_G(yy_c_buf_p) = yy_cp = yy_bp + %d;";
-	static char directive[MAXLINE*2] = "\0";
+	static char directive[MAXLINE*2] = {0};
 
 	snprintf (directive, sizeof(directive), format, c);
 	return directive;
@@ -252,7 +252,7 @@ static const char * cpp_get_char_forward( const struct flex_backend_t *b, int c 
 /* Generate the line skip sub-action. */
 static const char * cpp_get_line_forward( const struct flex_backend_t *b, int l ) {
 	static const char *format = "YY_LINENO_REWIND_TO(yy_bp + %d);";
-	static char directive[MAXLINE*2] = "\0";
+	static char directive[MAXLINE*2] = {0};
 
 	snprintf (directive, sizeof(directive), format, l);
 	return directive;
@@ -288,7 +288,7 @@ static void cpp_format_bool_const ( const struct flex_backend_t *b, const char *
 /* Define a string constant. */
 static const char * cpp_get_const ( const struct flex_backend_t *b, const char *n, const char *v ) {
 	static const char *format = "#define %s %s\n";
-	static char directive[MAXLINE*2] = "\0";
+	static char directive[MAXLINE*2] = {0};
 
 	snprintf(directive, sizeof(directive), format, n, v);
 	return directive;
@@ -347,7 +347,7 @@ static const char * cpp_get_user_postaction ( const struct flex_backend_t *b, co
 /* Generate the fatal_error action. */
 static const char * cpp_get_fatal_error ( const struct flex_backend_t *b, const char *e ) {
 	static const char *format = "yypanic(%s M4_YY_CALL_LAST_ARG);";
-	static char directive[MAXLINE*2] = "\0";
+	static char directive[MAXLINE*2] = {0};
 
 	snprintf (directive, sizeof(directive), format, e);
 	return directive;
@@ -366,7 +366,7 @@ static const char * cpp_get_yyterminate ( const struct flex_backend_t *b, const 
 		return b->get_const(b, "yyterminate", d);
 	}
 	else {
-		return b->get_const(b, "yyterminate", "return NULL");
+		return b->get_const(b, "yyterminate", "");
 	}
 }
 
