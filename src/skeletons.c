@@ -332,5 +332,248 @@ void skelout (bool announce)
 	}			/* end while */
 }
 
+/* Combine the format string from *_get_trace_line_format with its arguments. */
+void _format_line_directive_out ( const struct flex_backend_t *b, FILE *output_file, char *path, int linenum ) {
+	char   directive[MAXLINE*2], filename[MAXLINE];
+	char   *s1, *s2, *s3;
+
+	if (!ctrl.gen_line_dirs) {
+		return;
+	}
+	
+	/* char *infilename is in the global namespace */
+	s1 = (path != NULL) ? path : infilename;
+
+	if ((path != NULL) && !s1) {
+		s1 = "<stdin>";
+	}
+    
+	s2 = filename;
+	s3 = &filename[sizeof (filename) - 2];
+
+	while (s2 < s3 && *s1) {
+		if (*s1 == '\\' || *s1 == '"') {
+			/* Escape the '\' or '"' */
+			*s2++ = '\\';
+		}
+
+		*s2++ = *s1++;
+	}
+
+	*s2 = '\0';
+
+	if (path != NULL) {
+		snprintf (directive, sizeof(directive), b->get_trace_line_format(b), linenum, filename);
+	} else {
+		snprintf (directive, sizeof(directive), b->get_trace_line_format(b), 0, filename);
+	}
+
+	/* If output_file is nil then we should put the directive in
+	 * the accumulated actions.
+	 */
+	if (output_file) {
+		fputs (directive, output_file);
+	}
+	else {
+		add_action (directive);
+	}
+}
+
+void _format_comment ( const struct flex_backend_t *b, const char *const c ) {
+	b->indent(b);
+	fputs(b->get_comment(b, c), stdout);
+}
+
+/*
+void _format_open_table ( const struct flex_backend_t *b );
+
+void _format_continue_table ( const struct flex_backend_t *b );
+
+void _format_close_table ( const struct flex_backend_t *b );
+*/
+
+/* Intended to emit a macro call in C/CXX.
+   Can also emit a bare string.
+ */
+void _verbatim ( const struct flex_backend_t *b, const char *s ) {
+	if (s)
+		fputs(s, stdout);
+	
+	return;
+}
+
+/* Emit a case for the main state switch. 
+*/
+void _format_normal_state_case_arm ( const struct flex_backend_t *b, int c ) {
+	b->indent(b);
+	fputs(b->get_normal_state_case_arm(b, c), stdout);
+}
+
+/* Emit the special case arm for EOF. */
+void _format_eof_state_case_arm ( const struct flex_backend_t *b, const char *const c ) {
+	b->indent(b);
+	fputs(b->get_eof_state_case_arm(b, c), stdout);
+}
+
+/*
+void _format_eof_state_case_fallthrough ( const struct flex_backend_t *b );
+
+void _format_eof_state_case_terminate ( const struct flex_backend_t *b );
+*/
+
+/* Emit the action preamble. */
+void _format_take_yytext ( const struct flex_backend_t *b ) {
+	b->indent(b);
+	fputs(b->get_take_yytext(b), stdout);
+}
+
+/* Emit the action postamble. */
+void _format_release_yytext ( const struct flex_backend_t *b ) {
+	b->indent(b);
+	fputs( b->get_release_yytext(b), stdout);
+}
+
+/* Emit the buffer rewind sub-action. */
+void _format_char_rewind ( const struct flex_backend_t *b, int c ) {
+	b->indent(b);
+	fputs(b->get_char_rewind(b, c), stdout);
+}
+
+/* Emit the line rewind sub-action. */
+void _format_line_rewind ( const struct flex_backend_t *b, int l ) {
+	b->indent(b);
+	fputs(b->get_line_rewind(b,l), stdout);
+}
+
+/* Emit the buffer skip sub-action. */
+void _format_char_forward ( const struct flex_backend_t *b, int c ) {
+	b->indent(b);
+	fputs(b->get_char_forward(b, c), stdout);
+}
+
+/* Emit the line skip sub-action. */
+void _format_line_forward ( const struct flex_backend_t *b, int l ) {
+	b->indent(b);
+	fputs(b->get_line_forward(b,l), stdout);
+}
+
+/*
+void _format_yy_decl ( const struct flex_backend_t *b, const char *d );
+
+void _format_userinit ( const struct flex_backend_t *b, const char *d );
+*/
+
+/* Define a string constant. */
+void _format_const ( const struct flex_backend_t *b, const char *n, const char *v ) {
+	fputs(b->get_const(b, n, v), stdout);
+}
+
+
+/* Inject the rule_setup macro call where needed. */
+void _format_rule_setup ( const struct flex_backend_t *b ) {
+	fputs(b->get_rule_setup(b), stdout);
+	b->newline(b);
+}
+
+
+/* Emit the user_action constant, if needed. */
+void _format_user_preaction ( const struct flex_backend_t *b, const char *d ) {
+	fputs(b->get_user_preaction(b, d), stdout);
+}
+
+/* End a state case arm, optionally inserting user postactions. */
+void _format_state_case_break ( const struct flex_backend_t *b ) {
+	b->indent(b);
+	b->get_state_case_break(b);
+}
+
+/* Generate the definition of the STATE_CASE_BREAK end of action. */
+void _format_user_postaction ( const struct flex_backend_t *b, const char *d ) {
+	fputs(b->get_user_postaction(b, d), stdout);
+}
+
+/* Emit the fatal_error action. */
+void _format_fatal_error ( const struct flex_backend_t *b, const char *e ) {
+	b->indent(b);
+	fputs(b->get_fatal_error(b, e), stdout);
+}
+
+
+/* Emit the echo action. */
+void _echo ( const struct flex_backend_t *b ) {
+	b->indent(b);
+	fputs(b->get_echo(b), stdout);
+}
+
+void _format_yyterminate ( const struct flex_backend_t *b, const char *d ) {
+	fputs(b->get_yyterminate(b, d), stdout);
+}
+
+/* Emit the reject special action. */
+void _format_yyreject ( const struct flex_backend_t *b ) {
+	b->indent(b);
+	fputs(b->get_yyreject(b), stdout);
+}
+
+/* Define a symbol used by the output filter system. 
+   Optionally, leave the definition open to encompass a block of verbatim output.
+*/
+void _filter_define_name ( const struct flex_backend_t *b, const char *n, const int leave_open ) {
+	b->verbatim(b, "m4_define([[");
+	b->verbatim(b, n);
+	b->verbatim(b, "]], [[");
+	if (leave_open)
+		b->verbatim(b, "m4_dnl");
+	else
+		b->verbatim(b, "]])m4_dnl");
+	b->newline(b);
+}
+
+/* Close a filter symbol definition that was left open by a call to filter_define_name. 
+   Optionally, provide a final string of verbatim output to emit before closing the definition block.
+*/
+void _filter_define_close (const struct flex_backend_t *b, const char *v) {
+	b->verbatim(b, v);
+	b->verbatim(b, "]])m4_dnl");
+	b->newline(b);
+}
+
+/* Define a variable used by the output filter system. 
+   Provide a string value the filter will substitue for the variable when it is encountered
+   later in the output. 
+*/
+void _filter_define_vars ( const struct flex_backend_t *b, const char *n, const char *v ) {
+	b->filter_define_name(b, n, true);
+	b->filter_define_close(b, v);
+}
+
+/* Define a variable used by the output filter system. 
+   Provide a numeric value the filter will substitue for the variable when it is encountered
+   later in the output. 
+*/
+void _filter_define_vard ( const struct flex_backend_t *b, const char *n, const int v ) {
+	b->filter_define_name(b, n, true);
+	fprintf(stdout, "%d", v);
+	b->filter_define_close(b, NULL);
+}
+
+/* Format a macro replacement through the output filter system.
+   Filter macros are defined like variables. The syntax for defining a filter macro depends on the 
+   filter chain in use.
+   
+   This example assumes the M4 filter chain where: every variable is a macro; the tokens following
+   the name are substituted for the macro name; if the first token following the name is an OPAREN,
+   it is followed by a comma-delimited list of positional parameters that are themselves substituded
+   into the text after the next CPAREN in place of the tokens '$1', '$2', etc.
+   
+   Flex's own filter macros only use one positional argument, currently.
+*/
+void _filter_call_macro ( const struct flex_backend_t *b, const char *n, const char *v ) {
+	b->verbatim(b, n);
+	b->verbatim(b, "( ");
+	b->verbatim(b, v);
+	b->verbatim(b, " )");
+	b->newline(b);
+}
 
 /* end */

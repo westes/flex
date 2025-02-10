@@ -56,6 +56,7 @@ struct flex_backend_t {
 	const char * (*get_packed_type) (const struct flex_backend_t *b, struct packtype_t *p);
 	void (*open_block_comment) ( const struct flex_backend_t *b );
 	void (*close_block_comment) ( const struct flex_backend_t *b );
+	const char * (*get_comment) ( const struct flex_backend_t *b, const char *c );
 	void (*comment) ( const struct flex_backend_t *b, const char *c );
 	void (*record_separator) ( const struct flex_backend_t *b );
 	void (*column_separator) ( const struct flex_backend_t *b );
@@ -94,19 +95,26 @@ struct flex_backend_t {
 	void (*format_size_const) ( const struct flex_backend_t *b, const char *n, const int s );
 	void (*format_uint_const) ( const struct flex_backend_t *b, const char *n, const unsigned int u );
 	void (*format_bool_const) ( const struct flex_backend_t *b, const char *n, const int t );
+	const char * (*get_const) ( const struct flex_backend_t *b, const char *n, const char *v );
 	void (*format_const) ( const struct flex_backend_t *b, const char *n, const char *v );
 	void (*format_offset_type) ( const struct flex_backend_t *b, const char *t );
 	void (*format_yy_decl) ( const struct flex_backend_t *b, const char *d );
 	void (*format_userinit) ( const struct flex_backend_t *b, const char *d );
 	const char * (*get_rule_setup) ( const struct flex_backend_t *b );
 	void (*format_rule_setup) ( const struct flex_backend_t *b );
+	const char * (*get_user_preaction) ( const struct flex_backend_t *b, const char *d );
 	void (*format_user_preaction) ( const struct flex_backend_t *b, const char *d );
+	const char * (*get_state_case_break) ( const struct flex_backend_t *b );
 	void (*format_state_case_break) ( const struct flex_backend_t *b );
+	const char * (*get_user_postaction) ( const struct flex_backend_t *b, const char *d );
 	void (*format_user_postaction) ( const struct flex_backend_t *b, const char *d );
+	const char * (*get_fatal_error) ( const struct flex_backend_t *b, const char *e );
 	void (*format_fatal_error) ( const struct flex_backend_t *b, const char *e );
 	const char * (*get_echo) ( const struct flex_backend_t *b );
 	void (*echo) ( const struct flex_backend_t *b );
+	const char * (*get_yyterminate) ( const struct flex_backend_t *b, const char *d );
 	void (*format_yyterminate) ( const struct flex_backend_t *b, const char *d );
+	const char * (*get_yyreject) ( const struct flex_backend_t *b );
 	void (*format_yyreject) ( const struct flex_backend_t *b );
 	void (*filter_define_name) ( const struct flex_backend_t *b, const char *n, const int leave_open );
 	void (*filter_define_close) (const struct flex_backend_t *b, const char *v);
@@ -117,5 +125,51 @@ struct flex_backend_t {
 
 const struct flex_backend_t *get_backend(void);
 
+/* Default implementations for emitter functions */
+void _format_line_directive_out ( const struct flex_backend_t *b, FILE *output_file, char *path, int linenum );
+void _format_comment (const struct flex_backend_t *b, const char *const c);
+void _format_open_table ( const struct flex_backend_t *b );
+void _format_continue_table ( const struct flex_backend_t *b );
+void _format_close_table ( const struct flex_backend_t *b );
+void _verbatim ( const struct flex_backend_t *b, const char *s );
+void _format_normal_state_case_arm ( const struct flex_backend_t *b, int c );
+void _format_eof_state_case_arm ( const struct flex_backend_t *b, const char *const c );
+void _format_eof_state_case_fallthrough ( const struct flex_backend_t *b );
+void _format_eof_state_case_terminate ( const struct flex_backend_t *b );
+void _format_take_yytext ( const struct flex_backend_t *b );
+void _format_release_yytext ( const struct flex_backend_t *b );
+void _format_char_rewind ( const struct flex_backend_t *b, int c );
+void _format_line_rewind ( const struct flex_backend_t *b, int l );
+void _format_char_forward ( const struct flex_backend_t *b, int c );
+void _format_line_forward ( const struct flex_backend_t *b, int l );
+/*
+void _format_yy_decl ( const struct flex_backend_t *b, const char *d );
+void _format_userinit ( const struct flex_backend_t *b, const char *d );
+*/
+void _format_const ( const struct flex_backend_t *b, const char *n, const char *v );
+void _format_rule_setup ( const struct flex_backend_t *b );
+void _format_user_preaction ( const struct flex_backend_t *b, const char *d );
+void _format_state_case_break ( const struct flex_backend_t *b );
+void _format_user_postaction ( const struct flex_backend_t *b, const char *d );
+void _format_fatal_error ( const struct flex_backend_t *b, const char *e );
+void _echo ( const struct flex_backend_t *b );
+void _format_yyterminate ( const struct flex_backend_t *b, const char *d );
+void _format_yyreject ( const struct flex_backend_t *b );
+/*
+void (*format_byte_const) ( const struct flex_backend_t *b, const char *n, const int c );
+void (*format_state_const) ( const struct flex_backend_t *b, const char *n, const int s );
+void (*format_size_const) ( const struct flex_backend_t *b, const char *n, const int s );
+void (*format_uint_const) ( const struct flex_backend_t *b, const char *n, const unsigned int u );
+void (*format_bool_const) ( const struct flex_backend_t *b, const char *n, const int t );
+void (*format_const) ( const struct flex_backend_t *b, const char *n, const char *v );
+void (*format_offset_type) ( const struct flex_backend_t *b, const char *t );
+*/
+
+/* Default implementations of filter emitter fuctions */
+void _filter_define_name ( const struct flex_backend_t *b, const char *n, const int leave_open );
+void _filter_define_close (const struct flex_backend_t *b, const char *v);
+void _filter_define_vars ( const struct flex_backend_t *b, const char *n, const char *v );
+void _filter_define_vard ( const struct flex_backend_t *b, const char *n, const int v );
+void _filter_call_macro ( const struct flex_backend_t *b, const char *n, const char *v );
 
 #endif /* FLEX_SKELETONS_H */
