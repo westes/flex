@@ -223,17 +223,36 @@ static void cpp_format_state_table_entry ( const struct flex_backend_t * b, int 
    Other target languages may use another selection syntax. Basically, each arm matches
    the character under examination, treated as a number.
 */
+static const char * cpp_get_normal_state_case_arm ( const struct flex_backend_t *b, int c ) {
+	static const char *format = "case %d: ";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, c);
+	return directive;
+}
+
+/* Emit a case for the main state switch. 
+*/
 static void cpp_format_normal_state_case_arm ( const struct flex_backend_t *b, int c ) {
 	b->indent(b);
-	fprintf(stdout, "case %d: ", c);
+	fputs(b->get_normal_state_case_arm(b, c), stdout);
 }
 
 /* Generate the special case arm for EOF. 
    This lives in the body of yyinput and determines whether/when to switch to the next buffer.
 */
+static const char * cpp_get_eof_state_case_arm ( const struct flex_backend_t *b, const char * const c ) {
+	static const char *format = "case YY_STATE_EOF(%s): ";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, c);
+	return directive;
+}
+
+/* Emit the special case arm for EOF. */
 static void cpp_format_eof_state_case_arm ( const struct flex_backend_t *b, const char * const c ) {
 	b->indent(b);
-	fprintf(stdout, "case YY_STATE_EOF(%s): ", c);
+	fputs(b->get_eof_state_case_arm(b, c), stdout);
 }
 
 /* Generate the special action FALLTHROUGH. 
@@ -242,6 +261,7 @@ static void cpp_format_eof_state_case_arm ( const struct flex_backend_t *b, cons
 static void cpp_eof_state_case_fallthrough ( const struct flex_backend_t *b ) {
 	b->indent(b);
 	b->comment(b, "FALLTHROUGH");
+	b->newline(b);
 }
 
 /* Generate the special action terminate. */
@@ -251,39 +271,87 @@ static void cpp_eof_state_case_terminate ( const struct flex_backend_t *b ) {
 }
 
 /* Generate the action preamble. */
-static void cpp_take_yytext ( const struct flex_backend_t *b ) {
+static const char * cpp_get_take_yytext( const struct flex_backend_t *b ) {
+	static const char *directive = "YY_DO_BEFORE_ACTION; /* set up yytext */";
+	return directive;
+};
+
+/* Emit the action preamble. */
+static void cpp_format_take_yytext ( const struct flex_backend_t *b ) {
 	b->indent(b);
-	fputs("YY_DO_BEFORE_ACTION; /* set up yytext */", stdout);
+	fputs(b->get_take_yytext(b), stdout);
 }
 
 /* Generate the action postamble. */
-static void cpp_release_yytext ( const struct flex_backend_t *b ) {
+static const char * cpp_get_release_yytext( const struct flex_backend_t *b ) {
+	static const char *directive = "*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */";
+	return directive;
+};
+
+/* Emit the action postamble. */
+static void cpp_format_release_yytext ( const struct flex_backend_t *b ) {
 	b->indent(b);
-	fputs( "*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */", stdout);
+	fputs( b->get_release_yytext(b), stdout);
 }
 
 /* Generate the buffer rewind sub-action. */
+static const char * cpp_get_char_rewind( const struct flex_backend_t *b, int c ) {
+	static const char *format = "YY_G(yy_c_buf_p) = yy_cp -= %d;";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, c);
+	return directive;
+}
+
+/* Emit the buffer rewind sub-action. */
 static void cpp_format_char_rewind ( const struct flex_backend_t *b, int c ) {
 	b->indent(b);
-	fprintf(stdout, "YY_G(yy_c_buf_p) = yy_cp -= %d;", c);
+	fputs(b->get_char_rewind(b, c), stdout);
 }
 
 /* Generate the line rewind sub-action. */
+static const char * cpp_get_line_rewind( const struct flex_backend_t *b, int l ) {
+	static const char *format = "YY_LINENO_REWIND_TO(yy_cp - %d);";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, l);
+	return directive;
+}
+
+/* Emit the line rewind sub-action. */
 static void cpp_format_line_rewind ( const struct flex_backend_t *b, int l ) {
 	b->indent(b);
-	fprintf(stdout, "YY_LINENO_REWIND_TO(yy_cp - %d);", l);
+	fputs(b->get_line_rewind(b,l), stdout);
 }
 
 /* Generate the buffer skip sub-action. */
+static const char * cpp_get_char_forward( const struct flex_backend_t *b, int c ) {
+	static const char *format = "YY_G(yy_c_buf_p) = yy_cp = yy_bp + %d;";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, c);
+	return directive;
+}
+
+/* Emit the buffer skip sub-action. */
 static void cpp_format_char_forward ( const struct flex_backend_t *b, int c ) {
 	b->indent(b);
-	fprintf(stdout, "YY_G(yy_c_buf_p) = yy_cp = yy_bp + %d;", c);
+	fputs(b->get_char_forward(b, c), stdout);
+}
+
+/* Generate the line skip sub-action. */
+static const char * cpp_get_line_forward( const struct flex_backend_t *b, int l ) {
+	static const char *format = "YY_LINENO_REWIND_TO(yy_bp + %d);";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, l);
+	return directive;
 }
 
 /* Generate the line skip sub-action. */
 static void cpp_format_line_forward ( const struct flex_backend_t *b, int l ) {
 	b->indent(b);
-	fprintf(stdout, "YY_LINENO_REWIND_TO(yy_bp + %d);", l);
+	fputs(b->get_line_forward(b,l), stdout);
 }
 
 /* Define a byte-width constant. */
@@ -334,8 +402,15 @@ static void cpp_format_userinit ( const struct flex_backend_t *b, const char *d 
 }
 
 /* Inject the rule_setup macro call where needed. */
+static const char * cpp_get_rule_setup ( const struct flex_backend_t *b ) {
+	static const char *directive = "YY_RULE_SETUP";
+
+	return directive;
+}
+
+/* Inject the rule_setup macro call where needed. */
 static void cpp_format_rule_setup ( const struct flex_backend_t *b ) {
-	b->verbatim(b, "YY_RULE_SETUP");
+	fputs(b->get_rule_setup(b), stdout);
 	b->newline(b);
 }
 
@@ -375,9 +450,16 @@ static void cpp_format_fatal_error ( const struct flex_backend_t *b, const char 
 }
 
 /* Generate the echo action. */
+static const char * cpp_get_echo ( const struct flex_backend_t *b ) {
+	static const char *directive = "yyecho();";
+
+	return directive;
+}
+
+/* Emit the echo action. */
 static void cpp_echo ( const struct flex_backend_t *b ) {
 	b->indent(b);
-	fputs("yyecho();", stdout);
+	fputs(b->get_echo(b), stdout);
 }
 
 /* Generate the definition of the terminate special action. */
@@ -489,15 +571,23 @@ struct flex_backend_t cpp_backend = {
 	.verbatim = cpp_verbatim,
 	.format_data_table_entry = cpp_format_data_table_entry,
 	.format_state_table_entry = cpp_format_state_table_entry,
+	.get_normal_state_case_arm = cpp_get_normal_state_case_arm,
 	.format_normal_state_case_arm = cpp_format_normal_state_case_arm,
+	.get_eof_state_case_arm = cpp_get_eof_state_case_arm,
 	.format_eof_state_case_arm = cpp_format_eof_state_case_arm,
 	.eof_state_case_fallthrough = cpp_eof_state_case_fallthrough,
 	.eof_state_case_terminate = cpp_eof_state_case_terminate,
-	.take_yytext = cpp_take_yytext,
-	.release_yytext = cpp_release_yytext,
+	.get_take_yytext = cpp_get_take_yytext,
+	.format_take_yytext = cpp_format_take_yytext,
+	.get_release_yytext = cpp_get_release_yytext,
+	.format_release_yytext = cpp_format_release_yytext,
+	.get_char_rewind = cpp_get_char_rewind,
 	.format_char_rewind = cpp_format_char_rewind,
+	.get_line_rewind = cpp_get_line_rewind,
 	.format_line_rewind = cpp_format_line_rewind,
+	.get_char_forward = cpp_get_char_forward,
 	.format_char_forward = cpp_format_char_forward,
+	.get_line_forward = cpp_get_line_forward,
 	.format_line_forward = cpp_format_line_forward,
 	.format_byte_const = cpp_format_byte_const,
 	.format_state_const = cpp_format_state_const,
@@ -508,11 +598,13 @@ struct flex_backend_t cpp_backend = {
 	.format_offset_type = cpp_format_offset_type,
 	.format_yy_decl = cpp_format_yy_decl,
 	.format_userinit = cpp_format_userinit,
+	.get_rule_setup = cpp_get_rule_setup,
 	.format_rule_setup = cpp_format_rule_setup,
 	.format_user_preaction = cpp_format_user_preaction,
 	.format_state_case_break = cpp_format_state_case_break,
 	.format_user_postaction = cpp_format_user_postaction,
 	.format_fatal_error = cpp_format_fatal_error,
+	.get_echo = cpp_get_echo,
 	.echo = cpp_echo,
 	.format_yyterminate = cpp_format_yyterminate,
 	.format_yyreject = cpp_format_yyreject,

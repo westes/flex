@@ -223,17 +223,36 @@ static void c99_format_state_table_entry ( const struct flex_backend_t * b, int 
    Other target languages may use another selection syntax. Basically, each arm matches
    the character under examination, treated as a number.
 */
+static const char * c99_get_normal_state_case_arm ( const struct flex_backend_t *b, int c ) {
+	static const char *format = "case %d: ";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, c);
+	return directive;
+}
+
+/* Emit a case for the main state switch. 
+*/
 static void c99_format_normal_state_case_arm ( const struct flex_backend_t *b, int c ) {
 	b->indent(b);
-	fprintf(stdout, "case %d: ", c);
+	fputs(b->get_normal_state_case_arm(b, c), stdout);
 }
 
 /* Generate the special case arm for EOF. 
    This lives in the body of yyinput and determines whether/when to switch to the next buffer.
 */
+static const char * c99_get_eof_state_case_arm ( const struct flex_backend_t *b, const char * const c ) {
+	static const char *format = "case YY_STATE_EOF(%s): ";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, c);
+	return directive;
+}
+
+/* Emit the special case arm for EOF. */
 static void c99_format_eof_state_case_arm ( const struct flex_backend_t *b, const char * const c ) {
 	b->indent(b);
-	fprintf(stdout, "case YY_STATE_EOF(%s): ", c);
+	fputs(b->get_eof_state_case_arm(b, c), stdout);
 }
 
 /* Generate the special action FALLTHROUGH. 
@@ -251,39 +270,87 @@ static void c99_eof_state_case_terminate ( const struct flex_backend_t *b ) {
 }
 
 /* Generate the action preamble. */
-static void c99_take_yytext ( const struct flex_backend_t *b ) {
+static const char * c99_get_take_yytext( const struct flex_backend_t *b ) {
+	static const char *directive = "YY_DO_BEFORE_ACTION; /* set up yytext */";
+	return directive;
+};
+
+/* Emit the action preamble. */
+static void c99_format_take_yytext ( const struct flex_backend_t *b ) {
 	b->indent(b);
-	fputs("YY_DO_BEFORE_ACTION; /* set up yytext */", stdout);
+	fputs(b->get_take_yytext(b), stdout);
 }
 
 /* Generate the action postamble. */
-static void c99_release_yytext ( const struct flex_backend_t *b ) {
+static const char * c99_get_release_yytext( const struct flex_backend_t *b ) {
+	static const char *directive = "*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */";
+	return directive;
+};
+
+/* Emit the action postamble. */
+static void c99_format_release_yytext ( const struct flex_backend_t *b ) {
 	b->indent(b);
-	fputs( "*yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */", stdout);
+	fputs( b->get_release_yytext(b), stdout);
 }
 
 /* Generate the buffer rewind sub-action. */
+static const char * c99_get_char_rewind( const struct flex_backend_t *b, int c ) {
+	static const char *format = "YY_G(yy_c_buf_p) = yy_cp -= %d;";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, c);
+	return directive;
+}
+
+/* Emit the buffer rewind sub-action. */
 static void c99_format_char_rewind ( const struct flex_backend_t *b, int c ) {
 	b->indent(b);
-	fprintf(stdout, "YY_G(yy_c_buf_p) = yy_cp -= %d;", c);
+	fputs(b->get_char_rewind(b, c), stdout);
 }
 
 /* Generate the line rewind sub-action. */
+static const char * c99_get_line_rewind( const struct flex_backend_t *b, int l ) {
+	static const char *format = "YY_LINENO_REWIND_TO(yy_cp - %d);";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, l);
+	return directive;
+}
+
+/* Emit the line rewind sub-action. */
 static void c99_format_line_rewind ( const struct flex_backend_t *b, int l ) {
 	b->indent(b);
-	fprintf(stdout, "YY_LINENO_REWIND_TO(yy_cp - %d);", l);
+	fputs(b->get_line_rewind(b,l), stdout);
 }
 
 /* Generate the buffer skip sub-action. */
+static const char * c99_get_char_forward( const struct flex_backend_t *b, int c ) {
+	static const char *format = "YY_G(yy_c_buf_p) = yy_cp = yy_bp + %d;";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, c);
+	return directive;
+}
+
+/* Emit the buffer skip sub-action. */
 static void c99_format_char_forward ( const struct flex_backend_t *b, int c ) {
 	b->indent(b);
-	fprintf(stdout, "YY_G(yy_c_buf_p) = yy_cp = yy_bp + %d;", c);
+	fputs(b->get_char_forward(b, c), stdout);
+}
+
+/* Generate the line skip sub-action. */
+static const char * c99_get_line_forward( const struct flex_backend_t *b, int l ) {
+	static const char *format = "YY_LINENO_REWIND_TO(yy_bp + %d);";
+	static char directive[MAXLINE*2] = "\0";
+
+	snprintf (directive, sizeof(directive), format, l);
+	return directive;
 }
 
 /* Generate the line skip sub-action. */
 static void c99_format_line_forward ( const struct flex_backend_t *b, int l ) {
 	b->indent(b);
-	fprintf(stdout, "YY_LINENO_REWIND_TO(yy_bp + %d);", l);
+	fputs(b->get_line_forward(b,l), stdout);
 }
 
 /* Define a byte-width constant. */
@@ -334,8 +401,15 @@ static void c99_format_userinit ( const struct flex_backend_t *b, const char *d 
 }
 
 /* Inject the rule_setup macro call where needed. */
+static const char * c99_get_rule_setup ( const struct flex_backend_t *b ) {
+	static const char *directive = "YY_RULE_SETUP";
+	
+	return directive;
+}
+
+/* Inject the rule_setup macro call where needed. */
 static void c99_format_rule_setup ( const struct flex_backend_t *b ) {
-	b->verbatim(b, "YY_RULE_SETUP");
+	fputs(b->get_rule_setup(b), stdout);
 	b->newline(b);
 }
 
@@ -375,9 +449,16 @@ static void c99_format_fatal_error ( const struct flex_backend_t *b, const char 
 }
 
 /* Generate the echo action. */
+static const char * c99_get_echo ( const struct flex_backend_t *b ) {
+	static const char *directive = "yyecho();";
+
+	return directive;
+}
+
+/* Emit the echo action. */
 static void c99_echo ( const struct flex_backend_t *b ) {
 	b->indent(b);
-	fputs("yyecho();", stdout);
+	fputs(b->get_echo(b), stdout);
 }
 
 /* Generate the definition of the terminate special action. */
@@ -489,15 +570,23 @@ struct flex_backend_t c99_backend = {
 	.verbatim = c99_verbatim,
 	.format_data_table_entry = c99_format_data_table_entry,
 	.format_state_table_entry = c99_format_state_table_entry,
+	.get_normal_state_case_arm = c99_get_normal_state_case_arm,
 	.format_normal_state_case_arm = c99_format_normal_state_case_arm,
+	.get_eof_state_case_arm = c99_get_eof_state_case_arm,
 	.format_eof_state_case_arm = c99_format_eof_state_case_arm,
 	.eof_state_case_fallthrough = c99_eof_state_case_fallthrough,
 	.eof_state_case_terminate = c99_eof_state_case_terminate,
-	.take_yytext = c99_take_yytext,
-	.release_yytext = c99_release_yytext,
+	.get_take_yytext = c99_get_take_yytext,
+	.format_take_yytext = c99_format_take_yytext,
+	.get_release_yytext = c99_get_release_yytext,
+	.format_release_yytext = c99_format_release_yytext,
+	.get_char_rewind = c99_get_char_rewind,
 	.format_char_rewind = c99_format_char_rewind,
+	.get_line_rewind = c99_get_line_rewind,
 	.format_line_rewind = c99_format_line_rewind,
+	.get_char_forward = c99_get_char_forward,
 	.format_char_forward = c99_format_char_forward,
+	.get_line_forward = c99_get_line_forward,
 	.format_line_forward = c99_format_line_forward,
 	.format_byte_const = c99_format_byte_const,
 	.format_state_const = c99_format_state_const,
@@ -508,11 +597,13 @@ struct flex_backend_t c99_backend = {
 	.format_offset_type = c99_format_offset_type,
 	.format_yy_decl = c99_format_yy_decl,
 	.format_userinit = c99_format_userinit,
+	.get_rule_setup = c99_get_rule_setup,
 	.format_rule_setup = c99_format_rule_setup,
 	.format_user_preaction = c99_format_user_preaction,
 	.format_state_case_break = c99_format_state_case_break,
 	.format_user_postaction = c99_format_user_postaction,
 	.format_fatal_error = c99_format_fatal_error,
+	.get_echo = c99_get_echo,
 	.echo = c99_echo,
 	.format_yyterminate = c99_format_yyterminate,
 	.format_yyreject = c99_format_yyreject,
