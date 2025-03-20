@@ -334,6 +334,7 @@ lineno_generated.c: lineno_generated.l
 
 bison_nr_main.$(OBJEXT): bison_nr_parser.h bison_nr_scanner.h
 bison_nr_scanner.$(OBJEXT): bison_nr_parser.h
+bison_nr_parser.$(OBJEXT): bison_nr_scanner.h
 
 bison_nr_scanner.h: bison_nr_scanner.c
 	@if test ! -f $@; then rm -f $<; else :; fi
@@ -341,6 +342,7 @@ bison_nr_scanner.h: bison_nr_scanner.c
 
 bison_yylloc_main.$(OBJEXT): bison_yylloc_parser.h bison_yylloc_scanner.h
 bison_yylloc_scanner.$(OBJEXT): bison_yylloc_parser.h
+bison_yylloc_parser.$(OBJEXT): bison_yylloc_scanner.h
 
 bison_yylloc_scanner.h: bison_yylloc_scanner.c
 	@if test ! -f $@; then rm -f $<; else :; fi
@@ -348,6 +350,7 @@ bison_yylloc_scanner.h: bison_yylloc_scanner.c
 
 bison_yylval_main.$(OBJEXT): bison_yylval_parser.h bison_yylval_scanner.h
 bison_yylval_scanner.$(OBJEXT): bison_yylval_parser.h
+bison_yylval_parser.$(OBJEXT): bison_yylval_scanner.h
 
 bison_yylval_scanner.h: bison_yylval_scanner.c
 	@if test ! -f $@; then rm -f $<; else :; fi
