@@ -56,7 +56,7 @@ int     yytbl_write32 (struct yytbl_writer *wr, flex_uint32_t v);
 int     yytbl_write16 (struct yytbl_writer *wr, flex_uint16_t v);
 int     yytbl_write8 (struct yytbl_writer *wr, flex_uint8_t v);
 int     yytbl_writen (struct yytbl_writer *wr, void *v, int len);
-static flex_int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i);
+static flex_int32_t yytbl_data_geti (FlexState* gv, const struct yytbl_data *tbl, int i);
 /* XXX Not used
 static flex_int32_t yytbl_data_getijk (const struct yytbl_data *tbl, int i,
 				  int j, int k);
@@ -80,7 +80,7 @@ int yytbl_writer_init (struct yytbl_writer *wr, FILE * out)
  *  @param version_str the  version string
  *  @param name the name of this table set
  */
-int yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
+int yytbl_hdr_init (FlexState* gv, struct yytbl_hdr *th, const char *version_str,
 		    const char *name)
 {
 	memset (th, 0, sizeof (struct yytbl_hdr));
@@ -90,8 +90,8 @@ int yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
 	th->th_hsize += (8 - (th->th_hsize % 8)) % 8; // Pad to 64-bit boundary
 	th->th_ssize = 0;	// Not known at this point.
 	th->th_flags = 0;
-	th->th_version = xstrdup(version_str);
-	th->th_name = xstrdup(name);
+	th->th_version = xstrdup(gv, version_str);
+	th->th_name = xstrdup(gv, name);
 	return 0;
 }
 
@@ -140,7 +140,7 @@ static int yytbl_write_pad64 (struct yytbl_writer *wr)
  *  @param th table header to be written
  *  @return -1 on error, or bytes written on success.
  */
-int yytbl_hdr_fwrite (struct yytbl_writer *wr, const struct yytbl_hdr *th)
+int yytbl_hdr_fwrite (FlexState* gv, struct yytbl_writer *wr, const struct yytbl_hdr *th)
 {
 	int  sz, rv;
 	int     bwritten = 0;
@@ -186,7 +186,7 @@ int yytbl_hdr_fwrite (struct yytbl_writer *wr, const struct yytbl_hdr *th)
  *  @param td table data to be written
  *  @return -1 on error, or bytes written on success.
  */
-int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
+int yytbl_data_fwrite (FlexState* gv, struct yytbl_writer *wr, struct yytbl_data *td)
 {
 	int  rv;
 	flex_int32_t bwritten = 0;
@@ -213,13 +213,13 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 	for (i = 0; i < total_len; i++) {
 		switch (YYTDFLAGS2BYTES (td->td_flags)) {
 		case sizeof (flex_int8_t):
-			rv = yytbl_write8 (wr, (flex_uint8_t) yytbl_data_geti (td, i));
+			rv = yytbl_write8 (wr, (flex_uint8_t) yytbl_data_geti (gv, td, i));
 			break;
 		case sizeof (flex_int16_t):
-			rv = yytbl_write16 (wr, (flex_uint16_t) yytbl_data_geti (td, i));
+			rv = yytbl_write16 (wr, (flex_uint16_t) yytbl_data_geti (gv, td, i));
 			break;
 		case sizeof (flex_int32_t):
-			rv = yytbl_write32 (wr, (flex_uint32_t) yytbl_data_geti (td, i));
+			rv = yytbl_write32 (wr, (flex_uint32_t) yytbl_data_geti (gv, td, i));
 			break;
 		default:
 			flex_die (_("invalid td_flags detected"));
@@ -376,7 +376,7 @@ static flex_int32_t yytbl_data_getijk (const struct yytbl_data *tbl, int i,
  * @param i index into array.
  * @return data[i]
  */
-static flex_int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i)
+static flex_int32_t yytbl_data_geti (FlexState* gv, const struct yytbl_data *tbl, int i)
 {
 
 	switch (YYTDFLAGS2BYTES (tbl->td_flags)) {
@@ -400,7 +400,7 @@ static flex_int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i)
  * @param i index into array.
  * @param newval new value for data[i]
  */
-static void yytbl_data_seti (const struct yytbl_data *tbl, int i,
+static void yytbl_data_seti (FlexState* gv, const struct yytbl_data *tbl, int i,
 			     flex_int32_t newval)
 {
 
@@ -425,7 +425,7 @@ static void yytbl_data_seti (const struct yytbl_data *tbl, int i,
  *  @param tbl  the data table
  *  @return sizeof(n) where n in {flex_int8_t, flex_int16_t, flex_int32_t}
  */
-static size_t min_int_size (struct yytbl_data *tbl)
+static size_t min_int_size (FlexState* gv, struct yytbl_data *tbl)
 {
 	flex_int32_t i, total_len;
 	flex_int32_t max = 0;
@@ -435,7 +435,7 @@ static size_t min_int_size (struct yytbl_data *tbl)
 	for (i = 0; i < total_len; i++) {
 		flex_int32_t n;
 
-		n = abs (yytbl_data_geti (tbl, i));
+		n = abs (yytbl_data_geti (gv, tbl, i));
 
 		if (max < n)
 			max = n;
@@ -458,7 +458,7 @@ static size_t min_int_size (struct yytbl_data *tbl)
  *
  * @param tbl the table to be compressed
  */
-void yytbl_data_compress (struct yytbl_data *tbl)
+void yytbl_data_compress (FlexState* gv, struct yytbl_data *tbl)
 {
 	flex_int32_t i, total_len;
 	size_t newsz;
@@ -469,7 +469,7 @@ void yytbl_data_compress (struct yytbl_data *tbl)
 	newtbl.td_lolen = tbl->td_lolen;
 	newtbl.td_flags = tbl->td_flags;
 
-	newsz = min_int_size (tbl);
+	newsz = min_int_size (gv, tbl);
 
 
 	if (newsz == YYTDFLAGS2BYTES (tbl->td_flags))
@@ -489,8 +489,8 @@ void yytbl_data_compress (struct yytbl_data *tbl)
 	for (i = 0; i < total_len; i++) {
 		flex_int32_t g;
 
-		g = yytbl_data_geti (tbl, i);
-		yytbl_data_seti (&newtbl, i, g);
+		g = yytbl_data_geti (gv, tbl, i);
+		yytbl_data_seti (gv, &newtbl, i, g);
 	}
 
 

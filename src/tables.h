@@ -59,19 +59,19 @@ struct yytbl_writer {
  * tablesverify - true if tables-verify option specified
  * gentables - true if we should spit out the normal C tables
  */
-extern bool tablesext, tablesverify,gentables;
-extern char *tablesfilename, *tablesname;
-extern struct yytbl_writer tableswr;
+//extern bool tablesext, tablesverify,gentables;
+//extern char *tablesfilename, *tablesname;
+//extern struct yytbl_writer tableswr;
 
 int     yytbl_writer_init (struct yytbl_writer *, FILE *);
-int     yytbl_hdr_init (struct yytbl_hdr *th, const char *version_str,
+int     yytbl_hdr_init (FlexState* gv, struct yytbl_hdr *th, const char *version_str,
 			const char *name);
 int     yytbl_data_init (struct yytbl_data *tbl, enum yytbl_id id);
 int     yytbl_data_destroy (struct yytbl_data *td);
-int     yytbl_hdr_fwrite (struct yytbl_writer *wr,
+int     yytbl_hdr_fwrite (FlexState* gv, struct yytbl_writer *wr,
 			  const struct yytbl_hdr *th);
-int     yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td);
-void    yytbl_data_compress (struct yytbl_data *tbl);
+int     yytbl_data_fwrite (FlexState* gv, struct yytbl_writer *wr, struct yytbl_data *td);
+void    yytbl_data_compress (FlexState* gv, struct yytbl_data *tbl);
 
 
 #ifdef __cplusplus
