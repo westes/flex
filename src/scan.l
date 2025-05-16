@@ -177,7 +177,8 @@ void context_member(char *, const char *);
 		snprintf(trampoline, sizeof(trampoline),
 			 "M4_HOOK_TRACE_LINE_FORMAT(%d, [[%s]])",
 			 linenum, infilename?infilename:"<stdin>");
-                buf_strappend(&top_buf, trampoline);
+                if (ctrl.gen_line_dirs)
+                    buf_strappend(&top_buf, trampoline);
                 brace_depth = 1;
                 yy_push_state(CODEBLOCK_MATCH_BRACE);
             }
