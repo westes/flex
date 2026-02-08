@@ -36,6 +36,7 @@
 #include "version.h"
 #include "options.h"
 #include "tables.h"
+#include "skeletons.h"
 #include "parse.h"
 
 static char flex_version[] = FLEX_VERSION;
@@ -135,6 +136,7 @@ int flex_main (int argc, char *argv[])
 {
 	int     i, exit_status, child_status;
 	int	did_eof_rule = false;
+	const struct flex_backend_t *backend = NULL;
 
 	/* Set a longjmp target. Yes, I know it's a hack, but it gets worse: The
 	 * return value of setjmp, if non-zero, is the desired exit code PLUS ONE.
@@ -165,6 +167,9 @@ int flex_main (int argc, char *argv[])
 	flexinit (argc, argv);
 
 	readin ();
+
+	backend = get_backend();
+
 	skelout (true);		/* %% [1.0] DFA */
 	footprint += ntod ();
 
@@ -178,7 +183,8 @@ int flex_main (int argc, char *argv[])
 			      ("-s option given but default rule can be matched"),
 			      rule_linenum[default_rule]);
 
-	comment("START of m4 controls\n");
+	backend->comment(backend, "START of m4 controls");
+	backend->newline(backend);
 
 	// mode switches for yy_trans_info specification
 	// nultrans
@@ -196,20 +202,20 @@ int flex_main (int argc, char *argv[])
 		    visible_define ( "M4_MODE_NO_NULTRANS_FULLSPD");
 	}
 	
-	comment("END of m4 controls\n");
-	out ("\n");
+	backend->comment(backend, "END of m4 controls");
+	backend->newline(backend);
 
-	comment("START of Flex-generated definitions\n");
-	out_str_dec ("M4_HOOK_CONST_DEFINE_UINT(%s, %d)", "YY_NUM_RULES", num_rules);
-	out_str_dec ("M4_HOOK_CONST_DEFINE_STATE(%s, %d)", "YY_END_OF_BUFFER", num_rules + 1);
-	out_str_dec ("M4_HOOK_CONST_DEFINE_STATE(%s, %d)", "YY_JAMBASE", jambase);
-	out_str_dec ("M4_HOOK_CONST_DEFINE_STATE(%s, %d)", "YY_JAMSTATE", jamstate);
-	out_str_dec ("M4_HOOK_CONST_DEFINE_BYTE(%s, %d)", "YY_NUL_EC", NUL_ec);
+	backend->comment(backend, "START of Flex-generated definitions");
+	backend->format_size_const(backend, "YY_NUM_RULES", num_rules);
+	backend->format_state_const(backend,  "YY_END_OF_BUFFER", num_rules + 1);
+	backend->format_state_const(backend,  "YY_JAMBASE", jambase);
+	backend->format_state_const(backend,  "YY_JAMSTATE", jamstate);
+	backend->format_byte_const(backend,  "YY_NUL_EC", NUL_ec);
 	/* Need to define the transet type as a size large
 	 * enough to hold the biggest offset.
 	 */
-	out_str ("M4_HOOK_SET_OFFSET_TYPE(%s)", optimize_pack(tblend + numecs + 1)->name);
-	comment("END of Flex-generated definitions\n");
+	backend->filter_call_macro(backend, "M4_HOOK_SET_OFFSET_TYPE", backend->get_packed_type(backend, optimize_pack(tblend + numecs + 1)));
+	backend->comment(backend, "END of Flex-generated definitions");
 
 	skelout (true);		/* %% [2.0] - tables get dumped here */
 
@@ -218,36 +224,38 @@ int flex_main (int argc, char *argv[])
 
 	skelout (true);		/* %% [3.0] - mode-dependent static declarations get dumped here */
 
-	out (&action_array[defs1_offset]);
+	backend->verbatim(backend, &action_array[defs1_offset]);
+	backend->newline(backend);
 
 	line_directive_out (stdout, NULL, linenum);
 
 	skelout (true);		/* %% [4.0] - various random yylex internals get dumped here */
 
 	/* Copy prolog to output file. */
-	out (&action_array[prolog_offset]);
+	backend->verbatim(backend, &action_array[prolog_offset]);
+	backend->newline(backend);
 
 	line_directive_out (stdout, NULL, linenum);
 
 	skelout (true);		/* %% [5.0] - main loop of matching-engine code gets dumped here */
 
 	/* Copy actions to output file. */
-	out (&action_array[action_offset]);
+	backend->verbatim(backend, &action_array[action_offset]);
+	backend->newline(backend);
 
 	line_directive_out (stdout, NULL, linenum);
 
 	/* generate cases for any missing EOF rules */
 	for (i = 1; i <= lastsc; ++i)
 		if (!sceof[i]) {
-			out_str ("M4_HOOK_EOF_STATE_CASE_ARM(%s)", scname[i]);
-			outc('\n');
-			out ("M4_HOOK_EOF_STATE_CASE_FALLTHROUGH");
-			outc('\n');
+			backend->format_eof_state_case_arm(backend, scname[i]);
+			backend->eof_state_case_fallthrough(backend);
+			backend->newline(backend);
 			did_eof_rule = true;
 		}
 
 	if (did_eof_rule) {
-		out ("M4_HOOK_EOF_STATE_CASE_TERMINATE");
+		backend->eof_state_case_terminate(backend);
 	}
 
 	skelout (true);
@@ -257,13 +265,15 @@ int flex_main (int argc, char *argv[])
 	line_directive_out (stdout, infilename, linenum);
 
 	if (sectnum == 3) {
-		OUT_BEGIN_CODE ();
+		backend->verbatim(backend, "m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl");
+		backend->newline(backend);
                 if (!ctrl.no_section3_escape)
                    fputs("[[", stdout);
 		(void) flexscan ();	/* copy remainder of input to output */
                 if (!ctrl.no_section3_escape)
                    fputs("]]", stdout);
-		OUT_END_CODE ();
+		backend->verbatim(backend, "]])");
+		backend->newline(backend);
 	}
 
 	/* Note, flexend does not return.  It exits with its argument
@@ -721,6 +731,9 @@ void flexinit (int argc, char **argv)
 	/* Initialize any buffers. */
 	buf_init (&userdef_buf, sizeof (char));	/* one long string */
 	buf_init (&top_buf, sizeof (char));	    /* one long string */
+
+	init_backends();
+	push_backend(FLEX_BACKEND_CPP);
 
 	sf_init ();
 
@@ -1193,6 +1206,8 @@ void flexinit (int argc, char **argv)
 void readin (void)
 {
 	char buf[256];
+	flex_backend_id_t backend_id;
+	const struct flex_backend_t *backend = NULL;
 
 	line_directive_out(NULL, infilename, linenum);
 
@@ -1210,9 +1225,14 @@ void readin (void)
 	 * when %option emit was evaluated; this catches command-line
 	 * optiins and the default case.
 	 */
-	backend_by_name(ctrl.emit);
+	backend_id = backend_by_name(ctrl.emit);
+	if ( backend_id != top_backend() )
+		/* only push a new backend if it's not already the top */
+		push_backend(backend_id);
 
 	initialize_output_filters();
+
+	backend = get_backend();
 
 	yyout = stdout;
 
@@ -1265,39 +1285,42 @@ void readin (void)
 
 	skelout(false);	/* [0.0] Make hook macros available, silently */
 
-	comment("A lexical scanner generated by flex\n");
+	backend->comment(backend, "A lexical scanner generated by flex");
+	backend->newline(backend);
 
 	/* Dump the %top code. */
 	if( top_buf.elts)
-		outn((char*) top_buf.elts);
+		backend->verbatim(backend, (char*) top_buf.elts);
+		backend->newline(backend);
 
 	/* Place a bogus line directive, it will be fixed in the filter. */
 	line_directive_out(NULL, NULL, 0);
 
 	/* User may want to set the scanner prototype */
 	if (ctrl.yydecl != NULL) {
-		out_str ("M4_HOOK_SET_YY_DECL(%s)\n", ctrl.yydecl);
+		backend->filter_call_macro(backend, "M4_HOOK_SET_YY_DECL", ctrl.yydecl);
 	}
 
 	if (ctrl.userinit != NULL) {
-		out_str ("M4_HOOK_SET_USERINIT(%s)\n", ctrl.userinit);
+		backend->filter_call_macro(backend, "M4_HOOK_SET_USERINIT", ctrl.userinit);
 	}
 	if (ctrl.preaction != NULL) {
-		out_str ("M4_HOOK_SET_PREACTION(%s)\n", ctrl.preaction);
+		backend->filter_call_macro(backend, "M4_HOOK_SET_PREACTION", ctrl.preaction);
 	}
 	if (ctrl.postaction != NULL) {
-		out_str ("M4_HOOK_SET_POSTACTION(%s)\n", ctrl.postaction);
+		backend->filter_call_macro(backend, "M4_HOOK_SET_POSTACTION", ctrl.postaction);
 	}
 
 	/* This has to be a straight textual substitution rather
 	 * than a constant declaration because in C a const is
 	 * not const enough to be a static array bound.
 	 */
-	out_dec ("m4_define([[YYLMAX]], [[%d]])\n", ctrl.yylmax);
+	backend->filter_define_vard(backend, "YYLMAX", ctrl.yylmax);
 
 	/* Dump the user defined preproc directives. */
 	if (userdef_buf.elts)
-		outn ((char *) (userdef_buf.elts));
+		backend->verbatim(backend, (char *) (userdef_buf.elts));
+		backend->newline(backend);
 
 	/* If the user explicitly requested posix compatibility by specifying the
 	 * posix-compat option, then we check for conflicting options. However, if
@@ -1414,30 +1437,21 @@ void readin (void)
 	// that historically used to be generated by C code in flex
 	// itself; by shoving all this stuff out to the skeleton file
 	// we make it easier to retarget the code generation.
-	snprintf(buf, sizeof(buf), "Target: %s\n", ctrl.backend_name);
-	comment(buf);
-	comment("START of m4 controls\n");
+	snprintf(buf, sizeof(buf), "Target: %s", ctrl.backend_name);
+	backend->comment(backend, buf);
+	backend->newline(backend);
+	backend->comment(backend, "START of m4 controls");
+	backend->newline(backend);
 
 	/* Define the start condition macros. */
 	{
-		struct Buf tmpbuf;
-		int i;
-		buf_init(&tmpbuf, sizeof(char));
-		for (i = 1; i <= lastsc; i++) {
-			char *str, *fmt = "M4_HOOK_CONST_DEFINE_STATE(%s, %d)";
-			size_t strsz;
-
-			strsz = strlen(fmt) + strlen(scname[i]) + (size_t)(1 + ceil (log10(i))) + 2;
-			str = malloc(strsz);
-			if (!str)
-				flexfatal(_("allocation of macro definition failed"));
-			snprintf(str, strsz, fmt, scname[i], i - 1);
-			buf_strappend(&tmpbuf, str);
-			free(str);
-		}
+		int i = 0;
 		// FIXME: Not dumped visibly because we plan to do away with the indirection
-		out_m4_define("M4_YY_SC_DEFS", tmpbuf.elts);
-		buf_destroy(&tmpbuf);
+		backend->filter_define_name(backend, "M4_YY_SC_DEFS", true);
+		for (i = 1; i <= lastsc; i++) {
+			backend->format_state_const(backend, scname[i], i-1);
+		}
+		backend->filter_define_close(backend, NULL); /* End YY_SC_DEFS */
 	}
 
 	if (ctrl.bison_bridge_lval)
@@ -1557,7 +1571,7 @@ void readin (void)
 
 	if (ctrl.yyclass != NULL) {
 		visible_define ( "M4_MODE_YYCLASS");
-		out_m4_define("M4_YY_CLASS_NAME", ctrl.yyclass);
+		backend->filter_define_vars(backend, "M4_YY_CLASS_NAME", ctrl.yyclass);
 	}
 
 	if (ctrl.ddebug)
@@ -1673,8 +1687,8 @@ void readin (void)
 	else
 		visible_define ( "M4_MODE_NO_REWRITE");
 
-	comment("END of m4 controls\n");
-	out ("\n");
+	backend->comment(backend, "END of m4 controls");
+	backend->newline(backend);
 }
 
 /* set_up_initial_allocations - allocate memory for internal tables */

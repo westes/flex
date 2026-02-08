@@ -81,7 +81,7 @@ m4_define([[M4_HOOK_SET_PREACTION]], [[m4_define([[YY_USER_ACTION]], [[$1]])]])
 m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[/*LINTED*/break;]])
 m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[$1]])]])
 m4_define([[M4_HOOK_FATAL_ERROR]], [[yypanic($1, yyscanner);]])
-m4_define([[M4_HOOK_ECHO]], [[yyecho(yyscanner);]])
+m4_define([[M4_HOOK_ECHO]], [[yyecho();]])
 
 m4_define([[yyterminate]], m4_ifdef([[M4_MODE_YYTERMINATE]], [[M4_MODE_YYTERMINATE /* $1 */]], [[return YY_NULL /* $1 */]]))
 
@@ -548,6 +548,17 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]], [[
 ]])
 }; /* end struct yyguts_t */
 
+/* For convenience, these vars (plus the bison vars far below)
+   are macros in the reentrant scanner. */
+#define yyin yyscanner->yyin_r
+#define yyout yyscanner->yyout_r
+#define yyextra yyscanner->yyextra_r
+#define yyleng yyscanner->yyleng_r
+#define yytext yyscanner->yytext_r
+#define yylineno (yy_current_buffer(yyscanner)->bs_yylineno)
+#define yycolumn (yy_current_buffer(yyscanner)->bs_yycolumn)
+#define yyflexdebug yyscanner->yyflexdebug_r
+
 m4_ifdef( [[M4_YY_BISON_LVAL]],
 [[
 /* This must go here because YYSTYPE and YYLTYPE are included
@@ -920,12 +931,16 @@ int yystart(yyscan_t yyscanner) {
 /* This used to be an fputs(), but since the string might contain NULs,
  * we now use fwrite().
  */
-void yyecho(yyscan_t yyscanner) {
+void yyecho_r(yyscan_t yyscanner) {
 	fwrite(yyscanner->yytext_r, (size_t) yyscanner->yyleng_r, 1, yyscanner->yyout_r);
 }
 
+#define yyecho() yyecho_r(yyscanner)
+
 m4_ifdef( [[M4_YY_NO_YYUNPUT]],, [[
-void yyunput(char c, yyscan_t yyscanner)
+#define yyunput(c) yyunput_r(c, yyscanner)
+
+void yyunput_r(char c, yyscan_t yyscanner)
 {
 	char *yy_cp;
 
@@ -974,7 +989,7 @@ m4_ifdef( [[M4_MODE_YYLINENO]],
 %# magic functions, so yy_get_next_buffer() won't need a forward declaration.
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
-void yymore(yyscan_t yyscanner) {yyscanner->yy_more_offset = strlen(yyscanner->yytext_r);}
+void yymore_r(yyscan_t yyscanner) {yyscanner->yy_more_offset = strlen(yyscanner->yytext_r);}
 m4_define([[YY_MORE_ADJ]],  [[0]])
 m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[{
 yyscanner->yy_more_offset = yyscanner->yy_prev_more_offset;
@@ -983,11 +998,13 @@ yyscanner->yyleng_r -= yyscanner->yy_more_offset;
 ]])
 ]])
 m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
-void yymore(yyscan_t yyscanner) {yyscanner->yy_more_flag = true;}
+void yymore_r(yyscan_t yyscanner) {yyscanner->yy_more_flag = true;}
 m4_define([[YY_MORE_ADJ]],  [[yyscanner->yy_more_len]])
 m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[]])
 ]])
 ]])
+
+#define yymore() yymore_r(yyscanner)
 
 m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[
 m4_define([[YY_MORE_ADJ]],  [[0]])

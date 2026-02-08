@@ -66,6 +66,7 @@
 
 #include "flexdef.h"
 #include "tables.h"
+#include "skeletons.h"
 
 int pat, scnum, eps, headcnt, trailcnt, lastchar, i, rulelen;
 static int currccl;
@@ -78,6 +79,9 @@ int scon_stk_ptr;
 static int madeany = false;  /* whether we've made the '.' character class */
 static int ccldot, cclany;
 int previous_continued_action;	/* whether the previous rule's action was '|' */
+
+static flex_backend_id_t backend_id;
+static const struct flex_backend_t *backend = NULL;
 
 #define format_warn3(fmt, a1, a2) \
 	do{ \
@@ -117,6 +121,10 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 
 %}
 
+%initial-action { 
+	backend = get_backend();
+};
+
 %%
 goal		:  initlex sect1 sect1end sect2 initforrule
 			{ /* add default rule */
@@ -140,13 +148,14 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 			add_action("]]");
 
 			if ( ctrl.spprdflt )
-				add_action(
-				"M4_HOOK_FATAL_ERROR(\"flex scanner jammed\")");
+				add_action( backend->get_fatal_error(backend, "\"flex scanner jammed\"") );
 			else {
-			    add_action("M4_HOOK_ECHO");
+			    add_action( backend->get_echo(backend) );
 			}
 
-			add_action( "\n\tM4_HOOK_STATE_CASE_BREAK\n" );
+			add_action( "\n\t" );
+			add_action( backend->get_state_case_break(backend) );
+			add_action( "\n" );
 			}
 		;
 
@@ -223,7 +232,14 @@ option		:  TOK_OUTFILE '=' NAME
 		|  TOK_BUFSIZE '=' TOK_NUMERIC
 			{ ctrl.bufsize = nmval; }
 		|  TOK_EMIT '=' NAME
-			{ ctrl.emit = xstrdup(nmstr); backend_by_name(ctrl.emit); }
+			{ ctrl.emit = xstrdup(nmstr); 
+			  backend_id = backend_by_name(ctrl.emit);
+			  if ( backend_id != top_backend() ) {
+			    /* only push a new backend if it's not already the top */
+			    push_backend(backend_id);
+				backend = get_backend();
+			  }
+			}
 		|  TOK_USERINIT '=' NAME
 			{ ctrl.userinit = xstrdup(nmstr); }
 		|  TOK_YYTERMINATE '=' NAME
@@ -978,7 +994,6 @@ string		:  string CHAR
 void build_eof_action(void)
 	{
 	int i;
-	char action_text[MAXLINE];
 
 	for ( i = 1; i <= scon_stk_ptr; ++i )
 		{
@@ -991,12 +1006,13 @@ void build_eof_action(void)
 			{
 			sceof[scon_stk[i]] = true;
 
-			if (previous_continued_action /* && previous action was regular */)
-				add_action("YY_RULE_SETUP\n");
+			if (previous_continued_action /* && previous action was regular */) {
+				add_action( backend->get_rule_setup(backend) );
+				add_action( "\n" );
+			}
 
-			snprintf( action_text, sizeof(action_text), "M4_HOOK_EOF_STATE_CASE_ARM(%s)\n",
-				scname[scon_stk[i]] );
-			add_action( action_text );
+			add_action( backend->get_eof_state_case_arm(backend, scname[scon_stk[i]]) );
+			add_action( "\n" );
 			}
 		}
 

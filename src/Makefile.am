@@ -64,6 +64,10 @@ endif
 COMMON_SOURCES = \
 	buf.c \
 	ccl.c \
+	cpp-backend.c \
+	cpp-backend.h \
+	c99-backend.c \
+	c99-backend.h \
 	dfa.c \
 	ecs.c \
 	filter.c \
@@ -82,6 +86,7 @@ COMMON_SOURCES = \
 	scanopt.c \
 	scanopt.h \
 	skeletons.c \
+	skeletons.h \
 	sym.c \
 	tables.c \
 	tables.h \
@@ -118,6 +123,16 @@ SKELINCLUDES = \
 	cpp-flex.h \
 	c99-flex.h \
 	go-flex.h
+
+# DO NOT REMOVE - Ignore StackOverflow
+# This variable is misnamed and misunderstood. It tells Make that the named
+# sources are synchronization points for parallel builds (e.g. -j8). 
+# If you remove or change this variable without testing large parallel builds,
+# make will fail randomly. Stop "fixing" this based on StackOverflow threads, please.
+#
+BUILT_SOURCES = $(SKELINCLUDES) stage1scan.c stage2scan.c
+#
+# DO NOT REMOVE
 
 cpp-flex.h: cpp-flex.skl mkskel.sh flexint_shared.h tables_shared.h tables_shared.c
 	$(SHELL) $(srcdir)/mkskel.sh cpp $(srcdir) $(m4) $(VERSION) > $@.tmp

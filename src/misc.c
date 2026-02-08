@@ -32,6 +32,7 @@
 /*  PURPOSE. */
 #include "flexdef.h"
 #include "tables.h"
+#include "skeletons.h"
 
 /* Append "new_text" to the running buffer. */
 void add_action (const char *new_text)
@@ -157,17 +158,20 @@ int cclcmp (const void *a, const void *b)
 
 /* dataend - finish up a block of data declarations */
 
-void dataend (const char *endit)
+void dataend (const int endit)
 {
+	const struct flex_backend_t *backend = get_backend();
+
 	/* short circuit any output */
 	if (gentables) {
 
+		/* Pretty print the end of the current data line. */
 		if (datapos > 0)
 			dataflush ();
 
-		/* add terminator for initialization; { for vi */
+		/* Optionally, close the table. */
 		if (endit)
-			outn (endit);
+			backend->close_table(backend);
 	}
 	dataline = 0;
 	datapos = 0;
@@ -178,16 +182,19 @@ void dataend (const char *endit)
 
 void dataflush (void)
 {
-	assert (gentables);
+	const struct flex_backend_t *backend = get_backend();
 
+	if (!gentables)
+		return;
+	
 	if (datapos > 0)
-		outc ('\n');
+		backend->newline(backend);
 
 	if (++dataline >= NUMDATALINES) {
 		/* Put out a blank line so that the table is grouped into
 		 * large blocks that enable the user to find elements easily.
 		 */
-		outc ('\n');
+		backend->newline(backend);
 		dataline = 0;
 	}
 
@@ -246,45 +253,9 @@ void lerr_fatal (const char *msg, ...)
 /* line_directive_out - spit out a "#line" statement or equivalent */
 void line_directive_out (FILE *output_file, char *path, int linenum)
 {
-	char	*trace_fmt = "m4_ifdef([[M4_HOOK_TRACE_LINE_FORMAT]], [[M4_HOOK_TRACE_LINE_FORMAT([[%d]], [[%s]])]])";
-	char    directive[MAXLINE*2], filename[MAXLINE];
-	char   *s1, *s2, *s3;
+	const struct flex_backend_t *backend = get_backend();
 
-	if (!ctrl.gen_line_dirs)
-		return;
-
-	s1 = (path != NULL) ? path : "M4_YY_OUTFILE_NAME";
-
-	if ((path != NULL) && !s1)
-		s1 = "<stdin>";
-    
-	s2 = filename;
-	s3 = &filename[sizeof (filename) - 2];
-
-	while (s2 < s3 && *s1) {
-		if (*s1 == '\\' || *s1 == '"')
-			/* Escape the '\' or '"' */
-			*s2++ = '\\';
-
-		*s2++ = *s1++;
-	}
-
-	*s2 = '\0';
-
-	if (path != NULL)
-		snprintf (directive, sizeof(directive), trace_fmt, linenum, filename);
-	else {
-		snprintf (directive, sizeof(directive), trace_fmt, 0, filename);
-	}
-
-	/* If output_file is nil then we should put the directive in
-	 * the accumulated actions.
-	 */
-	if (output_file) {
-		fputs (directive, output_file);
-	}
-	else
-		add_action (directive);
+	backend->line_directive_out(backend, output_file, path, linenum);
 }
 
 
@@ -318,25 +289,25 @@ void mark_prolog (void)
  */
 void mk2data (int value)
 {
+	const struct flex_backend_t *backend = get_backend();
+
 	/* short circuit any output */
 	if (!gentables)
 		return;
 
 	if (datapos >= NUMDATAITEMS) {
-		outc (',');
+		backend->column_separator(backend);
 		dataflush ();
 	}
 
 	if (datapos == 0)
-		/* Indent. */
-		out ("    ");
-
+		backend->indent(backend);
 	else
-	  outc (',');
+	  backend->column_separator(backend);
 
 	++datapos;
 
-	out_dec ("%5d", value);
+	backend->format_data_table_entry(backend, value);
 }
 
 
@@ -347,23 +318,25 @@ void mk2data (int value)
  */
 void mkdata (int value)
 {
+	const struct flex_backend_t *backend = get_backend();
+
 	/* short circuit any output */
 	if (!gentables)
 		return;
 
 	if (datapos >= NUMDATAITEMS) {
-		outc (',');
+		backend->column_separator(backend);
 		dataflush ();
 	}
 
 	if (datapos == 0)
-		/* Indent. */
-		out ("    ");
+		backend->indent(backend);
 	else
-		outc (',');
+	  backend->column_separator(backend);
+
 	++datapos;
 
-	out_dec ("%5d", value);
+	backend->format_data_table_entry(backend, value);
 }
 
 
@@ -451,62 +424,6 @@ unsigned char myesc (unsigned char array[])
 	default:
 		return array[1];
 	}
-}
-
-
-/* out - various flavors of outputting a (possibly formatted) string for the
- *	 generated scanner, keeping track of the line count.
- */
-
-void out (const char *str)
-{
-	fputs (str, stdout);
-}
-
-void out_dec (const char *fmt, int n)
-{
-	fprintf (stdout, fmt, n);
-}
-
-void out_dec2 (const char *fmt, int n1, int n2)
-{
-	fprintf (stdout, fmt, n1, n2);
-}
-
-void out_hex (const char *fmt, unsigned int x)
-{
-	fprintf (stdout, fmt, x);
-}
-
-void out_str (const char *fmt, const char str[])
-{
-	fprintf (stdout,fmt, str);
-}
-
-void out_str_dec (const char *fmt, const char str[], int n)
-{
-	fprintf (stdout,fmt, str, n);
-}
-
-void outc (int c)
-{
-	fputc (c, stdout);
-}
-
-void outn (const char *str)
-{
-	fputs (str,stdout);
-    fputc('\n',stdout);
-}
-
-/** Print "m4_define( [[def]], [[val]])m4_dnl\n".
- * @param def The m4 symbol to define.
- * @param val The definition; may be NULL.
- */
-void out_m4_define (const char* def, const char* val)
-{
-    const char * fmt = "m4_define( [[%s]], [[%s]])m4_dnl\n";
-    fprintf(stdout, fmt, def, val?val:"");
 }
 
 
@@ -599,21 +516,26 @@ void   *reallocate_array (void *array, int size, size_t element_size)
 
 void transition_struct_out (int element_v, int element_n)
 {
+	const struct flex_backend_t *backend = get_backend();
 
 	/* short circuit any output */
 	if (!gentables)
 		return;
 
-	out_dec2 ("M4_HOOK_TABLE_OPENER[[%4d]],[[%4d]]M4_HOOK_TABLE_CONTINUE", element_v, element_n);
-	outc ('\n');
+	backend->open_table(backend);
+	backend->format_data_table_entry(backend, element_v);
+	backend->column_separator(backend);
+	backend->format_data_table_entry(backend, element_n);
+	backend->continue_table(backend);
+	backend->newline(backend);
 
 	datapos += TRANS_STRUCT_PRINT_LENGTH;
 
 	if (datapos >= 79 - TRANS_STRUCT_PRINT_LENGTH) {
-		outc ('\n');
+		backend->newline(backend);
 
 		if (++dataline % 10 == 0)
-			outc ('\n');
+			backend->newline(backend);
 
 		datapos = 0;
 	}
@@ -657,21 +579,6 @@ char   *chomp (char *str)
 	while (p >= str && (*p == '\r' || *p == '\n'))
 		*p-- = 0;
 	return str;
-}
-
-void comment(const char *txt)
-{
-	char buf[MAXLINE];
-	bool eol;
-
-	strncpy(buf, txt, MAXLINE-1);
-	eol = buf[strlen(buf)-1] == '\n';
-
-	if (eol)
-		buf[strlen(buf)-1] = '\0';
-	out_str("M4_HOOK_COMMENT_OPEN [[%s]] M4_HOOK_COMMENT_CLOSE", buf);
-	if (eol)
-		outc ('\n');
 }
 
 
