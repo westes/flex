@@ -132,6 +132,8 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 			 */
 			default_rule = num_rules;
 
+			rule_has_nl[default_rule] = true;
+
 			finish_rule( def_rule, false, 0, 0, 0);
 
 			for ( i = 1; i <= lastsc; ++i )
