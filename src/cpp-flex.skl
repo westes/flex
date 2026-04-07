@@ -3237,7 +3237,7 @@ void yyFlexLexer::yyensure_buffer_stack(void)
 		YY_G(yy_buffer_stack) = (struct yy_buffer_state**)yyalloc
 								(num_to_alloc * sizeof(struct yy_buffer_state*)
 								M4_YY_CALL_LAST_ARG);
-		if ( YY_G(yy_buffer_stack == NULL) ) {
+		if ( YY_G(yy_buffer_stack) == NULL ) {
 			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
 		}
 
