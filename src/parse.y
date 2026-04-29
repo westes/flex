@@ -199,27 +199,33 @@ optionlist	:  optionlist option
 
 option		:  TOK_OUTFILE '=' NAME
 			{
+			reject_brackets_in_option_value("outfile", nmstr);
 			env.outfilename = xstrdup(nmstr);
 			env.did_outfilename = 1;
 			}
 		|  TOK_EXTRA_TYPE '=' NAME
-			{ extra_type = xstrdup(nmstr); }
+			{ reject_brackets_in_option_value("extra-type", nmstr);
+			  extra_type = xstrdup(nmstr); }
 		|  TOK_PREFIX '=' NAME
-			{ ctrl.prefix = xstrdup(nmstr);
-                          if (strchr(ctrl.prefix, '[') || strchr(ctrl.prefix, ']'))
-                              flexerror(_("Prefix must not contain [ or ]")); }
+			{ reject_brackets_in_option_value("prefix", nmstr);
+			  ctrl.prefix = xstrdup(nmstr); }
 		|  TOK_YYCLASS '=' NAME
-			{ ctrl.yyclass = xstrdup(nmstr); }
+			{ reject_brackets_in_option_value("yyclass", nmstr);
+			  ctrl.yyclass = xstrdup(nmstr); }
 		|  TOK_HEADER_FILE '=' NAME
-			{ env.headerfilename = xstrdup(nmstr); }
+			{ reject_brackets_in_option_value("header-file", nmstr);
+			  env.headerfilename = xstrdup(nmstr); }
 		|  TOK_YYLMAX '=' TOK_NUMERIC
 			{ ctrl.yylmax = nmval; }
 		|  TOK_YYDECL '=' NAME
-			{ ctrl.yydecl = xstrdup(nmstr); }
+			{ reject_brackets_in_option_value("yydecl", nmstr);
+			  ctrl.yydecl = xstrdup(nmstr); }
 		|  TOK_PREACTION '=' NAME
-			{ ctrl.preaction = xstrdup(nmstr); }
+			{ reject_brackets_in_option_value("pre-action", nmstr);
+			  ctrl.preaction = xstrdup(nmstr); }
 		|  TOK_POSTACTION '=' NAME
-			{ ctrl.postaction = xstrdup(nmstr); }
+			{ reject_brackets_in_option_value("post-action", nmstr);
+			  ctrl.postaction = xstrdup(nmstr); }
 		|  TOK_BUFSIZE '=' TOK_NUMERIC
 			{ ctrl.bufsize = nmval; }
 		|  TOK_EMIT '=' NAME
@@ -227,7 +233,8 @@ option		:  TOK_OUTFILE '=' NAME
 		|  TOK_USERINIT '=' NAME
 			{ ctrl.userinit = xstrdup(nmstr); }
 		|  TOK_YYTERMINATE '=' NAME
-			{ ctrl.yyterminate = xstrdup(nmstr); }
+			{ reject_brackets_in_option_value("yyterminate", nmstr);
+			  ctrl.yyterminate = xstrdup(nmstr); }
 		|  TOK_TABLES_FILE '=' NAME
         		{ tablesext = true; tablesfilename = xstrdup(nmstr); }
 		;
