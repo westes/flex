@@ -239,9 +239,11 @@ int flex_main (int argc, char *argv[])
 	/* generate cases for any missing EOF rules */
 	for (i = 1; i <= lastsc; ++i)
 		if (!sceof[i]) {
+			if (did_eof_rule) {
+				out ("M4_HOOK_EOF_STATE_CASE_FALLTHROUGH");
+				outc('\n');
+			}
 			out_str ("M4_HOOK_EOF_STATE_CASE_ARM(%s)", scname[i]);
-			outc('\n');
-			out ("M4_HOOK_EOF_STATE_CASE_FALLTHROUGH");
 			outc('\n');
 			did_eof_rule = true;
 		}
