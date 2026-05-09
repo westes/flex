@@ -849,6 +849,10 @@ extern void dataflush(void);
 /* Report an error message and terminate. */
 extern void flexerror(const char *);
 
+/* Reject `[` / `]` in a %option= value to prevent m4-quote injection. */
+extern void reject_brackets_in_option_value(const char *opt_name,
+					     const char *val);
+
 /* Report a fatal error message and terminate. */
 extern void flexfatal(const char *);
 

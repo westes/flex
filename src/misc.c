@@ -205,6 +205,30 @@ void flexerror (const char *msg)
 }
 
 
+/* reject_brackets_in_option_value - bail out if a %option= value contains
+ * `[` or `]`.  Such characters break out of the m4 quoting scheme that
+ * flex uses to interpolate option values into m4 input (see PR #81 which
+ * added the same escaping for action / code-block contexts via
+ * ESCAPED_QSTART / ESCAPED_QEND in src/scan.l).  The OPTION-state
+ * quoted-string rule at src/scan.l:480 was never plumbed through that
+ * escape, so without this guard a malicious .l file can inject arbitrary
+ * m4 (e.g. m4_syscmd) into the output pipeline.
+ *
+ * Mirrors the existing prefix= guard that has been in parse.y since
+ * before PR #81.
+ */
+void reject_brackets_in_option_value (const char *opt_name, const char *val)
+{
+	if (val != NULL && (strchr (val, '[') || strchr (val, ']'))) {
+		char    msg[MAXLINE];
+		snprintf (msg, sizeof msg,
+		          _("%%option %s value must not contain '[' or ']'"),
+		          opt_name);
+		flexerror (msg);
+	}
+}
+
+
 /* flexfatal - report a fatal error message and terminate */
 
 void flexfatal (const char *msg)
