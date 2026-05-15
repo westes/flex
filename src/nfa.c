@@ -539,9 +539,17 @@ int     mkposcl (int state)
  *   if "ub" is INFINITE_REPEAT then "new" matches "lb" or more occurrences of "mach"
  */
 
+#ifndef RE_DUP_MAX
+#define RE_DUP_MAX 255
+#endif
+
 int     mkrep (int mach, int lb, int ub)
 {
 	int     base_mach, tail, copy, i;
+
+	if (lb > RE_DUP_MAX || (ub > RE_DUP_MAX &&
+	    ub != INFINITE_REPEAT))
+		flexfatal (_("repetition value too large"));
 
 	base_mach = copysingl (mach, lb - 1);
 
