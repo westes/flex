@@ -55,7 +55,7 @@ void add_action (const char *new_text)
 						    action_size);
 	}
 
-	strcpy (&action_array[action_index], new_text);
+	memcpy (&action_array[action_index], new_text, len + 1);
 
 	action_index += len;
 }
@@ -666,7 +666,7 @@ void comment(const char *txt)
 	char buf[MAXLINE];
 	bool eol;
 
-	strncpy(buf, txt, MAXLINE-1);
+	snprintf(buf, sizeof(buf), "%s", txt);
 	eol = buf[strlen(buf)-1] == '\n';
 
 	if (eol)
