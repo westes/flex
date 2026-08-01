@@ -4007,7 +4007,27 @@ static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *
 	} else {
 		rd->bread += (flex_uint32_t) bytes;
 	}
-	th->th_name = th->th_version + strlen (th->th_version) + 1;
+	/* Validate that the buffer contains TWO NUL-terminated strings within
+	 * its bounds (a version string followed by a name string).  Without
+	 * these checks, a header whose payload is missing either NUL would
+	 * cause the strlen() below, and the strcmp() in yytbl_fload, to read
+	 * past the heap allocation. */
+	{
+		size_t vlen, nlen;
+		vlen = strnlen (th->th_version, bytes);
+		if (vlen >= bytes - 1) {
+			yyfree (th->th_version M4_YY_CALL_LAST_ARG);
+			th->th_version = NULL;
+			return -1;
+		}
+		nlen = strnlen (th->th_version + vlen + 1, bytes - vlen - 1);
+		if (nlen >= bytes - vlen - 1) {
+			yyfree (th->th_version M4_YY_CALL_LAST_ARG);
+			th->th_version = NULL;
+			return -1;
+		}
+		th->th_name = th->th_version + vlen + 1;
+	}
 	return 0;
 }
 
@@ -4045,6 +4065,19 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 	    || yytbl_read16 (&td.td_flags, rd) != 0
 	    || yytbl_read32 (&td.td_hilen, rd) != 0
 	    || yytbl_read32 (&td.td_lolen, rd) != 0) {
+		return -1;
+	}
+	/* Bound the dimensions before any size_t multiplication.  Without
+	 * this, a malicious tables file with td_lolen and td_hilen set to
+	 * arbitrary uint32 values drives the bytes computation below into
+	 * a multi-GB allocation request.  YYTBL_MAX_DIM is well above what
+	 * any real scanner produces (the documented NFA-state limit is
+	 * around 32k; tables larger than a few million elements would not
+	 * fit any realistic memory budget). */
+#ifndef YYTBL_MAX_DIM
+#define YYTBL_MAX_DIM (1u << 24)
+#endif
+	if (td.td_lolen > YYTBL_MAX_DIM || td.td_hilen > YYTBL_MAX_DIM) {
 		return -1;
 	}
 	/* Lookup the map for the transition table so we have it in case we need it
