@@ -368,7 +368,8 @@ int filter_fix_linedirs (struct filter *chain)
 				s1 = fname;
 				s2 = filename;
 
-				while ((s2 - filename) < (MAXLINE - 1) && *s1) {
+				/* Leave room for a possible escape byte and the terminator. */
+				while ((s2 - filename) < (MAXLINE - 2) && *s1) {
 					/* Escape the backslash */
 					if (*s1 == '\\')
 						*s2++ = '\\';
