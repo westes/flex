@@ -2336,20 +2336,17 @@ void yyFlexLexer::ctor_common() {
 	yy_buffer_stack_max = 0;
 
 
-m4_ifdef( [[M4_MODE_USES_REJECT]],
-[[
-	yy_state_buf = new yy_state_type[YY_STATE_BUF_SIZE];
-	yy_state_buf_max = YY_STATE_BUF_SIZE;
-]],
-[[
+	/* The reject state buffer is allocated by yylex() and resized with
+	 * yyrealloc(), so it must not come from new[].
+	 */
 	yy_state_buf = 0;
-]])
+	yy_state_buf_max = 0;
 }
 
 /* The contents of this function are C++ specific, so the YY_G macro is not used.
  */
 yyFlexLexer::~yyFlexLexer() {
-	delete [] yy_state_buf;
+	yyfree( yy_state_buf M4_YY_CALL_LAST_ARG );
 	yyfree( yy_start_stack M4_YY_CALL_LAST_ARG );
 	yy_delete_buffer( yy_current_buffer() M4_YY_CALL_LAST_ARG);
 	yyfree( yy_buffer_stack M4_YY_CALL_LAST_ARG );
