@@ -710,6 +710,9 @@ void yy_delete_buffer(yybuffer b, FlexLexer *yyscanner)
  */
 void yypush_buffer_state(yybuffer new_buffer, FlexLexer *yyscanner)
 {
+	size_t newSize = 0;
+	yyStateType *newStateBuf = 0;
+
 	if (new_buffer == NULL) {
 		return;
 	}
@@ -731,6 +734,24 @@ void yypush_buffer_state(yybuffer new_buffer, FlexLexer *yyscanner)
 
 	/* copied from yy_switch_to_buffer. */
 	yy_load_buffer_state(yyscanner);
+
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
+	/* Ensure the reject state buffer is large enough.
+	 */
+	if ( yyscanner->yyStateBufMax < (yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE) ) {
+		newSize = yy_current_buffer(yyscanner)->yyInputBufSize + YY_STATE_BUF_EXTRA_SPACE;
+		newStateBuf = (yyStateType *)yyrealloc( yyscanner->yyStateBuf, (newSize * sizeof(yyStateType)), yyscanner );
+
+		if ( newStateBuf == NULL ) {
+			yypanic( "out of dynamic memory in yylex()", yyscanner );
+		}
+		else {
+			yyscanner->yyStateBuf = newStateBuf;
+			yyscanner->yyStateBufMax = newSize;
+		}
+	}
+]] )
+
 	yyscanner->yyDidBufferSwitchOnEof = true;
 }
 
