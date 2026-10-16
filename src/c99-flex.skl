@@ -801,6 +801,10 @@ void yy_delete_buffer(yybuffer b, yyscan_t yyscanner)
  */
 void yypush_buffer_state(yybuffer new_buffer, yyscan_t yyscanner)
 {
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
+	size_t new_size = 0;
+	yy_state_type *new_state_buf = 0;
+]] )
 	if (new_buffer == NULL) {
 		return;
 	}
@@ -822,6 +826,24 @@ void yypush_buffer_state(yybuffer new_buffer, yyscan_t yyscanner)
 
 	/* copied from yy_switch_to_buffer. */
 	yy_load_buffer_state( yyscanner );
+
+m4_ifdef( [[M4_MODE_USES_REJECT]], [[
+	/* Ensure the reject state buffer is large enough.
+	 */
+	if ( yyscanner->yy_state_buf_max < (size_t) (yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE) ) {
+		new_size = yy_current_buffer(yyscanner)->yy_buf_size + YY_STATE_BUF_EXTRA_SPACE;
+		new_state_buf = (yy_state_type*) yyrealloc( yyscanner->yy_state_buf, (new_size * sizeof(yy_state_type)), yyscanner );
+
+		if ( new_state_buf == NULL ) {
+			yypanic( "out of dynamic memory in yylex()", yyscanner );
+		}
+		else {
+			yyscanner->yy_state_buf = new_state_buf;
+			yyscanner->yy_state_buf_max = new_size;
+		}
+	}
+]] )
+
 	yyscanner->yy_did_buffer_switch_on_eof = true;
 }
 

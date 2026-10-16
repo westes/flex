@@ -98,7 +98,8 @@ DIRECT_TESTS = \
 	rescan_nr.direct \
 	rescan_r.direct \
 	state_buf.direct \
-	state_buf_multiple.direct
+	state_buf_multiple.direct \
+	state_buf_push.direct
 
 I3_TESTS = \
 	cxx_yywrap.i3 \
@@ -161,6 +162,7 @@ yyextra_c99_SOURCES = yyextra_c99.l
 yywrap_r_i3_SOURCES = yywrap_r.i3.l
 state_buf_direct_SOURCES = state_buf.direct.lll
 state_buf_multiple_direct_SOURCES = state_buf_multiple.direct.lll
+state_buf_push_direct_SOURCES = state_buf_push.direct.l
 
 # Normally, automake would distribute files built by flex. Since the
 # point of the test suite is to test the files that flex builds, and
@@ -232,6 +234,7 @@ CLEANFILES = \
 	yywrap_r.i3.c \
 	state_buf.direct.cc \
 	state_buf_multiple.direct.cc \
+	state_buf_push.direct.c \
 	$(RULESET_REMOVABLES)
 
 dist-hook:
@@ -302,6 +305,7 @@ EXTRA_DIST = \
 	yyunput.txt \
 	state_buf.direct.txt \
 	state_buf_multiple.direct.txt \
+	state_buf_push.direct.txt \
 	$(RULESETS)
 
 dist_noinst_SCRIPTS = \
