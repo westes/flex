@@ -299,6 +299,7 @@ EXTRA_DIST = \
 	yymore.txt \
 	yymorearray.txt \
 	yymorearraybol.txt \
+	yymorearrayless.txt \
 	yyunput.txt \
 	state_buf.direct.txt \
 	state_buf_multiple.direct.txt \
@@ -449,6 +450,7 @@ RULESETS = \
 	$(srcdir)/yymore.rules \
 	$(srcdir)/yymorearray.rules \
 	$(srcdir)/yymorearraybol.rules \
+	$(srcdir)/yymorearrayless.rules \
 	$(srcdir)/yyunput.rules
 
 $(srcdir)/ruleset.am: $(srcdir)/ruleset.sh $(RULESETS)

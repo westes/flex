@@ -498,6 +498,13 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
         YY_LESS_LINENO(yyless_macro_arg);\
 		*yy_cp = YY_G(yy_hold_char); \
 		YY_RESTORE_YY_MORE_OFFSET \
+m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
+		/* yyleng counts the yymore() text, which is not in the buffer. */ \
+		if ( yyless_macro_arg < YY_G(yy_more_offset) ) { \
+			YY_G(yy_more_offset) = yyless_macro_arg; \
+		} \
+		yyless_macro_arg -= YY_G(yy_more_offset); \
+]])]]) \
 		YY_G(yy_c_buf_p) = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
 		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 		} \
@@ -3449,8 +3456,22 @@ int yyFlexLexer::yy_top_state()
 		/* Undo effects of setting up yytext. */ \
 		int yyless_macro_arg = (n); \
 		YY_LESS_LINENO(yyless_macro_arg);\
+m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
+			/* yytext is a copy; the token itself is at yytext_ptr. */ \
+			*YY_G(yy_c_buf_p) = YY_G(yy_hold_char); \
+m4_ifdef([[M4_MODE_YYMORE_USED]], [[ \
+			if ( yyless_macro_arg < YY_G(yy_prev_more_offset) ) { \
+				YY_G(yy_prev_more_offset) = yyless_macro_arg; \
+			} \
+			YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + yyless_macro_arg - YY_G(yy_prev_more_offset); \
+]], [[ \
+			YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + yyless_macro_arg; \
+]]) \
+			yytext[yyless_macro_arg] = '\0'; \
+]], [[ \
 			yytext[yyleng] = YY_G(yy_hold_char); \
 			YY_G(yy_c_buf_p) = yytext + yyless_macro_arg; \
+]]) \
 			YY_G(yy_hold_char) = *YY_G(yy_c_buf_p); \
 			*YY_G(yy_c_buf_p) = '\0'; \
 			yyleng = yyless_macro_arg; \

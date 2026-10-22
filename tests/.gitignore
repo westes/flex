@@ -150,6 +150,8 @@ yymore*
 !yymorearray.txt
 !yymorearraybol.rules
 !yymorearraybol.txt
+!yymorearrayless.rules
+!yymorearrayless.txt
 yyunput*
 !yyunput.rules
 !yyunput.txt
