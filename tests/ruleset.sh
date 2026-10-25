@@ -8,6 +8,9 @@
 # then an automake include directive.
 set -eu
 
+# The glob below must sort the same way everywhere.
+export LC_ALL=C
+
 RULESET_TESTS=""
 RULESET_REMOVABLES=""
 TESTMAKEROPTS=""
