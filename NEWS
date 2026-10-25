@@ -128,6 +128,12 @@ flex NEWS
 
 ** scanner
 
+*** With %option yylineno, a newline matched by the default rule is now
+    counted in yylineno. Before, yylineno did not change when the
+    default rule matched a newline. (#397)
+
+    Thanks to ggujjula; reported by Horst H. von Brand.
+
 *** With %array and yylineno, calling yyless() with a count shorter than
     the text saved by yymore() made yylineno come out too low. This has
     been fixed.
