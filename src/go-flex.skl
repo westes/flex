@@ -1413,8 +1413,14 @@ m4_ifdef([[M4_MODE_YYLINENO]], [[
 /* FIXME: gate on yyRuleCanMatchEOL, this is no longer a macro
  * and we can get at yyAct */
 static void yyLessLineno(int n, FlexLexer *yyscanner) {
-	int yyl;
-	for (yyl = n; yyl < yyscanner->yyleng; ++yyl) {
+	int yyl = n;
+m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
+	/* The yymore() text was counted by an earlier action. */
+	if (yyl < yyscanner->yyPrevMoreOffset) {
+		yyl = yyscanner->yyPrevMoreOffset;
+	}
+]])]])
+	for (; yyl < yyscanner->yyleng; ++yyl) {
 		if (yyscanner->yytext[yyl] == '\n') {
 			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->bs_yylineno--;
 		}

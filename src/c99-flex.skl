@@ -1564,8 +1564,14 @@ m4_ifdef( [[M4_MODE_YYLINENO]], [[
 /* FIXME: gate on yy_rule_can_match_eol, this is no longer a macro
  * and we can get at yy_act */
 static void yy_less_lineno(int n, yyscan_t yyscanner) {
-	int yyl;
-	for ( yyl = n; yyl < yyscanner->yyleng_r; ++yyl ) {
+	int yyl = n;
+m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
+	/* The yymore() text was counted by an earlier action. */
+	if ( yyl < yyscanner->yy_prev_more_offset ) {
+		yyl = yyscanner->yy_prev_more_offset;
+	}
+]])]])
+	for ( ; yyl < yyscanner->yyleng_r; ++yyl ) {
 		if ( yyscanner->yytext_r[yyl] == '\n' ) {
 			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno--;
 		}
