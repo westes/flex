@@ -282,6 +282,7 @@ EXTRA_DIST = \
 	bol.txt \
 	ccl.txt \
 	debug.txt \
+	defaultrule.txt \
 	extended.txt \
 	fixedtrailing.txt \
 	flexname.txt \
@@ -434,6 +435,7 @@ RULESETS = \
 	$(srcdir)/bol.rules \
 	$(srcdir)/ccl.rules \
 	$(srcdir)/debug.rules \
+	$(srcdir)/defaultrule.rules \
 	$(srcdir)/extended.rules \
 	$(srcdir)/fixedtrailing.rules \
 	$(srcdir)/flexname.rules \
