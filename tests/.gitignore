@@ -9,6 +9,8 @@
 
 alloc_extra_nr
 alloc_extra_nr.c
+alloc_extra_r
+alloc_extra_r.c
 alloc_extra_c99
 alloc_extra_c99.c
 array*
@@ -54,6 +56,8 @@ cxx_restart
 cxx_restart.cc
 cxx_yywrap.i3
 cxx_yywrap.cc
+yywrap_r.i3
+yywrap_r.i3.c
 debug*
 !debug.rules
 !debug.txt
@@ -122,6 +126,10 @@ rescan_nr.direct
 rescan_nr.direct.c
 rescan_r.direct
 rescan_r.direct.c
+state_buf.direct
+state_buf.direct.cc
+state_buf_multiple.direct
+state_buf_multiple.direct.cc
 string_nr
 string_nr.c
 string_r
