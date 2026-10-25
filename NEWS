@@ -128,6 +128,10 @@ flex NEWS
 
 ** scanner
 
+*** With %array and yylineno, calling yyless() with a count shorter than
+    the text saved by yymore() made yylineno come out too low. This has
+    been fixed.
+
 *** With %array, calling yyless() after yymore() could write past the
     end of the input buffer. This has been fixed.
 
