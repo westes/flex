@@ -4,55 +4,317 @@ flex NEWS
 
 ** build
 
-*** Flex now includes its own <config.h> header before including
-    system headers so that any system specific features detected by
-    configure are taken into account during compilation of flex
-    itself.
+*** Building flex no longer rewrites the .po translation files.
 
-*** The flex build system now includes Makefile targets at the top
-    level to allow just building and installing libfl.
+*** A race condition that could build flex twice at the same time during
+    a parallel make has been fixed.
 
-*** The flex distribution now includes a file, src/libfl.pc, to allow
-    using pkgconfig to find out what flags to use when building
-    against libfl from flex.
+*** Source files now carry SPDX license identifiers.
+
+    Thanks to Tuukka Pasanen.
+
+*** The replacement malloc in lib/ now has a full prototype.
+
+    Thanks to Richard Barnes.
+
+*** Automated builds now run on GitHub Actions instead of travis-ci, and
+    nightly distribution tarballs are built there.
+
+    Thanks to Joseph Langley.
+
+*** The configure script accepts the space that AC_PROG_LEX puts before
+    the parentheses when checking for yymore and yyreject. It also no
+    longer uses obsolete Autoconf macros, and the macro that finds the C
+    compiler for the build machine has been updated to fix problems with
+    executable file names when cross compiling.
+
+    Thanks to Bill Currie and Kang-Che Sung.
+
+*** The man page can now be built when cross compiling, including on
+    MS Windows. (#560)
 
 *** Various edge cases, mostly involving out-of-tree builds have been
     accounted for in the autotools build system.
 
+    Thanks to Michael Haubenwallner and Kang-Che Sung.
+
+*** The build now has flex build its own scanner a second time and fails
+    if the result differs from the first. This check runs only for
+    native builds.
+
+    Thanks to Kang-Che Sung.
+
+*** The GitHub Actions workflows now use pinned versions of the actions,
+    have read-only permissions, and are kept up to date by dependabot.
+
+    Thanks to Pedro Kaj Kjellerup Nacht.
+
+*** The minimum versions of the Autotools needed to build flex are now
+    correct and documented, and autogen.sh is more reliable in finding
+    libtoolize.
+
+    Thanks to Kang-Che Sung.
+
+*** Flex no longer searches PATH for m4 itself and leaves that to the
+    system. This avoids a failure on 32-bit systems that read file
+    systems with 64-bit inode numbers. (#413)
+
+    Thanks to Kang-Che Sung.
+
+*** Flex no longer declares reallocarray() itself.
+
+    Thanks to Lukasz Baj.
+
+*** Flex now includes its own <config.h> header before including system
+    headers so that any system specific features detected by configure
+    are taken into account during compilation of flex itself.
+
+    Thanks to Kang-Che Sung.
+
+*** The flex build system now includes Makefile targets at the top level
+    to allow just building and installing libfl.
+
+    Thanks to Kang-Che Sung.
+
+*** The flex distribution now includes a file, src/libfl.pc, to allow
+    using pkgconfig to find out what flags to use when building against
+    libfl from flex.
+
+    Thanks to Tyler Slabinski and Kang-Che Sung.
+
+*** The skeleton files are now generated correctly on systems whose
+    files use CRLF line endings.
+
+    Thanks to Jannick.
+
 *** A crash during building on NetBSD has been fixed.
 
-*** Flex is now automatically built by travis-ci. That should increase
-    the visibility of bugs and help prevent regressions.
+    Thanks to Thomas Klausner.
 
 ** documentation
 
-*** new bg, eo, ka, pt, uk translations from the translation project
+*** Several examples in the manual have been corrected or modernized:
+    character classes, case-insensitive ranges, the patterns for C and
+    C++ comments, the Bison snippets, and a call to yylex_init_extra().
+
+    Thanks to Joseph Langley, Martin Joerg, zmajeed, Akim Demaille and
+    Nikolaos Chatzikonstantinou.
+
+*** Typos in the manual and the README have been fixed.
+
+    Thanks to Houtan Bastani, Xiao Hanyu, winter.loo, musvaage and
+    6NoFantasy9.
+
+*** INSTALL is now INSTALL.md and has updated instructions. There is a
+    new CONTRIBUTING.md, and the README now describes how to use the
+    mailing list and where to find releases.
+
+    Thanks to Joseph Langley and Simon Sobisch.
+
+*** New bg, ka, pt, uk translations from the Translation Project.
+
+*** Updated ca, da, de, eo, es, fi, fr, ga, hr, ko, nl, pl, pt_BR, ro,
+    ru, sr, sv, tr, vi, zh_CN, zh_TW translations from the Translation
+    Project.
+
+*** The --yymore option is now documented.
+
+    Thanks to ggujjula.
+
+*** The manual now describes how to retarget flex to other languages and
+    lists the deprecated interfaces and their replacements.
+
+    Thanks to Eric S. Raymond and Daniel Brooks.
 
 ** scanner
 
+*** With %array, calling yyless() after yymore() could write past the
+    end of the input buffer. This has been fixed.
+
+    Thanks to anshal ossaimi.
+
+*** A heap buffer overflow that could happen when flex_main() was called
+    more than once in the same process has been fixed.
+
+    Thanks to David Pokora of Trail of Bits, in collaboration with
+    Anthropic.
+
+*** Flex no longer puts #line directives from %top blocks into the
+    output when --noline or %option noline is given. (#463, #268)
+
+    Thanks to Javier Maestro.
+
+*** A bug in how yylex_destroy() frees the buffer stack has been fixed.
+
+    Thanks to Wiktor Garbacz.
+
+*** Refilling the input buffer is a little faster.
+
+    Thanks to John Lindal.
+
+*** When the input buffer is grown, the new size now always includes
+    room for the final two end-of-buffer characters.
+
+    Thanks to David Lamparter.
+
+*** Generated scanners now compile without warnings in more situations,
+    for example with -Wextra-semi-stmt (#416), -Wundef,
+    -Wnull-dereference (#377), when yyunput is disabled, and when
+    comparing sizes.
+
+    Thanks to Sean McBride, Alex Richardson, Kang-Che Sung and Bill
+    Currie.
+
+*** The error message for a file that cannot be opened now includes the
+    system's reason.
+
+    Thanks to Ryan McCullagh.
+
 *** Some memory leaks have been fixed.
 
+    Thanks to viktor.shepel and Kang-Che Sung.
+
+*** Scanners generated with the --full option no longer allocate table
+    space that is never used. (#628)
+
+    Thanks to Joseph Langley.
+
+*** Line numbers in #line directives were off by one after an indented
+    code block in the rules section. This has been fixed.
+
+    Thanks to Bill Currie.
+
+*** A leftover reference to the old location of the line directive
+    template in the output filter was corrected.
+
+    Thanks to Burke Libbey.
+
+*** A crash while starting m4 on Apple M1 has been fixed. (#539)
+
+    Thanks to Yifeng Li.
+
+*** Scanners now fail with an error, rather than misbehaving, when
+    yy_get_next_buffer() cannot find a buffer. (#525)
+
+    Thanks to Joseph Langley.
+
+*** The generated header flexint_shared.h can now be included twice
+    without errors (#329), and it uses <cstdint> when compiled as C++11
+    or later. (#517)
+
+    Thanks to Kang-Che Sung.
+
+*** New options: --noinput and --noyyinput, --noyyget_debug and
+    --noyyset_debug. The existing --nounput can now also be written
+    --noyyunput.
+
+    Thanks to ggujjula and Eric S. Raymond.
+
+*** Scanners that call yy_switch_to_buffer() with REJECT now always have
+    a large enough state buffer.
+
+    Thanks to Joseph Langley.
+
+*** There are new function style interfaces to replace those that relied
+    on C macros: yybegin(), yyecho(), yyreject(), yyinput(), yyunput(),
+    yystart(), yyatbol(), yysetbol() and yypanic(). Macros that you used
+    to define yourself are replaced by options: yydecl, yylmax,
+    noyyread, extra-type, user-init, pre-action, post-action and
+    bufsize. The old interfaces still work with the default back end but
+    are deprecated, as is YY_FLEX_SUBMINOR_VERSION. The manual lists the
+    replacements.
+
+    Thanks to Eric S. Raymond.
+
+*** Flex can now generate scanners in other languages. The new option
+    -e, --emit (also %option emit) selects a back end. The default back
+    end generates C or C++ as before. A new C99 back end generates only
+    reentrant scanners and drops the legacy interfaces. The new %option
+    rewrite controls whether calls to the function style interfaces
+    below are rewritten for back ends that cannot rely on the C
+    preprocessor.
+
+    Thanks to Eric S. Raymond.
+
+*** Generated scanners no longer need a separate table for NUL
+    transitions.
+
+    Thanks to Nick Downing.
+
+*** The indentation in the skeleton has been corrected.
+
+    Thanks to Joerg Sonnenberger.
+
+*** YYTABLES_NAME is no longer defined unless tables are requested.
+
+    Thanks to Jannick.
+
+*** yy_top_state() now returns the current start condition when the
+    start condition stack is empty, including in reentrant scanners.
+
+    Thanks to Jannick.
+
+*** An option argument can now be "--", as in "flex --outfile -- file".
+    (#285)
+
+    Thanks to Kang-Che Sung.
+
+*** Memory for filters is now allocated with calloc.
+
+    Thanks to Michael W. Bombardieri.
+
 *** A long standing bug that effected expressions of the form c{i,j}
-    where 'c' is a character and {i,j} describes the number of times
-    to match against 'c' when case sensitivity was turned on has been
+    where 'c' is a character and {i,j} describes the number of times to
+    match against 'c' when case sensitivity was turned on has been
     fixed.
+
+    Thanks to NieDzejkob.
 
 *** New option: --backup-file allows setting the name of the file
     written containing backing up information. Useful if you need
-    backing up information from multiple scanners in the same
-    directory.
+    backing up information from multiple scanners in the same directory.
 
-*** flex emits correct line number directives when line numbers refer
-    to the file containing the line number directives.
+    Thanks to EricSharkey.
+
+*** flex emits correct line number directives when line numbers refer to
+    the file containing the line number directives.
+
+    Thanks to Jeff Smith.
 
 *** The options {no,}yy{get,set}_column are now supported.
 
 ** test
 
+*** The test suite now works in VPATH builds, and the test programs it
+    generates are ignored by git.
+
+    Thanks to Joseph Langley.
+
+*** The test suite no longer fails to build when many jobs run in
+    parallel and finish in an unlucky order, because the parser objects
+    now depend on the scanner headers they include.
+
+    Thanks to Ross Burton.
+
+*** The shell scripts in the repository have been cleaned up using
+    shellcheck.
+
+    Thanks to Daniel Brooks.
+
+*** Many tests are now generated from *.rules files, so that each one
+    runs against every back end. When running "make check", you can set
+    TESTOPTS to pass options to flex.
+
+    Thanks to Eric S. Raymond.
+
 *** Generating the various tableoptions make rules is now more portable.
+
+    Thanks to Kang-Che Sung.
 
 *** Tests of the options -C*f and -C*F will now run correctly on
     filesystems that are not case sensitive.
+
+    Thanks to Hans-Bernhard Broeker.
 
 * Noteworthy changes in release 2.6.4 (2017-05-06) [stable]
 
