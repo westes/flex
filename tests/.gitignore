@@ -61,6 +61,9 @@ yywrap_r.i3.c
 debug*
 !debug.rules
 !debug.txt
+defaultrule*
+!defaultrule.rules
+!defaultrule.txt
 extended*
 !extended.rules
 !extended.txt
