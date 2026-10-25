@@ -148,7 +148,7 @@ stage2scan.c: scan.l flex$(EXEEXT) stage1scan.c
 	( cd $(srcdir) && $(abs_builddir)/flex$(EXEEXT) \
 	  $(AM_LFLAGS) $(LFLAGS) -o scan.c -t scan.l ) >$@
 
-stage2compare: stage1scan.c
+stage2compare: stage1scan.c flex$(EXEEXT)
 	@rm -f stage2scan.c; \
 	$(MAKE) $(AM_MAKEFLAGS) stage2scan.c; \
 	echo Comparing stage1scan.c and stage2scan.c; \
