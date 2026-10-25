@@ -114,7 +114,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 ')dnl close preamble
 define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
-define(`M4_TEST_ASSERT', `if (!$1) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
+define(`M4_TEST_ASSERT', `if (!($1)) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
 m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `yyset_debug (yyget_debug(lexer), lexer);')') 
 dnl The reentrant C skeleton makes yyless() a macro that needs yyg, while
 dnl the c99 skeleton makes it a function that takes the scanner.
@@ -178,7 +178,7 @@ define(`M4_TEST_PREAMBLE', `dnl
 ')dnl close preamble
 define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
-define(`M4_TEST_ASSERT', `if (!$1) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
+define(`M4_TEST_ASSERT', `if (!($1)) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
 m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `yyset_debug (yyget_debug(lexer), lexer);')') 
 define(`M4_TEST_INCREMENT', `++$1')
 define(`M4_TEST_DECREMENT', `--$1')
