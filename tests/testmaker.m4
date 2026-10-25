@@ -37,12 +37,23 @@ dnl
 dnl M4_TEST_INITHOOK = define this in a rules file to splice code into
 dnl the test main as a compilation test.
 dnl
+dnl M4_TEST_SECTION3 = define this in a rules file to splice code into
+dnl section 3, ahead of the test main.  Code that must see the section 3
+dnl forms of yyless() and friends has to go here.  Currently supported
+dnl by the nr, r and c99 back ends.
+dnl
+dnl M4_TEST_LESS_DECL, M4_TEST_LESS_DEFN and M4_TEST_LESS_CALL(n) = a
+dnl helper that calls yyless(n) from section 3, for use from an action.
+dnl Put M4_TEST_LESS_DECL in section 1 of the rules file, and have
+dnl M4_TEST_SECTION3 expand to M4_TEST_LESS_DEFN.
+dnl
 dnl These macros are to be expanded by files with a .rules extension
 dnl that contain pure flex rulesets and no backend-specific code.
 dnl
 changecom
 define(`M4_TEST_FAILMESSAGE', `INVALID BACK END')dnl
 define(`M4_TEST_INITHOOK', `')dnl
+define(`M4_TEST_SECTION3', `')dnl
 dnl
 ifelse(M4_TEST_BACKEND, `nr', `dnl
 define(`M4_TEST_PREAMBLE', `dnl
@@ -55,9 +66,17 @@ define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
 define(`M4_TEST_ASSERT', `if (!($1)) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
 m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `flex_debug = 1;')') 
+define(`M4_TEST_LESS_DECL', `static void less_fn(int n);')
+define(`M4_TEST_LESS_DEFN', `static void less_fn(int n)
+{
+    yyless(n);
+}
+')
+define(`M4_TEST_LESS_CALL', `less_fn($1)')
 define(`M4_TEST_INCREMENT', `++$1')
 define(`M4_TEST_DECREMENT', `--$1')
 define(`M4_TEST_POSTAMBLE', `dnl
+M4_TEST_SECTION3`'dnl
 int main (int argc, char **argv)
 {
 ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl
@@ -97,9 +116,25 @@ define(`M4_TEST_DO', `$1;')
 define(`M4_TEST_FAILMESSAGE', `fprintf(stderr,"TEST FAILED: %d:\"%s\".\n", yylineno, yytext); exit(1);')
 define(`M4_TEST_ASSERT', `if (!$1) {fprintf(stderr,"ASSERT FAILED: %d:\"%s\"\n", yylineno, yytext); exit(1);}')
 m4_ifdef(`M4_TEST_ENABLEDEBUG', `define(`M4_TEST_INITHOOK', `yyset_debug (yyget_debug(lexer), lexer);')') 
+dnl The reentrant C skeleton makes yyless() a macro that needs yyg, while
+dnl the c99 skeleton makes it a function that takes the scanner.
+define(`M4_TEST_LESS_DECL', `static void less_fn(void *yyscanner, int n);')
+define(`M4_TEST_LESS_DEFN', `static void less_fn(void *yyscanner, int n)
+{
+#ifdef yyless
+    struct yyguts_t * yyg = (struct yyguts_t *) yyscanner;
+    (void) yyg;
+    yyless(n);
+#else
+    yyless(n, yyscanner);
+#endif
+}
+')
+define(`M4_TEST_LESS_CALL', `less_fn(yyscanner, $1)')
 define(`M4_TEST_INCREMENT', `++$1')
 define(`M4_TEST_DECREMENT', `--$1')
 define(`M4_TEST_POSTAMBLE', `dnl
+M4_TEST_SECTION3`'dnl
 int main (int argc, char **argv)
 {
 ifdef(`M4_TEST_TABLE_SERIALIZATION', `dnl

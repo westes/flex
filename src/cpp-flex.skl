@@ -468,8 +468,13 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
      */
     #define  YY_LESS_LINENO(n) \
             do { \
-                int yyl;\
-                for ( yyl = n; yyl < yyleng; ++yyl ) { \
+                int yyl = (n);\
+m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
+                /* The yymore() text was counted by an earlier action. */ \
+                if ( yyl < YY_G(yy_prev_more_offset) ) \
+                        yyl = YY_G(yy_prev_more_offset); \
+]])]]) \
+                for ( ; yyl < yyleng; ++yyl ) { \
 			if ( yytext[yyl] == '\n' ) { \
                         	--yylineno;\
 			} \

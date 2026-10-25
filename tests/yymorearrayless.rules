@@ -22,18 +22,46 @@
  */
  /*
   * Test yyless after yymore with array buffer representation.  What should happen is:
-  * 1. "foo" is matched by the first rule but not consumed.
+  * 1. "foo" is matched by the first rule and saved by yymore().
   * 2. "barbaz" is matched with token length 9, and yyless(4) keeps "foob".
   * 3. "arbaz" is pushed back and matched by the third rule.
+  * 4. "x\n\n" is matched and saved by yymore(), then "qrs" is matched with
+  *    token length 6.  yyless(1) is shorter than the yymore() text, so the
+  *    rest of that text is dropped and "qrs" is scanned again.  yylineno
+  *    must still count the two newlines that were dropped.
+  * 5. "ab" is saved by yymore(), then "cdef" is matched with token length 6.
+  *    yyless(4) is called from section 3, which has its own form of yyless(),
+  *    and keeps "abcd".  "ef" is pushed back and matched.
+  * 6. "m\n\n" is saved by yymore(), then "opq" is matched.  The section 3
+  *    yyless(1) is shorter than the yymore() text, with the same result as
+  *    case 4.
   */
 
 %array
-%option nounput noyywrap noyylineno warn nodefault noinput
+%option nounput noyywrap yylineno warn nodefault noinput
+%{
+M4_TEST_LESS_DECL
+%}
+define(`M4_TEST_SECTION3', `M4_TEST_LESS_DEFN')dnl
 %%
 foo	{M4_TEST_DO(yymore())}
-barbaz	{M4_TEST_DO(yyless(4))}
+barbaz	{M4_TEST_DO(yyless(4)) if (yyleng != 4 || yytext[3] != 'b') {fprintf(stderr,"ASSERT FAILED: yyless(4).\n"); exit(1);}}
 arbaz	{M4_TEST_ASSERT(yyleng == 5)}
+x\n\n	{M4_TEST_DO(yymore())}
+qrs	{if (yyleng > 3) {M4_TEST_DO(yyless(1)) if (yyleng != 1 || yytext[0] != 'x') {fprintf(stderr,"ASSERT FAILED: yyless(1).\n"); exit(1);}} else if (yylineno != 4) {fprintf(stderr,"ASSERT FAILED: yylineno %d.\n", yylineno); exit(1);}}
+ab	{M4_TEST_DO(yymore())}
+cdef	{M4_TEST_DO(M4_TEST_LESS_CALL(4)) if (yyleng != 4 || yytext[3] != 'd') {fprintf(stderr,"ASSERT FAILED: section 3 yyless(4).\n"); exit(1);}}
+ef	{M4_TEST_ASSERT(yyleng == 2)}
+m\n\n	{M4_TEST_DO(yymore())}
+opq	{if (yyleng > 3) {M4_TEST_DO(M4_TEST_LESS_CALL(1)) if (yyleng != 1 || yytext[0] != 'm') {fprintf(stderr,"ASSERT FAILED: section 3 yyless(1).\n"); exit(1);}} else if (yylineno != 8) {fprintf(stderr,"ASSERT FAILED: section 3 yylineno %d.\n", yylineno); exit(1);}}
 \n	;
 .	{M4_TEST_FAILMESSAGE}
 ###
 foobarbaz
+x
+
+qrs
+abcdef
+m
+
+opq
