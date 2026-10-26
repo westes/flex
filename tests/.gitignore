@@ -139,6 +139,10 @@ string_r
 string_r.c
 string_c99
 string_c99.c
+tables_fload_bad
+tables_fload_bad.c
+tables_verify_bad
+tables_verify_bad.c
 tableopts*
 !tableopts.rules
 !tableopts.txt

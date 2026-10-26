@@ -56,7 +56,7 @@ VER_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_VER_LOG_FLAGS = -d $(builddir) -i $(srcdir)/tableopts.txt -r
 
 AM_YFLAGS = -d -p test
-AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src
+AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src -I$(srcdir)
 
 check_PROGRAMS = $(RULESET_TESTS) $(SPORADIC_TESTS) $(DIRECT_TESTS) $(I3_TESTS) $(PTHREAD_TESTS)
 
@@ -86,6 +86,8 @@ SPORADIC_TESTS = \
 	string_nr \
 	string_r \
 	string_c99 \
+	tables_fload_bad \
+	tables_verify_bad \
 	top \
 	yyextra_nr \
 	yyextra_c99
@@ -154,6 +156,8 @@ rescan_r_direct_SOURCES = rescan_r.direct.l
 string_nr_SOURCES = string_nr.l
 string_r_SOURCES = string_r.l
 string_c99_SOURCES = string_c99.l
+tables_fload_bad_SOURCES = tables_fload_bad.l
+tables_verify_bad_SOURCES = tables_verify_bad.l
 top_SOURCES = top.l top_main.c
 nodist_top_SOURCES = top.h
 yyextra_nr_SOURCES = yyextra_nr.l
@@ -225,6 +229,10 @@ CLEANFILES = \
 	string_r.c \
 	string_c99.c \
 	string_c99.c \
+	tables_fload_bad.c \
+	tables_fload_bad.tables \
+	tables_verify_bad.c \
+	tables_verify_bad.tables \
 	top.c \
 	top.h  \
 	yyextra_nr.c \
@@ -242,6 +250,7 @@ dist-hook:
 	done
 
 EXTRA_DIST = \
+	tables_bad.h \
 	README \
 	testmaker.m4 \
 	alloc_extra.txt \
