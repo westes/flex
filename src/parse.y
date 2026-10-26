@@ -189,6 +189,9 @@ namelist1	:  namelist1 NAME
 			{ scinstal( nmstr, sc_is_exclusive ); }
 
 		|  error
+			/* TRANSLATORS: A "start condition" is a named state
+			   of the scanner that turns groups of rules on and
+			   off. */
 			{ synerr( _("bad start condition list") ); }
 		;
 
@@ -209,7 +212,7 @@ option		:  TOK_OUTFILE '=' NAME
 		|  TOK_PREFIX '=' NAME
 			{ ctrl.prefix = xstrdup(nmstr);
                           if (strchr(ctrl.prefix, '[') || strchr(ctrl.prefix, ']'))
-                              flexerror(_("Prefix must not contain [ or ]")); }
+                              flexerror(_("Prefix cannot include '[' or ']'")); }
 		|  TOK_YYCLASS '=' NAME
 			{ ctrl.yyclass = xstrdup(nmstr); }
 		|  TOK_HEADER_FILE '=' NAME
@@ -338,7 +341,7 @@ flexrule	:  '^' rule
 			}
 
 		|  error
-			{ synerr( _("unrecognized rule") ); }
+			{ synerr( _("syntax error: this is not a valid rule") ); }
 		;
 
 scon_stk_ptr	:
@@ -457,6 +460,10 @@ rule		:  re2 re
 			}
 
 		|  re2 re '$'
+			/* TRANSLATORS: "Trailing context" is the part of a
+			   rule that must match after the text of the rule,
+			   written r/s or with a $ at the end of the rule. A
+			   rule can have only one. */
 			{ synerr( _("trailing context used twice") ); }
 
 		|  re '$'
@@ -575,7 +582,12 @@ series		:  series singleton
 
 			if ( $3 > $5 || $3 < 0 )
 				{
-				synerr( _("bad iteration values") );
+				/* TRANSLATORS: A "repeat range" is a pair of
+				   numbers in braces after a pattern, such as
+				   {2,5}, that sets how many times the
+				   pattern may repeat. */
+				synerr( _("invalid repeat range in braces: the first number must not be "
+				  "larger than the second, and the second must be at least 1") );
 				$$ = $1;
 				}
 			else
@@ -585,7 +597,8 @@ series		:  series singleton
 					if ( $5 <= 0 )
 						{
 						synerr(
-						_("bad iteration values") );
+						_("invalid repeat range in braces: the first number must not be "
+						  "larger than the second, and the second must be at least 1") );
 						$$ = $1;
 						}
 					else
@@ -603,7 +616,7 @@ series		:  series singleton
 
 			if ( $3 <= 0 )
 				{
-				synerr( _("iteration value must be positive") );
+				synerr( _("the repeat count in braces must be at least 1") );
 				$$ = $1;
 				}
 
@@ -621,7 +634,7 @@ series		:  series singleton
 
 			if ( $3 <= 0 )
 				{
-				  synerr( _("iteration value must be positive")
+				  synerr( _("the repeat count in braces must be at least 1")
 					  );
 				$$ = $1;
 				}
@@ -658,7 +671,8 @@ singleton	:  singleton '*'
 
 			if ( $3 > $5 || $3 < 0 )
 				{
-				synerr( _("bad iteration values") );
+				synerr( _("invalid repeat range in braces: the first number must not be "
+				  "larger than the second, and the second must be at least 1") );
 				$$ = $1;
 				}
 			else
@@ -668,7 +682,8 @@ singleton	:  singleton '*'
 					if ( $5 <= 0 )
 						{
 						synerr(
-						_("bad iteration values") );
+						_("invalid repeat range in braces: the first number must not be "
+						  "larger than the second, and the second must be at least 1") );
 						$$ = $1;
 						}
 					else
@@ -686,7 +701,7 @@ singleton	:  singleton '*'
 
 			if ( $3 <= 0 )
 				{
-				synerr( _("iteration value must be positive") );
+				synerr( _("the repeat count in braces must be at least 1") );
 				$$ = $1;
 				}
 
@@ -704,7 +719,7 @@ singleton	:  singleton '*'
 
 			if ( $3 <= 0 )
 				{
-				synerr( _("iteration value must be positive") );
+				synerr( _("the repeat count in braces must be at least 1") );
 				$$ = $1;
 				}
 
@@ -939,13 +954,13 @@ ccl_expr:
 		|  CCE_NEG_XDIGIT	{ CCL_NEG_EXPR(isxdigit); }
 		|  CCE_NEG_LOWER	{ 
 				if ( sf_case_ins() )
-					lwarn(_("[:^lower:] is ambiguous in case insensitive scanner"));
+					lwarn(_("[:^lower:] is ambiguous in a case-insensitive scanner"));
 				else
 					CCL_NEG_EXPR(islower);
 				}
 		|  CCE_NEG_UPPER	{
 				if ( sf_case_ins() )
-					lwarn(_("[:^upper:] ambiguous in case insensitive scanner"));
+					lwarn(_("[:^upper:] is ambiguous in a case-insensitive scanner"));
 				else
 					CCL_NEG_EXPR(isupper);
 				}
@@ -1082,7 +1097,7 @@ void line_warning( const char *str, int line )
 
 	if ( ! env.nowarn )
 		{
-		snprintf( warning, sizeof(warning), "warning, %s", str );
+		snprintf( warning, sizeof(warning), _("warning, %s"), str );
 		line_pinpoint( warning, line );
 		}
 	}

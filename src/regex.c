@@ -57,7 +57,7 @@ void flex_regcomp(regex_t *preg, const char *regex, int cflags)
 
 		errbuf = malloc(errbuf_sz * sizeof(char));
 		if (!errbuf)
-			flexfatal(_("Unable to allocate buffer to report regcomp"));
+			lerr_fatal (_("Unable to allocate buffer to report %s"), "regcomp");
 		n = snprintf(errbuf, errbuf_sz, "regcomp for \"%s\" failed: ", regex);
 		regerror(err, preg, errbuf+n, errbuf_sz-(size_t)n);
 

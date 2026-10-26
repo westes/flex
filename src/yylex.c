@@ -56,7 +56,7 @@ int     yylex (void)
 		eofseen = true;
 
 		if (sectnum == 1) {
-			synerr (_("premature EOF"));
+			synerr (_("unexpected end of file: the line that starts the rules section is missing"));
 			sectnum = 2;
 			toktype = SECTEND;
 		}
@@ -199,13 +199,12 @@ int     yylex (void)
 			break;
 
 		case 0:
-			fprintf (stderr, _("End Marker\n"));
+			fprintf (stderr, "End Marker\n");
 			break;
 
 		default:
 			fprintf (stderr,
-				 _
-				 ("*Something Weird* - tok: %d val: %d\n"),
+				 "*Something Weird* - tok: %d val: %d\n",
 				 toktype, yylval);
 			break;
 		}

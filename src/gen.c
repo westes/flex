@@ -383,7 +383,7 @@ static void genecs(void)
 	footprint += sizeof(YY_CHAR) * ctrl.csize;
 
 	if (env.trace) {
-		fputs (_("\n\nEquivalence Classes:\n\n"), stderr);
+		fputs ("\n\nEquivalence Classes:\n\n", stderr);
 
 		/* Print in 8 columns */
 		numrows = ctrl.csize / 8;
@@ -429,7 +429,7 @@ static struct yytbl_data *mkftbl(void)
 		tdata[i] = anum;
 
 		if (env.trace && anum)
-			fprintf (stderr, _("state # %d accepts: [%d]\n"),
+			fprintf (stderr, "state # %d accepts: [%d]\n",
 				 i, anum);
 	}
 
@@ -458,7 +458,7 @@ static void genftbl(void)
 		mkdata (anum);
 
 		if (env.trace && anum)
-			fprintf (stderr, _("state # %d accepts: [%d]\n"),
+			fprintf (stderr, "state # %d accepts: [%d]\n",
 				 i, anum);
 	}
 
@@ -537,7 +537,7 @@ static void gentabs(void)
 
 				if (env.trace)
 					fprintf (stderr,
-						 _("state # %d accepts: "),
+						 "state # %d accepts: ",
 						 i);
 
 				for (k = 1; k <= nacc; ++k) {
@@ -586,7 +586,9 @@ static void gentabs(void)
 		if (tablesext) {
 			yytbl_data_compress (yyacclist_tbl);
 			if (yytbl_data_fwrite (&tableswr, yyacclist_tbl) < 0)
-				flexerror (_("Could not write yyacclist_tbl"));
+				/* TRANSLATORS: %s is the name of a table in
+				   the generated scanner. */
+				lerr (_("Could not write %s"), "yyacclist_tbl");
 			yytbl_data_destroy (yyacclist_tbl);
 			yyacclist_tbl = NULL;
 		}
@@ -642,7 +644,7 @@ static void gentabs(void)
 		yyacc_data[yyacc_curr++] = acc_array[i];
 
 		if (!reject && env.trace && acc_array[i])
-			fprintf (stderr, _("state # %d accepts: [%d]\n"),
+			fprintf (stderr, "state # %d accepts: [%d]\n",
 				 i, acc_array[i]);
 	}
 
@@ -663,7 +665,7 @@ static void gentabs(void)
 	if (tablesext) {
 		yytbl_data_compress (yyacc_tbl);
 		if (yytbl_data_fwrite (&tableswr, yyacc_tbl) < 0)
-			flexerror (_("Could not write yyacc_tbl"));
+			lerr (_("Could not write %s"), "yyacc_tbl");
 	}
 	yytbl_data_destroy (yyacc_tbl);
 	yyacc_tbl = NULL;
@@ -678,7 +680,7 @@ static void gentabs(void)
 			tbl = mkecstbl ();
 			yytbl_data_compress (tbl);
 			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
-				flexerror (_("Could not write ecstbl"));
+				lerr (_("Could not write %s"), "ecstbl");
 			yytbl_data_destroy (tbl);
 			tbl = 0;
 		}
@@ -698,7 +700,7 @@ static void gentabs(void)
 			   sizeof (flex_int32_t));
 
 		if (env.trace)
-			fputs (_("\n\nMeta-Equivalence Classes:\n"),
+			fputs ("\n\nMeta-Equivalence Classes:\n",
 			       stderr);
 		out_dec ("m4_define([[M4_HOOK_MECSTABLE_SIZE]], [[%d]])", numecs+1);
 		outn ("m4_define([[M4_HOOK_MECSTABLE_BODY]], [[m4_dnl");
@@ -718,7 +720,7 @@ static void gentabs(void)
 		if (tablesext) {
 			yytbl_data_compress (yymeta_tbl);
 			if (yytbl_data_fwrite (&tableswr, yymeta_tbl) < 0)
-				flexerror (_("Could not write yymeta_tbl"));
+				lerr (_("Could not write %s"), "yymeta_tbl");
 		}
 		yytbl_data_destroy (yymeta_tbl);
 		yymeta_tbl = NULL;
@@ -778,7 +780,7 @@ static void gentabs(void)
 	if (tablesext) {
 		yytbl_data_compress (yybase_tbl);
 		if (yytbl_data_fwrite (&tableswr, yybase_tbl) < 0)
-			flexerror (_("Could not write yybase_tbl"));
+			lerr (_("Could not write %s"), "yybase_tbl");
 	}
 	yytbl_data_destroy (yybase_tbl);
 	yybase_tbl = NULL;
@@ -809,7 +811,7 @@ static void gentabs(void)
 	if (tablesext) {
 		yytbl_data_compress (yydef_tbl);
 		if (yytbl_data_fwrite (&tableswr, yydef_tbl) < 0)
-			flexerror (_("Could not write yydef_tbl"));
+			lerr (_("Could not write %s"), "yydef_tbl");
 	}
 	yytbl_data_destroy (yydef_tbl);
 	yydef_tbl = NULL;
@@ -848,7 +850,7 @@ static void gentabs(void)
 	if (tablesext) {
 		yytbl_data_compress (yynxt_tbl);
 		if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)
-			flexerror (_("Could not write yynxt_tbl"));
+			lerr (_("Could not write %s"), "yynxt_tbl");
 	}
 	yytbl_data_destroy (yynxt_tbl);
 	yynxt_tbl = NULL;
@@ -881,7 +883,7 @@ static void gentabs(void)
 	if (tablesext) {
 		yytbl_data_compress (yychk_tbl);
 		if (yytbl_data_fwrite (&tableswr, yychk_tbl) < 0)
-			flexerror (_("Could not write yychk_tbl"));
+			lerr (_("Could not write %s"), "yychk_tbl");
 	}
 	yytbl_data_destroy (yychk_tbl);
 	yychk_tbl = NULL;
@@ -936,13 +938,13 @@ void make_tables (void)
 			tbl = mkctbl ();
 			yytbl_data_compress (tbl);
 			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
-				flexerror (_("Could not write ftbl"));
+				lerr (_("Could not write %s"), "ftbl");
 			yytbl_data_destroy (tbl);
 
 			tbl = mkssltbl ();
 			yytbl_data_compress (tbl);
 			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
-				flexerror (_("Could not write ssltbl"));
+				lerr (_("Could not write %s"), "ssltbl");
 			yytbl_data_destroy (tbl);
 			tbl = 0;
 
@@ -950,8 +952,7 @@ void make_tables (void)
 				tbl = mkecstbl ();
 				yytbl_data_compress (tbl);
 				if (yytbl_data_fwrite (&tableswr, tbl) < 0)
-					flexerror (_
-						   ("Could not write ecstbl"));
+					lerr (_("Could not write %s"), "ecstbl");
 				yytbl_data_destroy (tbl);
 				tbl = 0;
 			}
@@ -969,7 +970,7 @@ void make_tables (void)
 			ptype = optimize_pack(tbl->td_lolen);
 			out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
 			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
-				flexerror (_("Could not write ftbl"));
+				lerr (_("Could not write %s"), "ftbl");
 			yytbl_data_destroy (tbl);
 			tbl = 0;
 
@@ -977,8 +978,7 @@ void make_tables (void)
 				tbl = mkecstbl ();
 				yytbl_data_compress (tbl);
 				if (yytbl_data_fwrite (&tableswr, tbl) < 0)
-					flexerror (_
-						   ("Could not write ecstbl"));
+					lerr (_("Could not write %s"), "ecstbl");
 				yytbl_data_destroy (tbl);
 				tbl = 0;
 			}
@@ -1027,7 +1027,7 @@ void make_tables (void)
 			tbl = mkeoltbl ();
 			yytbl_data_compress (tbl);
 			if (yytbl_data_fwrite (&tableswr, tbl) < 0)
-				flexerror (_("Could not write eoltbl"));
+				lerr (_("Could not write %s"), "eoltbl");
 			yytbl_data_destroy (tbl);
 			tbl = 0;
 		}
@@ -1073,8 +1073,7 @@ void make_tables (void)
 			yytbl_data_compress (yynultrans_tbl);
 			if (yytbl_data_fwrite (&tableswr, yynultrans_tbl) <
 			    0)
-				flexerror (_
-					   ("Could not write yynultrans_tbl"));
+				lerr (_("Could not write %s"), "yynultrans_tbl");
 		}
 
 		if (yynultrans_tbl != NULL) {

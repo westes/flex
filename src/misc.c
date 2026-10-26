@@ -113,8 +113,8 @@ int intcmp (const void *a, const void *b)
 void check_char (int c)
 {
 	if (c >= CSIZE)
-		lerr (_("bad character '%s' detected in check_char()"),
-			readable_form (c));
+		lerr (_("bad character '%s' detected in %s()"),
+			readable_form (c), "check_char");
 
 	if (c >= ctrl.csize)
 		lerr (_
@@ -137,7 +137,7 @@ char *xstrdup(const char *s)
 	char *s2;
 
 	if ((s2 = strdup(s)) == NULL)
-		flexfatal (_("memory allocation failure in xstrdup()"));
+		lerr_fatal (_("memory allocation failed in %s()"), "xstrdup");
 
 	return s2;
 }
@@ -566,11 +566,11 @@ void   *reallocate_array (void *array, int size, size_t element_size)
 #ifdef HAVE_REALLOCARR
 	new_array = array;
 	if (reallocarr(&new_array, (size_t) size, element_size)) {
-		flexfatal ((array) ?
-			_("attempt to increase array size failed") :
-			/* Function name is allocate_array() because of
-			 * compatibility (for translations): */
-			_("memory allocation failed in allocate_array()"));
+		if (array)
+			flexfatal (_("attempt to increase array size failed"));
+		else
+			lerr_fatal (_("memory allocation failed in %s()"),
+				    "reallocate_array");
 	}
 #else
 # ifdef HAVE_REALLOCARRAY
@@ -582,11 +582,11 @@ void   *reallocate_array (void *array, int size, size_t element_size)
 		realloc(array, num_bytes);
 # endif
 	if (!new_array) {
-		flexfatal ((array) ?
-			_("attempt to increase array size failed") :
-			/* Function name is allocate_array() because of
-			 * compatibility (for translations): */
-			_("memory allocation failed in allocate_array()"));
+		if (array)
+			flexfatal (_("attempt to increase array size failed"));
+		else
+			lerr_fatal (_("memory allocation failed in %s()"),
+				    "reallocate_array");
 	}
 #endif
 	return new_array;
@@ -633,8 +633,8 @@ void   *yy_flex_xmalloc (int size)
 
 	result = malloc((size_t) size);
 	if (!result)
-		flexfatal (_
-			   ("memory allocation failed in yy_flex_xmalloc()"));
+		lerr_fatal (_("memory allocation failed in %s()"),
+			    "yy_flex_xmalloc");
 
 	return result;
 }

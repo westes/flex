@@ -183,7 +183,7 @@ void context_member(char *, const char *);
                 yy_push_state(CODEBLOCK_MATCH_BRACE);
             }
 
-    ^"%top".*   synerr( _("malformed '%top' directive") );
+    ^"%top".*   format_synerr( _("malformed '%s' directive"), "%top" );
 
 	{WS}		/* discard */
 
@@ -205,6 +205,9 @@ void context_member(char *, const char *);
 	^"%"{LEXOPT}{WS}.*{NL}	++linenum;	/* ignore */
 
 	/* xgettext: no-c-format */
+	/* TRANSLATORS: A "directive" is a line in the first section of the
+	   input that starts with a percent sign, such as %option or %top.
+	   Do not translate the directive names. */
 	^"%"[^sxaceknopr{}].*	synerr( _( "unrecognized '%' directive" ) );
 
 	^{NAME}		{
@@ -798,6 +801,10 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 	">"/^		BEGIN(CARETISBOL); return '>';
 	{SCNAME}	RETURNNAME;
 	.		{
+			/* TRANSLATORS: A "start condition" is a named state
+			   of the scanner that turns groups of rules on and
+			   off. It is written between < and > in front of a
+			   rule. */
 			format_synerr( _( "bad <start condition>: %s" ),
 				yytext );
 			}
@@ -811,7 +818,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 	"\""		BEGIN(SECT2); return '"';
 
 	{NL}		{
-			synerr( _( "missing quote" ) );
+			synerr( _( "missing closing quotation mark: the line ended inside a quoted string" ) );
 			BEGIN(SECT2);
 			++linenum;
 			return '"';
@@ -843,7 +850,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 	[^\]\n]		RETURNCHAR;
 	"]"		BEGIN(SECT2); return ']';
 	.|{NL}		{
-			synerr( _( "bad character class" ) );
+			synerr( _( "unterminated character class: the line ended before the closing ]" ) );
 			BEGIN(SECT2);
 			return ']';
 			}
@@ -1051,7 +1058,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
        yyterminate();
     }
 }
-<*>.|\n			format_synerr( _( "bad character: %s" ), yytext );
+<*>.|\n			format_synerr( _( "unexpected character: %s" ), yytext );
 
 %%
 

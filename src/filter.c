@@ -51,7 +51,8 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
 	/* allocate and initialize new filter */
 	f = calloc(sizeof(struct filter), 1);
 	if (!f)
-		flexerror(_("calloc failed (f) in filter_create_ext"));
+		lerr_fatal (_("memory allocation failed in %s()"),
+			    "filter_create_ext");
 	f->filter_func = NULL;
 	f->extra = NULL;
 	f->next = NULL;
@@ -69,7 +70,8 @@ struct filter *filter_create_ext (struct filter *chain, const char *cmd,
 	max_args = 8;
 	f->argv = malloc(sizeof(char *) * (size_t) (max_args + 1));
 	if (!f->argv)
-		flexerror(_("malloc failed (f->argv) in filter_create_ext"));
+		lerr_fatal (_("memory allocation failed in %s()"),
+			    "filter_create_ext");
 	f->argv[f->argc++] = cmd;
 
 	va_start (ap, cmd);
@@ -103,7 +105,8 @@ struct filter *filter_create_int (struct filter *chain,
 	/* allocate and initialize new filter */
 	f = calloc(sizeof(struct filter), 1);
 	if (!f)
-		flexerror(_("calloc failed in filter_create_int"));
+		lerr_fatal (_("memory allocation failed in %s()"),
+			    "filter_create_int");
 	f->next = NULL;
 	f->argc = 0;
 	f->argv = NULL;
@@ -164,7 +167,7 @@ bool filter_apply_chain (struct filter * chain)
 		close (pipes[1]);
 		clearerr(stdin);
 		if (dup2 (pipes[0], fileno (stdin)) == -1)
-			flexfatal (_("dup2(pipes[0],0)"));
+			flexfatal ("dup2(pipes[0],0)");
 		close (pipes[0]);
 		fseek (stdin, 0, SEEK_CUR);
 		ungetc(' ', stdin); /* still an evil hack, but one that works better */
@@ -175,7 +178,7 @@ bool filter_apply_chain (struct filter * chain)
 			int     r;
 
 			if ((r = chain->filter_func (chain)) == -1)
-				flexfatal (_("filter_func failed"));
+				flexfatal ("filter_func failed");
 			FLEX_EXIT (0);
 		}
 		else {
@@ -191,7 +194,7 @@ bool filter_apply_chain (struct filter * chain)
 	/* Parent */
 	close (pipes[0]);
 	if (dup2 (pipes[1], fileno (stdout)) == -1)
-		flexfatal (_("dup2(pipes[1],1)"));
+		flexfatal ("dup2(pipes[1],1)");
 	close (pipes[1]);
 	fseek (stdout, 0, SEEK_CUR);
 
@@ -243,12 +246,12 @@ int filter_tee_header (struct filter *chain)
 	 */
 
 	if ((to_cfd = dup (1)) == -1)
-		flexfatal (_("dup(1) failed"));
+		flexfatal ("dup(1) failed");
 	to_c = fdopen (to_cfd, "w");
 
 	if (write_header) {
 		if (freopen ((char *) chain->extra, "w", stdout) == NULL)
-			flexfatal (_("freopen(headerfilename) failed"));
+			flexfatal ("freopen(headerfilename) failed");
 
 		filter_apply_chain (chain->next);
 		to_h = stdout;

@@ -128,6 +128,21 @@ flex NEWS
 
 ** scanner
 
+*** The messages Flex prints are easier to translate, and more of them
+    are offered to the Translation Project. The --help text is split
+    into several messages. Words that must not be translated, such as
+    option and keyword names, are no longer part of the messages. The
+    statistics printed by -v and the dumps printed in debug mode are
+    no longer marked for translation, so they appear in English. The
+    messages in five source files that were never offered for
+    translation now are, and the word "warning" at the start of each
+    warning is translated. Seven short error messages, such as
+    "premature EOF" and "bad character class", now say what is wrong.
+
+*** The --help text showed the -T option as --env.trace, and the message
+    about using -l with --reentrant called that option --ctrl.reentrant.
+    Both now show the right option names.
+
 *** Scanners generated with --tables-file or --tables-verify now check
     the tables file they read at run time. A damaged or hostile file
     could make such a scanner read outside its memory, write outside it,
