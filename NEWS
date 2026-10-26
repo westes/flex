@@ -128,15 +128,16 @@ flex NEWS
 
 ** scanner
 
+*** With %array, calling yyless() with a count shorter than the text
+    saved by yymore() now returns the rest of that text to the input, as
+    it does with %pointer. Before, that text was dropped and never
+    scanned again. With yylineno, the newlines in it are counted once.
+
 *** With %option yylineno, a newline matched by the default rule is now
     counted in yylineno. Before, yylineno did not change when the
     default rule matched a newline. (#397)
 
     Thanks to ggujjula; reported by Horst H. von Brand.
-
-*** With %array and yylineno, calling yyless() with a count shorter than
-    the text saved by yymore() made yylineno come out too low. This has
-    been fixed.
 
 *** With %array, calling yyless() after yymore() could write past the
     end of the input buffer. This has been fixed.
