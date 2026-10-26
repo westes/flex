@@ -725,7 +725,7 @@ void flexinit (int argc, char **argv)
 	ctrl.do_yywrap = ctrl.gen_line_dirs = ctrl.usemecs = ctrl.useecs = true;
 	ctrl.reentrant = ctrl.bison_bridge_lval = ctrl.bison_bridge_lloc = false;
 	env.performance_hint = 0;
-	ctrl.prefix = "yy";
+	ctrl.prefix = xstrdup("yy");
 	ctrl.rewrite = false;
 	ctrl.yylmax = BUFSIZ;
 
@@ -892,12 +892,14 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_OUTFILE:
-			env.outfilename = arg;
+			free(env.outfilename);
+			env.outfilename = xstrdup(arg);
 			env.did_outfilename = 1;
 			break;
 
 		    case OPT_PREFIX:
-			ctrl.prefix = arg;
+			free(ctrl.prefix);
+			ctrl.prefix = xstrdup(arg);
 			break;
 
 		    case OPT_PERF_REPORT:
@@ -1010,11 +1012,13 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_EMIT:
-			ctrl.emit = arg;
+			free(ctrl.emit);
+			ctrl.emit = xstrdup(arg);
 			break;
 
 		    case OPT_HEADER_FILE:
-			env.headerfilename = arg;
+			free(env.headerfilename);
+			env.headerfilename = arg ? xstrdup(arg) : NULL;
 			break;
 
 		    case OPT_META_ECS:
@@ -1059,7 +1063,8 @@ void flexinit (int argc, char **argv)
 			break;
 
 		    case OPT_YYCLASS:
-			ctrl.yyclass = arg;
+			free(ctrl.yyclass);
+			ctrl.yyclass = xstrdup(arg);
 			break;
 
 		    case OPT_YYLINENO:
