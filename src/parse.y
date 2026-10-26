@@ -201,35 +201,35 @@ optionlist	:  optionlist option
 
 option		:  TOK_OUTFILE '=' NAME
 			{
-			env.outfilename = xstrdup(nmstr);
+			free(env.outfilename); env.outfilename = xstrdup(nmstr);
 			env.did_outfilename = 1;
 			}
 		|  TOK_EXTRA_TYPE '=' NAME
-			{ extra_type = xstrdup(nmstr); }
+			{ free(extra_type); extra_type = xstrdup(nmstr); }
 		|  TOK_PREFIX '=' NAME
-			{ ctrl.prefix = xstrdup(nmstr);
+			{ free(ctrl.prefix); ctrl.prefix = xstrdup(nmstr);
                           if (strchr(ctrl.prefix, '[') || strchr(ctrl.prefix, ']'))
                               flexerror(_("Prefix must not contain [ or ]")); }
 		|  TOK_YYCLASS '=' NAME
-			{ ctrl.yyclass = xstrdup(nmstr); }
+			{ free(ctrl.yyclass); ctrl.yyclass = xstrdup(nmstr); }
 		|  TOK_HEADER_FILE '=' NAME
-			{ env.headerfilename = xstrdup(nmstr); }
+			{ free(env.headerfilename); env.headerfilename = xstrdup(nmstr); }
 		|  TOK_YYLMAX '=' TOK_NUMERIC
 			{ ctrl.yylmax = nmval; }
 		|  TOK_YYDECL '=' NAME
-			{ ctrl.yydecl = xstrdup(nmstr); }
+			{ free(ctrl.yydecl); ctrl.yydecl = xstrdup(nmstr); }
 		|  TOK_PREACTION '=' NAME
-			{ ctrl.preaction = xstrdup(nmstr); }
+			{ free(ctrl.preaction); ctrl.preaction = xstrdup(nmstr); }
 		|  TOK_POSTACTION '=' NAME
-			{ ctrl.postaction = xstrdup(nmstr); }
+			{ free(ctrl.postaction); ctrl.postaction = xstrdup(nmstr); }
 		|  TOK_BUFSIZE '=' TOK_NUMERIC
 			{ ctrl.bufsize = nmval; }
 		|  TOK_EMIT '=' NAME
-			{ ctrl.emit = xstrdup(nmstr); backend_by_name(ctrl.emit); }
+			{ free(ctrl.emit); ctrl.emit = xstrdup(nmstr); backend_by_name(ctrl.emit); }
 		|  TOK_USERINIT '=' NAME
-			{ ctrl.userinit = xstrdup(nmstr); }
+			{ free(ctrl.userinit); ctrl.userinit = xstrdup(nmstr); }
 		|  TOK_YYTERMINATE '=' NAME
-			{ ctrl.yyterminate = xstrdup(nmstr); }
+			{ free(ctrl.yyterminate); ctrl.yyterminate = xstrdup(nmstr); }
 		|  TOK_TABLES_FILE '=' NAME
         		{ tablesext = true; tablesfilename = xstrdup(nmstr); }
 		;
