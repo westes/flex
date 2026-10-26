@@ -137,6 +137,11 @@ flex NEWS
 
     Thanks to MarkLee131.
 
+*** With %array, a switch to another input buffer now ends the text
+    saved by yymore(), as it does with %pointer. Before, calling yyless()
+    with a count shorter than that text after the switch could move the
+    scanner to before the start of the new buffer.
+
 *** With %array, calling yyless() with a count shorter than the text
     saved by yymore() now returns the rest of that text to the input, as
     it does with %pointer. Before, that text was dropped and never
