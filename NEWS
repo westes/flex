@@ -128,6 +128,12 @@ flex NEWS
 
 ** scanner
 
+*** Flex no longer writes one byte past the end of a buffer when the
+    name of the output file given with -o is very long and contains
+    enough backslashes or double quotes. (#749)
+
+    Thanks to ReisterJ.
+
 *** The messages Flex prints are easier to translate, and more of them
     are offered to the Translation Project. The --help text is split
     into several messages. Words that must not be translated, such as
