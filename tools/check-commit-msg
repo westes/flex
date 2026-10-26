@@ -1,0 +1,64 @@
+#! /bin/sh
+# check-commit-msg: check that a commit message follows the convention
+# described in CONTRIBUTING.md (Conventional Commits).
+#
+# Usage: check-commit-msg [FILE]
+#
+# Reads the message from FILE, or from standard input if FILE is - or is
+# left out. Only the subject (the first line that is not blank and not a
+# comment) is checked. Exits 0 if it is acceptable, 1 if not.
+#
+# Acceptable subjects have the form
+#
+#     type[(scope)][!]: description
+#
+# where the type is one of the list below, which semver-next shares.
+# Subjects of merge commits and of fixup!, squash! and amend! commits that
+# are waiting to be autosquashed are also accepted.
+
+set -eu
+
+types='build|chore|ci|docs|feat|fix|perf|refactor|release|revert|style|test'
+
+case ${1:-} in
+    -h|--help)
+        sed -n '2,/^$/p' "$0" | sed -e 's/^# \{0,1\}//'
+        exit 0
+        ;;
+esac
+
+msgfile=${1:--}
+if [ "$msgfile" = - ]; then
+    message=$(cat)
+else
+    message=$(cat "$msgfile")
+fi
+
+subject=$(printf '%s\n' "$message" | grep -v '^#' | sed -n '/[^[:space:]]/{p;q;}')
+
+if [ -z "$subject" ]; then
+    echo "check-commit-msg: the commit message is empty" >&2
+    exit 1
+fi
+
+case $subject in
+    "Merge "*|"fixup! "*|"squash! "*|"amend! "*)
+        exit 0
+        ;;
+esac
+
+if printf '%s\n' "$subject" |
+    grep -Eq "^($types)(\([a-z0-9._/-]+\))?!?: [^[:space:]]"; then
+    exit 0
+fi
+
+cat >&2 <<EOF_MSG
+check-commit-msg: the subject does not follow the commit convention:
+
+    $subject
+
+It should look like "type(scope): description" or "type: description",
+where the type is one of: $(echo "$types" | sed -e 's/|/, /g').
+See CONTRIBUTING.md.
+EOF_MSG
+exit 1
