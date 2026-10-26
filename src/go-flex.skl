@@ -521,6 +521,10 @@ static void yy_load_buffer_state  (FlexLexer *yyscanner)
 	yyscanner->yytext_ptr = yyscanner->yyCBufP = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyBufPos;
 	yyscanner->yyin = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyInputFile;
 	yyscanner->yyHoldChar = *yyscanner->yyCBufP;
+m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
+	/* The yymore() text is not in the new buffer, so it ends here, as with %pointer. */
+	yyscanner->yyMoreOffset = yyscanner->yyPrevMoreOffset = 0;
+]])]])
 }
 
 /** Discard all buffered characters. On the next scan, yyread() will be called.

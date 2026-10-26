@@ -47,6 +47,10 @@ dnl helper that calls yyless(n) from section 3, for use from an action.
 dnl Put M4_TEST_LESS_DECL in section 1 of the rules file, and have
 dnl M4_TEST_SECTION3 expand to M4_TEST_LESS_DEFN.
 dnl
+dnl M4_TEST_SWITCH_STRING(s) = switch the scanner to a new buffer that
+dnl holds the string s, for use from an action.  Currently supported by
+dnl the nr, r and c99 back ends.
+dnl
 dnl These macros are to be expanded by files with a .rules extension
 dnl that contain pure flex rulesets and no backend-specific code.
 dnl
@@ -73,6 +77,7 @@ define(`M4_TEST_LESS_DEFN', `static void less_fn(int n)
 }
 ')
 define(`M4_TEST_LESS_CALL', `less_fn($1)')
+define(`M4_TEST_SWITCH_STRING', `yy_switch_to_buffer(yy_scan_string($1))')
 define(`M4_TEST_INCREMENT', `++$1')
 define(`M4_TEST_DECREMENT', `--$1')
 define(`M4_TEST_POSTAMBLE', `dnl
@@ -131,6 +136,7 @@ define(`M4_TEST_LESS_DEFN', `static void less_fn(void *yyscanner, int n)
 }
 ')
 define(`M4_TEST_LESS_CALL', `less_fn(yyscanner, $1)')
+define(`M4_TEST_SWITCH_STRING', `yy_switch_to_buffer(yy_scan_string($1, yyscanner), yyscanner)')
 define(`M4_TEST_INCREMENT', `++$1')
 define(`M4_TEST_DECREMENT', `--$1')
 define(`M4_TEST_POSTAMBLE', `dnl
