@@ -110,7 +110,7 @@ void    dumpnfa (int state1)
 
 	/* for ( ns = firstst[state1]; ns <= lastst[state1]; ++ns ) */
 	for (ns = 1; ns <= lastnfa; ++ns) {
-		fprintf (stderr, _("state # %4d\t"), ns);
+		fprintf (stderr, "state # %4d\t", ns);
 
 		sym = transchar[ns];
 		tsp1 = trans1[ns];
@@ -125,7 +125,7 @@ void    dumpnfa (int state1)
 		fprintf (stderr, "\n");
 	}
 
-	fprintf (stderr, _("********** end of dump\n"));
+	fprintf (stderr, "********** end of dump\n");
 }
 
 
@@ -168,7 +168,7 @@ int     dupmachine (int mach)
 	}
 
 	if (state == 0)
-		flexfatal (_("empty machine in dupmachine()"));
+		lerr_fatal (_("empty machine in %s()"), "dupmachine");
 
 	state_offset = state - i + 1;
 
@@ -232,8 +232,12 @@ void    finish_rule (int mach, bool variable_trail_rule, int headcnt, int trailc
 
 		if (env.performance_hint > 0)
 			fprintf (stderr,
-				 _
-				 ("Variable trailing context rule at line %d\n"),
+				 /* TRANSLATORS: A rule has "variable
+				    trailing context" when neither the text
+				    before the trailing context nor the
+				    trailing context itself has a fixed
+				    length. */
+				 _("Variable trailing context rule at line %d\n"),
 				 rule_linenum[num_rules]);
 
 		variable_trailing_context_rules = true;
@@ -351,8 +355,7 @@ void    mark_beginning_as_normal (int mach)
 		break;
 
 	default:
-		flexerror (_
-			   ("bad state type in mark_beginning_as_normal()"));
+		lerr (_("bad state type in %s()"), "mark_beginning_as_normal");
 		break;
 	}
 }
@@ -670,7 +673,7 @@ void    mkxtion (int statefrom, int stateto)
 
 	else if ((transchar[statefrom] != SYM_EPSILON) ||
 		 (trans2[statefrom] != NO_TRANSITION))
-		flexfatal (_("found too many transitions in mkxtion()"));
+		lerr_fatal (_("found too many transitions in %s()"), "mkxtion");
 
 	else {			/* second out-transition for an epsilon state */
 		++eps2;

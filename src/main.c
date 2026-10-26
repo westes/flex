@@ -176,8 +176,10 @@ int flex_main (int argc, char *argv[])
 				      rule_linenum[i]);
 
 	if (ctrl.spprdflt && !reject && rule_useful[default_rule])
-		line_warning (_
-			      ("-s option given but default rule can be matched"),
+		/* TRANSLATORS: The "default rule" is the rule that copies
+		   input that no other rule matches to the output. The -s
+		   option is meant to remove it. */
+		line_warning (_("-s option given but default rule can be matched"),
 			      rule_linenum[default_rule]);
 
 	comment("START of m4 controls\n");
@@ -327,7 +329,7 @@ void check_options (void)
 
 		if (ctrl.reentrant || ctrl.bison_bridge_lval)
 			flexerror (_
-				   ("Can't use --ctrl.reentrant or --bison-bridge with -l option"));
+				   ("Can't use --reentrant or --bison-bridge with -l option"));
 
 		ctrl.yytext_is_array = true;
 		ctrl.do_yylineno = true;
@@ -494,11 +496,13 @@ void flexend (int exit_status)
 				backing_name);
 	}
 
+	/* These statistics are diagnostic output for flex developers. They
+	 * are not marked for translation. */
 	if (env.printstats) {
-		fprintf (stderr, _("%s version %s usage statistics:\n"),
+		fprintf (stderr, "%s version %s usage statistics:\n",
 			 program_name, flex_version);
 
-		fprintf (stderr, _("  scanner options: -"));
+		fprintf (stderr, "  scanner options: -");
 
 		if (ctrl.C_plus_plus)
 			putc ('+', stderr);
@@ -577,56 +581,52 @@ void flexend (int exit_status)
 
 		putc ('\n', stderr);
 
-		fprintf (stderr, _("  %d/%d NFA states\n"),
+		fprintf (stderr, "  %d/%d NFA states\n",
 			 lastnfa, current_mns);
-		fprintf (stderr, _("  %d/%d DFA states (%d words)\n"),
+		fprintf (stderr, "  %d/%d DFA states (%d words)\n",
 			 lastdfa, current_max_dfas, totnst);
-		fprintf (stderr, _("  %d rules\n"),
+		fprintf (stderr, "  %d rules\n",
 			 num_rules + num_eof_rules -
 			 1 /* - 1 for def. rule */ );
 
 		if (num_backing_up == 0)
-			fprintf (stderr, _("  No backing up\n"));
+			fprintf (stderr, "  No backing up\n");
 		else if (ctrl.fullspd || ctrl.fulltbl)
 			fprintf (stderr,
-				 _
-				 ("  %d backing-up (non-accepting) states\n"),
+				 "  %d backing-up (non-accepting) states\n",
 				 num_backing_up);
 		else
 			fprintf (stderr,
-				 _
-				 ("  Compressed tables always back-up\n"));
+				 "  Compressed tables always back-up\n");
 
 		if (bol_needed)
 			fprintf (stderr,
-				 _("  Beginning-of-line patterns used\n"));
+				 "  Beginning-of-line patterns used\n");
 
-		fprintf (stderr, _("  %d/%d start conditions\n"), lastsc,
+		fprintf (stderr, "  %d/%d start conditions\n", lastsc,
 			 current_max_scs);
 		fprintf (stderr,
-			 _
-			 ("  %d epsilon states, %d double epsilon states\n"),
+			 "  %d epsilon states, %d double epsilon states\n",
 			 numeps, eps2);
 
 		if (lastccl == 0)
-			fprintf (stderr, _("  no character classes\n"));
+			fprintf (stderr, "  no character classes\n");
 		else
 			fprintf (stderr,
-				 _
-				 ("  %d/%d character classes needed %d/%d words of storage, %d reused\n"),
+				 "  %d/%d character classes needed %d/%d words of storage, %d reused\n",
 				 lastccl, current_maxccls,
 				 cclmap[lastccl] + ccllen[lastccl],
 				 current_max_ccl_tbl_size, cclreuse);
 
-		fprintf (stderr, _("  %d state/nextstate pairs created\n"),
+		fprintf (stderr, "  %d state/nextstate pairs created\n",
 			 numsnpairs);
 		fprintf (stderr,
-			 _("  %d/%d unique/duplicate transitions\n"),
+			 "  %d/%d unique/duplicate transitions\n",
 			 numuniq, numdup);
 
 		if (ctrl.fulltbl) {
 			tblsiz = lastdfa * numecs;
-			fprintf (stderr, _("  %d table entries\n"),
+			fprintf (stderr, "  %d table entries\n",
 				 tblsiz);
 		}
 
@@ -634,50 +634,45 @@ void flexend (int exit_status)
 			tblsiz = 2 * (lastdfa + numtemps) + 2 * tblend;
 
 			fprintf (stderr,
-				 _("  %d/%d base-def entries created\n"),
+				 "  %d/%d base-def entries created\n",
 				 lastdfa + numtemps, current_max_dfas);
 			fprintf (stderr,
-				 _
-				 ("  %d/%d (peak %d) nxt-chk entries created\n"),
+				 "  %d/%d (peak %d) nxt-chk entries created\n",
 				 tblend, current_max_xpairs, peakpairs);
 			fprintf (stderr,
-				 _
-				 ("  %d/%d (peak %d) template nxt-chk entries created\n"),
+				 "  %d/%d (peak %d) template nxt-chk entries created\n",
 				 numtemps * nummecs,
 				 current_max_template_xpairs,
 				 numtemps * numecs);
-			fprintf (stderr, _("  %d empty table entries\n"),
+			fprintf (stderr, "  %d empty table entries\n",
 				 nummt);
-			fprintf (stderr, _("  %d protos created\n"),
+			fprintf (stderr, "  %d protos created\n",
 				 numprots);
 			fprintf (stderr,
-				 _("  %d templates created, %d uses\n"),
+				 "  %d templates created, %d uses\n",
 				 numtemps, tmpuses);
 		}
 
 		if (ctrl.useecs) {
 			tblsiz = tblsiz + ctrl.csize;
 			fprintf (stderr,
-				 _
-				 ("  %d/%d equivalence classes created\n"),
+				 "  %d/%d equivalence classes created\n",
 				 numecs, ctrl.csize);
 		}
 
 		if (ctrl.usemecs) {
 			tblsiz = tblsiz + numecs;
 			fprintf (stderr,
-				 _
-				 ("  %d/%d meta-equivalence classes created\n"),
+				 "  %d/%d meta-equivalence classes created\n",
 				 nummecs, ctrl.csize);
 		}
 
 		fprintf (stderr,
-			 _
-			 ("  %d (%d saved) hash collisions, %d DFAs equal\n"),
+			 "  %d (%d saved) hash collisions, %d DFAs equal\n",
 			 hshcol, hshsave, dfaeql);
-		fprintf (stderr, _("  %d sets of reallocations needed\n"),
+		fprintf (stderr, "  %d sets of reallocations needed\n",
 			 num_reallocs);
-		fprintf (stderr, _("  %d total table entries needed\n"),
+		fprintf (stderr, "  %d total table entries needed\n",
 			 tblsiz);
 	}
 
@@ -1347,16 +1342,13 @@ void readin (void)
 		if (ctrl.lex_compat) {
 			fprintf (stderr,
 				 _
-				 ("-l AT&T lex compatibility option entails a large performance penalty\n"));
-			fprintf (stderr,
-				 _
-				 (" and may be the actual source of other reported performance penalties\n"));
+				 ("-l AT&T lex compatibility option entails a large performance penalty\n and may be the actual source of other reported performance penalties\n"));
 		}
 
 		else if (ctrl.do_yylineno) {
 			fprintf (stderr,
-				 _
-				 ("%%option yylineno entails a performance penalty ONLY on rules that can match newline characters\n"));
+				 _("%s entails a performance penalty ONLY on rules that can match newline characters\n"),
+				 "%option yylineno");
 		}
 
 		if (env.performance_hint > 1) {
@@ -1367,19 +1359,23 @@ void readin (void)
 
 			if (yymore_used)
 				fprintf (stderr,
-					 _
-					 ("yymore() entails a minor performance penalty\n"));
+					 _("%s entails a minor performance penalty\n"),
+					 "yymore()");
 		}
 
 		if (reject)
 			fprintf (stderr,
-				 _
-				 ("REJECT entails a large performance penalty\n"));
+				 _("%s entails a large performance penalty\n"),
+				 "REJECT");
 
 		if (variable_trailing_context_rules)
 			fprintf (stderr,
-				 _
-				 ("Variable trailing context rules entail a large performance penalty\n"));
+				 /* TRANSLATORS: A rule has "variable
+				    trailing context" when neither the text
+				    before the trailing context nor the
+				    trailing context itself has a fixed
+				    length. */
+				 _("Variable trailing context rules entail a large performance penalty\n"));
 	}
 
 	if (reject)
@@ -1390,11 +1386,10 @@ void readin (void)
 
 	if ((ctrl.fulltbl || ctrl.fullspd) && reject) {
 		if (real_reject)
-			flexerror (_
-				   ("REJECT cannot be used with -f or -F"));
+			lerr (_("%s cannot be used with -f or -F"), "REJECT");
 		else if (ctrl.do_yylineno)
-			flexerror (_
-				   ("%option yylineno cannot be used with REJECT"));
+			lerr (_("%s cannot be used with %s"),
+				"%option yylineno", "REJECT");
 		else
 			flexerror (_
 				   ("variable trailing context rules cannot be used with -f or -F"));
@@ -1751,63 +1746,74 @@ void usage (void)
 	}
 
 	fprintf (f, _("Usage: %s [OPTIONS] [FILE]...\n"), program_name);
-	fprintf (f,
-		 _
-		 ("Generates programs that perform pattern-matching on text.\n"
-		  "\n" "Table Compression:\n"
-		  "  -Ca, --align      trade off larger tables for better memory alignment\n"
-		  "  -Ce, --ecs        construct equivalence classes\n"
-		  "  -Cf               do not compress tables; use -f representation\n"
-		  "  -CF               do not compress tables; use -F representation\n"
-		  "  -Cm, --meta-ecs   construct meta-equivalence classes\n"
-		  "  -Cr, --read       use read() instead of stdio for scanner input\n"
-		  "  -f, --full        generate fast, large scanner. Same as -Cfr\n"
-		  "  -F, --fast        use alternate table representation. Same as -CFr\n"
-		  "  -Cem              default compression (same as --ecs --meta-ecs)\n"
-		  "\n" "Debugging:\n"
-		  "  -d, --debug             enable debug mode in scanner\n"
-		  "  -b, --backup            write backing-up information to %s\n"
-		  "  -p, --perf-report       write performance report to stderr\n"
-		  "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
-		  "  -T, --env.trace             %s should run in env.trace mode\n"
-		  "  -w, --nowarn            do not generate warnings\n"
-		  "  -v, --verbose           write summary of scanner statistics to stdout\n"
-		  "      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
-		  "\n" "Files:\n"
-		  "  -o, --outfile=FILE      specify output filename\n"
-		  "  -S, --skel=FILE         specify skeleton file\n"
-		  "  -t, --stdout            write scanner on stdout instead of %s\n"
-		  "      --yyclass=NAME      name of C++ class\n"
-		  "      --header-file=FILE   create a C header file in addition to the scanner\n"
-		  "      --tables-file[=FILE] write tables to FILE\n"
-		  "      --backup-file=FILE  write backing-up information to FILE\n" "\n"
-		  "Scanner behavior:\n"
-		  "  -7, --7bit              generate 7-bit scanner\n"
-		  "  -8, --8bit              generate 8-bit scanner\n"
-		  "  -B, --batch             generate batch scanner (opposite of -I)\n"
-		  "  -i, --case-insensitive  ignore case in patterns\n"
-		  "  -l, --lex-compat        maximal compatibility with original lex\n"
-		  "  -X, --posix-compat      maximal compatibility with POSIX lex\n"
-		  "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
-		  "      --yylineno          track line count in yylineno\n"
-		  "\n" "Generated code:\n"
-		  "  -+,  --c++               generate C++ scanner class\n"
-		  "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
-		  "  -e,  --emit=LANG         Specify target language\n"
-		  "  -L,  --noline            suppress #line directives in scanner\n"
-		  "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
-		  "  -R,  --reentrant         generate a reentrant scanner\n"
-		  "       --bison-bridge      scanner for Bison pure parser.\n"
-		  "       --bison-locations   include yylloc support.\n"
-		  "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
-		  "       --nounistd          do not include <unistd.h>\n"
-		  "       --noFUNCTION        do not generate a particular FUNCTION\n"
-		  "\n" "Miscellaneous:\n"
-		  "  -c                      do-nothing POSIX option\n"
-		  "  -n                      do-nothing POSIX option\n"
-		  "  -?\n"
-		  "  -h, --help              produce this help message\n"
-		  "  -V, --version           report %s version\n"),
-		 backing_name, "flex", outfile_path, "flex");
+	fputs (_("Generates programs that perform pattern-matching on text.\n"), f);
 
+	putc ('\n', f);
+	fputs (_("Table Compression:\n"
+		 "  -Ca, --align      trade off larger tables for better memory alignment\n"
+		 "  -Ce, --ecs        construct equivalence classes\n"
+		 "  -Cf               do not compress tables; use -f representation\n"
+		 "  -CF               do not compress tables; use -F representation\n"
+		 "  -Cm, --meta-ecs   construct meta-equivalence classes\n"
+		 "  -Cr, --read       use read() instead of stdio for scanner input\n"
+		 "  -f, --full        generate fast, large scanner. Same as -Cfr\n"
+		 "  -F, --fast        use alternate table representation. Same as -CFr\n"
+		 "  -Cem              default compression (same as --ecs --meta-ecs)\n"), f);
+
+	putc ('\n', f);
+	fprintf (f, _("Debugging:\n"
+		      "  -d, --debug             enable debug mode in scanner\n"
+		      "  -b, --backup            write backing-up information to %s\n"
+		      "  -p, --perf-report       write performance report to stderr\n"
+		      "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
+		      "  -T, --trace             %s should run in trace mode\n"
+		      "  -w, --nowarn            do not generate warnings\n"
+		      "  -v, --verbose           write summary of scanner statistics to stdout\n"
+		      "      --hex               use hexadecimal numbers instead of octal in debug outputs\n"),
+		 backing_name, "flex");
+
+	putc ('\n', f);
+	fprintf (f, _("Files:\n"
+		      "  -o, --outfile=FILE      specify output filename\n"
+		      "  -S, --skel=FILE         specify skeleton file\n"
+		      "  -t, --stdout            write scanner on stdout instead of %s\n"
+		      "      --yyclass=NAME      name of C++ class\n"
+		      "      --header-file=FILE   create a C header file in addition to the scanner\n"
+		      "      --tables-file[=FILE] write tables to FILE\n"
+		      "      --backup-file=FILE  write backing-up information to FILE\n"),
+		 outfile_path);
+
+	putc ('\n', f);
+	fputs (_("Scanner behavior:\n"
+		 "  -7, --7bit              generate 7-bit scanner\n"
+		 "  -8, --8bit              generate 8-bit scanner\n"
+		 "  -B, --batch             generate batch scanner (opposite of -I)\n"
+		 "  -i, --case-insensitive  ignore case in patterns\n"
+		 "  -l, --lex-compat        maximal compatibility with original lex\n"
+		 "  -X, --posix-compat      maximal compatibility with POSIX lex\n"
+		 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
+		 "      --yylineno          track line count in yylineno\n"), f);
+
+	putc ('\n', f);
+	fputs (_("Generated code:\n"
+		 "  -+,  --c++               generate C++ scanner class\n"
+		 "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
+		 "  -e,  --emit=LANG         Specify target language\n"
+		 "  -L,  --noline            suppress #line directives in scanner\n"
+		 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
+		 "  -R,  --reentrant         generate a reentrant scanner\n"), f);
+	fputs (_("       --bison-bridge      scanner for Bison pure parser.\n"
+		 "       --bison-locations   include yylloc support.\n"
+		 "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+		 "       --nounistd          do not include <unistd.h>\n"
+		 "       --noFUNCTION        do not generate a particular FUNCTION\n"), f);
+
+	putc ('\n', f);
+	fprintf (f, _("Miscellaneous:\n"
+		      "  -c                      do-nothing POSIX option\n"
+		      "  -n                      do-nothing POSIX option\n"
+		      "  -?\n"
+		      "  -h, --help              produce this help message\n"
+		      "  -V, --version           report %s version\n"),
+		 "flex");
 }

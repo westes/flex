@@ -59,6 +59,12 @@ static void check_for_backing_up(int ds, int state[])
 
 		if (env.backing_up_report) {
 			fprintf (ctrl.backing_up_file,
+				 /* TRANSLATORS: This starts one line of the
+				    report written by the -b option. A
+				    "non-accepting" state is one in which no
+				    rule has been matched yet, so the
+				    scanner may have to back up to an
+				    earlier position in the input. */
 				 _("State #%d is non-accepting -\n"), ds);
 
 			/* identify the state */
@@ -118,8 +124,14 @@ static void check_trailing_context(int *nfa_states, int num_states, int *accset,
 			 */
 			for (j = 1; j <= nacc; ++j)
 				if (accset[j] & YY_TRAILING_HEAD_MASK) {
-					line_warning (_
-						      ("dangerous trailing context"),
+					/* TRANSLATORS: "Trailing context"
+					   is the part of a rule that must
+					   match after the text of the rule,
+					   written r/s or with a $ at the
+					   end of the rule. It is dangerous
+					   when the two parts can match the
+					   same characters. */
+					line_warning (_("dangerous trailing context"),
 						      rule_linenum[ar]);
 					return;
 				}
@@ -159,6 +171,8 @@ static void dump_associated_rules(FILE *file, int ds)
 
 	qsort (&rule_set [1], (size_t) num_associated_rules, sizeof (rule_set [1]), intcmp);
 
+	/* TRANSLATORS: The line numbers, in the flex input, of the rules
+	   that can still match from this state. */
 	fprintf (file, _(" associated rule line numbers:"));
 
 	for (i = 1; i <= num_associated_rules; ++i) {
@@ -193,6 +207,8 @@ static void dump_transitions(FILE *file, int state[])
 		out_char_set[i] = state[ec];
 	}
 
+	/* TRANSLATORS: The characters that take the scanner from this state
+	   to another state. */
 	fprintf (file, _(" out-transitions: "));
 
 	list_character_set (file, out_char_set);
@@ -330,8 +346,8 @@ ADD_STATE(state); \
 		if (IS_MARKED (stk[stkpos]))
 			UNMARK_STATE (stk[stkpos]);
 		else
-			flexfatal (_
-				   ("consistency check failed in epsclosure()"));
+			lerr_fatal (_("consistency check failed in %s()"),
+				    "epsclosure");
 	}
 
 	*ns_addr = numstates;
@@ -423,7 +439,7 @@ size_t ntod (void)
 
 	if (env.trace) {
 		dumpnfa (scset[1]);
-		fputs (_("\n\nDFA Dump:\n\n"), stderr);
+		fputs ("\n\nDFA Dump:\n\n", stderr);
 	}
 
 	inittbl ();
@@ -581,7 +597,7 @@ size_t ntod (void)
 		dsize = dfasiz[ds];
 
 		if (env.trace)
-			fprintf (stderr, _("state # %d:\n"), ds);
+			fprintf (stderr, "state # %d:\n", ds);
 
 		sympartition (dset, dsize, symlist, duplist);
 
@@ -740,8 +756,7 @@ size_t ntod (void)
 		if (tablesext) {
 			yytbl_data_compress (yynxt_tbl);
 			if (yytbl_data_fwrite (&tableswr, yynxt_tbl) < 0)
-				flexerror (_
-					   ("Could not write yynxt_tbl[][]"));
+				lerr (_("Could not write %s"), "yynxt_tbl[][]");
 		}
 		if (yynxt_tbl) {
 			yytbl_data_destroy (yynxt_tbl);
@@ -1003,8 +1018,8 @@ static void sympartition(int ds[], int numstates, int symlist[], int duplist[])
 
 		if (tch != SYM_EPSILON) {
 			if (tch < -lastccl || tch >= ctrl.csize) {
-				flexfatal (_
-					   ("bad transition character detected in sympartition()"));
+				lerr_fatal (_("bad transition character detected in %s()"),
+					    "sympartition");
 			}
 
 			if (tch >= 0) {	/* character transition */

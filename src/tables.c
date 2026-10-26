@@ -149,35 +149,35 @@ int yytbl_hdr_fwrite (struct yytbl_writer *wr, const struct yytbl_hdr *th)
 
 	if (yytbl_write32 (wr, th->th_magic) < 0
 	    || yytbl_write32 (wr, th->th_hsize) < 0)
-		flex_die (_("th_magic|th_hsize write32 failed"));
+		flex_die ("th_magic|th_hsize write32 failed");
 	bwritten += 8;
 
 	if (fgetpos (wr->out, &(wr->th_ssize_pos)) != 0)
-		flex_die (_("fgetpos failed"));
+		flex_die ("fgetpos failed");
 
 	if (yytbl_write32 (wr, th->th_ssize) < 0
 	    || yytbl_write16 (wr, th->th_flags) < 0)
-		flex_die (_("th_ssize|th_flags write failed"));
+		flex_die ("th_ssize|th_flags write failed");
 	bwritten += 6;
 
 	sz = (int) strlen (th->th_version) + 1;
 	if ((rv = yytbl_writen (wr, th->th_version, sz)) != sz)
-		flex_die (_("th_version written failed"));
+		flex_die ("th_version written failed");
 	bwritten += rv;
 
 	sz = (int) strlen (th->th_name) + 1;
 	if ((rv = yytbl_writen (wr, th->th_name, sz)) != sz)
-		flex_die (_("th_name written failed"));
+		flex_die ("th_name written failed");
 	bwritten += rv;
 
 	/* add padding */
 	if ((rv = yytbl_write_pad64 (wr)) < 0)
-		flex_die (_("pad64 failed"));
+		flex_die ("pad64 failed");
 	bwritten += rv;
 
 	/* Sanity check */
 	if (bwritten != (int) th->th_hsize)
-		flex_die (_("pad64 failed"));
+		flex_die ("pad64 failed");
 
 	return bwritten;
 }
@@ -224,7 +224,7 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 			rv = yytbl_write32 (wr, (flex_uint32_t) yytbl_data_geti (td, i));
 			break;
 		default:
-			flex_die (_("invalid td_flags detected"));
+			flex_die ("invalid td_flags detected");
 		}
 		if (rv < 0) {
 			flex_die (_("error while writing tables"));
@@ -235,13 +235,13 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 
 	/* Sanity check */
 	if (bwritten != (12 + total_len * (int) YYTDFLAGS2BYTES (td->td_flags))) {
-		flex_die (_("insanity detected"));
+		flex_die ("insanity detected");
 		return -1;
 	}
 
 	/* add padding */
 	if ((rv = yytbl_write_pad64 (wr)) < 0) {
-		flex_die (_("pad64 failed"));
+		flex_die ("pad64 failed");
 		return -1;
 	}
 	bwritten += rv;
@@ -251,7 +251,7 @@ int yytbl_data_fwrite (struct yytbl_writer *wr, struct yytbl_data *td)
 	    || fsetpos (wr->out, &(wr->th_ssize_pos)) != 0
 	    || yytbl_write32 (wr, (flex_uint32_t) wr->total_written) < 0
 	    || fsetpos (wr->out, &pos)) {
-		flex_die (_("get|set|fwrite32 failed"));
+		flex_die ("get|set|fwrite32 failed");
 		return -1;
 	}
 	else
@@ -363,7 +363,7 @@ static flex_int32_t yytbl_data_getijk (const struct yytbl_data *tbl, int i,
 								    1) +
 						    k];
 	default:
-		flex_die (_("invalid td_flags detected"));
+		flex_die ("invalid td_flags detected");
 		break;
 	}
 
@@ -389,7 +389,7 @@ static flex_int32_t yytbl_data_geti (const struct yytbl_data *tbl, int i)
 	case sizeof (flex_int32_t):
 		return ((flex_int32_t *) (tbl->td_data))[i];
 	default:
-		flex_die (_("invalid td_flags detected"));
+		flex_die ("invalid td_flags detected");
 		break;
 	}
 	return 0;
@@ -417,7 +417,7 @@ static void yytbl_data_seti (const struct yytbl_data *tbl, int i,
 		((flex_int32_t *) (tbl->td_data))[i] = (flex_int32_t) newval;
 		break;
 	default:
-		flex_die (_("invalid td_flags detected"));
+		flex_die ("invalid td_flags detected");
 		break;
 	}
 }
@@ -479,7 +479,7 @@ void yytbl_data_compress (struct yytbl_data *tbl)
 		return;
 
 	if (newsz > YYTDFLAGS2BYTES (tbl->td_flags)) {
-		flex_die (_("detected negative compression"));
+		flex_die ("detected negative compression");
 		return;
 	}
 

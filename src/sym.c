@@ -174,7 +174,7 @@ static size_t hashfunct (const char *str, size_t hash_size)
 void    ndinstal (const char *name, char definition[])
 {
 	if (addsym(name, definition, 0, ndtbl, NAME_TABLE_HASH_SIZE)) {
-		synerr (_("name defined twice"));
+		format_synerr (_("name \"%s\" is defined twice"), name);
 	}
 }
 
@@ -217,6 +217,9 @@ void    scinstal (const char *str, bool sc_is_exclusive)
 
 	if (addsym(str, NULL, lastsc, sctbl, START_COND_HASH_SIZE)) {
 		format_pinpoint_message (
+			/* TRANSLATORS: A "start condition" is a named state
+			   of the scanner that turns groups of rules on and
+			   off. %s is its name. */
 			_("start condition %s declared twice"), str);
 	}
 	scname[lastsc] = sctbl[hashfunct(str, START_COND_HASH_SIZE)]->name;
