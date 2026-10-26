@@ -1663,31 +1663,33 @@ struct yytbl_dmap {
 	enum yytbl_id dm_id;/**< table identifier */
 	void  **dm_arr;		/**< address of pointer to store the deserialized table. */
 	size_t  dm_sz;		/**< local sizeof() each element in table. */
+	size_t  dm_bytes;	/**< local sizeof() the whole table, or 0 if it is not a fixed array. */
 };
 
-/** A {0,0,0}-terminated list of structs, forming the map */
+/** A {0,0,0,0}-terminated list of structs, forming the map */
 static struct yytbl_dmap yydmap[] = {
-m4_ifdef([[M4_HOOK_NXT_TYPE]], [[	{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(M4_HOOK_NXT_TYPE)},]],[[m4_dnl]])
-m4_ifdef([[M4_HOOK_YYNXT_TYPE]], [[	{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(M4_HOOK_YYNXT_TYPE)},]],[[m4_dnl]])
-m4_ifdef([[M4_MODE_FULLSPD]], [[	{YYTD_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(struct yy_trans_info*)},]],[[m4_dnl]])
-m4_ifdef([[M4_MODE_YYLINENO]], [[	{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(M4_HOOK_EOLTABLE_TYPE)},]],[[m4_dnl]])
-m4_ifdef([[M4_MODE_USEECS]],  [[	{YYTD_ID_EC, (void**)&yy_ec, sizeof(YY_CHAR)},]],[[m4_dnl]])
-m4_ifdef([[M4_MODE_USEMECS]], [[	{YYTD_ID_META, (void**)&yy_meta, sizeof(YY_CHAR)},]],[[m4_dnl]])
-m4_ifdef([[M4_HOOK_ACCLIST_TYPE]], [[	{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(M4_HOOK_ACCLIST_TYPE)},]],[[m4_dnl]])
-m4_ifdef([[M4_HOOK_MKCTBL_TYPE]], [[	{YYTD_ID_TRANSITION, (void**)&yy_transition, sizeof(M4_HOOK_MKCTBL_TYPE)},]],[[m4_dnl]])
-m4_ifdef([[M4_HOOK_MKFTBL_TYPE]], [[	{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(M4_HOOK_MKFTBL_TYPE)},]],[[m4_dnl]])
-m4_ifdef([[M4_HOOK_ACCEPT_TYPE]], [[	{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(M4_HOOK_ACCEPT_TYPE)},]],[[m4_dnl]])
-m4_ifdef([[M4_HOOK_BASE_TYPE]], [[	{YYTD_ID_BASE, (void**)&yy_base, sizeof(M4_HOOK_BASE_TYPE)},]],[[m4_dnl]])
-m4_ifdef([[M4_HOOK_DEF_TYPE]], [[	{YYTD_ID_DEF, (void**)&yy_def, sizeof(M4_HOOK_DEF_TYPE)},]],[[m4_dnl]])
-m4_ifdef([[M4_HOOK_CHK_TYPE]], [[	{YYTD_ID_CHK, (void**)&yy_chk, sizeof(M4_HOOK_CHK_TYPE)},]],[[m4_dnl]])
-m4_ifdef([[M4_HOOK_NULTRANS_TYPE]], [[	{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(M4_HOOK_NULTRANS_TYPE)},]],[[m4_dnl]])
-    {0,0,0}
+m4_ifdef([[M4_HOOK_NXT_TYPE]], [[	{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(M4_HOOK_NXT_TYPE), M4_YY_TABLES_VERIFY ? sizeof(yy_nxt) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_YYNXT_TYPE]], [[	{YYTD_ID_NXT, (void**)&yy_nxt, sizeof(M4_HOOK_YYNXT_TYPE), M4_YY_TABLES_VERIFY ? sizeof(yy_nxt) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_MODE_FULLSPD]], [[	{YYTD_ID_START_STATE_LIST, (void**)&yy_start_state_list, sizeof(struct yy_trans_info*), M4_YY_TABLES_VERIFY ? sizeof(yy_start_state_list) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_MODE_YYLINENO]], [[	{YYTD_ID_RULE_CAN_MATCH_EOL, (void**)&yy_rule_can_match_eol, sizeof(M4_HOOK_EOLTABLE_TYPE), M4_YY_TABLES_VERIFY ? sizeof(yy_rule_can_match_eol) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_MODE_USEECS]],  [[	{YYTD_ID_EC, (void**)&yy_ec, sizeof(YY_CHAR), M4_YY_TABLES_VERIFY ? sizeof(yy_ec) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_MODE_USEMECS]], [[	{YYTD_ID_META, (void**)&yy_meta, sizeof(YY_CHAR), M4_YY_TABLES_VERIFY ? sizeof(yy_meta) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_ACCLIST_TYPE]], [[	{YYTD_ID_ACCLIST, (void**)&yy_acclist, sizeof(M4_HOOK_ACCLIST_TYPE), M4_YY_TABLES_VERIFY ? sizeof(yy_acclist) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_MKCTBL_TYPE]], [[	{YYTD_ID_TRANSITION, (void**)&yy_transition, sizeof(M4_HOOK_MKCTBL_TYPE), M4_YY_TABLES_VERIFY ? sizeof(yy_transition) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_MKFTBL_TYPE]], [[	{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(M4_HOOK_MKFTBL_TYPE), M4_YY_TABLES_VERIFY ? sizeof(yy_accept) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_ACCEPT_TYPE]], [[	{YYTD_ID_ACCEPT, (void**)&yy_accept, sizeof(M4_HOOK_ACCEPT_TYPE), M4_YY_TABLES_VERIFY ? sizeof(yy_accept) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_BASE_TYPE]], [[	{YYTD_ID_BASE, (void**)&yy_base, sizeof(M4_HOOK_BASE_TYPE), M4_YY_TABLES_VERIFY ? sizeof(yy_base) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_DEF_TYPE]], [[	{YYTD_ID_DEF, (void**)&yy_def, sizeof(M4_HOOK_DEF_TYPE), M4_YY_TABLES_VERIFY ? sizeof(yy_def) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_CHK_TYPE]], [[	{YYTD_ID_CHK, (void**)&yy_chk, sizeof(M4_HOOK_CHK_TYPE), M4_YY_TABLES_VERIFY ? sizeof(yy_chk) : 0},]],[[m4_dnl]])
+m4_ifdef([[M4_HOOK_NULTRANS_TYPE]], [[	{YYTD_ID_NUL_TRANS, (void**)&yy_NUL_trans, sizeof(M4_HOOK_NULTRANS_TYPE), M4_YY_TABLES_VERIFY ? sizeof(yy_NUL_trans) : 0},]],[[m4_dnl]])
+    {0,0,0,0}
 };
 
 /** A tables-reader object to maintain some state in the read. */
 struct yytbl_reader {
     FILE * fp; /**< input stream */
     flex_uint32_t bread; /**< bytes read since beginning of current tableset */
+    size_t trans_len; /**< number of entries in the transition table loaded so far */
 };
 
 ]])
@@ -4002,6 +4004,12 @@ static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *
 		return -1;
 	}
 
+	/* The dataset includes its header, and a set with no tables is no use. */
+	if (th->th_ssize <= th->th_hsize) {
+		errno = EIO;
+		return -1;
+	}
+
 	/* Allocate enough space for the version and name fields */
 	bytes = th->th_hsize - 14;
 	th->th_version = (char *) yyalloc (bytes M4_YY_CALL_LAST_ARG);
@@ -4017,26 +4025,25 @@ static int yytbl_hdr_read YYFARGS2(struct yytbl_hdr *, th, struct yytbl_reader *
 	} else {
 		rd->bread += (flex_uint32_t) bytes;
 	}
-	/* Validate that the buffer contains TWO NUL-terminated strings within
-	 * its bounds (a version string followed by a name string).  Without
-	 * these checks, a header whose payload is missing either NUL would
-	 * cause the strlen() below, and the strcmp() in yytbl_fload, to read
-	 * past the heap allocation. */
+	/* The buffer must hold two NUL-terminated strings, the version and then
+	 * the name.  Look for each NUL only inside the bytes we read, since
+	 * nothing guarantees the file put them there.
+	 */
 	{
-		size_t vlen, nlen;
-		vlen = strnlen (th->th_version, bytes);
-		if (vlen >= bytes - 1) {
+		char *vend, *nend = NULL;
+
+		vend = (char *) memchr (th->th_version, '\0', bytes);
+		if (vend != NULL) {
+			nend = (char *) memchr (vend + 1, '\0',
+				bytes - (size_t) (vend + 1 - th->th_version));
+		}
+		if (nend == NULL) {
 			yyfree (th->th_version M4_YY_CALL_LAST_ARG);
 			th->th_version = NULL;
+			errno = EIO;
 			return -1;
 		}
-		nlen = strnlen (th->th_version + vlen + 1, bytes - vlen - 1);
-		if (nlen >= bytes - vlen - 1) {
-			yyfree (th->th_version M4_YY_CALL_LAST_ARG);
-			th->th_version = NULL;
-			return -1;
-		}
-		th->th_name = th->th_version + vlen + 1;
+		th->th_name = vend + 1;
 	}
 	return 0;
 }
@@ -4067,6 +4074,7 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 	struct yytbl_data td;
 	struct yytbl_dmap *transdmap=0;
 	int     len, i, rv, inner_loop_count;
+	size_t  nelem;
 	void   *p=0;
 
 	memset (&td, 0, sizeof (struct yytbl_data));
@@ -4075,19 +4083,6 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 	    || yytbl_read16 (&td.td_flags, rd) != 0
 	    || yytbl_read32 (&td.td_hilen, rd) != 0
 	    || yytbl_read32 (&td.td_lolen, rd) != 0) {
-		return -1;
-	}
-	/* Bound the dimensions before any size_t multiplication.  Without
-	 * this, a malicious tables file with td_lolen and td_hilen set to
-	 * arbitrary uint32 values drives the bytes computation below into
-	 * a multi-GB allocation request.  YYTBL_MAX_DIM is well above what
-	 * any real scanner produces (the documented NFA-state limit is
-	 * around 32k; tables larger than a few million elements would not
-	 * fit any realistic memory budget). */
-#ifndef YYTBL_MAX_DIM
-#define YYTBL_MAX_DIM (1u << 24)
-#endif
-	if (td.td_lolen > YYTBL_MAX_DIM || td.td_hilen > YYTBL_MAX_DIM) {
 		return -1;
 	}
 	/* Lookup the map for the transition table so we have it in case we need it
@@ -4107,13 +4102,55 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 	 * struct members.
 	 */
 	{
-		size_t  bytes;
+		size_t  bytes, esz, maxn;
+		flex_uint32_t hi;
+		int     is_struct = (td.td_flags & YYTD_STRUCT) != 0;
+		int     is_ptrans = (td.td_flags & YYTD_PTRANS) != 0;
 
-		if ((td.td_flags & YYTD_STRUCT)) {
-			bytes = sizeof(struct yy_trans_info) * td.td_lolen * (td.td_hilen ? td.td_hilen : 1);
-		} else {
-			bytes = td.td_lolen * (td.td_hilen ? td.td_hilen : 1) * dmap->dm_sz;
+		/* The file says how each table is laid out, but this scanner
+		 * knows how it stores the table, and the loop below does what the
+		 * flags say.  So refuse a table the two disagree about: only the
+		 * transition table is made of structs, a table of indexes needs a
+		 * transition table and room for a pointer in each entry, and any
+		 * other table needs an entry size the loop can store.
+		 */
+		if (is_struct != (td.td_id == YYTD_ID_TRANSITION)
+		    || (is_struct && is_ptrans)
+		    || (is_ptrans && (transdmap == NULL
+			|| dmap->dm_sz != sizeof (struct yy_trans_info *)))
+		    || (!is_ptrans && dmap->dm_sz != sizeof (flex_int8_t)
+			&& dmap->dm_sz != sizeof (flex_int16_t)
+			&& dmap->dm_sz != sizeof (flex_int32_t))) {
+			errno = EIO;
+			return -1;
 		}
+
+		/* The sizes come from the file, so make sure the element count
+		 * fits the int used to count them below (two ints per element
+		 * for the transition table) and that the byte count fits in a
+		 * size_t, before we multiply.
+		 */
+		esz = is_struct ? sizeof(struct yy_trans_info) : dmap->dm_sz;
+		hi = td.td_hilen ? td.td_hilen : 1;
+		maxn = (size_t) (INT32_MAX / 2);
+		if (maxn > (size_t) -1 / esz) {
+			maxn = (size_t) -1 / esz;
+		}
+		if (td.td_lolen > maxn / hi) {
+			errno = EIO;
+			return -1;
+		}
+		nelem = td.td_lolen * hi;
+
+		/* With tables-verify we compare against the scanner's own array,
+		 * so the file must not be longer than that array.
+		 */
+		if (M4_YY_TABLES_VERIFY && nelem * esz > dmap->dm_bytes) {
+			errno = EIO;
+			return -1;
+		}
+
+		bytes = nelem * esz;
 		if (M4_YY_TABLES_VERIFY) {
 			/* We point to the array itself */
 			p = dmap->dm_arr;
@@ -4225,6 +4262,12 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 					return -1;
 				}
 
+				/* The index must name an entry of the transition table. */
+				if (t32 < 0 || (size_t) t32 >= rd->trans_len) {
+					errno = EIO;
+					return -1;
+				}
+
 				if( M4_YY_TABLES_VERIFY) {
 					v = &(((struct yy_trans_info *) (transdmap->dm_arr))[t32]);
 				} else {
@@ -4281,6 +4324,10 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 
 	}
 
+	if (td.td_id == YYTD_ID_TRANSITION) {
+		rd->trans_len = nelem;
+	}
+
 	/* Now eat padding. */
 	{
 		while (rd->bread % (8 * sizeof(flex_uint8_t)) > 0) {
@@ -4303,6 +4350,7 @@ static int yytbl_fload YYFARGS2(FILE *, fp, const char *, key) {
 	struct yytbl_reader rd;
 
 	rd.fp = fp;
+	rd.trans_len = 0;
 	th.th_version = NULL;
 
 	/* Keep trying until we find the right set of tables or end of file. */
