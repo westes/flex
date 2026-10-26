@@ -2980,6 +2980,10 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 	yyin.rdbuf(YY_CURRENT_BUFFER_LVALUE->yy_input_file);
 ]])
 	YY_G(yy_hold_char) = *YY_G(yy_c_buf_p);
+m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
+	/* The yymore() text is not in the new buffer, so it ends here, as with %pointer. */
+	YY_G(yy_more_offset) = YY_G(yy_prev_more_offset) = 0;
+]])]])
 }
 
 /** Allocate and initialize an input buffer state.

@@ -169,6 +169,8 @@ yymore*
 !yymorearrayless.txt
 !yymorearrayrefill.rules
 !yymorearrayrefill.txt
+!yymorearrayswitch.rules
+!yymorearrayswitch.txt
 yyunput*
 !yyunput.rules
 !yyunput.txt

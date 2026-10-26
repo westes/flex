@@ -612,6 +612,10 @@ static void yy_load_buffer_state  (yyscan_t yyscanner)
 	yyscanner->yytext_ptr = yyscanner->yy_c_buf_p = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_pos;
 	yyscanner->yyin_r = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_input_file;
 	yyscanner->yy_hold_char = *yyscanner->yy_c_buf_p;
+m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
+	/* The yymore() text is not in the new buffer, so it ends here, as with %pointer. */
+	yyscanner->yy_more_offset = yyscanner->yy_prev_more_offset = 0;
+]])]])
 }
 
 /** Discard all buffered characters. On the next scan, yyread() will be called.
