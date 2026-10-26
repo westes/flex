@@ -128,6 +128,15 @@ flex NEWS
 
 ** scanner
 
+*** Scanners generated with --tables-file or --tables-verify now check
+    the tables file they read at run time. A damaged or hostile file
+    could make such a scanner read outside its memory, write outside it,
+    or ask for a huge amount of it. Now yytables_fload() returns -1 for
+    such a file. A scanner that is already built is not changed, so it
+    must be generated again with this version of Flex. (#730)
+
+    Thanks to MarkLee131.
+
 *** With %array, calling yyless() with a count shorter than the text
     saved by yymore() now returns the rest of that text to the input, as
     it does with %pointer. Before, that text was dropped and never
