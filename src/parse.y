@@ -205,41 +205,51 @@ optionlist	:  optionlist option
 option		:  TOK_OUTFILE '=' NAME
 			{
 			reject_brackets_in_option_value("outfile", nmstr);
+			free(env.outfilename);
 			env.outfilename = xstrdup(nmstr);
 			env.did_outfilename = 1;
 			}
 		|  TOK_EXTRA_TYPE '=' NAME
 			{ reject_brackets_in_option_value("extra-type", nmstr);
+			  free(extra_type);
 			  extra_type = xstrdup(nmstr); }
 		|  TOK_PREFIX '=' NAME
 			{ reject_brackets_in_option_value("prefix", nmstr);
+			  free(ctrl.prefix);
 			  ctrl.prefix = xstrdup(nmstr); }
 		|  TOK_YYCLASS '=' NAME
 			{ reject_brackets_in_option_value("yyclass", nmstr);
+			  free(ctrl.yyclass);
 			  ctrl.yyclass = xstrdup(nmstr); }
 		|  TOK_HEADER_FILE '=' NAME
 			{ reject_brackets_in_option_value("header-file", nmstr);
+			  free(env.headerfilename);
 			  env.headerfilename = xstrdup(nmstr); }
 		|  TOK_YYLMAX '=' TOK_NUMERIC
 			{ ctrl.yylmax = nmval; }
 		|  TOK_YYDECL '=' NAME
 			{ reject_brackets_in_option_value("yydecl", nmstr);
+			  free(ctrl.yydecl);
 			  ctrl.yydecl = xstrdup(nmstr); }
 		|  TOK_PREACTION '=' NAME
 			{ reject_brackets_in_option_value("pre-action", nmstr);
+			  free(ctrl.preaction);
 			  ctrl.preaction = xstrdup(nmstr); }
 		|  TOK_POSTACTION '=' NAME
 			{ reject_brackets_in_option_value("post-action", nmstr);
+			  free(ctrl.postaction);
 			  ctrl.postaction = xstrdup(nmstr); }
 		|  TOK_BUFSIZE '=' TOK_NUMERIC
 			{ ctrl.bufsize = nmval; }
 		|  TOK_EMIT '=' NAME
-			{ ctrl.emit = xstrdup(nmstr); backend_by_name(ctrl.emit); }
+			{ free(ctrl.emit); ctrl.emit = xstrdup(nmstr); backend_by_name(ctrl.emit); }
 		|  TOK_USERINIT '=' NAME
 			{ reject_brackets_in_option_value("user-init", nmstr);
+			  free(ctrl.userinit);
 			  ctrl.userinit = xstrdup(nmstr); }
 		|  TOK_YYTERMINATE '=' NAME
 			{ reject_brackets_in_option_value("yyterminate", nmstr);
+			  free(ctrl.yyterminate);
 			  ctrl.yyterminate = xstrdup(nmstr); }
 		|  TOK_TABLES_FILE '=' NAME
         		{ tablesext = true; tablesfilename = xstrdup(nmstr); }
