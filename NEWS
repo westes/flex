@@ -128,6 +128,15 @@ flex NEWS
 
 ** scanner
 
+*** C++ scanners that use REJECT now allocate their state buffer with
+    yyalloc() and release it with yyfree(), as C scanners do. Before,
+    switching to an input buffer larger than the default could pass
+    memory obtained with new[] to yyrealloc(), and a scanner that
+    defines its own yyalloc(), yyrealloc() and yyfree() received a
+    pointer its yyalloc() had never returned. (#751)
+
+    Thanks to anshal ossaimi.
+
 *** Flex no longer writes one byte past the end of a buffer when the
     name of the output file given with -o is very long and contains
     enough backslashes or double quotes. (#749)
