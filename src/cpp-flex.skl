@@ -469,11 +469,6 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
     #define  YY_LESS_LINENO(n) \
             do { \
                 int yyl = (n);\
-m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
-                /* The yymore() text was counted by an earlier action. */ \
-                if ( yyl < YY_G(yy_prev_more_offset) ) \
-                        yyl = YY_G(yy_prev_more_offset); \
-]])]]) \
                 for ( ; yyl < yyleng; ++yyl ) { \
 			if ( yytext[yyl] == '\n' ) { \
                         	--yylineno;\
@@ -503,13 +498,6 @@ m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
         YY_LESS_LINENO(yyless_macro_arg);\
 		*yy_cp = YY_G(yy_hold_char); \
 		YY_RESTORE_YY_MORE_OFFSET \
-m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
-		/* yyleng counts the yymore() text, which is not in the buffer. */ \
-		if ( yyless_macro_arg < YY_G(yy_more_offset) ) { \
-			YY_G(yy_more_offset) = yyless_macro_arg; \
-		} \
-		yyless_macro_arg -= YY_G(yy_more_offset); \
-]])]]) \
 		YY_G(yy_c_buf_p) = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
 		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 		} \
@@ -870,18 +858,21 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[YY_G(yytext_ptr) -= YY_G(yy_more_len); \
 	yyleng = (int) (yy_cp - YY_G(yytext_ptr));]])]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyleng = (int) (yy_cp - yy_bp);]]) \
-	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyleng = (int) (yy_cp - yy_bp);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyleng = (int) (yy_cp - yy_bp) + YY_G(yy_more_offset);]])]]) \
 	YY_G(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if ( yyleng + YY_G(yy_more_offset) >= YYLMAX ) \
-		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if ( yyleng >= YYLMAX ) \
-		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" );]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yy_flex_strncpy( &yytext[YY_G(yy_more_offset)], YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyleng += YY_G(yy_more_offset);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[YY_G(yy_prev_more_offset) = YY_G(yy_more_offset);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[YY_G(yy_more_offset) = 0;]]) \
+	if ( yyleng >= YYLMAX ) \
+		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" ); \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[/* yy_cp is before yy_bp when the token is cut back into the saved text, which yytext already holds. */ \
+	if ( yy_cp >= yy_bp ) \
+		yy_flex_strncpy( &yytext[YY_G(yy_more_offset)], yy_bp, (yy_cp - yy_bp) + 1 M4_YY_CALL_LAST_ARG); \
+	else \
+		yytext[yyleng] = '\0'; \
+	/* Like %pointer, yytext_ptr is the start of the yymore() text in the buffer, so a refill keeps it. */ \
+	YY_G(yytext_ptr) = yy_bp - YY_G(yy_more_offset); \
+	YY_G(yy_prev_more_offset) = YY_G(yy_more_offset); \
+	YY_G(yy_more_offset) = 0;]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yy_flex_strncpy( yytext, YY_G(yytext_ptr), yyleng + 1 M4_YY_CALL_LAST_ARG);]]) \
 ]]) \
 	YY_G(yy_c_buf_p) = yy_cp; \
@@ -1140,7 +1131,7 @@ static int yy_more_len = 0;
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
 #define yymore() (YY_G(yy_more_offset) = yy_flex_strlen( yytext M4_YY_CALL_LAST_ARG))
 #define YY_NEED_STRLEN
-#define YY_MORE_ADJ 0
+#define YY_MORE_ADJ YY_G(yy_prev_more_offset)
 #define YY_RESTORE_YY_MORE_OFFSET \
 { \
 YY_G(yy_more_offset) = YY_G(yy_prev_more_offset); \
@@ -3464,14 +3455,7 @@ int yyFlexLexer::yy_top_state()
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 			/* yytext is a copy; the token itself is at yytext_ptr. */ \
 			*YY_G(yy_c_buf_p) = YY_G(yy_hold_char); \
-m4_ifdef([[M4_MODE_YYMORE_USED]], [[ \
-			if ( yyless_macro_arg < YY_G(yy_prev_more_offset) ) { \
-				YY_G(yy_prev_more_offset) = yyless_macro_arg; \
-			} \
-			YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + yyless_macro_arg - YY_G(yy_prev_more_offset); \
-]], [[ \
 			YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + yyless_macro_arg; \
-]]) \
 			yytext[yyless_macro_arg] = '\0'; \
 ]], [[ \
 			yytext[yyleng] = YY_G(yy_hold_char); \

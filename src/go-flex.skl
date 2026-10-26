@@ -99,13 +99,6 @@ m4_define([[yyless]], [[
 		m4_ifdef([[M4_MODE_YYLINENO]], [[yyLessLineno(yylessMacroArg, yyscanner);]])
 		*yyCp = yyscanner->yyHoldChar;
 		YY_RESTORE_YY_MORE_OFFSET
-m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
-		/* yyleng counts the yymore() text, which is not in the buffer. */
-		if (yylessMacroArg < yyscanner->yyMoreOffset) {
-			yyscanner->yyMoreOffset = yylessMacroArg;
-		}
-		yylessMacroArg -= yyscanner->yyMoreOffset;
-]])]])
 		yyscanner->yyCBufP = yyCp = yyBp + yylessMacroArg - YY_MORE_ADJ;
 		yyDoBeforeAction(yyscanner, yyCp, yyBp); /* set up yytext again */
 	} while (0)
@@ -937,7 +930,7 @@ m4_ifdef([[M4_MODE_NO_CPP_USE_READ]], [[
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 void yymore(FlexLexer *yyscanner) {yyscanner->yyMoreOffset = strlen(yyscanner->yytext);}
-m4_define([[YY_MORE_ADJ]],  [[0]])
+m4_define([[YY_MORE_ADJ]],  [[yyscanner->yyPrevMoreOffset]])
 m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[{
 yyscanner->yyMoreOffset = yyscanner->yyPrevMoreOffset;
 yyscanner->yyleng -= yyscanner->yyMoreOffset;
@@ -1392,18 +1385,21 @@ void yyDoBeforeAction(FlexLexer *yyscanner, char *yyCp, char *yyBp) {
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyscanner->yytext_ptr -= yyscanner->yyMoreLen; \
 	yyscanner->yyleng = (int) (yyCp - yyscanner->yytext_ptr);]])]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyscanner->yyleng = (int) (yyCp - yyBp);]]) \
-	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyscanner->yyleng = (int) (yyCp - yyBp);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyscanner->yyleng = (int) (yyCp - yyBp) + yyscanner->yyMoreOffset;]])]]) \
 	yyscanner->yyHoldChar = *yyCp; \
 	*yyCp = '\0'; \
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if (yyscanner->yyleng + yyscanner->yyMoreOffset >= YYLMAX) \
-					 yypanic("token too large, exceeds YYLMAX", yyscanner);]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if (yyscanner->yyleng >= YYLMAX) \
-					 yypanic("token too large, exceeds YYLMAX", yyscanner);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[strncpy(&yyscanner->yytext[yyscanner->yyMoreOffset], yyscanner->yytext_ptr, yyscanner->yyleng + 1);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yyleng += yyscanner->yyMoreOffset;]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yyPrevMoreOffset = yyscanner->yyMoreOffset;]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yyMoreOffset = 0;]]) \
+	if (yyscanner->yyleng >= YYLMAX) \
+		yypanic("token too large, exceeds YYLMAX", yyscanner); \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[/* yyCp is before yyBp when the token is cut back into the saved text, which yytext already holds. */ \
+	if (yyCp >= yyBp) \
+		strncpy(&yyscanner->yytext[yyscanner->yyMoreOffset], yyBp, (yyCp - yyBp) + 1); \
+	else \
+		yyscanner->yytext[yyscanner->yyleng] = '\0'; \
+	/* Like %pointer, yytext_ptr is the start of the yymore() text in the buffer, so a refill keeps it. */ \
+	yyscanner->yytext_ptr = yyBp - yyscanner->yyMoreOffset; \
+	yyscanner->yyPrevMoreOffset = yyscanner->yyMoreOffset; \
+	yyscanner->yyMoreOffset = 0;]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[strncpy(yyscanner->yytext, yyscanner->yytext_ptr, yyscanner->yyleng + 1);]]) \
 ]]) \
 	yyscanner->yyCBufP = yyCp;
@@ -1413,14 +1409,8 @@ m4_ifdef([[M4_MODE_YYLINENO]], [[
 /* FIXME: gate on yyRuleCanMatchEOL, this is no longer a macro
  * and we can get at yyAct */
 static void yyLessLineno(int n, FlexLexer *yyscanner) {
-	int yyl = n;
-m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
-	/* The yymore() text was counted by an earlier action. */
-	if (yyl < yyscanner->yyPrevMoreOffset) {
-		yyl = yyscanner->yyPrevMoreOffset;
-	}
-]])]])
-	for (; yyl < yyscanner->yyleng; ++yyl) {
+	int yyl;
+	for (yyl = n; yyl < yyscanner->yyleng; ++yyl) {
 		if (yyscanner->yytext[yyl] == '\n') {
 			yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->bs_yylineno--;
 		}
@@ -2255,14 +2245,7 @@ void yyless(int n, FlexLexer *yyscanner) {
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 	/* yytext is a copy; the token itself is at yytext_ptr. */
 	*yyscanner->yyCBufP = yyscanner->yyHoldChar;
-m4_ifdef([[M4_MODE_YYMORE_USED]], [[
-	if (n < yyscanner->yyPrevMoreOffset) {
-		yyscanner->yyPrevMoreOffset = n;
-	}
-	yyscanner->yyCBufP = yyscanner->yytext_ptr + n - yyscanner->yyPrevMoreOffset;
-]], [[
 	yyscanner->yyCBufP = yyscanner->yytext_ptr + n;
-]])
 	yyscanner->yytext[n] = '\0';
 ]], [[
 	yyscanner->yytext[yyscanner->yyleng] = yyscanner->yyHoldChar;

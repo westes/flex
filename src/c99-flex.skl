@@ -93,13 +93,6 @@ m4_define([[yyless]], [[
 		m4_ifdef([[M4_MODE_YYLINENO]], [[yy_less_lineno(yyless_macro_arg, yyscanner);]])
 		*yy_cp = yyscanner->yy_hold_char;
 		YY_RESTORE_YY_MORE_OFFSET
-m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
-		/* yyleng counts the yymore() text, which is not in the buffer. */
-		if ( yyless_macro_arg < yyscanner->yy_more_offset ) {
-			yyscanner->yy_more_offset = yyless_macro_arg;
-		}
-		yyless_macro_arg -= yyscanner->yy_more_offset;
-]])]])
 		yyscanner->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ;
 		yy_do_before_action(yyscanner, yy_cp, yy_bp); /* set up yytext again */
 	} while ( 0 )
@@ -982,7 +975,7 @@ m4_ifdef( [[M4_MODE_YYLINENO]],
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_YYTEXT_IS_ARRAY]], [[
 void yymore(yyscan_t yyscanner) {yyscanner->yy_more_offset = strlen(yyscanner->yytext_r);}
-m4_define([[YY_MORE_ADJ]],  [[0]])
+m4_define([[YY_MORE_ADJ]],  [[yyscanner->yy_prev_more_offset]])
 m4_define([[YY_RESTORE_YY_MORE_OFFSET]], [[{
 yyscanner->yy_more_offset = yyscanner->yy_prev_more_offset;
 yyscanner->yyleng_r -= yyscanner->yy_more_offset;
@@ -1543,18 +1536,21 @@ void yy_do_before_action(yyscan_t yyscanner, char *yy_cp, char *yy_bp) {
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyscanner->yytext_ptr -= yyscanner->yy_more_len; \
 	yyscanner->yyleng_r = (int) (yy_cp - yyscanner->yytext_ptr);]])]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyscanner->yyleng_r = (int) (yy_cp - yy_bp);]]) \
-	m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyscanner->yyleng_r = (int) (yy_cp - yy_bp);]]) \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyscanner->yyleng_r = (int) (yy_cp - yy_bp) + yyscanner->yy_more_offset;]])]]) \
 	yyscanner->yy_hold_char = *yy_cp; \
 	*yy_cp = '\0'; \
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[if ( yyscanner->yyleng_r + yyscanner->yy_more_offset >= YYLMAX ) \
-					 yypanic( "token too large, exceeds YYLMAX", yyscanner);]]) \
-	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[if ( yyscanner->yyleng_r >= YYLMAX ) \
-					 yypanic( "token too large, exceeds YYLMAX", yyscanner);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[strncpy( &yyscanner->yytext_r[yyscanner->yy_more_offset], yyscanner->yytext_ptr, yyscanner->yyleng_r + 1);]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yyleng_r += yyscanner->yy_more_offset;]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yy_prev_more_offset = yyscanner->yy_more_offset;]]) \
-	m4_ifdef([[M4_MODE_YYMORE_USED]], [[yyscanner->yy_more_offset = 0;]]) \
+	if ( yyscanner->yyleng_r >= YYLMAX ) \
+		yypanic( "token too large, exceeds YYLMAX", yyscanner); \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[/* yy_cp is before yy_bp when the token is cut back into the saved text, which yytext already holds. */ \
+	if ( yy_cp >= yy_bp ) \
+		strncpy( &yyscanner->yytext_r[yyscanner->yy_more_offset], yy_bp, (yy_cp - yy_bp) + 1); \
+	else \
+		yyscanner->yytext_r[yyscanner->yyleng_r] = '\0'; \
+	/* Like %pointer, yytext_ptr is the start of the yymore() text in the buffer, so a refill keeps it. */ \
+	yyscanner->yytext_ptr = yy_bp - yyscanner->yy_more_offset; \
+	yyscanner->yy_prev_more_offset = yyscanner->yy_more_offset; \
+	yyscanner->yy_more_offset = 0;]]) \
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[strncpy( yyscanner->yytext_r, yyscanner->yytext_ptr, yyscanner->yyleng_r + 1);]]) \
 ]]) \
 	yyscanner->yy_c_buf_p = yy_cp;
@@ -1564,14 +1560,8 @@ m4_ifdef( [[M4_MODE_YYLINENO]], [[
 /* FIXME: gate on yy_rule_can_match_eol, this is no longer a macro
  * and we can get at yy_act */
 static void yy_less_lineno(int n, yyscan_t yyscanner) {
-	int yyl = n;
-m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
-	/* The yymore() text was counted by an earlier action. */
-	if ( yyl < yyscanner->yy_prev_more_offset ) {
-		yyl = yyscanner->yy_prev_more_offset;
-	}
-]])]])
-	for ( ; yyl < yyscanner->yyleng_r; ++yyl ) {
+	int yyl;
+	for ( yyl = n; yyl < yyscanner->yyleng_r; ++yyl ) {
 		if ( yyscanner->yytext_r[yyl] == '\n' ) {
 			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->bs_yylineno--;
 		}
@@ -2409,14 +2399,7 @@ void yyless(int n, yyscan_t yyscanner) {
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 	/* yytext is a copy; the token itself is at yytext_ptr. */
 	*yyscanner->yy_c_buf_p = yyscanner->yy_hold_char;
-m4_ifdef([[M4_MODE_YYMORE_USED]], [[
-	if ( n < yyscanner->yy_prev_more_offset ) {
-		yyscanner->yy_prev_more_offset = n;
-	}
-	yyscanner->yy_c_buf_p = yyscanner->yytext_ptr + n - yyscanner->yy_prev_more_offset;
-]], [[
 	yyscanner->yy_c_buf_p = yyscanner->yytext_ptr + n;
-]])
 	yyscanner->yytext_r[n] = '\0';
 ]], [[
 	yyscanner->yytext_r[yyscanner->yyleng_r] = yyscanner->yy_hold_char;
