@@ -74,12 +74,14 @@ like the descriptions of the types below.
 
 The primary types are:
 - build: Change the build system, including tracking external dependencies
+- chore: Routine upkeep that changes nothing a user can see
 - ci: Change the CI/CD system
 - docs: Update the package documentation
 - feat: Add a new feature
 - fix: Fix a bug or incorrect behavior
 - perf: Improve performance of a feature
 - refactor: Simplify maintainability without affecting performance or behavior
+- release: Prepare a release (made by the release automation)
 - revert: Revert a previous commit
 - style: Correct a style mismatch (indentation, etc.)
 - test: Change or add to the test suite
@@ -96,7 +98,7 @@ commit introduces a breaking change - one that breaks compatibility
 with previous versions of the code base. Whenever the `!` marker
 appears, a BREAKING-CHANGE footer should also be included.
 
-The optional body may be included to provid additional information
+The optional body may be included to provide additional information
 or context about the change. If it appears, it must be preceded by a
 blank line.
 
@@ -107,7 +109,7 @@ preceded by a blank line. Footers must be formatted as `<footer-type>:
 description's format depends upon the footer-type. Known footer-types
 include:
 - Refs: A comma-separated list of commit hashes and/or issue and PR numbers. Issue and PR numbers must be prefixed with a `#`.
-- BREAKING-CHANGE: A description of the change that breaks compatibility with previous versions of the code, including the version number at which compatibility is broken. 
+- BREAKING-CHANGE: A description of the change that breaks compatibility with previous versions of the code, including the version number at which compatibility is broken. `BREAKING CHANGE:` is also accepted.
 
 A breaking change commit message might look like:
 
@@ -121,6 +123,39 @@ A breaking change commit message might look like:
 Squash your commits so that each commit is an atomic change. This aids
 discussion and revision during the review process. In particular,
 there should be no commits that fixup prior commits.
+
+The repository has a hook that checks your commit message against this
+convention. To turn it on in your clone, run:
+
+```
+    git config core.hooksPath .githooks
+```
+
+Using the hook is optional. A commit message that does not follow the
+convention is not an error and will not hold up your pull request. The
+maintainer may reword it when merging.
+
+### How commit messages become releases
+
+Flex follows [Semantic Versioning](https://semver.org/) and makes a
+release from the master branch whenever a push to it contains a change
+that users can see. The type of your commit decides what kind of
+release it causes:
+- A commit with a `!` after its type or scope, or with a
+  `BREAKING-CHANGE:` footer, causes a major release.
+- `feat` causes a minor release.
+- `fix`, `perf` and `revert` cause a patch release.
+- All other types cause no release by themselves. They go out with the
+  next release that is made.
+
+The highest of these among the commits since the last release decides
+the version. A commit that does not follow the convention causes no
+release, so a bug fix should use the `fix` type.
+
+The maintainer writes the entry for the NEWS file, not the contributor.
+Please do not edit NEWS in your pull request. Describe the change for a
+user of flex in the pull request instead, and the maintainer will turn
+it into a NEWS entry.
 
 ## Submitting PRs
 

@@ -1,0 +1,105 @@
+#! /bin/sh
+# semver-next: work out the next release version from commit messages.
+#
+# Usage: semver-next [-v] [-C DIR] [-t REV]
+#
+#   -C DIR  run in the git repository at DIR
+#   -t REV  look at the commits up to REV instead of HEAD
+#   -v      list how each commit was counted, on standard error
+#
+# Finds the highest tag of the form vX.Y.Z reachable from REV (release
+# candidate tags and older tags that are not of that form are ignored)
+# and looks at the commits since then. It prints these lines on standard
+# output:
+#
+#   last=X.Y.Z       the version of that tag
+#   commits=N        how many commits since then, merge commits not counted
+#   bump=KIND        major, minor, patch or none
+#   next=X.Y.Z       the next version, empty if the bump is none
+#
+# The bump follows the commit types in CONTRIBUTING.md. The highest wins:
+#
+#   major   a "!" before the colon, or a BREAKING-CHANGE: or
+#           BREAKING CHANGE: footer, on any type
+#   minor   feat
+#   patch   fix, perf, revert
+#   none    anything else, including subjects that do not follow the
+#           convention
+#
+# Exits 2, printing nothing on standard output, if there is no vX.Y.Z tag.
+
+set -eu
+
+dir=.
+end=HEAD
+verbose=0
+
+while getopts :C:t:vh OPTION; do
+    case $OPTION in
+        C) dir=$OPTARG ;;
+        t) end=$OPTARG ;;
+        v) verbose=1 ;;
+        h) sed -n '2,/^$/p' "$0" | sed -e 's/^# \{0,1\}//'
+           exit 0 ;;
+        *) echo "Usage: $0 [-v] [-C DIR] [-t REV]" >&2
+           exit 1 ;;
+    esac
+done
+
+last_tag=$(git -C "$dir" tag --merged "$end" |
+    grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' |
+    sort -t. -k1.2,1n -k2,2n -k3,3n |
+    tail -n 1)
+
+if [ -z "$last_tag" ]; then
+    echo "semver-next: no vX.Y.Z tag is reachable from $end" >&2
+    exit 2
+fi
+
+last=${last_tag#v}
+
+summary=$(git -C "$dir" log --no-merges --format='%x01%B' "$last_tag..$end" |
+    awk -v verbose="$verbose" '
+    BEGIN { RS = "\001"; commits = 0; level = 0 }
+    /^[ \t\n]*$/ { next }
+    {
+        n = split($0, line, "\n")
+        subject = line[1]
+        commits++
+        lv = 0
+        if (subject ~ /^[a-z]+(\([^)]+\))?!?: [^ ]/) {
+            type = subject
+            sub(/[(!:].*$/, "", type)
+            if (type == "feat") lv = 2
+            else if (type == "fix" || type == "perf" || type == "revert") lv = 1
+            if (subject ~ /^[a-z]+(\([^)]+\))?!: /) lv = 3
+            for (i = 2; i <= n; i++)
+                if (line[i] ~ /^BREAKING[ -]CHANGE: /) lv = 3
+        }
+        if (lv > level) level = lv
+        if (verbose) {
+            printf "semver-next: %s: %s\n", \
+                (lv == 3 ? "major" : lv == 2 ? "minor" : lv == 1 ? "patch" : "none"), \
+                subject > "/dev/stderr"
+        }
+    }
+    END {
+        kind = (level == 3 ? "major" : level == 2 ? "minor" : level == 1 ? "patch" : "none")
+        print commits, kind
+    }')
+
+commits=${summary% *}
+bump=${summary#* }
+
+IFS=. read -r major minor patch <<EOF_VERSION
+$last
+EOF_VERSION
+
+case $bump in
+    major) next=$((major + 1)).0.0 ;;
+    minor) next=$major.$((minor + 1)).0 ;;
+    patch) next=$major.$minor.$((patch + 1)) ;;
+    *)     next= ;;
+esac
+
+printf 'last=%s\ncommits=%s\nbump=%s\nnext=%s\n' "$last" "$commits" "$bump" "$next"

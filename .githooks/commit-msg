@@ -1,0 +1,8 @@
+#! /bin/sh
+# Check the commit message against the convention in CONTRIBUTING.md.
+# Turn this on in your clone with:
+#
+#     git config core.hooksPath .githooks
+#
+top=$(git rev-parse --show-toplevel)
+exec "$top/tools/check-commit-msg" "$1"

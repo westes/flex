@@ -1,0 +1,96 @@
+#! /bin/sh
+# check-release: check that the source tree is ready to be released.
+#
+# Usage: check-release [-u] [-t TAG] [-d DIR]
+#
+#   -d DIR  the top of the source tree, default the current directory
+#   -t TAG  also check that TAG is v followed by the version
+#   -u      check the tree before the release commit is made: the top
+#           section of NEWS must still have the placeholder header, and
+#           have entries
+#
+# Without -u, the top section of NEWS must be the release: a real version
+# and date in its header, the same version as AC_INIT in configure.ac, a
+# date that is not in the future, and at least one entry.
+#
+# Prints each problem found on standard error. Exits 0 if there are none,
+# 1 if there are.
+
+set -eu
+
+dir=.
+tag=
+unreleased=0
+
+while getopts :d:t:uh OPTION; do
+    case $OPTION in
+        d) dir=$OPTARG ;;
+        t) tag=$OPTARG ;;
+        u) unreleased=1 ;;
+        h) sed -n '2,/^$/p' "$0" | sed -e 's/^# \{0,1\}//'
+           exit 0 ;;
+        *) echo "Usage: $0 [-u] [-t TAG] [-d DIR]" >&2
+           exit 1 ;;
+    esac
+done
+
+problems=0
+problem() {
+    echo "check-release: $*" >&2
+    problems=1
+}
+
+news=$dir/NEWS
+header=$(grep -m 1 '^\* Noteworthy changes in release' "$news" || true)
+
+if [ -z "$header" ]; then
+    echo "check-release: no release section found in $news" >&2
+    exit 1
+fi
+
+# The entries in the top section: the lines that start a "***" item
+# between the first header and the next one.
+entries=$(awk '
+    /^\* Noteworthy changes in release/ { if (seen) exit; seen = 1; next }
+    seen && /^\*\*\* / { n++ }
+    END { print n + 0 }' "$news")
+
+if [ "$entries" -eq 0 ]; then
+    problem "the top section of NEWS has no entries"
+fi
+
+placeholder='^\* Noteworthy changes in release +\?\.\? \(\?\?\?\?-\?\?-\?\?\) \[\?\]$'
+
+if [ "$unreleased" -eq 1 ]; then
+    if ! printf '%s\n' "$header" | grep -Eq "$placeholder"; then
+        problem "the top section of NEWS should have the placeholder header, but has: $header"
+    fi
+    exit $problems
+fi
+
+pattern='^\* Noteworthy changes in release +([0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?) \(([0-9]{4}-[0-9]{2}-[0-9]{2})\) \[[a-z-]+\]$'
+
+if ! printf '%s\n' "$header" | grep -Eq "$pattern"; then
+    problem "the top section of NEWS does not have a release header with a version and date: $header"
+    exit 1
+fi
+
+version=$(printf '%s\n' "$header" | sed -E "s/$pattern/\\1/")
+date=$(printf '%s\n' "$header" | sed -E "s/$pattern/\\3/")
+
+today=$(date -u +%Y-%m-%d)
+latest=$(printf '%s\n%s\n' "$date" "$today" | sort | tail -n 1)
+if [ "$latest" != "$today" ]; then
+    problem "the date in the NEWS header, $date, is in the future"
+fi
+
+configured=$(sed -n 's/^AC_INIT(\[[^]]*\],\[\([^]]*\)\].*/\1/p' "$dir/configure.ac")
+if [ "$configured" != "$version" ]; then
+    problem "NEWS says $version, but AC_INIT in configure.ac says ${configured:-nothing}"
+fi
+
+if [ -n "$tag" ] && [ "$tag" != "v$version" ]; then
+    problem "the tag is $tag, but the version is $version"
+fi
+
+exit $problems
