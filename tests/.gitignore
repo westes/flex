@@ -163,6 +163,8 @@ yymore*
 !yymorearraybol.txt
 !yymorearrayless.rules
 !yymorearrayless.txt
+!yymorearrayrefill.rules
+!yymorearrayrefill.txt
 yyunput*
 !yyunput.rules
 !yyunput.txt

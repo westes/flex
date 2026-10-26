@@ -1,0 +1,50 @@
+/*
+ * This file is part of flex.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * Neither the name of the University nor the names of its contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ */
+ /*
+  * Test yyless below the yymore() text with %array when the input buffer
+  * is refilled in between.  The buffer holds 16 characters, so the refill
+  * and the growth of the buffer happen in the middle of the second token.
+  * What should happen is:
+  * 1. "aaaaaaaaaaaa" (12 characters) is saved by yymore().
+  * 2. "bbbbbbbbbbbb" (12 characters) is matched with token length 24.
+  *    yyless(3) keeps "aaa".
+  * 3. The other nine "a" characters go back to the input and are matched
+  *    one at a time.  The "b" characters are then matched again as one
+  *    token, which is not shortened this time.
+  */
+
+%array
+%option nounput noyywrap yylineno warn nodefault noinput
+%{
+#include <string.h>
+#define YY_BUF_SIZE 16
+static int singles;
+%}
+%%
+a{12}	{M4_TEST_DO(yymore())}
+b{12}	{if (yyleng > 12) {M4_TEST_DO(yyless(3)) if (yyleng != 3 || strcmp(yytext, "aaa") != 0) {fprintf(stderr,"ASSERT FAILED: yyless(3).\n"); exit(1);}} else if (singles != 9 || yyleng != 12) {fprintf(stderr,"ASSERT FAILED: %d rescanned.\n", singles); exit(1);}}
+a	{++singles;}
+\n	;
+.	{M4_TEST_FAILMESSAGE}
+###
+aaaaaaaaaaaabbbbbbbbbbbb
