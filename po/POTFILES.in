@@ -3,6 +3,7 @@ src/ccl.c
 src/dfa.c
 src/ecs.c
 src/filter.c
+src/flexdef.h
 src/gen.c
 src/libmain.c
 src/libyywrap.c
