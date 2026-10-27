@@ -18,7 +18,7 @@ int  statep = 0;
 
 int  need_closing = FALSE;
 
-char buffer[YY_BUF_SIZE];
+char buffer[16384];
 
 extern char *yytext;
 

@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <math.h>
 
+int yylex(void);
+int yyerror(char *message);
+
 %}
 
 %union {
@@ -44,9 +47,10 @@ exp     : NUMBER                 { $$ = $1;        }
 
 %%
 
-yyerror(char *message)
+int yyerror(char *message)
 {
   printf("%s\n",message);
+  return 0;
 }
 
 int main(int argc, char *argv[])

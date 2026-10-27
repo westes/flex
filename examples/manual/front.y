@@ -8,6 +8,9 @@
 extern int  yylexlinenum;                   /* these are in YYlex      */
 extern char *yytext;                        /* current token           */
 
+int yylex(void);
+int yyerror(char *message);
+
 
 %}
 
@@ -115,4 +118,5 @@ int yyerror(char *message)
 
   fprintf(yyout,"\nError at line %5d. (%s) \n",
                      yylexlinenum,message);
+  return 0;
 }

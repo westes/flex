@@ -90,15 +90,15 @@ ulong_ext         {long_ext}{unsigned_ext}|{unsigned_ext}{long_ext}
                              return(SIGNED_LONG_SYM);
                           }
 {float_constant}{long_ext}  {
-                             sscanf(yytext,"%lf",&yylval.ylong_double); 
+                             sscanf(yytext,"%Lf",&yylval.ylong_double); 
                              return(LONG_DOUBLE_SYM);
                           }
 {float_constant}{float_ext}  {
                              sscanf(yytext,"%f",&yylval.yfloat); 
                              return(FLOAT_SYM);
                           }
-{float_constant}          { /* use %lf to protect against overflow */
-                             sscanf(yytext,"%lf",&yylval.ylong_double); 
+{float_constant}          { /* use %Lf to protect against overflow */
+                             sscanf(yytext,"%Lf",&yylval.ylong_double); 
                              return(LONG_DOUBLE_SYM);
                           }
 %%
@@ -128,7 +128,7 @@ int main(void)
        break;
     case LONG_DOUBLE_SYM:  
        printf("Type of number  : LONG DOUBLE\n");
-       printf("Value of number : %lf\n",yylval.ylong_double);
+       printf("Value of number : %Lf\n",yylval.ylong_double);
        break;
     case FLOAT_SYM:        
        printf("Type of number  : FLOAT\n");
