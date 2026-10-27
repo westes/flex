@@ -41,7 +41,6 @@
 /* yylex - scan for a regular expression token */
 extern char *yytext;
 extern FILE *yyout;
-bool no_section3_escape = false;
 int     yylex (void)
 {
 	int     toktype;
