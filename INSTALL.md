@@ -78,7 +78,7 @@ built from scratch:
 * automake; for Makefile generation
 * libtool; often packaged with automake, but not always
 * make; for running the generated Makefiles
-* gettext; for i18n support
+* gettext 0.23 or later; for i18n support
 * help2man; to generate the flex man page
 * tar, gzip, lzip, etc.; for packaging of the source distribution
 * GNU texinfo; to build and test the flex manual. Note that if you want
