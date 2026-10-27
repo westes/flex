@@ -268,7 +268,7 @@ int filter_tee_header (struct filter *chain)
 		fputs ("m4_define([[M4_YY_NOOP]])[[]]m4_dnl\n", to_h);
 		fputs ("m4_define([[M4_YY_IN_HEADER]],[[]])m4_dnl\n", to_h);
 		fprintf (to_h,
-			 "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
+			 "m4_define( [[M4_YY_OUTFILE_NAME]],[[[[%s]]]])m4_dnl\n",
 			 env.headerfilename != NULL ? env.headerfilename : "<stdout>");
 	}
 
@@ -277,7 +277,7 @@ int filter_tee_header (struct filter *chain)
 	fputs ("m4_changequote`'m4_dnl\n", to_c);
 	fputs ("m4_changequote([[,]])[[]]m4_dnl\n", to_c);
 	fputs ("m4_define([[M4_YY_NOOP]])[[]]m4_dnl\n", to_c);
-	fprintf (to_c, "m4_define( [[M4_YY_OUTFILE_NAME]],[[%s]])m4_dnl\n",
+	fprintf (to_c, "m4_define( [[M4_YY_OUTFILE_NAME]],[[[[%s]]]])m4_dnl\n",
 		 env.outfilename != NULL ? env.outfilename : "<stdout>");
 
 	while (fgets (buf, sizeof buf, stdin)) {

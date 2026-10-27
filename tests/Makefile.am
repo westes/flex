@@ -21,7 +21,7 @@
 
 AM_CFLAGS = $(WARNINGFLAGS)
 
-TESTS = $(check_PROGRAMS) options.cn skel_option.skel
+TESTS = $(check_PROGRAMS) options.cn skel_option.skel m4_injection.inj
 
 # The script testwrapper.sh will run most tests as is. A couple tests
 # in the suite end in .direct, .cn. and the like so that we can pass
@@ -29,7 +29,7 @@ TESTS = $(check_PROGRAMS) options.cn skel_option.skel
 # automake knows how to distinguish between the various kinds of tests
 # we have.
 
-TEST_EXTENSIONS = .direct .cn .skel .i3 .pthread .opt .ser .ver
+TEST_EXTENSIONS = .direct .cn .skel .inj .i3 .pthread .opt .ser .ver
 
 LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
@@ -42,6 +42,8 @@ AM_CN_LOG_FLAGS = $(FLEX)
 
 SKEL_LOG_COMPILER = $(SHELL) $(srcdir)/skel_option.skel
 AM_SKEL_LOG_FLAGS = $(FLEX)
+INJ_LOG_COMPILER = $(SHELL) $(srcdir)/m4_injection.inj
+AM_INJ_LOG_FLAGS = $(FLEX)
 
 I3_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_I3_LOG_FLAGS = -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt
@@ -336,6 +338,7 @@ dist_noinst_SCRIPTS = \
 dist_check_SCRIPTS = \
 	options.cn \
 	skel_option.skel \
+	m4_injection.inj \
 	testwrapper-direct.sh \
 	testwrapper.sh
 

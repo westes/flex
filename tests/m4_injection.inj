@@ -1,0 +1,121 @@
+#!/bin/sh
+
+# Test that text from %option values and command-line options cannot
+# escape into the m4 input that flex generates, where it could run m4
+# builtins such as m4_syscmd while flex itself is running.
+#
+# Each payload tries to create a file named PWNED.  Values containing
+# '[' or ']' must be rejected.  Values with no brackets must be passed
+# through as plain text.
+
+FLEX=$1
+case $FLEX in
+    /*) ;;
+    *) FLEX=$(pwd)/$FLEX ;;
+esac
+
+work=$(mktemp -d "${TMPDIR:-/tmp}/m4inj.XXXXXX") || exit 99
+trap 'rm -rf "$work"' EXIT HUP INT QUIT TERM
+
+failures=0
+n=0
+
+fail () {
+    echo "FAIL: $*" >&2
+    failures=$((failures + 1))
+}
+
+# run_flex NAME LFILE-CONTENT [FLEX-ARGS...]
+# Runs flex in a fresh directory.  Sets $dir and $status.
+run_flex () {
+    n=$((n + 1))
+    dir=$work/$n
+    mkdir "$dir"
+    printf '%s\n%%%%\n.	;\n%%%%\n' "$2" > "$dir/a.l"
+    shift 2
+    status=0
+    (cd "$dir" && "$FLEX" "$@" a.l >out.txt 2>err.txt) || status=$?
+}
+
+# expect_rejected NAME LFILE-CONTENT [FLEX-ARGS...]
+expect_rejected () {
+    name=$1
+    run_flex "$@"
+    if [ -e "$dir/PWNED" ]; then
+        fail "$name: injected command ran"
+    elif [ "$status" -eq 0 ]; then
+        fail "$name: value with brackets was accepted"
+    fi
+}
+
+# expect_literal NAME LFILE-CONTENT [FLEX-ARGS...]
+# The payload has no brackets: flex must succeed, must not run it, and
+# must keep it as text in lex.yy.c.
+expect_literal () {
+    name=$1
+    run_flex "$@"
+    if [ -e "$dir/PWNED" ]; then
+        fail "$name: injected command ran"
+    elif [ "$status" -ne 0 ]; then
+        fail "$name: flex failed: $(cat "$dir/err.txt")"
+    elif ! grep -F 'm4_syscmd(touch PWNED)' "$dir"/lex.yy.c >/dev/null; then
+        fail "$name: value did not reach the output as text"
+    fi
+}
+
+q=']]m4_syscmd(touch PWNED)m4_dnl[['
+p='x) m4_syscmd(touch PWNED) ('
+
+# Values with brackets, set in the scanner file.
+expect_rejected outfile       "%option outfile=\"a$q.c\""
+expect_rejected header-file   "%option header-file=\"a$q.h\""
+expect_rejected yydecl        "%option yydecl=\"int f(void)$q\""
+expect_rejected yyclass       "%option c++ yyclass=\"a$q\""
+expect_rejected extra-type    "%option reentrant extra-type=\"a$q\""
+expect_rejected pre-action    "%option pre-action=\"a$q\""
+expect_rejected post-action   "%option post-action=\"a$q\""
+expect_rejected yyterminate   "%option yyterminate=\"a$q\""
+expect_rejected user-init     "%option user-init=\"a$q\""
+expect_rejected prefix        "%option prefix=\"a$q\""
+
+# Values with brackets, set on the command line.
+expect_rejected cmdline-o            "" -o "a$q.c"
+expect_rejected cmdline-header-file  "" --header-file="a$q.h"
+expect_rejected cmdline-yyclass      "" --c++ --yyclass="a$q"
+expect_rejected cmdline-prefix       "" -P"a$q"
+
+# Values with no brackets, which used to be expanded by m4 anyway.
+expect_literal yydecl-plain     "%option yydecl=\"int f$p\""
+expect_literal user-init-plain  "%option user-init=\"$p\""
+expect_literal pre-action-plain "%option pre-action=\"$p\""
+expect_literal post-action-plain "%option post-action=\"$p\""
+
+# A file name is also expanded by m4 when it is written to #line.
+run_flex outfile-plain "%option outfile=\"o)m4_syscmd(touch PWNED)(.c\""
+if [ -e "$dir/PWNED" ]; then
+    fail "outfile-plain: injected command ran"
+elif [ "$status" -ne 0 ]; then
+    fail "outfile-plain: flex failed: $(cat "$dir/err.txt")"
+fi
+
+run_flex header-plain "%option header-file=\"h)m4_syscmd(touch PWNED)(.h\""
+if [ -e "$dir/PWNED" ]; then
+    fail "header-plain: injected command ran"
+elif [ "$status" -ne 0 ]; then
+    fail "header-plain: flex failed: $(cat "$dir/err.txt")"
+fi
+
+# Ordinary values still work.
+run_flex ordinary '%option yydecl="int foobar(void)" user-init="count = 0;"'
+if [ "$status" -ne 0 ]; then
+    fail "ordinary: flex failed: $(cat "$dir/err.txt")"
+elif ! grep -F 'int foobar(void)' "$dir/lex.yy.c" >/dev/null; then
+    fail "ordinary: yydecl value is missing from the output"
+elif ! grep -F 'count = 0;' "$dir/lex.yy.c" >/dev/null; then
+    fail "ordinary: user-init value is missing from the output"
+fi
+
+if [ "$failures" -ne 0 ]; then
+    exit 1
+fi
+echo "m4 injection tests passed"
