@@ -35,6 +35,7 @@
 
 
 #include "flexdef.h"
+#include <errno.h>
 #include "version.h"
 #include "options.h"
 #include "tables.h"
@@ -297,6 +298,18 @@ int main (int argc, char *argv[])
 void initialize_output_filters(void)
 {
 	const char * m4 = NULL;
+
+	/* The header file is opened later, in a forked child, where a failure
+	 * cannot be reported cleanly. Check here that we can write it.
+	 */
+	if (env.headerfilename != NULL) {
+		FILE *hf = fopen (env.headerfilename, "w");
+
+		if (hf == NULL)
+			lerr (_("can't open %s: %s"),
+			      env.headerfilename, strerror (errno));
+		fclose (hf);
+	}
 
 	output_chain = filter_create_int(NULL, filter_tee_header, env.headerfilename);
 	if ( !(m4 = getenv("M4"))) {

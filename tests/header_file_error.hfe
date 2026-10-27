@@ -1,0 +1,64 @@
+#!/bin/sh
+
+# Test that flex reports a header file it cannot write: the message
+# names the file and the system's reason, flex exits with status 1, and
+# it leaves no output file behind.  A writable header file must still
+# work.
+
+FLEX=$1
+case $FLEX in
+    /*) ;;
+    *) FLEX=$(pwd)/$FLEX ;;
+esac
+
+work=$(mktemp -d "${TMPDIR:-/tmp}/hfe.XXXXXX") || exit 99
+trap 'rm -rf "$work"' EXIT HUP INT QUIT TERM
+
+failures=0
+
+fail () {
+    echo "FAIL: $*" >&2
+    failures=$((failures + 1))
+}
+
+printf '%%%%\n.\t;\n%%%%\n' > "$work/a.l"
+bad=$work/no-such-dir/x.h
+
+# In the scanner file.
+printf '%%option header-file="%s"\n%%%%\n.\t;\n%%%%\n' "$bad" > "$work/b.l"
+status=0
+(cd "$work" && "$FLEX" -o out1.c b.l >out.txt 2>err.txt) || status=$?
+if [ "$status" -ne 1 ]; then
+    fail "option: expected exit status 1, got $status"
+elif ! grep -F "can't open $bad" "$work/err.txt" >/dev/null; then
+    fail "option: message does not name the file: $(cat "$work/err.txt")"
+elif [ -e "$work/out1.c" ]; then
+    fail "option: output file was left behind"
+fi
+
+# On the command line.
+status=0
+(cd "$work" && "$FLEX" -o out2.c --header-file="$bad" a.l >out.txt 2>err.txt) \
+    || status=$?
+if [ "$status" -ne 1 ]; then
+    fail "command line: expected exit status 1, got $status"
+elif ! grep -F "can't open $bad" "$work/err.txt" >/dev/null; then
+    fail "command line: message does not name the file: $(cat "$work/err.txt")"
+elif [ -e "$work/out2.c" ]; then
+    fail "command line: output file was left behind"
+fi
+
+# A header file that can be written.
+status=0
+(cd "$work" && "$FLEX" -o out3.c --header-file=out3.h a.l >out.txt 2>err.txt) \
+    || status=$?
+if [ "$status" -ne 0 ]; then
+    fail "writable: flex failed: $(cat "$work/err.txt")"
+elif [ ! -s "$work/out3.h" ]; then
+    fail "writable: header file is missing or empty"
+fi
+
+if [ "$failures" -ne 0 ]; then
+    exit 1
+fi
+echo "header file error tests passed"
