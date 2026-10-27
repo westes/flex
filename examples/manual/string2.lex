@@ -5,7 +5,7 @@
 
 %{
 #include <ctype.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 #define isodigit(x) ((x) >= '0' && (x) <= '7') 
 #define hextoint(x) (isdigit((x)) ? (x) - '0' : ((x) - 'A') + 10)  

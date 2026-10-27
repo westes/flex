@@ -10,6 +10,7 @@
 
 CC       = gcc -g
 LEX      = flex -i -I 
+LEXLIB   = -lfl
 YACC     = bison -d -y
 ALLOCA   =
 
@@ -20,8 +21,9 @@ ALLOCA   =
 ############################################################
 PATH := /usr/local/bin:${PATH}
 
-all: expr front myname eof wc replace user_act string1\
-     string2 yymore numbers dates cat
+all: expr front myname myname2 eof_rules pas_include wc replace user_act\
+     string1 string2 yymore yymore2 numbers dates cat reject unput\
+     userinit j2t example_r example_nr example_er
 
 example_r: example_r.lex
 	$(LEX)  example_r.lex
@@ -38,64 +40,89 @@ example_er: example_er.lex
 expr:   expr.y expr.lex
 	$(YACC) expr.y
 	$(LEX)  expr.lex
-	$(CC) -o expr lex.yy.c y.tab.c $(ALLOCA) -ll -lm
+	$(CC) -o expr lex.yy.c y.tab.c $(ALLOCA) $(LEXLIB) -lm
 
 front:  front.y front.lex
 	$(YACC) front.y
 	$(LEX)  front.lex
-	$(CC) -o front lex.yy.c y.tab.c $(ALLOCA) -ll -lm
+	$(CC) -o front lex.yy.c y.tab.c $(ALLOCA) $(LEXLIB) -lm
 
 numbers: numbers.lex
 	$(LEX)  numbers.lex
-	$(CC)   lex.yy.c -o numbers
+	$(CC)   lex.yy.c -o numbers $(LEXLIB)
 
 dates: dates.lex
 	$(LEX)  dates.lex
-	$(CC)   lex.yy.c -o dates -ll
+	$(CC)   lex.yy.c -o dates $(LEXLIB)
 
 yymore: yymore.lex
 	$(LEX)  yymore.lex
-	$(CC)   lex.yy.c -o yymore -ll
+	$(CC)   lex.yy.c -o yymore $(LEXLIB)
 
 string1: string1.lex
 	$(LEX)  string1.lex
-	$(CC)   lex.yy.c -o string1 -ll
+	$(CC)   lex.yy.c -o string1 $(LEXLIB)
 
 string2: string2.lex
 	$(LEX)  string2.lex
-	$(CC)   lex.yy.c -o string2 -ll
+	$(CC)   lex.yy.c -o string2 $(LEXLIB)
 
 myname: myname.lex
 	$(LEX)  myname.lex
-	$(CC)   lex.yy.c -o myname -ll
+	$(CC)   lex.yy.c -o myname $(LEXLIB)
 
 myname2: myname2.lex
 	$(LEX)  myname2.lex
-	$(CC)   lex.yy.c -o myname2 -ll
+	$(CC)   lex.yy.c -o myname2 $(LEXLIB)
 
-eof:    eof_rules.lex
+eof_rules: eof_rules.lex
 	$(LEX)  eof_rules.lex
-	$(CC)   lex.yy.c -o eof -ll
+	$(CC)   lex.yy.c -o eof_rules $(LEXLIB)
+
+pas_include: pas_include.lex
+	$(LEX)  pas_include.lex
+	$(CC)   lex.yy.c -o pas_include $(LEXLIB)
 
 wc:     wc.lex
 	$(LEX)  wc.lex
-	$(CC)   lex.yy.c -o wc -ll
+	$(CC)   lex.yy.c -o wc $(LEXLIB)
 
 cat:    cat.lex
 	$(LEX)  cat.lex
-	$(CC)   lex.yy.c -o cat -ll
+	$(CC)   lex.yy.c -o cat $(LEXLIB)
 
 replace: replace.lex
 	$(LEX)  replace.lex
-	$(CC)   lex.yy.c -o replace -ll
+	$(CC)   lex.yy.c -o replace $(LEXLIB)
 
-user_act: expr.y expr.lex
+user_act: user_act.lex
 	$(LEX)  user_act.lex
-	$(CC) -o user_act lex.yy.c -ll 
+	$(CC) -o user_act lex.yy.c $(LEXLIB) 
+
+yymore2: yymore2.lex
+	$(LEX)  yymore2.lex
+	$(CC)   lex.yy.c -o yymore2 $(LEXLIB)
+
+reject: reject.lex
+	$(LEX)  reject.lex
+	$(CC)   lex.yy.c -o reject $(LEXLIB)
+
+unput:  unput.lex
+	$(LEX)  unput.lex
+	$(CC)   lex.yy.c -o unput $(LEXLIB)
+
+userinit: userinit.lex
+	$(LEX)  userinit.lex
+	$(CC)   lex.yy.c -o userinit $(LEXLIB)
+
+j2t:    j2t.lex
+	$(LEX)  j2t.lex
+	$(CC)   lex.yy.c -o j2t $(LEXLIB)
 
 clean:
 	rm -f *.BAK *.o core *~* *.a 
 	rm -f *.tab.h *.tab.c
-	rm -f myname expr lex.yy.c *.out eof wc yymore
-	rm -f replace front user_act string1 string2
-	rm -f dates numbers cat
+	rm -f myname myname2 expr lex.yy.c *.out eof_rules pas_include wc
+	rm -f yymore yymore2 replace front user_act string1 string2
+	rm -f dates numbers cat reject unput userinit j2t
+	rm -f example_r example_nr example_er

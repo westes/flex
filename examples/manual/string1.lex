@@ -4,7 +4,7 @@
 
 %{
 #include <ctype.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 #define ALLOC_SIZE 32 /* for (re)allocating the buffer */                   
 

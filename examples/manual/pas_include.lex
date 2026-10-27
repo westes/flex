@@ -45,22 +45,20 @@ int             include_count = -1;
 
           yybegin(INITIAL);
         }
-<INCLUDE><<EOF>> 
-        {
+<INCLUDE><<EOF>> {
             fprintf( stderr, "EOF in include" );
             yyterminate();
         }
-<COMMENT><<EOF>> 
-        {
+<COMMENT><<EOF>> {
             fprintf( stderr, "EOF in comment" );
             yyterminate();
         }
 <<EOF>> {
-          if ( include_count <= 0 ){
+          if ( include_count < 0 ){
             yyterminate();
           } else {
-            yy_delete_buffer(include_stack[include_count--] );
-            yy_switch_to_buffer(include_stack[include_count] );
+            yy_delete_buffer( yy_current_buffer() );
+            yy_switch_to_buffer( include_stack[include_count--] );
             yybegin(INCLUDE);
           }
         }

@@ -4,7 +4,10 @@
  */
 
 %{
+#include <stdlib.h>
 #include "y.tab.h"
+
+int yyerror(char *message);
 
 %}
 
