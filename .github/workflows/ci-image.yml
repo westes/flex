@@ -1,0 +1,45 @@
+name: Build CI image
+
+# Builds the image the other workflows run in. See .github/ci-image/Dockerfile.
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+    - .github/ci-image/**
+    - tools/bootstrap-flex
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  image:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE: ghcr.io/${{ github.repository_owner }}/flex-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - name: Log in to the registry
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ACTOR: ${{ github.actor }}
+      run: echo "$GH_TOKEN" | docker login ghcr.io -u "$ACTOR" --password-stdin
+    - name: Build
+      env:
+        SHA: ${{ github.sha }}
+        REPO: ${{ github.repository }}
+      # The source label links the package to this repository, which lets
+      # later runs of this workflow push to it with the default token.
+      run: |
+        docker build -f .github/ci-image/Dockerfile \
+          --label "org.opencontainers.image.source=https://github.com/$REPO" \
+          -t "$IMAGE:latest" -t "$IMAGE:$SHA" .
+    - name: Push
+      env:
+        SHA: ${{ github.sha }}
+      run: |
+        docker push "$IMAGE:$SHA"
+        docker push "$IMAGE:latest"
