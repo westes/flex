@@ -46,11 +46,6 @@ jobs:
           ver=$ver-$slug
           echo "version=$ver" >> $GITHUB_OUTPUT
           sed -i "s/^\(AC_INIT.*generator\],\)\(.*\)\(,\[flex-help.*\)$/\1[$ver]\3/" $GITHUB_WORKSPACE/configure.ac
-      - name: apt
-        env:
-          update_needed: ${{ steps.update.outputs.needed }}
-        if: ${{ env.update_needed == 1 }}
-        run: sudo apt-get update && sudo apt-get install -y gcc autoconf automake libtool gettext autopoint bison help2man lzip texinfo texlive
       - name: Update CHANGE_LOG
         env:
           update_needed: ${{ steps.update.outputs.needed }}
@@ -60,12 +55,12 @@ jobs:
       - name: build
         env:
           update_needed: ${{ steps.update.outputs.needed }}
+          image: ghcr.io/westes/flex-ci@sha256:f6fd1d3cddbc6976df7f7a8d0b72cc4e72fcf2a82b4e6aa1ab1be93186388152
         if: ${{ env.update_needed == 1 }}
         run: |
-          ./autogen.sh
-          ./configure
-          make
-          make distcheck
+          docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
+            -v "$PWD:/src" -w /src "$image" \
+            sh -c './autogen.sh && ./configure && make && make distcheck'
       - name: Make Git archives
         env:
           ver: ${{ steps.version.outputs.version }}
