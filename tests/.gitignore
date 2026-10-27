@@ -135,6 +135,8 @@ state_buf.direct
 state_buf.direct.cc
 state_buf_multiple.direct
 state_buf_multiple.direct.cc
+state_buf_push.direct
+state_buf_push.direct.c
 string_nr
 string_nr.c
 string_r
