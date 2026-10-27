@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.38\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-27 14:18-0400\n"
+"POT-Creation-Date: 2026-10-27 13:37-0400\n"
 "PO-Revision-Date: 2015-08-27 16:54+0800\n"
 "Last-Translator: Mingye Wang <arthur200126@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -19,506 +19,336 @@ msgstr ""
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "X-Generator: Poedit 1.8.4\n"
 
-#: src/buf.c:61
+#: src/buf.c:63
 msgid "Allocation of buffer to print string failed"
 msgstr "给予缓冲区配额以打印字串时失败"
 
-#: src/ccl.c:80
+#: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
 msgstr ""
 
-#: src/dfa.c:59
+#. TRANSLATORS: This starts one line of the
+#. report written by the -b option. A
+#. "non-accepting" state is one in which no
+#. rule has been matched yet, so the
+#. scanner may have to back up to an
+#. earlier position in the input.
+#: src/dfa.c:68
 #, c-format
 msgid "State #%d is non-accepting -\n"
 msgstr "#%d 正处于非访问状态 -\n"
 
-#: src/dfa.c:119
+#. TRANSLATORS: "Trailing context"
+#. is the part of a rule that must
+#. match after the text of the rule,
+#. written r/s or with a $ at the
+#. end of the rule. It is dangerous
+#. when the two parts can match the
+#. same characters.
+#: src/dfa.c:134
 msgid "dangerous trailing context"
 msgstr "不安全的末端上下文"
 
-#: src/dfa.c:159
-#, c-format
-msgid " associated rule line numbers:"
+#. TRANSLATORS: The line numbers, in the flex input, of the rules
+#. that can still match from this state.
+#: src/dfa.c:176
+#, fuzzy
+msgid "associated rule line numbers:"
 msgstr " 关联的规则列号："
 
-#: src/dfa.c:193
-#, c-format
-msgid " out-transitions: "
+#. TRANSLATORS: The characters that take the scanner from this state
+#. to another state.
+#: src/dfa.c:212
+#, fuzzy
+msgid "out-transitions:"
 msgstr " 外转换："
 
-#: src/dfa.c:201
-#, c-format
-msgid ""
-"\n"
-" jam-transitions: EOF "
+#. TRANSLATORS: The characters that have no transition from this
+#. state.
+#: src/dfa.c:222
+#, fuzzy
+msgid "jam-transitions:"
 msgstr ""
 "\n"
 " 合并转换：文件结尾 "
 
-#: src/dfa.c:331
-msgid "consistency check failed in epsclosure()"
+#: src/dfa.c:351
+#, fuzzy, c-format
+msgid "consistency check failed in %s()"
 msgstr "epsclosure() 中的一致性检查失败"
 
-#: src/dfa.c:422
-msgid ""
-"\n"
-"\n"
-"DFA Dump:\n"
-"\n"
-msgstr ""
-"\n"
-"\n"
-"DFA 转储：\n"
-"\n"
-
-#: src/dfa.c:558
+#: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
 msgstr "无法创建独立的 end-of-buffer 状态"
 
-#: src/dfa.c:579
-#, c-format
-msgid "state # %d:\n"
-msgstr "状态 # %d：\n"
-
-#: src/dfa.c:738
-msgid "Could not write yynxt_tbl[][]"
-msgstr "无法写入 yynxt_tbl[][]"
-
-#: src/dfa.c:1001
-msgid "bad transition character detected in sympartition()"
-msgstr "在 sympartition() 检测到错误的变换字符"
-
-#: src/gen.c:379
-msgid ""
-"\n"
-"\n"
-"Equivalence Classes:\n"
-"\n"
-msgstr ""
-"\n"
-"\n"
-"等价类：\n"
-"\n"
-
-#: src/gen.c:425 src/gen.c:454 src/gen.c:638
-#, c-format
-msgid "state # %d accepts: [%d]\n"
-msgstr "状态 # %d 接受：[%d]\n"
-
-#: src/gen.c:533
-#, c-format
-msgid "state # %d accepts: "
-msgstr "状态 # %d 接受："
-
-#: src/gen.c:582
-msgid "Could not write yyacclist_tbl"
-msgstr "无法写入 yyacclist_tbl"
-
-#: src/gen.c:659
-msgid "Could not write yyacc_tbl"
-msgstr "无法写入 yyacc_tbl"
-
-#: src/gen.c:674 src/gen.c:947 src/gen.c:974
-msgid "Could not write ecstbl"
+#. TRANSLATORS: %s is the name of a table in
+#. the generated scanner.
+#: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
+#: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
+#: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
+#: src/gen.c:1076
+#, fuzzy, c-format
+msgid "Could not write %s"
 msgstr "无法写入 ecstbl"
 
-#: src/gen.c:694
-msgid ""
-"\n"
-"\n"
-"Meta-Equivalence Classes:\n"
+#: src/dfa.c:1023
+#, fuzzy, c-format
+msgid "bad transition character detected in %s()"
+msgstr "在 sympartition() 检测到错误的变换字符"
+
+#: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
+#: src/misc.c:596 src/misc.c:612 src/misc.c:660
+#, fuzzy, c-format
+msgid "memory allocation failed in %s()"
+msgstr "在 allocatearray() 中内存配置失败"
+
+#: src/filter.c:153
+msgid "pipe failed"
 msgstr ""
-"\n"
-"\n"
-"元等价类：\n"
 
-#: src/gen.c:714
-msgid "Could not write yymeta_tbl"
-msgstr "无法写入 yymeta_tbl"
+#: src/filter.c:156
+msgid "fork failed"
+msgstr ""
 
-#: src/gen.c:774
-msgid "Could not write yybase_tbl"
-msgstr "无法写入 yybase_tbl"
-
-#: src/gen.c:805
-msgid "Could not write yydef_tbl"
-msgstr "无法写入 yydef_tbl"
-
-#: src/gen.c:844
-msgid "Could not write yynxt_tbl"
-msgstr "无法写入 yynxt_tbl"
-
-#: src/gen.c:877
-msgid "Could not write yychk_tbl"
-msgstr "无法写入 yychk_tbl"
-
-#: src/gen.c:932 src/gen.c:965
-msgid "Could not write ftbl"
-msgstr "无法写入 ftbl"
-
-#: src/gen.c:938
-msgid "Could not write ssltbl"
-msgstr "无法写入 ssltbl"
-
-#: src/gen.c:1014
-msgid "Could not write eoltbl"
-msgstr "无法写入 eoltbl"
-
-#: src/gen.c:1061
-msgid "Could not write yynultrans_tbl"
-msgstr "无法写入 yynultrans_tbl"
-
-#: src/main.c:169
-msgid "rule cannot be matched"
-msgstr "无法匹配规则"
-
-#: src/main.c:174
-msgid "-s option given but default rule can be matched"
-msgstr "-s 选项已给定但是可以吻合缺省规则"
-
-#: src/main.c:317
-msgid "Can't use -+ with -l option"
-msgstr "无法将 -+ 与 -l 选项共同使用"
-
-#: src/main.c:320
-msgid "Can't use -f or -F with -l option"
-msgstr "无法将 -f 或 -F 与 -l 选项共同使用"
-
-#: src/main.c:324
-#, fuzzy
-msgid "Can't use --ctrl.reentrant or --bison-bridge with -l option"
-msgstr "无法将 --reentrant 或 --bison-bridge 与 -l 选项共同使用"
-
-#: src/main.c:356
-msgid "-Cf/-CF and -Cm don't make sense together"
-msgstr "-Cf/-CF 和 -Cm 共用时不具任何意义"
-
-#: src/main.c:359
-msgid "-Cf/-CF and -I are incompatible"
-msgstr "-Cf/-CF 和 -I 是不兼容的"
-
-#: src/main.c:363
-msgid "-Cf/-CF are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF 与 lex 兼容模式是不兼容的"
-
-#: src/main.c:368
-msgid "-Cf and -CF are mutually exclusive"
-msgstr "-Cf 和 -CF 是互斥的"
-
-#: src/main.c:372
-msgid "Can't use -+ with -CF option"
-msgstr "无法将 -+ 与 -CF 选项共同使用"
-
-#: src/main.c:375
+#: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
+#: src/filter.c:254
 #, c-format
-msgid "%array incompatible with -+ option"
-msgstr "%array 与 -+ 选项不兼容"
+msgid "%s failed"
+msgstr ""
 
-#: src/main.c:380
-msgid "Options -+ and --reentrant are mutually exclusive."
-msgstr "选项 -+ 和 --reentrant 是互斥的。"
-
-#: src/main.c:383
-msgid "bison bridge not supported for the C++ scanner."
-msgstr "bison 桥接器不受 C++ 扫描程序支持。"
-
-#: src/main.c:422 src/main.c:1235
+#: src/filter.c:187
 #, c-format
-msgid "could not create %s"
-msgstr "无法创建 %s"
+msgid "exec of %s failed"
+msgstr ""
 
-#: src/main.c:443
-#, c-format
-msgid "%option yyclass only meaningful for C++ scanners"
-msgstr "%option yyclass 只对于 C++ 扫描程序有意义"
-
-#: src/main.c:447
-#, c-format
-msgid "input error reading skeleton file %s"
-msgstr "读取骨架文件 %s 时输入错误"
-
-#: src/main.c:451
-#, c-format
-msgid "error closing skeleton file %s"
-msgstr "关闭骨架文件 %s 出错"
-
-#: src/main.c:457
+#: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
 msgid "error writing output file %s"
 msgstr "写入输出文件 %s 出错"
 
-#: src/main.c:461
+#: src/filter.c:301 src/filter.c:311 src/filter.c:425 src/main.c:494
 #, c-format
 msgid "error closing output file %s"
 msgstr "关闭输出文件 %s 出错"
 
-#: src/main.c:465
+#: src/flexdef.h:864
+#, fuzzy, c-format
+msgid "%s: fatal internal error at %s:%d (%s): %s\n"
+msgstr "%s：严重内部错误，%s\n"
+
+#: src/flexdef.h:873
+#, fuzzy, c-format
+msgid "%s: fatal internal error at %s:%d %s\n"
+msgstr "%s：严重内部错误，%s\n"
+
+#: src/main.c:175
+msgid "rule cannot be matched"
+msgstr "无法匹配规则"
+
+#: src/main.c:185
+#, fuzzy, c-format
+msgid "%s option given but default rule can be matched"
+msgstr "-s 选项已给定但是可以吻合缺省规则"
+
+#: src/main.c:314 src/scan.l:1094
+#, fuzzy, c-format
+msgid "can't open %s: %s"
+msgstr "无法打开 %s"
+
+#: src/main.c:342 src/main.c:399
+#, fuzzy, c-format
+msgid "Can't use %s with %s option"
+msgstr "无法将 -+ 与 -l 选项共同使用"
+
+#: src/main.c:345 src/main.c:349
+#, fuzzy, c-format
+msgid "Can't use %s or %s with %s option"
+msgstr "无法将 -f 或 -F 与 -l 选项共同使用"
+
+#: src/main.c:381
+#, fuzzy, c-format
+msgid "%s and %s don't make sense together"
+msgstr "-Cf/-CF 和 -Cm 共用时不具任何意义"
+
+#: src/main.c:385
+#, fuzzy, c-format
+msgid "%s and %s are incompatible"
+msgstr "-Cf/-CF 和 -I 是不兼容的"
+
+#: src/main.c:389
+#, fuzzy, c-format
+msgid "%s are incompatible with lex-compatibility mode"
+msgstr "-Cf/-CF 与 lex 兼容模式是不兼容的"
+
+#: src/main.c:394 src/main.c:411
+#, fuzzy, c-format
+msgid "Options %s and %s are mutually exclusive."
+msgstr "选项 -+ 和 --reentrant 是互斥的。"
+
+#: src/main.c:404
+#, fuzzy, c-format
+msgid "%s incompatible with %s option"
+msgstr "%array 与 -+ 选项不兼容"
+
+#: src/main.c:415
+msgid "bison bridge not supported for the C++ scanner."
+msgstr "bison 桥接器不受 C++ 扫描程序支持。"
+
+#: src/main.c:454 src/main.c:1271
+#, c-format
+msgid "could not create %s"
+msgstr "无法创建 %s"
+
+#: src/main.c:475
+#, fuzzy, c-format
+msgid "%s only meaningful for C++ scanners"
+msgstr "%option yyclass 只对于 C++ 扫描程序有意义"
+
+#: src/main.c:480
+#, c-format
+msgid "input error reading skeleton file %s"
+msgstr "读取骨架文件 %s 时输入错误"
+
+#: src/main.c:484
+#, c-format
+msgid "error closing skeleton file %s"
+msgstr "关闭骨架文件 %s 出错"
+
+#: src/main.c:498
 #, c-format
 msgid "error deleting output file %s"
 msgstr "删除输出文件 %s 出错"
 
 # See Concept Index. fr translation is wrong for that 'archive'.
-#: src/main.c:472
+#: src/main.c:505
 #, c-format
 msgid "No backing up.\n"
 msgstr "没有回溯。\n"
 
-#: src/main.c:476
-#, c-format
-msgid "%d backing up (non-accepting) states.\n"
-msgstr "%d 回溯 (非接受) 状态。\n"
+#: src/main.c:508
+#, fuzzy, c-format
+msgid "%d backing up (non-accepting) state.\n"
+msgid_plural "%d backing up (non-accepting) states.\n"
+msgstr[0] "%d 回溯 (非接受) 状态。\n"
+msgstr[1] "%d 回溯 (非接受) 状态。\n"
 
-#: src/main.c:480
+#: src/main.c:514
 #, c-format
 msgid "Compressed tables always back up.\n"
 msgstr "压缩过的表格总会自动回溯。\n"
 
-#: src/main.c:483
+#: src/main.c:517
 #, c-format
 msgid "error writing backup file %s"
 msgstr "写入回溯文件 %s 出错"
 
-#: src/main.c:487
+#: src/main.c:521
 #, c-format
 msgid "error closing backup file %s"
 msgstr "关闭回溯文件 %s 出错"
 
-#: src/main.c:492
-#, c-format
-msgid "%s version %s usage statistics:\n"
-msgstr "%s 版本 %s 用法统计：\n"
-
-#: src/main.c:495
-#, c-format
-msgid "  scanner options: -"
-msgstr "  扫描器选项：-"
-
-#: src/main.c:574
-#, c-format
-msgid "  %d/%d NFA states\n"
-msgstr "  %d/%d NFA 状态\n"
-
-#: src/main.c:576
-#, c-format
-msgid "  %d/%d DFA states (%d words)\n"
-msgstr "  %d/%d DFA 状态 (%d 个字词)\n"
-
-#: src/main.c:578
-#, c-format
-msgid "  %d rules\n"
-msgstr "  %d 条规则\n"
-
-#: src/main.c:583
-#, c-format
-msgid "  No backing up\n"
-msgstr "  没有回溯\n"
-
-#: src/main.c:587
-#, c-format
-msgid "  %d backing-up (non-accepting) states\n"
-msgstr "  %d 回溯 (非接受) 状态\n"
-
-#: src/main.c:592
-#, c-format
-msgid "  Compressed tables always back-up\n"
-msgstr "  压缩过的表格总会自动回溯\n"
-
-#: src/main.c:596
-#, c-format
-msgid "  Beginning-of-line patterns used\n"
-msgstr "  列首式样已使用\n"
-
-#: src/main.c:598
-#, c-format
-msgid "  %d/%d start conditions\n"
-msgstr "  %d/%d 起始条件\n"
-
-#: src/main.c:602
-#, c-format
-msgid "  %d epsilon states, %d double epsilon states\n"
-msgstr "  %d ε状态，%d 双倍ε状态\n"
-
-#: src/main.c:606
-#, c-format
-msgid "  no character classes\n"
-msgstr "  无字符类别\n"
-
-#: src/main.c:610
-#, c-format
-msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-msgstr "  %d/%d 字符类别所需 %d/%d 字词的保存体，%d 重新使用\n"
-
-#: src/main.c:615
-#, c-format
-msgid "  %d state/nextstate pairs created\n"
-msgstr "  %d 状态/下一状态对已创建\n"
-
-#: src/main.c:618
-#, c-format
-msgid "  %d/%d unique/duplicate transitions\n"
-msgstr "  %d/%d 独一/重复转换\n"
-
-#: src/main.c:623
-#, c-format
-msgid "  %d table entries\n"
-msgstr "  %d 表格项目\n"
-
-#: src/main.c:631
-#, c-format
-msgid "  %d/%d base-def entries created\n"
-msgstr "  %d/%d base-def 项目已创建\n"
-
-#: src/main.c:635
-#, c-format
-msgid "  %d/%d (peak %d) nxt-chk entries created\n"
-msgstr "  %d/%d (峰值 %d) nxt-chk 项目已创建\n"
-
-#: src/main.c:639
-#, c-format
-msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
-msgstr "  %d/%d (峰值 %d) 模板 nxt-chk 项目已创建\n"
-
-#: src/main.c:643
-#, c-format
-msgid "  %d empty table entries\n"
-msgstr "  %d 清空表格项目\n"
-
-#: src/main.c:645
-#, c-format
-msgid "  %d protos created\n"
-msgstr "  %d 原型已创建\n"
-
-#: src/main.c:648
-#, c-format
-msgid "  %d templates created, %d uses\n"
-msgstr "  %d 范本已创建，%d 使用\n"
-
-#: src/main.c:656
-#, c-format
-msgid "  %d/%d equivalence classes created\n"
-msgstr "  %d/%d 等价类别已创建\n"
-
-#: src/main.c:664
-#, c-format
-msgid "  %d/%d meta-equivalence classes created\n"
-msgstr "  %d/%d 后设等价类别已创建\n"
-
-#: src/main.c:670
-#, c-format
-msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
-msgstr "  %d (%d 已保存) 哈希碰撞，%d DFAs 相等\n"
-
-#: src/main.c:672
-#, c-format
-msgid "  %d sets of reallocations needed\n"
-msgstr "  需要 %d 组重新配置\n"
-
-#: src/main.c:674
-#, c-format
-msgid "  %d total table entries needed\n"
-msgstr "  总计需要 %d 表格项目\n"
-
-#: src/main.c:735
+#: src/main.c:762
 #, c-format
 msgid "Internal error. flexopts are malformed.\n"
 msgstr "内部错误。flexopts 功能异常。\n"
 
-#: src/main.c:745
+#: src/main.c:772
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "尝试「%s --help」以获得更多信息。\n"
 
-#: src/main.c:807
-#, c-format
-msgid "unknown -C option '%c'"
+#: src/main.c:833
+#, fuzzy, c-format
+msgid "unknown %s option '%c'"
 msgstr "未知的 -C 选项“%c”"
 
-#: src/main.c:1195
+#: src/main.c:1222
 msgid "fatal parse error"
 msgstr "致命的解析错误"
 
-#: src/main.c:1247
+#: src/main.c:1283
 msgid "could not write tables header"
 msgstr "无法写入表头"
 
-#: src/main.c:1251
+#: src/main.c:1287
 #, c-format
 msgid "can't open skeleton file %s"
 msgstr "无法打开骨架文件 %s"
 
-#: src/main.c:1254
-msgid "Prefix cannot include '[' or ']'"
-msgstr ""
-
-#: src/main.c:1322
+#: src/main.c:1355
 #, c-format
 msgid "could not create backing-up info file %s"
 msgstr "无法创建回溯信息文件 %s"
 
-#: src/main.c:1343
-#, c-format
-msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
-msgstr "-l AT&T lex 兼容性选项会导致大幅性能减退\n"
-
-#: src/main.c:1346
-#, c-format
-msgid " and may be the actual source of other reported performance penalties\n"
+#: src/main.c:1375
+#, fuzzy, c-format
+msgid ""
+"%s AT&T lex compatibility option entails a large performance penalty\n"
+" and may be the actual source of other reported performance penalties\n"
 msgstr " 同时也许是其他回报性能减退的实际来源\n"
 
-#: src/main.c:1352
-#, c-format
+#: src/main.c:1381
+#, fuzzy, c-format
 msgid ""
-"%%option yylineno entails a performance penalty ONLY on rules that can match "
-"newline characters\n"
+"%s entails a performance penalty ONLY on rules that can match newline "
+"characters\n"
 msgstr "%%option yylineno 导致性能减退，只有当该规则该吻合新列字符时才会\n"
 
-#: src/main.c:1359
-#, c-format
-msgid "-I (interactive) entails a minor performance penalty\n"
+#: src/main.c:1388
+#, fuzzy, c-format
+msgid "%s (interactive) entails a minor performance penalty\n"
 msgstr "-I (交互式) 导致小幅性能减退\n"
 
-#: src/main.c:1364
-#, c-format
-msgid "yymore() entails a minor performance penalty\n"
+#: src/main.c:1393
+#, fuzzy, c-format
+msgid "%s entails a minor performance penalty\n"
 msgstr "yymore() 导致小幅性能减退\n"
 
-#: src/main.c:1370
-#, c-format
-msgid "REJECT entails a large performance penalty\n"
+#: src/main.c:1399
+#, fuzzy, c-format
+msgid "%s entails a large performance penalty\n"
 msgstr "REJECT 导致大幅性能减退\n"
 
-#: src/main.c:1375
+#. TRANSLATORS: A rule has "variable
+#. trailing context" when neither the text
+#. before the trailing context nor the
+#. trailing context itself has a fixed
+#. length.
+#: src/main.c:1409
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr "变量末尾上下文规则导致大幅性能减退\n"
 
-#: src/main.c:1387
-msgid "REJECT cannot be used with -f or -F"
+#: src/main.c:1420
+#, fuzzy, c-format
+msgid "%s cannot be used with %s or %s"
 msgstr "REJECT 无法与 -f 或 -F 共同使用"
 
-#: src/main.c:1390
-#, c-format
-msgid "%option yylineno cannot be used with REJECT"
-msgstr "%option yylineno 无法与 REJECT 共同使用"
+#: src/main.c:1423
+#, fuzzy, c-format
+msgid "%s cannot be used with %s"
+msgstr "REJECT 无法与 -f 或 -F 共同使用"
 
-#: src/main.c:1393
-msgid "variable trailing context rules cannot be used with -f or -F"
+#: src/main.c:1426
+#, fuzzy, c-format
+msgid "variable trailing context rules cannot be used with %s or %s"
 msgstr "变量末尾上下文规则无法与 -f 或 -F 共同使用"
 
-#: src/main.c:1428
+#: src/main.c:1462
 msgid "allocation of macro definition failed"
 msgstr "给予宏定义配额时失败"
 
-#: src/main.c:1745
+#: src/main.c:1780
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "用法：%s [选项] [文件]...\n"
 
-#: src/main.c:1748
-#, fuzzy, c-format
+#: src/main.c:1781
+msgid "Generates programs that perform pattern-matching on text.\n"
+msgstr ""
+
+#: src/main.c:1784
 msgid ""
-"Generates programs that perform pattern-matching on text.\n"
-"\n"
 "Table Compression:\n"
 "  -Ca, --align      trade off larger tables for better memory alignment\n"
 "  -Ce, --ecs        construct equivalence classes\n"
@@ -529,18 +359,26 @@ msgid ""
 "  -f, --full        generate fast, large scanner. Same as -Cfr\n"
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
-"\n"
+msgstr ""
+
+#: src/main.c:1796
+#, c-format
+msgid ""
 "Debugging:\n"
 "  -d, --debug             enable debug mode in scanner\n"
 "  -b, --backup            write backing-up information to %s\n"
 "  -p, --perf-report       write performance report to stderr\n"
 "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
-"  -T, --env.trace             %s should run in env.trace mode\n"
+"  -T, --trace             %s should run in trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
 "      --hex               use hexadecimal numbers instead of octal in debug "
 "outputs\n"
-"\n"
+msgstr ""
+
+#: src/main.c:1808
+#, c-format
+msgid ""
 "Files:\n"
 "  -o, --outfile=FILE      specify output filename\n"
 "  -S, --skel=FILE         specify skeleton file\n"
@@ -550,7 +388,10 @@ msgid ""
 "scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
-"\n"
+msgstr ""
+
+#: src/main.c:1819
+msgid ""
 "Scanner behavior:\n"
 "  -7, --7bit              generate 7-bit scanner\n"
 "  -8, --8bit              generate 8-bit scanner\n"
@@ -560,7 +401,10 @@ msgid ""
 "  -X, --posix-compat      maximal compatibility with POSIX lex\n"
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
-"\n"
+msgstr ""
+
+#: src/main.c:1830
+msgid ""
 "Generated code:\n"
 "  -+,  --c++               generate C++ scanner class\n"
 "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
@@ -568,12 +412,20 @@ msgid ""
 "  -L,  --noline            suppress #line directives in scanner\n"
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
+msgstr ""
+
+#: src/main.c:1837
+msgid ""
 "       --bison-bridge      scanner for Bison pure parser.\n"
 "       --bison-locations   include yylloc support.\n"
 "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
-"\n"
+msgstr ""
+
+#: src/main.c:1844
+#, c-format
+msgid ""
 "Miscellaneous:\n"
 "  -c                      do-nothing POSIX option\n"
 "  -n                      do-nothing POSIX option\n"
@@ -581,100 +433,32 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
-"产生能够根据文本进行式样匹配的程序。\n"
-"\n"
-"表格压缩：\n"
-"  -Ca，--align      换掉较大表格以获取较佳内存对位\n"
-"  -Ce，--ecs        建构等价类别\n"
-"  -Cf               不压缩表格；使用 -f 表示法\n"
-"  -CF               不压缩表格；使用 -F 表示法\n"
-"  -Cm，--meta-ecs   构造后设等价类别\n"
-"  -Cr，--read       使用 read() 以代替 stdio 用于扫描程序的输入\n"
-"  -f, --full        产生快速，大型扫描程序。如同 -Cfr\n"
-"  -F, --fast        使用交替表格表示法。如同 -CFr\n"
-"  -Cem              缺省压缩 (如同 --ecs --meta-ecs)\n"
-"\n"
-"调试：\n"
-"  -d, --debug             在扫描程序中启用除错模式\n"
-"  -b, --backup            写入回溯信息到 %s\n"
-"  -p, --perf-report       将性能报告写入标准勘误\n"
-"  -s, --nodefault         抑制缺省规则以回应不符合的文本\n"
-"  -T, --trace             %s 应该在追踪模式中运行\n"
-"  -w, --nowarn            不产生警告\n"
-"  -v, --verbose           将概要的扫描程序统计写入标准输出\n"
-"\n"
-"文件：\n"
-"  -o, --outfile=文件      指定输出文件名\n"
-"  -S, --skel=文件         指定架构文件\n"
-"  -t, --stdout            将扫描程序写入标准输出以代替 %s\n"
-"      --yyclass=名称      C++ 类别的名称\n"
-"      --header-file=文件   扫描程序之外创建 C 标头档\n"
-"      --tables-file[=文件] 将表格写入文件\n"
-"\n"
-"扫描程序行为：\n"
-"  -7, --7bit              产生七比特扫描程序\n"
-"  -8, --8bit              产生八比特扫描程序\n"
-"  -B, --batch             产生批次扫描程序 (相对于 -I)\n"
-"  -i, --case-insensitive  忽略式样中的大小写\n"
-"  -l, --lex-compat        与原始 lex 最大兼容\n"
-"  -X, --posix-compat      与 POSIX lex 最大兼容\n"
-"  -I, --interactive       产生交互式扫描程序 (相对于 -B)\n"
-"      --yylineno          在 yylineno 中计数轨列\n"
-"\n"
-"产生的编码：\n"
-"  -+,  --c++               产生 C++ 扫描程序类别\n"
-"  -Dmacro [=defn]          #define 宏 defn  (缺省 defn 为「1」)\n"
-"  -L,  --noline            在扫描程序中抑制 # 列指令\n"
-"  -P,  --prefix=字串       使用字串作为前缀以代替「yy」\n"
-"  -R,  --reentrant         产生重新进入 C 扫描程序\n"
-"       --bison-bridge      扫描程序用于 bison pure 剖析器。\n"
-"       --bison-locations   包含 yylloc 支持。\n"
-"       --stdinit           初始化 yyin/yyout 到标准输入/标准输出\n"
-"       --noansi-definitions 旧式函数定义\n"
-"       --noansi-prototypes  在原型中清空参数清单\n"
-"       --nounistd          不包含 <unistd.h>\n"
-"       --noFUNCTION        不产生特定函数\n"
-"\n"
-"杂项：\n"
-"  -c                      do-nothing POSIX 选项\n"
-"  -n                      do-nothing POSIX 选项\n"
-"  -?\n"
-"  -h, --help              产生这个说明消息\n"
-"  -V, --version           报告 %s 版本\n"
 
-#: src/misc.c:70 src/misc.c:81
-msgid "memory allocation failed in allocate_array()"
-msgstr "在 allocatearray() 中内存配置失败"
-
-#: src/misc.c:131
-#, c-format
-msgid "bad character '%s' detected in check_char()"
+#: src/misc.c:116
+#, fuzzy, c-format
+msgid "bad character '%s' detected in %s()"
 msgstr "在 checkchar() 中侦测到不当的字符「%s」"
 
-#: src/misc.c:136
+#: src/misc.c:121
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "扫描程序需要 -8 旗标以使用字符 %s"
 
-#: src/misc.c:155
-#, fuzzy
-msgid "memory allocation failure in xstrdup()"
-msgstr "在 allocatearray() 中内存配置失败"
+#: src/misc.c:227
+#, c-format
+msgid "the value of '%s' must not contain '[' or ']'"
+msgstr ""
 
-#: src/misc.c:231
+#: src/misc.c:238
 #, c-format
 msgid "%s: fatal internal error, %s\n"
 msgstr "%s：严重内部错误，%s\n"
 
-#: src/misc.c:587 src/misc.c:598
+#: src/misc.c:594 src/misc.c:610
 msgid "attempt to increase array size failed"
 msgstr "试图增加数组大小时失败"
 
-#: src/misc.c:645
-msgid "memory allocation failed in yy_flex_xmalloc()"
-msgstr "在 yy_flex_xmalloc() 中的内存分配失败"
-
-#: src/nfa.c:100
+#: src/nfa.c:102
 #, c-format
 msgid ""
 "\n"
@@ -685,237 +469,693 @@ msgstr ""
 "\n"
 "********** 开始输出起始状态为 %d 的 NFA\n"
 
-#: src/nfa.c:111
-#, c-format
-msgid "state # %4d\t"
-msgstr "状态 # %4d\t"
-
-#: src/nfa.c:126
-#, c-format
-msgid "********** end of dump\n"
-msgstr "********** 输出结束\n"
-
-#: src/nfa.c:169
-msgid "empty machine in dupmachine()"
+#: src/nfa.c:171
+#, fuzzy, c-format
+msgid "empty machine in %s()"
 msgstr "在 dupmachine() 中清空机器"
 
-#: src/nfa.c:234
+#. TRANSLATORS: A rule has "variable
+#. trailing context" when neither the text
+#. before the trailing context nor the
+#. trailing context itself has a fixed
+#. length.
+#: src/nfa.c:240
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
 msgstr "变量末尾上下文规则于列 %d\n"
 
-#: src/nfa.c:353
-msgid "bad state type in mark_beginning_as_normal()"
-msgstr "在 mark_beginning_as_normal() 中有不当的状态输入"
+#: src/nfa.c:358
+#, fuzzy, c-format
+msgid "bad state type in %s()"
+msgstr "错误 <起始条件>：%s"
 
-#: src/nfa.c:593
+#: src/nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "输入规则太复杂 (>= %d NFA 状态)"
 
-#: src/nfa.c:671
-msgid "found too many transitions in mkxtion()"
+#: src/nfa.c:676
+#, fuzzy, c-format
+msgid "found too many transitions in %s()"
 msgstr "在 mkxtion() 中找到太多转换"
 
-#: src/nfa.c:697
+#: src/nfa.c:702
 #, c-format
 msgid "too many rules (> %d)!"
 msgstr "规则过多 (> %d)！"
 
-#: src/parse.y:163
+#: src/parse.y:167
 msgid "unknown error processing section 1"
 msgstr "未知的错误处理节 1"
 
-#: src/parse.y:188 src/parse.y:373
+#. TRANSLATORS: A "start condition" is a named state
+#. of the scanner that turns groups of rules on and
+#. off.
+#: src/parse.y:195 src/parse.y:390
 msgid "bad start condition list"
 msgstr "错误的起始状态列表"
 
-#: src/parse.y:208
-msgid "Prefix must not contain [ or ]"
+#: src/parse.y:300
+#, c-format
+msgid "%s operator results in sub-optimal performance"
 msgstr ""
 
-#: src/parse.y:337
-msgid "unrecognized rule"
-msgstr "不能识别的规则"
+#: src/parse.y:345
+#, fuzzy, c-format
+msgid "all start conditions already have %s rules"
+msgstr "起始条件 %s 声明了两次"
 
-#: src/parse.y:456 src/parse.y:469 src/parse.y:538
+#: src/parse.y:354
+msgid "syntax error: this is not a valid rule"
+msgstr ""
+
+#: src/parse.y:397
+#, fuzzy, c-format
+msgid "undeclared start condition %s"
+msgstr "错误 <起始条件>：%s"
+
+#: src/parse.y:405
+#, fuzzy, c-format
+msgid "<%s> specified twice"
+msgstr "名称定义了两次"
+
+#: src/parse.y:441 src/parse.y:501
+#, c-format
+msgid "trailing context made variable due to preceding '%s' action"
+msgstr ""
+
+#. TRANSLATORS: "Trailing context" is the part of a
+#. rule that must match after the text of the rule,
+#. written r/s or with a $ at the end of the rule. A
+#. rule can have only one.
+#: src/parse.y:478 src/parse.y:491 src/parse.y:561
 msgid "trailing context used twice"
 msgstr "末尾上下文已使用两次"
 
-#: src/parse.y:574 src/parse.y:584 src/parse.y:657 src/parse.y:667
-msgid "bad iteration values"
-msgstr "不当的迭代值"
+#. TRANSLATORS: A "repeat range" is a pair of
+#. numbers in braces after a pattern, such as
+#. {2,5}, that sets how many times the
+#. pattern may repeat.
+#: src/parse.y:601 src/parse.y:612 src/parse.y:686 src/parse.y:697
+msgid ""
+"invalid repeat range in braces: the first number must not be larger than the "
+"second, and the second must be at least 1"
+msgstr ""
 
-#: src/parse.y:602 src/parse.y:620 src/parse.y:685 src/parse.y:703
-msgid "iteration value must be positive"
-msgstr "迭代值必须是正值"
+#: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
+msgid "the repeat count in braces must be at least 1"
+msgstr ""
 
-#: src/parse.y:826 src/parse.y:836
+#: src/parse.y:857 src/parse.y:867
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
 msgstr "在大小写不须相符的扫描程序中，字符范围 [%c-%c] 是模棱两可的"
 
-#: src/parse.y:841
+#: src/parse.y:872
 msgid "negative range in character class"
 msgstr "在字符类别中有负值范围"
 
-#: src/parse.y:938
-msgid "[:^lower:] is ambiguous in case insensitive scanner"
+#: src/parse.y:969
+#, fuzzy
+msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
 msgstr "在大小写不须相符的扫描程序中，[:^lower:] 是模棱两可的"
 
-#: src/parse.y:944
-msgid "[:^upper:] ambiguous in case insensitive scanner"
+#: src/parse.y:975
+#, fuzzy
+msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
 msgstr "在大小写不须相符的扫描程序中，[:^upper:] 是模棱两可的"
 
-#: src/scan.l:73 src/scan.l:662 src/scan.l:720
+#: src/parse.y:1019
+#, c-format
+msgid "multiple %s rules for start condition %s"
+msgstr ""
+
+#: src/parse.y:1117
+#, c-format
+msgid "warning, %s"
+msgstr ""
+
+#: src/regex.c:60
+#, c-format
+msgid "Unable to allocate buffer to report %s"
+msgstr ""
+
+#: src/regex.c:83
+msgid "Unable to allocate a copy of the match"
+msgstr ""
+
+#: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "输入列太长\n"
 
-#: src/scan.l:185
-#, c-format
-msgid "malformed '%top' directive"
+#: src/scan.l:186
+#, fuzzy, c-format
+msgid "malformed '%s' directive"
 msgstr "异常的「%top」指令"
 
-#: src/scan.l:207
+#. TRANSLATORS: A "directive" is a line in the first section of the
+#. input that starts with a percent sign, such as %option or %top.
+#. Do not translate the directive names.
+#: src/scan.l:211
 #, no-c-format
 msgid "unrecognized '%' directive"
 msgstr "无法辨识的「%」指令"
 
-#: src/scan.l:216
+#: src/scan.l:220
 msgid "Definition name too long\n"
 msgstr "定义名称太长\n"
 
-#: src/scan.l:311
+#: src/scan.l:315
 msgid "Unmatched '{'"
 msgstr "不成对的「{」"
 
-#: src/scan.l:327
+#: src/scan.l:331
 #, c-format
 msgid "Definition value for {%s} too long\n"
 msgstr "{%s} 的定义值太长\n"
 
-#: src/scan.l:344
+#: src/scan.l:348
 msgid "incomplete name definition"
 msgstr "不完整的名称定义"
 
-#: src/scan.l:486
+#: src/scan.l:490
 msgid "Option line too long\n"
 msgstr "选项列太长\n"
 
-#: src/scan.l:494
-#, c-format
-msgid "unrecognized %%option: %s"
+#: src/scan.l:501
+#, fuzzy, c-format
+msgid "unrecognized %s: %s"
 msgstr "不能识别的 %%选项：%s"
 
-#: src/scan.l:677 src/scan.l:850
-msgid "bad character class"
-msgstr "错误的字符类别"
-
-#: src/scan.l:727
+#: src/scan.l:731
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "未定义的定义 {%s}"
 
-#: src/scan.l:790
+#: src/scan.l:794
 msgid "unbalanced parenthesis"
 msgstr ""
 
-#: src/scan.l:805
+#. TRANSLATORS: A "start condition" is a named state
+#. of the scanner that turns groups of rules on and
+#. off. It is written between < and > in front of a
+#. rule.
+#: src/scan.l:813
 #, c-format
 msgid "bad <start condition>: %s"
 msgstr "错误 <起始条件>：%s"
 
-#: src/scan.l:818
-msgid "missing quote"
-msgstr "遗漏引号"
+#: src/scan.l:826
+msgid "missing closing quotation mark: the line ended inside a quoted string"
+msgstr ""
 
-#: src/scan.l:884
+#: src/scan.l:858
+msgid "unterminated character class: the line ended before the closing ]"
+msgstr ""
+
+#: src/scan.l:892
 #, c-format
 msgid "bad character class expression: %s"
 msgstr "错误的字符类别表达式：%s"
 
-#: src/scan.l:906
+#: src/scan.l:914
 msgid "bad character inside {}'s"
 msgstr "不当字符于 {} 内部"
 
-#: src/scan.l:912
+#: src/scan.l:920
 msgid "missing }"
 msgstr "遗漏 }"
 
-#: src/scan.l:1020
+#: src/scan.l:1028
 msgid "EOF encountered inside an action"
 msgstr "在动作中文件结束"
 
-#: src/scan.l:1025
+#: src/scan.l:1033
 msgid "EOF encountered inside pattern"
 msgstr "在式样之内遇到文件结束"
 
-#: src/scan.l:1058
-#, c-format
-msgid "bad character: %s"
+#: src/scan.l:1066
+#, fuzzy, c-format
+msgid "unexpected character: %s"
 msgstr "错误的字符：%s"
 
-#: src/scan.l:1086
+#: src/scanflags.c:70
 #, c-format
-msgid "can't open %s"
-msgstr "无法打开 %s"
+msgid "Unable to allocate %zu of stack"
+msgstr ""
 
-#: src/scanopt.c:248
+#: src/scanopt.c:250
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
 msgstr "用法：%s [选项]...\n"
 
-#: src/scanopt.c:484
+#: src/scanopt.c:486
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
 msgstr "选项“%s”不接受参数\n"
 
-#: src/scanopt.c:489
+#: src/scanopt.c:491
 #, c-format
 msgid "option `%s' requires an argument\n"
 msgstr "选项“%s”需要一个参数\n"
 
-#: src/scanopt.c:493
+#: src/scanopt.c:495
 #, c-format
 msgid "option `%s' is ambiguous\n"
 msgstr "选项「%s」是模棱两可的\n"
 
-#: src/scanopt.c:497
+#: src/scanopt.c:499
 #, c-format
 msgid "Unrecognized option `%s'\n"
 msgstr "未知的选项“%s”\n"
 
-#: src/scanopt.c:501
+#: src/scanopt.c:503
 #, c-format
 msgid "Unknown error=(%d)\n"
 msgstr "未知错误=(%d)\n"
 
-#: src/sym.c:92
+#: src/skeletons.c:118
+msgid "no such back end"
+msgstr ""
+
+#: src/skeletons.c:182
+msgid "unterminated or too long property name"
+msgstr ""
+
+#: src/skeletons.c:191
+msgid "garbled property line"
+msgstr ""
+
+#: src/skeletons.c:200
+msgid "unterminated or too long property value"
+msgstr ""
+
+#: src/skeletons.c:247
+msgid "bad line in skeleton file"
+msgstr "骨架文件中错误的行"
+
+#: src/sym.c:93
 msgid "symbol table memory allocation failed"
 msgstr "符号表内存分配失败"
 
-#: src/sym.c:183
-msgid "name defined twice"
+#: src/sym.c:177
+#, fuzzy, c-format
+msgid "name \"%s\" is defined twice"
 msgstr "名称定义了两次"
 
-#: src/sym.c:231
+#. TRANSLATORS: A "start condition" is a named state
+#. of the scanner that turns groups of rules on and
+#. off. %s is its name.
+#: src/sym.c:223
 #, c-format
 msgid "start condition %s declared twice"
 msgstr "起始条件 %s 声明了两次"
 
-#: src/yylex.c:57
-msgid "premature EOF"
-msgstr "过早出现文件结尾"
+#: src/tables.c:230
+#, fuzzy
+msgid "error while writing tables"
+msgstr "写入输出文件 %s 出错"
 
-#: src/yylex.c:200
-#, c-format
-msgid "End Marker\n"
-msgstr "结束标志\n"
+#: src/yylex.c:58
+msgid ""
+"unexpected end of file: the line that starts the rules section is missing"
+msgstr ""
 
-#: src/yylex.c:206
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "DFA Dump:\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "DFA 转储：\n"
+#~ "\n"
+
 #, c-format
-msgid "*Something Weird* - tok: %d val: %d\n"
-msgstr "*情况很怪异* - tok：%d val：%d\n"
+#~ msgid "state # %d:\n"
+#~ msgstr "状态 # %d：\n"
+
+#~ msgid "Could not write yynxt_tbl[][]"
+#~ msgstr "无法写入 yynxt_tbl[][]"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Equivalence Classes:\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "等价类：\n"
+#~ "\n"
+
+#, c-format
+#~ msgid "state # %d accepts: [%d]\n"
+#~ msgstr "状态 # %d 接受：[%d]\n"
+
+#, c-format
+#~ msgid "state # %d accepts: "
+#~ msgstr "状态 # %d 接受："
+
+#~ msgid "Could not write yyacclist_tbl"
+#~ msgstr "无法写入 yyacclist_tbl"
+
+#~ msgid "Could not write yyacc_tbl"
+#~ msgstr "无法写入 yyacc_tbl"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Meta-Equivalence Classes:\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "元等价类：\n"
+
+#~ msgid "Could not write yymeta_tbl"
+#~ msgstr "无法写入 yymeta_tbl"
+
+#~ msgid "Could not write yybase_tbl"
+#~ msgstr "无法写入 yybase_tbl"
+
+#~ msgid "Could not write yydef_tbl"
+#~ msgstr "无法写入 yydef_tbl"
+
+#~ msgid "Could not write yynxt_tbl"
+#~ msgstr "无法写入 yynxt_tbl"
+
+#~ msgid "Could not write yychk_tbl"
+#~ msgstr "无法写入 yychk_tbl"
+
+#~ msgid "Could not write ftbl"
+#~ msgstr "无法写入 ftbl"
+
+#~ msgid "Could not write ssltbl"
+#~ msgstr "无法写入 ssltbl"
+
+#~ msgid "Could not write eoltbl"
+#~ msgstr "无法写入 eoltbl"
+
+#~ msgid "Could not write yynultrans_tbl"
+#~ msgstr "无法写入 yynultrans_tbl"
+
+#, fuzzy
+#~ msgid "Can't use --ctrl.reentrant or --bison-bridge with -l option"
+#~ msgstr "无法将 --reentrant 或 --bison-bridge 与 -l 选项共同使用"
+
+#~ msgid "-Cf and -CF are mutually exclusive"
+#~ msgstr "-Cf 和 -CF 是互斥的"
+
+#~ msgid "Can't use -+ with -CF option"
+#~ msgstr "无法将 -+ 与 -CF 选项共同使用"
+
+#, c-format
+#~ msgid "%s version %s usage statistics:\n"
+#~ msgstr "%s 版本 %s 用法统计：\n"
+
+#, c-format
+#~ msgid "  scanner options: -"
+#~ msgstr "  扫描器选项：-"
+
+#, c-format
+#~ msgid "  %d/%d NFA states\n"
+#~ msgstr "  %d/%d NFA 状态\n"
+
+#, c-format
+#~ msgid "  %d/%d DFA states (%d words)\n"
+#~ msgstr "  %d/%d DFA 状态 (%d 个字词)\n"
+
+#, c-format
+#~ msgid "  %d rules\n"
+#~ msgstr "  %d 条规则\n"
+
+#, c-format
+#~ msgid "  No backing up\n"
+#~ msgstr "  没有回溯\n"
+
+#, c-format
+#~ msgid "  %d backing-up (non-accepting) states\n"
+#~ msgstr "  %d 回溯 (非接受) 状态\n"
+
+#, c-format
+#~ msgid "  Compressed tables always back-up\n"
+#~ msgstr "  压缩过的表格总会自动回溯\n"
+
+#, c-format
+#~ msgid "  Beginning-of-line patterns used\n"
+#~ msgstr "  列首式样已使用\n"
+
+#, c-format
+#~ msgid "  %d/%d start conditions\n"
+#~ msgstr "  %d/%d 起始条件\n"
+
+#, c-format
+#~ msgid "  %d epsilon states, %d double epsilon states\n"
+#~ msgstr "  %d ε状态，%d 双倍ε状态\n"
+
+#, c-format
+#~ msgid "  no character classes\n"
+#~ msgstr "  无字符类别\n"
+
+#, c-format
+#~ msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
+#~ msgstr "  %d/%d 字符类别所需 %d/%d 字词的保存体，%d 重新使用\n"
+
+#, c-format
+#~ msgid "  %d state/nextstate pairs created\n"
+#~ msgstr "  %d 状态/下一状态对已创建\n"
+
+#, c-format
+#~ msgid "  %d/%d unique/duplicate transitions\n"
+#~ msgstr "  %d/%d 独一/重复转换\n"
+
+#, c-format
+#~ msgid "  %d table entries\n"
+#~ msgstr "  %d 表格项目\n"
+
+#, c-format
+#~ msgid "  %d/%d base-def entries created\n"
+#~ msgstr "  %d/%d base-def 项目已创建\n"
+
+#, c-format
+#~ msgid "  %d/%d (peak %d) nxt-chk entries created\n"
+#~ msgstr "  %d/%d (峰值 %d) nxt-chk 项目已创建\n"
+
+#, c-format
+#~ msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
+#~ msgstr "  %d/%d (峰值 %d) 模板 nxt-chk 项目已创建\n"
+
+#, c-format
+#~ msgid "  %d empty table entries\n"
+#~ msgstr "  %d 清空表格项目\n"
+
+#, c-format
+#~ msgid "  %d protos created\n"
+#~ msgstr "  %d 原型已创建\n"
+
+#, c-format
+#~ msgid "  %d templates created, %d uses\n"
+#~ msgstr "  %d 范本已创建，%d 使用\n"
+
+#, c-format
+#~ msgid "  %d/%d equivalence classes created\n"
+#~ msgstr "  %d/%d 等价类别已创建\n"
+
+#, c-format
+#~ msgid "  %d/%d meta-equivalence classes created\n"
+#~ msgstr "  %d/%d 后设等价类别已创建\n"
+
+#, c-format
+#~ msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
+#~ msgstr "  %d (%d 已保存) 哈希碰撞，%d DFAs 相等\n"
+
+#, c-format
+#~ msgid "  %d sets of reallocations needed\n"
+#~ msgstr "  需要 %d 组重新配置\n"
+
+#, c-format
+#~ msgid "  %d total table entries needed\n"
+#~ msgstr "  总计需要 %d 表格项目\n"
+
+#, c-format
+#~ msgid ""
+#~ "-l AT&T lex compatibility option entails a large performance penalty\n"
+#~ msgstr "-l AT&T lex 兼容性选项会导致大幅性能减退\n"
+
+#, c-format
+#~ msgid "%option yylineno cannot be used with REJECT"
+#~ msgstr "%option yylineno 无法与 REJECT 共同使用"
+
+#, fuzzy, c-format
+#~ msgid ""
+#~ "Generates programs that perform pattern-matching on text.\n"
+#~ "\n"
+#~ "Table Compression:\n"
+#~ "  -Ca, --align      trade off larger tables for better memory alignment\n"
+#~ "  -Ce, --ecs        construct equivalence classes\n"
+#~ "  -Cf               do not compress tables; use -f representation\n"
+#~ "  -CF               do not compress tables; use -F representation\n"
+#~ "  -Cm, --meta-ecs   construct meta-equivalence classes\n"
+#~ "  -Cr, --read       use read() instead of stdio for scanner input\n"
+#~ "  -f, --full        generate fast, large scanner. Same as -Cfr\n"
+#~ "  -F, --fast        use alternate table representation. Same as -CFr\n"
+#~ "  -Cem              default compression (same as --ecs --meta-ecs)\n"
+#~ "\n"
+#~ "Debugging:\n"
+#~ "  -d, --debug             enable debug mode in scanner\n"
+#~ "  -b, --backup            write backing-up information to %s\n"
+#~ "  -p, --perf-report       write performance report to stderr\n"
+#~ "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
+#~ "  -T, --env.trace             %s should run in env.trace mode\n"
+#~ "  -w, --nowarn            do not generate warnings\n"
+#~ "  -v, --verbose           write summary of scanner statistics to stdout\n"
+#~ "      --hex               use hexadecimal numbers instead of octal in "
+#~ "debug outputs\n"
+#~ "\n"
+#~ "Files:\n"
+#~ "  -o, --outfile=FILE      specify output filename\n"
+#~ "  -S, --skel=FILE         specify skeleton file\n"
+#~ "  -t, --stdout            write scanner on stdout instead of %s\n"
+#~ "      --yyclass=NAME      name of C++ class\n"
+#~ "      --header-file=FILE   create a C header file in addition to the "
+#~ "scanner\n"
+#~ "      --tables-file[=FILE] write tables to FILE\n"
+#~ "      --backup-file=FILE  write backing-up information to FILE\n"
+#~ "\n"
+#~ "Scanner behavior:\n"
+#~ "  -7, --7bit              generate 7-bit scanner\n"
+#~ "  -8, --8bit              generate 8-bit scanner\n"
+#~ "  -B, --batch             generate batch scanner (opposite of -I)\n"
+#~ "  -i, --case-insensitive  ignore case in patterns\n"
+#~ "  -l, --lex-compat        maximal compatibility with original lex\n"
+#~ "  -X, --posix-compat      maximal compatibility with POSIX lex\n"
+#~ "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
+#~ "      --yylineno          track line count in yylineno\n"
+#~ "\n"
+#~ "Generated code:\n"
+#~ "  -+,  --c++               generate C++ scanner class\n"
+#~ "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
+#~ "  -e,  --emit=LANG         Specify target language\n"
+#~ "  -L,  --noline            suppress #line directives in scanner\n"
+#~ "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
+#~ "  -R,  --reentrant         generate a reentrant scanner\n"
+#~ "       --bison-bridge      scanner for Bison pure parser.\n"
+#~ "       --bison-locations   include yylloc support.\n"
+#~ "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+#~ "       --nounistd          do not include <unistd.h>\n"
+#~ "       --noFUNCTION        do not generate a particular FUNCTION\n"
+#~ "\n"
+#~ "Miscellaneous:\n"
+#~ "  -c                      do-nothing POSIX option\n"
+#~ "  -n                      do-nothing POSIX option\n"
+#~ "  -?\n"
+#~ "  -h, --help              produce this help message\n"
+#~ "  -V, --version           report %s version\n"
+#~ msgstr ""
+#~ "产生能够根据文本进行式样匹配的程序。\n"
+#~ "\n"
+#~ "表格压缩：\n"
+#~ "  -Ca，--align      换掉较大表格以获取较佳内存对位\n"
+#~ "  -Ce，--ecs        建构等价类别\n"
+#~ "  -Cf               不压缩表格；使用 -f 表示法\n"
+#~ "  -CF               不压缩表格；使用 -F 表示法\n"
+#~ "  -Cm，--meta-ecs   构造后设等价类别\n"
+#~ "  -Cr，--read       使用 read() 以代替 stdio 用于扫描程序的输入\n"
+#~ "  -f, --full        产生快速，大型扫描程序。如同 -Cfr\n"
+#~ "  -F, --fast        使用交替表格表示法。如同 -CFr\n"
+#~ "  -Cem              缺省压缩 (如同 --ecs --meta-ecs)\n"
+#~ "\n"
+#~ "调试：\n"
+#~ "  -d, --debug             在扫描程序中启用除错模式\n"
+#~ "  -b, --backup            写入回溯信息到 %s\n"
+#~ "  -p, --perf-report       将性能报告写入标准勘误\n"
+#~ "  -s, --nodefault         抑制缺省规则以回应不符合的文本\n"
+#~ "  -T, --trace             %s 应该在追踪模式中运行\n"
+#~ "  -w, --nowarn            不产生警告\n"
+#~ "  -v, --verbose           将概要的扫描程序统计写入标准输出\n"
+#~ "\n"
+#~ "文件：\n"
+#~ "  -o, --outfile=文件      指定输出文件名\n"
+#~ "  -S, --skel=文件         指定架构文件\n"
+#~ "  -t, --stdout            将扫描程序写入标准输出以代替 %s\n"
+#~ "      --yyclass=名称      C++ 类别的名称\n"
+#~ "      --header-file=文件   扫描程序之外创建 C 标头档\n"
+#~ "      --tables-file[=文件] 将表格写入文件\n"
+#~ "\n"
+#~ "扫描程序行为：\n"
+#~ "  -7, --7bit              产生七比特扫描程序\n"
+#~ "  -8, --8bit              产生八比特扫描程序\n"
+#~ "  -B, --batch             产生批次扫描程序 (相对于 -I)\n"
+#~ "  -i, --case-insensitive  忽略式样中的大小写\n"
+#~ "  -l, --lex-compat        与原始 lex 最大兼容\n"
+#~ "  -X, --posix-compat      与 POSIX lex 最大兼容\n"
+#~ "  -I, --interactive       产生交互式扫描程序 (相对于 -B)\n"
+#~ "      --yylineno          在 yylineno 中计数轨列\n"
+#~ "\n"
+#~ "产生的编码：\n"
+#~ "  -+,  --c++               产生 C++ 扫描程序类别\n"
+#~ "  -Dmacro [=defn]          #define 宏 defn  (缺省 defn 为「1」)\n"
+#~ "  -L,  --noline            在扫描程序中抑制 # 列指令\n"
+#~ "  -P,  --prefix=字串       使用字串作为前缀以代替「yy」\n"
+#~ "  -R,  --reentrant         产生重新进入 C 扫描程序\n"
+#~ "       --bison-bridge      扫描程序用于 bison pure 剖析器。\n"
+#~ "       --bison-locations   包含 yylloc 支持。\n"
+#~ "       --stdinit           初始化 yyin/yyout 到标准输入/标准输出\n"
+#~ "       --noansi-definitions 旧式函数定义\n"
+#~ "       --noansi-prototypes  在原型中清空参数清单\n"
+#~ "       --nounistd          不包含 <unistd.h>\n"
+#~ "       --noFUNCTION        不产生特定函数\n"
+#~ "\n"
+#~ "杂项：\n"
+#~ "  -c                      do-nothing POSIX 选项\n"
+#~ "  -n                      do-nothing POSIX 选项\n"
+#~ "  -?\n"
+#~ "  -h, --help              产生这个说明消息\n"
+#~ "  -V, --version           报告 %s 版本\n"
+
+#~ msgid "memory allocation failed in allocate_array()"
+#~ msgstr "在 allocatearray() 中内存配置失败"
+
+#~ msgid "memory allocation failed in yy_flex_xmalloc()"
+#~ msgstr "在 yy_flex_xmalloc() 中的内存分配失败"
+
+#, c-format
+#~ msgid "state # %4d\t"
+#~ msgstr "状态 # %4d\t"
+
+#, c-format
+#~ msgid "********** end of dump\n"
+#~ msgstr "********** 输出结束\n"
+
+#~ msgid "bad state type in mark_beginning_as_normal()"
+#~ msgstr "在 mark_beginning_as_normal() 中有不当的状态输入"
+
+#~ msgid "unrecognized rule"
+#~ msgstr "不能识别的规则"
+
+#~ msgid "bad iteration values"
+#~ msgstr "不当的迭代值"
+
+#~ msgid "iteration value must be positive"
+#~ msgstr "迭代值必须是正值"
+
+#~ msgid "bad character class"
+#~ msgstr "错误的字符类别"
+
+#~ msgid "missing quote"
+#~ msgstr "遗漏引号"
+
+#~ msgid "premature EOF"
+#~ msgstr "过早出现文件结尾"
+
+#, c-format
+#~ msgid "End Marker\n"
+#~ msgstr "结束标志\n"
+
+#, c-format
+#~ msgid "*Something Weird* - tok: %d val: %d\n"
+#~ msgstr "*情况很怪异* - tok：%d val：%d\n"
 
 #~ msgid "Allocation of buffer for line directive failed"
 #~ msgstr "给予缓冲区配额用于列指令时失败"
@@ -940,9 +1180,6 @@ msgstr "*情况很怪异* - tok：%d val：%d\n"
 
 #~ msgid "dynamic memory failure in copy_string()"
 #~ msgstr "在 copystring() 中动态内存失败"
-
-#~ msgid "bad line in skeleton file"
-#~ msgstr "骨架文件中错误的行"
 
 #~ msgid "consistency check failed in symfollowset"
 #~ msgstr "symfollowset 中的一致性检查失败"
