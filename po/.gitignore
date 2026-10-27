@@ -10,7 +10,9 @@ en@boldquot.*header
 en@boldquot.po
 en@quot.*header
 en@quot.po
+fetch-po
 flex.pot
+insert-header.sed
 insert-header.sin
 quot.sed
 remove-potcdate.sed
