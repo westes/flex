@@ -76,8 +76,3 @@ PO_DEPENDS_ON_POT = no
 # "no".  Set this to no if the POT file and PO files are maintained
 # externally.
 DIST_DEPENDS_ON_UPDATE_PO = no
-
-# The rules in Makefile.in.in write files that other languages also use,
-# such as remove-potcdate.sed and the en@quot intermediates, so they
-# are not safe to run in parallel.
-.NOTPARALLEL:
