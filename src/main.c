@@ -1208,6 +1208,15 @@ void readin (void)
 	 */
 	backend_by_name(ctrl.emit);
 
+	/* These values are written into the m4 input, so check them before
+	 * anything is sent to m4.  The parser has checked the ones that came
+	 * from %option; this catches the ones from the command line.
+	 */
+	reject_brackets_in_option_value("prefix", ctrl.prefix);
+	reject_brackets_in_option_value("outfile", env.outfilename);
+	reject_brackets_in_option_value("header-file", env.headerfilename);
+	reject_brackets_in_option_value("yyclass", ctrl.yyclass);
+
 	initialize_output_filters();
 
 	yyout = stdout;
@@ -1251,9 +1260,6 @@ void readin (void)
 	if (env.skelname && (env.skelfile = fopen (env.skelname, "r")) == NULL)
 		lerr (_("can't open skeleton file %s"), env.skelname);
 
-	if (strchr(ctrl.prefix, '[') || strchr(ctrl.prefix, ']'))
-		flexerror(_("Prefix cannot include '[' or ']'"));
-
 	if (env.did_outfilename)
 		line_directive_out (stdout, NULL, linenum);
 
@@ -1272,17 +1278,17 @@ void readin (void)
 
 	/* User may want to set the scanner prototype */
 	if (ctrl.yydecl != NULL) {
-		out_str ("M4_HOOK_SET_YY_DECL(%s)\n", ctrl.yydecl);
+		out_str ("M4_HOOK_SET_YY_DECL([[[[%s]]]])\n", ctrl.yydecl);
 	}
 
 	if (ctrl.userinit != NULL) {
-		out_str ("M4_HOOK_SET_USERINIT(%s)\n", ctrl.userinit);
+		out_str ("M4_HOOK_SET_USERINIT([[[[%s]]]])\n", ctrl.userinit);
 	}
 	if (ctrl.preaction != NULL) {
-		out_str ("M4_HOOK_SET_PREACTION(%s)\n", ctrl.preaction);
+		out_str ("M4_HOOK_SET_PREACTION([[[[%s]]]])\n", ctrl.preaction);
 	}
 	if (ctrl.postaction != NULL) {
-		out_str ("M4_HOOK_SET_POSTACTION(%s)\n", ctrl.postaction);
+		out_str ("M4_HOOK_SET_POSTACTION([[[[%s]]]])\n", ctrl.postaction);
 	}
 
 	/* This has to be a straight textual substitution rather

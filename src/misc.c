@@ -224,7 +224,7 @@ void reject_brackets_in_option_value (const char *opt_name, const char *val)
 	if (val != NULL && (strchr (val, '[') || strchr (val, ']'))) {
 		char    msg[MAXLINE];
 		snprintf (msg, sizeof msg,
-		          _("%%option %s value must not contain '[' or ']'"),
+		          _("the value of '%s' must not contain '[' or ']'"),
 		          opt_name);
 		flexerror (msg);
 	}

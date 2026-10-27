@@ -236,7 +236,8 @@ option		:  TOK_OUTFILE '=' NAME
 		|  TOK_EMIT '=' NAME
 			{ ctrl.emit = xstrdup(nmstr); backend_by_name(ctrl.emit); }
 		|  TOK_USERINIT '=' NAME
-			{ ctrl.userinit = xstrdup(nmstr); }
+			{ reject_brackets_in_option_value("user-init", nmstr);
+			  ctrl.userinit = xstrdup(nmstr); }
 		|  TOK_YYTERMINATE '=' NAME
 			{ reject_brackets_in_option_value("yyterminate", nmstr);
 			  ctrl.yyterminate = xstrdup(nmstr); }
