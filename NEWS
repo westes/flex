@@ -4,6 +4,10 @@ flex NEWS
 
 ** build
 
+*** Regenerating the build files now needs gettext 0.23 or later. The
+    po/ directory can then be built in parallel with make -j. Building
+    from a release tarball is not affected.
+
 *** A new script, tools/bootstrap-flex, builds and installs the previous
     release of flex. Building flex from a git checkout needs a flex that
     is already installed, and the script lets a system without one get
