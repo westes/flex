@@ -128,6 +128,12 @@ flex NEWS
 
 ** scanner
 
+*** Scanners that use REJECT no longer write past the end of their
+    state buffer when a buffer larger than the default is installed
+    with yypush_buffer_state() and a long token is then scanned. (#752)
+
+    Thanks to anshal ossaimi.
+
 *** C++ scanners that use REJECT now allocate their state buffer with
     yyalloc() and release it with yyfree(), as C scanners do. Before,
     switching to an input buffer larger than the default could pass
