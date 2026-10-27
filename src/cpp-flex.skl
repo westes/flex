@@ -1188,9 +1188,9 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 #endif
 ]])
 
-m4_ifdef( [[M4_EXTRA_TYPE_DEFS]],
+m4_ifdef( [[M4_MODE_EXTRA_TYPE]],
 [[
-#define YY_EXTRA_TYPE M4_EXTRA_TYPE_DEFS
+#define YY_EXTRA_TYPE M4_MODE_EXTRA_TYPE
 ]],
 [[
 #ifndef YY_EXTRA_TYPE
