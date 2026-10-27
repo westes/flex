@@ -128,6 +128,16 @@ flex NEWS
 
 ** scanner
 
+*** A scanner file could run commands while flex was running by
+    putting m4 macros in the values of options such as outfile,
+    header-file, yydecl, user-init, pre-action and post-action. Flex
+    now passes those values through as plain text, and rejects the
+    characters '[' and ']' in them, in the output and header file
+    names, in the class name given to yyclass, and in the prefix.
+    (#728)
+
+    Thanks to MarkLee131.
+
 *** The --skel (-S) option again makes flex read the skeleton file it
     names. Flex had been accepting the option but using its built-in
     skeleton anyway.
