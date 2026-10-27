@@ -4,6 +4,11 @@ flex NEWS
 
 ** build
 
+*** A new script, tools/bootstrap-flex, builds and installs the previous
+    release of flex. Building flex from a git checkout needs a flex that
+    is already installed, and the script lets a system without one get
+    started.
+
 *** Building flex no longer rewrites the .po translation files.
 
 *** A race condition that could build flex twice at the same time during

@@ -4,6 +4,7 @@ TESTS = \
 	test-semver-next.sh
 
 EXTRA_DIST = \
+	bootstrap-flex \
 	check-commit-msg \
 	check-release \
 	git2cl \
