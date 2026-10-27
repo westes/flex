@@ -495,8 +495,13 @@ void context_member(char *, const char *);
 			}
 
 	(([a-mo-z]|n[a-np-z])[[:alpha:]\-+]*)|.	{
-			format_synerr( _( "unrecognized %%option: %s" ),
-				yytext );
+			{
+			char msg[MAXLINE];
+
+			snprintf( msg, sizeof(msg), _( "unrecognized %s: %s" ),
+				"%option", yytext );
+			synerr( msg );
+			}
 			BEGIN(RECOVER);
 			}
 }
