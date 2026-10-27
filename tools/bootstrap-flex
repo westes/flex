@@ -1,0 +1,57 @@
+#! /bin/sh
+# Build and install the previous release of flex.
+#
+# A git checkout of flex has no scan.c, and generating it takes a flex that
+# is already installed. A release tarball ships a scan.c, so it builds with
+# a C compiler, make and GNU m4 (flex runs m4 itself). Run this once, then put
+# PREFIX/bin on your PATH before running ./autogen.sh and ./configure in the
+# checkout.
+#
+# Usage: tools/bootstrap-flex PREFIX
+
+set -e
+
+# The release to bootstrap from. Update both lines after each new release.
+version=2.6.4
+sha256=e87aae032bf07c26f85ac0ed3250998c37621d95f8bd748b31f15b33c45ee995
+
+if test $# -ne 1; then
+    echo "usage: $0 PREFIX" >&2
+    exit 2
+fi
+prefix=$1
+
+tarball=flex-$version.tar.gz
+url=https://github.com/westes/flex/releases/download/v$version/$tarball
+
+workdir=$(mktemp -d)
+trap 'rm -rf "$workdir"' EXIT
+cd "$workdir"
+
+echo "Downloading $url"
+if command -v curl >/dev/null 2>&1; then
+    curl -fsSLO "$url"
+elif command -v wget >/dev/null 2>&1; then
+    wget -q "$url"
+else
+    echo "error: need curl or wget to download $tarball" >&2
+    exit 1
+fi
+
+if command -v sha256sum >/dev/null 2>&1; then
+    actual=$(sha256sum "$tarball" | cut -d ' ' -f 1)
+else
+    actual=$(shasum -a 256 "$tarball" | cut -d ' ' -f 1)
+fi
+if test "$actual" != "$sha256"; then
+    echo "error: $tarball has sha256 $actual, expected $sha256" >&2
+    exit 1
+fi
+
+tar -xzf "$tarball"
+cd "flex-$version"
+./configure --prefix="$prefix"
+make
+make install
+
+echo "Installed flex $version in $prefix. Add $prefix/bin to your PATH."

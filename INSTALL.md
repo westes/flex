@@ -59,7 +59,11 @@ To build from the git repository:
 First, make sure you have a copy of flex installed somewhere on your
 path so that configure can find it. You can usually do this with your
 operating system's standard means of installing software. Sometimes,
-you have to build from a recent release of flex, however. Using a
+you have to build from a recent release of flex, however. Running
+`tools/bootstrap-flex PREFIX` does that: it downloads the previous
+release of flex, checks it against a known hash, and installs it in
+PREFIX, and you then add `PREFIX/bin` to your path. It needs a C
+compiler, make, GNU m4, and curl or wget. Using a
 version of flex built from the flex codebase is always acceptable if
 you have already bootstrapped doing so.
 
