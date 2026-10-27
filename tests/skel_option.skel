@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Test that the -S option makes flex read the named skeleton file
+# instead of its built-in skeleton.
+
+set -eu
+
+FLEX=$1
+SKEL=skel_option.tmp.skl
+OUT=skel_option.tmp.out
+
+trap 'rm -f "$SKEL" "$OUT"' EXIT
+
+echo 'MARKER-FROM-THE-TEST-SKELETON' > "$SKEL"
+echo '%%' | "$FLEX" -S "$SKEL" -o "$OUT"
+
+grep MARKER-FROM-THE-TEST-SKELETON "$OUT" > /dev/null
+
+# A skeleton file that does not exist is an error.
+if echo '%%' | "$FLEX" -S skel_option.no-such-file -o "$OUT" 2> /dev/null
+then
+    exit 1
+fi

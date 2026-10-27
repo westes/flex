@@ -52,7 +52,6 @@ void set_up_initial_allocations(void);
 bool    syntaxerror, eofseen;
 int     yymore_used, reject, real_reject, continued_action, in_rule;
 int     datapos, dataline, linenum;
-FILE   *skelfile = NULL;
 int     skel_ind = 0;
 char   *action_array;
 int     action_size, defs1_offset, prolog_offset, action_offset,
@@ -450,12 +449,12 @@ void flexend (int exit_status)
 	if (ctrl.yyclass != NULL && !ctrl.C_plus_plus)
 		flexerror (_("%option yyclass only meaningful for C++ scanners"));
 
-	if (skelfile != NULL) {
-		if (ferror (skelfile))
+	if (env.skelfile != NULL) {
+		if (ferror (env.skelfile))
 			lerr (_("input error reading skeleton file %s"),
 				env.skelname);
 
-		else if (fclose (skelfile))
+		else if (fclose (env.skelfile))
 			lerr (_("error closing skeleton file %s"),
 				env.skelname);
 	}
@@ -1249,7 +1248,7 @@ void readin (void)
 			flexerror (_("could not write tables header"));
 	}
 
-	if (env.skelname && (skelfile = fopen (env.skelname, "r")) == NULL)
+	if (env.skelname && (env.skelfile = fopen (env.skelname, "r")) == NULL)
 		lerr (_("can't open skeleton file %s"), env.skelname);
 
 	if (strchr(ctrl.prefix, '[') || strchr(ctrl.prefix, ']'))
