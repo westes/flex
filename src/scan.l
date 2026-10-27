@@ -85,7 +85,7 @@ extern const char *escaped_qstart, *escaped_qend;
 		reject = true;
 
 #define CHECK_YYREJECT(str) \
-	if ( all_lower( str ) ) \
+	if ( strncmp( str, "yyreject", 8 ) == 0 ) \
 		reject = true;
 
 #define YY_USER_INIT \
