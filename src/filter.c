@@ -167,7 +167,7 @@ bool filter_apply_chain (struct filter * chain)
 		close (pipes[1]);
 		clearerr(stdin);
 		if (dup2 (pipes[0], fileno (stdin)) == -1)
-			flexfatal ("dup2(pipes[0],0)");
+			lerr_fatal (_("%s failed"), "dup2(pipes[0],0)");
 		close (pipes[0]);
 		fseek (stdin, 0, SEEK_CUR);
 		ungetc(' ', stdin); /* still an evil hack, but one that works better */
@@ -178,7 +178,7 @@ bool filter_apply_chain (struct filter * chain)
 			int     r;
 
 			if ((r = chain->filter_func (chain)) == -1)
-				flexfatal ("filter_func failed");
+				lerr_fatal (_("%s failed"), "filter_func");
 			FLEX_EXIT (0);
 		}
 		else {
@@ -194,7 +194,7 @@ bool filter_apply_chain (struct filter * chain)
 	/* Parent */
 	close (pipes[0]);
 	if (dup2 (pipes[1], fileno (stdout)) == -1)
-		flexfatal ("dup2(pipes[1],1)");
+		lerr_fatal (_("%s failed"), "dup2(pipes[1],1)");
 	close (pipes[1]);
 	fseek (stdout, 0, SEEK_CUR);
 
@@ -246,12 +246,12 @@ int filter_tee_header (struct filter *chain)
 	 */
 
 	if ((to_cfd = dup (1)) == -1)
-		flexfatal ("dup(1) failed");
+		lerr_fatal (_("%s failed"), "dup(1)");
 	to_c = fdopen (to_cfd, "w");
 
 	if (write_header) {
 		if (freopen ((char *) chain->extra, "w", stdout) == NULL)
-			flexfatal ("freopen(headerfilename) failed");
+			lerr_fatal (_("%s failed"), "freopen(headerfilename)");
 
 		filter_apply_chain (chain->next);
 		to_h = stdout;

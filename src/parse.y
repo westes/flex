@@ -296,8 +296,9 @@ flexrule	:  '^' rule
 				bol_needed = true;
 
 				if ( env.performance_hint > 1 )
-					pinpoint_message(
-			"'^' operator results in sub-optimal performance" );
+					format_pinpoint_message(
+			_("%s operator results in sub-optimal performance"),
+			"'^'" );
 				}
 			}
 
@@ -340,8 +341,9 @@ flexrule	:  '^' rule
 						scon_stk[++scon_stk_ptr] = i;
 
 				if ( scon_stk_ptr == 0 )
-					lwarn(
-			"all start conditions already have <<EOF>> rules" );
+					format_warn(
+			_("all start conditions already have %s rules"),
+			"<<EOF>>" );
 
 				else
 					build_eof_action();
@@ -392,7 +394,7 @@ sconname	:  NAME
 			{
 			if ( (scnum = sclookup( nmstr )) == 0 )
 				format_pinpoint_message(
-					"undeclared start condition %s",
+					_("undeclared start condition %s"),
 					nmstr );
 			else
 				{
@@ -400,7 +402,7 @@ sconname	:  NAME
 					if ( scon_stk[i] == scnum )
 						{
 						format_warn(
-							"<%s> specified twice",
+							_("<%s> specified twice"),
 							scname[scnum] );
 						break;
 						}
@@ -435,8 +437,9 @@ rule		:  re2 re
 				 * erroneously.
 				 */
 				if ( ! varlength || headcnt != 0 )
-					lwarn(
-		"trailing context made variable due to preceding '|' action" );
+					format_warn(
+		_("trailing context made variable due to preceding '%s' action"),
+		"|" );
 
 				/* Mark as variable. */
 				varlength = true;
@@ -494,8 +497,9 @@ rule		:  re2 re
 				/* See the comment in the rule for "re2 re"
 				 * above.
 				 */
-				lwarn(
-		"trailing context made variable due to preceding '|' action" );
+				format_warn(
+		_("trailing context made variable due to preceding '%s' action"),
+		"|" );
 
 				varlength = true;
 				}
@@ -1008,9 +1012,14 @@ void build_eof_action(void)
 	for ( i = 1; i <= scon_stk_ptr; ++i )
 		{
 		if ( sceof[scon_stk[i]] )
-			format_pinpoint_message(
-				"multiple <<EOF>> rules for start condition %s",
-				scname[scon_stk[i]] );
+			{
+			char msg[MAXLINE];
+
+			snprintf( msg, sizeof(msg),
+				_("multiple %s rules for start condition %s"),
+				"<<EOF>>", scname[scon_stk[i]] );
+			pinpoint_message( msg );
+			}
 
 		else
 			{
