@@ -31,7 +31,7 @@ dnl requirements are provided for information only (no guarantee that the tools
 dnl will work and we may bump requirements with future code changes).
 dnl Uses AC_PATH_PROGS_FEATURE_CHECK. Requires autoconf-2.62 as minimum.
 AC_PREREQ([2.62])
-AC_INIT([the fast lexical analyser generator],[2.6.4],[flex-help@lists.sourceforge.net],[flex])
+AC_INIT([the fast lexical analyser generator],[2.6.5-rc1],[flex-help@lists.sourceforge.net],[flex])
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_USE_SYSTEM_EXTENSIONS
