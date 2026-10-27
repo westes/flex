@@ -87,3 +87,16 @@ jobs:
         if: ${{ env.update_needed == 1 }}
         run: |
           gh release upload nightlies ${{ env.ARTIFACT_GZ }} ${{ env.ARTIFACT_LZ }} ${{ env.SOURCE_GZ }} ${{ env.SOURCE_ZIP }} --clobber
+      - name: Delete older nightlies
+        env:
+          ver: ${{ steps.version.outputs.version }}
+          update_needed: ${{ steps.update.outputs.needed }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ env.update_needed == 1 }}
+        run: |
+          names=$(gh release view nightlies --json assets --jq '.assets[].name')
+          # Delete nothing unless the four files just uploaded are all there.
+          [ "$(echo "$names" | grep -cF -- "$ver")" -eq 4 ] || { echo "::error::The new nightly files are not all in the release. Keeping the old ones."; exit 1; }
+          echo "$names" | grep -vF -- "$ver" | while read -r name; do
+            gh release delete-asset nightlies "$name" --yes
+          done
