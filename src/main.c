@@ -175,12 +175,17 @@ int flex_main (int argc, char *argv[])
 			line_warning (_("rule cannot be matched"),
 				      rule_linenum[i]);
 
-	if (ctrl.spprdflt && !reject && rule_useful[default_rule])
+	if (ctrl.spprdflt && !reject && rule_useful[default_rule]) {
+		char    msg[MAXLINE];
+
 		/* TRANSLATORS: The "default rule" is the rule that copies
 		   input that no other rule matches to the output. The -s
 		   option is meant to remove it. */
-		line_warning (_("-s option given but default rule can be matched"),
-			      rule_linenum[default_rule]);
+		snprintf (msg, sizeof msg,
+			  _("%s option given but default rule can be matched"),
+			  "-s");
+		line_warning (msg, rule_linenum[default_rule]);
+	}
 
 	comment("START of m4 controls\n");
 
@@ -334,14 +339,15 @@ void check_options (void)
 
 	if (ctrl.lex_compat) {
 		if (ctrl.C_plus_plus)
-			flexerror (_("Can't use -+ with -l option"));
+			lerr (_("Can't use %s with %s option"), "-+", "-l");
 
 		if (ctrl.fulltbl || ctrl.fullspd)
-			flexerror (_("Can't use -f or -F with -l option"));
+			lerr (_("Can't use %s or %s with %s option"),
+			      "-f", "-F", "-l");
 
 		if (ctrl.reentrant || ctrl.bison_bridge_lval)
-			flexerror (_
-				   ("Can't use --reentrant or --bison-bridge with -l option"));
+			lerr (_("Can't use %s or %s with %s option"),
+			      "--reentrant", "--bison-bridge", "-l");
 
 		ctrl.yytext_is_array = true;
 		ctrl.do_yylineno = true;
@@ -372,32 +378,38 @@ void check_options (void)
 
 	if (ctrl.fulltbl || ctrl.fullspd) {
 		if (ctrl.usemecs)
-			flexerror (_
-				   ("-Cf/-CF and -Cm don't make sense together"));
+			lerr (_("%s and %s don't make sense together"),
+			      "-Cf/-CF", "-Cm");
 
 		if (ctrl.interactive != trit_false)
-			flexerror (_("-Cf/-CF and -I are incompatible"));
+			lerr (_("%s and %s are incompatible"),
+			      "-Cf/-CF", "-I");
 
 		if (ctrl.lex_compat)
-			flexerror (_
-				   ("-Cf/-CF are incompatible with lex-compatibility mode"));
+			lerr (_("%s are incompatible with lex-compatibility mode"),
+			      "-Cf/-CF");
 
 
 		if (ctrl.fulltbl && ctrl.fullspd)
-			flexerror (_
-				   ("-Cf and -CF are mutually exclusive"));
+			lerr (_("Options %s and %s are mutually exclusive."),
+			      "-Cf", "-CF");
 	}
 
 	if (ctrl.C_plus_plus && ctrl.fullspd)
-		flexerror (_("Can't use -+ with -CF option"));
+		lerr (_("Can't use %s with %s option"), "-+", "-CF");
 
 	if (ctrl.C_plus_plus && ctrl.yytext_is_array) {
-		lwarn (_("%array incompatible with -+ option"));
+		char    msg[MAXLINE];
+
+		snprintf (msg, sizeof msg, _("%s incompatible with %s option"),
+			  "%array", "-+");
+		lwarn (msg);
 		ctrl.yytext_is_array = false;
 	}
 
 	if (ctrl.C_plus_plus && (ctrl.reentrant))
-		flexerror (_("Options -+ and --reentrant are mutually exclusive."));
+		lerr (_("Options %s and %s are mutually exclusive."),
+		      "-+", "--reentrant");
 
 	if (ctrl.C_plus_plus && ctrl.bison_bridge_lval)
 		flexerror (_("bison bridge not supported for the C++ scanner."));
@@ -460,7 +472,8 @@ void flexend (int exit_status)
 		FLEX_EXIT (exit_status);
 
 	if (ctrl.yyclass != NULL && !ctrl.C_plus_plus)
-		flexerror (_("%option yyclass only meaningful for C++ scanners"));
+		lerr (_("%s only meaningful for C++ scanners"),
+		      "%option yyclass");
 
 	if (env.skelfile != NULL) {
 		if (ferror (env.skelfile))
@@ -492,8 +505,9 @@ void flexend (int exit_status)
 			fprintf (ctrl.backing_up_file, _("No backing up.\n"));
 		else if (ctrl.fullspd || ctrl.fulltbl)
 			fprintf (ctrl.backing_up_file,
-				 _
-				 ("%d backing up (non-accepting) states.\n"),
+				 ngettext ("%d backing up (non-accepting) state.\n",
+					   "%d backing up (non-accepting) states.\n",
+					   num_backing_up),
 				 num_backing_up);
 		else
 			fprintf (ctrl.backing_up_file,
@@ -816,9 +830,8 @@ void flexinit (int argc, char **argv)
 					break;
 
 				    default:
-					lerr (_
-					      ("unknown -C option '%c'"),
-					      arg[i]);
+					lerr (_("unknown %s option '%c'"),
+					      "-C", arg[i]);
 					break;
 				}
 			break;
@@ -1359,8 +1372,8 @@ void readin (void)
 	if (env.performance_hint > 0) {
 		if (ctrl.lex_compat) {
 			fprintf (stderr,
-				 _
-				 ("-l AT&T lex compatibility option entails a large performance penalty\n and may be the actual source of other reported performance penalties\n"));
+				 _("%s AT&T lex compatibility option entails a large performance penalty\n and may be the actual source of other reported performance penalties\n"),
+				 "-l");
 		}
 
 		else if (ctrl.do_yylineno) {
@@ -1372,8 +1385,8 @@ void readin (void)
 		if (env.performance_hint > 1) {
 			if (ctrl.interactive == trit_true)
 				fprintf (stderr,
-					 _
-					 ("-I (interactive) entails a minor performance penalty\n"));
+					 _("%s (interactive) entails a minor performance penalty\n"),
+					 "-I");
 
 			if (yymore_used)
 				fprintf (stderr,
@@ -1404,13 +1417,14 @@ void readin (void)
 
 	if ((ctrl.fulltbl || ctrl.fullspd) && reject) {
 		if (real_reject)
-			lerr (_("%s cannot be used with -f or -F"), "REJECT");
+			lerr (_("%s cannot be used with %s or %s"),
+			      "REJECT", "-f", "-F");
 		else if (ctrl.do_yylineno)
 			lerr (_("%s cannot be used with %s"),
 				"%option yylineno", "REJECT");
 		else
-			flexerror (_
-				   ("variable trailing context rules cannot be used with -f or -F"));
+			lerr (_("variable trailing context rules cannot be used with %s or %s"),
+			      "-f", "-F");
 	}
 
 	if (ctrl.useecs)

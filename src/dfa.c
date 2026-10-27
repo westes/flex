@@ -173,7 +173,7 @@ static void dump_associated_rules(FILE *file, int ds)
 
 	/* TRANSLATORS: The line numbers, in the flex input, of the rules
 	   that can still match from this state. */
-	fprintf (file, _(" associated rule line numbers:"));
+	fprintf (file, " %s", _("associated rule line numbers:"));
 
 	for (i = 1; i <= num_associated_rules; ++i) {
 		if (i % 8 == 1)
@@ -209,7 +209,7 @@ static void dump_transitions(FILE *file, int state[])
 
 	/* TRANSLATORS: The characters that take the scanner from this state
 	   to another state. */
-	fprintf (file, _(" out-transitions: "));
+	fprintf (file, " %s ", _("out-transitions:"));
 
 	list_character_set (file, out_char_set);
 
@@ -217,7 +217,9 @@ static void dump_transitions(FILE *file, int state[])
 	for (i = 0; i < ctrl.csize; ++i)
 		out_char_set[i] = !out_char_set[i];
 
-	fprintf (file, _("\n jam-transitions: EOF "));
+	/* TRANSLATORS: The characters that have no transition from this
+	   state. */
+	fprintf (file, "\n %s EOF ", _("jam-transitions:"));
 
 	list_character_set (file, out_char_set);
 
