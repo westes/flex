@@ -1,13 +1,13 @@
 # Bulgarian translation of flex po-file.
-# Copyright (C) 2019, 2021 The Flex Project (msgids)
+# Copyright (C) 2019, 2021, 2026 The Flex Project (msgids)
 # This file is distributed under the same license as the flex package.
-# Alexander Shopov <ash@kambanaria.org>, 2019, 2021.
+# Alexander Shopov <ash@kambanaria.org>, 2019, 2021, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: flex 2.6.4\n"
+"Project-Id-Version: flex 2.6.5-rc1\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-10-27 13:37-0400\n"
-"PO-Revision-Date: 2022-01-03 10:52+0100\n"
+"POT-Creation-Date: 2026-10-27 14:05-0400\n"
+"PO-Revision-Date: 2026-10-28 13:27+0100\n"
 "Last-Translator: Alexander Shopov <ash@kambanaria.org>\n"
 "Language-Team: Bulgarian <dict@ludost.net>\n"
 "Language: bg\n"
@@ -23,7 +23,7 @@ msgstr "Неуспешно заделяне на буфер за отпечат�
 
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "вътрешна грешка: опит за добавяне на знак към клас от знаци, който не е последен.\n"
 
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
@@ -50,30 +50,25 @@ msgstr "опасен последващ контекст"
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " номера на редове на съответното правило:"
+msgstr "номера̀ на редове на съответното правило:"
 
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " изходящи преходи: "
+msgstr "изходящи преходи:"
 
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" обобщени преходи: край на файл"
+msgstr "обобщени преходи:"
 
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "неуспешна проверка за консистентност в „epsclosure()“"
+msgstr "неуспешна проверка за консистентност в „%s()“"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
@@ -85,39 +80,39 @@ msgstr "уникалното състояние за край на буфер н
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "„ecstbl“ не може да се запише"
+msgstr "„%s“ не може да се запише"
 
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "в „sympartition()“ има неправилен знак за преход"
+msgstr "в „%s()“ има неправилен знак за преход"
 
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "неуспешно заделяне на памет в „xstrdup()“"
+msgstr "неуспешно заделяне на памет в „%s()“"
 
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "неуспешно пораждане на канал (pipe)"
 
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "неуспешно пораждане на процес (fork)"
 
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "неуспешно изпълнение на „%s“"
 
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "неуспешно изпълнение на „%s“"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -130,69 +125,67 @@ msgid "error closing output file %s"
 msgstr "грешка при затварянето на изходния файл „%s“"
 
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s: фатална вътрешна грешка — %s\n"
+msgstr "%s: фатална вътрешна грешка при %s:%d (%s): %s\n"
 
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s: фатална вътрешна грешка — %s\n"
+msgstr "%s: фатална вътрешна грешка при  %s:%d %s\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
 msgstr "правилото не напасва"
 
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr "зададена е опцията „-s“, но стандартното правило напасва"
+msgstr "зададена е опцията „%s“, но стандартното правило напасва"
 
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "„%s“ не може да се отвори"
+msgstr "„%s“ не може да се отвори: %s"
 
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "опциите „-+“ и „-l“ са несъвместими"
+msgstr "Опциите „%s“ и „%s“ са несъвместими"
 
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "опциите „-f“/„-F“ и „-l“ са несъвместими"
+msgstr "Опциите „%s“/„%s“ и „%s“ са несъвместими"
 
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "опциите „-Cf“/„-CF“ и „-Cm“ са несъвместими"
+msgstr "Опциите „%s“ и „%s“ са несъвместими"
 
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "опциите „-Cf“/„-CF“ и „-I“ са несъвместими"
+msgstr "Опциите „%s“ и „%s“ са несъвместими"
 
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr "опциите „-Cf“/„-CF“ са несъвместими с режима за съвместимост с „lex“"
+msgstr "Опциите „%s“ са несъвместими с режима за съвместимост с „lex“"
 
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "Опциите „-+“ и „--reentrant“ са несъвместими."
+msgstr "Опциите „%s“ и „%s“ са несъвместими"
 
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "опцията „-+“ e несъвместима с декларация „%array“"
+msgstr "Опциите „%s“ и „%s“ са несъвместими"
 
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
-msgstr ""
-"анализатори, които са на C++, не поддържат допълнителната поддръжка за "
-"„bison“."
+msgstr "анализатори, които са на C++, не поддържат допълнителната поддръжка за „bison“."
 
 #: src/main.c:454 src/main.c:1271
 #, c-format
@@ -200,11 +193,9 @@ msgid "could not create %s"
 msgstr "„%s“ не може да се създаде"
 
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr ""
-"директивата за „%option“ — „yyclass“ важи само за анализаторите, които са на "
-"C++"
+msgstr "директивата „%s“ важи само за анализаторите, които са на C++"
 
 #: src/main.c:480
 #, c-format
@@ -227,10 +218,10 @@ msgid "No backing up.\n"
 msgstr "Без връщане назад.\n"
 
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d състояния за връщане (неприемащи)\n"
+msgstr[0] "%d състояние за връщане (неприемащи)\n"
 msgstr[1] "%d състояния за връщане (неприемащи)\n"
 
 #: src/main.c:514
@@ -259,9 +250,9 @@ msgid "Try `%s --help' for more information.\n"
 msgstr "За повече информация изпълнете „%s --help“.\n"
 
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "непозната опция към „-C“: „%c“"
+msgstr "непозната опция към „%s“: „%c“"
 
 #: src/main.c:1222
 msgid "fatal parse error"
@@ -282,35 +273,33 @@ msgid "could not create backing-up info file %s"
 msgstr "файлът с информация за връщане назад не може да се създаде: „%s“"
 
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
-msgstr " и може да доведе до допълнителни проблеми с производителността\n"
+msgstr ""
+"опцията за съвместимост с „lex“ на AT&T: „%s“, води до голяма загуба на производителност\n"
+" и може да доведе до допълнителни проблеми с производителността\n"
 
 #: src/main.c:1381
-#, fuzzy, c-format
-msgid ""
-"%s entails a performance penalty ONLY on rules that can match newline "
-"characters\n"
-msgstr ""
-"директивата за „%%option“ — „yylineno“ води до загуба на производителност, "
-"само за правилата, които напасват знак за нов ред\n"
+#, c-format
+msgid "%s entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "директивата „%s“ води до загуба на производителност, само за правила̀та, които напасват знак за нов ред\n"
 
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "„-I“ (интерактивният режим) води до малка загуба на производителност\n"
+msgstr "„%s“ (интерактивният режим) води до малка загуба на производителност\n"
 
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "„yymore()“ води до малка загуба на производителност\n"
+msgstr "„%s“ води до малка загуба на производителност\n"
 
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "Отхвърлянето (REJECT) води до голяма загуба на производителност\n"
+msgstr "„%s“ води до голяма загуба на производителност\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -320,26 +309,22 @@ msgstr "Отхвърлянето (REJECT) води до голяма загуб�
 #: src/main.c:1409
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
-"Правила с последващ контекст, който не е константен, водят до голяма загуба "
-"на производителност\n"
+msgstr "Правила̀ с последващ контекст, който не е константен, водят до голяма загуба на производителност\n"
 
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "Отхвърлянето (REJECT) е несъвместимо с „-f“ или „-F“"
+msgstr "„%s“ е несъвместимо с опциите „%s“ и „%s“"
 
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "Отхвърлянето (REJECT) е несъвместимо с „-f“ или „-F“"
+msgstr "„%s“ е несъвместимо с „%s“"
 
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr ""
-"правила с последващ контекст, който не е константен, не може да се ползват "
-"заедно с „-f“ или „-F“"
+msgstr "правила̀ с последващ контекст, който не е константен, са несъвместими с „%s“ и „%s“"
 
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
@@ -352,7 +337,7 @@ msgstr "Употреба: %s [ОПЦИЯ] [ФАЙЛ]…\n"
 
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "Създаване на програми, които напасват шаблони по текст.\n"
 
 #: src/main.c:1784
 msgid ""
@@ -367,6 +352,16 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"Table Compression:\n"
+"  -Ca, --align     по-точно подравняване в паметта, но по-големи таблици\n"
+"  -Ce, --ecs       създаване на класове за еквивалентност\n"
+"  -Cf              без компресиране на таблици, представяне както с „-f“\n"
+"  -CF              без компресиране на таблици, представяне както с „-F“\n"
+"  -Cm, --meta-ecs  създаване на класовете за мета-еквивалентност\n"
+"  -Cr, --read      анализаторът да чете с „read()“ вместо от стандартния вход\n"
+"  -f, --full       създаване на голям, но бърз анализатор (≡„-Cfr“)\n"
+"  -F, --fast       алтернативно представяне на таблиците (≡„-CFr“)\n"
+"  -Cem             стандартна компресия (≡„--ecs --meta-ecs“)\n"
 
 #: src/main.c:1796
 #, c-format
@@ -379,9 +374,19 @@ msgid ""
 "  -T, --trace             %s should run in trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
-"      --hex               use hexadecimal numbers instead of octal in debug "
-"outputs\n"
+"      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 msgstr ""
+"Изчистване на грешки:\n"
+"  -d, --debug      включване на режима за изчистване на грешки в анализатора\n"
+"  -b, --backup     извеждане на информацията за връщане назад в „%s“\n"
+"  -p, --perf-report\n"
+"                   извеждане на доклад за производителност на стандартната грешка\n"
+"  -s, --nodefault  без стандартното правило за извеждане на ненапаснат текст\n"
+"  -T, --trace      „%s“ да работи в режим на проследяване на изпълнението\n"
+"  -w, --nowarn     без предупреждения\n"
+"  -v, --verbose    извеждане на статистика на анализатора на стандартния изход\n"
+"      --hex        шестнайсетични, а не осмични числа в изхода за изчистване на\n"
+"                   грешки\n"
 
 #: src/main.c:1808
 #, c-format
@@ -391,11 +396,23 @@ msgid ""
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the "
-"scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"Файлове:\n"
+"  -o, --outfile=ФАЙЛ\n"
+"                   задаване на изходния ФАЙЛ\n"
+"  -S, --skel=ФАЙЛ  задаване на скелетния ФАЙЛ\n"
+"  -t, --stdout     извеждане на анализатора на стандартния изход, а не в „%s“\n"
+"      --yyclass=ИМЕ\n"
+"                   ИМЕ на клас за C++\n"
+"      --header-file=ФАЙЛ\n"
+"                   създаване и на заглавен файл на C към анализатора\n"
+"      --tables-file[=ФАЙЛ]\n"
+"                   извеждане на таблиците във ФАЙЛа\n"
+"      --backup-file=ФАЙЛ\n"
+"                   извеждане на информацията за връщане назад във ФАЙЛа\n"
 
 #: src/main.c:1819
 msgid ""
@@ -409,6 +426,19 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"Поведение на анализатора:\n"
+"  -7, --7bit       анализатор за 7-битов вход\n"
+"  -8, --8bit       анализатор за 8-битов вход\n"
+"  -B, --batch      пакетен анализатор (обратното на „-I“)\n"
+"  -i, --case-insensitive\n"
+"                   без разлика между главни и малки знаци\n"
+"  -l, --lex-compat\n"
+"                   максимална съвместимост с оригиналния „lex“\n"
+"  -X, --posix-compat\n"
+"                   максимална съвместимост с „lex“ по POSIX\n"
+"  -I, --interactive\n"
+"                   интерактивен анализатор (обратното на „-B“)\n"
+"      --yylineno   следене на броя на редовете чрез „yylineno“\n"
 
 #: src/main.c:1830
 msgid ""
@@ -420,6 +450,17 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"Генериран код:\n"
+"  -+,  --c++       генериране на анализатор като клас на C++\n"
+"  -DМАКРОС[=ДЕФИНИЦИЯ]\n"
+"                   „#define МАКРОС ДЕФИНИЦИЯ“ (стандартно ДЕФИНИЦИЯта е „1“)\n"
+"  -e,  --emit=ЕЗИК\n"
+"                   указване на целеви ЕЗИК\n"
+"  -L,  --noline    без директиви „#line“ в анализатора\n"
+"  -P,  --prefix=НИЗ\n"
+"                   използване на този НИЗ за префикс вместо обичайния „yy“\n"
+"  -R,  --reentrant\n"
+"                   анализатор с възможност за повторно извикване\n"
 
 #: src/main.c:1837
 msgid ""
@@ -429,6 +470,15 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge\n"
+"                   лексичен анализатор за синтактичен анализатор на „bison“\n"
+"       --bison-locations\n"
+"                   поддръжка на „yylloc“\n"
+"       --stdinit   първоначалните стойности на „yyin“ и „yyout“ да са съответно\n"
+"                   стандартният вход и изход\n"
+"       --nounistd  без ползване на „<unistd.h>“\n"
+"       --noФУНКЦИЯ\n"
+"                   без създаването на определена ФУНКЦИЯ\n"
 
 #: src/main.c:1844
 #, c-format
@@ -440,11 +490,17 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Други:\n"
+"  -c               опция по POSIX, която не прави нищо\n"
+"  -n               опция по POSIX, която не прави нищо\n"
+"  -?\n"
+"  -h, --help       извеждане на това помощно съобщение\n"
+"  -V, --version    извеждане на версията на „%s“\n"
 
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "„check_char()“ се натъкна на неправилен знак: „%s“"
+msgstr "„%s()“ се натъкна на неправилен знак: „%s“"
 
 #: src/misc.c:121
 #, c-format
@@ -452,9 +508,9 @@ msgid "scanner requires -8 flag to use the character %s"
 msgstr "опцията „-8“ е задължителна, за да ползвате знака „%s“ в анализатора"
 
 #: src/misc.c:227
-#, fuzzy, c-format
+#, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr "Префиксът не трябва да съдържа „[“ или „]“"
+msgstr "стойността на „%s“ не трябва да съдържа „[“ или „]“"
 
 #: src/misc.c:238
 #, c-format
@@ -477,9 +533,9 @@ msgstr ""
 "•••••••••• начало на извеждането на НКА с начално състояние %d\n"
 
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "празна машина в „dupmachine()“"
+msgstr "празна машина в „%s()“"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -492,24 +548,24 @@ msgid "Variable trailing context rule at line %d\n"
 msgstr "Правило с последващ контекст, който не е константен, на ред %d\n"
 
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "лошо начално условие: „%s“"
+msgstr "лош вид състояние в „%s()“"
 
 #: src/nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
-msgstr "входните правила са прекалено сложни (≥ %d състояния на НКА)"
+msgstr "входните правила̀ са прекалено сложни (≥ %d състояния на НКА)"
 
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "прекалено много преходи в „mkxtion()“"
+msgstr "прекалено много преходи в „%s()“"
 
 #: src/nfa.c:702
 #, c-format
 msgid "too many rules (> %d)!"
-msgstr "прекалено много правила (> %d)!"
+msgstr "прекалено много правила̀ (> %d)!"
 
 #: src/parse.y:167
 msgid "unknown error processing section 1"
@@ -525,31 +581,31 @@ msgstr "неправилен списък на началните състоян
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "операторът „%s“ води до забавяне"
 
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "началното условие „%s“ е дефинирано двукратно"
+msgstr "всички начални условия имат вече %s правила̀"
 
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "СИНТАКТИЧНА ГРЕШКА: грешно правило"
 
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "лошо начално условие: „%s“"
+msgstr "необявено начално условие: „%s“"
 
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "името е дефинирано двукратно"
+msgstr "„%s“ е дефинирано двукратно"
 
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "последващият контекстът е направен променлив поради предшестващо действие „%s“"
 
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
@@ -564,67 +620,57 @@ msgstr "двукратно ползване на последващ контек
 #. {2,5}, that sets how many times the
 #. pattern may repeat.
 #: src/parse.y:601 src/parse.y:612 src/parse.y:686 src/parse.y:697
-msgid ""
-"invalid repeat range in braces: the first number must not be larger than the "
-"second, and the second must be at least 1"
-msgstr ""
+msgid "invalid repeat range in braces: the first number must not be larger than the second, and the second must be at least 1"
+msgstr "неправилен диапазон за повтаряне във „{}“: първото число не може да е по-малко от второто, а второто трябва да е поне 1"
 
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "броят на повторенията във „{}“ трябва да е поне 1"
 
 #: src/parse.y:857 src/parse.y:867
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"диапазонът знаци [%c-%c] не е еднозначен при лексичен анализатор, който не "
-"прави разлика между главни и малки знаци"
+msgstr "диапазонът знаци [%c-%c] не е еднозначен при лексичен анализатор, който не прави разлика между главни и малки знаци"
 
 #: src/parse.y:872
 msgid "negative range in character class"
-msgstr "изключващ диапазон в клас знаци"
+msgstr "изключващ диапазон в клас от знаци"
 
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"диапазонът знаци [:^lower:] не е еднозначен при лексичен анализатор, който "
-"не прави разлика между главни и малки знаци"
+msgstr "диапазонът знаци [:^lower:] не е еднозначен при лексичен анализатор, който не прави разлика между главни и малки знаци"
 
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"диапазонът знаци [:^upper:] не е еднозначен при лексичен анализатор, който "
-"не прави разлика между главни и малки знаци"
+msgstr "диапазонът знаци [:^upper:] не е еднозначен при лексичен анализатор, който не прави разлика между главни и малки знаци"
 
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "множество правила̀ „%s“ за началното условие „%s“"
 
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "ПРЕДУПРЕЖДЕНИЕ: %s"
 
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "Не може да се задели памет, за да се докладва %s"
 
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "Не може да се задели памет за копие на напаснатото"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "Входният ред е твърде дълъг\n"
 
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "неправилна директива „%top“"
+msgstr "неправилна директива „%s“"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -656,9 +702,9 @@ msgid "Option line too long\n"
 msgstr "Редът за опция е твърде дълъг\n"
 
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "непозната опция „%%option“: „%s“"
+msgstr "непозната директива „%s“: „%s“"
 
 #: src/scan.l:731
 #, c-format
@@ -680,11 +726,11 @@ msgstr "лошо начално условие: „%s“"
 
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "липсва знак за затварящи кавички: редът свърши в цитиран текст"
 
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "незавършен клас за знаци: редът свърши преди затваряща „%s“"
 
 #: src/scan.l:892
 #, c-format
@@ -708,14 +754,14 @@ msgid "EOF encountered inside pattern"
 msgstr "край на файл в шаблон"
 
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "неправилен знак: %s"
+msgstr "неочакван знак: %s"
 
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "Не може да се заделят %zu за стек"
 
 #: src/scanopt.c:250
 #, c-format
@@ -749,19 +795,19 @@ msgstr "Неизвестна грешка=(%d)\n"
 
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "няма такова ядро"
 
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "прекалено дълго или незавършено име на свойство"
 
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "повреден ред за свойство"
 
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "прекалено дълга или незавършена стойност на свойство"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -772,9 +818,9 @@ msgid "symbol table memory allocation failed"
 msgstr "неуспешно заделяне на памет за таблицата със символите"
 
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "името е дефинирано двукратно"
+msgstr "името „%s“ дефинирано двукратно"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -785,432 +831,9 @@ msgid "start condition %s declared twice"
 msgstr "началното условие „%s“ е дефинирано двукратно"
 
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "грешка при записването на изходния файл „%s“"
+msgstr "грешка при записването на таблици"
 
 #: src/yylex.c:58
-msgid ""
-"unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "DFA Dump:\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Извеждане на ДКА:\n"
-#~ "\n"
-
-#, c-format
-#~ msgid "state # %d:\n"
-#~ msgstr "състояние №%d:\n"
-
-#~ msgid "Could not write yynxt_tbl[][]"
-#~ msgstr "„yynxt_tbl[][]“ не може да се запише"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Equivalence Classes:\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Класове на еквивалентност:\n"
-#~ "\n"
-
-#, c-format
-#~ msgid "state # %d accepts: [%d]\n"
-#~ msgstr "състояние №%d приема: [%d]\n"
-
-#, c-format
-#~ msgid "state # %d accepts: "
-#~ msgstr "състояние №%d приема: "
-
-#~ msgid "Could not write yyacclist_tbl"
-#~ msgstr "„yyacclist_tbl“ не може да се запише"
-
-#~ msgid "Could not write yyacc_tbl"
-#~ msgstr "„yyacc_tbl“ не може да се запише"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Meta-Equivalence Classes:\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Класове за мета-еквивалентност:\n"
-
-#~ msgid "Could not write yymeta_tbl"
-#~ msgstr "„yymeta_tbl“ не може да се запише"
-
-#~ msgid "Could not write yybase_tbl"
-#~ msgstr "„yybase_tbl“ не може да се запише"
-
-#~ msgid "Could not write yydef_tbl"
-#~ msgstr "„yydef_tbl“ не може да се запише"
-
-#~ msgid "Could not write yynxt_tbl"
-#~ msgstr "„yynxt_tbl“ не може да се запише"
-
-#~ msgid "Could not write yychk_tbl"
-#~ msgstr "„yychk_tbl“ не може да се запише"
-
-#~ msgid "Could not write ftbl"
-#~ msgstr "„ftbl“ не може да се запише"
-
-#~ msgid "Could not write ssltbl"
-#~ msgstr "„ssltbl“ не може да се запише"
-
-#~ msgid "Could not write eoltbl"
-#~ msgstr "„eoltbl“ не може да се запише"
-
-#~ msgid "Could not write yynultrans_tbl"
-#~ msgstr "„yynultrans_tbl“ не може да се запише"
-
-#, fuzzy
-#~ msgid "Can't use --ctrl.reentrant or --bison-bridge with -l option"
-#~ msgstr "опциите „--reentrant“/„--bison-bridge“ и „-l“ са несъвместими"
-
-#~ msgid "-Cf and -CF are mutually exclusive"
-#~ msgstr "опциите „-Cf“ и „-CF“ са несъвместими"
-
-#~ msgid "Can't use -+ with -CF option"
-#~ msgstr "опциите „-+“ и „-CF“ са несъвместими"
-
-#, c-format
-#~ msgid "%s version %s usage statistics:\n"
-#~ msgstr "Статистика за употреба на %s, версия %s:\n"
-
-#, c-format
-#~ msgid "  scanner options: -"
-#~ msgstr "  опции на лексическия анализатор: -"
-
-#, c-format
-#~ msgid "  %d/%d NFA states\n"
-#~ msgstr "  %d/%d състояния на НКА\n"
-
-#, c-format
-#~ msgid "  %d/%d DFA states (%d words)\n"
-#~ msgstr "  %d/%d състояния на ДКА (%d думи)\n"
-
-#, c-format
-#~ msgid "  %d rules\n"
-#~ msgstr "  %d правила\n"
-
-#, c-format
-#~ msgid "  No backing up\n"
-#~ msgstr "  Без връщане назад\n"
-
-#, c-format
-#~ msgid "  %d backing-up (non-accepting) states\n"
-#~ msgstr "  %d състояния за връщане (неприемащи)\n"
-
-#, c-format
-#~ msgid "  Compressed tables always back-up\n"
-#~ msgstr "  Компресираните таблици винаги водят до връщане\n"
-
-#, c-format
-#~ msgid "  Beginning-of-line patterns used\n"
-#~ msgstr "  Използвани са правила за начало на ред\n"
-
-#, c-format
-#~ msgid "  %d/%d start conditions\n"
-#~ msgstr "  %d/%d начални състояния\n"
-
-#, c-format
-#~ msgid "  %d epsilon states, %d double epsilon states\n"
-#~ msgstr "  %d ε-състояния, %d двойни ε-състояния\n"
-
-#, c-format
-#~ msgid "  no character classes\n"
-#~ msgstr "  няма класове знаци\n"
-
-#, c-format
-#~ msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-#~ msgstr ""
-#~ "  %d/%d класове за знаци изискваха %d/%d думи за съхранение, "
-#~ "преизползвани са %d\n"
-
-#, c-format
-#~ msgid "  %d state/nextstate pairs created\n"
-#~ msgstr "  %d двойки състояние/преход\n"
-
-#, c-format
-#~ msgid "  %d/%d unique/duplicate transitions\n"
-#~ msgstr "  %d/%d уникални/повтарящи се преходи\n"
-
-#, c-format
-#~ msgid "  %d table entries\n"
-#~ msgstr "  %d таблични записи\n"
-
-#, c-format
-#~ msgid "  %d/%d base-def entries created\n"
-#~ msgstr "  %d/%d записи за основни дефиниции\n"
-
-#, c-format
-#~ msgid "  %d/%d (peak %d) nxt-chk entries created\n"
-#~ msgstr "  %d/%d (максимум %d) записи\n"
-
-#, c-format
-#~ msgid "  %d/%d (peak %d) template nxt-chk entries created\n"
-#~ msgstr "  %d/%d (максимум %d) шаблонни записи\n"
-
-#, c-format
-#~ msgid "  %d empty table entries\n"
-#~ msgstr "  %d празни таблични записи\n"
-
-#, c-format
-#~ msgid "  %d protos created\n"
-#~ msgstr "  %d създадени прототипи\n"
-
-#, c-format
-#~ msgid "  %d templates created, %d uses\n"
-#~ msgstr "  %d създадени шаблони, %d употреби\n"
-
-#, c-format
-#~ msgid "  %d/%d equivalence classes created\n"
-#~ msgstr "  създадени са %d/%d класове за еквивалентност\n"
-
-#, c-format
-#~ msgid "  %d/%d meta-equivalence classes created\n"
-#~ msgstr "  създадени са %d/%d класове за мета-еквивалентност\n"
-
-#, c-format
-#~ msgid "  %d (%d saved) hash collisions, %d DFAs equal\n"
-#~ msgstr "  %d (%d запазени) конфликти по суми, %d ДКА са еднакви\n"
-
-#, c-format
-#~ msgid "  %d sets of reallocations needed\n"
-#~ msgstr "  необходими са %d пъти заделяния на памет наново\n"
-
-#, c-format
-#~ msgid "  %d total table entries needed\n"
-#~ msgstr "  необходими са общо %d записи в таблица\n"
-
-#~ msgid "Prefix cannot include '[' or ']'"
-#~ msgstr "Префиксът не трябва да съдържа „[“ или „]“"
-
-#, c-format
-#~ msgid ""
-#~ "-l AT&T lex compatibility option entails a large performance penalty\n"
-#~ msgstr ""
-#~ "опцията за съвместимост с „lex“ на AT&T: „-l“, води до голяма загуба на "
-#~ "производителност\n"
-
-#, c-format
-#~ msgid "%option yylineno cannot be used with REJECT"
-#~ msgstr ""
-#~ "директивата за „%option“ — „yylineno“ е несъвместима с отхвърляне (REJECT)"
-
-#, fuzzy, c-format
-#~ msgid ""
-#~ "Generates programs that perform pattern-matching on text.\n"
-#~ "\n"
-#~ "Table Compression:\n"
-#~ "  -Ca, --align      trade off larger tables for better memory alignment\n"
-#~ "  -Ce, --ecs        construct equivalence classes\n"
-#~ "  -Cf               do not compress tables; use -f representation\n"
-#~ "  -CF               do not compress tables; use -F representation\n"
-#~ "  -Cm, --meta-ecs   construct meta-equivalence classes\n"
-#~ "  -Cr, --read       use read() instead of stdio for scanner input\n"
-#~ "  -f, --full        generate fast, large scanner. Same as -Cfr\n"
-#~ "  -F, --fast        use alternate table representation. Same as -CFr\n"
-#~ "  -Cem              default compression (same as --ecs --meta-ecs)\n"
-#~ "\n"
-#~ "Debugging:\n"
-#~ "  -d, --debug             enable debug mode in scanner\n"
-#~ "  -b, --backup            write backing-up information to %s\n"
-#~ "  -p, --perf-report       write performance report to stderr\n"
-#~ "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
-#~ "  -T, --env.trace             %s should run in env.trace mode\n"
-#~ "  -w, --nowarn            do not generate warnings\n"
-#~ "  -v, --verbose           write summary of scanner statistics to stdout\n"
-#~ "      --hex               use hexadecimal numbers instead of octal in "
-#~ "debug outputs\n"
-#~ "\n"
-#~ "Files:\n"
-#~ "  -o, --outfile=FILE      specify output filename\n"
-#~ "  -S, --skel=FILE         specify skeleton file\n"
-#~ "  -t, --stdout            write scanner on stdout instead of %s\n"
-#~ "      --yyclass=NAME      name of C++ class\n"
-#~ "      --header-file=FILE   create a C header file in addition to the "
-#~ "scanner\n"
-#~ "      --tables-file[=FILE] write tables to FILE\n"
-#~ "      --backup-file=FILE  write backing-up information to FILE\n"
-#~ "\n"
-#~ "Scanner behavior:\n"
-#~ "  -7, --7bit              generate 7-bit scanner\n"
-#~ "  -8, --8bit              generate 8-bit scanner\n"
-#~ "  -B, --batch             generate batch scanner (opposite of -I)\n"
-#~ "  -i, --case-insensitive  ignore case in patterns\n"
-#~ "  -l, --lex-compat        maximal compatibility with original lex\n"
-#~ "  -X, --posix-compat      maximal compatibility with POSIX lex\n"
-#~ "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
-#~ "      --yylineno          track line count in yylineno\n"
-#~ "\n"
-#~ "Generated code:\n"
-#~ "  -+,  --c++               generate C++ scanner class\n"
-#~ "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
-#~ "  -e,  --emit=LANG         Specify target language\n"
-#~ "  -L,  --noline            suppress #line directives in scanner\n"
-#~ "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
-#~ "  -R,  --reentrant         generate a reentrant scanner\n"
-#~ "       --bison-bridge      scanner for Bison pure parser.\n"
-#~ "       --bison-locations   include yylloc support.\n"
-#~ "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
-#~ "       --nounistd          do not include <unistd.h>\n"
-#~ "       --noFUNCTION        do not generate a particular FUNCTION\n"
-#~ "\n"
-#~ "Miscellaneous:\n"
-#~ "  -c                      do-nothing POSIX option\n"
-#~ "  -n                      do-nothing POSIX option\n"
-#~ "  -?\n"
-#~ "  -h, --help              produce this help message\n"
-#~ "  -V, --version           report %s version\n"
-#~ msgstr ""
-#~ "Генериране на програма за лексически анализ на текст.\n"
-#~ "\n"
-#~ "Компресиране на таблиците\n"
-#~ "  -Ca, --align             по-точно подравняване в паметта, но по-големи "
-#~ "таблици\n"
-#~ "  -Ce, --ecs               създаване на класовете за еквивалентност\n"
-#~ "  -Cf                      без компресия на таблиците, представяне както "
-#~ "с „-f“\n"
-#~ "  -CF                      без компресия на таблиците, представяне както "
-#~ "с „-F“\n"
-#~ "  -Cm, --meta-ecs          създаване на класовете за мета-еквивалентност\n"
-#~ "  -Cr, --read              четене чрез „read()“, а не от стандартния "
-#~ "вход\n"
-#~ "  -f, --full               генериране на голям, но бърз анализатор, (≡„-"
-#~ "Cfr“)\n"
-#~ "  -F, --fast               алтернативно представяне на таблиците (≡„-"
-#~ "CFr“)\n"
-#~ "  -Cem                     стандартна компресия (≡„--ecs --meta-ecs“)\n"
-#~ "\n"
-#~ "Изчистване на грешки:\n"
-#~ "  -d, --debug              режим на изчистване на грешки в анализатора\n"
-#~ "  -b, --backup             запазване на информацията за връщане назад в "
-#~ "„%s“\n"
-#~ "  -p, --perf-report        доклад за производителността към стандартната "
-#~ "грешка\n"
-#~ "  -s, --nodefault          потискане на стандартното правило за извеждане "
-#~ "на\n"
-#~ "                           текста, който не напасва\n"
-#~ "  -T, --trace              „%s“ да се изпълнява в режим на трасиране\n"
-#~ "  -w, --nowarn             без предупреждения\n"
-#~ "  -v, --verbose            доклад-статистика за анализатора към "
-#~ "стандартния изход\n"
-#~ "\n"
-#~ "Файлове:\n"
-#~ "  -o, --outfile=ФАЙЛ       задаване на изходния ФАЙЛ\n"
-#~ "  -S, --skel=ФАЙЛ          задаване на скелетния ФАЙЛ\n"
-#~ "  -t, --stdout             извеждане на анализатора на стандартния изход, "
-#~ "а\n"
-#~ "                           не в „%s“\n"
-#~ "      --yyclass=ИМЕ        ИМЕ на клас за C++\n"
-#~ "      --header-file=ФАЙЛ   създаване и на заглавен файл на C\n"
-#~ "      --tables-file[=ФАЙЛ] извеждане на таблиците във ФАЙЛа\n"
-#~ "\n"
-#~ "Поведение на анализатора:\n"
-#~ "  -7, --7bit               анализатор за 7-битов вход\n"
-#~ "  -8, --8bit               анализатор за 8-битов вход\n"
-#~ "  -B, --batch              пакетен анализатор (обратното на „-I“)\n"
-#~ "  -i, --case-insensitive   без разлика между главни и малки знаци\n"
-#~ "  -l, --lex-compat         максимална съвместимост с оригиналния „lex“\n"
-#~ "  -X, --posix-compat       максимална съвместимост с „lex“ по POSIX\n"
-#~ "  -I, --interactive        интерактивен анализатор (обратното на „-B“)\n"
-#~ "      --yylineno           следене на броя на редовете чрез „yylineno“\n"
-#~ "\n"
-#~ "Генериран код:\n"
-#~ "  -+,  --c++               генериране на анализатор като клас на C++\n"
-#~ "  -DМАКРОС[=ДЕФИНИЦИЯ]     „#define МАКРОС ДЕФИНИЦИЯ“ (стандартно\n"
-#~ "                           ДЕФИНИЦИЯта е „1“)\n"
-#~ "  -L,  --noline            без директиви „#line“ в анализатора\n"
-#~ "  -P,  --prefix=НИЗ        използване на този НИЗ за префикс вместо "
-#~ "обичайния „yy“\n"
-#~ "  -R,  --reentrant         анализатор на C с възможност за повторно "
-#~ "извикване\n"
-#~ "       --bison-bridge      допълнителна поддръжка за „bison“\n"
-#~ "       --bison-locations   поддръжка на „yylloc“\n"
-#~ "       --stdinit           първоначалните стойности на „yyin“ и „yyout“ "
-#~ "да са\n"
-#~ "                           съответно стандартният вход и изход\n"
-#~ "       --nounistd          без ползване на „<unistd.h>“\n"
-#~ "       --noФУНКЦИЯ         без създаването на определена ФУНКЦИЯ\n"
-#~ "\n"
-#~ "Други:\n"
-#~ "  -c                      опция по POSIX, която не прави нищо\n"
-#~ "  -n                      опция по POSIX, която не прави нищо\n"
-#~ "  -?\n"
-#~ "  -h, --help              извеждане на това помощно съобщение\n"
-#~ "  -V, --version           извеждане на версията на „%s“\n"
-
-#~ msgid "memory allocation failed in allocate_array()"
-#~ msgstr "неуспешно заделяне на памет в „allocate_array()“"
-
-#~ msgid "memory allocation failed in yy_flex_xmalloc()"
-#~ msgstr "неуспешно заделяне на памет в „yy_flex_xmalloc()“"
-
-#, c-format
-#~ msgid "state # %4d\t"
-#~ msgstr "състояние №%4d"
-
-#, c-format
-#~ msgid "********** end of dump\n"
-#~ msgstr "•••••••••• край на извеждането\n"
-
-#~ msgid "bad state type in mark_beginning_as_normal()"
-#~ msgstr "неправилен вид състояние в „mark_beginning_as_normal()“"
-
-#~ msgid "unrecognized rule"
-#~ msgstr "непознато правило"
-
-#~ msgid "bad iteration values"
-#~ msgstr "неправилни стойности на итерация"
-
-#~ msgid "iteration value must be positive"
-#~ msgstr "стойността на итерацията трябва да е положителна"
-
-#~ msgid "bad character class"
-#~ msgstr "неправилен клас знаци"
-
-#~ msgid "missing quote"
-#~ msgstr "липсваща кавичка"
-
-#~ msgid "premature EOF"
-#~ msgstr "преждевременен край (EOF)"
-
-#, c-format
-#~ msgid "End Marker\n"
-#~ msgstr "Маркер за край\n"
-
-#, c-format
-#~ msgid "*Something Weird* - tok: %d val: %d\n"
-#~ msgstr "•Нещо странно• — лекс.: %d ст-ст: %d\n"
-
-#~ msgid "Allocation of buffer for line directive failed"
-#~ msgstr "Неуспешно заделяне на буфер за директива „#line“"
-
-#~ msgid "Allocation of buffer for m4 def failed"
-#~ msgstr "Неуспешно заделяне на буфер за добавяне на дефиниция за „m4“"
-
-#~ msgid "Allocation of buffer for m4 undef failed"
-#~ msgstr "Неуспешно заделяне на буфер за премахване на дефиниция за „m4“"
-
-#~ msgid "error creating header file %s"
-#~ msgstr "грешка при създаването на заглавен файл „%s“"
-
-#~ msgid "%s %s\n"
-#~ msgstr "%s %s\n"
-
-#~ msgid "allocation of sko_stack failed"
-#~ msgstr "неуспешно заделяне на памет за „sko_stack“"
-
-#~ msgid "name \"%s\" ridiculously long"
-#~ msgstr "прекалено дълго име: „%s“"
+msgid "unexpected end of file: the line that starts the rules section is missing"
+msgstr "неочакван край на файл: липсва редът за начало на раздела за правила̀"
