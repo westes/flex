@@ -52,9 +52,11 @@ main ( int argc, char** argv )
         exit(-1);
     }
 
-    /* First scan on the default-sized buffer. This allocates the reject
-     * state buffer at YY_BUF_SIZE.
+    /* First scan on a small buffer. This allocates the reject state buffer
+     * at YY_BUF_SIZE. It reads a string, because the default input is
+     * stdin and the test must not wait on it.
      */
+    yy_scan_string( "aaa" );
     yylex();
 
     /* Now push a buffer much larger than YY_BUF_SIZE and scan a long token
