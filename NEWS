@@ -4,6 +4,11 @@ flex NEWS
 
 ** build
 
+*** The version and date in the header of each release's section of this
+    NEWS file, and the version in configure.ac, are now set together by
+    a script when the release is made. A release candidate gets its own
+    header in the same way.
+
 *** Regenerating the build files now needs gettext 0.23 or later. The
     po/ directory can then be built in parallel with make -j. Building
     from a release tarball is not affected.
