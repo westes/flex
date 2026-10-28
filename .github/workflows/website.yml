@@ -1,0 +1,66 @@
+name: Website
+
+on:
+  push:
+    tags:
+    - 'v*'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  build:
+    name: Build the manual and landing page
+    runs-on: ubuntu-22.04
+    container: ghcr.io/westes/flex-ci@sha256:f6fd1d3cddbc6976df7f7a8d0b72cc4e72fcf2a82b4e6aa1ab1be93186388152
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - name: autogen
+      run: ./autogen.sh
+    - name: configure
+      run: ./configure
+    - name: split manual
+      run: make -C doc html
+    - name: assemble the site
+      run: |
+        mkdir _site
+        cp -R doc/flex.html _site/manual
+        makeinfo --html --no-split -I examples/manual \
+          -o _site/manual-single.html doc/flex.texi
+        cp doc/site/index.html doc/site/style.css _site/
+        touch _site/.nojekyll
+        ver=${GITHUB_REF_NAME#v}
+        [ "$GITHUB_REF_TYPE" = tag ] || ver=$(sed -n 's/^AC_INIT(\[[^]]*\],\[\([^]]*\)\].*/\1/p' configure.ac)
+        sed -i "s/@VERSION@/$ver/" _site/index.html
+    - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: site
+        path: _site
+        include-hidden-files: true
+
+  publish:
+    name: Replace the gh-pages branch
+    needs: build
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+      with:
+        name: site
+        path: _site
+    - name: push
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cd _site
+        git init -b gh-pages
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git add -A
+        git commit -m "website for $GITHUB_REF_NAME"
+        git push --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages

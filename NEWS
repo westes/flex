@@ -135,6 +135,13 @@ flex NEWS
 
     Thanks to Eric S. Raymond and Daniel Brooks.
 
+*** The flex manual is now on the web at
+    https://westes.github.io/flex/manual/, split into one page per
+    section, and as a single page at
+    https://westes.github.io/flex/manual-single.html. General
+    information about flex is at https://westes.github.io/flex/. The
+    site is rebuilt from the flex sources for each release.
+
 ** scanner
 
 *** A scanner file could run commands while flex was running by
