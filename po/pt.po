@@ -1,23 +1,23 @@
 # Portuguese (Portugal) translation for the flex package.
 # Copyright (C) 2019 The Flex Project (msgids)
 # This file is put in the public domain.
-# Pedro Albuquerque <palbuquerque73@gmail.com>, 2019.
+# Pedro Albuquerque <pmra@protonmail.com>, 2019, 2025, 2026.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: flex 2.5.38\n"
+"Project-Id-Version: flex 2.6.5-rc1\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-10-27 13:37-0400\n"
-"PO-Revision-Date: 2019-05-23 10:15+0100\n"
-"Last-Translator: Pedro Albuquerque <palbuquerque73@gmail.com>\n"
-"Language-Team: Portuguese <translation-team-pt@lists.sourceforge.net>\n"
+"POT-Creation-Date: 2026-10-27 14:05-0400\n"
+"PO-Revision-Date: 2026-10-28 08:52+0000\n"
+"Last-Translator: Pedro Albuquerque <pmra@protonmail.com>\n"
+"Language-Team: Portuguese <translation-team-pt@googlegroups.com>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\\n\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
+"X-Generator: Geany / PoHelper 2.1\n"
 
 #: src/buf.c:63
 msgid "Allocation of buffer to print string failed"
@@ -25,7 +25,7 @@ msgstr "Falha ao alocar buffer para imprimir a cadeia"
 
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "erro interno: tentativa de adicionar um carácter a um CCL que não seja o último.\n"
 
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
@@ -52,30 +52,25 @@ msgstr "conteúdo final perigoso"
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " números de linha de regra associada:"
+msgstr "números de linha de regra associada:"
 
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " out-transitions: "
+msgstr "out-transitions:"
 
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" jam-transitions: EOF "
+msgstr "jam-transitions:"
 
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "falha no teste de consistência em epsclosure()"
+msgstr "falha no teste de consistência em %s()"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
@@ -87,39 +82,39 @@ msgstr "impossível criar estado end-of-buffer exclusivo"
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "Impossível escrever ecstbl"
+msgstr "Impossível escrever %s"
 
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "detectado um mau carácter de transição em sympartition()"
+msgstr "detectado um mau carácter de transição em %s()"
 
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "falha ao alocar memória em allocate_array()"
+msgstr "falha ao alocar memória em %s()"
 
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "falha no túnel"
 
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "falha na bifurcação"
 
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "%s falhou"
 
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "falha ao executar %s"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -132,63 +127,65 @@ msgid "error closing output file %s"
 msgstr "erro ao fechar ficheiro de saída %s"
 
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s: erro interno fatal, %s\n"
+msgstr "%s: erro interno fatal em %s:%d (%s): %s\n"
 
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s: erro interno fatal, %s\n"
+msgstr ""
+"%s: erro interno fatal em %s:%d %s\n"
+"\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
 msgstr "impossível comparar a regra"
 
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr "indicada a opção -s, mas a regra predefinida pode ser comparada"
+msgstr "indicada a opção %s, mas a regra predefinida pode ser comparada"
 
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "impossível abrir %s"
+msgstr "impossível abrir %s: %s"
 
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "Impossível usar -+ com a opção -l"
+msgstr "Impossível usar %s com a opção %s"
 
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "Impossível usar -f ou -F com a opção -l"
+msgstr "Impossível usar %s ou %s com a opção %s"
 
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "-Cf/-CF e -Cm não fazem sentido em conjunto"
+msgstr "%s e %s não fazem sentido em conjunto"
 
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "-Cf/-CF e -I são incompatíveis"
+msgstr "%s e %s são incompatíveis"
 
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF são incompatíveis com o modo lex-compatibility"
+msgstr "%s são incompatíveis com o modo lex-compatibility"
 
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "As opções -+ e --reentrant são mutuamente exclusivas."
+msgstr "As opções %s e %s são mutuamente exclusivas."
 
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "%array incompatível com a opção -+"
+msgstr "%s incompatível com a opção %s"
 
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
@@ -200,9 +197,9 @@ msgid "could not create %s"
 msgstr "impossível criar %s"
 
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr "a %opção yyclass só tem significado para analisadores C++"
+msgstr "a opção %s só tem significado para analisadores C++"
 
 #: src/main.c:480
 #, c-format
@@ -225,11 +222,11 @@ msgid "No backing up.\n"
 msgstr "Sem seguranças.\n"
 
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d estados de segurança (não aceitando).\n"
-msgstr[1] "%d estados de segurança (não aceitando).\n"
+msgstr[0] "%d estado de salvaguarda (não aceitação).\n"
+msgstr[1] "%d estados de salvaguarda (não aceitação).\n"
 
 #: src/main.c:514
 #, c-format
@@ -257,9 +254,9 @@ msgid "Try `%s --help' for more information.\n"
 msgstr "Tente \"%s --help\" para mais informação.\n"
 
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "Opção -C \"%c\" desconhecida"
+msgstr "opção %s \"%c\" desconhecida"
 
 #: src/main.c:1222
 msgid "fatal parse error"
@@ -280,36 +277,33 @@ msgid "could not create backing-up info file %s"
 msgstr "impossível criar ficheiro de informação de segurança %s"
 
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
 msgstr ""
-" e pode ser a fonte actual de outras penalizações de desempenho reportadas\n"
+"A opção de compatibilidade com o léxico %s AT&T implica uma grande perda de \n"
+"desempenho e pode ser a verdadeira causa de outras perdas de desempenho relatadas\n"
 
 #: src/main.c:1381
-#, fuzzy, c-format
-msgid ""
-"%s entails a performance penalty ONLY on rules that can match newline "
-"characters\n"
-msgstr ""
-"a %%opção yylineno implica uma perda de desempenho SÓ em regras que possam "
-"comparar caracteres de nova linha\n"
+#, c-format
+msgid "%s entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "%s implica uma perda de desempenho SÓ em regras que possam comparar caracteres de nova linha\n"
 
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "-I (interactiva) implica uma perda menor de desempenho\n"
+msgstr "%s (interactiva) implica uma perda menor de desempenho\n"
 
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore() implica uma perda menor de desempenho\n"
+msgstr "%s implica uma perda menor de desempenho\n"
 
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT implica uma grave perda de desempenho\n"
+msgstr "%s implica uma grave perda de desempenho\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -319,23 +313,22 @@ msgstr "REJECT implica uma grave perda de desempenho\n"
 #: src/main.c:1409
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
-"Regras variáveis de contexto final implicam uma grave perda de desempenho\n"
+msgstr "Regras variáveis de contexto final implicam uma grave perda de desempenho\n"
 
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "REJECT não ode ser usado com -f ou -F"
+msgstr "%s não ode ser usado com %s ou %s"
 
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "REJECT não ode ser usado com -f ou -F"
+msgstr "%s não pode ser usado com %s"
 
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr "regras variáveis de contexto final não podem ser usadas com -f ou -F"
+msgstr "regras variáveis de contexto final não podem ser usadas com %s ou %s"
 
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
@@ -348,7 +341,7 @@ msgstr "Uso: %s [OPÇÕES] [FICHEIRO]...\n"
 
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "Gera programas que realizam a comparação de padrões em textos.\n"
 
 #: src/main.c:1784
 msgid ""
@@ -363,6 +356,16 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"Compressão da tabela:\n"
+"  -Ca, --align      trocar tabelas maiores por um melhor alinhamento da memória\n"
+"  -Ce, --ecs        construir classes de equivalência\n"
+"  -Cf               não comprimir as tabelas; usar a representação -f\n"
+"  -CF               não comprimir as tabelas; usar a representação -F\n"
+"  -Cm, --meta-ecs   construir classes de meta-equivalência\n"
+"  -Cr, --read       Usar read() em vez do stdio para a entrada do analisador\n"
+"  -f, --full        gerar um analisador rápido e de grande capacidade. Igual a -Cfr\n"
+"  -F, --fast        utilizar uma representação alternativa da tabela. Igual a -CFr\n"
+"  -Cem              compressão predefinida (igual a --ecs --meta-ecs)\n"
 
 #: src/main.c:1796
 #, c-format
@@ -375,9 +378,17 @@ msgid ""
 "  -T, --trace             %s should run in trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
-"      --hex               use hexadecimal numbers instead of octal in debug "
-"outputs\n"
+"      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 msgstr ""
+"Depuração:\n"
+"  -d, --debug             activar o modo de depuração no analisador\n"
+"  -b, --backup            gravar as informações de salvaguarda em %s\n"
+"  -p, --perf-report       elaborar um relatório de desempenho para stderr\n"
+"  -s, --nodefault         suprimir a regra predefinida para ECHOar texto não correspondente\n"
+"  -T, --trace             %s deve ser executado no modo de rastreio\n"
+"  -w, --nowarn            não gerar avisos\n"
+"  -v, --verbose           escrever um resumo das estatísticas do analisador na saída padrão\n"
+"      --hex               utilizar números hexadecimais em vez de octais nas saídas de depuração\n"
 
 #: src/main.c:1808
 #, c-format
@@ -387,11 +398,18 @@ msgid ""
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the "
-"scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"Ficheiros:\n"
+"  -o, --outfile=FICH      especificar o nome do ficheiro de saída\n"
+"  -S, --skel=FICH         especificar ficheiro de estrutura\n"
+"  -t, --stdout            escrever os dados do analisador na saída padrão em vez de %s\n"
+"      --yyclass=NOME      nome da classe C++\n"
+"      --header-file=FICH   criar um ficheiro de cabeçalho C, além do analisador\n"
+"      --tables-file[=FICH] escrever tabelas em FICH\n"
+"      --backup-file=FICH  escrever informação de salvaguarda em FICH\n"
 
 #: src/main.c:1819
 msgid ""
@@ -405,6 +423,15 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"Comportamento do analisador:\n"
+"  -7, --7bit              gerar analisador de 7 bits\n"
+"  -8, --8bit              gerar analisador de 8 bits\n"
+"  -B, --batch             gerar analisador em lote (o oposto de -I)\n"
+"  -i, --case-insensitive  ignorar maiúsculas e minúsculas nos padrões\n"
+"  -l, --lex-compat        máxima compatibilidade com o lex original\n"
+"  -X, --posix-compat      máxima compatibilidade com o POSIX lex\n"
+"  -I, --interactive       criar analisador interactivo (o oposto de -B)\n"
+"      --yylineno          rastrear total de linhas em yylineno\n"
 
 #: src/main.c:1830
 msgid ""
@@ -416,6 +443,13 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"Código gerado:\n"
+"  -+,  --c++               gerar uma classe de analisador em C++\n"
+"  -Dmacro[=defn]           #define macro defn  (predefinição de defn é \"1\")\n"
+"  -e,  --emit=LANG         Especificar a linguagem-destino\n"
+"  -L,  --noline            suprimir directivas #line no analisador\n"
+"  -P,  --prefix=CADEIA     utilizar CADEIA como prefixo em vez de \"yy\"\n"
+"  -R,  --reentrant         gerar um analisador reentrante\n"
 
 #: src/main.c:1837
 msgid ""
@@ -425,6 +459,11 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      analisador para «Bison pure».\n"
+"       --bison-locations   incluir suporte a yylloc.\n"
+"       --stdinit           inicializar yyin/yyout em stdin/stdout\n"
+"       --nounistd          não incluir <unistd.h>\n"
+"       --noFUNÇÃO        não gerar uma FUNÇÃO particular\n"
 
 #: src/main.c:1844
 #, c-format
@@ -436,11 +475,17 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Diversas:\n"
+"  -c                      opção POSIX do-nothing\n"
+"  -n                      opção POSIX do-nothing\n"
+"  -?\n"
+"  -h, --help              produz esta mensagem de ajuda\n"
+"  -V, --version           relata a versão %s\n"
 
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "mau carácter \"%s\" detectado em check_char()"
+msgstr "mau carácter \"%s\" detectado em %s()"
 
 #: src/misc.c:121
 #, c-format
@@ -450,7 +495,7 @@ msgstr "o analisador requer bandeira -8 para usar o carácter %s"
 #: src/misc.c:227
 #, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr ""
+msgstr "o valor de \"%s\" não pode conter [ ou ]"
 
 #: src/misc.c:238
 #, c-format
@@ -473,9 +518,9 @@ msgstr ""
 "********** a começar o despejo de nfa com estado inicial %d\n"
 
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "máquina vazia em dupmachine()"
+msgstr "máquina vazia em %s()"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -488,9 +533,9 @@ msgid "Variable trailing context rule at line %d\n"
 msgstr "Regra variável de contexto final na linha %d\n"
 
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "má <condição inicial>: %s"
+msgstr "mau tipo de estado em %s()"
 
 #: src/nfa.c:598
 #, c-format
@@ -498,9 +543,9 @@ msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "regras de entrada muito complicadas (>= %d estados NFA)"
 
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "encontradas demasiadas transições em mkxtion()"
+msgstr "encontradas demasiadas transições em %s()"
 
 #: src/nfa.c:702
 #, c-format
@@ -521,31 +566,31 @@ msgstr "má lista de condição inicial"
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "O operador %s resulta num desempenho abaixo do ideal"
 
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "condição inicial %s declarada duas vezes"
+msgstr "todas as condições de início já têm regras %s"
 
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "erro de sintaxe: regra inválida"
 
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "má <condição inicial>: %s"
+msgstr "condição inicial %s não declarada"
 
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "nome definido duas vezes"
+msgstr "<%s> especificada duas vezes"
 
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "o contexto seguinte tornou-se variável devido à acção \"%s\" anterior"
 
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
@@ -560,63 +605,57 @@ msgstr "contexto final usado duas vezes"
 #. {2,5}, that sets how many times the
 #. pattern may repeat.
 #: src/parse.y:601 src/parse.y:612 src/parse.y:686 src/parse.y:697
-msgid ""
-"invalid repeat range in braces: the first number must not be larger than the "
-"second, and the second must be at least 1"
-msgstr ""
+msgid "invalid repeat range in braces: the first number must not be larger than the second, and the second must be at least 1"
+msgstr "intervalo de repetição inválido entre chavetas: o primeiro número não pode ser maior do que o segundo, e o segundo deve ser, pelo menos, 1"
 
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "o número de repetições entre chaves deve ser, pelo menos, 1"
 
 #: src/parse.y:857 src/parse.y:867
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"o intervalo de caracteres [%c-%c] é ambíguo num analisador que ignora "
-"maiúsculas"
+msgstr "o intervalo de caracteres [%c-%c] é ambíguo num analisador que ignora maiúsculas"
 
 #: src/parse.y:872
 msgid "negative range in character class"
 msgstr "intervalo negativo em classe de carácter"
 
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr "[:^lower:] é ambíguo num analisador que ignora maiúsculas"
+msgstr "[:^lower:] é ambíguo num analisador que não distingue maiúsculas de minúsculas"
 
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr "[:^upper:] é ambíguo num analisador que ignora maiúsculas"
+msgstr "[:^upper:] é ambíguo num analisador que não distingue maiúsculas de minúsculas"
 
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "múltiplas regras %s para a condição inicial %s"
 
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "aviso, %s"
 
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "Impossível alocar o buffer ao relatório %s"
 
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "Impossível alocar uma cópia da comparação"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "Linha de entrada muito grande\n"
 
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "directiva \"%top\" mal formada"
+msgstr "directiva \"%s\" mal formada"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -641,16 +680,16 @@ msgstr "Valor de definição para {%s} muito longo\n"
 
 #: src/scan.l:348
 msgid "incomplete name definition"
-msgstr "Definição de nome incompleta"
+msgstr "definição de nome incompleta"
 
 #: src/scan.l:490
 msgid "Option line too long\n"
 msgstr "Linha de opção muito longa\n"
 
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "%%opção não reconhecida: %s"
+msgstr "%s não reconhecida: %s"
 
 #: src/scan.l:731
 #, c-format
@@ -659,7 +698,7 @@ msgstr "definição {%s} indefinida"
 
 #: src/scan.l:794
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "parênteses desirmanados"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -672,11 +711,11 @@ msgstr "má <condição inicial>: %s"
 
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "falta uma aspa de fecho: a linha terminou dentro de uma cadeia entre aspas"
 
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "classe de caracteres não concluída: a linha terminou antes do ] de fecho"
 
 #: src/scan.l:892
 #, c-format
@@ -700,14 +739,14 @@ msgid "EOF encountered inside pattern"
 msgstr "EOF encontrado dentro de um padrão"
 
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "mau carácter: %s"
+msgstr "carácter inesperado: %s"
 
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "Impossível alocar %zu da pilha"
 
 #: src/scanopt.c:250
 #, c-format
@@ -741,19 +780,19 @@ msgstr "Erro desconhecido=(%d)\n"
 
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "não existe tal motor"
 
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "nome da propriedade sem fim ou demasiado longo"
 
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "limite de propriedade mal definido"
 
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "valor da propriedade sem fim ou demasiado longo"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -764,9 +803,9 @@ msgid "symbol table memory allocation failed"
 msgstr "falha ao alocar memória de tabela de símbolos"
 
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "nome definido duas vezes"
+msgstr "nome \"%s\" definido duas vezes"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -777,14 +816,21 @@ msgid "start condition %s declared twice"
 msgstr "condição inicial %s declarada duas vezes"
 
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "erro ao escrever ficheiro de saída %s"
+msgstr "erro ao escrever tabelas"
 
 #: src/yylex.c:58
-msgid ""
-"unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgid "unexpected end of file: the line that starts the rules section is missing"
+msgstr "fim inesperado do ficheiro: falta a linha que dá início à secção das regras"
+
+#~ msgid "Allocation of buffer for line directive failed"
+#~ msgstr "Falha ao alocar buffer para directiva de linha"
+
+#~ msgid "Allocation of buffer for m4 def failed"
+#~ msgstr "Falha ao alocar buffer para m4 def"
+
+#~ msgid "Allocation of buffer for m4 undef failed"
+#~ msgstr "Falha ao alocar buffer para m4 undef"
 
 #~ msgid ""
 #~ "\n"
@@ -865,8 +911,7 @@ msgstr ""
 #~ msgid "Could not write yynultrans_tbl"
 #~ msgstr "Impossível escrever yynultrans_tbl"
 
-#, fuzzy
-#~ msgid "Can't use --ctrl.reentrant or --bison-bridge with -l option"
+#~ msgid "Can't use --reentrant or --bison-bridge with -l option"
 #~ msgstr "Impossível usar --reentrant ou --bison-bridge com a opção -l"
 
 #~ msgid "-Cf and -CF are mutually exclusive"
@@ -874,6 +919,13 @@ msgstr ""
 
 #~ msgid "Can't use -+ with -CF option"
 #~ msgstr "Impossível usar -+ com a opção -CF"
+
+#~ msgid "Prefix cannot include '[' or ']'"
+#~ msgstr "O prefixo não pode incluir \"[\" ou \"]\""
+
+#, c-format
+#~ msgid "error creating header file %s"
+#~ msgstr "erro ao criar ficheiro de cabeçalho %s"
 
 #, c-format
 #~ msgid "%s version %s usage statistics:\n"
@@ -905,7 +957,7 @@ msgstr ""
 
 #, c-format
 #~ msgid "  Compressed tables always back-up\n"
-#~ msgstr "Tabelas comprimidas têm sempre segurança.\n"
+#~ msgstr "  Tabelas comprimidas têm sempre salvaguarda.\n"
 
 #, c-format
 #~ msgid "  Beginning-of-line patterns used\n"
@@ -925,9 +977,7 @@ msgstr ""
 
 #, c-format
 #~ msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-#~ msgstr ""
-#~ "  classes de carácter %d/%d necessárias %d/%d palavras de armazenamento, "
-#~ "%d reutilizadas\n"
+#~ msgstr "  classes de carácter %d/%d necessárias %d/%d palavras de armazenamento, %d reutilizadas\n"
 
 #, c-format
 #~ msgid "  %d state/nextstate pairs created\n"
@@ -986,17 +1036,18 @@ msgstr ""
 #~ msgstr "  %d entradas de tabela totais necessárias\n"
 
 #, c-format
-#~ msgid ""
-#~ "-l AT&T lex compatibility option entails a large performance penalty\n"
-#~ msgstr ""
-#~ "a opção de compatibilidade -l AT&T lex implica uma grande perda de "
-#~ "desempenho\n"
+#~ msgid "%s %s\n"
+#~ msgstr "%s %s\n"
+
+#, c-format
+#~ msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
+#~ msgstr "a opção de compatibilidade -l AT&T lex implica uma grande perda de desempenho\n"
 
 #, c-format
 #~ msgid "%option yylineno cannot be used with REJECT"
 #~ msgstr "a %opção yylineno não pode ser usada com REJECT"
 
-#, fuzzy, c-format
+#, c-format
 #~ msgid ""
 #~ "Generates programs that perform pattern-matching on text.\n"
 #~ "\n"
@@ -1016,21 +1067,18 @@ msgstr ""
 #~ "  -b, --backup            write backing-up information to %s\n"
 #~ "  -p, --perf-report       write performance report to stderr\n"
 #~ "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
-#~ "  -T, --env.trace             %s should run in env.trace mode\n"
+#~ "  -T, --trace             %s should run in trace mode\n"
 #~ "  -w, --nowarn            do not generate warnings\n"
 #~ "  -v, --verbose           write summary of scanner statistics to stdout\n"
-#~ "      --hex               use hexadecimal numbers instead of octal in "
-#~ "debug outputs\n"
+#~ "      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 #~ "\n"
 #~ "Files:\n"
 #~ "  -o, --outfile=FILE      specify output filename\n"
 #~ "  -S, --skel=FILE         specify skeleton file\n"
 #~ "  -t, --stdout            write scanner on stdout instead of %s\n"
 #~ "      --yyclass=NAME      name of C++ class\n"
-#~ "      --header-file=FILE   create a C header file in addition to the "
-#~ "scanner\n"
+#~ "      --header-file=FILE   create a C header file in addition to the scanner\n"
 #~ "      --tables-file[=FILE] write tables to FILE\n"
-#~ "      --backup-file=FILE  write backing-up information to FILE\n"
 #~ "\n"
 #~ "Scanner behavior:\n"
 #~ "  -7, --7bit              generate 7-bit scanner\n"
@@ -1045,11 +1093,10 @@ msgstr ""
 #~ "Generated code:\n"
 #~ "  -+,  --c++               generate C++ scanner class\n"
 #~ "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
-#~ "  -e,  --emit=LANG         Specify target language\n"
 #~ "  -L,  --noline            suppress #line directives in scanner\n"
 #~ "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
-#~ "  -R,  --reentrant         generate a reentrant scanner\n"
-#~ "       --bison-bridge      scanner for Bison pure parser.\n"
+#~ "  -R,  --reentrant         generate a reentrant C scanner\n"
+#~ "       --bison-bridge      scanner for bison pure parser.\n"
 #~ "       --bison-locations   include yylloc support.\n"
 #~ "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
 #~ "       --nounistd          do not include <unistd.h>\n"
@@ -1065,37 +1112,32 @@ msgstr ""
 #~ "Gera programas que realizam comparação de padrões em texto.\n"
 #~ "\n"
 #~ "Compressão de tabela:\n"
-#~ "  -Ca, --align      troca tabelas maiores para melhor alinhamento da "
-#~ "memória\n"
+#~ "  -Ca, --align      troca tabelas maiores para melhor alinhamento da memória\n"
 #~ "  -Ce, --ecs        constrói classes de equivalência\n"
 #~ "  -Cf               não comprime tabelas; usa representação -f\n"
 #~ "  -CF               não comprime tabelas; usa representação -F\n"
 #~ "  -Cm, --meta-ecs   constrói classes de meta-equivalência\n"
-#~ "  -Cr, --read       usa read() em vez de stdio para entrada do "
-#~ "analisador\n"
+#~ "  -Cr, --read       usa read() em vez de stdio para entrada do analisador\n"
 #~ "  -f, --full        gera analisador rápido e grande. Igual a -Cfr\n"
-#~ "  -F, --fast        usa representação de tabela alternativa. Igual a "
-#~ "-CFr\n"
+#~ "  -F, --fast        usa representação de tabela alternativa. Igual a -CFr\n"
 #~ "  -Cem              compressão predefinida (igual a --ecs --meta-ecs)\n"
 #~ "\n"
 #~ "Depuração:\n"
 #~ "  -d, --debug             activa modo de depuração no analisador\n"
-#~ "  -b, --backup            escreve informação de segurança em %s\n"
+#~ "  -b, --backup            escreve informação de salvaguarda em %s\n"
 #~ "  -p, --perf-report       escreve relatório de desempenho em stderr\n"
-#~ "  -s, --nodefault         suprime regra predefinida para texto não "
-#~ "comparado em ECHO\n"
-#~ "  -T, --trace             %s deve correr em modo de rasto\n"
+#~ "  -s, --nodefault         suprime regra predefinida para texto não comparado em ECHO\n"
+#~ "  -T, --trace             %s deve correr em modo de rastreio\n"
 #~ "  -w, --nowarn            não gera avisos\n"
-#~ "  -v, --verbose           escreve resumo das estatísticas do analisador "
-#~ "em stdout\n"
+#~ "  -v, --verbose           escreve resumo das estatísticas do analisador em stdout\n"
+#~ "      --hex               usa números hexadecimais em vez de octais em saídas de depuração\n"
 #~ "\n"
 #~ "Ficheiros:\n"
 #~ "  -o, --outfile=FICH      especifica o ficheiro de saída\n"
 #~ "  -S, --skel=FICH         especifica o ficheiro esqueleto\n"
 #~ "  -t, --stdout            escreve o analisador em stdout em vez de %s\n"
 #~ "      --yyclass=NOME      nome da classe C++\n"
-#~ "      --header-file=FICH   cria um ficheiro de cabeçalho C além do "
-#~ "analisador\n"
+#~ "      --header-file=FICH   cria um ficheiro de cabeçalho C além do analisador\n"
 #~ "      --tables-file[=FICH] escreve tabelas em FICH\n"
 #~ "\n"
 #~ "Comportamento do analisador:\n"
@@ -1110,16 +1152,13 @@ msgstr ""
 #~ "\n"
 #~ "Código gerado:\n"
 #~ "  -+,  --c++               gera classe de analisador C++\n"
-#~ "  -Dmacro[=defn]           #define macro defn  (defn predefinido é "
-#~ "\"1\")\n"
+#~ "  -Dmacro[=defn]           #define macro defn  (defn pré-definido é \"1\")\n"
 #~ "  -L,  --noline            suprime directivas #line no analisador\n"
 #~ "  -P,  --prefix=CADEIA     usa CADEIA como prefixo em vez de \"yy\"\n"
 #~ "  -R,  --reentrant         gera um analisador reentrant C\n"
 #~ "       --bison-bridge      analisador para processador de bison puro.\n"
 #~ "       --bison-locations   inclui suporte yylloc.\n"
 #~ "       --stdinit           inicializa yyin/yyout para stdin/stdout\n"
-#~ "       --noansi-definitions definições de funções de estilo antigo\n"
-#~ "       --noansi-prototypes  lista de parâmetros em protótipos\n"
 #~ "       --nounistd          não inclui <unistd.h>\n"
 #~ "       --noFUNÇÃO          não gera uma FUNÇÃO em particular\n"
 #~ "\n"
@@ -1129,6 +1168,13 @@ msgstr ""
 #~ "  -?\n"
 #~ "  -h, --help              mostra esta mensagem de ajuda\n"
 #~ "  -V, --version           mostra a versão %s\n"
+
+#~ msgid "allocation of sko_stack failed"
+#~ msgstr "falha ao alocar sko_stack"
+
+#, c-format
+#~ msgid "name \"%s\" ridiculously long"
+#~ msgstr "nome \"%s\" ridiculamente longo"
 
 #~ msgid "memory allocation failed in allocate_array()"
 #~ msgstr "falha ao alocar memória em allocate_array()"
@@ -1163,7 +1209,7 @@ msgstr ""
 #~ msgstr "aspa em falta"
 
 #~ msgid "premature EOF"
-#~ msgstr "EOF prematuro"
+#~ msgstr "eof prematuro"
 
 #, c-format
 #~ msgid "End Marker\n"
@@ -1172,27 +1218,6 @@ msgstr ""
 #, c-format
 #~ msgid "*Something Weird* - tok: %d val: %d\n"
 #~ msgstr "*Algo esquisito* - tok: %d val: %d\n"
-
-#~ msgid "Allocation of buffer for line directive failed"
-#~ msgstr "Falha ao alocar buffer para directiva de linha"
-
-#~ msgid "Allocation of buffer for m4 def failed"
-#~ msgstr "Falha ao alocar buffer para m4 def"
-
-#~ msgid "Allocation of buffer for m4 undef failed"
-#~ msgstr "Falha ao alocar buffer para m4 undef"
-
-#~ msgid "error creating header file %s"
-#~ msgstr "erro ao criar ficheiro de cabeçalho %s"
-
-#~ msgid "%s %s\n"
-#~ msgstr "%s %s\n"
-
-#~ msgid "allocation of sko_stack failed"
-#~ msgstr "falha ao alocar sko_stack"
-
-#~ msgid "name \"%s\" ridiculously long"
-#~ msgstr "nome \"%s\" ridiculamente longo"
 
 #~ msgid "dynamic memory failure in copy_string()"
 #~ msgstr "falha de memória dinâmica copy_string()"
