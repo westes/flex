@@ -1,0 +1,136 @@
+#! /bin/sh
+# make-release: make the release commits for a version.
+#
+# Usage: make-release [-C DIR] [-d DATE] [-r] VERSION
+#
+#   -C DIR   run in the git repository at DIR
+#   -d DATE  the release date as YYYY-MM-DD, default today in UTC
+#   -r       make a release candidate: VERSION must be X.Y.Z-rcN
+#
+# VERSION is X.Y.Z, for example the one tools/semver-next prints. The
+# top section of NEWS must have the placeholder header and have entries,
+# and the work tree must have no uncommitted changes to tracked files.
+#
+# Makes two commits on the current branch, each touching only the files
+# named:
+#
+#   release: vVERSION
+#       NEWS: the placeholder header becomes the version and date.
+#       configure.ac: AC_INIT gets the version.
+#   release: start development after vVERSION
+#       NEWS: a new placeholder section goes above the release.
+#
+# With -r, makes only the first commit, with the release candidate
+# version, and the NEWS header says [pre-release] instead of [stable].
+# The caller tags that commit and keeps it off master.
+#
+# The commits use the git identity that is configured. Prints the id of
+# each commit on standard output, one per line. Does not build, tag, sign
+# or push. If anything goes wrong it prints the problem on standard error,
+# puts the branch back where it started and exits 1.
+
+set -eu
+
+dir=.
+date=$(date -u +%Y-%m-%d)
+rc=0
+
+while getopts :C:d:rh OPTION; do
+    case $OPTION in
+        C) dir=$OPTARG ;;
+        d) date=$OPTARG ;;
+        r) rc=1 ;;
+        h) sed -n '2,/^$/p' "$0" | sed -e 's/^# \{0,1\}//'
+           exit 0 ;;
+        *) echo "Usage: $0 [-C DIR] [-d DATE] [-r] VERSION" >&2
+           exit 1 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 [-C DIR] [-d DATE] [-r] VERSION" >&2
+    exit 1
+fi
+version=$1
+
+fail() {
+    echo "make-release: $*" >&2
+    exit 1
+}
+
+tools=$(cd "$(dirname "$0")" && pwd)
+
+if [ "$rc" -eq 1 ]; then
+    printf '%s\n' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+-rc[0-9]+$' ||
+        fail "$version is not a release candidate version like 2.6.5-rc1"
+    kind=pre-release
+else
+    printf '%s\n' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' ||
+        fail "$version is not a version like 2.6.5 (use -r for a release candidate)"
+    kind=stable
+fi
+
+printf '%s\n' "$date" |
+    grep -Eq '^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$' ||
+    fail "$date is not a date like 2026-10-28"
+
+cd "$dir"
+
+[ -z "$(git status --porcelain --untracked-files=no)" ] ||
+    fail "the work tree has uncommitted changes"
+
+"$tools/check-release" -u || fail "the tree is not ready for a release"
+
+# From here on, put everything back if we stop early.
+start=$(git rev-parse HEAD)
+done_ok=0
+undo() {
+    if [ "$done_ok" -eq 0 ]; then
+        git reset -q --hard "$start"
+    fi
+}
+trap undo EXIT
+trap 'exit 1' HUP INT QUIT TERM
+
+release_header="* Noteworthy changes in release $version ($date) [$kind]"
+placeholder='* Noteworthy changes in release  ?.? (????-??-??) [?]'
+
+# Replace the first header line in NEWS, and nothing else.
+awk -v header="$release_header" '
+    !done && /^\* Noteworthy changes in release/ { print header; done = 1; next }
+    { print }' NEWS >NEWS.new
+mv NEWS.new NEWS
+
+sed -e "s/^\(AC_INIT(\[[^]]*\],\)\[[^]]*\]/\1[$version]/" configure.ac >configure.ac.new
+cat configure.ac.new >configure.ac
+rm configure.ac.new
+
+changed=$(git diff --name-only | tr '\n' ' ')
+[ "$changed" = "NEWS configure.ac " ] ||
+    fail "expected to change configure.ac and NEWS, but changed: $changed"
+
+"$tools/check-release" -t "v$version" || fail "the release does not pass check-release"
+
+git add NEWS configure.ac
+git commit -q -m "release: v$version"
+ids=$(git rev-parse HEAD)
+
+if [ "$rc" -eq 0 ]; then
+    awk -v placeholder="$placeholder" -v header="$release_header" '
+        !done && $0 == header { print placeholder; print ""; done = 1 }
+        { print }' NEWS >NEWS.new
+    mv NEWS.new NEWS
+
+    changed=$(git diff --name-only | tr '\n' ' ')
+    [ "$changed" = "NEWS " ] ||
+        fail "expected to change NEWS only, but changed: $changed"
+
+    git add NEWS
+    git commit -q -m "release: start development after v$version"
+    ids="$ids
+$(git rev-parse HEAD)"
+fi
+
+done_ok=1
+printf '%s\n' "$ids"
