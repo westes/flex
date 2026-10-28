@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the flex package.
 #
 # Viktor Shepel <shepelvictor@bigmir.net>, 2017.
-# Yuri Chornoivan <yurchor@ukr.net>, 2017, 2022.
+# Yuri Chornoivan <yurchor@ukr.net>, 2017, 2022, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: flex 2.6.4\n"
+"Project-Id-Version: flex 2.6.5-rc1\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-10-27 13:37-0400\n"
-"PO-Revision-Date: 2022-01-03 11:33+0200\n"
+"POT-Creation-Date: 2026-10-27 14:05-0400\n"
+"PO-Revision-Date: 2026-10-28 16:40+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -17,9 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 20.12.0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 25.12.1\n"
 
 #: src/buf.c:63
 msgid "Allocation of buffer to print string failed"
@@ -27,7 +26,7 @@ msgstr "Не вдалось виділити буфер для рядка, що 
 
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "внутрішня помилка: спроба додати символ до неостаннього ccl.\n"
 
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
@@ -54,30 +53,25 @@ msgstr "небезпечний замикаючий контекст"
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " номера рядків асоційованого правила:"
+msgstr "номери рядків пов'язаного правила:"
 
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " out-переходи: "
+msgstr "out-переходи: "
 
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" jam-переходи: EOF "
+msgstr "jam-переходи:"
 
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "помилка при перевірці на цілісність у epsclosure()"
+msgstr "помилка при перевірці на цілісність у %s()"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
@@ -89,39 +83,39 @@ msgstr "неможливо створити унікальний стан end_of
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "Неможливо записати ecstbl"
+msgstr "Не вдалося записати %s"
 
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "виявлено невірний символ переходу в sympartition()"
+msgstr "виявлено невірний символ переходу у %s()"
 
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "помилка виділення пам'яті у xstrdup()"
+msgstr "помилка розміщення у пам'яті у %s()"
 
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "помилка pipe"
 
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "невдале розгалуження"
 
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "помилка %s"
 
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "помилка виконання %s"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -134,64 +128,63 @@ msgid "error closing output file %s"
 msgstr "помилка закриття вихідного файла %s"
 
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s: фатальна внутрішня помилка, %s\n"
+msgstr "%s: фатальна внутрішня помилка у %s:%d (%s): %s\n"
 
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s: фатальна внутрішня помилка, %s\n"
+msgstr "%s: фатальна внутрішня помилка у %s:%d %s\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
 msgstr "неможливо застосувати правило"
 
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr ""
-"вказано параметр -s, але правило за замовчуванням може бути застосоване"
+msgstr "вказано параметр %s, але правило за замовчуванням може бути застосоване"
 
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "неможливо відкрити %s"
+msgstr "неможливо відкрити %s: %s"
 
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "Неможливо використовувати -+ з параметром -l"
+msgstr "Неможливо використовувати %s з параметром %s"
 
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "Неможливо використовувати -f або -F з параметром -l"
+msgstr "Неможливо використовувати %s або %s з параметром %s"
 
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "Параметри -Cf/-CF і -Cm разом не мають сенсу"
+msgstr "Параметри %s і %s разом не мають сенсу"
 
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "Параметри -Cf/-CF і -I несумісні"
+msgstr "Параметри %s і %s несумісні"
 
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr "Параметри -Cf/-CF несумісні з режимом lex-compatibility"
+msgstr "-%s несумісний з режимом сумісності з lex"
 
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "Параметри -+ і --reentrant є взаємовиключними."
+msgstr "Параметри %s і %s не можна використовувати одночасно."
 
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "%array несумісний з параметром -+"
+msgstr "%s несумісний з параметром %s"
 
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
@@ -203,9 +196,9 @@ msgid "could not create %s"
 msgstr "неможливо створити %s"
 
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr "%option yyclass має сенс тільки для сканерів C++"
+msgstr "%s має сенс тільки для сканерів C++"
 
 #: src/main.c:480
 #, c-format
@@ -228,7 +221,7 @@ msgid "No backing up.\n"
 msgstr "Резервне копіювання вимкнено.\n"
 
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
 msgstr[0] "резервне копіювання %d (недопустимих) станів.\n"
@@ -261,9 +254,9 @@ msgid "Try `%s --help' for more information.\n"
 msgstr "Спробуйте «%s --help» для отримання більш докладного опису.\n"
 
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "невідоме значення «%c» для параметру -C"
+msgstr "невідоме значення %s для параметра «%c»"
 
 #: src/main.c:1222
 msgid "fatal parse error"
@@ -284,35 +277,33 @@ msgid "could not create backing-up info file %s"
 msgstr "неможливо створити резервну копію інформаційного файла %s"
 
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
-msgstr "і також може бути істинним джерелом проблем з продуктивністю\n"
+msgstr ""
+"Параметр сумісності з lex AT&T (%s) призводить до значного зниження продуктивності\n"
+" і також може бути істинним джерелом проблем з продуктивністю\n"
 
 #: src/main.c:1381
-#, fuzzy, c-format
-msgid ""
-"%s entails a performance penalty ONLY on rules that can match newline "
-"characters\n"
-msgstr ""
-"%%option yylineno спричиняе значне зниження продуктивності ТІЛЬКИ для "
-"правил, котрі описують символи нового рядка\n"
+#, c-format
+msgid "%s entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "%s спричиняє значне зниження продуктивності ТІЛЬКИ для правил, котрі описують символи нового рядка\n"
 
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "-I (інтерактивний) спричиняе незначне зниження продуктивності\n"
+msgstr "%s (інтерактивний) спричиняє незначне зниження продуктивності\n"
 
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore() спричиняе незначне зниження продуктивності\n"
+msgstr "%s спричиняє незначне зниження продуктивності\n"
 
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT спричиняе значне зниження продуктивності\n"
+msgstr "%s спричиняє значне зниження продуктивності\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -322,26 +313,22 @@ msgstr "REJECT спричиняе значне зниження продукти
 #: src/main.c:1409
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
-"Правила котрі мають замикаючий контекст змінної довжини значно знижують "
-"продуктивність\n"
+msgstr "Правила котрі мають замикаючий контекст змінної довжини значно знижують продуктивність\n"
 
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "REJECT не може бути використано разом з -f або -F"
+msgstr "%s не може бути використано разом з %s або %s"
 
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "REJECT не може бути використано разом з -f або -F"
+msgstr "%s не можна використовувати разом з %s"
 
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr ""
-"Правила котрі мають замикаючий контекст змінної довжини не можуть бути "
-"використані з -f or -F"
+msgstr "правила, які мають замикаючий контекст змінної довжини не можуть бути використані з %s або %s"
 
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
@@ -354,7 +341,7 @@ msgstr "Використання: %s [ПАРАМЕТРИ] [ФАЙЛ]…\n"
 
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "Створює програми, які виконують пошук у тексті за взірцем.\n"
 
 #: src/main.c:1784
 msgid ""
@@ -369,6 +356,16 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"Стискання таблиці:\n"
+"  -Ca, --align      пожертвувати більшими таблицями заради кращого вирівнювання в пам’яті\n"
+"  -Ce, --ecs        побудувати класи еквівалентності\n"
+"  -Cf               не стискати таблиці; використати представлення -f\n"
+"  -CF               не стискати таблиці; використати представлення -F\n"
+"  -Cm, --meta-ecs   побудувати класи метаеквівалентності\n"
+"  -Cr, --read       використати read() замість stdio для вхідних даних сканера\n"
+"  -f, --full        створити швидкий, великий сканер. Те саме, що і -Cfr\n"
+"  -F, --fast        використати альтернативне представлення таблиці. Те саме, що і -CFr\n"
+"  -Cem              типове представлення (те саме, що і --ecs --meta-ecs)\n"
 
 #: src/main.c:1796
 #, c-format
@@ -381,9 +378,17 @@ msgid ""
 "  -T, --trace             %s should run in trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
-"      --hex               use hexadecimal numbers instead of octal in debug "
-"outputs\n"
+"      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 msgstr ""
+"Діагностика:\n"
+"  -d, --debug             увімкнути у сканері режим діагностики\n"
+"  -b, --backup            записати резервні відомості до %s\n"
+"  -p, --perf-report       записати звіт щодо швидкодії до stderr\n"
+"  -s, --nodefault         придушити типове правило для ПОВТОРЕННЯ невідповідного тексту\n"
+"  -T, --trace             %s має запускатися у режимі трасування\n"
+"  -w, --nowarn            не створювати попереджень\n"
+"  -v, --verbose           записати резюме статистики сканера до stdout\n"
+"      --hex               використати шістнадцяткові числа замість вісімкових у діагностичному виведенні\n"
 
 #: src/main.c:1808
 #, c-format
@@ -393,11 +398,18 @@ msgid ""
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the "
-"scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"Файли:\n"
+"  -o, --outfile=ФАЙЛ      вказати назву файла результатів\n"
+"  -S, --skel=ФАЙЛ         вказати базовий файл\n"
+"  -t, --stdout            записати сканер до stdout, а не до %s\n"
+"      --yyclass=НАЗВА     вказати назву класу C++\n"
+"      --header-file=ФАЙЛ   створити файл заголовка C на додачу до сканера\n"
+"      --tables-file[=ФАЙЛ] записати таблиці до ФАЙЛа\n"
+"      --backup-file=ФАЙЛ  записати резервні відомості до файла ФАЙЛ\n"
 
 #: src/main.c:1819
 msgid ""
@@ -411,6 +423,15 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"Поведінка сканера:\n"
+"  -7, --7bit              створити 7-бітовий сканер\n"
+"  -8, --8bit              створити 8-бітовий сканер\n"
+"  -B, --batch             створити пакетний сканер (протилежне до -I)\n"
+"  -i, --case-insensitive  ігнорувати регістр символів у взірцях\n"
+"  -l, --lex-compat        максимальна сумісність із оригінальним lex\n"
+"  -X, --posix-compat      максимальна сумісність з lex з POSIX\n"
+"  -I, --interactive       створити інтерактивний сканер (протилежне до -B)\n"
+"      --yylineno          стежити за кількістю рядків у yylineno\n"
 
 #: src/main.c:1830
 msgid ""
@@ -422,6 +443,13 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"Створений код:\n"
+"  -+,  --c++               створити клас сканера C++\n"
+"  -Dmacro[=defn]           #define макрос defn  (типовим defn є '1')\n"
+"  -e,  --emit=LANG         вказати мову призначення\n"
+"  -L,  --noline            придушити інструкції #line у сканері\n"
+"  -P,  --prefix=РЯДОК      використати РЯДОК як префікс замість \"yy\"\n"
+"  -R,  --reentrant         створити сканер із повторним входом\n"
 
 #: src/main.c:1837
 msgid ""
@@ -431,6 +459,11 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      сканер для чистого обробника Bison.\n"
+"       --bison-locations   включити підтримку yylloc.\n"
+"       --stdinit           ініціалізувати yyin/yyout у stdin/stdout\n"
+"       --nounistd          не включати <unistd.h>\n"
+"       --noФУНКЦІЯ         не створювати певну ФУНКЦІЮ\n"
 
 #: src/main.c:1844
 #, c-format
@@ -442,11 +475,17 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Інше:\n"
+"  -c                      параметр do-nothing POSIX\n"
+"  -n                      параметр do-nothing POSIX\n"
+"  -?\n"
+"  -h, --help              вивести це довідкове повідомлення\n"
+"  -V, --version           вивести версію %s\n"
 
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "check_char() виявив недопустимий символ «%s»"
+msgstr "помилковий символ «%s» виявлено у %s()"
 
 #: src/misc.c:121
 #, c-format
@@ -454,9 +493,9 @@ msgid "scanner requires -8 flag to use the character %s"
 msgstr "для використання символу %s сканер потребує опцію -8"
 
 #: src/misc.c:227
-#, fuzzy, c-format
+#, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr "Префікс не може містити символи «[» або «]»"
+msgstr "значення «%s» не повинно містити «[» або «]»"
 
 #: src/misc.c:238
 #, c-format
@@ -479,9 +518,9 @@ msgstr ""
 "********** початок дампу НСА з початковим станом %d\n"
 
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "порожній автомат у dupmachine()"
+msgstr "помилкова машина у %s()"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -494,9 +533,9 @@ msgid "Variable trailing context rule at line %d\n"
 msgstr "Правило із замикаючим контекстом змінної довжини у стрічці %d\n"
 
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "невірно сформованана <умова, що активує правило>: %s"
+msgstr "помилковий тип стану у %s()"
 
 #: src/nfa.c:598
 #, c-format
@@ -504,9 +543,9 @@ msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "вхідні правила занадто складні (>= %d станів НСА)"
 
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "знайдено занадто багато переходів у mkxtion()"
+msgstr "знайдено забагато переходів у %s()"
 
 #: src/nfa.c:702
 #, c-format
@@ -527,31 +566,31 @@ msgstr "невірний список початкових умов"
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "Оператор %s призведе до неоптимальної швидкодії"
 
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "початкова умова %s описана двічі"
+msgstr "усі початкові умови вже мають правила %s"
 
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "синтаксична помилка: не правило є некоректним"
 
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "невірно сформованана <умова, що активує правило>: %s"
+msgstr "неоголошений початок умови %s"
 
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "ім'я визначено двічі"
+msgstr "<%s> вказано двічі"
 
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "кінцевий контекст став контекстом змінної довжини через попередню дію «%s»"
 
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
@@ -566,69 +605,57 @@ msgstr "замикаючий контекст використано двічі"
 #. {2,5}, that sets how many times the
 #. pattern may repeat.
 #: src/parse.y:601 src/parse.y:612 src/parse.y:686 src/parse.y:697
-msgid ""
-"invalid repeat range in braces: the first number must not be larger than the "
-"second, and the second must be at least 1"
-msgstr ""
+msgid "invalid repeat range in braces: the first number must not be larger than the second, and the second must be at least 1"
+msgstr "некоректний діапазон повторень у дужках: перше число не повинно бути більшим за друге, а друге має бути рівним щонайменше 1"
 
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "кількість повторень у дужках має бути рівною принаймні 1"
 
 #: src/parse.y:857 src/parse.y:867
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"використання діапазону символів [%c-%c] є двозначним для сканера, що не "
-"чутливий до регістру символів"
+msgstr "використання діапазону символів [%c-%c] є двозначним для сканера, що не чутливий до регістру символів"
 
 #: src/parse.y:872
 msgid "negative range in character class"
-msgstr ""
-"символьний клас описано діапазоном, перший елемент котрого більший за "
-"останній"
+msgstr "символьний клас описано діапазоном, перший елемент котрого більший за останній"
 
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"використання [:^lower:] є невизначеним для сканера, що не чутливий до "
-"регістру символів"
+msgstr "використання [:^lower:] є невизначеним для сканера, що не чутливий до регістру символів"
 
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"використання [:^upper:] є невизначеним для сканера, що не чутливий до "
-"регістру символів"
+msgstr "використання [:^upper:] є невизначеним для сканера, що не чутливий до регістру символів"
 
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "декілька правил %s для початку умови %s"
 
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "попередження: %s"
 
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "Не вдалося розмістити у пам'яті буфер для звіту %s"
 
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "Не вдалося розмістити у пам'яті копію відповідника"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "Занадто довгий вхідний рядок\n"
 
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "нерозпізнана директива «%top»"
+msgstr "помилкове форматування інструкції «%s»"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -660,9 +687,9 @@ msgid "Option line too long\n"
 msgstr "Занадто довгий параметр\n"
 
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "нерозпізнаний %%option: %s"
+msgstr "нерозпізнаний %s: %s"
 
 #: src/scan.l:731
 #, c-format
@@ -680,15 +707,15 @@ msgstr "незбалансовані круглі дужки"
 #: src/scan.l:813
 #, c-format
 msgid "bad <start condition>: %s"
-msgstr "невірно сформованана <умова, що активує правило>: %s"
+msgstr "помилкова <початкова умова>: %s"
 
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "пропущено завершальну позначку лапок: рядок завершився всередині рядка у лапках"
 
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "незавершений клас символів: рядок завершився до завершальної ]"
 
 #: src/scan.l:892
 #, c-format
@@ -712,14 +739,14 @@ msgid "EOF encountered inside pattern"
 msgstr "знайдено EOF всередині шаблону, що задає правило"
 
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
 msgstr "неочікуваний символ: %s"
 
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "Не вдалося розмістити %zu стека"
 
 #: src/scanopt.c:250
 #, c-format
@@ -753,19 +780,19 @@ msgstr "Невідома помилка=(%d)\n"
 
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "такого модуля немає"
 
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "незавершена або надто довга назва властивості"
 
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "нечітка межа рядка властивості"
 
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "незавершене або надто довге значення властивості"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -776,9 +803,9 @@ msgid "symbol table memory allocation failed"
 msgstr "помилка виділення пам'яті для таблиці символів"
 
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "ім'я визначено двічі"
+msgstr "назву «%s» визначено двічі"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -789,14 +816,21 @@ msgid "start condition %s declared twice"
 msgstr "початкова умова %s описана двічі"
 
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "помилка запису у вихідний файл %s"
+msgstr "помилка під час записування таблиць"
 
 #: src/yylex.c:58
-msgid ""
-"unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgid "unexpected end of file: the line that starts the rules section is missing"
+msgstr "неочікуваний кінець файла: пропущено рядок, який починає розділ правил"
+
+#~ msgid "Allocation of buffer for line directive failed"
+#~ msgstr "Не вдалось виділити буфер для рядкової директиви"
+
+#~ msgid "Allocation of buffer for m4 def failed"
+#~ msgstr "Не вдалось виділити буфер для m4 def"
+
+#~ msgid "Allocation of buffer for m4 undef failed"
+#~ msgstr "Не вдалось виділити буфер для m4 undef"
 
 #~ msgid ""
 #~ "\n"
@@ -877,16 +911,21 @@ msgstr ""
 #~ msgid "Could not write yynultrans_tbl"
 #~ msgstr "Неможливо записати yynultrans_tbl"
 
-#, fuzzy
-#~ msgid "Can't use --ctrl.reentrant or --bison-bridge with -l option"
-#~ msgstr ""
-#~ "Неможливо використовувати --reentrant або --bison-bridge з параметром -l"
+#~ msgid "Can't use --reentrant or --bison-bridge with -l option"
+#~ msgstr "Неможливо використовувати --reentrant або --bison-bridge з параметром -l"
 
 #~ msgid "-Cf and -CF are mutually exclusive"
 #~ msgstr "Параметри -Cf і -CF є взаємовиключними"
 
 #~ msgid "Can't use -+ with -CF option"
 #~ msgstr "Неможливо використовувати -+ з параметром -CF"
+
+#~ msgid "Prefix cannot include '[' or ']'"
+#~ msgstr "Префікс не може містити «[» або «]»"
+
+#, c-format
+#~ msgid "error creating header file %s"
+#~ msgstr "помилка створення файла-заголовку %s"
 
 #, c-format
 #~ msgid "%s version %s usage statistics:\n"
@@ -938,9 +977,7 @@ msgstr ""
 
 #, c-format
 #~ msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-#~ msgstr ""
-#~ "  %d/%d символьних класів потребують %d/%d слів для зберігання, %d "
-#~ "використано вдруге\n"
+#~ msgstr "  %d/%d символьних класів потребують %d/%d слів для зберігання, %d використано вдруге\n"
 
 #, c-format
 #~ msgid "  %d state/nextstate pairs created\n"
@@ -998,21 +1035,19 @@ msgstr ""
 #~ msgid "  %d total table entries needed\n"
 #~ msgstr "  всього потрібно %d елементів таблиці\n"
 
-#~ msgid "Prefix cannot include '[' or ']'"
-#~ msgstr "Префікс не може містити «[» або «]»"
+#, c-format
+#~ msgid "%s %s\n"
+#~ msgstr "%s %s\n"
 
 #, c-format
-#~ msgid ""
-#~ "-l AT&T lex compatibility option entails a large performance penalty\n"
-#~ msgstr ""
-#~ "Параметр -l сумісності з AT&T lex спричиняє значне зниження "
-#~ "продуктивності\n"
+#~ msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
+#~ msgstr "Параметр -l сумісності з AT&T lex спричиняє значне зниження продуктивності\n"
 
 #, c-format
 #~ msgid "%option yylineno cannot be used with REJECT"
 #~ msgstr "%option yylineno не може бути використано з REJECT"
 
-#, fuzzy, c-format
+#, c-format
 #~ msgid ""
 #~ "Generates programs that perform pattern-matching on text.\n"
 #~ "\n"
@@ -1032,21 +1067,18 @@ msgstr ""
 #~ "  -b, --backup            write backing-up information to %s\n"
 #~ "  -p, --perf-report       write performance report to stderr\n"
 #~ "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
-#~ "  -T, --env.trace             %s should run in env.trace mode\n"
+#~ "  -T, --trace             %s should run in trace mode\n"
 #~ "  -w, --nowarn            do not generate warnings\n"
 #~ "  -v, --verbose           write summary of scanner statistics to stdout\n"
-#~ "      --hex               use hexadecimal numbers instead of octal in "
-#~ "debug outputs\n"
+#~ "      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 #~ "\n"
 #~ "Files:\n"
 #~ "  -o, --outfile=FILE      specify output filename\n"
 #~ "  -S, --skel=FILE         specify skeleton file\n"
 #~ "  -t, --stdout            write scanner on stdout instead of %s\n"
 #~ "      --yyclass=NAME      name of C++ class\n"
-#~ "      --header-file=FILE   create a C header file in addition to the "
-#~ "scanner\n"
+#~ "      --header-file=FILE   create a C header file in addition to the scanner\n"
 #~ "      --tables-file[=FILE] write tables to FILE\n"
-#~ "      --backup-file=FILE  write backing-up information to FILE\n"
 #~ "\n"
 #~ "Scanner behavior:\n"
 #~ "  -7, --7bit              generate 7-bit scanner\n"
@@ -1061,11 +1093,10 @@ msgstr ""
 #~ "Generated code:\n"
 #~ "  -+,  --c++               generate C++ scanner class\n"
 #~ "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
-#~ "  -e,  --emit=LANG         Specify target language\n"
 #~ "  -L,  --noline            suppress #line directives in scanner\n"
 #~ "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
-#~ "  -R,  --reentrant         generate a reentrant scanner\n"
-#~ "       --bison-bridge      scanner for Bison pure parser.\n"
+#~ "  -R,  --reentrant         generate a reentrant C scanner\n"
+#~ "       --bison-bridge      scanner for bison pure parser.\n"
 #~ "       --bison-locations   include yylloc support.\n"
 #~ "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
 #~ "       --nounistd          do not include <unistd.h>\n"
@@ -1084,10 +1115,8 @@ msgstr ""
 #~ "  -Ca, --align       вирівняти таблиці у пам'яті збільшивши розмір\n"
 #~ "                     їх елементів\n"
 #~ "  -Ce, --ecs         створювати класи еквівалентності\n"
-#~ "  -Cf                не стискати таблиці; використовувати -f "
-#~ "представлення\n"
-#~ "  -CF                не стискати таблиці; використовувати -F "
-#~ "представлення\n"
+#~ "  -Cf                не стискати таблиці; використовувати -f представлення\n"
+#~ "  -CF                не стискати таблиці; використовувати -F представлення\n"
 #~ "  -Cm, --meta-ecs    створювати класи мета-еквівалентності\n"
 #~ "  -Cr, --read        використати read() замість stdio як\n"
 #~ "                     вхідні дані сканера\n"
@@ -1105,10 +1134,8 @@ msgstr ""
 #~ "                          що не збігається з жодним правилом\n"
 #~ "  -T, --trace             %s повинен запускатися у режимі трасування\n"
 #~ "  -w, --nowarn            не видавати попереджень\n"
-#~ "  -v, --verbose           записати підсумкову статистику сканера до "
-#~ "stdout\n"
-#~ "      --hex               шістнадцяткові числа замість вісімкових у "
-#~ "діагностиці\n"
+#~ "  -v, --verbose           записати підсумкову статистику сканера до stdout\n"
+#~ "      --hex               шістнадцяткові числа замість вісімкових у діагностиці\n"
 #~ "\n"
 #~ "Файли:\n"
 #~ "  -o, --outfile=ФАЙЛ        вказати ім'я вихідного файла\n"
@@ -1132,8 +1159,7 @@ msgstr ""
 #~ "\n"
 #~ "Генерація коду:\n"
 #~ "  -+,  --c++                створити C++ клас сканера\n"
-#~ "  -Dmacro[=defn]            #define macro defn (за замовчуванням "
-#~ "defn='1')\n"
+#~ "  -Dmacro[=defn]            #define macro defn (за замовчуванням defn='1')\n"
 #~ "  -L,  --noline             не створювати #line директиви для сканера\n"
 #~ "  -P,  --prefix=РЯДОК       використати РЯДОК як префікс замість «yy»\n"
 #~ "  -R,  --reentrant          генерувати реентерабельний C-сканер\n"
@@ -1149,6 +1175,13 @@ msgstr ""
 #~ "  -?\n"
 #~ "  -h, --help              показати цю довідку\n"
 #~ "  -V, --version           показати версію %s\n"
+
+#~ msgid "allocation of sko_stack failed"
+#~ msgstr "не вдалось отримати пам’ять під sko_stack"
+
+#, c-format
+#~ msgid "name \"%s\" ridiculously long"
+#~ msgstr "ім'я «%s» занадто довге"
 
 #~ msgid "memory allocation failed in allocate_array()"
 #~ msgstr "помилка виділення пам'яті у allocate_array()"
@@ -1192,27 +1225,6 @@ msgstr ""
 #, c-format
 #~ msgid "*Something Weird* - tok: %d val: %d\n"
 #~ msgstr "*Щось не так* — tok: %d val: %d\n"
-
-#~ msgid "Allocation of buffer for line directive failed"
-#~ msgstr "Не вдалось виділити буфер для рядкової директиви"
-
-#~ msgid "Allocation of buffer for m4 def failed"
-#~ msgstr "Не вдалось виділити буфер для m4 def"
-
-#~ msgid "Allocation of buffer for m4 undef failed"
-#~ msgstr "Не вдалось виділити буфер для m4 undef"
-
-#~ msgid "error creating header file %s"
-#~ msgstr "помилка створення файла-заголовку %s"
-
-#~ msgid "%s %s\n"
-#~ msgstr "%s %s\n"
-
-#~ msgid "allocation of sko_stack failed"
-#~ msgstr "не вдалось отримати пам’ять під sko_stack"
-
-#~ msgid "name \"%s\" ridiculously long"
-#~ msgstr "ім'я «%s» занадто довге"
 
 #~ msgid "dynamic memory failure in copy_string()"
 #~ msgstr "помилка під час роботи з динамічною пам’яттю у copy_string()"
