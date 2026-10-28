@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>flex, the fast lexical analyzer generator</title>
+<meta name="description" content="flex generates scanners: programs that recognize lexical patterns in text.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header>
+<h1>flex</h1>
+<p>The fast lexical analyzer generator. Current version: @VERSION@.</p>
+</header>
+
+<nav aria-label="Site">
+<ul>
+<li><a href="manual/">Manual (one page per section)</a></li>
+<li><a href="manual-single.html">Manual (everything on one page)</a></li>
+<li><a href="https://github.com/westes/flex/releases">Downloads</a></li>
+<li><a href="https://github.com/westes/flex">Source code</a></li>
+</ul>
+</nav>
+
+<main id="main">
+
+<h2>What flex is</h2>
+<p>
+flex is a tool for generating scanners. A scanner is a program that
+recognizes lexical patterns in text. You describe the patterns as
+regular expressions, and attach a piece of code to each one. flex reads
+that description and writes a source file, normally in C, that defines
+a function called <code>yylex()</code>. Compile that file and you have a
+scanner. Whenever it finds text matching one of your patterns, it runs
+the code you attached to that pattern.
+</p>
+
+<h2>A small example</h2>
+<p>
+This flex input copies its input to its output, replacing each
+occurrence of the word <code>username</code> with the name of the
+person running the program:
+</p>
+<pre><code>%%
+username    printf( "%s", getlogin() );</code></pre>
+<p>
+Any text that no rule matches is copied through unchanged, so one rule
+is all it takes.
+</p>
+
+<h2>Why you might want it</h2>
+<p>
+Splitting text into meaningful pieces is the first step in many
+programs. Compilers and interpreters do it to turn source code into
+words, numbers and symbols before they work out what the program means.
+The same job comes up in programs that read configuration files, log
+files and data formats. Writing that code by hand is slow and easy to
+get wrong. With flex you write only the patterns and what to do when
+each one matches.
+</p>
+<p>
+flex scanners can be used with a parser written for yacc or bison, the
+usual way to build a compiler front end. flex is a rewrite of the
+traditional Unix <code>lex</code> tool and is compliant with the POSIX
+specification for it. The manual lists the places where flex and the
+original <code>lex</code> differ.
+</p>
+
+<h2>Where to go next</h2>
+<ul>
+<li>The <a href="manual/">manual</a> starts with a short tour and
+covers every feature. If you prefer to search a whole document at
+once, use the <a href="manual-single.html">single-page version</a>.</li>
+<li>Source releases are on the
+<a href="https://github.com/westes/flex/releases">GitHub releases page</a>.
+The code is kept in
+<a href="https://github.com/westes/flex">Git on GitHub</a>.</li>
+<li>Report bugs and send patches through GitHub's
+<a href="https://github.com/westes/flex/issues">issues</a> and
+<a href="https://github.com/westes/flex/pulls">pull requests</a>.</li>
+<li>There are three mailing lists, hosted at SourceForge:
+flex-announce for release announcements, flex-help for questions about
+using flex, and flex-devel for discussion of flex itself. Posting is
+allowed only from subscribed addresses. See the
+<a href="https://sourceforge.net/p/flex/mailman/">list archive and
+subscription page</a>.</li>
+</ul>
+
+</main>
+
+<footer>
+<p>
+flex is free software, distributed under a BSD-style license. See the
+<a href="https://github.com/westes/flex/blob/master/COPYING">COPYING</a>
+file for the terms.
+</p>
+</footer>
+</body>
+</html>

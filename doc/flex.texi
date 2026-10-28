@@ -67,7 +67,7 @@ PURPOSE.
 @end titlepage
 @contents
 @ifnottex
-@node Top, Copyright, (dir), (dir)
+@node Top
 @top flex
 
 This manual describes @code{flex}, a tool for generating programs that

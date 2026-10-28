@@ -9,6 +9,11 @@ lexical patterns in text.
 The flex codebase is kept in
 [Git on GitHub.](https://github.com/westes/flex) Source releases of flex with some intermediate files already built can be found on [the github releases page.](https://github.com/westes/flex/releases)
 
+General information about flex is at <https://westes.github.io/flex/>.
+The manual is at <https://westes.github.io/flex/manual/>, with the whole
+manual on a single page at
+<https://westes.github.io/flex/manual-single.html>.
+
 Use GitHub's [issues](https://github.com/westes/flex/issues) and
 [pull request](https://github.com/westes/flex) features to file bugs
 and submit patches.
