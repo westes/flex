@@ -25,6 +25,6 @@ jobs:
     - name: make
       run: make
     - name: make check
-      run: make check
+      run: make check VERBOSE=1
     - name: make distcheck
       run: make distcheck
