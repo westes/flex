@@ -124,8 +124,10 @@ void backend_by_name(const char *name)
 	ctrl.traceline_template = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_TEMPLATE"));
 	ctrl.have_state_entry_format = boneseeker("m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]]");
 	prefix_property = skel_property("M4_PROPERTY_PREFIX");
-	if (prefix_property != NULL)
+	if (prefix_property != NULL) {
+		free(ctrl.prefix);
 		ctrl.prefix = xstrdup(prefix_property);
+	}
 	flex_init_regex(ctrl.traceline_re);
 }
 
