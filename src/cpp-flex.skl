@@ -3352,9 +3352,13 @@ m4_ifdef([[M4_MODE_C_ONLY]], [[
  */
 yybuffer yy_scan_string YYFARGS1( const char *, yystr)
 {
+	size_t len = strlen( yystr );
 	m4_dnl M4_YY_DECL_GUTS_VAR();
 
-	return yy_scan_bytes( yystr, (int) strlen(yystr) M4_YY_CALL_LAST_ARG);
+	if ( (size_t) (int) len != len ) {
+		YY_FATAL_ERROR( "string too long for yy_scan_string()" );
+	}
+	return yy_scan_bytes( yystr, (int) len M4_YY_CALL_LAST_ARG);
 }
 ]])
 ]])
@@ -3377,8 +3381,11 @@ yybuffer yy_scan_bytes  YYFARGS2( const char *,yybytes, int ,_yybytes_len) {
 	int i;
 	m4_dnl M4_YY_DECL_GUTS_VAR();
 
+	if ( _yybytes_len < 0 ) {
+		YY_FATAL_ERROR( "negative length in yy_scan_bytes()" );
+	}
 	/* Get memory for full buffer, including space for trailing EOB's. */
-	n = (yy_size_t) (_yybytes_len + 2);
+	n = (yy_size_t) _yybytes_len + 2;
 	buf = (char *) yyalloc( n M4_YY_CALL_LAST_ARG );
 	if ( buf == 0 ) {
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
