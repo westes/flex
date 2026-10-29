@@ -98,6 +98,7 @@ SPORADIC_TESTS = \
 	tables_fload_bad \
 	tables_verify_bad \
 	top \
+	user_input_r \
 	yyextra_nr \
 	yyextra_c99
 
@@ -173,6 +174,7 @@ tables_fload_bad_SOURCES = tables_fload_bad.l
 tables_verify_bad_SOURCES = tables_verify_bad.l
 top_SOURCES = top.l top_main.c
 nodist_top_SOURCES = top.h
+user_input_r_SOURCES = user_input_r.l
 yyextra_nr_SOURCES = yyextra_nr.l
 yyextra_c99_SOURCES = yyextra_c99.l
 yywrap_r_i3_SOURCES = yywrap_r.i3.l
@@ -253,6 +255,7 @@ CLEANFILES = \
 	tables_verify_bad.tables \
 	top.c \
 	top.h  \
+	user_input_r.c \
 	yyextra_nr.c \
 	yyextra_c99.c \
 	yywrap_r.i3.c \
