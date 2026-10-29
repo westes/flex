@@ -1562,6 +1562,9 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 #define YY_INPUT(buf,result,max_size) do {result = yyread(buf, max_size M4_YY_CALL_LAST_ARG);} while (0)
 
 m4_ifdef( [[M4_MODE_USER_YYREAD]], , [[
+/* Input comes from yyin, so a buffer without a FILE has nothing to read. */
+#define YY_INPUT_IS_OURS 1
+
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
  * is returned in "result".
  */
@@ -3080,6 +3083,7 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 	b->yy_input_file = file.rdbuf();
 ]])
 
+#ifdef YY_INPUT_IS_OURS
     /* b->yy_input_file should never by NULL but we'll handle it cleanly
 	 * on the off chance.
 	 */
@@ -3088,6 +3092,12 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 	} else {
 	  b->yy_fill_buffer = 1;
 	}
+#else
+	/* A user-defined YY_INPUT or yyread() need not read the FILE at
+	 * all, so a NULL file does not mean there is nothing to read.
+	 */
+	b->yy_fill_buffer = 1;
+#endif
 
 
 
