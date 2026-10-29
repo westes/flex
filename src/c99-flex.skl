@@ -1736,8 +1736,11 @@ yybuffer yy_scan_bytes(const char * yybytes, int  _yybytes_len, yyscan_t yyscann
 	size_t n;
 	int i;
 
+	if ( _yybytes_len < 0 ) {
+		yypanic( "negative length in yy_scan_bytes()", yyscanner );
+	}
 	/* Get memory for full buffer, including space for trailing EOB's. */
-	n = (size_t) (_yybytes_len + 2);
+	n = (size_t) _yybytes_len + 2;
 	buf = (char *) yyalloc( n, yyscanner );
 	if ( buf == 0 ) {
 		yypanic( "out of dynamic memory in yy_scan_bytes()", yyscanner );
@@ -1772,7 +1775,12 @@ m4_ifdef( [[M4_YY_NO_SCAN_STRING]],,
  */
 yybuffer yy_scan_string(const char * yystr, yyscan_t yyscanner)
 {
-	return yy_scan_bytes( yystr, (int) strlen(yystr), yyscanner);
+	size_t len = strlen( yystr );
+
+	if ( (size_t) (int) len != len ) {
+		yypanic( "string too long for yy_scan_string()", yyscanner );
+	}
+	return yy_scan_bytes( yystr, (int) len, yyscanner);
 }
 ]])
 
