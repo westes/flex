@@ -1408,6 +1408,16 @@ m4_ifdef( [[<M4_YY_BISON_LLOC>]],
  * section 1.
  */
 
+m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl
+/* Legacy names for YY_NO_YYINPUT and YY_NO_YYUNPUT. */
+#if defined(YY_NO_INPUT) && !defined(YY_NO_YYINPUT)
+#define YY_NO_YYINPUT 1
+#endif
+#if defined(YY_NO_UNPUT) && !defined(YY_NO_YYUNPUT)
+#define YY_NO_YYUNPUT 1
+#endif
+]])
+
 #ifndef YY_SKIP_YYWRAP
 #ifdef __cplusplus
 extern "C" int yywrap ( M4_YY_PROTO_ONLY_ARG );
