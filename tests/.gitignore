@@ -66,6 +66,8 @@ debug*
 defaultrule*
 !defaultrule.rules
 !defaultrule.txt
+echo_override_r
+echo_override_r.c
 extended*
 !extended.rules
 !extended.txt
