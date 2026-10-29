@@ -1507,6 +1507,10 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Copy whatever the last rule matched to the standard output. */
 #ifndef yyecho
+#ifdef ECHO
+/* Legacy interface: a user-defined ECHO replaces the default action. */
+#define yyecho() ECHO
+#else
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 %# Standard (non-C++) definition
 /* This used to be an fputs(), but since the string might contain NUL's,
@@ -1519,8 +1523,11 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 #define yyecho() LexerOutput( yytext, yyleng )
 ]])
 #endif
+#endif
 /* Legacy interface */
+#ifndef ECHO
 #define ECHO yyecho()
+#endif
 ]])
 
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
