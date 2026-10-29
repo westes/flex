@@ -79,6 +79,7 @@ SPORADIC_TESTS = \
 	cxx_multiple_scanners \
 	cxx_reject \
 	cxx_restart \
+	echo_override_r \
 	header_nr \
 	header_r \
 	lineno_generated \
@@ -142,6 +143,7 @@ cxx_reject_SOURCES = cxx_reject.ll
 cxx_restart_SOURCES = cxx_restart.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
 cxx_yywrap_i3_SOURCES = cxx_yywrap.ll
+echo_override_r_SOURCES = echo_override_r.l
 header_nr_SOURCES = header_nr_scanner.l header_nr_main.c
 nodist_header_nr_SOURCES = header_nr_scanner.h
 header_r_SOURCES = header_r_scanner.l header_r_main.c
@@ -215,6 +217,7 @@ CLEANFILES = \
 	cxx_reject.cc \
 	cxx_restart.cc \
 	cxx_yywrap.cc \
+	echo_override_r.c \
 	header_nr_scanner.c \
 	header_nr_scanner.h \
 	header_r_scanner.c \

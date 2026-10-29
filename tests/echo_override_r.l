@@ -1,0 +1,67 @@
+/*
+ * This file is part of flex.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * Neither the name of the University nor the names of its contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ */
+
+%{
+/* Test that a user-defined ECHO, the legacy interface, is honored both
+   by explicit ECHO actions and by the default rule. */
+#include <stdio.h>
+#include <stdlib.h>
+#include "config.h"
+
+static int echoed = 0;
+#define ECHO (++echoed)
+%}
+
+%option 8bit prefix="test"
+%option nounput nomain noyywrap noinput
+%option reentrant
+
+
+%%
+
+a   { ECHO; }
+
+%%
+
+int main(void);
+
+int
+main (void)
+{
+    yyscan_t scanner;
+    yybuffer buffer;
+
+    testlex_init(&scanner);
+    /* "a" matches the ECHO action, "X" and "b" the default rule. */
+    buffer = test_scan_string("aXb", scanner);
+    testlex(scanner);
+    test_delete_buffer(buffer, scanner);
+    testlex_destroy(scanner);
+
+    if (echoed != 3) {
+        fprintf(stderr, "*** Error: ECHO used %d times, expected 3.\n", echoed);
+        return 1;
+    }
+    printf("TEST RETURNING OK.\n");
+    return 0;
+}
