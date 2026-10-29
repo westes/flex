@@ -87,6 +87,7 @@ SPORADIC_TESTS = \
 	mem_c99 \
 	multiple_scanners_nr \
 	multiple_scanners_r \
+	no_input_unput_r \
 	prefix_nr \
 	prefix_r \
 	prefix_c99 \
@@ -156,6 +157,7 @@ multiple_scanners_nr_SOURCES = multiple_scanners_nr_main.c multiple_scanners_nr_
 nodist_multiple_scanners_nr_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
 multiple_scanners_r_SOURCES = multiple_scanners_r_main.c multiple_scanners_r_1.l multiple_scanners_r_2.l
 nodist_multiple_scanners_r_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
+no_input_unput_r_SOURCES = no_input_unput_r.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
 prefix_c99_SOURCES = prefix_c99.l
@@ -229,6 +231,7 @@ CLEANFILES = \
 	multiple_scanners_r_1.h \
 	multiple_scanners_r_2.c \
 	multiple_scanners_r_2.h \
+	no_input_unput_r.c \
 	prefix_nr.c \
 	prefix_r.c \
 	prefix_c99.c \
