@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.8, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<title>Multiple Input Buffers (Lexical Analysis With Flex, for Flex 2.6.5-rc1)</title>
+
+<meta name="description" content="Multiple Input Buffers (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="keywords" content="Multiple Input Buffers (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Indices.html" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html" rel="up" title="Top">
+<link href="EOF.html" rel="next" title="EOF">
+<link href="Start-Conditions.html" rel="prev" title="Start Conditions">
+<style type="text/css">
+<!--
+a.copiable-anchor {visibility: hidden; text-decoration: none; line-height: 0em}
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+span:hover a.copiable-anchor {visibility: visible}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="chapter" id="Multiple-Input-Buffers">
+<div class="header">
+<p>
+Next: <a href="EOF.html" accesskey="n" rel="next">End-of-File Rules</a>, Previous: <a href="Start-Conditions.html" accesskey="p" rel="prev">Start Conditions</a>, Up: <a href="index.html" accesskey="u" rel="up">flex</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<span id="Multiple-Input-Buffers-1"></span><h2 class="chapter">11 Multiple Input Buffers</h2>
+
+<span id="index-multiple-input-streams"></span>
+<p>Some scanners (such as those which support &ldquo;include&rdquo; files) require
+reading from several input streams.  As <code>flex</code> scanners do a large
+amount of buffering, one cannot control where the next input will be
+read from by simply writing a <code>yyread()</code> which is sensitive to
+the scanning context.  <code>yyread()</code> is only called when the scanner
+reaches the end of its buffer, which may be a long time after scanning a
+statement such as an <code>include</code> statement which requires switching
+the input source.
+</p>
+<p>To negotiate these sorts of problems, <code>flex</code> provides a mechanism
+for creating and switching between multiple input buffers.  An input
+buffer is created by using:
+</p>
+<span id="index-memory_002c-allocating-input-buffers"></span>
+<dl class="def">
+<dt id="index-yy_005fcreate_005fbuffer"><span class="category">Function: </span><span><em>yybuffer</em> <strong>yy_create_buffer</strong> <em>( FILE *file, int size )</em><a href='#index-yy_005fcreate_005fbuffer' class='copiable-anchor'> &para;</a></span></dt>
+</dl>
+
+<p>which takes a <code>FILE</code> pointer and a size and creates a buffer
+associated with the given file and large enough to hold <code>size</code>
+characters (when in doubt, use <code>YY_BUF_SIZE</code> for the size).  It
+returns a <code>yybuffer</code> handle, which may then be passed to
+other routines (see below).
+</p>
+<p>In target languages other than C/C++, this prototype will look
+different.  The input-stream type won&rsquo;t be <code>FILE *</code>, but you can
+expect the same semantics expressed using the target language&rsquo;s native
+types.
+</p>
+<span id="index-yybuffer"></span>
+<p>The <code>yybuffer</code> type is a
+reference to an opaque buffer state structure, so you may
+safely initialize <code>yybuffer</code> variables to <code>((yybuffer)
+NULL)</code> if you wish, and also refer to the opaque structure in order to
+correctly declare input buffers in source files other than that of your
+scanner.  Note that the <code>FILE</code> pointer in the call to
+<code>yy_create_buffer</code> is only used as the value of <samp>yyin</samp> seen by
+<code>yyread()</code>.  If you redefine <code>yyread()</code> so it no longer uses
+<samp>yyin</samp>, then you can safely pass a NULL <code>FILE</code> pointer to
+<code>yy_create_buffer</code>.  You select a particular buffer to scan from
+using:
+</p>
+<dl class="def">
+<dt id="index-yy_005fswitch_005fto_005fbuffer"><span class="category">Function: </span><span><em>void</em> <strong>yy_switch_to_buffer</strong> <em>( yybuffer new_buffer )</em><a href='#index-yy_005fswitch_005fto_005fbuffer' class='copiable-anchor'> &para;</a></span></dt>
+</dl>
+
+<p>The above function switches the scanner&rsquo;s input buffer so subsequent tokens
+will come from <code>new_buffer</code>.  Note that <code>yy_switch_to_buffer()</code> may
+be used by <code>yywrap()</code> to set things up for continued scanning, instead of
+opening a new file and pointing <samp>yyin</samp> at it. If you are looking for a
+stack of input buffers, then you want to use <code>yypush_buffer_state()</code>
+instead of this function. Note also that switching input sources via either
+<code>yy_switch_to_buffer()</code> or <code>yywrap()</code> does <em>not</em> change the
+start condition.
+</p>
+<span id="index-memory_002c-deleting-input-buffers"></span>
+<dl class="def">
+<dt id="index-yy_005fdelete_005fbuffer"><span class="category">Function: </span><span><em>void</em> <strong>yy_delete_buffer</strong> <em>( yybuffer buffer )</em><a href='#index-yy_005fdelete_005fbuffer' class='copiable-anchor'> &para;</a></span></dt>
+</dl>
+
+<p>is used to reclaim the storage associated with a buffer.  (<code>buffer</code>
+can be NULL, in which case the routine does nothing.)  You can also clear
+the current contents of a buffer using:
+</p>
+<span id="index-pushing-an-input-buffer"></span>
+<span id="index-stack_002c-input-buffer-push"></span>
+<dl class="def">
+<dt id="index-yypush_005fbuffer_005fstate"><span class="category">Function: </span><span><em>void</em> <strong>yypush_buffer_state</strong> <em>( yybuffer buffer )</em><a href='#index-yypush_005fbuffer_005fstate' class='copiable-anchor'> &para;</a></span></dt>
+</dl>
+
+<p>This function pushes the new buffer state onto an internal stack. The pushed
+state becomes the new current state. The stack is maintained by flex and will
+grow as required. This function is intended to be used instead of
+<code>yy_switch_to_buffer</code>, when you want to change states, but preserve the
+current state for later use. 
+</p>
+<span id="index-popping-an-input-buffer"></span>
+<span id="index-stack_002c-input-buffer-pop"></span>
+<dl class="def">
+<dt id="index-yypop_005fbuffer_005fstate"><span class="category">Function: </span><span><em>void</em> <strong>yypop_buffer_state</strong> <em>( )</em><a href='#index-yypop_005fbuffer_005fstate' class='copiable-anchor'> &para;</a></span></dt>
+</dl>
+
+<p>This function removes the current state from the top of the stack, and deletes
+it by calling <code>yy_delete_buffer</code>.  The next state on the stack, if any,
+becomes the new current state.
+</p>
+<span id="index-clearing-an-input-buffer"></span>
+<span id="index-flushing-an-input-buffer"></span>
+<dl class="def">
+<dt id="index-yy_005fflush_005fbuffer"><span class="category">Function: </span><span><em>void</em> <strong>yy_flush_buffer</strong> <em>( yybuffer buffer )</em><a href='#index-yy_005fflush_005fbuffer' class='copiable-anchor'> &para;</a></span></dt>
+</dl>
+
+<p>This function discards the buffer&rsquo;s contents,
+so the next time the scanner attempts to match a token from the
+buffer, it will first fill the buffer anew using
+<code>yyread()</code>.
+</p>
+<dl class="def">
+<dt id="index-yy_005fnew_005fbuffer"><span class="category">Function: </span><span><em>yybuffer</em> <strong>yy_new_buffer</strong> <em>( FILE *file, int size )</em><a href='#index-yy_005fnew_005fbuffer' class='copiable-anchor'> &para;</a></span></dt>
+</dl>
+
+<p>is an alias for <code>yy_create_buffer()</code>,
+provided for compatibility with the C++ use of <code>new</code> and
+<code>delete</code> for creating and destroying dynamic objects.
+</p>
+<span id="index-yy_005fcurrent_005fbuffer_0028_0029_002c-and-multiple-buffers"></span>
+<p>Finally, <code>yy_current_buffer()</code> returns a
+<code>yybuffer</code> handle to the current buffer. It should not be
+used as an lvalue, because it can return NULL to indicate no buffer is
+current.
+</p>
+<span id="index-EOF_002c-example-using-multiple-input-buffers"></span>
+<p>Here are two examples of using these features for writing a scanner
+which expands include files (the
+<code>&lt;&lt;EOF&gt;&gt;</code>
+feature is discussed below).
+</p>
+<p>This first example uses yypush_buffer_state and yypop_buffer_state. Flex
+maintains the stack internally.
+</p>
+<span id="index-handling-include-files-with-multiple-input-buffers"></span>
+<div class="example">
+<pre class="verbatim">/* the &quot;incl&quot; state is used for picking up the name
+ * of an include file
+ */
+%x incl
+%%
+include             yybegin(incl);
+
+[a-z]+              yyecho();
+[^a-z\n]*\n?        yyecho();
+
+&lt;incl&gt;[ \t]*      /* eat the whitespace */
+&lt;incl&gt;[^ \t\n]+   { /* got the include file name */
+        yyin = fopen( yytext, &quot;r&quot; );
+
+        if ( ! yyin )
+            error( ... );
+
+        yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
+
+        yybegin(INITIAL);
+}
+
+&lt;&lt;EOF&gt;&gt; {
+    yypop_buffer_state();
+
+    if ( !yy_current_buffer() ) {
+            yyterminate();
+    }
+}
+</pre></div>
+
+<p>The second example, below, does the same thing as the previous example did, but
+manages its own input buffer stack manually (instead of letting flex do it).
+</p>
+<span id="index-handling-include-files-with-multiple-input-buffers-1"></span>
+<div class="example">
+<pre class="verbatim">/* the &quot;incl&quot; state is used for picking up the name
+ * of an include file
+ */
+%x incl
+
+%{
+#define MAX_INCLUDE_DEPTH 10
+yybuffer include_stack[MAX_INCLUDE_DEPTH];
+int include_stack_ptr = 0;
+%}
+
+%%
+include             yybegin(incl);
+
+[a-z]+              yyecho();
+[^a-z\n]*\n?        yyecho();
+
+&lt;incl&gt;[ \t]*      /* eat the whitespace */
+&lt;incl&gt;[^ \t\n]+   { /* got the include file name */
+        if ( include_stack_ptr &gt;= MAX_INCLUDE_DEPTH ) {
+            fprintf( stderr, &quot;Includes nested too deeply&quot; );
+            exit( 1 );
+        }
+
+        include_stack[include_stack_ptr++] =
+            yy_current_buffer();
+
+        yyin = fopen( yytext, &quot;r&quot; );
+
+        if ( ! yyin )
+            error( ... );
+
+        yy_switch_to_buffer(
+            yy_create_buffer( yyin, YY_BUF_SIZE ) );
+
+        yybegin(INITIAL);
+}
+
+&lt;&lt;EOF&gt;&gt; {
+        if ( --include_stack_ptr == 0 ) {
+            yyterminate();
+        } else {
+            yy_delete_buffer( yy_current_buffer() );
+            yy_switch_to_buffer(
+                 include_stack[include_stack_ptr] );
+        }
+}
+</pre></div>
+
+<span id="Scanning-Strings"></span><span id="index-strings_002c-scanning-strings-instead-of-files"></span>
+<p>The following routines are available for setting up input buffers for
+scanning in-memory strings instead of files.  All of them create a new
+input buffer for scanning the string, and return a corresponding
+<code>yybuffer</code> handle (which you should delete with
+<code>yy_delete_buffer()</code> when done with it).  They also switch to the
+new buffer using <code>yy_switch_to_buffer()</code>, so the next call to
+<code>yylex()</code> will start scanning the string.
+</p>
+<dl class="def">
+<dt id="index-yy_005fscan_005fstring"><span class="category">Function: </span><span><em>yybuffer</em> <strong>yy_scan_string</strong> <em>( char *str )</em><a href='#index-yy_005fscan_005fstring' class='copiable-anchor'> &para;</a></span></dt>
+<dd><p>scans a string.  This declaration is correct for C/C++, in which
+strings are simply character sequences terminated by a NUL.  It is
+expected that each target language will use the most appropriate
+native string type instead.
+</p></dd></dl>
+
+<dl class="def">
+<dt id="index-yy_005fscan_005fbytes"><span class="category">Function: </span><span><em>yybuffer</em> <strong>yy_scan_bytes</strong> <em>( const char *bytes, int len )</em><a href='#index-yy_005fscan_005fbytes' class='copiable-anchor'> &para;</a></span></dt>
+<dd><p>scans <code>len</code> bytes (including possibly <code>NUL</code>s) starting at
+location <code>bytes</code>. It is expected that each target language will
+use the most appropriate native type instead of char*, such as a
+reference to a byte array or slice.
+</p></dd></dl>
+
+<p>Note that both of these functions create and scan a <em>copy</em> of the
+string or bytes.  (This may be desirable, since <code>yylex()</code> modifies
+the contents of the buffer it is scanning.)  You can avoid the copy by
+using:
+</p>
+<span id="index-YY_005fEND_005fOF_005fBUFFER_005fCHAR"></span>
+<dl class="def">
+<dt id="index-yy_005fscan_005fbuffer"><span class="category">Function: </span><span><em>yybuffer</em> <strong>yy_scan_buffer</strong> <em>(char *base, yy_size_t size)</em><a href='#index-yy_005fscan_005fbuffer' class='copiable-anchor'> &para;</a></span></dt>
+<dd><p>which scans in place the buffer starting at <code>base</code>, consisting of
+<code>size</code> bytes, the last two bytes of which <em>must</em> be
+<code>YY_END_OF_BUFFER_CHAR</code> (ASCII NUL).  These last two bytes are
+not scanned; thus, scanning consists of <code>base[0]</code> through
+<code>base[size-2]</code>, inclusive. It is expected that each target
+language will use the most appropriate native type instead of char*,
+such as an owned byte array.
+</p></dd></dl>
+
+<p>If you fail to set up <code>base</code> in this manner (i.e., forget the
+final two <code>YY_END_OF_BUFFER_CHAR</code> bytes), then
+<code>yy_scan_buffer()</code> returns a NULL pointer (and/or an error)
+instead of creating a new input buffer.
+</p>
+<dl class="def">
+<dt id="index-yy_005fsize_005ft"><span class="category">Data type: </span><span><strong>yy_size_t</strong><a href='#index-yy_005fsize_005ft' class='copiable-anchor'> &para;</a></span></dt>
+<dd><p>is an integral type to which you can cast an integer expression
+reflecting the size of the buffer.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="EOF.html">End-of-File Rules</a>, Previous: <a href="Start-Conditions.html">Start Conditions</a>, Up: <a href="index.html">flex</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

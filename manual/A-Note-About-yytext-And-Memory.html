@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.8, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<title>A Note About yytext And Memory (Lexical Analysis With Flex, for Flex 2.6.5-rc1)</title>
+
+<meta name="description" content="A Note About yytext And Memory (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="keywords" content="A Note About yytext And Memory (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Indices.html" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Memory-Management.html" rel="up" title="Memory Management">
+<link href="Overriding-The-Default-Memory-Management.html" rel="prev" title="Overriding The Default Memory Management">
+<style type="text/css">
+<!--
+a.copiable-anchor {visibility: hidden; text-decoration: none; line-height: 0em}
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+span:hover a.copiable-anchor {visibility: visible}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section" id="A-Note-About-yytext-And-Memory">
+<div class="header">
+<p>
+Previous: <a href="Overriding-The-Default-Memory-Management.html" accesskey="p" rel="prev">Overriding The Default Memory Management</a>, Up: <a href="Memory-Management.html" accesskey="u" rel="up">Memory Management</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<span id="A-Note-About-yytext-And-Memory-1"></span><h3 class="section">21.3 A Note About yytext And Memory</h3>
+
+<span id="index-yytext_002c-memory-considerations"></span>
+
+<p>This section applies only to target languages with manual memory management.
+</p>
+<p>When flex finds a match, <code>yytext</code> points to the first character of the
+match in the input buffer. The string itself is part of the input buffer, and
+is <em>NOT</em> allocated separately. The value of yytext will be overwritten the next
+time yylex() is called. In short, the value of yytext is only valid from within
+the matched rule&rsquo;s action.
+</p>
+<p>Often, you want the value of yytext to persist for later processing, i.e., by a
+parser with non-zero lookahead. In order to preserve yytext, you will have to
+copy it with strdup() or a similar function. But this introduces some headache
+because your parser is now responsible for freeing the copy of yytext. If you
+use a yacc or bison parser, (commonly used with flex), you will discover that
+the error recovery mechanisms can cause memory to be leaked.
+</p>
+<p>To prevent memory leaks from strdup&rsquo;d yytext, you will have to track the memory
+somehow. Our experience has shown that a garbage collection mechanism or a
+pooled memory mechanism will save you a lot of grief when writing parsers.
+</p>
+</div>
+
+
+
+</body>
+</html>

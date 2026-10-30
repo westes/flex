@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.8, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<title>Limitations (Lexical Analysis With Flex, for Flex 2.6.5-rc1)</title>
+
+<meta name="description" content="Limitations (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="keywords" content="Limitations (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Indices.html" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html" rel="up" title="Top">
+<link href="Bibliography.html" rel="next" title="Bibliography">
+<link href="Diagnostics.html" rel="prev" title="Diagnostics">
+<style type="text/css">
+<!--
+a.copiable-anchor {visibility: hidden; text-decoration: none; line-height: 0em}
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+span:hover a.copiable-anchor {visibility: visible}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="chapter" id="Limitations">
+<div class="header">
+<p>
+Next: <a href="Bibliography.html" accesskey="n" rel="next">Additional Reading</a>, Previous: <a href="Diagnostics.html" accesskey="p" rel="prev">Diagnostics</a>, Up: <a href="index.html" accesskey="u" rel="up">flex</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<span id="Limitations-1"></span><h2 class="chapter">24 Limitations</h2>
+
+<span id="index-limitations-of-flex"></span>
+
+<p>Some trailing context patterns cannot be properly matched and generate
+warning messages (&lsquo;<samp>dangerous trailing context</samp>&rsquo;).  These are
+patterns where the ending of the first part of the rule matches the
+beginning of the second part, such as &lsquo;<samp>zx*/xy*</samp>&rsquo;, where the &rsquo;x*&rsquo;
+matches the &rsquo;x&rsquo; at the beginning of the trailing context.  (Note that
+the POSIX draft states that the text matched by such patterns is
+undefined.)  For some trailing context rules, parts which are actually
+fixed-length are not recognized as such, leading to the abovementioned
+performance loss.  In particular, parts using &lsquo;<samp>|</samp>&rsquo; or &lsquo;<samp>{n}</samp>&rsquo;
+(such as &lsquo;<samp>foo{3}</samp>&rsquo;) are always considered variable-length.
+Combining trailing context with the special &lsquo;<samp>|</samp>&rsquo; action can result
+in <em>fixed</em> trailing context being turned into the more expensive
+<em>variable</em> trailing context.  For example, in the following:
+</p>
+<span id="index-warning_002c-dangerous-trailing-context"></span>
+<div class="example">
+<pre class="verbatim">    %%
+    abc      |
+    xyz/def
+</pre></div>
+
+<p>Some caveats are specific to the C/C++ back end: Use of
+<code>yyunput()</code> invalidates yytext and yyleng, unless the
+<code>%array</code> directive or the &lsquo;<samp>-l</samp>&rsquo; option has been used.
+Pattern-matching of <code>NUL</code>s is substantially slower than matching
+other characters.  Dynamic resizing of the input buffer is slow, as it
+entails rescanning all the text matched so far by the current
+(generally huge) token.  Due to both buffering of input and
+read-ahead, you cannot intermix calls to <samp>&lt;stdio.h&gt;</samp> routines
+(such as <b>getchar()</b>) with <code>flex</code> rules and expect it to work.
+Call <code>yyinput()</code> instead.
+</p>
+<p>The total table entries listed by the &lsquo;<samp>-v</samp>&rsquo; flag excludes
+the number of table entries needed to determine what rule has been
+matched.  The number of entries is equal to the number of DFA states if
+the scanner does not use <code>yyreject()</code>, and somewhat greater than the
+number of states if it does.  <code>yyreject()</code> cannot be used with the
+&lsquo;<samp>-f</samp>&rsquo; or &lsquo;<samp>-F</samp>&rsquo; options.
+</p>
+<p>The <code>flex</code> internal algorithms need documentation.
+</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Bibliography.html">Additional Reading</a>, Previous: <a href="Diagnostics.html">Diagnostics</a>, Up: <a href="index.html">flex</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

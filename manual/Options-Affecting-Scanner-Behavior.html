@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.8, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<title>Options Affecting Scanner Behavior (Lexical Analysis With Flex, for Flex 2.6.5-rc1)</title>
+
+<meta name="description" content="Options Affecting Scanner Behavior (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="keywords" content="Options Affecting Scanner Behavior (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Indices.html" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Scanner-Options.html" rel="up" title="Scanner Options">
+<link href="Code_002dLevel-And-API-Options.html" rel="next" title="Code-Level And API Options">
+<link href="Options-for-Specifying-Filenames.html" rel="prev" title="Options for Specifying Filenames">
+<style type="text/css">
+<!--
+a.copiable-anchor {visibility: hidden; text-decoration: none; line-height: 0em}
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+span:hover a.copiable-anchor {visibility: visible}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section" id="Options-Affecting-Scanner-Behavior">
+<div class="header">
+<p>
+Next: <a href="Code_002dLevel-And-API-Options.html" accesskey="n" rel="next">Code-Level And API Options</a>, Previous: <a href="Options-for-Specifying-Filenames.html" accesskey="p" rel="prev">Options for Specifying Filenames</a>, Up: <a href="Scanner-Options.html" accesskey="u" rel="up">Scanner Options</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<span id="Options-Affecting-Scanner-Behavior-1"></span><h3 class="section">16.2 Options Affecting Scanner Behavior</h3>
+
+<dl compact="compact">
+<dd><span id="option_002demit"></span><span id="index-_002de"></span>
+<span id="index-_002d_002d_002demit"></span>
+<span id="index-emit"></span>
+</dd>
+<dt><span>&lsquo;<samp>-e, --emit, <code>%option emit</code></samp>&rsquo;</span></dt>
+<dd><p>instructs <code>flex</code> to generate code using a specific back end other
+than the default.  The default is called &ldquo;cpp&rdquo;, generates C or C++
+code, supports all legacy interfaces, and generates either
+non-reentrant or re-entrant scanners.  There is presently one
+alternate back end, C99; it drops a lot of legacy interfaces,
+generates only re-entrant scanners, and outputs modern C.  The C99
+back end is intended to be a launching point for as yet unwritten back
+ends generating scanners in other languages such as Go, Rust, Java,
+Python, etc.
+</p>
+<span id="option_002drewrite"></span></dd>
+<dt><span>&lsquo;<samp><code>%option rewrite</code></samp>&rsquo;</span></dt>
+<dd><p>Back ends other than the default C generator can&rsquo;t assume they have
+the C preprocessor available.  Therefore, Flex recognizes the
+following function calls - yyecho(), yyless(), yymore(), yyinput(),
+yystart(), yybegin(), yyunput(), yypanic() - and rewrites them adding a
+yyscanner final argument as though they were C macros. This optiion
+is set to false when you select or default to the C back end, and to
+true otherwise.  You can turn it off (or on) explicitly after your
+emit option.
+</p>
+<span id="option_002dcase_002dinsensitive"></span><span id="index-_002di"></span>
+<span id="index-_002d_002d_002dcase_002dinsensitive"></span>
+<span id="index-case_002dinsensitive"></span>
+</dd>
+<dt><span>&lsquo;<samp>-i, --case-insensitive, <code>%option case-insensitive</code></samp>&rsquo;</span></dt>
+<dd><p>instructs <code>flex</code> to generate a <em>case-insensitive</em> scanner.  The
+case of letters given in the <code>flex</code> input patterns will be ignored,
+and tokens in the input will be matched regardless of case.  The matched
+text given in <code>yytext</code> will have the preserved case (i.e., it will
+not be folded).  For tricky behavior, see <a href="Patterns.html#case-and-character-ranges">case and character ranges</a>.
+</p>
+
+<span id="option_002dlex_002dcompat"></span><span id="index-_002dl"></span>
+<span id="index-_002d_002d_002dlex_002dcompat"></span>
+<span id="index-lex_002dcompat"></span>
+</dd>
+<dt><span>&lsquo;<samp>-l, --lex-compat, <code>%option lex-compat</code></samp>&rsquo;</span></dt>
+<dd><p>turns on maximum compatibility with the original AT&amp;T <code>lex</code>
+implementation.  Note that this does not mean <em>full</em> compatibility.
+Use of this option costs a considerable amount of performance, and it
+cannot be used with the &lsquo;<samp>--c++</samp>&rsquo;, &lsquo;<samp>--full</samp>&rsquo;, &lsquo;<samp>--fast</samp>&rsquo;, &lsquo;<samp>-Cf</samp>&rsquo;, or
+&lsquo;<samp>-CF</samp>&rsquo; options.  For details on the compatibilities it provides, see
+<a href="Lex-and-Posix.html">Incompatibilities with Lex and Posix</a>. It will usually be a no-op on back ends other
+than C/C++.
+This option also results in the name
+<code>YY_FLEX_LEX_COMPAT</code> being <code>#define</code>&rsquo;d in the generated scanner.
+</p>
+
+
+<span id="option_002dbatch"></span><span id="index-_002dB"></span>
+<span id="index-_002d_002d_002dbatch"></span>
+<span id="index-batch"></span>
+</dd>
+<dt><span>&lsquo;<samp>-B, --batch, <code>%option batch</code></samp>&rsquo;</span></dt>
+<dd><p>instructs <code>flex</code> to generate a <em>batch</em> scanner, the opposite of
+<em>interactive</em> scanners generated by &lsquo;<samp>--interactive</samp>&rsquo; (see below).  In
+general, you use &lsquo;<samp>-B</samp>&rsquo; when you are <em>certain</em> that your scanner
+will never be used interactively, and you want to squeeze a
+<em>little</em> more performance out of it.  If your goal is instead to
+squeeze out a <em>lot</em> more performance, you should be using the
+&lsquo;<samp>-Cf</samp>&rsquo; or &lsquo;<samp>-CF</samp>&rsquo; options, which turn on &lsquo;<samp>--batch</samp>&rsquo; automatically
+anyway.
+</p>
+
+
+<span id="option_002dinteractive"></span><span id="index-_002dI"></span>
+<span id="index-_002d_002d_002dinteractive"></span>
+<span id="index-interactive"></span>
+</dd>
+<dt><span>&lsquo;<samp>-I, --interactive, <code>%option interactive</code></samp>&rsquo;</span></dt>
+<dd><p>instructs <code>flex</code> to generate an <i>interactive</i> scanner.  An
+interactive scanner is one that only looks ahead to decide what token
+has been matched if it absolutely must.  It turns out that always
+looking one extra character ahead, even if the scanner has already seen
+enough text to disambiguate the current token, is a bit faster than only
+looking ahead when necessary.  But scanners that always look ahead give
+dreadful interactive performance; for example, when a user types a
+newline, it is not recognized as a newline token until they enter
+<em>another</em> token, which often means typing in another whole line.
+</p>
+<p><code>flex</code> scanners default to <code>interactive</code> unless you use the
+&lsquo;<samp>-Cf</samp>&rsquo; or &lsquo;<samp>-CF</samp>&rsquo; table-compression options
+(see <a href="Performance.html">Performance Considerations</a>).  That&rsquo;s because if you&rsquo;re looking for
+high-performance you should be using one of these options, so if you
+didn&rsquo;t, <code>flex</code> assumes you&rsquo;d rather trade off a bit of run-time
+performance for intuitive interactive behavior.  Note also that you
+<em>cannot</em> use &lsquo;<samp>--interactive</samp>&rsquo; in conjunction with &lsquo;<samp>-Cf</samp>&rsquo; or
+&lsquo;<samp>-CF</samp>&rsquo;.  Thus, this option is not really needed; it is on by default
+for all those cases in which it is allowed.
+</p>
+<p>You can force a scanner to
+<em>not</em>
+be interactive by using
+&lsquo;<samp>--batch</samp>&rsquo;
+</p>
+
+
+<span id="option_002d7bit"></span><span id="index-_002d7"></span>
+<span id="index-_002d_002d_002d7bit"></span>
+<span id="index-7bit"></span>
+</dd>
+<dt><span>&lsquo;<samp>-7, --7bit, <code>%option 7bit</code></samp>&rsquo;</span></dt>
+<dd><p>instructs <code>flex</code> to generate a 7-bit scanner, i.e., one which can
+only recognize 7-bit characters in its input.  The advantage of using
+&lsquo;<samp>--7bit</samp>&rsquo; is that the scanner&rsquo;s tables can be up to half the size of
+those generated using the &lsquo;<samp>--8bit</samp>&rsquo;.  The disadvantage is that such
+scanners often hang or crash if their input contains an 8-bit character.
+</p>
+<p>Note, however, that unless you generate your scanner using the
+&lsquo;<samp>-Cf</samp>&rsquo; or &lsquo;<samp>-CF</samp>&rsquo; table compression options, use of &lsquo;<samp>--7bit</samp>&rsquo;
+will save only a small amount of table space, and make your scanner
+considerably less portable.  <code>Flex</code>&rsquo;s default behavior is to
+generate an 8-bit scanner unless you use the &lsquo;<samp>-Cf</samp>&rsquo; or &lsquo;<samp>-CF</samp>&rsquo;,
+in which case <code>flex</code> defaults to generating 7-bit scanners unless
+your site was always configured to generate 8-bit scanners (as will
+often be the case with non-USA sites).  You can tell whether flex
+generated a 7-bit or an 8-bit scanner by inspecting the flag summary in
+the &lsquo;<samp>--verbose</samp>&rsquo; output as described above.
+</p>
+<p>Note that if you use &lsquo;<samp>-Cfe</samp>&rsquo; or &lsquo;<samp>-CFe</samp>&rsquo; <code>flex</code> still
+defaults to generating an 8-bit scanner, since usually with these
+compression options full 8-bit tables are not much more expensive than
+7-bit tables.
+</p>
+
+
+<span id="option_002d8bit"></span><span id="index-_002d8"></span>
+<span id="index-_002d_002d_002d8bit"></span>
+<span id="index-8bit"></span>
+</dd>
+<dt><span>&lsquo;<samp>-8, --8bit, <code>%option 8bit</code></samp>&rsquo;</span></dt>
+<dd><p>instructs <code>flex</code> to generate an 8-bit scanner, i.e., one which can
+recognize 8-bit characters.  This flag is only needed for scanners
+generated using &lsquo;<samp>-Cf</samp>&rsquo; or &lsquo;<samp>-CF</samp>&rsquo;, as otherwise flex defaults to
+generating an 8-bit scanner anyway.
+</p>
+<p>See the discussion of
+&lsquo;<samp>--7bit</samp>&rsquo;
+above for <code>flex</code>&rsquo;s default behavior and the tradeoffs between 7-bit
+and 8-bit scanners.
+</p>
+
+
+<span id="option_002ddefault"></span><span id="index-_002d_002d_002ddefault"></span>
+<span id="index-default"></span>
+</dd>
+<dt><span>&lsquo;<samp>--default, <code>%option default</code></samp>&rsquo;</span></dt>
+<dd><p>generate the default rule.
+</p>
+
+
+<span id="option_002dalways_002dinteractive"></span><span id="index-_002d_002d_002dalways_002dinteractive"></span>
+<span id="index-always_002dinteractive"></span>
+</dd>
+<dt><span>&lsquo;<samp>--always-interactive, <code>%option always-interactive</code></samp>&rsquo;</span></dt>
+<dd><p>instructs flex to generate a scanner which always considers its input
+<em>interactive</em>.  Normally, on each new input file the scanner calls
+<code>isatty()</code> in an attempt to determine whether the scanner&rsquo;s input
+source is interactive and thus should be read a character at a time.
+When this option is used, however, then no such call is made.
+</p>
+
+
+<span id="index-_002d_002d_002dnever_002dinteractive"></span>
+</dd>
+<dt><span>&lsquo;<samp>--never-interactive, <code>%option never-interactive</code></samp>&rsquo;</span></dt>
+<dd><p>instructs flex to generate a scanner which never considers its input
+interactive.  This is the opposite of <code>always-interactive</code>.
+</p>
+
+<span id="option_002dposix"></span><span id="index-_002dX"></span>
+<span id="index-_002d_002d_002dposix"></span>
+<span id="index-posix"></span>
+</dd>
+<dt><span>&lsquo;<samp>-X, --posix, <code>%option posix</code></samp>&rsquo;</span></dt>
+<dd><p>turns on maximum compatibility with the POSIX 1003.2-1992 definition of
+<code>lex</code>.  Since <code>flex</code> was originally designed to implement the
+POSIX definition of <code>lex</code> this generally involves very few changes
+in behavior.  At the current writing the known differences between
+<code>flex</code> and the POSIX standard are:
+</p>
+<ul>
+<li> In POSIX and AT&amp;T <code>lex</code>, the repeat operator, &lsquo;<samp>{}</samp>&rsquo;, has lower
+precedence than concatenation (thus &lsquo;<samp>ab{3}</samp>&rsquo; yields &lsquo;<samp>ababab</samp>&rsquo;).
+Most POSIX utilities use an Extended Regular Expression (ERE) precedence
+that has the precedence of the repeat operator higher than concatenation
+(which causes &lsquo;<samp>ab{3}</samp>&rsquo; to yield &lsquo;<samp>abbb</samp>&rsquo;).  By default, <code>flex</code>
+places the precedence of the repeat operator higher than concatenation
+which matches the ERE processing of other POSIX utilities.  When either
+&lsquo;<samp>--posix</samp>&rsquo; or &lsquo;<samp>-l</samp>&rsquo; are specified, <code>flex</code> will use the
+traditional AT&amp;T and POSIX-compliant precedence for the repeat operator
+where concatenation has higher precedence than the repeat operator.
+</li></ul>
+
+
+<span id="option_002dstack"></span><span id="index-_002d_002d_002dstack"></span>
+<span id="index-stack"></span>
+</dd>
+<dt><span>&lsquo;<samp>--stack, <code>%option stack</code></samp>&rsquo;</span></dt>
+<dd><p>enables the use of
+start condition stacks (see <a href="Start-Conditions.html">Start Conditions</a>).
+</p>
+
+
+<span id="option_002dstdinit"></span><span id="index-_002d_002d_002dstdinit"></span>
+<span id="index-stdinit"></span>
+</dd>
+<dt><span>&lsquo;<samp>--stdinit, <code>%option stdinit</code></samp>&rsquo;</span></dt>
+<dd><p>if set (i.e., <b>%option stdinit)</b> initializes <code>yyin</code> and
+<code>yyout</code> to <samp>stdin</samp> and <samp>stdout</samp>, instead of the default of
+<samp>NULL</samp>.  Some existing <code>lex</code> programs depend on this behavior,
+even though it is not compliant with ANSI C, which does not require
+<samp>stdin</samp> and <samp>stdout</samp> to be compile-time constant. In a
+reentrant scanner, however, this is not a problem since initialization
+is performed in <code>yylex_init</code> at runtime.
+</p>
+
+
+<span id="option_002dyylineno"></span><span id="index-_002d_002d_002dyylineno"></span>
+<span id="index-yylineno"></span>
+</dd>
+<dt><span>&lsquo;<samp>--yylineno, <code>%option yylineno</code></samp>&rsquo;</span></dt>
+<dd><p>directs <code>flex</code> to generate a scanner
+that maintains the number of the current line read from its input in the
+global variable <code>yylineno</code>.  This option is implied by <code>%option
+lex-compat</code>.  In a reentrant C scanner, <code>yylineno</code> is
+accessible regardless of the value of <code>%option yylineno</code>, however, its
+value is not modified by <code>flex</code> unless <code>%option yylineno</code> is enabled.
+</p>
+
+
+<span id="option_002dyywrap"></span><span id="index-_002d_002d_002dyywrap"></span>
+<span id="index-yywrap"></span>
+</dd>
+<dt><span>&lsquo;<samp>--yywrap, <code>%option yywrap</code></samp>&rsquo;</span></dt>
+<dd><p>if unset (i.e., <code>--noyywrap)</code>, makes the scanner not call
+<code>yywrap()</code> upon an end-of-file, but simply assume that there are no
+more files to scan (until the user points <samp>yyin</samp> at a new file and
+calls <code>yylex()</code> again).
+</p>
+</dd>
+</dl>
+
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Code_002dLevel-And-API-Options.html">Code-Level And API Options</a>, Previous: <a href="Options-for-Specifying-Filenames.html">Options for Specifying Filenames</a>, Up: <a href="Scanner-Options.html">Scanner Options</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.8, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<title>Getting Started (Lexical Analysis With Flex, for Flex 2.6.5-rc1)</title>
+
+<meta name="description" content="Getting Started (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="keywords" content="Getting Started (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Indices.html" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Retargeting-Flex.html" rel="up" title="Retargeting Flex">
+<link href="Development-Steps.html" rel="next" title="Development Steps">
+<link href="Overview.html" rel="prev" title="Overview">
+<style type="text/css">
+<!--
+a.copiable-anchor {visibility: hidden; text-decoration: none; line-height: 0em}
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+span:hover a.copiable-anchor {visibility: visible}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection" id="Getting-Started">
+<div class="header">
+<p>
+Next: <a href="Development-Steps.html" accesskey="n" rel="next">Development Steps</a>, Previous: <a href="Overview.html" accesskey="p" rel="prev">Overview</a>, Up: <a href="Retargeting-Flex.html" accesskey="u" rel="up">Retargeting Flex</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<span id="Getting-Started-1"></span><h4 class="subsection">A.5.2 Getting Started</h4>
+
+<p>To get started on writing a new back end, browse
+<code>src/skeletons,c</code> to get some idea of how skeleton files are
+queried, then read a skeleton file.  If no sketon exists of a language
+that is closer to your target, the C99 back end is specifically
+intended to be cloned and used as a launch pont for new back ends.
+</p>
+<p>This file you are looking at is processed through GNU m4 during the
+pre-compilation stage of Flex. At this time only macros starting with
+&lsquo;m4preproc_&rsquo; are processed, and quoting is normal (that is, the quote
+opener is a back-tick (ASCII 96) and the quote closer is a tick or
+single quote (ASCII 39) <a id="DOCF9" href="#FOOT9"><sup>9</sup></a>.  The main purpose of
+this expansion phase is to set Flex version symbols.
+</p>
+<p>At Flex compilation time, the preprocessed skeleton is translated into a comma-separated
+list of doublequoted strings which is stuffed into a language-
+specific method block compiled into the flex binary.
+</p>
+<p>At scanner generation time, , the skeleton is generated and filtered
+(again) through m4. Macros beginning with &lsquo;m4_&rsquo; will be processed.
+The quoting is &ldquo;[[&ldquo; and &ldquo;]]&rdquo; so we don&rsquo;t interfere with user code.
+</p>
+<p>A line beginning with &ldquo;%#&rdquo; is a comment. These comments are omitted
+from the generated scanner.
+</p>
+<p>A line beginning with &ldquo;%%&rdquo; is a stop-point, where code is inserted by
+Flex.  Each stop-point is numbered here and also in the code
+generator.  Stop points will be inserted into the generated scanner as
+a comment.  This is to aid those who edit skeletons.
+</p>
+<p>You&rsquo;ll want to start by studying the <code>M4_PROPERTY_*</code> macros near the
+top of the skeleton file. They declare properties of the back end like
+its name and normal source-code suffix. These aren&rsquo;t used for code
+generation; they&rsquo;re for Flex to read and key on.
+</p>
+<p>Following those are the <code>M4_HOOK_*</code> macros. Rather than emit
+literal language syntax, Flex ships calls to these macros which are
+expected to be expanded to to the correct language syntax within the
+skeleton.  The other things flex ships which appear in the output code
+are mostly bodies for table initializers, with associated macros for
+typenames and table dimensions.  The names of all such macros have the
+prefix &ldquo;M4_HOOK_&rdquo;; you can study them in the Flex code by grepping
+for that prefix.
+</p>
+<p>Flex ships another fairly large set of macros that are guard
+conditions for conditional macroexpanion. The values of these symbols
+don&rsquo;t directly appear in the output, but they control the shape of the
+generated code. The names of such macros have the prefixes
+&ldquo;M4_MODE_&rdquo; or &ldquo;M4_YY_&rdquo;; you can study them in the Flex code by
+grepping for these prefixes.  Many of these symbols correspond to Flex
+command-line options.
+</p>
+</div>
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h5><a id="FOOT9" href="#DOCF9">(9)</a></h5>
+<p>See chapter 3.2 of the m4 manual,
+&ldquo;Quoting input to m4&rdquo;, for more information.</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Development-Steps.html">Development Steps</a>, Previous: <a href="Overview.html">Overview</a>, Up: <a href="Retargeting-Flex.html">Retargeting Flex</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

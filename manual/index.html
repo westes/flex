@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.8, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<title>Top (Lexical Analysis With Flex, for Flex 2.6.5-rc1)</title>
+
+<meta name="description" content="Top (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="keywords" content="Top (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="#Top" rel="start" title="Top">
+<link href="Indices.html" rel="index" title="Indices">
+<link href="#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Copyright.html" rel="next" title="Copyright">
+<style type="text/css">
+<!--
+a.copiable-anchor {visibility: hidden; text-decoration: none; line-height: 0em}
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+span:hover a.copiable-anchor {visibility: visible}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<h1 class="settitle" align="center">Lexical Analysis With Flex, for Flex 2.6.5-rc1</h1>
+
+
+<div class="top" id="Top">
+<div class="header">
+<p>
+Next: <a href="Copyright.html" accesskey="n" rel="next">Copyright</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<span id="flex"></span><h1 class="top">flex</h1>
+
+<p>This manual describes <code>flex</code>, a tool for generating programs that
+perform pattern-matching on text.  The manual includes both tutorial and
+reference sections.
+</p>
+<p>This edition of <cite>The flex Manual</cite> documents <code>flex</code> version
+2.6.5-rc1. It was last updated on 30 October 2026.
+</p>
+<p>This manual was written by Vern Paxson, Will Estes and John Millaway.
+</p>
+<div class="Contents_element" id="SEC_Contents">
+<h2 class="contents-heading">Table of Contents</h2>
+
+<div class="contents">
+
+<ul class="no-bullet">
+  <li><a id="toc-Copyright-1" href="Copyright.html">1 Copyright</a></li>
+  <li><a id="toc-Reporting-Bugs-1" href="Reporting-Bugs.html">2 Reporting Bugs</a></li>
+  <li><a id="toc-Introduction-1" href="Introduction.html">3 Introduction</a></li>
+  <li><a id="toc-Some-Simple-Examples" href="Simple-Examples.html">4 Some Simple Examples</a></li>
+  <li><a id="toc-Format-of-the-Input-File" href="Format.html">5 Format of the Input File</a>
+  <ul class="no-bullet">
+    <li><a id="toc-Format-of-the-Definitions-Section" href="Definitions-Section.html">5.1 Format of the Definitions Section</a></li>
+    <li><a id="toc-Format-of-the-Rules-Section" href="Rules-Section.html">5.2 Format of the Rules Section</a></li>
+    <li><a id="toc-Format-of-the-User-Code-Section" href="User-Code-Section.html">5.3 Format of the User Code Section</a></li>
+    <li><a id="toc-Comments-in-the-Input-1" href="Comments-in-the-Input.html">5.4 Comments in the Input</a></li>
+  </ul></li>
+  <li><a id="toc-Patterns-1" href="Patterns.html">6 Patterns</a></li>
+  <li><a id="toc-How-the-Input-Is-Matched" href="Matching.html">7 How the Input Is Matched</a></li>
+  <li><a id="toc-Actions-1" href="Actions.html">8 Actions</a></li>
+  <li><a id="toc-The-Generated-Scanner" href="Generated-Scanner.html">9 The Generated Scanner</a></li>
+  <li><a id="toc-Start-Conditions-1" href="Start-Conditions.html">10 Start Conditions</a></li>
+  <li><a id="toc-Multiple-Input-Buffers-1" href="Multiple-Input-Buffers.html">11 Multiple Input Buffers</a></li>
+  <li><a id="toc-End_002dof_002dFile-Rules" href="EOF.html">12 End-of-File Rules</a></li>
+  <li><a id="toc-Miscellaneous-Controls" href="Misc-Controls.html">13 Miscellaneous Controls</a></li>
+  <li><a id="toc-Values-Available-To-the-User" href="User-Values.html">14 Values Available To the User</a></li>
+  <li><a id="toc-Interfacing-with-Yacc" href="Yacc.html">15 Interfacing with Yacc</a></li>
+  <li><a id="toc-Scanner-Options-1" href="Scanner-Options.html">16 Scanner Options</a>
+  <ul class="no-bullet">
+    <li><a id="toc-Options-for-Specifying-Filenames-1" href="Options-for-Specifying-Filenames.html">16.1 Options for Specifying Filenames</a></li>
+    <li><a id="toc-Options-Affecting-Scanner-Behavior-1" href="Options-Affecting-Scanner-Behavior.html">16.2 Options Affecting Scanner Behavior</a></li>
+    <li><a id="toc-Code_002dLevel-And-API-Options-1" href="Code_002dLevel-And-API-Options.html">16.3 Code-Level And API Options</a></li>
+    <li><a id="toc-Options-for-Scanner-Speed-and-Size-1" href="Options-for-Scanner-Speed-and-Size.html">16.4 Options for Scanner Speed and Size</a></li>
+    <li><a id="toc-Debugging-Options-1" href="Debugging-Options.html">16.5 Debugging Options</a></li>
+    <li><a id="toc-Miscellaneous-Options-1" href="Miscellaneous-Options.html">16.6 Miscellaneous Options</a></li>
+  </ul></li>
+  <li><a id="toc-Performance-Considerations" href="Performance.html">17 Performance Considerations</a></li>
+  <li><a id="toc-Generating-C_002b_002b-Scanners" href="Cxx.html">18 Generating C++ Scanners</a></li>
+  <li><a id="toc-Reentrant-C-Scanners" href="Reentrant.html">19 Reentrant C Scanners</a>
+  <ul class="no-bullet">
+    <li><a id="toc-Uses-for-Reentrant-Scanners" href="Reentrant-Uses.html">19.1 Uses for Reentrant Scanners</a></li>
+    <li><a id="toc-An-Overview-of-the-Reentrant-API" href="Reentrant-Overview.html">19.2 An Overview of the Reentrant API</a></li>
+    <li><a id="toc-Reentrant-Example-1" href="Reentrant-Example.html">19.3 Reentrant Example</a></li>
+    <li><a id="toc-The-Reentrant-API-in-Detail" href="Reentrant-Detail.html">19.4 The Reentrant API in Detail</a>
+    <ul class="no-bullet">
+      <li><a id="toc-Declaring-a-Scanner-As-Reentrant" href="Specify-Reentrant.html">19.4.1 Declaring a Scanner As Reentrant</a></li>
+      <li><a id="toc-The-Extra-Argument" href="Extra-Reentrant-Argument.html">19.4.2 The Extra Argument</a></li>
+      <li><a id="toc-Global-Variables-Replaced-By-Macros" href="Global-Replacement.html">19.4.3 Global Variables Replaced By Macros</a></li>
+      <li><a id="toc-Init-and-Destroy-Functions-1" href="Init-and-Destroy-Functions.html">19.4.4 Init and Destroy Functions</a></li>
+      <li><a id="toc-Accessing-Variables-with-Reentrant-Scanners" href="Accessor-Methods.html">19.4.5 Accessing Variables with Reentrant Scanners</a></li>
+      <li><a id="toc-Extra-Data-1" href="Extra-Data.html">19.4.6 Extra Data</a></li>
+      <li><a id="toc-About-yyscan_005ft-1" href="About-yyscan_005ft.html">19.4.7 About yyscan_t</a></li>
+    </ul></li>
+    <li><a id="toc-Functions-Available-in-Reentrant-Scanners" href="Reentrant-Functions.html">19.5 Functions Available in Reentrant Scanners</a></li>
+  </ul></li>
+  <li><a id="toc-Incompatibilities-with-Lex-and-Posix" href="Lex-and-Posix.html">20 Incompatibilities with Lex and Posix</a></li>
+  <li><a id="toc-Memory-Management-1" href="Memory-Management.html">21 Memory Management</a>
+  <ul class="no-bullet">
+    <li><a id="toc-The-Default-Memory-Management-1" href="The-Default-Memory-Management.html">21.1 The Default Memory Management</a></li>
+    <li><a id="toc-Overriding-The-Default-Memory-Management-1" href="Overriding-The-Default-Memory-Management.html">21.2 Overriding The Default Memory Management</a></li>
+    <li><a id="toc-A-Note-About-yytext-And-Memory-1" href="A-Note-About-yytext-And-Memory.html">21.3 A Note About yytext And Memory</a></li>
+  </ul></li>
+  <li><a id="toc-Serialized-Tables-1" href="Serialized-Tables.html">22 Serialized Tables</a>
+  <ul class="no-bullet">
+    <li><a id="toc-Creating-Serialized-Tables-1" href="Creating-Serialized-Tables.html">22.1 Creating Serialized Tables</a></li>
+    <li><a id="toc-Loading-and-Unloading-Serialized-Tables-1" href="Loading-and-Unloading-Serialized-Tables.html">22.2 Loading and Unloading Serialized Tables</a></li>
+    <li><a id="toc-Tables-File-Format-1" href="Tables-File-Format.html">22.3 Tables File Format</a></li>
+  </ul></li>
+  <li><a id="toc-Diagnostics-1" href="Diagnostics.html">23 Diagnostics</a></li>
+  <li><a id="toc-Limitations-1" href="Limitations.html">24 Limitations</a></li>
+  <li><a id="toc-Additional-Reading" href="Bibliography.html">25 Additional Reading</a></li>
+  <li><a id="toc-FAQ-1" href="FAQ.html">FAQ</a>
+  <ul class="no-bullet">
+    <li><a id="toc-When-was-flex-born_003f-1" href="When-was-flex-born_003f.html">When was flex born?</a></li>
+    <li><a id="toc-How-do-I-expand-backslash_002descape-sequences-in-C_002dstyle-quoted-strings_003f-1" href="How-do-I-expand-backslash_002descape-sequences-in-C_002dstyle-quoted-strings_003f.html">How do I expand backslash-escape sequences in C-style quoted strings?</a></li>
+    <li><a id="toc-Why-do-flex-scanners-call-fileno-if-it-is-not-ANSI-compatible_003f-1" href="Why-do-flex-scanners-call-fileno-if-it-is-not-ANSI-compatible_003f.html">Why do flex scanners call fileno if it is not ANSI compatible?</a></li>
+    <li><a id="toc-Does-flex-support-recursive-pattern-definitions_003f-1" href="Does-flex-support-recursive-pattern-definitions_003f.html">Does flex support recursive pattern definitions?</a></li>
+    <li><a id="toc-How-do-I-skip-huge-chunks-of-input-_0028tens-of-megabytes_0029-while-using-flex_003f-1" href="How-do-I-skip-huge-chunks-of-input-_0028tens-of-megabytes_0029-while-using-flex_003f.html">How do I skip huge chunks of input (tens of megabytes) while using flex?</a></li>
+    <li><a id="toc-Flex-is-not-matching-my-patterns-in-the-same-order-that-I-defined-them_002e-1" href="Flex-is-not-matching-my-patterns-in-the-same-order-that-I-defined-them_002e.html">Flex is not matching my patterns in the same order that I defined them.</a></li>
+    <li><a id="toc-My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e-1" href="My-actions-are-executing-out-of-order-or-sometimes-not-at-all_002e.html">My actions are executing out of order or sometimes not at all.</a></li>
+    <li><a id="toc-How-can-I-have-multiple-input-sources-feed-into-the-same-scanner-at-the-same-time_003f-1" href="How-can-I-have-multiple-input-sources-feed-into-the-same-scanner-at-the-same-time_003f.html">How can I have multiple input sources feed into the same scanner at the same time?</a></li>
+    <li><a id="toc-Can-I-build-nested-parsers-that-work-with-the-same-input-file_003f-1" href="Can-I-build-nested-parsers-that-work-with-the-same-input-file_003f.html">Can I build nested parsers that work with the same input file?</a></li>
+    <li><a id="toc-How-can-I-match-text-only-at-the-end-of-a-file_003f-1" href="How-can-I-match-text-only-at-the-end-of-a-file_003f.html">How can I match text only at the end of a file?</a></li>
+    <li><a id="toc-How-can-I-make-yyreject_0028_0029-cascade-across-start-condition-boundaries_003f-1" href="How-can-I-make-yyreject_0028_0029-cascade-across-start-condition-boundaries_003f.html">How can I make yyreject() cascade across start condition boundaries?</a></li>
+    <li><a id="toc-Why-can_0027t-I-use-fast-or-full-tables-with-interactive-mode_003f" href="Why-cant-I-use-fast-or-full-tables-with-interactive-mode_003f.html">Why can&rsquo;t I use fast or full tables with interactive mode?</a></li>
+    <li><a id="toc-How-much-faster-is-_002dF-or-_002df-than-_002dC_003f-1" href="How-much-faster-is-_002dF-or-_002df-than-_002dC_003f.html">How much faster is -F or -f than -C?</a></li>
+    <li><a id="toc-If-I-have-a-simple-grammar-can_0027t-I-just-parse-it-with-flex_003f" href="If-I-have-a-simple-grammar-cant-I-just-parse-it-with-flex_003f.html">If I have a simple grammar can&rsquo;t I just parse it with flex?</a></li>
+    <li><a id="toc-Why-doesn_0027t-yyrestart_0028_0029-set-the-start-state-back-to-INITIAL_003f-1" href="Why-doesn_0027t-yyrestart_0028_0029-set-the-start-state-back-to-INITIAL_003f.html">Why doesn&rsquo;t yyrestart() set the start state back to INITIAL?</a></li>
+    <li><a id="toc-How-can-I-match-C_002dstyle-comments_003f-1" href="How-can-I-match-C_002dstyle-comments_003f.html">How can I match C-style comments?</a></li>
+    <li><a id="toc-The-_0027_002e_0027-isn_0027t-working-the-way-I-expected_002e" href="The-period-isn_0027t-working-the-way-I-expected_002e.html">The &rsquo;.&rsquo; isn&rsquo;t working the way I expected.</a></li>
+    <li><a id="toc-Can-I-get-the-flex-manual-in-another-format_003f-1" href="Can-I-get-the-flex-manual-in-another-format_003f.html">Can I get the flex manual in another format?</a></li>
+    <li><a id="toc-Does-there-exist-a-_0022faster_0022-NDFA_002d_003eDFA-algorithm_003f-1" href="Does-there-exist-a-_0022faster_0022-NDFA_002d_003eDFA-algorithm_003f.html">Does there exist a &quot;faster&quot; NDFA-&gt;DFA algorithm?</a></li>
+    <li><a id="toc-How-does-flex-compile-the-DFA-so-quickly_003f-1" href="How-does-flex-compile-the-DFA-so-quickly_003f.html">How does flex compile the DFA so quickly?</a></li>
+    <li><a id="toc-How-can-I-use-more-than-8192-rules_003f-1" href="How-can-I-use-more-than-8192-rules_003f.html">How can I use more than 8192 rules?</a></li>
+    <li><a id="toc-How-do-I-abandon-a-file-in-the-middle-of-a-scan-and-switch-to-a-new-file_003f-1" href="How-do-I-abandon-a-file-in-the-middle-of-a-scan-and-switch-to-a-new-file_003f.html">How do I abandon a file in the middle of a scan and switch to a new file?</a></li>
+    <li><a id="toc-How-do-I-execute-code-only-during-initialization-_0028only-before-the-first-scan_0029_003f-1" href="How-do-I-execute-code-only-during-initialization-_0028only-before-the-first-scan_0029_003f.html">How do I execute code only during initialization (only before the first scan)?</a></li>
+    <li><a id="toc-How-do-I-execute-code-at-termination_003f-1" href="How-do-I-execute-code-at-termination_003f.html">How do I execute code at termination?</a></li>
+    <li><a id="toc-Where-else-can-I-find-help_003f-1" href="Where-else-can-I-find-help_003f.html">Where else can I find help?</a></li>
+    <li><a id="toc-Can-I-include-comments-in-the-_0022rules_0022-section-of-the-file_003f-1" href="Can-I-include-comments-in-the-_0022rules_0022-section-of-the-file_003f.html">Can I include comments in the &quot;rules&quot; section of the file?</a></li>
+    <li><a id="toc-I-get-an-error-about-undefined-yywrap_0028_0029_002e-1" href="I-get-an-error-about-undefined-yywrap_0028_0029_002e.html">I get an error about undefined yywrap().</a></li>
+    <li><a id="toc-How-can-I-change-the-matching-pattern-at-run-time_003f-1" href="How-can-I-change-the-matching-pattern-at-run-time_003f.html">How can I change the matching pattern at run time?</a></li>
+    <li><a id="toc-How-can-I-expand-macros-in-the-input_003f-1" href="How-can-I-expand-macros-in-the-input_003f.html">How can I expand macros in the input?</a></li>
+    <li><a id="toc-How-can-I-build-a-two_002dpass-scanner_003f-1" href="How-can-I-build-a-two_002dpass-scanner_003f.html">How can I build a two-pass scanner?</a></li>
+    <li><a id="toc-How-do-I-match-any-string-not-matched-in-the-preceding-rules_003f-1" href="How-do-I-match-any-string-not-matched-in-the-preceding-rules_003f.html">How do I match any string not matched in the preceding rules?</a></li>
+    <li><a id="toc-I-am-trying-to-port-code-from-AT_0026T-lex-that-uses-yysptr-and-yysbuf_002e-1" href="I-am-trying-to-port-code-from-AT_0026T-lex-that-uses-yysptr-and-yysbuf_002e.html">I am trying to port code from AT&amp;T lex that uses yysptr and yysbuf.</a></li>
+    <li><a id="toc-Is-there-a-way-to-make-flex-treat-NUL-like-a-regular-character_003f-1" href="Is-there-a-way-to-make-flex-treat-NUL-like-a-regular-character_003f.html">Is there a way to make flex treat NUL like a regular character?</a></li>
+    <li><a id="toc-Whenever-flex-can-not-match-the-input-it-says-_0022flex-scanner-jammed_0022_002e-1" href="Whenever-flex-can-not-match-the-input-it-says-_0022flex-scanner-jammed_0022_002e.html">Whenever flex can not match the input it says &quot;flex scanner jammed&quot;.</a></li>
+    <li><a id="toc-Why-doesn_0027t-flex-have-non_002dgreedy-operators-like-perl-does_003f-1" href="Why-doesn_0027t-flex-have-non_002dgreedy-operators-like-perl-does_003f.html">Why doesn&rsquo;t flex have non-greedy operators like perl does?</a></li>
+    <li><a id="toc-Memory-leak-_002d-16386-bytes-allocated-by-malloc_002e-1" href="Memory-leak-_002d-16386-bytes-allocated-by-malloc_002e.html">Memory leak - 16386 bytes allocated by malloc.</a></li>
+    <li><a id="toc-How-do-I-track-the-byte-offset-for-lseek_0028_0029_003f-1" href="How-do-I-track-the-byte-offset-for-lseek_0028_0029_003f.html">How do I track the byte offset for lseek()?</a></li>
+    <li><a id="toc-How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f-1" href="How-do-I-use-my-own-I_002fO-classes-in-a-C_002b_002b-scanner_003f.html">How do I use my own I/O classes in a C++ scanner?</a></li>
+    <li><a id="toc-How-do-I-skip-as-many-chars-as-possible_003f-1" href="How-do-I-skip-as-many-chars-as-possible_003f.html">How do I skip as many chars as possible?</a></li>
+    <li><a id="toc-deleteme00-1" href="deleteme00.html">deleteme00</a></li>
+    <li><a id="toc-Are-certain-equivalent-patterns-faster-than-others_003f-1" href="Are-certain-equivalent-patterns-faster-than-others_003f.html">Are certain equivalent patterns faster than others?</a></li>
+    <li><a id="toc-Is-backing-up-a-big-deal_003f-1" href="Is-backing-up-a-big-deal_003f.html">Is backing up a big deal?</a></li>
+    <li><a id="toc-Can-I-fake-multi_002dbyte-character-support_003f-1" href="Can-I-fake-multi_002dbyte-character-support_003f.html">Can I fake multi-byte character support?</a></li>
+    <li><a id="toc-deleteme01-1" href="deleteme01.html">deleteme01</a></li>
+    <li><a id="toc-Can-you-discuss-some-flex-internals_003f-1" href="Can-you-discuss-some-flex-internals_003f.html">Can you discuss some flex internals?</a></li>
+    <li><a id="toc-yyunput_0028_0029-messes-up-yyatbol-1" href="yyunput_0028_0029-messes-up-yyatbol.html">yyunput() messes up yyatbol</a></li>
+    <li><a id="toc-The-_007c-operator-is-not-doing-what-I-want-1" href="The-_007c-operator-is-not-doing-what-I-want.html">The | operator is not doing what I want</a></li>
+    <li><a id="toc-Why-can_0027t-flex-understand-this-variable-trailing-context-pattern_003f-1" href="Why-can_0027t-flex-understand-this-variable-trailing-context-pattern_003f.html">Why can&rsquo;t flex understand this variable trailing context pattern?</a></li>
+    <li><a id="toc-The-_005e-operator-isn_0027t-working-1" href="The-_005e-operator-isn_0027t-working.html">The ^ operator isn&rsquo;t working</a></li>
+    <li><a id="toc-Trailing-context-is-getting-confused-with-trailing-optional-patterns-1" href="Trailing-context-is-getting-confused-with-trailing-optional-patterns.html">Trailing context is getting confused with trailing optional patterns</a></li>
+    <li><a id="toc-Is-flex-GNU-or-not_003f-1" href="Is-flex-GNU-or-not_003f.html">Is flex GNU or not?</a></li>
+    <li><a id="toc-ERASEME53-1" href="ERASEME53.html">ERASEME53</a></li>
+    <li><a id="toc-I-need-to-scan-if_002dthen_002delse-blocks-and-while-loops-1" href="I-need-to-scan-if_002dthen_002delse-blocks-and-while-loops.html">I need to scan if-then-else blocks and while loops</a></li>
+    <li><a id="toc-ERASEME55-1" href="ERASEME55.html">ERASEME55</a></li>
+    <li><a id="toc-ERASEME56-1" href="ERASEME56.html">ERASEME56</a></li>
+    <li><a id="toc-ERASEME57-1" href="ERASEME57.html">ERASEME57</a></li>
+    <li><a id="toc-Is-there-a-repository-for-flex-scanners_003f-1" href="Is-there-a-repository-for-flex-scanners_003f.html">Is there a repository for flex scanners?</a></li>
+    <li><a id="toc-How-can-I-conditionally-compile-or-preprocess-my-flex-input-file_003f-1" href="How-can-I-conditionally-compile-or-preprocess-my-flex-input-file_003f.html">How can I conditionally compile or preprocess my flex input file?</a></li>
+    <li><a id="toc-Where-can-I-find-grammars-for-lex-and-yacc_003f-1" href="Where-can-I-find-grammars-for-lex-and-yacc_003f.html">Where can I find grammars for lex and yacc?</a></li>
+    <li><a id="toc-I-get-an-end_002dof_002dbuffer-message-for-each-character-scanned_002e-1" href="I-get-an-end_002dof_002dbuffer-message-for-each-character-scanned_002e.html">I get an end-of-buffer message for each character scanned.</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d62-1" href="unnamed_002dfaq_002d62.html">unnamed-faq-62</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d63-1" href="unnamed_002dfaq_002d63.html">unnamed-faq-63</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d64-1" href="unnamed_002dfaq_002d64.html">unnamed-faq-64</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d65-1" href="unnamed_002dfaq_002d65.html">unnamed-faq-65</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d66-1" href="unnamed_002dfaq_002d66.html">unnamed-faq-66</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d67-1" href="unnamed_002dfaq_002d67.html">unnamed-faq-67</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d68-1" href="unnamed_002dfaq_002d68.html">unnamed-faq-68</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d69-1" href="unnamed_002dfaq_002d69.html">unnamed-faq-69</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d70-1" href="unnamed_002dfaq_002d70.html">unnamed-faq-70</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d71-1" href="unnamed_002dfaq_002d71.html">unnamed-faq-71</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d72-1" href="unnamed_002dfaq_002d72.html">unnamed-faq-72</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d73-1" href="unnamed_002dfaq_002d73.html">unnamed-faq-73</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d74-1" href="unnamed_002dfaq_002d74.html">unnamed-faq-74</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d75-1" href="unnamed_002dfaq_002d75.html">unnamed-faq-75</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d76-1" href="unnamed_002dfaq_002d76.html">unnamed-faq-76</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d77-1" href="unnamed_002dfaq_002d77.html">unnamed-faq-77</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d78-1" href="unnamed_002dfaq_002d78.html">unnamed-faq-78</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d79-1" href="unnamed_002dfaq_002d79.html">unnamed-faq-79</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d80-1" href="unnamed_002dfaq_002d80.html">unnamed-faq-80</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d81-1" href="unnamed_002dfaq_002d81.html">unnamed-faq-81</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d82-1" href="unnamed_002dfaq_002d82.html">unnamed-faq-82</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d83-1" href="unnamed_002dfaq_002d83.html">unnamed-faq-83</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d84-1" href="unnamed_002dfaq_002d84.html">unnamed-faq-84</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d85-1" href="unnamed_002dfaq_002d85.html">unnamed-faq-85</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d86-1" href="unnamed_002dfaq_002d86.html">unnamed-faq-86</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d87-1" href="unnamed_002dfaq_002d87.html">unnamed-faq-87</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d88-1" href="unnamed_002dfaq_002d88.html">unnamed-faq-88</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d90-1" href="unnamed_002dfaq_002d90.html">unnamed-faq-90</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d91-1" href="unnamed_002dfaq_002d91.html">unnamed-faq-91</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d92-1" href="unnamed_002dfaq_002d92.html">unnamed-faq-92</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d93-1" href="unnamed_002dfaq_002d93.html">unnamed-faq-93</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d94-1" href="unnamed_002dfaq_002d94.html">unnamed-faq-94</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d95-1" href="unnamed_002dfaq_002d95.html">unnamed-faq-95</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d96-1" href="unnamed_002dfaq_002d96.html">unnamed-faq-96</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d97-1" href="unnamed_002dfaq_002d97.html">unnamed-faq-97</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d98-1" href="unnamed_002dfaq_002d98.html">unnamed-faq-98</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d99-1" href="unnamed_002dfaq_002d99.html">unnamed-faq-99</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d100-1" href="unnamed_002dfaq_002d100.html">unnamed-faq-100</a></li>
+    <li><a id="toc-unnamed_002dfaq_002d101-1" href="unnamed_002dfaq_002d101.html">unnamed-faq-101</a></li>
+    <li><a id="toc-Why-do-I-get-_0022conflicting-types-for-yylex_0022-error_003f-1" href="Why-do-I-get-_0022conflicting-types-for-yylex_0022-error_003f.html">Why do I get &quot;conflicting types for yylex&quot; error?</a></li>
+    <li><a id="toc-How-do-I-access-the-values-set-in-a-Flex-action-from-within-a-Bison-action_003f-1" href="How-do-I-access-the-values-set-in-a-Flex-action-from-within-a-Bison-action_003f.html">How do I access the values set in a Flex action from within a Bison action?</a></li>
+  </ul></li>
+  <li><a id="toc-Appendices-1" href="Appendices.html">Appendix A Appendices</a>
+  <ul class="no-bullet">
+    <li><a id="toc-Makefiles-and-Flex-1" href="Makefiles-and-Flex.html">A.1 Makefiles and Flex</a></li>
+    <li><a id="toc-C-Scanners-with-Bison-Parsers" href="Bison-Bridge.html">A.2 C Scanners with Bison Parsers</a></li>
+    <li><a id="toc-M4-Dependency-1" href="M4-Dependency.html">A.3 M4 Dependency</a></li>
+    <li><a id="toc-Common-Patterns-1" href="Common-Patterns.html">A.4 Common Patterns</a>
+    <ul class="no-bullet">
+      <li><a id="toc-Numbers-1" href="Numbers.html">A.4.1 Numbers</a></li>
+      <li><a id="toc-Identifiers-1" href="Identifiers.html">A.4.2 Identifiers</a></li>
+      <li><a id="toc-Quoted-Constructs-1" href="Quoted-Constructs.html">A.4.3 Quoted Constructs</a></li>
+      <li><a id="toc-Addresses-1" href="Addresses.html">A.4.4 Addresses</a></li>
+    </ul></li>
+    <li><a id="toc-Retargeting-Flex-1" href="Retargeting-Flex.html">A.5 Retargeting Flex</a>
+    <ul class="no-bullet">
+      <li><a id="toc-Overview-1" href="Overview.html">A.5.1 Overview</a></li>
+      <li><a id="toc-Getting-Started-1" href="Getting-Started.html">A.5.2 Getting Started</a></li>
+      <li><a id="toc-Development-Steps-1" href="Development-Steps.html">A.5.3 Development Steps</a></li>
+      <li><a id="toc-Translation-Guidelines-1" href="Translation-Guidelines.html">A.5.4 Translation Guidelines</a></li>
+    </ul></li>
+    <li><a id="toc-Deprecated-interfaces_002c-_002c-Retargeting-Flex" href="Deprecated-Interfaces.html">A.6 Deprecated interfaces, , Retargeting Flex</a></li>
+  </ul></li>
+  <li><a id="toc-Indices-1" href="Indices.html">Indices</a>
+  <ul class="no-bullet">
+    <li><a id="toc-Concept-Index-1" href="Concept-Index.html" rel="index">Concept Index</a></li>
+    <li><a id="toc-Index-of-Functions-1" href="Index-of-Functions.html" rel="index">Index of Functions</a></li>
+    <li><a id="toc-Index-of-Variables-1" href="Index-of-Variables.html" rel="index">Index of Variables</a></li>
+    <li><a id="toc-Index-of-Data-Types-1" href="Index-of-Data-Types.html" rel="index">Index of Data Types</a></li>
+    <li><a id="toc-Index-of-Hooks-1" href="Index-of-Hooks.html" rel="index">Index of Hooks</a></li>
+    <li><a id="toc-Index-of-Scanner-Options-1" href="Index-of-Scanner-Options.html" rel="index">Index of Scanner Options</a></li>
+  </ul></li>
+</ul>
+</div>
+</div>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Copyright.html" accesskey="n" rel="next">Copyright</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

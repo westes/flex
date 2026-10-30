@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.8, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<title>Tables File Format (Lexical Analysis With Flex, for Flex 2.6.5-rc1)</title>
+
+<meta name="description" content="Tables File Format (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="keywords" content="Tables File Format (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Indices.html" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Serialized-Tables.html" rel="up" title="Serialized Tables">
+<link href="Loading-and-Unloading-Serialized-Tables.html" rel="prev" title="Loading and Unloading Serialized Tables">
+<style type="text/css">
+<!--
+a.copiable-anchor {visibility: hidden; text-decoration: none; line-height: 0em}
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+span:hover a.copiable-anchor {visibility: visible}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section" id="Tables-File-Format">
+<div class="header">
+<p>
+Previous: <a href="Loading-and-Unloading-Serialized-Tables.html" accesskey="p" rel="prev">Loading and Unloading Serialized Tables</a>, Up: <a href="Serialized-Tables.html" accesskey="u" rel="up">Serialized Tables</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<span id="Tables-File-Format-1"></span><h3 class="section">22.3 Tables File Format</h3>
+<span id="index-tables_002c-file-format"></span>
+<span id="index-file-format_002c-serialized-tables"></span>
+
+<p>This section defines the file format of serialized <code>flex</code> tables.
+</p>
+<p>The tables format allows for one or more sets of tables to be
+specified, where each set corresponds to a given scanner. Scanners are
+indexed by name, as described below. The file format is as follows:
+</p>
+<div class="example">
+<pre class="verbatim">                 TABLE SET 1
+                +-------------------------------+
+        Header  | uint32          th_magic;     |
+                | uint32          th_hsize;     |
+                | uint32          th_ssize;     |
+                | uint16          th_flags;     |
+                | char            th_version[]; |
+                | char            th_name[];    |
+                | uint8           th_pad64[];   |
+                +-------------------------------+
+        Table 1 | uint16          td_id;        |
+                | uint16          td_flags;     |
+                | uint32          td_hilen;     |
+                | uint32          td_lolen;     |
+                | void            td_data[];    |
+                | uint8           td_pad64[];   |
+                +-------------------------------+
+        Table 2 |                               |
+           .    .                               .
+           .    .                               .
+           .    .                               .
+           .    .                               .
+        Table n |                               |
+                +-------------------------------+
+                 TABLE SET 2
+                      .
+                      .
+                      .
+                 TABLE SET N
+</pre></div>
+
+<p>The above diagram shows that a complete set of tables consists of a header
+followed by multiple individual tables. Furthermore, multiple complete sets may
+be present in the same file, each set with its own header and tables. The sets
+are contiguous in the file. The only way to know if another set follows is to
+check the next four bytes for the magic number (or check for EOF). The header
+and tables sections are padded to 64-bit boundaries. Below we describe each
+field in detail. This format does not specify how the scanner will expand the
+given data, i.e., data may be serialized as int8, but expanded to an int32
+array at runtime. This is to reduce the size of the serialized data where
+possible.  Remember, <em>all integer values are in network byte order</em>. 
+</p>
+<p>Fields of a table header:
+</p>
+<dl compact="compact">
+<dt><span><code>th_magic</code></span></dt>
+<dd><p>Magic number, always 0xF13C57B1.
+</p>
+</dd>
+<dt><span><code>th_hsize</code></span></dt>
+<dd><p>Size of this entire header, in bytes, including all fields plus any padding.
+</p>
+</dd>
+<dt><span><code>th_ssize</code></span></dt>
+<dd><p>Size of this entire set, in bytes, including the header, all tables, plus
+any padding.
+</p>
+</dd>
+<dt><span><code>th_flags</code></span></dt>
+<dd><p>Bit flags for this table set. Currently unused.
+</p>
+</dd>
+<dt><span><code>th_version[]</code></span></dt>
+<dd><p>Flex version in NULL-terminated string format. e.g., &lsquo;<samp>2.5.13a</samp>&rsquo;. This is
+the version of flex that was used to create the serialized tables.
+</p>
+</dd>
+<dt><span><code>th_name[]</code></span></dt>
+<dd><p>Contains the name of this table set. The default is &lsquo;<samp>yytables</samp>&rsquo;,
+and is prefixed accordingly, e.g., &lsquo;<samp>footables</samp>&rsquo;. Must be NUL-terminated.
+</p>
+</dd>
+<dt><span><code>th_pad64[]</code></span></dt>
+<dd><p>Zero or more NUL bytes, padding the entire header to the next 64-bit boundary
+as calculated from the beginning of the header.
+</p></dd>
+</dl>
+
+<p>Fields of a table:
+</p>
+<dl compact="compact">
+<dt><span><code>td_id</code></span></dt>
+<dd><p>Specifies the table identifier. Possible values are:
+</p><dl compact="compact">
+<dt><span><code>YYTD_ID_ACCEPT (0x01)</code></span></dt>
+<dd><p><code>yy_accept</code>
+</p></dd>
+<dt><span><code>YYTD_ID_BASE   (0x02)</code></span></dt>
+<dd><p><code>yy_base</code>
+</p></dd>
+<dt><span><code>YYTD_ID_CHK    (0x03)</code></span></dt>
+<dd><p><code>yy_chk</code>
+</p></dd>
+<dt><span><code>YYTD_ID_DEF    (0x04)</code></span></dt>
+<dd><p><code>yy_def</code>
+</p></dd>
+<dt><span><code>YYTD_ID_EC     (0x05)</code></span></dt>
+<dd><p><code>yy_ec </code>
+</p></dd>
+<dt><span><code>YYTD_ID_META   (0x06)</code></span></dt>
+<dd><p><code>yy_meta</code>
+</p></dd>
+<dt><span><code>YYTD_ID_NUL_TRANS (0x07)</code></span></dt>
+<dd><p><code>yy_NUL_trans</code>
+</p></dd>
+<dt><span><code>YYTD_ID_NXT (0x08)</code></span></dt>
+<dd><p><code>yy_nxt</code>. This array may be two dimensional. See the <code>td_hilen</code>
+field below.
+</p></dd>
+<dt><span><code>YYTD_ID_RULE_CAN_MATCH_EOL (0x09)</code></span></dt>
+<dd><p><code>yy_rule_can_match_eol</code>
+</p></dd>
+<dt><span><code>YYTD_ID_START_STATE_LIST (0x0A)</code></span></dt>
+<dd><p><code>yy_start_state_list</code>. This array is handled specially because it is an
+array of pointers to structs. See the <code>td_flags</code> field below.
+</p></dd>
+<dt><span><code>YYTD_ID_TRANSITION (0x0B)</code></span></dt>
+<dd><p><code>yy_transition</code>. This array is handled specially because it is an array of
+structs. See the <code>td_lolen</code> field below.
+</p></dd>
+<dt><span><code>YYTD_ID_ACCLIST (0x0C)</code></span></dt>
+<dd><p><code>yy_acclist</code>
+</p></dd>
+</dl>
+
+</dd>
+<dt><span><code>td_flags</code></span></dt>
+<dd><p>Bit flags describing how to interpret the data in <code>td_data</code>.
+The data arrays are one-dimensional by default, but may be
+two dimensional as specified in the <code>td_hilen</code> field.
+</p>
+<dl compact="compact">
+<dt><span><code>YYTD_DATA8 (0x01)</code></span></dt>
+<dd><p>The data is serialized as an array of type int8.
+</p></dd>
+<dt><span><code>YYTD_DATA16 (0x02)</code></span></dt>
+<dd><p>The data is serialized as an array of type int16.
+</p></dd>
+<dt><span><code>YYTD_DATA32 (0x04)</code></span></dt>
+<dd><p>The data is serialized as an array of type int32.
+</p></dd>
+<dt><span><code>YYTD_PTRANS (0x08)</code></span></dt>
+<dd><p>The data is a list of indexes of entries in the expanded <code>yy_transition</code>
+array.  Each index should be expanded to a pointer to the corresponding entry
+in the <code>yy_transition</code> array. We count on the fact that the
+<code>yy_transition</code> array has already been seen.
+</p></dd>
+<dt><span><code>YYTD_STRUCT (0x10)</code></span></dt>
+<dd><p>The data is a list of yy_trans_info structs, each of which consists of
+two integers. There is no padding between struct elements or between structs.
+The type of each member is determined by the <code>YYTD_DATA*</code> bits.
+</p></dd>
+</dl>
+
+</dd>
+<dt><span><code>td_hilen</code></span></dt>
+<dd><p>If <code>td_hilen</code> is non-zero, then the data is a two-dimensional array.
+Otherwise, the data is a one-dimensional array. <code>td_hilen</code> contains the
+number of elements in the higher dimensional array, and <code>td_lolen</code> contains
+the number of elements in the lowest dimension.
+</p>
+<p>Conceptually, <code>td_data</code> is either <code>sometype td_data[td_lolen]</code>, or
+<code>sometype td_data[td_hilen][td_lolen]</code>, where <code>sometype</code> is specified
+by the <code>td_flags</code> field.  It is possible for both <code>td_lolen</code> and
+<code>td_hilen</code> to be zero, in which case <code>td_data</code> is a zero length
+array, and no data is loaded, i.e., this table is simply skipped. Flex does not
+currently generate tables of zero length.
+</p>
+</dd>
+<dt><span><code>td_lolen</code></span></dt>
+<dd><p>Specifies the number of elements in the lowest dimension array. If this is
+a one-dimensional array, then it is simply the number of elements in this array.
+The element size is determined by the <code>td_flags</code> field.
+</p>
+</dd>
+<dt><span><code>td_data[]</code></span></dt>
+<dd><p>The table data. This array may be a one- or two-dimensional array, of type
+<code>int8</code>, <code>int16</code>, <code>int32</code>, <code>struct yy_trans_info</code>, or
+<code>struct yy_trans_info*</code>,  depending upon the values in the
+<code>td_flags</code>, <code>td_hilen</code>, and <code>td_lolen</code> fields.
+</p>
+</dd>
+<dt><span><code>td_pad64[]</code></span></dt>
+<dd><p>Zero or more NUL bytes, padding the entire table to the next 64-bit boundary as
+calculated from the beginning of this table.
+</p></dd>
+</dl>
+
+</div>
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Loading-and-Unloading-Serialized-Tables.html">Loading and Unloading Serialized Tables</a>, Up: <a href="Serialized-Tables.html">Serialized Tables</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

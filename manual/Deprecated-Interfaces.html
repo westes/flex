@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.8, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<title>Deprecated Interfaces (Lexical Analysis With Flex, for Flex 2.6.5-rc1)</title>
+
+<meta name="description" content="Deprecated Interfaces (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="keywords" content="Deprecated Interfaces (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Indices.html" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Appendices.html" rel="up" title="Appendices">
+<link href="Retargeting-Flex.html" rel="prev" title="Retargeting Flex">
+<style type="text/css">
+<!--
+a.copiable-anchor {visibility: hidden; text-decoration: none; line-height: 0em}
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+span:hover a.copiable-anchor {visibility: visible}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section" id="Deprecated-Interfaces">
+<div class="header">
+<p>
+Previous: <a href="Retargeting-Flex.html" accesskey="p" rel="prev">Retargeting Flex</a>, Up: <a href="Appendices.html" accesskey="u" rel="up">Appendices</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<span id="Deprecated-interfaces_002c-_002c-Retargeting-Flex"></span><h3 class="section">A.6 Deprecated interfaces, , Retargeting Flex</h3>
+<span id="index-interfaces_002c-deprecated"></span>
+
+<p>Long-time users of Flex and its predecessor, Lex, may notice that the
+examples in this manual look a little different than they used to.
+They have changed because of the support for targeting languages
+other than C/C++.
+</p>
+<p>All the old interfaces are still in place for legacy C code to use.
+But some are now deprecated and should not be used in new code. Doing
+so will hinder forward portability someday.
+</p>
+<p>These changes are necessary because the documented Flex interface can
+no longer rely on controlling scanner generation by defining
+preprocessor macros.  Most languages other than C/C++ don&rsquo;t have text
+macros, and none of those that do emulate C #define closely enough to
+preserve the behavior dependent on it.  Thus interface calls in
+multi-language Flex need to be functions, at least syntactically
+(though many are still implemented as macros for C/C++).
+</p>
+<p>A list of deprecated interfaces and their replacements follows.
+Again, all are still available in the default C/C++ back end, but not
+in any other.
+</p>
+<ul>
+<li> BEGIN: Replaced by yybegin()
+
+</li><li> ECHO: Replaced by yyecho()
+
+</li><li> REJECT: Replaced by yyreject()
+
+</li><li> #define YY_DECL: Replaced by the <code>yydecl</code> option.
+
+</li><li> #define YYLMAX: Replaced by the <code>yylmax</code> option.
+
+</li><li> #define YY_INPUT: Replaced by the <code>noyyread</code> option.
+
+</li><li> YYSTART: Replaced by yystart().
+
+</li><li> YY_AT_BOL(): Replaced by yyatbol().
+
+</li><li> yy_set_bol(): Replaced by yysetbol()
+
+</li><li> input(): Replaced by yyinput(). This function was already yyinput()
+in the C++ back end.
+
+</li><li> :
+unput(): Replaced by yyunput().
+
+</li><li> #define YY_EXTRA_TYPE: Replaced by the <code>extra-type</code> option.
+
+</li><li> #define YY_USER_INIT: Replaced by the <code>user-init</code> option.
+
+</li><li> #define YY_USER_ACTION replaced by <code>pre-action</code> option.
+
+</li><li> #define YY_BREAK replaced by <code>post-action</code> option.
+
+</li><li> YYSTATE: is accepted as an alias for <code>yystart()</code>
+(since that is what&rsquo;s used by AT&amp;T <code>lex</code>).
+
+</li><li> YY_FLUSH_BUFFER: replaced by yy_flush_current_buffer().
+
+</li><li> YY_CURRENT_BUFFER: replaced by yy_current_buffer().
+
+</li><li> YY_BUFFER_STATE: replaced by yybuffer.
+
+</li><li> YY_FATAL_ERROR: replaced by yypanic().
+To supply your own handler, simply use <code>%option noyypanic</code>
+so the default handler is not generated, then write your own handler
+with the same prototype.
+
+</li><li> YY_NEW_FILE: In previous versions of <code>flex</code>, when assigning
+<samp>yyin</samp> to a new input file, after doing the assignment you had to
+call the special action <code>YY_NEW_FILE</code>.  This is no longer
+necessary.
+
+</li><li> FLEX_SCANNER: Not meaningful outside of the C back end, and not defined.
+
+</li><li> FLEX_DEBUG: Outside the default C back end, this is a constant of type
+bool rather rthan a preprocessor symbol.
+
+</li><li> FLEX_BETA: Its behavior can&rsquo;t be replicated without the
+C preprocessor. Test for YY_FLEX_SUBMINOR_VERSION instead.
+
+</li><li> YY_BUF_SIZE: replaced by <code>%option bufsize</code>.
+
+</li><li> :
+yyterminate(): Backends that don&rsquo;t use the C preprocessor cannot
+support redefining this hook with #define.  Instead, set it with
+the <code>yyterminate</code> option. 
+
+</li></ul>
+
+<p>Where entry point names have been downcased and had underscores
+removed, it&rsquo;s because some languages in the expected target set for
+Flex - notably Go and Python - have validator/linter tools that would
+complain about uppercase or underscores or both.  It would obviously be best
+if the parts of the public API that have to change to conform to
+local conventions are small and not commonly used.
+</p>
+<p>This is also why the functions <code>yy_current_buffer()</code>,
+<code>yy_flush_current_buffer()</code>, and <code>yy_set_interactive()</code>
+do not have rewrite rules (see See <a href="Options-Affecting-Scanner-Behavior.html#option_002drewrite">option-rewrite</a>); simply
+removing the underscores would have produced names that are
+uncomfortably long and hard on the eyeballs.  We leave
+it to the API binding for each individual target language to
+choose whether they should be left as is, camel-cased, or
+otherwise adapted to local conventions.
+</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Retargeting-Flex.html">Retargeting Flex</a>, Up: <a href="Appendices.html">Appendices</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

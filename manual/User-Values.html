@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.8, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<title>User Values (Lexical Analysis With Flex, for Flex 2.6.5-rc1)</title>
+
+<meta name="description" content="User Values (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="keywords" content="User Values (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Indices.html" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html" rel="up" title="Top">
+<link href="Yacc.html" rel="next" title="Yacc">
+<link href="Misc-Controls.html" rel="prev" title="Misc Controls">
+<style type="text/css">
+<!--
+a.copiable-anchor {visibility: hidden; text-decoration: none; line-height: 0em}
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+span:hover a.copiable-anchor {visibility: visible}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="chapter" id="User-Values">
+<div class="header">
+<p>
+Next: <a href="Yacc.html" accesskey="n" rel="next">Interfacing with Yacc</a>, Previous: <a href="Misc-Controls.html" accesskey="p" rel="prev">Miscellaneous Controls</a>, Up: <a href="index.html" accesskey="u" rel="up">flex</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<span id="Values-Available-To-the-User"></span><h2 class="chapter">14 Values Available To the User</h2>
+
+<p>This chapter summarizes the various values available to the user in the
+rule actions.
+</p>
+<dl compact="compact">
+<dd><span id="index-yytext-2"></span>
+</dd>
+<dt><span><code>char *yytext</code></span></dt>
+<dd><p>holds the text of the current token.  It may be modified but not
+lengthened (you cannot append characters to the end).
+</p>
+<span id="index-yytext_002c-default-array-size"></span>
+<span id="index-array_002c-default-size-for-yytext"></span>
+<span id="index-yylmax"></span>
+<p>If the special directive <code>%array</code> appears in the first section of
+the scanner description, then <code>yytext</code> is instead declared
+to be an array of YYLMAX characters, where <code>YYLMAX</code> is a parameter
+that you can redefine with a <code>%yylmax</code> option if you don&rsquo;t like the default
+value (generally 8KB).  Using <code>%array</code> results in somewhat slower
+scanners, but the value of <code>yytext</code> becomes immune to calls to
+<code>yyunput()</code>, which potentially destroy its value when <code>yytext</code> is
+a character pointer.  The opposite of <code>%array</code> is <code>%pointer</code>,
+which is the default.
+</p>
+<span id="index-C_002b_002b-and-_0025array"></span>
+<p>You cannot use <code>%array</code> when generating C++ scanner classes (the
+&lsquo;<samp>-+</samp>&rsquo; flag).
+</p>
+<span id="index-yyleng-1"></span>
+</dd>
+<dt><span><code>int yyleng</code></span></dt>
+<dd><p>holds the length of the current token.
+</p>
+<span id="index-yyin-1"></span>
+</dd>
+<dt><span><code>FILE *yyin</code></span></dt>
+<dd><p>is the file which by default <code>flex</code> reads from.
+In target languages other than C/C++, expect it to have
+whatever native type is associated with I/O streams. It may be
+redefined but doing so only makes sense before scanning begins or after
+an EOF has been encountered.  Changing it in the midst of scanning will
+have unexpected results since <code>flex</code> buffers its input; use
+<code>yyrestart()</code> instead.  Once scanning terminates because an
+end-of-file has been seen, you can assign <samp>yyin</samp> to be the new input
+file and then call the scanner again to continue scanning.
+</p>
+<span id="index-yyrestart"></span>
+</dd>
+<dt><span><code>void yyrestart( FILE *new_file )</code></span></dt>
+<dd><p>may be called to point <samp>yyin</samp> at the new input file.
+In target languages other than C/C++, expect the argument to have
+whatever tyoe is associated with I/O streams. The
+switch-over to the new file is immediate (any previously buffered-up
+input is lost).  Note that calling <code>yyrestart()</code> with <samp>yyin</samp>
+as an argument thus throws away the current input buffer and continues
+scanning the same input file.
+</p>
+<span id="index-yyout-1"></span>
+</dd>
+<dt><span><code>FILE *yyout</code></span></dt>
+<dd><p>is the output stream to which <code>yyecho()</code> actions are done.  It can be reassigned
+by the user.
+In target languages other than C/C++, expect it to have
+whatever tyoe is associated with I/O streams.
+</p>
+<span id="index-yy_005fcurrent_005fbuffer_0028_0029"></span>
+</dd>
+<dt><span><code>yy_current_buffer()</code></span></dt>
+<dd><p>returns a <code>yybuffer</code> handle to the current buffer.
+</p>
+<span id="index-yystart_0028_0029"></span>
+</dd>
+<dt><span><code>yystart()</code></span></dt>
+<dd><p>returns an integer value corresponding to the current start condition.
+You can subsequently use this value with <code>yybegin()</code> to return to that
+start condition.
+</p></dd>
+</dl>
+
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Yacc.html">Interfacing with Yacc</a>, Previous: <a href="Misc-Controls.html">Miscellaneous Controls</a>, Up: <a href="index.html">flex</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

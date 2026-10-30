@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.8, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 
+The flex manual is placed under the same licensing conditions as the
+rest of flex:
+
+Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2012
+The Flex Project.
+
+Copyright (C) 1990, 1997 The Regents of the University of California.
+All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Vern Paxson.
+
+The United States Government has rights in this work pursuant
+to contract no. DE-AC03-76SF00098 between the United States
+Department of Energy and the University of California.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. -->
+<title>Translation Guidelines (Lexical Analysis With Flex, for Flex 2.6.5-rc1)</title>
+
+<meta name="description" content="Translation Guidelines (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="keywords" content="Translation Guidelines (Lexical Analysis With Flex, for Flex 2.6.5-rc1)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Indices.html" rel="index" title="Indices">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Retargeting-Flex.html" rel="up" title="Retargeting Flex">
+<link href="Development-Steps.html" rel="prev" title="Development Steps">
+<style type="text/css">
+<!--
+a.copiable-anchor {visibility: hidden; text-decoration: none; line-height: 0em}
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+span:hover a.copiable-anchor {visibility: visible}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection" id="Translation-Guidelines">
+<div class="header">
+<p>
+Previous: <a href="Development-Steps.html" accesskey="p" rel="prev">Development Steps</a>, Up: <a href="Retargeting-Flex.html" accesskey="u" rel="up">Retargeting Flex</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<span id="Translation-Guidelines-1"></span><h4 class="subsection">A.5.4 Translation Guidelines</h4>
+
+<ul>
+<li> Don&rsquo;t bother supporting non-reentrant parser generation.
+The interface of original Lex with all those globals hanging out
+needs to be supported in C for backwards compatibility, but
+there is no need to carry it forward.
+</li></ul>
+
+<ul>
+<li> The &ldquo;one exception&rdquo; to target-syntax independence hinted at earlier
+is some C code spliced into the skeleton when table serialization is
+enabled. This option is thus available only with the C back end; you
+need not bother supporting it in yours.
+
+</li><li> If your target language has an object system, you probably want your
+back end to generate a class named by default FlexLexer (as the
+C++ back end does) with all of the controls and query functions as
+methods. As in C++, <code>%option yyclass</code> should modify the
+class name.  If your target language has a module system, the
+-P option (which in C/C++ sets a common prefix on exposed entry
+points) can be pressed into service to set the module name.
+</li></ul>
+
+<p>The following assumptions in the code might trip you up and
+require fixes outside a back end.
+</p>
+<ol>
+<li> As previously noted, the item separator in data initializers is a
+comma. Flex does not assume that a trailing comma after the last
+initializer element is legal, though it is legal in C/C++.
+
+</li><li> Either case arms can be stacked as in C; that is, there is
+an implicit fallthrough if the case arm has no code. Or,
+there is an explicit fallthrough keyword that enables this,
+as in Go.
+</li></ol>
+
+<p>By putting a <code>yyterminate()</code> call in the expansion of
+<code>M4_HOOK_EOF_STATE_CASE_FALLTHROUGH</code> and defining an empty
+<code>M4_HOOK_EOF_STATE_CASE_TERMINATE</code> macro, you could handle
+languages like Pascal.
+</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Development-Steps.html">Development Steps</a>, Up: <a href="Retargeting-Flex.html">Retargeting Flex</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Indices.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>
