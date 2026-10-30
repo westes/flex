@@ -1,0 +1,824 @@
+# Latvian translation for flex.
+# This file is put in the public domain.
+# Copyright (C) 2026 The Flex Project (msgids)
+# Rihards Priedītis <rprieditis@gmail.com>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: flex 2.6.5-rc1\n"
+"Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2026-10-27 14:05-0400\n"
+"PO-Revision-Date: 2026-10-30 16:09+0200\n"
+"Last-Translator: Rihards Priedītis <rprieditis@gmail.com>\n"
+"Language-Team: Latvian <translation-team-lv@lists.sourceforge.net>\n"
+"Language: lv\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==0 || (n%100>=11 && n%100<=19) ? 0 : n%10==1 && n%100!=11 ? 1 : 2);\n"
+"X-Generator: Poedit 3.10\n"
+
+#: src/buf.c:63
+msgid "Allocation of buffer to print string failed"
+msgstr "Neizdevās piešķirt buferi virknes izvadīšanai"
+
+#: src/ccl.c:82
+msgid "internal error: trying to add a char to a non-last ccl.\n"
+msgstr "iekšējā kļūda: mēģina pievienot rakstzīmi ne-pēdējai ccl.\n"
+
+#. TRANSLATORS: This starts one line of the
+#. report written by the -b option. A
+#. "non-accepting" state is one in which no
+#. rule has been matched yet, so the
+#. scanner may have to back up to an
+#. earlier position in the input.
+#: src/dfa.c:68
+#, c-format
+msgid "State #%d is non-accepting -\n"
+msgstr "Stāvoklis #%d nav pieņemošs -\n"
+
+#. TRANSLATORS: "Trailing context"
+#. is the part of a rule that must
+#. match after the text of the rule,
+#. written r/s or with a $ at the
+#. end of the rule. It is dangerous
+#. when the two parts can match the
+#. same characters.
+#: src/dfa.c:134
+msgid "dangerous trailing context"
+msgstr "bīstams sekojošais konteksts"
+
+#. TRANSLATORS: The line numbers, in the flex input, of the rules
+#. that can still match from this state.
+#: src/dfa.c:176
+msgid "associated rule line numbers:"
+msgstr "saistīto noteikumu rindu numuri:"
+
+#. TRANSLATORS: The characters that take the scanner from this state
+#. to another state.
+#: src/dfa.c:212
+msgid "out-transitions:"
+msgstr "izejošās pārejas:"
+
+#. TRANSLATORS: The characters that have no transition from this
+#. state.
+#: src/dfa.c:222
+msgid "jam-transitions:"
+msgstr "aizsprostošās pārejas:"
+
+#: src/dfa.c:351
+#, c-format
+msgid "consistency check failed in %s()"
+msgstr "konsekvences pārbaude neizdevās %s()"
+
+#: src/dfa.c:581
+msgid "could not create unique end-of-buffer state"
+msgstr "neizdevās izveidot unikālu bufera beigu stāvokli"
+
+#. TRANSLATORS: %s is the name of a table in
+#. the generated scanner.
+#: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
+#: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
+#: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
+#: src/gen.c:1076
+#, c-format
+msgid "Could not write %s"
+msgstr "Neizdevās ierakstīt %s"
+
+#: src/dfa.c:1023
+#, c-format
+msgid "bad transition character detected in %s()"
+msgstr "atklāta nepareiza pārejas rakstzīme %s()"
+
+#: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
+#: src/misc.c:596 src/misc.c:612 src/misc.c:660
+#, c-format
+msgid "memory allocation failed in %s()"
+msgstr "neizdevās piešķirt atmiņu %s()"
+
+#: src/filter.c:153
+msgid "pipe failed"
+msgstr "neizdevās izveidot cauruli"
+
+#: src/filter.c:156
+msgid "fork failed"
+msgstr "neizdevās izveidot procesa kopiju"
+
+#: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
+#: src/filter.c:254
+#, c-format
+msgid "%s failed"
+msgstr "%s neizdevās"
+
+#: src/filter.c:187
+#, c-format
+msgid "exec of %s failed"
+msgstr "neizdevās izpildīt %s"
+
+#: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
+#, c-format
+msgid "error writing output file %s"
+msgstr "kļūda rakstot izvades failu %s"
+
+#: src/filter.c:301 src/filter.c:311 src/filter.c:425 src/main.c:494
+#, c-format
+msgid "error closing output file %s"
+msgstr "kļūda aizverot izvades failu %s"
+
+#: src/flexdef.h:864
+#, c-format
+msgid "%s: fatal internal error at %s:%d (%s): %s\n"
+msgstr "%s: fatāla iekšējā kļūda %s:%d (%s): %s\n"
+
+#: src/flexdef.h:873
+#, c-format
+msgid "%s: fatal internal error at %s:%d %s\n"
+msgstr "%s: fatāla iekšējā kļūda %s:%d %s\n"
+
+#: src/main.c:175
+msgid "rule cannot be matched"
+msgstr "noteikums nevar tikt sakārtots"
+
+#: src/main.c:185
+#, c-format
+msgid "%s option given but default rule can be matched"
+msgstr "norādīta opcija %s, bet var atbilst noklusētajam noteikumam"
+
+#: src/main.c:314 src/scan.l:1094
+#, c-format
+msgid "can't open %s: %s"
+msgstr "neizdevās atvērt %s: %s"
+
+#: src/main.c:342 src/main.c:399
+#, c-format
+msgid "Can't use %s with %s option"
+msgstr "Nevar izmantot %s ar opciju %s"
+
+#: src/main.c:345 src/main.c:349
+#, c-format
+msgid "Can't use %s or %s with %s option"
+msgstr "Nevar izmantot %s vai %s ar opciju %s"
+
+#: src/main.c:381
+#, c-format
+msgid "%s and %s don't make sense together"
+msgstr "%s un %s kopā nav jēgas"
+
+#: src/main.c:385
+#, c-format
+msgid "%s and %s are incompatible"
+msgstr "%s un %s nav savietojami"
+
+#: src/main.c:389
+#, c-format
+msgid "%s are incompatible with lex-compatibility mode"
+msgstr "%s nav savietojami ar lex-savietojamības režīmu"
+
+#: src/main.c:394 src/main.c:411
+#, c-format
+msgid "Options %s and %s are mutually exclusive."
+msgstr "Opcijas %s un %s ir savstarpēji izslēdzošas."
+
+#: src/main.c:404
+#, c-format
+msgid "%s incompatible with %s option"
+msgstr "%s nav savietojams ar opciju %s"
+
+#: src/main.c:415
+msgid "bison bridge not supported for the C++ scanner."
+msgstr "bison tilts netiek atbalstīts C++ skenerim."
+
+#: src/main.c:454 src/main.c:1271
+#, c-format
+msgid "could not create %s"
+msgstr "neizdevās izveidot %s"
+
+#: src/main.c:475
+#, c-format
+msgid "%s only meaningful for C++ scanners"
+msgstr "%s ir jēga tikai C++ skeneriem"
+
+#: src/main.c:480
+#, c-format
+msgid "input error reading skeleton file %s"
+msgstr "ievades kļūda, lasot skeleta failu %s"
+
+#: src/main.c:484
+#, c-format
+msgid "error closing skeleton file %s"
+msgstr "kļūda, aizverot skeleta failu %s"
+
+#: src/main.c:498
+#, c-format
+msgid "error deleting output file %s"
+msgstr "kļūda, dzēšot izvades failu %s"
+
+#: src/main.c:505
+#, c-format
+msgid "No backing up.\n"
+msgstr "Nav dublēšanas.\n"
+
+#: src/main.c:508
+#, c-format
+msgid "%d backing up (non-accepting) state.\n"
+msgid_plural "%d backing up (non-accepting) states.\n"
+msgstr[0] "%d dublēšanas (neakceptējoši) stāvokļi.\n"
+msgstr[1] "%d dublēšanas (neakceptējoš) stāvoklis.\n"
+msgstr[2] "%d dublēšanas (neakceptējoši) stāvokļi.\n"
+
+#: src/main.c:514
+#, c-format
+msgid "Compressed tables always back up.\n"
+msgstr "Saspiestās tabulas vienmēr dublē.\n"
+
+#: src/main.c:517
+#, c-format
+msgid "error writing backup file %s"
+msgstr "kļūda, rakstot dublēšanas failu %s"
+
+#: src/main.c:521
+#, c-format
+msgid "error closing backup file %s"
+msgstr "kļūda, aizverot dublēšanas failu %s"
+
+#: src/main.c:762
+#, c-format
+msgid "Internal error. flexopts are malformed.\n"
+msgstr "Iekšēja kļūda. flexopts ir nekorekti formatēti.\n"
+
+#: src/main.c:772
+#, c-format
+msgid "Try `%s --help' for more information.\n"
+msgstr "Izmēģiniet `%s --help', lai iegūtu vairāk informācijas.\n"
+
+#: src/main.c:833
+#, c-format
+msgid "unknown %s option '%c'"
+msgstr "nezināma %s opcija '%c'"
+
+#: src/main.c:1222
+msgid "fatal parse error"
+msgstr "fatāla parsēšanas kļūda"
+
+#: src/main.c:1283
+msgid "could not write tables header"
+msgstr "neizdevās ierakstīt tabulu galveni"
+
+#: src/main.c:1287
+#, c-format
+msgid "can't open skeleton file %s"
+msgstr "neizdevās atvērt skeleta failu %s"
+
+#: src/main.c:1355
+#, c-format
+msgid "could not create backing-up info file %s"
+msgstr "neizdevās izveidot rezerves informācijas failu %s"
+
+#: src/main.c:1375
+#, c-format
+msgid ""
+"%s AT&T lex compatibility option entails a large performance penalty\n"
+" and may be the actual source of other reported performance penalties\n"
+msgstr ""
+"%s AT&T lex saderības opcija rada lielu veiktspējas samazinājumu\n"
+" un var būt faktiskais citu ziņoto veiktspējas samazinājumu avots\n"
+
+#: src/main.c:1381
+#, c-format
+msgid "%s entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "%s rada veiktspējas samazinājumu TIKAI noteikumiem, kas var atbilst jaunas rindas rakstzīmēm\n"
+
+#: src/main.c:1388
+#, c-format
+msgid "%s (interactive) entails a minor performance penalty\n"
+msgstr "%s (interaktīvs) rada nelielu veiktspējas samazinājumu\n"
+
+#: src/main.c:1393
+#, c-format
+msgid "%s entails a minor performance penalty\n"
+msgstr "%s rada nelielu veiktspējas samazinājumu\n"
+
+#: src/main.c:1399
+#, c-format
+msgid "%s entails a large performance penalty\n"
+msgstr "%s rada lielu veiktspējas samazinājumu\n"
+
+#. TRANSLATORS: A rule has "variable
+#. trailing context" when neither the text
+#. before the trailing context nor the
+#. trailing context itself has a fixed
+#. length.
+#: src/main.c:1409
+#, c-format
+msgid "Variable trailing context rules entail a large performance penalty\n"
+msgstr "Mainīga aizmugurējā konteksta noteikumi rada lielu veiktspējas zudumu\n"
+
+#: src/main.c:1420
+#, c-format
+msgid "%s cannot be used with %s or %s"
+msgstr "%s nevar izmantot kopā ar %s vai %s"
+
+#: src/main.c:1423
+#, c-format
+msgid "%s cannot be used with %s"
+msgstr "%s nevar izmantot kopā ar %s"
+
+#: src/main.c:1426
+#, c-format
+msgid "variable trailing context rules cannot be used with %s or %s"
+msgstr "mainīga aizmugurējā konteksta kārtulas nevar izmantot kopā ar %s vai %s"
+
+#: src/main.c:1462
+msgid "allocation of macro definition failed"
+msgstr "makro definīcijas piešķiršana neizdevās"
+
+#: src/main.c:1780
+#, c-format
+msgid "Usage: %s [OPTIONS] [FILE]...\n"
+msgstr "Lietošana: %s [OPCIJAS] [FAILS]...\n"
+
+#: src/main.c:1781
+msgid "Generates programs that perform pattern-matching on text.\n"
+msgstr "Ģenerē programmas, kas veic teksta rakstu atbilstības pārbaudi.\n"
+
+#: src/main.c:1784
+msgid ""
+"Table Compression:\n"
+"  -Ca, --align      trade off larger tables for better memory alignment\n"
+"  -Ce, --ecs        construct equivalence classes\n"
+"  -Cf               do not compress tables; use -f representation\n"
+"  -CF               do not compress tables; use -F representation\n"
+"  -Cm, --meta-ecs   construct meta-equivalence classes\n"
+"  -Cr, --read       use read() instead of stdio for scanner input\n"
+"  -f, --full        generate fast, large scanner. Same as -Cfr\n"
+"  -F, --fast        use alternate table representation. Same as -CFr\n"
+"  -Cem              default compression (same as --ecs --meta-ecs)\n"
+msgstr ""
+"Tabulu kompresija:\n"
+"  -Ca, --align      kompromiss starp lielākām tabulām un labāku atmiņas izlīdzināšanu\n"
+"  -Ce, --ecs        veidot ekvivalences klases\n"
+"  -Cf               nekompresēt tabulas; izmantot -f reprezentāciju\n"
+"  -CF               nekompresēt tabulas; izmantot -F reprezentāciju\n"
+"  -Cm, --meta-ecs   veidot meta-ekvivalences klases\n"
+"  -Cr, --read       izmantot read() stdio vietā skenera ievadei\n"
+"  -f, --full        ģenerēt ātru, lielu skeneri. Tas pats, kas -Cfr\n"
+"  -F, --fast        izmantot alternatīvu tabulu reprezentāciju. Tas pats, kas -CFr\n"
+"  -Cem              noklusējuma kompresija (tas pats, kas --ecs --meta-ecs)\n"
+
+#: src/main.c:1796
+#, c-format
+msgid ""
+"Debugging:\n"
+"  -d, --debug             enable debug mode in scanner\n"
+"  -b, --backup            write backing-up information to %s\n"
+"  -p, --perf-report       write performance report to stderr\n"
+"  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
+"  -T, --trace             %s should run in trace mode\n"
+"  -w, --nowarn            do not generate warnings\n"
+"  -v, --verbose           write summary of scanner statistics to stdout\n"
+"      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
+msgstr ""
+"Atkļūdošana:\n"
+"  -d, --debug             ieslēgt atkļūdošanas režīmu skenerī\n"
+"  -b, --backup            rakstīt dublēšanas informāciju uz %s\n"
+"  -p, --perf-report       rakstīt veiktspējas pārskatu uz stderr\n"
+"  -s, --nodefault         neizmantot noklusējuma noteikumu ECHO neatbilstošam tekstam\n"
+"  -T, --trace             %s jādarbina izsekošanas režīmā\n"
+"  -w, --nowarn            neģenerēt brīdinājumus\n"
+"  -v, --verbose           rakstīt skenera statistikas kopsavilkumu uz stdout\n"
+"      --hex               izmantot heksadecimālus skaitļus oktālo vietā atkļūdošanas izvades datos\n"
+
+#: src/main.c:1808
+#, c-format
+msgid ""
+"Files:\n"
+"  -o, --outfile=FILE      specify output filename\n"
+"  -S, --skel=FILE         specify skeleton file\n"
+"  -t, --stdout            write scanner on stdout instead of %s\n"
+"      --yyclass=NAME      name of C++ class\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
+"      --tables-file[=FILE] write tables to FILE\n"
+"      --backup-file=FILE  write backing-up information to FILE\n"
+msgstr ""
+"Faili:\n"
+"  -o, --outfile=FAILS      norādīt izvades faila nosaukumu\n"
+"  -S, --skel=FAILS         norādīt skeleta failu\n"
+"  -t, --stdout            rakstīt skeneri uz stdout, nevis %s\n"
+"      --yyclass=NOSAUKUMS     C++ klases nosaukums\n"
+"      --header-file=FAILS   izveidot C galvenes failu papildus skenerim\n"
+"      --tables-file[=FAILS] rakstīt tabulas uz FAILS\n"
+"      --backup-file=FAILS  rakstīt dublēšanas informāciju uz FAILS\n"
+
+#: src/main.c:1819
+msgid ""
+"Scanner behavior:\n"
+"  -7, --7bit              generate 7-bit scanner\n"
+"  -8, --8bit              generate 8-bit scanner\n"
+"  -B, --batch             generate batch scanner (opposite of -I)\n"
+"  -i, --case-insensitive  ignore case in patterns\n"
+"  -l, --lex-compat        maximal compatibility with original lex\n"
+"  -X, --posix-compat      maximal compatibility with POSIX lex\n"
+"  -I, --interactive       generate interactive scanner (opposite of -B)\n"
+"      --yylineno          track line count in yylineno\n"
+msgstr ""
+"Skenera uzvedība:\n"
+"  -7, --7bit              ģenerēt 7 bitu skeneri\n"
+"  -8, --8bit              ģenerēt 8 bitu skeneri\n"
+"  -B, --batch             ģenerēt pakešu skeneri (pretējs -I)\n"
+"  -i, --case-insensitive  ignorēt reģistru modeļos\n"
+"  -l, --lex-compat        maksimāla saderība ar oriģinālo lex\n"
+"  -X, --posix-compat      maksimāla saderība ar POSIX lex\n"
+"  -I, --interactive       ģenerēt interaktīvu skeneri (pretējs -B)\n"
+"      --yylineno          sekot līniju skaitam yylineno\n"
+
+#: src/main.c:1830
+msgid ""
+"Generated code:\n"
+"  -+,  --c++               generate C++ scanner class\n"
+"  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
+"  -e,  --emit=LANG         Specify target language\n"
+"  -L,  --noline            suppress #line directives in scanner\n"
+"  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
+"  -R,  --reentrant         generate a reentrant scanner\n"
+msgstr ""
+"Ģenerētais kods:\n"
+"  -+,  --c++               ģenerēt C++ skenera klasi\n"
+"  -Dmacro[=defn]           #define macro defn  (noklusējuma defn ir '1')\n"
+"  -e,  --emit=VALODA       Norādīt mērķa valodu\n"
+"  -L,  --noline            neizmantot #line direktīvas skenerī\n"
+"  -P,  --prefix=VIRKNE     izmantot VIRKNE kā prefiksu \"yy\" vietā\n"
+"  -R,  --reentrant         ģenerēt atkārtoti izmantojamu skeneri\n"
+
+#: src/main.c:1837
+msgid ""
+"       --bison-bridge      scanner for Bison pure parser.\n"
+"       --bison-locations   include yylloc support.\n"
+"       --stdinit           initialize yyin/yyout to stdin/stdout\n"
+"       --nounistd          do not include <unistd.h>\n"
+"       --noFUNCTION        do not generate a particular FUNCTION\n"
+msgstr ""
+"       --bison-bridge      skeneris Bison tīram parserim.\n"
+"       --bison-locations   iekļaut yylloc atbalstu.\n"
+"       --stdinit           inicializēt yyin/yyout uz stdin/stdout\n"
+"       --nounistd          neiekļaut <unistd.h>\n"
+"       --noFUNCTION        neģenerēt konkrētu FUNKCIJU\n"
+
+#: src/main.c:1844
+#, c-format
+msgid ""
+"Miscellaneous:\n"
+"  -c                      do-nothing POSIX option\n"
+"  -n                      do-nothing POSIX option\n"
+"  -?\n"
+"  -h, --help              produce this help message\n"
+"  -V, --version           report %s version\n"
+msgstr ""
+"Dažādi:\n"
+"  -c                      neko nedaroša POSIX opcija\n"
+"  -n                      neko nedaroša POSIX opcija\n"
+"  -?\n"
+"  -h, --help              parādīt šo palīdzības paziņojumu\n"
+"  -V, --version           ziņot par %s versiju\n"
+
+#: src/misc.c:116
+#, c-format
+msgid "bad character '%s' detected in %s()"
+msgstr "konstatēts nederīgs simbols '%s' funkcijā %s()"
+
+#: src/misc.c:121
+#, c-format
+msgid "scanner requires -8 flag to use the character %s"
+msgstr "skenerim nepieciešama -8 karogs, lai izmantotu simbolu %s"
+
+#: src/misc.c:227
+#, c-format
+msgid "the value of '%s' must not contain '[' or ']'"
+msgstr "'%s' vērtībā nedrīkst būt '[' vai ']'"
+
+#: src/misc.c:238
+#, c-format
+msgid "%s: fatal internal error, %s\n"
+msgstr "%s: fatāla iekšējā kļūda, %s\n"
+
+#: src/misc.c:594 src/misc.c:610
+msgid "attempt to increase array size failed"
+msgstr "neizdevās palielināt masīva izmēru"
+
+#: src/nfa.c:102
+#, c-format
+msgid ""
+"\n"
+"\n"
+"********** beginning dump of nfa with start state %d\n"
+msgstr ""
+"\n"
+"\n"
+"********** sākas NFA izvade ar sākuma stāvokli %d\n"
+
+#: src/nfa.c:171
+#, c-format
+msgid "empty machine in %s()"
+msgstr "tukša mašīna funkcijā %s()"
+
+#. TRANSLATORS: A rule has "variable
+#. trailing context" when neither the text
+#. before the trailing context nor the
+#. trailing context itself has a fixed
+#. length.
+#: src/nfa.c:240
+#, c-format
+msgid "Variable trailing context rule at line %d\n"
+msgstr "Mainīgais pēdējās konteksta noteikums rindā %d\n"
+
+#: src/nfa.c:358
+#, c-format
+msgid "bad state type in %s()"
+msgstr "nepareizs stāvokļa tips funkcijā %s()"
+
+#: src/nfa.c:598
+#, c-format
+msgid "input rules are too complicated (>= %d NFA states)"
+msgstr "ievades noteikumi ir pārāk sarežģīti (>= %d NFA stāvokļi)"
+
+#: src/nfa.c:676
+#, c-format
+msgid "found too many transitions in %s()"
+msgstr "atrasts pārāk daudz pāreju funkcijā %s()"
+
+#: src/nfa.c:702
+#, c-format
+msgid "too many rules (> %d)!"
+msgstr "pārāk daudz noteikumu (> %d)!"
+
+#: src/parse.y:167
+msgid "unknown error processing section 1"
+msgstr "nezināma kļūda apstrādājot 1. sadaļu"
+
+#. TRANSLATORS: A "start condition" is a named state
+#. of the scanner that turns groups of rules on and
+#. off.
+#: src/parse.y:195 src/parse.y:390
+msgid "bad start condition list"
+msgstr "nekorekts sākuma nosacījumu saraksts"
+
+#: src/parse.y:300
+#, c-format
+msgid "%s operator results in sub-optimal performance"
+msgstr "%s operators rada neoptimālu veiktspēju"
+
+#: src/parse.y:345
+#, c-format
+msgid "all start conditions already have %s rules"
+msgstr "visiem sākuma nosacījumiem jau ir %s noteikumi"
+
+#: src/parse.y:354
+msgid "syntax error: this is not a valid rule"
+msgstr "sintakses kļūda: šis nav derīgs noteikums"
+
+#: src/parse.y:397
+#, c-format
+msgid "undeclared start condition %s"
+msgstr "nedeklarēts sākuma nosacījums %s"
+
+#: src/parse.y:405
+#, c-format
+msgid "<%s> specified twice"
+msgstr "<%s> norādīts divreiz"
+
+#: src/parse.y:441 src/parse.y:501
+#, c-format
+msgid "trailing context made variable due to preceding '%s' action"
+msgstr "iepriekšējās \"%s\" darbības dēļ aizmugurējais konteksts padarīts mainīgs"
+
+#. TRANSLATORS: "Trailing context" is the part of a
+#. rule that must match after the text of the rule,
+#. written r/s or with a $ at the end of the rule. A
+#. rule can have only one.
+#: src/parse.y:478 src/parse.y:491 src/parse.y:561
+msgid "trailing context used twice"
+msgstr "aizmugurējais konteksts izmantots divreiz"
+
+#. TRANSLATORS: A "repeat range" is a pair of
+#. numbers in braces after a pattern, such as
+#. {2,5}, that sets how many times the
+#. pattern may repeat.
+#: src/parse.y:601 src/parse.y:612 src/parse.y:686 src/parse.y:697
+msgid "invalid repeat range in braces: the first number must not be larger than the second, and the second must be at least 1"
+msgstr "nederīgs atkārtojuma diapazons cirtainajās iekavās: pirmajam skaitlim jābūt ne lielākam par otro, un otram jābūt vismaz 1"
+
+#: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
+msgid "the repeat count in braces must be at least 1"
+msgstr "atkārtojumu skaitam cirtainajās iekavās jābūt vismaz 1"
+
+#: src/parse.y:857 src/parse.y:867
+#, c-format
+msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
+msgstr "rakstzīmju diapazons [%c-%c] ir neskaidrs reģistrjutīgā skenerī"
+
+#: src/parse.y:872
+msgid "negative range in character class"
+msgstr "negatīvs diapazons rakstzīmju klasē"
+
+#: src/parse.y:969
+msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
+msgstr "[:^lower:] ir neskaidrs reģistrjutīgā skenerī"
+
+#: src/parse.y:975
+msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
+msgstr "[:^upper:] ir neskaidrs reģistrjutīgā skenerī"
+
+#: src/parse.y:1019
+#, c-format
+msgid "multiple %s rules for start condition %s"
+msgstr "vairāki %s noteikumi sākuma nosacījumam %s"
+
+#: src/parse.y:1117
+#, c-format
+msgid "warning, %s"
+msgstr "brīdinājums, %s"
+
+#: src/regex.c:60
+#, c-format
+msgid "Unable to allocate buffer to report %s"
+msgstr "Neizdevās piešķirt buferi, lai ziņotu par %s"
+
+#: src/regex.c:83
+msgid "Unable to allocate a copy of the match"
+msgstr "Neizdevās piešķirt atbilstības kopiju"
+
+#: src/scan.l:73 src/scan.l:671 src/scan.l:724
+msgid "Input line too long\n"
+msgstr "Ievades rinda pārāk gara\n"
+
+#: src/scan.l:186
+#, c-format
+msgid "malformed '%s' directive"
+msgstr "nepareizi formatēta '%s' direktīva"
+
+#. TRANSLATORS: A "directive" is a line in the first section of the
+#. input that starts with a percent sign, such as %option or %top.
+#. Do not translate the directive names.
+#: src/scan.l:211
+#, no-c-format
+msgid "unrecognized '%' directive"
+msgstr "neatpazīta '%' direktīva"
+
+#: src/scan.l:220
+msgid "Definition name too long\n"
+msgstr "Definīcijas nosaukums pārāk garš\n"
+
+#: src/scan.l:315
+msgid "Unmatched '{'"
+msgstr "Neatbilstoša '{'"
+
+#: src/scan.l:331
+#, c-format
+msgid "Definition value for {%s} too long\n"
+msgstr "Definīcijas vērtība {%s} pārāk gara\n"
+
+#: src/scan.l:348
+msgid "incomplete name definition"
+msgstr "nepabeigta nosaukuma definīcija"
+
+#: src/scan.l:490
+msgid "Option line too long\n"
+msgstr "Opcijas rinda pārāk gara\n"
+
+#: src/scan.l:501
+#, c-format
+msgid "unrecognized %s: %s"
+msgstr "neatpazīts %s: %s"
+
+#: src/scan.l:731
+#, c-format
+msgid "undefined definition {%s}"
+msgstr "nedefinēta definīcija {%s}"
+
+#: src/scan.l:794
+msgid "unbalanced parenthesis"
+msgstr "nesabalansētas iekavas"
+
+#. TRANSLATORS: A "start condition" is a named state
+#. of the scanner that turns groups of rules on and
+#. off. It is written between < and > in front of a
+#. rule.
+#: src/scan.l:813
+#, c-format
+msgid "bad <start condition>: %s"
+msgstr "kļūdains <sākuma nosacījums>: %s"
+
+#: src/scan.l:826
+msgid "missing closing quotation mark: the line ended inside a quoted string"
+msgstr "trūkst noslēdzošās pēdiņas: rinda beidzās pēdiņu iekšpusē"
+
+#: src/scan.l:858
+msgid "unterminated character class: the line ended before the closing ]"
+msgstr "nepabeigta rakstzīmju klase: rinda beidzās pirms noslēdzošās ]"
+
+#: src/scan.l:892
+#, c-format
+msgid "bad character class expression: %s"
+msgstr "kļūdaina rakstzīmju klases izteiksme: %s"
+
+#: src/scan.l:914
+msgid "bad character inside {}'s"
+msgstr "kļūdaina rakstzīme {} iekšpusē"
+
+#: src/scan.l:920
+msgid "missing }"
+msgstr "trūkst }"
+
+#: src/scan.l:1028
+msgid "EOF encountered inside an action"
+msgstr "Faila beigas sasniegtas darbībā"
+
+#: src/scan.l:1033
+msgid "EOF encountered inside pattern"
+msgstr "Faila beigas sasniegtas šablonā"
+
+#: src/scan.l:1066
+#, c-format
+msgid "unexpected character: %s"
+msgstr "neparedzēta rakstzīme: %s"
+
+#: src/scanflags.c:70
+#, c-format
+msgid "Unable to allocate %zu of stack"
+msgstr "Neizdevās piešķirt %zu no kaudzes"
+
+#: src/scanopt.c:250
+#, c-format
+msgid "Usage: %s [OPTIONS]...\n"
+msgstr "Lietošana: %s [OPCIJAS]...\n"
+
+#: src/scanopt.c:486
+#, c-format
+msgid "option `%s' doesn't allow an argument\n"
+msgstr "opcijai `%s' nav atļauts arguments\n"
+
+#: src/scanopt.c:491
+#, c-format
+msgid "option `%s' requires an argument\n"
+msgstr "opcijai `%s' ir nepieciešams arguments\n"
+
+#: src/scanopt.c:495
+#, c-format
+msgid "option `%s' is ambiguous\n"
+msgstr "opcija `%s' ir neskaidra\n"
+
+#: src/scanopt.c:499
+#, c-format
+msgid "Unrecognized option `%s'\n"
+msgstr "Nepazīta opcija `%s'\n"
+
+#: src/scanopt.c:503
+#, c-format
+msgid "Unknown error=(%d)\n"
+msgstr "Nezināma kļūda=(%d)\n"
+
+#: src/skeletons.c:118
+msgid "no such back end"
+msgstr "tāda aizmugursistēma neeksistē"
+
+#: src/skeletons.c:182
+msgid "unterminated or too long property name"
+msgstr "nepabeigts vai pārāk garš īpašuma nosaukums"
+
+#: src/skeletons.c:191
+msgid "garbled property line"
+msgstr "bojāta īpašuma rinda"
+
+#: src/skeletons.c:200
+msgid "unterminated or too long property value"
+msgstr "nepabeigta vai pārāk gara īpašuma vērtība"
+
+#: src/skeletons.c:247
+msgid "bad line in skeleton file"
+msgstr "kļūdaina rinda skeleta failā"
+
+#: src/sym.c:93
+msgid "symbol table memory allocation failed"
+msgstr "neizdevās piešķirt atmiņu simbolu tabulai"
+
+#: src/sym.c:177
+#, c-format
+msgid "name \"%s\" is defined twice"
+msgstr "nosaukums \"%s\" ir definēts divreiz"
+
+#. TRANSLATORS: A "start condition" is a named state
+#. of the scanner that turns groups of rules on and
+#. off. %s is its name.
+#: src/sym.c:223
+#, c-format
+msgid "start condition %s declared twice"
+msgstr "sākuma nosacījums %s deklarēts divreiz"
+
+#: src/tables.c:230
+msgid "error while writing tables"
+msgstr "kļūda, rakstot tabulas"
+
+#: src/yylex.c:58
+msgid "unexpected end of file: the line that starts the rules section is missing"
+msgstr "neparedzēts faila beigas: trūkst rinda, kas sāk noteikumu sadaļu"
