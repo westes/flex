@@ -64,3 +64,29 @@ jobs:
         git add -A
         git commit -m "website for $GITHUB_REF_NAME"
         git push --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+
+  deploy:
+    name: Upload the manual to flexlexer.org
+    needs: build
+    runs-on: ubuntu-22.04
+    environment: website
+    permissions: {}
+
+    steps:
+    - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+      with:
+        name: site
+        path: _site
+    - name: rsync
+      env:
+        DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+      run: |
+        # The server-side key is limited to the flexlexer.org docroot. The
+        # rest of the site is built from the flexlexer-site repo, so only the
+        # manual is sent from here, and --delete is limited to what is sent.
+        mkdir -p ~/.ssh
+        printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+        ssh_cmd="ssh -i $HOME/.ssh/deploy_key -o StrictHostKeyChecking=accept-new"
+        rsync -az --delete -e "$ssh_cmd" _site/manual/ root@flexlexer.org:manual/
+        rsync -az -e "$ssh_cmd" _site/manual-single.html root@flexlexer.org:
