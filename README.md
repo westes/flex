@@ -14,6 +14,10 @@ The manual is at <https://westes.github.io/flex/manual/>, with the whole
 manual on a single page at
 <https://westes.github.io/flex/manual-single.html>.
 
+News about flex, and stories from maintaining it, are on the blog at
+<https://flexlexer.org/posts/>. To get release announcements by e-mail,
+subscribe to flex-announce at <https://lists.flexlexer.org/subscription/form>.
+
 Use GitHub's [issues](https://github.com/westes/flex/issues) and
 [pull request](https://github.com/westes/flex) features to file bugs
 and submit patches.
