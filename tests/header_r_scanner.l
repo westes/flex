@@ -43,4 +43,11 @@
 .|\n              { }
 
 %%
-
+/* User code in section 3 belongs in the scanner only. If it were copied
+   into the header, header_r_main.c would define this function too and the
+   test would fail to link. */
+int test_section3_function (void);
+int test_section3_function (void)
+{
+    return 0;
+}

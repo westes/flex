@@ -292,6 +292,12 @@ int filter_tee_header (struct filter *chain)
 		/* write a fake line number. It will get fixed by the linedir filter. */
 		if (ctrl.gen_line_dirs)
 			line_directive_out (to_h, NULL, 4000);
+
+		/* Leave header mode only after all input, including section 3,
+		 * has been copied, so code guarded by OUT_BEGIN_CODE() stays
+		 * out of the header.
+		 */
+		fputs ("m4_undefine([[M4_YY_IN_HEADER]])m4_dnl\n", to_h);
 		fflush (to_h);
 		if (ferror (to_h))
 			lerr (_("error writing output file %s"),

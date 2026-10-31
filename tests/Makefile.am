@@ -79,6 +79,7 @@ SPORADIC_TESTS = \
 	cxx_multiple_scanners \
 	cxx_reject \
 	cxx_restart \
+	echo_override_r \
 	header_nr \
 	header_r \
 	lineno_generated \
@@ -87,6 +88,7 @@ SPORADIC_TESTS = \
 	mem_c99 \
 	multiple_scanners_nr \
 	multiple_scanners_r \
+	no_input_unput_r \
 	prefix_nr \
 	prefix_r \
 	prefix_c99 \
@@ -97,6 +99,7 @@ SPORADIC_TESTS = \
 	tables_fload_bad \
 	tables_verify_bad \
 	top \
+	user_input_r \
 	yyextra_nr \
 	yyextra_c99
 
@@ -139,6 +142,7 @@ cxx_reject_SOURCES = cxx_reject.ll
 cxx_restart_SOURCES = cxx_restart.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
 cxx_yywrap_i3_SOURCES = cxx_yywrap.ll
+echo_override_r_SOURCES = echo_override_r.l
 header_nr_SOURCES = header_nr_scanner.l header_nr_main.c
 nodist_header_nr_SOURCES = header_nr_scanner.h
 header_r_SOURCES = header_r_scanner.l header_r_main.c
@@ -156,6 +160,7 @@ multiple_scanners_nr_SOURCES = multiple_scanners_nr_main.c multiple_scanners_nr_
 nodist_multiple_scanners_nr_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
 multiple_scanners_r_SOURCES = multiple_scanners_r_main.c multiple_scanners_r_1.l multiple_scanners_r_2.l
 nodist_multiple_scanners_r_SOURCES = multiple_scanners_nr_1.h multiple_scanners_nr_2.h
+no_input_unput_r_SOURCES = no_input_unput_r.l
 prefix_nr_SOURCES = prefix_nr.l
 prefix_r_SOURCES = prefix_r.l
 prefix_c99_SOURCES = prefix_c99.l
@@ -170,6 +175,7 @@ tables_fload_bad_SOURCES = tables_fload_bad.l
 tables_verify_bad_SOURCES = tables_verify_bad.l
 top_SOURCES = top.l top_main.c
 nodist_top_SOURCES = top.h
+user_input_r_SOURCES = user_input_r.l
 yyextra_nr_SOURCES = yyextra_nr.l
 yyextra_c99_SOURCES = yyextra_c99.l
 yywrap_r_i3_SOURCES = yywrap_r.i3.l
@@ -208,6 +214,7 @@ CLEANFILES = \
 	cxx_multiple_scanners_2.cc \
 	cxx_reject.cc \
 	cxx_restart.cc \
+	echo_override_r.c \
 	cxx_yywrap.cc \
 	header_nr_scanner.c \
 	header_nr_scanner.h \
@@ -229,6 +236,7 @@ CLEANFILES = \
 	multiple_scanners_r_1.h \
 	multiple_scanners_r_2.c \
 	multiple_scanners_r_2.h \
+	no_input_unput_r.c \
 	prefix_nr.c \
 	prefix_r.c \
 	prefix_c99.c \
@@ -247,6 +255,7 @@ CLEANFILES = \
 	tables_verify_bad.tables \
 	top.c \
 	top.h  \
+	user_input_r.c \
 	yyextra_nr.c \
 	yyextra_c99.c \
 	yywrap_r.i3.c \

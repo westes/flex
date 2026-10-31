@@ -66,6 +66,8 @@ debug*
 defaultrule*
 !defaultrule.rules
 !defaultrule.txt
+echo_override_r
+echo_override_r.c
 extended*
 !extended.rules
 !extended.txt
@@ -102,6 +104,8 @@ multiple_scanners_nr
 multiple_scanners_nr_[12].[ch]
 multiple_scanners_r
 multiple_scanners_r_[12].[ch]
+no_input_unput_r
+no_input_unput_r.c
 posix*
 !posix.rules
 !posix.txt
@@ -152,6 +156,8 @@ tableopts*
 !tableopts.txt
 top
 top.[ch]
+user_input_r
+user_input_r.c
 vartrailing*
 !vartrailing.rules
 !vartrailing.txt
