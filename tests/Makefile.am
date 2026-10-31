@@ -91,6 +91,7 @@ SPORADIC_TESTS = \
 	prefix_r \
 	prefix_c99 \
 	quotes \
+	scan_length_c99 \
 	string_nr \
 	string_r \
 	string_c99 \
@@ -107,6 +108,7 @@ DIRECT_TESTS = \
 	include_by_reentrant.direct \
 	rescan_nr.direct \
 	rescan_r.direct \
+	scan_length.direct \
 	state_buf.direct \
 	state_buf_multiple.direct \
 	state_buf_push.direct
@@ -163,6 +165,7 @@ pthread_pthread_SOURCES = pthread.l
 quotes_SOURCES = quotes.l
 rescan_nr_direct_SOURCES = rescan_nr.direct.l
 rescan_r_direct_SOURCES = rescan_r.direct.l
+scan_length_c99_SOURCES = scan_length_c99.l
 string_nr_SOURCES = string_nr.l
 string_r_SOURCES = string_r.l
 string_c99_SOURCES = string_c99.l
@@ -173,6 +176,7 @@ nodist_top_SOURCES = top.h
 yyextra_nr_SOURCES = yyextra_nr.l
 yyextra_c99_SOURCES = yyextra_c99.l
 yywrap_r_i3_SOURCES = yywrap_r.i3.l
+scan_length_direct_SOURCES = scan_length.direct.l
 state_buf_direct_SOURCES = state_buf.direct.lll
 state_buf_multiple_direct_SOURCES = state_buf_multiple.direct.lll
 state_buf_push_direct_SOURCES = state_buf_push.direct.l
@@ -235,8 +239,10 @@ CLEANFILES = \
 	pthread.c \
 	quotes.c \
 	quotes_c99.c \
+	scan_length_c99.c \
 	rescan_nr.direct.c \
 	rescan_r.direct.c \
+	scan_length.direct.c \
 	string_nr.c \
 	string_r.c \
 	string_c99.c \
@@ -334,6 +340,7 @@ EXTRA_DIST = \
 
 dist_noinst_SCRIPTS = \
 	ruleset.sh \
+	scan_length.h \
 	testmaker.sh \
 	test-yydecl-gen.sh
 
