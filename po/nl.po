@@ -1,24 +1,24 @@
 # Dutch translations for the fast parser Flex.
-# Copyright (C) 2022 The Flex Project (msgids)
+# Copyright (C) 2026 The Flex Project (msgids)
 # This file is distributed under the same license as the flex package.
 #
 # Beim schwarzen Schaf...
 #
-# Benno Schulenberg <benno@vertaalt.nl>, 2005, 2006, 2007, 2008, 2012, 2014, 2022.
+# Benno Schulenberg <vertaling@coevern.nl>, 2005, 2006, 2007, 2008, 2012, 2014, 2022, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: flex-2.6.4\n"
+"Project-Id-Version: flex-2.6.5-rc1\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-10-27 13:37-0400\n"
-"PO-Revision-Date: 2022-01-09 19:38+0100\n"
+"POT-Creation-Date: 2026-10-27 14:05-0400\n"
+"PO-Revision-Date: 2026-10-31 16:56+0100\n"
 "Last-Translator: Benno Schulenberg <vertaling@coevern.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 
 #: src/buf.c:63
 msgid "Allocation of buffer to print string failed"
@@ -26,7 +26,7 @@ msgstr "Geheugenreservering voor stringprintbuffer is mislukt"
 
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "**interne fout**: poging een teken toe te voegen aan een niet-laatste tekenklasse\n"
 
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
@@ -53,30 +53,25 @@ msgstr "gevaarlijke nakomende context"
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " regelnummers van de betrokken voorschriften:"
+msgstr "regelnummers van de betrokken voorschriften:"
 
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " uit-transities: "
+msgstr "uit-transities: "
 
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" vastlopende transities: EOF "
+msgstr "vastlopende transities:"
 
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "consistentiecontrole is mislukt in epsclosure()"
+msgstr "consistentiecontrole is mislukt in %s()"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
@@ -88,39 +83,39 @@ msgstr "kon geen unieke toestand voor einde-van-buffer aanmaken"
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "Kan ecstbl niet schrijven"
+msgstr "Kan %s niet schrijven"
 
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "onjuist transitieteken in sympartition()"
+msgstr "onjuist transitieteken in %s()"
 
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "geheugenreservering is mislukt in xstrdup()"
+msgstr "geheugenreservering is mislukt in %s()"
 
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "pipe() is mislukt"
 
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "fork() is mislukt"
 
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "%s() is mislukt"
 
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "exec() van %s is mislukt"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -133,64 +128,63 @@ msgid "error closing output file %s"
 msgstr "fout tijdens sluiten van uitvoerbestand %s"
 
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s: **fatale interne programmafout**, %s\n"
+msgstr "%s: **fatale interne programmafout** op %s:%d (%s): %s\n"
 
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s: **fatale interne programmafout**, %s\n"
+msgstr "%s: **fatale interne programmafout** op %s:%d %s\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
 msgstr "voorschrift geeft geen overeenkomsten"
 
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr ""
-"optie '-s' is gegeven, maar het standaardvoorschrift geeft overeenkomsten"
+msgstr "optie '%s' is gegeven, maar het standaardvoorschrift geeft overeenkomsten"
 
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "kan %s niet openen"
+msgstr "kan %s niet openen: %s"
 
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "Optie '-+' gaat niet samen met '-l'"
+msgstr "Optie '%s' gaat niet samen met '%s'"
 
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "Optie '-f' of '-F' gaat niet samen met '-l'"
+msgstr "Optie '%s' of '%s' gaat niet samen met '%s'"
 
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "Opties -Cf/-CF en -Cm gaan niet samen"
+msgstr "Opties '%s' en '%s' samen hebben geen zin"
 
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "Opties -Cf/-CF en -I gaan niet samen"
+msgstr "Opties '%s' en '%s' gaan niet samen"
 
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr "Optie -Cf of -CF gaat niet samen met lex-compatibiliteitsmodus"
+msgstr "Opties '%s' gaat niet samen met lex-compatibiliteitsmodus"
 
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "Opties '-+' en '--reentrant' sluiten elkaar uit."
+msgstr "Opties '%s' en '%s' sluiten elkaar uit."
 
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "Optie '-+' gaat niet samen met %array"
+msgstr "%s gaat niet samen met optie '%s'"
 
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
@@ -202,9 +196,9 @@ msgid "could not create %s"
 msgstr "kan %s niet aanmaken"
 
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr "%optie yyclass heeft alleen betekenis voor C++-scanners"
+msgstr "%s heeft alleen betekenis voor C++-scanners"
 
 #: src/main.c:480
 #, c-format
@@ -227,10 +221,10 @@ msgid "No backing up.\n"
 msgstr "Terugstappen is niet mogelijk.\n"
 
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d terugstappende (niet-accepterende) toestanden.\n"
+msgstr[0] "%d terugstappende (niet-accepterende) toestand.\n"
 msgstr[1] "%d terugstappende (niet-accepterende) toestanden.\n"
 
 #: src/main.c:514
@@ -259,9 +253,9 @@ msgid "Try `%s --help' for more information.\n"
 msgstr "Typ '%s --help' voor meer informatie.\n"
 
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "onbekende -C-optie '%c'"
+msgstr "onbekende %s-optie '%c'"
 
 #: src/main.c:1222
 msgid "fatal parse error"
@@ -282,37 +276,33 @@ msgid "could not create backing-up info file %s"
 msgstr "kon terugstapbestand %s niet aanmaken"
 
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
 msgstr ""
-" en zou de eigenlijke bron kunnen zijn van andere gemelde "
-"prestatieverminderingen\n"
+"AT&T-lex-compatibiliteitsoptie '%s' veroorzaakt een grote prestatievermindering\n"
+"en zou de eigenlijke bron kunnen zijn van andere gemelde prestatieverminderingen\n"
 
 #: src/main.c:1381
-#, fuzzy, c-format
-msgid ""
-"%s entails a performance penalty ONLY on rules that can match newline "
-"characters\n"
-msgstr ""
-"de %%optie yylineno betekent een prestatievermindering, maar ALLEEN voor "
-"voorschriften die met het regeleindeteken overeen kunnen komen\n"
+#, c-format
+msgid "%s entails a performance penalty ONLY on rules that can match newline characters\n"
+msgstr "optie '%s' veroorzaakt een prestatievermindering, maar ALLEEN voor voorschriften die met het regeleindeteken overeen kunnen komen\n"
 
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "optie '-I' (interactief) betekent een kleine prestatievermindering\n"
+msgstr "optie '%s' (interactief) veroorzaakt een kleine prestatievermindering\n"
 
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore() betekent een kleine prestatievermindering\n"
+msgstr "%s() veroorzaakt een kleine prestatievermindering\n"
 
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT betekent een grote prestatievermindering\n"
+msgstr "%s veroorzaakt een grote prestatievermindering\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -322,26 +312,22 @@ msgstr "REJECT betekent een grote prestatievermindering\n"
 #: src/main.c:1409
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
-"Voorschriften met variabele nakomende context betekenen een grote "
-"prestatievermindering\n"
+msgstr "Voorschriften met variabele nakomende context betekenen een grote prestatievermindering\n"
 
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "REJECT gaat niet samen met -f of -F"
+msgstr "%s gaat niet samen met '%s' of '%s'"
 
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "REJECT gaat niet samen met -f of -F"
+msgstr "%s gaat niet samen met '%s'"
 
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr ""
-"voorschriften met variabele nakomende context gaan niet samen met '-f' of '-"
-"F'"
+msgstr "voorschriften met variabele nakomende context gaan niet samen met '%s' of '%s'"
 
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
@@ -354,7 +340,7 @@ msgstr "Gebruik:  %s [OPTIE...] [BESTAND...]\n"
 
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "Genereert programma's die patroonherkenning op tekst doen.\n"
 
 #: src/main.c:1784
 msgid ""
@@ -369,6 +355,16 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"Tabelcompressie:\n"
+"  -Ca, --align      meer geheugen gebruiken voor beter uitgelijnde tabellen\n"
+"  -Ce, --ecs        equivalentieklassen construeren\n"
+"  -Cf               tabellen niet comprimeren; de -f-representatie gebruiken\n"
+"  -CF               tabellen niet comprimeren; de -F-representatie gebruiken\n"
+"  -Cm, --meta-ecs   meta-equivalentieklassen construeren\n"
+"  -Cr, --read       read() gebruiken in plaats van stdio voor scannerinvoer\n"
+"  -f, --full        een snelle, grote scanner genereren (zelfde als -Cfr)\n"
+"  -F, --fast        alternatieve tabelrepresentatie gebruiken (als -CFr)\n"
+"  -Cem              standaardcompressie (zelfde als --ecs --meta-ecs)\n"
 
 #: src/main.c:1796
 #, c-format
@@ -381,9 +377,17 @@ msgid ""
 "  -T, --trace             %s should run in trace mode\n"
 "  -w, --nowarn            do not generate warnings\n"
 "  -v, --verbose           write summary of scanner statistics to stdout\n"
-"      --hex               use hexadecimal numbers instead of octal in debug "
-"outputs\n"
+"      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 msgstr ""
+"Debuggen:\n"
+"  -d, --debug         debugmodus in scanner aanzetten\n"
+"  -b, --backup        terugstap-informatie naar %s schrijven\n"
+"  -p, --perf-report   prestatierapport naar standaardfoutuitvoer schrijven\n"
+"  -s, --nodefault     standaardvoorschrift dat onherkende tekst ECHO-t uitzetten\n"
+"  -T, --trace         %s uitvoeren in tracemodus\n"
+"  -w, --nowarn        geen waarschuwingen geven\n"
+"  -v, --verbose       scannerstatistieken naar standaarduitvoer schrijven\n"
+"      --hex           hexadecimale i.p.v. octale getallen in debuguitvoer\n"
 
 #: src/main.c:1808
 #, c-format
@@ -393,11 +397,18 @@ msgid ""
 "  -S, --skel=FILE         specify skeleton file\n"
 "  -t, --stdout            write scanner on stdout instead of %s\n"
 "      --yyclass=NAME      name of C++ class\n"
-"      --header-file=FILE   create a C header file in addition to the "
-"scanner\n"
+"      --header-file=FILE   create a C header file in addition to the scanner\n"
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"Bestanden:\n"
+"  -o, --outfile=BESTAND   dit uitvoerbestand gebruiken\n"
+"  -S, --skel=BESTAND      dit skeletbestand gebruiken\n"
+"  -t, --stdout            scanner naar standaarduitvoer schrijven, niet naar %s\n"
+"      --yyclass=NAAM      naam van de C++-klasse\n"
+"      --header-file=BESTAND    behalve de scanner ook een C-headerbestand maken\n"
+"      --tables-file[=BESTAND]  tabellen schrijven (naar dit BESTAND)\n"
+"      --backup-file=BESTAND    reservekopie-info naar dit bestand schrijven\n"
 
 #: src/main.c:1819
 msgid ""
@@ -411,6 +422,16 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"Scannergedrag:\n"
+"  -7, --7bit              een 7-bits-scanner genereren\n"
+"  -8, --8bit              een 8-bits-scanner genereren\n"
+"  -B, --batch             een batch-scanner genereren (tegengestelde van -I)\n"
+"  -i, --case-insensitive  hoofd-/kleine letters in patronen negeren\n"
+"  -l, --lex-compat        maximale compatibiliteit met de originele 'lex'\n"
+"  -X, --posix-compat      maximale compatibiliteit met de POSIX 'lex'\n"
+"  -I, --interactive       een interactieve scanner genereren\n"
+"      --yylineno          het regelaantal bijhouden in yylineno\n"
+"\n"
 
 #: src/main.c:1830
 msgid ""
@@ -422,6 +443,12 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"Gegenereerde code:\n"
+"  -+, --c++               een C++-scannerklasse genereren\n"
+"  -Dmacro[=defn]          #define macro defn  (standaard defn is '1')\n"
+"  -L, --noline            de #line-commando's in de scanner onderdrukken\n"
+"  -P, --prefix=STRING     STRING gebruiken als prefix in plaats van \"yy\"\n"
+"  -R, --reentrant         een herintreedbare C-scanner genereren\n"
 
 #: src/main.c:1837
 msgid ""
@@ -431,6 +458,12 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"      --bison-bridge      een scanner voor zuivere bison-ontleder genereren\n"
+"      --bison-locations   ondersteuning voor yylloc opnemen\n"
+"      --stdinit           yyin/yyout naar standaardin/uitvoer initialiseren\n"
+"      --nounistd          <unistd.h> niet insluiten\n"
+"      --noFUNCTIE         specifieke FUNCTIE niet genereren\n"
+"\n"
 
 #: src/main.c:1844
 #, c-format
@@ -442,11 +475,17 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Varia:\n"
+"  -c                      nietsdoende POSIX-optie\n"
+"  -n                      nietsdoende POSIX-optie\n"
+"  -?\n"
+"  -h, --help              deze hulptekst tonen\n"
+"  -V, --version           de versie van %s tonen\n"
 
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "onjuist teken '%s' in check_char()"
+msgstr "onjuist teken '%s' in %s()"
 
 #: src/misc.c:121
 #, c-format
@@ -454,9 +493,9 @@ msgid "scanner requires -8 flag to use the character %s"
 msgstr "scanner heeft de optie '-8' nodig om teken %s te kunnen gebruiken"
 
 #: src/misc.c:227
-#, fuzzy, c-format
+#, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr "prefix mag geen '[' of ']' bevatten"
+msgstr "de waarde van '%s' mag geen '[' of ']' bevatten"
 
 #: src/misc.c:238
 #, c-format
@@ -479,9 +518,9 @@ msgstr ""
 "********** begin van dump van NFA met starttoestand %d\n"
 
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "lege machine in dupmachine()"
+msgstr "lege machine in %s()"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -494,9 +533,9 @@ msgid "Variable trailing context rule at line %d\n"
 msgstr "Voorschrift met variabele nakomende context op regel %d\n"
 
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "onjuiste <startvoorwaarde>: %s"
+msgstr "onjuist toestandstype in %s()"
 
 #: src/nfa.c:598
 #, c-format
@@ -504,9 +543,9 @@ msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "invoervoorschriften zijn te ingewikkeld (>= %d NFA-toestanden)"
 
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "te veel transities gevonden in mkxtion()"
+msgstr "te veel transities gevonden in %s()"
 
 #: src/nfa.c:702
 #, c-format
@@ -527,31 +566,31 @@ msgstr "onjuiste lijst van startvoorwaarden"
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "operator %s resulteert in suboptimale prestaties"
 
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "startvoorwaarde %s is twee keer vermeld"
+msgstr "alle startvoorwaarden hebben al %s-voorschriften"
 
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "syntaxfout: dit is geen geldig voorschrift"
 
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "onjuiste <startvoorwaarde>: %s"
+msgstr "ongedeclareerde startvoorwaarde %s"
 
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "naam is twee keer gedefinieerd"
+msgstr "<%s> is twee keer gegegeven"
 
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "nakomende context is variabel gemaakt door voorgaande '%s'-actie"
 
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
@@ -566,63 +605,57 @@ msgstr "nakomende context twee keer gebruikt"
 #. {2,5}, that sets how many times the
 #. pattern may repeat.
 #: src/parse.y:601 src/parse.y:612 src/parse.y:686 src/parse.y:697
-msgid ""
-"invalid repeat range in braces: the first number must not be larger than the "
-"second, and the second must be at least 1"
-msgstr ""
+msgid "invalid repeat range in braces: the first number must not be larger than the second, and the second must be at least 1"
+msgstr "ongeldig herhalingsbereik tussen accolades: het eerste getal moet groter zijn dan het tweede, en het tweede moet minstens 1 zijn"
 
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "het herhalingsaantal tussen accolades moet minstens 1 zijn"
 
 #: src/parse.y:857 src/parse.y:867
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"het tekenbereik [%c-%c] is niet eenduidig in een hoofdletterongevoelige "
-"scanner"
+msgstr "het tekenbereik [%c-%c] is niet eenduidig in een hoofdletterongevoelige scanner"
 
 #: src/parse.y:872
 msgid "negative range in character class"
 msgstr "negatief bereik in tekenklasse"
 
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
 msgstr "[:^lower:] is niet eenduidig in een hoofdletterongevoelige scanner"
 
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
 msgstr "[:^upper:] is niet eenduidig in een hoofdletterongevoelige scanner"
 
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "meerdere %s-voorschriften voor startvoorwaarde %s"
 
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "waarschuwing: %s"
 
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "Kan geen buffer reserveren om %s te rapporteren"
 
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "Kan geen geheugen reserveren voor een kopie van de overeenkomst"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "Invoerregel is te lang\n"
 
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "verkeerde opbouw van '%top'-commando"
+msgstr "misvormd '%s'-commando"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -654,9 +687,9 @@ msgid "Option line too long\n"
 msgstr "Optiesregel is te lang\n"
 
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "onbekende %%option: %s"
+msgstr "onbekende %s: %s"
 
 #: src/scan.l:731
 #, c-format
@@ -678,11 +711,11 @@ msgstr "onjuiste <startvoorwaarde>: %s"
 
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "ontbrekend sluit-aanhalingsteken: de regel eindigde midden in een aangehaalde tekenreeks"
 
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "niet-afgesloten tekenklasse: de regel eindigde vóór de afsluitende ']'"
 
 #: src/scan.l:892
 #, c-format
@@ -706,14 +739,14 @@ msgid "EOF encountered inside pattern"
 msgstr "EOF werd bereikt binnen een patroon"
 
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "onjuist teken: %s"
+msgstr "onverwacht teken: %s"
 
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "Kan geen %zu bytes reserveren voor de stack"
 
 #: src/scanopt.c:250
 #, c-format
@@ -747,19 +780,19 @@ msgstr "Onbekende fout=(%d)\n"
 
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "niet-bestaand backend"
 
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "niet-afgesloten of te lange eigenschapsnaam"
 
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "verhaspelde eigenschapsregel"
 
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "niet-afgesloten of te lange eigenschapswaarde"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -770,9 +803,9 @@ msgid "symbol table memory allocation failed"
 msgstr "geheugenreservering voor symbolentabel is mislukt"
 
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "naam is twee keer gedefinieerd"
+msgstr "naam \"%s\" is twee keer gedefinieerd"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -783,14 +816,21 @@ msgid "start condition %s declared twice"
 msgstr "startvoorwaarde %s is twee keer vermeld"
 
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "fout tijdens schrijven van uitvoerbestand %s"
+msgstr "fout tijdens schrijven van tabellen"
 
 #: src/yylex.c:58
-msgid ""
-"unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgid "unexpected end of file: the line that starts the rules section is missing"
+msgstr "onverwacht einde van bestand: de startregel van de voorschriftensectie ontbreekt"
+
+#~ msgid "Allocation of buffer for line directive failed"
+#~ msgstr "Geheugenreservering voor line-commandobuffer is mislukt"
+
+#~ msgid "Allocation of buffer for m4 def failed"
+#~ msgstr "Geheugenreservering voor buffer voor m4 def is mislukt"
+
+#~ msgid "Allocation of buffer for m4 undef failed"
+#~ msgstr "Geheugenreservering voor buffer voor m4 undef is mislukt"
 
 #~ msgid ""
 #~ "\n"
@@ -871,8 +911,7 @@ msgstr ""
 #~ msgid "Could not write yynultrans_tbl"
 #~ msgstr "Kan yynultrans_tbl niet schrijven"
 
-#, fuzzy
-#~ msgid "Can't use --ctrl.reentrant or --bison-bridge with -l option"
+#~ msgid "Can't use --reentrant or --bison-bridge with -l option"
 #~ msgstr "Optie '--reentrant' of '--bison-bridge' gaat niet samen met '-l'"
 
 #~ msgid "-Cf and -CF are mutually exclusive"
@@ -880,6 +919,13 @@ msgstr ""
 
 #~ msgid "Can't use -+ with -CF option"
 #~ msgstr "Optie '-+' gaat niet samen met '-CF'"
+
+#~ msgid "Prefix cannot include '[' or ']'"
+#~ msgstr "prefix mag geen '[' of ']' bevatten"
+
+#, c-format
+#~ msgid "error creating header file %s"
+#~ msgstr "fout tijdens aanmaken van headerbestand %s"
 
 #, c-format
 #~ msgid "%s version %s usage statistics:\n"
@@ -931,8 +977,7 @@ msgstr ""
 
 #, c-format
 #~ msgid "  %d/%d character classes needed %d/%d words of storage, %d reused\n"
-#~ msgstr ""
-#~ "  %d/%d tekenklassen hadden %d/%d opslagwoorden nodig, %d hergebruikt\n"
+#~ msgstr "  %d/%d tekenklassen hadden %d/%d opslagwoorden nodig, %d hergebruikt\n"
 
 #, c-format
 #~ msgid "  %d state/nextstate pairs created\n"
@@ -990,21 +1035,19 @@ msgstr ""
 #~ msgid "  %d total table entries needed\n"
 #~ msgstr "  in totaal %d tabelitems nodig\n"
 
-#~ msgid "Prefix cannot include '[' or ']'"
-#~ msgstr "prefix mag geen '[' of ']' bevatten"
+#, c-format
+#~ msgid "%s %s\n"
+#~ msgstr "%s %s\n"
 
 #, c-format
-#~ msgid ""
-#~ "-l AT&T lex compatibility option entails a large performance penalty\n"
-#~ msgstr ""
-#~ "de AT&T-lexcompatibiliteitsoptie '-l' betekent een grote "
-#~ "prestatievermindering\n"
+#~ msgid "-l AT&T lex compatibility option entails a large performance penalty\n"
+#~ msgstr "de AT&T-lexcompatibiliteitsoptie '-l' betekent een grote prestatievermindering\n"
 
 #, c-format
 #~ msgid "%option yylineno cannot be used with REJECT"
 #~ msgstr "%optie yylineno gaat niet samen met REJECT"
 
-#, fuzzy, c-format
+#, c-format
 #~ msgid ""
 #~ "Generates programs that perform pattern-matching on text.\n"
 #~ "\n"
@@ -1024,21 +1067,18 @@ msgstr ""
 #~ "  -b, --backup            write backing-up information to %s\n"
 #~ "  -p, --perf-report       write performance report to stderr\n"
 #~ "  -s, --nodefault         suppress default rule to ECHO unmatched text\n"
-#~ "  -T, --env.trace             %s should run in env.trace mode\n"
+#~ "  -T, --trace             %s should run in trace mode\n"
 #~ "  -w, --nowarn            do not generate warnings\n"
 #~ "  -v, --verbose           write summary of scanner statistics to stdout\n"
-#~ "      --hex               use hexadecimal numbers instead of octal in "
-#~ "debug outputs\n"
+#~ "      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 #~ "\n"
 #~ "Files:\n"
 #~ "  -o, --outfile=FILE      specify output filename\n"
 #~ "  -S, --skel=FILE         specify skeleton file\n"
 #~ "  -t, --stdout            write scanner on stdout instead of %s\n"
 #~ "      --yyclass=NAME      name of C++ class\n"
-#~ "      --header-file=FILE   create a C header file in addition to the "
-#~ "scanner\n"
+#~ "      --header-file=FILE   create a C header file in addition to the scanner\n"
 #~ "      --tables-file[=FILE] write tables to FILE\n"
-#~ "      --backup-file=FILE  write backing-up information to FILE\n"
 #~ "\n"
 #~ "Scanner behavior:\n"
 #~ "  -7, --7bit              generate 7-bit scanner\n"
@@ -1053,11 +1093,10 @@ msgstr ""
 #~ "Generated code:\n"
 #~ "  -+,  --c++               generate C++ scanner class\n"
 #~ "  -Dmacro[=defn]           #define macro defn  (default defn is '1')\n"
-#~ "  -e,  --emit=LANG         Specify target language\n"
 #~ "  -L,  --noline            suppress #line directives in scanner\n"
 #~ "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
-#~ "  -R,  --reentrant         generate a reentrant scanner\n"
-#~ "       --bison-bridge      scanner for Bison pure parser.\n"
+#~ "  -R,  --reentrant         generate a reentrant C scanner\n"
+#~ "       --bison-bridge      scanner for bison pure parser.\n"
 #~ "       --bison-locations   include yylloc support.\n"
 #~ "       --stdinit           initialize yyin/yyout to stdin/stdout\n"
 #~ "       --nounistd          do not include <unistd.h>\n"
@@ -1073,51 +1112,39 @@ msgstr ""
 #~ "Genereert patroonherkenningsprogramma's.\n"
 #~ "\n"
 #~ "Tabelcompressie:\n"
-#~ "  -Ca, --align      meer geheugen gebruiken voor beter uitgelijnde "
-#~ "tabellen\n"
+#~ "  -Ca, --align      meer geheugen gebruiken voor beter uitgelijnde tabellen\n"
 #~ "  -Ce, --ecs        equivalentieklassen construeren\n"
-#~ "  -Cf               tabellen niet comprimeren; de -f-representatie "
-#~ "gebruiken\n"
-#~ "  -CF               tabellen niet comprimeren; de -F-representatie "
-#~ "gebruiken\n"
+#~ "  -Cf               tabellen niet comprimeren; de -f-representatie gebruiken\n"
+#~ "  -CF               tabellen niet comprimeren; de -F-representatie gebruiken\n"
 #~ "  -Cm, --meta-ecs   meta-equivalentieklassen construeren\n"
-#~ "  -Cr, --read       read() gebruiken in plaats van stdio voor "
-#~ "scannerinvoer\n"
-#~ "  -f, --full        een snelle, grote scanner genereren (zelfde als "
-#~ "-Cfr)\n"
+#~ "  -Cr, --read       read() gebruiken in plaats van stdio voor scannerinvoer\n"
+#~ "  -f, --full        een snelle, grote scanner genereren (zelfde als -Cfr)\n"
 #~ "  -F, --fast        alternatieve tabelrepresentatie gebruiken (als -CFr)\n"
 #~ "  -Cem              standaardcompressie (zelfde als --ecs --meta-ecs)\n"
 #~ "\n"
 #~ "Debuggen:\n"
 #~ "  -d, --debug         debugmodus in scanner aanzetten\n"
 #~ "  -b, --backup        terugstap-informatie naar %s schrijven\n"
-#~ "  -p, --perf-report   prestatierapport naar standaardfoutuitvoer "
-#~ "schrijven\n"
-#~ "  -s, --nodefault     standaardvoorschrift dat onherkende tekst ECHO-t "
-#~ "uitzetten\n"
+#~ "  -p, --perf-report   prestatierapport naar standaardfoutuitvoer schrijven\n"
+#~ "  -s, --nodefault     standaardvoorschrift dat onherkende tekst ECHO-t uitzetten\n"
 #~ "  -T, --trace         %s uitvoeren in tracemodus\n"
 #~ "  -w, --nowarn        geen waarschuwingen geven\n"
-#~ "  -v, --verbose       scannerstatistieken naar standaarduitvoer "
-#~ "schrijven\n"
+#~ "  -v, --verbose       scannerstatistieken naar standaarduitvoer schrijven\n"
 #~ "\n"
 #~ "Bestanden:\n"
 #~ "  -o, --outfile=BESTAND   dit uitvoerbestand gebruiken\n"
 #~ "  -S, --skel=BESTAND      dit skeletbestand gebruiken\n"
-#~ "  -t, --stdout            scanner naar standaarduitvoer schrijven, niet "
-#~ "naar %s\n"
+#~ "  -t, --stdout            scanner naar standaarduitvoer schrijven, niet naar %s\n"
 #~ "      --yyclass=NAAM      naam van de C++-klasse\n"
-#~ "      --header-file=BESTAND    behalve de scanner ook een C-headerbestand "
-#~ "maken\n"
+#~ "      --header-file=BESTAND    behalve de scanner ook een C-headerbestand maken\n"
 #~ "      --tables-file[=BESTAND]  tabellen schrijven (naar dit BESTAND)\n"
 #~ "\n"
 #~ "Scannergedrag:\n"
 #~ "  -7, --7bit              een 7-bits-scanner genereren\n"
 #~ "  -8, --8bit              een 8-bits-scanner genereren\n"
-#~ "  -B, --batch             een batch-scanner genereren (tegengestelde van "
-#~ "-I)\n"
+#~ "  -B, --batch             een batch-scanner genereren (tegengestelde van -I)\n"
 #~ "  -i, --case-insensitive  hoofd-/kleine letters in patronen negeren\n"
-#~ "  -l, --lex-compat        maximale compatibiliteit met de originele "
-#~ "'lex'\n"
+#~ "  -l, --lex-compat        maximale compatibiliteit met de originele 'lex'\n"
 #~ "  -X, --posix-compat      maximale compatibiliteit met de POSIX 'lex'\n"
 #~ "  -I, --interactive       een interactieve scanner genereren\n"
 #~ "      --yylineno          het regelaantal bijhouden in yylineno\n"
@@ -1126,14 +1153,11 @@ msgstr ""
 #~ "  -+,  --c++              een C++-scannerklasse genereren\n"
 #~ "  -Dmacro[=defn]          #define macro defn  (standaard defn is '1')\n"
 #~ "  -L,  --noline           de #line-commando's in de scanner onderdrukken\n"
-#~ "  -P,  --prefix=STRING    STRING gebruiken als prefix in plaats van "
-#~ "\"yy\"\n"
+#~ "  -P,  --prefix=STRING    STRING gebruiken als prefix in plaats van \"yy\"\n"
 #~ "  -R,  --reentrant        een herintreedbare C-scanner genereren\n"
-#~ "       --bison-bridge     een scanner voor zuivere bison-ontleder "
-#~ "genereren\n"
+#~ "       --bison-bridge     een scanner voor zuivere bison-ontleder genereren\n"
 #~ "       --bison-locations  ondersteuning voor yylloc opnemen\n"
-#~ "       --stdinit          yyin/yyout naar standaardin/uitvoer "
-#~ "initialiseren\n"
+#~ "       --stdinit          yyin/yyout naar standaardin/uitvoer initialiseren\n"
 #~ "       --nounistd         <unistd.h> niet insluiten\n"
 #~ "       --noFUNCTIE        specifieke FUNCTIE niet genereren\n"
 #~ "\n"
@@ -1143,6 +1167,13 @@ msgstr ""
 #~ "  -?\n"
 #~ "  -h, --help              deze hulptekst tonen\n"
 #~ "  -V, --version           de versie van %s tonen\n"
+
+#~ msgid "allocation of sko_stack failed"
+#~ msgstr "geheugenreservering voor 'sko_stack' is mislukt"
+
+#, c-format
+#~ msgid "name \"%s\" ridiculously long"
+#~ msgstr "naam is belachelijk lang: \"%s\""
 
 #~ msgid "memory allocation failed in allocate_array()"
 #~ msgstr "geheugenreservering is mislukt in allocate_array()"
@@ -1186,24 +1217,3 @@ msgstr ""
 #, c-format
 #~ msgid "*Something Weird* - tok: %d val: %d\n"
 #~ msgstr "*Iets Raars* - token: %d waarde:%d\n"
-
-#~ msgid "Allocation of buffer for line directive failed"
-#~ msgstr "Geheugenreservering voor line-commandobuffer is mislukt"
-
-#~ msgid "Allocation of buffer for m4 def failed"
-#~ msgstr "Geheugenreservering voor buffer voor m4 def is mislukt"
-
-#~ msgid "Allocation of buffer for m4 undef failed"
-#~ msgstr "Geheugenreservering voor buffer voor m4 undef is mislukt"
-
-#~ msgid "error creating header file %s"
-#~ msgstr "fout tijdens aanmaken van headerbestand %s"
-
-#~ msgid "%s %s\n"
-#~ msgstr "%s %s\n"
-
-#~ msgid "allocation of sko_stack failed"
-#~ msgstr "geheugenreservering voor 'sko_stack' is mislukt"
-
-#~ msgid "name \"%s\" ridiculously long"
-#~ msgstr "naam is belachelijk lang: \"%s\""
