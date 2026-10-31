@@ -4484,7 +4484,6 @@ m4_ifdef( [[M4_YY_IN_HEADER]],
 m4preproc_undivert(1)
 #undef M4_MODE_PREFIX[[IN_HEADER]]
 #endif /* M4_MODE_PREFIX[[HEADER_H]] */
-m4_undefine([[M4_YY_IN_HEADER]])m4_dnl
 ]])
 
 %# Local Variables:
