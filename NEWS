@@ -149,6 +149,15 @@ flex NEWS
 
 ** scanner
 
+*** yy_scan_string() and yy_scan_bytes() no longer write outside the
+    buffer they allocate when the input is too long for an int, or when
+    the length given to yy_scan_bytes() is negative. They now stop with
+    the fatal error "string too long for yy_scan_string()" or "negative
+    length in yy_scan_bytes()". Input longer than an int can hold was
+    never supported; before, it could corrupt the heap. (#446, #664)
+
+    Thanks to anshal ossaimi.
+
 *** A scanner file could run commands while flex was running by
     putting m4 macros in the values of options such as outfile,
     header-file, yydecl, user-init, pre-action and post-action. Flex

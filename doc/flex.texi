@@ -2280,6 +2280,11 @@ use the most appropriate native type instead of char*, such as a
 reference to a byte array or slice.
 @end deftypefun
 
+The length of the input is an @code{int}, so both functions stop with
+a fatal error if it is negative or, for @code{yy_scan_string()}, too
+large for an @code{int}.  To scan more than that, read the input in
+pieces.
+
 Note that both of these functions create and scan a @emph{copy} of the
 string or bytes.  (This may be desirable, since @code{yylex()} modifies
 the contents of the buffer it is scanning.)  You can avoid the copy by
