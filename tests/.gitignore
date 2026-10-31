@@ -131,12 +131,16 @@ rescan_nr.direct
 rescan_nr.direct.c
 rescan_r.direct
 rescan_r.direct.c
+scan_length.direct
+scan_length.direct.c
 state_buf.direct
 state_buf.direct.cc
 state_buf_multiple.direct
 state_buf_multiple.direct.cc
 state_buf_push.direct
 state_buf_push.direct.c
+scan_length_c99
+scan_length_c99.c
 string_nr
 string_nr.c
 string_r
