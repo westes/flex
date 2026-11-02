@@ -54,6 +54,8 @@ ccl*
 !ccl.txt
 cxx_basic
 cxx_basic.cc
+cxx_buffer_stack
+cxx_buffer_stack.cc
 cxx_buffer_typedef_legacy
 cxx_buffer_typedef_legacy.cc
 cxx_legacy_members
