@@ -50,6 +50,8 @@ ccl*
 !ccl.txt
 cxx_basic
 cxx_basic.cc
+cxx_buffer_stack
+cxx_buffer_stack.cc
 cxx_multiple_scanners
 cxx_multiple_scanners_[12].cc
 cxx_reject

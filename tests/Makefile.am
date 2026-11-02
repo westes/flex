@@ -76,6 +76,7 @@ SPORADIC_TESTS = \
 	c_cxx_nr \
 	c_cxx_r \
 	cxx_basic \
+	cxx_buffer_stack \
 	cxx_multiple_scanners \
 	cxx_reject \
 	cxx_restart \
@@ -137,6 +138,7 @@ endif
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
 cxx_basic_SOURCES = cxx_basic.ll
+cxx_buffer_stack_SOURCES = cxx_buffer_stack.ll
 cxx_reject_SOURCES = cxx_reject.ll
 cxx_restart_SOURCES = cxx_restart.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
@@ -208,6 +210,7 @@ CLEANFILES = \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
 	cxx_basic.cc \
+	cxx_buffer_stack.cc \
 	cxx_multiple_scanners_1.cc \
 	cxx_multiple_scanners_2.cc \
 	cxx_reject.cc \
@@ -279,6 +282,7 @@ EXTRA_DIST = \
 	c_cxx_nr.txt \
 	c_cxx_r.txt \
 	cxx_basic.txt \
+	cxx_buffer_stack.txt \
 	cxx_multiple_scanners.txt \
 	cxx_reject.txt \
 	cxx_restart.txt \

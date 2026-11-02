@@ -2348,7 +2348,12 @@ void yyFlexLexer::ctor_common() {
 yyFlexLexer::~yyFlexLexer() {
 	yyfree( yy_state_buf M4_YY_CALL_LAST_ARG );
 	yyfree( yy_start_stack M4_YY_CALL_LAST_ARG );
-	yy_delete_buffer( yy_current_buffer() M4_YY_CALL_LAST_ARG);
+	/* Pop the whole buffer stack, like yylex_destroy() does for the C
+	 * scanners, so buffers pushed with yypush_buffer_state() are freed.
+	 */
+	while ( yy_current_buffer() != NULL ) {
+		yypop_buffer_state();
+	}
 	yyfree( yy_buffer_stack M4_YY_CALL_LAST_ARG );
 }
 
