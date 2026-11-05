@@ -149,6 +149,13 @@ flex NEWS
 
 ** scanner
 
+*** The header file written by the --header-file option no longer
+    contains the code from section 3 of the scanner file, such as
+    function definitions. A scanner whose header was included in other
+    source files could fail to compile or link because of it. (#801)
+
+    Thanks to Christoph Grüninger.
+
 *** yy_scan_string() and yy_scan_bytes() no longer write outside the
     buffer they allocate when the input is too long for an int, or when
     the length given to yy_scan_bytes() is negative. They now stop with
