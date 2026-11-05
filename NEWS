@@ -149,6 +149,15 @@ flex NEWS
 
 ** scanner
 
+*** A scanner that defines its own YY_INPUT or yyread() can again create
+    a buffer from a NULL file, for example with yy_create_buffer(NULL,
+    size), and have it filled through that routine, as in flex 2.6.4.
+    Such a buffer is treated as empty only when the scanner reads its
+    input with flex's own routine, which needs a file to read from.
+    (#802)
+
+    Thanks to Christoph Grüninger.
+
 *** The header file written by the --header-file option no longer
     contains the code from section 3 of the scanner file, such as
     function definitions. A scanner whose header was included in other
