@@ -1558,6 +1558,10 @@ static void rule_check_bol(yyscan_t yyscanner) {
  * claimed as yytext.
  */
 void yy_do_before_action(yyscan_t yyscanner, char *yy_cp, char *yy_bp) {
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[/* yytext_ptr is backed up over the yymore() text below, so keep that inside the buffer. */
+	if ( yyscanner->yy_more_offset > yy_bp - yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf )
+		yyscanner->yy_more_offset = (int) (yy_bp - yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf);
+]])]])
 	yyscanner->yytext_ptr = yy_bp; \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[yyscanner->yytext_ptr -= yyscanner->yy_more_len; \
 	yyscanner->yyleng_r = (int) (yy_cp - yyscanner->yytext_ptr);]])]]) \
