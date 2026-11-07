@@ -3,6 +3,11 @@
 # This file is distributed under the same licence as the flex package.
 # Jordi Mallach <jordi@sindominio.net>, 2002, 2003, 2006, 2008, 2012.
 #
+# Messages marked "machine translation (Claude)" were written by an AI model
+# on 2026-11-07 for flex 2.6.5, because the Translation Project had no
+# current translation for them. A native speaker has not reviewed them.
+# They are replaced when the Translation Project supplies a translation.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.37\n"
@@ -11,6 +16,7 @@ msgstr ""
 "PO-Revision-Date: 2012-12-04 17:36+0100\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,9 +27,10 @@ msgstr ""
 msgid "Allocation of buffer to print string failed"
 msgstr "Ha fallat l'assignació d'un búfer per imprimir la cadena"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "error intern: s'ha intentat afegir un caràcter a una ccl que no és l'última.\n"
 
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
@@ -47,77 +54,83 @@ msgstr "L'estat #%d és no-acceptar -\n"
 msgid "dangerous trailing context"
 msgstr "Context posterior perillós"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " números de línia associats a la regla:"
+msgstr "números de línia de les regles associades:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " fi de transicions: "
+msgstr "transicions de sortida:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" transicions de bloqueig: EOF "
+msgstr "transicions de bloqueig:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "la comprovació de consistència ha fallat en epsclosure()"
+msgstr "ha fallat la comprovació de consistència en %s()"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
 msgstr "no s'ha pogut crear un estat únic de final-de-búfer"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: %s is the name of a table in
 #. the generated scanner.
 #: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "No s'ha pogut escriure ecstbl"
+msgstr "no s'ha pogut escriure %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "caràcter de transició incorrecte detectat en sympartition()"
+msgstr "s'ha detectat un caràcter de transició incorrecte en %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "ha fallat l'assignació de memòria en allocate_array()"
+msgstr "ha fallat l'assignació de memòria en %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "ha fallat pipe"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "ha fallat fork"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "ha fallat %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "ha fallat l'execució (exec) de %s"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -129,64 +142,75 @@ msgstr "s'ha produït un error en escriure el fitxer d'eixida %s"
 msgid "error closing output file %s"
 msgstr "s'ha produït un error en tancar el fitxer d'eixida %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s: error intern fatal, %s\n"
+msgstr "%s: error intern fatal en %s:%d (%s): %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s: error intern fatal, %s\n"
+msgstr "%s: error intern fatal en %s:%d %s\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
 msgstr "no es pot satisfer la regla"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr "S'ha especificat l'opció -s però es pot aplicar la regla per defecte"
+msgstr "s'ha indicat l'opció %s però la regla per defecte es pot satisfer"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "no es pot obrir %s"
+msgstr "no es pot obrir %s: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "No es pot fer servir -+ amb l'opció -l"
+msgstr "No es pot usar %s amb l'opció %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "No es pot fer servir -f o -F amb l'opció -l"
+msgstr "No es pot usar %s ni %s amb l'opció %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "-Cf/-CF i -Cm no tenen sentit juntes"
+msgstr "%s i %s no tenen sentit junts"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "-Cf/-CF i -I són incompatibles"
+msgstr "%s i %s són incompatibles"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF són incompatibles amb el mode de compatibilitat amb lex"
+msgstr "%s són incompatibles amb el mode de compatibilitat amb lex"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "Les opcions -+ i --reentrant són mútuament excloents"
+msgstr "Les opcions %s i %s són mútuament excloents."
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "%array és incompatible amb l'opció -+"
+msgstr "%s és incompatible amb l'opció %s"
 
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
@@ -197,10 +221,11 @@ msgstr "No es suporta «bison bridge» per a l'analitzador de C++"
 msgid "could not create %s"
 msgstr "no s'ha pogut crear %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr "l'%opció yyclass només té sentit per a analitzadors de C++"
+msgstr "%s només té sentit per als analitzadors de C++"
 
 #: src/main.c:480
 #, c-format
@@ -222,12 +247,13 @@ msgstr "s'ha produït un error en suprimir el fitxer d'eixida %s"
 msgid "No backing up.\n"
 msgstr "No hi ha retrocés.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d estats de retrocés (no-acceptació).\n"
-msgstr[1] "%d estats de retrocés (no-acceptació).\n"
+msgstr[0] "%d estat de retrocés (no acceptant).\n"
+msgstr[1] "%d estats de retrocés (no acceptants).\n"
 
 #: src/main.c:514
 #, c-format
@@ -254,10 +280,11 @@ msgstr "Error intern. Els flexopts estan malformats.\n"
 msgid "Try `%s --help' for more information.\n"
 msgstr "Proveu «%s --help» per a obtindre més informació.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "opció de -C desconeguda «%c»"
+msgstr "opció %s desconeguda «%c»"
 
 # Hmm. No se si açò està be. jm
 #: src/main.c:1222
@@ -278,37 +305,41 @@ msgstr "No es pot obrir el fitxer d'esquema %s"
 msgid "could not create backing-up info file %s"
 msgstr "no s'ha pogut crear un fitxer d'informació del retrocés %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
 msgstr ""
-" i pot ser l'origen real d'altres penalitzacions del rendiment notificades\n"
+"L'opció de compatibilitat amb lex d'AT&T %s implica una penalització del rendiment molt gran\n"
+" i pot ser l'origen real d'altres penalitzacions del rendiment comunicades\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1381
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s entails a performance penalty ONLY on rules that can match newline "
 "characters\n"
-msgstr ""
-"l'%%opció yylineno implica una penalització del rendiment NOMÉS en regles "
-"que poden fer coincidir caràcters de nova línia\n"
+msgstr "%s implica una penalització del rendiment NOMÉS en les regles que poden coincidir amb caràcters de nova línia\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "-I (interactiu) implica una xicoteta penalització del rendiment\n"
+msgstr "%s (interactiu) implica una penalització del rendiment petita\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore() implica una xicoteta penalització del rendiment\n"
+msgstr "%s implica una penalització del rendiment petita\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT implica una penalització del rendiment molt gran\n"
+msgstr "%s implica una penalització del rendiment molt gran\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -322,21 +353,23 @@ msgstr ""
 "Les regles de context posterior variable implica una penalització del "
 "rendiment molt gran\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "REJECT no es pot fer servir amb -f o -F"
+msgstr "%s no es pot usar amb %s ni %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "REJECT no es pot fer servir amb -f o -F"
+msgstr "%s no es pot usar amb %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr ""
-"Les regles de context posterior variable no es poden utilitzar amb -f o -F"
+msgstr "les regles de context posterior variable no es poden usar amb %s ni %s"
 
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
@@ -347,10 +380,12 @@ msgstr "Ha fallat l'assignació de la definició de la macro"
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Forma d'ús: %s [OPCIONS] [FITXER]...\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "Genera programes que realitzen cerca de patrons en text.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1784
 msgid ""
 "Table Compression:\n"
@@ -364,7 +399,18 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"Compressió de taules:\n"
+"  -Ca, --align      sacrificar taules més grans per una millor alineació de memòria\n"
+"  -Ce, --ecs        construir classes d'equivalència\n"
+"  -Cf               no comprimir les taules; usar la representació -f\n"
+"  -CF               no comprimir les taules; usar la representació -F\n"
+"  -Cm, --meta-ecs   construir classes de metaequivalència\n"
+"  -Cr, --read       usar read() en lloc de stdio per a l'entrada de l'analitzador\n"
+"  -f, --full        generar un analitzador ràpid i gran. Igual que -Cfr\n"
+"  -F, --fast        usar una representació alternativa de taules. Igual que -CFr\n"
+"  -Cem              compressió per defecte (igual que --ecs --meta-ecs)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1796
 #, c-format
 msgid ""
@@ -379,7 +425,17 @@ msgid ""
 "      --hex               use hexadecimal numbers instead of octal in debug "
 "outputs\n"
 msgstr ""
+"Depuració:\n"
+"  -d, --debug             activar el mode de depuració a l'analitzador\n"
+"  -b, --backup            escriure la informació de retrocés a %s\n"
+"  -p, --perf-report       escriure l'informe de rendiment a stderr\n"
+"  -s, --nodefault         suprimir la regla per defecte que fa ECHO del text sense coincidència\n"
+"  -T, --trace             %s s'ha d'executar en mode de traça\n"
+"  -w, --nowarn            no generar avisos\n"
+"  -v, --verbose           escriure a stdout un resum de les estadístiques de l'analitzador\n"
+"      --hex               usar nombres hexadecimals en lloc d'octals a la sortida de depuració\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1808
 #, c-format
 msgid ""
@@ -393,7 +449,16 @@ msgid ""
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"Fitxers:\n"
+"  -o, --outfile=FITXER    especificar el nom del fitxer de sortida\n"
+"  -S, --skel=FITXER       especificar el fitxer d'esquema\n"
+"  -t, --stdout            escriure l'analitzador a stdout en lloc de %s\n"
+"      --yyclass=NOM       nom de la classe de C++\n"
+"      --header-file=FITXER   crear un fitxer de capçalera C a més de l'analitzador\n"
+"      --tables-file[=FITXER] escriure les taules a FITXER\n"
+"      --backup-file=FITXER   escriure la informació de retrocés a FITXER\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1819
 msgid ""
 "Scanner behavior:\n"
@@ -406,7 +471,17 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"Comportament de l'analitzador:\n"
+"  -7, --7bit              generar un analitzador de 7 bits\n"
+"  -8, --8bit              generar un analitzador de 8 bits\n"
+"  -B, --batch             generar un analitzador per lots (oposat a -I)\n"
+"  -i, --case-insensitive  ignorar majúscules i minúscules als patrons\n"
+"  -l, --lex-compat        màxima compatibilitat amb el lex original\n"
+"  -X, --posix-compat      màxima compatibilitat amb el lex de POSIX\n"
+"  -I, --interactive       generar un analitzador interactiu (oposat a -B)\n"
+"      --yylineno          comptar les línies a yylineno\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1830
 msgid ""
 "Generated code:\n"
@@ -417,7 +492,15 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"Codi generat:\n"
+"  -+,  --c++               generar una classe d'analitzador de C++\n"
+"  -Dmacro[=defn]           #define macro defn  (el valor per defecte de defn és «1»)\n"
+"  -e,  --emit=LLENGUA      especificar el llenguatge de destinació\n"
+"  -L,  --noline            suprimir les directives #line a l'analitzador\n"
+"  -P,  --prefix=CADENA     usar CADENA com a prefix en lloc de «yy»\n"
+"  -R,  --reentrant         generar un analitzador reentrant\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1837
 msgid ""
 "       --bison-bridge      scanner for Bison pure parser.\n"
@@ -426,7 +509,13 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      analitzador per a l'analitzador sintàctic pur de Bison.\n"
+"       --bison-locations   incloure suport de yylloc.\n"
+"       --stdinit           inicialitzar yyin/yyout amb stdin/stdout\n"
+"       --nounistd          no incloure <unistd.h>\n"
+"       --noFUNCIÓ          no generar una FUNCIÓ concreta\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1844
 #, c-format
 msgid ""
@@ -437,21 +526,29 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Diversos:\n"
+"  -c                      opció POSIX sense efecte\n"
+"  -n                      opció POSIX sense efecte\n"
+"  -?\n"
+"  -h, --help              mostrar aquest missatge d'ajuda\n"
+"  -V, --version           mostrar la versió de %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "caràcter incorrecte «%s» detectat en check_char()"
+msgstr "s'ha detectat el caràcter incorrecte «%s» en %s()"
 
 #: src/misc.c:121
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "l'analitzador requereix l'opció -8 per a fer servir el caràcter %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:227
 #, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr ""
+msgstr "el valor de «%s» no pot contenir «[» ni «]»"
 
 #: src/misc.c:238
 #, c-format
@@ -473,10 +570,11 @@ msgstr ""
 "\n"
 "********** s'està començant el bolcat de l'afn amb l'estat inicial %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "màquina buida en dupmachine()"
+msgstr "màquina buida en %s()"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -488,20 +586,22 @@ msgstr "màquina buida en dupmachine()"
 msgid "Variable trailing context rule at line %d\n"
 msgstr "Regla de context posterior variable en la línia %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "<condició d'activació> incorrecta: %s"
+msgstr "tipus d'estat incorrecte en %s()"
 
 #: src/nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "les regles d'entrada són massa complicades (>= %d estats AFN)"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "s'han trobat massa transicions en mkxtion()"
+msgstr "s'han trobat massa transicions en %s()"
 
 #: src/nfa.c:702
 #, c-format
@@ -519,34 +619,40 @@ msgstr "s'ha produït un error desconegut en processar la secció 1"
 msgid "bad start condition list"
 msgstr "condició de començament incorrecta"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "l'operador %s dóna un rendiment subòptim"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "la condició d'activació %s ha sigut declarada dos vegades"
+msgstr "totes les condicions d'activació ja tenen regles %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "error de sintaxi: aquesta no és una regla vàlida"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "<condició d'activació> incorrecta: %s"
+msgstr "condició d'activació %s no declarada"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "el nom ha sigut definit dos vegades"
+msgstr "<%s> especificat dues vegades"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "el context posterior s'ha fet variable a causa de l'acció «%s» anterior"
 
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
@@ -556,6 +662,7 @@ msgstr ""
 msgid "trailing context used twice"
 msgstr "s'ha utilitzat el context posterior dos vegades"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "repeat range" is a pair of
 #. numbers in braces after a pattern, such as
 #. {2,5}, that sets how many times the
@@ -564,11 +671,12 @@ msgstr "s'ha utilitzat el context posterior dos vegades"
 msgid ""
 "invalid repeat range in braces: the first number must not be larger than the "
 "second, and the second must be at least 1"
-msgstr ""
+msgstr "rang de repetició no vàlid entre claus: el primer nombre no pot ser més gran que el segon, i el segon ha de ser com a mínim 1"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "el comptador de repetició entre claus ha de ser com a mínim 1"
 
 #: src/parse.y:857 src/parse.y:867
 #, c-format
@@ -581,47 +689,48 @@ msgstr ""
 msgid "negative range in character class"
 msgstr "rang negatiu en classe de caràcter"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"[:^lower:] és ambigu en un analitzador insensible a les majúscules i "
-"minúscules"
+msgstr "[:^lower:] és ambigu en un analitzador insensible a les majúscules i minúscules"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"[:^upper:] és ambigu en un analitzador insensible a les majúscules i "
-"minúscules"
+msgstr "[:^upper:] és ambigu en un analitzador insensible a les majúscules i minúscules"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "diverses regles %s per a la condició d'activació %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "avís, %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "no s'ha pogut assignar un búfer per a informar de %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "no s'ha pogut assignar una còpia de la coincidència"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "La línia d'entrada és massa llarga\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "directiva «%top» malformada"
+msgstr "directiva «%s» mal formada"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -652,19 +761,21 @@ msgstr "definició del nom incompleta"
 msgid "Option line too long\n"
 msgstr "La línia d'opcions és massa llarga\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "%%opció no reconeguda: %s"
+msgstr "%s no reconegut: %s"
 
 #: src/scan.l:731
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "definició no definida {%s}"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:794
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "parèntesi sense aparellar"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -675,13 +786,15 @@ msgstr ""
 msgid "bad <start condition>: %s"
 msgstr "<condició d'activació> incorrecta: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "falta el signe de cometes de tancament: la línia ha acabat dins d'una cadena entre cometes"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "classe de caràcters sense acabar: la línia ha acabat abans del ] de tancament"
 
 #: src/scan.l:892
 #, c-format
@@ -704,15 +817,17 @@ msgstr "s'ha trobat un EOF dins d'una acció"
 msgid "EOF encountered inside pattern"
 msgstr "s'ha trobat un EOF dins d'un patró"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "caràcter incorrecte: %s"
+msgstr "caràcter inesperat: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "no s'ha pogut assignar %zu de pila"
 
 #: src/scanopt.c:250
 #, c-format
@@ -744,21 +859,25 @@ msgstr "Opció no reconeguda «%s»\n"
 msgid "Unknown error=(%d)\n"
 msgstr "Error desconegut=(%d)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "no existeix aquest «back end»"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "nom de propietat sense acabar o massa llarg"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "línia de propietat malmesa"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "valor de propietat sense acabar o massa llarg"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -768,10 +887,11 @@ msgstr "línia incorrecta en el fitxer d'esquema"
 msgid "symbol table memory allocation failed"
 msgstr "ha fallat l'assignació de memòria per a la taula de símbols"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "el nom ha sigut definit dos vegades"
+msgstr "el nom \"%s\" està definit dues vegades"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -781,15 +901,16 @@ msgstr "el nom ha sigut definit dos vegades"
 msgid "start condition %s declared twice"
 msgstr "la condició d'activació %s ha sigut declarada dos vegades"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "s'ha produït un error en escriure el fitxer d'eixida %s"
+msgstr "error en escriure les taules"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/yylex.c:58
 msgid ""
 "unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgstr "final de fitxer inesperat: falta la línia que inicia la secció de regles"
 
 #~ msgid ""
 #~ "\n"
