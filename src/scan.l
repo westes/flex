@@ -1092,6 +1092,8 @@ int yywrap(void)
 
 void set_input_file( char *file )
 	{
+	free( infilename );
+
 	if ( file && strcmp( file, "-" ) )
 		{
 		infilename = xstrdup(file);
