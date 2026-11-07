@@ -4,6 +4,12 @@
 # Wang Li <charles@linux.net.cn>, 2002.
 # Wei-Lun Chao <bluebat@member.fsf.org>, 2009, 2013.
 # Mingye Wang <arthur200126@gmail.com>, 2015.
+#
+# Messages marked "machine translation (Claude)" were written by an AI model
+# on 2026-11-07 for flex 2.6.5, because the Translation Project had no
+# current translation for them. A native speaker has not reviewed them.
+# They are replaced when the Translation Project supplies a translation.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.38\n"
@@ -12,6 +18,7 @@ msgstr ""
 "PO-Revision-Date: 2015-08-27 16:54+0800\n"
 "Last-Translator: Mingye Wang <arthur200126@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,9 +30,10 @@ msgstr ""
 msgid "Allocation of buffer to print string failed"
 msgstr "给予缓冲区配额以打印字串时失败"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "内部错误：试图向不是最后一个的 ccl 添加字符。\n"
 
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
@@ -49,77 +57,83 @@ msgstr "#%d 正处于非访问状态 -\n"
 msgid "dangerous trailing context"
 msgstr "不安全的末端上下文"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " 关联的规则列号："
+msgstr "相关规则的行号："
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " 外转换："
+msgstr "出转换："
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" 合并转换：文件结尾 "
+msgstr "阻塞转换："
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "epsclosure() 中的一致性检查失败"
+msgstr "%s() 中的一致性检查失败"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
 msgstr "无法创建独立的 end-of-buffer 状态"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: %s is the name of a table in
 #. the generated scanner.
 #: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "无法写入 ecstbl"
+msgstr "无法写入 %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "在 sympartition() 检测到错误的变换字符"
+msgstr "在 %s() 中检测到错误的转换字符"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "在 allocatearray() 中内存配置失败"
+msgstr "%s() 中的内存分配失败"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "pipe 失败"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "fork 失败"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "%s 失败"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "执行 (exec) %s 失败"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -131,64 +145,75 @@ msgstr "写入输出文件 %s 出错"
 msgid "error closing output file %s"
 msgstr "关闭输出文件 %s 出错"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s：严重内部错误，%s\n"
+msgstr "%s：在 %s:%d (%s) 发生致命内部错误：%s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s：严重内部错误，%s\n"
+msgstr "%s：在 %s:%d 发生致命内部错误：%s\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
 msgstr "无法匹配规则"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr "-s 选项已给定但是可以吻合缺省规则"
+msgstr "指定了 %s 选项，但默认规则仍可被匹配"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "无法打开 %s"
+msgstr "无法打开 %s：%s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "无法将 -+ 与 -l 选项共同使用"
+msgstr "不能将 %s 与 %s 选项一起使用"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "无法将 -f 或 -F 与 -l 选项共同使用"
+msgstr "不能将 %s 或 %s 与 %s 选项一起使用"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "-Cf/-CF 和 -Cm 共用时不具任何意义"
+msgstr "%s 和 %s 一起使用没有意义"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "-Cf/-CF 和 -I 是不兼容的"
+msgstr "%s 和 %s 是不兼容的"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF 与 lex 兼容模式是不兼容的"
+msgstr "%s 与 lex 兼容模式不兼容"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "选项 -+ 和 --reentrant 是互斥的。"
+msgstr "选项 %s 和 %s 是互斥的。"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "%array 与 -+ 选项不兼容"
+msgstr "%s 与 %s 选项不兼容"
 
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
@@ -199,10 +224,11 @@ msgstr "bison 桥接器不受 C++ 扫描程序支持。"
 msgid "could not create %s"
 msgstr "无法创建 %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr "%option yyclass 只对于 C++ 扫描程序有意义"
+msgstr "%s 仅对 C++ 扫描程序有意义"
 
 #: src/main.c:480
 #, c-format
@@ -225,12 +251,12 @@ msgstr "删除输出文件 %s 出错"
 msgid "No backing up.\n"
 msgstr "没有回溯。\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d 回溯 (非接受) 状态。\n"
-msgstr[1] "%d 回溯 (非接受) 状态。\n"
+msgstr[0] "%d 个回溯（非接受）状态。\n"
 
 #: src/main.c:514
 #, c-format
@@ -257,10 +283,11 @@ msgstr "内部错误。flexopts 功能异常。\n"
 msgid "Try `%s --help' for more information.\n"
 msgstr "尝试「%s --help」以获得更多信息。\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "未知的 -C 选项“%c”"
+msgstr "未知的 %s 选项“%c”"
 
 #: src/main.c:1222
 msgid "fatal parse error"
@@ -280,34 +307,41 @@ msgstr "无法打开骨架文件 %s"
 msgid "could not create backing-up info file %s"
 msgstr "无法创建回溯信息文件 %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
-msgstr " 同时也许是其他回报性能减退的实际来源\n"
+msgstr ""
+"AT&T lex 兼容选项 %s 导致大幅性能减退\n"
+" 并且可能是其他已报告的性能减退的真正根源\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1381
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s entails a performance penalty ONLY on rules that can match newline "
 "characters\n"
-msgstr "%%option yylineno 导致性能减退，只有当该规则该吻合新列字符时才会\n"
+msgstr "%s 仅对可以匹配换行符的规则导致性能减退\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "-I (交互式) 导致小幅性能减退\n"
+msgstr "%s（交互式）导致轻微的性能减退\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore() 导致小幅性能减退\n"
+msgstr "%s 导致轻微的性能减退\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT 导致大幅性能减退\n"
+msgstr "%s 导致大幅性能减退\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -319,20 +353,23 @@ msgstr "REJECT 导致大幅性能减退\n"
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr "变量末尾上下文规则导致大幅性能减退\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "REJECT 无法与 -f 或 -F 共同使用"
+msgstr "%s 不能与 %s 或 %s 一起使用"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "REJECT 无法与 -f 或 -F 共同使用"
+msgstr "%s 不能与 %s 一起使用"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr "变量末尾上下文规则无法与 -f 或 -F 共同使用"
+msgstr "变量末尾上下文规则无法与 %s 或 %s 共同使用"
 
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
@@ -343,10 +380,12 @@ msgstr "给予宏定义配额时失败"
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "用法：%s [选项] [文件]...\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "生成对文本执行模式匹配的程序。\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1784
 msgid ""
 "Table Compression:\n"
@@ -360,7 +399,18 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"表压缩：\n"
+"  -Ca, --align      以更大的表换取更好的内存对齐\n"
+"  -Ce, --ecs        构造等价类\n"
+"  -Cf               不压缩表；使用 -f 表示法\n"
+"  -CF               不压缩表；使用 -F 表示法\n"
+"  -Cm, --meta-ecs   构造元等价类\n"
+"  -Cr, --read       对扫描程序输入使用 read() 而不是 stdio\n"
+"  -f, --full        生成快速的大型扫描程序。与 -Cfr 相同\n"
+"  -F, --fast        使用替代的表表示法。与 -CFr 相同\n"
+"  -Cem              默认压缩（与 --ecs --meta-ecs 相同）\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1796
 #, c-format
 msgid ""
@@ -375,7 +425,17 @@ msgid ""
 "      --hex               use hexadecimal numbers instead of octal in debug "
 "outputs\n"
 msgstr ""
+"调试：\n"
+"  -d, --debug             在扫描程序中启用调试模式\n"
+"  -b, --backup            将回溯信息写入 %s\n"
+"  -p, --perf-report       将性能报告写入 stderr\n"
+"  -s, --nodefault         禁止对不匹配的文本执行 ECHO 的默认规则\n"
+"  -T, --trace             %s 应以跟踪模式运行\n"
+"  -w, --nowarn            不生成警告\n"
+"  -v, --verbose           将扫描程序统计摘要写入 stdout\n"
+"      --hex               在调试输出中使用十六进制数而不是八进制数\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1808
 #, c-format
 msgid ""
@@ -389,7 +449,16 @@ msgid ""
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"文件：\n"
+"  -o, --outfile=文件      指定输出文件名\n"
+"  -S, --skel=文件         指定骨架文件\n"
+"  -t, --stdout            将扫描程序写入 stdout 而不是 %s\n"
+"      --yyclass=名称      C++ 类的名称\n"
+"      --header-file=文件   除扫描程序外再创建一个 C 头文件\n"
+"      --tables-file[=文件] 将表写入文件\n"
+"      --backup-file=文件  将回溯信息写入文件\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1819
 msgid ""
 "Scanner behavior:\n"
@@ -402,7 +471,17 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"扫描程序行为：\n"
+"  -7, --7bit              生成 7 位扫描程序\n"
+"  -8, --8bit              生成 8 位扫描程序\n"
+"  -B, --batch             生成批处理扫描程序（与 -I 相反）\n"
+"  -i, --case-insensitive  在模式中忽略大小写\n"
+"  -l, --lex-compat        与原始 lex 最大程度兼容\n"
+"  -X, --posix-compat      与 POSIX lex 最大程度兼容\n"
+"  -I, --interactive       生成交互式扫描程序（与 -B 相反）\n"
+"      --yylineno          在 yylineno 中跟踪行数\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1830
 msgid ""
 "Generated code:\n"
@@ -413,7 +492,15 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"生成的代码：\n"
+"  -+,  --c++               生成 C++ 扫描程序类\n"
+"  -Dmacro[=defn]           #define macro defn  （默认的 defn 为“1”）\n"
+"  -e,  --emit=语言         指定目标语言\n"
+"  -L,  --noline            在扫描程序中禁止 #line 指令\n"
+"  -P,  --prefix=字符串     使用字符串作为前缀而不是“yy”\n"
+"  -R,  --reentrant         生成可重入的扫描程序\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1837
 msgid ""
 "       --bison-bridge      scanner for Bison pure parser.\n"
@@ -422,7 +509,13 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      用于 Bison 纯解析器的扫描程序。\n"
+"       --bison-locations   包含 yylloc 支持。\n"
+"       --stdinit           将 yyin/yyout 初始化为 stdin/stdout\n"
+"       --nounistd          不包含 <unistd.h>\n"
+"       --no函数            不生成特定的函数\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1844
 #, c-format
 msgid ""
@@ -433,21 +526,29 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"杂项：\n"
+"  -c                      无作用的 POSIX 选项\n"
+"  -n                      无作用的 POSIX 选项\n"
+"  -?\n"
+"  -h, --help              显示此帮助信息\n"
+"  -V, --version           报告 %s 的版本\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "在 checkchar() 中侦测到不当的字符「%s」"
+msgstr "在 %2$s() 中检测到错误的字符“%1$s”"
 
 #: src/misc.c:121
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "扫描程序需要 -8 旗标以使用字符 %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:227
 #, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr ""
+msgstr "“%s”的值不能包含“[”或“]”"
 
 #: src/misc.c:238
 #, c-format
@@ -469,10 +570,11 @@ msgstr ""
 "\n"
 "********** 开始输出起始状态为 %d 的 NFA\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "在 dupmachine() 中清空机器"
+msgstr "%s() 中有空的自动机"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -484,20 +586,22 @@ msgstr "在 dupmachine() 中清空机器"
 msgid "Variable trailing context rule at line %d\n"
 msgstr "变量末尾上下文规则于列 %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "错误 <起始条件>：%s"
+msgstr "%s() 中的状态类型错误"
 
 #: src/nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "输入规则太复杂 (>= %d NFA 状态)"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "在 mkxtion() 中找到太多转换"
+msgstr "在 %s() 中发现太多转换"
 
 #: src/nfa.c:702
 #, c-format
@@ -515,34 +619,40 @@ msgstr "未知的错误处理节 1"
 msgid "bad start condition list"
 msgstr "错误的起始状态列表"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "%s 运算符会导致性能欠佳"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "起始条件 %s 声明了两次"
+msgstr "所有起始条件都已有 %s 规则"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "语法错误：这不是有效的规则"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "错误 <起始条件>：%s"
+msgstr "未声明的起始条件 %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "名称定义了两次"
+msgstr "<%s> 被指定了两次"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "由于前面的“%s”动作，末尾上下文变成了可变的"
 
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
@@ -552,6 +662,7 @@ msgstr ""
 msgid "trailing context used twice"
 msgstr "末尾上下文已使用两次"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "repeat range" is a pair of
 #. numbers in braces after a pattern, such as
 #. {2,5}, that sets how many times the
@@ -560,11 +671,12 @@ msgstr "末尾上下文已使用两次"
 msgid ""
 "invalid repeat range in braces: the first number must not be larger than the "
 "second, and the second must be at least 1"
-msgstr ""
+msgstr "花括号中的重复范围无效：第一个数字不能大于第二个数字，并且第二个数字至少为 1"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "花括号中的重复次数至少为 1"
 
 #: src/parse.y:857 src/parse.y:867
 #, c-format
@@ -575,43 +687,48 @@ msgstr "在大小写不须相符的扫描程序中，字符范围 [%c-%c] 是模
 msgid "negative range in character class"
 msgstr "在字符类别中有负值范围"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr "在大小写不须相符的扫描程序中，[:^lower:] 是模棱两可的"
+msgstr "[:^lower:] 在大小写不须相符的扫描程序中是模棱两可的"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr "在大小写不须相符的扫描程序中，[:^upper:] 是模棱两可的"
+msgstr "[:^upper:] 在大小写不须相符的扫描程序中是模棱两可的"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "起始状态 %2$s 有多个 %1$s 规则"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "警告，%s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "无法分配缓冲区来报告 %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "无法分配匹配结果的副本"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "输入列太长\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "异常的「%top」指令"
+msgstr "格式错误的“%s”指令"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -642,19 +759,21 @@ msgstr "不完整的名称定义"
 msgid "Option line too long\n"
 msgstr "选项列太长\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "不能识别的 %%选项：%s"
+msgstr "无法识别的 %s：%s"
 
 #: src/scan.l:731
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "未定义的定义 {%s}"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:794
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "括号不匹配"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -665,13 +784,15 @@ msgstr ""
 msgid "bad <start condition>: %s"
 msgstr "错误 <起始条件>：%s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "缺少右引号：该行在带引号的字符串内结束"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "字符类未终止：该行在右 ] 之前结束"
 
 #: src/scan.l:892
 #, c-format
@@ -694,15 +815,17 @@ msgstr "在动作中文件结束"
 msgid "EOF encountered inside pattern"
 msgstr "在式样之内遇到文件结束"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "错误的字符：%s"
+msgstr "意外的字符：%s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "无法分配 %zu 的堆栈"
 
 #: src/scanopt.c:250
 #, c-format
@@ -734,21 +857,25 @@ msgstr "未知的选项“%s”\n"
 msgid "Unknown error=(%d)\n"
 msgstr "未知错误=(%d)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "没有这样的后端"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "属性名称未终止或太长"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "属性行已损坏"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "属性值未终止或太长"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -758,10 +885,11 @@ msgstr "骨架文件中错误的行"
 msgid "symbol table memory allocation failed"
 msgstr "符号表内存分配失败"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "名称定义了两次"
+msgstr "名称“%s”被定义了两次"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -771,15 +899,16 @@ msgstr "名称定义了两次"
 msgid "start condition %s declared twice"
 msgstr "起始条件 %s 声明了两次"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "写入输出文件 %s 出错"
+msgstr "写入表时出错"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/yylex.c:58
 msgid ""
 "unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgstr "意外的文件结束：缺少开始规则部分的行"
 
 #~ msgid ""
 #~ "\n"
