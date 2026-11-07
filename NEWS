@@ -135,8 +135,8 @@ flex NEWS
     ru, sr, sv, tr, vi, zh_CN, zh_TW translations from the Translation
     Project.
 
-*** Added machine translations of the ca, da, de, eo messages that the
-    Translation Project had not updated. A native speaker has not
+*** Added machine translations of the ca, da, de, eo, es messages that
+    the Translation Project had not updated. A native speaker has not
     reviewed them, and each one is marked as machine translated in its
     .po file. Translations from the Translation Project will replace
     them.
