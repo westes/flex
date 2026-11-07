@@ -944,7 +944,8 @@ void flexinit (int argc, char **argv)
 
 		    case OPT_TABLES_FILE:
 			tablesext = true;
-			tablesfilename = arg;
+			free(tablesfilename);
+			tablesfilename = arg ? xstrdup(arg) : NULL;
 			break;
 
 		    case OPT_TABLES_VERIFY:
@@ -1263,18 +1264,17 @@ void readin (void)
 	if (tablesext) {
 		FILE   *tablesout;
 		struct yytbl_hdr hdr;
-		char   *pname = 0;
 		size_t  nbytes = 0;
 
 		if (!tablesfilename) {
 			nbytes = strlen (ctrl.prefix) + strlen (tablesfile_template) + 2;
-			tablesfilename = pname = calloc(nbytes, 1);
-			snprintf (pname, nbytes, tablesfile_template, ctrl.prefix);
+			tablesfilename = calloc(nbytes, 1);
+			snprintf (tablesfilename, nbytes, tablesfile_template, ctrl.prefix);
 		}
 
 		if ((tablesout = fopen (tablesfilename, "w")) == NULL)
 			lerr (_("could not create %s"), tablesfilename);
-		free(pname);
+		free(tablesfilename);
 		tablesfilename = 0;
 
 		yytbl_writer_init (&tableswr, tablesout);
