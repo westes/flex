@@ -119,6 +119,9 @@ void backend_by_name(const char *name)
 	}
   backend_ok:
 	ctrl.rewrite = !is_default_backend();
+	free((void *) ctrl.backend_name);
+	free((void *) ctrl.traceline_re);
+	free((void *) ctrl.traceline_template);
 	ctrl.backend_name = xstrdup(skel_property("M4_PROPERTY_BACKEND_NAME"));
 	ctrl.traceline_re = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_REGEXP"));
 	ctrl.traceline_template = xstrdup(skel_property("M4_PROPERTY_TRACE_LINE_TEMPLATE"));
