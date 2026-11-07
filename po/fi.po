@@ -4,6 +4,11 @@
 # This file is distributed under the same license as the flex package.
 # Jorma Karvonen <karvonen.jorma@gmail.com>, 2009, 2012.
 #
+# Messages marked "machine translation (Claude)" were written by an AI model
+# on 2026-11-07 for flex 2.6.5, because the Translation Project had no
+# current translation for them. A native speaker has not reviewed them.
+# They are replaced when the Translation Project supplies a translation.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.36\n"
@@ -23,9 +28,10 @@ msgstr ""
 msgid "Allocation of buffer to print string failed"
 msgstr "Puskurin varaaminen merkkijonon tulostamiseen epäonnistui"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "sisäinen virhe: yritetään lisätä merkki ccl:ään, joka ei ole viimeinen.\n"
 
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
@@ -50,77 +56,83 @@ msgstr "Tila #%d on ei-hyväksyvä -\n"
 msgid "dangerous trailing context"
 msgstr "vaarallinen jättökonteksti"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " yhdistetyt sääntörivinumerot:"
+msgstr "liittyvien sääntöjen rivinumerot:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " ulossiirtymät: "
+msgstr "lähtevät siirtymät:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" ruuhkasiirtymät: TIEDOSTONLOPPUMERKKI "
+msgstr "umpisiirtymät:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "yhtenäisyystarkistus epäonnistui epsclosure()-funktiossa"
+msgstr "johdonmukaisuustarkistus epäonnistui funktiossa %s()"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
 msgstr "ei voitu luoda uniikkia puskurinlopputilaa"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: %s is the name of a table in
 #. the generated scanner.
 #: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "Ei voitu kirjoitaa ecstbl"
+msgstr "%s:ää ei voitu kirjoittaa"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "väärä siirtymämerkki havaittu funktiossa sympartition()"
+msgstr "virheellinen siirtymämerkki havaittu funktiossa %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "muistinvaraus epäonnistui funktiossa allocate_array()"
+msgstr "muistinvaraus epäonnistui funktiossa %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "pipe epäonnistui"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "fork epäonnistui"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "%s epäonnistui"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "%s:n exec epäonnistui"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -132,64 +144,75 @@ msgstr "virhe kirjoitettaessa tulostetiedostoa %s"
 msgid "error closing output file %s"
 msgstr "virhe suljettaessa tulostetiedostoa %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s: vakava sisäinen virhe, %s\n"
+msgstr "%s: vakava sisäinen virhe kohdassa %s:%d (%s): %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s: vakava sisäinen virhe, %s\n"
+msgstr "%s: vakava sisäinen virhe kohdassa %s:%d %s\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
 msgstr "sääntö ei voinut täsmätä"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr "valitsin -s annettu mutta oletussääntö ei voinut täsmätä"
+msgstr "valitsin %s annettu, mutta oletussääntö voi täsmätä"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "ei voi avata %s"
+msgstr "ei voida avata %s: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "Ei voi käyttää -+ valitsimen -l kanssa"
+msgstr "%s:ää ei voi käyttää valitsimen %s kanssa"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "Ei voi käyttää valitsinta -f tai -F valitsimen -l kanssa"
+msgstr "%s:ää tai %s:ää ei voi käyttää valitsimen %s kanssa"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "-Cf/-CF ja -Cm eivät ole järkeviä yhdessä"
+msgstr "%s ja %s eivät ole mielekkäitä yhdessä"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "-Cf/-CF ja -I ovat yhteensopimattomia"
+msgstr "%s ja %s ovat yhteensopimattomia"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF ovat yhteensopimattomia lex-yhteensopivuustilassa"
+msgstr "%s ovat yhteensopimattomia lex-yhteensopivuustilan kanssa"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "Valitsimen -+ ja --reentrant ovat toisensa poissulkevia."
+msgstr "Valitsimet %s ja %s sulkevat toisensa pois."
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "%array on yhteensopimaton valitsimen -+ kanssa"
+msgstr "%s on yhteensopimaton valitsimen %s kanssa"
 
 #  bison bridge tarkoittaa, että flex käyttää bison-ohjelmaa analyysissä
 #: src/main.c:415
@@ -201,10 +224,11 @@ msgstr "”bison bridge”-menettelyä ei tueta C++-skannerille."
 msgid "could not create %s"
 msgstr "ei voitu luoda %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr "%option yyclass on merkityksellinen vain C++-skannereille"
+msgstr "%s on mielekäs vain C++-skannereille"
 
 #: src/main.c:480
 #, c-format
@@ -226,12 +250,13 @@ msgstr "virhe poistettaessa tulostetiedostoa %s"
 msgid "No backing up.\n"
 msgstr "Ei varmuuskopiointia.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d (ei-hyväksyvää) varmuuskopiointitilaa.\n"
-msgstr[1] "%d (ei-hyväksyvää) varmuuskopiointitilaa.\n"
+msgstr[0] "%d varmuuskopiointia vaativa (ei-hyväksyvä) tila.\n"
+msgstr[1] "%d varmuuskopiointia vaativaa (ei-hyväksyvää) tilaa.\n"
 
 #: src/main.c:514
 #, c-format
@@ -258,10 +283,11 @@ msgstr "Sisäinen virhe. flex-valitsimet ovat vääränmuotoisia.\n"
 msgid "Try `%s --help' for more information.\n"
 msgstr "Lisätietoja käskyllä ”%s --help”.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "tuntematon valitsin -C ”%c”"
+msgstr "tuntematon %s-valitsin ”%c”"
 
 #: src/main.c:1222
 msgid "fatal parse error"
@@ -281,37 +307,41 @@ msgstr "ei voi avata kehystiedostoa %s"
 msgid "could not create backing-up info file %s"
 msgstr "ei voitu luoda varmuuskopiotietotiedostoa %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
 msgstr ""
-" ja saattaa olla muiden ilmoitettujen suorituskykysakkojen todellinen lähde\n"
+"AT&T:n lex-yhteensopivuusvalitsin %s tuo mukanaan ison suorituskykyrangaistuksen\n"
+" ja voi olla todellinen syy muihin ilmoitettuihin suorituskykyrangaistuksiin\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1381
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s entails a performance penalty ONLY on rules that can match newline "
 "characters\n"
-msgstr ""
-"%%option yylineno tuo mukanaan suorituskykysakon VAIN säännöissä, jotka "
-"voivat täsmätä rivinvaihtomerkkeihin\n"
+msgstr "%s tuo mukanaan suorituskykyrangaistuksen VAIN säännöille, jotka voivat täsmätä rivinvaihtomerkkeihin\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "-I (interaktiivinen) tuo mukanaan pienemmän suorituskykysakon\n"
+msgstr "%s (vuorovaikutteinen) tuo mukanaan pienen suorituskykyrangaistuksen\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore() tuo mukanaan pienemmän suorituskykysakon\n"
+msgstr "%s tuo mukanaan pienen suorituskykyrangaistuksen\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT tuo mukanaan ison suorituskykyrangaistuksen\n"
+msgstr "%s tuo mukanaan ison suorituskykyrangaistuksen\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -323,21 +353,23 @@ msgstr "REJECT tuo mukanaan ison suorituskykyrangaistuksen\n"
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr "Muuttujajättökontekstisäännöt tuovat mukanaan ison suorityskykysakon\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "REJECT ei voida käyttää valitsimen -f tai -F kanssa"
+msgstr "%s:ää ei voi käyttää valitsimien %s tai %s kanssa"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "REJECT ei voida käyttää valitsimen -f tai -F kanssa"
+msgstr "%s:ää ei voi käyttää valitsimen %s kanssa"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr ""
-"muuttujajättökontekstisääntöjä ei voida käyttää valitsimen -f tai -F kanssa"
+msgstr "muuttuvan jättökontekstin säännöt eivät voi käyttää valitsimia %s tai %s"
 
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
@@ -348,10 +380,12 @@ msgstr "Makromäärityksen varaaminen epäonnistui"
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Käyttö: %s [VALITSIMET] [TIEDOSTO]...\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "Luo ohjelmia, jotka suorittavat hahmonsovitusta tekstille.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1784
 msgid ""
 "Table Compression:\n"
@@ -365,7 +399,18 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"Taulujen pakkaus:\n"
+"  -Ca, --align      vaihda isommat taulut parempaan muistin kohdistukseen\n"
+"  -Ce, --ecs        muodosta ekvivalenssiluokat\n"
+"  -Cf               älä pakkaa tauluja; käytä -f-esitystä\n"
+"  -CF               älä pakkaa tauluja; käytä -F-esitystä\n"
+"  -Cm, --meta-ecs   muodosta metaekvivalenssiluokat\n"
+"  -Cr, --read       käytä read():ia stdion sijaan skannerin syötteeseen\n"
+"  -f, --full        luo nopea, suuri skanneri. Sama kuin -Cfr\n"
+"  -F, --fast        käytä vaihtoehtoista taulun esitystä. Sama kuin -CFr\n"
+"  -Cem              oletuspakkaus (sama kuin --ecs --meta-ecs)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1796
 #, c-format
 msgid ""
@@ -380,7 +425,17 @@ msgid ""
 "      --hex               use hexadecimal numbers instead of octal in debug "
 "outputs\n"
 msgstr ""
+"Vianjäljitys:\n"
+"  -d, --debug             ota vianjäljitystila käyttöön skannerissa\n"
+"  -b, --backup            kirjoita varmuuskopiointitiedot tiedostoon %s\n"
+"  -p, --perf-report       kirjoita suorituskykyraportti vakiovirheeseen\n"
+"  -s, --nodefault         estä oletussääntö, joka ECHO-aa täsmäämättömän tekstin\n"
+"  -T, --trace             %s:n tulee toimia jäljitystilassa\n"
+"  -w, --nowarn            älä luo varoituksia\n"
+"  -v, --verbose           kirjoita yhteenveto skannerin tilastoista vakiotulosteeseen\n"
+"      --hex               käytä heksadesimaalilukuja oktaalilukujen sijaan vianjäljitystulosteissa\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1808
 #, c-format
 msgid ""
@@ -394,7 +449,16 @@ msgid ""
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"Tiedostot:\n"
+"  -o, --outfile=TIEDOSTO  määritä tulostiedoston nimi\n"
+"  -S, --skel=TIEDOSTO     määritä kehystiedosto\n"
+"  -t, --stdout            kirjoita skanneri vakiotulosteeseen kohteen %s sijaan\n"
+"      --yyclass=NIMI      C++-luokan nimi\n"
+"      --header-file=TIEDOSTO   luo C-otsaketiedosto skannerin lisäksi\n"
+"      --tables-file[=TIEDOSTO] kirjoita taulut tiedostoon TIEDOSTO\n"
+"      --backup-file=TIEDOSTO   kirjoita varmuuskopiointitiedot tiedostoon TIEDOSTO\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1819
 msgid ""
 "Scanner behavior:\n"
@@ -407,7 +471,17 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"Skannerin toiminta:\n"
+"  -7, --7bit              luo 7-bittinen skanneri\n"
+"  -8, --8bit              luo 8-bittinen skanneri\n"
+"  -B, --batch             luo eräskanneri (-I:n vastakohta)\n"
+"  -i, --case-insensitive  älä huomioi kirjainkokoa kuvioissa\n"
+"  -l, --lex-compat        mahdollisimman yhteensopiva alkuperäisen lexin kanssa\n"
+"  -X, --posix-compat      mahdollisimman yhteensopiva POSIX-lexin kanssa\n"
+"  -I, --interactive       luo vuorovaikutteinen skanneri (-B:n vastakohta)\n"
+"      --yylineno          seuraa rivilaskuria muuttujassa yylineno\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1830
 msgid ""
 "Generated code:\n"
@@ -418,7 +492,15 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"Luotu koodi:\n"
+"  -+,  --c++               luo C++-skannerin luokka\n"
+"  -Dmacro[=defn]           #define macro defn  (oletus defn on ”1”)\n"
+"  -e,  --emit=KIELI        määritä kohdekieli\n"
+"  -L,  --noline            estä #line-direktiivit skannerissa\n"
+"  -P,  --prefix=MERKKIJONO käytä MERKKIJONOA etuliitteenä ”yy”:n sijaan\n"
+"  -R,  --reentrant         luo uudelleenkäynnistyvä skanneri\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1837
 msgid ""
 "       --bison-bridge      scanner for Bison pure parser.\n"
@@ -427,7 +509,13 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      skanneri Bisonin puhtaalle jäsentimelle.\n"
+"       --bison-locations   sisällytä yylloc-tuki.\n"
+"       --stdinit           alusta yyin/yyout arvoihin stdin/stdout\n"
+"       --nounistd          älä sisällytä <unistd.h>:ta\n"
+"       --noFUNKTIO         älä luo tiettyä FUNKTIOTA\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1844
 #, c-format
 msgid ""
@@ -438,21 +526,29 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Sekalaista:\n"
+"  -c                      POSIX-valitsin, jolla ei ole vaikutusta\n"
+"  -n                      POSIX-valitsin, jolla ei ole vaikutusta\n"
+"  -?\n"
+"  -h, --help              näytä tämä ohjeviesti\n"
+"  -V, --version           raportoi %s:n versio\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "väärä merkki ”%s” havaittu funktiossa check_char()"
+msgstr "virheellinen merkki ”%s” havaittu funktiossa %s()"
 
 #: src/misc.c:121
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "skanneri vaatiin lipun -8 käytettäväksi merkille %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:227
 #, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr ""
+msgstr "arvo ”%s” ei saa sisältää merkkejä ”[” tai ”]”"
 
 #: src/misc.c:238
 #, c-format
@@ -475,10 +571,11 @@ msgstr ""
 "********** Epädeterministisen äärellisen automaatin vedoksen alku "
 "aloitustilassa %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "tyhjä kone funktiossa dupmachine()"
+msgstr "tyhjä kone funktiossa %s()"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -490,10 +587,11 @@ msgstr "tyhjä kone funktiossa dupmachine()"
 msgid "Variable trailing context rule at line %d\n"
 msgstr "Muuttujajättökontekstisääntö rivillä %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "virheellinen <aloitusehto>: %s"
+msgstr "virheellinen tilatyyppi funktiossa %s()"
 
 #: src/nfa.c:598
 #, c-format
@@ -502,10 +600,11 @@ msgstr ""
 "syötesäännöt ovat liian mutkikkaita (>= %d Epädeterministisen äärellisen "
 "automaatin tilaa)"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "löytyi liian monta siirtymää funktiossa mkxtion()"
+msgstr "löytyi liian monta siirtymää funktiossa %s()"
 
 #: src/nfa.c:702
 #, c-format
@@ -523,34 +622,40 @@ msgstr "tuntematon virhe käsiteltäessä lohkoa 1"
 msgid "bad start condition list"
 msgstr "väärä alkuehtoluettelo"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "operaattori %s johtaa epäoptimaaliseen suorituskykyyn"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "alkuehto %s esitelty kahdesti"
+msgstr "kaikilla aloitusehdoilla on jo säännöt %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "syntaksivirhe: tämä ei ole kelvollinen sääntö"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "virheellinen <aloitusehto>: %s"
+msgstr "esittelemätön aloitusehto %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "nimi määritelty kahdesti"
+msgstr "<%s> määritetty kahdesti"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "jättökonteksti muuttui muuttuvaksi edeltävän toiminnon ”%s” vuoksi"
 
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
@@ -560,6 +665,7 @@ msgstr ""
 msgid "trailing context used twice"
 msgstr "jättökontekstia käytetty kahdesti"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "repeat range" is a pair of
 #. numbers in braces after a pattern, such as
 #. {2,5}, that sets how many times the
@@ -568,11 +674,12 @@ msgstr "jättökontekstia käytetty kahdesti"
 msgid ""
 "invalid repeat range in braces: the first number must not be larger than the "
 "second, and the second must be at least 1"
-msgstr ""
+msgstr "virheellinen toistoväli aaltosulkeissa: ensimmäinen luku ei saa olla suurempi kuin toinen, ja toisen on oltava vähintään 1"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "toistomäärän aaltosulkeissa on oltava vähintään 1"
 
 #: src/parse.y:857 src/parse.y:867
 #, c-format
@@ -585,45 +692,48 @@ msgstr ""
 msgid "negative range in character class"
 msgstr "negatiivinen lukualue merkkiluokassa"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"[:^lower:] ei ole yksiselitteinen skannerissa, joka ei välitä kirjainkoosta"
+msgstr "[:^lower:] on monitulkintainen skannerissa, joka ei välitä kirjainkoosta"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"[:^upper:] ei ole yksiselitteinen skannerissa, joka ei välit kirjainkoosta"
+msgstr "[:^upper:] on monitulkintainen skannerissa, joka ei välitä kirjainkoosta"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "useita %s-sääntöjä aloitusehdolle %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "varoitus, %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "puskurin varaaminen kohteen %s raportointia varten ei onnistu"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "täsmäyksen kopion varaaminen ei onnistu"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "Syöterivi on liian pitkä\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "vääränmuotoinen ”%top”-direktiivi"
+msgstr "virheellinen ”%s”-direktiivi"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -654,19 +764,21 @@ msgstr "epätäydellinen nimimäärittely"
 msgid "Option line too long\n"
 msgstr "Valitsinrivi on liian pitkä\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "tunnistamaton %%valitsin: %s"
+msgstr "tunnistamaton %s: %s"
 
 #: src/scan.l:731
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "määrittelemätön määrittely {%s}"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:794
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "epätasapainoinen sulku"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -677,13 +789,15 @@ msgstr ""
 msgid "bad <start condition>: %s"
 msgstr "virheellinen <aloitusehto>: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "sulkeva lainausmerkki puuttuu: rivi päättyi lainausmerkeissä olevan merkkijonon sisällä"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "päättämätön merkkiluokka: rivi päättyi ennen sulkevaa ]-merkkiä"
 
 #: src/scan.l:892
 #, c-format
@@ -706,15 +820,17 @@ msgstr "Tiedoston loppumerkki EOF tavattu toiminnon sisällä"
 msgid "EOF encountered inside pattern"
 msgstr "Tiedoston loppumerkki EOF tavattu mallin sisällä"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "väärä merkki: %s"
+msgstr "odottamaton merkki: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "%zu pinoa ei voi varata"
 
 #: src/scanopt.c:250
 #, c-format
@@ -746,21 +862,25 @@ msgstr "Tunnistamaton valitsin ”%s”\n"
 msgid "Unknown error=(%d)\n"
 msgstr "Tuntematon virhe=(%d)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "sellaista taustaosaa ei ole"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "päättämätön tai liian pitkä ominaisuuden nimi"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "sotkeutunut ominaisuusrivi"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "päättämätön tai liian pitkä ominaisuuden arvo"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -770,10 +890,11 @@ msgstr "väärä rivi kehystiedostossa"
 msgid "symbol table memory allocation failed"
 msgstr "symbolitaulun muistinvaraus epäonnistui"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "nimi määritelty kahdesti"
+msgstr "nimi ”%s” on määritetty kahdesti"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -783,15 +904,16 @@ msgstr "nimi määritelty kahdesti"
 msgid "start condition %s declared twice"
 msgstr "alkuehto %s esitelty kahdesti"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "virhe kirjoitettaessa tulostetiedostoa %s"
+msgstr "virhe taulujen kirjoituksessa"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/yylex.c:58
 msgid ""
 "unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgstr "odottamaton tiedoston loppu: sääntöosion aloittava rivi puuttuu"
 
 #  DFA on akronyymi käsitteelle "deterministic finite automaton" eli deterministinen äärellinen automaatti.
 #~ msgid ""
