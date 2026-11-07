@@ -625,8 +625,10 @@ static void gentabs(void)
 		 */
 		++sz;
 
-	/* Note that this table is alternately defined if ctrl.fulltbl */
-	ptype = optimize_pack(sz);
+	/* Note that this table is alternately defined if ctrl.fulltbl.
+	 * With REJECT its values are indices into yy_acclist.
+	 */
+	ptype = optimize_pack(reject ? MAX(sz, (size_t) (numas + 2)) : sz);
 	outn ("m4_define([[M4_HOOK_NEED_ACCEPT]], 1)");
 	out_str ("m4_define([[M4_HOOK_ACCEPT_TYPE]], [[%s]])", ptype->name);
 	out_dec ("m4_define([[M4_HOOK_ACCEPT_SIZE]], [[%d]])", sz);
@@ -731,7 +733,7 @@ static void gentabs(void)
 
 	/* Begin generating yy_base */
 	sz = total_states + 1;
-	ptype = optimize_pack(sz);
+	ptype = optimize_pack(MAX(sz, (size_t) (tblend + numecs + 1)));
 	out_str ("m4_define([[M4_HOOK_BASE_TYPE]], [[%s]])", ptype->name);
 	out_dec ("m4_define([[M4_HOOK_BASE_SIZE]], [[%d]])", sz);
 	outn ("m4_define([[M4_HOOK_BASE_BODY]], [[m4_dnl");
