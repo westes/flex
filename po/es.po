@@ -9,6 +9,11 @@
 # Gracias a Nicolás Fernández García que me ha sugerido algunas ideas.
 # Cristian Othòn Martínez Vera <cfuga@cfuga.mx>, 2022.
 #
+# Messages marked "machine translation (Claude)" were written by an AI model
+# on 2026-11-07 for flex 2.6.5, because the Translation Project had no
+# current translation for them. A native speaker has not reviewed them.
+# They are replaced when the Translation Project supplies a translation.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU flex 2.6.4\n"
@@ -17,6 +22,7 @@ msgstr ""
 "PO-Revision-Date: 2022-03-04 01:06-0600\n"
 "Last-Translator: Cristian Othón Martínez Vera <cfuga@cfuga.mx>\n"
 "Language-Team: Spanish <es@tp.org.es>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,9 +33,10 @@ msgstr ""
 msgid "Allocation of buffer to print string failed"
 msgstr "Falló la ubicación de almacenamiento para la cadena print"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "error interno: se intenta añadir un carácter a una ccl que no es la última.\n"
 
 # El estado (?) sv
 #. TRANSLATORS: This starts one line of the
@@ -54,29 +61,28 @@ msgstr "El estado #%d es no-aceptar -\n"
 msgid "dangerous trailing context"
 msgstr "contexto posterior peligroso"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " números de línea asociados a la regla:"
+msgstr "números de línea de las reglas asociadas:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " fin de transiciones: "
+msgstr "transiciones de salida:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" transiciones de bloqueo: fin de archivo (EOF)"
+msgstr "transiciones de bloqueo:"
 
+# machine translation (Claude), not reviewed by a native speaker
 # Teste no lo he oído en mi vida. ¿te suena mal test a secas?
 # o quizá ¿examen de consistencia? em
 # Pongo comillas a la función em
@@ -89,29 +95,32 @@ msgstr ""
 #
 # Sugiero usar prueba o comprobación. sv
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "el teste de consistencia falló en `epsclosure()'"
+msgstr "falló la comprobación de consistencia en %s()"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
 msgstr "no se pudo crear un estado único de final-de-buffer"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: %s is the name of a table in
 #. the generated scanner.
 #: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "no se pudo escribir ecstbl"
+msgstr "no se pudo escribir %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "carácter de transición erróneo detectado en sympartition()"
+msgstr "se detectó un carácter de transición incorrecto en %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #  Asignación de memoria  em
 # ¿está unificado? ng
 # Sí, pero creo que sólo por mí. Normalmente esos mensajes
@@ -119,28 +128,32 @@ msgstr "carácter de transición erróneo detectado en sympartition()"
 # ok ng+
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "falló la asignación de memoria en xstrdup()"
+msgstr "falló la asignación de memoria en %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "falló pipe"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "falló fork"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "falló %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "falló la ejecución (exec) de %s"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -152,17 +165,19 @@ msgstr "error al escribir el archivo de salida %s"
 msgid "error closing output file %s"
 msgstr "error al cerrar el archivo de salida %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 # Sugerencia: error fatal. sv
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s: error interno muy grave, %s\n"
+msgstr "%s: error interno muy grave en %s:%d (%s): %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 # Sugerencia: error fatal. sv
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s: error interno muy grave, %s\n"
+msgstr "%s: error interno muy grave en %s:%d %s\n"
 
 # ¿coincidencia?, es la traducción habitual em
 # La traducción de match no me gusta pero no encuentro otra
@@ -175,60 +190,68 @@ msgstr "%s: error interno muy grave, %s\n"
 msgid "rule cannot be matched"
 msgstr "la regla no se puede aplicar"
 
+# machine translation (Claude), not reviewed by a native speaker
 # ## re-redacto el mensaje. sv
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr ""
-"se ha especificado la opción -s pero se puede aplicar la regla por defecto"
+msgstr "se indicó la opción %s pero la regla por defecto puede aplicarse"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "no se puede abrir %s"
+msgstr "no se puede abrir %s: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "No se puede usar -+ con la opción -l"
+msgstr "No se puede usar %s con la opción %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "No se pueden usar las opciones -f o -F con la opción -l"
+msgstr "No se puede usar %s ni %s con la opción %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 # ¿juntos o juntas?
 # Creo que está bien así em
 # ok ng
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "-Cf/-CF y -Cm no tienen sentido juntos"
+msgstr "%s y %s no tienen sentido juntos"
 
+# machine translation (Claude), not reviewed by a native speaker
 # no se si poner y ó e
 # A mí tambien me hubiese pasado, creo que está bien así em
 # entonces lo dejo ng
 # Yo creo que en este caso no hace falta porque se leería así:
 # "menos ce efe o menos ce efe mayúscula y menos I son incompatibles". sv
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "-Cf/-CF e -I son incompatibles"
+msgstr "%s y %s son incompatibles"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF son incompatibles con el modo de compatibilidad con lex"
+msgstr "%s son incompatibles con el modo de compatibilidad con lex"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "Las opciones -+ y --reentrant son mutuamente excluyentes."
+msgstr "Las opciones %s y %s son mutuamente excluyentes."
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "%array incompatible con la opción -+"
+msgstr "%s es incompatible con la opción %s"
 
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
@@ -239,10 +262,11 @@ msgstr "no se admite el puente bison para el analizador C++."
 msgid "could not create %s"
 msgstr "no se pudo crear %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr "la %option yyclass sólo tiene sentido para los analizadores en C++"
+msgstr "%s solo tiene sentido en analizadores C++"
 
 # Skeleton se puede traducir por máscara, o por modelo em
 # Sí, lo estuve considerando. Pero el eskeleton file es un fichero que
@@ -283,12 +307,13 @@ msgstr "error al borrar el archivo de salida %s"
 msgid "No backing up.\n"
 msgstr "Sin retroceso.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d estados de retroceso (no-aceptación).\n"
-msgstr[1] "%d estados de retroceso (no-aceptación).\n"
+msgstr[0] "%d estado de retroceso (no aceptante).\n"
+msgstr[1] "%d estados de retroceso (no aceptantes).\n"
 
 # Esta frase no me convence demasiado. Si tradujésemos de español
 # a inglés lo que hay ahora en español diría algo así como:
@@ -324,10 +349,11 @@ msgstr "Error interno. flexopts mal formadas.\n"
 msgid "Try `%s --help' for more information.\n"
 msgstr "Pruebe `%s --help' para más información.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "opción -C desconocida '%c'"
+msgstr "opción %s desconocida '%c'"
 
 # Creo que no existe traducción de parse, en todo lo referente a compiladores
 # y autómatas yo siempre lo he visto así.
@@ -384,38 +410,41 @@ msgstr ""
 "no se pudo crear el archivo de información de las reglas\n"
 "que producen un retroceso del analizador %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
 msgstr ""
-" y puede ser el origen real de otras penalizaciones del rendimiento "
-"notificadas\n"
+"La opción de compatibilidad con lex de AT&T %s implica una penalización del rendimiento muy alta\n"
+" y puede ser el origen real de otras penalizaciones del rendimiento notificadas\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1381
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s entails a performance penalty ONLY on rules that can match newline "
 "characters\n"
-msgstr ""
-"la %%opción yylineno implica una penalización del rendimiento SOLAMENTE en "
-"reglas que coinciden con caracteres de lìnea nueva\n"
+msgstr "%s implica una penalización del rendimiento SOLO en las reglas que pueden coincidir con caracteres de nueva línea\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "-I (interactivo) implica una pequeña penalización del rendimiento\n"
+msgstr "%s (interactivo) implica una penalización del rendimiento pequeña\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore() implica un pequeña penalización del rendimiento\n"
+msgstr "%s implica una penalización del rendimiento pequeña\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT implica una penalización del rendimiento muy alta\n"
+msgstr "%s implica una penalización del rendimiento muy alta\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -429,21 +458,23 @@ msgstr ""
 "La existencia de reglas de contexto posterior variable implica una\n"
 "penalización del rendimiento muy alta\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "REJECT no se puede usar con -f o -F"
+msgstr "%s no se puede usar con %s ni %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "REJECT no se puede usar con -f o -F"
+msgstr "%s no se puede usar con %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr ""
-"las reglas de contexto posterior variable no se pueden usar con -f o -F"
+msgstr "las reglas de contexto posterior variable no se pueden usar con %s ni %s"
 
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
@@ -454,10 +485,12 @@ msgstr "falló el alojamiento para la definición de macro"
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Uso: %s [OPCIONES] [FICHERO]...\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "Genera programas que realizan búsqueda de patrones en texto.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1784
 msgid ""
 "Table Compression:\n"
@@ -471,7 +504,18 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"Compresión de tablas:\n"
+"  -Ca, --align      sacrificar tablas más grandes por una mejor alineación de memoria\n"
+"  -Ce, --ecs        construir clases de equivalencia\n"
+"  -Cf               no comprimir las tablas; usar la representación -f\n"
+"  -CF               no comprimir las tablas; usar la representación -F\n"
+"  -Cm, --meta-ecs   construir clases de metaequivalencia\n"
+"  -Cr, --read       usar read() en lugar de stdio para la entrada del analizador\n"
+"  -f, --full        generar un analizador rápido y grande. Igual que -Cfr\n"
+"  -F, --fast        usar una representación alternativa de tablas. Igual que -CFr\n"
+"  -Cem              compresión por defecto (igual que --ecs --meta-ecs)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1796
 #, c-format
 msgid ""
@@ -486,7 +530,17 @@ msgid ""
 "      --hex               use hexadecimal numbers instead of octal in debug "
 "outputs\n"
 msgstr ""
+"Depuración:\n"
+"  -d, --debug             activar el modo de depuración en el analizador\n"
+"  -b, --backup            escribir la información de retroceso en %s\n"
+"  -p, --perf-report       escribir el informe de rendimiento en stderr\n"
+"  -s, --nodefault         suprimir la regla por defecto que hace ECHO del texto sin coincidencia\n"
+"  -T, --trace             %s debe ejecutarse en modo de traza\n"
+"  -w, --nowarn            no generar avisos\n"
+"  -v, --verbose           escribir en stdout un resumen de las estadísticas del analizador\n"
+"      --hex               usar números hexadecimales en lugar de octales en la salida de depuración\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1808
 #, c-format
 msgid ""
@@ -500,7 +554,16 @@ msgid ""
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"Archivos:\n"
+"  -o, --outfile=ARCHIVO   especificar el nombre del archivo de salida\n"
+"  -S, --skel=ARCHIVO      especificar el archivo de esquema\n"
+"  -t, --stdout            escribir el analizador en stdout en lugar de %s\n"
+"      --yyclass=NOMBRE    nombre de la clase C++\n"
+"      --header-file=ARCHIVO   crear un archivo de cabecera C además del analizador\n"
+"      --tables-file[=ARCHIVO] escribir las tablas en ARCHIVO\n"
+"      --backup-file=ARCHIVO   escribir la información de retroceso en ARCHIVO\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1819
 msgid ""
 "Scanner behavior:\n"
@@ -513,7 +576,17 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"Comportamiento del analizador:\n"
+"  -7, --7bit              generar un analizador de 7 bits\n"
+"  -8, --8bit              generar un analizador de 8 bits\n"
+"  -B, --batch             generar un analizador por lotes (opuesto de -I)\n"
+"  -i, --case-insensitive  ignorar mayúsculas y minúsculas en los patrones\n"
+"  -l, --lex-compat        máxima compatibilidad con el lex original\n"
+"  -X, --posix-compat      máxima compatibilidad con el lex de POSIX\n"
+"  -I, --interactive       generar un analizador interactivo (opuesto de -B)\n"
+"      --yylineno          llevar la cuenta de líneas en yylineno\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1830
 msgid ""
 "Generated code:\n"
@@ -524,7 +597,15 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"Código generado:\n"
+"  -+,  --c++               generar una clase de analizador C++\n"
+"  -Dmacro[=defn]           #define macro defn  (defn por defecto es '1')\n"
+"  -e,  --emit=IDIOMA       especificar el lenguaje de destino\n"
+"  -L,  --noline            suprimir las directivas #line en el analizador\n"
+"  -P,  --prefix=CADENA     usar CADENA como prefijo en lugar de \"yy\"\n"
+"  -R,  --reentrant         generar un analizador reentrante\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1837
 msgid ""
 "       --bison-bridge      scanner for Bison pure parser.\n"
@@ -533,7 +614,13 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      analizador para el analizador sintáctico puro de Bison.\n"
+"       --bison-locations   incluir soporte de yylloc.\n"
+"       --stdinit           inicializar yyin/yyout con stdin/stdout\n"
+"       --nounistd          no incluir <unistd.h>\n"
+"       --noFUNCIÓN         no generar una FUNCIÓN concreta\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1844
 #, c-format
 msgid ""
@@ -544,11 +631,18 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Varios:\n"
+"  -c                      opción POSIX sin efecto\n"
+"  -n                      opción POSIX sin efecto\n"
+"  -?\n"
+"  -h, --help              mostrar este mensaje de ayuda\n"
+"  -V, --version           mostrar la versión de %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "carácter incorrecto '%s' detectado en `check_char()'"
+msgstr "se detectó un carácter incorrecto '%s' en %s()"
 
 # he añadido el `poder' em
 # ok ng
@@ -557,10 +651,11 @@ msgstr "carácter incorrecto '%s' detectado en `check_char()'"
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "el analizador requiere la opción -8 para poder usar el carácter %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:227
-#, fuzzy, c-format
+#, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr "El prefijo no debe contener [ o ]"
+msgstr "el valor de '%s' no debe contener '[' ni ']'"
 
 # Sugerencia: error fatal. sv
 #: src/misc.c:238
@@ -583,10 +678,11 @@ msgstr ""
 "\n"
 "********** comenzando la descarga del AFN con el estado inicial %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "máquina vacía en `dupmachine()'"
+msgstr "máquina vacía en %s()"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -598,21 +694,23 @@ msgstr "máquina vacía en `dupmachine()'"
 msgid "Variable trailing context rule at line %d\n"
 msgstr "Regla de contexto posterior variable en la línea %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "<condición de activación> incorrecta: %s"
+msgstr "tipo de estado incorrecto en %s()"
 
 #: src/nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "las reglas de entrada son demasiado complicadas (>= %d estados AFN)"
 
+# machine translation (Claude), not reviewed by a native speaker
 # Sugerencia: se han encontrado... sv
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "encontradas demasiadas transiciones en mkxtion()"
+msgstr "se encontraron demasiadas transiciones en %s()"
 
 #: src/nfa.c:702
 #, c-format
@@ -630,38 +728,44 @@ msgstr "error desconocido en el proceso de la sección 1"
 msgid "bad start condition list"
 msgstr "lista de condiciones de activación incorrecta"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "el operador %s produce un rendimiento subóptimo"
 
+# machine translation (Claude), not reviewed by a native speaker
 # Aquí lo mismo 'la condición ... ha sido ..." em
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "la condición de activación %s ha sido declarada dos veces"
+msgstr "todas las condiciones de activación ya tienen reglas %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "error de sintaxis: esta no es una regla válida"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "<condición de activación> incorrecta: %s"
+msgstr "condición de activación %s no declarada"
 
+# machine translation (Claude), not reviewed by a native speaker
 # hay que procurar evitar esto, siempre nos suena mejor
 # el nombre ha sido definido dos veces, ¿qué te parece? em
 # mucho mejor, ya lo había pensado, pero no sabía cual era el estilo usual. ng
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "el nombre ha sido definido dos veces"
+msgstr "<%s> especificado dos veces"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "el contexto posterior se hizo variable debido a la acción '%s' anterior"
 
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
@@ -671,6 +775,7 @@ msgstr ""
 msgid "trailing context used twice"
 msgstr "contexto posterior usado dos veces"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "repeat range" is a pair of
 #. numbers in braces after a pattern, such as
 #. {2,5}, that sets how many times the
@@ -679,11 +784,12 @@ msgstr "contexto posterior usado dos veces"
 msgid ""
 "invalid repeat range in braces: the first number must not be larger than the "
 "second, and the second must be at least 1"
-msgstr ""
+msgstr "rango de repetición no válido entre llaves: el primer número no debe ser mayor que el segundo, y el segundo debe ser al menos 1"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "el contador de repetición entre llaves debe ser al menos 1"
 
 #: src/parse.y:857 src/parse.y:867
 #, c-format
@@ -696,47 +802,48 @@ msgstr ""
 msgid "negative range in character class"
 msgstr "rango negativo en clase caracteres"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"[:^lower:] es ambiguo en un analizador que no distingue mayúsculas y "
-"minúsculas"
+msgstr "[:^lower:] es ambiguo en un analizador que no distingue mayúsculas y minúsculas"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"[:^upper:] es ambiguo en un analizador que no distingue mayúsculas y "
-"minúsculas"
+msgstr "[:^upper:] es ambiguo en un analizador que no distingue mayúsculas y minúsculas"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "varias reglas %s para la condición de activación %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "aviso, %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "no se pudo asignar un búfer para informar de %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "no se pudo asignar una copia de la coincidencia"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "Lìnea de entrada demasiado larga\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "directiva '%top' malformada"
+msgstr "directiva '%s' mal formada"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -767,10 +874,11 @@ msgstr "definición de nombre incompleta"
 msgid "Option line too long\n"
 msgstr "Lìnea de opción demasiado larga\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "%%opción no reconocida: %s"
+msgstr "%s no reconocido: %s"
 
 #: src/scan.l:731
 #, c-format
@@ -790,13 +898,15 @@ msgstr "paréntesis sin balancear"
 msgid "bad <start condition>: %s"
 msgstr "<condición de activación> incorrecta: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "falta la comilla de cierre: la línea terminó dentro de una cadena entrecomillada"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "clase de caracteres sin terminar: la línea terminó antes del ] de cierre"
 
 # Corregido el orden de la frase, ponía:
 # incorrecta la expresión ... em
@@ -824,15 +934,17 @@ msgstr "Fin de archivo (EOF) encontrado dentro de una acción"
 msgid "EOF encountered inside pattern"
 msgstr "Fin de archivo (EOF) encontrado dentro de un patròn"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "carácter incorrecto: %s"
+msgstr "carácter inesperado: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "no se pudo asignar %zu de pila"
 
 #: src/scanopt.c:250
 #, c-format
@@ -864,21 +976,25 @@ msgstr "Opción no reconocida `%s'\n"
 msgid "Unknown error=(%d)\n"
 msgstr "Error desconocido=(%d)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "no existe ese backend"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "nombre de propiedad sin terminar o demasiado largo"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "línea de propiedad corrupta"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "valor de propiedad sin terminar o demasiado largo"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -889,13 +1005,14 @@ msgstr "línea incorrecta en el archivo de esquema"
 msgid "symbol table memory allocation failed"
 msgstr "falló la reserva de memoria para la tabla de símbolos"
 
+# machine translation (Claude), not reviewed by a native speaker
 # hay que procurar evitar esto, siempre nos suena mejor
 # el nombre ha sido definido dos veces, ¿qué te parece? em
 # mucho mejor, ya lo había pensado, pero no sabía cual era el estilo usual. ng
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "el nombre ha sido definido dos veces"
+msgstr "el nombre \"%s\" está definido dos veces"
 
 # Aquí lo mismo 'la condición ... ha sido ..." em
 #. TRANSLATORS: A "start condition" is a named state
@@ -906,15 +1023,16 @@ msgstr "el nombre ha sido definido dos veces"
 msgid "start condition %s declared twice"
 msgstr "la condición de activación %s ha sido declarada dos veces"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "error al escribir el archivo de salida %s"
+msgstr "error al escribir las tablas"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/yylex.c:58
 msgid ""
 "unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgstr "fin de archivo inesperado: falta la línea que inicia la sección de reglas"
 
 # ¿Qué tal volcado? em
 # ok, a mí tampoco me gustaba descarga ng
