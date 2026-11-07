@@ -3,6 +3,11 @@
 # This file is distributed under the same license as the flex package.
 # Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022.
 #
+# Messages marked "machine translation (Claude)" were written by an AI model
+# on 2026-11-07 for flex 2.6.5, because the Translation Project had no
+# current translation for them. A native speaker has not reviewed them.
+# They are replaced when the Translation Project supplies a translation.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.6.4\n"
@@ -19,14 +24,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/buf.c:63
 msgid "Allocation of buffer to print string failed"
-msgstr ""
+msgstr "სტრიქონის დასაბეჭდად ბუფერის გამოყოფა ჩავარდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "შიდა შეცდომა: ccl-ში, რომელიც ბოლო არაა, სიმბოლოს დამატების მცდელობა.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
 #. "non-accepting" state is one in which no
@@ -36,8 +44,9 @@ msgstr ""
 #: src/dfa.c:68
 #, c-format
 msgid "State #%d is non-accepting -\n"
-msgstr ""
+msgstr "მდგომარეობა #%d მიუღებელია -\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: "Trailing context"
 #. is the part of a rule that must
 #. match after the text of the rule,
@@ -47,203 +56,234 @@ msgstr ""
 #. same characters.
 #: src/dfa.c:134
 msgid "dangerous trailing context"
-msgstr ""
+msgstr "საშიში დამამთავრებელი კონტექსტი"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
 msgid "associated rule line numbers:"
-msgstr ""
+msgstr "ასოცირებული წესების ხაზის ნომრები:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " out-გადასვლები: "
+msgstr "გამავალი გადასვლები:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" jam-გადასვლები: EOF "
+msgstr "ჩაჭედილი გადასვლები:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:351
 #, c-format
 msgid "consistency check failed in %s()"
-msgstr ""
+msgstr "თანმიმდევრულობის შემოწმება ჩავარდა ფუნქციაში %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
-msgstr ""
+msgstr "ბუფერის დასასრულის უნიკალური მდგომარეობის შექმნა ვერ მოხერხდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: %s is the name of a table in
 #. the generated scanner.
 #: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "ჩაწერის შეცდომა: ecstbl"
+msgstr "%s-ის ჩაწერა ვერ მოხერხდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:1023
 #, c-format
 msgid "bad transition character detected in %s()"
-msgstr ""
+msgstr "აღმოჩენილია გადასვლის არასწორი სიმბოლო ფუნქციაში %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
 #, c-format
 msgid "memory allocation failed in %s()"
-msgstr ""
+msgstr "მეხსიერების გამოყოფა ჩავარდა ფუნქციაში %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "pipe ჩავარდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "fork ჩავარდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "%s ჩავარდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "%s-ის exec ჩავარდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
 msgid "error writing output file %s"
-msgstr ""
+msgstr "გამოტანის ფაილში %s ჩაწერის შეცდომა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:301 src/filter.c:311 src/filter.c:425 src/main.c:494
 #, c-format
 msgid "error closing output file %s"
-msgstr ""
+msgstr "გამოტანის ფაილის %s დახურვის შეცდომა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:864
 #, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr ""
+msgstr "%s: ფატალური შიდა შეცდომა %s:%d (%s): %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:873
 #, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr ""
+msgstr "%s: ფატალური შიდა შეცდომა %s:%d %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:175
 msgid "rule cannot be matched"
-msgstr ""
+msgstr "წესის დამთხვევა შეუძლებელია"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:185
 #, c-format
 msgid "%s option given but default rule can be matched"
-msgstr ""
+msgstr "მითითებულია პარამეტრი %s, მაგრამ ნაგულისხმევი წესის დამთხვევა შესაძლებელია"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "'%s'-ის გახსნის შეცდომა"
+msgstr "%s-ის გახსნა შეუძლებელია: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:342 src/main.c:399
 #, c-format
 msgid "Can't use %s with %s option"
-msgstr ""
+msgstr "%s-ის გამოყენება პარამეტრთან %s შეუძლებელია"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:345 src/main.c:349
 #, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr ""
+msgstr "%s-ის ან %s-ის გამოყენება პარამეტრთან %s შეუძლებელია"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:381
 #, c-format
 msgid "%s and %s don't make sense together"
-msgstr ""
+msgstr "%s და %s ერთად აზრს მოკლებულია"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "-Cf /-CF და - მე შეუთავსებელია"
+msgstr "%s და %s შეუთავსებელია"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:389
 #, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr ""
+msgstr "%s შეუთავსებელია lex-თან თავსებადობის რეჟიმთან"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "-Cf და -CF ურთიერთგამომრიცხავია"
+msgstr "პარამეტრები %s და %s ურთიერთგამომრიცხავია."
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:404
 #, c-format
 msgid "%s incompatible with %s option"
-msgstr ""
+msgstr "%s შეუთავსებელია პარამეტრთან %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
-msgstr ""
+msgstr "C++ სკანერისთვის bison bridge მხარდაჭერილი არაა."
 
 #: src/main.c:454 src/main.c:1271
 #, c-format
 msgid "could not create %s"
 msgstr "%s-ის შექმნის შეცდომა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:475
 #, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr ""
+msgstr "%s აზრიანია მხოლოდ C++ სკანერებისთვის"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:480
 #, c-format
 msgid "input error reading skeleton file %s"
-msgstr ""
+msgstr "შეყვანის შეცდომა ჩონჩხის ფაილის %s კითხვისას"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:484
 #, c-format
 msgid "error closing skeleton file %s"
-msgstr ""
+msgstr "ჩონჩხის ფაილის %s დახურვის შეცდომა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:498
 #, c-format
 msgid "error deleting output file %s"
-msgstr ""
+msgstr "გამოტანის ფაილის %s წაშლის შეცდომა"
 
 #: src/main.c:505
 #, c-format
 msgid "No backing up.\n"
 msgstr "მარქაფი გამორთულია.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:508
 #, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d მარქაფის (არმიმღები) მდგომარეობა.\n"
+msgstr[1] "%d მარქაფის (არმიმღები) მდგომარეობა.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:514
 #, c-format
 msgid "Compressed tables always back up.\n"
-msgstr ""
+msgstr "შეკუმშული ცხრილები ყოველთვის მარქაფს აკეთებს.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:517
 #, c-format
 msgid "error writing backup file %s"
-msgstr ""
+msgstr "მარქაფის ფაილში %s ჩაწერის შეცდომა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:521
 #, c-format
 msgid "error closing backup file %s"
-msgstr ""
+msgstr "მარქაფის ფაილის %s დახურვის შეცდომა"
 
 #: src/main.c:762
 #, c-format
@@ -255,10 +295,11 @@ msgstr "შიდა შეცდომა. flexopts არასწორია
 msgid "Try `%s --help' for more information.\n"
 msgstr "მეტი ინფორმაციისთვის სცადეთ '%s --help'\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "უცნობი -C -ის პარამეტრი '%c'"
+msgstr "უცნობი %s-ის პარამეტრი '%c'"
 
 #: src/main.c:1222
 msgid "fatal parse error"
@@ -273,40 +314,49 @@ msgstr "ცხრილების თავსართის ჩაწერ�
 msgid "can't open skeleton file %s"
 msgstr "ჩონჩხის ფაილის %s გახსნის შეცდომა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1355
 #, c-format
 msgid "could not create backing-up info file %s"
-msgstr ""
+msgstr "მარქაფის ინფორმაციის ფაილის %s შექმნა ვერ მოხერხდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1375
 #, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
 msgstr ""
+"AT&T lex-თან თავსებადობის პარამეტრი %s წარმადობის დიდ ხინჯს შეიცავს\n"
+" და შეიძლება სხვა დაფიქსირებული ხინჯების რეალური წყარო იყოს\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1381
 #, c-format
 msgid ""
 "%s entails a performance penalty ONLY on rules that can match newline "
 "characters\n"
-msgstr ""
+msgstr "%s წარმადობის ხინჯს მხოლოდ იმ წესებზე შეიცავს, რომლებიც ახალი ხაზის სიმბოლოებს შეიძლება დაემთხვეს\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "yymore() მცირე წარმადობის ხინჯს შეიცავს\n"
+msgstr "%s (ინტერაქტიული) წარმადობის მცირე ხინჯს შეიცავს\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore() მცირე წარმადობის ხინჯს შეიცავს\n"
+msgstr "%s წარმადობის მცირე ხინჯს შეიცავს\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT წარმადობის დიდ ხინჯს შეიცავს\n"
+msgstr "%s წარმადობის დიდ ხინჯს შეიცავს\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
 #. before the trailing context nor the
@@ -315,36 +365,43 @@ msgstr "REJECT წარმადობის დიდ ხინჯს შე�
 #: src/main.c:1409
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
+msgstr "ცვლადი დამამთავრებელი კონტექსტის წესები წარმადობის დიდ ხინჯს შეიცავს\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1420
 #, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr ""
+msgstr "%s-ს ვერ გამოიყენებთ %s-თან ან %s-თან ერთად"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1423
 #, c-format
 msgid "%s cannot be used with %s"
-msgstr ""
+msgstr "%s-ს ვერ გამოიყენებთ %s-თან ერთად"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1426
 #, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr ""
+msgstr "ცვლადი დამამთავრებელი კონტექსტის წესებს ვერ გამოიყენებთ %s-თან ან %s-თან ერთად"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
-msgstr ""
+msgstr "მაკროს აღწერის გამოყოფა ჩავარდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1780
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
-msgstr ""
+msgstr "გამოყენება: %s [პარამეტრები] [ფაილი]...\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "ქმნის პროგრამებს, რომლებიც ტექსტში შაბლონების დამთხვევას ასრულებს.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1784
 msgid ""
 "Table Compression:\n"
@@ -358,7 +415,18 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"ცხრილების შეკუმშვა:\n"
+"  -Ca, --align      უფრო დიდი ცხრილები მეხსიერების უკეთესი განლაგებისთვის\n"
+"  -Ce, --ecs        ეკვივალენტობის კლასების აგება\n"
+"  -Cf               ცხრილების შეუკუმშავად; -f წარმოდგენის გამოყენება\n"
+"  -CF               ცხრილების შეუკუმშავად; -F წარმოდგენის გამოყენება\n"
+"  -Cm, --meta-ecs   მეტა-ეკვივალენტობის კლასების აგება\n"
+"  -Cr, --read       სკანერის შეყვანისთვის stdio-ს მაგიერ read()-ის გამოყენება\n"
+"  -f, --full        სწრაფი, დიდი სკანერის შექმნა. იგივეა, რაც -Cfr\n"
+"  -F, --fast        ცხრილის ალტერნატიული წარმოდგენის გამოყენება. იგივეა, რაც -CFr\n"
+"  -Cem              ნაგულისხმევი შეკუმშვა (იგივეა, რაც --ecs --meta-ecs)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1796
 #, c-format
 msgid ""
@@ -373,7 +441,17 @@ msgid ""
 "      --hex               use hexadecimal numbers instead of octal in debug "
 "outputs\n"
 msgstr ""
+"გამართვა:\n"
+"  -d, --debug             სკანერში გამართვის რეჟიმის ჩართვა\n"
+"  -b, --backup            მარქაფის ინფორმაციის ჩაწერა %s-ში\n"
+"  -p, --perf-report       წარმადობის ანგარიშის stderr-ში ჩაწერა\n"
+"  -s, --nodefault         ნაგულისხმევი წესის გამორთვა, რომელიც დაუმთხვეველ ტექსტს ECHO-თი გამოიტანს\n"
+"  -T, --trace             %s ტრასირების რეჟიმში უნდა გაეშვას\n"
+"  -w, --nowarn            გაფრთხილებების გარეშე\n"
+"  -v, --verbose           სკანერის სტატისტიკის მოკლე შეჯამების stdout-ში ჩაწერა\n"
+"      --hex               გამართვის გამოტანაში რვაობითის მაგიერ თექვსმეტობითი რიცხვების გამოყენება\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1808
 #, c-format
 msgid ""
@@ -387,7 +465,16 @@ msgid ""
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"ფაილები:\n"
+"  -o, --outfile=ფაილი     გამოტანის ფაილის სახელის მითითება\n"
+"  -S, --skel=ფაილი        ჩონჩხის ფაილის მითითება\n"
+"  -t, --stdout            სკანერის %s-ის მაგიერ stdout-ში ჩაწერა\n"
+"      --yyclass=სახელი    C++ კლასის სახელი\n"
+"      --header-file=ფაილი   სკანერის გარდა C თავსართის ფაილის შექმნა\n"
+"      --tables-file[=ფაილი] ცხრილების ფაილში ჩაწერა\n"
+"      --backup-file=ფაილი   მარქაფის ინფორმაციის ფაილში ჩაწერა\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1819
 msgid ""
 "Scanner behavior:\n"
@@ -400,7 +487,17 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"სკანერის ქცევა:\n"
+"  -7, --7bit              7-ბიტიანი სკანერის შექმნა\n"
+"  -8, --8bit              8-ბიტიანი სკანერის შექმნა\n"
+"  -B, --batch             პაკეტური სკანერის შექმნა (-I-ის საპირისპირო)\n"
+"  -i, --case-insensitive  შაბლონებში რეგისტრის უგულებელყოფა\n"
+"  -l, --lex-compat        ორიგინალ lex-თან მაქსიმალური თავსებადობა\n"
+"  -X, --posix-compat      POSIX lex-თან მაქსიმალური თავსებადობა\n"
+"  -I, --interactive       ინტერაქტიული სკანერის შექმნა (-B-ის საპირისპირო)\n"
+"      --yylineno          ხაზების რაოდენობის თვალყურის დევნება yylineno-ში\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1830
 msgid ""
 "Generated code:\n"
@@ -411,7 +508,15 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"გენერირებული კოდი:\n"
+"  -+,  --c++               C++ სკანერის კლასის შექმნა\n"
+"  -Dmacro[=defn]           #define macro defn  (defn-ის ნაგულისხმევი მნიშვნელობაა '1')\n"
+"  -e,  --emit=ენა          სამიზნე ენის მითითება\n"
+"  -L,  --noline            სკანერში #line დირექტივების გამორთვა\n"
+"  -P,  --prefix=სტრიქონი   პრეფიქსად \"yy\"-ის მაგიერ სტრიქონის გამოყენება\n"
+"  -R,  --reentrant         რეენტერაბელური სკანერის შექმნა\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1837
 msgid ""
 "       --bison-bridge      scanner for Bison pure parser.\n"
@@ -420,7 +525,13 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      სკანერი Bison-ის წმინდა გარჩევისთვის.\n"
+"       --bison-locations   yylloc-ის მხარდაჭერის ჩართვა.\n"
+"       --stdinit           yyin/yyout-ის stdin/stdout-ზე დაყენება\n"
+"       --nounistd          <unistd.h>-ის ჩართვის გარეშე\n"
+"       --noფუნქცია         გარკვეული ფუნქციის შექმნის გარეშე\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1844
 #, c-format
 msgid ""
@@ -431,31 +542,43 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"სხვადასხვა:\n"
+"  -c                      არაფრისმქნელი POSIX პარამეტრი\n"
+"  -n                      არაფრისმქნელი POSIX პარამეტრი\n"
+"  -?\n"
+"  -h, --help              ამ დახმარების შეტყობინების ჩვენება\n"
+"  -V, --version           %s-ის ვერსიის ჩვენება\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:116
 #, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr ""
+msgstr "ფუნქციაში %2$s() აღმოჩენილია არასწორი სიმბოლო '%1$s'"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:121
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
-msgstr ""
+msgstr "სკანერს სიმბოლოს %s გამოსაყენებლად ალამი -8 სჭირდება"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:227
 #, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr ""
+msgstr "'%s'-ის მნიშვნელობა არ უნდა შეიცავდეს '[' ან ']'"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:238
 #, c-format
 msgid "%s: fatal internal error, %s\n"
-msgstr ""
+msgstr "%s: ფატალური შიდა შეცდომა, %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:594 src/misc.c:610
 msgid "attempt to increase array size failed"
-msgstr ""
+msgstr "მასივის ზომის გაზრდის მცდელობა ჩავარდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:102
 #, c-format
 msgid ""
@@ -463,12 +586,17 @@ msgid ""
 "\n"
 "********** beginning dump of nfa with start state %d\n"
 msgstr ""
+"\n"
+"\n"
+"********** NFA-ის დამპის დასაწყისი საწყისი მდგომარეობით %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:171
 #, c-format
 msgid "empty machine in %s()"
-msgstr ""
+msgstr "ცარიელი ავტომატი ფუნქციაში %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
 #. before the trailing context nor the
@@ -477,76 +605,90 @@ msgstr ""
 #: src/nfa.c:240
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
-msgstr ""
+msgstr "ცვლადი დამამთავრებელი კონტექსტის წესი ხაზზე %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:358
 #, c-format
 msgid "bad state type in %s()"
-msgstr ""
+msgstr "მდგომარეობის არასწორი ტიპი ფუნქციაში %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
-msgstr ""
+msgstr "შეყვანის წესები მეტისმეტად რთულია (>= %d NFA მდგომარეობა)"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:676
 #, c-format
 msgid "found too many transitions in %s()"
-msgstr ""
+msgstr "ფუნქციაში %s() ნაპოვნია მეტისმეტად ბევრი გადასვლა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:702
 #, c-format
 msgid "too many rules (> %d)!"
-msgstr ""
+msgstr "მეტისმეტად ბევრი წესი (> %d)!"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:167
 msgid "unknown error processing section 1"
-msgstr ""
+msgstr "უცნობი შეცდომა პირველი სექციის დამუშავებისას"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
 #. off.
 #: src/parse.y:195 src/parse.y:390
 msgid "bad start condition list"
-msgstr ""
+msgstr "გაშვების პირობების არასწორი სია"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "ოპერატორი %s არაოპტიმალურ წარმადობას იწვევს"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:345
 #, c-format
 msgid "all start conditions already have %s rules"
-msgstr ""
+msgstr "ყველა გაშვების პირობას უკვე აქვს %s წესები"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "სინტაქსური შეცდომა: ეს სწორი წესი არაა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "  %d/%d გაშვების პირობები\n"
+msgstr "გამოუცხადებელი გაშვების პირობა %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:405
 #, c-format
 msgid "<%s> specified twice"
-msgstr ""
+msgstr "<%s> ორჯერაა მითითებული"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "დამამთავრებელი კონტექსტი ცვლადი გახდა წინა '%s' ქმედების გამო"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
 #. written r/s or with a $ at the end of the rule. A
 #. rule can have only one.
 #: src/parse.y:478 src/parse.y:491 src/parse.y:561
 msgid "trailing context used twice"
-msgstr ""
+msgstr "დამამთავრებელი კონტექსტი ორჯერ გამოიყენება"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "repeat range" is a pair of
 #. numbers in braces after a pattern, such as
 #. {2,5}, that sets how many times the
@@ -555,100 +697,121 @@ msgstr ""
 msgid ""
 "invalid repeat range in braces: the first number must not be larger than the "
 "second, and the second must be at least 1"
-msgstr ""
+msgstr "გამეორების არასწორი დიაპაზონი ფიგურულ ფრჩხილებში: პირველი რიცხვი არ უნდა იყოს მეორეზე დიდი და მეორე მინიმუმ 1 უნდა იყოს"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "გამეორების რაოდენობა ფიგურულ ფრჩხილებში მინიმუმ 1 უნდა იყოს"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:857 src/parse.y:867
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr ""
+msgstr "სიმბოლოების დიაპაზონი [%c-%c] ორაზროვანია რეგისტრის მიმართ არამგრძნობიარე სკანერში"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:872
 msgid "negative range in character class"
-msgstr ""
+msgstr "უარყოფითი დიაპაზონი სიმბოლოების კლასში"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:969
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr ""
+msgstr "[:^lower:] ორაზროვანია რეგისტრის მიმართ არამგრძნობიარე სკანერში"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:975
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr ""
+msgstr "[:^upper:] ორაზროვანია რეგისტრის მიმართ არამგრძნობიარე სკანერში"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "გაშვების პირობისთვის %2$s ბევრი %1$s წესია"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "გაფრთხილება, %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "%s-ის შესახებ მოსახსენებლად ბუფერის გამოყოფა შეუძლებელია"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "დამთხვევის ასლისთვის მეხსიერების გამოყოფა შეუძლებელია"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
-msgstr ""
+msgstr "შეყვანის ხაზი ძალიან გრძელია\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:186
 #, c-format
 msgid "malformed '%s' directive"
-msgstr ""
+msgstr "არასწორი ფორმის დირექტივა '%s'"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
 #. Do not translate the directive names.
 #: src/scan.l:211
 #, no-c-format
 msgid "unrecognized '%' directive"
-msgstr ""
+msgstr "უცნობი დირექტივა '%'"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:220
 msgid "Definition name too long\n"
-msgstr ""
+msgstr "აღწერის სახელი ძალიან გრძელია\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:315
 msgid "Unmatched '{'"
-msgstr ""
+msgstr "დაუწყვილებელი '{'"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:331
 #, c-format
 msgid "Definition value for {%s} too long\n"
-msgstr ""
+msgstr "{%s}-ის აღწერის მნიშვნელობა ძალიან გრძელია\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:348
 msgid "incomplete name definition"
-msgstr ""
+msgstr "სახელის არასრული აღწერა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:490
 msgid "Option line too long\n"
-msgstr ""
+msgstr "პარამეტრის ხაზი ძალიან გრძელია\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:501
 #, c-format
 msgid "unrecognized %s: %s"
-msgstr ""
+msgstr "უცნობი %s: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:731
 #, c-format
 msgid "undefined definition {%s}"
-msgstr ""
+msgstr "აღუწერელი აღწერა {%s}"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:794
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "დაუბალანსებელი ფრჩხილი"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
 #. off. It is written between < and > in front of a
@@ -656,122 +819,147 @@ msgstr ""
 #: src/scan.l:813
 #, c-format
 msgid "bad <start condition>: %s"
-msgstr ""
+msgstr "არასწორი <გაშვების პირობა>: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "ბრჭყალის დახურვა აკლია: ხაზი ბრჭყალებში ჩასმული სტრიქონის შიგნით დასრულდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "დაუსრულებელი სიმბოლოების კლასი: ხაზი დახურვის ]-მდე დასრულდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:892
 #, c-format
 msgid "bad character class expression: %s"
-msgstr ""
+msgstr "სიმბოლოების კლასის არასწორი გამოსახულება: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:914
 msgid "bad character inside {}'s"
-msgstr ""
+msgstr "არასწორი სიმბოლო {}-ის შიგნით"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:920
 msgid "missing }"
-msgstr ""
+msgstr "აკლია }"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1028
 msgid "EOF encountered inside an action"
-msgstr ""
+msgstr "ქმედების შიგნით ფაილის დასასრული შეგვხვდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1033
 msgid "EOF encountered inside pattern"
-msgstr ""
+msgstr "შაბლონის შიგნით ფაილის დასასრული შეგვხვდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1066
 #, c-format
 msgid "unexpected character: %s"
-msgstr ""
+msgstr "მოულოდნელი სიმბოლო: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "სტეკის %zu-ის გამოყოფა შეუძლებელია"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:250
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
-msgstr ""
+msgstr "გამოყენება: %s [პარამეტრები]...\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:486
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
-msgstr ""
+msgstr "პარამეტრი `%s' არგუმენტს არ იღებს\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:491
 #, c-format
 msgid "option `%s' requires an argument\n"
-msgstr ""
+msgstr "პარამეტრს `%s' არგუმენტი სჭირდება\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:495
 #, c-format
 msgid "option `%s' is ambiguous\n"
-msgstr ""
+msgstr "პარამეტრი `%s' ორაზროვანია\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:499
 #, c-format
 msgid "Unrecognized option `%s'\n"
-msgstr ""
+msgstr "უცნობი პარამეტრი `%s'\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:503
 #, c-format
 msgid "Unknown error=(%d)\n"
-msgstr ""
+msgstr "უცნობი შეცდომა=(%d)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "ასეთი back end არ არსებობს"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "დაუსრულებელი ან ძალიან გრძელი თვისების სახელი"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "დაზიანებული თვისების ხაზი"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "დაუსრულებელი ან ძალიან გრძელი თვისების მნიშვნელობა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
-msgstr ""
+msgstr "არასწორი ხაზი ჩონჩხის ფაილში"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/sym.c:93
 msgid "symbol table memory allocation failed"
-msgstr ""
+msgstr "სიმბოლოების ცხრილისთვის მეხსიერების გამოყოფა ჩავარდა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/sym.c:177
 #, c-format
 msgid "name \"%s\" is defined twice"
-msgstr ""
+msgstr "სახელი \"%s\" ორჯერაა აღწერილი"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
 #. off. %s is its name.
 #: src/sym.c:223
 #, c-format
 msgid "start condition %s declared twice"
-msgstr ""
+msgstr "გაშვების პირობა %s ორჯერაა გამოცხადებული"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/tables.c:230
 msgid "error while writing tables"
-msgstr ""
+msgstr "ცხრილების ჩაწერის შეცდომა"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/yylex.c:58
 msgid ""
 "unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgstr "მოულოდნელი ფაილის დასასრული: წესების სექციის დამწყები ხაზი აკლია"
 
 #~ msgid ""
 #~ "\n"
