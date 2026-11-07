@@ -136,10 +136,10 @@ flex NEWS
     Project.
 
 *** Added machine translations of the ca, da, de, eo, es, fi, ga, hr,
-    ka, ko, pt_BR, ru, sr, tr, vi messages that the Translation Project
-    had not updated. A native speaker has not reviewed them, and each
-    one is marked as machine translated in its .po file. Translations
-    from the Translation Project will replace them.
+    ka, ko, pt_BR, ru, sr, tr, vi, zh_CN messages that the Translation
+    Project had not updated. A native speaker has not reviewed them, and
+    each one is marked as machine translated in its .po file.
+    Translations from the Translation Project will replace them.
 
 *** The --yymore option is now documented.
 
