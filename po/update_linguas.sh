@@ -26,5 +26,17 @@ for po in *.po; do
     fi
 done
 
+# Some Translation Project files are in an older encoding, such as
+# ISO-8859-1 or EUC-KR. Convert them to UTF-8, which also rewrites the
+# charset in the header. Files already in UTF-8 are left alone.
+for po in *.po; do
+    lang=${po%.po}
+    case $lang in en@*) continue ;; esac
+    if ! LC_ALL=C grep -q -i '^"Content-Type:.*charset=UTF-8' "$po"; then
+        msgconv --to-code=UTF-8 "$po" -o "$po.new" || exit
+        mv "$po.new" "$po"
+    fi
+done
+
 echo "Regenerating POT file and recompiling PO files..."
 make update-po
