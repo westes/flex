@@ -701,7 +701,7 @@ msgstr "[:^upper:] 在大小写不须相符的扫描程序中是模棱两可的"
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr "起始状态 %2$s 有多个 %1$s 规则"
+msgstr "起始条件 %2$s 有多个 %1$s 规则"
 
 # machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1117
