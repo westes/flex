@@ -4,6 +4,11 @@
 # Johan Linde <jl@theophys.kth.se>, 1996.
 # Keld Simonsen <keld@keldix.com>, 2000-2011, 2015.
 #
+# Messages marked "machine translation (Claude)" were written by an AI model
+# on 2026-11-07 for flex 2.6.5, because the Translation Project had no
+# current translation for them. A native speaker has not reviewed them.
+# They are replaced when the Translation Project supplies a translation.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: flex-2.5.38\n"
@@ -12,6 +17,7 @@ msgstr ""
 "PO-Revision-Date: 2015-04-26 09:12+0200\n"
 "Last-Translator: Keld Simonsen <keld@keldix.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
@@ -22,9 +28,10 @@ msgstr ""
 msgid "Allocation of buffer to print string failed"
 msgstr "Tildeling af buffer til udskrivningsstreng mislykkedes"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "intern fejl: forsøg på at tilføje et tegn til en ccl, der ikke er den sidste.\n"
 
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
@@ -48,77 +55,83 @@ msgstr "Tilstand %d er ikke-accepterende -\n"
 msgid "dangerous trailing context"
 msgstr "farlig efterfølgende kontekst"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " linjenummer for associeret regel:"
+msgstr "tilknyttede reglers linjenumre:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " ud-overgange: "
+msgstr "udgående overgange:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" stopovergange: filslut "
+msgstr "blokerede overgange:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "konsistenskontrollen mislykkedes i epsclosure()"
+msgstr "konsistenskontrol mislykkedes i %s()"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
 msgstr "kunne ikke oprette en unik buffersluttilstand"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: %s is the name of a table in
 #. the generated scanner.
 #: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "Kunne ikke skrive esctbl"
+msgstr "kunne ikke skrive %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "forkert overgangstegn fundet i sympartition()"
+msgstr "ugyldigt overgangstegn fundet i %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "hukommelsestildelingen mislykkedes i allocate_array()"
+msgstr "hukommelsestildeling mislykkedes i %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "pipe mislykkedes"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "fork mislykkedes"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "%s mislykkedes"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "exec af %s mislykkedes"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -130,64 +143,75 @@ msgstr "fejl ved skrivning af udfilen %s"
 msgid "error closing output file %s"
 msgstr "fejl ved lukning af udfilen %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s: uoprettelig intern fejl, %s\n"
+msgstr "%s: fatal intern fejl ved %s:%d (%s): %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s: uoprettelig intern fejl, %s\n"
+msgstr "%s: fatal intern fejl ved %s:%d %s\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
 msgstr "reglen kan ikke matches"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr "flaget -s angivet, men standardreglen kan følges"
+msgstr "flaget %s er angivet, men standardreglen kan matches"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "kan ikke åbne %s"
+msgstr "kan ikke åbne %s: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "-+ kan ikke bruges sammen med flaget -l"
+msgstr "Kan ikke bruge %s sammen med flaget %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "-f eller -F kan ikke bruges sammen med -l"
+msgstr "Kan ikke bruge %s eller %s sammen med flaget %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "-Cf/-CF og -Cm kan ikke bruges sammen"
+msgstr "%s og %s giver ikke mening sammen"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "-Cf/-CF og -I kan ikke bruges sammen"
+msgstr "%s og %s er uforenelige"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF kan ikke bruges i lex-kompatibilitetstilstand"
+msgstr "%s er uforenelige med lex-kompatibilitetstilstand"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "Flagene -+ og --reentrant er gensidigt udelukkende."
+msgstr "Flagene %s og %s er gensidigt udelukkende."
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "-+ kan ikke bruges sammen med %array"
+msgstr "%s er uforeneligt med flaget %s"
 
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
@@ -198,10 +222,11 @@ msgstr "bisonbro understøttes ikke for C++-skanneren."
 msgid "could not create %s"
 msgstr "kunne ikke oprette %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr "%option yyclass er kun meningsfyldt for C++-fortolkere"
+msgstr "%s giver kun mening for C++-skannere"
 
 #: src/main.c:480
 #, c-format
@@ -223,12 +248,13 @@ msgstr "fejl ved sletning af udfilen %s"
 msgid "No backing up.\n"
 msgstr "Ingen sikkerhedskopiering.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d sikkerhedskopierer (ikke-accepterende) tilstande.\n"
-msgstr[1] "%d sikkerhedskopierer (ikke-accepterende) tilstande.\n"
+msgstr[0] "%d tilstand med sikkerhedskopiering (ikke-accepterende).\n"
+msgstr[1] "%d tilstande med sikkerhedskopiering (ikke-accepterende).\n"
 
 #: src/main.c:514
 #, c-format
@@ -255,10 +281,11 @@ msgstr "Intern fejl. flexopts er fejlbehæftede.\n"
 msgid "Try `%s --help' for more information.\n"
 msgstr "Prøv '%s --help' for mere information.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "ukendt flag til -C '%c'"
+msgstr "ukendt %s-flag '%c'"
 
 #: src/main.c:1222
 msgid "fatal parse error"
@@ -278,36 +305,41 @@ msgstr "kan ikke åbne skabelonfilen %s"
 msgid "could not create backing-up info file %s"
 msgstr "kunne ikke oprette sikkerhedskopi af info-fil %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
-msgstr " og kan være den egentlige årsag til andre rapporter om dette\n"
+msgstr ""
+"AT&T's lex-kompatibilitetsflag %s medfører et væsentligt præstationstab\n"
+" og kan være den egentlige kilde til andre rapporterede præstationstab\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1381
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s entails a performance penalty ONLY on rules that can match newline "
 "characters\n"
-msgstr ""
-"%%option yylineno medfører et præstationstab KUN på regler der kan matche "
-"nylinje-tegn\n"
+msgstr "%s medfører KUN et præstationstab for regler, der kan matche linjeskifttegn\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "-I (interaktiv) medfører et mindre præstationstab\n"
+msgstr "%s (interaktiv) medfører et lille præstationstab\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore() medfører et mindre præstationstab\n"
+msgstr "%s medfører et lille præstationstab\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT medfører et væsentligt præstationstab\n"
+msgstr "%s medfører et væsentligt præstationstab\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -321,22 +353,23 @@ msgstr ""
 "Regler for variabel efterfølgende kontekst medfører et væsentlig "
 "præstationstab\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "REJECT kan ikke bruges sammen med -f eller -F"
+msgstr "%s kan ikke bruges sammen med %s eller %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "REJECT kan ikke bruges sammen med -f eller -F"
+msgstr "%s kan ikke bruges sammen med %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr ""
-"regler for variabel efterfølgende kontekst kan ikke bruges\n"
-"sammen med -f eller -F"
+msgstr "regler med variabel efterfølgende kontekst kan ikke bruges sammen med %s eller %s"
 
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
@@ -347,10 +380,12 @@ msgstr "tildeling af makro-definition mislykkedes"
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Brug: %s [FLAG] [FIL]...\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "Genererer programmer, der udfører mønstergenkendelse i tekst.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1784
 msgid ""
 "Table Compression:\n"
@@ -364,7 +399,18 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"Tabelkomprimering:\n"
+"  -Ca, --align      byt større tabeller for bedre hukommelsesjustering\n"
+"  -Ce, --ecs        konstruér ækvivalensklasser\n"
+"  -Cf               komprimér ikke tabeller; brug -f-repræsentation\n"
+"  -CF               komprimér ikke tabeller; brug -F-repræsentation\n"
+"  -Cm, --meta-ecs   konstruér meta-ækvivalensklasser\n"
+"  -Cr, --read       brug read() i stedet for stdio til skannerens inddata\n"
+"  -f, --full        generér hurtig, stor skanner. Samme som -Cfr\n"
+"  -F, --fast        brug alternativ tabelrepræsentation. Samme som -CFr\n"
+"  -Cem              standardkomprimering (samme som --ecs --meta-ecs)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1796
 #, c-format
 msgid ""
@@ -379,7 +425,17 @@ msgid ""
 "      --hex               use hexadecimal numbers instead of octal in debug "
 "outputs\n"
 msgstr ""
+"Fejlsøgning:\n"
+"  -d, --debug             aktivér fejlsøgningstilstand i skanneren\n"
+"  -b, --backup            skriv sikkerhedskopi-information til %s\n"
+"  -p, --perf-report       skriv ydelsesrapport til stderr\n"
+"  -s, --nodefault         undertryk standardreglen, der udfører ECHO af tekst uden match\n"
+"  -T, --trace             %s skal køre i sporingstilstand\n"
+"  -w, --nowarn            generér ikke advarsler\n"
+"  -v, --verbose           skriv oversigt over skannerstatistik til stdout\n"
+"      --hex               brug hexadecimale tal i stedet for oktale i fejlsøgningsuddata\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1808
 #, c-format
 msgid ""
@@ -393,7 +449,16 @@ msgid ""
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"Filer:\n"
+"  -o, --outfile=FIL       angiv navn på uddatafil\n"
+"  -S, --skel=FIL          angiv skabelonfil\n"
+"  -t, --stdout            skriv skanneren til stdout i stedet for %s\n"
+"      --yyclass=NAVN      navn på C++-klasse\n"
+"      --header-file=FIL   opret en C-headerfil udover skanneren\n"
+"      --tables-file[=FIL] skriv tabeller til FIL\n"
+"      --backup-file=FIL   skriv sikkerhedskopi-information til FIL\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1819
 msgid ""
 "Scanner behavior:\n"
@@ -406,7 +471,17 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"Skannerens opførsel:\n"
+"  -7, --7bit              generér 7-bit skanner\n"
+"  -8, --8bit              generér 8-bit skanner\n"
+"  -B, --batch             generér batch-skanner (modsat -I)\n"
+"  -i, --case-insensitive  ignorér forskel på store og små bogstaver i mønstre\n"
+"  -l, --lex-compat        maksimal kompatibilitet med original lex\n"
+"  -X, --posix-compat      maksimal kompatibilitet med POSIX-lex\n"
+"  -I, --interactive       generér interaktiv skanner (modsat -B)\n"
+"      --yylineno          hold styr på linjeantal i yylineno\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1830
 msgid ""
 "Generated code:\n"
@@ -417,7 +492,15 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"Genereret kode:\n"
+"  -+,  --c++               generér C++-skannerklasse\n"
+"  -Dmacro[=defn]           #define macro defn  (standard for defn er '1')\n"
+"  -e,  --emit=SPROG        angiv målsprog\n"
+"  -L,  --noline            undertryk #line-direktiver i skanneren\n"
+"  -P,  --prefix=STRENG     brug STRENG som præfiks i stedet for \"yy\"\n"
+"  -R,  --reentrant         generér en reentrant skanner\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1837
 msgid ""
 "       --bison-bridge      scanner for Bison pure parser.\n"
@@ -426,7 +509,13 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      skanner til Bisons rene fortolker.\n"
+"       --bison-locations   medtag yylloc-understøttelse.\n"
+"       --stdinit           initialisér yyin/yyout til stdin/stdout\n"
+"       --nounistd          medtag ikke <unistd.h>\n"
+"       --noFUNKTION        generér ikke en bestemt FUNKTION\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1844
 #, c-format
 msgid ""
@@ -437,21 +526,29 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Diverse:\n"
+"  -c                      POSIX-flag uden virkning\n"
+"  -n                      POSIX-flag uden virkning\n"
+"  -?\n"
+"  -h, --help              vis denne hjælpetekst\n"
+"  -V, --version           rapportér versionen af %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "forkert tegn '%s' fundet i check_char()"
+msgstr "ugyldigt tegn '%s' fundet i %s()"
 
 #: src/misc.c:121
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "skanneren kræver flaget -8 for at kunne bruge tegnet %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:227
 #, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr ""
+msgstr "værdien af '%s' må ikke indeholde '[' eller ']'"
 
 #: src/misc.c:238
 #, c-format
@@ -473,10 +570,11 @@ msgstr ""
 "\n"
 "********** begynder udskrift af nfa med starttilstand %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "tom maskine i dupmachine()"
+msgstr "tom maskine i %s()"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -488,20 +586,22 @@ msgstr "tom maskine i dupmachine()"
 msgid "Variable trailing context rule at line %d\n"
 msgstr "Regel for variabel efterfølgende kontekst på linje %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "forkert <startbetingelse>: %s"
+msgstr "ugyldig tilstandstype i %s()"
 
 #: src/nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "inddatareglerne er for komplicerede (>= %d NFA-tilstand)"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "fandt for mange overgange i mkxtion()"
+msgstr "fandt for mange overgange i %s()"
 
 #: src/nfa.c:702
 #, c-format
@@ -519,34 +619,40 @@ msgstr "ukendt fejl ved tolkning af sektion 1"
 msgid "bad start condition list"
 msgstr "forkert liste af startbetingelser"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "operatoren %s giver suboptimal ydelse"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "startbetingelse %s deklareret to gange"
+msgstr "alle startbetingelser har allerede %s-regler"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "syntaksfejl: dette er ikke en gyldig regel"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "forkert <startbetingelse>: %s"
+msgstr "ikke-erklæret startbetingelse %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "navnet defineret to gange"
+msgstr "<%s> angivet to gange"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "efterfølgende kontekst blev gjort variabel på grund af den foregående '%s'-handling"
 
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
@@ -556,6 +662,7 @@ msgstr ""
 msgid "trailing context used twice"
 msgstr "efterfølgende kontekst brugt to gange"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "repeat range" is a pair of
 #. numbers in braces after a pattern, such as
 #. {2,5}, that sets how many times the
@@ -564,11 +671,12 @@ msgstr "efterfølgende kontekst brugt to gange"
 msgid ""
 "invalid repeat range in braces: the first number must not be larger than the "
 "second, and the second must be at least 1"
-msgstr ""
+msgstr "ugyldigt gentagelsesinterval i tuborgparenteser: det første tal må ikke være større end det andet, og det andet skal være mindst 1"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "gentagelsesantallet i tuborgparenteser skal være mindst 1"
 
 #: src/parse.y:857 src/parse.y:867
 #, c-format
@@ -579,43 +687,48 @@ msgstr "tegnintervallet [%c-%c] er flertydigt i en versalufølsom skanner"
 msgid "negative range in character class"
 msgstr "negativt interval i tegnklasse"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
 msgstr "[:^lower:] er flertydigt i en versalufølsom skanner"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
 msgstr "[:^upper:] er flertydigt i en versalufølsom skanner"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "flere %s-regler for startbetingelsen %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "advarsel, %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "kunne ikke allokere buffer til rapportering af %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "kunne ikke allokere en kopi af matchet"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "For lang inddatalinje\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "fejlagtigt '%top'-direktiv"
+msgstr "ugyldigt '%s'-direktiv"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -646,19 +759,21 @@ msgstr "ufuldstændig navnedefinition"
 msgid "Option line too long\n"
 msgstr "For lang valgmulighedslinje\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "ukendt %%option: %s"
+msgstr "ukendt %s: %s"
 
 #: src/scan.l:731
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "udefinieret definition {%s}"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:794
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "ubalanceret parentes"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -669,13 +784,15 @@ msgstr ""
 msgid "bad <start condition>: %s"
 msgstr "forkert <startbetingelse>: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "manglende afsluttende citationstegn: linjen sluttede inde i en streng i citationstegn"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "uafsluttet tegnklasse: linjen sluttede før den afsluttende ]"
 
 #: src/scan.l:892
 #, c-format
@@ -698,15 +815,17 @@ msgstr "filslutning mødt inden i en handling"
 msgid "EOF encountered inside pattern"
 msgstr "filslutning mødt inden i et mønster"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "forkert tegn: %s"
+msgstr "uventet tegn: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "kunne ikke allokere %zu af stak"
 
 #: src/scanopt.c:250
 #, c-format
@@ -738,21 +857,25 @@ msgstr "Ukendt flag: '%s'\n"
 msgid "Unknown error=(%d)\n"
 msgstr "Ukendt fejl=(%d)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "ingen sådan back end"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "uafsluttet eller for langt egenskabsnavn"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "forvansket egenskabslinje"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "uafsluttet eller for lang egenskabsværdi"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -762,10 +885,11 @@ msgstr "forkert linje i skeletfilen"
 msgid "symbol table memory allocation failed"
 msgstr "hukommelsestildeling for symboltabel mislykkedes"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "navnet defineret to gange"
+msgstr "navnet \"%s\" er defineret to gange"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -775,15 +899,16 @@ msgstr "navnet defineret to gange"
 msgid "start condition %s declared twice"
 msgstr "startbetingelse %s deklareret to gange"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "fejl ved skrivning af udfilen %s"
+msgstr "fejl under skrivning af tabeller"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/yylex.c:58
 msgid ""
 "unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgstr "uventet filafslutning: linjen, der starter regelafsnittet, mangler"
 
 #~ msgid ""
 #~ "\n"
