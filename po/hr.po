@@ -3,6 +3,12 @@
 # This file is put in the public domain.
 #
 # Tomislav Krznar <tomislav.krznar@gmail.com>, 2012.
+#
+# Messages marked "machine translation (Claude)" were written by an AI model
+# on 2026-11-07 for flex 2.6.5, because the Translation Project had no
+# current translation for them. A native speaker has not reviewed them.
+# They are replaced when the Translation Project supplies a translation.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.37\n"
@@ -20,14 +26,17 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Lokalize 1.4\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/buf.c:63
 msgid "Allocation of buffer to print string failed"
-msgstr ""
+msgstr "dodjela međuspremnika za ispis niza nije uspjela"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "interna greška: pokušaj dodavanja znaka u ccl koji nije posljednji.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
 #. "non-accepting" state is one in which no
@@ -37,8 +46,9 @@ msgstr ""
 #: src/dfa.c:68
 #, c-format
 msgid "State #%d is non-accepting -\n"
-msgstr ""
+msgstr "Stanje #%d ne prihvaća -\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: "Trailing context"
 #. is the part of a rule that must
 #. match after the text of the rule,
@@ -48,35 +58,41 @@ msgstr ""
 #. same characters.
 #: src/dfa.c:134
 msgid "dangerous trailing context"
-msgstr ""
+msgstr "opasan prateći kontekst"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
 msgid "associated rule line numbers:"
-msgstr ""
+msgstr "brojevi redaka pridruženih pravila:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
 msgid "out-transitions:"
-msgstr ""
+msgstr "izlazni prijelazi:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
 msgid "jam-transitions:"
-msgstr ""
+msgstr "slijepi prijelazi:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:351
 #, c-format
 msgid "consistency check failed in %s()"
-msgstr ""
+msgstr "provjera dosljednosti nije uspjela u %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
-msgstr ""
+msgstr "nije moguće stvoriti jedinstveno stanje kraja međuspremnika"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: %s is the name of a table in
 #. the generated scanner.
 #: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
@@ -85,37 +101,43 @@ msgstr ""
 #: src/gen.c:1076
 #, c-format
 msgid "Could not write %s"
-msgstr ""
+msgstr "nije moguće zapisati %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:1023
 #, c-format
 msgid "bad transition character detected in %s()"
-msgstr ""
+msgstr "otkriven je neispravan znak prijelaza u %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "alokacija memorije za tablicu simbola nije uspjela"
+msgstr "dodjela memorije nije uspjela u %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "pipe nije uspio"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "fork nije uspio"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "%s nije uspjelo"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "exec od %s nije uspio"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -127,83 +149,99 @@ msgstr "greška pri pisanju izlazne datoteke %s"
 msgid "error closing output file %s"
 msgstr "greška pri zatvaranju izlazne datoteke %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:864
 #, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr ""
+msgstr "%s: fatalna interna greška na %s:%d (%s): %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:873
 #, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr ""
+msgstr "%s: fatalna interna greška na %s:%d %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:175
 msgid "rule cannot be matched"
-msgstr ""
+msgstr "pravilo se ne može podudariti"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:185
 #, c-format
 msgid "%s option given but default rule can be matched"
-msgstr ""
+msgstr "opcija %s je zadana, ali se zadano pravilo može podudariti"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "ne mogu otvoriti %s"
+msgstr "nije moguće otvoriti %s: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:342 src/main.c:399
 #, c-format
 msgid "Can't use %s with %s option"
-msgstr ""
+msgstr "Nije moguće koristiti %s s opcijom %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:345 src/main.c:349
 #, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr ""
+msgstr "Nije moguće koristiti %s ili %s s opcijom %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:381
 #, c-format
 msgid "%s and %s don't make sense together"
-msgstr ""
+msgstr "%s i %s nemaju smisla zajedno"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:385
 #, c-format
 msgid "%s and %s are incompatible"
-msgstr ""
+msgstr "%s i %s su nekompatibilni"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:389
 #, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr ""
+msgstr "%s su nekompatibilni s načinom kompatibilnosti s lexom"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:394 src/main.c:411
 #, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr ""
+msgstr "Opcije %s i %s se međusobno isključuju."
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:404
 #, c-format
 msgid "%s incompatible with %s option"
-msgstr ""
+msgstr "%s je nekompatibilno s opcijom %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
-msgstr ""
+msgstr "bison most nije podržan za C++ skener."
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:454 src/main.c:1271
 #, c-format
 msgid "could not create %s"
-msgstr ""
+msgstr "nije moguće stvoriti %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:475
 #, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr ""
+msgstr "%s ima smisla samo za C++ skenere"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:480
 #, c-format
 msgid "input error reading skeleton file %s"
-msgstr ""
+msgstr "greška ulaza pri čitanju datoteke predloška %s"
 
 #: src/main.c:484
 #, c-format
@@ -215,96 +253,114 @@ msgstr "greška pri zatvaranju datoteke predloška %s"
 msgid "error deleting output file %s"
 msgstr "greška pri uklanjanju izlazne datoteke %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:505
 #, c-format
 msgid "No backing up.\n"
-msgstr ""
+msgstr "Nema vraćanja.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:508
 #, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%d stanje s vraćanjem (neprihvaćajuće).\n"
+msgstr[1] "%d stanja s vraćanjem (neprihvaćajuća).\n"
+msgstr[2] "%d stanja s vraćanjem (neprihvaćajuća).\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:514
 #, c-format
 msgid "Compressed tables always back up.\n"
-msgstr ""
+msgstr "Komprimirane tablice uvijek vraćaju.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:517
 #, c-format
 msgid "error writing backup file %s"
-msgstr ""
+msgstr "greška pri pisanju datoteke sigurnosne kopije %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:521
 #, c-format
 msgid "error closing backup file %s"
-msgstr ""
+msgstr "greška pri zatvaranju datoteke sigurnosne kopije %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:762
 #, c-format
 msgid "Internal error. flexopts are malformed.\n"
-msgstr ""
+msgstr "Interna greška. flexopts su neispravne.\n"
 
 #: src/main.c:772
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Pokušajte „%s --help” za više informacija.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "nepoznata -C opcija „%c”"
+msgstr "nepoznata %s opcija „%c”"
 
 #: src/main.c:1222
 msgid "fatal parse error"
 msgstr "fatalna greška analize"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1283
 msgid "could not write tables header"
-msgstr ""
+msgstr "nije moguće zapisati zaglavlje tablica"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1287
 #, c-format
 msgid "can't open skeleton file %s"
-msgstr ""
+msgstr "nije moguće otvoriti datoteku predloška %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1355
 #, c-format
 msgid "could not create backing-up info file %s"
-msgstr ""
+msgstr "nije moguće stvoriti datoteku s informacijama o vraćanju %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1375
 #, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
 msgstr ""
+"AT&T lex opcija kompatibilnosti %s uzrokuje veliki gubitak performansi\n"
+" i može biti stvarni izvor drugih prijavljenih gubitaka performansi\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1381
 #, c-format
 msgid ""
 "%s entails a performance penalty ONLY on rules that can match newline "
 "characters\n"
-msgstr ""
+msgstr "%s uzrokuje gubitak performansi SAMO kod pravila koja se mogu podudarati sa znakovima novog retka\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1388
 #, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr ""
+msgstr "%s (interaktivno) uzrokuje mali gubitak performansi\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1393
 #, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr ""
+msgstr "%s uzrokuje mali gubitak performansi\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1399
 #, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr ""
+msgstr "%s uzrokuje veliki gubitak performansi\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
 #. before the trailing context nor the
@@ -313,36 +369,42 @@ msgstr ""
 #: src/main.c:1409
 #, c-format
 msgid "Variable trailing context rules entail a large performance penalty\n"
-msgstr ""
+msgstr "Pravila s promjenjivim pratećim kontekstom uzrokuju veliki gubitak performansi\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1420
 #, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr ""
+msgstr "%s se ne može koristiti s %s ili %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1423
 #, c-format
 msgid "%s cannot be used with %s"
-msgstr ""
+msgstr "%s se ne može koristiti s %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1426
 #, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr ""
+msgstr "pravila s promjenjivim pratećim kontekstom ne mogu se koristiti s %s ili %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
-msgstr ""
+msgstr "dodjela definicije makroa nije uspjela"
 
 #: src/main.c:1780
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Uporaba: %s [OPCIJE] [DATOTEKA]...\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "Stvara programe koji obavljaju podudaranje uzoraka u tekstu.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1784
 msgid ""
 "Table Compression:\n"
@@ -356,7 +418,18 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"Sažimanje tablica:\n"
+"  -Ca, --align      žrtvuj veće tablice za bolje poravnanje memorije\n"
+"  -Ce, --ecs        konstruiraj klase ekvivalencije\n"
+"  -Cf               ne sažimaj tablice; koristi -f prikaz\n"
+"  -CF               ne sažimaj tablice; koristi -F prikaz\n"
+"  -Cm, --meta-ecs   konstruiraj meta-klase ekvivalencije\n"
+"  -Cr, --read       koristi read() umjesto stdio za ulaz skenera\n"
+"  -f, --full        stvori brzi, veliki skener. Isto kao -Cfr\n"
+"  -F, --fast        koristi alternativni prikaz tablica. Isto kao -CFr\n"
+"  -Cem              zadano sažimanje (isto kao --ecs --meta-ecs)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1796
 #, c-format
 msgid ""
@@ -371,7 +444,17 @@ msgid ""
 "      --hex               use hexadecimal numbers instead of octal in debug "
 "outputs\n"
 msgstr ""
+"Otklanjanje grešaka:\n"
+"  -d, --debug             uključi način otklanjanja grešaka u skeneru\n"
+"  -b, --backup            zapiši informacije o vraćanju u %s\n"
+"  -p, --perf-report       zapiši izvješće o performansama na stderr\n"
+"  -s, --nodefault         potisni zadano pravilo koje radi ECHO nepodudarnog teksta\n"
+"  -T, --trace             %s treba raditi u načinu praćenja\n"
+"  -w, --nowarn            ne stvaraj upozorenja\n"
+"  -v, --verbose           zapiši sažetak statistike skenera na stdout\n"
+"      --hex               koristi heksadecimalne umjesto oktalnih brojeva u izlazu otklanjanja grešaka\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1808
 #, c-format
 msgid ""
@@ -385,7 +468,16 @@ msgid ""
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"Datoteke:\n"
+"  -o, --outfile=DATOTEKA  odredi ime izlazne datoteke\n"
+"  -S, --skel=DATOTEKA     odredi datoteku predloška\n"
+"  -t, --stdout            zapiši skener na stdout umjesto %s\n"
+"      --yyclass=IME       ime C++ klase\n"
+"      --header-file=DATOTEKA   stvori C datoteku zaglavlja uz skener\n"
+"      --tables-file[=DATOTEKA] zapiši tablice u DATOTEKU\n"
+"      --backup-file=DATOTEKA   zapiši informacije o vraćanju u DATOTEKU\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1819
 msgid ""
 "Scanner behavior:\n"
@@ -398,7 +490,17 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"Ponašanje skenera:\n"
+"  -7, --7bit              stvori 7-bitni skener\n"
+"  -8, --8bit              stvori 8-bitni skener\n"
+"  -B, --batch             stvori skener za skupnu obradu (suprotno od -I)\n"
+"  -i, --case-insensitive  zanemari veličinu slova u uzorcima\n"
+"  -l, --lex-compat        najveća kompatibilnost s izvornim lexom\n"
+"  -X, --posix-compat      najveća kompatibilnost s POSIX lexom\n"
+"  -I, --interactive       stvori interaktivni skener (suprotno od -B)\n"
+"      --yylineno          prati broj redaka u yylineno\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1830
 msgid ""
 "Generated code:\n"
@@ -409,7 +511,15 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"Generirani kôd:\n"
+"  -+,  --c++               stvori C++ klasu skenera\n"
+"  -Dmacro[=defn]           #define macro defn  (zadani defn je „1”)\n"
+"  -e,  --emit=JEZIK        odredi ciljni jezik\n"
+"  -L,  --noline            potisni #line direktive u skeneru\n"
+"  -P,  --prefix=NIZ        koristi NIZ kao prefiks umjesto „yy”\n"
+"  -R,  --reentrant         stvori reentrantni skener\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1837
 msgid ""
 "       --bison-bridge      scanner for Bison pure parser.\n"
@@ -418,7 +528,13 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      skener za Bisonov čisti parser.\n"
+"       --bison-locations   uključi podršku za yylloc.\n"
+"       --stdinit           inicijaliziraj yyin/yyout na stdin/stdout\n"
+"       --nounistd          ne uključuj <unistd.h>\n"
+"       --noFUNKCIJA        ne stvaraj određenu FUNKCIJU\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1844
 #, c-format
 msgid ""
@@ -429,31 +545,43 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Razno:\n"
+"  -c                      POSIX opcija bez učinka\n"
+"  -n                      POSIX opcija bez učinka\n"
+"  -?\n"
+"  -h, --help              prikaži ovu poruku pomoći\n"
+"  -V, --version           prijavi verziju programa %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "neispravan znak unutar {}"
+msgstr "otkriven je neispravan znak „%s” u %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:121
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
-msgstr ""
+msgstr "skener zahtijeva zastavicu -8 za korištenje znaka %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:227
 #, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr ""
+msgstr "vrijednost „%s” ne smije sadržavati „[” ili „]”"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:238
 #, c-format
 msgid "%s: fatal internal error, %s\n"
-msgstr ""
+msgstr "%s: fatalna interna greška, %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:594 src/misc.c:610
 msgid "attempt to increase array size failed"
-msgstr ""
+msgstr "pokušaj povećanja veličine polja nije uspio"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:102
 #, c-format
 msgid ""
@@ -461,12 +589,17 @@ msgid ""
 "\n"
 "********** beginning dump of nfa with start state %d\n"
 msgstr ""
+"\n"
+"\n"
+"********** početak ispisa nfa s početnim stanjem %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:171
 #, c-format
 msgid "empty machine in %s()"
-msgstr ""
+msgstr "prazan stroj u %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
 #. before the trailing context nor the
@@ -475,76 +608,89 @@ msgstr ""
 #: src/nfa.c:240
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
-msgstr ""
+msgstr "Pravilo s promjenjivim pratećim kontekstom u retku %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:358
 #, c-format
 msgid "bad state type in %s()"
-msgstr ""
+msgstr "neispravna vrsta stanja u %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
-msgstr ""
+msgstr "ulazna pravila su previše složena (>= %d NFA stanja)"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:676
 #, c-format
 msgid "found too many transitions in %s()"
-msgstr ""
+msgstr "pronađeno je previše prijelaza u %s()"
 
 #: src/nfa.c:702
 #, c-format
 msgid "too many rules (> %d)!"
 msgstr "previše pravila (> %d)!"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:167
 msgid "unknown error processing section 1"
-msgstr ""
+msgstr "nepoznata greška pri obradi odjeljka 1"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
 #. off.
 #: src/parse.y:195 src/parse.y:390
 msgid "bad start condition list"
-msgstr ""
+msgstr "neispravan popis početnih uvjeta"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "operator %s dovodi do neoptimalnih performansi"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:345
 #, c-format
 msgid "all start conditions already have %s rules"
-msgstr ""
+msgstr "svi početni uvjeti već imaju %s pravila"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "sintaktička greška: ovo nije ispravno pravilo"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:397
 #, c-format
 msgid "undeclared start condition %s"
-msgstr ""
+msgstr "nedeklarirani početni uvjet %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "ime je dvaput definirano"
+msgstr "<%s> je naveden dvaput"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "prateći kontekst je postao promjenjiv zbog prethodne „%s” radnje"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
 #. written r/s or with a $ at the end of the rule. A
 #. rule can have only one.
 #: src/parse.y:478 src/parse.y:491 src/parse.y:561
 msgid "trailing context used twice"
-msgstr ""
+msgstr "prateći kontekst je korišten dvaput"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "repeat range" is a pair of
 #. numbers in braces after a pattern, such as
 #. {2,5}, that sets how many times the
@@ -553,64 +699,75 @@ msgstr ""
 msgid ""
 "invalid repeat range in braces: the first number must not be larger than the "
 "second, and the second must be at least 1"
-msgstr ""
+msgstr "neispravan raspon ponavljanja u zagradama: prvi broj ne smije biti veći od drugog, a drugi mora biti barem 1"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "broj ponavljanja u zagradama mora biti barem 1"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:857 src/parse.y:867
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr ""
+msgstr "raspon znakova [%c-%c] je dvosmislen u skeneru koji ne razlikuje veličinu slova"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:872
 msgid "negative range in character class"
-msgstr ""
+msgstr "negativan raspon u klasi znakova"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:969
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr ""
+msgstr "[:^lower:] je dvosmisleno u skeneru koji ne razlikuje veličinu slova"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:975
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr ""
+msgstr "[:^upper:] je dvosmisleno u skeneru koji ne razlikuje veličinu slova"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "više %s pravila za početni uvjet %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "upozorenje, %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "nije moguće dodijeliti međuspremnik za prijavu %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "nije moguće dodijeliti kopiju podudaranja"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "Ulazni redak je predugačak\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:186
 #, c-format
 msgid "malformed '%s' directive"
-msgstr ""
+msgstr "neispravna „%s” direktiva"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
 #. Do not translate the directive names.
 #: src/scan.l:211
 #, no-c-format
 msgid "unrecognized '%' directive"
-msgstr ""
+msgstr "neprepoznata „%” direktiva"
 
 #: src/scan.l:220
 msgid "Definition name too long\n"
@@ -620,10 +777,11 @@ msgstr "Ime definicije je predugačko\n"
 msgid "Unmatched '{'"
 msgstr "Neuparena „{”"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:331
 #, c-format
 msgid "Definition value for {%s} too long\n"
-msgstr ""
+msgstr "Vrijednost definicije za {%s} je predugačka\n"
 
 #: src/scan.l:348
 msgid "incomplete name definition"
@@ -633,20 +791,23 @@ msgstr "nepotpuna definicija imena"
 msgid "Option line too long\n"
 msgstr "Redak opcija je predugačak\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "neprepoznato pravilo"
+msgstr "neprepoznato %s: %s"
 
 #: src/scan.l:731
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "nedefinirana definicija {%s}"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:794
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "neuparena zagrada"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
 #. off. It is written between < and > in front of a
@@ -654,20 +815,23 @@ msgstr ""
 #: src/scan.l:813
 #, c-format
 msgid "bad <start condition>: %s"
-msgstr ""
+msgstr "neispravan <početni uvjet>: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "nedostaje završni navodnik: redak je završio unutar niza u navodnicima"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "nezavršena klasa znakova: redak je završio prije završne ]"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:892
 #, c-format
 msgid "bad character class expression: %s"
-msgstr ""
+msgstr "neispravan izraz klase znakova: %s"
 
 #: src/scan.l:914
 msgid "bad character inside {}'s"
@@ -677,23 +841,27 @@ msgstr "neispravan znak unutar {}"
 msgid "missing }"
 msgstr "nedostaje }"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1028
 msgid "EOF encountered inside an action"
-msgstr ""
+msgstr "naišlo se na EOF unutar radnje"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1033
 msgid "EOF encountered inside pattern"
-msgstr ""
+msgstr "naišlo se na EOF unutar uzorka"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "neispravan znak: %s"
+msgstr "neočekivani znak: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "nije moguće dodijeliti %zu stoga"
 
 #: src/scanopt.c:250
 #, c-format
@@ -725,21 +893,25 @@ msgstr "Neprepoznata opcija „%s”\n"
 msgid "Unknown error=(%d)\n"
 msgstr "Nepoznata greška=(%d)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "ne postoji takav back end"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "nezavršeno ili predugačko ime svojstva"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "oštećen redak svojstva"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "nezavršena ili predugačka vrijednost svojstva"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -749,28 +921,31 @@ msgstr "neispravan redak u datoteci predloška"
 msgid "symbol table memory allocation failed"
 msgstr "alokacija memorije za tablicu simbola nije uspjela"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "ime je dvaput definirano"
+msgstr "ime „%s” je definirano dvaput"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
 #. off. %s is its name.
 #: src/sym.c:223
 #, c-format
 msgid "start condition %s declared twice"
-msgstr ""
+msgstr "početni uvjet %s je deklariran dvaput"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "greška pri pisanju izlazne datoteke %s"
+msgstr "greška pri pisanju tablica"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/yylex.c:58
 msgid ""
 "unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgstr "neočekivani kraj datoteke: nedostaje redak koji počinje odjeljak pravila"
 
 #~ msgid "bad iteration values"
 #~ msgstr "neispravne vrijednosti iteracije"
