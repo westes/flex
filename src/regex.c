@@ -27,6 +27,7 @@
 
 
 regex_t regex_linedir; /**< matches line directives */
+static bool regex_linedir_compiled = false;
 
 
 /** Initialize the regular expressions.
@@ -34,8 +35,14 @@ regex_t regex_linedir; /**< matches line directives */
  */
 bool flex_init_regex(const char *traceline_re)
 {
-	if (traceline_re != NULL)
+	if (regex_linedir_compiled) {
+		regfree(&regex_linedir);
+		regex_linedir_compiled = false;
+	}
+	if (traceline_re != NULL) {
 		flex_regcomp(&regex_linedir, traceline_re, REG_EXTENDED);
+		regex_linedir_compiled = true;
+	}
 	return true;
 }
 
