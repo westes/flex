@@ -6,6 +6,11 @@
 # Clytie Siddall <clytie@riverland.net.au>, 2005-2008.
 # Trần Ngọc Quân <vnwildman@gmail.com>, 2012-2014.
 #
+# Messages marked "machine translation (Claude)" were written by an AI model
+# on 2026-11-07 for flex 2.6.5, because the Translation Project had no
+# current translation for them. A native speaker has not reviewed them.
+# They are replaced when the Translation Project supplies a translation.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: flex-2.5.38\n"
@@ -27,9 +32,10 @@ msgstr ""
 msgid "Allocation of buffer to print string failed"
 msgstr "Việc phân bổ bộ đệm cho lệnh in chuỗi gặp lỗi"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "lỗi nội bộ: cố gắng thêm một ký tự vào ccl không phải là cái cuối cùng.\n"
 
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
@@ -53,77 +59,83 @@ msgstr "Trạng thái #%d là không chấp nhận -\n"
 msgid "dangerous trailing context"
 msgstr "ngữ cảnh theo sau là nguy hiểm"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " số thứ tự dòng quy tắc tương ứng:"
+msgstr "số thứ tự dòng của các quy tắc liên quan:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " việc chuyển tiếp xuất: "
+msgstr "các chuyển tiếp đi ra:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" chuyển tiếp kẹt: gặp kết thúc tập tin "
+msgstr "các chuyển tiếp bế tắc:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "việc kiểm tra sự thống nhất bị lỗi trong epsclosure()"
+msgstr "việc kiểm tra tính nhất quán gặp lỗi trong %s()"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
 msgstr "không thể tạo trạng thái kết-thúc-bộ-đệm duy nhất"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: %s is the name of a table in
 #. the generated scanner.
 #: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "Không thể ghi \"ecstbl\""
+msgstr "không thể ghi %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "phát hiện ký tự chuyển tiếp sai trong sympartition()"
+msgstr "phát hiện ký tự chuyển tiếp sai trong %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "việc phân chia bộ nhớ bị lỗi trong allocate_array() (phân bổ mảng)"
+msgstr "việc cấp phát bộ nhớ gặp lỗi trong %s()"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "pipe gặp lỗi"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "fork gặp lỗi"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "%s gặp lỗi"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "việc thực hiện (exec) %s gặp lỗi"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -135,66 +147,75 @@ msgstr "gặp lỗi khi ghi tập tin xuất %s"
 msgid "error closing output file %s"
 msgstr "gặp lỗi khi đóng tập tin xuất %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s: gặp lỗi nôi bộ nghiêm trọng, %s\n"
+msgstr "%s: lỗi nội bộ nghiêm trọng tại %s:%d (%s): %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s: gặp lỗi nôi bộ nghiêm trọng, %s\n"
+msgstr "%s: lỗi nội bộ nghiêm trọng tại %s:%d %s\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
 msgstr "quy tắc không thể được khớp"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr "đưa ra tùy chọn \"-s\" còn quy tắc mặc định có thể được khớp"
+msgstr "đã đưa ra tùy chọn %s nhưng quy tắc mặc định có thể được khớp"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "không thể mở %s"
+msgstr "không thể mở %s: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "Không thể dùng ký tự \"-+\" với tùy chọn \"-l\""
+msgstr "Không thể dùng %s với tùy chọn %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "Không thể dùng cờ \"-f\" hoặc \"-F\" với tùy chọn \"-l\""
+msgstr "Không thể dùng %s hay %s với tùy chọn %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "Hai tùy chọn \"-Cf/-CF\" và \"-Cm\" với nhau thì không có ý nghĩa"
+msgstr "%s và %s không có nghĩa khi dùng cùng nhau"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "Hai tùy chọn \"-Cf/-CF\" và \"-I\" không tương thích với nhau"
+msgstr "%s và %s không tương thích với nhau"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr ""
-"Tùy chọn \"-Cf/-CF\" không tương thích với chế độ \"lex-compatibility\" "
-"(tương thích với lex)"
+msgstr "%s xung khắc với chế độ tương thích lex"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "Hai tùy chọn \"- +\" và \"--reentrant\" xung đột với nhau."
+msgstr "Hai tùy chọn %s và %s xung đột với nhau."
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "\"%array\" (mảng) không tương thích với tùy chọn \"-+\""
+msgstr "%s xung khắc với tùy chọn %s"
 
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
@@ -205,10 +226,11 @@ msgstr "bison bridge (chiếc cầu bison) không được hỗ trợ với bộ
 msgid "could not create %s"
 msgstr "không thể tạo %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr "%option (tùy chọn) \"yyclass\" chỉ có ý nghĩa với bộ quét C++"
+msgstr "%s chỉ có nghĩa đối với bộ quét C++"
 
 #: src/main.c:480
 #, c-format
@@ -230,11 +252,12 @@ msgstr "gặp lỗi khi xoá bỏ tập tin xuất %s"
 msgid "No backing up.\n"
 msgstr "Không sao lưu.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d đang sao lưu các trạng thái (kiểu không chấp nhận).\n"
+msgstr[0] "%d trạng thái sao lưu (không chấp nhận).\n"
 
 #: src/main.c:514
 #, c-format
@@ -261,10 +284,11 @@ msgstr "Gặp lỗi nội bộ vì những flexopts sai dạng.\n"
 msgid "Try `%s --help' for more information.\n"
 msgstr "Hãy thử lệnh \"%s --help\" (trợ giúp) để xem thêm thông tin.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "không hiểu tùy chọn \"-C\" là \"%c\""
+msgstr "không rõ tùy chọn %s \"%c\""
 
 #: src/main.c:1222
 msgid "fatal parse error"
@@ -284,36 +308,41 @@ msgstr "không thể mở tập tin khung sườn %s"
 msgid "could not create backing-up info file %s"
 msgstr "không thể tạo tập tin thông tin sao lưu %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
-msgstr " thì có lẽ thật gây ra trường hợp giảm hiệu suất khác\n"
+msgstr ""
+"Tùy chọn tương thích lex AT&T %s làm suy giảm hiệu suất nghiêm trọng\n"
+" và có thể là nguồn gốc thực sự của các suy giảm hiệu suất khác đã được báo cáo\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1381
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s entails a performance penalty ONLY on rules that can match newline "
 "characters\n"
-msgstr ""
-"%%tùy chọn \"yylineno\" giảm hiệu suất CHỈ với quy tắc khớp với ký tự dòng "
-"mới\n"
+msgstr "%s làm suy giảm hiệu suất CHỈ đối với các quy tắc có thể khớp với ký tự xuống dòng\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "Tùy chọn \"-I\" (tương tác) giảm hiệu suất một ít\n"
+msgstr "%s (tương tác) làm suy giảm hiệu suất một chút\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore() giảm hiệu suất một ít\n"
+msgstr "%s làm suy giảm hiệu suất một chút\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT (đẩy ra) làm suy giảm hiệu suất nghiêm trọng\n"
+msgstr "%s làm suy giảm hiệu suất nghiêm trọng\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -325,22 +354,23 @@ msgstr "REJECT (đẩy ra) làm suy giảm hiệu suất nghiêm trọng\n"
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr "Quy tắc ngữ cảnh theo sau biến rất giảm hiệu suất\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "Không cho phép dùng REJECT (đẩy ra) với tùy chọn \"-f\" hay \"-F\""
+msgstr "%s không thể được dùng với %s hay %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "Không cho phép dùng REJECT (đẩy ra) với tùy chọn \"-f\" hay \"-F\""
+msgstr "%s không thể được dùng với %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr ""
-"không cho phép dùng quy tắc ngữ cảnh theo sau biến với tùy chọn \"-f\" hay "
-"\"-F\""
+msgstr "các quy tắc ngữ cảnh theo sau biến đổi không thể được dùng với %s hay %s"
 
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
@@ -351,10 +381,12 @@ msgstr "việc phân bổ cho định nghĩa macro gặp lỗi"
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Cách dùng: %s [TÙY_CHỌN] [TẬP_TIN]...\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "Tạo các chương trình thực hiện việc khớp mẫu trên văn bản.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1784
 msgid ""
 "Table Compression:\n"
@@ -368,7 +400,18 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"Nén bảng:\n"
+"  -Ca, --align      đổi bảng lớn hơn lấy việc căn chỉnh bộ nhớ tốt hơn\n"
+"  -Ce, --ecs        xây dựng các lớp tương đương\n"
+"  -Cf               không nén bảng; dùng biểu diễn -f\n"
+"  -CF               không nén bảng; dùng biểu diễn -F\n"
+"  -Cm, --meta-ecs   xây dựng các lớp siêu tương đương\n"
+"  -Cr, --read       dùng read() thay cho stdio làm đầu vào của bộ quét\n"
+"  -f, --full        tạo bộ quét nhanh, lớn. Giống -Cfr\n"
+"  -F, --fast        dùng biểu diễn bảng thay thế. Giống -CFr\n"
+"  -Cem              nén mặc định (giống --ecs --meta-ecs)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1796
 #, c-format
 msgid ""
@@ -383,7 +426,17 @@ msgid ""
 "      --hex               use hexadecimal numbers instead of octal in debug "
 "outputs\n"
 msgstr ""
+"Gỡ lỗi:\n"
+"  -d, --debug             bật chế độ gỡ lỗi trong bộ quét\n"
+"  -b, --backup            ghi thông tin sao lưu vào %s\n"
+"  -p, --perf-report       ghi báo cáo hiệu suất vào stderr\n"
+"  -s, --nodefault         chặn quy tắc mặc định ECHO văn bản không khớp\n"
+"  -T, --trace             %s nên chạy ở chế độ theo dõi\n"
+"  -w, --nowarn            không tạo cảnh báo\n"
+"  -v, --verbose           ghi tóm tắt thống kê bộ quét vào stdout\n"
+"      --hex               dùng số thập lục phân thay cho bát phân trong kết xuất gỡ lỗi\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1808
 #, c-format
 msgid ""
@@ -397,7 +450,16 @@ msgid ""
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"Tập tin:\n"
+"  -o, --outfile=TẬP_TIN   chỉ định tên tập tin kết xuất\n"
+"  -S, --skel=TẬP_TIN      chỉ định tập tin khung sườn\n"
+"  -t, --stdout            ghi bộ quét vào stdout thay cho %s\n"
+"      --yyclass=TÊN       tên của lớp C++\n"
+"      --header-file=TẬP_TIN   tạo tập tin đầu C ngoài bộ quét\n"
+"      --tables-file[=TẬP_TIN] ghi các bảng vào TẬP_TIN\n"
+"      --backup-file=TẬP_TIN   ghi thông tin sao lưu vào TẬP_TIN\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1819
 msgid ""
 "Scanner behavior:\n"
@@ -410,7 +472,17 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"Ứng xử của bộ quét:\n"
+"  -7, --7bit              tạo bộ quét 7 bit\n"
+"  -8, --8bit              tạo bộ quét 8 bit\n"
+"  -B, --batch             tạo bộ quét theo lô (ngược với -I)\n"
+"  -i, --case-insensitive  bỏ qua chữ hoa/thường trong mẫu\n"
+"  -l, --lex-compat        tương thích tối đa với lex gốc\n"
+"  -X, --posix-compat      tương thích tối đa với lex POSIX\n"
+"  -I, --interactive       tạo bộ quét tương tác (ngược với -B)\n"
+"      --yylineno          theo dõi số dòng trong yylineno\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1830
 msgid ""
 "Generated code:\n"
@@ -421,7 +493,15 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"Mã được tạo:\n"
+"  -+,  --c++               tạo lớp bộ quét C++\n"
+"  -Dmacro[=defn]           #define macro defn  (defn mặc định là \"1\")\n"
+"  -e,  --emit=NGÔN_NGỮ     chỉ định ngôn ngữ đích\n"
+"  -L,  --noline            chặn các chỉ thị #line trong bộ quét\n"
+"  -P,  --prefix=CHUỖI      dùng CHUỖI làm tiền tố thay cho \"yy\"\n"
+"  -R,  --reentrant         tạo bộ quét có thể vào lại\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1837
 msgid ""
 "       --bison-bridge      scanner for Bison pure parser.\n"
@@ -430,7 +510,13 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      bộ quét cho bộ phân tích cú pháp thuần của Bison.\n"
+"       --bison-locations   bao gồm hỗ trợ yylloc.\n"
+"       --stdinit           khởi tạo yyin/yyout thành stdin/stdout\n"
+"       --nounistd          không bao gồm <unistd.h>\n"
+"       --noHÀM             không tạo một HÀM cụ thể\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1844
 #, c-format
 msgid ""
@@ -441,21 +527,29 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Linh tinh:\n"
+"  -c                      tùy chọn POSIX không làm gì\n"
+"  -n                      tùy chọn POSIX không làm gì\n"
+"  -?\n"
+"  -h, --help              hiển thị trợ giúp này\n"
+"  -V, --version           báo cáo phiên bản %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "phát hiện ký tự sai \"%s\" trong check_char() (kiểm tra ký tự)"
+msgstr "phát hiện ký tự sai \"%s\" trong %s()"
 
 #: src/misc.c:121
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "bộ quét cần thiết cờ \"-8\" để dùng ký tự %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:227
 #, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr ""
+msgstr "giá trị của \"%s\" không được chứa \"[\" hay \"]\""
 
 #: src/misc.c:238
 #, c-format
@@ -477,10 +571,11 @@ msgstr ""
 "\n"
 "********** bắt đầu đổ NFA có trạng thái bắt đầu là %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "máy trống trong dupmachine() (nhân đôi máy)"
+msgstr "máy trống trong %s()"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -492,20 +587,22 @@ msgstr "máy trống trong dupmachine() (nhân đôi máy)"
 msgid "Variable trailing context rule at line %d\n"
 msgstr "Gặp quy tắc ngữ cảnh theo sau biến tại dòng %d\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "<start condition> (điệu kiện bắt đầu) sai: %s"
+msgstr "kiểu trạng thái sai trong %s()"
 
 #: src/nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "các quy tắc đầu vào là quá phức tạp (≥ %d trạng thái NFA)"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "gặp quá nhiều chuyển tiếp trong mkxtion()"
+msgstr "tìm thấy quá nhiều chuyển tiếp trong %s()"
 
 #: src/nfa.c:702
 #, c-format
@@ -523,34 +620,40 @@ msgstr "gặp lỗi không rõ khi xử lý phần 1"
 msgid "bad start condition list"
 msgstr "danh sách điều kiện bắt đầu là sai"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "toán tử %s dẫn đến hiệu suất dưới mức tối ưu"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "điều kiện bắt đầu %s đã được khai báo hai lần"
+msgstr "mọi điều kiện bắt đầu đã có quy tắc %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "lỗi cú pháp: đây không phải là quy tắc hợp lệ"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "<start condition> (điệu kiện bắt đầu) sai: %s"
+msgstr "điều kiện bắt đầu %s chưa được khai báo"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "tên đã được định nghĩa hai lần"
+msgstr "<%s> được chỉ định hai lần"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "ngữ cảnh theo sau đã trở thành biến đổi do hành động \"%s\" đứng trước"
 
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
@@ -560,6 +663,7 @@ msgstr ""
 msgid "trailing context used twice"
 msgstr "ngữ cảnh theo sau được dùng hai lần"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "repeat range" is a pair of
 #. numbers in braces after a pattern, such as
 #. {2,5}, that sets how many times the
@@ -568,11 +672,12 @@ msgstr "ngữ cảnh theo sau được dùng hai lần"
 msgid ""
 "invalid repeat range in braces: the first number must not be larger than the "
 "second, and the second must be at least 1"
-msgstr ""
+msgstr "phạm vi lặp lại không hợp lệ trong dấu ngoặc nhọn: số thứ nhất không được lớn hơn số thứ hai, và số thứ hai phải ít nhất là 1"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "số lần lặp lại trong dấu ngoặc nhọn phải ít nhất là 1"
 
 #: src/parse.y:857 src/parse.y:867
 #, c-format
@@ -585,43 +690,48 @@ msgstr ""
 msgid "negative range in character class"
 msgstr "gặp phạm vi âm trong lớp ký tự"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
 msgstr "[:^lower:] là chưa rõ ràng trong trường hợp quét bỏ qua chữ HOA/thường"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
 msgstr "[:^upper:] là chưa rõ ràng trong trường hợp quét bỏ qua chữ HOA/thường"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "nhiều quy tắc %s cho điều kiện bắt đầu %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "cảnh báo, %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "không thể cấp phát bộ đệm để báo cáo %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "không thể cấp phát một bản sao của kết quả khớp"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "dòng nhập quá dài\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "chỉ thị kiểu \"%top\" (đầu) dạng sai"
+msgstr "chỉ thị \"%s\" sai dạng"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -635,9 +745,10 @@ msgstr "gặp chỉ thị kiểu \"%\" không được nhận dạng"
 msgid "Definition name too long\n"
 msgstr "Tên định nghĩa quá dài\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:315
 msgid "Unmatched '{'"
-msgstr "Chưa khớp \"{\""
+msgstr "\"{\" không có \"}\" tương ứng"
 
 #: src/scan.l:331
 #, c-format
@@ -652,19 +763,21 @@ msgstr "lời đinh nghĩa tên chưa hoàn tất"
 msgid "Option line too long\n"
 msgstr "dòng tùy chọn quá dài\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "gặp tùy chọn %% không được nhận dạng: %s"
+msgstr "%s không được nhận ra: %s"
 
 #: src/scan.l:731
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "chưa định nghĩa định danh {%s}"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:794
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "dấu ngoặc đơn không cân xứng"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -675,13 +788,15 @@ msgstr ""
 msgid "bad <start condition>: %s"
 msgstr "<start condition> (điệu kiện bắt đầu) sai: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "thiếu dấu trích dẫn đóng: dòng đã kết thúc bên trong một chuỗi có trích dẫn"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "lớp ký tự chưa kết thúc: dòng đã kết thúc trước dấu ] đóng"
 
 #: src/scan.l:892
 #, c-format
@@ -704,15 +819,17 @@ msgstr "gặp kết thúc tập tin ở trong một hành động"
 msgid "EOF encountered inside pattern"
 msgstr "gặp kết thúc tập tin ở trong mẫu"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "ký tự sai: %s"
+msgstr "ký tự bất ngờ: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "không thể cấp phát %zu của ngăn xếp"
 
 #: src/scanopt.c:250
 #, c-format
@@ -744,21 +861,25 @@ msgstr "Không nhận ra tùy chọn \"%s\"\n"
 msgid "Unknown error=(%d)\n"
 msgstr "Không rõ lỗi=(%d)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "không có phần phụ trợ như vậy"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "tên thuộc tính chưa kết thúc hoặc quá dài"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "dòng thuộc tính bị hỏng"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "giá trị thuộc tính chưa kết thúc hoặc quá dài"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -768,10 +889,11 @@ msgstr "gặp dòng sai trong tập tin khung sườn"
 msgid "symbol table memory allocation failed"
 msgstr "gặp lỗi khi phân bổ bộ nhớ của bảng ký hiệu"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "tên đã được định nghĩa hai lần"
+msgstr "tên \"%s\" được định nghĩa hai lần"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -781,15 +903,16 @@ msgstr "tên đã được định nghĩa hai lần"
 msgid "start condition %s declared twice"
 msgstr "điều kiện bắt đầu %s đã được khai báo hai lần"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "gặp lỗi khi ghi tập tin xuất %s"
+msgstr "gặp lỗi khi ghi các bảng"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/yylex.c:58
 msgid ""
 "unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgstr "kết thúc tập tin bất ngờ: thiếu dòng bắt đầu phần quy tắc"
 
 #~ msgid ""
 #~ "\n"
