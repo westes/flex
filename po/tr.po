@@ -2,6 +2,11 @@
 # Copyright (C) 2004 The Flex Project
 # Deniz Akkus Kanca <deniz@arayan.com>, 2004.
 #
+# Messages marked "machine translation (Claude)" were written by an AI model
+# on 2026-11-07 for flex 2.6.5, because the Translation Project had no
+# current translation for them. A native speaker has not reviewed them.
+# They are replaced when the Translation Project supplies a translation.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.31\n"
@@ -10,6 +15,7 @@ msgstr ""
 "PO-Revision-Date: 2004-05-16 18:36+0300\n"
 "Last-Translator: Deniz Akkus Kanca <deniz@arayan.com>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,13 +23,15 @@ msgstr ""
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "X-Generator: KBabel 1.0.2\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/buf.c:63
 msgid "Allocation of buffer to print string failed"
-msgstr ""
+msgstr "dizgeyi yazdırmak için tampon ayrılamadı"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "iç hata: son olmayan bir ccl'ye karakter eklenmeye çalışılıyor.\n"
 
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
@@ -47,77 +55,83 @@ msgstr "Durum #%d kabul etmiyor -\n"
 msgid "dangerous trailing context"
 msgstr "izleyen bağlam tehlikeli"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " alakalı kural satır numaraları:"
+msgstr "ilişkili kuralların satır numaraları:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " dış-geçişler: "
+msgstr "çıkış geçişleri:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" sıkışık-geçişler: EOF "
+msgstr "çıkmaz geçişler:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "epsclosure() içindeki tutarlılık kontrolü başarısız"
+msgstr "%s() içinde tutarlılık denetimi başarısız oldu"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
 msgstr "tekil tampon sonu durumu yaratılamadı"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: %s is the name of a table in
 #. the generated scanner.
 #: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "ecstbl yazılamadı"
+msgstr "%s yazılamadı"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "sympartition() içinde hatalı geçiş karakterleri saptandı"
+msgstr "%s() içinde hatalı geçiş karakteri bulundu"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "allocate_array() içinde bellek ayırımı başarısız"
+msgstr "%s() içinde bellek ayırma başarısız oldu"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "pipe başarısız oldu"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "fork başarısız oldu"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "%s başarısız oldu"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "%s çalıştırılamadı (exec)"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -129,64 +143,75 @@ msgstr "çıktı dosyası %s yazılırken hata"
 msgid "error closing output file %s"
 msgstr "çıktı dosyası %s kapatılırken hata"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s: ölümcül iç hata, %s\n"
+msgstr "%s: %s:%d (%s) konumunda ölümcül iç hata: %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s: ölümcül iç hata, %s\n"
+msgstr "%s: %s:%d konumunda ölümcül iç hata: %s\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
 msgstr "kural eşlenemedi"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr "-s seçeneği verilmiş fakat öntanımlı kural eşlenebiliyor"
+msgstr "%s seçeneği verildi ama öntanımlı kural eşlenebilir"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "%s açılamıyor"
+msgstr "%s açılamıyor: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "-+'yi -l seçeneği ile kullanma"
+msgstr "%s, %s seçeneğiyle birlikte kullanılamaz"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "-f veya -F'yi -l seçeneği ile kullanma"
+msgstr "%s veya %s, %s seçeneğiyle birlikte kullanılamaz"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "-Cf/-CF ve -Cm birlikte anlam ifade etmiyor"
+msgstr "%s ve %s birlikte anlamlı değil"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "-Cf/-CF ve -I uyumsuz"
+msgstr "%s ve %s uyumsuz"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF lex-uyumluluk kipi ile uyumsuz"
+msgstr "%s, lex uyumluluk kipiyle uyumsuz"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "-+ ve --reentrant seçenekleri bir arada kullanılamaz"
+msgstr "%s ve %s seçenekleri bir arada kullanılamaz."
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "%array, -+ seçeneği ile uyumsuz"
+msgstr "%s, %s seçeneğiyle uyumsuz"
 
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
@@ -197,10 +222,11 @@ msgstr "bison bridge, C++ tarayıcısı için desteklenmiyor."
 msgid "could not create %s"
 msgstr "%s oluşturulamadı"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr "%option yyclass, sadece C++ tarayıcıları için anlamlıdır"
+msgstr "%s yalnızca C++ tarayıcıları için anlamlıdır"
 
 #: src/main.c:480
 #, c-format
@@ -222,12 +248,13 @@ msgstr "çıktı dosyası %s silinirken hata"
 msgid "No backing up.\n"
 msgstr "Yedekleme yok.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d yedeklenen (kabul-etmeyen) durumlar.\n"
-msgstr[1] "%d yedeklenen (kabul-etmeyen) durumlar.\n"
+msgstr[0] "%d yedekleme gerektiren (kabul etmeyen) durum.\n"
+msgstr[1] "%d yedekleme gerektiren (kabul etmeyen) durum.\n"
 
 #: src/main.c:514
 #, c-format
@@ -254,10 +281,11 @@ msgstr "İç hata. flexopt'lar bozuk.\n"
 msgid "Try `%s --help' for more information.\n"
 msgstr "Daha fazla bilgi için `%s --help' yazın.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "bilinmeyen -C seçeneği '%c'"
+msgstr "bilinmeyen %s seçeneği '%c'"
 
 #: src/main.c:1222
 msgid "fatal parse error"
@@ -277,37 +305,41 @@ msgstr "iskelet dosyası %s açılamadı"
 msgid "could not create backing-up info file %s"
 msgstr "yedekleme bilgi dosyası %s oluşturulamadı"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
 msgstr ""
-" ve belki bildirilen başka performans kayıplarının da kaynağı olabilir\n"
+"AT&T lex uyumluluk seçeneği %s büyük ölçekli bir yavaşlamaya neden olur\n"
+" ve bildirilen diğer yavaşlamaların asıl kaynağı olabilir\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1381
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s entails a performance penalty ONLY on rules that can match newline "
 "characters\n"
-msgstr ""
-"yylineno %%seçeneği YALNIZCA yenisatır karakterlerini de eşleyen satırlarda "
-"yavaşlar.\n"
+msgstr "%s yalnızca satır sonu karakterleriyle eşlenebilen kurallarda yavaşlamaya neden olur\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "-I (etkileşimli) küçük ölçekli bir yavaşlamaya neden olur\n"
+msgstr "%s (etkileşimli) küçük ölçekli bir yavaşlamaya neden olur\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore() küçük ölçekli bir yavaşlamaya neden olur\n"
+msgstr "%s küçük ölçekli bir yavaşlamaya neden olur\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT büyük ölçekli bir yavaşlamaya neden olur\n"
+msgstr "%s büyük ölçekli bir yavaşlamaya neden olur\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -320,34 +352,40 @@ msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr ""
 "Değişken izleyen bağlam kuralları, büyük ölçekli yavaşlamaya neden olur\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "REJECT, -f veya -F ile kullanılamaz"
+msgstr "%s, %s veya %s ile birlikte kullanılamaz"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "REJECT, -f veya -F ile kullanılamaz"
+msgstr "%s, %s ile birlikte kullanılamaz"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr "değişken izleme ortamı kuralları, -f veya -F ile birlikte kullanılamaz"
+msgstr "değişken izleyen bağlam kuralları %s veya %s ile birlikte kullanılamaz"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
-msgstr ""
+msgstr "makro tanımı için yer ayırma başarısız oldu"
 
 #: src/main.c:1780
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
 msgstr "Kullanım: %s [SEÇENEKLER...] [DOSYA...]\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "Metin üzerinde örüntü eşleme yapan programlar üretir.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1784
 msgid ""
 "Table Compression:\n"
@@ -361,7 +399,18 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"Tablo sıkıştırma:\n"
+"  -Ca, --align      daha büyük tablolar karşılığında daha iyi bellek hizalaması sağla\n"
+"  -Ce, --ecs        denklik sınıfları oluştur\n"
+"  -Cf               tabloları sıkıştırma; -f gösterimini kullan\n"
+"  -CF               tabloları sıkıştırma; -F gösterimini kullan\n"
+"  -Cm, --meta-ecs   üst denklik sınıfları oluştur\n"
+"  -Cr, --read       tarayıcı girdisi için stdio yerine read() kullan\n"
+"  -f, --full        hızlı, büyük tarayıcı üret. -Cfr ile aynı\n"
+"  -F, --fast        alternatif tablo gösterimini kullan. -CFr ile aynı\n"
+"  -Cem              öntanımlı sıkıştırma (--ecs --meta-ecs ile aynı)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1796
 #, c-format
 msgid ""
@@ -376,7 +425,17 @@ msgid ""
 "      --hex               use hexadecimal numbers instead of octal in debug "
 "outputs\n"
 msgstr ""
+"Hata ayıklama:\n"
+"  -d, --debug             tarayıcıda hata ayıklama kipini etkinleştir\n"
+"  -b, --backup            yedekleme bilgisini %s dosyasına yaz\n"
+"  -p, --perf-report       başarım raporunu stderr'e yaz\n"
+"  -s, --nodefault         eşleşmeyen metni ECHO eden öntanımlı kuralı engelle\n"
+"  -T, --trace             %s izleme kipinde çalışsın\n"
+"  -w, --nowarn            uyarı üretme\n"
+"  -v, --verbose           tarayıcı istatistiklerinin özetini stdout'a yaz\n"
+"      --hex               hata ayıklama çıktılarında sekizlik yerine onaltılık sayılar kullan\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1808
 #, c-format
 msgid ""
@@ -390,7 +449,16 @@ msgid ""
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"Dosyalar:\n"
+"  -o, --outfile=DOSYA     çıktı dosyası adını belirt\n"
+"  -S, --skel=DOSYA        iskelet dosyasını belirt\n"
+"  -t, --stdout            tarayıcıyı %s yerine stdout'a yaz\n"
+"      --yyclass=AD        C++ sınıfının adı\n"
+"      --header-file=DOSYA   tarayıcıya ek olarak bir C başlık dosyası oluştur\n"
+"      --tables-file[=DOSYA] tabloları DOSYA'ya yaz\n"
+"      --backup-file=DOSYA   yedekleme bilgisini DOSYA'ya yaz\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1819
 msgid ""
 "Scanner behavior:\n"
@@ -403,7 +471,17 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"Tarayıcı davranışı:\n"
+"  -7, --7bit              7 bitlik tarayıcı üret\n"
+"  -8, --8bit              8 bitlik tarayıcı üret\n"
+"  -B, --batch             toplu tarayıcı üret (-I'nın tersi)\n"
+"  -i, --case-insensitive  örüntülerde büyük/küçük harf ayrımı yapma\n"
+"  -l, --lex-compat        özgün lex ile azami uyumluluk\n"
+"  -X, --posix-compat      POSIX lex ile azami uyumluluk\n"
+"  -I, --interactive       etkileşimli tarayıcı üret (-B'nin tersi)\n"
+"      --yylineno          satır sayısını yylineno içinde tut\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1830
 msgid ""
 "Generated code:\n"
@@ -414,7 +492,15 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"Üretilen kod:\n"
+"  -+,  --c++               C++ tarayıcı sınıfı üret\n"
+"  -Dmacro[=defn]           #define macro defn  (öntanımlı defn '1'dir)\n"
+"  -e,  --emit=DİL          hedef dili belirt\n"
+"  -L,  --noline            tarayıcıda #line yönergelerini engelle\n"
+"  -P,  --prefix=DİZGE      \"yy\" yerine DİZGE'yi önek olarak kullan\n"
+"  -R,  --reentrant         yeniden girilebilir bir tarayıcı üret\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1837
 msgid ""
 "       --bison-bridge      scanner for Bison pure parser.\n"
@@ -423,7 +509,13 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      Bison saf ayrıştırıcısı için tarayıcı.\n"
+"       --bison-locations   yylloc desteğini ekle.\n"
+"       --stdinit           yyin/yyout'u stdin/stdout olarak ilklendir\n"
+"       --nounistd          <unistd.h> dosyasını ekleme\n"
+"       --noİŞLEV           belirli bir İŞLEV'i üretme\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1844
 #, c-format
 msgid ""
@@ -434,21 +526,29 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"Çeşitli:\n"
+"  -c                      işlevsiz POSIX seçeneği\n"
+"  -n                      işlevsiz POSIX seçeneği\n"
+"  -?\n"
+"  -h, --help              bu yardım iletisini göster\n"
+"  -V, --version           %s sürümünü bildir\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "check_char() içinde hatalı karakter '%s' saptandı"
+msgstr "%2$s() içinde hatalı karakter '%1$s' bulundu"
 
 #: src/misc.c:121
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "tarayıcı %s karakterini kullanmak için -8 bayrağına ihtiyaç duyar"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:227
 #, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr ""
+msgstr "'%s' değeri '[' veya ']' içermemelidir"
 
 #: src/misc.c:238
 #, c-format
@@ -470,10 +570,11 @@ msgstr ""
 "\n"
 "********** başlangıç durumu %d olan nfa'nın dökümüne başlanıyor\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "dupmachine() içinde boş makine"
+msgstr "%s() içinde boş makine"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -485,20 +586,22 @@ msgstr "dupmachine() içinde boş makine"
 msgid "Variable trailing context rule at line %d\n"
 msgstr "%d satırında değişken izleyen bağlam kuralı\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "hatalı <başlangıç şartı>: %s"
+msgstr "%s() içinde hatalı durum türü"
 
 #: src/nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "girdi kuralları fazla karışık (>= %d NFA durumu)"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "mkxtion() içinde çok fazla geçiş bulundu"
+msgstr "%s() içinde çok fazla geçiş bulundu"
 
 #: src/nfa.c:702
 #, c-format
@@ -516,34 +619,40 @@ msgstr "1. bölüm işlenirken bilinmeyen hata oluştu"
 msgid "bad start condition list"
 msgstr "hatalı başlangıç şart listesi"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "%s işleci en iyi olmayan başarıma yol açar"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "başlangıç şartı %s iki defa bildirildi"
+msgstr "tüm başlangıç şartları zaten %s kurallarına sahip"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "sözdizimi hatası: bu geçerli bir kural değil"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "hatalı <başlangıç şartı>: %s"
+msgstr "bildirilmemiş başlangıç şartı %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "isim iki defa tanımlandı"
+msgstr "<%s> iki defa belirtilmiş"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "önceki '%s' eylemi nedeniyle izleyen bağlam değişken yapıldı"
 
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
@@ -553,6 +662,7 @@ msgstr ""
 msgid "trailing context used twice"
 msgstr "izleyen bağlam iki defa kullanılmış"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "repeat range" is a pair of
 #. numbers in braces after a pattern, such as
 #. {2,5}, that sets how many times the
@@ -561,11 +671,12 @@ msgstr "izleyen bağlam iki defa kullanılmış"
 msgid ""
 "invalid repeat range in braces: the first number must not be larger than the "
 "second, and the second must be at least 1"
-msgstr ""
+msgstr "süslü parantez içinde geçersiz yineleme aralığı: ilk sayı ikinciden büyük olmamalı ve ikinci sayı en az 1 olmalıdır"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "süslü parantez içindeki yineleme sayısı en az 1 olmalıdır"
 
 #: src/parse.y:857 src/parse.y:867
 #, c-format
@@ -578,47 +689,48 @@ msgstr ""
 msgid "negative range in character class"
 msgstr "karakter sınıflarında negatif aralık"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"[%c-%c] karakter aralığı, büyük/küçük harf farkı gözetmeyen bir tarayıcıda\n"
-"belirsiz anlamlı"
+msgstr "[:^lower:] büyük/küçük harf farkı gözetmeyen bir tarayıcıda belirsizdir"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr ""
-"[%c-%c] karakter aralığı, büyük/küçük harf farkı gözetmeyen bir tarayıcıda\n"
-"belirsiz anlamlı"
+msgstr "[:^upper:] büyük/küçük harf farkı gözetmeyen bir tarayıcıda belirsizdir"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "%2$s başlangıç şartı için birden çok %1$s kuralı"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "uyarı, %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "%s bildirmek için tampon ayrılamadı"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "eşleşmenin bir kopyası ayrılamadı"
 
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
 msgstr "Girdi satırı fazla uzun\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "hatalı `%top' yönergesi"
+msgstr "biçimi bozuk '%s' yönergesi"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -628,42 +740,45 @@ msgstr "hatalı `%top' yönergesi"
 msgid "unrecognized '%' directive"
 msgstr "'%' yönergesi bilinmiyor"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:220
-#, fuzzy
 msgid "Definition name too long\n"
-msgstr "Girdi satırı fazla uzun\n"
+msgstr "Tanım adı çok uzun\n"
 
 #: src/scan.l:315
 msgid "Unmatched '{'"
 msgstr "'{' eşleşmiyor"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:331
 #, c-format
 msgid "Definition value for {%s} too long\n"
-msgstr ""
+msgstr "{%s} için tanım değeri çok uzun\n"
 
 #: src/scan.l:348
 msgid "incomplete name definition"
 msgstr "eksik isim tanımlaması"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:490
-#, fuzzy
 msgid "Option line too long\n"
-msgstr "Girdi satırı fazla uzun\n"
+msgstr "Seçenek satırı çok uzun\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "geçersiz %%seçenek: %s"
+msgstr "tanınmayan %s: %s"
 
 #: src/scan.l:731
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "belirsiz tanım {%s}"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:794
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "dengesiz parantez"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -674,13 +789,15 @@ msgstr ""
 msgid "bad <start condition>: %s"
 msgstr "hatalı <başlangıç şartı>: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "kapatan tırnak işareti eksik: satır tırnak içindeki bir dizgenin içinde bitti"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "sonlandırılmamış karakter sınıfı: satır kapatan ] işaretinden önce bitti"
 
 #: src/scan.l:892
 #, c-format
@@ -699,20 +816,22 @@ msgstr "eksik }"
 msgid "EOF encountered inside an action"
 msgstr "bir eylem içinde EOF ile karşılaşıldı"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1033
-#, fuzzy
 msgid "EOF encountered inside pattern"
-msgstr "bir eylem içinde EOF ile karşılaşıldı"
+msgstr "desen içinde dosya sonu ile karşılaşıldı"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "hatalı karakter: %s"
+msgstr "beklenmeyen karakter: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "%zu yığın ayrılamadı"
 
 #: src/scanopt.c:250
 #, c-format
@@ -744,21 +863,25 @@ msgstr "Bilinmeyen seçenek: `%s'\n"
 msgid "Unknown error=(%d)\n"
 msgstr "Bilinmeyen hata=(%d)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "böyle bir arka uç yok"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "sonlandırılmamış veya çok uzun özellik adı"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "bozuk özellik satırı"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "sonlandırılmamış veya çok uzun özellik değeri"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -768,10 +891,11 @@ msgstr "iskelet dosya içinde hatalı satır"
 msgid "symbol table memory allocation failed"
 msgstr "simge tablosu bellek ayırımı başarısız"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "isim iki defa tanımlandı"
+msgstr "\"%s\" ismi iki defa tanımlandı"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -781,15 +905,16 @@ msgstr "isim iki defa tanımlandı"
 msgid "start condition %s declared twice"
 msgstr "başlangıç şartı %s iki defa bildirildi"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "çıktı dosyası %s yazılırken hata"
+msgstr "tablolar yazılırken hata"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/yylex.c:58
 msgid ""
 "unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgstr "beklenmeyen dosya sonu: kurallar bölümünü başlatan satır eksik"
 
 #~ msgid ""
 #~ "\n"
