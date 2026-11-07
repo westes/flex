@@ -149,6 +149,13 @@ flex NEWS
 
 ** scanner
 
+*** A scanner that defines YY_NO_INPUT or YY_NO_UNPUT in section 1 again
+    has yyinput() or yyunput() left out, as in flex 2.6.4, and no longer
+    gets warnings about unused functions. The new names YY_NO_YYINPUT
+    and YY_NO_YYUNPUT work as well. (#804)
+
+    Thanks to Christoph Grüninger.
+
 *** A scanner that defines its own ECHO macro again has it used, both
     by ECHO actions and by the default rule, as in flex 2.6.4, and no
     longer gets a warning that ECHO is redefined. Defining yyecho()
