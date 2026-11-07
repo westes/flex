@@ -589,9 +589,9 @@ static void gentabs(void)
 				/* TRANSLATORS: %s is the name of a table in
 				   the generated scanner. */
 				lerr (_("Could not write %s"), "yyacclist_tbl");
-			yytbl_data_destroy (yyacclist_tbl);
-			yyacclist_tbl = NULL;
 		}
+		yytbl_data_destroy (yyacclist_tbl);
+		yyacclist_tbl = NULL;
 	}
 
 	else {
