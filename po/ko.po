@@ -2,6 +2,11 @@
 # Copyright (C) 1996 The Flex Project
 # Choi Jun Ho <junker@jazz.snu.ac.kr>, 1997.
 #
+# Messages marked "machine translation (Claude)" were written by an AI model
+# on 2026-11-07 for flex 2.6.5, because the Translation Project had no
+# current translation for them. A native speaker has not reviewed them.
+# They are replaced when the Translation Project supplies a translation.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.5.2\n"
@@ -10,19 +15,22 @@ msgstr ""
 "PO-Revision-Date: 1997-02-05 20:30\n"
 "Last-Translator: Choi Jun Ho <junker@jazz.snu.ac.kr>\n"
 "Language-Team: Korean <ko@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=EUC-KR\n"
 "Content-Transfer-Encoding: 8-bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/buf.c:63
 msgid "Allocation of buffer to print string failed"
-msgstr ""
+msgstr "문자열을 출력할 버퍼 할당에 실패했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/ccl.c:82
 msgid "internal error: trying to add a char to a non-last ccl.\n"
-msgstr ""
+msgstr "내부 오류: 마지막이 아닌 ccl에 문자를 추가하려고 했습니다.\n"
 
 #. TRANSLATORS: This starts one line of the
 #. report written by the -b option. A
@@ -46,77 +54,83 @@ msgstr "상태번호 %d는 받아들이지 않는 -입니다\n"
 msgid "dangerous trailing context"
 msgstr "위험한 추적 문맥"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
 #: src/dfa.c:176
-#, fuzzy
 msgid "associated rule line numbers:"
-msgstr " 관련 규칙 행번호:"
+msgstr "연관된 규칙의 줄 번호:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that take the scanner from this state
 #. to another state.
 #: src/dfa.c:212
-#, fuzzy
 msgid "out-transitions:"
-msgstr " 나가는 쪽 전이: "
+msgstr "나가는 전이:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: The characters that have no transition from this
 #. state.
 #: src/dfa.c:222
-#, fuzzy
 msgid "jam-transitions:"
-msgstr ""
-"\n"
-" 잼-전이: EOF "
+msgstr "막힌 전이:"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:351
-#, fuzzy, c-format
+#, c-format
 msgid "consistency check failed in %s()"
-msgstr "epsclosure()에서 일관성 검사가 실패했습니다"
+msgstr "%s()에서 일관성 검사에 실패했습니다"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
 msgstr "유일한 버퍼의 끝(end-of-buffer)상태를 만들 수 없었습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: %s is the name of a table in
 #. the generated scanner.
 #: src/dfa.c:761 src/gen.c:591 src/gen.c:668 src/gen.c:683 src/gen.c:723
 #: src/gen.c:783 src/gen.c:814 src/gen.c:853 src/gen.c:886 src/gen.c:941
 #: src/gen.c:947 src/gen.c:955 src/gen.c:973 src/gen.c:981 src/gen.c:1030
 #: src/gen.c:1076
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write %s"
-msgstr "%s를 만들 수 없습니다"
+msgstr "%s을(를) 쓸 수 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/dfa.c:1023
-#, fuzzy, c-format
+#, c-format
 msgid "bad transition character detected in %s()"
-msgstr "sympartition()에서 잘못된 전이 문자를 찾았습니다"
+msgstr "%s()에서 잘못된 전이 문자가 발견되었습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "memory allocation failed in %s()"
-msgstr "allocate_array()에서 메모리 할당이 실패했습니다"
+msgstr "%s()에서 메모리 할당에 실패했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr ""
+msgstr "pipe에 실패했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:156
 msgid "fork failed"
-msgstr ""
+msgstr "fork에 실패했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
 #, c-format
 msgid "%s failed"
-msgstr ""
+msgstr "%s에 실패했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/filter.c:187
 #, c-format
 msgid "exec of %s failed"
-msgstr ""
+msgstr "%s의 exec에 실패했습니다"
 
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
@@ -128,78 +142,91 @@ msgstr "출력파일 %s를 쓰는 데 오류가 발생했습니다"
 msgid "error closing output file %s"
 msgstr "출력파일 %s를 닫는데 오류가 발생했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:864
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d (%s): %s\n"
-msgstr "%s: 치명적인 내부 에러, %s\n"
+msgstr "%s: %s:%d (%s)에서 치명적인 내부 오류: %s\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/flexdef.h:873
-#, fuzzy, c-format
+#, c-format
 msgid "%s: fatal internal error at %s:%d %s\n"
-msgstr "%s: 치명적인 내부 에러, %s\n"
+msgstr "%s: %s:%d에서 치명적인 내부 오류: %s\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
 msgstr "맞는 규칙을 찾을 수 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "%s option given but default rule can be matched"
-msgstr "-s 옵션이 주어졌지만 기본 규칙이 적용될 수 있습니다"
+msgstr "%s 옵션이 주어졌지만 기본 규칙이 일치할 수 있습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:314 src/scan.l:1094
-#, fuzzy, c-format
+#, c-format
 msgid "can't open %s: %s"
-msgstr "%s를 열 수 없습니다"
+msgstr "%s을(를) 열 수 없습니다: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:342 src/main.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s with %s option"
-msgstr "-l옵션에는 -+옵션을 같이 쓸 수 없습니다"
+msgstr "%s은(는) %s 옵션과 함께 사용할 수 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:345 src/main.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "Can't use %s or %s with %s option"
-msgstr "-l옵션에 -f나 -F옵션을 쓸 수 없습니다"
+msgstr "%s 또는 %s은(는) %s 옵션과 함께 사용할 수 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s don't make sense together"
-msgstr "-Cf/-CF는 -Cm와 같이 쓰면 의미가 없습니다"
+msgstr "%s와(과) %s은(는) 함께 쓰면 의미가 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "%s and %s are incompatible"
-msgstr "-Cf/-CF와 -I는 같이 쓸 수 없습니다"
+msgstr "%s와(과) %s은(는) 서로 맞지 않습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "%s are incompatible with lex-compatibility mode"
-msgstr "-Cf/-CF 는 lex호환 모드와는 같이 쓸 수 없습니다"
+msgstr "%s은(는) lex 호환 모드와 맞지 않습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:394 src/main.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "Options %s and %s are mutually exclusive."
-msgstr "-Cf와 -CF는 같이 쓸 수 없습니다"
+msgstr "%s 옵션과 %s 옵션은 함께 쓸 수 없습니다."
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "%s incompatible with %s option"
-msgstr "%array는 -+옵션과 같이 쓸 수 없습니다"
+msgstr "%s은(는) %s 옵션과 맞지 않습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:415
 msgid "bison bridge not supported for the C++ scanner."
-msgstr ""
+msgstr "C++ 스캐너에서는 bison 브리지를 지원하지 않습니다."
 
 #: src/main.c:454 src/main.c:1271
 #, c-format
 msgid "could not create %s"
 msgstr "%s를 만들 수 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:475
-#, fuzzy, c-format
+#, c-format
 msgid "%s only meaningful for C++ scanners"
-msgstr "%option yyclass는 C++스캐너에게만 의미가 있습니다"
+msgstr "%s은(는) C++ 스캐너에서만 의미가 있습니다"
 
 #: src/main.c:480
 #, c-format
@@ -221,12 +248,12 @@ msgstr "출력파일 %s를 지우는 데 오류가 발생했습니다"
 msgid "No backing up.\n"
 msgstr "되돌림이 없습니다.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:508
-#, fuzzy, c-format
+#, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d개의 되돌림(받아들이지 않는) 상태.\n"
-msgstr[1] "%d개의 되돌림(받아들이지 않는) 상태.\n"
+msgstr[0] "되돌림(비수락) 상태 %d개.\n"
 
 #: src/main.c:514
 #, c-format
@@ -243,29 +270,32 @@ msgstr "백업 파일 %s를 쓰는데 오류가 발생했습니다"
 msgid "error closing backup file %s"
 msgstr "백업 파일 %s를 닫는데 오류가 발생했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:762
 #, c-format
 msgid "Internal error. flexopts are malformed.\n"
-msgstr ""
+msgstr "내부 오류. flexopts가 잘못되었습니다.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:772
 #, c-format
 msgid "Try `%s --help' for more information.\n"
-msgstr ""
+msgstr "자세한 내용은 `%s --help'를 시도해 보십시오.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:833
-#, fuzzy, c-format
+#, c-format
 msgid "unknown %s option '%c'"
-msgstr "알 수 없는 -C 옵션 '%c'"
+msgstr "알 수 없는 %s 옵션 '%c'"
 
 #: src/main.c:1222
 msgid "fatal parse error"
 msgstr "치명적인 파싱 에러"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1283
-#, fuzzy
 msgid "could not write tables header"
-msgstr "%s를 만들 수 없습니다"
+msgstr "테이블 헤더를 쓸 수 없습니다"
 
 #: src/main.c:1287
 #, c-format
@@ -277,34 +307,41 @@ msgstr "스켈레톤 파일 %s를 열 수 없습니다"
 msgid "could not create backing-up info file %s"
 msgstr "되돌림 정보 파일 %s를 만들 수 없었습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s AT&T lex compatibility option entails a large performance penalty\n"
 " and may be the actual source of other reported performance penalties\n"
-msgstr " 그리고 아마도 다른 보고된 성능 저하의 실제 원인일 것입니다\n"
+msgstr ""
+"AT&T lex 호환 옵션 %s은(는) 큰 성능저하를 일으킵니다\n"
+" 그리고 보고된 다른 성능저하의 실제 원인일 수 있습니다\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1381
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s entails a performance penalty ONLY on rules that can match newline "
 "characters\n"
-msgstr "%%option yylineno는 큰 성능저하를 일으킵니다\n"
+msgstr "%s은(는) 개행 문자와 일치할 수 있는 규칙에서만 성능저하를 일으킵니다\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1388
-#, fuzzy, c-format
+#, c-format
 msgid "%s (interactive) entails a minor performance penalty\n"
-msgstr "-I (대화형) 은 소규모의 성능저하를 일으킵니다\n"
+msgstr "%s (대화형)은(는) 작은 성능저하를 일으킵니다\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1393
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a minor performance penalty\n"
-msgstr "yymore()는 소규모의 성능저하를 일으킵니다\n"
+msgstr "%s은(는) 작은 성능저하를 일으킵니다\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1399
-#, fuzzy, c-format
+#, c-format
 msgid "%s entails a large performance penalty\n"
-msgstr "REJECT는 큰 성능저하를 일으킵니다\n"
+msgstr "%s은(는) 큰 성능저하를 일으킵니다\n"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -316,34 +353,41 @@ msgstr "REJECT는 큰 성능저하를 일으킵니다\n"
 msgid "Variable trailing context rules entail a large performance penalty\n"
 msgstr "가변 추적 문맥 규칙은 큰 성능저하를 일으킵니다\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1420
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s or %s"
-msgstr "REJECT는 -f나 -F옵션과 같이 쓸 수 없습니다"
+msgstr "%s은(는) %s 또는 %s와(과) 함께 사용할 수 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "%s cannot be used with %s"
-msgstr "REJECT는 -f나 -F옵션과 같이 쓸 수 없습니다"
+msgstr "%s은(는) %s와(과) 함께 사용할 수 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1426
-#, fuzzy, c-format
+#, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr "가변 추적 문맥 규칙은 -f나 -F옵션과 같이 쓸 수 없습니다"
+msgstr "가변 추적 문맥 규칙은 %s 또는 %s와(과) 함께 사용할 수 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
-msgstr ""
+msgstr "매크로 정의 할당에 실패했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1780
 #, c-format
 msgid "Usage: %s [OPTIONS] [FILE]...\n"
-msgstr ""
+msgstr "사용법: %s [옵션] [파일]...\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr ""
+msgstr "텍스트에서 패턴 일치를 수행하는 프로그램을 생성합니다.\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1784
 msgid ""
 "Table Compression:\n"
@@ -357,7 +401,18 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
+"테이블 압축:\n"
+"  -Ca, --align      더 큰 테이블을 감수하고 메모리 정렬을 개선\n"
+"  -Ce, --ecs        동치 클래스 구성\n"
+"  -Cf               테이블을 압축하지 않음; -f 표현 사용\n"
+"  -CF               테이블을 압축하지 않음; -F 표현 사용\n"
+"  -Cm, --meta-ecs   메타 동치 클래스 구성\n"
+"  -Cr, --read       스캐너 입력에 stdio 대신 read() 사용\n"
+"  -f, --full        빠르고 큰 스캐너 생성. -Cfr과 같음\n"
+"  -F, --fast        대체 테이블 표현 사용. -CFr과 같음\n"
+"  -Cem              기본 압축 (--ecs --meta-ecs와 같음)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1796
 #, c-format
 msgid ""
@@ -372,7 +427,17 @@ msgid ""
 "      --hex               use hexadecimal numbers instead of octal in debug "
 "outputs\n"
 msgstr ""
+"디버깅:\n"
+"  -d, --debug             스캐너에서 디버그 모드 사용\n"
+"  -b, --backup            되돌림 정보를 %s에 기록\n"
+"  -p, --perf-report       성능 보고서를 stderr에 기록\n"
+"  -s, --nodefault         일치하지 않는 텍스트를 ECHO하는 기본 규칙 억제\n"
+"  -T, --trace             %s을(를) 추적 모드로 실행\n"
+"  -w, --nowarn            경고를 생성하지 않음\n"
+"  -v, --verbose           스캐너 통계 요약을 stdout에 기록\n"
+"      --hex               디버그 출력에서 8진수 대신 16진수 사용\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1808
 #, c-format
 msgid ""
@@ -386,7 +451,16 @@ msgid ""
 "      --tables-file[=FILE] write tables to FILE\n"
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
+"파일:\n"
+"  -o, --outfile=FILE      출력 파일 이름 지정\n"
+"  -S, --skel=FILE         스켈레톤 파일 지정\n"
+"  -t, --stdout            스캐너를 %s 대신 stdout에 기록\n"
+"      --yyclass=NAME      C++ 클래스 이름\n"
+"      --header-file=FILE   스캐너와 함께 C 헤더 파일 생성\n"
+"      --tables-file[=FILE] 테이블을 FILE에 기록\n"
+"      --backup-file=FILE  되돌림 정보를 FILE에 기록\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1819
 msgid ""
 "Scanner behavior:\n"
@@ -399,7 +473,17 @@ msgid ""
 "  -I, --interactive       generate interactive scanner (opposite of -B)\n"
 "      --yylineno          track line count in yylineno\n"
 msgstr ""
+"스캐너 동작:\n"
+"  -7, --7bit              7비트 스캐너 생성\n"
+"  -8, --8bit              8비트 스캐너 생성\n"
+"  -B, --batch             일괄 처리 스캐너 생성 (-I의 반대)\n"
+"  -i, --case-insensitive  패턴에서 대소문자 무시\n"
+"  -l, --lex-compat        원래 lex와 최대한 호환\n"
+"  -X, --posix-compat      POSIX lex와 최대한 호환\n"
+"  -I, --interactive       대화형 스캐너 생성 (-B의 반대)\n"
+"      --yylineno          yylineno에서 줄 수 추적\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1830
 msgid ""
 "Generated code:\n"
@@ -410,7 +494,15 @@ msgid ""
 "  -P,  --prefix=STRING     use STRING as prefix instead of \"yy\"\n"
 "  -R,  --reentrant         generate a reentrant scanner\n"
 msgstr ""
+"생성되는 코드:\n"
+"  -+,  --c++               C++ 스캐너 클래스 생성\n"
+"  -Dmacro[=defn]           #define macro defn  (defn의 기본값은 '1')\n"
+"  -e,  --emit=LANG         대상 언어 지정\n"
+"  -L,  --noline            스캐너에서 #line 지시어 억제\n"
+"  -P,  --prefix=STRING     \"yy\" 대신 STRING을 접두어로 사용\n"
+"  -R,  --reentrant         재진입 가능한 스캐너 생성\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1837
 msgid ""
 "       --bison-bridge      scanner for Bison pure parser.\n"
@@ -419,7 +511,13 @@ msgid ""
 "       --nounistd          do not include <unistd.h>\n"
 "       --noFUNCTION        do not generate a particular FUNCTION\n"
 msgstr ""
+"       --bison-bridge      Bison 순수 파서용 스캐너.\n"
+"       --bison-locations   yylloc 지원 포함.\n"
+"       --stdinit           yyin/yyout을 stdin/stdout으로 초기화\n"
+"       --nounistd          <unistd.h>를 포함하지 않음\n"
+"       --noFUNCTION        특정 FUNCTION을 생성하지 않음\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/main.c:1844
 #, c-format
 msgid ""
@@ -430,21 +528,29 @@ msgid ""
 "  -h, --help              produce this help message\n"
 "  -V, --version           report %s version\n"
 msgstr ""
+"기타:\n"
+"  -c                      아무 일도 하지 않는 POSIX 옵션\n"
+"  -n                      아무 일도 하지 않는 POSIX 옵션\n"
+"  -?\n"
+"  -h, --help              이 도움말 메시지 출력\n"
+"  -V, --version           %s 버전 보고\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "check_char()에서 잘못된 문자 '%s'를 찾았습니다"
+msgstr "%2$s()에서 잘못된 문자 '%1$s'가 발견되었습니다"
 
 #: src/misc.c:121
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
 msgstr "스캐너에서 문자 %s를 쓰기 위해서는 -8옵션이 필요합니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/misc.c:227
 #, c-format
 msgid "the value of '%s' must not contain '[' or ']'"
-msgstr ""
+msgstr "'%s'의 값에는 '['나 ']'가 들어갈 수 없습니다"
 
 #: src/misc.c:238
 #, c-format
@@ -466,10 +572,11 @@ msgstr ""
 "\n"
 "********** 시작 상태 %d에서 nfa출력 시작\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "empty machine in %s()"
-msgstr "dupmachine()에서의 빈 머신"
+msgstr "%s()에 빈 머신이 있습니다"
 
 #. TRANSLATORS: A rule has "variable
 #. trailing context" when neither the text
@@ -481,76 +588,86 @@ msgstr "dupmachine()에서의 빈 머신"
 msgid "Variable trailing context rule at line %d\n"
 msgstr "%d행에서 가변 추적 문맥 규칙\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:358
-#, fuzzy, c-format
+#, c-format
 msgid "bad state type in %s()"
-msgstr "잘못된 <시작 조건>: %s"
+msgstr "%s()에 잘못된 상태 유형이 있습니다"
 
 #: src/nfa.c:598
 #, c-format
 msgid "input rules are too complicated (>= %d NFA states)"
 msgstr "입력 규칙이 너무 복잡합니다(>= NFA상태 %d개)"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/nfa.c:676
-#, fuzzy, c-format
+#, c-format
 msgid "found too many transitions in %s()"
-msgstr "mkxtion()에 전이가 너무 많습니다"
+msgstr "%s()에서 전이가 너무 많이 발견되었습니다"
 
 #: src/nfa.c:702
 #, c-format
 msgid "too many rules (> %d)!"
 msgstr "규칙이 너무 많습니다 (> %d)!"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:167
 msgid "unknown error processing section 1"
-msgstr ""
+msgstr "섹션 1을 처리하는 도중 알 수 없는 오류가 발생했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
 #. off.
 #: src/parse.y:195 src/parse.y:390
-#, fuzzy
 msgid "bad start condition list"
-msgstr "잘못된 <시작 조건>: %s"
+msgstr "잘못된 시작 조건 목록"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:300
 #, c-format
 msgid "%s operator results in sub-optimal performance"
-msgstr ""
+msgstr "%s 연산자는 최적이 아닌 성능을 낳습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:345
-#, fuzzy, c-format
+#, c-format
 msgid "all start conditions already have %s rules"
-msgstr "시작조건 %s를 두번 선언했습니다"
+msgstr "모든 시작 조건에 이미 %s 규칙이 있습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:354
 msgid "syntax error: this is not a valid rule"
-msgstr ""
+msgstr "구문 오류: 올바른 규칙이 아닙니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:397
-#, fuzzy, c-format
+#, c-format
 msgid "undeclared start condition %s"
-msgstr "잘못된 <시작 조건>: %s"
+msgstr "선언되지 않은 시작 조건 %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:405
-#, fuzzy, c-format
+#, c-format
 msgid "<%s> specified twice"
-msgstr "이름을 두번 정의했습니다"
+msgstr "<%s>이(가) 두 번 지정되었습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:441 src/parse.y:501
 #, c-format
 msgid "trailing context made variable due to preceding '%s' action"
-msgstr ""
+msgstr "앞선 '%s' 동작 때문에 추적 문맥이 가변이 되었습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: "Trailing context" is the part of a
 #. rule that must match after the text of the rule,
 #. written r/s or with a $ at the end of the rule. A
 #. rule can have only one.
 #: src/parse.y:478 src/parse.y:491 src/parse.y:561
-#, fuzzy
 msgid "trailing context used twice"
-msgstr "%d행에서 가변 추적 문맥 규칙\n"
+msgstr "추적 문맥이 두 번 사용되었습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #. TRANSLATORS: A "repeat range" is a pair of
 #. numbers in braces after a pattern, such as
 #. {2,5}, that sets how many times the
@@ -559,59 +676,67 @@ msgstr "%d행에서 가변 추적 문맥 규칙\n"
 msgid ""
 "invalid repeat range in braces: the first number must not be larger than the "
 "second, and the second must be at least 1"
-msgstr ""
+msgstr "중괄호 안의 반복 범위가 올바르지 않습니다: 첫 번째 수는 두 번째 수보다 클 수 없으며, 두 번째 수는 1 이상이어야 합니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:631 src/parse.y:649 src/parse.y:716 src/parse.y:734
 msgid "the repeat count in braces must be at least 1"
-msgstr ""
+msgstr "중괄호 안의 반복 횟수는 1 이상이어야 합니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:857 src/parse.y:867
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr ""
+msgstr "대소문자를 구분하지 않는 스캐너에서 문자 범위 [%c-%c]은(는) 모호합니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:872
-#, fuzzy
 msgid "negative range in character class"
-msgstr "  문자류가 없습니다\n"
+msgstr "문자 클래스의 범위가 역순입니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:969
-#, fuzzy
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr "\t-i  대소문자 구별없는 스캐너를 만듭니다\n"
+msgstr "대소문자를 구분하지 않는 스캐너에서 [:^lower:]은(는) 모호합니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:975
-#, fuzzy
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr "\t-i  대소문자 구별없는 스캐너를 만듭니다\n"
+msgstr "대소문자를 구분하지 않는 스캐너에서 [:^upper:]은(는) 모호합니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1019
 #, c-format
 msgid "multiple %s rules for start condition %s"
-msgstr ""
+msgstr "시작 조건 %2$s에 %1$s 규칙이 여러 개 있습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/parse.y:1117
 #, c-format
 msgid "warning, %s"
-msgstr ""
+msgstr "경고, %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:60
 #, c-format
 msgid "Unable to allocate buffer to report %s"
-msgstr ""
+msgstr "%s을(를) 보고할 버퍼를 할당할 수 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/regex.c:83
 msgid "Unable to allocate a copy of the match"
-msgstr ""
+msgstr "일치 항목의 복사본을 할당할 수 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:73 src/scan.l:671 src/scan.l:724
 msgid "Input line too long\n"
-msgstr ""
+msgstr "입력 줄이 너무 깁니다\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:186
-#, fuzzy, c-format
+#, c-format
 msgid "malformed '%s' directive"
-msgstr "알 수 없는 '%' 지시자"
+msgstr "잘못된 '%s' 지시어"
 
 #. TRANSLATORS: A "directive" is a line in the first section of the
 #. input that starts with a percent sign, such as %option or %top.
@@ -621,40 +746,46 @@ msgstr "알 수 없는 '%' 지시자"
 msgid "unrecognized '%' directive"
 msgstr "알 수 없는 '%' 지시자"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:220
 msgid "Definition name too long\n"
-msgstr ""
+msgstr "정의 이름이 너무 깁니다\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:315
 msgid "Unmatched '{'"
-msgstr ""
+msgstr "짝이 없는 '{'"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:331
 #, c-format
 msgid "Definition value for {%s} too long\n"
-msgstr ""
+msgstr "{%s}의 정의 값이 너무 깁니다\n"
 
 #: src/scan.l:348
 msgid "incomplete name definition"
 msgstr "불완전한 이름 정의"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:490
 msgid "Option line too long\n"
-msgstr ""
+msgstr "옵션 줄이 너무 깁니다\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:501
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized %s: %s"
-msgstr "알 수 없는 %%option: %s"
+msgstr "인식할 수 없는 %s: %s"
 
 #: src/scan.l:731
 #, c-format
 msgid "undefined definition {%s}"
 msgstr "정의되지 않은 정의 {%s}"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:794
 msgid "unbalanced parenthesis"
-msgstr ""
+msgstr "괄호의 짝이 맞지 않습니다"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -665,13 +796,15 @@ msgstr ""
 msgid "bad <start condition>: %s"
 msgstr "잘못된 <시작 조건>: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:826
 msgid "missing closing quotation mark: the line ended inside a quoted string"
-msgstr ""
+msgstr "닫는 따옴표가 없습니다: 따옴표로 묶인 문자열 안에서 줄이 끝났습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:858
 msgid "unterminated character class: the line ended before the closing ]"
-msgstr ""
+msgstr "끝나지 않은 문자 클래스: 닫는 ] 앞에서 줄이 끝났습니다"
 
 #: src/scan.l:892
 #, c-format
@@ -690,66 +823,78 @@ msgstr "}이 빠졌습니다"
 msgid "EOF encountered inside an action"
 msgstr "동작 도중에 EOF를 만났습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1033
-#, fuzzy
 msgid "EOF encountered inside pattern"
-msgstr "동작 도중에 EOF를 만났습니다"
+msgstr "패턴 안에서 EOF를 만났습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scan.l:1066
-#, fuzzy, c-format
+#, c-format
 msgid "unexpected character: %s"
-msgstr "잘못된 문자: %s"
+msgstr "예기치 않은 문자: %s"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr ""
+msgstr "스택 %zu을(를) 할당할 수 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:250
 #, c-format
 msgid "Usage: %s [OPTIONS]...\n"
-msgstr ""
+msgstr "사용법: %s [옵션]...\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:486
 #, c-format
 msgid "option `%s' doesn't allow an argument\n"
-msgstr ""
+msgstr "`%s' 옵션은 인자를 허용하지 않습니다\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:491
 #, c-format
 msgid "option `%s' requires an argument\n"
-msgstr ""
+msgstr "`%s' 옵션에는 인자가 필요합니다\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:495
 #, c-format
 msgid "option `%s' is ambiguous\n"
-msgstr ""
+msgstr "`%s' 옵션이 모호합니다\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:499
-#, fuzzy, c-format
+#, c-format
 msgid "Unrecognized option `%s'\n"
-msgstr "알 수 없는 %%option: %s"
+msgstr "인식할 수 없는 옵션 `%s'\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/scanopt.c:503
 #, c-format
 msgid "Unknown error=(%d)\n"
-msgstr ""
+msgstr "알 수 없는 오류=(%d)\n"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:118
 msgid "no such back end"
-msgstr ""
+msgstr "그런 백엔드가 없습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:182
 msgid "unterminated or too long property name"
-msgstr ""
+msgstr "끝나지 않았거나 너무 긴 속성 이름"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:191
 msgid "garbled property line"
-msgstr ""
+msgstr "손상된 속성 줄"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/skeletons.c:200
 msgid "unterminated or too long property value"
-msgstr ""
+msgstr "끝나지 않았거나 너무 긴 속성 값"
 
 #: src/skeletons.c:247
 msgid "bad line in skeleton file"
@@ -759,10 +904,11 @@ msgstr "스켈레톤 파일에 잘못된 행"
 msgid "symbol table memory allocation failed"
 msgstr "심볼 테이블 메모리 할당이 실패했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/sym.c:177
-#, fuzzy, c-format
+#, c-format
 msgid "name \"%s\" is defined twice"
-msgstr "이름을 두번 정의했습니다"
+msgstr "이름 \"%s\"이(가) 두 번 정의되었습니다"
 
 #. TRANSLATORS: A "start condition" is a named state
 #. of the scanner that turns groups of rules on and
@@ -772,15 +918,16 @@ msgstr "이름을 두번 정의했습니다"
 msgid "start condition %s declared twice"
 msgstr "시작조건 %s를 두번 선언했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/tables.c:230
-#, fuzzy
 msgid "error while writing tables"
-msgstr "출력파일 %s를 쓰는 데 오류가 발생했습니다"
+msgstr "테이블을 쓰는 중 오류가 발생했습니다"
 
+# machine translation (Claude), not reviewed by a native speaker
 #: src/yylex.c:58
 msgid ""
 "unexpected end of file: the line that starts the rules section is missing"
-msgstr ""
+msgstr "예기치 않은 파일 끝: 규칙 섹션을 시작하는 줄이 없습니다"
 
 #~ msgid ""
 #~ "\n"
