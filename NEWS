@@ -149,6 +149,13 @@ flex NEWS
 
 ** scanner
 
+*** A scanner that defines its own ECHO macro again has it used, both
+    by ECHO actions and by the default rule, as in flex 2.6.4, and no
+    longer gets a warning that ECHO is redefined. Defining yyecho()
+    takes precedence over defining ECHO. (#803)
+
+    Thanks to Christoph Grüninger.
+
 *** A scanner that defines its own YY_INPUT or yyread() can again create
     a buffer from a NULL file, for example with yy_create_buffer(NULL,
     size), and have it filled through that routine, as in flex 2.6.4.
