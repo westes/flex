@@ -1286,6 +1286,8 @@ void readin (void)
 
 		if (yytbl_hdr_fwrite (&tableswr, &hdr) <= 0)
 			flexerror (_("could not write tables header"));
+		free(hdr.th_version);
+		free(hdr.th_name);
 	}
 
 	if (env.skelname && (env.skelfile = fopen (env.skelname, "r")) == NULL)
