@@ -3,15 +3,14 @@
 # Copyright (C) 2026 The Flex Project (msgids)
 # Rihards Priedītis <rprieditis@gmail.com>, 2026.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: flex 2.6.5-rc1\n"
 "Report-Msgid-Bugs-To: flex-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-27 14:05-0400\n"
-"PO-Revision-Date: 2026-10-30 16:09+0200\n"
+"PO-Revision-Date: 2026-11-07 21:02+0200\n"
 "Last-Translator: Rihards Priedītis <rprieditis@gmail.com>\n"
-"Language-Team: Latvian <translation-team-lv@lists.sourceforge.net>\n"
+"Language-Team: Latvian <translation-team-lv@googlegroups.com>\n"
 "Language: lv\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +47,7 @@ msgstr "Stāvoklis #%d nav pieņemošs -\n"
 #. same characters.
 #: src/dfa.c:134
 msgid "dangerous trailing context"
-msgstr "bīstams sekojošais konteksts"
+msgstr "bīstams aizmugurējais konteksts"
 
 #. TRANSLATORS: The line numbers, in the flex input, of the rules
 #. that can still match from this state.
@@ -71,7 +70,7 @@ msgstr "aizsprostošās pārejas:"
 #: src/dfa.c:351
 #, c-format
 msgid "consistency check failed in %s()"
-msgstr "konsekvences pārbaude neizdevās %s()"
+msgstr "konsekvences pārbaude neizdevās funkcijā %s()"
 
 #: src/dfa.c:581
 msgid "could not create unique end-of-buffer state"
@@ -90,21 +89,21 @@ msgstr "Neizdevās ierakstīt %s"
 #: src/dfa.c:1023
 #, c-format
 msgid "bad transition character detected in %s()"
-msgstr "atklāta nepareiza pārejas rakstzīme %s()"
+msgstr "funkcijā %s() atklāta nepareiza pārejas rakstzīme"
 
 #: src/filter.c:54 src/filter.c:73 src/filter.c:108 src/misc.c:140
 #: src/misc.c:596 src/misc.c:612 src/misc.c:660
 #, c-format
 msgid "memory allocation failed in %s()"
-msgstr "neizdevās piešķirt atmiņu %s()"
+msgstr "neizdevās piešķirt atmiņu funkcijā %s()"
 
 #: src/filter.c:153
 msgid "pipe failed"
-msgstr "neizdevās izveidot cauruli"
+msgstr "pipe neizdevās"
 
 #: src/filter.c:156
 msgid "fork failed"
-msgstr "neizdevās izveidot procesa kopiju"
+msgstr "fork neizdevās"
 
 #: src/filter.c:170 src/filter.c:181 src/filter.c:197 src/filter.c:249
 #: src/filter.c:254
@@ -120,12 +119,12 @@ msgstr "neizdevās izpildīt %s"
 #: src/filter.c:297 src/filter.c:307 src/filter.c:421 src/main.c:490
 #, c-format
 msgid "error writing output file %s"
-msgstr "kļūda rakstot izvades failu %s"
+msgstr "kļūda, rakstot izvades failu %s"
 
 #: src/filter.c:301 src/filter.c:311 src/filter.c:425 src/main.c:494
 #, c-format
 msgid "error closing output file %s"
-msgstr "kļūda aizverot izvades failu %s"
+msgstr "kļūda, aizverot izvades failu %s"
 
 #: src/flexdef.h:864
 #, c-format
@@ -139,12 +138,12 @@ msgstr "%s: fatāla iekšējā kļūda %s:%d %s\n"
 
 #: src/main.c:175
 msgid "rule cannot be matched"
-msgstr "noteikums nevar tikt sakārtots"
+msgstr "noteikumam nekas nevar atbilst"
 
 #: src/main.c:185
 #, c-format
 msgid "%s option given but default rule can be matched"
-msgstr "norādīta opcija %s, bet var atbilst noklusētajam noteikumam"
+msgstr "norādīta opcija %s, bet noklusējuma noteikumam var būt atbilstība"
 
 #: src/main.c:314 src/scan.l:1094
 #, c-format
@@ -218,30 +217,30 @@ msgstr "kļūda, dzēšot izvades failu %s"
 #: src/main.c:505
 #, c-format
 msgid "No backing up.\n"
-msgstr "Nav dublēšanas.\n"
+msgstr "Nav atkāpšanās.\n"
 
 #: src/main.c:508
 #, c-format
 msgid "%d backing up (non-accepting) state.\n"
 msgid_plural "%d backing up (non-accepting) states.\n"
-msgstr[0] "%d dublēšanas (neakceptējoši) stāvokļi.\n"
-msgstr[1] "%d dublēšanas (neakceptējoš) stāvoklis.\n"
-msgstr[2] "%d dublēšanas (neakceptējoši) stāvokļi.\n"
+msgstr[0] "%d atkāpšanās (nepieņemošu) stāvokļu.\n"
+msgstr[1] "%d atkāpšanās (nepieņemošs) stāvoklis.\n"
+msgstr[2] "%d atkāpšanās (nepieņemoši) stāvokļi.\n"
 
 #: src/main.c:514
 #, c-format
 msgid "Compressed tables always back up.\n"
-msgstr "Saspiestās tabulas vienmēr dublē.\n"
+msgstr "Saspiestās tabulas vienmēr atkāpjas.\n"
 
 #: src/main.c:517
 #, c-format
 msgid "error writing backup file %s"
-msgstr "kļūda, rakstot dublēšanas failu %s"
+msgstr "kļūda, rakstot atkāpšanās informācijas failu %s"
 
 #: src/main.c:521
 #, c-format
 msgid "error closing backup file %s"
-msgstr "kļūda, aizverot dublēšanas failu %s"
+msgstr "kļūda, aizverot atkāpšanās informācijas failu %s"
 
 #: src/main.c:762
 #, c-format
@@ -274,7 +273,7 @@ msgstr "neizdevās atvērt skeleta failu %s"
 #: src/main.c:1355
 #, c-format
 msgid "could not create backing-up info file %s"
-msgstr "neizdevās izveidot rezerves informācijas failu %s"
+msgstr "neizdevās izveidot atkāpšanās informācijas failu %s"
 
 #: src/main.c:1375
 #, c-format
@@ -328,7 +327,7 @@ msgstr "%s nevar izmantot kopā ar %s"
 #: src/main.c:1426
 #, c-format
 msgid "variable trailing context rules cannot be used with %s or %s"
-msgstr "mainīga aizmugurējā konteksta kārtulas nevar izmantot kopā ar %s vai %s"
+msgstr "mainīga aizmugurējā konteksta noteikumus nevar izmantot kopā ar %s vai %s"
 
 #: src/main.c:1462
 msgid "allocation of macro definition failed"
@@ -341,7 +340,7 @@ msgstr "Lietošana: %s [OPCIJAS] [FAILS]...\n"
 
 #: src/main.c:1781
 msgid "Generates programs that perform pattern-matching on text.\n"
-msgstr "Ģenerē programmas, kas veic teksta rakstu atbilstības pārbaudi.\n"
+msgstr "Ģenerē programmas, kas tekstā meklē šablonu atbilstības.\n"
 
 #: src/main.c:1784
 msgid ""
@@ -356,16 +355,18 @@ msgid ""
 "  -F, --fast        use alternate table representation. Same as -CFr\n"
 "  -Cem              default compression (same as --ecs --meta-ecs)\n"
 msgstr ""
-"Tabulu kompresija:\n"
-"  -Ca, --align      kompromiss starp lielākām tabulām un labāku atmiņas izlīdzināšanu\n"
+"Tabulu saspiešana:\n"
+"  -Ca, --align      kompromiss starp lielākām tabulām un labāku atmiņas\n"
+"                    izlīdzināšanu\n"
 "  -Ce, --ecs        veidot ekvivalences klases\n"
-"  -Cf               nekompresēt tabulas; izmantot -f reprezentāciju\n"
-"  -CF               nekompresēt tabulas; izmantot -F reprezentāciju\n"
+"  -Cf               nesaspiest tabulas; izmantot -f reprezentāciju\n"
+"  -CF               nesaspiest tabulas; izmantot -F reprezentāciju\n"
 "  -Cm, --meta-ecs   veidot meta-ekvivalences klases\n"
 "  -Cr, --read       izmantot read() stdio vietā skenera ievadei\n"
 "  -f, --full        ģenerēt ātru, lielu skeneri. Tas pats, kas -Cfr\n"
-"  -F, --fast        izmantot alternatīvu tabulu reprezentāciju. Tas pats, kas -CFr\n"
-"  -Cem              noklusējuma kompresija (tas pats, kas --ecs --meta-ecs)\n"
+"  -F, --fast        izmantot alternatīvu tabulu reprezentāciju. Tas pats,\n"
+"                    kas -CFr\n"
+"  -Cem              noklusējuma saspiešana (tas pats, kas --ecs --meta-ecs)\n"
 
 #: src/main.c:1796
 #, c-format
@@ -381,8 +382,8 @@ msgid ""
 "      --hex               use hexadecimal numbers instead of octal in debug outputs\n"
 msgstr ""
 "Atkļūdošana:\n"
-"  -d, --debug             ieslēgt atkļūdošanas režīmu skenerī\n"
-"  -b, --backup            rakstīt dublēšanas informāciju uz %s\n"
+"  -d, --debug             iespējot atkļūdošanas režīmu skenerī\n"
+"  -b, --backup            rakstīt atkāpšanās informāciju failā %s\n"
 "  -p, --perf-report       rakstīt veiktspējas pārskatu uz stderr\n"
 "  -s, --nodefault         neizmantot noklusējuma noteikumu ECHO neatbilstošam tekstam\n"
 "  -T, --trace             %s jādarbina izsekošanas režīmā\n"
@@ -403,13 +404,13 @@ msgid ""
 "      --backup-file=FILE  write backing-up information to FILE\n"
 msgstr ""
 "Faili:\n"
-"  -o, --outfile=FAILS      norādīt izvades faila nosaukumu\n"
-"  -S, --skel=FAILS         norādīt skeleta failu\n"
+"  -o, --outfile=FAILS     norādīt izvades faila nosaukumu\n"
+"  -S, --skel=FAILS        norādīt skeleta failu\n"
 "  -t, --stdout            rakstīt skeneri uz stdout, nevis %s\n"
-"      --yyclass=NOSAUKUMS     C++ klases nosaukums\n"
-"      --header-file=FAILS   izveidot C galvenes failu papildus skenerim\n"
-"      --tables-file[=FAILS] rakstīt tabulas uz FAILS\n"
-"      --backup-file=FAILS  rakstīt dublēšanas informāciju uz FAILS\n"
+"      --yyclass=NOSAUKUMS C++ klases nosaukums\n"
+"      --header-file=FAILS  izveidot C galvenes failu papildus skenerim\n"
+"      --tables-file[=FAILS] rakstīt tabulas FAILĀ\n"
+"      --backup-file=FAILS rakstīt atkāpšanās informāciju FAILĀ\n"
 
 #: src/main.c:1819
 msgid ""
@@ -427,11 +428,11 @@ msgstr ""
 "  -7, --7bit              ģenerēt 7 bitu skeneri\n"
 "  -8, --8bit              ģenerēt 8 bitu skeneri\n"
 "  -B, --batch             ģenerēt pakešu skeneri (pretējs -I)\n"
-"  -i, --case-insensitive  ignorēt reģistru modeļos\n"
+"  -i, --case-insensitive  ignorēt reģistru šablonos\n"
 "  -l, --lex-compat        maksimāla saderība ar oriģinālo lex\n"
 "  -X, --posix-compat      maksimāla saderība ar POSIX lex\n"
 "  -I, --interactive       ģenerēt interaktīvu skeneri (pretējs -B)\n"
-"      --yylineno          sekot līniju skaitam yylineno\n"
+"      --yylineno          sekot rindu skaitam mainīgajā yylineno\n"
 
 #: src/main.c:1830
 msgid ""
@@ -448,7 +449,7 @@ msgstr ""
 "  -Dmacro[=defn]           #define macro defn  (noklusējuma defn ir '1')\n"
 "  -e,  --emit=VALODA       Norādīt mērķa valodu\n"
 "  -L,  --noline            neizmantot #line direktīvas skenerī\n"
-"  -P,  --prefix=VIRKNE     izmantot VIRKNE kā prefiksu \"yy\" vietā\n"
+"  -P,  --prefix=VIRKNE     izmantot VIRKNI kā priedēkli \"yy\" vietā\n"
 "  -R,  --reentrant         ģenerēt atkārtoti izmantojamu skeneri\n"
 
 #: src/main.c:1837
@@ -485,12 +486,12 @@ msgstr ""
 #: src/misc.c:116
 #, c-format
 msgid "bad character '%s' detected in %s()"
-msgstr "konstatēts nederīgs simbols '%s' funkcijā %s()"
+msgstr "funkcijā %2$s() konstatēta nederīga rakstzīme '%1$s'"
 
 #: src/misc.c:121
 #, c-format
 msgid "scanner requires -8 flag to use the character %s"
-msgstr "skenerim nepieciešama -8 karogs, lai izmantotu simbolu %s"
+msgstr "skenerim nepieciešams karogs -8, lai izmantotu rakstzīmi %s"
 
 #: src/misc.c:227
 #, c-format
@@ -530,7 +531,7 @@ msgstr "tukša mašīna funkcijā %s()"
 #: src/nfa.c:240
 #, c-format
 msgid "Variable trailing context rule at line %d\n"
-msgstr "Mainīgais pēdējās konteksta noteikums rindā %d\n"
+msgstr "Mainīga aizmugurējā konteksta noteikums rindā %d\n"
 
 #: src/nfa.c:358
 #, c-format
@@ -615,7 +616,7 @@ msgstr "atkārtojumu skaitam cirtainajās iekavās jābūt vismaz 1"
 #: src/parse.y:857 src/parse.y:867
 #, c-format
 msgid "the character range [%c-%c] is ambiguous in a case-insensitive scanner"
-msgstr "rakstzīmju diapazons [%c-%c] ir neskaidrs reģistrjutīgā skenerī"
+msgstr "rakstzīmju diapazons [%c-%c] reģistrnejutīgā skenerī ir neviennozīmīgs"
 
 #: src/parse.y:872
 msgid "negative range in character class"
@@ -623,11 +624,11 @@ msgstr "negatīvs diapazons rakstzīmju klasē"
 
 #: src/parse.y:969
 msgid "[:^lower:] is ambiguous in a case-insensitive scanner"
-msgstr "[:^lower:] ir neskaidrs reģistrjutīgā skenerī"
+msgstr "[:^lower:] reģistrnejutīgā skenerī ir neviennozīmīgs"
 
 #: src/parse.y:975
 msgid "[:^upper:] is ambiguous in a case-insensitive scanner"
-msgstr "[:^upper:] ir neskaidrs reģistrjutīgā skenerī"
+msgstr "[:^upper:] reģistrnejutīgā skenerī ir neviennozīmīgs"
 
 #: src/parse.y:1019
 #, c-format
@@ -741,12 +742,12 @@ msgstr "Faila beigas sasniegtas šablonā"
 #: src/scan.l:1066
 #, c-format
 msgid "unexpected character: %s"
-msgstr "neparedzēta rakstzīme: %s"
+msgstr "negaidīta rakstzīme: %s"
 
 #: src/scanflags.c:70
 #, c-format
 msgid "Unable to allocate %zu of stack"
-msgstr "Neizdevās piešķirt %zu no kaudzes"
+msgstr "Neizdevās piešķirt %zu steka"
 
 #: src/scanopt.c:250
 #, c-format
@@ -766,12 +767,12 @@ msgstr "opcijai `%s' ir nepieciešams arguments\n"
 #: src/scanopt.c:495
 #, c-format
 msgid "option `%s' is ambiguous\n"
-msgstr "opcija `%s' ir neskaidra\n"
+msgstr "opcija `%s' ir neviennozīmīga\n"
 
 #: src/scanopt.c:499
 #, c-format
 msgid "Unrecognized option `%s'\n"
-msgstr "Nepazīta opcija `%s'\n"
+msgstr "Neatpazīta opcija `%s'\n"
 
 #: src/scanopt.c:503
 #, c-format
@@ -821,4 +822,4 @@ msgstr "kļūda, rakstot tabulas"
 
 #: src/yylex.c:58
 msgid "unexpected end of file: the line that starts the rules section is missing"
-msgstr "neparedzēts faila beigas: trūkst rinda, kas sāk noteikumu sadaļu"
+msgstr "negaidītas faila beigas: trūkst rindas, ar kuru sākas noteikumu sadaļa"
