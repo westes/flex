@@ -336,7 +336,10 @@ while (my $_l = <$fh>) {
     }
 
     if ($done) {
-	print (strftime "%Y-%m-%d  $author\n\n", @date);
+	# Keep $author out of the strftime format: strftime hands back
+	# decoded characters in a UTF-8 locale, which would print names
+	# with accents as Latin-1 in an otherwise UTF-8 file.
+	print (strftime ("%Y-%m-%d", @date), "  $author\n\n");
 
 	my $files = join (", ", @files);
 	$files = mywrap ("\t", "\t", "* $files"), ": ";

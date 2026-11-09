@@ -1,6 +1,7 @@
 TESTS = \
 	test-check-commit-msg.sh \
 	test-check-release.sh \
+	test-git2cl.sh \
 	test-make-release.sh \
 	test-semver-next.sh
 
