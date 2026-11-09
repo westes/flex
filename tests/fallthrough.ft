@@ -1,0 +1,165 @@
+#!/bin/sh
+
+# Test that scanners flex generates do not trip the compiler's
+# fall-through checking, and do not draw pedantic complaints about the
+# way the fall-through is marked.
+#
+# The end-of-file cases for start conditions that have no <<EOF>> rule
+# fall into each other, and so does one case in input().  GCC accepts a
+# comment as the marker; clang only accepts an attribute.  The marker
+# the scanner uses must work for each compiler we can find, in each
+# language standard it supports, without -pedantic noticing it.
+#
+# The compilers tried are the ones given on the command line, then gcc,
+# clang and any clang-N or g++/clang++ found on PATH.  A compiler is
+# used only if it can compile a trivial file in the mode in question
+# and warns about an unmarked fall-through, because otherwise a clean
+# result would mean nothing.  If no compiler qualifies the test is
+# skipped (exit status 77).
+
+FLEX=$1
+CC_ARG=$2
+CXX_ARG=$3
+INCDIR=$4
+case $FLEX in
+    /*) ;;
+    *) FLEX=$(pwd)/$FLEX ;;
+esac
+
+work=$(mktemp -d "${TMPDIR:-/tmp}/ft.XXXXXX") || exit 99
+trap 'rm -rf "$work"' EXIT HUP INT QUIT TERM
+
+failures=0
+ran=0
+
+fail () {
+    echo "FAIL: $*" >&2
+    failures=$((failures + 1))
+}
+
+# All but one of the start conditions lack an <<EOF>> rule, so the
+# scanner gets several generated end-of-file cases in a row, followed
+# by the user's own.
+cat > "$work/ft.l" <<'EOF'
+%option noyywrap
+%x A B C D
+%%
+x		;
+<A>a		;
+<B>b		;
+<C>c		;
+<D>d		;
+<D><<EOF>>	{ yyterminate(); }
+%%
+EOF
+
+# The smallest case: two generated end-of-file cases, so one
+# fall-through, and no <<EOF>> rule at all.
+cat > "$work/ft1.l" <<'EOF'
+%option noyywrap
+%x A
+%%
+x		;
+<A>a		;
+%%
+EOF
+
+# Candidate compilers, one per line.  Duplicates are harmless.
+candidates () {
+    kind=$1   # c or c++
+    if [ "$kind" = c ]; then
+        given=$CC_ARG; names="gcc clang cc"; glob="clang-[0-9]*"
+    else
+        given=$CXX_ARG; names="g++ clang++ c++"; glob="clang++-[0-9]*"
+    fi
+    [ -n "$given" ] && { command -v "$given" 2>/dev/null || echo "$given"; }
+    for n in $names; do
+        command -v "$n" 2>/dev/null
+    done
+    oldifs=$IFS; IFS=:
+    for d in $PATH; do
+        for f in "$d"/$glob; do
+            [ -x "$f" ] && echo "$f"
+        done
+    done
+    IFS=$oldifs
+}
+
+# usable KIND COMPILER STD: can COMPILER compile a trivial file with STD,
+# and does it warn about an unmarked fall-through?
+usable () {
+    kind=$1; cc=$2; std=$3
+    if [ "$kind" = c ]; then ext=c; hdr='#include <stdio.h>'; else ext=cc; hdr='#include <iostream>'; fi
+    printf '%s\nint f(int x) { switch (x) { case 1: x++;\ncase 2: return x; } return 0; }\n' "$hdr" \
+        > "$work/probe.$ext"
+    $cc -c -o /dev/null -std="$std" "$work/probe.$ext" >/dev/null 2>&1 || return 1
+    $cc -c -o /dev/null -std="$std" -Wimplicit-fallthrough "$work/probe.$ext" 2>&1 \
+        | grep -i 'fall.through' >/dev/null
+}
+
+# check_one KIND COMPILER STD LABEL: compile one generated scanner and
+# fail if the compiler complains about the fall-through marking.  Other
+# warnings, such as fileno() being undeclared under strict C99, are not
+# this test's business.
+check_one () {
+    kind=$1; cc=$2; std=$3; label=$4
+    if [ "$kind" = c ]; then file=$work/$label.c; else file=$work/$label.cc; fi
+    $cc -c -o /dev/null -std="$std" -Wall -Wextra -Wimplicit-fallthrough \
+        -pedantic -I"$work" -I"$INCDIR" "$file" > "$work/cc.txt" 2>&1
+    if grep -i -E 'fall.?through|does not support .*attribute|label can only be part|unknown attribute' \
+        "$work/cc.txt" | grep -E 'warning|error' > "$work/hits.txt"; then
+        fail "$label: $cc -std=$std"
+        sed -e "s|$work/||" -e 's/^/    /' "$work/hits.txt" >&2
+    fi
+}
+
+# gen KIND LABEL INPUT FLEXARGS...: generate the scanner for LABEL, with
+# the extension the compiler needs to pick the language.  Adds LABEL to
+# c_labels or cxx_labels if flex succeeded.
+c_labels=""
+cxx_labels=""
+gen () {
+    kind=$1; label=$2; infile=$3; shift 3
+    if [ "$kind" = c ]; then ext=c; else ext=cc; fi
+    if "$FLEX" "$@" -o "$work/$label.$ext" "$work/$infile" >/dev/null 2>"$work/flex.txt"; then
+        if [ "$kind" = c ]; then c_labels="$c_labels $label"; else cxx_labels="$cxx_labels $label"; fi
+    else
+        fail "$label: flex failed: $(cat "$work/flex.txt")"
+    fi
+}
+
+# run_kind KIND STANDARDS LABELS
+run_kind () {
+    kind=$1; stds=$2; labels=$3
+    for cc in $(candidates "$kind" | sort -u); do
+        [ -x "$cc" ] || continue
+        for std in $stds; do
+            if ! usable "$kind" "$cc" "$std"; then
+                echo "note: skipping $cc -std=$std (cannot compile, or does not check fall-through)" >&2
+                continue
+            fi
+            ran=$((ran + 1))
+            for label in $labels; do
+                check_one "$kind" "$cc" "$std" "$label"
+            done
+        done
+    done
+}
+
+gen c   default   ft.l
+gen c   reentrant ft.l --reentrant
+gen c   c99       ft.l -e c99
+gen c   single    ft1.l
+gen c++ cxx       ft.l --c++
+
+run_kind c   "c99 c11 c17 c2x gnu99 gnu11" "$c_labels"
+run_kind c++ "c++98 c++11 c++17 gnu++11"   "$cxx_labels"
+
+if [ "$failures" -ne 0 ]; then
+    exit 1
+fi
+if [ "$ran" -eq 0 ]; then
+    echo "no compiler that checks fall-through was found" >&2
+    exit 77
+fi
+echo "fall-through tests passed ($ran compiler and standard combinations)"
