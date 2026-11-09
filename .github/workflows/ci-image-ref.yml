@@ -1,0 +1,34 @@
+name: Read the CI image reference
+
+# Reused by the workflows that run in the CI image. The reference lives in
+# .github/ci-image-ref, so a rebuilt image changes one file and no workflow.
+
+on:
+  workflow_call:
+    outputs:
+      ref:
+        description: The CI image, by digest
+        value: ${{ jobs.read.outputs.ref }}
+
+permissions: {}
+
+jobs:
+  read:
+    name: Read the CI image reference
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    outputs:
+      ref: ${{ steps.read.outputs.ref }}
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        sparse-checkout: .github/ci-image-ref
+        sparse-checkout-cone-mode: false
+    - name: Read it
+      id: read
+      run: |
+        ref=$(cat .github/ci-image-ref)
+        printf '%s\n' "$ref" | grep -Eq '^ghcr\.io/[a-z0-9-]+/flex-ci@sha256:[0-9a-f]{64}$' \
+          || { echo "::error::.github/ci-image-ref is not a flex-ci image by digest."; exit 1; }
+        echo "ref=$ref" >> "$GITHUB_OUTPUT"

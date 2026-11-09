@@ -8,8 +8,14 @@ on:
 permissions: {}
 
 jobs:
+  image:
+    uses: ./.github/workflows/ci-image-ref.yml
+    permissions:
+      contents: read
+
   nightly:
     name: Run a Nightly Build and Save the Artifacts
+    needs: image
     runs-on: ubuntu-22.04
     outputs:
       update_needed: ${{ steps.update.outputs.needed }}
@@ -59,7 +65,7 @@ jobs:
       - name: build
         env:
           update_needed: ${{ steps.update.outputs.needed }}
-          image: ghcr.io/westes/flex-ci@sha256:d12b538158a6eb131eb72f507ff17e937d0d8b01d4cdf2d42d510742b71f99b6
+          image: ${{ needs.image.outputs.ref }}
         if: ${{ env.update_needed == 1 }}
         run: |
           docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
