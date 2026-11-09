@@ -54,7 +54,6 @@ jobs:
           # git2cl cannot tell that it has no terminal here, and writes an
           # empty file unless the log is piped in.
           git log | ./tools/git2cl > $GITHUB_WORKSPACE/ChangeLog
-          [ -s $GITHUB_WORKSPACE/ChangeLog ] || { echo "::error::The ChangeLog is empty."; exit 1; }
       - name: build
         env:
           update_needed: ${{ steps.update.outputs.needed }}
@@ -64,6 +63,16 @@ jobs:
           docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
             -v "$PWD:/src" -w /src "$image" \
             sh -c './autogen.sh && ./configure && make && make distcheck'
+      - name: Check the ChangeLog in the tarball
+        env:
+          ver: ${{ steps.version.outputs.version }}
+          update_needed: ${{ steps.update.outputs.needed }}
+        if: ${{ env.update_needed == 1 }}
+        run: |
+          # make dist writes the ChangeLog again, so look at the one that shipped.
+          size=$(tar -xzOf flex-$ver.tar.gz flex-$ver/ChangeLog | wc -c)
+          echo "The ChangeLog in the tarball is $size bytes."
+          [ "$size" -gt 0 ] || { echo "::error::The ChangeLog in the tarball is empty."; exit 1; }
       - name: Make Git archives
         env:
           ver: ${{ steps.version.outputs.version }}

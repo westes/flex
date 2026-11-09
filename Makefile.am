@@ -82,7 +82,8 @@ clean-libfl:
 
 ChangeLog: $(srcdir)/tools/git2cl
 	if [ -d $(srcdir)/.git ] ; then \
-		$(srcdir)/tools/git2cl > $@ \
+		(cd $(srcdir) && LC_ALL=C git log --pretty --numstat --summary) \
+			| $(srcdir)/tools/git2cl > $@ \
 	; fi
 
 indent:
