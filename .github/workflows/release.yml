@@ -1,0 +1,324 @@
+name: Release
+
+# A push to master that holds a releasable change (a fix, a feat or a
+# breaking change since the last vX.Y.Z tag) makes a signed release, once the
+# repository variable AUTO_RELEASE is "true".
+# Started by hand it can instead make a dry run, a release candidate, or a
+# release with the version given.
+#
+# Two jobs. "build" has no secrets: it makes the release commits in its own
+# checkout, builds and checks the tarballs. "publish" runs in the "release"
+# environment, which is limited to master and holds the signing subkey. It
+# checks what build made, signs it, pushes the commits and the tag, and
+# makes the GitHub release.
+
+on:
+  push:
+    branches:
+    - master
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Build and check everything but sign, push and publish nothing
+        type: boolean
+        default: true
+      rc:
+        description: Make a release candidate (not on master) instead of a final release
+        type: boolean
+        default: false
+      version:
+        description: The version X.Y.Z to release, for when no commit decides it
+        type: string
+        default: ''
+
+permissions: {}
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  # The fingerprint of the release key, and of its signing subkey. These are
+  # public. The job refuses to sign with anything else.
+  PRIMARY_FPR: 56D664C70CC2364CF5164914B7DFE8BB6C241FED
+  SUBKEY_FPR: 15A2D3E3BEACC2E97D3BCA7294D9D33CD054C8B4
+
+jobs:
+  image:
+    # A release commit does not start another release. A push makes a release
+    # only while the repository variable AUTO_RELEASE is "true", so the
+    # automation can be put on master and tried by hand before it is on.
+    if: >-
+      ${{ !startsWith(github.event.head_commit.message, 'release:')
+      && (github.event_name != 'push' || vars.AUTO_RELEASE == 'true') }}
+    uses: ./.github/workflows/ci-image-ref.yml
+    permissions:
+      contents: read
+
+  build:
+    name: Make the release commits and build the tarballs
+    needs: image
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    outputs:
+      release: ${{ steps.version.outputs.release }}
+      version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
+      rc: ${{ steps.version.outputs.rc }}
+
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+
+    - name: Work out the version
+      id: version
+      env:
+        INPUT_VERSION: ${{ inputs.version }}
+        INPUT_RC: ${{ inputs.rc }}
+      run: |
+        if [ -n "$INPUT_VERSION" ]; then
+            next=$INPUT_VERSION
+        else
+            tools/semver-next | tee semver.out
+            next=$(sed -n 's/^next=//p' semver.out)
+            rm semver.out
+        fi
+        if [ -z "$next" ]; then
+            echo "::notice title=No release::No commit since the last release is a fix, a feat or a breaking change."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+        fi
+        case $next in
+            [0-9]*.[0-9]*.[0-9]*) ;;
+            *) echo "::error::The version '$next' is not X.Y.Z."; exit 1 ;;
+        esac
+        case $next in
+            *[!0-9.]*) echo "::error::The version '$next' is not X.Y.Z."; exit 1 ;;
+        esac
+        rc=0
+        version=$next
+        if [ "$INPUT_RC" = true ]; then
+            rc=1
+            last=$(git tag -l "v$next-rc*" | sed "s/^v$next-rc//" | sort -n | tail -n 1)
+            version=$next-rc$(( ${last:-0} + 1 ))
+        fi
+        if git rev-parse -q --verify "refs/tags/v$version" > /dev/null; then
+            echo "::error::The tag v$version already exists."
+            exit 1
+        fi
+        echo "Releasing $version"
+        {
+            echo "release=true"
+            echo "version=$version"
+            echo "tag=v$version"
+            echo "rc=$rc"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Check NEWS before the release commit
+      if: steps.version.outputs.release == 'true'
+      run: tools/check-release -u
+
+    - name: Make the release commits
+      if: steps.version.outputs.release == 'true'
+      env:
+        VERSION: ${{ steps.version.outputs.version }}
+        RC: ${{ steps.version.outputs.rc }}
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git rev-parse HEAD > base.txt
+        if [ "$RC" = 1 ]; then
+            tools/make-release -r "$VERSION" > commits.txt
+        else
+            tools/make-release "$VERSION" > commits.txt
+        fi
+        cat commits.txt
+        # Only NEWS and configure.ac may change.
+        last=$(tail -n 1 commits.txt)
+        extra=$(git diff --name-only "$(cat base.txt)" "$last" | grep -vx -e NEWS -e configure.ac || true)
+        if [ -n "$extra" ]; then
+            echo "::error::The release commits changed more than NEWS and configure.ac: $extra"
+            exit 1
+        fi
+        git bundle create release.bundle "$(cat base.txt)..HEAD"
+
+    - name: Build, check and make the tarballs
+      if: steps.version.outputs.release == 'true'
+      env:
+        TAG: ${{ steps.version.outputs.tag }}
+        image: ${{ needs.image.outputs.ref }}
+      run: |
+        # git2cl cannot tell that it has no terminal here, and writes an
+        # empty file unless the log is piped in.
+        git log | ./tools/git2cl > ChangeLog
+        docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
+          -v "$PWD:/src" -w /src "$image" \
+          sh -c './autogen.sh && ./configure && make && make releasecheck'
+        tools/check-release -t "$TAG"
+
+    - name: Check the tarball
+      if: steps.version.outputs.release == 'true'
+      env:
+        VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        ls -l "flex-$VERSION.tar.gz" "flex-$VERSION.tar.lz"
+        # make dist writes the ChangeLog again, so look at the one that shipped.
+        size=$(tar -xzOf "flex-$VERSION.tar.gz" "flex-$VERSION/ChangeLog" | wc -c)
+        echo "The ChangeLog in the tarball is $size bytes."
+        [ "$size" -gt 0 ] || { echo "::error::The ChangeLog in the tarball is empty."; exit 1; }
+        # (grep -q would stop tar early and fail the pipe, so list to a file first.)
+        tar -tzf "flex-$VERSION.tar.gz" > tarball.list
+        grep -qx "flex-$VERSION/po/flex.pot" tarball.list ||
+            { echo "::error::po/flex.pot is not in the tarball."; exit 1; }
+
+    - name: Collect what the publish job needs
+      if: steps.version.outputs.release == 'true'
+      env:
+        VERSION: ${{ steps.version.outputs.version }}
+        TAG: ${{ steps.version.outputs.tag }}
+        RC: ${{ steps.version.outputs.rc }}
+      run: |
+        mkdir out
+        mv "flex-$VERSION.tar.gz" "flex-$VERSION.tar.lz" out/
+        (cd out && sha256sum "flex-$VERSION.tar.gz" "flex-$VERSION.tar.lz" > SHA256SUMS)
+        # The NEWS section for this version is the release notes.
+        awk -v v="$VERSION" '/^\* Noteworthy changes in release /{p = index($0, "release " v " (") > 0} p' NEWS > out/notes.md
+        [ -s out/notes.md ] || { echo "::error::No NEWS section for $VERSION."; exit 1; }
+        cp release.bundle out/
+        {
+            echo "version=$VERSION"
+            echo "tag=$TAG"
+            echo "rc=$RC"
+            echo "base=$(cat base.txt)"
+            echo "first=$(head -n 1 commits.txt)"
+            echo "last=$(tail -n 1 commits.txt)"
+        } > out/release-info.txt
+        cat out/release-info.txt
+        {
+            echo "### Release $VERSION"
+            echo
+            echo "The tag would be \`$TAG\`."
+            echo
+            echo '```'
+            cat out/SHA256SUMS
+            echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"
+
+    - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      if: steps.version.outputs.release == 'true'
+      with:
+        name: release
+        path: out
+        if-no-files-found: error
+
+  publish:
+    name: Sign, push and publish
+    needs: build
+    if: ${{ needs.build.outputs.release == 'true' && !inputs.dry_run && github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-22.04
+    environment: release
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        fetch-depth: 0
+
+    - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+      with:
+        name: release
+        path: out
+
+    - name: Check what the build job made
+      working-directory: out
+      run: |
+        . ./release-info.txt
+        sha256sum -c SHA256SUMS
+        ls -1
+        [ "$tag" = "v$version" ] || { echo "::error::The tag and version differ."; exit 1; }
+
+    - name: Bring in the release commits
+      run: |
+        . out/release-info.txt
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git bundle verify out/release.bundle
+        git fetch out/release.bundle HEAD
+        git cat-file -e "$last^{commit}"
+        git cat-file -e "$first^{commit}"
+        # Only NEWS and configure.ac may differ from where the build started.
+        extra=$(git diff --name-only "$base" "$last" | grep -vx -e NEWS -e configure.ac || true)
+        if [ -n "$extra" ]; then
+            echo "::error::The release commits changed more than NEWS and configure.ac: $extra"
+            exit 1
+        fi
+        if [ "$rc" = 0 ]; then
+            # A final release is the two commits straight on top of the build's base.
+            [ "$(git rev-list --count "$base..$last")" = 2 ] || { echo "::error::Expected two release commits."; exit 1; }
+        fi
+
+    - name: Sign
+      env:
+        SIGNING_KEY: ${{ secrets.RELEASE_SIGNING_KEY }}
+        SIGNING_PASSPHRASE: ${{ secrets.RELEASE_SIGNING_PASSPHRASE }}
+      run: |
+        . out/release-info.txt
+        export GNUPGHOME="$RUNNER_TEMP/gnupg"
+        mkdir -m 700 "$GNUPGHOME"
+        printf '%s\n' "$SIGNING_KEY" | gpg --batch --import
+        # Refuse to sign with any key but the expected one.
+        gpg --list-keys --with-colons | awk -F: '/^fpr/{print $10}' > "$RUNNER_TEMP/fprs"
+        grep -qx "$PRIMARY_FPR" "$RUNNER_TEMP/fprs" || { echo "::error::The imported key is not the release key."; exit 1; }
+        grep -qx "$SUBKEY_FPR" "$RUNNER_TEMP/fprs" || { echo "::error::The imported key lacks the release signing subkey."; exit 1; }
+        pf="$RUNNER_TEMP/passphrase"
+        (umask 077; printf '%s' "$SIGNING_PASSPHRASE" > "$pf")
+        cd out || exit 1
+        for f in "flex-$version.tar.gz" "flex-$version.tar.lz" SHA256SUMS; do
+            gpg --batch --yes --pinentry-mode loopback --passphrase-file "$pf" \
+                --local-user "$SUBKEY_FPR!" --detach-sign --output "$f.sig" "$f"
+            gpg --batch --verify "$f.sig" "$f"
+        done
+        gpg --armor --export "$PRIMARY_FPR" > flex-release-key.asc
+        rm -f "$pf"
+        ls -l
+
+    - name: Push the commits and the tag
+      run: |
+        . out/release-info.txt
+        git tag -a "$tag" -m "flex $version" "$first"
+        if [ "$rc" = 1 ]; then
+            # A release candidate is not on master.
+            git push origin "refs/tags/$tag"
+        else
+            # One atomic push. If master has moved, it is rejected and
+            # nothing is published; the next push to master tries again.
+            git push --atomic origin "$last:refs/heads/master" "refs/tags/$tag"
+        fi
+
+    - name: Make the GitHub release
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        . out/release-info.txt
+        flags=
+        [ "$rc" = 1 ] && flags=--prerelease
+        gh release create "$tag" --verify-tag --title "flex $version" \
+            --notes-file out/notes.md $flags \
+            "out/flex-$version.tar.gz" "out/flex-$version.tar.gz.sig" \
+            "out/flex-$version.tar.lz" "out/flex-$version.tar.lz.sig" \
+            out/SHA256SUMS out/SHA256SUMS.sig out/flex-release-key.asc
+
+    - name: Update the websites
+      if: ${{ needs.build.outputs.rc == '0' }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # A tag pushed with the built-in token does not start the website
+        # workflow, so start it here.
+        . out/release-info.txt
+        gh workflow run website.yml --ref "$tag"
