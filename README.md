@@ -9,6 +9,15 @@ lexical patterns in text.
 The flex codebase is kept in
 [Git on GitHub.](https://github.com/westes/flex) Source releases of flex with some intermediate files already built can be found on [the github releases page.](https://github.com/westes/flex/releases)
 
+Releases of flex from 2.6.5 on are signed with a key whose user id is
+Flex Releases <releases@flexlexer.org>. Its fingerprint is
+
+    56D6 64C7 0CC2 364C F516  4914 B7DF E8BB 6C24 1FED
+
+The public key is on keys.openpgp.org and at
+<https://flexlexer.org/downloads/>. Earlier releases were signed by other
+keys; the new key is not connected to them.
+
 General information about flex is at <https://westes.github.io/flex/>.
 The manual is at <https://westes.github.io/flex/manual/>, with the whole
 manual on a single page at
