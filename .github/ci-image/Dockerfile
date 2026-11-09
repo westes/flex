@@ -7,8 +7,11 @@
 #
 #     docker build -f .github/ci-image/Dockerfile -t flex-ci .
 
-# Pinned by digest. Dependabot's docker ecosystem can propose new digests.
-FROM ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b AS gettext
+# The base image, pinned by digest. To try another Ubuntu release, build with
+# --build-arg UBUNTU_IMAGE=ubuntu:24.04 (or similar).
+ARG UBUNTU_IMAGE=ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b
+
+FROM ${UBUNTU_IMAGE} AS gettext
 
 ARG GETTEXT_VERSION=1.0
 ARG GETTEXT_SHA256=71132a3fb71e68245b8f2ac4e9e97137d3e5c02f415636eb508ae607bc01add7
@@ -43,7 +46,7 @@ RUN tar -xf gettext-${GETTEXT_VERSION}.tar.xz \
  && make install DESTDIR=/staging
 
 
-FROM ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b
+FROM ${UBUNTU_IMAGE}
 
 # The same tools the workflows installed, minus gettext and autopoint. The
 # hosted runner image preinstalls others that the workflows never listed,
@@ -52,7 +55,7 @@ FROM ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \
         build-essential ca-certificates curl git \
-        gcc autoconf automake libtool bison help2man lzip texinfo texlive \
+        gcc clang autoconf automake libtool bison help2man lzip texinfo texlive \
  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=gettext /staging/usr/local /usr/local
