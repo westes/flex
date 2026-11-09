@@ -1,6 +1,10 @@
 name: Build CI image
 
 # Builds the image the other workflows run in. See .github/ci-image/Dockerfile.
+#
+# The new image is tested by running the build workflow in it. Only if that
+# passes does this workflow open a pull request that changes
+# .github/ci-image-ref, the one file the other workflows read.
 
 on:
   push:
@@ -8,6 +12,9 @@ on:
     paths:
     - .github/ci-image/**
     - tools/bootstrap-flex
+  schedule:
+  # Monthly, to pick up operating system updates.
+  - cron: '17 4 1 * *'
   workflow_dispatch:
 
 permissions: {}
@@ -18,6 +25,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      ref: ${{ steps.digest.outputs.ref }}
     env:
       IMAGE: ghcr.io/${{ github.repository_owner }}/flex-ci
     steps:
@@ -43,3 +52,54 @@ jobs:
       run: |
         docker push "$IMAGE:$SHA"
         docker push "$IMAGE:latest"
+    - name: Find the digest
+      id: digest
+      env:
+        SHA: ${{ github.sha }}
+      run: |
+        ref=$(docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE:$SHA")
+        printf '%s\n' "$ref" | grep -Eq '^ghcr\.io/[a-z0-9-]+/flex-ci@sha256:[0-9a-f]{64}$' \
+          || { echo "::error::Unexpected image reference: $ref"; exit 1; }
+        echo "ref=$ref" >> "$GITHUB_OUTPUT"
+        echo "The new image is $ref" >> "$GITHUB_STEP_SUMMARY"
+
+  test:
+    name: Test the new image
+    needs: image
+    permissions:
+      contents: read
+    uses: ./.github/workflows/build.yml
+    with:
+      image: ${{ needs.image.outputs.ref }}
+
+  propose:
+    name: Propose the new image
+    needs: [ image, test ]
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REF: ${{ needs.image.outputs.ref }}
+      BRANCH: ci-image-update
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - name: Open or update the pull request
+      run: |
+        if [ "$(cat .github/ci-image-ref)" = "$REF" ]; then
+          echo "The image reference is already current. Nothing to propose." >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+        fi
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git switch -c "$BRANCH"
+        printf '%s\n' "$REF" > .github/ci-image-ref
+        git commit -q -am "chore(ci): use the rebuilt CI image" \
+          -m "The build workflow passed in $REF."
+        git push --force origin "$BRANCH"
+        if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+          gh pr create --head "$BRANCH" --base master \
+            --title "chore(ci): use the rebuilt CI image" \
+            --body "The CI image was rebuilt, and the build workflow passed in it. This changes the reference in .github/ci-image-ref to $REF."
+        fi

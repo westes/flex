@@ -13,3 +13,7 @@ updates:
       github-actions:
         patterns:
           - "*"
+  - package-ecosystem: "docker"
+    directory: "/.github/ci-image"
+    schedule:
+      interval: "weekly"

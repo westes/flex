@@ -7,11 +7,24 @@ on:
     - 'v*'
   pull_request:
     branches: [ master ]
+  workflow_call:
+    inputs:
+      image:
+        description: Run in this image instead of the one in .github/ci-image-ref
+        type: string
+        default: ''
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
+  image:
+    uses: ./.github/workflows/ci-image-ref.yml
+    permissions:
+      contents: read
+
   build:
+    needs: image
 
     strategy:
       fail-fast: false
@@ -22,7 +35,7 @@ jobs:
       CC: ${{ matrix.cc }}
       CXX: ${{ matrix.cc == 'clang' && 'clang++' || 'g++' }}
     runs-on: ubuntu-22.04
-    container: ghcr.io/westes/flex-ci@sha256:d12b538158a6eb131eb72f507ff17e937d0d8b01d4cdf2d42d510742b71f99b6
+    container: ${{ inputs.image || needs.image.outputs.ref }}
 
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
