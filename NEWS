@@ -35,6 +35,15 @@ flex NEWS
 *** A race condition that could build flex twice at the same time during
     a parallel make has been fixed.
 
+*** Releases are now made and signed by a GitHub workflow. Each release
+    has a detached signature for both tarballs and for a SHA256SUMS
+    file, and a copy of the public key. The key is new and is not
+    connected to the key that signed 2.6.4. Its fingerprint is
+    56D6 64C7 0CC2 364C F516  4914 B7DF E8BB 6C24 1FED. It is published
+    on keys.openpgp.org, at flexlexer.org, and in the README.
+
+    Thanks to Joseph Langley.
+
 *** Source files now carry SPDX license identifiers.
 
     Thanks to Tuukka Pasanen.
