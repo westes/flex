@@ -4,6 +4,14 @@ flex NEWS
 
 ** build
 
+*** The ChangeLog that tools/git2cl writes is now valid UTF-8. Author
+    names with accented characters used to come out in a different
+    encoding from the rest of the file, and the script printed "Wide
+    character in print" warnings.
+
+*** The ChangeLog in the nightly distribution tarballs is no longer
+    empty, and the nightly build now fails if it would be.
+
 *** The script that updates the translations from the Translation
     Project now converts any .po file that is not in UTF-8 to UTF-8, so
     every translation in the source tree uses the same encoding.
