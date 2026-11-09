@@ -13,8 +13,9 @@ on:
     - .github/ci-image/**
     - tools/bootstrap-flex
   schedule:
-  # Monthly, to pick up operating system updates.
-  - cron: '17 4 1 * *'
+  # Weekly, to pick up operating system updates. Dependabot checks the base
+  # image on Mondays at 05:00 UTC; this runs a few hours after.
+  - cron: '17 9 * * 1'
   workflow_dispatch:
 
 permissions: {}

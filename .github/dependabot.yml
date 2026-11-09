@@ -17,3 +17,5 @@ updates:
     directory: "/.github/ci-image"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "05:00"
