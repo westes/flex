@@ -51,7 +51,10 @@ jobs:
           update_needed: ${{ steps.update.outputs.needed }}
         if: ${{ env.update_needed == 1 }}
         run: |
-          ./tools/git2cl > $GITHUB_WORKSPACE/ChangeLog
+          # git2cl cannot tell that it has no terminal here, and writes an
+          # empty file unless the log is piped in.
+          git log | ./tools/git2cl > $GITHUB_WORKSPACE/ChangeLog
+          [ -s $GITHUB_WORKSPACE/ChangeLog ] || { echo "::error::The ChangeLog is empty."; exit 1; }
       - name: build
         env:
           update_needed: ${{ steps.update.outputs.needed }}
