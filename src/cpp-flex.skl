@@ -42,19 +42,25 @@ m4_define([[M4_HOOK_STATE_ENTRY_FORMAT]], [[	&yy_transition[$1],
 ]])
 m4_define([[M4_HOOK_NORMAL_STATE_CASE_ARM]], [[	case $1:]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_ARM]], [[	case YY_STATE_EOF($1):]])
-m4_define([[M4_HOOK_EOF_STATE_CASE_FALLTHROUGH]], [[
+m4_define([[M4_HOOK_FALLTHROUGH]], [[
 m4_changequote(<<, >>)
-	#if defined(__has_cpp_attribute)
+	;
+	#if defined(__has_attribute)
+	#if __has_attribute(fallthrough)
+	__attribute__((fallthrough));
+	#elif defined(__has_cpp_attribute)
 	#if __has_cpp_attribute(fallthrough)
 	[[fallthrough]];
 	#endif
-	#elif defined(__has_attribute)
-	#if __has_attribute (fallthrough)
-	__attribute__((fallthrough));
+	#endif
+	#elif defined(__has_cpp_attribute)
+	#if __has_cpp_attribute(fallthrough)
+	[[fallthrough]];
 	#endif
 	#endif
 m4_changequote([[, ]])
 ]])
+m4_define([[M4_HOOK_EOF_STATE_CASE_FALLTHROUGH]], [[M4_HOOK_FALLTHROUGH]])
 m4_define([[M4_HOOK_EOF_STATE_CASE_TERMINATE]], [[		yyterminate();
 ]])
 m4_define([[M4_HOOK_TAKE_YYTEXT]], [[YY_DO_BEFORE_ACTION; /* set up yytext */]])
@@ -2817,7 +2823,7 @@ int yyFlexLexer::yyinput()
 				/* Reset buffer status. */
 				yyrestart( yyin M4_YY_CALL_LAST_ARG);
 
-				/*FALLTHROUGH*/
+				M4_HOOK_FALLTHROUGH
 
 			case EOB_ACT_END_OF_FILE:
 				if ( yywrap( M4_YY_CALL_ONLY_ARG ) ) {
