@@ -21,7 +21,7 @@
 
 AM_CFLAGS = $(WARNINGFLAGS)
 
-TESTS = $(check_PROGRAMS) options.cn skel_option.skel m4_injection.inj header_file_error.hfe
+TESTS = $(check_PROGRAMS) options.cn skel_option.skel m4_injection.inj header_file_error.hfe fallthrough.ft
 
 # The script testwrapper.sh will run most tests as is. A couple tests
 # in the suite end in .direct, .cn. and the like so that we can pass
@@ -29,7 +29,7 @@ TESTS = $(check_PROGRAMS) options.cn skel_option.skel m4_injection.inj header_fi
 # automake knows how to distinguish between the various kinds of tests
 # we have.
 
-TEST_EXTENSIONS = .direct .cn .skel .inj .hfe .i3 .pthread .opt .ser .ver
+TEST_EXTENSIONS = .direct .cn .skel .inj .hfe .ft .i3 .pthread .opt .ser .ver
 
 LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
@@ -46,6 +46,8 @@ INJ_LOG_COMPILER = $(SHELL) $(srcdir)/m4_injection.inj
 AM_INJ_LOG_FLAGS = $(FLEX)
 HFE_LOG_COMPILER = $(SHELL) $(srcdir)/header_file_error.hfe
 AM_HFE_LOG_FLAGS = $(FLEX)
+FT_LOG_COMPILER = $(SHELL) $(srcdir)/fallthrough.ft
+AM_FT_LOG_FLAGS = $(FLEX) "$(CC)" "$(CXX)" $(top_srcdir)/src
 
 I3_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_I3_LOG_FLAGS = -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt
@@ -358,6 +360,7 @@ dist_check_SCRIPTS = \
 	skel_option.skel \
 	m4_injection.inj \
 	header_file_error.hfe \
+	fallthrough.ft \
 	testwrapper-direct.sh \
 	testwrapper.sh
 
