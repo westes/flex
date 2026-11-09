@@ -153,6 +153,16 @@ flex NEWS
 
 ** scanner
 
+*** A generated scanner now marks the places where it falls through from
+    one case to the next with the fall-through attribute, where the
+    compiler supports it, instead of only a comment. Clang, which
+    ignores the comment, no longer warns about them under
+    -Wimplicit-fallthrough. This covers the end-of-file cases for start
+    conditions without an <<EOF>> rule and the fall-through in
+    yyinput(). (#427, #709)
+
+    Thanks to Luca Bacci.
+
 *** A scanner that defines YY_NO_INPUT or YY_NO_UNPUT in section 1 again
     has yyinput() or yyunput() left out, as in flex 2.6.4, and no longer
     gets warnings about unused functions. The new names YY_NO_YYINPUT
