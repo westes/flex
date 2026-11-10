@@ -1,0 +1,35 @@
+#! /bin/sh
+# news-to-markdown: turn a section of NEWS into Markdown for GitHub.
+#
+# Usage: news-to-markdown < NEWS-SECTION > notes.md
+#
+# NEWS marks its outline with asterisks at the start of a line. GitHub
+# renders a release's notes as Markdown, where those mean bullets, so:
+#
+#   "* "   (the release header)   becomes  "# "
+#   "** "  (a category)           becomes  "## "
+#   "*** " (an entry)             becomes  "*   "
+#
+# The entry's continuation lines are already indented four spaces, which
+# is where Markdown wants them under "*   ".
+#
+# A word in angle brackets, such as <cstdint> or <<EOF>>, would be taken
+# for an HTML tag and vanish, so it is wrapped in backticks. Nothing else
+# is changed.
+#
+# This is for the current layout of NEWS, where a "**" line is a short
+# category heading. Older sections use "**" for whole entries.
+
+exec awk '
+{
+    if (sub(/^\*\*\* /, "*   ")) { }
+    else if (sub(/^\*\* /, "## ")) { }
+    else sub(/^\* /, "# ")
+    out = ""
+    while (match($0, /<+[^ <>]+>+/)) {
+        out = out substr($0, 1, RSTART - 1) "`" substr($0, RSTART, RLENGTH) "`"
+        $0 = substr($0, RSTART + RLENGTH)
+    }
+    print out $0
+}
+'

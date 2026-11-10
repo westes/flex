@@ -341,8 +341,11 @@ jobs:
         . out/release-info.txt
         flags=
         [ "$rc" = 1 ] && flags=--prerelease
+        # GitHub shows the notes as Markdown; the announcement keeps NEWS as is.
+        tools/news-to-markdown < out/notes.md > "$RUNNER_TEMP/release-notes.md"
+        [ -s "$RUNNER_TEMP/release-notes.md" ] || { echo "::error::The release notes are empty."; exit 1; }
         gh release create "$tag" --verify-tag --title "flex $version" \
-            --notes-file out/notes.md $flags \
+            --notes-file "$RUNNER_TEMP/release-notes.md" $flags \
             "out/flex-$version.tar.gz" "out/flex-$version.tar.gz.sig" \
             "out/flex-$version.tar.lz" "out/flex-$version.tar.lz.sig" \
             out/SHA256SUMS out/SHA256SUMS.sig out/flex-release-key.asc \
