@@ -111,6 +111,7 @@ SPORADIC_TESTS = \
 	buffer_typedef_legacy \
 	c_cxx_nr \
 	c_cxx_r \
+	cxx_c_buffer_state \
 	cxx_basic \
 	cxx_buffer_stack \
 	cxx_buffer_typedef_legacy \
@@ -211,6 +212,12 @@ legacy_hooks_SOURCES = legacy_hooks.l
 buffer_typedef_legacy_SOURCES = buffer_typedef_legacy.l
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
+cxx_c_buffer_state_SOURCES = \
+	cxx_c_buffer_state_main.cc \
+	cxx_c_buffer_state_flex_first.cc \
+	cxx_c_buffer_state_c.lll \
+	cxx_c_buffer_state_cpp.ll
+nodist_cxx_c_buffer_state_SOURCES = cxx_c_buffer_state_c.h
 cxx_basic_SOURCES = cxx_basic.ll
 cxx_buffer_stack_SOURCES = cxx_buffer_stack.ll
 cxx_buffer_typedef_legacy_SOURCES = cxx_buffer_typedef_legacy.ll
@@ -319,6 +326,9 @@ CLEANFILES = \
 	buffer_typedef_legacy.c \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
+	cxx_c_buffer_state_c.cc \
+	cxx_c_buffer_state_c.h \
+	cxx_c_buffer_state_cpp.cc \
 	cxx_basic.cc \
 	cxx_buffer_stack.cc \
 	cxx_buffer_typedef_legacy.cc \
@@ -403,6 +413,7 @@ EXTRA_DIST = \
 	bison_yylval.txt \
 	c_cxx_nr.txt \
 	c_cxx_r.txt \
+	cxx_c_buffer_state.txt \
 	cxx_basic.txt \
 	cxx_buffer_stack.txt \
 	cxx_multiple_scanners.txt \
@@ -542,6 +553,13 @@ bison_yylval_scanner.h: bison_yylval_scanner.c
 %.cc: %.lll $(FLEX)
 	$(AM_V_LEX)$(FLEX) $(TESTOPTS) -o $@ $<
 
+cxx_c_buffer_state_main.$(OBJEXT): cxx_c_buffer_state_c.h
+cxx_c_buffer_state_flex_first.$(OBJEXT): cxx_c_buffer_state_c.h
+
+cxx_c_buffer_state_c.h: cxx_c_buffer_state_c.cc
+	@if test ! -f $@; then rm -f $<; else :; fi
+	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
+
 header_nr_main.$(OBJEXT): header_nr_scanner.h
 
 header_nr_scanner.h: header_nr_scanner.c
@@ -638,5 +656,3 @@ $(srcdir)/ruleset.am: $(srcdir)/ruleset.sh $(RULESETS)
 #	( cd $(srcdir) && $(SHELL) ruleset.sh nr r c99 go >ruleset.am )
 
 include $(srcdir)/ruleset.am
-
-
