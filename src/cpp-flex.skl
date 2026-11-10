@@ -468,7 +468,12 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 #ifndef YY_TYPEDEF_YYBUFFER
 #define YY_TYPEDEF_YYBUFFER
+m4_ifdef([[M4_MODE_C_ONLY]], [[
+typedef struct yy_c_buffer_state *yybuffer;
+]])
+m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 typedef struct yy_buffer_state *yybuffer;
+]])
 #endif
 
 /* Legacy interface. A program that declares YY_BUFFER_STATE itself
@@ -477,7 +482,12 @@ typedef struct yy_buffer_state *yybuffer;
  */
 #ifndef YY_TYPEDEF_YY_BUFFER_STATE
 #define YY_TYPEDEF_YY_BUFFER_STATE
+m4_ifdef([[M4_MODE_C_ONLY]], [[
+typedef struct yy_c_buffer_state *YY_BUFFER_STATE;
+]])
+m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
+]])
 #endif
 
 #ifndef YY_TYPEDEF_YY_SIZE_T
@@ -550,9 +560,16 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 #define unput(c) yyunput_r( c, YY_G(yytext_ptr) M4_YY_CALL_LAST_ARG )
 ]])
 
+m4_ifdef([[M4_MODE_C_ONLY]], [[
+#ifndef YY_STRUCT_YY_C_BUFFER_STATE
+#define YY_STRUCT_YY_C_BUFFER_STATE
+struct yy_c_buffer_state
+]])
+m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 #ifndef YY_STRUCT_YY_BUFFER_STATE
 #define YY_STRUCT_YY_BUFFER_STATE
 struct yy_buffer_state
+]])
 	{
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 	FILE *yy_input_file;
@@ -3063,7 +3080,7 @@ yybuffer yyFlexLexer::yy_create_buffer( std::istream& file, int size )
 {
 	yybuffer b;
 
-	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
+	b = (yybuffer) yyalloc( sizeof( *b ) M4_YY_CALL_LAST_ARG );
 	if (  b == NULL ) {
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 	}
@@ -3334,14 +3351,14 @@ void yyFlexLexer::yyensure_buffer_stack(void)
 		 * immediate realloc on the next call.
 		 */
 		num_to_alloc = 1; /* After all that talk, this was set to 1 anyways... */
-		YY_G(yy_buffer_stack) = (struct yy_buffer_state**)yyalloc
-								(num_to_alloc * sizeof(struct yy_buffer_state*)
+		YY_G(yy_buffer_stack) = (yybuffer *) yyalloc
+								(num_to_alloc * sizeof(yybuffer)
 								M4_YY_CALL_LAST_ARG);
 		if ( YY_G(yy_buffer_stack) == NULL ) {
 			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
 		}
 
-		memset(YY_G(yy_buffer_stack), 0, num_to_alloc * sizeof(struct yy_buffer_state*));
+		memset(YY_G(yy_buffer_stack), 0, num_to_alloc * sizeof(yybuffer));
 
 		YY_G(yy_buffer_stack_max) = num_to_alloc;
 		YY_G(yy_buffer_stack_top) = 0;
@@ -3353,15 +3370,15 @@ void yyFlexLexer::yyensure_buffer_stack(void)
 		yy_size_t grow_size = 8 /* arbitrary grow size */;
 
 		num_to_alloc = YY_G(yy_buffer_stack_max) + grow_size;
-		YY_G(yy_buffer_stack) = (struct yy_buffer_state**)yyrealloc
+		YY_G(yy_buffer_stack) = (yybuffer *) yyrealloc
 								(YY_G(yy_buffer_stack),
-								num_to_alloc * sizeof(struct yy_buffer_state*)
+								num_to_alloc * sizeof(yybuffer)
 								M4_YY_CALL_LAST_ARG);
 		if (YY_G(yy_buffer_stack) == NULL) {
 			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
 		}
 		/* zero only the new slots.*/
-		memset(YY_G(yy_buffer_stack) + YY_G(yy_buffer_stack_max), 0, grow_size * sizeof(struct yy_buffer_state*));
+		memset(YY_G(yy_buffer_stack) + YY_G(yy_buffer_stack_max), 0, grow_size * sizeof(yybuffer));
 		YY_G(yy_buffer_stack_max) = num_to_alloc;
 	}
 }
@@ -3389,7 +3406,7 @@ yybuffer yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 		/* They forgot to leave room for the EOB's. */
 		return NULL;
 	}
-	b = (yybuffer) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
+	b = (yybuffer) yyalloc( sizeof( *b ) M4_YY_CALL_LAST_ARG );
 	if ( b == NULL ) {
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
 	}
