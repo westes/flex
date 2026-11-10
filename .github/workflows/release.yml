@@ -159,6 +159,23 @@ jobs:
           sh -c './autogen.sh && ./configure && make && make releasecheck'
         tools/check-release -t "$TAG"
 
+    - name: Record the tool versions
+      if: steps.version.outputs.release == 'true'
+      env:
+        image: ${{ needs.image.outputs.ref }}
+      run: |
+        # The announcement lists the tools the release was bootstrapped with.
+        docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
+          -v "$PWD:/src" -w /src "$image" sh -c '
+            autoconf --version | head -n 1
+            automake --version | head -n 1
+            libtoolize --version | head -n 1
+            msgfmt --version | head -n 1
+            bison --version | head -n 1
+            m4 --version | head -n 1
+          ' > tools.txt
+        cat tools.txt
+
     - name: Check the tarball
       if: steps.version.outputs.release == 'true'
       env:
@@ -188,6 +205,7 @@ jobs:
         awk -v v="$VERSION" '/^\* Noteworthy changes in release /{p = index($0, "release " v " (") > 0} p' NEWS > out/notes.md
         [ -s out/notes.md ] || { echo "::error::No NEWS section for $VERSION."; exit 1; }
         cp release.bundle out/
+        cp tools.txt out/
         {
             echo "version=$VERSION"
             echo "tag=$TAG"
@@ -287,6 +305,18 @@ jobs:
         rm -f "$pf"
         ls -l
 
+    - name: Write the announcement
+      run: |
+        . out/release-info.txt
+        export GNUPGHOME="$RUNNER_TEMP/gnupg"
+        gpg --fingerprint --list-options no-show-uid-validity "$PRIMARY_FPR" |
+            sed -n '/^pub/,/^uid/p' > "$RUNNER_TEMP/key.txt"
+        # Written before the push, so a problem here releases nothing. The
+        # tag will point at the first release commit.
+        tools/make-announcement -c "$first" -f out \
+            -k "$RUNNER_TEMP/key.txt" -t out/tools.txt "$version" > out/announcement.txt
+        cat out/announcement.txt
+
     - name: Push the commits and the tag
       run: |
         . out/release-info.txt
@@ -311,7 +341,8 @@ jobs:
             --notes-file out/notes.md $flags \
             "out/flex-$version.tar.gz" "out/flex-$version.tar.gz.sig" \
             "out/flex-$version.tar.lz" "out/flex-$version.tar.lz.sig" \
-            out/SHA256SUMS out/SHA256SUMS.sig out/flex-release-key.asc
+            out/SHA256SUMS out/SHA256SUMS.sig out/flex-release-key.asc \
+            out/announcement.txt
 
     - name: Update the websites
       if: ${{ needs.build.outputs.rc == '0' }}

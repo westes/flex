@@ -1,0 +1,194 @@
+#! /bin/sh
+# make-announcement: write the announcement for a release.
+#
+# Usage: make-announcement [-C DIR] [-c COMMIT] [-d DATE] [-f DIR]
+#                          -k KEYFILE -t TOOLSFILE VERSION
+#
+#   -C DIR       run in the git repository at DIR
+#   -c COMMIT    the commit that the tag vVERSION points at, or will point
+#                at; default vVERSION
+#   -d DATE      the release date as YYYY-MM-DD, default today in UTC
+#   -f DIR       the directory with the release files: the two tarballs,
+#                their .sig files, SHA256SUMS and notes.md (the NEWS section
+#                for this version); default .
+#   -k KEYFILE   the release key as gpg prints it (see the workflow)
+#   -t TOOLSFILE the versions of the tools the release was built with, one
+#                per line
+#
+# VERSION is X.Y.Z or X.Y.Z-rcN. The text is for flex-announce and is
+# written to standard output. The first line is the subject of the email.
+#
+# The counts and the thanks list cover the commits since the most recent
+# earlier final release, never a release candidate. Release commits and
+# commits by bots are left out. The NEWS section is copied unchanged.
+#
+# Nothing is hand-written. Prints a problem on standard error and exits 1
+# if a file is missing or no earlier release is found.
+
+set -eu
+
+# These are the project's fixed addresses and the release key.
+repo=westes/flex
+home=https://flexlexer.org/
+fpr=56D664C70CC2364CF5164914B7DFE8BB6C241FED
+
+dir=.
+files=.
+commit=
+date=$(date -u +%Y-%m-%d)
+keyfile=
+toolsfile=
+
+die() {
+    echo "make-announcement: $*" >&2
+    exit 1
+}
+
+while getopts :C:c:d:f:k:t:h OPTION; do
+    case $OPTION in
+        C) dir=$OPTARG ;;
+        c) commit=$OPTARG ;;
+        d) date=$OPTARG ;;
+        f) files=$OPTARG ;;
+        k) keyfile=$OPTARG ;;
+        t) toolsfile=$OPTARG ;;
+        h) sed -n '2,/^$/p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        *) die "unknown option -$OPTARG" ;;
+    esac
+done
+shift $((OPTIND - 1))
+[ $# -eq 1 ] || die "give exactly one VERSION"
+version=$1
+
+case $version in
+    [0-9]*.[0-9]*.[0-9]*) ;;
+    *) die "the version '$version' is not X.Y.Z or X.Y.Z-rcN" ;;
+esac
+case $version in
+    *-rc[0-9]*) base=${version%-rc*}; kind='pre-release'; what='a release candidate' ;;
+    *) base=$version; kind='stable'; what='a stable release' ;;
+esac
+tag=v$version
+[ -n "$commit" ] || commit=$tag
+
+[ -f "$keyfile" ] || die "give the key description with -k"
+[ -f "$toolsfile" ] || die "give the tool versions with -t"
+for f in "flex-$version.tar.gz" "flex-$version.tar.lz" \
+         "flex-$version.tar.gz.sig" "flex-$version.tar.lz.sig" \
+         SHA256SUMS SHA256SUMS.sig notes.md; do
+    [ -f "$files/$f" ] || die "$files/$f is missing"
+done
+[ -s "$files/notes.md" ] || die "$files/notes.md is empty"
+
+git="git -C $dir"
+hash=$($git rev-parse --verify "$commit^{commit}") || die "no commit $commit"
+
+# The previous final release: the greatest vX.Y.Z below this X.Y.Z.
+prev=$($git tag -l 'v[0-9]*.[0-9]*.[0-9]*' | grep -v -e '-' |
+    { cat; echo "v$base"; } | sort -uV |
+    awk -v b="v$base" '$0 == b {print last; exit} {last = $0}')
+[ -n "$prev" ] || die "no final release before $base"
+
+range=$prev..$hash
+# Not release commits, not bots.
+filter="--perl-regexp --author=^(?!.*\[bot\]).*\$ --grep=^release: --invert-grep"
+# shellcheck disable=SC2086
+commits=$($git rev-list --count $filter "$range")
+# shellcheck disable=SC2086
+shortlog=$($git shortlog -s -n $filter "$range")
+people=$(printf '%s\n' "$shortlog" | grep -c . || true)
+
+prevdate=$($git log -1 --format=%cs "$prev")
+days=$(( ($(date -u -d "$date" +%s) - $(date -u -d "$prevdate" +%s)) / 86400 ))
+weeks=$(( (days + 3) / 7 ))
+[ "$weeks" -ge 1 ] || weeks=1
+case $weeks in 1) weeks_word='week' ;; *) weeks_word='weeks' ;; esac
+
+url=https://github.com/$repo/releases/download/$tag
+size() {
+    numfmt --to=iec --format=%.1f "$(wc -c < "$files/$1")"
+}
+
+cat <<EOF
+Subject: flex-$version released [$kind]
+
+This is to announce flex-$version, $what.
+
+There have been $commits commits by $people people in $weeks $weeks_word since ${prev#v}.
+
+See the NEWS below for a brief summary.
+
+Thanks to everyone who has contributed! The following people contributed changes to this release:
+
+$shortlog
+
+Will
+[on behalf of the flex maintainers]
+
+==================================================================
+
+Here is the flex home page:
+  $home
+
+Here are the compressed sources:
+  $url/flex-$version.tar.gz   ($(size "flex-$version.tar.gz"))
+  $url/flex-$version.tar.lz   ($(size "flex-$version.tar.lz"))
+
+Here are the GPG detached signatures:
+  $url/flex-$version.tar.gz.sig
+  $url/flex-$version.tar.lz.sig
+
+Here are the SHA256 checksums:
+
+$(cat "$files/SHA256SUMS")
+
+To check them, download SHA256SUMS and the tarballs into one directory
+and run:
+  sha256sum --check SHA256SUMS
+SHA256SUMS is signed too:
+  $url/SHA256SUMS.sig
+
+Use a .sig file to verify that the corresponding file (without the .sig
+suffix) is intact. First, be sure to download both the .sig file and the
+corresponding tarball. Then, run a command like this:
+
+  gpg --verify flex-$version.tar.gz.sig
+
+The signature should match the fingerprint of the following key:
+
+$(cat "$keyfile")
+
+If that command fails because you don't have the required public key,
+then run this command to import it:
+
+  gpg --keyserver keys.openpgp.org --recv-keys $fpr
+
+or download it from the release page:
+
+  $url/flex-release-key.asc
+
+and import it with gpg --import.
+
+This release is based on the flex git repository, available as
+
+  git clone https://github.com/$repo.git
+
+with commit $hash tagged as $tag.
+
+For a summary of changes and contributors, see:
+
+  https://github.com/$repo/compare/$prev...$tag
+
+or run this command from a git-cloned flex directory:
+
+  git shortlog $prev..$tag
+
+This release was bootstrapped with the following tools:
+$(sed 's/^/  /' "$toolsfile")
+
+NEWS
+
+$(cat "$files/notes.md")
+
+Also posted at https://github.com/$repo/releases/tag/$tag
+EOF
