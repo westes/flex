@@ -2,6 +2,11 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** build
+
+*** tools/bootstrap-flex now builds flex 2.6.5 and checks its signature
+    against the flex release key, as well as its hash. It needs gpg.
+
 * Noteworthy changes in release 2.6.5 (2026-11-10) [stable]
 
 ** build
