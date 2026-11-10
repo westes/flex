@@ -29,7 +29,8 @@ mkdir "$work/repo" "$work/files"
 git -C "$work/repo" init -q .
 commit Old 'fix: an old fix'
 git -C "$work/repo" tag v2.6.3
-commit Old 'fix: another old fix'
+# Pin the date of v2.6.4 so the day counts below do not depend on today.
+GIT_COMMITTER_DATE='2026-11-06T12:00:00Z' commit Old 'fix: another old fix'
 git -C "$work/repo" tag v2.6.4
 commit Alice 'fix: one'
 commit Alice 'fix: two'
@@ -50,8 +51,9 @@ printf '* Noteworthy changes in release 2.6.5-rc2 (2026-11-09) [pre-release]\n\n
 printf 'pub   ed25519 2026-11-09 [C]\n      AAAA BBBB\nuid   Flex Releases\n' > "$work/key.txt"
 printf 'autoconf 2.71\n' > "$work/tools.txt"
 
+# run VERSION: announce on 2026-11-09 (3 days after v2.6.4) unless DATE is set.
 run() {
-    "$make_announcement" -C "$work/repo" -c HEAD -d 2026-11-09 \
+    "$make_announcement" -C "$work/repo" -c HEAD -d "${DATE:-2026-11-09}" \
         -f "$work/files" -k "$work/key.txt" -t "$work/tools.txt" "$@"
 }
 
@@ -63,7 +65,7 @@ else
         fail "subject: $(head -n 1 "$out")"
     # Counted since v2.6.4, the final release, not v2.6.5-rc1: fix one, two,
     # three and four; not the bot's commits.
-    grep -q '^There have been 4 commits by 2 people in 1 week since 2.6.4\.$' "$out" ||
+    grep -q '^There have been 4 commits by 2 people in 3 days since 2.6.4\.$' "$out" ||
         fail "counts: $(grep '^There have been' "$out")"
     grep -q 'Alice' "$out" || fail "Alice is not thanked"
     grep -q 'Bob' "$out" || fail "Bob is not thanked"
@@ -90,6 +92,18 @@ if run 2.6.5 > "$work/out2" 2> "$work/err"; then
 else
     fail "final should succeed: $(cat "$work/err")"
 fi
+
+# Under a week is counted in days; from a week on, in whole weeks rounded down.
+span_check() {
+    DATE=$1 run 2.6.5-rc2 2> /dev/null | grep -q "^There have been .* in $2 since 2\\.6\\.4\\.\$" ||
+        fail "span on $1 should be $2"
+}
+span_check 2026-11-06 '0 days'
+span_check 2026-11-07 '1 day'
+span_check 2026-11-12 '6 days'
+span_check 2026-11-13 '1 week'
+span_check 2026-11-19 '1 week'
+span_check 2026-11-20 '2 weeks'
 
 # Missing or empty input is refused.
 : > "$work/files/notes.md"

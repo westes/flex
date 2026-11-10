@@ -105,9 +105,15 @@ shortlog=$(printf '%s\n' "$counted" | grep . | LC_ALL=C sort | uniq -c |
 
 prevdate=$($git log -1 --format=%cs "$prev")
 days=$(( ($(date -u -d "$date" +%s) - $(date -u -d "$prevdate" +%s)) / 86400 ))
-weeks=$(( (days + 3) / 7 ))
-[ "$weeks" -ge 1 ] || weeks=1
-case $weeks in 1) weeks_word='week' ;; *) weeks_word='weeks' ;; esac
+# Whole weeks, rounded down. Under a week, say the days instead.
+weeks=$(( days / 7 ))
+if [ "$weeks" -ge 1 ]; then
+    n=$weeks unit=week
+else
+    n=$days unit=day
+fi
+[ "$n" -eq 1 ] || unit=${unit}s
+span="$n $unit"
 
 url=https://github.com/$repo/releases/download/$tag
 size() {
@@ -119,7 +125,7 @@ Subject: flex-$version released [$kind]
 
 This is to announce flex-$version, $what.
 
-There have been $commits commits by $people people in $weeks $weeks_word since ${prev#v}.
+There have been $commits commits by $people people in $span since ${prev#v}.
 
 See the NEWS below for a brief summary.
 
