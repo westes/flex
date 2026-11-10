@@ -17,6 +17,12 @@ on:
   # image on Mondays at 05:00 UTC; this runs a few hours after.
   - cron: '17 9 * * 1'
   workflow_dispatch:
+    inputs:
+      prune:
+        description: What to do about old images in the registry (list shows what would go)
+        type: choice
+        options: [ list, delete ]
+        default: list
 
 permissions: {}
 
@@ -104,3 +110,53 @@ jobs:
             --title "chore(ci): use the rebuilt CI image" \
             --body "The CI image was rebuilt, and the build workflow passed in it. This changes the reference in .github/ci-image-ref to $REF."
         fi
+
+  prune:
+    name: Remove old images
+    # Needs only the push, not the test, so a failed test does not let the
+    # registry grow. A push or the weekly run deletes. A run started by hand
+    # only lists, unless it is asked to delete.
+    needs: image
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      OWNER: ${{ github.repository_owner }}
+      MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.prune || 'delete' }}
+      # The newest versions to keep. Each weekly run adds one.
+      KEEP: 10
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - name: Remove old versions of the image
+      run: |
+        # Never remove the image that .github/ci-image-ref names: every CI job
+        # pulls it by that digest.
+        current=$(sed -n 's/^.*@//p' .github/ci-image-ref)
+        case $current in
+          sha256:*) ;;
+          *) echo "::error::No digest in .github/ci-image-ref."; exit 1 ;;
+        esac
+        gh api --paginate "users/$OWNER/packages/container/flex-ci/versions?per_page=100" \
+          --jq '.[] | [.id, .name, .created_at] | @tsv' | sort -t "$(printf '\t')" -k3 -r > versions.tsv
+        total=$(wc -l < versions.tsv)
+        if [ "$total" -eq 0 ]; then
+          echo "::error::The registry listed no versions."
+          exit 1
+        fi
+        awk -F '\t' -v keep="$current" -v n="$KEEP" 'NR > n && $2 != keep {print $1}' versions.tsv > remove.txt
+        count=$(wc -l < remove.txt)
+        {
+          echo "### Old images"
+          echo
+          echo "$total versions in the registry; keeping the newest $KEEP and $current."
+          echo "Mode: $MODE. $count to remove."
+        } >> "$GITHUB_STEP_SUMMARY"
+        echo "$total versions, $count to remove, mode $MODE"
+        while read -r id; do
+          grep -P "^$id\t" versions.tsv
+          if [ "$MODE" = delete ]; then
+            gh api -X DELETE "users/$OWNER/packages/container/flex-ci/versions/$id"
+          fi
+        done < remove.txt
