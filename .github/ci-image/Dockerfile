@@ -51,10 +51,10 @@ FROM ${UBUNTU_IMAGE}
 # The same tools the workflows installed, minus gettext and autopoint. The
 # hosted runner image preinstalls others that the workflows never listed,
 # which a bare container lacks: build-essential, git and certificates are
-# added here, and curl is for the bootstrap script below.
+# added here, and curl and gnupg are for the bootstrap script below.
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        build-essential ca-certificates curl git \
+        build-essential ca-certificates curl git gnupg \
         gcc clang autoconf automake libtool bison help2man lzip texinfo texlive \
  && rm -rf /var/lib/apt/lists/*
 
@@ -62,6 +62,7 @@ COPY --from=gettext /staging/usr/local /usr/local
 RUN ldconfig
 
 # A git checkout has no scan.c, and building it needs a flex that is already
-# installed. Build the previous release, which ships a scan.c.
+# installed. Build a release, which ships a scan.c. The script checks its
+# hash and its signature.
 COPY tools/bootstrap-flex /tmp/bootstrap-flex
 RUN sh /tmp/bootstrap-flex /usr/local && rm /tmp/bootstrap-flex

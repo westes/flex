@@ -7,13 +7,23 @@
 # PREFIX/bin on your PATH before running ./autogen.sh and ./configure in the
 # checkout.
 #
+# The tarball is checked against a pinned SHA-256 and against the signature
+# of the flex release key, whose fingerprint is written below. That needs gpg.
+#
 # Usage: tools/bootstrap-flex PREFIX
 
 set -e
 
-# The release to bootstrap from. Update both lines after each new release.
-version=2.6.4
-sha256=e87aae032bf07c26f85ac0ed3250998c37621d95f8bd748b31f15b33c45ee995
+# The release to bootstrap from, signed by the flex release key (2.6.5 is the
+# first release it signed). This only needs to change when the flex source
+# can no longer be built by this release or when this release is withdrawn:
+# update both lines, to a release signed by the key.
+version=2.6.5
+sha256=4dfb3d6095c0cd58f050dd66fa132ad52c118c5ae26a4bddd916557720920769
+# The fingerprint of the release key's primary key. The signature must have
+# been made by this key (or one of its subkeys); a key that comes with the
+# download proves nothing.
+key_fpr=56D664C70CC2364CF5164914B7DFE8BB6C241FED
 
 if test $# -ne 1; then
     echo "usage: $0 PREFIX" >&2
@@ -22,21 +32,33 @@ fi
 prefix=$1
 
 tarball=flex-$version.tar.gz
-url=https://github.com/westes/flex/releases/download/v$version/$tarball
+base=https://github.com/westes/flex/releases/download/v$version
+url=$base/$tarball
 
 workdir=$(mktemp -d)
 trap 'rm -rf "$workdir"' EXIT
 cd "$workdir"
 
-echo "Downloading $url"
-if command -v curl >/dev/null 2>&1; then
-    curl -fsSLO "$url"
-elif command -v wget >/dev/null 2>&1; then
-    wget -q "$url"
-else
-    echo "error: need curl or wget to download $tarball" >&2
+if ! command -v gpg >/dev/null 2>&1; then
+    echo "error: need gpg to check the signature of $tarball" >&2
     exit 1
 fi
+
+fetch() {
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsSLO "$1"
+    elif command -v wget >/dev/null 2>&1; then
+        wget -q "$1"
+    else
+        echo "error: need curl or wget to download $tarball" >&2
+        exit 1
+    fi
+}
+
+echo "Downloading $url"
+fetch "$url"
+fetch "$url.sig"
+fetch "$base/flex-release-key.asc"
 
 if command -v sha256sum >/dev/null 2>&1; then
     actual=$(sha256sum "$tarball" | cut -d ' ' -f 1)
@@ -45,6 +67,19 @@ else
 fi
 if test "$actual" != "$sha256"; then
     echo "error: $tarball has sha256 $actual, expected $sha256" >&2
+    exit 1
+fi
+
+# Import the key into a keyring of its own and require a good signature
+# made by the key with the pinned fingerprint. VALIDSIG ends with the
+# fingerprint of the primary key.
+GNUPGHOME=$workdir/gnupg
+export GNUPGHOME
+mkdir -m 700 "$GNUPGHOME"
+gpg --batch --quiet --import flex-release-key.asc
+if ! gpg --batch --status-fd 1 --verify "$tarball.sig" "$tarball" 2>/dev/null |
+        grep -q "^\[GNUPG:\] VALIDSIG .* $key_fpr\$"; then
+    echo "error: $tarball is not signed by the flex release key $key_fpr" >&2
     exit 1
 fi
 
