@@ -151,6 +151,10 @@ jobs:
         TAG: ${{ steps.version.outputs.tag }}
         image: ${{ needs.image.outputs.ref }}
       run: |
+        # The tag points at the first release commit. For a final release the
+        # second commit adds the placeholder header for the next release, so
+        # build from the first, which is what the tag and the tarballs name.
+        git checkout --detach "$(head -n 1 commits.txt)"
         # git2cl cannot tell that it has no terminal here, and writes an
         # empty file unless the log is piped in.
         git log | ./tools/git2cl > ChangeLog
