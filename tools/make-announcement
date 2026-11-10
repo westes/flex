@@ -90,13 +90,18 @@ prev=$($git tag -l 'v[0-9]*.[0-9]*.[0-9]*' | grep -v -e '-' |
 [ -n "$prev" ] || die "no final release before $base"
 
 range=$prev..$hash
-# Not release commits, not bots.
-filter="--perl-regexp --author=^(?!.*\[bot\]).*\$ --grep=^release: --invert-grep"
-# shellcheck disable=SC2086
-commits=$($git rev-list --count $filter "$range")
-# shellcheck disable=SC2086
-shortlog=$($git shortlog -s -n $filter "$range")
-people=$(printf '%s\n' "$shortlog" | grep -c . || true)
+# One line per commit that counts: not a release commit, not a bot. This is
+# done here and not with git's own --author and --grep options, because
+# combining those with --invert-grep behaves differently between versions
+# of git.
+tab=$(printf '\t')
+counted=$($git log --format="%aN$tab%aE$tab%s" "$range" |
+    awk -F "$tab" '$1 !~ /\[bot\]/ && $2 !~ /\[bot\]/ && $3 !~ /^release:/ {print $1}')
+commits=$(printf '%s\n' "$counted" | grep -c . || true)
+people=$(printf '%s\n' "$counted" | grep . | sort -u | grep -c . || true)
+shortlog=$(printf '%s\n' "$counted" | grep . | LC_ALL=C sort | uniq -c |
+    awk '{n = $1; sub(/^ *[0-9]+ /, ""); printf "%6d\t%s\n", n, $0}' |
+    LC_ALL=C sort -t "$tab" -k1,1nr -k2)
 
 prevdate=$($git log -1 --format=%cs "$prev")
 days=$(( ($(date -u -d "$date" +%s) - $(date -u -d "$prevdate" +%s)) / 86400 ))
