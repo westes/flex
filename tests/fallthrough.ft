@@ -120,14 +120,24 @@ usable () {
 }
 
 # check_one KIND COMPILER STD LABEL: compile one generated scanner and
-# fail if the compiler complains about the fall-through marking.  Other
-# warnings, such as fileno() being undeclared under strict C99, are not
-# this test's business.
+# fail if the compiler cannot compile it, or complains about the
+# fall-through marking.  Other warnings are not this test's business.
+#
+# An undeclared function is an error in recent compilers (GCC 14 and
+# Clang 16 and later) and only a warning in older ones, so C scanners
+# are compiled with that warning made an error.  Otherwise the result
+# would depend on the age of the compiler.  Strict language standards
+# such as -std=c99 hide functions that are not part of ISO C, and the
+# scanner uses one of them to tell whether its input is a terminal.
 check_one () {
     kind=$1; cc=$2; std=$3; label=$4
-    if [ "$kind" = c ]; then file=$work/$label.c; else file=$work/$label.cc; fi
+    if [ "$kind" = c ]; then
+        file=$work/$label.c; werror=-Werror=implicit-function-declaration
+    else
+        file=$work/$label.cc; werror=
+    fi
     if ! $cc -c -o /dev/null -std="$std" -Wall -Wextra -Wimplicit-fallthrough \
-        -pedantic -I"$work" -I"$INCDIR" "$file" > "$work/cc.txt" 2>&1; then
+        $werror -pedantic -I"$work" -I"$INCDIR" "$file" > "$work/cc.txt" 2>&1; then
         fail "$label: $cc -std=$std: compilation failed"
         sed -e "s|$work/||" -e 's/^/    /' "$work/cc.txt" >&2
     fi
