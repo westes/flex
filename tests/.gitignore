@@ -41,6 +41,8 @@ bison_yylval_scanner.[ch]
 bol*
 !bol.rules
 !bol.txt
+at_bol_member
+at_bol_member.c
 buffer_typedef_legacy
 buffer_typedef_legacy.c
 c_cxx_nr
@@ -54,6 +56,8 @@ cxx_basic
 cxx_basic.cc
 cxx_buffer_typedef_legacy
 cxx_buffer_typedef_legacy.cc
+cxx_legacy_members
+cxx_legacy_members.cc
 cxx_multiple_scanners
 cxx_multiple_scanners_[12].cc
 cxx_reject
@@ -72,6 +76,10 @@ defaultrule*
 !defaultrule.txt
 echo_override_r
 echo_override_r.c
+flex_debug_nr
+flex_debug_nr_scanner.c
+flex_debug_prefix_nr
+flex_debug_prefix_nr_scanner.c
 extended*
 !extended.rules
 !extended.txt
@@ -91,6 +99,8 @@ include_by_push.direct
 include_by_push.direct.c
 include_by_reentrant.direct
 include_by_reentrant.direct.c
+legacy_defines_nr
+legacy_defines_nr.c
 lexcompat*
 !lexcompat.rules
 !lexcompat.txt

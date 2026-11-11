@@ -75,17 +75,22 @@ SPORADIC_TESTS = \
 	bison_nr \
 	bison_yylloc \
 	bison_yylval \
+	at_bol_member \
 	buffer_typedef_legacy \
 	c_cxx_nr \
 	c_cxx_r \
 	cxx_basic \
 	cxx_buffer_typedef_legacy \
+	cxx_legacy_members \
 	cxx_multiple_scanners \
 	cxx_reject \
 	cxx_restart \
 	echo_override_r \
+	flex_debug_nr \
+	flex_debug_prefix_nr \
 	header_nr \
 	header_r \
+	legacy_defines_nr \
 	lineno_generated \
 	mem_nr \
 	mem_r \
@@ -141,16 +146,20 @@ bison_nr_SOURCES = no_bison_stub.c
 bison_yylloc_SOURCES = no_bison_stub.c
 bison_yylval_SOURCES = no_bison_stub.c
 endif
+at_bol_member_SOURCES = at_bol_member.l
 buffer_typedef_legacy_SOURCES = buffer_typedef_legacy.l
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
 cxx_basic_SOURCES = cxx_basic.ll
 cxx_buffer_typedef_legacy_SOURCES = cxx_buffer_typedef_legacy.ll
+cxx_legacy_members_SOURCES = cxx_legacy_members.ll
 cxx_reject_SOURCES = cxx_reject.ll
 cxx_restart_SOURCES = cxx_restart.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
 cxx_yywrap_i3_SOURCES = cxx_yywrap.ll
 echo_override_r_SOURCES = echo_override_r.l
+flex_debug_nr_SOURCES = flex_debug_nr_scanner.l flex_debug_nr_main.c
+flex_debug_prefix_nr_SOURCES = flex_debug_prefix_nr_scanner.l flex_debug_prefix_nr_main.c
 header_nr_SOURCES = header_nr_scanner.l header_nr_main.c
 nodist_header_nr_SOURCES = header_nr_scanner.h
 header_r_SOURCES = header_r_scanner.l header_r_main.c
@@ -158,6 +167,7 @@ nodist_header_r_SOURCES = header_r_scanner.h
 include_by_buffer_direct_SOURCES = include_by_buffer.direct.l
 include_by_push_direct_SOURCES = include_by_push.direct.l
 include_by_reentrant_direct_SOURCES = include_by_reentrant.direct.l
+legacy_defines_nr_SOURCES = legacy_defines_nr.l
 lineno_generated_SOURCES = lineno_generated.l
 lineno_generated.l: lineno_generated.l.in
 	grep -n '@LINE@' $^ | sed -e 's%^\([0-9]\+\):.*%\1s/@LINE@/\1/%' | sed -f - $^ > $@.t && mv $@.t $@
@@ -217,17 +227,21 @@ CLEANFILES = \
 	bison_yylval_parser.h \
 	bison_yylval_scanner.c \
 	bison_yylval_scanner.h \
+	at_bol_member.c \
 	buffer_typedef_legacy.c \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
 	cxx_basic.cc \
 	cxx_buffer_typedef_legacy.cc \
+	cxx_legacy_members.cc \
 	cxx_multiple_scanners_1.cc \
 	cxx_multiple_scanners_2.cc \
 	cxx_reject.cc \
 	cxx_restart.cc \
 	cxx_yywrap.cc \
 	echo_override_r.c \
+	flex_debug_nr_scanner.c \
+	flex_debug_prefix_nr_scanner.c \
 	header_nr_scanner.c \
 	header_nr_scanner.h \
 	header_r_scanner.c \
@@ -235,6 +249,7 @@ CLEANFILES = \
 	include_by_buffer.direct.c \
 	include_by_push.direct.c \
 	include_by_reentrant.direct.c \
+	legacy_defines_nr.c \
 	lineno_generated.c \
 	lineno_generated.l \
 	mem_nr.c \
