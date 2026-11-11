@@ -7,6 +7,16 @@ flex NEWS
 *** tools/bootstrap-flex now builds flex 2.6.5 and checks its signature
     against the flex release key, as well as its hash. It needs gpg.
 
+** scanner
+
+*** A generated scanner no longer fails to compile in a program that
+    defines a macro named fallthrough, as the Linux kernel's headers do.
+    Flex 2.6.5 wrote the fall-through marker with that plain name, so
+    the macro was expanded inside the scanner. The scanner now uses the
+    reserved spelling __fallthrough__ for the attribute. (#842)
+
+    Thanks to Luca Bacci; reported by Philip Müller.
+
 * Noteworthy changes in release 2.6.5 (2026-11-10) [stable]
 
 ** build
