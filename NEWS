@@ -2,6 +2,15 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** build
+
+*** Flex now builds when configured with --disable-nls. It failed to
+    compile with a compiler that treats a call to an undeclared function
+    as an error, because the report of backing-up states used a function
+    that is only declared when translations are enabled. (#844)
+
+    Thanks to Hendrik Donner.
+
 * Noteworthy changes in release 2.6.7 (2026-11-11) [stable]
 
 ** scanner
