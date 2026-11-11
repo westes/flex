@@ -2,6 +2,18 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A generated scanner now compiles when the program is built in a
+    strict ISO C mode, such as -std=c99, with a compiler that treats a
+    call to an undeclared function as an error (GCC 14 and later, Clang
+    16 and later). Those modes hide a function the scanner needs to tell
+    whether its input is a terminal, and the scanner now declares it
+    itself. This also fixes "make check" failing in flex 2.6.6 with
+    those compilers. (#845)
+
+    Thanks to Philip Müller and K1ngfish3r for reporting it.
+
 * Noteworthy changes in release 2.6.6 (2026-11-11) [stable]
 
 ** build

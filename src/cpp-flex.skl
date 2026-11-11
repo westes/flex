@@ -285,6 +285,15 @@ m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]], ,
     defined(_POSIX_SOURCE))
 # define _POSIX_C_SOURCE 1 /* Required for fileno() */
 # define _POSIX_SOURCE 1
+# if defined(__STRICT_ANSI__)
+/* In a strict ISO C mode the headers have already been set up without
+ * POSIX, so the definitions above come too late to make <stdio.h>
+ * declare fileno().  Declare it here instead of changing what the user's
+ * code can see.
+ */
+#  include <stdio.h>
+extern int fileno(FILE *);
+# endif
 #endif]])]])
 #include <stdio.h>
 #include <string.h>
