@@ -4,6 +4,18 @@ flex NEWS
 
 ** scanner
 
+*** Four names that programs used with flex 2.6.4, and that flex 2.6.5
+    changed, work again. The global debug flag is again called
+    yy_flex_debug (with a prefix, the prefix followed by _flex_debug),
+    so a program that declares it with its own extern declaration links
+    again; in a C++ scanner it is again the yy_flex_debug member of
+    yyFlexLexer. The buffer structure's member that records whether the
+    scanner is at the beginning of a line is again called yy_at_bol. A
+    definition of YY_READ_BUF_SIZE in the scanner file is used again.
+    Defining FLEXINT_H again keeps the scanner from declaring its own
+    integer types, for a program that supplies them. The new names
+    yyflexdebug and yyatbol() continue to work.
+
 *** A generated scanner compiles again in a program that declares
     YY_BUFFER_STATE itself, guarded by YY_TYPEDEF_YY_BUFFER_STATE, as it
     did with flex 2.6.4. Flex 2.6.5 declared its new yybuffer type under
