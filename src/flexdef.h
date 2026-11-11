@@ -91,12 +91,16 @@
 
 /* We use gettext. So, when we write strings which should be translated, we
  * mark them with _()
+ *
+ * gettext.h is always included: with NLS disabled it supplies no-op versions
+ * of gettext, ngettext and friends, which code such as ngettext() in main.c
+ * calls directly.
  */
+#include "gettext.h"
 #if defined(ENABLE_NLS) && ENABLE_NLS
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif /* HAVE_LOCALE_H */
-#include "gettext.h"
 #define _(String) gettext (String)
 #else
 #define _(STRING) STRING
