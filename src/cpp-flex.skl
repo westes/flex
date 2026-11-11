@@ -46,16 +46,16 @@ m4_define([[M4_HOOK_FALLTHROUGH]], [[
 m4_changequote(<<, >>)
 	;
 	#if defined(__has_attribute)
-	#if __has_attribute(fallthrough)
-	__attribute__((fallthrough));
+	#if __has_attribute(__fallthrough__)
+	__attribute__((__fallthrough__));
 	#elif defined(__has_cpp_attribute)
-	#if __has_cpp_attribute(fallthrough)
-	[[fallthrough]];
+	#if __has_cpp_attribute(__fallthrough__)
+	[[__fallthrough__]];
 	#endif
 	#endif
 	#elif defined(__has_cpp_attribute)
-	#if __has_cpp_attribute(fallthrough)
-	[[fallthrough]];
+	#if __has_cpp_attribute(__fallthrough__)
+	[[__fallthrough__]];
 	#endif
 	#endif
 m4_changequote([[, ]])
