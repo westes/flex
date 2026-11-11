@@ -41,6 +41,8 @@ bison_yylval_scanner.[ch]
 bol*
 !bol.rules
 !bol.txt
+buffer_typedef_legacy
+buffer_typedef_legacy.c
 c_cxx_nr
 c_cxx_nr.cc
 c_cxx_r
@@ -50,6 +52,8 @@ ccl*
 !ccl.txt
 cxx_basic
 cxx_basic.cc
+cxx_buffer_typedef_legacy
+cxx_buffer_typedef_legacy.cc
 cxx_multiple_scanners
 cxx_multiple_scanners_[12].cc
 cxx_reject
