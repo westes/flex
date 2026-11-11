@@ -10,6 +10,12 @@
 # the scanner uses must work for each compiler we can find, in each
 # language standard it supports, without -pedantic noticing it.
 #
+# A program that includes a scanner may also define a macro named
+# fallthrough, as the Linux kernel's headers do.  The scanner must still
+# compile, so the marker may not be written with the plain name
+# fallthrough, which such a macro would expand.  A compiler that cannot
+# compile the scanner at all fails the test, as well as one that warns.
+#
 # The compilers tried are the ones given on the command line, then gcc,
 # clang and any clang-N or g++/clang++ found on PATH.  A compiler is
 # used only if it can compile a trivial file in the mode in question
@@ -64,6 +70,22 @@ x		;
 %%
 EOF
 
+# The same, in a program that defines fallthrough as a macro the way
+# the Linux kernel does.
+cat > "$work/ftmacro.l" <<'EOF'
+%top{
+#define fallthrough __attribute__((__fallthrough__))
+}
+%option noyywrap
+%x A B
+%%
+x		;
+<A>a		;
+<B>b		;
+<B><<EOF>>	{ yyterminate(); }
+%%
+EOF
+
 # Candidate compilers, one per line.  Duplicates are harmless.
 candidates () {
     kind=$1   # c or c++
@@ -104,8 +126,11 @@ usable () {
 check_one () {
     kind=$1; cc=$2; std=$3; label=$4
     if [ "$kind" = c ]; then file=$work/$label.c; else file=$work/$label.cc; fi
-    $cc -c -o /dev/null -std="$std" -Wall -Wextra -Wimplicit-fallthrough \
-        -pedantic -I"$work" -I"$INCDIR" "$file" > "$work/cc.txt" 2>&1
+    if ! $cc -c -o /dev/null -std="$std" -Wall -Wextra -Wimplicit-fallthrough \
+        -pedantic -I"$work" -I"$INCDIR" "$file" > "$work/cc.txt" 2>&1; then
+        fail "$label: $cc -std=$std: compilation failed"
+        sed -e "s|$work/||" -e 's/^/    /' "$work/cc.txt" >&2
+    fi
     if grep -i -E 'fall.?through|does not support .*attribute|label can only be part|unknown attribute' \
         "$work/cc.txt" | grep -E 'warning|error' > "$work/hits.txt"; then
         fail "$label: $cc -std=$std"
@@ -150,7 +175,10 @@ gen c   default   ft.l
 gen c   reentrant ft.l --reentrant
 gen c   c99       ft.l -e c99
 gen c   single    ft1.l
+gen c   macro     ftmacro.l
+gen c   macro99   ftmacro.l -e c99
 gen c++ cxx       ft.l --c++
+gen c++ cxxmacro  ftmacro.l --c++
 
 run_kind c   "c99 c11 c17 c2x gnu99 gnu11" "$c_labels"
 run_kind c++ "c++98 c++11 c++17 gnu++11"   "$cxx_labels"
