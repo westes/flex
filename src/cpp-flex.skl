@@ -122,7 +122,7 @@ m4_ifelse(M4_MODE_PREFIX,yy,,
 #define yypush_buffer_state M4_MODE_PREFIX[[push_buffer_state]]
 #define yypop_buffer_state M4_MODE_PREFIX[[pop_buffer_state]]
 #define yyensure_buffer_stack M4_MODE_PREFIX[[ensure_buffer_stack]]
-#define yyflexdebug M4_MODE_PREFIX[[flexdebug]]
+#define yy_flex_debug M4_MODE_PREFIX[[_flex_debug]]
 #define yyin M4_MODE_PREFIX[[in]]
 #define yyleng M4_MODE_PREFIX[[leng]]
 #define yylex M4_MODE_PREFIX[[lex]]
@@ -181,6 +181,8 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
      * altogether.
      */
     #define yyFlexLexer M4_MODE_PREFIX[[FlexLexer]]
+    /* The member keeps its old name; yyflexdebug is the new spelling. */
+    #define yyflexdebug yy_flex_debug
 ]])
 
 m4_ifdef([[M4_MODE_C_ONLY]], [[
@@ -250,7 +252,7 @@ m4_ifdef( [[M4_YY_NOT_REENTRANT]],
     M4_GEN_PREFIX(`leng')
     M4_GEN_PREFIX(`in')
     M4_GEN_PREFIX(`out')
-    M4_GEN_PREFIX(`flexdebug')
+    M4_GEN_PREFIX(`_flex_debug')
     M4_GEN_PREFIX(`lineno')
 ]])
 )
@@ -317,7 +319,12 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 /* end standard C++ headers. */
 ]])
 
+/* A program that defines FLEXINT_H, the guard flex 2.6.4 used, supplies
+ * the flex integer types itself.
+ */
+#ifndef FLEXINT_H
 m4preproc_include(`flexint_shared.h')
+#endif
 
 /* TODO: this is always defined, so inline it */
 #define yyconst const
@@ -382,6 +389,8 @@ m4_define( [[M4_YY_DOC_PARAM]], [[@param yyscanner The scanner object.]])
 #define yylineno (YY_CURRENT_BUFFER_LVALUE->yy_bs_lineno)
 #define yycolumn (YY_CURRENT_BUFFER_LVALUE->yy_bs_column)
 #define yyflexdebug YY_G(yyflexdebug_r)
+/* Legacy interface */
+#define yy_flex_debug yyflexdebug
 
 m4_define( [[M4_YY_INCR_LINENO]],
 [[
@@ -581,7 +590,7 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 	 * If so, '^' rules will be active on the next match, otherwise
 	 * not.
 	 */
-	int yyatbol;
+	int yy_at_bol;
 
 	int yy_bs_lineno; /**< The line count. */
 	int yy_bs_column; /**< The column count. */
@@ -710,11 +719,11 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 		YY_CURRENT_BUFFER_LVALUE =    \
             yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG); \
 	} \
-	YY_CURRENT_BUFFER_LVALUE->yyatbol = at_bol; \
+	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = at_bol; \
 }
-#define yyatbol() (YY_CURRENT_BUFFER_LVALUE->yyatbol)
+#define yyatbol() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 /* Legacy interface */
-#define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yyatbol)
+#define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 #define yy_set_bol(at_bol) \
 	{ \
 	if ( yy_current_buffer() == NULL ) { \
@@ -722,7 +731,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 		YY_CURRENT_BUFFER_LVALUE =    \
             yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG); \
 	} \
-	YY_CURRENT_BUFFER_LVALUE->yyatbol = at_bol; \
+	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = at_bol; \
 }
 ]])
 
@@ -915,12 +924,12 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 m4_ifdef([[M4_YY_NOT_REENTRANT]], [[
 m4_ifdef( [[M4_MODE_C_ONLY]],
 [[
-extern int yyflexdebug;
-int yyflexdebug = m4_ifdef([[M4_MODE_DEBUG]],[[1]],[[0]]);
-/* Legacy interface */
-#ifndef yy_flex_debug
-#define yy_flex_debug yyflexdebug
-#endif
+/* The variable keeps its old name, yy_flex_debug, because programs name
+ * it in their own declarations. yyflexdebug is the new spelling.
+ */
+extern int yy_flex_debug;
+int yy_flex_debug = m4_ifdef([[M4_MODE_DEBUG]],[[1]],[[0]]);
+#define yyflexdebug yy_flex_debug
 ]])
 ]])
 
@@ -1537,7 +1546,9 @@ m4_define( [[M4_YY_NO_TOP_STATE]])
  * chosen a fit size foe whatever platform
  * we're running on.
  */
+#ifndef YY_READ_BUF_SIZE
 #define YY_READ_BUF_SIZE BUFSIZ
+#endif
 
 /* Size of default input buffer. We want to be able to fit two
  * OS-level reads, but efficiency gains as the buffer size
@@ -1808,7 +1819,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define YY_RULE_SETUP \
 	m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( yyleng > 0 ) {  \
-	YY_CURRENT_BUFFER_LVALUE->yyatbol = (yytext[yyleng - 1] == '\n'); \
+	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (yytext[yyleng - 1] == '\n'); \
 	} \
 ]])	YY_USER_ACTION
 ]])
@@ -2864,9 +2875,9 @@ int yyFlexLexer::yyinput()
 	YY_G(yy_hold_char) = *++YY_G(yy_c_buf_p);
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
-	YY_CURRENT_BUFFER_LVALUE->yyatbol = (c == '\n');
+	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
 m4_ifdef([[M4_MODE_YYLINENO]], [[
-	if ( YY_CURRENT_BUFFER_LVALUE->yyatbol ) {
+	if ( YY_CURRENT_BUFFER_LVALUE->yy_at_bol ) {
 		M4_YY_INCR_LINENO();
 	}
 ]])
@@ -3208,7 +3219,7 @@ void yyFlexLexer::yy_flush_buffer( yybuffer b )
 
 	b->yy_buf_pos = &b->yy_ch_buf[0];
 
-	b->yyatbol = 1;
+	b->yy_at_bol = 1;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
 	if ( b == yy_current_buffer() ) {
@@ -3388,7 +3399,7 @@ yybuffer yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 	b->yy_input_file = NULL;
 	b->yy_n_chars = b->yy_buf_size;
 	b->yy_is_interactive = 0;
-	b->yyatbol = 1;
+	b->yy_at_bol = 1;
 	b->yy_fill_buffer = 0;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
