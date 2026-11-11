@@ -252,7 +252,9 @@ option		:  TOK_OUTFILE '=' NAME
 			  free(ctrl.yyterminate);
 			  ctrl.yyterminate = xstrdup(nmstr); }
 		|  TOK_TABLES_FILE '=' NAME
-        		{ tablesext = true; tablesfilename = xstrdup(nmstr); }
+			{ tablesext = true;
+			  free(tablesfilename);
+			  tablesfilename = xstrdup(nmstr); }
 		;
 
 sect2		:  sect2 scon initforrule flexrule '\n'
