@@ -75,9 +75,11 @@ SPORADIC_TESTS = \
 	bison_nr \
 	bison_yylloc \
 	bison_yylval \
+	buffer_typedef_legacy \
 	c_cxx_nr \
 	c_cxx_r \
 	cxx_basic \
+	cxx_buffer_typedef_legacy \
 	cxx_multiple_scanners \
 	cxx_reject \
 	cxx_restart \
@@ -139,9 +141,11 @@ bison_nr_SOURCES = no_bison_stub.c
 bison_yylloc_SOURCES = no_bison_stub.c
 bison_yylval_SOURCES = no_bison_stub.c
 endif
+buffer_typedef_legacy_SOURCES = buffer_typedef_legacy.l
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
 cxx_basic_SOURCES = cxx_basic.ll
+cxx_buffer_typedef_legacy_SOURCES = cxx_buffer_typedef_legacy.ll
 cxx_reject_SOURCES = cxx_reject.ll
 cxx_restart_SOURCES = cxx_restart.ll
 cxx_multiple_scanners_SOURCES = cxx_multiple_scanners_main.cc cxx_multiple_scanners_1.ll cxx_multiple_scanners_2.ll
@@ -213,9 +217,11 @@ CLEANFILES = \
 	bison_yylval_parser.h \
 	bison_yylval_scanner.c \
 	bison_yylval_scanner.h \
+	buffer_typedef_legacy.c \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
 	cxx_basic.cc \
+	cxx_buffer_typedef_legacy.cc \
 	cxx_multiple_scanners_1.cc \
 	cxx_multiple_scanners_2.cc \
 	cxx_reject.cc \

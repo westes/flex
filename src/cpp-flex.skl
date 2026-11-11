@@ -457,10 +457,17 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 ]])
 
 
+#ifndef YY_TYPEDEF_YYBUFFER
+#define YY_TYPEDEF_YYBUFFER
+typedef struct yy_buffer_state *yybuffer;
+#endif
+
+/* Legacy interface. A program that declares YY_BUFFER_STATE itself
+ * defines this guard first, so the scanner must still declare yybuffer
+ * above.
+ */
 #ifndef YY_TYPEDEF_YY_BUFFER_STATE
 #define YY_TYPEDEF_YY_BUFFER_STATE
-typedef struct yy_buffer_state *yybuffer;
-/* Legacy interface */
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
