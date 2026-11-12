@@ -28,9 +28,9 @@
  * lexer without popping them, and checks every pointer yyalloc() handed out
  * was returned through yyfree().
  */
+#include "config.h"
 #include <cstdio>
 #include <cstdlib>
-#include "config.h"
 
 %}
 
