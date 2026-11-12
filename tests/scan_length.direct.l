@@ -52,8 +52,12 @@ static int count;
 int
 main ( int argc, char** argv )
 {
-    int failed = 0;
-    int returned;
+    /* These are used across setjmp() and longjmp(), so they must be
+       volatile. Otherwise the compiler may keep them in registers that
+       longjmp() does not restore, and their values are indeterminate
+       after the jump. */
+    volatile int failed = 0;
+    volatile int returned;
     char *huge;
 
     (void) argc;
