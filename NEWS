@@ -2,6 +2,18 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A generated scanner compiles again where the C library's <stdio.h>
+    does not define BUFSIZ, as in a freestanding build such as GRUB's.
+    Flex 2.6.5 and later sized each read with BUFSIZ, so the scanner
+    failed to compile there. It now uses BUFSIZ when it is defined and
+    8192 when it is not, in both the default and the c99 back end. In
+    the default back end, a definition of YY_READ_BUF_SIZE still takes
+    precedence over both. (#851)
+
+    Thanks to ojab.
+
 * Noteworthy changes in release 2.6.9 (2026-11-11) [stable]
 
 ** scanner
