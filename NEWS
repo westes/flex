@@ -2,6 +2,15 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** test
+
+*** The scan_length tests could fail on some architectures, such as
+    aarch64, because two variables in each test could hold wrong values
+    after the test recovered from the expected fatal error. They are
+    now declared so that the compiler cannot do that. (#850)
+
+    Thanks to Funda Wang.
+
 * Noteworthy changes in release 2.6.10 (2026-11-12) [stable]
 
 ** scanner
