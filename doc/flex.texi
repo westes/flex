@@ -5018,7 +5018,10 @@ character buffer as described above. Any buffer state that you explicitly
 create by calling yy_create_buffer() is @emph{NOT} destroyed automatically. You
 must call yy_delete_buffer() to free the memory. The exception to this rule is
 that flex will delete the current buffer automatically when you call
-yylex_destroy(). If you delete the current buffer, be sure to set it to NULL.
+yylex_destroy(). A buffer that you add with yypush_buffer_state() belongs to
+flex: yylex_destroy() deletes every buffer left on that stack, and the
+destructor of a C++ scanner does the same. If you delete the current buffer,
+be sure to set it to NULL.
 That way, flex will not try to delete the buffer a second time (possibly
 crashing your program!) At the time of this writing, flex does not provide a
 growable stack for the buffer states.  You have to manage that yourself.
