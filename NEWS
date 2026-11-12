@@ -2,6 +2,15 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A C++ scanner now frees every buffer left on its buffer stack when
+    it is destroyed. Before, it freed only the top one, so each buffer
+    added with yypush_buffer_state() and not yet removed leaked its
+    memory. The C scanners already did this in yylex_destroy().
+
+    Thanks to anshal ossaimi.
+
 ** test
 
 *** The scan_length tests could fail on some architectures, such as
