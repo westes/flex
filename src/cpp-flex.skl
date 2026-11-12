@@ -1544,10 +1544,15 @@ m4_define( [[M4_YY_NO_TOP_STATE]])
  * Amount of stuff to slurp up with each read.
  * We assume the stdio library has already
  * chosen a fit size foe whatever platform
- * we're running on.
+ * we're running on.  Some freestanding environments
+ * have no BUFSIZ, so fall back to a fixed size there.
  */
 #ifndef YY_READ_BUF_SIZE
+#ifdef BUFSIZ
 #define YY_READ_BUF_SIZE BUFSIZ
+#else
+#define YY_READ_BUF_SIZE 8192
+#endif
 #endif
 
 /* Size of default input buffer. We want to be able to fit two

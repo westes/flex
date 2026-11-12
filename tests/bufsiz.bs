@@ -1,0 +1,111 @@
+#!/bin/sh
+
+# Test that a scanner flex generates compiles where the C library's
+# header does not define BUFSIZ, as in a freestanding build such as
+# GRUB's.  The size of each read then falls back to 8192.  Where BUFSIZ
+# is defined the scanner must still use it, and a program that defines
+# YY_READ_BUF_SIZE itself must still get its own value.  The c99 back end
+# has no such override and keeps the size in a const int, which C does
+# not accept as a constant expression, so there the test only checks
+# that the scanner compiles.
+
+FLEX=$1
+CC_ARG=$2
+CXX_ARG=$3
+INCDIR=$4
+case $FLEX in
+    /*) ;;
+    *) FLEX=$(pwd)/$FLEX ;;
+esac
+
+work=$(mktemp -d "${TMPDIR:-/tmp}/bs.XXXXXX") || exit 99
+trap 'rm -rf "$work"' EXIT HUP INT QUIT TERM
+
+failures=0
+ran=0
+
+fail () {
+    echo "FAIL: $*" >&2
+    failures=$((failures + 1))
+}
+
+# A <stdio.h> that is the real one with BUFSIZ taken away.
+mkdir "$work/nobufsiz"
+printf '#include_next <stdio.h>\n#undef BUFSIZ\n' > "$work/nobufsiz/stdio.h"
+
+# The check goes after the scanner's own definitions, where the
+# read size is known.  The array size is negative if EXPECT is wrong.
+cat > "$work/bs.l" <<'EOF'
+%option noyywrap
+%%
+x		;
+%%
+#ifndef NOCHECK
+typedef char read_size_check[(YY_READ_BUF_SIZE == EXPECT) ? 1 : -1];
+#endif
+EOF
+
+# compile_one KIND COMPILER LABEL EXPECT INCLUDE-DIR [EXTRA-FLAGS]
+# An EXPECT of "none" does not check the size.
+compile_one () {
+    kind=$1; cc=$2; label=$3; expect=$4; inc=$5; shift 5
+    [ "$expect" = none ] && set -- -DNOCHECK "$@"
+    if [ "$kind" = c ]; then file=$work/$label.c; else file=$work/$label.cc; fi
+    if ! $cc -c -o /dev/null -DEXPECT="$expect" -I"$INCDIR" ${inc:+-I"$inc"} "$@" "$file" \
+        > "$work/cc.txt" 2>&1; then
+        fail "$label: $cc did not compile it"
+        sed -e "s|$work/||" -e 's/^/    /' "$work/cc.txt" >&2
+    fi
+}
+
+# run_kind KIND COMPILER FLEXARGS...
+run_kind () {
+    kind=$1; cc=$2; shift 2
+    [ -n "$cc" ] || return 0
+    if [ "$kind" = c ]; then ext=c; else ext=cc; fi
+    probe=$work/probe.$ext
+    if [ "$kind" = c ]; then
+        printf '#include <stdio.h>\nint main(void) { return 0; }\n' > "$probe"
+    else
+        printf '#include <cstdio>\nint main() { return 0; }\n' > "$probe"
+    fi
+    if ! $cc -c -o /dev/null "$probe" >/dev/null 2>&1; then
+        echo "note: skipping $cc (cannot compile a trivial file)" >&2
+        return 0
+    fi
+    # Skip a compiler whose own headers need BUFSIZ.
+    if ! $cc -c -o /dev/null -I"$work/nobufsiz" "$probe" >/dev/null 2>&1; then
+        echo "note: skipping $cc (its headers need BUFSIZ)" >&2
+        return 0
+    fi
+    label=$kind$#
+    if [ "$1" = -e ]; then label=${kind}c99; fi
+    if ! "$FLEX" "$@" -o "$work/$label.$ext" "$work/bs.l" >/dev/null 2>"$work/flex.txt"; then
+        fail "$label: flex failed: $(cat "$work/flex.txt")"
+        return 0
+    fi
+    ran=$((ran + 1))
+    if [ "$1" = -e ]; then
+        compile_one "$kind" "$cc" "$label" none "$work/nobufsiz"
+        compile_one "$kind" "$cc" "$label" none ""
+        return 0
+    fi
+    compile_one "$kind" "$cc" "$label" 8192 "$work/nobufsiz"
+    compile_one "$kind" "$cc" "$label" BUFSIZ ""
+    compile_one "$kind" "$cc" "$label" 4096 "$work/nobufsiz" -DYY_READ_BUF_SIZE=4096
+    compile_one "$kind" "$cc" "$label" 4096 "" -DYY_READ_BUF_SIZE=4096
+}
+
+run_kind c   "$CC_ARG"
+run_kind c   "$CC_ARG" --reentrant
+run_kind c   "$CC_ARG" -e c99
+run_kind c++ "$CXX_ARG" --c++
+
+if [ "$failures" -ne 0 ]; then
+    exit 1
+fi
+if [ "$ran" -eq 0 ]; then
+    echo "no usable compiler found" >&2
+    exit 77
+fi
+echo "BUFSIZ fallback tests passed ($ran scanners)"
