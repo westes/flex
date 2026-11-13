@@ -4223,15 +4223,20 @@ static int yytbl_data_load YYFARGS2(struct yytbl_dmap *, dmap, struct yytbl_read
 		flex_uint32_t hi;
 		int     is_struct = (td.td_flags & YYTD_STRUCT) != 0;
 		int     is_ptrans = (td.td_flags & YYTD_PTRANS) != 0;
+		int     holds_ptrs = td.td_id == YYTD_ID_START_STATE_LIST
+		    || (td.td_id == YYTD_ID_NUL_TRANS
+			&& m4_ifdef([[M4_MODE_FULLSPD]], [[1]], [[0]]));
 
 		/* The file says how each table is laid out, but this scanner
 		 * knows how it stores the table, and the loop below does what the
 		 * flags say.  So refuse a table the two disagree about: only the
 		 * transition table is made of structs, a table of indexes needs a
-		 * transition table and room for a pointer in each entry, and any
-		 * other table needs an entry size the loop can store.
+		 * transition table and room for a pointer in each entry, only
+		 * tables of pointers may be tables of indexes, and any other
+		 * table needs an entry size the loop can store.
 		 */
 		if (is_struct != (td.td_id == YYTD_ID_TRANSITION)
+		    || is_ptrans != holds_ptrs
 		    || (is_struct && is_ptrans)
 		    || (is_ptrans && (transdmap == NULL
 			|| dmap->dm_sz != sizeof (struct yy_trans_info *)))
