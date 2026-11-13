@@ -897,6 +897,10 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
  */
 #define YY_DO_BEFORE_ACTION \
 	do { \
+	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[/* yytext_ptr is backed up over the yymore() text below, so keep that inside the buffer. */ \
+	if ( YY_G(yy_more_offset) > yy_bp - YY_CURRENT_BUFFER_LVALUE->yy_ch_buf ) \
+		YY_G(yy_more_offset) = (int) (yy_bp - YY_CURRENT_BUFFER_LVALUE->yy_ch_buf); \
+]])]]) \
 	YY_G(yytext_ptr) = yy_bp; \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[YY_G(yytext_ptr) -= YY_G(yy_more_len); \
 	yyleng = (int) (yy_cp - YY_G(yytext_ptr));]])]]) \
