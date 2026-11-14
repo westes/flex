@@ -1102,13 +1102,15 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 m4_ifdef( [[M4_MODE_C_ONLY]], [[
 m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
 m4_ifdef( [[M4_YY_NOT_REENTRANT]], [[
-/* Definitions for backing up.  We don't need them if yyreject()
- * is being used because then we use an alternative backing-up
- * technique instead.
+m4_ifdef( [[M4_MODE_HAS_BACKING_UP]], [[
+/* Definitions for backing up.  We don't need them if the scanner
+ * never backs up, or if yyreject() is being used because then we
+ * use an alternative backing-up technique instead.
  */
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
+]])
 ]])
 ]])
 ]])
