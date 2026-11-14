@@ -80,6 +80,9 @@ SPORADIC_TESTS = \
 	at_bol_member \
 	declared_yyunput \
 	cxx_yyunput_member \
+	cxx_nodefault \
+	buf_size_section1 \
+	fatal_error_name \
 	buffer_typedef_legacy \
 	c_cxx_nr \
 	c_cxx_r \
@@ -154,6 +157,9 @@ endif
 at_bol_member_SOURCES = at_bol_member.l
 declared_yyunput_SOURCES = declared_yyunput.l
 cxx_yyunput_member_SOURCES = cxx_yyunput_member.ll
+cxx_nodefault_SOURCES = cxx_nodefault.ll
+buf_size_section1_SOURCES = buf_size_section1.l
+fatal_error_name_SOURCES = fatal_error_name.l
 buffer_typedef_legacy_SOURCES = buffer_typedef_legacy.l
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
@@ -238,6 +244,9 @@ CLEANFILES = \
 	at_bol_member.c \
 	declared_yyunput.c \
 	cxx_yyunput_member.cc \
+	cxx_nodefault.cc \
+	buf_size_section1.c \
+	fatal_error_name.c \
 	buffer_typedef_legacy.c \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \

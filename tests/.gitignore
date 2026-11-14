@@ -47,6 +47,12 @@ declared_yyunput
 declared_yyunput.c
 cxx_yyunput_member
 cxx_yyunput_member.cc
+cxx_nodefault
+cxx_nodefault.cc
+buf_size_section1
+buf_size_section1.c
+fatal_error_name
+fatal_error_name.c
 buffer_typedef_legacy
 buffer_typedef_legacy.c
 c_cxx_nr

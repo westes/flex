@@ -91,7 +91,7 @@ m4_define([[M4_HOOK_SET_PREACTION]], [[#define YY_USER_ACTION $1
 ]])
 m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[/*LINTED*/break;]])
 m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[$1]])]])
-m4_define([[M4_HOOK_FATAL_ERROR]], [[yypanic($1 M4_YY_CALL_LAST_ARG);]])
+m4_define([[M4_HOOK_FATAL_ERROR]], [[YY_FATAL_ERROR($1);]])
 m4_define([[M4_HOOK_ECHO]], [[yyecho();]])
 
 m4_ifdef([[M4_MODE_YYTERMINATE]], [[m4_define([[yyterminate]], [[M4_MODE_YYTERMINATE]])]])
@@ -843,6 +843,31 @@ extern char *yytext;
 ]])
 ]])
 
+/* These come before the user's first section, as in flex 2.6.4, so that a
+ * program can use them there. */
+/*
+ * Amount of stuff to slurp up with each read.
+ * We assume the stdio library has already
+ * chosen a fit size foe whatever platform
+ * we're running on.  Some freestanding environments
+ * have no BUFSIZ, so fall back to a fixed size there.
+ */
+#ifndef YY_READ_BUF_SIZE
+#ifdef BUFSIZ
+#define YY_READ_BUF_SIZE BUFSIZ
+#else
+#define YY_READ_BUF_SIZE 8192
+#endif
+#endif
+
+/* Size of default input buffer. We want to be able to fit two
+ * OS-level reads, but efficiency gains as the buffer size
+ * increases fall off after that
+ */
+#ifndef YY_BUF_SIZE
+#define YY_BUF_SIZE	(m4_ifdef([[M4_MODE_YY_BUFSIZE]], [[M4_MODE_YY_BUFSIZE]], [[2 * YY_READ_BUF_SIZE]]))
+#endif
+
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 %% [1.5] DFA
@@ -1539,29 +1564,6 @@ m4_define( [[M4_YY_NO_TOP_STATE]])
 ]])
 ]])
 
-/*
- * Amount of stuff to slurp up with each read.
- * We assume the stdio library has already
- * chosen a fit size foe whatever platform
- * we're running on.  Some freestanding environments
- * have no BUFSIZ, so fall back to a fixed size there.
- */
-#ifndef YY_READ_BUF_SIZE
-#ifdef BUFSIZ
-#define YY_READ_BUF_SIZE BUFSIZ
-#else
-#define YY_READ_BUF_SIZE 8192
-#endif
-#endif
-
-/* Size of default input buffer. We want to be able to fit two
- * OS-level reads, but efficiency gains as the buffer size
- * increases fall off after that
- */
-#ifndef YY_BUF_SIZE
-#define YY_BUF_SIZE	(m4_ifdef([[M4_MODE_YY_BUFSIZE]], [[M4_MODE_YY_BUFSIZE]], [[2 * YY_READ_BUF_SIZE]]))
-#endif
-
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Copy whatever the last rule matched to the standard output. */
@@ -1622,6 +1624,13 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 #define YY_FATAL_ERROR(msg) LexerError( msg )
 ]])
 #endif
+
+m4_ifdef([[M4_MODE_C_ONLY]], [[
+/* The name flex 2.6.4 gave yypanic(), which programs call themselves. */
+#ifndef yy_fatal_error
+#define yy_fatal_error yypanic
+#endif
+]])
 
 /* Legacy interface */
 #ifndef YY_INPUT
