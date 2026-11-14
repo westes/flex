@@ -1159,7 +1159,6 @@ int yyinput(FlexLexer *yyscanner)
 	}
 
 	c = *(unsigned char *) yyscanner->yyCBufP;	/* cast for 8-bit char's */
-	*yyscanner->yyCBufP = '\0';	/* preserve yytext */
 	yyscanner->yyHoldChar = *++yyscanner->yyCBufP;
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
@@ -1167,6 +1166,7 @@ m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 m4_ifdef([[M4_MODE_YYLINENO]], [[
 	if (yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbolFlag) {
 		yybumpline(yyscanner);
+	*yyscanner->yyCBufP = '\0';	/* preserve yytext */
 	}
 ]])
 ]])

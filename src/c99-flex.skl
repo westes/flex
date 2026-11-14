@@ -1285,7 +1285,6 @@ int yyinput (yyscan_t yyscanner)
 	}
 
 	c = *(unsigned char *) yyscanner->yy_c_buf_p;	/* cast for 8-bit char's */
-	*yyscanner->yy_c_buf_p = '\0';	/* preserve yytext */
 	yyscanner->yy_hold_char = *++yyscanner->yy_c_buf_p;
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
@@ -1293,6 +1292,7 @@ m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 m4_ifdef([[M4_MODE_YYLINENO]], [[
 	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag ) {
 		yybumpline( yyscanner );
+	*yyscanner->yy_c_buf_p = '\0';	/* preserve yytext */
 	}
 ]])
 ]])
