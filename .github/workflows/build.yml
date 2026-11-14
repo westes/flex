@@ -47,5 +47,7 @@ jobs:
       run: make
     - name: make check
       run: make check VERBOSE=1
+    - name: make check-tools
+      run: make -C tools check-tools
     - name: make distcheck
       run: make distcheck

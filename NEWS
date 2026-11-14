@@ -26,9 +26,10 @@ flex NEWS
 
 ** test
 
-*** Running "make check" no longer needs git. Three tests of the
-    maintainer scripts in tools/ build small git repositories, and they
-    failed where git was not installed. They are now skipped there.
+*** "make check" now tests only the build of flex. The tests of the
+    maintainer scripts in tools/ were part of it, and three of them
+    build small git repositories, so a build from a tarball failed
+    where git was not installed. They now run with "make check-tools".
     (#857)
 
 * Noteworthy changes in release 2.6.11 (2026-11-12) [stable]
