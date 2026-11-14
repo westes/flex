@@ -83,6 +83,7 @@ SPORADIC_TESTS = \
 	cxx_nodefault \
 	buf_size_section1 \
 	fatal_error_name \
+	user_yy_functions \
 	buffer_typedef_legacy \
 	c_cxx_nr \
 	c_cxx_r \
@@ -160,6 +161,7 @@ cxx_yyunput_member_SOURCES = cxx_yyunput_member.ll
 cxx_nodefault_SOURCES = cxx_nodefault.ll
 buf_size_section1_SOURCES = buf_size_section1.l
 fatal_error_name_SOURCES = fatal_error_name.l
+user_yy_functions_SOURCES = user_yy_functions.l
 buffer_typedef_legacy_SOURCES = buffer_typedef_legacy.l
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
@@ -247,6 +249,7 @@ CLEANFILES = \
 	cxx_nodefault.cc \
 	buf_size_section1.c \
 	fatal_error_name.c \
+	user_yy_functions.c \
 	buffer_typedef_legacy.c \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \

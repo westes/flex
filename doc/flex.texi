@@ -8966,6 +8966,12 @@ A list of deprecated interfaces and their replacements follows.
 Again, all are still available in the default C/C++ back end, but not
 in any other.
 
+In the default back end, flex recognizes yybegin(), yyecho(), yystart(),
+yyunput(), yyatbol() and yysetbol() only inside rule actions, where it
+rewrites each to the old interface.  They are not macros, so a program
+can have its own functions with those names.  Outside an action, use
+the old interface.
+
 @itemize
 @item
 BEGIN: Replaced by yybegin()

@@ -92,11 +92,11 @@ m4_define([[M4_HOOK_SET_PREACTION]], [[#define YY_USER_ACTION $1
 m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[/*LINTED*/break;]])
 m4_define([[M4_HOOK_SET_POSTACTION]], [[m4_define([[M4_HOOK_STATE_CASE_BREAK]], [[$1]])]])
 m4_define([[M4_HOOK_FATAL_ERROR]], [[YY_FATAL_ERROR($1);]])
-m4_define([[M4_HOOK_ECHO]], [[yyecho();]])
+m4_define([[M4_HOOK_ECHO]], [[ECHO;]])
 
 m4_ifdef([[M4_MODE_YYTERMINATE]], [[m4_define([[yyterminate]], [[M4_MODE_YYTERMINATE]])]])
 
-m4_define([[M4_HOOK_REJECT]], [[yyreject()]])
+m4_define([[M4_HOOK_REJECT]], [[REJECT]])
 
 %% [0.0] Make hook macros available to Flex
 
@@ -438,15 +438,11 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
  * but we do it the disgusting crufty way forced on us by the ()-less
  * definition of BEGIN.
  */
-#define yybegin(s) YY_G(yy_start) = 1 + 2 * (s)
-/* Legacy interface */
 #define BEGIN YY_G(yy_start) = 1 + 2 *
 /* Translate the current start state into a value that can be later handed
  * to BEGIN to return to the state.  The YYSTATE alias is for lex
  * compatibility.
  */
-#define yystart() ((YY_G(yy_start) - 1) / 2)
-/* Legacy interfaces */
 #define YY_START ((YY_G(yy_start) - 1) / 2)
 #define YYSTATE YY_START
 /* Action number for EOF rule of a given start state. */
@@ -711,17 +707,6 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 	} \
 	YY_CURRENT_BUFFER_LVALUE->yy_is_interactive = is_interactive; \
 }
-#define yysetbol(at_bol) \
-	{ \
-	if ( yy_current_buffer() == NULL ) { \
-		yyensure_buffer_stack (M4_YY_CALL_ONLY_ARG);	\
-		YY_CURRENT_BUFFER_LVALUE =    \
-            yy_create_buffer( yyin, YY_BUF_SIZE M4_YY_CALL_LAST_ARG); \
-	} \
-	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = at_bol; \
-}
-#define yyatbol() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
-/* Legacy interface */
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 #define yy_set_bol(at_bol) \
 	{ \
@@ -1165,7 +1150,7 @@ static int *yy_full_state;
 ]])
 ]])
 ]])
-#define yyreject()				\
+#define REJECT				\
 { \
 *yy_cp = YY_G(yy_hold_char); /* undo effects of setting up yytext */ \
 yy_cp = YY_G(yy_full_match); /* restore poss. backed-over text */ \
@@ -1177,13 +1162,11 @@ yy_current_state = *YY_G(yy_state_ptr); /* restore curr. state */ \
 ++YY_G(yy_lp); \
 goto find_rule; \
 }
-#define REJECT	yyreject()
 ]])
 m4_ifdef( [[M4_MODE_NO_USES_REJECT]],[[
 /* The intent behind this definition is that it'll catch
  * any uses of yyreject() which flex missed.
  */
-#define yyreject() reject_used_but_not_detected
 #define REJECT reject_used_but_not_detected
 ]])
 
@@ -1574,27 +1557,18 @@ m4_define( [[M4_YY_NO_TOP_STATE]])
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 /* Copy whatever the last rule matched to the standard output. */
-#ifndef yyecho
-#ifdef ECHO
-/* Legacy interface: a user-defined ECHO replaces the default action. */
-#define yyecho() ECHO
-#else
+#ifndef ECHO
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 %# Standard (non-C++) definition
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
-#define yyecho() do { if (fwrite( yytext, (size_t) yyleng, 1, yyout )) {} } while (0)
+#define ECHO do { if (fwrite( yytext, (size_t) yyleng, 1, yyout )) {} } while (0)
 ]])
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 %# C++ definition
-#define yyecho() LexerOutput( yytext, yyleng )
+#define ECHO LexerOutput( yytext, yyleng )
 ]])
-#endif
-#endif
-/* Legacy interface */
-#ifndef ECHO
-#define ECHO yyecho()
 #endif
 ]])
 
@@ -1897,12 +1871,12 @@ m4_ifdef([[M4_MODE_USEMECS]], [[
 m4_define([[M4_GEN_START_STATE]], [[
 	/* Generate the code to find the start state. */
 m4_ifdef([[M4_MODE_FULLSPD]], [[
-m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state", "yy_start_state_list[YY_G(yy_start) + yyatbol()];]])
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state", "yy_start_state_list[YY_G(yy_start) + YY_AT_BOL()];]])
 m4_ifdef([[M4_MODE_NO_BOL_NEEDED]], [[yy_current_state = yy_start_state_list[YY_G(yy_start)];]])
 ]])
 m4_ifdef([[M4_MODE_NO_FULLSPD]], [[
 			yy_current_state = YY_G(yy_start);
-m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state += yyatbol();]])
+m4_ifdef([[M4_MODE_BOL_NEEDED]], [[yy_current_state += YY_AT_BOL();]])
 			/* Set up for storing up states. */
 			m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 			YY_G(yy_state_ptr) = YY_G(yy_state_buf);
@@ -2196,10 +2170,10 @@ m4_ifdef([[M4_MODE_C_ONLY]], [[
 ]])
 				} else {
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
-					std::cerr << "--EOF (start condition " << yystart() << ")\n";
+					std::cerr << "--EOF (start condition " << YY_START << ")\n";
 ]])
 m4_ifdef([[M4_MODE_C_ONLY]], [[
-					fprintf( stderr, "--EOF (start condition %d)\n", yystart() );
+					fprintf( stderr, "--EOF (start condition %d)\n", YY_START );
 ]])
 				}
 			}
@@ -2327,7 +2301,7 @@ m4_ifdef([[M4_MODE_FIND_ACTION_REJECT_OR_INTERACTIVE]], [[
 							 */
 							YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + YY_MORE_ADJ;
 
-							yy_act = YY_STATE_EOF(yystart());
+							yy_act = YY_STATE_EOF(YY_START);
 							goto do_action;
 						} else {
 							if ( ! YY_G(yy_did_buffer_switch_on_eof) ) {
@@ -3532,9 +3506,9 @@ void yyFlexLexer::yy_push_state( int _new_state )
 			YY_FATAL_ERROR( "out of memory expanding start-condition stack" );
 		}
 	}
-	YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr)++] = yystart();
+	YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr)++] = YY_START;
 
-	yybegin(_new_state);
+	BEGIN(_new_state);
 }
 ]])
 
@@ -3552,7 +3526,7 @@ void yyFlexLexer::yy_pop_state()
 	if ( --YY_G(yy_start_stack_ptr) < 0 ) {
 		YY_FATAL_ERROR( "start-condition stack underflow" );
 	}
-	yybegin(YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr)]);
+	BEGIN(YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr)]);
 }
 ]])
 
@@ -3567,7 +3541,7 @@ int yyFlexLexer::yy_top_state()
 ]])
 {
 	M4_YY_DECL_GUTS_VAR();
-	return YY_G(yy_start_stack_ptr) > 0 ? YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr) - 1] : yystart();
+	return YY_G(yy_start_stack_ptr) > 0 ? YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr) - 1] : YY_START;
 }
 ]])
 
@@ -4574,7 +4548,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]],
 [[
 #undef YY_NEW_FILE
 #undef YY_FLUSH_BUFFER
-#undef yysetbol
+#undef yy_set_bol
 #undef yy_new_buffer
 #undef yy_set_interactive
 #undef YY_DO_BEFORE_ACTION

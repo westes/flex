@@ -53,6 +53,8 @@ buf_size_section1
 buf_size_section1.c
 fatal_error_name
 fatal_error_name.c
+user_yy_functions
+user_yy_functions.c
 buffer_typedef_legacy
 buffer_typedef_legacy.c
 c_cxx_nr

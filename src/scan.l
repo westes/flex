@@ -150,6 +150,7 @@ FUNARGS     [^)]*
 
 %{
 void context_call(char *);
+void legacy_call(char *);
 void context_member(char *, const char *);
 #undef yyreject
 %}
@@ -967,25 +968,17 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 <ACTION>{
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
-	yyecho\(\)|yyinput\(\)|yystart\({FUNARGS}\)|yybegin\({FUNARGS}\)|yypanic\({FUNARGS}\)|yyatbol\(\)|yysetbol\({FUNARGS}\) {
+	yyinput\(\)|yypanic\({FUNARGS}\) {
 			if (ctrl.rewrite)
 				context_call(yytext);
 			else
 				ACTION_ECHO;
 	}
-	yyunput\({FUNARGS}\) {
-			/* The default back end has no yyunput() macro, because
-			 * flex 2.6.4 declared a function of that name that programs
-			 * declare for themselves. Read yyunput(c) in an action as
-			 * unput(c). */
+	yyecho\(\)|yystart\({FUNARGS}\)|yybegin\({FUNARGS}\)|yyunput\({FUNARGS}\)|yyatbol\(\)|yysetbol\({FUNARGS}\) {
 			if (ctrl.rewrite)
 				context_call(yytext);
-			else if (strchr(yytext, ',') != NULL)
-				ACTION_ECHO;	/* a 2.6.4-style call with the buffer pointer */
-			else {
-				add_action("unput");
-				add_action(yytext + strlen("yyunput"));
-			}
+			else
+				legacy_call(yytext);
 	}
 	yyterminate\(\)|yyless\({FUNARGS}\) {
 			add_action("]""]");
@@ -1116,6 +1109,42 @@ void set_input_file( char *file )
 
 	linenum = 1;
 	}
+
+/* In the default back end the lower-case macros of flex 2.6.5 are not
+ * defined, because programs written for 2.6.4 have their own functions
+ * with names like yybegin (GCC does), and a macro would rewrite them.
+ * In an action, write the call in the 2.6.4 way instead. A call with
+ * two arguments, which is a 2.6.4 yyunput, is left as it is. */
+void legacy_call(char *txt) {
+	static const struct { const char *name; const char *with; } map[] = {
+		{ "yyecho", "ECHO" },
+		{ "yystart", "YY_START" },
+		{ "yybegin", "BEGIN" },
+		{ "yyunput", "unput" },
+		{ "yyatbol", "YY_AT_BOL" },
+		{ "yysetbol", "yy_set_bol" },
+	};
+	size_t i;
+
+	for (i = 0; i < sizeof(map) / sizeof(map[0]); i++) {
+		size_t n = strlen(map[i].name);
+
+		if (strncmp(txt, map[i].name, n) != 0 || txt[n] != '(')
+			continue;
+		if (strcmp(map[i].name, "yyunput") == 0 && strchr(txt, ',') != NULL) {
+			add_action(txt);
+		} else if (strcmp(map[i].name, "yyecho") == 0 ||
+			   strcmp(map[i].name, "yystart") == 0) {
+			/* object-like in 2.6.4: ECHO and YY_START take no () */
+			add_action(map[i].with);
+		} else {
+			add_action(map[i].with);
+			add_action(txt + n);
+		}
+		return;
+	}
+	add_action(txt);
+}
 
 void context_call(char *txt) {
 	const char *context_arg = skel_property("M4_PROPERTY_CONTEXT_ARG");
