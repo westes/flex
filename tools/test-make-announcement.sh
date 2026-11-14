@@ -2,6 +2,10 @@
 # Test tools/make-announcement on a small git repository made for the purpose.
 set -u
 
+# These tests build small git repositories. Skip them where git is not
+# installed, so that building flex from a tarball does not need it.
+command -v git >/dev/null 2>&1 || { echo "git is not installed"; exit 77; }
+
 srcdir=${srcdir:-$(dirname "$0")}
 case $srcdir in
     /*) ;;
