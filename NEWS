@@ -14,6 +14,15 @@ flex NEWS
     default back end. In a rule's action, yyunput(c) is still accepted
     and works as unput(c); anywhere else, use unput(c). (#858)
 
+*** A program can have its own functions named yybegin, yyecho,
+    yystart, yyatbol or yysetbol, as GCC does with yybegin, and they
+    compile again. Flex 2.6.5 defined these names as macros, which
+    rewrote the program's declarations and definitions. The default
+    back end no longer defines them. Inside a rule's action flex still
+    accepts them and writes the old interface in their place: BEGIN,
+    ECHO, YY_START, YY_AT_BOL() and yy_set_bol(). Outside an action,
+    use the old interface. (#856)
+
 *** A C++ scanner built with %option nodefault compiles again. Flex
     2.6.5 and later generated a call to yypanic(), which a C++ scanner
     does not have, for input that no rule matches. It now goes through
