@@ -14,6 +14,16 @@ flex NEWS
     default back end. In a rule's action, yyunput(c) is still accepted
     and works as unput(c); anywhere else, use unput(c). (#858)
 
+*** A C++ scanner built with %option nodefault compiles again. Flex
+    2.6.5 and later generated a call to yypanic(), which a C++ scanner
+    does not have, for input that no rule matches. It now goes through
+    YY_FATAL_ERROR, and so to LexerError(), as in 2.6.4. (#858)
+
+*** A program can call yy_fatal_error(), the 2.6.4 name of yypanic(),
+    again. YY_BUF_SIZE and YY_READ_BUF_SIZE are defined before the
+    scanner's first section again, so the program can use them there.
+    (#858)
+
 ** test
 
 *** Running "make check" no longer needs git. Three tests of the
