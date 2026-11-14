@@ -1285,6 +1285,8 @@ void readin (void)
 		tablesname = calloc(nbytes, 1);
 		snprintf (tablesname, nbytes, "%stables", ctrl.prefix);
 		yytbl_hdr_init (&hdr, flex_version, tablesname);
+		free(tablesname);
+		tablesname = NULL;
 
 		if (yytbl_hdr_fwrite (&tableswr, &hdr) <= 0)
 			flexerror (_("could not write tables header"));
