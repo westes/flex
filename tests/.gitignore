@@ -59,6 +59,8 @@ no_backing_up
 no_backing_up.c
 large_tables
 large_tables.c
+legacy_hooks
+legacy_hooks.c
 buffer_typedef_legacy
 buffer_typedef_legacy.c
 c_cxx_nr
