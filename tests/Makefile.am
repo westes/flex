@@ -406,6 +406,8 @@ EXTRA_DIST = \
 	yymorearrayrefill.txt \
 	yymorearrayswitch.txt \
 	yymorearrayswitchafter.txt \
+	yylessbol.txt \
+	yylessbol0.txt \
 	yyunput.txt \
 	state_buf.direct.txt \
 	state_buf_multiple.direct.txt \
@@ -568,6 +570,8 @@ RULESETS = \
 	$(srcdir)/yymorearrayrefill.rules \
 	$(srcdir)/yymorearrayswitch.rules \
 	$(srcdir)/yymorearrayswitchafter.rules \
+	$(srcdir)/yylessbol.rules \
+	$(srcdir)/yylessbol0.rules \
 	$(srcdir)/yyunput.rules
 
 $(srcdir)/ruleset.am: $(srcdir)/ruleset.sh $(RULESETS)

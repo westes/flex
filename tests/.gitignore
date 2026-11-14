@@ -225,6 +225,10 @@ yymore*
 !yymorearrayswitch.txt
 !yymorearrayswitchafter.rules
 !yymorearrayswitchafter.txt
+!yylessbol.rules
+!yylessbol.txt
+!yylessbol0.rules
+!yylessbol0.txt
 yyunput*
 !yyunput.rules
 !yyunput.txt

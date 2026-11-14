@@ -113,6 +113,9 @@ m4_define([[yyless]], [[
 		YY_RESTORE_YY_MORE_OFFSET
 		yyscanner->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ;
 		yy_do_before_action(yyscanner, yy_cp, yy_bp); /* set up yytext again */
+		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = ( yyscanner->yyleng_r > 0 ) ?
+			(yyscanner->yytext_r[yyscanner->yyleng_r - 1] == '\n') :
+			yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_before_match;
 	} while ( 0 )
 ]])
 
@@ -496,6 +499,8 @@ struct yy_buffer_state {
 	 * not.
 	 */
 	bool yyatbol_flag;
+	/* The value of yyatbol_flag when the current match began, so giving back all of the text can restore it. */
+	bool yyatbol_before_match;
 
 	int bs_yylineno; /**< The line count. */
 	int bs_yycolumn; /**< The column count. */
@@ -671,6 +676,7 @@ void yy_flush_buffer(yybuffer b, yyscan_t yyscanner)
 	b->yy_buf_pos = &b->yy_ch_buf[0];
 
 	b->yyatbol_flag = true;
+	b->yyatbol_before_match = true;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
 	if ( b == yy_current_buffer(yyscanner) ) {
@@ -1286,13 +1292,13 @@ int yyinput (yyscan_t yyscanner)
 
 	c = *(unsigned char *) yyscanner->yy_c_buf_p;	/* cast for 8-bit char's */
 	yyscanner->yy_hold_char = *++yyscanner->yy_c_buf_p;
+	*yyscanner->yy_c_buf_p = '\0';	/* preserve yytext */
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = (c == '\n');
 m4_ifdef([[M4_MODE_YYLINENO]], [[
 	if ( yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag ) {
 		yybumpline( yyscanner );
-	*yyscanner->yy_c_buf_p = '\0';	/* preserve yytext */
 	}
 ]])
 ]])
@@ -1578,6 +1584,8 @@ m4_define([[YY_DECL]], [[int yylex M4_YY_LEX_DECLARATION]])
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 static void rule_check_bol(yyscan_t yyscanner) {
+	if ( ! YY_MORE_ADJ )
+		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_before_match = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag;
 	if ( yyscanner->yyleng_r > 0 ) {		\
 		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = (yyscanner->yytext_r[yyscanner->yyleng_r - 1] == '\n');
 	}
@@ -1748,6 +1756,7 @@ yybuffer yy_scan_buffer(char * base, size_t  size, yyscan_t yyscanner)
 	b->yy_n_chars = b->yy_buf_size;
 	b->yy_is_interactive = false;
 	b->yyatbol_flag = true;
+	b->yyatbol_before_match = true;
 	b->yy_fill_buffer = false;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
@@ -2478,6 +2487,9 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 	yyscanner->yy_hold_char = *yyscanner->yy_c_buf_p;
 	*yyscanner->yy_c_buf_p = '\0';
 	yyscanner->yyleng_r = n;
+	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = ( n > 0 ) ?
+		(yyscanner->yytext_r[n - 1] == '\n') :
+		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_before_match;
 }
 
 static int yy_init_globals (yyscan_t yyscanner) {

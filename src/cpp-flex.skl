@@ -539,6 +539,9 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 		YY_RESTORE_YY_MORE_OFFSET \
 		YY_G(yy_c_buf_p) = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
 		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
+		YY_CURRENT_BUFFER_LVALUE->yy_at_bol = ( yyleng > 0 ) ? \
+			(yytext[yyleng - 1] == '\n') : \
+			YY_CURRENT_BUFFER_LVALUE->yy_at_bol_before_match; \
 		} \
 	while ( 0 )
 /* Push a character back onto the input. In an action, flex also reads yyunput(c) as this. */
@@ -586,6 +589,11 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 	 * not.
 	 */
 	int yy_at_bol;
+
+	/* The value of yy_at_bol when the current match began, so that
+	 * yyless(0) can give the text back and restore it.
+	 */
+	int yy_at_bol_before_match;
 
 	int yy_bs_lineno; /**< The line count. */
 	int yy_bs_column; /**< The column count. */
@@ -1811,7 +1819,9 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 [[
 #define YY_RULE_SETUP \
-	m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( yyleng > 0 ) {  \
+	m4_ifdef([[M4_MODE_BOL_NEEDED]], [[	if ( ! YY_MORE_ADJ ) \
+		YY_CURRENT_BUFFER_LVALUE->yy_at_bol_before_match = YY_CURRENT_BUFFER_LVALUE->yy_at_bol; \
+	if ( yyleng > 0 ) {  \
 	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (yytext[yyleng - 1] == '\n'); \
 	} \
 ]])	YY_USER_ACTION
@@ -2875,6 +2885,7 @@ int yyFlexLexer::yyinput()
 
 	c = *(unsigned char *) YY_G(yy_c_buf_p);	/* cast for 8-bit char's */
 	YY_G(yy_hold_char) = *++YY_G(yy_c_buf_p);
+	*YY_G(yy_c_buf_p) = '\0';	/* preserve yytext */
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
@@ -2885,7 +2896,6 @@ m4_ifdef([[M4_MODE_YYLINENO]], [[
 ]])
 ]])
 m4_ifdef([[M4_MODE_NO_BOL_NEEDED]], [[
-	*YY_G(yy_c_buf_p) = '\0';	/* preserve yytext */
 m4_ifdef([[M4_MODE_YYLINENO]], [[
 	if ( c == '\n' ) {
 		M4_YY_INCR_LINENO();
@@ -3223,6 +3233,7 @@ void yyFlexLexer::yy_flush_buffer( yybuffer b )
 	b->yy_buf_pos = &b->yy_ch_buf[0];
 
 	b->yy_at_bol = 1;
+	b->yy_at_bol_before_match = 1;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
 	if ( b == yy_current_buffer() ) {
@@ -3403,6 +3414,7 @@ yybuffer yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 	b->yy_n_chars = b->yy_buf_size;
 	b->yy_is_interactive = 0;
 	b->yy_at_bol = 1;
+	b->yy_at_bol_before_match = 1;
 	b->yy_fill_buffer = 0;
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
@@ -3571,6 +3583,9 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 			YY_G(yy_hold_char) = *YY_G(yy_c_buf_p); \
 			*YY_G(yy_c_buf_p) = '\0'; \
 			yyleng = yyless_macro_arg; \
+			YY_CURRENT_BUFFER_LVALUE->yy_at_bol = ( yyleng > 0 ) ? \
+				(yytext[yyleng - 1] == '\n') : \
+				YY_CURRENT_BUFFER_LVALUE->yy_at_bol_before_match; \
 	} while ( 0 )
 
 
