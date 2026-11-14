@@ -2,6 +2,26 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** After yyless() gives text back, the scanner now works out whether it is
+    at the start of a line from the text that is left. When the text kept
+    ends in a newline, a rule that starts with ^ can match what follows.
+    With yyless(0), the scanner is back at the line state it had before
+    the match. Before, the scanner kept the line state of the whole token,
+    and such a rule did not match. (#452)
+
+    Thanks to Todd C. Miller.
+
+*** yyinput() no longer overwrites the characters it reads with NUL
+    bytes. A program that gave the scanner its own buffer with
+    yy_scan_buffer() found those characters gone from its buffer
+    afterwards. As a string, yytext now extends over the characters
+    that yyinput() has read, and yyleng, the length of the token, is
+    unchanged. (#396, #395)
+
+    Thanks to Satya Das.
+
 * Noteworthy changes in release 2.6.13 (2026-11-14) [stable]
 
 ** scanner
