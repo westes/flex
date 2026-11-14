@@ -882,6 +882,13 @@ static yy_state_type yy_get_previous_state ( M4_YY_PROTO_ONLY_ARG );
 static yy_state_type yy_try_NUL_trans ( yy_state_type current_state  M4_YY_PROTO_LAST_ARG);
 static int yy_get_next_buffer ( M4_YY_PROTO_ONLY_ARG );
 static void yynoreturn yypanic ( const char* msg M4_YY_PROTO_LAST_ARG );
+m4_ifdef([[M4_MODE_C_ONLY]], [[
+/* The name flex 2.6.4 gave yypanic(), which programs call themselves,
+ * even in their own first section, so it is defined before that. */
+#ifndef yy_fatal_error
+#define yy_fatal_error yypanic
+#endif
+]])
 ]])
 
 ]])
@@ -1624,13 +1631,6 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 #define YY_FATAL_ERROR(msg) LexerError( msg )
 ]])
 #endif
-
-m4_ifdef([[M4_MODE_C_ONLY]], [[
-/* The name flex 2.6.4 gave yypanic(), which programs call themselves. */
-#ifndef yy_fatal_error
-#define yy_fatal_error yypanic
-#endif
-]])
 
 /* Legacy interface */
 #ifndef YY_INPUT

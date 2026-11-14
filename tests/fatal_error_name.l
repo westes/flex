@@ -22,11 +22,14 @@
  */
 
 %{
-/* Test that a program can call yy_fatal_error(), the flex 2.6.4 name of
-   yypanic(), from its own code. */
+/* Test that a program can use yy_fatal_error(), the flex 2.6.4 name of
+   yypanic(), from its own code, including in the first section, as gpc
+   does to avoid an unused-function warning. */
 #include <stdio.h>
 #include <stdlib.h>
 #include "config.h"
+
+static void mention(void) { (void) yy_fatal_error; }
 %}
 
 %option 8bit nomain nodefault noyywrap
@@ -48,6 +51,7 @@ int
 main (void)
 {
     if (0) {
+        mention();
         give_up("not reached");
     }
     printf("TEST RETURNING OK.\n");
