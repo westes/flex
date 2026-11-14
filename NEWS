@@ -33,6 +33,15 @@ flex NEWS
     scanner's first section again, so the program can use them there.
     (#858)
 
+*** A non-reentrant C scanner whose rules never need backing up no
+    longer declares the two unused variables yy_last_accepting_state
+    and yy_last_accepting_cpos. Flex 2.6.5 and later declared them
+    anyway, so building such a scanner, for example one made with
+    %option full, stopped a program that compiles with -Werror, such
+    as the Kconfig lexer in the Xen hypervisor. (#859)
+
+    Thanks to Christoph Grüninger.
+
 ** test
 
 *** "make check" now tests only the build of flex. The tests of the
