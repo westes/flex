@@ -2,6 +2,38 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A scanner built with %array no longer reads or writes before the
+    start of its input buffer when yymore() is used after the scanner
+    switches buffers, after unput() has pushed text back to the start
+    of the buffer, or after the program has lengthened yytext. Since
+    flex 2.6.5 the scanner could point yytext before the buffer, and the
+    next refill or yyless() then went outside it. The text saved by
+    yymore() now ends at the start of the buffer. (#809)
+
+    Thanks to anshal ossaimi.
+
+*** A scanner with a very large set of rules is built correctly again.
+    Since flex 2.6.5, some of its tables could be given an element type
+    too small for the numbers stored in them. A C++ compiler rejected
+    the generated file with "narrowing conversion" errors. A C compiler
+    only warned, and in our test the scanner then looped forever.
+    Doxygen's code scanner is one example. Flex now chooses the types
+    as 2.6.4 did, and for a table of offsets or indexes by the largest
+    value it can hold. Two other tables of such a scanner are also half
+    the size they had become. (#816)
+
+    Thanks to Christoph Grüninger.
+
+*** A scanner that loads its tables from a file works again on 32-bit
+    systems. Since flex 2.6.5 the loader took a table of indexes for a
+    table of integers where a pointer is four bytes wide, and refused
+    the file with "table id not found in map". The tests for tables
+    files failed on i686 and on 32-bit ARM. (#838)
+
+    Thanks to Christoph Grüninger.
+
 * Noteworthy changes in release 2.6.12 (2026-11-14) [stable]
 
 ** scanner
