@@ -2,6 +2,18 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A program can declare yyunput() itself again, as it could with
+    flex 2.6.4. Flex 2.6.5 made yyunput a one-argument macro, so a
+    declaration such as "static void yyunput (int c, char *buf_ptr);",
+    which some programs write to silence an unused-function warning,
+    no longer compiled. The scanner's function is called yyunput again,
+    with the arguments it had in 2.6.4, and in a C++ scanner it is the
+    yyFlexLexer member of that name again. The macro is gone from the
+    default back end. In a rule's action, yyunput(c) is still accepted
+    and works as unput(c); anywhere else, use unput(c). (#858)
+
 * Noteworthy changes in release 2.6.11 (2026-11-12) [stable]
 
 ** scanner
