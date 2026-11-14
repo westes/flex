@@ -2727,6 +2727,13 @@ back end is intended to be a launching point for as yet unwritten back
 ends generating scanners in other languages such as Go, Rust, Java,
 Python, etc.
 
+The C99 back end defines its interface as ordinary global functions
+such as @code{yybegin()}, @code{yystart()}, @code{yyecho()},
+@code{yyatbol()} and @code{yysetbol()}.  A program that has its own
+function with one of those names cannot use that back end in the same
+program, and should rename its function.  The default back end does not
+have this limit, because it does not define those names.
+
 @anchor{option-rewrite}
 @item @code{%option rewrite}
 Back ends other than the default C generator can't assume they have
