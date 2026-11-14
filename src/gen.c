@@ -820,7 +820,7 @@ static void gentabs(void)
 	/* End generating yy_def */
 
 
-	ptype = optimize_pack(tblend + 1);
+	ptype = optimize_pack(total_states + 1);
 	/* Note: Used when !ctrl.fulltbl && !ctrl.fullspd).
 	 * (Alternately defined when ctrl.fullspd)
 	 */
@@ -859,7 +859,7 @@ static void gentabs(void)
 	/* End generating yy_nxt */
 
 	/* Begin generating yy_chk */
-	ptype = optimize_pack(tblend + 1);
+	ptype = optimize_pack(total_states + 1);
 	out_str ("m4_define([[M4_HOOK_CHK_TYPE]], [[%s]])", ptype->name);
 	out_dec ("m4_define([[M4_HOOK_CHK_SIZE]], [[%d]])", tblend + 1);
 	outn ("m4_define([[M4_HOOK_CHK_BODY]], [[m4_dnl");
