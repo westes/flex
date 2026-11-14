@@ -545,9 +545,8 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 		} \
 	while ( 0 )
-#define yyunput(c) yyunput_r( c, YY_G(yytext_ptr) M4_YY_CALL_LAST_ARG )
-/* Legacy interface */
-#define unput(c) yyunput_r( c, YY_G(yytext_ptr) M4_YY_CALL_LAST_ARG )
+/* Push a character back onto the input. In an action, flex also reads yyunput(c) as this. */
+#define unput(c) yyunput( c, YY_G(yytext_ptr) M4_YY_CALL_LAST_ARG )
 ]])
 
 #ifndef YY_STRUCT_YY_BUFFER_STATE
@@ -1473,7 +1472,7 @@ m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl
 #ifndef YY_NO_YYUNPUT
     m4_ifdef( [[M4_YY_NO_YYUNPUT]],,
     [[
-    static void yyunput_r ( int c, char *buf_ptr  M4_YY_PROTO_LAST_ARG);
+    static void yyunput ( int c, char *buf_ptr  M4_YY_PROTO_LAST_ARG);
     ]])
 #endif
 ]])
@@ -2770,10 +2769,10 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[m4_undefine([[M4_YY_NO_YYUNPUT]])]])
 m4_ifdef( [[M4_YY_NO_YYUNPUT]], , [[
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 #ifndef YY_NO_YYUNPUT
-static void yyunput_r YYFARGS2( int,c, char *,yy_bp)
+static void yyunput YYFARGS2( int,c, char *,yy_bp)
 ]])
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
-void yyFlexLexer::yyunput_r( int c, char* yy_bp)
+void yyFlexLexer::yyunput( int c, char* yy_bp)
 ]])
 {
 	char *yy_cp;

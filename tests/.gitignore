@@ -43,6 +43,10 @@ bol*
 !bol.txt
 at_bol_member
 at_bol_member.c
+declared_yyunput
+declared_yyunput.c
+cxx_yyunput_member
+cxx_yyunput_member.cc
 buffer_typedef_legacy
 buffer_typedef_legacy.c
 c_cxx_nr

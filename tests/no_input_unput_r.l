@@ -24,7 +24,7 @@
 %{
 /* Test that the legacy macros YY_NO_INPUT and YY_NO_UNPUT, defined in
    section 1 instead of using %option noinput nounput, still keep the
-   scanner from defining yyinput() and yyunput_r(). If it defined them,
+   scanner from defining yyinput() and yyunput(). If it defined them,
    the declarations in section 3 would conflict with the static
    functions and this test would not compile. */
 #include <stdio.h>
@@ -47,7 +47,7 @@
 %%
 
 extern int yyinput;
-extern int yyunput_r;
+extern int yyunput;
 
 int main(void);
 

@@ -967,11 +967,25 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 <ACTION>{
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
-	yyecho\(\)|yyinput\(\)|yystart\({FUNARGS}\)|yybegin\({FUNARGS}\)|yyunput\({FUNARGS}\)|yypanic\({FUNARGS}\)|yyatbol\(\)|yysetbol\({FUNARGS}\) {
+	yyecho\(\)|yyinput\(\)|yystart\({FUNARGS}\)|yybegin\({FUNARGS}\)|yypanic\({FUNARGS}\)|yyatbol\(\)|yysetbol\({FUNARGS}\) {
 			if (ctrl.rewrite)
 				context_call(yytext);
 			else
 				ACTION_ECHO;
+	}
+	yyunput\({FUNARGS}\) {
+			/* The default back end has no yyunput() macro, because
+			 * flex 2.6.4 declared a function of that name that programs
+			 * declare for themselves. Read yyunput(c) in an action as
+			 * unput(c). */
+			if (ctrl.rewrite)
+				context_call(yytext);
+			else if (strchr(yytext, ',') != NULL)
+				ACTION_ECHO;	/* a 2.6.4-style call with the buffer pointer */
+			else {
+				add_action("unput");
+				add_action(yytext + strlen("yyunput"));
+			}
 	}
 	yyterminate\(\)|yyless\({FUNARGS}\) {
 			add_action("]""]");
