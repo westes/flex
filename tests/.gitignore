@@ -55,6 +55,8 @@ fatal_error_name
 fatal_error_name.c
 user_yy_functions
 user_yy_functions.c
+no_backing_up
+no_backing_up.c
 buffer_typedef_legacy
 buffer_typedef_legacy.c
 c_cxx_nr

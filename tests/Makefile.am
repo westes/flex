@@ -84,6 +84,7 @@ SPORADIC_TESTS = \
 	buf_size_section1 \
 	fatal_error_name \
 	user_yy_functions \
+	no_backing_up \
 	buffer_typedef_legacy \
 	c_cxx_nr \
 	c_cxx_r \
@@ -162,6 +163,8 @@ cxx_nodefault_SOURCES = cxx_nodefault.ll
 buf_size_section1_SOURCES = buf_size_section1.l
 fatal_error_name_SOURCES = fatal_error_name.l
 user_yy_functions_SOURCES = user_yy_functions.l
+no_backing_up_SOURCES = no_backing_up.l
+no_backing_up_CFLAGS = $(AM_CFLAGS) -Werror=unused-variable
 buffer_typedef_legacy_SOURCES = buffer_typedef_legacy.l
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
@@ -250,6 +253,7 @@ CLEANFILES = \
 	buf_size_section1.c \
 	fatal_error_name.c \
 	user_yy_functions.c \
+	no_backing_up.c \
 	buffer_typedef_legacy.c \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
