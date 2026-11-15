@@ -37,6 +37,9 @@
 %option nounput noyywrap yylineno warn nodefault noinput
 %{
 #include <string.h>
+#ifdef YY_BUF_SIZE
+#undef YY_BUF_SIZE
+#endif
 #define YY_BUF_SIZE 16
 static int singles;
 %}
