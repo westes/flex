@@ -61,6 +61,8 @@ user_yy_functions
 user_yy_functions.c
 no_backing_up
 no_backing_up.c
+yy_break
+yy_break.c
 yyinput_buffer
 yyinput_buffer.c
 yyinput_buffer_c99
