@@ -1520,9 +1520,16 @@ m4_ifdef([[M4_MODE_NO_YYINPUT]], [[#define YY_NO_YYINPUT 1]])
 #ifndef YY_NO_YYINPUT
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl
+/* As in flex 2.6.4, a C compiler sees this function as input() and a C++
+ * compiler sees it as yyinput(). Programs declare yyinput themselves, so
+ * the name is not defined for C. flex reads yyinput() in a rule's action
+ * as YY_CALL_INPUT(), which names whichever one exists. */
+#ifdef __cplusplus
 static int yyinput ( M4_YY_PROTO_ONLY_ARG );
-#ifndef __cplusplus
-#define input yyinput
+#define YY_CALL_INPUT yyinput
+#else
+static int input ( M4_YY_PROTO_ONLY_ARG );
+#define YY_CALL_INPUT input
 #endif
 ]])
 ]])
@@ -2824,7 +2831,11 @@ m4_ifdef([[M4_MODE_C_ONLY]], [[
 
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 #ifndef YY_NO_YYINPUT
+#ifdef __cplusplus
 int yyinput (M4_YY_DEF_ONLY_ARG)
+#else
+int input (M4_YY_DEF_ONLY_ARG)
+#endif
 ]])
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 int yyFlexLexer::yyinput()
@@ -2872,7 +2883,8 @@ int yyFlexLexer::yyinput()
 				if ( ! YY_G(yy_did_buffer_switch_on_eof) ) {
 					YY_NEW_FILE;
 				}
-				return yyinput(M4_YY_CALL_ONLY_ARG);
+m4_ifdef([[M4_MODE_C_ONLY]], [[				return YY_CALL_INPUT(M4_YY_CALL_ONLY_ARG);]])
+m4_ifdef([[M4_MODE_CXX_ONLY]], [[				return yyinput(M4_YY_CALL_ONLY_ARG);]])
 
 			case EOB_ACT_CONTINUE_SCAN:
 				YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + offset;

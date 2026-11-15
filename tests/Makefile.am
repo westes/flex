@@ -78,6 +78,8 @@ SPORADIC_TESTS = \
 	bison_yylloc \
 	bison_yylval \
 	at_bol_member \
+	declared_yyinput \
+	declared_yyinput_r \
 	declared_yyunput \
 	cxx_yyunput_member \
 	cxx_nodefault \
@@ -162,6 +164,8 @@ bison_yylloc_SOURCES = no_bison_stub.c
 bison_yylval_SOURCES = no_bison_stub.c
 endif
 at_bol_member_SOURCES = at_bol_member.l
+declared_yyinput_SOURCES = declared_yyinput.l
+declared_yyinput_r_SOURCES = declared_yyinput_r.l
 declared_yyunput_SOURCES = declared_yyunput.l
 cxx_yyunput_member_SOURCES = cxx_yyunput_member.ll
 cxx_nodefault_SOURCES = cxx_nodefault.ll
@@ -258,6 +262,8 @@ CLEANFILES = \
 	bison_yylval_scanner.c \
 	bison_yylval_scanner.h \
 	at_bol_member.c \
+	declared_yyinput.c \
+	declared_yyinput_r.c \
 	declared_yyunput.c \
 	cxx_yyunput_member.cc \
 	cxx_nodefault.cc \

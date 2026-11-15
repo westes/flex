@@ -968,9 +968,24 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 <ACTION>{
 	"{"		ACTION_ECHO; ++bracelevel;
 	"}"		ACTION_ECHO; --bracelevel;
-	yyinput\(\)|yypanic\({FUNARGS}\) {
+	yypanic\({FUNARGS}\) {
 			if (ctrl.rewrite)
 				context_call(yytext);
+			else
+				ACTION_ECHO;
+	}
+	yyinput\(\) {
+			if (ctrl.rewrite)
+				context_call(yytext);
+			else
+				legacy_call(yytext);
+	}
+	yyinput/[[:space:]]*"(" {
+			/* A call with an argument, possibly after a space. Only
+			 * the default C back end renames it; the others leave
+			 * it alone, as they always have. */
+			if (!ctrl.rewrite && !ctrl.C_plus_plus)
+				add_action("YY_CALL_INPUT");
 			else
 				ACTION_ECHO;
 	}
@@ -1116,10 +1131,14 @@ void set_input_file( char *file )
  * defined, because programs written for 2.6.4 have their own functions
  * with names like yybegin (GCC does), and a macro would rewrite them.
  * In an action, write the call in the 2.6.4 way instead. A call with
- * two arguments, which is a 2.6.4 yyunput, is left as it is. */
+ * two arguments, which is a 2.6.4 yyunput, is left as it is. yyinput()
+ * is written as YY_CALL_INPUT(), which is input() for a C compiler and
+ * yyinput() for a C++ compiler, as in 2.6.4. A C++ scanner has the
+ * yyinput member and keeps the call. */
 void legacy_call(char *txt) {
 	static const struct { const char *name; const char *with; } map[] = {
 		{ "yyecho", "ECHO" },
+		{ "yyinput", "YY_CALL_INPUT" },
 		{ "yystart", "YY_START" },
 		{ "yybegin", "BEGIN" },
 		{ "yyunput", "unput" },
@@ -1135,6 +1154,8 @@ void legacy_call(char *txt) {
 			continue;
 		if (strcmp(map[i].name, "yyunput") == 0 && strchr(txt, ',') != NULL) {
 			add_action(txt);
+		} else if (strcmp(map[i].name, "yyinput") == 0 && ctrl.C_plus_plus) {
+			add_action(txt);	/* the C++ member keeps its name */
 		} else if (strcmp(map[i].name, "yyecho") == 0 ||
 			   strcmp(map[i].name, "yystart") == 0) {
 			/* object-like in 2.6.4: ECHO and YY_START take no () */
