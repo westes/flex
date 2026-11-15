@@ -132,6 +132,8 @@ lineno*
 !lineno_generated.l.in
 !lineno.rules
 !lineno.txt
+long_call_c99
+long_call_c99.c
 mem_nr
 mem_nr.c
 mem_r
