@@ -43,6 +43,10 @@ bol*
 !bol.txt
 at_bol_member
 at_bol_member.c
+declared_yyinput
+declared_yyinput.c
+declared_yyinput_r
+declared_yyinput_r.c
 declared_yyunput
 declared_yyunput.c
 cxx_yyunput_member

@@ -1450,8 +1450,13 @@ Finally, note that you cannot put back @samp{EOF} to attempt to mark the
 input stream with an end-of-file.
 
 @cindex yyinput()
-@code{yyinput()} reads the next character from the input stream.  For
-example, the following is one way to eat up C comments:
+@code{yyinput()} reads the next character from the input stream.  In a
+rule's action, the default C back end reads @code{yyinput()} as the
+function that flex 2.6.4 called @code{input()}, so a program can declare
+a @code{yyinput} of its own.  A call outside an action must use the name
+the C compiler sees: @code{input()}, or @code{yyinput()} when the
+scanner is compiled as C++.  For example, the following is one way to
+eat up C comments:
 
 @cindex comments, discarding
 @cindex discarding C comments
@@ -4723,8 +4728,8 @@ a per-scanner (single global variable) basis.
 @code{yylineno} is not part of the POSIX specification.
 
 @item
-The @code{input()} routine (which has become @code{yyinput()} in modern
-Flex) is not redefinable, though it may be called
+The @code{input()} routine (which may also be written @code{yyinput()}
+in an action) is not redefinable, though it may be called
 to read characters following whatever has been matched by a rule.  If
 @code{input()} encounters an end-of-file the normal @code{yywrap()}
 processing is done.  A ``real'' end-of-file is returned by
@@ -9008,8 +9013,9 @@ YY_AT_BOL(): Replaced by yyatbol().
 yy_set_bol(): Replaced by yysetbol()
 
 @item
-input(): Replaced by yyinput(). This function was already yyinput()
-in the C++ back end.
+input(): May be written yyinput() in an action. The default C back end
+still names the function input(), as flex 2.6.4 did, and the C++ back
+end names it yyinput().
 
 @item:
 unput(): Replaced by yyunput().
