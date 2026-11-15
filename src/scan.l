@@ -1155,11 +1155,11 @@ void context_call(char *txt) {
 	if (context_arg == NULL) {
 		add_action(txt);
 	} else {
-		char buf[BUFSIZ];
+		char *buf;
 
 		/* otherwise, supply the context string as a final argument */
 		assert(txt[strlen(txt)-1] == ')');
-		strncpy(buf, txt, sizeof(buf));
+		buf = xstrdup(txt);
 		buf[strlen(buf)-1] = '\0';	/* remove trailing ) */
 		add_action(buf);
 		if (txt[strlen(buf)-1] != '(') {
@@ -1167,6 +1167,7 @@ void context_call(char *txt) {
 		}
 		add_action(context_arg);
 		add_action(")");
+		free(buf);
 	}
 }
 

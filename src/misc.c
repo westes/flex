@@ -691,6 +691,7 @@ void comment(const char *txt)
 	bool eol;
 
 	strncpy(buf, txt, MAXLINE-1);
+	buf[MAXLINE-1] = '\0';
 	eol = buf[strlen(buf)-1] == '\n';
 
 	if (eol)
