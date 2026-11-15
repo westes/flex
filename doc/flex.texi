@@ -2443,7 +2443,9 @@ the current buffer will have @samp{^} rules active, false otherwise.
 In the generated scanner, the actions are all gathered in one large
 switch statement and separated using a post-action fragment, which
 may be redefined.  By default, in C it is simply a @code{break}, to
-separate each rule's action from the following rule's. Other target
+separate each rule's action from the following rule's. The default
+back end also still uses a @code{YY_BREAK} that the program defines in
+the first section, as flex 2.6.4 did. Other target
 languages may have different defaults for this action, often an empty
 string.  If a target language has no case statement this option will
 probably be ineffective.
@@ -9030,7 +9032,7 @@ unput(): Replaced by yyunput().
 #define YY_USER_ACTION replaced by @code{pre-action} option.
 
 @item
-#define YY_BREAK replaced by @code{post-action} option.
+#define YY_BREAK: Still used by the default back end. The @code{post-action} option does the same in every back end.
 
 @item
 YYSTATE: is accepted as an alias for @code{yystart()}

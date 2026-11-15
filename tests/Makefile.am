@@ -87,6 +87,7 @@ SPORADIC_TESTS = \
 	fatal_error_name \
 	user_yy_functions \
 	no_backing_up \
+	yy_break \
 	yyinput_buffer \
 	yyinput_buffer_c99 \
 	large_tables \
@@ -174,6 +175,7 @@ fatal_error_name_SOURCES = fatal_error_name.l
 user_yy_functions_SOURCES = user_yy_functions.l
 no_backing_up_SOURCES = no_backing_up.l
 no_backing_up_CFLAGS = $(AM_CFLAGS) -Werror=unused-variable
+yy_break_SOURCES = yy_break.l
 yyinput_buffer_SOURCES = yyinput_buffer.l
 yyinput_buffer_c99_SOURCES = yyinput_buffer_c99.l
 large_tables_SOURCES = large_tables.l
@@ -271,6 +273,7 @@ CLEANFILES = \
 	fatal_error_name.c \
 	user_yy_functions.c \
 	no_backing_up.c \
+	yy_break.c \
 	yyinput_buffer.c \
 	yyinput_buffer_c99.c \
 	large_tables.c \
