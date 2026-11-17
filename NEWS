@@ -2,6 +2,25 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** After a rule's action has called input() or yyinput(), yytext as a
+    string ends where the token ends, as it did with flex 2.6.4. Flex
+    2.6.14 made it run on over the characters that had been read, so a
+    program that copied yytext after reading ahead, such as the
+    gobject-introspection comment scanner, got those characters twice.
+    The characters read are still left as they were in a buffer that
+    the program supplied, and yyleng is unchanged. (#870)
+
+    The C++ class yyFlexLexer in FlexLexer.h has one more member for
+    this, so a C++ program should be rebuilt, along with every library
+    of its own that includes FlexLexer.h, when it moves to this release.
+
+*** yyless() after input() or yyinput() gives back the right text and
+    no longer writes a stale character over the end of the token. Before,
+    the program's own buffer could be changed and the next token could
+    start with the wrong character, as with flex 2.6.4.
+
 * Noteworthy changes in release 2.6.15 (2026-11-15) [stable]
 
 ** scanner
