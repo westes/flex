@@ -1292,7 +1292,15 @@ int yyinput (yyscan_t yyscanner)
 
 			case EOB_ACT_CONTINUE_SCAN:
 				yyscanner->yy_c_buf_p = yyscanner->yytext_ptr + offset;
+				/* unput() can leave the end of yytext in front of
+				 * yytext_ptr, which the refill did not keep, and
+				 * yytext then ends at its start. If yytext ended at
+				 * the old end of the buffer, new input is there now. */
+				if ( hold_offset < 0 ) {
+					hold_offset = 0;
+				}
 				yyscanner->yy_hold_ptr = yyscanner->yytext_ptr + hold_offset;
+				yyscanner->yy_hold_char = *yyscanner->yy_hold_ptr;
 				break;
 			default:
 				yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);
