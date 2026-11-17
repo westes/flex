@@ -440,6 +440,7 @@ m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 	size_t yyBufferStackMax; /**< capacity of stack. */
 	yybuffer * yyBufferStack; /**< Stack as an array. */
 	char yyHoldChar;
+	char *yyHoldPtr; /**< where yyHoldChar was taken from: the end of yytext. */
 	int yyNChars;
 	char *yyCBufP;
 	bool yyInit;
@@ -526,6 +527,7 @@ static void yy_load_buffer_state  (FlexLexer *yyscanner)
 	yyscanner->yytext_ptr = yyscanner->yyCBufP = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyBufPos;
 	yyscanner->yyin = yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyInputFile;
 	yyscanner->yyHoldChar = *yyscanner->yyCBufP;
+	yyscanner->yyHoldPtr = yyscanner->yyCBufP;
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 	/* The yymore() text is not in the new buffer, so it ends here, as with %pointer. */
 	yyscanner->yyMoreOffset = yyscanner->yyPrevMoreOffset = 0;
@@ -731,7 +733,7 @@ void yypush_buffer_state(yybuffer new_buffer, FlexLexer *yyscanner)
 	/* This block is copied from yy_switch_to_buffer. */
 	if (yy_current_buffer(yyscanner) != NULL) {
 		/* Flush out information for old buffer. */
-		*yyscanner->yyCBufP = yyscanner->yyHoldChar;
+		*yyscanner->yyHoldPtr = yyscanner->yyHoldChar;
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyBufPos = yyscanner->yyCBufP;
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars = yyscanner->yyNChars;
 	}
@@ -871,7 +873,7 @@ void yyunput(char c, FlexLexer *yyscanner)
 	yyCp = yyscanner->yyCBufP;
 
 	/* undo effects of setting up yytext */
-	*yyCp = yyscanner->yyHoldChar;
+	*yyscanner->yyHoldPtr = yyscanner->yyHoldChar;
 
 	if (yyCp < yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyChBuf + 2) {
 		/* need to shift things up to make room */
@@ -904,6 +906,7 @@ m4_ifdef([[M4_MODE_YYLINENO]],
 ]])
 
 	yyscanner->yyHoldChar = *yyCp;
+	yyscanner->yyHoldPtr = yyCp;
 	yyscanner->yyCBufP = yyCp;
 }
 ]])
@@ -1113,8 +1116,14 @@ m4_ifdef([[M4_MODE_USES_REJECT]],
 int yyinput(FlexLexer *yyscanner)
 {
 	int c;
+	int holdOffset;
 
-	*yyscanner->yyCBufP = yyscanner->yyHoldChar;
+	/* Put back the character under the end of yytext, so that every
+	 * character of the input is in place while we read. It is replaced
+	 * by the NUL again before we return: yytext ends where the token
+	 * ends, and no character after it is ever changed. */
+	holdOffset = (int) (yyscanner->yyHoldPtr - yyscanner->yytext_ptr);
+	*yyscanner->yyHoldPtr = yyscanner->yyHoldChar;
 
 	if (*yyscanner->yyCBufP == flexBufferSentinel) {
 		/* yyCBufP now points to the character we want to return.
@@ -1157,6 +1166,7 @@ int yyinput(FlexLexer *yyscanner)
 
 			case EOB_ACT_CONTINUE_SCAN:
 				yyscanner->yyCBufP = yyscanner->yytext_ptr + offset;
+				yyscanner->yyHoldPtr = yyscanner->yytext_ptr + holdOffset;
 				break;
 			default:
 				yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);
@@ -1165,8 +1175,8 @@ int yyinput(FlexLexer *yyscanner)
 	}
 
 	c = *(unsigned char *) yyscanner->yyCBufP;	/* cast for 8-bit char's */
-	yyscanner->yyHoldChar = *++yyscanner->yyCBufP;
-	*yyscanner->yyCBufP = '\0';	/* preserve yytext */
+	++yyscanner->yyCBufP;
+	*yyscanner->yyHoldPtr = '\0';	/* preserve yytext */
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbolFlag = (c == '\n');
@@ -1424,6 +1434,7 @@ void yyDoBeforeAction(FlexLexer *yyscanner, char *yyCp, char *yyBp) {
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyscanner->yyleng = (int) (yyCp - yyBp);]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyscanner->yyleng = (int) (yyCp - yyBp) + yyscanner->yyMoreOffset;]])]]) \
 	yyscanner->yyHoldChar = *yyCp; \
+	yyscanner->yyHoldPtr = yyCp; \
 	*yyCp = '\0'; \
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 	if (yyscanner->yyleng >= YYLMAX) \
@@ -1507,7 +1518,7 @@ void yy_switch_to_buffer(yybuffer newBuffer, FlexLexer *yyscanner)
 	}
 	if (yy_current_buffer(yyscanner)) {
 		/* Flush out information for old buffer. */
-		*yyscanner->yyCBufP = yyscanner->yyHoldChar;
+		*yyscanner->yyHoldPtr = yyscanner->yyHoldChar;
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyBufPos = yyscanner->yyCBufP;
 		yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyNChars = yyscanner->yyNChars;
 	}
@@ -1972,10 +1983,11 @@ m4_ifdef([[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
 			}
 ]])
 ]])
+			/* Support of yytext. The character was taken from the end
+			 * of the last token, which is behind yyCBufP when
+			 * yyinput() has read characters since. */
+			*yyscanner->yyHoldPtr = yyscanner->yyHoldChar;
 			yyCp = yyscanner->yyCBufP;
-
-			/* Support of yytext. */
-			*yyCp = yyscanner->yyHoldChar;
 
 			/* yyBp points to the position in yyChBuf of the start of
 			 * the current run.
@@ -2290,14 +2302,15 @@ void yyless(int n, FlexLexer *yyscanner) {
 	m4_ifdef([[M4_MODE_YYLINENO]], [[yyLessLineno(n, yyscanner);]])
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 	/* yytext is a copy; the token itself is at yytext_ptr. */
-	*yyscanner->yyCBufP = yyscanner->yyHoldChar;
+	*yyscanner->yyHoldPtr = yyscanner->yyHoldChar;
 	yyscanner->yyCBufP = yyscanner->yytext_ptr + n;
 	yyscanner->yytext[n] = '\0';
 ]], [[
-	yyscanner->yytext[yyscanner->yyleng] = yyscanner->yyHoldChar;
+	*yyscanner->yyHoldPtr = yyscanner->yyHoldChar;
 	yyscanner->yyCBufP = yyscanner->yytext + n;
 ]])
 	yyscanner->yyHoldChar = *yyscanner->yyCBufP;
+	yyscanner->yyHoldPtr = yyscanner->yyCBufP;
 	*yyscanner->yyCBufP = '\0';
 	yyscanner->yyleng = n;
 	yyscanner->yyBufferStack[yyscanner->yyBufferStackTop]->yyatbolFlag = (n > 0) ?

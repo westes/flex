@@ -172,8 +172,10 @@ protected:
   std::istream yyin;  // input source for default LexerInput
   std::ostream yyout; // output sink for default LexerOutput
 
-  // yy_hold_char holds the character lost when yytext is formed.
+  // yy_hold_char holds the character lost when yytext is formed, and
+  // yy_hold_ptr is where it was lost.
   char yy_hold_char;
+  char* yy_hold_ptr;
 
   // Number of characters read into yy_ch_buf.
   int yy_n_chars;
