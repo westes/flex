@@ -67,6 +67,10 @@ yyinput_buffer
 yyinput_buffer.c
 yyinput_buffer_c99
 yyinput_buffer_c99.c
+yytext_input
+yytext_input.c
+yytext_input_c99
+yytext_input_c99.c
 large_tables
 large_tables.c
 legacy_hooks

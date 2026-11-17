@@ -660,8 +660,11 @@ m4_ifdef([[M4_MODE_C_ONLY]], [[
 
 m4_ifdef([[M4_YY_NOT_REENTRANT]], [[
 m4_ifdef( [[M4_YY_IN_HEADER]],,[[m4_dnl
-/* yy_hold_char holds the character lost when yytext is formed. */
+/* yy_hold_char holds the character lost when yytext is formed, and
+ * yy_hold_ptr is where it was lost: the end of the token. yy_c_buf_p is
+ * where scanning continues, which is later when yyinput() has read ahead. */
 static char yy_hold_char;
+static char *yy_hold_ptr;
 static int yy_n_chars;		/* number of characters read into yy_ch_buf */
 int yyleng;
 
@@ -931,6 +934,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyleng = (int) (yy_cp - yy_bp);]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyleng = (int) (yy_cp - yy_bp) + YY_G(yy_more_offset);]])]]) \
 	YY_G(yy_hold_char) = *yy_cp; \
+	YY_G(yy_hold_ptr) = yy_cp; \
 	*yy_cp = '\0'; \
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 	if ( yyleng >= YYLMAX ) \
@@ -1287,6 +1291,7 @@ struct yyguts_t {
 	size_t yy_buffer_stack_max; /**< capacity of stack. */
 	yybuffer * yy_buffer_stack; /**< Stack as an array. */
 	char yy_hold_char;
+	char *yy_hold_ptr;
 	int yy_n_chars;
 	int yyleng_r;
 	char *yy_c_buf_p;
@@ -2027,10 +2032,11 @@ m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
 			}
 ]])
 ]])
+			/* Support of yytext. The character was taken from the end
+			 * of the last token, which is behind yy_c_buf_p when
+			 * yyinput() has read characters since. */
+			*YY_G(yy_hold_ptr) = YY_G(yy_hold_char);
 			yy_cp = YY_G(yy_c_buf_p);
-
-			/* Support of yytext. */
-			*yy_cp = YY_G(yy_hold_char);
 
 			/* yy_bp points to the position in yy_ch_buf of the start of
 			 * the current run.
@@ -2796,7 +2802,7 @@ void yyFlexLexer::yyunput( int c, char* yy_bp)
 	yy_cp = YY_G(yy_c_buf_p);
 
 	/* undo effects of setting up yytext */
-	*yy_cp = YY_G(yy_hold_char);
+	*YY_G(yy_hold_ptr) = YY_G(yy_hold_char);
 
 	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 ) {
 		/* need to shift things up to make room */
@@ -2831,6 +2837,7 @@ m4_ifdef( [[M4_MODE_YYLINENO]],
 
 	YY_G(yytext_ptr) = yy_bp;
 	YY_G(yy_hold_char) = *yy_cp;
+	YY_G(yy_hold_ptr) = yy_cp;
 	YY_G(yy_c_buf_p) = yy_cp;
 }
 m4_ifdef([[M4_MODE_C_ONLY]], [[
@@ -2851,9 +2858,15 @@ int yyFlexLexer::yyinput()
 ]])
 {
 	int c;
+	int hold_offset;
 	M4_YY_DECL_GUTS_VAR();
 
-	*YY_G(yy_c_buf_p) = YY_G(yy_hold_char);
+	/* Put back the character under the end of yytext, so that every
+	 * character of the input is in place while we read. It is replaced
+	 * by the NUL again before we return: yytext ends where the token
+	 * ends, and no character after it is ever changed. */
+	hold_offset = (int) (YY_G(yy_hold_ptr) - YY_G(yytext_ptr));
+	*YY_G(yy_hold_ptr) = YY_G(yy_hold_char);
 
 	if ( *YY_G(yy_c_buf_p) == YY_END_OF_BUFFER_CHAR ) {
 		/* yy_c_buf_p now points to the character we want to return.
@@ -2897,6 +2910,7 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[				return yyinput(M4_YY_CALL_ONLY_ARG);]])
 
 			case EOB_ACT_CONTINUE_SCAN:
 				YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + offset;
+				YY_G(yy_hold_ptr) = YY_G(yytext_ptr) + hold_offset;
 				break;
 			default:
 				YY_FATAL_ERROR("unexpected return value from yy_get_next_buffer()");
@@ -2905,8 +2919,8 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[				return yyinput(M4_YY_CALL_ONLY_ARG);]])
 	}
 
 	c = *(unsigned char *) YY_G(yy_c_buf_p);	/* cast for 8-bit char's */
-	YY_G(yy_hold_char) = *++YY_G(yy_c_buf_p);
-	*YY_G(yy_c_buf_p) = '\0';	/* preserve yytext */
+	++YY_G(yy_c_buf_p);
+	*YY_G(yy_hold_ptr) = '\0';	/* preserve yytext */
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
@@ -3025,7 +3039,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	}
 	if ( yy_current_buffer() ) {
 		/* Flush out information for old buffer. */
-		*YY_G(yy_c_buf_p) = YY_G(yy_hold_char);
+		*YY_G(yy_hold_ptr) = YY_G(yy_hold_char);
 		YY_CURRENT_BUFFER_LVALUE->yy_buf_pos = YY_G(yy_c_buf_p);
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = YY_G(yy_n_chars);
 	}
@@ -3076,6 +3090,7 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 	yyin.rdbuf(YY_CURRENT_BUFFER_LVALUE->yy_input_file);
 ]])
 	YY_G(yy_hold_char) = *YY_G(yy_c_buf_p);
+	YY_G(yy_hold_ptr) = YY_G(yy_c_buf_p);
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 	/* The yymore() text is not in the new buffer, so it ends here, as with %pointer. */
 	YY_G(yy_more_offset) = YY_G(yy_prev_more_offset) = 0;
@@ -3288,7 +3303,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* This block is copied from yy_switch_to_buffer. */
 	if ( yy_current_buffer() != NULL ) {
 		/* Flush out information for old buffer. */
-		*YY_G(yy_c_buf_p) = YY_G(yy_hold_char);
+		*YY_G(yy_hold_ptr) = YY_G(yy_hold_char);
 		YY_CURRENT_BUFFER_LVALUE->yy_buf_pos = YY_G(yy_c_buf_p);
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = YY_G(yy_n_chars);
 	}
@@ -3594,14 +3609,15 @@ int yyFlexLexer::yy_top_state()
 		YY_LESS_LINENO(yyless_macro_arg);\
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 			/* yytext is a copy; the token itself is at yytext_ptr. */ \
-			*YY_G(yy_c_buf_p) = YY_G(yy_hold_char); \
+			*YY_G(yy_hold_ptr) = YY_G(yy_hold_char); \
 			YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + yyless_macro_arg; \
 			yytext[yyless_macro_arg] = '\0'; \
 ]], [[ \
-			yytext[yyleng] = YY_G(yy_hold_char); \
+			*YY_G(yy_hold_ptr) = YY_G(yy_hold_char); \
 			YY_G(yy_c_buf_p) = yytext + yyless_macro_arg; \
 ]]) \
 			YY_G(yy_hold_char) = *YY_G(yy_c_buf_p); \
+			YY_G(yy_hold_ptr) = YY_G(yy_c_buf_p); \
 			*YY_G(yy_c_buf_p) = '\0'; \
 			yyleng = yyless_macro_arg; \
 			YY_CURRENT_BUFFER_LVALUE->yy_at_bol = ( yyleng > 0 ) ? \

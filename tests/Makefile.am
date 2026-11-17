@@ -90,6 +90,8 @@ SPORADIC_TESTS = \
 	yy_break \
 	yyinput_buffer \
 	yyinput_buffer_c99 \
+	yytext_input \
+	yytext_input_c99 \
 	large_tables \
 	legacy_hooks \
 	buffer_typedef_legacy \
@@ -178,6 +180,8 @@ no_backing_up_CFLAGS = $(AM_CFLAGS) -Werror=unused-variable
 yy_break_SOURCES = yy_break.l
 yyinput_buffer_SOURCES = yyinput_buffer.l
 yyinput_buffer_c99_SOURCES = yyinput_buffer_c99.l
+yytext_input_SOURCES = yytext_input.l
+yytext_input_c99_SOURCES = yytext_input_c99.l
 large_tables_SOURCES = large_tables.l
 large_tables_CFLAGS = $(AM_CFLAGS) -Werror=overflow
 legacy_hooks_SOURCES = legacy_hooks.l
@@ -276,6 +280,8 @@ CLEANFILES = \
 	yy_break.c \
 	yyinput_buffer.c \
 	yyinput_buffer_c99.c \
+	yytext_input.c \
+	yytext_input_c99.c \
 	large_tables.c \
 	legacy_hooks.c \
 	buffer_typedef_legacy.c \

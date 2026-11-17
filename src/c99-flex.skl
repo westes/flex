@@ -537,6 +537,7 @@ struct yyguts_t {
 	size_t yy_buffer_stack_max; /**< capacity of stack. */
 	yybuffer * yy_buffer_stack; /**< Stack as an array. */
 	char yy_hold_char;
+	char *yy_hold_ptr; /**< where yy_hold_char was taken from: the end of yytext. */
 	int yy_n_chars;
 	int yyleng_r;
 	char *yy_c_buf_p;
@@ -649,6 +650,7 @@ static void yy_load_buffer_state  (yyscan_t yyscanner)
 	yyscanner->yytext_ptr = yyscanner->yy_c_buf_p = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_pos;
 	yyscanner->yyin_r = yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_input_file;
 	yyscanner->yy_hold_char = *yyscanner->yy_c_buf_p;
+	yyscanner->yy_hold_ptr = yyscanner->yy_c_buf_p;
 m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 	/* The yymore() text is not in the new buffer, so it ends here, as with %pointer. */
 	yyscanner->yy_more_offset = yyscanner->yy_prev_more_offset = 0;
@@ -855,7 +857,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	/* This block is copied from yy_switch_to_buffer. */
 	if ( yy_current_buffer(yyscanner) != NULL ) {
 		/* Flush out information for old buffer. */
-		*yyscanner->yy_c_buf_p = yyscanner->yy_hold_char;
+		*yyscanner->yy_hold_ptr = yyscanner->yy_hold_char;
 		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_pos = yyscanner->yy_c_buf_p;
 		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars = yyscanner->yy_n_chars;
 	}
@@ -996,7 +998,7 @@ void yyunput(char c, yyscan_t yyscanner)
 	yy_cp = yyscanner->yy_c_buf_p;
 
 	/* undo effects of setting up yytext */
-	*yy_cp = yyscanner->yy_hold_char;
+	*yyscanner->yy_hold_ptr = yyscanner->yy_hold_char;
 
 	if ( yy_cp < yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_ch_buf + 2 ) {
 		/* need to shift things up to make room */
@@ -1030,6 +1032,7 @@ m4_ifdef( [[M4_MODE_YYLINENO]],
 ]])
 
 	yyscanner->yy_hold_char = *yy_cp;
+	yyscanner->yy_hold_ptr = yy_cp;
 	yyscanner->yy_c_buf_p = yy_cp;
 }
 ]])
@@ -1239,8 +1242,14 @@ m4_ifdef( [[M4_MODE_USES_REJECT]],
 int yyinput (yyscan_t yyscanner)
 {
 	int c;
+	int hold_offset;
 
-	*yyscanner->yy_c_buf_p = yyscanner->yy_hold_char;
+	/* Put back the character under the end of yytext, so that every
+	 * character of the input is in place while we read. It is replaced
+	 * by the NUL again before we return: yytext ends where the token
+	 * ends, and no character after it is ever changed. */
+	hold_offset = (int) (yyscanner->yy_hold_ptr - yyscanner->yytext_ptr);
+	*yyscanner->yy_hold_ptr = yyscanner->yy_hold_char;
 
 	if ( *yyscanner->yy_c_buf_p == YY_END_OF_BUFFER_CHAR ) {
 		/* yy_c_buf_p now points to the character we want to return.
@@ -1283,6 +1292,7 @@ int yyinput (yyscan_t yyscanner)
 
 			case EOB_ACT_CONTINUE_SCAN:
 				yyscanner->yy_c_buf_p = yyscanner->yytext_ptr + offset;
+				yyscanner->yy_hold_ptr = yyscanner->yytext_ptr + hold_offset;
 				break;
 			default:
 				yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);
@@ -1291,8 +1301,8 @@ int yyinput (yyscan_t yyscanner)
 	}
 
 	c = *(unsigned char *) yyscanner->yy_c_buf_p;	/* cast for 8-bit char's */
-	yyscanner->yy_hold_char = *++yyscanner->yy_c_buf_p;
-	*yyscanner->yy_c_buf_p = '\0';	/* preserve yytext */
+	++yyscanner->yy_c_buf_p;
+	*yyscanner->yy_hold_ptr = '\0';	/* preserve yytext */
 
 m4_ifdef([[M4_MODE_BOL_NEEDED]], [[
 	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = (c == '\n');
@@ -1608,6 +1618,7 @@ void yy_do_before_action(yyscan_t yyscanner, char *yy_cp, char *yy_bp) {
 	m4_ifdef([[M4_MODE_NO_YYMORE_USED]], [[yyscanner->yyleng_r = (int) (yy_cp - yy_bp);]]) \
 	m4_ifdef([[M4_MODE_YYMORE_USED]], [[m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[yyscanner->yyleng_r = (int) (yy_cp - yy_bp) + yyscanner->yy_more_offset;]])]]) \
 	yyscanner->yy_hold_char = *yy_cp; \
+	yyscanner->yy_hold_ptr = yy_cp; \
 	*yy_cp = '\0'; \
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[ \
 	if ( yyscanner->yyleng_r >= YYLMAX ) \
@@ -1693,7 +1704,7 @@ m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	}
 	if ( yy_current_buffer(yyscanner) ) {
 		/* Flush out information for old buffer. */
-		*yyscanner->yy_c_buf_p = yyscanner->yy_hold_char;
+		*yyscanner->yy_hold_ptr = yyscanner->yy_hold_char;
 		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_buf_pos = yyscanner->yy_c_buf_p;
 		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yy_n_chars = yyscanner->yy_n_chars;
 	}
@@ -2158,10 +2169,11 @@ m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
 			}
 ]])
 ]])
+			/* Support of yytext. The character was taken from the end
+			 * of the last token, which is behind yy_c_buf_p when
+			 * yyinput() has read characters since. */
+			*yyscanner->yy_hold_ptr = yyscanner->yy_hold_char;
 			yy_cp = yyscanner->yy_c_buf_p;
-
-			/* Support of yytext. */
-			*yy_cp = yyscanner->yy_hold_char;
 
 			/* yy_bp points to the position in yy_ch_buf of the start of
 			 * the current run.
@@ -2477,14 +2489,15 @@ void yyless(int n, yyscan_t yyscanner) {
 	m4_ifdef([[M4_MODE_YYLINENO]], [[yy_less_lineno(n, yyscanner);]])
 m4_ifdef([[M4_MODE_YYTEXT_IS_ARRAY]], [[
 	/* yytext is a copy; the token itself is at yytext_ptr. */
-	*yyscanner->yy_c_buf_p = yyscanner->yy_hold_char;
+	*yyscanner->yy_hold_ptr = yyscanner->yy_hold_char;
 	yyscanner->yy_c_buf_p = yyscanner->yytext_ptr + n;
 	yyscanner->yytext_r[n] = '\0';
 ]], [[
-	yyscanner->yytext_r[yyscanner->yyleng_r] = yyscanner->yy_hold_char;
+	*yyscanner->yy_hold_ptr = yyscanner->yy_hold_char;
 	yyscanner->yy_c_buf_p = yyscanner->yytext_r + n;
 ]])
 	yyscanner->yy_hold_char = *yyscanner->yy_c_buf_p;
+	yyscanner->yy_hold_ptr = yyscanner->yy_c_buf_p;
 	*yyscanner->yy_c_buf_p = '\0';
 	yyscanner->yyleng_r = n;
 	yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = ( n > 0 ) ?
