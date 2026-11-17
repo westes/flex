@@ -1166,7 +1166,15 @@ int yyinput(FlexLexer *yyscanner)
 
 			case EOB_ACT_CONTINUE_SCAN:
 				yyscanner->yyCBufP = yyscanner->yytext_ptr + offset;
+				/* unput() can leave the end of yytext in front of
+				 * yytext_ptr, which the refill did not keep, and
+				 * yytext then ends at its start. If yytext ended at
+				 * the old end of the buffer, new input is there now. */
+				if (holdOffset < 0) {
+					holdOffset = 0;
+				}
 				yyscanner->yyHoldPtr = yyscanner->yytext_ptr + holdOffset;
+				yyscanner->yyHoldChar = *yyscanner->yyHoldPtr;
 				break;
 			default:
 				yypanic("unexpected return value from yy_get_next_buffer()", yyscanner);

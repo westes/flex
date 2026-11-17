@@ -2910,7 +2910,15 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[				return yyinput(M4_YY_CALL_ONLY_ARG);]])
 
 			case EOB_ACT_CONTINUE_SCAN:
 				YY_G(yy_c_buf_p) = YY_G(yytext_ptr) + offset;
+				/* unput() can leave the end of yytext in front of
+				 * yytext_ptr, which the refill did not keep, and
+				 * yytext then ends at its start. If yytext ended at
+				 * the old end of the buffer, new input is there now. */
+				if ( hold_offset < 0 ) {
+					hold_offset = 0;
+				}
 				YY_G(yy_hold_ptr) = YY_G(yytext_ptr) + hold_offset;
+				YY_G(yy_hold_char) = *YY_G(yy_hold_ptr);
 				break;
 			default:
 				YY_FATAL_ERROR("unexpected return value from yy_get_next_buffer()");
