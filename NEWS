@@ -2,6 +2,17 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A scanner no longer writes to memory in front of its input buffer
+    when a rule's action uses unput() to push back more characters than
+    the rule matched and then calls input() or yyinput() far enough to
+    read past the end of the buffer. Flex 2.6.16 did this on every later
+    call to input() or yyinput() in that action, which could corrupt
+    memory. (#873)
+
+    Thanks to anshal ossaimi.
+
 * Noteworthy changes in release 2.6.16 (2026-11-17) [stable]
 
 ** scanner
