@@ -2033,7 +2033,11 @@ m4_ifdef( [[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
 			YY_G(yy_more_len) = 0;
 			if ( YY_G(yy_more_flag) ) {
-				YY_G(yy_more_len) = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr));
+				/* unput() can push back more than the token, which leaves the scan
+				 * position in front of yytext_ptr. No yymore() text is left then. */
+				if ( YY_G(yy_c_buf_p) > YY_G(yytext_ptr) ) {
+					YY_G(yy_more_len) = (int) (YY_G(yy_c_buf_p) - YY_G(yytext_ptr));
+				}
 				YY_G(yy_more_flag) = 0;
 			}
 ]])

@@ -429,6 +429,7 @@ EXTRA_DIST = \
 	yymorearrayrefill.txt \
 	yymorearrayswitch.txt \
 	yymorearrayswitchafter.txt \
+	yymoreunput.txt \
 	yylessbol.txt \
 	yylessbol0.txt \
 	yyunput.txt \
@@ -594,6 +595,7 @@ RULESETS = \
 	$(srcdir)/yymorearrayrefill.rules \
 	$(srcdir)/yymorearrayswitch.rules \
 	$(srcdir)/yymorearrayswitchafter.rules \
+	$(srcdir)/yymoreunput.rules \
 	$(srcdir)/yylessbol.rules \
 	$(srcdir)/yylessbol0.rules \
 	$(srcdir)/yyunput.rules
