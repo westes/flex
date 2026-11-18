@@ -264,9 +264,24 @@ void context_member(char *, const char *);
 	[[:digit:]]+	linenum = myctoi( yytext );
 
 	"\""[^""\n]*"\""	{
-			free(infilename);
-			infilename = xstrdup(yytext + 1);
-			infilename[strlen( infilename ) - 1] = '\0';
+			char *fname = xstrdup(yytext + 1);
+			fname[strlen( fname ) - 1] = '\0';
+			/* The file name is written verbatim into the m4
+			 * input (see line_directive_out()), wrapped in the
+			 * [[ ]] quotes.  An m4 quote delimiter in it escapes
+			 * that quoting and lets a '#line' directive inject
+			 * m4, the same hole reject_brackets_in_option_value()
+			 * closes for %option values.  Single brackets are
+			 * fine and appear in real paths, so reject only the
+			 * [[ and ]] sequences. */
+			if ( strstr( fname, M4QSTART ) ||
+			     strstr( fname, M4QEND ) ) {
+				synerr( _("'#line' file name contains an m4 quote delimiter") );
+				free( fname );
+			} else {
+				free( infilename );
+				infilename = fname;
+			}
 			}
 	.		/* ignore spurious characters */
 }
@@ -1111,6 +1126,14 @@ void set_input_file( char *file )
 
 	if ( file && strcmp( file, "-" ) )
 		{
+		/* The input file name reaches the m4 input through the
+		 * #line directives (see line_directive_out()), just like a
+		 * name from a '#line' directive in the file, so reject the m4
+		 * quote delimiters here too. */
+		if ( strstr( file, M4QSTART ) || strstr( file, M4QEND ) )
+			lerr( _( "input file name must not contain '%s' or '%s'" ),
+				M4QSTART, M4QEND );
+
 		infilename = xstrdup(file);
 		yyin = fopen( infilename, "r" );
 
