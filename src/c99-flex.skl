@@ -2172,7 +2172,11 @@ m4_ifdef( [[M4_MODE_YYMORE_USED]], [[
 m4_ifdef( [[M4_MODE_NO_YYTEXT_IS_ARRAY]], [[
 			yyscanner->yy_more_len = 0;
 			if ( yyscanner->yy_more_flag ) {
-				yyscanner->yy_more_len = (int) (yyscanner->yy_c_buf_p - yyscanner->yytext_ptr);
+				/* unput() can push back more than the token, which leaves the scan
+				 * position in front of yytext_ptr. No yymore() text is left then. */
+				if ( yyscanner->yy_c_buf_p > yyscanner->yytext_ptr ) {
+					yyscanner->yy_more_len = (int) (yyscanner->yy_c_buf_p - yyscanner->yytext_ptr);
+				}
 				yyscanner->yy_more_flag = false;
 			}
 ]])

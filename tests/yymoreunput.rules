@@ -1,0 +1,44 @@
+/*
+ * This file is part of flex.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * Neither the name of the University nor the names of its contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ */
+ /*
+  * Test yymore() with %pointer when the action also pushes back more
+  * characters than the token had.  unput() overwrites the token in the
+  * buffer, so no yymore() text is left.  The scanner used to compute a
+  * negative yymore() length, which made yyleng wrong and made it read
+  * before the start of the input buffer.
+  * What should happen is:
+  * 1. "a" is matched, yymore() is called and "bcd" is pushed back.
+  * 2. "bcd" is matched with token length 3.
+  */
+
+%option noyywrap yylineno warn nodefault noinput
+%{
+#include <string.h>
+%}
+%%
+a	{M4_TEST_DO(yymore()) M4_TEST_DO(yyunput('d')) M4_TEST_DO(yyunput('c')) M4_TEST_DO(yyunput('b'))}
+bcd	{if (yyleng != 3 || strcmp(yytext, "bcd") != 0) {fprintf(stderr,"ASSERT FAILED: yymore() after unput().\n"); exit(1);}}
+\n	;
+.	{M4_TEST_FAILMESSAGE}
+###
+a
