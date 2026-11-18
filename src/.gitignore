@@ -5,6 +5,7 @@
 config.h
 config.h.in
 config_for_build.h
+FlexLexer.h
 flex
 libfl.pc
 parse.c

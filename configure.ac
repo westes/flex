@@ -213,8 +213,16 @@ AC_CHECK_DECLS(__func__)
 AS_IF([test "$cross_compiling" = yes],
   [AC_CONFIG_FILES([src/config_for_build.h])])
 
+FLEX_MAJOR_VERSION=`echo "$PACKAGE_VERSION" | cut -d. -f1`
+FLEX_MINOR_VERSION=`echo "$PACKAGE_VERSION" | cut -d. -f2`
+FLEX_SUBMINOR_VERSION=`echo "$PACKAGE_VERSION" | cut -d. -f3`
+AC_SUBST([FLEX_MAJOR_VERSION])
+AC_SUBST([FLEX_MINOR_VERSION])
+AC_SUBST([FLEX_SUBMINOR_VERSION])
+
 AC_CONFIG_FILES(
 Makefile
+src/FlexLexer.h
 doc/Makefile
 examples/Makefile
 examples/fastwc/Makefile

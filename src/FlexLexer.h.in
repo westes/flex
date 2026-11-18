@@ -48,6 +48,13 @@
 // Never included before - need to define base class.
 #define __FLEX_LEXER_H
 
+// The version of flex this file comes from.  A scanner flex generates
+// checks it, so that a copy of this file from another flex stops the
+// build with one clear message.
+#define YY_FLEXLEXER_MAJOR_VERSION @FLEX_MAJOR_VERSION@
+#define YY_FLEXLEXER_MINOR_VERSION @FLEX_MINOR_VERSION@
+#define YY_FLEXLEXER_SUBMINOR_VERSION @FLEX_SUBMINOR_VERSION@
+
 #include <iostream>
 
 extern "C++" {

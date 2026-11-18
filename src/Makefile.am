@@ -99,6 +99,7 @@ include_HEADERS = \
 	FlexLexer.h
 
 EXTRA_DIST = \
+	FlexLexer.h.in \
 	c99-flex.skl \
 	cpp-flex.skl \
 	go-flex.skl \
