@@ -2,6 +2,17 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A scanner whose yytext is a pointer, which is the default, no longer
+    reports a wrong yyleng, or reads memory in front of its input
+    buffer, when a rule's action calls yymore() and then uses unput()
+    to push back more characters than the rule matched. The next token
+    now starts with the pushed-back characters, as no yymore() text is
+    left to keep. (#874)
+
+    Thanks to anshal ossaimi.
+
 * Noteworthy changes in release 2.7.0 (2026-11-18) [stable]
 
 ** scanner
