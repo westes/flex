@@ -84,6 +84,23 @@ expect_rejected cmdline-header-file  "" --header-file="a$q.h"
 expect_rejected cmdline-yyclass      "" --c++ --yyclass="a$q"
 expect_rejected cmdline-prefix       "" -P"a$q"
 
+# A '#line' directive inside the scanner file sets the file name that is
+# written into the m4 input, so its value must be rejected the same way.
+expect_rejected line-directive       "#line 1 \"a$q.c\""
+
+# The name of the input file itself is written into the m4 input the same
+# way, so a bracketed input file name on the command line must be rejected.
+dir=$work/cmdline-input
+mkdir "$dir"
+printf '%%%%\n.	;\n%%%%\n' > "$dir/a$q.l"
+status=0
+(cd "$dir" && "$FLEX" -t "a$q.l" >out.txt 2>err.txt) || status=$?
+if [ -e "$dir/PWNED" ]; then
+    fail "cmdline-input: injected command ran"
+elif [ "$status" -eq 0 ]; then
+    fail "cmdline-input: bracketed input file name was accepted"
+fi
+
 # Values with no brackets, which used to be expanded by m4 anyway.
 expect_literal yydecl-plain     "%option yydecl=\"int f$p\""
 expect_literal user-init-plain  "%option user-init=\"$p\""
@@ -103,6 +120,15 @@ if [ -e "$dir/PWNED" ]; then
     fail "header-plain: injected command ran"
 elif [ "$status" -ne 0 ]; then
     fail "header-plain: flex failed: $(cat "$dir/err.txt")"
+fi
+
+# A single '[' or ']' is harmless to m4, so a '#line' file name that has
+# one must still be accepted and reach the output unchanged.
+run_flex line-directive-plain '#line 1 "a[1].c"'
+if [ "$status" -ne 0 ]; then
+    fail "line-directive-plain: flex rejected a single-bracket file name: $(cat "$dir/err.txt")"
+elif ! grep -F '"a[1].c"' "$dir/lex.yy.c" >/dev/null; then
+    fail "line-directive-plain: file name did not reach the output"
 fi
 
 # Ordinary values still work.
