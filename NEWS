@@ -2,6 +2,17 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A C++ scanner now stops the build with one message, naming the flex
+    version that generated it, when the FlexLexer.h it finds is from
+    another version of flex, as a copy kept in a project's own sources
+    can be. Before, the compiler reported many errors about members the
+    class did not have, such as yy_hold_ptr. FlexLexer.h now carries the
+    version of flex it comes from for this check. A FlexLexer.h from
+    flex 2.6.17 or earlier has no version and is refused as well;
+    replace it with the one from this flex. (#872)
+
 * Noteworthy changes in release 2.6.17 (2026-11-18) [stable]
 
 ** scanner

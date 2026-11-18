@@ -3913,6 +3913,13 @@ defaults to generating the scanner to the file @file{lex.yy.cc} instead
 of @file{lex.yy.c}.  The generated scanner includes the header file
 @file{FlexLexer.h}, which defines the interface to two C++ classes.
 
+The scanner and @file{FlexLexer.h} must come from the same version of
+@code{flex}, because the scanner defines members of the class that the
+header declares.  Use the @file{FlexLexer.h} that is installed with the
+@code{flex} that generates your scanner, and do not keep a copy of it in
+your own sources.  A scanner stops the build with an error message when
+the header it finds is from another version of @code{flex}.
+
 The first class in @file{FlexLexer.h}, @code{FlexLexer},
 provides an abstract base class defining the general scanner class
 interface.  It provides the following member functions:
