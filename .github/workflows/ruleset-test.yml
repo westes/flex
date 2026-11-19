@@ -1,0 +1,28 @@
+name: Ruleset bypass test
+
+on:
+  pull_request:
+    branches: [ master ]
+
+permissions:
+  contents: write
+
+jobs:
+  push:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        fetch-depth: 0
+    - name: Push an empty commit to ruleset-test with the built-in token
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git fetch origin ruleset-test
+        git checkout -q -B ruleset-test FETCH_HEAD
+        git commit -q --allow-empty -m "test: ruleset bypass probe"
+        if git push origin ruleset-test; then
+            echo "RESULT: PUSH-OK"
+        else
+            echo "RESULT: PUSH-REJECTED"
+        fi
