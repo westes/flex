@@ -49,6 +49,13 @@ if ! $CXX_ARG -c -o /dev/null -I"$SRCDIR" "$work/hdr.cc" > "$work/cc.txt" 2>&1; 
     failures=$((failures + 1))
 fi
 
+# A nightly build puts a suffix such as -85d29a1-2026-11-18 after the
+# version.  It must not reach the header, where it would not be a number.
+if ! grep -q '^#define YY_FLEXLEXER_SUBMINOR_VERSION [0-9][0-9]*$' "$SRCDIR/FlexLexer.h"; then
+    echo "FAIL: YY_FLEXLEXER_SUBMINOR_VERSION in FlexLexer.h is not a plain number" >&2
+    failures=$((failures + 1))
+fi
+
 # A header without a version, and one with a different version, standing
 # in for copies from other flex releases.
 mkdir "$work/none" "$work/other"
