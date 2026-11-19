@@ -90,6 +90,7 @@ SPORADIC_TESTS = \
 	user_yy_functions \
 	no_backing_up \
 	yy_break \
+	full_8bit \
 	yyinput_buffer \
 	yyinput_buffer_c99 \
 	yytext_input \
@@ -181,6 +182,7 @@ user_yy_functions_SOURCES = user_yy_functions.l
 no_backing_up_SOURCES = no_backing_up.l
 no_backing_up_CFLAGS = $(AM_CFLAGS) -Werror=unused-variable
 yy_break_SOURCES = yy_break.l
+full_8bit_SOURCES = full_8bit.l
 yyinput_buffer_SOURCES = yyinput_buffer.l
 yyinput_buffer_c99_SOURCES = yyinput_buffer_c99.l
 yytext_input_SOURCES = yytext_input.l
@@ -282,6 +284,7 @@ CLEANFILES = \
 	user_yy_functions.c \
 	no_backing_up.c \
 	yy_break.c \
+	full_8bit.c \
 	yyinput_buffer.c \
 	yyinput_buffer_c99.c \
 	yytext_input.c \

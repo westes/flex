@@ -2844,17 +2844,12 @@ Note, however, that unless you generate your scanner using the
 @samp{-Cf} or @samp{-CF} table compression options, use of @samp{--7bit}
 will save only a small amount of table space, and make your scanner
 considerably less portable.  @code{Flex}'s default behavior is to
-generate an 8-bit scanner unless you use the @samp{-Cf} or @samp{-CF},
-in which case @code{flex} defaults to generating 7-bit scanners unless
-your site was always configured to generate 8-bit scanners (as will
-often be the case with non-USA sites).  You can tell whether flex
-generated a 7-bit or an 8-bit scanner by inspecting the flag summary in
-the @samp{--verbose} output as described above.
-
-Note that if you use @samp{-Cfe} or @samp{-CFe} @code{flex} still
-defaults to generating an 8-bit scanner, since usually with these
-compression options full 8-bit tables are not much more expensive than
-7-bit tables.
+generate an 8-bit scanner, also with @samp{-Cf} or @samp{-CF}, unless
+your site was configured to generate 7-bit scanners for those options.
+Only use @samp{--7bit} if the scanner's input can never contain an
+8-bit character.  You can tell whether flex generated a 7-bit or an
+8-bit scanner by inspecting the flag summary in the @samp{--verbose}
+output as described above.
 
 
 
@@ -2864,9 +2859,9 @@ compression options full 8-bit tables are not much more expensive than
 @opindex 8bit
 @item -8, --8bit, @code{%option 8bit}
 instructs @code{flex} to generate an 8-bit scanner, i.e., one which can
-recognize 8-bit characters.  This flag is only needed for scanners
-generated using @samp{-Cf} or @samp{-CF}, as otherwise flex defaults to
-generating an 8-bit scanner anyway.
+recognize 8-bit characters.  This is the default, so the flag is only
+needed to override an earlier @samp{--7bit} or a site configured to
+generate 7-bit scanners for @samp{-Cf} or @samp{-CF}.
 
 See the discussion of
 @samp{--7bit}
@@ -5507,8 +5502,8 @@ constant (8K bytes by default).  You can increase the value with the
 @item
 @samp{scanner requires -8 flag to use the character 'x'}. Your scanner
 specification includes recognizing the 8-bit character @samp{'x'} and
-you did not specify the -8 flag, and your scanner defaulted to 7-bit
-because you used the @samp{-Cf} or @samp{-CF} table compression options.
+you generated a 7-bit scanner, with the @samp{-7} flag or because your
+site configured @samp{-Cf} and @samp{-CF} to default to 7-bit.
 See the discussion of the @samp{-7} flag, @ref{Scanner Options}, for
 details.
 

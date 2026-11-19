@@ -63,6 +63,8 @@ no_backing_up
 no_backing_up.c
 yy_break
 yy_break.c
+full_8bit
+full_8bit.c
 yyinput_buffer
 yyinput_buffer.c
 yyinput_buffer_c99

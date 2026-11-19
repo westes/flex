@@ -23,10 +23,10 @@
 
 # Possible values for DEFS:
 #
-# By default, flex generates 8-bit scanners when using table compression,
-# and 7-bit scanners when using uncompressed tables (-f or -F options).
-# For flex to always generate 8-bit scanners, add "-DDEFAULT_CSIZE=256"
-# to DEFS.
+# By default, flex generates 8-bit scanners.  To make scanners that use
+# uncompressed tables (-f or -F options) 7-bit unless -8 is given, add
+# "-DDEFAULT_CSIZE=128" to DEFS.  Such scanners read past their tables
+# when their input has a byte above 127.
 
 ACLOCAL_AMFLAGS = -I m4
 
