@@ -2,6 +2,18 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A scanner made with -Cf or -CF, without -Ce and without -7 or -8,
+    now handles input bytes above 127. Before, flex made such a scanner
+    7-bit, so its tables had no entries for those bytes, and a scanner
+    given one read memory past its tables and could skip input or crash.
+    These scanners are now 8-bit unless -7 is given, so their tables
+    are larger. Building flex with -DDEFAULT_CSIZE=128 restores the old
+    default. (#880)
+
+    Thanks to anshal ossaimi.
+
 * Noteworthy changes in release 2.7.1 (2026-11-18) [stable]
 
 ** scanner
