@@ -65,6 +65,10 @@ yy_break
 yy_break.c
 full_8bit
 full_8bit.c
+batch_nul
+batch_nul.c
+batch_nul_c99
+batch_nul_c99.c
 yyinput_buffer
 yyinput_buffer.c
 yyinput_buffer_c99
