@@ -199,6 +199,10 @@ state_buf_push.direct
 state_buf_push.direct.c
 scan_length_c99
 scan_length_c99.c
+start_stack_underflow
+start_stack_underflow.c
+start_stack_underflow_c99
+start_stack_underflow_c99.c
 string_nr
 string_nr.c
 string_r

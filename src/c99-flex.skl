@@ -1880,10 +1880,13 @@ m4_ifdef( [[M4_YY_NO_POP_STATE]],,
 [[
 static void yy_pop_state  (yyscan_t yyscanner)
 {
-	if ( --yyscanner->yy_start_stack_ptr < 0 ) {
+	/* Check before moving the pointer, so a program that recovers from
+	 * the error, with longjmp() or an exception, still has a valid stack. */
+	if ( yyscanner->yy_start_stack_ptr <= 0 ) {
 		yypanic( "start-condition stack underflow", yyscanner );
+	} else {
+		yybegin(yyscanner->yy_start_stack[--yyscanner->yy_start_stack_ptr], yyscanner);
 	}
-	yybegin(yyscanner->yy_start_stack[yyscanner->yy_start_stack_ptr], yyscanner);
 }
 ]])
 

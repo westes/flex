@@ -1694,10 +1694,13 @@ m4_ifdef([[M4_YY_NO_POP_STATE]],,
 [[
 static void yy_pop_state(FlexLexer *yyscanner)
 {
-	if (--yyscanner->yyStartStackOffset < 0) {
+	/* Check before moving the pointer, so a program that recovers from
+	 * the error, with longjmp() or an exception, still has a valid stack. */
+	if (yyscanner->yyStartStackOffset <= 0) {
 		yypanic("start-condition stack underflow", yyscanner);
+	} else {
+		yybegin(yyscanner->yyStartStack[--yyscanner->yyStartStackOffset], yyscanner);
 	}
-	yybegin(yyscanner->yyStartStack[yyscanner->yyStartStackOffset], yyscanner);
 }
 ]])
 
