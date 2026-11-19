@@ -129,6 +129,8 @@ SPORADIC_TESTS = \
 	prefix_c99 \
 	quotes \
 	scan_length_c99 \
+	start_stack_underflow \
+	start_stack_underflow_c99 \
 	string_nr \
 	string_r \
 	string_c99 \
@@ -237,6 +239,8 @@ quotes_SOURCES = quotes.l
 rescan_nr_direct_SOURCES = rescan_nr.direct.l
 rescan_r_direct_SOURCES = rescan_r.direct.l
 scan_length_c99_SOURCES = scan_length_c99.l
+start_stack_underflow_SOURCES = start_stack_underflow.l
+start_stack_underflow_c99_SOURCES = start_stack_underflow_c99.l
 string_nr_SOURCES = string_nr.l
 string_r_SOURCES = string_r.l
 string_c99_SOURCES = string_c99.l
@@ -346,6 +350,8 @@ CLEANFILES = \
 	rescan_nr.direct.c \
 	rescan_r.direct.c \
 	scan_length.direct.c \
+	start_stack_underflow.c \
+	start_stack_underflow_c99.c \
 	string_nr.c \
 	string_r.c \
 	string_c99.c \

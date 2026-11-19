@@ -3595,10 +3595,13 @@ void yyFlexLexer::yy_pop_state()
 ]])
 {
 	M4_YY_DECL_GUTS_VAR();
-	if ( --YY_G(yy_start_stack_ptr) < 0 ) {
+	/* Check before moving the pointer, so a program that recovers from
+	 * the error, with longjmp() or an exception, still has a valid stack. */
+	if ( YY_G(yy_start_stack_ptr) <= 0 ) {
 		YY_FATAL_ERROR( "start-condition stack underflow" );
+	} else {
+		BEGIN(YY_G(yy_start_stack)[--YY_G(yy_start_stack_ptr)]);
 	}
-	BEGIN(YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr)]);
 }
 ]])
 
