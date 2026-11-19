@@ -1,0 +1,60 @@
+name: Pull request checks
+
+# Two checks on the commits a pull request would add to master, so a
+# mistake shows up before the merge instead of in the Release run after it.
+#
+# - Every commit subject must follow the convention in CONTRIBUTING.md.
+# - If the commits since the last release would make a release (a fix, a
+#   feat or a breaking change), the NEWS file must be ready for one, which
+#   is what the Release workflow insists on. A pull request that holds such
+#   a commit stays red until the maintainer has added the NEWS entry.
+
+on:
+  pull_request:
+    branches: [ master ]
+
+permissions:
+  contents: read
+
+jobs:
+  commits:
+    name: Commit messages and NEWS
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        fetch-depth: 0
+        persist-credentials: false
+
+    - name: Check the commit messages
+      env:
+        BASE: ${{ github.event.pull_request.base.sha }}
+        HEAD: ${{ github.event.pull_request.head.sha }}
+      run: |
+        # Apart from the loop, a git failure must stop the step, not pass it.
+        commits=$(git rev-list --no-merges "$BASE..$HEAD")
+        failed=0
+        for c in $commits; do
+            if ! git log -n 1 --format=%B "$c" | tools/check-commit-msg; then
+                echo "::error::Commit $(git rev-parse --short "$c") has a subject that does not follow the convention."
+                failed=1
+            fi
+        done
+        exit $failed
+
+    - name: Check that NEWS is ready if these commits make a release
+      run: |
+        tools/semver-next > semver.out
+        cat semver.out
+        next=$(sed -n 's/^next=//p' semver.out)
+        rm semver.out
+        if [ -z "$next" ]; then
+            echo "No commit since the last release makes a release, so NEWS is not needed."
+            exit 0
+        fi
+        echo "These commits would release $next."
+        if ! tools/check-release -u; then
+            echo "::error::A fix, a feat or a breaking change makes a release, and NEWS is not ready for one. If this change is not visible to users of flex, use another type such as build, ci, docs, test or refactor."
+            exit 1
+        fi
