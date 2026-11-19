@@ -91,6 +91,8 @@ SPORADIC_TESTS = \
 	no_backing_up \
 	yy_break \
 	full_8bit \
+	batch_nul \
+	batch_nul_c99 \
 	yyinput_buffer \
 	yyinput_buffer_c99 \
 	yytext_input \
@@ -183,6 +185,8 @@ no_backing_up_SOURCES = no_backing_up.l
 no_backing_up_CFLAGS = $(AM_CFLAGS) -Werror=unused-variable
 yy_break_SOURCES = yy_break.l
 full_8bit_SOURCES = full_8bit.l
+batch_nul_SOURCES = batch_nul.l
+batch_nul_c99_SOURCES = batch_nul_c99.l
 yyinput_buffer_SOURCES = yyinput_buffer.l
 yyinput_buffer_c99_SOURCES = yyinput_buffer_c99.l
 yytext_input_SOURCES = yytext_input.l
@@ -285,6 +289,8 @@ CLEANFILES = \
 	no_backing_up.c \
 	yy_break.c \
 	full_8bit.c \
+	batch_nul.c \
+	batch_nul_c99.c \
 	yyinput_buffer.c \
 	yyinput_buffer_c99.c \
 	yytext_input.c \

@@ -2313,7 +2313,7 @@ m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 						m4_ifdef([[M4_MODE_FIND_ACTION_FULLTBL]], [[yy_cp = YY_G(yy_c_buf_p);]])
 m4_ifdef([[M4_MODE_NO_FULLSPD_OR_FULLTBL]], [[
 m4_ifdef([[M4_MODE_NO_USES_REJECT]], [[
-m4_ifdef([[M4_NOT_MODE_INTERACTIVE]], [[
+m4_ifdef([[M4_MODE_NO_INTERACTIVE]], [[
 						/* Do the guaranteed-needed backing up to figure
 						 * out the match.
 						 */
