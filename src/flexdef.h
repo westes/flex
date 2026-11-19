@@ -109,9 +109,13 @@
 /* Always be prepared to generate an 8-bit scanner. */
 #define CSIZE 256
 
-/* Size of input alphabet - should be size of ASCII set. */
+/* Size of the input alphabet for -Cf and -CF scanners when neither -7 nor
+ * -8 is given.  A 7-bit scanner indexes its tables with every input byte,
+ * so a byte above 127 reads past them; only build flex with
+ * -DDEFAULT_CSIZE=128 if every scanner's input is known to be 7-bit.
+ */
 #ifndef DEFAULT_CSIZE
-#define DEFAULT_CSIZE 128
+#define DEFAULT_CSIZE 256
 #endif
 
 /* Maximum line length we'll have to deal with. */
