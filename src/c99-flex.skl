@@ -109,8 +109,10 @@ m4_define([[yyless]], [[
 		/* Undo effects of setting up yytext. */
 		int yyless_macro_arg = ($1);
 		m4_ifdef([[M4_MODE_YYLINENO]], [[yy_less_lineno(yyless_macro_arg, yyscanner);]])
-		*yy_cp = yyscanner->yy_hold_char;
+		*yyscanner->yy_hold_ptr = yyscanner->yy_hold_char;
 		YY_RESTORE_YY_MORE_OFFSET
+		/* input() can move or reallocate the buffer, so yy_bp may be stale. */
+		yy_bp = yyscanner->yytext_ptr + YY_MORE_ADJ;
 		yyscanner->yy_c_buf_p = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ;
 		yy_do_before_action(yyscanner, yy_cp, yy_bp); /* set up yytext again */
 		yyscanner->yy_buffer_stack[yyscanner->yy_buffer_stack_top]->yyatbol_flag = ( yyscanner->yyleng_r > 0 ) ?
