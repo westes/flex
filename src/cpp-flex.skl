@@ -220,6 +220,7 @@ m4_ifelse(M4_MODE_PREFIX,yy,,
     [[
         M4_GEN_PREFIX(`get_column')
         M4_GEN_PREFIX(`set_column')
+        M4_GEN_PREFIX(`guts_t')
     ]])
     M4_GEN_PREFIX(`wrap')
 )
