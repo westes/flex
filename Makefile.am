@@ -101,6 +101,10 @@ lint:
 # placeholder header, so it is not part of distcheck or check.
 releasecheck:
 	$(SHELL) $(srcdir)/tools/check-release -d $(srcdir)
+	@if grep -q '10\.\*|11\.\*)' $(srcdir)/configure; then \
+	  echo 'releasecheck: configure was made with libtool 2.4.6 or older, which fails on macOS 12 and later; bootstrap with libtool 2.4.7 or newer' >&2; \
+	  exit 1; \
+	fi
 	$(MAKE) $(AM_MAKEFLAGS) distcheck
 
 .PHONY: libfl install-libfl uninstall-libfl clean-libfl \

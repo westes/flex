@@ -1,6 +1,7 @@
 # Build image for flex's CI: the tools the workflows used to apt-get on every
-# run, GNU gettext 1.0, which Ubuntu 22.04 does not package, and the previous
-# release of flex, which a git checkout needs in order to build.
+# run, GNU gettext 1.0, which Ubuntu 22.04 does not package, libtool 2.4.7,
+# which it packages only as 2.4.6, and the previous release of flex, which a
+# git checkout needs in order to build.
 #
 # Build it from the top of the source tree, so tools/bootstrap-flex is in the
 # build context:
@@ -45,6 +46,37 @@ RUN tar -xf gettext-${GETTEXT_VERSION}.tar.xz \
  && make -j"$(nproc)" \
  && make install DESTDIR=/staging
 
+FROM ${UBUNTU_IMAGE} AS libtool
+
+# Ubuntu 22.04 packages libtool 2.4.6, whose configure script does not work on
+# macOS 12 and later. Release 2.4.7 has the fix, and the configure script in a
+# flex tarball is made with whatever libtool the image has.
+ARG LIBTOOL_VERSION=2.4.7
+ARG LIBTOOL_SHA256=4f7f217f057ce655ff22559ad221a0fd8ef84ad1fc5fcb6990cecc333aa1635d
+# Alex Ameen, who signed the release.
+ARG LIBTOOL_SIGNER_FPR=7C5FBB96BE82B954AC20DF5F6EAC957F8EEB55C0
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+        build-essential ca-certificates curl gpgv m4 xz-utils \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+RUN curl -fsSLO https://ftp.gnu.org/gnu/libtool/libtool-${LIBTOOL_VERSION}.tar.xz \
+ && curl -fsSLO https://ftp.gnu.org/gnu/libtool/libtool-${LIBTOOL_VERSION}.tar.xz.sig \
+ && curl -fsSLO https://ftp.gnu.org/gnu/gnu-keyring.gpg
+
+RUN echo "${LIBTOOL_SHA256}  libtool-${LIBTOOL_VERSION}.tar.xz" | sha256sum -c - \
+ && gpgv --keyring ./gnu-keyring.gpg --status-fd 1 \
+        libtool-${LIBTOOL_VERSION}.tar.xz.sig libtool-${LIBTOOL_VERSION}.tar.xz \
+    | grep -q "^\[GNUPG:\] VALIDSIG ${LIBTOOL_SIGNER_FPR} "
+
+RUN tar -xf libtool-${LIBTOOL_VERSION}.tar.xz \
+ && mkdir build && cd build \
+ && ../libtool-${LIBTOOL_VERSION}/configure --prefix=/usr/local \
+ && make -j"$(nproc)" \
+ && make install DESTDIR=/staging
+
 
 FROM ${UBUNTU_IMAGE}
 
@@ -59,6 +91,9 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=gettext /staging/usr/local /usr/local
+# The libtool from the libtool stage must come before the apt one, which is
+# in /usr/bin: /usr/local/bin is ahead of it in PATH.
+COPY --from=libtool /staging/usr/local /usr/local
 RUN ldconfig
 
 # A git checkout has no scan.c, and building it needs a flex that is already
