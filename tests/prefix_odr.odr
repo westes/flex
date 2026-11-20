@@ -1,0 +1,96 @@
+#!/bin/sh
+
+# Two reentrant scanners with different prefixes and different extra types
+# are compiled as C++ and linked into one program. Each one must give its
+# own name to the structure that holds its state, or the compiler's link-time
+# check for the One Definition Rule reports two different types by one name.
+
+FLEX=$1
+CXX_ARG=$2
+case $FLEX in
+    /*) ;;
+    *) FLEX=$(pwd)/$FLEX ;;
+esac
+
+if [ -z "$CXX_ARG" ]; then
+    echo "no C++ compiler" >&2
+    exit 77
+fi
+
+work=$(mktemp -d "${TMPDIR:-/tmp}/odr.XXXXXX") || exit 99
+trap 'rm -rf "$work"' EXIT HUP INT QUIT TERM
+
+# The check is made by the link step with -flto -Wodr, so see that this
+# compiler can do that at all.
+printf 'struct s { int a; };\nint main() { return 0; }\n' > "$work/probe.cc"
+if ! $CXX_ARG -flto -Wodr -o "$work/probe" "$work/probe.cc" >/dev/null 2>&1; then
+    echo "note: skipping $CXX_ARG (no -flto -Wodr)" >&2
+    exit 77
+fi
+
+cat > "$work/a.l" <<'EOT'
+%option reentrant prefix="aaYY" extra-type="struct astate *" noyywrap nounput noinput
+%{
+struct astate { int x; };
+%}
+%%
+.|\n	;
+%%
+int a_main()
+{
+    yyscan_t s;
+    aaYYlex_init(&s);
+    aaYYlex_destroy(s);
+    return 0;
+}
+EOT
+
+cat > "$work/b.l" <<'EOT'
+%option reentrant prefix="bbYY" extra-type="struct bstate *" noyywrap nounput noinput
+%{
+struct bstate { double y; char z[8]; };
+%}
+%%
+.|\n	;
+%%
+int b_main()
+{
+    yyscan_t s;
+    bbYYlex_init(&s);
+    bbYYlex_destroy(s);
+    return 0;
+}
+EOT
+
+cat > "$work/main.cc" <<'EOT'
+int a_main();
+int b_main();
+int main() { return a_main() + b_main(); }
+EOT
+
+for n in a b; do
+    if ! "$FLEX" -o "$work/$n.cc" "$work/$n.l" 2>"$work/flex.txt"; then
+        echo "FAIL: flex failed on $n.l: $(cat "$work/flex.txt")" >&2
+        exit 1
+    fi
+    if ! $CXX_ARG -flto -Wodr -c -o "$work/$n.o" "$work/$n.cc" 2>"$work/cc.txt"; then
+        echo "FAIL: $n.cc did not compile" >&2
+        sed 's/^/    /' "$work/cc.txt" >&2
+        exit 1
+    fi
+done
+$CXX_ARG -flto -Wodr -c -o "$work/main.o" "$work/main.cc"
+
+if ! $CXX_ARG -flto -Wodr -Werror=odr -o "$work/prog" "$work/a.o" "$work/b.o" "$work/main.o" >"$work/ld.txt" 2>&1; then
+    echo "FAIL: the two scanners could not be linked without an ODR warning" >&2
+    sed 's/^/    /' "$work/ld.txt" >&2
+    exit 1
+fi
+if grep -q 'violates the C++ One Definition Rule' "$work/ld.txt"; then
+    echo "FAIL: the link reported an ODR violation" >&2
+    sed 's/^/    /' "$work/ld.txt" >&2
+    exit 1
+fi
+"$work/prog" || { echo "FAIL: the program failed" >&2; exit 1; }
+echo "TEST RETURNING OK."
+exit 0
