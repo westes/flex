@@ -535,8 +535,10 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 		/* Undo effects of setting up yytext. */ \
         int yyless_macro_arg = (n); \
         YY_LESS_LINENO(yyless_macro_arg);\
-		*yy_cp = YY_G(yy_hold_char); \
+		*YY_G(yy_hold_ptr) = YY_G(yy_hold_char); \
 		YY_RESTORE_YY_MORE_OFFSET \
+		/* input() can move or reallocate the buffer, so yy_bp may be stale. */ \
+		yy_bp = YY_G(yytext_ptr) + YY_MORE_ADJ; \
 		YY_G(yy_c_buf_p) = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
 		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 		YY_CURRENT_BUFFER_LVALUE->yy_at_bol = ( yyleng > 0 ) ? \
