@@ -96,6 +96,8 @@ SPORADIC_TESTS = \
 	yytext_input \
 	yytext_input_c99 \
 	unput_input \
+	input_yyless \
+	input_yyless_c99 \
 	large_tables \
 	legacy_hooks \
 	buffer_typedef_legacy \
@@ -188,6 +190,8 @@ yyinput_buffer_c99_SOURCES = yyinput_buffer_c99.l
 yytext_input_SOURCES = yytext_input.l
 yytext_input_c99_SOURCES = yytext_input_c99.l
 unput_input_SOURCES = unput_input.l
+input_yyless_SOURCES = input_yyless.l
+input_yyless_c99_SOURCES = input_yyless_c99.l
 large_tables_SOURCES = large_tables.l
 large_tables_CFLAGS = $(AM_CFLAGS) -Werror=overflow
 legacy_hooks_SOURCES = legacy_hooks.l
@@ -290,6 +294,8 @@ CLEANFILES = \
 	yytext_input.c \
 	yytext_input_c99.c \
 	unput_input.c \
+	input_yyless.c \
+	input_yyless_c99.c \
 	large_tables.c \
 	legacy_hooks.c \
 	buffer_typedef_legacy.c \

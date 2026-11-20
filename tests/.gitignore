@@ -75,6 +75,10 @@ yytext_input_c99
 yytext_input_c99.c
 unput_input
 unput_input.c
+input_yyless
+input_yyless.c
+input_yyless_c99
+input_yyless_c99.c
 large_tables
 large_tables.c
 legacy_hooks
