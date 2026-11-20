@@ -2,6 +2,55 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** build
+
+*** The release tarballs are now made with libtool 2.4.7, which has the
+    fix that lets the configure script work on macOS 12 and later. The
+    configure script in the 2.7.2 tarball was made with libtool 2.4.6
+    and does not. The release check now stops if it finds the old
+    script. (#888)
+
+    Thanks to Ryan Carsten Schmidt.
+
+** scanner
+
+*** A reentrant scanner made with a prefix now puts the prefix in the
+    name of its state structure, yyguts_t, as it does for its other
+    names. Before, two such scanners with different extra types, built
+    as C++ and linked into one program, made the compiler warn that
+    yyguts_t violates the One Definition Rule. Code that writes struct
+    yyguts_t keeps working. (#877)
+
+    Thanks to albert-github.
+
+*** A scanner file could run commands while flex was running by putting
+    m4 macros in the file name of a #line directive, and so could the
+    name of the input file given on the command line. Flex now rejects
+    the sequences [[ and ]] in those names. A single bracket is still
+    allowed. (#879)
+
+    Thanks to anshal ossaimi.
+
+*** A scanner no longer writes into memory it has freed when a rule's
+    action calls input() at the end of the buffer, which can move the
+    buffer, and then calls yyless(). (#889)
+
+    Thanks to anshal ossaimi.
+
+*** A scanner whose error handler does not end the program, because it
+    uses longjmp() or throws an exception, no longer writes in front of
+    its start-condition stack after yy_pop_state() is called on an
+    empty stack. Before, the stack position was left below zero, and
+    the next yy_push_state() wrote at that position. (#887)
+
+    Thanks to anshal ossaimi.
+
+*** A batch scanner (-B) with compressed tables now matches a NUL byte
+    that cannot extend the current token on its own. Since flex 2.6.5,
+    the NUL was swallowed into the previous token. (#885)
+
+    Thanks to Olivier Paquet.
+
 * Noteworthy changes in release 2.7.2 (2026-11-19) [stable]
 
 ** scanner
