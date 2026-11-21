@@ -1,5 +1,5 @@
 # Build image for flex's CI: the tools the workflows used to apt-get on every
-# run, GNU gettext 1.0, which Ubuntu 22.04 does not package, libtool 2.4.7,
+# run, GNU gettext 1.0, which Ubuntu 22.04 does not package, libtool 2.6.2,
 # which it packages only as 2.4.6, and the previous release of flex, which a
 # git checkout needs in order to build.
 #
@@ -49,12 +49,14 @@ RUN tar -xf gettext-${GETTEXT_VERSION}.tar.xz \
 FROM ${UBUNTU_IMAGE} AS libtool
 
 # Ubuntu 22.04 packages libtool 2.4.6, whose configure script does not work on
-# macOS 12 and later. Release 2.4.7 has the fix, and the configure script in a
-# flex tarball is made with whatever libtool the image has.
-ARG LIBTOOL_VERSION=2.4.7
-ARG LIBTOOL_SHA256=4f7f217f057ce655ff22559ad221a0fd8ef84ad1fc5fcb6990cecc333aa1635d
-# Alex Ameen, who signed the release.
-ARG LIBTOOL_SIGNER_FPR=7C5FBB96BE82B954AC20DF5F6EAC957F8EEB55C0
+# macOS 12 and later. Release 2.4.7 and later have the fix, and the configure
+# script in a flex tarball is made with whatever libtool the image has, so this
+# is the current release. configure.ac asks only for 2.4.7.
+ARG LIBTOOL_VERSION=2.6.2
+ARG LIBTOOL_SHA256=2ef1067c16c97db930fd740cc9bc3d3ba9a583804ae5ac42cc3e8719e49e191e
+# Ileana Dumitrescu, who signed the release. The key in the GNU keyring has
+# expired, so gpgv reports it as expired, but still prints VALIDSIG.
+ARG LIBTOOL_SIGNER_FPR=FA26CA784BE188927F22B99F6570EA01146F7354
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
