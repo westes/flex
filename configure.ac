@@ -35,8 +35,9 @@ AC_INIT([the fast lexical analyser generator],[2.7.3],[flex-help@lists.sourcefor
 AC_CONFIG_SRCDIR([src/scan.l])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_USE_SYSTEM_EXTENSIONS
-dnl "LT_*" macros and "libtoolize --install" require libtool-2.2 as minimum.
-LT_PREREQ([2.2])
+dnl "LT_*" macros and "libtoolize --install" require libtool-2.4.7 as minimum,
+dnl the first release whose configure script works on macOS 12 and later.
+LT_PREREQ([2.4.7])
 LT_INIT
 dnl Uses dist-lzip. Requires automake-1.11.3 as minimum.
 AM_INIT_AUTOMAKE([1.11.3 -Wno-portability foreign std-options dist-lzip parallel-tests subdir-objects])

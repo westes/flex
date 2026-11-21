@@ -2,6 +2,17 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** build
+
+*** Regenerating the build files now needs libtool 2.4.7 or newer. The
+    first release whose configure script works on macOS 12 and later is
+    2.4.7, and flex had asked only for 2.2. The release tarballs are now
+    made with libtool 2.6.2, the current release. The release check now
+    stops if it finds a configure script made by an older libtool; its
+    earlier test looked for text that no released libtool writes. (#888)
+
+    Thanks to Ryan Carsten Schmidt.
+
 * Noteworthy changes in release 2.7.3 (2026-11-20) [stable]
 
 ** build
