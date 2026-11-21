@@ -264,8 +264,14 @@ void context_member(char *, const char *);
 	[[:digit:]]+	linenum = myctoi( yytext );
 
 	"\""[^""\n]*"\""	{
-			char *fname = xstrdup(yytext + 1);
-			fname[strlen( fname ) - 1] = '\0';
+			char *fname;
+
+			/* Drop the closing quote at the end of the match.
+			 * The name can hold a NUL, where strlen() would
+			 * stop, and a NUL right after the opening quote
+			 * would make that index -1. */
+			yytext[yyleng - 1] = '\0';
+			fname = xstrdup(yytext + 1);
 			/* The file name is written verbatim into the m4
 			 * input (see line_directive_out()), wrapped in the
 			 * [[ ]] quotes.  An m4 quote delimiter in it escapes
@@ -506,7 +512,9 @@ void context_member(char *, const char *);
 			   synerr( _("Option line too long\n"));
 			   FLEX_EXIT(EXIT_FAILURE);
 			 }
-			nmstr[strlen( nmstr ) - 1] = '\0';
+			/* Drop the closing quote by its place in the match,
+			 * not by strlen(), which stops at a NUL in the value. */
+			nmstr[yyleng - 2] = '\0';
 			return NAME;
 			}
 
