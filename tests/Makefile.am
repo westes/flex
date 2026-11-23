@@ -21,7 +21,7 @@
 
 AM_CFLAGS = $(WARNINGFLAGS)
 
-TESTS = $(check_PROGRAMS) options.cn skel_option.skel m4_injection.inj header_file_error.hfe fallthrough.ft bufsiz.bs flexlexer_header.hdr prefix_odr.odr names_compat.nc
+TESTS = $(check_PROGRAMS) options.cn skel_option.skel m4_injection.inj header_file_error.hfe fallthrough.ft bufsiz.bs flexlexer_header.hdr prefix_odr.odr names_compat.nc quoted_nul.nul
 
 # The script testwrapper.sh will run most tests as is. A couple tests
 # in the suite end in .direct, .cn. and the like so that we can pass
@@ -29,7 +29,7 @@ TESTS = $(check_PROGRAMS) options.cn skel_option.skel m4_injection.inj header_fi
 # automake knows how to distinguish between the various kinds of tests
 # we have.
 
-TEST_EXTENSIONS = .direct .cn .skel .inj .hfe .ft .bs .hdr .odr .nc .i3 .pthread .opt .ser .ver
+TEST_EXTENSIONS = .direct .cn .skel .inj .hfe .ft .bs .hdr .odr .nc .nul .i3 .pthread .opt .ser .ver
 
 LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_LOG_FLAGS = -d $(srcdir) -r
@@ -56,6 +56,8 @@ ODR_LOG_COMPILER = $(SHELL) $(srcdir)/prefix_odr.odr
 AM_ODR_LOG_FLAGS = $(FLEX) "$(CXX)"
 NC_LOG_COMPILER = $(SHELL) $(srcdir)/names_compat.nc
 AM_NC_LOG_FLAGS = $(FLEX) "$(CC)" "$(CXX)"
+NUL_LOG_COMPILER = $(SHELL) $(srcdir)/quoted_nul.nul
+AM_NUL_LOG_FLAGS = $(FLEX)
 
 I3_LOG_COMPILER = $(SHELL) $(srcdir)/testwrapper.sh
 AM_I3_LOG_FLAGS = -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt -i $(srcdir)/cxx_yywrap.txt
@@ -479,6 +481,7 @@ dist_check_SCRIPTS = \
 	flexlexer_header.hdr \
 	prefix_odr.odr \
 	names_compat.nc \
+	quoted_nul.nul \
 	testwrapper-direct.sh \
 	testwrapper.sh
 

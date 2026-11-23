@@ -1,0 +1,89 @@
+#!/bin/sh
+
+# Test that a NUL byte in a quoted %option value or a quoted '#line'
+# file name is handled.  The scanner used to find the closing quote with
+# strlen(), which stops at the NUL.  With the NUL right after the opening
+# quote that wrote one byte before the buffer, and with the NUL further
+# in it cut one character too many off the value.
+#
+# The write before the buffer shows only under a sanitizer, so these
+# tests check what can be seen without one: the value is cut at the NUL
+# and keeps every character before it.  Under a sanitizer, the first
+# and third cases report the bad write.
+
+FLEX=$1
+case $FLEX in
+    /*) ;;
+    *) FLEX=$(pwd)/$FLEX ;;
+esac
+
+work=$(mktemp -d "${TMPDIR:-/tmp}/quotednul.XXXXXX") || exit 99
+trap 'rm -rf "$work"' EXIT HUP INT QUIT TERM
+
+failures=0
+n=0
+
+fail () {
+    echo "FAIL: $*" >&2
+    failures=$((failures + 1))
+}
+
+# run_flex NAME LINE
+# Writes LINE, which is a printf format that may hold \000, above an
+# empty rules section, and runs flex on it in a fresh directory.  Sets
+# $dir and $status.
+run_flex () {
+    n=$((n + 1))
+    dir=$work/$n
+    mkdir "$dir"
+    printf "$2"'\n%%%%\n.\t;\n%%%%\n' > "$dir/a.l"
+    status=0
+    (cd "$dir" && "$FLEX" -o out.c a.l >out.txt 2>err.txt) || status=$?
+}
+
+# NUL right after the opening quote.  There is nothing to keep, but flex
+# must neither crash nor write before its buffer.
+run_flex prefix-empty '%%option prefix="\000"'
+if [ "$status" -ne 0 ]; then
+    fail "prefix-empty: flex failed: $(cat "$dir/err.txt")"
+fi
+
+run_flex line-empty '#line 1 "\000"'
+if [ "$status" -ne 0 ]; then
+    fail "line-empty: flex failed: $(cat "$dir/err.txt")"
+fi
+
+# NUL further in.  The value must be the text before the NUL, all of it.
+run_flex prefix-cut '%%option prefix="ab\000cd"'
+if [ "$status" -ne 0 ]; then
+    fail "prefix-cut: flex failed: $(cat "$dir/err.txt")"
+elif ! grep -F 'ablex' "$dir/out.c" >/dev/null; then
+    fail "prefix-cut: the prefix is not 'ab'"
+fi
+
+run_flex line-cut '#line 1 "ab\000cd"'
+if [ "$status" -ne 0 ]; then
+    fail "line-cut: flex failed: $(cat "$dir/err.txt")"
+elif ! grep -F '#line 2 "ab"' "$dir/out.c" >/dev/null; then
+    fail "line-cut: the file name is not 'ab'"
+fi
+
+# A value with no NUL is unchanged.
+run_flex prefix-plain '%%option prefix="ab"'
+if [ "$status" -ne 0 ]; then
+    fail "prefix-plain: flex failed: $(cat "$dir/err.txt")"
+elif ! grep -F 'ablex' "$dir/out.c" >/dev/null; then
+    fail "prefix-plain: the prefix is not 'ab'"
+fi
+
+run_flex line-plain '#line 1 "ab"'
+if [ "$status" -ne 0 ]; then
+    fail "line-plain: flex failed: $(cat "$dir/err.txt")"
+elif ! grep -F '#line 2 "ab"' "$dir/out.c" >/dev/null; then
+    fail "line-plain: the file name is not 'ab'"
+fi
+
+if [ "$failures" -ne 0 ]; then
+    exit 1
+fi
+echo "quoted NUL tests passed"
