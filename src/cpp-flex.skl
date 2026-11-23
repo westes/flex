@@ -391,7 +391,7 @@ m4_define( [[M4_YY_DOC_PARAM]], [[@param yyscanner The scanner object.]])
 #define yytext YY_G(yytext_r)
 #define yylineno (YY_CURRENT_BUFFER_LVALUE->yy_bs_lineno)
 #define yycolumn (YY_CURRENT_BUFFER_LVALUE->yy_bs_column)
-#define yyflexdebug YY_G(yyflexdebug_r)
+#define yyflexdebug YY_G(yy_flex_debug_r)
 /* Legacy interface */
 #define yy_flex_debug yyflexdebug
 
@@ -1316,7 +1316,7 @@ struct yyguts_t {
 	char* yy_last_accepting_cpos;
 
 	int yylineno_r;
-	int yyflexdebug_r;
+	int yy_flex_debug_r;
 
 m4_ifdef( [[M4_MODE_USES_REJECT]], [[
 	yy_state_type *yy_state_buf;
