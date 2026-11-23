@@ -2,6 +2,15 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** Flex no longer writes outside its own buffers when a quoted %option
+    value or a #line file name in the scanner file starts with a NUL
+    byte. A NUL byte further inside such a value now cuts the value
+    there and no longer also drops the character before it. (#725)
+
+    Thanks to anshal ossaimi; reported by Marc Schoenefeld.
+
 * Noteworthy changes in release 2.7.4 (2026-11-23) [stable]
 
 ** build
