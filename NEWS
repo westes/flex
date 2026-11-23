@@ -2,6 +2,19 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A scanner no longer defines _POSIX_C_SOURCE and _POSIX_SOURCE ahead
+    of the program's own code, and no longer includes <assert.h> for
+    that purpose. Flex 2.6.5 to 2.7.5 did, which on systems whose
+    headers hide declarations when those macros are set removed names
+    the program uses: fileno_unlocked, which stopped GCC's Modula-2
+    scanner from compiling, and SO_REUSEPORT, which stopped a program
+    that includes boost asio. A strict ISO C mode still gets its own
+    declaration of fileno. (#900, #901)
+
+    Thanks to barracuda156 and fxdupont.
+
 * Noteworthy changes in release 2.7.5 (2026-11-23) [stable]
 
 ** scanner
