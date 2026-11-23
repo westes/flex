@@ -13,6 +13,26 @@ flex NEWS
 
     Thanks to Ryan Carsten Schmidt.
 
+** scanner
+
+*** A program that declares struct yyguts_t itself, before the scanner,
+    and supplies its own yyscan_t by defining YY_TYPEDEF_YY_SCANNER_T,
+    compiles again with a prefixed reentrant scanner. Flex 2.7.3 put the
+    prefix in the name of that structure, which made the program's
+    declaration a different type from the scanner's, and doxygen would
+    not build. Flex now leaves the name alone when the program defines
+    YY_TYPEDEF_YY_SCANNER_T. A program that wants a prefixed name there
+    can declare struct <prefix>guts_t. (#895)
+
+    Thanks to Lars Wendler.
+
+*** A reentrant C scanner can again set the member yy_flex_debug_r of
+    its state structure, as it could with flex 2.6.4. Flex 2.6.5 renamed
+    it to yyflexdebug_r, which stopped csound from building. The new
+    name yyflexdebug, and the function yyset_debug(), still work. (#896)
+
+    Thanks to CelestifyX.
+
 * Noteworthy changes in release 2.7.3 (2026-11-20) [stable]
 
 ** build
