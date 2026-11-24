@@ -124,6 +124,7 @@ SPORADIC_TESTS = \
 	header_nr \
 	header_r \
 	legacy_defines_nr \
+	line_directives \
 	lineno_generated \
 	long_call_c99 \
 	mem_nr \
@@ -229,6 +230,7 @@ include_by_buffer_direct_SOURCES = include_by_buffer.direct.l
 include_by_push_direct_SOURCES = include_by_push.direct.l
 include_by_reentrant_direct_SOURCES = include_by_reentrant.direct.l
 legacy_defines_nr_SOURCES = legacy_defines_nr.l
+line_directives_SOURCES = line_directives.l
 lineno_generated_SOURCES = lineno_generated.l
 lineno_generated.l: lineno_generated.l.in
 	grep -n '@LINE@' $^ | sed -e 's%^\([0-9]\+\):.*%\1s/@LINE@/\1/%' | sed -f - $^ > $@.t && mv $@.t $@
@@ -337,6 +339,7 @@ CLEANFILES = \
 	include_by_push.direct.c \
 	include_by_reentrant.direct.c \
 	legacy_defines_nr.c \
+	line_directives.c \
 	lineno_generated.c \
 	lineno_generated.l \
 	long_call_c99.c \
