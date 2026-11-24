@@ -2,6 +2,20 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A scanner generated in C mode and compiled as C++ no longer defines
+    a struct named yy_buffer_state, so it can be linked into the same
+    program as a scanner generated with %option c++ without two
+    different definitions of that struct. The C scanner's struct is now
+    named yy_c_buffer_state in that case. A scanner compiled as C is
+    unchanged, as are YY_BUFFER_STATE and yybuffer in both languages.
+    Code that names struct yy_buffer_state directly in a C scanner
+    compiled as C++ must use yy_c_buffer_state, or the typedefs, instead.
+    (#831)
+
+    Thanks to DingdWang.
+
 * Noteworthy changes in release 2.7.7 (2026-11-24) [stable]
 
 ** scanner
