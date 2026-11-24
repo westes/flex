@@ -243,8 +243,6 @@ int flex_main (int argc, char *argv[])
 	/* Copy actions to output file. */
 	out (&action_array[action_offset]);
 
-	line_directive_out (stdout, NULL, linenum);
-
 	/* generate cases for any missing EOF rules */
 	for (i = 1; i <= lastsc; ++i)
 		if (!sceof[i]) {

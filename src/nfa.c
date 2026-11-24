@@ -288,8 +288,10 @@ void    finish_rule (int mach, bool variable_trail_rule, int headcnt, int trailc
 	if (!continued_action)
 		add_action ("M4_HOOK_SET_RULE_SETUP\n");
 
-	/* The default rule has no source line in the .l file. */
-	if (num_rules != default_rule) {
+	/* The default rule has no source line in the .l file. A rule whose
+	 * action is '|' has no action text of its own, so a directive here
+	 * would point at the case label of the next rule. */
+	if (num_rules != default_rule && !continued_action) {
 		line_directive_out(NULL, infilename, linenum);
 		add_action("[[");
 	}
