@@ -450,10 +450,25 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 ]])
 
 
+m4_ifdef([[M4_MODE_C_ONLY]], [[
+/* A C scanner compiled as C++ must not define the same struct tag as a
+ * C++ scanner in the same program, so it gets its own. Compiled as C,
+ * it keeps the tag that programs which declare YY_BUFFER_STATE
+ * themselves already use.
+ */
+#ifndef YY_C_BUFFER_STATE_TAG
+#ifdef __cplusplus
+#define YY_C_BUFFER_STATE_TAG yy_c_buffer_state
+#else
+#define YY_C_BUFFER_STATE_TAG yy_buffer_state
+#endif
+#endif
+]])
+
 #ifndef YY_TYPEDEF_YYBUFFER
 #define YY_TYPEDEF_YYBUFFER
 m4_ifdef([[M4_MODE_C_ONLY]], [[
-typedef struct yy_c_buffer_state *yybuffer;
+typedef struct YY_C_BUFFER_STATE_TAG *yybuffer;
 ]])
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 typedef struct yy_buffer_state *yybuffer;
@@ -467,7 +482,7 @@ typedef struct yy_buffer_state *yybuffer;
 #ifndef YY_TYPEDEF_YY_BUFFER_STATE
 #define YY_TYPEDEF_YY_BUFFER_STATE
 m4_ifdef([[M4_MODE_C_ONLY]], [[
-typedef struct yy_c_buffer_state *YY_BUFFER_STATE;
+typedef struct YY_C_BUFFER_STATE_TAG *YY_BUFFER_STATE;
 ]])
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
@@ -551,7 +566,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 m4_ifdef([[M4_MODE_C_ONLY]], [[
 #ifndef YY_STRUCT_YY_C_BUFFER_STATE
 #define YY_STRUCT_YY_C_BUFFER_STATE
-struct yy_c_buffer_state
+struct YY_C_BUFFER_STATE_TAG
 ]])
 m4_ifdef([[M4_MODE_CXX_ONLY]], [[
 #ifndef YY_STRUCT_YY_BUFFER_STATE
