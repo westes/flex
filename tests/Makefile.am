@@ -656,3 +656,5 @@ $(srcdir)/ruleset.am: $(srcdir)/ruleset.sh $(RULESETS)
 #	( cd $(srcdir) && $(SHELL) ruleset.sh nr r c99 go >ruleset.am )
 
 include $(srcdir)/ruleset.am
+
+

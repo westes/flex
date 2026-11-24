@@ -55,9 +55,14 @@ main (void)
 {
     YY_BUFFER_STATE old_name;
     yybuffer new_name;
+    /* Copying through the program's own struct tag is a hard error,
+       not just a warning, if the scanner uses a different struct. */
+    struct yy_buffer_state copy;
 
     old_name = new_name = test_scan_string("text");
     (void) old_name;
+    copy = *new_name;
+    (void) copy;
     testlex();
     test_delete_buffer(new_name);
 

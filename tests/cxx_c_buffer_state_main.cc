@@ -29,12 +29,23 @@
 #define yyFlexLexer Cpp_FlexLexer
 #include <FlexLexer.h>
 
+/* Overload resolution picks the first form only when both arguments
+   have the same type. */
+template <class T> char (&same_type (T, T))[1];
+template <class T, class U> char (&same_type (T, U))[2];
+
 int
 main (void)
 {
     Cpp_FlexLexer lexer;
     yy_buffer_state *buffer = lexer.yy_create_buffer (std::cin, 16384);
     lexer.yy_delete_buffer (buffer);
+
+    /* The C scanner's buffer type must differ from the C++ scanner's.
+       If they were the same struct, the program would contain two
+       definitions of it. The calls are only named, never run. */
+    if (sizeof (same_type (C__create_buffer (stdin, 0), buffer)) == 1)
+        return 1;
 
     int result = 0;
     result += lexer.yylex ();
