@@ -288,8 +288,11 @@ void    finish_rule (int mach, bool variable_trail_rule, int headcnt, int trailc
 	if (!continued_action)
 		add_action ("M4_HOOK_SET_RULE_SETUP\n");
 
-	line_directive_out(NULL, infilename, linenum);
-        add_action("[[");
+	/* The default rule has no source line in the .l file. */
+	if (num_rules != default_rule) {
+		line_directive_out(NULL, infilename, linenum);
+		add_action("[[");
+	}
 }
 
 

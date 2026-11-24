@@ -2,6 +2,18 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** The #line directives in a generated scanner now switch back to the
+    generated file after each rule action, as Bison does, and the
+    default rule no longer gets a #line directive of its own. Before,
+    the code flex adds between actions, and the default rule, were
+    attributed to lines of the scanner file, some of which did not
+    exist. Compiler messages and coverage tools such as lcov 2.1 and
+    later then pointed at the wrong lines or failed. (#903)
+
+    Thanks to Szabolcs Horvát.
+
 * Noteworthy changes in release 2.7.6 (2026-11-23) [stable]
 
 ** scanner
