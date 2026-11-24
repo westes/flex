@@ -103,6 +103,20 @@ extern const char *escaped_qstart, *escaped_qend;
     if ((indented_code = x)) ACTION_ECHO; \
 } while(0)
 
+/* Finish an action. A rule action is closed and followed by the code
+ * that ends its case. The directive that switches back to the generated
+ * file must come after the action's closing quote, so that m4 expands
+ * it, and before the case break, so that the break is not attributed to
+ * the scanner file. Other code blocks only get the directive. */
+#define END_ACTION do { \
+    if (doing_rule_action) { \
+        add_action("]""]"); \
+        line_directive_out(NULL, NULL, 0); \
+        add_action("\tM4_HOOK_STATE_CASE_BREAK\n"); \
+    } else \
+        line_directive_out(NULL, NULL, 0); \
+} while (0)
+
 #define END_CODEBLOCK do { \
     yy_pop_state();\
     add_action(M4QEND); \
@@ -608,7 +622,6 @@ void context_member(char *, const char *);
                             yyless(amt);
                         }
                         else {
-                            add_action("]""]");
                             continued_action = true;
                             ++linenum;
                             return '\n';
@@ -977,9 +990,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
 		++linenum;
 		ACTION_ECHO;
 		if (bracelevel <= 0 || (doing_codeblock && indented_code)) {
-            if ( doing_rule_action )
-                add_action( "\t]""]M4_HOOK_STATE_CASE_BREAK\n" );
-                line_directive_out(NULL, NULL, 0);
+            END_ACTION;
 
             doing_rule_action = doing_codeblock = false;
             BEGIN(SECT2);
@@ -1045,9 +1056,7 @@ nmstr[yyleng - 2 - end_is_ws] = '\0';  /* chop trailing brace */
                 ++linenum;
                 ACTION_ECHO;
                 if (bracelevel <= 0) {
-                   if ( doing_rule_action )
-                      add_action( "\t]""]M4_HOOK_STATE_CASE_BREAK\n" );
-                      line_directive_out(NULL, NULL, 0);
+                   END_ACTION;
 
                    doing_rule_action = false;
                    BEGIN(SECT2);

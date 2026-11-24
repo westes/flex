@@ -24,8 +24,8 @@
 /* Test that the code flex generates between rule actions, and for the
    default rule, is attributed to the generated file and not to the .l
    file. YY_USER_ACTION runs in generated code at the start of every
-   rule, so __FILE__ there must name the generated C file, whichever
-   rule ran before it. */
+   rule, and YY_BREAK at the end of every rule, so __FILE__ in each
+   must name the generated C file, whichever rule ran before it. */
 
 %{
 #include <stdio.h>
@@ -40,6 +40,15 @@ static int bad;
 		        yytext, __FILE__); \
 		bad = 1; \
 	}
+
+#define YY_BREAK \
+	if (strstr(__FILE__, ".l") != NULL && \
+	    strstr(__FILE__, ".lo") == NULL) { \
+		fprintf(stderr, "end of rule for \"%s\" runs in %s\n", \
+		        yytext, __FILE__); \
+		bad = 1; \
+	} \
+	break;
 %}
 
 %option 8bit nomain noyywrap nounput noinput
