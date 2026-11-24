@@ -89,6 +89,8 @@ legacy_hooks
 legacy_hooks.c
 buffer_typedef_legacy
 buffer_typedef_legacy.c
+c_cxx_buffer_typedef_legacy
+c_cxx_buffer_typedef_legacy.cc
 c_cxx_nr
 c_cxx_nr.cc
 c_cxx_r
