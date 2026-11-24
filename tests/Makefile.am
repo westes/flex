@@ -109,6 +109,7 @@ SPORADIC_TESTS = \
 	large_tables \
 	legacy_hooks \
 	buffer_typedef_legacy \
+	c_cxx_buffer_typedef_legacy \
 	c_cxx_nr \
 	c_cxx_r \
 	cxx_c_buffer_state \
@@ -210,6 +211,7 @@ large_tables_SOURCES = large_tables.l
 large_tables_CFLAGS = $(AM_CFLAGS) -Werror=overflow
 legacy_hooks_SOURCES = legacy_hooks.l
 buffer_typedef_legacy_SOURCES = buffer_typedef_legacy.l
+c_cxx_buffer_typedef_legacy_SOURCES = c_cxx_buffer_typedef_legacy.lll
 c_cxx_nr_SOURCES = c_cxx_nr.lll
 c_cxx_r_SOURCES = c_cxx_r.lll
 cxx_c_buffer_state_SOURCES = \
@@ -324,6 +326,7 @@ CLEANFILES = \
 	large_tables.c \
 	legacy_hooks.c \
 	buffer_typedef_legacy.c \
+	c_cxx_buffer_typedef_legacy.cc \
 	c_cxx_nr.cc \
 	c_cxx_r.cc \
 	cxx_c_buffer_state_c.cc \
@@ -411,6 +414,7 @@ EXTRA_DIST = \
 	bison_nr.txt \
 	bison_yylloc.txt \
 	bison_yylval.txt \
+	c_cxx_buffer_typedef_legacy.txt \
 	c_cxx_nr.txt \
 	c_cxx_r.txt \
 	cxx_c_buffer_state.txt \
