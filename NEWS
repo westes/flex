@@ -2,6 +2,17 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** The #line directive that switches back to the generated file after
+    each rule action now comes before the code that ends the rule, such
+    as YY_BREAK, so that code is no longer attributed to the scanner
+    file. Two more directives that pointed into the scanner file are
+    gone: the one before the case label of a rule whose action is '|',
+    and a repeated directive after the default rule. (#903)
+
+    Thanks to Szabolcs Horvát.
+
 * Noteworthy changes in release 2.7.8 (2026-11-24) [stable]
 
 ** scanner
