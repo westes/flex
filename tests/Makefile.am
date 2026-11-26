@@ -101,6 +101,7 @@ SPORADIC_TESTS = \
 	full_8bit \
 	eof_continued \
 	fast_nul \
+	fast_nul_tables \
 	batch_nul \
 	batch_nul_c99 \
 	yyinput_buffer \
@@ -204,6 +205,7 @@ yy_break_SOURCES = yy_break.l
 full_8bit_SOURCES = full_8bit.l
 eof_continued_SOURCES = eof_continued.l
 fast_nul_SOURCES = fast_nul.l
+fast_nul_tables_SOURCES = fast_nul_tables.l
 batch_nul_SOURCES = batch_nul.l
 batch_nul_c99_SOURCES = batch_nul_c99.l
 yyinput_buffer_SOURCES = yyinput_buffer.l
@@ -322,6 +324,8 @@ CLEANFILES = \
 	full_8bit.c \
 	eof_continued.c \
 	fast_nul.c \
+	fast_nul_tables.c \
+	fast_nul_tables.tables \
 	batch_nul.c \
 	batch_nul_c99.c \
 	yyinput_buffer.c \

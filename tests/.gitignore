@@ -69,6 +69,8 @@ eof_continued
 eof_continued.c
 fast_nul
 fast_nul.c
+fast_nul_tables
+fast_nul_tables.c
 batch_nul
 batch_nul.c
 batch_nul_c99
