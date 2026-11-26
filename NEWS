@@ -2,6 +2,21 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A scanner whose <<EOF>> rule has the action '|', so that it shares
+    the action of the rule after it, can be generated again. Flex 2.7.9
+    stopped with the m4 error "end of file in string" on such a rule.
+    (#906)
+
+    Thanks to George Rubin.
+
+*** A scanner generated with -F or -CF no longer reads past the end of
+    its transition table when its input contains a NUL character.
+    (#628, #908)
+
+    Thanks to anshal ossaimi.
+
 * Noteworthy changes in release 2.7.9 (2026-11-24) [stable]
 
 ** scanner
