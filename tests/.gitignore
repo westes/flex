@@ -65,6 +65,8 @@ yy_break
 yy_break.c
 full_8bit
 full_8bit.c
+fast_nul
+fast_nul.c
 batch_nul
 batch_nul.c
 batch_nul_c99
