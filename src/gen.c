@@ -135,7 +135,7 @@ static struct yytbl_data *mkctbl (void)
 	yytbl_data_init (tbl, YYTD_ID_TRANSITION);
 	tbl->td_flags = YYTD_DATA32 | YYTD_STRUCT;
 	tbl->td_hilen = 0;
-	tbl->td_lolen = (flex_uint32_t) (tblend + 2 + 1);	/* number of structs */
+	tbl->td_lolen = (flex_uint32_t) (tblend + 2 + 1 + numecs);	/* number of structs */
 
 	tbl->td_data = tdata =
 		calloc(tbl->td_lolen * 2, sizeof (flex_int32_t));
@@ -152,10 +152,14 @@ static struct yytbl_data *mkctbl (void)
 	 */
 
 	/* We need to have room in nxt/chk for two more slots: One for the
-	 * action and one for the end-of-buffer transition.  We now *assume*
-	 * that we're guaranteed the only character we'll try to index this
-	 * nxt/chk pair with is EOB, i.e., 0, so we don't have to make sure
-	 * there's room for jam entries for other characters.
+	 * action and one for the end-of-buffer transition.  The scanning
+	 * loop indexes a state once more after it has taken a transition,
+	 * with the equivalence class of the next character, and a NUL in
+	 * the input has the same class as the end-of-buffer character, so
+	 * the character after the one that reached the end-of-buffer state
+	 * is not always another end-of-buffer character.  That state
+	 * therefore needs a jam entry for every class as well, which is
+	 * emitted after it rather than through nxt/chk.
 	 */
 
 	while (tblend + 2 >= current_max_xpairs)
@@ -213,6 +217,12 @@ static struct yytbl_data *mkctbl (void)
 	tdata[curr++] = chk[tblend + 2];
 	tdata[curr++] = nxt[tblend + 2];
 
+	/* A jam for every equivalence class after the end-of-buffer state. */
+	for (i = 1; i <= numecs; ++i) {
+		tdata[curr++] = 0;
+		tdata[curr++] = 0;
+	}
+
 	return tbl;
 }
 
@@ -251,7 +261,7 @@ static void genctbl(void)
 	int     end_of_buffer_action = num_rules + 1;
 
 	/* Table of verify for transition and offset to next state. */
-	out_dec ("m4_define([[M4_HOOK_TRANSTABLE_SIZE]], [[%d]])", tblend + 2 + 1);
+	out_dec ("m4_define([[M4_HOOK_TRANSTABLE_SIZE]], [[%d]])", tblend + 2 + 1 + numecs);
 	outn ("m4_define([[M4_HOOK_TRANSTABLE_BODY]], [[m4_dnl");
 
 	/* We want the transition to be represented as the offset to the
@@ -266,10 +276,14 @@ static void genctbl(void)
 	 */
 
 	/* We need to have room in nxt/chk for two more slots: One for the
-	 * action and one for the end-of-buffer transition.  We now *assume*
-	 * that we're guaranteed the only character we'll try to index this
-	 * nxt/chk pair with is EOB, i.e., 0, so we don't have to make sure
-	 * there's room for jam entries for other characters.
+	 * action and one for the end-of-buffer transition.  The scanning
+	 * loop indexes a state once more after it has taken a transition,
+	 * with the equivalence class of the next character, and a NUL in
+	 * the input has the same class as the end-of-buffer character, so
+	 * the character after the one that reached the end-of-buffer state
+	 * is not always another end-of-buffer character.  That state
+	 * therefore needs a jam entry for every class as well, which is
+	 * emitted after it rather than through nxt/chk.
 	 */
 
 	while (tblend + 2 >= current_max_xpairs)
@@ -319,8 +333,12 @@ static void genctbl(void)
 	transition_struct_out (chk[tblend + 1], nxt[tblend + 1]);
 	transition_struct_out (chk[tblend + 2], nxt[tblend + 2]);
 
+	/* A jam for every equivalence class after the end-of-buffer state. */
+	for (i = 1; i <= numecs; ++i)
+		transition_struct_out (0, 0);
+
 	outn ("]])");
-	footprint += sizeof(struct yy_trans_info) * (tblend + 2 + 1);
+	footprint += sizeof(struct yy_trans_info) * (tblend + 2 + 1 + numecs);
 
 	out_dec ("m4_define([[M4_HOOK_STARTTABLE_SIZE]], [[%d]])", lastsc * 2 + 1);
 	if (gentables) {
