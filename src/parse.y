@@ -78,6 +78,7 @@ int scon_stk_ptr;
 static int madeany = false;  /* whether we've made the '.' character class */
 static int ccldot, cclany;
 int previous_continued_action;	/* whether the previous rule's action was '|' */
+static bool eof_rule_pending;	/* an <<EOF>> rule still needs its directive and quote */
 
 #define format_warn3(fmt, a1, a2) \
 	do{ \
@@ -256,7 +257,27 @@ option		:  TOK_OUTFILE '=' NAME
 		;
 
 sect2		:  sect2 scon initforrule flexrule '\n'
-			{ scon_stk_ptr = $2; }
+			{
+			scon_stk_ptr = $2;
+
+			/* An <<EOF>> rule is reduced before the scanner has
+			 * read its action, so this is the first place that
+			 * knows whether the action is '|'.  Like finish_rule(),
+			 * a '|' rule has no action text of its own, so it
+			 * gets neither the directive nor the opening quote
+			 * that the next rule's closing quote would pair with.
+			 */
+			if ( eof_rule_pending )
+				{
+				eof_rule_pending = false;
+
+				if ( ! continued_action )
+					{
+					line_directive_out(NULL, infilename, linenum);
+					add_action("[[");
+					}
+				}
+			}
 		|  sect2 scon '{' sect2 '}'
 			{ scon_stk_ptr = $2; }
 		|
@@ -1044,8 +1065,11 @@ void build_eof_action(void)
 			}
 		}
 
-	line_directive_out(NULL, infilename, linenum);
-        add_action("[[");
+	/* The directive and the opening quote go in once the end of the
+	 * rule's pattern has been read, because only then do we know
+	 * whether its action is '|' (see the sect2 rule above).
+	 */
+	eof_rule_pending = true;
 
 	/* This isn't a normal rule after all - don't count it as
 	 * such, so we don't have any holes in the rule numbering
