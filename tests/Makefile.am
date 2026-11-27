@@ -624,7 +624,7 @@ top.h: top.c
 #
 # # This is a temporary fake rule for use while the Go back end still
 # # actually generates C.
-# # We'll replace the CC comand with a golang command if Make still
+# # We'll replace the CC command with a golang command if Make still
 # # doesn't have a builtin rule when the backend is ready.
 # 
 # %.o: %.go

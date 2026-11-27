@@ -11,8 +11,8 @@ dnl as re-entrant C, but may have a different skeleton file.
 dnl
 dnl The purpose of this file is to properly set these macros:
 dnl
-dnl M4_TEST_PREAMBLE = the contyents of s top secton, if required, and
-dnl the emit option required to srt the back end.
+dnl M4_TEST_PREAMBLE = the contents of the top section, if required, and
+dnl the emit option required to set the back end.
 dnl
 dnl M4_TEST_COMPRESSION = compression option.
 dnl

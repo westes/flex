@@ -197,7 +197,7 @@ AS_IF([test "$cross_compiling" = yes],
    AC_MSG_WARN([result $ac_cv_func_realloc_0_nonnull guessed because of cross compilation]))
 
 dnl Autoheader (<= 2.69) bug: "dnl" comments in a quoted argument of
-dnl AC_CHECK_FUNCS will expand wierdly in config.h.in.
+dnl AC_CHECK_FUNCS will expand weirdly in config.h.in.
 dnl (https://lists.gnu.org/archive/html/bug-autoconf/2018-02/msg00005.html)
 
 AC_CHECK_FUNCS([dup2 memset regcomp strcasecmp strchr strdup strtol], [],

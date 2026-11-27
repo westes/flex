@@ -53,7 +53,7 @@ for input in $inputs; do
 done
 
 # Detect if the test wants a table argument.  If it does, the test maker will have generated
-# a tables=-file option do that the a table file named afte the test was created when the
+# a tables=-file option so that a table file named after the test was created when the
 # scanner was built. Thus we can assume that it will be looking for the table data at
 # the matching path we're about to generate.
 case ${TESTNAME} in
