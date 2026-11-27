@@ -25,6 +25,14 @@
 #include "config.h"
 %}
 
+%top{
+/* A program that links this scanner with a %option c++ scanner gives
+   this one its own buffer struct tag. */
+#ifndef YY_C_BUFFER_STATE_TAG
+#define YY_C_BUFFER_STATE_TAG yy_c_buffer_state
+#endif
+}
+
 %option 8bit prefix="C_"
 %option header-file="cxx_c_buffer_state_c.h"
 %option nounput nomain noinput noyywrap
