@@ -2,6 +2,19 @@ flex NEWS
 
 * Noteworthy changes in release  ?.? (????-??-??) [?]
 
+** scanner
+
+*** A scanner generated in C mode and compiled as C++ defines its
+    buffer struct as yy_buffer_state again, as it did before 2.7.8.
+    Flex 2.7.8 renamed it to yy_c_buffer_state, so a program that
+    declares struct yy_buffer_state itself failed to link with such a
+    scanner. A program that links one with a scanner generated with
+    %option c++ can still give the C scanner a different struct name by
+    defining YY_C_BUFFER_STATE_TAG, for example as yy_c_buffer_state,
+    wherever it includes the C scanner's header. (#910)
+
+    Thanks to K1ngfish3r.
+
 * Noteworthy changes in release 2.7.10 (2026-11-26) [stable]
 
 ** scanner
