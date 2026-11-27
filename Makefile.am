@@ -38,7 +38,9 @@ dist_doc_DATA = \
 	README.md
 
 EXTRA_DIST = \
+	.codespellrc \
 	.githooks/commit-msg \
+	.githooks/pre-commit \
 	.indent.pro \
 	INSTALL.md \
 	CONTRIBUTING.md

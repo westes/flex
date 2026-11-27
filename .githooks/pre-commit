@@ -1,0 +1,17 @@
+#! /bin/sh
+# Check the spelling of the files in this commit with codespell. The
+# settings, including what is skipped, are in .codespellrc.
+# Turn this on in your clone with:
+#
+#     git config core.hooksPath .githooks
+#
+# Only files added or changed by the commit are checked. If codespell is
+# not installed the check is skipped, and CI runs it on the pull request.
+if ! command -v codespell >/dev/null 2>&1; then
+    echo "pre-commit: codespell is not installed, skipping the spelling check." >&2
+    exit 0
+fi
+top=$(git rev-parse --show-toplevel) || exit 1
+cd "$top" || exit 1
+git diff --cached --name-only --diff-filter=ACMR -z |
+    xargs -0 -r codespell

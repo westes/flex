@@ -1,0 +1,18 @@
+[codespell]
+# Translations, generated files and history are not ours to correct.
+skip = *.po,ChangeLog,ONEWS,THANKS,*.direct.txt,examples/manual/*.txt,tests/yyextra.txt,tests/alloc_extra.txt,.git,autom4te.cache
+# Names, test input and code that look like misspellings:
+#   ser ver opt  words of the test generator
+#   ue           usage element in scanopt.c
+#   te           test input
+#   nd           ordinal suffix pattern (1st, 2nd)
+#   parm         parameter in the manual's sample code
+#   readin       the function that reads the input
+#   singl        variable name in nfa.c comments
+#   afile        file name in a manual example
+#   rin          sample input in tools/git2cl
+#   fpr          gpg field name and a shell variable
+#   fo           sample input in the manual
+#   testin       variable in tests
+#   fle          test pattern
+ignore-words-list = ser,ue,te,nd,parm,readin,singl,afile,rin,fpr,fo,testin,fle
