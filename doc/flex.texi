@@ -171,9 +171,9 @@ FAQ
 * Can I build nested parsers that work with the same input file?::  
 * How can I match text only at the end of a file?::  
 * How can I make yyreject() cascade across start condition boundaries?::  
-* Why cant I use fast or full tables with interactive mode?::  
+* Why can't I use fast or full tables with interactive mode?::  
 * How much faster is -F or -f than -C?::  
-* If I have a simple grammar cant I just parse it with flex?::  
+* If I have a simple grammar can't I just parse it with flex?::  
 * Why doesn't yyrestart() set the start state back to INITIAL?::  
 * How can I match C-style comments?::  
 * The period isn't working the way I expected.::  
@@ -695,7 +695,7 @@ If the target language is something other than C/C++, you will need to use
 its normal comment syntax in actions and code blocks.  Note that the
 optional @{ and @} delimiters around actions a Flex syntax, not C
 syntax; you will be able to use those even if, e,g., your target
-language is Pascal-like and delimits blocs with begin/end.
+language is Pascal-like and delimits blocks with begin/end.
 
 @node Patterns, Matching, Format, Top
 @chapter Patterns
@@ -2505,7 +2505,7 @@ file and then call the scanner again to continue scanning.
 @item  void yyrestart( FILE *new_file )
 may be called to point @file{yyin} at the new input file.
 In target languages other than C/C++, expect the argument to have
-whatever tyoe is associated with I/O streams. The
+whatever type is associated with I/O streams. The
 switch-over to the new file is immediate (any previously buffered-up
 input is lost).  Note that calling @code{yyrestart()} with @file{yyin}
 as an argument thus throws away the current input buffer and continues
@@ -2516,7 +2516,7 @@ scanning the same input file.
 is the output stream to which @code{yyecho()} actions are done.  It can be reassigned
 by the user.
 In target languages other than C/C++, expect it to have
-whatever tyoe is associated with I/O streams.
+whatever type is associated with I/O streams.
 
 @vindex yy_current_buffer()
 @item  yy_current_buffer()
@@ -2747,7 +2747,7 @@ Back ends other than the default C generator can't assume they have
 the C preprocessor available.  Therefore, Flex recognizes the
 following function calls - yyecho(), yyless(), yymore(), yyinput(),
 yystart(), yybegin(), yyunput(), yypanic() - and rewrites them adding a
-yyscanner final argument as though they were C macros. This optiion
+yyscanner final argument as though they were C macros. This option
 is set to false when you select or default to the C back end, and to
 true otherwise.  You can turn it off (or on) explicitly after your
 emit option.
@@ -3487,7 +3487,7 @@ We recommend using this option always.
 @item @code{%option bufsize}
 Forces the input buffer size, which is normally set to a good default
 for your platform based on what the standard buffered-IO library in
-your traget language does.  This option is mainly intended for stress-testing
+your target language does.  This option is mainly intended for stress-testing
 memory allocation in generated scanners; you probably shouldn't set it. 
 
 @end table
@@ -5630,9 +5630,9 @@ publish them here.
 * Can I build nested parsers that work with the same input file?::  
 * How can I match text only at the end of a file?::  
 * How can I make yyreject() cascade across start condition boundaries?::  
-* Why cant I use fast or full tables with interactive mode?::  
+* Why can't I use fast or full tables with interactive mode?::  
 * How much faster is -F or -f than -C?::  
-* If I have a simple grammar cant I just parse it with flex?::  
+* If I have a simple grammar can't I just parse it with flex?::  
 * Why doesn't yyrestart() set the start state back to INITIAL?::  
 * How can I match C-style comments?::  
 * The period isn't working the way I expected.::  
@@ -5939,7 +5939,7 @@ yybegin(INITIAL);
 @end verbatim
 @end example
 
-@node  Why cant I use fast or full tables with interactive mode?
+@node  Why can't I use fast or full tables with interactive mode?
 @unnumberedsec Why can't I use fast or full tables with interactive mode?
 
 One of the assumptions
@@ -5964,7 +5964,7 @@ interactive option.
 
 Much faster (factor of 2-3).
 
-@node  If I have a simple grammar cant I just parse it with flex?
+@node  If I have a simple grammar can't I just parse it with flex?
 @unnumberedsec If I have a simple grammar can't I just parse it with flex?
 
 Is your grammar recursive? That's almost always a sign that you're
@@ -6722,7 +6722,7 @@ From: Vern Paxson <vern>
 You can control this by calling yysetbol().  It's described in the manual.
 
 >      And if in pre-reading it goes to the end of file, is anything done
-> to control the end of curren buffer and end of file?
+> to control the end of current buffer and end of file?
 
 No, there's no way to put back an end-of-file.
 
@@ -6816,7 +6816,7 @@ From: Vern Paxson <vern>
 > In my lexer code, i have the line :
 > ^\*.*          { }
 >
-> Thus all lines starting with an astrix (*) are comment lines.
+> Thus all lines starting with an asterisk (*) are comment lines.
 > This does not work !
 
 I can't get this problem to reproduce - it works fine for me.  Note
@@ -7178,7 +7178,7 @@ In-reply-to: Your message of Tue, 16 Dec 1997 15:17:34 PST.
 Date: Tue, 16 Dec 1997 14:17:09 PST
 From: Vern Paxson <vern>
 
-> Can you explain to me what is ment by a long-jump in relation to flex?
+> Can you explain to me what is meant by a long-jump in relation to flex?
 
 Using the longjmp() function while inside yylex() or a routine called by it.
 
@@ -7186,7 +7186,7 @@ Using the longjmp() function while inside yylex() or a routine called by it.
 
 Just yylex()'s stack frame.
 
-> As far as I can see yyrestart will bring me back to the sart of the input
+> As far as I can see yyrestart will bring me back to the start of the input
 > file and using flex++ isnot really an option!
 
 No, yyrestart() doesn't imply a rewind, even though its name might sound
@@ -7372,7 +7372,7 @@ From: Vern Paxson <vern>
 > local or sequential context.
 
 One way to do this is to have the parser call a stub routine that's
-included in the scanner's .l file, and consequently that has access ot
+included in the scanner's .l file, and consequently that has access to
 yybegin().  The only ugliness is that the parser can't pass in the state
 it wants, because those aren't visible - but if you don't have many
 such states, then using a different set of names doesn't seem like
@@ -7552,7 +7552,7 @@ From: Vern Paxson <vern>
 
 > To overcome this, I gets() the stdin into a string and lex the string. The
 > string is lexed OK except that the end of string isn't lexed properly
-> (yy_scan_string()), that is the lexer dosn't recognise the end of string.
+> (yy_scan_string()), that is the lexer doesn't recognise the end of string.
 
 Flex doesn't contain mechanisms for recognizing buffer endpoints.  But if
 you use fgets instead (which you should anyway, to protect against buffer
@@ -7609,7 +7609,7 @@ From: Vern Paxson <vern>
 
 > Vern Paxson,
 >
-> I followed your advice, posted on Usenet bu you, and emailed to me
+> I followed your advice, posted on Usenet by you, and emailed to me
 > personally by you, on how to overcome the 32K states limit. I'm running
 > on Linux machines.
 > I took the full source of version 2.5.4 and did the following changes in
@@ -8018,7 +8018,7 @@ I have been using flex for years.
 It works very well on many projects.
 Most case, I used it to generate a scanner on C language.
 However, one project I needed to generate  a scanner
-on C++ lanuage. Thanks to your enhancement, flex did
+on C++ language. Thanks to your enhancement, flex did
 the job.
 
 Currently, I'm working on enhancing my previous project.
@@ -8091,7 +8091,7 @@ From: Vern Paxson <vern>
 > I hope you can help me.  I am using Flex and Bison to produce an interpreted
 > language.  However all goes well until I try to implement an IF statement or
 > a WHILE.  I cannot get this to work as the parser parses all the conditions
-> eg. the TRUE and FALSE conditons to check for a rule match.  So I cannot
+> eg. the TRUE and FALSE conditions to check for a rule match.  So I cannot
 > make a decision!!
 
 You need to use the parser to build a parse tree (= abstract syntax trwee),
@@ -8122,7 +8122,7 @@ ambiguity, where yours has because at any given time the scanner can
 be in the middle of all sorts of combinations of the different
 rules) blow up exponentially.
 
-For your rules, there is an easy fix.  Change the ".*" that comes fater
+For your rules, there is an easy fix.  Change the ".*" that comes faster
 the directory name to "[^ ]*".  With that in place, the rules are no
 longer nearly so ambiguous, because then once one of the directories
 has been matched, no other can be matched (since they all require a
@@ -8272,7 +8272,7 @@ From: Vern Paxson <vern>
 
 For flex, no.  I don't know what the current state of this is for bison.
 
-> Also, is there any requrirement for us to neccessarily  provide source for
+> Also, is there any requirement for us to necessarily  provide source for
 > the grammar files which are fed into flex and bison ?
 
 Again, for flex, no.
@@ -8809,7 +8809,7 @@ To get started on writing a new back end, browse
 @code{src/skeletons,c} to get some idea of how skeleton files are
 queried, then read a skeleton file.  If no sketon exists of a language
 that is closer to your target, the C99 back end is specifically
-intended to be cloned and used as a launch pont for new back ends.
+intended to be cloned and used as a launch point for new back ends.
 
 This file you are looking at is processed through GNU m4 during the
 pre-compilation stage of Flex. At this time only macros starting with
@@ -8892,7 +8892,7 @@ one of the existing sets of test loads to get good coverage.  Note
 that is highly unlikely your back end will be accepted into the
 flex distribution without a test suite.  Fortunately, adapting
 the existing tests should not be difficult.  There is some guidance
-in the @file{tests/README} file of the source distrbution.
+in the @file{tests/README} file of the source distribution.
 @end enumerate
 
 Syntactically C-like languages such as Go, Rust, and Java should be easy
