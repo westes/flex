@@ -1,6 +1,6 @@
 name: Pull request checks
 
-# Two checks on the commits a pull request would add to master, so a
+# Checks on the commits a pull request would add to master, so a
 # mistake shows up before the merge instead of in the Release run after it.
 #
 # - Every commit subject must follow the convention in CONTRIBUTING.md.
@@ -8,6 +8,11 @@ name: Pull request checks
 #   feat or a breaking change), the NEWS file must be ready for one, which
 #   is what the Release workflow insists on. A pull request that holds such
 #   a commit stays red until the maintainer has added the NEWS entry.
+# - The files the pull request adds or changes must pass codespell, set up
+#   in .codespellrc.
+# - .githooks holds only the hooks we know about. Git runs any executable
+#   there once a clone turns the directory on, so a new one must be looked
+#   at before it is merged.
 
 on:
   pull_request:
@@ -58,3 +63,51 @@ jobs:
             echo "::error::A fix, a feat or a breaking change makes a release, and NEWS is not ready for one. If this change is not visible to users of flex, use another type such as build, ci, docs, test or refactor."
             exit 1
         fi
+
+  spelling:
+    name: Spelling
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        fetch-depth: 0
+        persist-credentials: false
+
+    - name: Install codespell
+      run: python3 -m pip install --user codespell==2.4.3
+
+    - name: Check the files this pull request adds or changes
+      env:
+        BASE: ${{ github.event.pull_request.base.sha }}
+        HEAD: ${{ github.event.pull_request.head.sha }}
+      run: |
+        # The pipe's own failure is not hidden: xargs exits non-zero if
+        # codespell does, and the list is built first so a git failure stops.
+        git diff --name-only --diff-filter=ACMR -z "$BASE...$HEAD" > changed.list
+        xargs -0 -r "$HOME/.local/bin/codespell" < changed.list
+        rm changed.list
+
+  hooks:
+    name: Git hooks
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        persist-credentials: false
+
+    - name: Check that .githooks holds only the known hooks
+      run: |
+        # To add a hook, add its name here, after reading what it does.
+        known="commit-msg pre-commit"
+        failed=0
+        for f in .githooks/* .githooks/.[!.]*; do
+            [ -e "$f" ] || continue
+            name=${f#.githooks/}
+            case " $known " in
+                *" $name "*) ;;
+                *) echo "::error::$f is not a known hook. A maintainer must read it before it is merged."; failed=1 ;;
+            esac
+        done
+        exit $failed

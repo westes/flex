@@ -135,6 +135,13 @@ Using the hook is optional. A commit message that does not follow the
 convention is not an error and will not hold up your pull request. The
 maintainer may reword it when merging.
 
+The same setting turns on a second hook, which checks the spelling of the
+files in each commit with [codespell](https://github.com/codespell-project/codespell).
+It does nothing if codespell is not installed. The pull request check
+runs codespell too, so a misspelling is caught there if not before. If
+codespell flags a word that is correct, such as a name in the code, add
+it to `ignore-words-list` in `.codespellrc`.
+
 ### How commit messages become releases
 
 Flex follows [Semantic Versioning](https://semver.org/) and makes a
