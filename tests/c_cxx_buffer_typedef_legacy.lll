@@ -24,8 +24,8 @@
 %{
 /* Test that a C scanner compiled as C++ still honors a program's own
    YY_BUFFER_STATE declaration, guarded by YY_TYPEDEF_YY_BUFFER_STATE.
-   Compiled as C++, the scanner's struct is yy_c_buffer_state, so the
-   program names that one. */
+   Compiled as C++, the scanner's struct is still yy_buffer_state, so a
+   program that names that struct, as IGC does, links. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -35,7 +35,7 @@
 %top{
 #ifndef YY_TYPEDEF_YY_BUFFER_STATE
 #define YY_TYPEDEF_YY_BUFFER_STATE
-typedef struct yy_c_buffer_state *YY_BUFFER_STATE;
+typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 }
 
@@ -56,7 +56,7 @@ main (void)
 {
     YY_BUFFER_STATE old_name;
     yybuffer new_name;
-    struct yy_c_buffer_state copy;
+    struct yy_buffer_state copy;
 
     old_name = new_name = test_scan_string("text");
     copy = *new_name;

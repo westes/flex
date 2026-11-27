@@ -21,6 +21,10 @@
  * PURPOSE.
  */
 
+#ifndef YY_C_BUFFER_STATE_TAG
+#define YY_C_BUFFER_STATE_TAG yy_c_buffer_state
+#endif
+
 #undef yyFlexLexer
 #define yyFlexLexer HeaderOrderFlexLexer
 #include <FlexLexer.h>

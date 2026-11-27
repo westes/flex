@@ -21,6 +21,10 @@
  * PURPOSE.
  */
 
+#ifndef YY_C_BUFFER_STATE_TAG
+#define YY_C_BUFFER_STATE_TAG yy_c_buffer_state
+#endif
+
 #include <iostream>
 
 #include "cxx_c_buffer_state_c.h"

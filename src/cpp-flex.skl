@@ -451,17 +451,17 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
 
 
 m4_ifdef([[M4_MODE_C_ONLY]], [[
-/* A C scanner compiled as C++ must not define the same struct tag as a
- * C++ scanner in the same program, so it gets its own. Compiled as C,
- * it keeps the tag that programs which declare YY_BUFFER_STATE
- * themselves already use.
+/* The struct tag of a C scanner's buffer. It is yy_buffer_state, as in
+ * every earlier release, because programs declare that struct
+ * themselves and, when the scanner is compiled as C++, the tag is part
+ * of the mangled names of the buffer functions. A C scanner compiled as
+ * C++ and a scanner generated with %option c++ in one program would
+ * each define that struct, so a program that links both defines
+ * YY_C_BUFFER_STATE_TAG to another tag, such as yy_c_buffer_state,
+ * everywhere it includes the C scanner's header.
  */
 #ifndef YY_C_BUFFER_STATE_TAG
-#ifdef __cplusplus
-#define YY_C_BUFFER_STATE_TAG yy_c_buffer_state
-#else
 #define YY_C_BUFFER_STATE_TAG yy_buffer_state
-#endif
 #endif
 ]])
 
