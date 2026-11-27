@@ -355,7 +355,7 @@ struct ctrl_bundle_t {
 	char *prefix;		// prefix for externally visible names, default "yy" 
 	trit reject_really_used;// Force generation of support code for reject operation
 	bool reentrant;		// if true (-R), generate a reentrant C scanner
-	bool rewrite;		// Appl;y magic rewre rles to special fumctions 
+	bool rewrite;		// Apply magic rewrite rules to special functions 
 	bool stack_used;	// Enable use of start-condition stacks
 	bool no_section3_escape;// True if the undocumented option --unsafe-no-m4-sect3-escape was passed
 	bool spprdflt;		// (-s) suppress the default rule
@@ -689,7 +689,7 @@ extern int end_of_buffer_state;
  * cclmap - maps a ccl index to its set pointer
  * ccllen - gives the length of a ccl
  * cclng - true for a given ccl if the ccl is negated
- * cclreuse - counts how many times a ccl is re-used
+ * cclreuse - counts how many times a ccl is reused
  * current_max_ccl_tbl_size - current limit on number of characters needed
  *	to represent the unique ccl's
  * ccltbl - holds the characters in each ccl - indexed by cclmap

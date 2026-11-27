@@ -1417,7 +1417,7 @@ static void rule_check_bol(FlexLexer *yyscanner) {
 
 /* Done after the current pattern has been matched and before the
  * corresponding action - sets up yytext.  yyCp and yyBp are the
- * end abd start pointers for the input buffer segment that is
+ * end and start pointers for the input buffer segment that is
  * claimed as yytext.
  */
 void yyDoBeforeAction(FlexLexer *yyscanner, char *yyCp, char *yyBp) {

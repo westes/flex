@@ -1602,7 +1602,7 @@ static void rule_check_bol(yyscan_t yyscanner) {
 
 /* Done after the current pattern has been matched and before the
  * corresponding action - sets up yytext.  yy_cp and yy_bp are the
- * end abd start pointers for the input buffer segment that is
+ * end and start pointers for the input buffer segment that is
  * claimed as yytext.
  */
 void yy_do_before_action(yyscan_t yyscanner, char *yy_cp, char *yy_bp) {

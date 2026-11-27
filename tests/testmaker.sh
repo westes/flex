@@ -74,7 +74,7 @@ for part in "$@"; do
 	Cem) options="${options} ecs meta-ecs" ;;
 	Cae) options="${options} align ecs" ;;
 	Caef) options="${options} align ecs full" ;;
-	CaexF|Caexf) options="${options} algin ecs fast" ;;
+	CaexF|Caexf) options="${options} align ecs fast" ;;
 	Cam) options="${options} align meta-ecs" ;;
 	Caem) options="${options} align ecs meta-ecs" ;;
     esac

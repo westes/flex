@@ -25,7 +25,7 @@
   * 1. "foobar" is matched by the first rule.
   * 2. "bar" is pushed back by yyless(3)
   * 3. "bar" is matched by the second rule
-  * 4. Trailing \n is matched and discareded
+  * 4. Trailing \n is matched and discarded
   * 5. Final rule is never reached.
   */
 
