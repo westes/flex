@@ -5,7 +5,7 @@ FLEX = $(top_builddir)/src/flex$(EXEEXT)
 endif
 
 TEXI2DVI = @TEXI2DVI@ -I $(srcdir)/../examples/manual/
-TEXI2PDF = @TEXI2PDF@ -I $(srcdir)/../examples/manual/
+TEXI2PDF = $(TEXI2DVI) --pdf --batch
 
 info_TEXINFOS =	flex.texi
 AM_MAKEINFOFLAGS = -I $(srcdir)/../examples/manual/

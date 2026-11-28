@@ -130,7 +130,7 @@ AC_PATH_PROG([HELP2MAN], help2man, [\${top_srcdir}/build-aux/missing help2man])
 
 AC_PATH_PROGS([TEXI2DVI], [gtexi2dvi texi2dvi], [\${top_srcdir}/build-aux/missing texi2dvi])
   AS_IF([test "$TEXI2DVI" = "\${top_srcdir}/build-aux/missing texi2dvi"],
-    AC_MSG_WARN(texi2dvi: program not found: building pdf version of manual will not work)
+    AC_MSG_WARN(texi2dvi: program not found: building dvi and pdf versions of manual will not work)
   )
 
 # Check for a m4 that supports -P
