@@ -4,6 +4,13 @@ flex NEWS
 
 ** build
 
+*** "make pdf" builds the PDF version of the manual again. Since flex
+    2.6.5-rc1 it stopped with the error "@TEXI2PDF@: command not found"
+    instead of running texi2dvi. The PDF is still not included in the
+    source distribution. (#537)
+
+    Thanks to a report from dctaylor87.
+
 *** The repository has a git hook that checks the spelling of the files
     in each commit with codespell, alongside the existing hook that
     checks commit messages. A clone turns on both with
